@@ -32,7 +32,7 @@
   define('BUTTON_DONATE','<a href="https://www.modified-shop.org/spenden" target="_blank"><img src="https://www.paypal.com/de_DE/DE/i/btn/btn_donateCC_LG.gif" alt="' . TEXT_INFO_DONATIONS_IMG_ALT . '" border="0" /></a>');
   define('TEXT_START', '<b>Willkommen zur modified eCommerce Shopsoftware Installation</b><br /><br />Die modified eCommerce Shopsoftware ist eine Open-Source e-commerce L&ouml;sung, die st&auml;ndig vom modified eCommerce Shopsoftware Team und einer grossen Gemeinschaft weiterentwickelt wird.<br /> Seine out-of-the-box Installation erlaubt es dem Shop-Besitzer seinen Online-Shop mit einem Minimum an Aufwand und Kosten zu installieren, zu betreiben und zu verwalten.<br /><br />Die modified eCommerce Shopsoftware ist auf jedem System lauff&auml;hig, welches eine PHP Umgebung (ab PHP '.PHP_VERSION_MIN.') und MySQL (ab MySQL 5.0.0) zur Verf&uuml;gung stellt, wie zum Beispiel Linux, Solaris, BSD, und Microsoft Windows.<br /><br />Die modified eCommerce Shopsoftware ist ein OpenSource-Projekt &ndash; wir stecken jede Menge Arbeit und Freizeit in dieses Projekt und w&uuml;rden uns daher &uuml;ber eine <b>Spende</b> als kleine Anerkennung freuen.<br /><br />' . BUTTON_DONATE);
   define('TEXT_UPDATER_HEADING', 'Bitte ausw&auml;hlen');
-  define('TEXT_UPDATER', 'Willkommen beim neuen Updater der modified eComemrce Shopsoftware.');
+  define('TEXT_UPDATER', 'Willkommen beim neuen Updater der modified eCommerce Shopsoftware.');
   define('TEXT_UPDATE_CONFIG', 'Konfigurations-Datei (configure.php) aktualisieren');
   
   define('TEXT_CONFIGURE', 'Konfigurations-Datei (configure.php) aktualisieren');
