@@ -247,9 +247,11 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
   if ($_SESSION['customers_status']['customers_status_graduated_prices'] == '1') {
     include (DIR_WS_MODULES.FILENAME_GRADUATED_PRICE);
   }
+  $products_reviews_count = 0;
   if ($_SESSION['customers_status']['customers_status_read_reviews'] == '1') {
+    $reviews_count = $product->getReviewsCount();
     $info_smarty->assign('PRODUCTS_AVERAGE_RATING', $product->getReviewsAverage());
-    $info_smarty->assign('PRODUCTS_RATING_COUNT', $product->getReviewsCount());
+    $info_smarty->assign('PRODUCTS_RATING_COUNT', $products_reviews_count);
     include (DIR_WS_MODULES.'product_reviews.php');
   }
   include (DIR_WS_MODULES.'product_tags.php');
@@ -294,7 +296,7 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
     $info_smarty->caching = 1;
     $info_smarty->cache_lifetime = CACHE_LIFETIME;
     $info_smarty->cache_modified_check = CACHE_CHECK;
-    $cache_id = md5($product->data['products_id'].$_SESSION['language'].$_SESSION['customers_status']['customers_status_name'].$_SESSION['currency']);
+    $cache_id = md5($product->data['products_id'].$_SESSION['language'].$_SESSION['customers_status']['customers_status_name'].$_SESSION['currency'].$products_reviews_count);
     $product_info = $info_smarty->fetch(CURRENT_TEMPLATE.'/module/product_info/'.$product->data['product_template'], $cache_id);
   }
   $smarty->assign('main_content', $product_info);
