@@ -2442,9 +2442,7 @@ a.tags_bar_reset {
 
 /* 24. START content sites (AGB, Datenschutz, etc.) */
 .content_site {
-  -ms-word-break: break-all;
-  word-break: break-all;
-  word-break: break-word;
+
 }
 .content_site ul {
   margin-left:15px;
