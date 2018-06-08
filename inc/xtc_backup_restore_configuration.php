@@ -22,8 +22,10 @@
                                    );
       if (xtc_db_num_rows($backup_query) > 0) {
         $backup = xtc_db_fetch_array($backup_query);
-        xtc_db_query("REPLACE INTO " . TABLE_MODULE_BACKUP . " (configuration_key, configuration_value, last_modified)
-                            VALUES ('". xtc_db_input($configuration[$i]) ."', '".xtc_db_input($backup['configuration_value'])."', now())");                                 
+
+        xtc_db_query("INSERT INTO " . TABLE_MODULE_BACKUP . " (configuration_key, configuration_value, last_modified)
+                           VALUES ('". xtc_db_input($configuration[$i]) ."', '".xtc_db_input($backup['configuration_value'])."', now())
+                           ON DUPLICATE KEY UPDATE configuration_value = '".xtc_db_input($backup['configuration_value'])."', last_modified = now()");
       }
     }
   }
