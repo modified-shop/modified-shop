@@ -113,15 +113,15 @@ class product {
     if ($pID == '') {
       $pID = $this->pID;
     }
-    $reviews_query = xtDBquery("SELECT count(*) AS total
-                                  FROM ".TABLE_REVIEWS." r
-                                  JOIN ".TABLE_REVIEWS_DESCRIPTION." rd
-                                       ON r.reviews_id = rd.reviews_id
-                                          AND rd.languages_id = '".(int)$_SESSION['languages_id']."'
-                                          AND rd.reviews_text != ''
-                                 WHERE r.products_id = '".(int)$pID."'
-                                   AND r.reviews_status = '1'");
-    $reviews = xtc_db_fetch_array($reviews_query, true);
+    $reviews_query = xtc_db_query("SELECT count(*) AS total
+                                     FROM ".TABLE_REVIEWS." r
+                                     JOIN ".TABLE_REVIEWS_DESCRIPTION." rd
+                                          ON r.reviews_id = rd.reviews_id
+                                             AND rd.languages_id = '".(int)$_SESSION['languages_id']."'
+                                             AND rd.reviews_text != ''
+                                    WHERE r.products_id = '".(int)$pID."'
+                                      AND r.reviews_status = '1'");
+    $reviews = xtc_db_fetch_array($reviews_query);
     return $reviews['total'];
   }
 

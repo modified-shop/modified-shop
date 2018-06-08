@@ -189,7 +189,7 @@ if ($result != false) {
     $get_params .= isset($_SESSION['filter_sorting']) ? $_SESSION['filter_sorting'] : '';
     $get_params .= isset($_GET['filter']) ? serialize($_GET['filter']) : '';
 
-    $cache_id = md5($current_category_id.'_'.$_SESSION['language'].'_'.$_SESSION['customers_status']['customers_status_name'].'_'.$_SESSION['currency'].$get_params);
+    $cache_id = md5($current_category_id.'_'.$_SESSION['language'].'_'.$_SESSION['customers_status']['customers_status_name'].'_'.$_SESSION['currency'].$max_display_results.$get_params);
     $module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/product_listing/'.$category['listing_template'], $cache_id);
   }
   $smarty->assign('main_content', $module);
