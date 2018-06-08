@@ -180,9 +180,9 @@
                     }
                     
                     if ( isset($cInfo) && (is_object($cInfo)) && ($countries['countries_id'] == $cInfo->countries_id) ) {
-                      $tr_attributes = 'class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_COUNTRIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->countries_id . '&action=edit') .'\'"';
+                      $tr_attributes = 'class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_COUNTRIES, xtc_get_all_get_params(array('action', 'cID')) . 'cID=' . $cInfo->countries_id . '&action=edit') .'\'"';
                     } else {
-                      $tr_attributes = 'class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_COUNTRIES, 'page=' . $_GET['page'] . '&cID=' . $countries['countries_id']) .'\'"';
+                      $tr_attributes = 'class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_COUNTRIES, xtc_get_all_get_params(array('action', 'cID')) . 'cID=' . $countries['countries_id']) .'\'"';
                     }
                 ?>
                 <tr <?php echo $tr_attributes;?>>
