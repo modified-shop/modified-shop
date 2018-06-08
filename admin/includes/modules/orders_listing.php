@@ -131,8 +131,7 @@
                   $orders_query_raw = "-- /admin/orders.php
                                        SELECT ".$order_select_fields."
                                          FROM ".TABLE_ORDERS." o
-                                        WHERE o.orders_status = '".(int)$status."'
-                                          AND (o.customers_name LIKE '%".xtc_db_input($customer)."%'
+                                        WHERE (o.customers_name LIKE '%".xtc_db_input($customer)."%'
                                            OR o.customers_firstname LIKE '%".xtc_db_input($customer)."%'
                                            OR o.customers_lastname LIKE '%".xtc_db_input($customer)."%'
                                            OR o.customers_company LIKE '%".xtc_db_input($customer)."%')                       
