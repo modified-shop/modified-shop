@@ -14,6 +14,7 @@
   require_once('includes/functions.php');
 
   // global defines
+  define('DIR_MODIFIED_INSTALLER', '_installer');
   define('DIR_FS_DOCUMENT_ROOT', get_document_root());
   define('DIR_FS_CATALOG', DIR_FS_DOCUMENT_ROOT);
   define('DIR_WS_CATALOG', rtrim(dirname(dirname($_SERVER['PHP_SELF'])), '/').'/');

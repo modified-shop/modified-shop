@@ -11,10 +11,6 @@
    ---------------------------------------------------------------------------------------*/
    
    
-  if(!defined('DIR_MODIFIED_INSTALLER')) {
-    define('DIR_MODIFIED_INSTALLER', '_installer');
-  }
-  
   define('MODIFIED_SQL', 'includes/sql/modified.sql');
   
   // config
