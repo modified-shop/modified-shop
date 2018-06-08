@@ -237,7 +237,7 @@
       }
       
       $restore['utf8'] = false;
-      if(isset($_GET['convert']) && $_GET['convert'] == 'utf8') {
+      if(isset($_GET['convert']) && $_GET['convert'] == 'utf-8') {
         $restore['utf8'] = true;
       }
     
