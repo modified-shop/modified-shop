@@ -25,10 +25,11 @@
         <div class="pageHeading flt-l" style="margin: 3px 40px;"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CREATE_ACCOUNT) . '">' . BUTTON_CREATE_ACCOUNT . '</a>'; ?></div>
 
         <?php echo xtc_draw_form('status', FILENAME_CUSTOMERS, '', 'get');
-          $select_data = array ();
-          $select_data = array (array ('id' => '', 'text' => TEXT_SELECT), array ('id' => '100', 'text' => TEXT_ALL_CUSTOMERS));
+          $select_data = array(
+            array('id' => '', 'text' => ((!isset($_GET['status']) || $_GET['status'] == '') ? TEXT_SELECT : TEXT_ALL_CUSTOMERS)), 
+          );
         ?>
-        <div class="main mrg5"><?php echo HEADING_TITLE_STATUS . ' ' . xtc_draw_pull_down_menu('status',xtc_array_merge($select_data, $customers_statuses_array), isset($_GET['status']) ? $_GET['status'] : '', 'onChange="this.form.submit();"'); ?></div>
+        <div class="main mrg5"><?php echo HEADING_TITLE_STATUS . ' ' . xtc_draw_pull_down_menu('status', array_merge($select_data, $customers_statuses_array), isset($_GET['status']) ? $_GET['status'] : '', 'onChange="this.form.submit();"'); ?></div>
         </form>
 
         <div class="clear"></div>
@@ -89,9 +90,8 @@
                   $keywords = xtc_db_input(xtc_db_prepare_input($_GET['search_email']));
                   $search = "AND (c.customers_email_address LIKE '%".$keywords."%')";
                 }
-                if (isset($_GET['status']) && ($_GET['status'] != '100' || $_GET['status'] == '0')) {
-                  $status = xtc_db_prepare_input($_GET['status']);
-                  $search = "AND c.customers_status = '".$status."'";
+                if (isset($_GET['status']) && (int)$_GET['status'] >= 0) {
+                  $search = "AND c.customers_status = '".(int)$_GET['status']."'";
                 }
 
                 if (isset($_GET['sorting']) && xtc_not_null($_GET['sorting'])) {
