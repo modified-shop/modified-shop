@@ -616,23 +616,27 @@ class xtcPrice {
     $decimal_places = ($decimal_places > 0) ? $decimal_places : $this->currencies[$this->actualCurr]['decimal_places'];
     $from = $this->checkAttributes($pID);
     if ($format) {
-      $sQuery = xtDBquery("SELECT max(po.quantity) AS qty,
-                                  p.products_tax_class_id
-                             FROM " . TABLE_PERSONAL_OFFERS_BY . $this->actualGroup . " po
-                             JOIN " . TABLE_PRODUCTS . " p
-                                  ON po.products_id = p.products_id
-                            WHERE po.products_id='" . $pID . "'
-                         GROUP BY p.products_id");
-      $sQuery = xtc_db_fetch_array($sQuery, true);
-      if (($this->cStatus['customers_status_graduated_prices'] == '1') && ($sQuery['qty'] > 1)) {
-        $from = ' ' . FROM . ' ';
-        $price = $this->xtcGetGraduatedPrice($pID, $sQuery['qty']);
-        if ($curr) {
-          $price = $this->xtcCalculateCurr($price);
-        }
-        if ($sQuery['products_tax_class_id'] != 0) {
-          $products_tax = ($this->cStatus['customers_status_show_price_tax'] == '0') ? 0 : $this->TAX[$sQuery['products_tax_class_id']];
-          $price = $this->xtcAddTax($price, $products_tax);
+      if ((int)$pID > 0) {
+        $sQuery = xtDBquery("SELECT max(po.quantity) AS qty,
+                                    p.products_tax_class_id
+                               FROM " . TABLE_PERSONAL_OFFERS_BY . $this->actualGroup . " po
+                               JOIN " . TABLE_PRODUCTS . " p
+                                    ON po.products_id = p.products_id
+                              WHERE po.products_id = '" . (int)$pID . "'
+                           GROUP BY p.products_id");
+        if (xtc_db_num_rows($sQuery, true) > 0) {
+          $sQuery = xtc_db_fetch_array($sQuery, true);
+          if (($this->cStatus['customers_status_graduated_prices'] == '1') && ($sQuery['qty'] > 1)) {
+            $from = ' ' . FROM . ' ';
+            $price = $this->xtcGetGraduatedPrice($pID, $sQuery['qty']);
+            if ($curr) {
+              $price = $this->xtcCalculateCurr($price);
+            }
+            if ($sQuery['products_tax_class_id'] > 0) {
+              $products_tax = ($this->cStatus['customers_status_show_price_tax'] == '0') ? 0 : $this->TAX[$sQuery['products_tax_class_id']];
+              $price = $this->xtcAddTax($price, $products_tax);
+            }
+          }
         }
       }
       $Pprice = $this->xtcFormatCurrency($price, $decimal_places);
