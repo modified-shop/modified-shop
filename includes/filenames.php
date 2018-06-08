@@ -93,4 +93,5 @@ define('FILENAME_FINDOLOGIC', 'findologic.php');
 define('FILENAME_WISHLIST', 'wishlist.php');
 define('FILENAME_ACCOUNT_CHECKOUT_EXPRESS', 'account_checkout_express.php');
 define('FILENAME_CHECKOUT_PAYMENT_IFRAME', 'checkout_payment_iframe.php');
+define('FILENAME_MEDIA_CONTENT', 'media_content.php'); 
 ?>
