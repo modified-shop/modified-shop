@@ -364,7 +364,6 @@
     'lang/german/modules/payment/sofortueberweisungvorkasse.php', // neu
     'lang/german/modules/payment/worldpay.php', // neu
     'LICENSE', // neu
-    'media_content.php',
     'paypal_checkout.php', // neu
     'popup_cvv.php',
     'popup_image.php',
