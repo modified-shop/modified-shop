@@ -33,6 +33,7 @@
     'includes/classes/Smarty_2.6.22',
     'includes/classes/Smarty_2.6.26',
     'includes/classes/Smarty_2.6.27', // neu
+    'includes/external/phpmailer/language', // neu
     'includes/econda', // neu
     'includes/iclear',
     'includes/janolaw',

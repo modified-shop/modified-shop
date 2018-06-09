@@ -239,11 +239,22 @@
     'includes/configure.org.php',
     'includes/external/janolaw/send_order.php', // from r9293
     'includes/external/magnalister/config/german/hood.form', // neu
+    'includes/external/magnalister/php/modules/idealo/classes/IdealoCheckinSubmit.php', // neu
     'includes/external/payone/modules/send_order.php', // from r9293
     'includes/external/paypal/lib/PayPal/Core/PayPalLoggingLevel.php', // neu
     'includes/external/paypal/modules/cart_action.php', // neu
     'includes/external/paypal/modules/product_info.php', // neu
     'includes/external/paypal/modules/send_order.php', // neu
+    'includes/external/phpmailer/language/phpmailer.lang-de.php', // neu
+    'includes/external/phpmailer/language/phpmailer.lang-en.php', // neu
+    'includes/external/phpmailer/_modified-shop.txt', // neu
+    'includes/external/phpmailer/class.phpmailer.php', // neu
+    'includes/external/phpmailer/class.phpmaileroauth.php', // neu
+    'includes/external/phpmailer/class.phpmaileroauthgoogle.php', // neu
+    'includes/external/phpmailer/class.pop3.php', // neu
+    'includes/external/phpmailer/class.smtp.php', // neu
+    'includes/external/phpmailer/get_oauth_token.php', // neu
+    'includes/external/phpmailer/PHPMailerAutoload.php', // neu
     'includes/external/shopgate/api.php', // neu
     'includes/external/shopgate/helper/ShopgateHelperLoader.php', // neu
     'includes/external/shopgate/Model/ShopgateModelLoader.php', // neu
@@ -265,6 +276,7 @@
     'includes/extra/send_order/janolaw.php', // neu
     'includes/extra/send_order/payone.php', // neu
     'includes/extra/send_order/paypal.php', // neu
+    'includes/google_conversiontracking.js.php', // neu
     'includes/masterpayment/logs/.htaccess', // neu
     'includes/modules/reviews.php',
     'includes/modules/module.easybill.php',
@@ -303,7 +315,7 @@
     'lang/english/modules/payment/images/logo_750.gif', // neu
     'lang/english/modules/payment/images/sofortueberweisung_info.gif', // neu
     'lang/english/modules/payment/images/sofortueberweisung_logo.gif', // neu
-    'lang/english/modules/payment/images/sofortueberweisungk_banner.gif', // neu
+    'lang/english/modules/payment/images/sofortueberweisungk_banner.jpg', // neu
     'lang/english/modules/payment/billsafe_2hp.php',
     'lang/english/modules/payment/cc.php',
     'lang/english/modules/payment/iclear.php',
@@ -332,7 +344,7 @@
     'lang/german/modules/payment/images/logo_750.gif', // neu
     'lang/german/modules/payment/images/sofortueberweisung_info.gif', // neu
     'lang/german/modules/payment/images/sofortueberweisung_logo.gif', // neu
-    'lang/german/modules/payment/images/sofortueberweisungk_banner.gif', // neu
+    'lang/german/modules/payment/images/sofortueberweisungk_banner.jpg', // neu
     'lang/german/modules/payment/billsafe_2hp.php',
     'lang/german/modules/payment/cc.php',
     'lang/german/modules/payment/iclear.php',
