@@ -42,6 +42,8 @@
   define('TEXT_SQL_UPDATE', 'Database Update');
   define('TEXT_SQL_UPDATE_HEADING', 'Choose SQL Update');
   define('TEXT_SQL_UPDATE_DESC', 'Please select only the update files, which are necessary for your current Shopversion.');
+  define('TEXT_EXECUTED_SUCCESS', '<b>Executed successful:</b>');
+  define('TEXT_EXECUTED_ERROR', '<b>Executed with errors:</b>');
 
   define('TEXT_SQL_MANUELL', 'Manual SQL input');
   define('TEXT_SQL_MANUELL_HEADING', 'Enter SQL command:');

@@ -40,6 +40,8 @@
     global $unlinked_files, $error;
     
     foreach(glob(DIR_FS_DOCUMENT_ROOT.$dir . '/*') as $file) {
+      $file = str_replace(DIR_FS_DOCUMENT_ROOT, '', $file);
+
       if(is_dir(DIR_FS_DOCUMENT_ROOT.$file)) {
         rrmdir($file);
       } else {
@@ -187,10 +189,35 @@
         xtc_db_query($sql);
       
         if (xtc_db_affected_rows() > 0) {
+          if (get_messagestack_size('update', 'success') < 1) {
+            $messageStack->add_session('update', TEXT_EXECUTED_SUCCESS, 'success');
+          }
           $messageStack->add_session('update', sprintf(TEXT_SQL_SUCCESS, encode_htmlspecialchars($sql)), 'success');
+        } else {
+          if (get_messagestack_size('update', 'error') < 1) {
+            $messageStack->add_session('update', TEXT_EXECUTED_ERROR, 'error');
+          }
+          $messageStack->add_session('update', sprintf(TEXT_SQL_SUCCESS, encode_htmlspecialchars($sql)), 'error');
         }
       }
     }
+  }
+  
+  
+  function get_messagestack_size($class, $type) {
+    $count = 0;
+    if (isset($_SESSION['messageToStack'])) {
+      $messages = array();
+      for ($i=0, $n=sizeof($_SESSION['messageToStack']); $i<$n; $i++) {
+        $messages[$_SESSION['messageToStack'][$i]['class']][$_SESSION['messageToStack'][$i]['type']][] = $_SESSION['messageToStack'][$i]['text'];        
+      }
+    }
+
+    if (isset($messages[$class][$type])) {
+      $count = count($messages[$class][$type]);
+    }
+      
+    return $count;
   }
   
   

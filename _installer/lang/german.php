@@ -42,7 +42,9 @@
   define('TEXT_SQL_UPDATE', 'Datenbank Update');
   define('TEXT_SQL_UPDATE_HEADING', 'SQL Update ausw&auml;hlen');
   define('TEXT_SQL_UPDATE_DESC', 'Bitte w&auml;hlen Sie hier nur die Update-Dateien aus, die f&uuml;r Ihre derzeitige Shopversion notwendig sind.');
-
+  define('TEXT_EXECUTED_SUCCESS', '<b>Erfolgreich ausgeführt:</b>');
+  define('TEXT_EXECUTED_ERROR', '<b>Mit Fehler ausgeführt:</b>');
+  
   define('TEXT_SQL_MANUELL', 'Manuelle SQL-Eingabe');
   define('TEXT_SQL_MANUELL_HEADING', 'SQL Befehl eingeben:');
   define('TEXT_SQL_MANUELL_DESC', 'SQL-Befehle m&uuml;ssen mit einem Semikolon ( ; ) abgeschlossen werden!');
