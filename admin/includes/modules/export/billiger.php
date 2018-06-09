@@ -380,7 +380,7 @@ class billiger {
     {
         xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_BILLIGER_FILE', 'billiger.csv',  '6', '1', '', now())");
         xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_BILLIGER_STATUS', 'True',  '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
-    xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_BILLIGER_SHIPPING_METHOD', 'price',  '6', '1', 'xtc_cfg_select_option(array(\'price\', \'weight (kg)\'), ', now())");
+    xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_BILLIGER_SHIPPING_METHOD', 'price',  '6', '1', 'xtc_cfg_select_option(array(\'price\', \'weight\'), ', now())");
         xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_BILLIGER_SHIPPING_COST', '25:5.50,50:8.50',  '6', '1', '', now())");
     }
     // remove
