@@ -33,7 +33,7 @@ define('CURRENCY_DESC', 'W&auml;hrung in der Exportdatei');
 define('LANGUAGE', '<hr /><b>Sprache:</b>');
 define('LANGUAGE_DESC', 'Sprache in der Exportdatei');
 define('MODULE_BILLIGER_SHIPPING_COST_TITLE', '<hr /><b>Versandkosten:</b>');
-define('MODULE_BILLIGER_SHIPPING_COST_DESC', 'Die Versandkosten basieren auf Preis oder Gewicht des Artikels. Beispiel: 25:5.50,50:8.50,etc.. <b>Bis</b> 25 werden 5.50 verrechnet, <b>bis</b> 50 werden 8.50 verrechnet, etc. F&uuml;r alles dar&uuml;ber werden keine Versandkosten berechnet!<br /><br />Die Versandkosten sind als Brutto anzugeben.<br />Es gilt die unten eingestellte W&auml;hrung.');
+define('MODULE_BILLIGER_SHIPPING_COST_DESC', 'Die Versandkosten basieren auf Preis oder Gewicht (kg) des Artikels. Beispiel: 25:5.50,50:8.50,etc.. <b>Bis</b> 25 werden 5.50 verrechnet, <b>bis</b> 50 werden 8.50 verrechnet, etc. F&uuml;r alles dar&uuml;ber werden keine Versandkosten berechnet!<br /><br />Die Versandkosten sind als Brutto anzugeben.<br />Es gilt die unten eingestellte W&auml;hrung.');
 define('MODULE_BILLIGER_SHIPPING_METHOD_TITLE', '<b>Versandkosten Methode</b>');
 define('MODULE_BILLIGER_SHIPPING_METHOD_DESC', 'Die Versandkosten basieren auf Preis oder Gewicht des Artikels.');
 define('EXPORT', 'Bitte den Sicherungsprozess AUF KEINEN FALL unterbrechen. Dieser kann einige Minuten in Anspruch nehmen.');
