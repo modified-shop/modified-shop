@@ -98,10 +98,6 @@
 	// shopgate
 	define('TABLE_SHOPGATE_ORDERS', 'orders_shopgate_order');
 
-  // easybill
-  define('TABLE_EASYBILL_DATEV', 'easybill_datev');
-	define('TABLE_EASYBILL', 'easybill');
-  
   // track & trace
   define('TABLE_CARRIERS', 'carriers');
   define('TABLE_ORDERS_TRACKING', 'orders_tracking');

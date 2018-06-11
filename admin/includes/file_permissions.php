@@ -40,7 +40,6 @@ $writeableDirs = array(
   DIR_FS_ADMIN.'images/icons',
   DIR_FS_CATALOG.'cache',
   DIR_FS_CATALOG.'export',
-  DIR_FS_CATALOG.'export/easybill',
   DIR_FS_CATALOG.'export/idealo_realtime',
   DIR_FS_EXTERNAL.'magnalister',
   DIR_FS_EXTERNAL.'shopgate/shopgate_library/config',

@@ -27,12 +27,15 @@
     DIR_ADMIN.'includes/modules/magpierss',
     DIR_ADMIN.'includes/modules/magpierss/extlib',
     DIR_ADMIN.'rss',
+    'api/easybill',  // neu
     'callback/pn_sofortueberweisung', // neu
+    'export/easybill', // neu
     'images/infobox', // neu
     'includes/classes/nusoap', // neu
     'includes/classes/Smarty_2.6.22',
     'includes/classes/Smarty_2.6.26',
     'includes/classes/Smarty_2.6.27', // neu
+    'includes/external/easybill',  // neu
     'includes/external/phpmailer/language', // neu
     'includes/econda', // neu
     'includes/iclear',
