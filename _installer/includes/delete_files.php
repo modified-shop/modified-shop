@@ -198,6 +198,7 @@
     'checkout_iclear.php',
     'copyright.php',
     'export/xml_export.php',
+    'export/easybill/.htaccess',
     'favicon.ico',
     'google_conversiontracking.js.php',
     'google_sitemap.php',
