@@ -142,7 +142,7 @@ echo '<script type="text/javascript"> if (top.lpg) top.lpg.close("'.xtc_href_lin
 
 $smarty->assign('language', $_SESSION['language']);
 $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/checkout_success.html');
-$smarty->assign('main_content', $main_content.(isset($_SESSION['xtb2'])?"<div style=\"text-align:center;padding:3px;margin-top:10px;font-weight:bold;\"><a style=\"text-decoration:underline;color:blue;\" href=\"./callback/xtbooster/xtbcallback.php?reverse=true\">Zur&uuml;ck zur xs:booster Auktions&uuml;bersicht..</a></div>":""));
+$smarty->assign('main_content', $main_content);
 
 $smarty->caching = 0;
 if (!defined('RM')) {

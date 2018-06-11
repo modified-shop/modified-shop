@@ -76,7 +76,6 @@ define('FILENAME_REMOVEOLDPICS', 'removeoldpics.php');
 define('FILENAME_SHOPGATE', 'shopgate.php');
 define('FILENAME_JANOLAW','janolaw.php');
 define('FILENAME_HAENDLERBUND', 'haendlerbund.php');
-define('FILENAME_XTBOOSTER','xtbooster.php');
 define('FILENAME_SAFETERMS','safeterms.php');
 define('FILENAME_EASYMARKETING','easymarketing.php');
 define('FILENAME_GV_CUSTOMERS','gv_customers.php');

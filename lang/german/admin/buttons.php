@@ -76,11 +76,6 @@ define('BUTTON_NEW_TAX_RATE', 'Neuer Steuersatz');
 define('BUTTON_SEND', 'Senden');
 define('BUTTON_REVERSE', 'Stornieren');
 
-// BOF - Tomcraft - 2009-11-28 - Included xs:booster
-define('BUTTON_EDIT_XTBOOSTER', 'eBay-Artikel');
-define('BUTTON_XTBOOSTER_MULTI', 'eBay-Multi-Artikel');
-// EOF - Tomcraft - 2009-11-28 - Included xs:booster
-
 // BOF - Dokuman - 2010-02-04 - delete cache files in admin section
 define('BUTTON_DELETE_CACHE', 'Cache leeren');
 define('BUTTON_DELETE_TEMP_CACHE', 'Templatecache leeren');

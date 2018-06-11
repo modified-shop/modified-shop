@@ -125,9 +125,6 @@
 
       </div>
       <br class="clearfix" />
-      {if isset($XTB_REDIRECT_USER_TO) && $XTB_REDIRECT_USER_TO == 'product'}
-        <div class="xtb_booster_redirect_message"><strong>Sie haben die eBay Auktion gewonnen!</strong><br />Bitte w&auml;hlen Sie nun noch die gew&uuml;nschten Produkteigenschaften und legen Sie den Artikel danach in den Warenkorb, um mit der Zahlung fortzufahren und das Produkt versandfertig zu machen!</div>
-      {/if}
       {if isset($MODULE_product_options) && $MODULE_product_options != ''}
         {if $MODULE_product_options_template != 'multi_options_1.html' && $MODULE_product_options_template|strpos:"dropdown" === false}
           {$MODULE_product_options}

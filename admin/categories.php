@@ -155,57 +155,6 @@ if (xtc_not_null($action)) {
     case 'edit_crossselling' :
       $catfunc->edit_cross_sell($_REQUEST);
       break;
-    // BOF - Tomcraft - 2009-11-28 - Included xs:booster
-    case 'multi_action':
-      // xs:booster start - multiauktion (v1.041)
-      if (isset($_POST['multi_xtb'])) {
-        $_SESSION['xtb1']['multi_xtb']=array();
-        require_once(DIR_FS_CATALOG.DIR_WS_CLASSES.'xtbooster.php');
-        $xtb = new xtbooster_base;
-        $xtb->config();
-        $requestx = "ACTION:TradeTemplateFetch";
-        $resx = $xtb->parse($xtb->exec($requestx));
-        $MULTI_REVERSECATS = $resx['MULTI_REVERSECATS'];
-        $MULTI_ONLYONSTOCK = $resx['MULTI_ONLYONSTOCK'];
-        if (is_array($_POST['multi_products'])) {
-          $x=$_POST['multi_products'];
-          foreach($x as $products_id) {
-            $q = xtc_db_query("select products_quantity from ".TABLE_PRODUCTS." where products_id = '".$products_id."'");
-            $p = xtc_db_fetch_array($q);
-            if($MULTI_ONLYONSTOCK=='true'&&$p['products_quantity']<1) continue;
-            $_SESSION['xtb1']['multi_xtb'][]=$products_id;
-          }
-        }
-        if (is_array($_POST['multi_categories'])) {
-          $_xtb_max_p = 10000;
-          function _xtb_reverse($category_id=0) {
-            global $_xtb_max_p,$MULTI_ONLYONSTOCK;
-            $cp = xtc_db_query("select * from ".TABLE_CATEGORIES." where parent_id = '".$category_id."'");
-            while($c=xtc_db_fetch_array($cp)) {
-              $q = xtc_db_query("select p.products_id, p.products_quantity from ".TABLE_PRODUCTS." p, ".TABLE_PRODUCTS_TO_CATEGORIES." p2c where p.products_id = p2c.products_id and p.products_status = '1' and p2c.categories_id = '".$c['categories_id']."'");
-              while($p = xtc_db_fetch_array($q)) {
-                if($MULTI_ONLYONSTOCK=='true'&&$p['products_quantity']<1) continue;
-                $_SESSION['xtb1']['multi_xtb'][$p['products_id']] = $p['products_id'];
-              }
-              if($_xtb_max_p--<0) break;
-              _xtb_reverse($c['categories_id']);
-            }
-          }
-          foreach ($_POST['multi_categories'] AS $i=>$category_id) {
-            $q = xtc_db_query("select p.products_id, p.products_quantity from ".TABLE_PRODUCTS." p, ".TABLE_PRODUCTS_TO_CATEGORIES." p2c where p.products_id = p2c.products_id and p.products_status = '1' and p2c.categories_id = '".$category_id."'");
-            while($p = xtc_db_fetch_array($q)) {
-              if($MULTI_ONLYONSTOCK=='true'&&$p['products_quantity']<1) continue;
-              $_SESSION['xtb1']['multi_xtb'][$p['products_id']] = $p['products_id'];
-            }
-            if($MULTI_REVERSECATS=='true') _xtb_reverse($category_id);
-          }
-        }
-        header("Location: xtbooster.php?xtb_module=add&mode=multi_xtb");
-        exit;
-      }
-      // xs:booster end - multiauktion (v1.041)
-      break;
-      // EOF - Tomcraft - 2009-11-28 - Included xs:booster
     case 'multi_action_confirm' :
       // --- MULTI DELETE ---
       if (isset ($_POST['multi_delete_confirm'])) {

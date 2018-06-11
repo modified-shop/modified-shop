@@ -275,25 +275,6 @@ class shoppingCart {
       return true; // nothing needs to be updated if theres no quantity, so we return true..
     }
     
-    // xs:booster start (v1.041)
-    $pid = xtc_get_prid($products_id); //use xtc function
-    if(isset($_SESSION['xtb0']) && is_array($_SESSION['xtb0']['tx'])) {
-      $sum = 0; 
-      $cc = true;
-      foreach($_SESSION['xtb0']['tx'] as $tx) {
-        if ($tx['products_id'] == $pid) {
-          $sum += $tx['XTB_QUANTITYPURCHASED'];
-          if ($tx['XTB_ALLOW_USER_CHQTY'] == 'false') {
-            $cc = false;
-          }
-        }
-      }
-      if($quantity != $sum && $cc == false) {
-        $quantity=$sum;
-      }
-    }
-    // xs:booster end
-
     //$this->contents[$products_id] = array ('qty' => (int)$quantity);
     $this->contents[$products_id]['qty'] = (int)$quantity; //don't reset $this->contents[$products_id] by update_quantity
     //new module support           

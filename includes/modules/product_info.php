@@ -54,23 +54,6 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
   // defaults
   $hide_qty = 0;
 
-  // xs:booster start (v1.041)
-  if (isset($_SESSION['xtb0']['tx']) && is_array($_SESSION['xtb0']['tx'])) {
-    $xsb_tx = array();
-    foreach($_SESSION['xtb0']['tx'] as $tx) {
-      if($tx['products_id'] == $product->data['products_id']) {
-        $xsb_tx = $tx;
-        break;
-      }
-    }
-    if (isset($xsb_tx['products_id'])) {           // replace || with && ?
-      $hide_qty = (@$xsb_tx['XTB_ALLOW_USER_CHQTY'] != 'true' || $xsb_tx['products_id'] == $product->data['products_id']) ? 1 : 0;
-      if(isset($xsb_tx['XTB_REDIRECT_USER_TO']) && $xsb_tx['products_id'] == $product->data['products_id']) {
-        $info_smarty->assign('XTB_REDIRECT_USER_TO', $xsb_tx['XTB_REDIRECT_USER_TO']);
-      }
-    }
-  }
-
   if (ACTIVATE_NAVIGATOR == 'true') {
     include (DIR_WS_MODULES.'product_navigator.php');
   }
