@@ -227,7 +227,6 @@ if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS 
   // disable some modules, because needed action on checkout_payment
   $disallowed_payment = array(
     'banktransfer',
-    'billsafe_2',  
     'paypalplus',
     'payone_installment',
     'payone_otrans',

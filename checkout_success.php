@@ -136,10 +136,6 @@ $breadcrumb->add(NAVBAR_TITLE_2_CHECKOUT_SUCCESS);
 
 require (DIR_WS_INCLUDES.'header.php');
 
-## BILLSAFE payment module
-echo '<script type="text/javascript"> if (top.lpg) top.lpg.close("'.xtc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL').'"); </script>';
-## BILLSAFE payment module
-
 $smarty->assign('language', $_SESSION['language']);
 $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/checkout_success.html');
 $smarty->assign('main_content', $main_content);

@@ -40,6 +40,7 @@
     'includes/classes/Smarty_2.6.26',
     'includes/classes/Smarty_2.6.27', // neu
     'includes/external/easybill',  // neu
+    'includes/external/billsafe',  // neu
     'includes/external/phpmailer/language', // neu
     'includes/econda', // neu
     'includes/iclear',

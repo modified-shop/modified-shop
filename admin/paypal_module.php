@@ -69,7 +69,6 @@ $payment_disallowed_array = array(
   'billpaydebit',
   'billpaypaylater',
   'billpaytransactioncredit',
-  'billsafe_2',
   'payone_installment',
   'payone_otrans',
 );
