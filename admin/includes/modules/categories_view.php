@@ -951,11 +951,6 @@
                   $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%;">' . TEXT_MARKED_ELEMENTS . '</div>');
                   $contents[] = array('align' => 'center', 'text' => '<input type="submit" class="button" name="multi_delete" value="'. BUTTON_DELETE . '">&nbsp;<input type="submit" class="button" name="multi_move" value="' . BUTTON_MOVE . '">&nbsp;<input type="submit" class="button" name="multi_copy" value="' . BUTTON_COPY . '">');
                   $contents[] = array('align' => 'center', 'text' => '<input type="submit" class="button" name="multi_status_on" value="'. BUTTON_STATUS_ON . '">&nbsp;<input type="submit" class="button" name="multi_status_off" value="' . BUTTON_STATUS_OFF . '">');
-                  // BOF - Tomcraft - 2009-11-28 - Included xs:booster
-                  if (defined('MODULE_XTBOOSTER_STATUS') && MODULE_XTBOOSTER_STATUS == 'True') {
-                    $contents[] = array('align' => 'center', 'text' => xtc_button(BUTTON_XTBOOSTER_MULTI, 'submit', 'name="multi_xtb"'));
-                  }
-                  // EOF - Tomcraft - 2009-11-28 - Included xs:booster
                   //Single Element Actions
                   $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%; border-top: 1px solid #aaa; margin-top: 5px;">' . TEXT_ACTIVE_ELEMENT . '</div>');
                   $contents[] = array('align' => 'center', 'text' => '<a class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '&cID=' . $cInfo->categories_id . '&action=edit_category') . '">' . BUTTON_EDIT . '</a>');
@@ -985,11 +980,6 @@
                   $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%;">' . TEXT_MARKED_ELEMENTS . '</div>');
                   $contents[] = array('align' => 'center', 'text' => xtc_button(BUTTON_DELETE, 'submit', 'name="multi_delete"').'&nbsp;'.xtc_button(BUTTON_MOVE, 'submit', 'name="multi_move"').'&nbsp;'.xtc_button(BUTTON_COPY, 'submit', 'name="multi_copy"'));
                   $contents[] = array('align' => 'center', 'text' => '<input type="submit" class="button" name="multi_status_on" value="'. BUTTON_STATUS_ON . '">&nbsp;<input type="submit" class="button" name="multi_status_off" value="' . BUTTON_STATUS_OFF . '">');
-                  // BOF - Tomcraft - 2009-11-28 - Included xs:booster
-                  if (defined('MODULE_XTBOOSTER_STATUS') && MODULE_XTBOOSTER_STATUS=='True') {
-                    $contents[] = array('align' => 'center', 'text' => xtc_button(BUTTON_XTBOOSTER_MULTI, 'submit', 'name="multi_xtb"'));
-                  }
-                  // EOF - Tomcraft - 2009-11-28 - Included xs:booster
                   //Single Product Actions
                   $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%; border-top: 1px solid #aaa; margin-top: 5px;">' . TEXT_ACTIVE_ELEMENT . '</div>');
                   $contents[] = array('align' => 'center', 
@@ -1002,15 +992,7 @@
                   $contents[] = array('align' => 'center', 
                                       'text' =>  '<a class="button" href="'.xtc_href_link(FILENAME_CATEGORIES, 'action=edit_crossselling&current_product_id='.$pInfo->products_id.'&cpath='.$cPath).'">' . BUTTON_EDIT_CROSS_SELLING . '</a>
                                                   <a class="button" href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action')) . (isset($_GET['action']) ? 'last_action='.$_GET['action'] : '') .'&action=new_products_content'.'&set=product') . '">' . BUTTON_NEW_CONTENT . '</a>'
-                                                 );
-                  
-                  // BOC Included xs:booster                  
-                  if (defined('MODULE_XTBOOSTER_STATUS') && MODULE_XTBOOSTER_STATUS=='True') {
-                    $contents[] = array('align' => 'center', 
-                                        'text' =>  '<a href="'.xtc_href_link(FILENAME_XTBOOSTER, 'action=edit_xtbooster&xtb_module=add&current_product_id='.$pInfo->products_id.'&cpath='.$cPath).'" class="button">' . BUTTON_EDIT_XTBOOSTER . '</a>'
-                                                   );
-                  }
-                  // EOC Included xs:booster                  
+                                                 );                  
                   //Insert new Element Actions
                   $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%; border-top: 1px solid #aaa; margin-top: 5px;">' . TEXT_INSERT_ELEMENT . '</div>');
                   if (!xtc_not_null($search)) {

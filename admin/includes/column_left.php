@@ -136,15 +136,6 @@ echo mainMenue(BOX_HEADING_PARTNER_MODULES);
     } else {
       if ($admin_access['shopgate'] == '1') echo '<li><a href="' . xtc_href_link('shopgate.php', 'sg_option=info', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_SHOPGATE . '</a></li>';
     }
-
-    ## xs:booster
-    if (defined('MODULE_XTBOOSTER_STATUS') && MODULE_XTBOOSTER_STATUS =='True') {
-      echo '<li><a href="#" class="menuBoxContentLinkSub"> -'.BOX_HEADING_XSBOOSTER.'</a><ul>';
-        if ($admin_access['configuration'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_XTBOOSTER."?xtb_module=list", '', 'NONSSL') . '" class="menuBoxContentLink"> -'.BOX_XSBOOSTER_LISTAUCTIONS.'</a></li>';
-        if ($admin_access['configuration'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_XTBOOSTER."?xtb_module=add", '', 'NONSSL') . '" class="menuBoxContentLink"> -'.BOX_XSBOOSTER_ADDAUCTIONS.'</a></li>';
-        if ($admin_access['configuration'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_XTBOOSTER."?xtb_module=conf", '', 'NONSSL') . '" class="menuBoxContentLink"> -'.BOX_XSBOOSTER_CONFIG.'</a></li>';
-      echo '</ul></li>';
-    }
 echo endMenue(BOX_HEADING_PARTNER_MODULES);
 
 //---------------------------STATISTIKEN

@@ -26,9 +26,11 @@
     DIR_ADMIN.'includes/modules/fckeditor',
     DIR_ADMIN.'includes/modules/magpierss',
     DIR_ADMIN.'includes/modules/magpierss/extlib',
+    DIR_ADMIN.'includes/xsbooster', // neu
     DIR_ADMIN.'rss',
     'api/easybill',  // neu
     'callback/pn_sofortueberweisung', // neu
+    'callback/xtbooster', // neu
     'export/easybill', // neu
     'export/idealo', // neu
     'export/idealo_realtime', // neu

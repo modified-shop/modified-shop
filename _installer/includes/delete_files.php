@@ -177,6 +177,7 @@
     DIR_ADMIN.'includes/modules/paypal_transactiondetail.php', // neu
     DIR_ADMIN.'includes/modules/system/easybill.php',
     DIR_ADMIN.'includes/modules/system/easybillcsv.php',
+    DIR_ADMIN.'includes/modules/system/xtbooster.php',
     DIR_ADMIN.'includes/stylesheet_stocklist.css', // neu
     DIR_ADMIN.'includes/stylesheet_stocklist_print.css', // neu
     DIR_ADMIN.'paypal.php', // neu
@@ -185,6 +186,7 @@
     DIR_ADMIN.'rss/index.html',
     DIR_ADMIN.'rss/xt-news.cache',
     DIR_ADMIN.'rss/xtc.cache',
+    DIR_ADMIN.'xtbooster.php',
     'callback/paypal/ipn.php', // neu
     'callback/sofort/callback.php', // neu
     'callback/sofort/helperFunctions.php', // neu
@@ -243,6 +245,7 @@
     'includes/classes/phpmailer.lang-en.php', // neu
     'includes/classes/sessions.php', // neu
     'includes/classes/cc_validation.php',
+    'includes/classes/xtbooster.php',
     'includes/configure.org.php',
     'includes/external/janolaw/send_order.php', // from r9293
     'includes/external/magnalister/config/german/hood.form', // neu
@@ -278,6 +281,7 @@
     'includes/external/smarty/smarty_3/sysplugins/smarty_internal_utility.php', // neu
     'includes/external/smarty/smarty_3/sysplugins/smarty_internal_write_file.php', // neu
     'includes/extra/checkout/checkout_process_end/20_easybill.php', // neu
+    'includes/extra/checkout/checkout_process_end/10_xsbooster.php', // neu
     'includes/extra/send_order/banktransfer.php', // neu
     'includes/extra/send_order/billpay.php', // neu
     'includes/extra/send_order/index.html', // neu
@@ -316,6 +320,7 @@
     'lang/english/admin/blacklist.php', // neu
     'lang/english/admin/paypal.php', // neu
     'lang/english/admin/paypal_payment.php', // neu
+    'lang/english/admin/xtbooster.php', // neu
     'lang/english/checkout_confirmation.php', // neu
     'lang/english/sofortueberweisung_abort.php', // neu
     'lang/english/easybill.php',
@@ -344,9 +349,11 @@
     'lang/english/modules/payment/worldpay.php', // neu
     'lang/english/modules/system/easybill.php', // neu
     'lang/english/modules/system/easybillcsv.php', // neu
+    'lang/english/modules/system/xtbooster.php', // neu
     'lang/german/admin/blacklist.php', // neu
     'lang/german/admin/paypal.php', // neu
     'lang/german/admin/paypal_payment.php', // neu
+    'lang/german/admin/xtbooster.php', // neu
     'lang/german/checkout_confirmation.php', // neu
     'lang/german/sofortueberweisung_abort.php', // neu
     'lang/german/easybill.php',
@@ -375,6 +382,7 @@
     'lang/german/modules/payment/worldpay.php', // neu
     'lang/german/modules/system/easybill.php', // neu
     'lang/german/modules/system/easybillcsv.php', // neu
+    'lang/german/modules/system/xtbooster.php', // neu
     'LICENSE', // neu
     'paypal_checkout.php', // neu
     'popup_cvv.php',
