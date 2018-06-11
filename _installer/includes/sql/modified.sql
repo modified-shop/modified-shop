@@ -811,7 +811,7 @@ CREATE TABLE orders_products (
   products_quantity INT(2) NOT NULL,
   allow_tax INT(1) NOT NULL,
   products_order_description text,
-  products_weight DECIMAL(6,3) NOT NULL,
+  products_weight DECIMAL(15,4) NOT NULL,
   PRIMARY KEY (orders_products_id),
   KEY idx_orders_id (orders_id),
   KEY idx_products_id (products_id)
@@ -941,7 +941,7 @@ CREATE TABLE products (
   products_date_added DATETIME NOT NULL,
   products_last_modified DATETIME,
   products_date_available DATETIME,
-  products_weight DECIMAL(6,3) NOT NULL,
+  products_weight DECIMAL(15,4) NOT NULL,
   products_status INT(1) NOT NULL,
   products_tax_class_id INT NOT NULL,
   product_template VARCHAR(64),
