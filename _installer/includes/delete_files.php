@@ -13,124 +13,126 @@
 
   // set all files to be deleted                     
   $unlink_file = array(
-    '_installer/images/icons/error.gif', // neu
-    '_installer/banktransfer_blz.sql', // neu
-    '_installer/bugfixes_106beta.sql', // neu
-    '_installer/bugfixes_106r4356.sql', // neu
-    '_installer/bugfixes_106r4642.sql', // neu
-    '_installer/change_language_id.sql', // neu
-    '_installer/db_upgrade.php', // neu
-    '_installer/images/button_administration_tool.gif', // neu
-    '_installer/images/button_back.gif', // neu
-    '_installer/images/button_cancel.gif', // neu
-    '_installer/images/button_catalog.gif', // neu
-    '_installer/images/button_continue.gif', // neu
-    '_installer/images/button_new_install.gif', // neu
-    '_installer/images/button_retry.gif', // neu
-    '_installer/images/button_upgrade.gif', // neu
-    '_installer/images/error.gif', // neu
-    '_installer/images/step1.gif', // neu
-    '_installer/images/step2.gif', // neu
-    '_installer/images/step3.gif', // neu
-    '_installer/images/step4.gif', // neu
-    '_installer/images/step5.gif', // neu
-    '_installer/images/step6.gif', // neu
-    '_installer/images/step7.gif', // neu
-    '_installer/images/step8.gif', // neu
-    '_installer/images/title_index.gif', // neu
-    '_installer/includes/templates/configure_admin.php', // neu
-    '_installer/modified.sql', // neu
-    '_installer/update_1.0.1.0_to_1.0.2.0.sql', // neu
-    '_installer/update_1.0.2.0_to_1.0.3.0.sql', // neu
-    '_installer/update_1.0.3.0_to_1.0.4.0.sql', // neu
-    '_installer/update_1.0.4.0_to_1.0.5.0.sql', // neu
-    '_installer/update_1.0.5.0_to_1.0.6.0.sql', // neu
-    '_installer/update_1.0.6.0_to_1.0.6.1.sql', // neu
-    '_installer/update_1.0.6.1_to_1.0.6.2.sql', // neu
-    '_installer/update_1.0.6.2_to_1.0.6.3.sql', // neu
-    '_installer/update_1.0.6.3_to_1.0.6.4.sql', // neu
-    '_installer/update_xtc3.0.4sp2.1_to_1.00.sql', // neu
-    '_installer/update_xtc3.0.4sp2.1_to_1.0.1.0.sql', // neu
-    '_installer/version106r8', // neu
-    '_installer/version106r9', // neu
-    '_installer/version.php', // neu
-    '_installer/debug.php', // neu
-    '_installer/images/bg_left_blocktitle.gif', // neu
-    '_installer/images/bg_top.jpg', // neu
-    '_installer/images/break-el.gif', // neu
-    '_installer/images/icons/arrow-setup.jpg', // neu
-    '_installer/images/icons/arrow02.gif', // neu
-    '_installer/images/icons/big_warning.png', // neu
-    '_installer/images/icons/error.png', // neu
-    '_installer/images/icons/icon-deu.gif', // neu
-    '_installer/images/icons/icon-eng.gif', // neu
-    '_installer/images/icons/icon-setup.gif', // neu
-    '_installer/images/icons/icon-spa.gif', // neu
-    '_installer/images/icons/login_keys.gif', // neu
-    '_installer/images/icons/ok.gif', // neu
-    '_installer/images/icons/success.gif', // neu
-    '_installer/images/icons/warning.gif', // neu
-    '_installer/images/icons/x.jpg', // neu
-    '_installer/images/install.gif', // neu
-    '_installer/images/loading.gif', // neu
-    '_installer/images/logo.gif', // neu
-    '_installer/images/logo.png', // neu
-    '_installer/includes/application.php', // neu
-    '_installer/includes/favicon.ico', // neu
-    '_installer/includes/form_check.js.php', // neu
-    '_installer/includes/version.php', // neu
-    '_installer/install_step3.php', // neu
-    '_installer/install_step4.php', // neu
-    '_installer/install_step5.php', // neu
-    '_installer/install_step6.php', // neu
-    '_installer/install_step7.php', // neu
+    '_installer/images/icons/error.gif',
+    '_installer/banktransfer_blz.sql',
+    '_installer/bugfixes_106beta.sql',
+    '_installer/bugfixes_106r4356.sql',
+    '_installer/bugfixes_106r4642.sql',
+    '_installer/change_language_id.sql',
+    '_installer/db_upgrade.php',
+    '_installer/images/button_administration_tool.gif',
+    '_installer/images/button_back.gif',
+    '_installer/images/button_cancel.gif',
+    '_installer/images/button_catalog.gif',
+    '_installer/images/button_continue.gif',
+    '_installer/images/button_new_install.gif',
+    '_installer/images/button_retry.gif',
+    '_installer/images/button_upgrade.gif',
+    '_installer/images/error.gif',
+    '_installer/images/step1.gif',
+    '_installer/images/step2.gif',
+    '_installer/images/step3.gif',
+    '_installer/images/step4.gif',
+    '_installer/images/step5.gif',
+    '_installer/images/step6.gif',
+    '_installer/images/step7.gif',
+    '_installer/images/step8.gif',
+    '_installer/images/title_index.gif',
+    '_installer/includes/templates/configure_admin.php',
+    '_installer/modified.sql',
+    '_installer/update_1.0.1.0_to_1.0.2.0.sql',
+    '_installer/update_1.0.2.0_to_1.0.3.0.sql',
+    '_installer/update_1.0.3.0_to_1.0.4.0.sql',
+    '_installer/update_1.0.4.0_to_1.0.5.0.sql',
+    '_installer/update_1.0.5.0_to_1.0.6.0.sql',
+    '_installer/update_1.0.6.0_to_1.0.6.1.sql',
+    '_installer/update_1.0.6.1_to_1.0.6.2.sql',
+    '_installer/update_1.0.6.2_to_1.0.6.3.sql',
+    '_installer/update_1.0.6.3_to_1.0.6.4.sql',
+    '_installer/update_xtc3.0.4sp2.1_to_1.00.sql',
+    '_installer/update_xtc3.0.4sp2.1_to_1.0.1.0.sql',
+    '_installer/version106r8',
+    '_installer/version106r9',
+    '_installer/version.php',
+    '_installer/debug.php',
+    '_installer/images/bg_left_blocktitle.gif',
+    '_installer/images/bg_top.jpg',
+    '_installer/images/break-el.gif',
+    '_installer/images/icons/arrow-setup.jpg',
+    '_installer/images/icons/arrow02.gif',
+    '_installer/images/icons/big_warning.png',
+    '_installer/images/icons/error.png',
+    '_installer/images/icons/icon-deu.gif',
+    '_installer/images/icons/icon-eng.gif',
+    '_installer/images/icons/icon-setup.gif',
+    '_installer/images/icons/icon-spa.gif',
+    '_installer/images/icons/login_keys.gif',
+    '_installer/images/icons/ok.gif',
+    '_installer/images/icons/success.gif',
+    '_installer/images/icons/warning.gif',
+    '_installer/images/icons/x.jpg',
+    '_installer/images/install.gif',
+    '_installer/images/loading.gif',
+    '_installer/images/logo.gif',
+    '_installer/images/logo.png',
+    '_installer/includes/application.php',
+    '_installer/includes/favicon.ico',
+    '_installer/includes/form_check.js.php',
+    '_installer/includes/version.php',
+    '_installer/install_step3.php',
+    '_installer/install_step4.php',
+    '_installer/install_step5.php',
+    '_installer/install_step6.php',
+    '_installer/install_step7.php',
     '_unterverzeichnis_.htaccess',
     DIR_ADMIN.'billsafe_orders_2hp.php',
-    DIR_ADMIN.'blacklist.php', // neu
-    DIR_ADMIN.'cleverreach.html', // neu
-    DIR_ADMIN.'sofortueberweisung_install.php', // neu
-    DIR_ADMIN.'stock_list.php', // neu
+    DIR_ADMIN.'billsafe_orders_2.php',
+    DIR_ADMIN.'billsafe_print_order_2.php',
+    DIR_ADMIN.'blacklist.php',
+    DIR_ADMIN.'cleverreach.html',
+    DIR_ADMIN.'sofortueberweisung_install.php',
+    DIR_ADMIN.'stock_list.php',
     DIR_ADMIN.'fck_wrapper.php',
-    DIR_ADMIN.'images/icons/fastnav/icon_backup.jpg', // neu
-    DIR_ADMIN.'images/icons/fastnav/icon_categories.jpg', // neu
-    DIR_ADMIN.'images/icons/fastnav/icon_content.jpg', // neu
-    DIR_ADMIN.'images/icons/fastnav/icon_credits.jpg', // neu
-    DIR_ADMIN.'images/icons/fastnav/icon_credits2.jpg', // neu
-    DIR_ADMIN.'images/icons/fastnav/icon_customers.jpg', // neu
-    DIR_ADMIN.'images/icons/fastnav/icon_logout.jpg', // neu
-    DIR_ADMIN.'images/icons/fastnav/icon_newsletter.jpg', // neu
-    DIR_ADMIN.'images/icons/fastnav/icon_order_status.jpg', // neu
-    DIR_ADMIN.'images/icons/fastnav/icon_orders.jpg', // neu
-    DIR_ADMIN.'images/icons/fastnav/icon_shipping_status.jpg', // neu
-    DIR_ADMIN.'images/icons/fastnav/icon_shop.jpg', // neu
-    DIR_ADMIN.'images/icons/heading_configuration.gif', // neu
-    DIR_ADMIN.'images/icons/heading_content.gif', // neu
-    DIR_ADMIN.'images/icons/heading_customers.gif', // neu
-    DIR_ADMIN.'images/icons/heading_modules.gif', // neu
-    DIR_ADMIN.'images/icons/heading_news.gif', // neu
-    DIR_ADMIN.'images/icons/heading_statistic.gif', // neu
-    DIR_ADMIN.'images/icons/sofortueberweisung_autoinstaller.gif', // neu
-    DIR_ADMIN.'images/icons/sofortueberweisung_icon.gif', // neu
-    DIR_ADMIN.'images/icon_info.gif.jpg', // neu
-    DIR_ADMIN.'images/top_credits.gif', // neu
-    DIR_ADMIN.'images/top_end.jpg', // neu
-    DIR_ADMIN.'images/top_index.gif', // neu
-    DIR_ADMIN.'images/top_logout.gif', // neu
-    DIR_ADMIN.'images/top_shop.gif', // neu
-    DIR_ADMIN.'images/top_support.gif', // neu
-    DIR_ADMIN.'includes/classes/class.paypal.php', // neu
-    DIR_ADMIN.'includes/classes/sessions.php', // neu
-    DIR_ADMIN.'includes/classes/phpmailer.lang-de.php', // neu
-    DIR_ADMIN.'includes/classes/phpmailer.lang-en.php', // neu
+    DIR_ADMIN.'images/icons/fastnav/icon_backup.jpg',
+    DIR_ADMIN.'images/icons/fastnav/icon_categories.jpg',
+    DIR_ADMIN.'images/icons/fastnav/icon_content.jpg',
+    DIR_ADMIN.'images/icons/fastnav/icon_credits.jpg',
+    DIR_ADMIN.'images/icons/fastnav/icon_credits2.jpg',
+    DIR_ADMIN.'images/icons/fastnav/icon_customers.jpg',
+    DIR_ADMIN.'images/icons/fastnav/icon_logout.jpg',
+    DIR_ADMIN.'images/icons/fastnav/icon_newsletter.jpg',
+    DIR_ADMIN.'images/icons/fastnav/icon_order_status.jpg',
+    DIR_ADMIN.'images/icons/fastnav/icon_orders.jpg',
+    DIR_ADMIN.'images/icons/fastnav/icon_shipping_status.jpg',
+    DIR_ADMIN.'images/icons/fastnav/icon_shop.jpg',
+    DIR_ADMIN.'images/icons/heading_configuration.gif',
+    DIR_ADMIN.'images/icons/heading_content.gif',
+    DIR_ADMIN.'images/icons/heading_customers.gif',
+    DIR_ADMIN.'images/icons/heading_modules.gif',
+    DIR_ADMIN.'images/icons/heading_news.gif',
+    DIR_ADMIN.'images/icons/heading_statistic.gif',
+    DIR_ADMIN.'images/icons/sofortueberweisung_autoinstaller.gif',
+    DIR_ADMIN.'images/icons/sofortueberweisung_icon.gif',
+    DIR_ADMIN.'images/icon_info.gif.jpg',
+    DIR_ADMIN.'images/top_credits.gif',
+    DIR_ADMIN.'images/top_end.jpg',
+    DIR_ADMIN.'images/top_index.gif',
+    DIR_ADMIN.'images/top_logout.gif',
+    DIR_ADMIN.'images/top_shop.gif',
+    DIR_ADMIN.'images/top_support.gif',
+    DIR_ADMIN.'includes/classes/class.paypal.php',
+    DIR_ADMIN.'includes/classes/sessions.php',
+    DIR_ADMIN.'includes/classes/phpmailer.lang-de.php',
+    DIR_ADMIN.'includes/classes/phpmailer.lang-en.php',
     DIR_ADMIN.'includes/configure.org.php',
-    DIR_ADMIN.'includes/extra/modules/orders/orders_action/easybill.php', // neu
-    DIR_ADMIN.'includes/extra/modules/orders/orders_info_blocks/easybill.php', // neu
-    DIR_ADMIN.'includes/functions/db_restore.php', // neu
-    DIR_ADMIN.'includes/functions/languages.php', // neu
-    DIR_ADMIN.'includes/functions/validations.php', // neu
-    DIR_ADMIN.'includes/haendlerbund/css/ui_custom.css', // neu
-    DIR_ADMIN.'includes/haendlerbund/images/groesster-onlinehandelsverband-europas.png', // neu
-    DIR_ADMIN.'includes/haendlerbund/jquery-1.4.4.js', // neu
+    DIR_ADMIN.'includes/extra/modules/orders/orders_action/easybill.php',
+    DIR_ADMIN.'includes/extra/modules/orders/orders_info_blocks/easybill.php',
+    DIR_ADMIN.'includes/functions/db_restore.php',
+    DIR_ADMIN.'includes/functions/languages.php',
+    DIR_ADMIN.'includes/functions/validations.php',
+    DIR_ADMIN.'includes/haendlerbund/css/ui_custom.css',
+    DIR_ADMIN.'includes/haendlerbund/images/groesster-onlinehandelsverband-europas.png',
+    DIR_ADMIN.'includes/haendlerbund/jquery-1.4.4.js',
     DIR_ADMIN.'includes/modules/carp/carp.php',
     DIR_ADMIN.'includes/modules/carp/carpconf.php',
     DIR_ADMIN.'includes/modules/carp/carpinc.php',
@@ -138,19 +140,19 @@
     DIR_ADMIN.'includes/modules/easybill.action.php',
     DIR_ADMIN.'includes/modules/easybill.button.php',
     DIR_ADMIN.'includes/modules/easybill.info.php',
-    DIR_ADMIN.'includes/modules/export/easybill.php', // neu
-    DIR_ADMIN.'includes/modules/export/easymarketing.php', // neu
-    DIR_ADMIN.'includes/modules/export/it_recht_kanzlei.php', // neu
-    DIR_ADMIN.'includes/modules/export/idealo.php', // neu
-    DIR_ADMIN.'includes/modules/export/idealo_real.php', // neu
-    DIR_ADMIN.'includes/modules/export/froogle.php', // neu
-    DIR_ADMIN.'includes/modules/export/googlebase.php', // neu
-    DIR_ADMIN.'includes/modules/export/image_processing_step.php', // neu
-    DIR_ADMIN.'includes/modules/export/janolaw.php', // neu
-    DIR_ADMIN.'includes/modules/export/protectedshops.php', // neu
-    DIR_ADMIN.'includes/modules/export/shipcloud.php', // neu
-    DIR_ADMIN.'includes/modules/export/tag_cloud.php', // neu
-    DIR_ADMIN.'includes/modules/export/xtbooster.php', // neu
+    DIR_ADMIN.'includes/modules/export/easybill.php',
+    DIR_ADMIN.'includes/modules/export/easymarketing.php',
+    DIR_ADMIN.'includes/modules/export/it_recht_kanzlei.php',
+    DIR_ADMIN.'includes/modules/export/idealo.php',
+    DIR_ADMIN.'includes/modules/export/idealo_real.php',
+    DIR_ADMIN.'includes/modules/export/froogle.php',
+    DIR_ADMIN.'includes/modules/export/googlebase.php',
+    DIR_ADMIN.'includes/modules/export/image_processing_step.php',
+    DIR_ADMIN.'includes/modules/export/janolaw.php',
+    DIR_ADMIN.'includes/modules/export/protectedshops.php',
+    DIR_ADMIN.'includes/modules/export/shipcloud.php',
+    DIR_ADMIN.'includes/modules/export/tag_cloud.php',
+    DIR_ADMIN.'includes/modules/export/xtbooster.php',
     DIR_ADMIN.'includes/modules/export/image_processing.php',
     DIR_ADMIN.'includes/modules/export/image_processing_new.php',
     DIR_ADMIN.'includes/modules/export/image_processing_new_step.php',
@@ -161,7 +163,7 @@
     DIR_ADMIN.'includes/modules/fckeditor/editor/filemanager/browser/default/frmresourceslist.html',
     DIR_ADMIN.'includes/modules/fckeditor/editor/filemanager/browser/default/frmresourcetype.html',
     DIR_ADMIN.'includes/modules/fckeditor/editor/filemanager/browser/default/frmupload.html',
-    DIR_ADMIN.'includes/modules/graduated-prices-edit.php', // neu
+    DIR_ADMIN.'includes/modules/graduated-prices-edit.php',
     DIR_ADMIN.'includes/modules/magpierss/AUTHORS',
     DIR_ADMIN.'includes/modules/magpierss/ChangeLog',
     DIR_ADMIN.'includes/modules/magpierss/CHANGES',
@@ -170,53 +172,53 @@
     DIR_ADMIN.'includes/modules/magpierss/rss_parse.inc',
     DIR_ADMIN.'includes/modules/magpierss/rss_utils.inc',
     DIR_ADMIN.'includes/modules/magpierss/extlib/Snoopy.class.inc',
-    DIR_ADMIN.'includes/modules/paypal_capturetransaction.php', // neu
-    DIR_ADMIN.'includes/modules/paypal_listtransactions.php', // neu
-    DIR_ADMIN.'includes/modules/paypal_refundtransaction.php', // neu
-    DIR_ADMIN.'includes/modules/paypal_searchtransaction.php', // neu
-    DIR_ADMIN.'includes/modules/paypal_transactiondetail.php', // neu
+    DIR_ADMIN.'includes/modules/paypal_capturetransaction.php',
+    DIR_ADMIN.'includes/modules/paypal_listtransactions.php',
+    DIR_ADMIN.'includes/modules/paypal_refundtransaction.php',
+    DIR_ADMIN.'includes/modules/paypal_searchtransaction.php',
+    DIR_ADMIN.'includes/modules/paypal_transactiondetail.php',
     DIR_ADMIN.'includes/modules/system/easybill.php',
     DIR_ADMIN.'includes/modules/system/easybillcsv.php',
     DIR_ADMIN.'includes/modules/system/xtbooster.php',
-    DIR_ADMIN.'includes/stylesheet_stocklist.css', // neu
-    DIR_ADMIN.'includes/stylesheet_stocklist_print.css', // neu
-    DIR_ADMIN.'paypal.php', // neu
-    DIR_ADMIN.'paypal_payment.php', // neu
-    DIR_ADMIN.'popup_image.php', // neu
+    DIR_ADMIN.'includes/stylesheet_stocklist.css',
+    DIR_ADMIN.'includes/stylesheet_stocklist_print.css',
+    DIR_ADMIN.'paypal.php',
+    DIR_ADMIN.'paypal_payment.php',
+    DIR_ADMIN.'popup_image.php',
     DIR_ADMIN.'rss/index.html',
     DIR_ADMIN.'rss/xt-news.cache',
     DIR_ADMIN.'rss/xtc.cache',
     DIR_ADMIN.'xtbooster.php',
-    'callback/paypal/ipn.php', // neu
-    'callback/sofort/callback.php', // neu
-    'callback/sofort/helperFunctions.php', // neu
-    'callback/sofort/sofort.ini', // neu
-    'callback/sofort/sofort.php', // neu
-    'callback/sofort/sofortInstall.php', // neu
+    'callback/paypal/ipn.php',
+    'callback/sofort/callback.php',
+    'callback/sofort/helperFunctions.php',
+    'callback/sofort/sofort.ini',
+    'callback/sofort/sofort.php',
+    'callback/sofort/sofortInstall.php',
     'checkout_iclear.php',
     'copyright.php',
-    'export/xml_export.php', // neu
-    'favicon.ico', // neu
-    'google_conversiontracking.js.php', // neu
-    'google_sitemap.php', // neu
-    'images/icons/kl_epaypal_de.gif', // neu
-    'images/icons/kl_epaypal_en.gif', // neu
-    'images/icons/luupay.gif', // neu
-    'images/icons/moneybookers/sofort.gif', // neu
-    'images/icons/sofortueberweisung_icon.gif', // neu
-    'images/icons/masterpayment_sofortbanking.gif', // neu
-    'inc/search_replace_iso-8859-1.php', // neu
-    'inc/search_replace_iso-8859-15.php', // neu
-    'inc/shopstat_functions.inc.php', // neu
-    'inc/tld.txt', // neu
-    'inc/xtc_convert_linefeeds.inc.php', // neu
+    'export/xml_export.php',
+    'favicon.ico',
+    'google_conversiontracking.js.php',
+    'google_sitemap.php',
+    'images/icons/kl_epaypal_de.gif',
+    'images/icons/kl_epaypal_en.gif',
+    'images/icons/luupay.gif',
+    'images/icons/moneybookers/sofort.gif',
+    'images/icons/sofortueberweisung_icon.gif',
+    'images/icons/masterpayment_sofortbanking.gif',
+    'inc/search_replace_iso-8859-1.php',
+    'inc/search_replace_iso-8859-15.php',
+    'inc/shopstat_functions.inc.php',
+    'inc/tld.txt',
+    'inc/xtc_convert_linefeeds.inc.php',
     'inc/xtc_db_connect_installer.inc.php',
     'inc/xtc_db_install.inc.php',
     'inc/xtc_db_query_installer.inc.php',
     'inc/xtc_db_select_db.inc.php',
     'inc/xtc_db_test_connection.inc.php',
     'inc/xtc_db_test_create_db_permission.inc.php',
-    'inc/xtc_delete_file.inc.php', // neu
+    'inc/xtc_delete_file.inc.php',
     'inc/xtc_draw_box_content_bullet.inc.php',
     'inc/xtc_draw_box_contents.inc.php',
     'inc/xtc_draw_box_heading.inc.php',
@@ -226,414 +228,423 @@
     'inc/xtc_draw_password_field_installer.inc.php',
     'inc/xtc_draw_radio_field_installer.inc.php',
     'inc/xtc_draw_selection_field_installer.inc.php',
-    'inc/xtc_exit.inc.php', // neu
+    'inc/xtc_exit.inc.php',
     'inc/xtc_gdlib_check.inc.php',
-    'inc/xtc_show_category_content.inc.php', // neu
-    'inc/xtc_set_customer_status_upgrade.inc.php', // neu
+    'inc/xtc_show_category_content.inc.php',
+    'inc/xtc_set_customer_status_upgrade.inc.php',
     'inc/base64todec.inc.php',
     'inc/changedatain.inc.php',
     'inc/changedataout.inc.php',
     'inc/dectobase64.inc.php',
-    'includes/banners.php', // neu
-    'includes/center_modules.php', // neu
+    'includes/banners.php',
+    'includes/center_modules.php',
     'includes/classes/class.easybill.php',
-    'includes/classes/class.phpmailer.php', // neu
-    'includes/classes/class.smtp.php', // neu
-    'includes/classes/outputfilter.note.php', // neu
-    'includes/classes/paypal_checkout.php', // neu
-    'includes/classes/phpmailer.lang-de.php', // neu
-    'includes/classes/phpmailer.lang-en.php', // neu
-    'includes/classes/sessions.php', // neu
+    'includes/classes/class.phpmailer.php',
+    'includes/classes/class.smtp.php',
+    'includes/classes/outputfilter.note.php',
+    'includes/classes/paypal_checkout.php',
+    'includes/classes/phpmailer.lang-de.php',
+    'includes/classes/phpmailer.lang-en.php',
+    'includes/classes/sessions.php',
     'includes/classes/cc_validation.php',
     'includes/classes/xtbooster.php',
     'includes/configure.org.php',
     'includes/external/janolaw/send_order.php', // from r9293
-    'includes/external/magnalister/config/german/hood.form', // neu
-    'includes/external/magnalister/php/modules/idealo/classes/IdealoCheckinSubmit.php', // neu
+    'includes/external/magnalister/config/german/hood.form',
+    'includes/external/magnalister/php/modules/idealo/classes/IdealoCheckinSubmit.php',
     'includes/external/payone/modules/send_order.php', // from r9293
-    'includes/external/paypal/lib/PayPal/Core/PayPalLoggingLevel.php', // neu
-    'includes/external/paypal/modules/cart_action.php', // neu
-    'includes/external/paypal/modules/product_info.php', // neu
-    'includes/external/paypal/modules/send_order.php', // neu
-    'includes/external/phpmailer/language/phpmailer.lang-de.php', // neu
-    'includes/external/phpmailer/language/phpmailer.lang-en.php', // neu
-    'includes/external/phpmailer/_modified-shop.txt', // neu
-    'includes/external/phpmailer/class.phpmailer.php', // neu
-    'includes/external/phpmailer/class.phpmaileroauth.php', // neu
-    'includes/external/phpmailer/class.phpmaileroauthgoogle.php', // neu
-    'includes/external/phpmailer/class.pop3.php', // neu
-    'includes/external/phpmailer/class.smtp.php', // neu
-    'includes/external/phpmailer/get_oauth_token.php', // neu
-    'includes/external/phpmailer/PHPMailerAutoload.php', // neu
-    'includes/external/shopgate/api.php', // neu
-    'includes/external/shopgate/helper/ShopgateHelperLoader.php', // neu
-    'includes/external/shopgate/Model/ShopgateModelLoader.php', // neu
-    'includes/external/shopgate/Model/ShopgateCouponModel.php', // neu
-    'includes/external/shopgate/shopgate_library/build_config.php', // neu
-    'includes/external/shopgate/shopgate_library/build.properties', // neu
-    'includes/external/shopgate/shopgate_library/vendors/mobile_redirect.class.php', // neu
-    'includes/external/smarty/smarty_3/plugins/shared.mb_wordwrap.php', // neu
-    'includes/external/smarty/smarty_3/sysplugins/smarty_config_source.php', // neu
-    'includes/external/smarty/smarty_3/sysplugins/smarty_internal_config.php', // neu
-    'includes/external/smarty/smarty_3/sysplugins/smarty_internal_filter_handler.php', // neu
-    'includes/external/smarty/smarty_3/sysplugins/smarty_internal_function_call_handler.php', // neu
-    'includes/external/smarty/smarty_3/sysplugins/smarty_internal_get_include_path.php', // neu
-    'includes/external/smarty/smarty_3/sysplugins/smarty_internal_utility.php', // neu
-    'includes/external/smarty/smarty_3/sysplugins/smarty_internal_write_file.php', // neu
-    'includes/extra/checkout/checkout_process_end/20_easybill.php', // neu
-    'includes/extra/checkout/checkout_process_end/10_xsbooster.php', // neu
-    'includes/extra/send_order/banktransfer.php', // neu
-    'includes/extra/send_order/billpay.php', // neu
-    'includes/extra/send_order/index.html', // neu
-    'includes/extra/send_order/janolaw.php', // neu
-    'includes/extra/send_order/payone.php', // neu
-    'includes/extra/send_order/paypal.php', // neu
-    'includes/google_conversiontracking.js.php', // neu
-    'includes/masterpayment/logs/.htaccess', // neu
+    'includes/external/paypal/lib/PayPal/Core/PayPalLoggingLevel.php',
+    'includes/external/paypal/modules/cart_action.php',
+    'includes/external/paypal/modules/product_info.php',
+    'includes/external/paypal/modules/send_order.php',
+    'includes/external/phpmailer/language/phpmailer.lang-de.php',
+    'includes/external/phpmailer/language/phpmailer.lang-en.php',
+    'includes/external/phpmailer/_modified-shop.txt',
+    'includes/external/phpmailer/class.phpmailer.php',
+    'includes/external/phpmailer/class.phpmaileroauth.php',
+    'includes/external/phpmailer/class.phpmaileroauthgoogle.php',
+    'includes/external/phpmailer/class.pop3.php',
+    'includes/external/phpmailer/class.smtp.php',
+    'includes/external/phpmailer/get_oauth_token.php',
+    'includes/external/phpmailer/PHPMailerAutoload.php',
+    'includes/external/shopgate/api.php',
+    'includes/external/shopgate/helper/ShopgateHelperLoader.php',
+    'includes/external/shopgate/Model/ShopgateModelLoader.php',
+    'includes/external/shopgate/Model/ShopgateCouponModel.php',
+    'includes/external/shopgate/shopgate_library/build_config.php',
+    'includes/external/shopgate/shopgate_library/build.properties',
+    'includes/external/shopgate/shopgate_library/vendors/mobile_redirect.class.php',
+    'includes/external/smarty/smarty_3/plugins/shared.mb_wordwrap.php',
+    'includes/external/smarty/smarty_3/sysplugins/smarty_config_source.php',
+    'includes/external/smarty/smarty_3/sysplugins/smarty_internal_config.php',
+    'includes/external/smarty/smarty_3/sysplugins/smarty_internal_filter_handler.php',
+    'includes/external/smarty/smarty_3/sysplugins/smarty_internal_function_call_handler.php',
+    'includes/external/smarty/smarty_3/sysplugins/smarty_internal_get_include_path.php',
+    'includes/external/smarty/smarty_3/sysplugins/smarty_internal_utility.php',
+    'includes/external/smarty/smarty_3/sysplugins/smarty_internal_write_file.php',
+    'includes/extra/checkout/checkout_process_end/20_easybill.php',
+    'includes/extra/checkout/checkout_process_end/10_xsbooster.php',
+    'includes/extra/header/header_body/billsafe.php',
+    'includes/extra/send_order/banktransfer.php',
+    'includes/extra/send_order/billpay.php',
+    'includes/extra/send_order/index.html',
+    'includes/extra/send_order/janolaw.php',
+    'includes/extra/send_order/payone.php',
+    'includes/extra/send_order/paypal.php',
+    'includes/google_conversiontracking.js.php',
+    'includes/masterpayment/logs/.htaccess',
     'includes/modules/reviews.php',
     'includes/modules/module.easybill.php',
-    'includes/modules/order_total/ot_sofort.php', // neu
+    'includes/modules/order_total/ot_billsafe.php',
+    'includes/modules/order_total/ot_sofort.php',
     'includes/modules/payment/billsafe_2hp.php',
+    'includes/modules/payment/billsafe_2.php',
     'includes/modules/payment/cc.php',
     'includes/modules/payment/iclear.php',
-    'includes/modules/payment/luupws.php', // neu
-    'includes/modules/payment/paypal.php', // neu
-    'includes/modules/payment/paypal_ipn.php', // neu
-    'includes/modules/payment/paypalexpress.php', // neu
-    'includes/modules/paypal_express_cart.php', // neu
-    'includes/modules/paypal_express_error.php', // neu
-    'includes/modules/payment/pn_sofortueberweisung.php', // neu
-    'includes/modules/payment/sofort_lastschrift.php', // neu
-    'includes/modules/payment/sofort_sofortlastschrift.php', // neu
-    'includes/modules/payment/sofort_sofortrechnung.php', // neu
-    'includes/modules/payment/sofort_sofortueberweisung.php', // neu
-    'includes/modules/payment/sofort_sofortvorkasse.php', // neu
-    'includes/modules/payment/sofortueberweisung.php', // neu
-    'includes/modules/payment/sofortueberweisungredirect.php', // neu
-    'includes/modules/payment/sofortueberweisungvorkasse.php', // neu
-    'includes/modules/payment/worldpay.php', // neu
-    'includes/modules/sofort_vorkasse.php', // neu
-    'includes/modules/upcoming_products.php', // neu
-    'includes/shopgate/shopgate_library/.htaccess', // neu
-    'includes/shopgate/.htaccess', // neu
-    'INFO.txt', // neu
-    'lang/english/admin/blacklist.php', // neu
-    'lang/english/admin/paypal.php', // neu
-    'lang/english/admin/paypal_payment.php', // neu
-    'lang/english/admin/xtbooster.php', // neu
-    'lang/english/checkout_confirmation.php', // neu
-    'lang/english/sofortueberweisung_abort.php', // neu
+    'includes/modules/payment/luupws.php',
+    'includes/modules/payment/paypal.php',
+    'includes/modules/payment/paypal_ipn.php',
+    'includes/modules/payment/paypalexpress.php',
+    'includes/modules/paypal_express_cart.php',
+    'includes/modules/paypal_express_error.php',
+    'includes/modules/payment/pn_sofortueberweisung.php',
+    'includes/modules/payment/sofort_lastschrift.php',
+    'includes/modules/payment/sofort_sofortlastschrift.php',
+    'includes/modules/payment/sofort_sofortrechnung.php',
+    'includes/modules/payment/sofort_sofortueberweisung.php',
+    'includes/modules/payment/sofort_sofortvorkasse.php',
+    'includes/modules/payment/sofortueberweisung.php',
+    'includes/modules/payment/sofortueberweisungredirect.php',
+    'includes/modules/payment/sofortueberweisungvorkasse.php',
+    'includes/modules/payment/worldpay.php',
+    'includes/modules/sofort_vorkasse.php',
+    'includes/modules/upcoming_products.php',
+    'includes/shopgate/shopgate_library/.htaccess',
+    'includes/shopgate/.htaccess',
+    'INFO.txt',
+    'lang/english/admin/blacklist.php',
+    'lang/english/admin/paypal.php',
+    'lang/english/admin/paypal_payment.php',
+    'lang/english/admin/xtbooster.php',
+    'lang/english/checkout_confirmation.php',
+    'lang/english/sofortueberweisung_abort.php',
     'lang/english/easybill.php',
-    'lang/english/modules/order_total/ot_sofort.php', // neu
-    'lang/english/modules/payment/images/logo_750.gif', // neu
-    'lang/english/modules/payment/images/sofortueberweisung_info.gif', // neu
-    'lang/english/modules/payment/images/sofortueberweisung_logo.gif', // neu
-    'lang/english/modules/payment/images/sofortueberweisungk_banner.jpg', // neu
+    'lang/english/modules/order_total/ot_billsafe.php',
+    'lang/english/modules/order_total/ot_sofort.php',
+    'lang/english/modules/payment/images/logo_750.gif',
+    'lang/english/modules/payment/images/sofortueberweisung_info.gif',
+    'lang/english/modules/payment/images/sofortueberweisung_logo.gif',
+    'lang/english/modules/payment/images/sofortueberweisungk_banner.jpg',
     'lang/english/modules/payment/billsafe_2hp.php',
+    'lang/english/modules/payment/billsafe_2.php',
     'lang/english/modules/payment/cc.php',
     'lang/english/modules/payment/iclear.php',
-    'lang/english/modules/payment/luupws.php', // neu
-    'lang/english/modules/payment/paypal.php', // neu
-    'lang/english/modules/payment/paypal_ipn.php', // neu
-    'lang/english/modules/payment/paypalexpress.php', // neu
-    'lang/english/modules/payment/pn_sofortueberweisung.php', // neu
-    'lang/english/modules/payment/sofort_general.php', // neu
-    'lang/english/modules/payment/sofort_lastschrift.php', // neu
-    'lang/english/modules/payment/sofort_sofortlastschrift.php', // neu
-    'lang/english/modules/payment/sofort_sofortrechnung.php', // neu
-    'lang/english/modules/payment/sofort_sofortueberweisung.php', // neu
-    'lang/english/modules/payment/sofort_sofortvorkasse.php', // neu
-    'lang/english/modules/payment/sofortueberweisung.php', // neu
-    'lang/english/modules/payment/sofortueberweisungredirect.php', // neu
-    'lang/english/modules/payment/sofortueberweisungvorkasse.php', // neu
-    'lang/english/modules/payment/worldpay.php', // neu
-    'lang/english/modules/system/easybill.php', // neu
-    'lang/english/modules/system/easybillcsv.php', // neu
-    'lang/english/modules/system/xtbooster.php', // neu
-    'lang/german/admin/blacklist.php', // neu
-    'lang/german/admin/paypal.php', // neu
-    'lang/german/admin/paypal_payment.php', // neu
-    'lang/german/admin/xtbooster.php', // neu
-    'lang/german/checkout_confirmation.php', // neu
-    'lang/german/sofortueberweisung_abort.php', // neu
+    'lang/english/modules/payment/luupws.php',
+    'lang/english/modules/payment/paypal.php',
+    'lang/english/modules/payment/paypal_ipn.php',
+    'lang/english/modules/payment/paypalexpress.php',
+    'lang/english/modules/payment/pn_sofortueberweisung.php',
+    'lang/english/modules/payment/sofort_general.php',
+    'lang/english/modules/payment/sofort_lastschrift.php',
+    'lang/english/modules/payment/sofort_sofortlastschrift.php',
+    'lang/english/modules/payment/sofort_sofortrechnung.php',
+    'lang/english/modules/payment/sofort_sofortueberweisung.php',
+    'lang/english/modules/payment/sofort_sofortvorkasse.php',
+    'lang/english/modules/payment/sofortueberweisung.php',
+    'lang/english/modules/payment/sofortueberweisungredirect.php',
+    'lang/english/modules/payment/sofortueberweisungvorkasse.php',
+    'lang/english/modules/payment/worldpay.php',
+    'lang/english/modules/system/easybill.php',
+    'lang/english/modules/system/easybillcsv.php',
+    'lang/english/modules/system/xtbooster.php',
+    'lang/german/admin/blacklist.php',
+    'lang/german/admin/paypal.php',
+    'lang/german/admin/paypal_payment.php',
+    'lang/german/admin/xtbooster.php',
+    'lang/german/checkout_confirmation.php',
+    'lang/german/sofortueberweisung_abort.php',
     'lang/german/easybill.php',
-    'lang/german/modules/order_total/ot_sofort.php', // neu
-    'lang/german/modules/payment/images/logo_750.gif', // neu
-    'lang/german/modules/payment/images/sofortueberweisung_info.gif', // neu
-    'lang/german/modules/payment/images/sofortueberweisung_logo.gif', // neu
-    'lang/german/modules/payment/images/sofortueberweisungk_banner.jpg', // neu
+    'lang/german/modules/order_total/ot_billsafe.php',
+    'lang/german/modules/order_total/ot_sofort.php',
+    'lang/german/modules/payment/images/logo_750.gif',
+    'lang/german/modules/payment/images/sofortueberweisung_info.gif',
+    'lang/german/modules/payment/images/sofortueberweisung_logo.gif',
+    'lang/german/modules/payment/images/sofortueberweisungk_banner.jpg',
     'lang/german/modules/payment/billsafe_2hp.php',
+    'lang/german/modules/payment/billsafe_2.php',
     'lang/german/modules/payment/cc.php',
     'lang/german/modules/payment/iclear.php',
-    'lang/german/modules/payment/luupws.php', // neu
-    'lang/german/modules/payment/paypal.php', // neu
-    'lang/german/modules/payment/paypal_ipn.php', // neu
-    'lang/german/modules/payment/paypalexpress.php', // neu
-    'lang/german/modules/payment/pn_sofortueberweisung.php', // neu
-    'lang/german/modules/payment/sofort_general.php', // neu
-    'lang/german/modules/payment/sofort_lastschrift.php', // neu
-    'lang/german/modules/payment/sofort_sofortlastschrift.php', // neu
-    'lang/german/modules/payment/sofort_sofortrechnung.php', // neu
-    'lang/german/modules/payment/sofort_sofortueberweisung.php', // neu
-    'lang/german/modules/payment/sofort_sofortvorkasse.php', // neu
-    'lang/german/modules/payment/sofortueberweisung.php', // neu
-    'lang/german/modules/payment/sofortueberweisungredirect.php', // neu
-    'lang/german/modules/payment/sofortueberweisungvorkasse.php', // neu
-    'lang/german/modules/payment/worldpay.php', // neu
-    'lang/german/modules/system/easybill.php', // neu
-    'lang/german/modules/system/easybillcsv.php', // neu
-    'lang/german/modules/system/xtbooster.php', // neu
-    'LICENSE', // neu
-    'paypal_checkout.php', // neu
+    'lang/german/modules/payment/luupws.php',
+    'lang/german/modules/payment/paypal.php',
+    'lang/german/modules/payment/paypal_ipn.php',
+    'lang/german/modules/payment/paypalexpress.php',
+    'lang/german/modules/payment/pn_sofortueberweisung.php',
+    'lang/german/modules/payment/sofort_general.php',
+    'lang/german/modules/payment/sofort_lastschrift.php',
+    'lang/german/modules/payment/sofort_sofortlastschrift.php',
+    'lang/german/modules/payment/sofort_sofortrechnung.php',
+    'lang/german/modules/payment/sofort_sofortueberweisung.php',
+    'lang/german/modules/payment/sofort_sofortvorkasse.php',
+    'lang/german/modules/payment/sofortueberweisung.php',
+    'lang/german/modules/payment/sofortueberweisungredirect.php',
+    'lang/german/modules/payment/sofortueberweisungvorkasse.php',
+    'lang/german/modules/payment/worldpay.php',
+    'lang/german/modules/system/easybill.php',
+    'lang/german/modules/system/easybillcsv.php',
+    'lang/german/modules/system/xtbooster.php',
+    'LICENSE',
+    'paypal_checkout.php',
     'popup_cvv.php',
     'popup_image.php',
     'shopstat/.htaccess',
     'show_product_thumbs.php',
-    'sitemap1.xml', // neu
-    'sofortueberweisung_abort.php', // neu
-    'sofortueberweisung_checkout_success.php', // neu
-    'sofortueberweisung_tracking.php', // neu
-    'sseq-filter/.htaccess', // neu
-    'sseq-lib/.htaccess', // neu
-    'sseq-lib/seq_dump/.htaccess', // neu
-    'sseq-lib/seq_lib/.htaccess', // neu
-    'sseq-lib/seq_log/.htaccess', // neu
-    'templates/xtc5/boxes/box.html', // neu
-    'templates/xtc5/buttons/english/button_arrow_left.gif', // neu
-    'templates/xtc5/buttons/english/button_arrow_right.gif', // neu
-    'templates/xtc5/buttons/english/button_ask_a_question.gif', // neu
-    'templates/xtc5/buttons/english/button_bonus_add.gif', // neu
-    'templates/xtc5/buttons/english/sofortueberweisung.gif', // neu
-    'templates/xtc5/buttons/english/sofortueberweisung_.gif', // neu
-    'templates/xtc5/buttons/english/sofortueberweisung_block.gif', // neu
-    'templates/xtc5/buttons/english/sofortueberweisung_info.gif', // neu
-    'templates/xtc5/buttons/english/sofortueberweisung_paynow.gif', // neu
-    'templates/xtc5/buttons/german/button_arrow_left.gif', // neu
-    'templates/xtc5/buttons/german/button_arrow_right.gif', // neu
-    'templates/xtc5/buttons/german/button_ask_a_question.gif', // neu
-    'templates/xtc5/buttons/german/button_bonus_add.gif', // neu
-    'templates/xtc5/buttons/german/button_details.gif', // neu
-    'templates/xtc5/buttons/german/button_more.gif', // neu
-    'templates/xtc5/buttons/german/button_notifications.gif', // neu
-    'templates/xtc5/buttons/german/button_remove_notifications.gif', // neu
-    'templates/xtc5/buttons/german/button_search_small.gif', // neu
-    'templates/xtc5/buttons/german/button_sign_guestbook.gif', // neu
-    'templates/xtc5/buttons/german/button_tell_a_friend.gif', // neu
-    'templates/xtc5/buttons/german/sofortueberweisung.gif', // neu
-    'templates/xtc5/buttons/german/sofortueberweisung_.gif', // neu
-    'templates/xtc5/buttons/german/sofortueberweisung_block.gif', // neu
-    'templates/xtc5/buttons/german/sofortueberweisung_info.gif', // neu
-    'templates/xtc5/buttons/german/sofortueberweisung_paynow.gif', // neu
-    'templates/xtc5/css/images/ui-anim_basic_16x16.gif', // neu
+    'sitemap1.xml',
+    'sofortueberweisung_abort.php',
+    'sofortueberweisung_checkout_success.php',
+    'sofortueberweisung_tracking.php',
+    'sseq-filter/.htaccess',
+    'sseq-lib/.htaccess',
+    'sseq-lib/seq_dump/.htaccess',
+    'sseq-lib/seq_lib/.htaccess',
+    'sseq-lib/seq_log/.htaccess',
+    'templates/xtc5/admin/billsafe_print_order.html',
+    'templates/xtc5/boxes/box.html',
+    'templates/xtc5/buttons/english/button_arrow_left.gif',
+    'templates/xtc5/buttons/english/button_arrow_right.gif',
+    'templates/xtc5/buttons/english/button_ask_a_question.gif',
+    'templates/xtc5/buttons/english/button_bonus_add.gif',
+    'templates/xtc5/buttons/english/sofortueberweisung.gif',
+    'templates/xtc5/buttons/english/sofortueberweisung_.gif',
+    'templates/xtc5/buttons/english/sofortueberweisung_block.gif',
+    'templates/xtc5/buttons/english/sofortueberweisung_info.gif',
+    'templates/xtc5/buttons/english/sofortueberweisung_paynow.gif',
+    'templates/xtc5/buttons/german/button_arrow_left.gif',
+    'templates/xtc5/buttons/german/button_arrow_right.gif',
+    'templates/xtc5/buttons/german/button_ask_a_question.gif',
+    'templates/xtc5/buttons/german/button_bonus_add.gif',
+    'templates/xtc5/buttons/german/button_details.gif',
+    'templates/xtc5/buttons/german/button_more.gif',
+    'templates/xtc5/buttons/german/button_notifications.gif',
+    'templates/xtc5/buttons/german/button_remove_notifications.gif',
+    'templates/xtc5/buttons/german/button_search_small.gif',
+    'templates/xtc5/buttons/german/button_sign_guestbook.gif',
+    'templates/xtc5/buttons/german/button_tell_a_friend.gif',
+    'templates/xtc5/buttons/german/sofortueberweisung.gif',
+    'templates/xtc5/buttons/german/sofortueberweisung_.gif',
+    'templates/xtc5/buttons/german/sofortueberweisung_block.gif',
+    'templates/xtc5/buttons/german/sofortueberweisung_info.gif',
+    'templates/xtc5/buttons/german/sofortueberweisung_paynow.gif',
+    'templates/xtc5/css/images/ui-anim_basic_16x16.gif',
     'templates/xtc5/css/no_javascript.css',
-    'templates/xtc5/img/arrow1.gif', // neu
-    'templates/xtc5/img/arrow2.gif', // neu
-    'templates/xtc5/img/arrow_green.gif', // neu
-    'templates/xtc5/img/arrow_right.gif', // neu
-    'templates/xtc5/img/arrow_south_east.gif', // neu
-    'templates/xtc5/img/basketIcon.gif', // neu
-    'templates/xtc5/img/bg_breadcrumbarrow.gif', // neu
-    'templates/xtc5/img/bg_header.gif', // neu
-    'templates/xtc5/img/bg_left_column.jpg', // neu
-    'templates/xtc5/img/bg_right_column.jpg', // neu
-    'templates/xtc5/img/bg_search_breakline.gif', // neu
-    'templates/xtc5/img/bg_top.jpg', // neu
-    'templates/xtc5/img/bg_toplinks.gif', // neu
-    'templates/xtc5/img/box_write_review.gif', // neu
-    'templates/xtc5/img/breadcrumbbg.gif', // neu
-    'templates/xtc5/img/cartBoxHeaderLeft.gif', // neu
-    'templates/xtc5/img/cartBoxHeaderRight.gif', // neu
-    'templates/xtc5/img/cart_bg.gif', // neu
-    'templates/xtc5/img/cart_bg.png', // neu
-    'templates/xtc5/img/category_header.gif', // neu
-    'templates/xtc5/img/checkout_bullet.gif', // neu
-    'templates/xtc5/img/checkout_success.gif', // neu
-    'templates/xtc5/img/greenboxbg.gif', // neu
-    'templates/xtc5/img/greycaleBG.gif', // neu
-    'templates/xtc5/img/horMenuItemBg.gif', // neu
-    'templates/xtc5/img/icon_arrow.gif', // neu
-    'templates/xtc5/img/icon_arrow.jpg', // neu
-    'templates/xtc5/img/icon_more.gif', // neu
-    'templates/xtc5/img/icon_more_light.gif', // neu
-    'templates/xtc5/img/img_gift.gif', // neu
-    'templates/xtc5/img/img_line.jpg', // neu
-    'templates/xtc5/img/infoBoxHeaderLeft.gif', // neu
-    'templates/xtc5/img/infoBoxHeaderRight.gif', // neu
-    'templates/xtc5/img/karteiLeft.gif', // neu
-    'templates/xtc5/img/karteiRight.gif', // neu
-    'templates/xtc5/img/mainBG.gif', // neu
-    'templates/xtc5/img/menuspacer.gif', // neu
-    'templates/xtc5/img/mnu_dark_background.gif', // neu
-    'templates/xtc5/img/mnu_green_background.gif', // neu
-    'templates/xtc5/img/orangeHeaderBg.gif', // neu
-    'templates/xtc5/img/paymentShippingTypeHeader.gif', // neu
-    'templates/xtc5/img/pixel_silver.gif', // neu
-    'templates/xtc5/img/pixel_trans.gif', // neu
-    'templates/xtc5/img/print.gif', // neu
-    'templates/xtc5/img/productHeaderLeft.gif', // neu
-    'templates/xtc5/img/productHeaderRight.gif', // neu
-    'templates/xtc5/img/productSplitLine.gif', // neu
-    'templates/xtc5/img/smallHeaderLeft.gif', // neu
-    'templates/xtc5/img/smallHeaderRight.gif', // neu
-    'templates/xtc5/img/smallLightHeaderLeft.gif', // neu
-    'templates/xtc5/img/smallLightHeaderRight.gif', // neu
-    'templates/xtc5/img/sprites.gif', // neu
-    'templates/xtc5/img/submenuarrow.gif', // neu
-    'templates/xtc5/img/submenuheaderbg.gif', // neu
-    'templates/xtc5/img/topCornerLeft.gif', // neu
-    'templates/xtc5/img/topCornerRight.gif', // neu
-    'templates/xtc5/img/topMenuBG.gif', // neu
-    'templates/xtc5/img/toplinks_newproducts.gif', // neu
-    'templates/xtc5/img/toplinks_search.gif', // neu
-    'templates/xtc5/img/toplinks_specials.gif', // neu
-    'templates/xtc5/img/toprowbg.gif', // neu
-    'templates/xtc5/javascript/jquery.js', // neu
-    'templates/xtc5/javascript/macFFBgHack.png', // neu
-    'templates/xtc5/javascript/thickbox.css', // neu
-    'templates/xtc5/mail/english/change_password_mail.html', // neu
-    'templates/xtc5/mail/english/change_password_mail.txt', // neu
-    'templates/xtc5/mail/english/password_verification_mail.html', // neu
-    'templates/xtc5/mail/english/password_verification_mail.txt', // neu
+    'templates/xtc5/img/arrow1.gif',
+    'templates/xtc5/img/arrow2.gif',
+    'templates/xtc5/img/arrow_green.gif',
+    'templates/xtc5/img/arrow_right.gif',
+    'templates/xtc5/img/arrow_south_east.gif',
+    'templates/xtc5/img/basketIcon.gif',
+    'templates/xtc5/img/bg_breadcrumbarrow.gif',
+    'templates/xtc5/img/bg_header.gif',
+    'templates/xtc5/img/bg_left_column.jpg',
+    'templates/xtc5/img/bg_right_column.jpg',
+    'templates/xtc5/img/bg_search_breakline.gif',
+    'templates/xtc5/img/bg_top.jpg',
+    'templates/xtc5/img/bg_toplinks.gif',
+    'templates/xtc5/img/box_write_review.gif',
+    'templates/xtc5/img/breadcrumbbg.gif',
+    'templates/xtc5/img/cartBoxHeaderLeft.gif',
+    'templates/xtc5/img/cartBoxHeaderRight.gif',
+    'templates/xtc5/img/cart_bg.gif',
+    'templates/xtc5/img/cart_bg.png',
+    'templates/xtc5/img/category_header.gif',
+    'templates/xtc5/img/checkout_bullet.gif',
+    'templates/xtc5/img/checkout_success.gif',
+    'templates/xtc5/img/greenboxbg.gif',
+    'templates/xtc5/img/greycaleBG.gif',
+    'templates/xtc5/img/horMenuItemBg.gif',
+    'templates/xtc5/img/icon_arrow.gif',
+    'templates/xtc5/img/icon_arrow.jpg',
+    'templates/xtc5/img/icon_more.gif',
+    'templates/xtc5/img/icon_more_light.gif',
+    'templates/xtc5/img/img_gift.gif',
+    'templates/xtc5/img/img_line.jpg',
+    'templates/xtc5/img/infoBoxHeaderLeft.gif',
+    'templates/xtc5/img/infoBoxHeaderRight.gif',
+    'templates/xtc5/img/karteiLeft.gif',
+    'templates/xtc5/img/karteiRight.gif',
+    'templates/xtc5/img/mainBG.gif',
+    'templates/xtc5/img/menuspacer.gif',
+    'templates/xtc5/img/mnu_dark_background.gif',
+    'templates/xtc5/img/mnu_green_background.gif',
+    'templates/xtc5/img/orangeHeaderBg.gif',
+    'templates/xtc5/img/paymentShippingTypeHeader.gif',
+    'templates/xtc5/img/pixel_silver.gif',
+    'templates/xtc5/img/pixel_trans.gif',
+    'templates/xtc5/img/print.gif',
+    'templates/xtc5/img/productHeaderLeft.gif',
+    'templates/xtc5/img/productHeaderRight.gif',
+    'templates/xtc5/img/productSplitLine.gif',
+    'templates/xtc5/img/smallHeaderLeft.gif',
+    'templates/xtc5/img/smallHeaderRight.gif',
+    'templates/xtc5/img/smallLightHeaderLeft.gif',
+    'templates/xtc5/img/smallLightHeaderRight.gif',
+    'templates/xtc5/img/sprites.gif',
+    'templates/xtc5/img/submenuarrow.gif',
+    'templates/xtc5/img/submenuheaderbg.gif',
+    'templates/xtc5/img/topCornerLeft.gif',
+    'templates/xtc5/img/topCornerRight.gif',
+    'templates/xtc5/img/topMenuBG.gif',
+    'templates/xtc5/img/toplinks_newproducts.gif',
+    'templates/xtc5/img/toplinks_search.gif',
+    'templates/xtc5/img/toplinks_specials.gif',
+    'templates/xtc5/img/toprowbg.gif',
+    'templates/xtc5/javascript/jquery.js',
+    'templates/xtc5/javascript/macFFBgHack.png',
+    'templates/xtc5/javascript/thickbox.css',
+    'templates/xtc5/mail/english/change_password_mail.html',
+    'templates/xtc5/mail/english/change_password_mail.txt',
+    'templates/xtc5/mail/english/password_verification_mail.html',
+    'templates/xtc5/mail/english/password_verification_mail.txt',
     'templates/xtc5/mail/english/widerruf.txt',
     'templates/xtc5/mail/english/widerruf.html',
-    'templates/xtc5/mail/german/change_password_mail.html', // neu
-    'templates/xtc5/mail/german/change_password_mail.txt', // neu
-    'templates/xtc5/mail/german/password_verification_mail.html', // neu
-    'templates/xtc5/mail/german/password_verification_mail.txt', // neu
+    'templates/xtc5/mail/german/change_password_mail.html',
+    'templates/xtc5/mail/german/change_password_mail.txt',
+    'templates/xtc5/mail/german/password_verification_mail.html',
+    'templates/xtc5/mail/german/password_verification_mail.txt',
     'templates/xtc5/mail/german/widerruf.txt',
     'templates/xtc5/mail/german/widerruf.html',
-    'templates/xtc5/module/account_newsletter.html', // neu
-    'templates/xtc5/module/checkout_paypal.html', // neu
-    'templates/xtc5/module/error_handler.html', // neu
-    'templates/xtc5/module/google_sitemap.html', // neu
-    'templates/xtc5/module/gv_faq.html', // neu
-    'templates/xtc5/module/paypal_express_cart.html', // neu
-    'templates/xtc5/module/sofort_vorkasse.html', // neu
-    'templates/xtc5/module/wpcallback.html', // neu
+    'templates/xtc5/module/account_newsletter.html',
+    'templates/xtc5/module/checkout_paypal.html',
+    'templates/xtc5/module/error_handler.html',
+    'templates/xtc5/module/google_sitemap.html',
+    'templates/xtc5/module/gv_faq.html',
+    'templates/xtc5/module/paypal_express_cart.html',
+    'templates/xtc5/module/sofort_vorkasse.html',
+    'templates/xtc5/module/wpcallback.html',
     'templates/xtc5/smarty/function.facebook_badge.php',
     'templates/xtc5/smarty/function.googleanalytics.php',
     'templates/xtc5/smarty/function.piwik.php',
     'templates/xtc5/smarty/function.onlytext.php',
-    'templates/xtc5/source/inc/gunnart_productRedirect.inc.php', // neu
-    'templates/tpl_modified/buttons/english/sofortueberweisung.gif', // neu
-    'templates/tpl_modified/buttons/german/sofortueberweisung.gif', // neu
-    'templates/tpl_modified/css/images/ui-anim_basic_16x16.gif', // neu
-    'templates/tpl_modified/css/images/ui-bg_flat_0_aaaaaa_40x100.png', // neu
-    'templates/tpl_modified/css/images/ui-bg_flat_75_ffffff_40x100.png', // neu
-    'templates/tpl_modified/css/images/ui-bg_glass_55_fbf9ee_1x400.png', // neu
-    'templates/tpl_modified/css/images/ui-bg_glass_65_ffffff_1x400.png', // neu
-    'templates/tpl_modified/css/images/ui-bg_glass_75_dadada_1x400.png', // neu
-    'templates/tpl_modified/css/images/ui-bg_glass_75_e6e6e6_1x400.png', // neu
-    'templates/tpl_modified/css/images/ui-bg_glass_95_fef1ec_1x400.png', // neu
-    'templates/tpl_modified/css/images/ui-bg_highlight-soft_75_cccccc_1x100.png', // neu
-    'templates/tpl_modified/css/images/ui-icons_222222_256x240.png', // neu
-    'templates/tpl_modified/css/images/ui-icons_2e83ff_256x240.png', // neu
-    'templates/tpl_modified/css/images/ui-icons_454545_256x240.png', // neu
-    'templates/tpl_modified/css/images/ui-icons_888888_256x240.png', // neu
-    'templates/tpl_modified/css/images/ui-icons_cd0a0a_256x240.png', // neu
-    'templates/tpl_modified/css/macFFBgHack.png', // neu
-    'templates/tpl_modified/img/arrow1.gif', // neu
-    'templates/tpl_modified/img/arrow2.gif', // neu
-    'templates/tpl_modified/img/arrow_green.gif', // neu
-    'templates/tpl_modified/img/arrow_right.gif', // neu
-    'templates/tpl_modified/img/arrow_south_east.gif', // neu
-    'templates/tpl_modified/img/basketIcon.gif', // neu
-    'templates/tpl_modified/img/bg.gif', // neu
-    'templates/tpl_modified/img/bg_boxheader.gif', // neu
-    'templates/tpl_modified/img/bg_boxheader_cart.gif', // neu
-    'templates/tpl_modified/img/bg_breadcrumb.gif', // neu
-    'templates/tpl_modified/img/bg_breadcrumbarrow.gif', // neu
-    'templates/tpl_modified/img/bg_header.gif', // neu
-    'templates/tpl_modified/img/bg_left_column.jpg', // neu
-    'templates/tpl_modified/img/bg_right_column.jpg', // neu
-    'templates/tpl_modified/img/bg_search_breakline.gif', // neu
-    'templates/tpl_modified/img/bg_top.jpg', // neu
-    'templates/tpl_modified/img/bg_toplinks.gif', // neu
-    'templates/tpl_modified/img/bg_topmenu.gif', // neu
-    'templates/tpl_modified/img/bg_topmenu_breakline.gif', // neu
-    'templates/tpl_modified/img/box_write_review.gif', // neu
-    'templates/tpl_modified/img/breadcrumbbg.gif', // neu
-    'templates/tpl_modified/img/cartBoxHeaderLeft.gif', // neu
-    'templates/tpl_modified/img/cartBoxHeaderRight.gif', // neu
-    'templates/tpl_modified/img/cart_bg.gif', // neu
-    'templates/tpl_modified/img/cart_bg.png', // neu
-    'templates/tpl_modified/img/category_header.gif', // neu
-    'templates/tpl_modified/img/checkout_bullet.gif', // neu
-    'templates/tpl_modified/img/checkout_success.gif', // neu
-    'templates/tpl_modified/img/greenboxbg.gif', // neu
-    'templates/tpl_modified/img/greycaleBG.gif', // neu
-    'templates/tpl_modified/img/horMenuItemBg.gif', // neu
-    'templates/tpl_modified/img/hr_productpreview.gif', // neu
-    'templates/tpl_modified/img/icon_arrow.gif', // neu
-    'templates/tpl_modified/img/icon_arrow.jpg', // neu
-    'templates/tpl_modified/img/icon_more.gif', // neu
-    'templates/tpl_modified/img/icon_more_light.gif', // neu
-    'templates/tpl_modified/img/img_gift.gif', // neu
-    'templates/tpl_modified/img/img_line.jpg', // neu
-    'templates/tpl_modified/img/img_willkommen.jpg', // neu
-    'templates/tpl_modified/img/infoBoxHeaderLeft.gif', // neu
-    'templates/tpl_modified/img/infoBoxHeaderRight.gif', // neu
-    'templates/tpl_modified/img/input_bg.gif', // neu
-    'templates/tpl_modified/img/karteiLeft.gif', // neu
-    'templates/tpl_modified/img/karteiRight.gif', // neu
-    'templates/tpl_modified/img/magnifier.gif', // neu
-    'templates/tpl_modified/img/mainBG.gif', // neu
-    'templates/tpl_modified/img/menuspacer.gif', // neu
-    'templates/tpl_modified/img/mnu_dark_background.gif', // neu
-    'templates/tpl_modified/img/mnu_green_background.gif', // neu
-    'templates/tpl_modified/img/orangeHeaderBg.gif', // neu
-    'templates/tpl_modified/img/paymentShippingTypeHeader.gif', // neu
-    'templates/tpl_modified/img/pixel_silver.gif', // neu
-    'templates/tpl_modified/img/pixel_trans.gif', // neu
-    'templates/tpl_modified/img/print.gif', // neu
-    'templates/tpl_modified/img/productHeaderLeft.gif', // neu
-    'templates/tpl_modified/img/productHeaderRight.gif', // neu
-    'templates/tpl_modified/img/productSplitLine.gif', // neu
-    'templates/tpl_modified/img/smallHeaderLeft.gif', // neu
-    'templates/tpl_modified/img/smallHeaderRight.gif', // neu
-    'templates/tpl_modified/img/smallLightHeaderLeft.gif', // neu
-    'templates/tpl_modified/img/smallLightHeaderRight.gif', // neu
-    'templates/tpl_modified/img/spacer.gif', // neu
-    'templates/tpl_modified/img/sprites.gif', // neu
-    'templates/tpl_modified/img/submenuarrow.gif', // neu
-    'templates/tpl_modified/img/submenuheaderbg.gif', // neu
-    'templates/tpl_modified/img/topCornerLeft.gif', // neu
-    'templates/tpl_modified/img/topCornerRight.gif', // neu
-    'templates/tpl_modified/img/topMenuBG.gif', // neu
-    'templates/tpl_modified/img/top_logo.jpg', // neu
-    'templates/tpl_modified/img/toplinks_newproducts.gif', // neu
-    'templates/tpl_modified/img/toplinks_search.gif', // neu
-    'templates/tpl_modified/img/toplinks_specials.gif', // neu
-    'templates/tpl_modified/img/toprowbg.gif', // neu
-    'templates/tpl_modified/module/error_handler.html', // neu
-    'templates/'.CURRENT_TEMPLATE.'/javascript/macFFBgHack.png', // neu
-    'templates/'.CURRENT_TEMPLATE.'/javascript/thickbox.css', // neu
-    'templates/'.CURRENT_TEMPLATE.'/mail/english/change_password_mail.html', // neu
-    'templates/'.CURRENT_TEMPLATE.'/mail/english/change_password_mail.txt', // neu
-    'templates/'.CURRENT_TEMPLATE.'/mail/english/password_verification_mail.html', // neu
-    'templates/'.CURRENT_TEMPLATE.'/mail/english/password_verification_mail.txt', // neu
+    'templates/xtc5/source/inc/gunnart_productRedirect.inc.php',
+    'templates/tpl_modified/admin/billsafe_print_order.html',
+    'templates/tpl_modified/buttons/english/sofortueberweisung.gif',
+    'templates/tpl_modified/buttons/german/sofortueberweisung.gif',
+    'templates/tpl_modified/css/images/ui-anim_basic_16x16.gif',
+    'templates/tpl_modified/css/images/ui-bg_flat_0_aaaaaa_40x100.png',
+    'templates/tpl_modified/css/images/ui-bg_flat_75_ffffff_40x100.png',
+    'templates/tpl_modified/css/images/ui-bg_glass_55_fbf9ee_1x400.png',
+    'templates/tpl_modified/css/images/ui-bg_glass_65_ffffff_1x400.png',
+    'templates/tpl_modified/css/images/ui-bg_glass_75_dadada_1x400.png',
+    'templates/tpl_modified/css/images/ui-bg_glass_75_e6e6e6_1x400.png',
+    'templates/tpl_modified/css/images/ui-bg_glass_95_fef1ec_1x400.png',
+    'templates/tpl_modified/css/images/ui-bg_highlight-soft_75_cccccc_1x100.png',
+    'templates/tpl_modified/css/images/ui-icons_222222_256x240.png',
+    'templates/tpl_modified/css/images/ui-icons_2e83ff_256x240.png',
+    'templates/tpl_modified/css/images/ui-icons_454545_256x240.png',
+    'templates/tpl_modified/css/images/ui-icons_888888_256x240.png',
+    'templates/tpl_modified/css/images/ui-icons_cd0a0a_256x240.png',
+    'templates/tpl_modified/css/macFFBgHack.png',
+    'templates/tpl_modified/img/arrow1.gif',
+    'templates/tpl_modified/img/arrow2.gif',
+    'templates/tpl_modified/img/arrow_green.gif',
+    'templates/tpl_modified/img/arrow_right.gif',
+    'templates/tpl_modified/img/arrow_south_east.gif',
+    'templates/tpl_modified/img/basketIcon.gif',
+    'templates/tpl_modified/img/bg.gif',
+    'templates/tpl_modified/img/bg_boxheader.gif',
+    'templates/tpl_modified/img/bg_boxheader_cart.gif',
+    'templates/tpl_modified/img/bg_breadcrumb.gif',
+    'templates/tpl_modified/img/bg_breadcrumbarrow.gif',
+    'templates/tpl_modified/img/bg_header.gif',
+    'templates/tpl_modified/img/bg_left_column.jpg',
+    'templates/tpl_modified/img/bg_right_column.jpg',
+    'templates/tpl_modified/img/bg_search_breakline.gif',
+    'templates/tpl_modified/img/bg_top.jpg',
+    'templates/tpl_modified/img/bg_toplinks.gif',
+    'templates/tpl_modified/img/bg_topmenu.gif',
+    'templates/tpl_modified/img/bg_topmenu_breakline.gif',
+    'templates/tpl_modified/img/box_write_review.gif',
+    'templates/tpl_modified/img/breadcrumbbg.gif',
+    'templates/tpl_modified/img/cartBoxHeaderLeft.gif',
+    'templates/tpl_modified/img/cartBoxHeaderRight.gif',
+    'templates/tpl_modified/img/cart_bg.gif',
+    'templates/tpl_modified/img/cart_bg.png',
+    'templates/tpl_modified/img/category_header.gif',
+    'templates/tpl_modified/img/checkout_bullet.gif',
+    'templates/tpl_modified/img/checkout_success.gif',
+    'templates/tpl_modified/img/greenboxbg.gif',
+    'templates/tpl_modified/img/greycaleBG.gif',
+    'templates/tpl_modified/img/horMenuItemBg.gif',
+    'templates/tpl_modified/img/hr_productpreview.gif',
+    'templates/tpl_modified/img/icon_arrow.gif',
+    'templates/tpl_modified/img/icon_arrow.jpg',
+    'templates/tpl_modified/img/icon_more.gif',
+    'templates/tpl_modified/img/icon_more_light.gif',
+    'templates/tpl_modified/img/img_gift.gif',
+    'templates/tpl_modified/img/img_line.jpg',
+    'templates/tpl_modified/img/img_willkommen.jpg',
+    'templates/tpl_modified/img/infoBoxHeaderLeft.gif',
+    'templates/tpl_modified/img/infoBoxHeaderRight.gif',
+    'templates/tpl_modified/img/input_bg.gif',
+    'templates/tpl_modified/img/karteiLeft.gif',
+    'templates/tpl_modified/img/karteiRight.gif',
+    'templates/tpl_modified/img/magnifier.gif',
+    'templates/tpl_modified/img/mainBG.gif',
+    'templates/tpl_modified/img/menuspacer.gif',
+    'templates/tpl_modified/img/mnu_dark_background.gif',
+    'templates/tpl_modified/img/mnu_green_background.gif',
+    'templates/tpl_modified/img/orangeHeaderBg.gif',
+    'templates/tpl_modified/img/paymentShippingTypeHeader.gif',
+    'templates/tpl_modified/img/pixel_silver.gif',
+    'templates/tpl_modified/img/pixel_trans.gif',
+    'templates/tpl_modified/img/print.gif',
+    'templates/tpl_modified/img/productHeaderLeft.gif',
+    'templates/tpl_modified/img/productHeaderRight.gif',
+    'templates/tpl_modified/img/productSplitLine.gif',
+    'templates/tpl_modified/img/smallHeaderLeft.gif',
+    'templates/tpl_modified/img/smallHeaderRight.gif',
+    'templates/tpl_modified/img/smallLightHeaderLeft.gif',
+    'templates/tpl_modified/img/smallLightHeaderRight.gif',
+    'templates/tpl_modified/img/spacer.gif',
+    'templates/tpl_modified/img/sprites.gif',
+    'templates/tpl_modified/img/submenuarrow.gif',
+    'templates/tpl_modified/img/submenuheaderbg.gif',
+    'templates/tpl_modified/img/topCornerLeft.gif',
+    'templates/tpl_modified/img/topCornerRight.gif',
+    'templates/tpl_modified/img/topMenuBG.gif',
+    'templates/tpl_modified/img/top_logo.jpg',
+    'templates/tpl_modified/img/toplinks_newproducts.gif',
+    'templates/tpl_modified/img/toplinks_search.gif',
+    'templates/tpl_modified/img/toplinks_specials.gif',
+    'templates/tpl_modified/img/toprowbg.gif',
+    'templates/tpl_modified/module/error_handler.html',
+    'templates/'.CURRENT_TEMPLATE.'/javascript/macFFBgHack.png',
+    'templates/'.CURRENT_TEMPLATE.'/javascript/thickbox.css',
+    'templates/'.CURRENT_TEMPLATE.'/mail/english/change_password_mail.html',
+    'templates/'.CURRENT_TEMPLATE.'/mail/english/change_password_mail.txt',
+    'templates/'.CURRENT_TEMPLATE.'/mail/english/password_verification_mail.html',
+    'templates/'.CURRENT_TEMPLATE.'/mail/english/password_verification_mail.txt',
     //'templates/'.CURRENT_TEMPLATE.'/mail/english/widerruf.txt',
     //'templates/'.CURRENT_TEMPLATE.'/mail/english/widerruf.html',
-    'templates/'.CURRENT_TEMPLATE.'/mail/german/change_password_mail.html', // neu
-    'templates/'.CURRENT_TEMPLATE.'/mail/german/change_password_mail.txt', // neu
-    'templates/'.CURRENT_TEMPLATE.'/mail/german/password_verification_mail.html', // neu
-    'templates/'.CURRENT_TEMPLATE.'/mail/german/password_verification_mail.txt', // neu
+    'templates/'.CURRENT_TEMPLATE.'/mail/german/change_password_mail.html',
+    'templates/'.CURRENT_TEMPLATE.'/mail/german/change_password_mail.txt',
+    'templates/'.CURRENT_TEMPLATE.'/mail/german/password_verification_mail.html',
+    'templates/'.CURRENT_TEMPLATE.'/mail/german/password_verification_mail.txt',
     //'templates/'.CURRENT_TEMPLATE.'/mail/german/widerruf.txt',
     //'templates/'.CURRENT_TEMPLATE.'/mail/german/widerruf.html',
-    'templates/'.CURRENT_TEMPLATE.'/module/account_newsletter.html', // neu
-    'templates/'.CURRENT_TEMPLATE.'/module/checkout_paypal.html', // neu
-    'templates/'.CURRENT_TEMPLATE.'/module/error_handler.html', // neu
-    'templates/'.CURRENT_TEMPLATE.'/module/google_sitemap.html', // neu
-    'templates/'.CURRENT_TEMPLATE.'/module/paypal_express_cart.html', // neu
-    'templates/'.CURRENT_TEMPLATE.'/module/sofort_vorkasse.html', // neu
-    'templates/'.CURRENT_TEMPLATE.'/module/wpcallback.html', // neu
+    'templates/'.CURRENT_TEMPLATE.'/module/account_newsletter.html',
+    'templates/'.CURRENT_TEMPLATE.'/module/checkout_paypal.html',
+    'templates/'.CURRENT_TEMPLATE.'/module/error_handler.html',
+    'templates/'.CURRENT_TEMPLATE.'/module/google_sitemap.html',
+    'templates/'.CURRENT_TEMPLATE.'/module/paypal_express_cart.html',
+    'templates/'.CURRENT_TEMPLATE.'/module/sofort_vorkasse.html',
+    'templates/'.CURRENT_TEMPLATE.'/module/wpcallback.html',
     'templates/'.CURRENT_TEMPLATE.'/smarty/function.facebook_badge.php',
     'templates/'.CURRENT_TEMPLATE.'/smarty/function.googleanalytics.php',
     'templates/'.CURRENT_TEMPLATE.'/smarty/function.piwik.php',
     'templates/'.CURRENT_TEMPLATE.'/smarty/function.onlytext.php',
-    'update.php', // neu
+    'update.php',
     'update_1.0.5.0_to_1.0.6.0.sql',
-    'wpcallback.php', // neu
+    'wpcallback.php',
     'wsdl_iclear_order.php',
     'xtbcallback.php',
   );

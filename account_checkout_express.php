@@ -190,7 +190,6 @@ $disallowed_payment = array(
   'billpaydebit',
   'billpaypaylater',
   'billpaytransactioncredit',
-  'billsafe_2',  
   'paypalplus',
   'payone_installment',
   'payone_otrans',

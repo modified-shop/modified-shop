@@ -155,7 +155,6 @@
         case 'invoice':
         case 'billpay':
         case 'klarna_invoice':
-        case 'billsafe_2':
         case 'masterpayment_rechnungskauf':
         case 'payone_invoice':
           $paymenttype = 'INVOICE';

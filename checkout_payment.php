@@ -280,13 +280,6 @@ if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weigh
 $smarty->assign('BUTTON_BACK', '<a href="'.$backlink.'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
 $smarty->assign('BUTTON_BACK_LINK', $backlink);
 
-### BILLSAFE payment module
-if ((isset($_GET['billsafe_close']) && $_GET['billsafe_close'] == 'true') 
-|| (isset($_GET['payment_error']) && $_GET['payment_error'] == 'billsafe_2')) {
-  echo '<script type="text/javascript"> if (top.lpg) top.lpg.close("'.xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message='.stripslashes(urlencode(decode_htmlentities($_GET['error_message']))), 'SSL').'"); </script>';
-}
-### BILLSAFE payment module
-
 $smarty->assign('language', $_SESSION['language']);
 $smarty->assign('PAYMENT_BLOCK', $payment_block);
 $main_content = $smarty->fetch(CURRENT_TEMPLATE . '/module/checkout_payment.html');
