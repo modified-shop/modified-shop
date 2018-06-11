@@ -221,6 +221,7 @@
     'inc/xtc_exit.inc.php', // neu
     'inc/xtc_gdlib_check.inc.php',
     'inc/xtc_show_category_content.inc.php', // neu
+    'inc/xtc_set_customer_status_upgrade.inc.php', // neu
     'inc/base64todec.inc.php',
     'inc/changedatain.inc.php',
     'inc/changedataout.inc.php',
