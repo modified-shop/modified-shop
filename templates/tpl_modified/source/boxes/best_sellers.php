@@ -39,7 +39,7 @@ if (MIN_DISPLAY_BESTSELLERS > 0 && (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/b
                        FROM ".TABLE_ORDERS_PRODUCTS." op
                        JOIN ".TABLE_ORDERS." o
                             ON o.orders_id = op.orders_id
-                               AND o.date_purchased > '".date("Y-m-d", mktime(1, 1, 1, date("m"), date("d") - MAX_DISPLAY_BESTSELLERS_DAYS, date("Y")))."'
+                               AND o.date_purchased > '".date("Y-m-d", mktime(1, 1, 1, date("m"), date("d") - (int)MAX_DISPLAY_BESTSELLERS_DAYS, date("Y")))."'
                    GROUP BY op.products_id
                    ORDER BY op.orders_id DESC";
     $orders_query = xtc_db_query($orders_query);
