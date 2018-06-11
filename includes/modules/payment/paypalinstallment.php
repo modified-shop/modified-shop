@@ -56,6 +56,16 @@ class paypalinstallment extends PayPalPayment {
       $this->enabled = false;
     }
     
+    if ($this->enabled === true
+        && ($order->content_type == 'virtual' 
+            || $order->content_type == 'virtual_weight'
+            || $_SESSION['cart']->count_contents_virtual() == 0
+            )
+        )
+    {
+      $this->enabled = false;
+    }
+    
     if ($this->enabled === true) {
       if (!class_exists('order_total')) {
         require_once(DIR_WS_CLASSES.'order_total.php');
