@@ -61,6 +61,8 @@
   require_once (DIR_FS_INC.'xtc_image.inc.php');
   require_once (DIR_FS_INC.'get_database_version.inc.php');
   require_once (DIR_FS_INC.'xtc_set_time_limit.inc.php');
+  require_once (DIR_FS_INC.'xtc_random_charcode.inc.php');
+  require_once (DIR_FS_INC.'xtc_rand.inc.php');
   
   require_once (DIR_FS_INC.'xtc_not_null.inc.php');
   require_once (DIR_FS_INC.'xtc_href_link.inc.php');

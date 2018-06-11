@@ -56,6 +56,12 @@
       <div class="field_item cf"><div class="field_heading">{$smarty.const.TEXT_SERVER_USE_SSL}</div>{$INPUT_USE_SSL}</div>
       <div class="field_item cf"><div class="field_heading">{$smarty.const.TEXT_SERVER_SESSION}</div>{$INPUT_SESSION}</div>
     </div>
+    <br />
+    <h2>{$smarty.const.TEXT_ADMIN_DIRECTORY_HEADING}</h2>
+    <div class="field_row cf">
+      <div class="field_item cf"><div class="field_heading errormessage">{$smarty.const.TEXT_ADMIN_DIRECTORY_DESCRIPTION}</div></div>
+      <div class="field_item cf"><div class="field_heading">{$smarty.const.TEXT_ADMIN_DIRECTORY}&nbsp;&nbsp;{$ADMIN_DIRECTORY_SUGGEST}</div>{$INPUT_ADMIN_DIRECTORY}</div>
+    </div>
   {else}
     <h2>{$smarty.const.TEXT_DB_EXISTS}</h2>
     {*<p>{$smarty.const.TEXT_DB_EXISTS_DESC}</p>*}
