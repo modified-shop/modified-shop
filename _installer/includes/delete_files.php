@@ -123,6 +123,8 @@
     DIR_ADMIN.'includes/classes/phpmailer.lang-de.php', // neu
     DIR_ADMIN.'includes/classes/phpmailer.lang-en.php', // neu
     DIR_ADMIN.'includes/configure.org.php',
+    DIR_ADMIN.'includes/extra/modules/orders/orders_action/easybill.php', // neu
+    DIR_ADMIN.'includes/extra/modules/orders/orders_info_blocks/easybill.php', // neu
     DIR_ADMIN.'includes/functions/db_restore.php', // neu
     DIR_ADMIN.'includes/functions/languages.php', // neu
     DIR_ADMIN.'includes/functions/validations.php', // neu
@@ -171,6 +173,8 @@
     DIR_ADMIN.'includes/modules/paypal_refundtransaction.php', // neu
     DIR_ADMIN.'includes/modules/paypal_searchtransaction.php', // neu
     DIR_ADMIN.'includes/modules/paypal_transactiondetail.php', // neu
+    DIR_ADMIN.'includes/modules/system/easybill.php',
+    DIR_ADMIN.'includes/modules/system/easybillcsv.php',
     DIR_ADMIN.'includes/stylesheet_stocklist.css', // neu
     DIR_ADMIN.'includes/stylesheet_stocklist_print.css', // neu
     DIR_ADMIN.'paypal.php', // neu
@@ -271,6 +275,7 @@
     'includes/external/smarty/smarty_3/sysplugins/smarty_internal_get_include_path.php', // neu
     'includes/external/smarty/smarty_3/sysplugins/smarty_internal_utility.php', // neu
     'includes/external/smarty/smarty_3/sysplugins/smarty_internal_write_file.php', // neu
+    'includes/extra/checkout/checkout_process_end/20_easybill.php', // neu
     'includes/extra/send_order/banktransfer.php', // neu
     'includes/extra/send_order/billpay.php', // neu
     'includes/extra/send_order/index.html', // neu
@@ -335,6 +340,8 @@
     'lang/english/modules/payment/sofortueberweisungredirect.php', // neu
     'lang/english/modules/payment/sofortueberweisungvorkasse.php', // neu
     'lang/english/modules/payment/worldpay.php', // neu
+    'lang/english/modules/system/easybill.php', // neu
+    'lang/english/modules/system/easybillcsv.php', // neu
     'lang/german/admin/blacklist.php', // neu
     'lang/german/admin/paypal.php', // neu
     'lang/german/admin/paypal_payment.php', // neu
@@ -364,6 +371,8 @@
     'lang/german/modules/payment/sofortueberweisungredirect.php', // neu
     'lang/german/modules/payment/sofortueberweisungvorkasse.php', // neu
     'lang/german/modules/payment/worldpay.php', // neu
+    'lang/german/modules/system/easybill.php', // neu
+    'lang/german/modules/system/easybillcsv.php', // neu
     'LICENSE', // neu
     'paypal_checkout.php', // neu
     'popup_cvv.php',
