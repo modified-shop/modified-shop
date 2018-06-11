@@ -98,7 +98,8 @@
   define('TEXT_DB_PCONNECT', 'Persistent:');
   define('TEXT_DB_EXISTS', 'Database already exists');
   define('TEXT_DB_EXISTS_DESC', 'If you click "Confirm", all tables in this database will be overwritten! If you do not want it, click "Back" and specify a different database. Otherwise, click "Confirm".');
-  
+  define('TEXT_DB_INSTALL', 'Database installation (mandatory on initial setup!). Existing database tables are exhausted!');
+
   define('TEXT_SERVER_HEADING', 'Information about the shop:');
   define('TEXT_SERVER_HTTP_SERVER', 'HTTP:');
   define('TEXT_SERVER_HTTPS_SERVER', 'HTTPS:');

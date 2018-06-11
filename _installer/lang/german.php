@@ -98,7 +98,8 @@
   define('TEXT_DB_PCONNECT', 'Persistent:');
   define('TEXT_DB_EXISTS', 'Datenbank existiert bereits');
   define('TEXT_DB_EXISTS_DESC', 'Wenn Sie "Best&auml;tigen" klicken werden alle Tabellen dieser Datenbank &uuml;berschrieben! Wenn Sie dies nicht m&ouml;chten, dann klicken Sie auf "Zur&uuml;ck" und geben eine andere Datenbank an. Andersfalls klicken Sie auf "Best&auml;tigen".');
-  
+  define('TEXT_DB_INSTALL', 'Datenbank Installation (Zwingend erforderlich bei Erstinstallation). Bestehende Tabellen werden dabei geleert!');
+
   define('TEXT_SERVER_HEADING', 'Angaben zum Shop:');
   define('TEXT_SERVER_HTTP_SERVER', 'HTTP:');
   define('TEXT_SERVER_HTTPS_SERVER', 'HTTPS:');

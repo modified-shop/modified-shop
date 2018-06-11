@@ -58,8 +58,10 @@
     </div>
   {else}
     <h2>{$smarty.const.TEXT_DB_EXISTS}</h2>
-    <p>{$smarty.const.TEXT_DB_EXISTS_DESC}</p>
-    {$INPUT_DB_INSTALL}
+    {*<p>{$smarty.const.TEXT_DB_EXISTS_DESC}</p>*}
+    <p>{$INPUT_WRITE_CONFIGURE}<label for="write_configure">{$smarty.const.TEXT_CONFIGURE}</label></p>
+    <p>{$INPUT_DB_INSTALL}<label for="db_install">{$smarty.const.TEXT_DB_INSTALL}</label></p>
+    {$INPUT_HIDDEN}
   {/if}
   
   {if !isset($PROCESSING)}

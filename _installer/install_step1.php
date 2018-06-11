@@ -59,6 +59,7 @@
       'https_server',
       'session',
       'use_ssl',
+      'write_configure',
     );
 
     // prepare variables
@@ -71,6 +72,8 @@
     // Database
     require_once (DIR_FS_INC.'db_functions_'.$db_type.'.inc.php');
     require_once (DIR_FS_INC.'db_functions.inc.php');
+
+    $_SESSION['language_charset'] = (($db_charset == 'utf8') ? 'utf-8' : 'ISO-8859-15');
     
     $connection = xtc_db_connect($db_server, $db_username, $db_password, $db_database, 'db_link');
     if (is_object($connection) || is_resource($connection)) {
@@ -83,9 +86,10 @@
         }
       }
       
-      if ($error === false) {
-        $_SESSION['language_charset'] = (($db_charset == 'utf8') ? 'utf-8' : 'ISO-8859-15');
-        
+      if (($error === false && !isset($db_install))
+          || isset($write_configure)
+          )
+      {        
         $collation = 'latin1_german1_ci';
         if ($_SESSION['language_charset'] == 'utf-8') {
           $collation = 'utf8_general_ci';
@@ -120,7 +124,13 @@
         }
         fputs($fp, $file_contents);
         fclose($fp);
-        
+               
+        if (isset($write_configure) && $error === true) {
+          xtc_redirect(xtc_href_link(DIR_WS_INSTALLER.'install_finished.php', '', $request_type));
+        }
+      }
+      
+      if ($error === false || isset($db_install)) {
         xtc_redirect(xtc_href_link(DIR_WS_INSTALLER.'install_step1.php', 'action=restorenow&sql=0', $request_type));
       }
     } else {
@@ -284,11 +294,13 @@
     $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.'index.php', '', $request_type).'">'.BUTTON_BACK.'</a>');
   }
   if (isset($error) && $error === true) {
-    $hidden_fields = xtc_draw_hidden_field('db_install', '1');
+    $hidden_fields = '';
     foreach ($_POST as $key => $value) {
       $hidden_fields .= xtc_draw_hidden_field($key, $value);
     }
-    $smarty->assign('INPUT_DB_INSTALL', $hidden_fields);
+    $smarty->assign('INPUT_HIDDEN', $hidden_fields);
+    $smarty->assign('INPUT_DB_INSTALL', '<input type="checkbox" value="1" name="db_install" id="db_install" />');
+    $smarty->assign('INPUT_WRITE_CONFIGURE', '<input type="checkbox" value="1" name="write_configure" id="write_configure" />');
     $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), '', $request_type).'">'.BUTTON_BACK.'</a>');
   }
   
