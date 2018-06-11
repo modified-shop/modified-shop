@@ -141,6 +141,8 @@
     DIR_ADMIN.'includes/modules/export/easybill.php', // neu
     DIR_ADMIN.'includes/modules/export/easymarketing.php', // neu
     DIR_ADMIN.'includes/modules/export/it_recht_kanzlei.php', // neu
+    DIR_ADMIN.'includes/modules/export/idealo.php', // neu
+    DIR_ADMIN.'includes/modules/export/idealo_real.php', // neu
     DIR_ADMIN.'includes/modules/export/froogle.php', // neu
     DIR_ADMIN.'includes/modules/export/googlebase.php', // neu
     DIR_ADMIN.'includes/modules/export/image_processing_step.php', // neu

@@ -30,6 +30,8 @@
     'api/easybill',  // neu
     'callback/pn_sofortueberweisung', // neu
     'export/easybill', // neu
+    'export/idealo', // neu
+    'export/idealo_realtime', // neu
     'images/infobox', // neu
     'includes/classes/nusoap', // neu
     'includes/classes/Smarty_2.6.22',
