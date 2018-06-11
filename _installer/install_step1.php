@@ -60,6 +60,7 @@
       'session',
       'use_ssl',
       'write_configure',
+      'admin_directory',
     );
 
     // prepare variables
@@ -68,6 +69,13 @@
         ${$key} = addslashes($value);
       }
     }
+
+    if (isset($admin_directory) && $admin_directory != trim(DIR_ADMIN, '/')) {
+      $admin_directory = preg_replace('/[^a-zA-Z0-9_]/', '', $admin_directory);
+      if (!is_dir(DIR_FS_CATALOG.$admin_directory)) {
+        @rename(DIR_FS_CATALOG.trim(DIR_ADMIN, '/'), DIR_FS_CATALOG.$admin_directory);
+      }
+    }  
     
     // Database
     require_once (DIR_FS_INC.'db_functions_'.$db_type.'.inc.php');
@@ -289,6 +297,9 @@
   $smarty->assign('INPUT_HTTPS_SERVER', xtc_draw_input_fieldNote(array('name' => 'https_server')));    
   $smarty->assign('INPUT_SESSION', xtc_draw_pull_down_menuNote(array ('name' => 'session'), $session_array, $session));
   $smarty->assign('INPUT_USE_SSL', xtc_draw_pull_down_menuNote(array ('name' => 'use_ssl'), $boolean_array, $use_ssl));
+  
+  $smarty->assign('INPUT_ADMIN_DIRECTORY', xtc_draw_input_fieldNote(array('name' => 'admin_directory'), trim(DIR_ADMIN, '/'))); 
+  $smarty->assign('ADMIN_DIRECTORY_SUGGEST', 'admin_'.xtc_random_charcode(10));
   
   if ($upgrade === true) {
     $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.'index.php', '', $request_type).'">'.BUTTON_BACK.'</a>');

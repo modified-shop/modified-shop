@@ -106,6 +106,10 @@
   define('TEXT_SERVER_USE_SSL', 'SSL:');
   define('TEXT_SERVER_SESSION', 'Session:');
 
+  define('TEXT_ADMIN_DIRECTORY_HEADING','Admin Directory:');
+  define('TEXT_ADMIN_DIRECTORY_DESCRIPTION', 'Due to seurity reasons change the name of the admin directory.');
+  define('TEXT_ADMIN_DIRECTORY', 'This is a generated suggestion:');
+
   define('TEXT_ACCOUNT','The installer will create the admin account and will perform some db actions.<br /> The given information for <b>Country</b> and <b>Post Code</b> are used for shipping and tax callculations.');
   define('TEXT_ACCOUNT_HEADING', 'Account details:');
   define('TEXT_ACCOUNT_FIRSTNAME', 'First name:');

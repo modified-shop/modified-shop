@@ -106,6 +106,10 @@
   define('TEXT_SERVER_USE_SSL', 'SSL:');
   define('TEXT_SERVER_SESSION', 'Session:');
 
+  define('TEXT_ADMIN_DIRECTORY_HEADING','Admin Verzeichnis:');
+  define('TEXT_ADMIN_DIRECTORY_DESCRIPTION', 'Bitte &auml;ndern Sie aus Sicherheitsgr&uuml;nden den Namen des Admin Verzeichnisses.');
+  define('TEXT_ADMIN_DIRECTORY', 'Hier ein per Zufallsgenerator generierter Vorschlag:');
+
   define('TEXT_ACCOUNT','Der Installer richtet den Admin-Account ein und schreibt noch diverse Daten in die Datenbank.<br />Die angegebenen Daten f&uuml;r <b>Land</b> und <b>PLZ</b> werden f&uuml;r die Versand- und Steuerberechnungen genutzt.');
   define('TEXT_ACCOUNT_HEADING', 'Angaben zum Account:');
   define('TEXT_ACCOUNT_FIRSTNAME', 'Vorname:');
