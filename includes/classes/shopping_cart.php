@@ -890,12 +890,15 @@ class shoppingCart {
    * @return boolean
    */
   function check_products_status_permission($products_id) {
+    require(DIR_WS_INCLUDES.'define_conditions.php');
+    $conditions = str_replace('p.', '', $products_conditions_p);
+
     $status = false;
     $check_query = xtc_db_query("SELECT products_id 
                                    FROM ".TABLE_PRODUCTS."
                                   WHERE products_id = '".xtc_get_prid($products_id)."'
                                     AND products_status = '1'
-                                        ".PRODUCTS_CONDITIONS);
+                                        ".$conditions);
     if (xtc_db_num_rows($check_query) > 0) {
       $status = true;
     }
