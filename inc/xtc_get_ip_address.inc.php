@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_get_ip_address.inc.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -41,7 +41,8 @@
       $ip_array = explode(',', $tmp_ip);
       $ip = trim($ip_array[0]);
     }
-
+    
+    $ip = preg_replace('/[^a-zA-Z0-9\.:]/', '', $ip);
     return $ip;
   }
 ?>

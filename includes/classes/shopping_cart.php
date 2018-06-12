@@ -958,5 +958,63 @@ class shoppingCart {
     }
     return $check;
   }
+  
+  /**
+   * get continue shopping link
+   *
+   * @return url
+   */
+  function get_continue_shopping_link() {
+    $url = '';
+    if (!empty($_SERVER['HTTP_REFERER']) 
+        && strpos($_SERVER['HTTP_REFERER'], FILENAME_SHOPPING_CART) === false  
+        && strpos($_SERVER['HTTP_REFERER'], 'in_cart') === false 
+        && strpos($_SERVER['HTTP_REFERER'], 'checkout_') === false
+        && filter_var($_SERVER['HTTP_REFERER'], FILTER_VALIDATE_URL) !== false
+        )
+    {
+      $referer = parse_url($_SERVER['HTTP_REFERER']);
+      if (isset($referer['host'])
+          && (strpos(HTTP_SERVER, $referer['host']) !== false
+              || strpos(HTTPS_SERVER, $referer['host']) !== false
+              )
+          )
+      {
+        $params = '';
+        if (isset($referer['query'])) {
+          parse_str($referer['query'], $params_array);
+      
+          $valid_params = array(
+            'cPath',
+            'products_id',
+            'filter_id',
+            'filter',
+            'manufacturers_id',
+            'categories_id',
+            'inc_subcat',
+            'keywords',
+            'pfrom',
+            'pto',
+            'page',
+          );
+      
+          foreach ($params_array as $k => $v) {
+            if (!in_array($k, $valid_params)) {
+              unset($params_array[$k]);
+            }
+          }
+          $params = http_build_query($params_array, '', '&');
+        }
+    
+        $url = xtc_href_link(ltrim($referer['path'], '/'), $params, $request_type);
+
+        //new module support 
+        $url = $this->shoppingCartModules->get_continue_shopping_link($url, $referer);
+      }
+    }
+    
+    return $url;
+  }
+  
 }
 ?>

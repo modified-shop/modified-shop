@@ -170,8 +170,8 @@
                                                                       } ?></td-->
                 <td class="dataTableContent txta-c"><?php echo date('H:i:s', $whos_online['time_entry']); ?></td>
                 <td class="dataTableContent txta-c"><?php echo date('H:i:s', $whos_online['time_last_click']); ?></td>
-                <td class="dataTableContent"><?php echo $last_page_url; ?>&nbsp;</td>
-                <td class="dataTableContent"><?php echo encode_htmlentities($whos_online['http_referer']); ?></td>
+                <td class="dataTableContent"><?php echo encode_htmlspecialchars($last_page_url); ?>&nbsp;</td>
+                <td class="dataTableContent"><?php echo encode_htmlspecialchars($whos_online['http_referer']); ?></td>
               </tr>
               <?php
                 }
@@ -211,7 +211,7 @@
               }
               if (sizeof($products) > 0) {
                 $contents[] = array('text' => xtc_draw_separator('pixel_black.gif', '100%', '1'));
-                $contents[] = array('align' => 'right', 'text'  => '<span style="nobr">'.TEXT_SHOPPING_CART_SUBTOTAL . ' ' . $xtPrice->xtcFormat($user_session['cart']->total , true). '</span>');
+                $contents[] = array('align' => 'right', 'text'  => '<span style="nobr">'.TEXT_SHOPPING_CART_SUBTOTAL . ' ' . $xtPrice->xtcFormat($user_session['cart']->total, true). '</span>');
               } else {
                 $contents[] = array('text' => TEXT_EMPTY_CART);
               }
