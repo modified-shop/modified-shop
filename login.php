@@ -159,6 +159,9 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
       // who's online
       xtc_update_whos_online();
 
+      // write customers status in session
+      require(DIR_WS_INCLUDES.'write_customers_status.php');
+
 			// restore cart contents
 			$_SESSION['cart']->restore_contents();
 
