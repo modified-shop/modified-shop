@@ -1324,8 +1324,16 @@ class categories {
         $products_data['specials_quantity'] = 0;
       }
       
-      if (substr($products_data['specials_price'], -1) != '%'){
+      if (substr($products_data['specials_price'], -1) != '%') {
+        if (!isset($products_data['products_tax_class_id']) || (int)$products_data['products_tax_class_id'] <= 0) {
+          $price_query = xtc_db_query("SELECT products_tax_class_id
+                                         FROM ".TABLE_PRODUCTS."
+                                        WHERE products_id = '".(int)$products_data['products_id']."'");
+          $price = xtc_db_fetch_array($price_query);
+          $products_data['products_tax_class_id'] = $price['products_tax_class_id'];
+        }
         $tax_rate = xtc_get_tax_rate($products_data['products_tax_class_id']);
+
         $products_data['specials_price'] = $this->priceCheck($products_data['specials_price'], $tax_rate);
       } else {
         if (!isset($products_data['products_price']) || (double)$products_data['products_price'] <= 0.00) {

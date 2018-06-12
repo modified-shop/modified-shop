@@ -134,11 +134,11 @@ require (DIR_WS_INCLUDES.'head.php');
             }
           }
 
+          $price_netto = '';
+          $new_price_netto = '';
           $price = $sInfo->products_price;
           $new_price = $sInfo->specials_new_products_price;
-          $new_price_netto = '';
-          $price_netto = '';
-          if (PRICE_IS_BRUTTO == 'true'){
+          if (PRICE_IS_BRUTTO == 'true') {
             $price_netto = ' ' . TEXT_NETTO.'<strong>'.xtc_round($price,PRICE_PRECISION).'</strong>  ';
             if ($price > 0) {
               $new_price_netto = TEXT_NETTO.'<strong>'.xtc_round($new_price,PRICE_PRECISION).'</strong>';
@@ -154,15 +154,15 @@ require (DIR_WS_INCLUDES.'head.php');
           if ($form_action == 'update') { 
             echo xtc_draw_hidden_field('specials_id', $sID);                
           }
-          echo xtc_draw_hidden_field('tax_rate', xtc_get_tax_rate($sInfo->products_tax_class_id));
-          echo xtc_draw_hidden_field('products_price_hidden', $sInfo->products_price);
+          echo xtc_draw_hidden_field('products_tax_class_id', $sInfo->products_tax_class_id);
+          echo xtc_draw_hidden_field('products_price', $sInfo->products_price);
           echo xtc_draw_hidden_field('specials_action', $form_action);
           ?>
           
           <table class="tableConfig">
             <tr>
               <td class="dataTableConfig col-left"><?php echo TEXT_SPECIALS_PRODUCT; ?></td>
-              <td class="dataTableConfig col-middle"><?php echo ((isset($sInfo->products_name)) ? $sInfo->products_name . '<br/><small>(' . $xtPrice->xtcFormat($price,true). ' )' . $price_netto .'</small>'.xtc_draw_hidden_field('products_id', $sInfo->products_id) : xtc_draw_products_pull_down('products_id', 'style="font-size:10px"', $specials_array)); echo xtc_draw_hidden_field('products_price', $sInfo->products_price); ?></td>
+              <td class="dataTableConfig col-middle"><?php echo ((isset($sInfo->products_name)) ? $sInfo->products_name . '<br/><small>(' . $xtPrice->xtcFormat($price,true). ' )' . $price_netto .'</small>'.xtc_draw_hidden_field('products_id', $sInfo->products_id) : xtc_draw_products_pull_down('products_id', 'style="font-size:10px"', $specials_array)); ?></td>
               <td class="dataTableConfig col-right">&nbsp;</td>
             </tr>
             <?php
