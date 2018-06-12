@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: stats_stock_warning.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id$   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -58,13 +58,13 @@ class sitemaporg {
     }
     if (is_array($products)) {      
       if (is_file(DIR_FS_CATALOG_POPUP_IMAGES.$products['products_image'])) {
-        $this->xml_image_entry(HTTP_SERVER.DIR_WS_CATALOG_POPUP_IMAGES.$products['products_image'], $products['products_name']);
+        $this->xml_image_entry(HTTP_SERVER.DIR_WS_CATALOG_POPUP_IMAGES.urlencode($products['products_image']), $products['products_name']);
       }
       $mo_images = xtc_get_products_mo_images($products['products_id']);
       if ($mo_images != false) {
         foreach ($mo_images as $img) {
           if (is_file(DIR_FS_CATALOG_POPUP_IMAGES.$img['image_name'])) {
-            $this->xml_image_entry(HTTP_SERVER.DIR_WS_CATALOG_POPUP_IMAGES.$img['image_name'], $products['products_name']);
+            $this->xml_image_entry(HTTP_SERVER.DIR_WS_CATALOG_POPUP_IMAGES.urlencode($img['image_name']), $products['products_name']);
           }
         }
       }
