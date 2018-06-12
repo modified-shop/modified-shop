@@ -1329,7 +1329,7 @@ class categories {
         $products_data['specials_price'] = $this->priceCheck($products_data['specials_price'], $tax_rate);
       } else {
         if (!isset($products_data['products_price']) || (double)$products_data['products_price'] <= 0.00) {
-          $price_query = xtc_cb_query("SELECT products_price
+          $price_query = xtc_db_query("SELECT products_price
                                          FROM ".TABLE_PRODUCTS."
                                         WHERE products_id = '".(int)$products_data['products_id']."'");
           $price = xtc_db_fetch_array($price_query);
