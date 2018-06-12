@@ -191,7 +191,7 @@
         require_once (DIR_FS_LANGUAGES.$_SESSION['language'].'/modules/order_total/ot_subtotal.php');
         $sql_data_array = array(
             'orders_id' => (int)$orders_id,
-            'title' => '<b>'.MODULE_ORDER_TOTAL_SUBTOTAL_TITLE.'</b>:',
+            'title' => MODULE_ORDER_TOTAL_SUBTOTAL_TITLE.':',
             'text' => '0',
             'value' => '0',
             'class' => 'ot_subtotal',
