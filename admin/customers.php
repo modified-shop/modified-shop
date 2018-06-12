@@ -22,10 +22,12 @@
    --------------------------------------------------------------*/
 
   require ('includes/application_top.php');
+  
   require_once (DIR_FS_INC.'xtc_validate_vatid_status.inc.php');
   require_once (DIR_FS_INC.'xtc_get_geo_zone_code.inc.php');
   require_once (DIR_FS_INC.'xtc_encrypt_password.inc.php');
   require_once (DIR_FS_INC.'xtc_js_lang.php');
+  require_once (DIR_FS_INC.'ip_clearing.inc.php');
   
   require(DIR_WS_INCLUDES . 'get_states.php');
 
