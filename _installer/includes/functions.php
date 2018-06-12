@@ -186,9 +186,9 @@
         if (DB_SERVER_CHARSET == 'utf8') {
           $sql = mb_convert_encoding($sql, 'utf-8', 'ISO-8859-15');
         }
-        xtc_db_query($sql);
-      
-        if (xtc_db_affected_rows() > 0) {
+        $result = xtc_db_query($sql);
+
+        if ($result === true) {
           if (get_messagestack_size('update', 'success') < 1) {
             $messageStack->add_session('update', TEXT_EXECUTED_SUCCESS, 'success');
           }
