@@ -192,7 +192,7 @@ class shoppingCartModules {
         return self::call_module_method($products_id);
     }
 
-    public static function create_products_attributes_array($url, $referer)
+    public static function get_continue_shopping_link($url, $referer)
     {
         self::$function_call = 'get_continue_shopping_link';
         return self::call_module_method($url, $referer);
