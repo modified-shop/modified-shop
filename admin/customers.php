@@ -139,23 +139,30 @@
             'billing_address_format_id' => xtc_db_prepare_input($country['address_format_id']),
             'payment_method' => xtc_db_prepare_input($_POST['payment']),
             'comments' => '',
-            'last_modified' => 'now()',
             'date_purchased' => 'now()',
-            'orders_status' => '1',
-            'orders_date_finished' => '',
+            'orders_status' => DEFAULT_ORDERS_STATUS_ID,
             'currency' => DEFAULT_CURRENCY,
             'currency_value' => '1.0000',
-            'account_type' => '0',
+            'account_type' => $customers1['account_type'],
             'payment_class' => xtc_db_prepare_input($_POST['payment']),
             'shipping_method' => constant('MODULE_SHIPPING_'.strtoupper($_POST['shipping']).'_TEXT_TITLE'),
             'shipping_class' => xtc_db_prepare_input($_POST['shipping']).'_'.xtc_db_prepare_input($_POST['shipping']),
-            'customers_ip' => '',
+            'customers_ip' => ip_clearing($_SESSION['tracking']['ip']),
             'language' => $_SESSION['language'],
             'languages_id' => $_SESSION['languages_id']
           );
 
         xtc_db_perform(TABLE_ORDERS, $sql_data_array);
         $orders_id = xtc_db_insert_id();
+
+        $sql_data_array = array (
+            'orders_id' => (int)$orders_id,
+            'orders_status_id' => DEFAULT_ORDERS_STATUS_ID,
+            'date_added' => 'now()',
+            'customer_notified' => '0',
+            'comments' => '',
+          );
+        xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
 
         require_once (DIR_FS_LANGUAGES.$_SESSION['language'].'/modules/order_total/ot_total.php');
         $sql_data_array = array(
