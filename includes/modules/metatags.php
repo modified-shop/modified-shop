@@ -643,6 +643,30 @@ if (strpos($meta_robots,'noindex') !== false) {
     $set_hreflang = false;
   }
 }
+
+if ($addPagination) {
+  $number_of_pages = 0;
+  $split_obj = array('listing_split', 'specials_split', 'products_new_split');
+  foreach ($split_obj as $object) {
+    if (isset(${$object}) && is_object(${$object})) {
+      $number_of_pages = ${$object}->number_of_pages;
+      break;
+    }
+  }
+  if ($number_of_pages > 1) {
+    $page = ((isset($_GET['page']) && $_GET['page'] > 0) ? (int)$_GET['page'] : 1);
+    if ($page > 1 && $number_of_pages >= $page) {
+      echo '<link rel="prev" href="'.xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params_include(array('products_id', 'cPath', 'manufacturers_id', 'coID')).(($page > 2) ? 'page='.($page - 1) : ''), 'NONSSL', false).'" />'."\n";
+    }
+    if ($page >= 1 && $number_of_pages > 1 && $number_of_pages > $page) {
+      echo '<link rel="next" href="'.xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params_include(array('products_id', 'cPath', 'manufacturers_id', 'coID')).'page='.($page + 1), 'NONSSL', false).'" />'."\n";
+    }
+    if (isset($canonical_url) && $page > 1) {
+      unset($canonical_url);
+    }
+  }
+}
+
 $meta_alternate = array();
 if (!isset($lng) || (isset($lng) && !is_object($lng))) {
   require_once(DIR_WS_CLASSES . 'language.php');
@@ -686,24 +710,5 @@ if (count($meta_alternate) > 2) {
   echo implode("\n",$meta_alternate)."\n";
 } elseif (isset($canonical_url)) {
   echo '<link rel="canonical" href="'.$canonical_url.'" />'."\n";
-}
-if ($addPagination) {
-  $number_of_pages = 0;
-  $split_obj = array('listing_split', 'specials_split', 'products_new_split');
-  foreach ($split_obj as $object) {
-    if (isset(${$object}) && is_object(${$object})) {
-      $number_of_pages = ${$object}->number_of_pages;
-      break;
-    }
-  }
-  if ($number_of_pages > 1) {
-    $page = ((isset($_GET['page']) && $_GET['page'] > 0) ? (int)$_GET['page'] : 1);
-    if ($page > 1 && $number_of_pages >= $page) {
-      echo '<link rel="prev" href="'.xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params_include(array('products_id', 'cPath', 'manufacturers_id', 'coID')).(($page > 2) ? 'page='.($page - 1) : ''), 'NONSSL', false).'" />'."\n";
-    }
-    if ($page >= 1 && $number_of_pages > 1 && $number_of_pages > $page) {
-      echo '<link rel="next" href="'.xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params_include(array('products_id', 'cPath', 'manufacturers_id', 'coID')).'page='.($page + 1), 'NONSSL', false).'" />'."\n";
-    }
-  }
 }
 ?>
