@@ -27,7 +27,7 @@ class PayPalPaymentBase extends PayPalCommon {
     global $order;
 
     $this->code = $class;
-    $this->paypal_version = '1.1';
+    $this->paypal_version = '1.2';
 
     $this->admin_access_array = array(
       'paypal_info',
@@ -487,6 +487,20 @@ class PayPalPaymentBase extends PayPalCommon {
       if (xtc_db_num_rows($check_query) < 1) {
         $sql_data_array = array(
           'config_key' => 'MODULE_PAYMENT_PAYPALPLUS_USE_TABS',
+          'config_value' => '1'
+        );
+        xtc_db_perform(TABLE_PAYPAL_CONFIG, $sql_data_array);
+      }
+    }
+
+    // check express button
+    if ($this->code == 'paypalcart') {
+      $check_query = xtc_db_query("SELECT config_key
+                                     FROM ".TABLE_PAYPAL_CONFIG."
+                                    WHERE config_value = 'MODULE_PAYMENT_PAYPALCART_SHOW_PRODUCT'");
+      if (xtc_db_num_rows($check_query) < 1) {
+        $sql_data_array = array(
+          'config_key' => 'MODULE_PAYMENT_PAYPALCART_SHOW_PRODUCT',
           'config_value' => '1'
         );
         xtc_db_perform(TABLE_PAYPAL_CONFIG, $sql_data_array);
