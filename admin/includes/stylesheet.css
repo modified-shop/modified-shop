@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------
-$Id: stylesheet.css 1127 2005-07-30 16:06:01Z novalis $   
+$Id$   
 
 XT-Commerce - community made shopping
 http://www.xt-commerce.com
@@ -861,14 +861,14 @@ max-width:1240px;
 min-width:1000px;
 }
 .customers-groups{
-width: 370px;
+width: 450px;
 padding: 5px;
 border: 1px solid #DAA520;
-background:#FFDEAD;
+background:#fff0cf;
 float:left;
 }
 .bg_notice{
-background:#FFDEAD !important;
+background:#fff0cf !important;
 }
 table.collapse{
 border-collapse:collapse;

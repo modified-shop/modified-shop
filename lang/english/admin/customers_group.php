@@ -12,7 +12,7 @@ define('TEXT_CATEGORIES', 'Categories');
 define('TEXT_PRODUCTS', 'Products');
 define('TEXT_CONTENT', 'Site content (Content Manager)');
 define('TEXT_PRODUCTS_CONTENT', 'Products content (Content Manager)');
-define('TEXT_PERMISSION', 'Authorization');
+define('TEXT_PERMISSION', '<div class="error_message">ATTENTION: All permissions will be overwritten!</div><br/>Authorization');
 define('TEXT_SET', 'give');
 define('TEXT_UNSET', 'revoke');
 define('TEXT_SEND', 'Send');

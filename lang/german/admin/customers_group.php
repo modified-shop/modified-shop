@@ -12,7 +12,7 @@ define('TEXT_CATEGORIES', 'Kategorien');
 define('TEXT_PRODUCTS', 'Produkte');
 define('TEXT_CONTENT', 'Seiten Content (Content Manager)');
 define('TEXT_PRODUCTS_CONTENT', 'Artikel Content (Content Manager)');
-define('TEXT_PERMISSION', 'Berechtigung');
+define('TEXT_PERMISSION', '<div class="error_message">ACHTUNG: Es werden alle gesetzten Berechtigungen &uuml;berschrieben!</div><br/>Berechtigung');
 define('TEXT_SET', 'geben');
 define('TEXT_UNSET', 'entziehen');
 define('TEXT_SEND', 'Senden');
