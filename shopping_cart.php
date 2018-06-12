@@ -119,13 +119,11 @@ unset($_SESSION['new_products_id_in_cart']);
 unset($_SESSION['new_products_id_in_wishlist']);
 
 // continue shopping link
-if (!empty($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], FILENAME_SHOPPING_CART) === false  && strpos($_SERVER['HTTP_REFERER'],'in_cart') === false && strpos($_SERVER['HTTP_REFERER'], 'checkout_') === false) {
-  $_SESSION['continue_link'] = $_SERVER['HTTP_REFERER'];
+$_SESSION['continue_link'] = $_SESSION['cart']->get_continue_shopping_link();
+if (!empty($_SESSION['continue_link'])) {
+  $smarty->assign('CONTINUE_LINK', $_SESSION['continue_link']);
+  $smarty->assign('BUTTON_CONTINUE_SHOPPING', xtc_image_button('button_continue_shopping.gif', IMAGE_BUTTON_CONTINUE_SHOPPING));
 }
-if(!empty($_SESSION['continue_link'])) {
-  $smarty->assign('CONTINUE_LINK',$_SESSION['continue_link']);
-}
-$smarty->assign('BUTTON_CONTINUE_SHOPPING', xtc_image_button('button_continue_shopping.gif', IMAGE_BUTTON_CONTINUE_SHOPPING));
 
 if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS == 'true') {
   if (isset($_SESSION['customer_id']) && $_SESSION['customers_status']['customers_status_id'] != DEFAULT_CUSTOMERS_STATUS_ID_GUEST) {
