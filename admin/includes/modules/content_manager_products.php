@@ -15,24 +15,26 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 if (!$action) {
   // products content
   // load products_ids into array
-  $products_id_query=xtc_db_query("SELECT DISTINCT
-                                                   pc.products_id,
-                                                   pd.products_name
-                                              FROM ".TABLE_PRODUCTS_CONTENT." pc,
-                                                   ".TABLE_PRODUCTS_DESCRIPTION." pd
-                                             WHERE pd.products_id=pc.products_id
-                                               AND pd.language_id='".(int)$_SESSION['languages_id']."'");
-  $products_ids=array();
-  while ($products_id_data=xtc_db_fetch_array($products_id_query)) {
-    $products_ids[]=array('id'=>$products_id_data['products_id'],
-                        'name'=>$products_id_data['products_name']);
-  } // while
+  $products_id_query = xtc_db_query("SELECT DISTINCT pc.products_id,
+                                                     pd.products_name
+                                                FROM ".TABLE_PRODUCTS_CONTENT." pc
+                                                JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
+                                                     ON pd.products_id = pc.products_id
+                                                        AND pd.language_id = '".(int)$_SESSION['languages_id']."'
+                                            ORDER BY pd.products_name ASC");
+  $products_ids = array();
+  while ($products_id_data = xtc_db_fetch_array($products_id_query)) {
+    $products_ids[] = array(
+      'id' => $products_id_data['products_id'],
+      'name' => $products_id_data['products_name'],
+    );
+  }
   ?>
   <div class="pageHeadingTaba pdg2 flt-l"><a onclick="this.blur();" href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER); ?>"><?php echo HEADING_CONTENT; ?></a></div>
   <div class="pageHeadingTab pdg2 flt-l"><?php echo HEADING_PRODUCTS_CONTENT; ?></div>
   <div class="borderTab">
   <?php
-    $total_space_media_products = xtc_spaceUsed(DIR_FS_CATALOG.'media/products/'); // DokuMan - 2011-09-06 - sum up correct filesize avoiding global variable
+    $total_space_media_products = xtc_spaceUsed(DIR_FS_CATALOG.'media/products/');
     echo '<div class="main clear">'.USED_SPACE.xtc_format_filesize($total_space_media_products).'</div><br />';
   ?>
   <table class="tableCenter">
@@ -51,31 +53,26 @@ if (!$action) {
           </td>
         </tr>
         <?php
-        if ($_GET['pID']) {
+        if ($_GET['pID'] && $_GET['pID'] != '') {
           // display content elements
-          $content_query=xtc_db_query("SELECT
-                                              content_id,
-                                              content_name,
-                                              content_file,
-                                              content_link,
-                                              languages_id,
-                                              file_comment,
-                                              content_read
+          $content_query=xtc_db_query("SELECT *
                                          FROM ".TABLE_PRODUCTS_CONTENT."
-                                        WHERE products_id='".$_GET['pID']."'
+                                        WHERE products_id = '"(int).$_GET['pID']."'
                                      ORDER BY content_name");
           $content_array = array();
           while ($content_data = xtc_db_fetch_array($content_query)) {
-            $content_array[]=array('id'=> $content_data['content_id'],
-                                 'name'=> $content_data['content_name'],
-                                 'file'=> $content_data['content_file'],
-                                 'link'=> $content_data['content_link'],
-                              'comment'=> $content_data['file_comment'],
-                         'languages_id'=> $content_data['languages_id'],
-                                 'read'=> $content_data['content_read']);
-          } // while content data
+            $content_array[] = array(
+              'id' => $content_data['content_id'],
+              'name' => $content_data['content_name'],
+              'file' => $content_data['content_file'],
+              'link' => $content_data['content_link'],
+              'comment' => $content_data['file_comment'],
+              'languages_id' => $content_data['languages_id'],
+              'read' => $content_data['content_read'],
+            );
+          }
 
-          if ($_GET['pID']==$products_ids[$i]['id']){
+          if ((int)$_GET['pID'] == $products_ids[$i]['id']) {
             ?>
             <tr>
               <td class="dataTableContent"></td>
@@ -102,11 +99,11 @@ if (!$action) {
                           if ($content_array[$ii]['file']!='') {
                             echo xtc_image('../'. DIR_WS_IMAGES.'icons/filetype/icon_'.str_replace('.','',strstr($content_array[$ii]['file'],'.')).'.gif'); //web28 - 2010-09-03 - change path
                           } else {
-                            echo xtc_image('../'. DIR_WS_IMAGES.'icons/filetype/icon_link.gif'); //web28 - 2010-09-03 - change path
+                            echo xtc_image('../'. DIR_WS_IMAGES.'icons/filetype/icon_link.gif');
                           }
                           for ($xx=0,$zz=sizeof($languages); $xx<$zz;$xx++){
-                            if ($languages[$xx]['id']==$content_array[$ii]['languages_id']) {
-                              $lang_dir=$languages[$xx]['directory'];
+                            if ($languages[$xx]['id'] == $content_array[$ii]['languages_id']) {
+                              $lang_dir = $languages[$xx]['directory'];
                               break;
                             }
                           }
@@ -145,12 +142,12 @@ if (!$action) {
                       </td>
                     </tr>
                     <?php
-                  } // for content_array
+                  }
                 echo '    </table>';
               echo '  </td>';
             echo '</tr>';
           }
-        } // for
+        }
       }
     ?>
   </table>
@@ -161,63 +158,56 @@ if (!$action) {
     case 'edit_products_content':
     case 'new_products_content':
       if ($action =='edit_products_content') {
-        $content_query=xtc_db_query("SELECT
-                                      content_id,
-                                      products_id,
-                                      group_ids,
-                                      content_name,
-                                      content_file,
-                                      content_link,
-                                      languages_id,
-                                      file_comment,
-                                      content_read
-                                     FROM ".TABLE_PRODUCTS_CONTENT."
-                                     WHERE content_id='".$g_coID."'
-                                     LIMIT 1"); //DokuMan - 2011-05-13 - added LIMIT 1
+        $content_query=xtc_db_query("SELECT*
+                                       FROM ".TABLE_PRODUCTS_CONTENT."
+                                      WHERE content_id = '".$g_coID."'
+                                      LIMIT 1");
         $content=xtc_db_fetch_array($content_query);
       }
-      // get products names.
-      $products_query=xtc_db_query("SELECT
-                                           products_id,
+      // get products names
+      $products_query=xtc_db_query("SELECT products_id,
                                            products_name
                                       FROM ".TABLE_PRODUCTS_DESCRIPTION."
-                                     WHERE language_id='".(int)$_SESSION['languages_id']."'
-                                  ORDER BY products_name"); // Tomcraft - 2010-09-15 - Added default sort order to products_name for product-content in content-manager
-      $products_array=array();
+                                     WHERE language_id = '".(int)$_SESSION['languages_id']."'
+                                  ORDER BY products_name");
+      $products_array = array();
       while ($products_data=xtc_db_fetch_array($products_query)) {
-        $products_array[]=array('id' => $products_data['products_id'],
-                              'text' => $products_data['products_name']);
+        $products_array[] = array(
+          'id' => $products_data['products_id'],
+          'text' => $products_data['products_name'],
+        );
       }
 
       // get languages
       $languages_array = array();
       for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-        if ($languages[$i]['id']==$content['languages_id']) {
-          $languages_selected=$languages[$i]['code'];
-          $languages_id=$languages[$i]['id'];
+        if ($languages[$i]['id'] == $content['languages_id']) {
+          $languages_selected = $languages[$i]['code'];
+          $languages_id = $languages[$i]['id'];
         }
-        $languages_array[] = array('id' => $languages[$i]['code'],
-                                 'text' => $languages[$i]['name']);
+        $languages_array[] = array(
+          'id' => $languages[$i]['code'],
+          'text' => $languages[$i]['name'],
+        );
       }
 
       // get used content files
-      $content_files_query=xtc_db_query("SELECT DISTINCT
-                                                         content_name,
-                                                         content_file
+      $content_files_query=xtc_db_query("SELECT DISTINCT *
                                                     FROM ".TABLE_PRODUCTS_CONTENT."
-                                                   WHERE content_file!=''");
-      $content_files=array();
+                                                   WHERE content_file != ''");
+      $content_files = array();
       while ($content_files_data=xtc_db_fetch_array($content_files_query)) {
-        $content_files[]=array('id' => $content_files_data['content_file'],
-                             'text' => $content_files_data['content_name']);
+        $content_files[] = array(
+          'id' => $content_files_data['content_file'],
+          'text' => $content_files_data['content_name'],
+        );
       }
 
       // add default value to array
       $default_array[]=array('id' => 'default','text' => TEXT_SELECT);
-      $default_value='default';
-      $content_files=array_merge($default_array,$content_files);
-      // mask for product content
-      
+      $default_value = 'default';
+      $content_files = array_merge($default_array,$content_files);
+      // mask for product content      
       ?>
       <div style="width:99%; margin:5px;">
       <div class="pageHeading"><br /><?php echo HEADING_PRODUCTS_CONTENT; ?><br /></div>
