@@ -186,6 +186,7 @@ require_once (DIR_FS_INC.'xtc_input_validation.inc.php');
 require_once (DIR_FS_INC.'xtc_js_lang.php');
 require_once (DIR_FS_INC.'xtc_backup_restore_configuration.php');
 require_once (DIR_FS_INC.'xtc_hide_session_id.inc.php');
+require_once (DIR_FS_INC.'xtc_get_manufacturers.inc.php');
 require_once (DIR_FS_INC.'get_messages.inc.php');
 
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/functions/','php') as $file) require_once ($file);
