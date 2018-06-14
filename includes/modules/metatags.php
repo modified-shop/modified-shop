@@ -349,7 +349,7 @@ switch(basename($PHP_SELF)) {
       $startpage = false;
     }
 
-    $manu_id = $manu_name = false;
+    $manu_id = $manufacturers_name = false;
 
     // Nachsehen, ob ein Hersteller gewählt ist
     if (!empty($_GET['manufacturers_id'])) {
@@ -363,27 +363,21 @@ switch(basename($PHP_SELF)) {
 
     // ggf. Herstellernamen herausfinden ...
     if ($manu_id !== false) {
-      $manu_name_query = xtDBquery("SELECT m.manufacturers_name,
-                                           mi.manufacturers_meta_keywords,
-                                           mi.manufacturers_meta_description,
-                                           mi.manufacturers_meta_title
-                                      FROM ".TABLE_MANUFACTURERS." m 
-                                      JOIN ".TABLE_MANUFACTURERS_INFO." mi 
-                                           ON m.manufacturers_id=mi.manufacturers_id
-                                              AND mi.languages_id = '".(int)$_SESSION['languages_id']."'
-                                     WHERE m.manufacturers_id = '".(int)$manu_id."'");
-      $manu_name = xtc_db_fetch_array($manu_name_query, true);
+      $manufacturers_array = xtc_get_manufacturers();
+      if (isset($manufacturers_array[$manu_id])) {
+        $manufacturer = $manufacturers_array[$manu_id];
   
-      if (empty($current_category_id)) {      
-        $categories_meta['categories_meta_title'] = ((!empty($manu_name['manufacturers_meta_title'])) ? $manu_name['manufacturers_meta_title'] : $manu_name['manufacturers_name']);
-        $categories_meta['categories_meta_keywords'] = ((!empty($manu_name['manufacturers_meta_keywords'])) ? $manu_name['manufacturers_meta_keywords'] : $manu_name['manufacturers_name']);
-        ((!empty($manu_name['manufacturers_meta_description'])) ? $categories_meta['categories_meta_description'] = $manu_name['manufacturers_meta_description'] : false);
+        if (empty($current_category_id)) {      
+          $categories_meta['categories_meta_title'] = ((!empty($manufacturer['manufacturers_meta_title'])) ? $manufacturer['manufacturers_meta_title'] : $manufacturer['manufacturers_name']);
+          $categories_meta['categories_meta_keywords'] = ((!empty($manufacturer['manufacturers_meta_keywords'])) ? $manufacturer['manufacturers_meta_keywords'] : $manufacturer['manufacturers_name']);
+          ((!empty($manufacturer['manufacturers_meta_description'])) ? $categories_meta['categories_meta_description'] = $manufacturer['manufacturers_meta_description'] : false);
 
-        $metaGoWords .= ','.$manu_name['manufacturers_name']; // <-- zu GoWords hinzuf¸gen
-        $manu_name = '';
-      } else {
-        $manu_name = $manu_name['manufacturers_name'];
-        $metaGoWords .= ','.$manu_name; // <-- zu GoWords hinzuf¸gen
+          $metaGoWords .= ','.$manufacturer['manufacturers_name']; // <-- zu GoWords hinzuf¸gen
+          $manufacturers_name = '';
+        } else {
+          $manufacturers_name = $manufacturer['manufacturers_name'];
+          $metaGoWords .= ','.$manufacturers_name; // <-- zu GoWords hinzuf¸gen
+        }
       }
     }
 
@@ -391,25 +385,25 @@ switch(basename($PHP_SELF)) {
     if (!empty($categories_meta['categories_meta_keywords'])) {
       $meta_keyw = $categories_meta['categories_meta_keywords']; // <-- 1:1 übernehmen!
     } else{
-      $meta_keyw = metaKeyWords($categories_meta['categories_name'].' '.$manu_name.' '.$categories_meta['categories_description']);
+      $meta_keyw = metaKeyWords($categories_meta['categories_name'].' '.$manufacturers_name.' '.$categories_meta['categories_description']);
     }
 
     // Description ...
     if (!empty($categories_meta['categories_meta_description'])) {
       // ggf. Herstellername hinzufügen
-      $meta_descr = $categories_meta['categories_meta_description'].(($manu_name)?' - '.$manu_name:'');
+      $meta_descr = $categories_meta['categories_meta_description'].(($manufacturers_name)?' - '.$manufacturers_name:'');
       $metaDesLength = false;
     } elseif ($categories_meta) {
       // ggf. Herstellername und Kategorientext hinzufügen
-      $meta_descr = $categories_meta['categories_name'].(($manu_name)?' - '.$manu_name:'').(($categories_meta['categories_description'])?' - '.$categories_meta['categories_description']:'');
+      $meta_descr = $categories_meta['categories_name'].(($manufacturers_name)?' - '.$manufacturers_name:'').(($categories_meta['categories_description'])?' - '.$categories_meta['categories_description']:'');
     }
 
     // Title ...
     if (!empty($categories_meta['categories_meta_title'])) {
       // Meta-Titel, ggf. Herstellername, ggf. Seiten-Nummer, ggf. Shop-Titel
-      $meta_title = $categories_meta['categories_meta_title'].(($manu_name)?' - '.$manu_name:'').(($Page)?' - '.$Page:'').(($addCatShopTitle)?' - '.ML_TITLE:'');
+      $meta_title = $categories_meta['categories_meta_title'].(($manufacturers_name)?' - '.$manufacturers_name:'').(($Page)?' - '.$Page:'').(($addCatShopTitle)?' - '.ML_TITLE:'');
     } else{
-      $meta_title = metaTitle($categories_meta['categories_name'],$manu_name,$Page,($addCatShopTitle)?ML_TITLE:'');
+      $meta_title = metaTitle($categories_meta['categories_name'],$manufacturers_name,$Page,($addCatShopTitle)?ML_TITLE:'');
     }
 
     //-- Canonical-URL
@@ -492,13 +486,13 @@ switch(basename($PHP_SELF)) {
 
     // ggf. Herstellernamen herausfinden ...
     if (!empty($_GET['manufacturers_id'])) {
-      $manu_name_query = xtDBquery("SELECT manufacturers_name
-                                      FROM ".TABLE_MANUFACTURERS."
-                                     WHERE manufacturers_id = '".(int)$_GET['manufacturers_id']."'
-      ");
-      $manu_name = xtc_db_fetch_array($manu_name_query,true);
-      is_array($manu_name) ? $manu_name = implode('',$manu_name) :  $manu_name = '';
-      $metaGoWords .= ','.$manu_name; // <-- zu GoWords hinzufügen
+      $manufacturers_array = xtc_get_manufacturers();
+      if (isset($manufacturers_array[(int)$_GET['manufacturers_id']])) {
+        $manufacturers = $manufacturers_array[(int)$_GET['manufacturers_id']];
+        
+        $manufacturers_name = $manufacturers['manufacturers_name'];
+        $metaGoWords .= ','.$manufacturers_name; // <-- zu GoWords hinzufügen
+      }
     }
     // ggf. Kategorien-Namen herausfinden ...
     if (!empty($_GET['categories_id'])) {
@@ -513,7 +507,7 @@ switch(basename($PHP_SELF)) {
     $meta_title = metaTitle($breadcrumbTitle,
                             $Page,
                             (isset($cat_name) ? $cat_name : ''),
-                            (isset($manu_name) ? $manu_name :  ''),
+                            (isset($manufacturers_name) ? $manufacturers_name :  ''),
                             ($addSearchShopTitle) ? ML_TITLE : ''
                             );
     break;

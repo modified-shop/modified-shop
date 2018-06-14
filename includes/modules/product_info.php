@@ -67,23 +67,10 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
            AND language_id = ".(int)$_SESSION['languages_id']);
   }
 
-  // Get manufacturer name etc. for the product page
-  $manufacturer_query = xtDBquery("SELECT m.manufacturers_id,
-                                          m.manufacturers_name,
-                                          m.manufacturers_image,
-                                          mi.manufacturers_url,
-                                          mi.manufacturers_description
-                                     FROM " . TABLE_MANUFACTURERS . " m
-                                     JOIN " . TABLE_MANUFACTURERS_INFO . " mi
-                                          ON m.manufacturers_id = mi.manufacturers_id
-                                             AND mi.languages_id = '" . (int)$_SESSION['languages_id'] . "'
-                                     JOIN " . TABLE_PRODUCTS . " p
-                                          ON p.manufacturers_id = m.manufacturers_id
-                                             AND p.products_id = '" . $product->data['products_id'] . "'");
-  if (xtc_db_num_rows($manufacturer_query, true)) {
-    $manufacturer = xtc_db_fetch_array($manufacturer_query, true);
-
-    $image = $main->getImage($manufacturer['manufacturers_image'],'',MANUFACTURER_IMAGE_SHOW_NO_IMAGE,'manufacturers/noimage.gif');
+  $manufacturerfacturers_array = xtc_get_manufacturers();
+  if (isset($manufacturerfacturers_array[$product->data['manufacturers_id']])) {
+    $manufacturer = $manufacturerfacturers_array[$product->data['manufacturers_id']];
+    $image = $main->getImage($manufacturer['manufacturers_image'], '', MANUFACTURER_IMAGE_SHOW_NO_IMAGE, 'manufacturers/noimage.gif');
 
     $info_smarty->assign('MANUFACTURER_IMAGE', (($image != '') ? DIR_WS_BASE . $image : ''));
     $info_smarty->assign('MANUFACTURER', $manufacturer['manufacturers_name']);
