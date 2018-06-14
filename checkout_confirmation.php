@@ -35,14 +35,14 @@ include ('includes/application_top.php');
 // create smarty elements
 $smarty = new Smarty;
 
-// include boxes
-require (DIR_FS_CATALOG . 'templates/' . CURRENT_TEMPLATE . '/source/boxes.php');
-
 // include needed functions
 require_once (DIR_FS_INC . 'xtc_calculate_tax.inc.php');
 require_once (DIR_FS_INC . 'xtc_display_tax_value.inc.php');
 
 require (DIR_WS_INCLUDES.'checkout_requirements.php');
+
+// include boxes
+require (DIR_FS_CATALOG . 'templates/' . CURRENT_TEMPLATE . '/source/boxes.php');
 
 //check if display conditions on checkout page is true
 if (isset($_POST['payment']))

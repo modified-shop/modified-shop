@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: checkout_shipping.php 2454 2011-12-06 14:44:38Z franky-n-xtcm $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -37,15 +37,15 @@ defined('SHOW_SELFPICKUP_FREE') or define('SHOW_SELFPICKUP_FREE', 'false'); // d
 // create smarty elements
 $smarty = new Smarty;
 
-// include boxes
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
-
 // include needed functions
 require_once (DIR_FS_INC.'xtc_address_label.inc.php');
 require_once (DIR_FS_INC.'xtc_get_address_format_id.inc.php');
 require_once (DIR_FS_INC.'xtc_count_shipping_modules.inc.php');
 
 require (DIR_WS_INCLUDES.'checkout_requirements.php');
+
+// include boxes
+require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 //express checkout
 if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS == 'true') {

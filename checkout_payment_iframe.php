@@ -24,10 +24,10 @@ require_once (DIR_FS_INC.'xtc_address_label.inc.php');
 
 $smarty = new Smarty;
 
+require (DIR_WS_INCLUDES.'checkout_requirements.php');
+
 // include boxes
 require (DIR_FS_CATALOG . 'templates/' . CURRENT_TEMPLATE . '/source/boxes.php');
-
-require (DIR_WS_INCLUDES.'checkout_requirements.php');
 
 // load selected payment module
 require_once (DIR_WS_CLASSES.'payment.php');

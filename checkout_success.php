@@ -32,9 +32,6 @@ include ('includes/application_top.php');
 // create smarty elements
 $smarty = new Smarty;
 
-// include boxes
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
-
 if (isset ($_GET['action']) && ($_GET['action'] == 'update')) {
 	if ($_POST['account_type'] != 1) {
     xtc_redirect(xtc_href_link(FILENAME_DEFAULT),'NONSSL');
@@ -47,6 +44,9 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'update')) {
 if (!isset ($_SESSION['customer_id'])) {
   xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART), 'NONSSL');
 }
+
+// include boxes
+require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 $orders_query = xtc_db_query("SELECT orders_id,
                                      orders_status,
