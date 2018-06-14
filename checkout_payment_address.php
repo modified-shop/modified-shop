@@ -21,9 +21,6 @@ include ('includes/application_top.php');
 // create smarty elements
 $smarty = new Smarty;
 
-// include boxes
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
-
 // include needed functions
 require_once (DIR_FS_INC.'xtc_count_customer_address_book_entries.inc.php');
 require_once (DIR_FS_INC.'xtc_address_label.inc.php');
@@ -45,6 +42,9 @@ if (!isset ($_SESSION['customer_id'])) {
 if ($_SESSION['cart']->count_contents() < 1) {
   xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART));
 }
+
+// include boxes
+require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 $error = false;
 $process = false;

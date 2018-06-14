@@ -38,14 +38,14 @@ defined('CHECK_FIRST_PAYMENT_MODUL') or define('CHECK_FIRST_PAYMENT_MODUL', 'fal
 // create smarty elements
 $smarty = new Smarty;
 
-// include boxes
-require (DIR_FS_CATALOG . 'templates/' . CURRENT_TEMPLATE . '/source/boxes.php');
-
 // include needed functions
 require_once (DIR_FS_INC . 'xtc_address_label.inc.php');
 require_once (DIR_FS_INC . 'xtc_get_address_format_id.inc.php');
 
 require (DIR_WS_INCLUDES.'checkout_requirements.php');
+
+// include boxes
+require (DIR_FS_CATALOG . 'templates/' . CURRENT_TEMPLATE . '/source/boxes.php');
 
 unset ($_SESSION['tmp_oID']);
 unset ($_SESSION['transaction_id']); ### moneybookers payment module version 2.4
