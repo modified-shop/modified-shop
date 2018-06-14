@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: create_breadcrumb.php 3851 2012-11-06 10:33:23Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -38,11 +38,11 @@ if (isset ($cPath_array)) {
   }
 } elseif (isset($_GET['manufacturers_id']) && xtc_not_null($_GET['manufacturers_id'])) { 
   $_GET['manufacturers_id'] = (int) $_GET['manufacturers_id'];
-  $manufacturers_query = xtDBquery("SELECT manufacturers_name 
-                                      FROM ".TABLE_MANUFACTURERS." 
-                                     WHERE manufacturers_id = '".(int) $_GET['manufacturers_id']."'");
-  $manufacturers = xtc_db_fetch_array($manufacturers_query, true);
-  $breadcrumb->add($manufacturers['manufacturers_name'], xtc_href_link(FILENAME_DEFAULT, xtc_manufacturer_link((int) $_GET['manufacturers_id'], $manufacturers['manufacturers_name'])));
+  $manufacturers_array = xtc_get_manufacturers();
+  if (isset($manufacturers_array[(int)$_GET['manufacturers_id']])) {
+    $manufacturers = $manufacturers_array[(int)$_GET['manufacturers_id']];
+    $breadcrumb->add($manufacturers['manufacturers_name'], xtc_href_link(FILENAME_DEFAULT, xtc_manufacturer_link((int) $_GET['manufacturers_id'], $manufacturers['manufacturers_name'])));
+  }
 }
 
 // add the products model/name to the breadcrumb trail
