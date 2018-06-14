@@ -59,28 +59,11 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
   include ('includes/application_bottom.php');
 } else {
   
-  // Get manufacturer name etc. for the product page
-  $manufacturer_query = xtc_db_query("SELECT m.manufacturers_id,
-                                             m.manufacturers_name,
-                                             m.manufacturers_image,
-                                             mi.manufacturers_url
-                                        FROM " . TABLE_MANUFACTURERS . " m
-                                   LEFT JOIN " . TABLE_MANUFACTURERS_INFO . " mi
-                                          ON (m.manufacturers_id = mi.manufacturers_id
-                                         AND mi.languages_id = '" . (int)$_SESSION['languages_id'] . "')
-                                        JOIN " . TABLE_PRODUCTS . " p
-                                             ON p.manufacturers_id = m.manufacturers_id
-                                       WHERE p.products_id = '" . $product->data['products_id'] . "'");
-  if (xtc_db_num_rows($manufacturer_query)) {
-    $manufacturer = xtc_db_fetch_array($manufacturer_query);
+  $manufacturerfacturers_array = xtc_get_manufacturers();
+  if (isset($manufacturerfacturers_array[$product->data['manufacturers_id']])) {
+    $manufacturer = $manufacturerfacturers_array[$product->data['manufacturers_id']];
+    $image = $main->getImage($manufacturer['manufacturers_image'], '', MANUFACTURER_IMAGE_SHOW_NO_IMAGE, 'manufacturers/noimage.gif');
 
-    $image = '';
-    if ($manufacturer['manufacturers_image'] != '') {
-      $image = DIR_WS_IMAGES.$manufacturer['manufacturers_image'];
-    }    
-    if (!is_file(DIR_FS_CATALOG.$image)) {
-      $image = ((MANUFACTURER_IMAGE_SHOW_NO_IMAGE == 'true') ? DIR_WS_IMAGES.'manufacturers/noimage.gif' : '');
-    }
     $info_smarty->assign('MANUFACTURER_IMAGE', (($image != '') ? DIR_WS_BASE . $image : ''));
     $info_smarty->assign('MANUFACTURER', $manufacturer['manufacturers_name']);
     $info_smarty->assign('MANUFACTURER_LINK', xtc_href_link(FILENAME_DEFAULT, xtc_manufacturer_link($manufacturer['manufacturers_id'], $manufacturer['manufacturers_name'])));
