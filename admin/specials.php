@@ -338,7 +338,7 @@ require (DIR_WS_INCLUDES.'head.php');
                   $contents[] = array('align' => 'center', 'text' => '<br />' . xtc_product_thumb_image($sInfo->products_image, $sInfo->products_name, defined('SMALL_IMAGE_WIDTH') ? SMALL_IMAGE_WIDTH : '', defined('SMALL_IMAGE_HEIGHT') ? SMALL_IMAGE_HEIGHT : ''));
                   $contents[] = array('text' => '<br />' . TEXT_INFO_ORIGINAL_PRICE . ' ' . $xtPrice->xtcFormat($sInfo->products_price,true));
                   $contents[] = array('text' => '' . TEXT_INFO_NEW_PRICE . ' ' . $xtPrice->xtcFormat($sInfo->specials_new_products_price,true));
-                  $contents[] = array('text' => '' . TEXT_INFO_PERCENTAGE . ' ' . number_format(100 - (($sInfo->specials_new_products_price / $sInfo->products_price) * 100)) . '%');
+                  $contents[] = array('text' => '' . TEXT_INFO_PERCENTAGE . ' ' . (($sInfo->products_price > 0) ? number_format(100 - (($sInfo->specials_new_products_price / $sInfo->products_price) * 100)) : '0') . '%');
                   $contents[] = array('text' => '<br />' . TEXT_INFO_START_DATE . ' <b>' . xtc_date_short($sInfo->start_date) . '</b>');
                   $contents[] = array('text' => TEXT_INFO_EXPIRES_DATE . ' <b>' . xtc_date_short($sInfo->expires_date) . '</b>');
                   $contents[] = array('text' => TEXT_INFO_STATUS_CHANGE . ' ' . xtc_date_short($sInfo->date_status_change));
