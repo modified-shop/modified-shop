@@ -67,9 +67,9 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
            AND language_id = ".(int)$_SESSION['languages_id']);
   }
 
-  $manufacturerfacturers_array = xtc_get_manufacturers();
-  if (isset($manufacturerfacturers_array[$product->data['manufacturers_id']])) {
-    $manufacturer = $manufacturerfacturers_array[$product->data['manufacturers_id']];
+  $manufacturers_array = xtc_get_manufacturers();
+  if (isset($manufacturers_array[$product->data['manufacturers_id']])) {
+    $manufacturer = $manufacturers_array[$product->data['manufacturers_id']];
     $image = $main->getImage($manufacturer['manufacturers_image'], '', MANUFACTURER_IMAGE_SHOW_NO_IMAGE, 'manufacturers/noimage.gif');
 
     $info_smarty->assign('MANUFACTURER_IMAGE', (($image != '') ? DIR_WS_BASE . $image : ''));
