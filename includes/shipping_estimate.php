@@ -105,6 +105,7 @@ if (MODULE_ORDER_TOTAL_INSTALLED) {
   $module_smarty->assign('TOTAL_BLOCK_ARRAY', $order_total_array);
   $total_block = $order_total_modules->output();
   $module_smarty->assign('TOTAL_BLOCK', $total_block);
+  $smarty->assign('TOTAL_BLOCK', $total_block);
 }
 
 if (!isset($order->info['total'])) {
