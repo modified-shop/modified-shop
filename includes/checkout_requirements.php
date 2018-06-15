@@ -111,7 +111,7 @@ if ($_SESSION['customers_status']['customers_status_min_order'] != 0 && $xtPrice
 
 // Checkout only when maximum order value is not reached
 if ($_SESSION['customers_status']['customers_status_max_order'] != 0 && $xtPrice->xtcRemoveCurr($_SESSION['cart']->show_total()) > $_SESSION['customers_status']['customers_status_max_order'] ) {
-    xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART));
+  xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART));
 }
 
 // from checkout_payment

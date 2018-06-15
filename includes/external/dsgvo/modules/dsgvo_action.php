@@ -27,6 +27,10 @@
         if (count($_SESSION['dsgvo']) < 1) {
           unset($_SESSION['dsgvo']);
           
+          if (basename($PHP_SELF) == FILENAME_CHECKOUT_CONFIRMATION) {
+            xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, xtc_get_all_get_params(array('action')), 'SSL')); 
+          }
+          
           // define pages allowed to redirect
           $redirect_array = array(FILENAME_ACCOUNT_HISTORY_INFO, 
                                   FILENAME_ACCOUNT, 
@@ -40,9 +44,9 @@
               unset($_SESSION['old_customers_basket_cart']);
               $messageStack->add_session('info_message_3', TEXT_SAVED_BASKET);
             }
-            xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART),'NONSSL'); 
+            xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART)); 
           } else {          
-            xtc_redirect(xtc_href_link(FILENAME_DEFAULT),'NONSSL');           
+            xtc_redirect(xtc_href_link(FILENAME_DEFAULT));           
           }
         }
       }
