@@ -21,13 +21,14 @@
   class upload {
     var $file, $filename, $destination, $permissions, $extensions, $mime_types, $tmp_filename;
 
-    function __construct($file = '', $destination = '', $permissions = '644', $extensions = '', $mime_types='') {
+    function __construct($file = '', $destination = '', $permissions = '644', $extensions = '', $mime_types = '') {
 
       $this->set_file($file);
       $this->set_destination($destination);
       $this->set_permissions($permissions);
       $this->set_extensions($extensions);
-
+      $this->set_mime_types($mime_types);
+      
       if (xtc_not_null($this->file) && xtc_not_null($this->destination)) {
         if ( ($this->parse() == true) && ($this->save() == true) ) {
           return true;
@@ -38,8 +39,7 @@
     }
 
     function parse() {
-      global $messageStack;
-      
+    
       $file = array();
 
       if (isset($_FILES[$this->file])) {
@@ -52,19 +52,19 @@
       if (isset($file['tmp_name']) && !empty($file['tmp_name']) && ($file['tmp_name'] != 'none') && is_uploaded_file($file['tmp_name'])) {
         if (sizeof($this->mime_types) > 0) {
           if (!in_array(strtolower($file['type']), $this->mime_types)) {
-            $messageStack->add_session(ERROR_FILETYPE_NOT_ALLOWED, 'error');
+            $this->set_message(ERROR_FILETYPE_NOT_ALLOWED);
             return false;
           }
         }
         if (sizeof($this->extensions) > 0) {
           if (!in_array(strtolower(substr($file['name'], strrpos($file['name'], '.')+1)), $this->extensions)) {
-            $messageStack->add_session(ERROR_FILETYPE_NOT_ALLOWED, 'error');
+            $this->set_message(ERROR_FILETYPE_NOT_ALLOWED);
             return false;
           }
         }
 
         if ($file['name'] == '.htaccess' || $file['name'] == '.htpasswd') {
-          $messageStack->add_session(ERROR_FILETYPE_NOT_ALLOWED, 'error');
+          $this->set_message(ERROR_FILETYPE_NOT_ALLOWED);
           return false;
         }
 
@@ -74,13 +74,14 @@
         return $this->check_destination();
         
       } else {
-        if ($file['tmp_name']=='none') $messageStack->add_session(WARNING_NO_FILE_UPLOADED, 'warning');
+        if ($file['tmp_name'] == 'none') {
+          $this->set_message(WARNING_NO_FILE_UPLOADED);
+        }
         return false;
       }
     }
 
     function save() {
-      global $messageStack;
 
       if (substr($this->destination, -1) != '/') $this->destination .= '/';
 
@@ -93,12 +94,12 @@
           if (strstr(PRODUCT_IMAGE_THUMBNAIL_MERGE,'.gif') ||
               strstr(PRODUCT_IMAGE_INFO_MERGE,'.gif') ||
               strstr(PRODUCT_IMAGE_POPUP_MERGE,'.gif')) {
-              $messageStack->add_session(ERROR_GIF_MERGE, 'error');
+              $this->set_message(ERROR_GIF_MERGE);
               return false;
           }
           // check if uploaded image = .gif
           if (strstr($this->filename,'.gif')) {
-           $messageStack->add_session(ERROR_GIF_UPLOAD, 'error');
+           $this->set_message(ERROR_GIF_UPLOAD);
            return false;
           }
 
@@ -114,11 +115,11 @@
       
       if (move_uploaded_file($this->file['tmp_name'], $this->destination . $this->filename)) {
         chmod($this->destination . $this->filename, $this->permissions);
-        $messageStack->add_session(SUCCESS_FILE_SAVED_SUCCESSFULLY, 'success');
+        $this->set_message(SUCCESS_FILE_SAVED_SUCCESSFULLY, 'success');
         return true;
         
       } else {
-        $messageStack->add_session(ERROR_FILE_NOT_SAVED, 'error');
+        $this->set_message(ERROR_FILE_NOT_SAVED);
         return false;
       }
     }
@@ -155,14 +156,24 @@
       }
     }
 
+    function set_mime_types($mime_types) { 
+      if (xtc_not_null($mime_types)) { 
+        if (is_array($mime_types)) { 
+          $this->mime_types = $mime_types; 
+        } else { 
+          $this->mime_types = array($mime_types); 
+        } 
+      } else { 
+        $this->mime_types = array(); 
+      } 
+    }
+ 	
     function check_destination() {
-      global $messageStack;
-
       if (!is_writeable($this->destination)) {
         if (is_dir($this->destination)) {
-          $messageStack->add_session(sprintf(ERROR_DESTINATION_NOT_WRITEABLE, $this->destination), 'error');
+          $this->set_message(sprintf(ERROR_DESTINATION_NOT_WRITEABLE, $this->destination));
         } else {
-          $messageStack->add_session(sprintf(ERROR_DESTINATION_DOES_NOT_EXIST, $this->destination), 'error');
+          $this->set_message(sprintf(ERROR_DESTINATION_DOES_NOT_EXIST, $this->destination));
         }
         return false;
         
@@ -183,5 +194,14 @@
 
       return $filename;		    
     }
+
+    function set_message($text, $type = 'error') { 
+      global $messageStack;
+      
+      if (is_object($messageStack)) { 
+        $messageStack->add_session($text, $type); 
+      } 
+    }
+    
   }
 ?>
