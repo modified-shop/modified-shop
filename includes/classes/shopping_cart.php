@@ -965,6 +965,8 @@ class shoppingCart {
    * @return url
    */
   function get_continue_shopping_link() {
+    global $request_type;
+    
     $url = '';
     if (!empty($_SERVER['HTTP_REFERER']) 
         && strpos($_SERVER['HTTP_REFERER'], FILENAME_SHOPPING_CART) === false  
