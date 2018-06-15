@@ -11,6 +11,7 @@
    ---------------------------------------------------------------------------------------*/
   
   
+  require_once(DIR_WS_LANGUAGES.$_SESSION['language'].'/modules/payment/easycredit.php');
   require_once(DIR_WS_MODULES.'payment/easycredit.php');
   $easycredit = new easycredit();
 
@@ -21,7 +22,6 @@
       && $country['countries_iso_code_2'] == 'DE'
       ) 
   {  
-    require_once(DIR_WS_LANGUAGES.$_SESSION['language'].'/modules/payment/easycredit.php');
     $amount = $xtPrice->xtcGetPrice($product->data['products_id'], false, 1, $product->data['products_tax_class_id'], $product->data['products_price']); 
     $presentment = $easycredit->get_presentment_product($amount);
     $info_smarty->assign('EASYCREDIT', $presentment);
