@@ -41,13 +41,7 @@
    * @param mixed $value
    * @return
    */
-  function clear_string($value) {
-    $string = str_replace("'", '', $value);
-    $string = str_replace(')', '', $string);
-    $string = str_replace('(', '', $string);
-    $array = explode(',', $string);
-    return $array;
-  }
+  require_once(DIR_FS_INC . 'clear_string.inc.php'); // Use existing function from "/inc/" folder
 
   /**
    * xtc_parse_input_field_data()
@@ -1920,14 +1914,7 @@
    * @param string $mime_types
    * @return
    */
-  function xtc_try_upload($file = '', $destination = '', $permissions = '644', $extensions = '', $mime_types = '') {
-    $file_object = new upload($file, $destination, $permissions, $extensions, $mime_types);
-    if ($file_object->filename != '') {
-      return $file_object;
-    } else {
-      return false;
-    }
-  }
+  require_once(DIR_FS_INC . 'xtc_try_upload.inc.php'); // Use existing function from "/inc/" folder
 
   /**
    * xtc_button()
