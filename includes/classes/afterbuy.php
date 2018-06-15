@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$ 
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -40,11 +40,21 @@ class xtc_afterbuy_functions {
 		// new Orderstatus ID of processed order
 		$order_status = AFTERBUY_ORDERSTATUS;
 
-		// ######################################
+    //$Artikelerkennung = '2';
+    // 0 = Product ID (products_id XT muss gleich Product ID Afterbuy sein)
+    // 1 = Artikelnummer (products_model XT muss gleich Arrikelnummer Afterbuy sein)
+    // 2 = EAN (products_ean XT muss gleich EAN Afterbuy sein)
+    // sollen keine Stammartikel erkannt werden, muss diese Zeile: $Artikelerkennung = '1';  gelöscht oder auskommentiert werden
+
+    // ######################################
 
 		$oID = $this->order_id;
 		$customer = array ();
-		$afterbuy_URL = 'https://api.afterbuy.de/afterbuy/ShopInterface'.((isset($_SESSION['language_charset']) && strtolower($_SESSION['language_charset']) == 'utf8') ? 'UTF8' : '').'.aspx';
+    if (DB_SERVER_CHARSET == 'utf8') {
+      $afterbuy_URL = 'https://api.afterbuy.de/afterbuy/shopinterfaceUTF8.aspx';
+    } else {
+      $afterbuy_URL = 'https://api.afterbuy.de/afterbuy/ShopInterface.aspx';
+    }
 
 		// connect
 		$ch = curl_init();
@@ -77,18 +87,21 @@ class xtc_afterbuy_functions {
 		$customer['fax'] = "";
 		$customer['mail'] = $oData['customers_email_address'];
 		$customer['land'] = $oData['billing_country_iso_code_2'];
+    $customer['ustid'] = $oData['customers_vat_id'];
+    $customer['customers_status'] = $oData['customers_status'];
 
 		// get gender
-		$c_query = xtc_db_query("SELECT customers_gender FROM ".TABLE_CUSTOMERS." WHERE customers_id='".(int)$customer['id']."'");
-		$c_data = xtc_db_fetch_array($c_query);
-		switch ($c_data['customers_gender']) {
-			case 'm' :
-				$customer['gender'] = 'Herr';
-				break;
-			default :
-				$customer['gender'] = 'Frau';
-				break;
-		}
+    switch ($oData['customers_gender']) {
+      case 'm' :
+        $customer['gender'] = 'Herr';
+        break;
+      case 'f' :
+        $customer['gender'] = 'Frau';
+        break;
+      default :
+        $customer['gender'] = '';
+        break;
+    }
 
 		// Delivery Address
 		$customer['d_firma'] = $oData['delivery_company'];
@@ -102,10 +115,11 @@ class xtc_afterbuy_functions {
 
 		// get products related to order
 		$p_query = xtc_db_query("SELECT * FROM ".TABLE_ORDERS_PRODUCTS." WHERE orders_id='".(int)$oID."'");
-
 		$p_count = xtc_db_num_rows($p_query);
+
 		// init GET string
-		$DATAstring = "Action=new&";
+    $DATAstring = "Kundenerkennung=1&";
+    $DATAstring .= "Action=new&";
 		$DATAstring .= "PartnerID=".$PartnerID."&";
 		$DATAstring .= "PartnerPass=".$PartnerPass."&";
 		$DATAstring .= "UserID=".$UserID."&";
@@ -133,24 +147,82 @@ class xtc_afterbuy_functions {
 		$DATAstring .= "KLPLZ=".$customer['d_plz']."&";
 		$DATAstring .= "KLOrt=".$customer['d_ort']."&";
 		$DATAstring .= "KLLand=".$customer['d_land']."&";
+    $DATAstring .= "UsStID=".$customer['ustid']."&";
+    $DATAstring .= "VID=" . $oID . "&";
 
-		// products_data
+    $customer_status = $customer['customers_status'];
+    switch($customer_status) {
+      case '0': //Admin
+        $DATAstring .= "Haendler=0&";
+        break;
+      case '1': //Gast
+        $DATAstring .= "Haendler=0&";
+        break;
+      case '2': //Kunde
+        $DATAstring .= "Haendler=0&";
+        break;
+      case '3': //im Standard B2B
+        $DATAstring .= "Haendler=1&";
+        break;
+      case '4': //eigene Kundengruppe
+        $DATAstring .= "Haendler=1&";
+        break;
+      case '5': //eigene Kundengruppe
+        $DATAstring .= "Haendler=1&";
+        break;
+      case '6': //eigene Kundengruppe
+        $DATAstring .= "Haendler=1&";
+        break;
+      case '7': //eigene Kundengruppe
+        $DATAstring .= "Haendler=1&";
+        break;
+      default: //wenn alles nicht zutrifft
+        $DATAstring .= "Haendler=0&";
+    }
+
+    $cQuery = xtc_db_query("SELECT customers_status_add_tax_ot, customers_status_show_price_tax FROM " . TABLE_CUSTOMERS_STATUS . " WHERE customers_status_id = '" . $oData['customers_status'] . "' LIMIT 0,1");
+    $cData  = xtc_db_fetch_array($cQuery);
+
+    // products_data
+    if (isset($Artikelerkennung) && is_numeric($Artikelerkennung)) $DATAstring .= "Artikelerkennung=" . $Artikelerkennung . "&";
 		$nr = 0;
 		$anzahl = 0;
 		while ($pDATA = xtc_db_fetch_array($p_query)) {
 			$nr ++;
-			$artnr = $pDATA['products_model'];
-			if ($artnr == '')
-				$artnr = $pDATA['products_id'];
-			$DATAstring .= "Artikelnr_".$nr."=".$artnr."&";
-			$DATAstring .= "Artikelname_".$nr."=".preg_replace("/&/", "%38", preg_replace("/\"/", "", preg_replace("/ /", "%20", $pDATA['products_name'])))."&"; 
-			
-			if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1) $pDATA['products_price'] = $xtPrice->xtcAddTax($pDATA['products_price'], $pDATA['products_tax']);
-			if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0) $pDATA['products_tax'] = 0;
-			$price = preg_replace("/\./", ",", $pDATA['products_price']); 
-			$tax = preg_replace("/\./", ",", $pDATA['products_tax']); 
 
-			$DATAstring .= "ArtikelEPreis_".$nr."=".$price."&";
+      if (!empty($pDATA['products_model']) && is_numeric($pDATA['products_model'])) {
+        $artnr = $pDATA['products_model'];
+      } else {
+        $artnr = $pDATA['products_id'];
+      }
+
+      if ($Artikelerkennung == 0) {
+        $stammid = $pDATA['products_id'];
+      } elseif ($Artikelerkennung == 1 && $pDATA['products_model'] != '') {
+        $stammid = $pDATA['products_model'];
+      } elseif ($Artikelerkennung == 2 && $pDATA['products_ean'] != '') {
+        $stammid = $pDATA['products_ean'];
+      } else {
+        $stammid = '';
+      }
+
+      $DATAstring .= "Artikelnr_".$nr."=".$artnr."&";
+      if ($stammid != '') $DATAstring .= "ArtikelStammID_".$nr."=".$stammid."&";
+			$DATAstring .= "Artikelname_".$nr."=".preg_replace("/&/", "%38", preg_replace("/\"/", "", preg_replace("/ /", "%20", $pDATA['products_name'])))."&";
+
+      $price = $pDATA['products_price'];
+      $tax = $pDATA['products_tax'];
+      if ($pDATA['allow_tax'] == 0) {
+        if ($cData['customers_status_add_tax_ot'] == 0) {
+          $tax = 0;
+        } else {
+          $price = $xtPrice->xtcAddTax($price, $tax);
+        }
+      }
+      $price = preg_replace("/\./", ",", $price);
+      $tax = preg_replace("/\./", ",", $tax);
+
+      $DATAstring .= "ArtikelEPreis_".$nr."=".$price."&";
 			$DATAstring .= "ArtikelMwst_".$nr."=".$tax."&";
 			$DATAstring .= "ArtikelMenge_".$nr."=".$pDATA['products_quantity']."&";
 			$url = HTTP_SERVER.DIR_WS_CATALOG.'product_info.php?products_id='.$pDATA['products_id'];
@@ -170,6 +242,8 @@ class xtc_afterbuy_functions {
 			}
 			$anzahl += $pDATA['products_quantity'];
 		}
+
+    $customers_status_show_price_tax = $cData['customers_status_show_price_tax'];
 
 		$order_total_query = xtc_db_query("SELECT *
 						                             FROM ".TABLE_ORDERS_TOTAL."
@@ -218,15 +292,15 @@ class xtc_afterbuy_functions {
 			// cod tax class
 			// MODULE_ORDER_TOTAL_COD_TAX_CLASS
 			$nr ++;
+      $codtax = xtc_get_tax_rate(MODULE_ORDER_TOTAL_COD_TAX_CLASS);
 			$DATAstring .= "Artikelnr_".$nr."=99999999&";
 			$DATAstring .= "Artikelname_".$nr."=Nachname&";
-			$cod_fee = preg_replace("/\./", ",", $cod_fee); 
+      $cod_fee = $this->get_ot_total($customers_status_show_price_tax, $codtax, $cod_fee);
 			$DATAstring .= "ArtikelEPreis_".$nr."=".$cod_fee."&";
-			$DATAstring .= "ArtikelMwst_".$nr."=".$tax."&";
+      $DATAstring .= "ArtikelMwst_".$nr."=".$codtax."&";
 			$DATAstring .= "ArtikelMenge_".$nr."=1&";
 			$p_count ++;
 		}
-
 		// rabatt
 		if ($discount_flag) {
 			$nr ++;
@@ -234,7 +308,7 @@ class xtc_afterbuy_functions {
 			$DATAstring .= "Artikelname_".$nr."=Rabatt&";
 			$discount = preg_replace("/\./", ",", $discount); 
 			$DATAstring .= "ArtikelEPreis_".$nr."=".$discount."&";
-			$DATAstring .= "ArtikelMwst_".$nr."=".$tax."&";
+      $DATAstring .= "ArtikelMwst_".$nr."=0&";
 			$DATAstring .= "ArtikelMenge_".$nr."=1&";
 			$p_count ++;
 		}
@@ -244,7 +318,7 @@ class xtc_afterbuy_functions {
 			$gvtax = xtc_get_tax_rate(MODULE_ORDER_TOTAL_GV_TAX_CLASS);
 			$DATAstring .= "Artikelnr_".$nr."=99999997&";
 			$DATAstring .= "Artikelname_".$nr."=Gutschein&";
-			$gv = preg_replace("/\./", ",", ($gv * (-1))); 
+      $gv = preg_replace("/\./", ",", ($gv * (-1)));
 			$DATAstring .= "ArtikelEPreis_".$nr."=".$gv."&";
 			$DATAstring .= "ArtikelMwst_".$nr."=".$gvtax."&";
 			$DATAstring .= "ArtikelMenge_".$nr."=1&";
@@ -256,7 +330,7 @@ class xtc_afterbuy_functions {
 			$coupontax = xtc_get_tax_rate(MODULE_ORDER_TOTAL_COUPON_TAX_CLASS);
 			$DATAstring .= "Artikelnr_".$nr."=99999996&";
 			$DATAstring .= "Artikelname_".$nr."=Kupon&";
-			$coupon = preg_replace("/\./", ",", ($coupon * (-1))); 
+      $coupon = preg_replace("/\./", ",", ($coupon * (-1)));
 			$DATAstring .= "ArtikelEPreis_".$nr."=".$coupon."&";
 			$DATAstring .= "ArtikelMwst_".$nr."=".$coupontax."&";
 			$DATAstring .= "ArtikelMenge_".$nr."=1&";
@@ -265,33 +339,35 @@ class xtc_afterbuy_functions {
 
 		$DATAstring .= "PosAnz=".$p_count."&";
 
-		$vK = preg_replace("/\./", ",", $shipping); 
+    $vK = preg_replace("/\./", ",", $shipping);
 
-		if ($oData['payment_method'] == 'cod')
-			$oData['payment_method'] = 'Nachnahme';
-
-		$s_method = explode('(', $oData['shipping_method']);
+    $s_method = explode('(', $oData['shipping_method']);
 		$s_method = str_replace(' ', '%20', $s_method[0]);
 
-		$DATAstring .= "kommentar=".$oData['comments']."&";
+    $DATAstring .= "Kommentar=".urlencode($oData['comments'])."&";
 		$DATAstring .= "Versandart=".$s_method."&";
-		$DATAstring .= "Versandkosten=".$vK."&";
-		$DATAstring .= "Zahlart=".$oData['payment_method']."&";
+    $DATAstring .= "Versandkosten=".$vK."&";
+    $this->getPayment($oData['payment_method']);
+    $DATAstring .= "Zahlart=" . $this->payment_name . "&";
+    $DATAstring .= "ZFunktionsID=" . $this->payment_id . "&";
 
 		//banktransfer data
 		if ($oData['payment_method']=='banktransfer') {
 		$b_query = xtc_db_query("SELECT * FROM ".TABLE_BANKTRANSFER." WHERE orders_id='".(int)$oID."'");
 
-		if (xtc_db_numrows($b_query)) {
-			$b_data = xtc_db_fetch_array($b_query);
-			$DATAstring .= "Bankname=".$b_data['banktransfer_bankname']."&";
-			$DATAstring .= "BLZ=".$b_data['banktransfer_blz']."&";
-			$DATAstring .= "Kontonummer=".$b_data['banktransfer_number']."&";
-			$DATAstring .= "Kontoinhaber=".$b_data['banktransfer_owner']."&";
-		}
+      if (xtc_db_numrows($b_query)) {
+        $b_data = xtc_db_fetch_array($b_query);
+        $DATAstring .= "Bankname=".$b_data['banktransfer_bankname']."&";
+        $DATAstring .= "BLZ=".$b_data['banktransfer_blz']."&";
+        $DATAstring .= "Kontonummer=".$b_data['banktransfer_number']."&";
+        $DATAstring .= "Kontoinhaber=".$b_data['banktransfer_owner']."&";
+        $DATAstring .= "BIC=".$b_data['banktransfer_bic']."&";
+        $DATAstring .= "IBAN=".$b_data['banktransfer_iban']."&";
+      }
 		}
 
 		$DATAstring .= "NoVersandCalc=1";
+    $DATAstring .= "Bestandart=shop&";
 
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $DATAstring);
@@ -312,10 +388,10 @@ class xtc_afterbuy_functions {
 			}
 		} else {
 			// mail to shopowner
-			$mail_content = 'Fehler bei &Uuml;bertragung der Bestellung: '.$oID.chr(13).chr(10).'Folgende Fehlermeldung wurde vom afterbuy.de zur&uuml;ckgegeben:'.chr(13).chr(10).$result;
-
-			mail(EMAIL_BILLING_ADDRESS, "Afterbuy-Fehl&uuml;bertragung", $mail_content);
-		}
+			$mail_content_html = 'Fehler beim Senden der Bestellung: '.$this->order_id."<br />\r\n".'Folgende Fehlermeldung wurde von afterbuy.de zur&uuml;ckgegeben:'."<br />\r\n"."<br />\r\n".$result;
+      $mail_content_txt = 'Fehler beim Senden der Bestellung: '.$this->order_id."\r\n".'Folgende Fehlermeldung wurde von afterbuy.de zurueckgegeben:'."\r\n\r\n".$result;
+      xtc_php_mail(STORE_OWNER_EMAIL_ADDRESS,STORE_NAME,STORE_OWNER_EMAIL_ADDRESS, STORE_NAME,'',STORE_OWNER_EMAIL_ADDRESS, STORE_NAME,'','', "Afterbuy-Error", $mail_content_html, $mail_content_txt);
+    }
 		// close session
 		curl_close($ch);
 	}
@@ -331,6 +407,115 @@ class xtc_afterbuy_functions {
 		return true;
 
 	}
+
+  function getPayment($payment) {
+    switch($payment) {
+      case 'banktransfer':
+        $this->payment_id   = '7';
+        $this->payment_name = "Bankeinzug";
+        break;
+      case 'cash':
+        $this->payment_id   = '2';
+        $this->payment_name = "Barzahlung";
+        break;
+      case 'cod':
+        $this->payment_id   = '4';
+        $this->payment_name = "Nachnahme";
+        break;
+      case 'invoice':
+        $this->payment_id   = '6';
+        $this->payment_name = "Rechnung";
+        break;
+      case 'moneyorder':
+      case 'eustandardtransfer':
+        $this->payment_id   = '1';
+        $this->payment_name = "Vorkasse";
+        break;
+      case 'moneybookers':
+        $this->payment_id   = '15';
+        $this->payment_name = "Moneybookers";
+        break;
+      case 'moneybookers_cc':
+        $this->payment_id   = '15';
+        $this->payment_name = "Moneybookers CC";
+        break;
+      case 'moneybookers_cgb':
+        $this->payment_id   = '15';
+        $this->payment_name = "Moneybookers CGB";
+        break;
+      case 'moneybookers_csi':
+        $this->payment_id   = '15';
+        $this->payment_name = "Moneybookers CSI";
+        break;
+      case 'moneybookers_elv':
+        $this->payment_id   = '15';
+        $this->payment_name = "Moneybookers ELV";
+        break;
+      case 'moneybookers_giropay':
+        $this->payment_id   = '15';
+        $this->payment_name = "Moneybookers GIROPAY";
+        break;
+      case 'moneybookers_ideal':
+        $this->payment_id   = '15';
+        $this->payment_name = "Moneybookers IDEAL";
+        break;
+      case 'moneybookers_mae':
+        $this->payment_id   = '15';
+        $this->payment_name = "Moneybookers MAE";
+        break;
+      case 'moneybookers_netpay':
+        $this->payment_id   = '15';
+        $this->payment_name = "Moneybookers NETPAY";
+        break;
+      case 'moneybookers_psp':
+        $this->payment_id   = '15';
+        $this->payment_name = "Moneybookers PSP";
+        break;
+      case 'moneybookers_pwy':
+        $this->payment_id   = '15';
+        $this->payment_name = "Moneybookers PWY";
+        break;
+      case 'moneybookers_sft':
+        $this->payment_id   = '15';
+        $this->payment_name = "Moneybookers SFT";
+        break;
+      case 'moneybookers_wlt':
+        $this->payment_id   = '15';
+        $this->payment_name = "Moneybookers WLT";
+        break;
+      case 'paypal':
+      case 'paypalplus':
+      case 'paypalcart':
+      case 'paypalclassic':
+      case 'paypallink':
+      case 'paypalpluslink':
+      case 'paypalinstallment':
+        $this->payment_id   = '5';
+        $this->payment_name = "Paypal";
+        break;
+
+      case 'sofort_sofortueberweisung_gateway':
+      case 'sofort_sofortueberweisung_classic':
+        $this->payment_id   = '12';
+        $this->payment_name = "Sofort";
+        break;
+      case 'billsafe':
+        $this->payment_id   = '18';
+        $this->payment_name = "Billsafe";
+        break;
+      case 'ipayment':
+        $this->payment_id   = '99';
+        $this->payment_name = "IPayment";
+        break;
+      case 'cc':
+        $this->payment_id   = '99';
+        $this->payment_name = "Kreditkarte";
+        break;
+      default:
+        $this->payment_id   = '99';
+        $this->payment_name = "sonstige Zahlungsweise";
+    }
+  }
 
 }
 ?>
