@@ -84,36 +84,24 @@ class paypalcart extends PayPalPayment {
     global $order, $smarty, $xtPrice, $main, $messageStack, $total_weight, $total_count, $free_shipping;
         
     if (isset($_GET['conditions_message']) && $this->messageStack === false) {
-      $message_condition = str_replace('\n', '', ERROR_CONDITIONS_NOT_ACCEPTED);
-      $message_address = str_replace('\n', '', ERROR_ADDRESS_NOT_ACCEPTED);
-      switch($_GET['conditions_message']) {
-        case "1":
-          $messageStack->add('checkout_confirmation', $message_condition);
-          break;
-        case "13":
-          $messageStack->add('checkout_confirmation', $message_condition);
-          $messageStack->add('checkout_confirmation', ERROR_CHECKOUT_SHIPPING_NO_METHOD);
-          break;
-        case "2":
-          $messageStack->add('checkout_confirmation', $message_address);
-          break;
-        case "23":
-          $messageStack->add('checkout_confirmation', $message_address);
-          $messageStack->add('checkout_confirmation', ERROR_CHECKOUT_SHIPPING_NO_METHOD);
-          break;
-        case "12":
-          $messageStack->add('checkout_confirmation', $message_condition);
-          $messageStack->add('checkout_confirmation', $message_address);
-          break;
-        case "123":
-          $messageStack->add('checkout_confirmation', $message_condition);
-          $messageStack->add('checkout_confirmation', $message_address);
-          $messageStack->add('checkout_confirmation', ERROR_CHECKOUT_SHIPPING_NO_METHOD);
-          break;
-        case "3":
-          $messageStack->add('checkout_confirmation', ERROR_CHECKOUT_SHIPPING_NO_METHOD);
-          break;
+      $error_mess = explode(',', $_GET['conditions_message']);
+      
+      if (in_array('1', $error_mess)) {
+        $messageStack->add('checkout_confirmation', str_replace('\n', '', ERROR_CONDITIONS_NOT_ACCEPTED));
       }
+      if (in_array('2', $error_mess)) {
+        $messageStack->add('checkout_confirmation', str_replace('\n', '', ERROR_ADDRESS_NOT_ACCEPTED));
+      }
+      if (in_array('3', $error_mess)) {
+        $messageStack->add('checkout_confirmation', ERROR_CHECKOUT_SHIPPING_NO_METHOD);
+      }
+      if (in_array('4', $error_mess)) {
+        $messageStack->add('checkout_confirmation', str_replace('\n', '', ERROR_REVOCATION_NOT_ACCEPTED));
+      }
+      if (in_array('5', $error_mess)) {
+        $messageStack->add('checkout_confirmation', str_replace('\n', '', ERROR_PRIVACY_NOTICE_NOT_ACCEPTED));
+      }
+      
       $this->messageStack = true;
     }
 
@@ -241,6 +229,11 @@ class paypalcart extends PayPalPayment {
       $module_smarty->assign('AGB_TITLE', $shop_content_data['content_heading']);
       $module_smarty->assign('AGB_LINK', $main->getContentLink(3, MORE_INFO,'SSL'));
       $module_smarty->assign('TEXT_AGB_CHECKOUT', sprintf(TEXT_AGB_CHECKOUT,$main->getContentLink(3, MORE_INFO,'SSL') , $main->getContentLink(REVOCATION_ID, MORE_INFO,'SSL')));
+      //privacy
+      $shop_content_data = $main->getContentData(2);
+      $module_smarty->assign('PRIVACY', $shop_content_data['content_heading']);
+      $module_smarty->assign('PRIVACY_TITLE', $shop_content_data['content_heading']);
+      $module_smarty->assign('PRIVACY_LINK', $main->getContentLink(2, MORE_INFO,'SSL'));
     }
 
     //check if display conditions on checkout page is true
@@ -249,6 +242,25 @@ class paypalcart extends PayPalPayment {
       $module_smarty->assign('AGB', '<div class="agbframe">' . $shop_content_data['content_text'] . '</div>');
       $module_smarty->assign('AGB_LINK', $main->getContentLink(3, MORE_INFO,'SSL'));
       $module_smarty->assign('AGB_checkbox', '<input type="checkbox" value="conditions" name="conditions" id="conditions"'.(isset($_GET['step']) && $_GET['step'] == 'step2' ? ' checked="checked"' : '').' />');
+    }
+
+    if (defined('DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT')
+        && DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT == 'true'
+        && ($_SESSION['cart']->content_type == 'virtual'
+            || $_SESSION['cart']->content_type == 'mixed')
+        )
+    {
+      $shop_content_data = $main->getContentData(REVOCATION_ID);
+      $module_smarty->assign('REVOCATION', '<div class="agbframe">' . $shop_content_data['content_text'] . '</div>');
+      $module_smarty->assign('REVOCATION_LINK', $main->getContentLink(REVOCATION_ID, MORE_INFO,'SSL'));
+      $module_smarty->assign('REVOCATION_checkbox', '<input type="checkbox" value="revocation" name="revocation" id="revocation"'.(isset($_GET['step']) && $_GET['step'] == 'step2' ? ' checked="checked"' : '').' />');
+    }
+
+    if (defined('DISPLAY_PRIVACY_ON_CHECKOUT') && DISPLAY_PRIVACY_ON_CHECKOUT == 'true') {
+      $shop_content_data = $main->getContentData(2);
+      $module_smarty->assign('PRIVACY', '<div class="agbframe">' . $shop_content_data['content_text'] . '</div>');
+      $module_smarty->assign('PRIVACY_LINK', $main->getContentLink(2, MORE_INFO,'SSL'));
+      $module_smarty->assign('PRIVACY_checkbox', '<input type="checkbox" value="privacy" name="privacy" id="privacy"'.(isset($_GET['step']) && $_GET['step'] == 'step2' ? ' checked="checked"' : '').' />');
     }
 
     $module_smarty->assign('COMMENTS', xtc_draw_textarea_field('comments', 'soft', '60', '5', isset($_SESSION['comments'])?$_SESSION['comments']:'') . xtc_draw_hidden_field('comments_added', 'YES')); //Dokuman - 2012-05-31 - fix paypal_checkout notices
@@ -278,21 +290,28 @@ class paypalcart extends PayPalPayment {
         if ($_POST['comments_added'] != '') {
           $_SESSION['comments'] = xtc_db_prepare_input($_POST['comments']);
         }
-        $error_mess  = '';
+        $error_mess  = array();
         if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true' && $_POST['conditions'] != 'conditions') {
-          $error_mess = '1';
+          $error_mess[] = '1';
         }
         if ($_POST['check_address'] != 'address') {
-          $error_mess .= '2';
+          $error_mess[] = '2';
         }
         if (!isset($_SESSION['shipping']) 
             || ($_SESSION['shipping'] !== false && !is_array($_SESSION['shipping']))
             ) 
         {
-          $error_mess .= '3';
+          $error_mess[] = '3';
         }
-        if($error_mess != '') {
-          xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, xtc_get_all_get_params(array('conditions_message')).'conditions=true&conditions_message='.$error_mess, 'SSL', true, false));
+        if (defined('DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT') && DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT == 'true' && $_POST['revocation'] != 'revocation') {
+          $error_mess[] = '4';
+        }
+        if (defined('DISPLAY_PRIVACY_ON_CHECKOUT') && DISPLAY_PRIVACY_ON_CHECKOUT == 'true' && $_POST['privacy'] != 'privacy') {
+          $error_mess[] = '5';
+        }
+        
+        if (count($error_mess) > 0) {
+          xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, xtc_get_all_get_params(array('conditions_message')).'conditions=true&conditions_message='.implode(',', $error_mess), 'SSL', true, false));
         }
       }
     }
