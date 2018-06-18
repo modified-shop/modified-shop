@@ -98,6 +98,7 @@ define('ERROR_NO_PAYMENT_MODULE_SELECTED', '* Bitte w&auml;hlen Sie eine Zahlung
 define('JS_ERROR_NO_SHIPPING_MODULE_SELECTED', '* Bitte w&auml;hlen Sie eine Versandart f&uuml;r Ihre Bestellung.\n');
 define('JS_ERROR_CONDITIONS_NOT_ACCEPTED', '* Sofern Sie unsere Allgemeinen Gesch&auml;ftsbedingungen nicht zur Kenntnis nehmen,\nk&ouml;nnen wir Ihre Bestellung bedauerlicherweise nicht entgegennehmen!\n\n');
 define('JS_ERROR_REVOCATION_NOT_ACCEPTED', '* Sofern Sie das Erl&ouml;schen des Widerrufsrecht f&uuml;r virtuelle Artikel nicht akzeptieren,\nk&ouml;nnen wir Ihre Bestellung bedauerlicherweise nicht entgegennehmen!\n\n');
+define('JS_ERROR_PRIVACY_NOTICE_NOT_ACCEPTED', '* Sofern Sie unsere Regelungen zum Datenschutz nicht zur Kenntnis nehmen,\nk&ouml;nnen wir Ihre Bestellung bedauerlicherweise nicht entgegennehmen!\n\n');
 define('JS_REVIEW_AUTHOR', '* Bitte geben Sie Ihren Namen ein.\n\n');
 
 /*
@@ -276,6 +277,7 @@ define('ERROR_CHECKOUT_SHIPPING_NO_MODULE', 'Es ist keine Versandart vorhanden.'
 
 define('ERROR_CONDITIONS_NOT_ACCEPTED', '* Sofern Sie unsere Allgemeinen Gesch&auml;ftsbedingungen nicht zur Kenntnis nehmen, k&ouml;nnen wir Ihre Bestellung bedauerlicherweise nicht entgegennehmen!');
 define('ERROR_REVOCATION_NOT_ACCEPTED', '* Sofern Sie das Erl&ouml;schen des Widerrufsrecht f&uuml;r virtuelle Artikel nicht akzeptieren, k&ouml;nnen wir Ihre Bestellung bedauerlicherweise nicht entgegennehmen!');
+define('ERROR_PRIVACY_NOTICE_NOT_ACCEPTED', '* Sofern Sie unsere Regelungen zum Datenschutz nicht zur Kenntnis nehmen, k&ouml;nnen wir Ihre Bestellung bedauerlicherweise nicht entgegennehmen!');
 
 define('SUB_TITLE_OT_DISCOUNT','Rabatt:');
 

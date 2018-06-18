@@ -250,6 +250,13 @@
                  '  }' . "\n\n";
         }
 
+        if (DISPLAY_PRIVACY_ON_CHECKOUT == 'true') {
+          $js .= "\n" . '  if (!document.getElementById("checkout_payment").privacy.checked) {' . "\n" .
+                 '    error_message = error_message + unescape("' . xtc_js_lang(JS_ERROR_PRIVACY_NOTICE_NOT_ACCEPTED) . '");' . "\n" .
+                 '    error = 1;' . "\n" .
+                 '  }' . "\n\n";
+        }
+
         if (DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT == 'true'
             && ($_SESSION['cart']->content_type == 'virtual'
                 || $_SESSION['cart']->content_type == 'mixed')
