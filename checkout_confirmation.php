@@ -260,7 +260,7 @@ if (DISPLAY_REVOCATION_ON_CHECKOUT == 'true') {
   $shop_content_data = $main->getContentData(3);
   $smarty->assign('AGB_TITLE', $shop_content_data['content_heading']);
   $smarty->assign('AGB_LINK', $main->getContentLink(3, MORE_INFO,'SSL'));
-  $smarty->assign('TEXT_AGB_CHECKOUT', sprintf(TEXT_AGB_CHECKOUT,$main->getContentLink(3, MORE_INFO,'SSL') , $main->getContentLink(REVOCATION_ID, MORE_INFO,'SSL')));
+  $smarty->assign('TEXT_AGB_CHECKOUT', sprintf(TEXT_AGB_CHECKOUT,$main->getContentLink(3, MORE_INFO,'SSL') , $main->getContentLink(REVOCATION_ID, MORE_INFO,'SSL') , $main->getContentLink(2, MORE_INFO,'SSL')));
 }
 
 $store_owner = STORE_NAME;
