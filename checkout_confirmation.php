@@ -62,6 +62,13 @@ if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true') {
   }
 }
 
+if (DISPLAY_PRIVACY_ON_CHECKOUT == 'true') {
+  if ((!isset($_POST['privacy']) || $_POST['privacy'] == false) && !isset($_GET['conditions'])) {
+    $error = str_replace('\n', '<br />', ERROR_PRIVACY_NOTICE_NOT_ACCEPTED);
+    xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode($error), 'SSL', true, false));
+  }
+}
+
 $content_type = $_SESSION['cart']->get_content_type();
 if (DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT == 'true'
     && ($_SESSION['cart']->content_type == 'virtual'

@@ -72,6 +72,11 @@
       <div class="checkoutconditions">
         {$AGB_checkbox} <strong><label for="conditions">{#text_accept_agb#}</label></strong>&nbsp;{$AGB_LINK}
       </div>
+      {if isset($PRIVACY_checkbox)}
+        <div class="checkoutconditions">
+          {$PRIVACY_checkbox} <strong><label for="privacy">{#text_privacy_accept#}</label></strong>&nbsp;{$PRIVACY_LINK}
+        </div>
+      {/if}
       {if isset($REVOCATION_checkbox)}
         <div class="checkoutconditions">
           {$REVOCATION_checkbox} <strong><label for="revocation">{#text_accept_revocation#}</label></strong>&nbsp;{$REVOCATION_LINK}
@@ -80,6 +85,11 @@
     {else}
       <h4 class="checkout">{#title_comments_short#}</h4>
       <div class="checkoutcomment">{$COMMENTS}</div>
+      {if isset($PRIVACY_checkbox)}
+        <div class="checkoutconditions">
+          {$PRIVACY_checkbox} <strong><label for="privacy">{#text_privacy_accept#}</label></strong>&nbsp;{$PRIVACY_LINK}
+        </div>
+      {/if}
       {if isset($REVOCATION_checkbox)}
         <div class="checkoutconditions">
           {$REVOCATION_checkbox} <strong><label for="revocation">{#text_accept_revocation#}</label></strong>&nbsp;{$REVOCATION_LINK}

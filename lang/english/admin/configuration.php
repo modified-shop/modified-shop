@@ -1050,6 +1050,8 @@ define('SEARCH_AC_STATUS_DESC','Activate for autocomplete search<br/><b>Attentio
 define('SEARCH_AC_MIN_LENGTH_TITLE', 'Autocomplete number of characters');
 define('SEARCH_AC_MIN_LENGTH_DESC', 'Number of characters to display first search results<br/><b>Attention:</b> This only works with a shop version 2.0.0.0 compatible template!');
 
+define('DISPLAY_PRIVACY_ON_CHECKOUT_TITLE', 'Display Privacy notice');
+define('DISPLAY_PRIVACY_ON_CHECKOUT_DESC', 'Display a checkbox to inform the customer about the privacy notice?');
 define('DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT_TITLE', 'Display right of withdrawal for Downloads');
 define('DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT_DESC', 'Display a checkbox to inform the customer, that the right of withdrawal expires for downloads?');
 define('ORDER_STATUSES_DISPLAY_DEFAULT_TITLE', 'Display Orders');

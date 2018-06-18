@@ -34,12 +34,25 @@
         <td>{$AGB_checkbox}</td>
         <td width="100%"><strong><label for="conditions">{#text_accept_agb#}</label></strong>&nbsp;{$AGB_LINK}</td>
       </tr>
+      {if isset($PRIVACY_checkbox)}
+      <tr>
+        <td>{$PRIVACY_checkbox}</td>
+        <td width="100%"><strong><label for="privacy">{#text_privacy_accept#}</label></strong>&nbsp;{$PRIVACY_LINK}</td>
+      </tr>
+      {/if}
       {if isset($REVOCATION_checkbox)}
       <tr>
         <td>{$REVOCATION_checkbox}</td>
         <td width="100%"><strong><label for="revocation">{#text_accept_revocation#}</label></strong>&nbsp;{$REVOCATION_LINK}</td>
       </tr>
       {/if}
+    </table>
+  {elseif isset($PRIVACY_checkbox)}
+    <table width="100%" border="0" cellspacing="0" cellpadding="4">
+      <tr>
+        <td>{$PRIVACY_checkbox}</td>
+        <td width="100%"><strong><label for="privacy">{#text_privacy_accept#}</label></strong>&nbsp;{$PRIVACY_LINK}</td>
+      </tr>
     </table>
   {elseif isset($REVOCATION_checkbox)}
     <table width="100%" border="0" cellspacing="0" cellpadding="4">

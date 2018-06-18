@@ -98,6 +98,7 @@ define('ERROR_NO_PAYMENT_MODULE_SELECTED', 'Please choose a method of payment fo
 define('JS_ERROR_NO_SHIPPING_MODULE_SELECTED', '* Please choose a method of shipping for your order.\n');
 define('JS_ERROR_CONDITIONS_NOT_ACCEPTED', '* Unfortunately we cannot accept your order\nunless you confirm that you have read our terms and conditions!\n\n');
 define('JS_ERROR_REVOCATION_NOT_ACCEPTED', '* Unfortunately we cannot accept your order\nunless you accept that the right of withdrawal expires for virtual products!\n\n');
+define('JS_ERROR_PRIVACY_NOTICE_NOT_ACCEPTED', '* Unfortunately we cannot accept your order\nunless you confirm our privacy notice!\n\n');
 define('JS_REVIEW_AUTHOR', '* Please enter your name.\n\n');
 
 /*
@@ -276,6 +277,7 @@ define('ERROR_CHECKOUT_SHIPPING_NO_MODULE', 'No shipping method available.');
 
 define('ERROR_CONDITIONS_NOT_ACCEPTED', 'Please confirm that you have read our terms and conditions to proceed with your order.');
 define('ERROR_REVOCATION_NOT_ACCEPTED', 'Please accept that the right of withdrawal expires for virtual products.');
+define('ERROR_PRIVACY_NOTICE_NOT_ACCEPTED', 'Please confirm that you accept our privacy notice.');
 
 define('SUB_TITLE_OT_DISCOUNT','Discount:');
 
