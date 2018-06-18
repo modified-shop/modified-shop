@@ -270,7 +270,6 @@ if (DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT == 'true'
   $smarty->assign('REVOCATION_checkbox', '<input type="checkbox" value="revocation" name="revocation" id="revocation"'.(isset($_GET['step']) && $_GET['step'] == 'step2' ? ' checked="checked"' : '').' />');
 }
 
-//check if display conditions on checkout page is true
 if (DISPLAY_PRIVACY_ON_CHECKOUT == 'true') {
   $shop_content_data = $main->getContentData(2);
   $smarty->assign('PRIVACY', '<div class="agbframe">' . $shop_content_data['content_text'] . '</div>');
