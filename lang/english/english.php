@@ -277,7 +277,7 @@ define('ERROR_CHECKOUT_SHIPPING_NO_MODULE', 'No shipping method available.');
 
 define('ERROR_CONDITIONS_NOT_ACCEPTED', 'Please confirm that you have read our terms and conditions to proceed with your order.');
 define('ERROR_REVOCATION_NOT_ACCEPTED', 'Please accept that the right of withdrawal expires for virtual products.');
-define('ERROR_PRIVACY_NOTICE_NOT_ACCEPTED', 'Please confirm that you accept our privacy notice.');
+define('ERROR_PRIVACY_NOTICE_NOT_ACCEPTED', 'Please confirm that you have read our privacy notice.');
 
 define('SUB_TITLE_OT_DISCOUNT','Discount:');
 
