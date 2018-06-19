@@ -170,20 +170,12 @@ if ($result != false) {
     $module_smarty->cache_modified_check = CACHE_CHECK;
 
     //setting/clearing params
-    $get_params = isset($_GET['manufacturers_id']) && xtc_not_null($_GET['manufacturers_id']) ? '_'.(int)$_GET['manufacturers_id'] : '';
-    $get_params .= isset($_GET['filter_id']) && xtc_not_null($_GET['filter_id']) ? '_'.(int)$_GET['filter_id'] : '';
-    $get_params .= isset($_GET['page']) && $_GET['page'] > 0  ? '_'.(int)$_GET['page'] : '';
-    $get_params .= isset($_GET['categories_id']) && xtc_not_null($_GET['categories_id']) ? '_'.(int)$_GET['categories_id'] : '';
-    $get_params .= isset($_GET['keywords']) && !empty($_GET['keywords']) ? '_'.stripslashes(trim(urldecode($_GET['keywords']))) : '';
-    $get_params .= isset($_GET['pfrom']) && !empty($_GET['pfrom']) ? '_'.stripslashes($_GET['pfrom']) : '';
-    $get_params .= isset($_GET['pto']) && !empty($_GET['pto']) ? '_'.stripslashes($_GET['pto']) : '';
+    $get_params = xtc_get_all_get_params();
     $get_params .= isset($_GET['x']) && $_GET['x'] >= 0 ? '_'.(int)$_GET['x'] : '';
     $get_params .= isset($_GET['y']) && $_GET['y'] >= 0 ? '_'.(int)$_GET['y'] : '';
     $get_params .= isset($_SESSION['filter_sorting']) ? '_'.$_SESSION['filter_sorting'] : '';
-    $get_params .= isset($_GET['filter']) ? '_'.serialize($_GET['filter']) : '';
-    $get_params .= isset($_GET['show']) && xtc_not_null($_GET['show']) ? '_'.(int)$_GET['show'] : '';
 
-    $cache_id = md5($current_category_id.'_'.$_SESSION['language'].'_'.$_SESSION['customers_status']['customers_status_name'].'_'.$_SESSION['currency'].$max_display_results.$get_params);
+    $cache_id = md5($current_category_id.'_'.$_SESSION['language'].'_'.$_SESSION['customers_status']['customers_status_id'].'_'.$_SESSION['currency'].$max_display_results.$get_params);
     $module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/product_listing/'.$category['listing_template'], $cache_id);
   }
   $smarty->assign('main_content', $module);
