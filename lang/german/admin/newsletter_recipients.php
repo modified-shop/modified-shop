@@ -23,6 +23,7 @@
   define('ENTRY_SEARCH_CUSTOMER', 'Suche:');
 
   define('TEXT_INFO_HISTORY_NEWSLETTER', 'Historie:');
+  define('TEXT_INFO_HISTORY_NEWSLETTER_NONE', 'keine Historie verf&uuml;gbar');
   define('TEXT_INFO_HEADING_DELETE_NEWSLETTER', 'E-Mail Adresse abmelden');
   define('TEXT_INFO_DELETE_INTRO', 'Sind Sie sicher, dass Sie diese E-Mail Adresse vom Newsletter abmelden m&ouml;chten?');
 

@@ -23,6 +23,7 @@
   define('ENTRY_SEARCH_CUSTOMER', 'Search:');
 
   define('TEXT_INFO_HISTORY_NEWSLETTER', 'History:');
+  define('TEXT_INFO_HISTORY_NEWSLETTER_NONE', 'no history available');
   define('TEXT_INFO_HEADING_DELETE_NEWSLETTER', 'E-Mail Address unsubscribe');
   define('TEXT_INFO_DELETE_INTRO', 'Are you sure you want to unsubscribe this e-mail address?');
 
