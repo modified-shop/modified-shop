@@ -22,7 +22,7 @@
   define('ENTRY_MAIL_STATUS', 'Status:');
   define('ENTRY_SEARCH_CUSTOMER', 'Suche:');
 
-  define('TXT_SUBSCRIBED', 'aboniert');
+  define('TXT_SUBSCRIBED', 'abonniert');
   define('TXT_UNSUBSCRIBED', 'abgemeldet');
 
   define('TEXT_INFO_HISTORY_NEWSLETTER', 'Historie:');
