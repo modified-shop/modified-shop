@@ -55,6 +55,7 @@
   define('TABLE_MANUFACTURERS_INFO', 'manufacturers_info');
   define('TABLE_MODULE_NEWSLETTER','module_newsletter');
   define('TABLE_NEWSLETTER_RECIPIENTS', 'newsletter_recipients');
+  define('TABLE_NEWSLETTER_RECIPIENTS_HISTORY', 'newsletter_recipients_history');
   define('TABLE_NEWSLETTERS', 'newsletters');
   define('TABLE_NEWSLETTERS_HISTORY', 'newsletters_history');
   define('TABLE_ORDERS', 'orders');

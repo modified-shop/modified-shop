@@ -187,6 +187,7 @@ define('BOX_SHIPCLOUD', 'shipcloud');
 define('BOX_SHIPCLOUD_PICKUP', 'shipcloud - pickup');
 define('BOX_PRODUCTS_TAGS', 'Product features');
 define('BOX_TRUSTEDSHOPS', 'Trusted Shops');
+define('BOX_NEWSLETTER_RECIPIENTS', 'Newsletter recipients');
 
 define('TXT_GROUPS','<b>Groups</b>:');
 define('TXT_SYSTEM','System');

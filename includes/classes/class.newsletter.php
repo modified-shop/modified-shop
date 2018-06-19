@@ -30,26 +30,39 @@ class newsletter {
 
   function __construct() {
     $this->auto = false;
+    $this->remove = false;
   }
 
 
   function RemoveFromList($key, $mail) {
-    if (!xtc_not_null($key)) {
+    if (!xtc_not_null($key) && $this->remove === false) {
       $this->message = TEXT_EMAIL_ACTIVE_ERROR;
       $this->message_class = 'error';
     } else {
+      $where = '';
+      if ($this->remove === false) {
+        $where = " AND mail_key = '".xtc_db_input($key)."' ";
+      }
       $check_mail_query = xtc_db_query("SELECT customers_email_address,
                                                customers_id,
                                                mail_key
                                           FROM ".TABLE_NEWSLETTER_RECIPIENTS."
                                          WHERE MD5(customers_email_address) = '".xtc_db_input($mail)."'
-                                           AND mail_key = '".xtc_db_input($key)."'");
+                                               ".$where);
       if (xtc_db_num_rows($check_mail_query) > 0) {
         $check_mail = xtc_db_fetch_array($check_mail_query);
         $this->sendRequestMail($check_mail['customers_email_address'], 'unsubscribe');
-        $del_query = xtc_db_query("DELETE FROM ".TABLE_NEWSLETTER_RECIPIENTS."
-                                         WHERE customers_email_address ='".xtc_db_input($check_mail['customers_email_address'])."'
-                                           AND mail_key = '".xtc_db_input($key)."'");
+
+        $sql_data_array = array (
+          'mail_status' => '0',
+          'mail_key' => '',
+          'date_added' => 'null',
+          'ip_date_added' => '',
+          'date_confirmed' => 'null',
+          'ip_date_confirmed' => '',
+        );
+        xtc_db_perform(TABLE_NEWSLETTER_RECIPIENTS, $sql_data_array, 'update', "customers_email_address = '".xtc_db_input($check_mail['customers_email_address'])."'".$where);
+
         $this->message = TEXT_EMAIL_DEL;
         $this->message_class = 'info';
       } else {
@@ -204,21 +217,8 @@ class newsletter {
         }
 
         if ($check == 'del') {
-          $check_mail_query = xtc_db_query("SELECT customers_email_address
-                                              FROM ".TABLE_NEWSLETTER_RECIPIENTS."
-                                             WHERE customers_email_address = '".xtc_db_input($mail)."'
-                                           ");
-          if (xtc_db_num_rows($check_mail_query) > 0) {
-            $this->sendRequestMail($mail, 'unsubscribe');
-            $del_query = xtc_db_query("DELETE FROM ".TABLE_NEWSLETTER_RECIPIENTS."
-                                             WHERE customers_email_address ='".xtc_db_input($mail)."'
-                                      ");
-            $this->message = TEXT_EMAIL_DEL;
-            $this->message_class = 'info';
-          } else {
-            $this->message = TEXT_EMAIL_NOT_EXIST;
-            $this->message_class = 'error';
-          }
+          $this->remove = true;
+          $this->RemoveFromList('', md5($mail));
         }
 
       } else {
@@ -234,21 +234,29 @@ class newsletter {
     $sendmail = false;
     $smarty = new Smarty;
     
+    $sql_data_array = array(
+      'customers_email_address' => $mail,
+      'customers_action' => $action,
+      'ip_address' => ((defined('RUN_MODE_ADMIN')) ? 'Admin' : ip_clearing($_SESSION['tracking']['ip'])),
+      'date_added' => 'now()'
+    );
+    xtc_db_perform(TABLE_NEWSLETTER_RECIPIENTS_HISTORY, $sql_data_array);
+    
     switch ($action) {
       case 'opt_in':
         $sendmail = true;
         $link = xtc_href_link(FILENAME_NEWSLETTER, 'action=activate&email='.md5($mail).'&key='.$this->vlCode, 'NONSSL');
         $smarty->assign('EMAIL', xtc_db_input($mail));
         $smarty->assign('LINK', $link);
+        
+        foreach(auto_include(DIR_FS_CATALOG.'includes/extra/newsletter/opt_in/','php') as $file) require_once ($file);
         break;
       
       case 'unsubscribe':
-        $this->_externmailer($mail, $action);
+        foreach(auto_include(DIR_FS_CATALOG.'includes/extra/newsletter/unsubscribe/','php') as $file) require_once ($file);
         break;
         
       case 'subscribe':
-        $this->_externmailer($mail, $action);
-
         if (ACTIVATE_GIFT_SYSTEM == 'true') {
           if (defined('MODULE_NEWSLETTER_VOUCHER_AMOUNT')
               && MODULE_NEWSLETTER_VOUCHER_AMOUNT > '0'
@@ -314,6 +322,8 @@ class newsletter {
             }
           }
         }
+        
+        foreach(auto_include(DIR_FS_CATALOG.'includes/extra/newsletter/subscribe/','php') as $file) require_once ($file);
         break;
     }
     
@@ -363,92 +373,6 @@ class newsletter {
       return true;
     }
     return false;
-  }
-  
-  
-  function _externmailer($mail, $type) {
-    $newsletter_query = xtc_db_query("SELECT * 
-                                        FROM ".TABLE_NEWSLETTER_RECIPIENTS." 
-                                       WHERE customers_email_address ='".xtc_db_input($mail)."'");
-    $newsletter = xtc_db_fetch_array($newsletter_query);
-    
-    if (defined('MODULE_SUPERMAILER_STATUS') && MODULE_SUPERMAILER_STATUS == 'True') {
-      $txt_mail_arr = array(
-        'EMail' => $newsletter['customers_email_address'],
-        'RG' => MODULE_SUPERMAILER_GROUP
-      );
-    
-      if ($type == 'subscribe') {
-        $txt_mail_arr['Name'] = $newsletter['customers_firstname'] . ' ' . $newsletter['customers_lastname'];
-      }
-    
-      $txt_mail = '';
-      foreach(array_keys($txt_mail_arr) as $key){    
-        $txt_mail .= $key . ': ' . $txt_mail_arr[$key] . "\n";
-      }
-      $txt_mail .= '[NOSIGNATUR]';
-    
-      xtc_php_mail($mail,
-                   '',
-                   MODULE_SUPERMAILER_EMAIL_ADDRESS,
-                   '',
-                   '',
-                   $mail,
-                   '',
-                   '',
-                   '',
-                   strtoupper($type),
-                   $txt_mail,
-                   nl2br($txt_mail)
-                   );
-    }
-
-    if (defined('MODULE_CLEVERREACH_STATUS') && MODULE_CLEVERREACH_STATUS == 'true') {
-      $api = new SoapClient('http://api.cleverreach.com/soap/interface_v5.1.php?wsdl');
-      
-      switch ($type) {
-        case 'subscribe':
-          $user = array('email' => $mail,
-                        'registered' => strtotime($newsletter['date_added']),
-                        'activated' => time(),
-                        'source' => MODULE_CLEVERREACH_NAME,
-                        'attributes' => array(array('key' => 'firstname', 'value' => encode_utf8($newsletter['customers_firstname'], $_SESSION['language_charset'], true)),
-                                              array('key' => 'lastname', 'value' => encode_utf8($newsletter['customers_lastname'], $_SESSION['language_charset'], true)))
-                        );
-          $result = $api->receiverAdd(MODULE_CLEVERREACH_APIKEY, MODULE_CLEVERREACH_GROUP, $user);
-          break; 
-        case 'unsubscribe':
-          $result = $api->receiverDelete(MODULE_CLEVERREACH_APIKEY, MODULE_CLEVERREACH_GROUP, $mail);
-          break;
-      }
-      
-      // get unsubscribed
-      $nl_unsubscribe_query = xtc_db_query("SELECT date_added
-                                              FROM ".TABLE_NEWSLETTER_RECIPIENTS." 
-                                             WHERE mail_id < '".$newsletter['mail_id']."'
-                                          ORDER BY mail_id DESC
-                                             LIMIT 1");
-                                             
-      if (xtc_db_num_rows($nl_unsubscribe_query) > 0) {
-        $nl_unsubscribe = xtc_db_fetch_array($nl_unsubscribe_query);
-                                             
-        $page = 0;
-        do {
-          $filter = array('page' => $page++,
-                          'filter' => 'unsubscribed',
-                          'range_start' => date('d.m.Y H:i', strtotime($nl_unsubscribe['date_added'])),
-                          'range_end' => date('d.m.Y H:i', time())
-                          );
-          $return = $api->receiverGetByDate(MODULE_CLEVERREACH_APIKEY, MODULE_CLEVERREACH_GROUP, $filter);
-          if ($return->status == "SUCCESS") {
-            foreach ($return->data as $data) {
-              xtc_db_query("DELETE FROM ".TABLE_NEWSLETTER_RECIPIENTS." 
-                                  WHERE customers_email_address = '".xtc_db_input($data->email)."'");
-            }
-          }        
-        } while ($return->status == "SUCCESS");
-      }
-    }
   }
 
 }

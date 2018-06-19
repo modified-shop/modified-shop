@@ -150,6 +150,7 @@ echo endMenue(BOX_HEADING_STATISTICS);
 //---------------------------HILFSPROGRAMME
 echo mainMenue(BOX_HEADING_TOOLS);
     if (MODULE_NEWSLETTER_STATUS == 'true') {
+      if ($admin_access['newsletter_recipients'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_NEWSLETTER_RECIPIENTS) . '" class="menuBoxContentLink"> -' . BOX_NEWSLETTER_RECIPIENTS . '</a></li>';
       if ($admin_access['module_newsletter'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_MODULE_NEWSLETTER) . '" class="menuBoxContentLink"> -' . BOX_MODULE_NEWSLETTER . '</a></li>';
     }
     if ($admin_access['content_manager'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_CONTENT_MANAGER) . '" class="menuBoxContentLink"> -' . BOX_CONTENT . '</a></li>';
