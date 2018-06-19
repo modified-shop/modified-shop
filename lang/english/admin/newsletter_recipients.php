@@ -21,7 +21,10 @@
 
   define('ENTRY_MAIL_STATUS', 'Status:');
   define('ENTRY_SEARCH_CUSTOMER', 'Search:');
-
+  
+  define('TXT_SUBSCRIBED', 'subscribed');
+  define('TXT_UNSUBSCRIBED', 'unsubscribed');
+  
   define('TEXT_INFO_HISTORY_NEWSLETTER', 'History:');
   define('TEXT_INFO_HISTORY_NEWSLETTER_NONE', 'no history available');
   define('TEXT_INFO_HEADING_DELETE_NEWSLETTER', 'E-Mail Address unsubscribe');

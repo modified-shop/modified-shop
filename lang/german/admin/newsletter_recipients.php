@@ -22,6 +22,9 @@
   define('ENTRY_MAIL_STATUS', 'Status:');
   define('ENTRY_SEARCH_CUSTOMER', 'Suche:');
 
+  define('TXT_SUBSCRIBED', 'aboniert');
+  define('TXT_UNSUBSCRIBED', 'abgemeldet');
+
   define('TEXT_INFO_HISTORY_NEWSLETTER', 'Historie:');
   define('TEXT_INFO_HISTORY_NEWSLETTER_NONE', 'keine Historie verf&uuml;gbar');
   define('TEXT_INFO_HEADING_DELETE_NEWSLETTER', 'E-Mail Adresse abmelden');

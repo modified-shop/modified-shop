@@ -20,8 +20,8 @@
   $customers_statuses_array = xtc_get_customers_statuses();
   $mail_statuses_array = array(
     array('id' => '', 'text' => TXT_ALL), 
-    array('id' => '1', 'text' => TXT_ACTIVE), 
-    array('id' => '0', 'text' => TXT_INACTIVE), 
+    array('id' => '1', 'text' => TXT_SUBSCRIBED), 
+    array('id' => '0', 'text' => TXT_UNSUBSCRIBED), 
   );  
 
   $where = '';
