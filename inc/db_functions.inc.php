@@ -135,7 +135,7 @@
       }
       
       // set cache  
-      $cache->set($id, $records , DB_CACHE_EXPIRE);
+      $cache->set($id, $records , (int)DB_CACHE_EXPIRE);
     } else {
       if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS == 'true') {
         $queryEndTime = array_sum(explode(" ",microtime())); 
