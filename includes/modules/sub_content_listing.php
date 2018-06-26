@@ -20,6 +20,7 @@ $shop_content_smarty->assign('tpl_path', DIR_WS_BASE . 'templates/'.CURRENT_TEMP
 if ($shop_content_data['parent_id'] == '0') { 
   $shop_content_sub_query_1 = xtDBquery("SELECT c2.content_title,
                                                 c2.content_group,
+                                                c2.content_text,
                                                 c1.content_title as title, 
                                                 c1.content_group as group_id,
                                                 c1.parent_id
@@ -46,6 +47,7 @@ if ($shop_content_data['parent_id'] == '0') {
 } else {
   $shop_content_sub_query_2 = xtDBquery("SELECT c3.content_title,
                                                 c3.content_group,
+                                                c3.content_text,
                                                 c2.content_title as title, 
                                                 c2.content_group as group_id,
                                                 c2.parent_id
@@ -89,6 +91,8 @@ if ($result === true) {
         $breadcrumb->add($shop_sub_content['content_title'], xtc_href_link(FILENAME_CONTENT,'coID='.$shop_sub_content['content_group']));
       }
       $parent_content = array('CONTENT_TITLE' => $shop_sub_content['content_title'],
+                              'CONTENT_TEXT' => $shop_sub_content['content_text'],
+                              'CONTENT_GROUP' => $shop_sub_content['content_group'],
                               'CONTENT_LINK' => xtc_href_link(FILENAME_CONTENT, 'coID='.$shop_sub_content['content_group'], 'NONSSL')
                               );
     }
