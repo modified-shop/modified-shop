@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: new_attributes.php 3212 2012-07-14 09:41:44Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -24,7 +24,6 @@
 
 require('includes/application_top.php');
 require(DIR_WS_MODULES.'new_attributes_config.php');
-require(DIR_FS_INC .'xtc_findTitle.inc.php');
 require_once(DIR_FS_INC . 'xtc_format_filesize.inc.php');
 
 $oldaction = isset($_GET['oldaction']) ? '&oldaction='.$_GET['oldaction'] : (isset($_POST['oldaction']) ? '&oldaction='.$_POST['oldaction']: '');
@@ -82,7 +81,7 @@ require (DIR_WS_INCLUDES.'head.php');
           <?php
           // BOF - Tomcraft - 2009-11-11 - NEW SORT SELECTION
           if (isset($_GET['option_order_by']) && $_GET['option_order_by'] && !isset($_POST['action'])) {
-            $pageTitle = TITLE_EDIT.': ' . xtc_findTitle($_GET['current_product_id'], $languageFilter);
+            $pageTitle = TITLE_EDIT.': ' . xtc_get_products_name($_GET['current_product_id']);
             include(DIR_WS_MODULES.'new_attributes_include.php');
           }
           if (!isset($_GET['option_order_by'])) {
