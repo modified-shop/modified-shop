@@ -9,11 +9,13 @@
  * @package CacheResource-examples
  */
 class Smarty_CacheResource_Phpfastcache extends Smarty_CacheResource_KeyValueStore {
-
+    
+    protected $phpfastcache = null;
+    
     public function __construct()
     {
         require_once (DIR_FS_EXTERNAL . 'phpfastcache/phpfastcache.php');
-        $this->cache = phpFastCache();        
+        $this->phpfastcache = phpFastCache();        
     }
 
     /**
@@ -28,7 +30,7 @@ class Smarty_CacheResource_Phpfastcache extends Smarty_CacheResource_KeyValueSto
         $_keys = $_res = array();
         foreach ($keys as $k) {
             $_k = sha1($k);
-            $_res[$_k] = $this->cache->get($_k);
+            $_res[$k] = $this->phpfastcache->get($_k);
         }
 
         return $_res;
@@ -45,7 +47,7 @@ class Smarty_CacheResource_Phpfastcache extends Smarty_CacheResource_KeyValueSto
     {
        foreach ($keys as $k => $v) {
             $k = sha1($k);
-            $this->cache->set($k, $v, $expire);
+            $this->phpfastcache->set($k, $v, $expire);
         }
         return true;
     }
@@ -59,7 +61,7 @@ class Smarty_CacheResource_Phpfastcache extends Smarty_CacheResource_KeyValueSto
     protected function delete(array $keys)
     {
         foreach ($keys as $k) {
-            $this->cache->delete($k);
+            $this->phpfastcache->delete($k);
         }
         return true;
     }
@@ -71,6 +73,6 @@ class Smarty_CacheResource_Phpfastcache extends Smarty_CacheResource_KeyValueSto
      */
     protected function purge()
     {
-        return $this->cache->clean();
+        return $this->phpfastcache->clean();
     }
 }
