@@ -102,7 +102,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     xtc_db_perform(TABLE_PRODUCTS_ATTRIBUTES, $attrib_res_array);
                   }
                 }
-                $pageTitle = TITLE_EDIT.': ' . xtc_findTitle($_POST['current_product_id'], $languageFilter);
+                $pageTitle = TITLE_EDIT.': ' . xtc_get_products_name($_POST['current_product_id'], $languageFilter);
                 include(DIR_WS_MODULES.'new_attributes_include.php');
                 break;
               case 'change':
