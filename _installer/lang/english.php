@@ -32,7 +32,7 @@
   define('BUTTON_DONATE','<a href="https://www.modified-shop.org/spenden" target="_blank"><img src="https://www.paypal.com/en_US/i/btn/btn_donateCC_LG.gif" alt="' . TEXT_INFO_DONATIONS_IMG_ALT . '" border="0" /></a>');
   define('TEXT_START', '<b>Welcome to the modified eCommerce Shopsoftware installation process</b><br /><br />The modified eCommerce Shopsoftware is an open source e-commerce solution under on going development by the modified eCommerce Shopsoftware Team and its community.<br /> Its feature packed out-of-the-box installation allows store owners to setup, run, and maintain their online stores with minimum effort and with no costs involved.<br />The modified eCommerce Shopsoftware combines open source solutions to provide a free and open development platform, which includes the powerful PHP web scripting language, the stable Apache web server, and the fast MySQL database server.<br /><br />With no restrictions or special requirements, the modified eCommerce Shopsoftware can be installed on on any environment that supports PHP '.PHP_VERSION_MIN.' and MySQL 5.0.0, which includes Linux, Solaris, BSD, and Microsoft Windows environments.<br /><br />The modified eCommerce Shopsoftware is an open source project, yet a lot of work and spare time go into this project. Therefore we would be grateful if you show your appreciation by <b>donating</b> to the project.<br /><br />' . BUTTON_DONATE);
   define('TEXT_UPDATER_HEADING', 'Please Choose');
-  define('TEXT_UPDATER', 'Welcome to the new Updater of the modified eComemrce Shopsoftware');
+  define('TEXT_UPDATER', 'Welcome to the new Updater of the modified eCommerce Shopsoftware');
   define('TEXT_UPDATE_CONFIG', 'Update configuration file (configure.php)');
   
   define('TEXT_CONFIGURE', 'Recreate configuration file (configure.php)');
@@ -42,6 +42,8 @@
   define('TEXT_SQL_UPDATE', 'Database Update');
   define('TEXT_SQL_UPDATE_HEADING', 'Choose SQL Update');
   define('TEXT_SQL_UPDATE_DESC', 'Please select only the update files, which are necessary for your current Shopversion.');
+  define('TEXT_EXECUTED_SUCCESS', '<b>Executed successful:</b>');
+  define('TEXT_EXECUTED_ERROR', '<b>Executed with errors:</b>');
 
   define('TEXT_SQL_MANUELL', 'Manual SQL input');
   define('TEXT_SQL_MANUELL_HEADING', 'Enter SQL command:');
@@ -96,12 +98,17 @@
   define('TEXT_DB_PCONNECT', 'Persistent:');
   define('TEXT_DB_EXISTS', 'Database already exists');
   define('TEXT_DB_EXISTS_DESC', 'If you click "Confirm", all tables in this database will be overwritten! If you do not want it, click "Back" and specify a different database. Otherwise, click "Confirm".');
-  
+  define('TEXT_DB_INSTALL', 'Database installation (mandatory on initial setup!). Existing database tables are exhausted!');
+
   define('TEXT_SERVER_HEADING', 'Information about the shop:');
   define('TEXT_SERVER_HTTP_SERVER', 'HTTP:');
   define('TEXT_SERVER_HTTPS_SERVER', 'HTTPS:');
   define('TEXT_SERVER_USE_SSL', 'SSL:');
   define('TEXT_SERVER_SESSION', 'Session:');
+
+  define('TEXT_ADMIN_DIRECTORY_HEADING','Admin Directory:');
+  define('TEXT_ADMIN_DIRECTORY_DESCRIPTION', 'Due to seurity reasons change the name of the admin directory.');
+  define('TEXT_ADMIN_DIRECTORY', 'This is a generated suggestion:');
 
   define('TEXT_ACCOUNT','The installer will create the admin account and will perform some db actions.<br /> The given information for <b>Country</b> and <b>Post Code</b> are used for shipping and tax callculations.');
   define('TEXT_ACCOUNT_HEADING', 'Account details:');

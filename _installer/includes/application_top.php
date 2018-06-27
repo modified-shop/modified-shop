@@ -11,6 +11,13 @@
    ---------------------------------------------------------------------------------------*/
 
 
+  // set the type of request (secure or not)
+  if (file_exists('../includes/request_type.php')) {
+    include_once('../includes/request_type.php');
+  } else {
+    $request_type = 'NONSSL';
+  }
+  
   // configuration parameters
   require_once(__DIR__.'/configure.php');
 
@@ -31,13 +38,6 @@
   if (is_file(DIR_FS_CATALOG.'includes/error_reporting.php')) {
     define('LOGGING_LEVEL', 'WARN');
     require_once (DIR_FS_CATALOG.'includes/error_reporting.php');
-  }
-
-  // set the type of request (secure or not)
-  if (file_exists(DIR_WS_INCLUDES.'request_type.php')) {
-    include_once (DIR_WS_INCLUDES.'request_type.php');
-  } else {
-    $request_type = 'NONSSL';
   }
 
   // Base/PHP_SELF/SSL-PROXY
@@ -61,6 +61,8 @@
   require_once (DIR_FS_INC.'xtc_image.inc.php');
   require_once (DIR_FS_INC.'get_database_version.inc.php');
   require_once (DIR_FS_INC.'xtc_set_time_limit.inc.php');
+  require_once (DIR_FS_INC.'xtc_random_charcode.inc.php');
+  require_once (DIR_FS_INC.'xtc_rand.inc.php');
   
   require_once (DIR_FS_INC.'xtc_not_null.inc.php');
   require_once (DIR_FS_INC.'xtc_href_link.inc.php');

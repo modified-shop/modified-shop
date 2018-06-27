@@ -14,12 +14,13 @@
   require_once('includes/functions.php');
 
   // global defines
+  defined('DIR_MODIFIED_INSTALLER') OR define('DIR_MODIFIED_INSTALLER', '_installer');
   define('DIR_FS_DOCUMENT_ROOT', get_document_root());
   define('DIR_FS_CATALOG', DIR_FS_DOCUMENT_ROOT);
   define('DIR_WS_CATALOG', rtrim(dirname(dirname($_SERVER['PHP_SELF'])), '/').'/');
 
   // server
-  define('HTTP_SERVER', 'http://'.$_SERVER['HTTP_HOST']);
+  define('HTTP_SERVER', 'http'.(($request_type == 'SSL') ? 's' : '').'://'.$_SERVER['HTTP_HOST']);
   define('HTTPS_SERVER', 'https://'.$_SERVER['HTTP_HOST']);
 
   // session handling
