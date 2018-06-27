@@ -1093,6 +1093,7 @@ CREATE TABLE products_tags (
   products_id int(11) NOT NULL,
   options_id int(11) NOT NULL,
   values_id int(11) NOT NULL,
+  sort_order int(11) NOT NULL DEFAULT '0',
   products_options_id int(11) NOT NULL DEFAULT '0',
   products_options_values_id int(11) NOT NULL DEFAULT '0',
   KEY idx_products_options_values (products_id,options_id,values_id),

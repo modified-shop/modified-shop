@@ -40,7 +40,7 @@ $tags_query = xtDBquery("SELECT ".ADD_TAGS_SELECT."
                                    AND ptv.status = '1'
                                    AND ptv.languages_id = '".(int)$_SESSION['languages_id']."'
                           WHERE pt.products_id = '".$product->data['products_id']."'
-                       ORDER BY pto.sort_order, ptv.sort_order");
+                       ORDER BY pt.sort_order, pto.sort_order, ptv.sort_order");
 
 if (xtc_db_num_rows($tags_query, true) > 0) {
   while ($tags = xtc_db_fetch_array($tags_query, true)) {
