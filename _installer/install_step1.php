@@ -59,6 +59,8 @@
       'https_server',
       'session',
       'use_ssl',
+      'write_configure',
+      'admin_directory',
     );
 
     // prepare variables
@@ -67,10 +69,19 @@
         ${$key} = addslashes($value);
       }
     }
+
+    if (isset($admin_directory) && $admin_directory != trim(DIR_ADMIN, '/')) {
+      $admin_directory = preg_replace('/[^a-zA-Z0-9_]/', '', $admin_directory);
+      if (!is_dir(DIR_FS_CATALOG.$admin_directory)) {
+        @rename(DIR_FS_CATALOG.trim(DIR_ADMIN, '/'), DIR_FS_CATALOG.$admin_directory);
+      }
+    }  
     
     // Database
     require_once (DIR_FS_INC.'db_functions_'.$db_type.'.inc.php');
     require_once (DIR_FS_INC.'db_functions.inc.php');
+
+    $_SESSION['language_charset'] = (($db_charset == 'utf8') ? 'utf-8' : 'ISO-8859-15');
     
     $connection = xtc_db_connect($db_server, $db_username, $db_password, $db_database, 'db_link');
     if (is_object($connection) || is_resource($connection)) {
@@ -83,11 +94,12 @@
         }
       }
       
-      if ($error === false) {
-        $_SESSION['language_charset'] = $db_charset;
-        
+      if (($error === false && !isset($db_install))
+          || isset($write_configure)
+          )
+      {        
         $collation = 'latin1_german1_ci';
-        if ($_SESSION['language_charset'] == 'utf8') {
+        if ($_SESSION['language_charset'] == 'utf-8') {
           $collation = 'utf8_general_ci';
         }
         xtc_db_query('ALTER DATABASE `'.$db_database.'` DEFAULT CHARACTER SET '.$db_charset.' COLLATE '.$collation);
@@ -120,7 +132,13 @@
         }
         fputs($fp, $file_contents);
         fclose($fp);
-        
+               
+        if (isset($write_configure) && $error === true) {
+          xtc_redirect(xtc_href_link(DIR_WS_INSTALLER.'install_finished.php', '', $request_type));
+        }
+      }
+      
+      if ($error === false || isset($db_install)) {
         xtc_redirect(xtc_href_link(DIR_WS_INSTALLER.'install_step1.php', 'action=restorenow&sql=0', $request_type));
       }
     } else {
@@ -268,7 +286,7 @@
   );
   $smarty->assign('INPUT_DB_SERVER', xtc_draw_input_fieldNote(array('name' => 'db_server')));
   $smarty->assign('INPUT_DB_USERNAME', xtc_draw_input_fieldNote(array('name' => 'db_username')));
-  $smarty->assign('INPUT_DB_PASSWORD', xtc_draw_input_fieldNote(array('name' => 'db_password')));
+  $smarty->assign('INPUT_DB_PASSWORD', xtc_draw_password_fieldNote(array('name' => 'db_password')));
   $smarty->assign('INPUT_DB_DATABSE', xtc_draw_input_fieldNote(array('name' => 'db_database')));    
   $smarty->assign('INPUT_DB_MYSQL_TYPE', xtc_draw_pull_down_menuNote(array ('name' => 'db_type'), $db_type_array, $db_type));
   $smarty->assign('INPUT_DB_CHARSET', xtc_draw_pull_down_menuNote(array ('name' => 'db_charset'), $db_charset_array, $db_charset));
@@ -280,15 +298,20 @@
   $smarty->assign('INPUT_SESSION', xtc_draw_pull_down_menuNote(array ('name' => 'session'), $session_array, $session));
   $smarty->assign('INPUT_USE_SSL', xtc_draw_pull_down_menuNote(array ('name' => 'use_ssl'), $boolean_array, $use_ssl));
   
+  $smarty->assign('INPUT_ADMIN_DIRECTORY', xtc_draw_input_fieldNote(array('name' => 'admin_directory'), trim(DIR_ADMIN, '/'))); 
+  $smarty->assign('ADMIN_DIRECTORY_SUGGEST', 'admin_'.xtc_random_charcode(10));
+  
   if ($upgrade === true) {
     $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.'index.php', '', $request_type).'">'.BUTTON_BACK.'</a>');
   }
   if (isset($error) && $error === true) {
-    $hidden_fields = xtc_draw_hidden_field('db_install', '1');
+    $hidden_fields = '';
     foreach ($_POST as $key => $value) {
       $hidden_fields .= xtc_draw_hidden_field($key, $value);
     }
-    $smarty->assign('INPUT_DB_INSTALL', $hidden_fields);
+    $smarty->assign('INPUT_HIDDEN', $hidden_fields);
+    $smarty->assign('INPUT_DB_INSTALL', '<input type="checkbox" value="1" name="db_install" id="db_install" />');
+    $smarty->assign('INPUT_WRITE_CONFIGURE', '<input type="checkbox" value="1" name="write_configure" id="write_configure" />');
     $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), '', $request_type).'">'.BUTTON_BACK.'</a>');
   }
   

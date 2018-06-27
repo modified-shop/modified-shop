@@ -207,7 +207,7 @@
       xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($multilanguage_email). "' WHERE configuration_key = 'EMAIL_BILLING_REPLY_ADDRESS'");
       xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($multilanguage_email). "' WHERE configuration_key = 'EMAIL_BILLING_FORWARDING_STRING'");
 
-      if ($_SESSION['language_charset'] == 'utf8') {
+      if ($_SESSION['language_charset'] == 'utf-8') {
         xtc_db_query("UPDATE " .TABLE_LANGUAGES . " SET language_charset='utf-8'");
       }
 
@@ -332,7 +332,7 @@
       $sql_array = parse_sql_file(DIR_FS_INSTALLER.'includes/sql/'.$sql_file);
 
       for ($i=0, $n=count($sql_array); $i<$n; $i++) {
-        if ($_SESSION['language_charset'] == 'utf8') {
+        if ($_SESSION['language_charset'] == 'utf-8') {
           $sql_array[$i] = mb_convert_encoding($sql_array[$i], 'utf-8', 'ISO-8859-15');
         }
         xtc_db_query($sql_array[$i]);

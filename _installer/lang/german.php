@@ -32,7 +32,7 @@
   define('BUTTON_DONATE','<a href="https://www.modified-shop.org/spenden" target="_blank"><img src="https://www.paypal.com/de_DE/DE/i/btn/btn_donateCC_LG.gif" alt="' . TEXT_INFO_DONATIONS_IMG_ALT . '" border="0" /></a>');
   define('TEXT_START', '<b>Willkommen zur modified eCommerce Shopsoftware Installation</b><br /><br />Die modified eCommerce Shopsoftware ist eine Open-Source e-commerce L&ouml;sung, die st&auml;ndig vom modified eCommerce Shopsoftware Team und einer grossen Gemeinschaft weiterentwickelt wird.<br /> Seine out-of-the-box Installation erlaubt es dem Shop-Besitzer seinen Online-Shop mit einem Minimum an Aufwand und Kosten zu installieren, zu betreiben und zu verwalten.<br /><br />Die modified eCommerce Shopsoftware ist auf jedem System lauff&auml;hig, welches eine PHP Umgebung (ab PHP '.PHP_VERSION_MIN.') und MySQL (ab MySQL 5.0.0) zur Verf&uuml;gung stellt, wie zum Beispiel Linux, Solaris, BSD, und Microsoft Windows.<br /><br />Die modified eCommerce Shopsoftware ist ein OpenSource-Projekt &ndash; wir stecken jede Menge Arbeit und Freizeit in dieses Projekt und w&uuml;rden uns daher &uuml;ber eine <b>Spende</b> als kleine Anerkennung freuen.<br /><br />' . BUTTON_DONATE);
   define('TEXT_UPDATER_HEADING', 'Bitte ausw&auml;hlen');
-  define('TEXT_UPDATER', 'Willkommen beim neuen Updater der modified eComemrce Shopsoftware.');
+  define('TEXT_UPDATER', 'Willkommen beim neuen Updater der modified eCommerce Shopsoftware.');
   define('TEXT_UPDATE_CONFIG', 'Konfigurations-Datei (configure.php) aktualisieren');
   
   define('TEXT_CONFIGURE', 'Konfigurations-Datei (configure.php) aktualisieren');
@@ -41,23 +41,25 @@
   
   define('TEXT_SQL_UPDATE', 'Datenbank Update');
   define('TEXT_SQL_UPDATE_HEADING', 'SQL Update ausw&auml;hlen');
-  define('TEXT_SQL_UPDATE_DESC', 'Bitte wählen Sie hier nur die Update-Dateien aus, die für Ihre derzeitige Shopversion notwendig sind.');
-
+  define('TEXT_SQL_UPDATE_DESC', 'Bitte w&auml;hlen Sie hier nur die Update-Dateien aus, die f&uuml;r Ihre derzeitige Shopversion notwendig sind.');
+  define('TEXT_EXECUTED_SUCCESS', '<b>Erfolgreich ausgef&uuml;hrt:</b>');
+  define('TEXT_EXECUTED_ERROR', '<b>Mit Fehlern ausgef&uuml;hrt:</b>');
+  
   define('TEXT_SQL_MANUELL', 'Manuelle SQL-Eingabe');
   define('TEXT_SQL_MANUELL_HEADING', 'SQL Befehl eingeben:');
   define('TEXT_SQL_MANUELL_DESC', 'SQL-Befehle m&uuml;ssen mit einem Semikolon ( ; ) abgeschlossen werden!');
 
   define('TEXT_DB_RESTORE', 'Datenbank Wiederherstellung');
-  define('TEXT_DB_RESTORE_DESC', 'Sie können hier Ihre Datenbank aus einem vorhandenen Backup wiederherstellen.');
+  define('TEXT_DB_RESTORE_DESC', 'Sie k&ouml;nnen hier Ihre Datenbank aus einem vorhandenen Backup wiederherstellen.');
   define('TEXT_INFO_DO_RESTORE', 'Die Datenbank wird wiederhergestellt!');
   define('TEXT_INFO_DO_RESTORE_OK', 'Die Datenbank wurde erfolgreich wiederhergestellt!');
   
   define('TEXT_DB_BACKUP', 'Datenbank-Backup');
-  define('TEXT_DB_BACKUP_DESC', 'Sie können hier Ihre Datenbank sichern.');
+  define('TEXT_DB_BACKUP_DESC', 'Sie k&ouml;nnen hier Ihre Datenbank sichern.');
   define('TEXT_DB_COMPRESS', 'Backup komprimieren');
   define('TEXT_DB_REMOVE_COLLATE', 'Ohne Zeichenkodierung \'COLLATE\' und \'DEFAULT CHARSET\'');
   define('TEXT_DB_REMOVE_ENGINE', 'Ohne Speicherengines \'ENGINE\'');
-  define('TEXT_DB_COMPLETE_INSERTS', 'Vollständige \'INSERT\'s');
+  define('TEXT_DB_COMPLETE_INSERTS', 'Vollst&auml;ndige \'INSERT\'s');
   define('TEXT_DB_UFT8_CONVERT', 'Datenbank auf UTF-8 konvertieren');
   define('TEXT_DB_COMPRESS_GZIP', 'Mit GZIP');
   define('TEXT_DB_COMPRESS_RAW', 'Keine Komprimierung (Raw SQL)');
@@ -80,7 +82,7 @@
   define('TEXT_INFO_MAX_RELOADS', 'Maximale Seitenreloads wurden erreicht: ');
   
   define('TEXT_DB_UPDATE', 'Datenbankstruktur Update');
-  define('TEXT_DB_UPDATE_DESC', 'Hier können Sie die Datenbank Ihrer Shopinstallation auf den aktuellen Stand bringen.');
+  define('TEXT_DB_UPDATE_DESC', 'Hier k&ouml;nnen Sie die Datenbank Ihrer Shopinstallation auf den aktuellen Stand bringen.');
   define('TEXT_DB_UPDATE_FINISHED', 'DB Update erfolgreich abgesclossen!');
   define('TEXT_FROM', ' von ');
   //define('TEXT_DB_UPDATE_BEFORE', 'Text davor'); // Not used yet
@@ -96,12 +98,17 @@
   define('TEXT_DB_PCONNECT', 'Persistent:');
   define('TEXT_DB_EXISTS', 'Datenbank existiert bereits');
   define('TEXT_DB_EXISTS_DESC', 'Wenn Sie "Best&auml;tigen" klicken werden alle Tabellen dieser Datenbank &uuml;berschrieben! Wenn Sie dies nicht m&ouml;chten, dann klicken Sie auf "Zur&uuml;ck" und geben eine andere Datenbank an. Andersfalls klicken Sie auf "Best&auml;tigen".');
-  
+  define('TEXT_DB_INSTALL', 'Datenbank Installation (Zwingend erforderlich bei Erstinstallation). Bestehende Tabellen werden dabei geleert!');
+
   define('TEXT_SERVER_HEADING', 'Angaben zum Shop:');
   define('TEXT_SERVER_HTTP_SERVER', 'HTTP:');
   define('TEXT_SERVER_HTTPS_SERVER', 'HTTPS:');
   define('TEXT_SERVER_USE_SSL', 'SSL:');
   define('TEXT_SERVER_SESSION', 'Session:');
+
+  define('TEXT_ADMIN_DIRECTORY_HEADING','Admin Verzeichnis:');
+  define('TEXT_ADMIN_DIRECTORY_DESCRIPTION', 'Bitte &auml;ndern Sie aus Sicherheitsgr&uuml;nden den Namen des Admin Verzeichnisses.');
+  define('TEXT_ADMIN_DIRECTORY', 'Hier ein per Zufallsgenerator generierter Vorschlag:');
 
   define('TEXT_ACCOUNT','Der Installer richtet den Admin-Account ein und schreibt noch diverse Daten in die Datenbank.<br />Die angegebenen Daten f&uuml;r <b>Land</b> und <b>PLZ</b> werden f&uuml;r die Versand- und Steuerberechnungen genutzt.');
   define('TEXT_ACCOUNT_HEADING', 'Angaben zum Account:');
