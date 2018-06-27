@@ -197,11 +197,6 @@
     require_once(DIR_FS_INC.'auto_include.inc.php');
     foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/new_product/','php') as $file) require ($file);
     
-    //products tags
-    if (!is_file('includes/modules/products_tags_iframe.php')) {
-      include(DIR_WS_MODULES.'products_tags.php');
-    }
-
     //Price options
     include(DIR_WS_MODULES.'group_prices.php');
     
@@ -226,12 +221,16 @@
       <?php
       if (isset($_GET['pID']) && $_GET['pID'] > 0) {
         echo '&nbsp;&nbsp;<input type="submit" class="button" name="prod_update" value="'.BUTTON_UPDATE.'" '.$confirm_save_entry.'/>';
+        
         if (is_file('includes/modules/products_tags_iframe.php')) {
           include_once("includes/modules/products_tags_iframe.php");
-          if (function_exists('tags_iframe_link')) {
-            echo '&nbsp;&nbsp;'.tags_iframe_link($_GET['pID']);
-          } 
         }
+        if (function_exists('tags_iframe_link')) {
+          echo '&nbsp;&nbsp;'.tags_iframe_link($_GET['pID']);
+        } else {
+          echo '&nbsp;&nbsp;<a class="button" href="' . xtc_href_link('products_tags.php','cpath='. $cPath . $catfunc->page_parameter.'&current_product_id='.$_GET['pID'].'&action=edit&oldaction=new_product').'" onclick="this.blur()">'.TEXT_PRODUCTS_TAGS.'</a>';
+        }
+        
         if (is_file('includes/modules/products_attributes_iframe.php')) {
           include_once("includes/modules/products_attributes_iframe.php");
         }
@@ -240,6 +239,7 @@
         } else {
           echo '&nbsp;&nbsp;<a class="button" href="' . xtc_href_link('new_attributes.php','cpath='. $cPath . $catfunc->page_parameter.'&current_product_id='.$_GET['pID'].'&action=edit&oldaction=new_product').'" onclick="this.blur()">'.BUTTON_EDIT_ATTRIBUTES.'</a>';
         }
+        
         echo '&nbsp;&nbsp;<a onclick="return confirmLink(\''. CONTINUE_WITHOUT_SAVE .'\', \'\' ,this)" class="button" href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action','last_action', 'set', 'id')) . 'last_action='.$_GET['action'].'&action=new_products_content&set=product') . '">' . BUTTON_NEW_CONTENT . '</a>';
         echo '&nbsp;&nbsp;<a class="button" href="' . xtc_catalog_href_link('product_info.php', 'products_id=' . $_GET['pID']) . '" target="_blank">' . BUTTON_VIEW_PRODUCT . '</a>';
       }

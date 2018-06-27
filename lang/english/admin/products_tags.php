@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: geo_TAGs.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -75,4 +75,10 @@ define('TEXT_INFO_ATTRIBUTES_DELETE', 'Attributes - Delete mappings from deleted
 define('TEXT_INFO_IMPORT_WAIT', 'Please wait...');
 define('TEXT_INFO_IMPORT_FINISHED', 'Import finished.');
 
+define('SORT_ORDER','Sort order');
+define('TEXT_SORTORDER', 'Sorting');
+define('TEXT_OPTION_ID', 'Option ID');
+define('TEXT_OPTION_NAME', 'Option Name');
+define('TITLE_EDIT','Edit product features');
+define('ATTR_SAVE_ACTIVE', 'Save Unfold Features');
 ?>

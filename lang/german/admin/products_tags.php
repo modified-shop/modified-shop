@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: geo_TAGs.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -75,4 +75,10 @@ define('TEXT_INFO_ATTRIBUTES_DELETE', 'Attribute - Zuordnungen entfernen von gel
 define('TEXT_INFO_IMPORT_WAIT', 'Bitte warten...');
 define('TEXT_INFO_IMPORT_FINISHED', 'Import abgeschlossen.');
 
+define('SORT_ORDER','Reihenfolge');
+define('TEXT_SORTORDER', 'Sortierung');
+define('TEXT_OPTION_ID', 'Options ID');
+define('TEXT_OPTION_NAME', 'Optionsname');
+define('TITLE_EDIT','Artikeleigenschaften Editieren');
+define('ATTR_SAVE_ACTIVE', 'Aufgeklappte Eigenschaften speichern');
 ?>

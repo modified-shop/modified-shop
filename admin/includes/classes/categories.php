@@ -1382,14 +1382,27 @@ class categories {
   
   function save_products_tags($products_data,$products_id)
   {
-      xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_TAGS." WHERE products_id = '".(int)$products_id."'");    
+      if (isset($products_data['options_id']) && is_array($products_data['options_id'])) {
+        foreach ($products_data['options_id'] as $options_id) {
+          $options_id = str_replace('oid-','',$options_id);
+          xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_TAGS." WHERE products_id = '".(int)$products_id."' AND options_id = '".(int)$options_id."'");
+        }
+      }
+      
+      if (isset($products_data['products_tags_save'])) {
+        xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_TAGS." WHERE products_id = '".(int)$products_id."'");
+      }
+      
       if (isset($products_data['product_tags']) && is_array($products_data['product_tags'])) {
         foreach ($products_data['product_tags'] as $options_id => $value) {
           foreach ($value as $values_id => $subvalue) {
             if ($subvalue == 'on') {
-              $sql_data_array = array('products_id' => (int)$products_id,
-                                      'options_id' => (int)$options_id,
-                                      'values_id' => (int)$values_id);
+              $sql_data_array = array(
+                'products_id' => (int)$products_id,
+                'options_id' => (int)$options_id,
+                'values_id' => (int)$values_id,
+                'sort_order' => $products_data['product_tags_sort'][(int)$options_id][(int)$values_id],
+              );
               xtc_db_perform(TABLE_PRODUCTS_TAGS, $sql_data_array);                    
             }
           }

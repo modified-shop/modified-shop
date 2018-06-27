@@ -19,7 +19,7 @@ REPLACE INTO `customers_status` SELECT cs.`customers_status_id`, 2, cs.`customer
 
 
 #GTB - 2018-06-19 - add newsletter update
-ALTER TABLE admin_access ADD newsletter_recipients INT(1) NOT NULL DEFAULT 0 AFTER paypal_module;
+ALTER TABLE admin_access ADD newsletter_recipients INT(1) NOT NULL DEFAULT '0' AFTER paypal_module;
 UPDATE admin_access SET newsletter_recipients = 1 WHERE customers_id = 1 LIMIT 1;
 UPDATE admin_access SET newsletter_recipients = 5 WHERE customers_id = 'groups' LIMIT 1;
 
@@ -31,5 +31,8 @@ CREATE TABLE newsletter_recipients_history (
   date_added datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   KEY idx_customers_email_address (customers_email_address)
 );
+
+#GTB - 2018-06-27 - add sort order tags
+ALTER TABLE `products_tags` ADD `sort_order` INT(11) NOT NULL DEFAULT '0' AFTER `values_id` ;
 
 # Keep an empty line at the end of this file for the db_updater to work properly

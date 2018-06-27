@@ -133,6 +133,7 @@
     DIR_ADMIN.'includes/haendlerbund/css/ui_custom.css',
     DIR_ADMIN.'includes/haendlerbund/images/groesster-onlinehandelsverband-europas.png',
     DIR_ADMIN.'includes/haendlerbund/jquery-1.4.4.js',
+    DIR_ADMIN.'includes/javascript/jquery.products_tags.js',
     DIR_ADMIN.'includes/modules/carp/carp.php',
     DIR_ADMIN.'includes/modules/carp/carpconf.php',
     DIR_ADMIN.'includes/modules/carp/carpinc.php',
