@@ -55,7 +55,7 @@
   define('DIR_FS_EXTERNAL', DIR_FS_CATALOG . 'includes/external/');
 
   // installer
-  define('DIR_MODIFIED_INSTALLER', '_installer');
+  defined('DIR_MODIFIED_INSTALLER') OR define('DIR_MODIFIED_INSTALLER', '_installer');
   
   // extra paths
   require_once(DIR_FS_INC.'auto_include.inc.php');
