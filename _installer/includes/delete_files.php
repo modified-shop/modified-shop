@@ -230,6 +230,7 @@
     'inc/xtc_draw_radio_field_installer.inc.php',
     'inc/xtc_draw_selection_field_installer.inc.php',
     'inc/xtc_exit.inc.php',
+    'inc/xtc_findTitle.inc.php',
     'inc/xtc_gdlib_check.inc.php',
     'inc/xtc_show_category_content.inc.php',
     'inc/xtc_set_customer_status_upgrade.inc.php',
