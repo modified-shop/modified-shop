@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------------------
-#  $Id: update_2.0.4.0_to_2.0.4.1.sql 11316 2018-06-27 09:16:53Z GTB $
+#  $Id$
 #
 #  modified eCommerce Shopsoftware
 #  http://www.modified-shop.org
