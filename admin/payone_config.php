@@ -32,11 +32,14 @@ if (!isset($_SESSION[$messages_ns])) {
 }
 
 // check new column
-$check_query = xtc_db_query("SELECT *
-                               FROM payone_transactions
-                              LIMIT 1");
-$check = xtc_db_fetch_array($check_query);
-if (!isset($check['type'])) {
+$found = false;
+$check_query = xtc_db_query("SHOW COLUMNS FROM `payone_transactions`");
+while ($check = xtc_db_fetch_array($check_query)) {
+  if ($check['Field']) == 'type') {
+    $found = true;
+  }
+}
+if ($found === false) {
   xtc_db_query("ALTER TABLE payone_transactions ADD type varchar(64) NOT NULL");
 }
 
