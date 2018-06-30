@@ -23,14 +23,16 @@
   $languages = xtc_get_languages(); 
 
   // installed
-  $installed_array = array();
-  $installed_query = xtc_db_query("SELECT languages_id
-                                     FROM ".TABLE_TRUSTEDSHOPS."
-                                    WHERE status = '1'");
-  while ($installed = xtc_db_fetch_array($installed_query)) {
-    $installed_array[] = $installed['languages_id'];
+  if (defined('MODULE_TRUSTEDSHOPS_STATUS') && MODULE_TRUSTEDSHOPS_STATUS == 'true') {
+    $installed_array = array();
+    $installed_query = xtc_db_query("SELECT languages_id
+                                       FROM ".TABLE_TRUSTEDSHOPS."
+                                      WHERE status = '1'");
+    while ($installed = xtc_db_fetch_array($installed_query)) {
+      $installed_array[] = $installed['languages_id'];
+    }
   }
-  
+
   $languages_id_array = array();
   for ($i=0, $n=count($languages); $i<$n; $i++) {
     $languages_id_array[] = array('id' => $languages[$i]['id'], 'text' => $languages[$i]['name']);
