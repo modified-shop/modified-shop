@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: stylesheet.css 4246 2013-01-11 14:36:07Z Tomcraft1980 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -29,7 +29,7 @@
     // create $search_keywords array
     $keywordcheck = xtc_parse_search_string($queryString, $search_keywords);
         
-    if ($keywordcheck === true && strlen($queryString) > SEARCH_AC_MIN_LENGTH) {
+    if ($keywordcheck === true && strlen($queryString) >= SEARCH_AC_MIN_LENGTH) {
       
       $from_str .= SEARCH_IN_ATTR == 'true' ? " LEFT OUTER JOIN ".TABLE_PRODUCTS_ATTRIBUTES." AS pa ON (p.products_id = pa.products_id) 
                                                 LEFT OUTER JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." AS pov ON (pa.options_values_id = pov.products_options_values_id) " : "";
