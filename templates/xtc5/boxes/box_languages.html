@@ -1,4 +1,2 @@
-{if isset($BOX_CONTENT)}
-  {config_load file="$language/lang_$language.conf" section="boxes"}
-  {$BOX_CONTENT}
-{/if}
+{config_load file="$language/lang_$language.conf" section="boxes"}
+{if isset($BOX_CONTENT)}{$BOX_CONTENT}{/if}

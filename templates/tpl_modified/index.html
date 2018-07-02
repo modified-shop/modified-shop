@@ -4,7 +4,7 @@
 <div id="layout_navbar">
   <div id="layout_navbar_inner">
     {if isset($box_INFOBOX)}<div id="customers_group">{$box_INFOBOX}</div>{/if}
-    {if isset($box_LANGUAGES) && $box_LANGUAGES != ''}<div id="languages">{$box_LANGUAGES}</div>{/if}
+    {if isset($box_LANGUAGES) && trim($box_LANGUAGES) != ''}<div id="languages">{$box_LANGUAGES}</div>{/if}
     <ul class="topnavigation"> 
       {if isset($account)}
         <li class="first"><a href="{$account}">{#link_account#}</a></li>

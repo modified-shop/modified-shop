@@ -21,7 +21,7 @@
         <li><a href="{$login}">{#link_login#}</a></li>
       {/if}
     </ul>
-    <div id="languages">{if isset($box_LANGUAGES)}{$box_LANGUAGES}{/if}</div>
+    {if isset($box_LANGUAGES) && trim($box_LANGUAGES) != ''}<div id="languages">{$box_LANGUAGES}</div>{/if}
   </div>
   <div id="breadcrumb">{if isset($navtrail)}{$navtrail}{/if}</div>
   <div id="contentwrap">

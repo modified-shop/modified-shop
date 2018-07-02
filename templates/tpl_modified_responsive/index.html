@@ -11,7 +11,7 @@
         {if isset($box_INFOBOX)}
           <li class="tn_group">{$box_INFOBOX}</li>
         {/if}
-        {if isset($box_LANGUAGES) && $box_LANGUAGES != ''}
+        {if isset($box_LANGUAGES) && trim($box_LANGUAGES) != ''}
           <li class="tn_lang">{$box_LANGUAGES}</li>
         {/if}
         {if isset($smarty.session.customer_id)}
