@@ -77,7 +77,8 @@ function get_sqlbefehl()
       // Delete actions
       elseif ($sub9=='DROP TABL') $sqlparser_status=1;
       elseif ($sub9=='DROP VIEW') $sqlparser_status=1;
-    
+      elseif ($sub9=='TRUNCATE ') $sqlparser_status=1;
+      
       // Befehle, die nicht ausgeführt werden sollen
       elseif ($sub9=='CREATE DA ') $sqlparser_status=7;
       elseif ($sub9=='DROP DATA ') $sqlparser_status=7;
