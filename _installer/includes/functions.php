@@ -371,4 +371,13 @@
     }
     return $document_root;
   }
+  
+  
+  function get_mysql_type() {
+    if (function_exists('mysqli_connect')) {
+      return 'mysqli';
+    }
+    
+    return 'mysql';
+  }
 ?>
