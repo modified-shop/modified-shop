@@ -184,7 +184,7 @@
       }
       if (!$exists) {
         if (DB_SERVER_CHARSET == 'utf8') {
-          $sql = mb_convert_encoding($sql, 'utf-8', 'ISO-8859-15');
+          $sql = encode_utf8($sql, '', true);
         }
         $result = xtc_db_query($sql);
 

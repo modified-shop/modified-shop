@@ -237,7 +237,7 @@
       }
       
       $restore['utf8'] = false;
-      if(isset($_GET['convert']) && $_GET['convert'] == 'utf8') {
+      if(isset($_GET['convert']) && $_GET['convert'] == 'utf-8') {
         $restore['utf8'] = true;
       }
     
@@ -280,7 +280,7 @@
           $actual_table = $restore['actual_table'];
           if (!RESTORE_TEST) {
             if ($restore['utf8'] == true) {
-              $sql_command = mb_convert_encoding($sql_command, 'utf-8', 'ISO-8859-15');
+              $sql_command = encode_utf8($sql_command, '', true); 
             }
             $res = xtc_db_query($sql_command);
             if ($res===false) {
