@@ -154,23 +154,23 @@ class product {
     if ($pID == '') {
       $pID = $this->pID;
     }
-    $reviews_query = xtDBquery("SELECT r.reviews_rating,
-                                       r.reviews_id,
-                                       r.customers_name,
-                                       r.date_added,
-                                       r.last_modified,
-                                       r.reviews_read,
-                                       rd.reviews_text
-                                  FROM ".TABLE_REVIEWS." r
-                                  JOIN ".TABLE_REVIEWS_DESCRIPTION." rd
-                                       ON r.reviews_id = rd.reviews_id
-                                          AND rd.languages_id = '".(int)$_SESSION['languages_id']."'
-                                 WHERE r.products_id = '".(int)$pID."'
-                                   AND r.reviews_status = '1'
-                              ORDER BY r.reviews_id DESC");
+    $reviews_query = xtc_db_query("SELECT r.reviews_rating,
+                                          r.reviews_id,
+                                          r.customers_name,
+                                          r.date_added,
+                                          r.last_modified,
+                                          r.reviews_read,
+                                          rd.reviews_text
+                                     FROM ".TABLE_REVIEWS." r
+                                     JOIN ".TABLE_REVIEWS_DESCRIPTION." rd
+                                          ON r.reviews_id = rd.reviews_id
+                                             AND rd.languages_id = '".(int)$_SESSION['languages_id']."'
+                                    WHERE r.products_id = '".(int)$pID."'
+                                      AND r.reviews_status = '1'
+                                 ORDER BY r.reviews_id DESC");
     $data_reviews = array ();
-    if (xtc_db_num_rows($reviews_query, true)) {
-      while ($reviews = xtc_db_fetch_array($reviews_query, true)) {
+    if (xtc_db_num_rows($reviews_query)) {
+      while ($reviews = xtc_db_fetch_array($reviews_query)) {
         $img = 'templates/'.CURRENT_TEMPLATE.'/img/stars_'.$reviews['reviews_rating'].'.gif';
         if (!is_file(DIR_FS_CATALOG.$img)) {
           $img = 'templates/'.CURRENT_TEMPLATE.'/img/stars_'.$reviews['reviews_rating'].'.png';        
