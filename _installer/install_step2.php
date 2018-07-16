@@ -142,6 +142,9 @@
     }
     
     if ($error === false) {
+      // set charset
+      xtc_db_set_charset('utf8');
+      
       $sql_data_array = array(
         'delete_user' => '0',
         'customers_status' => '0',
@@ -207,7 +210,7 @@
       xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($multilanguage_email). "' WHERE configuration_key = 'EMAIL_BILLING_REPLY_ADDRESS'");
       xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($multilanguage_email). "' WHERE configuration_key = 'EMAIL_BILLING_FORWARDING_STRING'");
 
-      if ($_SESSION['language_charset'] == 'utf-8') {
+      if (DB_SERVER_CHARSET == 'utf8') {
         xtc_db_query("UPDATE " .TABLE_LANGUAGES . " SET language_charset='utf-8'");
       }
 
@@ -328,6 +331,9 @@
         xtc_db_query("INSERT INTO tax_rates (tax_rates_id, tax_zone_id, tax_class_id, tax_priority, tax_rate, tax_description, last_modified, date_added) VALUES (1, 5, 1, 1, '".$tax_normal."', '".$tax_normal_text."', NULL, now())");
         xtc_db_query("INSERT INTO tax_rates (tax_rates_id, tax_zone_id, tax_class_id, tax_priority, tax_rate, tax_description, last_modified, date_added) VALUES (2, 5, 2, 1, '".$tax_special."', '".$tax_special_text."', NULL, now())");
       }
+      
+      // set charset
+      xtc_db_set_charset(DB_SERVER_CHARSET);
 
       $sql_array = parse_sql_file(DIR_FS_INSTALLER.'includes/sql/'.$sql_file);
 
