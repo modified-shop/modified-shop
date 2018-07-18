@@ -307,6 +307,15 @@
     }
   }
   
+  $javascriptcheck = '
+    <script type="text/javascript">
+	  $(document).ready(function(){	
+  		$(".cssButtonRow").show();	
+	  });
+    </script>
+  ';
+  $smarty->assign('JAVASCRIPTCHECK', $javascriptcheck);
+  
   if ($messageStack->size('update') > 0) {
     $smarty->assign('error', $messageStack->output('update'));
   }

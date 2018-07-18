@@ -315,6 +315,15 @@
     $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), '', $request_type).'">'.BUTTON_BACK.'</a>');
   }
   
+  $javascriptcheck = '
+          <script type="text/javascript">
+		  	$(document).ready(function(){	
+  				$(".cssButtonRow").show();	
+			});
+		  </script>
+  ';
+  $smarty->assign('JAVASCRIPTCHECK', $javascriptcheck);
+  
   // form
   $smarty->assign('FORM_ACTION', xtc_draw_form('db_connection', xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), '', $request_type), 'post').xtc_draw_hidden_field('action', 'process').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()));
   $smarty->assign('BUTTON_SUBMIT', '<button type="submit">'.BUTTON_SUBMIT.'</button>');
