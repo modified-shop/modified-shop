@@ -71,6 +71,8 @@
   {/if}
   
   {if !isset($PROCESSING)}
+    {$JAVASCRIPTCHECK}
+    <noscript><div class="errormessage cf"><strong>{$smarty.const.TEXT_ERROR_JAVASCRIPT}</strong></div></noscript>
     <div class="cssButtonRow cf">
       {if isset($BUTTON_BACK)}<div class="cssButton cssColor_2">{$BUTTON_BACK}</div>{/if}
       <div class="cssButton cssColor_3">{$BUTTON_SUBMIT}</div>
