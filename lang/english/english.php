@@ -441,7 +441,7 @@ define('TIMES',' times.');
 define('ERROR_INVALID_STARTDATE_COUPON','Your coupon is not available yet.');
 define('ERROR_INVALID_FINISDATE_COUPON','Your voucher is already expired.');
 define('ERROR_INVALID_MINIMUM_ORDER_COUPON', 'This coupon can be redeemed only with a minimum order value of %s!');
-define('ERROR_INVALID_MINIMUM_ORDER_COUPON_ADD','<br/>You must enter the coupon code again when you reach the minimum order value!');
+define('ERROR_INVALID_MINIMUM_ORDER_COUPON_ADD','<br/>You have to enter the coupon code again when you reach the minimum order value!');
 define('PERSONAL_MESSAGE', '%s writes:');
 
 /*
