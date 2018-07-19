@@ -73,9 +73,11 @@ function JStoPHPResponse(data) {
     $(location).attr('href', decodeEntities(continue_url));
   } else {
     var infoText = '<?php echo constant("TEXT_INFO_DO_".strtoupper($process)."_OK");?>';
+    var infoWait = '<?php echo constant("TEXT_INFO_FINISH");?>';
     if (maxReloadsText != '') infoText = maxReloadsText;
     $('#info_wait').html('&nbsp;');
     $('#info_text').html(infoText);
+    $('#process_info_wait').html(infoWait);
     $('#button_back').html(button_back);
     $('.processing_bar').hide();
     $('.process_wrapper').show();
