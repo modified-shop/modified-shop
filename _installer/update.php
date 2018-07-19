@@ -36,12 +36,12 @@
          ->setConfigDir(__DIR__.'/lang')
          ->SetCaching(0);
 
-  $smarty->assign('BUTTON_CONFIGURE', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=configure', $request_type).'">'.BUTTON_CONFIGURE.'</a>');
-  $smarty->assign('BUTTON_DB_UPDATE', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=db_update', $request_type).'">'.BUTTON_DB_UPDATE.'</a>');
-  $smarty->assign('BUTTON_SQL_UPDATE', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=sql_update', $request_type).'">'.BUTTON_SQL_UPDATE.'</a>');
-  $smarty->assign('BUTTON_SQL_MANUELL', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=sql_manuell', $request_type).'">'.BUTTON_SQL_MANUELL.'</a>');
-  $smarty->assign('BUTTON_DB_BACKUP', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=db_backup', $request_type).'">'.BUTTON_DB_BACKUP.'</a>');
-  $smarty->assign('BUTTON_DB_RESTORE', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=db_restore', $request_type).'">'.BUTTON_DB_RESTORE.'</a>');
+  $smarty->assign('BUTTON_CONFIGURE', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=configure', $request_type).'" class="ActionLink" style="display:none">'.BUTTON_CONFIGURE.'</a>');
+  $smarty->assign('BUTTON_DB_UPDATE', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=db_update', $request_type).'" class="ActionLink" style="display:none">'.BUTTON_DB_UPDATE.'</a>');
+  $smarty->assign('BUTTON_SQL_UPDATE', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=sql_update', $request_type).'" class="ActionLink" style="display:none">'.BUTTON_SQL_UPDATE.'</a>');
+  $smarty->assign('BUTTON_SQL_MANUELL', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=sql_manuell', $request_type).'" class="ActionLink" style="display:none">'.BUTTON_SQL_MANUELL.'</a>');
+  $smarty->assign('BUTTON_DB_BACKUP', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=db_backup', $request_type).'" class="ActionLink" style="display:none">'.BUTTON_DB_BACKUP.'</a>');
+  $smarty->assign('BUTTON_DB_RESTORE', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=db_restore', $request_type).'" class="ActionLink" style="display:none">'.BUTTON_DB_RESTORE.'</a>');
   $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.'index.php', '', $request_type).'">'.BUTTON_BACK.'</a>');
 
   if (isset($_GET['action'])) {
@@ -310,7 +310,7 @@
   $javascriptcheck = '
     <script type="text/javascript">
 	  $(document).ready(function(){	
-  		$(".cssButtonRow").show();	
+  		$(".ActionLink").show();	
 	  });
     </script>
   ';
