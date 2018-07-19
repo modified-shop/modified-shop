@@ -130,7 +130,7 @@
   define('TEXT_MODULES_UNINSTALLED', 'Not installed:');
   define('TEXT_INFO_DO_INSTALL', 'The database is being installed.');
   
-  define('TEXT_ERROR_JAVASCRIPT', 'Javascript is deactivated in your browser. You must enable javascript to run the installer.');
+  define('TEXT_ERROR_JAVASCRIPT', 'Javascript is deactivated in your browser. You have to enable javascript to run the installer.');
   define('TEXT_ERROR_PERMISSION_FILES', 'The following files require write permissions (CHMOD 777):');
   define('TEXT_ERROR_PERMISSION_FOLDER', 'The following folders require write permissions (CHMOD 777):');
   define('TEXT_ERROR_PERMISSION_RFOLDER', 'The following folders including all files and subfolders require recursive write permissions (CHMOD 777):');
