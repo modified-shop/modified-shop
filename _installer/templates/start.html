@@ -1,7 +1,9 @@
 <p>{$smarty.const.TEXT_START}</p>
 <br />
 <br />
-<div class="cssButtonRow cf">
+{$JAVASCRIPTCHECK}
+<noscript><div class="errormessage cf"><strong>{$smarty.const.TEXT_ERROR_JAVASCRIPT}</strong></div></noscript>
+<div class="cssButtonRow cf" style="display:none">
   <div class="cssButton cssColor_1">{$BUTTON_UPDATE}</div>
   <div class="cssButton cssColor_3">{$BUTTON_INSTALL}</div>
 </div>

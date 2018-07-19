@@ -130,6 +130,7 @@
   define('TEXT_MODULES_UNINSTALLED', 'Nicht installiert:');
   define('TEXT_INFO_DO_INSTALL', 'Die Datenbank wird installiert.');
   
+  define('TEXT_ERROR_JAVASCRIPT','In ihrem Browser ist Javascript deaktiviert. Sie m&uuml;ssen Javascript aktivieren, um den Installer ausf&uuml;hren zu k&ouml;nnen.');
   define('TEXT_ERROR_PERMISSION_FILES', 'Die folgenden Dateien ben&ouml;tigen Schreibrechte (CHMOD 777):');
   define('TEXT_ERROR_PERMISSION_FOLDER', 'Die folgenden Ordner ben&ouml;tigen Schreibrechte (CHMOD 777):');
   define('TEXT_ERROR_PERMISSION_RFOLDER', 'Folgende Ordner inklusive aller Dateien und Unterordner ben&ouml;tigen rekursive Schreibrechte (CHMOD 777):');

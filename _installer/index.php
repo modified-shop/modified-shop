@@ -69,6 +69,14 @@
     $module_content = $smarty->fetch('error.html');
   } else {
     if ($upgrade === true) {
+	  $javascriptcheck = '
+        <script type="text/javascript">
+		  $(document).ready(function(){	
+  			$(".cssButtonRow").show();	
+		  });
+		</script>
+      ';
+      $smarty->assign('JAVASCRIPTCHECK', $javascriptcheck);
       $smarty->assign('BUTTON_INSTALL', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.'install_step1.php', '', $request_type).'">'.BUTTON_INSTALL.'</a>');
       $smarty->assign('BUTTON_UPDATE', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.'update.php', '', $request_type).'">'.BUTTON_UPDATE.'</a>');
       $module_content = $smarty->fetch('start.html');
