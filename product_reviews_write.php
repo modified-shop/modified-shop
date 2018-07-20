@@ -32,6 +32,7 @@ $smarty = new Smarty;
 // include boxes
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
+$review_error = false;
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/product_reviews_write/','php') as $file) require ($file);
 
 if ($_SESSION['customers_status']['customers_status_write_reviews'] == 0) {
@@ -44,7 +45,7 @@ if ($_SESSION['customers_status']['customers_status_write_reviews'] == 0) {
 
 $review = '';
 $rating = '';
-if (isset ($_GET['action']) && $_GET['action'] == 'process') {
+if (isset ($_GET['action']) && $_GET['action'] == 'process' && $review_error === false) {
   if (is_object($product) && $product->isProduct() === true) { // We got to the process but it is an illegal product, don't write
     
     $review = xtc_db_prepare_input($_POST['review']);
