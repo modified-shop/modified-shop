@@ -50,14 +50,16 @@ if (WARN_CONFIG_WRITEABLE == 'true') {
   }
 }
 
-$check = array();
-foreach($writeableFiles as $file) {
-  if (!is_writable($file)) {
-    $check[] = $file;
+if (WARN_FILES_WRITEABLE == 'true') {
+  $check = array();
+  foreach($writeableFiles as $file) {
+    if (!is_writable($file)) {
+      $check[] = $file;
+    }
   }
-}
-if (!empty($check)) {
-  $warnings[] = '<p>'.TEXT_FILE_WARNING.'</p><ul><li>'.implode('</li><li>',$check).'</li></ul>';
+  if (!empty($check)) {
+    $warnings[] = '<p>'.TEXT_FILE_WARNING.'</p><ul><li>'.implode('</li><li>',$check).'</li></ul>';
+  }
 }
 
 if(defined('MODULE_JANOLAW_STATUS') && MODULE_JANOLAW_STATUS == 'True' && defined('MODULE_JANOLAW_TYPE') && MODULE_JANOLAW_TYPE == 'File') {
@@ -76,15 +78,17 @@ if(defined('MODULE_JANOLAW_STATUS') && MODULE_JANOLAW_STATUS == 'True' && define
  ** check folder permissions
  ******************************************************************************/
 
-// writeable dirs - only check if dir exssts
-$check = array();
-foreach($writeableDirs as $dir) {
-  if (is_file($dir) && !is_writable($dir)) {
-    $check[] = $dir;
+// writeable dirs - only check if dir exists
+if (WARN_DIRS_WRITEABLE == 'true') {
+  $check = array();
+  foreach($writeableDirs as $dir) {
+    if (is_file($dir) && !is_writable($dir)) {
+      $check[] = $dir;
+    }
   }
-}
-if (!empty($check)) {
-  $warnings[] = TEXT_FOLDER_WARNING.'<ul><li>'.implode('</li><li>',$check).'</li></ul>';
+  if (!empty($check)) {
+    $warnings[] = TEXT_FOLDER_WARNING.'<ul><li>'.implode('</li><li>',$check).'</li></ul>';
+  }
 }
 
 /* //for further use
