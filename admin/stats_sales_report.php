@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: stats_sales_report.php 1687 2011-01-23 12:12:04Z franky-n-xtcm $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -410,7 +410,7 @@
                           <?php
                         } else {
                           // csv export
-                          ('Content-type: application/x-octet-stream');
+                          header('Content-type: application/x-octet-stream');
                           header('Content-disposition: attachment; filename=stats_sales_report.csv');
                           echo date(DATE_FORMAT, $sr->showDate) . SR_SEPARATOR1 . date(DATE_FORMAT, $sr->showDateEnd) . SR_SEPARATOR1;
                           echo $info[0]['order'] . SR_SEPARATOR1;
