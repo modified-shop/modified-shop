@@ -298,9 +298,9 @@ if (!isset($_SESSION['customer_id'])) {
 xtc_check_permission($pagename);
 
 // set which precautions should be checked
-defined('WARN_CONFIG_WRITEABLE') OR define('WARN_CONFIG_WRITEABLE', false);
-defined('WARN_FILES_WRITEABLE') OR define('WARN_FILES_WRITEABLE', false);
-defined('WARN_DIRS_WRITEABLE') OR define('WARN_DIRS_WRITEABLE', false);
+defined('WARN_CONFIG_WRITEABLE') OR define('WARN_CONFIG_WRITEABLE', 'true');
+defined('WARN_FILES_WRITEABLE') OR define('WARN_FILES_WRITEABLE', 'true');
+defined('WARN_DIRS_WRITEABLE') OR define('WARN_DIRS_WRITEABLE', 'true');
 
 foreach(auto_include(DIR_FS_ADMIN.'includes/extra/application_top/application_top_end/','php') as $file) require ($file);
 

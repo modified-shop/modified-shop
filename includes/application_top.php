@@ -348,10 +348,10 @@ $breadcrumb = new breadcrumb;
 include_once (DIR_WS_MODULES.'create_breadcrumb.php');
 
 // set which precautions should be checked
-defined('WARN_INSTALL_EXISTENCE') OR define('WARN_INSTALL_EXISTENCE', false);
-defined('WARN_CONFIG_WRITEABLE') OR define('WARN_CONFIG_WRITEABLE', false);
-defined('WARN_FILES_WRITEABLE') OR define('WARN_FILES_WRITEABLE', false);
-defined('WARN_DIRS_WRITEABLE') OR define('WARN_DIRS_WRITEABLE', false);
+defined('WARN_INSTALL_EXISTENCE') OR define('WARN_INSTALL_EXISTENCE', 'true');
+defined('WARN_CONFIG_WRITEABLE') OR define('WARN_CONFIG_WRITEABLE', 'true');
+defined('WARN_FILES_WRITEABLE') OR define('WARN_FILES_WRITEABLE', 'true');
+defined('WARN_DIRS_WRITEABLE') OR define('WARN_DIRS_WRITEABLE', 'true');
 defined('WARN_SESSION_DIRECTORY_NOT_WRITEABLE') OR define('WARN_SESSION_DIRECTORY_NOT_WRITEABLE', 'true');
 defined('WARN_SESSION_AUTO_START') OR define('WARN_SESSION_AUTO_START', 'true');
 defined('WARN_DOWNLOAD_DIRECTORY_NOT_READABLE') OR define('WARN_DOWNLOAD_DIRECTORY_NOT_READABLE', 'true');
