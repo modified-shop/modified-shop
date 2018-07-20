@@ -200,11 +200,11 @@ class product {
     }
 
     if ($customer_id == '') {
-      $customer_id = $_SESSION['customer_id'];
+      $customer_id = (int)$_SESSION['customer_id'];
     }
     
     $purchased = true;
-    if (!isset($_SESSION['customer_id'])) {
+    if ((int)$customer_id < 1) {
       $purchased = false;
     } else {
       $check_customer = xtc_db_query("SELECT op.products_id
