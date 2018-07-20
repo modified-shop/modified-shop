@@ -127,6 +127,7 @@
           if (isset($_POST['sql']) && $_POST['sql'] != '') {
             sql_update($_POST['sql'], true);
           }
+          xtc_redirect(xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=sql_manuell', $request_type));
         }
         $smarty->assign('UPDATE_ACTION', 'sql_manuell');
         $smarty->assign('SQL_MANUELL', xtc_draw_textarea_field('sql', 'soft', '60', '5'));
