@@ -297,6 +297,11 @@ if (!isset($_SESSION['customer_id'])) {
 
 xtc_check_permission($pagename);
 
+// set which precautions should be checked
+define('WARN_CONFIG_WRITEABLE', 'true');
+define('WARN_FILES_WRITEABLE', 'true');
+define('WARN_DIRS_WRITEABLE', 'true');
+
 foreach(auto_include(DIR_FS_ADMIN.'includes/extra/application_top/application_top_end/','php') as $file) require ($file);
 
 //compatibility for modified eCommerce Shopsoftware 1.06 files

@@ -41,7 +41,7 @@ if (!empty($check)) {
 if (WARN_CONFIG_WRITEABLE == 'true') {
   $check = array();
   foreach($configFiles as $file) {
-    if (is_writable($file)) {
+    if (is_file($file) && is_writable($file)) {
       $check[] = $file;
     }
   }
@@ -53,7 +53,7 @@ if (WARN_CONFIG_WRITEABLE == 'true') {
 if (WARN_FILES_WRITEABLE == 'true') {
   $check = array();
   foreach($writeableFiles as $file) {
-    if (!is_writable($file)) {
+    if (is_file($file) && !is_writable($file)) {
       $check[] = $file;
     }
   }
@@ -65,7 +65,7 @@ if (WARN_FILES_WRITEABLE == 'true') {
 if(defined('MODULE_JANOLAW_STATUS') && MODULE_JANOLAW_STATUS == 'True' && defined('MODULE_JANOLAW_TYPE') && MODULE_JANOLAW_TYPE == 'File') {
   $check = array();
   foreach($writeableJanolawFiles as $file) {
-    if (!is_writable($file)) {
+    if (is_file($file) && !is_writable($file)) {
       $check[] = $file;
     }
   }
@@ -82,12 +82,12 @@ if(defined('MODULE_JANOLAW_STATUS') && MODULE_JANOLAW_STATUS == 'True' && define
 if (WARN_DIRS_WRITEABLE == 'true') {
   $check = array();
   foreach($writeableDirs as $dir) {
-    if (is_file($dir) && !is_writable($dir)) {
+    if (is_dir($dir) && !is_writable($dir)) {
       $check[] = $dir;
     }
   }
   if (!empty($check)) {
-    $warnings[] = TEXT_FOLDER_WARNING.'<ul><li>'.implode('</li><li>',$check).'</li></ul>';
+    $warnings[] = '<p>'.TEXT_FOLDER_WARNING.'</p><ul><li>'.implode('</li><li>',$check).'</li></ul>';
   }
 }
 
@@ -95,12 +95,12 @@ if (WARN_DIRS_WRITEABLE == 'true') {
   // non writeable dirs
   $check = array();
   foreach($nonWriteableDirs as $dir) {
-    if (is_writable($dir)) {
+    if (is_dir($dir) && is_writable($dir)) {
       $check[] = $dir;
     }
   }
   if (!empty($check)) {
-    $warnings[] = TEXT_FOLDER_WARNING_IS_WRITEABLE.'<ul><li>'.implode('</li><li>',$check).'</li></ul>';
+    $warnings[] = '<p>'.TEXT_FOLDER_WARNING_IS_WRITEABLE.'</p><ul><li>'.implode('</li><li>',$check).'</li></ul>';
   }
 */ //for further use
 
