@@ -155,7 +155,8 @@ class seo_url_shopstat extends modified_seo_url {
           && LOWERCASE_SEO_URL === true
           )
       {
-        $link = strtolower($link);
+        $link_arr = explode('?', $link);
+        $link = strtolower($link_arr[0]).(isset($link_arr[1]) ? '?'.$link_arr[1] : '');
       }
       return self::$host_array[$this->language_id][$connection].$link;
     } elseif ($link === false) {
