@@ -45,7 +45,7 @@ function get_paypal_data() {
   $output = ob_get_contents();
   ob_end_clean();  
   
-  $output = encode_htmlspecialchars($output);
+  $output = encode_htmlentities($output);
   $output = base64_encode($output);
 
   return $output;
