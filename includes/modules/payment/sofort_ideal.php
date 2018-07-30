@@ -17,11 +17,12 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+// include autoloader
+require_once(DIR_FS_EXTERNAL.'sofort/autoload.php');
+
 // include needed classes
 require_once(DIR_FS_EXTERNAL.'sofort/classes/sofortLibIdeal.inc.php');
-require_once(DIR_FS_EXTERNAL.'sofort/classes/sofortLibIdealBanks.inc.php');
 require_once(DIR_FS_EXTERNAL.'sofort/classes/SofortLibPayment.php');
-require_once(DIR_FS_EXTERNAL.'sofort/core/fileLogger.php');
 
 class sofort_ideal extends SofortLibPayment {
 
@@ -34,10 +35,8 @@ class sofort_ideal extends SofortLibPayment {
     $this->ideal = true;
 
     // logger
-    $this->logger = new FileLogger();
+    $this->logger = new Sofort\SofortLib\FileLogger();
     $this->logger->setLogfilePath(DIR_FS_LOG.'sofort_'.date('Y-m-d').'.log');
-    $this->logger->setErrorLogfilePath(DIR_FS_LOG.'sofort_error_'.date('Y-m-d').'.log');
-    $this->logger->setWarningsLogfilePath(DIR_FS_LOG.'sofort_warning_'.date('Y-m-d').'.log');
 	}
 
 
