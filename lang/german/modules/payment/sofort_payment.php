@@ -17,8 +17,7 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_TITLE', 'Sofort.<br /><img src="https://cdn.klarna.com/1.0/shared/image/generic/badge/de_de/pay_now/standard/pink.svg" alt="Logo SOFORT &Uuml;berweisung"/>');
-define('MODULE_PAYMENT_'.$sofort_code.'_KS_TEXT_TITLE', 'Sofort. mit K&auml;uferschutz<br /><img src="https://cdn.klarna.com/1.0/shared/image/generic/badge/de_de/pay_now/standard/pink.svg" alt="Logo SOFORT &Uuml;berweisung"/>');
+define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_TITLE', 'Sofort.');
 define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_DESCRIPTION', 'SOFORT &Uuml;berweisung ist der kostenlose, T&Uuml;V-zertifizierte Zahlungsdienst der SOFORT GmbH.');
 define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_INFO', 'Zahlen Sie bequem mit dem zertifizierten und gepr&uuml;ften Online Banking System SOFORT &Uuml;berweisung der SOFORT GmbH.');
 

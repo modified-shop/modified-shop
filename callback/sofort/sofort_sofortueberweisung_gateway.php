@@ -25,18 +25,16 @@ require_once(DIR_FS_INC.'get_external_content.inc.php');
 
 // include needed classes
 require_once(DIR_WS_CLASSES.'order.php');
-require_once(DIR_FS_EXTERNAL.'sofort/core/sofortLibNotification.inc.php');
-require_once(DIR_FS_EXTERNAL.'sofort/core/sofortLibTransactionData.inc.php');
-require_once(DIR_FS_EXTERNAL.'sofort/core/fileLogger.php');
+
+// include autoloader
+require_once(DIR_FS_EXTERNAL.'sofort/autoload.php');
 
 // logger
-$logger = new FileLogger();
+$logger = new Sofort\SofortLib\FileLogger();
 $logger->setLogfilePath(DIR_FS_LOG.'sofort_'.date('Y-m-d').'.log');
-$logger->setErrorLogfilePath(DIR_FS_LOG.'sofort_error_'.date('Y-m-d').'.log');
-$logger->setWarningsLogfilePath(DIR_FS_LOG.'sofort_warning_'.date('Y-m-d').'.log');
 
 // get transaction
-$SofortLibNotification = new SofortLibNotification();
+$SofortLibNotification = new Sofort\SofortLib\Notification();
 $tID = $SofortLibNotification->getNotification(get_external_content('php://input', 3, false));
 
 if (xtc_not_null($tID)) {
@@ -47,7 +45,7 @@ if (xtc_not_null($tID)) {
   if (xtc_db_num_rows($orders_query) == 1) {
 
     // transaction data
-    $SofortLibTransactionData = new SofortLibTransactionData(MODULE_PAYMENT_SOFORT_SOFORTUEBERWEISUNG_GATEWAY_KEY);
+    $SofortLibTransactionData = new Sofort\SofortLib\TransactionData(MODULE_PAYMENT_SOFORT_SOFORTUEBERWEISUNG_GATEWAY_KEY);
 
     // set Logging
     $SofortLibTransactionData->setLogger($logger);
@@ -101,14 +99,18 @@ if (xtc_not_null($tID)) {
         $comments .= "\n".'Reason: ' . constant('TEXT_SOFORT_'.strtoupper($reason));
       }
 
-      xtc_db_query("UPDATE ".TABLE_ORDERS." SET orders_status = '".$order_status_id."' WHERE orders_id = '".(int) $orders['order_id']."'");
-      $sql_data_array = array('orders_id' => (int) $orders['order_id'],
-                              'orders_status_id' => $order_status_id,
-                              'date_added' => 'now()',
-                              'customer_notified' => '0',
-                              'comments' => decode_htmlentities($comments),
-                              'comments_sent' => '0'
-                              );
+      xtc_db_query("UPDATE ".TABLE_ORDERS." 
+                       SET orders_status = '".(int) $order_status_id."' 
+                     WHERE orders_id = '".(int) $orders['order_id']."'");
+      
+      $sql_data_array = array(
+        'orders_id' => (int) $orders['order_id'],
+        'orders_status_id' => (int) $order_status_id,
+        'date_added' => 'now()',
+        'customer_notified' => '0',
+        'comments' => decode_htmlentities($comments),
+        'comments_sent' => '0'
+      );
 
       xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
     }
@@ -119,24 +121,6 @@ if (xtc_not_null($tID)) {
     header("HTTP/1.0 404 Not Found");
     header("Status: 404 Not Found");
     
-    /*
-    if (MODULE_PAYMENT_SOFORT_SOFORTUEBERWEISUNG_GATEWAY_TMP_ORDER == 'False') {
-      // transaction data
-      $SofortLibTransactionData = new SofortLibTransactionData(MODULE_PAYMENT_SOFORT_SOFORTUEBERWEISUNG_GATEWAY_KEY);
-
-      // get transaction
-      $SofortLibTransactionData->addTransaction($tID);
-      $SofortLibTransactionData->sendRequest();
-
-      fwrite($fp, 'redirect to: '.$SofortLibTransactionData->getUserVariable(0).'&nonexistorder=true'."\n");
-      fclose($fp);
-      
-      // wait before redirect
-      sleep(3);
-      
-      xtc_redirect($SofortLibTransactionData->getUserVariable(0).'&nonexistorder=true');
-    }
-    */
   }
 } else {
   die('Direct access to this location is not allowed.');
