@@ -12,8 +12,8 @@
 
 $sofort_code = 'SOFORT_IDEAL';
 
-define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_TITLE', 'iDEAL <br /><img src="https://images.sofort.com/en/ideal/logo_90x30.png" alt="Logo iDEAL"/>');
-define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_DESCRIPTION', '<b>iDEAL</b><br />Once the customer has chosen this method of payment and his bank , he will be forwarded by the SOFORT GmbH on his bench. He spends his payment and then returned back to the shop system . Upon successful payment confirmation takes place through the SOFORT GmbH a callback to the shop system instead of that changes the payment status of the order accordingly changed.<br/>Powered by SOFORT GmbH');
+define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_TITLE', 'iDEAL');
+define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_DESCRIPTION', '<b>iDEAL</b><br />Once the customer has chosen this method of payment and his bank, he will be forwarded by the SOFORT GmbH on his bench. He spends his payment and then returned back to the shop system. Upon successful payment confirmation takes place through the SOFORT GmbH a callback to the shop system instead of that changes the payment status of the order accordingly changed.<br/>Powered by SOFORT GmbH');
 define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_INFO', 'iDEAL.nl - online payments for e-commerce in the Netherlands. For payment by iDEAL you need an account with one of the banks listed. They will do the transfer directly to your bank. Services / goods are delivered or shipped when available IMMEDIATELY!');
 
 // checkout

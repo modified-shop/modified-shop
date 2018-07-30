@@ -101,7 +101,6 @@ class sofort_sofortueberweisung_classic extends SofortLibPayment {
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_".strtoupper($this->code)."_PROJECT_ID', '',  '6', '4', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_".strtoupper($this->code)."_PROJECT_PASS', '',  '6', '4', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_".strtoupper($this->code)."_NOTIFY_PASS', '',  '6', '4', now())");
-    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_".strtoupper($this->code)."_KS_STATUS', 'False', '6', '3', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_".strtoupper($this->code)."_HASH_ALGORITHM', 'sha1',  '6', '6', 'xtc_cfg_select_option(array(\'md5\',\'sha1\',\'sha256\',\'sha512\'), ', now())");
 	}
 
@@ -114,12 +113,11 @@ class sofort_sofortueberweisung_classic extends SofortLibPayment {
 
 	function keys() {
 	  $keys = $this->keys_default();
-	  $keys[1] = 'MODULE_PAYMENT_'.strtoupper($this->code).'_KS_STATUS';
-	  $keys[2] = 'MODULE_PAYMENT_'.strtoupper($this->code).'_USER_ID';
-	  $keys[3] = 'MODULE_PAYMENT_'.strtoupper($this->code).'_PROJECT_ID';
-	  $keys[4] = 'MODULE_PAYMENT_'.strtoupper($this->code).'_PROJECT_PASS';
-	  $keys[5] = 'MODULE_PAYMENT_'.strtoupper($this->code).'_NOTIFY_PASS';
-	  $keys[6] = 'MODULE_PAYMENT_'.strtoupper($this->code).'_HASH_ALGORITHM';
+	  $keys[1] = 'MODULE_PAYMENT_'.strtoupper($this->code).'_USER_ID';
+	  $keys[2] = 'MODULE_PAYMENT_'.strtoupper($this->code).'_PROJECT_ID';
+	  $keys[3] = 'MODULE_PAYMENT_'.strtoupper($this->code).'_PROJECT_PASS';
+	  $keys[4] = 'MODULE_PAYMENT_'.strtoupper($this->code).'_NOTIFY_PASS';
+	  $keys[5] = 'MODULE_PAYMENT_'.strtoupper($this->code).'_HASH_ALGORITHM';
 
     ksort($keys);
     $keys = array_values($keys);

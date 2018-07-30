@@ -24,6 +24,9 @@ require_once('includes/application_top.php');
 require_once(DIR_WS_CLASSES.'order.php');
 require_once(DIR_FS_EXTERNAL.'sofort/classes/sofortLibNotificationClassic.inc.php');
 
+// include autoloader
+require_once(DIR_FS_EXTERNAL.'sofort/autoload.php');
+
 // set callback type
 $sofort_code = substr(basename($PHP_SELF), 0, -4);
 
@@ -111,13 +114,4 @@ if (xtc_db_num_rows($orders_query) == 1) {
   header("HTTP/1.0 404 Not Found");
   header("Status: 404 Not Found");
   
-  /*
-  if(constant('MODULE_PAYMENT_'.strtoupper($sofort_code).'_TMP_ORDER') == 'False') {
-    // wait before redirect
-    sleep(3);
-
-    xtc_redirect($sofortLibNotification->getUserVariable(3).'&nonexistorder=true');
-  }
-  */
-
 }

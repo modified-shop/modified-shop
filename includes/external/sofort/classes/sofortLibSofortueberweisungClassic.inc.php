@@ -1,6 +1,4 @@
 <?php
-require_once(DIR_FS_EXTERNAL.'sofort/core/sofortLibMultipay.inc.php');
-
 /**
  * Extends Multipay to deal with sofortueberweisung classic transactions
  *
@@ -15,7 +13,7 @@ require_once(DIR_FS_EXTERNAL.'sofort/core/sofortLibMultipay.inc.php');
  *
  * @link http://www.sofort.com/ official website
  */
-class SofortLibSofortueberweisungClassic extends SofortLibMultipay {
+class SofortLibSofortueberweisungClassic extends Sofort\SofortLib\Multipay {
 
 	const SOFORT_CLASSIC_URL = 'https://www.sofortueberweisung.de/payment/start';
 
