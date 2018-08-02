@@ -167,7 +167,7 @@
             $add_meta = 'mi.manufacturers_meta_title, mi.manufacturers_meta_description, mi.manufacturers_meta_keywords,';
             $manufacturers_query = xtc_db_query("select ".$add_meta." m.manufacturers_id, mi.manufacturers_url, mi.manufacturers_description from " . TABLE_MANUFACTURERS . " m left join " . TABLE_MANUFACTURERS_INFO . " mi on m.manufacturers_id = mi.manufacturers_id where mi.languages_id = '" . $lngID_from . "'");
             while ($manufacturers = xtc_db_fetch_array($manufacturers_query)) {
-              $sql_data_array = $orders_status;
+              $sql_data_array = $manufacturers;
               $sql_data_array['languages_id'] = $lngID_to;
               xtc_db_perform(TABLE_MANUFACTURERS_INFO,$sql_data_array);              
             }
