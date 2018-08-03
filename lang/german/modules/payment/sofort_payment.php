@@ -18,8 +18,8 @@
    ---------------------------------------------------------------------------------------*/
 
 define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_TITLE', 'Sofort.');
-define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_DESCRIPTION', 'SOFORT &Uuml;berweisung ist der kostenlose, T&Uuml;V-zertifizierte Zahlungsdienst der SOFORT GmbH.');
-define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_INFO', 'Zahlen Sie bequem mit dem zertifizierten und gepr&uuml;ften Online Banking System SOFORT &Uuml;berweisung der SOFORT GmbH.');
+define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_DESCRIPTION', 'Sofort. ist der kostenlose, T&Uuml;V-zertifizierte Zahlungsdienst der SOFORT GmbH.');
+define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_INFO', 'Zahlen Sie bequem mit dem zertifizierten und gepr&uuml;ften Online Banking System Sofort. der SOFORT GmbH.');
 
 // checkout
 define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_DESCRIPTION_CHECKOUT_PAYMENT_IMAGE', '
@@ -33,39 +33,29 @@ define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_DESCRIPTION_CHECKOUT_PAYMENT_IMAGE'
 	    <td class="main">{{text}}</td>
 	  </tr>
 	</table>');
-define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_DESCRIPTION_CHECKOUT_PAYMENT_IMAGEALT', 'SOFORT &Uuml;berweisung');
+define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_DESCRIPTION_CHECKOUT_PAYMENT_IMAGEALT', 'Sofort.');
 define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_DESCRIPTION_CHECKOUT_PAYMENT_TEXT', '
   <ul>
-    <li>Zahlungssystem mit T&Uuml;V-gepr&uuml;ftem Datenschutz</li>
-    <li>Keine Registrierung notwendig</li>
-    <li>Ware/Dienstleistung wird bei Verf&uuml;gbarkeit SOFORT versendet</li>
-    <li>Bitte halten Sie Ihre Online-Banking-Daten (PIN/TAN) bereit</li>
-  </ul>');
-define('MODULE_PAYMENT_'.$sofort_code.'_KS_TEXT_DESCRIPTION_CHECKOUT_PAYMENT_TEXT', '
-  <ul>
-    <li>Bei Bezahlung mit SOFORT &Uuml;berweisung genie&szlig;en Sie [[link_beginn]]K&auml;uferschutz![[link_end]]</li>
-    <li>Zahlungssystem mit T&Uuml;V-gepr&uuml;ftem Datenschutz</li><li>Keine Registrierung notwendig</li>
-    <li>Ware/Dienstleistung wird bei Verf&uuml;gbarkeit SOFORT versendet</li>
-    <li>Bitte halten Sie Ihre Online-Banking-Daten (PIN/TAN) bereit</li>
+    <li>Einfach und direkt bezahlen per Online Banking.</li>
   </ul>');
 
 // admin
 define('MODULE_PAYMENT_'.$sofort_code.'_ALLOWED_TITLE', 'Erlaubte Zonen');
 define('MODULE_PAYMENT_'.$sofort_code.'_ALLOWED_DESC', 'Geben Sie <b>einzeln</b> die Zonen an, welche f&uuml;r dieses Modul erlaubt sein sollen. (z.B. AT,DE (wenn leer, werden alle Zonen erlaubt))');
-define('MODULE_PAYMENT_'.$sofort_code.'_STATUS_TITLE', 'SOFORT &Uuml;berweisung aktivieren');
-define('MODULE_PAYMENT_'.$sofort_code.'_STATUS_DESC', 'M&ouml;chten Sie Zahlungen per SOFORT &Uuml;berweisung akzeptieren?');
+define('MODULE_PAYMENT_'.$sofort_code.'_STATUS_TITLE', 'Sofort. aktivieren');
+define('MODULE_PAYMENT_'.$sofort_code.'_STATUS_DESC', 'M&ouml;chten Sie Zahlungen per Sofort. akzeptieren?');
 define('MODULE_PAYMENT_'.$sofort_code.'_TMP_ORDER_TITLE', 'Tempor&auml;re Bestellung');
 define('MODULE_PAYMENT_'.$sofort_code.'_TMP_ORDER_DESC', 'M&ouml;chten Sie eine tempor&auml;re Bestellung anlegen?');
 define('MODULE_PAYMENT_'.$sofort_code.'_LOGGING_TITLE', 'Logging aktivieren');
 define('MODULE_PAYMENT_'.$sofort_code.'_LOGGING_DESC', 'M&ouml;chten Sie das Logging aktivieren?<br/>Die Logfiles werden im Ordner /log abgelegt.');
 define('MODULE_PAYMENT_'.$sofort_code.'_KEY_TITLE', 'Konfigurationsschl&uuml;ssel');
-define('MODULE_PAYMENT_'.$sofort_code.'_KEY_DESC', 'Den Konfigurationsschl&uuml;ssel finden Sie in den Einstellungen von SOFORT &Uuml;berweisung');
+define('MODULE_PAYMENT_'.$sofort_code.'_KEY_DESC', 'Den Konfigurationsschl&uuml;ssel finden Sie in den Einstellungen von Sofort.');
 define('MODULE_PAYMENT_'.$sofort_code.'_SORT_ORDER_TITLE', 'Anzeigereihenfolge');
 define('MODULE_PAYMENT_'.$sofort_code.'_SORT_ORDER_DESC', 'Reihenfolge der Anzeige. Kleinste Ziffer wird zuerst angezeigt');
 define('MODULE_PAYMENT_'.$sofort_code.'_ZONE_TITLE', 'Zahlungszone');
 define('MODULE_PAYMENT_'.$sofort_code.'_ZONE_DESC', 'Wenn eine Zone ausgew&auml;hlt ist, gilt die Zahlungsmethode nur f&uuml;r diese Zone.');
 define('MODULE_PAYMENT_'.$sofort_code.'_CURRENCY_TITLE', 'Transaktionsw&auml;hrung');
-define('MODULE_PAYMENT_'.$sofort_code.'_CURRENCY_DESC', 'Empfangende W&auml;hrung laut SOFORT &Uuml;berweisung Projekteinstellung');
+define('MODULE_PAYMENT_'.$sofort_code.'_CURRENCY_DESC', 'Empfangende W&auml;hrung laut Sofort. Projekteinstellung');
 define('MODULE_PAYMENT_'.$sofort_code.'_ORDER_STATUS_ID_TITLE', 'best&auml;tigter Bestellstatus');
 define('MODULE_PAYMENT_'.$sofort_code.'_ORDER_STATUS_ID_DESC', 'Order Status nach Eingang einer Bestellung, bei der eine erfolgreiche Zahlungsbest&auml;tigung &uuml;bermittelt wurde');
 define('MODULE_PAYMENT_'.$sofort_code.'_TMP_STATUS_ID_TITLE', 'Tempor&auml;rer Bestellstatus');
@@ -84,12 +74,10 @@ define('MODULE_PAYMENT_'.$sofort_code.'_REASON_2_TITLE', 'Verwendungszweck Zeile
 define('MODULE_PAYMENT_'.$sofort_code.'_REASON_2_DESC', 'Im Verwendungszweck (maximal 27 Zeichen) werden folgende Platzhalter ersetzt:<br /> {{order_id}}<br />{{order_date}}<br />{{customer_id}}<br />{{customer_name}}<br />{{customer_company}}<br />{{customer_email}}');
 define('MODULE_PAYMENT_'.$sofort_code.'_IMAGE_TITLE', 'Zahlungsauswahl Grafik / Text');
 define('MODULE_PAYMENT_'.$sofort_code.'_IMAGE_DESC', 'Angezeigte Grafik / Text bei der Auswahl Zahlungsoptionen');
-define('MODULE_PAYMENT_'.$sofort_code.'_KS_STATUS_TITLE', 'K&auml;uferschutz aktiviert');
-define('MODULE_PAYMENT_'.$sofort_code.'_KS_STATUS_DESC', 'Voraussetzung: Konto bei der <u><a href="https://www.handelsbank.com/" target="_blank">Deutsche Handelsbank</a></u> und Aktivierung in Ihren Projekteinstellungen und damit verbunden die H&auml;ndlerbedingungen zum K&auml;uferschutz akzeptiert wurden.');
 define('MODULE_PAYMENT_'.$sofort_code.'_USER_ID_TITLE', 'Kundennummer');
-define('MODULE_PAYMENT_'.$sofort_code.'_USER_ID_DESC', 'Ihre Kundennummer bei SOFORT &Uuml;berweisung');
+define('MODULE_PAYMENT_'.$sofort_code.'_USER_ID_DESC', 'Ihre Kundennummer bei Sofort.');
 define('MODULE_PAYMENT_'.$sofort_code.'_PROJECT_ID_TITLE', 'Projektnummer');
-define('MODULE_PAYMENT_'.$sofort_code.'_PROJECT_ID_DESC', 'Die verantwortliche Projektnummer bei SOFORT &Uuml;berweisung, zu der die Zahlung geh&ouml;rt');
+define('MODULE_PAYMENT_'.$sofort_code.'_PROJECT_ID_DESC', 'Die verantwortliche Projektnummer bei Sofort., zu der die Zahlung geh&ouml;rt');
 define('MODULE_PAYMENT_'.$sofort_code.'_PROJECT_PASS_TITLE', 'Projekt-Passwort');
 define('MODULE_PAYMENT_'.$sofort_code.'_PROJECT_PASS_DESC', 'Das Projekt-Passwort (unter Erweiterte Einstellungen / Passw&ouml;rter und Hashfunktionen)');
 define('MODULE_PAYMENT_'.$sofort_code.'_NOTIFY_PASS_TITLE', 'Benachrichtigungspasswort');
@@ -102,20 +90,20 @@ define('MODULE_PAYMENT_'.$sofort_code.'_DESCRIPTION_INSTALL', '<br/><br/>Wollen 
 define('TEXT_NO_STATUSUPDATE', 'keine Statusaktualisierung');
 
 // error
-define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_ERROR_HEADING', 'Folgender Fehler wurde von SOFORT &Uuml;berweisung w&auml;hrend des Prozesses gemeldet:');
-define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_ERROR_MESSAGE', 'Zahlung via SOFORT &Uuml;berweisung ist leider nicht m&ouml;glich oder wurde auf Kundenwunsch abgebrochen. Bitte w&auml;hlen Sie eine andere Zahlungsweise.');
+define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_ERROR_HEADING', 'Folgender Fehler wurde von Sofort. w&auml;hrend des Prozesses gemeldet:');
+define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_ERROR_MESSAGE', 'Zahlung via Sofort. ist leider nicht m&ouml;glich oder wurde auf Kundenwunsch abgebrochen. Bitte w&auml;hlen Sie eine andere Zahlungsweise.');
 
 // callback
-define('TEXT_SOFORT_NOT_CREDITED_YET', 'SOFORT &Uuml;berweisung erfolgreich abgeschlossen');
+define('TEXT_SOFORT_NOT_CREDITED_YET', 'Sofort. erfolgreich abgeschlossen');
 define('TEXT_SOFORT_NOT_CREDITED', 'Geld nicht auf Konto eingegangen');
 define('TEXT_SOFORT_LOSS', 'Bestellung pr&uuml;fen');
 define('TEXT_SOFORT_RECEIVED', 'Geld auf Konto eingegangen');
 define('TEXT_SOFORT_CREDITED', TEXT_SOFORT_RECEIVED);
 define('TEXT_SOFORT_REFUNDED', 'Geld wurde komplett zur&uuml;ckerstattet');
-define('TEXT_SOFORT_CANCELED', 'SOFORT &Uuml;berweisung abgebrochen');
+define('TEXT_SOFORT_CANCELED', 'Sofort. abgebrochen');
 define('TEXT_SOFORT_WAIT_FOR_MONEY', 'Auf Zahlungseingang warten');
-define('TEXT_SOFORT_CONFIRMATION_PERIOD_EXPIRED', 'SOFORT &Uuml;berweisung timeout');
-define('TEXT_SOFORT_REJECTED', 'SOFORT &Uuml;berweisung abgelehnt');
+define('TEXT_SOFORT_CONFIRMATION_PERIOD_EXPIRED', 'Sofort. timeout');
+define('TEXT_SOFORT_REJECTED', 'Sofort. abgelehnt');
 define('TEXT_SOFORT_SOFORT_BANK_ACCOUNT_NEEDED', TEXT_SOFORT_NOT_CREDITED_YET);
 
 define('MODULE_PAYMENT_'.$sofort_code.'_ERROR_TRANSACTION', "Fehler beim Callback\nTransaction-ID: %s");
