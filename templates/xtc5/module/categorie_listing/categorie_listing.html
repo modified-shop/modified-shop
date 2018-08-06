@@ -4,8 +4,10 @@
 {else}
   <h1>{$CATEGORIES_NAME}</h1>
 {/if}
-{if $CATEGORIES_IMAGE}<img src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME|onlytext}" />{/if}
-{if $CATEGORIES_DESCRIPTION}<div>{$CATEGORIES_DESCRIPTION}</div>{/if}
+<div class="cf">
+  {if $CATEGORIES_IMAGE}<img src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME|onlytext}" class="imgLeft" /><br />{/if}
+  {if $CATEGORIES_DESCRIPTION}<div>{$CATEGORIES_DESCRIPTION}</div>{/if}
+</div>
 {if $module_content != '' && $TR_COLS > 0} <strong>{#heading_more_categories#}</strong>
   <br />
   <table style="border-top: 2px solid; border-color: #d4d4d4;" width="100%" border="0" cellspacing="0" cellpadding="0">
