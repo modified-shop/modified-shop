@@ -1688,26 +1688,26 @@
    * @return
    */
   function format_price($price_string, $price_special, $currency, $allow_tax, $tax_rate) {
-    // calculate currencies
     $currencies_query = xtc_db_query("SELECT symbol_left,
                                              symbol_right,
                                              decimal_places,
-                                             value
+                                             decimal_point,
+                                             thousands_point
                                         FROM ".TABLE_CURRENCIES."
                                         WHERE code = '".xtc_db_input($currency)."'");
-    $currencies_value = xtc_db_fetch_array($currencies_query);
-    $currencies_data = array ('SYMBOL_LEFT' => $currencies_value['symbol_left'],
-                              'SYMBOL_RIGHT' => $currencies_value['symbol_right'],
-                              'DECIMAL_PLACES' => $currencies_value['decimal_places'],
-                              'VALUE' => $currencies_value['value']);
-    // round price
+    $currencies = xtc_db_fetch_array($currencies_query);
+
     if ($allow_tax == 1) {
       $price_string = $price_string / ((100 + $tax_rate) / 100);
     }
-    $price_string = precision($price_string, $currencies_data['DECIMAL_PLACES']);
-    if ($price_special == '1') {
-      $price_string = $currencies_data['SYMBOL_LEFT'].' '.$price_string.' '.$currencies_data['SYMBOL_RIGHT'];
+
+    if ($price_format == '1') {
+      $price_string = number_format($price_string, $currencies['decimal_places'], $currencies['decimal_point'], $currencies['thousands_point']);
+      $price_string = $currencies['symbol_left'].' '.$price_string.' '.$currencies['symbol_right'];
+    } else {
+      $price_string = precision($price_string, $currencies['decimal_places']);
     }
+    
     return $price_string;
   }
 
