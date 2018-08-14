@@ -360,8 +360,7 @@ CREATE TABLE coupon_email_track (
   sent_lastname VARCHAR(32) DEFAULT NULL,
   emailed_to VARCHAR(255) DEFAULT NULL,
   date_sent DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (unique_id),
-  UNIQUE idx_coupon_id (coupon_id)
+  PRIMARY KEY (unique_id)
 );
 
 DROP TABLE IF EXISTS coupon_gv_customer;
