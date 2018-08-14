@@ -1687,7 +1687,7 @@
    * @param mixed $tax_rate
    * @return
    */
-  function format_price($price_string, $price_special, $currency, $allow_tax, $tax_rate) {
+  function format_price($price_string, $price_format, $currency, $allow_tax, $tax_rate) {
     $currencies_query = xtc_db_query("SELECT symbol_left,
                                              symbol_right,
                                              decimal_places,
