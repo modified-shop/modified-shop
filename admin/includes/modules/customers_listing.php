@@ -178,20 +178,20 @@
                                                      FROM ".TABLE_COUNTRIES." 
                                                     WHERE countries_id = '".(int)$customers['entry_country_id']."'");
                     $country = xtc_db_fetch_array($country_query);
-                    $customers = array_merge($customers, $country);                    
+                    $customers = array_merge($customers, (array)$country);                    
                     
                     $reviews_query = xtc_db_query("SELECT count(*) as number_of_reviews 
                                                      FROM ".TABLE_REVIEWS." 
                                                      WHERE customers_id = '".(int)$customers['customers_id']."'");
                     $reviews = xtc_db_fetch_array($reviews_query);
-                    $customers = array_merge($customers, $reviews);
+                    $customers = array_merge($customers, (array)$reviews);
 
                     $customers_info_query = xtc_db_query("SELECT customers_info_date_of_last_logon as date_last_logon,
                                                                  customers_info_number_of_logons as number_of_logons 
                                                             FROM ".TABLE_CUSTOMERS_INFO." 
                                                            WHERE customers_info_id = '".(int)$customers['customers_id']."'");
                     $customers_info = xtc_db_fetch_array($customers_info_query);
-                    $customers = array_merge($customers, $customers_info);
+                    $customers = array_merge($customers, (array)$customers_info);
 
                     $cInfo = new objectInfo($customers);
                   }
