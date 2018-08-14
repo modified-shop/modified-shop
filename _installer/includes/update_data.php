@@ -74,6 +74,7 @@
       'drop' => array(
         'idx' => array(
           'customer_id',
+          'idx_coupon_id',
         ),
       ),
     ),
