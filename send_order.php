@@ -34,6 +34,11 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
     $xtPrice = new xtcPrice($order->info['currency'], $order->info['status']);
   }
 
+  if(!is_object($main)) {
+    require_once(DIR_FS_CATALOG.'includes/classes/main.php');
+    $main = new main($order->info['languages_id']);
+  }
+
   $smarty->assign('address_label_customer', xtc_address_format($order->customer['format_id'], $order->customer, 1, '', '<br />'));
   $smarty->assign('address_label_shipping', xtc_address_format($order->delivery['format_id'], $order->delivery, 1, '', '<br />'));
   $smarty->assign('address_label_payment', xtc_address_format($order->billing['format_id'], $order->billing, 1, '', '<br />'));
@@ -102,10 +107,6 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
   }
   
   //allow duty-note in email
-  if(!is_object($main)) {
-    require_once(DIR_FS_CATALOG.'includes/classes/main.php');
-    $main = new main();
-  }
   $smarty->assign('DELIVERY_DUTY_INFO', $main->getDeliveryDutyInfo($order->delivery['country_iso_2']));
 
   //absolute image path
