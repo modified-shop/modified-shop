@@ -20,7 +20,10 @@ class main {
   /**
    * class constructor function
    */
-  function __construct() {
+  function __construct($language_id = '') {
+    if ($language_id == '') {
+      $language_id = (int)$_SESSION['languages_id'];
+    }
     
     //new module support
     require_once (DIR_FS_CATALOG.'includes/classes/mainModules.class.php');
@@ -33,7 +36,7 @@ class main {
                                       shipping_status_image,
                                       shipping_status_id
                                FROM ".TABLE_SHIPPING_STATUS."
-                               WHERE language_id = '".(int)$_SESSION['languages_id']."'");
+                               WHERE language_id = '".(int)$language_id."'");
 
     while ($status_data=xtc_db_fetch_array($status_query,true)) {
       $this->SHIPPING[$status_data['shipping_status_id']] = array(
