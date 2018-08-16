@@ -400,7 +400,7 @@ switch ($action) {
 <style type="text/css">
 .table{width: 100%; border: 1px solid #a3a3a3; margin-bottom:20px; background: #f3f3f3; padding:2px;}
 .heading{font-family: Verdana, Arial, sans-serif; font-size: 12px; font-weight: bold; padding:2px; }
-.last_row{background-color: #ffdead;}
+.last_row{background-color: #fff0cf;}
 textarea#comments{width:99%;}
 </style>
 
