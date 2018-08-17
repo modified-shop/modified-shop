@@ -2524,7 +2524,7 @@ function CustomersUpdate ()
   if ($_POST['customers_price_level'] == 4) $sql_customers_data_array['customers_status'] = 5;
   if ($_POST['customers_price_level'] == 3) $sql_customers_data_array['customers_status'] = 4;
   if ($_POST['customers_price_level'] == 2) $sql_customers_data_array['customers_status'] = 2;
-  if ($_POST['customers_price_level'] == 1) $sql_customers_data_array['customers_status'] = 0;
+  //if ($_POST['customers_price_level'] == 1) $sql_customers_data_array['customers_status'] = 0; // Tomcraft - 2018-08-18 - Beware that customers_status 0 is the admin customers group!
 
   if (file_exists('cao_custupd_1.php')) { include('cao_custupd_1.php'); }
 
