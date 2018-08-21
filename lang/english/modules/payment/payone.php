@@ -33,4 +33,4 @@ define('MODULE_PAYMENT_PAYONE_ORDER_STATUS_ID_TITLE', 'Set Order Status');
 define('MODULE_PAYMENT_PAYONE_ORDER_STATUS_ID_DESC', 'Set the status of orders made with this payment module to this value');
 define('MODULE_PAYMENT_PAYONE_SORT_ORDER_TITLE', 'Sort order');
 define('MODULE_PAYMENT_PAYONE_SORT_ORDER_DESC', 'Sort order of display. Lowest is displayed first.');
-define('MODULE_PAYMENT_PAYONE_LP', '<br/><br/><a target="_blank" href="http://www.payone.de/plattform-integration/extensions/modified-shop/"><strong>Create PAYONE account here now.</strong></a>');
+define('MODULE_PAYMENT_PAYONE_LP', '<br/><br/><a target="_blank" href="https://www.payone.com/en/plattform-integration/extensions/modified-shop/"><strong>Create PAYONE account here now.</strong></a>');
