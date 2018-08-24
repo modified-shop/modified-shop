@@ -56,13 +56,13 @@
           xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_TABLE_NUMBER_ZONES', '1', '6', '0', now())");
           if (defined('MODULE_SHIPPING_TABLE_COST')) {
             if (!defined('MODULE_SHIPPING_TABLE_COUNTRIES_1')) {
-              xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SHIPPING_TABLE_COUNTRIES_1', ". MODULE_SHIPPING_TABLE_ALLOWED .", '6', '0', 'xtc_cfg_textarea(', now())");
+              xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SHIPPING_TABLE_COUNTRIES_1', '". MODULE_SHIPPING_TABLE_ALLOWED ."', '6', '0', 'xtc_cfg_textarea(', now())");
             }
             if (!defined('MODULE_SHIPPING_TABLE_COST_1')) {
-              xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_TABLE_COST_1', ". MODULE_SHIPPING_TABLE_COST .", '6', '0', now())");
+              xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_TABLE_COST_1', '". MODULE_SHIPPING_TABLE_COST ."', '6', '0', now())");
             }
             if (!defined('MODULE_SHIPPING_TABLE_HANDLING_1')) {
-              xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_TABLE_HANDLING_1', ". MODULE_SHIPPING_TABLE_HANDLING .", '6', '0', now())");
+              xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_TABLE_HANDLING_1', '". MODULE_SHIPPING_TABLE_HANDLING ."', '6', '0', now())");
             }
           }
         }
