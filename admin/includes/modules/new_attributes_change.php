@@ -126,7 +126,7 @@
                                'products_attributes_maxcount' => $value_download_count
                               );
                               
-      foreach(auto_include(DIR_FS_ADMIN.'includes/extra/new_attributes/new_attributes_change_dl/','php') as $file) require ($file);                        
+      foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/new_attributes/new_attributes_change_dl/','php') as $file) require ($file);
             
       xtc_db_perform(TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD, $sql_data_array);
     }
