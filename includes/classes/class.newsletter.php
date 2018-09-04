@@ -23,6 +23,11 @@ define('NL_REG_MAIL_ADMIN', false);
 
 // include needed function
 require_once (DIR_FS_INC.'ip_clearing.inc.php');
+require_once (DIR_WS_CLASSES.'captcha.php');
+
+// include needed classes
+require_once (DIR_WS_CLASSES.'modified_captcha.php');
+
 
 class newsletter {
   var $message, $message_class;
@@ -31,6 +36,9 @@ class newsletter {
   function __construct() {
     $this->auto = false;
     $this->remove = false;
+    
+    $captcha_class = CAPTCHA_MOD_CLASS;
+    $this->mod_captcha = $captcha_class::getInstance();
   }
 
 
@@ -127,7 +135,7 @@ class newsletter {
       $this->message_class = 'error';
     } else {
       $this->generateCode();
-      if ((isset($_SESSION['vvcode']) && strtoupper($postCode) == $_SESSION['vvcode'] && $_SESSION['vvcode'] != '') || $this->auto==true) {
+      if ($this->mod_captcha->validate($postCode) === true || $this->auto === true) {
 
         if ($check == 'inp') {
           $check_mail_query = xtc_db_query("SELECT customers_email_address,
@@ -226,7 +234,6 @@ class newsletter {
         $this->message_class = 'error';
       }
     }
-    unset($_SESSION['vvcode']);
   }
 
 

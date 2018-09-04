@@ -37,6 +37,12 @@ require_once (DIR_FS_INC.'xtc_validate_password.inc.php');
 require_once (DIR_FS_INC.'xtc_array_to_string.inc.php');
 require_once (DIR_FS_INC.'xtc_write_user_info.inc.php');
 
+// include needed classes
+require_once (DIR_WS_CLASSES.'modified_captcha.php');
+
+$captcha_class = CAPTCHA_MOD_CLASS;
+$mod_captcha = $captcha_class::getInstance();
+
 // redirect the customer to a friendly cookie-must-be-enabled page if cookies are disabled (or the session has not started)
 if ($session_started == false) {
 	xtc_redirect(xtc_href_link(FILENAME_COOKIE_USAGE));
@@ -58,10 +64,7 @@ if (!isset($_SESSION['customers_login_tries'])) {
 if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
 	$email_address = xtc_db_prepare_input($_POST['email_address']);
 	$password = xtc_db_prepare_input($_POST['password']);
-
-	$vvcode = xtc_db_prepare_input((isset($_POST['vvcode'])) ? $_POST['vvcode'] : '0');
-	$captcha = xtc_db_prepare_input((isset($_SESSION['vvcode'])) ? $_SESSION['vvcode'] : '1');
-  unset($_SESSION['vvcode']);		
+  $captcha_validation = $mod_captcha->validate($_POST['vvcode']);
   
   // brute force
   $check_login_query = xtc_db_query("SELECT customers_login_tries
@@ -91,9 +94,7 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
   // captcha
   $captcha_error = false;	
   if ($_SESSION['customers_login_tries'] >= LOGIN_NUM) {
-    if (strtoupper($vvcode) != $captcha) {
-      $captcha_error = true;
-    }
+    $captcha_error = (($captcha_validation !== true) ? true : false);
   }
     
   // increment login tries
@@ -230,8 +231,8 @@ $smarty->assign('FORM_END', '</form>');
 
 // captcha
 if ($_SESSION['customers_login_tries'] >= LOGIN_NUM) {
-  $smarty->assign('VVIMG', '<img src="'.xtc_href_link(FILENAME_DISPLAY_VVCODES, '', 'SSL').'" alt="Captcha" />');
-  $smarty->assign('INPUT_CODE', xtc_draw_input_field('vvcode', '', 'size="'.MODULE_CAPTCHA_CODE_LENGTH.'" maxlength="'.MODULE_CAPTCHA_CODE_LENGTH.'"', 'text', false));
+  $smarty->assign('VVIMG', $mod_captcha->get_image_code());
+  $smarty->assign('INPUT_CODE', $mod_captcha->get_input_code());
 }
 
 $smarty->assign('language', $_SESSION['language']);

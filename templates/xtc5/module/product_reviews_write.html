@@ -17,11 +17,13 @@
         <td><strong>{#text_author#}</strong></td>
         <td>{$INPUT_AUTHOR}</td>
       </tr>
-      {if $INPUT_CODE}
+      {if $VVIMG}
         <tr>
           <td width="140"><strong>{#text_sec_code#}:</strong></td>
           <td>{$VVIMG}</td>
         </tr>
+      {/if}
+      {if $INPUT_CODE}
         <tr>
           <td><strong>{#text_sec_code#}:</strong></td>
           <td>{$INPUT_CODE}</td>

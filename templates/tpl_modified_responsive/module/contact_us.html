@@ -38,10 +38,12 @@
           <td><span class="fieldtext">{#text_company#}</span><span class="stern">{$INPUT_COMPANY}</span></td>
         </tr>
 *}
-        {if $INPUT_CODE}
+        {if $VVIMG}
         <tr>
           <td><span class="fieldtext">{#text_sec_code#}</span><span class="stern">{$VVIMG}</span></td>
         </tr>
+        {/if}
+        {if $INPUT_CODE}
         <tr>
           <td><span class="fieldtext">{#text_inp_code#}</span><span class="stern">{$INPUT_CODE}<span class="inputRequirement"> *</span></span></td>
         </tr>

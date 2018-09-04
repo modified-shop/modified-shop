@@ -18,7 +18,12 @@
   //use contact_us.php language file
   require_once (DIR_WS_LANGUAGES.$_SESSION['language'].'/contact_us.php');
   require_once (DIR_FS_INC.'parse_multi_language_value.inc.php');
+
+  require_once(DIR_WS_CLASSES.'modified_captcha.php');
   
+  $captcha_class = CAPTCHA_MOD_CLASS;
+  $mod_captcha = $captcha_class::getInstance();
+    
   // captcha
   $use_captcha = array('contact');
   if (defined('MODULE_CAPTCHA_ACTIVE')) {
@@ -58,18 +63,11 @@
       $error = true;
     }
     
-    if (in_array('contact', $use_captcha) && (!isset($_SESSION['customer_id']) || MODULE_CAPTCHA_LOGGED_IN == 'True')) {
-      if (!isset($_SESSION['vvcode'])
-          || !isset($_POST['vvcode'])
-          || $_SESSION['vvcode'] == ''
-          || $_POST['vvcode'] == ''
-          || strtoupper($_POST['vvcode']) != $_SESSION['vvcode']
-          ) 
-      {
+    if (in_array('contact', $use_captcha) && (!isset($_SESSION['customer_id']) || MODULE_CAPTCHA_LOGGED_IN == 'True')) {    
+      if ($mod_captcha->validate($_POST['vvcode']) !== true) {
         $messageStack->add('contact_us', ERROR_VVCODE);
         $error = true;
       }
-      unset($_SESSION['vvcode']);
     }
     
     if (trim($message_body) == '') {
@@ -229,8 +227,8 @@
     $smarty->assign('CONTACT_CONTENT', $contact_content);
     $smarty->assign('FORM_ACTION', xtc_draw_form('contact_us', xtc_href_link(FILENAME_CONTENT, 'action=send&coID='.(int) $_GET['coID'], 'SSL')));
     if (in_array('contact', $use_captcha) && (!isset($_SESSION['customer_id']) || MODULE_CAPTCHA_LOGGED_IN == 'True')) {
-      $smarty->assign('VVIMG', '<img src="'.xtc_href_link(FILENAME_DISPLAY_VVCODES, '', 'SSL').'" alt="Captcha" />');
-      $smarty->assign('INPUT_CODE', xtc_draw_input_field('vvcode', '', 'size="'. MODULE_CAPTCHA_CODE_LENGTH .'" maxlength="'.MODULE_CAPTCHA_CODE_LENGTH.'"', 'text', false));
+      $smarty->assign('VVIMG', $mod_captcha->get_image_code());
+      $smarty->assign('INPUT_CODE', $mod_captcha->get_input_code());
     }
     if (DISPLAY_PRIVACY_CHECK == 'true') {
       $smarty->assign('PRIVACY_CHECKBOX', xtc_draw_checkbox_field('privacy', 'privacy', $privacy, 'id="privacy"'));

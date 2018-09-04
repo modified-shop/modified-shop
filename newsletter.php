@@ -44,7 +44,13 @@ require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 // include needed functions
 require_once (DIR_FS_INC.'xtc_validate_email.inc.php');
 require_once (DIR_FS_INC.'secure_form.inc.php');
+
+// include needed classes
 require_once (DIR_WS_CLASSES.'class.newsletter.php');
+require_once (DIR_WS_CLASSES.'modified_captcha.php');
+
+$captcha_class = CAPTCHA_MOD_CLASS;
+$mod_captcha = $captcha_class::getInstance();
 
 $info_message = '';
 $newsletter = new newsletter();
@@ -105,8 +111,8 @@ $breadcrumb->add(NAVBAR_TITLE_NEWSLETTER, xtc_href_link(FILENAME_NEWSLETTER, '',
 require (DIR_WS_INCLUDES.'header.php');
 
 if (in_array('newsletter', $use_captcha) && (!isset($_SESSION['customer_id']) || MODULE_CAPTCHA_LOGGED_IN == 'True')) {
-  $smarty->assign('VVIMG', '<img src="'.xtc_href_link(FILENAME_DISPLAY_VVCODES, '', 'SSL') .'" alt="Captcha" />');
-  $smarty->assign('INPUT_CODE', xtc_draw_input_field('vvcode', '', 'size="'.MODULE_CAPTCHA_CODE_LENGTH.'" maxlength="'.MODULE_CAPTCHA_CODE_LENGTH.'"', 'text', false));
+  $smarty->assign('VVIMG', $mod_captcha->get_image_code());
+  $smarty->assign('INPUT_CODE', $mod_captcha->get_input_code());
 }
 
 $smarty->assign('text_newsletter', TEXT_NEWSLETTER);
