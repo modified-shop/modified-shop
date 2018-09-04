@@ -11,10 +11,12 @@
     <div class="highlightbox">
       <h4>{#heading_personal#}</h4>
       <table>
-        {if $INPUT_CODE}
+        {if $VVIMG}
         <tr>
           <td><span class="fieldtext">{#text_sec_code#}</span><span class="stern">{$VVIMG}</span></td>
         </tr>
+        {/if}
+        {if $INPUT_CODE}
         <tr>
           <td><span class="fieldtext">{#text_sec_code#}</span><span class="stern">{$INPUT_CODE}<span class="inputRequirement"> *</span></span></td>
         </tr>

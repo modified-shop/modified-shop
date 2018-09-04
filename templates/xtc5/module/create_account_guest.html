@@ -116,16 +116,20 @@
 </table>
 </div>
 {/if}
-{if $INPUT_VVCODE}
+{if $INPUT_VVCODE || $VVIMG}
 <table width="100%" border="0" cellspacing="0" cellpadding="4">
-  <tr>
-    <td style="white-space:nowrap;"><strong>{#text_sec_code#}:</strong></td>
-    <td>{$VVIMG}</td>
-  </tr>
-  <tr>
-    <td style="white-space:nowrap;"><strong>{#text_sec_code#}:</strong></td>
-    <td>{$INPUT_VVCODE}</td>
-  </tr>
+  {if $VVIMG}
+    <tr>
+      <td style="white-space:nowrap;"><strong>{#text_sec_code#}:</strong></td>
+      <td>{$VVIMG}</td>
+    </tr>
+  {/if}
+  {if $INPUT_VVCODE}
+    <tr>
+      <td style="white-space:nowrap;"><strong>{#text_sec_code#}:</strong></td>
+      <td>{$INPUT_VVCODE}</td>
+    </tr>
+  {/if}
 </table>
 {/if}
 {if $PRIVACY_CHECKBOX}

@@ -2356,6 +2356,7 @@
   function xtc_cfg_select_mod_seo_url() {
     $name = (isset($key) ? 'configuration['.$key.']' : 'configuration_value');
     if ($dir = opendir(DIR_FS_CATALOG.'includes/extra/seo_url_mod/')) {
+      $seo_url_mod_array = array();
       while (($seo_url_mod = readdir($dir)) !== false) {
         if (is_file(DIR_FS_CATALOG.'includes/extra/seo_url_mod/'.$seo_url_mod) && substr($seo_url_mod, -4) == ".php") {
           $seo_url_mod_array[] = array ('id' => substr($seo_url_mod, 0, -4), 'text' => substr($seo_url_mod, 0, -4));
@@ -2416,6 +2417,34 @@
     return $value;
   }
 
+
+  /**
+   * xtc_cfg_select_mod_captcha()
+   *
+   * @return dropdown
+   */
+  function xtc_cfg_select_mod_captcha() {
+    $name = (isset($key) ? 'configuration['.$key.']' : 'configuration_value');
+    if ($dir = opendir(DIR_FS_CATALOG.'includes/extra/captcha/')) {
+      $captcha_mod_array = array(
+        array('id' => 'modified_captcha', 'text' => xtc_multi_lang_values('modified_captcha')),
+      );
+      while (($captcha_mod = readdir($dir)) !== false) {
+        if (is_file(DIR_FS_CATALOG.'includes/extra/captcha/'.$captcha_mod) && substr($captcha_mod, -4) == ".php") {
+          $class = substr($captcha_mod, 0, -4);
+          if (defined('MODULE_SYSTEM_'.strtoupper($class).'_STATUS')
+              && constant('MODULE_SYSTEM_'.strtoupper($class).'_STATUS') == 'true'
+              )
+          {
+            $captcha_mod_array[] = array ('id' => $class, 'text' => xtc_multi_lang_values($class));
+          }
+        }
+      }
+      closedir($dir);
+      sort($captcha_mod_array);
+      return xtc_draw_pull_down_menu($name, $captcha_mod_array, CAPTCHA_MOD_CLASS);
+    }
+  }
 
   /********************************************** NOT USED FUNCTIONS **********************************************/
   

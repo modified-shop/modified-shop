@@ -44,6 +44,10 @@ require_once (DIR_FS_INC.'secure_form.inc.php');
 
 // include needed classes
 require_once (DIR_FS_EXTERNAL.'password_policy/password_policy.php');
+require_once (DIR_WS_CLASSES.'modified_captcha.php');
+
+$captcha_class = CAPTCHA_MOD_CLASS;
+$mod_captcha = $captcha_class::getInstance();
 
 // default case
 $case = 'double_opt';
@@ -62,7 +66,7 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'first_opt_in') && isset($_PO
     } else {
       $messageStack->add('password_double_opt_in', TEXT_EMAIL_ERROR);
     }
-  } elseif (xtc_not_null($_POST['email']) && (!in_array('password', $use_captcha) || (isset($_POST['vvcode']) && isset($_SESSION['vvcode']) && strtoupper($_POST['vvcode']) == strtoupper($_SESSION['vvcode'])))) {
+  } elseif (xtc_not_null($_POST['email']) && (!in_array('password', $use_captcha) || $mod_captcha->validate($_POST['vvcode']) === true)) {
     $check_customer_query = xtc_db_query("SELECT customers_email_address, 
                                                  customers_id 
                                             FROM ".TABLE_CUSTOMERS." 
@@ -227,8 +231,8 @@ switch ($case) {
   case 'double_opt' :
   case 'first_opt_in' :
     if (in_array('password', $use_captcha)) {
-      $smarty->assign('VVIMG', '<img src="'.xtc_href_link(FILENAME_DISPLAY_VVCODES, '', 'SSL').'" alt="Captcha" />');
-      $smarty->assign('INPUT_CODE', xtc_draw_input_field('vvcode', '', 'size="'.MODULE_CAPTCHA_CODE_LENGTH.'" maxlength="'.MODULE_CAPTCHA_CODE_LENGTH.'"', 'text', false));
+      $smarty->assign('VVIMG', $mod_captcha->get_image_code());
+      $smarty->assign('INPUT_CODE', $mod_captcha->get_input_code());
     }
     if ($messageStack->size('password_double_opt_in') > 0) {
       $smarty->assign('info_message', $messageStack->output('password_double_opt_in'));

@@ -8,11 +8,13 @@
   {$FORM_ACTION}
   <div class="highlightbox">
     <table border="0" cellspacing="0" cellpadding="4">
-      {if $INPUT_CODE}
+      {if $VVIMG}
         <tr>
           <td width="140"><strong>{#text_sec_code#}:</strong></td>
           <td>{$VVIMG}</td>
         </tr>
+      {/if}
+      {if $INPUT_CODE}
         <tr>
           <td><strong>{#text_sec_code#}:</strong></td>
           <td>{$INPUT_CODE}</td>

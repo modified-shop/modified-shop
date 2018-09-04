@@ -34,4 +34,17 @@ ALTER TABLE `products_tags` ADD `sort_order` INT(11) NOT NULL DEFAULT '0' AFTER 
 #GTB - 2018-08-14 - remove unique id due to problems with coupons for create account or newsletter registration
 ALTER TABLE `coupon_email_track` DROP INDEX `idx_coupon_id`;
 
+#GTB - 2018-09-04 new captcha handling
+DELETE FROM `configuration` WHERE configuration_key = 'MODULE_CAPTCHA_USE_COLOR';
+DELETE FROM `configuration` WHERE configuration_key = 'MODULE_CAPTCHA_USE_SHADOW';
+DELETE FROM `configuration` WHERE configuration_key = 'MODULE_CAPTCHA_CODE_LENGTH';
+DELETE FROM `configuration` WHERE configuration_key = 'MODULE_CAPTCHA_NUM_LINES';
+DELETE FROM `configuration` WHERE configuration_key = 'MODULE_CAPTCHA_MIN_FONT';
+DELETE FROM `configuration` WHERE configuration_key = 'MODULE_CAPTCHA_MAX_FONT';
+DELETE FROM `configuration` WHERE configuration_key = 'MODULE_CAPTCHA_BACKGROUND_RGB';
+DELETE FROM `configuration` WHERE configuration_key = 'MODULE_CAPTCHA_LINES_RGB';
+DELETE FROM `configuration` WHERE configuration_key = 'MODULE_CAPTCHA_CHARS_RGB';
+DELETE FROM `configuration` WHERE configuration_key = 'MODULE_CAPTCHA_WIDTH';
+DELETE FROM `configuration` WHERE configuration_key = 'MODULE_CAPTCHA_HEIGHT';
+
 # Keep an empty line at the end of this file for the db_updater to work properly

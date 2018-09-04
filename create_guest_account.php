@@ -60,6 +60,12 @@ require_once (DIR_FS_INC.'get_customers_gender.inc.php');
 require_once (DIR_FS_INC.'check_country_required_zones.inc.php');
 require_once (DIR_FS_INC.'secure_form.inc.php');
 
+// include needed classes
+require_once (DIR_WS_CLASSES.'modified_captcha.php');
+
+$captcha_class = CAPTCHA_MOD_CLASS;
+$mod_captcha = $captcha_class::getInstance();
+
 $country = isset($_POST['country']) ? (int)$_POST['country'] : STORE_COUNTRY;
 $privacy = isset($_POST['privacy']) && $_POST['privacy'] == 'privacy' ? true : false;
 
@@ -464,8 +470,8 @@ if (ACCOUNT_STATE == 'true') { //important no $required_zones because of ajax lo
 }
 
 if (in_array('create_account', $use_captcha)) {
-  $smarty->assign('VVIMG', '<img src="'.xtc_href_link(FILENAME_DISPLAY_VVCODES, '', 'SSL') .'" alt="Captcha" />');
-  $smarty->assign('INPUT_VVCODE', xtc_draw_input_field('vvcode', '', 'style="width:240px;" size="'.MODULE_CAPTCHA_CODE_LENGTH.'" maxlength="'.MODULE_CAPTCHA_CODE_LENGTH.'"', 'text', false));
+  $smarty->assign('VVIMG', $mod_captcha->get_image_code());
+  $smarty->assign('INPUT_VVCODE', $mod_captcha->get_input_code());
 }
 $smarty->assign('SELECT_COUNTRY', xtc_get_country_list(array ('name' => 'country', 'text' => '&nbsp;'. (xtc_not_null(ENTRY_COUNTRY_TEXT) ? '<span class="inputRequirement">' . ENTRY_COUNTRY_TEXT . '</span>' : '')), (int)$country));
 $smarty->assign('INPUT_TEL', xtc_draw_input_fieldNote(array ('name' => 'telephone','text' => '&nbsp;'. ((ACCOUNT_TELEPHONE_OPTIONAL == 'false' && xtc_not_null(ENTRY_TELEPHONE_NUMBER_TEXT)) ? '<span class="inputRequirement">' . ENTRY_TELEPHONE_NUMBER_TEXT . '</span>' : ''))));
