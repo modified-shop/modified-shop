@@ -26,6 +26,12 @@ if (defined('MODULE_CAPTCHA_ACTIVE')) {
 defined('MODULE_CAPTCHA_CODE_LENGTH') or define('MODULE_CAPTCHA_CODE_LENGTH', 6);
 defined('MODULE_CAPTCHA_LOGGED_IN') or define('MODULE_CAPTCHA_LOGGED_IN', 'True');
 
+// include needed classes
+require_once (DIR_WS_CLASSES.'modified_captcha.php');
+
+$captcha_class = CAPTCHA_MOD_CLASS;
+$mod_captcha = $captcha_class::getInstance();
+
 // create smarty elements
 $smarty = new Smarty;
 
@@ -66,17 +72,11 @@ if (isset ($_GET['action']) && $_GET['action'] == 'process' && $review_error ===
       $error = true;
     }
     if (in_array('reviews', $use_captcha) && (!isset($_SESSION['customer_id']) || MODULE_CAPTCHA_LOGGED_IN == 'True')) {
-      if (!isset($_SESSION['vvcode'])
-          || !isset($_POST['vvcode'])
-          || $_SESSION['vvcode'] == ''
-          || $_POST['vvcode'] == ''
-          || strtoupper($_POST['vvcode']) != $_SESSION['vvcode']
-          ) 
+      if ($mod_captcha->validate($_POST['vvcode']) !== true) 
       {
         $messageStack->add('product_reviews_write', strip_tags(ERROR_VVCODE, '<b><strong>'));
         $error = true;
       }
-      unset($_SESSION['vvcode']);
     }
     
     if ($error === false) {
@@ -137,8 +137,8 @@ if ($product->isProduct() === false) {
     }
   }
   if (in_array('reviews', $use_captcha) && (!isset($_SESSION['customer_id']) || MODULE_CAPTCHA_LOGGED_IN == 'True')) {
-    $smarty->assign('VVIMG', '<img src="'.xtc_href_link(FILENAME_DISPLAY_VVCODES, '', 'SSL') .'" alt="Captcha" />');
-    $smarty->assign('INPUT_CODE', xtc_draw_input_field('vvcode', '', 'style="width:240px;" size="'.MODULE_CAPTCHA_CODE_LENGTH.'" maxlength="'.MODULE_CAPTCHA_CODE_LENGTH.'"', 'text', false));
+    $smarty->assign('VVIMG', $mod_captcha->get_image_code());
+    $smarty->assign('INPUT_CODE', $mod_captcha->get_input_code());
   }
   $link = 'javascript:history.back(1)';
   if (!isset($_SERVER['HTTP_REFERER']) 
