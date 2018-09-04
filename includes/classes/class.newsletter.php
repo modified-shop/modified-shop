@@ -23,7 +23,6 @@ define('NL_REG_MAIL_ADMIN', false);
 
 // include needed function
 require_once (DIR_FS_INC.'ip_clearing.inc.php');
-require_once (DIR_WS_CLASSES.'captcha.php');
 
 // include needed classes
 require_once (DIR_WS_CLASSES.'modified_captcha.php');
