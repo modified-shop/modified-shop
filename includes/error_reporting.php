@@ -12,7 +12,8 @@
 
 
 $LogEnabled = true;
-$error_reporting = array_shift(glob(DIR_FS_CATALOG.'export/_error_reporting\.*'));
+$error_files = glob(DIR_FS_CATALOG.'export/_error_reporting\.*');
+$error_reporting = array_shift($error_files);
 switch (basename($error_reporting)) {
   case '_error_reporting.shop':
     $LogLevel = 'INFO';
