@@ -25,6 +25,7 @@
 define('PAGE_PARSE_START_TIME', microtime());
 
 // set the level of error reporting
+@ini_set('display_errors', false);
 error_reporting(0);
 
 // Set the local configuration parameters - mainly for developers - if exists else the mainconfigure

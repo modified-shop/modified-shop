@@ -35,6 +35,10 @@ define('RUN_MODE_ADMIN',true);
 // Start the clock for the page parse time log
 define('PAGE_PARSE_START_TIME', microtime(true));
 
+// set the level of error reporting
+@ini_set('display_errors', false);
+error_reporting(0);
+
 // security
 define('_VALID_XTC',true);
 
@@ -57,23 +61,6 @@ if (version_compare(PHP_VERSION, '5.6', '<')) {
 
 // default time zone
 date_default_timezone_set('Europe/Berlin');
-
-// set the level of error reporting
-@ini_set('display_errors', true);
-if (is_file(DIR_FS_CATALOG.'export/_error_reporting.admin')) {
-  error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED); //exlude E_STRICT on PHP 5.4
-  define('LOGGING_LEVEL', 'INFO');
-} elseif (is_file(DIR_FS_CATALOG.'export/_error_reporting.all')) {
-  error_reporting(E_ALL); //exlude E_STRICT on PHP 5.4
-  define('LOGGING_LEVEL', 'FINE');
-} elseif (is_file(DIR_FS_CATALOG.'export/_error_reporting.dev')) {
-  error_reporting(-1); // Development value
-  define('LOGGING_LEVEL', 'DEBUG');
-} else {
-  @ini_set('display_errors', false);
-  error_reporting(0);
-  define('LOGGING_LEVEL', 'WARN');
-}
 
 // new error handling
 if (is_file(DIR_FS_CATALOG.DIR_WS_INCLUDES.'error_reporting.php')) {
