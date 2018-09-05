@@ -48,7 +48,7 @@ class php_captcha
 
     function install() 
     {
-        xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SYSTEM_PHP_CAPTCHA_STATUS', 'false',  '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
+        xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SYSTEM_PHP_CAPTCHA_STATUS', 'true',  '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
         xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SYSTEM_PHP_CAPTCHA_USE_COLOR', 'true',  '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
         xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SYSTEM_PHP_CAPTCHA_USE_SHADOW', 'false',  '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
         xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SYSTEM_PHP_CAPTCHA_CODE_LENGTH', '6',  '6', '1', '', now())");
@@ -60,11 +60,14 @@ class php_captcha
         xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SYSTEM_PHP_CAPTCHA_CHARS_RGB', '112,112,112',  '6', '1', '', now())");
         xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SYSTEM_PHP_CAPTCHA_WIDTH', '240',  '6', '1', '', now())");
         xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SYSTEM_PHP_CAPTCHA_HEIGHT', '50',  '6', '1', '', now())");
+
+        xtc_db_query("UPDATE ".TABLE_CONFIGURATION." SET configuration_value = 'php_captcha' WHERE configuration_key = 'CAPTCHA_MOD_CLASS'");
     }
 
     function remove()
     {
         xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key LIKE 'MODULE_SYSTEM_PHP_CAPTCHA_%'");
+        xtc_db_query("UPDATE ".TABLE_CONFIGURATION." SET configuration_value = 'modified_captcha' WHERE configuration_key = 'CAPTCHA_MOD_CLASS'");
     }
 
     function keys() 
