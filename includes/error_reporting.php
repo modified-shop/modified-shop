@@ -10,13 +10,44 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-// include needed class
-require_once(DIR_FS_CATALOG.'includes/classes/class.logger.php');
+
+$LogEnabled = true;
+$error_reporting = array_shift(glob(DIR_FS_CATALOG.'export/_error_reporting\.*'));
+switch (basename($error_reporting)) {
+  case '_error_reporting.shop':
+    $LogLevel = 'INFO';
+    error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
+    break;
+  case '_error_reporting.admin':
+    $LogLevel = 'NONE';
+    $LogEnabled = false;
+    if (defined('RUN_MODE_ADMIN')) {
+      $LogLevel = 'INFO';
+      error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
+    }
+    break;
+  case '_error_reporting.all':
+    $LogLevel = 'FINE';
+    error_reporting(E_ALL);
+    break;
+  case '_error_reporting.err':
+    $LogLevel = 'ERROR';
+    error_reporting(E_ALL);
+    break;
+  case '_error_reporting.dev':
+    $LogLevel = 'DEBUG';
+    error_reporting(-1);
+    break;
+  default:
+    $LogLevel = 'NONE';
+    $LogEnabled = false;
+    break;
+}
 
 $config = array(
-  'LogEnabled' => true,
+  'LogEnabled' => $LogEnabled,
   'SplitLogging' => true,
-  'LogLevel' => ((defined('LOGGING_LEVEL')) ? LOGGING_LEVEL : 'INFO'), // DEBUG, FINE, INFO, WARN, ERROR, CUSTOM
+  'LogLevel' => $LogLevel, // DEBUG, FINE, INFO, WARN, ERROR, CUSTOM
   'LogThreshold' => '2MB',
   'FileName' => DIR_FS_LOG.'mod_error_'.((defined('RUN_MODE_ADMIN')) ? 'admin_' : '').date('Y-m-d') .'.log',
   'FileName.debug' => DIR_FS_LOG.'mod_notice_'.((defined('RUN_MODE_ADMIN')) ? 'admin_' : '').date('Y-m-d') .'.log',
@@ -26,7 +57,12 @@ $config = array(
   'FileName.error' => DIR_FS_LOG.'mod_error_'.((defined('RUN_MODE_ADMIN')) ? 'admin_' : '').date('Y-m-d') .'.log',
   'FileName.custom' => DIR_FS_LOG.'mod_custom_'.((defined('RUN_MODE_ADMIN')) ? 'admin_' : '').date('Y-m-d') .'.log',
 );
+
+
+// include needed class
+require_once(DIR_FS_CATALOG.'includes/classes/class.logger.php');
 $LoggingManager = new LoggingManager($config);
+
 
 /**
  * Error handler, passes flow over the exception logger with new ErrorException.
@@ -57,7 +93,8 @@ function log_exception($e)
     }
     
     if (strpos($e->getFile(), 'templates_c') !== false
-        || strpos($e->getFile(), 'cache') !== false) return;
+        || strpos($e->getFile(), 'cache') !== false
+        || $config['LogEnabled'] === false) return;
 
     if (!is_array($error_exceptions)) {
       $error_exceptions = array();
