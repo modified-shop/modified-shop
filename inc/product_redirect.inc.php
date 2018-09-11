@@ -32,6 +32,9 @@ function product_redirect_link($products_id = false, $current_link) {
                                           ON pd.products_id = p.products_id 
                                              AND pd.language_id = '".(int)$_SESSION['languages_id']."' 
                                              AND trim(pd.products_name) != ''
+                                     JOIN " . TABLE_CATEGORIES . " c
+                                          ON c.categories_id = p2c.categories_id 
+                                             AND c.categories_status = '1'
                                     WHERE p.products_id = '" . (int)$products_id . "'
                                           " . PRODUCTS_CONDITIONS_P . "
                                       AND p.products_status = '1'

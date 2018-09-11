@@ -44,19 +44,21 @@ function xtc_get_product_path($products_id) {
   
   // canonical
   $add_select = ((defined('PRODUCTS_CANONICAL_CAT_ID') && PRODUCTS_CANONICAL_CAT_ID === true) ? "p.products_canonical_cat_id," : '');
+  $order_by = ((defined('PRODUCTS_CANONICAL_CAT_ID') && PRODUCTS_CANONICAL_CAT_ID) ? "ORDER BY FIELD(p2c.categories_id, p.products_canonical_cat_id) DESC" : '');
   
   $category_query = "SELECT ".$add_select."
                             p2c.categories_id
-                       FROM " . TABLE_CATEGORIES . " c 
+                       FROM " . TABLE_PRODUCTS . " p
                        JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c 
-                         ON p2c.categories_id != '0' 
-                            AND p2c.categories_id = c.categories_id 
-                            AND c.categories_status = '1' 
-                                ".$category_check."
-                       JOIN " . TABLE_PRODUCTS ." p 
                             ON p.products_id = p2c.products_id 
-                               AND p.products_id = '" . (int)$products_id . "' 
-                               AND p.products_status = '1' 
+                               AND p2c.categories_id != '0' 
+                                   ".$category_check."
+                       JOIN " . TABLE_CATEGORIES ." c
+                            ON p2c.categories_id = c.categories_id 
+                               AND c.categories_status = '1' 
+                      WHERE p.products_id = '" . (int)$products_id . "' 
+                        AND p.products_status = '1' 
+                            ".$order_by."
                             ".$limit;
 
   $category_query  = xtDBquery($category_query);
@@ -72,6 +74,7 @@ function xtc_get_product_path($products_id) {
           && !$products_link_cat_id 
           && isset($category['products_canonical_cat_id']) 
           && $category['products_canonical_cat_id'] > 0
+          && $category['products_canonical_cat_id'] == $category['categories_id']
           )
       {
         $cat_id = $category['products_canonical_cat_id'];            
