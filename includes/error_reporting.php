@@ -11,42 +11,11 @@
    ---------------------------------------------------------------------------------------*/
 
 
-$LogEnabled = true;
-$error_files = glob(DIR_FS_CATALOG.'export/_error_reporting\.*');
-$error_reporting = array_shift($error_files);
-switch (basename($error_reporting)) {
-  case '_error_reporting.shop':
-    $LogLevel = 'INFO';
-    error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
-    break;
-  case '_error_reporting.admin':
-    $LogLevel = 'NONE';
-    $LogEnabled = false;
-    if (defined('RUN_MODE_ADMIN')) {
-      $LogLevel = 'INFO';
-      error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
-    }
-    break;
-  case '_error_reporting.all':
-    $LogLevel = 'FINE';
-    error_reporting(E_ALL);
-    break;
-  case '_error_reporting.err':
-    $LogLevel = 'ERROR';
-    error_reporting(E_ALL);
-    break;
-  case '_error_reporting.dev':
-    $LogLevel = 'DEBUG';
-    error_reporting(-1);
-    break;
-  default:
-    $LogLevel = 'NONE';
-    $LogEnabled = false;
-    break;
-}
+$error_files = glob(DIR_FS_CATALOG."export/_error_reporting\.{dev,all,err,shop,admin,none}", GLOB_BRACE);
+$LogLevel = get_log_level($error_files);
 
 $config = array(
-  'LogEnabled' => $LogEnabled,
+  'LogEnabled' => (($LogLevel == 'NONE') ? false : true),
   'SplitLogging' => true,
   'LogLevel' => $LogLevel, // DEBUG, FINE, INFO, WARN, ERROR, CUSTOM
   'LogThreshold' => '2MB',
@@ -64,6 +33,46 @@ $config = array(
 require_once(DIR_FS_CATALOG.'includes/classes/class.logger.php');
 $LoggingManager = new LoggingManager($config);
 
+
+/**
+ * check for LogLevel
+ */
+function get_log_level((array)$error_reporting_array) {
+  $error_reporting = basename(array_shift($error_reporting_array));
+    
+  switch ($error_reporting) {
+    case '_error_reporting.err':
+      $LogLevel = 'ERROR';
+      error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED & ~E_WARNING);
+      break;
+    case '_error_reporting.shop':
+    case '_error_reporting.admin':
+      if (($error_reporting == '_error_reporting.admin' && defined('RUN_MODE_ADMIN')) 
+          || ($error_reporting == '_error_reporting.shop' && !defined('RUN_MODE_ADMIN'))
+          )
+      {
+        $LogLevel = 'INFO';
+        error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
+      } else {
+        $LogLevel = get_log_level($error_reporting_array);
+      }
+      break;
+    case '_error_reporting.dev':
+      $LogLevel = 'DEBUG';
+      error_reporting(-1);
+      break;
+    case '_error_reporting.none':
+      $LogLevel = 'NONE';
+      error_reporting(0);
+      break;
+    default:
+      $LogLevel = 'FINE';
+      error_reporting(E_ALL);
+      break;
+  }
+  
+  return $LogLevel;
+}
 
 /**
  * Error handler, passes flow over the exception logger with new ErrorException.
