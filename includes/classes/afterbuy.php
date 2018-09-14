@@ -345,6 +345,7 @@ class xtc_afterbuy_functions {
 		$s_method = str_replace(' ', '%20', $s_method[0]);
 
     $DATAstring .= "Kommentar=".urlencode($oData['comments'])."&";
+    $DATAstring .= "Bestandart=shop&";
 		$DATAstring .= "Versandart=".$s_method."&";
     $DATAstring .= "Versandkosten=".$vK."&";
     $this->getPayment($oData['payment_method']);
@@ -367,7 +368,6 @@ class xtc_afterbuy_functions {
 		}
 
 		$DATAstring .= "NoVersandCalc=1";
-    $DATAstring .= "Bestandart=shop&";
 
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $DATAstring);
