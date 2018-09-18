@@ -37,7 +37,7 @@ $LoggingManager = new LoggingManager($config);
 /**
  * check for LogLevel
  */
-function get_log_level((array)$error_reporting_array) {
+function get_log_level($error_reporting_array) {
   $error_reporting = basename(array_shift($error_reporting_array));
     
   switch ($error_reporting) {
