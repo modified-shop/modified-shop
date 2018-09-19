@@ -187,6 +187,10 @@ class xtc_afterbuy_functions {
     if (isset($Artikelerkennung) && is_numeric($Artikelerkennung)) $DATAstring .= "Artikelerkennung=" . $Artikelerkennung . "&";
 		$nr = 0;
 		$anzahl = 0;
+		if (!class_exists (xtcPrice)) {
+		  require_once (DIR_FS_CATALOG.DIR_WS_CLASSES . 'xtcPrice.php');
+		  $xtPrice = new xtcPrice($oData['currency'],$oData['customers_status']);
+		}
 		while ($pDATA = xtc_db_fetch_array($p_query)) {
 			$nr ++;
 
@@ -225,6 +229,7 @@ class xtc_afterbuy_functions {
       $DATAstring .= "ArtikelEPreis_".$nr."=".$price."&";
 			$DATAstring .= "ArtikelMwst_".$nr."=".$tax."&";
 			$DATAstring .= "ArtikelMenge_".$nr."=".$pDATA['products_quantity']."&";
+			$DATAstring .= "ArtikelGewicht_".$nr."=".$this->getProductsWeight($pDATA['products_id'])."&";
 			$url = HTTP_SERVER.DIR_WS_CATALOG.'product_info.php?products_id='.$pDATA['products_id'];
 			$DATAstring .= "ArtikelLink_".$nr."=".$url."&";
 
@@ -251,6 +256,7 @@ class xtc_afterbuy_functions {
 						                         ORDER BY sort_order ASC");
 
 		$order_total = array ();
+		$shipping = '0.0000';
 		$cod_fee = '';
 		$cod_flag = false;
 		$discount_flag = false;
@@ -262,8 +268,9 @@ class xtc_afterbuy_functions {
 			$order_total[] = array ('CLASS' => $order_total_values['class'], 'VALUE' => $order_total_values['value']);
 
 			// shippingcosts
-			if ($order_total_values['class'] == 'ot_shipping')
+			if ($order_total_values['class'] == 'ot_shipping') {
 				$shipping = $order_total_values['value'];
+			}
 			// nachnamegebuer
 			if ($order_total_values['class'] == 'ot_cod_fee') {
 				$cod_flag = true;
@@ -354,7 +361,7 @@ class xtc_afterbuy_functions {
 
 		//banktransfer data
 		if ($oData['payment_method']=='banktransfer') {
-		$b_query = xtc_db_query("SELECT * FROM ".TABLE_BANKTRANSFER." WHERE orders_id='".(int)$oID."'");
+		  $b_query = xtc_db_query("SELECT * FROM ".TABLE_BANKTRANSFER." WHERE orders_id='".(int)$oID."'");
 
       if (xtc_db_numrows($b_query)) {
         $b_data = xtc_db_fetch_array($b_query);
@@ -380,17 +387,17 @@ class xtc_afterbuy_functions {
 			$cdr = explode('<KundenNr>', $result);
 			$cdr = explode('</KundenNr>', $cdr[1]);
 			$cdr = $cdr[0];
-			xtc_db_query("update ".TABLE_ORDERS." set afterbuy_success='1',afterbuy_id='".$cdr."' where orders_id='".(int)$oID."'");
+			xtc_db_query("UPDATE ".TABLE_ORDERS." SET afterbuy_success='1',afterbuy_id='".$cdr."' WHERE orders_id='".(int)$oID."'");
 
 			//set new order status
 			if ($order_status != '') {
-				xtc_db_query("update ".TABLE_ORDERS." set orders_status='".(int)$order_status."' where orders_id='".(int)$oID."'");
+				xtc_db_query("UPDATE ".TABLE_ORDERS." SET orders_status='".(int)$order_status."' WHERE orders_id='".(int)$oID."'");
 			}
 		} else {
 			// mail to shopowner
 			$mail_content_html = 'Fehler beim Senden der Bestellung: '.$this->order_id."<br />\r\n".'Folgende Fehlermeldung wurde von afterbuy.de zur&uuml;ckgegeben:'."<br />\r\n"."<br />\r\n".$result;
       $mail_content_txt = 'Fehler beim Senden der Bestellung: '.$this->order_id."\r\n".'Folgende Fehlermeldung wurde von afterbuy.de zurueckgegeben:'."\r\n\r\n".$result;
-      xtc_php_mail(STORE_OWNER_EMAIL_ADDRESS,STORE_NAME,STORE_OWNER_EMAIL_ADDRESS, STORE_NAME,'',STORE_OWNER_EMAIL_ADDRESS, STORE_NAME,'','', "Afterbuy-Error", $mail_content_html, $mail_content_txt);
+     		xtc_php_mail(STORE_OWNER_EMAIL_ADDRESS,STORE_NAME,STORE_OWNER_EMAIL_ADDRESS, STORE_NAME,'',STORE_OWNER_EMAIL_ADDRESS, STORE_NAME,'','', 'Afterbuy-Error', $mail_content_html, $mail_content_txt);
     }
 		// close session
 		curl_close($ch);
@@ -406,6 +413,13 @@ class xtc_afterbuy_functions {
 			return false;
 		return true;
 
+	}
+
+	function getProductsWeight($id) {
+		$check_query = xtc_db_query("SELECT products_weight FROM ".TABLE_PRODUCTS." WHERE products_id='".(int)$id."'");
+		$data = xtc_db_fetch_array($check_query);		
+		$weight = number_format($data['products_weight'],2,',','.');
+		return $weight;
 	}
 
   function getPayment($payment) {
