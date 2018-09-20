@@ -263,7 +263,7 @@
         $field .= '<option value="' .$val['id'] . '"';
         $li .= '<li data-val="' .$val['id'] . '"';
         if ( ((strlen($val['id']) > 0) && isset($GLOBALS[$name]) && ($GLOBALS[$name] == $val['id'])) || ($default == $val['id']) ) {
-          $field .= ' selected="selected"';
+          if($default == $val['id']) $field .= ' selected="selected"';
           //$li .= ' class="selected"';
           $selText = $val['text'];
         }
