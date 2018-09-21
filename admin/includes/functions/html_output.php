@@ -262,9 +262,13 @@
       foreach ($values as $key=>$val) {
         $field .= '<option value="' .$val['id'] . '"';
         $li .= '<li data-val="' .$val['id'] . '"';
-        if ( ((strlen($val['id']) > 0) && isset($GLOBALS[$name]) && ($GLOBALS[$name] == $val['id'])) || ($default == $val['id']) ) {
-          if($default == $val['id']) $field .= ' selected="selected"';
-          //$li .= ' class="selected"';
+        if ((strlen($val['id']) > 0 
+             && isset($GLOBALS[$name]) 
+             && (string)$GLOBALS[$name] == (string)$val['id']
+             ) || ((string)$default == (string)$val['id'])
+            )
+        {
+          $field .= ' selected="selected"';
           $selText = $val['text'];
         }
         $field .= '>' . $val['text'] . '</option>' . PHP_EOL;
