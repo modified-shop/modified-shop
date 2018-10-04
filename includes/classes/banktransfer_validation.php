@@ -27,7 +27,7 @@
    New methods and bug fixes 2010 - 2015:	Christian Rothe <buero@laufstar.de>
 
 	 BLZ-Downloadseite der Deutschen Bundesbank:
-	 https://www.bundesbank.de/Redaktion/DE/Standardartikel/Aufgaben/Unbarer_Zahlungsverkehr/bankleitzahlen_download.html
+	 https://www.bundesbank.de/de/aufgaben/unbarer-zahlungsverkehr/serviceangebot/bankleitzahlen/download---bankleitzahlen-602592
 
    Aktuelle Beschreibung der Pruefverfahren:
    https://www.bundesbank.de/Navigation/DE/Aufgaben/Unbarer_Zahlungsverkehr/Serviceangebot/Pruefzifferberechnung/pruefzifferberechnung.html
