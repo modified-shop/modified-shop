@@ -123,7 +123,7 @@ class shoppingCartModules {
     public static function add_cart_products_session($products_id,$type,$qty,$attributes)
     {
         self::$function_call = 'add_cart_products_session';
-        return self::call_module_method($products_id,$type,$qty);
+        return self::call_module_method($products_id,$type,$qty,$attributes);
     }
     
     public static function add_cart_products_db($sql_data_array)
