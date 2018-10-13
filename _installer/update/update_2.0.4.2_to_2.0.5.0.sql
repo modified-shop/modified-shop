@@ -47,4 +47,8 @@ DELETE FROM `configuration` WHERE configuration_key = 'MODULE_CAPTCHA_CHARS_RGB'
 DELETE FROM `configuration` WHERE configuration_key = 'MODULE_CAPTCHA_WIDTH';
 DELETE FROM `configuration` WHERE configuration_key = 'MODULE_CAPTCHA_HEIGHT';
 
+#Tomcraft - 2018-10-13 - Delete entries for France, Metropolitan and Yugoslavia
+DELETE FROM `zones_to_geo_zones` WHERE association_id = 74;
+DELETE FROM `zones_to_geo_zones` WHERE association_id = 236;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
