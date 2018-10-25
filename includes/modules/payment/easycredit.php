@@ -346,10 +346,18 @@ class easycredit {
         )
     {
       $monthlyCosts = $this->apiClient->getBest($amount);
+      $calculator_link = sprintf(ecConfig::EXAMPLE_CALCULATION_LINK, $this->webshopId, $amount);
+      
+      $separator = '?';
+      if (strpos($ContractInfoURL, $separator) !== false) {
+        $separator = '&';
+      }
+      $calculator_link .= (($this->link_parameters != '') ? $separator.$this->link_parameters : '');
+
       $presentment_array = array(
         'link_class' => $this->link_class,
         'monthly_payment' => $xtPrice->xtcFormat($monthlyCosts->getAmountOfRate(), true),
-        'calculator_link' => sprintf(ecConfig::EXAMPLE_CALCULATION_LINK, $this->webshopId, $amount).(($this->link_parameters != '') ? '&'.$this->link_parameters : ''),
+        'calculator_link' => $calculator_link,
       );
       
       $ec_smarty = new Smarty();
@@ -515,7 +523,14 @@ class easycredit {
 
   function get_payment_info() {    
     $CommonProcessData = $this->ecProcess->getCommonProcessData();
-    $ContractInfoURL = $CommonProcessData->getCommonProcessData()->getContractInfoURL().(($this->link_parameters != '') ? '&'.$this->link_parameters : '');
+    $ContractInfoURL = $CommonProcessData->getCommonProcessData()->getContractInfoURL();
+    
+    $separator = '?';
+    if (strpos($ContractInfoURL, $separator) !== false) {
+      $separator = '&';
+    }
+    $ContractInfoURL .= (($this->link_parameters != '') ? $separator.$this->link_parameters : '');
+    
     $string = $CommonProcessData->getPaymentPlanText();
         
     $text_array = array();
