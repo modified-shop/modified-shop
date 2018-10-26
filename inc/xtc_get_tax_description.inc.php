@@ -16,6 +16,11 @@
    ---------------------------------------------------------------------------------------*/
    
   function xtc_get_tax_description($class_id, $country_id= -1, $zone_id= -1) {
+    static $tax_description_array;
+    
+    if (!is_array($tax_description_array)) {
+      $tax_description_array = array();
+    }
     
     // VERSANDKOSTEN IM WARENKORB
     if (isset($_SESSION['country'])) {
@@ -30,35 +35,39 @@
         $country_id = $_SESSION['customer_country_id'];
         $zone_id = $_SESSION['customer_zone_id'];
       }
-    }else{
+    } else {
       $country_id = $country_id;
       $zone_id = $zone_id;
     }
   	
-    $tax_query = xtDBquery("SELECT tax_description 
-                              FROM " . TABLE_TAX_RATES . " tr 
-                         LEFT JOIN " . TABLE_ZONES_TO_GEO_ZONES . " za 
-                                   ON (tr.tax_zone_id = za.geo_zone_id) 
-                         LEFT JOIN " . TABLE_GEO_ZONES . " tz 
-                                   ON (tz.geo_zone_id = tr.tax_zone_id) 
-                             WHERE (za.zone_country_id is null 
-                                    OR za.zone_country_id = '0' 
-                                    OR za.zone_country_id = '" . (int)$country_id . "') 
-                               AND (za.zone_id is null 
-                                    OR za.zone_id = '0' 
-                                    OR za.zone_id = '" . (int)$zone_id . "') 
-                               AND tr.tax_class_id = '" . (int)$class_id . "' 
-                          ORDER BY tr.tax_priority");
-    if (xtc_db_num_rows($tax_query,true)) {
-      $tax_description = '';
-      while ($tax = xtc_db_fetch_array($tax_query,true)) {
-        $tax_description .= $tax['tax_description'] . ' + ';
-      }
-      $tax_description = substr($tax_description, 0, -3);
+  	if (!isset($tax_description_array[$country_id][$zone_id][$class_id])) {
+      $tax_query = xtDBquery("SELECT tax_description 
+                                FROM " . TABLE_TAX_RATES . " tr 
+                           LEFT JOIN " . TABLE_ZONES_TO_GEO_ZONES . " za 
+                                     ON (tr.tax_zone_id = za.geo_zone_id) 
+                           LEFT JOIN " . TABLE_GEO_ZONES . " tz 
+                                     ON (tz.geo_zone_id = tr.tax_zone_id) 
+                               WHERE (za.zone_country_id is null 
+                                      OR za.zone_country_id = '0' 
+                                      OR za.zone_country_id = '" . (int)$country_id . "') 
+                                 AND (za.zone_id is null 
+                                      OR za.zone_id = '0' 
+                                      OR za.zone_id = '" . (int)$zone_id . "') 
+                                 AND tr.tax_class_id = '" . (int)$class_id . "' 
+                            ORDER BY tr.tax_priority");
+      if (xtc_db_num_rows($tax_query,true)) {
+        $tax_description = '';
+        while ($tax = xtc_db_fetch_array($tax_query,true)) {
+          $tax_description .= $tax['tax_description'] . ' + ';
+        }
+        $tax_description = substr($tax_description, 0, -3);
 
-      return $tax_description;
-    } else {
-      return TEXT_UNKNOWN_TAX_RATE;
+        $tax_description_array[$country_id][$zone_id][$class_id] = $tax_description;
+      } else {
+        $tax_description_array[$country_id][$zone_id][$class_id] = TEXT_UNKNOWN_TAX_RATE;
+      }
     }
+    
+    return $tax_description_array[$country_id][$zone_id][$class_id];
   }
 ?>
