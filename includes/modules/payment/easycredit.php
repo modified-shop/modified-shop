@@ -145,18 +145,7 @@ class easycredit {
     }
     
     if ($this->enabled === true) {
-      if (!class_exists('order_total')) {
-        require_once(DIR_WS_CLASSES.'order_total.php');
-      }
-      $order_total_modules = new order_total();
-      $order_totals = $order_total_modules->process();
-      
-      $this->total_amount = 0;
-      for ($i=0, $n=count($order_totals); $i<$n; $i++) {
-        if ($order_totals[$i]['code'] == 'ot_total') {
-          $this->total_amount = $order_totals[$i]['value'];
-        }
-      }
+      $this->total_amount = $this->calculate_total();
       
       if ($this->total_amount < $this->config->getMinOrderAmount()
           || $this->total_amount > $this->config->getMaxOrderAmount()
@@ -372,6 +361,8 @@ class easycredit {
   function payment_redirect() {
     global $order;
     
+    $this->total_amount = $this->calculate_total();
+
     //basedata
     $this->ecProcess->getProcessData()->setOrderTotal(floatval($this->total_amount));
     $this->ecProcess->getProcessData()->setTerm(intval($_SESSION['easycredit']['term']));
@@ -519,6 +510,25 @@ class easycredit {
     } else {
       return mb_convert_encoding($string, "UTF-8", $_SESSION['language_charset']);
     }
+  }
+
+  function calculate_total() {
+    global $order;
+    
+    $order_backup = $order;
+    
+    require_once (DIR_WS_CLASSES . 'order.php');
+    $order = new order();
+
+    require_once (DIR_WS_CLASSES . 'order_total.php');
+    $order_total_modules = new order_total();
+    $order_total = $order_total_modules->process();
+    
+    $total = $order->info['total'];
+
+    $order = $order_backup;
+
+    return $total;
   }
 
   function get_payment_info() {    
