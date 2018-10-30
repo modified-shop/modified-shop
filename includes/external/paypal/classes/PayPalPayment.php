@@ -215,11 +215,7 @@ class PayPalPayment extends PayPalPaymentBase {
       
       // set totals
       if ($order_exists === false) {
-        if (!class_exists('order_total')) {
-          require_once(DIR_WS_CLASSES.'order_total.php');
-        }
-        $order_total_modules = new order_total();
-        $order_totals = $order_total_modules->process();
+        $order_totals = $this->calculate_total(false);
         $this->get_totals($order_totals, true, $subtotal);
       } else {
         $this->get_totals($order->totals);

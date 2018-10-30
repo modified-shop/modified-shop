@@ -243,6 +243,41 @@ class PayPalCommon extends PayPalAuth {
   }
 
 
+  function calculate_total($plain = true) {
+    global $order;
+    
+    $order_backup = $order;
+    
+    if (isset($_SESSION['shipping'])) {
+      if (!class_exists('shipping')) {
+        require_once (DIR_WS_CLASSES . 'shipping.php');
+      }
+      $shipping_modules = new shipping($_SESSION['shipping']);
+    }
+    
+    if (!class_exists('order')) {
+      require_once (DIR_WS_CLASSES . 'order.php');
+    }
+    $order = new order();
+    
+    if (!class_exists('order_total')) {
+      require_once (DIR_WS_CLASSES . 'order_total.php');
+    }
+    $order_total_modules = new order_total();
+    $order_total = $order_total_modules->process();
+    
+    $total = $order->info['total'];
+
+    $order = $order_backup;
+    
+    if ($plain === false) {
+      return $order_total;
+    }
+    
+    return $total;
+  }
+
+
   function get_profile($id) {
   
     // auth

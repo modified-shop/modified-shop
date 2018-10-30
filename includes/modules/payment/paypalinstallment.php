@@ -67,18 +67,7 @@ class paypalinstallment extends PayPalPayment {
     }
     
     if ($this->enabled === true) {
-      if (!class_exists('order_total')) {
-        require_once(DIR_WS_CLASSES.'order_total.php');
-      }
-      $order_total_modules = new order_total();
-      $order_totals = $order_total_modules->process();
-      
-      $this->total_amount = 0;
-      for ($i=0, $n=count($order_totals); $i<$n; $i++) {
-        if ($order_totals[$i]['code'] == 'ot_total') {
-          $this->total_amount = $order_totals[$i]['value'];
-        }
-      }
+      $this->total_amount = $this->calculate_total();
       
       $this->presentment_array = $this->get_presentment($this->total_amount, $order->info['currency'], $order->billing['country']['iso_code_2']);
       if (count($this->presentment_array) < 1) {
