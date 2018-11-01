@@ -435,7 +435,7 @@ function SendOrders ()
         while ($attributes = xtc_db_fetch_array($attributes_query))
         {
           require_once(DIR_FS_INC . 'xtc_get_attributes_model.inc.php');
-          $attributes_model =xtc_get_attributes_model($products['products_id'],$attributes['products_options_values']);
+          $attributes_model =xtc_get_attributes_model($products['products_id'],$attributes['products_options'],$attributes['products_options_values']);
           $schema .= '<OPTION>' . "\n" .
                      '<PRODUCTS_OPTIONS>' .  encode_htmlspecialchars($attributes['products_options']) . '</PRODUCTS_OPTIONS>' . "\n" .
                      '<PRODUCTS_OPTIONS_VALUES>' .  encode_htmlspecialchars($attributes['products_options_values']) . '</PRODUCTS_OPTIONS_VALUES>' . "\n" .
