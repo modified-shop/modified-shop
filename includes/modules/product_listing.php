@@ -231,7 +231,6 @@ if ($result != false) {
     include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
   }
 } elseif (isset($_GET['manufacturers_id']) && $_GET['manufacturers_id'] > 0) {
-
   $manufacturers_array = xtc_get_manufacturers();
   if (isset($manufacturers_array[(int)$_GET['manufacturers_id']])
       && $manufacturers_array[(int)$_GET['manufacturers_id']]['manufacturers_name'] != ''
@@ -258,14 +257,14 @@ if ($result != false) {
     // set cache ID
     if (!CacheCheck()) {
       $module_smarty->caching = 0;
-      $main_content = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/product_listing/'.$manufacturer['template']);
+      $main_content = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/categorie_listing/'.$manufacturer['template']);
     } else {
       $module_smarty->caching = 1;
       $module_smarty->cache_lifetime = CACHE_LIFETIME;
       $module_smarty->cache_modified_check = CACHE_CHECK;
 
       $cache_id = md5((int)$_GET['manufacturers_id'].'_'.$_SESSION['language'].'_'.$_SESSION['customers_status']['customers_status_name']);
-      $main_content = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/product_listing/'.$manufacturer['listing_template'], $cache_id);
+      $main_content = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/categorie_listing/'.$manufacturer['listing_template'], $cache_id);
     }
     $smarty->assign('main_content', $main_content);
   } else {
@@ -275,7 +274,6 @@ if ($result != false) {
     }
     include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
   }
-  include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
 } elseif ($current_category_id == '0' && isset($_GET['keywords'])) {
   $site_error = TEXT_PRODUCT_NOT_FOUND;
   include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
