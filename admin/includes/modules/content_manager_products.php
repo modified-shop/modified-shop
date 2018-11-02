@@ -57,7 +57,7 @@ if (!$action) {
           // display content elements
           $content_query=xtc_db_query("SELECT *
                                          FROM ".TABLE_PRODUCTS_CONTENT."
-                                        WHERE products_id = '"(int).$_GET['pID']."'
+                                        WHERE products_id = '".(int)$_GET['pID']."'
                                      ORDER BY content_name");
           $content_array = array();
           while ($content_data = xtc_db_fetch_array($content_query)) {
