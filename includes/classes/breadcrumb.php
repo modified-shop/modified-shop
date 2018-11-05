@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: breadcrumb.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id$   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -47,35 +47,16 @@
 
     function add($title, $link = '') {
       global $PHP_SELF, $request_type;
-      
-      $current_link = xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('cat', 'filter_id', 'filter', 'show', 'page')), $request_type);
-      
-      if ($link == $current_link) {
-        $link = '';
-      }
+            
       $this->_trail[] = array('title' => $title, 'link' => $link);
     }
 
 
     function trail($separator = ' - ') {
-      $trail_string = '<span itemscope itemtype="http://schema.org/BreadcrumbList">';
-      
-      for ($i=0, $n=sizeof($this->_trail); $i<$n; $i++) {
-        $trail_string .= '<span itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">';
-
-        if (isset($this->_trail[$i]['link']) && xtc_not_null($this->_trail[$i]['link'])) {
-          $trail_string .= '<a itemprop="item" href="' . $this->_trail[$i]['link'] . '" class="headerNavigation"><span itemprop="name">' . $this->_trail[$i]['title'] . '</span></a>';
-        } else {
-          $trail_string .= '<span itemprop="item"><span class="current" itemprop="name">'.$this->_trail[$i]['title'].'</span></span>';
-        }
-        $trail_string .= '<meta itemprop="position" content="'.($i+1).'" />';
-
-        $trail_string .= '</span>';
-
-        if (($i+1) < $n) $trail_string .= $separator;
-      }
-      
-      $trail_string .= '</span>';
+      $smarty = new Smarty();
+      $smarty->assign('TRAIL', $this->_trail);
+      $smarty->assign('SEPARATOR', $separator);
+      $trail_string = $smarty->fetch(CURRENT_TEMPLATE.'/module/breadcrumb.html');
       
       return $trail_string;
     }
