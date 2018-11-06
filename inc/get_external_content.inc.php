@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: get_external_content.inc.php 4202 2013-01-10 20:27:44Z Tomcraft1980 $
+   $Id$
 
    modified eCommerce Shopsoftware - community made shopping
    http://www.modified-shop.org
@@ -20,6 +20,7 @@
             curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
             curl_setopt($ch, CURLOPT_HEADER, FALSE);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
       $data = curl_exec($ch);
               curl_close($ch);
 
