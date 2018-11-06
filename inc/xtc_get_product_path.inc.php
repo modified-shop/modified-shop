@@ -31,18 +31,21 @@ function xtc_get_product_path($products_id) {
     $cPath_array = xtc_parse_category_path($_SESSION['CatPath']);
     $categories_id = $cPath_array[(sizeof($cPath_array) - 1)];
     
-    $where = " AND categories_id = '".(int)$categories_id."' ";
+    $where = " AND (c.categories_id = '".(int)$categories_id."' OR c.parent_id = '".(int)$categories_id."') ";
     if (CATEGORIES_SHOW_PRODUCTS_SUBCATS == 'true') {
       $subcategories_array = array ();
       xtc_get_subcategories($subcategories_array, $categories_id);
       $subcategories_array[] = $categories_id;
-      $where = " AND categories_id IN ('".implode("', '", $subcategories_array)."') ";
+      $where = " AND c.categories_id IN ('".implode("', '", $subcategories_array)."') ";
     }
-
+        
     $check_query = xtDBquery("SELECT count(*) as total,
-                                     categories_id 
-                                FROM ".TABLE_PRODUCTS_TO_CATEGORIES." 
-                               WHERE products_id = '".(int)$products_id."'
+                                     c.categories_id 
+                                FROM ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
+                                JOIN ".TABLE_CATEGORIES." c
+                                     ON c.categories_id = p2c.categories_id
+                                        AND c.categories_status = '1'
+                               WHERE p2c.products_id = '".(int)$products_id."'
                                      ".$where);
     $check = xtc_db_fetch_array($check_query, true);
     if ($check['total'] > 0) {
