@@ -4,11 +4,11 @@
       <span itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
         {if !$smarty.foreach.aussen.last}
           <a itemprop="item" href="{$breadcrumb.link}" class="headerNavigation">
-            <span itemprop="name">{$breadcrumb.title}</span>
+            <span itemprop="name">{$breadcrumb.title|onlytext}</span>
           </a>
         {else}
           <meta itemprop="item" content="{$breadcrumb.link}" />
-          <span class="current" itemprop="name">{$breadcrumb.title}</span>
+          <span class="current" itemprop="name">{$breadcrumb.title|onlytext}</span>
         {/if}
         <meta itemprop="position" content="{$smarty.foreach.aussen.iteration}" />
       </span>
