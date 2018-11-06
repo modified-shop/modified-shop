@@ -16,6 +16,8 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+require_once (DIR_FS_INC.'xtc_get_subcategories.inc.php');
+
 function xtc_get_product_path($products_id) {
   global $canonical_flag, $products_link_cat_id;
   
@@ -27,13 +29,24 @@ function xtc_get_product_path($products_id) {
       ) 
   {
     $cPath_array = xtc_parse_category_path($_SESSION['CatPath']);
-    $check_query = xtDBquery("SELECT count(*) as total 
+    $categories_id = $cPath_array[(sizeof($cPath_array) - 1)];
+    
+    $where = " AND categories_id = '".(int)$categories_id."' ";
+    if (CATEGORIES_SHOW_PRODUCTS_SUBCATS == 'true') {
+      $subcategories_array = array ();
+      xtc_get_subcategories($subcategories_array, $categories_id);
+      $subcategories_array[] = $categories_id;
+      $where = " AND categories_id IN ('".implode("', '", $subcategories_array)."') ";
+    }
+
+    $check_query = xtDBquery("SELECT count(*) as total,
+                                     categories_id 
                                 FROM ".TABLE_PRODUCTS_TO_CATEGORIES." 
-                               WHERE categories_id = '".(int)$cPath_array[(sizeof($cPath_array) - 1)]."'
-                                 AND products_id = '".(int)$products_id."'");
+                               WHERE products_id = '".(int)$products_id."'
+                                     ".$where);
     $check = xtc_db_fetch_array($check_query, true);
     if ($check['total'] > 0) {
-      return $_SESSION['CatPath'];
+      return xtc_get_category_path($check['categories_id']);
     }
   }
   
