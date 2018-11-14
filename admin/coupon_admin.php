@@ -802,32 +802,32 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
 ?>
     <td class="boxCenter">
         <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_news.png'); ?></div>
-        <div class="flt-l">
-          <div class="pageHeading"><?php echo HEADING_TITLE; ?></div>
-        </div>
-
-        <div class="main" style="float:left;padding: 3px 20px 0 20px;">
-            <?php echo xtc_draw_form('status', FILENAME_COUPON_ADMIN, '', 'get');
-              $status_array[] = array('id' => 'Y', 'text' => TEXT_COUPON_ACTIVE);
-              $status_array[] = array('id' => 'N', 'text' => TEXT_COUPON_INACTIVE);
-              $status_array[] = array('id' => '*', 'text' => TEXT_COUPON_ALL);
-              $status = $_GET['status'] ? xtc_db_prepare_input($_GET['status']) : 'Y';
-	          //BOF Adding coupon_search HE
-	            echo HEADING_TITLE_STATUS . ' ' . xtc_draw_pull_down_menu('status', $status_array, $status, '');
-	            //echo HEADING_TITLE_STATUS . ' ' . xtc_draw_pull_down_menu('status', $status_array, $status, 'onChange="this.form.submit();"');
-	            $input_id = !isset($_POST['input_id']) ? !isset($_GET['input_id']) ? '' : (int)$_GET['input_id'] : (int)$_POST['input_id'];
-	            echo ' &nbsp; cID: <input type="text" name="input_id" value="'.$input_id.'"/> &nbsp; ';
-	            $input_code = !isset($_POST['input_code']) ? !isset($_GET['input_code']) ? '' : xtc_db_input($_GET['input_code']) : xtc_db_input($_POST['input_code']);
-	            echo ' &nbsp; Code: <input type="text" name="input_code" value="'.$input_code.'"/> &nbsp; ';
-	            $input_name = !isset($_POST['input_name']) ? !isset($_GET['input_name']) ? '' : xtc_db_input($_GET['input_name']) : xtc_db_input($_POST['input_name']);
-	            echo ' &nbsp; Name: <input type="text" name="input_name" value="'.$input_name.'"/> &nbsp; ';
-	            echo '<input class="button" type="submit" name="btnSearch" value="Suchen"/>';
-	          //EOF Adding coupon_search HE
-              ?>
-            </form>
-        </div>
-	    <br/>
-        <div style="margin-bottom:10px;"><a class="button" href="<?php echo xtc_href_link('coupon_admin.php', 'action=new'); ?>"><?php echo BUTTON_INSERT; ?></a></div>
+	    <!--BOF Adding coupon_search HE-->
+	    <div>
+		    <div class="pageHeading"><?php echo HEADING_TITLE; ?></div>
+	    </div>
+	    <div style="width: 100%;">
+		    <div class="main" style="display: inline-block;padding: 5px;">
+			    <?php echo xtc_draw_form('status', FILENAME_COUPON_ADMIN, '', 'get');
+			    $status_array[] = array('id' => 'Y', 'text' => TEXT_COUPON_ACTIVE);
+			    $status_array[] = array('id' => 'N', 'text' => TEXT_COUPON_INACTIVE);
+			    $status_array[] = array('id' => '*', 'text' => TEXT_COUPON_ALL);
+			    $status = $_GET['status'] ? xtc_db_prepare_input($_GET['status']) : 'Y';
+			    echo HEADING_TITLE_STATUS . ' &nbsp; ' . xtc_draw_pull_down_menu('status', $status_array, $status, '');
+			    //echo HEADING_TITLE_STATUS . ' ' . xtc_draw_pull_down_menu('status', $status_array, $status, 'onChange="this.form.submit();"');
+			    $input_id = !isset($_POST['input_id']) ? !isset($_GET['input_id']) ? '' : (int)$_GET['input_id'] : (int)$_POST['input_id'];
+			    echo ' &nbsp; cID: <input type="text" name="input_id" value="'.$input_id.'"/> &nbsp; ';
+			    $input_code = !isset($_POST['input_code']) ? !isset($_GET['input_code']) ? '' : xtc_db_input($_GET['input_code']) : xtc_db_input($_POST['input_code']);
+			    echo ' &nbsp; Code: <input type="text" name="input_code" value="'.$input_code.'"/> &nbsp; ';
+			    $input_name = !isset($_POST['input_name']) ? !isset($_GET['input_name']) ? '' : xtc_db_input($_GET['input_name']) : xtc_db_input($_POST['input_name']);
+			    echo ' &nbsp; Name: <input type="text" name="input_name" value="'.$input_name.'"/> &nbsp; ';
+			    echo '<input class="button" type="submit" name="btnSearch" value="'.BUTTON_SEARCH.'"/>';
+			    ?>
+			    </form>
+		    </div>
+		    <div style="margin-bottom:10px;margin-left: 50px;display: inline-block;"><a class="button" href="<?php echo xtc_href_link('coupon_admin.php', 'action=new'); ?>"><?php echo BUTTON_INSERT; ?></a></div>
+	    </div>
+	    <!--EOF Adding coupon_search HE-->
         <table class="tableCenter">
           <tr>
             <td class="boxCenterLeft">
