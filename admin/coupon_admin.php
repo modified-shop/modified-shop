@@ -826,7 +826,7 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
               ?>
             </form>
         </div>
-
+	    <br/>
         <div style="margin-bottom:10px;"><a class="button" href="<?php echo xtc_href_link('coupon_admin.php', 'action=new'); ?>"><?php echo BUTTON_INSERT; ?></a></div>
         <table class="tableCenter">
           <tr>
