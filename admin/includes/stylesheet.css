@@ -493,7 +493,7 @@ a.button {
 display:inline-block;
 padding: 6px 15px;
 font-size:10px;
-line-height:14px;
+line-height:15px;
 font-weight:bold;
 border-style: solid;
 border-width: 1px;
@@ -508,7 +508,7 @@ input.button {
 display:inline-block;
 padding: 6px 15px;
 font-size:10px;
-line-height:14px;
+line-height:15px;
 font-weight:bold;
 border-style: solid;
 border-width: 1px;
@@ -531,6 +531,10 @@ background-color:#333;
 border-color: #222;
 text-decoration:none !important;
 cursor:pointer;  
+}
+
+.no_top_margin {
+margin-top: 0px !important;
 }
 
 a.but_green, input.but_green {
