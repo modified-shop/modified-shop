@@ -806,8 +806,8 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
 	    <div>
 		    <div class="pageHeading"><?php echo HEADING_TITLE; ?></div>
 	    </div>
-	    <div style="width: 100%;">
-		    <div class="main" style="display: inline-block;padding: 5px;">
+	    <div style="width: 100%; margin: 0 0 10px 0;">
+		    <div class="main" style="display:inline-block; padding: 5px; vertical-align:top;">
 			    <?php echo xtc_draw_form('status', FILENAME_COUPON_ADMIN, '', 'get');
 			    $status_array[] = array('id' => 'Y', 'text' => TEXT_COUPON_ACTIVE);
 			    $status_array[] = array('id' => 'N', 'text' => TEXT_COUPON_INACTIVE);
@@ -821,11 +821,11 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
 			    echo ' &nbsp; Code: <input type="text" name="input_code" value="'.$input_code.'"/> &nbsp; ';
 			    $input_name = !isset($_POST['input_name']) ? !isset($_GET['input_name']) ? '' : xtc_db_input($_GET['input_name']) : xtc_db_input($_POST['input_name']);
 			    echo ' &nbsp; Name: <input type="text" name="input_name" value="'.$input_name.'"/> &nbsp; ';
-			    echo '<input class="button no_top_margin" type="submit" name="btnSearch" value="'.BUTTON_SEARCH.'"/>';
+			    echo '<input class="button no_top_margin" style="vertical-align:top;" type="submit" name="btnSearch" value="'.BUTTON_SEARCH.'"/>';
 			    ?>
 			    </form>
 		    </div>
-		    <div style="margin-bottom:10px;margin-left: 50px;display: inline-block;"><a class="button no_top_margin" href="<?php echo xtc_href_link('coupon_admin.php', 'action=new'); ?>"><?php echo BUTTON_INSERT; ?></a></div>
+		    <div class="main" style="display:inline-block; padding:5px; vertical-align:top; margin-left:50px"><a class="button no_top_margin" href="<?php echo xtc_href_link('coupon_admin.php', 'action=new'); ?>"><?php echo BUTTON_INSERT; ?></a></div>
 	    </div>
 	    <!--EOF Adding coupon_search HE-->
         <table class="tableCenter">
