@@ -178,7 +178,7 @@ class PayPalPayment extends PayPalPaymentBase {
                 ->setQuantity(1) 
                 ->setPrice($shipping_cost); 
         $this->amount->setTotal($this->amount->getTotal() + (double)$shipping_cost);
-        $this->details->setSubtotal($this->amount->getTotal() - $this->details->getShippingDiscount());
+        $this->details->setSubtotal($this->amount->getTotal() - $this->details->getTax() - $this->details->getShippingDiscount());
       }    
           
       // set amount 
