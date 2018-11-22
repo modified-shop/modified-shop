@@ -35,6 +35,8 @@ class payone_invoice extends PayonePayment {
 	function _paymentDataFormProcess($active_genre_identifier) {
 	  global $order;
 	  
+	  require_once(DIR_FS_INC.'xtc_date_short.inc.php');
+
 	  $payment_smarty = new Smarty();
 	  $payment_smarty->template_dir = DIR_FS_EXTERNAL.'payone/templates/';
 
