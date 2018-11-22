@@ -35,7 +35,7 @@ if (!isset($_SESSION[$messages_ns])) {
 $found = false;
 $check_query = xtc_db_query("SHOW COLUMNS FROM `payone_transactions`");
 while ($check = xtc_db_fetch_array($check_query)) {
-  if ($check['Field']) == 'type') {
+  if ($check['Field'] == 'type') {
     $found = true;
   }
 }
