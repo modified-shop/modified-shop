@@ -31,7 +31,7 @@ define('MODULE_PAYMENT_INVOICE_ALLOWED_DESC' , 'Geben Sie <b>einzeln</b> die Zon
 define('MODULE_PAYMENT_INVOICE_MIN_ORDER_TITLE' , 'Notwendige Bestellungen');
 define('MODULE_PAYMENT_INVOICE_MIN_ORDER_DESC' , 'Die Mindestanzahl an Bestellungen, die ein Kunden haben muss, damit die Zahlungsmethode zur Verf&uuml;gung steht.');
 define('MODULE_PAYMENT_INVOICE_MIN_ORDER_STATUS_ID_TITLE' , 'Bestellstatus notwendiger Bestellungen');
-define('MODULE_PAYMENT_INVOICE_MIN_ORDER_STATUS_ID_DESC' , 'Wählen Sie hier den Status der Bestellungen aus, der für die unter "Notwendige Bestellungen" eingetragene Anzahl berücksichtigt werden soll.');
+define('MODULE_PAYMENT_INVOICE_MIN_ORDER_STATUS_ID_DESC' , 'W&auml;hlen Sie hier den Status der Bestellungen aus, der f&uuml;r die unter "Notwendige Bestellungen" eingetragene Anzahl ber&uuml;cksichtigt werden soll.');
 define('MODULE_PAYMENT_INVOICE_MAX_AMOUNT_TITLE' , 'H&ouml;chstbetrag');
 define('MODULE_PAYMENT_INVOICE_MAX_AMOUNT_DESC' , 'Geben Sie hier den H&ouml;chstbetrag f&uuml;r die Bezahlung auf Rechnung an.');
 ?>
