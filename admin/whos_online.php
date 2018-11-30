@@ -190,7 +190,7 @@
             $session_data = '';
             if (STORE_SESSIONS == 'mysql') {
               $session_data = _sess_read($info['session_id']);
-            } else {
+            } elseif (STORE_SESSIONS == '') {
               if ( (file_exists(xtc_session_save_path() . '/sess_' . $info['session_id'])) && (filesize(xtc_session_save_path() . '/sess_' . $info['session_id']) > 0) ) {
                 $session_data = file(xtc_session_save_path() . '/sess_' . $info['session_id']);
                 $session_data = trim(implode('', $session_data));

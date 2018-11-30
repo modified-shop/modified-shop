@@ -19,7 +19,7 @@ require_once(DIR_FS_INC.'redirect_invalid_session.inc.php');
 
 // set the session name and save path
 xtc_session_name('MODsid');
-if (STORE_SESSIONS != 'mysql') {
+if (STORE_SESSIONS == '') {
   xtc_session_save_path(SESSION_WRITE_DIRECTORY);
 }
 
