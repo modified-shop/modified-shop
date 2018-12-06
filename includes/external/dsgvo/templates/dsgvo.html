@@ -5,7 +5,7 @@
   {foreach name=aussen item=module_data from=$module_content}
     <h2>{$module_data.TITLE}</h2>
     <div class="agbframe">{$module_data.TEXT}</div>
-    {$module_data.CHECKBOX} <strong><label for="conditions">{$module_data.CONDITION}</label></strong>&nbsp;{$module_data.LINK}
+    {$module_data.CHECKBOX} <strong><label for="dsgvo[{$module_data.ID}]">{$module_data.CONDITION}</label></strong>&nbsp;{$module_data.LINK}
   {/foreach}
   <br class="clearfix" />
   {*<div class="button_left">{$BUTTON_BACK}</div>*}
