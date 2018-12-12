@@ -151,6 +151,7 @@ function xtc_php_mail($from_email_address, $from_email_name,
   $mail->Debugoutput = 'error_log';
   $mail->loggerFile = DIR_FS_LOG.'mod_mailer_'.date('Y-m-d') .'.log';
   $mail->CharSet = $lang_data['language_charset'];
+  $mail->Priority = $priority;
   
   if (EMAIL_TRANSPORT == 'smtp') {
     require_once (DIR_FS_EXTERNAL.'phpmailer/SMTP.php');
