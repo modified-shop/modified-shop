@@ -22,7 +22,8 @@ function xtc_php_mail($from_email_address, $from_email_name,
                       $to_email_address, $to_name, $forwarding_to,
                       $reply_address, $reply_address_name,
                       $path_to_attachments, $path_to_more_attachments,
-                      $email_subject, $message_body_html, $message_body_plain
+                      $email_subject, $message_body_html, $message_body_plain,
+                      $priority = null
                      )
 {
   global $order, $main, $LoggingManager;
@@ -137,7 +138,7 @@ function xtc_php_mail($from_email_address, $from_email_name,
   // decode html2txt
   $html_array = array('<br />', '<br/>', '<br>');
   $txt_array = array(" \n", " \n", " \n");
-  $message_body_plain = str_replace($html_array, $txt_array, $message_body_plain.$txt_signatur);//DPW Signatur ergänzt.
+  $message_body_plain = str_replace($html_array, $txt_array, $message_body_plain.$txt_signatur);//DPW Signatur ergï¿½nzt.
   
   // remove html tags
   $message_body_plain = strip_tags($message_body_plain);
@@ -212,7 +213,7 @@ function xtc_php_mail($from_email_address, $from_email_name,
   $mail->setWordWrap((int)EMAIL_WORD_WRAP);
   if (EMAIL_USE_HTML == 'true') { // set email format to HTML
     $mail->IsHTML(true);
-    $mail->Body = $message_body_html.$html_signatur;//DPW Signatur ergänzt.
+    $mail->Body = $message_body_html.$html_signatur;//DPW Signatur ergï¿½nzt.
     $mail->AltBody = $message_body_plain;
   } else {
     $mail->IsHTML(false);
