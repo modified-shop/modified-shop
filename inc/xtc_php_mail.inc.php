@@ -208,7 +208,7 @@ function xtc_php_mail($from_email_address, $from_email_name,
   }
 
   //Content
-  $mail->Subject = $email_subject;
+  $mail->Subject = encode_utf8($email_subject);
   $mail->setWordWrap((int)EMAIL_WORD_WRAP);
   if (EMAIL_USE_HTML == 'true') { // set email format to HTML
     $mail->IsHTML(true);
