@@ -233,7 +233,7 @@ class shoppingCart {
       if (is_array($attributes)) {
         reset($attributes);
         while (list ($option, $value) = each($attributes)) {
-          $this->contents[$products_id]['attributes'][$option] = $value;
+          $this->contents[$products_id]['attributes'][(int)$option] = (int)$value;
           
           //new module support           
           $this->shoppingCartModules->add_cart_attributes_session($value, $this->type, $products_id, $option);
@@ -294,7 +294,7 @@ class shoppingCart {
     if (is_array($attributes)) {
       reset($attributes);
       while (list ($option, $value) = each($attributes)) {
-        $this->contents[$products_id]['attributes'][$option] = $value;
+        $this->contents[$products_id]['attributes'][(int)$option] = (int)$value;
         //new module support           
         $this->shoppingCartModules->update_cart_attributes_session($value, $this->type, $products_id, $option);
         
