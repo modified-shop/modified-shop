@@ -459,6 +459,10 @@ class shoppingCart {
                                             p.products_tax_class_id,
                                             p.products_weight
                                        FROM ".TABLE_PRODUCTS." p
+                                       JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
+                                            ON pd.products_id = p.products_id
+                                               AND pd.language_id = '".(int)$_SESSION['languages_id']."'
+                                               AND trim(pd.products_name) != ''
                                       WHERE p.products_id='".xtc_get_prid($products_id)."'");
       if ($product = xtc_db_fetch_array($product_query)) {
 
