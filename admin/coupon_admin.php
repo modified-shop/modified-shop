@@ -693,8 +693,7 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
       $coupon_startdate = date('Y-m-d');
     }
     if (!$coupon_finishdate) {
-      $coupon_finishdate = date('Y-m-d');
-      $coupon_finishdate[3] = $coupon_finishdate[3] + 1; //set actual year +1
+      $coupon_finishdate = date('Y-m-d', strtotime('+1 year'));
     }
 // BOF - web28 - 2010-07-23 - new table design
     $input_name = '';
