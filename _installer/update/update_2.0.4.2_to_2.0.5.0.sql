@@ -51,4 +51,7 @@ DELETE FROM `configuration` WHERE configuration_key = 'MODULE_CAPTCHA_HEIGHT';
 DELETE FROM `zones_to_geo_zones` WHERE association_id = 74;
 DELETE FROM `zones_to_geo_zones` WHERE association_id = 236;
 
+#Tomcraft - 2019-01-09 - Update Tracking Link for HERMES
+UPDATE carriers SET carrier_tracking_link = 'https://tracking.hermesworld.com/?TrackID=$1' WHERE carrier_name = 'HERMES';
+
 # Keep an empty line at the end of this file for the db_updater to work properly
