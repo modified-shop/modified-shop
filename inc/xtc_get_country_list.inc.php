@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_get_country_list.inc.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -22,6 +22,7 @@
   function xtc_get_country_list($name, $selected = '', $parameters = '') {
     $countries = xtc_get_countriesList();
 
+    $countries_array = array();
     for ($i=0, $n=sizeof($countries); $i<$n; $i++) {
       $countries_array[] = array('id' => $countries[$i]['countries_id'], 'text' => $countries[$i]['countries_name']);
     }
