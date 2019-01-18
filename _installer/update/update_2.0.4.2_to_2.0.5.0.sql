@@ -54,4 +54,7 @@ DELETE FROM `zones_to_geo_zones` WHERE association_id = 236;
 #Tomcraft - 2019-01-09 - Update Tracking Link for HERMES
 UPDATE carriers SET carrier_tracking_link = 'https://tracking.hermesworld.com/?TrackID=$1' WHERE carrier_name = 'HERMES';
 
+#Tomcraft - 2019-01-18 - Added Monaco to EU Zones
+UPDATE zones_to_geo_zones SET geo_zone_id = 5 WHERE zone_country_id = 141;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
