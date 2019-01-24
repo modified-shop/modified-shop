@@ -64,7 +64,16 @@ if ($language_not_found === true) {
     $shop_content_data['content_heading'] = TEXT_CONTENT_NOT_FOUND;
   }
 
+  $link = 'javascript:history.back(1)';
+  if (!isset($_SERVER['HTTP_REFERER']) 
+      || strpos($_SERVER['HTTP_REFERER'], HTTP_SERVER) === false
+      )
+  {
+    $link = xtc_href_link(FILENAME_DEFAULT, '', 'NONSSL');
+  } 
+  $smarty->assign('BUTTON_CONTINUE', '<a href="'.$link.'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
   $smarty->assign('CONTENT_HEADING', (($shop_content_data['content_heading'] != '') ? $shop_content_data['content_heading'] : $shop_content_data['content_title']));
+  $smarty->assign('language', $_SESSION['language']);
 
   if ($_GET['coID'] == 7 && $content_exists == 1) {
     include (DIR_WS_INCLUDES.'contact_us.php');
@@ -84,16 +93,6 @@ if ($language_not_found === true) {
       }
     }
     $smarty->assign('CONTENT_BODY', $content_body);
-
-    $link = 'javascript:history.back(1)';
-    if (!isset($_SERVER['HTTP_REFERER']) 
-        || strpos($_SERVER['HTTP_REFERER'], HTTP_SERVER) === false
-        )
-    {
-      $link = xtc_href_link(FILENAME_DEFAULT, '', 'NONSSL');
-    } 
-    $smarty->assign('BUTTON_CONTINUE', '<a href="'.$link.'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
-     $smarty->assign('language', $_SESSION['language']);
     
     $content_template = 'content.html';
     
