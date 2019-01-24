@@ -128,6 +128,8 @@
 
       case 'delcache':
         clear_dir(DIR_FS_CATALOG.'cache/');
+        require_once(DIR_FS_CATALOG.'includes/classes/modified_cache.php');
+        $modified_cache->clear();
         $messageStack->add_session(DELETE_CACHE_SUCCESSFUL, 'success');
         xtc_redirect(xtc_href_link(FILENAME_CONFIGURATION, 'gID=' . (int)$_GET['gID']));
         break;

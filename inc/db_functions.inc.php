@@ -96,9 +96,10 @@
 
 
   function xtDBquery($query, $link='db_link') {
-    global ${$link};
+    global ${$link}, $modified_cache;
 
     if (defined('DB_CACHE') && DB_CACHE == 'true') {
+      require_once(DIR_FS_CATALOG.'includes/classes/modified_cache.php');
       $result = xtc_db_queryCached($query, $link);
     } else {
       $result = xtc_db_query($query, $link);
@@ -108,35 +109,28 @@
 
 
   function xtc_db_queryCached($query, $link='db_link') {
-    global ${$link};
+    global ${$link}, $modified_cache;
     
     if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS == 'true') {    
       $queryStartTime = array_sum(explode(" ",microtime()));
     }
+        
+    $id = 'db_'.md5(strtolower(preg_replace("'[\r\n\s]+'", '', $query)));
+    $modified_cache->setID($id);
     
-    // include needed class
-    require_once (DIR_FS_EXTERNAL . 'phpfastcache/phpfastcache.php');
-
-    $cache = phpFastCache();
-    
-    $id = md5(strtolower(preg_replace("'[\r\n\s]+'", '', $query)));
-    
-    // get cache
-    $records = $cache->get($id);
-
-    if ($records == null) {
-      $result = xtc_db_query($query, $link);
-
+    if ($modified_cache->isHit() === false) {
       // fetch data into array
       $records = array('query' => array());
-      
+
+      $result = xtc_db_query($query, $link);
       while ($record = xtc_db_fetch_array($result)) {
-          $records['query'][] = $record;
+        $records['query'][] = $record;
       }
-      
-      // set cache  
-      $cache->set($id, $records , (int)DB_CACHE_EXPIRE);
+    
+      $modified_cache->set($records);
     } else {
+      $records = $modified_cache->get();
+
       if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS == 'true') {
         $queryEndTime = array_sum(explode(" ",microtime())); 
         $processTime = number_format(round($queryEndTime - $queryStartTime, 3), 3, '.', '');

@@ -2265,28 +2265,14 @@
     $cache_array = array();
     
     if(is_writeable(SQL_CACHEDIR)) {
-      $cache_array[] = array('id' => 'files', 'text' => 'FILE');
+      $cache_array[] = array('id' => 'modified', 'text' => 'FILE');
     }
-    if(extension_loaded('apc') && ini_get('apc.enabled') && strpos(PHP_SAPI,"CGI") === false) {
-      $cache_array[] = array('id' => 'apc', 'text' => 'APC');
+    
+    foreach(auto_include(DIR_FS_CATALOG.'includes/extra/cache/','php') as $file) {
+      $name = substr(basename($file), 0, strrpos(basename($file), '_cache.php'));
+      $cache_array[] = array('id' => $name, 'text' => ucwords(str_replace(array('.', '_'), ' ', $name)));
     }
-    if(extension_loaded('xcache') && function_exists("xcache_get")) {
-      $cache_array[] = array('id' => 'xcache', 'text' => 'XCACHE');
-    }
-    if(function_exists('memcache_connect')) {
-      $cache_array[] = array('id' => 'memcache', 'text' => 'MEMCACHE');
-    }
-    if(class_exists("memcached")) {
-      $cache_array[] = array('id' => 'memcached', 'text' => 'MEMCACHED');
-    }
-    if(class_exists("Redis")) {
-      $cache_array[] = array('id' => 'redis', 'text' => 'REDIS');
-    }
-    /* disabled due performance
-    if (extension_loaded('sqlite3')) {
-      $cache_array[] = array('id' => 'sqlite', 'text' => 'SQLITE');
-    }
-    */
+
     return xtc_draw_pull_down_menu($cfg_key, $cache_array, $cfg_value);
   }
 
