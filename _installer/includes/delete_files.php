@@ -264,6 +264,7 @@
     'includes/external/paypal/modules/cart_action.php',
     'includes/external/paypal/modules/product_info.php',
     'includes/external/paypal/modules/send_order.php',
+    'includes/external/phpfastcache/phpfastcache.php',
     'includes/external/phpmailer/language/phpmailer.lang-de.php',
     'includes/external/phpmailer/language/phpmailer.lang-en.php',
     'includes/external/phpmailer/_modified-shop.txt',
