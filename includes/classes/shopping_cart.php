@@ -971,7 +971,7 @@ class shoppingCart {
   function get_continue_shopping_link() {
     global $request_type;
     
-    $url = '';
+    $url = ((isset($_SESSION['continue_link']) && $_SESSION['continue_link'] != '') ? $_SESSION['continue_link'] : '');
     if (!empty($_SERVER['HTTP_REFERER']) 
         && filter_var($_SERVER['HTTP_REFERER'], FILTER_VALIDATE_URL) !== false
         )
@@ -1033,6 +1033,8 @@ class shoppingCart {
 
         //new module support 
         $url = $this->shoppingCartModules->get_continue_shopping_link($url, $referer);
+        
+        $_SESSION['continue_link'] = $url;
       }
     }
 
