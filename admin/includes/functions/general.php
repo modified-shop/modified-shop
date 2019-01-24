@@ -2265,7 +2265,7 @@
     $cache_array = array();
     
     if(is_writeable(SQL_CACHEDIR)) {
-      $cache_array[] = array('id' => 'modified', 'text' => 'FILE');
+      $cache_array[] = array('id' => 'modified', 'text' => 'Files');
     }
     
     foreach(auto_include(DIR_FS_CATALOG.'includes/extra/cache/','php') as $file) {
