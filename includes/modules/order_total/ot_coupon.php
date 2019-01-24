@@ -357,7 +357,7 @@ class ot_coupon {
 
     //Wenn der Kupon ohne Steuer definiert wurde, muss die Bestellsumme korrigiert werden
     if ($this->include_tax == 'false'){
-      $order_total = $order_total + $order->info['tax'];
+      //$order_total = $order_total + $order->info['tax'];
     }
     
     //Einschränkungen
@@ -461,14 +461,14 @@ class ot_coupon {
 
   function get_order_total() {
     global $order;
-
-    $order_total = $order->info['total'];
+    
+    $order_total = $_SESSION['cart']->show_total();
     $this->products_price = array();
     $this->products_tax_description = array();
     $this->products_tax_rate = array();
+    
     // Check if gift voucher is in cart and adjust total
     $products = $order->products; //use order objekt
-    //echo '<pre>'.print_r($products,true).'</pre>';
     for ($i = 0; $i < sizeof($products); $i ++) {
       //create products_prices with id index for function product_price()
       $product_id = $products[$i]['id'];
@@ -476,20 +476,18 @@ class ot_coupon {
       $this->products_price["$product_id"] = $products_price;
       $this->products_tax_description["$product_id"] = $products[$i]['tax_description'];
       $this->products_tax_rate["$product_id"] = xtc_get_tax_rate($products[$i]['tax_class_id'], $order->delivery['country']['id'], $order->delivery['zone_id']);
-      //echo $products[$i]['tax_description'] .'<br>';
+
       if (preg_match('/^GIFT/', addslashes($products[$i]['model']))) {
         $order_total -= $products_price;
       }
     }
-    if ($this->include_tax == 'false')
-      $order_total -= $order->info['tax'];
 
-    if ($this->include_shipping == 'false' 
+    if ($this->include_shipping == 'true' 
         && isset($order->info['shipping_cost']) 
         && $order->info['shipping_cost'] > 0
         ) 
     {
-      $order_total -= $order->info['shipping_cost'];
+      $order_total += $order->info['shipping_cost'];
     }
 
     return $order_total;
