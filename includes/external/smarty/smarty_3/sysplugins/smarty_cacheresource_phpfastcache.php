@@ -8,14 +8,17 @@
  * *
  * @package CacheResource-examples
  */
+require_once(DIR_FS_CATALOG.'includes/classes/modified_cache.php');
+
 class Smarty_CacheResource_Phpfastcache extends Smarty_CacheResource_KeyValueStore {
     
-    protected $phpfastcache = null;
+    private $cache = null;
     
     public function __construct()
     {
-        require_once (DIR_FS_EXTERNAL . 'phpfastcache/phpfastcache.php');
-        $this->phpfastcache = phpFastCache();        
+        global $modified_cache;
+
+        $this->cache = $modified_cache;
     }
 
     /**
@@ -30,9 +33,9 @@ class Smarty_CacheResource_Phpfastcache extends Smarty_CacheResource_KeyValueSto
         $_keys = $_res = array();
         foreach ($keys as $k) {
             $_k = sha1($k);
-            $_res[$k] = $this->phpfastcache->get($_k);
+            $this->cache->setID($_k);
+            $_res[$k] = $this->cache->get();
         }
-
         return $_res;
     }
     
@@ -43,11 +46,12 @@ class Smarty_CacheResource_Phpfastcache extends Smarty_CacheResource_KeyValueSto
      * @param int $expire expiration time
      * @return boolean true on success, false on failure
      */
-    protected function write(array $keys, $expire=null)
+    protected function write(array $keys, $expire = DB_CACHE_EXPIRE)
     {
        foreach ($keys as $k => $v) {
-            $k = sha1($k);
-            $this->phpfastcache->set($k, $v, $expire);
+            $_k = sha1($k);
+            $this->cache->setID($_k);
+            $this->cache->set($v, $expire);
         }
         return true;
     }
@@ -61,7 +65,7 @@ class Smarty_CacheResource_Phpfastcache extends Smarty_CacheResource_KeyValueSto
     protected function delete(array $keys)
     {
         foreach ($keys as $k) {
-            $this->phpfastcache->delete($k);
+            $this->cache->delete($k);
         }
         return true;
     }
@@ -72,7 +76,7 @@ class Smarty_CacheResource_Phpfastcache extends Smarty_CacheResource_KeyValueSto
      * @return boolean true on success, false on failure
      */
     protected function purge()
-    {
-        return $this->phpfastcache->clean();
+    {        
+        return $this->cache->clear();
     }
 }

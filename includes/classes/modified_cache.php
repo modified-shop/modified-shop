@@ -11,6 +11,11 @@
    ---------------------------------------------------------------------------------------*/
 
 
+  // include needed class
+  require_once (DIR_FS_EXTERNAL . 'phpfastcache/src/autoload.php');
+
+  use phpFastCache\CacheManager;
+
   foreach(auto_include(DIR_FS_CATALOG.'includes/extra/cache/','php') as $file) require_once ($file);
 
   $_mod_cache_class = strtolower(DB_CACHE_TYPE).'_cache';
@@ -18,11 +23,6 @@
     $_mod_cache_class = 'modified_cache';
   }
   $modified_cache = $_mod_cache_class::getInstance();
-
-  // include needed class
-  require_once (DIR_FS_EXTERNAL . 'phpfastcache/src/autoload.php');
-
-  use phpFastCache\CacheManager;
 
 
   class modified_cache {
@@ -61,7 +61,7 @@
       if (null === self::$_instance) {
         if (null === self::$objCache) {
           self::setConfig([
-            'path' => SQL_CACHEDIR,
+            'path' => self::get_cache_dir(),
           ]);
 
           // Get instance of files cache
@@ -73,7 +73,25 @@
       return self::$_instance;
     }
 
-
+    
+    /**
+     * get_cache_dir
+     *
+     * @return cache
+     */
+    protected static function get_cache_dir() {
+      $cache_dir = realpath(DIR_FS_CACHE);
+      if (strpos($cache_dir, '/') === false
+          || !is_dir($cache_dir) 
+          || !is_writeable($cache_dir)
+          )
+      {
+        $cache_dir = SQL_CACHEDIR;
+      }      
+      return $cache_dir;
+    }
+    
+    
     /**
      * clone
      */
