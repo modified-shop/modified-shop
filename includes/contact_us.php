@@ -17,8 +17,12 @@
 
   //use contact_us.php language file
   require_once (DIR_WS_LANGUAGES.$_SESSION['language'].'/contact_us.php');
-  require_once (DIR_FS_INC.'parse_multi_language_value.inc.php');
 
+  // include needed functions
+  require_once (DIR_FS_INC.'parse_multi_language_value.inc.php');
+  require_once (DIR_FS_INC.'secure_form.inc.php');
+
+  // include needed classes
   require_once(DIR_WS_CLASSES.'modified_captcha.php');
   
   $captcha_class = CAPTCHA_MOD_CLASS;
@@ -77,6 +81,11 @@
 
     if (DISPLAY_PRIVACY_CHECK == 'true' && empty($privacy)) {
       $messageStack->add('contact_us', ENTRY_PRIVACY_ERROR);
+      $error = true;
+    }
+
+    if (check_secure_form($_POST) === false) {
+      $messageStack->add('contact_us', ENTRY_TOKEN_ERROR);
       $error = true;
     }
 
@@ -225,7 +234,7 @@
     if (!$error) $message_body = $products_info . "\n";
 
     $smarty->assign('CONTACT_CONTENT', $contact_content);
-    $smarty->assign('FORM_ACTION', xtc_draw_form('contact_us', xtc_href_link(FILENAME_CONTENT, 'action=send&coID='.(int) $_GET['coID'], 'SSL')));
+    $smarty->assign('FORM_ACTION', xtc_draw_form('contact_us', xtc_href_link(FILENAME_CONTENT, 'action=send&coID='.(int) $_GET['coID'], 'SSL')).secure_form());
     if (in_array('contact', $use_captcha) && (!isset($_SESSION['customer_id']) || MODULE_CAPTCHA_LOGGED_IN == 'True')) {
       $smarty->assign('VVIMG', $mod_captcha->get_image_code());
       $smarty->assign('INPUT_CODE', $mod_captcha->get_input_code());
