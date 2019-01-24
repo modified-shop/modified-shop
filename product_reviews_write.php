@@ -26,6 +26,9 @@ if (defined('MODULE_CAPTCHA_ACTIVE')) {
 defined('MODULE_CAPTCHA_CODE_LENGTH') or define('MODULE_CAPTCHA_CODE_LENGTH', 6);
 defined('MODULE_CAPTCHA_LOGGED_IN') or define('MODULE_CAPTCHA_LOGGED_IN', 'True');
 
+// include needed functions
+require_once (DIR_FS_INC.'secure_form.inc.php');
+
 // include needed classes
 require_once (DIR_WS_CLASSES.'modified_captcha.php');
 
@@ -77,6 +80,10 @@ if (isset ($_GET['action']) && $_GET['action'] == 'process' && $review_error ===
         $messageStack->add('product_reviews_write', strip_tags(ERROR_VVCODE, '<b><strong>'));
         $error = true;
       }
+    }
+    if (check_secure_form($_POST) === false) {
+      $messageStack->add('product_reviews_write', ENTRY_TOKEN_ERROR);
+      $error = true;
     }
     
     if ($error === false) {
@@ -151,7 +158,7 @@ if ($product->isProduct() === false) {
   $smarty->assign('PRODUCTS_NAME', $product->data['products_name']);
   $smarty->assign('INPUT_AUTHOR', xtc_draw_input_field('author', $author, 'style="width:235px;"'));
   $smarty->assign('INPUT_TEXT', xtc_draw_textarea_field('review', 'soft', '60', '15', $review));
-  $smarty->assign('FORM_ACTION', xtc_draw_form('product_reviews_write', xtc_href_link(FILENAME_PRODUCT_REVIEWS_WRITE, xtc_get_all_get_params(array('action')).'action=process'), 'post', 'onSubmit="return check_form_review();"').xtc_draw_hidden_field('get_params', xtc_get_all_get_params(array('action'))));
+  $smarty->assign('FORM_ACTION', xtc_draw_form('product_reviews_write', xtc_href_link(FILENAME_PRODUCT_REVIEWS_WRITE, xtc_get_all_get_params(array('action')).'action=process'), 'post', 'onSubmit="return check_form_review();"').xtc_draw_hidden_field('get_params', xtc_get_all_get_params(array('action'))).secure_form());
   $smarty->assign('BUTTON_BACK', '<a href="'.$link.'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
   $smarty->assign('BUTTON_SUBMIT', xtc_image_submit('button_continue.gif', IMAGE_BUTTON_CONTINUE));
   $smarty->assign('FORM_END', '</form>');

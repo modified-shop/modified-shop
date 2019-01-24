@@ -27,6 +27,7 @@ require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 // include needed functions
 require_once (DIR_FS_INC.'xtc_validate_password.inc.php');
 require_once (DIR_FS_INC.'xtc_encrypt_password.inc.php');
+require_once (DIR_FS_INC.'secure_form.inc.php');
 
 require_once (DIR_FS_EXTERNAL.'password_policy/password_policy.php');
 
@@ -77,6 +78,11 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
     $messageStack->add('account_password', ENTRY_PASSWORD_ERROR_NOT_MATCHING);
   }
 
+  if (check_secure_form($_POST) === false) {
+    $messageStack->add('account_password', ENTRY_TOKEN_ERROR);
+    $error = true;
+  }
+
 	if ($error === false) {
 		$check_customer_query = xtc_db_query("SELECT customers_password 
 		                                        FROM ".TABLE_CUSTOMERS." 
@@ -105,7 +111,7 @@ if ($messageStack->size('account_password') > 0) {
 	$smarty->assign('error', $messageStack->output('account_password'));
 }
 
-$smarty->assign('FORM_ACTION', xtc_draw_form('account_password', xtc_href_link(FILENAME_ACCOUNT_PASSWORD, '', 'SSL'), 'post', 'onsubmit="return check_form(account_password);"').xtc_draw_hidden_field('action', 'process'));
+$smarty->assign('FORM_ACTION', xtc_draw_form('account_password', xtc_href_link(FILENAME_ACCOUNT_PASSWORD, '', 'SSL'), 'post', 'onsubmit="return check_form(account_password);"').xtc_draw_hidden_field('action', 'process').secure_form());
 $smarty->assign('INPUT_ACTUAL', xtc_draw_password_fieldNote(array ('name' => 'password_current', 'text' => '&nbsp;'. (xtc_not_null(ENTRY_PASSWORD_CURRENT_TEXT) ? '<span class="inputRequirement">'.ENTRY_PASSWORD_CURRENT_TEXT.'</span>' : ''))));
 $smarty->assign('INPUT_NEW', xtc_draw_password_fieldNote(array ('name' => 'password_new', 'text' => '&nbsp;'. (xtc_not_null(ENTRY_PASSWORD_NEW_TEXT) ? '<span class="inputRequirement">'.ENTRY_PASSWORD_NEW_TEXT.'</span>' : ''))));
 $smarty->assign('INPUT_CONFIRM', xtc_draw_password_fieldNote(array ('name' => 'password_confirmation', 'text' => '&nbsp;'. (xtc_not_null(ENTRY_PASSWORD_CONFIRMATION_TEXT) ? '<span class="inputRequirement">'.ENTRY_PASSWORD_CONFIRMATION_TEXT.'</span>' : ''))));
