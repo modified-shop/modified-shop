@@ -49,8 +49,7 @@ require_once (DIR_FS_INC.'secure_form.inc.php');
 require_once (DIR_WS_CLASSES.'class.newsletter.php');
 require_once (DIR_WS_CLASSES.'modified_captcha.php');
 
-$captcha_class = CAPTCHA_MOD_CLASS;
-$mod_captcha = $captcha_class::getInstance();
+$mod_captcha = $_mod_captcha_class::getInstance();
 
 $info_message = '';
 $newsletter = new newsletter();

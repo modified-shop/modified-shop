@@ -46,8 +46,7 @@ require_once (DIR_FS_INC.'secure_form.inc.php');
 require_once (DIR_FS_EXTERNAL.'password_policy/password_policy.php');
 require_once (DIR_WS_CLASSES.'modified_captcha.php');
 
-$captcha_class = CAPTCHA_MOD_CLASS;
-$mod_captcha = $captcha_class::getInstance();
+$mod_captcha = $_mod_captcha_class::getInstance();
 
 // default case
 $case = 'double_opt';

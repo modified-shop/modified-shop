@@ -13,6 +13,12 @@
 
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/captcha/','php') as $file) require_once ($file);
 
+$_mod_captcha_class = CAPTCHA_MOD_CLASS;
+if (!class_exists($_mod_captcha_class)) {
+  $_mod_captcha_class = 'modified_captcha';
+}
+
+
 class modified_captcha {
     
   /**
