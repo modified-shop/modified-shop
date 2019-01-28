@@ -24,6 +24,7 @@
     $exclude_array[] = 'error';
     $exclude_array[] = 'x';
     $exclude_array[] = 'y';
+    $exclude_array[] = '_';
     
     $get_url = '';
     if (is_array($_GET) && (count($_GET) > 0)) {
@@ -32,15 +33,7 @@
             && (!in_array($key, $exclude_array)) 
             ) 
         {
-          if (!is_array($value)) {
-            $get_url .= rawurlencode(stripslashes($key)) . '=' . rawurlencode(stripslashes($value)) . '&';
-          } else {
-            foreach ($value as $k => $v) {
-              if (strlen($v) > 0) {
-                $get_url .= rawurlencode(stripslashes($key.'['.$k.']')) . '=' . rawurlencode(stripslashes($v)) . '&';
-              }
-            }
-          }
+          $get_url .= build_get_query(array($key => $value));          
         }
       }
     }
@@ -60,19 +53,54 @@
             && (in_array($key, $include_array)) 
             ) 
         {
-          if (!is_array($value)) {
-            $get_url .= rawurlencode(stripslashes($key)) . '=' . rawurlencode(stripslashes($value)) . '&';
-          } else {
-            foreach ($value as $k => $v) {
-              if (strlen($v) > 0) {
-                $get_url .= rawurlencode(stripslashes($key.'['.$k.']')) . '=' . rawurlencode(stripslashes($v)) . '&';
-              }
-            }
-          }
+          $get_url .= build_get_query(array($key => $value));          
         }
       }
     }
 
     return $get_url;
+  }
+  
+  
+  function build_get_query($array) {
+    $get_url = '';
+    
+    $array = clean_get_param($array);
+    if (is_array($array)) {
+      $array = sanitize_get_param($array);
+      $get_url = http_build_query($array, '', '&', PHP_QUERY_RFC3986).'&';
+    }
+    
+    return $get_url;
+  }
+  
+  
+  function clean_get_param($array) {
+    foreach($array as $k => &$v){
+      if (is_array($v)) {
+        $v = clean_get_param($v);
+        if (count($v) < 1) {
+          unset($array[$k]);
+        }
+      } elseif (strlen($v) < 1) {
+        unset($array[$k]);
+      }
+    }
+    
+    return $array;
+  }
+  
+  
+  function sanitize_get_param($string) {
+    if (is_array($string)) {
+      $data = array();
+      foreach ($string as $key => $value) {
+        $data[stripslashes($key)] = sanitize_get_param($value);
+      }
+    } else {
+      $data = stripslashes($string);
+    }
+    
+    return $data;
   }
 ?>

@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_draw_pull_down_menu.inc.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
+   $Id$
 
 
    modified eCommerce Shopsoftware
@@ -68,4 +68,29 @@
     return $field;
   }
 
+  function xtc_draw_multi_menu($name, $values, $default = array(), $parameters = '', $required = false) {
+    $field = '<select multiple="multiple" name="' . xtc_parse_input_field_data($name, array('"' => '&quot;')) . '"';
+
+    if (xtc_not_null($parameters)) $field .= ' ' . $parameters;
+
+    $field .= '>';
+
+    if ((!is_array($default) || count($default) < 1) && isset($GLOBALS[$name])) $default = $GLOBALS[$name];
+    
+    if (is_array($values) && count($values) > 0) {
+      foreach ($values as $value) {
+        $field .= '<option value="' . xtc_parse_input_field_data($value['id'], array('"' => '&quot;')) . '"';
+        if (in_array($value['id'], (array)$default)) {
+          $field .= ' selected="selected"';
+        }
+
+        $field .= '>' . xtc_parse_input_field_data($value['text'], array('"' => '&quot;', '\'' => '&#039;', '<' => '&lt;', '>' => '&gt;')) . '</option>';
+      }
+    }
+    $field .= '</select>';
+
+    if ($required == true) $field .= TEXT_FIELD_REQUIRED;
+
+    return $field;
+  }
  ?>

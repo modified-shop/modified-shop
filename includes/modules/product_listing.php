@@ -33,6 +33,12 @@ $max_display_results = (isset($_SESSION['filter_set']) ? (int)$_SESSION['filter_
 if (strpos($PHP_SELF, FILENAME_ADVANCED_SEARCH_RESULT) !== false && defined('MAX_DISPLAY_ADVANCED_SEARCH_RESULTS') && MAX_DISPLAY_ADVANCED_SEARCH_RESULTS != '') {
   $max_display_results = (isset($_SESSION['filter_set']) ? (int)$_SESSION['filter_set'] : MAX_DISPLAY_ADVANCED_SEARCH_RESULTS);
   $module_smarty->assign('SEARCH_RESULT', true);
+} elseif (strpos($PHP_SELF, FILENAME_SPECIALS) !== false && defined('MAX_DISPLAY_SPECIAL_PRODUCTS') && MAX_DISPLAY_SPECIAL_PRODUCTS != '') {
+  $max_display_results = (isset($_SESSION['filter_set']) ? (int)$_SESSION['filter_set'] : MAX_DISPLAY_SPECIAL_PRODUCTS);
+  $module_smarty->assign('SPECIALS', true);
+} elseif (strpos($PHP_SELF, FILENAME_PRODUCTS_NEW) !== false && defined('MAX_DISPLAY_PRODUCTS_NEW') && MAX_DISPLAY_PRODUCTS_NEW != '') {
+  $max_display_results = (isset($_SESSION['filter_set']) ? (int)$_SESSION['filter_set'] : MAX_DISPLAY_PRODUCTS_NEW);
+  $module_smarty->assign('WHATS_NEW', true);
 }
 
 $list_count_key = 'p.products_id';
@@ -44,7 +50,14 @@ $listing_split = new splitPageResults($listing_sql, (isset($_GET['page']) ? (int
 $module_content = $category = array();
 $image = '';
 
-if ($listing_split->number_of_rows > 0) {
+if ($listing_split->number_of_rows == 0
+    && (basename($PHP_SELF) == FILENAME_PRODUCTS_NEW
+        || (basename($PHP_SELF) == FILENAME_SPECIALS|| $_SESSION['customers_status']['customers_status_specials'] != '1')
+        )
+    )
+{
+  xtc_redirect(xtc_href_link(FILENAME_DEFAULT));
+} elseif ($listing_split->number_of_rows > 0) {
   if (!is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/pagination.html')) {
     $pagination = '<div class="smallText" style="clear:both;">
                      <div style="float:left;">'.$listing_split->display_count(TEXT_DISPLAY_NUMBER_OF_PRODUCTS).'</div> 
@@ -80,7 +93,7 @@ if ($listing_split->number_of_rows > 0) {
 
   if (isset($_GET['manufacturers_id']) && $_GET['manufacturers_id'] > 0) {
     $manufacturers_id = (int)$_GET['manufacturers_id'];
-  } elseif (isset($_GET['filter_id']) && $_GET['filter_id'] > 0) {
+  } elseif (isset($_GET['filter_id']) && !is_array($_GET['filter_id']) && (int)$_GET['filter_id'] > 0) {
     $manufacturers_id = (int)$_GET['filter_id'];
   }
   
@@ -223,7 +236,7 @@ if ($result != false) {
     $module_smarty->caching = 0;
     $main_content = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/categorie_listing/'.$category['categories_template']);
     $smarty->assign('main_content', $main_content);
-  } elseif (isset($_GET['filter_id']) && $_GET['filter_id'] > 0) {
+  } elseif (isset($_GET['filter_id']) && !is_array($_GET['filter_id']) && (int)$_GET['filter_id'] > 0) {
     $site_error = MANUFACTURER_NOT_FOUND;
     include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
   } else {
@@ -269,7 +282,7 @@ if ($result != false) {
     $smarty->assign('main_content', $main_content);
   } else {
     $site_error = MANUFACTURER_NOT_FOUND;
-    if (isset($_GET['filter_id']) && $_GET['filter_id'] > 0) {
+    if (isset($_GET['filter_id']) && !is_array($_GET['filter_id']) && (int)$_GET['filter_id'] > 0) {
       $site_error = CATEGORIE_NOT_FOUND;  
     }
     include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
