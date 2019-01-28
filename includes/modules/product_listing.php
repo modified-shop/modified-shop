@@ -124,6 +124,10 @@ if ($listing_split->number_of_rows == 0
     $list_title = $category['categories_heading_title'];
   } elseif (isset($category['categories_name']) && $category['categories_name'] != '') {
     $list_title = $category['categories_name'];
+  } elseif (basename($PHP_SELF) == FILENAME_SPECIALS) {
+    $list_title = TITLE_SPECIALS;
+  } elseif (basename($PHP_SELF) == FILENAME_PRODUCTS_NEW) {
+    $list_title = TITLE_PRODUCTS_NEW;
   }
 
   $module_smarty->assign('LIST_TITLE',  isset($list_title) ? $list_title : '');
