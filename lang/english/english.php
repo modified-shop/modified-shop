@@ -644,4 +644,7 @@ define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_UNKNOWN', 'Unknown error when checking
 
 define('PRODUCT_REVIEWS_SUCCESS', 'Thank you for your review.');
 define('PRODUCT_REVIEWS_SUCCESS_WAITING', 'Thank you for your review. This will be checked before it is published.');
+
+define('TITLE_PRODUCTS_NEW', 'New products');
+define('TITLE_SPECIALS', 'Special offers');
 ?>

@@ -644,4 +644,7 @@ define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_UNKNOWN', 'Unbekannter Fehler bei Pr&u
 
 define('PRODUCT_REVIEWS_SUCCESS', 'Vielen Dank f&uuml;r Ihre Rezension.');
 define('PRODUCT_REVIEWS_SUCCESS_WAITING', 'Vielen Dank f&uuml;r Ihre Rezension. Diese wird nun gepr&uuml;ft bevor sie freigeschaltet wird.');
+
+define('TITLE_PRODUCTS_NEW', 'Neue Artikel');
+define('TITLE_SPECIALS', 'Angebote');
 ?>
