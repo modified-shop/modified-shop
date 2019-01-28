@@ -108,7 +108,7 @@
         $tax = xtc_db_fetch_array($tax_query, true);
         $tax_class_array[$country_id][$zone_id][$class_id] = $tax['tax_class_id'];
       } else {
-        $tax_class_array[$country_id][$zone_id][$class_id] = $tax_class_id;
+        $tax_class_array[$country_id][$zone_id][$class_id] = $class_id;
       }
     }
     
