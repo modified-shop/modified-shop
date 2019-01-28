@@ -87,7 +87,7 @@ if (isset ($cPath) && xtc_not_null($cPath)) {
   $category_depth = 'products';
 }
 
-if ($language_not_found === true) {
+if (isset($language_not_found) && $language_not_found === true) {
   if ($category_depth != 'top') {
     $site_error = CATEGORIE_NOT_FOUND;
     include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
