@@ -197,7 +197,7 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
 	}
 }
 
-if ($captcha_error === true) {	
+if (isset($captcha_error) && $captcha_error === true) {	
   $messageStack->add('login', TEXT_WRONG_CODE);
 }
 
