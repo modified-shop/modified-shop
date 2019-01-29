@@ -321,12 +321,16 @@
           }
         }
 
+        // meta robots
+        if ($contents_meta['content_meta_robots']!='') {
+          $meta_robots = $contents_meta['content_meta_robots'];
+        }
+
         $metadata_array = array(
           'title' => (($contents_meta['content_meta_title'] != '') ? $contents_meta['content_meta_title'] : metaTitle($contents_meta['content_title'], $contents_meta['content_heading'])),
           'description' => (($contents_meta['content_meta_description'] != '') ? $contents_meta['content_meta_description'] : (($contents_meta['content_heading'] != '') ? $contents_meta['content_heading'].': ' : '').$contents_meta['content_text']),
           'keywords' => (($contents_meta['content_meta_keywords'] != '') ? $contents_meta['content_meta_keywords'] : metaKeyWords($contents_meta['content_title'].' '.$contents_meta['content_heading'].' '.$contents_meta['content_text'])),
           'link' => xtc_href_link(FILENAME_CONTENT, 'coID='.(int)$_GET['coID'], 'NONSSL', false),
-          'robot' => $contents_meta['content_meta_robots'],
         );
 
         if ($addContentShopTitle) $metadata_array['title'] .= ' - ' . ML_META_TITLE;
@@ -409,7 +413,7 @@
 
   // use standard for empty
   foreach ($metadata_array as $k => $v) {
-    if ($v == '') {
+    if ($v == '' && defined('ML_META_'.strtoupper($k))) {
       $metadata_array[$k] = constant('ML_META_'.strtoupper($k));
     }
   }
