@@ -629,6 +629,7 @@
     'templates/tpl_modified/module/error_handler.html',
     'templates/tpl_modified/module/new_products_overview.html',
     'templates/tpl_modified/module/specials.html',
+    'templates/'.CURRENT_TEMPLATE.'/admin/billsafe_print_order.html',
     'templates/'.CURRENT_TEMPLATE.'/javascript/macFFBgHack.png',
     'templates/'.CURRENT_TEMPLATE.'/javascript/thickbox.css',
     'templates/'.CURRENT_TEMPLATE.'/mail/english/change_password_mail.html',
