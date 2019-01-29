@@ -153,7 +153,8 @@ include (DIR_WS_MODULES. 'categories_listing.php');
 if ($result != false) {
 
   // get default template
-  if ($category['listing_template'] == '' 
+  if (!isset($category['listing_template'])
+      || $category['listing_template'] == '' 
       || $category['listing_template'] == 'default'
       || !is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_listing/'.$category['listing_template'])
       )
