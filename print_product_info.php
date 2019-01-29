@@ -137,10 +137,10 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
   }
 
   // date available/added
-  if ($product->data['products_date_available'] > date('Y-m-d H:i:s')) {
+  if (isset($product->data['products_date_available']) && $product->data['products_date_available'] > date('Y-m-d H:i:s')) {
     $info_smarty->assign('PRODUCTS_DATE_AVIABLE', sprintf(TEXT_DATE_AVAILABLE, xtc_date_long($product->data['products_date_available'])));
     $info_smarty->assign('PRODUCTS_DATE_AVAILABLE', sprintf(TEXT_DATE_AVAILABLE, xtc_date_long($product->data['products_date_available']))); 
-  } elseif ($product->data['products_date_added'] != '0000-00-00 00:00:00') {
+  } elseif (isset($product->data['products_date_available']) && $product->data['products_date_added'] != '0000-00-00 00:00:00') {
     $info_smarty->assign('PRODUCTS_ADDED', sprintf(TEXT_DATE_ADDED, xtc_date_long($product->data['products_date_added'])));
   }
 
