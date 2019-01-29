@@ -291,7 +291,7 @@
         $metaGoWords .= ','.$manufacturer['manufacturers_name'];
       } else {
         $metadata_array = array(
-          'title' => ML_TITLE,
+          'title' => ML_META_TITLE,
           'description' => ML_META_DESCRIPTION,
           'keywords' => ML_META_KEYWORDS,
           'link' => xtc_href_link(FILENAME_DEFAULT, '', 'NONSSL', false),
