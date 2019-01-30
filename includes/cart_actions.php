@@ -51,6 +51,7 @@ if (xtc_not_null($action)) {
     }
   }
   
+  $info_message = '';
   $parameters = array ('action', 'pid', 'info_message_3', 'wishlist', 'prd_id', 'info_message');
   if (DISPLAY_CART == 'true') {
     $goto = FILENAME_SHOPPING_CART;
