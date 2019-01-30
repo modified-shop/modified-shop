@@ -43,7 +43,7 @@ class PayoneCreditRisk {
  
     $hidden = xtc_draw_hidden_field('p1crcheck', 'true').PHP_EOL;
     foreach ($_POST as $key => $value) {
-      if (!is_object(${$key})) {
+      if (!isset(${$key}) || !is_object(${$key})) {
         $hidden .= xtc_draw_hidden_field($key, $value).PHP_EOL;
       }
     }

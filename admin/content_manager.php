@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: content_manager.php 5007 2013-07-04 09:31:37Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -56,7 +56,7 @@
 
   if ($id == 'update' || $id == 'insert') {    
     foreach ($_POST as $key => $value) {
-      if (!is_object(${$key})) {
+      if (!isset(${$key}) || !is_object(${$key})) {
         if (is_array($value)) {
           ${$key} = array_map('xtc_db_prepare_input', $value);
         } else {

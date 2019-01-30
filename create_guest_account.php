@@ -96,7 +96,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
 
   // prepare variables
   foreach ($_POST as $key => $value) {
-    if (!is_object(${$key}) && in_array($key , $valid_params)) {
+    if ((!isset(${$key}) || !is_object(${$key})) && in_array($key , $valid_params)) {
       ${$key} = xtc_db_prepare_input($value);
     }
   }
@@ -253,7 +253,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     }
   }
 
-  if (!$newsletter) {
+  if (!isset($newsletter)) {
     $newsletter = '';
   }
 

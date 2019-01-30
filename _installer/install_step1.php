@@ -65,7 +65,7 @@
 
     // prepare variables
     foreach ($_POST as $key => $value) {
-      if (!is_object(${$key}) && in_array($key , $valid_params)) {
+      if ((!isset(${$key}) || !is_object(${$key})) && in_array($key , $valid_params)) {
         ${$key} = addslashes($value);
       }
     }

@@ -141,7 +141,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'verified' && isset($_GET['key
       
   // prepare variables
   foreach ($_GET as $gkey => $value) {
-    if (!is_object(${$gkey}) && in_array($gkey , $valid_params)) {
+    if ((!isset(${$gkey}) || !is_object(${$gkey})) && in_array($gkey , $valid_params)) {
       ${$gkey} = xtc_db_prepare_input($value);
     }
   }
@@ -168,7 +168,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'verified' && isset($_GET['key
 
       // prepare variables
       foreach ($_POST as $key => $value) {
-        if (!is_object(${$key}) && in_array($key , $valid_params)) {
+        if ((!isset(${$key}) || !is_object(${$key})) && in_array($key , $valid_params)) {
           ${$key} = xtc_db_prepare_input($value);
         }
       }
