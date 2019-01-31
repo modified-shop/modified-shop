@@ -192,6 +192,7 @@
       && (!isset($_GET['manufacturers_id']) || $_GET['manufacturers_id'] == '')
       )
   {
+    define('META_TITLE', TITLE);
     $ml_meta_query = xtDBquery("SELECT content_meta_title as ml_meta_title,
                                        content_meta_description as ml_meta_description,
                                        content_meta_keywords as ml_meta_keywords
@@ -200,7 +201,7 @@
                                    AND languages_id = '".(int)$_SESSION['languages_id']."'");
     $ml_meta = xtc_db_fetch_array($ml_meta_query, true);
     foreach ($ml_meta as $k => $v) {
-      define(strtoupper($k), $v);
+      define(strtoupper($k), (($v != '') ? $v : constant(strtoupper(substr($k, 3)))));
     }
   } else {
     define('ML_META_KEYWORDS', META_KEYWORDS);
