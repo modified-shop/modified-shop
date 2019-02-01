@@ -62,10 +62,10 @@ class findologic {
       $key[] = 'MODULE_FINDOLOGIC_SHOP_ID_'.strtoupper($languages[$i]['code']);
       $key[] = 'MODULE_FINDOLOGIC_SERVICE_URL_'.strtoupper($languages[$i]['code']);
 
-      define('MODULE_FINDOLOGIC_SHOP_ID_'.strtoupper($languages[$i]['code']).'_TITLE', '<hr noshade>Shopkey - '.xtc_cfg_fl_get_language($languages[$i]['code']).'</b>');
-      define('MODULE_FINDOLOGIC_SHOP_ID_'.strtoupper($languages[$i]['code']).'_DESC', 'Ihr Shopkey<br />Sie finden den Shopkey im FINDOLOGIC Kundenaccount &rarr; Men&uuml; Account &rarr; Stammdaten.');
-      define('MODULE_FINDOLOGIC_SERVICE_URL_'.strtoupper($languages[$i]['code']).'_TITLE', '<b><hr noshade>FINDOLOGIC/Service-URL - '.xtc_cfg_fl_get_language($languages[$i]['code']).'</b>');
-      define('MODULE_FINDOLOGIC_SERVICE_URL_'.strtoupper($languages[$i]['code']).'_DESC', 'Die FINDOLOGIC/Service-URL Ihres Onlineshops<br /><strong>WICHTIG:</strong> Vergessen Sie bei den URLs nicht den Slash am Ende, da es sonst zu Problemen bei der Darstellung der Ergebnisse kommt.<br />Sie finden die FINDOLOGIC/Service-URL im FINDOLOGIC Kundenaccount &rarr; Men&uuml; Account &rarr; Stammdaten.');
+      define('MODULE_FINDOLOGIC_SHOP_ID_'.strtoupper($languages[$i]['code']).'_TITLE', '<hr noshade>'.MODULE_FINDOLOGIC_SHOP_ID_TITLE.' - '.xtc_cfg_fl_get_language($languages[$i]['code']).'</b>');
+      define('MODULE_FINDOLOGIC_SHOP_ID_'.strtoupper($languages[$i]['code']).'_DESC', MODULE_FINDOLOGIC_SHOP_ID_DESC);
+      define('MODULE_FINDOLOGIC_SERVICE_URL_'.strtoupper($languages[$i]['code']).'_TITLE', '<b><hr noshade>'.MODULE_FINDOLOGIC_SERVICE_URL_TITLE.' - '.xtc_cfg_fl_get_language($languages[$i]['code']).'</b>');
+      define('MODULE_FINDOLOGIC_SERVICE_URL_'.strtoupper($languages[$i]['code']).'_DESC', MODULE_FINDOLOGIC_SERVICE_URL_DESC);
     }
     return $key;
   }

@@ -29,5 +29,8 @@ define('MODULE_FINDOLOGIC_STATUS_TITLE' , 'Status');
 define('MODULE_FINDOLOGIC_STATUS_DESC' , 'Modul aktivieren?');
 define('MODULE_FINDOLOGIC_AUTOCOMPLETE_TITLE' , '<hr noshade>Autocomplete Suche');
 define('MODULE_FINDOLOGIC_AUTOCOMPLETE_DESC' , 'Autocomplete Feature in der Suchbox aktivieren?');
-
+define('MODULE_FINDOLOGIC_SHOP_ID_TITLE', 'Shopkey');
+define('MODULE_FINDOLOGIC_SHOP_ID_DESC', 'Ihr Shopkey<br />Sie finden den Shopkey im FINDOLOGIC Kundenaccount &rarr; Men&uuml; Account &rarr; Stammdaten.');
+define('MODULE_FINDOLOGIC_SERVICE_URL_TITLE', 'FINDOLOGIC/Service-URL');
+define('MODULE_FINDOLOGIC_SERVICE_URL_DESC', 'Die FINDOLOGIC/Service-URL Ihres Onlineshops<br /><strong>WICHTIG:</strong> Vergessen Sie bei den URLs nicht den Slash am Ende, da es sonst zu Problemen bei der Darstellung der Ergebnisse kommt.<br />Sie finden die FINDOLOGIC/Service-URL im FINDOLOGIC Kundenaccount &rarr; Men&uuml; Account &rarr; Stammdaten.');
 ?>
