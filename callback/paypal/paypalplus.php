@@ -26,6 +26,9 @@ if (isset($_GET['checkout']) && $_SESSION['payment'] == 'paypalplus') {
   $selection = get_third_party_payments();
   $paypal = new PayPalPayment('paypalplus');
   
+  require_once (DIR_WS_CLASSES . 'order.php');
+  $order = new order();
+
   $module = array();
   if (ACTIVATE_GIFT_SYSTEM == 'true') {
     require_once (DIR_WS_CLASSES . 'order_total.php');
@@ -43,21 +46,14 @@ if (isset($_GET['checkout']) && $_SESSION['payment'] == 'paypalplus') {
     }
   }
 
-  $country_query = xtc_db_query("SELECT c.countries_iso_code_2
-                                   FROM ".TABLE_COUNTRIES." c
-                                   JOIN ".TABLE_ADDRESS_BOOK." ab
-                                        ON c.countries_id = ab.entry_country_id
-                                           AND address_book_id = '".$_SESSION['customer_default_address_id']."'");
-  $country = xtc_db_fetch_array($country_query);
-
   echo '<div id="ppplus"></div>';
   echo '<script type="text/javascript">
   var ppp = PAYPAL.apps.PPP({	
   "approvalUrl": "'.$_SESSION['paypal']['approval'].'",
   "placeholder": "ppplus",
   "mode": "'.$paypal->get_config('PAYPAL_MODE').'",
-  "language": "'.$_SESSION['language_code'].'_'.$country['countries_iso_code_2'].'",
-  "country": "'.$country['countries_iso_code_2'].'",
+  "language": "'.$_SESSION['language_code'].'_'.$order->customer['country']['iso_code_2'].'",
+  "country": "'.$order->customer['country']['iso_code_2'].'",
   "buttonLocation": "outside",
   "preselection": "paypal",
   "useraction": "continue",
