@@ -32,7 +32,7 @@ function xtc_wysiwyg($type, $lang, $langID = '',$addonType='')
     $sid = ''; //'&'.session_name() . '=' . session_id();
 
     $editor = '&editor='. $wysiwig_type;
-    $language = '&lang='. $_SESSION['language_code'].'_'.strtoupper($_SESSION['language_code']);
+    $language = '&lang='. $_SESSION['language_code'];
 
     //Einrückung für Code
     $codetab = '            ';  
