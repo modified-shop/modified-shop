@@ -1,3 +1,0 @@
-Modified Shop 2.x
-
-Changes all $_SERVER['DOCUMENT_ROOT'] with $_SESSION['KCFINDER']['DOCUMENT_ROOT']

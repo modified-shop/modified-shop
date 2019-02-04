@@ -20,22 +20,19 @@ function xtc_wysiwyg($type, $lang, $langID = '',$addonType='')
 
     $wysiwig_type = 'ckeditor';
 
-    $filemanagerurl = DIR_WS_ADMIN. 'includes/modules/kcfinder/browse.php?opener=ckeditor&cms=modifiedshop&lang='.$lang;
+    $filemanagerurl = DIR_WS_ADMIN. 'includes/modules/filemanager/dialog.php?fldr=';
     $js_src = DIR_WS_MODULES .'ckeditor/ckeditor.js';
-    $file_path = '&opener=ckeditor&type=files';
-    $image_path = '&opener=ckeditor&type=images';
-    $flash_path = '&opener=ckeditor&type=flash';
-    $media_path = '&opener=ckeditor&type=flash';
+    $file_path = '&type=2';
+    $image_path = '&type=1';
+    $media_path = '&type=3';
 
     $default_editor_width = '\'100%\''; //kama 850, moono 870;
     $default_editor_height = '400';
 
     $sid = ''; //'&'.session_name() . '=' . session_id();
 
-    $view = '&view=thumbnail';
-
     $editor = '&editor='. $wysiwig_type;
-    $language = '&language='. $_SESSION['language_code'];
+    $language = '&lang='. $_SESSION['language_code'].'_'.strtoupper($_SESSION['language_code']);
 
     //Einrückung für Code
     $codetab = '            ';  
@@ -94,10 +91,12 @@ function xtc_wysiwyg($type, $lang, $langID = '',$addonType='')
     
     //Filebrowser settings
     $filebrowser_settings = PHP_EOL .
-                $codetab.'filebrowserBrowseUrl : "'.$filemanagerurl.$language.$editor.$flash_path.$sid.'",
-                filebrowserImageBrowseUrl : "'.$filemanagerurl.$language.$editor.$image_path.$sid.$view.'",
-                filebrowserFlashBrowseUrl : "'.$filemanagerurl.$language.$editor.$flash_path.$sid.'",
-                filebrowserWindowWidth : "960",
+                $codetab.'
+                filebrowserBrowseUrl : "'.$filemanagerurl.$editor.$file_path.$language.$sid.'",
+                filebrowserImageBrowseUrl : "'.$filemanagerurl.$editor.$image_path.$language.$sid.'",
+                filebrowserFlashBrowseUrl : "'.$filemanagerurl.$editor.$media_path.$language.$sid.'",
+                filebrowserUploadUrl : "'.$filemanagerurl.$editor.$file_path.$language.$sid.'",
+                filebrowserWindowWidth : "980",
                 filebrowserWindowHeight : "640",';
 
     $add_init = '';

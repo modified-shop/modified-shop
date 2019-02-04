@@ -1790,3 +1790,7 @@ color:#af417e;
   break-inside: avoid-column;
   width:100%;
 }
+.cke_dialog_background_cover {
+  background-color: #000 !important;
+  opacity: 0.2 !important;
+}
