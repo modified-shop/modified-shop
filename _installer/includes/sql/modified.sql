@@ -787,7 +787,7 @@ CREATE TABLE orders (
   account_type INT(1) DEFAULT 0 NOT NULL,
   payment_class VARCHAR(64) NOT NULL,
   shipping_method VARCHAR(128) NOT NULL,
-  shipping_class VARCHAR(32) NOT NULL,
+  shipping_class VARCHAR(64) NOT NULL,
   customers_ip VARCHAR(50) NOT NULL,
   language VARCHAR(32) NOT NULL,
   languages_id int(11) NOT NULL,
