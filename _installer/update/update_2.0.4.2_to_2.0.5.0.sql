@@ -60,4 +60,8 @@ UPDATE zones_to_geo_zones SET geo_zone_id = 5 WHERE zone_country_id = 141;
 #GTB - 2019-02-05 - fix #1505
 ALTER TABLE orders MODIFY shipping_class VARCHAR(64) NOT NULL;
 
+#GTB - 2019-02-05 - fix #1510
+UPDATE customers_info set customers_info_date_of_last_logon = customers_info_date_account_created WHERE customers_info_date_of_last_logon = '0000-00-00 00:00:00';
+UPDATE customers_info set customers_info_number_of_logons = 1 WHERE customers_info_number_of_logons = 0;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
