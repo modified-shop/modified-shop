@@ -483,37 +483,37 @@
       }
     }
 
-		public static function payment_title($payment_method, $order_id = '') {
-			static $static_payment_array;
+    public static function payment_title($payment_method, $order_id = '') {
+      static $static_payment_array;
 
-			if (!is_array($static_payment_array)) {
-				$static_payment_array = array();
-			}
-		
-			if ($payment_method != '' && $payment_method != 'no_payment') {
-				if (!isset($static_payment_array[$payment_method][(int)$order_id])) { 
-					if (is_file(DIR_FS_CATALOG . 'includes/modules/payment/' . $payment_method . '.php')) {
-						include_once(DIR_FS_CATALOG . 'lang/' . $_SESSION['language'] . '/modules/payment/' . $payment_method . '.php');
-						$payment_name = constant(strtoupper('MODULE_PAYMENT_' . $payment_method . '_TEXT_TITLE'));
+      if (!is_array($static_payment_array)) {
+        $static_payment_array = array();
+      }
+    
+      if ($payment_method != '' && $payment_method != 'no_payment') {
+        if (!isset($static_payment_array[$payment_method][(int)$order_id])) { 
+          if (is_file(DIR_FS_CATALOG . 'includes/modules/payment/' . $payment_method . '.php')) {
+            include_once(DIR_FS_CATALOG . 'lang/' . $_SESSION['language'] . '/modules/payment/' . $payment_method . '.php');
+            $payment_name = constant(strtoupper('MODULE_PAYMENT_' . $payment_method . '_TEXT_TITLE'));
 
-						if ($payment_method == 'paypalplus' && (int)$order_id > 0) {
-							require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalInfo.php');
-							$paypal = new PayPalInfo($payment_method);
-							$payment_array = $paypal->get_payment_data($order_id);
-							if (count($payment_array) > 0 && $payment_array['payment_method'] == 'pay_upon_invoice') {
-								$payment_name = $payment_name . ' - ' . MODULE_PAYMENT_PAYPALPLUS_INVOICE;
-							}
-						}
-					} else {
-						$payment_name = $payment_method;
-					}
-					$static_payment_array[$payment_method][(int)$order_id] = strip_tags($payment_name);
-				}
-				return $static_payment_array[$payment_method][(int)$order_id];
-			} else {
-				return false;
-			}
-		}
+            if ($payment_method == 'paypalplus' && (int)$order_id > 0) {
+              require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalInfo.php');
+              $paypal = new PayPalInfo($payment_method);
+              $payment_array = $paypal->get_payment_data($order_id);
+              if (count($payment_array) > 0 && $payment_array['payment_method'] == 'pay_upon_invoice') {
+                $payment_name = $payment_name . ' - ' . MODULE_PAYMENT_PAYPALPLUS_INVOICE;
+              }
+            }
+          } else {
+            $payment_name = $payment_method;
+          }
+          $static_payment_array[$payment_method][(int)$order_id] = strip_tags($payment_name);
+        }
+        return $static_payment_array[$payment_method][(int)$order_id];
+      } else {
+        return false;
+      }
+    }
     
   }
 ?>
