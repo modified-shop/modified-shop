@@ -109,7 +109,7 @@
           }
 
           if ($_POST['expires_date'] != '' && $_POST['expires_date'] != '0000-00-00') {          
-            $expires_date = date('Y-m-d', strtotime($_POST['expires_date']));
+            $expires_date = date('Y-m-d 23:59:59', strtotime($_POST['expires_date']));
             xtc_db_query("update " . TABLE_BANNERS . " set expires_date = '" . xtc_db_input($expires_date) . "', expires_impressions = null where banners_id = '" . (int)$banners_id . "'");
           } elseif ($_POST['expires_impressions'] != '' && $_POST['expires_impressions'] != '0') {
             $expires_impressions = xtc_db_prepare_input($_POST['expires_impressions']);
@@ -117,7 +117,7 @@
           }
 
           if ($_POST['date_scheduled'] != '' && $_POST['date_scheduled'] != '0000-00-00') {
-            $date_scheduled = date('Y-m-d', strtotime($_POST['date_scheduled']));
+            $date_scheduled = date('Y-m-d 00:00:00', strtotime($_POST['date_scheduled']));
             xtc_db_query("update " . TABLE_BANNERS . " set status = '0', date_scheduled = '" . xtc_db_input($date_scheduled) . "' where banners_id = '" . (int)$banners_id . "'");
           }
           xtc_redirect(xtc_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banners_id));
