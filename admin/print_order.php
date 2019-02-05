@@ -54,8 +54,9 @@
 
   $smarty->assign('oID',$order->info['order_id']);
   if ($order->info['payment_method'] != '' && $order->info['payment_method'] != 'no_payment') {
-    include(DIR_FS_CATALOG.'lang/'.$_SESSION['language'].'/modules/payment/'.$order->info['payment_method'].'.php');
-    $payment_method = constant(strtoupper('MODULE_PAYMENT_'.$order->info['payment_method'].'_TEXT_TITLE'));
+    require_once (DIR_FS_CATALOG.DIR_WS_CLASSES . 'payment.php');
+		$payment_modules = new payment($order->info['payment_method']);
+    $payment_method = $payment_modules::payment_title($order->info['payment_method'],$order->info['order_id']);
 
     // mod: BILLPAY payment module
     if(stripos($order->info['payment_method'], 'billpay') !== false) {

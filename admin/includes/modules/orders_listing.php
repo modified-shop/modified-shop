@@ -178,7 +178,7 @@
                   <td class="dataTableContent" align="right"><?php echo $orders['delivery_country']; ?>&nbsp;</td>
                   <td class="dataTableContent" align="right"><?php echo format_price(get_order_total($orders['orders_id']), 1, $orders['currency'], 0, 0); ?></td>
                   <td class="dataTableContent" align="center"><?php echo xtc_datetime_short($orders['date_purchased']); ?></td>
-                  <td class="dataTableContent" align="center"><?php echo get_payment_name($orders['payment_method']); ?></td>
+                  <td class="dataTableContent" align="center"><?php echo payment::payment_title($orders['payment_method']); ?></td>
                   <td class="dataTableContent" align="right"><?php if($orders['orders_status']!='0') { echo $orders_status_array[$orders['orders_status']]; }else{ echo '<span class="col-red">'.TEXT_VALIDATING.'</span>';}?></td>
                   <?php if (AFTERBUY_ACTIVATED=='true') { ?>
                   <td class="dataTableContent" align="right"><?php  echo ($orders['afterbuy_success'] == 1) ? $orders['afterbuy_id'] : 'TRANSMISSION_ERROR'; ?></td>
@@ -228,7 +228,7 @@
                         $contents[] = array ('text' => TEXT_DATE_ORDER_LAST_MODIFIED.' '.xtc_date_short($oInfo->last_modified));
                       }
                       if ($oInfo->payment_method != '') {
-                        $contents[] = array ('text' => '<br />'.TEXT_INFO_PAYMENT_METHOD.' '.get_payment_name($oInfo->payment_method, $oInfo->orders_id).' ('.$oInfo->payment_method.')');
+                        $contents[] = array ('text' => '<br />'.TEXT_INFO_PAYMENT_METHOD.' '.payment::payment_title($oInfo->payment_method, $oInfo->orders_id).' ('.$oInfo->payment_method.')');
                       }
                       if ($oInfo->shipping_class != '') {
                         $contents[] = array ('text' => (($oInfo->payment_method == '') ? '<br/>' : '').TEXT_INFO_SHIPPING_METHOD.' '.get_shipping_name($oInfo->shipping_class));

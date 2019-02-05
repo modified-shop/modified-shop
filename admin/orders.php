@@ -41,35 +41,6 @@ if (function_exists('magnaExecute')) magnaExecute('magnaSubmitOrderStatus', arra
 if(!defined('MAX_DISPLAY_ORDER_RESULTS')) {
   define('MAX_DISPLAY_ORDER_RESULTS', 30);
 }
-//New function
-function get_payment_name($payment_method, $order_id = '') {
-  static $static_payment_array;
-  
-  if (!is_array($static_payment_array)) {
-    $static_payment_array = array();
-  }
-  
-  if (!isset($static_payment_array[$payment_method])) {    
-    if (file_exists(DIR_FS_CATALOG.'lang/'.$_SESSION['language'].'/modules/payment/'.$payment_method.'.php')) {
-      include(DIR_FS_CATALOG.'lang/'.$_SESSION['language'].'/modules/payment/'.$payment_method.'.php');
-      $static_payment_array[$payment_method] = constant(strtoupper('MODULE_PAYMENT_'.$payment_method.'_TEXT_TITLE'));
-    } else {
-      $static_payment_array[$payment_method] = $payment_method;
-    }
-  }
-
-  $text = '';
-  if ($payment_method == 'paypalplus' && (int)$order_id > 0) {
-    require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalInfo.php');
-    $paypal = new PayPalInfo($payment_method);
-    $payment_array = $paypal->get_payment_data($order_id);
-    if (count($payment_array) > 0 && $payment_array['payment_method'] == 'pay_upon_invoice') {
-      $text = ' - ' . MODULE_PAYMENT_PAYPALPLUS_INVOICE;
-    }
-  }
-  
-  return strip_tags($static_payment_array[$payment_method] . $text);
-}
 function get_shipping_name($shipping_class) {
   $shipping_class_array = explode('_', $shipping_class);
   $shipping_class = $shipping_class_array[0];
@@ -163,7 +134,8 @@ if ($action == 'search' && $oID && $customer == '') {
   }
 }
 
-require (DIR_WS_CLASSES.'order.php');
+require_once (DIR_WS_CLASSES.'order.php');
+require_once (DIR_FS_CATALOG.DIR_WS_CLASSES . 'payment.php');
 if (($action == 'edit' || $action == 'update_order') && $order_exists) {
   $order = new order($oID);
   require_once(DIR_FS_CATALOG.DIR_WS_CLASSES.'xtcPrice.php');

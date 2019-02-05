@@ -143,7 +143,7 @@
                   ?>
                     <tr>
                       <td class="main"><b><?php echo ENTRY_PAYMENT_METHOD; ?></b></td>
-                      <td class="main"><?php echo get_payment_name($order->info['payment_method'], $order->info['order_id']) . ' ('.$order->info['payment_method'].')'; ?></td>
+                      <td class="main"><?php echo payment::payment_title($order->info['payment_method'], $order->info['order_id']) . ' ('.$order->info['payment_method'].')'; ?></td>
                     </tr>
                   <?php
                   }
