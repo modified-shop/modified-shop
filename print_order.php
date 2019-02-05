@@ -57,11 +57,6 @@ if ((isset($_SESSION['customer_id']) && $_SESSION['customer_id'] == $order_check
   $smarty->assign('charset', $_SESSION['language_charset'] );
 
   $smarty->assign('oID', $oID);
-  $payment_method = false; //DokuMan - 2010-03-18 - set undefined variable
-  if ($order->info['payment_method'] != '' && $order->info['payment_method'] != 'no_payment') {
-    include_once (DIR_WS_LANGUAGES.$_SESSION['language'].'/modules/payment/'.$order->info['payment_method'].'.php');
-    $payment_method = constant(strtoupper('MODULE_PAYMENT_'.$order->info['payment_method'].'_TEXT_TITLE'));
-  }
   $smarty->assign('PAYMENT_METHOD', $payment_method);
   $smarty->assign('COMMENT', $order->info['comments']);
   $smarty->assign('DATE', xtc_date_long($order->info['date_purchased']));
@@ -71,6 +66,7 @@ if ((isset($_SESSION['customer_id']) && $_SESSION['customer_id'] == $order_check
   require_once (DIR_WS_CLASSES . 'payment.php');
   $payment_modules = new payment($order->info['payment_class']);
   $smarty->assign('PAYMENT_INFO', $payment_modules->success());
+  $smarty->assign('PAYMENT_METHOD', $payment_modules->payment_title($order->info['payment_method'],$oID));
 
   // dont allow cache
   $smarty->caching =0;

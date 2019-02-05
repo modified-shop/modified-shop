@@ -44,8 +44,8 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
   $smarty->assign('address_label_payment', xtc_address_format($order->billing['format_id'], $order->billing, 1, '', '<br />'));
   $smarty->assign('csID', $order->customer['csID']);
 
-  $order_total = $order->getTotalData($insert_id); //ACHTUNG für Bestellbestätigung  aus Admin Funktion in admin/includes/classes/order.php
-  $smarty->assign('order_data', $order->getOrderData($insert_id)); //ACHTUNG für Bestellbestätigung  aus Admin Funktion in admin/includes/classes/order.php
+  $order_total = $order->getTotalData($insert_id); //ACHTUNG fï¿½r Bestellbestï¿½tigung  aus Admin Funktion in admin/includes/classes/order.php
+  $smarty->assign('order_data', $order->getOrderData($insert_id)); //ACHTUNG fï¿½r Bestellbestï¿½tigung  aus Admin Funktion in admin/includes/classes/order.php
   $smarty->assign('order_total', $order_total['data']);
 
   // assign language to template for caching
@@ -68,8 +68,9 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
   
   //payment method
   if ($order->info['payment_method'] != '' && $order->info['payment_method'] != 'no_payment') {    
-    include_once (DIR_FS_CATALOG . 'lang/'.$order->info['language'].'/modules/payment/'.$order->info['payment_method'].'.php');
-    $payment_method = constant(strtoupper('MODULE_PAYMENT_'.$order->info['payment_method'].'_TEXT_TITLE'));
+    require_once (DIR_WS_CLASSES . 'payment.php');
+    $payment_modules = new payment($order->info['payment_class']);
+    $payment_method = $payment_modules->payment_title($order->info['payment_method'],$order->info['order_id']);
     $payment_class = $order->info['payment_class'];
   }
   $smarty->assign('PAYMENT_METHOD', $payment_method);
@@ -220,7 +221,7 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
   if (isset($send_by_admin)) {
     $customer_notified = '1';
     $orders_status_id = '1';
-    //Comment out the next line for setting  the $orders_status_id= '1 '- Auskommentieren der nächste Zeile, um die $orders_status_id = '1' zu setzen
+    //Comment out the next line for setting  the $orders_status_id= '1 '- Auskommentieren der nï¿½chste Zeile, um die $orders_status_id = '1' zu setzen
     $orders_status_id = ($order->info['orders_status'] < 1) ? '1' : $order->info['orders_status'];
     $comments = encode_utf8(COMMENT_SEND_ORDER_BY_ADMIN, 'ISO-8859-15');
     

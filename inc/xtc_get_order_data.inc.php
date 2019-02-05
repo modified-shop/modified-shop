@@ -29,8 +29,9 @@ function xtc_get_order_data($order_id) {
   $order_data['orders_status'] = $order_status_data['orders_status_name'];
   
   // get language name for payment method
-  include(DIR_WS_LANGUAGES.$_SESSION['language'].'/modules/payment/'.$order_data['payment_method'].'.php');
-  $order_data['payment_method'] = constant(strtoupper('MODULE_PAYMENT_'.$order_data['payment_method'].'_TEXT_TITLE'));	
+  require_once (DIR_WS_CLASSES . 'payment.php');
+  $payment_modules = new payment($order_data['payment_method']);
+  $order_data['payment_method'] = $payment_modules->payment_title($order_data['payment_method'],(int)$_GET['oID']);
   
   return $order_data; 
 }

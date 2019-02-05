@@ -175,8 +175,7 @@ $smarty->assign('PRODUCTS_ARRAY', $order->products);
 $smarty->assign('ORDER_TAX_GROUPS', sizeof($order->info['tax_groups']));
 
 if ($order->info['payment_method'] != 'no_payment' && $order->info['payment_method'] != '') {
-  include_once (DIR_WS_LANGUAGES . '/' . $_SESSION['language'] . '/modules/payment/' . $order->info['payment_method'] . '.php');
-  $smarty->assign('PAYMENT_METHOD', constant('MODULE_PAYMENT_' . strtoupper($order->info['payment_method']) . '_TEXT_TITLE'));
+  $smarty->assign('PAYMENT_METHOD', $payment_modules->payment_title($order->info['payment_method']));
   $smarty->assign('PAYMENT_EDIT', xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
 }
 

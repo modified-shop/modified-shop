@@ -482,6 +482,29 @@
         }
       }
     }
+
+    function payment_title($payment_method, $order_id = '') {
+      if ($payment_method != '' && $payment_method != 'no_payment'){
+        if (is_file(DIR_WS_MODULES . 'payment/' . $payment_method . '.php')){
+          include_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $payment_method . '.php');
+          $payment_name = constant(strtoupper('MODULE_PAYMENT_' . $payment_method . '_TEXT_TITLE'));
+
+          if ($payment_method == 'paypalplus' && (int)$order_id > 0) {
+            require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalInfo.php');
+            $paypal = new PayPalInfo($payment_method);
+            $payment_array = $paypal->get_payment_data($order_id);
+            if (count($payment_array) > 0 && $payment_array['payment_method'] == 'pay_upon_invoice') {
+              $payment_name = $payment_name . ' - ' . MODULE_PAYMENT_PAYPALPLUS_INVOICE;
+            }
+          }
+        } else {
+          $payment_name = $payment_method;
+        }
+        return strip_tags($payment_name);
+      } else {
+        return false;
+      }
+    }
     
   }
 ?>
