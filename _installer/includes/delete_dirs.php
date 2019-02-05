@@ -45,6 +45,8 @@
     'includes/external/phpfastcache/3.0.0',  // neu
     'includes/external/phpfastcache/_extensions',  // neu
     'includes/external/phpmailer/language', // neu
+    'includes/external/sofort/core',
+    'includes/external/sofort/unittests',
     'includes/econda', // neu
     'includes/iclear',
     'includes/janolaw',

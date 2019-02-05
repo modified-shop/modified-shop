@@ -307,6 +307,8 @@
     'includes/external/smarty/smarty_3/sysplugins/smarty_internal_get_include_path.php',
     'includes/external/smarty/smarty_3/sysplugins/smarty_internal_utility.php',
     'includes/external/smarty/smarty_3/sysplugins/smarty_internal_write_file.php',
+    'includes/external/sofort/classes/sofortLibIdealBanks.inc.php',
+    'includes/external/sofort/classes/sofortLibSofortueberweisungGateway.inc.php',
     'includes/extra/checkout/checkout_process_end/20_easybill.php',
     'includes/extra/checkout/checkout_process_end/10_xsbooster.php',
     'includes/extra/header/header_body/billsafe.php',
