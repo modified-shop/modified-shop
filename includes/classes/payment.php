@@ -492,7 +492,7 @@
 		
 			if ($payment_method != '' && $payment_method != 'no_payment') {
 				if (!isset($static_payment_array[$payment_method][(int)$order_id])) { 
-					if (is_file(DIR_WS_MODULES . 'payment/' . $payment_method . '.php')) {
+					if (is_file(DIR_FS_CATALOG . 'includes/modules/payment/' . $payment_method . '.php')) {
 						include_once(DIR_FS_CATALOG . 'lang/' . $_SESSION['language'] . '/modules/payment/' . $payment_method . '.php');
 						$payment_name = constant(strtoupper('MODULE_PAYMENT_' . $payment_method . '_TEXT_TITLE'));
 
