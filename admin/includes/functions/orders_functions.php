@@ -1244,7 +1244,8 @@
                                 WHERE orders_id = '".(int)$oID."'
                                   AND tax !='0'
                                   AND class = 'ot_tax'
-                             GROUP BY tax_rate DESC");
+                             GROUP BY tax_rate 
+                             ORDER BY tax_rate DESC");
 
     while ($ust = xtc_db_fetch_array($ust_query)) {
       $ust_desc_query = xtc_db_query("SELECT tax_description 
