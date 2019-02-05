@@ -57,4 +57,7 @@ UPDATE carriers SET carrier_tracking_link = 'https://tracking.hermesworld.com/?T
 #Tomcraft - 2019-01-18 - Added Monaco to EU Zones
 UPDATE zones_to_geo_zones SET geo_zone_id = 5 WHERE zone_country_id = 141;
 
+#GTB - 2019-02-05 - fix #1505
+ALTER TABLE orders MODIFY shipping_class VARCHAR(64) NOT NULL;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
