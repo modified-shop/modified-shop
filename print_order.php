@@ -57,7 +57,6 @@ if ((isset($_SESSION['customer_id']) && $_SESSION['customer_id'] == $order_check
   $smarty->assign('charset', $_SESSION['language_charset'] );
 
   $smarty->assign('oID', $oID);
-  $smarty->assign('PAYMENT_METHOD', $payment_method);
   $smarty->assign('COMMENT', $order->info['comments']);
   $smarty->assign('DATE', xtc_date_long($order->info['date_purchased']));
 
