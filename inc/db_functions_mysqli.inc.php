@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id:$
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -86,9 +86,9 @@
 
     $socket = explode(':', $server);
     if (USE_PCONNECT == 'true') {
-      ${$link} = @mysqli_connect('p:'.$socket[0], $username, $password, NULL, ((isset($socket[2])) ? $socket[2] : NULL), ((isset($socket[1])) ? $socket[1] : NULL));
+      ${$link} = @mysqli_connect('p:'.$socket[0], $username, $password, NULL, ((isset($socket[1] && $socket[1] != '')) ? $socket[1] : NULL), ((isset($socket[2]) && $socket[2] != '') ? $socket[2] : NULL));
     } else {
-      ${$link} = @mysqli_connect($socket[0], $username, $password, NULL, ((isset($socket[2])) ? $socket[2] : NULL), ((isset($socket[1])) ? $socket[1] : NULL));
+      ${$link} = @mysqli_connect($socket[0], $username, $password, NULL, ((isset($socket[1] && $socket[1] != '')) ? $socket[1] : NULL), ((isset($socket[2]) && $socket[2] != '') ? $socket[2] : NULL));
     }
 
     if (${$link}) {
