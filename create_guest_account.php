@@ -323,7 +323,8 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     
     $sql_data_array = array('customers_info_id' => (int)$_SESSION['customer_id'],
                             'customers_info_number_of_logons' => '1',
-                            'customers_info_date_account_created' => 'now()'
+                            'customers_info_date_account_created' => 'now()',
+                            'customers_info_date_of_last_logon' => 'now()'
                             );
     xtc_db_perform(TABLE_CUSTOMERS_INFO, $sql_data_array);
 
