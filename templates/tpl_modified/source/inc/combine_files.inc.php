@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: combine_files.inc.php 48 2016-04-26 09:54:10Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -28,6 +28,7 @@ function combine_files($f_array,$f_min,$compress_css = false,$f_time = 0)
         $compactor->add(DIR_FS_CATALOG.$f_plain);
       }
       if ($compactor->save($f_min) === true) {
+        $f_min_ts = is_writeable(DIR_FS_CATALOG.$f_min) ? filemtime(DIR_FS_CATALOG.$f_min) : false;
         $f_array = array($f_min.'?v='.$f_min_ts);
       }
     } elseif ($f_min_ts) {
