@@ -894,7 +894,7 @@ class shoppingCart {
    * @return boolean
    */
   function check_products_status_permission($products_id) {
-    require(DIR_WS_INCLUDES.'define_conditions.php');
+    require(DIR_FS_CATALOG.'includes/define_conditions.php');
     $conditions = str_replace('p.', '', $products_conditions_p);
 
     $status = false;
