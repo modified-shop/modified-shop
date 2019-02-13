@@ -3,13 +3,23 @@
   <div class="pagination_list">
     <ul>  
       <li class="plain">{$smarty.const.TEXT_RESULT_PAGE}</li>
-      {if isset($DISPLAY_LINKS.previous)}<li>{$DISPLAY_LINKS.previous}</li>{/if}
-      {if isset($DISPLAY_LINKS.previouspages)}<li>{$DISPLAY_LINKS.previouspages}</li>{/if}
-      {foreach key="keys" name="outer" item="pages" from=$DISPLAY_LINKS.pages}
-        <li class="{$keys}">{$pages}</li>
-      {/foreach}
-      {if isset($DISPLAY_LINKS.nextpages)}<li>{$DISPLAY_LINKS.nextpages}</li>{/if}
-      {if isset($DISPLAY_LINKS.next)}<li>{$DISPLAY_LINKS.next}</li>{/if}
+      {if isset($DISPLAY_LINKS.previous_data)}
+        <li><a class="pageResults" href="{$DISPLAY_LINKS.previous_data.LINK}" title="{$DISPLAY_LINKS.previous_data.TITLE}">{$DISPLAY_LINKS.previous_data.TEXT}</a></li>
+      {/if}
+      {if isset($DISPLAY_LINKS.previouspages_data)}
+        <li><a class="pageResults" href="{$DISPLAY_LINKS.previouspages_data.LINK}" title="{$DISPLAY_LINKS.previouspages_data.TITLE}">{$DISPLAY_LINKS.previouspages_data.TEXT}</a></li>
+      {/if}
+      {if isset($DISPLAY_LINKS.pages_data)}
+        {foreach key="keys" name="outer" item="pages" from=$DISPLAY_LINKS.pages_data}
+          <li{if $pages.CURRENT == 1} class="current"{/if}><a class="pageResults" href="{$pages.LINK}" title="{$pages.TITLE}">{$pages.TEXT}</a></li>
+        {/foreach}
+      {/if}
+      {if isset($DISPLAY_LINKS.nextpages_data)}
+        <li><a class="pageResults" href="{$DISPLAY_LINKS.nextpages_data.LINK}" title="{$DISPLAY_LINKS.nextpages_data.TITLE}">{$DISPLAY_LINKS.nextpages_data.TEXT}</a></li>
+      {/if}
+      {if isset($DISPLAY_LINKS.next_data)}
+        <li><a class="pageResults" href="{$DISPLAY_LINKS.next_data.LINK}" title="{$DISPLAY_LINKS.next_data.TITLE}">{$DISPLAY_LINKS.next_data.TEXT}</a></li>
+      {/if}
     </ul>
   </div>
 </div>
