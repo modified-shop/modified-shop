@@ -11,7 +11,11 @@
       {/if}
       {if isset($DISPLAY_LINKS.pages_data)}
         {foreach key="keys" name="outer" item="pages" from=$DISPLAY_LINKS.pages_data}
-          <li{if $pages.CURRENT == 1} class="current"{/if}><a class="pageResults" href="{$pages.LINK}" title="{$pages.TITLE}">{$pages.TEXT}</a></li>
+          {if $pages.CURRENT == 1}
+            <li class="current">{$pages.TEXT}</li>
+          {else}
+            <li><a class="pageResults" href="{$pages.LINK}" title="{$pages.TITLE}">{$pages.TEXT}</a></li>
+          {/if}
         {/foreach}
       {/if}
       {if isset($DISPLAY_LINKS.nextpages_data)}
