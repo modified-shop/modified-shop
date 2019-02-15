@@ -16,7 +16,7 @@ require('includes/application_top.php');
 // include needed function
 require_once(DIR_FS_INC.'get_external_content.inc.php');
 
-$blz_file_default_link = 'https://www.bundesbank.de/resource/blob/602632/a44cbafa539a539be6222ffa06d33996/mL/blz-2018-09-03-txt-data.txt';
+$blz_file_default_link = 'https://www.bundesbank.de/resource/blob/602632/b6f18dadd412af2b8f47fac0cd8a8dd4/mL/blz-aktuell-txt-data.txt';
 
 require (DIR_WS_INCLUDES.'head.php');
 ?>
