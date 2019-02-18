@@ -463,7 +463,7 @@ class PayPalPayment extends PayPalPaymentBase {
     // set shipping address
     $shipping_address = new ShippingAddress();      
     
-    if (trim($order->delivery['name']) == '') {
+    if (!isset($order->delivery)) {
       $order->delivery = $order->billing;
     }
     $shipping_address->setRecipientName($this->encode_utf8($order->delivery['firstname'].' '.$order->delivery['lastname']))
