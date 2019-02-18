@@ -463,7 +463,7 @@ class PayPalPayment extends PayPalPaymentBase {
     // set shipping address
     $shipping_address = new ShippingAddress();      
     
-    if (!isset($order->delivery)) {
+    if ($order->delivery === false) {
       $order->delivery = $order->billing;
     }
     $shipping_address->setRecipientName($this->encode_utf8($order->delivery['firstname'].' '.$order->delivery['lastname']))
@@ -770,7 +770,7 @@ class PayPalPayment extends PayPalPaymentBase {
     // set address
     $shipping_address = new ShippingAddress();      
     
-    if (trim($order->delivery['name']) == '') {
+    if ($order->delivery === false) {
       $order->delivery = $order->billing;
     }
     $shipping_address->setRecipientName($this->encode_utf8($order->delivery['firstname'].' '.$order->delivery['lastname']))
