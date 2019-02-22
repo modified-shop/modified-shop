@@ -58,8 +58,17 @@
     function output($class, $type = 'error') {
       $output = '';
       if ($this->size($class, $type) > 0) {
-        foreach ($this->messages[$class][$type] as $message) {
-          $output .= '<p>'.$message.'</p>';
+        if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/message_stack.html')) {
+          $smarty = new Smarty();
+          $smarty->caching = 0;
+          $smarty->assign('type', $type);
+          $smarty->assign('language', $_SESSION['language']);
+          $smarty->assign('messages', $this->messages[$class][$type]);
+          $output = $smarty->fetch(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/message_stack.html');
+        } else {
+          foreach ($this->messages[$class][$type] as $message) {
+            $output .= '<p>'.$message.'</p>';
+          }
         }
       }
       return $output;
