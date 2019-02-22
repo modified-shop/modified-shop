@@ -647,4 +647,10 @@ define('PRODUCT_REVIEWS_SUCCESS_WAITING', 'Vielen Dank f&uuml;r Ihre Rezension. 
 
 define('TITLE_PRODUCTS_NEW', 'Neue Artikel');
 define('TITLE_SPECIALS', 'Angebote');
+
+define('SITEMAP_ERROR_400', 'Fehler 400: Die Anforderung war syntaktisch falsch.');
+define('SITEMAP_ERROR_401', 'Fehler 401: Authentifizierungsfehler.');
+define('SITEMAP_ERROR_403', 'Fehler 403: Der Server verweigert die Ausf&uuml;hrung.');
+define('SITEMAP_ERROR_404', 'Fehler 404: Die gesuchte Seite wurde nicht gefunden!');
+define('SITEMAP_ERROR_500', 'Fehler 500: Beim Server gab es einen internen Fehler.');
 ?>

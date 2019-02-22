@@ -647,4 +647,10 @@ define('PRODUCT_REVIEWS_SUCCESS_WAITING', 'Thank you for your review. This will 
 
 define('TITLE_PRODUCTS_NEW', 'New products');
 define('TITLE_SPECIALS', 'Special offers');
+
+define('SITEMAP_ERROR_400', 'Error 400: Bad Request.');
+define('SITEMAP_ERROR_401', 'Error 401: Unauthorized.');
+define('SITEMAP_ERROR_403', 'Error 403: Forbidden.');
+define('SITEMAP_ERROR_404', 'Error 404: Not Found!');
+define('SITEMAP_ERROR_500', 'Error 500: Internal Server Error.');
 ?>
