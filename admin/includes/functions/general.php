@@ -284,38 +284,7 @@
    * @param bool $include_itself
    * @return
    */
-  function xtc_get_category_tree($parent_id = '0', $spacing = '', $exclude = '', $category_tree_array = '', $include_itself = false) {
-    if (!is_array($category_tree_array)) {
-      $category_tree_array = array ();
-    }
-    if ((sizeof($category_tree_array) < 1) && ($exclude != '0')) {
-      $category_tree_array[] = array ('id' => '0', 'text' => TEXT_TOP);
-    }
-    if ($include_itself) {
-      $category_query = xtc_db_query("SELECT cd.categories_name
-                                        FROM ".TABLE_CATEGORIES_DESCRIPTION." cd
-                                       WHERE cd.language_id = '".(int)$_SESSION['languages_id']."'
-                                         AND cd.categories_id = '".(int)$parent_id."'");
-      $category = xtc_db_fetch_array($category_query);
-      $category_tree_array[] = array ('id' => $parent_id, 'text' => $category['categories_name']);
-    }
-    $categories_query = xtc_db_query("SELECT c.categories_id,
-                                             cd.categories_name,
-                                             c.parent_id
-                                        FROM ".TABLE_CATEGORIES." c
-                                        JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd
-                                             ON c.categories_id = cd.categories_id
-                                                AND cd.language_id = '".(int)$_SESSION['languages_id']."'
-                                       WHERE c.parent_id = '".(int)$parent_id."'
-                                    ORDER BY c.sort_order, cd.categories_name");
-    while ($categories = xtc_db_fetch_array($categories_query)) {
-      if ($exclude != $categories['categories_id']) {
-        $category_tree_array[] = array ('id' => $categories['categories_id'], 'text' => $spacing.$categories['categories_name']);
-      }
-      $category_tree_array = xtc_get_category_tree($categories['categories_id'], $spacing.'&nbsp;&nbsp;&nbsp;', $exclude, $category_tree_array);
-    }
-    return $category_tree_array;
-  }
+  require_once(DIR_FS_INC . 'xtc_get_category_tree.inc.php'); // Use existing function from "/inc/" folder
 
   /**
    * xtc_draw_products_pull_down()
