@@ -680,7 +680,8 @@
     $products_a_query = xtc_db_query("SELECT options_values_price, 
                                              price_prefix 
                                         FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES." 
-                                       WHERE orders_products_id = '".(int)$data_array['opID']."'");
+                                       WHERE orders_products_id = '".(int)$data_array['opID']."'
+                                         AND options_values_price > 0");
     $ov_price = 0;
     $prefix = false;
     while ($products_a = xtc_db_fetch_array($products_a_query)) {
@@ -804,7 +805,8 @@
     $products_a_query = xtc_db_query("SELECT options_values_price, 
                                              price_prefix 
                                         FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES." 
-                                       WHERE orders_products_id = '".(int)$data_array['opID']."'");
+                                       WHERE orders_products_id = '".(int)$data_array['opID']."'
+                                         AND options_values_price > 0");
     $ov_price = 0;
     $prefix = false;
     while ($products_a = xtc_db_fetch_array($products_a_query)) {
