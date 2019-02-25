@@ -13,7 +13,7 @@
 
   defined('CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION') OR define('CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION', 'true');
   defined('DISCOUNT_MODULES') OR define('DISCOUNT_MODULES', 'ot_discount,ot_payment');
-  defined('FORMAT_NEGATIVE') OR define('FORMAT_NEGATIVE', '<b><font color="#ff0000">%s</font></b>');
+  defined('FORMAT_NEGATIVE') OR define('FORMAT_NEGATIVE', '<span class="color_ot_total"><b>%s</b></span>');
 
 
   // include needed functions
