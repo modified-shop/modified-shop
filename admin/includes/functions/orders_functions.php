@@ -682,8 +682,22 @@
                                         FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES." 
                                        WHERE orders_products_id = '".(int)$data_array['opID']."'");
     $ov_price = 0;
+    $prefix = false;
     while ($products_a = xtc_db_fetch_array($products_a_query)) {
-      $ov_price += $products_a['price_prefix'].$products_a['options_values_price'];
+      switch ($products_a['price_prefix']) {
+        case '+':
+          $ov_price += $products_a['options_values_price'];
+          break;
+        case '-':
+          $ov_price += $products_a['options_values_price'] * (-1);
+          break;
+        case '=':
+          if (xtc_db_num_rows($products_a_query) == 1) {
+            $prefix = true;
+            $ov_price = $products_a['options_values_price'];
+          }
+          break;
+      }
     }
 
     $discount = 0;
@@ -694,11 +708,13 @@
       }
       $ov_price -= $ov_price / 100 * $discount;
     }
-
-    $products_old_price = $xtPrice->xtcGetPrice($products['products_id'], $format = false, $products['products_quantity'], '', '', '', $order->customer['ID']);
-
-    $products_price = ($products_old_price + $ov_price);
-
+    
+    $products_price = $ov_price;
+    if ($prefix === false) {
+      $products_old_price = $xtPrice->xtcGetPrice($products['products_id'], $format = false, $products['products_quantity'], '', '', '', $order->customer['ID']);
+      $products_price = ($products_old_price + $ov_price);
+    }
+    
     $tax_rate = $products['products_tax'];
     if ($status['customers_status_show_price_tax'] == 0 && $status['customers_status_add_tax_ot'] == 0) {
       $tax_rate = 0;
@@ -732,7 +748,9 @@
     $products_attributes_query = xtc_db_query("SELECT options_id,
                                                       options_values_id,
                                                       options_values_price,
-                                                      price_prefix
+                                                      price_prefix,
+                                                      attributes_model,
+                                                      attributes_ean
                                                  FROM ".TABLE_PRODUCTS_ATTRIBUTES."
                                                 WHERE products_attributes_id = '".(int)$data_array['aID']."'");
     $products_attributes = xtc_db_fetch_array($products_attributes_query);
@@ -758,6 +776,8 @@
       'orders_products_options_id' => xtc_db_prepare_input($products_attributes['options_id']),
       'orders_products_options_values_id' => xtc_db_prepare_input($products_attributes['options_values_id']),
       'price_prefix' => xtc_db_prepare_input($products_attributes['price_prefix']),
+      'attributes_model' => xtc_db_prepare_input($products_options['attributes_model']),
+      'attributes_ean' => xtc_db_prepare_input($products_options['attributes_ean']),
     );
     xtc_db_perform(TABLE_ORDERS_PRODUCTS_ATTRIBUTES, $sql_data_array);
 
@@ -786,8 +806,22 @@
                                         FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES." 
                                        WHERE orders_products_id = '".(int)$data_array['opID']."'");
     $ov_price = 0;
+    $prefix = false;
     while ($products_a = xtc_db_fetch_array($products_a_query)) {
-      $ov_price += $products_a['price_prefix'].$products_a['options_values_price'];
+      switch ($products_a['price_prefix']) {
+        case '+':
+          $ov_price += $products_a['options_values_price'];
+          break;
+        case '-':
+          $ov_price += $products_a['options_values_price'] * (-1);
+          break;
+        case '=':
+          if (xtc_db_num_rows($products_a_query) == 1) {
+            $prefix = true;
+            $ov_price = $products_a['options_values_price'];
+          }
+          break;
+      }    
     }
 
     if (DOWNLOAD_ENABLED == 'true') {
@@ -836,10 +870,12 @@
       $ov_price -= $ov_price / 100 * $discount;
     }
 
-    $products_old_price = $xtPrice->xtcGetPrice($products['products_id'], $format = false, $products['products_quantity'], '', '', '', $order->customer['ID']);
-
-    $products_price = ($products_old_price + $ov_price);
-
+    $products_price = $ov_price;
+    if ($prefix === false) {
+      $products_old_price = $xtPrice->xtcGetPrice($products['products_id'], $format = false, $products['products_quantity'], '', '', '', $order->customer['ID']);
+      $products_price = ($products_old_price + $ov_price);
+    }
+    
     $tax_rate = $products['products_tax'];
     if ($status['customers_status_show_price_tax'] == 0 && $status['customers_status_add_tax_ot'] == 0) {
       $tax_rate = 0;
