@@ -88,7 +88,7 @@
           {if $smarty.const.SHOW_IMAGES_IN_EMAIL == 'true'}
           <td style="border-right: 2px solid; border-bottom: 2px solid; border-color: #ffffff;">
             {if $order_values.PRODUCTS_IMAGE neq ''}              
-                <img src="{$img_path}{$order_values.PRODUCTS_IMAGE}" style="{$smarty.const.SHOW_IMAGES_IN_EMAIL_STYLE}" />              
+                <img src="{$img_path}{$order_values.PRODUCTS_IMAGE}" alt="{$order_values.PRODUCTS_NAME}" title="{$order_values.PRODUCTS_NAME}" style="{$smarty.const.SHOW_IMAGES_IN_EMAIL_STYLE}" />              
             {/if}
           </td>
           {/if}

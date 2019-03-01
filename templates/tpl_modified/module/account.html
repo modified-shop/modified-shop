@@ -80,7 +80,7 @@
       <li class="{if $smarty.foreach.history_products.first}first {/if}cf">
         <span class="hl_image cf">
         {if $prod_history_data.PRODUCTS_IMAGE != ''}
-          <a href="{$prod_history_data.PRODUCTS_LINK}"><img src="{$prod_history_data.PRODUCTS_IMAGE}" alt="{$prod_history_data.PRODUCTS_NAME|onlytext}" /></a>
+          <a href="{$prod_history_data.PRODUCTS_LINK}"><img src="{$prod_history_data.PRODUCTS_IMAGE}" alt="{$prod_history_data.PRODUCTS_NAME|onlytext}" title="{$prod_history_data.PRODUCTS_NAME|onlytext}" /></a>
         {else}
           &nbsp;
         {/if}

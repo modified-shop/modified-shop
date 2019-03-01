@@ -117,7 +117,7 @@
           {if $smarty.const.SHOW_IMAGES_IN_EMAIL == 'true'}
           <td style="border-bottom:1px dotted #999;" valign="top" width="60" align="center">
             {if $order_values.PRODUCTS_IMAGE neq ''}
-              <img src="{$img_path}{$order_values.PRODUCTS_IMAGE}" style="{$smarty.const.SHOW_IMAGES_IN_EMAIL_STYLE}" />
+              <img src="{$img_path}{$order_values.PRODUCTS_IMAGE}" alt="{$order_values.PRODUCTS_NAME}" title="{$order_values.PRODUCTS_NAME}" style="{$smarty.const.SHOW_IMAGES_IN_EMAIL_STYLE}" />
             {else}
               &nbsp;
             {/if}

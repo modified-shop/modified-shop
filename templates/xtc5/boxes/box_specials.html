@@ -3,7 +3,7 @@
 {if isset($box_content) && count($box_content) > 0}
 <h2 class="boxheader"><a href="{$SPECIALS_LINK}">{#heading_specials#}</a></h2>
 <div class="boxbody">
-  {if $box_content.PRODUCTS_IMAGE}<p class="center"><a href="{$box_content.PRODUCTS_LINK}"><img src="{$box_content.PRODUCTS_IMAGE}" alt="{$box_content.PRODUCTS_NAME|onlytext}" class="productboximage" /></a></p>{/if}
+  {if $box_content.PRODUCTS_IMAGE}<p class="center"><a href="{$box_content.PRODUCTS_LINK}"><img src="{$box_content.PRODUCTS_IMAGE}" alt="{$box_content.PRODUCTS_NAME|onlytext}" title="{$box_content.PRODUCTS_NAME|onlytext}" class="productboximage" /></a></p>{/if}
   <p class="center">
     <a href="{$box_content.PRODUCTS_LINK}"><strong>{$box_content.PRODUCTS_NAME}</strong></a><br />
     <strong>{$box_content.PRODUCTS_PRICE}</strong><br />

@@ -3,7 +3,7 @@
 <table class="productPreview" width="100%" border="0" cellspacing="0" cellpadding="0">
 {foreach name=aussen item=module_data from=$module_content}
   <tr>
-    <td align="center" class="productPreviewImage">{if $module_data.PRODUCTS_IMAGE != ''}<a href="{$module_data.PRODUCTS_LINK}"><img src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" class="productImageBorder" /></a>{else}&nbsp;{/if}</td>
+    <td align="center" class="productPreviewImage">{if $module_data.PRODUCTS_IMAGE != ''}<a href="{$module_data.PRODUCTS_LINK}"><img src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" title="{$module_data.PRODUCTS_NAME|onlytext}" class="productImageBorder" /></a>{else}&nbsp;{/if}</td>
     <td class="productPreviewContent">
     <h2><a href="{$module_data.PRODUCTS_LINK}">{$module_data.PRODUCTS_NAME}</a></h2>
     <br />{$module_data.PRODUCTS_SHORT_DESCRIPTION}

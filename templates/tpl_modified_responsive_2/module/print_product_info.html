@@ -61,14 +61,14 @@
   </div>
   <div class="printColumsInfoRight">
     {if $PRODUCTS_IMAGE != ''}
-      <img src="{$PRODUCTS_IMAGE}" alt="{$PRODUCTS_NAME|onlytext}" border="0" />
+      <img src="{$PRODUCTS_IMAGE}" alt="{$PRODUCTS_NAME|onlytext}" title="{$PRODUCTS_NAME|onlytext}" border="0" />
     {/if}
   </div>
   <div class="clearer"></div>
   <br />
   {foreach item=more_images_data from=$more_images}
   <div class="moimages cf">
-    <img src="{$more_images_data.PRODUCTS_IMAGE}" alt="{$PRODUCTS_NAME|onlytext}" border="0" />
+    <img src="{$more_images_data.PRODUCTS_IMAGE}" alt="{$PRODUCTS_NAME|onlytext}" title="{$PRODUCTS_NAME|onlytext}" border="0" />
   </div>
   {/foreach}
 

@@ -18,7 +18,7 @@
   <li>
     <div class="orderlist_row {cycle values="ol_row1,ol_row2"} cf">
       <span class="ol_quantity ol_width1">{$module_data.PRODUCTS_QTY}</span>
-      <span class="ol_image ol_width2">&nbsp;<img src="{$module_data.PRODUCTS_IMAGE}" alt="" /></span>
+      <span class="ol_image ol_width2">&nbsp;<img src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" title="{$module_data.PRODUCTS_NAME|onlytext}" /></span>
       <span class="ol_productsname ol_width3">
         <span class="ol_distance"><a class="ord_prdoducts_name" href="{$module_data.PRODUCTS_LINK}">{$module_data.PRODUCTS_NAME}</a></span>
         {if $module_data.ATTRIBUTES != ''}
