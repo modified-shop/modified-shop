@@ -130,10 +130,12 @@
         $coupon_count = xtc_db_query("SELECT coupon_id 
                                         FROM " . TABLE_COUPON_REDEEM_TRACK . " 
                                        WHERE coupon_id = '" . $gv_result['coupon_id']."'");
-        $coupon_count_customer = xtc_db_query("SELECT coupon_id 
-                                                 FROM " . TABLE_COUPON_REDEEM_TRACK . " 
-                                                WHERE coupon_id = '" . $gv_result['coupon_id']."' 
-                                                  AND customer_id = '" . (int)$_SESSION['customer_id'] . "'");
+        $coupon_count_customer = xtc_db_query("SELECT * 
+                                                 FROM " . TABLE_COUPON_REDEEM_TRACK . "  crt
+                                                 JOIN " . TABLE_ORDERS . " o
+                                                      ON o.orders_id = crt.order_id
+                                                         AND o.customers_email_address = '" . xtc_db_input($_SESSION['customer_email_address']) . "'
+                                                WHERE crt.coupon_id = '" . $gv_result['coupon_id'] . "'");
         if (xtc_db_num_rows($coupon_count)>=$gv_result['uses_per_coupon'] && $gv_result['uses_per_coupon'] > 0) {
           $messageStack->add_session('coupon_message', ERROR_INVALID_USES_COUPON . $gv_result['uses_per_coupon'] . TIMES);
           xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'));
