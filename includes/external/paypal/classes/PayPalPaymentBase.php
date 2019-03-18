@@ -312,7 +312,7 @@ class PayPalPaymentBase extends PayPalCommon {
     {
       $unallowed_modules = explode(',', $_SESSION['customers_status']['customers_status_payment_unallowed']);
       if (!in_array($this->code, $unallowed_modules)) {
-        $image = ((strtoupper($_SESSION['language_code']) == 'DE') ? 'epaypal_de.gif' : 'epaypal_en.gif');
+        $image = ((is_file(DIR_FS_CATALOG.DIR_WS_ICONS.'epaypal_'.strtolower($_SESSION['language_code']).'.gif')) ? 'epaypal_'.strtolower($_SESSION['language_code']).'.gif' : 'epaypal_en.gif');
         $image = xtc_image_button(DIR_WS_ICONS.$image, '', 'id="paypalcartbutton"');
         $checkout_button = '<a href="'.xtc_href_link(basename($PHP_SELF), 'action=paypal_cart_checkout').'">'.$image.'</a>';
 
@@ -326,7 +326,7 @@ class PayPalPaymentBase extends PayPalCommon {
     if ($this->enabled === true) {
       $unallowed_modules = explode(',', $_SESSION['customers_status']['customers_status_payment_unallowed']);
       if (!in_array($this->code, $unallowed_modules)) {
-        $image = ((strtoupper($_SESSION['language_code']) == 'DE') ? 'epaypal_de.gif' : 'epaypal_en.gif');
+        $image = ((is_file(DIR_FS_CATALOG.DIR_WS_ICONS.'epaypal_'.strtolower($_SESSION['language_code']).'.gif')) ? 'epaypal_'.strtolower($_SESSION['language_code']).'.gif' : 'epaypal_en.gif');
         $checkout_button = xtc_image_submit(DIR_WS_BASE.DIR_WS_ICONS.$image, IMAGE_BUTTON_IN_CART, 'id="paypalcartexpress" name="paypalcartexpress"');
 
         return $checkout_button;
