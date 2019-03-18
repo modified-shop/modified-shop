@@ -377,9 +377,9 @@ define('CSS_IMAGE_ICON_CART_ICON_RIGHT', '<i class="fa fa-cart-plus"></i>');
 define('CSS_IMAGE_ICON_CART_ICON_LEFT', '');
 
 
-define('CSS_IMAGE_EPAYPAL_EN_TEXT', '<span class="color-paypal1">Pay</span><span class="color-paypal2">Pal</span> Express');
+define('CSS_IMAGE_EPAYPAL_EN_TEXT', '<span class="color-paypal0">Check out with</span><span class="color-paypal1">Pay</span><span class="color-paypal2">Pal</span>');
 //define('CSS_IMAGE_EPAYPAL_EN_TITLE', '');
-define('CSS_IMAGE_EPAYPAL_EN_ICON_RIGHT', '<i class="fa fa-angle-right"></i>');
-define('CSS_IMAGE_EPAYPAL_EN_ICON_LEFT', '<i class="fa fa-paypal"></i>');
+define('CSS_IMAGE_EPAYPAL_EN_ICON_RIGHT', '');
+define('CSS_IMAGE_EPAYPAL_EN_ICON_LEFT', '');
 
 ?>
