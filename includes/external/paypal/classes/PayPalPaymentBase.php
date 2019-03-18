@@ -359,8 +359,8 @@ class PayPalPaymentBase extends PayPalCommon {
       if ($cleanlink === true) {
         return $link;
       }
-    
-      $image = ((strtoupper($_SESSION['language_code']) == 'DE') ? 'epaypal_de.gif' : 'epaypal_en.gif');
+      
+      $image = ((is_file(DIR_FS_CATALOG.DIR_WS_ICONS.'epaypal_'.strtolower($_SESSION['language_code']).'.gif')) ? 'epaypal_'.strtolower($_SESSION['language_code']).'.gif' : 'epaypal_en.gif');
       if (basename($PHP_SELF) == FILENAME_CHECKOUT_SUCCESS) {
         $image = xtc_image_button(DIR_WS_ICONS.$image, '', 'id="paypalcartbutton"');
       } else {
