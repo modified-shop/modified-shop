@@ -139,6 +139,9 @@
     .$pfrom_check
     .$pto_check;
 
+    // create $search_keywords array
+    $keywordcheck = xtc_parse_search_string($keywords, $search_keywords);
+
     //go for keywords... this is the main search process
     if ($keywords && $keywordcheck) {
     
@@ -153,7 +156,7 @@
 
     // glue together
     $listing_sql = $select_str.$from_str.$where_str;
-    
+  
     if (PRODUCT_LIST_FILTER == 'true') { 
       $products_search_array = array();
       $result_query = xtDBquery($listing_sql);
@@ -186,7 +189,6 @@
                   LEFT JOIN ".TABLE_SPECIALS." s 
                             ON p.products_id = s.products_id
                                ".SPECIALS_CONDITIONS_S."
-                            ".$join."
                             ".$filter_join."
                       WHERE p.products_id IN ('".implode("', '", $products_search_array)."')
                    GROUP BY p.products_id
