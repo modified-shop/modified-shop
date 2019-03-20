@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_input_validation.inc.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -17,7 +17,7 @@
    ---------------------------------------------------------------------------------------*/
 
 
-   function xtc_input_validation($var,$type,$replace_char) {
+   function xtc_input_validation($var, $type, $replace_char = '') {
 
       switch($type) {
                 case 'cPath':
