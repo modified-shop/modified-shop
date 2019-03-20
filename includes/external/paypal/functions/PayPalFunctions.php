@@ -26,7 +26,7 @@ function get_third_party_payments() {
   $selection = array();
   if (is_array($payment_modules->modules)) {
     reset($payment_modules->modules);
-    while (list(, $value) = each($payment_modules->modules)) {
+    foreach ($payment_modules->modules as $value) {
       $class = substr($value, 0, strrpos($value, '.'));
       if (isset($GLOBALS[$class]) && $GLOBALS[$class]->enabled && in_array($class, $payment_allowed)) {
         $module_selection = $GLOBALS[$class]->selection();
