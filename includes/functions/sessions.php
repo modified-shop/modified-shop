@@ -179,8 +179,6 @@
       $_SESSION = $session_backup;
 
       if (STORE_SESSIONS == 'mysql') {
-        session_set_save_handler('_sess_open', '_sess_close', '_sess_read', '_sess_write', '_sess_destroy', '_sess_gc');
-        register_shutdown_function('session_write_close');
         xtc_db_query("DELETE FROM " . TABLE_SESSIONS . " WHERE sesskey = '" . xtc_db_input($old_session_id) . "'");
       }
 
