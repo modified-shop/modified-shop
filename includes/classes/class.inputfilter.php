@@ -136,20 +136,18 @@ class InputFilter {
       // convert decimal
       $source = preg_replace_callback(
         '/&#(\d+);/m',
-        create_function (
-          '$m',
-          'return chr($m[1]);'
-        ),
+        function ($m) {
+          return chr($m[1]);
+        },
         $source
       );
     
       // convert hex
       $source = preg_replace_callback(
         '/&#x([a-f0-9]+);/mi',
-        create_function (
-          '$m',
-          'return chr(hexdec($m[1]));'
-        ),
+        function ($m) {
+          return chr(hexdec($m[1]));
+        },
         $source
       );
 		}
