@@ -221,6 +221,7 @@
   }
 
   // create meta array
+  $metadata_array = array();
   switch(basename($PHP_SELF)) {
 
     case FILENAME_PRODUCT_INFO :
