@@ -48,7 +48,7 @@
       $query = 'INSERT INTO ' . $table . ' (';
       
       $sub_query = array();
-      foreach ($data as $columns) {
+      foreach ($data as $columns => $value) {
         $sub_query[] = $columns;
       }
       $query .= implode(', ', $sub_query) . ') VALUES (';
