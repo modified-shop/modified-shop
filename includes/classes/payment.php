@@ -81,7 +81,7 @@
           );
         } else {
           reset($this->modules);
-          while (list(, $value) = each($this->modules)) {
+          foreach ($this->modules as $value) {
             $class = substr($value, 0, strrpos($value, '.'));
             $include_modules[] = array(
               'class' => $class,
@@ -216,7 +216,7 @@
               '  }' . "\n\n";
 
         reset($this->modules);
-        while (list(, $value) = each($this->modules)) {
+        foreach ($this->modules as $value) {
           $class = substr($value, 0, strrpos($value, '.'));
           if (isset($GLOBALS[$class]) 
               && is_object($GLOBALS[$class]) 
@@ -296,7 +296,7 @@
       $selection_array = array();
       if (is_array($this->modules)) {
         reset($this->modules);
-        while (list(, $value) = each($this->modules)) {
+        foreach ($this->modules as $value) {
           $class = substr($value, 0, strrpos($value, '.'));
           if (isset($GLOBALS[$class]) 
               && is_object($GLOBALS[$class])

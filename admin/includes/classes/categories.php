@@ -52,7 +52,7 @@ class categories {
       }
     }
     reset($products);
-    while (list ($key, $value) = each($products)) {
+    foreach ($products as $key => $value) {
       $check_query = xtc_db_query("SELECT COUNT(*) AS total
                                      FROM ".TABLE_PRODUCTS_TO_CATEGORIES."
                                     WHERE products_id = '".$key."'
@@ -68,11 +68,10 @@ class categories {
       $this->remove_category($categories[$i]['id']);
     }
     reset($products_delete);
-    while (list ($key) = each($products_delete)) {
+    foreach ($products_delete as $key) {
       $this->remove_product($key);
     }
   }
-
 
   // deletes a single category, without products
   function remove_category($category_id) {

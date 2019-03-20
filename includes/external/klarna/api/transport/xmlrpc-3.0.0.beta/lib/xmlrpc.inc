@@ -2332,7 +2332,7 @@ xmlrpc_encode_entitites($this->errstr, $GLOBALS['xmlrpc_internalencoding'], $cha
 				}
 				// be tolerant to line endings, and extra empty lines
 				$ar = preg_split("/\r?\n/", trim(substr($data, 0, $pos)));
-				while(list(,$line) = @each($ar))
+				foreach ($ar as $line) {
 				{
 					// take care of multi-line headers and cookies
 					$arr = explode(':',$line,2);
@@ -2891,7 +2891,7 @@ xmlrpc_encode_entitites($this->errstr, $GLOBALS['xmlrpc_internalencoding'], $cha
 				echo "$key => $val<br />";
 				if($key == 'array')
 				{
-					while(list($key2, $val2) = each($val))
+					foreach ($val as $key2 => $val2) {
 					{
 						echo "-- $key2 => $val2<br />";
 					}
@@ -3114,7 +3114,7 @@ xmlrpc_encode_entitites($this->errstr, $GLOBALS['xmlrpc_internalencoding'], $cha
 			if(is_array($b))
 			{
 				@reset($b);
-				while(list($id,$cont) = @each($b))
+				foreach ($b as $id => $cont) {
 				{
 					$b[$id] = $cont->scalarval();
 				}
@@ -3125,12 +3125,12 @@ xmlrpc_encode_entitites($this->errstr, $GLOBALS['xmlrpc_internalencoding'], $cha
 			{
 				$t = get_object_vars($b);
 				@reset($t);
-				while(list($id,$cont) = @each($t))
+				foreach ($t as $id => $cont)
 				{
 					$t[$id] = $cont->scalarval();
 				}
 				@reset($t);
-				while(list($id,$cont) = @each($t))
+				foreach ($t as $id => $cont)
 				{
 					@$b->$id = $cont;
 				}
@@ -3350,7 +3350,7 @@ xmlrpc_encode_entitites($this->errstr, $GLOBALS['xmlrpc_internalencoding'], $cha
 					&& class_exists($xmlrpc_val->_php_class))
 				{
 					$obj = @new $xmlrpc_val->_php_class;
-					while(list($key,$value)=$xmlrpc_val->structeach())
+					foreach ($xmlrpc_val->structeach() as $key => $value) {
 					{
 						$obj->$key = php_xmlrpc_decode($value, $options);
 					}
@@ -3359,7 +3359,7 @@ xmlrpc_encode_entitites($this->errstr, $GLOBALS['xmlrpc_internalencoding'], $cha
 				else
 				{
 					$arr = array();
-					while(list($key,$value)=$xmlrpc_val->structeach())
+					foreach ($xmlrpc_val->structeach() as $key => $value)
 					{
 						$arr[$key] = php_xmlrpc_decode($value, $options);
 					}
@@ -3468,7 +3468,7 @@ xmlrpc_encode_entitites($this->errstr, $GLOBALS['xmlrpc_internalencoding'], $cha
 				{
 					$arr = array();
 					reset($php_val);
-					while(list($k,$v) = each($php_val))
+					foreach ($php_val as $k => $v)
 					{
 						$arr[$k] = php_xmlrpc_encode($v, $options);
 					}

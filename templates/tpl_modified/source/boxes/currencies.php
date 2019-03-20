@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: currencies.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -27,7 +27,7 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_currencies.html', $cach
   $currencies_array = array();
   if (isset($xtPrice) && is_object($xtPrice)) {
     reset($xtPrice->currencies);
-    while (list($key, $value) = each($xtPrice->currencies)) {
+    foreach ($xtPrice->currencies as $key => $value) {
       $currencies_array[] = array('id' => $key, 'text' => $value['title']);
     }
   }
@@ -38,7 +38,7 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_currencies.html', $cach
     $hidden_get_variables = '';
     if (isset($_GET) && count($_GET) > 0) {
       reset($_GET);
-      while (list($key, $value) = each($_GET)) {
+      foreach ($_GET as $key => $value) {
         if (is_string($value) && $key != 'currency' && $key != xtc_session_name() && $key != 'x' && $key != 'y' ) {
           $hidden_get_variables .= xtc_draw_hidden_field($key, $value);
         }

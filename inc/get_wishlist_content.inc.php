@@ -67,7 +67,7 @@
         $attributes_exists = true;
         $subindex = 0;
         reset($products[$i]['attributes']);
-        while (list ($option, $value) = each($products[$i]['attributes'])) {
+        foreach ($products[$i]['attributes'] as $option => $value) {
           $attributes = $main->getAttributes($products[$i]['id'], $option, $value);
           $module_data[$i]['ATTRIBUTES'][$subindex] = array('ID' => $attributes['products_attributes_id'],
                                                             'MODEL' => $attributes['attributes_model'],

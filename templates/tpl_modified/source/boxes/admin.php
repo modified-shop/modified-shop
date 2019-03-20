@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: admin.php 96 2012-12-02 12:02:56Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -63,7 +63,7 @@ if ($admin_access['languages'] == '1' || $admin_access['categories'] == '1') {
   }
   if (count($lng->catalog_languages) > 1) {
     reset($lng->catalog_languages);
-    while (list($key, $value) = each($lng->catalog_languages)) {
+    foreach ($lng->catalog_languages as $key => $value) {
       $lng_link_txt = file_exists('lang/' .  $value['directory'] .'/' . $value['image']) ? xtc_image('lang/' .  $value['directory'] .'/' . $value['image'], $value['name']) : $value['name'];
       $languages_string .= '&nbsp;<a href="' . xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('language', 'currency')) . 'language=' . $key, $request_type) . '">' . $lng_link_txt . '</a> ';
     }

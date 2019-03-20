@@ -445,7 +445,7 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
         <?php
         /* Re-Post all POST'ed variables */
         reset($_POST);
-        while (list($key, $value) = each($_POST)) {
+        foreach ($_POST as $key => $value) {
           if (!is_array($_POST[$key])) {
             echo xtc_draw_hidden_field($key, encode_htmlspecialchars(stripslashes($value)));
           }

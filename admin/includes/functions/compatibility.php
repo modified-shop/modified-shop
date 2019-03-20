@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: compatibility.php 950 2005-05-14 16:45:21Z mz $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -24,7 +24,7 @@
   function do_magic_quotes_gpc(&$ar) {
     if (!is_array($ar)) return;
 
-    while (list($key, $value) = each($ar)) {
+    foreach ($ar as $key => $value) {
       if (is_array($value)) {
         do_magic_quotes_gpc($value);
       } else {
@@ -77,7 +77,7 @@
     function checkdnsrr($host, $type) {
       if(xtc_not_null($host) && xtc_not_null($type)) {
         @exec("nslookup -type=$type $host", $output);
-        while(list($k, $line) = each($output)) {
+        foreach ($output as $k => $line) {
           if(preg_match("/^$host/i", $line)) { // Hetfield - 2009-08-19 - replaced deprecated function eregi with preg_match to be ready for PHP >= 5.3
             return true;
           }
@@ -124,13 +124,17 @@
     if (function_exists('array_merge')) {
       $array_merged = array_merge($array1, $array2, $array3);
     } else {
-      while (list ($key, $val) = each($array1))
+      foreach ($array1 as $key => $val) {
         $array_merged[$key] = $val;
-      while (list ($key, $val) = each($array2))
+      }
+      foreach ($array2 as $key => $val) {
         $array_merged[$key] = $val;
-      if (sizeof($array3) > 0)
-        while (list ($key, $val) = each($array3))
+      }
+      if (sizeof($array3) > 0) {
+        foreach ($array3 as $key => $val) {
           $array_merged[$key] = $val;
+        }
+      }
     }
     return (array) $array_merged;
   }
@@ -142,7 +146,7 @@
       $i = 0;
       $shifted_array = array ();
       reset($array);
-      while (list ($key, $value) = each($array)) {
+      foreach ($array as $key => $value) {
         if ($i > 0) {
           $shifted_array[$key] = $value;
         } else {

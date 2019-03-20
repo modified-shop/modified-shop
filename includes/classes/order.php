@@ -591,7 +591,7 @@
           }
           $subindex = 0;
           reset($products_attributes);
-          while (list($option, $value) = each($products_attributes)) {
+          foreach ($products_attributes as $option => $value) {
             $attributes = $main->getAttributes($products[$i]['id'],$option,$value);
             if ($check_attributes_model === true && $attributes['attributes_model'] != '') {
               $attributes_model[] = $attributes['attributes_model'];

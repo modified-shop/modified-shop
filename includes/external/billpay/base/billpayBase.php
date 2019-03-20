@@ -996,7 +996,7 @@ JAVASCRIPT;
             if (is_array($order_totals)) {
                 reset($order_totals);
 
-                while(list(, $value) = each($order_totals)) {
+                foreach ($order_totals as $value) {
                     $classname = substr($value, 0, strrpos($value, '.'));
 
                     if (!class_exists($classname) || ! $GLOBALS[$classname]->enabled) {

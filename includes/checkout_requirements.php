@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id:$
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -73,7 +73,7 @@ if (STOCK_CHECK == 'true'
     //products attributes
     if (ATTRIBUTE_STOCK_CHECK == 'true' && isset($products[$i]['attributes']) && is_array($products[$i]['attributes'])) {
       reset($products[$i]['attributes']);
-      while (list ($option, $value) = each($products[$i]['attributes'])) {
+      foreach ($products[$i]['attributes'] as $option => $value) {
         $attributes = $main->getAttributes($products[$i]['id'],$option,$value);
         if ($attributes['attributes_stock'] - $products[$i]['quantity'] < 0) {
           $_SESSION['any_out_of_stock'] = 1;

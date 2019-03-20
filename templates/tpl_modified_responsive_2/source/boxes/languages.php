@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: languages.php 5581 2013-09-08 21:26:38Z Tomcraft $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -32,7 +32,7 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_languages.html', $cache
   if (count($lng->catalog_languages) > 1 && strpos(basename($PHP_SELF), 'checkout') === false) {
     $box_content = array();
     reset($lng->catalog_languages);
-    while (list($key, $value) = each($lng->catalog_languages)) {
+    foreach ($lng->catalog_languages as $key => $value) {
       $lng_link_txt = file_exists('lang/' .  $value['directory'] .'/' . $value['image']) ? xtc_image('lang/' .  $value['directory'] .'/' . $value['image'], $value['name'], '', '', 'title="' . $value['name']. '"') : $value['name'];
       $lng_link_url = xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('language', 'currency')) . 'language=' . $key, $request_type);
       if ($lng_link_url != '#') {

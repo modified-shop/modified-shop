@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: compatibility.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -40,7 +40,7 @@
   function do_magic_quotes_gpc(&$ar) {
     if (!is_array($ar)) return false;
 
-    while (list($key, $value) = each($ar)) {
+    foreach ($ar as $key => $value) {
       if (is_array($value)) {
         do_magic_quotes_gpc($value);
       } else {
@@ -75,7 +75,7 @@
   if (!function_exists('in_array')) {
     function in_array($lookup_value, $lookup_array) {
       reset($lookup_array);
-      while (list($key, $value) = each($lookup_array)) {
+      foreach ($lookup_array as $key => $value) {
         if ($value == $lookup_value) return true;
       }
 
@@ -120,9 +120,9 @@
   if (!function_exists('array_merge')) {
     function array_merge($array1, $array2, $array3 = '') {
       if (empty($array3) && !is_array($array3)) $array3 = array();
-      while (list($key, $val) = each($array1)) $array_merged[$key] = $val;
-      while (list($key, $val) = each($array2)) $array_merged[$key] = $val;
-      if (sizeof($array3) > 0) while (list($key, $val) = each($array3)) $array_merged[$key] = $val;
+      foreach ($array1 as $key => $val) $array_merged[$key] = $val;
+      foreach ($array2 as $key => $val) $array_merged[$key] = $val;
+      if (sizeof($array3) > 0) foreach ($array3 as $key => $val) $array_merged[$key] = $val;
 
       return (array) $array_merged;
     }
@@ -153,7 +153,7 @@
       if (is_array($array)) {
         $_new_array = array();
         reset($array);
-        while (list($key, $value) = each($array)) {
+        foreach ($array as $key => $value) {
           $_new_array[$key] = array_map($callback, $array[$key]);
         }
         return $_new_array;
@@ -179,7 +179,7 @@
     function checkdnsrr($host, $type) {
       if(xtc_not_null($host) && xtc_not_null($type)) {
         @exec("nslookup -type=$type $host", $output);
-        while(list($k, $line) = each($output)) {
+        foreach ($output as $k => $line) {
           if(preg_match("/^$host/i", $line)) { // Hetfield - 2009-08-19 - replaced deprecated function eregi with preg_match to be ready for PHP >= 5.3
             return true;
           }
