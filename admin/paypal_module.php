@@ -201,7 +201,7 @@ require (DIR_WS_INCLUDES.'head.php');
                   $mInfo = new objectInfo($module_info);
 
                   reset($mInfo->keys);
-                  while (list($key, $value) = each($mInfo->keys)) {
+                  foreach ($mInfo->keys as $key => $value) {
                     ?>
                     <tr>
                       <td class="dataTableConfig col-left"><?php echo $value['title']; ?></td>
