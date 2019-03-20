@@ -224,6 +224,8 @@ define('ICON_ERROR', 'Fehler');
 
 define('TEXT_PRINT', 'Drucken');
 
+define('BUTTON_RESET', 'Reset');
+define('BUTTON_UPDATE', 'Update');
 /*
  * 
  *  GREETINGS
