@@ -74,7 +74,7 @@ class shoppingCart {
     // insert current cart contents in database
     if (is_array($this->contents)) {
       reset($this->contents);
-      foreach ($this->contents as $products_id) {
+      foreach ($this->contents as $products_id => $data) {
         if ($this->check_products_status_permission($products_id) === true) {
           $qty = $this->contents[$products_id]['qty'];
           $product_query = xtc_db_query("SELECT products_id
@@ -316,7 +316,7 @@ class shoppingCart {
    */
   function cleanup() {
     reset($this->contents);
-    foreach ($this->contents as $key => $value) {
+    foreach ($this->contents as $key => $data) {
       if (isset($this->contents[$key]['qty']) && $this->contents[$key]['qty'] < 1) {
         unset ($this->contents[$key]);
         // remove from database
@@ -337,7 +337,7 @@ class shoppingCart {
     $total_items = 0;
     if (is_array($this->contents)) {
       reset($this->contents);
-      foreach ($this->contents as $products_id) {
+      foreach ($this->contents as $products_id => $data) {
         $total_items += $this->get_quantity($products_id);
       }
     }
@@ -410,7 +410,7 @@ class shoppingCart {
     $product_id_list = '';
     if (is_array($this->contents)) {
       reset($this->contents);
-      foreach ($this->contents as $products_id) {
+      foreach ($this->contents as $products_id => $data) {
         $product_id_list .= ', '.$products_id;
       }
     }
