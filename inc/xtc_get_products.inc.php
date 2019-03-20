@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_get_products.inc.php 3072 2012-06-18 15:01:13Z hhacker $   
+   $Id$   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -23,7 +23,7 @@ function xtc_get_products($session) {
   $products_array = array();
   reset($session);
   if (is_array($session['cart']->contents)) {     
-      while (list($products_id, ) = each($session['cart']->contents)) {
+      foreach ($session['cart']->contents as $products_id) {
         $products_query = xtc_db_query("SELECT p.products_id, 
                                                pd.products_name,
                                                p.products_image, 
@@ -67,8 +67,8 @@ function attributes_price($products_id,$session) {
   $xtPrice = new xtcPrice($session['currency'],$session['customers_status']['customers_status_id']);
   if (isset($session['contents'][$products_id]['attributes'])) {
     reset($session['contents'][$products_id]['attributes']);
-    while (list($option, $value) = each($session['contents'][$products_id]['attributes'])) {
-      $attribute_price_query = xtc_db_query("SELECT pd.products_tax_class_id, 
+    foreach ($session['contents'][$products_id]['attributes'] as $option => $value) {
+      $attribute_price_query = value("SELECT pd.products_tax_class_id, 
                                                     p.options_values_price, 
                                                     p.price_prefix 
                                                FROM " . TABLE_PRODUCTS_ATTRIBUTES . " p

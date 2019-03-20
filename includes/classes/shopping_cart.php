@@ -74,7 +74,7 @@ class shoppingCart {
     // insert current cart contents in database
     if (is_array($this->contents)) {
       reset($this->contents);
-      while (list ($products_id,) = each($this->contents)) {
+      foreach ($this->contents as $products_id) {
         if ($this->check_products_status_permission($products_id) === true) {
           $qty = $this->contents[$products_id]['qty'];
           $product_query = xtc_db_query("SELECT products_id
@@ -93,7 +93,7 @@ class shoppingCart {
 
             if (isset($this->contents[$products_id]['attributes'])) {
               reset($this->contents[$products_id]['attributes']);
-              while (list ($option, $value) = each($this->contents[$products_id]['attributes'])) {
+              foreach ($this->contents[$products_id]['attributes'] as $option => $value) {
                 $sql_data_array = array('customers_id' => (int)$_SESSION['customer_id'],
                                         'products_id' => $products_id,
                                         'products_options_id' => (int)$option,
@@ -232,7 +232,7 @@ class shoppingCart {
 
       if (is_array($attributes)) {
         reset($attributes);
-        while (list ($option, $value) = each($attributes)) {
+        foreach ($attributes as $option => $value) {
           $this->contents[$products_id]['attributes'][(int)$option] = (int)$value;
           
           //new module support           
@@ -293,7 +293,7 @@ class shoppingCart {
 
     if (is_array($attributes)) {
       reset($attributes);
-      while (list ($option, $value) = each($attributes)) {
+      foreach ($attributes as $option => $value) {
         $this->contents[$products_id]['attributes'][(int)$option] = (int)$value;
         //new module support           
         $this->shoppingCartModules->update_cart_attributes_session($value, $this->type, $products_id, $option);
@@ -316,7 +316,7 @@ class shoppingCart {
    */
   function cleanup() {
     reset($this->contents);
-    while (list ($key,) = each($this->contents)) {
+    foreach ($this->contents as $key => $value) {
       if (isset($this->contents[$key]['qty']) && $this->contents[$key]['qty'] < 1) {
         unset ($this->contents[$key]);
         // remove from database
@@ -337,7 +337,7 @@ class shoppingCart {
     $total_items = 0;
     if (is_array($this->contents)) {
       reset($this->contents);
-      while (list ($products_id,) = each($this->contents)) {
+      foreach ($this->contents as $products_id) {
         $total_items += $this->get_quantity($products_id);
       }
     }
@@ -410,7 +410,7 @@ class shoppingCart {
     $product_id_list = '';
     if (is_array($this->contents)) {
       reset($this->contents);
-      while (list ($products_id,) = each($this->contents)) {
+      foreach ($this->contents as $products_id) {
         $product_id_list .= ', '.$products_id;
       }
     }
@@ -449,7 +449,7 @@ class shoppingCart {
       return 0;
     }
     reset($this->contents);
-    while (list ($products_id) = each($this->contents)) {
+    foreach ($this->contents as $products_id => $data) {
       $qty = $this->contents[$products_id]['qty'];
       // products price
       $product_query = xtc_db_query("SELECT ".ADD_SELECT_CART."
@@ -489,7 +489,7 @@ class shoppingCart {
         $attribute_price = 0;
         if (isset($this->contents[$products_id]['attributes'])) {
           reset($this->contents[$products_id]['attributes']);
-          while (list ($option, $value) = each($this->contents[$products_id]['attributes'])) {
+          foreach ($this->contents[$products_id]['attributes'] as $option => $value) {
             $values = $xtPrice->xtcGetOptionPrice($product['products_id'], $option, $value);
             //new module support       
             $values['price'] = $this->shoppingCartModules->calculate_option_price($values['price'], $option, $value, $products_id, $qty);
@@ -565,7 +565,7 @@ class shoppingCart {
     $attributes_weight = 0;
     if (isset($this->contents[$products_id]['attributes'])) {
       reset($this->contents[$products_id]['attributes']);
-      while (list ($option, $value) = each($this->contents[$products_id]['attributes'])) {
+      foreach ($this->contents[$products_id]['attributes'] as $option => $value) {
         $values = $xtPrice->xtcGetOptionPrice($products_id, $option, $value);
         //new module support   
         $values['price'] = $this->shoppingCartModules->calculate_option_price($values['price'], $option, $value, $products_id, $qty);
@@ -587,7 +587,7 @@ class shoppingCart {
     $products_array = array ();
     reset($this->contents);
     $index = 0;
-    while (list ($products_id,) = each($this->contents)) {
+    foreach ($this->contents as $products_id => $data) {
       if($this->contents[$products_id]['qty'] != 0 || $this->contents[$products_id]['qty'] !=''){
         $products_query = xtc_db_query("SELECT ".ADD_SELECT_CART."
                                                p.products_id,
@@ -733,7 +733,7 @@ class shoppingCart {
     $this->content_type = false;
     if ((DOWNLOAD_ENABLED == 'true') && ($this->count_contents() > 0)) {
       reset($this->contents);
-      while (list ($products_id,) = each($this->contents)) {
+      foreach ($this->contents as $products_id => $data) {
         $db_products_id = $products_id;
         
         //new module support 
@@ -778,7 +778,7 @@ class shoppingCart {
             }          
           } else {
             // old routine as standard
-            while (list (, $options_values_id) = each($this->contents[$products_id]['attributes'])) {
+            foreach ($this->contents[$products_id]['attributes'] as $options_values_id) {
               $virtual_check_query = xtc_db_query("SELECT count(*) as total
                                                      FROM ".TABLE_PRODUCTS_ATTRIBUTES." pa
                                                      JOIN ".TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD." pad
@@ -861,7 +861,7 @@ class shoppingCart {
     $total_items = 0;
     if (is_array($this->contents)) {
       reset($this->contents);
-      while (list ($products_id,) = each($this->contents)) {
+      foreach ($this->contents as $products_id => $data) {
         $no_count = false;
         $gv_query = xtc_db_query("SELECT products_model 
                                     FROM ".TABLE_PRODUCTS." 

@@ -2801,12 +2801,12 @@ function SendLog ()
     // log data into db.
 
     $pdata ='';
-    while (list($key, $value) = each($_POST))
+    foreach ($_POST as $key => $value)
     {
        if (is_array($value))
        {
-         while (list($key1, $value1) = each($value))
-          {
+         foreach ($value as $key1 => $value1)
+         {
            $pdata .= xtc_db_input($key)."[" . xtc_db_input($key1)."] => ".xtc_db_input($value1)."\\r\\n";
          }
        }
@@ -2817,7 +2817,7 @@ function SendLog ()
     }
 
     $gdata ='';
-    while (list($key, $value) = each($_GET))
+    foreach ($_GET as $key => $value)
     {
        $gdata .= xtc_db_input($key)." => ".xtc_db_input($value)."\\r\\n";
     }

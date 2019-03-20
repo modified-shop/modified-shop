@@ -58,7 +58,7 @@
           );
         } else {
           reset($this->modules);
-          while (list(, $value) = each($this->modules)) {
+          foreach ($this->modules as $value) {
             $class = substr($value, 0, strrpos($value, '.'));
             $include_modules[] = array(
               'class' => $class, 
@@ -120,7 +120,7 @@
         $include_quotes = array();
 
         reset($this->modules);
-        while (list(, $value) = each($this->modules)) {
+        foreach ($this->modules as $value) {
           $class = substr($value, 0, strrpos($value, '.'));
           if (xtc_not_null($module) && isset($GLOBALS[$class])) {
             if ($module == $class && $GLOBALS[$class]->enabled) {
@@ -147,7 +147,7 @@
         $ignore_cheapest_array = explode(',', IGNORE_CHEAPEST_MODULES);
 
         reset($this->modules);
-        while (list(, $value) = each($this->modules)) {
+        foreach ($this->modules as $value) {
           $class = substr($value, 0, strrpos($value, '.'));
           if (isset($GLOBALS[$class])
               && is_object($GLOBALS[$class]) 
@@ -207,7 +207,7 @@
               '  }' . "\n\n";
 
         reset($this->modules);
-        while (list(, $value) = each($this->modules)) {
+        foreach ($this->modules as $value) {
           $class = substr($value, 0, strrpos($value, '.'));
           if (isset($GLOBALS[$class]) 
               && $GLOBALS[$class]->enabled 

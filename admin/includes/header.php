@@ -26,7 +26,7 @@
   $ls_languages = xtc_get_languages();  
   $languages_array = array();
   if (count($ls_languages) > 1) {
-    while (list($key, $value) = each($ls_languages)) {
+    foreach ($ls_languages as $key => $value) {
       if (!isset($_GET['action']) || $_GET['action'] == 'edit') {
         $languages_array[] = '<a href="' . xtc_href_link($current_page, xtc_get_all_get_params(array('language', 'currency')).'language=' . $value['code'], 'NONSSL') . '">' . xtc_image('../lang/' .  $value['directory'] .'/admin/images/' . $value['image'], $value['name']) . '</a>';
       } else {

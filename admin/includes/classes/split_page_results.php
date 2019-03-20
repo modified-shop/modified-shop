@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: split_page_results.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -93,8 +93,8 @@ class splitPageResults {
 
             if ($parameters != '') {
                 if (substr($parameters, -1) == '&') $parameters = substr($parameters, 0, -1);
-                $pairs = explode('&', $parameters);
-                while (list(, $pair) = each($pairs)) {
+                $pairs = explode('&', $parameters);                
+                foreach ($pairs as $pair) {
                     list($key,$value) = explode('=', $pair);
                     $display_links .= xtc_draw_hidden_field(rawurldecode($key), rawurldecode($value));
                 }

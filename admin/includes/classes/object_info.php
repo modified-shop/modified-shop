@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: object_info.php 950 2005-05-14 16:45:21Z mz $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -20,7 +20,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
     // class constructor
     function __construct($object_array) {
       reset($object_array);
-      while (list($key, $value) = each($object_array)) {
+      foreach ($object_array as $key => $value) {
         $this->$key = xtc_db_prepare_input($value);
       }
     }

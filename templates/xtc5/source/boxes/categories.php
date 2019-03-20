@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: categories.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -78,7 +78,7 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_categories.html', $cach
       $new_path = '';
       $id = explode('_', $cPath);
       reset($id);
-      while (list ($key, $value) = each($id)) {
+      foreach ($id as $key => $value) {
         unset ($prev_id);
         unset ($first_id);
         $categories_query = xtDBquery("SELECT c.categories_id,

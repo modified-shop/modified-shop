@@ -238,14 +238,14 @@ class ot_gv {
         $ratio1 = number_format($od_amount / $amount, 2);
         $tod_amount = 0;
         reset($order->info['tax_groups']);
-        while (list ($key, $value) = each($order->info['tax_groups'])) {
+        foreach ($order->info['tax_groups'] as $key => $value) {
           $tax_rate = xtc_get_tax_rate_from_desc($key);
           $total_net += $tax_rate * $order->info['tax_groups'][$key];
         }
         if ($od_amount > $total_net)
           $od_amount = $total_net;
         reset($order->info['tax_groups']);
-        while (list ($key, $value) = each($order->info['tax_groups'])) {
+        foreach ($order->info['tax_groups'] as $key => $value) {
           $tax_rate = xtc_get_tax_rate_from_desc($key);
           $net = $tax_rate * $order->info['tax_groups'][$key];
           if ($net > 0) {

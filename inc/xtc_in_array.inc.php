@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_in_array.inc.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -29,7 +29,7 @@
       }
     } else {
       reset($array);
-      while (list(,$key_value) = each($array)) {
+      foreach ($array as $key_value) {
         if (is_array($value)) {
           for ($i=0; $i<sizeof($value); $i++) {
             if ($key_value == $value[$i]) return true;

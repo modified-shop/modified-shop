@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id:$   
+   $Id$   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -78,7 +78,7 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_content.html', $cache_i
       $new_path = '';
       $coid = explode('_', $coPath);
       reset($coid);
-      while (list ($key, $value) = each($coid)) {
+      foreach ($coid as $key => $value) {
         unset($prev_cid);
         unset($first_cid);
         $content_query = xtDBquery("SELECT content_id, 

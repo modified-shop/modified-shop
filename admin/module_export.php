@@ -87,7 +87,7 @@
       case 'save':
         if (is_array($_POST['configuration'])) {
           if (count($_POST['configuration'])) {
-            while (list($key, $value) = each($_POST['configuration'])) {
+            foreach ($_POST['configuration'] as $key => $value) {
               if (is_array($_POST['configuration'][$key])) {
                 // multi language config
                 if (gettype(array_shift(array_keys($_POST['configuration'][$key]))) == 'string') {
@@ -116,7 +116,7 @@
           //add post params to get params
           $post_params = isset($module->post_params) ? $module->post_params : array();
           reset($post_params);
-          while(list($key, $pparam) = each($post_params)) {
+          foreach ($post_params as $key => $pparam) {
             $get_params[$pparam] = $_POST[$pparam];
           }
           //convert params array to params string
@@ -250,10 +250,10 @@
   {
     reset($params_array);
     $params = array();
-    while(list($key, $value) = each($params_array)) {
+    foreach ($params_array as $key => $value) {
       if (is_array($value)) {
         reset($value);
-        while(list($key2, $value2) = each($value)) {
+        foreach ($value as $key2 => $value2) {
           $params[] = $key.'_'.strtolower($key2) .'='. $value2;
         }
       } else {
@@ -432,12 +432,12 @@ if (xtc_not_null($action) && !$box) {
                     $keys = '';
                     
                     reset($mInfo->keys_dispnone);
-                    while (list($key, $value) = each($mInfo->keys_dispnone)) {
+                    foreach ($mInfo->keys_dispnone as $key => $value) {
                       unset($mInfo->keys[$value]);
                     }
                     
                     reset($mInfo->keys);
-                    while (list($key, $value) = each($mInfo->keys)) {
+                    foreach ($mInfo->keys as $key => $value) {
                       $keys .= '<b>' . $value['title'] . '</b><br />' .  $value['description'].'<br />';
                       if ($value['set_function']) {
                         if (strpos($value['set_function'], '->') !== false) {
@@ -503,7 +503,7 @@ if (xtc_not_null($action) && !$box) {
                       if ($mInfo->status != '0') {
                         $keys = '';
                         reset($mInfo->keys);
-                        while (list(, $value) = each($mInfo->keys)) {
+                        foreach ($mInfo->keys as $value) {
                           $keys .= '<b>' . $value['title'] . '</b><br />';
                           if ($value['use_function']) {
                             $use_function = $value['use_function'];

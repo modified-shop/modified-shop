@@ -25,7 +25,7 @@
       return trim(stripslashes($string));
     } elseif (is_array($string)) {
       reset($string);
-      while (list($key, $value) = each($string)) {
+      foreach ($string as $key => $value) {
         $string[$key] = xtc_db_prepare_input($value);
       }
       return $string;
@@ -48,14 +48,14 @@
       $query = 'INSERT INTO ' . $table . ' (';
       
       $sub_query = array();
-      while (list($columns, ) = each($data)) {
+      foreach ($data as $columns) {
         $sub_query[] = $columns;
       }
       $query .= implode(', ', $sub_query) . ') VALUES (';
       reset($data);
       
       $sub_query = array();
-      while (list(, $value) = each($data)) {
+      foreach ($data as $value) {
         $value = (string)$value;
         switch ($value) {
           case 'now()':
@@ -74,7 +74,7 @@
       $query = 'UPDATE ' . $table . ' SET ';
       
       $sub_query = array();
-      while (list($columns, $value) = each($data)) {
+      foreach ($data as $columns => $value) {
         $value = (string)$value;
         switch ($value) {
           case 'now()':

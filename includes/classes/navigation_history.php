@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: navigation_history.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -110,12 +110,12 @@
     function debug() {
       for ($i=0, $n=sizeof($this->path); $i<$n; $i++) {
         echo $this->path[$i]['page'] . '?';
-        while (list($key, $value) = each($this->path[$i]['get'])) {
+        foreach ($this->path[$i]['get'] as $key => $value) {
           echo $key . '=' . $value . '&';
         }
         if (sizeof($this->path[$i]['post']) > 0) {
           echo '<br />';
-          while (list($key, $value) = each($this->path[$i]['post'])) {
+          foreach ($this->path[$i]['post'] as $key => $value) {
             echo '&nbsp;&nbsp;<strong>' . $key . '=' . $value . '</strong><br />';
           }
         }

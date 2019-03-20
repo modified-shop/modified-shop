@@ -94,7 +94,7 @@
     switch ($action) {
       case 'save':
         reset($_POST['configuration']); //DokuMan - 2011-09-29 - reset $_POST array
-        while (list($key, $value) = each($_POST['configuration'])) {
+        foreach ($_POST['configuration'] as $key => $value) {
           if (is_array($_POST['configuration'][$key])) {
             // multi language config
             if (gettype(array_shift(array_keys($_POST['configuration'][$key]))) == 'string') {
@@ -529,7 +529,7 @@ if (xtc_not_null($action) && !$box) {
                 } 
                 $keys = '';
                 reset($mInfo->keys);
-                while (list($key, $value) = each($mInfo->keys)) {
+                foreach ($mInfo->keys as $key => $value) {
                   $keys .= '<b>' . $value['title'] . '</b><br />' .  $value['description'].'<br />';
                   if ($value['set_function']) {
                     if (strpos($value['set_function'], '->') !== false) {
@@ -562,7 +562,7 @@ if (xtc_not_null($action) && !$box) {
                   if ($mInfo->status != '0') {
                     $keys = '';
                     reset($mInfo->keys);
-                    while (list(, $value) = each($mInfo->keys)) {
+                    foreach ($mInfo->keys as $value) {
                       $keys .= '<b>' . (isset($value['title'])?$value['title']:'') . '</b><br />';
                       if ($value['use_function']) {
                         $use_function = $value['use_function'];

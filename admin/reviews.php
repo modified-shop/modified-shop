@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: reviews.php 4255 2013-01-11 16:04:14Z web28 $   
+   $Id$   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -199,7 +199,7 @@ require (DIR_WS_INCLUDES.'head.php');
                 if ($_POST) {
                   // Re-Post all POST'ed variables
                   reset($_POST);
-                  while(list($key, $value) = each($_POST)) echo '<input type="hidden" name="' . $key . '" value="' . encode_htmlspecialchars(stripslashes($value)) . '">';
+                  foreach ($_POST as $key => $value) echo '<input type="hidden" name="' . $key . '" value="' . encode_htmlspecialchars(stripslashes($value)) . '">';
                   ?>
                   <div class="smallText mrg5 txta-r"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $rInfo->reviews_id . '&action=edit') . '">' . BUTTON_BACK . '</a> <input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $rInfo->reviews_id) . '">' . BUTTON_CANCEL . '</a>'; ?></div>
                 <?php

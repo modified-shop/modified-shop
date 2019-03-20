@@ -371,7 +371,7 @@ class ot_coupon {
     $tod_amount = 0;
     
     //Steuer für jede Steuergruppe korrigieren
-    while (list ($key, $value) = each($order->info['tax_groups'])) {
+    foreach ($order->info['tax_groups'] as $key => $value) {
       // Bei Einschränkungen Gutscheinwert in % neu berechnen,  vereinheitlicht die Berechnungen
       $od_amount_pro = $restriction ? $od_amount/$this->price_total_by_tax_groups[$key] * 100 : $od_amount_pro;
       $t_flag = true;

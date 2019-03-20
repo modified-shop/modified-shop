@@ -50,7 +50,7 @@ class order_total {
       }
       unset($modules);
       
-      while (list (, $value) = each($this->modules)) {
+      foreach ($this->modules as $value) {
         include_once(DIR_WS_LANGUAGES.$_SESSION['language'].'/modules/order_total/'.$value);
         include_once(DIR_WS_MODULES.'order_total/'.$value);
         $class = substr($value, 0, strrpos($value, '.'));
@@ -80,7 +80,7 @@ class order_total {
     if (MODULE_ORDER_TOTAL_INSTALLED) {
       reset($this->modules);
       $output_string = '';
-      while (list (, $value) = each($this->modules)) {
+      foreach ($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
         if ($GLOBALS[$class]->enabled 
             && isset($GLOBALS[$class]->credit_class) 
@@ -120,7 +120,7 @@ class order_total {
   function update_credit_account($i) {
     if (MODULE_ORDER_TOTAL_INSTALLED) {
       reset($this->modules);
-      while (list (, $value) = each($this->modules)) {
+      foreach ($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
         if ($GLOBALS[$class]->enabled 
             && isset($GLOBALS[$class]->credit_class) 
@@ -142,7 +142,7 @@ class order_total {
   function collect_posts() {
     if (MODULE_ORDER_TOTAL_INSTALLED) {
       reset($this->modules);
-      while (list (, $value) = each($this->modules)) {
+      foreach ($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
         if ($GLOBALS[$class]->enabled 
             && isset($GLOBALS[$class]->credit_class) 
@@ -174,7 +174,7 @@ class order_total {
     if (MODULE_ORDER_TOTAL_INSTALLED) {
       $total_deductions = 0;
       reset($this->modules);
-      while (list (, $value) = each($this->modules)) {
+      foreach ($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
         $order_total = $this->get_order_total_main($class, $this->order_total);
         if ($GLOBALS[$class]->enabled 
@@ -202,7 +202,7 @@ class order_total {
   function apply_credit() {
     if (MODULE_ORDER_TOTAL_INSTALLED) {
       reset($this->modules);
-      while (list (, $value) = each($this->modules)) {
+      foreach ($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
         if ($GLOBALS[$class]->enabled 
             && isset($GLOBALS[$class]->credit_class) 
@@ -221,7 +221,7 @@ class order_total {
   function clear_posts() {
     if (MODULE_ORDER_TOTAL_INSTALLED) {
       reset($this->modules);
-      while (list (, $value) = each($this->modules)) {
+      foreach ($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
         if ($GLOBALS[$class]->enabled 
             && isset($GLOBALS[$class]->credit_class) 
@@ -250,7 +250,7 @@ class order_total {
     $order_total_array = array ();
     if (is_array($this->modules)) {
       reset($this->modules);
-      while (list (, $value) = each($this->modules)) {
+      foreach ($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
         if ($GLOBALS[$class]->enabled) {
           $GLOBALS[$class]->output = array();
@@ -278,7 +278,7 @@ class order_total {
     $output_string = '';
     if (is_array($this->modules)) {
       reset($this->modules);
-      while (list (, $value) = each($this->modules)) {
+      foreach ($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
         if ($GLOBALS[$class]->enabled) {
           $size = sizeof($GLOBALS[$class]->output);
@@ -296,7 +296,7 @@ class order_total {
     $arr_output = array();
     if (is_array($this->modules)) {
       reset($this->modules);
-      while (list (, $value) = each($this->modules)) {
+      foreach ($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
         if ($GLOBALS[$class]->enabled) {
           $size = sizeof($GLOBALS[$class]->output);

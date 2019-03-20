@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: mail.php 4255 2013-01-11 16:04:14Z web28 $   
+   $Id$   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -178,7 +178,7 @@
               <?php
               /* Re-Post all POST'ed variables */
               reset($_POST);
-              while (list($key, $value) = each($_POST)) {
+              foreach ($_POST as $key => $value) {
                 if (!is_array($_POST[$key])) {
                   echo xtc_draw_hidden_field($key, encode_htmlspecialchars(stripslashes($value)));
                 }

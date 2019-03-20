@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: ot_tax.php 1002 2005-07-10 16:11:37Z mz $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -34,7 +34,7 @@
       global $order, $xtPrice;
 
       reset($order->info['tax_groups']);
-      while (list($key, $value) = each($order->info['tax_groups'])) {
+      foreach ($order->info['tax_groups'] as $key => $value) {
         if ($value > 0) {
           if ($_SESSION['customers_status']['customers_status_show_price_tax'] != 0) {
             $this->output[] = array('title' => $key . ':',
