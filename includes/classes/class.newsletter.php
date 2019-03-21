@@ -25,7 +25,7 @@ define('NL_REG_MAIL_ADMIN', false);
 require_once (DIR_FS_INC.'ip_clearing.inc.php');
 
 // include needed classes
-require_once (DIR_WS_CLASSES.'modified_captcha.php');
+require_once (DIR_FS_CATALOG.'includes/classes/modified_captcha.php');
 
 
 class newsletter {
