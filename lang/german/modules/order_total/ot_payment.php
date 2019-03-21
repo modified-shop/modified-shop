@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: ot_payment.php 3481 2012-08-22 07:07:50Z dokuman $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -64,11 +64,13 @@ define('MODULE_ORDER_TOTAL_PAYMENT_STATUS_DESC', 'Wollen Sie den Zahlungsartenra
 define('MODULE_ORDER_TOTAL_PAYMENT_SORT_ORDER_TITLE', '<hr>Sortierreihenfolge');
 define('MODULE_ORDER_TOTAL_PAYMENT_SORT_ORDER_DESC', 'Anzeigereihenfolge');
 
-for ($j=1; $j<=MODULE_ORDER_TOTAL_PAYMENT_NUMBER; $j++) {
-  define('MODULE_ORDER_TOTAL_PAYMENT_PERCENTAGE' . $j . '_TITLE', '<hr>'.$j . '. Rabattstaffel');
-  define('MODULE_ORDER_TOTAL_PAYMENT_PERCENTAGE' . $j . '_DESC', 'Rabattierung (Mindestwert:Prozent)');
-  define('MODULE_ORDER_TOTAL_PAYMENT_TYPE' . $j . '_TITLE', $j . '. Zahlungsart');
-  define('MODULE_ORDER_TOTAL_PAYMENT_TYPE' . $j . '_DESC', 'Zahlungsarten, auf die Rabatt gegeben werden soll');
+if (defined('MODULE_ORDER_TOTAL_PAYMENT_NUMBER')) {
+  for ($j=1; $j<=MODULE_ORDER_TOTAL_PAYMENT_NUMBER; $j++) {
+    define('MODULE_ORDER_TOTAL_PAYMENT_PERCENTAGE' . $j . '_TITLE', '<hr>'.$j . '. Rabattstaffel');
+    define('MODULE_ORDER_TOTAL_PAYMENT_PERCENTAGE' . $j . '_DESC', 'Rabattierung (Mindestwert:Prozent)');
+    define('MODULE_ORDER_TOTAL_PAYMENT_TYPE' . $j . '_TITLE', $j . '. Zahlungsart');
+    define('MODULE_ORDER_TOTAL_PAYMENT_TYPE' . $j . '_DESC', 'Zahlungsarten, auf die Rabatt gegeben werden soll');
+  }
 }
 
 define('MODULE_ORDER_TOTAL_PAYMENT_INC_SHIPPING_TITLE', '<hr>Inklusive Versandkosten');
