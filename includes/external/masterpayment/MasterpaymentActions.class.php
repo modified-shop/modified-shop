@@ -7,7 +7,7 @@
  * support@k-30.de | www.k-30.de
  * ----------------------------------------------------
  *
- * $Id: MasterpaymentActions.class.php 02.07.2013 - 15:59 $
+ * $Id$
  *	
  *	The Modul based on:
  *  XT-Commerce - community made shopping
@@ -53,11 +53,11 @@ class MasterpaymentActions
 	
 	function getActionURL()
 	{	
-		if(MODULE_PAYMENT_MASTERPAYMENT_CONFIG_INFRAME == 'True') {            
-      		return $this->getShopURL() . 'checkout_masterpayment.php?' . session_name() . '=' . session_id();		
-	  	} else {
-	  		return $this->getShopURL() . 'checkout_masterpayment.php?action=request&' . session_name() . '=' . session_id();
-	  	}		
+		if(defined('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_INFRAME') && MODULE_PAYMENT_MASTERPAYMENT_CONFIG_INFRAME == 'True') {            
+      return $this->getShopURL() . 'checkout_masterpayment.php?' . session_name() . '=' . session_id();		
+    } else {
+      return $this->getShopURL() . 'checkout_masterpayment.php?action=request&' . session_name() . '=' . session_id();
+    }		
 	}
 	
 	
