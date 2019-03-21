@@ -91,6 +91,10 @@
   }
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
   if (xtc_not_null($action)) {
+    //load language file for action
+    if (file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . basename($module_class) . '.php')) {
+      include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . basename($module_class) . '.php');
+    }
     switch ($action) {
       case 'save':
         reset($_POST['configuration']); //DokuMan - 2011-09-29 - reset $_POST array
