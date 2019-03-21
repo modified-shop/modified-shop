@@ -3038,7 +3038,8 @@ xmlrpc_encode_entitites($this->errstr, $GLOBALS['xmlrpc_internalencoding'], $cha
 			//if (is_object($o) && (get_class($o) == 'xmlrpcval' || is_subclass_of($o, 'xmlrpcval')))
 			//{
 				reset($this->me);
-				list($typ, $val) = each($this->me);
+				$typ = key($this->me);
+				$val = $this->me[$typ];
 				return '<value>' . $this->serializedata($typ, $val, $charset_encoding) . "</value>\n";
 			//}
 		}
@@ -3051,7 +3052,8 @@ xmlrpc_encode_entitites($this->errstr, $GLOBALS['xmlrpc_internalencoding'], $cha
 			//{
 				$ar=$o->me;
 				reset($ar);
-				list($typ, $val) = each($ar);
+				$typ = key($ar);
+				$val = $ar[$typ];
 				return '<value>' . $this->serializedata($typ, $val) . "</value>\n";
 			//}
 		}
@@ -3096,7 +3098,9 @@ xmlrpc_encode_entitites($this->errstr, $GLOBALS['xmlrpc_internalencoding'], $cha
 		*/
 		function structeach()
 		{
-			return each($this->me['struct']);
+      foreach ($this->me['struct'] as $k => $v) {
+        return array('key' => $k, 'value' => $v);
+      }
 		}
 
 		// DEPRECATED! this code looks like it is very fragile and has not been fixed
@@ -3105,7 +3109,9 @@ xmlrpc_encode_entitites($this->errstr, $GLOBALS['xmlrpc_internalencoding'], $cha
 		{
 			// UNSTABLE
 			reset($this->me);
-			list($a,$b)=each($this->me);
+      $a = key($this->me);
+      $b = $this->me[$a];
+
 			// contributed by I Sofer, 2001-03-24
 			// add support for nested arrays to scalarval
 			// i've created a new method here, so as to
@@ -3294,7 +3300,8 @@ xmlrpc_encode_entitites($this->errstr, $GLOBALS['xmlrpc_internalencoding'], $cha
 				if (in_array('extension_api', $options))
 				{
 					reset($xmlrpc_val->me);
-					list($typ,$val) = each($xmlrpc_val->me);
+          $typ = key($xmlrpc_val->me);
+          $val = $this->me[$typ];
 					switch ($typ)
 					{
 						case 'dateTime.iso8601':
