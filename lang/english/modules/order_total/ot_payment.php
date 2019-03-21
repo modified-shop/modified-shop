@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: ot_payment.php 3481 2012-08-22 07:07:50Z dokuman $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -66,11 +66,13 @@ define('MODULE_ORDER_TOTAL_PAYMENT_STATUS_DESC', 'Do you want to enable the orde
 define('MODULE_ORDER_TOTAL_PAYMENT_SORT_ORDER_TITLE', '<hr>Sort order');
 define('MODULE_ORDER_TOTAL_PAYMENT_SORT_ORDER_DESC', 'Sort order of display');
 
-for ($j=1; $j<=MODULE_ORDER_TOTAL_PAYMENT_NUMBER; $j++) {
-  define('MODULE_ORDER_TOTAL_PAYMENT_PERCENTAGE' . $j . '_TITLE', $j . '. Discount percentage');
-  define('MODULE_ORDER_TOTAL_PAYMENT_PERCENTAGE' . $j . '_DESC', 'Amount of discount(countries|value:percentage&fee)');
-  define('MODULE_ORDER_TOTAL_PAYMENT_TYPE' . $j . '_TITLE', $j . '. Payment type');
-  define('MODULE_ORDER_TOTAL_PAYMENT_TYPE' . $j . '_DESC', 'Payment type to get discount');
+if (defined('MODULE_ORDER_TOTAL_PAYMENT_NUMBER')) {
+  for ($j=1; $j<=MODULE_ORDER_TOTAL_PAYMENT_NUMBER; $j++) {
+    define('MODULE_ORDER_TOTAL_PAYMENT_PERCENTAGE' . $j . '_TITLE', $j . '. Discount percentage');
+    define('MODULE_ORDER_TOTAL_PAYMENT_PERCENTAGE' . $j . '_DESC', 'Amount of discount(countries|value:percentage&fee)');
+    define('MODULE_ORDER_TOTAL_PAYMENT_TYPE' . $j . '_TITLE', $j . '. Payment type');
+    define('MODULE_ORDER_TOTAL_PAYMENT_TYPE' . $j . '_DESC', 'Payment type to get discount');
+  }
 }
 
 define('MODULE_ORDER_TOTAL_PAYMENT_INC_SHIPPING_TITLE', '<hr>Include shipping');
