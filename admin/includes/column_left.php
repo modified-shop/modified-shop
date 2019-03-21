@@ -149,14 +149,14 @@ echo endMenue(BOX_HEADING_STATISTICS);
 
 //---------------------------HILFSPROGRAMME
 echo mainMenue(BOX_HEADING_TOOLS);
-    if (MODULE_NEWSLETTER_STATUS == 'true') {
+    if (defined('MODULE_NEWSLETTER_STATUS') && MODULE_NEWSLETTER_STATUS == 'true') {
       if ($admin_access['newsletter_recipients'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_NEWSLETTER_RECIPIENTS) . '" class="menuBoxContentLink"> -' . BOX_NEWSLETTER_RECIPIENTS . '</a></li>';
       if ($admin_access['module_newsletter'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_MODULE_NEWSLETTER) . '" class="menuBoxContentLink"> -' . BOX_MODULE_NEWSLETTER . '</a></li>';
     }
     if ($admin_access['content_manager'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_CONTENT_MANAGER) . '" class="menuBoxContentLink"> -' . BOX_CONTENT . '</a></li>';
     if ($admin_access['removeoldpics'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_REMOVEOLDPICS, '', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_REMOVEOLDPICS . '</a></li>';
     if ($admin_access['backup'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_BACKUP) . '" class="menuBoxContentLink"> -' . BOX_BACKUP . '</a></li>';
-    if (MODULE_BANNER_MANAGER_STATUS == 'true') {
+    if (defined('MODULE_BANNER_MANAGER_STATUS') && MODULE_BANNER_MANAGER_STATUS == 'true') {
       if ($admin_access['banner_manager'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_BANNER_MANAGER) . '" class="menuBoxContentLink"> -' . BOX_BANNER_MANAGER . '</a></li>';
     }
     if ($admin_access['server_info'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_SERVER_INFO) . '" class="menuBoxContentLink"> -' . BOX_SERVER_INFO . '</a></li>';
