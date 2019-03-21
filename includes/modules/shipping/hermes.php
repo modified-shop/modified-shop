@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: hermes.php 5134 2013-07-18 14:23:20Z Tomcraft $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -28,10 +28,10 @@
       $this->code = 'hermes';
       $this->title = MODULE_SHIPPING_HERMES_TEXT_TITLE;
       $this->description = MODULE_SHIPPING_HERMES_TEXT_DESCRIPTION;
-      $this->sort_order = MODULE_SHIPPING_HERMES_SORT_ORDER;
+      $this->sort_order = ((defined('MODULE_SHIPPING_HERMES_SORT_ORDER')) ? MODULE_SHIPPING_HERMES_SORT_ORDER : '');
       $this->icon = DIR_WS_ICONS . 'shipping_hermes.gif';
-      $this->tax_class = MODULE_SHIPPING_HERMES_TAX_CLASS;
-      $this->enabled = ((MODULE_SHIPPING_HERMES_STATUS == 'True') ? true : false);
+      $this->tax_class = ((defined('MODULE_SHIPPING_HERMES_TAX_CLASS')) ? MODULE_SHIPPING_HERMES_TAX_CLASS : '');
+      $this->enabled = ((defined('MODULE_SHIPPING_HERMES_STATUS') && MODULE_SHIPPING_HERMES_STATUS == 'True') ? true : false);
 
       if ( $this->enabled == true && is_object($order) && count($order->products) > 0) {
         $check_flag = false;

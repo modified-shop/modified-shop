@@ -33,10 +33,10 @@
       $this->code = 'dp';
       $this->title = MODULE_SHIPPING_DP_TEXT_TITLE;
       $this->description = MODULE_SHIPPING_DP_TEXT_DESCRIPTION;
-      $this->sort_order = MODULE_SHIPPING_DP_SORT_ORDER;
+      $this->sort_order = ((defined('MODULE_SHIPPING_DP_SORT_ORDER')) ? MODULE_SHIPPING_DP_SORT_ORDER : '');
       $this->icon = DIR_WS_ICONS . 'shipping_dp.gif';
-      $this->tax_class = MODULE_SHIPPING_DP_TAX_CLASS;
-      $this->enabled = ((MODULE_SHIPPING_DP_STATUS == 'True') ? true : false);
+      $this->tax_class = ((defined('MODULE_SHIPPING_DP_TAX_CLASS')) ? MODULE_SHIPPING_DP_TAX_CLASS : '');
+      $this->enabled = ((defined('MODULE_SHIPPING_DP_STATUS') && MODULE_SHIPPING_DP_STATUS == 'True') ? true : false);
       $this->num_zones = defined('MODULE_SHIPPING_DP_NUMBER_ZONES') ? MODULE_SHIPPING_DP_NUMBER_ZONES : '';
 
       if ( ($this->enabled == true) && ((int)MODULE_SHIPPING_DP_ZONE > 0) && is_object($order) ) {

@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: flat.php 5038 2013-07-07 10:08:54Z Tomcraft $   
+   $Id$   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -27,10 +27,10 @@
       $this->code = 'flat';
       $this->title = MODULE_SHIPPING_FLAT_TEXT_TITLE;
       $this->description = MODULE_SHIPPING_FLAT_TEXT_DESCRIPTION;
-      $this->sort_order = MODULE_SHIPPING_FLAT_SORT_ORDER;
+      $this->sort_order = ((defined('MODULE_SHIPPING_FLAT_SORT_ORDER')) ? MODULE_SHIPPING_FLAT_SORT_ORDER : '');
       $this->icon = '';
-      $this->tax_class = MODULE_SHIPPING_FLAT_TAX_CLASS;
-      $this->enabled = ((MODULE_SHIPPING_FLAT_STATUS == 'True') ? true : false);
+      $this->tax_class = ((defined('MODULE_SHIPPING_FLAT_TAX_CLASS')) ? MODULE_SHIPPING_FLAT_TAX_CLASS : '');
+      $this->enabled = ((defined('MODULE_SHIPPING_FLAT_STATUS') && MODULE_SHIPPING_FLAT_STATUS == 'True') ? true : false);
 
       if ( ($this->enabled == true) && ((int)MODULE_SHIPPING_FLAT_ZONE > 0) && is_object($order) ) {
         $check_flag = false;

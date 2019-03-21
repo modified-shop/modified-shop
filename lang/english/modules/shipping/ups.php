@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: ups.php 5121 2013-07-18 11:38:19Z Tomcraft $   
+   $Id$   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -28,8 +28,8 @@ define('MODULE_SHIPPING_UPS_TEXT_TITLE', 'United Parcel Service Standard');
 define('MODULE_SHIPPING_UPS_TEXT_DESCRIPTION', 'United Parcel Service Standard - Shipping Module');
 define('MODULE_SHIPPING_UPS_TEXT_WAY', 'Dispatch to');
 define('MODULE_SHIPPING_UPS_TEXT_UNITS', 'kg');
-define('MODULE_SHIPPING_UPS_TEXT_FREE', 'Free Shipping minimum order: EUR ' . MODULE_SHIPPING_UPS_FREEAMOUNT);
-define('MODULE_SHIPPING_UPS_TEXT_LOW', 'From EUR ' . MODULE_SHIPPING_UPS_FREEAMOUNT . ' order value we ship your order at reduced shipping costs!');
+define('MODULE_SHIPPING_UPS_TEXT_FREE', 'Free Shipping minimum order: EUR ' . ((defined('MODULE_SHIPPING_UPS_FREEAMOUNT')) ? MODULE_SHIPPING_UPS_FREEAMOUNT : ''));
+define('MODULE_SHIPPING_UPS_TEXT_LOW', 'From EUR ' . ((defined('MODULE_SHIPPING_UPS_FREEAMOUNT')) ? MODULE_SHIPPING_UPS_FREEAMOUNT : '') . ' order value we ship your order at reduced shipping costs!');
 define('MODULE_SHIPPING_UPS_INVALID_ZONE', 'Unfortunately it is not possible to dispatch into this country');
 define('MODULE_SHIPPING_UPS_UNDEFINED_RATE', 'Shipping costs cannot be calculated for the moment');
 

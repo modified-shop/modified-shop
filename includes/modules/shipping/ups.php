@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: ups.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $   
+   $Id$   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -37,11 +37,11 @@
       $this->code = 'ups';
       $this->title = MODULE_SHIPPING_UPS_TEXT_TITLE;
       $this->description = MODULE_SHIPPING_UPS_TEXT_DESCRIPTION;
-      $this->sort_order = MODULE_SHIPPING_UPS_SORT_ORDER;
+      $this->sort_order = ((defined('MODULE_SHIPPING_UPS_SORT_ORDER')) ? MODULE_SHIPPING_UPS_SORT_ORDER : '');
       $this->icon = DIR_WS_ICONS . 'shipping_ups.gif';
-      $this->tax_class = MODULE_SHIPPING_UPS_TAX_CLASS;
+      $this->tax_class = ((defined('MODULE_SHIPPING_UPS_TAX_CLASS')) ? MODULE_SHIPPING_UPS_TAX_CLASS : '');
       $this->free = MODULE_SHIPPING_UPS_TEXT_FREE;
-      $this->enabled = ((MODULE_SHIPPING_UPS_STATUS == 'True') ? true : false);
+      $this->enabled = ((defined('MODULE_SHIPPING_UPS_STATUS') && MODULE_SHIPPING_UPS_STATUS == 'True') ? true : false);
 
       if ( ($this->enabled == true) && ((int)MODULE_SHIPPING_UPS_ZONE > 0) && is_object($order)) {
         $check_flag = false;

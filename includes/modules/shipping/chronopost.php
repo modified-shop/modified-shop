@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: chronopost.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $   
+   $Id$   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -34,10 +34,10 @@
       $this->code        = 'chronopost';
       $this->title       = MODULE_SHIPPING_CHRONOPOST_TEXT_TITLE;
       $this->description = MODULE_SHIPPING_CHRONOPOST_TEXT_DESCRIPTION;
-      $this->sort_order  = MODULE_SHIPPING_CHRONOPOST_SORT_ORDER;
+      $this->sort_order  = ((defined('MODULE_SHIPPING_CHRONOPOST_SORT_ORDER')) ? MODULE_SHIPPING_CHRONOPOST_SORT_ORDER : '');
       $this->icon        = DIR_WS_ICONS . 'shipping_chronopost.gif';
-      $this->tax_class   = MODULE_SHIPPING_CHRONOPOST_TAX_CLASS;
-      $this->enabled     = ((MODULE_SHIPPING_CHRONOPOST_STATUS == 'True') ? true : false);
+      $this->tax_class   = ((defined('MODULE_SHIPPING_CHRONOPOST_TAX_CLASS')) ? MODULE_SHIPPING_CHRONOPOST_TAX_CLASS : '');
+      $this->enabled     = ((defined('MODULE_SHIPPING_CHRONOPOST_STATUS') && MODULE_SHIPPING_CHRONOPOST_STATUS == 'True') ? true : false);
 
       /**
       * CUSTOMIZE THIS SETTING FOR THE NUMBER OF chronopost NEEDED

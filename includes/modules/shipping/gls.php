@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: gls.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -34,10 +34,10 @@
       $this->code = 'gls';
       $this->title = MODULE_SHIPPING_GLS_TEXT_TITLE;
       $this->description = MODULE_SHIPPING_GLS_TEXT_DESCRIPTION;
-      $this->sort_order = MODULE_SHIPPING_GLS_SORT_ORDER;
+      $this->sort_order = ((defined('MODULE_SHIPPING_GLS_SORT_ORDER')) ? MODULE_SHIPPING_GLS_SORT_ORDER : '');
       $this->icon = DIR_WS_ICONS . 'shipping_gls.gif';
-      $this->tax_class = MODULE_SHIPPING_GLS_TAX_CLASS;
-      $this->enabled = ((MODULE_SHIPPING_GLS_STATUS == 'True') ? true : false);
+      $this->tax_class = ((defined('MODULE_SHIPPING_GLS_TAX_CLASS')) ? MODULE_SHIPPING_GLS_TAX_CLASS : '');
+      $this->enabled = ((defined('MODULE_SHIPPING_GLS_STATUS') && MODULE_SHIPPING_GLS_STATUS == 'True') ? true : false);
 
       if ( ($this->enabled == true) && ((int)MODULE_SHIPPING_GLS_ZONE > 0) && is_object($order)) {
         $check_flag = false;
