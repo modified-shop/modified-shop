@@ -21,8 +21,9 @@ class exclude_payment {
     $this->code = 'exclude_payment';
     $this->title = MODULE_EXCLUDE_PAYMENT_TEXT_TITLE;
     $this->description = MODULE_EXCLUDE_PAYMENT_TEXT_DESCRIPTION;
-    $this->enabled = ((MODULE_EXCLUDE_PAYMENT_STATUS == 'True') ? true : false);
+    $this->enabled = ((defined('MODULE_EXCLUDE_PAYMENT_STATUS') && MODULE_EXCLUDE_PAYMENT_STATUS == 'True') ? true : false);
     $this->num_exclude_payment = ((defined('MODULE_EXCLUDE_PAYMENT_NUMBER')) ? MODULE_EXCLUDE_PAYMENT_NUMBER : '');
+    $this->sort_order = '';
     
     if ($this->check() > 0) {      
       $check_exclude_payment_query = xtc_db_query("SELECT * FROM " . TABLE_CONFIGURATION . " WHERE configuration_key LIKE 'MODULE_EXCLUDE_PAYMENT_SHIPPING_%'");

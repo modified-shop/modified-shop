@@ -22,8 +22,8 @@ class easymarketing {
     $this->code = 'easymarketing';
     $this->title = MODULE_EASYMARKETING_TEXT_TITLE;
     $this->description = MODULE_EASYMARKETING_TEXT_DESCRIPTION;
-    $this->sort_order = MODULE_EASYMARKETING_SORT_ORDER;
-    $this->enabled = ((MODULE_EASYMARKETING_STATUS == 'True') ? true : false);
+    $this->sort_order = ((defined('MODULE_EASYMARKETING_SORT_ORDER')) ? MODULE_EASYMARKETING_SORT_ORDER : '');
+    $this->enabled = ((defined('MODULE_EASYMARKETING_STATUS') && MODULE_EASYMARKETING_STATUS == 'True') ? true : false);
   }
 
 

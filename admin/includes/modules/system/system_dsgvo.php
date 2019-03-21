@@ -21,8 +21,8 @@ class system_dsgvo
         $this->code = 'system_dsgvo';
         $this->title = MODULE_SYSTEM_DSGVO_TEXT_TITLE;
         $this->description = MODULE_SYSTEM_DSGVO_TEXT_DESCRIPTION;
-        $this->sort_order = MODULE_SYSTEM_DSGVO_SORT_ORDER;
-        $this->enabled = ((MODULE_SYSTEM_DSGVO_STATUS == 'true') ? true : false);
+        $this->sort_order = ((defined('MODULE_SYSTEM_DSGVO_SORT_ORDER')) ? MODULE_SYSTEM_DSGVO_SORT_ORDER : '');
+        $this->enabled = ((defined('MODULE_SYSTEM_DSGVO_STATUS') && MODULE_SYSTEM_DSGVO_STATUS == 'true') ? true : false);
     }
 
     function process($file) 

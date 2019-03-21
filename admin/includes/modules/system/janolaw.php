@@ -25,11 +25,12 @@ class janolaw {
   function __construct() {
     global $order;
 
-     $this->code = 'janolaw';
-     $this->title = MODULE_JANOLAW_TEXT_TITLE;
-     $this->description = MODULE_JANOLAW_TEXT_DESCRIPTION;
-     $this->enabled = ((MODULE_JANOLAW_STATUS == 'True') ? true : false);
-   }
+    $this->code = 'janolaw';
+    $this->title = MODULE_JANOLAW_TEXT_TITLE;
+    $this->description = MODULE_JANOLAW_TEXT_DESCRIPTION;
+    $this->enabled = ((defined('MODULE_JANOLAW_STATUS') && MODULE_JANOLAW_STATUS == 'True') ? true : false);
+    $this->sort_order = '';
+  }
 
   function process($file) {
     global $messageStack;

@@ -18,11 +18,12 @@ class shipcloud {
   function __construct() {
     global $order;
 
-     $this->code = 'shipcloud';
-     $this->title = MODULE_SHIPCLOUD_TEXT_TITLE;
-     $this->description = MODULE_SHIPCLOUD_TEXT_DESCRIPTION;
-     $this->enabled = ((MODULE_SHIPCLOUD_STATUS == 'True') ? true : false);
-   }
+    $this->code = 'shipcloud';
+    $this->title = MODULE_SHIPCLOUD_TEXT_TITLE;
+    $this->description = MODULE_SHIPCLOUD_TEXT_DESCRIPTION;
+    $this->enabled = ((defined('MODULE_SHIPCLOUD_STATUS') && MODULE_SHIPCLOUD_STATUS == 'True') ? true : false);
+    $this->sort_order = '';
+  }
 
   function process($file) {
   }

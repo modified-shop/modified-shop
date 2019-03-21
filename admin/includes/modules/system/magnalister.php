@@ -38,7 +38,7 @@ class magnalister {
 		$this->code = 'magnalister';
 		$this->title = MODULE_MAGNALISTER_TEXT_TITLE;
 		$this->description = MODULE_MAGNALISTER_TEXT_DESCRIPTION;
-		$this->sort_order = MODULE_MAGNALISTER_SORT_ORDER;
+		$this->sort_order = defined('MODULE_MAGNALISTER_SORT_ORDER') ? MODULE_MAGNALISTER_SORT_ORDER : '';
 		$this->enabled = defined('MODULE_MAGNALISTER_STATUS') && (MODULE_MAGNALISTER_STATUS == 'True');
 		
 		$fnWrappers = array('xtc', 'tep');

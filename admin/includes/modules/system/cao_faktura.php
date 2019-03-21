@@ -19,8 +19,8 @@ class cao_faktura {
      $this->code = 'cao_faktura';
      $this->title = MODULE_CAO_FAKTURA_TEXT_TITLE;
      $this->description = MODULE_CAO_FAKTURA_TEXT_DESCRIPTION;
-     $this->sort_order = defined('MODULE_CAO_FAKTURA_SORT_ORDER') ? MODULE_CAO_FAKTURA_SORT_ORDER : 0;
-     $this->enabled = ((MODULE_CAO_FAKTURA_STATUS == 'true') ? true : false);
+     $this->sort_order = defined('MODULE_CAO_FAKTURA_SORT_ORDER') ? MODULE_CAO_FAKTURA_SORT_ORDER : '';
+     $this->enabled = ((defined('MODULE_CAO_FAKTURA_STATUS') && MODULE_CAO_FAKTURA_STATUS == 'true') ? true : false);
    }
 
   function process($file) {

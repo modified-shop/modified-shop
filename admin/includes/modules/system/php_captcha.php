@@ -22,7 +22,8 @@ class php_captcha
         $this->code = 'php_captcha';
         $this->title = MODULE_SYSTEM_PHP_CAPTCHA_TEXT_TITLE;
         $this->description = MODULE_SYSTEM_PHP_CAPTCHA_TEXT_DESCRIPTION;
-        $this->enabled = ((MODULE_SYSTEM_PHP_CAPTCHA_STATUS == 'true') ? true : false);
+        $this->enabled = ((defined('MODULE_SYSTEM_PHP_CAPTCHA_STATUS') && MODULE_SYSTEM_PHP_CAPTCHA_STATUS == 'true') ? true : false);
+        $this->sort_order = '';
     }
 
     function process($file) 

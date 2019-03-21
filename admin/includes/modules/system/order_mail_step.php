@@ -21,8 +21,9 @@ class order_mail_step
         $this->code = 'order_mail_step';
         $this->title = MODULE_ORDER_MAIL_STEP_TEXT_TITLE;
         $this->description = MODULE_ORDER_MAIL_STEP_TEXT_DESCRIPTION;
-        $this->sort_order = MODULE_ORDER_MAIL_STEP_SORT_ORDER;
-        $this->enabled = ((MODULE_ORDER_MAIL_STEP_STATUS == 'true') ? true : false);
+        $this->sort_order = ((defined('MODULE_ORDER_MAIL_STEP_SORT_ORDER')) ? MODULE_ORDER_MAIL_STEP_SORT_ORDER : '');
+        $this->enabled = ((defined('MODULE_ORDER_MAIL_STEP_STATUS') && MODULE_ORDER_MAIL_STEP_STATUS == 'true') ? true : false);
+        $this->sort_order = '';
     }
 
     function process($file) 

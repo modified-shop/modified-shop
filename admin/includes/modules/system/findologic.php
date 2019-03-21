@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: findologic.php 2011-11-24 modified-shop $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -11,7 +11,7 @@
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(cod.php,v 1.28 2003/02/14); www.oscommerce.com
    (c) 2003   nextcommerce (invoice.php,v 1.6 2003/08/24); www.nextcommerce.org
-   (c) 2005 XT-Commerce - community made shopping http://www.xt-commerce.com ($Id: billiger.php 950 2005-05-14 16:45:21Z mz $)
+   (c) 2005 XT-Commerce - community made shopping http://www.xt-commerce.com ($Id$)
    (c) 2008 Gambio OHG (billiger.php 2008-11-11 gambio)
 
    Released under the GNU General Public License
@@ -27,8 +27,8 @@ class findologic {
      $this->code = 'findologic';
      $this->title = MODULE_FINDOLOGIC_TEXT_TITLE;
      $this->description = MODULE_FINDOLOGIC_TEXT_DESCRIPTION;
-     $this->sort_order = MODULE_FINDOLOGIC_SORT_ORDER;
-     $this->enabled = ((MODULE_FINDOLOGIC_STATUS == 'True') ? true : false);
+     $this->sort_order = ((defined('MODULE_FINDOLOGIC_SORT_ORDER')) ? MODULE_FINDOLOGIC_SORT_ORDER : '');
+     $this->enabled = ((defined('MODULE_FINDOLOGIC_STATUS') && MODULE_FINDOLOGIC_STATUS == 'True') ? true : false);
    }
 
   function process($file) {

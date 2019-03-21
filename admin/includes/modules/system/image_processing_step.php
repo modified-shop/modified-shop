@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: image_processing_step.php 2992 2012-06-07 16:59:49Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -33,8 +33,8 @@ if ( !class_exists( "image_processing_step" ) ) {
       $this->code = 'image_processing_step';
       $this->title = MODULE_STEP_IMAGE_PROCESS_TEXT_TITLE;
       $this->description = sprintf(MODULE_STEP_IMAGE_PROCESS_TEXT_DESCRIPTION, 5);
-      $this->sort_order = defined('MODULE_STEP_IMAGE_PROCESS_SORT_ORDER')?MODULE_STEP_IMAGE_PROCESS_SORT_ORDER:0;
-      $this->enabled = ((MODULE_STEP_IMAGE_PROCESS_STATUS == 'True') ? true : false);
+      $this->sort_order = defined('MODULE_STEP_IMAGE_PROCESS_SORT_ORDER') ? MODULE_STEP_IMAGE_PROCESS_SORT_ORDER:'';
+      $this->enabled = ((defined('MODULE_STEP_IMAGE_PROCESS_STATUS') && MODULE_STEP_IMAGE_PROCESS_STATUS == 'True') ? true : false);
       $this->module_filename = $current_page;
       $this->properties = array();
       $this->files = array();

@@ -21,8 +21,8 @@ class shopvote
         $this->code = 'shopvote';
         $this->title = MODULE_SHOPVOTE_TEXT_TITLE;
         $this->description = MODULE_SHOPVOTE_TEXT_DESCRIPTION;
-        $this->sort_order = MODULE_SHOPVOTE_SORT_ORDER;
-        $this->enabled = ((MODULE_SHOPVOTE_STATUS == 'true') ? true : false);
+        $this->sort_order = ((defined('MODULE_SHOPVOTE_SORT_ORDER')) ? MODULE_SHOPVOTE_SORT_ORDER : '');
+        $this->enabled = ((defined('MODULE_SHOPVOTE_STATUS') && MODULE_SHOPVOTE_STATUS == 'true') ? true : false);
     }
 
     function process($file) 

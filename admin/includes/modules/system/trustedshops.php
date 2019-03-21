@@ -20,8 +20,8 @@ class trustedshops {
      $this->code = 'trustedshops';
      $this->title = MODULE_TRUSTEDSHOPS_TEXT_TITLE;
      $this->description = MODULE_TRUSTEDSHOPS_TEXT_DESCRIPTION;
-     $this->sort_order = defined('MODULE_TRUSTEDSHOPS_SORT_ORDER') ? MODULE_TRUSTEDSHOPS_SORT_ORDER : 0;
-     $this->enabled = ((MODULE_TRUSTEDSHOPS_STATUS == 'true') ? true : false);
+     $this->sort_order = defined('MODULE_TRUSTEDSHOPS_SORT_ORDER') ? MODULE_TRUSTEDSHOPS_SORT_ORDER : '';
+     $this->enabled = ((defined('MODULE_TRUSTEDSHOPS_STATUS') && MODULE_TRUSTEDSHOPS_STATUS == 'true') ? true : false);
    }
 
   function process($file) {

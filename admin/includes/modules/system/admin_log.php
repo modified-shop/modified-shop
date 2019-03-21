@@ -19,8 +19,8 @@ class admin_log {
      $this->code = 'admin_log';
      $this->title = MODULE_ADMIN_LOG_TEXT_TITLE;
      $this->description = MODULE_ADMIN_LOG_TEXT_DESCRIPTION;
-     $this->sort_order = defined('MODULE_ADMIN_LOG_SORT_ORDER') ? MODULE_ADMIN_LOG_SORT_ORDER : 0;
-     $this->enabled = ((MODULE_ADMIN_LOG_STATUS == 'true') ? true : false);
+     $this->sort_order = defined('MODULE_ADMIN_LOG_SORT_ORDER') ? MODULE_ADMIN_LOG_SORT_ORDER : '';
+     $this->enabled = ((defined('MODULE_ADMIN_LOG_STATUS') && MODULE_ADMIN_LOG_STATUS == 'true') ? true : false);
    }
 
   function process($file) {

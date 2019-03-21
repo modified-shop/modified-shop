@@ -24,7 +24,8 @@ class it_recht_kanzlei {
     $this->code = 'it_recht_kanzlei';
     $this->title = MODULE_API_IT_RECHT_KANZLEI_TEXT_TITLE;
     $this->description = MODULE_API_IT_RECHT_KANZLEI_TEXT_DESCRIPTION;
-    $this->enabled = ((MODULE_API_IT_RECHT_KANZLEI_STATUS == 'true') ? true : false);
+    $this->enabled = ((defined('MODULE_API_IT_RECHT_KANZLEI_STATUS') && MODULE_API_IT_RECHT_KANZLEI_STATUS == 'true') ? true : false);
+    $this->sort_order = '';
   }
  
   function process() {}

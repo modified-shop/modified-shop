@@ -28,7 +28,8 @@ class protectedshops {
     $this->code = 'protectedshops';
     $this->title = MODULE_PROTECTEDSHOPS_TEXT_TITLE;
     $this->description = MODULE_PROTECTEDSHOPS_TEXT_DESCRIPTION;
-    $this->enabled = ((MODULE_PROTECTEDSHOPS_STATUS == 'true') ? true : false);
+    $this->enabled = ((defined('MODULE_PROTECTEDSHOPS_STATUS') && MODULE_PROTECTEDSHOPS_STATUS == 'true') ? true : false);
+    $this->sort_order = '';
   }
  
   function init_ps() {

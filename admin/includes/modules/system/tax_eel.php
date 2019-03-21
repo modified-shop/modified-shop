@@ -52,7 +52,8 @@ class tax_eel {
     $this->code = 'tax_eel';
     $this->title = MODULE_TAX_EEL_TEXT_TITLE;
     $this->description = MODULE_TAX_EEL_TEXT_DESCRIPTION;
-    $this->enabled = ((MODULE_TAX_EEL_STATUS == 'true') ? true : false);
+    $this->enabled = ((defined('MODULE_TAX_EEL_STATUS') && MODULE_TAX_EEL_STATUS == 'true') ? true : false);
+    $this->sort_order = '';
   }
  
   function process() {

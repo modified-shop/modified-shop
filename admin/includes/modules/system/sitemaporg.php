@@ -35,8 +35,8 @@ class sitemaporg {
     $this->code = 'sitemaporg';
     $this->title = MODULE_SITEMAPORG_TEXT_TITLE;
     $this->description = MODULE_SITEMAPORG_TEXT_DESCRIPTION;
-    $this->sort_order = MODULE_SITEMAPORG_SORT_ORDER;
-    $this->enabled = ((MODULE_SITEMAPORG_STATUS == 'True') ? true : false);
+    $this->sort_order = ((defined('MODULE_SITEMAPORG_SORT_ORDER')) ? MODULE_SITEMAPORG_SORT_ORDER : '');
+    $this->enabled = ((defined('MODULE_SITEMAPORG_STATUS') && MODULE_SITEMAPORG_STATUS == 'True') ? true : false);
     $this->schema = '';
   }
   

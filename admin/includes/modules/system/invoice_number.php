@@ -24,8 +24,8 @@ if (!class_exists('invoice_number')) {
             $this->properties['btn_edit'] = MODULE_INVOICE_NUMBER_TEXT_BTN;
             $this->title = MODULE_INVOICE_NUMBER_TEXT_TITLE;
             $this->description = MODULE_INVOICE_NUMBER_TEXT_DESCRIPTION;
-            $this->sort_order = MODULE_INVOICE_NUMBER_SORT_ORDER;
-            $this->enabled = ((MODULE_INVOICE_NUMBER_STATUS == 'True') ? true : false);
+            $this->sort_order = ((defined('MODULE_INVOICE_NUMBER_SORT_ORDER')) ? MODULE_INVOICE_NUMBER_SORT_ORDER : '');
+            $this->enabled = ((defined('MODULE_INVOICE_NUMBER_STATUS') && MODULE_INVOICE_NUMBER_STATUS == 'True') ? true : false);
             if ($this->enabled) {
                 $this->description .= '<p>'.MODULE_INVOICE_NUMBER_STATUS_DESC .': '.MODULE_INVOICE_NUMBER_STATUS_INFO.'</p>';
             }

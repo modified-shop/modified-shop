@@ -21,8 +21,8 @@ class contact_us
         $this->code = 'contact_us';
         $this->title = MODULE_CONTACT_US_TEXT_TITLE;
         $this->description = MODULE_CONTACT_US_TEXT_DESCRIPTION;
-        $this->sort_order = MODULE_CONTACT_US_SORT_ORDER;
-        $this->enabled = ((MODULE_CONTACT_US_STATUS == 'true') ? true : false);
+        $this->sort_order = ((defined('MODULE_CONTACT_US_SORT_ORDER')) ? MODULE_CONTACT_US_SORT_ORDER : '');
+        $this->enabled = ((defined('MODULE_CONTACT_US_STATUS') && MODULE_CONTACT_US_STATUS == 'true') ? true : false);
     }
 
     function process($file) 

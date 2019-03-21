@@ -21,8 +21,8 @@ class checkout_express
         $this->code = 'checkout_express';
         $this->title = MODULE_CHECKOUT_EXPRESS_TEXT_TITLE;
         $this->description = MODULE_CHECKOUT_EXPRESS_TEXT_DESCRIPTION;
-        $this->sort_order = MODULE_CHECKOUT_EXPRESS_SORT_ORDER;
-        $this->enabled = ((MODULE_CHECKOUT_EXPRESS_STATUS == 'true') ? true : false);
+        $this->sort_order = ((defined('MODULE_CHECKOUT_EXPRESS_SORT_ORDER')) ? MODULE_CHECKOUT_EXPRESS_SORT_ORDER : '');
+        $this->enabled = ((defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS == 'true') ? true : false);
 
         if (defined('RUN_MODE_ADMIN') && $this->enabled === true && (!defined('MODULE_CHECKOUT_EXPRESS_CONTENT_INSTALLED') || MODULE_CHECKOUT_EXPRESS_CONTENT_INSTALLED != '1')) {
           $this->description .= ((defined('MODULE_'.strtoupper($this->code).'_DESCRIPTION_INSTALL')) ? constant('MODULE_'.strtoupper($this->code).'_DESCRIPTION_INSTALL').'<a class="button btnbox" style="text-align:center;" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system&module=' . $this->code . '&moduleaction=content') . '">' . MODULE_CHECKOUT_EXPRESS_BUTTON_INSTALL . '</a>' : '');
