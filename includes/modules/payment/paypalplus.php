@@ -167,6 +167,7 @@ class paypalplus extends PayPalPayment {
 	function install() {
 	  parent::install();
 	  
+    include_once(DIR_FS_LANGUAGES.$_SESSION['language'].'/modules/payment/paypalcart.php');
 	  require_once(DIR_FS_CATALOG.'includes/modules/payment/paypalcart.php');
 	  $paypalcart = new paypalcart();
 	  if ($paypalcart->check() != 1) {

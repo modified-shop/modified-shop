@@ -151,6 +151,7 @@ class paypalinstallment extends PayPalPayment {
     );
 	  $this->status_install($stati);
 	  
+    include_once(DIR_FS_LANGUAGES.$_SESSION['language'].'/modules/order_total/ot_paypalinstallment_fee.php');
 	  require_once(DIR_FS_CATALOG.'includes/modules/order_total/ot_paypalinstallment_fee.php');
 	  $pp_fee = new ot_paypalinstallment_fee();
 	  if ($pp_fee->check() != 1) {
