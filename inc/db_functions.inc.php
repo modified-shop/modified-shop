@@ -35,7 +35,7 @@
   }
   
 
-  function xtc_db_perform($table, $data, $action='insert', $parameters='', $link='db_link') {
+  function xtc_db_perform($table, $data, $action = 'insert', $parameters = '', $link = 'db_link') {
     global ${$link};
     
     if (!is_array($data) || count($data) < 1) {
@@ -43,52 +43,35 @@
     }
     
     reset($data);
+    
+    $sql_array = array();
+    foreach ($data as $columns => $values) {
+      switch ($values) {
+        case 'now()':
+          $sql_array[$columns] = 'now()';
+          break;
+        case 'null':
+          $sql_array[$columns] = 'null';
+          break;
+        default:
+          $sql_array[$columns] = "'" . xtc_db_input($values) . "'";
+          break;
+      }
+    }
 
     if ($action == 'insert') {
-      $query = 'INSERT INTO ' . $table . ' (';
-      
-      $sub_query = array();
-      foreach ($data as $columns => $value) {
-        $sub_query[] = $columns;
-      }
-      $query .= implode(', ', $sub_query) . ') VALUES (';
-      reset($data);
-      
-      $sub_query = array();
-      foreach ($data as $value) {
-        $value = (string)$value;
-        switch ($value) {
-          case 'now()':
-            $sub_query[] = 'now()';
-            break;
-          case 'null':
-            $sub_query[] = 'null';
-            break;
-          default:
-            $sub_query[] = '\'' . xtc_db_input($value) . '\'';
-            break;
-        }
-      }
-      $query .= implode(', ', $sub_query) . ')';
-    } elseif ($action == 'update') {
+      $query = 'INSERT INTO ' . $table . ' (' . implode(', ', array_keys($sql_array)) . ') VALUES (' . implode(', ', $sql_array) . ')';
+    }
+    
+    if ($action == 'update') {
       $query = 'UPDATE ' . $table . ' SET ';
-      
-      $sub_query = array();
-      foreach ($data as $columns => $value) {
-        $value = (string)$value;
-        switch ($value) {
-          case 'now()':
-            $sub_query[] = $columns . ' = now()';
-            break;
-          case 'null':
-            $sub_query[] = $columns . ' = null';
-            break;
-          default:
-            $sub_query[] = $columns . ' = \'' . xtc_db_input($value) . '\'';
-            break;
-        }
+      foreach ($sql_array as $col => $val) {
+        $query .= $col . ' = ' . $val . ', ';
       }
-      $query .= implode(', ', $sub_query) . ' WHERE ' . $parameters;
+      $query = rtrim($query, ', ');
+      if ($parameters != '') {
+        $query .= ' WHERE ' . $parameters;
+      }   
     }
 
     return xtc_db_query($query, $link);
