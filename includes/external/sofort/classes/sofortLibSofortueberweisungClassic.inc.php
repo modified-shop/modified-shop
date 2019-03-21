@@ -267,7 +267,7 @@ class SofortLibSofortueberweisungClassic extends Sofort\SofortLib\Multipay {
 	 * @param string $reason2 (optional)
 	 * @return SofortLibSofortueberweisungClassic $this
 	 */
-	public function setReason($reason1, $reason2 = '') {
+	public function setReason($reason1, $reason2 = '', $productCode = NULL) {
 		$this->_parameters['reason_1'] = $this->_shortenReason($reason1);
 		$this->_parameters['reason_2'] = $this->_shortenReason($reason2);
 
