@@ -29,13 +29,13 @@ class cash {
 		$this->enabled = ((defined('MODULE_PAYMENT_CASH_STATUS') && MODULE_PAYMENT_CASH_STATUS == 'True') ? true : false);
 		$this->info = MODULE_PAYMENT_CASH_TEXT_INFO;
 		if ($this->check() > 0) {
-      if ((int) MODULE_PAYMENT_CASH_ORDER_STATUS_ID > 0) {
-        $this->order_status = MODULE_PAYMENT_CASH_ORDER_STATUS_ID;
-      }
-    }
+			if ((int) MODULE_PAYMENT_CASH_ORDER_STATUS_ID > 0) {
+				$this->order_status = MODULE_PAYMENT_CASH_ORDER_STATUS_ID;
+			}
+		}
 		if (is_object($order)) {
 			$this->update_status();
-    }
+		}
 		$this->email_footer = MODULE_PAYMENT_CASH_TEXT_EMAIL_FOOTER;
 	}
 

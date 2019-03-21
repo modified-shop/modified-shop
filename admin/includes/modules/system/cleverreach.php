@@ -22,7 +22,7 @@ class cleverreach {
      $this->description = MODULE_CLEVERREACH_TEXT_DESCRIPTION;
      $this->sort_order = defined('MODULE_CLEVERREACH_SORT_ORDER') ? MODULE_CLEVERREACH_SORT_ORDER : '';
      $this->enabled = ((defined('MODULE_CLEVERREACH_STATUS') && MODULE_CLEVERREACH_STATUS == 'true') ? true : false);
-   }
+  }
 
   function process($file) {
 

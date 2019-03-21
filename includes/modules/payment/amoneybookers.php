@@ -53,14 +53,14 @@ class amoneybookers {
 		xtc_image(DIR_WS_ICONS . 'swift_small.jpg') . ' ' .
 		xtc_image(DIR_WS_ICONS . 'elv_small.jpg') . ' ' .
 		xtc_image(DIR_WS_ICONS . 'cheque_small.jpg');
-    
-    if ($this->check() > 0) {
-		  $this->tmpStatus = MODULE_PAYMENT_AMONEYBOOKERS_TMP_STATUS_ID;
-      if ((int) MODULE_PAYMENT_AMONEYBOOKERS_ORDER_STATUS_ID > 0) {
-        $this->order_status = MODULE_PAYMENT_AMONEYBOOKERS_ORDER_STATUS_ID;
-      }
-    }
-    
+		
+		if ($this->check() > 0) {
+			$this->tmpStatus = MODULE_PAYMENT_AMONEYBOOKERS_TMP_STATUS_ID;
+			if ((int) MODULE_PAYMENT_AMONEYBOOKERS_ORDER_STATUS_ID > 0) {
+				$this->order_status = MODULE_PAYMENT_AMONEYBOOKERS_ORDER_STATUS_ID;
+			}
+		}
+		
 		$this->repost = false;
 		$this->Error = '';
 		$this->oID = 0;

@@ -54,7 +54,7 @@ class ot_coupon {
     $this->enabled = ((defined('MODULE_ORDER_TOTAL_COUPON_STATUS') && MODULE_ORDER_TOTAL_COUPON_STATUS == 'true') ? true : false);
     $this->sort_order = ((defined('MODULE_ORDER_TOTAL_COUPON_SORT_ORDER')) ? MODULE_ORDER_TOTAL_COUPON_SORT_ORDER : '');
 
-    if ($this->check() > 0) {    
+    if ($this->check() > 0) {
       $this->include_shipping = 'false'; //MODULE_ORDER_TOTAL_COUPON_INC_SHIPPING;
       $this->include_tax = 'true'; //MODULE_ORDER_TOTAL_COUPON_INC_TAX;
       $this->calculate_tax = MODULE_ORDER_TOTAL_COUPON_CALC_TAX;

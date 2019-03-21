@@ -54,10 +54,10 @@ class MasterpaymentActions
 	function getActionURL()
 	{	
 		if(defined('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_INFRAME') && MODULE_PAYMENT_MASTERPAYMENT_CONFIG_INFRAME == 'True') {            
-      return $this->getShopURL() . 'checkout_masterpayment.php?' . session_name() . '=' . session_id();		
-    } else {
-      return $this->getShopURL() . 'checkout_masterpayment.php?action=request&' . session_name() . '=' . session_id();
-    }		
+			return $this->getShopURL() . 'checkout_masterpayment.php?' . session_name() . '=' . session_id();		
+		} else {
+			return $this->getShopURL() . 'checkout_masterpayment.php?action=request&' . session_name() . '=' . session_id();
+		}		
 	}
 	
 	

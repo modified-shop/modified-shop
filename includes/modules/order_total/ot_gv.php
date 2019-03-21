@@ -37,11 +37,11 @@ class ot_gv {
     $this->header = MODULE_ORDER_TOTAL_GV_HEADER;
     $this->description = MODULE_ORDER_TOTAL_GV_DESCRIPTION;
     $this->info = MODULE_ORDER_TOTAL_GV_USER_PROMPT;
-    $this->user_prompt = MODULE_ORDER_TOTAL_GV_USER_PROMPT;    
+    $this->user_prompt = MODULE_ORDER_TOTAL_GV_USER_PROMPT;
     $this->enabled = ((defined('MODULE_ORDER_TOTAL_GV_STATUS') && MODULE_ORDER_TOTAL_GV_STATUS == 'true') ? true : false);
     $this->sort_order = ((defined('MODULE_ORDER_TOTAL_GV_SORT_ORDER')) ? MODULE_ORDER_TOTAL_GV_SORT_ORDER : '');
 
-    if ($this->check() > 0) {    
+    if ($this->check() > 0) {
       $this->include_shipping = MODULE_ORDER_TOTAL_GV_INC_SHIPPING;
       $this->include_tax = MODULE_ORDER_TOTAL_GV_INC_TAX;
       $this->calculate_tax = MODULE_ORDER_TOTAL_GV_CALC_TAX;
