@@ -271,6 +271,9 @@
     if (count($installed_array) > 0) {
       foreach ($installed_array as $file) {
         if (is_file($module_directory . $file)) {
+          if (is_file(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $file)) {
+            include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $file);
+          }
           include_once($module_directory . $file);
           $class = substr($file, 0, strpos($file, '.'));
           if (xtc_class_exists($class)) {

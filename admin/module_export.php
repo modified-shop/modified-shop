@@ -210,12 +210,15 @@
 
   function create_directory_array($module_directory,$file_extension)
   {
-      global $module;
+      global $module, $module_type;
       $directory_array = array(array());
       if ($dir = @dir($module_directory)) {
         while ($file = $dir->read()) {
           if (!is_dir($module_directory . $file)) {
             if (substr($file, strrpos($file, '.')) == $file_extension) {
+              if (file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $file)) {
+                include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $file);
+              }
               include_once($module_directory . $file);
               $class = substr($file, 0, strrpos($file, '.'));
               if (xtc_class_exists($class)) {
