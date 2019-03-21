@@ -3153,7 +3153,7 @@ xmlrpc_encode_entitites($this->errstr, $GLOBALS['xmlrpc_internalencoding'], $cha
 		function scalarval()
 		{
 			reset($this->me);
-			list(,$b)=each($this->me);
+			$b = current($this->me);
 			return $b;
 		}
 
@@ -3166,7 +3166,8 @@ xmlrpc_encode_entitites($this->errstr, $GLOBALS['xmlrpc_internalencoding'], $cha
 		function scalartyp()
 		{
 			reset($this->me);
-			list($a,)=each($this->me);
+			$a = key($this->me);
+
 			if($a==$GLOBALS['xmlrpcI4'])
 			{
 				$a=$GLOBALS['xmlrpcInt'];
