@@ -38,22 +38,18 @@
     $languages_id_array[] = array('id' => $languages[$i]['id'], 'text' => $languages[$i]['name']);
   }
 
-  $trustedshops_status_array = array(array('id' => '1', 'text' => TEXT_ENABLED),
-                                     array('id' => '0', 'text' => TEXT_DISABLED),
-                                     );
+  $trustedshops_status_array = array(
+    array('id' => '1', 'text' => TEXT_ENABLED),
+    array('id' => '0', 'text' => TEXT_DISABLED),
+  );
 
-  $trustbadge_array = array(array('id' => 'default', 'text' => TEXT_BADGE_DEFAULT),
-                            //array('id' => 'small', 'text' => TEXT_BADGE_SMALL),
-                            array('id' => 'reviews', 'text' => TEXT_BADGE_REVIEWS),
-                            array('id' => 'custom', 'text' => TEXT_BADGE_CUSTOM),
-                            //array('id' => 'custom_reviews', 'text' => TEXT_BADGE_CUSTOM_REVIEWS),
-                            );
-
-  $trustbadge_position_array = array(array('id' => 'bottomRight', 'text' => TEXT_BADGE_BOTTOM_RIGHT),
-                                     array('id' => 'bottomLeft', 'text' => TEXT_BADGE_BOTTOM_LEFT),
-                                     array('id' => 'topRight', 'text' => TEXT_BADGE_TOP_RIGHT),
-                                     array('id' => 'topLeft', 'text' => TEXT_BADGE_TOP_LEFT),
-                                     );
+  $trustbadge_array = array(
+    array('id' => 'default', 'text' => TEXT_BADGE_DEFAULT),
+    //array('id' => 'small', 'text' => TEXT_BADGE_SMALL),
+    array('id' => 'reviews', 'text' => TEXT_BADGE_REVIEWS),
+    array('id' => 'custom', 'text' => TEXT_BADGE_CUSTOM),
+    //array('id' => 'custom_reviews', 'text' => TEXT_BADGE_CUSTOM_REVIEWS),
+  );
 
   switch ($_GET['action']) {
     case 'setflag':
