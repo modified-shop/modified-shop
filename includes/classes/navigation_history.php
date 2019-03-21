@@ -130,11 +130,12 @@
     }
 
     function unserialize($broken) {
-      for(reset($broken);$kv=each($broken);) {
-        $key=$kv['key'];
-        if (gettype($this->$key)!="user function")
-        $this->$key=$kv['value'];
+      foreach ($broken as $key => $val) {
+        if (gettype($this->{$key}) != 'user function') {
+          $this->{$key} = $val;
+        }
       }
     }
+    
   }
 ?>
