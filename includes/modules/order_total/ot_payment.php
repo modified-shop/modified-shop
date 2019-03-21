@@ -36,7 +36,7 @@ class ot_payment {
     $this->num_payment = defined('MODULE_ORDER_TOTAL_PAYMENT_NUMBER')?MODULE_ORDER_TOTAL_PAYMENT_NUMBER:'';
     $this->title = defined('MODULE_ORDER_TOTAL_PAYMENT_TITLE')?MODULE_ORDER_TOTAL_PAYMENT_TITLE:'';
     $this->description = defined('MODULE_ORDER_TOTAL_PAYMENT_DESCRIPTION')?MODULE_ORDER_TOTAL_PAYMENT_DESCRIPTION:'';
-    $this->enabled = (MODULE_ORDER_TOTAL_PAYMENT_STATUS == 'true') ? true : false;
+    $this->enabled = (defined('MODULE_ORDER_TOTAL_PAYMENT_STATUS') && MODULE_ORDER_TOTAL_PAYMENT_STATUS == 'true') ? true : false;
     $this->sort_order = defined('MODULE_ORDER_TOTAL_PAYMENT_SORT_ORDER')?MODULE_ORDER_TOTAL_PAYMENT_SORT_ORDER:'';
     $this->include_shipping = defined('MODULE_ORDER_TOTAL_PAYMENT_INC_SHIPPING')?MODULE_ORDER_TOTAL_PAYMENT_INC_SHIPPING:'';
     $this->include_tax = defined('MODULE_ORDER_TOTAL_PAYMENT_INC_TAX')?MODULE_ORDER_TOTAL_PAYMENT_INC_TAX:'';
@@ -47,7 +47,7 @@ class ot_payment {
     $this->original_total = 0;
     $this->discount = array();
     $this->amounts = array();
-    $this->show_in_checkout_payment = MODULE_ORDER_TOTAL_PAYMENT_SHOW_IN_CHECKOUT_PAYMENT=='true' ? true : false;
+    $this->show_in_checkout_payment = defined('MODULE_ORDER_TOTAL_PAYMENT_SHOW_IN_CHECKOUT_PAYMENT') && MODULE_ORDER_TOTAL_PAYMENT_SHOW_IN_CHECKOUT_PAYMENT=='true' ? true : false;
     $this->show_type = defined('MODULE_ORDER_TOTAL_PAYMENT_SHOW_TYPE')?MODULE_ORDER_TOTAL_PAYMENT_SHOW_TYPE:'';
 
     if ($this->check() > 0) {      

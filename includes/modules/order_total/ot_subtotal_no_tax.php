@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: ot_subtotal_no_tax.php 3664 2012-09-21 16:09:38Z web28 $   
+   $Id$   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -26,8 +26,8 @@
       $this->code = 'ot_subtotal_no_tax';
       $this->title = MODULE_ORDER_TOTAL_SUBTOTAL_NO_TAX_TITLE;
       $this->description = MODULE_ORDER_TOTAL_SUBTOTAL_NO_TAX_DESCRIPTION;
-      $this->enabled = ((MODULE_ORDER_TOTAL_SUBTOTAL_NO_TAX_STATUS == 'true') ? true : false);
-      $this->sort_order = MODULE_ORDER_TOTAL_SUBTOTAL_NO_TAX_SORT_ORDER;
+      $this->enabled = ((defined('MODULE_ORDER_TOTAL_SUBTOTAL_NO_TAX_STATUS') && MODULE_ORDER_TOTAL_SUBTOTAL_NO_TAX_STATUS == 'true') ? true : false);
+      $this->sort_order = ((defined('MODULE_ORDER_TOTAL_SUBTOTAL_NO_TAX_SORT_ORDER')) ? MODULE_ORDER_TOTAL_SUBTOTAL_NO_TAX_SORT_ORDER : '');
 
       $this->output = array();
     }
