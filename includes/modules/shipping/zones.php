@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: zones.php 5118 2013-07-18 10:58:36Z Tomcraft $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -26,11 +26,11 @@
       $this->code = 'zones';
       $this->title = MODULE_SHIPPING_ZONES_TEXT_TITLE;
       $this->description = MODULE_SHIPPING_ZONES_TEXT_DESCRIPTION;
-      $this->sort_order = MODULE_SHIPPING_ZONES_SORT_ORDER;
+      $this->sort_order = defined('MODULE_SHIPPING_ZONES_SORT_ORDER') ? MODULE_SHIPPING_ZONES_SORT_ORDER : '';
       $this->icon = '';
-      $this->tax_class = MODULE_SHIPPING_ZONES_TAX_CLASS;
-      $this->enabled = ((MODULE_SHIPPING_ZONES_STATUS == 'True') ? true : false);
-      $this->num_zones = defined('MODULE_SHIPPING_ZONES_NUMBER_ZONES') ? MODULE_SHIPPING_ZONES_NUMBER_ZONES : '1';
+      $this->tax_class = defined('MODULE_SHIPPING_ZONES_TAX_CLASS') ? MODULE_SHIPPING_ZONES_TAX_CLASS : '';
+      $this->enabled = ((defined('MODULE_SHIPPING_ZONES_STATUS') && MODULE_SHIPPING_ZONES_STATUS == 'True') ? true : false);
+      $this->num_zones = defined('MODULE_SHIPPING_ZONES_NUMBER_ZONES') ? MODULE_SHIPPING_ZONES_NUMBER_ZONES : '';
 
       if ( ($this->enabled == true) && ((int)MODULE_SHIPPING_ZONES_ZONE > 0) && is_object($order) ) {
         $check_flag = false;

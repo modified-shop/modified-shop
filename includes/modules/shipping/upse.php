@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: upse.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $   
+   $Id$   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -35,10 +35,10 @@
       $this->code = 'upse';
       $this->title = MODULE_SHIPPING_UPSE_TEXT_TITLE;
       $this->description = MODULE_SHIPPING_UPSE_TEXT_DESCRIPTION;
-      $this->sort_order = MODULE_SHIPPING_UPSE_SORT_ORDER;
+      $this->sort_order = ((defined('MODULE_SHIPPING_UPSE_SORT_ORDER')) ? MODULE_SHIPPING_UPSE_SORT_ORDER : '');
       $this->icon = DIR_WS_ICONS . 'shipping_ups.gif';
-      $this->tax_class = MODULE_SHIPPING_UPSE_TAX_CLASS;
-      $this->enabled = ((MODULE_SHIPPING_UPSE_STATUS == 'True') ? true : false);
+      $this->tax_class = ((defined('MODULE_SHIPPING_UPSE_TAX_CLASS')) ? MODULE_SHIPPING_UPSE_TAX_CLASS : '');
+      $this->enabled = ((defined('MODULE_SHIPPING_UPSE_STATUS') && MODULE_SHIPPING_UPSE_STATUS == 'True') ? true : false);
 
       if ( ($this->enabled == true) && ((int)MODULE_SHIPPING_UPSE_ZONE > 0) && is_object($order)) {
         $check_flag = false;

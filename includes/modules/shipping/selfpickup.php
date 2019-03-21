@@ -1,6 +1,6 @@
 <?PHP
 /* -----------------------------------------------------------------------------------------
-   $Id: selfpickup.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -31,8 +31,8 @@ class selfpickup
         $this->title       = MODULE_SHIPPING_SELFPICKUP_TEXT_TITLE;
         $this->description = MODULE_SHIPPING_SELFPICKUP_TEXT_DESCRIPTION;
         $this->icon        = '';   // change $this->icon =  DIR_WS_ICONS . 'shipping_ups.gif'; to some freeshipping icon
-        $this->sort_order  = MODULE_SHIPPING_SELFPICKUP_SORT_ORDER;
-        $this->enabled = ((MODULE_SHIPPING_SELFPICKUP_STATUS == 'True') ? true : false);
+        $this->sort_order  = ((defined('MODULE_SHIPPING_SELFPICKUP_SORT_ORDER')) ? MODULE_SHIPPING_SELFPICKUP_SORT_ORDER : '');
+        $this->enabled = ((defined('MODULE_SHIPPING_SELFPICKUP_STATUS') && MODULE_SHIPPING_SELFPICKUP_STATUS == 'True') ? true : false);
     }
 
     function quote($method = '')

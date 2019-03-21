@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: dp.php 5118 2013-07-18 10:58:36Z Tomcraft $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -47,10 +47,12 @@ define('MODULE_SHIPPING_DP_NUMBER_ZONES_DESC' , 'Number of zones to use');
 define('MODULE_SHIPPING_DP_DISPLAY_TITLE' , 'Enable Display');
 define('MODULE_SHIPPING_DP_DISPLAY_DESC' , 'Do you want to display, if shipping to destination is not possible or if shipping costs cannot be calculated?');
 
-for ($module_shipping_dp_i = 1; $module_shipping_dp_i <= MODULE_SHIPPING_DP_NUMBER_ZONES; $module_shipping_dp_i ++) {
-  define('MODULE_SHIPPING_DP_COUNTRIES_'.$module_shipping_dp_i.'_TITLE' , '<hr/>DP Zone '.$module_shipping_dp_i.' Countries');
-  define('MODULE_SHIPPING_DP_COUNTRIES_'.$module_shipping_dp_i.'_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone '.$module_shipping_dp_i.' (Enter WORLD for the rest of the world.).');
-  define('MODULE_SHIPPING_DP_COST_'.$module_shipping_dp_i.'_TITLE' , 'DP Zone '.$module_shipping_dp_i.' Shipping Table');
-  define('MODULE_SHIPPING_DP_COST_'.$module_shipping_dp_i.'_DESC' , 'Shipping rates to Zone '.$module_shipping_dp_i.' destinations based on a range of order weights. Example: 3:8.50,7:10.50,99999:12.00... Weights greater than 0 and less than 3 would cost 8.50, less than 7 would cost 10.50 for Zone '.$module_shipping_dp_i.' destinations.');
+if (defined('MODULE_SHIPPING_FREEAMOUNT_NUMBER_ZONES')) {
+  for ($module_shipping_dp_i = 1; $module_shipping_dp_i <= MODULE_SHIPPING_DP_NUMBER_ZONES; $module_shipping_dp_i ++) {
+    define('MODULE_SHIPPING_DP_COUNTRIES_'.$module_shipping_dp_i.'_TITLE' , '<hr/>DP Zone '.$module_shipping_dp_i.' Countries');
+    define('MODULE_SHIPPING_DP_COUNTRIES_'.$module_shipping_dp_i.'_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone '.$module_shipping_dp_i.' (Enter WORLD for the rest of the world.).');
+    define('MODULE_SHIPPING_DP_COST_'.$module_shipping_dp_i.'_TITLE' , 'DP Zone '.$module_shipping_dp_i.' Shipping Table');
+    define('MODULE_SHIPPING_DP_COST_'.$module_shipping_dp_i.'_DESC' , 'Shipping rates to Zone '.$module_shipping_dp_i.' destinations based on a range of order weights. Example: 3:8.50,7:10.50,99999:12.00... Weights greater than 0 and less than 3 would cost 8.50, less than 7 would cost 10.50 for Zone '.$module_shipping_dp_i.' destinations.');
+  }
 }
 ?>

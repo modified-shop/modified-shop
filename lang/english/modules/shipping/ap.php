@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: ap.php 5118 2013-07-18 10:58:36Z Tomcraft $   
+   $Id$   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -48,12 +48,14 @@ define('MODULE_SHIPPING_AP_NUMBER_ZONES_DESC' , 'Number of zones to use');
 define('MODULE_SHIPPING_AP_DISPLAY_TITLE' , 'Enable Display');
 define('MODULE_SHIPPING_AP_DISPLAY_DESC' , 'Do you want to display, if shipping to destination is not possible or if shipping costs cannot be calculated?');
 
-for ($module_shipping_ap_i = 1; $module_shipping_ap_i <= MODULE_SHIPPING_AP_NUMBER_ZONES; $module_shipping_ap_i ++) {
-  define('MODULE_SHIPPING_AP_COUNTRIES_'.$module_shipping_ap_i.'_TITLE' , '<hr/>Zone '.$module_shipping_ap_i.' Countries');
-  define('MODULE_SHIPPING_AP_COUNTRIES_'.$module_shipping_ap_i.'_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone '.$module_shipping_ap_i.' (Enter WORLD for the rest of the world.).');
-  define('MODULE_SHIPPING_AP_COST_'.$module_shipping_ap_i.'_TITLE' , 'Zone '.$module_shipping_ap_i.' Shipping Table');
-  define('MODULE_SHIPPING_AP_COST_'.$module_shipping_ap_i.'_DESC' , 'Shipping rates to Zone '.$module_shipping_ap_i.' will be multiplied by the number of items in an order that uses this shipping method.');
-  define('MODULE_SHIPPING_AP_HANDLING_'.$module_shipping_ap_i.'_TITLE' , 'Zone '.$module_shipping_ap_i.' Handling Fee');
-  define('MODULE_SHIPPING_AP_HANDLING_'.$module_shipping_ap_i.'_DESC' , 'Handling Fee for this shipping zone');
+if (defined('MODULE_SHIPPING_AP_NUMBER_ZONES')) {
+  for ($module_shipping_ap_i = 1; $module_shipping_ap_i <= MODULE_SHIPPING_AP_NUMBER_ZONES; $module_shipping_ap_i ++) {
+    define('MODULE_SHIPPING_AP_COUNTRIES_'.$module_shipping_ap_i.'_TITLE' , '<hr/>Zone '.$module_shipping_ap_i.' Countries');
+    define('MODULE_SHIPPING_AP_COUNTRIES_'.$module_shipping_ap_i.'_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone '.$module_shipping_ap_i.' (Enter WORLD for the rest of the world.).');
+    define('MODULE_SHIPPING_AP_COST_'.$module_shipping_ap_i.'_TITLE' , 'Zone '.$module_shipping_ap_i.' Shipping Table');
+    define('MODULE_SHIPPING_AP_COST_'.$module_shipping_ap_i.'_DESC' , 'Shipping rates to Zone '.$module_shipping_ap_i.' will be multiplied by the number of items in an order that uses this shipping method.');
+    define('MODULE_SHIPPING_AP_HANDLING_'.$module_shipping_ap_i.'_TITLE' , 'Zone '.$module_shipping_ap_i.' Handling Fee');
+    define('MODULE_SHIPPING_AP_HANDLING_'.$module_shipping_ap_i.'_DESC' , 'Handling Fee for this shipping zone');
+  }
 }
 ?>

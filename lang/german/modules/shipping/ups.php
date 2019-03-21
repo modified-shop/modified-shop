@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: ups.php 5121 2013-07-18 11:38:19Z Tomcraft $   
+   $Id$   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -28,8 +28,8 @@ define('MODULE_SHIPPING_UPS_TEXT_TITLE', 'United Parcel Service Standard');
 define('MODULE_SHIPPING_UPS_TEXT_DESCRIPTION', 'United Parcel Service Standard - Versandmodul');
 define('MODULE_SHIPPING_UPS_TEXT_WAY', 'Versand nach');
 define('MODULE_SHIPPING_UPS_TEXT_UNITS', 'kg');
-define('MODULE_SHIPPING_UPS_TEXT_FREE', 'Ab EUR ' . MODULE_SHIPPING_UPS_FREEAMOUNT . ' Bestellwert versenden wir Ihre Bestellung versandkostenfrei!');
-define('MODULE_SHIPPING_UPS_TEXT_LOW', 'Ab EUR ' . MODULE_SHIPPING_UPS_FREEAMOUNT . ' Bestellwert versenden wir Ihre Bestellung zu erm&auml;&szlig;igten Versandkosten!');
+define('MODULE_SHIPPING_UPS_TEXT_FREE', 'Ab EUR ' . ((defined('MODULE_SHIPPING_UPS_FREEAMOUNT')) ? MODULE_SHIPPING_UPS_FREEAMOUNT : '') . ' Bestellwert versenden wir Ihre Bestellung versandkostenfrei!');
+define('MODULE_SHIPPING_UPS_TEXT_LOW', 'Ab EUR ' . ((defined('MODULE_SHIPPING_UPS_FREEAMOUNT')) ? MODULE_SHIPPING_UPS_FREEAMOUNT : '') . ' Bestellwert versenden wir Ihre Bestellung zu erm&auml;&szlig;igten Versandkosten!');
 define('MODULE_SHIPPING_UPS_INVALID_ZONE', 'Es ist leider kein Versand in dieses Land m&ouml;glich.');
 define('MODULE_SHIPPING_UPS_UNDEFINED_RATE', 'Die Versandkosten k&ouml;nnen im Moment nicht errechnet werden.');
 
