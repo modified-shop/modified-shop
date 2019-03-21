@@ -678,10 +678,13 @@ TITLE;
     private function _checkForLatestVersion()
     {
         if (($this->_isInvoice()
+            && defined('MODULE_PAYMENT_KLARNA_INVOICE_LATESTVERSION')
             && strtolower(MODULE_PAYMENT_KLARNA_INVOICE_LATESTVERSION) == 'true')
             || ($this->_isSpec()
+            && defined('MODULE_PAYMENT_KLARNA_SPECCAMP_LATESTVERSION')
             && strtolower(MODULE_PAYMENT_KLARNA_SPECCAMP_LATESTVERSION) == 'true')
             || ($this->_isPart()
+            && defined('MODULE_PAYMENT_KLARNA_PARTPAYMENT_LATESTVERSION')
             && strtolower(MODULE_PAYMENT_KLARNA_PARTPAYMENT_LATESTVERSION) == 'true')
         ) {
             $this->_utils->checkForLatestVersion();
