@@ -551,8 +551,8 @@ HEREDOC;
          * @abstract
          * @return bool
          */
-        // public function onDisplayPdf($pdf, $orderId, $bankDataQuery)
-        public function onDisplayPdf()
+        public function onDisplayPdf($pdf, $orderId, $bankDataQuery)
+        //public function onDisplayPdf()
         {
             return true;
         }
@@ -2188,8 +2188,8 @@ JAVASCRIPT;
          * @abstract
          * @return int
          */
-        // protected function _getStaticLimit($config) {
-        protected function _getStaticLimit() {
+        protected function _getStaticLimit($config) {
+        //protected function _getStaticLimit() {
             return 0;
         }
 
@@ -2198,8 +2198,8 @@ JAVASCRIPT;
          * @abstract
          * @return int
          */
-        // protected function _getMinValue($config) {
-        protected function _getMinValue() {
+        protected function _getMinValue($config) {
+        //protected function _getMinValue() {
             return 0;
         }
 
@@ -2208,8 +2208,8 @@ JAVASCRIPT;
          * @abstract
          * @return bool
          */
-        // protected function _is_b2c_allowed($config) {
-        protected function _is_b2c_allowed() {
+        protected function _is_b2c_allowed($config) {
+        ///protected function _is_b2c_allowed() {
             return true;
         }
 
@@ -2218,8 +2218,8 @@ JAVASCRIPT;
          * @abstract
          * @return bool
          */
-        // protected function _is_b2b_allowed($config) {
-        protected function _is_b2b_allowed() {
+        protected function _is_b2b_allowed($config) {
+        //protected function _is_b2b_allowed() {
             return false;
         }
 
@@ -2951,7 +2951,8 @@ JAVASCRIPT;
          * #param $data array $_POST onInput
          * @return bool
          */
-        public function isDobRequired()
+        //public function isDobRequired()
+        public function isDobRequired($data)
         {
             return true;
         }
@@ -3171,8 +3172,8 @@ JAVASCRIPT;
          * @return string
          * @abstract
          */
-        // public function getPayUntilText($bank_data, $currency)
-        public function getPayUntilText()
+        public function getPayUntilText($bank_data, $currency)
+        //public function getPayUntilText()
         {
             return '!!!Pay until text not implemented for this method!!!';
         }

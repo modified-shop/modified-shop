@@ -255,7 +255,7 @@ if (!class_exists('BillpayPayLater'))
          * Renders payUntilText visible on invoice and email order confirmation.
          * @return string
          */
-        function getPayUntilText()
+        function getPayUntilText($bank_data, $currency)
         {
             return MODULE_PAYMENT_BILLPAYPAYLATER_PAY_UNTIL_TEXT;
         }
