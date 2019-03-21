@@ -44,7 +44,7 @@ define('MODULE_SHIPPING_AP_NUMBER_ZONES_DESC' , 'Anzahl der bereitgestellten Zon
 define('MODULE_SHIPPING_AP_DISPLAY_TITLE' , 'Anzeige aktivieren');
 define('MODULE_SHIPPING_AP_DISPLAY_DESC' , 'M&ouml;chten Sie anzeigen, wenn kein Versand in das Land m&ouml;glich ist bzw. keine Versandkosten berechnet werden konnten?');
 
-if (defined('MODULE_SHIPPING_DP_NUMBER_ZONES')) {
+if (defined('MODULE_SHIPPING_AP_NUMBER_ZONES')) {
   for ($module_shipping_ap_i = 1; $module_shipping_ap_i <= MODULE_SHIPPING_AP_NUMBER_ZONES; $module_shipping_ap_i ++) {
     define('MODULE_SHIPPING_AP_COUNTRIES_'.$module_shipping_ap_i.'_TITLE' , '<hr/>Zone '.$module_shipping_ap_i.' L&auml;nder');
     define('MODULE_SHIPPING_AP_COUNTRIES_'.$module_shipping_ap_i.'_DESC' , 'Durch Komma getrennte Liste von ISO L&auml;ndercodes (2 Zeichen), welche Teil von Zone '.$module_shipping_ap_i.' sind (WORLD eintragen f&uuml;r den Rest der Welt.).');
