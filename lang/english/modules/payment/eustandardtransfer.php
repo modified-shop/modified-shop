@@ -27,7 +27,7 @@
           '<br />BIC/SWIFT: ' . (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKBIC') ? MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKBIC : '') .
           '<br /><br />Your order will not be shipped until we receive your payment in the above account.<br />');
 
-  if (MODULE_PAYMENT_EUSTANDARDTRANSFER_SUCCESS == 'True') {
+  if (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_SUCCESS') && MODULE_PAYMENT_EUSTANDARDTRANSFER_SUCCESS == 'True') {
     define('MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_INFO','Please transfer the invoice total to our bank account. You will receive the account data in the last step of the checkout.');
   } else {
     define('MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_INFO','Please transfer the invoice total to our bank account. You will receive the account data by e-mail when your order has been confirmed.');

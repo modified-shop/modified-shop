@@ -1,7 +1,7 @@
 <?php
 
 /* -----------------------------------------------------------------------------------------
-   $Id: cash.php 1102 2005-07-24 15:05:38Z mz $
+   $Id$
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -29,4 +29,6 @@ define('MODULE_PAYMENT_CASH_ZONE_TITLE', 'Payment Zone');
 define('MODULE_PAYMENT_CASH_ZONE_DESC', 'If a zone is selected, only enable this payment method for that zone.');
 define('MODULE_PAYMENT_CASH_ALLOWED_TITLE', 'Allowed zones');
 define('MODULE_PAYMENT_CASH_ALLOWED_DESC', 'Please enter the zones <b>separately</b> which should be allowed to use this modul (e. g. AT,DE (leave empty if you want to allow all zones))');
+
+define('MODULE_PAYMENT_CASH_TEXT_EMAIL_FOOTER', 'You pay for the order on pickup.');
 ?>
