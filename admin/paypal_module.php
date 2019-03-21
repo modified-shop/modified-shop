@@ -136,6 +136,7 @@ if (isset($_GET['action'])) {
 
     case 'install':
       if (in_array($_GET['module'], $payment_array)) {                  
+        include_once(DIR_FS_LANGUAGES.$_SESSION['language'].'/modules/payment/'.$_GET['module'].'.php');
         require_once(DIR_FS_CATALOG.'includes/modules/payment/'.$_GET['module'].'.php');
         $module = new $_GET['module']();
         $module->install();
