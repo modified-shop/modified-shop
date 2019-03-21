@@ -832,7 +832,11 @@ class PHPMailer
         switch ($this->Debugoutput) {
             case 'error_log':
                 //Don't output, just log
-                error_log($str);
+                if ($this->loggerFile != '') {
+                  error_log("[" . date('d-m-Y H:i:s') . "] \t: $str\n", 3, $this->loggerFile);
+                } else {
+                  error_log($str);
+                }
                 break;
             case 'html':
                 //Cleans up output a bit for a better looking, HTML-safe output
@@ -1871,6 +1875,7 @@ class PHPMailer
             return true;
         }
 
+        $this->smtp->loggerFile = $this->loggerFile;
         $this->smtp->setTimeout($this->Timeout);
         $this->smtp->setDebugLevel($this->SMTPDebug);
         $this->smtp->setDebugOutput($this->Debugoutput);
@@ -4335,8 +4340,8 @@ class PHPMailer
                     }
                 }
             } else {
-                if (!empty($$current) and strpos($header, ' =?') === 0) {
-                    $$current .= $header;
+                if (!empty(${$current}) and strpos($header, ' =?') === 0) {
+                    ${$current} .= $header;
                 } else {
                     $current = '';
                 }
