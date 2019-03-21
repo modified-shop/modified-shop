@@ -18,25 +18,26 @@ defined('ENCODE_DEFAULT_CHARSET') or define('ENCODE_DEFAULT_CHARSET', 'ISO-8859-
  * helper functions
  */
 function get_third_party_payments() {
-  $payment_allowed = explode(';', MODULE_PAYMENT_PAYPAL_PLUS_THIRDPARTY_PAYMENT);
-    
-  require_once (DIR_FS_CATALOG . 'includes/classes/payment.php');
-  $payment_modules = new payment;
-
   $selection = array();
-  if (is_array($payment_modules->modules)) {
-    reset($payment_modules->modules);
-    foreach ($payment_modules->modules as $value) {
-      $class = substr($value, 0, strrpos($value, '.'));
-      if (isset($GLOBALS[$class]) && $GLOBALS[$class]->enabled && in_array($class, $payment_allowed)) {
-        $module_selection = $GLOBALS[$class]->selection();
-        if (is_array($module_selection)) {
-          $selection[] = $module_selection;
+  if (defined('MODULE_PAYMENT_PAYPAL_PLUS_THIRDPARTY_PAYMENT')) {
+    $payment_allowed = explode(';', MODULE_PAYMENT_PAYPAL_PLUS_THIRDPARTY_PAYMENT);
+    
+    require_once (DIR_FS_CATALOG . 'includes/classes/payment.php');
+    $payment_modules = new payment;
+
+    if (is_array($payment_modules->modules)) {
+      reset($payment_modules->modules);
+      foreach ($payment_modules->modules as $value) {
+        $class = substr($value, 0, strrpos($value, '.'));
+        if (isset($GLOBALS[$class]) && $GLOBALS[$class]->enabled && in_array($class, $payment_allowed)) {
+          $module_selection = $GLOBALS[$class]->selection();
+          if (is_array($module_selection)) {
+            $selection[] = $module_selection;
+          }
         }
       }
     }
   }
-  
   return $selection;
 }
 
