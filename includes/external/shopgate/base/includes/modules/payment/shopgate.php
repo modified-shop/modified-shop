@@ -32,8 +32,8 @@ class shopgate
         $this->code        = 'shopgate';
         $this->title       = MODULE_PAYMENT_SHOPGATE_TEXT_TITLE;
         $this->description = MODULE_PAYMENT_SHOPGATE_TEXT_DESCRIPTION;
-        $this->enabled     = ((MODULE_PAYMENT_SHOPGATE_STATUS == 'True') ? true : false);
-        $this->sort_order  = MODULE_PAYMENT_SHOPGATE_SORT_ORDER;
+        $this->enabled     = ((defined('MODULE_PAYMENT_SHOPGATE_STATUS') && MODULE_PAYMENT_SHOPGATE_STATUS == 'True') ? true : false);
+        $this->sort_order  = ((defined('MODULE_PAYMENT_SHOPGATE_SORT_ORDER')) ? MODULE_PAYMENT_SHOPGATE_SORT_ORDER : '');
     }
     
     function mobile_payment()
@@ -42,7 +42,7 @@ class shopgate
         $this->title       = MODULE_PAYMENT_SHOPGATE_TEXT_TITLE;
         $this->description = MODULE_PAYMENT_SHOPGATE_TEXT_DESCRIPTION;
         $this->enabled     = false;
-        $this->sort_order  = MODULE_PAYMENT_SHOPGATE_SORT_ORDER;
+        $this->sort_order  = ((defined('MODULE_PAYMENT_SHOPGATE_SORT_ORDER')) ? MODULE_PAYMENT_SHOPGATE_SORT_ORDER : '');
     }
     
     function update_status()
