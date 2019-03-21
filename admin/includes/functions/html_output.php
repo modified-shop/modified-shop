@@ -185,7 +185,7 @@
     if ($value != '') {
       $selection .= ' value="' . $value . '"';
     }
-    if ( ($checked == true) || (isset($GLOBALS[$name]) && ($GLOBALS[$name] == 'on')) || ($value && isset($GLOBALS[$name]) && ($GLOBALS[$name] == $value)) || ($value && ($value == $compare)) ) {
+    if ( ($checked == true) || (isset($GLOBALS[$name]) && ($GLOBALS[$name] == 'on')) || ($value && isset($GLOBALS[$name]) !is_object($GLOBALS[$name]) && ($GLOBALS[$name] == $value)) || ($value && ($value == $compare)) ) {
       $selection .= ' checked="checked"';
     }
     $addtag = '';
@@ -264,6 +264,7 @@
         $li .= '<li data-val="' .$val['id'] . '"';
         if ((strlen($val['id']) > 0 
              && isset($GLOBALS[$name]) 
+             && !is_object($GLOBALS[$name]) 
              && (string)$GLOBALS[$name] == (string)$val['id']
              ) || ((string)$default == (string)$val['id'])
             )
