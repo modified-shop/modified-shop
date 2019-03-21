@@ -40,7 +40,7 @@ class micropayment_method extends micropayment_helper
         if(isset($_SESSION['customers_status']) &&
             isset($_SESSION['customers_status']['customers_status_id']) &&
             $_SESSION['customers_status']['customers_status_id'] == 0) {
-            if($this->check() > 0 && !defined('MODULE_PAYMENT_MCP_SERVICE_ACCOUNT_ID') && !self::$registerInfoShow) {
+            if($this->check_is_service_installed() && MODULE_PAYMENT_MCP_SERVICE_ACCOUNT_ID == '' && !self::$registerInfoShow) {
                 echo sprintf(MODULE_PAYMENT_MCP_SERVICE_NO_ACCOUNT, MODULE_PAYMENT_MCP_SERVICE_CSS, $this->rslcode);
                 self::$registerInfoShow = true;
             }
