@@ -19,10 +19,10 @@ class mcp_prepay extends micropayment_method
         global $order, $language;
         $this->title       = MODULE_PAYMENT_MCP_PREPAY_TEXT_TITLE;
         $this->description = MODULE_PAYMENT_MCP_PREPAY_TEXT_DESCRIPTION;
-        $this->sort_order  = MODULE_PAYMENT_MCP_PREPAY_SORT_ORDER;
+        $this->sort_order  = ((defined('MODULE_PAYMENT_MCP_PREPAY_SORT_ORDER')) ? MODULE_PAYMENT_MCP_PREPAY_SORT_ORDER : '');
         $this->title_extern = MODULE_PAYMENT_MCP_PREPAY_TEXT_TITLE_EXTERN;
         $this->info        = MODULE_PAYMENT_MCP_PREPAY_TEXT_INFO;
-        parent::micropayment_method();
+        parent::__construct();
     }
 
     function install()

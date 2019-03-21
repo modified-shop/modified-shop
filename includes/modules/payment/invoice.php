@@ -26,15 +26,19 @@ class invoice {
     $this->title = MODULE_PAYMENT_INVOICE_TEXT_TITLE;
     $this->description = MODULE_PAYMENT_INVOICE_TEXT_DESCRIPTION;
     $this->min_order = MODULE_PAYMENT_INVOICE_MIN_ORDER;
-    $this->sort_order = MODULE_PAYMENT_INVOICE_SORT_ORDER;
-    $this->enabled = ((MODULE_PAYMENT_INVOICE_STATUS == 'True') ? true : false);
+    $this->sort_order = ((defined('MODULE_PAYMENT_INVOICE_SORT_ORDER')) ? MODULE_PAYMENT_INVOICE_SORT_ORDER : '');
+    $this->enabled = ((defined('MODULE_PAYMENT_INVOICE_STATUS') && MODULE_PAYMENT_INVOICE_STATUS == 'True') ? true : false);
     $this->info = MODULE_PAYMENT_INVOICE_TEXT_INFO;
-    if ((int) MODULE_PAYMENT_INVOICE_ORDER_STATUS_ID > 0) {
-      $this->order_status = MODULE_PAYMENT_INVOICE_ORDER_STATUS_ID;
+    
+    if ($this->check() > 0) {
+      if ((int) MODULE_PAYMENT_INVOICE_ORDER_STATUS_ID > 0) {
+        $this->order_status = MODULE_PAYMENT_INVOICE_ORDER_STATUS_ID;
+      }
     }
-
-    if (is_object($order))
+    
+    if (is_object($order)) {
       $this->update_status();
+    }
   }
 
   function update_status() {

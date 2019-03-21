@@ -38,13 +38,12 @@ class amoneybookers {
 		$this->version = '2.1';
 		$this->title = MODULE_PAYMENT_AMONEYBOOKERS_TEXT_TITLE;
 		$this->description = MODULE_PAYMENT_AMONEYBOOKERS_TEXT_DESCRIPTION;
-		$this->sort_order = MODULE_PAYMENT_AMONEYBOOKERS_SORT_ORDER;
-		$this->enabled = ((MODULE_PAYMENT_AMONEYBOOKERS_STATUS == 'True') ? true : false);
+		$this->sort_order = ((defined('MODULE_PAYMENT_AMONEYBOOKERS_SORT_ORDER')) ? MODULE_PAYMENT_AMONEYBOOKERS_SORT_ORDER : '');
+		$this->enabled = ((defined('MODULE_PAYMENT_AMONEYBOOKERS_STATUS') && MODULE_PAYMENT_AMONEYBOOKERS_STATUS == 'True') ? true : false);
 		$this->info = MODULE_PAYMENT_AMONEYBOOKERS_TEXT_INFO;
 		$this->logo = xtc_image(DIR_WS_ICONS . 'logo_moneybookers.jpg');
 		$this->landingPage = 'http://www.moneybookers.com/ecommerce_btc/de/index.html';
 		$this->tmpOrders = true;
-		$this->tmpStatus = MODULE_PAYMENT_AMONEYBOOKERS_TMP_STATUS_ID;
 		$this->icons_available = xtc_image(DIR_WS_ICONS . 'cc_amex_small.jpg') . ' ' .
 		xtc_image(DIR_WS_ICONS . 'cc_mastercard_small.jpg') . ' ' .
 		xtc_image(DIR_WS_ICONS . 'cc_visa_small.jpg') . ' ' .
@@ -54,7 +53,14 @@ class amoneybookers {
 		xtc_image(DIR_WS_ICONS . 'swift_small.jpg') . ' ' .
 		xtc_image(DIR_WS_ICONS . 'elv_small.jpg') . ' ' .
 		xtc_image(DIR_WS_ICONS . 'cheque_small.jpg');
-
+    
+    if ($this->check() > 0) {
+		  $this->tmpStatus = MODULE_PAYMENT_AMONEYBOOKERS_TMP_STATUS_ID;
+      if ((int) MODULE_PAYMENT_AMONEYBOOKERS_ORDER_STATUS_ID > 0) {
+        $this->order_status = MODULE_PAYMENT_AMONEYBOOKERS_ORDER_STATUS_ID;
+      }
+    }
+    
 		$this->repost = false;
 		$this->Error = '';
 		$this->oID = 0;
@@ -91,9 +97,6 @@ class amoneybookers {
 			}
 		}
 
-				if ((int) MODULE_PAYMENT_AMONEYBOOKERS_ORDER_STATUS_ID > 0) {
-					$this->order_status = MODULE_PAYMENT_AMONEYBOOKERS_ORDER_STATUS_ID;
-				}
 		//
 		if (is_object($order))
 			$this->update_status();

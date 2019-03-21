@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: banktransfer.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -29,20 +29,22 @@
 
       $this->code = 'banktransfer';
       $this->title = MODULE_PAYMENT_BANKTRANSFER_TEXT_TITLE;
+      $this->info = MODULE_PAYMENT_BANKTRANSFER_TEXT_INFO;
       $this->description = MODULE_PAYMENT_BANKTRANSFER_TEXT_DESCRIPTION;
       $this->extended_description = MODULE_PAYMENT_BANKTRANSFER_TEXT_EXTENDED_DESCRIPTION;
-      $this->sort_order = MODULE_PAYMENT_BANKTRANSFER_SORT_ORDER;
-      $this->min_order = MODULE_PAYMENT_BANKTRANSFER_MIN_ORDER;
-      $this->enabled = ((MODULE_PAYMENT_BANKTRANSFER_STATUS == 'True') ? true : false);
-      $this->info=MODULE_PAYMENT_BANKTRANSFER_TEXT_INFO;
-      if ((int)MODULE_PAYMENT_BANKTRANSFER_ORDER_STATUS_ID > 0) {
-        $this->order_status = MODULE_PAYMENT_BANKTRANSFER_ORDER_STATUS_ID;
+      $this->sort_order = ((defined('MODULE_PAYMENT_BANKTRANSFER_SORT_ORDER')) ? MODULE_PAYMENT_BANKTRANSFER_SORT_ORDER : '');
+      $this->enabled = ((defined('MODULE_PAYMENT_BANKTRANSFER_STATUS') && MODULE_PAYMENT_BANKTRANSFER_STATUS == 'True') ? true : false);      
+      if ($this->check() > 0) {
+        $this->min_order = MODULE_PAYMENT_BANKTRANSFER_MIN_ORDER;
+        if ((int)MODULE_PAYMENT_BANKTRANSFER_ORDER_STATUS_ID > 0) {
+          $this->order_status = MODULE_PAYMENT_BANKTRANSFER_ORDER_STATUS_ID;
+        }
+        if (isset($_POST['banktransfer_fax']) && $_POST['banktransfer_fax'] == "on") {
+          $this->email_footer = MODULE_PAYMENT_BANKTRANSFER_TEXT_EMAIL_FOOTER;
+        }
       }
       if (is_object($order)) {
         $this->update_status();
-      }
-      if (isset($_POST['banktransfer_fax']) && $_POST['banktransfer_fax'] == "on") {
-        $this->email_footer = MODULE_PAYMENT_BANKTRANSFER_TEXT_EMAIL_FOOTER;
       }
     }
 
