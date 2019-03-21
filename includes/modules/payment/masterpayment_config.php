@@ -7,7 +7,7 @@
  * support@k-30.de | www.k-30.de
  * ----------------------------------------------------
  *
- * $Id: masterpayment_config.php 04.06.2012 21:06 $
+ * $Id$
  *	
  *	The Modul based on:
  *  XT-Commerce - community made shopping
@@ -39,7 +39,7 @@ require_once(DIR_FS_CATALOG . 'includes/external/masterpayment/MasterpaymentActi
       /*
       $this->sort_order		= 10;	  
       */
-      $this->sort_order = MODULE_PAYMENT_MASTERPAYMENT_CONFIG_SORT_ORDER;
+      $this->sort_order = ((defined('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_SORT_ORDER')) ? MODULE_PAYMENT_MASTERPAYMENT_CONFIG_SORT_ORDER : '');
       //EOF - Tomcraft - 2012-12-15 - do not set/show a default sort order, when module is not enabled
     }
 

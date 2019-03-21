@@ -34,7 +34,7 @@ class klarna_SpecCamp extends KlarnaBase
     public function __construct()
     {
         $this->code = 'klarna_SpecCamp';
-        $this->sort_order = MODULE_PAYMENT_KLARNA_SPECCAMP_SORT_ORDER;
+        $this->sort_order = ((defined('MODULE_PAYMENT_KLARNA_SPECCAMP_SORT_ORDER')) ? MODULE_PAYMENT_KLARNA_SPECCAMP_SORT_ORDER : '');
 
         parent::__construct(KiTT::SPEC);
     }

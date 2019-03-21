@@ -24,17 +24,20 @@ class eustandardtransfer {
     $this->code = 'eustandardtransfer';
     $this->title = MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_TITLE;
     $this->description = MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_DESCRIPTION;
-    $this->sort_order = MODULE_PAYMENT_EUSTANDARDTRANSFER_SORT_ORDER;
+    $this->sort_order = ((defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_SORT_ORDER')) ? MODULE_PAYMENT_EUSTANDARDTRANSFER_SORT_ORDER : '');
     $this->info = MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_INFO;
-    $this->info_success = (MODULE_PAYMENT_EUSTANDARDTRANSFER_SUCCESS == 'True' ? $this->description : $this->info);
-    $this->enabled = ((MODULE_PAYMENT_EUSTANDARDTRANSFER_STATUS == 'True') ? true : false);
-
-		if ((int) MODULE_PAYMENT_EUSTANDARDTRANSFER_ORDER_STATUS_ID > 0) {
-			$this->order_status = MODULE_PAYMENT_EUSTANDARDTRANSFER_ORDER_STATUS_ID;
-		}
-
-		if (is_object($order))
+    $this->enabled = ((defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_STATUS') && MODULE_PAYMENT_EUSTANDARDTRANSFER_STATUS == 'True') ? true : false);
+    
+    if ($this->check() > 0) {
+      $this->info_success = ((defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_SUCCESS') && MODULE_PAYMENT_EUSTANDARDTRANSFER_SUCCESS == 'True') ? $this->description : $this->info);
+      if ((int) MODULE_PAYMENT_EUSTANDARDTRANSFER_ORDER_STATUS_ID > 0) {
+        $this->order_status = MODULE_PAYMENT_EUSTANDARDTRANSFER_ORDER_STATUS_ID;
+      }
+    }
+    
+		if (is_object($order)) {
 			$this->update_status();
+		}
   }
 
 	function update_status() {

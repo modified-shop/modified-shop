@@ -1,7 +1,7 @@
 <?php
 
 /* -----------------------------------------------------------------------------------------
-   $Id: moneyorder.php 998 2005-07-07 14:18:20Z mz $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -25,18 +25,21 @@ class moneyorder {
     $this->code = 'moneyorder';
     $this->title = MODULE_PAYMENT_MONEYORDER_TEXT_TITLE;
     $this->description = MODULE_PAYMENT_MONEYORDER_TEXT_DESCRIPTION;
-    $this->sort_order = MODULE_PAYMENT_MONEYORDER_SORT_ORDER;
-    $this->enabled = ((MODULE_PAYMENT_MONEYORDER_STATUS == 'True') ? true : false);
+    $this->sort_order = ((defined('MODULE_PAYMENT_MONEYORDER_SORT_ORDER')) ? MODULE_PAYMENT_MONEYORDER_SORT_ORDER : '');
+    $this->enabled = ((defined('MODULE_PAYMENT_MONEYORDER_STATUS') && MODULE_PAYMENT_MONEYORDER_STATUS == 'True') ? true : false);
     $this->info = MODULE_PAYMENT_MONEYORDER_TEXT_INFO;    
-    $this->info_success = (MODULE_PAYMENT_MONEYORDER_SUCCESS == 'True' ? $this->description : $this->info);
     
-    if ((int) MODULE_PAYMENT_MONEYORDER_ORDER_STATUS_ID > 0) {
-      $this->order_status = MODULE_PAYMENT_MONEYORDER_ORDER_STATUS_ID;
+    if ($this->check() > 0) {
+      $this->info_success = ((defined('MODULE_PAYMENT_MONEYORDER_SUCCESS') && MODULE_PAYMENT_MONEYORDER_SUCCESS == 'True') ? $this->description : $this->info);
+      if ((int) MODULE_PAYMENT_MONEYORDER_ORDER_STATUS_ID > 0) {
+        $this->order_status = MODULE_PAYMENT_MONEYORDER_ORDER_STATUS_ID;
+      }
     }
-
-    if (is_object($order))
+    
+    if (is_object($order)) {
       $this->update_status();
-
+    }
+    
     $this->email_footer = MODULE_PAYMENT_MONEYORDER_TEXT_EMAIL_FOOTER;
   }
 

@@ -21,10 +21,10 @@ class mcp_creditcard extends micropayment_method
         $this->title        = MODULE_PAYMENT_MCP_CREDITCARD_TEXT_TITLE;
         $this->title_extern = MODULE_PAYMENT_MCP_CREDITCARD_TEXT_TITLE_EXTERN;
         $this->description = MODULE_PAYMENT_MCP_CREDITCARD_TEXT_DESCRIPTION;
-        $this->sort_order  = MODULE_PAYMENT_MCP_CREDITCARD_SORT_ORDER;
+        $this->sort_order  = ((defined('MODULE_PAYMENT_MCP_CREDITCARD_SORT_ORDER')) ? MODULE_PAYMENT_MCP_CREDITCARD_SORT_ORDER : '');
         $this->info        = MODULE_PAYMENT_MCP_CREDITCARD_TEXT_INFO;
         $this->url         = '/creditcard/event/';
-        parent::micropayment_method();
+        parent::__construct();
     }
 
     function install()

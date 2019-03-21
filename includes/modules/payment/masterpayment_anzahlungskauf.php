@@ -7,7 +7,7 @@
  * support@k-30.de | www.k-30.de
  * ----------------------------------------------------
  *
- * $Id: masterpayment_anzahlungskauf.php 27.04.2012 - 19:02 $
+ * $Id$
  *	
  *	The Modul based on:
  *  XT-Commerce - community made shopping
@@ -27,21 +27,23 @@ require_once(DIR_FS_CATALOG . 'includes/external/masterpayment/MasterpaymentActi
     function __construct() {
       global $order;
 
-      $this->code		 	= 'masterpayment_anzahlungskauf';
-      $this->title 			= 'Masterpayment ('.MODULE_PAYMENT_MASTERPAYMENT_ANZAHLUNGSKAUF_TEXT_TITLE.')';
-	  $this->title_checkout = MODULE_PAYMENT_MASTERPAYMENT_ANZAHLUNGSKAUF_TEXT_TITLE;
-      $this->description 	= MODULE_PAYMENT_MASTERPAYMENT_ANZAHLUNGSKAUF_TEXT_DESCRIPTION;
-	  $this->info			= MODULE_PAYMENT_MASTERPAYMENT_ANZAHLUNGSKAUF_TEXT_INFO;
-      $this->sort_order 	= MODULE_PAYMENT_MASTERPAYMENT_ANZAHLUNGSKAUF_SORT_ORDER;
-      $this->enabled 		= ((MODULE_PAYMENT_MASTERPAYMENT_ANZAHLUNGSKAUF_STATUS == 'True') ? true : false);
-	
+      $this->code = 'masterpayment_anzahlungskauf';
+      $this->title = 'Masterpayment ('.MODULE_PAYMENT_MASTERPAYMENT_ANZAHLUNGSKAUF_TEXT_TITLE.')';
+      $this->title_checkout = MODULE_PAYMENT_MASTERPAYMENT_ANZAHLUNGSKAUF_TEXT_TITLE;
+      $this->description = MODULE_PAYMENT_MASTERPAYMENT_ANZAHLUNGSKAUF_TEXT_DESCRIPTION;
+      $this->info = MODULE_PAYMENT_MASTERPAYMENT_ANZAHLUNGSKAUF_TEXT_INFO;
+      $this->sort_order = ((defined('MODULE_PAYMENT_MASTERPAYMENT_ANZAHLUNGSKAUF_SORT_ORDER')) ? MODULE_PAYMENT_MASTERPAYMENT_ANZAHLUNGSKAUF_SORT_ORDER : '');
+      $this->enabled = ((defined('MODULE_PAYMENT_MASTERPAYMENT_ANZAHLUNGSKAUF_STATUS') && MODULE_PAYMENT_MASTERPAYMENT_ANZAHLUNGSKAUF_STATUS == 'True') ? true : false);
       $this->tmpOrders = true;
-	  $this->order_status = MODULE_PAYMENT_MASTERPAYMENT_CONFIG_ORDER_STATUS_ID_TEMP;
-	  $this->tmpStatus = MODULE_PAYMENT_MASTERPAYMENT_CONFIG_ORDER_STATUS_ID_TEMP;
 
+      if ($this->check() > 0) {
+        $this->order_status = MODULE_PAYMENT_MASTERPAYMENT_CONFIG_ORDER_STATUS_ID_TEMP;
+        $this->tmpStatus = MODULE_PAYMENT_MASTERPAYMENT_CONFIG_ORDER_STATUS_ID_TEMP;
+      }
+      
       if (is_object($order)) $this->update_status();
-	  
-	  $this->form_action_url = $this->getActionURL();	  
+
+      $this->form_action_url = $this->getActionURL();	  
     }
 
     function update_status() {
