@@ -3098,9 +3098,9 @@ xmlrpc_encode_entitites($this->errstr, $GLOBALS['xmlrpc_internalencoding'], $cha
 		*/
 		function structeach()
 		{
-      foreach ($this->me['struct'] as $k => $v) {
-        return array('key' => $k, 'value' => $v);
-      }
+			foreach ($this->me['struct'] as $k => $v) {
+				return array('key' => $k, 'value' => $v);
+			}
 		}
 
 		// DEPRECATED! this code looks like it is very fragile and has not been fixed
@@ -3109,8 +3109,8 @@ xmlrpc_encode_entitites($this->errstr, $GLOBALS['xmlrpc_internalencoding'], $cha
 		{
 			// UNSTABLE
 			reset($this->me);
-      $a = key($this->me);
-      $b = $this->me[$a];
+			$a = key($this->me);
+			$b = $this->me[$a];
 
 			// contributed by I Sofer, 2001-03-24
 			// add support for nested arrays to scalarval
@@ -3301,8 +3301,8 @@ xmlrpc_encode_entitites($this->errstr, $GLOBALS['xmlrpc_internalencoding'], $cha
 				if (in_array('extension_api', $options))
 				{
 					reset($xmlrpc_val->me);
-          $typ = key($xmlrpc_val->me);
-          $val = $this->me[$typ];
+					$typ = key($xmlrpc_val->me);
+					$val = $this->me[$typ];
 					switch ($typ)
 					{
 						case 'dateTime.iso8601':

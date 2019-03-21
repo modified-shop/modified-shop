@@ -22,7 +22,7 @@ class supermailer {
      $this->description = MODULE_SUPERMAILER_TEXT_DESCRIPTION;
      $this->sort_order = defined('MODULE_SUPERMAILER_SORT_ORDER') ? MODULE_SUPERMAILER_SORT_ORDER : '';
      $this->enabled = ((defined('MODULE_SUPERMAILER_STATUS') && MODULE_SUPERMAILER_STATUS == 'True') ? true : false);
-   }
+  }
 
   function process($file) {
 

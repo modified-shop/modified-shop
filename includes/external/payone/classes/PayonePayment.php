@@ -35,11 +35,11 @@ class PayonePayment {
 
 		$this->payone = new PayoneModified();
 		if ($this->check() > 0) {
-      $this->config = $this->payone->getConfig();
-      $this->pg_config = $this->config[$this->_getActiveGenreIdentifier()];
-      $this->global_config = $this->pg_config['global_override'] == 'true' ? $this->pg_config['global'] : $this->config['global'];
-      $this->tmpStatus = $this->config['orders_status']['tmp'];
-    }
+			$this->config = $this->payone->getConfig();
+			$this->pg_config = $this->config[$this->_getActiveGenreIdentifier()];
+			$this->global_config = $this->pg_config['global_override'] == 'true' ? $this->pg_config['global'] : $this->config['global'];
+			$this->tmpStatus = $this->config['orders_status']['tmp'];
+		}
 		!empty($this->code) OR $this->code = 'payone';
 		$this->title = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_TITLE')) ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_TITLE') : ''); 
 		$this->description = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_DESCRIPTION')) ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_DESCRIPTION').((defined('RUN_MODE_ADMIN')) ? MODULE_PAYMENT_PAYONE_LP : '') : ''); 

@@ -79,7 +79,7 @@ class ot_klarna_fee
         $this->enabled = ((defined('MODULE_ORDER_TOTAL_KLARNA_FEE_STATUS') && MODULE_ORDER_TOTAL_KLARNA_FEE_STATUS == 'true') ? true : false);
         $this->sort_order = ((defined('MODULE_ORDER_TOTAL_KLARNA_FEE_SORT_ORDER')) ? MODULE_ORDER_TOTAL_KLARNA_FEE_SORT_ORDER : '');
 
-        if ($this->check() > 0) {    
+        if ($this->check() > 0) {
           $this->tax_class = MODULE_ORDER_TOTAL_KLARNA_FEE_TAX_CLASS;
         }
         $this->output = array();

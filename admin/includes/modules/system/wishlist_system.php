@@ -21,7 +21,7 @@ class wishlist_system {
      $this->description = MODULE_WISHLIST_SYSTEM_TEXT_DESCRIPTION;
      $this->sort_order = defined('MODULE_WISHLIST_SYSTEM_SORT_ORDER') ? MODULE_WISHLIST_SYSTEM_SORT_ORDER : '';
      $this->enabled = ((defined('MODULE_WISHLIST_SYSTEM_STATUS') && MODULE_WISHLIST_SYSTEM_STATUS == 'true') ? true : false);
-   }
+  }
 
   function process($file) {
   }

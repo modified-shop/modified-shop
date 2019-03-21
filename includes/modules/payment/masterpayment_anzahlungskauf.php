@@ -43,7 +43,7 @@ require_once(DIR_FS_CATALOG . 'includes/external/masterpayment/MasterpaymentActi
       
       if (is_object($order)) $this->update_status();
 
-      $this->form_action_url = $this->getActionURL();	  
+      $this->form_action_url = $this->getActionURL();
     }
 
     function update_status() {

@@ -224,8 +224,8 @@ class easycredit {
     if (isset($_POST['ec_term'])) {
       $_SESSION['easycredit']['term'] = $_POST['ec_term'];
     }
- 		$this->payment_redirect();
-	}
+    $this->payment_redirect();
+  }
 
   function confirmation() {
     $payment_info = $this->get_payment_info();
@@ -642,13 +642,13 @@ class easycredit {
                   `technicalTbaId` VARCHAR( 512 ) NOT NULL ,
                   PRIMARY KEY ( `orders_id` )
                   )");
-    
+                  
     include_once(DIR_FS_LANGUAGES.$_SESSION['language'].'/modules/order_total/ot_easycredit_fee.php');
-	  require_once(DIR_FS_CATALOG.'includes/modules/order_total/ot_easycredit_fee.php');
-	  $ot_easycredit_fee = new ot_easycredit_fee();
-	  if ($ot_easycredit_fee->check() != 1) {
-	    $ot_easycredit_fee->install();
-	  }
+    require_once(DIR_FS_CATALOG.'includes/modules/order_total/ot_easycredit_fee.php');
+    $ot_easycredit_fee = new ot_easycredit_fee();
+    if ($ot_easycredit_fee->check() != 1) {
+      $ot_easycredit_fee->install();
+    }
   }
 
   function remove() {

@@ -29,7 +29,7 @@ class findologic {
      $this->description = MODULE_FINDOLOGIC_TEXT_DESCRIPTION;
      $this->sort_order = ((defined('MODULE_FINDOLOGIC_SORT_ORDER')) ? MODULE_FINDOLOGIC_SORT_ORDER : '');
      $this->enabled = ((defined('MODULE_FINDOLOGIC_STATUS') && MODULE_FINDOLOGIC_STATUS == 'True') ? true : false);
-   }
+  }
 
   function process($file) {
 
