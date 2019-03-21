@@ -178,7 +178,7 @@
               <?php
                 echo TEXT_SAVE_ORDER;
                 echo xtc_draw_form('save_order', FILENAME_ORDERS_EDIT, 'action=save_order', 'post');
-                  echo xtc_draw_hidden_field('customers_status_id', $address[customers_status]);
+                  echo xtc_draw_hidden_field('customers_status_id', $address['customers_status']);
                   echo xtc_draw_hidden_field('oID', (int)$_GET['oID']);
                   echo xtc_draw_hidden_field('cID', (int)$_GET['cID']);
                   echo '<input type="submit" class="button" onclick="this.blur();" value="'.BUTTON_SAVE.'"/>';
