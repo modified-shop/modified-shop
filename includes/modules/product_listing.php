@@ -282,7 +282,7 @@ if ($result != false) {
       $module_smarty->cache_modified_check = CACHE_CHECK;
 
       $cache_id = md5((int)$_GET['manufacturers_id'].'_'.$_SESSION['language'].'_'.$_SESSION['customers_status']['customers_status_name']);
-      $main_content = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/categorie_listing/'.$manufacturer['listing_template'], $cache_id);
+      $main_content = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/categorie_listing/'.$manufacturer['template'], $cache_id);
     }
     $smarty->assign('main_content', $main_content);
   } else {
