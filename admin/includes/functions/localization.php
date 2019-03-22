@@ -36,7 +36,7 @@
   }
 
   function quote_cryptonator_currency($to, $from = DEFAULT_CURRENCY) {
-    $url = 'https://www.cryptonator.com/api/ticker/'.$from.'-'.$to;
+    $url = 'hhttps://api.cryptonator.com/api/ticker/'.$from.'-'.$to;
     $currency = get_external_content(urldecode($url), 3, false);
     $currency = json_decode($currency, true);
     
