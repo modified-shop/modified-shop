@@ -44,6 +44,7 @@ class amoneybookers {
 		$this->logo = xtc_image(DIR_WS_ICONS . 'logo_moneybookers.jpg');
 		$this->landingPage = 'http://www.moneybookers.com/ecommerce_btc/de/index.html';
 		$this->tmpOrders = true;
+		$this->tmpStatus = ((defined('MODULE_PAYMENT_AMONEYBOOKERS_TMP_STATUS_ID')) ? MODULE_PAYMENT_AMONEYBOOKERS_TMP_STATUS_ID : 0);
 		$this->icons_available = xtc_image(DIR_WS_ICONS . 'cc_amex_small.jpg') . ' ' .
 		xtc_image(DIR_WS_ICONS . 'cc_mastercard_small.jpg') . ' ' .
 		xtc_image(DIR_WS_ICONS . 'cc_visa_small.jpg') . ' ' .
@@ -53,14 +54,7 @@ class amoneybookers {
 		xtc_image(DIR_WS_ICONS . 'swift_small.jpg') . ' ' .
 		xtc_image(DIR_WS_ICONS . 'elv_small.jpg') . ' ' .
 		xtc_image(DIR_WS_ICONS . 'cheque_small.jpg');
-		
-		if ($this->check() > 0) {
-			$this->tmpStatus = MODULE_PAYMENT_AMONEYBOOKERS_TMP_STATUS_ID;
-			if ((int) MODULE_PAYMENT_AMONEYBOOKERS_ORDER_STATUS_ID > 0) {
-				$this->order_status = MODULE_PAYMENT_AMONEYBOOKERS_ORDER_STATUS_ID;
-			}
-		}
-		
+				
 		$this->repost = false;
 		$this->Error = '';
 		$this->oID = 0;
