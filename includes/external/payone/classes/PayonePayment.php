@@ -34,7 +34,7 @@ class PayonePayment {
 		global $order;
 
 		$this->payone = new PayoneModified();
-		if ($this->check() > 0) {
+		if ($this->check() > 0 && is_object($order)) {
 			$this->config = $this->payone->getConfig();
 			$this->pg_config = $this->config[$this->_getActiveGenreIdentifier()];
 			$this->global_config = $this->pg_config['global_override'] == 'true' ? $this->pg_config['global'] : $this->config['global'];

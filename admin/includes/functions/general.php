@@ -1688,7 +1688,7 @@
    * @return
    */
   function precision($number, $places) {
-    $number = number_format($number, $places, '.', '');
+    $number = number_format($number, (int)$places, '.', '');
     return $number;
   }
 
@@ -1700,7 +1700,7 @@
    * @return
    */
   function xtc_round($value, $precision) {
-    return round($value, $precision);
+    return round($value, (int)$precision);
   }
 
   /**
@@ -1712,7 +1712,7 @@
    */
   function xtc_calculate_tax($price, $tax) {
     global $currencies;
-    return xtc_round($price * $tax / 100, $currencies->currencies[DEFAULT_CURRENCY]['decimal_places']);
+    return xtc_round((double)$price * (double)$tax / 100, $currencies->currencies[DEFAULT_CURRENCY]['decimal_places']);
   }
 
   /**
