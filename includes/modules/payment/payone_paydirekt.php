@@ -34,12 +34,14 @@ class payone_paydirekt extends PayonePayment {
     if ($this->enabled === true) {
       $genre_config = $this->config[$this->_getActiveGenreIdentifier()];		
       
-      foreach ($genre_config['types'] as $key => $value) {
-        if ($genre_config['types'][$key]['active'] != 'true'
-            && $genre_config['types'][$key]['name'] == 'paymenttype_paydirekt'
-            ) 
-        {
-          $this->enabled = false;
+      if (isset($genre_config['types']) && is_array($genre_config['types'])) {
+        foreach ($genre_config['types'] as $key => $value) {
+          if ($genre_config['types'][$key]['active'] != 'true'
+              && $genre_config['types'][$key]['name'] == 'paymenttype_paydirekt'
+              ) 
+          {
+            $this->enabled = false;
+          }
         }
       }
     }

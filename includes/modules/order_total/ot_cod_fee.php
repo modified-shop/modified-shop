@@ -67,18 +67,20 @@
           $shipping_array = explode('_', $_SESSION['shipping']['id']);
           $shipping_code = strtoupper(array_shift($shipping_array));
           $shipping_code = ($shipping_code == 'FREEAMOUNT') ? 'FREEAMOUNT_FREE' : 'FEE_' . $shipping_code;
-          $cod_zones = preg_split("/[:,]/", constant('MODULE_ORDER_TOTAL_COD_'. $shipping_code));
-          for ($i = 0; $i < count($cod_zones); $i++) {
-            if ($cod_zones[$i] == $order->delivery['country']['iso_code_2']) {
-              $cod_cost = $cod_zones[$i + 1];
-              $cod_country = true;
-              break;
-            } elseif ($cod_zones[$i] == '00') {
-              $cod_cost = $cod_zones[$i + 1];
-              $cod_country = true;
-              break;
+          if (defined('MODULE_ORDER_TOTAL_COD_'. $shipping_code)) {
+            $cod_zones = preg_split("/[:,]/", constant('MODULE_ORDER_TOTAL_COD_'. $shipping_code));
+            for ($i = 0; $i < count($cod_zones); $i++) {
+              if ($cod_zones[$i] == $order->delivery['country']['iso_code_2']) {
+                $cod_cost = $cod_zones[$i + 1];
+                $cod_country = true;
+                break;
+              } elseif ($cod_zones[$i] == '00') {
+                $cod_cost = $cod_zones[$i + 1];
+                $cod_country = true;
+                break;
+              }
+              $i++;
             }
-            $i++;
           }
         } else {
           //COD selected, but no shipping module which offers COD

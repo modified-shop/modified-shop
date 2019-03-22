@@ -299,21 +299,23 @@ class easycredit {
       $results = $modelCalculation->getResults();
     
       $presentment_array = array();
-      foreach ($results as $installmentPlan) {
-        $interestRate = $installmentPlan->getInterestRate();
-        $paymentSchedule = $installmentPlan->getPaymentSchedule();
+      if (is_array($results) || is_object($results)) {
+        foreach ($results as $installmentPlan) {
+          $interestRate = $installmentPlan->getInterestRate();
+          $paymentSchedule = $installmentPlan->getPaymentSchedule();
       
-        $presentment_array[] = array(
-          'effective_rate' => $interestRate->getEffectiveInterest(),
-          'nominal_rate' => $interestRate->getNominalInterest(),
-          'accruing_rate' => $interestRate->getAccruingInterest(),
-          'number_of_rates' => $paymentSchedule->getNumberOfRates(),
-          'first_rate_date' => $paymentSchedule->getFirstRateDate(),
-          'last_rate_date' => $paymentSchedule->getLastRateDate(),
-          'total_payment' => $xtPrice->xtcFormat($installmentPlan->getAmount(), true),
-          'monthly_payment' => $xtPrice->xtcFormat($paymentSchedule->getAmountOfRate(), true),
-          'last_payment' => $xtPrice->xtcFormat($paymentSchedule->getAmountOfLastRate(), true),
-        );
+          $presentment_array[] = array(
+            'effective_rate' => $interestRate->getEffectiveInterest(),
+            'nominal_rate' => $interestRate->getNominalInterest(),
+            'accruing_rate' => $interestRate->getAccruingInterest(),
+            'number_of_rates' => $paymentSchedule->getNumberOfRates(),
+            'first_rate_date' => $paymentSchedule->getFirstRateDate(),
+            'last_rate_date' => $paymentSchedule->getLastRateDate(),
+            'total_payment' => $xtPrice->xtcFormat($installmentPlan->getAmount(), true),
+            'monthly_payment' => $xtPrice->xtcFormat($paymentSchedule->getAmountOfRate(), true),
+            'last_payment' => $xtPrice->xtcFormat($paymentSchedule->getAmountOfLastRate(), true),
+          );
+        }
       }
       
       $ec_smarty = new Smarty();
