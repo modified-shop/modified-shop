@@ -202,11 +202,6 @@ define('HEADING_NAME','Artikel');
 define('HEADING_CATEGORY','Kategorie');
 define('HEADING_IMAGE','Bild');
 
-// BOF - Tomcraft - 2009-11-02 - Admin language tabs
-define('TEXT_SORT_ASC','aufsteigend');
-define('TEXT_SORT_DESC','absteigend');
-// EOF - Tomcraft - 2009-11-02 - Admin language tabs
-
 // BOF - Tomcraft - 2009-11-06 - Use variable TEXT_PRODUCTS_DATE_FORMAT
 define('TEXT_PRODUCTS_DATE_FORMAT', 'JJJJ-MM-TT');
 // EOF - Tomcraft - 2009-11-06 - Use variable TEXT_PRODUCTS_DATE_FORMAT

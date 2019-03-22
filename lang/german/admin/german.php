@@ -604,4 +604,7 @@ define('DELETE_LOGS_SUCCESSFUL', 'Logfiles erfolgreich gel&ouml;scht.');
 define('BOX_BLACKLIST_LOGS', 'Blacklist Logs');
 
 define('CONTINUE_WITHOUT_SAVE', 'Nicht gespeicherte &Auml;nderungen gehen verloren.');
+
+define('TEXT_SORT_ASC','aufsteigend');
+define('TEXT_SORT_DESC','absteigend');
 ?>

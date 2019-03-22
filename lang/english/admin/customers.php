@@ -69,9 +69,6 @@ define('TEXT_INFO_DELETE_DEFAULT', '<b>The address book entry can not be deleted
 define('TABLE_HEADING_AMOUNT','Credit');
 define('WARNING_CUSTOMER_ALREADY_EXISTS', 'Customer group can not be changed. This email address is already in use for a customer account.');
 
-define('TEXT_SORT_ASC','ascending');
-define('TEXT_SORT_DESC','descending');
-
 define('TEXT_INFO_HEADING_STATUS_NEW_ORDER','New order');
 define('TEXT_INFO_PAYMENT','Payment:');
 define('TEXT_INFO_SHIPPING','Shipping:');
