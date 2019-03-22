@@ -101,6 +101,13 @@ $values_group_update = array();
   //$values[] = "(NULL, 'COMPRESS_STYLESHEET_TIME', '', '6', '100', NULL, NOW(), NULL, NULL);"; // Tomcraft - 2016-06-06 - Obsolete since r7607
   $values[] = "(NULL, 'NEWSFEED_LAST_READ', '', '6', '100', NULL, NOW(), NULL, NULL);";
   $values[] = "(NULL, 'NEWSFEED_LAST_UPDATE', '', '6', '100', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'MODULE_CATEGORIES_INSTALLED', '', '6', '0', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'MODULE_CHECKOUT_INSTALLED', '', '6', '0', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'MODULE_MAIN_INSTALLED', '', '6', '0', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'MODULE_ORDER_INSTALLED', '', '6', '0', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'MODULE_PRODUCT_INSTALLED', '', '6', '0', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'MODULE_SHOPPING_CART_INSTALLED', '', '6', '0', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'MODULE_XTCPRICE_INSTALLED', '', '6', '0', NULL, NOW(), NULL, NULL);";
 
 //configuration_group_id 7 --- "Versandoptionen"
   //$values[] = "(NULL, 'SHIPPING_DEFAULT_TAX_CLASS_METHOD', '1', 7, 7, NULL, NOW(), 'xtc_get_default_tax_class_method_name', 'xtc_cfg_pull_down_default_tax_class_methods(');"; //modified 1.07
