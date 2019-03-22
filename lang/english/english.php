@@ -373,11 +373,7 @@ define('NAVBAR_TITLE_2_CHECKOUT_SHIPPING_ADDRESS', 'Change shipping address');
 define('NAVBAR_TITLE_1_CHECKOUT_SUCCESS', 'Checkout');
 define('NAVBAR_TITLE_2_CHECKOUT_SUCCESS', 'Success');
 define('NAVBAR_TITLE_CREATE_ACCOUNT', 'Create account');
-if (isset($navigation) && $navigation->snapshot['page'] == FILENAME_CHECKOUT_SHIPPING) {
-  define('NAVBAR_TITLE_LOGIN', 'Order');
-} else {
-  define('NAVBAR_TITLE_LOGIN', 'Login');
-}
+define('NAVBAR_TITLE_LOGIN', 'Login');
 define('NAVBAR_TITLE_LOGOFF','Good bye');
 define('NAVBAR_TITLE_PRODUCTS_NEW', 'New products');
 define('NAVBAR_TITLE_SHOPPING_CART', 'Shopping cart');

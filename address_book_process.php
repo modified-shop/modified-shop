@@ -338,12 +338,7 @@ if (isset ($_GET['delete'])) {
     $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL').'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
     $smarty->assign('BUTTON_UPDATE', xtc_draw_hidden_field('action', 'update').xtc_draw_hidden_field('edit', $_GET['edit']).xtc_image_submit('button_update.gif', IMAGE_BUTTON_UPDATE));
   } else {
-    if (sizeof($_SESSION['navigation']->snapshot) > 0) {
-      $back_link = xtc_href_link($_SESSION['navigation']->snapshot['page'], xtc_array_to_string($_SESSION['navigation']->snapshot['get'], array (xtc_session_name())), $_SESSION['navigation']->snapshot['mode']);
-    } else {
-      $back_link = xtc_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL');
-    }
-    $smarty->assign('BUTTON_BACK', '<a href="'.$back_link.'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
+    $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL').'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
     $smarty->assign('BUTTON_UPDATE', xtc_draw_hidden_field('action', 'process').xtc_image_submit('button_continue.gif', IMAGE_BUTTON_CONTINUE));
   }
   $smarty->assign('FORM_END', '</form>');

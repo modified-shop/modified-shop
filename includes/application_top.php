@@ -226,9 +226,6 @@ $current_domain_old = (($request_type == 'NONSSL') ? $http_domain_old : $https_d
 // include shopping cart class
 require_once (DIR_WS_CLASSES.'shopping_cart.php');
 
-// include navigation history class
-require_once (DIR_WS_CLASSES.'navigation_history.php');
-
 // some code to solve compatibility issues
 require_once (DIR_WS_FUNCTIONS.'compatibility.php');
 

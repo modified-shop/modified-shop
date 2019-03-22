@@ -121,7 +121,6 @@ if ($_SESSION['account_type'] == '1') {
   unset ($_SESSION['user_info']);
   unset ($_SESSION['customers_status']);
   unset ($_SESSION['selected_box']);
-  unset ($_SESSION['navigation']);
   unset ($_SESSION['shipping']);
   unset ($_SESSION['payment']);
   unset ($_SESSION['ccard']);

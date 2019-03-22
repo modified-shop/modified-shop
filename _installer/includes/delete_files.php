@@ -265,6 +265,7 @@
     'includes/classes/class.easybill.php',
     'includes/classes/class.phpmailer.php',
     'includes/classes/class.smtp.php',
+    'includes/classes/navigation_history.php',
     'includes/classes/outputfilter.note.php',
     'includes/classes/paypal_checkout.php',
     'includes/classes/phpmailer.lang-de.php',
