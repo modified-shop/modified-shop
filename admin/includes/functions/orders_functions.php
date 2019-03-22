@@ -485,7 +485,7 @@
       }
     }
 
-    $final_price = $data_array['products_price'] * $data_array['products_quantity'];
+    $final_price = $data_array['products_price'] * (int)$data_array['products_quantity'];
   
     $product['products_short_description'] = CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION == 'true' ? $product['products_short_description'] : '';        
     $product['products_order_description'] = !empty($product['products_order_description']) ? nl2br($product['products_order_description']) : $product['products_short_description'];
@@ -586,7 +586,7 @@
 
     $price = $xtPrice->xtcGetPrice($data_array['products_id'], $format = false, $data_array['products_quantity'], $product['products_tax_class_id'], '', '', $order->customer['ID']);
 
-    $final_price = $price * $data_array['products_quantity'];
+    $final_price = $price * (int)$data_array['products_quantity'];
   
     $product['products_short_description'] = CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION == 'true' ? $product['products_short_description'] : '';        
     $product['products_order_description'] = !empty($product['products_order_description']) ? nl2br($product['products_order_description']) : $product['products_short_description'];
@@ -722,7 +722,7 @@
     }
     $price = $xtPrice->xtcAddTax($products_price, $tax_rate);
 
-    $final_price = $price * $products['products_quantity'];
+    $final_price = $price * (int)$products['products_quantity'];
 
     $sql_data_array = array(
       'products_price' => xtc_db_prepare_input($price),
@@ -883,7 +883,7 @@
       $tax_rate = 0;
     }
     $price = $xtPrice->xtcAddTax($products_price, $tax_rate); //tax by products
-    $final_price = $price * $products['products_quantity'];
+    $final_price = $price * (int)$products['products_quantity'];
 
     $sql_data_array = array(
       'products_price' => xtc_db_prepare_input($price),
@@ -937,7 +937,7 @@
     $products_old_price = $xtPrice->xtcGetPrice($products['products_id'], $format = false, $products['products_quantity'], '', '', '', $order->customer['ID']);
     $products_price = ($products_old_price + $options_values_price);
     $price = $xtPrice->xtcGetPrice($products['products_id'], $format = false, $products['products_quantity'], $products['products_tax_class_id'], $products_price, '', $order->customer['ID']);
-    $final_price = $price * $products['products_quantity'];
+    $final_price = $price * (int)$products['products_quantity'];
 
     $sql_data_array = array(
       'products_price' => xtc_db_prepare_input($price),
