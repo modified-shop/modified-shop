@@ -111,7 +111,12 @@
   // Output a form input field
   function xtc_draw_input_field($name, $value = '', $parameters = '', $required = false, $type = 'text', $reinsert_value = true) {
     $field = '<input type="' . $type . '" name="' . $name . '"';
-    if ( isset($GLOBALS[$name]) && ($reinsert_value) ) {
+    if (isset($GLOBALS[$name]) 
+        && !is_object($GLOBALS[$name]) 
+        && !is_array($GLOBALS[$name]) 
+        && ($reinsert_value) 
+        ) 
+    {
       $field .= ' value="' . encode_htmlspecialchars(trim($GLOBALS[$name])) . '"';
     } elseif ($value != '') {
       $field .= ' value="' . encode_htmlspecialchars(trim($value)) . '"';
@@ -128,7 +133,12 @@
   // Output a form small input field
   function xtc_draw_small_input_field($name, $value = '', $parameters = '', $required = false, $type = 'text', $reinsert_value = true) {
     $field = '<input type="' . $type . '" size="3" name="' . $name . '"';
-    if ( isset($GLOBALS[$name]) && ($reinsert_value) ) {
+    if (isset($GLOBALS[$name]) 
+        && !is_object($GLOBALS[$name]) 
+        && !is_array($GLOBALS[$name]) 
+        && ($reinsert_value) 
+        ) 
+    {
       $field .= ' value="' . encode_htmlspecialchars(trim($GLOBALS[$name])) . '"';
     } elseif ($value != '') {
       $field .= ' value="' . encode_htmlspecialchars(trim($value)) . '"';
@@ -185,7 +195,7 @@
     if ($value != '') {
       $selection .= ' value="' . $value . '"';
     }
-    if ( ($checked == true) || (isset($GLOBALS[$name]) && ($GLOBALS[$name] == 'on')) || ($value && isset($GLOBALS[$name]) && !is_object($GLOBALS[$name]) && ($GLOBALS[$name] == $value)) || ($value && ($value == $compare)) ) {
+    if ( ($checked == true) || (isset($GLOBALS[$name]) && ($GLOBALS[$name] == 'on')) || ($value && isset($GLOBALS[$name]) && !is_object($GLOBALS[$name]) && !is_array($GLOBALS[$name]) && ($GLOBALS[$name] == $value)) || ($value && ($value == $compare)) ) {
       $selection .= ' checked="checked"';
     }
     $addtag = '';
@@ -215,7 +225,12 @@
     $field = '<textarea id="'.$name.'" name="' . $name . '" wrap="' . $wrap . '" cols="' . $width . '" rows="' . $height . '"';
     if ($params) $field .= ' ' . $params;
     $field .= '>';
-    if ( isset($GLOBALS[$name]) && ($reinsert_value) ) {
+    if (isset($GLOBALS[$name]) 
+        && !is_object($GLOBALS[$name]) 
+        && !is_array($GLOBALS[$name]) 
+        && ($reinsert_value) 
+        ) 
+    {
       $field .= encode_htmlspecialchars(trim($GLOBALS[$name]));
     } elseif ($text != '') {
       if ($encode === true) {
@@ -265,6 +280,7 @@
         if ((strlen($val['id']) > 0 
              && isset($GLOBALS[$name]) 
              && !is_object($GLOBALS[$name]) 
+             && !is_array($GLOBALS[$name]) 
              && (string)$GLOBALS[$name] == (string)$val['id']
              ) || ((string)$default == (string)$val['id'])
             )
