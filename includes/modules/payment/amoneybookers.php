@@ -604,19 +604,6 @@ class amoneybookers {
 			$this->defLang = "EN";
 		}
 		
-		$mb_installed = false;
-		//BOF - Hetfield - 2010-01-28 - replace mysql_list_tables with query SHOW TABLES -> PHP5.3 deprecated
-		//$tables = mysql_list_tables(DB_DATABASE);
-		$tables = xtc_db_query("SHOW TABLES LIKE 'payment_moneybookers'");			
-		while ($checktables = xtc_db_fetch_array($tables, MYSQL_NUM)) {
-			if ($checktables[0] == 'payment_moneybookers')	$mb_installed=true;
-		}
-		//EOF - Hetfield - 2010-01-28 - replace mysql_list_tables with query SHOW TABLES -> PHP5.3 deprecated
-
-		if ($mb_installed==false) {
-		xtc_db_query("CREATE TABLE payment_moneybookers (mb_TRID varchar(255) NOT NULL default '',mb_ERRNO smallint(3) unsigned NOT NULL default '0',mb_ERRTXT varchar(255) NOT NULL default '',mb_DATE datetime NOT NULL default '0000-00-00 00:00:00',mb_MBTID bigint(18) unsigned NOT NULL default '0',mb_STATUS tinyint(1) NOT NULL default '0',mb_ORDERID int(11) unsigned NOT NULL default '0',PRIMARY KEY  (mb_TRID))");
-		}
-
 		xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_AMONEYBOOKERS_STATUS', 'True',  '6', '0', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
 		xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_AMONEYBOOKERS_EMAILID', '', '6', '1', now())");
 		xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_AMONEYBOOKERS_PWD', '',  '6', '2', now())");
@@ -633,8 +620,7 @@ class amoneybookers {
 		xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_AMONEYBOOKERS_ICONS', 'elv.jpg,giropay.gif,cc_visa.jpg,visa_electron.jpg,cc_mastercard.jpg,cc_amex.jpg,cc_diners.jpg,swift.jpg,cheque.jpg',  '6', '0', now())");
 
 		// tables
-
-
+		xtc_db_query("CREATE TABLE IF NOT EXISTS payment_moneybookers (mb_TRID varchar(255) NOT NULL default '',mb_ERRNO smallint(3) unsigned NOT NULL default '0',mb_ERRTXT varchar(255) NOT NULL default '',mb_DATE datetime NOT NULL default '0000-00-00 00:00:00',mb_MBTID bigint(18) unsigned NOT NULL default '0',mb_STATUS tinyint(1) NOT NULL default '0',mb_ORDERID int(11) unsigned NOT NULL default '0',PRIMARY KEY  (mb_TRID))");
 	}
 
 	function remove() {
