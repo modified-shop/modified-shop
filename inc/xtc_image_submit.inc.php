@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_image_submit.inc.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -20,7 +20,7 @@
   function xtc_image_submit($image, $alt = '', $parameters = '', $useCssButton = true) {
     
     if (basename($image) == $image) {
-      $image = DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/buttons/' . $_SESSION['language'] . '/'. $image;
+      $image = ((defined('DIR_WS_BASE')) ? DIR_WS_BASE : '').'templates/'.CURRENT_TEMPLATE.'/buttons/' . $_SESSION['language'] . '/'. $image;
     }
     
     if (function_exists('css_button') && $useCssButton) {
