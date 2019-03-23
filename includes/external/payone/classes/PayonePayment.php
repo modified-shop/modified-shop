@@ -525,14 +525,14 @@ class PayonePayment {
     $this->delivery_data->setShippingAddressaddition($order->billing['suburb']);
 		$this->delivery_data->setShippingZip($order->delivery['postcode']);
 		$this->delivery_data->setShippingCity($order->delivery['city']);
-    if (isset($order->billing['country_iso_2'])) {
-      $this->delivery_data->setShippingCountry($order->billing['country_iso_2']);
-      $order->billing['country']['iso_code_2'] = $order->billing['country_iso_2'];
+    if (isset($order->delivery['country_iso_2'])) {
+      $this->delivery_data->setShippingCountry($order->delivery['country_iso_2']);
+      $order->delivery['country']['iso_code_2'] = $order->delivery['country_iso_2'];
     } else {
-      $this->delivery_data->setShippingCountry($order->billing['country']['iso_code_2']);
+      $this->delivery_data->setShippingCountry($order->delivery['country']['iso_code_2']);
     }
-    if (in_array($order->billing['country']['iso_code_2'], array('US', 'CA'))) {
-      $this->delivery_data->setShippingState($order->billing['state']);
+    if (in_array($order->delivery['country']['iso_code_2'], array('US', 'CA'))) {
+      $this->delivery_data->setShippingState($order->delivery['state']);
     }
 	}
 	
