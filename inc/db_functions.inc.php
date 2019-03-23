@@ -46,7 +46,7 @@
     
     $sql_array = array();
     foreach ($data as $columns => $values) {
-      switch ($values) {
+      switch ((string)$values) {
         case 'now()':
           $sql_array[$columns] = 'now()';
           break;
