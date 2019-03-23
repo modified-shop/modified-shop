@@ -535,10 +535,13 @@
       // build customer, billing, delivery array
       if (isset($_SESSION['customer_id'])) {
         $customer_address['state'] = ((xtc_not_null($customer_address['state'])) ? $customer_address['state'] : $customer_address['zone_name']);
+        $customer_address['state'] = xtc_get_zone_code($customer_address['country_id'], $customer_address['zone_id'], $customer_address['state']);
         $this->customer = $this->parse_customers_data($customer_address, array_merge($customers_standard_arr, $customers_extended_arr));
         $shipping_address['state'] = ((xtc_not_null($shipping_address['state'])) ? $shipping_address['state'] : $shipping_address['zone_name']);
+        $shipping_address['state'] = xtc_get_zone_code($shipping_address['country_id'], $shipping_address['zone_id'], $shipping_address['state']);
         $this->delivery = $this->parse_customers_data($shipping_address, $customers_standard_arr);
         $billing_address['state'] = ((xtc_not_null($billing_address['state'])) ? $billing_address['state'] : $billing_address['zone_name']);
+        $billing_address['state'] = xtc_get_zone_code($billing_address['country_id'], $billing_address['zone_id'], $billing_address['state']);
         $this->billing = $this->parse_customers_data($billing_address, $customers_standard_arr);
       } else {
         $this->customer = array_merge($customers_standard_arr, $customers_extended_arr);
