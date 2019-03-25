@@ -599,6 +599,11 @@ define('SEARCH_IN_ATTR_DESC','Include products attributes when searching');
 define('SEARCH_IN_MANU_TITLE','Search in products manufacturers');
 define('SEARCH_IN_MANU_DESC','Include products manufacturers when searching');
 
+define('ADMIN_SEARCH_IN_DESC_TITLE','Search in products descriptions');
+define('ADMIN_SEARCH_IN_DESC_DESC','Include products descriptions when searching');
+define('ADMIN_SEARCH_IN_ATTR_TITLE','Search in products attributes');
+define('ADMIN_SEARCH_IN_ATTR_DESC','Include products attributes when searching');
+
 // changes for 3.0.4 SP2
 define('REVOCATION_ID_TITLE','Revocation');
 define('REVOCATION_ID_DESC','Select content to display revocation');

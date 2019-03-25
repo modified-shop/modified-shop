@@ -192,8 +192,7 @@
           </tr>
           <?php
             include(DIR_FS_INC . 'xtc_parse_search_string.inc.php');
-            define(ADMIN_SEARCH_IN_ATTR, true); // true = search in attributes
-            define(ADMIN_SEARCH_IN_DESC, false); // true = search in description
+
             //build query
             $select_str = "SELECT DISTINCT p.products_tax_class_id,
                                            p.products_id,
