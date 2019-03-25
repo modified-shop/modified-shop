@@ -423,8 +423,7 @@
              $products_count = 0;
              if (xtc_not_null($search) || xtc_not_null($search_id)) {
                include(DIR_FS_INC . 'xtc_parse_search_string.inc.php');
-               define(ADMIN_SEARCH_IN_ATTR, true); // true = search in attributes
-               define(ADMIN_SEARCH_IN_DESC, false); // true = search in description
+
                //build query
                $add_select = 's.specials_new_products_price,specials_quantity,expires_date,s.status as specials_status,'; 
                
