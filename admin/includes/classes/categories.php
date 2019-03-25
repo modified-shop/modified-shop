@@ -1105,20 +1105,16 @@ class categories {
 
   function create_templates_dropdown_menu($template, $path, $default_value, $style = '') {
     $files = array ();
-    if ($dir = opendir(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.$path)) {
-      while (($file = readdir($dir)) !== false) {
-        if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.$path.$file)
-            && (substr($file, -5) == ".html") 
-            && ($file != "index.html") 
-            && (substr($file, 0, 1) !=".")
-            ) 
-        {
-          $files[] = array ('id' => $file, 'text' => $file);
-        }
+    
+    if (is_dir(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.$path)) {
+      foreach(auto_include(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.$path, 'html') as $file) {
+        $files[] = array (
+          'id' => basename($file), 
+          'text' => basename($file),
+        );
       }
-      closedir($dir);
     }
-    // set default value in dropdown!
+    
     $default_array = array (array ('id' => 'default', 'text' => (count($files) > 0) ? TEXT_SELECT : TEXT_NO_FILE));
     $files = array_merge($default_array, $files);
     return xtc_draw_pull_down_menu($template, $files, $default_value, $style);
