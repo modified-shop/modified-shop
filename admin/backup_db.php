@@ -22,8 +22,8 @@ $Id$
   
   //#################################
   defined ('ANZAHL_ZEILEN_BKUP') or define ('ANZAHL_ZEILEN_BKUP', 20000); //Anzahl der Zeilen die beim Backup pro Durchlauf maximal aus einer Tabelle  gelesen werden.
-  defined ('MAX_RELOADS') or define ('MAX_RELOADS', 600); //Anzahle der maximalen Seitenreloads beim Backup  - falls etwas nicht richtig funktioniert stoppt das Script nach 600 Seitenaufrufen
-  defined ('RESTORE_TEST') or define ('RESTORE_TEST', false); //Standard: false - auf true â€°ndern fÂ¸r Simulation fÂ¸r die Wiederherstellung, die SQL Befehle werden in eine Protokolldatei (log) im Backup-Verzeichnis geschrieben
+  defined ('MAX_RELOADS') or define ('MAX_RELOADS', 600); //Anzahl der maximalen Seitenreloads beim Backup  - falls etwas nicht richtig funktioniert stoppt das Script nach 600 Seitenaufrufen
+  defined ('RESTORE_TEST') or define ('RESTORE_TEST', false); //Standard: false - auf true ändern für Simulation für die Wiederherstellung, die SQL Befehle werden in eine Protokolldatei (log) im Backup-Verzeichnis geschrieben
   //#################################
   
   include ('includes/functions/db_functions.php');
