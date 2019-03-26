@@ -147,6 +147,7 @@
     $dir_ok = true;
     if (!is_writeable(DIR_FS_BACKUP)) {
       $messageStack->add(ERROR_BACKUP_DIRECTORY_NOT_WRITEABLE, 'error');
+      $dir_ok = false;
     }
   } else {
     $messageStack->add(ERROR_BACKUP_DIRECTORY_DOES_NOT_EXIST, 'error');
