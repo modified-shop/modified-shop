@@ -1791,7 +1791,7 @@
         while (($file = readdir($dh)) !== false) {
           if (is_dir($dir.$file) && $file != '.' && $file != '..') {
             xtc_spaceUsed($dir.$file.'/');
-          } else {
+          } elseif (is_readable($dir.$file)) {
             $totalspaceUsed += @filesize($dir.$file);
           }
         }
