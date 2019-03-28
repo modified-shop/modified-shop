@@ -63,7 +63,7 @@ class PayPalInfo extends PayPalPayment {
         $payment = Payment::get($orders['payment_id'], $apiContext);
         $valid = true;
       } catch (Exception $ex) {
-        $this->LoggingManager->log('DEBUG', 'Payment', $ex);
+        $this->LoggingManager->log('DEBUG', 'Payment', array('exception' => $ex));
         $valid = false;
       }
       
@@ -118,7 +118,7 @@ class PayPalInfo extends PayPalPayment {
             $resource->refund($refund, $apiContext);
             $success = true;
           } catch (Exception $ex) {
-            $this->LoggingManager->log('DEBUG', 'Transactions', $ex);
+            $this->LoggingManager->log('DEBUG', 'Transactions', array('exception' => $ex));
             
             if ($ex instanceof \PayPal\Exception\PayPalConnectionException) {
               $error_json = $ex->getData();
@@ -153,7 +153,7 @@ class PayPalInfo extends PayPalPayment {
         $payment = Payment::get($orders['payment_id'], $apiContext);
         $valid = true;
       } catch (Exception $ex) {
-        $this->LoggingManager->log('DEBUG', 'Payment', $ex);
+        $this->LoggingManager->log('DEBUG', 'Payment', array('exception' => $ex));
         $valid = false;
       }
     
@@ -184,7 +184,7 @@ class PayPalInfo extends PayPalPayment {
 
         $payment_array =  $this->get_payment_details($payment);    
       } catch (Exception $ex) {
-        $this->LoggingManager->log('DEBUG', 'Payment', $ex);
+        $this->LoggingManager->log('DEBUG', 'Payment', array('exception' => $ex));
       }
     }
     
@@ -204,7 +204,7 @@ class PayPalInfo extends PayPalPayment {
       $PaymentHistory = Payment::all($params, $apiContext);
       $valid = true;
     } catch (Exception $ex) {
-      $this->LoggingManager->log('DEBUG', 'Payment', $ex);
+      $this->LoggingManager->log('DEBUG', 'Payment', array('exception' => $ex));
       $valid = false;
     }
 

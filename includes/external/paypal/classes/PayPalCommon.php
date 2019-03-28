@@ -290,7 +290,7 @@ class PayPalCommon extends PayPalAuth {
       $webProfileList = $webProfile->get($id, $apiContext);
       $valid = true;
     } catch (Exception $ex) {
-      $this->LoggingManager->log('DEBUG', 'Profile', $ex);
+      $this->LoggingManager->log('DEBUG', 'Profile', array('exception' => $ex));
       $valid = false;
     }
   

@@ -184,7 +184,7 @@ class PayPalPayment extends PayPalPaymentBase {
                        ->setCity($this->encode_utf8($order->delivery['city']))
                        ->setCountryCode($this->encode_utf8((($order_exists === false) ? $order->delivery['country']['iso_code_2'] : $order->delivery['country_iso_2'])))
                        ->setPostalCode($this->encode_utf8($order->delivery['postcode']))
-                       ->setState($this->encode_utf8((($order->delivery['state'] != '') ? xtc_get_zone_code($order->delivery['country_id'], $order->delivery['zone_id'], $order->delivery['state']) : '')));
+                       ->setState($this->encode_utf8(((isset($order->delivery['state']) && $order->delivery['state'] != '') ? xtc_get_zone_code($order->delivery['country_id'], $order->delivery['zone_id'], $order->delivery['state']) : '')));
 
       if ($order->delivery['suburb'] != '') {
         $shipping_address->setLine2($this->encode_utf8($order->delivery['suburb']));
@@ -301,7 +301,7 @@ class PayPalPayment extends PayPalPaymentBase {
       $payment_address = new Address();
       $payment_address->setLine1($this->encode_utf8($order->billing['street_address']))
                       ->setCity($this->encode_utf8($order->billing['city']))
-                      ->setState($this->encode_utf8((($order->billing['state'] != '') ? xtc_get_zone_code($order->billing['country_id'], $order->billing['zone_id'], $order->billing['state']) : '')))
+                      ->setState($this->encode_utf8(((isset($order->billing['state']) && $order->billing['state'] != '') ? xtc_get_zone_code($order->billing['country_id'], $order->billing['zone_id'], $order->billing['state']) : '')))
                       ->setPostalCode($this->encode_utf8($order->billing['postcode']))
                       ->setCountryCode($this->encode_utf8($order->billing['country']['iso_code_2']));
 
@@ -350,7 +350,7 @@ class PayPalPayment extends PayPalPaymentBase {
       }
       
     } catch (Exception $ex) { 
-      $this->LoggingManager->log('DEBUG', 'getApprovalLink', $ex);
+      $this->LoggingManager->log('DEBUG', 'getApprovalLink', array('exception' => $ex));
       
       unset($_SESSION['paypal']);
       if ($cart === true) {
@@ -373,7 +373,7 @@ class PayPalPayment extends PayPalPaymentBase {
       $payment = Payment::get($_SESSION['paypal']['paymentId'], $apiContext);
   
     } catch (Exception $ex) {
-      $this->LoggingManager->log('DEBUG', 'Payment', $ex);
+      $this->LoggingManager->log('DEBUG', 'Payment', array('exception' => $ex));
       
       unset($_SESSION['paypal']);
       xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
@@ -433,7 +433,7 @@ class PayPalPayment extends PayPalPaymentBase {
     $payment_address = new Address();
     $payment_address->setLine1($this->encode_utf8($order->billing['street_address']))
                     ->setCity($this->encode_utf8($order->billing['city']))
-                    ->setState($this->encode_utf8((($order->billing['state'] != '') ? xtc_get_zone_code($order->billing['country_id'], $order->billing['zone_id'], $order->billing['state']) : '')))
+                    ->setState($this->encode_utf8(((isset($order->billing['state']) && $order->billing['state'] != '') ? xtc_get_zone_code($order->billing['country_id'], $order->billing['zone_id'], $order->billing['state']) : '')))
                     ->setPostalCode($this->encode_utf8($order->billing['postcode']))
                     ->setCountryCode($this->encode_utf8($order->billing['country']['iso_code_2']));
 
@@ -459,7 +459,7 @@ class PayPalPayment extends PayPalPaymentBase {
                      ->setCity($this->encode_utf8($order->delivery['city']))
                      ->setCountryCode($this->encode_utf8($order->delivery['country']['iso_code_2']))
                      ->setPostalCode($this->encode_utf8($order->delivery['postcode']))
-                     ->setState($this->encode_utf8((($order->delivery['state'] != '') ? xtc_get_zone_code($order->delivery['country_id'], $order->delivery['zone_id'], $order->delivery['state']) : '')));
+                     ->setState($this->encode_utf8(((isset($order->delivery['state']) && $order->delivery['state'] != '') ? xtc_get_zone_code($order->delivery['country_id'], $order->delivery['zone_id'], $order->delivery['state']) : '')));
 
     if ($order->delivery['suburb'] != '') {
       $shipping_address->setLine2($this->encode_utf8($order->delivery['suburb']));
@@ -477,7 +477,7 @@ class PayPalPayment extends PayPalPaymentBase {
       // update payment
       $payment->update($patchRequest, $apiContext);      
     } catch (Exception $ex) {
-      $this->LoggingManager->log('DEBUG', 'Patch', $ex);
+      $this->LoggingManager->log('DEBUG', 'Patch', array('exception' => $ex));
       
       unset($_SESSION['paypal']);
       xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
@@ -503,7 +503,7 @@ class PayPalPayment extends PayPalPaymentBase {
         $valid = true;
     
       } catch (Exception $ex) {
-        $this->LoggingManager->log('DEBUG', 'Payment', $ex);
+        $this->LoggingManager->log('DEBUG', 'Payment', array('exception' => $ex));
         $valid = false;
       }
       
@@ -571,7 +571,7 @@ class PayPalPayment extends PayPalPaymentBase {
         $payment = Payment::get($_SESSION['paypal']['paymentId'], $apiContext);       
           
       } catch (Exception $ex) {
-        $this->LoggingManager->log('DEBUG', 'Payment', $ex);
+        $this->LoggingManager->log('DEBUG', 'Payment', array('exception' => $ex));
 
         // redirect
         unset($_SESSION['paypal']);
@@ -595,7 +595,7 @@ class PayPalPayment extends PayPalPaymentBase {
         $payment = Payment::get($_SESSION['paypal']['paymentId'], $apiContext);       
 
       } catch (Exception $ex) {
-        $this->LoggingManager->log('DEBUG', 'Payment', $ex);
+        $this->LoggingManager->log('DEBUG', 'Payment', array('exception' => $ex));
       }
     
       // payer
@@ -637,7 +637,7 @@ class PayPalPayment extends PayPalPaymentBase {
         $payment->execute($execution, $apiContext);
         
       } catch (Exception $ex) {
-        $this->LoggingManager->log('DEBUG', 'Execute', $ex);  
+        $this->LoggingManager->log('DEBUG', 'Execute', array('exception' => $ex));  
 
         $this->remove_order($insert_id);
         unset($_SESSION['paypal']);
@@ -664,7 +664,7 @@ class PayPalPayment extends PayPalPaymentBase {
         $payment = Payment::get($_SESSION['paypal']['paymentId'], $apiContext);
   
       } catch (Exception $ex) {
-        $this->LoggingManager->log('DEBUG', 'Payment', $ex);
+        $this->LoggingManager->log('DEBUG', 'Payment', array('exception' => $ex));
 
         $this->remove_order($insert_id);
         unset($_SESSION['paypal']);
@@ -724,7 +724,7 @@ class PayPalPayment extends PayPalPaymentBase {
       $payment = Payment::get($_SESSION['paypal']['paymentId'], $apiContext);
       
     } catch (Exception $ex) {
-      $this->LoggingManager->log('DEBUG', 'Payment', $ex);
+      $this->LoggingManager->log('DEBUG', 'Payment', array('exception' => $ex));
       
       $this->remove_order($insert_id);
       unset($_SESSION['paypal']);
@@ -741,7 +741,7 @@ class PayPalPayment extends PayPalPaymentBase {
     $payment_address = new Address();
     $payment_address->setLine1($this->encode_utf8($order->billing['street_address']))
                     ->setCity($this->encode_utf8($order->billing['city']))
-                    ->setState($this->encode_utf8((($order->billing['state'] != '') ? xtc_get_zone_code($order->billing['country_id'], $order->billing['zone_id'], $order->billing['state']) : '')))
+                    ->setState($this->encode_utf8(((isset($order->billing['state']) && $order->billing['state'] != '') ? xtc_get_zone_code($order->billing['country_id'], $order->billing['zone_id'], $order->billing['state']) : '')))
                     ->setPostalCode($this->encode_utf8($order->billing['postcode']))
                     ->setCountryCode($this->encode_utf8(((isset($order->billing['country_iso_2'])) ? $order->billing['country_iso_2'] : $order->billing['country']['iso_code_2'])));
 
@@ -766,7 +766,7 @@ class PayPalPayment extends PayPalPaymentBase {
                      ->setCity($this->encode_utf8($order->delivery['city']))
                      ->setCountryCode($this->encode_utf8(((isset($order->delivery['country_iso_2'])) ? $order->delivery['country_iso_2'] : $order->delivery['country']['iso_code_2'])))
                      ->setPostalCode($this->encode_utf8($order->delivery['postcode']))
-                     ->setState($this->encode_utf8((($order->delivery['state'] != '') ? xtc_get_zone_code($order->delivery['country_id'], $order->delivery['zone_id'], $order->delivery['state']) : '')));
+                     ->setState($this->encode_utf8(((isset($order->delivery['state']) && $order->delivery['state'] != '') ? xtc_get_zone_code($order->delivery['country_id'], $order->delivery['zone_id'], $order->delivery['state']) : '')));
 
     if ($order->delivery['suburb'] != '') {
       $shipping_address->setLine2($this->encode_utf8($order->delivery['suburb']));
@@ -837,7 +837,7 @@ class PayPalPayment extends PayPalPaymentBase {
       $payment->update($patchRequest, $apiContext);      
 
     } catch (Exception $ex) {
-      $this->LoggingManager->log('DEBUG', 'Patch', $ex);
+      $this->LoggingManager->log('DEBUG', 'Patch', array('exception' => $ex));
 
       if ($order_exists === false) {
         unset($_SESSION['paypal']);
@@ -861,7 +861,7 @@ class PayPalPayment extends PayPalPaymentBase {
       $payment->execute($execution, $apiContext);      
 
     } catch (Exception $ex) {
-      $this->LoggingManager->log('DEBUG', 'Execute', $ex);
+      $this->LoggingManager->log('DEBUG', 'Execute', array('exception' => $ex));
 
       $this->remove_order($insert_id);
       unset($_SESSION['paypal']);
@@ -889,7 +889,7 @@ class PayPalPayment extends PayPalPaymentBase {
       $payment = Payment::get($_SESSION['paypal']['paymentId'], $apiContext);
 
     } catch (Exception $ex) {
-      $this->LoggingManager->log('DEBUG', 'Payment', $ex);
+      $this->LoggingManager->log('DEBUG', 'Payment', array('exception' => $ex));
 
       $this->remove_order($insert_id);
       unset($_SESSION['paypal']);
@@ -963,7 +963,7 @@ class PayPalPayment extends PayPalPaymentBase {
           $resource->capture($capture, $apiContext);
           $success = true;
         } catch (Exception $ex) {
-          $this->LoggingManager->log('DEBUG', 'Capture', $ex);
+          $this->LoggingManager->log('DEBUG', 'Capture', array('exception' => $ex));
           $success = false;
 
           if (defined('RUN_MODE_ADMIN') && $ex instanceof \PayPal\Exception\PayPalConnectionException) {
@@ -986,7 +986,7 @@ class PayPalPayment extends PayPalPaymentBase {
         }
       }
     } catch (Exception $ex) {
-      $this->LoggingManager->log('DEBUG', 'Capture', $ex);
+      $this->LoggingManager->log('DEBUG', 'Capture', array('exception' => $ex));
     }
   }
 
@@ -1044,7 +1044,7 @@ class PayPalPayment extends PayPalPaymentBase {
         }
       }
     } catch (Exception $ex) { 
-      $this->LoggingManager->log('DEBUG', 'Presentment', $ex);
+      $this->LoggingManager->log('DEBUG', 'Presentment', array('exception' => $ex));
       
     }
     
@@ -1120,7 +1120,7 @@ class PayPalPayment extends PayPalPaymentBase {
         xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
       }
     } catch (Exception $ex) { 
-      $this->LoggingManager->log('DEBUG', 'Installment', $ex);
+      $this->LoggingManager->log('DEBUG', 'Installment', array('exception' => $ex));
       unset($_SESSION['paypal']);
       xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
     }
@@ -1142,7 +1142,7 @@ class PayPalPayment extends PayPalPaymentBase {
         $payment = Payment::get($_SESSION['paypal']['paymentId'], $apiContext);       
           
       } catch (Exception $ex) {
-        $this->LoggingManager->log('DEBUG', 'Payment', $ex);
+        $this->LoggingManager->log('DEBUG', 'Payment', array('exception' => $ex));
 
         // redirect
         unset($_SESSION['paypal']);
@@ -1158,7 +1158,7 @@ class PayPalPayment extends PayPalPaymentBase {
         $payment->execute($execution, $apiContext);
         
       } catch (Exception $ex) {
-        $this->LoggingManager->log('DEBUG', 'Execute', $ex); 
+        $this->LoggingManager->log('DEBUG', 'Execute', array('exception' => $ex)); 
 
         $this->remove_order($insert_id);
         unset($_SESSION['paypal']);
@@ -1185,7 +1185,7 @@ class PayPalPayment extends PayPalPaymentBase {
         $payment = Payment::get($_SESSION['paypal']['paymentId'], $apiContext);
   
       } catch (Exception $ex) {
-        $this->LoggingManager->log('DEBUG', 'Payment', $ex);
+        $this->LoggingManager->log('DEBUG', 'Payment', array('exception' => $ex));
 
         $this->remove_order($insert_id);
         unset($_SESSION['paypal']);
@@ -1259,7 +1259,7 @@ class PayPalPayment extends PayPalPaymentBase {
       );
       
     } catch (Exception $ex) {
-      $this->LoggingManager->log('DEBUG', 'Transactions', $ex);
+      $this->LoggingManager->log('DEBUG', 'Transactions', array('exception' => $ex));
     }
   }
 
@@ -1282,7 +1282,7 @@ class PayPalPayment extends PayPalPaymentBase {
         $payment = Payment::get($orders['payment_id'], $apiContext);
         $valid = true;
       } catch (Exception $ex) {
-        $this->LoggingManager->log('DEBUG', 'Payment', $ex);
+        $this->LoggingManager->log('DEBUG', 'Payment', array('exception' => $ex));
         $valid = false;
       }
       
@@ -1302,7 +1302,7 @@ class PayPalPayment extends PayPalPaymentBase {
       $payment = Sale::get($id, $apiContext);
       $valid = true;
     } catch (Exception $ex) {
-      $this->LoggingManager->log('DEBUG', 'Sale', $ex);
+      $this->LoggingManager->log('DEBUG', 'Sale', array('exception' => $ex));
       $valid = false;
     }
     
@@ -1314,7 +1314,7 @@ class PayPalPayment extends PayPalPaymentBase {
       $payment = Authorization::get($id, $apiContext);
       $valid = true;
     } catch (Exception $ex) {
-      $this->LoggingManager->log('DEBUG', 'Authorization', $ex);
+      $this->LoggingManager->log('DEBUG', 'Authorization', array('exception' => $ex));
       $valid = false;
     }
     
@@ -1326,7 +1326,7 @@ class PayPalPayment extends PayPalPaymentBase {
       $payment = Capture::get($id, $apiContext);
       $valid = true;
     } catch (Exception $ex) {
-      $this->LoggingManager->log('DEBUG', 'Capture', $ex);
+      $this->LoggingManager->log('DEBUG', 'Capture', array('exception' => $ex));
       $valid = false;
     }
     
@@ -1338,7 +1338,7 @@ class PayPalPayment extends PayPalPaymentBase {
       $payment = Refund::get($id, $apiContext);
       $valid = true;
     } catch (Exception $ex) {
-      $this->LoggingManager->log('DEBUG', 'Refund', $ex);
+      $this->LoggingManager->log('DEBUG', 'Refund', array('exception' => $ex));
       $valid = false;
     }
     
@@ -1379,7 +1379,7 @@ class PayPalPayment extends PayPalPaymentBase {
           'state' => $payment->getState(),
         );
       } catch (Exception $ex) {
-        $this->LoggingManager->log('DEBUG', 'Payment', $ex);
+        $this->LoggingManager->log('DEBUG', 'Payment', array('exception' => $ex));
       }
     }
     
@@ -1456,7 +1456,7 @@ class PayPalPayment extends PayPalPaymentBase {
           $object = $resource->get($resource->getId(), $apiContext);
           $valid = true;
         } catch (Exception $ex) {
-          $this->LoggingManager->log('DEBUG', 'Transactions', $ex);
+          $this->LoggingManager->log('DEBUG', 'Transactions', array('exception' => $ex));
           $valid = false;
         }
         
@@ -1563,7 +1563,7 @@ class PayPalPayment extends PayPalPaymentBase {
       
       $valid = true;
     } catch (Exception $ex) {
-      $this->LoggingManager->log('DEBUG', 'Payer', $ex);
+      $this->LoggingManager->log('DEBUG', 'Payer', array('exception' => $ex));
       $valid = false;
     }
         
