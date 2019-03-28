@@ -22,7 +22,7 @@
     var $modules;
 
     function __construct($module = '') {
-      global $PHP_SELF,$order;
+      global $PHP_SELF, $order;
 
       require_once (DIR_FS_CATALOG.'includes/classes/checkoutModules.class.php');
       $this->checkoutModules = new checkoutModules();
@@ -80,9 +80,9 @@
             if (constant('MODULE_SHIPPING_' . strtoupper($include_modules[$i]['class']) . '_ALLOWED') != '') {
               $allowed_zones = explode(',', constant('MODULE_SHIPPING_' . strtoupper($include_modules[$i]['class']) . '_ALLOWED'));
             }
-            if (in_array($_SESSION['delivery_zone'], $allowed_zones) 
+            if ((isset($_SESSION['delivery_zone']) && in_array($_SESSION['delivery_zone'], $allowed_zones))
                 || count($allowed_zones) == 0
-                ) 
+                )
             {
               include_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/' . $include_modules[$i]['file']);
               include_once(DIR_WS_MODULES . 'shipping/' . $include_modules[$i]['file']);
