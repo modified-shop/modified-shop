@@ -314,8 +314,8 @@
         if (ACCOUNT_STATE == 'true') $entry_zone_id = xtc_db_prepare_input($_POST['entry_zone_id']);
         $memo_title = xtc_db_prepare_input($_POST['memo_title']);
         $memo_text = xtc_db_prepare_input($_POST['memo_text']);
-        $payment_unallowed = implode(',', (is_array($_POST['payment_unallowed']) ? $_POST['payment_unallowed'] : array()));
-        $shipping_unallowed = implode(',', (is_array($_POST['shipping_unallowed']) ? $_POST['shipping_unallowed'] : array()));
+        $payment_unallowed = implode(',', (isset($_POST['payment_unallowed']) && is_array($_POST['payment_unallowed']) ? $_POST['payment_unallowed'] : array()));
+        $shipping_unallowed = implode(',', (isset($_POST['shipping_unallowed']) && is_array($_POST['shipping_unallowed']) ? $_POST['shipping_unallowed'] : array()));
         $password = xtc_db_prepare_input($_POST['entry_password']);
         /*
         $amount = xtc_db_prepare_input($_POST['amount']);

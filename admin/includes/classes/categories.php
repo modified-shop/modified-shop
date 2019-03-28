@@ -503,7 +503,7 @@ class categories {
       }
     }
     // build array
-    if ($permission['all']==1) {
+    if (isset($permission['all']) && $permission['all']==1) {
       $permission = array ();
       end($customers_statuses_array);
       for ($i = 0, $n = key($customers_statuses_array); $i < $n+1; $i ++) {
@@ -623,7 +623,7 @@ class categories {
       $group_data[$i] = array ('STATUS_ID' => $group_values['customers_status_id']);
     }
     for ($col = 0, $n = sizeof($group_data); $col < $n +1; $col ++) {
-      if ($group_data[$col]['STATUS_ID'] != '') {
+      if (array_key_exists($col, $group_data) && $group_data[$col]['STATUS_ID'] != '') {
         $personal_price = xtc_db_prepare_input($products_data['products_price_'.$group_data[$col]['STATUS_ID']]);
         if ($personal_price == '' || $personal_price == '0.0000') {
           $personal_price = '0.00';
@@ -674,7 +674,7 @@ class categories {
       $group_data[$i] = array ('STATUS_ID' => $group_values['customers_status_id']);
     }
     for ($col = 0, $n = sizeof($group_data); $col < $n +1; $col ++) {
-      if ($group_data[$col]['STATUS_ID'] != '') {
+      if (array_key_exists($col, $group_data) && $group_data[$col]['STATUS_ID'] != '') {
         $quantity = xtc_db_prepare_input($products_data['products_quantity_staffel_'.$group_data[$col]['STATUS_ID']]);
         $staffelpreis = xtc_db_prepare_input($products_data['products_price_staffel_'.$group_data[$col]['STATUS_ID']]);
         if (PRICE_IS_BRUTTO == 'true') {
@@ -851,7 +851,7 @@ class categories {
       $group_data[$i] = array ('STATUS_ID' => $group_values['customers_status_id']);
     }
     for ($col = 0, $n = sizeof($group_data); $col < $n +1; $col ++) {
-      if ($group_data[$col]['STATUS_ID'] != '') {
+      if (array_key_exists($col, $group_data) && $group_data[$col]['STATUS_ID'] != '') {
         $copy_query = xtc_db_query("SELECT quantity,
                                            personal_offer
                                       FROM ".TABLE_PERSONAL_OFFERS_BY.$group_data[$col]['STATUS_ID']."

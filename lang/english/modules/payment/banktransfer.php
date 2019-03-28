@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: banktransfer.php 998 2005-07-07 14:18:20Z mz $   
+   $Id$   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -20,7 +20,6 @@
    
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
-define('MODULE_PAYMENT_TYPE_PERMISSION', 'bt');
 
 define('MODULE_PAYMENT_BANKTRANSFER_TEXT_TITLE', 'Banktransfer');
 define('MODULE_PAYMENT_BANKTRANSFER_TEXT_DESCRIPTION', 'Banktransfer Payments');
