@@ -63,7 +63,7 @@ if (!isset($_SESSION['customers_login_tries'])) {
 if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
 	$email_address = xtc_db_prepare_input($_POST['email_address']);
 	$password = xtc_db_prepare_input($_POST['password']);
-  $captcha_validation = $mod_captcha->validate($_POST['vvcode']);
+  $captcha_validation = $mod_captcha->validate((isset($_POST['vvcode'])) ? $_POST['vvcode'] : '');
   
   // brute force
   $check_login_query = xtc_db_query("SELECT customers_login_tries

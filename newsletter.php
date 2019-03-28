@@ -125,8 +125,8 @@ $smarty->assign('INPUT_EMAIL', xtc_draw_input_field('email', ((isset($_GET['emai
 if(isset($_POST['check']) && $_POST['check'] == 'inp') {$inp = 'true'; $del = '';}
 if(isset($_POST['check']) && $_POST['check'] == 'del') {$inp = ''; $del = 'true';}	
 
-$smarty->assign('CHECK_INP', xtc_draw_radio_field('check', 'inp', $inp));
-$smarty->assign('CHECK_DEL', xtc_draw_radio_field('check', 'del', $del));
+$smarty->assign('CHECK_INP', xtc_draw_radio_field('check', 'inp', ((isset($inp)) ? $inp : '')));
+$smarty->assign('CHECK_DEL', xtc_draw_radio_field('check', 'del', ((isset($del)) ? $del : '')));
 $smarty->assign('BUTTON_SEND', xtc_image_submit('button_send.gif', IMAGE_BUTTON_SEND));
 $smarty->assign('FORM_END', '</form>');
 if (DISPLAY_PRIVACY_CHECK == 'true') {
