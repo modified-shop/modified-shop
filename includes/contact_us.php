@@ -242,15 +242,15 @@
       $smarty->assign('PRIVACY_CHECKBOX', xtc_draw_checkbox_field('privacy', 'privacy', $privacy, 'id="privacy"'));
       $smarty->assign('PRIVACY_LINK', $main->getContentLink(2, MORE_INFO, $request_type));
     }
-    $smarty->assign('INPUT_NAME', xtc_draw_input_field('name', $name, 'size="30"'));
-    $smarty->assign('INPUT_EMAIL', xtc_draw_input_field('email', $email, 'size="30"'));
-    $smarty->assign('INPUT_PHONE', xtc_draw_input_field('phone', $phone, 'size="30"'));
-    $smarty->assign('INPUT_COMPANY', xtc_draw_input_field('company', $company, 'size="30"'));
-    $smarty->assign('INPUT_STREET', xtc_draw_input_field('street', $street, 'size="30"'));
-    $smarty->assign('INPUT_POSTCODE', xtc_draw_input_field('postcode', $postcode, 'size="30"'));
-    $smarty->assign('INPUT_CITY', xtc_draw_input_field('city', $city, 'size="30"'));
-    $smarty->assign('INPUT_FAX', xtc_draw_input_field('fax', $fax, 'size="30"'));
-    $smarty->assign('INPUT_TEXT', xtc_draw_textarea_field('message_body', 'soft', 45, 15, $message_body));
+    $smarty->assign('INPUT_NAME', xtc_draw_input_field('name', ((isset($name)) ? $name : ''), 'size="30"'));
+    $smarty->assign('INPUT_EMAIL', xtc_draw_input_field('email', ((isset($email)) ? $email : ''), 'size="30"'));
+    $smarty->assign('INPUT_PHONE', xtc_draw_input_field('phone', ((isset($phone)) ? $phone : ''), 'size="30"'));
+    $smarty->assign('INPUT_COMPANY', xtc_draw_input_field('company', ((isset($company)) ? $company : ''), 'size="30"'));
+    $smarty->assign('INPUT_STREET', xtc_draw_input_field('street', ((isset($street)) ? $street : ''), 'size="30"'));
+    $smarty->assign('INPUT_POSTCODE', xtc_draw_input_field('postcode', ((isset($postcode)) ? $postcode : ''), 'size="30"'));
+    $smarty->assign('INPUT_CITY', xtc_draw_input_field('city', ((isset($city)) ? $city : ''), 'size="30"'));
+    $smarty->assign('INPUT_FAX', xtc_draw_input_field('fax', ((isset($fax)) ? $fax : ''), 'size="30"'));
+    $smarty->assign('INPUT_TEXT', xtc_draw_textarea_field('message_body', 'soft', 45, 15, ((isset($message_body)) ? $message_body : '')));
     $smarty->assign('BUTTON_SUBMIT', xtc_image_submit('button_send.gif', IMAGE_BUTTON_SEND));
     $smarty->assign('FORM_END', '</form>');
   }
