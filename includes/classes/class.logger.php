@@ -10,209 +10,395 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+spl_autoload_register(function ($class) {
+  if (is_file(DIR_FS_EXTERNAL . str_replace('\\', DIRECTORY_SEPARATOR, $class) . '.php')) {
+    require_once(DIR_FS_EXTERNAL . str_replace('\\', DIRECTORY_SEPARATOR, $class) . '.php');
+  }
+});
 
-class LoggingManager
+use Psr\Log\LogLevel;
+
+class LoggingManager implements \Psr\Log\LoggerInterface
 {
-
     /**
-     * Logging Level
-     */
-    const DEBUG = 4;
-    const FINE = 3;
-    const INFO = 2;
-    const WARN = 1;
-    const ERROR = 0;
-    const DEFAULT_LEVEL = 0;
-
-    /**
-     * Logger Name
+     * File name and path of log file.
      * @var string
      */
-    private $loggerName;
+    private $logfile;
 
     /**
-     * Log Enabled
-     *
-     * @var bool
-     */
-    private $isLoggingEnabled;
-
-    /**
-     * Configured Logging Level
-     *
-     * @var int|mixed
-     */
-    private $loggingLevel;
-
-    /**
-     * Configured Logging File
-     *
+     * Log channel--namespace for log lines.
+     * Used to identify and correlate groups of similar log lines.
      * @var string
      */
-    private $loggerFile;
-    private $loggerFileError;
-    private $loggerFileWarning;
-    private $loggerFileInfo;
-    private $loggerFileFine;
-    private $loggerFileDebug;
+    private $channel;
 
     /**
-     * Configured Logging Path
-     *
-     * @var string
-     */
-    private $loggingPath;
-
-    /**
-     * Configured Logging Path
-     *
-     * @var boolean
-     */
-    private $splitLogging = false;
-
-    /**
-     * Configured Threshold
-     *
+     * Lowest log level to log.
      * @var int
      */
-    private $loggerThreshold = 1048576;
+    private $loglevel;
 
     /**
-     * Default Constructor
+     * Whether to log to standard out.
+     * @var bool
      */
-    public function __construct($config = array())
-    {
-        $this->isLoggingEnabled = ((isset($config['FileName']) && $config['LogEnabled'] === true) ? true : false);
-        $this->setLoggerName(((isset($config['LogName'])) ? $config['LogName'] : __CLASS__));
+    private $stdout;
 
-        if ($this->isLoggingEnabled === true) {
-            if (isset($config['FileName'])) {
-                $this->setLoggerFile($config['FileName']);
-            }
-            if (isset($config['FileName.error'])) {
-                $this->setLoggerFileError($config['FileName.error']);
-            }
-            if (isset($config['FileName.warning'])) {
-                $this->setLoggerFileWarning($config['FileName.warning']);
-            }
-            if (isset($config['FileName.info'])) {
-                $this->setLoggerFileInfo($config['FileName.info']);
-            }
-            if (isset($config['FileName.fine'])) {
-                $this->setLoggerFileFine($config['FileName.fine']);
-            }
-            if (isset($config['FileName.debug'])) {
-                $this->setLoggerFileDebug($config['FileName.debug']);
-            }
-            if (isset($config['FileName.custom'])) {
-                $this->setLoggerFileCustom($config['FileName.custom']);
-            }
-            if (isset($config['LogThreshold']) && $config['LogThreshold'] > 0) {
-                $this->setLoggerThreshold($config['LogThreshold']);
-            }
-            if (isset($config['SplitLogging'])) {
-                $this->setLoggerSplitLogging($config['SplitLogging']);
-            }
-                        
-            $this->loggingPath = dirname($this->loggerFile);            
+    /**
+     * threshold
+     * @var int
+     */
+    private $threshold = 1024;
+
+    /**
+     * Log fields separated by tabs to form a TSV (CSV with tabs).
+     */
+    const TAB = "\t";
+
+    /**
+     * Special minimum log level which will not log any log levels.
+     */
+    const LOG_LEVEL_NONE = 'none';
+
+    /**
+     * Log level hierachy
+     */
+    const LEVELS = [
+        LogLevel::DEBUG      => 0,
+        LogLevel::INFO       => 1,
+        LogLevel::NOTICE     => 2,
+        LogLevel::WARNING    => 3,
+        LogLevel::ERROR      => 4,
+        LogLevel::CRITICAL   => 5,
+        LogLevel::ALERT      => 6,
+        LogLevel::EMERGENCY  => 7,
+
+        self::LOG_LEVEL_NONE => 8,
+        'custom'             => 9,
+    ];
+
+    /**
+     * Logger constructor
+     *
+     * @param string $logfile  File name and path of log file.
+     * @param string $channel  Logger channel associated with this logger.
+     * @param string $logfile  (optional) Lowest log level to log.
+     */
+    public function __construct($logfile, $channel, $loglevel = LogLevel::DEBUG)
+    {
+        $this->logfile = $logfile;
+        $this->channel = $channel;
+        $this->stdout  = false;
+        
+        $this->setLogLevel($loglevel);
+    }
+
+    /**
+     * Set the lowest log level to log.
+     *
+     * @param string $loglevel
+     */
+    public function setLogLevel($loglevel)
+    {
+        if (!array_key_exists($loglevel, self::LEVELS)) {
+            $loglevel = self::LOG_LEVEL_NONE;
+        }
+
+        $this->loglevel = self::LEVELS[$loglevel];
+    }
+
+    /**
+     * Set the log channel which identifies the log line.
+     *
+     * @param string $channel
+     */
+    public function setChannel($channel)
+    {
+        $this->channel = $channel;
+    }
+
+    /**
+     * Set the standard out option on or off.
+     * If set to true, log lines will also be printed to standard out.
+     *
+     * @param bool $stdout
+     */
+    public function setOutput($stdout)
+    {
+        $this->stdout = $stdout;
+    }
+
+    /**
+     * Log a debug message.
+     * Fine-grained informational events that are most useful to debug an application.
+     *
+     * @param string $message Content of log event.
+     * @param array  $context Associative array of contextual support data that goes with the log event.
+     *
+     * @throws \RuntimeException
+     */
+    public function debug($message, array $context = array())
+    {
+        $this->log(LogLevel::DEBUG, $message, $context);
+    }
+
+    /**
+     * Log an info message.
+     * Interesting events and informational messages that highlight the progress of the application at coarse-grained level.
+     *
+     * @param string $message Content of log event.
+     * @param array  $context Associative array of contextual support data that goes with the log event.
+     *
+     * @throws \RuntimeException
+     */
+    public function info($message, array $context = array())
+    {
+        $this->log(LogLevel::INFO, $message, $context);
+    }
+
+    /**
+     * Log an notice message.
+     * Normal but significant events.
+     *
+     * @param string $message Content of log event.
+     * @param array  $context Associative array of contextual support data that goes with the log event.
+     *
+     * @throws \RuntimeException
+     */
+    public function notice($message, array $context = array())
+    {
+        $this->log(LogLevel::NOTICE, $message, $context);
+    }
+
+    /**
+     * Log a warning message.
+     * Exceptional occurrences that are not errors--undesirable things that are not necessarily wrong.
+     * Potentially harmful situations which still allow the application to continue running.
+     *
+     * @param string $message Content of log event.
+     * @param array  $context Associative array of contextual support data that goes with the log event.
+     *
+     * @throws \RuntimeException
+     */
+    public function warning($message, array $context = array())
+    {
+        $this->log(LogLevel::WARNING, $message, $context);
+    }
+
+    /**
+     * Log an error message.
+     * Error events that might still allow the application to continue running.
+     * Runtime errors that do not require immediate action but should typically be logged and monitored.
+     *
+     * @param string $message Content of log event.
+     * @param array  $context Associative array of contextual support data that goes with the log event.
+     *
+     * @throws \RuntimeException
+     */
+    public function error($message, array $context = array())
+    {
+        $this->log(LogLevel::ERROR, $message, $context);
+    }
+
+    /**
+     * Log a critical condition.
+     * Application components being unavailable, unexpected exceptions, etc.
+     *
+     * @param string $message Content of log event.
+     * @param array  $context Associative array of contextual support data that goes with the log event.
+     *
+     * @throws \RuntimeException
+     */
+    public function critical($message, array $context = array())
+    {
+        $this->log(LogLevel::CRITICAL, $message, $context);
+    }
+
+    /**
+     * Log an alert.
+     * This should trigger an email or SMS alert and wake you up.
+     * Example: Entire site down, database unavailable, etc.
+     *
+     * @param string $message Content of log event.
+     * @param array  $context Associative array of contextual support data that goes with the log event.
+     *
+     * @throws \RuntimeException
+     */
+    public function alert($message, array $context = array())
+    {
+        $this->log(LogLevel::ALERT, $message, $context);
+    }
+
+    /**
+     * Log an emergency.
+     * System is unsable.
+     * This should trigger an email or SMS alert and wake you up.
+     *
+     * @param string $message Content of log event.
+     * @param array  $context Associative array of contextual support data that goes with the log event.
+     *
+     * @throws \RuntimeException
+     */
+    public function emergency($message, array $context = array())
+    {
+        $this->log(LogLevel::EMERGENCY, $message, $context);
+    }
+
+    /**
+     * Log a message.
+     * Generic log routine that all severity levels use to log an event.
+     *
+     * @param string $level   Log level
+     * @param string $message Content of log event.
+     * @param array  $context Potentially multidimensional associative array of support data that goes with the log event.
+     *
+     * @throws \RuntimeException when log file cannot be opened for writing.
+     */
+    public function log($level, $message, array $context = array())
+    {
+        $level = strtolower($level);
+             
+        if ($this->logAtThisLevel($level)) 
+        {
+            // Build logline
+            $pid                       = getmypid();
+            list($exception, $context) = $this->handleException($context);
+            $context                   = $context ? json_encode($context, \JSON_UNESCAPED_SLASHES) : '{}';
+            $context                   = $context ?: '{}'; // Fail-safe incase json_encode fails.
+            $logline                   = $this->formatLogLine($level, $pid, $message, $context, $exception);
+            $logfile                   = sprintf($this->logfile, $level, date('Y-m-d'));
             
-            $loggingLevel = ((isset($config['LogLevel'])) ? strtoupper($config['LogLevel']) : '');
-            $this->loggingLevel = defined("LoggingManager::$loggingLevel") ? constant("LoggingManager::$loggingLevel") : LoggingManager::DEFAULT_LEVEL;
+            // Log to file
+            try {
+                if (is_file($logfile)) {
+                    $filesize = filesize($logfile);            
+                    if ($filesize >= $this->threshold) {
+                        $this->LoggerRotate($logfile);
+                    }
+                }
+
+                file_put_contents($logfile, $logline, FILE_APPEND | LOCK_EX);
+            } catch (\Throwable $e) {
+                throw new \RuntimeException("Could not open log file {$logfile} for writing to SimpleLog channel {$this->channel}!", 0, $e);
+            }
+        }
+
+        // Log to stdout if option set to do so.
+        if ($this->stdout) {
+            print($log_line);
         }
     }
 
     /**
-     * Sets Logger File Global
+     * Determine if the logger should log at a certain log level.
      *
-     * @param string $loggerFile
+     * @param  string $level
+     *
+     * @return bool True if we log at this level; false otherwise.
      */
-    public function setLoggerFile($loggerFile)
+    private function logAtThisLevel($level)
     {
-        $this->loggerFile = $loggerFile;
+        if (!array_key_exists($level, self::LEVELS)) {
+          $level = self::LOG_LEVEL_NONE;
+        }
+        
+        return self::LEVELS[$level] >= $this->loglevel;
     }
 
     /**
-     * Sets Logger File Error
+     * Handle an exception in the data context array.
+     * If an exception is included in the data context array, extract it.
      *
-     * @param string $loggerFile
+     * @param  array  $context
+     *
+     * @return array  [exception, data (without exception)]
      */
-    public function setLoggerFileError($loggerFile)
+    private function handleException(array $context = null)
     {
-        $this->loggerFileError = $loggerFile;
+        $exception_data = '{}';
+        if (array_key_exists('exception', $context)) {
+            if ($context['exception'] instanceof \Throwable) {
+                $exception      = $context['exception'];
+                $exception_data = $this->buildExceptionData($exception);
+            }
+            unset($context['exception']);
+        }
+        
+        return [$exception_data, $context];
     }
 
     /**
-     * Sets Logger File Warning
+     * Build the exception log data.
      *
-     * @param string $loggerFile
+     * @param  \Throwable $e
+     *
+     * @return string JSON {message, code, file, line, trace}
      */
-    public function setLoggerFileWarning($loggerFile)
+    private function buildExceptionData(\Throwable $e)
     {
-        $this->loggerFileWarning = $loggerFile;
+        $exceptionData = json_encode(
+            [
+                'message' => $e->getMessage(),
+                'code'    => $e->getCode(),
+                'file'    => $e->getFile(),
+                'line'    => $e->getLine(),
+                'trace'   => $e->getTrace()
+            ],
+            \JSON_UNESCAPED_SLASHES
+        );
+
+        // Fail-safe in case json_encode failed
+        return $exceptionData ?: '{"message":"' . $e->getMessage() . '"}';
     }
 
     /**
-     * Sets Logger File Info
+     * Format the log line.
+     * YYYY-mm-dd HH:ii:ss  [loglevel]  [channel]  [pid:##]  Log message content  {"Optional":"JSON Contextual Support Data"}  {"Optional":"Exception Data"}
      *
-     * @param string $loggerFile
+     * @param  string $level
+     * @param  int    $pid
+     * @param  string $message
+     * @param  string $context
+     * @param  string $exception_data
+     *
+     * @return string
      */
-    public function setLoggerFileInfo($loggerFile)
+    private function formatLogLine($level, $pid, $message, $context, $exception_data)
     {
-        $this->loggerFileInfo = $loggerFile;
+        return
+            "[{$this->getTime()}]"                        . self::TAB .
+            "[$level]"                                    . self::TAB .
+            "[{$this->channel}]"                          . self::TAB .
+            "[pid:$pid]"                                  . self::TAB .
+            str_replace(\PHP_EOL, '   ', trim($message))  . self::TAB .
+            str_replace(\PHP_EOL, '   ', $context)        . self::TAB .
+            str_replace(\PHP_EOL, '   ', $exception_data) . \PHP_EOL;
     }
 
     /**
-     * Sets Logger File Fine
+     * Get current date time.
+     * Format: YYYY-mm-dd HH:ii:ss
      *
-     * @param string $loggerFile
+     * @return string Date time
      */
-    public function setLoggerFileFine($loggerFile)
+    private function getTime()
     {
-        $this->loggerFileFine = $loggerFile;
+        return date('Y-m-d H:i:s');
     }
 
     /**
-     * Sets Logger File Debug
-     *
-     * @param string $loggerFile
-     */
-    public function setLoggerFileDebug($loggerFile)
-    {
-        $this->loggerFileDebug = $loggerFile;
-    }
-
-    /**
-     * Sets Logger File Custom
-     *
-     * @param string $loggerFile
-     */
-    public function setLoggerFileCustom($loggerFile)
-    {
-        $this->loggerFileCustom = $loggerFile;
-    }
-
-    /**
-     * Sets Logger Name. Generally defaulted to Logging Class
-     *
-     * @param string $loggerName
-     */
-    public function setLoggerName($loggerName = __CLASS__)
-    {
-        $this->loggerName = $loggerName;
-    }
-
-    /**
-     * Sets Logger Threshold. Generally defaulted to 1MB
+     * Sets Logger Threshold
      *
      * @param int $treshold
      */
-    public function setLoggerThreshold($treshold)
+    public function setThreshold($treshold)
     {
-        $this->loggerThreshold = $this->parseTreshold($treshold);
+        $this->threshold = $this->parseTreshold($treshold);
     }
 
     /**
-     * Parse Logger Threshold. Generally defaulted to 1MB
+     * Parse Logger Threshold
      *
      * @param string|int $treshold
      */
@@ -225,184 +411,19 @@ class LoggingManager
     }
 
     /**
-     * Sets Logger Split Logging
-     *
-     * @param boolean $splitLogging
-     */
-    public function setLoggerSplitLogging($splitLogging)
-    {
-        $this->splitLogging = (bool)$splitLogging;
-    }
-
-    /**
-     * Default Logger
-     *
-     * @param string $message
-     * @param int $level
-     */
-    public function log($message, $loggingLevel = 'FINE')
-    {
-        if ($this->isLoggingEnabled) {
-            
-            if ($this->loggerFile != '' && is_file($this->loggerFile)) {
-                $filesize = filesize($this->loggerFile);            
-                if ($filesize >= $this->loggerThreshold) {
-                    $this->LoggerRotate($this->loggerFile);
-                }
-            }
-            
-            $parsedLoggingLevel = $this->getLoggingLevel($loggingLevel);
-            if ($parsedLoggingLevel == 'CUSTOM' || constant("LoggingManager::$parsedLoggingLevel") <= $this->loggingLevel) {
-                if ($this->splitLogging === true && $parsedLoggingLevel != 'DEFAULT_LEVEL') {
-                  $func = strtolower($parsedLoggingLevel);
-                  LoggingManager::$func($message, $loggingLevel);
-                } else {
-                  if ($this->loggerFile != '') {
-                      error_log("[" . date('d-m-Y H:i:s') . "] $loggingLevel\t: " . $this->loggerName . ": $message\n", 3, $this->loggerFile);
-                  } else {
-                      error_log("[" . date('d-m-Y H:i:s') . "] $loggingLevel\t: " . $this->loggerName . ": $message\n");
-                  }
-                }
-            }
-        }
-    }
-
-    /**
-     * Log Error
-     *
-     * @param string $message
-     */
-    public function error($message, $error = 'ERROR')
-    {
-        if ($this->loggerFileError != '') {
-            if (is_file($this->loggerFileError)) {
-                $filesize = filesize($this->loggerFileError);            
-                if ($filesize >= $this->loggerThreshold) {
-                    $this->LoggerRotate($this->loggerFileError);
-                }
-            }
-            error_log("[" . date('d-m-Y H:i:s') . "] $error\t: " . $this->loggerName . ": $message\n", 3, $this->loggerFileError);
-        } else {
-            error_log("[" . date('d-m-Y H:i:s') . "] $error\t: " . $this->loggerName . ": $message\n");
-        }
-    }
-
-    /**
-     * Log Warning
-     *
-     * @param string $message
-     */
-    public function warn($message, $error = 'WARNING')
-    {
-        if ($this->loggerFileWarning != '') {
-            if (is_file($this->loggerFileWarning)) {
-                $filesize = filesize($this->loggerFileWarning);            
-                if ($filesize >= $this->loggerThreshold) {
-                    $this->LoggerRotate($this->loggerFileWarning);
-                }
-            }
-            error_log("[" . date('d-m-Y H:i:s') . "] $error\t: " . $this->loggerName . ": $message\n", 3, $this->loggerFileWarning);
-        } else {
-            error_log("[" . date('d-m-Y H:i:s') . "] $error\t: " . $this->loggerName . ": $message\n");
-        }
-    }
-
-    /**
-     * Log Info
-     *
-     * @param string $message
-     */
-    public function info($message, $error = 'INFO')
-    {
-        if ($this->loggerFileInfo != '') {
-            if (is_file($this->loggerFileInfo)) {
-                $filesize = filesize($this->loggerFileInfo);            
-                if ($filesize >= $this->loggerThreshold) {
-                    $this->LoggerRotate($this->loggerFileInfo);
-                }
-            }
-            error_log("[" . date('d-m-Y H:i:s') . "] $error\t: " . $this->loggerName . ": $message\n", 3, $this->loggerFileInfo);
-        } else {
-            error_log("[" . date('d-m-Y H:i:s') . "] $error\t: " . $this->loggerName . ": $message\n");
-        }
-    }
-
-    /**
-     * Log Fine
-     *
-     * @param string $message
-     */
-    public function fine($message, $error = 'FINE')
-    {
-        if ($this->loggerFileFine != '') {
-            if (is_file($this->loggerFileFine)) {
-                $filesize = filesize($this->loggerFileFine);            
-                if ($filesize >= $this->loggerThreshold) {
-                    $this->LoggerRotate($this->loggerFileFine);
-                }
-            }
-            error_log("[" . date('d-m-Y H:i:s') . "] $error\t: " . $this->loggerName . ": $message\n", 3, $this->loggerFileFine);
-        } else {
-            error_log("[" . date('d-m-Y H:i:s') . "] $error\t: " . $this->loggerName . ": $message\n");
-        }
-    }
-
-    /**
-     * Log Fine
-     *
-     * @param string $message
-     */
-    public function debug($message, $error = 'DEBUG')
-    {
-        if ($this->loggerFileDebug != '') {
-            if (is_file($this->loggerFileDebug)) {
-                $filesize = filesize($this->loggerFileDebug);            
-                if ($filesize >= $this->loggerThreshold) {
-                    $this->LoggerRotate($this->loggerFileDebug);
-                }
-            }
-            error_log("[" . date('d-m-Y H:i:s') . "] $error\t: " . $this->loggerName . ": $message\n", 3, $this->loggerFileDebug);
-        } else {
-            error_log("[" . date('d-m-Y H:i:s') . "] $error\t: " . $this->loggerName . ": $message\n");
-        }
-    }
-
-    /**
-     * Log Fine
-     *
-     * @param string $message
-     */
-    public function custom($message, $error = 'CUSTOM')
-    {
-        if ($this->loggerFileCustom != '') {
-            if (is_file($this->loggerFileCustom)) {
-                $filesize = filesize($this->loggerFileCustom);            
-                if ($filesize >= $this->loggerThreshold) {
-                    $this->LoggerRotate($this->loggerFileCustom);
-                }
-            }
-            error_log("[" . date('d-m-Y H:i:s') . "] $error\t: " . $this->loggerName . ": $message\n", 3, $this->loggerFileCustom);
-        } else {
-            error_log("[" . date('d-m-Y H:i:s') . "] $error\t: " . $this->loggerName . ": $message\n");
-        }
-    }
-
-    /**
      * Rotate Logging File
      *
+     * @param string $logfile  File name and path of log file.
      */
-    private function LoggerRotate($file)
+    private function LoggerRotate($logfile)
     {
-        if ($this->loggingPath == '') {
-            $this->loggingPath = dirname($file);
-        }
         $counter = 0;
-        foreach (new DirectoryIterator($this->loggingPath) as $info) {
+        foreach (new DirectoryIterator(dirname($logfile)) as $info) {
             if ($info->isDot() || !$info->isFile()) {
                 continue;
             }            
             $fileinfo = pathinfo($info->getFilename());
-            if ($fileinfo['filename'] == basename($file)) {
+            if ($fileinfo['filename'] == basename($logfile)) {
                 if ($fileinfo['extension'] > $counter) {
                     $counter = $fileinfo['extension'];
                 }
@@ -411,49 +432,8 @@ class LoggingManager
         $counter ++;
         
         // rotate
-        rename($file, $file.'.'.$counter);
+        rename($logfile, $logfile.'.'.$counter);
     }
 
-    /**
-     * Gets Logging Level
-     *
-     * @param string $level
-     */
-    private function getLoggingLevel($level)
-    {
-        switch($level) {
-            case 'ERROR':
-            case 'E_PARSE':
-            case 'E_ERROR':
-            case 'E_CORE_ERROR':
-            case 'E_USER_ERROR':
-            case 'E_RECOVERABLE_ERROR':
-            case 'UNDEFINED_ERROR':
-                return 'ERROR';
-
-            case 'WARN':
-            case 'E_WARNING':
-            case 'E_CORE_WARNING':
-            case 'E_USER_WARNING':
-                return 'WARN';
-
-            case 'INFO':
-            case 'E_STRICT':
-                return 'INFO';
-
-            case 'FINE':
-            case 'E_DEPRECATED':
-            case 'E_USER_DEPRECATED':
-                return 'FINE';
-
-            case 'DEBUG':
-            case 'E_NOTICE':
-                return 'DEBUG';
-
-            case 'E_USER_NOTICE':
-                return 'CUSTOM';
-        }
-        return 'DEFAULT_LEVEL';
-    }
 }
 ?>

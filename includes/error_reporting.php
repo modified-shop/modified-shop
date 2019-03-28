@@ -14,24 +14,9 @@
 $error_files = glob(DIR_FS_CATALOG."export/_error_reporting\.{dev,all,err,shop,admin,none}", GLOB_BRACE);
 $LogLevel = get_log_level($error_files);
 
-$config = array(
-  'LogEnabled' => (($LogLevel == 'NONE') ? false : true),
-  'SplitLogging' => true,
-  'LogLevel' => $LogLevel, // DEBUG, FINE, INFO, WARN, ERROR, CUSTOM
-  'LogThreshold' => '2MB',
-  'FileName' => DIR_FS_LOG.'mod_error_'.((defined('RUN_MODE_ADMIN')) ? 'admin_' : '').date('Y-m-d') .'.log',
-  'FileName.debug' => DIR_FS_LOG.'mod_notice_'.((defined('RUN_MODE_ADMIN')) ? 'admin_' : '').date('Y-m-d') .'.log',
-  'FileName.fine' => DIR_FS_LOG.'mod_deprecated_'.((defined('RUN_MODE_ADMIN')) ? 'admin_' : '').date('Y-m-d') .'.log',
-  'FileName.info' => DIR_FS_LOG.'mod_strict_'.((defined('RUN_MODE_ADMIN')) ? 'admin_' : '').date('Y-m-d') .'.log',
-  'FileName.warning' => DIR_FS_LOG.'mod_warning_'.((defined('RUN_MODE_ADMIN')) ? 'admin_' : '').date('Y-m-d') .'.log',
-  'FileName.error' => DIR_FS_LOG.'mod_error_'.((defined('RUN_MODE_ADMIN')) ? 'admin_' : '').date('Y-m-d') .'.log',
-  'FileName.custom' => DIR_FS_LOG.'mod_custom_'.((defined('RUN_MODE_ADMIN')) ? 'admin_' : '').date('Y-m-d') .'.log',
-);
-
-
 // include needed class
 require_once(DIR_FS_CATALOG.'includes/classes/class.logger.php');
-$LoggingManager = new LoggingManager($config);
+$LoggingManager = new LoggingManager(DIR_FS_LOG.'mod_%s_'.((defined('RUN_MODE_ADMIN')) ? 'admin_' : '').'%s.log', 'modified', strtolower($LogLevel));
 
 
 /**
@@ -66,7 +51,7 @@ function get_log_level($error_reporting_array) {
       error_reporting(0);
       break;
     default:
-      $LogLevel = 'FINE';
+      $LogLevel = 'NOTICE';
       error_reporting(E_ALL);
       break;
   }
@@ -96,15 +81,15 @@ function log_exception_handler($e) {
  */
 function log_exception($e)
 {
-    global $error_exceptions, $sql_error, $sql_query, $LoggingManager, $config;
+    global $error_exceptions, $sql_error, $sql_query, $LoggingManager, $LogLevel;
     
     if (!is_object($LoggingManager)) {
-        $LoggingManager = new LoggingManager($config);
+        $LoggingManager = new LoggingManager(DIR_FS_LOG.'mod_%s_'.((defined('RUN_MODE_ADMIN')) ? 'admin_' : '').'%s.log', 'modified', strtolower($LogLevel));
     }
     
     if (strpos($e->getFile(), 'templates_c') !== false
         || strpos($e->getFile(), 'cache') !== false
-        || $config['LogEnabled'] === false) return;
+        || $LogLevel === 'NONE') return;
 
     if (!is_array($error_exceptions)) {
       $error_exceptions = array();
@@ -114,7 +99,7 @@ function log_exception($e)
         $backtrace = debug_backtrace();
         $error = array();
         $error['number'] = (method_exists($e, 'getseverity') ? $e->getseverity() : 'UNDEFINED_ERROR');
-        $error['name'] = (($error['number'] != 'UNDEFINED_ERROR') ? error_level($error['number']) : 'UNDEFINED_ERROR');
+        $error['name'] = (($error['number'] != 'UNDEFINED_ERROR') ? error_level($error['number']) : 'ERROR');
         $error['line'] = $e->getLine();
         $error['file'] = $e->getFile();
         $error['message'] = $e->getMessage();
@@ -136,11 +121,11 @@ function log_exception($e)
             $error_exceptions[$error['name']][$index] .= '</table>' . PHP_EOL;
 
             // write Logfile
-            $LoggingManager->log(html_entity_decode($error['message']) . ' in File: ' . $error['file'] . ' on Line: ' . $error['line'], $error['name']);
+            $LoggingManager->log($error['name'], html_entity_decode($error['message']) . ' in File: ' . $error['file'] . ' on Line: ' . $error['line']);
             $err = 0;
             for ($i=0, $n=count($backtrace); $i<$n; $i++) {
                 if (isset($backtrace[$i]['file']) && $backtrace[$i]['file'] != $error['file'] && basename($backtrace[$i]['file']) != 'error_reporting.php') {
-                    $LoggingManager->log('Backtrace #'.$err.' - '.$backtrace[$i]['file'].' called at Line '.$backtrace[$i]['line'], $error['name']);
+                    $LoggingManager->log($error['name'], 'Backtrace #'.$err.' - '.$backtrace[$i]['file'].' called at Line '.$backtrace[$i]['line']);
                     $err ++;
                 }
             }
@@ -166,35 +151,35 @@ function error_level($type)
 {
     switch($type) {
         case E_ERROR: // 1 //
-            return 'E_ERROR';
+            return 'ERROR';
         case E_WARNING: // 2 //
-            return 'E_WARNING';
+            return 'WARNING';
         case E_PARSE: // 4 //
-            return 'E_PARSE';
+            return 'INFO';
         case E_NOTICE: // 8 //
-            return 'E_NOTICE';
+            return 'NOTICE';
         case E_CORE_ERROR: // 16 //
-            return 'E_CORE_ERROR';
+            return 'ERROR';
         case E_CORE_WARNING: // 32 //
-            return 'E_CORE_WARNING';
+            return 'WARNING';
         case E_CORE_ERROR: // 64 //
-            return 'E_COMPILE_ERROR';
+            return 'ERROR';
         case E_CORE_WARNING: // 128 //
-            return 'E_COMPILE_WARNING';
+            return 'WARNING';
         case E_USER_ERROR: // 256 //
-            return 'E_USER_ERROR';
+            return 'ERROR';
         case E_USER_WARNING: // 512 //
-            return 'E_USER_WARNING';
+            return 'WARNING';
         case E_USER_NOTICE: // 1024 //
-            return 'E_USER_NOTICE';
+            return 'CUSTOM';
         case E_STRICT: // 2048 //
-            return 'E_STRICT';
+            return 'INFO';
         case E_RECOVERABLE_ERROR: // 4096 //
-            return 'E_RECOVERABLE_ERROR';
+            return 'ERROR';
         case E_DEPRECATED: // 8192 //
-            return 'E_DEPRECATED';
+            return 'DEBUG';
         case E_USER_DEPRECATED: // 16384 //
-            return 'E_USER_DEPRECATED';
+            return 'DEBUG';
     }
     return $type;
 }
