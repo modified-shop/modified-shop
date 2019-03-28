@@ -112,6 +112,7 @@
           for ($i=1; $i<=MODULE_EXCLUDE_PAYMENT_NUMBER; $i++) {
             $shipping_exclude = explode(',', constant('MODULE_EXCLUDE_PAYMENT_SHIPPING_'.$i));
             if (isset($_SESSION['shipping']) 
+                && is_array($_SESSION['shipping'])
                 && array_key_exists('id', $_SESSION['shipping']) 
                 && in_array(substr($_SESSION['shipping']['id'], 0, (strpos($_SESSION['shipping']['id'], '_'))), $shipping_exclude) !== false
                 )
