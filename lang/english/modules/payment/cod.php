@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: cod.php 998 2005-07-07 14:18:20Z mz $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -14,7 +14,7 @@
 
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
-define('MODULE_PAYMENT_TYPE_PERMISSION', 'cod');
+
 define('MODULE_PAYMENT_COD_TEXT_TITLE', 'Cash on Delivery');
 define('MODULE_PAYMENT_COD_TEXT_DESCRIPTION', 'Payment via Cash on Delivery');
 define('MODULE_PAYMENT_COD_TEXT_INFO','Please note that an additional 2 euros delivery fee must be paid to the delivery site.');

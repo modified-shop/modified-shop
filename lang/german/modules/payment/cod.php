@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: cod.php 998 2005-07-07 14:18:20Z mz $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -14,7 +14,7 @@
 
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
-define('MODULE_PAYMENT_TYPE_PERMISSION', 'cod');
+
 define('MODULE_PAYMENT_COD_TEXT_TITLE', 'Nachnahme');
 define('MODULE_PAYMENT_COD_TEXT_DESCRIPTION', 'Bezahlung per Nachnahme');
 define('MODULE_PAYMENT_COD_TEXT_INFO', 'Bitte beachten Sie, dass zus&auml;tzlich 2 Euro Zustellgeb&uuml;hr an den Zusteller vor Ort zu entrichten sind.');

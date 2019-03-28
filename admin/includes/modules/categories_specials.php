@@ -148,7 +148,7 @@ echo SPECIALS_TITLE;
     </tr>
     <tr>
       <td class="main"><label for="input_specials_delete"><?php echo TEXT_INFO_HEADING_DELETE_SPECIALS; ?></label></td>
-      <td class="main"><?php echo xtc_draw_checkbox_field('specials_delete', 'true', $checked, '', 'id="input_specials_delete" onclick="if(this.checked==true)return confirm(\''.TEXT_INFO_DELETE_INTRO.'\');" style="vertical-align:middle;"'); ?></td>
+      <td class="main"><?php echo xtc_draw_checkbox_field('specials_delete', 'true', false, '', 'id="input_specials_delete" onclick="if(this.checked==true)return confirm(\''.TEXT_INFO_DELETE_INTRO.'\');" style="vertical-align:middle;"'); ?></td>
     </tr>
     <?php } ?>
   </table>

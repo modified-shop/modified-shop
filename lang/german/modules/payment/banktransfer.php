@@ -20,7 +20,6 @@
 
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
-define('MODULE_PAYMENT_TYPE_PERMISSION', 'bt');
 
 define('MODULE_PAYMENT_BANKTRANSFER_TEXT_TITLE', 'Lastschriftverfahren');
 define('MODULE_PAYMENT_BANKTRANSFER_TEXT_DESCRIPTION', 'Lastschriftverfahren');

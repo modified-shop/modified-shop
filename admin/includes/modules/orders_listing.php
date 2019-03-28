@@ -60,22 +60,22 @@
             $orders_statuses_array[] = array('id' => '0', 'text' => TEXT_VALIDATING);
             echo HEADING_TITLE_STATUS . ' ' . xtc_draw_pull_down_menu('status', array_merge($orders_statuses_array, $orders_statuses),(isset($_GET['status']) && xtc_not_null($_GET['status']) ? (int)$_GET['status'] : ''),'onchange="this.form.submit();"'); 
           ?>
-          <?php echo xtc_draw_hidden_filter_field('cgroup', $_GET['cgroup'])?>
-          <?php echo xtc_draw_hidden_filter_field('payment', $_GET['payment'])?>
+          <?php echo xtc_draw_hidden_filter_field('cgroup', ((isset($_GET['cgroup'])) ? $_GET['cgroup'] : ''))?>
+          <?php echo xtc_draw_hidden_filter_field('payment', ((isset($_GET['payment'])) ? $_GET['payment'] : ''))?>
           </form>        
         </div>
         <div class="main flt-l pdg2 mrg5" style="margin-left:20px;">
           <?php echo xtc_draw_form('payment', FILENAME_ORDERS, '', 'get'); ?>
           <?php echo TEXT_INFO_PAYMENT_METHOD . ' ' . xtc_draw_pull_down_menu('payment',xtc_array_merge(array (array ('id' => '', 'text' => TXT_ALL)), $payment_array), isset($_GET['payment']) ? $_GET['payment'] : '', 'onChange="this.form.submit();"'); ?>
-          <?php echo xtc_draw_hidden_filter_field('status', $_GET['status'])?>
-          <?php echo xtc_draw_hidden_filter_field('cgroup', $_GET['cgroup'])?>
+          <?php echo xtc_draw_hidden_filter_field('status', ((isset($_GET['status'])) ? $_GET['status'] : ''))?>
+          <?php echo xtc_draw_hidden_filter_field('cgroup', ((isset($_GET['cgroup'])) ? $_GET['cgroup'] : ''))?>
           </form>
         </div>
         <div class="main flt-l pdg2 mrg5" style="margin-left:20px;">
           <?php echo xtc_draw_form('cgroup', FILENAME_ORDERS, '', 'get'); ?>
           <?php echo ENTRY_CUSTOMERS_STATUS . ' ' . xtc_draw_pull_down_menu('cgroup',xtc_array_merge(array (array ('id' => '', 'text' => TXT_ALL)), $customers_statuses_array), isset($_GET['cgroup']) ? $_GET['cgroup'] : '', 'onChange="this.form.submit();"'); ?>
-          <?php echo xtc_draw_hidden_filter_field('status', $_GET['status'])?>
-          <?php echo xtc_draw_hidden_filter_field('payment', $_GET['payment'])?>
+          <?php echo xtc_draw_hidden_filter_field('status', ((isset($_GET['status'])) ? $_GET['status'] : ''))?>
+          <?php echo xtc_draw_hidden_filter_field('payment', ((isset($_GET['payment'])) ? $_GET['payment'] : ''))?>
           </form>
         </div>
         <div class="clear"></div>      
