@@ -363,7 +363,8 @@
 
     function process_button() {
       if (is_array($this->modules)) {
-        if (is_object($GLOBALS[$this->selected_module]) 
+        if (isset($GLOBALS[$this->selected_module])
+            && is_object($GLOBALS[$this->selected_module]) 
             && $GLOBALS[$this->selected_module]->enabled
             && method_exists($GLOBALS[$this->selected_module], 'process_button')
             )
@@ -375,7 +376,8 @@
 
     function before_process() {
       if (is_array($this->modules)) {
-        if (is_object($GLOBALS[$this->selected_module]) 
+        if (isset($GLOBALS[$this->selected_module])
+            && is_object($GLOBALS[$this->selected_module]) 
             && $GLOBALS[$this->selected_module]->enabled
             && method_exists($GLOBALS[$this->selected_module], 'before_process')
             ) 
@@ -387,7 +389,8 @@
 
     function payment_action() {
       if (is_array($this->modules)) {
-        if (is_object($GLOBALS[$this->selected_module]) 
+        if (isset($GLOBALS[$this->selected_module])
+            && is_object($GLOBALS[$this->selected_module]) 
             && $GLOBALS[$this->selected_module]->enabled
             && method_exists($GLOBALS[$this->selected_module], 'payment_action')
             ) 
@@ -399,7 +402,8 @@
 
     function before_send_order() {
       if (is_array($this->modules)) {
-        if (is_object($GLOBALS[$this->selected_module]) 
+        if (isset($GLOBALS[$this->selected_module])
+            && is_object($GLOBALS[$this->selected_module]) 
             && $GLOBALS[$this->selected_module]->enabled
             && method_exists($GLOBALS[$this->selected_module], 'before_send_order')
             ) 
@@ -411,7 +415,8 @@
 
     function after_process() {
       if (is_array($this->modules)) {
-        if (is_object($GLOBALS[$this->selected_module]) 
+        if (isset($GLOBALS[$this->selected_module])
+            && is_object($GLOBALS[$this->selected_module]) 
             && $GLOBALS[$this->selected_module]->enabled
             && method_exists($GLOBALS[$this->selected_module], 'after_process')
             ) 
@@ -423,7 +428,8 @@
 
     function success() {
       if (is_array($this->modules)) {
-        if (is_object($GLOBALS[$this->selected_module]) 
+        if (isset($GLOBALS[$this->selected_module])
+            && is_object($GLOBALS[$this->selected_module]) 
             && $GLOBALS[$this->selected_module]->enabled
             ) 
         {
@@ -438,7 +444,8 @@
 
     function get_error() {
       if (is_array($this->modules)) {
-        if (is_object($GLOBALS[$this->selected_module]) 
+        if (isset($GLOBALS[$this->selected_module])
+            && is_object($GLOBALS[$this->selected_module]) 
             && $GLOBALS[$this->selected_module]->enabled
             && method_exists($GLOBALS[$this->selected_module], 'get_error')
             ) 
@@ -450,7 +457,8 @@
 
     function iframeAction() {
       if (is_array($this->modules)) {
-        if (is_object($GLOBALS[$this->selected_module]) 
+        if (isset($GLOBALS[$this->selected_module])
+            && is_object($GLOBALS[$this->selected_module]) 
             && $GLOBALS[$this->selected_module]->enabled
             && method_exists($GLOBALS[$this->selected_module], 'iframeAction')
             ) 
@@ -462,7 +470,8 @@
 
     function create_paypal_link() {
       if (is_array($this->modules)) {
-        if (is_object($GLOBALS[$this->selected_module])
+        if (isset($GLOBALS[$this->selected_module])
+            && is_object($GLOBALS[$this->selected_module])
             && $GLOBALS[$this->selected_module]->enabled
             && method_exists($GLOBALS[$this->selected_module], 'create_paypal_link')
             ) 
@@ -474,7 +483,8 @@
 
     function info() {
       if (is_array($this->modules)) {
-        if (is_object($GLOBALS[$this->selected_module]) 
+        if (isset($GLOBALS[$this->selected_module])
+            && is_object($GLOBALS[$this->selected_module]) 
             && $GLOBALS[$this->selected_module]->enabled
             ) 
         {

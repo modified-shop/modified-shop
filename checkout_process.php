@@ -104,7 +104,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
       'customers_suburb' => $order->customer['suburb'],
       'customers_city' => $order->customer['city'],
       'customers_postcode' => $order->customer['postcode'],
-      'customers_state' => $order->customer['state'],
+      'customers_state' => ((isset($order->customer['state'])) ? $order->customer['state'] : ''),
       'customers_country' => $order->customer['country']['title'],
       'customers_telephone' => $order->customer['telephone'],
       'customers_email_address' => $order->customer['email_address'],
@@ -119,7 +119,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
       'delivery_suburb' => $order->delivery['suburb'],
       'delivery_city' => $order->delivery['city'],
       'delivery_postcode' => $order->delivery['postcode'],
-      'delivery_state' => $order->delivery['state'],
+      'delivery_state' => ((isset($order->delivery['state'])) ? $order->delivery['state'] : ''),
       'delivery_country' => $order->delivery['country']['title'],
       'delivery_country_iso_code_2' => $order->delivery['country']['iso_code_2'],
       'delivery_address_format_id' => $order->delivery['format_id'],
@@ -132,7 +132,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
       'billing_suburb' => $order->billing['suburb'],
       'billing_city' => $order->billing['city'],
       'billing_postcode' => $order->billing['postcode'],
-      'billing_state' => $order->billing['state'],
+      'billing_state' => ((isset($order->billing['state'])) ? $order->billing['state'] : ''),
       'billing_country' => $order->billing['country']['title'],
       'billing_country_iso_code_2' => $order->billing['country']['iso_code_2'],
       'billing_address_format_id' => $order->billing['format_id'],
@@ -182,12 +182,6 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
       'comments' => $order->info['comments']
     );
   xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
-
-  // initialized for the email confirmation
-  $products_ordered = '';#rem
-  $products_ordered_html = '';#rem
-  $subtotal = 0;#rem
-  $total_tax = 0;
 
   $_SESSION['disable_products'] = array();
   for ($i = 0, $n = sizeof($order->products); $i < $n; $i ++) {
@@ -288,7 +282,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
     }
 
     $order_total_modules->update_credit_account($i); // GV Code ICW ADDED FOR CREDIT CLASS SYSTEM
-    //------insert customer choosen option to order--------
+
     $attributes_exist = '0';
     $products_ordered_attributes = '';
     if (isset($order->products[$i]['attributes'])) {
@@ -381,11 +375,6 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
 
       }
     }
-    //------insert customer choosen option eof ----
-    $total_weight += ($order->products[$i]['qty'] * $order->products[$i]['weight']);
-    $total_tax += xtc_calculate_tax($total_products_price, $products_tax) * $order->products[$i]['qty'];
-    $total_cost += $total_products_price;
-
   }
 
   // check refID

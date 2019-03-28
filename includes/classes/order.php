@@ -302,7 +302,11 @@
         }
 
         //using short description  if order description is not defined or empty
-        if ($order_data_values['order_description'] == '' && CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION == 'true') {
+        if (isset($order_data_values['order_description']) 
+            && $order_data_values['order_description'] == '' 
+            && CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION == 'true'
+            )
+        {
           $order_data_values['order_description'] = (($order_data_values['products_short_description'] != '') ? $order_data_values['products_short_description'] : xtc_get_description($order_data_values['products_id'], $order_lang_id, true));
         }
         

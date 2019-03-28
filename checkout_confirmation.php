@@ -44,15 +44,17 @@ require (DIR_WS_INCLUDES.'checkout_requirements.php');
 // include boxes
 require (DIR_FS_CATALOG . 'templates/' . CURRENT_TEMPLATE . '/source/boxes.php');
 
-//check if display conditions on checkout page is true
-if (isset($_POST['payment']))
+if (isset($_POST['payment'])) {
   $_SESSION['payment'] = xtc_db_prepare_input($_POST['payment']);
+}
 
-if ($_POST['comments_added'] != '')
+if (isset($_POST['comments_added']) && $_POST['comments_added'] != '') {
   $_SESSION['comments'] = xtc_db_prepare_input($_POST['comments']);
+}
 
-// check if display conditions on checkout page is true
-if (isset($_POST['cot_gv'])) $_SESSION['cot_gv'] = $_POST['cot_gv'];
+if (isset($_POST['cot_gv'])) {
+  $_SESSION['cot_gv'] = $_POST['cot_gv'];
+}
 
 // if conditions are not accepted, redirect the customer to the payment method selection page
 if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true') {
@@ -259,7 +261,7 @@ if (DISPLAY_REVOCATION_ON_CHECKOUT == 'true') {
   $shop_content_data = $main->getContentData(3);
   $smarty->assign('AGB_TITLE', $shop_content_data['content_heading']);
   $smarty->assign('AGB_LINK', $main->getContentLink(3, MORE_INFO,'SSL'));
-  $smarty->assign('TEXT_AGB_CHECKOUT', sprintf(TEXT_AGB_CHECKOUT,$main->getContentLink(3, MORE_INFO,'SSL') , $main->getContentLink(REVOCATION_ID, MORE_INFO,'SSL') , $main->getContentLink(2, MORE_INFO,'SSL')));
+  $smarty->assign('TEXT_AGB_CHECKOUT', sprintf(TEXT_AGB_CHECKOUT, $main->getContentLink(3, MORE_INFO,'SSL'), $main->getContentLink(REVOCATION_ID, MORE_INFO,'SSL'), $main->getContentLink(2, MORE_INFO,'SSL')));
 }
 
 $store_owner = STORE_NAME;
