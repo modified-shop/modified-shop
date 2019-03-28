@@ -17,6 +17,8 @@
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
+require_once(DIR_FS_CATALOG.'includes/classes/class.logger.php');
+
 // include the mail classes
 function xtc_php_mail($from_email_address, $from_email_name,
                       $to_email_address, $to_name, $forwarding_to,
@@ -26,7 +28,7 @@ function xtc_php_mail($from_email_address, $from_email_name,
                       $priority = null
                      )
 {
-  global $order, $main, $LoggingManager;
+  global $order, $main, $LogLevel;
 
   // include needed function
   require_once(DIR_FS_INC.'xtc_not_null.inc.php');
@@ -148,8 +150,7 @@ function xtc_php_mail($from_email_address, $from_email_name,
   require_once (DIR_FS_EXTERNAL.'phpmailer/Exception.php');
 
   $mail = new PHPMailer(false);
-  $mail->Debugoutput = 'error_log';
-  $mail->loggerFile = DIR_FS_LOG.'mod_mailer_'.date('Y-m-d') .'.log';
+  $mail->Debugoutput = new LoggingManager(DIR_FS_LOG.'mailer_%s_'.((defined('RUN_MODE_ADMIN')) ? 'admin_' : '').'%s.log', 'mailer', (($LogLevel != '') ? $LogLevel : 'info'));
   $mail->CharSet = $lang_data['language_charset'];
   $mail->Priority = $priority;
   
