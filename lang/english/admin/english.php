@@ -465,9 +465,6 @@ define('_PAYMENT_MONEYBOOKERS_PENDING_STATUS_ID_TITLE','order status - payment o
 define('_PAYMENT_MONEYBOOKERS_PENDING_STATUS_ID_DESC','If someone does not have balance at his Skrill account. The payment is pending until Skrill receive settlement.');
 define('_PAYMENT_MONEYBOOKERS_CANCELED_STATUS_ID_TITLE','order status - payment cancelled');
 define('_PAYMENT_MONEYBOOKERS_CANCELED_STATUS_ID_DESC','If a (credit card) payment is rejected.');
-define('MB_TEXT_MBDATE', 'last update:');
-define('MB_TEXT_MBTID', 'TR ID:');
-define('MB_TEXT_MBERRTXT', 'Status:');
 define('MB_ERROR_NO_MERCHANT','There is no Skrill account associated with this email address.');
 define('MB_MERCHANT_OK','Skrill account OK, merchant ID %s received and saved.');
 define('MB_INFO','<img src="../images/icons/moneybookers/MBbanner.jpg"><br /><br />You may accept credit cards, debit notes, online bank transfer, Giropay and other major local payment payments after one single activation. You do not need the hassle of contracts with every payment processor if going with Skrill. All is done with <a href="https://account.skrill.com/signup/page1" target="_blank"><b>free Skrill account</b></a>. Additional payment options are free of charge, and there are <b>no monthy fees or activation costs</b>.<br /><br /><b>Your advantage:</b><br />- more sales by accepting all major payments<br />- reduced costs and effort - just one contract<br />- easy processing for your customer - direct payment without need to create an extra account<br />- one click activation and integration<br />- good <a href="https://www.skrill.com/en/fees/" target="_blank"><b>conditions</b></a><br />- instant payment notification and proof of customer details<br />- no extra costs, even abroad<br />- 11 mio. customers worldwide');

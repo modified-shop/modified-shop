@@ -173,7 +173,7 @@ class ot_gv {
                        SET amount = '".$gv_amount."' 
                      WHERE customer_id = '".(int)$_SESSION['customer_id']."'");
     }
-    return $gv_payment_amount;
+    return $gv_amount;
   }
 
   function collect_posts() {
