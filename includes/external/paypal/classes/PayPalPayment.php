@@ -70,19 +70,7 @@ class PayPalPayment extends PayPalPaymentBase {
 
   function __construct($class) {    
     $this->loglevel = ((PayPalPaymentBase::check_install() === true) ? $this->get_config('PAYPAL_LOG_LEVEL') : 'FINE'); 
-    $config = array(
-      'LogEnabled' => ((defined('MODULE_PAYMENT_'.strtoupper($class).'_STATUS' || PayPalPaymentBase::check_install() === true) && $this->get_config('PAYPAL_LOG_ENALBLED') == '1') ? true : false),
-      'SplitLogging' => true,
-      'LogLevel' => $this->loglevel,
-      'LogThreshold' => '2MB',
-      'FileName' => DIR_FS_LOG.'paypal_error_' .date('Y-m-d') .'.log',
-      'FileName.debug' => DIR_FS_LOG.'paypal_debug_' .date('Y-m-d') .'.log',
-      'FileName.fine' => DIR_FS_LOG.'paypal_fine_' .date('Y-m-d') .'.log',
-      'FileName.info' => DIR_FS_LOG.'paypal_info_' .date('Y-m-d') .'.log',
-      'FileName.warning' => DIR_FS_LOG.'paypal_warning_' .date('Y-m-d') .'.log',
-      'FileName.error' => DIR_FS_LOG.'paypal_error_' .date('Y-m-d') .'.log',
-    );
-    $this->LoggingManager = new LoggingManager($config);
+    $this->LoggingManager = new LoggingManager(DIR_FS_LOG.'mod_paypal_%s_'.((defined('RUN_MODE_ADMIN')) ? 'admin_' : '').'%s.log', 'paypal', strtolower($this->loglevel));
 
     PayPalPaymentBase::init($class);
   }
@@ -362,7 +350,7 @@ class PayPalPayment extends PayPalPaymentBase {
       }
       
     } catch (Exception $ex) { 
-      $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+      $this->LoggingManager->log('DEBUG', 'getApprovalLink', $ex);
       
       unset($_SESSION['paypal']);
       if ($cart === true) {
@@ -385,7 +373,7 @@ class PayPalPayment extends PayPalPaymentBase {
       $payment = Payment::get($_SESSION['paypal']['paymentId'], $apiContext);
   
     } catch (Exception $ex) {
-      $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+      $this->LoggingManager->log('DEBUG', 'Payment', $ex);
       
       unset($_SESSION['paypal']);
       xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
@@ -489,7 +477,7 @@ class PayPalPayment extends PayPalPaymentBase {
       // update payment
       $payment->update($patchRequest, $apiContext);      
     } catch (Exception $ex) {
-      $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+      $this->LoggingManager->log('DEBUG', 'Patch', $ex);
       
       unset($_SESSION['paypal']);
       xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
@@ -515,7 +503,7 @@ class PayPalPayment extends PayPalPaymentBase {
         $valid = true;
     
       } catch (Exception $ex) {
-        $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+        $this->LoggingManager->log('DEBUG', 'Payment', $ex);
         $valid = false;
       }
       
@@ -583,7 +571,7 @@ class PayPalPayment extends PayPalPaymentBase {
         $payment = Payment::get($_SESSION['paypal']['paymentId'], $apiContext);       
           
       } catch (Exception $ex) {
-        $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+        $this->LoggingManager->log('DEBUG', 'Payment', $ex);
 
         // redirect
         unset($_SESSION['paypal']);
@@ -607,7 +595,7 @@ class PayPalPayment extends PayPalPaymentBase {
         $payment = Payment::get($_SESSION['paypal']['paymentId'], $apiContext);       
 
       } catch (Exception $ex) {
-        $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+        $this->LoggingManager->log('DEBUG', 'Payment', $ex);
       }
     
       // payer
@@ -649,7 +637,7 @@ class PayPalPayment extends PayPalPaymentBase {
         $payment->execute($execution, $apiContext);
         
       } catch (Exception $ex) {
-        $this->LoggingManager->log(print_r($ex, true), 'DEBUG');          
+        $this->LoggingManager->log('DEBUG', 'Execute', $ex);  
 
         $this->remove_order($insert_id);
         unset($_SESSION['paypal']);
@@ -676,7 +664,7 @@ class PayPalPayment extends PayPalPaymentBase {
         $payment = Payment::get($_SESSION['paypal']['paymentId'], $apiContext);
   
       } catch (Exception $ex) {
-        $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+        $this->LoggingManager->log('DEBUG', 'Payment', $ex);
 
         $this->remove_order($insert_id);
         unset($_SESSION['paypal']);
@@ -736,7 +724,7 @@ class PayPalPayment extends PayPalPaymentBase {
       $payment = Payment::get($_SESSION['paypal']['paymentId'], $apiContext);
       
     } catch (Exception $ex) {
-      $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+      $this->LoggingManager->log('DEBUG', 'Payment', $ex);
       
       $this->remove_order($insert_id);
       unset($_SESSION['paypal']);
@@ -849,7 +837,7 @@ class PayPalPayment extends PayPalPaymentBase {
       $payment->update($patchRequest, $apiContext);      
 
     } catch (Exception $ex) {
-      $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+      $this->LoggingManager->log('DEBUG', 'Patch', $ex);
 
       if ($order_exists === false) {
         unset($_SESSION['paypal']);
@@ -873,7 +861,7 @@ class PayPalPayment extends PayPalPaymentBase {
       $payment->execute($execution, $apiContext);      
 
     } catch (Exception $ex) {
-      $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+      $this->LoggingManager->log('DEBUG', 'Execute', $ex);
 
       $this->remove_order($insert_id);
       unset($_SESSION['paypal']);
@@ -901,7 +889,7 @@ class PayPalPayment extends PayPalPaymentBase {
       $payment = Payment::get($_SESSION['paypal']['paymentId'], $apiContext);
 
     } catch (Exception $ex) {
-      $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+      $this->LoggingManager->log('DEBUG', 'Payment', $ex);
 
       $this->remove_order($insert_id);
       unset($_SESSION['paypal']);
@@ -975,7 +963,7 @@ class PayPalPayment extends PayPalPaymentBase {
           $resource->capture($capture, $apiContext);
           $success = true;
         } catch (Exception $ex) {
-          $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+          $this->LoggingManager->log('DEBUG', 'Capture', $ex);
           $success = false;
 
           if (defined('RUN_MODE_ADMIN') && $ex instanceof \PayPal\Exception\PayPalConnectionException) {
@@ -998,7 +986,7 @@ class PayPalPayment extends PayPalPaymentBase {
         }
       }
     } catch (Exception $ex) {
-      $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+      $this->LoggingManager->log('DEBUG', 'Capture', $ex);
     }
   }
 
@@ -1056,7 +1044,7 @@ class PayPalPayment extends PayPalPaymentBase {
         }
       }
     } catch (Exception $ex) { 
-      $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+      $this->LoggingManager->log('DEBUG', 'Presentment', $ex);
       
     }
     
@@ -1126,12 +1114,13 @@ class PayPalPayment extends PayPalPaymentBase {
           'cart_amount_immutable' => $credit_financing_offered->getCartAmountImmutable(),
         );
       } else {
-        $this->LoggingManager->log(print_r($payment, true), 'DEBUG');
+        $this->LoggingManager->log('DEBUG', 'Installment', $payment);
+        
         unset($_SESSION['paypal']);
         xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
       }
     } catch (Exception $ex) { 
-      $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+      $this->LoggingManager->log('DEBUG', 'Installment', $ex);
       unset($_SESSION['paypal']);
       xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
     }
@@ -1153,7 +1142,7 @@ class PayPalPayment extends PayPalPaymentBase {
         $payment = Payment::get($_SESSION['paypal']['paymentId'], $apiContext);       
           
       } catch (Exception $ex) {
-        $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+        $this->LoggingManager->log('DEBUG', 'Payment', $ex);
 
         // redirect
         unset($_SESSION['paypal']);
@@ -1169,7 +1158,7 @@ class PayPalPayment extends PayPalPaymentBase {
         $payment->execute($execution, $apiContext);
         
       } catch (Exception $ex) {
-        $this->LoggingManager->log(print_r($ex, true), 'DEBUG');          
+        $this->LoggingManager->log('DEBUG', 'Execute', $ex); 
 
         $this->remove_order($insert_id);
         unset($_SESSION['paypal']);
@@ -1196,7 +1185,7 @@ class PayPalPayment extends PayPalPaymentBase {
         $payment = Payment::get($_SESSION['paypal']['paymentId'], $apiContext);
   
       } catch (Exception $ex) {
-        $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+        $this->LoggingManager->log('DEBUG', 'Payment', $ex);
 
         $this->remove_order($insert_id);
         unset($_SESSION['paypal']);
@@ -1270,7 +1259,7 @@ class PayPalPayment extends PayPalPaymentBase {
       );
       
     } catch (Exception $ex) {
-      $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+      $this->LoggingManager->log('DEBUG', 'Transactions', $ex);
     }
   }
 
@@ -1293,7 +1282,7 @@ class PayPalPayment extends PayPalPaymentBase {
         $payment = Payment::get($orders['payment_id'], $apiContext);
         $valid = true;
       } catch (Exception $ex) {
-        $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+        $this->LoggingManager->log('DEBUG', 'Payment', $ex);
         $valid = false;
       }
       
@@ -1313,7 +1302,7 @@ class PayPalPayment extends PayPalPaymentBase {
       $payment = Sale::get($id, $apiContext);
       $valid = true;
     } catch (Exception $ex) {
-      $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+      $this->LoggingManager->log('DEBUG', 'Sale', $ex);
       $valid = false;
     }
     
@@ -1325,7 +1314,7 @@ class PayPalPayment extends PayPalPaymentBase {
       $payment = Authorization::get($id, $apiContext);
       $valid = true;
     } catch (Exception $ex) {
-      $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+      $this->LoggingManager->log('DEBUG', 'Authorization', $ex);
       $valid = false;
     }
     
@@ -1337,7 +1326,7 @@ class PayPalPayment extends PayPalPaymentBase {
       $payment = Capture::get($id, $apiContext);
       $valid = true;
     } catch (Exception $ex) {
-      $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+      $this->LoggingManager->log('DEBUG', 'Capture', $ex);
       $valid = false;
     }
     
@@ -1349,7 +1338,7 @@ class PayPalPayment extends PayPalPaymentBase {
       $payment = Refund::get($id, $apiContext);
       $valid = true;
     } catch (Exception $ex) {
-      $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+      $this->LoggingManager->log('DEBUG', 'Refund', $ex);
       $valid = false;
     }
     
@@ -1390,7 +1379,7 @@ class PayPalPayment extends PayPalPaymentBase {
           'state' => $payment->getState(),
         );
       } catch (Exception $ex) {
-        $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+        $this->LoggingManager->log('DEBUG', 'Payment', $ex);
       }
     }
     
@@ -1467,7 +1456,7 @@ class PayPalPayment extends PayPalPaymentBase {
           $object = $resource->get($resource->getId(), $apiContext);
           $valid = true;
         } catch (Exception $ex) {
-          $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+          $this->LoggingManager->log('DEBUG', 'Transactions', $ex);
           $valid = false;
         }
         
@@ -1574,7 +1563,7 @@ class PayPalPayment extends PayPalPaymentBase {
       
       $valid = true;
     } catch (Exception $ex) {
-      $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+      $this->LoggingManager->log('DEBUG', 'Payer', $ex);
       $valid = false;
     }
         
