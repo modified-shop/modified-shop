@@ -27,7 +27,7 @@ define('ERROR_MUST_CONFIRM_MANDATE', 'Please confirm that you want to grant the 
  
 // credit risk check
 define('CREDIT_RISK_HEADING', 'Credit check');
-define('BUTTON_CONFIRM', 'Yes, perform credit check');
+defined('BUTTON_CONFIRM') OR define('BUTTON_CONFIRM', 'Yes, perform credit check');
 define('BUTTON_NOCONFIRM', 'No, don\'t execute a verification');
 define('TEXT_CREDIT_RISK_INFO', 'A credit assessment is being executed.');
 define('TEXT_CREDIT_RISK_COMFIRM', 'Do you want to agree with this?');

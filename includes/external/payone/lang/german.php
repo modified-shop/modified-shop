@@ -27,7 +27,7 @@ define('ERROR_MUST_CONFIRM_MANDATE', 'Bitte best&auml;tigen Sie, dass Sie das SE
 
 // credit risk check
 define('CREDIT_RISK_HEADING', 'Bonit&auml;tspr&uuml;fung');
-define('BUTTON_CONFIRM', 'Ja, Pr&uuml;fung durchf&uuml;hren');
+defined('BUTTON_CONFIRM') OR define('BUTTON_CONFIRM', 'Ja, Pr&uuml;fung durchf&uuml;hren');
 define('BUTTON_NOCONFIRM', 'Nein, keine Pr&uuml;fung durchf&uuml;hren');
 define('TEXT_CREDIT_RISK_INFO', 'Es wird eine Bonit&auml;tsabfrage durchgef&uuml;hrt.');
 define('TEXT_CREDIT_RISK_COMFIRM', 'M&ouml;chten Sie dem zustimmen?');

@@ -17,12 +17,12 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_TITLE', 'Sofort.');
-define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_DESCRIPTION', 'Sofort. ist der kostenlose, T&Uuml;V-zertifizierte Zahlungsdienst der SOFORT GmbH.');
-define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_INFO', 'Zahlen Sie bequem mit dem zertifizierten und gepr&uuml;ften Online Banking System Sofort. der SOFORT GmbH.');
+defined('MODULE_PAYMENT_'.$sofort_code.'_TEXT_TITLE') OR define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_TITLE', 'Sofort.');
+defined('MODULE_PAYMENT_'.$sofort_code.'_TEXT_DESCRIPTION') OR define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_DESCRIPTION', 'Sofort. ist der kostenlose, T&Uuml;V-zertifizierte Zahlungsdienst der SOFORT GmbH.');
+defined('MODULE_PAYMENT_'.$sofort_code.'_TEXT_INFO') OR define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_INFO', 'Zahlen Sie bequem mit dem zertifizierten und gepr&uuml;ften Online Banking System Sofort. der SOFORT GmbH.');
 
 // checkout
-define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_DESCRIPTION_CHECKOUT_PAYMENT_IMAGE', '
+defined('MODULE_PAYMENT_'.$sofort_code.'_TEXT_DESCRIPTION_CHECKOUT_PAYMENT_IMAGE') OR define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_DESCRIPTION_CHECKOUT_PAYMENT_IMAGE', '
   <table border="0" cellspacing="0" cellpadding="0">
     <tr>
       <td valign="bottom">
@@ -33,17 +33,17 @@ define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_DESCRIPTION_CHECKOUT_PAYMENT_IMAGE'
 	    <td class="main">{{text}}</td>
 	  </tr>
 	</table>');
-define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_DESCRIPTION_CHECKOUT_PAYMENT_IMAGEALT', 'Sofort.');
-define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_DESCRIPTION_CHECKOUT_PAYMENT_TEXT', '
+defined('MODULE_PAYMENT_'.$sofort_code.'_TEXT_DESCRIPTION_CHECKOUT_PAYMENT_IMAGEALT') OR define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_DESCRIPTION_CHECKOUT_PAYMENT_IMAGEALT', 'Sofort.');
+defined('MODULE_PAYMENT_'.$sofort_code.'_TEXT_DESCRIPTION_CHECKOUT_PAYMENT_TEXT') OR define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_DESCRIPTION_CHECKOUT_PAYMENT_TEXT', '
   <ul>
     <li>Einfach und direkt bezahlen per Online Banking.</li>
   </ul>');
 
 // admin
+defined('MODULE_PAYMENT_'.$sofort_code.'_STATUS_TITLE') OR define('MODULE_PAYMENT_'.$sofort_code.'_STATUS_TITLE', 'Sofort. aktivieren');
+defined('MODULE_PAYMENT_'.$sofort_code.'_STATUS_DESC') OR define('MODULE_PAYMENT_'.$sofort_code.'_STATUS_DESC', 'M&ouml;chten Sie Zahlungen per Sofort. akzeptieren?');
 define('MODULE_PAYMENT_'.$sofort_code.'_ALLOWED_TITLE', 'Erlaubte Zonen');
 define('MODULE_PAYMENT_'.$sofort_code.'_ALLOWED_DESC', 'Geben Sie <b>einzeln</b> die Zonen an, welche f&uuml;r dieses Modul erlaubt sein sollen. (z.B. AT,DE (wenn leer, werden alle Zonen erlaubt))');
-define('MODULE_PAYMENT_'.$sofort_code.'_STATUS_TITLE', 'Sofort. aktivieren');
-define('MODULE_PAYMENT_'.$sofort_code.'_STATUS_DESC', 'M&ouml;chten Sie Zahlungen per Sofort. akzeptieren?');
 define('MODULE_PAYMENT_'.$sofort_code.'_TMP_ORDER_TITLE', 'Tempor&auml;re Bestellung');
 define('MODULE_PAYMENT_'.$sofort_code.'_TMP_ORDER_DESC', 'M&ouml;chten Sie eine tempor&auml;re Bestellung anlegen?');
 define('MODULE_PAYMENT_'.$sofort_code.'_LOGGING_TITLE', 'Logging aktivieren');
