@@ -150,7 +150,7 @@ function xtc_php_mail($from_email_address, $from_email_name,
   require_once (DIR_FS_EXTERNAL.'phpmailer/Exception.php');
 
   $mail = new PHPMailer(false);
-  $mail->Debugoutput = new LoggingManager(DIR_FS_LOG.'mailer_%s_'.((defined('RUN_MODE_ADMIN')) ? 'admin_' : '').'%s.log', 'mailer', (($LogLevel != '') ? $LogLevel : 'info'));
+  $mail->Debugoutput = new LoggingManager(DIR_FS_LOG.'mod_mailer_%s_'.((defined('RUN_MODE_ADMIN')) ? 'admin_' : '').'%s.log', 'mailer', (($LogLevel != '') ? $LogLevel : 'info'));
   $mail->CharSet = $lang_data['language_charset'];
   $mail->Priority = $priority;
   
