@@ -57,10 +57,10 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
   //shipping method
   $shipping_class = explode('_', $order->info['shipping_class']);
   if ($order->info['shipping_class'] != '' && $shipping_class[0] != 'free') {
-    include (DIR_FS_CATALOG . 'lang/'.$order->info['language'].'/modules/shipping/'.$shipping_class[0].'.php');
+    include_once (DIR_FS_CATALOG . 'lang/'.$order->info['language'].'/modules/shipping/'.$shipping_class[0].'.php');
     $shipping_method = constant(strtoupper('MODULE_SHIPPING_'.$shipping_class[0].'_TEXT_TITLE'));
   } else {
-    include (DIR_FS_CATALOG . 'lang/'.$order->info['language'].'/modules/order_total/ot_shipping.php');
+    include_once (DIR_FS_CATALOG . 'lang/'.$order->info['language'].'/modules/order_total/ot_shipping.php');
     $shipping_method = FREE_SHIPPING_TITLE;
   }
   $smarty->assign('SHIPPING_METHOD', $shipping_method);
