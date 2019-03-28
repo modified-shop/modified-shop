@@ -46,7 +46,7 @@ class PayPalAdmin extends PayPalPayment {
       $webProfileList = $webProfile->get_list($apiContext);
       $valid = true;
     } catch (Exception $ex) {
-      $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+      $this->LoggingManager->log('DEBUG', 'Profile', $ex);
       $valid = false;
     }
     
@@ -125,7 +125,7 @@ class PayPalAdmin extends PayPalPayment {
       $webProfile->create($apiContext);
       $valid = true;
     } catch (Exception $ex) {
-      $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+      $this->LoggingManager->log('DEBUG', 'Profile', $ex);
       $valid = false;
     }
   }
@@ -172,7 +172,7 @@ class PayPalAdmin extends PayPalPayment {
       $webProfile->update($apiContext);
       $valid = true;
     } catch (Exception $ex) {
-      $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+      $this->LoggingManager->log('DEBUG', 'Profile', $ex);
       $valid = false;
       
       if ($ex instanceof \PayPal\Exception\PayPalConnectionException) {
@@ -229,7 +229,7 @@ class PayPalAdmin extends PayPalPayment {
       $webProfile->delete($apiContext);
       $valid = true;
     } catch (Exception $ex) {
-      $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+      $this->LoggingManager->log('DEBUG', 'Profile', $ex);
       $valid = false;
     }
     
@@ -253,7 +253,7 @@ class PayPalAdmin extends PayPalPayment {
       $WebhookList = $webhooks->getAll($apiContext);
       $valid = true;
     } catch (Exception $ex) {
-      $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+      $this->LoggingManager->log('DEBUG', 'Webhook', $ex);
       $valid = false;
     }
 
@@ -309,7 +309,7 @@ class PayPalAdmin extends PayPalPayment {
     try {
       $WebhookList = $webhook->create($apiContext);
     } catch (Exception $ex) {
-      $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+      $this->LoggingManager->log('DEBUG', 'Webhook', $ex);
     }    
 
     $sql_data_array = array();
@@ -337,7 +337,7 @@ class PayPalAdmin extends PayPalPayment {
       $WebhookList = $webhook->get($data['id'], $apiContext);
       $valid = true;
     } catch (Exception $ex) {
-      $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+      $this->LoggingManager->log('DEBUG', 'Webhook', $ex);
       $valid = false;
     }
 
@@ -367,7 +367,7 @@ class PayPalAdmin extends PayPalPayment {
       $WebhookList->update($patchRequest, $apiContext);
       $success = true;
     } catch (Exception $ex) {
-      $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+      $this->LoggingManager->log('DEBUG', 'Webhook', $ex);
       $success = false;
     }
        
@@ -404,7 +404,7 @@ class PayPalAdmin extends PayPalPayment {
       $WebhookList = $webhook->get($id, $apiContext);
       $valid = true;
     } catch (Exception $ex) {
-      $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+      $this->LoggingManager->log('DEBUG', 'Webhook', $ex);
       $valid = false;
     }
 
@@ -441,7 +441,7 @@ class PayPalAdmin extends PayPalPayment {
       $WebhookList = $webhook->get($id, $apiContext);
       $valid = true;
     } catch (Exception $ex) {
-      $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+      $this->LoggingManager->log('DEBUG', 'Webhook', $ex);
       $valid = false;
     }
 
@@ -449,7 +449,7 @@ class PayPalAdmin extends PayPalPayment {
       try {
         $WebhookList->delete($apiContext);
       } catch (Exception $ex) {
-        $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+        $this->LoggingManager->log('DEBUG', 'Webhook', $ex);
       }
     }
 
@@ -472,7 +472,7 @@ class PayPalAdmin extends PayPalPayment {
       $WebhookList = $webhooks_event->availableEventTypes($apiContext);
       $valid = true;
     } catch (Exception $ex) {
-      $this->LoggingManager->log(print_r($ex, true), 'DEBUG');
+      $this->LoggingManager->log('DEBUG', 'Webhook', $ex);
       $valid = false;
     }
 

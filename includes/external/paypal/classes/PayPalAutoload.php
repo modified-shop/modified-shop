@@ -14,7 +14,6 @@ class PaypalAutoload {
   
   const CLASS_PREFIX = 'PayPal';
   const CUSTOMCLASS_PREFIX = 'classes';
-  const LOGGER_PREFIX = 'Psr';
   
   public function __construct() {
     $this->register();
@@ -26,10 +25,7 @@ class PaypalAutoload {
 
   public function loadClass($class) {
     $class = ltrim($class, '\\');
-    if (substr($class, 0, strlen(self::CLASS_PREFIX)) === self::CLASS_PREFIX
-        || substr($class, 0, strlen(self::LOGGER_PREFIX)) === self::LOGGER_PREFIX
-        )
-    {
+    if (substr($class, 0, strlen(self::CLASS_PREFIX)) === self::CLASS_PREFIX) {
       require_once(DIR_FS_EXTERNAL.'paypal/lib/' . str_replace('\\', DIRECTORY_SEPARATOR, $class) . '.php');
     }
     if (substr($class, 0, strlen(self::CUSTOMCLASS_PREFIX)) === self::CUSTOMCLASS_PREFIX) {
