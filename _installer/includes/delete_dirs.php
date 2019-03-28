@@ -42,7 +42,7 @@
     'includes/classes/Smarty_2.6.27', // neu
     'includes/external/easybill',  // neu
     'includes/external/billsafe',  // neu
-    'includes/external/paypal/lib/psr',
+    'includes/external/paypal/lib/Psr',
     'includes/external/phpfastcache/3.0.0',  // neu
     'includes/external/phpfastcache/_extensions',  // neu
     'includes/external/phpmailer/language', // neu
