@@ -424,7 +424,7 @@
 
   // metaClean
   $metadata_array = array_map('metaClean', $metadata_array);
-  $metadata_array['description'] =  metaClean($metadata_array['description'], $metaDesLength);
+  $metadata_array['description'] =  ((isset($metadata_array['description'])) ? metaClean($metadata_array['description'], $metaDesLength) : '');
 
   // output metas
   if (TEMPLATE_HTML_ENGINE == 'xhtml') {
@@ -437,13 +437,13 @@
   if (TEMPLATE_RESPONSIVE == 'true') {
     echo '<meta name="viewport" content="width=device-width, user-scalable=yes" />'."\n";
   }
-  if ($metadata_array['title'] != '') {
+  if (isset($metadata_array['title']) && $metadata_array['title'] != '') {
     echo '<title>'. $metadata_array['title'] .'</title>'."\n";
   }
   if ($_SESSION['language_code'] != '' && TEMPLATE_HTML_ENGINE == 'xhtml') {
     echo '<meta http-equiv="content-language" content="'. $_SESSION['language_code'] .'" />'."\n";
   }
-  if ($metadata_array['keywords'] != '') {
+  if (isset($metadata_array['keywords']) && $metadata_array['keywords'] != '') {
     echo '<meta name="keywords" content="'. $metadata_array['keywords'] .'" />'."\n";
   }
   if ($metadata_array['description'] != '') {

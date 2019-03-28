@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: tracking.php 2812 2012-05-02 09:26:43Z gtb-modified $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -48,7 +48,7 @@ if (!isset ($_SESSION['tracking']['http_referer']['host']))  $_SESSION['tracking
 // datetime
 if (!isset ($_SESSION['tracking']['date']))  $_SESSION['tracking']['date'] = (date("Y-m-d H:i:s"));
 // browser
-if (!isset ($_SESSION['tracking']['browser']))  $_SESSION['tracking']['browser'] = strip_tags($_SERVER['HTTP_USER_AGENT']);
+if (!isset ($_SESSION['tracking']['browser']) && isset($_SERVER['HTTP_USER_AGENT']))  $_SESSION['tracking']['browser'] = strip_tags($_SERVER['HTTP_USER_AGENT']);
 
 // pageview history
 if (!isset($_SESSION['tracking']['pageview_history'])) $_SESSION['tracking']['pageview_history'] = array();
