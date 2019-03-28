@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: ot_coupon.php 1243 2010-08-31 15:27:48Z dokuman $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -29,8 +29,6 @@
   define('MODULE_ORDER_TOTAL_COUPON_TITLE', 'Discount Coupons');
   define('MODULE_ORDER_TOTAL_COUPON_HEADER', 'Gift Vouchers/Discount Coupons');
   define('MODULE_ORDER_TOTAL_COUPON_DESCRIPTION', 'Discount Coupon');
-  define('SHIPPING_NOT_INCLUDED', ' [Shipping not included]');
-  define('TAX_NOT_INCLUDED', ' [Tax not included]');
   define('MODULE_ORDER_TOTAL_COUPON_USER_PROMPT', '');
   define('ERROR_NO_INVALID_REDEEM_COUPON', 'Invalid Coupon Code');
   //BOF - DokuMan - 2010-08-31 - constants already defined in english.php

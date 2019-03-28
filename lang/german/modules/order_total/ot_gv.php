@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: ot_gv.php 899 2005-04-29 02:40:57Z hhgag $
+   $Id$
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -28,8 +28,6 @@
   define('MODULE_ORDER_TOTAL_GV_TITLE', 'Gutscheine');
   define('MODULE_ORDER_TOTAL_GV_HEADER', 'Gutscheine');
   define('MODULE_ORDER_TOTAL_GV_DESCRIPTION', 'Gutscheine');
-  define('SHIPPING_NOT_INCLUDED', ' [Versand nicht enthalten]');
-  define('TAX_NOT_INCLUDED', ' [MwSt. nicht enthalten]');
   define('MODULE_ORDER_TOTAL_GV_USER_PROMPT', 'Anw&auml;hlen, wenn Sie Ihr Guthaben verwenden m&ouml;chten');
   define('TEXT_ENTER_GV_CODE', 'Geben Sie bitte hier Ihren Gutscheincode ein &nbsp;&nbsp;');
 

@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_random_name.inc.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -23,9 +23,9 @@
     $dirname = '.';
     $length = floor(xtc_rand(16,20));
     for ($i = 1; $i <= $length; $i++) {
-     $q = floor(xtc_rand(1,26));
-     $dirname .= $letters[$q];
+      $q = floor(xtc_rand(1,25));
+      $dirname .= $letters[$q];
     }
     return $dirname;
   }
- ?>
+?>
