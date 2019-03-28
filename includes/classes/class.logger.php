@@ -46,10 +46,10 @@ class LoggingManager implements \Psr\Log\LoggerInterface
     private $stdout;
 
     /**
-     * threshold
+     * threshold default 1MB
      * @var int
      */
-    private $threshold = 1024;
+    private $threshold = 1048576;
 
     /**
      * Log fields separated by tabs to form a TSV (CSV with tabs).
