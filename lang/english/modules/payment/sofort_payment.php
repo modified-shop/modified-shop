@@ -89,24 +89,24 @@ define('MODULE_PAYMENT_'.$sofort_code.'_HASH_ALGORITHM_DESC', 'Find this under S
 define('MODULE_PAYMENT_'.$sofort_code.'_DESCRIPTION_INSTALL', '<br/><br/>Do you want to install proper order status?<br/>The currently set statuses are overwritten.');
 
 // status
-define('TEXT_NO_STATUSUPDATE', 'no status update');
+defined('TEXT_NO_STATUSUPDATE') OR define('TEXT_NO_STATUSUPDATE', 'no status update');
 
 // error
 define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_ERROR_HEADING', 'The following error was reported during the process:');
 define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_ERROR_MESSAGE', 'Payment is unfortunately not possible or has been cancelled by the customer. Please select another payment method.');
 
 // callback
-define('TEXT_SOFORT_NOT_CREDITED_YET', 'Successfully completed Online Bank Transfer.');
-define('TEXT_SOFORT_NOT_CREDITED', 'Not received money on account');
-define('TEXT_SOFORT_LOSS', 'verify the order');
-define('TEXT_SOFORT_RECEIVED', 'Received money on account');
-define('TEXT_SOFORT_CREDITED', TEXT_SOFORT_RECEIVED);
-define('TEXT_SOFORT_REFUNDED', 'Money was refunded in full');
-define('TEXT_SOFORT_CANCELED', 'Online Bank Transfer. canceled');
-define('TEXT_SOFORT_WAIT_FOR_MONEY', 'Waiting for Payment');
-define('TEXT_SOFORT_CONFIRMATION_PERIOD_EXPIRED', 'Online Bank Transfer. Timeout');
-define('TEXT_SOFORT_REJECTED', 'Online Bank Transfer. rejected');
-define('TEXT_SOFORT_SOFORT_BANK_ACCOUNT_NEEDED', TEXT_SOFORT_NOT_CREDITED_YET);
+defined('TEXT_SOFORT_NOT_CREDITED_YET') OR define('TEXT_SOFORT_NOT_CREDITED_YET', 'Successfully completed Online Bank Transfer.');
+defined('TEXT_SOFORT_NOT_CREDITED') OR define('TEXT_SOFORT_NOT_CREDITED', 'Not received money on account');
+defined('TEXT_SOFORT_LOSS') OR define('TEXT_SOFORT_LOSS', 'verify the order');
+defined('TEXT_SOFORT_RECEIVED') OR define('TEXT_SOFORT_RECEIVED', 'Received money on account');
+defined('TEXT_SOFORT_CREDITED') OR define('TEXT_SOFORT_CREDITED', TEXT_SOFORT_RECEIVED);
+defined('TEXT_SOFORT_REFUNDED') OR define('TEXT_SOFORT_REFUNDED', 'Money was refunded in full');
+defined('TEXT_SOFORT_CANCELED') OR define('TEXT_SOFORT_CANCELED', 'Online Bank Transfer. canceled');
+defined('TEXT_SOFORT_WAIT_FOR_MONEY') OR define('TEXT_SOFORT_WAIT_FOR_MONEY', 'Waiting for Payment');
+defined('TEXT_SOFORT_CONFIRMATION_PERIOD_EXPIRED') OR define('TEXT_SOFORT_CONFIRMATION_PERIOD_EXPIRED', 'Online Bank Transfer. Timeout');
+defined('TEXT_SOFORT_REJECTED') OR define('TEXT_SOFORT_REJECTED', 'Online Bank Transfer. rejected');
+defined('TEXT_SOFORT_SOFORT_BANK_ACCOUNT_NEEDED') OR define('TEXT_SOFORT_SOFORT_BANK_ACCOUNT_NEEDED', TEXT_SOFORT_NOT_CREDITED_YET);
 
 define('MODULE_PAYMENT_'.$sofort_code.'_ERROR_TRANSACTION', "Error during HTTP notification\nPlease check transaction and notification\nTransaction-ID: %s");
 define('MODULE_PAYMENT_'.$sofort_code.'_ERROR_PAYMENT', "Money NOT received yet\nTransaction-ID: %s");

@@ -40,8 +40,9 @@ class ot_klarna_fee
     function __construct()
     {
         global $order;
+        
         $this->code = 'ot_klarna_fee';
-        $this->_country = $order->delivery['country']['iso_code_2'];
+        $this->_country = ((is_object($order)) ? $order->delivery['country']['iso_code_2'] : '');
         $this->_utils = new KlarnaUtils($this->_country);
         $this->_lang = KlarnaUtils::getLanguageCode();
 
@@ -70,7 +71,7 @@ class ot_klarna_fee
             $this->title = $invFee;
         }
 
-        $this->description .= $this->_utils->translate(
+        $this->description = $this->_utils->translate(
             'ot_klarna_title', $this->_lang
         );
         $this->description

@@ -87,24 +87,24 @@ define('MODULE_PAYMENT_'.$sofort_code.'_HASH_ALGORITHM_DESC', 'Der Hash-Algorith
 define('MODULE_PAYMENT_'.$sofort_code.'_DESCRIPTION_INSTALL', '<br/><br/>Wollen Sie geeignete Bestellstatus installieren?<br/>Dabei werden die aktuell eingestellten Status &uuml;berschrieben.');
 
 // status
-define('TEXT_NO_STATUSUPDATE', 'keine Statusaktualisierung');
+defined('TEXT_NO_STATUSUPDATE') OR define('TEXT_NO_STATUSUPDATE', 'keine Statusaktualisierung');
 
 // error
 define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_ERROR_HEADING', 'Folgender Fehler wurde von Sofort. w&auml;hrend des Prozesses gemeldet:');
 define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_ERROR_MESSAGE', 'Zahlung via Sofort. ist leider nicht m&ouml;glich oder wurde auf Kundenwunsch abgebrochen. Bitte w&auml;hlen Sie eine andere Zahlungsweise.');
 
 // callback
-define('TEXT_SOFORT_NOT_CREDITED_YET', 'Sofort. erfolgreich abgeschlossen');
-define('TEXT_SOFORT_NOT_CREDITED', 'Geld nicht auf Konto eingegangen');
-define('TEXT_SOFORT_LOSS', 'Bestellung pr&uuml;fen');
-define('TEXT_SOFORT_RECEIVED', 'Geld auf Konto eingegangen');
-define('TEXT_SOFORT_CREDITED', TEXT_SOFORT_RECEIVED);
-define('TEXT_SOFORT_REFUNDED', 'Geld wurde komplett zur&uuml;ckerstattet');
-define('TEXT_SOFORT_CANCELED', 'Sofort. abgebrochen');
-define('TEXT_SOFORT_WAIT_FOR_MONEY', 'Auf Zahlungseingang warten');
-define('TEXT_SOFORT_CONFIRMATION_PERIOD_EXPIRED', 'Sofort. timeout');
-define('TEXT_SOFORT_REJECTED', 'Sofort. abgelehnt');
-define('TEXT_SOFORT_SOFORT_BANK_ACCOUNT_NEEDED', TEXT_SOFORT_NOT_CREDITED_YET);
+defined('TEXT_SOFORT_NOT_CREDITED_YET') OR define('TEXT_SOFORT_NOT_CREDITED_YET', 'Sofort. erfolgreich abgeschlossen');
+defined('TEXT_SOFORT_NOT_CREDITED') OR define('TEXT_SOFORT_NOT_CREDITED', 'Geld nicht auf Konto eingegangen');
+defined('TEXT_SOFORT_LOSS') OR define('TEXT_SOFORT_LOSS', 'Bestellung pr&uuml;fen');
+defined('TEXT_SOFORT_RECEIVED') OR define('TEXT_SOFORT_RECEIVED', 'Geld auf Konto eingegangen');
+defined('TEXT_SOFORT_CREDITED') OR define('TEXT_SOFORT_CREDITED', TEXT_SOFORT_RECEIVED);
+defined('TEXT_SOFORT_REFUNDED') OR define('TEXT_SOFORT_REFUNDED', 'Geld wurde komplett zur&uuml;ckerstattet');
+defined('TEXT_SOFORT_CANCELED') OR define('TEXT_SOFORT_CANCELED', 'Sofort. abgebrochen');
+defined('TEXT_SOFORT_WAIT_FOR_MONEY') OR define('TEXT_SOFORT_WAIT_FOR_MONEY', 'Auf Zahlungseingang warten');
+defined('TEXT_SOFORT_CONFIRMATION_PERIOD_EXPIRED') OR define('TEXT_SOFORT_CONFIRMATION_PERIOD_EXPIRED', 'Sofort. timeout');
+defined('TEXT_SOFORT_REJECTED') OR define('TEXT_SOFORT_REJECTED', 'Sofort. abgelehnt');
+defined('TEXT_SOFORT_SOFORT_BANK_ACCOUNT_NEEDED') OR define('TEXT_SOFORT_SOFORT_BANK_ACCOUNT_NEEDED', TEXT_SOFORT_NOT_CREDITED_YET);
 
 define('MODULE_PAYMENT_'.$sofort_code.'_ERROR_TRANSACTION', "Fehler beim Callback\nTransaction-ID: %s");
 define('MODULE_PAYMENT_'.$sofort_code.'_ERROR_PAYMENT', "Zahlung noch nicht erhalten\nTransaction-ID: %s");
