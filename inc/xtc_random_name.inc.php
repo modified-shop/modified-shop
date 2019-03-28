@@ -23,7 +23,7 @@
     $dirname = '.';
     $length = floor(xtc_rand(16,20));
     for ($i = 1; $i <= $length; $i++) {
-      $q = floor(xtc_rand(1,25));
+      $q = floor(xtc_rand(0,25));
       $dirname .= $letters[$q];
     }
     return $dirname;
