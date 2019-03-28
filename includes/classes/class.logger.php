@@ -46,7 +46,7 @@ class LoggingManager implements \Psr\Log\LoggerInterface
     private $stdout;
 
     /**
-     * threshold default 1MB
+     * threshold default 1MiB
      * @var int
      */
     private $threshold = 1048576;
