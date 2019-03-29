@@ -17,7 +17,10 @@
 
 
 function xtc_check_agent() {
-  if (CHECK_CLIENT_AGENT == 'true') {
+  if (CHECK_CLIENT_AGENT == 'true'
+      && isset($_SERVER['HTTP_USER_AGENT'])
+      )
+  {
     $Robots = array (
       "acme.spider",
       "ahoythehomepagefinder",
@@ -323,22 +326,16 @@ function xtc_check_agent() {
       "google-structured-data-testing-tool"
     );
     
-    if (isset($_SERVER['HTTP_USER_AGENT'])) {
-      $botID = strtolower($_SERVER['HTTP_USER_AGENT']);
-      $botID2 = strtolower(getenv("HTTP_USER_AGENT"));
-    } else {
-      $browser = get_browser(null, true);
-      $botID = strtolower($browser['browser_name_pattern']);
-    }
+    $botID = strtolower($_SERVER['HTTP_USER_AGENT']);
+    $botID2 = strtolower(getenv("HTTP_USER_AGENT"));
     
-    for ($i = 0; $i < count($Robots); $i++) {
-      if (strstr($botID, $Robots[$i]) or strstr($botID2, $Robots[$i])) {
+    for ($i=0, $n=count($Robots); $i<$n; $i++) {
+      if (strstr($botID, $Robots[$i]) || strstr($botID2, $Robots[$i])) {
         return 1;
       }
     }
-    return 0;
-  } else {
-    return 0;
   }
+  
+  return 0;
 }
 ?>
