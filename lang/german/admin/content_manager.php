@@ -46,7 +46,6 @@
  define('TEXT_STATUS_DESCRIPTION','Link in der Info Box angezeigen?');
  define('TEXT_TITLE','Titel:');
  define('TEXT_TITLE_FILE','Titel/Dateiname:');
- define('TEXT_SELECT','-Bitte w&auml;hlen-');
  define('TEXT_HEADING','&Uuml;berschrift:');
  define('TEXT_CONTENT','Text:');
  define('TEXT_UPLOAD_FILE','Datei hochladen:');
