@@ -20,7 +20,7 @@
   require_once (DIR_FS_CATALOG.'includes/classes/validpass.php');
   
   // This funstion validates a plain text password with an encrpyted password
-  function xtc_validate_password($plain, $encrypted, $customers_id) {
+  function xtc_validate_password($plain, $encrypted, $customers_id = false) {
     if (xtc_not_null($plain) && xtc_not_null($encrypted)) {
       
       $check = xtc_validate_password_collation($plain, $encrypted, $customers_id);
