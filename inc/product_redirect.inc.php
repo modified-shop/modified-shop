@@ -21,7 +21,7 @@ function product_redirect_link($products_id = false, $current_link) {
                       'RedirectionLink' => '');
 
   if ($products_id !== false) {
-    $order_by = ((defined('PRODUCTS_CANONICAL_CAT_ID') && PRODUCTS_CANONICAL_CAT_ID) ? "ORDER BY FIELD(p2c.categories_id, p.products_canonical_cat_id) DESC" : '');
+    $order_by = ((defined('PRODUCTS_CANONICAL_CAT_ID') && PRODUCTS_CANONICAL_CAT_ID) ? "ORDER BY FIELD(p2c.categories_id, p.products_canonical_cat_id) DESC" : 'ORDER BY p2c.categories_id < 1, p2c.categories_id ASC');
     $check_link_query = xtDBquery("SELECT p.products_id, 
                                           pd.products_name,
                                           p2c.categories_id
