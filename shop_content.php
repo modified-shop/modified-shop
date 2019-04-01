@@ -75,45 +75,39 @@ if ($language_not_found === true) {
   $smarty->assign('CONTENT_HEADING', (($shop_content_data['content_heading'] != '') ? $shop_content_data['content_heading'] : $shop_content_data['content_title']));
   $smarty->assign('language', $_SESSION['language']);
 
-  if ($_GET['coID'] == 7 && $content_exists == 1) {
-    include (DIR_WS_INCLUDES.'contact_us.php');
+  $content_body = '';
+  if ($content_exists == 1) {
+    $content_body = $shop_content_data['content_text'];
+    if ($shop_content_data['content_file'] != '' && is_file(DIR_FS_CATALOG.'media/content/'.$shop_content_data['content_file'])) {
+      ob_start();
+      if (strpos($shop_content_data['content_file'], '.txt'))
+        echo '<pre>';
+      include (DIR_FS_CATALOG.'media/content/'.$shop_content_data['content_file']);
+      if (strpos($shop_content_data['content_file'], '.txt'))
+        echo '</pre>';
+      $smarty->assign('file', ob_get_contents());
+      ob_end_clean();
+    }
+  }
+  $smarty->assign('CONTENT_BODY', $content_body);
+  
+  $content_template = 'content.html';
+  
+  foreach(auto_include(DIR_FS_CATALOG.'includes/extra/shop_content_end/','php') as $file) require_once ($file);
+
+  // set cache ID
+  if (!CacheCheck()) {
+    $smarty->caching = 0;
+    $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/'.$content_template);
   } else {
-    $content_body = '';
-    if ($content_exists == 1) {
-      $content_body = $shop_content_data['content_text'];
-      if ($shop_content_data['content_file'] != '' && is_file(DIR_FS_CATALOG.'media/content/'.$shop_content_data['content_file'])) {
-        ob_start();
-        if (strpos($shop_content_data['content_file'], '.txt'))
-          echo '<pre>';
-        include (DIR_FS_CATALOG.'media/content/'.$shop_content_data['content_file']);
-        if (strpos($shop_content_data['content_file'], '.txt'))
-          echo '</pre>';
-        $smarty->assign('file', ob_get_contents());
-        ob_end_clean();
-      }
-    }
-    $smarty->assign('CONTENT_BODY', $content_body);
-    
-    $content_template = 'content.html';
-    
-    foreach(auto_include(DIR_FS_CATALOG.'includes/extra/shop_content_end/','php') as $file) require_once ($file);
-
-    // set cache ID
-     if (!CacheCheck()) {
-      $smarty->caching = 0;
-      $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/'.$content_template);
-    } else {
-      $smarty->caching = 1;
-      $smarty->cache_lifetime = CACHE_LIFETIME;
-      $smarty->cache_modified_check = CACHE_CHECK;
-      $cache_id = md5($_SESSION['language'].$_SESSION['customers_status']['customers_status'].$shop_content_data['content_id'].((isset($_REQUEST['error'])) ? $_REQUEST['error'] : ''));
-      $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/'.$content_template, $cache_id);
-    }
+    $smarty->caching = 1;
+    $smarty->cache_lifetime = CACHE_LIFETIME;
+    $smarty->cache_modified_check = CACHE_CHECK;
+    $cache_id = md5($_SESSION['language'].$_SESSION['customers_status']['customers_status'].$shop_content_data['content_id'].((isset($_REQUEST['error'])) ? $_REQUEST['error'] : ''));
+    $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/'.$content_template, $cache_id);
   }
 
-  if (($_GET['coID'] != 7) || (isset($_GET['action']) && $_GET['action'] == 'success') || $content_exists == 0) {
-    require (DIR_WS_INCLUDES.'header.php');
-  }
+  require (DIR_WS_INCLUDES.'header.php');
 }
 $smarty->assign('language', $_SESSION['language']);
 $smarty->assign('main_content', $main_content);

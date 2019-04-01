@@ -64,4 +64,7 @@ ALTER TABLE orders MODIFY shipping_class VARCHAR(64) NOT NULL;
 UPDATE customers_info set customers_info_date_of_last_logon = customers_info_date_account_created WHERE customers_info_date_of_last_logon = '0000-00-00 00:00:00';
 UPDATE customers_info set customers_info_number_of_logons = 1 WHERE customers_info_number_of_logons = 0;
 
+#GTB - 2019-04-01 update contact us
+UPDATE content_manager SET content_file = 'contact_us.php' WHERE content_group = '7';
+
 # Keep an empty line at the end of this file for the db_updater to work properly

@@ -262,6 +262,7 @@
     'inc/dectobase64.inc.php',
     'includes/banners.php',
     'includes/center_modules.php',
+    'includes/contact_us.php',
     'includes/classes/class.easybill.php',
     'includes/classes/class.phpmailer.php',
     'includes/classes/class.smtp.php',

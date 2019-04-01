@@ -174,21 +174,6 @@
     $smarty->assign('BUTTON_CONTINUE', '<a href="'.xtc_href_link(FILENAME_DEFAULT).'">'.xtc_image_button('button_continue.gif', IMAGE_BUTTON_CONTINUE).'</a>');
 
   } else {
-    if ($shop_content_data['content_file'] != '') {
-      ob_start();
-      if (strpos($shop_content_data['content_file'], '.txt'))
-        echo '<pre>';
-      include (DIR_FS_CATALOG.'media/content/'.$shop_content_data['content_file']);
-      if (strpos($shop_content_data['content_file'], '.txt'))
-        echo '</pre>';
-      $contact_content = ob_get_contents();
-      ob_end_clean();
-    } else {
-      $contact_content = $shop_content_data['content_text'];
-    }
-    
-    require (DIR_WS_INCLUDES.'header.php');
-
     if (isset ($_SESSION['customer_id']) && $action == '') {
       $c_query = xtc_db_query("SELECT c.customers_email_address,
                                       c.customers_telephone,
@@ -222,17 +207,8 @@
     	$city = '';
     	$fax = '';
     }
-
-    $products_info = '';
-    if (isset($_GET['products_id']) && $_GET['products_id']  && isset($_GET['inq']) && $_GET['inq']) {
-      $product_inq = new product((int)$_GET['products_id']);
-      $products_info = defined('PRODUCT_INQUIRY') ? PRODUCT_INQUIRY . "\n" : '';
-      $products_info .= HEADER_ARTICLE . ': '. $product_inq->data['products_name'] . "\n";  
-      $products_info .= ($product_inq->data['products_model'] ? HEADER_MODEL . ': ' .$product_inq->data['products_model'] : '') . "\n";
-    }
-    if (!$error) $message_body = $products_info . "\n";
-
-    $smarty->assign('CONTACT_CONTENT', $contact_content);
+    
+    $smarty->assign('CONTACT_CONTENT', $shop_content_data['content_text']);
     $smarty->assign('FORM_ACTION', xtc_draw_form('contact_us', xtc_href_link(FILENAME_CONTENT, 'action=send&coID='.(int) $_GET['coID'], 'SSL')).secure_form());
     if (in_array('contact', $use_captcha) && (!isset($_SESSION['customer_id']) || MODULE_CAPTCHA_LOGGED_IN == 'True')) {
       $smarty->assign('VVIMG', $mod_captcha->get_image_code());
@@ -257,5 +233,10 @@
 
   $smarty->assign('language', $_SESSION['language']);
   $smarty->caching = 0;
-  $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/contact_us.html');
+  $smarty->display(CURRENT_TEMPLATE.'/module/contact_us.html');
+  
+  // clear variables
+  $smarty->clear_assign('BUTTON_CONTINUE');
+  $smarty->clear_assign('CONTENT_HEADING');
+  $content_body = '';
 ?>
