@@ -55,7 +55,7 @@ define(
 
 define("MODULE_PAYMENT_SHOPGATE_LABEL_NEW_PRODUCTS", "New products");
 define("MODULE_PAYMENT_SHOPGATE_LABEL_SPECIAL_PRODUCTS", "Special products");
-define('SHOPGATE_ORDER_CUSTOM_FIELD', 'Custom field(s) of this Shopgate order:');
+defined('SHOPGATE_ORDER_CUSTOM_FIELD') OR define('SHOPGATE_ORDER_CUSTOM_FIELD', 'Custom field(s) of this Shopgate order:');
 
 define("SHOPGATE_COUPON_ERROR_NEED_ACCOUNT", "You need do be logged in to use this coupon");
 define("SHOPGATE_COUPON_ERROR_RESTRICTED_PRODUCTS", "This coupon is restricted to special products");

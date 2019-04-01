@@ -66,7 +66,7 @@
     }
 
     $content_meta_robots = implode(', ', ((isset($content_meta_robots) && is_array($content_meta_robots)) ? $content_meta_robots : array()));    
-    if ($parent_check == 'yes') {                                     
+    if (isset($parent_check) && $parent_check == 'yes') {                                     
       $parent_query = xtc_db_query("SELECT c2.content_id,
                                            c2.languages_id
                                       FROM ".TABLE_CONTENT_MANAGER." c1
@@ -127,11 +127,11 @@
               $group_ids .= 'c_'.$customers_statuses_array[$g]['id'].'_group,';
             }
           }
-
+array_key_exists(<#mixed key#>, <#array array#>)
           $sql_data_lang_array = array('content_status' => (int)$content_status[$i][$languages[$l]['id']],
                                        'content_active' => (int)$content_active[$i][$languages[$l]['id']],
                                        'languages_id' => $languages[$l]['id'],
-                                       'parent_id' => $parent_id[$languages[$l]['id']],
+                                       'parent_id' => ((isset($parent_id) && array_key_exists($languages[$l]['id'], $parent_id)) ? $parent_id[$languages[$l]['id']] : ''),
                                        'group_ids' => $group_ids,
                                        'content_title' => $content_title[$i][$languages[$l]['id']],
                                        'content_heading' => $content_heading[$i][$languages[$l]['id']],

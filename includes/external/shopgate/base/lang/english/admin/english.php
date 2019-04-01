@@ -150,7 +150,7 @@ define('SHOPGATE_PLUGIN_FIELD_AVAILABLE_TEXT_AVAILABLE_ON_DATE', 'Available on #
 
 ### Orders Import ###
 define('SHOPGATE_CONFIG_ORDER_IMPORT_SETTINGS', 'Importing Orders');
-define('SHOPGATE_ORDER_CUSTOM_FIELD', 'Custom field(s) of this Shopgate order:');
+defined('SHOPGATE_ORDER_CUSTOM_FIELD') OR define('SHOPGATE_ORDER_CUSTOM_FIELD', 'Custom field(s) of this Shopgate order:');
 
 define('SHOPGATE_CONFIG_EXTENDED_CUSTOMER_GROUP', 'Customer group');
 define('SHOPGATE_CONFIG_EXTENDED_CUSTOMER_GROUP_DESCRIPTION', 'Choose the Shopgate customer group (the customer group that all guest customers will be set to on importing orders).');
