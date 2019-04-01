@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: download.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $   
+   $Id$   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -140,6 +140,7 @@ if (isset ($_GET['order']) && is_numeric($_GET['order']) && isset ($_GET['id']) 
               // This will work on all systems, but will need considerable resources
               // We could also loop with fread($fp, 4096) to save memory
               readfile_chunked(DIR_FS_DOWNLOAD . $downloads['orders_products_filename'], $chunksize);
+              exit();
             }
           }
         } else {
