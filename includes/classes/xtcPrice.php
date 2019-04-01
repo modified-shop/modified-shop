@@ -83,7 +83,11 @@ class xtcPrice {
     $zones_query = xtDBquery("SELECT tax_class_id as class FROM " . TABLE_TAX_CLASS);
     while ($zones_data = xtc_db_fetch_array($zones_query, true)) {
       // calculate tax based on shipping or deliverey country (for downloads)
-      if (isset($_SESSION['billto']) && isset($_SESSION['sendto'])) {
+      if (isset($this->content_type) 
+          && isset($_SESSION['billto']) 
+          && isset($_SESSION['sendto'])
+          )
+      {
         $tax_address_query = xtc_db_query("SELECT ab.entry_country_id,
                                                   ab.entry_zone_id
                                              FROM " . TABLE_ADDRESS_BOOK . " ab
