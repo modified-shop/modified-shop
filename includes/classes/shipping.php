@@ -126,7 +126,7 @@
             if ($module == $class && $GLOBALS[$class]->enabled) {
               $include_quotes[] = $class;
             }
-          } elseif ($GLOBALS[$class]->enabled) {
+          } elseif (isset($GLOBALS[$class]) && $GLOBALS[$class]->enabled) {
             $include_quotes[] = $class;
           }
         }

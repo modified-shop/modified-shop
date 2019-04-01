@@ -163,6 +163,7 @@ class ot_gv {
   function apply_credit() {
     global $order, $coupon_no, $xtPrice;
     
+    $gv_amount = 0;
     if (isset ($_SESSION['cot_gv']) && $_SESSION['cot_gv'] == true) {
       $gv_query = xtc_db_query("SELECT amount 
                                   FROM ".TABLE_COUPON_GV_CUSTOMER." 
@@ -173,6 +174,7 @@ class ot_gv {
                        SET amount = '".$gv_amount."' 
                      WHERE customer_id = '".(int)$_SESSION['customer_id']."'");
     }
+    
     return $gv_amount;
   }
 
