@@ -213,7 +213,7 @@ class easycredit {
     }
     
     if ((!isset($_POST['ec_conditions']) || $_POST['ec_conditions'] == false) && !isset($_GET['ec_conditions'])) {
-      $error = str_replace('\n', '<br />', MODULE_PAYMENT_PAYPALINSTALLMENT_TEXT_ERROR_CHECKBOX);
+      $error = str_replace('\n', '<br />', MODULE_PAYMENT_EASYCREDIT_TEXT_ERROR_CHECKBOX);
       xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode($error), 'SSL', true, false));
     }
 

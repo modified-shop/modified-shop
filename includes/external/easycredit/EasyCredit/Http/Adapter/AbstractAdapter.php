@@ -228,7 +228,7 @@ abstract class AbstractAdapter
         $query = null;
 
         if ($this->method === Request::METHOD_GET) {
-            $query = '?'.http_build_query($this->getParameters());
+            $query = '?'.http_build_query($this->getParameters(), '', '&');
         }
 
         $port = ':'.$this->getPort();
