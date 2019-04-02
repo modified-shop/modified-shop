@@ -271,7 +271,7 @@ switch ($category_depth) {
                               AND p2c.categories_id = '".(int)$_GET['filter_id']."' ";
       }
     } else {
-      if (basename($PHP_SELF) == FILENAME_DEFAULT) {
+      if (basename($PHP_SELF) == FILENAME_DEFAULT && $subcat_list != '') {
         // show the products in a given categorie
         $from   .= "JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
                          ON p2c.products_id = pd.products_id
