@@ -80,7 +80,7 @@
                                          WHERE banners_id = '" . (int)$banners_id . "'");
           $banner = xtc_db_fetch_array($banner_query);
           $image_location = DIR_FS_CATALOG_IMAGES . 'banner/'.$banner['banners_image'];
-          if (file_exists($image_location)) {
+          if (is_file($image_location)) {
             @unlink($image_location);
           }          
         }
