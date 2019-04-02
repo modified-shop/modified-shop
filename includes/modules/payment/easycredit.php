@@ -340,7 +340,7 @@ class easycredit {
       $calculator_link = sprintf(ecConfig::EXAMPLE_CALCULATION_LINK, $this->webshopId, $amount);
       
       $separator = '?';
-      if (strpos($ContractInfoURL, $separator) !== false) {
+      if (strpos($calculator_link, $separator) !== false) {
         $separator = '&';
       }
       $calculator_link .= (($this->link_parameters != '') ? $separator.$this->link_parameters : '');
