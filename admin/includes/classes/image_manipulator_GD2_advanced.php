@@ -1,6 +1,6 @@
 <?php
   /* ----------------------------------------------------------------------------------------
-   $Id: image_manipulator_GD2.php 3072 2012-06-18 15:01:13Z hhacker $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -376,6 +376,7 @@
               // Keep transparent color
               $transcol = imagecolortransparent($this->s);
               imagecolortransparent($this->t, $transcol);
+              $this->sharpen();
               imagegif($this->t, $this->d);
               break;
 
@@ -383,12 +384,14 @@
             case 3:
               imagealphablending($this->t, true);
               imagesavealpha($this->t, true);
+              $this->sharpen();
               imagepng($this->t, $this->d);
               break;
 
             // Other images
             default:
               imageinterlace($this->t, true);
+              $this->sharpen();
               imagejpeg($this->t, $this->d, $this->e);
           }
           ob_end_clean();
@@ -428,6 +431,26 @@
       }
             
       return $resource_file;     
+    }
+    
+    function sharpen() {
+      $sharpen = array(
+        array(-1.2, -1, -1.2),
+        array(-1.0, 20, -1.0),
+        array(-1.2, -1, -1.2) 
+      );
+
+      if(is_file('includes/modules/image_sharpen.php')) {
+        require_once ('includes/modules/image_sharpen.php');
+      }
+      
+      if (is_array($sharpen) && count($sharpen) == 3) {
+        // calculate the sharpen divisor
+        $divisor = array_sum(array_map('array_sum', $sharpen));
+      
+        // sharpen the image
+        imageconvolution($this->t, $sharpen, $divisor, 0);
+      }
     }
 
   }
