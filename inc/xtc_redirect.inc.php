@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_redirect.inc.php 5462 2013-09-03 13:10:26Z Tomcraft $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -26,7 +26,7 @@
     }
 
     $_SESSION['REFERER'] = '';
-    if (strpos($PHP_SELF, 'admin') === false &&
+    if (strpos($PHP_SELF, ((defined('DIR_ADMIN')) ? DIR_ADMIN : 'admin')) === false &&
         strpos($PHP_SELF, FILENAME_CHECKOUT_SUCCESS) === false &&
         strpos($PHP_SELF, FILENAME_LOGIN) === false &&
         strpos($PHP_SELF, FILENAME_PASSWORD_DOUBLE_OPT) === false)
