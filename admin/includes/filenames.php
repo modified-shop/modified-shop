@@ -10,6 +10,9 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+require_once(DIR_FS_INC.'auto_include.inc.php');
+foreach(auto_include(DIR_FS_ADMIN.'includes/extra/filenames/','php') as $file) require ($file);
+
 // define the filenames used in the project
 define('FILENAME_ACCOUNTING', 'accounting.php');
 define('FILENAME_BACKUP', 'backup.php');
@@ -93,7 +96,4 @@ define('FILENAME_DOWNLOAD', 'download.php');
 define('FILENAME_BLACKLIST_LOGS', 'blacklist_logs.php');
 define('FILENAME_NEWSLETTER_RECIPIENTS', 'newsletter_recipients.php');
 define('FILENAME_CHECKOUT_PROCESS', '../checkout_process.php');
-
-require_once(DIR_FS_INC.'auto_include.inc.php');
-foreach(auto_include(DIR_FS_ADMIN.'includes/extra/filenames/','php') as $file) require ($file);
 ?>
