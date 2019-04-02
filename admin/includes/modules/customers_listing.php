@@ -161,6 +161,7 @@
                                                ON c.customers_id = cgc.customer_id
                                          WHERE c.customers_default_address_id = a.address_book_id
                                                ".$search."
+                                      GROUP BY c.customers_id
                                                ".$sort;
 
                 $customers_split = new splitPageResults($_GET['page'], $page_max_display_results, $customers_query_raw, $customers_query_numrows);
