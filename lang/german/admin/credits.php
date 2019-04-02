@@ -24,6 +24,7 @@ define('TEXT_HEADING_GPL', 'Ver&ouml;ffentlicht unter der GNU General Public Lic
 define('TEXT_INFO_GPL', 'Die Ver&ouml;ffentlichung dieses Programms erfolgt in der Hoffnung, dass es Ihnen von Nutzen sein wird, aber <strong>OHNE JEDE GEW&Auml;HRLEISTUNG</strong><br /> - sogar ohne die implizite Gew&auml;hrleistung der <strong>MARKTREIFE</strong> oder der <strong>EIGNUNG F&Uuml;R EINEN BESTIMMTEN ZWECK</strong>.<br /> Details finden Sie in der GNU General Public License.<br /><br /> Sie sollten eine Kopie der GNU General Public License zusammen mit diesem Programm erhalten haben.<br />Falls nicht, schreiben Sie an die Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.<br />Einzelheiten (in Englisch) hier: <a rel="nofollow noopener" style="font-size: 12px; text-decoration: underline;" href="http://www.gnu.org/licenses/gpl-2.0.html" target="_blank">http://www.gnu.org/licenses/gpl-2.0.html</a>.');
 
 define('TEXT_HEADING_DEVELOPERS', 'Entwickler der modified eCommerce Shopsoftware:');
+define('TEXT_HEADING_FORMER_DEVELOPERS', 'Ehemalige Entwickler der modified eCommerce Shopsoftware:');
 define('TEXT_HEADING_SUPPORT', 'Unterst&uuml;tzen Sie die Weiterentwicklung:');
 define('TEXT_HEADING_DONATIONS', 'Spenden:');
 define('TEXT_HEADING_BASED_ON', 'Die Shopsoftware basiert auf:');

@@ -25,6 +25,7 @@ define('TEXT_INFO_UPDATE_NOT_POSSIBLE', '<div class="error_message">Leider konnt
 define('TEXT_INFO_UPDATE', '<div class="success_message">Ihre Version ist aktuell.</div>');
 
 define('TEXT_HEADING_DEVELOPERS', 'Entwickler der modified eCommerce Shopsoftware:');
+define('TEXT_HEADING_FORMER_DEVELOPERS', 'Ehemalige Entwickler der modified eCommerce Shopsoftware:');
 define('TEXT_HEADING_SUPPORT', 'Unterst&uuml;tzen Sie die Weiterentwicklung:');
 define('TEXT_HEADING_DONATIONS', 'Spenden:');
 define('TEXT_HEADING_BASED_ON', 'Die Shopsoftware basiert auf:');
