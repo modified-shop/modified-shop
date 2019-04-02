@@ -537,6 +537,36 @@
   }
 
   /**
+   * xtc_cfg_pull_down_language_code()
+   *
+   * @param mixed $language_code
+   * @param string $key
+   * @return
+   */
+  function xtc_cfg_pull_down_language_code($language_code, $key = '') {
+    $name = (($key) ? 'configuration['.$key.']' : 'configuration_value');
+    
+    $languages_array = array();
+    $languages_query = xtc_db_query("SELECT languages_id,
+                                            name,
+                                            code,
+                                            image,
+                                            directory
+                                       FROM ".TABLE_LANGUAGES."
+                                      WHERE status = '1'
+                                   ORDER BY sort_order");
+
+    while ($languages = xtc_db_fetch_array($languages_query)) {
+      $languages_array[] = array (
+        'id' => $languages['code'],
+        'text' => $languages['name'],
+      );
+    }
+    
+    return xtc_draw_pull_down_menu($name, $languages_array, $language_code);
+  }
+
+  /**
    * xtc_get_categories_name()
    *
    * @param mixed $category_id

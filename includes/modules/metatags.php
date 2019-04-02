@@ -534,7 +534,7 @@
   if (SEARCH_ENGINE_FRIENDLY_URLS == 'true' && $set_hreflang && count($lng->catalog_languages) > 1 && (!isset($_GET['page']) || $_GET['page'] == 1)) {
     $canonical_flag = true;
     $x_default_flag = true;
-    $x_default_lng = 'en'; //DEFAULT_LANGUAGE
+    $x_default_lng = ((defined('META_X_DEFAULT')) ? META_X_DEFAULT : 'en');
     $x_default_link = xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params_include(array('products_id', 'cPath', 'manufacturers_id', 'coID')).'language='.$x_default_lng, 'NONSSL', false);
     if ($x_default_link != '#') {
       $meta_alternate['x-default'] = '<link rel="alternate" href="'.$x_default_link.'" hreflang="x-default" />';

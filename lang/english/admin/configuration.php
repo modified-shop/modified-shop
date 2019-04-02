@@ -978,6 +978,8 @@ define('META_GOOGLE_VERIFICATION_KEY_TITLE', 'Google Verification Key');
 define('META_GOOGLE_VERIFICATION_KEY_DESC', '<meta name="google-site-verification">');
 define('META_BING_VERIFICATION_KEY_TITLE', 'Bing Verification Key');
 define('META_BING_VERIFICATION_KEY_DESC', '<meta name="msvalidate.01">');
+define('META_X_DEFAULT_TITLE', 'Default language');
+define('META_X_DEFAULT_DESC', 'Set the most widely used language in multilingual shops.');
 
 define('GOOGLE_CONVERSION_TITLE','Google Conversion Tracking');
 define('GOOGLE_CONVERSION_DESC','Track conversion keywords on orders');
