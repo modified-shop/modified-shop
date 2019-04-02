@@ -33,7 +33,7 @@ FileETag None
 
 ##-- Enable the compression for any type of content
 <IfModule mod_deflate.c>
-  <FilesMatch "\\.(js|css|html|htm|php|xml|jpg|jpeg|png|gif|svg|woff|woff2|ttf|otf|eot)$">
+  <FilesMatch "\\.(js|css|html|htm|php|xml|ico|jpg|jpeg|png|gif|svg|woff|woff2|ttf|otf|eot)$">
     SetOutputFilter DEFLATE
   </FilesMatch>
 </IfModule>
