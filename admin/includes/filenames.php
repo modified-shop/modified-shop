@@ -11,7 +11,7 @@
    ---------------------------------------------------------------------------------------*/
 
 require_once(DIR_FS_INC.'auto_include.inc.php');
-foreach(auto_include(DIR_FS_ADMIN.'includes/extra/filenames/' => 'php') as $file) require ($file);
+foreach(auto_include(DIR_FS_ADMIN.'includes/extra/filenames/', 'php') as $file) require ($file);
 
 $filename_array = array(
   'FILENAME_ACCOUNTING' => 'accounting.php',
