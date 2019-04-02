@@ -51,11 +51,11 @@ var state = '';
 var min_length = <?php echo (ENTRY_STATE_MIN_LENGTH > 0 ? 1 : 0)?>;
 
 function show_state() {
-  $("[name='state']").parent().parent().show();
+  $("[name='state']").parent().parent().parent().show();
   $("[name='state']").prop('type', 'text'); //fix for check_form in form_check.js.php
 }
 function hide_state() {
-  $("[name='state']").parent().parent().hide();
+  $("[name='state']").parent().parent().parent().hide();
   $("[name='state']").prop('type', 'hidden'); //fix for check_form in form_check.js.php
 }
 
@@ -97,7 +97,7 @@ function load_state() {
         }).appendTo(stateSelect);
       });
       $("[name='state']").val(state);
-      stateSelect.parent().parent().show();
+      stateSelect.parent().parent().parent().show();
     } else {
       $("[name='state']").replaceWith('<input type="text" name="state"></input>');
       if (min_length) {
