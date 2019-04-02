@@ -18,6 +18,9 @@
   
   if ($paypal_installment->enabled === true
       && $country['countries_iso_code_2'] == 'DE'
+      && ($_SESSION['customers_status']['customers_status_show_price_tax'] != '1'
+          || $_SESSION['customers_status']['customers_status_add_tax_ot'] != '0'
+          )
       ) 
   {
     $amount = $_SESSION['cart']->show_total(); 

@@ -18,6 +18,9 @@
   
   if ($paypal_installment->enabled === true
       && $country['countries_iso_code_2'] == 'DE'
+      && ($_SESSION['customers_status']['customers_status_show_price_tax'] != '1'
+          || $_SESSION['customers_status']['customers_status_add_tax_ot'] != '0'
+          )
       ) 
   {
     $amount = $xtPrice->xtcGetPrice($product->data['products_id'], false, 1, $product->data['products_tax_class_id'], $product->data['products_price']); 
