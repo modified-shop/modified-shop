@@ -151,7 +151,7 @@
 
     // make a connection to the database... now
     xtc_db_connect() or die('Unable to connect to database server!');
-    xtc_db_query("SET storage_engine = MYISAM");
+    xtc_db_query("SET default_storage_engine = MYISAM");
     
     if ($_GET['action'] == 'restorenow' || $_GET['action'] == 'restoredb') {
       define('_VALID_XTC', true);
