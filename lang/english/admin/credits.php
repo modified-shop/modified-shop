@@ -24,6 +24,7 @@ define('TEXT_HEADING_GPL', 'Released under the GNU General Public License (Versi
 define('TEXT_INFO_GPL', 'This program is distributed in the hope that it will be useful, but <strong>WITHOUT ANY WARRANTY</strong>;<br />without even the implied warranty of <strong>MERCHANTABILITY</strong> or <strong>FITNESS FOR A PARTICULAR PURPOSE</strong>.<br />See the GNU General Public License for more details.<br /><br /> You should have received a copy of the<br />GNU General Public License along with this program; if not, write to the<br />Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.<br />See <a rel="nofollow noopener" style="font-size: 12px; text-decoration: underline;" href="http://www.gnu.org/licenses/gpl-2.0.html" target="_blank">http://www.gnu.org/licenses/gpl-2.0.html</a> for details. ');
 
 define('TEXT_HEADING_DEVELOPERS', 'Developers of the modified eCommerce Shopsoftware:');
+define('TEXT_HEADING_FORMER_DEVELOPERS', 'Former Developers of the modified eCommerce Shopsoftware:');
 define('TEXT_HEADING_SUPPORT', 'Please support further development:');
 define('TEXT_HEADING_DONATIONS', 'Donations:');
 define('TEXT_HEADING_BASED_ON', 'The shop software is based on:');
