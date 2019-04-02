@@ -20,7 +20,7 @@ foreach(auto_include(DIR_FS_CATALOG.'includes/extra/filenames/','php') as $file)
 
 //compatibility for modified eCommerce Shopsoftware 1.06 files
 if (!defined('DIR_ADMIN')) {
-  'DIR_ADMIN','admin/');
+  define('DIR_ADMIN', 'admin/');
 }
 
 $filename_array = array(
