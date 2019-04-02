@@ -25,7 +25,7 @@ class product {
    * @return product
    */
   function __construct($pID = 0) {
-    global $xtPrice;
+    global $xtPrice, $main;
 
     require_once (DIR_FS_CATALOG.'includes/classes/productModules.class.php');
     $this->productModules = new productModules();
@@ -51,7 +51,14 @@ class product {
     // default products image
     $this->useStandardImage = PRODUCT_IMAGE_SHOW_NO_IMAGE;
     $this->standardImage = 'noimage.gif';
-
+    
+    // default values
+    if (!is_object($main)) {
+      require_once(DIR_FS_CATALOG.'includes/classes/main.php');
+      $main = new main($_SESSION['languages_id']);
+    }
+    $this->ShippingLink = $main->getShippingLink();
+    
     if ($pID == 0) {
       $this->isProduct = false;
       return;
@@ -553,7 +560,7 @@ class product {
       'PRODUCTS_IMAGE_ALT' => str_replace(array('"', "'"), array('&quot;', '&apos;'), $array['products_name']), // Currently not in use
       'PRODUCTS_LINK' => $products_link,
       'PRODUCTS_TAX_INFO' => $main->getTaxInfo($tax_rate),
-      'PRODUCTS_SHIPPING_LINK' => $main->getShippingLink(),
+      'PRODUCTS_SHIPPING_LINK' => $this->ShippingLink,
       'PRODUCTS_BUTTON_BUY_NOW' => $buy_now,
       'PRODUCTS_SHIPPING_NAME' => $shipping_status_name,
       'PRODUCTS_SHIPPING_IMAGE' => $shipping_status_image,
