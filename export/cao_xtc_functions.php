@@ -429,22 +429,20 @@ function SendOrders ()
                  '<PRODUCTS_TAX>' . $products['products_tax'] . '</PRODUCTS_TAX>' . "\n".
                  '<PRODUCTS_TAX_FLAG>' . $products['allow_tax'] . '</PRODUCTS_TAX_FLAG>' . "\n";
 
-      $attributes_query = xtc_db_query("select products_options, products_options_values, options_values_price, price_prefix from " . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . " where orders_id = '" .$orders['orders_id'] . "' and orders_products_id = '" . $products['orders_products_id'] . "'");
+      $attributes_query = xtc_db_query("select products_options, products_options_values, options_values_price, attributes_model, price_prefix from " . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . " where orders_id = '" .$orders['orders_id'] . "' and orders_products_id = '" . $products['orders_products_id'] . "'");
       if (xtc_db_num_rows($attributes_query))
       {
         while ($attributes = xtc_db_fetch_array($attributes_query))
         {
-          require_once(DIR_FS_INC . 'xtc_get_attributes_model.inc.php');
-          $attributes_model =xtc_get_attributes_model($products['products_id'],$attributes['products_options'],$attributes['products_options_values']);
           $schema .= '<OPTION>' . "\n" .
-                     '<PRODUCTS_OPTIONS>' .  encode_htmlspecialchars($attributes['products_options']) . '</PRODUCTS_OPTIONS>' . "\n" .
-                     '<PRODUCTS_OPTIONS_VALUES>' .  encode_htmlspecialchars($attributes['products_options_values']) . '</PRODUCTS_OPTIONS_VALUES>' . "\n" .
-                     '<PRODUCTS_OPTIONS_MODEL>'.$attributes_model.'</PRODUCTS_OPTIONS_MODEL>'. "\n".
-                     '<PRODUCTS_OPTIONS_PRICE>' .  $attributes['price_prefix'] . ' ' . $attributes['options_values_price'] . '</PRODUCTS_OPTIONS_PRICE>' . "\n" .
+                     '<PRODUCTS_OPTIONS>' . encode_htmlspecialchars($attributes['products_options']) . '</PRODUCTS_OPTIONS>' . "\n" .
+                     '<PRODUCTS_OPTIONS_VALUES>' . encode_htmlspecialchars($attributes['products_options_values']) . '</PRODUCTS_OPTIONS_VALUES>' . "\n" .
+                     '<PRODUCTS_OPTIONS_MODEL>' . encode_htmlspecialchars($attributes['attributes_model']) . '</PRODUCTS_OPTIONS_MODEL>'. "\n".
+                     '<PRODUCTS_OPTIONS_PRICE>' . $attributes['price_prefix'] . ' ' . $attributes['options_values_price'] . '</PRODUCTS_OPTIONS_PRICE>' . "\n" .
                      '</OPTION>' . "\n";
         }
       }
-      $schema .=  '</PRODUCT>' . "\n";
+      $schema .=  '</PRODUCT>' . "\n";      
     }
     $schema .= '</ORDER_PRODUCTS>' . "\n";
     $schema .= '<ORDER_TOTAL>' . "\n";
