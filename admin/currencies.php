@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: currencies.php 5201 2013-07-22 11:57:22Z Tomcraft $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -85,15 +85,19 @@
       case 'update':
         $currency_query = xtc_db_query("select currencies_id, code, title from " . TABLE_CURRENCIES);
         while ($currency = xtc_db_fetch_array($currency_query)) {
-          $quote_function = 'quote_' . CURRENCY_SERVER_PRIMARY . '_currency'; //default quote_yahooapis_currency() in localization.php
-          $rate = $quote_function($currency['code']);
-          if ( empty($rate) && (xtc_not_null(CURRENCY_SERVER_BACKUP) )) {
-            $messageStack->add_session(sprintf(WARNING_PRIMARY_SERVER_FAILED, CURRENCY_SERVER_PRIMARY, $currency['title'], $currency['code']), 'warning');
-            $quote_function = 'quote_' . CURRENCY_SERVER_BACKUP . '_currency'; //default quote_cryptonator_currency() in localization.php
-            $rate = $quote_function($currency['code']);
+          $rate = quote_primary_currency($currency['code']);
+          if ($rate === false) {
+            $rate = quote_secondary_currency($currency['code']);
           }
-          if (is_numeric($rate) && $rate > 0) {
-            xtc_db_query("update " . TABLE_CURRENCIES . " set value = '" . $rate . "', last_updated = now() where currencies_id = '" . (int)$currency['currencies_id'] . "'");
+          if ($rate === false) {
+            $rate = quote_fallback_currency($currency['code']);
+          }
+          if ($rate !== false && $rate > 0) {
+            $sql_data_array = array(
+              'value' => $rate,
+              'last_updated' => 'now()',
+            );
+            xtc_db_perform(TABLE_CURRENCIES, $sql_data_array, 'update', "currencies_id = '" . (int)$currency['currencies_id'] . "'");
             $messageStack->add_session(sprintf(TEXT_INFO_CURRENCY_UPDATED, $currency['title'], $currency['code']), 'success');
           } else {
             $messageStack->add_session(sprintf(ERROR_CURRENCY_INVALID, $currency['title'], $currency['code']), 'error');
