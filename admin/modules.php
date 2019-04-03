@@ -558,9 +558,9 @@ if (xtc_not_null($action) && !$box) {
                 $heading[] = array('text' => '<b>' . $mInfo->title . '</b>');
                 $contents = array('form' => (isset($mInfo->properties['form_edit']) ? $mInfo->properties['form_edit'] : xtc_draw_form('modules', FILENAME_MODULES, 'set=' . $set . '&module=' . $module_class . '&action=save')));
                 $contents[] = array('text' => $keys);
-                $contents[] = method_exists($module,'display') ? $module->display() : '';
+                $contents[] = method_exists($module,'display') ? $module->display() : array();
                 $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $module_class) . '">' . BUTTON_CANCEL . '</a>');
-                $contents[] = method_exists($module,'display_end') ? $module->display_end() : '';
+                $contents[] = method_exists($module,'display_end') ? $module->display_end() : array();
                 break;
 
               default:
