@@ -284,7 +284,7 @@ CREATE TABLE cm_file_flags (
 DROP TABLE IF EXISTS configuration;
 CREATE TABLE configuration (
   configuration_id INT NOT NULL AUTO_INCREMENT,
-  configuration_key VARCHAR(64) NOT NULL,
+  configuration_key VARCHAR(128) NOT NULL,
   configuration_value text NOT NULL,
   configuration_group_id INT NOT NULL,
   sort_order INT(5) NULL,
@@ -646,7 +646,7 @@ CREATE TABLE manufacturers_info (
 DROP TABLE IF EXISTS module_backup;
 CREATE TABLE module_backup (
   configuration_id int(11) NOT NULL AUTO_INCREMENT,
-  configuration_key varchar(64) NOT NULL,
+  configuration_key varchar(128) NOT NULL,
   configuration_value text NOT NULL,
   last_modified datetime DEFAULT NULL,
   PRIMARY KEY (configuration_id),
