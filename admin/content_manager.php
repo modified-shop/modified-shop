@@ -127,7 +127,7 @@
               $group_ids .= 'c_'.$customers_statuses_array[$g]['id'].'_group,';
             }
           }
-array_key_exists(<#mixed key#>, <#array array#>)
+
           $sql_data_lang_array = array('content_status' => (int)$content_status[$i][$languages[$l]['id']],
                                        'content_active' => (int)$content_active[$i][$languages[$l]['id']],
                                        'languages_id' => $languages[$l]['id'],
