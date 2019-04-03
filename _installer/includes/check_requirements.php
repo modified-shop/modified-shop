@@ -41,21 +41,30 @@
   if (function_exists('curl_init')) {
     $status = true;
     $curl_version = curl_version();
-
-    // check for SSL Version
-    $ch = curl_init('https://www.howsmyssl.com/a/check');
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    $data = curl_exec($ch);
-    curl_close($ch);
-    $json = json_decode($data);
-    if (is_object($json)) {
-      $ssl_version = $json->tls_version;
-    }
-    if (version_compare(preg_replace('/[^0-9.]/', '', $ssl_version), SSL_VERSION_MIN, "<")) {
-      $status_tls = false;
-      $error = true;
+    $remote_address = xtc_get_ip_address();
+    
+    if (substr($remote_address, 0, 4) != '127.' 
+        && $remote_address != '::1' 
+        && strpos($_SERVER['SERVER_NAME'], 'localhost') === false
+        )
+    {
+      // check for SSL Version
+      $ch = curl_init('https://www.howsmyssl.com/a/check');
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+      $data = curl_exec($ch);
+      curl_close($ch);
+      $json = json_decode($data);
+      if (is_object($json)) {
+        $ssl_version = $json->tls_version;
+      }
+      if (version_compare(preg_replace('/[^0-9.]/', '', $ssl_version), SSL_VERSION_MIN, "<")) {
+        $status_tls = false;
+        $error = true;
+      } else {
+        $status_tls = true;
+      }
     } else {
-      $status_tls = true;
+      $status_tls = false;
     }
   } else {
     $error = true;
