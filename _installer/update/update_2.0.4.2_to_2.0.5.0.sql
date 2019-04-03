@@ -71,4 +71,7 @@ UPDATE content_manager SET content_file = 'contact_us.php' WHERE content_group =
 ALTER TABLE module_backup MODIFY configuration_key VARCHAR(128) NOT NULL;
 ALTER TABLE configuration MODIFY configuration_key VARCHAR(128) NOT NULL;
 
+#GTB - 2019-04-03 - fix #1541
+ALTER TABLE content_manager MODIFY content_text longtext NOT NULL;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
