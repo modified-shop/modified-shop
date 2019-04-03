@@ -316,7 +316,7 @@ CREATE TABLE content_manager (
   languages_id INT(11) NOT NULL,
   content_title TEXT NOT NULL,
   content_heading TEXT NOT NULL,
-  content_text TEXT NOT NULL,
+  content_text longtext NOT NULL,
   sort_order INT(4) NOT NULL DEFAULT 0,
   file_flag INT(1) NOT NULL DEFAULT 0,
   content_file VARCHAR(255) NOT NULL DEFAULT '',
