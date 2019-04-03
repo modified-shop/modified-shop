@@ -36,7 +36,7 @@ $payone->log(print_r($_POST, true), $logfile);
 
 // include language
 require_once (DIR_WS_CLASSES.'language.php');
-$lng = new language(xtc_input_validation(DEFAULT_LANGUAGE, 'char', ''));
+$lng = new language(xtc_input_validation(DEFAULT_LANGUAGE, 'lang', ''));
 require_once (DIR_FS_EXTERNAL.'payone/lang/'.$lng->language['directory'].'.php');
 
 // make callback

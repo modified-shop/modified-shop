@@ -29,6 +29,9 @@
                 case 'char':
                         $replace_param='/[^a-zA-Z]/';
                         break;
+                case 'lang':
+                        $replace_param='/[^a-zA-Z_]/';
+                        break;
                 case 'products_id':
                         $replace_param='/[^0-9\{\}]/';
                         break;

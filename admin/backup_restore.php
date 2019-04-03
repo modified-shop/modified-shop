@@ -106,12 +106,12 @@
   if (!isset($_SESSION['language']) || isset($_GET['language']) || (isset($_SESSION['language']) && !isset($_SESSION['language_charset']))) {
     require_once (DIR_WS_CLASSES.'language.php');
     if (isset($_GET['language'])) {
-      $_GET['language'] = xtc_input_validation($_GET['language'], 'char', '');
+      $_GET['language'] = xtc_input_validation($_GET['language'], 'lang', '');
       $lng = new language($_GET['language']);
     } elseif (isset($_SESSION['language'])) {
-      $lng = new language(xtc_input_validation($_SESSION['language'], 'char', ''));
+      $lng = new language(xtc_input_validation($_SESSION['language'], 'lang', ''));
     } else {
-      $lng = new language(xtc_input_validation(DEFAULT_LANGUAGE, 'char', ''));
+      $lng = new language(xtc_input_validation(DEFAULT_LANGUAGE, 'lang', ''));
       if (defined('USE_BROWSER_LANGUAGE') && USE_BROWSER_LANGUAGE == 'true') {
         $lng->get_browser_language();
       }

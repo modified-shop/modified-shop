@@ -33,7 +33,7 @@ if (!isset($_GET['shop']) || $_GET['shop'] != FL_SHOP_ID) {
 // set language
 $lang = FL_LANG;
 if (isset($_GET['language'])) {
-  $lang = xtc_input_validation($_GET['language'], 'char', '');
+  $lang = xtc_input_validation($_GET['language'], 'lang', '');
 }
 $language = new language($lang);
 define("FL_LANG_ID", $language->language['id']);

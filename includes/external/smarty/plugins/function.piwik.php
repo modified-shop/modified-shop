@@ -47,7 +47,7 @@ function smarty_function_piwik($params, $smarty) {
   }
 
   require_once (DIR_WS_CLASSES.'language.php');
-  $piwik_lang = new language(xtc_input_validation(DEFAULT_LANGUAGE, 'char', ''));
+  $piwik_lang = new language(xtc_input_validation(DEFAULT_LANGUAGE, 'lang', ''));
   $piwik_language_id = $piwik_lang->language['id'];
 
   $url = str_replace(array('http://', 'https://'), '', $url);
