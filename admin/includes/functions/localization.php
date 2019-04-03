@@ -20,28 +20,47 @@
   // include needed function
   require_once(DIR_FS_INC.'get_external_content.inc.php');
 
-  function quote_yahooapis_currency($to, $from = DEFAULT_CURRENCY) {
-    return false;
-    
-    // yahoo is deprecated
-    $url = 'https://query.yahooapis.com/v1/public/yql?q=select%20Rate%20from%20yahoo.finance.xchange%20where%20pair%20%3D%20%22'.$from.$to.'%22&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys';
+  function quote_primary_currency($to, $from = DEFAULT_CURRENCY) {
+    $url = 'https://api.fixer.io/latest?base=' . $from . '&symbols=' . $to;
     $currency = get_external_content($url, 3, false);
     $currency = json_decode($currency, true);
-
-    if (isset($currency['query']['results']['rate']['Rate'])) {
-      return $currency['query']['results']['rate']['Rate'];
+   
+    if ($from === $to) $currency['rates'][$to] = 1;
+   
+    if (isset($currency['rates'][$to])) {
+      return (float)$currency['rates'][$to];
     } else {
       return false;
     }
   }
 
-  function quote_cryptonator_currency($to, $from = DEFAULT_CURRENCY) {
-    $url = 'https://api.cryptonator.com/api/ticker/'.$from.'-'.$to;
-    $currency = get_external_content(urldecode($url), 3, false);
-    $currency = json_decode($currency, true);
-    
-    if (isset($currency['ticker']['price'])) {
-      return $currency['ticker']['price'];
+  function quote_secondary_currency($to, $from = DEFAULT_CURRENCY) {
+    $url = 'https://www.xe.com/currencyconverter/convert/?Amount=1&From=' . $from . '&To=' . $to;
+    $page = get_external_content($url, 3, false);
+
+    preg_match('/[0-9.]+\s*' . $from . '\s*=\s*([0-9.]+)\s*' . $to . '/', $page, $match);  
+
+    if (sizeof($match) > 0) {
+      return (float)$match[1];
+    } else {
+      return false;
+    }
+  }
+
+  function quote_fallback_currency($to, $from = DEFAULT_CURRENCY) {
+    $url = 'https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml';
+    $page = get_external_content($url, 3, false);    
+    $XML = simplexml_load_string($page);
+       
+    $cur = array();        
+    foreach($XML->Cube->Cube->Cube as $rate){
+      $cur[(string)$rate['currency']] = (float)$rate['rate'];
+    }
+   
+    $cur['EUR'] = 1;
+   
+    if (!empty($cur[$code]) && !empty($cur[$base])) {    
+      return (float)$cur[$code] / $cur[$base];
     } else {
       return false;
     }
