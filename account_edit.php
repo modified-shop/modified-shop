@@ -52,10 +52,6 @@ unset($_SESSION['shipping']);
 unset($_SESSION['payment']);
 unset($_SESSION['delivery_zone']);
 
-if ($_SESSION['customers_status']['customers_status'] == '0') {
-	xtc_redirect(xtc_href_link_admin(FILENAME_CUSTOMERS, 'cID='.$_SESSION['customer_id'].'&action=edit', 'SSL'));
-}
-
 if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
 
   $valid_params = array(
