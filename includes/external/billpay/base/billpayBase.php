@@ -2209,7 +2209,7 @@ JAVASCRIPT;
          * @return bool
          */
         protected function _is_b2c_allowed($config) {
-        ///protected function _is_b2c_allowed() {
+        //protected function _is_b2c_allowed() {
             return true;
         }
 
