@@ -194,7 +194,7 @@
                 if ($model == '') {
                   $model = xtc_get_attributes_model($order->products[$i]['id'], $order->products[$i]['attributes'][$j]['value'],$order->products[$i]['attributes'][$j]['option'], $lang);
                 }
-                echo (!empty($model) ? $attr_model_delimiter . $model : '<br />');
+                echo (($model != '') ? $attr_model_delimiter . $model : '<br />');
               }
             }
             echo '&nbsp;</td>'.PHP_EOL;
