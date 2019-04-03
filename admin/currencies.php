@@ -89,9 +89,6 @@
           if ($rate === false) {
             $rate = quote_secondary_currency($currency['code']);
           }
-          if ($rate === false) {
-            $rate = quote_fallback_currency($currency['code']);
-          }
           if ($rate !== false && $rate > 0) {
             $sql_data_array = array(
               'value' => $rate,
