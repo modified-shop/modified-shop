@@ -51,7 +51,7 @@
   $error = false;
   $entry_vat_error_text = '';
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
-  $customers_id = (int)$_GET['cID'];
+  $customers_id = (isset($_GET['cID']) ? (int)$_GET['cID'] : 0);
 
   if (isset($_GET['special']) && $_GET['special'] == 'remove_memo') {
     $mID = xtc_db_prepare_input($_GET['mID']);
