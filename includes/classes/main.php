@@ -373,10 +373,12 @@ class main {
                                    AND pa.options_id = '".(int)$option_id."'
                                    AND pa.options_values_id = '".(int)$value_id."'");
     
+    $attributes = xtc_db_fetch_array($attributes);
+    
     //new module support
     $attributes = $this->mainModules->getAttributesSelect($attributes,$paramsArr,$paramsArrOrigin);
     
-    return xtc_db_fetch_array($attributes);  
+    return $attributes;  
   }
   
   /**
