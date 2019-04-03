@@ -46,7 +46,7 @@ $category_depth = 'top';
 if (isset ($cPath) && xtc_not_null($cPath)) {
 
   // check categorie exist
-  if (xtc_check_categories_status($current_category_id) >= 1) {
+  if (xtc_check_categories_status($current_category_id) === false) {
     $site_error = CATEGORIE_NOT_FOUND;
     include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
     return;
