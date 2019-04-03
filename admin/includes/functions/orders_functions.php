@@ -717,7 +717,11 @@
     }
     
     $tax_rate = $products['products_tax'];
-    if ($status['customers_status_show_price_tax'] == 0 && $status['customers_status_add_tax_ot'] == 0) {
+    if (($status['customers_status_show_price_tax'] == 0 
+         && $status['customers_status_add_tax_ot'] == 0
+         ) || $products['allow_tax'] != '1'
+        ) 
+    {
       $tax_rate = 0;
     }
     $price = $xtPrice->xtcAddTax($products_price, $tax_rate);
@@ -879,7 +883,11 @@
     }
     
     $tax_rate = $products['products_tax'];
-    if ($status['customers_status_show_price_tax'] == 0 && $status['customers_status_add_tax_ot'] == 0) {
+    if (($status['customers_status_show_price_tax'] == 0 
+         && $status['customers_status_add_tax_ot'] == 0
+         ) || $products['allow_tax'] != '1'
+        ) 
+    {
       $tax_rate = 0;
     }
     $price = $xtPrice->xtcAddTax($products_price, $tax_rate); //tax by products
