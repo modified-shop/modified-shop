@@ -215,7 +215,7 @@
               if (!$_GET['action']) {
               ?>
               <div class="clear"></div>
-              <div class="pdg2 flt-l"><?php if (CURRENCY_SERVER_PRIMARY) { echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id . '&action=update') . '">' . BUTTON_CURRENCY_UPDATE . '</a>'; } ?></div>
+              <div class="pdg2 flt-l"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id . '&action=update') . '">' . BUTTON_CURRENCY_UPDATE . '</a>'; ?></div>
               <div class="pdg2 flt-r"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id . '&action=new') . '">' . BUTTON_NEW_CURRENCY . '</a>'; ?></div>
               
               <?php
