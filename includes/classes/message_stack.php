@@ -24,8 +24,8 @@
 
     function __construct() {
       $this->messages = array();
-      if (isset($_SESSION['messageToStack'])) {
-        for ($i=0, $n=sizeof($_SESSION['messageToStack']); $i<$n; $i++) {
+      if (isset($_SESSION['messageToStack']) && is_array($_SESSION['messageToStack'])) {
+        for ($i=0, $n=count($_SESSION['messageToStack']); $i<$n; $i++) {
           $this->add($_SESSION['messageToStack'][$i]['class'], $_SESSION['messageToStack'][$i]['text'], $_SESSION['messageToStack'][$i]['type']);
         }
         unset($_SESSION['messageToStack']);
