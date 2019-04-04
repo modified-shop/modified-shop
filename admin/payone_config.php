@@ -962,10 +962,10 @@ require (DIR_WS_INCLUDES.'head.php');
 											<label for="cr_confirmation"><?php echo CR_CONFIRMATION; ?></label>
 										</dt>
 										<dd>
-											<input type="radio" name="config[credit_risk][confirmation][active]" value="true" id="cr_confirmation_active" <?php echo $config[credit_risk][confirmation][active] == 'true' ? 'checked="checked"' : '' ?>>
+											<input type="radio" name="config[credit_risk][confirmation][active]" value="true" id="cr_confirmation_active" <?php echo $config['credit_risk']['confirmation']['active'] == 'true' ? 'checked="checked"' : '' ?>>
 											<label for="cr_confirmation_active"><?php echo TEXT_YES; ?></label><br>
 											
-											<input type="radio" name="config[credit_risk][confirmation][active]" value="false" id="cr_confirmation_inactive" <?php echo $config[credit_risk][confirmation][active] == 'false' ? 'checked="checked"' : '' ?>>
+											<input type="radio" name="config[credit_risk][confirmation][active]" value="false" id="cr_confirmation_inactive" <?php echo $config['credit_risk']['confirmation']['active'] == 'false' ? 'checked="checked"' : '' ?>>
 											<label for="cr_confirmation_inactive"><?php echo TEXT_NO; ?></label><br>
 										</dd>
                     </div>
