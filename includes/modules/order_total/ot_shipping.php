@@ -84,9 +84,12 @@ class ot_shipping {
       $tax = 0;
       $shipping_tax = 0;
       $shipping_tax_description = '';
-      $shipping_tax = xtc_get_tax_rate($GLOBALS[$module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
       
-      $shipping_tax_description = xtc_get_tax_description($GLOBALS[$module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
+      if (is_object($GLOBALS[$module]) && property_exists($GLOBALS[$module], 'tax_class')) {
+        $shipping_tax = xtc_get_tax_rate($GLOBALS[$module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
+        $shipping_tax_description = xtc_get_tax_description($GLOBALS[$module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
+      }
+      
       $tax = xtc_add_tax($order->info['shipping_cost'], $shipping_tax) - $order->info['shipping_cost'];
       $tax = $xtPrice->xtcFormat($tax, false, 0, true);
       

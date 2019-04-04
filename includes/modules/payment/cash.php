@@ -42,7 +42,13 @@ class cash {
 	function update_status() {
 		global $order;
 
-		if ($_SESSION['shipping']['id'] != 'selfpickup_selfpickup') {
+		if (!isset($_SESSION['shipping'])
+		    || !is_array($_SESSION['shipping'])
+		    || (array_key_exists('id', $_SESSION['shipping']) 
+		        && $_SESSION['shipping']['id'] != 'selfpickup_selfpickup'
+		        )
+		    )
+		{
 			$this->enabled = false;
 		}
 
