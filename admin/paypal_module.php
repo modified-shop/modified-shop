@@ -303,7 +303,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     </tr>
                     <?php
                     if (xtc_not_null(MODULE_PAYMENT_INSTALLED)) {
-                      $thirdparty_module = explode(';', MODULE_PAYMENT_PAYPAL_PLUS_THIRDPARTY_PAYMENT);
+                      $thirdparty_module = explode(';', ((defined('MODULE_PAYMENT_PAYPAL_PLUS_THIRDPARTY_PAYMENT')) ? MODULE_PAYMENT_PAYPAL_PLUS_THIRDPARTY_PAYMENT : ''));
                       $module_array = explode(';', MODULE_PAYMENT_INSTALLED);
                       
                       $thirdparty_exists = false;
