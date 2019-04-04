@@ -461,6 +461,8 @@ define('TEXT_COUPON_HELP_CATEGORIES', 'Kategorie');
 define('TEXT_COUPON_HELP_PRODUCTS', 'Artikel');
 define('ERROR_ENTRY_AMOUNT_CHECK', 'Ung&uuml;ltiger Gutscheinbetrag');
 define('ERROR_ENTRY_EMAIL_ADDRESS_CHECK', 'Ung&uuml;ltige E-Mail-Adresse');
+define('TEXT_COUPON_PRODUCTS_RESTRICT' 'Der Coupon ist auf eine Auswahl an Artikeln beschr&auml;nkt.');
+define('TEXT_COUPON_CATEGORIES_RESTRICT' 'Der Coupon ist auf eine Auswahl an Kategorien beschr&auml;nkt.');
 
 // VAT Reg No
 define('ENTRY_VAT_TEXT', 'Nur f&uuml;r Deutschland und EU!');

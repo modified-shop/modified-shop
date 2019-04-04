@@ -461,6 +461,8 @@ define('TEXT_COUPON_HELP_CATEGORIES', 'Category');
 define('TEXT_COUPON_HELP_PRODUCTS', 'Product');
 define('ERROR_ENTRY_AMOUNT_CHECK', 'Invalid amount');
 define('ERROR_ENTRY_EMAIL_ADDRESS_CHECK', 'Invalid e-mail address');
+define('TEXT_COUPON_PRODUCTS_RESTRICT' 'Your voucher/coupon is limited to some products.');
+define('TEXT_COUPON_CATEGORIES_RESTRICT' 'Your voucher/coupon is limited to some categories.');
 
 // VAT Reg No
 define('ENTRY_VAT_TEXT','* for EU-Countries only'); // anmerkung: besser wenn laden im EU ausland ist
