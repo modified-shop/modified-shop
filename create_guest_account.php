@@ -338,7 +338,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     $_SESSION['customer_email_address'] = $email_address;
     $_SESSION['customer_default_address_id'] = $address_id;
     $_SESSION['customer_country_id'] = (int)$country;
-    $_SESSION['customer_zone_id'] = $zone_id;
+    $_SESSION['customer_zone_id'] = (isset($zone_id) ? (int)$zone_id : 0);
     $_SESSION['customer_vat_id'] = $vat;
     
     // restore cart contents
