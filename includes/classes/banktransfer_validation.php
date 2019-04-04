@@ -284,28 +284,34 @@ class AccountCheck {
     return $Method06;
   }  /* End of Method06 */
 
-  private function Method16($AccountNo , $Significance, $Checkpoint) {
+  private function Method16($AccountNo, $Significance, $Checkpoint) {
     $Help = 0;
     $Method16 = 1;
     $AccountNo = $this->ExpandAccount($AccountNo);
-    for ($Run = 0;$Run < strlen($Significance);$Run++) {
-      $Help += (substr($AccountNo,$Run,1) * substr($Significance,$Run,1));
+    for ($Run = 0; $Run < strlen($Significance); $Run++) {
+      $Help += (substr($AccountNo, $Run, 1) * substr($Significance, $Run, 1));
     }
     $Help = $Help % 11;
     $Checksum = 11 - $Help;
     if ($Help == 0) {
       $Checksum = 0;
     }
-    if ($Checksum == substr($AccountNo,$Checkpoint-1,1)) {
+    if ($Checksum == substr($AccountNo, $Checkpoint - 1, 1)) {
        $Method16 = 0;
-     }
-     if ($Help == 1) {
-       if ($Checksum == substr($AccountNo,$Checkpoint-2,1)) {
-         $Method16 = 0;
-       }
-     }
-     return $Method16;
-   }  /* End of Method16 */
+    }
+    if ($Help == 1) {
+      if ($Checksum == substr($AccountNo, $Checkpoint - 2, 1)) {
+        $Method16 = 0;
+      }
+      // BOF Sonderfall fehlte: Vergleich der letzten beiden Stellen (9. und 10. bei Mark16 bzw 6. und 7. bei Mark23) 7.3.2019 vr
+      $Checksum = substr($AccountNo, $Checkpoint - 1, 1);
+      if ($Checksum == substr($AccountNo, $Checkpoint - 2, 1)) {
+        $Method16 = 0;
+      }
+      // EOF
+    }
+    return $Method16;
+  }  /* End of Method16 */
 
   private function Method90($AccountNo , $Significance ,$Checkpoint, $Modulator) {
     $Help = 0;
