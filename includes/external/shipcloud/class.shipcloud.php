@@ -30,7 +30,7 @@ class shipcloud {
     if ($oID != '') {
       $this->order = new order($oID);
     }
-    $this->log = ((defined('MODULE_SHIPCLOUD_LOG') && MODULE_SHIPCLOUD_LOG == 'True') ? true : true);
+    $this->log = ((defined('MODULE_SHIPCLOUD_LOG') && MODULE_SHIPCLOUD_LOG == 'True') ? true : false);
     $this->debug = false;
   }
   
