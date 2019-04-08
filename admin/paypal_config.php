@@ -65,13 +65,12 @@ $transaction_array = array(
 
 $log_level_array = array(
   array('id' => 'ERROR', 'text' => 'Error'),
-  array('id' => 'WARN', 'text' => 'Warning'),
+  array('id' => 'WARNING', 'text' => 'Warning'),
+  array('id' => 'NOTICE', 'text' => 'Notice'),
   array('id' => 'INFO', 'text' => 'Info'),
-  array('id' => 'FINE', 'text' => 'Fine'),
   array('id' => 'DEBUG', 'text' => 'Debug'),
 ); 
 
-//$locale_code = array(
 require (DIR_WS_INCLUDES.'head.php');
 ?>
 <link rel="stylesheet" type="text/css" href="../includes/external/paypal/css/stylesheet.css">  
