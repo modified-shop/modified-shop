@@ -63,7 +63,7 @@ $lang_array = array(
   'TEXT_PAYPAL_CONFIG_LOG_INFO' => 'Shall a log be written?',
 
   'TEXT_PAYPAL_CONFIG_LOG_LEVEL' => 'Log Level:',
-  'TEXT_PAYPAL_CONFIG_LOG_LEVEL_INFO' => '<b>Note:</b> In live mode, it is only logged up to level FINE.',
+  'TEXT_PAYPAL_CONFIG_LOG_LEVEL_INFO' => '<b>Note:</b> In live mode, it is only logged up to level INFO.',
   
   'BUTTON_PAYPAL_STATUS_INSTALL' => 'Install orders status',
 );
