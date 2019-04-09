@@ -168,4 +168,15 @@ class HitmeisterConfigure extends MagnaCompatibleConfigure {
 		}
 	}
 	
+	public function process() {
+		parent::process();
+		if (!$this->isAjax) {
+			$cG = new MLConfigurator($this->form, $this->mpID, 'conf_magnacompat');
+			echo $cG->checkboxAlert('conf_hitmeister.multipleeans_val',
+				ML_HITMEISTER_TITLE_WARNING_ALLOW_MULTIPLE_EAN,
+				ML_HITMEISTER_TEXT_WARNING_ALLOW_MULTIPLE_EAN,
+				ML_BUTTON_LABEL_YES,
+				ML_BUTTON_LABEL_NO);
+		}
+	}
 }

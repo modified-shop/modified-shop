@@ -1,0 +1,76 @@
+{
+    "prepare": {
+        "headline": "Artikelvorbereitung",
+        "fields": {
+            "whomade": {
+                "label": "Wer hat es gemacht?",
+                "key": "_#_platform_#_.whomade",
+                "type": "selection",
+                "desc": "",
+                "values": {
+                    "i_did": "Ich war's",
+                    "collective": "Ein Mitglied meines Shops",
+                    "someone_else": "Eine andere Firma oder Person"
+                }
+            },
+            "whenmade": {
+                "label": "Wann hast du es gemacht?",
+                "key": "_#_platform_#_.whenmade",
+                "type": "selection",
+                "desc": "",
+                "values": {
+                    "made_to_order": "Produktion auf Bestellung",
+                    "2010_2019": "2010-2019",
+                    "2000_2009": "2000-2009",
+                    "before_2000": "Vor 2000",
+                    "1990s": "1990ern",
+                    "1980s": "1980ern",
+                    "1970s": "1970ern",
+                    "1960s": "1960ern",
+                    "1950s": "1950ern",
+                    "1940s": "1940ern",
+                    "1930s": "1930ern",
+                    "1920s": "1920ern",
+                    "1910s": "1910ern",
+                    "1900s": "1900er",
+                    "1800s": "1800er",
+                    "1700s": "1700er",
+                    "before_1700": "Vor 1700"
+                }
+            },
+            "issupply": {
+                "label": "Was ist es?",
+                "key": "_#_platform_#_.issupply",
+                "type": "selection",
+                "desc": "",
+                "values": {
+                    "false": "Ein fertiges Produkt",
+                    "true": "Zubeh\u00f6r oder ein Werkzeug, um etwas herzustellen"
+                }
+            },
+            "manufacturerfilter": {
+                "label": "Herstellerfilter",
+                "key": "_#_platform_#_.filter.manufacturer",
+                "type": "multicheckbox",
+                "desc": "Alle hier markierten Hersteller werden bei der Produkt-Vorbereitung nicht mit angezeigt.",
+                "default": [
+                    
+                ],
+                "expertsetting": true
+            },
+            "lang": {
+                "label": "Artikelbeschreibung",
+                "key": "_#_platform_#_.lang",
+                "type": "selection",
+                "values": null
+            },
+            "shippingtemplate" : {
+                "label": "Etsy Versandgruppe",
+                "key": "_#_platform_#_.ShippingTemplate",
+                "type": "selection",
+                "desc": "Die Etsy Versandgruppen enthalten Angaben zum Versand:<br \/><ul><li>Land, aus dem Sie versenden,<\/li><li>Land oder Region, in die Sie versenden,<\/li><li>Versandkosten bei Einzellieferung,<\/li><li>Versandkosten wenn der Artikel zusammen mit anderen versendet wird.<\/li><\/ul><br \/>Die Angabe des Versanddienstleisters ist nicht vorgesehen.",
+                "values": null
+            }
+        }
+    }
+}

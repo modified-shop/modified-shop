@@ -46,6 +46,66 @@ function ebayEncodeImageUrl($sUrlPart) {
     return $sUrlPart;
 }
 
+function ebayPerformItemSearch($epid='', $ean='', $mpn='', $productsName='', $keywords='') {
+	$searchResults = array();
+	if (!empty($epid) && ($epid != 'variations')) {
+		try {
+			$result = MagnaConnector::gi()->submitRequest(array(
+				'ACTION' => 'ItemLookup',
+				'EPID' => $epid
+			));
+			if (!empty($result['DATA'])) {
+				$searchResults = array_merge($searchResults, $result['DATA']);
+			}
+		} catch (MagnaException $e) {
+			$e->setCriticalStatus(false);
+		}
+		return $searchResults;
+	}
+	$ean = str_replace(array(' ', '-'), '', $ean);
+	$aRequest = array (
+		'ACTION' => 'ItemSearch'
+	);
+	if (!empty($ean)) $aRequest['EAN'] = $ean;
+	if (!empty($mpn)) $aRequest['MPN'] = $mpn;
+	if (!empty($productsName)) $aRequest['NAME'] = $productsName;
+	if (!empty($keywords)) $aRequest['KEYWORDS'] = $keywords;
+	if (count($aRequest) > 1) {
+		try {
+			$result = MagnaConnector::gi()->submitRequest($aRequest);
+			if (!empty($result['DATA'])) {
+				$searchResults = array_merge($searchResults, $result['DATA']);
+			}
+		} catch (MagnaException $e) {
+			$e->setCriticalStatus(false);
+		}
+	}
+	return $searchResults;
+}
+
+/* brauchen wir wahrscheinlich nicht
+function ebayGetPossibleOptions($kind, $mpID = false) {
+	if ($mpID === false) {
+		global $_MagnaSession;
+		$mpID = $_MagnaSession['mpID'];
+	}
+	
+	initArrayIfNecessary($_MagnaSession, array($mpID, $kind));
+	
+	if (empty($_MagnaSession[$mpID][$kind])) {
+		try {
+			$result = MagnaConnector::gi()->submitRequest(array(
+				'ACTION' => 'Get'.$kind,
+				'SUBSYSTEM' => 'eBay',
+				'MARKETPLACEID' => $mpID,
+			));
+			$_MagnaSession[$mpID][$kind] = $result['DATA'];
+		} catch (MagnaException $e) { }
+	}
+	return $_MagnaSession[$mpID][$kind];
+}
+*/
+
 function getDebugDataForUpdateRequests($products_id) {
     $products_query = "
 		SELECT products_id, products_model, products_quantity, products_price, products_status
@@ -884,6 +944,28 @@ function VariationsEnabled($cID) {
     return false;
 }
 
+function ProductRequired($cID) {
+    global $_MagnaSession;
+    if (empty($cID))
+        return false;
+    try {
+        $ProductRequiredResult = MagnaConnector::gi()->submitRequest(array(
+            'ACTION' => 'ProductRequired',
+            'DATA' => array('CategoryID' => $cID,
+                'Site' => getDBConfigValue('ebay.site', $_MagnaSession['mpID'])),
+        ));
+    } catch (MagnaException $e) {
+        return false;
+    }
+    if (isset($ProductRequiredResult['DATA']['ProductRequiredEnabled'])
+        && (    ('Required' == (string)$ProductRequiredResult['DATA']['ProductRequiredEnabled'])
+             || ('Enabled'  == (string)$ProductRequiredResult['DATA']['ProductRequiredEnabled']))
+    ) {
+        return true;
+    }
+    return false;
+}
+
 function GetConditionValues($cID) {
     global $_MagnaSession;
     if (empty($cID))
@@ -1213,6 +1295,34 @@ function setVariationQuantity(&$variationMatrix, $pID, $attributes, $value, $mod
     return true;
 }
 
+/*
+ * Hilfsfunktion: Soweit für den Artikel Varianten-ePIDs hinterlegt sind, gebe diese zurück
+ * als Array. Keys sind, je nach general.keytype
+ * MarketPlaceId oder MarketplaceSku
+ */
+function getEpidsForVariationsByKey($pID, $artNr) {
+       // ePIDs for Variations (if stored)
+    global $_MagnaSession;
+    $blKeytypeIsArtnr = (getDBConfigValue('general.keytype', '0') == 'artNr');
+    $blePIDsForVariationsStored = (boolean)MagnaDB::gi()->fetchOne(eecho('SELECT COUNT(*) FROM magnalister_ebay_variations_epids
+        WHERE mpID = '.$_MagnaSession['mpID'].'
+          AND '. ($blKeytypeIsArtnr
+          ? 'products_sku = \''.$artNr.'\''
+          : 'products_id = '.$pID), false));
+    if (!$blePIDsForVariationsStored) return false;
+    $ePIDsForVariations = MagnaDB::gi()->fetchArray('SELECT * FROM magnalister_ebay_variations_epids
+        WHERE mpID = '.$_MagnaSession['mpID'].'
+            AND '. ($blKeytypeIsArtnr
+            ? 'products_sku = \''.$artNr.'\''
+            : 'products_id = '.$pID));
+    $ePIDsForVariationsByKey = array();
+    foreach ($ePIDsForVariations as $ePidRow) {
+        if ($blKeytypeIsArtnr) $ePIDsForVariationsByKey[$ePidRow['marketplace_sku']] = $ePidRow['ePID'];
+        else $ePIDsForVariationsByKey[$ePidRow['marketplace_id']] = $ePidRow['ePID'];
+    }
+    return $ePIDsForVariationsByKey;
+}
+
 function geteBayCategoryPath($CategoryID, $StoreCategory = false, $justImported = false) {
     global $_MagnaSession;
     $appendedText = '&nbsp;<span class="cp_next">&gt;</span>&nbsp;';
@@ -1352,6 +1462,9 @@ function prepareEBayPropertiesRow($pID, $itemDetails) {
             unset($row['ItemSpecifics']['2']);
         }
     }
+
+    $ePID = (string)MagnaDB::gi()->fetchOne('SELECT ePID FROM '.TABLE_MAGNA_EBAY_PROPERTIES.' WHERE products_id ='.$pID.' AND mpID = '.$_MagnaSession['mpID']);
+    if (!empty($ePID)) $row['ePID'] = $ePID;
 
     if (!empty($itemDetails['ml']['match']['ShopVariation'])) {
         $sIdentifier = $row['PrimaryCategory'];
@@ -1496,6 +1609,10 @@ function prepareEBayPropertiesRow($pID, $itemDetails) {
     $row['ShippingDetails'] = json_encode($ShippingDetails);
     # Noch nicht verifiziert:
     $row['Verified'] = 'OPEN';
+    # ePID gespeichert?
+    if (isset($itemDetails['ePID'.$pID])) {
+        $row['ePID'] = $itemDetails['ePID'.$pID];
+    }
     return $row;
 }
 
@@ -1507,7 +1624,13 @@ function eBayInsertPrepareData($data) {
     $data['topStoreCategory2'] = !array_key_exists('topStoreCategory2', $data) || $data['topStoreCategory2'] == null ? '' : $data['StoreCategory2'];
 
     // Filter JNH Tab
-    $data['Description'] = preg_replace('/\[TAB:([^\]]*)\]/', '<h1>${1}</h1>', $data['Description']);
+    if (getDBConfigValue('gambio.tabs.display', 0, 'h1') == 'none') {
+        if (strpos($data['Description'], '[TAB:')) {
+            $data['Description'] = $data['Description'] = substr($data['Description'], 0, strpos($data['Description'], '[TAB:'));
+        }
+    } else {
+        $data['Description'] = preg_replace('/\[TAB:([^\]]*)\]/', '<h1>${1}</h1>', $data['Description']);
+    }
     if (array_key_exists('MobileDescription', $data)
         && !empty($data['MobileDescription'])
         && (getDBConfigValue('ebay.template.usemobile', $_MagnaSession['mpID'], false) === 'true')) {

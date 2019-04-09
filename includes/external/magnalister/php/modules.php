@@ -49,7 +49,7 @@ $_modules = array(
 			'amazon.orderstatus.cancelled',
 			'amazon.stocksync.tomarketplace',
 			'amazon.stocksync.frommarketplace',
-			'amazon.mail.send'
+			'amazon.mail.send',
 			//'amazon.CustomerGroup', /* gibt es nicht in osCommerce */
 		),
 		'pages' => array (
@@ -104,6 +104,7 @@ $_modules = array(
                 'title' => ML_GENERIC_PREPARE,
                 'views' => array (
                     'apply' => ML_AMAZON_NEW_ITMES,
+                    'match' => ML_AMAZON_PRODUCT_MATCHING,
                     'varmatch' => ML_GENERIC_VARIANTEN_MATCHING,
                 )
             ),
@@ -177,7 +178,7 @@ $_modules = array(
 	'meinpaket' => array(
 		'title' => ML_MODULE_MEINPAKET,
 		'logo' => 'ayn',
-		'displayAlways' => true,
+		'displayAlways' => false,
 		'referer' => array('allyouneed.com'),
 		'requiredConfigKeys' => array (
 			'meinpaket.username',
@@ -706,7 +707,7 @@ $_modules = array(
 	'tradoria' => array (
 		'title' => 'Rakuten',
 		'logo' => 'rakuten',
-		'displayAlways' => false,
+		'displayAlways' => true,
 		'requiredConfigKeys' => array (
 			'tradoria.apikey',
 			'tradoria.mpusername',
@@ -831,6 +832,57 @@ $_modules = array(
 		),
 		'type' => 'marketplace',
 	),
+    'etsy' => array (
+        'title' => ML_MODULE_ETSY,
+        'logo' => 'etsy',
+        'displayAlways' => false,
+        'requiredConfigKeys' => array (
+            'etsy.username',
+            'etsy.password',
+            'etsy.shop.language',
+            'etsy.currency',
+            'etsy.lang',
+            'etsy.imagepath',
+            'etsy.price.addkind',
+            'etsy.price.factor',
+            'etsy.price.group',
+            'etsy.import',
+            'etsy.CustomerGroup',
+            'etsy.preimport.start',
+            'etsy.orderstatus.open',
+            'etsy.orderstatus.shipped',
+            'etsy.orderstatus.cancelled',
+            'etsy.stocksync.tomarketplace',
+            'etsy.stocksync.frommarketplace',
+            'etsy.inventorysync.price',
+        ),
+        'pages' => array (
+            'prepare' => array (
+                'title' => ML_GENERIC_PREPARE,
+                'views' => array (
+                    'apply' => ML_AMAZON_NEW_ITMES,
+                    'varmatch' => ML_GENERIC_VARIANTEN_MATCHING,
+                )
+            ),
+            'checkin' => ML_GENERIC_CHECKIN,
+            'listings' => array (
+                'title' => ML_GENERIC_LISTINGS,
+                'views' => array (
+                    'inventory' => ML_GENERIC_INVENTORY,
+                    'deleted' => ML_GENERIC_DELETED
+                )
+            ),
+            'errorlog' => ML_GENERIC_ERRORLOG,
+            'conf' => ML_GENERIC_CONFIGURATION,
+        ),
+        'settings' => array (
+            'defaultpage' => 'prepare',
+            'subsystem' => 'Etsy',
+            'currency' => 'EUR',
+            'hasOrderImport' => true,
+        ),
+        'type' => 'marketplace',
+    ),
 	'dawanda' => array (
 		'title' => ML_MODULE_DAWANDA,
 		'logo' => 'dawanda',
@@ -908,7 +960,7 @@ $_modules = array(
 			'ricardo.access.MPUSERNAME',
 			'ricardo.access.MPPASSWORD',
 			'ricardo.access.LANG',
-			'ricardo.checkin.displayfees'
+            'ricardo.token',
 		),
 		'pages' => array (
 			'prepare' => ML_GENERIC_PREPARE,

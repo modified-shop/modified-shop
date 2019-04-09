@@ -31,8 +31,15 @@ class EbayPrepareProductList extends MLProductListEbayAbstract {
 		);
 		$this->aListConfig[] = array(
 			'head' => array(
+				'attributes'	=> 'class="lowestprice"',
+				'content'		=> 'ML_EBAY_LABEL_PREPARE_KIND',
+			),
+			'field' => array('ebaypreparetype'),
+		);
+		$this->aListConfig[] = array(
+			'head' => array(
 				'attributes'	=> 'class="matched"',
-				'content'		=> 'ML_EBAY_LABEL_PREPARED',
+				'content'		=> 'ML_EBAY_LABEL_PREPARE_STATE',
 			),
 			'field' => array('preparestatusindicator'),
 		);

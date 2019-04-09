@@ -364,7 +364,7 @@ div#globalButtonBox {
 }
 
 div#magnafooter {
-	margin: 19px 0 0;
+	margin: 19px 0 60px;
 	border: none;
 	line-height: 15px;
 	border-collapse: collapse;
@@ -2790,6 +2790,14 @@ table#errorlog tbody td.errormessage span {
 table#errorlog tbody td.errormessage span[title].inline {
 	cursor: help;
 }
+
+table#errorlog tbody td.errorrecommendation span {
+	display: none;
+}
+table#errorlog tbody td.errorrecommendation span[title].inline {
+	cursor: help;
+}
+
 /* Datepicker fixes */
 body.magna.jqueryui .ui-widget {
 	font-family: sans-serif;
@@ -3239,7 +3247,61 @@ div.ebay div.itemident span.label {
 	font-weight: bold;
 	color: #fff;
 }
-
+#noteVariationsEnabled {
+	padding: 1px 0 3px;
+}
+#noteVariationsEnabled div {
+	width: 555px;
+	padding: 15px 19px;
+	line-height: 16px;
+	margin: 0;
+}
+#noteProductRequired {
+	padding: 1px 0 2px;
+}
+#noteProductRequired table {
+	border-spacing: 0;
+	border-collapse: collapse;
+}
+#noteProductRequired div {
+	width: 555px;
+	padding: 15px 19px;
+	line-height: 16px;
+	margin: 0;
+}
+#noteProductRequired td {
+	padding: 0;
+}
+#infobuttonProductRequired.gfxbutton.info {
+	margin: 7px 0 0 10px;
+	padding: 0;
+}
+#infobuttonProductRequired.gfxbutton.info:hover {
+	border-color: transparent;
+	background-color: inherit;
+	cursor: pointer;
+	box-shadow: none;
+}
+#infobuttonNoMatch {
+	cursor: pointer;
+	vertical-align: middle;
+}
+#infobuttonNoMatch:hover {
+	border-color: transparent;
+	background-color: inherit;
+	cursor: pointer;
+	box-shadow: none;
+}
+div[name=infobuttonNoMatch] {
+	cursor: pointer;
+	vertical-align: middle;
+}
+div[name=infobuttonNoMatch]:hover {
+	border-color: transparent;
+	background-color: inherit;
+	cursor: pointer;
+	box-shadow: none;
+}
 .mce-btn.mce-menubtn[role="button"]>button{
 	/*quirks fix tinymce, dropdowns (Format, Fonttype, Fontsize, ...)*/
 	padding-top: 2px;

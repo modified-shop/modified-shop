@@ -90,6 +90,12 @@ class RicardoSyncInventory extends MagnaCompatibleSyncInventory {
 		$data['SKU'] = magnaPID2SKU($product['ProductId']);
 
 		if ($bSyncStock) {
+            if (   ($this->config['StatusMode'] === 'true')
+                && ($product['Status'] == 0)
+            ) {
+                $product['QuantityTotal'] = 0;
+                $product['Quantity'] = 0;
+            }
 			// Check Quantity variants or master. QuantityTotal is only set if product has variants
 			if ((isset($this->cItem['Variations']) && isset($product['Variations'])) && isset($product['QuantityTotal'])) {
 				$data['IncreaseQuantity'] = false;
@@ -171,6 +177,11 @@ class RicardoSyncInventory extends MagnaCompatibleSyncInventory {
 				}
 
 				if ($bSyncStock) {
+                    if (   ($this->config['StatusMode'] === 'true')
+                        && ($product['Status'] == 0)
+                    ) {
+                        $variantData['Quantity'] = 0;
+                    }
 					$variant['Quantity'] = $variantData['Quantity'];
 					$variant['Process'] = true;
 					$variant['IncreaseQuantity'] = false;

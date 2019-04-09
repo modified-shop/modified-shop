@@ -79,6 +79,8 @@ class Check24CheckinSubmit extends MagnaCompatibleCheckinSubmit {
 			return;
 		}
 
+		$aData['submit']['CategoryPath'] = renderCategoryPath($iPID, 'product', ' > ');
+
 		#echo print_m($aProduct);
 
 		$aData['submit']['SKU'] = $aData['submit']['MasterSKU'] = ($this->settings['keytype'] == 'artNr') ? $aProduct['MarketplaceSku'] : $aProduct['MarketplaceId'];

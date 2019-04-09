@@ -331,8 +331,47 @@ echo '		<script type="text/javascript" src="'.$js.'"></script>'."\n";
 							return;
 						}
 						executed = true;
-						$.blockUI(blockUILoading);
-						window.location.href = $(e.target).data('href');
+						var popupTitle = '';
+						var popupText  = '';
+						if ($(e.target).data('href').search('update') > 0) {
+							popupTitle = '<?php echo ML_MESSAGE_BEFORE_UPDATE_TITLE ?>';
+							popupText  = '<?php echo ML_MESSAGE_BEFORE_UPDATE_TEXT ?>';
+							
+						} else if($(e.target).data('href').search('ImportOrders') > 0) {
+							popupTitle = '<?php echo ML_MESSAGE_BEFORE_IMPORT_ORDERS_TITLE ?>';
+							popupText  = '<?php echo ML_MESSAGE_BEFORE_IMPORT_ORDERS_TEXT ?>';
+						} else if($(e.target).data('href').search('SyncOrderStatus') > 0) {
+							popupTitle = '<?php echo ML_MESSAGE_BEFORE_SYNC_ORDERSTATUS_TITLE ?>';
+							popupText  = '<?php echo ML_MESSAGE_BEFORE_SYNC_ORDERSTATUS_TEXT ?>';
+						} else if($(e.target).data('href').search('SyncInventory') > 0) {
+							popupTitle = '<?php echo ML_MESSAGE_BEFORE_SYNC_INVENTORY_TITLE ?>';
+							popupText  = '<?php echo ML_MESSAGE_BEFORE_SYNC_INVENTORY_TEXT ?>';
+						} else if($(e.target).data('href').search('SyncEbayListingDetails') > 0) {
+							popupTitle = '<?php echo ML_MESSAGE_BEFORE_SYNC_EBAY_DETAILS_TITLE ?>';
+							popupText  = '<?php echo ML_MESSAGE_BEFORE_SYNC_EBAY_DETAILS_TEXT ?>';
+						} else {
+						// Fallback for whichever new button: "Note: Synchronizing data with the magnalister Server"
+							popupTitle = '<?php echo ML_LABEL_NOTE ?>';
+							popupText  = '<?php echo ML_STATUS_FILTER_SYNC_ITEM ?>';
+						}
+						$('<div></div>').html(popupText).jDialog({
+							title: popupTitle,
+							buttons: {
+								'<?php echo ML_BUTTON_LABEL_ABORT; ?>': function() {
+									window.location.href = '<?php $sUrl1 = strpos($_SERVER['REQUEST_URI'], 'update=true') ? substr($_SERVER['REQUEST_URI'], 0, strpos($_SERVER['REQUEST_URI'], 'update=true') -1) : $_SERVER['REQUEST_URI']; echo strpos($sUrl1, 'do=') ? substr($sUrl1, 0, strpos($sUrl1, 'do=') -1) : $sUrl1 ?>';
+									jQuery(this).dialog('close');
+								},
+								'<?php echo ML_BUTTON_LABEL_OK; ?>': function() {
+									$.blockUI(blockUILoading);
+									window.location.href = $(e.target).data('href');
+									jQuery(this).dialog('close');
+								}
+							}
+						});
+						//} else {
+						//	$.blockUI(blockUILoading);
+						//	window.location.href = $(e.target).data('href');
+						//}
 					}
 				})());
 				/*.on('dblclick', function (e) {

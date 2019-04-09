@@ -28,10 +28,10 @@ class HitmeisterCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 	protected $defaultShippingtime = '';
 	protected $shippingtimeMatching = array();
 	protected $ignoreErrors = true;
+	protected $shippingTimes = array();
 
 	public function __construct($settings = array()) {
 		global $_MagnaSession;
-		$this->summaryAddText = "<br /><br />\n" . ML_FYNDIQ_UPLOAD_EXPLANATION;
 
 		$settings = array_merge(array(
 			'language' => getDBConfigValue($settings['marketplace'] . '.lang', $_MagnaSession['mpID'], ''),
@@ -48,6 +48,14 @@ class HitmeisterCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 			'Price' => getDBConfigValue($settings['marketplace'] . '.inventorysync.price', $this->mpID, '') == 'auto',
 			'Quantity' => getDBConfigValue($settings['marketplace'] . '.stocksync.tomarketplace', $this->mpID, '') == 'auto',
 		);
+		
+		$this->defaultShippingtime  = getDBConfigValue($this->marketplace.'.shippingtime', $this->mpID, 0); 
+		$this->shippingtimeMatching = getDBConfigValue($this->marketplace.'.shippingtimematching.values', $this->mpID, array()); 
+		$this->useShippingtimeMatching = getDBConfigValue(array($this->marketplace.'.shippingtimematching.prefer', 'val'), $this->mpID, false); 
+		$this->shippingTimes = HitmeisterHelper::GetShippingTimes();
+		if (!is_array($this->shippingtimeMatching) || empty($this->shippingtimeMatching)) {
+			$this->useShippingtimeMatching = false;
+		}
 	}
 	
 	public function init($mode, $items = -1) {
@@ -63,14 +71,6 @@ class HitmeisterCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 				}
 			}
 		} catch (MagnaException $e) { }
-		
-		$this->defaultShippingtime  = getDBConfigValue($this->marketplace.'.shippingtime', $this->mpID, 0); 
-		$this->shippingtimeMatching = getDBConfigValue($this->marketplace.'.shippingtimematching.values', $this->mpID, array()); 
-		$this->useShippingtimeMatching = getDBConfigValue(array($this->marketplace.'.shippingtimematching.prefer', 'val'), $this->mpID, false); 
-		
-		if (!is_array($this->shippingtimeMatching) || empty($this->shippingtimeMatching)) {
-			$this->useShippingtimeMatching = false;
-		}
 	}
 
 	protected function setUpMLProduct()
@@ -102,7 +102,7 @@ class HitmeisterCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 				   AND mpID = '.$this->_magnasession['mpID'].'
 		');
 		
-		if (is_array($prepare)) {
+		if (is_array($prepare)) {// how? $prepare cannot be array - for what is else ?
 			$categoryAttributes = '';
 			if (!empty($prepare['CategoryAttributes'])) {
 				$categoryAttributes = HitmeisterHelper::gi()->convertMatchingToNameValue(
@@ -113,7 +113,7 @@ class HitmeisterCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 
 			$data['submit']['SKU'] = magnaPID2SKU($pID);
 			$data['submit']['ParentSKU'] = magnaPID2SKU($pID);
-			$data['submit']['EAN'] = isset($prepare['EAN']) ? $prepare['EAN'] : $product['EAN'];
+			$data['submit']['EAN'] = $product['EAN'];
 			$data['submit']['MarketplaceCategory'] = isset($prepare['MarketplaceCategories']) ? $prepare['MarketplaceCategories'] : '';
 			$data['submit']['MarketplaceCategoryName'] = isset($prepare['MarketplaceCategoriesName']) ? $prepare['MarketplaceCategoriesName'] : '';
 			$data['submit']['CategoryAttributes'] = $categoryAttributes;
@@ -143,18 +143,15 @@ class HitmeisterCheckinSubmit extends MagnaCompatibleCheckinSubmit {
                     );
 				}
 			}
-			
-			$data['submit']['ShippingTime'] = isset($data['shippingtime']) && !empty($data['shippingtime'])
-				? $data['shippingtime']
-				: $prepare['ShippingTime'];
-			if ($data['submit']['ShippingTime'] == 'm') { //fallback if old data stored
-				$data['submit']['ShippingTime'] = (($this->useShippingtimeMatching)
-					? $this->shippingtimeMatching[$product['products_shippingtime']]
-					: isset($data['shippingtime']) && !empty($data['shippingtime'])
-						? $data['shippingtime']
-						: $this->defaultShippingtime
-				);
+			$shippingTime = 
+				($this->useShippingtimeMatching || $prepare['ShippingTime'] === 'm') && array_key_exists($product['ShippingTimeId'], $this->shippingtimeMatching)
+				? $this->shippingtimeMatching[$product['ShippingTimeId']]
+				: $prepare['ShippingTime']
+			;
+			if (!array_key_exists($shippingTime, $this->shippingTimes)) {
+				$shippingTime = $this->defaultShippingtime;
 			}
+			$data['submit']['ShippingTime'] = $shippingTime;
 			$data['submit']['ConditionType'] = $prepare['ConditionType'];
 			$data['submit']['Location'] = isset($prepare['Location']) ? $prepare['Location'] : $defaultLocation;
 			$data['submit']['Comment'] = isset($prepare['Comment']) ? $prepare['Comment'] : '';
@@ -275,36 +272,6 @@ class HitmeisterCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 		}
 		$this->badItems = array_unique($this->badItems);
 		return $b || $shitHappend;
-	}
-
-	protected function postSubmit() {
-		#echo 'postSubmit';
-		/*if (isset($this->initSession['selectionFromErrorLog']) && !empty($this->initSession['selectionFromErrorLog'])) {
-			foreach ($this->initSession['selectionFromErrorLog'] as $errID => $pID) {
-				MagnaDB::gi()->delete(
-					TABLE_MAGNA_CS_ERRORLOG,
-					array(
-						'id' => (int)$errID
-					)
-				);
-			}
-		}*/
-		#echo var_dump_pre($this->initSession['upload']);
-		try {
-			$result = MagnaConnector::gi()->submitRequest(array(
-				'ACTION' => 'UploadItems',
-			));
-			#echo print_m($result, true);
-		} catch (MagnaException $e) {
-			$this->submitSession['api']['exception'] = $e;
-			$this->submitSession['api']['html'] = MagnaError::gi()->exceptionsToHTML();
-
-			$response = $e->getResponse();
-			$this->ajaxReply['state']['submmited'] -= count($response['ERRORS']);
-			$this->ajaxReply['state']['success'] -= count($response['ERRORS']);
-			$this->ajaxReply['state']['failed'] += count($response['ERRORS']);
-			$this->ajaxReply['redirect'] = $this->generateRedirectURL('fail');
-		}
 	}
 
 	protected function generateRedirectURL($state) {

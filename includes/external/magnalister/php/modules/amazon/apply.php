@@ -130,7 +130,9 @@ function populateGenericData($pID, $edit = false) {
 	$genericDataStructure['EAN'] = $product[MAGNA_FIELD_PRODUCTS_EAN];
 	$genericDataStructure['Description'] = amazonSanitizeDesc($product['products_description']);
 
-	$trimFunc = create_function('&$v, $k', '$v = trim($v);');
+    $trimFunc = function(&$v) {
+        $v = trim($v);
+    };
 
 	$product['products_meta_description'] = explode(',', $product['products_meta_description']);
 	array_walk($product['products_meta_description'], $trimFunc);

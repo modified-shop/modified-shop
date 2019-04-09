@@ -81,15 +81,14 @@ class HoodHelper extends MagnaCompatibleHelper {
 			'Auction' => array(
 				'Type'  => getDBConfigValue($mp.'.auction.quantity.type', $mpId, 'lump'),
 				'Value' => (int)getDBConfigValue($mp.'.auction.quantity.value', $mpId, 0),
-				'MaxQuantity' => (int)getDBConfigValue($mp.'.auction.quantity.maxquantity', $mpId, 0),
+				'MaxQuantity' => (int)getDBConfigValue($mp.'.auction.quantity.maxquantity', $mpId, 999999),
 			),
 			'Fixed' => array(
 				'Type'  => getDBConfigValue($mp.'.fixed.quantity.type', $mpId, 'lump'),
 				'Value' => (int)getDBConfigValue($mp.'.fixed.quantity.value', $mpId, 0),
-				'MaxQuantity' => (int)getDBConfigValue($mp.'.fixed.quantity.maxquantity', $mpId, 0),
+				'MaxQuantity' => (int)getDBConfigValue($mp.'.fixed.quantity.maxquantity', $mpId, 999999),
 			),
 		);
-		
 		return $config;
 	}
 	
@@ -98,7 +97,7 @@ class HoodHelper extends MagnaCompatibleHelper {
 			return $dbQuantity;
 		}
 		if (!isset($config['MaxQuantity'])) {
-			$config['MaxQuantity'] = 0;
+			$config['MaxQuantity'] = 999999;
 		}
 		switch ($config['Type']) {
 			case 'stocksub': {

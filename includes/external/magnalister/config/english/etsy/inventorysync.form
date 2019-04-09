@@ -1,0 +1,43 @@
+{  
+    "inventorysync":{  
+        "headline":"Synchronisation of Inventory",
+        "desc":"Determine which properties (Quantity and / or Price) should be synchronized from shop to _#_platformName_#_.",
+        "fields":{  
+            "stock_shop":{  
+                "label":"Stock Sync to Marketplace",
+                "desc":"Here you can set up if or how magnalister transfers inventory changes in your online shop to Etsy:<br \/><br \/> 1. No synchronization<br \/><br \/> Your online shop&apos;s inventory will not be synchronized with Etsy.<br \/><br \/> 2. Automatic synchronization with zero stock (recommended)<br \/><br \/> Your online shop&apos;s inventory is automatically synchronized with Etsy. Products with < 1 item in stock will be inactivated, but automatically reactivated as soon as inventory increases to > 0.<br \/><br \/> Important note: Etsy charges fees when reactivating items.<br \/><br \/> 3. Automatic synchronization without zero stock<br \/><br \/> Your inventory will only be synchronized automatically if stock is > 0. Items on Etsy will not automatically be reactivated - even when you have them in stock in your online shop. This prevents non-transparent fees.<br \/><br \/> General Hints:<br \/><ul> <li>Automatic inventory synchronization takes place every 4 hours via CronJob. The cycle starts daily at midnight.<\/li> <li>Item variants: Automatic inventory synchronization of item variants (even if stock is <1) is free of charge on Etsy, as long as one variant of the product stock > 0.<\/li> <li>You can reactivate single inactive products by setting your online shop&apos;s inventory to > 0 and initiate your product upload via the magnalister plugin again.<\/li> <li>The automatic inventory synchronization takes place every 4 hours via CronJob. The cycle starts daily at 0:00 am. The values from the database are checked and transferred, even if the changes were only made in the database by - for example - stock management applications.<\/li> <li>In addition, in our \"Flat\" plan, you can trigger the stock synchronization with your own CronJob in an interval of no more than 15 minutes by calling the following link of your webshop:<\/li> http:\/\/www.YourShop.com\/magnaCallback.php?do=SyncInventory<\/li> <li>CronJobs calls from customers, who are not in the \"Flat\" plan or who run the calls more frequently than every 15 minutes, are blocked.<\/li> <li>You can manually trigger a synchronization by clicking on the corresponding button in the top right-hand corner of the header.<\/li> <\/ul> Find more information about Etsy&apos;s fees via <a href=\"https:\/\/help.etsy.com\/hc\/en-us\/articles\/360000344908\" target=\"_blank\">Etsy Help Center<\/a>.",
+                "key":"_#_platform_#_.stocksync.tomarketplace",
+                "type":"selection",
+                "values":{  
+                    "auto_zero_stock":"Automatic Synchronization incl. Zero-Stock (recommended)",
+                    "auto":"Automatic Synchronization without Zero-Stock",
+                    "no":"No Synchronization"
+                },
+                "default":"auto",
+                "submit":"Callback.SyncInventory"
+            },
+            "stock_mp":{  
+                "label":"Order Import from _#_platformName_#_",
+                "desc":"For example: If 3 items are sold on Etsy, the shop-stock will be reduced by 3 items, too.",
+                "key":"_#_platform_#_.stocksync.frommarketplace",
+                "type":"selection",
+                "values":{  
+                    "rel":"Orders reduce Shop Inventory (recommended)",
+                    "no":"No Synchronization"
+                },
+                "default":"rel"
+            },
+            "price":{  
+                "label":"Price Options",
+                "desc":"This function allows you to define other prices for Etsy. These prices will be used in item upload as well as in the price synchronization.<br \/> <ul> <li>Use a customer group, or define an own customer group where you place the prices for the marketplace.<\/li> <li>If an item has no price defined for the price group chosen, the default price will be used.<\/li> <\/ul><br \/> This way, you can change the prices for only a few items without changing the calculation rules for everything.<br \/> The other configuration settings (Markup\/Markdown and Decimal amount) apply here as well.",
+                "key":"_#_platform_#_.inventorysync.price",
+                "type":"selection",
+                "values":{  
+                    "auto":"Automatic Synchronization via CronJob (recommended)",
+                    "no":"No Synchronization"
+                },
+                "default":"auto"
+            }
+        }
+    }
+}

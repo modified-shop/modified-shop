@@ -32,7 +32,7 @@ $queries[] = "
 		`LeafCategory` enum('0','1') NOT NULL default '0',
 		`InsertTimestamp` datetime NOT NULL,
 		UNIQUE KEY `UniqueEntry` (`mpID`,`CategoryID`)
-	) ENGINE=MyISAM;
+	) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 ";
 $queries[] = "
 	CREATE TABLE IF NOT EXISTS `".TABLE_MAGNA_MEINPAKET_CATEGORYMATCHING."` (
@@ -42,7 +42,7 @@ $queries[] = "
 		`mp_category_id` varchar(30) NOT NULL,
 		`store_category_id` varchar(255) NOT NULL,
 		UNIQUE KEY `UniqueEntry` (`mpID`,`products_id`,`products_model`)
-	) ENGINE=MyISAM;
+	) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 ";	
 $queries[] = "
 	CREATE TABLE IF NOT EXISTS `".TABLE_MAGNA_MEINPAKET_ERRORLOG."` (
@@ -53,5 +53,5 @@ $queries[] = "
 		`additionaldata` longtext NOT NULL,
 		PRIMARY KEY  (`id`),
 		KEY `mpID` (`mpID`)
-	) ENGINE=MyISAM;
+	) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 ";

@@ -304,3 +304,17 @@ function print_m(array) {
 		};
 	return formatArray(array, 0, pad_val, pad_char);
 }
+
+$(document).ready(function() {
+	/**
+	 * hide all related inputs of select option === lump
+	 */
+	$('td.input > select option[value="__ml_lump"], td.input > select option[value="lump"], td.input > select option[value="stocksub"]').closest("select").on("change", function() {
+		var self = $(this);
+		if ($.inArray(self.val(), ["__ml_lump", "lump", "stocksub"]) >= 0) {
+			self.closest("td").find(" > * ").not(self).show();
+		} else {
+			self.closest("td").find(" > * ").not(self).hide();
+		}
+	}).trigger("change");
+});

@@ -204,7 +204,8 @@ class HitmeisterApplyPrepareView extends MagnaCompatibleBase {
 				<tr class="odd">
 					<th>'.ML_HITMEISTER_SHIPPINGTIME.'</th>
 					<td class="input">
-					<select name="shippingtime" id="shippingtime">';
+					'.($defaultShippingTime === 'm' ? '<input name="shippingtime" type="hidden" value="m" />' : '').'
+					<select name="shippingtime" id="shippingtime"'.($defaultShippingTime === 'm' ? 'disabled="disabled" style="background-color: #eee; cursor: not-allowed;"' : '').'>';
 		foreach ($shippingTimes as $shipTimeID => $shipTimeName) {
 			if ($shipTimeID == $defaultShippingTime) {
 				$html .= '
@@ -524,8 +525,8 @@ class HitmeisterApplyPrepareView extends MagnaCompatibleBase {
 					<tr>
 						<td><?php echo ML_HITMEISTER_LABEL_HITMEISTER_PRICE ?>: </td>
 						<td>
-							<?php echo $defaultPrice . ' ' . ML_HITMEISTER_CURRENCY ?>
-							<input type="hidden" value="'.$defaultPrice.'" name="Price" id="Price" />
+							<?php echo $defaultPrice.' '.ML_HITMEISTER_CURRENCY ?>
+							<input type="hidden" value="<?php echo $defaultPrice; ?>" name="Price" id="Price" />
 						</td>
 						<td></td>
 					</tr>

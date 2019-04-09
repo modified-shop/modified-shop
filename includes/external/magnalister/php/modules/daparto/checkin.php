@@ -35,7 +35,7 @@ class DapartoCheckinSubmit extends ComparisonShoppingCheckinSubmit {
 		$data['submit']['DapartoExchange']  = null;
 		$data['submit']['DapartoTecDoc']    = getDBConfigValue('daparto.tecdoc', $this->mpID);
 		if (!isset($data['submit']['ModelNumber']) || empty($data['submit']['ModelNumber'])) {
-			$data['submit']['ModelNumber']      = $product['products_model'];
+			$data['submit']['ModelNumber']      = $product['ProductsModel'];
 		}
 	}	
 }

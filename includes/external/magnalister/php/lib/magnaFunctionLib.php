@@ -58,6 +58,8 @@ function html_image($image, $alt = "", $width = "", $height = "") {
 }
 
 function generateProductCategoryThumb($fName, $w, $h, $noImageIcon = false) {
+    // we will get the umlauts in image as html code from gambio shop so convert them
+    $fName = html_entity_decode($fName);
 	$retina = ML_RETINA_DISPLY;
 
 	if (!function_exists('imagecreatetruecolor')) {
@@ -156,7 +158,13 @@ function sanitizeProductDescription($str, $allowable_tags = '', $allowable_attri
 	$str = stripEvilBlockTags($str);
 
 	/* Convert Gambio-Tabs to H1-Headlines */
-	$str = preg_replace('/\[TAB:([^\]]*)\]/', '<h1>${1}</h1>', $str);
+	if (getDBConfigValue('gambio.tabs.display', 0, 'h1') == 'none') {
+		if (strpos($str, '[TAB:')) {
+			$str = substr($str, 0, strpos($str, '[TAB:'));
+		}
+	} else {
+		$str = preg_replace('/\[TAB:([^\]]*)\]/', '<h1>${1}</h1>', $str);
+	}
 
 	if (stripos($allowable_tags, '<br') === false) {
 		/* Convert (x)html breaks with or without atrributes to newlines. */
@@ -1063,7 +1071,7 @@ function magnaSKU2GambioProp($sSku) {
 			", false), true);
 		}
 
-		if ((count($mProductPropertiesCombisId) === 1) && ((int)$mProductPropertiesCombisId[0] > 0)) {
+		if (is_array($mProductPropertiesCombisId) && (count($mProductPropertiesCombisId) === 1) && ((int)$mProductPropertiesCombisId[0] > 0)) {
 			return MagnaDB::gi()->fetchRow(eecho("
 			    SELECT CONCAT(p.products_model, '-', ppc.combi_model) AS SKU, ppc.*
 			      FROM products_properties_combis ppc

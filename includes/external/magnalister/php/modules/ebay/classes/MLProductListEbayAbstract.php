@@ -37,9 +37,27 @@ abstract class MLProductListEbayAbstract extends MLProductList {
 					AND mpID = '".$this->aMagnaSession['mpID']."'
 			");
 		}
-		if($sFieldName === null){
+/*
+		kann man noch einbauen
+		if (getDBConfigValue('general.keytype', '0') == 'artNr') {
+			$this->aPrepareData[$aRow['products_id']]['variationsEpids'] =  MagnaDB::gi()->fetchArray("
+				SELECT marketplace_sku AS VariationSku, ePID
+				FROM magnalister_ebay_variations_epids
+				WHERE products_sku = '".MagnaDB::gi()->escape($aRow['products_model'])."'
+				AND mpID = '".$this->aMagnaSession['mpID']."'
+			");
+		} else {
+			$this->aPrepareData[$aRow['products_id']]['variationsEpids'] =  MagnaDB::gi()->fetchArray("
+				SELECT marketplace_sku AS VariationSku, ePID
+				FROM magnalister_ebay_variations_epids
+				WHERE products_id = '".$aRow['products_id']."'
+				AND mpID = '".$this->aMagnaSession['mpID']."'
+			");
+		}
+*/
+		if($sFieldName === null) {
 			return $this->aPrepareData[$aRow['products_id']];
-		}else{
+		} else {
 			return isset($this->aPrepareData[$aRow['products_id']][$sFieldName]) ? $this->aPrepareData[$aRow['products_id']][$sFieldName] : null;
 		}
 	}
@@ -77,39 +95,29 @@ abstract class MLProductListEbayAbstract extends MLProductList {
 		}
 	}
 
-	protected function isPreparedDifferently($aRow) {
-		$sPrimaryCategory = $this->getPrepareData($aRow, 'PrimaryCategory');
-		if (!empty($sPrimaryCategory)) {
-			$_POST['SecondaryCategory'] = $this->getPrepareData($aRow, 'SecondaryCategory');
-			$sItemSpecifics = EbayHelper::gi()->getPreparedData($sPrimaryCategory, 
-			((getDBConfigValue('general.keytype', '0') == 'artNr')
-			  ? $aRow['products_model']
-			  : $aRow['products_id']));
-			$categoryMatching = EbayHelper::gi()->getCategoryMatching($sPrimaryCategory);
-			return EbayHelper::gi()->detectChanges($categoryMatching, $sItemSpecifics);
-		}
-
-		return false;
+	protected function getPreparedStatusIndicator($aRow) {
 	}
 
-	protected function isDeletedAttributeFromShop($aRow, &$message) {
-		$sPrimaryCategory = $this->getPrepareData($aRow, 'PrimaryCategory');
-		if (!empty($sPrimaryCategory)) {
-			$_POST['SecondaryCategory'] = $this->getPrepareData($aRow, 'SecondaryCategory');
-			$matchedAttributes = EbayHelper::gi()->getPreparedData($sPrimaryCategory,
-			((getDBConfigValue('general.keytype', '0') == 'artNr')
-			  ? $aRow['products_model']
-			  : $aRow['products_id'])) ?: array();
-			$matchedAttributes = is_array($matchedAttributes) ? $matchedAttributes : array();
-			$shopAttributes = EbayHelper::gi()->flatShopVariations();
-
-			foreach ($matchedAttributes as $matchedAttribute) {
-				if (EbayHelper::gi()->detectIfAttributeIsDeletedOnShop($shopAttributes, $matchedAttribute, $message)) {
-					return true;
-				}
+	protected function getPrepareType($aRow) {
+		$sEPID = $this->getPrepareData($aRow, 'ePID');
+		$sProductRequired = $this->getPrepareData($aRow, 'productRequired');
+		$scurrencyID = $this->getPrepareData($aRow, 'currencyID');
+		#$aVarEpids = $this->getPrepareData($aRow, 'variationsEpids');
+		if (    strlen($sEPID) > 0
+		     || $sProductRequired === 'true') {
+			if ('newproduct' == $sEPID) {
+				return ML_EBAY_LABEL_APPLIED_CATALOG;
+			} else if ('variations' == $sEPID) {
+				return ML_EBAY_LABEL_CATALOG_VARIATIONS;
+			} else {
+				return ML_EBAY_LABEL_PREPARED_CATALOG;
+			       #.'<br />'.$sEPID;
 			}
+		} else if (!empty($scurrencyID)) {
+			return ML_EBAY_LABEL_PREPARED_NO_CATALOG;
+		} else {
+			return '&mdash;';
 		}
-
-		return false;
 	}
+
 }

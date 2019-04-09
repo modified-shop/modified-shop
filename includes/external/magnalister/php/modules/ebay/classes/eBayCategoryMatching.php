@@ -445,6 +445,35 @@ function VariationsEnabled(cID, viewElem) {
 	});
 }
 
+function ProductRequired(cID, viewElem) {
+	jQuery.ajax({
+		type: 'POST',
+		url: '<?php echo toURL($this->url, array('where' => 'prepareView', 'kind' => 'ajax'), true);?>',
+		data: {
+			'action': 'ProductRequired',
+			'id': cID
+		},
+		success: function(data) {
+			var msg;
+			if(data == 'true') msg='<?php echo '<table style="vertical-align:middle"><tr><td><div class="noticeBox">'.ML_EBAY_NOTE_PRODUCT_REQUIRED_SHORT.'</div></td><td><div class="gfxbutton info" id="infobuttonProductRequired" title="Infos"><span>'.ML_EBAY_NOTE_PRODUCT_REQUIRED.'</span></div></td></tr></table><div id="infobuttonProductRequiredDialog" class="dialog2" title="'.ML_LABEL_NOTE.'"></div>'; ?>';
+			else msg='';
+			viewElem.html(msg);
+		},
+		error: function() {
+		},
+		dataType: 'html'
+	});
+	window.setTimeout('productRequiredInfoPopup()', 500);
+}
+
+function productRequiredInfoPopup() {
+	$('div#infobuttonProductRequired').off();
+	$('div#infobuttonProductRequired').click(function() {
+		$('#infobuttonProductRequiredDialog').html($('span', this).html()).jDialog();
+	});
+	window.setTimeout('productRequiredInfoPopup()', 500);
+}
+
 function GetConditionValues(cID, viewElem, defaultConditionID) {
 	jQuery.ajax({
 		type: 'POST',
@@ -534,6 +563,7 @@ function startCategorySelector(callback, kind) {
 			startCategorySelector: startCategorySelector
 		}
 	})();
+
 $(document).ready(function() {
 		mpCategorySelector.addCategoriesEventListener($('#ebayCats'));
 });
@@ -609,6 +639,9 @@ $(document).ready(function() {
 			}
 			case 'VariationsEnabled': {
 				return VariationsEnabled($id)?'true':'false';
+			}
+			case 'ProductRequired': {
+				return ProductRequired($id)?'true':'false';
 			}
 			case 'GetConditionValues': {
 				$conditionValues = GetConditionValues($id);

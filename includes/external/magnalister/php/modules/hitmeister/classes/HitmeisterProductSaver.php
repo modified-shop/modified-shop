@@ -101,7 +101,13 @@ class HitmeisterProductSaver {
 			$aItemDetails['Description'] = $prod[0]['Description'];
 		}
 		
-		$aProduct = MLProduct::gi()->setLanguage(getDBConfigValue($this->sMarketplace . '.lang', $this->mpId))->getProductById($iProductId, array('purgeVariations' => true));
+		$aProduct = MLProduct::gi()
+            ->setLanguage(getDBConfigValue($this->sMarketplace . '.lang', $this->mpId))
+            ->getProductById($iProductId, array(
+                'sameVariationsToAttributes' => false,
+                'purgeVariations' => true,
+                'useGambioProperties' => (getDBConfigValue('general.options', '0', 'old') == 'gambioProperties'),
+            ));
 
 		if (isset($aItemDetails['Images'])) {
 			$aImages = (array)$aItemDetails['Images'];

@@ -94,8 +94,7 @@ class Shipping {
 			$this->modules = explode(';', MODULE_SHIPPING_INSTALLED);
 			$include_modules = array();
 
-			reset($this->modules);
-			while (list(, $value) = each($this->modules)) {
+			foreach ($this->modules as $value) {
 				$class = substr($value, 0, strrpos($value, '.'));
 				$include_modules[] = array(
 					'class' => $class,
@@ -242,9 +241,8 @@ class Shipping {
 			}
 			
 			$include_quotes = array();
-			
-			reset($this->modules);
-			while (list(, $value) = each($this->modules)) {
+
+            foreach ($this->modules as $value) {
 				$class = substr($value, 0, strrpos($value, '.'));
 				if (!empty($module)) {
 					if (($module == $class) && ($this->instances[$class]->enabled)) {

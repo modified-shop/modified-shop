@@ -157,7 +157,7 @@ class MagnaCompatibleSummaryView extends SimpleSummaryView {
 			return '
 				<td title="'.ML_LABEL_BRUTTO.'">'.ML_MAGNACOMPAT_LABEL_MP_PRICE_SHORT.'&nbsp;<span class="small">'.$this->settings['currency'].'</span></td>
 				<td>'.ML_LABEL_QUANTITY_AVAILABLE.'</td>
-				<td>'.$this->provideResetFunction(ML_LABEL_QUANTITY, 'quantity').'</td>
+				<td>'.ML_LABEL_QUANTITY.'</td>
 			';
 		}
 

@@ -96,6 +96,15 @@ class MLProduct {
 		}
 		return self::$instance;
 	}
+
+	/**
+	 * Gets the information if the shop has variations
+	 * (dummy, used in several scripts which come from the veyton version)
+	 * @return true
+	 */
+	public function hasMasterItems() {
+		return true;
+	}
 	
 	/**
 	 * Sets the internal options. The options affect the behavior of the
@@ -1775,7 +1784,13 @@ $images = array (
 		}
 		
 		// Filter JNH Tab
-		$desc['Description'] = preg_replace('/\[TAB:([^\]]*)\]/', '<h1>${1}</h1>', $desc['Description']);
+		if (getDBConfigValue('gambio.tabs.display', 0, 'h1') == 'none') {
+			if (strpos($desc['Description'], '[TAB:')) {
+				$desc['Description'] = substr($desc['Description'], 0, strpos($desc['Description'], '[TAB:'));
+			}
+		} else {
+			$desc['Description'] = preg_replace('/\[TAB:([^\]]*)\]/', '<h1>${1}</h1>', $desc['Description']);
+		}
 		
 		return $desc;
 	}
@@ -2053,7 +2068,13 @@ $images = array (
 		$finalProducts = array();
 		foreach ($products as &$product) {
 			// Filter JNH Tab
-			$product['products_description'] = preg_replace('/\[TAB:([^\]]*)\]/', '<h1>${1}</h1>', $product['products_description']);
+			if (getDBConfigValue('gambio.tabs.display', 0, 'h1') == 'none') {
+				if (strpos($product['products_description'], '[TAB:')) {
+					$product['products_description'] = substr($product['products_description'], 0, strpos($product['products_description'], '[TAB:'));
+				}
+			} else {
+				$product['products_description'] = preg_replace('/\[TAB:([^\]]*)\]/', '<h1>${1}</h1>', $product['products_description']);
+			}
 			
 			if ($product['products_image']) {
 				$product['products_allimages'] = array($product['products_image']);

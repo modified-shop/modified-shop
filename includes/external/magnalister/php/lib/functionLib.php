@@ -532,20 +532,18 @@ function charset_decode_utf_8($string) {
 	// decode three byte unicode characters
 	$string = preg_replace_callback(
 		"/([\300-\337])([\200-\277])/",
-		create_function(
-			'$matches',
-			'return "&#".((ord($matches[1])-224)*4096 + (ord($matches[2])-128)*64 + (ord($matches[3])-128)).";";'
-		),
+        function($matches) {
+            return "&#".((ord($matches[1])-224)*4096 + (ord($matches[2])-128)*64 + (ord($matches[3])-128)).";";
+        },
 		$string
 	);
 	
 	// decode two byte unicode characters
 	$string = preg_replace_callback(
 		"/([\300-\337])([\200-\277])/",
-		create_function(
-			'$matches',
-			'return "&#".((ord($matches[1])-192)*64 + (ord($matches[2])-128)).";";'
-		),
+		function($matches) {
+            return "&#".((ord($matches[1])-192)*64 + (ord($matches[2])-128)).";";
+        },
 		$string
 	);
 	
@@ -571,7 +569,7 @@ function fixHTMLUTF8Entities($str, $quoteStyle = ENT_NOQUOTES) {
 	// don't move the following line, it must be here, I've tried out everything, breaks things when used where it normally should be
 	$str = str_replace(chr(194), '', $str); // Â created from nothing by utf8_encode
 	// fix double encoded entities
-	$str = preg_replace('/&amp;(([A-Z]{0,1}[a-z]{1,10}|#[0-9]{3,6});)/', '&$1', $str);
+	$str = preg_replace('/&amp;(([A-Z]{0,1}[a-z]{1,10}|#[0-9]{2,6});)/', '&$1', $str);
 	
 	return $str;
 }
@@ -798,7 +796,9 @@ function hsv2rgb($hsv) {
 function serialize_fix($serialized) {
 	return preg_replace_callback(
 	    '!(?<=^|;)s:(\d+)(?=:"(.*?)";(?:}|a:|s:|b:|i:|o:|N;))!s',
-	     create_function('$match', 'return \'s:\' . strlen($match[2]);'),
+	     function($match) {
+             return 's:'.strlen($match[2]);
+         },
 	     $serialized
 	);
 }
@@ -909,25 +909,27 @@ function strip_tags_attributes($string, $allowtags = '', $allowattributes = '') 
     	return $string;
     }
     if (empty($allowattributes)) {
-		return preg_replace_callback("/<(\/?[a-zA-Z0-9]*)([^>]*)>/i", create_function(
-		    '$matches',
-		    'return \'<\'.trim(trim(strtolower($matches[1])).\' \'.
-		            trim(preg_replace("/.*=(\"[^\"]*\"|\'[^\']*\')/i", "", $matches[2]))).\'>\';'
-		), $string);
+        return preg_replace_callback("/<(\/?[a-zA-Z0-9]*)([^>]*)>/i",
+            function ($matches) {
+                return '<'.trim(trim(strtolower($matches[1])).' '.trim(preg_replace("/.*=(\"[^\"]*\"|'[^']*')/i", "", $matches[2]))).'>';
+            }
+            , $string);
     }
     if (!is_array($allowattributes)) {
         $allowattributes = explode(",", $allowattributes);
     }
-    array_walk($allowattributes, create_function('&$a', '$a = trim($a);'));
+    array_walk($allowattributes, function(&$a) {
+        $a = trim($a);
+    });
     if (is_array($allowattributes)) {
         $allowattributes = "(?<!".implode(")(?<!",$allowattributes).")";;
     }
-	$string = preg_replace_callback("/<(\/?[a-zA-Z0-9]*)([^>]*)>/i", create_function(
-	    '$matches',
-	    'return \'<\'.trim(trim(strtolower($matches[1])).\' \'.
+
+	$string = preg_replace_callback("/<(\/?[a-zA-Z0-9]*)([^>]*)>/i", function($matches) use ($allowattributes) {
+        return '<'.trim(trim(strtolower($matches[1])).' '.
 	            trim(preg_replace("/(\s|\n|\t)*[^ =]*'.$allowattributes.'=(\"[^\"]*\"|\'[^\']*\')/i", "", $matches[2]))).
-	            \'>\';'
-	), $string);
+	            '>';
+    }, $string);
 
     return $string;
 }
@@ -1415,25 +1417,30 @@ function magnaPreparePlainTextMode() {
 	}
 }
 
-function parse_str_unlimited($sUrlString, &$result) { 
-        $aArray = array();
-        if ($sUrlString != '') {
-            $aPairs = explode('&', $sUrlString);
-            $blIsUrlEncoded = (strpos($sUrlString, '%5B') !== false);
-            foreach ($aPairs as $sPair) {
-                $aKeyValue = explode('=', $sPair);
-                if (is_array($aKeyValue)) {
-                    $mKey = isset($aKeyValue[0]) ? ($blIsUrlEncoded ? urldecode($aKeyValue[0]) : $aKeyValue[0]) : null;
-                    $mValue = isset($aKeyValue[1]) ? ($blIsUrlEncoded ? urldecode($aKeyValue[1]) : $aKeyValue[0]) : null;
-                    if (strpos($mKey, '[') !== false) {                       
-                        $aKeys = explode('[', $mKey);
-                        $aArray = mlSetArrayKeysOfEachUrlParameter($aKeys, $aArray, $mValue);
-                    } else {
-                        $aArray[$mKey] = $mValue;
-                    }
+/**
+ * @param $sUrlString
+ * @param $result
+ * @return array
+ */
+function parse_str_unlimited($sUrlString, &$result) {
+    $aArray = array();
+    if ($sUrlString != '') {
+        $aPairs = explode('&', $sUrlString);
+        $blIsUrlEncoded = (strpos($sUrlString, '%5B') !== false);
+        foreach ($aPairs as $sPair) {
+            $aKeyValue = explode('=', $sPair);
+            if (is_array($aKeyValue)) {
+                $mKey = isset($aKeyValue[0]) ? ($blIsUrlEncoded ? urldecode($aKeyValue[0]) : $aKeyValue[0]) : null;
+                $mValue = isset($aKeyValue[1]) ? ($blIsUrlEncoded ? urldecode($aKeyValue[1]) : $aKeyValue[1]) : null;
+                if (strpos($mKey, '[') !== false) {
+                    $aKeys = explode('[', $mKey);
+                    $aArray = mlSetArrayKeysOfEachUrlParameter($aKeys, $aArray, $mValue);
+                } else {
+                    $aArray[$mKey] = $mValue;
                 }
             }
         }
+    }
     $result = $aArray;
     return $result;
 }
@@ -1450,7 +1457,7 @@ function parse_str_unlimited($sUrlString, &$result) {
  * 
  * @param array $aKeys
  * @param array $aArray
- * @param mix $mValue
+ * @param mixed $mValue
  * @return array
  */
 function mlSetArrayKeysOfEachUrlParameter($aKeys, $aArray, $mValue) {

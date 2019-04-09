@@ -29,13 +29,15 @@ if (!empty($_POST['FullSerializedForm'])) {
     $_POST = array_merge($_POST, $newPost);
 }
 
-if (!array_key_exists('view', $_GET) || !in_array($_GET['view'], array('apply', 'varmatch'))) {
+if (!array_key_exists('view', $_GET) || !in_array($_GET['view'], array('apply', 'match', 'varmatch'))) {
     $view = $_GET['view'] = 'apply';
 } else {
     $view = $_GET['view'];
 }
 
-if ($view === 'varmatch') {
+if ($view === 'match') {
+	require_once(DIR_MAGNALISTER_MODULES.'ebay/matching.php'); 
+} else if ($view === 'varmatch') {
     require_once(DIR_MAGNALISTER_MODULES.'ebay/prepare/EbayVariationMatching.php');
     $varMatch = new EbayVariationMatching(array(
         'resources' => array(

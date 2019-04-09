@@ -24,10 +24,21 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 require_once(DIR_MAGNALISTER_MODULES.'magnacompatible/crons/MagnaCompatibleSyncOrderStatus.php');
 
 class CdiscountSyncOrderStatus extends MagnaCompatibleSyncOrderStatus {
-	
+    public function __construct($mpID, $marketplace) {
+        parent::__construct($mpID, $marketplace);
+        $this->confirmationResponseField = 'CONFIRMATIONS';
+    }
+
+    protected function prepareSingleOrder($date) {
+        parent::prepareSingleOrder($date);
+
+        // this marketplace returns orders if successful
+        $this->oOrder['__dirty'] = false;
+    }
+
 	/**
 	 * Adds an error to the cdiscount error log.
-	 * 
+	 *
 	 * @param array $error
 	 *   The entry for the error log.
 	 * @return void
@@ -37,7 +48,7 @@ class CdiscountSyncOrderStatus extends MagnaCompatibleSyncOrderStatus {
 		unset($add['ErrorCode']);
 		unset($add['ErrorMessage']);
 		$add['Action'] = $error['APIACTION'];
-		
+
 		MagnaDB::gi()->insert(
 			TABLE_MAGNA_COMPAT_ERRORLOG,
 			array (
@@ -48,5 +59,5 @@ class CdiscountSyncOrderStatus extends MagnaCompatibleSyncOrderStatus {
 			)
 		);
 	}
-	
+
 }

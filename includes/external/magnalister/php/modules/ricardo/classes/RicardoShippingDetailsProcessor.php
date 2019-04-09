@@ -47,7 +47,8 @@ class RicardoShippingDetailsProcessor {
 				'DeliveryType' => $shippingId,
 			),
 		));
-		return count($result['DATA']) > 1 ? $result['DATA'] : null;
+
+		return (is_array($result['DATA']) && count($result['DATA']) > 1) ? $result['DATA'] : null;
 	}
 
 	public function renderView($shippingDefault = '') {

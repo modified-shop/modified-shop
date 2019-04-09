@@ -187,6 +187,8 @@ class RicardoConfigure extends MagnaCompatibleConfigure {
 
 	protected function finalizeForm() {
 		parent::finalizeForm();
+        $this->form['login']['fields']['token']['procFunc'] = array($this, 'getRicardoToken');
+
 		if (!$this->isAuthed) {
 			$this->form = array (
 				'login' => $this->form['login']
@@ -342,6 +344,12 @@ class RicardoConfigure extends MagnaCompatibleConfigure {
 	}
 	
 	public function process() {
+        if (isset($_GET['function'])) {
+            if ($_GET['function'] == 'GetTokenCreationLink') {
+                $this->getTokenCreationLink();
+            }
+        }
+
 		$this->form = $this->loadConfigForm(
 			$this->getForms(), 
 			array(
@@ -349,7 +357,18 @@ class RicardoConfigure extends MagnaCompatibleConfigure {
 				'_#_platformName_#_' => $this->marketplaceTitle
 			)
 		);
+
 		$this->processAuth();
+
+        if ($this->tokenAvailable()) {
+            $expires = getDBConfigValue('ricardo.token.expires', $this->mpID, '');
+            if ($expires < time()) {
+                $this->boxes .= '<p class="noticeBox">'.ML_RICARDO_TEXT_TOKEN_INVALID.'</p>';
+            }
+        } else {
+            $this->boxes .= '<p class="successBoxBlue">'.ML_RICARDO_TEXT_TOKEN_NOT_AVAILABLE_YET.'</p>';
+        }
+
 		$this->loadChoiseValues();
 		$this->finalizeForm();
 		
@@ -435,4 +454,82 @@ class RicardoConfigure extends MagnaCompatibleConfigure {
 
 		return $html;
 	}
+
+    public function getTokenCreationLink() {
+        $sUrl = 'error';
+        try {
+            //*
+            $result = MagnaConnector::gi()->submitRequest(array(
+                'ACTION' => 'GetTokenCreationLink'
+            ));
+            $sUrl = $result['DATA']['tokenCreationLink'];
+            //*/
+        } catch (MagnaException $e) {
+        }
+        echo $sUrl;
+        exit();
+    }
+
+    public function getRicardoToken() {
+        global $_url;
+        $expires = getDBConfigValue('ricardo.token.expires', $this->mpID, '');
+
+        $firstToken = '';
+        if (!empty($expires)) {
+            if (is_numeric($expires)) {
+                $expires = sprintf(ML_RICARDO_TEXT_TOKEN_EXPIRES_AT, date('d.m.Y H:i:s', $expires));
+            } else {
+                $expires = sprintf(ML_RICARDO_TEXT_TOKEN_EXPIRES_AT, date('d.m.Y H:i:s', unix_timestamp($expires)));
+            }
+        } else {
+            $firstToken = ' mlbtn-action';
+        }
+        return '<input class="ml-button'.$firstToken.' mlbtn-action" type="button" value="'.ML_RICARDO_BUTTON_TOKEN_NEW.'" id="requestToken"/>
+                '.$expires.'
+            <script type="text/javascript">/*<![CDATA[*/
+            $(document).ready(function() {
+                $(\'#requestToken\').click(function() {
+                    jQuery.blockUI(blockUILoading);
+                    jQuery.ajax({
+                        \'method\': \'get\',
+                        \'url\': \''.toURL($_url, array('function' => 'GetTokenCreationLink', 'kind' => 'ajax'), true).'\',
+                        \'success\': function (data) {
+                            // some shop systems attach error messages, warnings or even notices
+                            // to the output, which would be fatal here, so we strip it away
+                            if (data.indexOf(\'<style\') > 0) {
+                                data=data.substring(0, data.indexOf(\'<style\'));
+                            }
+                            jQuery.unblockUI();
+                            myConsole.log(\'ajax.success\', data);
+                            if (data == \'error\') {
+                                $(\'<div></div>\')
+                                    .attr(\'title\', '.json_encode(ML_RICARDO_ERROR_CREATE_TOKEN_LINK_HEADLINE).')
+                                    .html('.json_encode(ML_RICARDO_ERROR_CREATE_TOKEN_LINK_TEXT).')
+                                    .jDialog();
+                            } else {
+                                    var hwin = window.open(data, "popup", "resizable=yes,scrollbars=yes");
+                                    if (hwin.focus) {
+                                        hwin.focus();
+                                    }
+                            }
+                        }
+                    });
+                });
+            });
+            /*]]>*/</script>';
+    }
+
+    public function tokenAvailable() {
+        try {
+            $result = MagnaConnector::gi()->submitRequest(array(
+                'ACTION' => 'CheckIfTokenAvailable'
+            ));
+            if ('true' == $result['DATA']['TokenAvailable']) {
+                setDBConfigValue('ricardo.token', $this->mpID, '__saved__', true);
+                setDBConfigValue('ricardo.token.expires', $this->mpID, $result['DATA']['TokenExpirationTime'], true);
+                return true;
+            }
+        } catch (MagnaException $e) {}
+        return false;
+    }
 }

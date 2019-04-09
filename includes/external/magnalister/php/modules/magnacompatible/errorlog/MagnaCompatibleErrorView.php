@@ -32,6 +32,7 @@ class MagnaCompatibleErrorView {
 	
 	protected $mpID = 0;
 	protected $marketplace = '';
+	protected $blRecommendationColumn = false;
 	
 	public function __construct($settings = array()) {
 		global $_MagnaSession, $_url;
@@ -107,7 +108,7 @@ class MagnaCompatibleErrorView {
 		$this->offset = ($this->currentPage - 1) * $this->settings['itemLimit'];
 
 		$this->errorLog = MagnaDB::gi()->fetchArray('
-		    SELECT al.id, al.BatchId, al.origin, al.dateadded, al.errormessage, al.additionaldata
+		    SELECT al.id, al.BatchId, al.origin, al.dateadded, al.errormessage, al.recommendation, al.additionaldata
 		      FROM '.TABLE_MAGNA_COMPAT_ERRORLOG.' al
 		     WHERE al.mpID=\''.$this->mpID.'\'
 		  GROUP BY al.id
@@ -117,6 +118,7 @@ class MagnaCompatibleErrorView {
 		if (!empty($this->errorLog)) {
 			foreach ($this->errorLog as &$item) {
 				$item['errormessage'] = fixHTMLUTF8Entities($item['errormessage']);
+				if ($this->blRecommendationColumn && !empty($item['recommendation'])) $item['recommendation'] = fixHTMLUTF8Entities($item['recommendation']);
 				$item['additionaldata'] = @unserialize($item['additionaldata']);
 			}
 		}
@@ -187,6 +189,7 @@ class MagnaCompatibleErrorView {
 					'errormessage' => $item['ErrorMessage'],
 					'additionaldata' => serialize($item['ErrorData']),
 				);
+				if (isset($item['ErrorRecommendation'])) $data['recommendation'] = $item['ErrorRecommendation'];
 				if ($begin < $item['DateAdded']) {
 					$begin = $item['DateAdded'];
 				}
@@ -332,6 +335,22 @@ $(document).ready(function() {
 		return $ret;
 	}
 
+	protected function processErrorRecommendation($item) {
+		$ret = array (
+			'long' => $item['recommendation'],
+			'short' => '',
+		);
+		$ret['short'] = (
+			(strlen($ret['long']) > $this->settings['maxTitleChars'] + 2) ? 
+				(substr($ret['long'], 0, $this->settings['maxTitleChars']).'&hellip;') : 
+				$ret['long']
+		);
+		if (strpos($ret['long'], '&lt;div') !== false) {
+			$ret['long'] = html_entity_decode($ret['long']);
+		}
+		return $ret;
+	}
+
 	public function renderView() {
 		$html = '';
 		if (empty($this->errorLog)) {
@@ -358,7 +377,10 @@ $(document).ready(function() {
 						<td class="nowrap" style="width: 5px;"><input type="checkbox" id="selectAll"/><label for="selectAll">'.ML_LABEL_CHOICE.'</label></td>
 						'.($this->settings['hasBatchId'] ? '<td>'.ML_AMAZON_LABEL_BATCHID.'</td>' : '').'
 						<td>'.ML_AMAZON_LABEL_ADDITIONAL_DATA.'</td>
-						<td>'.ML_GENERIC_ERROR_MESSAGES.'&nbsp;'.$this->sortByType('errormessage').'</td>
+						<td>'.ML_GENERIC_ERROR_MESSAGES.'&nbsp;'.$this->sortByType('errormessage').'</td>' ;
+		if ($this->blRecommendationColumn) $html .= '
+						<td>'.ML_GENERIC_LABEL_ADDITIONAL_HELP.'</td>';
+		$html .= '
 						'.($this->settings['hasOrigin'] ? '<td>'.ML_GENERIC_LABEL_ORIGIN.'</td>' : '').'
 						<td>'.ML_GENERIC_COMMISSIONDATE.'&nbsp;'.$this->sortByType('commissiondate').'</td>
 					</tr></thead>
@@ -368,6 +390,9 @@ $(document).ready(function() {
 			$dateadded = strtotime($item['dateadded']);
 			$hdate = date("d.m.Y", $dateadded).' &nbsp;&nbsp;<span class="small">'.date("H:i", $dateadded).'</span>';
 			$message = $this->processErrorMessage($item);
+			if ($this->blRecommendationColumn) {
+				$recommendation = $this->processErrorRecommendation($item);
+			}
 			$html .= '
 						<tr class="' . (($oddEven = !$oddEven) ? 'odd' : 'even') . '"><td><input type="checkbox" name="errIDs[]" value="' . $item['id'] . '"></td>';
 			if ($this->settings['hasBatchId']) {
@@ -381,20 +406,28 @@ $(document).ready(function() {
 			}
 			$html .= '
 							<td class="nopadding" style="width: 1px">' . $this->additionalDataHandler($item['additionaldata']) . '</td>
-							<td class="errormessage">' . $message['short'] . '<span>' . $message['long'] . '</span></td>
-							' . ($this->settings['hasOrigin'] && !empty($item['origin']) ? '<td>' . $item['origin'] . '</td>' : '<td>&nbsp;&nbsp;&mdash;</td>') . '
+							<td class="errormessage">' . $message['short'] . '<span>' . $message['long'] . '</span></td>';
+			if ($this->blRecommendationColumn) $html .= '
+							<td class="errorrecommendation">' . $recommendation['short'] . '<span style="display:none;">' . $recommendation['long'] . '</span></td>';
+			$html .= '
+							' . ($this->settings['hasOrigin'] ? '<td>' . $item['origin'] . '</td>' : '') . '
 							<td>' . $hdate . '</td>
 						</tr>';
 		}
 		$html .= '
 					</tbody>
 				</table>
-				<div id="errordetails" class="dialog2" title="'.ML_GENERIC_ERROR_DETAILS.'"></div>';
+				<div id="errordetails" class="dialog2" title="'.ML_GENERIC_ERROR_DETAILS.'"></div>
+				<div id="recommendationdetails" class="dialog2" title="'.ML_GENERIC_ERROR_RECOMMENDATIONS.'"></div>';
 		ob_start(); ?>
 <script type="text/javascript">/*<![CDATA[*/
 	$(document).ready(function() {
 		$('table#errorlog tbody td.errormessage').click(function() {
 			$('#errordetails').html($('span', this).html()).jDialog();
+		});
+		
+		$('table#errorlog tbody td.errorrecommendation').click(function() {
+			$('#recommendationdetails').html($('span', this).html()).jDialog();
 		});
 		
 		$('#selectAll').click(function() {

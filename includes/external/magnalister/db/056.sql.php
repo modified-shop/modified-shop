@@ -27,7 +27,7 @@ $queries[] = 'CREATE TABLE IF NOT EXISTS `' . TABLE_MAGNA_AYN24_VARIANTMATCHING 
 	`CustomIdentifier` varchar(255) NOT NULL DEFAULT "",
 	`ShopVariation` text NOT NULL,
 	PRIMARY KEY (`MpId`, `MpIdentifier`, `CustomIdentifier`)
-)';
+) ENGINE=MyISAM DEFAULT CHARSET=utf8';
 
 $queries[] = 'CREATE TABLE IF NOT EXISTS `' . TABLE_MAGNA_AYN24_PROPERTIES . '` (
 	`mpID` int(11) NOT NULL,

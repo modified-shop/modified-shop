@@ -46,6 +46,13 @@ $authConfigKeys = array('ebay.token');
 $_magnaQuery['mode'] = getCurrentModulePage();
 $_magnaQuery['messages'] = array();
 
+
+if (array_key_exists('mode', $_GET) && ($_GET['mode'] == 'ajax')) {
+	include_once(DIR_MAGNALISTER_MODULES.'ebay/ebayajax.php');
+	require(DIR_WS_INCLUDES . 'application_bottom.php');
+	exit();
+}
+
 if (!allRequiredConfigKeysAvailable($requiredConfigKeys, $_MagnaSession['mpID'])) {
 	$_magnaQuery['mode'] = 'conf';
 }

@@ -57,7 +57,13 @@ class HoodProductSaver {
 	protected function insertPrepareData($data) {
 		// Filter JNH Tab
 		if (isset($data['Description'])) {
-			$data['Description'] = preg_replace('/\[TAB:([^\]]*)\]/', '<h1>${1}</h1>', $data['Description']);
+			if (getDBConfigValue('gambio.tabs.display', 0, 'h1') == 'none') {
+				if (strpos($data['Description'], '[TAB:')) {
+					$data['Description'] = substr($data['Description'], 0, strpos($data['Description'], '[TAB:'));
+				}
+			} else {
+				$data['Description'] = preg_replace('/\[TAB:([^\]]*)\]/', '<h1>${1}</h1>', $data['Description']);
+			}
 		}
 		
 		foreach (array('StoreCategory', 'StoreCategory2', 'StoreCategory3') as $shopCat) {

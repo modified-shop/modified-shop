@@ -161,6 +161,7 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 			  FROM `'.$tableSettings['Table']['table'].'` 
 			 WHERE `'.$tableSettings['Alias'].'` = "'.MagnaDB::gi()->escape($where).'"
 			       AND `'.$tableSettings['Table']['column'].'` <> \'\'
+			 LIMIT 1
 		');
 	}
 	
@@ -184,6 +185,16 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 				 LIMIT 1
 			");
 		}
+
+        // for modified 2.0 > if table "orders_tracking" exists
+        if (false == $mTrackingCode && MagnaDB::gi()->tableExists('orders_tracking')) {
+            $mTrackingCode = MagnaDB::gi()->fetchOne("
+                SELECT parcel_id
+                  FROM orders_tracking
+                 WHERE orders_id = '".MagnaDB::gi()->escape($orderId)."'
+                 LIMIT 1
+            ");
+        }
 
 		return $mTrackingCode;
 	}
@@ -209,6 +220,24 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 				 LIMIT 1
 			");
 		}
+
+        // for modified 2.0+ > if table "orders_tracking" exists
+        if (false == $mCarrier && MagnaDB::gi()->tableExists('orders_tracking')) {
+            $sCarrierId = MagnaDB::gi()->fetchOne("
+                SELECT carrier_id
+                  FROM orders_tracking
+                 WHERE orders_id = '".MagnaDB::gi()->escape($orderId)."'
+                 LIMIT 1
+            ");
+            if (!empty($sCarrierId)) {
+                $mCarrier = MagnaDB::gi()->fetchOne("
+                    SELECT carrier_name
+                      FROM carriers
+                     WHERE carrier_id = '".MagnaDB::gi()->escape($sCarrierId)."'
+                     LIMIT 1
+                ");
+            }
+        }
 
 		// carrier should not be empty
 		if (false == $mCarrier && !empty($this->config['CarrierDefault'])) {

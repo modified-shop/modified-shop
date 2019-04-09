@@ -39,7 +39,7 @@ function eBayGetSelection() {
             .'PictureURL, GalleryURL, ConditionID,  '
             .' PrimaryCategory, SecondaryCategory, StoreCategory, StoreCategory2, '
             .' Attributes, ItemSpecifics, eBayPicturePackPurge, VariationDimensionForPictures, GalleryType, '
-            .' ListingType, ListingDuration, PaymentMethods, ShippingDetails, SellerProfiles, DispatchTimeMax '
+            .' ListingType, ListingDuration, PaymentMethods, ShippingDetails, SellerProfiles, DispatchTimeMax, ePID '
             .' FROM '.TABLE_MAGNA_EBAY_PROPERTIES .' ep, '.TABLE_MAGNA_SELECTION.' ms, '
             . TABLE_PRODUCTS .' p, ' . TABLE_PRODUCTS_DESCRIPTION .' pd '
             .' WHERE ep.products_model = p.products_model '
@@ -61,7 +61,7 @@ function eBayGetSelection() {
             .' p.products_weight AS products_weight, '
             .' PrimaryCategory, SecondaryCategory, StoreCategory, StoreCategory2, '
             .' Attributes, ItemSpecifics, eBayPicturePackPurge, VariationDimensionForPictures, GalleryType, '
-            .' ListingType, ListingDuration, PaymentMethods, ShippingDetails, SellerProfiles, DispatchTimeMax '
+            .' ListingType, ListingDuration, PaymentMethods, ShippingDetails, SellerProfiles, DispatchTimeMax , ePID'
             .' FROM '.TABLE_MAGNA_EBAY_PROPERTIES .' ep, '.TABLE_MAGNA_SELECTION.' ms, '
             . TABLE_PRODUCTS_DESCRIPTION .' pd, '.TABLE_PRODUCTS.' p '
             .' WHERE p.products_id=pd.products_id and ep.products_id = ms.pID AND ep.mpID = ms.mpID  AND pd.products_id = ep.products_id '
@@ -75,8 +75,16 @@ function eBayGetSelection() {
         $dbOldSelection = array();
     }
     $oldProducts = array();
-    foreach ($dbOldSelection as $row) {
-        $oldProducts[] = MagnaDB::gi()->escape($keytypeIsArtNr ? $row['products_model'] : $row['products_id']);
+    $matchingSelection = array();
+    foreach ($dbOldSelection as $nr => $row) {
+	if (!empty($row['PrimaryCategory'])) {
+	// use old data only if category filled; otherwise, it comes from Matching
+	// and is almost empty
+        	$oldProducts[] = MagnaDB::gi()->escape($keytypeIsArtNr ? $row['products_model'] : $row['products_id']);
+	} else {
+		$matchingSelection[] = $row;
+		unset($dbOldSelection[$nr]);
+	}
     }
     if (empty($oldProducts)) {
         $oldProductsList = "''";
@@ -121,6 +129,18 @@ function eBayGetSelection() {
         .' AND session_id=\''.session_id().'\'';
     $dbNewSelection = MagnaDB::gi()->fetchArray($dbNewSelectionQuery);
     $dbSelection = array_merge($dbOldSelection, $dbNewSelection);
+    if (!empty($matchingSelection)) {
+	foreach ($matchingSelection as $mrow) {
+		foreach ($dbSelection as &$dbrow) {
+			if ($keytypeIsArtNr && $mrow['products_model'] == $dbrow['products_model']) {
+				$dbrow['ePID'] = $mrow['ePID'];
+			}
+			if (!$keytypeIsArtNr && $mrow['products_id'] == $dbrow['products_id']) {
+				$dbrow['ePID'] = $mrow['ePID'];
+			}
+		}
+	}
+    }
     if (false) { # DEBUG
         echo "dbOldSelectionQuery == \n$dbOldSelectionQuery<br />\n";
         echo "dbNewSelectionQuery == \n$dbNewSelectionQuery<br />\n";
@@ -133,7 +153,15 @@ function eBayGetSelection() {
     foreach ($dbSelection as &$current_row) {
         ++$rowCount;
         // Filter JNH Tab
-        $current_row['description'] = preg_replace('/\[TAB:([^\]]*)\]/', '<h1>${1}</h1>', $current_row['description']);
+        #$current_row['description'] = preg_replace('/\[TAB:([^\]]*)\]/', '<h1>${1}</h1>', $current_row['description']);
+        if (getDBConfigValue('gambio.tabs.display', 0, 'h1') == 'none') {
+            if (strpos($current_row['description'], '[TAB:')) {
+                $current_row['description'] = substr($current_row['description'], 0, strpos($current_row['description'], '[TAB:'));
+            }
+        } else {
+            $current_row['description'] = preg_replace('/\[TAB:([^\]]*)\]/', '<h1>${1}</h1>', $current_row['description']);
+        }
+
         $product_images = array_unique(MLProduct::gi()->getAllImagesByProductsId($current_row['products_id']));
         if(empty($current_row['PictureURL'])){//if product images was reset
             $aPictureUrls = $product_images;
@@ -248,7 +276,7 @@ function jsProcessPrepareButton() {
 <script type="text/javascript">/*<![CDATA[*/
 $(document).ready(function() {
 	$('#unpreparePopup').html('<?php echo $popupContent; ?>').jDialog({
-		title: '<?php echo ML_BUTTON_LABEL_REVERT ?>',
+		title: '<?php echo ML_BUTTON_LABEL_REVERT_FOR_SELECTION ?>',
 		buttons: {
 			'<?php echo ML_BUTTON_LABEL_ABORT; ?>': function() {
 				jQuery(this).dialog('close');
@@ -271,6 +299,13 @@ $('#reset_partly').click(function() {
     ob_end_clean();
     return ($div.$js);
 }
+
+#echo print_m($_POST, __LINE__.' $_POST');
+#echo print_m($_GET, '$_GET');
+#echo print_m($_MagnaSession, '$_MagnaSession');
+
+if (!isset($IsMatching)) $IsMatching=false;
+global $IsMatching;
 
 $_url['mode'] = 'prepare';
 $_url['view'] = 'apply';
@@ -302,6 +337,9 @@ if (array_key_exists('savePrepareData', $_POST) || (!empty($_POST['action']) && 
 			   selectionname=\''.$prepareSetting['selectionName'].'\' AND
 			   session_id=\''.session_id().'\'
 	', true);
+// DEBUG
+#echo print_m($itemDetails, __LINE__.' $itemDetails');
+#echo print_m($pIDs, __LINE__.' $pIDs');
     if (1 == count($pIDs)) {
         SaveEBaySingleProductProperties($pIDs[0], $itemDetails);
     } else if (!empty($pIDs)) {
@@ -332,21 +370,49 @@ if (array_key_exists('savePrepareData', $_POST) || (!empty($_POST['action']) && 
     #echo print_m($verified, '$ecs->verifyOneItem()');
 
     if('SUCCESS' == $verified['STATUS']) {
+	# wenn view=matching, so lassen
+	#if ($_GET['view']='match') $_url['view'] = 'match';
+	if ($_GET['view']='match') $_POST['prepare'] = 'matching';
+
         MagnaDB::gi()->delete(TABLE_MAGNA_SELECTION, array (
             'mpID' => $_MagnaSession['mpID'],
             'selectionname' => $prepareSetting['selectionName'],
             'session_id' => session_id()
         ));
+	if (1 == count($pIDs)) {
+		$msgSuccess = ML_EBAY_LABEL_PREPARED_SUCCESS;
+	} else {
+		$msgSuccess = ML_EBAY_LABEL_PREPARED_SUCCESS_MULTI;
+	}
+       	echo '<div class="successBox">'.$msgSuccess.'</div>'."\n";
     } else if('ERROR' == $verified['STATUS']) {
         # noch mal in der Maske bleiben
         $_POST['prepare'] = 'prepare';
+	# wenn view=matching, so lassen
+	#if ($_GET['view']='match') $_url['view'] = 'match';
+	if ($_GET['view']='match') $_POST['prepare'] = 'matching';
+
 
         /* Letzte Exception holen */
         $ex = $ecs->getLastException();
         /* Wenns eine Exception war und es sich nicht um einen Fehler in der API handelt... */
         if (is_object($ex) && ($ex->getSubsystem() != 'PHP')
-            && ($errors = $ex->getErrorArray()) && isset($errors['RESPONSEDATA'][0]['ERRORS'][0]['ERRORCODE'])
+            && ($errors = $ex->getErrorArray())
+            && (    isset($errors['RESPONSEDATA'][0]['ERRORS'][0]['ERRORCODE'])
+                 || isset($errors['ERRORS'][0]['ERRORMESSAGE']))
         ) {
+            if (!isset($errors['RESPONSEDATA'][0]['ERRORS'][0]['ERRORCODE'])) {
+                $errors['RESPONSEDATA'] = array(array ('ERRORS' => array (array (
+                    'ERRORCODE' => '',
+                    'ERRORMESSAGE' => $errors['ERRORS'][0]['ERRORMESSAGE'],
+                    'ERRORCLASS' => 'RequestError',
+                    'ERRORLEVEL' => 'Error',
+                ))));
+            }
+            /* Sonderfall: Fehlermeldung überschrieben von eBayCheckinSubmit */
+            if (isset($verified['OVERWRITE_ERRORS'])) {
+                $errors['RESPONSEDATA'][0]['ERRORS']  = $verified['OVERWRITE_ERRORS'];   
+            }
             $supportsUTF8 = (stripos($_SESSION['language_charset'], 'utf') !== false);
             /* ... als unkrittisch markieren. */
             $ex->setCriticalStatus(false);

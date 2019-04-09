@@ -81,7 +81,7 @@ class MagnaCompatibleInventoryView {
 		}
 	}
 
-	private function getInventory() {
+	protected function getInventory() {
 		try {
 			$request = array(
 				'ACTION' => 'GetInventory',
@@ -490,9 +490,9 @@ $(document).ready(function() {
 			<table class="actions">
 				<thead><tr><th>'.ML_LABEL_ACTIONS.'</th></tr></thead>
 				<tbody><tr><td>
-					<table><tbody><tr>
+					<table style="table-layout:fixed"><tbody><tr>
 						<td class="firstChild">'.$left.'</td>
-						<td><label for="tfSearch">'.ML_LABEL_SEARCH.':</label>
+						<td style="text-align:center"><label for="tfSearch">'.ML_LABEL_SEARCH.':</label>
 							<input id="tfSearch" name="tfSearch" type="text" value="'.fixHTMLUTF8Entities($this->search, ENT_COMPAT).'"/>
 							<input type="submit" class="ml-button" value="'.ML_BUTTON_LABEL_GO.'" name="search_go" /></td>
 						<td class="lastChild">'.$right.'</td>

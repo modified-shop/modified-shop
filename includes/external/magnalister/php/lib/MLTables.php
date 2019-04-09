@@ -80,3 +80,6 @@ define('TABLE_MAGNA_CROWDFOX_PREPARE', 'magnalister_crowdfox_prepare');
 define('TABLE_MAGNA_CROWDFOX_VARIANTMATCHING', 'magnalister_crowdfox_variantmatching');
 define('TABLE_MAGNA_DAWANDA_VARIANTMATCHING', 'magnalister_dawanda_variantmatching');
 define('TABLE_MAGNA_EBAY_VARIANTMATCHING', 'magnalister_ebay_variantmatching');
+define('TABLE_MAGNA_ETSY_CATEGORIES', 'magnalister_etsy_categories');
+define('TABLE_MAGNA_ETSY_PREPARE', 'magnalister_etsy_prepare');
+define('TABLE_MAGNA_ETSY_VARIANTMATCHING', 'magnalister_etsy_variantmatching');

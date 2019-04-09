@@ -40,6 +40,7 @@ class InventoryView {
 	protected $magnaShopSession = array();
 
 	protected $pendingItems = array();
+	protected $newErrors = 0;
 
 	protected $search = '';
 
@@ -128,6 +129,22 @@ class InventoryView {
 			'itemsCount' => $waitingItems,
 			'estimatedWaitingTime' => $maxEstimatedTime
 		);
+	}
+
+	private function getNewErrorCount() {
+		try {
+			$result = MagnaConnector::gi()->submitRequest(array(
+				'ACTION' => 'GetNumberOfNewErrors',
+				'SECONDS' => 600
+			));
+		} catch (MagnaException $e) {
+			$result = array('Errors' => 0);
+		}
+		if (!isset($result['DATA'])) {
+			$result = array('Errors' => 0);
+			return;
+		}
+		$this->newErrors = $result['DATA']['Errors'];
 	}
 
 	protected function sortByType($type) {
@@ -272,6 +289,7 @@ class InventoryView {
 		$result = $this->getInventory();
 		$this->getPendingFunction('Items');
 		$this->getPendingFunction('ProductDetailUpdates');
+		$this->getNewErrorCount();
 		if (($result !== false) && !empty($result['DATA'])) {
 			$this->renderableData = $result['DATA'];
 			foreach ($this->renderableData as &$item) {
@@ -283,6 +301,12 @@ class InventoryView {
 				$item['DateAdded'] = strtotime($item['DateAdded']);
 				$item['DateEnd']  = ('1'==$item['GTC']?'&mdash;':strtotime($item['End']));
 				$item['LastSync'] = ('1970-01-01 00:00:00'==$item['LastSync']?'&mdash;':strtotime($item['LastSync']));
+				if (isset($item['estimatedTime'])) {
+					if ('0000-00-00 00:00:00' == $item['estimatedTime'])  
+						$item['estimatedTime'] = '('.ML_LABEL_NOT_YET_KNOWN.')';
+					} else {
+					$item['estimatedTime'] = strtotime($item['estimatedTime']);
+				}
 			}
 			unset($result);
 		}
@@ -319,7 +343,7 @@ class InventoryView {
                 $ShopDataForSimpleItems = MagnaDB::gi()->fetchArray('
                     SELECT DISTINCT p.products_model SKU, p.products_id products_id, 
                            CAST(p.products_quantity AS SIGNED) ShopQuantity, p.products_price ShopPrice,
-                           pd.products_name ShopTitle 
+                           pd.products_name ShopTitle
                       FROM '.TABLE_PRODUCTS.' p, '.TABLE_PRODUCTS_DESCRIPTION.' pd
                      WHERE p.products_id=pd.products_id
                            AND pd.language_id='.$language.'
@@ -369,20 +393,60 @@ class InventoryView {
 					}
 				}
 			} else {
-            	$ShopDataForVariationItems = MagnaDB::gi()->fetchArray(eecho('
-                SELECT DISTINCT v.'.mlGetVariationSkuField().' AS SKU, v.variation_products_model AS SKUDeprecated,
-                       v.products_id products_id, variation_attributes,
-                       CAST(v.variation_quantity AS SIGNED) ShopQuantity, v.variation_price + p.products_price ShopPrice, pd.products_name ShopTitle
-                  FROM '.TABLE_MAGNA_VARIATIONS.' v, '.TABLE_PRODUCTS.' p, '.TABLE_PRODUCTS_DESCRIPTION.' pd
-                 WHERE v.products_id=p.products_id
-                       AND v.products_id=pd.products_id
-                       AND pd.language_id='.$language.'
-                       AND (
-                            v.'.mlGetVariationSkuField().' IN ('.$SKUlist.') 
-                            OR v.variation_products_model IN ('.$SKUlist.')
-                       )
-            ', false));
+                // if there are more problems with not existing master sku,
+                // we can filter by existing MasterSku where $SKUarr will filled in this method
+                // => now here to use magnaSKU2pID only here (performance)
+                $aSkusWithExistingMaster = array();
+                foreach ($this->renderableData as $item) {
+                    if ((int) magnaSKU2pID(empty($item['MasterSKU']) ? $item['SKU'] : $item['MasterSKU']) !== 0) {
+                        $aSkusWithExistingMaster[] = MagnaDB::gi()->escape($item['SKU']);
+                    }
+                }
+                if (empty($aSkusWithExistingMaster)) {
+                    $ShopDataForVariationItems = array();
+                } else {
+                    $sSkusWithExistingMaster = '"'.implode('", "', $aSkusWithExistingMaster).'"';
+                    $ShopDataForVariationItems = MagnaDB::gi()->fetchArray(eecho('
+                        SELECT DISTINCT v.'.mlGetVariationSkuField().' AS SKU, v.variation_products_model AS SKUDeprecated,
+                            v.products_id products_id, variation_attributes,
+                            CAST(v.variation_quantity AS SIGNED) ShopQuantity, v.variation_price + p.products_price ShopPrice, pd.products_name ShopTitle
+                        FROM '.TABLE_MAGNA_VARIATIONS.' v, '.TABLE_PRODUCTS.' p, '.TABLE_PRODUCTS_DESCRIPTION.' pd
+                        WHERE v.products_id=p.products_id
+                            AND v.products_id=pd.products_id
+                            AND pd.language_id='.$language.'
+                            AND (
+                                    v.'.mlGetVariationSkuField().' IN ('.$sSkusWithExistingMaster.') 
+                                    OR v.variation_products_model IN ('.$sSkusWithExistingMaster.')
+                            )
+                    ', false));
+                }
 			}
+            // ePIDs
+            if ('artNr' == getDBConfigValue('general.keytype', '0')) {
+              $ePIDsForSimpleItems = MagnaDB::gi()->fetchArray('
+                   SELECT products_model AS SKU, ePID FROM '.TABLE_MAGNA_EBAY_PROPERTIES.'
+                    WHERE products_model IN ('.$SKUlist.')');
+              $ePIDsForVariationItems = MagnaDB::gi()->fetchArray('
+                   SELECT marketplace_sku AS SKU, ePID FROM magnalister_ebay_variations_epids
+                    WHERE marketplace_sku IN ('.$SKUlist.')');
+            } else {
+              $ePIDsForSimpleItems = MagnaDB::gi()->fetchArray('
+                   SELECT products_id AS SKU, ePID FROM '.TABLE_MAGNA_EBAY_PROPERTIES.'
+                    WHERE CONCAT(\'ML\', products_id) IN ('.$SKUlist.')');
+              $ePIDsForVariationItems = MagnaDB::gi()->fetchArray('
+                   SELECT marketplace_id AS SKU, ePID FROM magnalister_ebay_variations_epids
+                    WHERE marketplace_id IN ('.$SKUlist.')');
+            }
+            $ePIDsForSimpleItemsBySKU = array();
+            foreach ($ePIDsForSimpleItems as $esRow) {
+              if (!empty($esRow['ePID'])) $ePIDsForSimpleItemsBySKU[$esRow['SKU']] = $esRow['ePID'];
+            }
+            $ePIDsForVariationItemsBySKU = array();
+            foreach ($ePIDsForVariationItems as $evRow) {
+              if (!empty($evRow['ePID'])) $ePIDsForVariationItemsBySKU[$evRow['SKU']] = $evRow['ePID'];
+            }
+            $ePIDsBySKU = array_merge($ePIDsForSimpleItemsBySKU, $ePIDsForVariationItemsBySKU);
+            
 			
             $ShopDataForItemsBySKU = array();
             foreach ($ShopDataForSimpleItems as $ShopDataForSimpleItem) {
@@ -415,12 +479,58 @@ class InventoryView {
                 $item['ShopVarText']  = isset($ShopDataForItemsBySKU[$item['SKU']]['ShopVarText'])
 				                        ? $ShopDataForItemsBySKU[$item['SKU']]['ShopVarText']
 				                        : '&nbsp;';
+                if (    isset($ePIDsBySKU[$item['SKU']])
+		     || isset($item['ePID'])) {
+                     if (!isset($item['ePID'])) $item['ePID'] = $ePIDsBySKU[$item['SKU']];
+                     if ('variations' == $item['ePID']) {
+                       $item['ePID'] = '&mdash;';
+                       $item['PrepareKind'] = ML_EBAY_LABEL_CATALOG_VARIATIONS;
+                     } else if (isset($ePIDsBySKU[$item['SKU']]) && ('newproduct' == $ePIDsBySKU[$item['SKU']])) {
+                       $item['PrepareKind'] = ML_EBAY_LABEL_APPLIED_CATALOG;
+                       $item['ePID'] = '&mdash;';
+                     } else if ('waiting_catalog' == $item['Status']) {
+                       $item['PrepareKind'] = ML_EBAY_LABEL_APPLIED_CATALOG;
+                       $item['ePID'] = '&mdash;';
+                     } else {
+                       $item['PrepareKind'] = ML_EBAY_LABEL_PREPARED_CATALOG;
+                     }
+                } else {
+                     $item['PrepareKind'] = ML_EBAY_LABEL_PREPARED_NO_CATALOG;
+                }
             } else {
                 $item['ShopQuantity'] = $item['ShopPrice'] = $item['ShopTitle'] = '&mdash;';
                 $item['ShopVarText']  = '&nbsp;';
                 $item['ProductsID']   = 0;
             }
+            if (isset ($item['Prepared'])) {
+            //got data from the API
+               switch ($item['Prepared']) {
+                 case('matched'): 
+                   $item['PrepareKind'] = ML_EBAY_LABEL_PRODUCT_MANUAL_MATCHED;
+                   break; 
+                 case('automatched'): 
+                   $item['PrepareKind'] = ML_EBAY_LABEL_PRODUCT_AUTO_MATCHED;
+                   break; 
+                 case('applied'): 
+                   $item['PrepareKind'] = ML_EBAY_LABEL_PRODUCT_APPLIED;
+                   break; 
+                 case('autoapplied'): 
+                   $item['PrepareKind'] = ML_EBAY_LABEL_PRODUCT_AUTO_APPLIED;
+                   break; 
+                 default:
+                   $item['PrepareKind'] = '&mdash;';
+                   break; 
+               } 
+            }
         }
+/*
+$item['PrepareKind']
+Automatisch gematcht ML_EBAY_LABEL_PRODUCT_AUTO_MATCHED
+Manuell gematcht ML_EBAY_LABEL_PRODUCT_MANUAL_MATCHED
+eBay Katalog-Vorschlag ML_EBAY_LABEL_PRODUCT_SUBMITTED
+Eigene Daten 
+(keine Katalogpflicht) ML_EBAY_LABEL_PREPARED_NO_CATALOG
+*/
     }
 	
 	private function emptyStr2mdash($str) {
@@ -443,6 +553,8 @@ class InventoryView {
 					<td>'.ML_LABEL_SHOP_TITLE.'</td>
 					<td>'.ML_LABEL_EBAY_TITLE.' '.$this->sortByType('itemtitle').'</td>
 					<td>'.ML_LABEL_EBAY_ITEM_ID.'</td>
+					<td>'.ML_LABEL_EBAY_EPID.'</td>
+					<td>'.ML_EBAY_LABEL_PREPARE_KIND.'</td>
 					<td>'.($priceBrutto
 						? ML_LABEL_SHOP_PRICE_BRUTTO
 						: ML_LABEL_SHOP_PRICE_NETTO
@@ -450,7 +562,6 @@ class InventoryView {
 					<td>'.ML_STOCK_SHOP_STOCK_EBAY.'<br />'.ML_LAST_SYNC.'</td>
 					<td>'.ML_LABEL_EBAY_LISTINGTIME.' '.$this->sortByType('dateadded').'</td>
 					<td>'.ML_GENERIC_STATUS.'</td>
-					<td>'.ML_GENERAL_INVENTORY_IS_SPLIT.'</td>
 				</tr></thead>
 				<tbody>
 		';
@@ -483,10 +594,33 @@ class InventoryView {
 					<td title="'.fixHTMLUTF8Entities($item['ShopTitle'], ENT_COMPAT).'">'.$item['ShopTitle'].'<br /><span class="small">'.$item['ShopVarText'].'</span></td>
 					<td title="'.fixHTMLUTF8Entities($item['ItemTitle'], ENT_COMPAT).'">'.$item['ItemTitleShort'].'<br /><span class="small">'.$item['VariationAttributesText'].'</span></td>
 					<td>'.(!empty($item['ItemID']) ? '<a href="'.$item['SiteUrl'].'?ViewItem&item='.$item['ItemID'].'" target="_blank">'.$item['ItemID'].'</a>' : '&mdash;').'</td>
+					<td>';
+					if (!empty($item['ePID']) && !empty($item['productWebUrl']))  {
+                                            $html .= '<a href="'.$item['productWebUrl'].'" target="_blank">'.$item['ePID'].'</a>' ;
+					} else if (!empty($item['ePID'])) {
+                                            $html .= $item['ePID'];
+					} else {
+                                            $html .= '&mdash;';
+                                        }
+					$html .= '</td>
+					<td>'.$item['PrepareKind'].'</td>
 					<td>'.$renderedShopPrice.' / '.$this->simplePrice->setPriceAndCurrency($item['Price'], $item['Currency'])->format().'</td>
 					<td>'.$item['ShopQuantity'].' / '.$item['Quantity'].'<br />'.('&mdash;' == $item['LastSync']? '&mdash;' : date("d.m.Y", $item['LastSync']).' &nbsp;&nbsp;<span class="small">'.date("H:i", $item['LastSync'])).'</span></td>
 					<td>'.date("d.m.Y", $item['DateAdded']).' &nbsp;&nbsp;<span class="small">'.date("H:i", $item['DateAdded']).'</span><br />'.('&mdash;' == $item['DateEnd']? '&mdash;' : date("d.m.Y", $item['DateEnd']).' &nbsp;&nbsp;<span class="small">'.date("H:i", $item['DateEnd']).'</span>').'</td>
-					<td title = "';
+					<td>';
+					if ('active' == $item['Status']) {
+						$html .= ML_GENERIC_INVENTORY_STATUS_ACTIVE;
+					} else if ('pending' == $item['Status']) {
+						if (!empty($item['ItemID'])) {
+							$html .= ML_EBAY_INVENTORY_STATUS_PENDING_UPDATE;
+						} else {
+							$html .= ML_EBAY_INVENTORY_STATUS_PENDING_UPLOAD;
+						}
+					} else if ('waiting_catalog' == $item['Status']) {
+						$html .= ML_EBAY_INVENTORY_STATUS_WAITING_CATALOG.'<br />'
+						      .  ML_EBAY_EST_UNTIL .' '.$item['estimatedTime'];
+					}
+					/*<td title = "';
 					if ('active' == $item['Status']) {
 						$html .= ML_AMAZON_LABEL_IN_INVENTORY.'">&nbsp;<img src="'.DIR_MAGNALISTER_WS_IMAGES.'status/green_dot.png" alt="'.ML_AMAZON_LABEL_IN_INVENTORY.'"/></td>';
 					} else if ('pending' == $item['Status']) {
@@ -495,9 +629,8 @@ class InventoryView {
 						} else {
 							$html .= ML_AMAZON_LABEL_ADD_WAIT.'">&nbsp;<img src="'.DIR_MAGNALISTER_WS_IMAGES.'status/grey_dot.png" alt="'.ML_AMAZON_LABEL_ADD_WAIT.'"/></td>';
 						}
-					}
-			$html .= '	
-	                <td>'.(empty($item['IsSplit']) ? ML_BUTTON_LABEL_NO : ML_BUTTON_LABEL_YES).'</td>
+					}*/
+			$html .= '</td>
 				</tr>';
 		}
 		$html .= '
@@ -557,6 +690,9 @@ class InventoryView {
 					</td>
 				</tr></tbody></table>';
 
+		if (!empty($this->newErrors)) {
+			$html .= '<p class="noticeBox">'.ML_EBAY_NEW_ERRORS_OCCURED_CHECK_ERRORLOG.'</p>';
+		}
 		if (!empty($this->pendingItems)) {
 			foreach ($this->pendingItems as $sKey => $aPendingItems) {
 				if (!empty($aPendingItems['itemsCount'])) {

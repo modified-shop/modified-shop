@@ -222,6 +222,8 @@ function getDBConfigValue($key, $mpID, $default = null) {
 	}
 	if (   !array_key_exists($mpID, $magnaConfig['db'])
 		|| !array_key_exists($key,  $magnaConfig['db'][$mpID])
+		|| (     !is_array($magnaConfig['db'][$mpID][$key])          && !is_array($default)
+	             && (strlen(trim($magnaConfig['db'][$mpID][$key])) == 0) && strlen($default) > 0)
 	) {
 		return $default;
 	}

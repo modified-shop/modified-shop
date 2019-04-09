@@ -228,7 +228,7 @@ class TradoriaCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 				'Price' => $price,
 				'Currency' => $this->settings['currency'],
 				'Quantity' => $this->quantityLumb === false ? max(0, $v['Quantity'] - (int)$this->quantitySub) : $this->quantityLumb,
-				'Ean' => $v['EAN']
+				'EAN' => $v['EAN']
 			);
 
 			$vi['ItemTitle'] = $data['submit']['ItemTitle'];

@@ -74,6 +74,10 @@ class Check24SyncInventory extends MagnaCompatibleSyncInventory {
 				$data['NewQuantity'] = $product['Quantity'];
 			}
 
+            if ($this->config['StatusMode'] == 'true' && $product['Status'] == 0) {
+                $data['NewQuantity'] = 0;
+            }
+
 			$data['Process'] = ($data['Process'] || (isset($this->cItem['Quantity']) && ($this->cItem['Quantity'] != $data['NewQuantity'])));
 		}
 
@@ -114,6 +118,11 @@ class Check24SyncInventory extends MagnaCompatibleSyncInventory {
 
 				if ($bSyncStock) {
 					$variant['Quantity'] = $variantData['Quantity'];
+
+                    if ($this->config['StatusMode'] == 'true' && $product['Status'] == 0) {
+                        $variant['Quantity'] = 0;
+                    }
+
 					$variant['Process'] = ($variant['Process'] || ($cVariation['Quantity'] != $variant['Quantity']));
 				}
 

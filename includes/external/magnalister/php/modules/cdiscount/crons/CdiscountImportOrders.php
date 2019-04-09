@@ -55,7 +55,7 @@ class CdiscountImportOrders extends MagnaCompatibleImportOrders {
 	protected function additionalProductsIdentification() {
 		$ean = $this->p['products_ean'];
 		unset($this->p['products_ean']);
-		if ($this->p['products_id'] == 0) {
+		if ($this->p['products_id'] == 0 && !empty($sEAN)) {
 			$pim = MagnaDB::gi()->fetchRow('
 				SELECT products_id, products_model FROM '.TABLE_PRODUCTS.'
 				 WHERE products_ean = "'.$ean.'"

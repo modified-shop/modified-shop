@@ -19,6 +19,7 @@
  */
 
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
+defined('DIR_MAGNA_LANGUAGES') or define('DIR_MAGNA_LANGUAGES', DIR_FS_LANGUAGES);
 
 class MLConfigurator {
 	private $form = array();
@@ -1078,7 +1079,7 @@ class MLConfigurator {
 								$input .= '&nbsp;<div class="desc" id="desc_'.($this->descCount++).'" title="'.ML_LABEL_INFOS.'"><span>'.$mfItem['desc'].'</span></div>';
 							}
 							if (isset($mfItem['label'])) {
-								$input .= ':&nbsp;';
+								$input .= '<span>:&nbsp;</span>';
 							}
 															
 							$input .= $this->renderInput($mfItem);
@@ -1139,9 +1140,11 @@ class MLConfigurator {
 									$input.
 								'</td>';
 					}
-					$html .= !empty($item['label']) ? 
-									$cfgRow : 
-									'<td class="subtable" colspan="'.(2 + $colspan).'"><table><tbody><tr>'.$cfgRow.'</tr></tbody></table></td>';
+					if (!empty($item['label'])) {
+						$html .= $cfgRow;
+					} else if (!empty($item['key'])) {
+						$html .= '<td class="subtable" colspan="'.(2 + $colspan).'"><table><tbody><tr>'.$cfgRow.'</tr></tbody></table></td>';
+					}
 					if (array_key_exists($item['key'], $this->notCorrect)) {
 						$html .= '
 							<td class="error"'.(!isset($item['hint']) ? ' colspan="2"' : '').'>'.$this->notCorrect[$item['key']].'</td>';

@@ -192,7 +192,7 @@ class MagnaRecalcOrdersTotal {
 		if (!isset($this->taxes[$this->shipping['tax']])) {
 			$this->taxes[$this->shipping['tax']] = 0;
 		}
-		$this->taxes[$this->shipping['tax']] += $this->shipping['brutto'] - $this->shipping['netto'];
+		$this->taxes[$this->shipping['tax']] += (float)$this->shipping['brutto'] - (float)$this->shipping['netto'];
 	}
 
 	private function fetchShippingDetails() {
@@ -419,12 +419,18 @@ class MagnaRecalcOrdersTotal {
 		$this->saveOrder();
 	}
 
-	public function execute($platform = 'ebay') {
+	public function execute($platform = 'ebay', $limit = 0) {
 		$platform = MagnaDB::gi()->escape($platform);
+		// limit to last N magnalister_orders datasets
+		if ((int)$limit == 0) {
+			$magnaOrders = TABLE_MAGNA_ORDERS;
+		} else {
+			$magnaOrders = '(SELECT * FROM '.TABLE_MAGNA_ORDERS.' ORDER BY orders_id DESC LIMIT '.$limit.')';
+		}
 		$data = MagnaDB::gi()->fetchArray(eecho('
 		    SELECT o.orders_id, ot.count, mo.special, mo.platform, mo.mpID
 		      FROM '.TABLE_ORDERS.' o
-		INNER JOIN '.TABLE_MAGNA_ORDERS.' mo ON o.orders_id=mo.orders_id AND mo.platform="'.$platform.'"
+		INNER JOIN '.$magnaOrders.' mo ON o.orders_id=mo.orders_id AND mo.platform="'.$platform.'"
 		 LEFT JOIN (
 		        SELECT COUNT(orders_total_id) AS count, orders_id
 		          FROM '.TABLE_ORDERS_TOTAL.' 

@@ -94,10 +94,10 @@ class ML_Database_Model_Query_Select {
 
     /**
      * 
-     * @param type $mJoin 
+     * @param string|array $mJoin
      *      if is string like this 'LEFT JOIN '._DB_PREFIX_.'product p ON ...' , 
      *      if is array like this array( tablename , alias , join condition )
-     * @param type $iType can be one the const join type
+     * @param int $iType can be one the const join type
      * @return ML_Database_Model_Query_Select
      */
     public function join($mJoin, $iType = 0) {
@@ -119,7 +119,7 @@ class ML_Database_Model_Query_Select {
 
     /**
      * see createCondition document
-     * @param type $mCondition
+     * @param string|array $mCondition
      * @return ML_Database_Model_Query_Select
      */
     public function where($mCondition) {
@@ -177,15 +177,15 @@ class ML_Database_Model_Query_Select {
                         $sBoolOperator = $sMixed;
                         foreach ($mValue as $sKey => $mWhereClause) {
                             if (gettype($sKey) === "string") {
-                                $aWhere[] = $this->createCondition(array("$sKey" => $mWhereClause), $sBoolOperator, true);
+                                $aWhere[] = $this->createCondition(array("$sKey" => $mWhereClause), $sBoolOperator);
                             } elseif (gettype($mWhereClause) === "string") {
-                                $aWhere[] = $this->createCondition($mWhereClause, $sBoolOperator, true);
+                                $aWhere[] = $this->createCondition($mWhereClause, $sBoolOperator);
                             } else if (is_array($mWhereClause)) {
-                                $aWhere[] = $this->createCondition($mWhereClause, 'AND', true);
+                                $aWhere[] = $this->createCondition($mWhereClause, 'AND');
                             }
                         }
                     } else {
-                        $aWhere[] = $this->createCondition($mValue, $sBoolOperator, true);
+                        $aWhere[] = $this->createCondition($mValue, $sBoolOperator);
                     }
                 }
             }

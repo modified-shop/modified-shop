@@ -19,10 +19,12 @@
  */
 
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
+global $_MagnaSession;
 
 require(DIR_MAGNALISTER_MODULES.'magnacompatible/config.php');
 $mpconfig['pages']['conf']['class'] = 'TradoriaConfigure';
 $mpconfig['pages']['prepare']['class'] = 'TradoriaPrepare';
 $mpconfig['checkin']['Categories']['Shop'] = 'optional';
 $mpconfig['checkin']['Categories']['Marketplace'] = 'no';
+$mpconfig['checkin']['Variations'] = getDBConfigValue(array('tradoria.checkin.usevariations', 'val'), $_MagnaSession['mpID'], true) ? 'yes' : 'no';
 $mpconfig['auth']['authkeys'] = array('apikey', 'mpusername', 'mppassword');

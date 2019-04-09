@@ -529,6 +529,7 @@ if (!$auth['state']) {
 	mlGetShippingModules($form['import']['fields']['defaultshipping']);
 	mlGetPaymentModules($form['import']['fields']['defaultpayment']);
 	mlGetShippingModules($form['import']['fields']['defaultshippingfba']);
+	mlGetShippingModules($form['import']['fields']['defaultshippingmfnprime']);
 	mlGetPaymentModules($form['import']['fields']['defaultpaymentfba']);
 
 	mlPresetTrackingCodeMatching($_MagnaSession['mpID'], 'amazon.orderstatus.carrier.carrierDBMatching', 'amazon.orderstatus.carrier.trackingcode');

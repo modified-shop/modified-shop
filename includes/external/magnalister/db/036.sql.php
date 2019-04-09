@@ -27,7 +27,7 @@ $queries[] = 'CREATE TABLE IF NOT EXISTS '.TABLE_MAGNA_MEINPAKET_VARIANTMATCHING
   `CustomIdentifier` varchar(255) NOT NULL DEFAULT "",
   `ShopVariation` text NOT NULL,
   PRIMARY KEY (`MpId`,`MpIdentifier`,`CustomIdentifier`)
-)';
+) ENGINE=MyISAM DEFAULT CHARSET=utf8';
 
 function magnaUpdateMeinpaketProperties() {
 	MagnaDB::gi()->query('

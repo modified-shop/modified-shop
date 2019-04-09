@@ -462,6 +462,12 @@ function magnaInstalled($woDBCheck = false) {
 		}
 	}
 
+	if (!defined('DIR_MAGNALISTER_FS_INCLUDES')) {
+		if (!defined('DIR_MAGNALISTER_FS')) defineMagnalisterDir();
+		define('DIR_MAGNALISTER_FS_INCLUDES', DIR_MAGNALISTER_FS.'php/');
+		define('DIR_MAGNALISTER_FS_CALLBACK', DIR_MAGNALISTER_FS_INCLUDES.'callback/');
+	}
+
 	$_magnaFilesInstalled = file_exists(DIR_MAGNALISTER_FS_INCLUDES.'lib/MagnaDB.php')
 		&& file_exists(DIR_MAGNALISTER_FS_INCLUDES.'modules.php')
 		&& file_exists(DIR_MAGNALISTER_FS_INCLUDES.'lib/functionLib.php')

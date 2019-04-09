@@ -1536,12 +1536,41 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
             $where = '"' . MagnaDB::gi()->escape($where) . '"';
         }
 
-        return (string) MagnaDB::gi()->fetchOne('
-			SELECT `' . $tableSettings['Table']['column'] . '`
-			FROM `' . $tableSettings['Table']['table'] . '`
-			WHERE `' . $tableSettings['Alias'] . '` = ' . $where . '
-				AND `' . $tableSettings['Table']['column'] . '` <> \'\'
-		');
+        $iResultCount = (int)MagnaDB::gi()->fetchOne('
+            SELECT COUNT(DISTINCT ' . $tableSettings['Table']['column'] . ')
+             FROM `' . $tableSettings['Table']['table'] . '`
+            WHERE `' . $tableSettings['Alias'] . '` = ' . $where . '
+              AND `' . $tableSettings['Table']['column'] . '` <> \'\'
+            ');
+
+        switch ($iResultCount) {
+            case (0) : {
+                return '';
+            }
+            case (1) : {
+                return (string) MagnaDB::gi()->fetchOne('
+                    SELECT DISTINCT `' . $tableSettings['Table']['column'] . '`
+                     FROM `' . $tableSettings['Table']['table'] . '`
+                    WHERE `' . $tableSettings['Alias'] . '` = ' . $where . '
+                      AND `' . $tableSettings['Table']['column'] . '` <> \'\'
+                    ');
+            }
+            default: {
+                if (    MagnaDB::gi()->columnExistsInTable('language_id', $tableSettings['Table']['table'])
+                     && (getDBConfigValue($this->marketplace.'.lang' , $this->mpId, 0) != 0)) {
+                    return (string) MagnaDB::gi()->fetchOne('
+                        SELECT DISTINCT `' . $tableSettings['Table']['column'] . '`
+                         FROM `' . $tableSettings['Table']['table'] . '`
+                        WHERE `' . $tableSettings['Alias'] . '` = ' . $where . '
+                          AND `' . $tableSettings['Table']['column'] . '` <> \'\'
+                          AND language_id = '.(int)getDBConfigValue($this->marketplace.'.lang' , $this->mpId, 0).'
+                        LIMIT 1
+                        ');
+                } else {
+                    return '';
+                }
+            }
+        }
     }
 
     protected function fixHTMLUTF8Entities($code) {

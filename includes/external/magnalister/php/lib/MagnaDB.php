@@ -1363,7 +1363,6 @@ class MagnaDB {
 		$where = rtrim($where, "AND ");
 
 		$query = "DELETE FROM `".$table."` WHERE ".$where." ".$add;
-
 		return $this->query($query);
 	}
 

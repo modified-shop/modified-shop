@@ -1794,6 +1794,17 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 			}
 		}
 	}
+
+	/**
+	 * ensure that orders_total data are complete
+	 */
+	protected function fixOrdersTotal() {
+		require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/MagnaRecalcOrdersTotal.php');
+		$mfot = new MagnaRecalcOrdersTotal();
+		ob_start();
+		$mfot->execute($this->marketplace, 100);
+		ob_end_clean();
+	}
 	
 	protected function submitSyncBatch() {
 		if (get_class($this->db) != 'MagnaTestDB') {
@@ -1856,6 +1867,7 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 			if (!empty($this->lastOrderDate)) {
 				setDBConfigValue($this->marketplace.'.orderimport.lastrun', $this->mpID, $this->lastOrderDate, true);
 			}
+			$this->fixOrdersTotal();
 		}
 		
 	}

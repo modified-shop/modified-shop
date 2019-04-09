@@ -35,6 +35,13 @@ class EbayCheckinProductList extends MLProductListEbayAbstract{
 		$this->aListConfig[] = array(
 			'head' => array(
 				'attributes'	=> 'class="lowestprice"',
+				'content'		=> 'ML_EBAY_LABEL_PREPARE_KIND',
+			),
+			'field' => array('ebaypreparetype'),
+		);
+		$this->aListConfig[] = array(
+			'head' => array(
+				'attributes'	=> 'class="lowestprice"',
 				'content'		=> 'ML_EBAY_LISTING_TYPE',
 			),
 			'field' => array('ebaylistingtype'),

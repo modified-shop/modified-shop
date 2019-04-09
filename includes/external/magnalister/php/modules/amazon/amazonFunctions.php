@@ -595,19 +595,53 @@ function amazonProcessMultiOrderStatus($args) {
 	#die();
 }
 
+function magnaAmazonRunDbMatching($tableSettings, $defaultAlias, $where) {
+    if (   !isset($tableSettings['Table']['table'])
+        || empty($tableSettings['Table']['table'])
+        || empty($tableSettings['Table']['column'])
+    ) {
+        return false;
+    }
+    if (empty($tableSettings['Alias'])) {
+        $tableSettings['Alias'] = $defaultAlias;
+    }
+
+    return (string)MagnaDB::gi()->fetchOne('
+        SELECT `'.$tableSettings['Table']['column'].'` 
+          FROM `'.$tableSettings['Table']['table'].'` 
+         WHERE `'.$tableSettings['Alias'].'` = "'.MagnaDB::gi()->escape($where).'"
+               AND `'.$tableSettings['Table']['column'].'` <> \'\'
+         LIMIT 1
+    ');
+}
+
 function magnaAmazonFetchTrackingCode3rdParty($oID, $mpID) {
-	$table = getDBConfigValue('amazon.orderstatus.carrier.trackingcode.table', $mpID, false);
-	if (($table === false) || empty($table['column']) || empty($table['table'])) return '';
-	$cIDAlias = getDBConfigValue('amazon.orderstatus.carrier.trackingcode.alias', $mpID);
-	if (empty($cIDAlias)) {
-		$cIDAlias = 'orders_id';
-	}
-	return (string)MagnaDB::gi()->fetchOne('
-		SELECT `'.$table['column'].'`
-		  FROM `'.$table['table'].'`
-		 WHERE `'.$cIDAlias.'`=\''.MagnaDB::gi()->escape($oID).'\'
-		       AND `'.$table['column'].'` <> \'\'
-	');
+    $mTrackingCode = magnaAmazonRunDbMatching(array (
+        'Table' => getDBConfigValue('amazon.orderstatus.carrier.trackingcode.table', $mpID, false),
+        'Alias' => getDBConfigValue('amazon.orderstatus.carrier.trackingcode.alias', $mpID, false),
+    ), 'orders_id', $oID);
+
+    // for Gambio 2.3 > if table "orders_parcel_tracking_codes" exists
+    if (false == $mTrackingCode && MagnaDB::gi()->tableExists('orders_parcel_tracking_codes')) {
+        $mTrackingCode = MagnaDB::gi()->fetchOne("
+            SELECT tracking_code
+              FROM orders_parcel_tracking_codes
+             WHERE order_id = '".MagnaDB::gi()->escape($oID)."'
+             LIMIT 1
+        ");
+    }
+
+    // for modified 2.0 > if table "orders_tracking" exists
+    if (false == $mTrackingCode && MagnaDB::gi()->tableExists('orders_tracking')) {
+        $mTrackingCode = MagnaDB::gi()->fetchOne("
+            SELECT parcel_id
+              FROM orders_tracking
+             WHERE orders_id = '".MagnaDB::gi()->escape($oID)."'
+             LIMIT 1
+        ");
+    }
+
+    return $mTrackingCode;
 }
 
 function magnaAmazonSaveTrackingCode3rdParty($oID, $tc, $mpID) {
@@ -625,18 +659,40 @@ function magnaAmazonSaveTrackingCode3rdParty($oID, $tc, $mpID) {
 }
 
 function magnaAmazonFetchCarrier3rdParty($oID, $mpID) {
-	$table = getDBConfigValue('amazon.orderstatus.carrier.carrierDBMatching.table', $mpID, false);
-	if (($table === false) || empty($table['column']) || empty($table['table'])) return '';
-	$cIDAlias = getDBConfigValue('amazon.orderstatus.carrier.carrierDBMatching.alias', $mpID);
-	if (empty($cIDAlias)) {
-		$cIDAlias = 'orders_id';
-	}
-	return (string)MagnaDB::gi()->fetchOne('
-		SELECT `'.$table['column'].'`
-		  FROM `'.$table['table'].'`
-		 WHERE `'.$cIDAlias.'`=\''.MagnaDB::gi()->escape($oID).'\'
-		       AND `'.$table['column'].'` <> \'\'
-	');
+    $mCarrier = magnaAmazonRunDbMatching(array (
+        'Table' => getDBConfigValue('amazon.orderstatus.carrier.carrierDBMatching.table', $mpID, false),
+        'Alias' => getDBConfigValue('amazon.orderstatus.carrier.carrierDBMatching.alias', $mpID, false),
+    ), 'orders_id', $oID);
+
+    // for Gambio 2.3 > if table "orders_parcel_tracking_codes" exists
+    if (false == $mCarrier && MagnaDB::gi()->tableExists('orders_parcel_tracking_codes')) {
+        $mCarrier = MagnaDB::gi()->fetchOne("
+            SELECT parcel_service_name
+              FROM orders_parcel_tracking_codes
+             WHERE order_id = '".MagnaDB::gi()->escape($oID)."'
+             LIMIT 1
+        ");
+    }
+
+    // for modified 2.0+ > if table "orders_tracking" exists
+    if (false == $mCarrier && MagnaDB::gi()->tableExists('orders_tracking')) {
+        $sCarrierId = MagnaDB::gi()->fetchOne("
+            SELECT carrier_id
+              FROM orders_tracking
+             WHERE orders_id = '".MagnaDB::gi()->escape($oID)."'
+             LIMIT 1
+        ");
+        if (!empty($sCarrierId)) {
+            $mCarrier = MagnaDB::gi()->fetchOne("
+                SELECT carrier_name
+                  FROM carriers
+                 WHERE carrier_id = '".MagnaDB::gi()->escape($sCarrierId)."'
+                 LIMIT 1
+            ");
+        }
+    }
+
+    return $mCarrier;
 }
 
 function magnaAmazonSaveCarrier3rdParty($oID, $carrier, $mpID) {

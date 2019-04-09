@@ -85,14 +85,16 @@ class HitmeisterPrepare extends MagnaCompatibleBase
 			foreach ($oProductSaver->aMissingFields as $sErrorMessage => $aErrorProducts) {
 				if (count($aErrorProducts)) {
 					$aExcludeProductIds = array_merge($aExcludeProductIds, array_keys($aErrorProducts));
-					echo '<div class="errorBox">';
-					echo constant($sErrorMessage);
-					if (count($aErrorProducts) === 1) { // eg. for variant errors
-						foreach ($aErrorProducts as $sSpecificError) {
-							echo empty($sSpecificError) ? '' : ' ('.$sSpecificError.')';
-						}
-					}
-					echo '</div>';
+					if (!$isAjax) {
+                        echo '<div class="errorBox">';
+                        echo constant($sErrorMessage);
+                        if (count($aErrorProducts) === 1) { // eg. for variant errors
+                            foreach ($aErrorProducts as $sSpecificError) {
+                                echo empty($sSpecificError) ? '' : ' ('.$sSpecificError.')';
+                            }
+                        }
+                        echo '</div>';
+                    }
 				}
 			}
 

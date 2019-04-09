@@ -545,6 +545,13 @@ class RicardoPrepareView extends MagnaCompatibleBase {
 			}
 		}
 
+		// if StartDate in the past, set it to now
+		// (otherwise the DatePicker shows today's date and the old hour)
+		if (    !empty($preSelected['StartDate'])
+		     && ($preSelected['StartDate'] < date('Y-m-d H:i:s')) ) {
+			$preSelected['StartDate'] = date('Y-m-d H:i:s');
+		}
+
 		return $preSelected;
 	}
 

@@ -165,5 +165,38 @@ if (MAGNA_DEBUG && class_exists('MagnaDB')) {
 				})(jQuery);
 			<?php } ?>
 		</script>
+        <?php
+        global $_magnaLanguage;
+        switch (strtolower($_magnaLanguage)) {
+            case 'german': {
+                // German
+                $sUrl = 'https://embed.tawk.to/5b73efaaafc2c34e96e7976e/default';
+                break;
+            }
+            case 'french': {
+                // French
+                $sUrl = 'https://embed.tawk.to/5b73f645f31d0f771d83cf15/default';
+                break;
+            }
+            default: {
+                // English
+                $sUrl = 'https://embed.tawk.to/5b73f63aafc2c34e96e79794/default';
+                break;
+            }
+        }
+        ?>
+        <!--Start of Tawk.to Script-->
+        <script type="text/javascript">
+            var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+            (function(){
+                var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+                s1.async=true;
+                s1.src='<?php echo $sUrl; ?>';
+                s1.charset='UTF-8';
+                s1.setAttribute('crossorigin','*');
+                s0.parentNode.insertBefore(s1,s0);
+            })();
+        </script>
+        <!--End of Tawk.to Script-->
 	</body>
 </html>

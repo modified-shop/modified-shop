@@ -380,7 +380,7 @@ class EbayHelper extends AttributesMatchingHelper
 	protected function getPreparedProductsData($category)
 	{
 		$dataFromDB = MagnaDB::gi()->fetchArray(eecho('
-				SELECT `ItemSpecifics`, PrimaryCategory, SecondaryCategory
+				SELECT DISTINCT `ItemSpecifics`, PrimaryCategory, SecondaryCategory
 				FROM ' . TABLE_MAGNA_EBAY_PROPERTIES . '
 				WHERE mpID = ' . $this->mpId . '
 					AND (
@@ -398,6 +398,8 @@ class EbayHelper extends AttributesMatchingHelper
 					if (!empty($itemSpecifics)) {
 						$result[] = $itemSpecifics;
 					}
+                    unset($decodedItemSpecifics);
+					unset($itemSpecifics);
 				}
 			}
 

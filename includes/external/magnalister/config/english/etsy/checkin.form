@@ -1,0 +1,66 @@
+{
+    "checkin":{  
+        "headline":"Listing Process",
+        "fields":{  
+            "status":{  
+                "label":"Status filter",
+                "key":"_#_platform_#_.checkin.status",
+                "type":"checkbox",
+                "values":{  
+                    "val":"Select only active Items"
+                },
+                "default":{  
+                    "val":false
+                }
+            },
+            "quantity":{  
+                "label":"Inventory Item Stock",
+                "desc":"Define, how many items are available by default. You can adjust the quantity for each item during the adjustment retroactively. \n\t\t\t\t\t<br\/><br\/>\n\t\t\t\t\tTo avoid over-sales, you can set the value <br \/>\n\t\t\t\t\t<strong>\"Take Less value from Shop Stock, Activate\"<\/strong> activate.<br \/><br \/>\n\t\t\t\t\t<strong>Example:<\/strong>value \"2\" sets.Results -> Shop Stock: 10 -> eBay Stock: 8",
+                "key":"_#_platform_#_.quantity.type",
+                "type":"selection",
+                "values":{  
+                    "stock":"use stock quantity from shop",
+                    "stocksub":"use stock quantity from shop, less the value from the right field",
+                    "lump":"fix-rate (from right field)"
+                },
+                "default":"lump",
+                "morefields":{  
+                    "quantity":{  
+                        "key":"_#_platform_#_.quantity.value",
+                        "type":"text",
+                        "default":1,
+                        "verify":"int",
+                        "cssClasses":[  
+                            "autoWidth"
+                        ]
+                    }
+                }
+            },
+            "maxquantity":{
+                "label":"Quantity Limit",
+                "desc":"Use this to limit the quantity of your eBay Items.<br \/><br \/>\n\t\t\t\t\t\t<strong>Example:<\/strong> You set the \"Quantity\" to \"use stock quantity from shop\", and set the limit to 20. That means, when uploading items, we use the quantity from the shop as long as it's smaller than 20 - otherwise, we set it to 20. The stock synchronisation works the same way: It sets the eBay quantity equal to the shop quantity when it's smaller than 20, otherwise = 20.<br \/><br \/>\n\t\t\t\t\t\tIf you leave this field empty or use 0, no limit is set.<br \/><br \/>\n\t\t\t\t\t\t<strong>Note:<\/strong> This field has no effect when the \"Quantity\" is set to \"fix-rate (from right field)\".",
+                "key":"_#_platform_#_.maxquantity",
+                "type":"text",
+                "default":"",
+                "cssClasses":[  
+                    "autoWidth"
+                ]
+            },
+            "leadtimetoship":{  
+                "label":"Maximum Dispatch Time",
+                "desc":"Maximum time you need to ship the Item.",
+                "key":"_#_platform_#_.checkin.leadtimetoship",
+                "type":"selection",
+                "values":{  
+                    "__calc__":"range(1,30)"
+                }
+            },
+            "mfn":{  
+                "label":"Default Manufacturer",
+                "desc":"If no manufacturer is stored in the product data, use this.",
+                "key":"_#_platform_#_.checkin.manufacturerfallback",
+                "type":"text"
+            }
+        }
+    }
+}

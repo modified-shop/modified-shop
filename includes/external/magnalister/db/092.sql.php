@@ -26,5 +26,5 @@ $queries = array('
 		`IsValid` bit NOT NULL DEFAULT 1,
 		`ModificationDate` DATETIME NOT NULL DEFAULT \'0000-00-00 00:00:00\',
 		PRIMARY KEY (`MpId`, `MpIdentifier`, `CustomIdentifier`)
-	)
+	) ENGINE=MyISAM DEFAULT CHARSET=utf8
 ');

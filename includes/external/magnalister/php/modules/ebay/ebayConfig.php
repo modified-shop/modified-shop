@@ -65,9 +65,22 @@ function magnaUpdateCurrencyValues($args) {
 	return $ret;
 }
 
-function eBayGenToken($args, &$value = '') {
+function eBayGenOauthToken($args, &$value = '') {
+	return eBayGenToken($args, $value, false);
+}
+
+function eBayGenToken($args, &$value = '', $blTradeAPIToken = true) {
 	global $_MagnaSession, $_url;
 	$expires = getDBConfigValue('ebay.token.expires', $_MagnaSession['mpID'], '');
+	if ($blTradeAPIToken) {
+		$expires = getDBConfigValue('ebay.token.expires', $_MagnaSession['mpID'], '');
+		$apiRequest = 'GetTokenCreationLink';
+		$buttonId = 'requestToken';
+	} else {
+		$expires = getDBConfigValue('ebay.oauth.token.expires', $_MagnaSession['mpID'], '');
+		$apiRequest = 'GetOauthTokenCreationLink';
+		$buttonId = 'requestOauthToken';
+	}
 	$firstToken = '';
 	if (!empty($expires)) {
 		if(is_numeric($expires))
@@ -77,15 +90,15 @@ function eBayGenToken($args, &$value = '') {
 	} else {
 		$firstToken = ' mlbtn-action';
 	}
-	return '<input class="ml-button'.$firstToken.' mlbtn-action" type="button" value="'.ML_EBAY_BUTTON_TOKEN_NEW.'" id="requestToken"/>
+	return '<input class="ml-button'.$firstToken.' mlbtn-action" type="button" value="'.ML_EBAY_BUTTON_TOKEN_NEW.'" id="'.$buttonId.'"/>
 	'.$expires.'
 <script type="text/javascript">/*<![CDATA[*/
 $(document).ready(function() {
-	$(\'#requestToken\').click(function() {
+	$(\'#'.$buttonId.'\').click(function() {
 		jQuery.blockUI(blockUILoading);
 		jQuery.ajax({
 			\'method\': \'get\',
-			\'url\': \''.toURL($_url, array('what' => 'GetTokenCreationLink', 'kind' => 'ajax'), true).'\',
+			\'url\': \''.toURL($_url, array('what' => $apiRequest, 'kind' => 'ajax'), true).'\',
 			\'success\': function (data) {
 				// some shop systems attach error messages, warnings or even notices
 				// to the output, which would be fatal here, so we strip it away
@@ -179,6 +192,10 @@ function tokenAvailable() {
 		if ('true' == $result['DATA']['TokenAvailable']) {
 			setDBConfigValue('ebay.token', $_MagnaSession['mpID'], '__saved__', true);
 			setDBConfigValue('ebay.token.expires', $_MagnaSession['mpID'], $result['DATA']['TokenExpirationTime'], true);
+			if (array_key_exists('OauthTokenExpirationTime', $result['DATA'])) {
+				// actually, it's the expiration time for the "refresh token" - but we handle these things within the API (the customer only needs to know when it's time to renew the auth process)
+				setDBConfigValue('ebay.oauth.token.expires', $_MagnaSession['mpID'], $result['DATA']['OauthTokenExpirationTime'], true);
+			}
 			return true;
 		}
 	} catch (MagnaException $e) {}
@@ -200,6 +217,18 @@ if (isset($_GET['what'])) {
 		} catch (MagnaException $e) { }
 		echo $iframeURL;
 		#require(DIR_WS_INCLUDES . 'application_bottom.php');
+		exit();
+	} else if($_GET['what'] == 'GetOauthTokenCreationLink') {
+		$iframeURL = 'error';
+		try {
+			//*
+			$result = MagnaConnector::gi()->submitRequest(array(
+				'ACTION' => 'GetOauthTokenCreationLink'
+			));
+			$iframeURL = $result['DATA']['tokenCreationLink'];
+			//*/
+		} catch (MagnaException $e) { }
+		echo $iframeURL;
 		exit();
 	} elseif ($_GET['what'] == 'GetSellerProfileData'){
 		eBayGetSellerProfileData($_GET['value']);
@@ -483,7 +512,8 @@ if (!$auth['state']) {
 	setDBConfigValue('ebay.authed', $_MagnaSession['mpID'], $auth, true);
 	// renderAuthError might have removed 'ebay.token'. But the token is there and valid at this point.
 	// Call tokenAvailable() again to set this config value.
-	if (getDBConfigValue('ebay.token', $_MagnaSession['mpID'], '') !== '__saved__') {
+	if (    getDBConfigValue('ebay.token', $_MagnaSession['mpID'], '') !== '__saved__'
+	     || getDBConfigValue('ebay.token.expires', $_MagnaSession['mpID'], '') == ''  ) {
 		tokenAvailable();
 	}
 	if (  (!$blBusinessPoliciesSet) 

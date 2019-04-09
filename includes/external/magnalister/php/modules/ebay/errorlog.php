@@ -22,6 +22,7 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 require_once(DIR_MAGNALISTER_MODULES.'magnacompatible/errorlog/MagnaCompatibleErrorView.php');
 
 class EbayErrorView extends MagnaCompatibleErrorView {
+	protected $blRecommendationColumn = true;
 	public function __construct($settings = array()) {
 		$settings = array_merge(array(
 			'hasImport' => true,
@@ -29,43 +30,6 @@ class EbayErrorView extends MagnaCompatibleErrorView {
 		), $settings);
 		
 		parent::__construct($settings);
-	}
-
-	public function renderActionBox() {
-		$left = '<input type="button" class="ml-button ml-js-deleteBtn" value="'.ML_BUTTON_LABEL_DELETE.'" name="delete"/>';
-		$right = '&nbsp;';
-
-		ob_start();?>
-<script type="text/javascript">/*<![CDATA[*/
-$(document).ready(function() {
-	$('.ml-js-deleteBtn').click(function() {
-		var btnAction = $(this).attr('name');
-		if (($('#errorlog input[type="checkbox"]:checked').length > 0)
-			&& confirm(unescape(<?php echo "'".html2url(ML_GENERIC_DELETE_ERROR_MESSAGES)."'"; ?>))
-		) {
-			$('#action').val(btnAction);
-			$(this).parents('form').submit();
-		}
-	});
-});
-/*]]>*/</script>
-<?php // Durch aufrufen der Seite wird automatisch ein Aktualisierungsauftrag gestartet
-		$js = ob_get_contents();	
-		ob_end_clean();
-
-		return '
-			<input type="hidden" id="action" name="action" value="">
-			<input type="hidden" name="timestamp" value="'.time().'">
-			<table class="actions">
-				<thead><tr><th>'.ML_LABEL_ACTIONS.'</th></tr></thead>
-				<tbody><tr><td>
-					<table><tbody><tr>
-						<td class="firstChild">'.$left.'</td>
-						<td class="lastChild">'.$right.'</td>
-					</tr></tbody></table>
-				</td></tr></tbody>
-			</table>
-			'.$js;
 	}
 }
 

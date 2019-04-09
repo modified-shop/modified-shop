@@ -60,6 +60,12 @@ class MLProductListDependencyEbayPrepareFormAction extends MLProductListDependen
 				;
 				$where['mpID'] = $this->getMagnaSession('mpID');
 				MagnaDB::gi()->delete(TABLE_MAGNA_EBAY_PROPERTIES, $where);
+
+				if (isset($where['products_model'])) {
+					$where['products_sku'] = $where['products_model'];
+					unset($where['products_model']);
+				}
+				MagnaDB::gi()->delete('magnalister_ebay_variations_epids', $where);
 				MagnaDB::gi()->delete(TABLE_MAGNA_SELECTION, array(
 					'pID' => $pID,
 					'mpID' => $this->getMagnaSession('mpID'),

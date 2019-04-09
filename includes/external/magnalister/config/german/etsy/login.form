@@ -1,0 +1,63 @@
+{
+    "login": {
+        "headline": "_#_platformName_#_ Zugangsdaten",
+        "desc": "The term 'Etsy' is a trademark of Etsy, Inc. This application uses the Etsy API but is not endorsed or certified by Etsy, Inc.",
+        "fields": [
+            {
+                "label": "Etsy Username",
+                "key": "_#_platform_#_.username",
+                "type": "text"
+            },
+            {
+                "label": "Etsy Password",
+                "key": "_#_platform_#_.password",
+                "type": "password",
+                "settings": {
+                    "save": false
+                }
+            },
+            {
+                "label": "Etsy Token",
+                "key": "_#_platform_#_.token",
+                "desc": "",
+                "type": "extern",
+                "procFunc": "EtsyConfigure::EtsyGetToken",
+                "params": [
+
+                ]
+            },
+            {
+                "label": "Etsy Sprache",
+                "key": "_#_platform_#_.shop.language",
+                "desc": "",
+                "type": "extern",
+                "procFunc": "EtsyConfigure::languageMatching",
+                "params": [
+
+                ]
+            },
+            {
+                "label": "Etsy W&auml;hrung",
+                "key": "_#_platform_#_.currency",
+                "desc": "",
+                "type": "selection",
+                "values": {
+                    "EUR": "€ Euro",
+                    "USD": "$ US-Dollar",
+                    "CAD": "$ Kanadischer Dollar",
+                    "GBP": "£ Britische Pfund",
+                    "AUD": "$ Australischer Dollar",
+                    "DDK": "kr Dänische Krone",
+                    "HKD": "$ Honkong-Dollar",
+                    "NZD": "$ Neuseeländischer Dollar",
+                    "NOK": "kr Norwegische Krone",
+                    "SGD": "$ Singapur-Dollar",
+                    "SEK": "kr Schwedische Krone",
+                    "CHF": "Schweizer Franken",
+                    "TWD": "NT$ Neuer Taiwan-Dollar"
+                },
+                "default": "EUR"
+            }
+        ]
+    }
+}

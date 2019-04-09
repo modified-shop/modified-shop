@@ -21,15 +21,15 @@ require_once(DIR_MAGNALISTER_INCLUDES . 'lib/classes/CheckinManager.php');
 
 class RicardoCheckinManager extends CheckinManager {
 	
-	protected $bDisplayFees = true;
+	protected $bDisplayLimitationWarning = true;
 
 	public function mainRoutine() {
 		global $magnaConfig;
 
 		$items = $this->getNumberOfSelectedItems();
-		$aDisplayFees = getDBConfigValue('ricardo.checkin.displayfees', $this->_magnasession['mpID']);
-		if (isset($aDisplayFees)) {
-			$this->bDisplayFees = $aDisplayFees['val'];
+		$aDisplayLimitationWarning = getDBConfigValue('ricardo.checkin.showlimitationwarning', $this->_magnasession['mpID'], array('val'=>true));
+		if (isset($aDisplayLimitationWarning)) {
+			$this->bDisplayLimitationWarning = $aDisplayLimitationWarning['val'];
 		}
 		
 		/* Are we in the holy sumbit cycle? */
@@ -178,7 +178,7 @@ $(document).ready(function() {
 	
 	$('#checkin_add').click(function() {
 		$(this).itemsFee({
-			mode: '<?php echo $this->bDisplayFees === true ? 'on' : 'off' ?>',
+			mode: '<?php echo $this->bDisplayLimitationWarning === true ? 'on' : 'off' ?>',
 			addItems: okFunction,
 			method: 'getItemsFee',
 			message: '<?php echo ML_RICARDO_ARTICLES_FEE ?>',
@@ -195,7 +195,7 @@ $(document).ready(function() {
 	
 	$('#checkin_purge').click(function() {
 		$(this).itemsFee({
-			mode: '<?php echo $this->bDisplayFees === true ? 'on' : 'off' ?>',
+			mode: '<?php echo $this->bDisplayLimitationWarning === true ? 'on' : 'off' ?>',
 			addItems: okPurgeFunction,
 			method: 'getItemsFee',
 			message: '<?php echo ML_RICARDO_ARTICLES_FEE ?>',

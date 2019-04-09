@@ -98,6 +98,12 @@ class HoodCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 	}
 	
 	protected function getVariations($pID, $product, &$data) {
+		/* For Gambio Properties, use own function
+		 */
+		if (getDBConfigValue('general.options', '0', 'old') == 'gambioProperties') {
+			$this->getProperties($pID, $product, $data);
+			return true;
+		}
 		/* This is limited to one VariationTheme.
 		   Start with guessing the "right" one, aka using the one that has the most variations. */
 		$pVID = MagnaDB::gi()->fetchRow('
@@ -177,6 +183,32 @@ class HoodCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 		$data['submit']['Variations'] = $variations;
 		return true;
 	}
+
+	private function getProperties($pID, $product, &$data) {
+		MLProduct::gi()->setOptions(array ('useGambioProperties' => true));
+		$p = MLProduct::gi()->getProductById($pID);
+		$vars = array();
+		$mainQuantity = 0;
+		foreach ($p['Variations'] as $i => $v) {
+			$vars[$i] = array (
+			'SKU' => $v['MarketplaceSku'],
+			'Price' => $v['Price'],
+			'Quantity' => $v['Quantity'],
+			'Variation' => array(),
+			); 
+			foreach ($v['Variation'] as $vv) {
+				$vars[$i]['Variation'][] = array(
+				'Name' => $vv['Name'],
+				'Value' => $vv['Value']
+				);
+			}
+			$mainQuantity += $v['Quantity'];
+		}
+		if (!empty($vars)) {
+			$data['submit']['Quantity'] = $mainQuantity;
+			$data['submit']['Variations'] = $vars;
+		}
+	}
 	
 	protected function appendOfferData($pID, $product, &$data) {
 		$listingType = ($data['submit']['ListingType'] == 'classic') ? 'Auction' : 'Fixed';
@@ -200,6 +232,7 @@ class HoodCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 		
 		$data['submit']['Tax'] = SimplePrice::getTaxByClassID($product['products_tax_class_id']);
 		$data['submit']['Quantity'] = HoodHelper::calcQuantity($product['products_quantity'], $this->quantityConfig[$listingType]);
+
 		
 		if (('shopProduct' == $data['submit']['ListingType']) && getDBConfigValue(array(
 				$this->_magnasession['currentPlatform'] . '.usevariations', 'val'
@@ -437,6 +470,9 @@ class HoodCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 		}
 	}
 	
+	/*
+	 * used in Synchro
+	 */
 	public static function loadProductByPId($pId, $onlyActive = false) {
 		global $_MagnaSession;
 		
@@ -459,8 +495,13 @@ class HoodCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 		return $data['submit'];
 	}
 	
+	/*
+	 * used in Synchro
+	 */
 	public static function loadOfferByPId($pId, $listingType, $onlyActive = false) {
 		global $_MagnaSession;
+
+        MLProduct::gi()->setLanguage(getDBConfigValue('hood.lang', $_MagnaSession['mpID'], $_SESSION['languages_id']));
 		
 		$product = MLProduct::gi()->getProductByIdOld($pId);
 		if ($onlyActive && ($product['products_status'] == '0')) {

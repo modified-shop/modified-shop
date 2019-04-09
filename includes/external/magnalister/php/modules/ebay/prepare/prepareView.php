@@ -19,7 +19,14 @@
  */
 
 /**
- * @todo: Preise einfrieren funzt perfekt fuer Einzel-Artikel. Fuer Multi noch einzubauen.
+ * TODO 2018-08-06:
+   - Flag haben obs aus dem Matching kommt, in dem Fall, wenn prepare row nicht ganz gefüllt
+   so tun als obs gar nicht gefüllt wäre, sprich, Daten aus Konfig nehmen (und nur EPID aus prepare row)
+   (mach ich so: Wenn EPID gefüllt ist, PrimaryCategory aber nicht (is null oder 0), nehme Daten
+   aus Konfig)
+   - Wenn EPID vorausgefüllt, Meldung dass es versucht wird automatisch zu matchen, unterdrücken.
+   - Und dann die Mechanik bei mehrfach-Vorbereitung.
+ *
  */
 
 /**
@@ -340,6 +347,17 @@ function renderSinglePrepareView($data) {
  * @param $data	enthaelt bereits vorausgefuellte daten aus Config oder User-eingaben
  */
 function renderMultiPrepareView($data) {
+// DEBUG
+#echo print_m($data, __LINE__.' '.__FUNCTION__.' $data');
+/* $data :: Array
+(
+    [0] => Array
+        (
+            [products_id] => 9
+            [products_model] => GT-S5230LKAXEB
+    ...
+            [ePID] => variations
+*/
 	global $_MagnaSession, $_url;
 	/* Ggf. Vorausfuellen der Kategorie */
 	$prefilledCatsArray = array();
@@ -354,6 +372,7 @@ function renderMultiPrepareView($data) {
 	$SellerProfilesArray  = array();
 	$DispatchTimeMaxArray = array();
 	$blBusinessPoliciesSet = geteBayBusinessPolicies();
+	$ePidsFilled = 0;
 
 	foreach ($data as $row) {
 		if (   isset($row['PrimaryCategory'])
@@ -385,9 +404,17 @@ function renderMultiPrepareView($data) {
 		if (!empty($row['SellerProfiles'])) {
 			$SellerProfilesArray[] = $row['SellerProfiles'];
 		}
+		if (!empty($row['ePID'])) {
+			$ePidsFilled++;
+		}
+		
         $lastI = $i;
 		++$i;
 	}
+	/* wenn alle ePIDs ausgefuellt, muss die Warnung nicht angezeigt werden */
+	if ($ePidsFilled == $i) { $ePidsFilled = true;
+	} else { $ePidsFilled = false; }
+
 	/* nur vorausfuellen wenn fuer alle gleich */
 	$PrimaryCategory = null;
 	if (1 == count($prefilledCatsArray)) {
@@ -504,11 +531,22 @@ function renderMultiPrepareView($data) {
 		}
 	}
 
+	// PBSE: forward ePIDs, if available
+	$html = '';
+	foreach ($data as $row) {
+		if (isset($row['ePID']) && !empty($row['ePID'])) {
+			$html .= '
+		<input type="hidden" value="'.$row['ePID'].'" name="ePID'.$row['products_id'].'" id="ePID'.$row['products_id'].'"/>';
+		}
+	}
+	#if ($IsMatching) 
+	#		$html .= '
+	#	<input type="hidden" value="matching" name="prepare" id="prepare"/>';
 	/*
 	 * Feldbezeichner | Eingabefeld | Beschreibung
 	 */
 	$oddEven = false;
-	$html = '
+	$html .= '
 		<tbody>
 			<tr class="headline">
 				<td colspan="3"><h4>'.ML_EBAY_AUCTION_SETTINGS.'</h4></td>
@@ -964,6 +1002,18 @@ function renderMultiPrepareView($data) {
 					$html .= '<br />'.ML_EBAY_NOTE_VARIATIONS_DISABLED;
 			}
 			$html .= '
+								<tr><td colspan=3>
+									<div id="noteProductRequired" name="noteProductRequired">';
+			if (is_numeric($PrimaryCategory)) {
+				if (ProductRequired($PrimaryCategory)) {
+#echo "<pre>LINE = ".__LINE__."\nePidsFilled = $ePidsFilled\n</pre>\n";
+					if ($ePidsFilled)
+						$html .= '<br />'.ML_EBAY_NOTE_PRODUCT_MATCHED;
+					else
+						$html .= '<br />'.ML_EBAY_NOTE_PRODUCT_REQUIRED_SHORT.'<div class="desc" id="desc_1" title="Infos"><span>'.ML_EBAY_NOTE_PRODUCT_REQUIRED.'</span></div>';
+				}
+			}
+			$html .= '
 									</div>
 								</td></tr>';
 
@@ -1371,6 +1421,7 @@ $(document).ready(function() {
 		if (cID != '') {
 			generateEbayCategoryPath(cID, $('#PrimaryCategoryVisual'));
 			VariationsEnabled(cID, $('#noteVariationsEnabled'));
+			ProductRequired(cID, $('#noteProductRequired'));
 			GetConditionValues(cID, $('#ebay_Condition'), <?php if(isset($defaultConditionID)) echo $defaultConditionID; else echo '1000'; ?>);
 			return true;
 		}
@@ -1392,6 +1443,7 @@ $(document).ready(function() {
 			$('#PrimaryCategory').val(cID);
 			generateEbayCategoryPath(cID, $('#PrimaryCategoryVisual'));
 			VariationsEnabled(cID, $('#noteVariationsEnabled'));
+			ProductRequired(cID, $('#noteProductRequired'));
 			GetConditionValues(cID, $('#ebay_Condition'), <?php if(isset($defaultConditionID)) echo $defaultConditionID; else echo '1000'; ?>);
 			return true;
 		}, 'eBay');
@@ -1604,8 +1656,18 @@ jQuery.blockUI(blockUILoading);
 /*]]>*/</script><?php
 	$renderedView = ob_get_clean();
 
+	#if ($IsMatching) $_url['view'] = 'match';
+	if (function_exists('thisIsMatching')) {
+		$_murl = $_url;;
+		$_murl['view'] = 'match';
+	} else {
+		$_murl = $_url;;
+	}
+#echo print_m($_murl, __LINE__.' $_url');
+#echo print_m(toURL($_murl), __LINE__.' toURL($_url)');
+
 	$renderedView .= '
-		<form method="post" id="prepareForm" action="'.toURL($_url).'">
+		<form method="post" id="prepareForm" action="'.toURL($_murl).'">
 			<table class="attributesTable">';
 	if ('single' == $prepareView) {
 		$renderedView .= renderSinglePrepareView($data);
