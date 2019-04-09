@@ -133,7 +133,7 @@
                                 JOIN " . TABLE_ORDERS_TOTAL . " ot 
                                      ON (ot.orders_id = o.orders_id AND  ot.class = 'ot_shipping')";
 
-      // query for shipping
+      // query for additional
       $this->queryAdditional = "SELECT sum(ot.value/o.currency_value) as additional 
                                   FROM " . TABLE_ORDERS . " o
                                   JOIN " . TABLE_ORDERS_TOTAL . " ot 
