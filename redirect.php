@@ -24,7 +24,7 @@ function check_url_scheme($url) {
   $parse_url = parse_url($url);
   if (!isset($parse_url['scheme'])) {
     $shop_url = xtc_get_top_level_domain((isset($parse_url['host'])) ? $parse_url['host'] : substr($parse_url['path'], 0, strpos($parse_url['path'], '/')));
-    if (strpos(HTTP_SERVER, $shop_url['new']) !== false) {
+    if (strpos(HTTP_SERVER, $shop_url['domain']) !== false) {
       $parse_url_host = parse_url(HTTP_SERVER);
       $url = $parse_url_host['scheme'].'://'.$url;
     } else {
@@ -57,7 +57,7 @@ if (isset($_GET['action'])) {
       
         if ((!isset($truncate_session_id) || $truncate_session_id === false)
             && (SESSION_FORCE_COOKIE_USE == 'False' && !$cookie)
-            && $shop_url['new'] == $banner_url['new']
+            && $shop_url['domain'] == $banner_url['domain']
            )
         {
           $separator = ((strpos($banner['banners_url'], '?') === false) ? '?' : '&');

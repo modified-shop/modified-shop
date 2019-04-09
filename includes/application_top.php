@@ -214,14 +214,12 @@ if ((!isset($gzip_off) || !$gzip_off) && (GZIP_COMPRESSION == 'true') && ($ext_z
 // set the top level domains
 $http_domain_arr = xtc_get_top_level_domain(HTTP_SERVER);
 $https_domain_arr = xtc_get_top_level_domain(HTTPS_SERVER);
-$http_domain = $http_domain_arr['new'];
-$https_domain = $https_domain_arr['new'];
+$http_domain = $http_domain_arr['domain'];
+$https_domain = $https_domain_arr['domain'];
 $current_domain = (($request_type == 'NONSSL') ? $http_domain : $https_domain);
 
-// set the top level domains - old
-$http_domain_old = $http_domain_arr['old'];
-$https_domain_old = $https_domain_arr['old'];
-$current_domain_old = (($request_type == 'NONSSL') ? $http_domain_old : $https_domain_old);
+// set the top level domains to delete
+$current_domain_delete = (($request_type == 'NONSSL') ? $http_domain_arr['delete'] : $https_domain_arr['delete']);
 
 // include shopping cart class
 require_once (DIR_WS_CLASSES.'shopping_cart.php');
