@@ -16,78 +16,57 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-function xtc_get_top_level_domain($url) {
-  // set array
-  $return_array = array(
-    'old' => '', 
-    'new' => get_cookie_domain($url)
-  );
-
+function xtc_get_top_level_domain($url) {  
   if (strpos($url, '://')) {
     $url = parse_url($url);
     $url = $url['host'];
   }
-
-  $domain_array = explode('.', $url);
-  if (count($domain_array) > 0) {
-    // old routine
-    $domain_path = $url;
-    if(substr($domain_path, 0, 4) == 'www.') {
-        $domain_path = substr($domain_path, 4);
-    }
-    $return_array['old'] = $domain_path;
-    
-    // new routine
-    if ($return_array['new'] === false) {
-      $return_array['new'] = $return_array['old'];
-    }
+  
+  $cookie_domain = $url;
+  $domains = get_cookie_domains($url);
+  if (count($domains) > 0) {
+    $cookie_domain = array_shift($domains);
   }
+  
+  // set array
+  $return_array = array(
+    'delete' => $domains, 
+    'domain' => $cookie_domain,
+  );  
   
   return $return_array;
 }
 
-function get_cookie_domain($url) {
-  $url_array = parse_url($url);
-  $domain = $subdomains = $url_array['host'];
-  if (preg_match('/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i', $domain, $regs)) {
-    $domain = $regs['domain'];
-    $subdomains = strstr($subdomains, $domain, true);
-    $domain = $subdomains != 'www.' ? $subdomains.$domain : $domain;    
-    //echo '<pre>DM'. $domain . '</pre>';
-    return $subdomains . $regs['domain'];
+
+function get_cookie_domains($domain, &$domain_array = array()) {
+  static $tld_domain_array;
+    
+  if (!is_array($tld_domain_array)) {
+    $tld_domain_array = array();
   }
-  return false;
-}
+  
+  if (is_file(DIR_FS_CATALOG.'includes/data/public_suffix_list.dat')
+      && count($tld_domain_array) < 1
+      )
+  {
+    $public_suffix_list = explode("\n", file_get_contents(DIR_FS_CATALOG.'includes/data/public_suffix_list.dat'));
 
-
-/*
- * new function from noRiddle - http://www.revilonetz.de
- * use this function for setting cookie to specific domain
- *
- 
-function xtc_get_top_level_domain($url) {
-    if (strpos($url, '://')) {
-        $url = parse_url($url);
-        $url = $url['host'];
+    foreach ($public_suffix_list as $data) {
+      if ($data != '' && strpos($data, '/') === false) {
+        $tld_domain_array[] = $data;
+      }
     }
-    $domain_array = explode('.', $url);
-    $domain_size = sizeof($domain_array);
-    if ($domain_size > 1) {
-        if (is_numeric($domain_array[$domain_size -2]) && is_numeric($domain_array[$domain_size -1])) {
-            return false;
-        } else {
-            if($domain_size == 4) {
-                return $domain_array[$domain_size - 4] . '.' . $domain_array[$domain_size - 3] . '.' . $domain_array[$domain_size - 2] . '.' . $domain_array[$domain_size - 1];
-            } elseif($domain_size == 3) {
-                return $domain_array[$domain_size - 3] . '.' . $domain_array[$domain_size - 2] . '.' . $domain_array[$domain_size - 1];
-            } elseif($domain_size == 2) {
-                return $domain_array[$domain_size - 2] . '.' . $domain_array[$domain_size - 1];
-            }
-            //whole if-else-clause is the same as return $url;
-        }
-    } else {
-        return false;
-    }
+  }
+  
+  if (count($tld_domain_array) > 0
+      && strpos($domain, '.') !== false
+      && !in_array($domain, $tld_domain_array)
+      )
+  {  
+    $domain_array[] = $domain;
+    return get_cookie_domains(substr($domain, strpos($domain, '.') + 1), $domain_array);
+  }
+  
+  return $domain_array;
 }
-*/
 ?>
