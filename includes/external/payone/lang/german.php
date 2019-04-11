@@ -185,7 +185,7 @@ define('TEXT_CARDCHECKNUM', 'Pr&uuml;fziffer:');
 define('TEXT_CHECK_DATA', 'Bitte &uuml;berpr&uuml;fen Sie Ihre Angaben.');
 
 // orders status
-define('ORDERS_STATUS_CONFIGURATION', 'Konfiguration der Bestellstati');
+define('ORDERS_STATUS_CONFIGURATION', 'Konfiguration Bestellstatus');
 define('ORDERS_STATUS_TMP', 'tempor&auml;rer Status');
 define('ORDERS_STATUS_PENDING', 'Zahlungseingang unsicher/erwartet');
 define('ORDERS_STATUS_PAID', 'Zahlung erfolgreich');
@@ -202,6 +202,7 @@ define('ORDERS_STATUS_REMINDER', 'Zahlung Erinnerung');
 define('ORDERS_STATUS_VAUTHORIZATION', 'Zahlung vAuth');
 define('ORDERS_STATUS_VSETTLEMENT', 'Zahlung vSettlement');
 define('ORDERS_STATUS_INVOICE', 'Zahlung Rechnung');
+define('ORDERS_STATUS_NONE', 'keine &Auml;nderung');
 define('TEXT_EXTERN_CALLBACK_URL', 'URL Statusweiterleitung');
 define('TEXT_EXTERN_CALLBACK_TIMEOUT', 'Timeout');
 
