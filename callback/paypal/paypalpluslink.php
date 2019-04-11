@@ -102,7 +102,11 @@ if (isset($_GET['oID'])
       $smarty->assign('BUTTON_BACK', '<a href="'.$cancel_link.'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
       $smarty->assign('BUTTON_CONTINUE', '<a href="#" onclick="ppp.doCheckout(); return false;">'.xtc_image_button('button_continue.gif', IMAGE_BUTTON_CONTINUE).'</a>');
     
-      $main_content = $smarty->fetch(DIR_FS_EXTERNAL.'paypal/templates/ppp.html');
+      $tpl_file = DIR_FS_EXTERNAL.'paypal/templates/ppp.html';
+      if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/paypal/ppp.html')) {
+        $tpl_file = DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/paypal/ppp.html';
+      }
+      $main_content = $smarty->fetch($tpl_file);
     
       $smarty->assign('main_content', $main_content);
       $smarty->assign('language', $_SESSION['language']);

@@ -199,7 +199,12 @@ class paypalcart extends PayPalPayment {
       
       $module_smarty->assign('language', $_SESSION['language']);
       $module_smarty->caching = 0;
-      $shipping_method = $module_smarty->fetch(DIR_FS_EXTERNAL.'/paypal/templates/shipping_block.html');
+
+      $tpl_file = DIR_FS_EXTERNAL.'paypal/templates/shipping_block.html';
+      if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/paypal/shipping_block.html')) {
+        $tpl_file = DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/paypal/shipping_block.html';
+      }
+      $shipping_method = $module_smarty->fetch($tpl_file);
     
       $smarty->assign('SHIPPING_METHOD', $shipping_method);
     }
@@ -278,8 +283,13 @@ class paypalcart extends PayPalPayment {
 
     $module_smarty->assign('language', $_SESSION['language']);
     $module_smarty->caching = 0;
-    $process_button = $module_smarty->fetch(DIR_FS_EXTERNAL.'/paypal/templates/comments_block.html');
     
+    $tpl_file = DIR_FS_EXTERNAL.'paypal/templates/comments_block.html';
+    if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/paypal/comments_block.html')) {
+      $tpl_file = DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/paypal/comments_block.html';
+    }
+    $process_button = $module_smarty->fetch($tpl_file);
+
     return $process_button;
   }
   
