@@ -139,6 +139,9 @@ class xtcImport {
         for ($i = 0; $i < $this->catDepth; $i ++) {
             $file_layout = array_merge($file_layout, array ('p_cat.'.$i => ''));
         }
+        
+        foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/import/file_layout/','php') as $file) require ($file);
+        
         return $file_layout;
     }
 
@@ -357,6 +360,13 @@ class xtcImport {
             $manufacturers_array = array ('manufacturers_name' => $manufacturer);
             xtc_db_perform(TABLE_MANUFACTURERS, $manufacturers_array);
             $this->mfn[$manufacturer]['id'] = xtc_db_insert_id();
+            for ($i = 0, $n = sizeof($this->sizeof_languages); $i < $n; $i++) {
+              $insert_sql_data = array(
+                'manufacturers_id' => $this->mfn[$manufacturer]['id'],
+                'languages_id' => $this->languages[$n]['id']
+              );
+              xtc_db_perform(TABLE_MANUFACTURERS_INFO, $insert_sql_data);
+            }
         } else {
             $man_data = xtc_db_fetch_array($man_query);
             $this->mfn[$manufacturer]['id'] = $man_data['manufacturers_id'];
@@ -418,6 +428,7 @@ class xtcImport {
             $products_array = array_merge($products_array, array ('products_sort' => (int)$dataArray['p_sorting']));
         //EOC strip potential slashes and type cast inputs
         
+        foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/import/insert_before/','php') as $file) require ($file);
 
         if ($mode == 'insert') {
             $products_array = array_merge($products_array, array ('products_date_added' => date("Y-m-d H:i:s")));
@@ -531,7 +542,9 @@ class xtcImport {
         if (!xtc_db_num_rows($categories_check_query)) {
             $this->insertPtoCconnection($products_id, $this->CatDefault);
         }
-  }
+    
+        foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/import/insert_end/','php') as $file) require ($file);
+    }
 
     /*****************************************************************************
     **
