@@ -457,7 +457,7 @@ function getOrdersStatus($include_hidden = false) {
 	           WHERE language_id = ".(int)$_SESSION['languages_id']." 
 	        ORDER BY sort_order ASC";
 	$result = xtc_db_query($query);
-	$status = array();
+	$status = array('0' => ORDERS_STATUS_NONE);
 	if ($include_hidden == true) {
 		$status[-1] = 'unsichtbar';
 	}
