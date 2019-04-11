@@ -202,6 +202,7 @@ define('ORDERS_STATUS_REMINDER', 'Payment reminder');
 define('ORDERS_STATUS_VAUTHORIZATION', 'Payment vAuth');
 define('ORDERS_STATUS_VSETTLEMENT', 'Payment vSettlement');
 define('ORDERS_STATUS_INVOICE', 'Payment sale on account');
+define('ORDERS_STATUS_NONE', 'no change');
 define('TEXT_EXTERN_CALLBACK_URL', 'URL status forwarding');
 define('TEXT_EXTERN_CALLBACK_TIMEOUT', 'Timeout');
  

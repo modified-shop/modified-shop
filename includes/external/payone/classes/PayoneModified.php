@@ -801,19 +801,20 @@ class PayoneModified {
 		  xtc_db_perform('payone_transactions', $sql_data_transactions_array, 'update', "txid='".$txstatus['txid']."'");                              
 			
 			if (in_array($txstatus['txaction'], $this->getStatusNames())) {
-        $sql_data_orders_array = array('orders_status' => (int)$config['orders_status'][$txstatus['txaction']],
-                                       'last_modified' => 'now()');
-        xtc_db_perform(TABLE_ORDERS, $sql_data_orders_array, 'update', "orders_id='".(int)$txstatus['reference']."'");                              
+			  if ((int)$config['orders_status'][$txstatus['txaction']] > 0) {
+          $sql_data_orders_array = array('orders_status' => (int)$config['orders_status'][$txstatus['txaction']],
+                                         'last_modified' => 'now()');
+          xtc_db_perform(TABLE_ORDERS, $sql_data_orders_array, 'update', "orders_id='".(int)$txstatus['reference']."'");                              
 
-        $sql_data_array = array('orders_id' => (int)$txstatus['reference'],
-                                'orders_status_id' => (int)$config['orders_status'][$txstatus['txaction']],
-                                'date_added' => 'now()',
-                                'customer_notified' => '0',
-                                'comments' => STATUS_UPDATED_BY_PAYONE,
-                                'comments_sent' => '0'
-                                );
-        xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
-
+          $sql_data_array = array('orders_id' => (int)$txstatus['reference'],
+                                  'orders_status_id' => (int)$config['orders_status'][$txstatus['txaction']],
+                                  'date_added' => 'now()',
+                                  'customer_notified' => '0',
+                                  'comments' => STATUS_UPDATED_BY_PAYONE,
+                                  'comments_sent' => '0'
+                                  );
+          xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+        }
         // send Transaction Status
         if ($config['orders_status_redirect']['url'][$txstatus['txaction']] != '') {
           $this->sendTransactionStatus($config['orders_status_redirect']['url'][$txstatus['txaction']], $txstatus, $config['orders_status_redirect']['timeout'][$txstatus['txaction']]);
