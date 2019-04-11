@@ -22,17 +22,19 @@ function get_third_party_payments() {
   if (defined('MODULE_PAYMENT_PAYPAL_PLUS_THIRDPARTY_PAYMENT')) {
     $payment_allowed = explode(';', MODULE_PAYMENT_PAYPAL_PLUS_THIRDPARTY_PAYMENT);
     
-    require_once (DIR_FS_CATALOG . 'includes/classes/payment.php');
-    $payment_modules = new payment;
+    if (count($payment_allowed) > 0) {
+      require_once (DIR_FS_CATALOG . 'includes/classes/payment.php');
+      $payment_modules = new payment();
 
-    if (is_array($payment_modules->modules)) {
-      reset($payment_modules->modules);
-      foreach ($payment_modules->modules as $value) {
-        $class = substr($value, 0, strrpos($value, '.'));
-        if (isset($GLOBALS[$class]) && $GLOBALS[$class]->enabled && in_array($class, $payment_allowed)) {
-          $module_selection = $GLOBALS[$class]->selection();
-          if (is_array($module_selection)) {
-            $selection[] = $module_selection;
+      if (is_array($payment_modules->modules)) {
+        reset($payment_modules->modules);
+        foreach ($payment_modules->modules as $value) {
+          $class = substr($value, 0, strrpos($value, '.'));
+          if (isset($GLOBALS[$class]) && $GLOBALS[$class]->enabled && in_array($class, $payment_allowed)) {
+            $module_selection = $GLOBALS[$class]->selection();
+            if (is_array($module_selection)) {
+              $selection[] = $module_selection;
+            }
           }
         }
       }
