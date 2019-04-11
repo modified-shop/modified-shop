@@ -20,7 +20,7 @@
 include(DIR_FS_BOXES_INC . 'smarty_default.php');
 
 // set cache id
-$cache_id = md5($_SESSION['language'].basename($PHP_SELF));
+$cache_id = md5($_SESSION['language'].basename($PHP_SELF).xtc_get_all_get_params());
 
 if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_languages.html', $cache_id) || !$cache) {
 
