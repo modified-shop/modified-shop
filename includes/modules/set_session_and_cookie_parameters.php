@@ -33,7 +33,7 @@ if (STORE_SESSIONS == 'mysql') {
       redirect_invalid_session();
     }
   }
-  // delete old cookies
+  // delete expired cookie
   if (isset($_COOKIE[xtc_session_name()])) {
     $check_query = xtc_db_query("SELECT expiry 
                                    FROM ".TABLE_SESSIONS." 
@@ -42,14 +42,15 @@ if (STORE_SESSIONS == 'mysql') {
     if (($check['expiry'] + (int)$SESS_LIFE) < time()) {
       $cookie_params = session_get_cookie_params();
       xtc_setcookie(xtc_session_name(), '', time()-3600, $cookie_params['path'], $cookie_params['domain']);
-
-      if (count($current_domain_delete) > 0) {
-        foreach ($current_domain_delete as $domain) {
-          xtc_setcookie(xtc_session_name(), '', time()-3600, '/', '.'.$domain);
-          xtc_setcookie(xtc_session_name(), '', time()-3600, DIR_WS_CATALOG, '.'.$domain);
-        }
-      }         
     }
+  }
+}
+
+// delete old cookie
+if (count($current_domain_delete) > 0) {
+  foreach ($current_domain_delete as $domain) {
+    xtc_setcookie(xtc_session_name(), '', time()-3600, '/', '.'.$domain);
+    xtc_setcookie(xtc_session_name(), '', time()-3600, DIR_WS_CATALOG, '.'.$domain);
   }
 }
 
