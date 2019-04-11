@@ -59,7 +59,7 @@ class paypalplus extends PayPalPayment {
     if ($_SESSION['paypal']['approval'] == '') {
       $GLOBALS['paypalplus']->enabled = false;
     } else {
-      $description = '<div id="ppp_result"></div>
+      $description = '<div id="ppp_result" style="position:relative;"></div>
       <script type="text/javascript">
         (function() {
           var pp = document . createElement(\'script\');
@@ -76,9 +76,6 @@ class paypalplus extends PayPalPayment {
           }
           ' : '').'
           $("#checkout_payment").attr("name", "checkout_payment");        
-          $.get("'.xtc_href_link('callback/paypal/paypalplus.php', '', 'SSL').'", function(data) {
-            $("#ppp_result").html(data);
-          });
           '.(($this->get_config('MODULE_PAYMENT_'.strtoupper($this->code).'_USE_TABS') == '1' || count($payments) > 0) ? '
           $("[id*=\"rd\"]").click(function(e) {
             if ($(\'input[name="payment"]:checked\', \'#checkout_payment\').val() == "'.$this->code.'") {
@@ -94,7 +91,18 @@ class paypalplus extends PayPalPayment {
             } else {
               '.((count($payments) > 0) ? '$("#continueButton").removeAttr("onclick");' : '').'
             }
-          });' : '').'
+          });
+          $(document).ready(function() {
+            if($(":radio[value=paypalplus]:checked").length > 0) {
+              $.get("'.xtc_href_link('callback/paypal/paypalplus.php', '', 'SSL').'", function(data) {
+                $("#ppp_result").html(data);
+              });
+            }
+          });' : '
+          $.get("'.xtc_href_link('callback/paypal/paypalplus.php', '', 'SSL').'", function(data) {
+            $("#ppp_result").html(data);
+          });
+          ').'          
         });
       </script>';
     
