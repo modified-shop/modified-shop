@@ -360,10 +360,10 @@ class xtcImport {
             $manufacturers_array = array ('manufacturers_name' => $manufacturer);
             xtc_db_perform(TABLE_MANUFACTURERS, $manufacturers_array);
             $this->mfn[$manufacturer]['id'] = xtc_db_insert_id();
-            for ($i = 0, $n = sizeof($this->sizeof_languages); $i < $n; $i++) {
+            for ($i = 0; $i < $this->sizeof_languages; $i ++) {
               $insert_sql_data = array(
                 'manufacturers_id' => $this->mfn[$manufacturer]['id'],
-                'languages_id' => $this->languages[$n]['id']
+                'languages_id' => $this->languages[$i]['id']
               );
               xtc_db_perform(TABLE_MANUFACTURERS_INFO, $insert_sql_data);
             }
