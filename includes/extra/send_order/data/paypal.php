@@ -25,6 +25,11 @@ if (is_object($order) && in_array($order->info['payment_method'], $paypal_paymen
 
   $paypal = new PayPalPayment($order->info['payment_method']);
   
+  $tpl_file = DIR_FS_EXTERNAL.'paypal/templates/payment_info.html';
+  if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/paypal/payment_info.html')) {
+    $tpl_file = DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/paypal/payment_info.html';
+  }
+
   if (strpos($order->info['payment_method'], 'link') !== false) {
     $paypal_payment_info = array(
       array ('title' => $paypal->title.': ', 
@@ -45,7 +50,7 @@ if (is_object($order) && in_array($order->info['payment_method'], $paypal_paymen
     $paypal_smarty->caching = 0;
     $paypal_smarty->assign('PAYMENT_INFO', $paypal_payment_info);
     $paypal_smarty->assign('language', $_SESSION['language']);
-    $payment_info_content = $paypal_smarty->fetch(DIR_FS_EXTERNAL.'paypal/templates/payment_info.html');
+    $payment_info_content = $paypal_smarty->fetch($tpl_file);
 
     $smarty->assign('PAYMENT_INFO_HTML', $payment_info_content);
     $smarty->assign('PAYMENT_INFO_TXT', sprintf(constant('MODULE_PAYMENT_'.strtoupper($paypal->code).'_TEXT_SUCCESS'), $paypal->create_paypal_link($order->info['order_id'], true)));
@@ -63,7 +68,8 @@ if (is_object($order) && in_array($order->info['payment_method'], $paypal_paymen
       $paypal_smarty->caching = 0;
       $paypal_smarty->assign('PAYMENT_INFO', $paypal_payment_info);
       $paypal_smarty->assign('language', $_SESSION['language']);
-      $payment_info_content = $paypal_smarty->fetch(DIR_FS_EXTERNAL.'paypal/templates/payment_info.html');
+      
+      $payment_info_content = $paypal_smarty->fetch($tpl_file);
   
       $smarty->assign('PAYMENT_INFO_HTML', $payment_info_content);
       $smarty->assign('PAYMENT_INFO_TXT', $payment_info_content);

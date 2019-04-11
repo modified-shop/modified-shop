@@ -595,7 +595,12 @@ class PayPalCommon extends PayPalAuth {
     }
 
     $pp_smarty->assign('language', $_SESSION['language']);
-    $presentment = $pp_smarty->fetch(DIR_FS_EXTERNAL.'paypal/templates/presentment_info.html');
+
+    $tpl_file = DIR_FS_EXTERNAL.'paypal/templates/presentment_info.html';
+    if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/paypal/presentment_info.html')) {
+      $tpl_file = DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/paypal/presentment_info.html';
+    }
+    $presentment = $pp_smarty->fetch($tpl_file);
     
     return $presentment;
   }
