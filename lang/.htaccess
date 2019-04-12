@@ -18,7 +18,7 @@
 # This is used with Apache WebServers
 # The following blocks direct HTTP requests in this directory recursively
 
-<Files *.html>
+<FilesMatch "(?<!\.css|\.js|\.jpg|\.jpeg|\.png|\.gif|\.webp|\.ico|\.svg)$">
   <IfModule mod_authz_core.c>
     # Apache 2.4
     <RequireAll>
@@ -30,17 +30,4 @@
     Order Deny,Allow
     Deny from all
   </IfModule>
-</Files>
-<Files *.conf>
-  <IfModule mod_authz_core.c>
-    # Apache 2.4
-    <RequireAll>
-      Require all denied
-    </RequireAll>
-  </IfModule>
-  <IfModule !mod_authz_core.c>
-    # Apache 2.2
-    Order Deny,Allow
-    Deny from all
-  </IfModule>
-</Files>
+</FilesMatch>
