@@ -62,7 +62,7 @@ class sofort_sofortueberweisung_gateway extends SofortLibPayment {
     */
     $this->Sofortueberweisung->setAmount($this->data['amount']);
     $this->Sofortueberweisung->setCurrencyCode($this->data['currency']);
-    $this->Sofortueberweisung->setReason($this->data['reason_1'], $this->data['reason_2']);
+    $this->Sofortueberweisung->setReason($this->shortenReason($this->data['reason_1']), $this->shortenReason($this->data['reason_2']));
     $this->Sofortueberweisung->setSuccessUrl($this->data['success_url'], true);
     $this->Sofortueberweisung->setUserVariable(array('0' => $this->data['success_url']));
     $this->Sofortueberweisung->setAbortUrl($this->data['abort_url']);

@@ -62,7 +62,7 @@ class sofort_sofortueberweisung_classic extends SofortLibPayment {
     $this->Sofortueberweisung->setCurrencyCode($this->data['currency']);
     $this->Sofortueberweisung->setSenderCountryId(strtoupper($order->billing['country']['iso_code_2']));
     $this->Sofortueberweisung->setLanguageCode(strtoupper($_SESSION['language_code']));
-    $this->Sofortueberweisung->setReason($this->data['reason_1'], $this->data['reason_2']);
+    $this->Sofortueberweisung->setReason($this->shortenReason($this->data['reason_1']), $this->shortenReason(this->data['reason_2']));
     $this->Sofortueberweisung->setOrderID($insert_id);
     $this->Sofortueberweisung->setCustomerID($_SESSION['customer_id']);
     $this->Sofortueberweisung->setSuccessUrl($this->data['success_url'], true);

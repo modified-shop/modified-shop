@@ -537,6 +537,12 @@ class SofortLibPayment {
     );
 	}
 
+	function shortenReason($reason, $pattern = '#[^a-zA-Z0-9+-\.,]#', $reasonLength = 27) {
+		$reason = preg_replace($pattern, ' ', $reason);
+		$reason = substr($reason, 0, $reasonLength);
+
+		return $reason;
+	}
 }
 
 

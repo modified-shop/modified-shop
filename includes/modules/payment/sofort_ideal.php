@@ -74,7 +74,7 @@ class sofort_ideal extends SofortLibPayment {
 
     $this->SofortIdeal->setAmount($this->data['amount']);
     $this->SofortIdeal->setCurrencyCode($this->data['currency']);
-    $this->SofortIdeal->setReason($this->data['reason_1'], $this->data['reason_2']);
+    $this->SofortIdeal->setReason($this->shortenReason($this->data['reason_1']), $this->shortenReason($this->data['reason_2']));
     $this->SofortIdeal->setOrderID($insert_id);
     $this->SofortIdeal->setCustomerID($_SESSION['customer_id']);
     $this->SofortIdeal->setCallbackIdentifier(32);

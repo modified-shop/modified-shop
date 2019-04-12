@@ -268,8 +268,8 @@ class SofortLibSofortueberweisungClassic extends Sofort\SofortLib\Multipay {
 	 * @return SofortLibSofortueberweisungClassic $this
 	 */
 	public function setReason($reason1, $reason2 = '', $productCode = NULL) {
-		$this->_parameters['reason_1'] = $this->shortenReason($reason1);
-		$this->_parameters['reason_2'] = $this->shortenReason($reason2);
+		$this->_parameters['reason_1'] = $reason1;
+		$this->_parameters['reason_2'] = $reason2;
 
 		return $this;
 	}
@@ -378,22 +378,6 @@ class SofortLibSofortueberweisungClassic extends Sofort\SofortLib\Multipay {
 	 */
 	public function getUserVariable($i = 0) {
 		return $this->_parameters['user_variable_'.$i];
-	}
-
-
-	/**
-	 * Shortens the reason string
-	 *
-	 * @param string $reason
-	 * @param string $pattern
-	 * @param int $reasonLength
-	 * @return string
-	 */
-	protected function shortenReason($reason, $pattern = '#[^a-zA-Z0-9+-\.,]#', $reasonLength = 27) {
-		$reason = preg_replace($pattern, ' ', $reason);
-		$reason = substr($reason, 0, $reasonLength);
-
-		return $reason;
 	}
 
 }
