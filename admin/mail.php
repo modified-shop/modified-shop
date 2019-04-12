@@ -204,11 +204,20 @@
                                    'text' => $customers_statuses_value['customers_status_name']);
             }
             // End customers Status 1.x
-            $mail_query = xtc_db_query("select customers_email_address, customers_firstname, customers_lastname from " . TABLE_CUSTOMERS . " order by customers_lastname");
-            while($customers_values = xtc_db_fetch_array($mail_query)) {
-              $customers[] = array('id' => $customers_values['customers_email_address'],
-                                   'text' => $customers_values['customers_lastname'] . ', ' . $customers_values['customers_firstname'] . ' (' . $customers_values['customers_email_address'] . ')');
-            }
+            $selected_customer = isset($_GET['customer']) ? $_GET['customer'] : $_POST['customers_email_address'];
+            if (!empty($selected_customer)) {
+              $mail_query = xtc_db_query("SELECT customers_email_address, 
+                                                 customers_firstname, 
+                                                 customers_lastname 
+                                            FROM " . TABLE_CUSTOMERS . " 
+                                           WHERE customers_email_address = '".$selected_customer."'
+                                        ORDER BY customers_lastname");
+              while($customers_values = xtc_db_fetch_array($mail_query)) {
+                $customers[] = array(
+                  'id' => $customers_values['customers_email_address'],
+                  'text' => $customers_values['customers_lastname'] . ', ' . $customers_values['customers_firstname'] . ' (' . $customers_values['customers_email_address'] . ')');
+              }
+            }  
           ?>
           <?php echo xtc_draw_form('mail', FILENAME_MAIL, 'action=preview'); ?>
               <table class="tableConfig borderall">
