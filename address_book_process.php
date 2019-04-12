@@ -208,7 +208,7 @@ if (isset ($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['act
       if ((isset ($_POST['primary']) && ($_POST['primary'] == 'on')) || ($_GET['edit'] == $_SESSION['customer_default_address_id'])) {
         $_SESSION['customer_first_name'] = $firstname;
         $_SESSION['customer_country_id'] = (int)$country;
-        $_SESSION['customer_zone_id'] = (($zone_id > 0) ? (int) $zone_id : '0');
+        $_SESSION['customer_zone_id'] = ((isset($zone_id) && $zone_id > 0) ? (int)$zone_id : 0);
         $_SESSION['customer_default_address_id'] = (int) $_GET['edit'];
 
         $sql_data_array = array('customers_firstname' => $firstname, 
