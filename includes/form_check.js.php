@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: form_check.js.php 1296 2005-10-08 17:52:26Z mz $
+   $Id$
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -48,7 +48,9 @@
   function check_input(field_name, field_size, message) {
     if (form.elements[field_name] && (form.elements[field_name].type != "hidden")) {
       var field_value = form.elements[field_name].value;
-
+      
+      if (field_size <= 0) return;
+      
       if (field_value == '' || field_value.length < field_size) {
         error_message = error_message + "* " + message + "\n";
         error = true;
