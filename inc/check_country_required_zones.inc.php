@@ -16,7 +16,7 @@
                              FROM ".TABLE_ZONES." z 
                              JOIN ".TABLE_COUNTRIES." c 
                                ON c.countries_id = z.zone_country_id 
-                            WHERE z.countries_id = '".(int)$country_id."'"); 
+                            WHERE c.countries_id = '".(int)$country_id."'"); 
     $check = xtc_db_fetch_array($query); 
     return (($dbData['total'] > 0) ? true : false);
   }
