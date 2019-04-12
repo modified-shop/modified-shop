@@ -22,7 +22,9 @@
 
   require_once (DIR_FS_INC.'xtc_php_mail.inc.php');
   require_once (DIR_FS_INC . 'xtc_wysiwyg.inc.php');
-
+  
+  require_once (DIR_FS_CATALOG.DIR_WS_CLASSES.'class.newsletter.php');
+  
   switch ($_GET['action']) {  // actions for datahandling
 
     case 'save': // save newsletter
@@ -192,11 +194,15 @@
 
     //Image path correction - absolute path needed
     $newsletters_data['body'] = str_replace('src="'.DIR_WS_CATALOG.'images/', 'src="'.((ENABLE_SSL === true) ? HTTPS_CATALOG_SERVER : HTTP_CATALOG_SERVER).DIR_WS_CATALOG.'images/', $newsletters_data['body']);
-
+    
+    $newsletter = new newsletter();
+    
     for ($i=1;$i<=NEWSLETTER_EXECUTE_LIMIT;$i++) {
       if(!empty($email_data[$i-1])) {
-        $link1 = chr(13).chr(10).chr(13).chr(10).TEXT_NEWSLETTER_REMOVE.chr(13).chr(10).chr(13).chr(10).((ENABLE_SSL === true) ? HTTPS_CATALOG_SERVER : HTTP_CATALOG_SERVER).DIR_WS_CATALOG.FILENAME_CATALOG_NEWSLETTER.'?action=remove&email='.$email_data[$i-1]['email'].'&key='.$email_data[$i-1]['key'];
-        $link2 = $link2 = '<br /><br /><hr>'.TEXT_NEWSLETTER_REMOVE.'<br /><a href="'.((ENABLE_SSL === true) ? HTTPS_CATALOG_SERVER : HTTP_CATALOG_SERVER).DIR_WS_CATALOG.FILENAME_CATALOG_NEWSLETTER.'?action=remove&email='.$email_data[$i-1]['email'].'&key='.$email_data[$i-1]['key'].'">' . TEXT_REMOVE_LINK . '</a>';
+        $remove_link = $newsletter->RemoveLinkAdmin($email_data[$i-1]['key'], $email_data[$i-1]['email']);
+        
+        $link1 = chr(13).chr(10).chr(13).chr(10).TEXT_NEWSLETTER_REMOVE.chr(13).chr(10).chr(13).chr(10).$remove_link;
+        $link2 = $link2 = '<br /><br /><hr>'.TEXT_NEWSLETTER_REMOVE.'<br /><a href="'.$remove_link.'">' . TEXT_REMOVE_LINK . '</a>';
 
         xtc_php_mail(EMAIL_SUPPORT_ADDRESS,
                      EMAIL_SUPPORT_NAME,
