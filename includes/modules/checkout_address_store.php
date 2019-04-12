@@ -93,7 +93,9 @@
           $messageStack->add('checkout_address', ENTRY_STATE_ERROR_SELECT);
         }
       } else {
-        if (is_numeric($state) || strlen($state) < ENTRY_STATE_MIN_LENGTH) {
+        if (!$required_zones) {
+          $state = '';
+        } elseif (strlen($state) < ENTRY_STATE_MIN_LENGTH) {
           $error = true;
           $messageStack->add('checkout_address', ENTRY_STATE_ERROR);
         }
