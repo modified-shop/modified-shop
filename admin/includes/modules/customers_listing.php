@@ -66,32 +66,26 @@
                 $search = '';
                 if (isset($_GET['search']) && (xtc_not_null($_GET['search']))) {
                   $keywords = xtc_db_input(xtc_db_prepare_input($_GET['search']));
-                  $search = "AND (c.customers_lastname LIKE '%".$keywords."%'
-                                  OR c.customers_firstname LIKE '%".$keywords."%'
-                                  OR CONCAT(customers_firstname,' ',customers_lastname) LIKE '%".$keywords."%'
-                                  OR CONCAT(customers_lastname,' ',customers_firstname) LIKE '%".$keywords."%'
-                                  OR c.customers_email_address LIKE '%".$keywords."%'
-                                  OR c.customers_cid LIKE '%".$keywords."%'
-                                  OR a.entry_company LIKE '%".$keywords."%'
-                                 )";
-
-                  if(isset($_GET['asb']) && $_GET['asb'] == 'asb') {
-                    $search = "AND (c.customers_lastname LIKE '%".$keywords."%'
+                  $search = "WHERE (c.customers_lastname LIKE '%".$keywords."%'
                                     OR c.customers_firstname LIKE '%".$keywords."%'
-                                    OR CONCAT(customers_firstname,' ',customers_lastname) LIKE '%".$keywords."%'
-                                    OR CONCAT(customers_lastname,' ',customers_firstname) LIKE '%".$keywords."%'
+                                    OR CONCAT(c.customers_firstname,' ',c.customers_lastname) LIKE '%".$keywords."%'
+                                    OR CONCAT(c.customers_lastname,' ',c.customers_firstname) LIKE '%".$keywords."%'
                                     OR c.customers_email_address LIKE '%".$keywords."%'
                                     OR c.customers_cid LIKE '%".$keywords."%'
                                     OR a.entry_company LIKE '%".$keywords."%'
+                                    OR a1.entry_company LIKE '%".$keywords."%'
+                                    OR a1.entry_firstname LIKE '%".$keywords."%'
+                                    OR a1.entry_lastname LIKE '%".$keywords."%'
+                                    OR CONCAT(a1.entry_firstname,' ',a1.entry_lastname) LIKE '%".$keywords."%'
+                                    OR CONCAT(a1.entry_lastname,' ',a1.entry_firstname) LIKE '%".$keywords."%'
                                    )";
-                  }
                 }
                 if (isset($_GET['search_email']) && (xtc_not_null($_GET['search_email']))) {
                   $keywords = xtc_db_input(xtc_db_prepare_input($_GET['search_email']));
-                  $search = "AND (c.customers_email_address LIKE '%".$keywords."%')";
+                  $search = "WHERE (c.customers_email_address LIKE '%".$keywords."%')";
                 }
                 if (isset($_GET['status']) && $_GET['status'] != '') {
-                  $search = "AND c.customers_status = '".(int)$_GET['status']."'";
+                  $search = "WHERE c.customers_status = '".(int)$_GET['status']."'";
                 }
 
                 if (isset($_GET['sorting']) && xtc_not_null($_GET['sorting'])) {
@@ -137,8 +131,7 @@
                   $sort = 'ORDER BY c.customers_date_added DESC';
                 }
 
-                $customers_query_raw = "-- admin/customers.php
-                                        SELECT c.customers_id,
+                $customers_query_raw = "SELECT c.customers_id,
                                                c.customers_cid,
                                                c.customers_vat_id,
                                                c.customers_vat_id_status,
@@ -157,9 +150,11 @@
                                           FROM ".TABLE_CUSTOMERS." c
                                           JOIN ".TABLE_ADDRESS_BOOK." a
                                                ON c.customers_id = a.customers_id
+                                                  AND c.customers_default_address_id = a.address_book_id
+                                          JOIN ".TABLE_ADDRESS_BOOK." a1
+                                               ON c.customers_id = a1.customers_id
                                      LEFT JOIN ".TABLE_COUPON_GV_CUSTOMER." cgc
                                                ON c.customers_id = cgc.customer_id
-                                         WHERE c.customers_default_address_id = a.address_book_id
                                                ".$search."
                                       GROUP BY c.customers_id
                                                ".$sort;
@@ -167,8 +162,7 @@
                 $customers_split = new splitPageResults($_GET['page'], $page_max_display_results, $customers_query_raw, $customers_query_numrows, 'c.customers_id');
                 $customers_query = xtc_db_query($customers_query_raw);
                 while ($customers = xtc_db_fetch_array($customers_query)) {
-                  $umsatz_query = xtc_db_query("-- admin/customers.php
-                                                SELECT SUM(op.final_price) as ordersum
+                  $umsatz_query = xtc_db_query("SELECT SUM(op.final_price) as ordersum
                                                   FROM ".TABLE_ORDERS_PRODUCTS." op
                                                   JOIN ".TABLE_ORDERS." o ON o.orders_id = op.orders_id
                                                  WHERE o.customers_id = '".(int)$customers['customers_id']."'");
