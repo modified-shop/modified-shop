@@ -72,12 +72,12 @@
                                     OR CONCAT(c.customers_lastname,' ',c.customers_firstname) LIKE '%".$keywords."%'
                                     OR c.customers_email_address LIKE '%".$keywords."%'
                                     OR c.customers_cid LIKE '%".$keywords."%'
-                                    OR a.entry_company LIKE '%".$keywords."%'
+                                    OR ab.entry_company LIKE '%".$keywords."%'
                                     OR a1.entry_company LIKE '%".$keywords."%'
                                     OR a1.entry_firstname LIKE '%".$keywords."%'
                                     OR a1.entry_lastname LIKE '%".$keywords."%'
-                                    OR CONCAT(a1.entry_firstname,' ',a1.entry_lastname) LIKE '%".$keywords."%'
-                                    OR CONCAT(a1.entry_lastname,' ',a1.entry_firstname) LIKE '%".$keywords."%'
+                                    OR CONCAT(ab1.entry_firstname,' ',ab1.entry_lastname) LIKE '%".$keywords."%'
+                                    OR CONCAT(ab1.entry_lastname,' ',ab1.entry_firstname) LIKE '%".$keywords."%'
                                    )";
                 }
                 if (isset($_GET['search_email']) && (xtc_not_null($_GET['search_email']))) {
@@ -103,10 +103,10 @@
                       $sort = 'ORDER BY c.customers_lastname DESC';
                       break;
                     case 'customers_country' :
-                      $sort = 'ORDER BY a.entry_country_id';
+                      $sort = 'ORDER BY ab.entry_country_id';
                       break;
                     case 'customers_country-desc' :
-                      $sort = 'ORDER BY a.entry_country_id DESC';
+                      $sort = 'ORDER BY ab.entry_country_id DESC';
                       break;
                     case 'date_account_created' :
                       $sort = 'ORDER BY c.customers_date_added';
@@ -144,15 +144,15 @@
                                                c.customers_last_modified as date_account_last_modified,
                                                c.member_flag,
                                                c.account_type,
-                                               a.entry_company,
-                                               a.entry_country_id,
+                                               ab.entry_company,
+                                               ab.entry_country_id,
                                                cgc.amount
                                           FROM ".TABLE_CUSTOMERS." c
-                                          JOIN ".TABLE_ADDRESS_BOOK." a
-                                               ON c.customers_id = a.customers_id
-                                                  AND c.customers_default_address_id = a.address_book_id
-                                          JOIN ".TABLE_ADDRESS_BOOK." a1
-                                               ON c.customers_id = a1.customers_id
+                                          JOIN ".TABLE_ADDRESS_BOOK." ab
+                                               ON c.customers_id = ab.customers_id
+                                                  AND c.customers_default_address_id = ab.address_book_id
+                                          JOIN ".TABLE_ADDRESS_BOOK." ab1
+                                               ON c.customers_id = ab1.customers_id
                                      LEFT JOIN ".TABLE_COUPON_GV_CUSTOMER." cgc
                                                ON c.customers_id = cgc.customer_id
                                                ".$search."
