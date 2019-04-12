@@ -36,7 +36,7 @@
   define('TEXT_UPDATER', 'Willkommen beim Updater der modified eCommerce Shopsoftware.');
   define('TEXT_UPDATE_CONFIG', 'Konfigurations-Datei (configure.php) aktualisieren');
   define('TEXT_UPDATE_SYSTEM', 'System Updates');
-  define('TEXT_UPDATE_SYSTEM_SUCCESS', 'System Updates wurden erfolgreich ausgeführt.');
+  define('TEXT_UPDATE_SYSTEM_SUCCESS', 'System Updates wurden erfolgreich ausgef&uuml;hrt.');
   
   define('TEXT_CONFIGURE', 'Konfigurations-Datei (configure.php) aktualisieren');
   define('TEXT_CONFIGURE_DESC', 'Hier k&ouml;nnen Sie die configure.php Datei aktualisieren um sicher zu gehen, dass sie dem aktuelle Stand entspricht.');
