@@ -73,9 +73,9 @@
                                     OR c.customers_email_address LIKE '%".$keywords."%'
                                     OR c.customers_cid LIKE '%".$keywords."%'
                                     OR ab.entry_company LIKE '%".$keywords."%'
-                                    OR a1.entry_company LIKE '%".$keywords."%'
-                                    OR a1.entry_firstname LIKE '%".$keywords."%'
-                                    OR a1.entry_lastname LIKE '%".$keywords."%'
+                                    OR ab1.entry_company LIKE '%".$keywords."%'
+                                    OR ab1.entry_firstname LIKE '%".$keywords."%'
+                                    OR ab1.entry_lastname LIKE '%".$keywords."%'
                                     OR CONCAT(ab1.entry_firstname,' ',ab1.entry_lastname) LIKE '%".$keywords."%'
                                     OR CONCAT(ab1.entry_lastname,' ',ab1.entry_firstname) LIKE '%".$keywords."%'
                                    )";
