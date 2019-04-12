@@ -187,7 +187,7 @@ class sofortLibNotificationClassic {
 
 		$this->params = array();
 		foreach ($fields as $key) {
-			$this->params[$key] = $request[$key];
+			$this->params[$key] = stripslashes($request[$key]);
 		}
 
 		$this->params['project_password'] = $this->_password;
