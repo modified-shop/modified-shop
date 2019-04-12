@@ -198,7 +198,7 @@ if (isset ($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['act
     }
     if (ACCOUNT_STATE == 'true') {
       $sql_data_array['entry_zone_id'] = (isset($zone_id) ? (int)$zone_id : 0);
-      $sql_data_array['entry_state'] = (isset($state) ? $state : '');
+      $sql_data_array['entry_state'] = ((isset($state) && !empty($state)) ? $state : '');
     }
 
     if ($_POST['action'] == 'update') {
