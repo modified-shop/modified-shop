@@ -518,7 +518,7 @@ class product {
     }
     
     //create products link
-    $products_link = xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($array['products_id'], $array['products_name']));
+    $products_link = xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$array['products_id']);
 
     //get $shipping_status_name, $shipping_status_image
     $shipping_status_name = $shipping_status_image = $shipping_status_link = '';

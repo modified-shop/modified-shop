@@ -49,7 +49,7 @@ if (isset ($cPath_array)) {
 
 // add the products model/name to the breadcrumb trail
 if ($product->isProduct() === true) {
-  $breadcrumb->add($product->getBreadcrumbModel(), xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($product->data['products_id'], $product->data['products_name'])));
+  $breadcrumb->add($product->getBreadcrumbModel(), xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$product->data['products_id']));
 }
 
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/create_breadcrumb/','php') as $file) require_once ($file);

@@ -36,7 +36,7 @@ function smarty_function_facebook_badge($params, $smarty) {
   $facebook_badge = '<iframe src="//www.facebook.com/plugins/like.php?href=%s&amp;width='.(isset($params['width']) ? $params['width'] : FB_WIDTH).'&amp;height='.(isset($params['height']) ? $params['height'] : FB_HEIGHT).'&amp;colorscheme='.(isset($params['color']) ? $params['color'] : FB_COLOR).'&amp;layout='.(isset($params['layout']) ? $params['layout'] : FB_LAYOUT).'&amp;action='.(isset($params['action']) ? $params['action'] : FB_ACTION).'&amp;show_faces='.(isset($params['faces']) ? $params['faces'] : FB_FACES).'&amp;send='.(isset($params['share']) ? $params['share'] : FB_SHARE).'&amp;appId=270892269593470" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:'.(isset($params['iframewidth']) ? $params['iframewidth'] : IFRAME_WIDTH).'px; height:'.(isset($params['iframeheight']) ? $params['iframeheight'] : IFRAME_HEIGHT).'px;" allowTransparency="true"></iframe>';
   
   if (isset($params['products_id'])) {
-    $link = xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($params['products_id']), 'NONSSL', false);
+    $link = xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$params['products_id'], 'NONSSL', false);
   }
   
   if (strpos($PHP_SELF, FILENAME_CHECKOUT_SUCCESS) !== false && !isset($params['products_id'])) {
@@ -64,7 +64,7 @@ function getOrderDetailsFacebook() {
                       GROUP BY products_id");
   if (xtc_db_num_rows($query) == 1) {
     $order = xtc_db_fetch_array($query);
-    $link = xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($order['products_id'], $order['products_name']), 'NONSSL', false);
+    $link = xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$order['products_id'], 'NONSSL', false);
   } else {
     $link = HTTP_SERVER;
   }

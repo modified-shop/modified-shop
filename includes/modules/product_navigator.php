@@ -63,20 +63,20 @@ if ($actual_key == 0) {
 	// aktuel key = first product
 } else {
 	$prev_id = $actual_key -1;
-	$prev_link = xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($p_data[$prev_id]['pID'], $p_data[$prev_id]['pName']));
+	$prev_link = xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$p_data[$prev_id]['pID']);
 	// check if prev id = first
 	if ($prev_id != 0)
-		$first_link = xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($p_data[0]['pID'], $p_data[0]['pName']));
+		$first_link = xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$p_data[0]['pID']);
 }
 // check if key = last
 if ($actual_key == (count($p_data) - 1)) {
 	// actual key is last
 } else {
 	$next_id = $actual_key +1;
-	$next_link = xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($p_data[$next_id]['pID'], $p_data[$next_id]['pName']));
+	$next_link = xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$p_data[$next_id]['pID']);
 	// check if next id = last
 	if ($next_id != (count($p_data) - 1))
-		$last_link = xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($p_data[(count($p_data) - 1)]['pID'], $p_data[(count($p_data) - 1)]['pName']));
+		$last_link = xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$p_data[(count($p_data) - 1)]['pID']);
 }
 $overview_link = xtc_href_link(FILENAME_DEFAULT, xtc_category_link($current_category_id));
 

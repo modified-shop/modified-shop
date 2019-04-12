@@ -39,7 +39,7 @@
       }
   
       $module_content_add = array (
-        'PRODUCTS_LINK' => xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($products[$i]['id'], $products[$i]['name'])),
+        'PRODUCTS_LINK' => xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$products[$i]['id']),
         'PRODUCTS_NAME' => $products[$i]['name'],
         'PRODUCTS_IMAGE' => $product->productImage(xtc_get_products_image(xtc_get_prid($products[$i]['id'])), 'thumbnail'),
         'PRODUCTS_BUTTON_DELETE' => $del_button,

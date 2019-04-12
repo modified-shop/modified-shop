@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id:$
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -130,7 +130,7 @@ if ($sql_limit != '' || $sql_where != '') {
                                 'availability' => ($products['products_quantity'] > '0') ? MODULE_EASYMARKETING_AVAILIBILLITY_STOCK_1 : MODULE_EASYMARKETING_AVAILIBILLITY_STOCK_0,
                                 'currency' => DEFAULT_CURRENCY,
                                 'price' => $products_price,
-                                'url' => xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($products['products_id'], $products['products_name']), 'NONSSL', false),
+                                'url' => xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$products['products_id'], 'NONSSL', false),
                                 'image_url' => !empty($products['products_image']) ? HTTP_SERVER.DIR_WS_CATALOG.MODULE_EASYMARKETING_IMAGE_SIZE.$products['products_image'] : '',
                                 'shipping' => mod_calculate_shipping_cost($products['products_id'], $products_price),
                                 'description' => (!empty($products['products_short_description']) ? $products['products_short_description'] : (!empty($products['products_description']) ? $products['products_description'] : 'null')),

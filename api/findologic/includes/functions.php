@@ -249,7 +249,7 @@ function select_product($products_id, $debug=false) {
                      "instead" => $xtcPrice->xtcFormat($row['products_price'], false, $row['products_tax_class_id']),
                      "maxprice" => $xtcPrice->xtcFormat(($row['products_price'] + $max_options_values_price), false, $row['products_tax_class_id']),
                      "taxrate" => xtc_get_tax_rate($row['products_tax_class_id']),
-                     "url" => xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($row['products_id'], $row['products_name']), 'NONSSL', false),
+                     "url" => xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$row['products_id'], 'NONSSL', false),
                      "image" => get_image($row['products_image']),
                      "attributes" => $attributes_enc,
                      "keywords" => $row['products_keywords'],

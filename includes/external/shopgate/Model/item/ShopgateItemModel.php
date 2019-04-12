@@ -866,7 +866,7 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
      */
     public function generateDeepLinkToProduct($productId, $productName)
     {
-        return xtc_href_link('product_info.php', xtc_product_link($productId, $productName), 'NONSSL', false);
+        return xtc_href_link('product_info.php', 'products_id='.$productId, 'NONSSL', false);
     }
 
     /**

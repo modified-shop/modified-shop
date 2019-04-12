@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: reviews.php 4209 2013-01-10 23:54:44Z Tomcraft1980 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -31,7 +31,7 @@ if ($product->isProduct() === true && $_SESSION['customers_status']['customers_s
     // display 'write a review' box
     $box_smarty->assign('REVIEWS_WRITE_REVIEW',BOX_REVIEWS_WRITE_REVIEW);
     $box_smarty->assign('REVIEWS_LINK', xtc_href_link(FILENAME_REVIEWS));
-    $box_smarty->assign('PRODUCTS_LINK', xtc_href_link(FILENAME_PRODUCT_REVIEWS_WRITE, xtc_product_link($product->data['products_id'],$product->data['products_name'])));
+    $box_smarty->assign('PRODUCTS_LINK', xtc_href_link(FILENAME_PRODUCT_REVIEWS_WRITE, 'products_id='.$product->data['products_id']));
   }
 } elseif ($_SESSION['customers_status']['customers_status_read_reviews'] == 1) {
 
