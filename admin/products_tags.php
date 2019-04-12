@@ -659,6 +659,14 @@ require (DIR_WS_INCLUDES.'head.php');
                     $contents = array('form' => xtc_draw_form('values', FILENAME_PRODUCTS_TAGS, 'page=' . $_GET['page'] . '&oID=' . $_GET['oID'] . '&action=list&spage=' . $_GET['spage'] . '&vID=' . $vInfo->values_id . '&saction=deleteconfirm_values'));
                     $contents[] = array('text' => TEXT_INFO_DELETE_VALUE_INTRO);
                     $contents[] = array('text' => '<br /><b>' . xtc_get_values_detail($vInfo->values_id, $_SESSION['languages_id'], 'values_name') . '</b>');
+                    $products_query = xtc_db_query("SELECT * 
+                                                      FROM ".TABLE_PRODUCTS_TAGS." 
+                                                     WHERE values_id = '".(int)$vInfo->values_id."' 
+                                                  GROUP BY products_id");
+                    $products_total = xtc_db_num_rows($products_query);
+                    if ($products_total > 0) {
+                      $contents[] = array('text' => '<br />' . sprintf(TEXT_INFO_WARNING_PRODUCTS, $products_total));
+                    }
                     $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PRODUCTS_TAGS, 'page=' . $_GET['page'] . '&oID=' . $_GET['oID'] . '&action=list&spage=' . $_GET['spage'] . '&vID=' . $vInfo->values_id) . '">' . BUTTON_CANCEL . '</a>');
                     break;
 
@@ -716,6 +724,14 @@ require (DIR_WS_INCLUDES.'head.php');
                     $contents = array('form' => xtc_draw_form('options', FILENAME_PRODUCTS_TAGS, 'page=' . $_GET['page'] . '&oID=' . $oInfo->options_id . '&action=deleteconfirm_options'));
                     $contents[] = array('text' => TEXT_INFO_DELETE_OPTION_INTRO);
                     $contents[] = array('text' => '<br /><b>' . xtc_get_options_detail($oInfo->options_id, $_SESSION['languages_id'], 'options_name') . '</b>');
+                    $products_query = xtc_db_query("SELECT * 
+                                                      FROM ".TABLE_PRODUCTS_TAGS." 
+                                                     WHERE options_id = '".(int)$oInfo->options_id."' 
+                                                  GROUP BY products_id");
+                    $products_total = xtc_db_num_rows($products_query);
+                    if ($products_total > 0) {
+                      $contents[] = array('text' => '<br />' . sprintf(TEXT_INFO_WARNING_PRODUCTS, $products_total));
+                    }
                     $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PRODUCTS_TAGS, 'page=' . $_GET['page'] . '&oID=' . $oInfo->options_id) . '">' . BUTTON_CANCEL . '</a>');
                     break;
 
