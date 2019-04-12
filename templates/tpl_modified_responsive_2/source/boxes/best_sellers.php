@@ -23,7 +23,7 @@
 include(DIR_FS_BOXES_INC . 'smarty_default.php');
 
 // set cache id
-$cache_id = md5($_SESSION['language'].$current_category_id);
+$cache_id = md5($_SESSION['currency'].$_SESSION['language'].$current_category_id);
 
 if (MIN_DISPLAY_BESTSELLERS > 0 && (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_best_sellers.html', $cache_id) || !$cache)) {
 	

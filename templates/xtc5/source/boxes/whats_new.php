@@ -1,6 +1,6 @@
 <?php
   /* -----------------------------------------------------------------------------------------
-   $Id: whats_new.php 4583 2013-04-05 15:25:22Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -65,7 +65,7 @@ if (xtc_db_num_rows($whats_new_query) > 0) {
   $whats_new = xtc_db_fetch_array($whats_new_query);
   
   // set cache id
-  $cache_id = md5($_SESSION['language'].$whats_new['products_id']);
+  $cache_id = md5($_SESSION['currency'].$_SESSION['language'].$whats_new['products_id']);
   
   if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_whatsnew.html', $cache_id) || !$cache) {
     $box_smarty->assign('box_content', $product->buildDataArray($whats_new));
