@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id:$
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -23,7 +23,7 @@ if (isset($_SESSION['tracking']['products_history']) && count($_SESSION['trackin
   $random_last_viewed = xtc_rand(0, (count($_SESSION['tracking']['products_history']) - 1));
 
   // set cache id
-  $cache_id = md5($_SESSION['language'].$_SESSION['customers_status']['customers_status'].$_SESSION['tracking']['products_history'][$random_last_viewed]);
+  $cache_id = md5($_SESSION['currency'].$_SESSION['language'].$_SESSION['customers_status']['customers_status'].$_SESSION['tracking']['products_history'][$random_last_viewed]);
 
   if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_last_viewed.html', $cache_id) || !$cache) {
 
