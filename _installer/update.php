@@ -36,6 +36,7 @@
          ->setConfigDir(__DIR__.'/lang')
          ->SetCaching(0);
 
+  $smarty->assign('BUTTON_SYSTEM_UPDATES', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=system_updates', $request_type).'" class="ActionLink" style="display:none">'.BUTTON_SYSTEM_UPDATES.'</a>');
   $smarty->assign('BUTTON_CONFIGURE', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=configure', $request_type).'" class="ActionLink" style="display:none">'.BUTTON_CONFIGURE.'</a>');
   $smarty->assign('BUTTON_DB_UPDATE', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=db_update', $request_type).'" class="ActionLink" style="display:none">'.BUTTON_DB_UPDATE.'</a>');
   $smarty->assign('BUTTON_SQL_UPDATE', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=sql_update', $request_type).'" class="ActionLink" style="display:none">'.BUTTON_SQL_UPDATE.'</a>');
@@ -46,6 +47,29 @@
 
   if (isset($_GET['action'])) {
     switch ($_GET['action']) {
+      case 'system_updates':
+        $downloads_query = xtc_db_query("SELECT opd.orders_id,
+                                                opd.orders_products_id, 
+                                                opd.orders_products_filename,
+                                                opd.orders_products_download_id
+                                                o.customers_id, 
+                                                o.customers_email_address
+                                           FROM ".TABLE_ORDERS_PRODUCTS_DOWNLOAD." opd 
+                                           JOIN ".TABLE_ORDERS." o 
+                                                ON o.orders_id = opd.orders_id
+                                          WHERE download_key = ''");
+        if (xtc_db_num_rows($downloads_query) > 0) {
+          while ($downloads = xtc_db_fetch_array($downloads_query)) {
+            $download_key = md5($downloads['orders_id'].$downloads['orders_products_id'].$downloads['customers_id'].$downloads['customers_email_address'].$downloads['orders_products_filename']);
+            xtc_db_query("UPDATE ".TABLE_ORDERS_PRODUCTS_DOWNLOAD."
+                             SET download_key = '".xtc_db_input($download_key)."'
+                           WHERE orders_products_download_id = '".(int)$downloads['orders_products_download_id']."'");
+          }
+        }
+        $messageStack->add_session('update', TEXT_UPDATE_SYSTEM_SUCCESS, 'success');
+        xtc_redirect(xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), '', $request_type));
+        break;
+        
       case 'configure':
       case 'configure_confirm':
         if ($_GET['action'] == 'configure_confirm') {

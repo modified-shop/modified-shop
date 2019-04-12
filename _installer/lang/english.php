@@ -19,6 +19,7 @@
   define('BUTTON_SHOP', 'Go to Shop');
 
   define('BUTTON_CONFIGURE', 'execute <i class="fa fa-caret-right"></i>');
+  define('BUTTON_SYSTEM_UPDATES', 'execute <i class="fa fa-caret-right"></i>');
   define('BUTTON_DB_UPDATE', 'execute <i class="fa fa-caret-right"></i>');
   define('BUTTON_SQL_UPDATE', 'execute <i class="fa fa-caret-right"></i>');
   define('BUTTON_SQL_MANUELL', 'execute <i class="fa fa-caret-right"></i>');
@@ -32,8 +33,10 @@
   define('BUTTON_DONATE','<a href="https://www.modified-shop.org/spenden" target="_blank"><img src="https://www.paypal.com/en_US/i/btn/btn_donateCC_LG.gif" alt="' . TEXT_INFO_DONATIONS_IMG_ALT . '" border="0" /></a>');
   define('TEXT_START', '<b>Welcome to the modified eCommerce Shopsoftware installation process</b><br /><br />The modified eCommerce Shopsoftware is an open source e-commerce solution under on going development by the modified eCommerce Shopsoftware Team and its community.<br /> Its feature packed out-of-the-box installation allows store owners to setup, run, and maintain their online stores with minimum effort and with no costs involved.<br />The modified eCommerce Shopsoftware combines open source solutions to provide a free and open development platform, which includes the powerful PHP web scripting language, the stable Apache web server, and the fast MySQL database server.<br /><br />With no restrictions or special requirements, the modified eCommerce Shopsoftware can be installed on on any environment that supports PHP '.PHP_VERSION_MIN.' and MySQL 5.0.0, which includes Linux, Solaris, BSD, and Microsoft Windows environments.<br /><br />The modified eCommerce Shopsoftware is an open source project, yet a lot of work and spare time go into this project. Therefore we would be grateful if you show your appreciation by <b>donating</b> to the project.<br /><br />' . BUTTON_DONATE);
   define('TEXT_UPDATER_HEADING', 'Please Choose');
-  define('TEXT_UPDATER', 'Welcome to the new Updater of the modified eCommerce Shopsoftware');
+  define('TEXT_UPDATER', 'Welcome to the Updater of the modified eCommerce Shopsoftware');
   define('TEXT_UPDATE_CONFIG', 'Update configuration file (configure.php)');
+  define('TEXT_UPDATE_SYSTEM', 'System updates');
+  define('TEXT_UPDATE_SYSTEM_SUCCESS', 'System updates executed successful.');
   
   define('TEXT_CONFIGURE', 'Recreate configuration file (configure.php)');
   define('TEXT_CONFIGURE_DESC', 'Here you can update the configure.php file to make sure it is up to date.');
