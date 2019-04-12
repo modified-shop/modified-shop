@@ -64,6 +64,7 @@ define('TEXT_INFO_HEADING_EDIT_OPTION', 'Edit feature');
 define('TEXT_INFO_EDIT_OPTION_INTRO', 'Please make any necessary changes.');
 define('TEXT_INFO_HEADING_DELETE_OPTION', 'Delete feature');
 define('TEXT_INFO_DELETE_OPTION_INTRO', 'Are you sure you want to delete this feature?');
+define('TEXT_INFO_WARNING_PRODUCTS', '<b>WARNING:</b> There are still %s products that have assigned this tag. This assignment gets deleted!');
 
 define('TEXT_DISPLAY_NUMBER_OF_OPTIONS', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> features)');
 

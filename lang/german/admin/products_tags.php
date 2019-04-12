@@ -64,6 +64,7 @@ define('TEXT_INFO_HEADING_EDIT_OPTION', 'Eigenschaft bearbeiten');
 define('TEXT_INFO_EDIT_OPTION_INTRO', 'Bitte f&uuml;hren Sie alle notwendigen &Auml;nderungen durch.');
 define('TEXT_INFO_HEADING_DELETE_OPTION', 'Eigenschaft l&ouml;schen');
 define('TEXT_INFO_DELETE_OPTION_INTRO', 'Sind Sie sicher, dass Sie diese Eigenschaft l&ouml;schen wollen?');
+define('TEXT_INFO_WARNING_PRODUCTS', '<b>WARNUNG:</b> Es existieren noch %s Artikel, welche diese Eigenschaft zugeordnet haben. Diese Zuordnung wird gelöscht!');
 
 define('TEXT_DISPLAY_NUMBER_OF_OPTIONS', 'Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> Eigenschaften)');
 
