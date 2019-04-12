@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: address_book_details.php 1239 2005-09-24 20:09:56Z mz $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -66,7 +66,7 @@
 
   if (ACCOUNT_STATE == 'true') {
     $module_smarty->assign('state','1');
-    $smarty->assign('display_state', '');
+    $module_smarty->assign('display_state', '');
     if ($process == true) {
       if ($entry_state_has_zones == true) {
         $zones_array = array();
@@ -79,20 +79,20 @@
         $state_input= xtc_draw_input_fieldNote(array('name'=>'state','text'=>'&nbsp;' .(xtc_not_null(ENTRY_STATE_TEXT) ? '<span class="inputRequirement">' . ENTRY_STATE_TEXT . '</span>': '')));
         if (!$required_zones) {
           $state_input = '<input type="hidden" value="0" name="state">';
-          $smarty->assign('display_state', ' style="display:none"');        
+          $module_smarty->assign('display_state', ' style="display:none"');        
         }
       }
     } else {
       $state_input= xtc_draw_input_fieldNote(array('name'=>'state','text'=>'&nbsp;' .(xtc_not_null(ENTRY_STATE_TEXT) ? '<span class="inputRequirement">' . ENTRY_STATE_TEXT . '</span>': '')), xtc_get_zone_name($entry['entry_country_id'], $entry['entry_zone_id'], $entry['entry_state']));
       if (!$required_zones) {
         $state_input = '<input type="hidden" value="0" name="state">';
-        $smarty->assign('display_state', ' style="display:none"');        
+        $module_smarty->assign('display_state', ' style="display:none"');        
       }
       $state_input.= xtc_draw_hidden_field('state_zone_id', $entry['entry_zone_id']);
     }
     $module_smarty->assign('INPUT_STATE',$state_input);
   } else {
-    $smarty->assign('state', '0');
+    $module_smarty->assign('state', '0');
   }
 
   $module_smarty->assign('SELECT_COUNTRY',xtc_get_country_list(array('name'=>'country','text'=>'&nbsp;' . (xtc_not_null(ENTRY_COUNTRY_TEXT) ? '<span class="inputRequirement">' . ENTRY_COUNTRY_TEXT . '</span>': '')), $selected));
