@@ -11,5 +11,5 @@
    ---------------------------------------------------------------------------------------*/
 
 
-  define('MODULE_ORDER_PRODUCTSTAGSONCHECKOUT_TITLE', 'Artikeleigenschaften im Checkout');
-  define('MODULE_ORDER_PRODUCTSTAGSONCHECKOUT_DESCRIPTION', 'Artikeleigenschaften werden auf Bestellbest&auml;tigungsseite zus&auml;tzlich zur Bestellbeschreibung angezeigt');
+  define('MODULE_ORDER_PRODUCTTAGSONCHECKOUT_TITLE', 'Artikeleigenschaften im Checkout');
+  define('MODULE_ORDER_PRODUCTTAGSONCHECKOUT_DESCRIPTION', 'Artikeleigenschaften werden auf Bestellbest&auml;tigungsseite zus&auml;tzlich zur Bestellbeschreibung angezeigt');
