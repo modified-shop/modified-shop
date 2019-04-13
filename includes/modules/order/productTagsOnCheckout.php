@@ -16,26 +16,11 @@ class productTagsOnCheckout {  //Important same name as filename
     function __construct()
     {
         $this->code = 'productTagsOnCheckout'; //Important same name as class name
-        $this->title = 'ProductFeaturesOnCheckout';
-        $this->description = 'Show product tags in checkout';        
         $this->name = 'MODULE_ORDER_'.strtoupper($this->code);
+        $this->title = constant($this->name.'_TITLE');
+        $this->description = constant($this->name.'_DESCRIPTION');
         $this->enabled = defined($this->name.'_STATUS') && constant($this->name.'_STATUS') == 'true' ? true : false;
-        $this->sort_order = defined($this->name.'_SORT_ORDER') ? constant($this->name.'_SORT_ORDER') : '';
-        
-        $this->translate();
-    }
-    
-    function translate() {
-        switch ($_SESSION['language_code']) {
-          case 'de':
-            $this->title = 'Artikeleigenschaften im Checkout';
-            $this->description = 'Artikeleigenschaften werden auf Bestellbest&auml;tigungsseite zus&auml;tzlich zur Bestellbeschreibung angezeigt';
-            break;
-          default:
-            $this->title = 'Product features in checkout';
-            $this->description = 'Product features are displayed additional to the order description on checkout comfirmation';
-            break;
-        }
+        $this->sort_order = defined($this->name.'_SORT_ORDER') ? constant($this->name.'_SORT_ORDER') : '';        
     }
     
     function check() {
