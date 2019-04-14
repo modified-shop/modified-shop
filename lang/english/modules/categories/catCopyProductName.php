@@ -11,5 +11,5 @@
    ---------------------------------------------------------------------------------------*/
 
 
-  define('MODULE_CATEGORIES_CATCOPYPRODUCTNAME_TITLE', 'copied product suffix');
-  define('MODULE_CATEGORIES_CATCOPYPRODUCTNAME_DESCRIPTION', 'When copied items of products name is supplemented with (copy)');
+  define('MODULE_CATEGORIES_CATCOPYPRODUCTNAME_TITLE', 'Copied product suffix');
+  define('MODULE_CATEGORIES_CATCOPYPRODUCTNAME_DESCRIPTION', 'For the copied product, the product name is supplemented with (copy)');

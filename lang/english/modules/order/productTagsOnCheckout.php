@@ -12,4 +12,4 @@
 
 
   define('MODULE_ORDER_PRODUCTTAGSONCHECKOUT_TITLE', 'Product features in checkout');
-  define('MODULE_ORDER_PRODUCTTAGSONCHECKOUT_DESCRIPTION', 'Product features are displayed additional to the order description on checkout comfirmation');
+  define('MODULE_ORDER_PRODUCTTAGSONCHECKOUT_DESCRIPTION', 'Product features are displayed additional to the order description on checkout comfirmation page');
