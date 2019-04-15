@@ -48,6 +48,7 @@
   if (isset($_GET['action'])) {
     switch ($_GET['action']) {
       case 'system_updates':
+        // downloads
         $downloads_query = xtc_db_query("SELECT opd.orders_id,
                                                 opd.orders_products_id, 
                                                 opd.orders_products_filename,
@@ -66,6 +67,21 @@
                            WHERE orders_products_download_id = '".(int)$downloads['orders_products_download_id']."'");
           }
         }
+        
+        // whos online
+        $primary = false;
+        $whosonline_query = xtc_db_query("SHOW INDEX FROM '".TABLE_WHOS_ONLINE."'");
+        while ($whosonline = xtc_db_fetch_array($whosonline_query)) {
+          if ($whosonline['Key_name'] == 'PRIMARY' && $whosonline['Column_name'] == 'session_id') {
+            $primary = true;
+          }
+        }
+        
+        if ($primary === false) {
+          xtc_db_query("TRUNCATE '".TABLE_WHOS_ONLINE."'");
+          xtc_db_query("ALTER TABLE '".TABLE_WHOS_ONLINE."' ADD PRIMARY KEY (session_id)");
+        }
+        
         $messageStack->add_session('update', TEXT_UPDATE_SYSTEM_SUCCESS, 'success');
         xtc_redirect(xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), '', $request_type));
         break;
