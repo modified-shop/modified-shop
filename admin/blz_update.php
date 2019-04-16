@@ -57,10 +57,12 @@ require (DIR_WS_INCLUDES.'head.php');
                   $blz_file = (isset($_GET['blz_file']) ? $_GET['blz_file'] : '');
                   if (empty($blz_file)) {
                     echo BLZ_LINK_NOT_GIVEN_TEXT;
+                    echo '<p><a class="button" href="'.FILENAME_BLZ_UPDATE.'">'.BUTTON_BACK.'</a></p>';
                     break;
                   } elseif (strpos($blz_file, '://www.bundesbank.de/') === false ||
                              strpos($blz_file, '.txt') === false) {
                     echo BLZ_LINK_INVALID_TEXT;
+                    echo '<p><a class="button" href="'.FILENAME_BLZ_UPDATE.'">'.BUTTON_BACK.'</a></p>';
                     break;
                   }
 
@@ -73,6 +75,7 @@ require (DIR_WS_INCLUDES.'head.php');
                   $blz_file_content = get_external_content($blz_file, 3, false);
                   if (file_put_contents($blz_file_local, $blz_file_content, LOCK_EX) === false) {
                     echo BLZ_LINK_INVALID_TEXT;
+                    echo '<p><a class="button" href="'.FILENAME_BLZ_UPDATE.'">'.BUTTON_BACK.'</a></p>';
                     break;
                   }
                   
@@ -98,6 +101,7 @@ require (DIR_WS_INCLUDES.'head.php');
 
                   if(!$lines) { //Invalid URL
                     echo BLZ_LINK_ERROR_TEXT;
+                    echo '<p><a class="button" href="'.FILENAME_BLZ_UPDATE.'">'.BUTTON_BACK.'</a></p>';
                     break;
                   }
                   foreach ($lines as $line) {
