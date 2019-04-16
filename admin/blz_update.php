@@ -145,7 +145,7 @@ require (DIR_WS_INCLUDES.'head.php');
                   echo xtc_draw_form('blz_update', 'blz_update.php', '', 'get');
                   echo '<input type="hidden" name="action" value="do_blz">';
                   echo '<table style="empty-cells:collapse; background:#FCFCFC; border-collapse:collapse;">';
-                  echo xtc_draw_textarea_field('blz_file','','120%','2','');
+                  echo xtc_draw_textarea_field('blz_file','','120%','2',$blz_file_default_link,'onfocus="if(this.value==this.defaultValue) this.value=\'\';" onblur="if(this.value==\'\') this.value=this.defaultValue;"');
                   echo '<tr style="text-align:right;">
                            <td colspan="2">
                              <input type="SUBMIT" class="button" value="'.BUTTON_UPDATE.'"'. $button_disabled .'>
