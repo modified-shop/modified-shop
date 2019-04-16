@@ -30,6 +30,9 @@ class mainModules {
             $class = substr($file, 0, strpos($file, '.'));
             $module_status = (defined('MODULE_'. strtoupper($module_type) .'_'. strtoupper($class) .'_STATUS') && strtolower(constant('MODULE_'. strtoupper($module_type) .'_'. strtoupper($class) .'_STATUS')) == 'true') ? true : false;
             if (is_file($module_directory . $file) && $module_status) {
+              if (file_exists(DIR_FS_CATALOG . 'lang/' . $_SESSION['language'] . '/modules/' . $module_type . '/' . $file) {
+                include_once(DIR_FS_CATALOG . 'lang/' . $_SESSION['language'] . '/modules/' . $module_type . '/' . $file);
+              }
               include_once($module_directory . $file);
               $GLOBALS[$class] = new $class();
               $this->modules[] = $class;
