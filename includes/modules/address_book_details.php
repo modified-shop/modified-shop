@@ -83,7 +83,7 @@
         }
       }
     } else {
-      $state_input= xtc_draw_input_fieldNote(array('name'=>'state','text'=>'&nbsp;' .(xtc_not_null(ENTRY_STATE_TEXT) ? '<span class="inputRequirement">' . ENTRY_STATE_TEXT . '</span>': '')), xtc_get_zone_name(((isset($entry['entry_country_id'])) ? $entry['entry_country_id'] ; STORE_COUNTRY), ((isset($entry['entry_zone_id'])) ? $entry['entry_zone_id'] : 0), ((isset($entry['entry_state'])) ? $entry['entry_state'] : 0)));
+      $state_input= xtc_draw_input_fieldNote(array('name'=>'state','text'=>'&nbsp;' .(xtc_not_null(ENTRY_STATE_TEXT) ? '<span class="inputRequirement">' . ENTRY_STATE_TEXT . '</span>': '')), xtc_get_zone_name(((isset($entry['entry_country_id'])) ? $entry['entry_country_id'] : STORE_COUNTRY), ((isset($entry['entry_zone_id'])) ? $entry['entry_zone_id'] : 0), ((isset($entry['entry_state'])) ? $entry['entry_state'] : 0)));
       if (!$required_zones) {
         $state_input = '<input type="hidden" value="0" name="state">';
         $module_smarty->assign('display_state', ' style="display:none"');        
