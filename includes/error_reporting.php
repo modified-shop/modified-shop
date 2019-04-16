@@ -12,7 +12,7 @@
 
 
 $error_files = glob(DIR_FS_CATALOG."export/_error_reporting\.{dev,all,err,shop,admin,none}", GLOB_BRACE);
-$LogLevel = get_log_level($error_files);
+$LogLevel = mod_get_log_level($error_files);
 
 // include needed class
 require_once(DIR_FS_CATALOG.'includes/classes/class.logger.php');
@@ -22,7 +22,7 @@ $LoggingManager = new LoggingManager(DIR_FS_LOG.'mod_%s_'.((defined('RUN_MODE_AD
 /**
  * check for LogLevel
  */
-function get_log_level($error_reporting_array) {
+function mod_get_log_level($error_reporting_array) {
   $error_reporting = basename(array_shift($error_reporting_array));
     
   switch ($error_reporting) {
@@ -62,24 +62,24 @@ function get_log_level($error_reporting_array) {
 /**
  * Error handler, passes flow over the exception logger with new ErrorException.
  */
-function log_error($num, $str, $file, $line, $context=null)
+function mod_log_error($num, $str, $file, $line, $context=null)
 {
-    log_exception_handler(new ErrorException($str, 0, $num, $file, $line));
+    mod_log_exception_handler(new ErrorException($str, 0, $num, $file, $line));
 }
 
 /**
  * check if exception is an valid object
  */
-function log_exception_handler($e) {
+function mod_log_exception_handler($e) {
   if (is_object($e)) {
-    log_exception($e);
+    mod_log_exception($e);
   }
 }
 
 /**
  * Uncaught exception handler.
  */
-function log_exception($e)
+function mod_log_exception($e)
 {
     global $error_exceptions, $sql_error, $sql_query, $LoggingManager, $LogLevel;
     
@@ -99,7 +99,7 @@ function log_exception($e)
         $backtrace = debug_backtrace();
         $error = array();
         $error['number'] = (method_exists($e, 'getseverity') ? $e->getseverity() : 'UNDEFINED_ERROR');
-        $error['name'] = (($error['number'] != 'UNDEFINED_ERROR') ? error_level($error['number']) : 'ERROR');
+        $error['name'] = (($error['number'] != 'UNDEFINED_ERROR') ? mod_error_level($error['number']) : 'ERROR');
         $error['line'] = $e->getLine();
         $error['file'] = $e->getFile();
         $error['message'] = $e->getMessage();
@@ -136,18 +136,18 @@ function log_exception($e)
 /**
  * Checks for a fatal error, work around for set_error_handler not working on fatal errors.
  */
-function check_for_fatal()
+function mod_check_for_fatal()
 {
     $error = error_get_last();
     if ($error['type'] == E_ERROR) {
-        log_error($error['type'], $error['message'], $error['file'], $error['line']);
+        mod_log_error($error['type'], $error['message'], $error['file'], $error['line']);
     }
 }
 
 /**
  * translate error number.
  */
-function error_level($type)
+function mod_error_level($type)
 {
     switch($type) {
         case E_ERROR: // 1 //
@@ -187,7 +187,7 @@ function error_level($type)
 /**
  * set error functions.
  */
-register_shutdown_function('check_for_fatal');
-set_error_handler('log_error');
-set_exception_handler('log_exception_handler');
+register_shutdown_function('mod_check_for_fatal');
+set_error_handler('mod_log_error');
+set_exception_handler('mod_log_exception_handler');
 ?>
