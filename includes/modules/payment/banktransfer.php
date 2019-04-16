@@ -149,7 +149,7 @@
         include(DIR_WS_CLASSES . 'banktransfer_validation.php');
 
         // iban / classic?
-        $number = preg_replace('/[^a-zA-Z0-9]/', '', $_POST['banktransfer_number']);
+        $number = preg_replace('/[^a-zA-Z0-9]/', '', ((isset($_POST['banktransfer_iban'])) ? $_POST['banktransfer_iban'] : $_POST['banktransfer_number']));
         if (ctype_digit($number) && MODULE_PAYMENT_BANKTRANSFER_IBAN_ONLY == 'False') {
           // classic
           $banktransfer_validation = new AccountCheck;
@@ -160,7 +160,7 @@
         } else {
           // iban
           $banktransfer_validation = new IbanAccountCheck;
-          $banktransfer_result = $banktransfer_validation->IbanCheckAccount($number, $_POST['banktransfer_blz']);
+          $banktransfer_result = $banktransfer_validation->IbanCheckAccount($number, ((isset($_POST['banktransfer_bic'])) ? $_POST['banktransfer_bic'] : $_POST['banktransfer_blz']));
           // some error codes <> 0/OK pass as OK
           if ($banktransfer_validation->account_acceptable($banktransfer_result))
             $banktransfer_result = 0;
@@ -318,9 +318,11 @@
     function process_button() {
       global $_POST;
       
-      $process_button_string = xtc_draw_hidden_field('banktransfer_blz', ($this->iban_mode) ? $this->banktransfer_bic : $this->banktransfer_blz) .
+      $process_button_string = xtc_draw_hidden_field('banktransfer_blz', $this->banktransfer_blz) .
                                xtc_draw_hidden_field('banktransfer_bankname', $this->banktransfer_bankname).
-                               xtc_draw_hidden_field('banktransfer_number', ($this->iban_mode) ? $this->banktransfer_iban : $this->banktransfer_number) .
+                               xtc_draw_hidden_field('banktransfer_number', $this->banktransfer_number) .
+                               xtc_draw_hidden_field('banktransfer_iban', $this->banktransfer_iban) .
+                               xtc_draw_hidden_field('banktransfer_bic', $this->banktransfer_bic) .
                                xtc_draw_hidden_field('banktransfer_owner', $this->banktransfer_owner) .
                                xtc_draw_hidden_field('banktransfer_owner_email', $this->banktransfer_owner_email) .
                                xtc_draw_hidden_field('banktransfer_status', $this->banktransfer_status) .
@@ -342,20 +344,20 @@
       global $insert_id, $_POST;
       
       $sql_data_array = array('orders_id' => $insert_id,
-                              'banktransfer_owner' => $this->banktransfer_owner,
-                              'banktransfer_number' => $this->banktransfer_number,
-                              'banktransfer_bankname' => $this->banktransfer_bankname,
-                              'banktransfer_blz' => $this->banktransfer_blz,
-                              'banktransfer_status' => $this->banktransfer_status,
-                              'banktransfer_prz' => $this->banktransfer_prz,
-                              'banktransfer_iban' => $this->banktransfer_iban,
-                              'banktransfer_bic' => $this->banktransfer_bic,
-                              'banktransfer_owner_email' => $this->banktransfer_owner_email,
+                              'banktransfer_owner' => $_POST['banktransfer_owner'],
+                              'banktransfer_number' => $_POST['banktransfer_number'],
+                              'banktransfer_bankname' => $_POST['banktransfer_bankname'],
+                              'banktransfer_blz' => $_POST['banktransfer_blz'],
+                              'banktransfer_status' => $_POST['banktransfer_status'],
+                              'banktransfer_prz' => $_POST['banktransfer_prz'],
+                              'banktransfer_iban' => $_POST['banktransfer_iban'],
+                              'banktransfer_bic' => $_POST['banktransfer_bic'],
+                              'banktransfer_owner_email' => $_POST['banktransfer_owner_email'],
                               );
       xtc_db_perform(TABLE_BANKTRANSFER, $sql_data_array);
 
       if (isset($_POST['banktransfer_fax'])) {
-        xtc_db_query("UPDATE banktransfer SET banktransfer_fax = '" . $this->banktransfer_fax ."' WHERE orders_id = '" . $insert_id . "'");
+        xtc_db_query("UPDATE banktransfer SET banktransfer_fax = '" . $_POST['banktransfer_fax'] ."' WHERE orders_id = '" . $insert_id . "'");
       }
       if (isset($this->order_status) && $this->order_status) {
         xtc_db_query("UPDATE ".TABLE_ORDERS." SET orders_status='".$this->order_status."' WHERE orders_id='".$insert_id."'");

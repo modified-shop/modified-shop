@@ -16,7 +16,7 @@ require('includes/application_top.php');
 // include needed function
 require_once(DIR_FS_INC.'get_external_content.inc.php');
 
-$blz_file_default_link = 'https://www.bundesbank.de/resource/blob/602632/b6f18dadd412af2b8f47fac0cd8a8dd4/mL/blz-aktuell-txt-data.txt';
+$blz_file_default_link = 'https://www.bundesbank.de/resource/blob/602632/ce8f548383be2d35ec0f3f4b832fdac9/mL/blz-aktuell-txt-data.txt';
 
 require (DIR_WS_INCLUDES.'head.php');
 ?>
@@ -101,25 +101,18 @@ require (DIR_WS_INCLUDES.'head.php');
                     break;
                   }
                   foreach ($lines as $line) {
-                    // to avoid dublettes, the unique flag
-                    // "bankleitzahlführender Zahlungsdienstleister" will be queried
-                    if (substr($line, 8, 1) == '1') {                //leading payment provider for bank code number (only one per bank code)
-                      $blz['blz'] = substr($line, 0, 8);             //bank code number(8)
-                      $blz['bankname'] = encode_utf8(trim(substr($line, 9, 58)), 'ISO-8859-15'); //bank name(58)
-                      $blz['prz'] = substr($line, 150, 2);           //checksum(2)
-                      $kennzeichen = substr($line, 158, 1); //change code(1)
-
-                      /*
-                      // check the change code of the bank code number
-                      // "A" = Addition
-                      // "D" = Deletion (do not import bank code numbers with this flag)
-                      // "M" = Modified
-                      // "U" = Unchanged
-                      */
-                      if ($kennzeichen!= 'D' && ($kennzeichen== 'A' || $kennzeichen == 'U' || $kennzeichen == 'M')) {
-                        // Add the bank code number to the import array
-                        $banktransfer[] = $blz;
-                      }
+                    $blz = array(
+                      'blz' => substr($line, 0, 8),
+                      'bankname' => encode_utf8(trim(substr($line, 9, 58))),
+                      'prz' => substr($line, 150, 2),
+                    );
+                    $kennzeichen = substr($line, 158, 1);
+                                        
+                    if ($kennzeichen != 'D'
+                        && substr($line, 8, 1) == '1'
+                        )
+                    {
+                      $banktransfer[] = $blz;
                     }
                   }
                   // show process information
