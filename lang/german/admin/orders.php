@@ -61,25 +61,14 @@ define('TABLE_HEADING_DATE_ADDED', 'hinzugef&uuml;gt am:');
 
 define('ENTRY_CUSTOMER', 'Kunde:');
 define('ENTRY_SOLD_TO', 'Rechnungsadresse:');
-define('ENTRY_STREET_ADDRESS', 'Stra&szlig;e:');
-define('ENTRY_SUBURB', 'Weitere Anschrift:');
-define('ENTRY_CITY', 'Stadt:');
-define('ENTRY_POST_CODE', 'PLZ:');
-define('ENTRY_STATE', 'Bundesland:');
-define('ENTRY_COUNTRY', 'Land:');
 define('ENTRY_TELEPHONE', 'Telefon:');
-define('ENTRY_EMAIL_ADDRESS', 'E-Mail-Adresse:');
 define('ENTRY_DELIVERY_TO', 'Lieferanschrift:');
 define('ENTRY_SHIP_TO', 'Lieferanschrift:');
 define('ENTRY_SHIPPING_ADDRESS', 'Versandadresse:');
 define('ENTRY_BILLING_ADDRESS', 'Rechnungsadresse:');
 define('ENTRY_PAYMENT_METHOD', 'Zahlungsweise:');
 define('ENTRY_SHIPPING_METHOD', 'Versandart:');
-define('ENTRY_CREDIT_CARD_TYPE', 'Kreditkartentyp:');
-define('ENTRY_CREDIT_CARD_OWNER', 'Kreditkarteninhaber:');
-define('ENTRY_CREDIT_CARD_NUMBER', 'Kreditkartennummer:');
-define('ENTRY_CREDIT_CARD_CVV', 'Sicherheitscode (CVV)):');
-define('ENTRY_CREDIT_CARD_EXPIRES', 'Kreditkarte l&auml;uft ab am:');
+
 define('ENTRY_SUB_TOTAL', 'Zwischensumme:');
 define('ENTRY_TAX', 'MwSt.:');
 define('ENTRY_SHIPPING', 'Versandkosten:');
@@ -116,7 +105,6 @@ define('WARNING_ORDER_NOT_UPDATED', 'Hinweis: Es wurde nichts ge&auml;ndert. Dah
 
 define('TABLE_HEADING_DISCOUNT','Rabatt');
 define('ENTRY_CUSTOMERS_GROUP','Kundengruppe:');
-define('ENTRY_CUSTOMERS_VAT_ID','USt-IdNr.:');
 define('TEXT_VALIDATING','Nicht best&auml;tigt');
 
 // BOF - Tomcraft - 2009-10-03 - Paypal Express Modul
