@@ -231,7 +231,7 @@
                 break;
             }  
 
-            echo xtc_draw_form('mail', FILENAME_GV_MAIL, 'action=send_email_to_user');
+            echo xtc_draw_form('mail', FILENAME_GV_MAIL, xtc_get_all_get_params(array('action')).'action=send_email_to_user');
               ?>
               <table class="tableConfig borderall">
                 <tr>
