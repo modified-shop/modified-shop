@@ -68,7 +68,6 @@ define('ENTRY_SHIPPING_ADDRESS', 'Versandadresse:');
 define('ENTRY_BILLING_ADDRESS', 'Rechnungsadresse:');
 define('ENTRY_PAYMENT_METHOD', 'Zahlungsweise:');
 define('ENTRY_SHIPPING_METHOD', 'Versandart:');
-
 define('ENTRY_SUB_TOTAL', 'Zwischensumme:');
 define('ENTRY_TAX', 'MwSt.:');
 define('ENTRY_SHIPPING', 'Versandkosten:');
@@ -108,7 +107,7 @@ define('ENTRY_CUSTOMERS_GROUP','Kundengruppe:');
 define('TEXT_VALIDATING','Nicht best&auml;tigt');
 
 // BOF - Tomcraft - 2009-10-03 - Paypal Express Modul
-define('TEXT_INFO_PAYPAL_DELETE', 'PayPal Transaktions Daten auch löschen.'); // ACHTUNG hier keine HTML-Entities verwenden
+define('TEXT_INFO_PAYPAL_DELETE', 'PayPal Transaktions Daten auch l?schen.'); // ACHTUNG hier keine HTML-Entities verwenden
 // EOF - Tomcraft - 2009-10-03 - Paypal Express Modul
 
 // BOF - Tomcraft - 2010-04-22 - Added a missing language definition
@@ -116,7 +115,7 @@ define('TEXT_PRODUCTS', 'Artikel');
 // EOF - Tomcraft - 2010-04-22 - Added a missing language definition
 
 //BOF - web28 - 2010-03-20 - Send Order by Admin
-define('COMMENT_SEND_ORDER_BY_ADMIN' , 'Auftragsbestätigung gesendet'); // ACHTUNG hier keine HTML-Entities verwenden
+define('COMMENT_SEND_ORDER_BY_ADMIN' , 'Auftragsbest?tigung gesendet'); // ACHTUNG hier keine HTML-Entities verwenden
 define('BUTTON_ORDER_CONFIRMATION', 'Auftragsbest&auml;tigung senden');
 define('SUCCESS_ORDER_SEND', 'Auftragsbest&auml;tigung erfolgreich gesendet');
 //EOF - web28 - 2010-03-20 - Send Order by Admin
@@ -175,7 +174,7 @@ define('TEXT_ORDERS_STATUS_FILTER', 'Bestellstatus Filter');
 define('TABLE_HEADING_DATE', 'Datum');
 
 define('BUTTON_ORDER_MAIL_STEP', 'Bestellbest&auml;tigung senden');
-define('COMMENT_SEND_ORDER_MAIL_STEP' , 'Bestellbestätigung gesendet'); // ACHTUNG hier keine HTML-Entities verwenden
+define('COMMENT_SEND_ORDER_MAIL_STEP' , 'Bestellbest?tigung gesendet'); // ACHTUNG hier keine HTML-Entities verwenden
 define('SUCCESS_ORDER_MAIL_STEP_SEND', 'Bestellbest&auml;tigung erfolgreich gesendet');
 
 define('BILLPAY_ORDER_UPDATE_HIGH', 'Fehler: Bei einer BillPay Bestellung darf der neue Bestellwert nicht h&ouml;her sein als der alte Bestellwert');
