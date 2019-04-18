@@ -338,7 +338,7 @@ if (xtc_not_null($action) && !$box) {
                                 $module_info = get_module_info($module);
                                 $mInfo = new objectInfo($module_info);
                               }
-                              if ($module->check() > 0 && !$installed) {
+                              if ($module->check() > 0 && !isset($installed)) {
                                 $installed = true;
                                 ?>
                                 <tr class="dataTableHeadingRow sub">
@@ -350,7 +350,7 @@ if (xtc_not_null($action) && !$box) {
                                   <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?> </td>
                                 </tr>
                                 <?php
-                              } elseif ($module->check() < 1 && !$deinstalled && $installed) {
+                              } elseif ($module->check() < 1 && !isset($deinstalled) && isset($installed)) {
                                 $deinstalled = true;
                                 ?>
                                 <tr><td colspan="3" style="height:35px;">&nbsp;</td></tr>
