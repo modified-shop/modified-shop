@@ -141,7 +141,7 @@ require (DIR_WS_INCLUDES.'head.php');
                 while ($products = xtc_db_fetch_array($products_query)) {
                   $rows++;
                   $rows = str_pad($rows, strlen($page_max_display_results), '0', STR_PAD_LEFT);
-                  if ((!xtc_not_null($_GET['pID']) || (isset($_GET['pID']) && $_GET['pID'] == $products['products_id'])) && !isset($pInfo)) {
+                  if ((!isset($_GET['pID']) || (isset($_GET['pID']) && $_GET['pID'] == $products['products_id'])) && !isset($pInfo)) {
                     $pInfo = new objectInfo($products);
                   }
 
