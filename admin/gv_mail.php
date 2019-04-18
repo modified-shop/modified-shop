@@ -55,8 +55,8 @@
     $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
     $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
 
-    $smarty->assign('AMMOUNT', $currencies->format($mail['coupon_amount']));
-    $smarty->assign('MESSAGE', $mail['message']);
+    $smarty->assign('AMMOUNT', $currencies->format($data['coupon_amount']));
+    $smarty->assign('MESSAGE', $data['message']);
     $smarty->assign('GIFT_ID', $coupon_code);
     $smarty->assign('WEBSITE', HTTP_SERVER.DIR_WS_CATALOG);
     $smarty->assign('GIFT_LINK', $link);
@@ -68,7 +68,7 @@
     $html_mail = $smarty->fetch(CURRENT_TEMPLATE . '/admin/mail/'.$_SESSION['language'].'/send_gift.html');
     $txt_mail = $smarty->fetch(CURRENT_TEMPLATE . '/admin/mail/'.$_SESSION['language'].'/send_gift.txt');
 
-    if ($mail['subject'] == '') $mail['subject'] = EMAIL_BILLING_SUBJECT;
+    if ($data['subject'] == '') $data['subject'] = EMAIL_BILLING_SUBJECT;
 
     xtc_php_mail(EMAIL_BILLING_ADDRESS,
                  EMAIL_BILLING_NAME, 
@@ -79,14 +79,14 @@
                  EMAIL_BILLING_REPLY_ADDRESS_NAME, 
                  '', 
                  '', 
-                 $mail['subject'], 
+                 $data['subject'], 
                  $html_mail, 
                  $txt_mail);
 
     $sql_data_array = array(
       'coupon_code' => $coupon_code,
       'coupon_type' => 'G',
-      'coupon_amount' => $mail['coupon_amount'],
+      'coupon_amount' => $data['coupon_amount'],
       'date_created' => 'now()',
     );
     xtc_db_perform(TABLE_COUPONS, $sql_data_array);
@@ -146,7 +146,7 @@
               $mail['message'] = $message; 
               $mail['coupon_amount'] = $coupon_amount;
       
-              send_gv_mail($data);
+              send_gv_mail($mail);
             }
           }
   
@@ -155,8 +155,10 @@
             $mail['message'] = $message; 
             $mail['coupon_amount'] = $coupon_amount;
             $mail['customers_email_address'] = $_POST['email_to'];
+            $mail['customers_firstname'] = $_POST['email_to'];
+            $mail['customers_lastname'] = '';
   
-            send_gv_mail($data);
+            send_gv_mail($mail);
           }
   
           $messageStack->add_session(sprintf(NOTICE_EMAIL_SENT_TO, $mail_sent_to), 'success');
@@ -265,26 +267,25 @@
             <?php
           } else {
 
+            $select = '';
+            $customers = array();
+            $customers[] = array('id' => '', 'text' => TEXT_SELECT_CUSTOMER);
+            $customers[] = array('id' => '***', 'text' => TEXT_ALL_CUSTOMERS);
+            $customers[] = array('id' => '**D', 'text' => TEXT_NEWSLETTER_CUSTOMERS);
+            $customers = array_merge($customers, xtc_get_customers_statuses());
+
             if (isset($_GET['cID']) && $_GET['cID'] != '') {
-              $select = 'WHERE customers_id='.(int)$_GET['cID'];
-            } else {
-              $select = '';
-              $customers = array();
-              $customers[] = array('id' => '', 'text' => TEXT_SELECT_CUSTOMER);
-              $customers[] = array('id' => '***', 'text' => TEXT_ALL_CUSTOMERS);
-              $customers[] = array('id' => '**D', 'text' => TEXT_NEWSLETTER_CUSTOMERS);
-              $customers = array_merge($customers, xtc_get_customers_statuses());
-            }
-            $mail_query = xtc_db_query("SELECT *
-                                          FROM " . TABLE_CUSTOMERS . " 
-                                               " . $select . " 
-                                      GROUP BY customers_email_address
-                                      ORDER BY customers_lastname");
-            while($customers_values = xtc_db_fetch_array($mail_query)) {
-              $customers[] = array(
-                'id' => $customers_values['customers_email_address'],
-                'text' => $customers_values['customers_lastname'] . ', ' . $customers_values['customers_firstname'] . ' (' . $customers_values['customers_email_address'] . ')'
-              );
+              $mail_query = xtc_db_query("SELECT *
+                                            FROM " . TABLE_CUSTOMERS . " 
+                                           WHERE customers_id = '".(int)$_GET['cID']."'
+                                        GROUP BY customers_email_address
+                                        ORDER BY customers_lastname");
+              while($customers_values = xtc_db_fetch_array($mail_query)) {
+                $customers[] = array(
+                  'id' => $customers_values['customers_email_address'],
+                  'text' => $customers_values['customers_lastname'] . ', ' . $customers_values['customers_firstname'] . ' (' . $customers_values['customers_email_address'] . ')'
+                );
+              }
             }
 
             echo xtc_draw_form('mail', FILENAME_GV_MAIL, xtc_get_all_get_params(array('action')).'action=preview');
