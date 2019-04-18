@@ -94,7 +94,7 @@ require (DIR_WS_INCLUDES.'head.php');
             $configuration_query = xtc_db_query("select configuration_key,configuration_id, configuration_value, use_function,set_function from " . TABLE_CONFIGURATION . " where configuration_group_id = '20' order by sort_order");
 
             while ($configuration = xtc_db_fetch_array($configuration_query)) {
-              if ($_GET['gID'] == 6) {
+              if (isset($_GET['gID']) && $_GET['gID'] == 6) {
                 switch ($configuration['configuration_key']) {
                   case 'MODULE_PAYMENT_INSTALLED':
                     if ($configuration['configuration_value'] != '') {
@@ -140,13 +140,14 @@ require (DIR_WS_INCLUDES.'head.php');
                 $cfgValue = $configuration['configuration_value'];
               }
 
-              if (((!$_GET['cID']) || (@$_GET['cID'] == $configuration['configuration_id'])) && (!$cInfo) && (substr($action, 0, 3) != 'new')) {
+              if ((!isset($_GET['cID']) || $_GET['cID'] == $configuration['configuration_id']) && !isset($cInfo) && substr($action, 0, 3) != 'new') {
                 $cfg_extra_query = xtc_db_query("select configuration_key,configuration_value, date_added, last_modified, use_function, set_function from " . TABLE_CONFIGURATION . " where configuration_id = '" . $configuration['configuration_id'] . "'");
                 $cfg_extra = xtc_db_fetch_array($cfg_extra_query);
 
                 $cInfo_array = xtc_array_merge($configuration, $cfg_extra);
                 $cInfo = new objectInfo($cInfo_array);
               }
+              
               if ($configuration['set_function']) {
                 eval('$value_field = ' . $configuration['set_function'] . '"' . encode_htmlspecialchars($configuration['configuration_value']) . '");');
               } else {
