@@ -39,7 +39,7 @@
     
     $_SESSION['allow_checkout'] = 'true';
     if (STOCK_CHECK == 'true') {
-      if ($_SESSION['any_out_of_stock'] == 1) {
+      if (isset($_SESSION['any_out_of_stock']) && $_SESSION['any_out_of_stock'] == 1) {
         if (STOCK_ALLOW_CHECKOUT == 'true') {
           $_SESSION['allow_checkout'] = 'true';
         } else {
