@@ -39,7 +39,7 @@ function mod_get_log_level($error_reporting_array) {
         $LogLevel = 'INFO';
         error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
       } else {
-        $LogLevel = get_log_level($error_reporting_array);
+        $LogLevel = mod_get_log_level($error_reporting_array);
       }
       break;
     case '_error_reporting.dev':
