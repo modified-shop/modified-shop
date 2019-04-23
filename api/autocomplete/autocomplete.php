@@ -22,7 +22,7 @@
   
   if (isset($_POST['queryString'])) {
     
-    $from_str = '';
+    $from_str = $where_str = '';
     
     $queryString = xtc_db_input(trim(decode_utf8($_POST['queryString'])));
 
