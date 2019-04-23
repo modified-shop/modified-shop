@@ -107,15 +107,15 @@ if ( !class_exists( "image_processing_step" ) ) {
           return $rData; // step is done
         }
         $products_image_name = $files[$i]['text'];
-        $products_image_name_process = ($_GET['lower_file_ext'] == 1) ? str_replace($ext_search, $ext_replace ,$files[$i]['text']) : $files[$i]['text'];
+        $products_image_name_process = (isset($_GET['lower_file_ext']) && $_GET['lower_file_ext'] == 1) ? str_replace($ext_search, $ext_replace ,$files[$i]['text']) : $files[$i]['text'];
 
         $rData['imgname'] = encode_htmlentities($products_image_name_process);
 
-        if ($_POST['logging'] == 1) {
+        if (isset($_POST['logging']) && $_POST['logging'] == 1) {
           $handle = fopen($this->logfile, "a"); fwrite($handle, $products_image_name. '|read'."\n"); fclose($handle);
         }
 
-        if ($_POST['only_missing_images'] == 1) {
+        if (isset($_POST['only_missing_images']) && $_POST['only_missing_images'] == 1) {
           $flag = false;
           if (!is_file(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$products_image_name_process)) {
             require(DIR_WS_INCLUDES . 'product_thumbnail_images.php'); $flag = true;
@@ -128,7 +128,7 @@ if ( !class_exists( "image_processing_step" ) ) {
           }
           if ($flag) {
             $count += 1;
-            if ($_POST['logging'] == 1) {
+            if (isset($_POST['logging']) && $_POST['logging'] == 1) {
               $handle = fopen($this->logfile, "a"); fwrite($handle, $rData['imgname'].'|process'."\n"); fclose($handle);
             }  
           }
@@ -137,7 +137,7 @@ if ( !class_exists( "image_processing_step" ) ) {
           require(DIR_WS_INCLUDES . 'product_info_images.php');
           require(DIR_WS_INCLUDES . 'product_popup_images.php');
           $count += 1;
-          if ($_POST['logging'] == 1) {
+          if (isset($_POST['logging']) && $_POST['logging'] == 1) {
             $handle = fopen($this->logfile, "a"); fwrite($handle, $rData['imgname'].'|process'."\n"); fclose($handle);
           }
         }
