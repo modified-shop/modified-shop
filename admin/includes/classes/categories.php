@@ -674,7 +674,12 @@ class categories {
       $group_data[$i] = array ('STATUS_ID' => $group_values['customers_status_id']);
     }
     for ($col = 0, $n = sizeof($group_data); $col < $n +1; $col ++) {
-      if (array_key_exists($col, $group_data) && $group_data[$col]['STATUS_ID'] != '') {
+      if (array_key_exists($col, $group_data) 
+          && $group_data[$col]['STATUS_ID'] != ''
+          && isset($products_data['products_quantity_staffel_'.$group_data[$col]['STATUS_ID']])
+          && isset($products_data['products_price_staffel_'.$group_data[$col]['STATUS_ID']])
+          )
+      {
         $quantity = xtc_db_prepare_input($products_data['products_quantity_staffel_'.$group_data[$col]['STATUS_ID']]);
         $staffelpreis = xtc_db_prepare_input($products_data['products_price_staffel_'.$group_data[$col]['STATUS_ID']]);
         if (PRICE_IS_BRUTTO == 'true') {
