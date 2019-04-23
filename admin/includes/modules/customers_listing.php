@@ -428,13 +428,16 @@
                       }
                       $contents[] = array ('align' => 'center',
                                            'text' => '<a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_ORDERS, 'cID='.$cInfo->customers_id).'">'.BUTTON_ORDERS.'</a>
-                                                      <a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_MAIL, 'customer='.$cInfo->customers_email_address).'">'.BUTTON_EMAIL.'</a>'.
-                                                      ((ACTIVATE_GIFT_SYSTEM == 'true' && $cInfo->customers_status != DEFAULT_CUSTOMERS_STATUS_ID_GUEST) ? '<a class="button" href="'.xtc_href_link(FILENAME_GV_MAIL, 'cID='.$cInfo->customers_id).'">'.BUTTON_SEND_COUPON.'</a>' : '')
+                                                      <a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_MAIL, 'customer='.$cInfo->customers_email_address).'">'.BUTTON_EMAIL.'</a>'
                                            );
                       $contents[] = array ('align' => 'center',
                                            'text' => '<a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action')).'cID='.$cInfo->customers_id.'&action=iplog').'">'.BUTTON_IPLOG.'</a>
                                                       <a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action')).'cID='.$cInfo->customers_id.'&action=new_order').'">'.BUTTON_NEW_ORDER.'</a>'
                                           );
+                      if (ACTIVATE_GIFT_SYSTEM == 'true' && $cInfo->customers_status != DEFAULT_CUSTOMERS_STATUS_ID_GUEST) {
+                        $contents[] = array ('align' => 'center', 'text' => '<a class="button" href="'.xtc_href_link(FILENAME_GV_MAIL, 'cID='.$cInfo->customers_id).'">'.BUTTON_SEND_COUPON.'</a>');
+                      }
+                      
                       $contents[] = array ('text' => '<br />'.TEXT_DATE_ACCOUNT_CREATED.' '.xtc_datetime_short($cInfo->date_account_created));
                       $contents[] = array ('text' => '<br />'.TEXT_DATE_ACCOUNT_LAST_MODIFIED.' '.xtc_datetime_short($cInfo->date_account_last_modified));
                       $contents[] = array ('text' => '<br />'.TEXT_INFO_DATE_LAST_LOGON.' '.xtc_datetime_short($cInfo->date_last_logon));
