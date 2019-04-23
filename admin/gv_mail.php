@@ -273,14 +273,22 @@
             $customers[] = array('id' => '***', 'text' => TEXT_ALL_CUSTOMERS);
             $customers[] = array('id' => '**D', 'text' => TEXT_NEWSLETTER_CUSTOMERS);
             $customers = array_merge($customers, xtc_get_customers_statuses());
-
+            
+            $selected_customer = ((isset($_POST['customers_email_address'])) ? $_POST['customers_email_address'] : '');
+            
             if (isset($_GET['cID']) && $_GET['cID'] != '') {
               $mail_query = xtc_db_query("SELECT *
                                             FROM " . TABLE_CUSTOMERS . " 
                                            WHERE customers_id = '".(int)$_GET['cID']."'
                                         GROUP BY customers_email_address
                                         ORDER BY customers_lastname");
-              while($customers_values = xtc_db_fetch_array($mail_query)) {
+              if (xtc_db_num_rows($mail_query) > 0) {
+                $customers_values = xtc_db_fetch_array($mail_query);
+                
+                if ($selected_customer != '') {
+                  $selected_customer = $customers_values['customers_email_address'];
+                }
+                
                 $customers[] = array(
                   'id' => $customers_values['customers_email_address'],
                   'text' => $customers_values['customers_lastname'] . ', ' . $customers_values['customers_firstname'] . ' (' . $customers_values['customers_email_address'] . ')'
@@ -293,7 +301,7 @@
               <table class="tableConfig borderall">
                 <tr>
                   <td class="dataTableConfig col-left"><?php echo TEXT_CUSTOMER; ?></td>
-                  <td class="dataTableConfig col-single-right"><?php echo xtc_draw_pull_down_menu('customers_email_address', $customers, ((isset($_POST['customers_email_address'])) ? $_POST['customers_email_address'] : ''));?></td>
+                  <td class="dataTableConfig col-single-right"><?php echo xtc_draw_pull_down_menu('customers_email_address', $customers, $selected_customer);?></td>
                 </tr>
                 <?php if (!isset($_GET['cID'])) { ?>
                  <tr>
