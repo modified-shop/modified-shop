@@ -306,7 +306,7 @@
             }
           ?>
           <tr>
-            <td class="smallText" align="center"><?php echo xtc_draw_pull_down_menu('carrier_id', $carriers, $carriers[0]); ?></td>
+            <td class="smallText" align="center"><?php echo xtc_draw_pull_down_menu('carrier_id', $carriers); ?></td>
             <td class="smallText" align="center" colspan="2"><?php echo xtc_draw_input_field('parcel_id', '' ,'style="width: 99%"'); ?></td>
             <td class="smallText" align="center"><input class="button" type="submit" value="<?php echo BUTTON_INSERT; ?>"></td>
           </tr>
