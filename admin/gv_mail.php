@@ -285,7 +285,7 @@
               if (xtc_db_num_rows($mail_query) > 0) {
                 $customers_values = xtc_db_fetch_array($mail_query);
                 
-                if ($selected_customer != '') {
+                if ($selected_customer == '') {
                   $selected_customer = $customers_values['customers_email_address'];
                 }
                 
