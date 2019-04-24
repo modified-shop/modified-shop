@@ -53,11 +53,7 @@ class product {
     $this->standardImage = 'noimage.gif';
     
     // default values
-    if (!is_object($main)) {
-      require_once(DIR_FS_CATALOG.'includes/classes/main.php');
-      $main = new main($_SESSION['languages_id']);
-    }
-    $this->ShippingLink = $main->getShippingLink();
+    $this->ShippingLink = '';
     
     if ($pID == 0) {
       $this->isProduct = false;
@@ -480,7 +476,11 @@ class product {
    */
   function buildDataArray(&$array, $image='thumbnail') {
     global $xtPrice, $main;
-
+    
+    if ($this->ShippingLink == '') {
+      $this->ShippingLink = $main->getShippingLink();
+    }
+    
     if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1
         && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0
         && $xtPrice->get_content_type_product($array['products_id']) == 'virtual'
