@@ -97,7 +97,7 @@
       'customer_id_sent' =>(int)$_SESSION['customer_id'],
       'sent_firstname' => 'Admin',
       'emailed_to' => $data['customers_email_address'],
-      'date_created' => 'now()',
+      'date_sent' => 'now()',
     );
     xtc_db_perform(TABLE_COUPON_EMAIL_TRACK, $sql_data_array);
   }
