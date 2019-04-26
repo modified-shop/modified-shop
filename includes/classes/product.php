@@ -25,7 +25,7 @@ class product {
    * @return product
    */
   function __construct($pID = 0) {
-    global $xtPrice, $main;
+    global $xtPrice;
 
     require_once (DIR_FS_CATALOG.'includes/classes/productModules.class.php');
     $this->productModules = new productModules();
