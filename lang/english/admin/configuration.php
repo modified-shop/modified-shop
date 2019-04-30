@@ -127,9 +127,9 @@ define('MAX_DISPLAY_PAGE_LINKS_DESC' , 'Number of "number" links use for page-se
 define('MAX_DISPLAY_SPECIAL_PRODUCTS_TITLE' , 'Specials');
 define('MAX_DISPLAY_SPECIAL_PRODUCTS_DESC' , 'Maximum number of products to display on special offer');
 define('MAX_DISPLAY_NEW_PRODUCTS_TITLE' , 'New Products Module');
-define('MAX_DISPLAY_NEW_PRODUCTS_DESC' , 'Maximum number of new products to display in a category');
+define('MAX_DISPLAY_NEW_PRODUCTS_DESC' , 'Maximum number of new products to display in a category and as TOP-products on startpage');
 define('MAX_DISPLAY_UPCOMING_PRODUCTS_TITLE' , 'Upcoming Products');
-define('MAX_DISPLAY_UPCOMING_PRODUCTS_DESC' , 'Maximum number of upcoming products to display');
+define('MAX_DISPLAY_UPCOMING_PRODUCTS_DESC' , 'Maximum number of upcoming products to display on startpage');
 define('MAX_DISPLAY_MANUFACTURERS_IN_A_LIST_TITLE' , 'Manufacturers List');
 define('MAX_DISPLAY_MANUFACTURERS_IN_A_LIST_DESC' , 'Used in manufacturers box; when the number of manufacturers exceeds this number, a drop-down list or list-box will be displayed instead of the default link-list (depends on what you entered in "Manufacturers Select Size").');
 define('MAX_MANUFACTURERS_LIST_TITLE' , 'Manufacturers Select Size');
@@ -147,7 +147,7 @@ define('MAX_RANDOM_SELECT_SPECIALS_DESC' , 'How many records to select from to c
 define('MAX_DISPLAY_CATEGORIES_PER_ROW_TITLE' , 'Categories To List Per Row');
 define('MAX_DISPLAY_CATEGORIES_PER_ROW_DESC' , 'How many categories to list per row');
 define('MAX_DISPLAY_PRODUCTS_NEW_TITLE' , 'New Products Listing');
-define('MAX_DISPLAY_PRODUCTS_NEW_DESC' , 'Maximum number of new products to display in new products page');
+define('MAX_DISPLAY_PRODUCTS_NEW_DESC' , 'Maximum number of new products to display on "new products" (products_new.php) page');
 define('MAX_DISPLAY_BESTSELLERS_TITLE' , 'Best Sellers');
 define('MAX_DISPLAY_BESTSELLERS_DESC' , 'Maximum number of best sellers to display');
 define('MAX_DISPLAY_BESTSELLERS_DAYS_TITLE' , 'Maximum Age (days) for Best Sellers');

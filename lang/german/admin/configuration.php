@@ -126,7 +126,7 @@ define('MAX_DISPLAY_PAGE_LINKS_DESC' , 'Anzahl der Einzelseiten, f&uuml;r die ei
 define('MAX_DISPLAY_SPECIAL_PRODUCTS_TITLE' , 'Sonderangebote');
 define('MAX_DISPLAY_SPECIAL_PRODUCTS_DESC' , 'Maximum Anzahl an Sonderangeboten, die angezeigt werden sollen.');
 define('MAX_DISPLAY_NEW_PRODUCTS_TITLE' , 'Neue Artikel Anzeigemodul');
-define('MAX_DISPLAY_NEW_PRODUCTS_DESC' , 'Maximum Anzahl an neuen Artikeln, die bei den Warenkategorien angezeigt werden sollen.');
+define('MAX_DISPLAY_NEW_PRODUCTS_DESC' , 'Maximum Anzahl an neuen Artikeln, die bei den Warenkategorien und als TOP-Artikel auf der Startseite angezeigt werden sollen.');
 define('MAX_DISPLAY_UPCOMING_PRODUCTS_TITLE' , 'Erwartete Artikel Anzeigemodul');
 define('MAX_DISPLAY_UPCOMING_PRODUCTS_DESC' , 'Maximum Anzahl an erwarteten Artikeln die auf der Startseite angezeigt werden sollen.');
 define('MAX_DISPLAY_MANUFACTURERS_IN_A_LIST_TITLE' , 'Hersteller-Liste Schwellenwert');
@@ -146,7 +146,7 @@ define('MAX_RANDOM_SELECT_SPECIALS_DESC' , 'Aus wie vielen Sonderangeboten solle
 define('MAX_DISPLAY_CATEGORIES_PER_ROW_TITLE' , 'Anzahl Kategorien pro Zeile');
 define('MAX_DISPLAY_CATEGORIES_PER_ROW_DESC' , 'Anzahl an Kategorien, die pro Zeile in den &Uuml;bersichten angezeigt werden sollen.');
 define('MAX_DISPLAY_PRODUCTS_NEW_TITLE' , 'Neue Artikel Liste');
-define('MAX_DISPLAY_PRODUCTS_NEW_DESC' , 'Maximum Anzahl neuer Artikel die in der Liste angezeigt werden sollen.');
+define('MAX_DISPLAY_PRODUCTS_NEW_DESC' , 'Maximum Anzahl neuer Artikel die auf der Seite "Neue Artikel" (products_new.php) angezeigt werden sollen.');
 define('MAX_DISPLAY_BESTSELLERS_TITLE' , 'Bestsellers');
 define('MAX_DISPLAY_BESTSELLERS_DESC' , 'Maximum Anzahl an Bestsellern die angezeigt werden sollen.');
 define('MAX_DISPLAY_BESTSELLERS_DAYS_TITLE' , 'Anzahl der Tage f&uuml;r Bestsellers');
