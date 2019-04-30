@@ -74,4 +74,12 @@ ALTER TABLE configuration MODIFY configuration_key VARCHAR(128) NOT NULL;
 #GTB - 2019-04-03 - fix #1541
 ALTER TABLE content_manager MODIFY content_text longtext NOT NULL;
 
+GTB - 2019-04-26 - primary keys
+ALTER TABLE `banktransfer` DROP INDEX `idx_orders_id`;
+ALTER TABLE `banktransfer` ADD PRIMARY KEY(orders_id);
+ALTER TABLE `customers_ip` ADD `customers_ip_id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST;
+ALTER TABLE `customers_login` ADD `customers_login_id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST;
+ALTER TABLE `products_graduated_prices` ADD `price_id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST;
+ALTER TABLE `products_tags` ADD `products_tags_id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
