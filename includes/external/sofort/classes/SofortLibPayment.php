@@ -52,6 +52,11 @@ class SofortLibPayment {
         if (isset($_GET['moduleaction']) && $_GET['moduleaction'] == 'status') {
           $this->status_install();
         }
+        
+        $check_query = xtc_db_query("SHOW COLUMNS FROM ".$this->code." LIKE 'sofort_id'");
+        if (xtc_db_num_rows($check_query) == 0) {
+          xtc_db_query("ALTER TABLE ".$this->code." ADD `sofort_id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST");
+        }
       }
 	  }
 	}
@@ -487,25 +492,27 @@ class SofortLibPayment {
 
 
 	function install_default() {
-    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_".strtoupper($this->code)."_STATUS', 'True', '6', '3', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
-    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_".strtoupper($this->code)."_TMP_ORDER', 'True', '6', '3', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
-    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_".strtoupper($this->code)."_LOGGING', 'False', '6', '3', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
-    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_".strtoupper($this->code)."_ALLOWED', '', '6', '0', now())");
-    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_".strtoupper($this->code)."_SORT_ORDER', '1', '6', '20', now())");
-    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, use_function, set_function, date_added) values ('MODULE_PAYMENT_".strtoupper($this->code)."_ZONE', '0', '6', '2', 'xtc_get_zone_class_title', 'xtc_cfg_pull_down_zone_classes(', now())");
-    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, use_function, date_added) values ('MODULE_PAYMENT_".strtoupper($this->code)."_ORDER_STATUS_ID', '0',  '6', '10', 'xtc_cfg_pull_down_order_statuses_sofort(', 'xtc_get_order_status_name', now())");
-    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, use_function, date_added) values ('MODULE_PAYMENT_".strtoupper($this->code)."_TMP_STATUS_ID', '0',  '6', '8', 'xtc_cfg_pull_down_order_statuses_sofort(', 'xtc_get_order_status_name', now())");
-    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, use_function, date_added) values ('MODULE_PAYMENT_".strtoupper($this->code)."_UNC_STATUS_ID', '0',  '6', '9', 'xtc_cfg_pull_down_order_statuses_sofort(', 'xtc_get_order_status_name', now())");
-    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, use_function, date_added) values ('MODULE_PAYMENT_".strtoupper($this->code)."_REC_STATUS_ID', '0',  '6', '11', 'xtc_cfg_pull_down_order_statuses_sofort(', 'xtc_get_order_status_name', now())");
-    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, use_function, date_added) values ('MODULE_PAYMENT_".strtoupper($this->code)."_REF_STATUS_ID', '0',  '6', '11', 'xtc_cfg_pull_down_order_statuses_sofort(', 'xtc_get_order_status_name', now())");
-    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, use_function, date_added) values ('MODULE_PAYMENT_".strtoupper($this->code)."_LOSS_STATUS_ID', '0',  '6', '12', 'xtc_cfg_pull_down_order_statuses_sofort(', 'xtc_get_order_status_name', now())");
-    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_".strtoupper($this->code)."_REASON_1', 'Nr. {{order_id}} Kd-Nr. {{customer_id}}',  '6', '4', 'xtc_cfg_select_option(array(\'Nr. {{order_id}} Kd-Nr. {{customer_id}}\',\'-TRANSACTION-\'), ', now())");
-    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_".strtoupper($this->code)."_REASON_2', '" . xtc_db_input(STORE_NAME) . "', '6', '4', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_".strtoupper($this->code)."_STATUS', 'True', '6', '3', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_".strtoupper($this->code)."_TMP_ORDER', 'True', '6', '3', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_".strtoupper($this->code)."_LOGGING', 'False', '6', '3', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_".strtoupper($this->code)."_ALLOWED', '', '6', '0', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_".strtoupper($this->code)."_SORT_ORDER', '1', '6', '20', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) values ('MODULE_PAYMENT_".strtoupper($this->code)."_ZONE', '0', '6', '2', 'xtc_get_zone_class_title', 'xtc_cfg_pull_down_zone_classes(', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) values ('MODULE_PAYMENT_".strtoupper($this->code)."_ORDER_STATUS_ID', '0',  '6', '10', 'xtc_cfg_pull_down_order_statuses_sofort(', 'xtc_get_order_status_name', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) values ('MODULE_PAYMENT_".strtoupper($this->code)."_TMP_STATUS_ID', '0',  '6', '8', 'xtc_cfg_pull_down_order_statuses_sofort(', 'xtc_get_order_status_name', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) values ('MODULE_PAYMENT_".strtoupper($this->code)."_UNC_STATUS_ID', '0',  '6', '9', 'xtc_cfg_pull_down_order_statuses_sofort(', 'xtc_get_order_status_name', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) values ('MODULE_PAYMENT_".strtoupper($this->code)."_REC_STATUS_ID', '0',  '6', '11', 'xtc_cfg_pull_down_order_statuses_sofort(', 'xtc_get_order_status_name', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) values ('MODULE_PAYMENT_".strtoupper($this->code)."_REF_STATUS_ID', '0',  '6', '11', 'xtc_cfg_pull_down_order_statuses_sofort(', 'xtc_get_order_status_name', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) values ('MODULE_PAYMENT_".strtoupper($this->code)."_LOSS_STATUS_ID', '0',  '6', '12', 'xtc_cfg_pull_down_order_statuses_sofort(', 'xtc_get_order_status_name', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_".strtoupper($this->code)."_REASON_1', 'Nr. {{order_id}} Kd-Nr. {{customer_id}}',  '6', '4', 'xtc_cfg_select_option(array(\'Nr. {{order_id}} Kd-Nr. {{customer_id}}\',\'-TRANSACTION-\'), ', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_".strtoupper($this->code)."_REASON_2', '" . xtc_db_input(STORE_NAME) . "', '6', '4', now())");
 
 	  xtc_db_query("CREATE TABLE IF NOT EXISTS `".$this->code."` (
-                  `transaction_id` VARCHAR( 128 ) NOT NULL ,
-                  `order_id` INT( 11 ) NOT NULL ,
-                  INDEX ( `transaction_id` )
+	                  sofort_id INT(11) NOT NULL AUTO_INCREMENT, 
+                    transaction_id VARCHAR(128) NOT NULL,
+                    order_id INT(11) NOT NULL,
+                    PRIMARY KEY (sofort_id),
+                    KEY idx_transaction_id (transaction_id)
                   )");
 
     $table_array = array(
