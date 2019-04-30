@@ -127,7 +127,7 @@ define('MAX_DISPLAY_PAGE_LINKS_DESC' , 'Number of "number" links use for page-se
 define('MAX_DISPLAY_SPECIAL_PRODUCTS_TITLE' , 'Specials');
 define('MAX_DISPLAY_SPECIAL_PRODUCTS_DESC' , 'Maximum number of products to display on special offer');
 define('MAX_DISPLAY_NEW_PRODUCTS_TITLE' , 'New Products Module');
-define('MAX_DISPLAY_NEW_PRODUCTS_DESC' , 'Maximum number of new products to display in a category and as TOP-products on startpage');
+define('MAX_DISPLAY_NEW_PRODUCTS_DESC' , 'Maximum number of new products to display in a category and as "TOP-products" on startpage');
 define('MAX_DISPLAY_UPCOMING_PRODUCTS_TITLE' , 'Upcoming Products');
 define('MAX_DISPLAY_UPCOMING_PRODUCTS_DESC' , 'Maximum number of upcoming products to display on startpage');
 define('MAX_DISPLAY_MANUFACTURERS_IN_A_LIST_TITLE' , 'Manufacturers List');
