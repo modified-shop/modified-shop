@@ -33,6 +33,7 @@
       'drop' => array(
         'idx' => array(
           'orders_id',
+          'idx_orders_id',
         ),
       ),
     ),
