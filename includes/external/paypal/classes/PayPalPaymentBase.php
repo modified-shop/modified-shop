@@ -421,12 +421,12 @@ class PayPalPaymentBase extends PayPalCommon {
     }
     
     xtc_db_query("CREATE TABLE IF NOT EXISTS ".TABLE_PAYPAL_PAYMENT." ( 
-                    paypal_payment_id int(11) NOT NULL auto_increment, 
+                    paypal_id int(11) NOT NULL auto_increment, 
                     orders_id int(11) NOT NULL default '0', 
                     payment_id varchar(64) NOT NULL default '', 
                     payer_id varchar(64) NOT NULL default '', 
                     transaction_id varchar(64) NOT NULL default '', 
-                    PRIMARY KEY (paypal_payment_id), 
+                    PRIMARY KEY (paypal_id), 
                     KEY idx_orders_id (orders_id),
                     KEY idx_payment_id (payment_id)
                   );");
@@ -675,10 +675,6 @@ class PayPalPaymentBase extends PayPalCommon {
     }
     
     //check tables
-    $check_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_PAYPAL_PAYMENT." LIKE 'paypal_payment_id'");
-    if (xtc_db_num_rows($check_query) == 0) {
-      xtc_db_query("ALTER TABLE ".TABLE_PAYPAL_PAYMENT." ADD `paypal_payment_id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST");
-    }
     $check_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_PAYPAL_CONFIG." LIKE 'config_id'");
     if (xtc_db_num_rows($check_query) == 0) {
       xtc_db_query("ALTER TABLE ".TABLE_PAYPAL_CONFIG." ADD `config_id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST");
