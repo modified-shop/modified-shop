@@ -427,7 +427,7 @@ class PayPalPaymentBase extends PayPalCommon {
                     payer_id varchar(64) NOT NULL default '', 
                     transaction_id varchar(64) NOT NULL default '', 
                     PRIMARY KEY (paypal_payment_id), 
-                    KEY idx_orders_id (orders_id)
+                    KEY idx_orders_id (orders_id),
                     KEY idx_payment_id (payment_id)
                   );");
   
