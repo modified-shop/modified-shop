@@ -41,7 +41,7 @@
       $address_content_array[$i]['ADDRESS_LABEL'] = xtc_address_label($_SESSION['customer_id'], $addresses['address_book_id'], true, ' ', '<br />');
       $address_content_array[$i]['RADIO_FIELD'] = xtc_draw_radio_field('address', $addresses['address_book_id'], ($addresses['address_book_id'] == $address_book_id), 'id="field_addresses_'.$addresses['address_book_id'].'"');
       $address_content_array[$i]['COUNTRY'] = xtc_get_country_name($addresses['country_id']);
-      $address_content_array[$i]['STATE'] = xtc_get_zone_name($addresses['country_id'], $addresses['zone_id']);
+      $address_content_array[$i]['STATE'] = xtc_get_zone_name($addresses['country_id'], $addresses['zone_id'], $addresses['state']);
 
       $address_content .= sprintf('<li>%s<label for="field_addresses_%s"> %s %s</label><br /><span class="address">%s</span></li>', xtc_draw_radio_field('address',$addresses['address_book_id'], ($addresses['address_book_id'] == $address_book_id), 'id="field_addresses_'.$addresses['address_book_id'].'"'), $addresses['address_book_id'], $addresses['firstname'], $addresses['lastname'], xtc_address_format($format_id, $addresses, true, ' ', ', ')); // Tomcraft - 2011-01-04 - make checkout process valid
       
