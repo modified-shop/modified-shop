@@ -82,9 +82,9 @@ class shoppingCart {
                                           WHERE customers_id = '".(int)$_SESSION['customer_id']."'
                                             AND products_id = '".xtc_db_input($products_id)."'");
           if (xtc_db_num_rows($product_query) < 1) {
-            $sql_data_array = array('customers_id' => $_SESSION['customer_id'],
+            $sql_data_array = array('customers_id' => (int)$_SESSION['customer_id'],
                                     'products_id' => $products_id,
-                                    'customers_basket_quantity' => $qty,
+                                    'customers_basket_quantity' => (int)$qty,
                                     'customers_basket_date_added' => 'now()'
                                    );
             //new module support    
@@ -106,7 +106,7 @@ class shoppingCart {
             }
           } else {
             xtc_db_query("UPDATE ".$this->table_basket."
-                             SET customers_basket_quantity = '".xtc_db_input($qty)."'
+                             SET customers_basket_quantity = '".(int)$qty."'
                            WHERE customers_id = '".(int)$_SESSION['customer_id']."'
                              AND products_id = '".xtc_db_input($products_id)."'");
           }
@@ -220,9 +220,9 @@ class shoppingCart {
       $this->shoppingCartModules->add_cart_products_session($products_id, $this->type, $qty, $attributes);
       // insert into database
       if (isset($_SESSION['customer_id'])){
-        $sql_data_array = array('customers_id' => $_SESSION['customer_id'],
+        $sql_data_array = array('customers_id' => (int)$_SESSION['customer_id'],
                                 'products_id' => $products_id,
-                                'customers_basket_quantity' => $qty,
+                                'customers_basket_quantity' => (int)$qty,
                                 'customers_basket_date_added' => 'now()'
                                );
         //new module support 
@@ -463,7 +463,7 @@ class shoppingCart {
                                             ON pd.products_id = p.products_id
                                                AND pd.language_id = '".(int)$_SESSION['languages_id']."'
                                                AND trim(pd.products_name) != ''
-                                      WHERE p.products_id='".xtc_get_prid($products_id)."'");
+                                      WHERE p.products_id='".(int)$products_id."'");
       if ($product = xtc_db_fetch_array($product_query)) {
 
         if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1
@@ -614,7 +614,7 @@ class shoppingCart {
                                           JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
                                                ON pd.products_id = p.products_id
                                                   AND pd.language_id = '".(int)$_SESSION['languages_id']."'
-                                         WHERE p.products_id='".xtc_get_prid($products_id)."'");
+                                         WHERE p.products_id='".(int)$products_id."'");
 
         if (xtc_db_num_rows($products_query) > 0) {
           $products = xtc_db_fetch_array($products_query);
@@ -864,7 +864,7 @@ class shoppingCart {
         $no_count = false;
         $gv_query = xtc_db_query("SELECT products_model 
                                     FROM ".TABLE_PRODUCTS." 
-                                   WHERE products_id = '".$products_id."'");
+                                   WHERE products_id = '".(int)$products_id."'");
         $gv_result = xtc_db_fetch_array($gv_query);
         if (preg_match('/^GIFT/', $gv_result['products_model'])) {
           $no_count = true;
@@ -872,7 +872,7 @@ class shoppingCart {
         if (defined('NO_COUNT_ZERO_WEIGHT') && NO_COUNT_ZERO_WEIGHT == 1) {
           $gv_query = xtc_db_query("SELECT products_weight 
                                       FROM ".TABLE_PRODUCTS." 
-                                     WHERE products_id = '".xtc_get_prid($products_id)."'");
+                                     WHERE products_id = '".(int)$products_id."'");
           $gv_result = xtc_db_fetch_array($gv_query);
           if ($gv_result['products_weight'] <= MINIMUM_WEIGHT) {
             $no_count = true;
@@ -899,7 +899,7 @@ class shoppingCart {
     $status = false;
     $check_query = xtc_db_query("SELECT products_id 
                                    FROM ".TABLE_PRODUCTS."
-                                  WHERE products_id = '".xtc_get_prid($products_id)."'
+                                  WHERE products_id = '".(int)$products_id."'
                                     AND products_status = '1'
                                         ".$conditions);
     if (xtc_db_num_rows($check_query) > 0) {
