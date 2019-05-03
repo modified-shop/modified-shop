@@ -226,7 +226,7 @@ class shoppingCart {
                                 'customers_basket_date_added' => 'now()'
                                );
         //new module support 
-        $sql_data_array = $this->shoppingCartModules->add_cart_products_db($sql_data_array);
+        $sql_data_array = $this->shoppingCartModules->add_cart_products_db($sql_data_array, $this->type);
         xtc_db_perform($this->table_basket, $sql_data_array);
       }
 
@@ -247,7 +247,7 @@ class shoppingCart {
                                    );
 
             //new module support 
-            $sql_data_array = $this->shoppingCartModules->add_cart_attributes_db($sql_data_array);
+            $sql_data_array = $this->shoppingCartModules->add_cart_attributes_db($sql_data_array, $this->type);
      
             xtc_db_perform($this->table_basket_attributes, $sql_data_array);
           }
@@ -287,7 +287,7 @@ class shoppingCart {
                                );
       
       //new module support 
-      $sql_data_array = $this->shoppingCartModules->update_cart_products_db($sql_data_array,$products_id, $attributes);
+      $sql_data_array = $this->shoppingCartModules->update_cart_products_db($sql_data_array, $products_id, $attributes, $this->type);
       xtc_db_perform($this->table_basket, $sql_data_array, 'update', "customers_id = '".(int)$_SESSION['customer_id']."' AND products_id = '".xtc_db_input($products_id)."'");
     }
 
@@ -303,7 +303,7 @@ class shoppingCart {
           $sql_data_array = array('products_options_value_id' => (int)$value,
                                  );
           //new module support 
-          $sql_data_array = $this->shoppingCartModules->update_cart_attributes_db($sql_data_array,$products_id,$option);
+          $sql_data_array = $this->shoppingCartModules->update_cart_attributes_db($sql_data_array, $products_id, $option, $this->type);
           xtc_db_perform($this->table_basket_attributes, $sql_data_array, 'update', "customers_id = '".(int)$_SESSION['customer_id']."' AND products_id = '".xtc_db_input($products_id)."' AND products_options_id = '".(int)$option."'");
         }
       }
@@ -381,7 +381,7 @@ class shoppingCart {
     unset($this->contents[$products_id]);
 
     //new module support 
-    $this->shoppingCartModules->remove_custom_inputs_session($products_id);
+    $this->shoppingCartModules->remove_custom_inputs_session($products_id, $this->type);
     
     // remove from database
     if (isset($_SESSION['customer_id'])) { 
