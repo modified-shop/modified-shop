@@ -105,10 +105,10 @@ class shoppingCartModules {
         return self::call_module_method($products_id,$type,$quantity,$attributes);
     }
     
-    public static function update_cart_products_db($sql_data_array,$products_id,$attributes)
+    public static function update_cart_products_db($sql_data_array,$products_id,$attributes,$type)
     {
         self::$function_call = 'update_cart_products_db';
-        return self::call_module_method($sql_data_array,$products_id,$attributes);
+        return self::call_module_method($sql_data_array,$products_id,$attributes,$type);
     }
     
     public static function update_cart_attributes_session($value,$type,$products_id,$option)
@@ -117,10 +117,10 @@ class shoppingCartModules {
         return self::call_module_method($value,$type,$products_id,$option);
     }
     
-    public static function update_cart_attributes_db($sql_data_array,$products_id,$option)
+    public static function update_cart_attributes_db($sql_data_array,$products_id,$option,$type)
     {
         self::$function_call = 'update_cart_attributes_db';
-        return self::call_module_method($sql_data_array,$products_id,$option);
+        return self::call_module_method($sql_data_array,$products_id,$option,$type);
     }
     
     public static function add_cart_products_session($products_id,$type,$qty,$attributes)
@@ -129,10 +129,10 @@ class shoppingCartModules {
         return self::call_module_method($products_id,$type,$qty,$attributes);
     }
     
-    public static function add_cart_products_db($sql_data_array)
+    public static function add_cart_products_db($sql_data_array,$type)
     {
         self::$function_call = 'add_cart_products_db';
-        return self::call_module_method($sql_data_array);
+        return self::call_module_method($sql_data_array,$type);
     }
     
     public static function add_cart_attributes_session($value,$type,$products_id,$option)
@@ -141,13 +141,13 @@ class shoppingCartModules {
         return self::call_module_method($value,$type,$products_id,$option);
     }
     
-    public static function add_cart_attributes_db($sql_data_array)
+    public static function add_cart_attributes_db($sql_data_array,$type)
     {
         self::$function_call = 'add_cart_attributes_db';
-        return self::call_module_method($sql_data_array);
+        return self::call_module_method($sql_data_array,$type);
     }
     
-    public static function remove_custom_inputs_session($products_id)
+    public static function remove_custom_inputs_session($products_id,$type)
     {
         self::$function_call = 'remove_custom_inputs_session';
         return self::call_module_method($products_id);
