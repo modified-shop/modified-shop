@@ -147,15 +147,25 @@
 
       xtc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array);      
       
+      if (isset($_POST['primary']) && ($_POST['primary'] == 'on')) {
+        $_SESSION['customer_default_address_id'] = (int)$new_address_book_id;
+        xtc_db_query("UPDATE ".TABLE_CUSTOMERS."
+                         SET customers_default_address_id = '".(int)$new_address_book_id."'
+                       WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
+      }
+
       //SWITCH shipping/payment
       switch ($checkout_page) {
         case 'shipping':
           unset ($_SESSION['shipping']);
-          $_SESSION['sendto'] = xtc_db_insert_id();
+          $_SESSION['sendto'] = $new_address_book_id;
+          if (isset($_POST['primary']) && ($_POST['primary'] == 'on')) {
+            $_SESSION['billto'] = $new_address_book_id;
+          }
           xtc_redirect(xtc_href_link($link_checkout_shipping, $params, 'SSL'));
           break;
         case 'payment':
-          $_SESSION['billto'] = xtc_db_insert_id();
+          $_SESSION['billto'] = $new_address_book_id;
           if ($_SESSION['shipping'] === false) {
             $_SESSION['sendto'] = $_SESSION['billto'];
           }
