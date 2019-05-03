@@ -146,6 +146,7 @@
       }
 
       xtc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array);      
+      $new_address_book_id = xtc_db_insert_id();
       
       if (isset($_POST['primary']) && ($_POST['primary'] == 'on')) {
         $_SESSION['customer_default_address_id'] = (int)$new_address_book_id;
