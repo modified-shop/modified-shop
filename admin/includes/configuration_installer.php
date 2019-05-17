@@ -101,6 +101,7 @@ $values_group_update = array();
   //$values[] = "(NULL, 'COMPRESS_STYLESHEET_TIME', '', '6', '100', NULL, NOW(), NULL, NULL);"; // Tomcraft - 2016-06-06 - Obsolete since r7607
   $values[] = "(NULL, 'NEWSFEED_LAST_READ', '', '6', '100', NULL, NOW(), NULL, NULL);";
   $values[] = "(NULL, 'NEWSFEED_LAST_UPDATE', '', '6', '100', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'NEWSFEED_LAST_UPDATE_TRY', '', '6', '100', NULL, NOW(), NULL, NULL);";
   $values[] = "(NULL, 'MODULE_CATEGORIES_INSTALLED', '', '6', '0', NULL, NOW(), NULL, NULL);";
   $values[] = "(NULL, 'MODULE_CHECKOUT_INSTALLED', '', '6', '0', NULL, NOW(), NULL, NULL);";
   $values[] = "(NULL, 'MODULE_MAIN_INSTALLED', '', '6', '0', NULL, NOW(), NULL, NULL);";

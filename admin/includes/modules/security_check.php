@@ -211,6 +211,26 @@ if (isset($duplicate_configuration) && count($duplicate_configuration) > 0) {
 }
 
 /*******************************************************************************
+ ** newsfeed check:
+ ******************************************************************************/
+if (isset($_POST['action']) 
+    && $_POST['action'] == 'delete_newsfeed'
+    ) 
+{
+  $time = time();
+  xtc_db_query("UPDATE ".TABLE_CONFIGURATION." SET configuration_value = '".$time."' WHERE configuration_key = 'NEWSFEED_LAST_UPDATE'");
+  xtc_db_query("UPDATE ".TABLE_CONFIGURATION." SET configuration_value = '".$time."' WHERE configuration_key = 'NEWSFEED_LAST_UPDATE_TRY'");
+
+} elseif (defined('NEWSFEED_LAST_UPDATE_TRY')
+          && abs(NEWSFEED_LAST_UPDATE_TRY - NEWSFEED_LAST_UPDATE) >= 3600
+          && time() - (int)NEWSFEED_LAST_UPDATE > 86400
+          )
+{
+  $warnings[] = RSS_FEED_NOT_REACHABLE;
+  $warnings[] = xtc_draw_form('configuration', basename($PHP_SELF)).xtc_draw_hidden_field('action', 'delete_newsfeed').'<input class="button" type="submit" value="OK"/></form>';
+}
+
+/*******************************************************************************
  ** output warnings:
  ******************************************************************************/
 if (!empty($warnings)) {

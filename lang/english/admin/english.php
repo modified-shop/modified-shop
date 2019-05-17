@@ -545,6 +545,7 @@ define('RSS_FEED_TITLE', 'Latest informations from modified eCommerce Shopsoftwa
 define('RSS_FEED_DESCRIPTION', 'Latest informations from modified eCommerce Shopsoftware Support Forum');
 define('RSS_FEED_LINK', 'http://www.modified-shop.org/blog');
 define('RSS_FEED_ALTERNATIVE', 'Unfortunately the latest news cannot be displayed in the RSS feed. Please visit our Blog at <a href="'.RSS_FEED_LINK.'">www.modified-shop.org/blog</a> to get important informations for shop maintainers concerning the following topics: <ul><li>Important Updates and Fixes</li><li>Function extensions</li><li>jurisdictions</li><li>News</li><li>Gossip</li></ul>');
+define('RSS_FEED_NOT_REACHABLE', 'The newsfeed could not be updated for a long time.<br>Do not miss any important news, offers and much more. Visit us <a target="_blank" href="https://www.modified-shop.org/blog">www.modified-shop.org/blog</a><br>');
 define('TEXT_DISPLAY_NUMBER_OF_NEWSFEED', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> News)');
 
 define('CFG_TXT_YES', 'Yes');

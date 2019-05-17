@@ -14,8 +14,16 @@
   require_once(DIR_FS_INC.'get_external_content.inc.php');
   
   function get_newsfeed() {
+    $time = time();
+    
     // newsfeed
-    if (time() - (int)NEWSFEED_LAST_UPDATE > 86400) {
+    if ($time - (int)NEWSFEED_LAST_UPDATE > 86400
+        || (defined('NEWSFEED_LAST_UPDATE_TRY')
+            && (int)NEWSFEED_LAST_UPDATE_TRY != (int)NEWSFEED_LAST_UPDATE
+            && $time - (int)NEWSFEED_LAST_UPDATE_TRY > 3600
+            )
+        )
+    {
       $db_version = get_database_version();
       $feed = get_external_content('https://www.modified-shop.org/feed/?v='.$db_version['plain'], 2);    
       if ($feed && class_exists('SimpleXmlElement')) {
@@ -31,8 +39,10 @@
                                                '".xtc_db_input(decode_utf8($rss->channel->item[$i]->link))."',
                                                '".xtc_db_input(strtotime($rss->channel->item[$i]->pubDate))."')");
         }
+        xtc_db_query("UPDATE ".TABLE_CONFIGURATION." SET configuration_value = '".$time."' WHERE configuration_key = 'NEWSFEED_LAST_UPDATE'");
       }
-      xtc_db_query("UPDATE ".TABLE_CONFIGURATION." SET configuration_value = '".time()."' WHERE configuration_key = 'NEWSFEED_LAST_UPDATE'");
+      
+      xtc_db_query("UPDATE ".TABLE_CONFIGURATION." SET configuration_value = '".$time."' WHERE configuration_key = 'NEWSFEED_LAST_UPDATE_TRY'");
     }
   }
 ?>
