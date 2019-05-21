@@ -1,7 +1,7 @@
 {config_load file="$language/lang_$language.conf" section="index"}
 {config_load file="lang_`$language`.custom"}
 {if isset($box_ADMIN)}<div class="adminspacer"></div>{$box_ADMIN}{/if}
-<div class="sidebar_closer{if isset($box_ADMIN)} sidebar_moremargin{/if}"><i class="fa fa-times"></i></div>
+<div class="sidebar_closer{if isset($box_ADMIN)} sidebar_moremargin{/if}"><i class="fas fa-times"></i></div>
 
 <div id="layout_wrap">
 
@@ -15,15 +15,15 @@
           <li class="tn_lang">{$box_LANGUAGES}</li>
         {/if}
         {if isset($smarty.session.customer_id)}
-          <li><a href="{$logoff}"><i class="fa fa-sign-out"></i><span class="tn_nomobile">{#link_logoff#}</span></a></li>
+          <li><a href="{$logoff}"><i class="fas fa-sign-out-alt"></i><span class="tn_nomobile">{#link_logoff#}</span></a></li>
         {else}
-          <li><a href="{$create_account}"><i class="fa fa-user-plus"></i><span class="tn_nomobile">{#new_customer#}</span></a></li>
-          <li><a href="{$login}"><i class="fa fa-sign-in"></i><span class="tn_nomobile">{#link_login#}</span></a></li>
+          <li><a href="{$create_account}"><i class="fas fa-user-plus"></i><span class="tn_nomobile">{#new_customer#}</span></a></li>
+          <li><a href="{$login}"><i class="fas fa-sign-in-alt"></i><span class="tn_nomobile">{#link_login#}</span></a></li>
         {/if}
         {if isset($account)}
-          <li><a href="{$account}"><i class="fa fa-user"></i><span class="tn_nomobile">{#link_account#}</span></a></li>
+          <li><a href="{$account}"><i class="fas fa-user"></i><span class="tn_nomobile">{#link_account#}</span></a></li>
         {/if}
-        <li><a href="{$index}"><i class="fa fa-home"></i><span class="tn_nomobile">{#link_index#}</span></a></li>
+        <li><a href="{$index}"><i class="fas fa-home"></i><span class="tn_nomobile">{#link_index#}</span></a></li>
       </ul>
     </div>
   </div>
@@ -43,10 +43,10 @@
         <div class="col_right_inner cf">
           <div id="content_navbar">
             <ul class="contentnavigation">
-              <li class="sidebar_btn"><span id="sidebar_marker"></span><a href="#"><i class="fa fa-bars"></i><span class="cn_nomobile_text">Men&uuml;</span></a></li>
-              <li class="cn_nomobile"><a href="{$smarty.const.FILENAME_CONTENT|xtc_href_link:'coID=7'}"><i class="fa fa-envelope-o"></i>{#link_contact#}</a></li>
-              <li class="cn_nomobile"><a href="{$smarty.const.FILENAME_CONTENT|xtc_href_link:'coID=4'}"><i class="fa fa-info-circle"></i>{#link_imprint#}</a></li>
-              <li class="cn_nomobile"><a href="{$checkout}"><strong><i class="fa fa-credit-card"></i>{#link_checkout#}</strong></a></li>
+              <li class="sidebar_btn"><span id="sidebar_marker"></span><a href="#"><i class="fas fa-bars"></i><span class="cn_nomobile_text">Men&uuml;</span></a></li>
+              <li class="cn_nomobile"><a href="{$smarty.const.FILENAME_CONTENT|xtc_href_link:'coID=7'}"><i class="far fa-envelope"></i>{#link_contact#}</a></li>
+              <li class="cn_nomobile"><a href="{$smarty.const.FILENAME_CONTENT|xtc_href_link:'coID=4'}"><i class="fas fa-info-circle"></i>{#link_imprint#}</a></li>
+              <li class="cn_nomobile"><a href="{$checkout}"><strong><i class="far fa-credit-card"></i>{#link_checkout#}</strong></a></li>
               {if isset($box_CART)}<li class="cart">{$box_CART}</li>{/if}
               {if isset($box_WISHLIST)}<li class="wishlist">{$box_WISHLIST}</li>{/if}
             </ul>
@@ -89,14 +89,14 @@
       <div id="col_full" class="cf">
         <div id="content_navbar">
           <ul class="contentnavigation">
-            <li class="cn_nomobile"><a href="{$smarty.const.FILENAME_CONTENT|xtc_href_link:'coID=7'}"><i class="fa fa-envelope-o"></i>{#link_contact#}</a></li>
-            <li class="cn_nomobile"><a href="{$smarty.const.FILENAME_CONTENT|xtc_href_link:'coID=4'}"><i class="fa fa-info-circle"></i>{#link_imprint#}</a></li>
-            <li class="cn_nomobile"><a href="{$checkout}"><strong><i class="fa fa-credit-card"></i>{#link_checkout#}</strong></a></li>
+            <li class="cn_nomobile"><a href="{$smarty.const.FILENAME_CONTENT|xtc_href_link:'coID=7'}"><i class="far fa-envelope"></i>{#link_contact#}</a></li>
+            <li class="cn_nomobile"><a href="{$smarty.const.FILENAME_CONTENT|xtc_href_link:'coID=4'}"><i class="fas fa-info-circle"></i>{#link_imprint#}</a></li>
+            <li class="cn_nomobile"><a href="{$checkout}"><strong><i class="far fa-credit-card"></i>{#link_checkout#}</strong></a></li>
             {if isset($box_CART)}<li class="cart">{$box_CART}</li>{/if}
             {if isset($box_WISHLIST)}<li class="wishlist">{$box_WISHLIST}</li>{/if}
           </ul>
         </div>
-        {if isset($navtrail)}<div id="breadcrumb"><span class="breadcrumb_info">{#text_here#}</span>{$navtrail|replace:" &raquo; ":"<i class=\"fa fa-angle-right\"></i>"}</div>{/if}
+        {if isset($navtrail)}<div id="breadcrumb"><span class="breadcrumb_info">{#text_here#}</span>{$navtrail|replace:" &raquo; ":"<i class=\"fas fa-angle-right\"></i>"}</div>{/if}
         {if isset($main_content)}{$main_content}{/if}
         {if $bestseller}
           {if isset($box_BESTSELLERS)}{$box_BESTSELLERS}{/if}
@@ -108,15 +108,15 @@
         <div class="col_right_inner cf">
           <div id="content_navbar">
             <ul class="contentnavigation">
-              <li class="sidebar_btn"><span id="sidebar_marker"></span><a href="#"><i class="fa fa-bars"></i><span class="cn_nomobile_text">Men&uuml;</span></a></li>
-              <li class="cn_nomobile"><a href="{$smarty.const.FILENAME_CONTENT|xtc_href_link:'coID=7'}"><i class="fa fa-envelope-o"></i>{#link_contact#}</a></li>
-              <li class="cn_nomobile"><a href="{$smarty.const.FILENAME_CONTENT|xtc_href_link:'coID=4'}"><i class="fa fa-info-circle"></i>{#link_imprint#}</a></li>
-              <li class="cn_nomobile"><a href="{$checkout}"><strong><i class="fa fa-credit-card"></i>{#link_checkout#}</strong></a></li>
+              <li class="sidebar_btn"><span id="sidebar_marker"></span><a href="#"><i class="fas fa-bars"></i><span class="cn_nomobile_text">Men&uuml;</span></a></li>
+              <li class="cn_nomobile"><a href="{$smarty.const.FILENAME_CONTENT|xtc_href_link:'coID=7'}"><i class="far fa-envelope"></i>{#link_contact#}</a></li>
+              <li class="cn_nomobile"><a href="{$smarty.const.FILENAME_CONTENT|xtc_href_link:'coID=4'}"><i class="fas fa-info-circle"></i>{#link_imprint#}</a></li>
+              <li class="cn_nomobile"><a href="{$checkout}"><strong><i class="far fa-credit-card"></i>{#link_checkout#}</strong></a></li>
               {if isset($box_CART)}<li class="cart">{$box_CART}</li>{/if}
               {if isset($box_WISHLIST)}<li class="wishlist">{$box_WISHLIST}</li>{/if}
             </ul>
           </div>
-          {if isset($navtrail)}<div id="breadcrumb"><span class="breadcrumb_info">{#text_here#}</span>{$navtrail|replace:" &raquo; ":"<i class=\"fa fa-angle-right\"></i>"}</div>{/if}
+          {if isset($navtrail)}<div id="breadcrumb"><span class="breadcrumb_info">{#text_here#}</span>{$navtrail|replace:" &raquo; ":"<i class=\"fas fa-angle-right\"></i>"}</div>{/if}
           {if isset($main_content)}{$main_content}{/if}
           {if $bestseller}{if isset($box_BESTSELLERS)}{$box_BESTSELLERS}{/if}{/if}
         </div>

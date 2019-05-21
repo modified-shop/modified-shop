@@ -108,18 +108,18 @@
 
 @media screen and (max-width: 600px) {
   .tn_nomobile { display:none; }
-  ul.topnavigation li { font-size: 23px; line-height: 25px; padding: 0 10px 0 10px;}
+  ul.topnavigation li { font-size: 21px; line-height: 25px; padding: 0 10px 0 10px;}
   .cn_nomobile_text { display:none; }
-  .cart_01 .fa { font-size:23px !important; padding-right: 4px !important; }
+  .cart_01 .fas { font-size:21px !important; padding-right: 4px !important; }
   .cart_02 { display:none !important; }
   .cart_04 { display:none !important; }
   .cart_05 { display:inline-block !important; }
-  .wish_01 .fa { font-size:23px !important; padding-right: 4px !important; }
+  .wish_01 .fas { font-size:21px !important; padding-right: 4px !important; }
   .wish_02 { display:none !important; }
   .wish_04 { display:none !important; }
   .wish_05 { display:inline-block !important; }
   ul.contentnavigation li.sidebar_btn { line-height:39px; margin: 0px 0px; font-size:23px;}
-  ul.contentnavigation li.sidebar_btn .fa { font-size:23px;}
+  ul.contentnavigation li.sidebar_btn .fas { font-size:23px;}
   ul.contentnavigation li.cart { position:static; }
   ul.contentnavigation li.wishlist { position:static; }
   .toggle_cart { width: 100%; }

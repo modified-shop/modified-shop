@@ -22,7 +22,7 @@
 .SumoSelect > .CaptionCont > span.placeholder { color: #ccc; font-style: italic; }
 
 .SumoSelect > .CaptionCont > label { position: absolute; top: 0; right: 0; bottom: 0; width: 30px;}
-.SumoSelect > .CaptionCont > label:after { font-size: 14px;font-family: FontAwesome;content: "\f078";position: absolute;margin: auto;right: 0;left: 0;top: 0;bottom: 0;text-align: center;height: 18px;}
+.SumoSelect > .CaptionCont > label:after { font-size: 14px;font-family: 'Font Awesome 5 Free'; font-weight:900;content: "\f078";position: absolute;margin: auto;right: 0;left: 0;top: 0;bottom: 0;text-align: center;height: 18px;}
 .SumoSelect > .CaptionCont > label > i { }
 
 .SumoSelect > .optWrapper {display:none; z-index: 1000; top: 100%; width: 100%; position: absolute; left: 0; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; background: #fff; border: 1px solid #ddd; box-shadow: 2px 3px 3px rgba(0, 0, 0, 0.11); border-radius: 2px;overflow: hidden;}
