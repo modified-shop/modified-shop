@@ -66,7 +66,7 @@ function load_state() {
   
   //change select to input
   var tmpParent = $("[name='state']").parent();
-  if (tmpParent.attr("class") == "SumoSelect") {
+  if (tmpParent.attr("class").indexOf("SumoSelect") > -1) {
     tmpParent.replaceWith('<input type="text" name="state"></input>');
   } else {
     $("select[name='state']").replaceWith('<input type="text" name="state"></input>');
@@ -92,8 +92,8 @@ function load_state() {
   
   //countries with required_zones
   $.get('ajax.php', {ext: 'get_states', country: selection, speed: 1}, function(data) {
-    if (data != '' && data != undefined) { 
-      $("[name='state']").replaceWith('<select name="state"></select>&nbsp;<span class="inputRequirement">*</span>');
+    if (data != '' && data != undefined) {
+      $("[name='state']").replaceWith('<select name="state"></select>');
       var stateSelect = $("[name='state']");
       $.each(data, function(id, arr) {
         //console.log('id:' + id + '|text:' + arr.name);
@@ -102,15 +102,15 @@ function load_state() {
           "text"    : arr.name
         }).appendTo(stateSelect);
       });
-      $("[name='state']").val(state);
       tmpParent = $("[name='state']").parent();
-      if(tmpParent.attr("class") == "SumoSelect"){
+      if (tmpParent.attr("class").indexOf("SumoSelect") > -1) {
         tmpParent.replaceWith($("[name='state']"));
       }
       $('select').SumoSelect();
+      $("[name='state']").val(state);
       stateSelect.parent().parent().parent().parent().show();
     } else {
-      if (tmpParent.attr("class") == "SumoSelect") {
+      if (tmpParent.attr("class").indexOf("SumoSelect") > -1) {
         tmpParent.replaceWith('<input type="text" name="state"></input>');
       } else {
         $("[name='state']").replaceWith('<input type="text" name="state"></input>');
