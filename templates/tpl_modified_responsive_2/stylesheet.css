@@ -2501,7 +2501,7 @@ a.tags_bar_reset {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
-.filter_bar .CaptionCont.SlectBox.Selected {
+.filter_bar .CaptionCont.SelectBox.Selected {
   color: #7b3c62 !important;
   background: #eee5ea !important;
 }
