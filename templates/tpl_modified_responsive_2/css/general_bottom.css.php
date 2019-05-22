@@ -22,7 +22,7 @@
     DIR_TMPL_CSS.'jquery.alerts.css',
     DIR_TMPL_CSS.'jquery.bxslider.css',
     DIR_TMPL_CSS.'jquery.sidebar.css',
-    DIR_TMPL_CSS.'font-awesome.css',
+    DIR_TMPL_CSS.'fontawesome-all.css',
     DIR_TMPL_CSS.'media-queries.css', // must be last entry
   );
   $css_min = DIR_TMPL_CSS.'tpl_plugins.min.css';

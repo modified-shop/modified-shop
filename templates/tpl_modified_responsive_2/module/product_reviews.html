@@ -10,7 +10,7 @@
     <div class="rb_headline"><strong>{#title_date#}</strong> {$module_data.DATE}</div>
     <div class="rb_autor"><strong>{#text_author#}</strong> {$module_data.AUTHOR}</div>
     {if isset($module_data.RATING_VOTE)}
-      <div class="rb_rating"><strong>{#text_rating#}</strong> <div class="rb_rating_icons"><i class="fa fa-star{if $module_data.RATING_VOTE >= 1} full{/if}"></i><i class="fa fa-star{if $module_data.RATING_VOTE >= 2} full{/if}"></i><i class="fa fa-star{if $module_data.RATING_VOTE >= 3} full{/if}"></i><i class="fa fa-star{if $module_data.RATING_VOTE >= 4} full{/if}"></i><i class="fa fa-star{if $module_data.RATING_VOTE >= 5} full{/if}"></i></div></div>
+      <div class="rb_rating"><strong>{#text_rating#}</strong> <div class="rb_rating_icons"><i class="fas fa-star{if $module_data.RATING_VOTE >= 1} full{/if}"></i><i class="fas fa-star{if $module_data.RATING_VOTE >= 2} full{/if}"></i><i class="fas fa-star{if $module_data.RATING_VOTE >= 3} full{/if}"></i><i class="fas fa-star{if $module_data.RATING_VOTE >= 4} full{/if}"></i><i class="fas fa-star{if $module_data.RATING_VOTE >= 5} full{/if}"></i></div></div>
     {else}
       <div class="rb_rating"><strong>{#text_rating#}</strong> {$module_data.RATING|replace:".gif":".png"}</div>
     {/if}

@@ -148,11 +148,11 @@ body {
     display: none;
   }
 
-  .box_header.sidebar_inactive .fa {
+  .box_header.sidebar_inactive .fas {
     display:inline-block;
   }
 
-  .box_header.sidebar_active .fa {
+  .box_header.sidebar_active .fas {
     display:inline-block;
     vertical-align:0px;
     -moz-transform: rotate(180deg);

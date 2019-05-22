@@ -56,10 +56,10 @@ foreach ($script_array as $script) {
     });
   });
   $(document).ready(function(){
-    $(".cbimages").colorbox({rel:'cbimages', scalePhotos:true, maxWidth: "90%", maxHeight: "90%", fixed: true, close: '<i class="fa fa-times"></i>', next: '<i class="fa fa-chevron-right"></i>', previous: '<i class="fa fa-chevron-left"></i>'});
-    $(".iframe").colorbox({iframe:true, width:"780", height:"560", maxWidth: "90%", maxHeight: "90%", fixed: true, close: '<i class="fa fa-times"></i>'});
+    $(".cbimages").colorbox({rel:'cbimages', scalePhotos:true, maxWidth: "90%", maxHeight: "90%", fixed: true, close: '<i class="fas fa-times"></i>', next: '<i class="fas fa-chevron-right"></i>', previous: '<i class="fas fa-chevron-left"></i>'});
+    $(".iframe").colorbox({iframe:true, width:"780", height:"560", maxWidth: "90%", maxHeight: "90%", fixed: true, close: '<i class="fas fa-times"></i>'});
     $("#print_order_layer").on('submit', function(event) {
-      $.colorbox({iframe:true, width:"780", height:"560", maxWidth: "90%", maxHeight: "90%", close: '<i class="fa fa-times"></i>', href:$(this).attr("action") + '&' + $(this).serialize()});
+      $.colorbox({iframe:true, width:"780", height:"560", maxWidth: "90%", maxHeight: "90%", close: '<i class="fas fa-times"></i>', href:$(this).attr("action") + '&' + $(this).serialize()});
       return false;
     });
 
@@ -117,8 +117,8 @@ foreach ($script_array as $script) {
     });
 
     $('.bxcarousel_bestseller').bxSlider({
-      nextText: '<i class="fa fa-chevron-right"></i>',
-      prevText: '<i class="fa fa-chevron-left"></i>',
+      nextText: '<i class="fas fa-chevron-right"></i>',
+      prevText: '<i class="fas fa-chevron-left"></i>',
       minSlides: 2,
       maxSlides: 8,
       pager: ($(this).children('li').length > 1), //FIX for only one entry
@@ -126,8 +126,8 @@ foreach ($script_array as $script) {
       slideMargin: 18
     });
     $('.bxcarousel_slider').bxSlider({
-      nextText: '<i class="fa fa-chevron-right"></i>',
-      prevText: '<i class="fa fa-chevron-left"></i>',
+      nextText: '<i class="fas fa-chevron-right"></i>',
+      prevText: '<i class="fas fa-chevron-left"></i>',
       adaptiveHeight: false,
       mode: 'fade',
       auto: true,

@@ -368,7 +368,8 @@ ul.topnavigation li a:hover {
   color:#6d2551;
   text-decoration:none;
 }
-ul.topnavigation li .fa {
+ul.topnavigation li .fas,
+ul.topnavigation li .far {
   vertical-align:0px;
   padding-right:6px;
 }
@@ -697,7 +698,7 @@ ul.footerlist, ul.footerlist ul {
 ul.footerlist li { 
 
 }
-ul.footerlist li .fa {
+ul.footerlist li .fas {
   float:left;
   padding: 3px 10px 0px 0px;
   margin-bottom:4px;
@@ -869,10 +870,10 @@ ul.contentnavigation li a:hover {
   -moz-border-radius: 8px;
   border-radius: 8px;
 }
-ul.contentnavigation li .fa {
+ul.contentnavigation li .fas,
+ul.contentnavigation li .far {
   display: inline-block;
   padding-right: 6px;
-  font-size:14px;
 }
 
 ul.contentnavigation li.cart {
@@ -906,18 +907,17 @@ ul.contentnavigation li.cart .cart_01 {
   float:left;
   display:inline-block;
 }
-ul.contentnavigation li.cart .cart_01 .fa {
+ul.contentnavigation li.cart .cart_01 .fas {
   display:inline-block;
   float:left;
   padding-right:7px;
-  font-size:19px;
   line-height:49px;
 }
 ul.contentnavigation li.cart .cart_02 {
   float:left;
   display:inline-block;
 }
-ul.contentnavigation li.cart .cart_02 .fa {
+ul.contentnavigation li.cart .cart_02 .fas {
   display:inline-block;
   padding-left:6px;
 }
@@ -925,7 +925,7 @@ ul.contentnavigation li.cart .cart_03 {
   float:left;
   display:inline-block;
   font-weight:bold;
-  padding: 0px 4px 0px 6px;
+  padding: 0px 4px 0px 0px;
 }
 ul.contentnavigation li.cart .cart_04 {
   float:left;
@@ -950,18 +950,17 @@ ul.contentnavigation li.wishlist .wish_01 {
   float:left;
   display:inline-block;
 }
-ul.contentnavigation li.wishlist .wish_01 .fa {
+ul.contentnavigation li.wishlist .wish_01 .fas {
   display:inline-block;
   float:left;
   padding-right:7px;
-  font-size:19px;
   line-height:49px;
 }
 ul.contentnavigation li.wishlist .wish_02 {
   float:left;
   display:inline-block;
 }
-ul.contentnavigation li.wishlist .wish_02 .fa {
+ul.contentnavigation li.wishlist .wish_02 .fas {
   display:inline-block;
   padding-left:6px;
 }
@@ -969,7 +968,7 @@ ul.contentnavigation li.wishlist .wish_03 {
   float:left;
   display:inline-block;
   font-weight:bold;
-  padding: 0px 4px 0px 6px;
+  padding: 0px 4px 0px 0px;
 }
 ul.contentnavigation li.wishlist .wish_04 {
   float:left;
@@ -1058,7 +1057,7 @@ div.hr_15 {
 #breadcrumb span.current {
   font-weight:bold;
 }
-#breadcrumb .fa {
+#breadcrumb .fas {
   color:#999;
   padding: 0px 10px;
 }
@@ -1106,12 +1105,11 @@ div.hr_15 {
   height:48px;
   line-height:48px;
 }
-.box_header .fa {
+.box_header .fas {
   display:none;
   font-size:14px;
   line-height:48px;
   margin-right:6px;
-  vertical-align:2px;
   color:#6d2551;
 }
 .box1 .box_line {
@@ -1295,7 +1293,7 @@ a.show_all .arrow {
   padding: 10px 0px 0 0;
   text-align:center;
 }
-.box_reviews_icons .fa {
+.box_reviews_icons .fas {
   padding: 0 1px 0 0;
 }
 .box_reviews_icons .full  {
@@ -1344,7 +1342,7 @@ ul.orderhistory_list li a:hover {
 }
 ul.orderhistory_list li .cart_icon .cssButton {
   padding: 5px 0px;
-  font-size:19px;
+  font-size:13px;
   line-height:19px;
 }
 /* 11. END New boxes */
@@ -2457,7 +2455,7 @@ a.color_more:hover {
   font-size: 19px;
   height: 41px;
 }
-.sort_bar_item.right .fa {
+.sort_bar_item.right .fas {
   vertical-align:-2px;
 }
 a.view_list {
@@ -2679,7 +2677,7 @@ ul.attributes_list li {
 .ord_wishlist a:hover {
   text-decoration:none;
 }
-.ord_wishlist .fa {
+.ord_wishlist .fas {
   padding-right:4px;
 }
 
@@ -3153,11 +3151,11 @@ ul.pd_iconlist li.print {
   position:relative;
 }
 ul.pd_iconlist li.print:before {
-  font-family: FontAwesome;
+  font-family: 'Font Awesome 5 Free';
   content: '\f02f';
-  font-size: 16px;
+  font-weight: 900;
   position:absolute;
-  top:5px;
+  top:7px;
   left:8px;
   color:#858585;
 }
@@ -3165,11 +3163,11 @@ ul.pd_iconlist li.vote {
   position:relative;
 }
 ul.pd_iconlist li.vote:before {
-  font-family: FontAwesome;
+  font-family: 'Font Awesome 5 Free';
   content: '\f164';
-  font-size: 16px;
+  font-weight: 900;
   position:absolute;
-  top:5px;
+  top:6px;
   left:8px;
   color:#858585;
 }
@@ -3177,12 +3175,12 @@ ul.pd_iconlist li.express {
   position:relative;
 }
 ul.pd_iconlist li.express:before {
-  font-family: FontAwesome;
+  font-family: 'Font Awesome 5 Free';
   content: '\f218';
-  font-size: 16px;
+  font-weight: 900;
   position:absolute;
-  top:5px;
-  left:8px;
+  top:7px;
+  left:6px;
   color:#858585;
 }
 ul.pd_iconlist li.wishlist {
@@ -3191,11 +3189,11 @@ ul.pd_iconlist li.wishlist {
   position:relative;
 }
 ul.pd_iconlist li.wishlist:before {
-  font-family: FontAwesome;
+  font-family: 'Font Awesome 5 Free';
   content: '\f005';
-  font-size: 16px;
+  font-weight: 900;
   position:absolute;
-  top:5px;
+  top:6px;
   left:8px;
   color:#858585;
 }
@@ -3225,9 +3223,8 @@ ul.pd_iconlist li.wishlist:before {
   color:#ccc;
   padding: 0px 3px 0 0;
 }
-.pd_inforow .pd_rating_icons .fa {
+.pd_inforow .pd_rating_icons .fas {
   padding: 0 1px 0 0;
-  vertical-align:-1px;
 }
 .pd_inforow .pd_rating_icons .full  {
   color:#e9c559;
@@ -3333,14 +3330,12 @@ ul.pd_iconlist li.wishlist:before {
 }
 .reviewrow_title .rating_icons {
   display:inline-block;
-  font-size:15px;
   line-height:15px;
   color:#ccc;
   padding: 0px 3px 0 5px;
 }
-.reviewrow_title .rating_icons .fa {
+.reviewrow_title .rating_icons .fas {
   padding: 0 1px 0 0;
-  vertical-align:-1px;
 }
 .reviewrow_title .rating_icons .full  {
   color:#e9c559;
@@ -3688,12 +3683,11 @@ p.underline {
 }
 .rb_rating .rb_rating_icons {
   display:inline-block;
-  font-size:15px;
   line-height:15px;
   color:#ccc;
   padding: 0px 0px 0 0;
 }
-.rb_rating .rb_rating_icons .fa {
+.rb_rating .rb_rating_icons .fas {
   padding: 0 1px 0 0;
   vertical-align:-1px
 }
@@ -4177,12 +4171,11 @@ ul.bxcarousel_slider img {
 }
 .pri_rating_icons {
   display:inline-block;
-  font-size:15px;
   line-height:17px;
   color:#ccc;
   padding: 0px 0px 0 0;
 }
-.pri_rating_icons .fa {
+.pri_rating_icons .fas {
   padding: 0 1px 0 0;
   vertical-align:-1px;
 }
@@ -4790,7 +4783,8 @@ ul.resp-tabs-list{
   filter: alpha(opacity=0);
 }
 
-.cssButton .fa {
+.cssButton .fas,
+.cssButton .far {
   padding-left:3px;
   padding-right:3px;
   vertical-align:0px;
@@ -4902,7 +4896,7 @@ ul.resp-tabs-list{
  	-webkit-box-shadow:inset 1px 1px 0px 0px #ffe3a1;
  	-moz-box-shadow:inset 1px 1px 0px 0px #ffe3a1;
  	box-shadow:inset 1px 1px 0px 0px #ffe3a1;
-  height:32px;
+  height:40px;
 }
 .cssButtonColor6:hover {
 	background:-moz-linear-gradient( center top, #fbba22 15%, #ffc848 90% );
@@ -4948,7 +4942,7 @@ ul.resp-tabs-list{
   top:0px;
   width:50px;
 }
-.cssButtonPos1 .fa {
+.cssButtonPos1 .fas {
   font-size:18px;
   vertical-align:bottom;
 }
@@ -4985,7 +4979,7 @@ ul.resp-tabs-list{
   display:block;
   margin: 0 0 5px 5px;
 }
-.cssButtonPos6 .fa {
+.cssButtonPos6 .fas {
   font-size:18px;
   vertical-align:bottom;
 }
@@ -5020,7 +5014,7 @@ ul.tc_list li .tc_delete .cssButton {
   padding: 4px 0px;
   line-height:19px;
 }
-ul.tc_list li .tc_delete .cssButton .fa {
+ul.tc_list li .tc_delete .cssButton .fas {
   font-size: 15px;
   line-height:19px;
   padding-right: 0;
@@ -5039,8 +5033,8 @@ ul.tc_list li .tc_delete .cssButton .fa {
   display:inline-block;
   margin: 0 2px 0 2px;
 }
-.cssButtonPos11 .fa {
-  font-size:18px;
+.cssButtonPos11 .fas {
+  font-size:17px;
   vertical-align:bottom;
 }
 
@@ -5064,7 +5058,7 @@ ul.tc_list li .tc_delete .cssButton .fa {
 .cssButtonPos13 .cssButton {
   padding: 3px 5px;
 }
-.cssButtonPos13 .fa {
+.cssButtonPos13 .fas {
   font-size:15px;
   vertical-align:bottom;
 }
@@ -5090,12 +5084,13 @@ ul.tc_list li .tc_delete .cssButton .fa {
   padding: 0px 1px;
 }
 .show_rating > label:before {
-  font-family: FontAwesome;
+  font-family: 'Font Awesome 5 Free';
   font-size:20px;
   line-height:20px;
   position: relative;
   display: block;
   content: "\f005";
+  font-weight: 900;
   color: #ccc;
   background: #ccc;
   -webkit-background-clip: text;
