@@ -56,7 +56,7 @@
     $content_string .= $tab; //Tabulator Codedarstellung
     $content_string .= '<li class="level'.$level.$content_active.$content_active_parent.'">';
     $content_string .= '<a href="'.xtc_href_link(FILENAME_CONTENT, 'coID='.$content_array[$counter]['coID']).'" title="'. $content_array[$counter]['name'] . '">';
-    $content_string .= '<i class="fa fa-angle-right"></i>';
+    $content_string .= '<i class="fas fa-angle-right"></i>';
     $content_string .= $content_array[$counter]['name'];
     $content_string .= '</a></li>';
     $content_string .= "\n"; //Zeilenschaltung Codedarstellung  
