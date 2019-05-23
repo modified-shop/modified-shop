@@ -87,7 +87,7 @@ function load_state() {
   //countries with required_zones
   $.get('ajax.php', {ext: 'get_states', country: selection, speed: 1}, function(data) {
     if (data != '' && data != undefined) { 
-      $("[name='state']").replaceWith('<select name="state"></select>&nbsp;<span class="inputRequirement">*</span>');
+      $("[name='state']").replaceWith('<select name="state"></select>');
       var stateSelect = $("[name='state']");
       $.each(data, function(id, arr) {
         //console.log('id:' + id + '|text:' + arr.name);
