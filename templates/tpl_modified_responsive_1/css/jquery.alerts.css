@@ -46,7 +46,8 @@
   color:#2d65cb;
 }
 #js_popup_content.alert:before {
-  font-family: FontAwesome;
+  font-family: 'Font Awesome 5 Free';
+  font-weight:900;
   content: '\f05a';
   font-size: 40px;
   position:absolute;
@@ -56,7 +57,8 @@
 }
 /* Question */
 #js_popup_content.confirm:before {
-  font-family: FontAwesome;
+  font-family: 'Font Awesome 5 Free';
+  font-weight:900;
   content: '\f059';
   font-size: 40px;
   position:absolute;
@@ -65,7 +67,8 @@
   color:#2d65cb;
 }
 #js_popup_content.prompt:before {
-  font-family: FontAwesome;
+  font-family: 'Font Awesome 5 Free';
+  font-weight:900;
   content: '\f059';
   font-size: 40px;
   position:absolute;
@@ -75,7 +78,8 @@
 }
 /* Allert Error */
 #js_popup_content.alert_error:before {
-  font-family: FontAwesome;
+  font-family: 'Font Awesome 5 Free';
+  font-weight:900;
   content: '\f071';
   font-size: 40px;
   position:absolute;

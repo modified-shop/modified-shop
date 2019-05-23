@@ -8,9 +8,9 @@
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
-	-moz-border-radius: 8px;
-	-webkit-border-radius: 8px;
-	border-radius: 8px;
+	-moz-border-radius: 0px;
+	-webkit-border-radius: 0px;
+	border-radius: 0px;
   outline:0;
   -webkit-box-shadow: 0px 0px 15px #3d3d3d;
   -moz-box-shadow: 0px 0px 15px #3d3d3d;
@@ -46,7 +46,8 @@
   color:#2d65cb;
 }
 #js_popup_content.alert:before {
-  font-family: FontAwesome;
+  font-family: 'Font Awesome 5 Free';
+  font-weight:900;
   content: '\f05a';
   font-size: 40px;
   position:absolute;
@@ -56,7 +57,8 @@
 }
 /* Question */
 #js_popup_content.confirm:before {
-  font-family: FontAwesome;
+  font-family: 'Font Awesome 5 Free';
+  font-weight:900;
   content: '\f059';
   font-size: 40px;
   position:absolute;
@@ -65,7 +67,8 @@
   color:#2d65cb;
 }
 #js_popup_content.prompt:before {
-  font-family: FontAwesome;
+  font-family: 'Font Awesome 5 Free';
+  font-weight:900;
   content: '\f059';
   font-size: 40px;
   position:absolute;
@@ -75,7 +78,8 @@
 }
 /* Allert Error */
 #js_popup_content.alert_error:before {
-  font-family: FontAwesome;
+  font-family: 'Font Awesome 5 Free';
+  font-weight:900;
   content: '\f071';
   font-size: 40px;
   position:absolute;
@@ -102,9 +106,9 @@
   box-sizing: border-box;
   white-space:nowrap;
   text-decoration:none;
-	-webkit-border-radius: 4px;
-	-moz-border-radius: 4px;
-	border-radius: 4px;
+	-webkit-border-radius: 0px;
+	-moz-border-radius: 0px;
+	border-radius: 0px;
 	border:1px solid #ccc;
 	text-decoration:none;
 	background-color:#eee;
