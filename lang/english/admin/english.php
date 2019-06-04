@@ -105,7 +105,7 @@ define('BOX_CONFIGURATION_17', 'Additional Modules');
 define('BOX_CONFIGURATION_18', 'VAT Reg No');
 define('BOX_CONFIGURATION_19', 'Partner');
 define('BOX_CONFIGURATION_22', 'Search-Options');
-define('BOX_CONFIGURATION_24', 'Google, Piwik &amp; Facebook');
+define('BOX_CONFIGURATION_24', 'Google, Matomo &amp; Facebook');
 define('BOX_CONFIGURATION_25', 'Captcha');
 define('BOX_CONFIGURATION_31', 'Skrill');
 define('BOX_CONFIGURATION_40', 'Popup Window Options');
