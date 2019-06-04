@@ -783,14 +783,14 @@ define('TRACKING_GOOGLEANALYTICS_ACTIVE_DESC' , 'By activating this option, all 
 define('TRACKING_GOOGLEANALYTICS_ID_TITLE' , 'Google Analytics account number');
 define('TRACKING_GOOGLEANALYTICS_ID_DESC' , 'Enter your Google Analytics account number in the format "UA-XXXXXXXX-X" which you received after successfully creating an account.');
 
-define('TRACKING_PIWIK_ACTIVE_TITLE' , 'Activate Piwik Web-Analytics tracking');
-define('TRACKING_PIWIK_ACTIVE_DESC' , 'In order to use Piwik at all, you have to download and install it to your webspace at first. See also <a href="http://piwik.org/" target="_blank"><b>Piwik Web-Analytics</b></a>. In comparison to Google Analytics all data will be stored locally, i.e. you as show owner have complete control over all data.');
-define('TRACKING_PIWIK_LOCAL_PATH_TITLE' , 'Piwik install path (without "http://")');
-define('TRACKING_PIWIK_LOCAL_PATH_DESC' , 'Enter the path when Piwik was installed successfully. The complete path of the domain has to be given, but without "http://", e.g. "www.domain.de/piwik".');
-define('TRACKING_PIWIK_ID_TITLE' , 'Piwik page ID');
-define('TRACKING_PIWIK_ID_DESC' , 'In the Piwik administration a page ID will be created per domain (usually "1")');
-define('TRACKING_PIWIK_GOAL_TITLE' , 'Piwik campaign number (optional)');
-define('TRACKING_PIWIK_GOAL_DESC' , 'Enter your campaign number, if you want to track predefined goals.. Details see <a href="http://piwik.org/docs/tracking-goals-web-analytics/" target="_blank"><b>Piwik: Tracking Goal Conversions</b></a>');
+define('TRACKING_PIWIK_ACTIVE_TITLE' , 'Activate Matomo Web-Analytics tracking');
+define('TRACKING_PIWIK_ACTIVE_DESC' , 'In order to use Matomo at all, you have to download and install it to your webspace at first. See also <a href="https://matomo.org/" target="_blank"><b>Matomo Web-Analytics</b></a>. In comparison to Google Analytics all data will be stored locally, i.e. you as show owner have complete control over all data.');
+define('TRACKING_PIWIK_LOCAL_PATH_TITLE' , 'Matomo install path (without "http://")');
+define('TRACKING_PIWIK_LOCAL_PATH_DESC' , 'Enter the path when Matomo was installed successfully. The complete path of the domain has to be given, but without "http://", e.g. "www.example.com/matomo".');
+define('TRACKING_PIWIK_ID_TITLE' , 'Matomo page ID');
+define('TRACKING_PIWIK_ID_DESC' , 'In the Matomo administration a page ID will be created per domain (usually "1")');
+define('TRACKING_PIWIK_GOAL_TITLE' , 'Matomo campaign number (optional)');
+define('TRACKING_PIWIK_GOAL_DESC' , 'Enter your campaign number, if you want to track predefined goals. Details see <a href="https://matomo.org/docs/tracking-goals-web-analytics/" target="_blank"><b>Matomo: Tracking Goal Conversions</b></a>');
 
 define ('CONFIRM_SAVE_ENTRY_TITLE', 'Confirmation when saving articles/category');
 define ('CONFIRM_SAVE_ENTRY_DESC', 'Should be made a confirmation message when saving products/categories? Default: true (yes)');

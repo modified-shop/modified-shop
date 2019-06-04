@@ -782,14 +782,14 @@ define('TRACKING_GOOGLEANALYTICS_ACTIVE_DESC' , 'Wird diese Option aktiviert, so
 define('TRACKING_GOOGLEANALYTICS_ID_TITLE' , 'Google Analytics Kontonummer');
 define('TRACKING_GOOGLEANALYTICS_ID_DESC' , 'Tragen Sie hier die Google Analytics Kontonummer im Format "UA-XXXXXXXX-X" ein, die Sie nach einer erfolgreichen Kontoerstellen bekommen haben.');
 
-define('TRACKING_PIWIK_ACTIVE_TITLE' , 'Piwik Web-Analytics Tracking aktivieren');
-define('TRACKING_PIWIK_ACTIVE_DESC' , 'Um Piwik nutzen zu k&ouml;nnen, m&uuml;ssen Sie es zun&auml;chst herunterladen und auf Ihrem Webspace installieren, siehe auch <a href="http://piwik.org/" target="_blank"><b>Piwik Web-Analytics</b></a>. Im Gegensatz zu Google Analytics werden die Daten lokal gespeichert, d.h. Sie als Shopbetreiber haben die Datenhoheit.');
-define('TRACKING_PIWIK_LOCAL_PATH_TITLE' , 'Piwik Installationsverzeichnis (ohne "http://")');
-define('TRACKING_PIWIK_LOCAL_PATH_DESC' , 'Tragen Sie hier das Verzeichnis ein, nachdem Piwik erfolgreich installiert worden ist. Als Pfad ist hier der komplette Domainname ohne "http://" einzutragen, z.B. "www.domain.de/piwik".');
-define('TRACKING_PIWIK_ID_TITLE' , 'Piwik Seiten-ID');
-define('TRACKING_PIWIK_ID_DESC' , 'In der Piwik Administrationsoberfl&auml;che wird pro angelegter Domain wird eine ID vergeben (meist "1")');
-define('TRACKING_PIWIK_GOAL_TITLE' , 'Piwik Kampagnen-Nummer (optional)');
-define('TRACKING_PIWIK_GOAL_DESC' , 'Tragen Sie hier eine Kampagnen-Nummer ein, wenn Sie vordefinierte Ziele nachverfolgen m&ouml;chten. Details siehe <a href="http://piwik.org/docs/tracking-goals-web-analytics/" target="_blank"><b>Piwik: Tracking Goal Conversions</b></a>');
+define('TRACKING_PIWIK_ACTIVE_TITLE' , 'Matomo Web-Analytics Tracking aktivieren');
+define('TRACKING_PIWIK_ACTIVE_DESC' , 'Um Matomo nutzen zu k&ouml;nnen, m&uuml;ssen Sie es zun&auml;chst herunterladen und auf Ihrem Webspace installieren, siehe auch <a href="https://matomo.org/" target="_blank"><b>Matomo Web-Analytics</b></a>. Im Gegensatz zu Google Analytics werden die Daten lokal gespeichert, d.h. Sie als Shopbetreiber haben die Datenhoheit.');
+define('TRACKING_PIWIK_LOCAL_PATH_TITLE' , 'Matomo Installationsverzeichnis (ohne "http://")');
+define('TRACKING_PIWIK_LOCAL_PATH_DESC' , 'Tragen Sie hier das Verzeichnis ein, nachdem Matomo erfolgreich installiert worden ist. Als Pfad ist hier der komplette Domainname ohne "http://" einzutragen, z.B. "www.example.com/matomo".');
+define('TRACKING_PIWIK_ID_TITLE' , 'Matomo Seiten-ID');
+define('TRACKING_PIWIK_ID_DESC' , 'In der Matomo Administrationsoberfl&auml;che wird pro angelegter Domain wird eine ID vergeben (meist "1")');
+define('TRACKING_PIWIK_GOAL_TITLE' , 'Matomo Kampagnen-Nummer (optional)');
+define('TRACKING_PIWIK_GOAL_DESC' , 'Tragen Sie hier eine Kampagnen-Nummer ein, wenn Sie vordefinierte Ziele nachverfolgen m&ouml;chten. Details siehe <a href="https://matomo.org/docs/tracking-goals-web-analytics/" target="_blank"><b>Matomo: Tracking Goal Conversions</b></a>');
 
 define('CONFIRM_SAVE_ENTRY_TITLE', 'Best&auml;tigungsabfrage beim Speichern von Artikeln/Kategorien');
 define('CONFIRM_SAVE_ENTRY_DESC', 'Soll eine Best&auml;tigungsabfrage beim Speichern von Artikeln/Kategorien erfolgen? Standard: true (ja)');
