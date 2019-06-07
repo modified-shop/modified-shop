@@ -920,10 +920,7 @@ class shoppingCart {
    */
   function create_products_attributes_array($products_id) {
     $dataArray = array();
-    
-    //new module support 
-    $products_id = $this->shoppingCartModules->create_products_attributes_array($products_id);
-    
+        
     $db_query = xtDBquery("SELECT options_id,
                                   options_values_id
                              FROM ".TABLE_PRODUCTS_ATTRIBUTES." 
@@ -931,6 +928,10 @@ class shoppingCart {
     while($data = xtc_db_fetch_array($db_query, true)) {
       $dataArray[$data['options_id']][] = $data['options_values_id'];
     }
+
+    //new module support 
+    $dataArray = $this->shoppingCartModules->create_products_attributes_array($dataArray, $products_id, $this->type);
+
     return $dataArray;
   }
 

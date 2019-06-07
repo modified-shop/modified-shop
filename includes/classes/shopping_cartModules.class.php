@@ -189,7 +189,7 @@ class shoppingCartModules {
         return self::call_module_method($status, $products_id);
     }
 
-    public static function create_products_attributes_array($products_id)
+    public static function create_products_attributes_array($dataArray, $products_id, $type)
     {
         self::$function_call = 'create_products_attributes_array';
         return self::call_module_method($products_id);
