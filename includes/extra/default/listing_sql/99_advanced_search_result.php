@@ -107,7 +107,7 @@
     }
   
     $from_str  = "FROM ".TABLE_PRODUCTS." AS p 
-             LEFT JOIN ".TABLE_PRODUCTS_DESCRIPTION." AS pd ON (p.products_id = pd.products_id AND trim(pd.products_name) != '' AND pd.language_id = '".(int)$_SESSION['languages_id']."') ";
+                  JOIN ".TABLE_PRODUCTS_DESCRIPTION." AS pd ON (p.products_id = pd.products_id AND trim(pd.products_name) != '' AND pd.language_id = '".(int)$_SESSION['languages_id']."') ";
     $from_str .= $subcat_join;
     $from_str .= SEARCH_IN_ATTR == 'true' ? " LEFT OUTER JOIN ".TABLE_PRODUCTS_ATTRIBUTES." AS pa ON (p.products_id = pa.products_id) 
                                               LEFT OUTER JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." AS pov ON (pa.options_values_id = pov.products_options_values_id) " : "";

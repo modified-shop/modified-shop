@@ -47,7 +47,7 @@
       $autocomplete_search_query = "SELECT p.*, 
                                            pd.products_name
                                       FROM ".TABLE_PRODUCTS." p 
-                                 LEFT JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd 
+                                      JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd 
                                            ON p.products_id = pd.products_id
                                               AND pd.language_id = '".(int)$_SESSION['languages_id']."'
                                               AND trim(pd.products_name) != ''
