@@ -180,8 +180,8 @@
       $this->delivery['country_iso_2'] = $order['delivery_country_iso_code_2'];
       $this->delivery['format_id'] = $order['delivery_address_format_id'];
 
-      if(!defined('RUN_MODE_ADMIN')) {
-        if (empty($this->delivery['name']) && empty($this->delivery['street_address'])) {
+      if (!defined('RUN_MODE_ADMIN')) {
+        if (empty(trim($this->delivery['name'])) && empty(trim($this->delivery['street_address']))) {
           $this->delivery = false;
         }
       }
@@ -483,7 +483,7 @@
                                                   FROM " . TABLE_ADDRESS_BOOK . " ab
                                                        " . $default_join . "
                                                  WHERE ab.customers_id = '" . $_SESSION['customer_id'] . "'
-                                                   AND ab.address_book_id = '" . ((isset($_SESSION['sendto'])) ? $_SESSION['sendto'] : $_SESSION['customer_default_address_id']) . "'
+                                                   AND ab.address_book_id = '" . ((isset($_SESSION['sendto']) && $_SESSION['sendto'] != false) ? $_SESSION['sendto'] : $_SESSION['customer_default_address_id']) . "'
                                               ");
         $shipping_address = xtc_db_fetch_array($shipping_address_query);
 
@@ -503,7 +503,7 @@
                                              FROM " . TABLE_ADDRESS_BOOK . " ab
                                         LEFT JOIN " . TABLE_ZONES . " z ON (ab.entry_zone_id = z.zone_id)
                                             WHERE ab.customers_id = '" . $_SESSION['customer_id'] . "'
-                                              AND ab.address_book_id = '" . (($this->content_type == 'virtual') ? ((isset($_SESSION['billto'])) ? $_SESSION['billto'] : ((isset($_SESSION['sendto'])) ? $_SESSION['sendto'] : $_SESSION['customer_default_address_id'])) : ((isset($_SESSION['sendto'])) ? $_SESSION['sendto'] : $_SESSION['customer_default_address_id'])) . "'
+                                              AND ab.address_book_id = '" . (($this->content_type == 'virtual') ? ((isset($_SESSION['billto'])) ? $_SESSION['billto'] : ((isset($_SESSION['sendto']) && $_SESSION['sendto'] != false) ? $_SESSION['sendto'] : $_SESSION['customer_default_address_id'])) : ((isset($_SESSION['sendto']) && $_SESSION['sendto'] != false) ? $_SESSION['sendto'] : $_SESSION['customer_default_address_id'])) . "'
                                          ");
         $tax_address = xtc_db_fetch_array($tax_address_query);
       }
