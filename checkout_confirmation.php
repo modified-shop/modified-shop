@@ -114,7 +114,7 @@ $order_total_modules->pre_confirmation_check();
 
 // GV Code line changed
 if ((is_array($payment_modules->modules) 
-     && (sizeof($payment_modules->modules) > 1) 
+     && (sizeof($payment_modules->modules) > 0) 
      && (!is_object(${$_SESSION['payment']})) 
      && (!isset($_SESSION['credit_covers']))) 
     || 
