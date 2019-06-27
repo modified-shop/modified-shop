@@ -277,7 +277,47 @@ class PayPalCommon extends PayPalAuth {
     return $total;
   }
 
-
+  
+  function get_payment_profile_data() {
+    $address_override = false;
+    $profile_id = $this->get_config('PAYPAL_'.strtoupper($this->code.'_'.$_SESSION['language_code']).'_PROFILE');
+    
+    if ($profile_id == '') {
+      $profile_id = $this->get_config('PAYPAL_STANDARD_PROFILE');
+    }
+    
+    if ($profile_id != '') {
+      if ($this->get_config(strtoupper($profile_id).'_TIME') < (time() - (3600 * 24))) {
+        $profile = $this->get_profile($profile_id);
+        
+        if (count($profile) > 0) {
+          $sql_data_array = array(
+            array(
+              'config_key' => strtoupper($profile_id).'_TIME', 
+              'config_value' => time(),
+            ),
+            array(
+              'config_key' => strtoupper($profile_id).'_ADDRESS', 
+              'config_value' => $profile[0]['input_fields']['address_override'],
+            ),
+          );
+          $this->save_config($sql_data_array);
+          $address_override = (($profile[0]['input_fields']['address_override'] == '0') ? true : false);
+        } else {
+          $profile_id = $this->delete_profile($profile_id);
+        }
+      } else {
+        $address_override = (($this->get_config(strtoupper($profile_id).'_ADDRESS') == '0') ? true : false);
+      }
+    }
+    
+    return array(
+      'profile_id' => $profile_id,
+      'address_override' => $address_override,
+    );
+  }
+  
+  
   function get_profile($id) {
   
     // auth
@@ -327,8 +367,31 @@ class PayPalCommon extends PayPalAuth {
   }
 
 
+  function delete_profile($id) {
+
+    // auth
+    $apiContext = $this->apiContext();
+
+    // set WebProfile
+    $webProfile = new WebProfile();
+    $webProfile->setId($id);
+
+    try {
+      $webProfile->delete($apiContext);
+    } catch (Exception $ex) {
+      $this->LoggingManager->log('DEBUG', 'Profile', array('exception' => $ex));
+    }
+    
+    if ($id == $this->get_config('PAYPAL_STANDARD_PROFILE')) {
+      $this->delete_config('PAYPAL_STANDARD_PROFILE');
+    }
+
+    $this->delete_config($id, 'config_value');
+  }
+
+
   function login_customer($customer) {
-    global $econda;
+    global $econda, $messageStack;
     
     // include needed function
     require_once (DIR_FS_INC.'xtc_write_user_info.inc.php');
@@ -393,7 +456,9 @@ class PayPalCommon extends PayPalAuth {
       if ($_SESSION['old_customers_basket_cart'] === true) {
         unset($_SESSION['old_customers_basket_cart']);
         unset($_SESSION['paypal']);
-        xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'info_message_3='.strtolower('TEXT_SAVED_BASKET')),'NONSSL'); 
+        
+        $messageStack->add_session('info_message_3', TEXT_SAVED_BASKET);
+        xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, ''), 'NONSSL'); 
       }
     }
      

@@ -198,8 +198,18 @@ class PayPalPayment extends PayPalPaymentBase {
                  ->setQuantity($order->products[$i]['qty']) 
                  ->setPrice($order->products[$i]['price'])
                  ->setSku(($order->products[$i]['model'] != '') ? $order->products[$i]['model'] : $order->products[$i]['id']); 
+        
+        if (isset($order->products[$i]['attributes'])) {
+          $attributes_string = '';
+          $order->products[$i]['attributes'] = array_values($order->products[$i]['attributes']);
+          for ($j = 0, $n2 = sizeof($order->products[$i]['attributes']); $j < $n2; $j ++) {
+            $attributes_string .= $order->products[$i]['attributes'][$j]['option'].': '.$order->products[$i]['attributes'][$j]['value'].', ';
+          }
+          $item[$i]->setName($this->encode_utf8($order->products[$i]['name'].' - '.substr($attributes_string, 0, -2)));
+        }
+        
         $subtotal += $order->products[$i]['price'] * $order->products[$i]['qty'];
-      }  
+      }
       
       // set totals
       if ($order_exists === false) {
@@ -261,31 +271,11 @@ class PayPalPayment extends PayPalPaymentBase {
     $itemList->setItems($item);
     
     // profile
-    $address_override = false;
-    $profile_id = $this->get_config('PAYPAL_'.strtoupper($this->code.'_'.$_SESSION['language_code']).'_PROFILE');
-    if ($profile_id == '') {
-      $profile_id = $this->get_config('PAYPAL_STANDARD_PROFILE');
-    }
-    if ($profile_id != '') {
-      if ($this->get_config(strtoupper($profile_id).'_TIME') < (time() - (3600 * 24))) {
-        $profile = $this->get_profile($profile_id);
-        $sql_data_array = array(
-          array(
-            'config_key' => strtoupper($profile_id).'_TIME', 
-            'config_value' => time(),
-          ),
-          array(
-            'config_key' => strtoupper($profile_id).'_ADDRESS', 
-            'config_value' => $profile[0]['input_fields']['address_override'],
-          ),          
-        );
-        $this->save_config($sql_data_array);
-        $address_override = (($profile[0]['input_fields']['address_override'] == '0') ? true : false);
-      } else {
-        $address_override = (($this->get_config(strtoupper($profile_id).'_ADDRESS') == '0') ? true : false);
-      }
-    }
-
+    $profile_data = $this->get_payment_profile_data();
+    
+    $profile_id = $profile_data['profile_id'];
+    $address_override = $profile_data['address_override'];
+        
     if (($cart === false 
          && $approval === false
          && $address_override === false) 
@@ -420,7 +410,16 @@ class PayPalPayment extends PayPalPaymentBase {
                  ->setQuantity($order->products[$i]['qty']) 
                  ->setPrice($order->products[$i]['price'])
                  ->setSku(($order->products[$i]['model'] != '') ? $order->products[$i]['model'] : $order->products[$i]['id']); 
-      }  
+
+        if (isset($order->products[$i]['attributes'])) {
+          $attributes_string = '';
+          $order->products[$i]['attributes'] = array_values($order->products[$i]['attributes']);
+          for ($j = 0, $n2 = sizeof($order->products[$i]['attributes']); $j < $n2; $j ++) {
+            $attributes_string .= $order->products[$i]['attributes'][$j]['option'].': '.$order->products[$i]['attributes'][$j]['value'].', ';
+          }
+          $item[$i]->setName($this->encode_utf8($order->products[$i]['name'].' - '.substr($attributes_string, 0, -2)));
+        }
+      }
     }
 
     $patch_items = new Patch();
@@ -606,29 +605,19 @@ class PayPalPayment extends PayPalPaymentBase {
       $execution->setPayerId($_SESSION['paypal']['PayerID']);
       
       // profile
-      $profile_id = $this->get_config('PAYPAL_'.strtoupper($this->code.'_'.$_SESSION['language_code']).'_PROFILE');
-      if ($profile_id == '') {
-        $profile_id = $this->get_config('PAYPAL_STANDARD_PROFILE');
-      }
-      if ($profile_id != '') {
-        $address_override = '0';
-        if ($this->get_config(strtoupper($profile_id).'_TIME') < (time() - (3600 * 24))) {
-          $profile = $this->get_profile($profile_id);
-          $address_override = $profile[0]['input_fields']['address_override'];
-        } else {
-          $address_override = $this->get_config(strtoupper($profile_id).'_ADDRESS');
-        }
-        if ($address_override == '0') {
-          // customer details    
-          $sql_data_array = $this->get_customer_data($payment);
-      
-          $sql_data_array['delivery']['delivery_country'] = $sql_data_array['delivery']['delivery_country']['title'];
-          unset($sql_data_array['delivery']['delivery_country_id']);
-          unset($sql_data_array['delivery']['delivery_zone_id']);
-                
-          if (count($sql_data_array) > 0) {
-            xtc_db_perform(TABLE_ORDERS, $sql_data_array['delivery'], 'update', "orders_id = '".$insert_id."'");
-          }
+      $profile_data = $this->get_payment_profile_data();
+      $address_override = $profile_data['address_override'];
+
+      if ($address_override == true) {
+        // customer details    
+        $sql_data_array = $this->get_customer_data($payment);
+    
+        $sql_data_array['delivery']['delivery_country'] = $sql_data_array['delivery']['delivery_country']['title'];
+        unset($sql_data_array['delivery']['delivery_country_id']);
+        unset($sql_data_array['delivery']['delivery_zone_id']);
+              
+        if (count($sql_data_array) > 0) {
+          xtc_db_perform(TABLE_ORDERS, $sql_data_array['delivery'], 'update', "orders_id = '".$insert_id."'");
         }
       }
       
@@ -821,7 +810,16 @@ class PayPalPayment extends PayPalPaymentBase {
                  ->setQuantity($order->products[$i]['qty']) 
                  ->setPrice($order->products[$i]['price'])
                  ->setSku(($order->products[$i]['model'] != '') ? $order->products[$i]['model'] : $order->products[$i]['id']); 
-      }  
+
+        if (isset($order->products[$i]['attributes'])) {
+          $attributes_string = '';
+          $order->products[$i]['attributes'] = array_values($order->products[$i]['attributes']);
+          for ($j = 0, $n2 = sizeof($order->products[$i]['attributes']); $j < $n2; $j ++) {
+            $attributes_string .= $order->products[$i]['attributes'][$j]['option'].': '.$order->products[$i]['attributes'][$j]['value'].', ';
+          }
+          $item[$i]->setName($this->encode_utf8($order->products[$i]['name'].' - '.substr($attributes_string, 0, -2)));
+        }
+      }
     }
 
     $patch_items = new Patch();
