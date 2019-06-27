@@ -150,7 +150,7 @@ class paypalcart extends PayPalPayment {
     // if the modules status was changed when none were available, to save on implementing
     // a javascript force-selection method, also automatically select the cheapest shipping
     // method if more than one module is now enabled
-    if ((!isset($_SESSION['shipping']) && CHECK_CHEAPEST_SHIPPING_MODUL == 'true') || (isset($_SESSION['shipping']) && ($_SESSION['shipping'] == false) && (xtc_count_shipping_modules() > 1))) {
+    if ((!isset($_SESSION['shipping']) && CHECK_CHEAPEST_SHIPPING_MODUL == 'true') || (isset($_SESSION['shipping']) && ($_SESSION['shipping'] == false) && (xtc_count_shipping_modules() == 1))) {
       $_SESSION['shipping'] = $shipping_modules->cheapest();
       $order = new order();
     }
@@ -190,7 +190,9 @@ class paypalcart extends PayPalPayment {
         }
         */
       }
-      $module_smarty->assign('BUTTON_CONTINUE', xtc_image_submit('button_confirm.gif', IMAGE_BUTTON_CONFIRM));
+      if (xtc_count_shipping_modules() > 1) {
+        $module_smarty->assign('BUTTON_CONTINUE', xtc_image_submit('button_confirm.gif', IMAGE_BUTTON_CONFIRM));
+      }
       $module_smarty->assign('FORM_END', '</form>');
     
       if ($no_shipping === false) {
