@@ -216,31 +216,6 @@ class PayPalAdmin extends PayPalPayment {
   }
 
 
-  function delete_profile($id) {
-
-    // auth
-    $apiContext = $this->apiContext();
-
-    // set WebProfile
-    $webProfile = new WebProfile();
-    $webProfile->setId($id);
-
-    try {
-      $webProfile->delete($apiContext);
-      $valid = true;
-    } catch (Exception $ex) {
-      $this->LoggingManager->log('DEBUG', 'Profile', array('exception' => $ex));
-      $valid = false;
-    }
-    
-    if ($id == $this->get_config('PAYPAL_STANDARD_PROFILE')) {
-      $this->delete_config('PAYPAL_STANDARD_PROFILE');
-    }
-
-    $this->delete_config($id, 'config_value');
-  }
-
-
   function list_webhooks() {
   
     // auth
