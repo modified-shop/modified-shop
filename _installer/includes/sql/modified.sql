@@ -242,7 +242,7 @@ CREATE TABLE carriers (
 DROP TABLE IF EXISTS categories;
 CREATE TABLE categories (
   categories_id INT(11) NOT NULL AUTO_INCREMENT,
-  categories_image VARCHAR(255),
+  categories_image VARCHAR(255) NOT NULL,
   parent_id INT DEFAULT 0 NOT NULL,
   categories_status INT(1) NOT NULL,
   categories_template VARCHAR(64),
@@ -611,7 +611,7 @@ CREATE TABLE languages (
   languages_id INT(11) NOT NULL AUTO_INCREMENT,
   name VARCHAR(32) NOT NULL,
   code CHAR(5) NOT NULL,
-  image VARCHAR(64),
+  image VARCHAR(64) NOT NULL,
   directory VARCHAR(32),
   sort_order INT(3),
   language_charset text NOT NULL,
@@ -626,7 +626,7 @@ DROP TABLE IF EXISTS manufacturers;
 CREATE TABLE manufacturers (
   manufacturers_id INT(11) NOT NULL AUTO_INCREMENT,
   manufacturers_name VARCHAR(64) NOT NULL,
-  manufacturers_image VARCHAR(255),
+  manufacturers_image VARCHAR(255) NOT NULL,
   date_added DATETIME NULL,
   last_modified DATETIME NULL,
   PRIMARY KEY (manufacturers_id),
