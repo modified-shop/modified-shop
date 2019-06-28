@@ -160,11 +160,12 @@ ALTER TABLE `zones_to_geo_zones` MODIFY `zone_country_id` INT(11) NOT NULL;
 
 #GTB - 2019-06-28 - raise length for images
 ALTER TABLE `banners` MODIFY `banners_image` VARCHAR(255) NOT NULL;
-ALTER TABLE `categories` MODIFY `categories_image` VARCHAR(255) NOT NULL;
-ALTER TABLE `manufacturers` MODIFY `manufacturers_image` VARCHAR(255) NOT NULL;
+ALTER TABLE `categories` MODIFY `categories_image` VARCHAR(255);
+ALTER TABLE `manufacturers` MODIFY `manufacturers_image` VARCHAR(255);
 ALTER TABLE `products` MODIFY `products_image` VARCHAR(255) NOT NULL;
 ALTER TABLE `products_images` MODIFY `image_name` VARCHAR(255) NOT NULL;
 ALTER TABLE `products_tags_values` MODIFY `values_image` VARCHAR(255) NOT NULL;
+ALTER TABLE `shipping_status` MODIFY `shipping_status_image` VARCHAR(64) NOT NULL;
 
 
 # Keep an empty line at the end of this file for the db_updater to work properly
