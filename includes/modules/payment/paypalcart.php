@@ -297,7 +297,11 @@ class paypalcart extends PayPalPayment {
   
 
   function before_process() {
-    if (isset($_SESSION['payment']) && $_SESSION['payment'] == $this->code) {
+    if (isset($_SESSION['payment']) 
+        && $_SESSION['payment'] == $this->code
+        && !isset($_SESSION['paypal']['process'])
+        )
+    {
       if (isset($_SESSION['paypal']['paymentId'])) {
         if ($_POST['comments_added'] != '') {
           $_SESSION['comments'] = xtc_db_prepare_input($_POST['comments']);
@@ -326,7 +330,11 @@ class paypalcart extends PayPalPayment {
           xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, xtc_get_all_get_params(array('conditions_message')).'conditions=true&conditions_message='.implode(',', $error_mess), 'SSL', true, false));
         }
       }
+    } elseif (isset($_SESSION['paypal']['process'])) {
+      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
     }
+    
+    $_SESSION['paypal']['process'] = true;
   }
 
 
