@@ -181,7 +181,7 @@ CREATE TABLE banners (
   banners_id INT(11) NOT NULL AUTO_INCREMENT,
   banners_title VARCHAR(64) NOT NULL,
   banners_url VARCHAR(255) NOT NULL,
-  banners_image VARCHAR(64) NOT NULL,
+  banners_image VARCHAR(255) NOT NULL,
   banners_group VARCHAR(10) NOT NULL,
   banners_html_text TEXT,
   languages_id INT(11) NOT NULL,
@@ -242,7 +242,7 @@ CREATE TABLE carriers (
 DROP TABLE IF EXISTS categories;
 CREATE TABLE categories (
   categories_id INT(11) NOT NULL AUTO_INCREMENT,
-  categories_image VARCHAR(64),
+  categories_image VARCHAR(255),
   parent_id INT DEFAULT 0 NOT NULL,
   categories_status INT(1) NOT NULL,
   categories_template VARCHAR(64),
@@ -626,7 +626,7 @@ DROP TABLE IF EXISTS manufacturers;
 CREATE TABLE manufacturers (
   manufacturers_id INT(11) NOT NULL AUTO_INCREMENT,
   manufacturers_name VARCHAR(64) NOT NULL,
-  manufacturers_image VARCHAR(64),
+  manufacturers_image VARCHAR(255),
   date_added DATETIME NULL,
   last_modified DATETIME NULL,
   PRIMARY KEY (manufacturers_id),
@@ -948,7 +948,7 @@ CREATE TABLE products (
   group_permission_3 TINYINT(1) NOT NULL,
   group_permission_4 TINYINT(1) NOT NULL,
   products_sort INT(4) NOT NULL DEFAULT 0,
-  products_image VARCHAR(254) NOT NULL,
+  products_image VARCHAR(255) NOT NULL,
   products_price DECIMAL(15,4) NOT NULL,
   products_discount_allowed DECIMAL(4,2) DEFAULT 0.00 NOT NULL,
   products_date_added DATETIME NOT NULL,
@@ -1053,7 +1053,7 @@ CREATE TABLE products_images (
   image_id INT(11) NOT NULL AUTO_INCREMENT,
   products_id INT(11) NOT NULL,
   image_nr SMALLINT(11) NOT NULL,
-  image_name VARCHAR(254) NOT NULL,
+  image_name VARCHAR(255) NOT NULL,
   PRIMARY KEY (image_id),
   KEY idx_products_id (products_id)
 );
@@ -1133,7 +1133,7 @@ CREATE TABLE products_tags_values (
   options_id int(11) NOT NULL,
   values_name varchar(128) NOT NULL,
   values_description text NOT NULL,
-  values_image varchar(128) NOT NULL,
+  values_image varchar(255) NOT NULL,
   values_content_group int(11) DEFAULT NULL,
   sort_order int(11) NOT NULL DEFAULT '0',
   languages_id int(11) NOT NULL,
@@ -1224,7 +1224,7 @@ CREATE TABLE shipping_status (
   shipping_status_id INT DEFAULT 0 NOT NULL,
   language_id INT(11) NOT NULL,
   shipping_status_name VARCHAR(32) NOT NULL,
-  shipping_status_image VARCHAR(32) NOT NULL,
+  shipping_status_image VARCHAR(64) NOT NULL,
   sort_order INT(11) DEFAULT 0 NOT NULL,
   PRIMARY KEY (shipping_status_id, language_id),
   KEY idx_shipping_status_name (shipping_status_name)
