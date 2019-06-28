@@ -107,17 +107,16 @@ if ($order->info['payment_method'] == 'paypallink'
 
 // Order History
 $history_block = '';
-$statuses_query = xtc_db_query("-- /account_history_info.php
-                                SELECT os.orders_status_name,
+$statuses_query = xtc_db_query("SELECT os.orders_status_name,
                                        osh.date_added,
                                        osh.comments,
                                        osh.comments_sent
-                                FROM ".TABLE_ORDERS_STATUS." os,
-                                     ".TABLE_ORDERS_STATUS_HISTORY." osh
+                                FROM ".TABLE_ORDERS_STATUS_HISTORY." osh
+                                JOIN ".TABLE_ORDERS_STATUS." os
+                                     ON osh.orders_status_id = os.orders_status_id
+                                        AND os.language_id = '".(int) $_SESSION['languages_id']."'
                                 WHERE osh.orders_id = '".$order->info['order_id']."'
-                                  AND osh.customer_notified = 1
-                                  AND osh.orders_status_id = os.orders_status_id
-                                  AND os.language_id = '".(int) $_SESSION['languages_id']."'
+                                  AND (osh.customer_notified = 1 OR osh.orders_status_id = '".$order->info['orders_status_id']."')
                                 ORDER BY osh.date_added");
 while ($statuses = xtc_db_fetch_array($statuses_query)) {
   $history_block .= xtc_date_short($statuses['date_added']). '&nbsp;<strong>' .$statuses['orders_status_name']. '</strong>&nbsp;' . (empty ($statuses['comments']) || empty($statuses['comments_sent']) ? '&nbsp;' : nl2br(encode_htmlspecialchars($statuses['comments']))) .'<br />';
