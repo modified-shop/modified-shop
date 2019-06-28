@@ -186,8 +186,12 @@ class PayPalPayment extends PayPalPaymentBase {
                        ->setPostalCode($this->encode_utf8($order->delivery['postcode']))
                        ->setState($this->encode_utf8(((isset($order->delivery['state']) && $order->delivery['state'] != '') ? xtc_get_zone_code($order->delivery['country_id'], $order->delivery['zone_id'], $order->delivery['state']) : '')));
 
+      if ($order->delivery['company'] != '') {
+        $shipping_address->setLine2($this->encode_utf8($order->delivery['company']));
+      }
+
       if ($order->delivery['suburb'] != '') {
-        $shipping_address->setLine2($this->encode_utf8($order->delivery['suburb']));
+        $shipping_address->setLine1($this->encode_utf8($order->delivery['street_address'].', '.$order->delivery['suburb']));
       }
       
       $subtotal = 0;
@@ -295,10 +299,14 @@ class PayPalPayment extends PayPalPaymentBase {
                       ->setPostalCode($this->encode_utf8($order->billing['postcode']))
                       ->setCountryCode($this->encode_utf8($order->billing['country']['iso_code_2']));
 
-      if ($order->billing['suburb'] != '') {
-        $payment_address->setLine2($this->encode_utf8($order->billing['suburb']));
+      if ($order->billing['company'] != '') {
+        $payment_address->setLine2($this->encode_utf8($order->billing['company']));
       }
-      
+
+      if ($order->billing['suburb'] != '') {
+        $payment_address->setLine1($this->encode_utf8($order->billing['street_address'].', '.$order->billing['suburb']));
+      }
+
       $payer_info->setBillingAddress($payment_address)
                  ->setShippingAddress($shipping_address)
                  ->setEmail($this->encode_utf8($order->customer['email_address']))
@@ -436,8 +444,12 @@ class PayPalPayment extends PayPalPaymentBase {
                     ->setPostalCode($this->encode_utf8($order->billing['postcode']))
                     ->setCountryCode($this->encode_utf8($order->billing['country']['iso_code_2']));
 
+    if ($order->billing['company'] != '') {
+      $payment_address->setLine2($this->encode_utf8($order->billing['company']));
+    }
+
     if ($order->billing['suburb'] != '') {
-      $payment_address->setLine2($this->encode_utf8($order->billing['suburb']));
+      $payment_address->setLine1($this->encode_utf8($order->billing['street_address'].', '.$order->billing['suburb']));
     }
 
     $patch_payment = new Patch();
@@ -460,10 +472,14 @@ class PayPalPayment extends PayPalPaymentBase {
                      ->setPostalCode($this->encode_utf8($order->delivery['postcode']))
                      ->setState($this->encode_utf8(((isset($order->delivery['state']) && $order->delivery['state'] != '') ? xtc_get_zone_code($order->delivery['country_id'], $order->delivery['zone_id'], $order->delivery['state']) : '')));
 
-    if ($order->delivery['suburb'] != '') {
-      $shipping_address->setLine2($this->encode_utf8($order->delivery['suburb']));
+    if ($order->delivery['company'] != '') {
+      $shipping_address->setLine2($this->encode_utf8($order->delivery['company']));
     }
 
+    if ($order->delivery['suburb'] != '') {
+      $shipping_address->setLine1($this->encode_utf8($order->delivery['street_address'].', '.$order->delivery['suburb']));
+    }
+    
     $patch_shipping = new Patch();
     $patch_shipping->setOp('add')
                    ->setPath('/transactions/0/item_list/shipping_address')
@@ -734,8 +750,12 @@ class PayPalPayment extends PayPalPaymentBase {
                     ->setPostalCode($this->encode_utf8($order->billing['postcode']))
                     ->setCountryCode($this->encode_utf8(((isset($order->billing['country_iso_2'])) ? $order->billing['country_iso_2'] : $order->billing['country']['iso_code_2'])));
 
+    if ($order->billing['company'] != '') {
+      $payment_address->setLine2($this->encode_utf8($order->billing['company']));
+    }
+
     if ($order->billing['suburb'] != '') {
-      $payment_address->setLine2($this->encode_utf8($order->billing['suburb']));
+      $payment_address->setLine1($this->encode_utf8($order->billing['street_address'].', '.$order->billing['suburb']));
     }
 
     $patch_payment = new Patch();
@@ -757,8 +777,12 @@ class PayPalPayment extends PayPalPaymentBase {
                      ->setPostalCode($this->encode_utf8($order->delivery['postcode']))
                      ->setState($this->encode_utf8(((isset($order->delivery['state']) && $order->delivery['state'] != '') ? xtc_get_zone_code($order->delivery['country_id'], $order->delivery['zone_id'], $order->delivery['state']) : '')));
 
+    if ($order->delivery['company'] != '') {
+      $shipping_address->setLine2($this->encode_utf8($order->delivery['company']));
+    }
+
     if ($order->delivery['suburb'] != '') {
-      $shipping_address->setLine2($this->encode_utf8($order->delivery['suburb']));
+      $shipping_address->setLine1($this->encode_utf8($order->delivery['street_address'].', '.$order->delivery['suburb']));
     }
 
     $patch_shipping = new Patch();
