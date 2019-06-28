@@ -108,6 +108,8 @@ if ($order->info['payment_method'] == 'paypallink'
 // Order History
 $history_block = '';
 $statuses_query = xtc_db_query("SELECT os.orders_status_name,
+                                       osh.orders_status_id,
+                                       osh.customer_notified,
                                        osh.date_added,
                                        osh.comments,
                                        osh.comments_sent
@@ -116,10 +118,11 @@ $statuses_query = xtc_db_query("SELECT os.orders_status_name,
                                      ON osh.orders_status_id = os.orders_status_id
                                         AND os.language_id = '".(int) $_SESSION['languages_id']."'
                                 WHERE osh.orders_id = '".$order->info['order_id']."'
-                                  AND (osh.customer_notified = 1 OR osh.orders_status_id = '".$order->info['orders_status_id']."')
-                                ORDER BY osh.date_added");
+                             ORDER BY osh.date_added");
 while ($statuses = xtc_db_fetch_array($statuses_query)) {
-  $history_block .= xtc_date_short($statuses['date_added']). '&nbsp;<strong>' .$statuses['orders_status_name']. '</strong>&nbsp;' . (empty ($statuses['comments']) || empty($statuses['comments_sent']) ? '&nbsp;' : nl2br(encode_htmlspecialchars($statuses['comments']))) .'<br />';
+  if ($statuses['customer_notified'] == '1' || $statuses['orders_status_id'] == $order->info['orders_status_id']) {
+    $history_block .= xtc_date_short($statuses['date_added']). '&nbsp;<strong>' .$statuses['orders_status_name']. '</strong>&nbsp;' . (empty ($statuses['comments']) || empty($statuses['comments_sent']) ? '&nbsp;' : nl2br(encode_htmlspecialchars($statuses['comments']))) .'<br />';
+  }
 }
 $smarty->assign('HISTORY_BLOCK', $history_block);
 
