@@ -524,7 +524,7 @@
           }
           $static_payment_array[$payment_method][(int)$order_id] = strip_tags($payment_name);
         }
-        return $static_payment_array[$payment_method][(int)$order_id];
+        return strip_tags($static_payment_array[$payment_method][(int)$order_id]);
       } else {
         return false;
       }
