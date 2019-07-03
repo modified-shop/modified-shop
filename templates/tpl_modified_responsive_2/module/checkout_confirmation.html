@@ -30,26 +30,28 @@
     {/if}
   </div>
 </div>
-<div class="twoColums last">
-  <div class="highlightbox plainright">
-    {if $REVOCATION}
-      {$TEXT_AGB_CHECKOUT}
-    {/if}  
-  </div>
-  {if isset($EXPRESS)}
-  <div class="highlightbox plainright">
-    <h4>{#heading_checkout_express#}</h4>
-    {if isset($success_message)}
-      <div class="infomessage">{$success_message}</div>
-    {else}
-      {$FORM_ACTION}
-      <span class="button_right_checkout_small">{$BUTTON_SUBMIT}</span>
-      {#text_express_checkout_information#} {if isset($EXPRESS_LINK)}{$EXPRESS_LINK}{/if}
-      {$FORM_END}
+{if $REVOCATION || isset($EXPRESS)}
+  <div class="twoColums last">
+    <div class="highlightbox plainright">
+      {if $REVOCATION}
+        {$TEXT_AGB_CHECKOUT}
+      {/if}
+    </div>
+    {if isset($EXPRESS)}
+    <div class="highlightbox plainright">
+      <h4>{#heading_checkout_express#}</h4>
+      {if isset($success_message)}
+        <div class="infomessage">{$success_message}</div>
+      {else}
+        {$FORM_ACTION}
+        <span class="button_right_checkout_small">{$BUTTON_SUBMIT}</span>
+        {#text_express_checkout_information#} {if isset($EXPRESS_LINK)}{$EXPRESS_LINK}{/if}
+        {$FORM_END}
+      {/if}
+    </div>
     {/if}
   </div>
-  {/if}
-</div>
+{/if}
 <br class="clearfix" />  
 {if $DELIVERY_LABEL}
 <div class="twoColums">
