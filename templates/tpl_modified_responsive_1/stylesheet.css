@@ -1850,22 +1850,36 @@ a.color_more:hover {
   min-height:300px;
 }
 .lb_image {
-  margin: 0 0 10px 0;
+  padding: 0px;
   text-align: center;
   width: 100%;
-  height:160px;  
   position:relative;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  overflow:hidden;
+  margin: 0 0 10px 0;
+}
+.lb_image:before {
+  content: "";
+  display:block;
+  padding-top: 65%;
 }
 .lb_image img {
-  position:absolute;
   margin: auto;
-	top:0px;
-	bottom:0px;
-	left:0px;
-	right:0px;  
-  background-color: #FFFFFF;
-  max-height:160px;
-  max-width:200px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  max-width: 20%;
+  width: auto !important;
+  max-height: 20%;
+  -webkit-transform: scale(5.0);
+  -moz-transform: scale(5.0);
+  -ms-transform: scale(5.0);
+  -o-transform: scale(5.0);
+  transform: scale(5.0);
 }
 .lb_title {
   border-bottom: 1px dotted #ddd;
@@ -2021,14 +2035,32 @@ a.color_more:hover {
   float:left;
   text-align: center;
   width: 160px;
-  height:160px;  
   overflow:hidden;
+  position:relative;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.lr_image:before {
+  content: "";
+  display:block;
+  padding-top: 100%;
 }
 .lr_image img {
-  background-color: #FFFFFF;
-  margin: 0 auto;
-  max-height:160px;
-  max-width:160px;
+  margin: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  max-width: 20%;
+  width: auto !important;
+  max-height: 20%;
+  -webkit-transform: scale(5.0);
+  -moz-transform: scale(5.0);
+  -ms-transform: scale(5.0);
+  -o-transform: scale(5.0);
+  transform: scale(5.0);
 }
 .lr_content {
   float:right;
@@ -2814,21 +2846,35 @@ ul.ord_total_list li {
 .pd_big_image {
   position:relative;
   width:100%;
-  min-height:100px;
   margin: 0px 0px 0px 0px;
   border:1px solid #eee;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
   text-align:center;
+  overflow:hidden;
+}
+.pd_big_image:before {
+  content: '';
+  padding-top: 100%;
+  display: block;
 }
 .pd_big_image img {
-  margin: 0px auto;
-  width:100%;
-  max-width:240px;
-  height:auto;
-  vertical-align:bottom;
-}  
+  margin: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  max-width: 25%;
+  max-height: 25%;
+  font-size: 0;
+  -webkit-transform: scale(4.0);
+  -moz-transform: scale(4.0);
+  -ms-transform: scale(4.0);
+  -o-transform: scale(4.0);
+  transform: scale(4.0);
+}
 .pd_fsk18 {
   background: transparent url(img/fsk18.png) no-repeat top center;
   height: 44px;
