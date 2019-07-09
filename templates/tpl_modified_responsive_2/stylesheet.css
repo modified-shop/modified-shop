@@ -2862,20 +2862,34 @@ ul.ord_total_list li {
 .pd_big_image {
   position:relative;
   width:100%;
-  min-height:100px;
   margin: 0px 0px 0px 0px;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
   text-align:center;
+  overflow:hidden;
+}
+.pd_big_image:before {
+  content: '';
+  padding-top: 100%;
+  display: block;
 }
 .pd_big_image img {
-  margin: 0px auto;
-  width:100%;
-  max-width:240px;
-  height:auto;
-  vertical-align:bottom;
-}  
+  margin: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  max-width: 25%;
+  max-height: 25%;
+  font-size: 0;
+  -webkit-transform: scale(4.0);
+  -moz-transform: scale(4.0);
+  -ms-transform: scale(4.0);
+  -o-transform: scale(4.0);
+  transform: scale(4.0);
+}
 .pd_fsk18 {
   background: transparent url(img/fsk18.png) no-repeat top center;
   height: 44px;
