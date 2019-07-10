@@ -143,6 +143,7 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
     if (xtc_db_num_rows($special_expires_date_query, true) > 0) {
       $sDate = xtc_db_fetch_array($special_expires_date_query, true);
       $info_smarty->assign('PRODUCTS_EXPIRES', $sDate['expires_date'] != '0000-00-00 00:00:00' ? xtc_date_short($sDate['expires_date']) : '');
+      $info_smarty->assign('PRODUCTS_EXPIRES_C', $sDate['expires_date'] != '0000-00-00 00:00:00' ? date('c', strtotime($sDate['expires_date'])) : '');
     }
   }
 
