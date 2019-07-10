@@ -33,35 +33,35 @@ if ($_SESSION['customers_status']['customers_status_read_reviews'] == '0') {
   xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
 }
 
-$reviews_query = xtc_db_query("SELECT r.*,
-                                      rd.reviews_text,
-                                      p.products_id,
-                                      p.products_image,
-                                      pd.products_name
-                                 FROM ".TABLE_REVIEWS." r
-                                 JOIN ".TABLE_REVIEWS_DESCRIPTION." rd
-                                      ON r.reviews_id = rd.reviews_id
-                                         AND rd.languages_id = '".(int)$_SESSION['languages_id']."'
-                                 JOIN ".TABLE_PRODUCTS." p 
-                                      ON r.products_id = p.products_id
-                                 JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd 
-                                      ON p.products_id = pd.products_id 
-                                         AND pd.language_id = '".(int) $_SESSION['languages_id']."'
-                                WHERE r.reviews_id = '".(int) $_GET['reviews_id']."'
-                                  AND r.products_id = '".(int) $_GET['products_id']."'
-                                  AND p.products_status = '1'
-                                  AND r.reviews_status = '1'
-                                      ".PRODUCTS_CONDITIONS_P);
+$product_reviews_query = xtc_db_query("SELECT r.*,
+                                              rd.reviews_text,
+                                              p.products_id,
+                                              p.products_image,
+                                              pd.products_name
+                                         FROM ".TABLE_REVIEWS." r
+                                         JOIN ".TABLE_REVIEWS_DESCRIPTION." rd
+                                              ON r.reviews_id = rd.reviews_id
+                                                 AND rd.languages_id = '".(int)$_SESSION['languages_id']."'
+                                         JOIN ".TABLE_PRODUCTS." p 
+                                              ON r.products_id = p.products_id
+                                         JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd 
+                                              ON p.products_id = pd.products_id 
+                                                 AND pd.language_id = '".(int) $_SESSION['languages_id']."'
+                                        WHERE r.reviews_id = '".(int) $_GET['reviews_id']."'
+                                          AND r.products_id = '".(int) $_GET['products_id']."'
+                                          AND p.products_status = '1'
+                                          AND r.reviews_status = '1'
+                                              ".PRODUCTS_CONDITIONS_P);
 
-if (xtc_db_num_rows($reviews_query) < 1) {
+if (xtc_db_num_rows($product_reviews_query) < 1) {
 	xtc_redirect(xtc_href_link(FILENAME_REVIEWS, '', 'NONSSL'));
 }
 
-$reviews = xtc_db_fetch_array($reviews_query);
+$product_reviews = xtc_db_fetch_array($product_reviews_query);
 
 xtc_db_query("UPDATE ".TABLE_REVIEWS." 
                  SET reviews_read = reviews_read+1 
-               WHERE reviews_id = '".$reviews['reviews_id']."'");
+               WHERE reviews_id = '".$product_reviews['reviews_id']."'");
 
 // include boxes
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
@@ -70,17 +70,17 @@ $breadcrumb->add(NAVBAR_TITLE_PRODUCT_REVIEWS, xtc_href_link(FILENAME_PRODUCT_RE
 
 require (DIR_WS_INCLUDES.'header.php');
 
-$smarty->assign('AUTHOR', $reviews['customers_name']);
-$smarty->assign('DATE', xtc_date_long($reviews['date_added']));
-$smarty->assign('REVIEWS_TEXT', nl2br(xtc_break_string(encode_htmlspecialchars($reviews['reviews_text']), 60, '-<br />')));
-$smarty->assign('RATING', xtc_image('templates/'.CURRENT_TEMPLATE.'/img/stars_'.$reviews['reviews_rating'].'.gif', sprintf(TEXT_OF_5_STARS, $reviews['reviews_rating'])));
-$smarty->assign('RATING_VOTE', $reviews['reviews_rating']);
-$smarty->assign('PRODUCTS_NAME', $reviews['products_name']);
-$smarty->assign('PRODUCTS_LINK', xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$reviews['products_id']));
-$smarty->assign('PRODUCTS_IMAGE', $product->productImage($reviews['products_image'], 'info'));
+$smarty->assign('AUTHOR', $product_reviews['customers_name']);
+$smarty->assign('DATE', xtc_date_long($product_reviews['date_added']));
+$smarty->assign('REVIEWS_TEXT', nl2br(xtc_break_string(encode_htmlspecialchars($product_reviews['reviews_text']), 60, '-<br />')));
+$smarty->assign('RATING', xtc_image('templates/'.CURRENT_TEMPLATE.'/img/stars_'.$product_reviews['reviews_rating'].'.gif', sprintf(TEXT_OF_5_STARS, $product_reviews['reviews_rating'])));
+$smarty->assign('RATING_VOTE', $product_reviews['reviews_rating']);
+$smarty->assign('PRODUCTS_NAME', $product_reviews['products_name']);
+$smarty->assign('PRODUCTS_LINK', xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$product_reviews['products_id']));
+$smarty->assign('PRODUCTS_IMAGE', $product->productImage($product_reviews['products_image'], 'info'));
 $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(FILENAME_PRODUCT_REVIEWS).'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
-$smarty->assign('BUTTON_BUY_NOW', '<a href="'.xtc_href_link(FILENAME_DEFAULT, 'action=buy_now&BUYproducts_id='.$reviews['products_id']).'">'.xtc_image_button('button_in_cart.gif', IMAGE_BUTTON_IN_CART).'</a>');
-$smarty->assign('PRODUCTS_BUTTON_DETAILS', '<a href="'.xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$reviews['products_id']).'">'.xtc_image_button('button_product_more.gif', TEXT_INFO_DETAILS).'</a>');
+$smarty->assign('BUTTON_BUY_NOW', '<a href="'.xtc_href_link(FILENAME_DEFAULT, 'action=buy_now&BUYproducts_id='.$product_reviews['products_id']).'">'.xtc_image_button('button_in_cart.gif', IMAGE_BUTTON_IN_CART).'</a>');
+$smarty->assign('PRODUCTS_BUTTON_DETAILS', '<a href="'.xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$product_reviews['products_id']).'">'.xtc_image_button('button_product_more.gif', TEXT_INFO_DETAILS).'</a>');
 
 $smarty->assign('language', $_SESSION['language']);
 
@@ -92,7 +92,7 @@ $smarty->assign('language', $_SESSION['language']);
 	$smarty->caching = 1;
 	$smarty->cache_lifetime = CACHE_LIFETIME;
 	$smarty->cache_modified_check = CACHE_CHECK;
-	$cache_id = md5($_SESSION['language'].$reviews['reviews_id']);
+	$cache_id = md5($_SESSION['language'].$product_reviews['reviews_id']);
 	$main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/product_reviews_info.html', $cache_id);
 }
 
