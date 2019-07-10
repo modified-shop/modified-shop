@@ -30,9 +30,14 @@ require ('includes/application_top.php');
 // create smarty elements
 $smarty = new Smarty;
 
+// include boxes
+require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
+
 // include needed functions
 require_once (DIR_FS_INC.'xtc_array_to_string.inc.php');
 require_once (DIR_FS_INC.'xtc_recalculate_price.inc.php');
+
+$breadcrumb->add(NAVBAR_TITLE_SHOPPING_CART, xtc_href_link(FILENAME_SHOPPING_CART, '', $request_type));
 
 if (ACTIVATE_GIFT_SYSTEM == 'true') {
   include (DIR_WS_MODULES.'gift_cart.php');
@@ -134,11 +139,6 @@ if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS 
     }
   }
 }
-
-// include boxes
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
-
-$breadcrumb->add(NAVBAR_TITLE_SHOPPING_CART, xtc_href_link(FILENAME_SHOPPING_CART, '', $request_type));
 
 require (DIR_WS_INCLUDES.'header.php');
 
