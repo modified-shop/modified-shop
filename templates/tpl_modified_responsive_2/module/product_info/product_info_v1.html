@@ -77,7 +77,7 @@
       <div class="pd_summarybox" itemprop="offers" itemscope itemtype="http://schema.org/Offer"> 
         <meta itemprop="url" content="{$PRODUCTS_LINK}" />
         <meta itemprop="priceCurrency" content="{$smarty.session.currency}" />
-        {if $PRODUCTS_EXPIRES_ISO}<meta itemprop="priceValidUntil" content="{$PRODUCTS_EXPIRES_ISO}" />{/if}
+        {if $PRODUCTS_EXPIRES_C}<meta itemprop="priceValidUntil" content="{$PRODUCTS_EXPIRES_C}" />{/if}
         {if $PRODUCTS_QUANTITY <= 0 && $smarty.const.STOCK_CHECK == 'true'}<meta itemprop="availability" content="http://schema.org/OutOfStock" />{else}<meta itemprop="availability" content="http://schema.org/InStock" />{/if}
         {if $PRODUCTS_MANUFACTURERS_MODEL != ''}<meta itemprop="mpn" content="{$PRODUCTS_MANUFACTURERS_MODEL}" />{/if}
         <meta itemprop="itemCondition" content="http://schema.org/NewCondition" />
