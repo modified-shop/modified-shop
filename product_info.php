@@ -40,10 +40,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'get_download') {
 	xtc_get_download((int)$_GET['cID']); 
 }
 
-include (DIR_WS_MODULES.'product_info.php');
-
 // include boxes
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
+
+include (DIR_WS_MODULES.'product_info.php');
 
 require (DIR_WS_INCLUDES.'header.php');
 
