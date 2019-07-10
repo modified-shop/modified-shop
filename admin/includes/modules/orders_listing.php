@@ -101,7 +101,7 @@
                 <?php
                 $sort = " ORDER BY o.date_purchased DESC";
                 $filter = isset($_GET['cgroup']) && $_GET['cgroup'] != '' ? " AND o.customers_status = '" . (int)$_GET['cgroup'] ."'": '';
-                $filter .=  isset($_GET['payment']) && $_GET['payment'] != '' ? " AND o.payment_class = '" . $_GET['payment'] ."'": '';               
+                $filter .=  isset($_GET['payment']) && $_GET['payment'] != '' ? " AND o.payment_class = '" . xtc_db_input($_GET['payment']) ."'": '';               
                 if (isset($_GET['cID'])) {
                   $cID = (int) $_GET['cID'];
                   $orders_query_raw = "-- /admin/orders.php
