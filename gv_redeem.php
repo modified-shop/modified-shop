@@ -31,9 +31,6 @@ require ('includes/application_top.php');
 // smarty
 $smarty = new Smarty;
 
-// include boxes
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
-
 if (ACTIVATE_GIFT_SYSTEM != 'true') {
   xtc_redirect(FILENAME_DEFAULT);
 }
@@ -82,6 +79,9 @@ if ($error === false && isset($_SESSION['customer_id'])) {
 	xtc_gv_account_update($_SESSION['customer_id'], $_SESSION['gv_id']);
 	unset($_SESSION['gv_id']);
 }
+
+// include boxes
+require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 $breadcrumb->add(NAVBAR_GV_REDEEM);
 

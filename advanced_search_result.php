@@ -27,9 +27,6 @@ unset($_GET['f']);
 // create smarty elements
 $smarty = new Smarty;
 
-// include boxes
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
-
 // include needed functions
 require_once (DIR_FS_INC.'xtc_parse_search_string.inc.php');
 
@@ -68,6 +65,9 @@ if ($errorno) {
   xtc_redirect(xtc_href_link(FILENAME_ADVANCED_SEARCH, xtc_get_all_get_params(array('errorno')).'errorno='.$errorno));
 
 } else {
+
+  // include boxes
+  require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
   // build breadcrumb
   $breadcrumb->add(NAVBAR_TITLE1_ADVANCED_SEARCH, xtc_href_link(FILENAME_ADVANCED_SEARCH));

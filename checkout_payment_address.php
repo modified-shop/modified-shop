@@ -43,9 +43,6 @@ if ($_SESSION['cart']->count_contents() < 1) {
   xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART));
 }
 
-// include boxes
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
-
 $error = false;
 $process = false;
 if (isset ($_POST['action']) && ($_POST['action'] == 'submit')) {
@@ -101,6 +98,9 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'submit')) {
 if (!isset ($_SESSION['billto'])) {
   $_SESSION['billto'] = $_SESSION['customer_default_address_id'];
 }
+
+// include boxes
+require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 $breadcrumb->add(NAVBAR_TITLE_1_PAYMENT_ADDRESS, xtc_href_link($link_checkout_payment, $params, 'SSL'));
 $breadcrumb->add(NAVBAR_TITLE_2_PAYMENT_ADDRESS, xtc_href_link(FILENAME_CHECKOUT_PAYMENT_ADDRESS, $params, 'SSL'));

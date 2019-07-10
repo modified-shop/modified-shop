@@ -37,9 +37,6 @@ $mod_captcha = $_mod_captcha_class::getInstance();
 // create smarty elements
 $smarty = new Smarty;
 
-// include boxes
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
-
 $review_error = false;
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/product_reviews_write/','php') as $file) require ($file);
 
@@ -118,6 +115,9 @@ if (isset ($_GET['action']) && $_GET['action'] == 'process' && $review_error ===
     }
   }
 }
+
+// include boxes
+require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 $breadcrumb->add(NAVBAR_TITLE_REVIEWS_WRITE, xtc_href_link(FILENAME_PRODUCT_REVIEWS, xtc_get_all_get_params()));
 

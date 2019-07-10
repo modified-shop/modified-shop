@@ -7,7 +7,7 @@
  * support@k-30.de | www.k-30.de
  * ----------------------------------------------------
  *
- * $Id: checkout_masterpayment.php 19.06.2013 09:12 $
+ * $Id$
  *	
  *	The Modul based on:
  *  XT-Commerce - community made shopping
@@ -20,10 +20,9 @@
  ******************************************************/
 
 include ('includes/application_top.php');
+
 // create smarty elements
 $smarty = new Smarty;
-// include boxes
-require (DIR_FS_CATALOG . 'templates/' . CURRENT_TEMPLATE . '/source/boxes.php');
 
 $action = $_GET['action'];
 
@@ -57,6 +56,9 @@ if($action == '' or !isset($action) or $action != 'response')
 		xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'NONSSL'));		
 	}
 }
+
+// include boxes
+require (DIR_FS_CATALOG . 'templates/' . CURRENT_TEMPLATE . '/source/boxes.php');
 
 $breadcrumb->add(NAVBAR_TITLE_1_CHECKOUT_PAYMENT, xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
 $breadcrumb->add(NAVBAR_TITLE_2_CHECKOUT_PAYMENT, xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));

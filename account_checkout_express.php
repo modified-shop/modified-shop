@@ -15,9 +15,6 @@ include ('includes/application_top.php');
 // create smarty elements
 $smarty = new Smarty;
 
-// include boxes
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
-
 // include needed functions
 require_once (DIR_FS_INC.'xtc_address_format.inc.php');
 require_once (DIR_FS_INC.'xtc_get_address_format_id.inc.php');
@@ -274,6 +271,8 @@ if (isset($_POST['action']) && $_POST['action'] == 'process' && $error === false
   xtc_redirect(xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
 }
 
+// include boxes
+require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 $breadcrumb->add(NAVBAR_TITLE_1_ACCOUNT_EDIT, xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
 $breadcrumb->add(NAVBAR_TITLE_ACCOUNT_CHECKOUT_EXPRESS_EDIT, xtc_href_link(FILENAME_ACCOUNT_CHECKOUT_EXPRESS, '', 'SSL'));

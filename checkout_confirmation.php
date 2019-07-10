@@ -41,9 +41,6 @@ require_once (DIR_FS_INC . 'xtc_display_tax_value.inc.php');
 
 require (DIR_WS_INCLUDES.'checkout_requirements.php');
 
-// include boxes
-require (DIR_FS_CATALOG . 'templates/' . CURRENT_TEMPLATE . '/source/boxes.php');
-
 if (isset($_POST['payment'])) {
   $_SESSION['payment'] = xtc_db_prepare_input($_POST['payment']);
 }
@@ -128,6 +125,9 @@ if ((is_array($payment_modules->modules)
   ) {
   xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode(ERROR_NO_PAYMENT_MODULE_SELECTED), 'SSL'));
 }
+
+// include boxes
+require (DIR_FS_CATALOG . 'templates/' . CURRENT_TEMPLATE . '/source/boxes.php');
 
 if (is_array($payment_modules->modules)) {
   $payment_modules->pre_confirmation_check();

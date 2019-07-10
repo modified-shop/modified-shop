@@ -45,9 +45,6 @@ if (!isset ($_SESSION['customer_id'])) {
   xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART), 'NONSSL');
 }
 
-// include boxes
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
-
 $orders_query = xtc_db_query("SELECT orders_id,
                                      orders_status,
                                      payment_class
@@ -66,6 +63,9 @@ if (xtc_db_num_rows($orders_query) < 1) {
   $order_status = $orders['orders_status'];
   $payment_class = $orders['payment_class'];
 }
+
+// include boxes
+require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 $_SESSION['customer_gid'] = $_SESSION['customer_id'];
 

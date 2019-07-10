@@ -58,9 +58,6 @@ if ($account_options == 'guest') {
 // create smarty elements
 $smarty = new Smarty;
 
-// include boxes
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
-
 // include needed functions
 require_once (DIR_FS_INC.'xtc_get_country_list.inc.php');
 require_once (DIR_FS_INC.'xtc_validate_email.inc.php');
@@ -527,7 +524,11 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
   }
 }
 
+// include boxes
+require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
+
 $breadcrumb->add(NAVBAR_TITLE_CREATE_ACCOUNT, xtc_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL'));
+
 require (DIR_WS_INCLUDES.'header.php');
 
 if ($messageStack->size('create_account') > 0) {

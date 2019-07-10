@@ -26,9 +26,6 @@ $smarty = new Smarty;
 
 require (DIR_WS_INCLUDES.'checkout_requirements.php');
 
-// include boxes
-require (DIR_FS_CATALOG . 'templates/' . CURRENT_TEMPLATE . '/source/boxes.php');
-
 // load selected payment module
 require_once (DIR_WS_CLASSES.'payment.php');
 $payment_modules = new payment($_SESSION['payment']);
@@ -48,6 +45,9 @@ $iframe_url = $payment_modules->iframeAction();
 if ($iframe_url == '') {
 	xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
 }
+
+// include boxes
+require (DIR_FS_CATALOG . 'templates/' . CURRENT_TEMPLATE . '/source/boxes.php');
 
 $breadcrumb->add(NAVBAR_TITLE_2_CHECKOUT_PAYMENT, xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
 

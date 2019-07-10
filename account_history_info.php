@@ -21,9 +21,6 @@ include ('includes/application_top.php');
 // create smarty elements
 $smarty = new Smarty;
 
-// include boxes
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
-
 // include needed functions
 require_once (DIR_FS_INC.'xtc_date_short.inc.php');
 require_once (DIR_FS_INC.'xtc_image_button.inc.php');
@@ -55,6 +52,9 @@ $customer_info = xtc_db_fetch_array($customer_info_query);
 if ($customer_info['customers_id'] != $_SESSION['customer_id']) { 
   xtc_redirect(xtc_href_link(FILENAME_ACCOUNT_HISTORY, '', 'SSL')); 
 }
+
+// include boxes
+require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 require (DIR_WS_CLASSES.'order.php');
 $order = new order((int)$_GET['order_id']);

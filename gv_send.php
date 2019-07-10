@@ -31,9 +31,6 @@ require ('includes/application_top.php');
 // smarty
 $smarty = new Smarty;
 
-// include boxes
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
-
 // include needed functions
 require_once (DIR_FS_INC.'xtc_validate_email.inc.php');
 
@@ -145,6 +142,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'process') {
 
   }
 }
+
+// include boxes
+require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 $breadcrumb->add(NAVBAR_GV_SEND);
 

@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: product_info.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -32,19 +32,6 @@ if (!isset($_GET['products_id']) && !isset($_GET['info']) && !isset($_GET['actio
   xtc_redirect(xtc_href_link(FILENAME_DEFAULT, '', 'NONSSL'));
 }
 
-/* web28 -2013-01-07 - comment out because cPath is allready set in includes/application_top.php or includes/modules/set_ids_by_url_parameters.php
-if (isset($_GET['products_id'])) {
-	$cat = xtc_db_query("SELECT categories_id FROM ".TABLE_PRODUCTS_TO_CATEGORIES." WHERE products_id='".(int) $_GET['products_id']."'");
-	$catData = xtc_db_fetch_array($cat);
-	require_once (DIR_FS_INC.'xtc_get_path.inc.php');
-	if ($catData['categories_id'])
-		$cPath = xtc_input_validation(xtc_get_path($catData['categories_id']), 'cPath', '');
-}
-*/
-
-// include boxes
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
-
 // include needed functions
 require_once (DIR_FS_INC.'xtc_get_download.inc.php');
 require_once (DIR_FS_INC.'xtc_date_long.inc.php');
@@ -54,6 +41,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'get_download') {
 }
 
 include (DIR_WS_MODULES.'product_info.php');
+
+// include boxes
+require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 require (DIR_WS_INCLUDES.'header.php');
 

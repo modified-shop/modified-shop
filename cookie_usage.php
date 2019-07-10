@@ -1,7 +1,7 @@
 <?php
 
 /* -----------------------------------------------------------------------------------------
-   $Id: cookie_usage.php 4221 2013-01-11 10:18:52Z gtb-modified $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -17,10 +17,11 @@
    ---------------------------------------------------------------------------------------*/
 
 include ('includes/application_top.php');
+
 $smarty = new Smarty;
+
 // include boxes
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
-
 
 $breadcrumb->add(NAVBAR_TITLE_COOKIE_USAGE, xtc_href_link(FILENAME_COOKIE_USAGE));
 

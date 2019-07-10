@@ -21,9 +21,6 @@ include ('includes/application_top.php');
 // create smarty
 $smarty = new Smarty;
 
-// include boxes
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
-
 // include needed functions
 require_once (DIR_FS_INC.'xtc_count_customer_orders.inc.php');
 require_once (DIR_FS_INC.'xtc_date_short.inc.php');
@@ -45,6 +42,9 @@ unset($_SESSION['billto']);
 unset($_SESSION['shipping']);
 unset($_SESSION['payment']);
 unset($_SESSION['delivery_zone']);
+
+// include boxes
+require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 $breadcrumb->add(NAVBAR_TITLE_ACCOUNT, xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
 require (DIR_WS_INCLUDES.'header.php');

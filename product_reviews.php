@@ -21,9 +21,6 @@ include ('includes/application_top.php');
 // create smarty
 $smarty = new Smarty;
 
-// include boxes
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
-
 // include needed functions
 require_once (DIR_FS_INC.'xtc_date_short.inc.php');
 require_once (DIR_FS_INC.'xtc_get_products_name.inc.php');
@@ -104,6 +101,9 @@ if ($reviews_split->number_of_rows > 0) {
   }
   xtc_redirect(xtc_href_link(FILENAME_REVIEWS, '', 'NONSSL'));
 }
+
+// include boxes
+require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 $breadcrumb->add(NAVBAR_TITLE_PRODUCT_REVIEWS, xtc_href_link(FILENAME_PRODUCT_REVIEWS, xtc_get_all_get_params()));
 

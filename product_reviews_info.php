@@ -21,9 +21,6 @@ include ('includes/application_top.php');
 // create smarty elements
 $smarty = new Smarty;
 
-// include boxes
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
-
 // include needed functions
 require_once (DIR_FS_INC.'xtc_break_string.inc.php');
 require_once (DIR_FS_INC.'xtc_date_long.inc.php');
@@ -66,7 +63,11 @@ xtc_db_query("UPDATE ".TABLE_REVIEWS."
                  SET reviews_read = reviews_read+1 
                WHERE reviews_id = '".$reviews['reviews_id']."'");
 
+// include boxes
+require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
+
 $breadcrumb->add(NAVBAR_TITLE_PRODUCT_REVIEWS, xtc_href_link(FILENAME_PRODUCT_REVIEWS, xtc_get_all_get_params(array ('reviews_id'))));
+
 require (DIR_WS_INCLUDES.'header.php');
 
 $smarty->assign('AUTHOR', $reviews['customers_name']);

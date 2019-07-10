@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: reviews.php 4346 2013-01-21 18:25:56Z Tomcraft1980 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -21,9 +21,6 @@ include ('includes/application_top.php');
 // create smarty
 $smarty = new Smarty;
 
-// include boxes
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
-
 // include needed functions
 require_once (DIR_FS_INC.'xtc_word_count.inc.php');
 require_once (DIR_FS_INC.'xtc_date_long.inc.php');
@@ -32,6 +29,9 @@ require_once (DIR_FS_INC.'xtc_date_short.inc.php');
 if ($_SESSION['customers_status']['customers_status_read_reviews'] == '0') {
   xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
 }
+
+// include boxes
+require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 $breadcrumb->add(NAVBAR_TITLE_REVIEWS, xtc_href_link(FILENAME_REVIEWS));
 

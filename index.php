@@ -1,7 +1,7 @@
 <?php
 
 /* -----------------------------------------------------------------------------------------
-   $Id: index.php 4173 2013-01-04 12:08:26Z web28 $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -27,10 +27,12 @@ require_once ('includes/application_top.php');
 // create smarty elements
 $smarty = new Smarty;
 
+include (DIR_WS_MODULES.'default.php');
+
 // include boxes
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
-include (DIR_WS_MODULES.'default.php');
-require (DIR_WS_INCLUDES.'header.php'); //web28 - 2013-01-04 - load header.php after default.php because of error handling status code
+
+require (DIR_WS_INCLUDES.'header.php');
 $smarty->assign('language', $_SESSION['language']);
 
 $smarty->caching = 0;

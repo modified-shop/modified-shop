@@ -54,9 +54,6 @@ if (isset($order) && $order->content_type == 'virtual' && !isset($_SESSION['payp
   xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
 }
 
-// include boxes
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
-
 $error = false;
 $process = false;
 if (isset ($_POST['action']) && ($_POST['action'] == 'submit')) {
@@ -105,6 +102,9 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'submit')) {
 if (!isset ($_SESSION['sendto'])) {
   $_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
 }
+
+// include boxes
+require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 $breadcrumb->add(NAVBAR_TITLE_1_CHECKOUT_SHIPPING_ADDRESS, xtc_href_link($link_checkout_shipping, $params, 'SSL'));
 $breadcrumb->add(NAVBAR_TITLE_2_CHECKOUT_SHIPPING_ADDRESS, xtc_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, $params, 'SSL'));
