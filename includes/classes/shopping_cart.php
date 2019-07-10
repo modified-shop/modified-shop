@@ -77,7 +77,8 @@ class shoppingCart {
       foreach ($this->contents as $products_id => $data) {
         if ($this->check_products_status_permission($products_id) === true) {
           $qty = $this->contents[$products_id]['qty'];
-          $product_query = xtc_db_query("SELECT products_id
+          $product_query = xtc_db_query("SELECT products_id,
+                                                customers_basket_quantity
                                            FROM ".$this->table_basket."
                                           WHERE customers_id = '".(int)$_SESSION['customer_id']."'
                                             AND products_id = '".xtc_db_input($products_id)."'");
@@ -105,6 +106,12 @@ class shoppingCart {
               }
             }
           } else {
+            /* use this code to add up saved qty
+            $product = xtc_db_fetch_array($product_query);
+
+            $qty += $product['customers_basket_quantity'];
+            $this->contents[$products_id] = array ('qty' => $qty);
+            */
             xtc_db_query("UPDATE ".$this->table_basket."
                              SET customers_basket_quantity = '".(int)$qty."'
                            WHERE customers_id = '".(int)$_SESSION['customer_id']."'
