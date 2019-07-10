@@ -134,7 +134,7 @@ if (xtc_not_null($action)) {
         }
       }
       foreach(auto_include(DIR_FS_CATALOG.'includes/extra/cart_actions/update_product_before_redirect/','php') as $file) require ($file);
-      if (isset($_POST['checkout_redirect'])) {
+      if (isset($_POST['checkout_redirect']) || (isset($_POST['checkout_redirect_x']) && isset($_POST['checkout_redirect_y']))) {
         xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
       }
       xtc_redirect(xtc_href_link($goto, xtc_get_all_get_params($parameters) . $info_message, 'NONSSL'));
