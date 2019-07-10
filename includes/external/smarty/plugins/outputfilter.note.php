@@ -31,6 +31,10 @@ function smarty_outputfilter_note($tpl_output, $smarty) {
   //web28 - making output W3C-Conform: replace ampersands, rest is covered by the modified shopstat_functions.php - preg_replace by cYbercOsmOnauT: don't replace &&
   $tpl_output = preg_replace("/((?<!&))&(?!(&|amp;|#[0-9]+;|[a-z0-9]+;))/i", "&amp;", $tpl_output);
 
+  if (TEMPLATE_HTML_ENGINE == 'html5') {
+    $tpl_output = str_replace(' type="text/javascript"', '', $tpl_output); 
+  }
+
   // compress HTML
   if (COMPRESS_HTML_OUTPUT == 'true') {
     require_once(DIR_FS_EXTERNAL.'compactor/compactor.php');
