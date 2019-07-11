@@ -19,7 +19,8 @@
   // The HTML href link wrapper function
   function xtc_href_link($page = '', $parameters = '', $connection = 'NONSSL', $add_session_id = true, $search_engine_safe = true, $urlencode = false, $admin = false) {
     global $request_type, $session_started, $http_domain, $https_domain, $truncate_session_id, $cookie;
-
+    static $session_id;
+        
     $parameters = str_replace('&amp;', '&', $parameters); // undo W3C-Conform link
 
     $link = $connection == 'SSL' && (ENABLE_SSL || $request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER;
@@ -61,17 +62,20 @@
         && (SESSION_FORCE_COOKIE_USE == 'False' && ($admin === true || $cookie === false))
        ) 
     {
-      if (defined('SID')
-          && constant('SID') != ''
-          && session_id() != '')
-      {
-        $link .= $separator . session_name() . '=' . session_id();
-      } elseif ( 
-        ( ( ($request_type == 'NONSSL') && ($connection == 'SSL') && (ENABLE_SSL == true) )
-          || ( ($request_type == 'SSL') && ($connection == 'NONSSL') )
-        ) && $http_domain != $https_domain) {
-        $link .= $separator . session_name() . '=' . session_id();
+      if (!isset($session_id)) {
+        if (defined('SID')
+            && constant('SID') != ''
+            && session_id() != '')
+        {
+          $session_id = $separator . session_name() . '=' . session_id();
+        } elseif ( 
+          ( ( ($request_type == 'NONSSL') && ($connection == 'SSL') && (ENABLE_SSL == true) )
+            || ( ($request_type == 'SSL') && ($connection == 'NONSSL') )
+          ) && $http_domain != $https_domain) {
+          $session_id = $separator . session_name() . '=' . session_id();
+        }
       }
+      $link .= $session_id;
     }
 
     // W3C-Conform
