@@ -67,15 +67,15 @@
             && constant('SID') != ''
             && session_id() != '')
         {
-          $session_id = $separator . session_name() . '=' . session_id();
+          $session_id = session_name() . '=' . session_id();
         } elseif ( 
           ( ( ($request_type == 'NONSSL') && ($connection == 'SSL') && (ENABLE_SSL == true) )
             || ( ($request_type == 'SSL') && ($connection == 'NONSSL') )
           ) && $http_domain != $https_domain) {
-          $session_id = $separator . session_name() . '=' . session_id();
+          $session_id = session_name() . '=' . session_id();
         }
       }
-      $link .= $session_id;
+      $link .= $separator . $session_id;
     }
 
     // W3C-Conform
