@@ -103,16 +103,19 @@ class eustandardtransfer {
   }
 
   function success() {
-    $confirmation = array(
+    global $last_order;
+    
+    $success = array(
       array ('title' => $this->title.': ', 
              'class' => $this->code,
              'fields' => array(array('title' => '',
-                                     'field' => $this->info_success
+                                     'field' => sprintf($this->info_success, $last_order)
                                      )
                                )
              )
     );
-    return $confirmation;
+    
+    return $success;
   }
 
   function output_error() {
