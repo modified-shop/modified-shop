@@ -25,6 +25,7 @@
           '<br />Account No.: ' . (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNUM') ? MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNUM : '') .
           '<br />IBAN: ' . (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCIBAN') ? MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCIBAN : '') .
           '<br />BIC/SWIFT: ' . (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKBIC') ? MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKBIC : '') .
+          '<br />Purpose of payment: %s'.
           '<br /><br />Your order will not be shipped until we receive your payment in the above account.<br />');
 
   if (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_SUCCESS') && MODULE_PAYMENT_EUSTANDARDTRANSFER_SUCCESS == 'True') {

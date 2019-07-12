@@ -96,7 +96,7 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
   // PAYMENT MODUL TEXTS
   $payment_method_array = array('eustandardtransfer','moneyorder');
   if (in_array($order->info['payment_method'],$payment_method_array)) {
-    $payment_text = defined('MODULE_PAYMENT_'.strtoupper($order->info['payment_method']).'_TEXT_DESCRIPTION') ? constant('MODULE_PAYMENT_'.strtoupper($order->info['payment_method']).'_TEXT_DESCRIPTION') : '';
+    $payment_text = defined('MODULE_PAYMENT_'.strtoupper($order->info['payment_method']).'_TEXT_DESCRIPTION') ? sprintf(constant('MODULE_PAYMENT_'.strtoupper($order->info['payment_method']).'_TEXT_DESCRIPTION'), $insert_id) : '';
     $smarty->assign('PAYMENT_INFO_HTML', $payment_text);
     $smarty->assign('PAYMENT_INFO_TXT', str_replace("<br />", "\n", $payment_text));
   }

@@ -25,6 +25,7 @@
           '<br />Kontonummer: ' . (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNUM') ? MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNUM : '') .
           '<br />IBAN: ' . (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCIBAN') ? MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCIBAN : '') .
           '<br />BIC/SWIFT: ' . (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKBIC') ? MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKBIC : '') .
+          '<br />Verwendungszweck: %s'.
           '<br /><br />Die Ware wird erst ausgeliefert, wenn der Betrag auf unserem Konto eingegangen ist.<br />');
 
   if (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_SUCCESS') && MODULE_PAYMENT_EUSTANDARDTRANSFER_SUCCESS == 'True') {
