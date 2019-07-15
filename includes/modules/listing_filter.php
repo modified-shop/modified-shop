@@ -102,7 +102,7 @@ if (PRODUCT_LIST_FILTER == 'true') {
                    ON p.products_id = s.products_id
                       ".SPECIALS_CONDITIONS_S." ";
   } elseif (basename($PHP_SELF) == FILENAME_PRODUCTS_NEW) {
-    if (MAX_DISPLAY_NEW_PRODUCTS_DAYS != '0' && $daysfound == true) {
+    if (MAX_DISPLAY_NEW_PRODUCTS_DAYS != '0' && isset($daysfound) && $daysfound == true) {
       $date_new_products = date("Y-m-d", mktime(1, 1, 1, date("m"), date("d") - MAX_DISPLAY_NEW_PRODUCTS_DAYS, date("Y")));
       $where = " AND p.products_date_added > '".$date_new_products."' ";
     }
@@ -222,7 +222,7 @@ if (PRODUCT_LIST_FILTER == 'true') {
                     ON p.products_id = s.products_id
                        AND s.status = '1' ";
   } elseif (basename($PHP_SELF) == FILENAME_PRODUCTS_NEW) {
-    if (MAX_DISPLAY_NEW_PRODUCTS_DAYS != '0' && $daysfound == true) {
+    if (MAX_DISPLAY_NEW_PRODUCTS_DAYS != '0' && isset($daysfound) && $daysfound == true) {
       $date_new_products = date("Y-m-d", mktime(1, 1, 1, date("m"), date("d") - MAX_DISPLAY_NEW_PRODUCTS_DAYS, date("Y")));
       $where .= " AND p.products_date_added > '".$date_new_products."' ";
     }
