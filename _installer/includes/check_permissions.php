@@ -58,7 +58,11 @@
         'includes/external/magnalister'
     )
   );
-
+  
+  if (file_exists(DIR_FS_CATALOG.'/includes/local/configure.php')) {    
+    $files_to_check['files'][] = 'includes/local/configure.php';
+  }
+  
   foreach ($files_to_check['adirs'] as $dir) {
     if (is_dir(DIR_FS_CATALOG.$dir)) {
       $files_to_check['dirs'][] = $dir;
