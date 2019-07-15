@@ -162,7 +162,7 @@ class PayPalCommon extends PayPalAuth {
     $total = $this->calc_total();
     $amount_total = $this->amount->getTotal();
 
-    if ($calc_total === true) {
+    if ($calc_total === true && $this->details->getSubtotal() > 0) {
       $this->amount->setTotal($total);
     } elseif ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
         && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1
