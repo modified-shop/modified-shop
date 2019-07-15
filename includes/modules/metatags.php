@@ -286,11 +286,11 @@
             'keywords' => (($manufacturer['manufacturers_meta_keywords'] != '') ? $manufacturer['manufacturers_meta_keywords'] : metaKeyWords($manufacturer['manufacturers_name'].' '.$manufacturer['manufacturers_description'])),
             'link' => xtc_href_link(FILENAME_DEFAULT, 'manufacturers_id='.(int)$manu_id, 'NONSSL', false),
           );
+          
+          if ($addCatShopTitle) $metadata_array['title'] .= ' - ' . ML_META_TITLE;
+
+          $metaGoWords .= ','.$manufacturer['manufacturers_name'];
         }
-
-        if ($addCatShopTitle) $metadata_array['title'] .= ' - ' . ML_META_TITLE;
-
-        $metaGoWords .= ','.$manufacturer['manufacturers_name'];
       } else {
         $metadata_array = array(
           'title' => ML_META_TITLE,
