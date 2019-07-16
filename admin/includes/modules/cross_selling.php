@@ -37,29 +37,45 @@
   $cross_sell_groups = xtc_get_cross_sell_groups();
 
   function buildCAT($catID) {
-    $cat = array ();
-    $tmpID = $catID;
+    static $categories;
 
-    while (getParent($catID) != 0 || $catID != 0) {
-      $cat_select = xtc_db_query("SELECT categories_name
-                                    FROM ".TABLE_CATEGORIES_DESCRIPTION."
-                                   WHERE categories_id='".$catID."'
-                                     AND language_id='".(int)$_SESSION['languages_id']."'");
-      $cat_data = xtc_db_fetch_array($cat_select);
-      $catID = getParent($catID);
-      $cat[] = $cat_data['categories_name'];
+    if (!isset($categories)) {
+      $categories = array();
     }
-    $catStr = '';
-    for ($i = count($cat); $i > 0; $i --) {
-      $catStr .= $cat[$i -1].' > ';
+  
+    if (!isset($categories[$catID])) {
+      $cat = array();
+      while (getParent($catID) != 0 || $catID != 0) {
+        $cat_select = xtc_db_query("SELECT categories_name
+                                      FROM ".TABLE_CATEGORIES_DESCRIPTION."
+                                     WHERE categories_id='".(int)$catID."'
+                                       AND language_id='".(int)$_SESSION['languages_id']."'");
+        $cat_data = xtc_db_fetch_array($cat_select);
+        $catID = getParent($catID);
+        $cat[] = $cat_data['categories_name'];
+      }
+      $categories[$catID] = implode(' > ', $cat);
     }
-    return $catStr;
+  
+    return $categories[$catID];
   }
 
   function getParent($catID) {
-    $parent_query = xtc_db_query("SELECT parent_id FROM ".TABLE_CATEGORIES." WHERE categories_id='".$catID."'");
-    $parent_data = xtc_db_fetch_array($parent_query);
-    return $parent_data['parent_id'];
+    static $parent;
+  
+    if (!isset($parent)) {
+      $parent = array();
+    }
+  
+    if (!isset($parent[$catID])) {
+      $parent_query = xtc_db_query("SELECT parent_id 
+                                      FROM ".TABLE_CATEGORIES." 
+                                     WHERE categories_id = '".(int)$catID."'");
+      $parent_data = xtc_db_fetch_array($parent_query);
+      $parent[$catID] = $parent_data['parent_id'];
+    }
+  
+    return $parent[$catID];
   }
   ?>
     <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_news.png'); ?></div>
