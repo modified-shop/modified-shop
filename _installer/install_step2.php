@@ -317,9 +317,9 @@
       
       // switzerland
       if ($country == '204') {
-        $tax_zero_text = sprintf($tax_text, $tax_zero);
-        $tax_germany_normal = sprintf($tax_text, $tax_germany_normal);
-        $tax_germany_special = sprintf($tax_text, $tax_germany_special);
+        $tax_zero_text = sprintf($tax_text, round($tax_zero, 2));
+        $tax_germany_normal_text = sprintf($tax_text, round($tax_germany_normal, 2));
+        $tax_germany_special_text = sprintf($tax_text, round($tax_germany_special, 2));
         
         xtc_db_query("INSERT INTO tax_rates (tax_rates_id, tax_zone_id, tax_class_id, tax_priority, tax_rate, tax_description, last_modified, date_added) VALUES (5, 8, 1, 1, '".$tax_normal."', '".$tax_normal_text."', NULL, now())");
         xtc_db_query("INSERT INTO tax_rates (tax_rates_id, tax_zone_id, tax_class_id, tax_priority, tax_rate, tax_description, last_modified, date_added) VALUES (6, 8, 2, 1, '".$tax_special."', '".$tax_special_text."', NULL, now())");
