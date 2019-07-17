@@ -50,13 +50,24 @@
                                 'text' => '<b>' . $xtPrice->xtcFormat($total, true) . '</b>',
                                 'value' => $xtPrice->xtcFormat($total, false));
       }
+      
       if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
           && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0
           ) 
-      {
-        $this->output[] = array('title' => MODULE_ORDER_TOTAL_TOTAL_TITLE_NO_TAX . ':',
-                                'text' => '<b>' . $xtPrice->xtcFormat($order->info['total'], true) . '</b>',
-                                'value' => $xtPrice->xtcFormat($order->info['total'], false));
+      {                
+        if ($order->delivery['country_id'] == STORE_COUNTRY) {
+          $total = round(($order->info['tax'] + $order->info['total']), 4);
+          if ($total == 0) {
+            $total = 0;
+          }
+          $this->output[] = array('title' => MODULE_ORDER_TOTAL_TOTAL_TITLE_NO_TAX_BRUTTO . ':',                          
+                                  'text' => '<b>' . $xtPrice->xtcFormat($total, true) . '</b>',
+                                  'value' => $xtPrice->xtcFormat($total, false));
+        } else {
+          $this->output[] = array('title' => MODULE_ORDER_TOTAL_TOTAL_TITLE_NO_TAX . ':',
+                                  'text' => '<b>' . $xtPrice->xtcFormat($order->info['total'], true) . '</b>',
+                                  'value' => $xtPrice->xtcFormat($order->info['total'], false));
+        }
       }
     }
 

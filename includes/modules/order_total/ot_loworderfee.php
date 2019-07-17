@@ -79,9 +79,14 @@
             $order->info['subtotal'] += $low_order_fee;
           }
         
-          if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
-              && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1
-              ) 
+          if (($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
+               && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1
+               ) || ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
+                     && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0
+                     && $order->delivery['country_id'] == STORE_COUNTRY
+                     )
+              )
+        
           {
             $low_order_fee = $low_order_fee_value;
             $order->info['tax'] += xtc_calculate_tax($low_order_fee_value, $tax);
@@ -91,7 +96,8 @@
           }
         
           if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
-              && $_SESSION['customers_status']['customers_status_add_tax_ot'] != 1
+              && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0
+              && $order->delivery['country_id'] != STORE_COUNTRY
               ) 
           {
             $low_order_fee = $low_order_fee_value;

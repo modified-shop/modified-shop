@@ -101,7 +101,15 @@
               $ps_cost= $xtPrice->xtcFormat($ps_cost_value, true);
               $order->info['subtotal'] += $ps_cost_value;
           }
-          if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1) {
+          if (($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
+               && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1
+               ) || ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
+                     && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0
+                     && $order->delivery['country_id'] == STORE_COUNTRY
+                     )
+              )
+        
+          {
               $order->info['tax'] += xtc_add_tax($ps_cost, $ps_tax)-$ps_cost;
               $order->info['tax_groups'][TAX_NO_TAX . "$ps_tax_description"] += xtc_add_tax($ps_cost, $ps_tax)-$ps_cost;
               $ps_cost_value = $ps_cost;
