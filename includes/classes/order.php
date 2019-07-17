@@ -583,6 +583,7 @@
         $this->products[$index]['tax'] = xtc_get_tax_rate($products[$i]['tax_class_id'], $tax_address['country_id'], $tax_address['zone_id']);
         if ($_SESSION['customers_status']['customers_status_show_price_tax'] == '0'
             && $_SESSION['customers_status']['customers_status_add_tax_ot'] == '0'
+            && $this->delivery['country_id'] != STORE_COUNTRY
             )
         {
           $this->products[$index]['tax'] = '0';
@@ -655,7 +656,13 @@
             $this->info['tax'] += $shown_price - ($shown_price / (($products_tax < 10) ? "1.0" . str_replace('.', '', $products_tax) : "1." . str_replace('.', '', $products_tax)));
             $this->info['tax_groups'][$tax_index] += (($shown_price /(100+$products_tax)) * $products_tax);
           }
-        } elseif ($_SESSION['customers_status']['customers_status_add_tax_ot'] == '1') {
+        } elseif ($_SESSION['customers_status']['customers_status_add_tax_ot'] == '1'
+                  || ($_SESSION['customers_status']['customers_status_add_tax_ot'] == '0'
+                      && $_SESSION['customers_status']['customers_status_show_price_tax'] == '0'
+                      && $this->delivery['country_id'] == STORE_COUNTRY
+                      )
+                  )
+        {
           $tax_index = TAX_NO_TAX.$products_tax_description;
           if (!isset($this->info['tax_groups'][$tax_index])) {
             $this->info['tax_groups'][$tax_index] = 0;
