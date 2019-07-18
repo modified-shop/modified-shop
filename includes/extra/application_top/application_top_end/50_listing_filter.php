@@ -1,5 +1,14 @@
 <?php
-if (PRODUCT_LIST_FILTER == 'true') {
+/* -----------------------------------------------------------------------------------------
+   $Id$
+
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
+
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   -----------------------------------------------------------------------------------------
+   Released under the GNU General Public License
+   ---------------------------------------------------------------------------------------*/
 
   // filter set
   $filter_vars_array = array();
@@ -66,5 +75,4 @@ if (PRODUCT_LIST_FILTER == 'true') {
     unset($_SESSION['filter_sort']);
     unset($_SESSION['filter_sorting']);
   }
-}
 ?>
