@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: stats_stock_warning.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id$   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -35,7 +35,17 @@ $stock_array = array(
   array('id' => '10', 'text' => '10'),
   array('id' => '20', 'text' => '20'),
   array('id' => '50', 'text' => '50'),
+  array('id' => '100', 'text' => '100'),
 );
+
+$prefix_array = array(
+  array('id' => '<', 'text' => '<'),
+  array('id' => '=', 'text' => '='),
+  array('id' => '>', 'text' => '>'),
+);
+
+$prefix = preg_replace('/[^<=>]/', '', ((isset($_GET['prefix'])) ? $_GET['prefix'] : ''));
+if ($prefix == '') $prefix = '<';
 
 require (DIR_WS_INCLUDES.'head.php');
 ?>
@@ -71,15 +81,15 @@ require (DIR_WS_INCLUDES.'head.php');
                 <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_NUMBER; ?></td>
                 <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_MODEL; ?></td>
                 <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS; ?></td>
-                <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_QUANTITY.' '.xtc_draw_pull_down_menu('qty', $stock_array, ((isset($_GET['qty']) && $_GET['qty'] != '') ? (int)$_GET['qty'] : ''), 'style="width: 80px" onChange="this.form.submit();"'); ?></td>
+                <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_QUANTITY.' '.xtc_draw_pull_down_menu('prefix', $prefix_array, $prefix, 'style="width: 30px" onChange="this.form.submit();"').xtc_draw_pull_down_menu('qty', $stock_array, ((isset($_GET['qty']) && $_GET['qty'] != '') ? (int)$_GET['qty'] : ''), 'style="width: 80px" onChange="this.form.submit();"'); ?></td>
               </tr>
               <?php
               $rows = (isset($_GET['page']) && $_GET['page'] > 1) ? $_GET['page']*$page_max_display_results-$page_max_display_results : 0;   
               $where = '';
               $where_attr = '';
               if (isset($_GET['qty']) && $_GET['qty'] != '') {
-                $where = " WHERE (p.products_quantity <= '".(int)$_GET['qty']."' OR pa.attributes_stock <= '".(int)$_GET['qty']."') ";
-                $where_attr = " AND pa.attributes_stock <= '".(int)$_GET['qty']."' ";
+                $where = " WHERE (p.products_quantity ".$prefix." '".(int)$_GET['qty']."' OR pa.attributes_stock ".$prefix." '".(int)$_GET['qty']."') ";
+                $where_attr = " AND pa.attributes_stock ".$prefix." '".(int)$_GET['qty']."' ";
               }
               $products_query_raw = "SELECT p.products_id,
                                             p.products_model,
