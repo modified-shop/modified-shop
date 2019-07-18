@@ -20,46 +20,51 @@ $filter_sort_dropdown = '';
 $manufacturer_dropdown = '';
 $filter_dropdown = array();
 
-// optional Product List Filter
-if (PRODUCT_LIST_FILTER == 'true') {
-  $filter_set_const = strtoupper(substr(basename($PHP_SELF), 0, -4));
-    
-  if (defined('DISPLAY_FILTER_'.$filter_set_const)) {
-    $filter_vars_array = explode(',', constant('DISPLAY_FILTER_'.$filter_set_const));
-
-    $filter_set_array = array(
-      array('id' => '',  'text' => TEXT_FILTER_SETTING_DEFAULT),
-    );
-
-    for ($i=0, $n=count($filter_vars_array); $i<$n; $i++) {
-      if (trim($filter_vars_array[$i]) != 'all') {
-        $filter_set_array[] = array('id' => $filter_vars_array[$i], 'text' => sprintf(TEXT_FILTER_SETTING, trim($filter_vars_array[$i])));
-      } else {
-        $filter_set_array[] = array('id' => '999999', 'text' => TEXT_FILTER_SETTING_ALL);
-      }
-    }
-
-    $filter_set_dropdown  = xtc_draw_form('set', xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('show'))), 'post').PHP_EOL;
-    $filter_set_dropdown .= xtc_draw_pull_down_menu('filter_set', $filter_set_array, ((isset($_SESSION['filter_set'])) ? (int)$_SESSION['filter_set'] : ''), 'onchange="this.form.submit()"').PHP_EOL;
-    $filter_set_dropdown .= '<noscript><input type="submit" value="'.SMALL_IMAGE_BUTTON_VIEW.'" id="filter_set_submit" /></noscript>'.PHP_EOL;
-    $filter_set_dropdown .= '</form>'.PHP_EOL;
-  }
+$filter_set_const = strtoupper(substr(basename($PHP_SELF), 0, -4));
   
-  $filter_sort_array = array(
-    array ('id' => '',  'text' => TEXT_FILTER_SORTING_DEFAULT),
-    array ('id' => '1', 'text' => TEXT_FILTER_SORTING_ABC_ASC),
-    array ('id' => '2', 'text' => TEXT_FILTER_SORTING_ABC_DESC),
-    array ('id' => '3', 'text' => TEXT_FILTER_SORTING_PRICE_ASC),
-    array ('id' => '4', 'text' => TEXT_FILTER_SORTING_PRICE_DESC),
-    array ('id' => '5', 'text' => TEXT_FILTER_SORTING_DATE_DESC),
-    array ('id' => '6', 'text' => TEXT_FILTER_SORTING_DATE_ASC),
-    array ('id' => '7', 'text' => TEXT_FILTER_SORTING_ORDER_DESC),
+if (defined('DISPLAY_FILTER_'.$filter_set_const)) {
+  $filter_vars_array = explode(',', constant('DISPLAY_FILTER_'.$filter_set_const));
+
+  $filter_set_array = array(
+    array('id' => '',  'text' => TEXT_FILTER_SETTING_DEFAULT),
   );
 
-  $filter_sort_dropdown  = xtc_draw_form('sort', xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('show'))), 'post').PHP_EOL;
-  $filter_sort_dropdown .= xtc_draw_pull_down_menu('filter_sort', $filter_sort_array, ((isset($_SESSION['filter_sort'])) ? (int)$_SESSION['filter_sort'] : ''), 'onchange="this.form.submit()"').PHP_EOL;
-  $filter_sort_dropdown .= '<noscript><input type="submit" value="'.SMALL_IMAGE_BUTTON_VIEW.'" id="filter_sort_submit" /></noscript>'.PHP_EOL;
-  $filter_sort_dropdown .= '</form>'.PHP_EOL;
+  for ($i=0, $n=count($filter_vars_array); $i<$n; $i++) {
+    if (trim($filter_vars_array[$i]) != 'all') {
+      $filter_set_array[] = array('id' => $filter_vars_array[$i], 'text' => sprintf(TEXT_FILTER_SETTING, trim($filter_vars_array[$i])));
+    } else {
+      $filter_set_array[] = array('id' => '999999', 'text' => TEXT_FILTER_SETTING_ALL);
+    }
+  }
+
+  $filter_set_dropdown  = xtc_draw_form('set', xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('show'))), 'post').PHP_EOL;
+  $filter_set_dropdown .= xtc_draw_pull_down_menu('filter_set', $filter_set_array, ((isset($_SESSION['filter_set'])) ? (int)$_SESSION['filter_set'] : ''), 'onchange="this.form.submit()"').PHP_EOL;
+  $filter_set_dropdown .= '<noscript><input type="submit" value="'.SMALL_IMAGE_BUTTON_VIEW.'" id="filter_set_submit" /></noscript>'.PHP_EOL;
+  $filter_set_dropdown .= '</form>'.PHP_EOL;
+  
+  $filter_smarty->assign('FILTER_SET', $filter_set_dropdown);
+}
+
+$filter_sort_array = array(
+  array ('id' => '',  'text' => TEXT_FILTER_SORTING_DEFAULT),
+  array ('id' => '1', 'text' => TEXT_FILTER_SORTING_ABC_ASC),
+  array ('id' => '2', 'text' => TEXT_FILTER_SORTING_ABC_DESC),
+  array ('id' => '3', 'text' => TEXT_FILTER_SORTING_PRICE_ASC),
+  array ('id' => '4', 'text' => TEXT_FILTER_SORTING_PRICE_DESC),
+  array ('id' => '5', 'text' => TEXT_FILTER_SORTING_DATE_DESC),
+  array ('id' => '6', 'text' => TEXT_FILTER_SORTING_DATE_ASC),
+  array ('id' => '7', 'text' => TEXT_FILTER_SORTING_ORDER_DESC),
+);
+
+$filter_sort_dropdown  = xtc_draw_form('sort', xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('show'))), 'post').PHP_EOL;
+$filter_sort_dropdown .= xtc_draw_pull_down_menu('filter_sort', $filter_sort_array, ((isset($_SESSION['filter_sort'])) ? (int)$_SESSION['filter_sort'] : ''), 'onchange="this.form.submit()"').PHP_EOL;
+$filter_sort_dropdown .= '<noscript><input type="submit" value="'.SMALL_IMAGE_BUTTON_VIEW.'" id="filter_sort_submit" /></noscript>'.PHP_EOL;
+$filter_sort_dropdown .= '</form>'.PHP_EOL;
+
+$filter_smarty->assign('FILTER_SORT', $filter_sort_dropdown);
+
+// optional Product List Filter
+if (PRODUCT_LIST_FILTER == 'true') {
 
   // filter
   $filter_join = '';
@@ -189,6 +194,8 @@ if (PRODUCT_LIST_FILTER == 'true') {
     $manufacturer_dropdown .= '<noscript><input type="submit" value="'.SMALL_IMAGE_BUTTON_VIEW.'" id="filter_submit" /></noscript>'.PHP_EOL;
     $manufacturer_dropdown .= xtc_hide_session_id() .PHP_EOL;
     $manufacturer_dropdown .= '</form>'.PHP_EOL;
+
+    $filter_smarty->assign('FILTER_MANUFACTURER', $manufacturer_dropdown);
   }
 
 
@@ -333,21 +340,18 @@ if (PRODUCT_LIST_FILTER == 'true') {
       $filter_dropdown[$options_id] .= xtc_hide_session_id() .PHP_EOL;
       $filter_dropdown[$options_id] .= '</form>'.PHP_EOL;
     }
+    $filter_smarty->assign('FILTER_TAG', $filter_dropdown);
   }
+}
 
-  $filter_smarty->assign('language', $_SESSION['language']);
-  $filter_smarty->assign('FILTER_MANUFACTURER', $manufacturer_dropdown);
-  $filter_smarty->assign('FILTER_SORT', $filter_sort_dropdown);
-  $filter_smarty->assign('FILTER_SET', $filter_set_dropdown);
-  $filter_smarty->assign('FILTER_TAG', $filter_dropdown);
-  $filter_smarty->assign('LINK_DISPLAY_LIST', xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('show')).'show=list', 'NONSSL'));
-  $filter_smarty->assign('LINK_DISPLAY_BOX', xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('show')).'show=box', 'NONSSL'));
-  $filter_smarty->assign('LINK_FILTER_RESET', xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('filter', 'show', 'filter_id')), 'NONSSL'));
+$filter_smarty->assign('language', $_SESSION['language']);
+$filter_smarty->assign('LINK_DISPLAY_LIST', xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('show')).'show=list', 'NONSSL'));
+$filter_smarty->assign('LINK_DISPLAY_BOX', xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('show')).'show=box', 'NONSSL'));
+$filter_smarty->assign('LINK_FILTER_RESET', xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('filter', 'show', 'filter_id')), 'NONSSL'));
 
-  $filter_smarty->caching = 0;
-  if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/listing_filter.html')) {
-    $module_filter = $filter_smarty->fetch(CURRENT_TEMPLATE.'/module/listing_filter.html');
-  }
+$filter_smarty->caching = 0;
+if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/listing_filter.html')) {
+  $module_filter = $filter_smarty->fetch(CURRENT_TEMPLATE.'/module/listing_filter.html');
 }
 
 if (isset($smarty) && is_object($smarty)) {
