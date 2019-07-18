@@ -33,3 +33,6 @@ $value_limits['NEW_SIGNUP_GIFT_VOUCHER_AMOUNT'] = array('min' => 0);
 $value_limits['MODULE_NEWSLETTER_VOUCHER_AMOUNT'] = array('min' => 0);
 
 $value_limits['MAX_DISPLAY_BESTSELLERS_DAYS'] = array('min' => 0);
+
+$value_limits['SEARCH_MIN_LENGTH'] = array('min' => 1);
+$value_limits['SEARCH_AC_MIN_LENGTH'] = array('min' => 1);

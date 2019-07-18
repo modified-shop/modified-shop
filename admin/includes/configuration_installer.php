@@ -348,6 +348,7 @@ $values_group_update = array();
   //$values[] = "(NULL, 'AFTERBUY_IGNORE_GROUPE', '', '21', '8', NULL , NOW(), NULL , NULL);";
 
 //configuration_group_id 22 --- "Such-Optionen"
+  $values[] = "(NULL, 'SEARCH_MIN_LENGTH', '3', '22', '1', NULL, NOW(), NULL, NULL);";
   $values[] = "(NULL, 'SEARCH_IN_MANU', 'true', 22, 4, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');"; 
   $values[] = "(NULL, 'SEARCH_IN_FILTER', 'true', 22, 5, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');"; 
   $values[] = "(NULL, 'SEARCH_AC_STATUS', 'true', 22, 10, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');"; 
