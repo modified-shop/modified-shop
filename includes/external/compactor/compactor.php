@@ -433,6 +433,8 @@
 			$code = preg_replace('/\\/\\*[^*]*\\*+([^\\/][^*]*\\*+)*\\//', '', $code);
       // Remove extra spaces
 			$code = preg_replace('/\s+/', ' ', $code);
+      // prevent negative px styles
+      $code = preg_replace('/(?<!px)\s?(-)\s?/', "\\1", $code);
       // Remove spaces that can be removed
 			return preg_replace('/\s?([\{\};\=\(\)\/\+\*-])\s?/', "\\1", $code);
 		}
@@ -445,6 +447,7 @@
 		 * @return string
 		 */
     private function _stripPHPComments($html) {
+      $html = preg_replace('/[^:\'\"]\/\/.*?[\\n\\r]{1,2}/', ' ', $html);
       return preg_replace('/\/\*.*?\*\//s', '', $html);
     }
 	}
