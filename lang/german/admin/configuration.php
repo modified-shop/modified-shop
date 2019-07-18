@@ -591,6 +591,8 @@ define('AFTERBUY_IGNORE_GROUPE_TITLE', 'Kundengruppe ignorieren');
 define('AFTERBUY_IGNORE_GROUPE_DESC', 'welche Kundengruppen sollen ignoiert werden?<br />Beispiel: <em>6,5,8</em>. Es d&uuml;rfen keine Leerzeichen enhalten sein!');
 
 // Search-Options
+define('SEARCH_MIN_LENGTH_TITLE', 'Suche Zeichenanzahl');
+define('SEARCH_MIN_LENGTH_DESC', 'Geben sie die minimum Zeichenzahl für die Suche an.');
 define('SEARCH_IN_DESC_TITLE','Suche in Produktbeschreibungen');
 define('SEARCH_IN_DESC_DESC','Aktivieren, um die Suche in den Produktbeschreibungen (Kurz + Lang) zu erm&ouml;glichen.');
 define('SEARCH_IN_ATTR_TITLE','Suche in Produkt- Attributen');

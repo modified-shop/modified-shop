@@ -42,7 +42,7 @@ $errorno = 0;
 $keywordcheck = xtc_parse_search_string($keywords, $search_keywords);
 
 // error check
-if ($keywords && strlen($keywords) < 3 && strlen($keywords) > 0) {
+if ($keywords && mb_strlen($keywords) < (int)SEARCH_MIN_LENGTH && strlen($keywords) > 0) {
   $errorno += 1;
 }
 if (!$keywords && !$pfrom && !$pto) {

@@ -592,6 +592,8 @@ define('AFTERBUY_IGNORE_GROUPE_TITLE', 'Customer group ignor');
 define('AFTERBUY_IGNORE_GROUPE_DESC', 'Example: <em>6,5,8</em>.');
 
 // Search-Options
+define('SEARCH_MIN_LENGTH_TITLE', 'Search number of characters');
+define('SEARCH_MIN_LENGTH_DESC', 'Enter the minimum number of characters for the search');
 define('SEARCH_IN_DESC_TITLE','Search in products descriptions');
 define('SEARCH_IN_DESC_DESC','Include products descriptions when searching');
 define('SEARCH_IN_ATTR_TITLE','Search in products attributes');

@@ -1734,6 +1734,7 @@ INSERT INTO configuration (configuration_id, configuration_key, configuration_va
 #INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'AFTERBUY_IGNORE_GROUPE', '', '21', '8', NULL , NOW(), NULL , NULL);
 
 #configuration_group_id 22, Search Options
+INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'SEARCH_MIN_LENGTH', '3', '22', '11', NULL , NOW(), NULL , NULL);
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'SEARCH_IN_DESC', 'true', '22', '2', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'SEARCH_IN_ATTR', 'true', '22', '3', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'ADVANCED_SEARCH_DEFAULT_OPERATOR', 'and', '22', '4', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'and\', \'or\'),');
