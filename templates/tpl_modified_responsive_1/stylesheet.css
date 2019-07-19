@@ -626,7 +626,7 @@ td.checkbox {
   background: #434343 url(img/bg_layout_footer.jpg) repeat-x;
   min-height:280px;
   margin: 40px 0 0 0;  
-  padding: 0 0 20px 0;
+  padding: 0 0 70px 0;
 }
 .layout_footer_inner {
   width:100%;
@@ -747,7 +747,7 @@ span.cop_grey {
   color:#666;
   font-size:11px;
   padding:0 0 10px 0;
-  margin: -40px 0 0 0;
+  margin: -90px 0 0 0;
   width:100%;
 }
 .copyright a {
