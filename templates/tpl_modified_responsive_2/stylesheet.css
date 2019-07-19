@@ -3529,6 +3529,9 @@ body.popupprint {
 ul.printinfolist {
   margin-left:15px;
 }
+ul.printinfolist li.active {
+  font-weight:bold;
+}
 .moimages {
   float:left;
   width:126px;
