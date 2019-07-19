@@ -530,7 +530,8 @@ define('_SHIPPING_TO', 'shipping to ');
 define('ERROR_SQL_DB_QUERY','We are sorry, but an database error has occurred somewhere on this page!');
 define('ERROR_SQL_DB_QUERY_REDIRECT','You will be redirected back to our home page in %s seconds!');
 
-define('TEXT_AGB_CHECKOUT','Please take note of our General Terms & Conditions %s, Cancellation Policy %s and Privacy Policy %s.');
+define('TEXT_AGB_CHECKOUT','Please take note of our General Terms & Conditions %s and Privacy Policy %s.');
+define('TEXT_REVOCATION_CHECKOUT', ', Cancellation Policy %s');
 define('DOWNLOAD_NOT_ALLOWED', '<h1>Forbidden</h1>This server could not verify that you are authorized to access the document requested. Either you supplied the wrong credentials (e.g., bad password), or your browser does not understand how to supply the credentials required.');
 
 define('TEXT_INFO_DETAILS', ' Details');
