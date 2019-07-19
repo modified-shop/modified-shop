@@ -24,6 +24,7 @@
 <?php
 $script_array = array(
   DIR_TMPL_JS.'thickbox.js',
+  DIR_TMPL_JS.'jquery.cookieconsent.min.js',
   DIR_TMPL_JS.'jquery.alerts.min.js',
 );
 $script_min = DIR_TMPL_JS.'tpl_plugins.min.js';
@@ -159,3 +160,14 @@ foreach ($script_array as $script) {
   }
 </script>
 <?php } ?>
+
+<script>
+  window.cookieconsent.initialise({
+    "content": {
+      "message": "<?php echo TEXT_COOKIECONSENT_MESSAGE; ?>",
+      "dismiss": "<?php echo TEXT_COOKIECONSENT_DISSMISS; ?>",
+      "link": "<?php echo TEXT_COOKIECONSENT_LINK; ?>",
+      "href": "<?php echo xtc_href_link(FILENAME_POPUP_CONTENT, 'coID=2', $request_type); ?>"
+    }
+  });
+</script>
