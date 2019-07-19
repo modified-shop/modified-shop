@@ -36,7 +36,7 @@ function mod_get_log_level($error_reporting_array) {
           || ($error_reporting == '_error_reporting.shop' && !defined('RUN_MODE_ADMIN'))
           )
       {
-        $LogLevel = 'INFO';
+        $LogLevel = 'WARNING';
         error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
       } else {
         $LogLevel = mod_get_log_level($error_reporting_array);
