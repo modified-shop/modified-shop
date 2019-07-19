@@ -56,7 +56,7 @@ foreach ($script_array as $script) {
   });
   $(document).ready(function(){
     $(".cbimages").colorbox({rel:'cbimages', scalePhotos:true, maxWidth: "90%", maxHeight: "90%", fixed: true});
-    $(".iframe").colorbox({iframe:true, width:"780", height:"560", maxWidth: "90%", maxHeight: "90%", fixed: true});
+    $(".iframe, .cc-link").colorbox({iframe:true, width:"780", height:"560", maxWidth: "90%", maxHeight: "90%", fixed: true});
     $("#print_order_layer").on('submit', function(event) {
       $.colorbox({iframe:true, width:"780", height:"560", maxWidth: "90%", maxHeight: "90%", href:$(this).attr("action") + '&' + $(this).serialize()});
       return false;
@@ -262,7 +262,7 @@ foreach ($script_array as $script) {
       "message": "<?php echo TEXT_COOKIECONSENT_MESSAGE; ?>",
       "dismiss": "<?php echo TEXT_COOKIECONSENT_DISSMISS; ?>",
       "link": "<?php echo TEXT_COOKIECONSENT_LINK; ?>",
-      "href": "<?php echo xtc_href_link('shop_content.php', 'coID=2', $request_type); ?>"
+      "href": "<?php echo xtc_href_link(FILENAME_POPUP_CONTENT, 'coID=2', $request_type); ?>"
     }
   });
 </script>
