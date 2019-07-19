@@ -93,22 +93,6 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
   // FSK18
   $info_smarty->assign('PRODUCTS_FSK18', $product->data['products_fsk18'] == '1' ? 'true' : '');
 
-  //get shippingstatus image and name
-  if (ACTIVATE_SHIPPING_STATUS == 'true') {
-    $info_smarty->assign('SHIPPING_NAME', $main->getShippingStatusName($product->data['products_shippingtime']));
-    $info_smarty->assign('SHIPPING_NAME_LINK', $main->getShippingStatusName($product->data['products_shippingtime'], true));
-    $info_smarty->assign('SHIPPING_IMAGE', $main->getShippingStatusImage($product->data['products_shippingtime']));
-  }
-
-  // price incl tax and shipping link
-  if ($_SESSION['customers_status']['customers_status_show_price'] != '0') {
-    if (isset($xtPrice->TAX[$product->data['products_tax_class_id']])) {
-      $tax_info = $main->getTaxInfo($xtPrice->TAX[$product->data['products_tax_class_id']]);
-      $info_smarty->assign('PRODUCTS_TAX_INFO', $tax_info);
-    }
-    $info_smarty->assign('PRODUCTS_SHIPPING_LINK', SHOW_SHIPPING == 'true' ? $main->getShippingLink() : '');
-  }
-
   $info_smarty->assign('PRODUCTS_DESCRIPTION', stripslashes($product->data['products_description']));
   $info_smarty->assign('PRODUCTS_SHORT_DESCRIPTION', stripslashes($product->data['products_short_description']));
   $info_smarty->assign('PRODUCTS_URL', !empty($product->data['products_url']) ? sprintf(TEXT_MORE_INFORMATION, xtc_href_link(FILENAME_REDIRECT, 'action=product&id='.$product->data['products_id'], 'NONSSL', true, false)) : '');

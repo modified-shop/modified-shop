@@ -18,8 +18,8 @@
 class product {
 
   /**
-  *
-  * Constructor
+   *
+   * Constructor
    *
    * @param integer $pID
    * @return product
@@ -54,6 +54,7 @@ class product {
     
     // default values
     $this->ShippingLink = '';
+    $this->getTaxInfo = array();
     
     if ($pID == 0) {
       $this->isProduct = false;
@@ -266,7 +267,7 @@ class product {
                                    AND pd.language_id = '".(int) $_SESSION['languages_id']."'
                                    AND trim(pd.products_name) != ''
                           WHERE op.orders_id = '".$orders['orders_id']."'
-                                " . PRODUCTS_CONDITIONS_P."
+                                ".PRODUCTS_CONDITIONS_P."
                        GROUP BY p.products_id";
       $products_query = xtDBquery($products_query);
       while ($products = xtc_db_fetch_array($products_query, true)) {
@@ -476,11 +477,7 @@ class product {
    */
   function buildDataArray(&$array, $image='thumbnail') {
     global $xtPrice, $main;
-    
-    if ($this->ShippingLink == '') {
-      $this->ShippingLink = $main->getShippingLink();
-    }
-    
+        
     if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1
         && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0
         && $xtPrice->get_content_type_product($array['products_id']) == 'virtual'
@@ -499,8 +496,13 @@ class product {
     $buy_now = '';
     $wishlist_now = '';
     $wishlist_now_link = '';
-    if ($_SESSION['customers_status']['customers_status_show_price'] != '0' && defined('SHOW_BUTTON_BUY_NOW') && SHOW_BUTTON_BUY_NOW != 'false'
-        && ($_SESSION['customers_status']['customers_fsk18'] != '1' || (isset($array['products_fsk18']) && $array['products_fsk18'] == '0')) ) {
+    if ($_SESSION['customers_status']['customers_status_show_price'] != '0' 
+        && defined('SHOW_BUTTON_BUY_NOW') && SHOW_BUTTON_BUY_NOW != 'false'
+        && ($_SESSION['customers_status']['customers_fsk18'] != '1' 
+            || (isset($array['products_fsk18']) && $array['products_fsk18'] == '0')
+            ) 
+        )
+    {
       $buy_now = $this->getBuyNowButton($array['products_id'], $array['products_name']);
       if (defined('MODULE_WISHLIST_SYSTEM_STATUS') && MODULE_WISHLIST_SYSTEM_STATUS == 'true') {
         $wishlist_now = $this->getWishlistNowButton($array['products_id'], $array['products_name']);
@@ -526,6 +528,17 @@ class product {
       $shipping_status_name = $main->getShippingStatusName($array['products_shippingtime']);
       $shipping_status_image = $main->getShippingStatusImage($array['products_shippingtime']);
       $shipping_status_link = $main->getShippingStatusName($array['products_shippingtime'], true);      
+    }
+
+    if ($_SESSION['customers_status']['customers_status_show_price'] != '0') {
+      if ($tax_rate > 0) {
+        if (!isset($this->getTaxInfo[$tax_rate])) {
+          $this->getTaxInfo[$tax_rate] = $main->getTaxInfo($tax_rate);
+        }
+      }
+      if ($this->ShippingLink == '' && SHOW_SHIPPING == 'true') {
+        $this->ShippingLink = $main->getShippingLink();
+      }
     }
     
     //get products image, imageinfo array
@@ -559,7 +572,7 @@ class product {
       'PRODUCTS_IMAGE_TITLE' => str_replace(array('"', "'"), array('&quot;', '&apos;'), $array['products_name']), // Currently not in use
       'PRODUCTS_IMAGE_ALT' => str_replace(array('"', "'"), array('&quot;', '&apos;'), $array['products_name']), // Currently not in use
       'PRODUCTS_LINK' => $products_link,
-      'PRODUCTS_TAX_INFO' => $main->getTaxInfo($tax_rate),
+      'PRODUCTS_TAX_INFO' => isset($this->getTaxInfo[$tax_rate]) ? $this->getTaxInfo[$tax_rate] : '',
       'PRODUCTS_SHIPPING_LINK' => $this->ShippingLink,
       'PRODUCTS_BUTTON_BUY_NOW' => $buy_now,
       'PRODUCTS_SHIPPING_NAME' => $shipping_status_name,
@@ -570,8 +583,10 @@ class product {
       'PRODUCTS_BUTTON_DETAILS' => '<a href="'.$products_link.'">'.xtc_image_button('button_product_more.gif', TEXT_INFO_DETAILS).'</a>',
       'PRODUCTS_BUTTON_WISHLIST_NOW' => $wishlist_now,
       'PRODUCTS_LINK_WISHLIST_NOW' => $wishlist_now_link,
+      'SHIPPING_NAME' => $shipping_status_name,
+      'SHIPPING_IMAGE' => $shipping_status_image,
+      'SHIPPING_NAME_LINK' => $shipping_status_link,
     );
-
     $productData = array_merge($productData,$productDataAdds);                     
 
     foreach((array)$products_price as $key => $entry) {                  
