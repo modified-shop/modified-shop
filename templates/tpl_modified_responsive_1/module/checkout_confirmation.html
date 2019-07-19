@@ -176,6 +176,6 @@
   {/if}
   
   <div class="clearer" style="height:15px;"></div>
-  <div class="button_right_checkout">{$CHECKOUT_FORM}{if $MODULE_BUTTONS != ''}{$MODULE_BUTTONS}{/if}<div class="cssButtonPos12">{$CHECKOUT_BUTTON}</div></div>
+  <div class="button_right_checkout">{$CHECKOUT_FORM}{if $MODULE_BUTTONS != ''}{$MODULE_BUTTONS}{/if}<div class="cssButtonPos12">{$CHECKOUT_BUTTON|replace:"</form>":""}</div></form></div>
 
 </div>
