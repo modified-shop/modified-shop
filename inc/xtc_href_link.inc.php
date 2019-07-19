@@ -19,7 +19,11 @@
   // The HTML href link wrapper function
   function xtc_href_link($page = '', $parameters = '', $connection = 'NONSSL', $add_session_id = true, $search_engine_safe = true, $urlencode = false, $admin = false) {
     global $request_type, $session_started, $http_domain, $https_domain, $truncate_session_id, $cookie;
-    static $session_id;
+    static $session_id, $href_link_array;
+    
+    if (!isset($href_link_array)) {
+      $href_link_array = array();
+    }
         
     $parameters = str_replace('&amp;', '&', $parameters); // undo W3C-Conform link
 
@@ -38,6 +42,11 @@
     }
 
     $link .= $page;
+    
+    parse_str($parameters, $params_array);
+    ksort($params_array);
+    $link_cache = md5('link_cache:'.$link);
+    $param_cache = md5('param_cache:'.http_build_query($params_array, '', '|'));
 
     $separator = '?';
     if (xtc_not_null($parameters)) {
@@ -48,11 +57,19 @@
     $link = rtrim($link, '&?'); // strip ?/& from the end of link
 
     if ($admin === false && SEARCH_ENGINE_FRIENDLY_URLS == 'true' && $search_engine_safe === true) {
-      require_once (DIR_FS_INC . 'seo_url_mod.php');
-      list($link, $separator) = seo_url_mod($link, $page, $parameters, $connection, $separator);
-      if ($link == '#') {
-        return $link;
+      if (!isset($href_link_array[$link_cache][$param_cache])) {
+        require_once (DIR_FS_INC . 'seo_url_mod.php');
+        list($link, $separator) = seo_url_mod($link, $page, $parameters, $connection, $separator);
+        if ($link == '#') {
+          return $link;
+        }
+        $href_link_array[$link_cache][$param_cache] = array(
+          'link' => $link,
+          'separator' => $separator
+        );
       }
+      $link = $href_link_array[$link_cache][$param_cache]['link'];
+      $separator = $href_link_array[$link_cache][$param_cache]['separator'];
     }
 
     // Add the session ID when moving from different HTTP and HTTPS servers, or when SID is defined
