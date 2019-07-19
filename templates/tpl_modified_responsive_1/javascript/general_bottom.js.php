@@ -25,6 +25,7 @@ $script_array = array(
   DIR_TMPL_JS.'jquery.colorbox.min.js',
   DIR_TMPL_JS.'jquery.unveil.min.js',
   DIR_TMPL_JS.'jquery.bxslider.min.js',
+  DIR_TMPL_JS.'jquery.cookieconsent.min.js',
   DIR_TMPL_JS.'jquery.easyTabs.min.js',
   DIR_TMPL_JS.'jquery.alerts.min.js',
   DIR_TMPL_JS.'jquery.sumoselect.min.js',
@@ -314,6 +315,17 @@ foreach ($script_array as $script) {
   });
 </script>
 <?php } ?>
+
+<script>
+  window.cookieconsent.initialise({
+    "content": {
+      "message": "<?php echo TEXT_COOKIECONSENT_MESSAGE; ?>",
+      "dismiss": "<?php echo TEXT_COOKIECONSENT_DISSMISS; ?>",
+      "link": "<?php echo TEXT_COOKIECONSENT_LINK; ?>",
+      "href": "<?php echo xtc_href_link('shop_content.php', 'coID=2', $request_type); ?>"
+    }
+  });
+</script>
 
 <?php if (strstr($PHP_SELF, FILENAME_CONTENT) && isset($_GET['coID']) && $_GET['coID'] == 8) { ?>
   <!--[if lt IE 10]>
