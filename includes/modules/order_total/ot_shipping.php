@@ -59,7 +59,7 @@ class ot_shipping {
       }
       
       if ($pass == true 
-          && $xtPrice->xtcRemoveCurr($order->info['total'] - $order->info['shipping_cost']) >= $free_shipping_value_over
+          && $xtPrice->xtcRemoveCurr($order->info['total'] - $order->info['shipping_cost']) >= $xtPrice->xtcRemoveCurr($free_shipping_value_over)
           ) 
       {
         $order->info['shipping_method'] = $this->title;
