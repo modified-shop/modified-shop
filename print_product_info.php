@@ -157,12 +157,12 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
 
   include (DIR_WS_MODULES.'product_attributes.php');
   $module_content = array();
-  if (isset($products_options_data) && is_array($products_options_data)) {
+  if (isset($products_options_data) && is_array($products_options_data)) {  
     foreach ($products_options_data as $attributes) {
       foreach ($attributes['DATA'] as $key => $value) {
-        $module_content[] = array('GROUP' => $attributes['NAME'],
-                                  'NAME' => $value['TEXT'] . ((isset($value['PREFIX'])) ? ' ('.$value['PREFIX'].$value['PRICE'].')' : '')
-                                  );
+        $module_content[$key] = $value;
+        $module_content[$key]['GROUP'] = $attributes['NAME'];
+        $module_content[$key]['NAME'] = $value['TEXT'] . ((isset($value['PREFIX'])) ? ' ('.$value['PREFIX'].$value['PRICE'].')' : '');
       }
     }
     $info_smarty->assign('module_content', $module_content);

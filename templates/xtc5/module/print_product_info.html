@@ -31,7 +31,7 @@
       {if $module_content != ''}
         <h2>{#options#}</h2>    
         <ul>{foreach name=aussen item=module_data from=$module_content}
-        <li>{$module_data.GROUP}: {$module_data.NAME}</li>
+        <li{if $module_data.CHECKED == 1} class="active"{/if}>{$module_data.GROUP}: {$module_data.NAME}</li>
         {/foreach}
         </ul>    
       {/if}
