@@ -149,23 +149,7 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
 
   // FSK18
   $info_smarty->assign('PRODUCTS_FSK18', $product->data['products_fsk18'] == '1' ? 'true' : '');
-
-  //get shippingstatus image and name
-  if (ACTIVATE_SHIPPING_STATUS == 'true') {
-    $info_smarty->assign('SHIPPING_NAME', $main->getShippingStatusName($product->data['products_shippingtime']));
-    $info_smarty->assign('SHIPPING_NAME_LINK', $main->getShippingStatusName($product->data['products_shippingtime'], true));
-    $info_smarty->assign('SHIPPING_IMAGE', $main->getShippingStatusImage($product->data['products_shippingtime']));
-  }
   
-  // price incl tax and shipping link
-  if ($_SESSION['customers_status']['customers_status_show_price'] != '0') {
-    if (isset($xtPrice->TAX[$product->data['products_tax_class_id']])) {
-      $tax_info = $main->getTaxInfo($xtPrice->TAX[$product->data['products_tax_class_id']]);
-      $info_smarty->assign('PRODUCTS_TAX_INFO', $tax_info);
-    }
-    $info_smarty->assign('PRODUCTS_SHIPPING_LINK',$main->getShippingLink());
-  }
-
   $info_smarty->assign('PRODUCTS_PRINT', xtc_image_button('print.gif', PRINTVIEW_INFO, 'onclick="javascript:window.open(\''.xtc_href_link(FILENAME_PRINT_PRODUCT_INFO, 'products_id='.$product->data['products_id'], $request_type).'\', \'popup\', \'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, '.POPUP_PRODUCT_PRINT_SIZE.'\')"'));
   $info_smarty->assign('PRODUCTS_PRINT_LAYER', '<a class="iframe" target="_blank" rel="nofollow" href="'.xtc_href_link(FILENAME_PRINT_PRODUCT_INFO, 'products_id='.$product->data['products_id'], $request_type). '" title="'.PRINTVIEW_INFO.'">'.PRINTVIEW_INFO.'</a>');
   $info_smarty->assign('PRODUCTS_WRITE_REVIEW', '<a rel="nofollow" href="'.xtc_href_link(FILENAME_PRODUCT_REVIEWS_WRITE, 'products_id='.$product->data['products_id']). '" title="'.PRODUCTS_REVIEW_LINK.'">'.PRODUCTS_REVIEW_LINK.'</a>');
