@@ -609,7 +609,7 @@ define('ADMIN_SEARCH_IN_ATTR_DESC','Aktivieren, um die Suche in den Produktattri
 define('REVOCATION_ID_TITLE','Widerrufsrecht');
 define('REVOCATION_ID_DESC','W&auml;hle den Content zur Anzeige des Widerrufsrechts.');
 define('DISPLAY_REVOCATION_ON_CHECKOUT_TITLE','Anzeige Widerrufsrecht?');
-define('DISPLAY_REVOCATION_ON_CHECKOUT_DESC','Widerrufsrecht auf checkout_confirmation anzeigen?');
+define('DISPLAY_REVOCATION_ON_CHECKOUT_DESC','Widerrufsrecht auf checkout_confirmation anzeigen?<br/><b>Hinweis:</b> Anzeigen und Unterzeichnen der AGB muss aktiv sein.');
 
 // BOF - Tomcraft - 2009-10-03 - Paypal Express Modul
 define('PAYPAL_MODE_TITLE','PayPal-Modus:');

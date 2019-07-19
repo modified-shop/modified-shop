@@ -610,7 +610,7 @@ define('ADMIN_SEARCH_IN_ATTR_DESC','Include products attributes when searching')
 define('REVOCATION_ID_TITLE','Revocation');
 define('REVOCATION_ID_DESC','Select content to display revocation');
 define('DISPLAY_REVOCATION_ON_CHECKOUT_TITLE','Display right of revocation?');
-define('DISPLAY_REVOCATION_ON_CHECKOUT_DESC','Display right of revocation on checkout_confirmation?');
+define('DISPLAY_REVOCATION_ON_CHECKOUT_DESC','Display right of revocation on checkout_confirmation?<br/><b>Attention:</b>Display Conditions on Checkout must be enabled.');
 
 // BOF - Tomcraft - 2009-10-03 - Paypal Express Modul
 define('PAYPAL_MODE_TITLE','PayPal Mode:');

@@ -250,18 +250,24 @@ if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS 
   }
 }
 
-//check if display conditions on checkout page is true
-if (DISPLAY_REVOCATION_ON_CHECKOUT == 'true') {
-  //revocation  
-  $shop_content_data = $main->getContentData(REVOCATION_ID);
-  $smarty->assign('REVOCATION', $shop_content_data['content_text']);
-  $smarty->assign('REVOCATION_TITLE', $shop_content_data['content_heading']);
-  $smarty->assign('REVOCATION_LINK', $main->getContentLink(REVOCATION_ID, MORE_INFO, 'SSL'));
-  //agb
+if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true') {
+  $shop_content_link = '';
+  if (DISPLAY_REVOCATION_ON_CHECKOUT == 'true') {
+    $shop_revocation_data = $main->getContentData(REVOCATION_ID);
+    $shop_revocation_link = $main->getContentLink(REVOCATION_ID, MORE_INFO,'SSL');
+    $smarty->assign('REVOCATION', $shop_revocation_data['content_text']);
+    $smarty->assign('REVOCATION_TITLE', $shop_revocation_data['content_heading']);
+    $smarty->assign('REVOCATION_LINK', $shop_revocation_link);
+    $shop_revocation_link = sprintf(TEXT_REVOCATION_CHECKOUT, $shop_revocation_link);
+  }
+  
   $shop_content_data = $main->getContentData(3);
+  $shop_content_link = $main->getContentLink(3, MORE_INFO,'SSL');
   $smarty->assign('AGB_TITLE', $shop_content_data['content_heading']);
-  $smarty->assign('AGB_LINK', $main->getContentLink(3, MORE_INFO,'SSL'));
-  $smarty->assign('TEXT_AGB_CHECKOUT', sprintf(TEXT_AGB_CHECKOUT, $main->getContentLink(3, MORE_INFO,'SSL'), $main->getContentLink(REVOCATION_ID, MORE_INFO,'SSL'), $main->getContentLink(2, MORE_INFO,'SSL')));
+  $smarty->assign('AGB_LINK', $shop_content_link);
+  
+  $shop_content_link .= $shop_revocation_link;
+  $smarty->assign('TEXT_AGB_CHECKOUT', sprintf(TEXT_AGB_CHECKOUT, $shop_content_link, $main->getContentLink(2, MORE_INFO,'SSL')));
 }
 
 $store_owner = STORE_NAME;
