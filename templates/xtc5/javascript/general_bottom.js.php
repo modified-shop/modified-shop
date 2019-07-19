@@ -167,7 +167,7 @@ foreach ($script_array as $script) {
       "message": "<?php echo TEXT_COOKIECONSENT_MESSAGE; ?>",
       "dismiss": "<?php echo TEXT_COOKIECONSENT_DISSMISS; ?>",
       "link": "<?php echo TEXT_COOKIECONSENT_LINK; ?>",
-      "href": "<?php echo xtc_href_link(FILENAME_POPUP_CONTENT, 'coID=2', $request_type); ?>"
+      "href": "<?php echo xtc_href_link(FILENAME_POPUP_CONTENT, 'coID=2'.(defined('TPL_POPUP_CONTENT_LINK_PARAMETERS') ? TPL_POPUP_CONTENT_LINK_PARAMETERS : POPUP_CONTENT_LINK_PARAMETERS), $request_type); ?>"
     }
   });
 </script>
