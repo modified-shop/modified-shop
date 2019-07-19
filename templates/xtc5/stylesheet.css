@@ -727,6 +727,9 @@ body.popupproductinfo {
   padding:15px;
   background:#fff none;
 }
+body.popupproductinfo ul li.active {
+  font-weight:bold;
+}
 /* POPUP print_order.html */
 body.popupprintorder {
   font-family:Arial, Sans-serif;
@@ -1277,7 +1280,7 @@ td.productPreviewContent {
 }
 /* Tomcraft - 2009-09-22 - FIX DER AUFZÄHLUNGEN IN DER DRUCKANSICHT */
 .popupproductinfo #productinfowrap ol, .popupproductinfo #productinfowrap ul {
-  margin:10px 0 10px 186px;
+  margin:10px 0 10px 205px;
 }
 /* SEARCHBOX */
 .search_header {
