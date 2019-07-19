@@ -31,10 +31,10 @@ if (DIR_WS_BASE == '') {
   $info_smarty->assign('base_href', (($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER) . DIR_WS_CATALOG);
 }
 if (isset($_GET['pID']) && $_GET['pID']!='') {
-  $_GET['products_id'] = xtc_get_prid($_GET['pID']);
+  $_GET['products_id'] = xtc_input_validation($_GET['pID'], 'products_id', '');
   $info_smarty->assign('noprint',true); 
 }
-if (isset($_GET['products_id']) && $_GET['products_id']!='') {
+if (isset($_GET['products_id']) && $_GET['products_id'] != '') {
   $product = new product((int)$_GET['products_id']);
 }
 if (!is_object($product) || $product->isProduct() === false || $language_not_found === true) {
