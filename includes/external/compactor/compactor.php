@@ -447,7 +447,16 @@
 		 * @return string
 		 */
     private function _stripPHPComments($html) {
-      $html = preg_replace('/[^:\'\"]\/\/.*?[\\n\\r]{1,2}/', ' ', $html);
+      //  Removes multi-line comments and does not create
+      //  a blank line, also treats white spaces/tabs 
+      $html = preg_replace('!^[ \t]*/\*.*?\*/[ \t]*[\r\n]!s', '', $html);
+
+      //  Removes single line '//' comments, treats blank characters
+      $html = preg_replace('![ \t]*//.*[ \t]*[\r\n]!', '', $html);
+
+      //  Strip blank lines
+      $html = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $html);
+      
       return preg_replace('/\/\*.*?\*\//s', '', $html);
     }
 	}
