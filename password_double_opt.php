@@ -57,7 +57,7 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'first_opt_in') && isset($_PO
 
 
   if (check_secure_form($_POST) === false) {
-    if (!in_array('password', $use_captcha)) {
+    if (in_array('password', $use_captcha)) {
       $messageStack->add('password_double_opt_in', TEXT_CODE_ERROR);
     } else {
       $messageStack->add('password_double_opt_in', TEXT_EMAIL_ERROR);
@@ -119,7 +119,7 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'first_opt_in') && isset($_PO
     }
   } else {
     $case = 'code_error';
-    if (!in_array('password', $use_captcha)) {
+    if (in_array('password', $use_captcha)) {
       $messageStack->add('password_double_opt_in', TEXT_CODE_ERROR);
     } else {
       $messageStack->add('password_double_opt_in', TEXT_EMAIL_ERROR);
