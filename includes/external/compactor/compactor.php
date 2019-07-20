@@ -258,7 +258,7 @@
 				}
 			}			
       // remove comments
-		  $html = preg_replace('/<!--(.|\s)*?-->/', '', $html);
+		  $html = preg_replace('/<!--(.*?)-->/isu', '', $html);
       // $html = preg_replace ('@<![\s\S]*?--[ \t\n\r]*>@', '', $html);
       // re sub-in the conditionals if required.
 			if($keep_conditionals)
