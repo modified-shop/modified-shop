@@ -168,5 +168,8 @@ ALTER TABLE `products_images` MODIFY `image_name` VARCHAR(255) NOT NULL;
 ALTER TABLE `products_tags_values` MODIFY `values_image` VARCHAR(255) NOT NULL;
 ALTER TABLE `shipping_status` MODIFY `shipping_status_image` VARCHAR(64) NOT NULL;
 
+#GTB - 2019-07-20 - delete unused entry
+DELETE FROM `configuration` WHERE configuration_key = 'GOOGLE_RSS_FEED_REFID';
+
 
 # Keep an empty line at the end of this file for the db_updater to work properly

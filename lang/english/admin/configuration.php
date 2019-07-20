@@ -684,11 +684,6 @@ define('DELETE_CACHE_SUCCESSFUL', 'Cache deleted successfully.');
 define('DELETE_TEMP_CACHE_SUCCESSFUL', 'Templatecache deleted successfully.');
 // EOF - Dokuman - 2010-02-04 - delete cache files in admin section
 
-// BOF - DokuMan - 2010-08-13 - set Google RSS Feed in admin section
-define('GOOGLE_RSS_FEED_REFID_TITLE' , 'Google RSS Feed - refID');
-define('GOOGLE_RSS_FEED_REFID_DESC' , 'Enter your campaign ID here. It will be appended to every link of the Google RSS Feed automaticallyt.');
-// EOF - DokuMan - 2010-08-13 - set Google RSS Feed in admin section
-
 // BOF - web28 - 2010-08-17 -  Bildgrößenberechnung kleinerer Bilder
 define('PRODUCT_IMAGE_NO_ENLARGE_UNDER_DEFAULT_TITLE','Upscaling low-res images)');
 define('PRODUCT_IMAGE_NO_ENLARGE_UNDER_DEFAULT_DESC','If set to <strong>false</strong>, upscaling of low-res images to default settings for image size is disabled. Set to <strong>true</strong> to enable upscaling of low-res images. In this case those images will be shown blurry.');

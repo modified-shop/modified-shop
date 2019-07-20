@@ -683,11 +683,6 @@ define('DELETE_CACHE_SUCCESSFUL', 'Cache erfolgreich geleert.');
 define('DELETE_TEMP_CACHE_SUCCESSFUL', 'Templatecache erfolgreich geleert.');
 // EOF - Dokuman - 2010-02-04 - delete cache files in admin section
 
-// BOF - DokuMan - 2010-08-13 - set Google RSS Feed in admin section
-define('GOOGLE_RSS_FEED_REFID_TITLE' , 'Google RSS Feed - refID');
-define('GOOGLE_RSS_FEED_REFID_DESC' , 'Tragen Sie hier die Kampagnen-ID ein. Diese wird jedem Link des Google RSS Feeds automatisch hinzugef&uuml;gt.');
-// EOF - DokuMan - 2010-08-13 - set Google RSS Feed in admin section
-
 // BOF - web28 - 2010-08-17 -  Bildgroessenberechnung kleinerer Bilder
 define('PRODUCT_IMAGE_NO_ENLARGE_UNDER_DEFAULT_TITLE','Skalierung von Bildern mit geringer Aufl&ouml;sung');
 define('PRODUCT_IMAGE_NO_ENLARGE_UNDER_DEFAULT_DESC','Aktivieren Sie die Einstellung <strong>Nein</strong> um zu verhindern, dass Produktbilder geringerer Aufl&ouml;sung auf die eingestellten default Werte f&uuml;r Breite und H&ouml;he skaliert werden. Aktivieren Sie die Einstellung <strong>Ja</strong>, werden auch Bilder geringerer Aufl&ouml;sung auf die eingestellten default Bildgr&ouml;&szlig;enwerte skaliert. In diesem Fall k&ouml;nnen diese Bilder aber sehr unscharf und pixelig dargestellt werden.');
