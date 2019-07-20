@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------------------
-#  $Id: update_1.0.5.0_to_1.0.6.0.sql 3813 2012-10-29 11:54:40Z Tomcraft1980 $
+#  $Id$
 #
 #  modified eCommerce Shopsoftware
 #  http://www.modified-shop.org
@@ -750,5 +750,16 @@ INSERT INTO `content_manager` (`content_id`, `languages_id`, `content_title`, `c
 INSERT INTO `content_manager` (`content_id`, `languages_id`, `content_title`, `content_heading`, `content_text`, `sort_order`, `file_flag`, `content_file`, `content_status`, `content_group`, `content_delete`, `content_active`)
   SELECT MAX(content_id)+1, '2','Rechnungsdaten','Firma - Adresse - PLZ Stadt','Firma<br/>Adresse<br/>PLZ Stadt<br/><br/>Tel: 0123456789<br/>E-Mail: info@shop.de<br/>www: www.shopurl.de<br/><br/>IBAN: DE123456789011<br/>BIC: BYLEMDNE1DE<br/><br/>Diese Daten k&ouml;nnen im Content Manager ge&auml;ndert werden.','0','1','','0',MAX(content_group),'0','0' FROM content_manager;
 UPDATE configuration SET configuration_value = (SELECT MAX(content_group) FROM content_manager) WHERE configuration_key = 'INVOICE_INFOS';
+
+#GTB - 2019-07-20 - update eustandardtransfer
+UPDATE configuration SET configuration_key = 'MODULE_PAYMENT_EUSTANDARDTRANSFER_STATUS' WHERE configuration_key = 'MODULE_PAYMENT_EUTRANSFER_STATUS';
+UPDATE configuration SET configuration_key = 'MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKNAM' WHERE configuration_key = 'MODULE_PAYMENT_EUTRANSFER_BANKNAM';
+UPDATE configuration SET configuration_key = 'MODULE_PAYMENT_EUSTANDARDTRANSFER_BRANCH' WHERE configuration_key = 'MODULE_PAYMENT_EUTRANSFER_BRANCH';
+UPDATE configuration SET configuration_key = 'MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNAM' WHERE configuration_key = 'MODULE_PAYMENT_EUTRANSFER_ACCNAM';
+UPDATE configuration SET configuration_key = 'MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNUM' WHERE configuration_key = 'MODULE_PAYMENT_EUTRANSFER_ACCNUM';
+UPDATE configuration SET configuration_key = 'MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCIBAN' WHERE configuration_key = 'MODULE_PAYMENT_EUTRANSFER_ACCIBAN';
+UPDATE configuration SET configuration_key = 'MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKBIC' WHERE configuration_key = 'MODULE_PAYMENT_EUTRANSFER_BANKBIC';
+UPDATE configuration SET configuration_key = 'MODULE_PAYMENT_EUSTANDARDTRANSFER_SORT_ORDER' WHERE configuration_key = 'MODULE_PAYMENT_EUTRANSFER_SORT_ORDER';
+
 
 # Keep an empty line at the end of this file for the db_updater to work properly
