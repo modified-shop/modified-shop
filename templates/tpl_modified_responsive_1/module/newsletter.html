@@ -26,27 +26,23 @@
         </tr>
         <tr>
           <td>
-            <table cellspacing="0" cellpadding="0">
-              <tr>
-                <td style="vertical-align:top;padding: 5px 5px 0px 0px;">{$CHECK_INP}</td>
-                <td>{#text_in#}</td>
-              </tr>
-              <tr>
-                <td style="vertical-align:top;padding: 5px 5px 0px 0px;">{$CHECK_DEL}</td>
-                <td>{#text_out#}</td>
-              </tr>
-            </table>
+            <div class="cus_radio cus_my_5">
+              {$CHECK_INP}
+              <label for="nl_insert">{#text_in#}</label>
+            </div>
+            <div class="cus_radio cus_my_5">
+              {$CHECK_DEL}
+              <label for="nl_delete">{#text_out#}</label>
+            </div>
           </td>
         </tr>
       </table>
       {if $PRIVACY_CHECKBOX}
-      <br />
-      <table>
-        <tr>
-          <td class="checkbox">{$PRIVACY_CHECKBOX}</td>
-          <td class="midi td_full"><strong><label for="privacy">{#text_privacy_accept#}</label></strong> {$PRIVACY_LINK}</td>
-        </tr>
-      </table>
+        <br />
+        <div class="cus_check cus_check_small cus_mb_10">
+          {$PRIVACY_CHECKBOX}
+          <label for="privacy"><strong>{#text_privacy_accept#}</strong> {$PRIVACY_LINK}</label>
+        </div>
       {/if}
       <div class="button_right cf"><div class="cssButtonPos4">{$BUTTON_SEND}</div></div>
     </div>

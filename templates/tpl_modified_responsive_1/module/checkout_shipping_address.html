@@ -18,13 +18,31 @@
     <p>{$ADDRESS_LABEL}</p>
   </div>
   <br />
-  {if $BLOCK_ADDRESS}
-  <div class="highlightbox">
-    <h4>{#title_old_addresses#}</h4>
-    <p>{#text_old_addresses#}</p>
-    {$BLOCK_ADDRESS}
-  </div>
-  {/if}
+  {if isset($BLOCK_ADDRESS_ARRAY)}
+    <div class="highlightbox">
+      <h4>{#title_old_addresses#}</h4>
+      <p>{#text_old_addresses#}</p>
+      <ol id="address_block">
+        {foreach item=module_data from=$BLOCK_ADDRESS_ARRAY}
+          <li>
+            <div class="cus_radio cus_my_5">
+              {$module_data.RADIO_FIELD}
+              <label for="field_addresses_{$module_data.ADDRESS_BOOK_ID}">
+                {$module_data.FIRSTNAME} {$module_data.LASTNAME}, {$module_data.CITY}
+                <span class="address">{$module_data.ADDRESS_LABEL|replace:"<br />":", "}</span>
+              </label>              
+            </div>
+          </li>
+        {/foreach}
+      </ol>
+    </div> 
+  {elseif isset($BLOCK_ADDRESS)}
+    <div class="highlightbox">
+      <h4>{#title_old_addresses#}</h4>
+      <p>{#text_old_addresses#}</p>
+      {$BLOCK_ADDRESS}
+    </div>      
+  {/if}  
 </div>
 
 <div class="twoColums last">

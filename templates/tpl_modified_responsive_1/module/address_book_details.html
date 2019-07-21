@@ -54,12 +54,10 @@
       </table>
       {if $new == '1'}
       <br />
-      <table>
-        <tr>
-          <td class="checkbox">{$CHECKBOX_PRIMARY}</td>
-          <td class="midi td_full"><label for="primary">{#text_standard#}</label></td>
-        </tr>
-      </table>
+      <div class="cus_check cus_check_small">
+        {$CHECKBOX_PRIMARY}
+        <label for="primary">{#text_standard#}</label>
+      </div>
       {/if}
     </div>
   </div>

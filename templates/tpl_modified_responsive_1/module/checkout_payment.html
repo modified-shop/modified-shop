@@ -72,16 +72,22 @@
         </div>
       </div>
       <div class="checkoutconditions">
-        {$AGB_checkbox} <strong><label for="conditions">{#text_accept_agb#}</label></strong>&nbsp;{$AGB_LINK}
+        <div class="cus_check cus_check_small">
+          {$AGB_checkbox}<label for="conditions"><strong>{#text_accept_agb#}</strong>&nbsp;{$AGB_LINK}</label>
+        </div>
       </div>
       {if isset($PRIVACY_checkbox)}
         <div class="checkoutconditions">
-          {$PRIVACY_checkbox} <strong><label for="privacy">{#text_privacy_accept#}</label></strong>&nbsp;{$PRIVACY_LINK}
+          <div class="cus_check cus_check_small">
+            {$PRIVACY_checkbox}<label for="privacy"><strong>{#text_privacy_accept#}</strong>&nbsp;{$PRIVACY_LINK}</label>
+          </div>
         </div>
       {/if}
       {if isset($REVOCATION_checkbox)}
         <div class="checkoutconditions">
-          {$REVOCATION_checkbox} <strong><label for="revocation">{#text_accept_revocation#}</label></strong>&nbsp;{$REVOCATION_LINK}
+          <div class="cus_check cus_check_small">
+            {$REVOCATION_checkbox}<label for="revocation"><strong>{#text_accept_revocation#}</strong>&nbsp;{$REVOCATION_LINK}</label>
+          </div>
         </div>
       {/if}
     {else}
@@ -89,12 +95,16 @@
       <div class="checkoutcomment">{$COMMENTS}</div>
       {if isset($PRIVACY_checkbox)}
         <div class="checkoutconditions">
-          {$PRIVACY_checkbox} <strong><label for="privacy">{#text_privacy_accept#}</label></strong>&nbsp;{$PRIVACY_LINK}
+          <div class="cus_check cus_check_small">
+            {$PRIVACY_checkbox}<label for="privacy"><strong>{#text_privacy_accept#}</strong>&nbsp;{$PRIVACY_LINK}</label>
+          </div>
         </div>
       {/if}
       {if isset($REVOCATION_checkbox)}
         <div class="checkoutconditions">
-          {$REVOCATION_checkbox} <strong><label for="revocation">{#text_accept_revocation#}</label></strong>&nbsp;{$REVOCATION_LINK}
+          <div class="cus_check cus_check_small">
+            {$REVOCATION_checkbox}<label for="revocation"><strong>{#text_accept_revocation#}</strong>&nbsp;{$REVOCATION_LINK}</label>
+          </div>
         </div>
       {/if}
     {/if}

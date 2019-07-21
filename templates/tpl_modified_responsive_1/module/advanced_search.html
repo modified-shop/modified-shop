@@ -13,7 +13,12 @@
       <td><span class="fieldtext">{#text_categories#}</span>{$SELECT_CATEGORIES}</td>
     </tr>
     <tr>
-      <td class="adv_search_checkbox">{$ENTRY_SUBCAT} &nbsp;{#text_subkategories#}</td>
+      <td class="adv_search_checkbox">
+        <div class="cus_check">
+          {$ENTRY_SUBCAT|replace:"name=":"id=\"inc_subcat\" name="}
+          <label for="inc_subcat">{#text_subkategories#}</label>
+        </div>
+      </td>
     </tr>
   </table>
 

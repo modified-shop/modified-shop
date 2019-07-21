@@ -1,11 +1,21 @@
 <div id="horizontalAccordion" class="checkout_accordion">
   <ul class="resp-tabs-list nonjs-fallback">
     {foreach name=outer item=gift_data from=$module_gift}
-      <li><span class="payment_radio">{$gift_data.selection}</span>{$gift_data.module|onlytext}<span class="payment_costs">{$gift_data.credit_amount}</span></li>
+      <li>
+        <div class="cus_check cus_check_gift">
+          {$gift_data.selection}
+          <label for="">{$gift_data.module|onlytext}<span class="payment_costs">{$gift_data.credit_amount}</span></label>
+        </div> 
+      </li>
     {/foreach}
     
     {foreach name=outer item=module_data from=$module_content}
-      <li><span class="payment_radio">{$module_data.selection}</span>{$module_data.module|onlytext}<span class="payment_costs">{$module_data.module_cost}</span></li>
+      <li>
+        <div class="cus_radio">
+          {$module_data.selection}
+          <label for="">{$module_data.module|onlytext}<span class="payment_costs">{$module_data.module_cost}</span></label>
+        </div>
+      </li>
     {/foreach}
   </ul>
   <div class="resp-tabs-container">

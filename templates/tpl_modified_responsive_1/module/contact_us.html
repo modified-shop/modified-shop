@@ -54,12 +54,10 @@
       </table>    
       {if $PRIVACY_CHECKBOX}
       <br />
-      <table>
-        <tr>
-          <td class="checkbox">{$PRIVACY_CHECKBOX}</td>
-          <td class="midi td_full"><strong><label for="privacy">{#text_privacy_accept#}</label></strong> {$PRIVACY_LINK}</td>
-        </tr>
-      </table>
+      <div class="cus_check cus_check_small">
+        {$PRIVACY_CHECKBOX}
+        <label for="privacy"><strong>{#text_privacy_accept#}</strong> {$PRIVACY_LINK}</label>
+      </div>
       {/if}
     </div>
     <div class="button_right cf"><div class="cssButtonPos4">{$BUTTON_SUBMIT}</div></div>
