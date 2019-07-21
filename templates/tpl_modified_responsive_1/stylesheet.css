@@ -5119,10 +5119,9 @@ ol#address_block {
   font-size:12px;
   line-height:18px;
 }
-
 .cus_check input[type="checkbox"] {
-  position: absolute;
-  left: -9999px;
+  position: absolute !important;
+  visibility:hidden;
   opacity: 0;
 }
 .cus_check input[type="checkbox"] ~ label {
@@ -5148,7 +5147,7 @@ ol#address_block {
   transition: background .15s;
 }
 .cus_check.cus_check_small input[type="checkbox"] ~ label:before {
-  top: 1px;
+  top: 2px;
 }
 .cus_check input[type="checkbox"]:disabled ~ label {
   color: #ccc;
@@ -5158,20 +5157,13 @@ ol#address_block {
 .cus_check input[type="checkbox"]:disabled ~ label:after {
   cursor: not-allowed;
 }
-.cus_check input[type="checkbox"]:disabled {
-  opacity:0.5;
-}
-.cus_check input[type="checkbox"]:disabled ~ label:before {
-  opacity:0.5;
-}
+.cus_check input[type="checkbox"]:disabled,
+.cus_check input[type="checkbox"]:disabled ~ label:before,
 .cus_check input[type="checkbox"]:disabled:checked ~ label:before {
   opacity:0.5;
 }
 .cus_check input[type="checkbox"] ~ label:after {
   font-family: 'Font Awesome 5 Free';
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   content: '\f14a';
   font-weight:900;
   font-size: 14px;
@@ -5182,9 +5174,12 @@ ol#address_block {
   color: #555;
   transition: transform .15s;
   transform: scale(0) rotate(90deg);
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 .cus_check.cus_check_small input[type="checkbox"] ~ label:after {
-  top: 1px;
+  top: 2px;
 }
 .cus_check input[type="checkbox"]:checked ~ label:after {
   transform: scale(1) rotate(0deg);
@@ -5204,7 +5199,7 @@ ol#address_block {
 }
 .cus_radio input[type="radio"] {
   position: absolute;
-  left: -9999px;
+  visibility:hidden;
   opacity: 0;
 }
 .cus_radio input[type="radio"] ~ label {
@@ -5227,10 +5222,10 @@ ol#address_block {
   top: 2px;
   left: 0;
   color:#ccc;
-  transition: background .15s;
-}
+  transition: background .15s; 
+}  
 .cus_radio.cus_radio_small input[type="radio"] ~ label:before {
-  top: 1px;
+  top: 2px;
 }
 .cus_radio input[type="radio"]:disabled ~ label {
   color: #ccc;
@@ -5240,20 +5235,13 @@ ol#address_block {
 .cus_radio input[type="radio"]:disabled ~ label:after {
   cursor: not-allowed;
 }
-.cus_radio input[type="radio"]:disabled {
-  opacity:0.5;
-}
-.cus_radio input[type="radio"]:disabled ~ label:before {
-  opacity:0.5;
-}
+.cus_radio input[type="radio"]:disabled,
+.cus_radio input[type="radio"]:disabled ~ label:before,
 .cus_radio input[type="radio"]:disabled:checked ~ label:before {
   opacity:0.5;
 }
 .cus_radio input[type="radio"] ~ label:after {
   font-family: 'Font Awesome 5 Free';
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   content: '\f192';
   font-weight:900;
   font-size: 14px;
@@ -5264,11 +5252,15 @@ ol#address_block {
   color: #555;
   transition: transform .15s;
   transform: scale(0) rotate(90deg);
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 .cus_radio.cus_radio_small input[type="radio"] ~ label:after {
-  top: 0px;
+  top: 2px;
 }
 .cus_radio input[type="radio"]:checked ~ label:after {
   transform: scale(1) rotate(0deg);
 }
 /* END Custom checkbox & radio */
+
