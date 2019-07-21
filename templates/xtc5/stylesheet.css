@@ -730,6 +730,9 @@ body.popupproductinfo {
 body.popupproductinfo ul li.active {
   font-weight:bold;
 }
+body.popupproductinfo .tags_block {
+  display: inline-block;
+}  
 /* POPUP print_order.html */
 body.popupprintorder {
   font-family:Arial, Sans-serif;
