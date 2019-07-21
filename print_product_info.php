@@ -142,16 +142,19 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
   include (DIR_WS_MODULES.'product_attributes.php');
   $module_content = array();
   if (isset($products_options_data) && is_array($products_options_data)) {  
+    $key = 0;
     foreach ($products_options_data as $attributes) {
-      foreach ($attributes['DATA'] as $key => $value) {
+      foreach ($attributes['DATA'] as $value) {
         $module_content[$key] = $value;
         $module_content[$key]['GROUP'] = $attributes['NAME'];
         $module_content[$key]['NAME'] = $value['TEXT'] . ((isset($value['PREFIX'])) ? ' ('.$value['PREFIX'].$value['PRICE'].')' : '');
         if (!isset($_GET['pID']) || $_GET['pID'] == '') {
           $module_content[$key]['CHECKED'] = 0;
         }
+        $key ++;
       }
     }
+    
     $info_smarty->assign('module_content', $module_content);
   }
   
