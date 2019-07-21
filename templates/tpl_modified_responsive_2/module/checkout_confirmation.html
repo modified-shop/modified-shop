@@ -135,7 +135,7 @@
         <span class="ol_quantity ol_width1"><span class="ol_distance">{$data.qty}</span></span>
         {if $smarty.const.CHECKOUT_SHOW_PRODUCTS_IMAGES == 'true'}<span class="ol_image ol_width2">{$data.image}</span>{/if}
         <span class="ol_productsname ol_width3">
-          <span class="ol_distance"><strong>{$data.name}</strong> {$data.link_more}</span>
+          <span class="ol_distance">{if isset($data.link_more)}<strong>{$data.name}</strong> {$data.link_more}{else}{$data.link}{/if}</span>
           <p class="ol_short_desc">{$data.order_description}</p>
           {if isset($data.products_tags)}
             <div class="ol_tags_row">

@@ -132,7 +132,7 @@
       <td class="ord_table_left ord_width40">{$data.qty}</td>
       {if $smarty.const.CHECKOUT_SHOW_PRODUCTS_IMAGES == 'true' && $data.image != ''}<td class="ord_table_left ord_width90">{$data.image}</td>{/if}
       <td class="ord_table_left">
-        <strong>{$data.name}</strong> {$data.link_more}
+        {if isset($data.link_more)}<strong>{$data.name}</strong> {$data.link_more}{else}{$data.link}{/if}
         {if $data.order_description}<div class="description">{$data.order_description}</div>{/if}
         {if isset($data.products_tags)}
           <div class="ol_tags_row">
