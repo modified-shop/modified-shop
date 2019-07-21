@@ -1434,6 +1434,17 @@ div.checkoutbox .details{
   color: #000;
   font-weight: bold;
 }
+
+div.checkoutbox .ol_tags_row {
+  margin: 5px 0 10px 0;
+}
+div.checkoutbox .ol_tags_item {
+  font-size:11px;
+  font-weight:normal;
+  margin: 2px 0 0 0;
+}
+
+
 div.checkoutbox .total table td {
   padding:0px;
 }

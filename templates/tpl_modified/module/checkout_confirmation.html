@@ -132,8 +132,20 @@
       <td class="ord_table_left ord_width40">{$data.qty}</td>
       {if $smarty.const.CHECKOUT_SHOW_PRODUCTS_IMAGES == 'true' && $data.image != ''}<td class="ord_table_left ord_width90">{$data.image}</td>{/if}
       <td class="ord_table_left">
-        {$data.link}
+        <strong>{$data.name}</strong> {$data.link_more}
         {if $data.order_description}<div class="description">{$data.order_description}</div>{/if}
+        {if isset($data.products_tags)}
+          <div class="ol_tags_row">
+            {foreach item=module_data from=$data.products_tags}
+              <div class="ol_tags_item">     
+                <strong>{$module_data.OPTIONS_NAME}</strong>:       
+                {foreach name=inner item=item_data from=$module_data.DATA}
+                  {$item_data.VALUES_NAME}{if $smarty.foreach.inner.last}{else}, {/if}
+                {/foreach}
+              </div>
+            {/foreach} 
+          </div>
+        {/if}
         {if $data.attributes != ''}
           <ul class="attributes_list">
             {foreach key=a_data item=attrib_data from=$data.attributes}

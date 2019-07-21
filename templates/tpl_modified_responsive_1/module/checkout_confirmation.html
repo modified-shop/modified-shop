@@ -135,8 +135,20 @@
         <span class="ol_quantity ol_width1"><span class="ol_distance">{$data.qty}</span></span>
         {if $smarty.const.CHECKOUT_SHOW_PRODUCTS_IMAGES == 'true'}<span class="ol_image ol_width2">{$data.image}</span>{/if}
         <span class="ol_productsname ol_width3">
-          <span class="ol_distance">{$data.link}</span>
+          <span class="ol_distance"><strong>{$data.name}</strong> {$data.link_more}</span>
           <p class="ol_short_desc">{$data.order_description}</p>
+          {if isset($data.products_tags)}
+            <div class="ol_tags_row">
+              {foreach item=module_data from=$data.products_tags}
+                <div class="ol_tags_item">     
+                  <strong>{$module_data.OPTIONS_NAME}</strong>:       
+                  {foreach name=inner item=item_data from=$module_data.DATA}
+                    {$item_data.VALUES_NAME}{if $smarty.foreach.inner.last}{else}, {/if}
+                  {/foreach}
+                </div>
+              {/foreach} 
+            </div>
+          {/if}
           <p class="ol_model">{$smarty.const.HEADER_MODEL}: {$data.model}</p>
           {if $data.shipping_time}<p class="ol_model">{$smarty.const.SHIPPING_TIME} {$data.shipping_time}</p>{/if}
           {if $data.attributes != ''}
