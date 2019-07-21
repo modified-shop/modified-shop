@@ -138,7 +138,7 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
     include (DIR_WS_MODULES.FILENAME_GRADUATED_PRICE);
   }
   include (DIR_WS_MODULES.FILENAME_PRODUCTS_MEDIA);
-
+  include (DIR_WS_MODULES.'product_tags.php');
   include (DIR_WS_MODULES.'product_attributes.php');
   $module_content = array();
   if (isset($products_options_data) && is_array($products_options_data)) {  
