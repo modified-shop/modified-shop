@@ -127,6 +127,20 @@
         <div style="width:420px; float:left;">
           {$data.link}
           {if $data.order_description}<div class="small">{$data.order_description}</div>{/if}
+
+          {if isset($data.products_tags)}
+            <div class="ol_tags_row">
+              {foreach item=module_data from=$data.products_tags}
+                <div class="ol_tags_item">     
+                  <strong>{$module_data.OPTIONS_NAME}</strong>:       
+                  {foreach name=inner item=item_data from=$module_data.DATA}
+                    {$item_data.VALUES_NAME}{if $smarty.foreach.inner.last}{else}, {/if}
+                  {/foreach}
+                </div>
+              {/foreach} 
+            </div>
+          {/if}
+
           {if $data.shipping_time}<br /><span class="nobr small">{$smarty.const.SHIPPING_TIME} {$data.shipping_time}</span>{/if}
           {foreach key=a_data item=attrib_data from=$data.attributes}
             {if $attrib_data.value != ''}<br /><span class="nobr small">&nbsp;<i> - {$attrib_data.option} : {$attrib_data.value}</i></span>{/if}

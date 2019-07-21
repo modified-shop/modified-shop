@@ -2595,6 +2595,8 @@ span.ol_image img {
 span.ol_productsname {
   float:left;
   display:inline-block;
+  font-size: 13px;
+  line-height: 19px;
 }
 span.ol_productsname a {
   font-size: 13px;
@@ -2650,6 +2652,16 @@ span.ol_totalprice {
 .ol_short_desc {
   font-size:12px;
   line-height:18px;
+}
+
+.ol_tags_row {
+  margin: 0 0 10px 0;
+}
+.ol_tags_item {
+  font-size:12px;
+  line-height:18px;
+  font-weight:normal;
+  margin: 2px 0 0 0;
 }
 
 ul.attributes_list {

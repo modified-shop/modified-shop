@@ -2281,6 +2281,7 @@ table.order_table tr.mainrow td img.cartimage {
 table.order_table tr.mainrow td .description {
   font-size:12px !important;
   line-height:16px !important;
+  margin-top:5px;
   margin-bottom:5px;
 }
 table.order_table tr.mainrow td .description p {
@@ -2293,6 +2294,18 @@ table.order_table tr.mainrow td .description ul{
 table.order_table tr.mainrow td .description ol{
   margin: 8px 0px 8px 15px;
 }
+
+table.order_table tr.mainrow td .ol_tags_row {
+  margin: 0 0 10px 0;
+}
+table.order_table tr.mainrow td .ol_tags_item {
+  font-size:12px;
+  line-height:18px;
+  font-weight:normal;
+  margin: 2px 0 0 0;
+}
+
+
 table.order_table tr.mainrow td .shipping {
   font-size:12px;
   line-height:16px;
