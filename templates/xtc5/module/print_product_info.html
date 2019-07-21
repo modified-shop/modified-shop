@@ -35,6 +35,12 @@
         {/foreach}
         </ul>    
       {/if}
+      
+      {if isset($MODULE_product_tags) && $MODULE_product_tags != ''}
+        {$MODULE_product_tags|replace:"<h1":"<h2"|replace:"h1>":"h2>"}
+      {/if}
+    
+      
       <h2>{#price#}</h2>
       <p><strong>{$PRODUCTS_PRICE}</strong>, {$PRODUCTS_TAX_INFO} {$PRODUCTS_SHIPPING_LINK}</p>
       {if $MODULE_graduated_price != ''}<div class="hrlightgrey"></div>{$MODULE_graduated_price}{/if}

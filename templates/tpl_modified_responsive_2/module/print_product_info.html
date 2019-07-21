@@ -36,7 +36,7 @@
   <p>{$PRODUCTS_DESCRIPTION}</p>
 
   {if $module_content != ''}
-  <h2>{#options#}</h2>    
+  <h4 class="detailbox">{#options#}</h4>    
   <ul class="printinfolist">
     {foreach name=aussen item=module_data from=$module_content}
       <li{if $module_data.CHECKED == 1} class="active"{/if}>{$module_data.GROUP}: {$module_data.NAME}</li>
@@ -44,7 +44,11 @@
   </ul>    
   {/if}
 
-  <h2>{#price#}</h2>
+  {if isset($MODULE_product_tags) && $MODULE_product_tags != ''}
+    {$MODULE_product_tags}
+  {/if}
+
+  <h4 class="detailbox">{#price#}</h4>
   <p class="onlytop">{$PRODUCTS_PRICE}</p>
   <p class="mini nomargin">{$PRODUCTS_TAX_INFO} {$PRODUCTS_SHIPPING_LINK}</p>
 
