@@ -173,6 +173,7 @@ DELETE FROM `configuration` WHERE configuration_key = 'GOOGLE_RSS_FEED_REFID';
 
 #Tomcraft - 2019-07-22 - removed safeterms
 ALTER TABLE admin_access DROP safeterms;
+DELETE FROM `configuration` WHERE configuration_key LIKE '%SAFETERMS%';
 
 #GTB - 2019-07-22 - delete obsulete entry (fix #1529 & #1438 & #704)
 DELETE FROM `configuration` WHERE configuration_key = 'META_X_DEFAULT';
