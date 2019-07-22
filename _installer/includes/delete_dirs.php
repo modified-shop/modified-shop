@@ -33,6 +33,8 @@
     DIR_ADMIN.'includes/xsbooster', // neu
     DIR_ADMIN.'rss',
     'api/easybill',  // neu
+    'api/easymarketing/includes',
+    'api/easymarketing',
     'callback/pn_sofortueberweisung', // neu
     'callback/xtbooster', // neu
     'export/easybill', // neu
