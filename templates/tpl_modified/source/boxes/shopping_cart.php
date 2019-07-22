@@ -109,7 +109,7 @@
     if (isset($_SESSION['cc_id'])) {
       $clink_parameters = defined('TPL_POPUP_CONTENT_LINK_PARAMETERS') ? TPL_POPUP_CONTENT_LINK_PARAMETERS : POPUP_CONTENT_LINK_PARAMETERS;
       $clink_class = defined('TPL_POPUP_CONTENT_LINK_CLASS') ? TPL_POPUP_CONTENT_LINK_CLASS : POPUP_CONTENT_LINK_CLASS;
-      $box_smarty->assign('COUPON_HELP_LINK', '<a target="_blank" class="'.$clink_class.'" title="'.(defined('TEXT_LINK_TITLE_INFORMATION') ? TEXT_LINK_TITLE_INFORMATION : 'Information').'" href="'.xtc_href_link(FILENAME_POPUP_COUPON_HELP, 'cID='.$_SESSION['cc_id']. $clink_parameters, $request_type).'">Information</a>');
+      $box_smarty->assign('COUPON_HELP_LINK', '<a target="_blank" class="'.$clink_class.'" title="'.TEXT_LINK_TITLE_INFORMATION.'" href="'.xtc_href_link(FILENAME_POPUP_COUPON_HELP, 'cID='.$_SESSION['cc_id']. $clink_parameters, $request_type).'">Information</a>');
     }
   }
 
