@@ -79,7 +79,6 @@ $filename_array = array(
   'FILENAME_SHOPGATE' => 'shopgate.php',
   'FILENAME_JANOLAW' => 'janolaw.php',
   'FILENAME_HAENDLERBUND' => 'haendlerbund.php',
-  'FILENAME_SAFETERMS' => 'safeterms.php',
   'FILENAME_EASYMARKETING' => 'easymarketing.php',
   'FILENAME_GV_CUSTOMERS' => 'gv_customers.php',
   'FILENAME_IT_RECHT_KANZLEI' => 'it_recht_kanzlei.php',

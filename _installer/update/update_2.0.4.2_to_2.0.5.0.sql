@@ -171,5 +171,7 @@ ALTER TABLE `shipping_status` MODIFY `shipping_status_image` VARCHAR(64) NOT NUL
 #GTB - 2019-07-20 - delete unused entry
 DELETE FROM `configuration` WHERE configuration_key = 'GOOGLE_RSS_FEED_REFID';
 
+#Tomcraft - 2019-07-22 - removed safeterms
+ALTER TABLE admin_access DROP safeterms;
 
 # Keep an empty line at the end of this file for the db_updater to work properly
