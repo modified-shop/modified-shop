@@ -63,7 +63,6 @@ class multilang
     {
         return array(
           'MODULE_MULTILANG_STATUS',
-          'MODULE_MULTILANG_ADD_LANGUAGE',
           'MODULE_MULTILANG_ADD_DEFAULT_LANGUAGE',
           'MODULE_MULTILANG_X_DEFAULT',
         );
