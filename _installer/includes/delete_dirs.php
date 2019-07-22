@@ -27,6 +27,9 @@
     DIR_ADMIN.'includes/modules/kcfinder',
     DIR_ADMIN.'includes/modules/magpierss',
     DIR_ADMIN.'includes/modules/magpierss/extlib',
+    DIR_ADMIN.'includes/safeterms/css',
+    DIR_ADMIN.'includes/safeterms/images',
+    DIR_ADMIN.'includes/safeterms',
     DIR_ADMIN.'includes/xsbooster', // neu
     DIR_ADMIN.'rss',
     'api/easybill',  // neu
