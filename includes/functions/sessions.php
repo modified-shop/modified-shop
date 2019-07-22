@@ -155,6 +155,14 @@
 
   function xtc_session_save_path($path = '') {
     if (!empty($path)) {
+      $path = realpath($path);
+      if (strpos($path, '/') === false
+          || !is_dir($path) 
+          || !is_writeable($path)
+          )
+      {
+        $path = sys_get_temp_dir();
+      }      
       return session_save_path($path);
     } else {
       return session_save_path();
