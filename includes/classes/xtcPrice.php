@@ -412,7 +412,8 @@ class xtcPrice {
                                      AND status = 1
                                      AND (start_date IS NULL 
                                           OR start_date <= NOW())
-                                 ");
+                                     AND (expires_date >= NOW() 
+                                          OR expires_date IS NULL)");
       if (xtc_db_num_rows($product_query, true) > 0) {
         $product = xtc_db_fetch_array($product_query, true);
         $this->flagSpecial = true;

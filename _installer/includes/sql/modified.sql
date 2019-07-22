@@ -1251,7 +1251,9 @@ CREATE TABLE specials (
   status INT(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (specials_id),
   KEY idx_products_id (products_id),
-  KEY idx_status (status)
+  KEY idx_status (status),
+  KEY idx_start_date (start_date),
+  KEY idx_expires_date (expires_date)
 );
 
 DROP TABLE IF EXISTS tax_class;
