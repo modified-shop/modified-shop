@@ -20,6 +20,9 @@ defined('PAG_DIVIDER') OR define('PAG_DIVIDER',SEO_SEPARATOR);
 
 defined('ADD_CAT_NAMES_TO_PRODUCT_LINK') OR defined('MODULE_SHOPSTAT_ADD_CAT_NAMES_TO_PRODUCT') ? define('ADD_CAT_NAMES_TO_PRODUCT_LINK', MODULE_SHOPSTAT_ADD_CAT_NAMES_TO_PRODUCT == 'true') : define('ADD_CAT_NAMES_TO_PRODUCT_LINK', true);
 
+defined('ADD_DEFAULT_LANGUAGE_TO_LINK') OR defined('MODULE_MULTILANG_ADD_DEFAULT_LANGUAGE') ? define('ADD_DEFAULT_LANGUAGE_TO_LINK', MODULE_MULTILANG_ADD_DEFAULT_LANGUAGE == 'true') : define('ADD_DEFAULT_LANGUAGE_TO_LINK', false);
+defined('ADD_LANGUAGE_TO_LINK') OR defined('MODULE_MULTILANG_STATUS') ? define('ADD_LANGUAGE_TO_LINK', MODULE_MULTILANG_STATUS == 'true') : define('ADD_LANGUAGE_TO_LINK', false);
+
 
 class seo_url_shopstat extends modified_seo_url {
 
@@ -139,11 +142,8 @@ class seo_url_shopstat extends modified_seo_url {
         break;
 
       case 'specials.php':
-        $link = 'specials.php' . self::get_link_params(false, '?page=');
-        break;
-      
       case 'products_new.php':
-        $link = 'products_new.php' . self::get_link_params(false, '?page=');
+        $link = $page . self::get_link_params(false, '?page=');
         break;
     }
   
