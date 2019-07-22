@@ -18,12 +18,6 @@
 
 include ('includes/application_top.php');
 
-// findologic
-if (defined('MODULE_FINDOLOGIC_STATUS') && MODULE_FINDOLOGIC_STATUS == 'True' && !isset($_GET['f'])) {
-  xtc_redirect(xtc_href_link(FILENAME_FINDOLOGIC, xtc_get_all_get_params()));
-}
-unset($_GET['f']);
-
 // create smarty elements
 $smarty = new Smarty;
 

@@ -25,9 +25,6 @@ $cache_id = md5($_SESSION['language']);
 
 if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_search.html', $cache_id) || !$cache) {
   $filename = FILENAME_ADVANCED_SEARCH_RESULT;
-  if (defined('MODULE_FINDOLOGIC_STATUS') && MODULE_FINDOLOGIC_STATUS == 'True') {
-    $filename = FILENAME_FINDOLOGIC;
-  }
   $box_smarty->assign('FORM_ACTION', xtc_draw_form('quick_find', xtc_href_link($filename, '', $request_type, false), 'get', 'class="box-search"') . xtc_hide_session_id());
   $box_smarty->assign('INPUT_SEARCH', xtc_draw_input_field('keywords', '', 'placeholder="'.IMAGE_BUTTON_SEARCH.'" id="inputString" maxlength="30" autocomplete="off" '.((SEARCH_AC_STATUS == 'true') ? 'onkeyup="ac_lookup(this.value);" ' : '')));
   $box_smarty->assign('BUTTON_SUBMIT', xtc_image_submit('button_quick_find.gif', IMAGE_BUTTON_SEARCH,''));
