@@ -306,6 +306,11 @@ foreach ($script_array as $script) {
              $(".resp-tab-active input[type=radio]").prop('checked', true);
           }
       });
+
+      $('.cus_check_gift label').click(function() {
+        $('#rd-cot_gv').prop('checked', !$('#rd-cot_gv').prop('checked'));
+      });
+     
       $('#horizontalTab').easyResponsiveTabs({
           type: 'default' //Types: default, vertical, accordion           
       });

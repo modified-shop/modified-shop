@@ -48,12 +48,10 @@
     {if $CHECKBOX_NEWSLETTER}
     <br />
     <h4>{#title_newsletter#}</h4>
-    <table>
-      <tr>
-        <td class="checkbox">{$CHECKBOX_NEWSLETTER}</td>
-        <td class="midi"><label for="newsletter">{#text_newsletter#}</label></td>
-      </tr>
-    </table>
+    <div class="cus_check cus_check_small">
+      {$CHECKBOX_NEWSLETTER|replace:"&nbsp;":""}
+      <label for="newsletter">{#text_newsletter#}</label>
+    </div>
     {/if}
   </div>
 
@@ -109,13 +107,11 @@
     </table>
     {/if}
     {if $PRIVACY_CHECKBOX}
-    <br />
-    <table>
-      <tr>
-        <td class="checkbox">{$PRIVACY_CHECKBOX}</td>
-        <td class="midi td_full"><strong><label for="privacy">{#text_privacy_accept#}</label></strong> {$PRIVACY_LINK}</td>
-      </tr>
-    </table>
+      <br />
+      <div class="cus_check cus_check_small">
+        {$PRIVACY_CHECKBOX}
+        <label for="privacy"><strong>{#text_privacy_accept#}</strong> {$PRIVACY_LINK}</label>
+      </div>
     {/if}
   </div>
 </div>

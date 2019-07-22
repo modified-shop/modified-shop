@@ -3437,7 +3437,6 @@ ul.pd_iconlist li.wishlist:before {
 }
 .options_row_selection .options_selection label .label_row2 {
   display:inline-block;
-  padding-left:25px;
   font-style:italic;
 }
 /* END product_options */
@@ -5135,3 +5134,182 @@ ul.tc_list li .tc_delete .cssButton .fas {
   -webkit-text-fill-color: transparent;
 }
 /* END CSS Write reviews */
+
+
+
+/* 49. START Custom checkbox & radio */
+
+/* globals & helper */
+.cus_my_5 {
+  margin: 5px 0px;
+}
+.cus_mb_10 {
+  margin-bottom: 10px;
+}  
+.cus_label {
+  padding-left: 26px;
+}   
+ol#address_block {
+  margin: 15px 0px 0px 0px;
+  list-style: none;
+}
+.cus_radio label .address {
+  display: block !important;
+  padding: 5px 0px 0px 0px !important;
+  font-weight:400 !important;
+}
+
+/* custom checkbox */
+.cus_check {
+  font-size:13px;
+  line-height:19px;
+}
+.cus_check.cus_check_small {
+  font-size:12px;
+  line-height:18px;
+}
+.cus_check input[type="checkbox"] {
+  position: absolute !important;
+  visibility:hidden;
+  opacity: 0;
+}
+.cus_check input[type="checkbox"] ~ label {
+  padding-left: 26px;
+  position: relative;
+  cursor: pointer;
+  display: block;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 0 0 0px 0;
+}
+.cus_check input[type="checkbox"] ~ label:before {
+  font-family: 'Font Awesome 5 Free';
+  content: "\f0c8";
+  font-weight:400;
+  font-size: 14px;
+  line-height:14px;
+  position: absolute;
+  top: 2px;
+  left: 1px;
+  color:#ccc;
+  transition: background .15s;
+}
+.cus_check.cus_check_small input[type="checkbox"] ~ label:before {
+  top: 2px;
+}
+.cus_check input[type="checkbox"]:disabled ~ label {
+  color: #ccc;
+}
+.cus_check input[type="checkbox"]:disabled ~ label,
+.cus_check input[type="checkbox"]:disabled ~ label:before,
+.cus_check input[type="checkbox"]:disabled ~ label:after {
+  cursor: not-allowed;
+}
+.cus_check input[type="checkbox"]:disabled,
+.cus_check input[type="checkbox"]:disabled ~ label:before,
+.cus_check input[type="checkbox"]:disabled:checked ~ label:before {
+  opacity:0.5;
+}
+.cus_check input[type="checkbox"] ~ label:after {
+  font-family: 'Font Awesome 5 Free';
+  content: '\f14a';
+  font-weight:900;
+  font-size: 14px;
+  line-height:14px;
+  position: absolute;
+  top: 2px;
+  left: 1px;
+  color: #555;
+  transition: transform .15s;
+  transform: scale(0) rotate(90deg);
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.cus_check.cus_check_small input[type="checkbox"] ~ label:after {
+  top: 2px;
+}
+.cus_check input[type="checkbox"]:checked ~ label:after {
+  transform: scale(1) rotate(0deg);
+}
+
+/* custom radios */
+.cus_radio {
+  font-size:13px;
+  line-height:19px;
+}
+.cus_radio.cus_radio_small {
+  font-size:12px;
+  line-height:18px;
+}
+.cus_radio > label {
+  padding-left: 26px;
+}
+.cus_radio input[type="radio"] {
+  position: absolute;
+  visibility:hidden;
+  opacity: 0;
+}
+.cus_radio input[type="radio"] ~ label {
+  padding-left: 26px;
+  position: relative;
+  cursor: pointer;
+  display: block;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 0 0 0px 0;
+}
+.cus_radio input[type="radio"] ~ label:before {
+  font-family: 'Font Awesome 5 Free';
+  content: "\f111";
+  font-weight:400;
+  font-size: 14px;
+  line-height:14px;
+  position: absolute;
+  top: 2px;
+  left: 0;
+  color:#ccc;
+  transition: background .15s; 
+}  
+.cus_radio.cus_radio_small input[type="radio"] ~ label:before {
+  top: 2px;
+}
+.cus_radio input[type="radio"]:disabled ~ label {
+  color: #ccc;
+}
+.cus_radio input[type="radio"]:disabled ~ label,
+.cus_radio input[type="radio"]:disabled ~ label:before,
+.cus_radio input[type="radio"]:disabled ~ label:after {
+  cursor: not-allowed;
+}
+.cus_radio input[type="radio"]:disabled,
+.cus_radio input[type="radio"]:disabled ~ label:before,
+.cus_radio input[type="radio"]:disabled:checked ~ label:before {
+  opacity:0.5;
+}
+.cus_radio input[type="radio"] ~ label:after {
+  font-family: 'Font Awesome 5 Free';
+  content: '\f192';
+  font-weight:900;
+  font-size: 14px;
+  line-height:14px;
+  position: absolute;
+  top: 2px;
+  left: 0;
+  color: #555;
+  transition: transform .15s;
+  transform: scale(0) rotate(90deg);
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.cus_radio.cus_radio_small input[type="radio"] ~ label:after {
+  top: 2px;
+}
+.cus_radio input[type="radio"]:checked ~ label:after {
+  transform: scale(1) rotate(0deg);
+}
+/* END Custom checkbox & radio */
+

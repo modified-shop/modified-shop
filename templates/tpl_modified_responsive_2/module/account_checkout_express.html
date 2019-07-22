@@ -10,7 +10,12 @@
     <h4>{#heading_shipping#}</h4>
     {if isset($module_shipping_error)}<div class="errormessage">{$module_shipping_error}</div>{/if}
     {foreach name=aussen item=shipping from=$module_shipping}
-      <div class="account_row_shipping cf"><span>{$shipping.FIELD}</span> <label for="shipping_{$shipping.ID}">{$shipping.NAME}</label></div>
+      <div class="account_row_shipping cf">
+        <div class="cus_radio">
+          {$shipping.FIELD}
+          <label for="shipping_{$shipping.ID}">{$shipping.NAME}</label>
+        </div>
+      </div>
     {/foreach}
   </div>
 </div>
@@ -20,7 +25,12 @@
     <h4>{#heading_payment#}</h4>
     {if isset($module_payment_error)}<div class="errormessage">{$module_payment_error}</div>{/if}
     {foreach name=aussen item=payment from=$module_payment}
-      <div class="account_row_payment cf"><span>{$payment.FIELD}</span> <label for="payment_{$payment.ID}">{$payment.NAME}</label></div>
+      <div class="account_row_payment cf">
+        <div class="cus_radio">
+          {$payment.FIELD}
+          <label for="payment_{$payment.ID}">{$payment.NAME}</label>
+        </div>
+      </div>
     {/foreach}
   </div>
 </div>
@@ -33,11 +43,13 @@
     <ul class="address_block">
     {foreach name=aussen item=shipping_address from=$module_shipping_address}
       <li>
-        <span class="address_check">{$shipping_address.FIELD}</span>
-        <label for="shipping_address_{$shipping_address.ID}">
-          <span class="address_head"><strong>{$shipping_address.NAME}</strong></span>
-          <span class="address">{$shipping_address.ADDRESS}</span>
-        </label>
+        <div class="cus_radio">
+          {$shipping_address.FIELD}
+          <label for="shipping_address_{$shipping_address.ID}">
+            <span class="address_head"><strong>{$shipping_address.NAME}</strong></span>
+            <span class="address">{$shipping_address.ADDRESS}</span>
+          </label>
+        </div>
       </li>
     {/foreach}
     </ul>
@@ -52,11 +64,13 @@
     <ul class="address_block">
     {foreach name=aussen item=payment_address from=$module_payment_address}
       <li class="cf">
-        <span class="address_check">{$payment_address.FIELD}</span>
-        <label for="payment_address_{$payment_address.ID}">
-          <span class="address_head"><strong>{$payment_address.NAME}</strong></span>
-          <span class="address">{$payment_address.ADDRESS}</span>
-        </label>
+        <div class="cus_radio">
+          {$payment_address.FIELD}
+          <label for="payment_address_{$payment_address.ID}">
+            <span class="address_head"><strong>{$payment_address.NAME}</strong></span>
+            <span class="address">{$payment_address.ADDRESS}</span>
+          </label>
+        </div>
       </li>
     {/foreach}
     </ul>
