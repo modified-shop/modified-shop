@@ -140,7 +140,7 @@ class paypalplus extends PayPalPayment {
  		  $this->patch_payment_paypalplus();
 		}
 		
-    return $description;
+    return false;
   }
 
 
