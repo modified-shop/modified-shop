@@ -177,4 +177,7 @@ ALTER TABLE admin_access DROP safeterms;
 #GTB - 2019-07-22 - delete obsulete entry (fix #1529 & #1438 & #704)
 DELETE FROM `configuration` WHERE configuration_key = 'META_X_DEFAULT';
 
+#Tomcraft - 2019-07-22 - removed easymarketing
+ALTER TABLE admin_access DROP easymarketing;
+
 # Keep an empty line at the end of this file for the db_updater to work properly

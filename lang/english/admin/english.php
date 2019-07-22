@@ -174,7 +174,6 @@ define('BOX_SHOP','Shop');
 define('BOX_LOGOUT','Logout');
 define('BOX_CREDITS','Credits');
 define('BOX_UPDATE','Check Version');
-define('BOX_EASYMARKETING','EASYMARKETING AG'); // Tomcraft - 2013-08-29 - Added easymarketing
 define('BOX_GV_CUSTOMERS','Customers Credit');
 define('BOX_IT_RECHT_KANZLEI', 'IT Recht Kanzlei');
 define('BOX_PROTECTEDSHOPS', 'Protected Shops - AGB Service');
