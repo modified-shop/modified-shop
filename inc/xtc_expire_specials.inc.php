@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_expire_specials.inc.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -19,15 +19,10 @@
 
   // Auto expire products on special
   function xtc_expire_specials() {
-    $specials_query = xtc_db_query("SELECT specials_id 
-                                      FROM " . TABLE_SPECIALS . " 
-                                     WHERE status = '1' 
-                                       AND now() >= expires_date 
-                                       AND expires_date > 0");
-    if (xtc_db_num_rows($specials_query)) {
-      while ($specials = xtc_db_fetch_array($specials_query)) {
-        xtc_set_specials_status($specials['specials_id'], '0');
-      }
-    }
+    xtc_db_query("UPDATE ".TABLE_SPECIALS." 
+                     SET status = '0', 
+                         date_status_change = now() 
+                   WHERE expires_date <= now() 
+                     AND expires_date > 0");
   }
 ?>
