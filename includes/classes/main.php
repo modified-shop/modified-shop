@@ -59,7 +59,7 @@ class main {
     }
     $link_parameters = defined('TPL_POPUP_SHIPPING_LINK_PARAMETERS') ? TPL_POPUP_SHIPPING_LINK_PARAMETERS : POPUP_SHIPPING_LINK_PARAMETERS;
     $link_class = defined('TPL_POPUP_SHIPPING_LINK_CLASS') ? TPL_POPUP_SHIPPING_LINK_CLASS : POPUP_SHIPPING_LINK_CLASS;
-    return '<a rel="nofollow" target="_blank" href="'.xtc_href_link(FILENAME_POPUP_CONTENT, 'coID='.SHIPPING_STATUS_INFOS.$link_parameters, $request_type).'" title="Information" class="'.$link_class.'">'.(isset($this->SHIPPING[$id]['name']) ? $this->SHIPPING[$id]['name'] : '').'</a>';
+    return '<a rel="nofollow" target="_blank" href="'.xtc_href_link(FILENAME_POPUP_CONTENT, 'coID='.SHIPPING_STATUS_INFOS.$link_parameters, $request_type).'" title="'.TEXT_LINK_TITLE_INFORMATION.'" class="'.$link_class.'">'.(isset($this->SHIPPING[$id]['name']) ? $this->SHIPPING[$id]['name'] : '').'</a>';
   }
 
   /**
@@ -93,7 +93,7 @@ class main {
     $link_class = defined('TPL_POPUP_SHIPPING_LINK_CLASS') ? TPL_POPUP_SHIPPING_LINK_CLASS : POPUP_SHIPPING_LINK_CLASS;
     
     if (SHOW_SHIPPING == 'true') {
-      return ' '.((SHOW_SHIPPING_EXCL == 'false') ? SHIPPING_INCL : SHIPPING_EXCL).' <a rel="nofollow" target="_blank" href="'.xtc_href_link(FILENAME_POPUP_CONTENT, 'coID='.SHIPPING_INFOS.$link_parameters, $request_type).'" title="Information" class="'.$link_class.'">'.SHIPPING_COSTS.'</a>';
+      return ' '.((SHOW_SHIPPING_EXCL == 'false') ? SHIPPING_INCL : SHIPPING_EXCL).' <a rel="nofollow" target="_blank" href="'.xtc_href_link(FILENAME_POPUP_CONTENT, 'coID='.SHIPPING_INFOS.$link_parameters, $request_type).'" title="'.TEXT_LINK_TITLE_INFORMATION.'" class="'.$link_class.'">'.SHIPPING_COSTS.'</a>';
     }
   }
 
@@ -189,7 +189,7 @@ class main {
     $link_parameters = defined('TPL_POPUP_CONTENT_LINK_PARAMETERS') ? TPL_POPUP_CONTENT_LINK_PARAMETERS : POPUP_CONTENT_LINK_PARAMETERS;
     $link_class = defined('TPL_POPUP_CONTENT_LINK_CLASS') ? TPL_POPUP_CONTENT_LINK_CLASS : POPUP_CONTENT_LINK_CLASS;
     
-    $contentLink = '<a target="_blank" href="'.xtc_href_link(FILENAME_POPUP_CONTENT, 'coID='.$coID.$link_parameters, $ssl).'" title="Information" class="'.(($class_more === true) ? 'color_more ' : '').$link_class.'">'.$text.'</a>';
+    $contentLink = '<a target="_blank" href="'.xtc_href_link(FILENAME_POPUP_CONTENT, 'coID='.$coID.$link_parameters, $ssl).'" title="'.TEXT_LINK_TITLE_INFORMATION.'" class="'.(($class_more === true) ? 'color_more ' : '').$link_class.'">'.$text.'</a>';
     
     //new module support
     $contentLink = $this->mainModules->getShippingNotice($contentLink, $coID, $text, $ssl, $class_more);
@@ -294,9 +294,9 @@ class main {
       $products_image = xtc_get_products_image($pID);
       $product = new product($pID);
       $products_image = $product->productImage($products_image, 'thumbnail');      
-      $productPopupLink = '<a target="_blank" title="Information" href="'.xtc_href_link('print_product_info.php', 'pID='.$pID.$link_parameters, $request_type).'" class="'.$link_class.'">'.'<img class="'.$class.'" alt="" src="'.$products_image.'" />'.'</a>';
+      $productPopupLink = '<a target="_blank" title="'.TEXT_LINK_TITLE_INFORMATION.'" href="'.xtc_href_link('print_product_info.php', 'pID='.$pID.$link_parameters, $request_type).'" class="'.$link_class.'">'.'<img class="'.$class.'" alt="" src="'.$products_image.'" />'.'</a>';
     } else {
-      $productPopupLink = '<a target="_blank" title="Information" href="'.xtc_href_link('print_product_info.php', 'pID='.$pID.$link_parameters.$add_params, $request_type).'" class="'.$link_class.' '.$class.'">'.$text.'</a>';
+      $productPopupLink = '<a target="_blank" title="'.TEXT_LINK_TITLE_INFORMATION.'" href="'.xtc_href_link('print_product_info.php', 'pID='.$pID.$link_parameters.$add_params, $request_type).'" class="'.$link_class.' '.$class.'">'.$text.'</a>';
     }
     
     //new module support

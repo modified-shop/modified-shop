@@ -442,6 +442,8 @@ define('ERROR_INVALID_MINIMUM_ORDER_COUPON', 'Dieser Coupon kann erst ab einem M
 define('ERROR_INVALID_MINIMUM_ORDER_COUPON_ADD','<br/>Sie m&uuml;ssen den Couponcode beim Erreichen des Mindestbestellwertes erneut eingeben!');
 define('PERSONAL_MESSAGE', '%s schreibt:');
 
+define('TEXT_LINK_TITLE_INFORMATION', 'Information');
+
 /*
  * 
  *  COUPON POPUP

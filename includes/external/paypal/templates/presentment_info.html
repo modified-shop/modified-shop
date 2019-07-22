@@ -47,7 +47,7 @@
     {/if}
     
     {if !isset($nopresentment)}
-      <div class="psc_infolink"><a target="_blank" href="{$link}" title="Information" class="{$link_class}">{$smarty.const.TEXT_PAYPALINSTALLMENT_INFO_LINK}</a></div>
+      <div class="psc_infolink"><a target="_blank" href="{$link}" title="{if $smarty.const.TEXT_LINK_TITLE_INFORMATION}{$smarty.const.TEXT_LINK_TITLE_INFORMATION}{else}Information{/if}" class="{$link_class}">{$smarty.const.TEXT_PAYPALINSTALLMENT_INFO_LINK}</a></div>
     {/if}
   </div>
 </div>
