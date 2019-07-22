@@ -185,4 +185,8 @@ DELETE FROM `configuration` WHERE configuration_key LIKE '%EASYMARKETING%';
 #Tomcraft - 2019-07-22 - removed findologic
 DELETE FROM `configuration` WHERE configuration_key LIKE '%FINDOLOGIC%';
 
+#GTB - 2019-07-22 - add index - fix #826
+ALTER TABLE `specials` ADD KEY `idx_start_date` (`start_date`);
+ALTER TABLE `specials` ADD KEY `idx_expires_date` (`expires_date`);
+
 # Keep an empty line at the end of this file for the db_updater to work properly
