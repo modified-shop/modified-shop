@@ -50,7 +50,12 @@ class cod {
 
   function update_status() {
     global $order;
-    if ($_SESSION['shipping']['id'] == 'selfpickup_selfpickup') {
+    
+    if (isset($_SESSION['shipping']) 
+        && array_key_exists('id', $_SESSION['shipping']) 
+        && $_SESSION['shipping']['id'] == 'selfpickup_selfpickup'
+        )
+    {
       $this->enabled = false;
     }
     if (($this->enabled == true) && ((int) MODULE_PAYMENT_COD_ZONE > 0)) {
