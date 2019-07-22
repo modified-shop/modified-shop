@@ -263,7 +263,7 @@
             'title' => (($categories_meta['categories_meta_title'] != '') ? $categories_meta['categories_meta_title'] : $categories_meta['categories_name']),
             'description' => (($categories_meta['categories_meta_description'] != '') ? $categories_meta['categories_meta_description'] : $categories_meta['categories_name'].(($categories_meta['categories_description'] != '') ? ': '.$categories_meta['categories_description'] : '')),
             'keywords' => (($categories_meta['categories_meta_keywords'] != '') ? $categories_meta['categories_meta_keywords'] : metaKeyWords($categories_meta['categories_name'].' '.$categories_meta['categories_description'])),
-            'link' => xtc_href_link(FILENAME_DEFAULT, 'cPath='.$cPath, 'NONSSL', false),
+            'link' => xtc_href_link(FILENAME_DEFAULT, 'cPath='.$cPath.$page_param, 'NONSSL', false),
           );
 
           if ($addCatShopTitle) $metadata_array['title'] .= ' - ' . ML_META_TITLE;
@@ -284,7 +284,7 @@
             'title' => (($manufacturer['manufacturers_meta_title'] != '') ? $manufacturer['manufacturers_meta_title'] : $manufacturer['manufacturers_name']),
             'description' => (($manufacturer['manufacturers_meta_description'] != '') ? $manufacturer['manufacturers_meta_description'] : $manufacturer['manufacturers_name'].(($manufacturer['manufacturers_description'] != '') ? ': '.$manufacturer['manufacturers_description'] : '')),
             'keywords' => (($manufacturer['manufacturers_meta_keywords'] != '') ? $manufacturer['manufacturers_meta_keywords'] : metaKeyWords($manufacturer['manufacturers_name'].' '.$manufacturer['manufacturers_description'])),
-            'link' => xtc_href_link(FILENAME_DEFAULT, 'manufacturers_id='.(int)$manu_id, 'NONSSL', false),
+            'link' => xtc_href_link(FILENAME_DEFAULT, 'manufacturers_id='.(int)$manu_id.$page_param, 'NONSSL', false),
           );
           
           if ($addCatShopTitle) $metadata_array['title'] .= ' - ' . ML_META_TITLE;
@@ -520,9 +520,12 @@
       if ($page >= 1 && $number_of_pages > 1 && $number_of_pages > $page) {
         echo '<link rel="next" href="'.xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params_include(array('products_id', 'cPath', 'manufacturers_id', 'coID')).'page='.($page + 1), 'NONSSL', false).'" />'."\n";
       }
+      /*
+      // dont show canonical with pagination
       if (isset($metadata_array['link']) && $page > 1) {
         unset($metadata_array['link']);
       }
+      */
     }
   }
 
@@ -536,13 +539,13 @@
       && MODULE_MULTILANG_STATUS == 'true'
       && $set_hreflang 
       && count($lng->catalog_languages) > 1 
-      && (!isset($_GET['page']) || $_GET['page'] == 1)
+      //&& (!isset($_GET['page']) || $_GET['page'] == 1)
       ) 
   {
     $canonical_flag = true;
     $x_default_flag = true;
     $x_default_lng = ((defined('MODULE_MULTILANG_X_DEFAULT')) ? MODULE_MULTILANG_X_DEFAULT : 'en');
-    $x_default_link = xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params_include(array('products_id', 'cPath', 'manufacturers_id', 'coID')).'language='.$x_default_lng, 'NONSSL', false);
+    $x_default_link = xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params_include(array('products_id', 'cPath', 'manufacturers_id', 'coID')).'language='.$x_default_lng.$page_param, 'NONSSL', false);
     if ($x_default_link != '#') {
       $meta_alternate['x-default'] = '<link rel="alternate" href="'.$x_default_link.'" hreflang="x-default" />';
     } else {
@@ -550,17 +553,7 @@
     }
     reset($lng->catalog_languages);
     foreach ($lng->catalog_languages as $key => $value) {
-      $alternate_link = xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params_include(array('products_id', 'cPath', 'manufacturers_id', 'coID')).'language='.$key, 'NONSSL', false);
-      /*
-      // dont show hreflang  for urls with language param
-      $meta_url = parse_url($alternate_link);
-      if (isset($meta_url['query'])) {
-        parse_str($meta_url['query'], $meta_params_array);
-        if (isset($meta_params_array['language'])) {
-          break;
-        }
-      }
-      */
+      $alternate_link = xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params_include(array('products_id', 'cPath', 'manufacturers_id', 'coID')).'language='.$key.$page_param, 'NONSSL', false);
       if ($alternate_link != '#') {
         if ($x_default_flag === false) {
           $meta_alternate['x-default'] = '<link rel="alternate" href="'.$alternate_link.'" hreflang="x-default" />';
@@ -570,7 +563,10 @@
         }
       }
     }
-    $canonical_flag = false;  
+    $canonical_flag = false;
+    
+    // canonical for alternate
+    $meta_alternate['canonical'] = '<link rel="canonical" href="'.$metadata_array['link'].'" />';
   }
   if (count($meta_alternate) > 2) {
     echo implode("\n",$meta_alternate)."\n";
