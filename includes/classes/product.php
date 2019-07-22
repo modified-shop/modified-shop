@@ -541,13 +541,8 @@ class product {
       }
     }
     
-    //get products image, imageinfo array
-    $products_image = $this->productImage($array['products_image'], $image);    
-    $p_img = substr($products_image, strlen(DIR_WS_BASE));
-    $img_attr = '';
-    if (file_exists($p_img)) {
-      list($width, $height, $type, $img_attr) = getimagesize($p_img);
-    }
+    //get products image
+    $products_image = $this->productImage($array['products_image'], $image);   
 
     // exclude some variables
     if (isset($array['products_date_available']) && $array['products_date_available'] < date('Y-m-d H:i:s')) {
@@ -568,7 +563,6 @@ class product {
       'PRODUCTS_VPE_VALUE' => $array['products_vpe_value'],
       'PRODUCTS_VPE_NAME' => $main->vpe_name,
       'PRODUCTS_IMAGE' => $products_image,
-      'PRODUCTS_IMAGE_SIZE' => $img_attr,
       'PRODUCTS_IMAGE_TITLE' => str_replace(array('"', "'"), array('&quot;', '&apos;'), $array['products_name']), // Currently not in use
       'PRODUCTS_IMAGE_ALT' => str_replace(array('"', "'"), array('&quot;', '&apos;'), $array['products_name']), // Currently not in use
       'PRODUCTS_LINK' => $products_link,
