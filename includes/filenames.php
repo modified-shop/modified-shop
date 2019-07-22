@@ -90,7 +90,6 @@ $filename_array = array(
   'FILENAME_ERROR_HANDLER' => 'error_handler.php',
   'FILENAME_CONTENT' => 'shop_content.php',
   'FILENAME_BANNER' => 'banners.php',
-  'FILENAME_FINDOLOGIC' => 'findologic.php',
   'FILENAME_WISHLIST' => 'wishlist.php',
   'FILENAME_ACCOUNT_CHECKOUT_EXPRESS' => 'account_checkout_express.php',
   'FILENAME_CHECKOUT_PAYMENT_IFRAME' => 'checkout_payment_iframe.php',

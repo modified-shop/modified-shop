@@ -182,4 +182,7 @@ DELETE FROM `configuration` WHERE configuration_key = 'META_X_DEFAULT';
 ALTER TABLE admin_access DROP easymarketing;
 DELETE FROM `configuration` WHERE configuration_key LIKE '%EASYMARKETING%';
 
+#Tomcraft - 2019-07-22 - removed findologic
+DELETE FROM `configuration` WHERE configuration_key LIKE '%FINDOLOGIC%';
+
 # Keep an empty line at the end of this file for the db_updater to work properly
