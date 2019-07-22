@@ -442,6 +442,8 @@ define('ERROR_INVALID_MINIMUM_ORDER_COUPON', 'This coupon can be redeemed only w
 define('ERROR_INVALID_MINIMUM_ORDER_COUPON_ADD','<br/>You have to enter the coupon code again when you reach the minimum order value!');
 define('PERSONAL_MESSAGE', '%s writes:');
 
+define('TEXT_LINK_TITLE_INFORMATION', 'Information');
+
 /*
  *
  * CUOPON POPUP
