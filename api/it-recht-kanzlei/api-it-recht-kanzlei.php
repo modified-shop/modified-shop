@@ -18,7 +18,7 @@
       )
   {
     require_once(DIR_FS_CATALOG.'api/it-recht-kanzlei/classes/class.api_it_recht_kanzlei.php');
-    $api_rechtskanzlei = new it_recht_kanzlei();
+    $api_it_recht_kanzlei = new api_it_recht_kanzlei();
 
     $xml_input = file_get_contents('php://input');
     $xml_output = rawurldecode(str_replace(array('xml=', '+'), array('', ' '), $xml_input));
@@ -30,9 +30,9 @@
         && $check[1] == MODULE_API_IT_RECHT_KANZLEI_TOKEN
         )
     {
-      $api_rechtskanzlei->process($xml_output);
+      $api_it_recht_kanzlei->process($xml_output);
     } else {
-      $api_rechtskanzlei->return_error('12');
+      $api_it_recht_kanzlei->return_error('12');
     }
   }
 ?>

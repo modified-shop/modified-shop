@@ -16,9 +16,9 @@
    ---------------------------------------------------------------------------------------*/
 
 
-class it_recht_kanzlei {
+class api_it_recht_kanzlei {
   
-  var $modulversion = '1.4';
+  public $modulversion = '1.5';
   var $api_action_flag, 
       $api_version_flag, 
       $api_username_flag, 
@@ -27,7 +27,13 @@ class it_recht_kanzlei {
       $action, 
       $post_xml;
 
-  function __construct() {}
+  function __construct() {
+    $this->document_name = array(
+      'de' => '%s - als PDF',
+      'en' => '%s - as PDF',
+      'fr' => '%s - au format PDF',
+    );
+  }
   
   function process($post_xml) {
   
@@ -125,11 +131,30 @@ class it_recht_kanzlei {
         $this->return_error('9');
       } else {
         require_once(DIR_WS_CLASSES.'language.php');
-        $lng = new language($xml->rechtstext_language);
+        $lng = new language((string)$xml->rechtstext_language);
         $languages_id = $lng->language['id'];
+        $languages_code = $lng->language['code'];
         if ($lng->language['code'] != $xml->rechtstext_language) {
           $this->return_error('9');
         }
+      }
+      // Catch errors - rechtstext_country
+      if ($xml->rechtstext_country == '') {
+        $this->return_error('17');
+      }
+      // Catch errors - rechtstext_title
+      if (!isset($xml->rechtstext_title)
+          || $xml->rechtstext_title == '' 
+          || strlen($xml->rechtstext_title) < 3
+          )
+      {
+        $this->return_error('18');
+      }
+      if (!isset($xml->rechtstext_pdf_filenamebase_suggestion) 
+          || $xml->rechtstext_pdf_filenamebase_suggestion == ''
+          )
+      {
+        $this->return_error('19');
       }
       
       $local_dir_for_pdf_storage = 'media/content/';
@@ -163,9 +188,9 @@ class it_recht_kanzlei {
             $this->return_error('7');
           }
           // Download pdf file
-          $file_pdf_targetfilename = $xml->rechtstext_type .'.pdf';
+          $file_pdf_targetfilename = $xml->rechtstext_pdf_filenamebase_suggestion.'_'.$languages_code.'.pdf';
           $file_pdf_target = DIR_FS_CATALOG.$local_dir_for_pdf_storage.$file_pdf_targetfilename;
-          $file_pdf_target_temp = DIR_FS_CATALOG.$local_dir_for_pdf_storage.md5($xml->rechtstext_type).'.pdf';
+          $file_pdf_target_temp = DIR_FS_CATALOG.$local_dir_for_pdf_storage.md5($xml->rechtstext_pdf_filenamebase_suggestion.'_'.$languages_code).'.pdf';
           
           // include needed function
           require_once(DIR_FS_INC.'get_external_content.inc.php');
@@ -216,50 +241,58 @@ class it_recht_kanzlei {
       if ($xml->rechtstext_type == 'agb') {
         $content_group = MODULE_API_IT_RECHT_KANZLEI_TYPE_AGB;
         if ($pdf_file_stored === true) {
-          $pdf_file_text = '<br /><br /><a href="'.((ENABLE_SSL === true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.$local_dir_for_pdf_storage.$file_pdf_targetfilename.'" target="_blank">AGB - PDF download!</a>';
+          $pdf_file_text = '<br /><br /><a href="'.((ENABLE_SSL === true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.$local_dir_for_pdf_storage.$file_pdf_targetfilename.'" target="_blank">'.sprintf($this->document_name[$languages_code], $xml->rechtstext_title).'</a>';
         }
       } elseif ($xml->rechtstext_type == 'datenschutz') {
         $content_group = MODULE_API_IT_RECHT_KANZLEI_TYPE_DSE;
         if ($pdf_file_stored === true) {
-          $pdf_file_text = '<br /><br /><a href="'.((ENABLE_SSL === true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.$local_dir_for_pdf_storage.$file_pdf_targetfilename.'" target="_blank">Datenschutz - PDF download!</a>';
+          $pdf_file_text = '<br /><br /><a href="'.((ENABLE_SSL === true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.$local_dir_for_pdf_storage.$file_pdf_targetfilename.'" target="_blank">'.sprintf($this->document_name[$languages_code], $xml->rechtstext_title).'</a>';
         }
       } elseif ($xml->rechtstext_type == 'widerruf') {
         $content_group = MODULE_API_IT_RECHT_KANZLEI_TYPE_WRB;
         if ($pdf_file_stored === true) {
-          $pdf_file_text = '<br /><br /><a href="'.((ENABLE_SSL === true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.$local_dir_for_pdf_storage.$file_pdf_targetfilename.'" target="_blank">Widerruf - PDF download!</a>';
+          $pdf_file_text = '<br /><br /><a href="'.((ENABLE_SSL === true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.$local_dir_for_pdf_storage.$file_pdf_targetfilename.'" target="_blank">'.sprintf($this->document_name[$languages_code], $xml->rechtstext_title).'</a>';
         }
       } elseif ($xml->rechtstext_type == 'impressum') {
         $content_group = MODULE_API_IT_RECHT_KANZLEI_TYPE_IMP;
       }
       
+      $url = xtc_href_link(FILENAME_CONTENT, 'coID='.$content_group.'&language='.$languages_code, 'NONSSL', false);
       if ($content_group != '') {
         $check_query = xtc_db_query("SELECT content_text 
                                        FROM ".TABLE_CONTENT_MANAGER." 
                                       WHERE content_group = '".$content_group."' 
                                         AND languages_id = '".$languages_id."' 
                                       LIMIT 1");
-        $check = xtc_db_fetch_array($check_query);
-        if ($check['content_text'] == $this->charset_decode_utf_8($xml->rechtstext_html.$pdf_file_text)) {
-          $this->return_success();
-        } else {
-          $sql_data_array = array('content_text' => $this->charset_decode_utf_8($xml->rechtstext_html.$pdf_file_text));
-          xtc_db_perform(TABLE_CONTENT_MANAGER, $sql_data_array, 'update', "content_group = '".$content_group."' AND languages_id = '".$languages_id."'");
-          if (xtc_db_affected_rows() < 1) {
-            $check_content_query = xtc_db_query("SELECT content_text 
-                                                   FROM ".TABLE_CONTENT_MANAGER." 
-                                                  WHERE content_group = '".$content_group."' 
-                                                    AND languages_id = '".$languages_id."'");
-            $check_content = xtc_db_fetch_array($check_content_query);
-            if ($check_content['content_text'] != $sql_data_array['content_text']) {
-              $this->return_error('99');
+        if (xtc_db_num_rows($check_query) > 0) {
+          $check = xtc_db_fetch_array($check_query);
+          if ($check['content_text'] == $this->charset_decode_utf_8($xml->rechtstext_html.$pdf_file_text)) {
+            $this->return_success($url);
+          } else {
+            $sql_data_array = array(
+              'content_text' => $this->charset_decode_utf_8($xml->rechtstext_html.$pdf_file_text.'<style>.itkanzlei_first_headline{display:none;}</style>'),
+              'content_title' => $this->charset_decode_utf_8($xml->rechtstext_title),
+            );
+            xtc_db_perform(TABLE_CONTENT_MANAGER, $sql_data_array, 'update', "content_group = '".$content_group."' AND languages_id = '".$languages_id."'");
+            if (xtc_db_affected_rows() < 1) {
+              $check_content_query = xtc_db_query("SELECT content_text 
+                                                     FROM ".TABLE_CONTENT_MANAGER." 
+                                                    WHERE content_group = '".$content_group."' 
+                                                      AND languages_id = '".$languages_id."'");
+              $check_content = xtc_db_fetch_array($check_content_query);
+              if ($check_content['content_text'] != $sql_data_array['content_text']) {
+                $this->return_error('99');
+              }
             }
           }
+        } else {
+          $this->return_error('81');
         }
       } else {
-        $this->return_error('99');
+        $this->return_error('80');
       }  
           
-      $this->return_success();
+      $this->return_success($url);
     } else {
       $this->return_error('99');
     }
@@ -340,7 +373,7 @@ class it_recht_kanzlei {
   }
   
   // return success and end script
-  function return_success() {
+  function return_success($url) {
     // output success
     header('Content-type: application/xml; charset=utf-8');
     echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
@@ -348,6 +381,7 @@ class it_recht_kanzlei {
     echo "  <status>success</status>\n";
     echo "  <meta_shopversion>".$this->shopversion."</meta_shopversion>\n";
     echo "  <meta_modulversion>".$this->modulversion."</meta_modulversion>\n";
+    echo "  <target_url><![CDATA[".$url."]]></target_url>\n";
     echo "</response>";
     exit();
   }
