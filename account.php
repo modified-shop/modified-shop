@@ -32,8 +32,14 @@ require_once (DIR_FS_INC.'get_tracking_link.inc.php');
 require_once (DIR_FS_INC.'xtc_format_price_order.inc.php');
 require_once (DIR_FS_INC.'get_order_total.inc.php');
 
-if (!isset($_SESSION['customer_id']) && GUEST_ACCOUNT_EDIT != 'true') { 
+if (!isset($_SESSION['customer_id'])) { 
   xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
+} elseif (isset($_SESSION['customer_id']) 
+          && $_SESSION['customers_status']['customers_status_id'] == DEFAULT_CUSTOMERS_STATUS_ID_GUEST
+          && GUEST_ACCOUNT_EDIT != 'true'
+          )
+{ 
+  xtc_redirect(xtc_href_link(FILENAME_DEFAULT, '', 'SSL'));
 }
 
 // clear session

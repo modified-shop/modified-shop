@@ -28,12 +28,10 @@ require_once (DIR_FS_INC.'xtc_count_customer_address_book_entries.inc.php');
 
 if (!isset($_SESSION['customer_id'])) { 
   xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
-}
-
-if (isset($_SESSION['customer_id']) 
-    && $_SESSION['customers_status']['customers_status_id'] == DEFAULT_CUSTOMERS_STATUS_ID_GUEST
-    && GUEST_ACCOUNT_EDIT != 'true'
-    )
+} elseif (isset($_SESSION['customer_id']) 
+          && $_SESSION['customers_status']['customers_status_id'] == DEFAULT_CUSTOMERS_STATUS_ID_GUEST
+          && GUEST_ACCOUNT_EDIT != 'true'
+          )
 { 
   xtc_redirect(xtc_href_link(FILENAME_DEFAULT, '', 'SSL'));
 }

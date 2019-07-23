@@ -28,21 +28,18 @@ require_once (DIR_FS_INC.'xtc_display_tax_value.inc.php');
 require_once (DIR_FS_INC.'xtc_format_price_order.inc.php');
 require_once (DIR_FS_INC.'get_tracking_link.inc.php');
 
-//security checks
-if (!isset ($_SESSION['customer_id'])) { 
-  xtc_redirect(xtc_href_link(FILENAME_LOGIN, 'order_id=' .(int)$_GET['order_id'], 'SSL')); 
-}
-
-if (isset($_SESSION['customer_id']) 
-    && $_SESSION['customers_status']['customers_status_id'] == DEFAULT_CUSTOMERS_STATUS_ID_GUEST
-    && GUEST_ACCOUNT_EDIT != 'true'
-    )
-{ 
-  xtc_redirect(xtc_href_link(FILENAME_DEFAULT, '', 'SSL'));
-}
-
 if (!isset ($_GET['order_id']) || (isset ($_GET['order_id']) && !is_numeric($_GET['order_id']))) {
    xtc_redirect(xtc_href_link(FILENAME_ACCOUNT_HISTORY, '', 'SSL'));
+}
+
+if (!isset($_SESSION['customer_id'])) { 
+  xtc_redirect(xtc_href_link(FILENAME_LOGIN, 'order_id='.(int)$_GET['order_id'], 'SSL'));
+} elseif (isset($_SESSION['customer_id']) 
+          && $_SESSION['customers_status']['customers_status_id'] == DEFAULT_CUSTOMERS_STATUS_ID_GUEST
+          && GUEST_ACCOUNT_EDIT != 'true'
+          )
+{ 
+  xtc_redirect(xtc_href_link(FILENAME_DEFAULT, '', 'SSL'));
 }
 
 $customer_info_query = xtc_db_query("SELECT customers_id 
