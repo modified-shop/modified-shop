@@ -359,6 +359,7 @@
     'includes/extra/send_order/janolaw.php',
     'includes/extra/send_order/payone.php',
     'includes/extra/send_order/paypal.php',
+    'includes/extra/wysiwyg/custom_config.php',
     'includes/google_conversiontracking.js.php',
     'includes/masterpayment/logs/.htaccess',
     'includes/modules/reviews.php',
