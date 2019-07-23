@@ -180,17 +180,18 @@ class api_it_recht_kanzlei {
         $this->return_error('4');
       }
       
+      // Download pdf file
       $pdf_file_stored = false;
+      $file_pdf_targetfilename = $xml->rechtstext_pdf_filenamebase_suggestion.'_'.$languages_code.'.pdf';
+      $file_pdf_target = DIR_FS_CATALOG.$local_dir_for_pdf_storage.$file_pdf_targetfilename;
+      $file_pdf_target_temp = DIR_FS_CATALOG.$local_dir_for_pdf_storage.md5($xml->rechtstext_pdf_filenamebase_suggestion.'_'.$languages_code).'.pdf';
+
       if (count($local_rechtstext_pdf_type) > 0 && in_array($xml->rechtstext_type, $local_rechtstext_pdf_type)) {        
         if (in_array($xml->rechtstext_type, $local_rechtstext_pdf_type)) {
           // Catch errors - element 'rechtstext_pdf_url' empty or URL invalid
           if ($xml->rechtstext_pdf_url == '' || $this->url_valid($xml->rechtstext_pdf_url) !== true) {
             $this->return_error('7');
           }
-          // Download pdf file
-          $file_pdf_targetfilename = $xml->rechtstext_pdf_filenamebase_suggestion.'_'.$languages_code.'.pdf';
-          $file_pdf_target = DIR_FS_CATALOG.$local_dir_for_pdf_storage.$file_pdf_targetfilename;
-          $file_pdf_target_temp = DIR_FS_CATALOG.$local_dir_for_pdf_storage.md5($xml->rechtstext_pdf_filenamebase_suggestion.'_'.$languages_code).'.pdf';
           
           // include needed function
           require_once(DIR_FS_INC.'get_external_content.inc.php');
@@ -223,6 +224,7 @@ class api_it_recht_kanzlei {
           } else {
             @unlink($file_pdf_target);
             @copy($file_pdf_target_temp, $file_pdf_target);
+            @unlink($file_pdf_target_temp);
             if (!is_file($file_pdf_target)) {
               $this->return_error('7');
             }
@@ -230,8 +232,8 @@ class api_it_recht_kanzlei {
           $pdf_file_stored = true;
         }
       } else {
-        if (is_file(DIR_FS_CATALOG.$local_dir_for_pdf_storage.$xml->rechtstext_type .'.pdf')) {
-          @unlink(DIR_FS_CATALOG.$local_dir_for_pdf_storage.$xml->rechtstext_type .'.pdf');
+        if (is_file($file_pdf_target)) {
+          @unlink($file_pdf_target);
         }
       }
       
