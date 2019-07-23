@@ -272,6 +272,7 @@ class api_it_recht_kanzlei {
             $sql_data_array = array(
               'content_text' => $this->charset_decode_utf_8($xml->rechtstext_html.$pdf_file_text.'<style>.itkanzlei_first_headline{display:none;}</style>'),
               'content_title' => $this->charset_decode_utf_8($xml->rechtstext_title),
+              'content_heading' => $this->charset_decode_utf_8($xml->rechtstext_title),
             );
             xtc_db_perform(TABLE_CONTENT_MANAGER, $sql_data_array, 'update', "content_group = '".$content_group."' AND languages_id = '".$languages_id."'");
             if (xtc_db_affected_rows() < 1) {
