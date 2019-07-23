@@ -29,6 +29,9 @@ $smarty = new Smarty;
 require_once (DIR_FS_INC.'xtc_date_long.inc.php');
 require_once (DIR_FS_INC.'xtc_get_vpe_name.inc.php');
 
+// include boxes
+require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
+
 if ($language_not_found === true) {
   $site_error = TEXT_SITE_NOT_FOUND;
   include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
@@ -38,9 +41,6 @@ if ($language_not_found === true) {
 
   include (DIR_WS_MODULES.'default.php');
 }
-
-// include boxes
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 require (DIR_WS_INCLUDES.'header.php');
 
