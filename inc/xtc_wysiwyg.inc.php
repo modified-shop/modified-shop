@@ -41,6 +41,13 @@ function xtc_wysiwyg($type, $lang, $langID = '',$addonType='')
     $customConfig = array();
     //$customConfig['customConfig'] = "customConfig : '../ckeditor/custom/ckeditor_config.js',";
 
+    //skin  - muss für jede CKEditor Version separat aktualisiert werden
+    $customConfig['skin'] = "skin: '".(defined('WYSIWYG_SKIN') ? WYSIWYG_SKIN : moonocolor)."',";
+
+    //Eingabeoptionen
+    $customConfig['enterMode'] = "enterMode: CKEDITOR.ENTER_BR,";
+    $customConfig['shiftEnterMode'] = "shiftEnterMode: CKEDITOR.ENTER_P,";
+
     //extraPlugins
     $customConfig['extraPlugins'] = "extraPlugins: '',";
     
