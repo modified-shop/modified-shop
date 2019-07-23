@@ -40,6 +40,24 @@ if (function_exists($ajax_ext)) {
     die("function or class does not exist");
 }
 
+if (isset($_REQUEST['speed'])) {
+
+}
+
+// if gzip_compression is enabled start to buffer the output
+if (defined('GZIP_COMPRESSION') && GZIP_COMPRESSION == 'true' && $ext_zlib_loaded = extension_loaded('zlib')) {
+  require_once (DIR_FS_INC.'xtc_gzip_output.inc.php');
+  require_once (DIR_FS_INC.'xtc_check_gzip.inc.php');
+  if (($ini_zlib_output_compression = (int) ini_get('zlib.output_compression')) < 1) {
+    ob_start('ob_gzhandler');
+  } else {
+    ini_set('zlib.output_compression_level', GZIP_LEVEL);
+  }
+  if ($encoding = xtc_check_gzip()) {
+    header('Content-Encoding: ' . $encoding);
+  }
+}
+
 if ($ajax_rt == 'json') {
     $response = json_encode($response);
     header('Content-Type: application/json');
@@ -57,11 +75,23 @@ header("Pragma: no-cache");
 // output
 echo $response;
 
+// gzip compression
+if (defined('GZIP_COMPRESSION')
+    && GZIP_COMPRESSION == 'true' 
+    && isset($ext_zlib_loaded)
+    && $ext_zlib_loaded == true 
+    && isset($ini_zlib_output_compression)
+    && $ini_zlib_output_compression < 1
+    )
+{
+  xtc_gzip_output(GZIP_LEVEL);
+}
+
 // log parse time
 if (defined('STORE_PAGE_PARSE_TIME') && STORE_PAGE_PARSE_TIME == 'true') {
-    $parse_time = number_format((microtime(true) - PAGE_PARSE_START_TIME), 3);
-    if ($parse_time >= STORE_PAGE_PARSE_TIME_THRESHOLD) {
-        error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' [' . $parse_time . 's] ' . getenv('REQUEST_URI') . "\n", 3, DIR_FS_LOG.'mod_parsetime_'. date('Y-m-d') .'.log');
-    }
+  $parse_time = number_format((microtime(true) - PAGE_PARSE_START_TIME), 3);
+  if ($parse_time >= STORE_PAGE_PARSE_TIME_THRESHOLD) {
+    error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' [' . $parse_time . 's] ' . getenv('REQUEST_URI') . "\n", 3, DIR_FS_LOG.'mod_parsetime_'. date('Y-m-d') .'.log');
+  }
 }
 ?>

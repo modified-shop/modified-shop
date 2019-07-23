@@ -106,15 +106,5 @@ while ($configuration = xtc_db_fetch_array($configuration_query)) {
 
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/application_top_export/application_top_export_begin/','php') as $file) require ($file);
 
-// if gzip_compression is enabled, start to buffer the output
-if ( (GZIP_COMPRESSION == 'true') && ($ext_zlib_loaded = extension_loaded('zlib')) && (PHP_VERSION >= '4') ) {
-  if (($ini_zlib_output_compression = (int)ini_get('zlib.output_compression')) < 1) {
-    ob_start('ob_gzhandler');
-  } else {
-    ini_set('zlib.output_compression_level', GZIP_LEVEL);
-  }
-}
-
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/application_top_export/application_top_export_end/','php') as $file) require ($file);
-
 ?>
