@@ -20,8 +20,13 @@
       return false;
     }
 
-    if (strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'x-gzip') !== false) return 'x-gzip';
-    if (strpos($_SERVER['HTTP_ACCEPT_ENCODING'],'gzip') !== false) return 'gzip';
+    $encoding = '';
+    if (isset($_SERVER['HTTP_ACCEPT_ENCODING'])) {
+      $encoding = $_SERVER['HTTP_ACCEPT_ENCODING'];
+    }
+    
+    if (strpos($encoding, 'x-gzip') !== false) return 'x-gzip';
+    if (strpos($encoding,'gzip') !== false) return 'gzip';
 
     return false;
   } 
