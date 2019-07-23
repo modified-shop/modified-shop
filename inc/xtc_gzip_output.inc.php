@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_gzip_output.inc.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -17,22 +17,14 @@
    
 /* $level = compression level 0-9, 0=none, 9=max */
   function xtc_gzip_output($level = 5) {
-    if ($encoding = xtc_check_gzip()) {
-      $contents = ob_get_contents();
-      ob_end_clean();
-
-      header('Content-Encoding: ' . $encoding);
-
-      $size = strlen($contents);
-      $crc = crc32($contents);
-
-      $contents = gzcompress($contents, $level);
-      $contents = substr($contents, 0, strlen($contents) - 4);
-
-      echo "\x1f\x8b\x08\x00\x00\x00\x00\x00";
-      echo $contents;
-      echo pack('V', $crc);
-      echo pack('V', $size);
+    if (xtc_check_gzip() !== false) {
+      $gzip_size        = ob_get_length();
+      $gzip_contents    = ob_get_clean();
+   
+      echo "\x1f\x8b\x08\x00\x00\x00\x00\x00",
+           substr(gzcompress($gzip_contents, (int)$level), 0, - 4),
+           pack('V', crc32($gzip_contents)),
+           pack('V', $gzip_size);
     } else {
       ob_end_flush();
     }

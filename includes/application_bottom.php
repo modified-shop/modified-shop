@@ -31,13 +31,6 @@ if (DISPLAY_PAGE_PARSE_TIME == 'all') {
   echo '<div class="parseTime">Parse Time: ' . $parse_time . 's</div>';
 }
 
-// gzip compression
-if ((GZIP_COMPRESSION == 'true') && ($ext_zlib_loaded == true) && ($ini_zlib_output_compression < 1)) {
-  if ((PHP_VERSION < '4.0.4') && (PHP_VERSION >= '4')) {
-    xtc_gzip_output(GZIP_LEVEL);
-  }
-}
-
 // econda tracking
 if (TRACKING_ECONDA_ACTIVE == 'true') {
   require_once (DIR_FS_EXTERNAL . 'econda/econda.php');
@@ -74,4 +67,15 @@ xtc_db_close();
 // end of page
 echo '</body>';
 echo '</html>';
+
+// gzip compression
+if (GZIP_COMPRESSION == 'true' 
+    && isset($ext_zlib_loaded)
+    && $ext_zlib_loaded == true 
+    && isset($ini_zlib_output_compression)
+    && $ini_zlib_output_compression < 1
+    )
+{
+  xtc_gzip_output(GZIP_LEVEL);
+}
 ?>

@@ -202,8 +202,10 @@ function CacheCheck() {
   return true;
 }
 
-// if gzip_compression is enabled and gzip_off is not set, start to buffer the output
-if ((!isset($gzip_off) || !$gzip_off) && (GZIP_COMPRESSION == 'true') && ($ext_zlib_loaded = extension_loaded('zlib')) && (PHP_VERSION >= '4')) {
+// if gzip_compression is enabled start to buffer the output
+if (GZIP_COMPRESSION == 'true' && $ext_zlib_loaded = extension_loaded('zlib')) {
+  require_once (DIR_FS_INC.'xtc_gzip_output.inc.php');
+  require_once (DIR_FS_INC.'xtc_check_gzip.inc.php');
   if (($ini_zlib_output_compression = (int) ini_get('zlib.output_compression')) < 1) {
     ob_start('ob_gzhandler');
   } else {

@@ -56,6 +56,18 @@ elseif (isset($site_error)
   header("Status: 410 Gone"); // FAST CGI
 }
 
+// gzip compression
+if (GZIP_COMPRESSION == 'true' 
+    && isset($ext_zlib_loaded)
+    && $ext_zlib_loaded == true 
+    && isset($ini_zlib_output_compression)
+    && $ini_zlib_output_compression < 1
+    && $encoding = xtc_check_gzip()
+    )
+{
+  header('Content-Encoding: ' . $encoding);
+}
+
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/header/header_begin/','php') as $file) require_once ($file);
 
 defined('TEMPLATE_RESPONSIVE') or define('TEMPLATE_RESPONSIVE', 'false');
