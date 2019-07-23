@@ -13,7 +13,7 @@
 require_once(DIR_FS_CATALOG.'api/it-recht-kanzlei/classes/class.api_it_recht_kanzlei.php');
 $api_it_recht_kanzlei = new api_it_recht_kanzlei();
 
-define('MODULE_API_IT_RECHT_KANZLEI_TEXT_TITLE', 'IT-Recht Kanzlei Auto Updater v'.$api_it_recht_kanzlei->modulversion);
+define('MODULE_API_IT_RECHT_KANZLEI_TEXT_TITLE', 'IT-Recht Kanzlei AGB-Schnittstelle v'.$api_it_recht_kanzlei->modulversion);
 define('MODULE_API_IT_RECHT_KANZLEI_TEXT_DESCRIPTION', 'IT-Recht Kanzlei - Auto Updater f&uuml;r automatische Rechtstexte<br/><br/><b>WICHTIG:</b> Vor der Nutzung des Moduls muss die Zuordnung der Content Seiten gemacht werden.<hr noshade>');
 define('MODULE_API_IT_RECHT_KANZLEI_STATUS_TITLE', 'Status');
 define('MODULE_API_IT_RECHT_KANZLEI_STATUS_DESC', 'Modulstatus');
