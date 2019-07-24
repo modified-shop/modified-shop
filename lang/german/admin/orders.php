@@ -65,6 +65,7 @@ define('ENTRY_TELEPHONE', 'Telefon:');
 define('ENTRY_DELIVERY_TO', 'Lieferanschrift:');
 define('ENTRY_SHIP_TO', 'Lieferanschrift:');
 define('ENTRY_SHIPPING_ADDRESS', 'Versandadresse:');
+define('ENTRY_PICKUP_ADDRESS', 'Abholadresse:');
 define('ENTRY_BILLING_ADDRESS', 'Rechnungsadresse:');
 define('ENTRY_PAYMENT_METHOD', 'Zahlungsweise:');
 define('ENTRY_SHIPPING_METHOD', 'Versandart:');

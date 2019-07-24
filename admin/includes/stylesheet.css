@@ -874,6 +874,9 @@ float:left;
 .bg_notice{
 background:#fff0cf !important;
 }
+.bg_warning{
+background-color:#F2DEDE !important;
+}
 table.collapse{
 border-collapse:collapse;
 }

@@ -101,12 +101,17 @@
               if ($order->delivery['name'] != $order->customer['name'] ||
                   $order->delivery['postcode'] != $order->customer['postcode'] ||
                   $order->delivery['city'] != $order->customer['city'] ||
-                  $order->delivery['street_address'] != $order->customer['street_address']) {
+                  $order->delivery['street_address'] != $order->customer['street_address']
+                  )
+              {
                 $address_add_class = ' bg_notice';
+                if (strpos($order->info['shipping_class'], 'selfpickup') !== false) {
+                  $address_add_class = ' bg_warning';
+                }
               }
               ?>
             <td class="main<?php echo $address_add_class; ?>" valign="top" style="border-right: 1px solid #a3a3a3;">
-              <b><?php echo ENTRY_SHIPPING_ADDRESS; ?></b><br />
+              <b><?php echo ((strpos($order->info['shipping_class'], 'selfpickup') !== false) ? ENTRY_PICKUP_ADDRESS : ENTRY_SHIPPING_ADDRESS); ?></b><br />
                <?php echo xtc_address_format($order->delivery['format_id'], $order->delivery, 1, '', '<br />'); ?>
             </td>
             <td valign="top" class="main">
