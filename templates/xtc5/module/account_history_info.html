@@ -8,7 +8,7 @@
 <div class="highlightbox">
   <h1>{#text_oid#}{$ORDER_NUMBER} ({$ORDER_STATUS})</h1>
   <p>{#text_date#} {$ORDER_DATE}</p>
-  <h2>{#text_shipping_address#}</h2>
+  <h2>{if isset($SHIPPING_CLASS) && strstr($SHIPPING_CLASS, 'selfpickup')}{#text_pickup_address#}{else}{#text_shipping_address#}{/if}</h2>
   <p>{$DELIVERY_LABEL}</p>
   {if $BILLING_LABEL}
   <h2>{#text_payment_address#}</h2>

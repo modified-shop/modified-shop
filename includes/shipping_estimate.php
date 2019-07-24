@@ -139,8 +139,21 @@ if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weigh
   if (SHOW_SELFPICKUP_FREE == 'true') {
     if ($free_shipping == true) {
       $free_shipping = false;
-      $quotes = array_merge($ot_shipping->quote(), $shipping->quote('selfpickup', 'selfpickup'));
-    }                    
+    
+      $quotes_array = $ot_shipping->quote();
+      for ($i = 0, $n = sizeof($quotes); $i < $n; $i ++) {
+        if (isset($GLOBALS[$quotes[$i]['id']])
+            && is_object($GLOBALS[$quotes[$i]['id']])
+            && method_exists($GLOBALS[$quotes[$i]['id']], 'display_free')
+            )
+        {
+          if ($GLOBALS[$quotes[$i]['id']]->display_free() === true) {
+            $quotes_array = array_merge($quotes_array, $shipping->quote($quotes[$i]['id'], $quotes[$i]['methods'][0]['id']));
+          }
+        }
+      }
+      $quotes = $quotes_array;
+    }
   }
   
   $shipping_content = array ();

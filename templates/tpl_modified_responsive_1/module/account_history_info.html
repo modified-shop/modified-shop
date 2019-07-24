@@ -13,7 +13,7 @@
 <div class="highlightbox cf">
   <div class="twoColums">
     <div class="highlightbox plainleft">
-      <h4>{#text_shipping_address#}</h4>
+      <h4>{if isset($SHIPPING_CLASS) && strstr($SHIPPING_CLASS, 'selfpickup')}{#text_pickup_address#}{else}{#text_shipping_address#}{/if}</h4>
       <p>{$DELIVERY_LABEL}</p>
     </div>
   </div>

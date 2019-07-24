@@ -166,6 +166,7 @@ $smarty->assign('PRODUCTS_EDIT', xtc_href_link(FILENAME_SHOPPING_CART, '', 'NONS
 
 if ($_SESSION['sendto'] != false) {
   if ($order->info['shipping_method']) {
+    $smarty->assign('SHIPPING_CLASS', $order->info['shipping_class']);
     $smarty->assign('SHIPPING_METHOD', $order->info['shipping_method']);
     $smarty->assign('SHIPPING_EDIT', xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
   }

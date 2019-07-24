@@ -43,7 +43,7 @@ if ((isset($_SESSION['customer_id']) && $_SESSION['customer_id'] == $order_check
   $smarty->assign('address_label_shipping', xtc_address_format($order->delivery['format_id'], $order->delivery, 1, '', '<br />'));
   $smarty->assign('address_label_payment', xtc_address_format($order->billing['format_id'], $order->billing, 1, '', '<br />'));
   $smarty->assign('csID', $order->customer['csID']);
-
+  
   // get products data
   $order_total = $order->getTotalData($oID);
   $smarty->assign('order_data', $order->getOrderData($oID));
@@ -59,6 +59,7 @@ if ((isset($_SESSION['customer_id']) && $_SESSION['customer_id'] == $order_check
   $smarty->assign('oID', $oID);
   $smarty->assign('COMMENT', $order->info['comments']);
   $smarty->assign('DATE', xtc_date_long($order->info['date_purchased']));
+  $smarty->assign('SHIPPING_CLASS', $order->info['shipping_class']);
 
   $last_order = $oID;
   // load the selected payment module

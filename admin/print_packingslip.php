@@ -61,6 +61,7 @@
   }
   $smarty->assign('COMMENTS', nl2br($order->info['comments']));
   $smarty->assign('DATE',xtc_date_long($order->info['date_purchased']));
+  $smarty->assign('SHIPPING_CLASS', $order->info['shipping_class']);
 
   require_once(DIR_FS_CATALOG.'includes/classes/main.php');
   $main = new main();
