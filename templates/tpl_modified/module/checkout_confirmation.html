@@ -56,7 +56,7 @@
 {if $DELIVERY_LABEL}
 <div class="twoColums">
   <div class="highlightbox plainleft">
-    <h4>{#text_shipping_address#} <a class="midi" href="{$SHIPPING_ADDRESS_EDIT}">{#text_edit#}</a></h4>
+    <h4>{if isset($SHIPPING_CLASS) && strstr($SHIPPING_CLASS, 'selfpickup')}{#text_pickup_address#}{else}{#text_shipping_address#} <a class="midi" href="{$SHIPPING_ADDRESS_EDIT}">{#text_edit#}</a>{/if}</h4>
     {$DELIVERY_LABEL} 
   </div>
 </div>

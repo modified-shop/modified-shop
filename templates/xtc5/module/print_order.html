@@ -25,7 +25,7 @@
         <td colspan="2"><div class="hr"></div></td>
       </tr>
       <tr>
-        <td><strong>{#shipping_address#}</strong><br />{$address_label_shipping}</td>
+        <td><strong>{if isset($SHIPPING_CLASS) && strstr($SHIPPING_CLASS, 'selfpickup')}{#pickup_address#}{else}{#shipping_address#}{/if}</strong><br />{$address_label_shipping}</td>
         <td style="vertical-align:top; text-align:right;">{if $address_label_payment}<strong>{#payment_address#}</strong>{/if}<br />{$address_label_payment}</td>
       </tr>
     </table>

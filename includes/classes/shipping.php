@@ -157,9 +157,9 @@
             $quotes = $GLOBALS[$class]->quotes;
             $size = isset($quotes['methods']) && is_array($quotes['methods']) ? sizeof($quotes['methods']) : 0;
             for ($i=0; $i<$size; $i++) {
-              if (array_key_exists('cost', $quotes['methods'][$i]) 
-                  && !in_array($quotes['id'], $ignore_cheapest_array)
-                  ) 
+              if (array_key_exists('cost', $quotes['methods'][$i])
+                  && (!method_exists($GLOBALS[$class], 'ignore_cheapest') || $GLOBALS[$class]->ignore_cheapest() === true)
+                  )
               {
                 $rates[] = array(
                   'id' => $quotes['id'] . '_' . $quotes['methods'][$i]['id'],

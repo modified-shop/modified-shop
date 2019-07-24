@@ -1,6 +1,6 @@
 <?PHP
 /* -----------------------------------------------------------------------------------------
-   $Id: selfpickup.php 5137 2013-07-18 14:48:00Z Tomcraft $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -30,4 +30,20 @@ define('MODULE_SHIPPING_SELFPICKUP_STATUS_TITLE', 'Enable Self Pickup');
 define('MODULE_SHIPPING_SELFPICKUP_STATUS_DESC', 'Do you want to offer pickup by the customer?');
 define('MODULE_SHIPPING_SELFPICKUP_SORT_ORDER_TITLE', 'Sort Order');
 define('MODULE_SHIPPING_SELFPICKUP_SORT_ORDER_DESC', 'Sort order of display.');
+define('MODULE_SHIPPING_SELFPICKUP_COMPANY_TITLE', 'Company');
+define('MODULE_SHIPPING_SELFPICKUP_COMPANY_DESC', 'Enter the company.');
+define('MODULE_SHIPPING_SELFPICKUP_FIRSTNAME_TITLE', 'Firstname');
+define('MODULE_SHIPPING_SELFPICKUP_FIRSTNAME_DESC', 'Enter the firstname.');
+define('MODULE_SHIPPING_SELFPICKUP_LASTNAME_TITLE', 'Lastname');
+define('MODULE_SHIPPING_SELFPICKUP_LASTNAME_DESC', 'Enter the lastname.');
+define('MODULE_SHIPPING_SELFPICKUP_STREET_ADDRESS_TITLE', 'Street/No.');
+define('MODULE_SHIPPING_SELFPICKUP_STREET_ADDRESS_DESC', 'Enter the street/no.');
+define('MODULE_SHIPPING_SELFPICKUP_SUBURB_TITLE', 'Addition to address');
+define('MODULE_SHIPPING_SELFPICKUP_SUBURB_DESC', 'Enter the addition to address.');
+define('MODULE_SHIPPING_SELFPICKUP_POSTCODE_TITLE', 'Postcode');
+define('MODULE_SHIPPING_SELFPICKUP_POSTCODE_DESC', 'Enter the postcode.');
+define('MODULE_SHIPPING_SELFPICKUP_CITY_TITLE', 'City');
+define('MODULE_SHIPPING_SELFPICKUP_CITY_DESC', 'Enter the city.');
+define('MODULE_SHIPPING_SELFPICKUP_COUNTRY_TITLE', 'Country');
+define('MODULE_SHIPPING_SELFPICKUP_COUNTRY_DESC', 'Enter the country.');
 ?>

@@ -160,8 +160,30 @@ class paypalcart extends PayPalPayment {
     if (defined('SHOW_SELFPICKUP_FREE') && SHOW_SELFPICKUP_FREE == 'true') {
       if ($free_shipping == true) {
         $free_shipping = false;
+    
+        $quotes_array = $ot_shipping->quote();
+        for ($i = 0, $n = sizeof($quotes); $i < $n; $i ++) {
+          if (isset($GLOBALS[$quotes[$i]['id']])
+              && is_object($GLOBALS[$quotes[$i]['id']])
+              && method_exists($GLOBALS[$quotes[$i]['id']], 'display_free')
+              )
+          {
+            if ($GLOBALS[$quotes[$i]['id']]->display_free() === true) {
+              $quotes_array = array_merge($quotes_array, $shipping_modules->quote($quotes[$i]['id'], $quotes[$i]['methods'][0]['id']));
+            }
+          } elseif ($quotes[$i]['id'] == 'selfpickup') {
+            $quotes_array = array_merge($quotes_array, $shipping_modules->quote($quotes[$i]['id'], $quotes[$i]['methods'][0]['id']));
+          }
+        }
+        $quotes = $quotes_array;
+      }
+    }
+
+    if (defined('SHOW_SELFPICKUP_FREE') && SHOW_SELFPICKUP_FREE == 'true') {
+      if ($free_shipping == true) {
+        $free_shipping = false;
         $quotes = array_merge($this->ot_shipping->quote(), $shipping_modules->quote('selfpickup', 'selfpickup'));
-      }                    
+      }
     }
 
     // build shipping block
