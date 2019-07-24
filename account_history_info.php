@@ -65,6 +65,7 @@ require (DIR_WS_INCLUDES.'header.php');
 
 // Delivery Info
 if ($order->delivery != false) {
+  $smarty->assign('SHIPPING_CLASS', $order->info['shipping_class']);
   $smarty->assign('DELIVERY_LABEL', xtc_address_format($order->delivery['format_id'], $order->delivery, 1, ' ', '<br />'));
   if ($order->info['shipping_method']) { $smarty->assign('SHIPPING_METHOD', $order->info['shipping_method']); }
 }
