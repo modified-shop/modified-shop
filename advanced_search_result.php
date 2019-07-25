@@ -42,10 +42,10 @@ if (!$keywords && !$pfrom && !$pto) {
 if ($keywords && strlen($keywords) > 0 && strlen($keywords) < (int)SEARCH_MIN_LENGTH) {
   $errorno += 2;
 }
-if ($pfrom && !settype($pfrom, "float")) {
+if ($pfrom && (!is_numeric($pfrom) || !settype($pfrom, "float")) ) {
   $errorno += 10000;
 }
-if ($pto && !settype($pto, "float")) {
+if ($pto && (!is_numeric($pto) || !settype($pto, "float")) ) {
   $errorno += 100000;
 }
 if ($pfrom && !(($errorno & 10000) == 10000) && $pto && !(($errorno & 100000) == 100000) && $pfrom > $pto) {
