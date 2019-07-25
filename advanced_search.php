@@ -43,35 +43,40 @@ $smarty->assign('SELECT_MANUFACTURERS',xtc_draw_pull_down_menu('manufacturers_id
 $smarty->assign('SELECT_PFROM',xtc_draw_input_field('pfrom'));
 $smarty->assign('SELECT_PTO',xtc_draw_input_field('pto'));
 
-$error = '';
 if (isset ($_GET['errorno'])) {
 	if (($_GET['errorno'] & 1) == 1) {
-		$error .= str_replace('\n', '<br />', JS_AT_LEAST_ONE_INPUT);
+	  $messageStack->add('advanced_search', stripslashes(str_replace('\n', '<br />', JS_AT_LEAST_ONE_INPUT)));
+	}
+  if (($_GET['errorno'] & 2) == 2) {
+	  $messageStack->add('advanced_search', stripslashes(str_replace('\n', '<br />', JS_KEYWORDS_MIN_LENGTH)));
 	}
 	if (($_GET['errorno'] & 10) == 10) {
-		$error .= str_replace('\n', '<br />', JS_INVALID_FROM_DATE);
+	  $messageStack->add('advanced_search', stripslashes(str_replace('\n', '<br />', JS_INVALID_FROM_DATE)));
 	}
 	if (($_GET['errorno'] & 100) == 100) {
-		$error .= str_replace('\n', '<br />', JS_INVALID_TO_DATE);
+	  $messageStack->add('advanced_search', stripslashes(str_replace('\n', '<br />', JS_INVALID_TO_DATE)));
 	}
 	if (($_GET['errorno'] & 1000) == 1000) {
-		$error .= str_replace('\n', '<br />', JS_TO_DATE_LESS_THAN_FROM_DATE);
+	  $messageStack->add('advanced_search', stripslashes(str_replace('\n', '<br />', JS_TO_DATE_LESS_THAN_FROM_DATE)));
 	}
 	if (($_GET['errorno'] & 10000) == 10000) {
-		$error .= str_replace('\n', '<br />', JS_PRICE_FROM_MUST_BE_NUM);
+	  $messageStack->add('advanced_search', stripslashes(str_replace('\n', '<br />', JS_PRICE_FROM_MUST_BE_NUM)));
 	}
 	if (($_GET['errorno'] & 100000) == 100000) {
-		$error .= str_replace('\n', '<br />', JS_PRICE_TO_MUST_BE_NUM);
+	  $messageStack->add('advanced_search', stripslashes(str_replace('\n', '<br />', JS_PRICE_TO_MUST_BE_NUM)));
 	}
 	if (($_GET['errorno'] & 1000000) == 1000000) {
-		$error .= str_replace('\n', '<br />', JS_PRICE_TO_LESS_THAN_PRICE_FROM);
+	  $messageStack->add('advanced_search', stripslashes(str_replace('\n', '<br />', JS_PRICE_TO_LESS_THAN_PRICE_FROM)));
 	}
 	if (($_GET['errorno'] & 10000000) == 10000000) {
-		$error .= str_replace('\n', '<br />', JS_INVALID_KEYWORDS);
+	  $messageStack->add('advanced_search', stripslashes(str_replace('\n', '<br />', JS_INVALID_KEYWORDS)));
 	}
 }
 
-$smarty->assign('error', $error);
+if ($messageStack->size('advanced_search') > 0) {
+  $smarty->assign('error', $messageStack->output('advanced_search'));
+}
+
 $smarty->assign('language', $_SESSION['language']);
 $smarty->assign('FORM_END', '</form>');
 
