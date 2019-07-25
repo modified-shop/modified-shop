@@ -59,10 +59,10 @@ if (isset ($_GET['errorno'])) {
 	if (($_GET['errorno'] & 1000) == 1000) {
 	  $messageStack->add('advanced_search', stripslashes(str_replace('\n', '<br />', JS_TO_DATE_LESS_THAN_FROM_DATE)));
 	}
-	if (($_GET['errorno'] & 10000) == 10000) {
+	if (($_GET['errorno'] & 10000) == 10000 || ($_GET['errorno'] & 110000) == 110000) {
 	  $messageStack->add('advanced_search', stripslashes(str_replace('\n', '<br />', JS_PRICE_FROM_MUST_BE_NUM)));
 	}
-	if (($_GET['errorno'] & 100000) == 100000) {
+	if (($_GET['errorno'] & 100000) == 100000 || ($_GET['errorno'] & 110000) == 110000) {
 	  $messageStack->add('advanced_search', stripslashes(str_replace('\n', '<br />', JS_PRICE_TO_MUST_BE_NUM)));
 	}
 	if (($_GET['errorno'] & 1000000) == 1000000) {
