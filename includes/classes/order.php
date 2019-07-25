@@ -553,16 +553,18 @@
         $this->billing = $customers_standard_arr;
       }
       
-      require_once (DIR_WS_CLASSES . 'shipping.php');
-      $shipping_modules = new shipping($_SESSION['shipping']);
-      $shipping_class = substr($this->info['shipping_class'], 0, strpos($this->info['shipping_class'], '_'));
+      if (isset($_SESSION['shipping']) && $_SESSION['shipping'] != false) {
+        require_once (DIR_WS_CLASSES . 'shipping.php');
+        $shipping_modules = new shipping($_SESSION['shipping']);
+        $shipping_class = substr($this->info['shipping_class'], 0, strpos($this->info['shipping_class'], '_'));
       
-      if (isset($GLOBALS[$shipping_class])
-          && is_object($GLOBALS[$shipping_class])
-          && method_exists($GLOBALS[$shipping_class], 'address')
-          )
-      {
-        $this->delivery = $GLOBALS[$shipping_class]->address();
+        if (isset($GLOBALS[$shipping_class])
+            && is_object($GLOBALS[$shipping_class])
+            && method_exists($GLOBALS[$shipping_class], 'address')
+            )
+        {
+          $this->delivery = $GLOBALS[$shipping_class]->address();
+        }
       }
       
       $index = 0;
