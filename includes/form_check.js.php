@@ -208,6 +208,12 @@
       error_field = document.getElementById("advanced_search").keywords;
       error_found = true;
     }
+    // check keyword min length
+    if (keywords.length > 0 && keywords.length < "<?php echo (int)SEARCH_MIN_LENGTH; ?>") {
+      error_message = error_message + unescape("<?php echo xtc_js_lang(JS_KEYWORDS_MIN_LENGTH); ?>");
+      error_field = document.getElementById("advanced_search").keywords;
+      error_found = true;
+    }
     if (pfrom.length > 0) {
       pfrom_float = parseFloat(pfrom);
       if (isNaN(pfrom_float)) {
