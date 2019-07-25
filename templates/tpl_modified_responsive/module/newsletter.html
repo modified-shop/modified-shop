@@ -1,0 +1,61 @@
+{config_load file="$language/lang_$language.conf" section="create_account"}
+{config_load file="$language/lang_$language.conf" section="newsletter"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="create_account"}
+{config_load file="lang_`$language`.section" section="newsletter"}
+<h1>{#heading_title#}</h1>
+{if $info_message != ''}<div class="{if $message_class}{$message_class}{else}info{/if}message">{$info_message}</div>{/if}
+{if !isset($activated)}
+  {$FORM_ACTION}
+  <div class="highlightbox cf">
+    <div class="twoColumsInner">
+      <h4>{#heading_personal#}</h4>
+      <table>
+        {if $VVIMG}
+        <tr>
+          <td><span class="fieldtext">{#text_sec_code#}</span><span class="stern">{$VVIMG}</span></td>
+        </tr>
+        {/if}
+        {if $INPUT_CODE}
+        <tr>
+          <td><span class="fieldtext">{#text_sec_code#}</span><span class="stern">{$INPUT_CODE}<span class="inputRequirement"> *</span></span></td>
+        </tr>
+        {/if}
+        <tr>
+          <td><span class="fieldtext">{#text_email#}</span><span class="stern">{$INPUT_EMAIL|replace:"type=\"text\"":"type=\"email\""} <span class="inputRequirement">*</span></span></td>
+        </tr>
+        <tr>
+          <td>
+            <div class="cus_radio cus_my_5">
+              {$CHECK_INP}
+              <label for="inp">{#text_in#}</label>
+            </div>
+            <div class="cus_radio cus_my_5">
+              {$CHECK_DEL}
+              <label for="del">{#text_out#}</label>
+            </div>
+          </td>
+        </tr>
+      </table>
+      {if $PRIVACY_CHECKBOX}
+        <br />
+        <div class="cus_check cus_check_small cus_mb_10">
+          {$PRIVACY_CHECKBOX}
+          <label for="privacy"><strong>{#text_privacy_accept#}</strong> {$PRIVACY_LINK}</label>
+        </div>
+      {/if}
+      <div class="button_right cf"><div class="cssButtonPos4">{$BUTTON_SEND}</div></div>
+    </div>
+
+    <div class="twoColumsInner last">
+      <h4>{#heading_text#}</h4>
+      <p>{#text_zusatz#}</p>
+    </div>
+  </div> 
+  {$FORM_END}
+{else}
+  <div class="highlightbox cf">
+    <h4>{#heading_text#}</h4>
+    <p>{#text_zusatz#}</p>
+  </div>
+{/if}

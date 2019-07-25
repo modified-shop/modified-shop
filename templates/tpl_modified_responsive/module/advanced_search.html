@@ -1,0 +1,43 @@
+{config_load file="$language/lang_$language.conf" section="advanced_search"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="advanced_search"}
+<h1>{#heading_search#}</h1>
+{$FORM_ACTION}
+{if $error != ''}<div class="errormessage">{$error}</div>{/if}
+<div class="highlightbox cf">
+  <table>
+    <tr>
+      <td><span class="fieldtext">{#title_keywords#}</span>{$INPUT_KEYWORDS}<br /><span class="mini"><a href="{$HELP_LINK}" title="{if $smarty.const.TEXT_LINK_TITLE_INFORMATION}{$smarty.const.TEXT_LINK_TITLE_INFORMATION}{else}Information{/if}" class="{if $smarty.const.TPL_POPUP_CONTENT_LINK_CLASS}{$smarty.const.TPL_POPUP_CONTENT_LINK_CLASS}{else}{$smarty.const.POPUP_CONTENT_LINK_CLASS}{/if}">{#text_help#}</a></span></td>
+    </tr>
+    <tr>
+      <td><span class="fieldtext">{#text_categories#}</span>{$SELECT_CATEGORIES}</td>
+    </tr>
+    <tr>
+      <td class="adv_search_checkbox">
+        <div class="cus_check">
+          {$ENTRY_SUBCAT|replace:"name=":"id=\"inc_subcat\" name="}
+          <label for="inc_subcat">{#text_subkategories#}</label>
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <div class="twoColumsInner">
+    <table>
+      <td><span class="fieldtext">{#text_manufacturer#}</span>{$SELECT_MANUFACTURERS}</td>
+    </table>
+  </div>
+
+  <div class="twoColumsInner last">
+    <table>
+      <tr>
+        <td><span class="fieldtext">{#text_min#}</span>{$SELECT_PFROM}</td>
+      </tr>
+      <tr>
+        <td><span class="fieldtext">{#text_max#}</span>{$SELECT_PTO}</td>
+      </tr>
+    </table>
+  </div>
+</div>
+<div class="button_right cf"><div class="cssButtonPos4">{$BUTTON_SUBMIT}</div></div>
+{$FORM_END}

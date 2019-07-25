@@ -1,0 +1,176 @@
+{config_load file="$language/lang_$language.conf" section="index"}
+{config_load file="lang_`$language`.custom"}
+{if isset($box_ADMIN)}<div class="adminspacer"></div>{$box_ADMIN}{/if}
+<div class="sidebar_closer{if isset($box_ADMIN)} sidebar_moremargin{/if}"><i class="fas fa-times"></i></div>
+
+<div id="layout_wrap">
+
+  <div id="layout_navbar">
+    <div class="layout_navbar_inner">
+      <ul class="topnavigation cf">
+        {if isset($box_INFOBOX)}
+          <li class="tn_group">{$box_INFOBOX}</li>
+        {/if}
+        {if isset($box_LANGUAGES) && trim($box_LANGUAGES) != ''}
+          <li class="tn_lang">{$box_LANGUAGES}</li>
+        {/if}
+        {if isset($smarty.session.customer_id)}
+          <li><a href="{$logoff}"><i class="fas fa-sign-out-alt"></i><span class="tn_nomobile">{#link_logoff#}</span></a></li>
+        {else}
+          <li><a href="{$create_account}"><i class="fas fa-user-plus"></i><span class="tn_nomobile">{#new_customer#}</span></a></li>
+          <li><a href="{$login}"><i class="fas fa-sign-in-alt"></i><span class="tn_nomobile">{#link_login#}</span></a></li>
+        {/if}
+        {if isset($account)}
+          <li><a href="{$account}"><i class="fas fa-user"></i><span class="tn_nomobile">{#link_account#}</span></a></li>
+        {/if}
+        <li><a href="{$index}"><i class="fas fa-home"></i><span class="tn_nomobile">{#link_index#}</span></a></li>
+      </ul>
+    </div>
+  </div>
+  {* ENDE layout_navbar *}
+
+  <div id="layout_logo" class="cf">
+    <div id="logo"><a href="{$index}" title="{#link_index#} &bull; {$store_name}"><img src="{$tpl_path}img/logo_head.png" alt="{$store_name}" /></a></div>
+    {if isset($box_SEARCH)}<div id="search">{$box_SEARCH}</div>{/if}
+  </div>
+  {* ENDE layout_logo *}
+
+
+  <div class="sidebar_layer"></div>
+  <div id="layout_content" class="cf">
+    {if isset($home) && $home == true}
+      <div id="col_right">
+        <div class="col_right_inner cf">
+          <div id="content_navbar">
+            <ul class="contentnavigation">
+              <li class="sidebar_btn"><span id="sidebar_marker"></span><a href="#"><i class="fas fa-bars"></i><span class="cn_nomobile_text">Men&uuml;</span></a></li>
+              <li class="cn_nomobile"><a href="{$smarty.const.FILENAME_CONTENT|xtc_href_link:'coID=7'}"><i class="far fa-envelope"></i>{#link_contact#}</a></li>
+              <li class="cn_nomobile"><a href="{$smarty.const.FILENAME_CONTENT|xtc_href_link:'coID=4'}"><i class="fas fa-info-circle"></i>{#link_imprint#}</a></li>
+              <li class="cn_nomobile"><a href="{$checkout}"><strong><i class="far fa-credit-card"></i>{#link_checkout#}</strong></a></li>
+              {if isset($box_CART)}<li class="cart">{$box_CART}</li>{/if}
+              {if isset($box_WISHLIST)}<li class="wishlist">{$box_WISHLIST}</li>{/if}
+            </ul>
+          </div>
+          {if isset($SLIDER)}
+            <div class="content_banner cf">
+              <ul class="bxcarousel_slider">
+              {foreach name=outer item=slider from=$SLIDER}
+                <li>{$slider.IMAGE}</li>
+              {/foreach}
+              </ul>
+            </div>
+          {/if}
+          {if isset($BANNER)}<div class="content_banner cf">{$BANNER}</div>{/if}
+          {if isset($main_content)}{$main_content}{/if}
+          {if isset($box_BESTSELLERS)}{$box_BESTSELLERS}{/if}
+        </div>
+      </div>
+      {* ENDE col_right *}
+      <div id="col_left_overlay">
+        <div id="col_left"{if isset($box_ADMIN)} class="col_left_moremargin"{/if}>
+          <div class="col_left_inner cf">
+            {if isset($box_CATEGORIES)}{$box_CATEGORIES}{/if}
+            {if isset($box_ADD_QUICKIE)}{$box_ADD_QUICKIE}{/if}
+            {if isset($box_LOGIN)}{$box_LOGIN}{/if}
+            {if isset($box_WHATSNEW)}{$box_WHATSNEW}{/if}
+            {if isset($box_SPECIALS)}{$box_SPECIALS}{/if}
+            {if isset($box_LAST_VIEWED)}{$box_LAST_VIEWED}{/if}
+            {if isset($box_REVIEWS)}{$box_REVIEWS}{/if}
+            {if isset($box_MANUFACTURERS)}{$box_MANUFACTURERS}{/if}
+            {if isset($box_MANUFACTURERS_INFO)}{$box_MANUFACTURERS_INFO}{/if}
+            {if isset($box_CURRENCIES)}{$box_CURRENCIES}{/if}
+            {if isset($box_HISTORY)}{$box_HISTORY}{/if}
+            {if isset($box_TRUSTEDSHOPS)}{$box_TRUSTEDSHOPS}{/if}
+          </div>
+        </div>
+      </div>
+      {* ENDE col_left *}
+    {elseif isset($fullcontent) && $fullcontent == true}
+      <div id="col_full" class="cf">
+        <div id="content_navbar">
+          <ul class="contentnavigation">
+            <li class="cn_nomobile"><a href="{$smarty.const.FILENAME_CONTENT|xtc_href_link:'coID=7'}"><i class="far fa-envelope"></i>{#link_contact#}</a></li>
+            <li class="cn_nomobile"><a href="{$smarty.const.FILENAME_CONTENT|xtc_href_link:'coID=4'}"><i class="fas fa-info-circle"></i>{#link_imprint#}</a></li>
+            <li class="cn_nomobile"><a href="{$checkout}"><strong><i class="far fa-credit-card"></i>{#link_checkout#}</strong></a></li>
+            {if isset($box_CART)}<li class="cart">{$box_CART}</li>{/if}
+            {if isset($box_WISHLIST)}<li class="wishlist">{$box_WISHLIST}</li>{/if}
+          </ul>
+        </div>
+        {if isset($navtrail)}<div id="breadcrumb"><span class="breadcrumb_info">{#text_here#}</span>{$navtrail|replace:" &raquo; ":"<i class=\"fas fa-angle-right\"></i>"}</div>{/if}
+        {if isset($main_content)}{$main_content}{/if}
+        {if $bestseller}
+          {if isset($box_BESTSELLERS)}{$box_BESTSELLERS}{/if}
+        {/if}
+      </div>
+      {* ENDE col_full *}
+    {else}
+      <div id="col_right">
+        <div class="col_right_inner cf">
+          <div id="content_navbar">
+            <ul class="contentnavigation">
+              <li class="sidebar_btn"><span id="sidebar_marker"></span><a href="#"><i class="fas fa-bars"></i><span class="cn_nomobile_text">Men&uuml;</span></a></li>
+              <li class="cn_nomobile"><a href="{$smarty.const.FILENAME_CONTENT|xtc_href_link:'coID=7'}"><i class="far fa-envelope"></i>{#link_contact#}</a></li>
+              <li class="cn_nomobile"><a href="{$smarty.const.FILENAME_CONTENT|xtc_href_link:'coID=4'}"><i class="fas fa-info-circle"></i>{#link_imprint#}</a></li>
+              <li class="cn_nomobile"><a href="{$checkout}"><strong><i class="far fa-credit-card"></i>{#link_checkout#}</strong></a></li>
+              {if isset($box_CART)}<li class="cart">{$box_CART}</li>{/if}
+              {if isset($box_WISHLIST)}<li class="wishlist">{$box_WISHLIST}</li>{/if}
+            </ul>
+          </div>
+          {if isset($navtrail)}<div id="breadcrumb"><span class="breadcrumb_info">{#text_here#}</span>{$navtrail|replace:" &raquo; ":"<i class=\"fas fa-angle-right\"></i>"}</div>{/if}
+          {if isset($main_content)}{$main_content}{/if}
+          {if $bestseller}{if isset($box_BESTSELLERS)}{$box_BESTSELLERS}{/if}{/if}
+        </div>
+      </div>
+      {* ENDE col_right *}
+      <div id="col_left_overlay">
+        <div id="col_left"{if isset($box_ADMIN)} class="col_left_moremargin"{/if}>
+          <div class="col_left_inner cf">
+            {if isset($box_CATEGORIES)}{$box_CATEGORIES}{/if}
+            {if isset($box_ADD_QUICKIE)}{$box_ADD_QUICKIE}{/if}
+            {if isset($box_LOGIN)}{$box_LOGIN}{/if}
+            {if isset($box_WHATSNEW)}{$box_WHATSNEW}{/if}
+            {if isset($box_SPECIALS)}{$box_SPECIALS}{/if}
+            {if isset($box_LAST_VIEWED)}{$box_LAST_VIEWED}{/if}
+            {if isset($box_REVIEWS)}{$box_REVIEWS}{/if}
+            {if isset($box_MANUFACTURERS)}{$box_MANUFACTURERS}{/if}
+            {if isset($box_MANUFACTURERS_INFO)}{$box_MANUFACTURERS_INFO}{/if}
+            {if isset($box_CURRENCIES)}{$box_CURRENCIES}{/if}
+            {if isset($box_HISTORY)}{$box_HISTORY}{/if}
+            {if isset($box_TRUSTEDSHOPS)}{$box_TRUSTEDSHOPS}{/if}
+          </div>
+        </div>
+      </div>
+      {* ENDE col_left *}
+    {/if}
+  </div>
+  {* ENDE layout_content *}
+
+  <div id="layout_footer">
+    <div class="layout_footer_inner">
+      <div class="footer_box_row cf">
+        {if isset($box_CONTENT)}<div class="footer_box"><div class="footer_box_inner cf">{$box_CONTENT}</div></div>{/if}
+        {if isset($box_INFORMATION)}<div class="footer_box"><div class="footer_box_inner cf">{$box_INFORMATION}</div></div>{/if}
+        {if isset($box_MISCELLANEOUS)}<div class="footer_box"><div class="footer_box_inner cf">{$box_MISCELLANEOUS}</div></div>{/if}
+        {if isset($box_NEWSLETTER)}<div class="footer_box"><div class="footer_box_inner cf">{$box_NEWSLETTER}</div></div>{/if}
+      </div>
+    </div>
+    <div class="mod_copyright">{$smarty.const.TITLE} &copy; {$smarty.now|date_format:"%Y"} | Template &copy; 2009-{$smarty.now|date_format:"%Y"} by <span class="cop_magenta">mod</span><span class="cop_grey">ified eCommerce Shopsoftware</span></div>
+  </div>
+
+</div>
+{* ENDE layout_wrap *}
+
+{if ($smarty.const.TRACKING_COUNT_ADMIN_ACTIVE == 'true' && $smarty.session.customers_status.customers_status_id == '0') || $smarty.session.customers_status.customers_status_id != '0'}
+  {if $smarty.const.TRACKING_PIWIK_ACTIVE == 'true'}
+    {piwik url=$smarty.const.TRACKING_PIWIK_LOCAL_PATH id=$smarty.const.TRACKING_PIWIK_ID goal=$smarty.const.TRACKING_PIWIK_GOAL}
+  {/if}
+  {if $smarty.const.TRACKING_GOOGLEANALYTICS_ACTIVE == 'true'}
+    {googleanalytics account=$smarty.const.TRACKING_GOOGLEANALYTICS_ID}
+  {/if}
+  {if $smarty.const.TRACKING_FACEBOOK_ACTIVE == 'true'}
+    {facebook id=$smarty.const.TRACKING_FACEBOOK_ID}
+  {/if}
+{/if}
+{if $smarty.const.GOOGLE_CERTIFIED_SHOPS_MERCHANT_ACTIVE == 'true'}
+  {googlecertificate subaccount=$smarty.const.GOOGLE_SHOPPING_ID account=$smarty.const.GOOGLE_TRUSTED_ID}
+{/if}

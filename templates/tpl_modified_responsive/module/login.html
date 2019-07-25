@@ -1,0 +1,64 @@
+{config_load file="$language/lang_$language.conf" section="login"}
+{config_load file="$language/lang_$language.conf" section="newsletter"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="login"}
+<h1>{#heading_login#}</h1>
+
+{if $info_message != ''}<div class="errormessage">{$info_message}</div>{/if}
+{if $success_message != ''}<div class="infomessage">{$success_message}</div>{/if}
+
+<div class="twoColums">
+  <div class="highlightbox cf">
+    <h4>{#title_returning#}</h4>
+    {$FORM_ACTION}
+    <p>{#text_returning#}</p>
+    {if $smarty.get.order_id}
+      {#text_after_login1#}
+    {elseif $smarty.get.review_prod_id}
+      {#text_after_login2#}
+    {else}
+      {#text_after_login#}
+    {/if}
+    <br />  
+    <table>
+      <tr>
+        <td><span class="fieldtext">{#text_email#}</span>{$INPUT_MAIL|replace:"type=\"text\"":"type=\"email\""}</td>
+      </tr>
+      <tr>
+        <td><span class="fieldtext">{#text_password#}</span>{$INPUT_PASSWORD}</td>
+      </tr>
+      {if $VVIMG}
+        <tr>
+          <td><span class="fieldtext">{#text_sec_code#}</span>{$VVIMG}</td>
+        </tr>
+      {/if}
+      {if $INPUT_CODE}
+        <tr>
+          <td><span class="fieldtext">{#text_sec_code#}</span>{$INPUT_CODE}</td>
+        </tr>
+      {/if}
+    </table>
+    <div class="button_left"><a class="black" href="{$LINK_LOST_PASSWORD}">{#text_lost_password#}</a></div>
+    <div class="button_right cf"><div class="cssButtonPos4">{$BUTTON_LOGIN}</div></div>
+    {$FORM_END}
+  </div>
+</div>
+
+<div class="twoColums last">
+  {if $account_option == 'account' or $account_option == 'both'}
+  <div class="highlightbox cf">
+    <h4>{#title_new#}</h4>
+    <p>{#text_new#}</p>
+    <div class="button_right cf"><div class="cssButtonPos4">{$BUTTON_NEW_ACCOUNT}</div></div>
+  </div>
+  {/if} 
+
+  {if $account_option == 'both' or $account_option == 'guest'}
+  <br />
+  <div class="highlightbox cf">
+    <h4>{#title_guest#}</h4>
+    <p>{#text_guest#}</p>
+    <div class="button_right cf"><div class="cssButtonPos4">{$BUTTON_GUEST}</div></div>
+  </div>
+  {/if}
+</div>
