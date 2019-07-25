@@ -3985,7 +3985,7 @@ ul.resp-tabs-list{
   list-style:none;
 }
 .suggestionList li a.autocomplete {
-  display:inline-block;
+  display:block;
   padding:5px 0px;
   text-decoration: none;
   -moz-box-sizing: border-box;

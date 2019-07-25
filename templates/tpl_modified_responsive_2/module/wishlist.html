@@ -49,7 +49,7 @@
         <div class="lr_content cf">
           <div class="lr_title"><h2><a href="{$module_data.PRODUCTS_LINK}">{$module_data.PRODUCTS_NAME}</a></h2></div>
           <div class="lr_desc_box">
-            {if $module_data.ATTRIBUTES != ''}
+            {if is_array($module_data.ATTRIBUTES) && count($module_data.ATTRIBUTES) > 0}
             <div class="lr_desc">
               <ul class="attributes_list">
                 {foreach key=key_data item=item_data from=$module_data.ATTRIBUTES} 
