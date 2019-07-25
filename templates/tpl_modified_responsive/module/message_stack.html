@@ -1,0 +1,5 @@
+{if isset($messages) && is_array($messages)}
+  {foreach item="message" from=$messages}
+    <p>{$message}</p>
+  {/foreach}
+{/if}

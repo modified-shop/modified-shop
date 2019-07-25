@@ -1,0 +1,121 @@
+{config_load file="$language/lang_$language.conf" section="print_product_info"}
+{config_load file="$language/lang_$language.conf" section="product_info"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="print_product_info"}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="{$charset}" />
+  <title>{$PRODUCTS_NAME} / {$PRODUCTS_MODEL}</title>
+  <meta name="robots" content="noindex, nofollow, noodp" />
+  {if $CanonicalLink}<link href="{$CanonicalLink}" rel="canonical" />{/if}
+  {if $base_href}<base href="{$base_href}" />{/if}
+  <link rel="stylesheet" type="text/css" href="{$tpl_path}stylesheet.css" />
+  {if !$noprint}
+  <script src="{$tpl_path}javascript/jquery.min.js" type="text/javascript"></script>
+  <script type="text/javascript">
+    {literal}
+    $(document).ready(function(){
+      window.focus();
+      window.print();
+    });
+    {/literal}
+  </script>
+  {/if}
+
+  <style>
+    @media only screen and (max-width: 690px) {
+      .printwrap {  
+        width:100%;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        padding: 0 5px 0 0;
+      }  
+      .printlogo img {
+        max-width:100%;
+        height:auto;
+        vertical-align:top;
+      }      
+      .printwrap_inner {
+        display: -webkit-box;
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        -webkit-flex-direction: column;
+        flex-direction: column;      
+      }
+      .tags_row { padding: 5px 0px; }
+      .tags_values_text_row { padding: 0px 0px; }
+      .tags_row .tags_options { padding: 0px 5px 0px 0; }
+
+      .printColumsInfoLeft {
+        width: 100%;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        order:1;
+      }
+    }
+  </style>
+</head>
+<body class="popupprint">
+
+<div class="printwrap cf">
+
+  <div class="printwrap_inner cf">
+
+    <div class="printlogo"><img src="{$tpl_path}img/logo.gif" alt="{$smarty.const.STORE_NAME}" /></div>
+    <h1>{$PRODUCTS_NAME}</h1>
+
+    <div class="printColumsInfoLeft">
+    {if $PRODUCTS_MODEL != ''}<p><strong>{#model#}</strong> {$PRODUCTS_MODEL}</p>{/if}
+    <p>{$PRODUCTS_DESCRIPTION}</p>
+
+    {if $module_content != ''}
+    <h4 class="detailbox">{#options#}</h4>    
+    <ul class="printinfolist">
+      {foreach name=aussen item=module_data from=$module_content}
+        <li{if $module_data.CHECKED == 1} class="active"{/if}>{$module_data.GROUP}: {$module_data.NAME}</li>
+      {/foreach}
+    </ul>    
+    {/if}
+
+    {if isset($MODULE_product_tags) && $MODULE_product_tags != ''}
+      {$MODULE_product_tags}
+    {/if}
+
+    <h4 class="detailbox">{#price#}</h4>
+    <p class="onlytop">{$PRODUCTS_PRICE}</p>
+    <p class="mini nomargin">{$PRODUCTS_TAX_INFO} {$PRODUCTS_SHIPPING_LINK}</p>
+
+    {if $PRODUCTS_DISCOUNT != ''}
+      <p>{#text_discount#} {$PRODUCTS_DISCOUNT}</p>
+    {/if}
+    {if $PRODUCTS_VPE}
+      <p>{$PRODUCTS_VPE}</p>
+    {/if}
+
+    {if $MODULE_graduated_price != ''}
+      {$MODULE_graduated_price}
+    {/if}
+    </div>
+    <div class="printColumsInfoRight">
+      {if $PRODUCTS_IMAGE != ''}
+        <img src="{$PRODUCTS_IMAGE}" alt="{$PRODUCTS_NAME|onlytext}" title="{$PRODUCTS_NAME|onlytext}" border="0" />
+      {/if}
+    </div>
+    <div class="clearer"></div>
+
+  </div>
+  <br />
+  {foreach item=more_images_data from=$more_images}
+  <div class="moimages cf">
+    <img src="{$more_images_data.PRODUCTS_IMAGE}" alt="{$PRODUCTS_NAME|onlytext}" title="{$PRODUCTS_NAME|onlytext}" border="0" />
+  </div>
+  {/foreach}
+
+</div>
+</body>
+</html>
