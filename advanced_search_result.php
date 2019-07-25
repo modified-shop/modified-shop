@@ -36,11 +36,11 @@ $errorno = 0;
 $keywordcheck = xtc_parse_search_string($keywords, $search_keywords);
 
 // error check
-if ($keywords && mb_strlen($keywords) < (int)SEARCH_MIN_LENGTH && strlen($keywords) > 0) {
-  $errorno += 1;
-}
 if (!$keywords && !$pfrom && !$pto) {
   $errorno += 1;
+}
+if ($keywords && strlen($keywords) > 0 && strlen($keywords) < (int)SEARCH_MIN_LENGTH) {
+  $errorno += 2;
 }
 if ($pfrom && !settype($pfrom, "float")) {
   $errorno += 10000;

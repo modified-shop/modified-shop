@@ -333,6 +333,7 @@ define('MAXIMUM_ORDER_VALUE_REACHED_1', 'You ordered more than the allowed amoun
 define('MAXIMUM_ORDER_VALUE_REACHED_2', '<br /> Please decrease your order by at least: ');
 
 define('ERROR_INVALID_PRODUCT', 'The product chosen was not found!');
+define('JS_KEYWORDS_MIN_LENGTH', 'The search term must be at least ' . (int)SEARCH_MIN_LENGTH . ' characters long.\n');
 
 /*
  *

@@ -333,6 +333,7 @@ define('MAXIMUM_ORDER_VALUE_REACHED_1', 'Sie haben die H&ouml;chstbestellsumme v
 define('MAXIMUM_ORDER_VALUE_REACHED_2', '&uuml;berschritten.<br /> Bitte reduzieren Sie Ihre Bestellung um mindestens: ');
 
 define('ERROR_INVALID_PRODUCT', 'Der von Ihnen gew&auml;hlte Artikel wurde nicht gefunden!');
+define('JS_KEYWORDS_MIN_LENGTH', 'Der Suchbegriff muss mindestens ' . (int)SEARCH_MIN_LENGTH . ' Zeichen lang sein.\n');
 
 /*
  * 
