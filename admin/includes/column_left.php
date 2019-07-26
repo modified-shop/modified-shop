@@ -76,6 +76,7 @@ echo mainMenue(BOX_HEADING_CUSTOMERS);
     if ($admin_access['customers_status'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_CUSTOMERS_STATUS, '', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_CUSTOMERS_STATUS . '</a></li>';
     if ($admin_access['customers_group'] == '1' && GROUP_CHECK == 'true') echo '<li><a href="' . xtc_href_link('customers_group.php', '', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_CUSTOMERS_GROUP . '</a></li>';
     if ($admin_access['orders'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_ORDERS, '', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_ORDERS . '</a></li>';
+    if ($admin_access['module_export'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system&module=dsgvo_export', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_DSGVO_EXPORT . '</a></li>';
 echo endMenue(BOX_HEADING_CUSTOMERS);
 
 //---------------------------ARTIKELKATALOG
