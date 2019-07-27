@@ -81,4 +81,4 @@
 <h2>{#title_print#}</h2>
 <p>{#text_print#}</p>
 {/if}
-<p>{$BUTTON_PRINT}</p>
+<p>{$BUTTON_PRINT}{if isset($BUTTON_CART_EXPRESS)} {$BUTTON_CART_EXPRESS}{/if} {$BUTTON_CART}</p>
