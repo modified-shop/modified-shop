@@ -14,6 +14,7 @@
       && defined('SEO_URL_MOD_CLASS')
       && defined('MODULE_MULTILANG_STATUS')
       && MODULE_MULTILANG_STATUS == 'true'
+      && !defined('RUN_MODE_ADMIN')
       )
   {
     $seo_url_sites = array(
