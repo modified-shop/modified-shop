@@ -25,7 +25,7 @@ $smarty = new Smarty;
 require_once (DIR_FS_INC.'xtc_break_string.inc.php');
 require_once (DIR_FS_INC.'xtc_date_long.inc.php');
 
-if (!isset($_GET['reviews_id']) && !isset($_GET['products_id'])) {
+if (!isset($_GET['reviews_id']) || !isset($_GET['products_id'])) {
 	xtc_redirect(xtc_href_link(FILENAME_REVIEWS, '', 'NONSSL'));
 }
 
