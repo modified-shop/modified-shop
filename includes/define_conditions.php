@@ -51,7 +51,7 @@ defined('CATEGORIES_CONDITIONS') OR define('CATEGORIES_CONDITIONS', str_replace(
 
 # SPECIALS
 ########################
-$specials_conditions_s = " AND s.status = '1' AND (now() >= s.start_date OR s.start_date IS NULL) " . (isset($specials_conditions_s) ? $specials_conditions_s : '');
+$specials_conditions_s = " AND s.status = '1' AND (s.start_date <= now() OR s.start_date IS NULL OR s.start_date = 0) AND (s.expires_date >= now() OR s.expires_date IS NULL OR s.expires_date = 0) " . (isset($specials_conditions_s) ? $specials_conditions_s : '');
 defined('SPECIALS_CONDITIONS_S') OR define('SPECIALS_CONDITIONS_S', $specials_conditions_s);
 defined('SPECIALS_CONDITIONS') OR define('SPECIALS_CONDITIONS', str_replace('s.', '', $specials_conditions_s));
 ?>
