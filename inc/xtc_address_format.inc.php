@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_address_format.inc.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id$   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -63,8 +63,8 @@
     $statecomma = '';
     $streets = $street;
     if ($suburb != '') $streets = $street . $cr . $suburb;
-    if ($firstname == '') $firstname = addslashes($address['name']);
-    if ($country == '') $country = addslashes((is_array($address['country']) && array_key_exists('title', $address['country'])) ? $address['country']['title'] : $address['country']);
+    if ($firstname == '' && isset($address['name'])) $firstname = addslashes($address['name']);
+    if ($country == '' && isset($address['country'])) $country = addslashes((is_array($address['country']) && array_key_exists('title', $address['country'])) ? $address['country']['title'] : $address['country']);
     if ($state != '') $statecomma = $state . ', ';
 
     $fmt = $address_format['format'];
