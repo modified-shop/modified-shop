@@ -1,0 +1,111 @@
+/**
+ * jquery.alertable.js - Minimal alert, confirmation, and prompt alternatives.
+ * Developed by Cory LaViska for A Beautiful Site, LLC
+ * https://github.com/claviska/jquery-alertable
+ * Licensed under the MIT license: http://opensource.org/licenses/MIT
+ */
+
+/* Modal */
+.alertable {
+  position: fixed;
+  z-index: 9999;
+  top: 25vh;
+  left:10px;
+  right:10px;      
+  max-width:580px;
+  background: white;
+  border: 4px solid #525252;
+  border-radius: 0px;
+  padding: 0px;
+  margin: 0 auto;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-box-shadow: 0px 0px 0px #3d3d3d;
+  -moz-box-shadow: 0px 0px 0px #3d3d3d;
+  box-shadow: 0px 0px 0px #3d3d3d;
+}
+
+
+/* Overlay */
+.alertable-overlay {
+  position: fixed;
+  z-index: 9998;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* Message */
+.alertable-message {
+  margin-bottom: 10px;
+}
+
+#alertable-title {
+  display:block;
+  font-size:12px;
+  font-weight:bold;
+  text-transform:uppercase;
+  color:#333;
+  padding: 8px 10px;
+  background: #e8e8e8;
+}
+
+#alertable-content {
+  display:block;
+  font-size:12px;
+  line-height:18px;
+  color:#555;
+  font-weight:400;
+  padding: 20px 10px 20px 10px;
+  white-space: pre-line;
+}
+#alertable-content p {
+  margin-top:0px;
+}
+#alertable-content > div {
+  padding: 5px 0px;
+}
+
+
+/* Button group */
+.alertable-buttons {
+  text-align: right;
+  padding: 10px;
+}
+
+/* OK button */
+.alertable-ok, 
+.alertable-ok:focus,
+.alertable-ok:active {
+  cursor: pointer;
+  text-align:center;
+  padding: 8px 20px;
+  font-size:13px;
+  line-height:17px;
+  font-weight:bold;
+  text-transform:uppercase;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  white-space:nowrap;
+  text-decoration:none;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+	border:1px solid #ccc;
+	text-decoration:none;
+	background-color:#eee;
+	color:#666;
+	display:inline-block;
+  outline:none;
+}
+
+.alertable-ok:hover {
+	background-color:#eee;
+	border:1px solid #aaa;
+  color:#222;
+  text-decoration:none !important;
+}

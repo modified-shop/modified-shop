@@ -19,7 +19,7 @@
   $css_array = array(
     DIR_TMPL_CSS.'thickbox.css',
     DIR_TMPL_CSS.'jquery.cookieconsent.css',
-    DIR_TMPL_CSS.'jquery.alerts.css',
+    DIR_TMPL_CSS.'jquery.alertable.css',
   );
   $css_min = DIR_TMPL_CSS.'tpl_plugins.min.css';
   

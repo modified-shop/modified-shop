@@ -25,7 +25,7 @@
 $script_array = array(
   DIR_TMPL_JS.'thickbox.js',
   DIR_TMPL_JS.'jquery.cookieconsent.min.js',
-  DIR_TMPL_JS.'jquery.alerts.min.js',
+  DIR_TMPL_JS.'jquery.alertable.min.js',
 );
 $script_min = DIR_TMPL_JS.'tpl_plugins.min.js';
 
@@ -43,14 +43,16 @@ foreach ($script_array as $script) {
 ?>
 
 <script type="text/javascript">
-  /*BOC jQuery Alerts*/
-  $.alerts.overlayOpacity = .2;
-  $.alerts.overlayColor = '#000';
+
   function alert(message, title) {
     title = title || 'Information';
-    jAlert(message, title);
+    $.alertable.alert('<span id="alertable-title"></span><span id="alertable-content"></span>', { 
+      html: true 
+    });
+    $('#alertable-content').html(message);
+    $('#alertable-title').html(title);
   }
-  /*EOC jQuery Alerts*/
+
   $('#button_checkout_confirmation').on('click',function() {
     $(this).hide();
   });
