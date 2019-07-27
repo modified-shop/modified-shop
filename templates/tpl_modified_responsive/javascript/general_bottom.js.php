@@ -27,7 +27,7 @@ $script_array = array(
   DIR_TMPL_JS.'jquery.bxslider.min.js',
   DIR_TMPL_JS.'jquery.cookieconsent.min.js',
   DIR_TMPL_JS.'jquery.easyTabs.min.js',
-  DIR_TMPL_JS.'jquery.alerts.min.js',
+  DIR_TMPL_JS.'jquery.alertable.min.js',
   DIR_TMPL_JS.'jquery.sumoselect.min.js',
   DIR_TMPL_JS.'jquery.sidebar.min.js',
 );
@@ -220,12 +220,16 @@ foreach ($script_array as $script) {
 		ac_page = 1;
 	}
   <?php } ?>
-  $.alerts.overlayOpacity = .2;
-  $.alerts.overlayColor = '#000';
+
   function alert(message, title) {
     title = title || 'Information';
-    jAlert(message, title);
+    $.alertable.alert('<span id="alertable-title"></span><span id="alertable-content"></span>', { 
+      html: true 
+    });
+    $('#alertable-content').html(message);
+    $('#alertable-title').html(title);
   }
+
   <?php if (!strstr($PHP_SELF, FILENAME_SHOPPING_CART) && !strstr($PHP_SELF, 'checkout')) { ?>
     $(function() {
       $('#toggle_cart').click(function() {
