@@ -105,9 +105,7 @@ class PayPalAdmin extends PayPalPayment {
     if ($config['presentation']['locale_code'] != '') {
       $presentation->setLocaleCode(strtoupper($config['presentation']['locale_code']));
     }
-    
-    $addess_override = (($config['input_fields']['address_override'] == '0') ? 1 : 0);
-    
+        
     // set InputFields
     $inputFields = new InputFields();
     $inputFields->setAllowNote(0)
@@ -151,9 +149,7 @@ class PayPalAdmin extends PayPalPayment {
     if ($config['presentation']['locale_code'] != '') {
       $presentation->setLocaleCode(strtoupper($config['presentation']['locale_code']));
     }
-
-    $addess_override = (($config['input_fields']['address_override'] == '0') ? 1 : 0);
-
+    
     // set InputFields
     $inputFields = new InputFields();
     $inputFields->setAllowNote(0)
@@ -209,7 +205,7 @@ class PayPalAdmin extends PayPalPayment {
       ),
       array(
         'config_key' => strtoupper($config['id']).'_ADDRESS', 
-        'config_value' => $addess_override,
+        'config_value' => 1,
       ),          
     );
     $this->save_config($sql_data_array);
