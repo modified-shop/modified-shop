@@ -148,7 +148,7 @@
       include(DIR_WS_INCLUDES.'build_search_query.php');
     
       if (PRODUCT_LIST_FILTER == 'true') { 
-        $where_str .= " ) GROUP BY p.products_id";
+        $where_str .= " ) GROUP BY p.products_id ORDER BY NULL";
       } else {
         $where_str .= " ) GROUP BY p.products_id ";
         $where_str .= ((isset($_SESSION['filter_sorting'])) ? $_SESSION['filter_sorting'] : 'ORDER BY p.products_id ASC');
