@@ -29,7 +29,7 @@
     // create $search_keywords array
     $keywordcheck = xtc_parse_search_string($queryString, $search_keywords);
         
-    if ($keywordcheck === true && mb_strlen($queryString) >= SEARCH_AC_MIN_LENGTH) {
+    if ($keywordcheck === true && mb_strlen($queryString, $_SESSION['language_charset']) >= SEARCH_AC_MIN_LENGTH) {
       
       $from_str .= SEARCH_IN_ATTR == 'true' ? " LEFT OUTER JOIN ".TABLE_PRODUCTS_ATTRIBUTES." AS pa ON (p.products_id = pa.products_id) 
                                                 LEFT OUTER JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." AS pov ON (pa.options_values_id = pov.products_options_values_id) " : "";
