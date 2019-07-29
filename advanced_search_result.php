@@ -39,7 +39,7 @@ $keywordcheck = xtc_parse_search_string($keywords, $search_keywords);
 if (!$keywords && !$pfrom && !$pto) {
   $errorno += 1;
 }
-if ($keywords && strlen($keywords) > 0 && strlen($keywords) < (int)SEARCH_MIN_LENGTH) {
+if ($keywords && strlen($keywords) > 0 && mb_strlen($keywords, $_SESSION['language_charset']) < (int)SEARCH_MIN_LENGTH) {
   $errorno += 2;
 }
 if ($pfrom && (!is_numeric($pfrom) || !settype($pfrom, "float")) ) {
