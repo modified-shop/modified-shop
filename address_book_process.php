@@ -93,17 +93,17 @@ if (isset ($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['act
     $messageStack->add('addressbook', ENTRY_GENDER_ERROR);
   }
 
-  if (strlen($firstname) < ENTRY_FIRST_NAME_MIN_LENGTH) {
+  if (mb_strlen($firstname, $_SESSION['language_charset']) < ENTRY_FIRST_NAME_MIN_LENGTH) {
     $error = true;
     $messageStack->add('addressbook', ENTRY_FIRST_NAME_ERROR);
   }
 
-  if (strlen($lastname) < ENTRY_LAST_NAME_MIN_LENGTH) {
+  if (mb_strlen($lastname, $_SESSION['language_charset']) < ENTRY_LAST_NAME_MIN_LENGTH) {
     $error = true;
     $messageStack->add('addressbook', ENTRY_LAST_NAME_ERROR);
   }
 
-  if (strlen($street_address) < ENTRY_STREET_ADDRESS_MIN_LENGTH) {
+  if (mb_strlen($street_address, $_SESSION['language_charset']) < ENTRY_STREET_ADDRESS_MIN_LENGTH) {
     $error = true;
     $messageStack->add('addressbook', ENTRY_STREET_ADDRESS_ERROR);
   }
@@ -113,7 +113,7 @@ if (isset ($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['act
     $messageStack->add('addressbook', ENTRY_POST_CODE_ERROR);
   }
 
-  if (strlen($city) < ENTRY_CITY_MIN_LENGTH) {
+  if (mb_strlen($city, $_SESSION['language_charset']) < ENTRY_CITY_MIN_LENGTH) {
     $error = true;
     $messageStack->add('addressbook', ENTRY_CITY_ERROR);
   }
@@ -161,7 +161,7 @@ if (isset ($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['act
     } else {
       if (!$required_zones) {
         $state = '';
-      } elseif (strlen($state) < ENTRY_STATE_MIN_LENGTH) {
+      } elseif (mb_strlen($state, $_SESSION['language_charset']) < ENTRY_STATE_MIN_LENGTH) {
         $error = true;
         $messageStack->add('addressbook', ENTRY_STATE_ERROR);
       }

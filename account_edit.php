@@ -75,12 +75,12 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
     $messageStack->add('account_edit', ENTRY_GENDER_ERROR);
 	}
 
-	if (strlen($firstname) < ENTRY_FIRST_NAME_MIN_LENGTH) {
+	if (mb_strlen($firstname, $_SESSION['language_charset']) < ENTRY_FIRST_NAME_MIN_LENGTH) {
 		$error = true;
 		$messageStack->add('account_edit', ENTRY_FIRST_NAME_ERROR);
 	}
 
-	if (strlen($lastname) < ENTRY_LAST_NAME_MIN_LENGTH) {
+	if (mb_strlen($lastname, $_SESSION['language_charset']) < ENTRY_LAST_NAME_MIN_LENGTH) {
 		$error = true;
 		$messageStack->add('account_edit', ENTRY_LAST_NAME_ERROR);
 	}
