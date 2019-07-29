@@ -162,7 +162,7 @@ foreach ($script_array as $script) {
   <?php } ?>
 
   function alert(message, title) {
-    title = title || 'Information';
+    title = title || "<?php echo TEXT_LINK_TITLE_INFORMATION; ?>";
     $.alertable.alert('<span id="alertable-title"></span><span id="alertable-content"></span>', { 
       html: true 
     });

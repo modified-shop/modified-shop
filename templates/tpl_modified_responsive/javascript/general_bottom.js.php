@@ -1,6 +1,6 @@
 <?php
 /*-----------------------------------------------------------
-   $Id: general_bottom.js.php 11950 2019-07-21 12:58:35Z Markus $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -222,7 +222,7 @@ foreach ($script_array as $script) {
   <?php } ?>
 
   function alert(message, title) {
-    title = title || 'Information';
+    title = title || "<?php echo TEXT_LINK_TITLE_INFORMATION; ?>";
     $.alertable.alert('<span id="alertable-title"></span><span id="alertable-content"></span>', { 
       html: true 
     });
