@@ -83,27 +83,27 @@
     }
   
     //build query
-    $select_str = "SELECT distinct ".ADD_SELECT_SEARCH."
-                                   p.products_id,
-                                   p.products_ean,
-                                   p.products_quantity,
-                                   p.products_shippingtime,
-                                   p.products_model,
-                                   p.products_image,
-                                   p.products_price,
-                                   p.products_weight,
-                                   p.products_tax_class_id,
-                                   p.products_fsk18,
-                                   p.products_vpe,
-                                   p.products_vpe_status,
-                                   p.products_vpe_value,
-                                   pd.products_name,
-                                   pd.products_short_description,
-                                   pd.products_description,
-                                   IFNULL(s.specials_new_products_price, p.products_price) AS price ";
+    $select_str = "SELECT ".ADD_SELECT_SEARCH."
+                          p.products_id,
+                          p.products_ean,
+                          p.products_quantity,
+                          p.products_shippingtime,
+                          p.products_model,
+                          p.products_image,
+                          p.products_price,
+                          p.products_weight,
+                          p.products_tax_class_id,
+                          p.products_fsk18,
+                          p.products_vpe,
+                          p.products_vpe_status,
+                          p.products_vpe_value,
+                          pd.products_name,
+                          pd.products_short_description,
+                          pd.products_description,
+                          IFNULL(s.specials_new_products_price, p.products_price) AS price ";
   
     if (PRODUCT_LIST_FILTER == 'true') { 
-      $select_str = "SELECT DISTINCT p.products_id ";
+      $select_str = "SELECT p.products_id ";
     }
   
     $from_str  = "FROM ".TABLE_PRODUCTS." AS p 
@@ -131,7 +131,7 @@
     }
 
     //where-string
-    $where_str = " WHERE p.products_status = '1' AND trim(pd.products_name) != '' "  
+    $where_str = " WHERE p.products_status = '1' "  
     .$subcat_where
     .$manu_check
     .PRODUCTS_CONDITIONS_P
@@ -150,7 +150,8 @@
       if (PRODUCT_LIST_FILTER == 'true') { 
         $where_str .= " ) GROUP BY p.products_id";
       } else {
-        $where_str .= " ) GROUP BY p.products_id ORDER BY p.products_id ASC";
+        $where_str .= " ) GROUP BY p.products_id ";
+        $where_str .= ((isset($_SESSION['filter_sorting'])) ? $_SESSION['filter_sorting'] : 'ORDER BY p.products_id ASC');
       }
     }
 
