@@ -341,8 +341,6 @@
       'customers_lastname' => xtc_db_prepare_input($data_array['customers_lastname']),
       'customers_name' => xtc_db_prepare_input($data_array['customers_firstname']) . ' ' . xtc_db_prepare_input($data_array['customers_lastname']),
       'customers_street_address' => xtc_db_prepare_input($data_array['customers_street_address']),
-      'customers_suburb' => xtc_db_prepare_input($data_array['customers_suburb']),
-      'customers_state' => xtc_db_prepare_input($data_array['customers_state']),
       'customers_city' => xtc_db_prepare_input($data_array['customers_city']),
       'customers_postcode' => xtc_db_prepare_input($data_array['customers_postcode']),
       'customers_country' => $customers_country['countries_name'],
@@ -356,8 +354,6 @@
       'delivery_lastname' => xtc_db_prepare_input($data_array['delivery_lastname']),
       'delivery_name' => xtc_db_prepare_input($data_array['delivery_firstname']) . ' ' . xtc_db_prepare_input($data_array['delivery_lastname']),
       'delivery_street_address' => xtc_db_prepare_input($data_array['delivery_street_address']),
-      'delivery_suburb' => xtc_db_prepare_input($data_array['delivery_suburb']),
-      'delivery_state' => xtc_db_prepare_input($data_array['delivery_state']),
       'delivery_city' => xtc_db_prepare_input($data_array['delivery_city']),
       'delivery_postcode' => xtc_db_prepare_input($data_array['delivery_postcode']),
       'delivery_country' => $delivery_country['countries_name'],
@@ -368,8 +364,6 @@
       'billing_lastname' => xtc_db_prepare_input($data_array['billing_lastname']),
       'billing_name' => xtc_db_prepare_input($data_array['billing_firstname']) . ' ' . xtc_db_prepare_input($data_array['billing_lastname']),
       'billing_street_address' => xtc_db_prepare_input($data_array['billing_street_address']),
-      'billing_suburb' => xtc_db_prepare_input($data_array['billing_suburb']),
-      'billing_state' => xtc_db_prepare_input($data_array['billing_state']),
       'billing_city' => xtc_db_prepare_input($data_array['billing_city']),
       'billing_postcode' => xtc_db_prepare_input($data_array['billing_postcode']),
       'billing_country' => $billing_country['countries_name'],
@@ -382,6 +376,18 @@
       $sql_data_array['customers_gender'] = xtc_db_prepare_input($data_array['customers_gender']);
       $sql_data_array['delivery_gender'] = xtc_db_prepare_input($data_array['delivery_gender']);
       $sql_data_array['billing_gender'] = xtc_db_prepare_input($data_array['billing_gender']);
+    }
+
+    if (ACCOUNT_SUBURB == 'true') {
+      $sql_data_array['customers_suburb'] = xtc_db_prepare_input($data_array['customers_suburb']);
+      $sql_data_array['delivery_suburb'] = xtc_db_prepare_input($data_array['delivery_suburb']);
+      $sql_data_array['billing_suburb'] = xtc_db_prepare_input($data_array['billing_suburb']);
+    }
+
+    if (ACCOUNT_STATE == 'true') {
+      $sql_data_array['customers_state'] = xtc_db_prepare_input($data_array['customers_state']);
+      $sql_data_array['delivery_state'] = xtc_db_prepare_input($data_array['delivery_state']);
+      $sql_data_array['billing_state'] = xtc_db_prepare_input($data_array['billing_state']);
     }
   
     xtc_db_perform(TABLE_ORDERS, $sql_data_array, 'update', "orders_id = '".(int)$oID."'");
