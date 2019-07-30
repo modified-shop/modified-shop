@@ -196,7 +196,7 @@
             // KLARNA ORDERSTATUS UPDATE START
             if (is_file(DIR_FS_DOCUMENT_ROOT . 'includes/external/klarna/class.KlarnaCore.php')) {
               require_once (DIR_FS_DOCUMENT_ROOT . 'includes/external/klarna/class.KlarnaCore.php');
-              if ($_GET['edit_action'] == "klarna_check_orderstatus") {
+              if (isset($_GET['edit_action']) && $_GET['edit_action'] == "klarna_check_orderstatus") {
                 include_once (DIR_FS_ADMIN. 'klarna_check_orderstatus.php');
                 $orderStatus = new KlarnaCheckOrder;
                 $orderStatus->checkOrder($_GET['oID'], $order->info['payment_method']);

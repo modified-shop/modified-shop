@@ -64,9 +64,7 @@ define('TEXT_PRODUCT_SEARCH', 'Search Products:');
 define('TEXT_PRODUCT_OPTION', 'Attributes:');
 define('TEXT_PRODUCT_OPTION_VALUE', 'Option Value:');
 define('TEXT_PRICE_PREFIX', 'Price Prefix:');
-define('TEXT_SAVE_ORDER', 'Finish and recalculate');
 define('TEXT_INS', 'Add:');
-define('TEXT_SHIPPING', 'Shipping Costs');
 define('TEXT_COD_COSTS', 'COD Costs');
 define('TEXT_VALUE', 'Price');
 define('TEXT_DESC', 'insert');
@@ -74,14 +72,13 @@ define('TEXT_DESC', 'insert');
 // Sonstiges
 
 define('TEXT_PAYMENT', 'Payment:');
-define('TEXT_SHIPPING', 'Shipping Module:');
+define('TEXT_SHIPPING', 'Shipping Costs:');
 define('TEXT_LANGUAGE', 'Language:');
 define('TEXT_CURRENCIES', 'Currency:');
 define('TEXT_ORDER_TOTAL', 'Total:');
 define('TEXT_SAVE', 'Save');
 define('TEXT_ACTUAL', 'actual:');
 define('TEXT_NEW', 'new:');
-define('TEXT_PRICE', 'Costs: ');
 
 define('TEXT_ADD_TAX','incl. ');
 define('TEXT_NO_TAX','plus ');
