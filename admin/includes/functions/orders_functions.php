@@ -790,6 +790,7 @@
                                            op.products_quantity,
                                            op.products_discount_made, 
                                            op.products_tax, 
+                                           op.allow_tax,
                                            p.products_tax_class_id
                                       FROM ".TABLE_ORDERS_PRODUCTS." op
                                       JOIN ".TABLE_PRODUCTS." p
