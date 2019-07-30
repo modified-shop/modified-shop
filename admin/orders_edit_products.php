@@ -201,7 +201,7 @@ if ($_GET['action'] =='product_search') {
                                    OR pa.attributes_ean LIKE ('%" . xtc_db_input($_GET['search']) . "%')
                                    )
                          GROUP BY p.products_id
-                         ORDER BY pd.products_name");
+                         ORDER BY pd.products_name";
                               
     $products_split = new splitPageResults($_GET['page'], MAX_DISPLAY_PRODUCTS_SEARCH_RESULTS, $products_query_raw, $products_query_numrows, 'p.products_id');
     $products_query = xtc_db_query($products_query_raw);
