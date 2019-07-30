@@ -18,7 +18,7 @@
   define('MODULE_PAYMENT_MONEYORDER_TEXT_TITLE', 'Check/Money Order');
   define('MODULE_PAYMENT_MONEYORDER_TEXT_DESCRIPTION', 'Make payable to:&nbsp;' . (defined('MODULE_PAYMENT_MONEYORDER_PAYTO') ? nl2br(MODULE_PAYMENT_MONEYORDER_PAYTO) : '') . '<br />Purpose of payment: %s<br /><br />Send to:<br /><br />' . nl2br(STORE_OWNER) . '<br /><br />' . 'Your order will not ship until we receive payment!');
   define('MODULE_PAYMENT_MONEYORDER_TEXT_EMAIL_FOOTER', "Make payable to: ". (defined('MODULE_PAYMENT_MONEYORDER_PAYTO') ? MODULE_PAYMENT_MONEYORDER_PAYTO : '') . "\nPurpose of payment: %s\n\nSend to:\n" . STORE_OWNER . "\n\n" . 'Your order will not ship until we receive payment');
-  if (MODULE_PAYMENT_MONEYORDER_SUCCESS == 'True') {
+  if (defined('MODULE_PAYMENT_MONEYORDER_SUCCESS') && MODULE_PAYMENT_MONEYORDER_SUCCESS == 'True') {
     define('MODULE_PAYMENT_MONEYORDER_TEXT_INFO','We ship your order after receipt of payment. You will receive the account data in the last step of the checkout.');
   } else {
     define('MODULE_PAYMENT_MONEYORDER_TEXT_INFO','We ship your order after receipt of payment. You will receive the account data by e-mail when your order has been confirmed.');

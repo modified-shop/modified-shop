@@ -18,7 +18,7 @@
   define('MODULE_PAYMENT_MONEYORDER_TEXT_TITLE', 'Vorkasse/Bank&uuml;berweisung');
   define('MODULE_PAYMENT_MONEYORDER_TEXT_DESCRIPTION', 'Bankverbindung:<br />' . (defined('MODULE_PAYMENT_MONEYORDER_PAYTO') ? nl2br(MODULE_PAYMENT_MONEYORDER_PAYTO) : '') . '<br />Verwendungszweck: %s<br /><br />Kontoinhaber:<br />' . nl2br(STORE_OWNER) . '<br /><br />' . 'Ihre Bestellung wird nach Geldeingang auf unserem Konto an Sie versendet.');
   define('MODULE_PAYMENT_MONEYORDER_TEXT_EMAIL_FOOTER', "Bankverbindung: ". (defined('MODULE_PAYMENT_MONEYORDER_PAYTO') ? MODULE_PAYMENT_MONEYORDER_PAYTO : '') . "\nVerwendungszweck: %s\n\nKontoinhaber:\n" . STORE_OWNER . "\n\n" . 'Ihre Bestellung wird nach Geldeingang auf unser Konto an Sie versendet.');
-  if (MODULE_PAYMENT_MONEYORDER_SUCCESS == 'True') {
+  if (defined('MODULE_PAYMENT_MONEYORDER_SUCCESS') && MODULE_PAYMENT_MONEYORDER_SUCCESS == 'True') {
     define('MODULE_PAYMENT_MONEYORDER_TEXT_INFO','Wir versenden Ihre Bestellung nach Zahlungseingang. Die Kontodaten erhalten Sie im letzten Schritt der Bestellung.');
   } else {
     define('MODULE_PAYMENT_MONEYORDER_TEXT_INFO','Wir versenden Ihre Bestellung nach Zahlungseingang. Die Kontodaten erhalten Sie nach Bestellannahme per E-Mail.');
