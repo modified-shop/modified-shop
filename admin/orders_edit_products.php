@@ -145,7 +145,7 @@ $currencies = new currencies();
 </table>
 <br /><br />
 <?php
-if ($_GET['action'] =='product_search') {  
+if (isset($_GET['action']) && $_GET['action'] =='product_search') {  
   ?>
   <table class="tableBoxCenter collapse">
     <tr class="dataTableHeadingRow">

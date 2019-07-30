@@ -30,7 +30,7 @@
   // include needed functions
   require_once (DIR_WS_FUNCTIONS.'orders_functions.php');
 
-  if (!$_GET['oID']) {
+  if (!isset($_GET['oID']) && isset($_POST['oID'])) {
     $_GET['oID'] = $_POST['oID'];
   }
   $order = new order((int)$_GET['oID']);
