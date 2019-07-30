@@ -152,10 +152,8 @@
           <tr>
             <td class="boxCenterLeft">                
               <?php
-              if ($_GET['text'] == 'address') {
-                if ($_GET['text'] == 'address') {
-                  echo TEXT_EDIT_ADDRESS_SUCCESS;
-                }
+              if (isset($_GET['text']) && $_GET['text'] == 'address') {
+                echo TEXT_EDIT_ADDRESS_SUCCESS;
               }
               if (!isset($_GET['edit_action'])) {
                 ?>                
