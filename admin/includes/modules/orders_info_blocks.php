@@ -442,7 +442,7 @@
           <tr>
             <td>
               <div class="flt-l"> 
-                <a class="button" href="<?php echo xtc_href_link(FILENAME_ORDERS, 'page='.$_GET['page'].'&oID='.$oID); ?>"><?php echo BUTTON_BACK;?></a>
+                <a class="button" href="<?php echo xtc_href_link(FILENAME_ORDERS, 'oID='.$oID.((isset($_GET['page'])) ? '&page='.$_GET['page'] : '')); ?>"><?php echo BUTTON_BACK;?></a>
               </div>
               <div class="flt-r"> 
                 <?php

@@ -101,7 +101,7 @@
     <td class="dataTableHeadingContent"><b><?php echo TEXT_PRODUCT_OPTION;?></b></td>
     <td class="dataTableHeadingContent"><b><?php echo TEXT_PRODUCT_OPTION_VALUE;?></b></td>
     <td class="dataTableHeadingContent"><b><?php echo TEXT_PRODUCTS_QTY;?></b></td>                                                                                                                                                 
-    <td class="dataTableHeadingContent"><b><?php echo TEXT_PRICE;?></b></td>
+    <td class="dataTableHeadingContent"><b><?php echo TEXT_PRICE . TEXT_SMALL_NETTO;?></b></td>
     <td class="dataTableHeadingContent">&nbsp;</td>
   </tr>
   <?php
@@ -114,12 +114,7 @@
         echo xtc_draw_hidden_field('opID', (int)$_GET['opID']);
         echo xtc_draw_hidden_field('pID', (int)$_GET['pID']);
         echo xtc_draw_hidden_field('aID', (int)$products['products_attributes_id']);
-        $brutto = PRICE_IS_BRUTTO;
-        if($brutto == 'true'){
-          $options_values_price = xtc_round(($products['options_values_price']*(1+($_GET['pTX']/100))), PRICE_PRECISION);
-        }else{
-          $options_values_price = xtc_round($products['options_values_price'], PRICE_PRECISION);
-        }
+        $options_values_price = xtc_round($products['options_values_price'], PRICE_PRECISION);
         ?>
         <td class="dataTableContent"><?php echo $products['products_attributes_id'];?></td>
         <td class="dataTableContent"><?php echo xtc_oe_get_options_name($products['options_id']);?></td>
