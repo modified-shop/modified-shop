@@ -702,7 +702,7 @@
     }
 
     $discount = 0;
-    if ($status['customers_status_discount_attributes'] == 1 && $status['customers_status_discount'] != 0.00 && $options_values_price > 0.00) {
+    if ($status['customers_status_discount_attributes'] == 1 && $status['customers_status_discount'] != 0.00 && $ov_price > 0.00) {
       $discount = $status['customers_status_discount'];
       if ($products['products_discount_made'] < $status['customers_status_discount']) {
         $discount = $products['products_discount_made'];
@@ -781,8 +781,8 @@
       'orders_products_options_id' => xtc_db_prepare_input($products_attributes['options_id']),
       'orders_products_options_values_id' => xtc_db_prepare_input($products_attributes['options_values_id']),
       'price_prefix' => xtc_db_prepare_input($products_attributes['price_prefix']),
-      'attributes_model' => xtc_db_prepare_input($products_options['attributes_model']),
-      'attributes_ean' => xtc_db_prepare_input($products_options['attributes_ean']),
+      'attributes_model' => xtc_db_prepare_input($products_attributes['attributes_model']),
+      'attributes_ean' => xtc_db_prepare_input($products_attributes['attributes_ean']),
     );
     xtc_db_perform(TABLE_ORDERS_PRODUCTS_ATTRIBUTES, $sql_data_array);
 
@@ -869,7 +869,7 @@
     }
 
     $discount = 0;
-    if ($status['customers_status_discount_attributes'] == 1 && $status['customers_status_discount'] != 0.00 && $options_values_price > 0.00) {
+    if ($status['customers_status_discount_attributes'] == 1 && $status['customers_status_discount'] != 0.00 && $ov_price > 0.00) {
       $discount = $status['customers_status_discount'];
       if ($products['products_discount_made'] < $status['customers_status_discount']) {
         $discount = $products['products_discount_made'];
@@ -907,7 +907,7 @@
 
 
   function orders_product_option_delete($oID, $data_array) {
-    global $xtPrice;
+    global $xtPrice, $order;
   
     // Update Attributes Stock
     if (STOCK_LIMITED == 'true') {
@@ -934,7 +934,8 @@
                                            ON op.products_id = p.products_id
                                      WHERE op.orders_products_id = '".(int)$data_array['opID']."'");
     $products = xtc_db_fetch_array($products_query);
-
+    
+    $options_values_price = 0;
     $products_a_query = xtc_db_query("SELECT options_values_price, 
                                              price_prefix 
                                         FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES." 
