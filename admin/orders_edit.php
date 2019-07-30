@@ -163,24 +163,23 @@
                   <?php echo TEXT_ORDERS_EDIT_INFO;?>
                 </div>
                 <?php
-              }
-              if ($_GET['edit_action'] == 'address') {                  
-                include ('orders_edit_address.php');                  
-              } elseif ($_GET['edit_action'] == 'products') {
-                include ('orders_edit_products.php');
-              } elseif ($_GET['edit_action'] == 'other') {
-                include ('orders_edit_other.php');
-              } elseif ($_GET['edit_action'] == 'options') {
-                include ('orders_edit_options.php');
+              } else {
+                if ($_GET['edit_action'] == 'address') {                  
+                  include ('orders_edit_address.php');                  
+                } elseif ($_GET['edit_action'] == 'products') {
+                  include ('orders_edit_products.php');
+                } elseif ($_GET['edit_action'] == 'other') {
+                  include ('orders_edit_other.php');
+                } elseif ($_GET['edit_action'] == 'options') {
+                  include ('orders_edit_options.php');
+                }
               }
               ?>
               <div class="clear smallText pdg2 flt-r mrg5">
               <?php
                 echo TEXT_SAVE_ORDER;
                 echo xtc_draw_form('save_order', FILENAME_ORDERS_EDIT, 'action=save_order', 'post');
-                  echo xtc_draw_hidden_field('customers_status_id', $address['customers_status']);
                   echo xtc_draw_hidden_field('oID', (int)$_GET['oID']);
-                  echo xtc_draw_hidden_field('cID', (int)$_GET['cID']);
                   echo '<input type="submit" class="button" onclick="this.blur();" value="'.BUTTON_SAVE.'"/>';
                   if (isset($_GET['edit_action'])) {
                     echo '&nbsp;&nbsp;&nbsp;';
