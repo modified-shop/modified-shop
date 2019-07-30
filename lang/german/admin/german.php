@@ -603,4 +603,12 @@ define('CONTINUE_WITHOUT_SAVE', 'Nicht gespeicherte &Auml;nderungen gehen verlor
 
 define('TEXT_SORT_ASC','aufsteigend');
 define('TEXT_SORT_DESC','absteigend');
+
+define('MSRP','UVP');
+define('YOUR_PRICE','Ihr Preis ');
+define('UNIT_PRICE','St&uuml;ckpreis ');
+define('ONLY',' Jetzt nur ');
+define('FROM','ab ');
+define('YOU_SAVE','Sie sparen ');
+define('INSTEAD','Unser bisheriger Preis ');
 ?>

@@ -604,4 +604,12 @@ define('CONTINUE_WITHOUT_SAVE', 'Unsaved changes will be dismissed.');
 
 define('TEXT_SORT_ASC','ascending');
 define('TEXT_SORT_DESC','descending');
+
+define('MSRP','MSRP');
+define('YOUR_PRICE','your price ');
+define('UNIT_PRICE','unit price ');
+define('ONLY',' Now only ');
+define('FROM','from ');
+define('YOU_SAVE','you save ');
+define('INSTEAD','Our previous price ');
 ?>
