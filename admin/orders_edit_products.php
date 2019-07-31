@@ -196,6 +196,7 @@ if (isset($_GET['action']) && $_GET['action'] =='product_search') {
                                   ON p.products_id = pa.products_id
                             WHERE (pd.products_name LIKE ('%" . xtc_db_input($_GET['search']) . "%') 
                                    OR p.products_model LIKE ('%" . xtc_db_input($_GET['search']) . "%') 
+                                   OR p.products_manufacturers_model LIKE ('%" . xtc_db_input($_GET['search']) . "%') 
                                    OR p.products_ean LIKE ('%" . xtc_db_input($_GET['search']) . "%')
                                    OR pa.attributes_model LIKE ('%" . xtc_db_input($_GET['search']) . "%') 
                                    OR pa.attributes_ean LIKE ('%" . xtc_db_input($_GET['search']) . "%')

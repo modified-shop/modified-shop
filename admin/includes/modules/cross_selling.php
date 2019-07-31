@@ -272,6 +272,8 @@
                       $where_str .= ($ent_keyword) ? "OR pd.products_name LIKE ('%".$ent_keyword."%') " : '';
                       $where_str .= "OR p.products_model LIKE ('%".$keyword."%') ";
                       $where_str .= ($ent_keyword) ? "OR p.products_model LIKE ('%".$ent_keyword."%') " : '';
+                      $where_str .= "OR p.products_manufacturers_model LIKE ('%".$keyword."%') ";
+                      $where_str .= ($ent_keyword) ? "OR p.products_manufacturers_model LIKE ('%".$ent_keyword."%') " : '';
                       if (ADMIN_SEARCH_IN_ATTR == 'true') {
                         $where_str .= "OR pa.attributes_model LIKE ('%".$keyword."%') ";
                         $where_str .= ($ent_keyword) ? "OR pa.attributes_model LIKE ('%".$ent_keyword."%') " : '';
