@@ -72,7 +72,7 @@ define('TEXT_DESC', 'insert');
 // Sonstiges
 
 define('TEXT_PAYMENT', 'Payment:');
-define('TEXT_SHIPPING', 'Shipping Costs:');
+define('TEXT_SHIPPING', 'Shipping Method:');
 define('TEXT_LANGUAGE', 'Language:');
 define('TEXT_CURRENCIES', 'Currency:');
 define('TEXT_ORDER_TOTAL', 'Total:');
