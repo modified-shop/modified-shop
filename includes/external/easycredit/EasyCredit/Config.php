@@ -55,7 +55,7 @@ class Config
      *
      * @const float
      */
-    const MAX_ORDER_AMOUNT = 5000.0;
+    const MAX_ORDER_AMOUNT = 10000.0;
 
 
     /**
