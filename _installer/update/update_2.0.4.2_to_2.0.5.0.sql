@@ -74,7 +74,7 @@ ALTER TABLE configuration MODIFY configuration_key VARCHAR(128) NOT NULL;
 #GTB - 2019-04-03 - fix #1541
 ALTER TABLE content_manager MODIFY content_text longtext NOT NULL;
 
-GTB - 2019-04-26 - primary keys
+#GTB - 2019-04-26 - primary keys
 ALTER TABLE `address_book` MODIFY `address_book_id` INT(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `address_book` MODIFY `customers_id` INT(11) NOT NULL;
 ALTER TABLE `address_format` MODIFY `address_format_id` INT(11) NOT NULL AUTO_INCREMENT;
