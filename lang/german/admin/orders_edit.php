@@ -19,7 +19,7 @@
 // Allgemeine Texte
 define('TABLE_HEADING', 'Bestelldaten bearbeiten');
 define('TABLE_HEADING_ORDER', 'Bestellung Nr:&nbsp;');
-define('TEXT_SAVE_ORDER', 'Bestellungsbearbeitung beenden und Bestellung neu berechnen.&nbsp;');
+define('TEXT_SAVE_ORDER', 'Bestellung abschlie&szlig;en und neu berechnen.&nbsp;');
 
 define('TEXT_EDIT_ADDRESS', 'Adress- und Kundendaten');
 define('TEXT_EDIT_PRODUCTS', 'Artikel, Artikeloptionen und Preise');
