@@ -223,7 +223,7 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
     $orders_status_id = '1';
     //Comment out the next line for setting the $orders_status_id = '1' //Auskommentieren der nächsten Zeile, um die $orders_status_id = '1' zu setzen
     $orders_status_id = ($order->info['orders_status'] < 1) ? '1' : $order->info['orders_status'];
-    $comments = encode_utf8(COMMENT_SEND_ORDER_BY_ADMIN, 'ISO-8859-15');
+    $comments = encode_utf8(decode_htmlentities(COMMENT_SEND_ORDER_BY_ADMIN), 'ISO-8859-15');
     
     if (defined('MODULE_ORDER_MAIL_STEP_STATUS')
         && MODULE_ORDER_MAIL_STEP_STATUS == 'true'
@@ -233,7 +233,7 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
         $orders_status_id = ($order->info['orders_status'] != MODULE_ORDER_MAIL_STEP_ORDERS_STATUS_ID) ? MODULE_ORDER_MAIL_STEP_ORDERS_STATUS_ID : $order->info['orders_status'];
         $messageStack->add_session(SUCCESS_ORDER_SEND, 'success');
       } else {
-        $comments = encode_utf8(COMMENT_SEND_ORDER_MAIL_STEP, 'ISO-8859-15');
+        $comments = encode_utf8(decode_htmlentities(COMMENT_SEND_ORDER_MAIL_STEP), 'ISO-8859-15');
         $messageStack->add_session(SUCCESS_ORDER_MAIL_STEP_SEND, 'success');
       }
     } else {
