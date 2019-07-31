@@ -4278,7 +4278,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
                           orders_status_id = '" . xtc_db_input($orders_status_id) . "',
                           date_added = now(),
                           customer_notified = '" . $customer_notified . "',
-                          comments = '" . COMMENT_SEND_ORDER_BY_ADMIN . "'"
+                          comments = '" . encode_utf8(decode_htmlentities(COMMENT_SEND_ORDER_BY_ADMIN), 'ISO-8859-15') . "'"
                     );
 
                     $messageStack->add_session(SUCCESS_ORDER_SEND, 'success');
