@@ -107,10 +107,6 @@ define('TABLE_HEADING_DISCOUNT','Rabatt');
 define('ENTRY_CUSTOMERS_GROUP','Kundengruppe:');
 define('TEXT_VALIDATING','Nicht best&auml;tigt');
 
-// BOF - Tomcraft - 2009-10-03 - Paypal Express Modul
-define('TEXT_INFO_PAYPAL_DELETE', 'PayPal Transaktions Daten auch löschen.'); // ACHTUNG hier keine HTML-Entities verwenden
-// EOF - Tomcraft - 2009-10-03 - Paypal Express Modul
-
 // BOF - Tomcraft - 2010-04-22 - Added a missing language definition
 define('TEXT_PRODUCTS', 'Artikel');
 // EOF - Tomcraft - 2010-04-22 - Added a missing language definition
