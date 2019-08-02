@@ -2699,6 +2699,9 @@ ul.pd_iconlist li.wishlist .wishlist_submit_link:hover {
   max-width: 100%;
   height: auto;
 }
+.pd_description iframe{
+  max-width: 100%;
+}
 .pd_inforow .pd_reviews_image {
   display:inline-block;
 }

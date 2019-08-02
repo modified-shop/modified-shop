@@ -165,6 +165,7 @@
   .subcatlist { width:50%; }
   .subcat_image_inner:before { padding-top: 52%; }
   .pd_small_image_tab { width:20%; }
+  .lb_image img { max-width: 100% !important; }
 }
 
 
@@ -179,7 +180,6 @@
   .rb_image img { max-width:50px; max-height:50px; }
   .rb_rating { display: block; padding: 0 0 10px 0; width: 100%; }
   .pd_small_image_tab { width:33.3333%; }
-  .lb_image img { max-width: 120px !important; }
 }
 
 
