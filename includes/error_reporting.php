@@ -11,7 +11,13 @@
    ---------------------------------------------------------------------------------------*/
 
 
-$error_files = glob(DIR_FS_CATALOG."export/_error_reporting\.{dev,all,err,shop,admin,none}", GLOB_BRACE);
+$error_files = array();
+$ext_array = array('dev', 'all', 'err', 'shop', 'admin', 'none');
+foreach($ext_array as $ext) {
+  if (is_file(DIR_FS_CATALOG.'export/_error_reporting.'.$ext)) {
+    $error_files[] = $ext;
+  }
+}
 $LogLevel = mod_get_log_level($error_files);
 
 // include needed class
@@ -26,12 +32,12 @@ function mod_get_log_level($error_reporting_array) {
   $error_reporting = basename(array_shift($error_reporting_array));
     
   switch ($error_reporting) {
-    case '_error_reporting.err':
+    case 'err':
       $LogLevel = 'ERROR';
       error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED & ~E_WARNING);
       break;
-    case '_error_reporting.shop':
-    case '_error_reporting.admin':
+    case 'shop':
+    case 'admin':
       if (($error_reporting == '_error_reporting.admin' && defined('RUN_MODE_ADMIN')) 
           || ($error_reporting == '_error_reporting.shop' && !defined('RUN_MODE_ADMIN'))
           )
@@ -42,11 +48,11 @@ function mod_get_log_level($error_reporting_array) {
         $LogLevel = mod_get_log_level($error_reporting_array);
       }
       break;
-    case '_error_reporting.dev':
+    case 'dev':
       $LogLevel = 'DEBUG';
       error_reporting(-1);
       break;
-    case '_error_reporting.none':
+    case 'none':
       $LogLevel = 'NONE';
       error_reporting(0);
       break;

@@ -2282,21 +2282,19 @@
    * @param boolean $basefiles
    */
   function clear_dir($dir, $basefiles = false) {
-    if ($basefiles === true) {
-      $files = glob(rtrim($dir, '/').'/{,.}[!.,!..]*', GLOB_BRACE);
-    } else {
-      $files = glob(rtrim($dir, '/').'/*');
+    $dir = rtrim($dir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+    $files = array_diff(scandir($dir), array('..', '.'));
+    
+    if ($basefiles === false) {
+      $files = array_diff($files, array('.htaccess', 'index.html'));
     }
+
     foreach ($files as $file) {
-      if(is_dir($file)) {
-        clear_dir($file, true);
-        rmdir($file);
+      if (is_dir($dir.$file)) {
+        clear_dir($dir.$file, true);
+        rmdir($dir.$file);
       } else {
-        if ($basefiles === false && basename($file) != 'index.html') {
-          unlink($file);
-        } elseif ($basefiles === true) {
-          unlink($file);
-        }
+        unlink($dir.$file);
       }
     }
   }

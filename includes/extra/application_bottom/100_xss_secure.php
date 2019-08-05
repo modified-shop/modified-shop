@@ -11,7 +11,7 @@
    --------------------------------------------------------------*/
 
   if (defined('XSS_SEND_LOG') && XSS_SEND_LOG === true) {
-    $xss_files_array = glob(DIR_FS_LOG.'*.mail', GLOB_BRACE);
+    $xss_files_array = glob(DIR_FS_LOG.'*.mail');
     if (count($xss_files_array) > 0) {
       foreach ($xss_files_array as $xss_file) {
         $mail_txt = file_get_contents($xss_file);
