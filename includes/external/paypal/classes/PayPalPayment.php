@@ -230,7 +230,7 @@ class PayPalPayment extends PayPalPaymentBase {
       // set redirect
       if ($order_exists === false) {
         $redirectUrls->setReturnUrl($this->link_encoding(xtc_href_link(FILENAME_CHECKOUT_PROCESS, xtc_session_name().'='.xtc_session_id(), 'SSL', false)))
-                     ->setCancelUrl($this->link_encoding(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '&payment_error='.$this->code.'&'.xtc_session_name().'='.xtc_session_id(), 'SSL', false)));
+                     ->setCancelUrl($this->link_encoding(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code.'&'.xtc_session_name().'='.xtc_session_id(), 'SSL', false)));
       } else {
         $redirectUrls->setReturnUrl($this->link_encoding(xtc_href_link('callback/paypal/'.$this->code.'.php', 'oID='.$order->info['order_id'].'&key='.md5($order->customer['email_address']).'&'.xtc_session_name().'='.xtc_session_id(), 'SSL', false)))
                      ->setCancelUrl($this->link_encoding(xtc_href_link('callback/paypal/'.$this->code.'.php', 'payment_error='.$this->code.'&oID='.$order->info['order_id'].'&key='.md5($order->customer['email_address']).'&'.xtc_session_name().'='.xtc_session_id(), 'SSL', false)));
@@ -310,8 +310,8 @@ class PayPalPayment extends PayPalPaymentBase {
       $payer_info->setBillingAddress($payment_address)
                  ->setShippingAddress($shipping_address)
                  ->setEmail($this->encode_utf8($order->customer['email_address']))
-                 ->setFirstName($this->encode_utf8($order->delivery['firstname']))
-                 ->setLastName($this->encode_utf8($order->delivery['lastname']));
+                 ->setFirstName($this->encode_utf8($order->billing['firstname']))
+                 ->setLastName($this->encode_utf8($order->billing['lastname']));
       
       $payer->setPayerInfo($payer_info);
     }
@@ -436,6 +436,10 @@ class PayPalPayment extends PayPalPaymentBase {
                 ->setValue($item);
     $patches_array[] = $patch_items;
              
+
+    // set payer_info
+    $payer_info = new PayerInfo();
+
     // set payment address
     $payment_address = new Address();
     $payment_address->setLine1($this->encode_utf8($order->billing['street_address']))
@@ -452,10 +456,15 @@ class PayPalPayment extends PayPalPaymentBase {
       $payment_address->setLine1($this->encode_utf8($order->billing['street_address'].', '.$order->billing['suburb']));
     }
 
+    $payer_info->setBillingAddress($payment_address)
+               ->setEmail($this->encode_utf8($order->customer['email_address']))
+               ->setFirstName($this->encode_utf8($order->billing['firstname']))
+               ->setLastName($this->encode_utf8($order->billing['lastname']));
+    
     $patch_payment = new Patch();
     $patch_payment->setOp('add')
-                  ->setPath('/potential_payer_info/billing_address')
-                  ->setValue($payment_address);
+                  ->setPath('/payer/payer_info')
+                  ->setValue($payer_info);
     $patches_array[] = $patch_payment;
 
     
@@ -487,7 +496,7 @@ class PayPalPayment extends PayPalPaymentBase {
     $patches_array[] = $patch_shipping;
 
     $patchRequest->setPatches($patches_array);
-                    
+          
     try {
       // update payment
       $payment->update($patchRequest, $apiContext);      
@@ -743,6 +752,10 @@ class PayPalPayment extends PayPalPaymentBase {
     $patches_array = array();
     $patchRequest = new PatchRequest();
 
+    // set payer_info
+    $payer_info = new PayerInfo();
+
+    // set payment address
     $payment_address = new Address();
     $payment_address->setLine1($this->encode_utf8($order->billing['street_address']))
                     ->setCity($this->encode_utf8($order->billing['city']))
@@ -758,10 +771,15 @@ class PayPalPayment extends PayPalPaymentBase {
       $payment_address->setLine1($this->encode_utf8($order->billing['street_address'].', '.$order->billing['suburb']));
     }
 
+    $payer_info->setBillingAddress($payment_address)
+               ->setEmail($this->encode_utf8($order->customer['email_address']))
+               ->setFirstName($this->encode_utf8($order->billing['firstname']))
+               ->setLastName($this->encode_utf8($order->billing['lastname']));
+    
     $patch_payment = new Patch();
     $patch_payment->setOp('add')
-                  ->setPath('/potential_payer_info/billing_address')
-                  ->setValue($payment_address);
+                  ->setPath('/payer/payer_info')
+                  ->setValue($payer_info);
     $patches_array[] = $patch_payment;
 
     // set address
