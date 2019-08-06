@@ -91,7 +91,7 @@ class ot_shipping {
       }
       
       $tax = xtc_add_tax($order->info['shipping_cost'], $shipping_tax) - $order->info['shipping_cost'];
-      $tax = $xtPrice->xtcFormat($tax, false, 0, true);
+      //$tax = $xtPrice->xtcFormat($tax, false, 0, true); // do not round
       
       if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1) {
         // price with tax

@@ -699,7 +699,8 @@
 
       $this->info['total'] = $this->info['subtotal'];
       if (isset($this->info['shipping_cost']) && $this->info['shipping_cost'] > 0) {
-        $this->info['total'] += $xtPrice->xtcFormat($this->info['shipping_cost'], false,0,true);
+        $this->info['total'] += $this->info['shipping_cost'];
+        //$this->info['total'] += $xtPrice->xtcFormat($this->info['shipping_cost'], false,0,true); // do not round
       }
     }
   }
