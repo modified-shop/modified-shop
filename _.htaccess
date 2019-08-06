@@ -41,13 +41,13 @@ FileETag None
 ##-- Customization of HTTP request and response headers
 <IfModule mod_headers.c>
   <FilesMatch "\\.(ico|jpe?g|png|gif|swf|flv|svg)$">
-    Header set Cache-Control "max-age=2592000, public"
+    Header set Cache-Control "max-age=2592000, public, must-revalidate"
   </FilesMatch>
-  <FilesMatch "\\.(css|woff|woff2|ttf|otf|eot)$">
-    Header set Cache-Control "max-age=604800, public"
+  <FilesMatch "\\.(woff|woff2|ttf|otf|eot)$">
+    Header set Cache-Control "max-age=2592000, public, must-revalidate"
   </FilesMatch>
-  <FilesMatch "\\.(js)$">
-    Header set Cache-Control "max-age=604800, private"
+  <FilesMatch "\\.(css|js)$">
+    Header set Cache-Control "max-age=604800, private, must-revalidate"
   </FilesMatch>
   <FilesMatch "\\.(xml|txt)$">
     Header set Cache-Control "max-age=604800, public, must-revalidate"
