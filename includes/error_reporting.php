@@ -38,8 +38,8 @@ function mod_get_log_level($error_reporting_array) {
       break;
     case 'shop':
     case 'admin':
-      if (($error_reporting == '_error_reporting.admin' && defined('RUN_MODE_ADMIN')) 
-          || ($error_reporting == '_error_reporting.shop' && !defined('RUN_MODE_ADMIN'))
+      if (($error_reporting == 'admin' && defined('RUN_MODE_ADMIN')) 
+          || ($error_reporting == 'shop' && !defined('RUN_MODE_ADMIN'))
           )
       {
         $LogLevel = 'WARNING';
