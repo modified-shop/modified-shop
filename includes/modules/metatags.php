@@ -566,7 +566,9 @@
     $canonical_flag = false;
     
     // canonical for alternate
-    $meta_alternate['canonical'] = '<link rel="canonical" href="'.$metadata_array['link'].'" />';
+    if (isset($metadata_array['link']) && $metadata_array['link'] != '') {
+      $meta_alternate['canonical'] = '<link rel="canonical" href="'.$metadata_array['link'].'" />';
+    }
   }
   if (count($meta_alternate) > 2) {
     echo implode("\n",$meta_alternate)."\n";
