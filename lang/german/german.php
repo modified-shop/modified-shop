@@ -97,7 +97,7 @@ define('JS_ERROR_SUBMITTED', 'Diese Seite wurde bereits best&auml;tigt. Klicken 
 define('ERROR_NO_PAYMENT_MODULE_SELECTED', '* Bitte w&auml;hlen Sie eine Zahlungsweise f&uuml;r Ihre Bestellung.');
 define('JS_ERROR_NO_SHIPPING_MODULE_SELECTED', '* Bitte w&auml;hlen Sie eine Versandart f&uuml;r Ihre Bestellung.\n');
 define('JS_ERROR_CONDITIONS_NOT_ACCEPTED', '* Sofern Sie unsere Allgemeinen Gesch&auml;ftsbedingungen nicht zur Kenntnis nehmen,\nk&ouml;nnen wir Ihre Bestellung bedauerlicherweise nicht entgegennehmen!\n\n');
-define('JS_ERROR_REVOCATION_NOT_ACCEPTED', '* Sofern Sie das Erl&ouml;schen des Widerrufsrecht f&uuml;r virtuelle Artikel nicht akzeptieren,\nk&ouml;nnen wir Ihre Bestellung bedauerlicherweise nicht entgegennehmen!\n\n');
+define('JS_ERROR_REVOCATION_NOT_ACCEPTED', '* Sofern Sie das Erl&ouml;schen des Widerrufsrechts f&uuml;r virtuelle Artikel nicht akzeptieren,\nk&ouml;nnen wir Ihre Bestellung bedauerlicherweise nicht entgegennehmen!\n\n');
 define('JS_ERROR_PRIVACY_NOTICE_NOT_ACCEPTED', '* Sofern Sie unsere Regelungen zum Datenschutz nicht zur Kenntnis nehmen,\nk&ouml;nnen wir Ihre Bestellung bedauerlicherweise nicht entgegennehmen!\n\n');
 define('JS_REVIEW_AUTHOR', '* Bitte geben Sie Ihren Namen ein.\n\n');
 
@@ -115,7 +115,7 @@ define('ENTRY_FIRST_NAME_ERROR', 'Ihr Vorname muss aus mindestens ' . ENTRY_FIRS
 define('ENTRY_FIRST_NAME_TEXT', '*');
 define('ENTRY_LAST_NAME_ERROR', 'Ihr Nachname muss aus mindestens ' . ENTRY_LAST_NAME_MIN_LENGTH . ' Zeichen bestehen.');
 define('ENTRY_LAST_NAME_TEXT', '*');
-define('ENTRY_DATE_OF_BIRTH_ERROR', 'Ihr Geburtsdatum muss im Format TT.MM.JJJJ (z.B. 21.05.1970) eingeben werden');
+define('ENTRY_DATE_OF_BIRTH_ERROR', 'Ihr Geburtsdatum muss im Format TT.MM.JJJJ (z.B. 21.05.1970) eingegeben werden');
 define('ENTRY_DATE_OF_BIRTH_TEXT', '* (z.B. 21.05.1970)');
 define('ENTRY_EMAIL_ADDRESS_ERROR', 'Ihre E-Mail-Adresse muss aus mindestens ' . ENTRY_EMAIL_ADDRESS_MIN_LENGTH . ' Zeichen bestehen.');
 define('ENTRY_EMAIL_ADDRESS_CHECK_ERROR', 'Ihre eingegebene E-Mail-Adresse ist fehlerhaft oder bereits registriert.');
@@ -278,7 +278,7 @@ define('ERROR_CHECKOUT_SHIPPING_NO_MODULE', 'Es ist keine Versandart vorhanden.'
 //  conditions check
 
 define('ERROR_CONDITIONS_NOT_ACCEPTED', '* Sofern Sie unsere Allgemeinen Gesch&auml;ftsbedingungen nicht zur Kenntnis nehmen, k&ouml;nnen wir Ihre Bestellung bedauerlicherweise nicht entgegennehmen!');
-define('ERROR_REVOCATION_NOT_ACCEPTED', '* Sofern Sie das Erl&ouml;schen des Widerrufsrecht f&uuml;r virtuelle Artikel nicht akzeptieren, k&ouml;nnen wir Ihre Bestellung bedauerlicherweise nicht entgegennehmen!');
+define('ERROR_REVOCATION_NOT_ACCEPTED', '* Sofern Sie das Erl&ouml;schen des Widerrufsrechts f&uuml;r virtuelle Artikel nicht akzeptieren, k&ouml;nnen wir Ihre Bestellung bedauerlicherweise nicht entgegennehmen!');
 define('ERROR_PRIVACY_NOTICE_NOT_ACCEPTED', '* Sofern Sie unsere Regelungen zum Datenschutz nicht zur Kenntnis nehmen, k&ouml;nnen wir Ihre Bestellung bedauerlicherweise nicht entgegennehmen!');
 
 define('SUB_TITLE_OT_DISCOUNT','Rabatt:');
