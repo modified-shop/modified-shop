@@ -99,6 +99,6 @@ define('TEXT_TS_PRODUCT_INFO', '
 </ul>');
 define('TEXT_TS_SPECIAL_INFO', '
 <b>Unser Special f&uuml;r Sie:<br/>dauerhaft g&uuml;nstiger f&uuml;r modified-Nutzer!</b><br/>
-<a target="_blank" href="http://www.trustedshops.de/shopbetreiber/index.html?shopsw=MODIFIED#offer?utm_source=Xtmodified&utm_medium=modul&utm_content=link1&utm_campaign=modultracking&a_aid=55cb437783a78"><img src="images/trustedshops/btn_330x40_de-DE_v2.png" style="margin-top:10px;"/></a>');
+<a target="_blank" href="https://checkout.trustedshops.com/?a_aid=modified-shop"><img src="images/trustedshops/btn_330x40_de-DE_v2.png" style="margin-top:10px;"/></a>');
             
 ?>
