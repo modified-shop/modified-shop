@@ -104,9 +104,13 @@ class sitemaporg {
   }
 
   function process_manufacturers() {
-    $manufacturers_query = "SELECT manufacturers_id,
-                                   manufacturers_name
-                              FROM ". TABLE_MANUFACTURERS;
+    $manufacturers_query = "SELECT DISTINCT m.manufacturers_id,
+                                            m.manufacturers_name 
+                                       FROM ".TABLE_MANUFACTURERS." as m
+                                       JOIN ".TABLE_PRODUCTS." as p 
+                                            ON m.manufacturers_id = p.manufacturers_id
+                                              AND p.products_status = '1'
+                                   ORDER BY m.manufacturers_name";
 
     $manufacturers_query = xtc_db_query($manufacturers_query);
     while ($manufacturers_data=xtc_db_fetch_array($manufacturers_query)) {
