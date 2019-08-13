@@ -2997,12 +2997,12 @@ ul.ord_total_list li {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
   text-align:center;
-  overflow:hidden;
 }
 .pd_big_image:before {
   content: '';
   padding-top: 100%;
   display: block;
+  overflow:hidden;
 }
 .pd_big_image img {
   margin: auto;
