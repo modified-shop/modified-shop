@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: module_export.php 899 2005-04-29 02:40:57Z hhgag $
+   $Id$
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -31,4 +31,5 @@ define('TEXT_MODULE_INFO','Please check the vendor of the modules for the latest
 
 define('TABLE_HEADING_MODULES_INSTALLED', 'Modules installed');
 define('TABLE_HEADING_MODULES_NOT_INSTALLED', 'Modules not installed');
+define('TEXT_MODULE_UPDATE_NEEDED', 'The following modules have been updated and need to update the database. For this please save the settings and reinstall these modules.');
 ?>

@@ -267,6 +267,36 @@
     return $params_string;
   }
 
+  function check_update_needed($module_type) {
+    global $module_directory, $messageStack;
+    
+    $installed_array = explode(';', constant('MODULE_'.strtoupper($module_type).'_INSTALLED'));
+    $info = array();
+    if (count($installed_array) > 0) {
+      foreach ($installed_array as $file) {
+        if (is_file($module_directory . $file)) {
+          if (is_file(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $file)) {
+            include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $file);
+          }
+          include_once($module_directory . $file);
+          $class = substr($file, 0, strpos($file, '.'));
+          if (xtc_class_exists($class)) {
+            $module = new $class();
+            if ($module instanceof $class && $module->check() > 0) {     
+              $key_array = $module->keys();     
+              foreach ($key_array as $key) {
+                if (!defined($key)) {
+                  $info[] = '<li>'.$class.'</li>';
+                  break;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    return $info;
+  }
 
 //########## OUTPUT ##########//
 require (DIR_WS_INCLUDES.'head.php');
@@ -311,7 +341,13 @@ if (xtc_not_null($action) && !$box) {
           <?php } ?>
           <table class="tableCenter">
             <tr>
-                <?php if(!xtc_not_null($action) || $box) { ?>
+              <?php 
+                if(!xtc_not_null($action) || $box) {
+                  $info = check_update_needed($module_type);
+                  if (count($info) > 0) {
+                    echo '<div class="error_message">'.TEXT_MODULE_UPDATE_NEEDED.'<ul>'.implode('', $info).'</ul></div>';
+                  }
+                  ?>
                     <td class="boxCenterLeft">
                       <table class="tableBoxCenter collapse">
                         <?php
