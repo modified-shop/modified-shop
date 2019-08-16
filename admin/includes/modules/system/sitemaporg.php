@@ -81,6 +81,9 @@ class sitemaporg {
   }
   
   function process_contents() {
+
+    $group_check = GROUP_CHECK == 'true' ? ' AND group_ids LIKE \'%c_'.$this->group_id.'_group%\' ' : '';
+
     $content_query = "SELECT content_id,
                              categories_id,
                              parent_id,
@@ -89,7 +92,7 @@ class sitemaporg {
                              date_added,
                              last_modified
                         FROM ".TABLE_CONTENT_MANAGER."
-                       WHERE languages_id = '".(int)$_SESSION['languages_id']."'
+                       WHERE languages_id = '".(int)$this->languages_id."'
                              ".$group_check." 
                          AND content_status = '1' 
                          AND content_meta_robots NOT LIKE '%noindex%' 
@@ -97,7 +100,7 @@ class sitemaporg {
 
     $content_query = xtc_db_query($content_query);
     while ($content_data=xtc_db_fetch_array($content_query)) {
-      $link = encode_htmlspecialchars(xtc_href_link_from_admin('shop_content.php','coID='.$content_data['content_group'], 'NONSSL', false));
+      $link = encode_htmlspecialchars(xtc_href_link_from_admin('shop_content.php', $this->url_param.'coID='.$content_data['content_group'], 'NONSSL', false));
       $date = (($this->check_date($content_data['last_modified']) === true) ? $content_data['last_modified'] : $content_data['date_added']);
       $this->xml_sitemap_entry($link, $date);     
     }
@@ -114,12 +117,15 @@ class sitemaporg {
 
     $manufacturers_query = xtc_db_query($manufacturers_query);
     while ($manufacturers_data=xtc_db_fetch_array($manufacturers_query)) {
-      $link = encode_htmlspecialchars(xtc_href_link_from_admin('index.php','manufacturers_id='.$manufacturers_data['manufacturers_id'], 'NONSSL', false));
+      $link = encode_htmlspecialchars(xtc_href_link_from_admin('index.php', $this->url_param.'manufacturers_id='.$manufacturers_data['manufacturers_id'], 'NONSSL', false));
       $this->xml_sitemap_entry($link);     
     }
   }
     
   function process_categories() {
+
+    $c_group_check = GROUP_CHECK == 'true' ? ' AND c.group_permission_'.$this->group_id.' = 1 ' : '';
+
     $categories_query = "SELECT c.categories_image,
                                 c.categories_id,
                                 cd.categories_name,
@@ -129,34 +135,38 @@ class sitemaporg {
                       LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION ." cd 
                                 ON c.categories_id = cd.categories_id
                           WHERE c.categories_status = '1'                      
-                            AND cd.language_id = ".(int)$_SESSION['languages_id']." 
-                                ".$group_check."
+                            AND cd.language_id = ".(int)$this->languages_id." 
+                                ".$c_group_check."
                        ORDER BY c.sort_order ASC";
 
     $categories_query = xtc_db_query($categories_query);
     while ($categories = xtc_db_fetch_array($categories_query)) {
       $cPath = xtc_get_category_path($categories['categories_id']);
-      $link = encode_htmlspecialchars(xtc_href_link_from_admin('index.php', 'cPath='.$cPath, 'NONSSL', false));
+      $link = encode_htmlspecialchars(xtc_href_link_from_admin('index.php', $this->url_param.'cPath='.$cPath, 'NONSSL', false));
       $date = (($this->check_date($categories['last_modified']) === true) ? $categories['last_modified'] : $categories['date_added']);
       $this->xml_sitemap_entry($link, $date);     
     }
   }
   
   function process_products() {      
-    $export_query =xtc_db_query("SELECT p.products_id,
-                                        p.products_last_modified,
-                                        p.products_date_added,
-                                        p.products_image,
-                                        pd.products_name
-                                   FROM " . TABLE_PRODUCTS . " p, 
-                                        " . TABLE_PRODUCTS_DESCRIPTION . " pd
-                                  WHERE p.products_status = 1 and
-                                        p.products_id = pd.products_id and
-                                        pd.language_id = ".(int)$_SESSION['languages_id']."
-                               ORDER BY p.products_id");
 
-    while ($products = xtc_db_fetch_array($export_query)) {
-      $link = encode_htmlspecialchars(xtc_href_link_from_admin('product_info.php', 'products_id='.$products['products_id'], 'NONSSL', false));
+    $p_group_check = GROUP_CHECK == 'true' ? ' AND p.group_permission_'.$this->group_id.' = 1 ' : '';
+    
+    $products_query =xtc_db_query("SELECT p.products_id,
+                                          p.products_last_modified,
+                                          p.products_date_added,
+                                          p.products_image,
+                                          pd.products_name
+                                     FROM " . TABLE_PRODUCTS . " p, 
+                                          " . TABLE_PRODUCTS_DESCRIPTION . " pd
+                                    WHERE p.products_status = 1
+                                      AND p.products_id = pd.products_id
+                                          ".$p_group_check."
+                                      AND pd.language_id = ".(int)$this->languages_id."
+                                 ORDER BY p.products_id");
+
+    while ($products = xtc_db_fetch_array($products_query)) {
+      $link = encode_htmlspecialchars(xtc_href_link_from_admin('product_info.php', $this->url_param.'products_id='.$products['products_id'], 'NONSSL', false));
       $date = (($this->check_date($products['products_last_modified']) === true) ? $products['products_last_modified'] : $products['products_date_added']);
       $this->xml_sitemap_entry($link, $date, $products);     
     }
@@ -171,7 +181,24 @@ class sitemaporg {
   
   function process($file) {
     @xtc_set_time_limit(0);
-   
+    
+    $this->url_param = '';
+    $this->group_id = $_POST['configuration']['MODULE_SITEMAPORG_CUSTOMERS_STATUS'];
+    $this->languages_code = $_SESSION['language_code'];
+    $this->languages_id = $_SESSION['languages_id'];
+    
+    if (defined('MODULE_MULTILANG_STATUS') && MODULE_MULTILANG_STATUS == 'true') {
+      $this->languages_code = $_POST['configuration']['MODULE_SITEMAPORG_LANGUAGE'];
+    
+      $lang_query = xtc_db_query("SELECT languages_id
+                                    FROM ".TABLE_LANGUAGES."
+                                   WHERE code = '".xtc_db_input($this->languages_code)."'");
+      $lang = xtc_db_fetch_array($lang_query);
+      $this->languages_id = $lang['languages_id'];
+      
+      $this->url_param = 'language='.$this->languages_code.'&';
+    }
+    
     $this->xml_sitemap_top();
     $this->xml_sitemap_entry(xtc_href_link_from_admin('index.php'));
     
@@ -240,6 +267,8 @@ class sitemaporg {
   function install() {
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SITEMAPORG_FILE', 'sitemap.xml',  '6', '1', '', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SITEMAPORG_STATUS', 'True',  '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_SITEMAPORG_CUSTOMERS_STATUS', '1',  '6', '1', 'xtc_cfg_pull_down_customers_status_list(', 'xtc_get_customers_status_name', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SITEMAPORG_LANGUAGE', '".DEFAULT_LANGUAGE."',  '6', '1', 'xtc_cfg_pull_down_language_code(', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SITEMAPORG_ROOT', 'no',  '6', '1', 'xtc_cfg_select_option(array(\'yes\', \'no\'), ', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SITEMAPORG_GZIP', 'no',  '6', '1', 'xtc_cfg_select_option(array(\'yes\', \'no\'), ', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SITEMAPORG_EXPORT', 'no',  '6', '1', 'xtc_cfg_select_option(array(\'yes\', \'no\'), ', now())");
@@ -250,11 +279,18 @@ class sitemaporg {
   }
 
   function keys() {
-    return array('MODULE_SITEMAPORG_FILE',
-                 'MODULE_SITEMAPORG_STATUS',
-                 'MODULE_SITEMAPORG_ROOT',
-                 'MODULE_SITEMAPORG_GZIP',
-                 'MODULE_SITEMAPORG_EXPORT');
+    $keys = array(
+      'MODULE_SITEMAPORG_STATUS',
+      'MODULE_SITEMAPORG_FILE',
+      'MODULE_SITEMAPORG_CUSTOMERS_STATUS',
+      ((defined('MODULE_MULTILANG_STATUS') && MODULE_MULTILANG_STATUS == 'true') ? 'MODULE_SITEMAPORG_LANGUAGE' : ''),
+      'MODULE_SITEMAPORG_ROOT',
+      'MODULE_SITEMAPORG_GZIP',
+      'MODULE_SITEMAPORG_EXPORT'
+    );
+    $keys = array_values(array_filter($keys));
+    
+    return $keys;
   }
   
 }
