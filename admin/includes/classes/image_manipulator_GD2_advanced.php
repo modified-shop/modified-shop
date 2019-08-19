@@ -19,7 +19,7 @@
    ---------------------------------------------------------------------------------------*/
   defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
   class image_manipulation {
-    var $effects_disabled = false; //DokuMan - 2011-01-06
+    var $effects_disabled = false; 
     function __construct($resource_file, $max_width, $max_height, $destination_file="", $compression=IMAGE_QUALITY, $transform="") {
       $this->a = $this->correctImageOrientation($resource_file);  // image to be thumbnailed
       $this->c = $transform;
@@ -34,7 +34,6 @@
       }
     }
 
-    //BOF - DokuMan - 2011-01-06 - added imagecopyresampled_adv - support for transparent PNGs
     // Support for transparency, enhanced PNG & GIF processing
     function imagecopyresampled_adv($image_type, &$dest, $source, $d_x, $d_y, $s_x, $s_y, $d_w, $d_h, $s_w, $s_h) {
       switch ($image_type) {
@@ -47,7 +46,6 @@
             imagefill($dest, 0, 0, $transcol);
           }
           imagecolortransparent($dest, $transcol);
-          return imagecopyresized($dest, $source, $d_x, $d_y, $s_x, $s_y, $d_w, $d_h, $s_w, $s_h);
           break;
 
         // Process PNG images
@@ -56,24 +54,23 @@
           imagealphablending($dest, false);
           imagesavealpha($dest, true);
           $transparent = imagecolorallocatealpha($dest, 255, 255, 255, 0);
-          //BOF - DokuMan - 2011-01-06 - imagecolortransparent much faster on big images
-          //for ($x = 0; $x < $d_w; $x++) {
-          //  for ($y = 0; $y < $d_h; $y++) {
-          //    imageSetPixel($dest, $x, $y, $transparent);
-          //  }
-          //}
-          imagecolortransparent($dest,$transparent);
-          //EOF - DokuMan - 2011-01-06 - imagecolortransparent much faster on big images
-          return imagecopyresampled($dest, $source, $d_x, $d_y, $s_x, $s_y, $d_w, $d_h, $s_w, $s_h);
+          //less faster, but works with sharpen
+          for ($x = 0; $x < $d_w; $x++) {
+            for ($y = 0; $y < $d_h; $y++) {
+              imageSetPixel($dest, $x, $y, $transparent);
+            }
+          }
+          //imagecolortransparent($dest,$transparent); //imagecolortransparent much faster on big images
           break;
 
         // Any other images
         default:
           $dest = imageCreateTrueColor($d_w, $d_h);
-          return imagecopyresampled($dest, $source, $d_x, $d_y, $s_x, $s_y, $d_w, $d_h, $s_w, $s_h);
+          break;
       }
+      
+      return imagecopyresampled($dest, $source, $d_x, $d_y, $s_x, $s_y, $d_w, $d_h, $s_w, $s_h);      
     }
-    //EOF - DokuMan - 2011-01-06 - added imagecopyresampled_adv - support for transparent PNGs
 
     function compile() {
       $this->h = getimagesize($this->a);
@@ -82,12 +79,10 @@
         $this->j = $this->h[1];
         $this->k = $this->h[2];
         
-        //BOF -web28- 2011-03-27 - OPTION DO NOT ENLARGE SMALL PICTURES
         if(PRODUCT_IMAGE_NO_ENLARGE_UNDER_DEFAULT == 'false'){
           if($this->i < $this->m) {$this->m = $this->i;}
           if($this->j < $this->n) {$this->n = $this->j;}
         }
-        //EOF  -web28- 2011-03-27 - OPTION DO NOT ENLARGE SMALL PICTURES
         
         if($this->m == '0'){
           $this->z = ($this->j / $this->n);
@@ -100,10 +95,8 @@
       }
       $this->s = ($this->k < 4) ? ($this->k < 3) ? ($this->k < 2) ? ($this->k < 1) ? Null : imagecreatefromgif($this->a) : imagecreatefromjpeg($this->a) : imagecreatefrompng($this->a) : Null;
       if($this->s !== Null) {
-        //BOF - DokuMan - 2011-01-06 - use new imagecopyresampled_adv here
         // Creates an new image: $this->t. $this->k is the image type.
         $this->u = $this->imagecopyresampled_adv($this->k, $this->t, $this->s, 0, 0, 0, 0, $this->q, $this->r, $this->i, $this->j);
-        //EOF - DokuMan - 2011-01-06 - use new imagecopyresampled_adv here
       }
     }
 
@@ -115,7 +108,7 @@
     function bevel($edge_width=10, $light_colour="FFFFFF", $dark_colour="000000") {
       // Not working properly for PNG images, so skipping
       if ($this->effects_disabled || $this->k == 3)
-        return; //DokuMan - 2011-01-06
+        return;
       $this->edge = $edge_width;
       $this->dc = $dark_colour;
       $this->lc = $light_colour;
@@ -140,7 +133,6 @@
       @ImageDestroy($this->light);
     }
     function greyscale($rv=38, $gv=36, $bv=26) {
-      //BOF - DokuMan - 2011-01-06
       // Not working properly for PNG & GIF images, so skipping
       if ($this->effects_disabled || $this->k == 3 || $this->k == 1)
         return;
@@ -161,7 +153,6 @@
         @ImageCopyMerge($this->t, $this->dot, $this->xpos - 3, $this->ypos - 3, 0, 0, 6, 6, 30);
         @ImageCopyMerge($this->t, $this->dot, $this->xpos - 2, $this->ypos - 2, 0, 0, 4, 4, 30);
         @ImageCopyMerge($this->t, $this->dot, $this->xpos - 1, $this->ypos - 1, 0, 0, 2, 2, 30);
-        //EOF - DokuMan - 2011-01-06
         $this->rv = $rv;
         $this->gv = $gv;
         $this->bv = $bv;
@@ -179,14 +170,12 @@
           }
         }
       }
-      //BOF - DokuMan - 2011-01-06
     }
-    //EOF - DokuMan - 2011-01-06
 
     function ellipse($bg_colour="FFFFFF") {
       // Not working properly for PNG images, so skipping
       if ($this->effects_disabled || $this->k == 3)
-        return; //DokuMan - 2011-01-06
+        return; 
       $this->bgc = $bg_colour;
       $this->br = $this->hex2rgb(substr($this->bgc,0,2));
       $this->bg = $this->hex2rgb(substr($this->bgc,2,2));
@@ -211,7 +200,7 @@
     function round_edges($edge_rad=3, $bg_colour="FFFFFF", $anti_alias=1) {
       // Not working properly for PNG images, so skipping
       if ($this->effects_disabled || $this->k == 3)
-        return; //DokuMan - 2011-01-06
+        return; 
       $this->er = $edge_rad;
       $this->bgd = $bg_colour;
       $this->aa = min(3,$anti_alias);
@@ -237,7 +226,7 @@
     }
     function merge($merge_img="", $x_left=0, $y_top=0, $merge_opacity=70, $trans_colour="FF0000") {
       if ($this->effects_disabled)
-        return; //DokuMan - 2011-01-06
+        return; 
       $this->mi = $merge_img;
       $this->xx = ($x_left < 0) ? $this->q+$x_left : $x_left;
       $this->yy = ($y_top < 0) ? $this->r+$y_top : $y_top;
@@ -265,7 +254,7 @@
     }
     function frame($light_colour="FFFFFF", $dark_colour="000000", $mid_width=4, $frame_colour = "" ) {
       if ($this->effects_disabled)
-        return; //DokuMan - 2011-01-06
+        return;
       $this->rw = $mid_width;
       $this->dh = $dark_colour;
       $this->lh = $light_colour;
@@ -297,7 +286,7 @@
     function drop_shadow($shadow_width, $shadow_colour="000000", $background_colour="FFFFFF") {
       // Not working properly for PNG & GIF images, so skipping
       if ($this->effects_disabled || $this->k == 3 || $this->k == 1)
-        return; //DokuMan - 2011-01-06
+        return; 
       $this->sw = $shadow_width;
       $this->sc = $shadow_colour;
       $this->sbr = $background_colour;
@@ -331,7 +320,7 @@
     function motion_blur($num_blur_lines, $background_colour="FFFFFF") {
       // Not working properly for PNG images, so skipping
       if ($this->effects_disabled || $this->k == 3)
-        return; //DokuMan - 2011-01-06
+        return; 
       $this->nbl = $num_blur_lines;
       $this->shw = ($this->nbl*2)+1;
       $this->bk = $background_colour;
@@ -368,7 +357,6 @@
     function create() {
       if($this->s !== Null) {
         if($this->d !== "") {
-          //BOF - DokuMan - 2011-01-06 - support jpg, gif and png
           ob_start();
           $image_type = $this->k;
           switch ($image_type) {
@@ -376,7 +364,7 @@
               // Keep transparent color
               $transcol = imagecolortransparent($this->s);
               imagecolortransparent($this->t, $transcol);
-              $this->sharpen();
+              //$this->sharpen();
               imagegif($this->t, $this->d);
               break;
 
@@ -384,18 +372,17 @@
             case 3:
               imagealphablending($this->t, true);
               imagesavealpha($this->t, true);
-              $this->sharpen();
+              //$this->sharpen();
               imagepng($this->t, $this->d);
               break;
 
             // Other images
             default:
               imageinterlace($this->t, true);
-              $this->sharpen();
+              //$this->sharpen();
               imagejpeg($this->t, $this->d, $this->e);
           }
           ob_end_clean();
-          //EOF - DokuMan - 2010-01-06 - support jpg, gif and png
         }
         imagedestroy($this->s);
         imagedestroy($this->t);
@@ -434,22 +421,27 @@
     }
     
     function sharpen() {
-      $sharpen = array(
+      $sharpen = false;
+ 
+      $sharpen_arr = array(
         array(-1.2, -1, -1.2),
         array(-1.0, 20, -1.0),
         array(-1.2, -1, -1.2) 
       );
 
-      if(is_file('includes/modules/image_sharpen.php')) {
-        require_once ('includes/modules/image_sharpen.php');
-      }
+      // calculate the sharpen divisor
+      $divisor = array_sum(array_map('array_sum', $sharpen_arr));
       
-      if (is_array($sharpen) && count($sharpen) == 3) {
-        // calculate the sharpen divisor
-        $divisor = array_sum(array_map('array_sum', $sharpen));
+      $offest = 0;
+
+      require_once(DIR_FS_INC.'auto_include.inc.php');
+      foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/image_sharpen/','php') as $file) require ($file);
+
+      
+      if ($sharpen === true && is_array($sharpen_arr) && count($sharpen_arr) == 3) {
       
         // sharpen the image
-        imageconvolution($this->t, $sharpen, $divisor, 0);
+        imageconvolution($this->t, $sharpen_arr, $divisor, $offset);
       }
     }
 
