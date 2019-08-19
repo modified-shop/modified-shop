@@ -143,7 +143,7 @@ if (ACTIVATE_GIFT_SYSTEM == 'true') {
       $credit_selection[$i]['checked'] = 0;
     }
     $credit_amount =  $credit_selection[$i]['credit_amount'];
-    $credit_order_total = $credit_selection[$i]['credit_order_total'];
+    $credit_order_total = $xtPrice->xtcFormat($credit_selection[$i]['credit_order_total'], false);
     $credit_selection[$i]['selection'] = xtc_draw_checkbox_field('c'.$credit_selection[$i]['id'], $credit_order_total, $credit_selection[$i]['checked'], 'id="rd-'.'c'.$credit_selection[$i]['id'].'"');
     $credit_selection[$i]['selection'] .= '<input type="hidden" name="credit_order_total"  id="cot-'.'c'.$credit_selection[$i]['id'].'" value="'.$total.'">';
     $credit_selection[$i]['credit_amount'] = $xtPrice->xtcFormat($credit_amount, true);
