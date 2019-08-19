@@ -171,7 +171,7 @@
       function remove()
       {
           xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key LIKE 'MODULE_INTERNETMARKE_%'");
-          //$this->uninstall_db();
+          $this->uninstall_db();
       }
 
       function keys() 
@@ -198,6 +198,7 @@
                           `PROID` int(11) NOT NULL,
                           `PRODNAME` varchar(128) NOT NULL,
                           `PROPR` double(15,4) NOT NULL,
+                          `SEL` tinyint(1) NOT NULL DEFAULT '0',
                           UNIQUE KEY `PROID` (`PROID`)
                         )");
 
