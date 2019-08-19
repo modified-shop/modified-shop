@@ -19,5 +19,5 @@
   define('TEXT_IM_PORTO', 'Porto');
   define('TEXT_IM_FORMAT', 'Papier');
   define('TEXT_IM_LABEL', 'Label erstellen');
-  define('TEXT_INTERNETMARKE_PORTO', 'Bitte aktualisieren sie die Preisdaten und w&auml;hlen im Modul die gew&uuml;nschten Sendungsformate.');
+  define('TEXT_INTERNETMARKE_PORTO', 'Bitte aktualisieren Sie die Preisdaten und w&auml;hlen im Modul die gew&uuml;nschten Sendungsformate.');
 ?>

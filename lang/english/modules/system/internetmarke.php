@@ -10,10 +10,10 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
   
-  define('MODULE_INTERNETMARKE_TEXT_TITLE', 'German Post');
-  define('MODULE_INTERNETMARKE_TEXT_DESCRIPTION', 'Label creation for German Post');
+  define('MODULE_INTERNETMARKE_TEXT_TITLE', 'Deutsche Post Internetmarke');
+  define('MODULE_INTERNETMARKE_TEXT_DESCRIPTION', 'Label creation for Deutsche Post Internetmarke');
   define('MODULE_INTERNETMARKE_TEXT_DESCRIPTION_UPLOAD', 'Price update');
-  define('MODULE_INTERNETMARKE_TEXT_DESCRIPTION_CARRIER', 'Install German Post as carrier.');
+  define('MODULE_INTERNETMARKE_TEXT_DESCRIPTION_CARRIER', 'Install Deutsche Post as carrier.');
   define('BUTTON_IM_INSTALL', 'Install carrier');
   define('BUTTON_IM_UPDATE', 'Update price data');
   
