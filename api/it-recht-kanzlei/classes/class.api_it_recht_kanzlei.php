@@ -259,7 +259,7 @@ class api_it_recht_kanzlei {
         $content_group = MODULE_API_IT_RECHT_KANZLEI_TYPE_IMP;
       }
       
-      $url = xtc_href_link(FILENAME_CONTENT, 'coID='.$content_group.'&language='.$languages_code, 'NONSSL', false);
+      $url = ((ENABLE_SSL === true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.FILENAME_CONTENT.'?coID='.$content_group.'&language='.$languages_code;
       if ($content_group != '') {
         $check_query = xtc_db_query("SELECT content_text 
                                        FROM ".TABLE_CONTENT_MANAGER." 
@@ -268,13 +268,13 @@ class api_it_recht_kanzlei {
                                       LIMIT 1");
         if (xtc_db_num_rows($check_query) > 0) {
           $check = xtc_db_fetch_array($check_query);
-          if ($check['content_text'] == $this->charset_decode_utf_8($xml->rechtstext_html.$pdf_file_text)) {
+          if ($check['content_text'] == $this->charset_decode_utf_8($xml->rechtstext_html.$pdf_file_text.'<style>.itkanzlei_first_headline{display:none;}</style>')) {
             $this->return_success($url);
           } else {
             $sql_data_array = array(
               'content_text' => $this->charset_decode_utf_8($xml->rechtstext_html.$pdf_file_text.'<style>.itkanzlei_first_headline{display:none;}</style>'),
-              'content_title' => $this->charset_decode_utf_8($xml->rechtstext_title),
-              'content_heading' => $this->charset_decode_utf_8($xml->rechtstext_title),
+              'content_title' => decode_htmlentities($xml->rechtstext_title),
+              'content_heading' => decode_htmlentities($xml->rechtstext_title),
             );
             xtc_db_perform(TABLE_CONTENT_MANAGER, $sql_data_array, 'update', "content_group = '".$content_group."' AND languages_id = '".$languages_id."'");
             if (xtc_db_affected_rows() < 1) {
@@ -340,7 +340,7 @@ class api_it_recht_kanzlei {
   }
   
   function set_shopversion() {
-    if (!$this->shopversion) {
+    if (!isset($this->shopversion)) {
       require_once(DIR_FS_INC.'get_database_version.inc.php');
       $db_version = get_database_version();
       $this->shopversion = $db_version['full'];
