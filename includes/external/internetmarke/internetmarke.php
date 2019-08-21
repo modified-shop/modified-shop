@@ -60,8 +60,8 @@
           new \Internetmarke\Address(MODULE_INTERNETMARKE_SUBURB, MODULE_INTERNETMARKE_STREET, '', MODULE_INTERNETMARKE_PLZ, MODULE_INTERNETMARKE_CITY, 'Country')
       );
       $receiver = new \Internetmarke\NamedAddress(
-          new \Internetmarke\Name(new \Internetmarke\PersonName('', '', $this->order->delivery['firstname'], $this->order->delivery['lastname']), null),
-          new \Internetmarke\Address($this->order->delivery['suburb'], $this->order->delivery['street_address'], '', $this->order->delivery['postcode'], $this->order->delivery['city'], $this->order->delivery['country'])
+          new \Internetmarke\Name(new \Internetmarke\PersonName('', '', $this->order->delivery['firstname'], $this->order->delivery['lastname']), $this->order->delivery['company']),
+          new \Internetmarke\Address($this->order->delivery['suburb'], $this->order->delivery['street_address'], '', $this->order->delivery['postcode'], $this->order->delivery['city'], $this->get_country_iso_3($this->order->delivery['country_iso_2']))
       );
       $address_binding = new \Internetmarke\AddressBinding($sender, $receiver);
 
@@ -85,6 +85,7 @@
           xtc_db_perform(TABLE_ORDERS_TRACKING, $sql_data_array);
         }
         
+        $messageStack->add_session(TEXT_IM_LABEL_CREATED, 'success');
       } catch (exception $ex) {
         $this->error = true;
         $messageStack->add_session($ex->getMessage(), 'error');
@@ -134,6 +135,19 @@
         }
       }
       return $formats_array;
+    }
+    
+    
+    function get_country_iso_3($country_iso_2) {
+      $countries_query = xtc_db_query("SELECT countries_iso_code_3
+                                         FROM ".TABLE_COUNTRIES."
+                                        WHERE countries_iso_code_2 = '".xtc_db_input($country_iso_2)."'");
+      if (xtc_db_num_rows($countries_query) > 0) {
+        $countries = xtc_db_fetch_array($countries_query);
+        return $countries['countries_iso_code_3'];
+      }
+      
+      return $country_iso_2;
     }
     
     

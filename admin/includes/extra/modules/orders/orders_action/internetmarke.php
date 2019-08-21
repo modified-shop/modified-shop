@@ -39,7 +39,7 @@
         case 'im_delete':
           $tracking_id = (int)$_GET['tID'];
           $oID = (int)$_GET['oID'];
-          
+          $messageStack->add_session(TEXT_IM_LABEL_DELETED, 'success');
           xtc_db_query("DELETE FROM ".TABLE_ORDERS_TRACKING." WHERE tracking_id = '".(int)$tracking_id."'");
           xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action','subaction')).'action=edit'));
           break;
