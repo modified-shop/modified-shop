@@ -202,10 +202,16 @@
                           UNIQUE KEY `PROID` (`PROID`)
                         )");
 
-          $check_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_ORDERS_TRACKING." LIKE 'im_%'");
-          if (xtc_db_num_rows($check_query) < 1) {
-            xtc_db_query("ALTER TABLE `" . TABLE_ORDERS_TRACKING . "` ADD `im_orders_id` INT(11);");
-            xtc_db_query("ALTER TABLE `" . TABLE_ORDERS_TRACKING . "` ADD `im_url` VARCHAR(512);");
+          $table_array = array(
+            array('column' => 'external', 'default' => 'INT(1) NOT NULL'),
+            array('column' => 'im_orders_id', 'default' => 'INT(11)'),
+            array('column' => 'im_url', 'default' => 'VARCHAR(512)'),
+          );
+          foreach ($table_array as $table) {
+            $check_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_ORDERS_TRACKING." LIKE '".xtc_db_input($table['column'])."'");
+            if (xtc_db_num_rows($check_query) < 1) {
+              xtc_db_query("ALTER TABLE ".TABLE_ORDERS_TRACKING." ADD ".$table['column']." ".$table['default']."");
+            }
           }
       }
       

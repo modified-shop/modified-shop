@@ -20,4 +20,7 @@
   define('TEXT_IM_FORMAT', 'Papier');
   define('TEXT_IM_LABEL', 'Label erstellen');
   define('TEXT_INTERNETMARKE_PORTO', 'Bitte aktualisieren Sie die Preisdaten und w&auml;hlen im Modul die gew&uuml;nschten Sendungsformate.');
+
+  define('TEXT_IM_LABEL_CREATED', 'Label erstellt');
+  define('TEXT_IM_LABEL_DELETED', 'Label gel&ouml;scht. <b>Achtung:</b> das Label wurde nur gel&ouml;scht, nicht aber storniert!');
 ?>
