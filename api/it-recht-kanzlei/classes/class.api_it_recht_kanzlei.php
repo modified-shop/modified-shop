@@ -18,7 +18,7 @@
 
 class api_it_recht_kanzlei {
   
-  public $modulversion = '1.5';
+  public $modulversion = '1.6';
   var $api_action_flag, 
       $api_version_flag, 
       $api_username_flag, 
