@@ -1,5 +1,7 @@
 .SumoSelect{width: 100%;}
 .stern .SumoSelect { width:95%;}
+.stern .SumoSelect select { width:100% !important;}
+
 
 .SumoSelect p {margin: 0;}
 .SelectBox {padding: 8px 8px 7px 8px;}
