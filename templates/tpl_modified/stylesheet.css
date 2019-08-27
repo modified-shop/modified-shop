@@ -2026,7 +2026,7 @@ a.color_more:hover {
 .manu_image {
   float:left;
   margin: 6px 25px 10px 0px;
-  max-width:745px;
+  max-width: 100%;
   position:relative;
 }
 .mi_nomargin {
