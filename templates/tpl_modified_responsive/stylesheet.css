@@ -2472,7 +2472,7 @@ a.color_more:hover {
 
 .mi_nomargin {
   margin-right: 0px !important;
-  max-width:755px;
+  max-width: 100%;
 }
 /* END categories listing & subcats */
 
