@@ -256,7 +256,7 @@
                                               FROM ".TABLE_CATEGORIES_DESCRIPTION."
                                              WHERE categories_id='".(int)$current_category_id."'
                                                AND language_id='".(int)$_SESSION['languages_id']."'");
-        if (xtc_db_num_rows($categories_meta_query) > 0) {
+        if (xtc_db_num_rows($categories_meta_query, true) > 0) {
           $categories_meta = xtc_db_fetch_array($categories_meta_query, true);
       
           $metadata_array = array(
