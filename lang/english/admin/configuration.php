@@ -427,11 +427,11 @@ define('EMAIL_BILLING_REPLY_ADDRESS_DESC' , 'Please enter an e-mail address for 
 define('EMAIL_BILLING_REPLY_ADDRESS_NAME_TITLE' , 'Billing - Reply-To Name');
 define('EMAIL_BILLING_REPLY_ADDRESS_NAME_DESC' , 'Please enter a name to be used in the reply-to field of billing e-mails.');
 define('EMAIL_BILLING_SUBJECT_TITLE' , 'Billing - E-Mail Subject');
-define('EMAIL_BILLING_SUBJECT_DESC' , 'Please enter an e-mail subject for <b>Billing</b> messages. (For example <b>Your order {$nr} from {$date}</b>)<br />You can use {$nr},{$date},{$firstname},{$lastname}');
+define('EMAIL_BILLING_SUBJECT_DESC' , 'Please enter an e-mail subject for <b>Billing</b> messages. (For example <b>Your order {$nr} from {$date}</b>)<br />You can use: {$nr},{$date},{$firstname},{$lastname}');
 define('EMAIL_BILLING_SUBJECT_ORDER_TITLE','Billing - Order Mail Subject');
-define('EMAIL_BILLING_SUBJECT_ORDER_DESC','Please enter a subject for order mails. (For example <b>Your order {$nr} from {$date}</b>)<br />You can use {$nr},{$date},{$firstname},{$lastname}');
+define('EMAIL_BILLING_SUBJECT_ORDER_DESC','Please enter a subject for order mails. (For example <b>Your order {$nr} from {$date}</b>)<br />You can use: {$nr},{$date},{$firstname},{$lastname}');
 define('MODULE_ORDER_MAIL_STEP_SUBJECT_TITLE','Billing - Order Confirmation Mail Subject');
-define('MODULE_ORDER_MAIL_STEP_SUBJECT_DESC','Please enter a subject for order confirmation mails. (like <b>our order {$nr},{$date}</b>). You can use, {$nr},{$date},{$firstname},{$lastname}');
+define('MODULE_ORDER_MAIL_STEP_SUBJECT_DESC','Please enter a subject for order confirmation mails. (For example <b>Your order {$nr} from {$date}</b>). You can use: {$nr},{$date},{$firstname},{$lastname}');
 
 define('DOWNLOAD_ENABLED_TITLE' , 'Enable Download');
 define('DOWNLOAD_ENABLED_DESC' , 'Enable the products download functions.');
