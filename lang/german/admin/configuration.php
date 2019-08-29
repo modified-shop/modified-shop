@@ -426,9 +426,9 @@ define('EMAIL_BILLING_REPLY_ADDRESS_DESC' , 'Bitte geben Sie eine E-Mail-Adresse
 define('EMAIL_BILLING_REPLY_ADDRESS_NAME_TITLE' , 'Verrechnung - Antwort-E-Mail-Adresse, Name');
 define('EMAIL_BILLING_REPLY_ADDRESS_NAME_DESC' , 'Absendername f&uuml;r Antwort-E-Mails.');
 define('EMAIL_BILLING_SUBJECT_TITLE' , 'Verrechnung - E-Mail-Betreff Status&auml;nderungen');
-define('EMAIL_BILLING_SUBJECT_DESC' , 'Geben Sie bitte einen E-Mail-Betreff f&uuml;r E-Mails des <b>Verrechnungs-Systems</b> Ihres Shops ein (Status&auml;nderungen).');
+define('EMAIL_BILLING_SUBJECT_DESC' , 'Geben Sie bitte einen E-Mail-Betreff f&uuml;r E-Mails des <b>Verrechnungs-Systems</b> (Status&auml;nderungen) an. (z.B.: <b>Ihre Bestellung {$nr} vom {$date}</b>)<br />Folgende Variablen stehen zur Verf&uuml;gung, {$nr},{$date},{$firstname},{$lastname}');
 define('EMAIL_BILLING_SUBJECT_ORDER_TITLE','Verrechnung - E-Mail-Betreff f&uuml;r Bestellungen');
-define('EMAIL_BILLING_SUBJECT_ORDER_DESC','Geben Sie bitte einen E-Mail-Betreff f&uuml;r Ihre Bestell-E-Mails an. (z.B.: <b>Ihre Bestellung {$nr},am {$date}</b>) ps: folgende Variablen stehen zur Verf&uuml;gung, {$nr},{$date},{$firstname},{$lastname}');
+define('EMAIL_BILLING_SUBJECT_ORDER_DESC','Geben Sie bitte einen E-Mail-Betreff f&uuml;r Ihre Bestell-E-Mails an. (z.B.: <b>Ihre Bestellung {$nr} vom {$date}</b>)<br />Folgende Variablen stehen zur Verf&uuml;gung, {$nr},{$date},{$firstname},{$lastname}');
 define('MODULE_ORDER_MAIL_STEP_SUBJECT_TITLE','Verrechnung - E-Mail-Betreff f&uuml;r Bestellbest&auml;tigung');
 define('MODULE_ORDER_MAIL_STEP_SUBJECT_DESC','Geben Sie bitte einen E-Mail-Betreff f&uuml;r Ihre Bestellbest&auml;tigung E-Mails an. (z.B.: <b>Ihre Bestellung {$nr},am {$date}</b>) ps: folgende Variablen stehen zur Verf&uuml;gung, {$nr},{$date},{$firstname},{$lastname}');
 
