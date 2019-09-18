@@ -32,7 +32,7 @@
     {
       $api_it_recht_kanzlei->process($xml_output);
     } else {
-      $api_it_recht_kanzlei->return_error('12');
+      $api_it_recht_kanzlei->return_error('3');
     }
   }
 ?>
