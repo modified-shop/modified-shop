@@ -72,7 +72,7 @@ class it_recht_kanzlei {
   function keys() {
     return array('MODULE_API_IT_RECHT_KANZLEI_STATUS', 
                  'MODULE_API_IT_RECHT_KANZLEI_TOKEN', 
-                 'MODULE_API_IT_RECHT_KANZLEI_VERSION',
+                 //'MODULE_API_IT_RECHT_KANZLEI_VERSION',
                  'MODULE_API_IT_RECHT_KANZLEI_TYPE_AGB', 
                  'MODULE_API_IT_RECHT_KANZLEI_TYPE_DSE', 
                  'MODULE_API_IT_RECHT_KANZLEI_TYPE_WRB', 
