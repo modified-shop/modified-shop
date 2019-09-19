@@ -27,12 +27,15 @@
   
     if (is_array($check)
         && isset($check[1])
-        && $check[1] == MODULE_API_IT_RECHT_KANZLEI_TOKEN
         )
     {
-      $api_it_recht_kanzlei->process($xml_output);
+      if ($check[1] == MODULE_API_IT_RECHT_KANZLEI_TOKEN) {
+        $api_it_recht_kanzlei->process($xml_output);
+      } else {
+        $api_it_recht_kanzlei->return_error('3');
+      }
     } else {
-      $api_it_recht_kanzlei->return_error('3');
+      $api_it_recht_kanzlei->return_error('12');
     }
   }
 ?>
