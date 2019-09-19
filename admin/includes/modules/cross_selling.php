@@ -207,49 +207,67 @@
             <td class="dataTableHeadingContent" style="width:<?php echo (( USE_ADMIN_THUMBS_IN_LIST=='true' ) ? '37%' : '42%'); ?>"><?php echo HEADING_CATEGORY; ?></td>
           </tr>
           <?php
-            include(DIR_FS_INC . 'xtc_parse_search_string.inc.php');
+            $keywords = $_GET['search'] = !empty($_GET['search']) ? stripslashes(trim(urldecode($_GET['search']))) : false;
 
-            //build query
-            $select_str = "SELECT DISTINCT p.products_tax_class_id,
-                                           p.products_id,
-                                           pd.products_name,
-                                           p.products_sort,
-                                           p.products_quantity,
-                                           p.products_image,
-                                           p.products_model,
-                                           p.products_price,
-                                           p.products_discount_allowed,
-                                           p.products_date_added,
-                                           p.products_last_modified,
-                                           p.products_date_available,
-                                           p.products_status,
-                                           p.products_startpage,
-                                           p.products_startpage_sort";
-
-            $from_str  = " FROM ".TABLE_PRODUCTS." AS p ";
-            $from_str .= "LEFT JOIN ".TABLE_PRODUCTS_DESCRIPTION." AS pd ON (p.products_id = pd.products_id AND pd.language_id = '".(int) $_SESSION['languages_id']."') ";
-            if (ADMIN_SEARCH_IN_ATTR == 'true') {
-              $from_str .= "LEFT OUTER JOIN ".TABLE_PRODUCTS_ATTRIBUTES." AS pa ON (p.products_id = pa.products_id) ";
-              $from_str .= "LEFT OUTER JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." AS pov ON (pa.options_values_id = pov.products_options_values_id) ";
+            $from_str = ''; 
+            if (SEARCH_IN_MANU == 'true') {
+              $from_str .= " LEFT OUTER JOIN ".TABLE_MANUFACTURERS." AS m ON (p.manufacturers_id = m.manufacturers_id) ";
+            }
+    
+            if (SEARCH_IN_FILTER == 'true') {
+              $from_str .= " LEFT JOIN ".TABLE_PRODUCTS_TAGS." pt ON (pt.products_id = p.products_id)
+                             LEFT JOIN ".TABLE_PRODUCTS_TAGS_VALUES." ptv ON (ptv.options_id = pt.options_id AND ptv.values_id = pt.values_id AND ptv.status = '1' AND ptv.languages_id = '".(int)$_SESSION['languages_id']."') ";
             }
 
+            if (SEARCH_IN_ATTR == 'true') {
+              $from_str .= " LEFT JOIN ".TABLE_PRODUCTS_ATTRIBUTES." AS pa ON (p.products_id = pa.products_id) 
+                             LEFT JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." AS pov ON (pa.options_values_id = pov.products_options_values_id) ";
+            }
+    
             $where_str = " WHERE p.products_id NOT IN (
                                     SELECT xsell_id
                                       FROM ".TABLE_PRODUCTS_XSELL."
                                      WHERE products_id = ".(int)$_GET['current_product_id']."
                                     )";
             $where_str .= " AND p.products_id != ".(int)$_GET['current_product_id'];
-            
-            if (isset ($_GET['search']) && xtc_not_null($_GET['search'])) {
+
+            if ($keywords) {
+              require_once (DIR_FS_INC.'xtc_parse_search_string.inc.php');
               $keywordcheck = xtc_parse_search_string($_GET['search'], $search_keywords);
-    
+
               if ($keywordcheck) {
-                include(DIR_WS_INCLUDES.'build_search_query.php');
+                include(DIR_FS_CATALOG.DIR_WS_INCLUDES.'build_search_query.php');
                 $where_str .= " ) GROUP BY p.products_id";
               }
             }
+    
+            $search_query_raw = "SELECT p.products_id,
+                                        p.products_model,
+                                        p.products_ean,
+                                        p.products_quantity,
+                                        p.products_image,
+                                        p.products_price,
+                                        p.products_discount_allowed,
+                                        p.products_tax_class_id,
+                                        p.products_date_available,
+                                        p.products_status,
+                                        s.specials_quantity,
+                                        s.specials_new_products_price,
+                                        s.expires_date,
+                                        pd.products_name                                         
+                                   FROM " . TABLE_PRODUCTS . " p
+                                   JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd
+                                        ON p.products_id = pd.products_id 
+                                           AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
+                              LEFT JOIN " . TABLE_SPECIALS . " s
+                                        ON p.products_id = s.products_id 
+                                           AND s.status = 1 
+                                           AND (now() >= s.start_date OR s.start_date IS NULL)                      
+                                        ".$from_str."
+                                        ".$where_str."
+                               ORDER BY pd.products_name";
             
-            $search_query = xtc_db_query($select_str.$from_str.$where_str);
+            $search_query = xtc_db_query($search_query_raw);
 
             while ($search_data = xtc_db_fetch_array($search_query)) {
               $categorie_query = xtc_db_query("SELECT categories_id
