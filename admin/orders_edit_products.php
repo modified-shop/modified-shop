@@ -169,7 +169,19 @@ if (isset($_GET['action']) && $_GET['action'] =='product_search') {
       <td class="dataTableHeadingContent"><b><?php echo TEXT_QUANTITY;?></b></td>
       <td class="dataTableHeadingContent">&nbsp;</td>
     </tr>
-    <?php   
+    <?php
+    $where_str = '';
+    if (isset ($_GET['search']) && xtc_not_null($_GET['search'])) {
+      require_once (DIR_FS_INC.'xtc_parse_search_string.inc.php');
+      $keywordcheck = xtc_parse_search_string($_GET['search'], $search_keywords);
+
+      if ($keywordcheck) {
+        include(DIR_WS_INCLUDES.'build_search_query.php');
+        $where_str = ' WHERE '.substr($where_str, 4);
+        $where_str .= " ) GROUP BY p.products_id";
+      }
+    }
+    
     $products_query_raw = "SELECT p.products_id,
                                   p.products_model,
                                   p.products_ean,
@@ -194,14 +206,7 @@ if (isset($_GET['action']) && $_GET['action'] =='product_search') {
                                      AND (now() >= s.start_date OR s.start_date IS NULL)                      
                         LEFT JOIN " . TABLE_PRODUCTS_ATTRIBUTES . " pa
                                   ON p.products_id = pa.products_id
-                            WHERE (pd.products_name LIKE ('%" . xtc_db_input($_GET['search']) . "%') 
-                                   OR p.products_model LIKE ('%" . xtc_db_input($_GET['search']) . "%') 
-                                   OR p.products_manufacturers_model LIKE ('%" . xtc_db_input($_GET['search']) . "%') 
-                                   OR p.products_ean LIKE ('%" . xtc_db_input($_GET['search']) . "%')
-                                   OR pa.attributes_model LIKE ('%" . xtc_db_input($_GET['search']) . "%') 
-                                   OR pa.attributes_ean LIKE ('%" . xtc_db_input($_GET['search']) . "%')
-                                   )
-                         GROUP BY p.products_id
+                                  ".$where_str ."
                          ORDER BY pd.products_name";
                               
     $products_split = new splitPageResults($_GET['page'], MAX_DISPLAY_PRODUCTS_SEARCH_RESULTS, $products_query_raw, $products_query_numrows, 'p.products_id');
