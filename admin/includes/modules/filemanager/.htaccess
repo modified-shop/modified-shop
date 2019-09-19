@@ -18,16 +18,16 @@
 # This is used with Apache WebServers
 # The following blocks direct HTTP requests in this directory recursively
 
-<FilesMatch "(?<!\.php|\.css|\.js|\.PHP|\.CSS|\.JS)$">
+<FilesMatch "(\.php|\.css|\.js|\.PHP|\.CSS|\.JS)$">
   <IfModule mod_authz_core.c>
     # Apache 2.4
     <RequireAll>
-      Require all denied
+      Require all granted
     </RequireAll>
   </IfModule>
   <IfModule !mod_authz_core.c>
     # Apache 2.2
     Order Deny,Allow
-    Deny from all
+    Allow from all
   </IfModule>
 </FilesMatch>
