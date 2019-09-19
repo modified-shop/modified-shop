@@ -18,7 +18,7 @@
 
 class api_it_recht_kanzlei {
   
-  public $modulversion = '1.7';
+  public $modulversion = '1.8';
   var $api_action_flag, 
       $api_version_flag, 
       $api_username_flag, 
@@ -353,10 +353,22 @@ class api_it_recht_kanzlei {
     }
 
     // decode three byte unicode characters
-    $string = preg_replace("/([\340-\357])([\200-\277])([\200-\277])/e", "'&#'.((ord('\\1')-224)*4096 + (ord('\\2')-128)*64 + (ord('\\3')-128)).';'", $string);
+    $string = preg_replace_callback(
+      "/([\340-\357])([\200-\277])([\200-\277])/",
+      function ($m) {
+        return '&#'.((ord($m[1])-224)*4096 + (ord($m[2])-128)*64 + (ord($m[3])-128)).';';
+      },
+      $string
+    );
 
     // decode two byte unicode characters
-    $string = preg_replace("/([\300-\337])([\200-\277])/e", "'&#'.((ord('\\1')-192)*64+(ord('\\2')-128)).';'", $string);
+    $string = preg_replace_callback(
+      "/([\300-\337])([\200-\277])/",
+      function ($m) {
+        return '&#'.((ord($m[1])-192)*64+(ord($m[2])-128)).';';
+      },
+      $string
+    );
 
     return decode_htmlentities($string);
   }
