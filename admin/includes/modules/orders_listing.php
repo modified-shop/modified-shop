@@ -104,23 +104,20 @@
                 $filter .=  isset($_GET['payment']) && $_GET['payment'] != '' ? " AND o.payment_class = '" . xtc_db_input($_GET['payment']) ."'": '';               
                 if (isset($_GET['cID'])) {
                   $cID = (int) $_GET['cID'];
-                  $orders_query_raw = "-- /admin/orders.php
-                                       SELECT ".$order_select_fields."
+                  $orders_query_raw = "SELECT ".$order_select_fields."
                                          FROM ".TABLE_ORDERS." o
                                         WHERE o.customers_id = '".xtc_db_input($cID)."'
                                               ".$filter.$sort;
 
                 } elseif (isset($_GET['status']) && $_GET['status'] == '0') {
-                  $orders_query_raw = "-- /admin/orders.php
-                                       SELECT ".$order_select_fields."
+                  $orders_query_raw = "SELECT ".$order_select_fields."
                                          FROM ".TABLE_ORDERS." o
                                         WHERE o.orders_status = '0'
                                               ".$filter.$sort;
 
                 } elseif (isset($_GET['status']) && xtc_not_null($_GET['status']) && $_GET['status'] != '-1') {
                   $status = xtc_db_prepare_input($_GET['status']);
-                  $orders_query_raw = "-- /admin/orders.php
-                                       SELECT ".$order_select_fields."
+                  $orders_query_raw = "SELECT ".$order_select_fields."
                                          FROM ".TABLE_ORDERS." o
                                         WHERE o.orders_status = '".(int)$status."'
                                               ".$filter.$sort;
@@ -128,14 +125,23 @@
                 } elseif ($action == 'search' && $oID && $customer == '') {
                    // ADMIN SEARCH BAR $orders_query_raw moved it to the top
                 } elseif ($action == 'search' && $customer) {
-                  $orders_query_raw = "-- /admin/orders.php
-                                       SELECT ".$order_select_fields."
+                  $orders_query_raw = "SELECT ".$order_select_fields."
                                          FROM ".TABLE_ORDERS." o
-                                        WHERE (o.customers_name LIKE '%".xtc_db_input($customer)."%'
-                                           OR o.customers_firstname LIKE '%".xtc_db_input($customer)."%'
-                                           OR o.customers_lastname LIKE '%".xtc_db_input($customer)."%'
-                                           OR o.customers_company LIKE '%".xtc_db_input($customer)."%')                       
-                                              ".$filter.$sort;
+                                        WHERE (o.customers_email_address LIKE '%".xtc_db_input($customer)."%'
+                                               OR o.customers_name LIKE '%".xtc_db_input($customer)."%'
+                                               OR o.customers_firstname LIKE '%".xtc_db_input($customer)."%'
+                                               OR o.customers_lastname LIKE '%".xtc_db_input($customer)."%'
+                                               OR o.customers_company LIKE '%".xtc_db_input($customer)."%'
+                                               OR o.delivery_name LIKE '%".xtc_db_input($customer)."%'
+                                               OR o.delivery_firstname LIKE '%".xtc_db_input($customer)."%'
+                                               OR o.delivery_lastname LIKE '%".xtc_db_input($customer)."%'
+                                               OR o.delivery_company LIKE '%".xtc_db_input($customer)."%'              
+                                               OR o.billing_name LIKE '%".xtc_db_input($customer)."%'
+                                               OR o.billing_firstname LIKE '%".xtc_db_input($customer)."%'
+                                               OR o.billing_lastname LIKE '%".xtc_db_input($customer)."%'
+                                               OR o.billing_company LIKE '%".xtc_db_input($customer)."%'
+                                               )
+                                               ".$filter.$sort;
                 } else {
                   $filter = strpos($filter,' AND') !== false ? substr_replace($filter,' WHERE',0,strlen(' AND')) : ''; //replace ONLY FIRST occurrence of a string within a string
                   $default_status = '';
@@ -143,8 +149,7 @@
                     $default_status_array = explode(',', ORDER_STATUSES_DISPLAY_DEFAULT);
                     $default_status = ((strpos($filter, 'WHERE') !== false) ? " AND " : " WHERE ")."o.orders_status IN ('".implode("', '", $default_status_array)."') ";
                   }
-                  $orders_query_raw = "-- /admin/orders.php
-                                       SELECT ".$order_select_fields."
+                  $orders_query_raw = "SELECT ".$order_select_fields."
                                          FROM ".TABLE_ORDERS." o
                                               ".$filter.$default_status.$sort;                  
                 }
