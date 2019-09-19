@@ -46,11 +46,6 @@ unset($_SESSION['delivery_zone']);
 // include boxes
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
-$breadcrumb->add(NAVBAR_TITLE_1_ADDRESS_BOOK, xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
-$breadcrumb->add(NAVBAR_TITLE_2_ADDRESS_BOOK, xtc_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
-
-require (DIR_WS_INCLUDES.'header.php');
-
 if ($messageStack->size('addressbook') > 0) {
 	$smarty->assign('error', $messageStack->output('addressbook'));
 }
@@ -100,6 +95,11 @@ if (xtc_count_customer_address_book_entries() < MAX_ADDRESS_BOOK_ENTRIES) {
 }
 
 $smarty->assign('ADDRESS_COUNT', sprintf(TEXT_MAXIMUM_ENTRIES, MAX_ADDRESS_BOOK_ENTRIES));
+
+$breadcrumb->add(NAVBAR_TITLE_1_ADDRESS_BOOK, xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
+$breadcrumb->add(NAVBAR_TITLE_2_ADDRESS_BOOK, xtc_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
+
+require (DIR_WS_INCLUDES.'header.php');
 
 $smarty->assign('language', $_SESSION['language']);
 $smarty->caching = 0;

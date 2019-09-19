@@ -52,9 +52,6 @@ unset($_SESSION['delivery_zone']);
 // include boxes
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
-$breadcrumb->add(NAVBAR_TITLE_ACCOUNT, xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
-require (DIR_WS_INCLUDES.'header.php');
-
 if ($messageStack->size('account') > 0) {
 	$smarty->assign('error_message', $messageStack->output('account'));
 }
@@ -161,6 +158,9 @@ if (isset($_SESSION['customer_id'])) {
 if (defined('MODULE_NEWSLETTER_STATUS') && MODULE_NEWSLETTER_STATUS == 'true') {
   $smarty->assign('LINK_NEWSLETTER', xtc_href_link(FILENAME_NEWSLETTER, '', 'SSL'));
 }
+
+$breadcrumb->add(NAVBAR_TITLE_ACCOUNT, xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
+require (DIR_WS_INCLUDES.'header.php');
 
 $smarty->assign('language', $_SESSION['language']);
 

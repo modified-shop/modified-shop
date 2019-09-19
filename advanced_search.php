@@ -28,10 +28,6 @@ require_once (DIR_FS_INC.'xtc_get_categories.inc.php');
 require_once (DIR_FS_INC.'xtc_get_manufacturers.inc.php');
 require_once (DIR_FS_INC.'xtc_checkdate.inc.php');
 
-$breadcrumb->add(NAVBAR_TITLE_ADVANCED_SEARCH, xtc_href_link(FILENAME_ADVANCED_SEARCH));
-
-require(DIR_WS_INCLUDES.'header.php');
-
 $smarty->assign('FORM_ACTION', xtc_draw_form('advanced_search', xtc_href_link(FILENAME_ADVANCED_SEARCH_RESULT, '', $request_type, false), 'get', 'onsubmit="return check_form_search(this);"').xtc_hide_session_id());
 $smarty->assign('INPUT_KEYWORDS', xtc_draw_input_field('keywords', '', 'placeholder="'.IMAGE_BUTTON_SEARCH.'" style="width: 100%"'));
 $smarty->assign('HELP_LINK', xtc_href_link(FILENAME_POPUP_SEARCH_HELP, (defined('TPL_POPUP_CONTENT_LINK_PARAMETERS') ? TPL_POPUP_CONTENT_LINK_PARAMETERS : POPUP_CONTENT_LINK_PARAMETERS) , $request_type));
@@ -76,6 +72,10 @@ if (isset ($_GET['errorno'])) {
 if ($messageStack->size('advanced_search') > 0) {
   $smarty->assign('error', $messageStack->output('advanced_search'));
 }
+
+$breadcrumb->add(NAVBAR_TITLE_ADVANCED_SEARCH, xtc_href_link(FILENAME_ADVANCED_SEARCH));
+
+require(DIR_WS_INCLUDES.'header.php');
 
 $smarty->assign('language', $_SESSION['language']);
 $smarty->assign('FORM_END', '</form>');
