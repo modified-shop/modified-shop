@@ -170,7 +170,7 @@
         echo xtc_draw_hidden_field('current_product_id', $_GET['current_product_id']).PHP_EOL;
         echo xtc_draw_hidden_field('cpath', $_GET['cpath']).PHP_EOL;
       ?>
-      <div class="main pdg2 flt-l"><?php echo xtc_draw_input_field('search', '', 'size="30"');?></div>
+      <div class="main pdg2 flt-l"><?php echo xtc_draw_input_field('search', ((isset($_GET['search'])) ? $_GET['search'] : ''), 'size="30"');?></div>
       <div class="main pdg2 flt-l">
       <?php
         echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SEARCH . '"/>';
