@@ -170,13 +170,30 @@ if (isset($_GET['action']) && $_GET['action'] =='product_search') {
       <td class="dataTableHeadingContent">&nbsp;</td>
     </tr>
     <?php
+    $keywords = $_GET['search'] = !empty($_GET['search']) ? stripslashes(trim(urldecode($_GET['search']))) : false;
+
+    $from_str = ''; 
+    if (SEARCH_IN_MANU == 'true') {
+      $from_str .= " LEFT OUTER JOIN ".TABLE_MANUFACTURERS." AS m ON (p.manufacturers_id = m.manufacturers_id) ";
+    }
+    
+    if (SEARCH_IN_FILTER == 'true') {
+      $from_str .= " LEFT JOIN ".TABLE_PRODUCTS_TAGS." pt ON (pt.products_id = p.products_id)
+                     LEFT JOIN ".TABLE_PRODUCTS_TAGS_VALUES." ptv ON (ptv.options_id = pt.options_id AND ptv.values_id = pt.values_id AND ptv.status = '1' AND ptv.languages_id = '".(int)$_SESSION['languages_id']."') ";
+    }
+
+    if (SEARCH_IN_ATTR == 'true') {
+      $from_str .= " LEFT JOIN ".TABLE_PRODUCTS_ATTRIBUTES." AS pa ON (p.products_id = pa.products_id) 
+                     LEFT JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." AS pov ON (pa.options_values_id = pov.products_options_values_id) ";
+    }
+    
     $where_str = '';
-    if (isset ($_GET['search']) && xtc_not_null($_GET['search'])) {
+    if ($keywords) {
       require_once (DIR_FS_INC.'xtc_parse_search_string.inc.php');
       $keywordcheck = xtc_parse_search_string($_GET['search'], $search_keywords);
 
       if ($keywordcheck) {
-        include(DIR_WS_INCLUDES.'build_search_query.php');
+        include(DIR_FS_CATALOG.DIR_WS_INCLUDES.'build_search_query.php');
         $where_str = ' WHERE '.substr($where_str, 4);
         $where_str .= " ) GROUP BY p.products_id";
       }
@@ -204,9 +221,8 @@ if (isset($_GET['action']) && $_GET['action'] =='product_search') {
                                   ON p.products_id = s.products_id 
                                      AND s.status = 1 
                                      AND (now() >= s.start_date OR s.start_date IS NULL)                      
-                        LEFT JOIN " . TABLE_PRODUCTS_ATTRIBUTES . " pa
-                                  ON p.products_id = pa.products_id
-                                  ".$where_str ."
+                                  ".$from_str."
+                                  ".$where_str."
                          ORDER BY pd.products_name";
                               
     $products_split = new splitPageResults($_GET['page'], MAX_DISPLAY_PRODUCTS_SEARCH_RESULTS, $products_query_raw, $products_query_numrows, 'p.products_id');
