@@ -144,11 +144,10 @@
     }
   }
 
-  function xtc_session_destroy() {
-    global $current_domain;
-    
+  function xtc_session_destroy() {    
     if (isset($_COOKIE[xtc_session_name()])) {
-      xtc_setcookie(xtc_session_name(), '', time()-3600, DIR_WS_CATALOG, (xtc_not_null($current_domain) ? '.'.$current_domain : ''));
+      $cookie_params = session_get_cookie_params();
+      xtc_setcookie(xtc_session_name(), '', time()-3600, $cookie_params['path'], $cookie_params['domain']);
     }
     return session_destroy();
   }

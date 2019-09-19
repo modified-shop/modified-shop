@@ -47,7 +47,10 @@ if (STORE_SESSIONS == 'mysql') {
 }
 
 // delete old cookie
-if (count($current_domain_delete) > 0) {
+if (is_array($current_domain_delete) 
+    && count($current_domain_delete) > 0
+    )
+{
   foreach ($current_domain_delete as $domain) {
     xtc_setcookie(xtc_session_name(), '', time()-3600, '/', '.'.$domain);
     xtc_setcookie(xtc_session_name(), '', time()-3600, DIR_WS_CATALOG, '.'.$domain);
