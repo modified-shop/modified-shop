@@ -33,10 +33,6 @@ if ($_SESSION['customers_status']['customers_status_read_reviews'] == '0') {
 // include boxes
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
-$breadcrumb->add(NAVBAR_TITLE_REVIEWS, xtc_href_link(FILENAME_REVIEWS));
-
-require (DIR_WS_INCLUDES.'header.php');
-
 $reviews_query_raw = "SELECT r.reviews_id,
                         left(rd.reviews_text, 250) as reviews_text,
                              r.reviews_rating,
@@ -96,6 +92,9 @@ if ($reviews_split->number_of_rows > 0) {
   }
   $smarty->assign('module_content', $module_data);
 }
+
+$breadcrumb->add(NAVBAR_TITLE_REVIEWS, xtc_href_link(FILENAME_REVIEWS));
+require (DIR_WS_INCLUDES.'header.php');
 
 $smarty->assign('language', $_SESSION['language']);
 

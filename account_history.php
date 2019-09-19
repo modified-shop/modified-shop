@@ -42,11 +42,6 @@ if (!isset($_SESSION['customer_id'])) {
 // include boxes
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
-$breadcrumb->add(NAVBAR_TITLE_1_ACCOUNT_HISTORY, xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
-$breadcrumb->add(NAVBAR_TITLE_2_ACCOUNT_HISTORY, xtc_href_link(FILENAME_ACCOUNT_HISTORY, '', 'SSL'));
-
-require (DIR_WS_INCLUDES.'header.php');
-
 $module_content = array ();
 if (xtc_count_customer_orders() > 0) {
   $history_query_raw = "SELECT o.orders_id,
@@ -106,6 +101,11 @@ if (xtc_count_customer_orders() > 0) {
     $row ++;
   }
 }
+
+$breadcrumb->add(NAVBAR_TITLE_1_ACCOUNT_HISTORY, xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
+$breadcrumb->add(NAVBAR_TITLE_2_ACCOUNT_HISTORY, xtc_href_link(FILENAME_ACCOUNT_HISTORY, '', 'SSL'));
+
+require (DIR_WS_INCLUDES.'header.php');
 
 $smarty->assign('order_content', $module_content);
 $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(FILENAME_ACCOUNT, '', 'SSL').'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');

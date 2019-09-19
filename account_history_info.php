@@ -57,12 +57,6 @@ require (DIR_WS_CLASSES.'order.php');
 $order = new order((int)$_GET['order_id']);
 $xtPrice = new xtcPrice($order->info['currency'], $order->info['status']);
 
-$breadcrumb->add(NAVBAR_TITLE_1_ACCOUNT_HISTORY_INFO, xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
-$breadcrumb->add(NAVBAR_TITLE_2_ACCOUNT_HISTORY_INFO, xtc_href_link(FILENAME_ACCOUNT_HISTORY, '', 'SSL'));
-$breadcrumb->add(sprintf(NAVBAR_TITLE_3_ACCOUNT_HISTORY_INFO, (int)$_GET['order_id']), xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id='.(int)$_GET['order_id'], 'SSL'));
-
-require (DIR_WS_INCLUDES.'header.php');
-
 // Delivery Info
 if ($order->delivery != false) {
   $smarty->assign('SHIPPING_CLASS', $order->info['shipping_class']);
@@ -144,6 +138,12 @@ $smarty->assign('BUTTON_PRINT_LAYER', '<a class="iframe" target="_blank" rel="no
 if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS == 'true') {
   $smarty->assign('BUTTON_CART_EXPRESS', '<a href="'.xtc_href_link(FILENAME_ACCOUNT, 'action=add_order&express=on&order_id='.$order->info['order_id'], 'SSL').'">'.xtc_image_button('button_checkout_express.gif', IMAGE_BUTTON_IN_CART).'</a>');
 }
+
+$breadcrumb->add(NAVBAR_TITLE_1_ACCOUNT_HISTORY_INFO, xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
+$breadcrumb->add(NAVBAR_TITLE_2_ACCOUNT_HISTORY_INFO, xtc_href_link(FILENAME_ACCOUNT_HISTORY, '', 'SSL'));
+$breadcrumb->add(sprintf(NAVBAR_TITLE_3_ACCOUNT_HISTORY_INFO, (int)$_GET['order_id']), xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id='.(int)$_GET['order_id'], 'SSL'));
+
+require (DIR_WS_INCLUDES.'header.php');
 
 $from_history = preg_match("/page=/i", xtc_get_all_get_params());
 $back_to = $from_history ? FILENAME_ACCOUNT_HISTORY : FILENAME_ACCOUNT;
