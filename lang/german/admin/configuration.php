@@ -890,8 +890,8 @@ define('COMPRESS_STYLESHEET_DESC', 'Soll ein komprimiertes Stylesheet ausgeliefe
 define('COMPRESS_JAVASCRIPT_TITLE', 'JavaScript Komprimierung');
 define('COMPRESS_JAVASCRIPT_DESC', 'Soll eine komprimierte JavaScript-Datei ausgeliefert werden?<br/><b>Achtung:</b> Das funktioniert nur mit einem ab Shopversion 2.0.1.0 kompatiblem Template!');
 
-define('USE_ATTRIBUTES_IFRAME_TITLE', 'Attribute editieren in iframe');
-define('USE_ATTRIBUTES_IFRAME_DESC', '&Ouml;ffnet die Attribut Verwaltung in der Kategorie/Artikelansicht in einem iframe');
+define('USE_ATTRIBUTES_IFRAME_TITLE', 'Attribute und Eigenschaften im iframe');
+define('USE_ATTRIBUTES_IFRAME_DESC', '&Ouml;ffnet die Attribut und Artikeleigenschaften Verwaltung in der Kategorie/Artikelansicht in einem iframe');
 
 define('ADMIN_HEADER_X_FRAME_OPTIONS_TITLE', 'Admin Clickjacking Schutz');
 define('ADMIN_HEADER_X_FRAME_OPTIONS_DESC', 'Adminbereich mit dem Header "X-Frame-Options: SAMEORIGIN" sch&uuml;tzen<br>Supported Browsers: FF 3.6.9+ Chrome 4.1.249.1042+ IE 8+ Safari 4.0+ Opera 10.50+ ');

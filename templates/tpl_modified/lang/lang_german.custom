@@ -25,6 +25,7 @@ ab_logoff = 'Abmelden'
 ab_news = 'News'
 ab_offline = 'Shop Offline'
 ab_update = 'Update'
+ab_edit_tags = 'Artikeleigenschaften'
 
 ab_edit_content = 'Content bearbeiten'
 ab_edit_product = 'Artikel bearbeiten'

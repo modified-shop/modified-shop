@@ -115,6 +115,12 @@ if ($admin_access['categories'] == '1') {
       $box_smarty->assign('EDIT_PRODUCT_ATTRIBUTES', xtc_href_link_admin((defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'new_attributes.php', 'cpath='.$cPath.'&current_product_id='.$product->data['products_id'].'&action=edit'));
     }
   }
+  // tags
+  if ($admin_access['products_tags'] == '1') {
+    if ($product->isProduct() === true) {
+      $box_smarty->assign('EDIT_PRODUCT_TAGS', xtc_href_link_admin((defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'products_tags.php', 'cpath='.$cPath.'&current_product_id='.$product->data['products_id'].'&action=edit'));
+    }
+  }
   // product info
   $products_query = xtc_db_query("select count(*) as count from ".TABLE_PRODUCTS." where products_status = '1'");
   $products = xtc_db_fetch_array($products_query);

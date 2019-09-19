@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: products_attributes_iframe.php 7936 2015-03-18 14:30:01Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -15,15 +15,15 @@ if (!defined('NEW_TAGS_IFRAME_FILENAME')) {
   define ('NEW_TAGS_IFRAME_FILENAME','products_tags.php');
 }
 
-if (!defined('USE_TAGS_IFRAME')) {
-  define ('USE_TAGS_IFRAME','true');
+if (!defined('USE_ATTRIBUTES_IFRAME')) {
+  define ('USE_ATTRIBUTES_IFRAME','true');
 }
 
 if (is_file(DIR_WS_MODULES.'iframe_box.php')) {
   include_once(DIR_WS_MODULES.'iframe_box.php');
 }
 
-if (defined('USE_TAGS_IFRAME') && USE_TAGS_IFRAME == 'true') {
+if (defined('USE_ATTRIBUTES_IFRAME') && USE_ATTRIBUTES_IFRAME == 'true') {
 
   function tags_iframe_link($pID, $icon=false)
   {
