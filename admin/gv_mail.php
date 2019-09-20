@@ -252,7 +252,7 @@
               ?>
               <table class="tableConfig borderall">
                 <tr>
-                  <td class="dataTableConfig col-left"><?php echo TEXT_CUSTOMER; ?></td>
+                  <td class="dataTableConfig col-left"><?php echo TEXT_CUSTOMER_GROUP; ?></td>
                   <td class="dataTableConfig col-single-right"><?php echo $mail_sent_to; ?></td>
                 </tr>
                 <tr>
@@ -284,7 +284,7 @@
 
             $select = '';
             $customers = array();
-            $customers[] = array('id' => '', 'text' => TEXT_SELECT_CUSTOMER);
+            $customers[] = array('id' => '', 'text' => TEXT_SELECT_CUSTOMER_GROUP);
             $customers[] = array('id' => '***', 'text' => TEXT_ALL_CUSTOMERS);
             $customers[] = array('id' => '**D', 'text' => TEXT_NEWSLETTER_CUSTOMERS);
             $customers = array_merge($customers, xtc_get_customers_statuses());
@@ -315,7 +315,7 @@
               ?>
               <table class="tableConfig borderall">
                 <tr>
-                  <td class="dataTableConfig col-left"><?php echo TEXT_CUSTOMER; ?></td>
+                  <td class="dataTableConfig col-left"><?php echo TEXT_CUSTOMER_GROUP; ?></td>
                   <td class="dataTableConfig col-single-right"><?php echo xtc_draw_pull_down_menu('customers_email_address', $customers, $selected_customer);?></td>
                 </tr>
                 <?php if (!isset($_GET['cID'])) { ?>
