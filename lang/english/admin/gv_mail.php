@@ -27,14 +27,14 @@
 
 define('HEADING_TITLE', 'Send Gift Voucher To Customers');
 
-define('TEXT_CUSTOMER', 'Customer:');
+define('TEXT_CUSTOMER_GROUP', 'Customers Group:');
 define('TEXT_SUBJECT', 'Subject:');
 define('TEXT_FROM', 'From:');
 define('TEXT_TO', 'E-Mail to:');
 define('TEXT_AMOUNT', 'Amount');
 define('TEXT_MESSAGE', 'Message:');
 define('TEXT_SINGLE_EMAIL', '<span class="smallText">Use this for sending single E-Mails, otherwise use dropdown above</span>');
-define('TEXT_SELECT_CUSTOMER', 'Select Customer');
+define('TEXT_SELECT_CUSTOMER_GROUP', 'Select Customer Group');
 define('TEXT_ALL_CUSTOMERS', 'All Customers');
 define('TEXT_NEWSLETTER_CUSTOMERS', 'To All Newsletter Subscribers');
 
