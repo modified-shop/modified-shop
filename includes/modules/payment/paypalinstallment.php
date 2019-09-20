@@ -80,9 +80,12 @@ class paypalinstallment extends PayPalPayment {
   function selection() {
     global $order, $request_type;
     
-    $presentment = $this->get_presentment_details($this->total_amount, $order->info['currency'], $order->billing['country']['iso_code_2'], 'payment');
-    $presentment .= '<br/><br/><input type="checkbox" value="pp_conditions" name="pp_conditions" id="pp_conditions" />&nbsp;<strong><label for="pp_conditions">'.MODULE_PAYMENT_PAYPALINSTALLMENT_TEXT_CHECKBOX.'</label></strong>';
-
+    $presentment = '';
+    if ($this->total_amount > 0) {
+      $presentment .= $this->get_presentment_details($this->total_amount, $order->info['currency'], $order->billing['country']['iso_code_2'], 'payment');
+      $presentment .= '<br/><br/><input type="checkbox" value="pp_conditions" name="pp_conditions" id="pp_conditions" />&nbsp;<strong><label for="pp_conditions">'.MODULE_PAYMENT_PAYPALINSTALLMENT_TEXT_CHECKBOX.'</label></strong>';
+    }
+    
     return array(
       'id' => $this->code, 
       'module' => $this->title, 
