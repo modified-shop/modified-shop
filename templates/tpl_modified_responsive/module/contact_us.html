@@ -52,12 +52,20 @@
           <td><span class="fieldtext">{#text_message#}</span><span class="stern">{$INPUT_TEXT}<span class="inputRequirement_textarea"> *</span></span></td>
         </tr>
       </table>    
-      {if $PRIVACY_CHECKBOX}
-      <br />
-      <div class="cus_check cus_check_small">
-        {$PRIVACY_CHECKBOX}
-        <label for="privacy"><strong>{#text_privacy_accept#}</strong> {$PRIVACY_LINK}</label>
-      </div>
+      {if isset($smarty.const.SIGN_CONDITIONS_ON_CHECKOUT)}
+        <br />
+        <div class="cus_check cus_check_small">
+          {if $PRIVACY_CHECKBOX}{$PRIVACY_CHECKBOX}{/if}
+          <label for="privacy"><strong>{#text_privacy_accept#|sprintf:$smarty.const.STORE_OWNER_EMAIL_ADDRESS}</strong> {$PRIVACY_LINK}</label>
+        </div>
+      {else}
+        {if $PRIVACY_CHECKBOX}
+        <br />
+        <div class="cus_check cus_check_small">
+          {$PRIVACY_CHECKBOX}
+          <label for="privacy"><strong>{#text_privacy_accept#}</strong> {$PRIVACY_LINK}</label>
+        </div>
+        {/if}
       {/if}
     </div>
     <div class="button_right cf"><div class="cssButtonPos4">{$BUTTON_SUBMIT}</div></div>

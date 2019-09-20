@@ -256,6 +256,9 @@ if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true') {
   $shop_content_data = $main->getContentData(3);
   $smarty->assign('AGB', '<div class="agbframe">' . $shop_content_data['content_text'] . '</div>');
   $smarty->assign('AGB_LINK', $main->getContentLink(3, MORE_INFO,'SSL'));
+}
+//check if sign conditions on checkout page is true
+if (SIGN_CONDITIONS_ON_CHECKOUT == 'true') {
   $smarty->assign('AGB_checkbox', '<input type="checkbox" value="conditions" name="conditions" id="conditions"'.(isset($_GET['step']) && $_GET['step'] == 'step2' ? ' checked="checked"' : '').' />');
 }
 

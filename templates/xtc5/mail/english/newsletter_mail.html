@@ -1,8 +1,11 @@
 <p><font size="2" face="Verdana, Arial, Helvetica, sans-serif"><b>Thank you for subscribing!</b></p>
 {if isset($LINK)}
+<p>You receive this e-mail because you want to receive our newsletter.</p>
 <p>Please click the following activation link to receive newsletters. If you haven't subscribed to this service, please ignore this e-mail!</p>
 <p><b>Your activation link:</b></p>
 <p><a href="{$LINK}">{$LINK}</a></p>
+<p>If you have not registered for our newsletter or do not wish to receive the newsletter, please ignore the activation link.</p>
+<p>Your consent to the dispatch of our newsletter is revocable at any time. The newsletter is sent according to our privacy policy.</p>
 {/if}
 {if $SEND_GIFT == true}
 <br />
