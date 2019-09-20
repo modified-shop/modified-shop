@@ -78,10 +78,10 @@
       $error = true;
     }
 
-    //if (DISPLAY_PRIVACY_CHECK == 'true' && empty($privacy)) {
+    if (empty($privacy)) {
       $messageStack->add('contact_us', ENTRY_PRIVACY_ERROR);
       $error = true;
-    //}
+    }
 
     if (check_secure_form($_POST) === false) {
       $messageStack->add('contact_us', ENTRY_TOKEN_ERROR);
