@@ -382,6 +382,14 @@
                 </tr>                
               </table> 
 
+              <?php if (!isset($_GET['oID']) || $_GET['oID'] == '') { ?>
+              <div class="smallText flt-l mrg5"><?php echo '<a class="button" href="' . xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action', 'cID')).'action=edit') . '"/>' . BUTTON_BACK . '</a>'; ?></div>
+              <?php } ?>
+
+              <?php if (!isset($_GET['cid']) || $_GET['cid'] == '') { ?>
+              <div class="smallText flt-l mrg5"><?php echo '<a class="button" href="' . xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('action', 'cid')).'cid='.(int)$_GET['cid']) . '"/>' . BUTTON_BACK . '</a>'; ?></div>
+              <?php } ?>
+              
               <div class="smallText mrg5 txta-r"><?php echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SEND_EMAIL . '"/>'; ?></div>
             </form>
           <?php
