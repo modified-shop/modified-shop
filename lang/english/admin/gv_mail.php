@@ -28,7 +28,7 @@
 define('HEADING_TITLE', 'Send Gift Voucher To Customers');
 define('HEADING_COUPON_TITLE', 'Send Coupon To Customers');
 
-define('TEXT_CUSTOMER', 'Customers Group:');
+define('TEXT_CUSTOMER_GROUP', 'Customers Group:');
 define('TEXT_SUBJECT', 'Subject:');
 define('TEXT_FROM', 'From:');
 define('TEXT_TO', 'E-Mail to:');
