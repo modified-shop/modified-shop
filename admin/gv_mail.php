@@ -351,15 +351,7 @@
                                         ORDER BY customers_lastname");
               if (xtc_db_num_rows($mail_query) > 0) {
                 $customers_values = xtc_db_fetch_array($mail_query);
-                
-                if ($selected_customer == '') {
-                  $selected_customer = $customers_values['customers_email_address'];
-                }
-                
-                $customers[] = array(
-                  'id' => $customers_values['customers_email_address'],
-                  'text' => $customers_values['customers_lastname'] . ', ' . $customers_values['customers_firstname'] . ' (' . $customers_values['customers_email_address'] . ')'
-                );
+                $_POST['email_to'] = $customers_values['customers_email_address'];
               }
             }
 
@@ -370,12 +362,10 @@
                   <td class="dataTableConfig col-left"><?php echo TEXT_CUSTOMER; ?></td>
                   <td class="dataTableConfig col-single-right"><?php echo xtc_draw_pull_down_menu('customers_email_address', $customers, $selected_customer);?></td>
                 </tr>
-                <?php if (!isset($_GET['cID'])) { ?>
                  <tr>
                   <td class="dataTableConfig col-left"><?php echo TEXT_TO; ?></td>
-                  <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('email_to'); ?><?php echo '&nbsp;&nbsp;' . TEXT_SINGLE_EMAIL; ?></td>
+                  <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('email_to', ((isset($_POST['email_to'])) ? $_POST['email_to'] : '')); ?><?php echo '&nbsp;&nbsp;' . TEXT_SINGLE_EMAIL; ?></td>
                 </tr>
-                <?php } ?>
                 <tr>
                   <td class="dataTableConfig col-left"><?php echo TEXT_SUBJECT; ?></td>
                   <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('subject', ((isset($_POST['subject'])) ? $_POST['subject'] : ''), 'style="width: 100%;"'); ?></td>
