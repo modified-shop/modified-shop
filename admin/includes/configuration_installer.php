@@ -333,6 +333,118 @@ $values_group_update = array();
                            'values' => "set_function = 'xtc_cfg_select_content(\'SHIPPING_STATUS_INFOS\','",
                            'configuration_key' => 'SHIPPING_STATUS_INFOS'
                            );
+  $values_update[] = array (
+                           'values' => "sort_order = '1'",
+                           'configuration_key' => 'USE_WYSIWYG'
+                           );
+  $values_update[] = array (
+                           'values' => "sort_order = '2'",
+                           'configuration_key' => 'WYSIWYG_SKIN'
+                           );
+  $values_update[] = array (
+                           'values' => "sort_order = '3'",
+                           'configuration_key' => 'ACTIVATE_GIFT_SYSTEM'
+                           );
+  $values_update[] = array (
+                           'values' => "sort_order = '4'",
+                           'configuration_key' => 'SECURITY_CODE_LENGTH'
+                           );
+  $values_update[] = array (
+                           'values' => "sort_order = '5'",
+                           'configuration_key' => 'NEW_SIGNUP_GIFT_VOUCHER_AMOUNT'
+                           );
+  $values_update[] = array (
+                           'values' => "sort_order = '6'",
+                           'configuration_key' => 'NEW_SIGNUP_DISCOUNT_COUPON'
+                           );
+  $values_update[] = array (
+                           'values' => "sort_order = '7'",
+                           'configuration_key' => 'ACTIVATE_SHIPPING_STATUS'
+                           );
+  $values_update[] = array (
+                           'values' => "sort_order = '8'",
+                           'configuration_key' => 'DISPLAY_CONDITIONS_ON_CHECKOUT'
+                           );
+  $values_update[] = array (
+                           'values' => "sort_order = '9'",
+                           'configuration_key' => 'SIGN_CONDITIONS_ON_CHECKOUT'
+                           );
+  $values_update[] = array (
+                           'values' => "sort_order = '10'",
+                           'configuration_key' => 'SHOW_IP_LOG'
+                           );
+  $values_update[] = array (
+                           'values' => "sort_order = '11'",
+                           'configuration_key' => 'SAVE_IP_LOG'
+                           );
+  $values_update[] = array (
+                           'values' => "sort_order = '12'",
+                           'configuration_key' => 'DISPLAY_HEADQUARTER_ON_CHECKOUT'
+                           );
+  $values_update[] = array (
+                           'values' => "sort_order = '13'",
+                           'configuration_key' => 'GROUP_CHECK'
+                           );
+  $values_update[] = array (
+                           'values' => "sort_order = '14'",
+                           'configuration_key' => 'MODULE_SMALL_BUSINESS'
+                           );
+  $values_update[] = array (
+                           'values' => "sort_order = '15'",
+                           'configuration_key' => 'ACTIVATE_NAVIGATOR'
+                           );
+  $values_update[] = array (
+                           'values' => "sort_order = '16'",
+                           'configuration_key' => 'QUICKLINK_ACTIVATED'
+                           );
+  $values_update[] = array (
+                           'values' => "sort_order = '17'",
+                           'configuration_key' => 'ACTIVATE_REVERSE_CROSS_SELLING'
+                           );
+  $values_update[] = array (
+                           'values' => "sort_order = '18'",
+                           'configuration_key' => 'DISPLAY_PRIVACY_ON_CHECKOUT'
+                           );
+  $values_update[] = array (
+                           'values' => "sort_order = '19'",
+                           'configuration_key' => 'DISPLAY_REVOCATION_ON_CHECKOUT'
+                           );
+  $values_update[] = array (
+                           'values' => "sort_order = '20'",
+                           'configuration_key' => 'DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT'
+                           );
+  $values_update[] = array (
+                           'values' => "sort_order = '21'",
+                           'configuration_key' => 'REVOCATION_ID'
+                           );
+  $values_update[] = array (
+                           'values' => "sort_order = '22'",
+                           'configuration_key' => 'SHIPPING_STATUS_INFOS'
+                           );
+  $values_update[] = array (
+                           'values' => "sort_order = '23'",
+                           'configuration_key' => 'CHECK_FIRST_PAYMENT_MODUL'
+                           );
+  $values_update[] = array (
+                           'values' => "sort_order = '24'",
+                           'configuration_key' => 'INVOICE_INFOS'
+                           );
+  $values_update[] = array (
+                           'values' => "sort_order = '25'",
+                           'configuration_key' => 'MODULE_BANNER_MANAGER_STATUS'
+                           );
+  $values_update[] = array (
+                           'values' => "sort_order = '26'",
+                           'configuration_key' => 'MODULE_NEWSLETTER_STATUS'
+                           );
+  $values_update[] = array (
+                           'values' => "sort_order = '27'",
+                           'configuration_key' => 'MODULE_NEWSLETTER_VOUCHER_AMOUNT'
+                           );
+  $values_update[] = array (
+                           'values' => "sort_order = '28'",
+                           'configuration_key' => 'MODULE_NEWSLETTER_DISCOUNT_COUPON'
+                           );
 
 //configuration_group_id 18 --- "UST-ID"
 

@@ -466,7 +466,7 @@ define('SESSION_RECREATE_DESC' , 'Erneuern der Session und Zuweisung einer neuen
 define('DISPLAY_CONDITIONS_ON_CHECKOUT_TITLE' , 'Anzeigen der AGB');
 define('DISPLAY_CONDITIONS_ON_CHECKOUT_DESC' , 'Anzeigen der AGB beim Bestellvorgang.');
 define('SIGN_CONDITIONS_ON_CHECKOUT_TITLE' , 'Unterzeichnen der AGB');
-define('SIGN_CONDITIONS_ON_CHECKOUT_DESC' , 'Unterzeichnen der AGB beim Bestellvorgang.');
+define('SIGN_CONDITIONS_ON_CHECKOUT_DESC' , 'Unterzeichnen der AGB beim Bestellvorgang.<br/><b>Hinweis:</b> "Anzeigen der AGB" muss aktiv sein.');
 
 define('META_MIN_KEYWORD_LENGTH_TITLE' , 'Minimum L&auml;nge Meta-Keywords');
 define('META_MIN_KEYWORD_LENGTH_DESC' , 'Minimum L&auml;nge der automatisch erzeugten Meta-Keywords (Artikelbeschreibung)');
@@ -610,8 +610,8 @@ define('ADMIN_SEARCH_IN_ATTR_DESC','Aktivieren, um die Suche in den Produktattri
 // changes for 3.0.4 SP2
 define('REVOCATION_ID_TITLE','Widerrufsrecht');
 define('REVOCATION_ID_DESC','W&auml;hle den Content zur Anzeige des Widerrufsrechts.');
-define('DISPLAY_REVOCATION_ON_CHECKOUT_TITLE','Anzeige Widerrufsrecht?');
-define('DISPLAY_REVOCATION_ON_CHECKOUT_DESC','Widerrufsrecht auf checkout_confirmation anzeigen?<br/><b>Hinweis:</b> "Unterzeichnen der AGB" muss aktiv sein.');
+define('DISPLAY_REVOCATION_ON_CHECKOUT_TITLE','Anzeige Widerrufsrecht');
+define('DISPLAY_REVOCATION_ON_CHECKOUT_DESC','Widerrufsrecht auf checkout_confirmation anzeigen.<br/><b>Hinweis:</b> "Anzeigen der AGB" muss aktiv sein.');
 
 // BOF - Tomcraft - 2009-10-03 - Paypal Express Modul
 define('PAYPAL_MODE_TITLE','PayPal-Modus:');
