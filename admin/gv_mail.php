@@ -302,7 +302,7 @@
               ?>
               <table class="tableConfig borderall">
                 <tr>
-                  <td class="dataTableConfig col-left"><?php echo TEXT_CUSTOMER; ?></td>
+                  <td class="dataTableConfig col-left"><?php echo TEXT_CUSTOMER_GROUP; ?></td>
                   <td class="dataTableConfig col-single-right"><?php echo $mail_sent_to; ?></td>
                 </tr>
                 <tr>
@@ -359,7 +359,7 @@
               ?>
               <table class="tableConfig borderall">
                 <tr>
-                  <td class="dataTableConfig col-left"><?php echo TEXT_CUSTOMER; ?></td>
+                  <td class="dataTableConfig col-left"><?php echo TEXT_CUSTOMER_GROUP; ?></td>
                   <td class="dataTableConfig col-single-right"><?php echo xtc_draw_pull_down_menu('customers_email_address', $customers, $selected_customer);?></td>
                 </tr>
                  <tr>
