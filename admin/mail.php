@@ -54,14 +54,14 @@
               $where = "WHERE customers_email_address = '" . xtc_db_input($mail_sent_to) . "'";
               if (is_numeric($mail_sent_to)) {
                 $where = "WHERE customers_status = '" . (int)$mail_sent_to . "'";
+
+                $status = xtc_get_customers_statuses(true);
+                $mail_sent_to = $status[$mail_sent_to]['text'];
               }
               $mail_query = xtc_db_query("SELECT *
                                             FROM " . TABLE_CUSTOMERS . " 
                                                  " . $where . "
-                                        GROUP BY customers_email_address");
-              if (isset($_POST['email_to']) && $_POST['email_to'] != '') {
-                $mail_sent_to = $_POST['email_to'];
-              }
+                                        GROUP BY customers_email_address");      
               break;
           }
 
@@ -70,21 +70,21 @@
   
           if (xtc_db_num_rows($mail_query) > 0) {
             while ($mail = xtc_db_fetch_array($mail_query)) {
-              $mail['subject'] = $subject; 
-              $mail['message'] = $message; 
-      
-              send_gv_mail($data);
+              xtc_php_mail(EMAIL_SUPPORT_ADDRESS,
+                           EMAIL_SUPPORT_NAME,
+                           $mail['customers_email_address'] ,
+                           $mail['customers_firstname'] . ' ' . $mail['customers_lastname'] ,
+                           '',
+                           EMAIL_SUPPORT_REPLY_ADDRESS,
+                           EMAIL_SUPPORT_REPLY_ADDRESS_NAME,
+                           '',
+                           '',
+                           $subject,
+                           $message,
+                           $message);
             }
           }
-  
-          if (isset($_POST['email_to']) && $_POST['email_to'] != '') {
-            $mail['subject'] = $subject; 
-            $mail['message'] = $message; 
-            $mail['customers_email_address'] = $_POST['email_to'];
-  
-            send_gv_mail($data);
-          }
-  
+    
           $messageStack->add_session(sprintf(NOTICE_EMAIL_SENT_TO, $mail_sent_to), 'success');
           if (isset($_GET['cID']) && $_GET['cID'] != '') {
             xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array('action'))));
