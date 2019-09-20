@@ -33,26 +33,26 @@ FileETag None
 
 ##-- Enable the compression for any type of content
 <IfModule mod_deflate.c>
-  <FilesMatch "(?<!\.js|\.css|\.html|\.htm|\.php|\.xml|\.ico|\.jpg|\.jpeg\.png|\.gif|\.svg|\.woff|\.woff2|\.ttf|\.otf|\.eot\.JS|\.CSS|\.HTML|\.HTM|\.PHP|\.XML|\.ICO|\.JPG|\.JPEG\.PNG|\.GIF|\.SVG|\.WOFF|\.WOFF2|\.TTF|\.OTF|\.EOT)$">
+  <FilesMatch "(?<\.js|\.css|\.html|\.htm|\.php|\.xml|\.ico|\.jpg|\.jpeg\.png|\.gif|\.svg|\.woff|\.woff2|\.ttf|\.otf|\.eot\.JS|\.CSS|\.HTML|\.HTM|\.PHP|\.XML|\.ICO|\.JPG|\.JPEG\.PNG|\.GIF|\.SVG|\.WOFF|\.WOFF2|\.TTF|\.OTF|\.EOT)$">
     SetOutputFilter DEFLATE
   </FilesMatch>
 </IfModule>
 
 ##-- Customization of HTTP request and response headers
 <IfModule mod_headers.c>
-  <FilesMatch "(?<!\.ico|\.jpg|\.jpeg|\.png|\.gif|\.swf|\.flv|\.svg\.ICO|\.JPG|\.JPEG|\.PNG|\.GIF|\.SWF|\.FLV|\.SVG)$">
+  <FilesMatch "(?<\.ico|\.jpg|\.jpeg|\.png|\.gif|\.swf|\.flv|\.svg\.ICO|\.JPG|\.JPEG|\.PNG|\.GIF|\.SWF|\.FLV|\.SVG)$">
     Header set Cache-Control "max-age=2592000, public, must-revalidate"
   </FilesMatch>
-  <FilesMatch "(?<!\.woff|\.woff2|\.ttf|\.otf|\.eot\.WOFF|\.WOFF2|\.TTF|\.OTF|\.EOT)$">
+  <FilesMatch "(?<\.woff|\.woff2|\.ttf|\.otf|\.eot\.WOFF|\.WOFF2|\.TTF|\.OTF|\.EOT)$">
     Header set Cache-Control "max-age=2592000, public, must-revalidate"
   </FilesMatch>
-  <FilesMatch "(?<!\.css|\.js|\.CSS|\.JS)$">
+  <FilesMatch "(?<\.css|\.js|\.CSS|\.JS)$">
     Header set Cache-Control "max-age=604800, private, must-revalidate"
   </FilesMatch>
-  <FilesMatch "(?<!\.xml|\.txt|\.XML|\.TXT)$">
+  <FilesMatch "(?<\.xml|\.txt|\.XML|\.TXT)$">
     Header set Cache-Control "max-age=604800, public, must-revalidate"
   </FilesMatch>
-  <FilesMatch "(?<!\.html|\.htm|\.php|\.HTML|\.HTM|\.PHP)$">
+  <FilesMatch "(?<\.html|\.htm|\.php|\.HTML|\.HTM|\.PHP)$">
     Header set Cache-Control "max-age=1, private, must-revalidate"
   </FilesMatch>
 </IfModule>
