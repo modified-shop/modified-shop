@@ -240,7 +240,11 @@ class PayPalPayment extends PayPalPaymentBase {
         $redirectUrls->setReturnUrl($this->link_encoding(xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'conditions=true&&pp_conditions=true&'.xtc_session_name().'='.xtc_session_id(), 'SSL')));
       }
     }
-
+    
+    if ($this->amount->getTotal() == 0) {
+      return;
+    }
+    
     // set ItemList
     if ($this->get_config('PAYPAL_ADD_CART_DETAILS') == '0'
         || $this->check_discount() === true
