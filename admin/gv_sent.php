@@ -86,7 +86,7 @@ require (DIR_WS_INCLUDES.'head.php');
                                  FROM " . TABLE_COUPONS . " c
                                  JOIN " . TABLE_COUPON_EMAIL_TRACK . " et 
                                       ON c.coupon_id = et.coupon_id
-                             ORDER BY c.coupon_id";
+                             ORDER BY c.coupon_id DESC";
                              
               $gv_split = new splitPageResults($_GET['page'], $page_max_display_results, $gv_query_raw, $gv_query_numrows);
               $gv_query = xtc_db_query($gv_query_raw);
