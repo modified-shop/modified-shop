@@ -106,9 +106,9 @@
   if (isset($_GET['action']) && $_GET['action'] != '') {
     switch ($_GET['action']) {
       case 'send_email_to_user':
-        if (isset($_POST['customers_email_address']) 
-            && $_POST['customers_email_address'] != ''
-            && !isset($_POST['back'])
+        if (((isset($_POST['customers_email_address']) && $_POST['customers_email_address'] != '')
+             || (isset($_POST['email_to']) && $_POST['email_to'] != '')
+             ) && !isset($_POST['back'])
             )
         {
           switch ($_POST['customers_email_address']) {
@@ -126,10 +126,15 @@
               break;
             default:
               $mail_sent_to = xtc_db_prepare_input($_POST['customers_email_address']);
-              $mail_query = xtc_db_query("SELECT *
-                                            FROM " . TABLE_CUSTOMERS . " 
-                                           WHERE customers_email_address = '" . xtc_db_input($mail_sent_to) . "'
-                                        GROUP BY customers_email_address");
+              if ($mail_sent_to != '') {
+                $mail_query = xtc_db_query("SELECT *
+                                              FROM " . TABLE_CUSTOMERS . " 
+                                             WHERE customers_status = '" . (int)$mail_sent_to . "'
+                                          GROUP BY customers_email_address");
+                                                          
+                $customers_status = xtc_get_customers_statuses(true);
+                $mail_sent_to = $customers_status[$mail_sent_to]['text'];
+              }
               if (isset($_POST['email_to']) && $_POST['email_to'] != '') {
                 $mail_sent_to = $_POST['email_to'];
               }
@@ -140,7 +145,11 @@
           $message = xtc_db_prepare_input($_POST['message']);
           $coupon_amount = xtc_db_prepare_input($_POST['coupon_amount']);
   
-          if (xtc_db_num_rows($mail_query) > 0) {
+          if (isset($mail_query) 
+              && is_object($mail_query)
+              && xtc_db_num_rows($mail_query) > 0
+              )
+          {
             while ($mail = xtc_db_fetch_array($mail_query)) {
               $mail['subject'] = $subject; 
               $mail['message'] = $message; 
@@ -170,7 +179,10 @@
         break;
       
       case 'preview':
-        if (!isset($_POST['customers_email_address']) || $_POST['customers_email_address'] == '') {
+        if ((!isset($_POST['customers_email_address']) || $_POST['customers_email_address'] == '')
+            && (!isset($_POST['email_to']) || $_POST['email_to'] == '')
+            )
+        {
           $messageStack->add(ERROR_NO_CUSTOMER_SELECTED, 'error');
           $error = true;
         }
@@ -227,8 +239,11 @@
                 break;
               default:
                 $mail_sent_to = $_POST['customers_email_address'];
-                if (isset($_POST['email_to'])) {
+                if (isset($_POST['email_to']) && $_POST['email_to'] != '') {
                   $mail_sent_to = $_POST['email_to'];
+                } else {
+                  $customers_status = xtc_get_customers_statuses(true);
+                  $mail_sent_to = $customers_status[$mail_sent_to]['text'];
                 }
                 break;
             }  
