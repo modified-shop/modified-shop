@@ -19,6 +19,8 @@ if (!function_exists('smarty_mb_str_replace')) {
      */
     function smarty_mb_str_replace($search, $replace, $subject, &$count = 0)
     {
+        $subject = encode_utf8($subject, '', true);
+        
         if (!is_array($search) && is_array($replace)) {
             return false;
         }
