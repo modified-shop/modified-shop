@@ -37,12 +37,20 @@
           </td>
         </tr>
       </table>
-      {if $PRIVACY_CHECKBOX}
+      {if isset($smarty.const.SIGN_CONDITIONS_ON_CHECKOUT)}
         <br />
         <div class="cus_check cus_check_small cus_mb_10">
-          {$PRIVACY_CHECKBOX}
+          {if $PRIVACY_CHECKBOX}{$PRIVACY_CHECKBOX}{/if}
           <label for="privacy"><strong>{#text_privacy_accept#}</strong> {$PRIVACY_LINK}</label>
         </div>
+      {else}
+        {if $PRIVACY_CHECKBOX}
+          <br />
+          <div class="cus_check cus_check_small cus_mb_10">
+            {$PRIVACY_CHECKBOX}
+            <label for="privacy"><strong>{#text_privacy_accept#}</strong> {$PRIVACY_LINK}</label>
+          </div>
+        {/if}
       {/if}
       <div class="button_right cf"><div class="cssButtonPos4">{$BUTTON_SEND}</div></div>
     </div>
