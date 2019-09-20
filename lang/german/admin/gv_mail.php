@@ -34,7 +34,7 @@ define('TEXT_TO', 'E-Mail an:');
 define('TEXT_AMOUNT', 'Wert:');
 define('TEXT_MESSAGE', 'Nachricht:');
 define('TEXT_SINGLE_EMAIL', '<span class="smallText">Benutzen Sie dieses Feld nur f&uuml;r einzelne E-Mails, ansonsten bitte das Feld Kunde benutzen</span>');
-define('TEXT_SELECT_CUSTOMER', 'Kunde ausw&auml;hlen');
+define('TEXT_SELECT_CUSTOMER_GROUP', 'Kundegruppe ausw&auml;hlen');
 define('TEXT_ALL_CUSTOMERS', 'Alle Kunden');
 define('TEXT_NEWSLETTER_CUSTOMERS', 'An alle Newsletter-Abonnenten');
 

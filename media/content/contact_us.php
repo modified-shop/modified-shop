@@ -78,10 +78,10 @@
       $error = true;
     }
 
-    if (DISPLAY_PRIVACY_CHECK == 'true' && empty($privacy)) {
+    //if (DISPLAY_PRIVACY_CHECK == 'true' && empty($privacy)) {
       $messageStack->add('contact_us', ENTRY_PRIVACY_ERROR);
       $error = true;
-    }
+    //}
 
     if (check_secure_form($_POST) === false) {
       $messageStack->add('contact_us', ENTRY_TOKEN_ERROR);
@@ -214,10 +214,10 @@
       $smarty->assign('VVIMG', $mod_captcha->get_image_code());
       $smarty->assign('INPUT_CODE', $mod_captcha->get_input_code());
     }
-    if (DISPLAY_PRIVACY_CHECK == 'true') {
+    //if (DISPLAY_PRIVACY_CHECK == 'true') {
       $smarty->assign('PRIVACY_CHECKBOX', xtc_draw_checkbox_field('privacy', 'privacy', $privacy, 'id="privacy"'));
-      $smarty->assign('PRIVACY_LINK', $main->getContentLink(2, MORE_INFO, $request_type));
-    }
+    //}
+    $smarty->assign('PRIVACY_LINK', $main->getContentLink(2, MORE_INFO, $request_type));
     $smarty->assign('INPUT_NAME', xtc_draw_input_field('name', ((isset($name)) ? $name : ''), 'size="30"'));
     $smarty->assign('INPUT_EMAIL', xtc_draw_input_field('email', ((isset($email)) ? $email : ''), 'size="30"'));
     $smarty->assign('INPUT_PHONE', xtc_draw_input_field('phone', ((isset($phone)) ? $phone : ''), 'size="30"'));

@@ -31,8 +31,13 @@
     <div class="checkoutagb">{$AGB}</div>
     <table width="100%" border="0" cellspacing="0" cellpadding="4">
       <tr>
+      {if isset($smarty.const.SIGN_CONDITIONS_ON_CHECKOUT)}
+        {if $smarty.const.SIGN_CONDITIONS_ON_CHECKOUT == 'true'}<td>{$AGB_checkbox}</td>{/if}
+        <td width="100%"{if $smarty.const.SIGN_CONDITIONS_ON_CHECKOUT == 'false'} colspan="2"{/if}><strong><label for="conditions">{#text_accept_agb#}</label></strong>&nbsp;{$AGB_LINK}</td>
+      {else}
         <td>{$AGB_checkbox}</td>
         <td width="100%"><strong><label for="conditions">{#text_accept_agb#}</label></strong>&nbsp;{$AGB_LINK}</td>
+      {/if}
       </tr>
       {if isset($PRIVACY_checkbox)}
       <tr>

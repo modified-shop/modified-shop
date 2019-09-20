@@ -1,10 +1,11 @@
 <p><font size="2" face="Verdana, Arial, Helvetica, sans-serif"><b>Vielen Dank f&uuml;r die Anmeldung zu unserem Newsletter.</b></p>
 {if isset($LINK)}
-<p>Sie erhalten diese E-Mail, weil Sie unseren Newsletter empfangen mo&uml;chten.
-Bitte klicken Sie auf den Aktivierungslink, damit Ihre E-Mail-Adresse f&uuml;r den Newsletterempfang freigeschaltet wird.
-Sollten Sie sich nicht f&uuml;r unseren Newsletter eingetragen haben bzw. den Empfang des Newsletters nicht w&uuml;nschen, bitten wir Sie, den Aktivierungslink einfach zu ignorieren.</p>
+<p>Sie erhalten diese E-Mail, weil Sie unseren Newsletter empfangen m&ouml;chten.</p>
+<p>Bitte klicken Sie auf den Aktivierungslink, damit Ihre E-Mail-Adresse f&uuml;r den Newsletterempfang freigeschaltet wird.</p>
 <p><b>Ihr Aktivierungslink:</b></p>
 <p><a href="{$LINK}">{$LINK}</a></p>
+<p>Sollten Sie sich nicht f&uuml;r unseren Newsletter eingetragen haben bzw. den Empfang des Newsletters nicht w&uuml;nschen, bitten wir Sie, den Aktivierungslink einfach zu ignorieren.</p>
+<p>Ihre Einwilligung in den Versand unseres Newsletters ist jederzeit widerruflich. Der Newsletter-Versand erfolgt entsprechend unserer Datenschutzerkl&auml;rung.</p>
 {/if}
 {if $SEND_GIFT == true}
 <br />
@@ -22,4 +23,5 @@ Kuponbeschreibung: <b>{$COUPON_DESC}</b><br />
 <br />
 Geben Sie einfach Ihren pers&ouml;nlichen Code {$COUPON_CODE} w&auml;hrend des Bezahlvorganges ein.<br />
 {/if}
+
 [SIGNATUR]

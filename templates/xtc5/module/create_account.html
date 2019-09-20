@@ -142,13 +142,22 @@
   {/if}
 </table>
 </div>
-{if $PRIVACY_CHECKBOX}
-<table width="100%" border="0" cellspacing="0" cellpadding="4">
-  <tr>
-    <td>{$PRIVACY_CHECKBOX}</td>
-    <td width="100%"><strong>{#text_privacy_accept#}</strong> {$PRIVACY_LINK}</td>
-  </tr>
-</table>
+{if isset($smarty.const.SIGN_CONDITIONS_ON_CHECKOUT)}
+  <table width="100%" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+      {if $PRIVACY_CHECKBOX}<td>{$PRIVACY_CHECKBOX}</td>{/if}
+      <td width="100%"><strong>{#text_privacy_accept#}</strong> {$PRIVACY_LINK}</td>
+    </tr>
+  </table>
+{else}
+  {if $PRIVACY_CHECKBOX}
+  <table width="100%" border="0" cellspacing="0" cellpadding="4">
+    <tr>
+      <td>{$PRIVACY_CHECKBOX}</td>
+      <td width="100%"><strong>{#text_privacy_accept#}</strong> {$PRIVACY_LINK}</td>
+    </tr>
+  </table>
+  {/if}
 {/if}
 <p>{$BUTTON_SUBMIT}</p>
 <p>{#text_must#}</p>
