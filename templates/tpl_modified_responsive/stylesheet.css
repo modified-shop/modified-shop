@@ -2973,21 +2973,36 @@ ul.ord_total_list li {
 .pd_content {
   float:right;
   width:66%;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
 }
 .pd_infobox {
-  float:left;
-  width:40%;
+  order:1;
+  width:44%;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 0 20px 0 0;
   margin-bottom:20px;
 }
 .pd_summarybox {
-  float:right;
-  background-color: #f5f5f5;
+  order:2;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  width:56%;
+  margin-bottom:20px;
+}
+.pd_summarybox_inner {
+   background-color: #F2F2F2;
+  border: 1px solid #E6E6E6;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
   padding:5px;
-  width:56%;
-  margin-bottom:20px;
 }
 .pd_big_image {
   position:relative;

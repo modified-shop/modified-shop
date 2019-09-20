@@ -19,6 +19,72 @@
     {/if}
 
     <div class="pd_content">
+      <div class="pd_summarybox" itemprop="offers" itemscope itemtype="http://schema.org/Offer"> 
+        <div class="pd_summarybox_inner cf">
+          <meta itemprop="url" content="{$PRODUCTS_LINK}" />
+          <meta itemprop="priceCurrency" content="{$smarty.session.currency}" />
+          {if $PRODUCTS_EXPIRES_C}<meta itemprop="priceValidUntil" content="{$PRODUCTS_EXPIRES_C}" />{/if}
+          {if $PRODUCTS_QUANTITY <= 0 && $smarty.const.STOCK_CHECK == 'true'}<meta itemprop="availability" content="http://schema.org/OutOfStock" />{else}<meta itemprop="availability" content="http://schema.org/InStock" />{/if}
+          {if $PRODUCTS_MANUFACTURERS_MODEL != ''}<meta itemprop="mpn" content="{$PRODUCTS_MANUFACTURERS_MODEL}" />{/if}
+          <meta itemprop="itemCondition" content="http://schema.org/NewCondition" />
+  
+          <div class="pd_price{if $PRODUCTS_FSK18 == 'true'} pd_fsk_padding{/if}">
+            {if $PRODUCTS_FSK18 == 'true'}<div class="pd_fsk18"></div>{/if}
+            <div id="pd_puprice">
+              {foreach name=inner item=price_data from=$PRODUCTS_PRICE_ARRAY}
+                {include file="module/includes/price_info.html"}
+              {/foreach}
+            </div>
+          </div>
+          {if $PRODUCTS_PRICE_ARRAY.0.PRODUCTS_PRICE_FLAG != 'NotAllowed'}
+            {if $PRODUCTS_VPE}<div class="pd_vpe">{$PRODUCTS_VPE}</div>{/if}
+            <div class="pd_tax{if $PRODUCTS_FSK18 == 'true'} pd_fsk_padding{/if}">{$PRODUCTS_TAX_INFO}{if $PRODUCTS_SHIPPING_LINK}{$PRODUCTS_SHIPPING_LINK}{/if}</div>
+          {/if}
+          {if isset($MODULE_graduated_price) && $MODULE_graduated_price != ''}{$MODULE_graduated_price}{/if}
+          {if isset($MODULE_product_options) && $MODULE_product_options != ''}
+            {if $MODULE_product_options_template == 'multi_options_1.html' || $MODULE_product_options_template|strpos:"dropdown" !== false}
+              {$MODULE_product_options}
+            {/if}
+          {/if}
+        
+          {if $ADD_CART_BUTTON != ''}
+          <div class="addtobasket cf">
+            <span class="addtobasket_input">{$ADD_QTY}</span>
+            <span class="addtobasket_actions cf">
+              <span class="cssButtonPos10">{$ADD_CART_BUTTON}</span>
+              {if isset($ADD_CART_BUTTON_EXPRESS)}
+                <span class="cssButtonPos10">{$ADD_CART_BUTTON_EXPRESS}</span>
+              {elseif $ACTIVATE_EXPRESS_LINK}
+                <span class="express_info"><a href="{$ACTIVATE_EXPRESS_LINK}">{#checkout_express_activate#}</a></span>
+              {/if}
+              {if $ADD_CART_BUTTON_PAYPAL}
+                <span class="cssButtonPos10">{$ADD_CART_BUTTON_PAYPAL}</span>
+              {/if}
+              {*
+              {if $ADD_CART_BUTTON_WISHLIST}
+              <br class="clearfix" />
+              <span class="cssButtonPos10">{$ADD_CART_BUTTON_WISHLIST}</span>
+              {/if}
+              *}
+            </span>
+          </div>
+          {/if}
+        
+          {if $PAYPAL_INSTALLMENT}
+            <br class="clearfix" />
+            {$PAYPAL_INSTALLMENT}
+          {/if}
+  
+          {if $EASYCREDIT}
+            <br class="clearfix" />
+            {$EASYCREDIT}
+          {/if}
+  
+          {if $ADD_CART_BUTTON == '' && $PRODUCTS_FSK18 == 'true'}<div class="pd_inforow_message">{#products_fsk18_check#}</div>{/if}
+          {if $ADD_CART_BUTTON == '' && $PRODUCTS_GIFT_FORBIDDEN == 'true'}<div class="pd_inforow_message">{#products_gift_forbidden#}</div>{/if}
+          {if isset($PRODUCTS_DATE_AVAILABLE) && $PRODUCTS_DATE_AVAILABLE != ''}<div class="pd_inforow_message">{$PRODUCTS_DATE_AVAILABLE}</div>{/if}
+        </div>
+      </div>
       <div class="pd_infobox">
         <div class="pd_inforow_first"></div>
         {if $SHIPPING_NAME}<div class="pd_inforow"><strong>{#text_shippingtime#}</strong> {if $SHIPPING_IMAGE}<img class="pd_shipping_image" src="{$SHIPPING_IMAGE}" alt="{$SHIPPING_NAME}" />{/if} {$SHIPPING_NAME_LINK}</div>{/if}
@@ -59,72 +125,6 @@
           {if $ADD_CART_BUTTON_WISHLIST_TEXT}<li class="wishlist">{$ADD_CART_BUTTON_WISHLIST_TEXT}</li>{/if}
         </ul>
         {if isset($KLARNA_PPBOX)}{$KLARNA_PPBOX}{/if}
-      </div>
-
-      <div class="pd_summarybox" itemprop="offers" itemscope itemtype="http://schema.org/Offer"> 
-        <meta itemprop="url" content="{$PRODUCTS_LINK}" />
-        <meta itemprop="priceCurrency" content="{$smarty.session.currency}" />
-        {if $PRODUCTS_EXPIRES_C}<meta itemprop="priceValidUntil" content="{$PRODUCTS_EXPIRES_C}" />{/if}
-        {if $PRODUCTS_QUANTITY <= 0 && $smarty.const.STOCK_CHECK == 'true'}<meta itemprop="availability" content="http://schema.org/OutOfStock" />{else}<meta itemprop="availability" content="http://schema.org/InStock" />{/if}
-        {if $PRODUCTS_MANUFACTURERS_MODEL != ''}<meta itemprop="mpn" content="{$PRODUCTS_MANUFACTURERS_MODEL}" />{/if}
-        <meta itemprop="itemCondition" content="http://schema.org/NewCondition" />
-
-        <div class="pd_price{if $PRODUCTS_FSK18 == 'true'} pd_fsk_padding{/if}">
-          {if $PRODUCTS_FSK18 == 'true'}<div class="pd_fsk18"></div>{/if}
-          <div id="pd_puprice">
-            {foreach name=inner item=price_data from=$PRODUCTS_PRICE_ARRAY}
-              {include file="module/includes/price_info.html"}
-            {/foreach}
-          </div>
-        </div>
-        {if $PRODUCTS_PRICE_ARRAY.0.PRODUCTS_PRICE_FLAG != 'NotAllowed'}
-          {if $PRODUCTS_VPE}<div class="pd_vpe">{$PRODUCTS_VPE}</div>{/if}
-          <div class="pd_tax{if $PRODUCTS_FSK18 == 'true'} pd_fsk_padding{/if}">{$PRODUCTS_TAX_INFO}{if $PRODUCTS_SHIPPING_LINK}{$PRODUCTS_SHIPPING_LINK}{/if}</div>
-        {/if}
-        {if isset($MODULE_graduated_price) && $MODULE_graduated_price != ''}{$MODULE_graduated_price}{/if}
-        {if isset($MODULE_product_options) && $MODULE_product_options != ''}
-          {if $MODULE_product_options_template == 'multi_options_1.html' || $MODULE_product_options_template|strpos:"dropdown" !== false}
-            {$MODULE_product_options}
-          {/if}
-        {/if}
-      
-        {if $ADD_CART_BUTTON != ''}
-        <div class="addtobasket cf">
-          <span class="addtobasket_input">{$ADD_QTY}</span>
-          <span class="addtobasket_actions cf">
-            <span class="cssButtonPos10">{$ADD_CART_BUTTON}</span>
-            {if isset($ADD_CART_BUTTON_EXPRESS)}
-              <span class="cssButtonPos10">{$ADD_CART_BUTTON_EXPRESS}</span>
-            {elseif $ACTIVATE_EXPRESS_LINK}
-              <span class="express_info"><a href="{$ACTIVATE_EXPRESS_LINK}">{#checkout_express_activate#}</a></span>
-            {/if}
-            {if $ADD_CART_BUTTON_PAYPAL}
-              <span class="cssButtonPos10">{$ADD_CART_BUTTON_PAYPAL}</span>
-            {/if}
-            {*
-            {if $ADD_CART_BUTTON_WISHLIST}
-            <br class="clearfix" />
-            <span class="cssButtonPos10">{$ADD_CART_BUTTON_WISHLIST}</span>
-            {/if}
-            *}
-          </span>
-        </div>
-        {/if}
-      
-        {if $PAYPAL_INSTALLMENT}
-          <br class="clearfix" />
-          {$PAYPAL_INSTALLMENT}
-        {/if}
-
-        {if $EASYCREDIT}
-          <br class="clearfix" />
-          {$EASYCREDIT}
-        {/if}
-
-        {if $ADD_CART_BUTTON == '' && $PRODUCTS_FSK18 == 'true'}<div class="pd_inforow_message">{#products_fsk18_check#}</div>{/if}
-        {if $ADD_CART_BUTTON == '' && $PRODUCTS_GIFT_FORBIDDEN == 'true'}<div class="pd_inforow_message">{#products_gift_forbidden#}</div>{/if}
-        {if isset($PRODUCTS_DATE_AVAILABLE) && $PRODUCTS_DATE_AVAILABLE != ''}<div class="pd_inforow_message">{$PRODUCTS_DATE_AVAILABLE}</div>{/if}
-
       </div>
       <br class="clearfix" />
       {if isset($MODULE_product_options) && $MODULE_product_options != ''}
