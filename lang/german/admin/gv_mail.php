@@ -26,6 +26,7 @@
    ---------------------------------------------------------------------------------------*/
 
 define('HEADING_TITLE', 'Gutschein an Kunden versenden');
+define('HEADING_COUPON_TITLE', 'Coupon an Kunden versenden');
 
 define('TEXT_CUSTOMER', 'Kunde:');
 define('TEXT_SUBJECT', 'Betreff:');
