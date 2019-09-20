@@ -131,8 +131,9 @@ $smarty->assign('BUTTON_SEND', xtc_image_submit('button_send.gif', IMAGE_BUTTON_
 $smarty->assign('FORM_END', '</form>');
 if (DISPLAY_PRIVACY_CHECK == 'true') {
   $smarty->assign('PRIVACY_CHECKBOX', xtc_draw_checkbox_field('privacy', 'privacy', $privacy, 'id="privacy"'));
+  $smarty->assign('PRIVACY_LINK', $main->getContentLink(2, MORE_INFO, $request_type));
 }
-$smarty->assign('PRIVACY_LINK', $main->getContentLink(2, MORE_INFO, $request_type));
+
 $smarty->assign('language', $_SESSION['language']);
 $smarty->caching = 0;
 $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/newsletter.html');

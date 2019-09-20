@@ -73,11 +73,7 @@
       </div>
       <div class="checkoutconditions">
         <div class="cus_check cus_check_small">
-        {if isset($smarty.const.SIGN_CONDITIONS_ON_CHECKOUT)}
-          {if $smarty.const.SIGN_CONDITIONS_ON_CHECKOUT == 'true'}{$AGB_checkbox}{/if}<label for="conditions"><strong>{#text_accept_agb#}</strong>&nbsp;{$AGB_LINK}</label>
-        {else}
           {$AGB_checkbox}<label for="conditions"><strong>{#text_accept_agb#}</strong>&nbsp;{$AGB_LINK}</label>
-        {/if}
         </div>
       </div>
       {if isset($PRIVACY_checkbox)}

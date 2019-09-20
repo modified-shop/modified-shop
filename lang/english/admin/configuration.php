@@ -465,9 +465,7 @@ define('SESSION_RECREATE_TITLE' , 'Recreate Session');
 define('SESSION_RECREATE_DESC' , 'Recreate the session to generate a new session ID when a customer logs on or creates an account (PHP >=4.1 needed). (Default &quot;false&quot;)'.SESSION_WARNING);
 
 define('DISPLAY_CONDITIONS_ON_CHECKOUT_TITLE' , 'Display Conditions on Checkout');
-define('DISPLAY_CONDITIONS_ON_CHECKOUT_DESC' , 'Display terms and conditions on checkout');
-define('SIGN_CONDITIONS_ON_CHECKOUT_TITLE' , 'Sign Conditions on Checkout');
-define('SIGN_CONDITIONS_ON_CHECKOUT_DESC' , 'Request approval of terms and conditions and on checkout');
+define('DISPLAY_CONDITIONS_ON_CHECKOUT_DESC' , 'Display terms and conditions and request approval on checkout');
 
 define('META_MIN_KEYWORD_LENGTH_TITLE' , 'Min. Meta-Keyword Length');
 define('META_MIN_KEYWORD_LENGTH_DESC' , 'min. length of a single keyword (generated from products description)');
@@ -612,7 +610,7 @@ define('ADMIN_SEARCH_IN_ATTR_DESC','Include products attributes when searching')
 define('REVOCATION_ID_TITLE','Revocation');
 define('REVOCATION_ID_DESC','Select content to display revocation');
 define('DISPLAY_REVOCATION_ON_CHECKOUT_TITLE','Display right of revocation?');
-define('DISPLAY_REVOCATION_ON_CHECKOUT_DESC','Display right of revocation on checkout_confirmation?<br/><b>Attention:</b> "Sign Conditions on Checkout" must be enabled.');
+define('DISPLAY_REVOCATION_ON_CHECKOUT_DESC','Display right of revocation on checkout_confirmation?<br/><b>Attention:</b>Display Conditions on Checkout must be enabled.');
 
 // BOF - Tomcraft - 2009-10-03 - Paypal Express Modul
 define('PAYPAL_MODE_TITLE','PayPal Mode:');
@@ -1012,7 +1010,7 @@ define('CHECK_CHEAPEST_SHIPPING_MODUL_TITLE', 'Preselect cheapest shipping metho
 define('CHECK_CHEAPEST_SHIPPING_MODUL_DESC', 'Shall the cheapest shipping method be preselected in checkout for the customer?');
 
 define('DISPLAY_PRIVACY_CHECK_TITLE', 'Show privacy checkbox');
-define('DISPLAY_PRIVACY_CHECK_DESC', 'Shall the privacy checkbox be displayed during account creation?)');
+define('DISPLAY_PRIVACY_CHECK_DESC', 'Shall the privacy checkbox be displayed during account creation? (Obligation for B2C businesses)');
 
 define('SHOW_SELFPICKUP_FREE_TITLE', 'Shipping module "Self Pickup" on "free shipping"');
 define('SHOW_SELFPICKUP_FREE_DESC', 'Shall the shipping module "Self Pickup (selfpickup)" be displayed upon reaching the amount for "free shipping" in module "Shipping (ot_shipping)"?');

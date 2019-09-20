@@ -463,10 +463,8 @@ define('SESSION_CHECK_IP_ADDRESS_DESC' , '&Uuml;berpr&uuml;fen der IP-Adresse de
 define('SESSION_RECREATE_TITLE' , 'Session erneuern');
 define('SESSION_RECREATE_DESC' , 'Erneuern der Session und Zuweisung einer neuen Session-ID sobald sich ein Benutzer einloggt oder registriert (PHP >=4.1 needed). (Standard &quot;false&quot;)'.SESSION_WARNING);
 
-define('DISPLAY_CONDITIONS_ON_CHECKOUT_TITLE' , 'Anzeigen der AGB');
-define('DISPLAY_CONDITIONS_ON_CHECKOUT_DESC' , 'Anzeigen der AGB beim Bestellvorgang.');
-define('SIGN_CONDITIONS_ON_CHECKOUT_TITLE' , 'Unterzeichnen der AGB');
-define('SIGN_CONDITIONS_ON_CHECKOUT_DESC' , 'Unterzeichnen der AGB beim Bestellvorgang.');
+define('DISPLAY_CONDITIONS_ON_CHECKOUT_TITLE' , 'Unterzeichnen der AGB');
+define('DISPLAY_CONDITIONS_ON_CHECKOUT_DESC' , 'Anzeigen und Unterzeichnen der AGB beim Bestellvorgang.');
 
 define('META_MIN_KEYWORD_LENGTH_TITLE' , 'Minimum L&auml;nge Meta-Keywords');
 define('META_MIN_KEYWORD_LENGTH_DESC' , 'Minimum L&auml;nge der automatisch erzeugten Meta-Keywords (Artikelbeschreibung)');
@@ -611,7 +609,7 @@ define('ADMIN_SEARCH_IN_ATTR_DESC','Aktivieren, um die Suche in den Produktattri
 define('REVOCATION_ID_TITLE','Widerrufsrecht');
 define('REVOCATION_ID_DESC','W&auml;hle den Content zur Anzeige des Widerrufsrechts.');
 define('DISPLAY_REVOCATION_ON_CHECKOUT_TITLE','Anzeige Widerrufsrecht?');
-define('DISPLAY_REVOCATION_ON_CHECKOUT_DESC','Widerrufsrecht auf checkout_confirmation anzeigen?<br/><b>Hinweis:</b> "Unterzeichnen der AGB" muss aktiv sein.');
+define('DISPLAY_REVOCATION_ON_CHECKOUT_DESC','Widerrufsrecht auf checkout_confirmation anzeigen?<br/><b>Hinweis:</b> Anzeigen und Unterzeichnen der AGB muss aktiv sein.');
 
 // BOF - Tomcraft - 2009-10-03 - Paypal Express Modul
 define('PAYPAL_MODE_TITLE','PayPal-Modus:');
@@ -1004,7 +1002,7 @@ define('CHECK_CHEAPEST_SHIPPING_MODUL_TITLE', 'G&uuml;nstigste Versandart voraus
 define('CHECK_CHEAPEST_SHIPPING_MODUL_DESC', 'Soll im Checkout die kosteng&uuml;nstigste Versandart f&uuml;r den Kunden vorausgew&auml;hlt werden?');
 
 define('DISPLAY_PRIVACY_CHECK_TITLE', 'Privatsph&auml;re Checkbox anzeigen');
-define('DISPLAY_PRIVACY_CHECK_DESC', 'Soll w&auml;hrend der Konto-Erstellung die Privatsph&auml;re-Checkbox angezeigt werden?');
+define('DISPLAY_PRIVACY_CHECK_DESC', 'Soll w&auml;hrend der Konto-Erstellung die Privatsph&auml;re-Checkbox angezeigt werden? (Bei B2C-Gesch&auml;ften Pflicht!)');
 
 define('SHOW_SELFPICKUP_FREE_TITLE', 'Versandmodul "Selbstabholung" bei "versandkostenfrei"');
 define('SHOW_SELFPICKUP_FREE_DESC', 'Soll das Versandmodul "Selbstabholung (selfpickup)" bei Erreichen des im Modul "Versandkosten (ot_shiping)" eingestellten Betrages f&uuml;r "versandkostenfrei" angezeigt werden?');
