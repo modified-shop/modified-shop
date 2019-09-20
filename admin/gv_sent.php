@@ -1,6 +1,6 @@
 <?php
    /* -----------------------------------------------------------------------------------------
-   $Id: gv_sent.php 899 2005-04-29 02:40:57Z hhgag $
+   $Id$
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -75,7 +75,19 @@ require (DIR_WS_INCLUDES.'head.php');
                 <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
               <?php
-              $gv_query_raw = "select c.coupon_amount, c.coupon_code, c.coupon_id, et.sent_firstname, et.sent_lastname, et.customer_id_sent, et.emailed_to, et.date_sent, c.coupon_id from " . TABLE_COUPONS . " c, " . TABLE_COUPON_EMAIL_TRACK . " et where c.coupon_id = et.coupon_id";
+              $gv_query_raw = "SELECT c.coupon_amount, 
+                                      c.coupon_code, 
+                                      c.coupon_id, 
+                                      et.sent_firstname, 
+                                      et.sent_lastname, 
+                                      et.customer_id_sent, 
+                                      et.emailed_to, 
+                                      et.date_sent
+                                 FROM " . TABLE_COUPONS . " c
+                                 JOIN " . TABLE_COUPON_EMAIL_TRACK . " et 
+                                      ON c.coupon_id = et.coupon_id
+                             ORDER BY c.coupon_id";
+                             
               $gv_split = new splitPageResults($_GET['page'], $page_max_display_results, $gv_query_raw, $gv_query_numrows);
               $gv_query = xtc_db_query($gv_query_raw);
               while ($gv_list = xtc_db_fetch_array($gv_query)) {
