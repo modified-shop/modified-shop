@@ -322,7 +322,6 @@ $values_group_update = array();
   $values[] = "(NULL, 'MODULE_NEWSLETTER_VOUCHER_AMOUNT', '0', '17', '20', NULL, NOW(), NULL, NULL);";
   $values[] = "(NULL, 'MODULE_NEWSLETTER_DISCOUNT_COUPON', '', '17', '21', NULL, NOW(), NULL, NULL);";
   $values[] = "(NULL, 'DISPLAY_HEADQUARTER_ON_CHECKOUT', 'true', '17', '8', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
-  $values[] = "(NULL, 'SIGN_CONDITIONS_ON_CHECKOUT', 'false', '17', '7', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
 
   $values_update[] = array (
                            'values' => "set_function = 'xtc_cfg_select_content(\'REVOCATION_ID\','",

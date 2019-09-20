@@ -43,24 +43,14 @@
         <td>{$BUTTON_SEND}</td>
       </tr>
     </table>
-    {if isset($smarty.const.SIGN_CONDITIONS_ON_CHECKOUT)}
-      <br />
-      <table>
-        <tr>
-          {if $PRIVACY_CHECKBOX}<td class="checkbox">{$PRIVACY_CHECKBOX}</td>{/if}
-          <td class="midi td_full"><strong><label for="privacy">{#text_privacy_accept#}</label></strong> {$PRIVACY_LINK}</td>
-        </tr>
-      </table>
-    {else}
-      {if $PRIVACY_CHECKBOX}
-      <br />
-      <table>
-        <tr>
-          <td class="checkbox">{$PRIVACY_CHECKBOX}</td>
-          <td class="midi td_full"><strong><label for="privacy">{#text_privacy_accept#}</label></strong> {$PRIVACY_LINK}</td>
-        </tr>
-      </table>
-      {/if}
+    {if $PRIVACY_CHECKBOX}
+    <br />
+    <table>
+      <tr>
+        <td class="checkbox">{$PRIVACY_CHECKBOX}</td>
+        <td class="midi td_full"><strong><label for="privacy">{#text_privacy_accept#}</label></strong> {$PRIVACY_LINK}</td>
+      </tr>
+    </table>
     {/if}
   </div>
   {$FORM_END}

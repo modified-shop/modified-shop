@@ -284,7 +284,7 @@
 
             $select = '';
             $customers = array();
-            $customers[] = array('id' => '', 'text' => TEXT_SELECT_CUSTOMER_GROUP);
+            $customers[] = array('id' => '', 'text' => TEXT_SELECT_CUSTOMER);
             $customers[] = array('id' => '***', 'text' => TEXT_ALL_CUSTOMERS);
             $customers[] = array('id' => '**D', 'text' => TEXT_NEWSLETTER_CUSTOMERS);
             $customers = array_merge($customers, xtc_get_customers_statuses());

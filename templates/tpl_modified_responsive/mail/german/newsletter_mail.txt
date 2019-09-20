@@ -3,16 +3,13 @@ Vielen Dank für die Anmeldung zu unserem Newsletter.
 
 {if isset($LINK)}
 Sie erhalten diese E-Mail, weil Sie unseren Newsletter empfangen möchten.
-
 Bitte klicken Sie auf den Aktivierungslink, damit Ihre E-Mail-Adresse für den Newsletterempfang freigeschaltet wird.
-
-Ihr Aktivierungslink:
-{$LINK}
 
 Sollten Sie sich nicht für unseren Newsletter eingetragen haben bzw. den Empfang des Newsletters nicht wünschen,
 bitten wir Sie, den Aktivierungslink einfach zu ignorieren. 
-
-Ihre Einwilligung in den Versand unseres Newsletters ist jederzeit widerruflich. Der Newsletter-Versand erfolgt entsprechend unserer Datenschutzerklärung.
+      
+Ihr Aktivierungslink:
+{$LINK}
 {/if}
 
 {if $SEND_GIFT == true}

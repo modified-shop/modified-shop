@@ -54,7 +54,7 @@ if (isset($_POST['cot_gv'])) {
 }
 
 // if conditions are not accepted, redirect the customer to the payment method selection page
-if (SIGN_CONDITIONS_ON_CHECKOUT == 'true') {
+if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true') {
   if ((!isset($_POST['conditions']) || $_POST['conditions'] == false) && !isset($_GET['conditions'])) {
     $error = str_replace('\n', '<br />', ERROR_CONDITIONS_NOT_ACCEPTED);
     xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode($error), 'SSL', true, false));
