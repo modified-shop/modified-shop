@@ -48,26 +48,37 @@
 
   function send_gv_mail($data) {
     global $currencies, $smarty;
-  
-    $coupon_code = create_coupon_code($data['customers_email_address']);
-    $link = HTTP_SERVER.DIR_WS_CATALOG.'gv_redeem.php?gv_no='.$coupon_code;
-
+    
     $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
     $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
 
-    $smarty->assign('AMMOUNT', $currencies->format($data['coupon_amount']));
     $smarty->assign('MESSAGE', $data['message']);
-    $smarty->assign('GIFT_ID', $coupon_code);
     $smarty->assign('WEBSITE', HTTP_SERVER.DIR_WS_CATALOG);
-    $smarty->assign('GIFT_LINK', $link);
-
+    
+    if (isset($_GET['cid']) && $_GET['cid'] != '') {
+      $template = 'send_coupon';
+      
+      $smarty->assign('COUPON_ID', $data['coupon_code']);
+      $smarty->assign('COUPON_AMOUNT', $currencies->format($data['coupon_amount']));
+    } else {
+      $template = 'send_gift';
+      
+      $coupon_code = create_coupon_code($data['customers_email_address']);
+      $link = HTTP_SERVER.DIR_WS_CATALOG.'gv_redeem.php?gv_no='.$coupon_code;
+      
+      $smarty->assign('AMMOUNT', $data['coupon_amount']);
+      $smarty->assign('GIFT_ID', $coupon_code);
+      $smarty->assign('GIFT_LINK', $link);     
+    }
+    
     // assign language to template for caching
     $smarty->assign('language', $_SESSION['language']);
     $smarty->caching = false;
 
-    $html_mail = $smarty->fetch(CURRENT_TEMPLATE . '/admin/mail/'.$_SESSION['language'].'/send_gift.html');
-    $txt_mail = $smarty->fetch(CURRENT_TEMPLATE . '/admin/mail/'.$_SESSION['language'].'/send_gift.txt');
-
+    $html_mail = $smarty->fetch(CURRENT_TEMPLATE . '/admin/mail/'.$_SESSION['language'].'/'.$template.'.html');
+    $txt_mail = $smarty->fetch(CURRENT_TEMPLATE . '/admin/mail/'.$_SESSION['language'].'/'.$template.'.txt');
+    $txt_mail = strip_tags($txt_mail);
+    
     if ($data['subject'] == '') $data['subject'] = EMAIL_BILLING_SUBJECT;
 
     xtc_php_mail(EMAIL_BILLING_ADDRESS,
@@ -82,24 +93,26 @@
                  $data['subject'], 
                  $html_mail, 
                  $txt_mail);
+    
+    if (!isset($_GET['cid']) || $_GET['cid'] == '') {
+      $sql_data_array = array(
+        'coupon_code' => $coupon_code,
+        'coupon_type' => 'G',
+        'coupon_amount' => $data['coupon_amount'],
+        'date_created' => 'now()',
+      );
+      xtc_db_perform(TABLE_COUPONS, $sql_data_array);
+      $insert_id = xtc_db_insert_id();
 
-    $sql_data_array = array(
-      'coupon_code' => $coupon_code,
-      'coupon_type' => 'G',
-      'coupon_amount' => $data['coupon_amount'],
-      'date_created' => 'now()',
-    );
-    xtc_db_perform(TABLE_COUPONS, $sql_data_array);
-    $insert_id = xtc_db_insert_id();
-
-    $sql_data_array = array(
-      'coupon_id' => $insert_id,
-      'customer_id_sent' =>(int)$_SESSION['customer_id'],
-      'sent_firstname' => 'Admin',
-      'emailed_to' => $data['customers_email_address'],
-      'date_sent' => 'now()',
-    );
-    xtc_db_perform(TABLE_COUPON_EMAIL_TRACK, $sql_data_array);
+      $sql_data_array = array(
+        'coupon_id' => $insert_id,
+        'customer_id_sent' =>(int)$_SESSION['customer_id'],
+        'sent_firstname' => 'Admin',
+        'emailed_to' => $data['customers_email_address'],
+        'date_sent' => 'now()',
+      );
+      xtc_db_perform(TABLE_COUPON_EMAIL_TRACK, $sql_data_array);
+    }
   }
 
   $error = false;
@@ -144,7 +157,37 @@
           $subject = xtc_db_prepare_input($_POST['subject']);
           $message = xtc_db_prepare_input($_POST['message']);
           $coupon_amount = xtc_db_prepare_input($_POST['coupon_amount']);
-  
+          $coupon_code = '';
+          
+          if (isset($_GET['cid']) && $_GET['cid'] != '') {
+            $coupon_query = xtc_db_query("SELECT * 
+                                            FROM " . TABLE_COUPONS . " 
+                                           WHERE coupon_id = '" . (int)$_GET['cid'] . "'");
+            $coupon = xtc_db_fetch_array($coupon_query);
+            $coupon_code = $coupon['coupon_code'];
+
+            $coupon_amount = '';
+            if ($coupon_result['coupon_type'] == 'S') {
+              $coupon_amount = COUPON_INFO . COUPON_FREE_SHIPPING;
+            } else {
+              $coupon_amount = COUPON_INFO . $currencies->format($coupon['coupon_amount']) . ' ';
+            }
+            if ($coupon_result['coupon_type'] == 'P') {
+              $coupon_amount = COUPON_INFO . number_format($coupon['coupon_amount'], 2) . '% ';
+            }
+            if ($coupon_result['coupon_type'] == 'T') {
+              $coupon_amount = COUPON_INFO . COUPON_FREE_SHIPPING . ' | '. number_format($coupon['coupon_amount'], 2) . '% ';
+            }
+            if ($coupon_result['coupon_minimum_order'] > 0) {
+              $coupon_amount .= COUPON_MINORDER_INFO . $currencies->format($coupon['coupon_minimum_order']) . ' ';
+            }
+            if (trim($coupon_result['restrict_to_products']) != '' || trim($coupon['restrict_to_categories']) != '') {
+              $coupon_amount .= COUPON_RESTRICT_INFO;
+            }
+            
+            $coupon_amount = nl2br($coupon_amount);
+          }
+          
           if (isset($mail_query) 
               && is_object($mail_query)
               && xtc_db_num_rows($mail_query) > 0
@@ -154,6 +197,7 @@
               $mail['subject'] = $subject; 
               $mail['message'] = $message; 
               $mail['coupon_amount'] = $coupon_amount;
+              $mail['coupon_code'] = $coupon_code;
       
               send_gv_mail($mail);
             }
@@ -174,6 +218,9 @@
           if (isset($_GET['oID']) && $_GET['oID'] != '') {
             xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action', 'cID')).'action=edit'));
           }
+          if (isset($_GET['cid']) && $_GET['cid'] != '') {
+            xtc_redirect(xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('action', 'cid')).'cid='.(int)$_GET['cid']));
+          }
           xtc_redirect(xtc_href_link(FILENAME_GV_MAIL, xtc_get_all_get_params(array('action', 'cID'))));
         }
         break;
@@ -187,7 +234,10 @@
           $error = true;
         }
       
-        if (!isset($_POST['coupon_amount']) || $_POST['coupon_amount'] == '') {
+        if ((!isset($_POST['coupon_amount']) || $_POST['coupon_amount'] == '')
+            && (!isset($_GET['cid']) || $_GET['cid'] == '')
+            )
+        {
           $messageStack->add(ERROR_NO_AMOUNT_SELECTED, 'error');
           $error = true;
         }
@@ -224,7 +274,7 @@
       <td class="boxCenter"> 
         <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_news.png'); ?></div>
         <div class="flt-l">
-          <div class="pageHeading"><?php echo HEADING_TITLE; ?></div>              
+          <div class="pageHeading"><?php echo ((isset($_GET['cid']) && $_GET['cid'] != '') ? HEADING_COUPON_TITLE : HEADING_TITLE); ?></div>              
         </div>
         <div class="clear"></div>
         <div class="div_box brd-none pdg2">
@@ -259,10 +309,12 @@
                   <td class="dataTableConfig col-left"><?php echo TEXT_SUBJECT; ?></td>
                   <td class="dataTableConfig col-single-right"><?php echo encode_htmlspecialchars(stripslashes($_POST['subject'])); ?></td>
                 </tr>
+                <?php if (!isset($_GET['cid']) || $_GET['cid'] == '') { ?>
                 <tr>
                   <td class="dataTableConfig col-left"><?php echo TEXT_AMOUNT; ?></td>
                   <td class="dataTableConfig col-single-right"><?php echo encode_htmlspecialchars(stripslashes($_POST['coupon_amount'])); ?></td>
                 </tr>
+                <?php } ?>
                 <tr>
                   <td class="dataTableConfig col-left"><?php echo TEXT_MESSAGE; ?></td>
                   <td class="dataTableConfig col-single-right"><?php echo stripslashes($_POST['message']); ?></td>
@@ -328,10 +380,12 @@
                   <td class="dataTableConfig col-left"><?php echo TEXT_SUBJECT; ?></td>
                   <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('subject', ((isset($_POST['subject'])) ? $_POST['subject'] : ''), 'style="width: 100%;"'); ?></td>
                 </tr>
+                <?php if (!isset($_GET['cid']) || $_GET['cid'] == '') { ?>
                 <tr>
                   <td class="dataTableConfig col-left"><?php echo TEXT_AMOUNT; ?></td>
                   <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('coupon_amount', ((isset($_POST['coupon_amount'])) ? $_POST['coupon_amount'] : '')); ?></td>
                 </tr>
+                <?php } ?>
                 <tr>
                   <td class="dataTableConfig col-left"><?php echo TEXT_MESSAGE; ?></td>
                   <td class="dataTableConfig col-single-right"><?php echo xtc_draw_textarea_field('message', 'soft', '100%', '55', ((isset($_POST['message'])) ? $_POST['message'] : '')); ?></td>

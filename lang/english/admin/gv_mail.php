@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: gv_mail.php 899 2005-04-29 02:40:57Z hhgag $
+   $Id$
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -54,4 +54,8 @@ define ('TEXT_REDEEM_COUPON_MESSAGE_AMOUNT', "\n\n" . 'The value of the Gift Vou
 define ('TEXT_REDEEM_COUPON_MESSAGE_BODY', "\n\n" . 'You can now visit our site, login and send the Gift Voucher amount to anyone you want.');
 define ('TEXT_REDEEM_COUPON_MESSAGE_FOOTER', "\n\n");
 
+define('COUPON_INFO', "\nCoupon Amount: "); 
+define('COUPON_FREE_SHIPPING', 'Free Shipping');
+define('COUPON_MINORDER_INFO', "\nCoupon Minimum Order: ");
+define('COUPON_RESTRICT_INFO', "\nThis coupon is only valid for certain products!"); 
 ?>

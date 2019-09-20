@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: gv_mail.php 899 2005-04-29 02:40:57Z hhgag $
+   $Id$
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -27,14 +27,14 @@
 
 define('HEADING_TITLE', 'Gutschein an Kunden versenden');
 
-define('TEXT_CUSTOMER_GROUP', 'Kundengruppe:');
+define('TEXT_CUSTOMER', 'Kunde:');
 define('TEXT_SUBJECT', 'Betreff:');
 define('TEXT_FROM', 'Absender:');
 define('TEXT_TO', 'E-Mail an:');
 define('TEXT_AMOUNT', 'Wert:');
 define('TEXT_MESSAGE', 'Nachricht:');
 define('TEXT_SINGLE_EMAIL', '<span class="smallText">Benutzen Sie dieses Feld nur f&uuml;r einzelne E-Mails, ansonsten bitte das Feld Kunde benutzen</span>');
-define('TEXT_SELECT_CUSTOMER_GROUP', 'Kundengruppe ausw&auml;hlen');
+define('TEXT_SELECT_CUSTOMER_GROUP', 'Kundegruppe ausw&auml;hlen');
 define('TEXT_ALL_CUSTOMERS', 'Alle Kunden');
 define('TEXT_NEWSLETTER_CUSTOMERS', 'An alle Newsletter-Abonnenten');
 
@@ -54,4 +54,8 @@ define ('TEXT_REDEEM_COUPON_MESSAGE_AMOUNT', "\n\n" . 'Der Wert Ihres Gutscheine
 define ('TEXT_REDEEM_COUPON_MESSAGE_BODY', "\n\n" . 'Sie k&ouml;nnen nun &uuml;ber Ihr pers&ouml;nliches Konto den Gutschein an jemanden versenden.');
 define ('TEXT_REDEEM_COUPON_MESSAGE_FOOTER', "\n\n");
 
+define('COUPON_INFO', "\nCouponwert: ");
+define('COUPON_FREE_SHIPPING', 'Versandkostenfrei');
+define('COUPON_MINORDER_INFO', "\nMindestbestellwert: ");
+define('COUPON_RESTRICT_INFO', "\nDieser Coupon ist nur f&uuml;r bestimmte Artikel g&uuml;ltig!");
 ?>
