@@ -110,7 +110,7 @@
       <br />
       <div class="cus_check cus_check_small">
         {if $PRIVACY_CHECKBOX}{$PRIVACY_CHECKBOX}{/if}
-        <label for="privacy"><strong>{#text_privacy_accept#}</strong> {$PRIVACY_LINK}</label>
+        <label for="privacy"><strong>{if $PRIVACY_CHECKBOX}{#text_privacy_accept#}{else}{#text_privacy_notice#}{/if}</strong> {$PRIVACY_LINK}</label>
       </div>
     {else}
       {if $PRIVACY_CHECKBOX}

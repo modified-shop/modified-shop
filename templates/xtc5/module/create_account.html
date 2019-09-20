@@ -146,7 +146,7 @@
   <table width="100%" border="0" cellspacing="0" cellpadding="4">
     <tr>
       {if $PRIVACY_CHECKBOX}<td>{$PRIVACY_CHECKBOX}</td>{/if}
-      <td width="100%"><strong>{#text_privacy_accept#}</strong> {$PRIVACY_LINK}</td>
+      <td width="100%"><strong>{if $PRIVACY_CHECKBOX}{#text_privacy_accept#}{else}{#text_privacy_notice#}{/if}</strong> {$PRIVACY_LINK}</td>
     </tr>
   </table>
 {else}

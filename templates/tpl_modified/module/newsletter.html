@@ -44,7 +44,7 @@
         <table>
           <tr>
             {if $PRIVACY_CHECKBOX}<td class="checkbox">{$PRIVACY_CHECKBOX}</td>{/if}
-            <td class="midi td_full"><strong><label for="privacy">{#text_privacy_accept#}</label></strong> {$PRIVACY_LINK}</td>
+            <td class="midi td_full"><strong><label for="privacy">{if $PRIVACY_CHECKBOX}{#text_privacy_accept#}{else}{#text_privacy_notice#}{/if}</label></strong> {$PRIVACY_LINK}</td>
           </tr>
         </table>
       {else}
