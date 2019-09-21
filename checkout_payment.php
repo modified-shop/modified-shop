@@ -256,10 +256,9 @@ if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true') {
   $shop_content_data = $main->getContentData(3);
   $smarty->assign('AGB', '<div class="agbframe">' . $shop_content_data['content_text'] . '</div>');
   $smarty->assign('AGB_LINK', $main->getContentLink(3, MORE_INFO,'SSL'));
-}
-//check if sign conditions on checkout page is true
-if (SIGN_CONDITIONS_ON_CHECKOUT == 'true') {
-  $smarty->assign('AGB_checkbox', '<input type="checkbox" value="conditions" name="conditions" id="conditions"'.(isset($_GET['step']) && $_GET['step'] == 'step2' ? ' checked="checked"' : '').' />');
+  if (SIGN_CONDITIONS_ON_CHECKOUT == 'true') {
+    $smarty->assign('AGB_checkbox', '<input type="checkbox" value="conditions" name="conditions" id="conditions"'.(isset($_GET['step']) && $_GET['step'] == 'step2' ? ' checked="checked"' : '').' />');
+  }
 }
 
 if (DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT == 'true'
@@ -277,7 +276,9 @@ if (DISPLAY_PRIVACY_ON_CHECKOUT == 'true') {
   $shop_content_data = $main->getContentData(2);
   $smarty->assign('PRIVACY', '<div class="agbframe">' . $shop_content_data['content_text'] . '</div>');
   $smarty->assign('PRIVACY_LINK', $main->getContentLink(2, MORE_INFO,'SSL'));
-  $smarty->assign('PRIVACY_checkbox', '<input type="checkbox" value="privacy" name="privacy" id="privacy"'.(isset($_GET['step']) && $_GET['step'] == 'step2' ? ' checked="checked"' : '').' />');
+  if (DISPLAY_PRIVACY_CHECK == 'true') {
+    $smarty->assign('PRIVACY_checkbox', '<input type="checkbox" value="privacy" name="privacy" id="privacy"'.(isset($_GET['step']) && $_GET['step'] == 'step2' ? ' checked="checked"' : '').' />');
+  }
 }
 
 if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weight') || ($_SESSION['cart']->count_contents_virtual() == 0)) {
