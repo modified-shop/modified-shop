@@ -435,7 +435,7 @@
     echo '<meta charset="'.$_SESSION['language_charset'].'" />'."\n";
   }
   if (TEMPLATE_RESPONSIVE == 'true') {
-    echo '<meta name="viewport" content="width=device-width, user-scalable=yes" />'."\n";
+    echo '<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />'."\n";
   }
   if (isset($metadata_array['title']) && $metadata_array['title'] != '') {
     echo '<title>'. $metadata_array['title'] .'</title>'."\n";
