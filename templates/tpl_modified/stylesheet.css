@@ -3385,6 +3385,19 @@ ul.bxcarousel_bestseller li .carousel_box .cb_title {
 ul.bxcarousel_bestseller li .carousel_box a:hover {
   text-decoration:none;
 }
+
+ul.bxcarousel_slider {
+  list-style-type:none;
+}
+ul.bxcarousel_slider li {
+  display:none;
+}
+ul.bxcarousel_slider li:first-child {
+  display:block;
+}
+ul.bxcarousel_slider img {
+  position: relative !important;
+}
 ul.bxcarousel_slider img {
   position: relative !important;
 }
