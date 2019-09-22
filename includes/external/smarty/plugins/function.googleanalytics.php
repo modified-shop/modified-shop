@@ -38,6 +38,7 @@ function smarty_function_googleanalytics($params, $smarty) {
   
   $beginCode = '
       <script type="text/javascript">
+      function TrackingGoogle () {
         // Set to the same value as the web property used on the site
         var gaProperty = \''.$account.'\';
 
@@ -83,6 +84,7 @@ function smarty_function_googleanalytics($params, $smarty) {
           var s = document.getElementsByTagName(\'script\')[0];
           s . parentNode . insertBefore(ga, s);
         })();
+      }
       </script>
     ';
   } else {

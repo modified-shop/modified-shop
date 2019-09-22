@@ -55,6 +55,7 @@ function smarty_function_piwik($params, $smarty) {
 
   $beginCode = '
     <script type="text/javascript">
+    function TrackingPiwik () {
       var _paq = _paq || [];
       (function(){
         var u="//'.$url.'/";
@@ -75,10 +76,14 @@ function smarty_function_piwik($params, $smarty) {
         g.src=u+\'piwik.js\';
         s.parentNode.insertBefore(g,s);
       })();
+    }
     </script>
-    <noscript><p><img src="//'.$url.'/piwik.php?idsite='.$id.'&rec=1" style="border:0" alt="" /></p></noscript>
   ';
-
+  
+  if ($_SESSION['tracking']['allow'] === true) {
+    $endCode .= '<noscript><p><img src="//'.$url.'/piwik.php?idsite='.$id.'&rec=1" style="border:0" alt="" /></p></noscript>';
+  }
+  
   $orderCode = null;
   if ((basename($PHP_SELF) == FILENAME_DEFAULT) && (isset($_GET['cPath'])) && ($_GET['cPath'] != '')) {
     $orderCode .= getCategoryName();
