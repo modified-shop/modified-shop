@@ -1012,7 +1012,7 @@ define('CHECK_CHEAPEST_SHIPPING_MODUL_TITLE', 'Preselect cheapest shipping metho
 define('CHECK_CHEAPEST_SHIPPING_MODUL_DESC', 'Shall the cheapest shipping method be preselected in checkout for the customer?');
 
 define('DISPLAY_PRIVACY_CHECK_TITLE', 'Show privacy checkbox');
-define('DISPLAY_PRIVACY_CHECK_DESC', 'Shall the privacy checkbox be displayed during account creation?)');
+define('DISPLAY_PRIVACY_CHECK_DESC', 'Shall the privacy checkbox be displayed during account creation, contact page, newsletter registration and checkout?)');
 
 define('SHOW_SELFPICKUP_FREE_TITLE', 'Shipping module "Self Pickup" on "free shipping"');
 define('SHOW_SELFPICKUP_FREE_DESC', 'Shall the shipping module "Self Pickup (selfpickup)" be displayed upon reaching the amount for "free shipping" in module "Shipping (ot_shipping)"?');
@@ -1037,7 +1037,7 @@ define('SEARCH_AC_MIN_LENGTH_TITLE', 'Autocomplete number of characters');
 define('SEARCH_AC_MIN_LENGTH_DESC', 'Number of characters to display first search results<br/><b>Attention:</b> This only works with a shop version 2.0.0.0 compatible template!');
 
 define('DISPLAY_PRIVACY_ON_CHECKOUT_TITLE', 'Display Privacy notice');
-define('DISPLAY_PRIVACY_ON_CHECKOUT_DESC', 'Display a checkbox to inform the customer about the privacy notice?');
+define('DISPLAY_PRIVACY_ON_CHECKOUT_DESC', 'Display a privacy notice on checkout?<br/><b>Attention:</b> If an additional checkbox shall be displayed, you need to set "Configuration" -> "Customer Details" -> "Show privacy checkbox" to "Yes"');
 define('DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT_TITLE', 'Display right of withdrawal for Downloads');
 define('DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT_DESC', 'Display a checkbox to inform the customer, that the right of withdrawal expires for downloads?');
 define('ORDER_STATUSES_DISPLAY_DEFAULT_TITLE', 'Display Orders');
