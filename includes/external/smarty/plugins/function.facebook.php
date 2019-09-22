@@ -38,24 +38,30 @@ function smarty_function_facebook($params, $smarty) {
 
   $total = get_order_total($last_order);
 
-  $beginCode = '<script>(function() {
-  var _fbq = window._fbq || (window._fbq = []);
-  if (!_fbq.loaded) {
-    var fbds = document.createElement(\'script\');
-    fbds.async = true;
-    fbds.src = \'//connect.facebook.net/en_US/fbds.js\';
-    var s = document.getElementsByTagName(\'script\')[0];
-    s.parentNode.insertBefore(fbds, s);
-    _fbq.loaded = true;
-  }
-})();
+  $beginCode = '<script>
+function TrackingFacebook () {
+  (function() {
+    var _fbq = window._fbq || (window._fbq = []);
+    if (!_fbq.loaded) {
+      var fbds = document.createElement(\'script\');
+      fbds.async = true;
+      fbds.src = \'//connect.facebook.net/en_US/fbds.js\';
+      var s = document.getElementsByTagName(\'script\')[0];
+      s.parentNode.insertBefore(fbds, s);
+      _fbq.loaded = true;
+    }
+  })();
   ';
 
   $endCode = 'window._fbq = window._fbq || [];
-window._fbq.push([\'track\', \''.$id.'\', {\'value\':\''.$total.'\',\'currency\':\''.$orders['currency'].'\'}]);
+  window._fbq.push([\'track\', \''.$id.'\', {\'value\':\''.$total.'\',\'currency\':\''.$orders['currency'].'\'}]);
+}
 </script>
-<noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?ev='.$id.'&amp;cd[value]='.$total.'&amp;cd[currency]='.$orders['currency'].'&amp;noscript=1" /></noscript>
   ';
+
+  if ($_SESSION['tracking']['allow'] === true) {
+    $endCode .= '<noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?ev='.$id.'&amp;cd[value]='.$total.'&amp;cd[currency]='.$orders['currency'].'&amp;noscript=1" /></noscript>';
+  }
 
   if ((strpos($PHP_SELF, FILENAME_CHECKOUT_SUCCESS) !== false)) {
     return $beginCode . $endCode;

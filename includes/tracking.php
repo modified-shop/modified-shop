@@ -16,7 +16,11 @@
 
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
-   
+
+if (!isset($_SESSION['tracking'])) {
+  $_SESSION['tracking'] = array();
+}
+  
 // IP
 if (!isset($_SESSION['tracking']['ip'])) {
   $_SESSION['tracking']['ip'] = xtc_get_ip_address();
@@ -59,4 +63,10 @@ if (count($_SESSION['tracking']['pageview_history']) > 6) {
   array_shift($_SESSION['tracking']['pageview_history']); 
 }
 $_SESSION['tracking']['pageview_history'] = array_values($_SESSION['tracking']['pageview_history']);
+
+// allow
+$_SESSION['tracking']['allow'] = false;
+if (isset($_COOKIE['cookieconsent_status'])) {
+  $_SESSION['tracking']['allow'] = ($_COOKIE['cookieconsent_status'] == 'allow');
+}
 ?>
