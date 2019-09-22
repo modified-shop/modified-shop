@@ -80,10 +80,10 @@
         {/if}
         </div>
       </div>
-      {if isset($PRIVACY_checkbox)}
+      {if isset($PRIVACY_LINK)}
         <div class="checkoutconditions">
           <div class="cus_check cus_check_small">
-            {$PRIVACY_checkbox}<label for="privacy"><strong>{#text_privacy_accept#}</strong>&nbsp;{$PRIVACY_LINK}</label>
+            {if $PRIVACY_checkbox}{$PRIVACY_checkbox}{/if}<label for="privacy"><strong>{if $PRIVACY_checkbox}{#text_privacy_accept#}{else}{#text_privacy_notice#}{/if}</strong>&nbsp;{$PRIVACY_LINK}</label>
           </div>
         </div>
       {/if}
@@ -97,10 +97,10 @@
     {else}
       <h4 class="checkout">{#title_comments_short#}</h4>
       <div class="checkoutcomment">{$COMMENTS}</div>
-      {if isset($PRIVACY_checkbox)}
+      {if isset($PRIVACY_LINK)}
         <div class="checkoutconditions">
           <div class="cus_check cus_check_small">
-            {$PRIVACY_checkbox}<label for="privacy"><strong>{#text_privacy_accept#}</strong>&nbsp;{$PRIVACY_LINK}</label>
+            {if $PRIVACY_checkbox}{$PRIVACY_checkbox}{/if}<label for="privacy"><strong>{if $PRIVACY_checkbox}{#text_privacy_accept#}{else}{#text_privacy_notice#}{/if}</strong>&nbsp;{$PRIVACY_LINK}</label>
           </div>
         </div>
       {/if}
