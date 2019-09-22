@@ -1004,7 +1004,7 @@ define('CHECK_CHEAPEST_SHIPPING_MODUL_TITLE', 'G&uuml;nstigste Versandart voraus
 define('CHECK_CHEAPEST_SHIPPING_MODUL_DESC', 'Soll im Checkout die kosteng&uuml;nstigste Versandart f&uuml;r den Kunden vorausgew&auml;hlt werden?');
 
 define('DISPLAY_PRIVACY_CHECK_TITLE', 'Privatsph&auml;re Checkbox anzeigen');
-define('DISPLAY_PRIVACY_CHECK_DESC', 'Soll w&auml;hrend der Konto-Erstellung die Privatsph&auml;re-Checkbox angezeigt werden?');
+define('DISPLAY_PRIVACY_CHECK_DESC', 'Soll w&auml;hrend der Konto-Erstellung, im Kontaktformular, Newsletter-Anmeldung und im Checkout die Privatsph&auml;re-Checkbox angezeigt werden?');
 
 define('SHOW_SELFPICKUP_FREE_TITLE', 'Versandmodul "Selbstabholung" bei "versandkostenfrei"');
 define('SHOW_SELFPICKUP_FREE_DESC', 'Soll das Versandmodul "Selbstabholung (selfpickup)" bei Erreichen des im Modul "Versandkosten (ot_shiping)" eingestellten Betrages f&uuml;r "versandkostenfrei" angezeigt werden?');
@@ -1029,7 +1029,7 @@ define('SEARCH_AC_MIN_LENGTH_TITLE', 'Autocomplete Suche Zeichenanzahl');
 define('SEARCH_AC_MIN_LENGTH_DESC', 'Ab welcher Zeichenanzahl sollen die ersten Suchergebnisse angezeigt werden?<br/><b>Achtung:</b> Das funktioniert nur mit einem ab Shopversion 2.0.0.0 kompatiblem Template!');
 
 define('DISPLAY_PRIVACY_ON_CHECKOUT_TITLE', 'Anzeige Datenschutz');
-define('DISPLAY_PRIVACY_ON_CHECKOUT_DESC', 'Soll eine Checkbox im Checkout angezeigt werden, mit Hinweis auf den Datenschutz?');
+define('DISPLAY_PRIVACY_ON_CHECKOUT_DESC', 'Soll ein Hinweis auf den Datenschutz im Checkout angezeigt werden?<br/><b>Achtung:</b> Soll zus&auml;tzlich eine Checkbox angezeigt werden, so muss unter "Konfiguration" -> "Kunden Details" -> "Privatsph&auml;re Checkbox anzeigen" auf "Ja" gestellt werden.');
 define('DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT_TITLE', 'Anzeige Widerrufsrecht Downloads');
 define('DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT_DESC', 'Soll eine Checkbox im Checkout angezeigt werden, mit welcher darauf hingewiesen wird, dass das Widerrufsrecht erlischt?');
 define('ORDER_STATUSES_DISPLAY_DEFAULT_TITLE', 'Anzeige Bestellungen');
