@@ -61,7 +61,7 @@ if (SIGN_CONDITIONS_ON_CHECKOUT == 'true') {
   }
 }
 
-if (DISPLAY_PRIVACY_ON_CHECKOUT == 'true') {
+if (DISPLAY_PRIVACY_ON_CHECKOUT == 'true' && DISPLAY_PRIVACY_CHECK == 'true') {
   if ((!isset($_POST['privacy']) || $_POST['privacy'] == false) && !isset($_GET['conditions'])) {
     $error = str_replace('\n', '<br />', ERROR_PRIVACY_NOTICE_NOT_ACCEPTED);
     xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode($error), 'SSL', true, false));
