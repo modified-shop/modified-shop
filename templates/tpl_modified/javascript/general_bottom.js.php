@@ -261,25 +261,23 @@ foreach ($script_array as $script) {
 <?php } ?>
 
 <script>
-  window.addEventListener('load', function(){
-    window.cookieconsent.initialise({
-     type: "opt-in",
-     content: {
-        "message": "<?php echo TEXT_COOKIECONSENT_MESSAGE; ?>",
-        "dismiss": "<?php echo TEXT_COOKIECONSENT_DISSMISS; ?>",
-        "link": "<?php echo TEXT_COOKIECONSENT_LINK; ?>",
-        "href": "<?php echo xtc_href_link(FILENAME_POPUP_CONTENT, 'coID=2', $request_type); ?>",
-        "policy": "<?php echo TEXT_COOKIECONSENT_POLICY; ?>",
-        "allow": "<?php echo TEXT_COOKIECONSENT_ALLOW; ?>",
-        "deny": "<?php echo TEXT_COOKIECONSENT_DENY; ?>"
-      },
-      onInitialise: function(status) {
-        if(status == cookieconsent.status.allow) TrackingScripts();
-      },
-      onStatusChange: function(status) {
-        if (this.hasConsented()) TrackingScripts();
-      }
-    })
+  window.cookieconsent.initialise({
+   type: "opt-in",
+   content: {
+      "message": "<?php echo TEXT_COOKIECONSENT_MESSAGE; ?>",
+      "dismiss": "<?php echo TEXT_COOKIECONSENT_DISSMISS; ?>",
+      "link": "<?php echo TEXT_COOKIECONSENT_LINK; ?>",
+      "href": "<?php echo xtc_href_link(FILENAME_POPUP_CONTENT, 'coID=2', $request_type); ?>",
+      "policy": "<?php echo TEXT_COOKIECONSENT_POLICY; ?>",
+      "allow": "<?php echo TEXT_COOKIECONSENT_ALLOW; ?>",
+      "deny": "<?php echo TEXT_COOKIECONSENT_DENY; ?>"
+    },
+    onInitialise: function(status) {
+      if(status == cookieconsent.status.allow) TrackingScripts();
+    },
+    onStatusChange: function(status) {
+      if (this.hasConsented()) TrackingScripts();
+    }
   });
   
   function TrackingScripts() {
