@@ -314,8 +314,8 @@ $values_group_update = array();
   $values[] = "(NULL, 'MODULE_SMALL_BUSINESS', 'false', 17, 14, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
   $values[] = "(NULL, 'WYSIWYG_SKIN', 'moonocolor', 17, 2, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'moono\', \'moonocolor\'),');";
   $values[] = "(NULL, 'CHECK_FIRST_PAYMENT_MODUL', 'false', '17', '24', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
-  $values[] = "(NULL, 'DISPLAY_PRIVACY_CHECK', 'true', '17', '18', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
-  $values[] = "(NULL, 'DISPLAY_PRIVACY_ON_CHECKOUT', 'false', '17', '19', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
+  $values[] = "(NULL, 'DISPLAY_PRIVACY_CHECK', 'true', '17', '19', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
+  $values[] = "(NULL, 'DISPLAY_PRIVACY_ON_CHECKOUT', 'false', '17', '18', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
   $values[] = "(NULL, 'DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT', 'false', '17', '21', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
   $values[] = "(NULL, 'MODULE_BANNER_MANAGER_STATUS', 'true', '17', '26', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
   $values[] = "(NULL, 'MODULE_NEWSLETTER_STATUS', 'true', '17', '27', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
@@ -402,12 +402,12 @@ $values_group_update = array();
                            'configuration_key' => 'ACTIVATE_REVERSE_CROSS_SELLING'
                            );
   $values_update[] = array (
-                           'values' => "configuration_group_id = '17', sort_order = '18'",
-                           'configuration_key' => 'DISPLAY_PRIVACY_CHECK'
+                           'values' => "sort_order = '18'",
+                           'configuration_key' => 'DISPLAY_PRIVACY_ON_CHECKOUT'
                            );
   $values_update[] = array (
-                           'values' => "sort_order = '19'",
-                           'configuration_key' => 'DISPLAY_PRIVACY_ON_CHECKOUT'
+                           'values' => "configuration_group_id = '17', sort_order = '19'",
+                           'configuration_key' => 'DISPLAY_PRIVACY_CHECK'
                            );
   $values_update[] = array (
                            'values' => "sort_order = '20'",
