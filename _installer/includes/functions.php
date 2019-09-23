@@ -39,16 +39,21 @@
   function rrmdir($dir) {
     global $unlinked_files, $error;
     
-    foreach(glob(DIR_FS_DOCUMENT_ROOT.$dir . '/*') as $file) {
-      $file = str_replace(DIR_FS_DOCUMENT_ROOT, '', $file);
-
-      if(is_dir(DIR_FS_DOCUMENT_ROOT.$file)) {
-        rrmdir($file);
-      } else {
-        if (unlink(DIR_FS_DOCUMENT_ROOT.$file) === true) {
-          $unlinked_files['success']['files'][] = $file;
+    $dir = rtrim($dir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+    $files = new DirectoryIterator(DIR_FS_DOCUMENT_ROOT.$dir);
+    
+    foreach ($files as $file) {
+      $filename = $file->getFilename();
+    
+      if ($file->isDot() === false) {
+        if(is_dir(DIR_FS_DOCUMENT_ROOT.$dir.$filename)) {
+          rrmdir($filename);
         } else {
-          $unlinked_files['error']['files'][] = $file;
+          if (unlink(DIR_FS_DOCUMENT_ROOT.$dir.$filename) === true) {
+            $unlinked_files['success']['files'][] = $filename;
+          } else {
+            $unlinked_files['error']['files'][] = $filename;
+          }
         }
       }
     }
