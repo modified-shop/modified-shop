@@ -18,7 +18,7 @@
 
   // The HTML href link wrapper function
   function xtc_href_link($page = '', $parameters = '', $connection = 'NONSSL', $add_session_id = true, $search_engine_safe = true, $urlencode = false, $admin = false) {
-    global $request_type, $session_started, $http_domain, $https_domain, $truncate_session_id, $cookie;
+    global $request_type, $session_started, $http_domain, $https_domain, $truncate_session_id, $cookie, $products_link_cat_id;
     static $session_id, $href_link_array;
     
     if (!isset($href_link_array)) {
@@ -46,7 +46,7 @@
     parse_str($parameters, $params_array);
     ksort($params_array);
     $link_cache = md5('link_cache:'.$link);
-    $param_cache = md5('param_cache:'.http_build_query($params_array, '', '|'));
+    $param_cache = md5('param_cache:'.http_build_query($params_array, '', '|').((isset($params_array['products_id'])) ? $products_link_cat_id : ''));
 
     $separator = '?';
     if (xtc_not_null($parameters)) {
