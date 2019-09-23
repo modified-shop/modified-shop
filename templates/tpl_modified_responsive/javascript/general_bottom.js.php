@@ -337,10 +337,16 @@ foreach ($script_array as $script) {
       "allow": "<?php echo TEXT_COOKIECONSENT_ALLOW; ?>",
       "deny": "<?php echo TEXT_COOKIECONSENT_DENY; ?>"
     },
+    cookie: {
+      "name": "MODtrack",
+      "path": "<?php echo DIR_WS_CATALOG; ?>",
+      "domain": "<?php echo (xtc_not_null($current_domain) ? '.'.$current_domain : ''); ?>",
+      "secure": <?php echo ((HTTP_SERVER == HTTPS_SERVER && $request_type == 'SSL') ? "true" : "false"); ?>
+    },
     onInitialise: function(status) {
       if(status == cookieconsent.status.allow) TrackingScripts();
     },
-    onStatusChange: function(status) {
+    onStatusChange: function(status, chosenBefore) {
       if (this.hasConsented()) TrackingScripts();
     }
   });
