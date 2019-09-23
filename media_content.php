@@ -64,7 +64,7 @@ if (DIR_WS_BASE == '') {
   $popup_smarty->assign('base', (($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER) . DIR_WS_CATALOG);
 }
 $popup_smarty->assign('content_heading', $content_heading);
-$popup_smarty->assign('content_text', $content_body);
+$popup_smarty->assign('content_text', $content_text);
 
 $popup_smarty->display(CURRENT_TEMPLATE.'/module/popup_content.html');
 ?>
