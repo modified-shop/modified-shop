@@ -128,13 +128,13 @@ class seo_url_shopstat extends modified_seo_url {
             && strpos($this->params_array['products_id'], '{') === false
             )
         {
-          $id = xtc_get_product_path($this->params_array['products_id']);
+          $this->params_array['cPath'] = xtc_get_product_path($this->params_array['products_id']);
           
-          if (!isset(self::$links_array['products'][$this->language_id][$this->params_array['products_id']][$id])) {
-            self::$links_array['products'][$this->language_id][$this->params_array['products_id']][$id] = self::create_products_link();
+          if (!isset(self::$links_array['products'][$this->language_id][$this->params_array['products_id']][$this->params_array['cPath']])) {
+            self::$links_array['products'][$this->language_id][$this->params_array['products_id']][$this->params_array['cPath']] = self::create_products_link();
           }
         
-          $link = self::$links_array['products'][$this->language_id][$this->params_array['products_id']][$id];
+          $link = self::$links_array['products'][$this->language_id][$this->params_array['products_id']][$this->params_array['cPath']];
           if ($link !== false) {
             $link .= self::get_link_params();
           }
@@ -193,7 +193,9 @@ class seo_url_shopstat extends modified_seo_url {
         || ADD_CAT_NAMES_TO_PRODUCT_LINK === true
         )
     {
-      $this->params_array['cPath'] = xtc_get_product_path($this->params_array['products_id']);
+      if (!isset($this->params_array['cPath'])) {
+        $this->params_array['cPath'] = xtc_get_product_path($this->params_array['products_id']);
+      }
       $category_link_array = self::create_catagory_link(true);
       $products_link_array = array_merge($category_link_array, $products_link_array);
     }
@@ -206,7 +208,9 @@ class seo_url_shopstat extends modified_seo_url {
         && ADD_CAT_ID_TO_PRODUCT_LINK === true
         )
     {
-      $this->params_array['cPath'] = xtc_get_product_path($this->params_array['products_id']);
+      if (!isset($this->params_array['cPath'])) {
+        $this->params_array['cPath'] = xtc_get_product_path($this->params_array['products_id']);
+      }
       $cat_path_array = explode('_', $this->params_array['cPath']);
       $cat_id = array_pop($cat_path_array);
       if ($cat_id != '') {

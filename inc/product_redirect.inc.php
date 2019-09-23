@@ -81,6 +81,12 @@ function product_redirect($actual_products_id) {
       return xtc_get_product_path($actual_products_id);
     }
     
+    require_once(DIR_FS_CATALOG.'includes/classes/modified_seo_url.php');
+    foreach(auto_include(DIR_FS_CATALOG.'includes/extra/seo_url_mod/','php') as $file) require_once ($file);
+
+    $seo_url_mod = SEO_URL_MOD_CLASS;
+    $modified_seo = $seo_url_mod::getInstance();
+
     // check Session-ID and $_GET-Parameter
     $current_link = preg_replace("/([^\?]*)(\?.*)/", "$1", $_SERVER['REQUEST_URI']);
     
