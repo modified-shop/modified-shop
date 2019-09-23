@@ -41,7 +41,7 @@
       </tr>
       {if isset($PRIVACY_LINK)}
       <tr>
-        {if $PRIVACY_checkbox}<td>{$REVOCATION_checkbox}</td>{/if}
+        {if $PRIVACY_checkbox}<td>{$PRIVACY_checkbox}</td>{/if}
         <td width="100%"{if !$PRIVACY_checkbox} colspan="2"{/if}><strong><label for="privacy">{if $PRIVACY_checkbox}{#text_privacy_accept#}{else}{#text_privacy_notice#}{/if}</label></strong>&nbsp;{$PRIVACY_LINK}</td>
       </tr>
       {/if}
