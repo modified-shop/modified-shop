@@ -95,7 +95,6 @@ $values_group_update = array();
 //configuration_group_id 5 --- "Kundendetails"
   $values[] = "(NULL, 'ACCOUNT_TELEPHONE_OPTIONAL', 'false', '5', '70', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
   $values[] = "(NULL, 'GUEST_ACCOUNT_EDIT', 'false', '5', '120', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
-  $values[] = "(NULL, 'DISPLAY_PRIVACY_CHECK', 'true', '5', '130', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
 
 //configuration_group_id 6 --- "Modul Optionen"
   //$values[] = "(NULL, 'COMPRESS_STYLESHEET_TIME', '', '6', '100', NULL, NOW(), NULL, NULL);"; // Tomcraft - 2016-06-06 - Obsolete since r7607
@@ -310,19 +309,20 @@ $values_group_update = array();
 
 //configuration_group_id 17 --- "Zusatzmodule"
   $values_group[] = "(17,'Additional Modules','Additional Modules',17,1);";
-  $values[] = "(NULL, 'SAVE_IP_LOG', 'false', 17, 8, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\', \'xxx\'),');";
+  $values[] = "(NULL, 'SAVE_IP_LOG', 'false', 17, 11, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\', \'xxx\'),');";
   //$values[] = "(NULL, 'SHIPPING_STATUS_INFOS', '', 17, 14, NULL, NOW(), NULL, 'xtc_cfg_select_content(\'SHIPPING_STATUS_INFOS\',');"; // Tomcraft - 2015-09-23 - Moved to update_1.0.6.0_to_2.0.0.0.sql for dynamic update
-  $values[] = "(NULL, 'MODULE_SMALL_BUSINESS', 'false', 17, 9, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
-  $values[] = "(NULL, 'WYSIWYG_SKIN', 'moonocolor', 17, 1, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'moono\', \'moonocolor\'),');";
-  $values[] = "(NULL, 'CHECK_FIRST_PAYMENT_MODUL', 'false', '17', '16', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
-  $values[] = "(NULL, 'DISPLAY_PRIVACY_ON_CHECKOUT', 'false', '17', '12', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
-  $values[] = "(NULL, 'DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT', 'false', '17', '13', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
-  $values[] = "(NULL, 'MODULE_BANNER_MANAGER_STATUS', 'true', '17', '18', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
-  $values[] = "(NULL, 'MODULE_NEWSLETTER_STATUS', 'true', '17', '19', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
-  $values[] = "(NULL, 'MODULE_NEWSLETTER_VOUCHER_AMOUNT', '0', '17', '20', NULL, NOW(), NULL, NULL);";
-  $values[] = "(NULL, 'MODULE_NEWSLETTER_DISCOUNT_COUPON', '', '17', '21', NULL, NOW(), NULL, NULL);";
-  $values[] = "(NULL, 'DISPLAY_HEADQUARTER_ON_CHECKOUT', 'true', '17', '8', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
-  $values[] = "(NULL, 'SIGN_CONDITIONS_ON_CHECKOUT', 'false', '17', '7', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
+  $values[] = "(NULL, 'MODULE_SMALL_BUSINESS', 'false', 17, 14, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
+  $values[] = "(NULL, 'WYSIWYG_SKIN', 'moonocolor', 17, 2, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'moono\', \'moonocolor\'),');";
+  $values[] = "(NULL, 'CHECK_FIRST_PAYMENT_MODUL', 'false', '17', '24', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
+  $values[] = "(NULL, 'DISPLAY_PRIVACY_CHECK', 'true', '17', '18', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
+  $values[] = "(NULL, 'DISPLAY_PRIVACY_ON_CHECKOUT', 'false', '17', '19', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
+  $values[] = "(NULL, 'DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT', 'false', '17', '21', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
+  $values[] = "(NULL, 'MODULE_BANNER_MANAGER_STATUS', 'true', '17', '26', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
+  $values[] = "(NULL, 'MODULE_NEWSLETTER_STATUS', 'true', '17', '27', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
+  $values[] = "(NULL, 'MODULE_NEWSLETTER_VOUCHER_AMOUNT', '0', '17', '28', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'MODULE_NEWSLETTER_DISCOUNT_COUPON', '', '17', '29', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'DISPLAY_HEADQUARTER_ON_CHECKOUT', 'true', '17', '12', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
+  $values[] = "(NULL, 'SIGN_CONDITIONS_ON_CHECKOUT', 'false', '17', '9', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
 
   $values_update[] = array (
                            'values' => "set_function = 'xtc_cfg_select_content(\'REVOCATION_ID\','",
@@ -402,47 +402,51 @@ $values_group_update = array();
                            'configuration_key' => 'ACTIVATE_REVERSE_CROSS_SELLING'
                            );
   $values_update[] = array (
-                           'values' => "sort_order = '18'",
-                           'configuration_key' => 'DISPLAY_PRIVACY_ON_CHECKOUT'
+                           'values' => "configuration_group_id = '17', sort_order = '18'",
+                           'configuration_key' => 'DISPLAY_PRIVACY_CHECK'
                            );
   $values_update[] = array (
                            'values' => "sort_order = '19'",
-                           'configuration_key' => 'DISPLAY_REVOCATION_ON_CHECKOUT'
+                           'configuration_key' => 'DISPLAY_PRIVACY_ON_CHECKOUT'
                            );
   $values_update[] = array (
                            'values' => "sort_order = '20'",
-                           'configuration_key' => 'DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT'
+                           'configuration_key' => 'DISPLAY_REVOCATION_ON_CHECKOUT'
                            );
   $values_update[] = array (
                            'values' => "sort_order = '21'",
-                           'configuration_key' => 'REVOCATION_ID'
+                           'configuration_key' => 'DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT'
                            );
   $values_update[] = array (
                            'values' => "sort_order = '22'",
-                           'configuration_key' => 'SHIPPING_STATUS_INFOS'
+                           'configuration_key' => 'REVOCATION_ID'
                            );
   $values_update[] = array (
                            'values' => "sort_order = '23'",
-                           'configuration_key' => 'CHECK_FIRST_PAYMENT_MODUL'
+                           'configuration_key' => 'SHIPPING_STATUS_INFOS'
                            );
   $values_update[] = array (
                            'values' => "sort_order = '24'",
-                           'configuration_key' => 'INVOICE_INFOS'
+                           'configuration_key' => 'CHECK_FIRST_PAYMENT_MODUL'
                            );
   $values_update[] = array (
                            'values' => "sort_order = '25'",
-                           'configuration_key' => 'MODULE_BANNER_MANAGER_STATUS'
+                           'configuration_key' => 'INVOICE_INFOS'
                            );
   $values_update[] = array (
                            'values' => "sort_order = '26'",
-                           'configuration_key' => 'MODULE_NEWSLETTER_STATUS'
+                           'configuration_key' => 'MODULE_BANNER_MANAGER_STATUS'
                            );
   $values_update[] = array (
                            'values' => "sort_order = '27'",
-                           'configuration_key' => 'MODULE_NEWSLETTER_VOUCHER_AMOUNT'
+                           'configuration_key' => 'MODULE_NEWSLETTER_STATUS'
                            );
   $values_update[] = array (
                            'values' => "sort_order = '28'",
+                           'configuration_key' => 'MODULE_NEWSLETTER_VOUCHER_AMOUNT'
+                           );
+  $values_update[] = array (
+                           'values' => "sort_order = '29'",
                            'configuration_key' => 'MODULE_NEWSLETTER_DISCOUNT_COUPON'
                            );
 
