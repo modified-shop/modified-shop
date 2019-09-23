@@ -262,12 +262,13 @@ foreach ($script_array as $script) {
 
 <script>
   window.cookieconsent.initialise({
-   type: "opt-in",
+   type: "<?php echo ((TRACKING_GOOGLEANALYTICS_ACTIVE == 'true' || TRACKING_PIWIK_ACTIVE == 'true' || TRACKING_FACEBOOK_ACTIVE == 'true') ? 'opt-in' : 'info'); ?>",
+   revokable: true,
    content: {
-      "message": "<?php echo TEXT_COOKIECONSENT_MESSAGE; ?>",
+      "message": "<?php echo ((TRACKING_GOOGLEANALYTICS_ACTIVE == 'true' || TRACKING_PIWIK_ACTIVE == 'true' || TRACKING_FACEBOOK_ACTIVE == 'true') ? TEXT_COOKIECONSENT_MESSAGE_TRACKING : TEXT_COOKIECONSENT_MESSAGE_INFO); ?>",
       "dismiss": "<?php echo TEXT_COOKIECONSENT_DISSMISS; ?>",
       "link": "<?php echo TEXT_COOKIECONSENT_LINK; ?>",
-      "href": "<?php echo xtc_href_link(FILENAME_POPUP_CONTENT, 'coID=2', $request_type); ?>",
+      "href": "<?php echo ((isset($privacy_link)) ? $privacy_link : xtc_href_link(FILENAME_POPUP_CONTENT, 'coID=2', $request_type)); ?>",
       "policy": "<?php echo TEXT_COOKIECONSENT_POLICY; ?>",
       "allow": "<?php echo TEXT_COOKIECONSENT_ALLOW; ?>",
       "deny": "<?php echo TEXT_COOKIECONSENT_DENY; ?>"
