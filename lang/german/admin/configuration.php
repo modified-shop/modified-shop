@@ -1028,8 +1028,8 @@ define('SEARCH_AC_STATUS_DESC','Aktivieren, um die Autocomplete Suche zu aktivie
 define('SEARCH_AC_MIN_LENGTH_TITLE', 'Autocomplete Suche Zeichenanzahl');
 define('SEARCH_AC_MIN_LENGTH_DESC', 'Ab welcher Zeichenanzahl sollen die ersten Suchergebnisse angezeigt werden?<br/><b>Achtung:</b> Das funktioniert nur mit einem ab Shopversion 2.0.0.0 kompatiblem Template!');
 
-define('DISPLAY_PRIVACY_ON_CHECKOUT_TITLE', 'Anzeigen des Datenschutzes');
-define('DISPLAY_PRIVACY_ON_CHECKOUT_DESC', 'Soll ein Hinweis auf den Datenschutz im Checkout angezeigt werden?<br/><b>Achtung:</b> Soll zus&auml;tzlich eine Checkbox angezeigt werden, so muss "Privatsph&auml;re Checkbox anzeigen" auf "Ja" gestellt werden.');
+define('DISPLAY_PRIVACY_ON_CHECKOUT_TITLE', 'Anzeigen des Datenschutzes im Checkout');
+define('DISPLAY_PRIVACY_ON_CHECKOUT_DESC', 'Soll zus&auml;tzlich ein Hinweis auf den Datenschutz im Checkout angezeigt werden?<br/><b>Achtung:</b> Soll zus&auml;tzlich eine Checkbox angezeigt werden, so muss "Privatsph&auml;re Checkbox anzeigen" auf "Ja" gestellt werden.');
 define('DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT_TITLE', 'Anzeige Widerrufsrecht Downloads');
 define('DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT_DESC', 'Soll eine Checkbox im Checkout angezeigt werden, mit welcher darauf hingewiesen wird, dass das Widerrufsrecht erlischt?');
 define('ORDER_STATUSES_DISPLAY_DEFAULT_TITLE', 'Anzeige Bestellungen');
