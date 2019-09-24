@@ -18,7 +18,7 @@
 
 class api_it_recht_kanzlei {
   
-  public $modulversion = '1.8';
+  public $modulversion = '2.1.9'; // shopversion . major . minor
   var $api_action_flag, 
       $api_version_flag, 
       $api_username_flag, 
