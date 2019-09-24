@@ -145,7 +145,7 @@
     }
 
     function pre_confirmation_check(){
-      if (@$_POST['banktransfer_fax'] == false && @$_POST['recheckok'] != 'true') {
+      if (!isset($_POST['banktransfer_fax']) && (!isset($_POST['recheckok']) || $_POST['recheckok'] != 'true')) {
         include(DIR_WS_CLASSES . 'banktransfer_validation.php');
 
         // iban / classic?
@@ -266,7 +266,7 @@
             break;
         }
 
-        if ($banktransfer_result > 0 && $_POST['recheckok'] != 'true') {
+        if ($banktransfer_result > 0 && (!isset($_POST['recheckok']) || $_POST['recheckok'] != 'true')) {
           $payment_error_return = 'payment_error=' . $this->code . '&error=' . urlencode($error) . '&banktransfer_owner=' . urlencode($_POST['banktransfer_owner']) . '&banktransfer_number=' . urlencode($_POST['banktransfer_number']) . '&banktransfer_blz=' . urlencode($_POST['banktransfer_blz']) . '&banktransfer_bankname=' . urlencode($_POST['banktransfer_bankname']) .'&banktransfer_owner_email=' . urlencode($_POST['banktransfer_owner_email']) .  '&recheckok=' . $recheckok;
           xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, $payment_error_return, 'SSL', true, false));
         }
