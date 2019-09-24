@@ -19,7 +19,7 @@ if (!function_exists('smarty_mb_str_replace')) {
      */
     function smarty_mb_str_replace($search, $replace, $subject, &$count = 0)
     {
-        $subject = encode_utf8($subject, '', true);
+        $subject = utf8_encode($subject);
         
         if (!is_array($search) && is_array($replace)) {
             return false;
@@ -50,6 +50,9 @@ if (!function_exists('smarty_mb_str_replace')) {
             $count = count($parts) - 1;
             $subject = implode($replace, $parts);
         }
+
+        $subject = utf8_decode($subject);
+
         return $subject;
     }
 }
