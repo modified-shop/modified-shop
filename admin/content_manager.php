@@ -131,7 +131,7 @@
           $sql_data_lang_array = array('content_status' => (int)$content_status[$i][$languages[$l]['id']],
                                        'content_active' => (int)$content_active[$i][$languages[$l]['id']],
                                        'languages_id' => $languages[$l]['id'],
-                                       'parent_id' => ((isset($parent_id) && array_key_exists($languages[$l]['id'], $parent_id)) ? $parent_id[$languages[$l]['id']] : ''),
+                                       'parent_id' => ((isset($parent_id) && is_array($parent_id) && array_key_exists($languages[$l]['id'], $parent_id)) ? $parent_id[$languages[$l]['id']] : ''),
                                        'group_ids' => $group_ids,
                                        'content_title' => $content_title[$i][$languages[$l]['id']],
                                        'content_heading' => $content_heading[$i][$languages[$l]['id']],
