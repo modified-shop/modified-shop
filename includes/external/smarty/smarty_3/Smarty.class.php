@@ -703,6 +703,9 @@ class Smarty extends Smarty_Compatibility
         if (is_callable('mb_internal_encoding')) {
             mb_internal_encoding(Smarty::$_CHARSET);
         }
+        if (is_callable('mb_regex_encoding')) {
+            mb_regex_encoding(Smarty::$_CHARSET);
+        }
         $this->start_time = microtime(true);
 
         // set default dirs
