@@ -67,6 +67,7 @@ class seo_url_shopstat extends modified_seo_url {
 
     if (isset($this->params_array['language']) 
         && strlen($this->params_array['language']) > 0
+        && array_key_exists($this->params_array['language'], parent::$language)
         )
     {
       $this->language_id = parent::$language[$this->params_array['language']];
