@@ -37,8 +37,6 @@ define('MODULE_SITEMAPORG_EXPORT_TITLE', '<hr /><b>Herunterladen?</b>');
 define('MODULE_SITEMAPORG_EXPORT_DESC', 'M&ouml;chten Sie die Datei herunterladen?');
 define('MODULE_SITEMAPORG_CUSTOMERS_STATUS_TITLE', 'Kundengruppe');
 define('MODULE_SITEMAPORG_CUSTOMERS_STATUS_DESC','Geben Sie hier an welche Kundengruppe f&uuml;r den Export der sitemap.xml verwendet werden soll.');
-define('MODULE_SITEMAPORG_CUSTOMERS_STATUS_TITLE', 'Kundengruppe');
-define('MODULE_SITEMAPORG_CUSTOMERS_STATUS_DESC','Geben Sie hier an welche Kundengruppe f&uuml;r den Export der sitemap.xml verwendet werden soll.');
 define('MODULE_SITEMAPORG_LANGUAGE_TITLE', 'Sprache');
 define('MODULE_SITEMAPORG_LANGUAGE_DESC','Geben Sie hier an in welcher Sprache der Export der sitemap.xml gemacht werden soll.');
 ?>
