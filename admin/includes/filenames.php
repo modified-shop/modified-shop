@@ -94,6 +94,8 @@ $filename_array = array(
   'FILENAME_BLACKLIST_LOGS' => 'blacklist_logs.php',
   'FILENAME_NEWSLETTER_RECIPIENTS' => 'newsletter_recipients.php',
   'FILENAME_CHECKOUT_PROCESS' => '../checkout_process.php',
+  'FILENAME_NEWSLETTER' => 'newsletter.php',
+  'FILENAME_GV_REDEEM' => 'gv_redeem.php',
 );
 
 // define 

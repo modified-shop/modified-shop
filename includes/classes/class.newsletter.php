@@ -242,6 +242,11 @@ class newsletter {
     $sendmail = false;
     $smarty = new Smarty;
     
+    $function = 'xtc_href_link';
+    if (function_exists('xtc_href_link_from_admin')) {
+      $function = 'xtc_href_link_from_admin';
+    }
+
     $sql_data_array = array(
       'customers_email_address' => $mail,
       'customers_action' => $action,
@@ -253,7 +258,7 @@ class newsletter {
     switch ($action) {
       case 'opt_in':
         $sendmail = true;
-        $link = xtc_href_link(FILENAME_NEWSLETTER, 'action=activate&email='.md5($mail).'&key='.$this->vlCode, 'NONSSL');
+        $link = $function(FILENAME_NEWSLETTER, 'action=activate&email='.md5($mail).'&key='.$this->vlCode, 'NONSSL', false);
         $smarty->assign('EMAIL', xtc_db_input($mail));
         $smarty->assign('LINK', $link);
         
@@ -294,7 +299,7 @@ class newsletter {
             $smarty->assign('SEND_GIFT', 'true');
             $smarty->assign('GIFT_AMMOUNT', $xtPrice->xtcFormat(MODULE_NEWSLETTER_VOUCHER_AMOUNT, true));
             $smarty->assign('GIFT_CODE', $coupon_code);
-            $smarty->assign('GIFT_LINK', xtc_href_link(FILENAME_GV_REDEEM, 'gv_no='.$coupon_code, 'NONSSL', false));
+            $smarty->assign('GIFT_LINK', $function(FILENAME_GV_REDEEM, 'gv_no='.$coupon_code, 'NONSSL', false));
           }
           
           if (defined('MODULE_NEWSLETTER_DISCOUNT_COUPON')
