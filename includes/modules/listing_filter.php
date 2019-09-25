@@ -72,10 +72,10 @@ if (PRODUCT_LIST_FILTER == 'true') {
     $fi = 1;
     foreach ($_GET['filter'] as $options_id => $values_id) {
       if ($values_id != '') {
-        $filter_join .= "JOIN ".TABLE_PRODUCTS_TAGS." pt".$fi." 
-                              ON pt".$fi.".products_id = p.products_id
-                                 AND pt".$fi.".options_id = '".(int)$options_id."'
-                                 AND pt".$fi.".values_id = '".(int)$values_id."' ";
+        $filter_join .= " JOIN ".TABLE_PRODUCTS_TAGS." pt".$fi." 
+                               ON pt".$fi.".products_id = p.products_id
+                                  AND pt".$fi.".options_id = '".(int)$options_id."'
+                                  AND pt".$fi.".values_id = '".(int)$values_id."' ";
         $fi ++;
       }
     }
