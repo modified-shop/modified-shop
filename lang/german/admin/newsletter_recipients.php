@@ -24,6 +24,7 @@
 
   define('TXT_SUBSCRIBED', 'abonniert');
   define('TXT_UNSUBSCRIBED', 'abgemeldet');
+  define('TXT_UNCONFIRMED', 'unbest&auml;tigt');
 
   define('TEXT_INFO_HISTORY_NEWSLETTER', 'Historie:');
   define('TEXT_INFO_HISTORY_NEWSLETTER_NONE', 'keine Historie verf&uuml;gbar');

@@ -152,7 +152,9 @@ class newsletter {
               $this->message_class = 'info';
 
               if (SEND_EMAILS_DOUBLE_OPT_IN == 'true' && SEND_EMAILS == 'true') {
-                $sql_data_array = array('mail_key' => $this->vlCode);
+                $sql_data_array = array('mail_key' => $this->vlCode,
+                                        'mail_status' => '0'
+                                        );
                 xtc_db_perform(TABLE_NEWSLETTER_RECIPIENTS, $sql_data_array, 'update', "customers_email_address = '".xtc_db_input($mail)."'");
                 $this->sendRequestMail($mail);
               } else {
