@@ -66,69 +66,71 @@
   }
   
   // Simple, yet effective.. loop through the selected Option Values.. find the proper price & prefix.. insert.. yadda yadda yadda.
-  for ($i = 0, $n = sizeof($_POST['optionValues']); $i < $n; $i++) {
-    $query = "SELECT * 
-                FROM ".TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS." 
-               WHERE products_options_values_id = '" . (int)$_POST['optionValues'][$i] . "'";
-    $result = xtc_db_query($query);
-    $matches = xtc_db_num_rows($result);
-    while ($line = xtc_db_fetch_array($result)) {
-      $optionsID = $line['products_options_id'];
-    }
+  if (isset($_POST['optionValues']) && is_array($_POST['optionValues'])) {
+    for ($i = 0, $n = sizeof($_POST['optionValues']); $i < $n; $i++) {
+      $query = "SELECT * 
+                  FROM ".TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS." 
+                 WHERE products_options_values_id = '" . (int)$_POST['optionValues'][$i] . "'";
+      $result = xtc_db_query($query);
+      $matches = xtc_db_num_rows($result);
+      while ($line = xtc_db_fetch_array($result)) {
+        $optionsID = $line['products_options_id'];
+      }
 
-    $cv_id = $_POST['optionValues'][$i];
-    $value_price =  $_POST[$cv_id . '_price'];
+      $cv_id = $_POST['optionValues'][$i];
+      $value_price =  $_POST[$cv_id . '_price'];
 
-    if (PRICE_IS_BRUTTO=='true'){
-      $value_price= ($value_price/((xtc_get_tax_rate(xtc_get_tax_class_id($_POST['current_product_id'])))+100)*100);
-    }
+      if (PRICE_IS_BRUTTO=='true'){
+        $value_price= ($value_price/((xtc_get_tax_rate(xtc_get_tax_class_id($_POST['current_product_id'])))+100)*100);
+      }
 
-    $value_price=xtc_round($value_price,PRICE_PRECISION);
+      $value_price=xtc_round($value_price,PRICE_PRECISION);
     
-    //default values
-    $sql_data_array = array ('products_id' => (int)$_POST['current_product_id'],
-                             'options_id' => (int)$optionsID,
-                             'options_values_id' => (int)$_POST['optionValues'][$i],
-                             'options_values_price' => $value_price,
-                             'price_prefix' => xtc_db_prepare_input($_POST[$cv_id . '_prefix']),
-                             'attributes_model' => xtc_db_prepare_input($_POST[$cv_id . '_model']),
-                             'attributes_stock' => (int)$_POST[$cv_id . '_stock'],
-                             'options_values_weight' => $_POST[$cv_id . '_weight'],
-                             'weight_prefix' => xtc_db_prepare_input($_POST[$cv_id . '_weight_prefix']),
-                             'sortorder' => (int)$_POST[$cv_id . '_sortorder']
-                             );
-    //additional values
-    $add_data_array = array ('attributes_ean' => xtc_db_prepare_input($_POST[$cv_id . '_ean']));
+      //default values
+      $sql_data_array = array ('products_id' => (int)$_POST['current_product_id'],
+                               'options_id' => (int)$optionsID,
+                               'options_values_id' => (int)$_POST['optionValues'][$i],
+                               'options_values_price' => $value_price,
+                               'price_prefix' => xtc_db_prepare_input($_POST[$cv_id . '_prefix']),
+                               'attributes_model' => xtc_db_prepare_input($_POST[$cv_id . '_model']),
+                               'attributes_stock' => (int)$_POST[$cv_id . '_stock'],
+                               'options_values_weight' => $_POST[$cv_id . '_weight'],
+                               'weight_prefix' => xtc_db_prepare_input($_POST[$cv_id . '_weight_prefix']),
+                               'sortorder' => (int)$_POST[$cv_id . '_sortorder']
+                               );
+      //additional values
+      $add_data_array = array ('attributes_ean' => xtc_db_prepare_input($_POST[$cv_id . '_ean']));
     
-    //VPE
-    if (isset($_POST[$cv_id . '_vpe_value'])) {
-        $sql_data_array['attributes_vpe_value'] = xtc_db_prepare_input($_POST[$cv_id .'_vpe_value']);
-    }
-    if (isset($_POST[$cv_id . '_vpe_id'])) {
-        $sql_data_array['attributes_vpe_id'] = xtc_db_prepare_input($_POST[$cv_id .'_vpe_id']);
-    }    
+      //VPE
+      if (isset($_POST[$cv_id . '_vpe_value'])) {
+          $sql_data_array['attributes_vpe_value'] = xtc_db_prepare_input($_POST[$cv_id .'_vpe_value']);
+      }
+      if (isset($_POST[$cv_id . '_vpe_id'])) {
+          $sql_data_array['attributes_vpe_id'] = xtc_db_prepare_input($_POST[$cv_id .'_vpe_id']);
+      }    
     
-    $sql_data_array = xtc_array_merge($sql_data_array, $add_data_array);
+      $sql_data_array = xtc_array_merge($sql_data_array, $add_data_array);
     
-    foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/new_attributes/new_attributes_change/','php') as $file) require ($file);
+      foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/new_attributes/new_attributes_change/','php') as $file) require ($file);
     
-    xtc_db_perform(TABLE_PRODUCTS_ATTRIBUTES, $sql_data_array);
-    $products_attributes_id = xtc_db_insert_id();
+      xtc_db_perform(TABLE_PRODUCTS_ATTRIBUTES, $sql_data_array);
+      $products_attributes_id = xtc_db_insert_id();
 
-    if ($_POST[$cv_id . '_download_file'] != '') {
-      $value_download_file = $_POST[$cv_id . '_download_file'];
-      $value_download_expire = $_POST[$cv_id . '_download_expire'];
-      $value_download_count = (int)$_POST[$cv_id . '_download_count'];
+      if ($_POST[$cv_id . '_download_file'] != '') {
+        $value_download_file = $_POST[$cv_id . '_download_file'];
+        $value_download_expire = $_POST[$cv_id . '_download_expire'];
+        $value_download_count = (int)$_POST[$cv_id . '_download_count'];
 
-      $sql_data_array = array ('products_attributes_id' => $products_attributes_id,
-                               'products_attributes_filename' => xtc_db_prepare_input($value_download_file),
-                               'products_attributes_maxdays' => $value_download_expire,
-                               'products_attributes_maxcount' => $value_download_count
-                              );
+        $sql_data_array = array ('products_attributes_id' => $products_attributes_id,
+                                 'products_attributes_filename' => xtc_db_prepare_input($value_download_file),
+                                 'products_attributes_maxdays' => $value_download_expire,
+                                 'products_attributes_maxcount' => $value_download_count
+                                );
                               
-      foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/new_attributes/new_attributes_change_dl/','php') as $file) require ($file);
+        foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/new_attributes/new_attributes_change_dl/','php') as $file) require ($file);
             
-      xtc_db_perform(TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD, $sql_data_array);
+        xtc_db_perform(TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD, $sql_data_array);
+      }
     }
   }
   xtc_db_query('UPDATE ' . TABLE_PRODUCTS . ' SET products_last_modified=now() WHERE products_id=' . (int)$_POST['current_product_id']); //DokuMan - 2010-09-21 - set modified date on product
