@@ -65,7 +65,7 @@
           $newsletter->AddUserAuto($check_mail['customers_email_address']);
           $messageStack->add_session($newsletter->message, (($newsletter->message_class == 'info') ? 'success' : $newsletter->message_class));
         }
-        xtc_redirect(xtc_href_link(FILENAME_NEWSLETTER_RECIPIENTS, xtc_get_all_get_params(array('action', 'mail'))));
+        xtc_redirect(xtc_href_link(FILENAME_NEWSLETTER_RECIPIENTS, xtc_get_all_get_params(array('action'))));
         break;
 
       case 'deleteconfirm':
