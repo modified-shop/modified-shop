@@ -4,7 +4,7 @@
 
 .cc-animate.cc-revoke{transition:transform 1s ease}
 .cc-animate.cc-revoke.cc-top{transform:translateY(-2em)}
-.cc-animate.cc-revoke.cc-bottom{transform:translateY(0em)}
+.cc-animate.cc-revoke.cc-bottom{transform:translateY(2em)}
 .cc-animate.cc-revoke.cc-active.cc-top{transform:translateY(0)}
 .cc-animate.cc-revoke.cc-active.cc-bottom{transform:translateY(0)}
 .cc-revoke:hover{transform:translateY(0)}
@@ -29,7 +29,7 @@ a.cc-link:active,.cc-link:visited{color:#fff;}
 .cc-close{display:block;position:absolute;top:0.5em;right:0.5em;font-size:1.6em;opacity:0.9;line-height:0.75}
 .cc-close:hover,.cc-close:focus{opacity:1}
 .cc-revoke.cc-top{top:0;left:3em;border-bottom-left-radius:0.5em;border-bottom-right-radius:0.5em}
-.cc-revoke.cc-bottom{bottom:0;right:3em;border-top-left-radius:0.0em;border-top-right-radius:0.0em}
+.cc-revoke.cc-bottom{bottom:0;left:3em;border-top-left-radius:0.0em;border-top-right-radius:0.0em}
 .cc-revoke.cc-left{left:3em;right:unset}
 .cc-revoke.cc-right{right:3em;left:unset}
 .cc-top{top:10px}
@@ -66,5 +66,5 @@ a.cc-link:active,.cc-link:visited{color:#fff;}
   .cc-window.cc-banner .cc-message{margin-right:0}
 }
 
-.cc-revoke { background:#222; color:#bbb; font-size:10px; line-height:14px; padding: 10px 15px; font-weight:bold; }
+.cc-revoke { background:#222; color:#bbb; font-size:10px; line-height:14px; padding: 5px 10px; font-weight:normal; }
 .cc-revoke:hover { text-decoration:none; color:#fff; }
