@@ -189,4 +189,8 @@ DELETE FROM `configuration` WHERE configuration_key LIKE '%FINDOLOGIC%';
 ALTER TABLE `specials` ADD KEY `idx_start_date` (`start_date`);
 ALTER TABLE `specials` ADD KEY `idx_expires_date` (`expires_date`);
 
+#GTB - 2019-09-25 - add index - fix #1679
+ALTER TABLE `products_tags_options` ADD KEY `idx_filter_multi` (`languages_id`,`filter`,`options_id`,`sort_order`);
+ALTER TABLE `products_tags_values` ADD KEY `idx_filter_multi` (`languages_id`,`filter`,`options_id`,`sort_order`);
+
 # Keep an empty line at the end of this file for the db_updater to work properly
