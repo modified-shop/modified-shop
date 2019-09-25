@@ -1691,7 +1691,7 @@ display: inline-block;
 position: relative; 
 }
 .infoBoxContent .SumoSelect { 
-  vertical-align: -12px !important;
+  margin-top: 2px;
 }
 
 /*set defaults*/
