@@ -21,7 +21,8 @@
   $mail_statuses_array = array(
     array('id' => '', 'text' => TXT_ALL), 
     array('id' => '1', 'text' => TXT_SUBSCRIBED), 
-    array('id' => '0', 'text' => TXT_UNSUBSCRIBED), 
+    array('id' => '0', 'text' => TXT_UNCONFIRMED), 
+    array('id' => '2', 'text' => TXT_UNSUBSCRIBED), 
   );  
 
   $where = '';
@@ -49,6 +50,16 @@
 
   if (xtc_not_null($action)) {
     switch ($action) {
+      case 'remind':
+        $mail = xtc_db_prepare_input($_GET['mail']);
+
+        require_once (DIR_FS_CATALOG.DIR_WS_CLASSES.'class.newsletter.php');
+        $newsletter = new newsletter();
+        $newsletter->sendRequestMail($mail, 'opt_in');
+        $messageStack->add_session($newsletter->message, (($newsletter->message_class == 'info') ? 'success' : $newsletter->message_class));
+        xtc_redirect(xtc_href_link(FILENAME_NEWSLETTER_RECIPIENTS, xtc_get_all_get_params(array('action'))));
+        break;
+
       case 'deleteconfirm':
         $mail = xtc_db_prepare_input($_GET['mail']);
 
@@ -221,6 +232,10 @@
 
                   if ($oInfo->mail_status == '1') {
                     $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_NEWSLETTER_RECIPIENTS, 'page=' . $_GET['page'] . '&mail=' . md5($oInfo->customers_email_address) . '&action=delete') . '">' . BUTTON_UNSUBSCRIBE . '</a>');
+                  }
+
+                  if ($oInfo->mail_status == '0') {
+                    $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_NEWSLETTER_RECIPIENTS, 'page=' . $_GET['page'] . '&mail=' . md5($oInfo->customers_email_address) . '&action=remind') . '">' . BUTTON_REMIND . '</a>');
                   }
                 }
                 break;

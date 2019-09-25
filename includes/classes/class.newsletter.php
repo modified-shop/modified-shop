@@ -61,7 +61,7 @@ class newsletter {
         $this->sendRequestMail($check_mail['customers_email_address'], 'unsubscribe');
 
         $sql_data_array = array (
-          'mail_status' => '0',
+          'mail_status' => '2',
           'mail_key' => '',
           'date_added' => 'null',
           'ip_date_added' => '',
@@ -146,7 +146,7 @@ class newsletter {
 
             $check_mail = xtc_db_fetch_array($check_mail_query);
 
-            if ($check_mail['mail_status'] == '0') {
+            if ($check_mail['mail_status'] != '1') {
 
               $this->message = TEXT_EMAIL_INPUT;
               $this->message_class = 'info';
