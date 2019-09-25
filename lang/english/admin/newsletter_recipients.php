@@ -34,6 +34,7 @@
   define('BUTTON_UNSUBSCRIBE', 'E-Mail unsubscribe');
   define('BUTTON_REMIND', 'E-Mail opt-in');
 
+  define('TEXT_EMAIL_SUBJECT','Ihre Newsletter-Anmeldung');
   define('TEXT_EMAIL_DEL','E-Mail address was deleted successfully from newsletter-database.');
   define('TEXT_EMAIL_DEL_ERROR','An Error occured, E-Mail address has not been removed from database!');
   define('TEXT_EMAIL_INPUT', 'Opt-in E-Mail sent.');
