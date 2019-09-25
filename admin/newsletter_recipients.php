@@ -52,12 +52,19 @@
     switch ($action) {
       case 'remind':
         $mail = xtc_db_prepare_input($_GET['mail']);
-        
-        require_once (DIR_FS_INC.'xtc_php_mail.inc.php');
-        require_once (DIR_FS_CATALOG.DIR_WS_CLASSES.'class.newsletter.php');
-        $newsletter = new newsletter();
-        $newsletter->sendRequestMail($mail, 'opt_in');
-        $messageStack->add_session($newsletter->message, (($newsletter->message_class == 'info') ? 'success' : $newsletter->message_class));
+
+        $check_mail_query = xtc_db_query("SELECT customers_email_address
+                                            FROM ".TABLE_NEWSLETTER_RECIPIENTS."
+                                           WHERE MD5(customers_email_address) = '".xtc_db_input($mail)."'");
+        if (xtc_db_num_rows($check_mail_query) > 0) {
+          $check_mail = xtc_db_fetch_array($check_mail_query);
+                                                 
+          require_once (DIR_FS_INC.'xtc_php_mail.inc.php');
+          require_once (DIR_FS_CATALOG.DIR_WS_CLASSES.'class.newsletter.php');
+          $newsletter = new newsletter();
+          $newsletter->sendRequestMail($check_mail['customers_email_address'], 'opt_in');
+          $messageStack->add_session($newsletter->message, (($newsletter->message_class == 'info') ? 'success' : $newsletter->message_class));
+        }
         xtc_redirect(xtc_href_link(FILENAME_NEWSLETTER_RECIPIENTS, xtc_get_all_get_params(array('action'))));
         break;
 
