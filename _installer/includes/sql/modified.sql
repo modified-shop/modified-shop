@@ -1122,6 +1122,7 @@ CREATE TABLE products_tags_options (
   products_options_id int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (options_id,languages_id),
   KEY idx_products_options_id (products_options_id),
+  KEY idx_filter_multi (languages_id, filter, options_id, sort_order),
   KEY idx_filter (filter)
 );
 
@@ -1143,6 +1144,7 @@ CREATE TABLE products_tags_values (
   PRIMARY KEY (values_id,languages_id),
   KEY idx_options_id (options_id),
   KEY idx_products_options_values_id (products_options_values_id),
+  KEY idx_filter_multi (languages_id, filter, options_id, sort_order),
   KEY idx_filter (filter)
 );
 
