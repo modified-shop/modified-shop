@@ -36,4 +36,5 @@
 
   define('TEXT_EMAIL_DEL','Die E-Mail-Adresse wurde aus der Newsletterdatenbank gel&ouml;scht.');
   define('TEXT_EMAIL_DEL_ERROR','Es ist ein Fehler aufgetreten, die E-Mail-Adresse wurde nicht gel&ouml;scht!');
+  define('TEXT_EMAIL_INPUT', 'Die Opt-in E-Mail wurde erneut versendet.');
 ?>

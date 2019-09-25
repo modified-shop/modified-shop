@@ -36,4 +36,5 @@
 
   define('TEXT_EMAIL_DEL','E-Mail address was deleted successfully from newsletter-database.');
   define('TEXT_EMAIL_DEL_ERROR','An Error occured, E-Mail address has not been removed from database!');
+  define('TEXT_EMAIL_INPUT', 'Opt-in E-Mail sent.');
 ?>
