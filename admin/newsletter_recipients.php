@@ -52,7 +52,8 @@
     switch ($action) {
       case 'remind':
         $mail = xtc_db_prepare_input($_GET['mail']);
-
+        
+        require_once (DIR_FS_INC.'xtc_php_mail.inc.php');
         require_once (DIR_FS_CATALOG.DIR_WS_CLASSES.'class.newsletter.php');
         $newsletter = new newsletter();
         $newsletter->sendRequestMail($mail, 'opt_in');
