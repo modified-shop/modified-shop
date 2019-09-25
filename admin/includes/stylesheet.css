@@ -1690,6 +1690,9 @@ height: 42px;
 display: inline-block; 
 position: relative; 
 }
+.infoBoxContent .SumoSelect { 
+  vertical-align: -10px !important;
+}
 
 /*set defaults*/
 input[type=radio].noStyling,
