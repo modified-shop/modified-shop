@@ -62,10 +62,10 @@
           require_once (DIR_FS_INC.'xtc_php_mail.inc.php');
           require_once (DIR_FS_CATALOG.DIR_WS_CLASSES.'class.newsletter.php');
           $newsletter = new newsletter();
-          $newsletter->sendRequestMail($check_mail['customers_email_address'], 'opt_in');
+          $newsletter->AddUserAuto($check_mail['customers_email_address']);
           $messageStack->add_session($newsletter->message, (($newsletter->message_class == 'info') ? 'success' : $newsletter->message_class));
         }
-        xtc_redirect(xtc_href_link(FILENAME_NEWSLETTER_RECIPIENTS, xtc_get_all_get_params(array('action'))));
+        xtc_redirect(xtc_href_link(FILENAME_NEWSLETTER_RECIPIENTS, xtc_get_all_get_params(array('action', 'mail'))));
         break;
 
       case 'deleteconfirm':
