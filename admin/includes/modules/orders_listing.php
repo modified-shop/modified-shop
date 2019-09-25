@@ -43,11 +43,6 @@
         </div>
 
         <div class="main flt-l pdg2 mrg5" style="margin-left:20px;">
-          <?php echo xtc_draw_form('orders', FILENAME_ORDERS, '', 'get'); ?>
-          <?php echo ASB_QUICK_SEARCH_CUSTOMER . ' ' . xtc_draw_input_field('customer', '', 'size="12"') . xtc_draw_hidden_field('action', 'search'); ?>
-          </form>
-        </div>
-        <div class="main flt-l pdg2 mrg5" style="margin-left:20px;">
           <?php echo xtc_draw_form('status', FILENAME_ORDERS, '', 'get'); ?>
           <?php
             $orders_statuses_array = array();
@@ -127,7 +122,8 @@
                 } elseif ($action == 'search' && $customer) {
                   $orders_query_raw = "SELECT ".$order_select_fields."
                                          FROM ".TABLE_ORDERS." o
-                                        WHERE (o.customers_email_address LIKE '%".xtc_db_input($customer)."%'
+                                        WHERE (o.orders_id LIKE '%".xtc_db_input($customer)."%'
+                                               OR o.customers_email_address LIKE '%".xtc_db_input($customer)."%'
                                                OR o.customers_name LIKE '%".xtc_db_input($customer)."%'
                                                OR o.customers_firstname LIKE '%".xtc_db_input($customer)."%'
                                                OR o.customers_lastname LIKE '%".xtc_db_input($customer)."%'

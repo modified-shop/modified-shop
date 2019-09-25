@@ -480,7 +480,8 @@ define('BOX_HEADING_CONFIGURATION2','Adv. Configuration');
 
 //BOF - web28 - 2010-04-10 - ADMIN SEARCH BAR
 define('ASB_QUICK_SEARCH_CUSTOMER','Search customers...');
-define('ASB_QUICK_SEARCH_ORDER_ID','Search orders...');
+define('ASB_QUICK_SEARCH_ORDER','Search orders...');
+define('ASB_QUICK_SEARCH_ORDER_ID','Search orders ID...');
 define('ASB_QUICK_SEARCH_ARTICLE','Search products/categories...');
 define('ASB_QUICK_SEARCH_EMAIL', 'Search E-Mail Addresses...');
 define('ASB_QUICK_SEARCH_ARTICLE_ID','Search products/categories ID...');
