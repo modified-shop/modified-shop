@@ -47,12 +47,13 @@
       </form>
     </div>
     <div class="col25">
-      <?php echo xtc_draw_form('search_email', FILENAME_CUSTOMERS, '', 'get'); ?>
-        <input name="search_email" type="text" value="<?php echo $search_email;?>" size="15" placeholder="<?php echo ASB_QUICK_SEARCH_EMAIL; ?>" />
+      <?php echo xtc_draw_form('search_order', FILENAME_ORDERS, '', 'get'); ?>
+        <input name="customer" type="text" value="<?php echo $customer;?>" size="15" placeholder="<?php echo ASB_QUICK_SEARCH_ORDER; ?>" />
+        <input type="hidden" name="action" value="search" />
       </form>
     </div>
     <div class="col25">
-      <?php echo xtc_draw_form('search_order', FILENAME_ORDERS, '', 'get'); ?>
+      <?php echo xtc_draw_form('search_order_id', FILENAME_ORDERS, '', 'get'); ?>
         <input name="oID" type="text" value="<?php echo $search_ord;?>" size="7" placeholder="<?php echo ASB_QUICK_SEARCH_ORDER_ID; ?>" />
         <input type="hidden" name="action" value="search" />
       </form>
@@ -63,7 +64,7 @@
       </form>
     </div>
     <div class="col25">
-      <?php echo xtc_draw_form('search_product', FILENAME_CATEGORIES, '', 'get'); ?>
+      <?php echo xtc_draw_form('search_categorie_id', FILENAME_CATEGORIES, '', 'get'); ?>
         <input name="search_id" type="text" value="<?php echo $search_id;?>" size="15" placeholder="<?php echo ASB_QUICK_SEARCH_ARTICLE_ID; ?>" />
       </form>
     </div>

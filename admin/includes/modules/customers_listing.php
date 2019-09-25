@@ -80,10 +80,7 @@
                                     OR CONCAT(ab1.entry_lastname,' ',ab1.entry_firstname) LIKE '%".$keywords."%'
                                    )";
                 }
-                if (isset($_GET['search_email']) && (xtc_not_null($_GET['search_email']))) {
-                  $keywords = xtc_db_input(xtc_db_prepare_input($_GET['search_email']));
-                  $search = "WHERE (c.customers_email_address LIKE '%".$keywords."%')";
-                }
+                
                 if (isset($_GET['status']) && $_GET['status'] != '') {
                   $search = "WHERE c.customers_status = '".(int)$_GET['status']."'";
                 }
