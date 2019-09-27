@@ -203,23 +203,19 @@
         break;
 
       case 'delete_confirm_adressbook' :
-          xtc_db_query("-- admin/customers.php
-                        DELETE FROM ".TABLE_ADDRESS_BOOK."
+          xtc_db_query("DELETE FROM ".TABLE_ADDRESS_BOOK."
                               WHERE address_book_id = '".(int) $_GET['address_book_id']."'
-                                AND customers_id = '".$customers_id."'"
-                                    );
+                                AND customers_id = '".$customers_id."'");
           xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action', 'delete_confirm_adressbook')).'cID='.(int)$customers_id));
           break;
 
        case 'update_default_adressbook' :
-          $address_book_query = xtc_db_query("-- admin/customers.php
-                                         SELECT entry_gender AS customers_gender,
-                                                entry_firstname AS customers_firstname,
-                                                entry_lastname AS customers_lastname
-                                           FROM ".TABLE_ADDRESS_BOOK."
-                                          WHERE address_book_id = '".(int) $_GET['default']."'
-                                            AND customers_id = '".$customers_id."'"
-                                             );
+          $address_book_query = xtc_db_query("SELECT entry_gender AS customers_gender,
+                                                     entry_firstname AS customers_firstname,
+                                                     entry_lastname AS customers_lastname
+                                                FROM ".TABLE_ADDRESS_BOOK."
+                                               WHERE address_book_id = '".(int) $_GET['default']."'
+                                                 AND customers_id = '".$customers_id."'");
           $address_book_array = xtc_db_fetch_array($address_book_query);
 
           if (ACCOUNT_GENDER != 'true') {

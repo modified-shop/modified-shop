@@ -65,10 +65,9 @@ $customer = (isset($_GET['customer']) ? xtc_db_prepare_input($_GET['customer']) 
 include('includes/modules/email_preview/email_preview_tabs.php');
 
 if (($action == 'edit' || $action == 'update_order') && $oID) {
-  $orders_query = xtc_db_query("-- /admin/orders.php
-                                  SELECT orders_id
-                                    FROM ".TABLE_ORDERS."
-                                   WHERE orders_id = '".$oID."'");
+  $orders_query = xtc_db_query("SELECT orders_id
+                                  FROM ".TABLE_ORDERS."
+                                 WHERE orders_id = '".$oID."'");
   $order_exists = true;
   if (!xtc_db_num_rows($orders_query)) {
     $order_exists = false;

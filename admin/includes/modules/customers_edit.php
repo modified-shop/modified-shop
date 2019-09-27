@@ -20,15 +20,11 @@
           }
 
           if (!isset($cInfo) || !is_object($cInfo)) {
-            $customers_query = xtc_db_query("-- admin/customers.php
-                                             SELECT c.customers_id,
+            $customers_query = xtc_db_query("SELECT c.customers_id,
                                                     c.customers_cid,
                                                     c.customers_vat_id,
                                                     c.customers_vat_id_status,
                                                     c.customers_status,
-                                                    -- c.customers_gender, # web28 2012-01-06 - wrong use correctly a.entry_gender AS customers_gender
-                                                    -- c.customers_firstname, # web28 2012-01-06 - wrong use correctly a.entry_firstname AS customers_firstname
-                                                    -- c.customers_lastname, # web28 2012-01-06 - wrong use correctly a.entry_lastname AS customers_lastname
                                                     c.customers_dob,
                                                     c.customers_email_address,
                                                     c.customers_default_address_id,

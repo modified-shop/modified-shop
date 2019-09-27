@@ -299,8 +299,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
         {
           $update_attr_stock = true;
           if (DOWNLOAD_ENABLED == 'true') {
-            $attr_stock_query = xtc_db_query("-- /checkout_process.php
-                                              SELECT pad.products_attributes_filename
+            $attr_stock_query = xtc_db_query("SELECT pad.products_attributes_filename
                                                 FROM ".TABLE_PRODUCTS_ATTRIBUTES." pa 
                                                 JOIN ".TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD." pad 
                                                      ON pa.products_attributes_id=pad.products_attributes_id

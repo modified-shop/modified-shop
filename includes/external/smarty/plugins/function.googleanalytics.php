@@ -144,26 +144,23 @@ function getOrderDetailsAnalytics() {
   
   $total = get_order_total($last_order);
   
-  $shipping_query = xtc_db_query("-- function.googleanalytics.php
-                         SELECT value
-                           FROM " . TABLE_ORDERS_TOTAL . "
-                          WHERE orders_id = '" . (int)$last_order . "' 
-                            AND class='ot_shipping'");
+  $shipping_query = xtc_db_query("SELECT value
+                                    FROM " . TABLE_ORDERS_TOTAL . "
+                                   WHERE orders_id = '" . (int)$last_order . "' 
+                                     AND class='ot_shipping'");
   $shipping = xtc_db_fetch_array($shipping_query);
 
-  $tax_query = xtc_db_query("-- function.googleanalytics.php
-                         SELECT value
-                           FROM " . TABLE_ORDERS_TOTAL . "
-                          WHERE orders_id = '" . (int)$last_order . "' 
-                            AND class='ot_tax'");
+  $tax_query = xtc_db_query("SELECT value
+                               FROM " . TABLE_ORDERS_TOTAL . "
+                              WHERE orders_id = '" . (int)$last_order . "' 
+                                AND class='ot_tax'");
   $tax = xtc_db_fetch_array($tax_query);
 
-  $location_query = xtc_db_query("-- function.googleanalytics.php
-                         SELECT customers_city,
-                                customers_state,
-                                customers_country
-                           FROM " . TABLE_ORDERS . "
-                          WHERE orders_id = '" . (int)$last_order . "'");
+  $location_query = xtc_db_query("SELECT customers_city,
+                                         customers_state,
+                                         customers_country
+                                    FROM " . TABLE_ORDERS . "
+                                   WHERE orders_id = '" . (int)$last_order . "'");
   $location = xtc_db_fetch_array($location_query);
 
   /**
@@ -190,8 +187,7 @@ function getOrderDetailsAnalytics() {
     addslashes($location['customers_country'])
   );
 
-  $item_query = xtc_db_query("-- function.googleanalytics_universal.php
-                              SELECT cd.categories_name,
+  $item_query = xtc_db_query("SELECT cd.categories_name,
                                      op.products_id,
                                      op.orders_products_id,
                                      op.products_model,
@@ -246,24 +242,21 @@ function getOrderDetailsAnalyticsUniversal() {
 
   $total = get_order_total($last_order);
   
-  $shipping_query = xtc_db_query("-- function.googleanalytics_universal.php
-                         SELECT value
-                           FROM " . TABLE_ORDERS_TOTAL . "
-                          WHERE orders_id = '" . (int)$last_order . "' 
-                            AND class='ot_shipping'");
+  $shipping_query = xtc_db_query("SELECT value
+                                    FROM " . TABLE_ORDERS_TOTAL . "
+                                   WHERE orders_id = '" . (int)$last_order . "' 
+                                     AND class='ot_shipping'");
   $shipping = xtc_db_fetch_array($shipping_query);
 
-  $tax_query = xtc_db_query("-- function.googleanalytics_universal.php
-                         SELECT value
-                           FROM " . TABLE_ORDERS_TOTAL . "
-                          WHERE orders_id = '" . (int)$last_order . "' 
-                            AND class='ot_tax'");
+  $tax_query = xtc_db_query("SELECT value
+                               FROM " . TABLE_ORDERS_TOTAL . "
+                              WHERE orders_id = '" . (int)$last_order . "' 
+                                AND class='ot_tax'");
   $tax = xtc_db_fetch_array($tax_query);
 
-  $currency_query = xtc_db_query("-- function.googleanalytics_universal.php
-                         SELECT currency
-                           FROM " . TABLE_ORDERS . "
-                          WHERE orders_id = '" . (int)$last_order . "'");
+  $currency_query = xtc_db_query("SELECT currency
+                                    FROM " . TABLE_ORDERS . "
+                                   WHERE orders_id = '" . (int)$last_order . "'");
   $currency = xtc_db_fetch_array($currency_query);
 
   $trackCommerce = "        ga('require', 'ecommerce', 'ecommerce.js');\n";
@@ -286,8 +279,7 @@ function getOrderDetailsAnalyticsUniversal() {
     $currency['currency']
   );
 
-  $item_query = xtc_db_query("-- function.googleanalytics_universal.php
-                              SELECT cd.categories_name,
+  $item_query = xtc_db_query("SELECT cd.categories_name,
                                      op.products_id,
                                      op.orders_products_id,
                                      op.products_model,

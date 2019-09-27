@@ -208,21 +208,19 @@ class main {
     $customers_status = $customers_status != '' ? $customers_status : $_SESSION['customers_status']['customers_status_id'];
     $group_check = (GROUP_CHECK == 'true') ? "AND group_ids LIKE '%c_" . (int)$customers_status . "_group%'" : '';
     $where = (($get_inactive === true) ? '' : " AND content_active = '1'");
-    $content_data_query = xtDBquery("-- includes/classes/main.php
-                                       SELECT ".$add_select."
-                                              content_id,
-                                              content_title,
-                                              content_heading,
-                                              content_text,
-                                              content_file
-                                         FROM " . TABLE_CONTENT_MANAGER . "
-                                        WHERE content_group='". (int)$coID ."'
-                                              " . $group_check . "
-                                              " . $where . "
-                                          AND trim(content_title) != ''
-                                          AND languages_id='" . (int)$lang_id . "'
-                                        LIMIT 1
-                                      ");
+    $content_data_query = xtDBquery("SELECT ".$add_select."
+                                            content_id,
+                                            content_title,
+                                            content_heading,
+                                            content_text,
+                                            content_file
+                                       FROM " . TABLE_CONTENT_MANAGER . "
+                                      WHERE content_group='". (int)$coID ."'
+                                            " . $group_check . "
+                                            " . $where . "
+                                        AND trim(content_title) != ''
+                                        AND languages_id='" . (int)$lang_id . "'
+                                      LIMIT 1");
     $content_data_array = xtc_db_fetch_array($content_data_query,true);
     
     // check if content data is a file

@@ -11,8 +11,7 @@
    ---------------------------------------------------------------------------------------*/
 
 if (isset ($_SESSION['customer_id'])) {
-  $account_type_query = xtc_db_query("-- /includes/application_top.php
-                                      SELECT account_type,
+  $account_type_query = xtc_db_query("SELECT account_type,
                                              customers_default_address_id
                                         FROM ".TABLE_CUSTOMERS."
                                        WHERE customers_id = '".(int) $_SESSION['customer_id']."'");
@@ -20,12 +19,10 @@ if (isset ($_SESSION['customer_id'])) {
 
   // check if zone id is unset bug
   if (!isset ($_SESSION['customer_country_id'])) {
-    $zone_query = xtc_db_query("-- /includes/application_top.php
-                            SELECT entry_country_id
-                              FROM ".TABLE_ADDRESS_BOOK."
-                             WHERE customers_id='".(int) $_SESSION['customer_id']."'
-                               AND address_book_id='".$account_type['customers_default_address_id']."'");
-
+    $zone_query = xtc_db_query("SELECT entry_country_id
+                                  FROM ".TABLE_ADDRESS_BOOK."
+                                 WHERE customers_id='".(int) $_SESSION['customer_id']."'
+                                   AND address_book_id='".$account_type['customers_default_address_id']."'");
     $zone = xtc_db_fetch_array($zone_query);
     $_SESSION['customer_country_id'] = $zone['entry_country_id'];
   }

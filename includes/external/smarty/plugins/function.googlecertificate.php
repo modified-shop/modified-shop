@@ -93,36 +93,32 @@ function getOrderDetailsCertificate($subaccount) {
 
   $total = get_order_total($last_order);
 
-  $query = xtc_db_query("-- function.googlecertificate.php
-    SELECT value
-      FROM " . TABLE_ORDERS_TOTAL . "
-     WHERE orders_id = '" . $last_order . "' 
-       AND class='ot_shipping'");
+  $query = xtc_db_query("SELECT value
+                           FROM " . TABLE_ORDERS_TOTAL . "
+                          WHERE orders_id = '" . $last_order . "' 
+                            AND class='ot_shipping'");
   $orders_total_shipping = xtc_db_fetch_array($query);
 
-  $query = xtc_db_query("-- function.googlecertificate.php
-    SELECT value
-      FROM " . TABLE_ORDERS_TOTAL . "
-     WHERE orders_id = '" . $last_order . "' 
-       AND class='ot_tax'");
+  $query = xtc_db_query("SELECT value
+                           FROM " . TABLE_ORDERS_TOTAL . "
+                          WHERE orders_id = '" . $last_order . "' 
+                            AND class='ot_tax'");
   $orders_total_tax = xtc_db_fetch_array($query);
   
   $discount = 0;
-  $query = xtc_db_query("-- function.googlecertificate.php
-    SELECT value
-      FROM " . TABLE_ORDERS_TOTAL . "
-     WHERE orders_id = '" . $last_order . "' 
-       AND class IN ('ot_discount', 'ot_coupon', 'ot_payment')");
+  $query = xtc_db_query("SELECT value
+                           FROM " . TABLE_ORDERS_TOTAL . "
+                          WHERE orders_id = '" . $last_order . "' 
+                            AND class IN ('ot_discount', 'ot_coupon', 'ot_payment')");
   while ($orders_total_discount = xtc_db_fetch_array($query)) {
     $discount += $orders_total_discount['value'];
   }
 
-  $query = xtc_db_query("-- function.googlecertificate.php
-    SELECT delivery_country_iso_code_2, 
-           currency, 
-           customers_email_address
-      FROM " . TABLE_ORDERS . "
-     WHERE orders_id = '" . $last_order . "'");
+  $query = xtc_db_query("SELECT delivery_country_iso_code_2, 
+                                currency, 
+                                customers_email_address
+                           FROM " . TABLE_ORDERS . "
+                          WHERE orders_id = '" . $last_order . "'");
   $orders = xtc_db_fetch_array($query);
 
   $time = strtotime("next weekday");
@@ -158,14 +154,13 @@ function getOrderDetailsCertificate($subaccount) {
     <span id="gts-o-has-preorder">N</span>
     <span id="gts-o-has-digital">N</span>';
 
-  $query = xtc_db_query("-- function.googlecertificate.php
-    SELECT products_id,
-           products_name,
-           products_price,
-           products_quantity
-      FROM " . TABLE_ORDERS_PRODUCTS . "
-     WHERE orders_id = '" . $last_order . "'
-  GROUP BY products_id");
+  $query = xtc_db_query("SELECT products_id,
+                                products_name,
+                                products_price,
+                                products_quantity
+                           FROM " . TABLE_ORDERS_PRODUCTS . "
+                          WHERE orders_id = '" . $last_order . "'
+                       GROUP BY products_id");
 
   $addGTSItem = array();
   while ($order = xtc_db_fetch_array($query)) {

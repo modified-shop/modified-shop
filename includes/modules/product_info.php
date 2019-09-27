@@ -59,11 +59,10 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
 
   // Update products_viewed
   if ($_SESSION['customers_status']['customers_status_id'] != '0') {
-    xtc_db_query("-- product_info.php
-        UPDATE ".TABLE_PRODUCTS_DESCRIPTION."
-           SET products_viewed = products_viewed+1
-         WHERE products_id = '".$product->data['products_id']."'
-           AND language_id = ".(int)$_SESSION['languages_id']);
+    xtc_db_query("UPDATE ".TABLE_PRODUCTS_DESCRIPTION."
+                     SET products_viewed = products_viewed+1
+                   WHERE products_id = '".$product->data['products_id']."'
+                     AND language_id = ".(int)$_SESSION['languages_id']);
   }
 
   $manufacturers_array = xtc_get_manufacturers();

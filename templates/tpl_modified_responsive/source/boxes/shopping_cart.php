@@ -1,6 +1,6 @@
 <?php
   /* -----------------------------------------------------------------------------------------
-   $Id: shopping_cart.php 11984 2019-07-22 15:27:36Z Tomcraft $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -89,8 +89,7 @@
 
   // GV Code
   if (isset($_SESSION['customer_id'])) {
-    $gv_query = xtc_db_query("-- /templates/".CURRENT_TEMPLATE."/source/boxes/shopping_cart.php
-                              SELECT amount
+    $gv_query = xtc_db_query("SELECT amount
                                 FROM ".TABLE_COUPON_GV_CUSTOMER."
                                WHERE customer_id = '".(int)$_SESSION['customer_id']."'");
     $gv_result = xtc_db_fetch_array($gv_query);
@@ -99,8 +98,7 @@
       $box_smarty->assign('GV_SEND_TO_FRIEND_LINK', '<a href="'.xtc_href_link(FILENAME_GV_SEND).'">');
     }
     if (isset($_SESSION['gv_id'])) {
-      $gv_query = xtc_db_query("-- /templates/".CURRENT_TEMPLATE."/source/boxes/shopping_cart.php
-                                SELECT coupon_amount
+      $gv_query = xtc_db_query("SELECT coupon_amount
                                   FROM ".TABLE_COUPONS."
                                  WHERE coupon_id = '".(int)$_SESSION['gv_id']."'");
       $coupon = xtc_db_fetch_array($gv_query);

@@ -295,8 +295,7 @@
                     require_once (DIR_FS_INC.'xtc_get_address_format_id.inc.php');
                     require_once (DIR_FS_INC.'xtc_count_customer_address_book_entries.inc.php');
 
-                    $addresses_query = xtc_db_query("-- admin/customers.php
-                                                     SELECT address_book_id,
+                    $addresses_query = xtc_db_query("SELECT address_book_id,
                                                             entry_firstname as firstname,
                                                             entry_lastname as lastname,
                                                             entry_company as company,

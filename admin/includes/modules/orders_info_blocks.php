@@ -60,10 +60,9 @@
                   <td class="main" valign="top"><b><?php echo CUSTOMERS_MEMO; ?></b></td>
                 <?php
                   // memo query
-                  $memo_query = xtc_db_query("-- /admin/orders.php
-                                             SELECT count(*) AS count
-                                               FROM ".TABLE_CUSTOMERS_MEMO."
-                                              WHERE customers_id=".$order->customer['ID']);
+                  $memo_query = xtc_db_query("SELECT count(*) AS count
+                                                FROM ".TABLE_CUSTOMERS_MEMO."
+                                               WHERE customers_id=".$order->customer['ID']);
                   $memo_count = xtc_db_fetch_array($memo_query);
                 ?>
                   <td class="main">
@@ -330,8 +329,7 @@
             <td class="smallText" align="center"><b><?php echo TABLE_HEADING_COMMENTS_SENT; ?></b></td>
           </tr>
           <?php
-            $orders_history_query = xtc_db_query("-- /admin/orders.php
-                                                  SELECT orders_status_id,
+            $orders_history_query = xtc_db_query("SELECT orders_status_id,
                                                          date_added,
                                                          customer_notified,
                                                          comments,

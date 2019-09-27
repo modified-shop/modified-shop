@@ -56,12 +56,11 @@ function getOrderDetailsFacebook() {
     return '';
   }
   
-  $query = xtc_db_query("-- function.facebook_badge.php
-                        SELECT products_id,
-                               products_name
-                          FROM " . TABLE_ORDERS_PRODUCTS . "
-                         WHERE orders_id='" . $last_order . "'
-                      GROUP BY products_id");
+  $query = xtc_db_query("SELECT products_id,
+                                products_name
+                           FROM " . TABLE_ORDERS_PRODUCTS . "
+                          WHERE orders_id='" . $last_order . "'
+                       GROUP BY products_id");
   if (xtc_db_num_rows($query) == 1) {
     $order = xtc_db_fetch_array($query);
     $link = xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$order['products_id'], 'NONSSL', false);
