@@ -26,7 +26,7 @@
 require_once (DIR_FS_INC.'get_order_total.inc.php');
 
 function smarty_function_googleanalytics($params, $smarty) {
-  global $PHP_SELF, $request_type;
+  global $PHP_SELF, $request_type, $last_order;
   
   if (!isset($params['account'])) {
     return false;
@@ -121,7 +121,13 @@ function smarty_function_googleanalytics($params, $smarty) {
   }
   
   $orderCode = null;
-  if ((strpos($PHP_SELF, FILENAME_CHECKOUT_SUCCESS) !== false) && TRACKING_GOOGLE_ECOMMERCE == 'true') {
+  if (strpos($PHP_SELF, FILENAME_CHECKOUT_SUCCESS) !== false
+      && TRACKING_GOOGLE_ECOMMERCE == 'true'
+      && !in_array('GA-'.$last_order, $_SESSION['tracking']['order'])
+      )
+  {
+    $_SESSION['tracking']['order'][] = 'GA-'.$last_order;
+    
     if (TRACKING_GOOGLEANALYTICS_UNIVERSAL == 'false') {
       $orderCode = getOrderDetailsAnalytics();
     } else {

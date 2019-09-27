@@ -69,4 +69,9 @@ $_SESSION['tracking']['allow'] = false;
 if (isset($_COOKIE['MODtrack'])) {
   $_SESSION['tracking']['allow'] = ($_COOKIE['MODtrack'] == 'allow');
 }
+
+// order
+if (!isset($_SESSION['tracking']['order'])) {
+  $_SESSION['tracking']['order'] = array();
+}
 ?>

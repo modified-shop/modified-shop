@@ -21,9 +21,12 @@
 require_once (DIR_FS_INC.'get_order_total.inc.php');
 
 function smarty_function_facebook($params, $smarty) {
-  global $PHP_SELF;
-  global $last_order; // from checkout_success.php
-
+  global $PHP_SELF, $last_order;
+  
+  if ((strpos($PHP_SELF, FILENAME_CHECKOUT_SUCCESS) === false)) {
+    return false;
+  }
+  
   $query = xtc_db_query("SELECT currency
                            FROM " . TABLE_ORDERS . "
                           WHERE orders_id = '" . $last_order . "'");
@@ -34,35 +37,36 @@ function smarty_function_facebook($params, $smarty) {
   if (!$id) {
     return false;
   }
+  
+  if (!in_array('FB-'.$last_order, $_SESSION['tracking']['order'])) {  
+    $_SESSION['tracking']['order'][] = 'FB-'.$last_order;
+    $total = get_order_total($last_order);
 
-  $total = get_order_total($last_order);
+    $beginCode = '<script>
+  function TrackingFacebook () {
+    (function() {
+      var _fbq = window._fbq || (window._fbq = []);
+      if (!_fbq.loaded) {
+        var fbds = document.createElement(\'script\');
+        fbds.async = true;
+        fbds.src = \'//connect.facebook.net/en_US/fbds.js\';
+        var s = document.getElementsByTagName(\'script\')[0];
+        s.parentNode.insertBefore(fbds, s);
+        _fbq.loaded = true;
+      }
+    })();
+    ';
 
-  $beginCode = '<script>
-function TrackingFacebook () {
-  (function() {
-    var _fbq = window._fbq || (window._fbq = []);
-    if (!_fbq.loaded) {
-      var fbds = document.createElement(\'script\');
-      fbds.async = true;
-      fbds.src = \'//connect.facebook.net/en_US/fbds.js\';
-      var s = document.getElementsByTagName(\'script\')[0];
-      s.parentNode.insertBefore(fbds, s);
-      _fbq.loaded = true;
+    $endCode = 'window._fbq = window._fbq || [];
+    window._fbq.push([\'track\', \''.$id.'\', {\'value\':\''.$total.'\',\'currency\':\''.$orders['currency'].'\'}]);
+  }
+  </script>
+    ';
+
+    if ($_SESSION['tracking']['allow'] === true) {
+      $endCode .= '<noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?ev='.$id.'&amp;cd[value]='.$total.'&amp;cd[currency]='.$orders['currency'].'&amp;noscript=1" /></noscript>';
     }
-  })();
-  ';
-
-  $endCode = 'window._fbq = window._fbq || [];
-  window._fbq.push([\'track\', \''.$id.'\', {\'value\':\''.$total.'\',\'currency\':\''.$orders['currency'].'\'}]);
-}
-</script>
-  ';
-
-  if ($_SESSION['tracking']['allow'] === true) {
-    $endCode .= '<noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?ev='.$id.'&amp;cd[value]='.$total.'&amp;cd[currency]='.$orders['currency'].'&amp;noscript=1" /></noscript>';
   }
-
-  if ((strpos($PHP_SELF, FILENAME_CHECKOUT_SUCCESS) !== false)) {
-    return $beginCode . $endCode;
-  }
+  
+  return $beginCode . $endCode;
 }

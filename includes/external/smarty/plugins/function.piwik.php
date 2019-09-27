@@ -36,7 +36,7 @@ require_once (DIR_FS_INC.'xtc_get_products_name.inc.php');
 require_once (DIR_FS_INC.'xtc_get_product_path.inc.php');
 
 function smarty_function_piwik($params, $smarty) {
-  global $PHP_SELF, $piwik_language_id;
+  global $PHP_SELF, $piwik_language_id, $last_order;
   
   $url = isset($params['url']) ? $params['url'] : false;
   $id = isset($params['id']) ? (int)$params['id'] : false;
@@ -97,9 +97,11 @@ function smarty_function_piwik($params, $smarty) {
   if ((strpos($PHP_SELF, FILENAME_CHECKOUT_SUCCESS) != false) && isset($_SESSION['customer_id'])) {
     $orderCode .= getOrders();
   }
-  if ((strpos($PHP_SELF, FILENAME_CHECKOUT_SUCCESS) !== false) && ($goal > 0)) {
+  if ((strpos($PHP_SELF, FILENAME_CHECKOUT_SUCCESS) !== false) && ($goal > 0) && (!in_array('PW-'.$last_order, $_SESSION['tracking']['order']))) {
+    $_SESSION['tracking']['order'][] = 'PW-'.$last_order;
     $orderCode .= getOrderDetailsPiwik($goal);
   }
+  
   return $beginCode . $orderCode . $endCode;
 }
 
