@@ -159,10 +159,11 @@ define('STANDARD_GROUP',DEFAULT_CUSTOMERS_STATUS_ID);
 
 include(DIR_FS_DOCUMENT_ROOT.(defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'includes/classes/'.IMAGE_MANIPULATOR);
 
-if ((isset($_POST['user']))and(isset($_POST['password']))) {
+$user = $password = '';
+if (isset($_POST['user']) && isset($_POST['password'])) {
    $user = $_POST['user'];
    $password = $_POST['password'];
-} else {
+} elseif (isset($_GET['user']) && isset($_GET['password'])) {
    $user = $_GET['user'];
    $password = $_GET['password'];
 }
