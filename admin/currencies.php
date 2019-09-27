@@ -156,20 +156,19 @@
                   <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
                 </tr>
                 <?php
-                  $currency_query_raw = "-- admin/currencies.php
-                                               SELECT currencies_id,
-                                                      code,
-                                                      title,
-                                                      symbol_left,
-                                                      symbol_right,
-                                                      decimal_point,
-                                                      thousands_point,
-                                                      decimal_places,
-                                                      value,
-                                                      status,
-                                                      last_updated
-                                                 FROM " . TABLE_CURRENCIES . "
-                                             ORDER BY title";
+                  $currency_query_raw = "SELECT currencies_id,
+                                                code,
+                                                title,
+                                                symbol_left,
+                                                symbol_right,
+                                                decimal_point,
+                                                thousands_point,
+                                                decimal_places,
+                                                value,
+                                                status,
+                                                last_updated
+                                           FROM " . TABLE_CURRENCIES . "
+                                       ORDER BY title";
                   $currency_split = new splitPageResults($_GET['page'], '20', $currency_query_raw, $currency_query_numrows);
                   $currency_query = xtc_db_query($currency_query_raw);
                   while ($currency = xtc_db_fetch_array($currency_query)) {

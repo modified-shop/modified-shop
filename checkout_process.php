@@ -193,8 +193,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
         if (is_array($products_attributes)) {
           $add_stock_query_raw .= " AND pa.options_id = '".$products_attributes[0]['option_id']."' AND pa.options_values_id = '".$products_attributes[0]['value_id']."'";
         }
-        $stock_query_raw = "-- /checkout_process.php
-                            SELECT products_quantity, 
+        $stock_query_raw = "SELECT products_quantity, 
                                    pad.products_attributes_filename
                               FROM ".TABLE_PRODUCTS." p
                          LEFT JOIN ".TABLE_PRODUCTS_ATTRIBUTES." pa 
@@ -207,10 +206,9 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
         // otherwise, we have to build the query dynamically with a loop
         $stock_query = xtc_db_query($stock_query_raw);
       } else {
-        $stock_query = xtc_db_query(" -- /checkout_process.php
-                                    SELECT products_quantity
-                                      FROM ".TABLE_PRODUCTS."
-                                     WHERE products_id = '".xtc_get_prid($order->products[$i]['id'])."'");
+        $stock_query = xtc_db_query("SELECT products_quantity
+                                       FROM ".TABLE_PRODUCTS."
+                                      WHERE products_id = '".xtc_get_prid($order->products[$i]['id'])."'");
       }
       if (xtc_db_num_rows($stock_query) > 0) {
         $stock_values = xtc_db_fetch_array($stock_query);
@@ -398,8 +396,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
                    WHERE orders_id = '".$insert_id."'");
   
   // check if late or direct sale
-  $customers_logon_query = "-- /checkout_process.php
-                            SELECT customers_info_number_of_logons
+  $customers_logon_query = "SELECT customers_info_number_of_logons
                               FROM ".TABLE_CUSTOMERS_INFO."
                              WHERE customers_info_id  = '".(int)$_SESSION['customer_id']."'";
   $customers_logon_query = xtc_db_query($customers_logon_query);

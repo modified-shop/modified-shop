@@ -95,7 +95,7 @@ class BillpayHooks
         $this->addHook((defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'orders.php', 'statusChange',
             'if ($check_status[\'orders_status\'] != $status || $comments != \'\') {',
                 'require_once(DIR_FS_CATALOG . \'includes/external/billpay/utils/billpay_status_requests.php\');',
-            'xtc_db_query("-- /admin/orders.php'
+            'xtc_db_query("'
         );
         $this->addHook((defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'orders.php', 'orderDelete',
             '\'deleteconfirm\' :',
