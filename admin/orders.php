@@ -169,7 +169,6 @@ $orders_status_query = xtc_db_query("SELECT orders_status_id,
                                             orders_status_name,
                                             language_id
                                        FROM ".TABLE_ORDERS_STATUS."
-                                      WHERE language_id = '".$lang."'
                                    ORDER BY sort_order");
 while ($orders_status = xtc_db_fetch_array($orders_status_query)) {
   if ($orders_status['language_id'] == $_SESSION['languages_id']) {
