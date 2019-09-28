@@ -138,7 +138,7 @@
                   ?>
                     <tr>
                       <td class="main"><b><?php echo ENTRY_SHIPPING_METHOD; ?></b></td>
-                      <td class="main"><?php echo get_shipping_name($order->info['shipping_method']) . ' ('.$order->info['shipping_class'].')'; ?></td>
+                      <td class="main"><?php echo get_shipping_name($order->info['shipping_class'], $order->info['shipping_method']) . ' ('.$order->info['shipping_class'].')'; ?></td>
                     </tr>
                   <?php
                   }
