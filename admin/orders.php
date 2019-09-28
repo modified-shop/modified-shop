@@ -41,10 +41,9 @@ if (function_exists('magnaExecute')) magnaExecute('magnaSubmitOrderStatus', arra
 if(!defined('MAX_DISPLAY_ORDER_RESULTS')) {
   define('MAX_DISPLAY_ORDER_RESULTS', 30);
 }
-function get_shipping_name($shipping_class) {
+function get_shipping_name($shipping_class, $shipping_method) {
   $shipping_class_array = explode('_', $shipping_class);
   $shipping_class = $shipping_class_array[0];
-  $shipping_method = $shipping_class;
   if (file_exists(DIR_FS_CATALOG.'lang/'.$_SESSION['language'].'/modules/shipping/'.$shipping_class.'.php')){
     include(DIR_FS_CATALOG.'lang/'.$_SESSION['language'].'/modules/shipping/'.$shipping_class.'.php');
     $shipping_method = constant(strtoupper('MODULE_SHIPPING_'.$shipping_class.'_TEXT_TITLE'));
@@ -165,16 +164,20 @@ if (!isset($lang_code)) $lang_code = $_SESSION['language_code'];
 if (!isset($lang_charset)) $lang_charset = $_SESSION['language_charset'];
 
 $orders_statuses = array();
-$orders_status_array = array();
+$orders_status_lang_array = array();
 $orders_status_query = xtc_db_query("SELECT orders_status_id,
-                                            orders_status_name
+                                            orders_status_name,
+                                            language_id
                                        FROM ".TABLE_ORDERS_STATUS."
                                       WHERE language_id = '".$lang."'
                                    ORDER BY sort_order");
 while ($orders_status = xtc_db_fetch_array($orders_status_query)) {
-  $orders_statuses[] = array ('id' => $orders_status['orders_status_id'], 'text' => $orders_status['orders_status_name']);
-  $orders_status_array[$orders_status['orders_status_id']] = $orders_status['orders_status_name'];
+  if ($orders_status['language_id'] == $_SESSION['languages_id']) {
+    $orders_statuses[] = array ('id' => $orders_status['orders_status_id'], 'text' => $orders_status['orders_status_name']);
+  }
+  $orders_status_lang_array[$orders_status['language_id']][$orders_status['orders_status_id']] = $orders_status['orders_status_name'];
 }
+$orders_status_array = $orders_status_lang_array[$_SESSION['languages_id']];
 
 switch ($action) {
   case 'send':
