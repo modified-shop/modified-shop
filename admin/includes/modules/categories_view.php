@@ -98,11 +98,11 @@
         break;
       case 'price':
         $catsort    = 'c.sort_order ASC'; //default
-        $prodsort   = 'p.products_price ASC';
+        $prodsort   = 'price ASC';
         break;
       case 'price-desc':
         $catsort    = 'c.sort_order ASC'; //default
-        $prodsort   = 'p.products_price DESC';
+        $prodsort   = 'price DESC';
         break;
       case 'stock':
         $catsort    = 'c.sort_order ASC'; //default
@@ -448,7 +448,8 @@
                                               p.products_status,
                                               p.products_startpage,
                                               p.products_startpage_sort,
-                                              p2c.categories_id ";
+                                              p2c.categories_id,
+                                              IFNULL(s.specials_new_products_price, p.products_price) AS price ";
 
                $from_str  = " FROM ".TABLE_PRODUCTS." AS p ";
                $from_str .= "LEFT JOIN ".TABLE_PRODUCTS_DESCRIPTION." AS pd ON (p.products_id = pd.products_id) ";
@@ -566,6 +567,7 @@
                                       p.products_status,
                                       p.products_startpage,
                                       p.products_startpage_sort
+                                      IFNULL(s.specials_new_products_price, p.products_price) AS price 
                                  FROM " . TABLE_PRODUCTS . " p
                             LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON p.products_id = pd.products_id AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
                                       " . $add_join . $add_where ."
