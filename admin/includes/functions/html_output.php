@@ -154,7 +154,7 @@
 
   // Output a form password field
   function xtc_draw_password_field($name, $value = '', $required = false, $parameters = '') {
-    $params = strpos($parameters,'maxlength') !== false ? '' : 'maxlength="40"';
+    $params = strpos($parameters,'maxlength') !== false ? '' : 'maxlength="60"';
     if ($parameters != '') {
       $params .= ' ' . $parameters;
     }
