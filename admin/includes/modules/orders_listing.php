@@ -232,7 +232,7 @@
                         $contents[] = array ('text' => '<br />'.TEXT_INFO_PAYMENT_METHOD.' '.payment::payment_title($oInfo->payment_method, $oInfo->orders_id).' ('.$oInfo->payment_method.')');
                       }
                       if ($oInfo->shipping_class != '') {
-                        $contents[] = array ('text' => (($oInfo->payment_method == '') ? '<br/>' : '').TEXT_INFO_SHIPPING_METHOD.' '.get_shipping_name($oInfo->shipping_class));
+                        $contents[] = array ('text' => (($oInfo->payment_method == '') ? '<br/>' : '').TEXT_INFO_SHIPPING_METHOD.' '.get_shipping_name($oInfo->shipping_class, $oInfo->payment_method));
                       }
                       $order = new order($oInfo->orders_id);
                       $contents[] = array ('text' => '<br />'.sizeof($order->products).'&nbsp;'.TEXT_PRODUCTS);
