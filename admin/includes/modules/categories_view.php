@@ -566,7 +566,7 @@
                                       p.products_date_available,
                                       p.products_status,
                                       p.products_startpage,
-                                      p.products_startpage_sort
+                                      p.products_startpage_sort,
                                       IFNULL(s.specials_new_products_price, p.products_price) AS price 
                                  FROM " . TABLE_PRODUCTS . " p
                             LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON p.products_id = pd.products_id AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
