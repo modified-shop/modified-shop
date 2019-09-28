@@ -356,9 +356,9 @@
                    $cInfo = new objectInfo($categories);
                  }
                  if (isset($cInfo) && is_object($cInfo) && ($categories['categories_id'] == $cInfo->categories_id) ) {
-                     echo '<tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'">' . "\n";
+                     echo '<tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\''.xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array ('cID', 'pID', 'action')).'cID='.$cInfo->categories_id.'&action=edit_category').'\'">' . "\n";
                  } else {
-                     echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'">' . "\n";
+                     echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\''.xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array ('cID', 'pID')).'cID='.$categories['categories_id']).'\'">' . "\n";
                  }
                  $checked = isset($_POST['multi_categories']) && is_array($_POST['multi_categories']) && in_array($categories['categories_id'], $_POST['multi_categories']) ? true : false; 
                  ?>
@@ -593,9 +593,9 @@
                  $pInfo = new objectInfo($pInfo_array);
                }
                if (isset($pInfo) && (is_object($pInfo)) && ($products['products_id'] == $pInfo->products_id) ) {
-                 echo '<tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" >' . "\n";
+                 echo '<tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\''.xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array ('pID', 'cID', 'action')).'cID='.$pInfo->products_id.'&action=new_product').'\'">' . "\n";
                } else {
-                 echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" >' . "\n";
+                 echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\''.xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array ('pID','cID')).'pID='.$products['products_id']).'\'">' . "\n";
                }
                  //checkbox again after submit and before final submit
                  $is_checked = false;
