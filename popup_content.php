@@ -16,6 +16,10 @@
 
 require ('includes/application_top.php');
 
+if (!isset($_GET['coID']) || $_GET['coID'] == '') {
+  die('Direct Access to this location is not allowed.');
+}
+
 $content_data = $main->getContentData((int)$_GET['coID'], '', '', (isset($_GET['preview']) ? true : false));
 
 $popup_smarty = new Smarty;

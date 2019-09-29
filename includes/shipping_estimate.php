@@ -72,6 +72,8 @@ if (isset($_SESSION['credit_covers'])) {
   unset($_SESSION['credit_covers']);
 }
 
+$_SESSION['delivery_zone'] = $order->delivery['country']['iso_code_2'];
+
 if (MODULE_ORDER_TOTAL_INSTALLED) {
   $order_total_array = $order_total_modules->process();
   if (count($order_total_array)) {
@@ -112,8 +114,6 @@ if (!isset($order->info['total'])) {
   $order->info['total'] = $_SESSION['cart']->show_total();
 }
 $total = $ot_total_value;
-
-$_SESSION['delivery_zone'] = $order->delivery['country']['iso_code_2'];
 
 //suppot downloads and gifts
 if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weight') || ($_SESSION['cart']->count_contents_virtual() == 0)) {
