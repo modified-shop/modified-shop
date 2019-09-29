@@ -4,7 +4,7 @@
       <li>
         <div class="cus_check cus_check_gift">
           {$gift_data.selection}
-          <label for="">{$gift_data.module|onlytext}<span class="payment_costs">{$gift_data.credit_amount}</span></label>
+          <label>{$gift_data.module|onlytext}<span class="payment_costs">{$gift_data.credit_amount}</span></label>
         </div> 
       </li>
     {/foreach}
@@ -13,7 +13,7 @@
       <li>
         <div class="cus_radio">
           {$module_data.selection}
-          <label for="">{$module_data.module|onlytext}<span class="payment_costs">{$module_data.module_cost}</span></label>
+          <label>{$module_data.module|onlytext}<span class="payment_costs">{$module_data.module_cost}</span></label>
         </div>
       </li>
     {/foreach}
