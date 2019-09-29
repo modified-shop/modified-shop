@@ -69,7 +69,7 @@ class paypalplus extends PayPalPayment {
           var s = document.getElementsByTagName(\'script\')[0];
           s . parentNode . insertBefore(pp, s);
         })();
-        $(window).on(\'load\',function() {
+        window.onload = function() {
           '.((count($payments) > 0) ? '
           if ($(\'input[name="payment"]:checked\', \'#checkout_payment\').val() == "'.$this->code.'") {
             $("#continueButton").attr("onclick", "ppp.doContinue(); return false;");
@@ -103,7 +103,7 @@ class paypalplus extends PayPalPayment {
             $("#ppp_result").html(data);
           });
           ').'          
-        });
+        };
       </script>';
     
       $smarty->assign('BUTTON_CONTINUE', xtc_image_submit('button_continue.gif', IMAGE_BUTTON_CONTINUE, 'id="continueButton"'));
