@@ -15,11 +15,8 @@
 // this javascriptfile get includes at the BOTTOM of every template page in shop
 // you can add your template specific js scripts here
 ?>
-
-<?php if (!strstr($PHP_SELF, FILENAME_SHOPPING_CART) && !strstr($PHP_SELF, FILENAME_PRODUCT_INFO) && !strstr($PHP_SELF, 'checkout') ) { ?>
-  <script src="<?php echo DIR_WS_BASE.DIR_TMPL_JS; ?>jquery.min.js" type="text/javascript"></script>
-  <script src="<?php echo DIR_WS_BASE.DIR_TMPL_JS; ?>jquery-migrate-1.4.1.min.js" type="text/javascript"></script>
-<?php } ?>
+<script src="<?php echo DIR_WS_BASE.DIR_TMPL_JS; ?>jquery.min.js" type="text/javascript"></script>
+<script src="<?php echo DIR_WS_BASE.DIR_TMPL_JS; ?>jquery-migrate-1.4.1.min.js" type="text/javascript"></script>
 
 <?php
 $script_array = array(
