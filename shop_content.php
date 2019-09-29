@@ -38,7 +38,7 @@ if ($language_not_found === true) {
   require (DIR_WS_INCLUDES.'header.php');
 
 } else {
-  if (!isset($_GET['coID'])) {
+  if (!isset($_GET['coID']) || $_GET['coID'] == '') {
     xtc_redirect(xtc_href_link(FILENAME_DEFAULT));
   }
   

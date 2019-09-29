@@ -986,7 +986,8 @@ class shoppingCart {
       $basename = '';
       $referer = parse_url($_SERVER['HTTP_REFERER']);
 
-      if (isset($referer['host'])
+      if (isset($referer['path'])
+          && isset($referer['host'])
           && (strpos(HTTP_SERVER, $referer['host']) !== false
               || strpos(HTTPS_SERVER, $referer['host']) !== false
               )
