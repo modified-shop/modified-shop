@@ -248,14 +248,14 @@
                '    }' . "\n" .       
                '  }' . "\n\n";
 
-        if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true') {
+        if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true' && SIGN_CONDITIONS_ON_CHECKOUT == 'true') {
           $js .= "\n" . '  if (!document.getElementById("checkout_payment").conditions.checked) {' . "\n" .
                  '    error_message = error_message + unescape("' . xtc_js_lang(JS_ERROR_CONDITIONS_NOT_ACCEPTED) . '");' . "\n" .
                  '    error = 1;' . "\n" .
                  '  }' . "\n\n";
         }
 
-        if (DISPLAY_PRIVACY_ON_CHECKOUT == 'true') {
+        if (DISPLAY_PRIVACY_ON_CHECKOUT == 'true' && DISPLAY_PRIVACY_CHECK == 'true') {
           $js .= "\n" . '  if (!document.getElementById("checkout_payment").privacy.checked) {' . "\n" .
                  '    error_message = error_message + unescape("' . xtc_js_lang(JS_ERROR_PRIVACY_NOTICE_NOT_ACCEPTED) . '");' . "\n" .
                  '    error = 1;' . "\n" .
