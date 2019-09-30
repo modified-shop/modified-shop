@@ -356,9 +356,9 @@
                    $cInfo = new objectInfo($categories);
                  }
                  if (isset($cInfo) && is_object($cInfo) && ($categories['categories_id'] == $cInfo->categories_id) ) {
-                     echo '<tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\''.xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array ('cID', 'pID', 'action')).'cID='.$cInfo->categories_id.'&action=edit_category').'\'">' . "\n";
+                     echo '<tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" data-event="'.xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array ('cID', 'pID', 'action')).'cID='.$cInfo->categories_id.'&action=edit_category').'">' . "\n";
                  } else {
-                     echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\''.xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array ('cID', 'pID')).'cID='.$categories['categories_id']).'\'">' . "\n";
+                     echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" data-event="'.xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array ('cID', 'pID')).'cID='.$categories['categories_id']).'">' . "\n";
                  }
                  $checked = isset($_POST['multi_categories']) && is_array($_POST['multi_categories']) && in_array($categories['categories_id'], $_POST['multi_categories']) ? true : false; 
                  ?>
@@ -380,7 +380,7 @@
                      <?php
                      echo '<a href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . xtc_get_path($categories['categories_id'])) . '">' . xtc_image(DIR_WS_ICONS . 'folder.gif', ICON_FOLDER, '', '', $icon_padding) . '</a>';
                      echo '<a href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '&cID=' . $categories['categories_id']. '&action=edit_category') . '">' . xtc_image(DIR_WS_ICONS . 'icon_edit.gif', ICON_EDIT, '', '', $icon_padding) . '</a>';
-                     echo '<b><a href="'.xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '&cID=' . $categories['categories_id']) .'">' . $categories['categories_name'] . '</a></b>';
+                     echo '<span style="vertical-align: 3px;">'.$categories['categories_name'].'</span>';
                      ?>
                    </td>
                    <?php
@@ -595,9 +595,9 @@
                  $pInfo = new objectInfo($pInfo_array);
                }
                if (isset($pInfo) && (is_object($pInfo)) && ($products['products_id'] == $pInfo->products_id) ) {
-                 echo '<tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\''.xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array ('pID', 'cID', 'action')).'pID='.$pInfo->products_id.'&action=new_product').'\'">' . "\n";
+                 echo '<tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" data-event="'.xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array ('pID', 'cID', 'action')).'pID='.$pInfo->products_id.'&action=new_product').'">' . "\n";
                } else {
-                 echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\''.xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array ('pID','cID')).'pID='.$products['products_id']).'\'">' . "\n";
+                 echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" data-event="'.xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array ('pID','cID')).'pID='.$products['products_id']).'">' . "\n";
                }
                  //checkbox again after submit and before final submit
                  $is_checked = false;
@@ -655,7 +655,7 @@
                    } else {
                      echo '<a href="'. xtc_href_link(FILENAME_PRODUCTS_TAGS, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cpath=' . $cPath . '&current_product_id=' . $products['products_id'] ) . '&action=edit' . '">' . xtc_image(DIR_WS_ICONS . 'icon_edit_tags.gif', TEXT_PRODUCTS_TAGS,'', '', $icon_padding). '</a>';
                    }
-                   echo '<a href="'.xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '&pID=' . $products['products_id']) .'">' . $products['products_name'] . '</a>';
+                   echo '<span style="vertical-align: 3px;">'.$products['products_name'].'</span>';
                    ?>
                  </td>
                  <?php
@@ -1101,3 +1101,18 @@
           <td>&nbsp;</td>
         </tr>    
       </table>
+      
+      <script>
+        var action = false;
+        $('.dataTableRow, .dataTableRowSelected, .dataTableRow a, .dataTableRowSelected a, .dataTableRow .ChkBox, .dataTableRowSelected .ChkBox').on('change, click', function (e) {          
+          if (this.nodeName == 'A' || this.nodeName == 'INPUT') {
+            action = true;
+          }
+          if (action === false && this.nodeName == 'TR') {
+            window.location.href = $(this).data('event');
+          }
+          if (this.nodeName == 'TR') {
+            action = false;
+          }
+        });
+      </script>
