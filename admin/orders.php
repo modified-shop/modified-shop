@@ -211,12 +211,12 @@ switch ($action) {
     break;
 
   case 'deleteconfirm':
-    xtc_remove_order($oID, xtc_db_prepare_input($_POST['restock']), ((STOCK_CHECKOUT_UPDATE_PRODUCTS_STATUS == 'true') ? true : false));
+    xtc_remove_order($oID, ((isset($_POST['restock'])) ? $_POST['restock'] : false), ((STOCK_CHECKOUT_UPDATE_PRODUCTS_STATUS == 'true') ? true : false));
     xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action'))));
     break;
 
   case 'stornoconfirm':
-    xtc_reverse_order($oID, xtc_db_prepare_input($_POST['restock']), xtc_db_prepare_input($_POST['status_storno']));
+    xtc_reverse_order($oID, ((isset($_POST['restock'])) ? $_POST['restock'] : false), (int)$_POST['status_storno'], ((STOCK_CHECKOUT_UPDATE_PRODUCTS_STATUS == 'true') ? true : false));
     xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action'))));
     break;
     

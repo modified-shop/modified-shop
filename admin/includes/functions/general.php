@@ -1334,9 +1334,9 @@
    * @param bool $restock
    * @return
    */
-  function xtc_reverse_order($order_id, $restock = false, $order_status_id) {
+  function xtc_reverse_order($order_id, $restock = false, $order_status_id, $activate = true) {
     if ($restock == 'on') {
-      xtc_restock_order($order_id);
+      xtc_restock_order($order_id, $activate);
     }
     $check_query = xtc_db_query("SELECT orders_status 
                                    FROM ".TABLE_ORDERS." 
