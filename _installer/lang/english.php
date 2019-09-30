@@ -173,7 +173,6 @@
   define('ENTRY_PASSWORD_ERROR_MIN_NUM', 'Password must contain at least %s numbers');
   define('ENTRY_PASSWORD_ERROR_MIN_CHAR', 'Password must contain at least %s non-aplhanumeric characters');
   define('ENTRY_PASSWORD_ERROR_NOT_MATCHING', 'Your passwords do not match.');
-  define('ENTRY_PASSWORD_CURRENT_ERROR','Your password must consist of at least ' . ENTRY_PASSWORD_MIN_LENGTH . ' characters.');
-
+  define('ENTRY_PASSWORD_CURRENT_ERROR','Your current password must not be empty.');
   
 ?>
