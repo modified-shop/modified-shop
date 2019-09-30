@@ -223,17 +223,8 @@ class ot_payment {
       if (!isset($this->amounts[(string)$products_tax])) {
         $this->amounts[(string)$products_tax] = 0;
       }
-      if (substr($gv_result['products_model'], 0, 4) == 'GIFT') {
-        if ($this->include_tax =='false') {
-          $gv_amount = $gv_result['products_price'] * $qty;
-        } else {
-          $gv_amount = ($gv_result['products_price'] + xtc_calculate_tax($gv_result['products_price'],$products_tax)) * $qty;
-        }
-        $order_total -= $gv_amount;
-      } else {
-        $this->amounts[(string)$products_tax] += $gv_result['products_price'] * (int)$qty;
-        $this->amounts['total'] += $gv_result['products_price'] * $qty;
-      }
+      $this->amounts[(string)$products_tax] += $gv_result['products_price'] * (int)$qty;
+      $this->amounts['total'] += $gv_result['products_price'] * $qty;
     }
     
     if ($this->include_tax == 'false') {
