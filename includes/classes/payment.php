@@ -509,7 +509,7 @@
         if (!isset($static_payment_array[$payment_method][(int)$order_id])) { 
           if (is_file(DIR_FS_CATALOG . 'includes/modules/payment/' . $payment_method . '.php')) {
             include_once(DIR_FS_CATALOG . 'lang/' . $_SESSION['language'] . '/modules/payment/' . $payment_method . '.php');
-            $payment_name = constant(strtoupper('MODULE_PAYMENT_' . $payment_method . '_TEXT_TITLE'));
+            $payment_name = strip_tags(constant(strtoupper('MODULE_PAYMENT_' . $payment_method . '_TEXT_TITLE')));
 
             if ($payment_method == 'paypalplus' && (int)$order_id > 0) {
               require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalInfo.php');
@@ -522,9 +522,9 @@
           } else {
             $payment_name = $payment_method;
           }
-          $static_payment_array[$payment_method][(int)$order_id] = strip_tags($payment_name);
+          $static_payment_array[$payment_method][(int)$order_id] = $payment_name;
         }
-        return strip_tags($static_payment_array[$payment_method][(int)$order_id]);
+        return $static_payment_array[$payment_method][(int)$order_id];
       } else {
         return false;
       }
