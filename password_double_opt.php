@@ -48,7 +48,11 @@ $mod_captcha = $_mod_captcha_class::getInstance();
 // default case
 $case = 'double_opt';
 
-if (isset ($_GET['action']) && ($_GET['action'] == 'first_opt_in') && isset($_POST) && count($_POST) > 0) {
+if (isset ($_GET['action']) 
+    && ($_GET['action'] == 'first_opt_in'
+    && $_SERVER['REQUEST_METHOD'] == 'POST'
+    )
+{
   $check_customer_query = xtc_db_query("SELECT customers_email_address, 
                                                customers_id 
                                           FROM ".TABLE_CUSTOMERS." 

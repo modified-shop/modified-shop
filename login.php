@@ -60,7 +60,11 @@ if (!isset($_SESSION['customers_login_tries'])) {
   $_SESSION['customers_login_tries'] = 0;
 }
 
-if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
+if (isset($_GET['action']) 
+    && $_GET['action'] == 'process'
+    && $_SERVER['REQUEST_METHOD'] == 'POST'
+    )
+{
 	$email_address = xtc_db_prepare_input($_POST['email_address']);
 	$password = xtc_db_prepare_input($_POST['password']);
   $captcha_validation = $mod_captcha->validate((isset($_POST['vvcode'])) ? $_POST['vvcode'] : '');

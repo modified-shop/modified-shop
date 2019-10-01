@@ -52,7 +52,11 @@ $info_message = '';
 $newsletter = new newsletter();
 $privacy = isset($_POST['privacy']) && $_POST['privacy'] == 'privacy' ? true : false;
 
-if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
+if (isset($_GET['action']) 
+    && $_GET['action'] == 'process'
+    && $_SERVER['REQUEST_METHOD'] == 'POST'
+    )
+{
   $error = false;
   $email = xtc_db_prepare_input($_POST['email']);
   if (DISPLAY_PRIVACY_CHECK == 'true' && empty($privacy)) {
