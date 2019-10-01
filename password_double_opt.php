@@ -48,8 +48,8 @@ $mod_captcha = $_mod_captcha_class::getInstance();
 // default case
 $case = 'double_opt';
 
-if (isset ($_GET['action']) 
-    && ($_GET['action'] == 'first_opt_in'
+if (isset($_GET['action']) 
+    && $_GET['action'] == 'first_opt_in'
     && $_SERVER['REQUEST_METHOD'] == 'POST'
     )
 {
