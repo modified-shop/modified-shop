@@ -21,4 +21,6 @@ define('MODULE_SYSTEM_DSGVO_CONTENT_DESC', 'Choose the content for your privacy 
 define('TEXT_DSGVO_HEADING', 'Update Required');
 define('TEXT_DSGVO_DESCRIPTION', 'New legal requirements require us to seek renewed approval from our customers for:');
 define('TEXT_DSGVO_ACCEPT_CONDITIONS', 'I accept %s');
+
+define('TEXT_DSGVO_ERROR', 'Unfortunately, if you do not accept our new privacy policy, you can not proceed.');
 ?>

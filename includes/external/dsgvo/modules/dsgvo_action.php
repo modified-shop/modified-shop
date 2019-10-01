@@ -52,7 +52,7 @@
       }
       
       if (count($_SESSION['dsgvo']) > 0) {
-        $messageStack->add('dsgvo', 'Sofern sie unsere neuen Datenschutzbestimmungen nicht akzeptieren, können sie bedauerlicherweise nicht fortfahren.');
+        $messageStack->add('dsgvo', TEXT_DSGVO_ERROR);
       }
     }
   }
