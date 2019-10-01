@@ -177,7 +177,7 @@ class ot_payment {
             reset($order->info['tax_groups']);
             foreach ($order->info['tax_groups'] as $key => $value) {
               //Steuerantei der Versandkosten wenn notwendig entfernen 
-              $value -= (strpos($key, $shipping_tax . '%') ? $tod_shipping : 0 );
+              $value -= ((isset($shipping_tax) && strpos($key, $shipping_tax . '%')) ? $tod_shipping : 0 );
               $god_amount = $value * $discount  - $value;
               $order->info['tax_groups'][$key] += $god_amount; //Steuergruppe korrigieren
               $tod_amount += $god_amount; //hier wird die Steuer aufaddiert
