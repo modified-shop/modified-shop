@@ -1,5 +1,3 @@
-# Die lang_german.custom wird nur eingebunden, wenn in der "../config/config.php" die "TEMPLATE_ENGINE" auf "smarty_3" gesetzt ist!
-
 zoomtext = 'F&uuml;r eine gr&ouml;&szlig;ere Ansicht klicken Sie auf das Vorschaubild'
 products_desc = 'Produktbeschreibung'
 products_fsk18_check = 'Dieser Artikel kann erst nach erfolgter Altersverifikation gekauft werden.'
