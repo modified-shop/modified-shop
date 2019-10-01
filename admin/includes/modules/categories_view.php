@@ -587,7 +587,7 @@
                if (xtc_not_null($search)) {
                  $cPath=$products['categories_id'];
                }
-               if ( (!isset($_GET['pID']) && !isset($_GET['cID']) || (@$_GET['pID'] == $products['products_id'])) && !isset($pInfo) && !isset($cInfo) && (substr($action, 0, 4) != 'new_') ) {
+               if (((!isset($_GET['pID']) || $_GET['pID'] == '') && !isset($_GET['cID']) || (isset($_GET['pID']) && $_GET['pID'] == $products['products_id'])) && !isset($pInfo) && !isset($cInfo) && (substr($action, 0, 4) != 'new_') ) {
                  // find out the rating average from customer reviews
                  $reviews_query = xtc_db_query("SELECT (avg(reviews_rating) / 5 * 100) AS average_rating FROM " . TABLE_REVIEWS . " WHERE products_id = '" . (int)$products['products_id'] . "'");
                  $reviews = xtc_db_fetch_array($reviews_query);
