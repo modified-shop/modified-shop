@@ -499,9 +499,9 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
       if (EMAIL_SUPPORT_FORWARDING_STRING != '') {
         xtc_php_mail(EMAIL_SUPPORT_ADDRESS, 
                      EMAIL_SUPPORT_NAME, 
-                     EMAIL_SUPPORT_FORWARDING_STRING, 
+                     EMAIL_SUPPORT_ADDRESS, 
                      EMAIL_SUPPORT_NAME, 
-                     '',
+                     EMAIL_SUPPORT_FORWARDING_STRING, 
                      $email_address, 
                      $name, 
                      '', 
