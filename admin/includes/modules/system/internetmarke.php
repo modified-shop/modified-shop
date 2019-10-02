@@ -55,7 +55,7 @@
           if (isset($_GET['subaction'])) {
             switch ($_GET['subaction']) {
               case 'im_update':
-                $ppl = get_external_content('https://www.modified-shop.org/downloads/internetmarke/ppl.csv', 3, false);
+                $ppl = get_external_content('https://api.modified-shop.org/internetmarke/ppl', 3, false);
                 file_put_contents(DIR_FS_CATALOG.'import/ppl.csv', $ppl);
 
                 if (($handle = fopen(DIR_FS_CATALOG.'import/ppl.csv', "r")) !== false) {
