@@ -117,7 +117,9 @@ function smarty_function_googleanalytics($params, $smarty) {
       $google_display = "        ga('require', 'displayfeatures');\n";
     }
   
-    $endCode = "        ga('send', 'pageview');\n</script>";
+    $endCode = "        ga('send', 'pageview');
+      }
+    </script>";
   }
   
   $orderCode = null;
