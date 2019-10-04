@@ -18,7 +18,7 @@
 
 class api_it_recht_kanzlei {
   
-  public $modulversion = '2.1.9'; // shopversion . major . minor
+  public $modulversion = '2.1.10'; // shopversion . major . minor
   var $api_action_flag, 
       $api_version_flag, 
       $api_username_flag, 
@@ -273,8 +273,8 @@ class api_it_recht_kanzlei {
           } else {
             $sql_data_array = array(
               'content_text' => $this->charset_decode_utf_8($xml->rechtstext_html.$pdf_file_text.'<style>.itkanzlei_first_headline{display:none;}</style>'),
-              'content_title' => decode_htmlentities($xml->rechtstext_title),
-              'content_heading' => decode_htmlentities($xml->rechtstext_title),
+              'content_title' => $this->charset_decode_utf_8($xml->rechtstext_title),
+              'content_heading' => $this->charset_decode_utf_8($xml->rechtstext_title),
             );
             xtc_db_perform(TABLE_CONTENT_MANAGER, $sql_data_array, 'update', "content_group = '".$content_group."' AND languages_id = '".$languages_id."'");
             if (xtc_db_affected_rows() < 1) {
@@ -369,8 +369,11 @@ class api_it_recht_kanzlei {
       },
       $string
     );
-
-    return decode_htmlentities($string);
+    
+    // remove problem sign
+    $string = str_replace('&thinsp;', ' ', $string);
+    
+    return decode_htmlentities($string, ENT_COMPAT, 'UTF-8');
   }
     
   // return error and end script
