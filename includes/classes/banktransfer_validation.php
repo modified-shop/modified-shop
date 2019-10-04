@@ -2190,6 +2190,9 @@ class AccountCheck {
     if ($RetVal != 0){
       $RetVal = $this->Method01($AccountNo, '173173173');
     }
+    if ($RetVal != 0){
+      $RetVal = $this->Method00($AccountNo, '212121212', 10);
+    }
     return $RetVal;
   }  /* End of MarkB1 */
 
