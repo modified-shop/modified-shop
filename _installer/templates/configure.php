@@ -48,7 +48,6 @@ $file_contents =
 '' . PHP_EOL .
 '  // secure SSL' . PHP_EOL .
 '  defined(\'ENABLE_SSL\') or define(\'ENABLE_SSL\', ' . $use_ssl . '); // secure webserver for checkout procedure?' . PHP_EOL .
-'  defined(\'USE_SSL_PROXY\') or define(\'USE_SSL_PROXY\', false); // using SSL proxy?' . PHP_EOL .
 '' . PHP_EOL .
 '  // session handling' . PHP_EOL .
 '  defined(\'STORE_SESSIONS\') or define(\'STORE_SESSIONS\', \'' . (($session == 'files') ? '' : 'mysql') . '\'); // leave empty \'\' for default handler or set to \'mysql\'' . PHP_EOL .                     

@@ -46,7 +46,6 @@
 
   // secure SSL
   defined('ENABLE_SSL') or define('ENABLE_SSL', false); // secure webserver for checkout procedure?
-  defined('USE_SSL_PROXY') or define('USE_SSL_PROXY', false); // using SSL proxy?
   
   // session handling
   defined('STORE_SESSIONS') or define('STORE_SESSIONS', 'mysql'); // leave empty '' for default handler or set to 'mysql'
