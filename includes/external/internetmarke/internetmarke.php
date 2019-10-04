@@ -50,6 +50,11 @@
     function createLabel($data) {
       global $messageStack;
       
+      if ($this->user_token == '') {
+        $messageStack->add_session('invalid token', 'error');
+        return false;
+      }
+      
       $price_query = xtc_db_query("SELECT PROPR
                                      FROM `internetmarke`
                                     WHERE PROID = '".$data['product']."'");
