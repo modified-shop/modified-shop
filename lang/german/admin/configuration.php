@@ -934,7 +934,7 @@ define('ACCOUNT_TELEPHONE_OPTIONAL_TITLE', 'Telefonnummer optional');
 define('ACCOUNT_TELEPHONE_OPTIONAL_DESC', 'Soll die Telefonnummer nur optional abgefragt werden?');
 
 define('TRACKING_GOOGLEANALYTICS_UNIVERSAL_TITLE' , 'Google Universal Analytics');
-define('TRACKING_GOOGLEANALYTICS_UNIVERSAL_DESC' , 'Soll der Google Universal Analytics Code verwendet werden?<br/><br/><b>Achtung:</b> Sobald Sie in Ihrem Google Analytics Konto auf den neuen Google Universal Analytics Code umstellen, kann das bisherige Google Analytics nicht mehr verwendet werden!<br/><b>Achtung:</b> Das funktioniert nur mit einem ab Shopversion 2.0.0.0 kompatiblem Template!');
+define('TRACKING_GOOGLEANALYTICS_UNIVERSAL_DESC' , 'Soll der Google Universal Analytics Code verwendet werden?<br/><b>Achtung:</b> Das funktioniert nur mit einem ab Shopversion 2.0.0.0 kompatiblem Template!');
 define('TRACKING_GOOGLEANALYTICS_DOMAIN_TITLE' , 'Google Universal Analytics Cookie Domain');
 define('TRACKING_GOOGLEANALYTICS_DOMAIN_DESC' , 'Tragen Sie hier Ihre Cookie Domain ein (<i>auto</i> oder <i>example.com</i> oder <i>www.example.com</i>). Funktioniert nur f&uuml;r Google Universal Analytics.');
 define('TRACKING_GOOGLE_LINKID_TITLE' , 'Google Universal Analytics LinkID');
@@ -944,7 +944,7 @@ define('TRACKING_GOOGLE_DISPLAY_DESC' , 'Die Bereiche zu demografischen Merkmale
 define('TRACKING_GOOGLE_ECOMMERCE_TITLE' , 'Google E-Commerce-Tracking');
 define('TRACKING_GOOGLE_ECOMMERCE_DESC' , 'Setzen Sie E-Commerce-Tracking ein, um herauszufinden, was Besucher &uuml;ber Ihre Website oder App kaufen. Zudem erhalten Sie folgende Informationen:<br><br><strong>Produkte:</strong> Gekaufte Produkte, sowie die Mengen und die mit diesen Produkten erzielten Ums&auml;tze<br><strong>Transaktionen:</strong> Informationen zu Umsatz, Steuern, Versandkosten und Mengen f&uuml;r jede Transaktion<br><strong>Zeit bis zum Kauf:</strong> Anzahl von Tagen und Besuchen, beginnend von der aktuellen Kampagne bis zum Abschluss der Transaktion.');
 define('TRACKING_GOOGLEANALYTICS_GTAG_TITLE' , 'Google Analytics GTAG');
-define('TRACKING_GOOGLEANALYTICS_GTAG_DESC' , 'Soll der Google gloabl Site Tag verwendet werden?<br/><br/><b>Achtung:</b> Sobald Sie in Ihrem Google Analytics Konto auf den neuen Google Universal Analytics Code umstellen, kann das bisherige Google Analytics nicht mehr verwendet werden!');
+define('TRACKING_GOOGLEANALYTICS_GTAG_DESC' , 'Soll der Google global Site Tag verwendet werden?');
 
 define('NEW_ATTRIBUTES_STYLING_TITLE', 'Attribut Verwaltung Styling');
 define('NEW_ATTRIBUTES_STYLING_DESC', 'In der Attribut Verwaltung das Styling bei den Checkboxen/Dropdowns aktivieren? Bei sehr vielen Attributen und Performanceproblemen auf Nein/false setzen.');
