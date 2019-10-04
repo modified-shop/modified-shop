@@ -110,6 +110,10 @@
         $check_query = xtc_db_query("SHOW CREATE TABLE `engine`");
         $check = xtc_db_fetch_array($check_query);
         
+        if (strpos($http_server, 'https:')) {
+          $use_ssl = 'true';
+        }
+        
         $pos = stripos($check['Create Table'], 'engine=');
         if ($pos !== false) {
           $engine = trim(substr($check['Create Table'], ($pos + 7), (strpos($check['Create Table'], ' ', $pos) - $pos - 7)));
@@ -268,7 +272,7 @@
   if (function_exists('mysqli_connect')) {
     $db_type_array[] = array('id' => 'mysqli', 'text' => 'MySQLi');
   }
-  if (function_exists('mysql_connect')) {
+  if (function_exists('mysql_connect') && count($db_type_array) > 1) {
     $db_type_array[] = array('id' => 'mysql', 'text' => 'MySQL');
   }
 
