@@ -1802,7 +1802,8 @@ color:#af417e;
   opacity: 0.2 !important;
 }
 
-img.thumbnail-catimage {
+img.thumbnail-catimage,
+img.thumbnail-manufacturer {
   vertical-align:top;
   max-width:100%;
   height:auto;
@@ -1812,5 +1813,5 @@ img.thumbnail-productsimage {
   vertical-align:top;
   max-width:100%;
   height:auto;
-  max-height:100px;
+  max-height:200px;
 }
