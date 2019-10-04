@@ -937,7 +937,7 @@ define('ACCOUNT_TELEPHONE_OPTIONAL_TITLE', 'Telephone number optional');
 define('ACCOUNT_TELEPHONE_OPTIONAL_DESC', 'Telephone number only optional on registration?');
 
 define('TRACKING_GOOGLEANALYTICS_UNIVERSAL_TITLE' , 'Google Universal Analytics');
-define('TRACKING_GOOGLEANALYTICS_UNIVERSAL_DESC' , 'Use Google Universal Analytics Code?<br/><br/><b>Attention:</b> After switching to Google Universal Analytics it is not possible to go back to the old one!<br/><b>Attention:</b> This only works with a shop version 2.0.0.0 compatible template!');
+define('TRACKING_GOOGLEANALYTICS_UNIVERSAL_DESC' , 'Use Google Universal Analytics Code?<br/><b>Attention:</b> This only works with a shop version 2.0.0.0 compatible template!');
 define('TRACKING_GOOGLEANALYTICS_DOMAIN_TITLE' , 'Google Universal Analytics Cookie Domain');
 define('TRACKING_GOOGLEANALYTICS_DOMAIN_DESC' , 'Please enter the Cookie Domain (<i>auto</i> or <i>example.com</i> or <i>www.example.com</i>). Only works with Google Universal Analytics.');
 define('TRACKING_GOOGLE_LINKID_TITLE' , 'Google Universal Analytics LinkID');
@@ -947,7 +947,7 @@ define('TRACKING_GOOGLE_DISPLAY_DESC' , 'The areas to demographics and interests
 define('TRACKING_GOOGLE_ECOMMERCE_TITLE' , 'Google E-Commerce Tracking');
 define('TRACKING_GOOGLE_ECOMMERCE_DESC' , 'Set up an E-Commerce tracking to find out what visitors buy from your website or app. In addition, you receive the following information:<br><br><strong>Products:</strong> Purchased products and the quantities and the revenues from these products<br><strong>Transactions:</strong> Information about sales, tax, shipping costs and quantities for each transaction<br><strong>time to Purchase:</strong> Number of days and visits, starting from the current campaign until the completion of the transaction');
 define('TRACKING_GOOGLEANALYTICS_GTAG_TITLE' , 'Google Analytics GTAG');
-define('TRACKING_GOOGLEANALYTICS_GTAG_DESC' , 'Use Google gloabl Site Tag?<br/><br/><b>Attention:</b> After switching to Google Universal Analytics it is not possible to go back to the old one!');
+define('TRACKING_GOOGLEANALYTICS_GTAG_DESC' , 'Use Google global Site Tag?');
 
 define('NEW_ATTRIBUTES_STYLING_TITLE', 'Attribute Manager Styling');
 define('NEW_ATTRIBUTES_STYLING_DESC', 'Enable styling of the checkboxes/dropdowns in the attribute manager? Set it to "No" if you experience problems with a huge number of attributes and performance problems.');
