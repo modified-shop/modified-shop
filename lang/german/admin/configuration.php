@@ -943,6 +943,8 @@ define('TRACKING_GOOGLE_DISPLAY_TITLE' , 'Google Universal Analytics Displayfeat
 define('TRACKING_GOOGLE_DISPLAY_DESC' , 'Die Bereiche zu demografischen Merkmalen und zum Interesse enthalten eine &Uuml;bersicht sowie neue Berichte zur Leistung nach Alter, Geschlecht und Interessenkategorien. Funktioniert nur f&uuml;r Google Universal Analytics.');
 define('TRACKING_GOOGLE_ECOMMERCE_TITLE' , 'Google E-Commerce-Tracking');
 define('TRACKING_GOOGLE_ECOMMERCE_DESC' , 'Setzen Sie E-Commerce-Tracking ein, um herauszufinden, was Besucher &uuml;ber Ihre Website oder App kaufen. Zudem erhalten Sie folgende Informationen:<br><br><strong>Produkte:</strong> Gekaufte Produkte, sowie die Mengen und die mit diesen Produkten erzielten Ums&auml;tze<br><strong>Transaktionen:</strong> Informationen zu Umsatz, Steuern, Versandkosten und Mengen f&uuml;r jede Transaktion<br><strong>Zeit bis zum Kauf:</strong> Anzahl von Tagen und Besuchen, beginnend von der aktuellen Kampagne bis zum Abschluss der Transaktion.');
+define('TRACKING_GOOGLEANALYTICS_GTAG_TITLE' , 'Google Analytics GTAG');
+define('TRACKING_GOOGLEANALYTICS_GTAG_DESC' , 'Soll der Google gloabl Site Tag verwendet werden?<br/><br/><b>Achtung:</b> Sobald Sie in Ihrem Google Analytics Konto auf den neuen Google Universal Analytics Code umstellen, kann das bisherige Google Analytics nicht mehr verwendet werden!');
 
 define('NEW_ATTRIBUTES_STYLING_TITLE', 'Attribut Verwaltung Styling');
 define('NEW_ATTRIBUTES_STYLING_DESC', 'In der Attribut Verwaltung das Styling bei den Checkboxen/Dropdowns aktivieren? Bei sehr vielen Attributen und Performanceproblemen auf Nein/false setzen.');
