@@ -1801,3 +1801,16 @@ color:#af417e;
   background-color: #000 !important;
   opacity: 0.2 !important;
 }
+
+img.thumbnail-catimage {
+  vertical-align:top;
+  max-width:100%;
+  height:auto;
+  max-height:100px;
+}
+img.thumbnail-productsimage {
+  vertical-align:top;
+  max-width:100%;
+  height:auto;
+  max-height:100px;
+}

@@ -205,7 +205,7 @@
             <tr>
               <td class="dataTableConfig col-left"><?php echo TEXT_EDIT_CATEGORIES_IMAGE; ?></td>
               <td class="dataTableConfig col-middle"><?php echo $cInfo->categories_image; ?></td>
-              <td class="dataTableConfig col-right"<?php echo $rowspan;?>><?php if ($cInfo->categories_image) { ?><img src="<?php echo DIR_WS_CATALOG.'images/categories/'.$cInfo->categories_image; ?>" /><?php } ?></td>
+              <td class="dataTableConfig col-right"<?php echo $rowspan;?>><?php if ($cInfo->categories_image) { ?><img class="thumbnail-catimage" src="<?php echo DIR_WS_CATALOG.'images/categories/'.$cInfo->categories_image; ?>" /><?php } ?></td>
             </tr>
             <tr>
               <td class="dataTableConfig col-left"><?php echo TEXT_EDIT_CATEGORIES_IMAGE; ?></td>

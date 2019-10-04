@@ -29,7 +29,7 @@ if ($_GET['action'] == 'new_product') {
     <tr>
       <td class="dataTableConfig col-left"><?php echo TEXT_PRODUCTS_IMAGE; ?></td>
       <td class="dataTableConfig col-middle"><?php echo $pInfo->products_image; ?></td>
-      <td class="dataTableConfig col-right"<?php echo $rowspan;?>><?php echo $pInfo->products_image ? xtc_image(DIR_WS_CATALOG_THUMBNAIL_IMAGES.$pInfo->products_image, 'Standard Image') : xtc_draw_separator('pixel_trans.gif', PRODUCT_IMAGE_THUMBNAIL_WIDTH, 10); ?></td>
+      <td class="dataTableConfig col-right"<?php echo $rowspan;?>><?php echo $pInfo->products_image ? xtc_image(DIR_WS_CATALOG_THUMBNAIL_IMAGES.$pInfo->products_image, 'Standard Image','','','class="thumbnail-productsimage"') : xtc_draw_separator('pixel_trans.gif', PRODUCT_IMAGE_THUMBNAIL_WIDTH, 10); ?></td>
     </tr>
     <tr>
       <td class="dataTableConfig col-left"><?php echo TEXT_PRODUCTS_IMAGE; ?></td>
@@ -54,7 +54,7 @@ if ($_GET['action'] == 'new_product') {
         <tr>
           <td class="dataTableConfig col-left"><?php echo TEXT_PRODUCTS_IMAGE.' '. ($i +1); ?></td>
           <td class="dataTableConfig col-middle"><?php echo (isset($mo_images[$i]['image_name']) ? $mo_images[$i]['image_name'] : ''); ?></td>
-          <td class="dataTableConfig col-right"<?php echo $rowspan;?>><?php echo (isset($mo_images[$i]['image_name']) ? xtc_image(DIR_WS_CATALOG_THUMBNAIL_IMAGES.$mo_images[$i]['image_name'], 'Image '. ($i +1)) : xtc_draw_separator('pixel_trans.gif', PRODUCT_IMAGE_THUMBNAIL_WIDTH, 10)); ?></td>
+          <td class="dataTableConfig col-right"<?php echo $rowspan;?>><?php echo (isset($mo_images[$i]['image_name']) ? xtc_image(DIR_WS_CATALOG_THUMBNAIL_IMAGES.$mo_images[$i]['image_name'], 'Image '. ($i +1),'','','class="thumbnail-productsimage"') : xtc_draw_separator('pixel_trans.gif', PRODUCT_IMAGE_THUMBNAIL_WIDTH, 10)); ?></td>
         </tr>
         <tr>
           <td class="dataTableConfig col-left"><?php echo TEXT_PRODUCTS_IMAGE.' '. ($i +1); ?></td>
