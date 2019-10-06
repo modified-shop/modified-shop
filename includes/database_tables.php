@@ -31,6 +31,7 @@
   define('TABLE_CONFIGURATION', 'configuration');
   define('TABLE_CONFIGURATION_GROUP', 'configuration_group');
   define('TABLE_CONTENT_MANAGER','content_manager');
+  define('TABLE_CONTENT_MANAGER_CONTENT', 'content_manager_content');
   define('TABLE_COUNTRIES', 'countries');
   define('TABLE_COUPON_EMAIL_TRACK', 'coupon_email_track');
   define('TABLE_COUPON_GV_CUSTOMER', 'coupon_gv_customer');

@@ -94,6 +94,8 @@ if ($language_not_found === true) {
   }
   $smarty->assign('CONTENT_BODY', $content_body);
   
+  include (DIR_WS_MODULES.'content_manager_media.php');
+  
   $content_template = 'content.html';
   
   foreach(auto_include(DIR_FS_CATALOG.'includes/extra/shop_content_end/','php') as $file) require_once ($file);
