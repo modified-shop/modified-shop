@@ -14,8 +14,9 @@
    --------------------------------------------------------------*/
    
  define('HEADING_TITLE','Content Manager');
- define('HEADING_CONTENT','Seiten Content');
+ define('HEADING_CONTENT','Seiten');
  define('HEADING_PRODUCTS_CONTENT','Artikel Content');
+ define('HEADING_CONTENT_MANAGER_CONTENT','Seiten Content');
  define('TABLE_HEADING_CONTENT_ID','ID');
  define('TABLE_HEADING_CONTENT_TITLE','Titel');
  define('TABLE_HEADING_CONTENT_FILE','Datei');
@@ -24,6 +25,9 @@
  define('TABLE_HEADING_PRODUCTS_ID','ID');
  define('TABLE_HEADING_PRODUCTS','Artikel');
  define('TABLE_HEADING_PRODUCTS_CONTENT_ID','ID');
+ define('TABLE_HEADING_CONTENT_MANAGER_ID','ID');
+ define('TABLE_HEADING_CONTENT_MANAGER','Seiten');
+ define('TABLE_HEADING_CONTENT_MANAGER_CONTENT_ID','ID');
  define('TABLE_HEADING_LANGUAGE','Sprache');
  define('TABLE_HEADING_CONTENT_NAME','Name/Dateiname');
  define('TABLE_HEADING_CONTENT_LINK','Link');
@@ -69,6 +73,9 @@
  define('TEXT_GROUP_DESC','Mit dieser ID verkn&uuml;pfen Sie gleiche Themen unterschiedlicher Sprachen miteinander.');
  
  define('TEXT_CONTENT_DESCRIPTION','Mit diesem Content Manager haben Sie die M&ouml;glichkeit, jeden beliebige Dateityp einem Artikel hinzuzuf&uuml;gen.<br />Z.B. Artikelbeschreibungen, Handb&uuml;cher, technische Datenbl&auml;tter, H&ouml;rproben, usw...<br />Diese Elemente werden In der Artikel-Detailansicht angezeigt.<br /><br />');
+ define('TEXT_CONTENT_MANAGER_CONTENT', 'Content:');
+ define('TEXT_CONTENT_MANAGER_DESCRIPTION','Mit diesem Content Manager haben Sie die M&ouml;glichkeit, jeden beliebigen Dateityp einem Content hinzuzuf&uuml;gen.<br />Z.B. PDF f&uuml;r Rechtstexte, usw...<br />Diese Elemente werden in der Contentansicht angezeigt.<br /><br />');
+
  define('TEXT_FILENAME','Benutze Datei:');
  define('TEXT_FILE_DESC','Beschreibung:');
  define('USED_SPACE','Verwendeter Speicherplatz:');
@@ -84,4 +91,5 @@
   
  define('TEXT_CONTENT_DOUBLE_GROUP_INDEX', 'Doppelter Content Gruppen Index! Bitte neu speichern. Das Problem wird damit automatisch behoben!');
  define('TEXT_CHARACTERS','Zeichen');
+ define('TEXT_KEEP_FILENAME', 'Dateiname beibehalten:');
 ?>

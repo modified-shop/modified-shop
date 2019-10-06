@@ -44,6 +44,7 @@
         'import',
         'log',
         'media/content',
+        'media/content/backup',
         'media/products',
         'media/products/backup',
         'templates_c'
