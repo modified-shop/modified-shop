@@ -74,7 +74,7 @@
 
  define('TEXT_CONTENT_DESCRIPTION','With this Content Manager you can add any filetype to a product, like technical sheets, productdetails, videos. These elements will be displayed on the products detailpage.<br /><br />');
  define('TEXT_CONTENT_MANAGER_CONTENT', 'Content:');
- define('TEXT_CONTENT_MANAGER_DESCRIPTION','With this Content Manager you can add any filetype to a content page.<br />These elements will be displayed on the content page.<br /><br />');
+ define('TEXT_CONTENT_MANAGER_DESCRIPTION','With this Content Manager you can add any filetype to a content page.<br />E.g. PDF for legal texts, etc...<br />These elements will be displayed on the content page.<br /><br />');
 
  define('TEXT_FILENAME','Used File:');
  define('TEXT_FILE_DESC','Description:');

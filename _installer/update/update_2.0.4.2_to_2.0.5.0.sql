@@ -193,4 +193,19 @@ ALTER TABLE `specials` ADD KEY `idx_expires_date` (`expires_date`);
 ALTER TABLE `products_tags_options` ADD KEY `idx_filter_multi` (`languages_id`,`filter`,`options_id`,`sort_order`);
 ALTER TABLE `products_tags_values` ADD KEY `idx_filter_multi` (`languages_id`,`filter`,`options_id`,`sort_order`);
 
+#GTB - 2019-10-06 - update content manager
+CREATE TABLE IF NOT EXISTS content_manager_content (
+  content_manager_id INT(11) NOT NULL AUTO_INCREMENT,
+  content_id INT(11) NOT NULL DEFAULT 0,
+  group_ids TEXT,
+  content_name VARCHAR(255) NOT NULL DEFAULT '',
+  content_file VARCHAR(255) NOT NULL,
+  content_link TEXT NOT NULL,
+  languages_id INT(11) NOT NULL,
+  content_read INT(11) NOT NULL DEFAULT 0,
+  file_comment TEXT NOT NULL,
+  PRIMARY KEY (content_manager_id),
+  KEY idx_content_id (content_id)
+);
+
 # Keep an empty line at the end of this file for the db_updater to work properly
