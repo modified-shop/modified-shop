@@ -28,7 +28,9 @@ class it_recht_kanzlei {
     $this->sort_order = '';
   }
  
-  function process() {}
+  function process() {
+    $this->install_db();
+  }
 
   // display
   function display() {
@@ -60,9 +62,24 @@ class it_recht_kanzlei {
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_API_IT_RECHT_KANZLEI_PDF_AGB', 'true',  '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_API_IT_RECHT_KANZLEI_PDF_DSE', 'true',  '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_API_IT_RECHT_KANZLEI_PDF_WRB', 'true',  '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
-    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_API_IT_RECHT_KANZLEI_PDF_FILE', '/media/content/',  '6', '1', '', now())");
+    //xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_API_IT_RECHT_KANZLEI_PDF_FILE', '/media/content/',  '6', '1', '', now())");
+    
+    $this->install_db();
   }
-
+  
+  // install_db
+  function install_db() {
+    $table_array = array(
+      array('column' => 'external', 'default' => 'INT(1) NOT NULL'),
+    );
+    foreach ($table_array as $table) {
+      $check_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_CONTENT_MANAGER_CONTENT." LIKE '".xtc_db_input($table['column'])."'");
+      if (xtc_db_num_rows($check_query) < 1) {
+        xtc_db_query("ALTER TABLE ".TABLE_CONTENT_MANAGER_CONTENT." ADD ".$table['column']." ".$table['default']."");
+      }
+    }  
+  }
+  
   // remove
   function remove() {
     xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key IN ('" . implode("', '", $this->keys()) . "')");
@@ -80,7 +97,7 @@ class it_recht_kanzlei {
                  'MODULE_API_IT_RECHT_KANZLEI_PDF_AGB', 
                  'MODULE_API_IT_RECHT_KANZLEI_PDF_DSE', 
                  'MODULE_API_IT_RECHT_KANZLEI_PDF_WRB', 
-                 'MODULE_API_IT_RECHT_KANZLEI_PDF_FILE', 
+                 //'MODULE_API_IT_RECHT_KANZLEI_PDF_FILE', 
                  );
   }
 }

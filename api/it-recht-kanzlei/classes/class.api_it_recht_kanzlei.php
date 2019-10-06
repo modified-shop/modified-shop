@@ -158,9 +158,11 @@ class api_it_recht_kanzlei {
       }
       
       $local_dir_for_pdf_storage = 'media/content/';
+      /*
       if (MODULE_API_IT_RECHT_KANZLEI_PDF_FILE != '') {
         $local_dir_for_pdf_storage = trim(MODULE_API_IT_RECHT_KANZLEI_PDF_FILE, '/').'/';
       }
+      */
       
       // Check PDF files required
       $local_rechtstext_pdf_type = array();
@@ -184,7 +186,7 @@ class api_it_recht_kanzlei {
       $pdf_file_stored = false;
       $file_pdf_targetfilename = $xml->rechtstext_pdf_filenamebase_suggestion.'_'.$languages_code.'.pdf';
       $file_pdf_target = DIR_FS_CATALOG.$local_dir_for_pdf_storage.$file_pdf_targetfilename;
-      $file_pdf_target_temp = DIR_FS_CATALOG.$local_dir_for_pdf_storage.md5($xml->rechtstext_pdf_filenamebase_suggestion.'_'.$languages_code).'.pdf';
+      $file_pdf_target_temp = DIR_FS_CATALOG.$local_dir_for_pdf_storage.md5($file_pdf_targetfilename).'.pdf';
 
       if (count($local_rechtstext_pdf_type) > 0 && in_array($xml->rechtstext_type, $local_rechtstext_pdf_type)) {        
         if (in_array($xml->rechtstext_type, $local_rechtstext_pdf_type)) {
@@ -238,23 +240,13 @@ class api_it_recht_kanzlei {
       }
       
       // text type
-      $pdf_file_text = '';
       $content_group = '';
       if ($xml->rechtstext_type == 'agb') {
         $content_group = MODULE_API_IT_RECHT_KANZLEI_TYPE_AGB;
-        if ($pdf_file_stored === true) {
-          $pdf_file_text = '<br /><br /><a href="'.((ENABLE_SSL === true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.$local_dir_for_pdf_storage.$file_pdf_targetfilename.'" target="_blank">'.sprintf($this->document_name[$languages_code], $xml->rechtstext_title).'</a>';
-        }
       } elseif ($xml->rechtstext_type == 'datenschutz') {
         $content_group = MODULE_API_IT_RECHT_KANZLEI_TYPE_DSE;
-        if ($pdf_file_stored === true) {
-          $pdf_file_text = '<br /><br /><a href="'.((ENABLE_SSL === true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.$local_dir_for_pdf_storage.$file_pdf_targetfilename.'" target="_blank">'.sprintf($this->document_name[$languages_code], $xml->rechtstext_title).'</a>';
-        }
       } elseif ($xml->rechtstext_type == 'widerruf') {
         $content_group = MODULE_API_IT_RECHT_KANZLEI_TYPE_WRB;
-        if ($pdf_file_stored === true) {
-          $pdf_file_text = '<br /><br /><a href="'.((ENABLE_SSL === true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.$local_dir_for_pdf_storage.$file_pdf_targetfilename.'" target="_blank">'.sprintf($this->document_name[$languages_code], $xml->rechtstext_title).'</a>';
-        }
       } elseif ($xml->rechtstext_type == 'impressum') {
         $content_group = MODULE_API_IT_RECHT_KANZLEI_TYPE_IMP;
       }
@@ -268,11 +260,35 @@ class api_it_recht_kanzlei {
                                       LIMIT 1");
         if (xtc_db_num_rows($check_query) > 0) {
           $check = xtc_db_fetch_array($check_query);
-          if ($check['content_text'] == $this->charset_decode_utf_8($xml->rechtstext_html.$pdf_file_text.'<style>.itkanzlei_first_headline{display:none;}</style>')) {
+
+          if ($pdf_file_stored === true) {
+            $sql_data_array = array(
+              'content_id' => $content_group,
+              'content_name' => $xml->rechtstext_title,
+              'content_file' => $file_pdf_targetfilename,
+              'languages_id' => $languages_id,
+              'external' => 1,
+            );
+
+            $check_dl_query = xtc_db_query("SELECT content_text 
+                                              FROM ".TABLE_CONTENT_MANAGER_CONTENT." 
+                                             WHERE content_id = '".$content_group."' 
+                                               AND languages_id = '".$languages_id."' 
+                                               AND external = 1
+                                             LIMIT 1");
+            if (xtc_db_num_rows($check_dl_query) > 0) {
+              $check_dl = xtc_db_fetch_array($check_dl_query);
+              xtc_db_perform(TABLE_CONTENT_MANAGER_CONTENT, $sql_data_array, 'update', "content_manager_id = '".$check_dl['content_manager_id']."'");
+            } else {
+              xtc_db_perform(TABLE_CONTENT_MANAGER_CONTENT, $sql_data_array);
+            }
+          }
+
+          if ($check['content_text'] == $this->charset_decode_utf_8($xml->rechtstext_html.'<style>.itkanzlei_first_headline{display:none;}</style>')) {
             $this->return_success($url);
           } else {
             $sql_data_array = array(
-              'content_text' => $this->charset_decode_utf_8($xml->rechtstext_html.$pdf_file_text.'<style>.itkanzlei_first_headline{display:none;}</style>'),
+              'content_text' => $this->charset_decode_utf_8($xml->rechtstext_html.'<style>.itkanzlei_first_headline{display:none;}</style>'),
               'content_title' => $this->charset_decode_utf_8($xml->rechtstext_title),
               'content_heading' => $this->charset_decode_utf_8($xml->rechtstext_title),
             );
