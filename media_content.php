@@ -50,7 +50,7 @@ if (isset($_GET['coID']) && (int)$_GET['coID'] > 0) {
       if (strpos($content_data['content_file'], '.txt'))
         echo '<pre>';
       if (strpos($mime_type, 'image') !== false) {
-        echo xtc_image('media/'.$path.'/'.$content_data['content_file']);
+        echo xtc_image('media/'.$path.'/'.$content_data['content_file'], $content_data['content_name']);
       } else {
         include (DIR_FS_CATALOG.'media/'.$path.'/'.$content_data['content_file']);
       }
