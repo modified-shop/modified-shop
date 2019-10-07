@@ -205,6 +205,29 @@ function xtc_php_mail($from_email_address, $from_email_name,
 
   //create attachments array for better handling
   $attachments = attachments_array($path_to_attachments,$path_to_more_attachments);
+  
+  $included_files = get_included_files();
+  if (is_array($included_files)) {
+    $conditions = CONTENT_CONDITIONS;
+    if (defined('RUND_MODE_ADMIN') && GROUP_CHECK == 'true') {
+      $conditions = " AND c1.group_ids LIKE '%c_".((isset($customers_status)) ? $customers_status : DEFAULT_CUSTOMERS_STATUS_ID_GUEST)."_group%' ";
+    }
+    $email_query = xtc_db_query("SELECT *
+                                   FROM ".TABLE_EMAIL_CONTENT."
+                                  WHERE languages_id = '".$lang_data['languages_id']."'
+                                        ".$conditions);
+    while ($email = xtc_db_fetch_array($email_query)) {  
+      foreach ($included_files as $files) {
+        if (strpos($files, $email['email_id'].'.html') !== false) {
+          if (is_file(DIR_FS_CATALOG.'media/content/'.$email['content_file'])) {
+            $attachments[] = DIR_FS_CATALOG.'media/content/'.$email['content_file'];
+          }
+        }
+      }
+    }
+  }
+  $attachments = array_unique($attachments); 
+
   // add attachments
   for( $i = 0, $n = count($attachments); $i < $n; $i++) {
     $mail->addAttachment($attachments[$i]);

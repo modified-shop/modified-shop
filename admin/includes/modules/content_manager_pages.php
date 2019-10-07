@@ -22,6 +22,7 @@ if (!$action) {
   <div class="pageHeadingTab flt-l pdg2"><?php echo HEADING_CONTENT; ?></div>
   <div class="pageHeadingTaba flt-l pdg2"><a onclick="this.blur();" href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER, 'set=product'); ?>"><?php echo HEADING_PRODUCTS_CONTENT; ?></a></div>
   <div class="pageHeadingTaba flt-l pdg2"><a onclick="this.blur();" href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER, 'set=content'); ?>"><?php echo HEADING_CONTENT_MANAGER_CONTENT; ?></a></div>
+  <div class="pageHeadingTaba flt-l pdg2"><a onclick="this.blur();" href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER, 'set=email'); ?>"><?php echo HEADING_EMAIL_CONTENT; ?></a></div>
   <div class="borderTab">
     <div class="main clear"><?php echo CONTENT_NOTE; ?></div>
     <?php
@@ -198,20 +199,20 @@ if (!$action) {
   }
   
   // content file
-  $files = array();
-  $files_array = new DirectoryIterator(DIR_FS_CATALOG.'media/content/');
-  foreach ($files_array as $file) {
+  $content_files = array();
+  $files = new DirectoryIterator(DIR_FS_CATALOG.'media/content/');
+  foreach ($files as $file) {
     if ($file->isDot() === false
         && $file->isDir() === false
         )
     {
-      $files[] = array(
+      $content_files[] = array(
         'id' => $file->getFilename(),
         'text' => $file->getFilename()
       );
     }
   }
-  sort($files);
+  array_multisort(array_column($content_files, 'text'), SORT_ASC, $content_files);
 
   ?>
   <div style="width:100%;padding:5px;">
@@ -432,7 +433,7 @@ if (!$action) {
             <td class="dataTableConfig col-single-right">
               <?php
                 echo TEXT_CHOOSE_FILE_SERVER.'<br /><br />';
-                echo xtc_draw_pull_down_menu('select_file['.$i.']['.$languages[$l]['id'].']', array_merge(array(array('id' => 'default','text' => (($content_lang['content_file'] != '') ? TEXT_NO_FILE : TEXT_SELECT))), $files), $content_lang['content_file']);
+                echo xtc_draw_pull_down_menu('select_file['.$i.']['.$languages[$l]['id'].']', array_merge(array(array('id' => 'default','text' => (($content_lang['content_file'] != '') ? TEXT_NO_FILE : TEXT_SELECT))), $content_files), $content_lang['content_file']);
                 if ($content_lang['content_file'] != '') {
                   echo ' '.TEXT_CURRENT_FILE.' <b>'.$content_lang['content_file'].'</b><br />';
                 }

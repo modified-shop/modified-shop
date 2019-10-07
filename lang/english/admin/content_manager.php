@@ -17,6 +17,7 @@
  define('HEADING_CONTENT','Site');
  define('HEADING_PRODUCTS_CONTENT','Products content');
  define('HEADING_CONTENT_MANAGER_CONTENT','Site content');
+ define('HEADING_EMAIL_CONTENT','E-Mail Content');
  define('TABLE_HEADING_CONTENT_ID','ID');
  define('TABLE_HEADING_CONTENT_TITLE','Title');
  define('TABLE_HEADING_CONTENT_FILE','File');
@@ -28,6 +29,8 @@
  define('TABLE_HEADING_CONTENT_MANAGER_ID','ID');
  define('TABLE_HEADING_CONTENT_MANAGER','Seiten');
  define('TABLE_HEADING_CONTENT_MANAGER_CONTENT_ID','ID');
+ define('TABLE_HEADING_EMAIL_ID','ID');
+ define('TABLE_HEADING_EMAIL','E-Mail');
  define('TABLE_HEADING_LANGUAGE','Language');
  define('TABLE_HEADING_CONTENT_NAME','Name/Filename');
  define('TABLE_HEADING_CONTENT_LINK','Link');
@@ -75,6 +78,8 @@
  define('TEXT_CONTENT_DESCRIPTION','With this Content Manager you can add any filetype to a product, like technical sheets, productdetails, videos. These elements will be displayed on the products detailpage.<br /><br />');
  define('TEXT_CONTENT_MANAGER_CONTENT', 'Content:');
  define('TEXT_CONTENT_MANAGER_DESCRIPTION','With this Content Manager you can add any filetype to a content page.<br />E.g. PDF for legal texts, etc...<br />These elements will be displayed on the content page.<br /><br />');
+ define('TEXT_EMAIL_CONTENT', 'E-Mail Content:');
+ define('TEXT_EMAIL_DESCRIPTION','With this Content Manager you can add any filetype as an E-Mail attachment.<br />E.g. PDF for legal texts, etc...<br /><br />');
 
  define('TEXT_FILENAME','Used File:');
  define('TEXT_FILE_DESC','Description:');

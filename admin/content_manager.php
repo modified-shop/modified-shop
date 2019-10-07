@@ -51,6 +51,11 @@
         $paramas = 'cID='.(int)$_GET['cID'];
         xtc_db_query("DELETE FROM ".TABLE_CONTENT_MANAGER_CONTENT." where content_manager_id='".$g_coID."'");
         break;
+
+      case 'delete_email':
+        $paramas = 'eID='.$_GET['eID'];
+        xtc_db_query("DELETE FROM ".TABLE_EMAIL_CONTENT." where content_id='".$g_coID."'");
+        break;
     }
     
     if (isset($_GET['cPath'])) {
@@ -208,6 +213,8 @@
     'insert_products',
     'update_content_manager',
     'insert_content_manager',
+    'update_email',
+    'insert_email',
   );
   
   if (in_array($id, $action_id)) {
@@ -215,7 +222,7 @@
     $subaction = array_shift($action_array);
     
     $type = $path = implode('_', $action_array);
-    if ($type == 'content_manager') {
+    if ($type == 'content_manager' || $type == 'email') {
       $path = 'content';
     }
     $table = constant('TABLE_'.strtoupper($type).'_CONTENT');
@@ -378,6 +385,10 @@
                   //products content
                   include(DIR_WS_MODULES.'content_manager_content.php');
                   $newaction = 'new_content_manager_content';
+                } elseif ($set == 'email') {
+                  //products content
+                  include(DIR_WS_MODULES.'content_manager_email.php');
+                  $newaction = 'new_email_content';
                 }
               ?>
               <?php                        
