@@ -50,6 +50,7 @@
   define('TABLE_CUSTOMERS_STATUS', 'customers_status');
   define('TABLE_CUSTOMERS_STATUS_HISTORY', 'customers_status_history');
   define('TABLE_DATABASE_VERSION', 'database_version');
+  define('TABLE_EMAIL_CONTENT', 'email_content');
   define('TABLE_GEO_ZONES', 'geo_zones');
   define('TABLE_LANGUAGES', 'languages');
   define('TABLE_MANUFACTURERS', 'manufacturers');

@@ -607,6 +607,21 @@ CREATE TABLE database_version (
   PRIMARY KEY (id)
 );
 
+DROP TABLE IF EXISTS email_content;
+CREATE TABLE email_content (
+  content_id INT(11) NOT NULL AUTO_INCREMENT,
+  email_id VARCHAR(64) NOT NULL DEFAULT 0,
+  group_ids TEXT,
+  content_name VARCHAR(255) NOT NULL DEFAULT '',
+  content_file VARCHAR(255) NOT NULL,
+  content_link TEXT NOT NULL,
+  languages_id INT(11) NOT NULL,
+  content_read INT(11) NOT NULL DEFAULT 0,
+  file_comment TEXT NOT NULL,
+  PRIMARY KEY (content_id),
+  KEY idx_email_id (email_id)
+);
+
 DROP TABLE IF EXISTS geo_zones;
 CREATE TABLE geo_zones (
   geo_zone_id INT(11) NOT NULL AUTO_INCREMENT,
