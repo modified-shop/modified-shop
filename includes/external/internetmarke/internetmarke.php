@@ -64,10 +64,13 @@
           new \Internetmarke\Name(null, new \Internetmarke\CompanyName(MODULE_INTERNETMARKE_COMPANY, new \Internetmarke\PersonName('', '', MODULE_INTERNETMARKE_FIRSTNAME, MODULE_INTERNETMARKE_LASTNAME))),
           new \Internetmarke\Address(MODULE_INTERNETMARKE_SUBURB, MODULE_INTERNETMARKE_STREET, '', MODULE_INTERNETMARKE_PLZ, MODULE_INTERNETMARKE_CITY, 'Country')
       );
+      
+      $person = new \Internetmarke\PersonName('', '', $this->order->delivery['firstname'], $this->order->delivery['lastname']);
       $receiver = new \Internetmarke\NamedAddress(
-          new \Internetmarke\Name(new \Internetmarke\PersonName('', '', $this->order->delivery['firstname'], $this->order->delivery['lastname']), $this->order->delivery['company']),
+          new \Internetmarke\Name((($this->order->delivery['company'] == '') ? $person : null), (($this->order->delivery['company'] != '') ? new \Internetmarke\CompanyName($this->order->delivery['company'], $person) : null)),
           new \Internetmarke\Address($this->order->delivery['suburb'], $this->order->delivery['street_address'], '', $this->order->delivery['postcode'], $this->order->delivery['city'], $this->get_country_iso_3($this->order->delivery['country_iso_2']))
       );
+      
       $address_binding = new \Internetmarke\AddressBinding($sender, $receiver);
 
       $order_item = new \Internetmarke\OrderItem($data['product'], null, $address_binding, new \Internetmarke\Position($data['column'],$data['row'],1), 'AddressZone');
