@@ -19,7 +19,7 @@ if (!$action) {
                                            cm.content_title
                                       FROM ".TABLE_CONTENT_MANAGER_CONTENT." cmc
                                       JOIN ".TABLE_CONTENT_MANAGER." cm
-                                           ON cm.content_group = cmc.content_id
+                                           ON cm.content_group = cmc.content_manager_id
                                               AND cm.languages_id = '".(int)$_SESSION['languages_id']."'
                                   GROUP BY cmc.content_id");
   $content_ids = array();
@@ -159,9 +159,9 @@ if (!$action) {
     case 'edit_content_manager_content':
     case 'new_content_manager_content':
       if ($action =='edit_content_manager_content') {
-        $content_query=xtc_db_query("SELECT*
+        $content_query=xtc_db_query("SELECT *
                                        FROM ".TABLE_CONTENT_MANAGER_CONTENT."
-                                      WHERE content_manager_id = '".$g_coID."'
+                                      WHERE content_id = '".$g_coID."'
                                       LIMIT 1");
         $content=xtc_db_fetch_array($content_query);
       }
