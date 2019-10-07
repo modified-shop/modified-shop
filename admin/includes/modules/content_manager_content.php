@@ -15,17 +15,17 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 if (!$action) {
   // content_manager content
   // load content into array
-  $content_id_query = xtc_db_query("SELECT cmc.content_id,
-                                            cm.content_title
-                                       FROM ".TABLE_CONTENT_MANAGER_CONTENT." cmc
-                                       JOIN ".TABLE_CONTENT_MANAGER." cm
-                                            ON cm.content_group = cmc.content_id
-                                               AND cm.languages_id = '".(int)$_SESSION['languages_id']."'
-                                   GROUP BY cmc.content_id");
+  $content_id_query = xtc_db_query("SELECT cmc.content_manager_id,
+                                           cm.content_title
+                                      FROM ".TABLE_CONTENT_MANAGER_CONTENT." cmc
+                                      JOIN ".TABLE_CONTENT_MANAGER." cm
+                                           ON cm.content_group = cmc.content_id
+                                              AND cm.languages_id = '".(int)$_SESSION['languages_id']."'
+                                  GROUP BY cmc.content_id");
   $content_ids = array();
   while ($content_id = xtc_db_fetch_array($content_id_query)) {
     $content_ids[] = array(
-      'id' => $content_id['content_id'],
+      'id' => $content_id['content_manager_id'],
       'name' => $content_id['content_title'],
     );
   }
@@ -58,12 +58,12 @@ if (!$action) {
           // display content elements
           $content_query=xtc_db_query("SELECT *
                                          FROM ".TABLE_CONTENT_MANAGER_CONTENT."
-                                        WHERE content_id = '".(int)$_GET['cID']."'
+                                        WHERE content_manager_id = '".(int)$_GET['cID']."'
                                      ORDER BY content_name");
           $content_array = array();
           while ($content_data = xtc_db_fetch_array($content_query)) {
             $content_array[] = array(
-              'id' => $content_data['content_manager_id'],
+              'id' => $content_data['content_id'],
               'name' => $content_data['content_name'],
               'file' => $content_data['content_file'],
               'link' => $content_data['content_link'],
@@ -258,7 +258,7 @@ if (!$action) {
         <table class="tableConfig borderall">
           <tr>
             <td class="dataTableConfig col-left"><?php echo TEXT_CONTENT_MANAGER_CONTENT; ?></td>
-            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_pull_down_menu('product',$content_array,$content['content_id']); ?></td>
+            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_pull_down_menu('product',$content_array,$content['content_manager_id']); ?></td>
           </tr>
           <tr>
             <td class="dataTableConfig col-left"><?php echo TEXT_LANGUAGE; ?></td>

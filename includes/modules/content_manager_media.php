@@ -15,14 +15,14 @@
  ---------------------------------------------------------------------------------------*/
 
 //get downloads
-$content_query = xtDBquery("SELECT content_manager_id, 
+$content_query = xtDBquery("SELECT content_id, 
                                    content_name, 
                                    content_link, 
                                    content_file, 
                                    content_read, 
                                    file_comment
                               FROM ".TABLE_CONTENT_MANAGER_CONTENT."
-                             WHERE content_id = '".(int)$_GET['coID']."'
+                             WHERE content_manager_id = '".(int)$_GET['coID']."'
                                    ".CONTENT_CONDITIONS."
                                AND languages_id = '".(int) $_SESSION['languages_id']."'");
 
@@ -53,7 +53,7 @@ if (xtc_db_num_rows($content_query, true) > 0) {
         $btnlink_parameters = defined('TPL_POPUP_CONTENT_LINK_PARAMETERS') ? TPL_POPUP_CONTENT_LINK_PARAMETERS : POPUP_CONTENT_LINK_PARAMETERS;
         $btnlink_class = defined('TPL_POPUP_CONTENT_LINK_CLASS') ? TPL_POPUP_CONTENT_LINK_CLASS : POPUP_CONTENT_LINK_CLASS;
         $button = '<a target="_blank"'.
-                  ' href="'.xtc_href_link(FILENAME_MEDIA_CONTENT, 'type=content_manager&coID='.$content_data['content_manager_id'].$btnlink_parameters).'"'.
+                  ' href="'.xtc_href_link(FILENAME_MEDIA_CONTENT, 'type=content_manager&coID='.$content_data['content_id'].$btnlink_parameters).'"'.
                   ' class="'.$btnlink_class.'">'.
                   xtc_image_button('button_view.gif', TEXT_VIEW).
                   '</a>';

@@ -263,22 +263,22 @@ class api_it_recht_kanzlei {
 
           if ($pdf_file_stored === true) {
             $sql_data_array = array(
-              'content_id' => $content_group,
+              'content_manager_id' => $content_group,
               'content_name' => $xml->rechtstext_title,
               'content_file' => $file_pdf_targetfilename,
               'languages_id' => $languages_id,
               'external' => 1,
             );
 
-            $check_dl_query = xtc_db_query("SELECT content_text 
+            $check_dl_query = xtc_db_query("SELECT content_id
                                               FROM ".TABLE_CONTENT_MANAGER_CONTENT." 
-                                             WHERE content_id = '".$content_group."' 
+                                             WHERE content_manager_id = '".$content_group."' 
                                                AND languages_id = '".$languages_id."' 
                                                AND external = 1
                                              LIMIT 1");
             if (xtc_db_num_rows($check_dl_query) > 0) {
               $check_dl = xtc_db_fetch_array($check_dl_query);
-              xtc_db_perform(TABLE_CONTENT_MANAGER_CONTENT, $sql_data_array, 'update', "content_manager_id = '".$check_dl['content_manager_id']."'");
+              xtc_db_perform(TABLE_CONTENT_MANAGER_CONTENT, $sql_data_array, 'update', "content_id = '".$check_dl['content_id']."'");
             } else {
               xtc_db_perform(TABLE_CONTENT_MANAGER_CONTENT, $sql_data_array);
             }
