@@ -17,6 +17,7 @@
  define('HEADING_CONTENT','Seiten');
  define('HEADING_PRODUCTS_CONTENT','Artikel Content');
  define('HEADING_CONTENT_MANAGER_CONTENT','Seiten Content');
+ define('HEADING_EMAIL_CONTENT','E-Mail Content');
  define('TABLE_HEADING_CONTENT_ID','ID');
  define('TABLE_HEADING_CONTENT_TITLE','Titel');
  define('TABLE_HEADING_CONTENT_FILE','Datei');
@@ -75,6 +76,8 @@
  define('TEXT_CONTENT_DESCRIPTION','Mit diesem Content Manager haben Sie die M&ouml;glichkeit, jeden beliebige Dateityp einem Artikel hinzuzuf&uuml;gen.<br />Z.B. Artikelbeschreibungen, Handb&uuml;cher, technische Datenbl&auml;tter, H&ouml;rproben, usw...<br />Diese Elemente werden In der Artikel-Detailansicht angezeigt.<br /><br />');
  define('TEXT_CONTENT_MANAGER_CONTENT', 'Content:');
  define('TEXT_CONTENT_MANAGER_DESCRIPTION','Mit diesem Content Manager haben Sie die M&ouml;glichkeit, jeden beliebigen Dateityp einem Content hinzuzuf&uuml;gen.<br />Z.B. PDF f&uuml;r Rechtstexte, usw...<br />Diese Elemente werden in der Contentansicht angezeigt.<br /><br />');
+ define('TEXT_EMAIL_CONTENT', 'E-Mail Content:');
+ define('TEXT_EMAIL_DESCRIPTION','Mit diesem Content Manager haben Sie die M&ouml;glichkeit, jeden beliebigen Dateityp einer E-Mail als Anhang hinzuzuf&uuml;gen.<br />Z.B. PDF f&uuml;r Rechtstexte, usw...<br /><br />');
 
  define('TEXT_FILENAME','Benutze Datei:');
  define('TEXT_FILE_DESC','Beschreibung:');

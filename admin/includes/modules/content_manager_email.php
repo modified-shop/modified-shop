@@ -13,27 +13,21 @@
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
 if (!$action) {
-  // content_manager content
-  // load content into array
-  $content_id_query = xtc_db_query("SELECT cmc.content_manager_id,
-                                           cm.content_title
-                                      FROM ".TABLE_CONTENT_MANAGER_CONTENT." cmc
-                                      JOIN ".TABLE_CONTENT_MANAGER." cm
-                                           ON cm.content_group = cmc.content_manager_id
-                                              AND cm.languages_id = '".(int)$_SESSION['languages_id']."'
-                                  GROUP BY cmc.content_id");
-  $content_ids = array();
-  while ($content_id = xtc_db_fetch_array($content_id_query)) {
-    $content_ids[] = array(
-      'id' => $content_id['content_manager_id'],
-      'name' => $content_id['content_title'],
+  $email_id_query = xtc_db_query("SELECT ec.email_id
+                                    FROM ".TABLE_EMAIL_CONTENT." ec
+                                GROUP BY ec.email_id");
+  $email_ids = array();
+  while ($email_id_data = xtc_db_fetch_array($email_id_query)) {
+    $email_ids[] = array(
+      'id' => $email_id_data['email_id'],
+      'name' => ucwords(implode(' ', explode('_', $email_id_data['email_id']))),
     );
   }
   ?>
   <div class="pageHeadingTaba pdg2 flt-l"><a onclick="this.blur();" href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER); ?>"><?php echo HEADING_CONTENT; ?></a></div>
   <div class="pageHeadingTaba pdg2 flt-l"><a onclick="this.blur();" href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER, 'set=product'); ?>"><?php echo HEADING_PRODUCTS_CONTENT; ?></a></div>
-  <div class="pageHeadingTab pdg2 flt-l"><?php echo HEADING_CONTENT_MANAGER_CONTENT; ?></div>
-  <div class="pageHeadingTaba pdg2 flt-l"><a onclick="this.blur();" href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER, 'set=email'); ?>"><?php echo HEADING_EMAIL_CONTENT; ?></a></div>
+  <div class="pageHeadingTaba pdg2 flt-l"><a onclick="this.blur();" href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER, 'set=content'); ?>"><?php echo HEADING_CONTENT_MANAGER_CONTENT; ?></a></div>
+  <div class="pageHeadingTab pdg2 flt-l"><?php echo HEADING_EMAIL_CONTENT; ?></div>
   <div class="borderTab">
   <?php
     $total_space_media_products = xtc_spaceUsed(DIR_FS_CATALOG.'media/content/');
@@ -41,25 +35,25 @@ if (!$action) {
   ?>
   <table class="tableCenter">
     <tr class="dataTableHeadingRow">
-      <td class="dataTableHeadingContent nobr txta-c"><?php echo TABLE_HEADING_CONTENT_MANAGER_ID; ?></td>
-      <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_CONTENT_MANAGER; ?></td>
+      <td class="dataTableHeadingContent nobr txta-c"><?php echo TABLE_HEADING_EMAIL_ID; ?></td>
+      <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_EMAIL; ?></td>
     </tr>
     <?php
-      for ($i=0,$n=sizeof($content_ids); $i<$n; $i++) {
+      for ($i=0,$n=sizeof($email_ids); $i<$n; $i++) {
         echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\'" onmouseout="this.className=\'dataTableRow\'">' . "\n";
           ?>
-          <td class="dataTableContent_products txta-c" style="width:5%"><?php echo $content_ids[$i]['id']; ?></td>
+          <td class="dataTableContent_products txta-c" style="width:5%"><?php echo $email_ids[$i]['id']; ?></td>
           <td class="dataTableContent_products"><b>
             <?php echo xtc_image(DIR_WS_CATALOG.'images/icons/arrow.gif'); ?>
-            <a href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER,'cID='.$content_ids[$i]['id'].$setparam);?>"><?php echo $content_ids[$i]['name']; ?></a></b>
+            <a href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER,'eID='.$email_ids[$i]['id'].$setparam);?>"><?php echo $email_ids[$i]['name']; ?></a></b>
           </td>
         </tr>
         <?php
-        if ($_GET['cID'] && $_GET['cID'] != '') {
+        if ($_GET['eID'] && $_GET['eID'] != '') {
           // display content elements
           $content_query=xtc_db_query("SELECT *
-                                         FROM ".TABLE_CONTENT_MANAGER_CONTENT."
-                                        WHERE content_manager_id = '".(int)$_GET['cID']."'
+                                         FROM ".TABLE_EMAIL_CONTENT."
+                                        WHERE email_id = '".xtc_db_input($_GET['eID'])."'
                                      ORDER BY content_name");
           $content_array = array();
           while ($content_data = xtc_db_fetch_array($content_query)) {
@@ -74,7 +68,7 @@ if (!$action) {
             );
           }
 
-          if ((int)$_GET['cID'] == $content_ids[$i]['id']) {
+          if (xtc_db_input($_GET['eID']) == $email_ids[$i]['id']) {
             ?>
             <tr>
               <td class="dataTableContent"></td>
@@ -125,18 +119,18 @@ if (!$action) {
                       </td>
                       <td class="dataTableContent txta-c"><?php echo $content_array[$ii]['read']; ?></td>
                       <td class="dataTableContent">
-                        <a href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER,'special=delete_content&coID='.$content_array[$ii]['id'].'&cID='.$content_ids[$i]['id'].'&set='.$set); ?>" onclick="return confirmLink('<?php echo DELETE_ENTRY; ?>', '', this)">
+                        <a href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER,'special=delete_email&coID='.$content_array[$ii]['id'].'&eID='.$email_ids[$i]['id'].'&set='.$set); ?>" onclick="return confirmLink('<?php echo DELETE_ENTRY; ?>', '', this)">
                         <?php
                           echo xtc_image(DIR_WS_ICONS.'delete.gif', ICON_DELETE,'','','style="cursor:pointer" onclick="return confirmLink(\''. DELETE_ENTRY .'\', \'\' ,this)"').'  '.TEXT_DELETE.'</a>&nbsp;&nbsp;';
                         ?>
-                        <a href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER,'action=edit_content_manager_content&coID='.$content_array[$ii]['id'].'&cID='.$content_ids[$i]['id'].$setparam); ?>">
+                        <a href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER,'action=edit_email_content&coID='.$content_array[$ii]['id'].'&eID='.$email_ids[$i]['id'].$setparam); ?>">
                           <?php
                           echo xtc_image(DIR_WS_ICONS.'icon_edit.gif', ICON_EDIT,'','','style="cursor:pointer"').'  '.TEXT_EDIT.'</a>';
                         // display preview button if filetype in array
                         $allowed_filetypes = array('.gif','.jpg','.png','.html','.htm','.txt','.bmp'); 
                         if (in_array(substr($content_array[$ii]['file'], 0, strrpos($content_array[$ii]['file'], '.') - 1), $allowed_filetypes)) {
                           ?>
-                          <a style="cursor:pointer" onclick="javascript:window.open('<?php echo xtc_href_link(FILENAME_CONTENT_PREVIEW,'cID=media&coID='.$content_array[$ii]['id']); ?>', 'popup', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, width=640, height=600')">
+                          <a style="cursor:pointer" onclick="javascript:window.open('<?php echo xtc_href_link(FILENAME_CONTENT_PREVIEW,'eID=media&coID='.$content_array[$ii]['id']); ?>', 'popup', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, width=640, height=600')">
                             <?php
                             echo xtc_image(DIR_WS_ICONS.'preview.gif', ICON_PREVIEW,'','',' style="cursor:pointer"').'&nbsp;&nbsp;'.TEXT_PREVIEW.'</a>';
                         }
@@ -157,27 +151,41 @@ if (!$action) {
   <?php
 } else {
   switch ($action) {
-    case 'edit_content_manager_content':
-    case 'new_content_manager_content':
-      if ($action =='edit_content_manager_content') {
-        $content_query=xtc_db_query("SELECT *
-                                       FROM ".TABLE_CONTENT_MANAGER_CONTENT."
+    case 'edit_email_content':
+    case 'new_email_content':
+      if ($action =='edit_email_content') {
+        $content_query=xtc_db_query("SELECT*
+                                       FROM ".TABLE_EMAIL_CONTENT."
                                       WHERE content_id = '".$g_coID."'
                                       LIMIT 1");
         $content=xtc_db_fetch_array($content_query);
       }
       
-      // get content
-      $content_query = xtc_db_query("SELECT content_group,
-                                            content_title
-                                       FROM ".TABLE_CONTENT_MANAGER."
-                                      WHERE languages_id = '".(int)$_SESSION['languages_id']."'
-                                   ORDER BY content_title");
-      $content_array = array();
-      while ($content_data = xtc_db_fetch_array($content_query)) {
-        $content_array[] = array(
-          'id' => $content_data['content_group'],
-          'text' => $content_data['content_title'],
+      // get templates
+      $invalid_template = array(
+        'signatur',
+        'widerruf',
+        'contact_us',
+      );
+
+      $template_array = auto_include(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/','html');
+      $template_array = array_merge($template_array, auto_include(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/admin/mail/'.$_SESSION['language'].'/','html'));
+
+      foreach ($template_array as $index => $template) {
+        $template = strstr(basename($template), '.html', true);
+        $template_array[$index] = $template;
+        if (in_array($template, $invalid_template)) {
+          unset($template_array[$index]);
+        }
+      }
+      $template_array = array_unique($template_array);
+      sort($template_array);
+
+      $email_array = array();
+      foreach ($template_array as $template) {  
+        $email_array[] = array(
+          'id' => $template,
+          'text' => ucwords(implode(' ', explode('_', $template))),
         );
       }
 
@@ -208,11 +216,27 @@ if (!$action) {
       }
 
       // get used content files
+      $content_files = array();
+      $content_files_query=xtc_db_query("SELECT DISTINCT *
+                                                    FROM ".TABLE_EMAIL_CONTENT."
+                                                   WHERE content_file != ''
+                                                ORDER BY content_name ASC");
+      while ($content_files_data=xtc_db_fetch_array($content_files_query)) {
+        $content_files[] = array(
+          'id' => $content_files_data['content_file'],
+          'text' => $content_files_data['content_name'],
+        );
+        
+        if (in_array($content_files_data['content_file'], $files_array)) {
+          $key = array_search ($content_files_data['content_file'], $files_array);
+          unset($files_array[$key]);
+        }
+      }
+
       $content_files_query=xtc_db_query("SELECT DISTINCT *
                                                     FROM ".TABLE_CONTENT_MANAGER_CONTENT."
                                                    WHERE content_file != ''
                                                 ORDER BY content_name ASC");
-      $content_files = array();
       while ($content_files_data=xtc_db_fetch_array($content_files_query)) {
         $content_files[] = array(
           'id' => $content_files_data['content_file'],
@@ -232,7 +256,7 @@ if (!$action) {
             'text' => $file,
           );
         }
-      }      
+      }
       array_multisort(array_column($content_files, 'text'), SORT_ASC, $content_files);
 
       $keep_filename_array = array(
@@ -247,19 +271,19 @@ if (!$action) {
       // mask for product content      
       ?>
       <div style="width:99%; margin:5px;">
-      <div class="pageHeading"><br /><?php echo HEADING_CONTENT_MANAGER_CONTENT; ?><br /></div>
-      <div class="main"><?php echo TEXT_CONTENT_MANAGER_DESCRIPTION; ?></div>
+      <div class="pageHeading"><br /><?php echo HEADING_EMAIL_CONTENT; ?><br /></div>
+      <div class="main"><?php echo TEXT_EMAIL_DESCRIPTION; ?></div>
         <?php 
-        if ($action != 'new_content_manager_content') {
-          echo xtc_draw_form('edit_content',FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action')) . 'action=edit_content_manager_content&id=update_content_manager&coID='.$g_coID,'post','enctype="multipart/form-data"').xtc_draw_hidden_field('coID',$g_coID);
+        if ($action != 'new_email_content') {
+          echo xtc_draw_form('edit_content',FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action')) . 'action=edit_email_content&id=update_email&coID='.$g_coID,'post','enctype="multipart/form-data"').xtc_draw_hidden_field('coID',$g_coID);
         } else {
-          echo xtc_draw_form('edit_content',FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action')) . 'action=edit_content_manager_content&id=insert_content_manager','post','enctype="multipart/form-data"');
+          echo xtc_draw_form('edit_content',FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action')) . 'action=edit_email_content&id=insert_email','post','enctype="multipart/form-data"');
         }
         ?>
         <table class="tableConfig borderall">
           <tr>
-            <td class="dataTableConfig col-left"><?php echo TEXT_CONTENT_MANAGER_CONTENT; ?></td>
-            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_pull_down_menu('product',$content_array,$content['content_manager_id']); ?></td>
+            <td class="dataTableConfig col-left"><?php echo TEXT_EMAIL_CONTENT; ?></td>
+            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_pull_down_menu('product',$email_array,$content['email_id']); ?></td>
           </tr>
           <tr>
             <td class="dataTableConfig col-left"><?php echo TEXT_LANGUAGE; ?></td>
@@ -291,14 +315,6 @@ if (!$action) {
           <tr>
             <td class="dataTableConfig col-left"><?php echo TEXT_TITLE_FILE; ?></td>
             <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('cont_title',$content['content_name'],'size="60"'); ?></td>
-          </tr>
-          <tr>
-            <td class="dataTableConfig col-left"><?php echo TEXT_LINK; ?></td>
-            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('cont_link',$content['content_link'],'size="60"'); ?></td>
-          </tr>
-          <tr>
-            <td class="dataTableConfig col-left"><?php echo TEXT_FILE_DESC; ?></td>
-            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_textarea_field('file_comment','','100','30',$content['file_comment']); ?></td>
           </tr>
           <tr>
             <td class="dataTableConfig col-left"><?php echo TEXT_CHOOSE_FILE; ?></td>

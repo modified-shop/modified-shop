@@ -33,6 +33,7 @@ if (!$action) {
   <div class="pageHeadingTaba pdg2 flt-l"><a onclick="this.blur();" href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER); ?>"><?php echo HEADING_CONTENT; ?></a></div>
   <div class="pageHeadingTab pdg2 flt-l"><?php echo HEADING_PRODUCTS_CONTENT; ?></div>
   <div class="pageHeadingTaba pdg2 flt-l"><a onclick="this.blur();" href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER, 'set=content'); ?>"><?php echo HEADING_CONTENT_MANAGER_CONTENT; ?></a></div>
+  <div class="pageHeadingTaba pdg2 flt-l"><a onclick="this.blur();" href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER, 'set=email'); ?>"><?php echo HEADING_EMAIL_CONTENT; ?></a></div>
   <div class="borderTab">
   <?php
     $total_space_media_products = xtc_spaceUsed(DIR_FS_CATALOG.'media/products/');
