@@ -21,7 +21,7 @@ if (!$action) {
                                       JOIN ".TABLE_CONTENT_MANAGER." cm
                                            ON cm.content_group = cmc.content_manager_id
                                               AND cm.languages_id = '".(int)$_SESSION['languages_id']."'
-                                  GROUP BY cmc.content_id");
+                                  GROUP BY cmc.content_manager_id");
   $content_ids = array();
   while ($content_id = xtc_db_fetch_array($content_id_query)) {
     $content_ids[] = array(

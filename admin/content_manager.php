@@ -49,7 +49,7 @@
 
       case 'delete_content':
         $paramas = 'cID='.(int)$_GET['cID'];
-        xtc_db_query("DELETE FROM ".TABLE_CONTENT_MANAGER_CONTENT." where content_manager_id='".$g_coID."'");
+        xtc_db_query("DELETE FROM ".TABLE_CONTENT_MANAGER_CONTENT." where content_id='".$g_coID."'");
         break;
 
       case 'delete_email':
