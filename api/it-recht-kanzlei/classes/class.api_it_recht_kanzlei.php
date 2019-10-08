@@ -27,13 +27,7 @@ class api_it_recht_kanzlei {
       $action, 
       $post_xml;
 
-  function __construct() {
-    $this->document_name = array(
-      'de' => '%s - als PDF',
-      'en' => '%s - as PDF',
-      'fr' => '%s - au format PDF',
-    );
-  }
+  function __construct() {}
   
   function process($post_xml) {
   
@@ -156,14 +150,7 @@ class api_it_recht_kanzlei {
       {
         $this->return_error('19');
       }
-      
-      $local_dir_for_pdf_storage = 'media/content/';
-      /*
-      if (MODULE_API_IT_RECHT_KANZLEI_PDF_FILE != '') {
-        $local_dir_for_pdf_storage = trim(MODULE_API_IT_RECHT_KANZLEI_PDF_FILE, '/').'/';
-      }
-      */
-      
+            
       // Check PDF files required
       $local_rechtstext_pdf_type = array();
       if (MODULE_API_IT_RECHT_KANZLEI_PDF_AGB == 'true') {
@@ -184,6 +171,7 @@ class api_it_recht_kanzlei {
       
       // Download pdf file
       $pdf_file_stored = false;
+      $local_dir_for_pdf_storage = 'media/content/';
       $file_pdf_targetfilename = $xml->rechtstext_pdf_filenamebase_suggestion.'_'.$languages_code.'.pdf';
       $file_pdf_target = DIR_FS_CATALOG.$local_dir_for_pdf_storage.$file_pdf_targetfilename;
       $file_pdf_target_temp = DIR_FS_CATALOG.$local_dir_for_pdf_storage.md5($file_pdf_targetfilename).'.pdf';
@@ -264,7 +252,7 @@ class api_it_recht_kanzlei {
           if ($pdf_file_stored === true) {
             $sql_data_array = array(
               'content_manager_id' => $content_group,
-              'content_name' => $xml->rechtstext_title,
+              'content_name' => $this->charset_decode_utf_8($xml->rechtstext_title),
               'content_file' => $file_pdf_targetfilename,
               'languages_id' => $languages_id,
               'external' => 1,
@@ -283,12 +271,13 @@ class api_it_recht_kanzlei {
               xtc_db_perform(TABLE_CONTENT_MANAGER_CONTENT, $sql_data_array);
             }
           }
-
-          if ($check['content_text'] == $this->charset_decode_utf_8($xml->rechtstext_html.'<style>.itkanzlei_first_headline{display:none;}</style>')) {
+          
+          $content_text = $this->charset_decode_utf_8($xml->rechtstext_html.'<style>.itkanzlei_first_headline{display:none;}</style>');
+          if ($check['content_text'] == $content_text) {
             $this->return_success($url);
           } else {
             $sql_data_array = array(
-              'content_text' => $this->charset_decode_utf_8($xml->rechtstext_html.'<style>.itkanzlei_first_headline{display:none;}</style>'),
+              'content_text' => $content_text,
               'content_title' => $this->charset_decode_utf_8($xml->rechtstext_title),
               'content_heading' => $this->charset_decode_utf_8($xml->rechtstext_title),
             );
