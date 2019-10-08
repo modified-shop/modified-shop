@@ -38,7 +38,6 @@ function smarty_function_googleanalytics($params, $smarty) {
   
   $beginCode = '
       <script type="text/javascript">
-      function TrackingGoogle () {
         // Set to the same value as the web property used on the site
         var gaProperty = \''.$account.'\';
 
@@ -53,15 +52,17 @@ function smarty_function_googleanalytics($params, $smarty) {
           document.cookie = disableStr + \'=true; expires=Thu, 31 Dec 2099 23:59:59 UTC; path=/\';
           window[disableStr] = true;
         }
-    '."\n";
+ 
+        var _gaq = _gaq || [];
+        var gaLoaded = false;
+        
+        function TrackingGoogle () {'."\n";
   
   if (TRACKING_GOOGLEANALYTICS_UNIVERSAL == 'false') {
     $beginCode .= '
-        var _gaq = _gaq || [];
-        _gaq.push([\'_setAccount\', \''.$account.'\']);
-        _gaq.push([\'_gat._anonymizeIp\']);
-        _gaq.push([\'_trackPageview\']);
-    '."\n";
+          _gaq.push([\'_setAccount\', \''.$account.'\']);
+          _gaq.push([\'_gat._anonymizeIp\']);
+          _gaq.push([\'_trackPageview\']);'."\n";
 
     // cache ga.js
     $cache_gs = DIR_FS_CATALOG.'cache/ga.js';
@@ -76,15 +77,18 @@ function smarty_function_googleanalytics($params, $smarty) {
     }
 
     $endCode ='
-        (function() {
-          var ga = document . createElement(\'script\');
-          ga.type = \'text/javascript\';
-          ga.async = true;
-          ga.src = '.((isset($gs)) ? '\''.$gs.'\'' : '(\'https:\' == document.location.protocol ? \'https://ssl\' : \'http://www\') + \'.google-analytics.com/ga.js\'').';
-          var s = document.getElementsByTagName(\'script\')[0];
-          s . parentNode . insertBefore(ga, s);
-        })();
-      }
+          if (gaLoaded === false) {
+            (function() {
+              var ga = document . createElement(\'script\');
+              ga.type = \'text/javascript\';
+              ga.async = true;
+              ga.src = '.((isset($gs)) ? '\''.$gs.'\'' : '(\'https:\' == document.location.protocol ? \'https://ssl\' : \'http://www\') + \'.google-analytics.com/ga.js\'').';
+              var s = document.getElementsByTagName(\'script\')[0];
+              s . parentNode . insertBefore(ga, s);
+            })();
+            gaLoaded = true;
+          }
+        }
       </script>
     ';
   } else {
@@ -101,25 +105,28 @@ function smarty_function_googleanalytics($params, $smarty) {
     }
 
     $beginCode .= "
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script',".((isset($gs)) ? "'".$gs."'" : "'//www.google-analytics.com/analytics.js'").",'ga');
-  
-        ga('create', '".$account."', '".TRACKING_GOOGLEANALYTICS_DOMAIN."');
-        ga('set', 'anonymizeIp', true);\n";
+          if (gaLoaded === false) {
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script',".((isset($gs)) ? "'".$gs."'" : "'//www.google-analytics.com/analytics.js'").",'ga');
+            gaLoaded = true;
+          }
+        
+          ga('create', '".$account."', '".TRACKING_GOOGLEANALYTICS_DOMAIN."');
+          ga('set', 'anonymizeIp', true);\n";
   
     if (TRACKING_GOOGLE_LINKID == 'true'){
-      $google_linkid = "        ga('require', 'linkid', 'linkid.js');\n";
+      $google_linkid = "          ga('require', 'linkid', 'linkid.js');\n";
     }
   
     if (TRACKING_GOOGLE_DISPLAY == 'true'){
-      $google_display = "        ga('require', 'displayfeatures');\n";
+      $google_display = "          ga('require', 'displayfeatures');\n";
     }
   
-    $endCode = "        ga('send', 'pageview');
-      }
-    </script>";
+    $endCode = "          ga('send', 'pageview');
+        }
+      </script>";
   }
   
   $orderCode = null;
@@ -184,7 +191,7 @@ function getOrderDetailsAnalytics() {
    *  ]);
    *
    */
-  $addTrans = sprintf("        _gaq.push(['_addTrans','%s','%s','%s','%s','%s','%s','%s','%s']);\n",
+  $addTrans = sprintf("          _gaq.push(['_addTrans','%s','%s','%s','%s','%s','%s','%s','%s']);\n",
     $last_order,
     addslashes(STORE_NAME),
     $total,
@@ -224,7 +231,7 @@ function getOrderDetailsAnalytics() {
      *  ]);
      *
      */
-    $addItem[] = sprintf("        _gaq.push(['_addItem','%s','%s','%s','%s','%s','%s']);\n",
+    $addItem[] = sprintf("          _gaq.push(['_addItem','%s','%s','%s','%s','%s','%s']);\n",
       $last_order,
       $item['products_id'],
       addslashes($item['products_name']),
@@ -233,7 +240,7 @@ function getOrderDetailsAnalytics() {
       $item['products_quantity']
     );
   }
-  $trackTrans = "        _gaq.push(['_trackTrans']);\n";
+  $trackTrans = "          _gaq.push(['_trackTrans']);\n";
 
   return $addTrans . implode('', $addItem) . $trackTrans;
 }
@@ -267,7 +274,7 @@ function getOrderDetailsAnalyticsUniversal() {
                                    WHERE orders_id = '" . (int)$last_order . "'");
   $currency = xtc_db_fetch_array($currency_query);
 
-  $trackCommerce = "        ga('require', 'ecommerce', 'ecommerce.js');\n";
+  $trackCommerce = "          ga('require', 'ecommerce', 'ecommerce.js');\n";
 
   /* 
   ga('ecommerce:addTransaction', {
@@ -278,7 +285,7 @@ function getOrderDetailsAnalyticsUniversal() {
      'tax': '1.29'                     // Tax.
   }); 
   */
-  $addTrans = sprintf("        ga('ecommerce:addTransaction', {'id': '%s', 'affiliation': '%s', 'revenue': '%s', 'shipping': '%s', 'tax': '%s', 'currency': '%s'});\n",
+  $addTrans = sprintf("          ga('ecommerce:addTransaction', {'id': '%s', 'affiliation': '%s', 'revenue': '%s', 'shipping': '%s', 'tax': '%s', 'currency': '%s'});\n",
     $last_order,
     addslashes(STORE_NAME),
     $total,
@@ -316,7 +323,7 @@ function getOrderDetailsAnalyticsUniversal() {
       'currency': 'GBP' // local currency code.
     });
     */
-    $addItem[] = sprintf("        ga('ecommerce:addItem', {'id': '%s', 'name': '%s', 'sku': '%s', 'category': '%s', 'price': '%s', 'quantity': '%s', 'currency': '%s'});\n",
+    $addItem[] = sprintf("          ga('ecommerce:addItem', {'id': '%s', 'name': '%s', 'sku': '%s', 'category': '%s', 'price': '%s', 'quantity': '%s', 'currency': '%s'});\n",
       $last_order,
       addslashes($item['products_name']),
       $item['products_id'],
@@ -326,7 +333,7 @@ function getOrderDetailsAnalyticsUniversal() {
       $currency['currency']
     );
   }
-  $trackTrans = "        ga('ecommerce:send');\n";
+  $trackTrans = "          ga('ecommerce:send');\n";
 
   return $trackCommerce . $addTrans . implode('', $addItem) . $trackTrans;
 }
