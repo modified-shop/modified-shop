@@ -234,14 +234,12 @@
           }
         }
         if (is_array($directory_array[0])) {
-          ksort($directory_array[0]);
-          foreach ($directory_array[0] as $key => $val){
-            $directory_array[0][$key] = $val;
-          }
+          sort($directory_array[0]);
           $directory_array[0] = array_values($directory_array[0]);
         }
         if (is_array($directory_array[1])) {
           sort($directory_array[1]);
+          $directory_array[1] = array_values($directory_array[1]);
         }
         ksort($directory_array);
         $dir->close();
