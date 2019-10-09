@@ -310,6 +310,8 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
                             'customers_last_modified' => 'now()',
                             );
 
+    $_SESSION['account_type'] = '0';
+
     if (ACCOUNT_GENDER == 'true') {
       $sql_data_array['customers_gender'] = $gender;
     }

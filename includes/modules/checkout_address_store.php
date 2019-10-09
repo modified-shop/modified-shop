@@ -150,6 +150,9 @@
       
       if (isset($_POST['primary']) && ($_POST['primary'] == 'on')) {
         $_SESSION['customer_default_address_id'] = (int)$new_address_book_id;
+        $_SESSION['customer_country_id'] = (int)$country;
+        $_SESSION['customer_zone_id'] = ((isset($zone_id) && $zone_id > 0) ? (int)$zone_id : 0);
+        
         xtc_db_query("UPDATE ".TABLE_CUSTOMERS."
                          SET customers_default_address_id = '".(int)$new_address_book_id."'
                        WHERE customers_id = '".(int)$_SESSION['customer_id']."'");

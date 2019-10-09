@@ -340,9 +340,6 @@ defined('WARN_SESSION_DIRECTORY_NOT_WRITEABLE') OR define('WARN_SESSION_DIRECTOR
 defined('WARN_SESSION_AUTO_START') OR define('WARN_SESSION_AUTO_START', 'true');
 defined('WARN_DOWNLOAD_DIRECTORY_NOT_READABLE') OR define('WARN_DOWNLOAD_DIRECTORY_NOT_READABLE', 'true');
 
-// set account_type
-include_once (DIR_WS_MODULES.'set_account_type.php');
-
 // modification for nre graduated system
 unset ($_SESSION['actual_content']);
 xtc_count_cart();

@@ -404,7 +404,8 @@ class PayPalCommon extends PayPalAuth {
                                                  customers_gender, 
                                                  customers_password, 
                                                  customers_email_address, 
-                                                 customers_default_address_id
+                                                 customers_default_address_id,
+                                                 account_type
                                             FROM ".TABLE_CUSTOMERS." 
                                            WHERE customers_email_address = '".xtc_db_input($customer['info']['email_address'])."' 
                                              AND account_type = '0'");
@@ -432,7 +433,8 @@ class PayPalCommon extends PayPalAuth {
 			$_SESSION['customer_default_address_id'] = $check_customer['customers_default_address_id'];
 			$_SESSION['customer_country_id'] = $check_country['entry_country_id'];
 			$_SESSION['customer_zone_id'] = $check_country['entry_zone_id'];
-
+      $_SESSION['account_type'] = $check_customer['account_type'];
+      
 			xtc_db_query("UPDATE ".TABLE_CUSTOMERS_INFO." 
 			                 SET customers_info_date_of_last_logon = now(), 
 			                     customers_info_number_of_logons = customers_info_number_of_logons+1 
