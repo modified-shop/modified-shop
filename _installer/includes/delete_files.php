@@ -335,6 +335,7 @@
     'includes/modules/payment/sofortueberweisungredirect.php',
     'includes/modules/payment/sofortueberweisungvorkasse.php',
     'includes/modules/payment/worldpay.php',
+    'includes/modules/set_account_type.php',
     'includes/modules/sofort_vorkasse.php',
     'includes/modules/upcoming_products.php',
     'INFO.txt',
