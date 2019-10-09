@@ -21,6 +21,8 @@
                                      GROUP BY cod.content_group
                                      ORDER BY cod.date_added DESC");
     if (xtc_db_num_rows($check_dsgvo_query) > 0) {
+      require_once (DIR_WS_LANGUAGES.$_SESSION['language'].'/modules/system/system_dsgvo.php');
+      
       $_SESSION['dsgvo'] = array();
       
       while ($check_dsgvo = xtc_db_fetch_array($check_dsgvo_query)) {

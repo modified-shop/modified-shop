@@ -27,8 +27,8 @@
         if (count($_SESSION['dsgvo']) < 1) {
           unset($_SESSION['dsgvo']);
           
-          if (basename($PHP_SELF) == FILENAME_CHECKOUT_CONFIRMATION) {
-            xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, xtc_get_all_get_params(array('action')), 'SSL')); 
+          if (strpos(basename($PHP_SELF), 'checkout') !== false) {
+            xtc_redirect(xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action')), 'SSL')); 
           }
           
           // define pages allowed to redirect
