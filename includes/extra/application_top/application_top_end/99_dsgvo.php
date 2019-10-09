@@ -10,13 +10,6 @@
     if (isset ($_GET['action']) && ($_GET['action'] == 'dsgvo')) {
       require(DIR_FS_EXTERNAL.'dsgvo/modules/dsgvo_action.php');
       require(DIR_FS_EXTERNAL.'dsgvo/modules/dsgvo_module.php');
-    } elseif (isset($_SESSION['dsgvo']) 
-              && count($_SESSION['dsgvo']) > 0
-              && basename($PHP_SELF) != FILENAME_POPUP_CONTENT
-              )
-    {
-      unset($_SESSION['dsgvo']);
-      xtc_redirect(xtc_href_link(FILENAME_LOGOFF, '', 'SSL'));
-    }
+    } 
   }
 ?>

@@ -122,12 +122,16 @@ switch(basename($PHP_SELF)) {
 
   case FILENAME_CHECKOUT_PAYMENT:
       require('includes/form_check.js.php');
-      echo $payment_modules->javascript_validation();
+      if (method_exists($payment_modules, 'javascript_validation')) {
+        echo $payment_modules->javascript_validation();
+      }
     break;
 
   case FILENAME_CHECKOUT_SHIPPING:
       require('includes/form_check.js.php');
-      echo $shipping_modules->javascript_validation();
+      if (method_exists($shipping_modules, 'javascript_validation')) {
+        echo $shipping_modules->javascript_validation();
+      }
     break;
 
   case FILENAME_CREATE_ACCOUNT:
