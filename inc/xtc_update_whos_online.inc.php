@@ -23,7 +23,7 @@
       return;
     }
 
-    if (basename($PHP_SELF) == 'ajax.php') {
+    if (in_array(basename($PHP_SELF), array('ajax.php', 'display_vvcodes.php'))) {
       return;
     }
     
