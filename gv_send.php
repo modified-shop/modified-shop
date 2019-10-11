@@ -59,7 +59,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'send') {
   $gv_result = xtc_db_fetch_array($gv_query);
   $customer_amount = $gv_result['amount'];
   $gv_amount = trim(str_replace(",", ".", $_POST['amount']));  
-  if (preg_match('/[^0-9\.]/', $gv_amount) && trim($gv_amount) != '') {
+  $gv_amount = preg_replace('/[^0-9\.]/', '', $gv_amount);  
+  if (trim($gv_amount) == '') {
     $error = true;
     $messageStack->add('gv_send', ERROR_ENTRY_AMOUNT_CHECK);
   }
@@ -75,8 +76,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'process') {
                               FROM ".TABLE_COUPON_GV_CUSTOMER." 
                              WHERE customer_id='".(int)$_SESSION['customer_id']."'");
   $gv_result = xtc_db_fetch_array($gv_query);
-  $new_amount = $gv_result['amount'] - str_replace(",", ".", $_POST['amount']);
-  $new_amount = str_replace(",", ".", $new_amount);
+  $gv_amount = str_replace(',', '.', $_POST['amount']);
+  $gv_amount = preg_replace('/[^0-9\.]/', '', $gv_amount);  
+  $new_amount = $gv_result['amount'] - $gv_amount;
   if ($new_amount < 0) {
     $error = true;
     $messageStack->add('gv_send', ERROR_ENTRY_AMOUNT_CHECK);
@@ -94,7 +96,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'process') {
     $sql_data_array = array('coupon_type' => 'G',
                             'coupon_code' => $id1,
                             'date_created' => 'now()',
-                            'coupon_amount' => str_replace(",", ".", $_POST['amount'])
+                            'coupon_amount' => $gv_amount
                             );
     xtc_db_perform(TABLE_COUPONS, $sql_data_array);
     $insert_id = xtc_db_insert_id();
@@ -114,7 +116,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'process') {
     $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');    
     $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
     $smarty->assign('GIFT_LINK', xtc_href_link(FILENAME_GV_REDEEM, 'gv_no='.$id1, 'NONSSL', false));
-    $smarty->assign('AMMOUNT', $xtPrice->xtcFormat(str_replace(",", ".", $_POST['amount']), true));
+    $smarty->assign('AMMOUNT', $xtPrice->xtcFormat($gv_amount, true));
     $smarty->assign('GIFT_CODE', $id1);
     $smarty->assign('MESSAGE', $_POST['message']);
     $smarty->assign('NAME', $_POST['to_name']);
@@ -166,7 +168,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'send' && !$error) {
   $gv_result = xtc_db_fetch_array($gv_query);
   $send_name = $gv_result['customers_firstname'].' '.$gv_result['customers_lastname'];
   $smarty->assign('FORM_ACTION', xtc_draw_form('gv_process', xtc_href_link(FILENAME_GV_SEND, 'action=process', 'NONSSL'), 'post'));
-  $smarty->assign('MAIN_MESSAGE', sprintf(MAIN_MESSAGE, $xtPrice->xtcFormat(str_replace(",", ".", $_POST['amount']), true), stripslashes($_POST['to_name']), $_POST['email'], stripslashes($_POST['to_name']), $xtPrice->xtcFormat(str_replace(",", ".", $_POST['amount']), true), $send_name));
+  $smarty->assign('MAIN_MESSAGE', sprintf(MAIN_MESSAGE, $xtPrice->xtcFormat($gv_amount, true), stripslashes($_POST['to_name']), $_POST['email'], stripslashes($_POST['to_name']), $xtPrice->xtcFormat($gv_amount, true), $send_name));
   if ($_POST['message']) {
     $smarty->assign('PERSONAL_MESSAGE', sprintf(PERSONAL_MESSAGE, $gv_result['customers_firstname']));
     $smarty->assign('POST_MESSAGE', stripslashes($_POST['message']));
