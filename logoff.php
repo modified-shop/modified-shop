@@ -39,7 +39,11 @@ if ($messageStack->size('logoff', 'success') > 0) {
   $smarty->assign('success_message', $messageStack->output('logoff', 'success'));
 }    
 
-if ($_SESSION['account_type'] == '1' && DELETE_GUEST_ACCOUNT == 'true') {
+if (isset($_SESSION['account_type'])
+    && $_SESSION['account_type'] == '1' 
+    && DELETE_GUEST_ACCOUNT == 'true'
+    )
+{
   xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS." WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
   xtc_db_query("DELETE FROM ".TABLE_ADDRESS_BOOK." WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
   xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_INFO." WHERE customers_info_id = '".(int)$_SESSION['customer_id']."'");
