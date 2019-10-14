@@ -33,7 +33,7 @@ function get_sc_service() {
   $sc_carriers = array();
 
   $carrier = $_GET['carrier'];
-  $language = xtc_input_validation($_GET['language'], 'lang', '');
+  $language = xtc_input_validation($_GET['language'], 'lang');
   
   if (defined('MODULE_SHIPCLOUD_STATUS') && MODULE_SHIPCLOUD_STATUS == 'True') {
     require_once (DIR_WS_CLASSES.'language.php');

@@ -58,8 +58,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'send') {
                              WHERE customer_id = '".(int)$_SESSION['customer_id']."'");
   $gv_result = xtc_db_fetch_array($gv_query);
   $customer_amount = $gv_result['amount'];
-  $gv_amount = trim(str_replace(",", ".", $_POST['amount']));  
-  $gv_amount = preg_replace('/[^0-9\.]/', '', $gv_amount);  
+  $gv_amount = xtc_input_validation($_POST['amount'], 'amount');
   if (trim($gv_amount) == '') {
     $error = true;
     $messageStack->add('gv_send', ERROR_ENTRY_AMOUNT_CHECK);
@@ -76,8 +75,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'process') {
                               FROM ".TABLE_COUPON_GV_CUSTOMER." 
                              WHERE customer_id='".(int)$_SESSION['customer_id']."'");
   $gv_result = xtc_db_fetch_array($gv_query);
-  $gv_amount = str_replace(',', '.', $_POST['amount']);
-  $gv_amount = preg_replace('/[^0-9\.]/', '', $gv_amount);  
+  $gv_amount = xtc_input_validation($_POST['amount'], 'amount');
   $new_amount = $gv_result['amount'] - $gv_amount;
   if ($new_amount < 0) {
     $error = true;

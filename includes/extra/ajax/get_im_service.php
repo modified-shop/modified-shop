@@ -35,7 +35,7 @@ function get_im_service() {
   $im_data = array();
 
   $format_id = $_GET['format'];
-  $language = xtc_input_validation($_GET['language'], 'lang', '');
+  $language = xtc_input_validation($_GET['language'], 'lang');
   
   if (defined('MODULE_INTERNETMARKE_STATUS') && MODULE_INTERNETMARKE_STATUS == 'true') {
     require_once (DIR_WS_CLASSES.'language.php');

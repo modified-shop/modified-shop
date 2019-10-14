@@ -1,6 +1,6 @@
 <?php
 /**
- * $Id: $
+ * $Id$
  *
  * modified eCommerce Shopsoftware
  * http://www.modified-shop.org
@@ -27,7 +27,7 @@
           case 'update_product':
             for ($i = 0, $n = sizeof($_POST['products_id']); $i < $n; $i++) {
               $cart_quantity = $_POST['cart_quantity'][$i] = xtc_remove_non_numeric($_POST['cart_quantity'][$i]);
-              $_POST['products_id'][$i] = xtc_input_validation($_POST['products_id'][$i], 'products_id', '');
+              $_POST['products_id'][$i] = xtc_input_validation($_POST['products_id'][$i], 'products_id');
               if (in_array($_POST['products_id'][$i], (isset($_POST['cart_delete']) && is_array($_POST['cart_delete']) ? $_POST['cart_delete'] : array ()))) {
    	           	$_SESSION['econda_cart'][] = array(
                     'todo'     => 'del',
