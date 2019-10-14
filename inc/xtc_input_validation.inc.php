@@ -17,28 +17,32 @@
    ---------------------------------------------------------------------------------------*/
 
 
-   function xtc_input_validation($var, $type, $replace_char = '') {
+  function xtc_input_validation($var, $type, $replace_char = '') {
 
-      switch($type) {
-                case 'cPath':
-                        $replace_param='/[^0-9_]/';
-                        break;
-                case 'int':
-                        $replace_param='/[^0-9]/';
-                        break;
-                case 'char':
-                        $replace_param='/[^a-zA-Z]/';
-                        break;
-                case 'lang':
-                        $replace_param='/[^a-zA-Z_]/';
-                        break;
-                case 'products_id':
-                        $replace_param='/[^0-9\{\}]/';
-                        break;
-      }
+    switch($type) {
+      case 'cPath':
+        $replace_param = '/[^0-9_]/';
+        break;
+      case 'int':
+        $replace_param = '/[^0-9]/';
+        break;
+      case 'char':
+        $replace_param = '/[^a-zA-Z]/';
+        break;
+      case 'lang':
+        $replace_param = '/[^a-zA-Z_]/';
+        break;
+      case 'products_id':
+        $replace_param = '/[^0-9\{\}]/';
+        break;
+      case 'amount':
+        $var = str_replace(",", ".", $var);
+        $replace_param = '/[^0-9\.]/';
+        break;
+    }
 
-    $val=preg_replace($replace_param,$replace_char,$var);
+    $val = preg_replace($replace_param, $replace_char, $var);
 
     return $val;
-   }
+  }
 ?>

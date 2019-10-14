@@ -14,12 +14,12 @@
 if (isset($_GET['info'])) {
   $site = explode('_', $_GET['info']);
   $pID = $site[0];
-  $_GET['products_id'] = xtc_input_validation(str_replace('p', '', $pID), 'products_id', '');
+  $_GET['products_id'] = xtc_input_validation(str_replace('p', '', $pID), 'products_id');
   $actual_products_id = (int) $_GET['products_id'];
   $product = new product($actual_products_id);
   unset($_GET['info']);
 } elseif (isset($_GET['products_id'])) {
-  $_GET['products_id'] = xtc_input_validation($_GET['products_id'], 'products_id', '');
+  $_GET['products_id'] = xtc_input_validation($_GET['products_id'], 'products_id');
   $actual_products_id = (int) $_GET['products_id'];
   $product = new product($actual_products_id);
 }
@@ -55,7 +55,7 @@ if (isset($_GET['cpID']) && (int)$_GET['cpID'] > 0) {
   unset($_GET['cpID']);
 }
 if (isset ($_GET['cPath']) && (!isset($product) || !is_object($product))) {
-  $cPath = $_GET['cPath'] = xtc_input_validation($_GET['cPath'], 'cPath', '');
+  $cPath = $_GET['cPath'] = xtc_input_validation($_GET['cPath'], 'cPath');
 } elseif (isset($product) 
           && is_object($product) 
           && !isset($_GET['manufacturers_id'])

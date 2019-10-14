@@ -98,7 +98,7 @@ if (xtc_not_null($action)) {
 
     case 'remove_product':
       foreach(auto_include(DIR_FS_CATALOG.'includes/extra/cart_actions/remove_product_prepare_get/','php') as $file) require ($file);
-      $prd_id = xtc_input_validation($_GET['prd_id'], 'products_id', '');
+      $prd_id = xtc_input_validation($_GET['prd_id'], 'products_id');
       $cart_object->remove($prd_id);
       foreach(auto_include(DIR_FS_CATALOG.'includes/extra/cart_actions/remove_product_before_redirect/','php') as $file) require ($file);
       xtc_redirect(xtc_href_link($goto, xtc_get_all_get_params($parameters), 'NONSSL'));
@@ -116,7 +116,7 @@ if (xtc_not_null($action)) {
       for ($i = 0, $n = sizeof($_POST['products_id']); $i < $n; $i++) {
         $cart_quantity = $_POST['cart_quantity'][$i] = xtc_remove_non_numeric($_POST['cart_quantity'][$i]);
         $_POST['old_qty'][$i] = xtc_remove_non_numeric($_POST['old_qty'][$i]);
-        $_POST['products_id'][$i] = xtc_input_validation($_POST['products_id'][$i], 'products_id', '');
+        $_POST['products_id'][$i] = xtc_input_validation($_POST['products_id'][$i], 'products_id');
           
         if ($cart_quantity == 0) $cart_object->remove($_POST['products_id'][$i]);
       
@@ -309,7 +309,7 @@ if (xtc_not_null($action)) {
           }
           $_SESSION['cart']->add_cart($products_id, $cart_quantity, $attributes_array);
 
-          $prd_id = xtc_input_validation($_GET['BUYproducts_id'], 'products_id', '');
+          $prd_id = xtc_input_validation($_GET['BUYproducts_id'], 'products_id');
           $_SESSION['wishlist']->remove($prd_id);
         }
         xtc_redirect(xtc_href_link($goto, xtc_get_all_get_params($parameters), 'NONSSL'));
@@ -331,7 +331,7 @@ if (xtc_not_null($action)) {
           }
           $_SESSION['wishlist']->add_cart($products_id, $cart_quantity, $attributes_array);
 
-          $prd_id = xtc_input_validation($_GET['BUYproducts_id'], 'products_id', '');
+          $prd_id = xtc_input_validation($_GET['BUYproducts_id'], 'products_id');
           $_SESSION['cart']->remove($prd_id);
         }
         xtc_redirect(xtc_href_link($goto, xtc_get_all_get_params($parameters), 'NONSSL'));
