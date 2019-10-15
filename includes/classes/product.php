@@ -63,14 +63,14 @@ class product {
     
     // query for Product
     $product_query = xtDBquery("SELECT *
-                                  FROM ".TABLE_PRODUCTS." AS p
-                                  JOIN ".TABLE_PRODUCTS_DESCRIPTION." AS pd 
-                                       ON p.products_status = '1'
-                                          AND p.products_id = '".$this->pID."'
-                                          AND pd.products_id = p.products_id
+                                  FROM ".TABLE_PRODUCTS." p
+                                  JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd 
+                                       ON pd.products_id = p.products_id
+                                          AND pd.language_id = '".(int)$_SESSION['languages_id']."'
                                           AND trim(pd.products_name) != ''
-                                          " . PRODUCTS_CONDITIONS_P . "
-                                          AND pd.language_id = '".(int)$_SESSION['languages_id']."'");
+                                 WHERE p.products_status = '1'
+                                   AND p.products_id = '".$this->pID."'                                          
+                                       ".PRODUCTS_CONDITIONS_P);
     if (!xtc_db_num_rows($product_query, true)) {
       $this->isProduct = false;
     } else {
@@ -180,13 +180,13 @@ class product {
           $img = 'templates/'.CURRENT_TEMPLATE.'/img/stars_'.$reviews['reviews_rating'].'.png';        
         }
         $data_reviews[] = array (
-            'AUTHOR' => $reviews['customers_name'],
-            'DATE' => xtc_date_short($reviews['date_added']),
-            'RATING' => xtc_image($img, sprintf(TEXT_OF_5_STARS, $reviews['reviews_rating'])),
-            'RATING_MICROTAG' => xtc_image($img, sprintf(TEXT_OF_5_STARS, $reviews['reviews_rating']),'','','itemprop="rating"'),
-            'RATING_VOTE' => $reviews['reviews_rating'],
-            'TEXT' => nl2br($reviews['reviews_text'])
-          );
+          'AUTHOR' => $reviews['customers_name'],
+          'DATE' => xtc_date_short($reviews['date_added']),
+          'RATING' => xtc_image($img, sprintf(TEXT_OF_5_STARS, $reviews['reviews_rating'])),
+          'RATING_MICROTAG' => xtc_image($img, sprintf(TEXT_OF_5_STARS, $reviews['reviews_rating']),'','','itemprop="rating"'),
+          'RATING_VOTE' => $reviews['reviews_rating'],
+          'TEXT' => nl2br($reviews['reviews_text'])
+        );
         if (count($data_reviews) == PRODUCT_REVIEWS_VIEW) break;
       }
     }
@@ -421,16 +421,17 @@ class product {
           $Nprice = $xtPrice->xtcFormatCurrency($xtPrice->xtcRemoveTax($Pprice, $xtPrice->TAX[$this->data['products_tax_class_id']]));
         }
 
-        $staffel_data[$i] = array('QUANTITY' => $quantity,
-                                  'PLAIN_QUANTITY' => $staffel[$i]['stk'],
-                                  'FROM_QUANTITY' => GRADUATED_PRICE_MAX_VALUE,
-                                  'TO_QUANTITY' => $to_quantity,
-                                  'VPE' => $vpe,
-                                  'PRICE' => $xtPrice->xtcFormat($Pprice, true),
-                                  'PLAIN_PRICE' => $Pprice,
-                                  'PRICE_NETTO' => $Nprice,
-                                  'PRICE_BRUTTO' => $Bprice,
-                                  );
+        $staffel_data[$i] = array(
+          'QUANTITY' => $quantity,
+          'PLAIN_QUANTITY' => $staffel[$i]['stk'],
+          'FROM_QUANTITY' => GRADUATED_PRICE_MAX_VALUE,
+          'TO_QUANTITY' => $to_quantity,
+          'VPE' => $vpe,
+          'PRICE' => $xtPrice->xtcFormat($Pprice, true),
+          'PLAIN_PRICE' => $Pprice,
+          'PRICE_NETTO' => $Nprice,
+          'PRICE_BRUTTO' => $Bprice,
+        );
       }
     }
     return $staffel_data;
@@ -589,7 +590,6 @@ class product {
     }
     $productData['PRODUCTS_PRICE_ARRAY'][0]['PRICE_ALLOWED'] = $productData['PRICE_ALLOWED'];
 
-    //echo '<pre>'.print_r($productData,true).'</pre>';
     $productData = $this->productModules->buildDataArray($productData,$array,$image);
     
     return $productData;
