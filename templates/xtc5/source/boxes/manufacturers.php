@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: manufacturers.php 2081 2011-08-03 09:06:48Z dokuman $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -30,7 +30,8 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_manufacturers.html', $c
                                      FROM ".TABLE_MANUFACTURERS." as m
                                      JOIN ".TABLE_PRODUCTS." as p 
                                           ON m.manufacturers_id = p.manufacturers_id
-                                             AND p.products_status = '1'
+                                    WHERE p.products_status = '1'
+                                          ".PRODUCTS_CONDITIONS_P."
                                  ORDER BY m.manufacturers_name";
   $manufacturers_query = xtDBquery($manufacturers_query);
   $manufacturers_count = xtc_db_num_rows($manufacturers_query, true);
