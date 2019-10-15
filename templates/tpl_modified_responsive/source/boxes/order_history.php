@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: order_history.php 5581 2013-09-08 21:26:38Z Tomcraft $
+   $Id$
    
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -42,6 +42,7 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_order_history.html', $c
                                                      AND language_id = '" . (int)$_SESSION['languages_id'] . "'
                                             WHERE o.customers_id = '" . (int)$_SESSION['customer_id'] . "'
                                               AND p.products_status = '1' 
+                                                  ".PRODUCTS_CONDITIONS_P."
                                          GROUP BY p.products_id 
                                          ORDER BY o.date_purchased DESC 
                                             LIMIT " . MAX_DISPLAY_PRODUCTS_IN_ORDER_HISTORY_BOX);
