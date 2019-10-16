@@ -295,8 +295,8 @@ define('CSS_IMAGE_BUTTON_HISTORY_ICON_LEFT', '');
 
 define('CSS_IMAGE_BUTTON_PRODUCT_MORE_TEXT', '');
 //define('CSS_IMAGE_BUTTON_PRODUCT_MORE_TITLE', '');
-define('CSS_IMAGE_BUTTON_PRODUCT_MORE_ICON_RIGHT', '');
-define('CSS_IMAGE_BUTTON_PRODUCT_MORE_ICON_LEFT', '<i class="fas fa-chevron-circle-right"></i>');
+define('CSS_IMAGE_BUTTON_PRODUCT_MORE_ICON_RIGHT', '<i class="fas fa-chevron-circle-right"></i>');
+define('CSS_IMAGE_BUTTON_PRODUCT_MORE_ICON_LEFT', '');
 
 
 //define('CSS_IMAGE_BUTTON_IN_WISHLIST_TEXT', '');
