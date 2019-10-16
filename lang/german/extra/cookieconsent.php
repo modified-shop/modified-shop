@@ -5,6 +5,6 @@
  define('TEXT_COOKIECONSENT_DISSMISS', 'Einverstanden');
  define('TEXT_COOKIECONSENT_LINK', 'Mehr Erfahren');
  define('TEXT_COOKIECONSENT_POLICY', 'Cookie Einstellungen');
- define('TEXT_COOKIECONSENT_ALLOW', 'Einverstanden');
+ define('TEXT_COOKIECONSENT_ALLOW', 'Akzeptieren');
  define('TEXT_COOKIECONSENT_DENY', 'Ablehnen');
 ?>
