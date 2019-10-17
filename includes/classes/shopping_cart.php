@@ -961,6 +961,10 @@ class shoppingCart {
         $products_attributes_array[$pID] = $this->create_products_attributes_array($pID);
       }
       foreach($attributes as $option => $value) {
+        if (!array_key_exists((int)$option, $products_attributes_array[$pID])) {
+          $check = false;
+          break;
+        }
         if (!in_array($value,$products_attributes_array[$pID][(int)$option])) {
           $check = false;
           break;

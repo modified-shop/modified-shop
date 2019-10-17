@@ -356,7 +356,15 @@ if (xtc_not_null($action)) {
               $attributes_array = array();
               if (is_array($order_data['PRODUCTS_ATTRIBUTES_ARRAY'])) {
                 foreach ($order_data['PRODUCTS_ATTRIBUTES_ARRAY'] as $attributes_data) {
-                  $attributes_array[$attributes_data['option_id']] = $attributes_data['value_id'];
+                  if(empty($attributes_data['option_id']) || empty($attributes_data['value_id'])) {
+                    require_once (DIR_FS_INC.'get_order_options_values_ids_by_names.inc.php');
+                    $possible_options = get_order_options_values_ids_by_names($order_data['PRODUCTS_ID'], $attributes_data['option'], $attributes_data['value'], $order->info['language']);
+                    if($possible_options['options_id'] > 0 && $possible_options['value_id'] > 0) {
+                      $attributes_array[$possible_options['options_id']] = $possible_options['value_id'];
+                    }
+                  }
+                  else
+                    $attributes_array[$attributes_data['option_id']] = $attributes_data['value_id'];
                 }
               }
 
@@ -389,10 +397,13 @@ if (xtc_not_null($action)) {
           && isset($_SESSION['customer_id'])) 
       {
         $orders_info_query = xtc_db_query("SELECT o.customers_id,
+                                                  o.language,
                                                   op.products_id,
                                                   op.products_quantity,
                                                   opa.orders_products_options_id,
-                                                  opa.orders_products_options_values_id
+                                                  opa.orders_products_options_values_id,
+                                                  opa.products_options,
+                                                  opa.products_options_values
                                              FROM ".TABLE_ORDERS." o
                                              JOIN ".TABLE_ORDERS_PRODUCTS." op
                                                   ON o.orders_id = op.orders_id
@@ -405,7 +416,15 @@ if (xtc_not_null($action)) {
           $attributes_array = array();
           while ($orders_info = xtc_db_fetch_array($orders_info_query)) {       
             if ($orders_info['orders_products_options_id'] != '') {
-              $attributes_array[$orders_info['orders_products_options_id']] = $orders_info['orders_products_options_values_id'];
+              if(empty($orders_info['orders_products_options_id']) || empty($orders_info['orders_products_options_values_id'])) {
+                require_once (DIR_FS_INC.'get_order_options_values_ids_by_names.inc.php');
+                $possible_options = get_order_options_values_ids_by_names($orders_info['products_id'], $orders_info['products_options'], $orders_info['products_options_values'], $orders_info['language']);
+                if($possible_options['options_id'] > 0 && $possible_options['value_id'] > 0) {
+                  $attributes_array[$possible_options['options_id']] = $possible_options['value_id'];
+                }
+              }
+              else
+                $attributes_array[$orders_info['orders_products_options_id']] = $orders_info['orders_products_options_values_id'];
             }
             $products_id = $orders_info['products_id'];
             $products_quantity = $orders_info['products_quantity'];
