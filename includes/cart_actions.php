@@ -361,6 +361,12 @@ if (xtc_not_null($action)) {
                     $possible_options = get_order_options_values_ids_by_names($order_data['PRODUCTS_ID'], $attributes_data['option'], $attributes_data['value'], $order->info['language']);
                     if($possible_options['options_id'] > 0 && $possible_options['value_id'] > 0) {
                       $attributes_array[$possible_options['options_id']] = $possible_options['value_id'];
+                      xtc_db_perform(
+                        TABLE_ORDERS_PRODUCTS_ATTRIBUTES,
+                        array('orders_products_options_id'=>$possible_options['options_id'],'orders_products_options_values_id'=>$possible_options['value_id']),
+                        'update',
+                        "orders_products_id=".(int)$order_data['ORDERS_PRODUCTS_ID']." AND products_options='".xtc_db_input($attributes_data['option'])."' AND products_options_values='".xtc_db_input($attributes_data['value'])."'"
+                      );
                     }
                   }
                   else
@@ -400,6 +406,7 @@ if (xtc_not_null($action)) {
                                                   o.language,
                                                   op.products_id,
                                                   op.products_quantity,
+                                                  op.orders_products_id,
                                                   opa.orders_products_options_id,
                                                   opa.orders_products_options_values_id,
                                                   opa.products_options,
@@ -421,6 +428,12 @@ if (xtc_not_null($action)) {
                 $possible_options = get_order_options_values_ids_by_names($orders_info['products_id'], $orders_info['products_options'], $orders_info['products_options_values'], $orders_info['language']);
                 if($possible_options['options_id'] > 0 && $possible_options['value_id'] > 0) {
                   $attributes_array[$possible_options['options_id']] = $possible_options['value_id'];
+                  xtc_db_perform(
+                    TABLE_ORDERS_PRODUCTS_ATTRIBUTES,
+                    array('orders_products_options_id'=>$possible_options['options_id'],'orders_products_options_values_id'=>$possible_options['value_id']),
+                    'update',
+                    "orders_products_id=".(int)$orders_info['orders_products_id']." AND products_options='".xtc_db_input($orders_info['products_options'])."' AND products_options_values='".xtc_db_input($orders_info['products_options_values'])."'"
+                  );
                 }
               }
               else
