@@ -92,7 +92,7 @@
                 </table>
               </td>
               <td class="smallText" align="center">
-                <br>
+                <div style="margin-bottom:8px;">&nbsp;</div>
                 <input class="button" type="submit" value="<?php echo TEXT_IM_LABEL; ?>">
               </td>
             <?php
