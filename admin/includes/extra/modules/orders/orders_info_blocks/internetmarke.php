@@ -84,10 +84,10 @@
               <td class="smallText" align="center" style="padding:0;" colspan="3">
                 <table cellpadding="5">
                   <tr>
-                    <td class="smallText" style="border:none;"><?php echo TEXT_IM_FORMAT.'<br>'.xtc_draw_pull_down_menu('format', $PageFormats, $id, 'id="im_format" style="width:270px;"'); ?></td>
-                    <td class="smallText" style="white-space:nowrap; border:none;"><?php echo TEXT_IM_ROW.'<br>'.xtc_draw_pull_down_menu('row', $row_array, '', 'id="im_row"'); ?></td>
-                    <td class="smallText" style="white-space:nowrap; border:none;"><?php echo TEXT_IM_COLUMN.'<br>'.xtc_draw_pull_down_menu('column', $column_array, '', 'id="im_column"'); ?></td>
-                    <td class="smallText" style="border:none;"><?php echo TEXT_IM_PORTO.'<br>'.xtc_draw_pull_down_menu('product', $price_array, '', 'style="width:320px;"'); ?></td>
+                    <td class="smallText" style="border:none;"><?php echo '<div style="margin-bottom:8px;">'.TEXT_IM_FORMAT.'</div>'.xtc_draw_pull_down_menu('format', $PageFormats, $id, 'id="im_format" style="width:270px;"'); ?></td>
+                    <td class="smallText" style="white-space:nowrap; border:none;"><?php echo '<div style="margin-bottom:8px;">'.TEXT_IM_ROW.'</div>'.xtc_draw_pull_down_menu('row', $row_array, '', 'id="im_row"'); ?></td>
+                    <td class="smallText" style="white-space:nowrap; border:none;"><?php echo '<div style="margin-bottom:8px;">'.TEXT_IM_COLUMN.'</div>'.xtc_draw_pull_down_menu('column', $column_array, '', 'id="im_column"'); ?></td>
+                    <td class="smallText" style="border:none;"><?php echo '<div style="margin-bottom:8px;">'.TEXT_IM_PORTO.'</div>'.xtc_draw_pull_down_menu('product', $price_array, '', 'style="width:320px;"'); ?></td>
                   </tr>
                 </table>
               </td>
