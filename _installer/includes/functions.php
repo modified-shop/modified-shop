@@ -47,7 +47,7 @@
     
       if ($file->isDot() === false) {
         if(is_dir(DIR_FS_DOCUMENT_ROOT.$dir.$filename)) {
-          rrmdir($filename);
+          rrmdir($dir.$filename);
         } else {
           if (unlink(DIR_FS_DOCUMENT_ROOT.$dir.$filename) === true) {
             $unlinked_files['success']['files'][] = $filename;
