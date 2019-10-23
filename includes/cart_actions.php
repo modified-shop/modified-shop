@@ -98,7 +98,7 @@ if (xtc_not_null($action)) {
 
     case 'remove_product':
       foreach(auto_include(DIR_FS_CATALOG.'includes/extra/cart_actions/remove_product_prepare_get/','php') as $file) require ($file);
-      $prd_id = xtc_input_validation($_GET['prd_id'], 'products_id', '');
+      $prd_id = xtc_input_validation($_GET['prd_id'], 'products_id');
       $cart_object->remove($prd_id);
       foreach(auto_include(DIR_FS_CATALOG.'includes/extra/cart_actions/remove_product_before_redirect/','php') as $file) require ($file);
       xtc_redirect(xtc_href_link($goto, xtc_get_all_get_params($parameters), 'NONSSL'));
@@ -116,7 +116,7 @@ if (xtc_not_null($action)) {
       for ($i = 0, $n = sizeof($_POST['products_id']); $i < $n; $i++) {
         $cart_quantity = $_POST['cart_quantity'][$i] = xtc_remove_non_numeric($_POST['cart_quantity'][$i]);
         $_POST['old_qty'][$i] = xtc_remove_non_numeric($_POST['old_qty'][$i]);
-        $_POST['products_id'][$i] = xtc_input_validation($_POST['products_id'][$i], 'products_id', '');
+        $_POST['products_id'][$i] = xtc_input_validation($_POST['products_id'][$i], 'products_id');
           
         if ($cart_quantity == 0) $cart_object->remove($_POST['products_id'][$i]);
       
@@ -309,7 +309,7 @@ if (xtc_not_null($action)) {
           }
           $_SESSION['cart']->add_cart($products_id, $cart_quantity, $attributes_array);
 
-          $prd_id = xtc_input_validation($_GET['BUYproducts_id'], 'products_id', '');
+          $prd_id = xtc_input_validation($_GET['BUYproducts_id'], 'products_id');
           $_SESSION['wishlist']->remove($prd_id);
         }
         xtc_redirect(xtc_href_link($goto, xtc_get_all_get_params($parameters), 'NONSSL'));
@@ -331,7 +331,7 @@ if (xtc_not_null($action)) {
           }
           $_SESSION['wishlist']->add_cart($products_id, $cart_quantity, $attributes_array);
 
-          $prd_id = xtc_input_validation($_GET['BUYproducts_id'], 'products_id', '');
+          $prd_id = xtc_input_validation($_GET['BUYproducts_id'], 'products_id');
           $_SESSION['cart']->remove($prd_id);
         }
         xtc_redirect(xtc_href_link($goto, xtc_get_all_get_params($parameters), 'NONSSL'));
@@ -361,12 +361,11 @@ if (xtc_not_null($action)) {
                     $possible_options = get_order_options_values_ids_by_names($order_data['PRODUCTS_ID'], $attributes_data['option'], $attributes_data['value'], $order->info['language']);
                     if ($possible_options['options_id'] > 0 && $possible_options['value_id'] > 0) {
                       $attributes_array[$possible_options['options_id']] = $possible_options['value_id'];
-                      xtc_db_perform(
-                        TABLE_ORDERS_PRODUCTS_ATTRIBUTES,
-                        array('orders_products_options_id'=>$possible_options['options_id'],'orders_products_options_values_id'=>$possible_options['value_id']),
-                        'update',
-                        "orders_products_id=".(int)$order_data['ORDERS_PRODUCTS_ID']." AND products_options='".xtc_db_input($attributes_data['option'])."' AND products_options_values='".xtc_db_input($attributes_data['value'])."'"
+                      $sql_data_array = array(
+                        'orders_products_options_id' => $possible_options['options_id'],
+                        'orders_products_options_values_id' => $possible_options['value_id']
                       );
+                      xtc_db_perform(TABLE_ORDERS_PRODUCTS_ATTRIBUTES, $sql_data_array, 'update', "orders_products_id = ".(int)$order_data['ORDERS_PRODUCTS_ID']." AND products_options = '".xtc_db_input($attributes_data['option'])."' AND products_options_values = '".xtc_db_input($attributes_data['value'])."'");
                     }
                   } else {
                     $attributes_array[$attributes_data['option_id']] = $attributes_data['value_id'];
@@ -428,12 +427,11 @@ if (xtc_not_null($action)) {
                 $possible_options = get_order_options_values_ids_by_names($orders_info['products_id'], $orders_info['products_options'], $orders_info['products_options_values'], $orders_info['language']);
                 if ($possible_options['options_id'] > 0 && $possible_options['value_id'] > 0) {
                   $attributes_array[$possible_options['options_id']] = $possible_options['value_id'];
-                  xtc_db_perform(
-                    TABLE_ORDERS_PRODUCTS_ATTRIBUTES,
-                    array('orders_products_options_id'=>$possible_options['options_id'],'orders_products_options_values_id'=>$possible_options['value_id']),
-                    'update',
-                    "orders_products_id=".(int)$orders_info['orders_products_id']." AND products_options='".xtc_db_input($orders_info['products_options'])."' AND products_options_values='".xtc_db_input($orders_info['products_options_values'])."'"
+                  $sql_data_array = array(
+                    'orders_products_options_id' => $possible_options['options_id'],
+                    'orders_products_options_values_id' => $possible_options['value_id']
                   );
+                  xtc_db_perform(TABLE_ORDERS_PRODUCTS_ATTRIBUTES, $sql_data_array, 'update', "orders_products_id = ".(int)$orders_info['orders_products_id']." AND products_options = '".xtc_db_input($orders_info['products_options'])."' AND products_options_values = '".xtc_db_input($orders_info['products_options_values'])."'");
                 }
               } else {
                 $attributes_array[$orders_info['orders_products_options_id']] = $orders_info['orders_products_options_values_id'];
