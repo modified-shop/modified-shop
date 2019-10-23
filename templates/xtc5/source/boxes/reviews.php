@@ -45,7 +45,8 @@ if ($product->isProduct() === true && $_SESSION['customers_status']['customers_s
                            substring(rd.reviews_text, 1, 60) as reviews_text,
                            p.products_id,
                            p.products_image,
-                           pd.products_name
+                           pd.products_name,
+                           pd.products_heading_title
                       FROM ".TABLE_REVIEWS." r
                       JOIN ".TABLE_REVIEWS_DESCRIPTION." rd
                            ON r.reviews_id = rd.reviews_id
@@ -83,6 +84,7 @@ if ($product->isProduct() === true && $_SESSION['customers_status']['customers_s
       $box_smarty->assign('REVIEWS_LINK', xtc_href_link(FILENAME_REVIEWS));
       $box_smarty->assign('PRODUCTS_IMAGE', $products_image);
       $box_smarty->assign('PRODUCTS_NAME', $reviews['products_name']);
+      $box_smarty->assign('PRODUCTS_HEADING_TITLE', $reviews['products_heading_title']);
       $box_smarty->assign('PRODUCTS_LINK', xtc_href_link(FILENAME_PRODUCT_REVIEWS_INFO, 'products_id=' . $reviews['products_id'] . '&reviews_id=' . $reviews['reviews_id']));
       $box_smarty->assign('REVIEWS', xtc_break_string(encode_htmlspecialchars($reviews['reviews_text']), 15, '-<br />'));
       $box_smarty->assign('REVIEWS_IMAGE', $review_image);

@@ -38,6 +38,8 @@
       }
       $where_str .= "OR pd.products_name LIKE ('%".$keyword."%') ";
       $where_str .= $ent_keyword ? "OR pd.products_name LIKE ('%".$ent_keyword."%') " : '';
+      $where_str .= "OR pd.products_heading_title LIKE ('%".$keyword."%') ";
+      $where_str .= $ent_keyword ? "OR pd.products_heading_title LIKE ('%".$ent_keyword."%') " : '';
       $where_str .= "OR p.products_model LIKE ('%".$keyword."%') ";
       $where_str .= $ent_keyword ? "OR p.products_model LIKE ('%".$ent_keyword."%') " : '';
       $where_str .= "OR p.products_ean LIKE ('%".$keyword."%') ";

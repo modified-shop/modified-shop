@@ -123,6 +123,7 @@ define('TEXT_PRODUCT_NOT_AVAILABLE', 'Deaktiviert');
 define('TEXT_PRODUCTS_MANUFACTURER', 'Artikelhersteller:');
 define('TEXT_PRODUCTS_MANUFACTURER_MODEL', 'Hersteller Art.-Nr. (HAN/MPN):');
 define('TEXT_PRODUCTS_NAME', 'Artikelname:');
+define('TEXT_PRODUCTS_HEADING_TITLE', 'Artikel &Uuml;berschrift:');
 define('TEXT_PRODUCTS_DESCRIPTION', 'Artikelbeschreibung:');
 define('TEXT_PRODUCTS_QUANTITY', 'Lagerbestand:');
 define('TEXT_PRODUCTS_MODEL', 'Artikel-Nr.:');

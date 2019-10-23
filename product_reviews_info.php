@@ -37,7 +37,8 @@ $product_reviews_query = xtc_db_query("SELECT r.*,
                                               rd.reviews_text,
                                               p.products_id,
                                               p.products_image,
-                                              pd.products_name
+                                              pd.products_name,
+                                              pd.products_heading_title
                                          FROM ".TABLE_REVIEWS." r
                                          JOIN ".TABLE_REVIEWS_DESCRIPTION." rd
                                               ON r.reviews_id = rd.reviews_id
@@ -76,6 +77,7 @@ $smarty->assign('REVIEWS_TEXT', nl2br(xtc_break_string(encode_htmlspecialchars($
 $smarty->assign('RATING', xtc_image('templates/'.CURRENT_TEMPLATE.'/img/stars_'.$product_reviews['reviews_rating'].'.gif', sprintf(TEXT_OF_5_STARS, $product_reviews['reviews_rating'])));
 $smarty->assign('RATING_VOTE', $product_reviews['reviews_rating']);
 $smarty->assign('PRODUCTS_NAME', $product_reviews['products_name']);
+$smarty->assign('PRODUCTS_HEADING_TITLE', $product_reviews['products_heading_title']);
 $smarty->assign('PRODUCTS_LINK', xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$product_reviews['products_id']));
 $smarty->assign('PRODUCTS_IMAGE', $product->productImage($product_reviews['products_image'], 'info'));
 $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(FILENAME_PRODUCT_REVIEWS, 'products_id='.$product_reviews['products_id']).'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');

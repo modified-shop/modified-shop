@@ -599,6 +599,7 @@ class shoppingCart {
         $products_query = xtc_db_query("SELECT ".ADD_SELECT_CART."
                                                p.products_id,
                                                pd.products_name,
+                                               pd.products_heading_title,
                                                pd.products_description,
                                                pd.products_short_description,
                                                pd.products_order_description,

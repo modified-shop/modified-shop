@@ -38,10 +38,11 @@ $reviews_query_raw = "SELECT r.reviews_id,
                         left(rd.reviews_text, 250) as reviews_text,
                              r.reviews_rating,
                              r.date_added,
+                             r.customers_name,
                              p.products_id,
-                             pd.products_name,
                              p.products_image,
-                             r.customers_name
+                             pd.products_name,
+                             pd.products_heading_title
                         FROM ".TABLE_REVIEWS." r
                         JOIN ".TABLE_REVIEWS_DESCRIPTION." rd
                              ON r.reviews_id = rd.reviews_id
@@ -84,6 +85,7 @@ if ($reviews_split->number_of_rows > 0) {
         'PRODUCTS_IMAGE' => $product->productImage($reviews['products_image'], 'thumbnail'),
         'PRODUCTS_LINK' => xtc_href_link(FILENAME_PRODUCT_REVIEWS_INFO, 'products_id='.$reviews['products_id'].'&reviews_id='.$reviews['reviews_id']),
         'PRODUCTS_NAME' => $reviews['products_name'],
+        'PRODUCTS_HEADING_TITLE' => $reviews['products_heading_title'],
         'AUTHOR' => $reviews['customers_name'],
         'DATE' => xtc_date_short($reviews['date_added']),
         'TEXT' => '('.sprintf(TEXT_REVIEW_WORD_COUNT, xtc_word_count($reviews['reviews_text'], ' ')).') <br />'.nl2br(encode_htmlspecialchars($reviews['reviews_text'])).'...',

@@ -98,6 +98,7 @@
                           p.products_vpe_status,
                           p.products_vpe_value,
                           pd.products_name,
+                          pd.products_heading_title,
                           pd.products_short_description,
                           pd.products_description,
                           IFNULL(s.specials_new_products_price, p.products_price) AS price ";
@@ -179,6 +180,7 @@
                              p.products_vpe_status,
                              p.products_vpe_value,
                              pd.products_name,
+                             pd.products_heading_title,
                              pd.products_short_description,
                              pd.products_description,
                              IFNULL(s.specials_new_products_price, p.products_price) AS price

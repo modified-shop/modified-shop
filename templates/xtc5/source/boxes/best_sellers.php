@@ -59,14 +59,7 @@ if (MIN_DISPLAY_BESTSELLERS > 0 && (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/b
 	$check_num = 0;
   if (isset($current_category_id) && $current_category_id > 0) {
     $best_sellers_query = "SELECT ".$select."
-                                  p.products_id,
-                                  p.products_price,
-                                  p.products_tax_class_id,
-                                  p.products_image,
-                                  p.products_vpe,
-                                  p.products_vpe_status,
-                                  p.products_vpe_value,
-                                  pd.products_name
+                                  ".$product->default_select."
                              FROM ".TABLE_PRODUCTS." p
                                   ".$join."
                              JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
@@ -97,14 +90,7 @@ if (MIN_DISPLAY_BESTSELLERS > 0 && (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/b
   
   if ($check_num < 1) {
     $best_sellers_query = "SELECT ".$select."
-                                  p.products_id,
-                                  p.products_image,
-                                  p.products_price,
-                                  p.products_vpe,
-                                  p.products_vpe_status,
-                                  p.products_vpe_value,
-                                  p.products_tax_class_id,
-                                  pd.products_name 
+                                  ".$product->default_select."
                              FROM ".TABLE_PRODUCTS." p
                                   ".$join."
                              JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd

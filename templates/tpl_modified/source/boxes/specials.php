@@ -24,15 +24,8 @@ include(DIR_FS_BOXES_INC . 'smarty_default.php');
 // reset cache id
 $cache_id = '';
 
-$specials_query = xtc_db_query("SELECT p.products_id,
-                                       pd.products_name,
-                                       p.products_price,
-                                       p.products_tax_class_id,
-                                       p.products_image,
+$specials_query = xtc_db_query("SELECT ".$product->default_select.",
                                        s.expires_date,
-                                       p.products_vpe,
-                                       p.products_vpe_status,
-                                       p.products_vpe_value,
                                        s.specials_new_products_price
                                   FROM ".TABLE_PRODUCTS." p
                                   JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd

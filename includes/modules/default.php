@@ -319,6 +319,7 @@ switch ($category_depth) {
                            p.products_vpe_status,
                            p.products_vpe_value,
                            pd.products_name,
+                           pd.products_heading_title,
                            pd.products_description,
                            pd.products_short_description
                       FROM ".TABLE_PRODUCTS." p

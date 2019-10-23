@@ -46,6 +46,7 @@ class product {
                              p.products_vpe_value,
                              p.products_model,
                              pd.products_name,
+                             pd.products_heading_title,
                              pd.products_short_description';
 
     // default products image

@@ -27,14 +27,7 @@ if (isset($_SESSION['tracking']['products_history']) && count($_SESSION['trackin
 
   if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_last_viewed.html', $cache_id) || !$cache) {
 
-    $random_query = "SELECT p.products_id,
-                            p.products_price,
-                            p.products_tax_class_id,
-                            p.products_image,
-                            p.products_vpe,
-                            p.products_vpe_status,
-                            p.products_vpe_value,
-                            pd.products_name,
+    $random_query = "SELECT ".$product->default_select.",
                             p2c.categories_id,
                             cd.categories_name
                        FROM " . TABLE_PRODUCTS . " p

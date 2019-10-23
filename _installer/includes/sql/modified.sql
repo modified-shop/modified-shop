@@ -1053,6 +1053,7 @@ CREATE TABLE products_description (
   products_id INT(11) NOT NULL,
   language_id INT(11) NOT NULL,
   products_name VARCHAR(255) NOT NULL DEFAULT '',
+  products_heading_title VARCHAR(255) NOT NULL DEFAULT '',
   products_description text,
   products_short_description text,
   products_keywords VARCHAR(255) DEFAULT NULL,

@@ -261,6 +261,9 @@
           <?php echo $lng_image ?>&nbsp;<b><?php echo TEXT_PRODUCTS_NAME; ?>&nbsp;</b><?php echo xtc_draw_input_field('products_name[' . $languages[$i]['id'] . ']', (isset($products_name[$languages[$i]['id']]) ? stripslashes($products_name[$languages[$i]['id']]) : $products_desc_fields['products_name']),'style="width:80%" maxlength="255"'); ?>
         </div>
         <div class="main" style="padding: 3px; line-height:20px;">
+          <?php echo $lng_image ?>&nbsp;<b><?php echo TEXT_PRODUCTS_HEADING_TITLE; ?>&nbsp;</b><?php echo xtc_draw_input_field('products_heading_title[' . $languages[$i]['id'] . ']', (isset($products_name[$languages[$i]['id']]) ? stripslashes($products_name[$languages[$i]['id']]) : $products_desc_fields['products_heading_title']), 'style="width:80%" maxlength="255"'); ?>
+        </div>
+        <div class="main" style="padding: 3px; line-height:20px;">
            <?php echo $lng_image. '&nbsp;'.TEXT_PRODUCTS_URL . '&nbsp;<small>' . TEXT_PRODUCTS_URL_WITHOUT_HTTP . '</small>&nbsp;'; ?><?php echo xtc_draw_input_field('products_url[' . $languages[$i]['id'] . ']', (isset($products_url[$languages[$i]['id']]) ? stripslashes($products_url[$languages[$i]['id']]) : $products_desc_fields['products_url']),'style="width:70%" maxlength="255"'); ?>
         </div>
         <!-- input boxes desc, meta etc -->

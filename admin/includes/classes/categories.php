@@ -708,6 +708,7 @@ class categories {
     foreach ($languages AS $lang) {
       $language_id = $lang['id'];
       $sql_data_array = array('products_name' => xtc_db_prepare_input($products_data['products_name'][$language_id]),
+                              'products_heading_title' => xtc_db_prepare_input($products_data['products_heading_title'][$language_id]),
                               'products_description' => xtc_db_prepare_input($products_data['products_description'][$language_id]),
                               'products_short_description' => xtc_db_prepare_input($products_data['products_short_description'][$language_id]),
                               'products_keywords' => xtc_db_prepare_input($products_data['products_keywords'][$language_id]),

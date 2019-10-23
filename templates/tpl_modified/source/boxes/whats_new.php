@@ -35,14 +35,7 @@ if (MAX_DISPLAY_NEW_PRODUCTS_DAYS != '0') {
 $current_prd =  (isset($_GET['products_id']) && (int)$_GET['products_id'] > 0) ? 'AND p.products_id != ' . (int)$_GET['products_id'] : '';
 
 // get random product data
-$whats_new_query = xtc_db_query("SELECT DISTINCT p.products_id,
-                                                 p.products_image,                                              
-                                                 p.products_tax_class_id,
-                                                 p.products_vpe,
-                                                 p.products_vpe_status,
-                                                 p.products_vpe_value,
-                                                 p.products_price,
-                                                 pd.products_name
+$whats_new_query = xtc_db_query("SELECT DISTINCT ".$product->default_select."
                                             FROM ".TABLE_PRODUCTS." p
                                             JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd 
                                                  ON p.products_id = pd.products_id 

@@ -222,4 +222,7 @@ CREATE TABLE IF NOT EXISTS email_content (
   KEY idx_email_id (email_id)
 );
 
+#GTB - 2019-10-23 - add products_heading_title
+ALTER TABLE products_description ADD products_heading_title VARCHAR(255) NOT NULL DEFAULT '' AFTER products_name;
+
 # Keep an empty line at the end of this file for the db_updater to work properly

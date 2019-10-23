@@ -123,6 +123,7 @@ define('TEXT_PRODUCT_NOT_AVAILABLE', 'Deactivated');
 define('TEXT_PRODUCTS_MANUFACTURER', 'Products Manufacturer:');
 define('TEXT_PRODUCTS_MANUFACTURER_MODEL', 'Manufacturer model no. (MPN):');
 define('TEXT_PRODUCTS_NAME', 'Products Name:');
+define('TEXT_PRODUCTS_HEADING_TITLE', 'Products Heading:');
 define('TEXT_PRODUCTS_DESCRIPTION', 'Products Description:');
 define('TEXT_PRODUCTS_QUANTITY', 'Products Stock:');
 define('TEXT_PRODUCTS_MODEL', 'Products Model:');

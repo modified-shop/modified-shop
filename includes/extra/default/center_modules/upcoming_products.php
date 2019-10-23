@@ -24,8 +24,7 @@ if (MAX_DISPLAY_UPCOMING_PRODUCTS != '0') {
   // include needed functions
   require_once (DIR_FS_INC.'xtc_date_short.inc.php');
 
-  $expected_query = xtDBquery("SELECT p.products_id, 
-                                      pd.products_name, 
+  $expected_query = xtDBquery("SELECT ".$product->default_select.",
                                       products_date_available as date_expected
                                  FROM ".TABLE_PRODUCTS." p
                                  JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd

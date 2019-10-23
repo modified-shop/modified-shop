@@ -44,8 +44,7 @@
       
       $where_str .= " ) ";
                                                    
-      $autocomplete_search_query = "SELECT p.*, 
-                                           pd.products_name
+      $autocomplete_search_query = "SELECT ".$product->default_select."
                                       FROM ".TABLE_PRODUCTS." p 
                                       JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd 
                                            ON p.products_id = pd.products_id
