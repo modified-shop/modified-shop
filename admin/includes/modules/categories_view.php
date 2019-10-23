@@ -128,6 +128,14 @@
         $catsort    = 'c.sort_order ASC'; //default
         $prodsort   = 'p.products_image DESC';
         break;
+      case 'startpage':
+        $catsort    = 'c.sort_order ASC';
+        $prodsort   = 'p.products_startpage_sort ASC';
+        break;
+      case 'startpage-desc':
+        $catsort    = 'c.sort_order ASC';
+        $prodsort   = 'p.products_startpage_sort DESC';
+        break;
       default:
         $catsort    = 'cd.categories_name ASC';
         $prodsort   = 'pd.products_name ASC';
