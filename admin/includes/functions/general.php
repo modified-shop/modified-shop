@@ -2283,19 +2283,22 @@
    */
   function clear_dir($dir, $basefiles = false) {
     $dir = rtrim($dir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
-    $files = array_diff(scandir($dir), array('..', '.'));
-    
-    if ($basefiles === false) {
-      $files = array_diff($files, array('.htaccess', 'index.html'));
-    }
-
-    foreach ($files as $file) {
-      if (is_dir($dir.$file)) {
-        clear_dir($dir.$file, true);
-        rmdir($dir.$file);
-      } else {
-        unlink($dir.$file);
+    $ignore_files = array('.htaccess', 'index.html');
+    if ($handle = opendir($dir)) {
+      while (false !== ($file = readdir($handle))) {
+        if ($file != "." && $file != "..") {
+          if (is_dir($dir.$file)) {
+            clear_dir($dir.$file, true);
+            rmdir($dir.$file);
+          } else {
+            if (!$basefiles && in_array($file, $ignore_files)) {
+              continue;
+            }
+            unlink($dir.$file);
+          }
+        }
       }
+      closedir($handle);
     }
   }
 
