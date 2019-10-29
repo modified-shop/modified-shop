@@ -124,20 +124,6 @@
 
 
     /**
-     * get_paypal_appinator
-     */
-    public static function get_paypal_appinator($mode) {  
-      $response = self::request('paypal/onboarding/'.$mode);
-      
-      if ($response == null || !is_array($response)) {
-        throw new Exception('ERROR modified API: get_paypal_appinator::'.$mode);
-      } else {
-        return $response;
-      }
-    }
-
-
-    /**
      * clean
      */
     private static function clean($response) {

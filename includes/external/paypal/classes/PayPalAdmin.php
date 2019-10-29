@@ -469,11 +469,10 @@ class PayPalAdmin extends PayPalPayment {
 
   
   function get_partner_details($mode) {
-    try {
-      $response = modified_api::get_paypal_appinator($mode);
+    $response = modified_api::request('paypal/onboarding/'.$mode);
+    
+    if ($response != null && is_array($response)) {
       return $response;
-    } catch (Exception $ex) {
-      $this->LoggingManager->log('DEBUG', 'Appinator', array('exception' => $ex));
     }
   }
   
