@@ -68,14 +68,29 @@
 
 
     /**
+     * get_newsfeed
+     */
+    public static function get_newsfeed($version) {  
+      $response = self::request('modified/news/'.$version);
+      
+      if ($response == null || !is_array($response) || !isset($response['channel'])) {
+        throw new Exception('Could not reach external host '.self::$_endpoint);
+      } else {
+        return $response['channel'];
+      }
+    }
+
+
+    /**
      * get_start_content
      */
     public static function get_start_content($language) {  
       $response = self::request('modified/start/'.$language);
+      
       if ($response == null || !is_array($response) || !isset($response['content'])) {
         throw new Exception('Could not reach external host '.self::$_endpoint);
       } else {
-        return self::clean($response['content']);
+        return $response['content'];
       }
     }
 
@@ -85,6 +100,7 @@
      */
     public static function get_support_content($language) {  
       $response = self::request('modified/support/'.$language);
+      
       if ($response == null || !is_array($response)) {
         throw new Exception('Could not reach external host '.self::$_endpoint);
       } else {

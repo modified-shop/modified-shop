@@ -11,35 +11,46 @@
    ---------------------------------------------------------------------------------------*/
   
   require_once(DIR_FS_INC.'get_database_version.inc.php');
-  require_once(DIR_FS_INC.'get_external_content.inc.php');
+  require_once(DIR_FS_CATALOG.'includes/classes/modified_api.php');
   
   function get_newsfeed() {
     $time = time();
+
+    if (!defined('NEWSFEED_LAST_UPDATE_TRY')) {
+      xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('NEWSFEED_LAST_UPDATE_TRY', '0', '6', '1', now())");
+    }
     
-    // newsfeed
-    if ($time - (int)NEWSFEED_LAST_UPDATE > 86400
-        || (defined('NEWSFEED_LAST_UPDATE_TRY')
-            && (int)NEWSFEED_LAST_UPDATE_TRY != (int)NEWSFEED_LAST_UPDATE
-            && $time - (int)NEWSFEED_LAST_UPDATE_TRY > 3600
-            )
+    if (($time - (int)NEWSFEED_LAST_UPDATE > 86400
+         && $time - (int)NEWSFEED_LAST_UPDATE_TRY > 3600
+         ) || ((int)NEWSFEED_LAST_UPDATE_TRY != (int)NEWSFEED_LAST_UPDATE
+               && $time - (int)NEWSFEED_LAST_UPDATE_TRY > 3600
+               )
         )
     {
       $db_version = get_database_version();
-      $feed = get_external_content('https://www.modified-shop.org/feed/?v='.$db_version['plain'], 2);    
-      if ($feed && class_exists('SimpleXmlElement')) {
-        $rss = new SimpleXmlElement($feed, LIBXML_NOCDATA);
-        $rss->addAttribute('encoding', 'UTF-8');
-        for ($i=0; $i<=9; $i++) {
-          xtc_db_query("REPLACE INTO newsfeed (news_title, 
-                                               news_text, 
-                                               news_link, 
-                                               news_date) 
-                                       VALUES ('".xtc_db_input(decode_htmlentities(trim(decode_utf8($rss->channel->item[$i]->title))))."', 
-                                               '".xtc_db_input(decode_htmlentities(trim(decode_utf8($rss->channel->item[$i]->description))))."',
-                                               '".xtc_db_input(decode_utf8($rss->channel->item[$i]->link))."',
-                                               '".xtc_db_input(strtotime($rss->channel->item[$i]->pubDate))."')");
+      
+      try {
+        $feed = modified_api::get_newsfeed($db_version['plain']);
+      
+        if (isset($feed['item'])
+            && count($feed['item']) > 0
+            )
+        {
+          foreach ($feed['item'] as $item) {
+            xtc_db_query("REPLACE INTO newsfeed (news_title, 
+                                                 news_text, 
+                                                 news_link, 
+                                                 news_date) 
+                                         VALUES ('".xtc_db_input(decode_htmlentities(trim(decode_utf8($item['title']))))."', 
+                                                 '".xtc_db_input(decode_htmlentities(trim(decode_utf8($item['description']))))."',
+                                                 '".xtc_db_input(decode_utf8($item['link']))."',
+                                                 '".xtc_db_input(strtotime($item['pubDate']))."')");
+          }
+
+          xtc_db_query("UPDATE ".TABLE_CONFIGURATION." SET configuration_value = '".$time."' WHERE configuration_key = 'NEWSFEED_LAST_UPDATE'");
         }
-        xtc_db_query("UPDATE ".TABLE_CONFIGURATION." SET configuration_value = '".$time."' WHERE configuration_key = 'NEWSFEED_LAST_UPDATE'");
+      } catch (Exception $e) {
+        trigger_error($e->getMessage(), E_USER_WARNING);
       }
       
       xtc_db_query("UPDATE ".TABLE_CONFIGURATION." SET configuration_value = '".$time."' WHERE configuration_key = 'NEWSFEED_LAST_UPDATE_TRY'");
