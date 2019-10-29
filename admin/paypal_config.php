@@ -71,6 +71,9 @@ $log_level_array = array(
   array('id' => 'DEBUG', 'text' => 'Debug'),
 ); 
 
+$paypal_live = $paypal->getOnboardingLink('live');
+$paypal_sandbox = $paypal->getOnboardingLink('sandbox');
+
 require (DIR_WS_INCLUDES.'head.php');
 ?>
 <link rel="stylesheet" type="text/css" href="../includes/external/paypal/css/stylesheet.css"> 
@@ -136,7 +139,7 @@ require (DIR_WS_INCLUDES.'head.php');
               <tr>
                 <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_CLIENT_LIVE; ?></td>
                 <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('config[PAYPAL_CLIENT_ID_LIVE]', $paypal->get_config('PAYPAL_CLIENT_ID_LIVE'), 'style="width: 300px;"'); ?></td>
-                <td class="dataTableConfig col-right" rowspan="2"><?php echo '<a target="_blank" data-paypal-popup-close="onboardedClose" data-paypal-onboard-complete="onboardedCallbackLive" data-paypal-button="PPLtBlue" href="' . $paypal->getOnboardingLink('live') . '">' . TEXT_PAYPAL_APPINATOR_LIVE . '</a><br><br>' . TEXT_PAYPAL_CONFIG_CLIENT_LIVE_INFO; ?></td>
+                <td class="dataTableConfig col-right" rowspan="2"><?php echo (($paypal_live != '') ? '<a target="_blank" data-paypal-popup-close="onboardedClose" data-paypal-onboard-complete="onboardedCallbackLive" data-paypal-button="PPLtBlue" href="' . $paypal_live . '">' . TEXT_PAYPAL_APPINATOR_LIVE . '</a><br><br>' : '') . TEXT_PAYPAL_CONFIG_CLIENT_LIVE_INFO; ?></td>
               </tr>
               <tr>
                 <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_SECRET_LIVE; ?></td>
@@ -146,7 +149,7 @@ require (DIR_WS_INCLUDES.'head.php');
               <tr>
                 <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_CLIENT_SANDBOX; ?></td>
                 <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('config[PAYPAL_CLIENT_ID_SANDBOX]', $paypal->get_config('PAYPAL_CLIENT_ID_SANDBOX'), 'style="width: 300px;"'); ?></td>
-                <td class="dataTableConfig col-right" rowspan="2"><?php echo '<a target="_blank" data-paypal-popup-close="onboardedClose" data-paypal-onboard-complete="onboardedCallbackSandbox" data-paypal-button="PPLtBlue" href="' . $paypal->getOnboardingLink('sandbox') . '">' . TEXT_PAYPAL_APPINATOR_SANDBOX . '</a><br><br>' . TEXT_PAYPAL_CONFIG_CLIENT_SANDBOX_INFO; ?></td>
+                <td class="dataTableConfig col-right" rowspan="2"><?php echo (($paypal_sandbox != '') ? '<a target="_blank" data-paypal-popup-close="onboardedClose" data-paypal-onboard-complete="onboardedCallbackSandbox" data-paypal-button="PPLtBlue" href="' . $paypal_sandbox . '">' . TEXT_PAYPAL_APPINATOR_SANDBOX . '</a><br><br>' : '') . TEXT_PAYPAL_CONFIG_CLIENT_SANDBOX_INFO; ?></td>
               </tr>
               <tr>
                 <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_SECRET_SANDBOX; ?></td>
