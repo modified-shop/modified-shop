@@ -110,20 +110,6 @@
 
 
     /**
-     * get_support_content
-     */
-    public static function get_support_content($language) {  
-      $response = self::request('modified/support/'.$language);
-      
-      if ($response == null || !is_array($response)) {
-        throw new Exception('ERROR modified API: get_support_content::'.$language);
-      } else {
-        return $response;
-      }
-    }
-
-
-    /**
      * clean
      */
     private static function clean($response) {
