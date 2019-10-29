@@ -74,7 +74,7 @@
       $response = self::request('modified/version/');
       
       if ($response == null || !is_array($response) || !isset($response[$version])) {
-        throw new Exception('Could not reach external host '.self::$_endpoint);
+        throw new Exception('ERROR modified API: get_version::'.$version);
       } else {
         return $response[$version];
       }
@@ -88,7 +88,7 @@
       $response = self::request('modified/news/'.$version);
       
       if ($response == null || !is_array($response) || !isset($response['channel'])) {
-        throw new Exception('Could not reach external host '.self::$_endpoint);
+        throw new Exception('ERROR modified API: get_newsfeed::'.$version);
       } else {
         return $response['channel'];
       }
@@ -102,7 +102,7 @@
       $response = self::request('modified/start/'.$language);
       
       if ($response == null || !is_array($response) || !isset($response['content'])) {
-        throw new Exception('Could not reach external host '.self::$_endpoint);
+        throw new Exception('ERROR modified API: get_start_content::'.$language);
       } else {
         return $response['content'];
       }
@@ -116,7 +116,7 @@
       $response = self::request('modified/support/'.$language);
       
       if ($response == null || !is_array($response)) {
-        throw new Exception('Could not reach external host '.self::$_endpoint);
+        throw new Exception('ERROR modified API: get_support_content::'.$language);
       } else {
         return $response;
       }
@@ -124,13 +124,27 @@
 
 
     /**
-     * get_support_content
+     * get_paypal_appinator
      */
     public static function get_paypal_appinator($mode) {  
       $response = self::request('paypal/onboarding/'.$mode);
       
       if ($response == null || !is_array($response)) {
-        throw new Exception('Could not reach external host '.self::$_endpoint);
+        throw new Exception('ERROR modified API: get_paypal_appinator::'.$mode);
+      } else {
+        return $response;
+      }
+    }
+
+
+    /**
+     * get_internetmarke_ppl
+     */
+    public static function get_internetmarke_ppl() {  
+      $response = self::request('internetmarke/ppl');
+      
+      if ($response == null || !is_array($response)) {
+        throw new Exception('ERROR modified API: get_internetmarke_ppl');
       } else {
         return $response;
       }

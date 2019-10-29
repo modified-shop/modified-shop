@@ -13,6 +13,10 @@
   defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
   
   
+  // include needed classes
+  require_once(DIR_FS_CATALOG.'includes/classes/modified_api.php');
+
+
   class internetmarke
   {
       var $code, $title, $description, $enabled;
@@ -55,24 +59,30 @@
           if (isset($_GET['subaction'])) {
             switch ($_GET['subaction']) {
               case 'im_update':
-                $ppl = get_external_content('https://api.modified-shop.org/internetmarke/ppl', 3, false);
-                file_put_contents(DIR_FS_CATALOG.'import/ppl.csv', $ppl);
-
-                if (($handle = fopen(DIR_FS_CATALOG.'import/ppl.csv', "r")) !== false) {
-                  xtc_db_query("TRUNCATE `internetmarke`");
-                  while (($data = fgetcsv($handle, 4096, ";")) !== false) {
-                    if ($data[2] != '' && is_numeric($data[2])) {
-                      $sql_data_array = array(
-                        'PROID' => (int)$data[2],
-                        'PRODNAME' => utf8_encode($data[4]),
-                        'PROPR' => str_replace(',', '.', $data[5]),
-                      );
-                      xtc_db_perform('internetmarke', $sql_data_array);             
-                    }
-                  }
-                  fclose($handle);
+                try {
+                  $ppl = modified_api::get_internetmarke_ppl();
+                  file_put_contents(DIR_FS_CATALOG.'import/ppl.csv', $ppl);
+                } catch (Exception $e) {
+                  trigger_error($e->getMessage(), E_USER_WARNING);
                 }
-                unlink(DIR_FS_CATALOG.'import/ppl.csv');
+                
+                if (is_file(DIR_FS_CATALOG.'import/ppl.csv')) {
+                  if (($handle = fopen(DIR_FS_CATALOG.'import/ppl.csv', "r")) !== false) {
+                    xtc_db_query("TRUNCATE `internetmarke`");
+                    while (($data = fgetcsv($handle, 4096, ";")) !== false) {
+                      if ($data[2] != '' && is_numeric($data[2])) {
+                        $sql_data_array = array(
+                          'PROID' => (int)$data[2],
+                          'PRODNAME' => utf8_encode($data[4]),
+                          'PROPR' => str_replace(',', '.', $data[5]),
+                        );
+                        xtc_db_perform('internetmarke', $sql_data_array);             
+                      }
+                    }
+                    fclose($handle);
+                  }
+                  unlink(DIR_FS_CATALOG.'import/ppl.csv');
+                }
                 break;
               
               case 'im_install':
