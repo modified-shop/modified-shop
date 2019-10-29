@@ -138,20 +138,6 @@
 
 
     /**
-     * get_internetmarke_ppl
-     */
-    public static function get_internetmarke_ppl() {  
-      $response = self::request('internetmarke/ppl');
-      
-      if ($response == null || !is_array($response)) {
-        throw new Exception('ERROR modified API: get_internetmarke_ppl');
-      } else {
-        return $response;
-      }
-    }
-    
-    
-    /**
      * clean
      */
     private static function clean($response) {
@@ -171,7 +157,7 @@
     /**
      * request
      */
-    private static function request($path, $data = '', $timeout = 5) {
+    public static function request($path, $data = '', $timeout = 5) {
       $ch = curl_init(self::$_endpoint.$path);
       
       curl_setopt($ch, CURLOPT_URL, self::$_endpoint.$path);

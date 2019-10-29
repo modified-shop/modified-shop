@@ -59,13 +59,11 @@
           if (isset($_GET['subaction'])) {
             switch ($_GET['subaction']) {
               case 'im_update':
-                try {
-                  $ppl = modified_api::get_internetmarke_ppl();
+                $response = modified_api::request('internetmarke/ppl');
+                if ($response != null) {
                   file_put_contents(DIR_FS_CATALOG.'import/ppl.csv', $ppl);
-                } catch (Exception $e) {
-                  trigger_error($e->getMessage(), E_USER_WARNING);
                 }
-                
+
                 if (is_file(DIR_FS_CATALOG.'import/ppl.csv')) {
                   if (($handle = fopen(DIR_FS_CATALOG.'import/ppl.csv', "r")) !== false) {
                     xtc_db_query("TRUNCATE `internetmarke`");
