@@ -324,11 +324,14 @@ foreach ($script_array as $script) {
 
 <script>
   var consent_type = "<?php echo ((TRACKING_GOOGLEANALYTICS_ACTIVE == 'true' || TRACKING_PIWIK_ACTIVE == 'true' || TRACKING_FACEBOOK_ACTIVE == 'true' || (defined('TRACKING_CUSTOM_ACTIVE') && TRACKING_CUSTOM_ACTIVE == 'true')) ? 'opt-in' : 'info'); ?>";
+  $("body").append('<div id="cookieconsent"></div>');
+  
   window.cookieconsent.initialise({
-   type: consent_type,
-   revokable: ((consent_type == 'info') ? false : true),
-   animateRevokable: ((consent_type == 'info') ? true : false),
-   content: {
+    container: document.getElementById("cookieconsent"),
+    type: consent_type,
+    revokable: ((consent_type == 'info') ? false : true),
+    animateRevokable: ((consent_type == 'info') ? true : false),
+    content: {
       "message": ((consent_type == 'info') ? "<?php echo TEXT_COOKIECONSENT_MESSAGE_INFO; ?>" : "<?php echo TEXT_COOKIECONSENT_MESSAGE_TRACKING; ?>"),
       "dismiss": "<?php echo TEXT_COOKIECONSENT_DISSMISS; ?>",
       "link": "<?php echo TEXT_COOKIECONSENT_LINK; ?>",
