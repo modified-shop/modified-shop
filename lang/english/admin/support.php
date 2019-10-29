@@ -13,5 +13,5 @@
   define('HEADING_TITLE', 'Commercial Support');
 
   define('HEADING_SUBTITLE', 'modified eCommerce Shopsoftware');
-  define('TEXT_SUPPORT_ALTERNATIVE', 'The support is currently not available. Please submit your request directly via the <a href="https://www.modified-shop.org/kontakt">contact form</a>');
+  define('TEXT_SUPPORT_ALTERNATIVE', 'The support is currently not available. Please submit your request directly via the <a href="https://www.modified-shop.org/kontakt" target="_blank">contact form</a>');
 ?>
