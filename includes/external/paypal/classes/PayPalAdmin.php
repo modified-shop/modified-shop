@@ -467,5 +467,24 @@ class PayPalAdmin extends PayPalPayment {
   }
 
   
+  function get_partner_details($mode) {
+    $res = get_external_content('https://api.modified-shop.org/paypal/onboarding/'.$mode, 3, false);
+    $response = json_decode($res, true);
+    
+    return $response;
+  }
+  
+  
+  function get_seller_nonce() {
+    return substr(hash('sha512', HTTP_SERVER.DIR_WS_CATALOG), 0, 100);
+  }
+  
+  
+  function getOnboardingLink($mode = 'live') {
+    $partner = $this->get_partner_details($mode);
+    
+    return sprintf($partner['requestURL'], $partner['partnerID'], $partner['clientID'], $this->get_seller_nonce());    
+  }
+  
 }
 ?>

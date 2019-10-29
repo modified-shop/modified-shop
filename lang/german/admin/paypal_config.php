@@ -14,17 +14,16 @@
 $lang_array = array(
   'TEXT_PAYPAL_CONFIG_HEADING_TITLE' => 'PayPal Konfiguration',
 
-  'TEXT_PAYPAL_CONFIG_CLIENT_LIVE' => 'Client ID Live:',
-  'TEXT_PAYPAL_CONFIG_CLIENT_LIVE_INFO' => 'Erstellen Sie in Ihrem PayPal Account eine neue App f&uuml;r diese Daten.',
-
   'TEXT_PAYPAL_CONFIG_SECRET_LIVE' => 'Secret Live:',
-  'TEXT_PAYPAL_CONFIG_SECRET_LIVE_INFO' => 'Erstellen Sie in Ihrem PayPal Account eine neue App f&uuml;r diese Daten.',
-
-  'TEXT_PAYPAL_CONFIG_CLIENT_SANDBOX' => 'Client ID Sandbox:',
-  'TEXT_PAYPAL_CONFIG_CLIENT_SANDBOX_INFO' => 'Erstellen Sie in Ihrem PayPal Account eine neue App f&uuml;r diese Daten.',
+  'TEXT_PAYPAL_CONFIG_CLIENT_LIVE' => 'Client ID Live:',
+  'TEXT_PAYPAL_CONFIG_CLIENT_LIVE_INFO' => 'Tragen Sie Ihre PayPal APP Daten ein oder fordern Sie diese neu an.',
 
   'TEXT_PAYPAL_CONFIG_SECRET_SANDBOX' => 'Secret Sandbox:',
-  'TEXT_PAYPAL_CONFIG_SECRET_SANDBOX_INFO' => 'Erstellen Sie in Ihrem PayPal Account eine neue App f&uuml;r diese Daten.',
+  'TEXT_PAYPAL_CONFIG_CLIENT_SANDBOX' => 'Client ID Sandbox:',
+  'TEXT_PAYPAL_CONFIG_CLIENT_SANDBOX_INFO' => 'Tragen Sie Ihre PayPal APP Daten ein oder fordern Sie diese neu an.',
+
+  'TEXT_PAYPAL_APPINATOR_LIVE' => 'Live Daten anfordern',
+  'TEXT_PAYPAL_APPINATOR_SANDBOX' => 'Sandbox Daten anfordern',
 
   'TEXT_PAYPAL_CONFIG_MODE' => 'Modus:',
   'TEXT_PAYPAL_CONFIG_MODE_INFO' => '',
