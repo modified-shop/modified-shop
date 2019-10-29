@@ -155,6 +155,14 @@
 
 
     /**
+     * isJSON
+     */
+    private static function isJSON($string){
+       return is_string($string) && is_array(json_decode($string, true)) && (json_last_error() == JSON_ERROR_NONE) ? true : false;
+    }
+
+
+    /**
      * request
      */
     public static function request($path, $data = '', $timeout = 5) {
@@ -190,9 +198,12 @@
       if ($httpStatus < 200 || $httpStatus >= 300) {
         throw new Exception('Could not reach external host. Status '.$httpStatus);
       }
-
-      $response = json_decode($result, true);
-    
+      
+      $response = $result;
+      if (self::isJSON($result) === true) {
+        $response = json_decode($result, true);
+      }
+      
       return self::clean($response);
     }
     
