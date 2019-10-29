@@ -71,7 +71,7 @@
           $banner_title = xtc_parse_input_field_data($banner['banners_title'], array('"' => '&quot;'));
           
           $banner_array[] = array(
-            'IMAGE' => ((xtc_not_null($banner['banners_url'])) ? '<a title="'.$banner_title.'" href="' . xtc_href_link(FILENAME_REDIRECT, 'action=banner&goto=' . $banner['banners_id']) . '"' . (($shop_url['domain'] != $banner_url['domain']) ? ' target="_blank" rel="noopener"' : '') . '>' . xtc_image(DIR_WS_IMAGES.'banner/'.$banner['banners_image'], $banner['banners_title']) . '</a>' : xtc_image(DIR_WS_IMAGES.'banner/'.$banner['banners_image'], $banner['banners_title'], '', '', 'title="'.$banner['banners_title'].'"')),
+            'IMAGE' => ((xtc_not_null($banner['banners_url'])) ? '<a title="'.$banner_title.'" href="' . xtc_href_link(FILENAME_REDIRECT, 'action=banner&goto=' . $banner['banners_id']) . '"' . (($shop_url['domain'] != $banner_url['domain']) ? ' target="_blank" rel="noopener"' : '') . '>' . xtc_image(DIR_WS_IMAGES.'banner/'.$banner['banners_image'], $banner['banners_title'], '', '', 'title="'.$banner['banners_title'].'"') . '</a>' : xtc_image(DIR_WS_IMAGES.'banner/'.$banner['banners_image'], $banner['banners_title'], '', '', 'title="'.$banner['banners_title'].'"')),
             'IMAGE_SRC' => DIR_WS_BASE.DIR_WS_IMAGES.'banner/'.$banner['banners_image'],
             'LINK' => ((xtc_not_null($banner['banners_url'])) ? xtc_href_link(FILENAME_REDIRECT, 'action=banner&goto=' . $banner['banners_id']) : ''),
             'TEXT' => $banner['banners_html_text'],
@@ -92,7 +92,7 @@
       $banner_title = xtc_parse_input_field_data($banner['banners_title'], array('"' => '&quot;'));
       $shop_url = xtc_get_top_level_domain(HTTP_SERVER);
       
-      $banner_string = '<a title="'.$banner_title.'" href="' . xtc_href_link(FILENAME_REDIRECT, 'action=banner&goto=' . $banner['banners_id']) . '"' . (($shop_url['domain'] != $banner_url['domain']) ? ' target="_blank" rel="noopener"' : '') . '>' . xtc_image(DIR_WS_IMAGES.'banner/' . $banner['banners_image'], $banner['banners_title']) . '</a>';
+      $banner_string = '<a title="'.$banner_title.'" href="' . xtc_href_link(FILENAME_REDIRECT, 'action=banner&goto=' . $banner['banners_id']) . '"' . (($shop_url['domain'] != $banner_url['domain']) ? ' target="_blank" rel="noopener"' : '') . '>' . xtc_image(DIR_WS_IMAGES.'banner/' . $banner['banners_image'], $banner['banners_title'], '', '', 'title="'.$banner['banners_title'].'"') . '</a>';
     } else {
       $banner_string = xtc_image(DIR_WS_IMAGES.'banner/'.$banner['banners_image'], $banner['banners_title'], '', '', 'title="'.$banner['banners_title'].'"');
     }
