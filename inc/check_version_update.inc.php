@@ -10,7 +10,7 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-  require_once (DIR_FS_INC.'get_external_content.inc.php');
+  require_once (DIR_FS_CATALOG.'includes/classes/modified_api.php');
 
   function check_version_update($cache = true) {
     $filename = SQL_CACHEDIR.'version.cache';
@@ -25,8 +25,12 @@
         || $cache === false
         )
     {
-      $check_version = get_external_content('https://www.modified-shop.org/VERSION', 3, false);
-      file_put_contents($filename, $check_version);
+      try {
+        $check_version = modified_api::get_version('stable');
+        file_put_contents($filename, $check_version);
+      } catch (Exception $e) {
+        trigger_error($e->getMessage(), E_USER_WARNING);
+      }
     }
   
     $check_version = file_get_contents($filename);

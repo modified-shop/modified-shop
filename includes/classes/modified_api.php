@@ -68,6 +68,20 @@
 
 
     /**
+     * get_version
+     */
+    public static function get_version($version) {  
+      $response = self::request('modified/version/');
+      
+      if ($response == null || !is_array($response) || !isset($response[$version])) {
+        throw new Exception('Could not reach external host '.self::$_endpoint);
+      } else {
+        return $response[$version];
+      }
+    }
+
+
+    /**
      * get_newsfeed
      */
     public static function get_newsfeed($version) {  
