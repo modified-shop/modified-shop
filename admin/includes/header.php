@@ -203,7 +203,7 @@
                 if ($page_permission[strtok($f['file'], '.')] != '1') continue;
                 $link = xtc_href_link($f['file'], $f['par'], 'NONSSL', true);
               }
-              echo '<li'.($f['class'] ? ' class="'.$f['class'].'"' : '').'><a'.($f['target'] ? ' target="'.$f['target'].'"' : '').' href="' . $link . '">'.
+              echo '<li'.($f['class'] ? ' class="'.$f['class'].'"' : '').'><a'.((isset($f['target'])) ? ' target="'.$f['target'].'"' : '').' href="' . $link . '">'.
                    xtc_image(DIR_WS_ICONS.'fastnav/'.$f['icon'], $f['name'], 32, 32).
                    (isset($f['count']) && $f['count'] ? '<div class="icon_count">'.$f['count'].'</div>' : '').
                    '</a></li>' . PHP_EOL;
