@@ -145,12 +145,21 @@
    * @return
    */
   function xtc_check_permission($pagename) {
+    $permit_array = array(
+      'support'
+    );
     if ($pagename != 'index') {
       $access_permission_query = xtc_db_query("SELECT *
                                                  FROM ".TABLE_ADMIN_ACCESS."
                                                 WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
       $access_permission = xtc_db_fetch_array($access_permission_query);
-      if (($_SESSION['customers_status']['customers_status_id'] == '0') && isset($access_permission[$pagename]) && ($access_permission[$pagename] == '1')) {
+      if ($_SESSION['customers_status']['customers_status_id'] == '0'
+          && ((isset($access_permission[$pagename]) 
+               && $access_permission[$pagename] == '1'
+               ) || in_array($pagename, $permit_array)
+              )
+          )
+      {
         return true;
       }
     }
