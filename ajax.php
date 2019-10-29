@@ -25,27 +25,23 @@ $ajax_rt = (isset($_REQUEST['type']) ?  preg_replace("/[^h-x]/i", "", $_REQUEST[
 
 // execute extension in ajax module dir
 if (function_exists($ajax_ext)) {
-    $response = $ajax_ext();
+  $response = $ajax_ext();
 } elseif (class_exists($ajax_ext)) {
-    $object =  new $ajax_ext;
-    $method = isset($_REQUEST['method']) ? $_REQUEST['method'] : null;
-    if ($method && method_exists($object, $method)) {
-        $response = $object->$method();
-    } elseif (method_exists($object, 'init')) {
-        $response = $object->init($method);
-    } else {
-        die("method does not exist");
-    }
+  $object =  new $ajax_ext;
+  $method = isset($_REQUEST['method']) ? $_REQUEST['method'] : null;
+  if ($method && method_exists($object, $method)) {
+    $response = $object->$method();
+  } elseif (method_exists($object, 'init')) {
+    $response = $object->init($method);
+  } else {
+    die("method does not exist");
+  }
 } else {
-    die("function or class does not exist");
-}
-
-if (isset($_REQUEST['speed'])) {
-
+  die("function or class does not exist");
 }
 
 // if gzip_compression is enabled start to buffer the output
-if (defined('GZIP_COMPRESSION') && GZIP_COMPRESSION == 'true' && $ext_zlib_loaded = extension_loaded('zlib')) {
+if (!isset($_REQUEST['speed']) && defined('GZIP_COMPRESSION') && GZIP_COMPRESSION == 'true' && $ext_zlib_loaded = extension_loaded('zlib')) {
   require_once (DIR_FS_INC.'xtc_gzip_output.inc.php');
   require_once (DIR_FS_INC.'xtc_check_gzip.inc.php');
   if (($ini_zlib_output_compression = (int) ini_get('zlib.output_compression')) < 1) {
@@ -59,10 +55,10 @@ if (defined('GZIP_COMPRESSION') && GZIP_COMPRESSION == 'true' && $ext_zlib_loade
 }
 
 if ($ajax_rt == 'json') {
-    $response = json_encode($response);
-    header('Content-Type: application/json');
+  $response = json_encode($response);
+  header('Content-Type: application/json');
 } else {
-    header('Content-Type: text/'.$ajax_rt);
+  header('Content-Type: text/'.$ajax_rt);
 }
 
 // response headers
@@ -76,7 +72,8 @@ header("Pragma: no-cache");
 echo $response;
 
 // gzip compression
-if (defined('GZIP_COMPRESSION')
+if (!isset($_REQUEST['speed'])
+    && defined('GZIP_COMPRESSION')
     && GZIP_COMPRESSION == 'true' 
     && isset($ext_zlib_loaded)
     && $ext_zlib_loaded == true 
