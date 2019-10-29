@@ -19,7 +19,6 @@ if (isset($_REQUEST['speed'])) {
   require_once (DIR_FS_INC.'db_functions_'.DB_MYSQL_TYPE.'.inc.php');
   require_once (DIR_FS_INC.'db_functions.inc.php');
   require_once (DIR_FS_INC.'html_encoding.php');
-  require_once (DIR_FS_INC.'get_external_content.inc.php');
   require_once (DIR_WS_INCLUDES.'database_tables.php');
 }
 
