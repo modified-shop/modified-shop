@@ -92,7 +92,10 @@
           $session_id = session_name() . '=' . session_id();
         }
       }
-      $link .= $separator . $session_id;
+      
+      if (isset($session_id) && $session_id != '') {
+        $link .= $separator . $session_id;
+      }
     }
 
     // W3C-Conform
