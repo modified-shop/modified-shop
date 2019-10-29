@@ -183,3 +183,43 @@ margin:5px;
 table.collapse{
 border-collapse:collapse;
 }
+a[data-paypal-button="PPLtBlue"] {
+position:relative;
+padding: 5px 10px 5px 80px !important;
+border-radius: 5px !important;
+border: 1px solid #9DA3A6 !important;
+vertical-align: middle !important;
+display: inline-block !important;
+text-decoration: none !important;
+background-color: #1B9DDb !important;
+color: #fff !important;
+font-size: 11px !important;
+line-height:17px;
+font-weight:bold !important;
+font-family: HelveticaNeueMedium,"Helvetica Neue Medium",Helvetica,Arial,sans-serif !important;
+}
+a[data-paypal-button="PPLtBlue"]::before {
+position:absolute;
+left:-1px;
+top:-1px;
+bottom:-1px;
+content: "";
+background:none !important;
+background-color:#fff !important;
+background-image: url(https://www.paypalobjects.com/webstatic/i/sparta/logo/logo_paypal_106x29.png) !important;
+background-repeat:no-repeat !important;
+background-size:50px !important;
+background-position:center center !important;
+display: block !important;
+width: 70px !important;
+height: 100% !important;
+float: none !important;
+margin: auto !important;
+border: 1px solid #9DA3A6 !important;
+border-bottom-left-radius: 5px !important;
+border-top-left-radius: 5px !important;
+margin-top: 0px !important;
+}
+a[data-paypal-button="PPLtBlue"]:hover {
+opacity:0.7;
+}
