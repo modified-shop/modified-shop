@@ -68,20 +68,6 @@
 
 
     /**
-     * get_version
-     */
-    public static function get_version($version) {  
-      $response = self::request('modified/version/');
-      
-      if ($response == null || !is_array($response) || !isset($response[$version])) {
-        throw new Exception('ERROR modified API: get_version::'.$version);
-      } else {
-        return $response[$version];
-      }
-    }
-
-
-    /**
      * get_newsfeed
      */
     public static function get_newsfeed($version) {  
