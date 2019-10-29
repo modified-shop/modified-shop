@@ -73,7 +73,33 @@ $log_level_array = array(
 
 require (DIR_WS_INCLUDES.'head.php');
 ?>
-<link rel="stylesheet" type="text/css" href="../includes/external/paypal/css/stylesheet.css">  
+<link rel="stylesheet" type="text/css" href="../includes/external/paypal/css/stylesheet.css"> 
+<script>
+  function onboardedClose() {
+    window.location.reload(false);
+  }
+  
+  function onboardedCallbackLive(authCode, sharedId) {
+    onboardedCallback(authCode, sharedId, 'live');
+  }
+
+  function onboardedCallbackSandbox(authCode, sharedId) {
+    onboardedCallback(authCode, sharedId, 'sandbox');
+  }
+  
+  function onboardedCallback(authCode, sharedId, mode) {
+    $.post( "../ajax.php", { 'ext': 'set_paypal_data', 'speed': 1, 'authCode': authCode, 'sharedId': sharedId, 'mode': mode, 'sec': '<?php echo MODULE_PAYMENT_PAYPAL_SECRET; ?>' }, function(data) {
+      if (data !== null 
+          && typeof data === 'object'
+          && data.success !== null 
+          && data.success !== undefined 
+          )
+      {
+        window.location.reload(false);  
+      }
+    });
+  }
+</script> 
 </head>
 <body>
     <!-- header //-->
@@ -110,22 +136,22 @@ require (DIR_WS_INCLUDES.'head.php');
               <tr>
                 <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_CLIENT_LIVE; ?></td>
                 <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('config[PAYPAL_CLIENT_ID_LIVE]', $paypal->get_config('PAYPAL_CLIENT_ID_LIVE'), 'style="width: 300px;"'); ?></td>
-                <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_CONFIG_CLIENT_LIVE_INFO; ?></td>
+                <td class="dataTableConfig col-right" rowspan="2"><?php echo '<a target="_blank" data-paypal-popup-close="onboardedClose" data-paypal-onboard-complete="onboardedCallbackLive" data-paypal-button="PPLtBlue" href="' . $paypal->getOnboardingLink('live') . '">' . TEXT_PAYPAL_APPINATOR_LIVE . '</a><br><br>' . TEXT_PAYPAL_CONFIG_CLIENT_LIVE_INFO; ?></td>
               </tr>
               <tr>
                 <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_SECRET_LIVE; ?></td>
                 <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('config[PAYPAL_SECRET_LIVE]', $paypal->get_config('PAYPAL_SECRET_LIVE'), 'style="width: 300px;"'); ?></td>
-                <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_CONFIG_SECRET_LIVE_INFO; ?></td>
+                <?php /*<td class="dataTableConfig col-right"><?php /*echo TEXT_PAYPAL_CONFIG_SECRET_LIVE_INFO; ?></td>*/ ?>
               </tr>
               <tr>
                 <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_CLIENT_SANDBOX; ?></td>
                 <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('config[PAYPAL_CLIENT_ID_SANDBOX]', $paypal->get_config('PAYPAL_CLIENT_ID_SANDBOX'), 'style="width: 300px;"'); ?></td>
-                <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_CONFIG_CLIENT_SANDBOX_INFO; ?></td>
+                <td class="dataTableConfig col-right" rowspan="2"><?php echo '<a target="_blank" data-paypal-popup-close="onboardedClose" data-paypal-onboard-complete="onboardedCallbackSandbox" data-paypal-button="PPLtBlue" href="' . $paypal->getOnboardingLink('sandbox') . '">' . TEXT_PAYPAL_APPINATOR_SANDBOX . '</a><br><br>' . TEXT_PAYPAL_CONFIG_CLIENT_SANDBOX_INFO; ?></td>
               </tr>
               <tr>
                 <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_SECRET_SANDBOX; ?></td>
                 <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('config[PAYPAL_SECRET_SANDBOX]', $paypal->get_config('PAYPAL_SECRET_SANDBOX'), 'style="width: 300px;"'); ?></td>
-                <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_CONFIG_SECRET_SANDBOX_INFO; ?></td>
+                <?php /*<td class="dataTableConfig col-right"><?php /*echo TEXT_PAYPAL_CONFIG_SECRET_SANDBOX_INFO; ?></td>*/ ?>
               </tr>
               <tr>
                 <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_MODE; ?></td>
@@ -206,6 +232,7 @@ require (DIR_WS_INCLUDES.'head.php');
         <!-- body_text_eof //-->
       </tr>
     </table>
+    <script id="paypal-js" src="//www.sandbox.paypal.com/webapps/merchantboarding/js/lib/lightbox/partner.js"></script>
     <!-- body_eof //-->
     <!-- footer //-->
     <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
