@@ -78,7 +78,7 @@
       $order_id = $this->service->createShopOrderId($this->user_token);
       
       try {
-        $label = $this->service->checkoutShoppingCartPdf($this->user_token, $data['format'], array($order_item), ($price['PROPR'] * 100), $order_id, null, true, 2);
+        $label = $this->service->checkoutShoppingCartPdf($this->user_token, $data['format'], array($order_item), (string)($price['PROPR'] * 100), $order_id, null, true, 2);
         
         foreach ($label->shoppingCart->voucherList->voucher as $voucher) {
           $sql_data_array = array(
