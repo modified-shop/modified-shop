@@ -165,6 +165,23 @@
               'class' => 'right',
               'count' => $update_array['update']
             );
+          $favorites[12] = array(
+              'file'  => xtc_href_link('support.php'),
+              'par'   => '', 
+              'mode'  => 2,
+              'icon'  => 'icon_support.png',
+              'name'  => BOX_SUPPORT,
+              'class' => 'right',
+            );
+          $favorites[13] = array(
+              'file'  => 'https://www.modified-shop.org/shop/',
+              'target' => '_blank',
+              'par'   => '', 
+              'mode'  => 2,
+              'icon'  => 'icon_modified_shop.png',
+              'name'  => BOX_SHOP,
+              'class' => 'right',
+            );
 
           // overwrite with hooks
           if(isset($own_favorites) && is_array($own_favorites)) {
@@ -186,7 +203,7 @@
                 if ($page_permission[strtok($f['file'], '.')] != '1') continue;
                 $link = xtc_href_link($f['file'], $f['par'], 'NONSSL', true);
               }
-              echo '<li'.($f['class'] ? ' class="'.$f['class'].'"' : '').'><a href="' . $link . '">'.
+              echo '<li'.($f['class'] ? ' class="'.$f['class'].'"' : '').'><a'.($f['target'] ? ' target="'.$f['target'].'"' : '').' href="' . $link . '">'.
                    xtc_image(DIR_WS_ICONS.'fastnav/'.$f['icon'], $f['name'], 32, 32).
                    (isset($f['count']) && $f['count'] ? '<div class="icon_count">'.$f['count'].'</div>' : '').
                    '</a></li>' . PHP_EOL;
