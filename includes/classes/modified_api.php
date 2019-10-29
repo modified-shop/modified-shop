@@ -129,10 +129,10 @@
     public static function get_paypal_appinator($mode) {  
       $response = self::request('paypal/onboarding/'.$mode);
       
-      if ($response == null || !is_array($response) || !isset($response[$mode])) {
+      if ($response == null || !is_array($response)) {
         throw new Exception('Could not reach external host '.self::$_endpoint);
       } else {
-        return $response[$mode];
+        return $response;
       }
     }
     
