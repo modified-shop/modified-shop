@@ -25,11 +25,10 @@
         || $cache === false
         )
     {
-      try {
-        $check_version = modified_api::get_version('stable');
+      $response = modified_api::request('modified/version');
+      if (is_array($response) && isset($response['stable'])) {
+        $check_version = $response['stable'];
         file_put_contents($filename, $check_version);
-      } catch (Exception $e) {
-        trigger_error($e->getMessage(), E_USER_WARNING);
       }
     }
   
