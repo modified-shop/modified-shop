@@ -28,10 +28,12 @@
         )
     {
       $db_version = get_database_version();
-      
-      try {
-        $feed = modified_api::get_newsfeed($db_version['plain']);
-      
+ 
+      $response = modified_api::request('modified/news/'.$db_version['plain']);
+
+      if ($response != null && is_array($response) && isset($response['channel'])) {
+        $feed = $response['channel'];
+        
         if (isset($feed['item'])
             && count($feed['item']) > 0
             )
@@ -49,8 +51,6 @@
 
           xtc_db_query("UPDATE ".TABLE_CONFIGURATION." SET configuration_value = '".$time."' WHERE configuration_key = 'NEWSFEED_LAST_UPDATE'");
         }
-      } catch (Exception $e) {
-        trigger_error($e->getMessage(), E_USER_WARNING);
       }
       
       xtc_db_query("UPDATE ".TABLE_CONFIGURATION." SET configuration_value = '".$time."' WHERE configuration_key = 'NEWSFEED_LAST_UPDATE_TRY'");

@@ -68,20 +68,6 @@
 
 
     /**
-     * get_newsfeed
-     */
-    public static function get_newsfeed($version) {  
-      $response = self::request('modified/news/'.$version);
-      
-      if ($response == null || !is_array($response) || !isset($response['channel'])) {
-        throw new Exception('ERROR modified API: get_newsfeed::'.$version);
-      } else {
-        return $response['channel'];
-      }
-    }
-
-
-    /**
      * get_start_content
      */
     public static function get_start_content($language) {  
