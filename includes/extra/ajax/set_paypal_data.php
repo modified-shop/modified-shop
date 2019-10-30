@@ -81,6 +81,8 @@ function set_paypal_data() {
       'cache.enabled' => false,
     )
   );
+  $apiContext->addRequestHeader('PayPal-Partner-Attribution-Id', 'Modified_Cart_1stURLonboarding');
+  
   $config = $apiContext->getConfig();
   
   $response = array('success' => false);
