@@ -415,8 +415,12 @@
       $filename = DIR_FS_CATALOG.'cache/blz.txt';
       
       $response = modified_api::request('bundesbank/blz');
-      if ($response != null) {
-        file_put_contents($filename, $response);
+      if ($response != null && is_array($response) && isset($response['requestURL'])) {
+        // include needed functions
+        require_once (DIR_FS_INC.'get_external_content.inc.php');
+
+        $blz_file_content = get_external_content($response['requestURL'], 3, false);
+        file_put_contents($filename, $blz_file_content);
       }
 
       if (is_file($filename)) {
