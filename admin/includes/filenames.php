@@ -41,7 +41,6 @@ $filename_array = array(
   'FILENAME_PRODUCTS_EXPECTED' => 'products_expected.php',
   'FILENAME_REVIEWS' => 'reviews.php',
   'FILENAME_SERVER_INFO' => 'server_info.php',
-  'FILENAME_BLZ_UPDATE' => 'blz_update.php',
   'FILENAME_SPECIALS' => 'specials.php',
   'FILENAME_STATS_CUSTOMERS' => 'stats_customers.php',
   'FILENAME_STATS_PRODUCTS_PURCHASED' => 'stats_products_purchased.php',

@@ -146,7 +146,6 @@ define('BOX_FILE_MANAGER', 'Datei-Manager');
 define('BOX_MAIL', 'E-Mail versenden');
 define('BOX_NEWSLETTERS', 'Newsletter Manager');
 define('BOX_SERVER_INFO', 'Server Info');
-define('BOX_BLZ_UPDATE', 'Bankleitzahlen aktualisieren');
 define('BOX_WHOS_ONLINE', 'Wer ist Online');
 define('BOX_TPL_BOXES','Box Reihenfolge');
 define('BOX_CURRENCIES', 'W&auml;hrungen');

@@ -145,7 +145,6 @@ define('BOX_FILE_MANAGER', 'File-Manager');
 define('BOX_MAIL', 'E-Mail Center');
 define('BOX_NEWSLETTERS', 'Notification Manager');
 define('BOX_SERVER_INFO', 'Server Info');
-define('BOX_BLZ_UPDATE', 'Update German bank code numbers');
 define('BOX_WHOS_ONLINE', 'Who is Online');
 define('BOX_TPL_BOXES','Boxes Sort Order');
 define('BOX_CURRENCIES', 'Currencies');

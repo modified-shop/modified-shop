@@ -225,4 +225,7 @@ CREATE TABLE IF NOT EXISTS email_content (
 #GTB - 2019-10-23 - add products_heading_title
 ALTER TABLE products_description ADD products_heading_title VARCHAR(255) NOT NULL DEFAULT '' AFTER products_name;
 
+#GTB - 2019-10-30 - removed blz update
+ALTER TABLE admin_access DROP blz_update;
+
 # Keep an empty line at the end of this file for the db_updater to work properly

@@ -34,6 +34,9 @@
       $this->extended_description = MODULE_PAYMENT_BANKTRANSFER_TEXT_EXTENDED_DESCRIPTION;
       $this->sort_order = ((defined('MODULE_PAYMENT_BANKTRANSFER_SORT_ORDER')) ? MODULE_PAYMENT_BANKTRANSFER_SORT_ORDER : '');
       $this->enabled = ((defined('MODULE_PAYMENT_BANKTRANSFER_STATUS') && MODULE_PAYMENT_BANKTRANSFER_STATUS == 'True') ? true : false);      
+
+      $this->properties['button_update'] = '<a class="button btnbox" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULES, 'set=payment&action=update&module='.$this->code) . '">' . BUTTON_UPDATE . '</a>';
+
       if ($this->check() > 0) {
         $this->min_order = MODULE_PAYMENT_BANKTRANSFER_MIN_ORDER;
         if ((int)MODULE_PAYMENT_BANKTRANSFER_ORDER_STATUS_ID > 0) {
@@ -399,6 +402,48 @@
         $this->_check = xtc_db_num_rows($check_query);
       }
       return $this->_check;
+    }
+
+    function update() {
+      global $messageStack;
+      
+      $filename = DIR_FS_CATALOG.'cache/blz.txt';
+      
+      $response = modified_api::request('bundesbank/blz');
+      if ($response != null) {
+        file_put_contents($filename, $response);
+      }
+
+      if (is_file($filename)) {
+        if (($handle = fopen($filename, "r")) !== false) {
+          xtc_db_query("TRUNCATE ".TABLE_BANKTRANSFER_BLZ);
+          
+          $cnt = 0;
+          while (!feof($handle)) {
+            $line = stream_get_line($handle, 65535, "\n");
+            $kennzeichen = substr($line, 158, 1);
+                                
+            if ($kennzeichen != 'D'
+                && substr($line, 8, 1) == '1'
+                )
+            {
+              $sql_data_array = array(
+                'blz' => substr($line, 0, 8),
+                'bankname' => encode_utf8(trim(substr($line, 9, 58))),
+                'prz' => substr($line, 150, 2),
+              );
+              
+              xtc_db_perform(TABLE_BANKTRANSFER_BLZ, $sql_data_array);
+              $cnt ++;
+            }
+          }
+          fclose($handle);
+        }
+        $messageStack->add_session(MODULE_PAYMENT_BANKTRANSFER_TEXT_UPDATE_SUCCESS.$cnt, 'success');
+        unlink($filename);
+      } else {
+        $messageStack->add_session(MODULE_PAYMENT_BANKTRANSFER_TEXT_UPDATE_ERROR, 'error');
+      }
     }
 
     function install() {
