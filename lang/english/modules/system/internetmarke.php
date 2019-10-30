@@ -55,4 +55,7 @@
 
   define('MODULE_INTERNETMARKE_PRICE_TITLE', '<hr><br><b>Mailing format</b><br>');
   define('MODULE_INTERNETMARKE_PRICE_DESC', 'Please select the mailing format.<br>');
+
+  define('MODULE_INTERNETMARKE_TEXT_UPDATE_SUCCESS', 'Price data successfully updated.');
+  define('MODULE_INTERNETMARKE_TEXT_UPDATE_ERROR', 'The price data could not be updated.');
 ?>

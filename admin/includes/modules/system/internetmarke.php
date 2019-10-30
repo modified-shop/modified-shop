@@ -40,6 +40,8 @@
 
       function process($file) 
       {
+          global $messageStack;
+          
           if (isset($_POST) && count($_POST) > 0) {
             if (isset($_POST['pageformats'])) {
               xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
@@ -59,13 +61,15 @@
           if (isset($_GET['subaction'])) {
             switch ($_GET['subaction']) {
               case 'im_update':
+                $filename = DIR_FS_CATALOG.'cache/ppl.csv';
+                
                 $response = modified_api::request('internetmarke/ppl');
                 if ($response != null) {
-                  file_put_contents(DIR_FS_CATALOG.'import/ppl.csv', $ppl);
+                  file_put_contents($filename, $response);
                 }
 
-                if (is_file(DIR_FS_CATALOG.'import/ppl.csv')) {
-                  if (($handle = fopen(DIR_FS_CATALOG.'import/ppl.csv', "r")) !== false) {
+                if (is_file($filename)) {
+                  if (($handle = fopen($filename, "r")) !== false) {
                     xtc_db_query("TRUNCATE `internetmarke`");
                     while (($data = fgetcsv($handle, 4096, ";")) !== false) {
                       if ($data[2] != '' && is_numeric($data[2])) {
@@ -78,8 +82,11 @@
                       }
                     }
                     fclose($handle);
+                    $messageStack->add_session(MODULE_INTERNETMARKE_TEXT_UPDATE_SUCCESS, 'success');
                   }
-                  unlink(DIR_FS_CATALOG.'import/ppl.csv');
+                  unlink($filename);
+                } else {
+                  $messageStack->add_session(MODULE_INTERNETMARKE_TEXT_UPDATE_ERROR, 'error');
                 }
                 break;
               

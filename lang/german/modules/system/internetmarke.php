@@ -55,4 +55,7 @@
 
   define('MODULE_INTERNETMARKE_PRICE_TITLE', '<hr><br><b>Sendungsformat</b><br>');
   define('MODULE_INTERNETMARKE_PRICE_DESC', 'Bitte w&auml;hlen Sie das Sendungsformat aus.<br>');
+
+  define('MODULE_INTERNETMARKE_TEXT_UPDATE_SUCCESS', 'Preisdaten erfolgreich aktualisiert.');
+  define('MODULE_INTERNETMARKE_TEXT_UPDATE_ERROR', 'Die Preisdaten konnten nicht aktualisiert werden.');
 ?>
