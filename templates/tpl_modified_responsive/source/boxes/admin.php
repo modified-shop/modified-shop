@@ -142,9 +142,7 @@ if ($admin_access['content_manager'] == '1') {
 }
 
 // start
-if ($admin_access['start'] == '1') {
-  $box_smarty->assign('START', xtc_href_link_admin(FILENAME_START,'', 'NONSSL'));
-}
+$box_smarty->assign('START', xtc_href_link_admin(FILENAME_START,'', 'NONSSL'));
 
 // support
 $box_smarty->assign('SUPPORT', xtc_href_link_admin((defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'support.php','', 'NONSSL'));
