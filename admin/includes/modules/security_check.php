@@ -222,7 +222,7 @@ if (isset($_POST['action'])
   xtc_db_query("UPDATE ".TABLE_CONFIGURATION." SET configuration_value = '".$time."' WHERE configuration_key = 'NEWSFEED_LAST_UPDATE_TRY'");
 
 } elseif (defined('NEWSFEED_LAST_UPDATE_TRY')
-          && abs(NEWSFEED_LAST_UPDATE_TRY - NEWSFEED_LAST_UPDATE) >= 3600
+          && abs((int)NEWSFEED_LAST_UPDATE_TRY - (int)NEWSFEED_LAST_UPDATE) >= 3600
           && time() - (int)NEWSFEED_LAST_UPDATE > 86400
           )
 {
