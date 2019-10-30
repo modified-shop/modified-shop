@@ -228,4 +228,7 @@ ALTER TABLE products_description ADD products_heading_title VARCHAR(255) NOT NUL
 #GTB - 2019-10-30 - removed blz update
 ALTER TABLE admin_access DROP blz_update;
 
+#GTB - 2019-10-30 - removed start
+ALTER TABLE admin_access DROP `start`;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
