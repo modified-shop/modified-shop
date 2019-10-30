@@ -93,6 +93,6 @@ define('MODULE_PAYMENT_BANKTRANSFER_DUE_DELAY_DESC', 'Enter period (in days) to 
 
 define('MODULE_PAYMENT_BANKTRANSFER_TEXT_EXTENDED_DESCRIPTION', '<strong><font color="red">ATTENTION:</font></strong> Please update the german bank code numbers!');
 
-define('MODULE_PAYMENT_BANKTRANSFER_TEXT_UPDATE_SUCCESS', 'Updated bank codes:');
+define('MODULE_PAYMENT_BANKTRANSFER_TEXT_UPDATE_SUCCESS', 'Updated bank codes: ');
 define('MODULE_PAYMENT_BANKTRANSFER_TEXT_UPDATE_ERROR', 'Bank codes could not be updated.');
 ?>

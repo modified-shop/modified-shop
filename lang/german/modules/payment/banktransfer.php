@@ -93,6 +93,6 @@ define('MODULE_PAYMENT_BANKTRANSFER_DUE_DELAY_DESC', 'Geben Sie ein, nach welche
 
 define('MODULE_PAYMENT_BANKTRANSFER_TEXT_EXTENDED_DESCRIPTION', '<strong><font color="red">ACHTUNG:</font></strong> Bitte aktualisieren Sie die Bankleitzahlen!');
 
-define('MODULE_PAYMENT_BANKTRANSFER_TEXT_UPDATE_SUCCESS', 'Aktualisierte Bankleitzahlen:');
+define('MODULE_PAYMENT_BANKTRANSFER_TEXT_UPDATE_SUCCESS', 'Aktualisierte Bankleitzahlen: ');
 define('MODULE_PAYMENT_BANKTRANSFER_TEXT_UPDATE_ERROR', 'Bankleitzahlen konnten nicht aktualisiert werden.');
 ?>
