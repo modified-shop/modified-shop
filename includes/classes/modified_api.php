@@ -100,6 +100,7 @@
       
       curl_setopt($ch, CURLOPT_URL, self::$_endpoint.$path);
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+      curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
       curl_setopt($ch, CURLOPT_HEADER, false);
       curl_setopt($ch, CURLINFO_HEADER_OUT, true);
       curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
