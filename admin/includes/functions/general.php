@@ -146,7 +146,7 @@
    */
   function xtc_check_permission($pagename) {
     $permit_array = array(
-      'start'
+      'start',
       'support'
     );
     if ($pagename != 'index') {
