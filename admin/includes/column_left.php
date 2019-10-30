@@ -159,7 +159,6 @@ echo mainMenue(BOX_HEADING_TOOLS);
       if ($admin_access['banner_manager'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_BANNER_MANAGER) . '" class="menuBoxContentLink"> -' . BOX_BANNER_MANAGER . '</a></li>';
     }
     if ($admin_access['server_info'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_SERVER_INFO) . '" class="menuBoxContentLink"> -' . BOX_SERVER_INFO . '</a></li>';
-    if ($admin_access['blz_update'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_BLZ_UPDATE) . '" class="menuBoxContentLink"> -' . BOX_BLZ_UPDATE . '</a></li>';
     if ($admin_access['whos_online'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_WHOS_ONLINE) . '" class="menuBoxContentLink"> -' . BOX_WHOS_ONLINE . '</a></li>';
     if ($admin_access['csv_backend'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_CSV_BACKEND) . '" class="menuBoxContentLink"> -' . BOX_IMPORT . '</a></li>';
     if ($admin_access['parcel_carriers'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_PARCEL_CARRIERS) . '" class="menuBoxContentLink"> -' . BOX_PARCEL_CARRIERS . '</a></li>';

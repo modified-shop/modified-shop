@@ -63,7 +63,7 @@ define('JS_BANK_OWNER', '* Please enter the name of the account owner!\n\n');
 define('JS_BANK_OWNER_EMAIL', '* Please enter E-Mail-Address of the account owner!\n\n');
 
 define('MODULE_PAYMENT_BANKTRANSFER_DATABASE_BLZ_TITLE' , 'Use database lookup for Bank Code?');
-define('MODULE_PAYMENT_BANKTRANSFER_DATABASE_BLZ_DESC', 'Use Database for validate Bank Code. Default: ("true")?<br/>Make sure that the bank codes in the database are up to date!<br/><a href="'.xtc_href_link(defined('FILENAME_BLZ_UPDATE')?FILENAME_BLZ_UPDATE:'').'" target="_blank"><strong>Link: --> BLZ UPDATE <-- </strong></a><br/><br/>On "false" (standard) is used the supplied blz.csv file that contains possibly outdated entries!');
+define('MODULE_PAYMENT_BANKTRANSFER_DATABASE_BLZ_DESC', 'Use Database for validate Bank Code. Default: ("true")?<br/>Make sure that the bank codes in the database are up to date!<br/><br/>On "false" (standard) is used the supplied blz.csv file that contains possibly outdated entries!');
 define('MODULE_PAYMENT_BANKTRANSFER_URL_NOTE_TITLE' , 'Fax-URL');
 define('MODULE_PAYMENT_BANKTRANSFER_URL_NOTE_DESC' , 'The fax-confirmation file. It must located in catalog-dir');
 define('MODULE_PAYMENT_BANKTRANSFER_FAX_CONFIRMATION_TITLE' , 'Allow Fax Confirmation');
@@ -91,5 +91,8 @@ define('MODULE_PAYMENT_BANKTRANSFER_REFERENCE_PREFIX_DESC', 'Enter a Prefix for 
 define('MODULE_PAYMENT_BANKTRANSFER_DUE_DELAY_TITLE', 'Maturity');
 define('MODULE_PAYMENT_BANKTRANSFER_DUE_DELAY_DESC', 'Enter period (in days) to execute banktransfer');
 
-define('MODULE_PAYMENT_BANKTRANSFER_TEXT_EXTENDED_DESCRIPTION', '<strong><font color="red">ATTENTION:</font></strong> Please update the german bank code numbers under "Tools" -> <a href="'.xtc_href_link('blz_update.php').'"><strong>"Update German bank code numbers"</strong></a>!');
+define('MODULE_PAYMENT_BANKTRANSFER_TEXT_EXTENDED_DESCRIPTION', '<strong><font color="red">ATTENTION:</font></strong> Please update the german bank code numbers!');
+
+define('MODULE_PAYMENT_BANKTRANSFER_TEXT_UPDATE_SUCCESS', 'Updated bank codes:');
+define('MODULE_PAYMENT_BANKTRANSFER_TEXT_UPDATE_ERROR', 'Bank codes could not be updated.');
 ?>
