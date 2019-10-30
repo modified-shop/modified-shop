@@ -21,6 +21,11 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+
+  // include needed classes
+  require_once(DIR_FS_CATALOG.'includes/classes/modified_api.php');
+
+
   class banktransfer {
     var $code, $title, $description, $enabled, $extended_description;
 
