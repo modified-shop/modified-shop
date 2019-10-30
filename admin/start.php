@@ -21,7 +21,6 @@ require_once (DIR_FS_INC.'xtc_validate_vatid_status.inc.php');
 require_once (DIR_FS_INC.'xtc_get_geo_zone_code.inc.php');
 require_once (DIR_FS_INC.'xtc_encrypt_password.inc.php');
 require_once (DIR_FS_INC.'xtc_js_lang.php');
-require_once (DIR_FS_INC.'get_external_content.inc.php');
 require_once (DIR_WS_CLASSES . 'currencies.php');
 $currencies = new currencies();
 
@@ -115,9 +114,12 @@ $turnover_query = xtc_db_query("SELECT round(coalesce(sum(if(date(o.date_purchas
                                        ".$where);
 $turnover = xtc_db_fetch_array($turnover_query);  
 
+
+require_once(DIR_FS_CATALOG.DIR_WS_CLASSES.'modified_api.php');
+$response = modified_api::request('modified/start/'.$_SESSION['language_code']);
+
 require (DIR_WS_INCLUDES.'head.php');
 ?>
-  <script type="text/javascript" src="includes/lang_tabs_menu/lang_tabs_menu.js"></script>
   <script type="text/javascript">
     $(function() {
       $('.blog_title').click(function(e) {
@@ -136,40 +138,6 @@ require (DIR_WS_INCLUDES.'head.php');
       });
     });
   </script>
-  <style type="text/css">
-    h1 {
-      font-size:18px;
-      font-weight:bold;
-      padding-left:10px;
-    }
-    .h2 {
-      font-family: Verdana, Arial, Helvetica, sans-serif;
-      font-size: 13pt;
-      font-weight: bold;
-    }
-    .h3 {
-      font-family: Verdana, Arial, Helvetica, sans-serif;
-      font-size: 9pt;
-      font-weight: bold;
-    }
-    .startphp td {
-      font-family: Verdana, Arial, Helvetica, sans-serif;
-      font-size: 12px;
-      padding:5px;
-    }
-    .startphp td div a, .startphp td.infoBoxHeading a {
-      font-family: Verdana, Arial, Helvetica, sans-serif;
-      font-size: 12px;
-      padding:0px;
-    }
-    .feedtitle a {
-      font-size:12px;
-      font-weight:bold;
-    }
-    .feedtitle ul li {
-      list-style-type:disc;
-    }
-  </style>
 </head>
 <body>   
   <!-- header //-->
@@ -190,189 +158,118 @@ require (DIR_WS_INCLUDES.'head.php');
       <!-- body_text //-->
       <td class="boxCenter" style="border:0;background:#fff;">
         <div class="admin_container cf">
-          <div class="admincol_left">
-          <?php
-            // tabs
-            $tabs_array = array();
-            if($admin_access['whos_online'] == 1) { 
-              $tabs_array[] = array('id' => 'online', 'name' => TABLE_CAPTION_USERS_ONLINE);
-            }
-            if($admin_access['orders'] == 1) { 
-              $tabs_array[] = array('id' => 'orders', 'name' => TABLE_CAPTION_NEW_ORDERS);
-            }
-            if($admin_access['customers'] == 1) { 
-              $tabs_array[] = array('id' => 'customer', 'name' => TABLE_CAPTION_NEW_CUSTOMERS);
-            }
-            if($admin_access['stats_sales_report'] == 1
-              || $admin_access['categories'] == 1
-              || $admin_access['customers'] == 1
-              || $admin_access['orders'] == 1
-              ) 
-            { 
-              $tabs_array[] = array('id' => 'statistic', 'name' => HEADING_CAPTION_STATISTIC);
-            }
-            $langtabs = '<div class="tablangmenu"><ul>';
-            $csstabstyle = 'border: 1px solid #aaaaaa; padding: 4px; width: 99%; margin-top: -1px; margin-bottom: 10px; float: left;background: #F3F3F3;';
-            $csstab = '<style type="text/css">' .  '#tab_lang_0' . '{display: block;' . $csstabstyle . '}';
-            $csstab_nojs = '<style type="text/css">';
-            for ($i = 0, $n = count($tabs_array); $i < $n; $i++) {
-              $tabtmp = "\'tab_lang_$i\'," ;
-              $langtabs.= '<li onclick="showTab('. $tabtmp. $n.')" style="cursor: pointer;" id="tabselect_' . $i .'">' .$tabs_array[$i]['name'].  '</li>';
-              if($i > 0) $csstab .= '#tab_lang_' . $i .'{display: none;' . $csstabstyle . '}';
-              $csstab_nojs .= '#tab_lang_' . $i .'{display: block;' . $csstabstyle . '}';
-            }
-            $csstab .= '</style>';
-            $csstab_nojs .= '</style>';
-            $langtabs.= '</ul></div>';
-            ?>
-            <?php if (USE_ADMIN_LANG_TABS != 'false') { ?>
-            <script type="text/javascript">
-              $.get("includes/lang_tabs_menu/lang_tabs_menu.css", function(css) {
-                $("head").append("<style type='text/css'>"+css+"<\/style>");
-              });
-              document.write('<?php echo ($csstab);?>');
-              document.write('<?php echo ($langtabs);?>');
-            </script>
-            <style type="text/css">
-              .tablangmenu {
-                border-left: 1px solid #aaaaaa;
-                font-family: Verdana,Arial,Helvetica,sans-serif;
-                font-size: 12px !important;
-                font-weight: bold;
-                height: auto !important;
-                line-height: 16px;
-                padding: 0;
-              }  
-              #tab_lang_0, #tab_lang_1, #tab_lang_2, #tab_lang_3 {
-                background: none repeat scroll 0 0 #f9f9f9;
-                border: solid #aaaaaa;
-                border-width: 1px;
-                margin-top: 0;
-                padding: 10px 10px 20px 10px;
-                width: 100%;
-                -moz-box-sizing: border-box;
-                -webkit-box-sizing: border-box;
-                box-sizing: border-box;
-              }
-              .tablangmenu ul li {
-                border-right: 1px solid #aaaaaa;
-                border-top: 1px solid #aaaaaa;
-                color: #aaaaaa;
-                display: inline;
-                float: left;
-                padding: 8px 20px !important;
-                position: relative;
-                width: auto !important;
-              }
-              .tablangmenu ul li:first-child {
-                border-left:1px solid #aaa !important;
-              }
-            </style>
-            <?php 
-            } else { 
-              echo ($csstab_nojs);
-            }
-            ?>
-            <noscript>
-              <?php echo ($csstab_nojs);?>
-            </noscript>
-            <?php
-            for ($i = 0, $n = count($tabs_array); $i < $n; $i++) {
-              echo ('<div id="tab_lang_' . $i . '">');
-              switch($tabs_array[$i]['id']) {
-                case 'online':
-                  if ($admin_access['whos_online'] == 1) { 
-                    ?>
-                      <p><?php echo TABLE_CAPTION_USERS_ONLINE_HINT; ?></p>
-                      <table class="admin_table">
-                        <tr class="header_row">
-                          <td><?php echo TABLE_HEADING_USERS_ONLINE_SINCE; ?></td>
-                          <td><?php echo TABLE_HEADING_USERS_ONLINE_NAME; ?></td>
-                          <td><?php echo TABLE_HEADING_USERS_ONLINE_LAST_CLICK; ?></td>
-                          <td><?php echo TABLE_HEADING_USERS_ONLINE_INFO; ?></td>
-                        </tr>
-                        <?php
-                          $whos_online_query = xtc_db_query("SELECT *
-                                                               FROM " . TABLE_WHOS_ONLINE ." 
-                                                           ORDER BY time_last_click DESC 
-                                                              LIMIT ".MAX_DISPLAY_SEARCH_RESULTS);
-                          while ($whos_online = xtc_db_fetch_array($whos_online_query)) { 
-                            $time_online = (time() - $whos_online['time_entry']); 
-                            ?>
-                        <tr class="content_row">
-                          <td><a href="<?php echo xtc_href_link(FILENAME_WHOS_ONLINE, 'info='.$whos_online['session_id']); ?>"><?php echo gmdate('H:i:s', $time_online); ?></a></td>
-                          <td><a href="<?php echo xtc_href_link(FILENAME_WHOS_ONLINE, 'info='.$whos_online['session_id']); ?>"><?php echo $whos_online['full_name']; ?></a></td>
-                          <td><a href="<?php echo xtc_href_link(FILENAME_WHOS_ONLINE, 'info='.$whos_online['session_id']); ?>"><?php echo date('H:i:s', $whos_online['time_last_click']); ?></a></td>
-                          <td><a href="<?php echo xtc_href_link(FILENAME_WHOS_ONLINE, 'info='.$whos_online['session_id']); ?>"><strong><?php echo TABLE_CELL_USERS_ONLINE_INFO; ?></strong></a></td>
-                        </tr>
-                        <?php } ?>          
-                      </table>
-                    <?php 
-                  } 
-                  break;
-        
-                case 'orders':
-                  if ($admin_access['orders'] == 1) { 
-                    ?>
-                    <table class="admin_table">
-                      <tr class="header_row">
-                        <td><?php echo TABLE_HEADING_NEW_ORDERS_ORDER_NUMBER; ?></td>
-                        <td><?php echo TABLE_HEADING_NEW_ORDERS_ORDER_DATE; ?></td>
-                        <td><?php echo TABLE_HEADING_NEW_ORDERS_CUSTOMERS_NAME; ?></td>
-                        <td><?php echo TABLE_HEADING_NEW_ORDERS_EDIT; ?></td>
-                        <td><?php echo TABLE_HEADING_NEW_ORDERS_DELETE; ?></td>
-                      </tr>
-                      <?php
-                      $last_orders_query = xtc_db_query("SELECT * FROM " . TABLE_ORDERS . " ORDER BY orders_id DESC LIMIT 20");
-                      while ($last_orders = xtc_db_fetch_array($last_orders_query)) {
-                      ?>
-                        <tr class="content_row">
-                          <td><?php echo $last_orders['orders_id']; ?></td>
-                          <td><?php echo $last_orders['date_purchased']; ?></td>
-                          <td><?php echo $last_orders['delivery_name']; ?></td>
-                          <td><a href="<?php echo xtc_href_link(FILENAME_ORDERS, 'page=1&oID='.$last_orders['orders_id'].'&action=edit'); ?>"><strong><?php echo TABLE_CELL_NEW_CUSTOMERS_EDIT; ?></strong></a></td>
-                          <td><a href="<?php echo xtc_href_link(FILENAME_ORDERS, 'page=1&oID='.$last_orders['orders_id'].'&action=delete'); ?>"><strong><?php echo TABLE_CELL_NEW_CUSTOMERS_DELETE; ?></strong></a></td>
-                        </tr>
-                      <?php } ?>
-                    </table>
-                    <?php 
-                  }
-                  break;
-        
-                case 'customer':
-                  if ($admin_access['customers'] == 1) { 
-                    ?>
-                    <table class="admin_table">
-                      <tr class="header_row">
-                        <td><?php echo TABLE_HEADING_NEW_CUSTOMERS_LASTNAME; ?></td>
-                        <td><?php echo TABLE_HEADING_NEW_CUSTOMERS_FIRSTNAME; ?></td>
-                        <td><?php echo TABLE_HEADING_NEW_CUSTOMERS_REGISTERED; ?></td>
-                        <td><?php echo TABLE_HEADING_NEW_CUSTOMERS_EDIT; ?></td>
-                        <td><?php echo TABLE_HEADING_NEW_CUSTOMERS_ORDERS; ?></td>
-                      </tr>
-                      <?php
-                      $last_customers_query = xtc_db_query("SELECT * 
-                                                              FROM " . TABLE_CUSTOMERS . " 
-                                                          ORDER BY customers_date_added DESC 
-                                                             LIMIT 15");
-                      while($last_customers = xtc_db_fetch_array($last_customers_query)) {
+ 
+          <div class="<?php echo ((is_array($response) && isset($response['content'])) ? 'admincol_left' : 'admincol_full'); ?>">
+            <div class="csstabs">
+
+              <?php
+              $tab_selected = false;
+              if ($admin_access['whos_online'] == 1) { 
+                $tab_selected = (($tab_selected === false && ADMIN_START_TAB_SELECTED == 'whos_online') ? true : $tab_selected);
+                ?>
+                <input name="tabs" type="radio" id="tab-1" class="input" <?php echo ((ADMIN_START_TAB_SELECTED == 'whos_online') ? 'checked="checked"' : ''); ?>/>
+                <label for="tab-1" class="label"><?php echo TABLE_CAPTION_USERS_ONLINE; ?></label>
+                <div class="panel">
+                  <p><?php echo TABLE_CAPTION_USERS_ONLINE_HINT; ?></p>
+                  <table class="admin_table">
+                    <tr class="header_row">
+                      <td><?php echo TABLE_HEADING_USERS_ONLINE_SINCE; ?></td>
+                      <td><?php echo TABLE_HEADING_USERS_ONLINE_NAME; ?></td>
+                      <td><?php echo TABLE_HEADING_USERS_ONLINE_LAST_CLICK; ?></td>
+                      <td><?php echo TABLE_HEADING_USERS_ONLINE_INFO; ?></td>
+                    </tr>
+                    <?php
+                      $whos_online_query = xtc_db_query("SELECT *
+                                                           FROM " . TABLE_WHOS_ONLINE ." 
+                                                       ORDER BY time_last_click DESC 
+                                                          LIMIT ".MAX_DISPLAY_SEARCH_RESULTS);
+                      while ($whos_online = xtc_db_fetch_array($whos_online_query)) { 
+                        $time_online = (time() - $whos_online['time_entry']); 
                         ?>
-                        <tr class="content_row">
-                          <td><?php echo $last_customers['customers_lastname']; ?></td>
-                          <td><?php echo $last_customers['customers_firstname']; ?></td>
-                          <td><?php echo $last_customers['customers_date_added']; ?></td>
-                          <td><a href="<?php echo xtc_href_link(FILENAME_CUSTOMERS, 'page=1&cID='.$last_customers['customers_id'].'&action=edit'); ?>"><strong><?php echo TABLE_CELL_NEW_CUSTOMERS_EDIT; ?></strong></a></td>
-                          <td><a href="<?php echo xtc_href_link(FILENAME_ORDERS, 'cID='.$last_customers['customers_id']); ?>"><strong><?php echo TABLE_CELL_NEW_CUSTOMERS_ORDERS; ?></strong></a></td>
-                        </tr>
-                      <?php } ?>      
-                    </table>
-                    <?php 
-                  }
-                  break;
-                
-                case 'statistic':
-                  if ($admin_access['stats_sales_report'] == 1) {
-                  ?>
+                    <tr class="content_row">
+                      <td><a href="<?php echo xtc_href_link(FILENAME_WHOS_ONLINE, 'info='.$whos_online['session_id']); ?>"><?php echo gmdate('H:i:s', $time_online); ?></a></td>
+                      <td><a href="<?php echo xtc_href_link(FILENAME_WHOS_ONLINE, 'info='.$whos_online['session_id']); ?>"><?php echo $whos_online['full_name']; ?></a></td>
+                      <td><a href="<?php echo xtc_href_link(FILENAME_WHOS_ONLINE, 'info='.$whos_online['session_id']); ?>"><?php echo date('H:i:s', $whos_online['time_last_click']); ?></a></td>
+                      <td><a href="<?php echo xtc_href_link(FILENAME_WHOS_ONLINE, 'info='.$whos_online['session_id']); ?>"><strong><?php echo TABLE_CELL_USERS_ONLINE_INFO; ?></strong></a></td>
+                    </tr>
+                    <?php } ?>          
+                  </table>
+                </div>
+              <?php } ?>
+
+              <?php 
+              if ($admin_access['orders'] == 1) { 
+                $tab_selected = (($tab_selected === false && ADMIN_START_TAB_SELECTED == 'orders') ? true : $tab_selected);
+                ?>      
+                <input name="tabs" type="radio" id="tab-2" class="input" <?php echo ((ADMIN_START_TAB_SELECTED == 'orders') ? 'checked="checked"' : ''); ?>/>
+                <label for="tab-2" class="label"><?php echo TABLE_CAPTION_NEW_ORDERS; ?></label>
+                <div class="panel">
+                  <table class="admin_table">
+                    <tr class="header_row">
+                      <td><?php echo TABLE_HEADING_NEW_ORDERS_ORDER_NUMBER; ?></td>
+                      <td><?php echo TABLE_HEADING_NEW_ORDERS_ORDER_DATE; ?></td>
+                      <td><?php echo TABLE_HEADING_NEW_ORDERS_CUSTOMERS_NAME; ?></td>
+                      <td><?php echo TABLE_HEADING_NEW_ORDERS_EDIT; ?></td>
+                      <td><?php echo TABLE_HEADING_NEW_ORDERS_DELETE; ?></td>
+                    </tr>
+                    <?php
+                    $last_orders_query = xtc_db_query("SELECT * FROM " . TABLE_ORDERS . " ORDER BY orders_id DESC LIMIT 20");
+                    while ($last_orders = xtc_db_fetch_array($last_orders_query)) {
+                    ?>
+                      <tr class="content_row">
+                        <td><?php echo $last_orders['orders_id']; ?></td>
+                        <td><?php echo $last_orders['date_purchased']; ?></td>
+                        <td><?php echo $last_orders['delivery_name']; ?></td>
+                        <td><a href="<?php echo xtc_href_link(FILENAME_ORDERS, 'page=1&oID='.$last_orders['orders_id'].'&action=edit'); ?>"><strong><?php echo TABLE_CELL_NEW_CUSTOMERS_EDIT; ?></strong></a></td>
+                        <td><a href="<?php echo xtc_href_link(FILENAME_ORDERS, 'page=1&oID='.$last_orders['orders_id'].'&action=delete'); ?>"><strong><?php echo TABLE_CELL_NEW_CUSTOMERS_DELETE; ?></strong></a></td>
+                      </tr>
+                    <?php } ?>
+                  </table>
+                </div>
+              <?php } ?>
+
+              <?php 
+              if ($admin_access['customers'] == 1) {
+                $tab_selected = (($tab_selected === false && ADMIN_START_TAB_SELECTED == 'customers') ? true : $tab_selected);
+                ?>
+                <input name="tabs" type="radio" id="tab-3" class="input" <?php echo ((ADMIN_START_TAB_SELECTED == 'customers') ? 'checked="checked"' : ''); ?>/>
+                <label for="tab-3" class="label"><?php echo TABLE_CAPTION_NEW_CUSTOMERS; ?></label>
+                <div class="panel">
+                  <table class="admin_table">
+                    <tr class="header_row">
+                      <td><?php echo TABLE_HEADING_NEW_CUSTOMERS_LASTNAME; ?></td>
+                      <td><?php echo TABLE_HEADING_NEW_CUSTOMERS_FIRSTNAME; ?></td>
+                      <td><?php echo TABLE_HEADING_NEW_CUSTOMERS_REGISTERED; ?></td>
+                      <td><?php echo TABLE_HEADING_NEW_CUSTOMERS_EDIT; ?></td>
+                      <td><?php echo TABLE_HEADING_NEW_CUSTOMERS_ORDERS; ?></td>
+                    </tr>
+                    <?php
+                    $last_customers_query = xtc_db_query("SELECT * 
+                                                            FROM " . TABLE_CUSTOMERS . " 
+                                                        ORDER BY customers_date_added DESC 
+                                                           LIMIT 15");
+                    while($last_customers = xtc_db_fetch_array($last_customers_query)) {
+                      ?>
+                      <tr class="content_row">
+                        <td><?php echo $last_customers['customers_lastname']; ?></td>
+                        <td><?php echo $last_customers['customers_firstname']; ?></td>
+                        <td><?php echo $last_customers['customers_date_added']; ?></td>
+                        <td><a href="<?php echo xtc_href_link(FILENAME_CUSTOMERS, 'page=1&cID='.$last_customers['customers_id'].'&action=edit'); ?>"><strong><?php echo TABLE_CELL_NEW_CUSTOMERS_EDIT; ?></strong></a></td>
+                        <td><a href="<?php echo xtc_href_link(FILENAME_ORDERS, 'cID='.$last_customers['customers_id']); ?>"><strong><?php echo TABLE_CELL_NEW_CUSTOMERS_ORDERS; ?></strong></a></td>
+                      </tr>
+                    <?php } ?>      
+                  </table>
+                </div>
+              <?php } ?>
+
+              <?php 
+              if ($admin_access['stats_sales_report'] == 1 || $admin_access['categories'] == 1 || $admin_access['customers'] == 1 || $admin_access['orders'] == 1 ) { 
+                $tab_selected = (($tab_selected === false && ADMIN_START_TAB_SELECTED == 'sales_report') ? true : $tab_selected);
+                ?>
+                <input name="tabs" type="radio" id="tab-4" class="input" <?php echo ((ADMIN_START_TAB_SELECTED == 'sales_report') ? 'checked="checked"' : ''); ?>/>
+                <label for="tab-4" class="label"><?php echo HEADING_CAPTION_STATISTIC; ?></label>
+                <div class="panel">
+                  <?php if ($admin_access['stats_sales_report'] == 1) { ?>
                     <table class="admin_table">
                       <tr class="content_row">
                          <td><strong><?php echo TURNOVER_TODAY; ?>:</strong></td>
@@ -417,9 +314,9 @@ require (DIR_WS_INCLUDES.'head.php');
                     </table>
                     <br />
                     <br />
-                    <?php } ?>
-                    
-                    <?php if($admin_access['customers'] == 1) { ?>
+                  <?php } ?>
+                
+                  <?php if($admin_access['customers'] == 1) { ?>
                     <table class="admin_table">
                       <?php
                         foreach ($customers as $customer) {
@@ -432,9 +329,9 @@ require (DIR_WS_INCLUDES.'head.php');
                         <td align="right"><?php echo $newsletter['count']; ?></td>
                       </tr>
                     </table>
-                    <?php } ?>
-                    
-                    <?php if($admin_access['categories'] == 1) { ?>
+                  <?php } ?>
+                
+                  <?php if($admin_access['categories'] == 1) { ?>
                     <table class="admin_table">
                       <tr class="content_row">
                         <td><strong><?php echo TOTAL_PRODUCTS_ACTIVE; ?>:</strong></td>
@@ -443,7 +340,7 @@ require (DIR_WS_INCLUDES.'head.php');
                       <tr class="content_row">
                         <td><a href="<?php echo xtc_href_link(FILENAME_CATEGORIES, 'search_inactive=1');?>"><strong><?php echo TOTAL_PRODUCTS_INACTIVE; ?>:</strong></a></td>
                         <td align="right"><a href="<?php echo xtc_href_link(FILENAME_CATEGORIES, 'search_inactive=1');?>"><?php echo $products['inactive_count']; ?></a></td>
-					            </tr>
+                      </tr>
                       <tr class="content_row">
                         <td><strong><?php echo TOTAL_PRODUCTS; ?>:</strong></td>
                         <td align="right"><?php echo $products['total_count'] ?></td>
@@ -455,9 +352,9 @@ require (DIR_WS_INCLUDES.'head.php');
                     </table>
                     <br />
                     <br />
-                   <?php } ?>
-                    
-                    <?php if($admin_access['orders'] == 1) { ?>
+                  <?php } ?>
+                
+                  <?php if($admin_access['orders'] == 1) { ?>
                     <table class="admin_table">
                     <?php
                       foreach ($orders as $order) {
@@ -466,44 +363,56 @@ require (DIR_WS_INCLUDES.'head.php');
                       }
                     ?>   
                     </table>
+                  <?php } ?>
+                                  
+                </div>
+              <?php } ?>                
+
+              <input name="tabs" type="radio" id="tab-5" class="input" <?php echo (($tab_selected === false) ? 'checked="checked"' : ''); ?>/>
+              <label for="tab-5" class="label"><?php echo 'Blog'; ?></label>
+              <div class="panel">
+                <p><a target="_blank" href="<?php echo RSS_FEED_LINK; ?>"><strong><?php echo RSS_FEED_TITLE; ?></strong></a></p>
+                <div class="admin_contentbox blog_container">
                   <?php
-                  break;
-                }
-              }
-              echo ('</div>');
+                  $news_query = xtc_db_query("SELECT * FROM newsfeed ORDER BY news_date DESC LIMIT 10");
+                  if (xtc_db_num_rows($news_query) > 0) {
+                    $i = 0;
+                    while ($news = xtc_db_fetch_array($news_query)) {
+                      $pagebreak = strpos($news['news_text'], '<tt class="bbc_tt"></tt>');
+                      $news['news_text'] = str_replace('src="http://', 'src="https://', $news['news_text']);
+                      ?>
+                      <div class="blog_title">
+                        <div class="blog_header"><?php echo $news['news_title']; ?></div>
+                        <div class="blog_date"><?php echo date('d.m.Y', $news['news_date']); ?></div>                                      
+                      </div>                          
+                      <div class="blogentry" style="display:none;">
+                        <div class="blog_desc"><?php echo (($pagebreak !== false) ? substr($news['news_text'], 0, $pagebreak) : $news['news_text']); ?></div>
+                        <div class="blog_read_more"><a target="_blank" href="<?php echo $news['news_link']; ?>">weiterlesen &raquo;</a></div>
+                      </div>
+                      <?php
+                      $i ++;
+                    }
+                  } else {
+                  ?>
+                    <div class="blogentry">
+                      <div class="blog_title"><?php echo RSS_FEED_ALTERNATIVE; ?></div>                          
+                      <div class="blog_desc"><?php echo RSS_FEED_DESCRIPTION; ?></div>
+                    </div>
+                  <?php
+                  }
+                ?>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          
+          <?php 
+            if (is_array($response) && isset($response['content'])) {
+              echo '<div class="admincol_right">'.$response['content'].'</div>';
             }
           ?>
-          </div>
-          <div class="admincol_right">
-            <div class="admin_headline"><a target="_blank" href="<?php echo RSS_FEED_LINK; ?>"><?php echo RSS_FEED_TITLE; ?></a></div>
-            <div class="admin_contentbox">
-              <?php
-              $news_query = xtc_db_query("SELECT * FROM newsfeed ORDER BY news_date DESC");
-              if (xtc_db_num_rows($news_query) > 0) {
-                $i = 0;
-                while ($news = xtc_db_fetch_array($news_query)) {
-                  $pagebreak = strpos($news['news_text'], '<tt class="bbc_tt"></tt>');
-                  $news['news_text'] = str_replace('src="http://', 'src="https://', $news['news_text']);
-                  ?>
-                  <div class="blog_title<?php echo (($i == 0) ? ' active' : ''); ?>"><?php echo $news['news_title']; ?></div>                          
-                  <div class="blogentry" <?php echo (($i != 0) ? ' style="display:none; margin-top:2px;"' : ''); ?>>
-                    <div class="blog_date"><?php echo date('d.m.Y', $news['news_date']); ?></div>                                      
-                    <div class="blog_desc"><?php echo (($pagebreak !== false) ? substr($news['news_text'], 0, $pagebreak) : $news['news_text']); ?></div>
-                    <div class="blog_read_more"><a target="_blank" href="<?php echo $news['news_link']; ?>">weiterlesen &raquo;</a></div>
-                  </div>
-                  <?php
-                  $i ++;
-                }
-              } else {
-              ?>
-                <div class="blogentry">
-                  <div class="blog_title"><?php echo RSS_FEED_ALTERNATIVE; ?></div>                          
-                  <div class="blog_desc"><?php echo RSS_FEED_DESCRIPTION; ?></div>
-                </div>
-              <?php
-              }
-            ?>           
-            </div>
+                    
         </div>
       </td>
       <!-- body_text_eof //-->

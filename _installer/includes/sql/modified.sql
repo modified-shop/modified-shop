@@ -1857,6 +1857,7 @@ INSERT INTO configuration (configuration_id, configuration_key, configuration_va
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'ATTRIBUTE_MODEL_DELIMITER', '<br />', 1000, '116', NULL, NOW(), NULL, NULL);
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'ADMIN_SEARCH_IN_ATTR', 'false', '1000', '25', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'ADMIN_SEARCH_IN_DESC', 'false', '1000', '25', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
+INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'ADMIN_START_TAB_SELECTED', 'whos_online', '1000', '24', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'whos_online\', \'orders\', \'customers\', \'sales_report\', \'blog\'),');
 
 INSERT INTO configuration_group VALUES (1,'My Store','General information about my store',1,1);
 INSERT INTO configuration_group VALUES (2,'Minimum Values','The minimum values for functions / data',2,1);

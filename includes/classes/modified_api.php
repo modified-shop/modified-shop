@@ -68,20 +68,6 @@
 
 
     /**
-     * get_start_content
-     */
-    public static function get_start_content($language) {  
-      $response = self::request('modified/start/'.$language);
-      
-      if ($response == null || !is_array($response) || !isset($response['content'])) {
-        throw new Exception('ERROR modified API: get_start_content::'.$language);
-      } else {
-        return $response['content'];
-      }
-    }
-
-
-    /**
      * clean
      */
     private static function clean($response) {
