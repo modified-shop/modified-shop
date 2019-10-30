@@ -566,6 +566,11 @@ define('CFG_TXT_ALL', 'all');
 define('CFG_TXT_WEIGHT', 'Weight');
 define('CFG_TXT_PRICE', 'Price');
 define('CFG_TXT_ITEM', 'Item');
+define('CFG_TXT_WHOS_ONLINE', 'Online');
+define('CFG_TXT_ORDERS', 'Orders');
+define('CFG_TXT_CUSTOMERS', 'Customers');
+define('CFG_TXT_SALES_REPORT', 'Statistics');
+define('CFG_TXT_BLOG', 'Blog');
 
 define('CSRF_TOKEN_MANIPULATION', 'CSRFToken manipulation (Due to security aspects it is not allowed to work in the admin area in different browser tabs anymore.)');
 define('CSRF_TOKEN_NOT_DEFINED', 'CSRFToken not defined (Due to security aspects it is not allowed to work in the admin area in different browser tabs anymore.)');
