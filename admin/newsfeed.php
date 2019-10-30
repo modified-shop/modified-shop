@@ -71,7 +71,7 @@ require (DIR_WS_INCLUDES.'head.php');
       <td width="100%" valign="top">
         <div class="dataTableHeadingContent"><a target="_blank" href="<?php echo RSS_FEED_LINK; ?>"><strong><?php echo RSS_FEED_TITLE; ?></strong></a></div>
         <div class="admin_container cf">
-          <div class="admin_contentbox">
+          <div class="admin_contentbox blog_container">
             <?php
             $news_query_raw = "SELECT * FROM newsfeed ORDER BY news_date DESC";
             $news_split = new splitPageResults($_GET['page'], $page_max_display_results, $news_query_raw, $news_query_numrows);
