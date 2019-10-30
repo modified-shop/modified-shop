@@ -52,7 +52,7 @@ Sollen mehr Rabattstaffeln m&ouml;glich sein (Standard sind <b>3</b>), muss vor 
 Wenn schon im Bestellprozess bei der Zahlungsauswahl der entsprechende Rabatt angezeigt werden soll, die Option &quot;Anzeige bei den Zahlungsarten&quot; auf &quot;true&quot; stellen. <br/><br/>
 Weiter kann man mit der Option &quot;Anzeigeart im Bestellprozess bei der Zahlungsauswahl&quot; die Art der Darstellung einstellen:
 <p> -- default: Prozent oder Betrag, abh&auml;ngig von den Eingaben bei Rabattstaffel</p>
-<p> -- price: Es wird immer der tats&auml;chliche Betrag angezeigt</p>'
+<p> -- Preis: Es wird immer der tats&auml;chliche Betrag angezeigt</p>'
 );
 
 define('MODULE_ORDER_TOTAL_PAYMENT_TITLE', 'Rabatt &amp; Zuschlag auf Zahlungsarten');
@@ -98,7 +98,7 @@ define('MODULE_ORDER_TOTAL_PAYMENT_SHOW_IN_CHECKOUT_PAYMENT_TITLE', '<hr>Anzeige
 define('MODULE_ORDER_TOTAL_PAYMENT_SHOW_IN_CHECKOUT_PAYMENT_DESC', 'Anzeige im Bestellprozess bei der Zahlungsauswahl');
 
 define('MODULE_ORDER_TOTAL_PAYMENT_SHOW_TYPE_TITLE', '<hr>Anzeigeart bei den Zahlungsarten');
-define('MODULE_ORDER_TOTAL_PAYMENT_SHOW_TYPE_DESC', 'Anzeigeart im Bestellprozess bei der Zahlungsauswahl <br />-- default: Prozent oder Betrag, abh&auml;ngig von den Eingaben bei Rabattstaffel<br />-- price: es wird immer der tats&auml;chliche Betrag angezeigt');
+define('MODULE_ORDER_TOTAL_PAYMENT_SHOW_TYPE_DESC', 'Anzeigeart im Bestellprozess bei der Zahlungsauswahl <br />-- default: Prozent oder Betrag, abh&auml;ngig von den Eingaben bei Rabattstaffel<br />-- Preis: Es wird immer der tats&auml;chliche Betrag angezeigt');
 
 define('MODULE_ORDER_TOTAL_PAYMENT_NUMBER_TITLE', 'Anzahl Zahlarten');
 define('MODULE_ORDER_TOTAL_PAYMENT_NUMBER_DESC', 'Anzahl an Rabatt &amp; Zuschlag auf Zahlungsarten');

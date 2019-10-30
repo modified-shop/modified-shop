@@ -21,7 +21,7 @@ define('MODULE_PAYMENT_MCP_SERVICE_PROJECT_CODE_DESC','Projektcode von micropaym
 define('MODULE_PAYMENT_MCP_SERVICE_PAYTEXT_TITLE',' Bezahltext');
 define('MODULE_PAYMENT_MCP_SERVICE_PAYTEXT_DESC','Dies wird auf der Rechnung bzw. als Titel im Bezahlfenster angezeigt. Mit dem Platzhalter #ORDER# k&ouml;nnen Sie die OrderID der Bestellung mit einf&uuml;gen. z.B. "Bestellung #ORDER#" w&uuml;rde "Bestellung 0000023" anzeigen.');
 define('MODULE_PAYMENT_MCP_SERVICE_THEME_TITLE',' Theme');
-define('MODULE_PAYMENT_MCP_SERVICE_THEME_DESC','Theme f&uuml;r das Bezahlfenster, Default ist x1');
+define('MODULE_PAYMENT_MCP_SERVICE_THEME_DESC','Theme f&uuml;r das Bezahlfenster, Standard ist x1');
 
 define('MODULE_PAYMENT_MCP_SERVICE_GFX_TITLE',' Logo-Code');
 define('MODULE_PAYMENT_MCP_SERVICE_GFX_DESC','Tragen Sie hier Ihren Logo-Code ein.');

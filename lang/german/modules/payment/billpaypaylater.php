@@ -9,7 +9,7 @@ define('MODULE_PAYMENT_BILLPAYPAYLATER_ALLOWED_TITLE' , 'Erlaubte Zonen');
 define('MODULE_PAYMENT_BILLPAYPAYLATER_ALLOWED_DESC' , 'Geben Sie einzeln die Zonen an, welche f&uuml;r dieses Modul erlaubt sein sollen. (z.B. AT,DE (wenn leer, werden alle Zonen erlaubt))');
 
 define('MODULE_PAYMENT_BILLPAYPAYLATER_LOGGING_TITLE' , 'Absoluter Pfad zur Logdatei');
-define('MODULE_PAYMENT_BILLPAYPAYLATER_LOGGING_DESC' , 'Wenn kein Wert eingestellt ist, wird standardm&auml;ssig in das Verzeichnis includes/external/billpay/log geschrieben (Schreibrechte m&uuml;ssen verf&uuml;gbar sein).\'');
+define('MODULE_PAYMENT_BILLPAYPAYLATER_LOGGING_DESC' , 'Wenn kein Wert eingestellt ist, wird standardm&auml;&szlig;ig in das Verzeichnis includes/external/billpay/log geschrieben (Schreibrechte m&uuml;ssen verf&uuml;gbar sein).\'');
 
 define('MODULE_PAYMENT_BILLPAYPAYLATER_MERCHANT_ID_TITLE' , 'Verk&auml;ufer ID\'');
 define('MODULE_PAYMENT_BILLPAYPAYLATER_MERCHANT_ID_DESC' , 'Diese Daten erhalten Sie von BillPay');

@@ -9,7 +9,7 @@
   define('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_SECRETKEY_TITLE', 'Secret-Key');
   define('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_SECRETKEY_DESC', '');
   define('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_INFRAME_TITLE', 'Masterpayment direkt im Shop einbinden?');
-  define('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_INFRAME_DESC', 'Masterpayment wird standardm&auml;ssig im Shop eingebunden. Durch Auswahl "False" erfolgt eine direkte Weiterleitung auf Masterpayment w&auml;hrend dem Bezahlvorgang.'); 
+  define('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_INFRAME_DESC', 'Masterpayment wird standardm&auml;&szlig;ig im Shop eingebunden. Durch Auswahl "False" erfolgt eine direkte Weiterleitung auf Masterpayment w&auml;hrend dem Bezahlvorgang.'); 
   define('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_BASKETDESCRIPTION_TITLE', 'Ihr Shopname');
   define('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_BASKETDESCRIPTION_DESC', 'Wird dem Kunden z.B. auf dem Kontoauszug angezeigt.');
   define('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_SEND_CUSTOMER_DATA_TITLE', 'Kundendaten an Masterpayment senden?');
