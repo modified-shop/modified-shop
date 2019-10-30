@@ -3064,7 +3064,6 @@ ul.ord_total_list li {
 }
 .pd_small_image_inner {
   border:1px solid #eee;
-  overflow:hidden;
   text-align: center;
   position:relative;
   width:100%;
@@ -3076,6 +3075,7 @@ ul.ord_total_list li {
   content: "";
   display:block;
   padding-top: 100%;
+  overflow:hidden;
 }
 
 .pd_small_image_inner img {
@@ -3109,7 +3109,6 @@ ul.ord_total_list li {
 }
 .pd_small_image_tab_inner {
   border:1px solid #eee;
-  overflow:hidden;
   text-align: center;
   position:relative;
   width:100%;
@@ -3121,6 +3120,7 @@ ul.ord_total_list li {
   content: "";
   display:block;
   padding-top: 100%;
+  overflow:hidden;
 }
 .pd_small_image_tab img {
   margin: auto;
