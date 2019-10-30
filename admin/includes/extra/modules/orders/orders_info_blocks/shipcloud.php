@@ -31,7 +31,7 @@
         $tracking_array = get_tracking_link($oID, $lang_code);
         if (count($tracking_array) > 0) {
           foreach($tracking_array as $tracking) {
-            if ($tracking['external'] == '1') {
+            if ($tracking['external'] == '1' && $tracking['sc_id'] != '') {
               ?>
               <tr>
                 <td class="smallText" align="center"><?php echo $tracking['carrier_name']; ?></td>
