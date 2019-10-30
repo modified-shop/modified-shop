@@ -43,8 +43,8 @@
 
       $this->default_values = 'AT:3.00,DE:3.58,00:9.99';
       
-      $this->properties['button_update'] = '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULES, 'set=' . 'ordertotal' . '&module=' . $this->code . '&action=update') . '">' . BUTTON_UPDATE. '</a>';
-      $this->properties['button_reset'] = '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULES, 'set=' . 'ordertotal' . '&module=' . $this->code . '&action=reset') . '">' . BUTTON_RESET. '</a>';
+      $this->properties['button_update'] = '<a class="button btnbox" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULES, 'set=' . 'ordertotal' . '&module=' . $this->code . '&action=update') . '">' . BUTTON_UPDATE. '</a>';
+      $this->properties['button_reset'] = '<a class="button btnbox" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULES, 'set=' . 'ordertotal' . '&module=' . $this->code . '&action=reset') . '">' . BUTTON_RESET. '</a>';
 
       $this->output = array();
     }
