@@ -138,7 +138,10 @@ foreach ($script_array as $script) {
     if(inputString.length == 0) {
       $('#suggestions').hide();
     } else {
-      $.post("<?php echo xtc_href_link('api/autocomplete/autocomplete.php', '', $request_type); ?>", {queryString: ""+inputString+""}, function(data) {
+      var post_params = $('#quick_find').serialize();
+      post_params = post_params.replace("keywords=", "queryString=");
+		  
+			$.post("<?php echo xtc_href_link('api/autocomplete/autocomplete.php', '', $request_type); ?>", post_params, function(data) {
         if(data.length > 0) {
           $('#suggestions').slideDown();
           $('#autoSuggestionsList').html(data);
@@ -149,6 +152,9 @@ foreach ($script_array as $script) {
       });
     }
   }
+	$('#cat_search').on('change', function () {
+	  $('#inputString').val('');
+	});	
 </script>
 <?php } ?>
 <?php if (SEARCH_AC_STATUS == 'true' || (!strstr($PHP_SELF, FILENAME_SHOPPING_CART) && !strstr($PHP_SELF, 'checkout'))) { ?>  

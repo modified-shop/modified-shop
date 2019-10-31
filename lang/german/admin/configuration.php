@@ -966,6 +966,8 @@ define('SEARCH_AC_STATUS_TITLE','Autocomplete Suche');
 define('SEARCH_AC_STATUS_DESC','Aktivieren, um die Autocomplete Suche zu aktivieren.<br/><b>Achtung:</b> Das funktioniert nur mit einem ab Shopversion 2.0.0.0 kompatiblem Template!');
 define('SEARCH_AC_MIN_LENGTH_TITLE', 'Autocomplete Suche Zeichenanzahl');
 define('SEARCH_AC_MIN_LENGTH_DESC', 'Ab welcher Zeichenanzahl sollen die ersten Suchergebnisse angezeigt werden?<br/><b>Achtung:</b> Das funktioniert nur mit einem ab Shopversion 2.0.0.0 kompatiblem Template!');
+define('SEARCH_AC_CATEGORIES_TITLE', 'Kategorien');
+define('SEARCH_AC_CATEGORIES_DESC', 'Aktivieren um bei der Suche ein Kategiedropdown anzuzeigen.');
 
 define('DISPLAY_PRIVACY_ON_CHECKOUT_TITLE', 'Anzeigen des Datenschutzes im Checkout');
 define('DISPLAY_PRIVACY_ON_CHECKOUT_DESC', 'Soll zus&auml;tzlich ein Hinweis auf den Datenschutz im Checkout angezeigt werden?<br/><b>Achtung:</b> Soll zus&auml;tzlich eine Checkbox angezeigt werden, so muss "Unterzeichnen des Datenschutzes" auf "Ja" gestellt werden.');
@@ -1007,6 +1009,6 @@ define('MODULE_NEWSLETTER_VOUCHER_AMOUNT_DESC', 'F&uuml;r einen Gutschein bei de
 define('MODULE_NEWSLETTER_DISCOUNT_COUPON_TITLE', 'Newsletter Coupon Code');
 define('MODULE_NEWSLETTER_DISCOUNT_COUPON_DESC', 'F&uuml;r einen Coupon bei der Newsletter Registrierung geben Sie den Coupon Code ein, ansonsten lassen Sie dieses Feld leer.');
 
-define('ADMIN_START_TAB_SELECTED_TITLE', ' Tabs Startseite');
+define('ADMIN_START_TAB_SELECTED_TITLE', 'Tabs Startseite');
 define('ADMIN_START_TAB_SELECTED_DESC', 'Welcher Tab auf der Startseite soll standardm&auml;&szlig;ig ausgew&auml;hlt sein?');
 ?>

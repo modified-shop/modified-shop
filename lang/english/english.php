@@ -303,6 +303,7 @@ define('TEXT_SEARCH_ENGINE_AGENT','Search engine');
  *
  */
 
+define('TEXT_AC_ALL_CATEGORIES', 'All');
 define('TEXT_ALL_CATEGORIES', 'All categories');
 define('TEXT_ALL_MANUFACTURERS', 'All manufacturers');
 define('JS_AT_LEAST_ONE_INPUT', '* One of the following fields must be filled out:\n    Keywords\n    Date added from\n    Date added to\n    Price over\n    Price up to\n');

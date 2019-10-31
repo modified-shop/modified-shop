@@ -974,6 +974,8 @@ define('SEARCH_AC_STATUS_TITLE','Autocomplete search');
 define('SEARCH_AC_STATUS_DESC','Activate for autocomplete search<br/><b>Attention:</b> This only works with a shop version 2.0.0.0 compatible template!');
 define('SEARCH_AC_MIN_LENGTH_TITLE', 'Autocomplete number of characters');
 define('SEARCH_AC_MIN_LENGTH_DESC', 'Number of characters to display first search results<br/><b>Attention:</b> This only works with a shop version 2.0.0.0 compatible template!');
+define('SEARCH_AC_CATEGORIES_TITLE', 'Categories');
+define('SEARCH_AC_CATEGORIES_DESC', 'Activate for displaying a categories select for search.');
 
 define('DISPLAY_PRIVACY_ON_CHECKOUT_TITLE', 'Display privacy notice on checkout');
 define('DISPLAY_PRIVACY_ON_CHECKOUT_DESC', 'Display an additional privacy notice on checkout?<br/><b>Attention:</b> If an additional checkbox shall be displayed, you need to set "Sign privacy notice" to "Yes"');
@@ -1015,6 +1017,6 @@ define('MODULE_NEWSLETTER_VOUCHER_AMOUNT_DESC', 'For newsletter registration gif
 define('MODULE_NEWSLETTER_DISCOUNT_COUPON_TITLE', 'Newsletter Coupon Code');
 define('MODULE_NEWSLETTER_DISCOUNT_COUPON_DESC', 'For newsletter registration coupon place the coupon code you wish to use or leave this field blank to disable.');
 
-define('ADMIN_START_TAB_SELECTED_TITLE', ' Tabs startpage');
+define('ADMIN_START_TAB_SELECTED_TITLE', 'Tabs startpage');
 define('ADMIN_START_TAB_SELECTED_DESC', 'Which tab on the start page should be selected by default?');
 ?>

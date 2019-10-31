@@ -303,6 +303,7 @@ define('TEXT_SEARCH_ENGINE_AGENT','Suchmaschine');
  * 
  */
 
+define('TEXT_AC_ALL_CATEGORIES', 'Alle');
 define('TEXT_ALL_CATEGORIES', 'Alle Kategorien');
 define('TEXT_ALL_MANUFACTURERS', 'Alle Hersteller');
 define('JS_AT_LEAST_ONE_INPUT', '* Eines der folgenden Felder muss ausgef&uuml;llt werden:\nStichworte\nPreis ab\nPreis bis\n');

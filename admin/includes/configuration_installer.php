@@ -467,6 +467,7 @@ $values_group_update = array();
   $values[] = "(NULL, 'SEARCH_IN_MANU', 'true', 22, 4, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');"; 
   $values[] = "(NULL, 'SEARCH_IN_FILTER', 'true', 22, 5, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');"; 
   $values[] = "(NULL, 'SEARCH_AC_STATUS', 'true', 22, 10, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');"; 
+  $values[] = "(NULL, 'SEARCH_AC_CATEGORIES', 'true', 22, 10, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');"; 
   $values[] = "(NULL, 'SEARCH_AC_MIN_LENGTH', '3', '22', '11', NULL, NOW(), NULL, NULL);";
   //$values[] = "(NULL, 'SEARCH_HIGHLIGHT', 'true', 22, 4, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";   //modified 2.10
   //$values[] = "(NULL, 'SEARCH_HIGHLIGHT_STYLE', 'color:#000;background-color:#eee;border:dotted #000 1px;', 22, 5, NULL, NOW(), NULL, NULL);"; //modified 2.10

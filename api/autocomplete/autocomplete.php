@@ -25,6 +25,8 @@
     $from_str = $where_str = '';
     
     $queryString = xtc_db_input(trim(decode_utf8($_POST['queryString'])));
+    $categories_id = !empty($_POST['categories_id']) ? (int)$_POST['categories_id'] : false;
+    $inc_subcat = !empty($_POST['inc_subcat']) ? (int)$_POST['inc_subcat'] : null;
 
     // create $search_keywords array
     $keywordcheck = xtc_parse_search_string($queryString, $search_keywords);
@@ -40,6 +42,23 @@
                       LEFT JOIN ".TABLE_PRODUCTS_TAGS_VALUES." ptv ON (ptv.options_id = pt.options_id AND ptv.values_id = pt.values_id AND ptv.status = '1' AND ptv.languages_id = '".(int)$_SESSION['languages_id']."') ";
       }
 
+      //include subcategories if needed
+      if ($categories_id !== false) {
+        if (isset($_GET['inc_subcat']) && $_GET['inc_subcat'] == '1') {
+          $subcategories_array = array();
+          xtc_get_subcategories($subcategories_array, $categories_id);
+          $from_str .= " LEFT OUTER JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." AS p2c ON (p.products_id = p2c.products_id) ";
+          $where_str .= " AND p2c.categories_id IN ('".$categories_id."' ";
+          foreach ($subcategories_array AS $scat) {
+            $where_str .= ", '".$scat."'";
+          }
+          $where_str .= ") ";
+        } else {
+          $from_str .= " LEFT OUTER JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." AS p2c ON (p.products_id = p2c.products_id) ";
+          $where_str .= " AND p2c.categories_id = '".$categories_id."' ";
+        }
+      }
+      
       include(DIR_WS_INCLUDES.'build_search_query.php');
       
       $where_str .= " ) ";
