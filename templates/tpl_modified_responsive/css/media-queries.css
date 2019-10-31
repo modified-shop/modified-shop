@@ -83,6 +83,7 @@
   .pri_big_image { width:180px; min-height:180px; }
   .pri_big_image img { max-width:180px; }
   .button_left_error { margin: -10px 0 0 0; }
+  #search { width:48%; }
 }
 
 

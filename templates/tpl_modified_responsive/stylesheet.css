@@ -489,14 +489,66 @@ ul.topnavigation li .far {
 #search {
   float:right;
   position:relative;
-  width:300px;
+  width:400px;
   border:0px solid transparent;
   margin-top:22px;
 }
-#search input[type=text] {
-  padding-right:90px;
+.search_inner {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
 }
-#search input[type=image] {
+.search_inner .search_cat {
+  position:relative;
+  z-index: 100000;
+  width:80px;
+}
+.search_inner .search_cat .SumoSelect > .CaptionCont {
+  background-color: #eeeeee !important;
+  -webkit-border-top-right-radius: 0px !important;
+  -webkit-border-bottom-right-radius: 0px !important;
+  -moz-border-radius-topright: 0px !important;
+  -moz-border-radius-bottomright: 0px !important;
+  border-top-right-radius: 0px !important;
+  border-bottom-right-radius: 0px !important;
+  height:35px;
+  border-right:1px solid #eeeeee !important;
+}
+.search_inner .search_cat .SumoSelect:focus > .CaptionCont,.SumoSelect:hover > .CaptionCont { border-right:1px solid #eeeeee !important; }
+.search_inner .search_cat .SumoSelect:focus > .CaptionCont,.SumoSelect:focus > .CaptionCont { border-right:1px solid #659eC9 !important; }
+
+.search_inner .SumoSelect > .CaptionCont > span {
+  padding-right: 20px;
+}    
+.search_inner .search_cat .SumoSelect > .optWrapper {
+  width:auto !important;
+  max-width:300px !important;
+}
+.search_inner .search_input {
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+}
+.search_inner.search_cat_mode .search_input input {
+  -webkit-border-top-left-radius: 0px !important;
+  -webkit-border-bottom-left-radius: 0px !important;
+  -moz-border-radius-topleft: 0px !important;
+  -moz-border-radius-bottomleft: 0px !important;
+  border-top-left-radius: 0px !important;
+  border-bottom-left-radius: 0px !important;
+}
+#search .search_inner input[type=text] {
+  padding-right:10px;
+  padding-left:10px;
+}
+#search .search_inner input[type=image] {
   position:absolute;
   right:0px;
   top:0px;
@@ -5139,9 +5191,6 @@ ul.resp-tabs-list{
 }
 /* Box search */
 .cssButtonPos2 {
-  position:absolute;
-  right:0px;
-  top:0px;
   width:80px;
 }
 
