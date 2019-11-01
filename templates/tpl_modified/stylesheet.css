@@ -334,17 +334,73 @@ ul.topnavigation li a:hover {
 #search {
   float:right;
   position:relative;
-  width:300px;
+  width:375px;
   border:0px solid transparent;
   margin-top:22px;
 }
-#search input[type=text] {
-  padding-right:90px;
+.search_inner {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
 }
-#search input[type=image] {
-  position:absolute;
-  right:0px;
-  top:0px;
+.search_inner .search_cat {
+  position:relative;
+  z-index: 100000;
+  width:80px;
+}
+.search_inner .search_cat select {
+  background-color: #eeeeee !important;
+  border-width: 1px;
+  padding: 7px 4px 7px 2px;
+  height:32px;
+  -webkit-border-top-right-radius: 0px !important;
+  -webkit-border-bottom-right-radius: 0px !important;
+  -moz-border-radius-topright: 0px !important;
+  -moz-border-radius-bottomright: 0px !important;
+  border-top-right-radius: 0px !important;
+  border-bottom-right-radius: 0px !important;
+  border-right:1px solid #eeeeee !important;
+}
+.search_inner .search_cat select:hover {
+    background-color:#eeeee;
+    border-right:1px solid #eeeeee !important;
+}    
+.search_inner .search_cat select:focus {
+    background-color:#eee;
+    border-right:1px solid #70AEDD !important;
+}
+.search_inner .search_input {
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+}
+.search_inner.search_cat_mode .search_input input {
+  -webkit-border-top-left-radius: 0px !important;
+  -webkit-border-bottom-left-radius: 0px !important;
+  -moz-border-radius-topleft: 0px !important;
+  -moz-border-radius-bottomleft: 0px !important;
+  border-top-left-radius: 0px !important;
+  border-bottom-left-radius: 0px !important;
+}
+#search .search_inner input[type=text] {
+  padding-right:10px;
+  padding-left:10px;
+  -webkit-border-top-right-radius: 0px !important;
+  -webkit-border-bottom-right-radius: 0px !important;
+  -moz-border-radius-topright: 0px !important;
+  -moz-border-radius-bottomright: 0px !important;
+  border-top-right-radius: 0px !important;
+  border-bottom-right-radius: 0px !important;
+}
+#search .search_button input[type=image] {
+  vertical-align:top;
   width:76px;
   height:32px; 
 }
