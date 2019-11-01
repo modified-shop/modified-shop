@@ -180,7 +180,7 @@ table td {
   float:left;
 }
 #header #search {
-  width:230px;
+  width:260px;
   height:75px;
   float:right;
   color:#fff;
@@ -191,9 +191,42 @@ table td {
   font-size:11px;
   outline:none;
 }
+#header #search td {
+  vertical-align:top;
+}
+#quick_find .search_cat_mode input[type="text"] {
+  width: 140px;
+  height:20px;
+  border: 1px solid #666;
+  padding: 2px;
+  background: url(img/input_bg.gif) no-repeat;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+#quick_find input[type="text"] {
+  width: 205px;
+  height:20px;
+  border: 1px solid #666;
+  padding: 2px;
+  background: url(img/input_bg.gif) no-repeat;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+#quick_find select {
+  width: 60px;
+  height:20px;
+  border: 1px solid #666;
+  color:#555;
+  padding: 2px;
+  background: url(img/input_bg.gif) no-repeat;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
 #header td {
   padding-top:1px;
-  padding-right:4px;
 }
 /* BREADCRUMB PATH AS LIST */
 #breadcrumb {
@@ -1580,10 +1613,6 @@ margin:0px;
 }
 
 /* styles for boxes */
-#quick_find input[type="text"] {
-    width: 160px;
-}
-
 #currencies > select {
     width: 100%;
 }
