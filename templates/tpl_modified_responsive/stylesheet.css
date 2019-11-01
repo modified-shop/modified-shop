@@ -529,6 +529,12 @@ ul.topnavigation li .far {
   width:auto !important;
   max-width:300px !important;
 }
+.search_inner .search_cat .SumoSelect > .optWrapper > .options li.opt {
+  padding: 5px 6px;
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 400;
+}
 .search_inner .search_input {
   -webkit-box-flex: 1;
   -moz-box-flex: 1;
