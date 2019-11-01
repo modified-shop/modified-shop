@@ -505,7 +505,7 @@ ul.topnavigation li .far {
 }
 .search_inner .search_cat {
   position:relative;
-  z-index: 100000;
+  z-index: 1200;
   width:80px;
 }
 .search_inner .search_cat .SumoSelect > .CaptionCont {
@@ -4854,7 +4854,7 @@ ul.resp-tabs-list{
   width:400px;
   background:#e2e2e2;
   color:#333;
-  z-index:99999;
+  z-index:1100;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
