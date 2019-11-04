@@ -26,6 +26,10 @@
           'blacklist',
           'xajax',
           'fck_wrapper',
+          'safeterms',
+          'easymarketing',
+          'blz_update',
+          'start',
         ),
       ),
     ),
@@ -63,6 +67,7 @@
         ),
       ),
     ),
+    'content_manager_content' => array(),
     'countries' => array(
       'drop' => array(
         'idx' => array(
@@ -131,6 +136,7 @@
     ),
     'customers_status_history' => array(),
     'database_version' => array(),
+    'email_content' => array(),
     'geo_zones' => array(),
     'languages' => array(
       'drop' => array(
@@ -151,6 +157,7 @@
     'newsfeed' => array(),
     'module_newsletter' => array(),
     'newsletter_recipients' => array(),
+    'newsletter_recipients_history' => array(),
     'newsletters' => array(),
     'newsletters_history' => array(),
     'orders' => array(
