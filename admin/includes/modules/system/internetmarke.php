@@ -63,9 +63,13 @@
               case 'im_update':
                 $filename = DIR_FS_CATALOG.'cache/ppl.csv';
                 
-                $response = modified_api::request('internetmarke/ppl');
-                if ($response != null) {
-                  file_put_contents($filename, $response);
+                $response = modified_api::request('internetmarke/pplupdate');
+                if ($response != null && is_array($response) && isset($response['requestURL'])) {
+                  // include needed functions
+                  require_once (DIR_FS_INC.'get_external_content.inc.php');
+
+                  $ppl_file_content = get_external_content($response['requestURL'], 3, false);
+                  file_put_contents($filename, $ppl_file_content);
                 }
 
                 if (is_file($filename)) {
