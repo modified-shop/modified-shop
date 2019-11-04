@@ -75,7 +75,13 @@
         ),
       ),
     ),
-    'coupon_email_track' => array(),
+    'coupon_email_track' => array(
+      'drop' => array(
+        'idx' => array(
+          'idx_coupon_id',
+        ),
+      ),
+    ),
     'coupon_gv_customer' => array(
       'drop' => array(
         'idx' => array(
