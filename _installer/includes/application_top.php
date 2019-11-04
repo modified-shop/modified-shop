@@ -38,6 +38,9 @@
   if (is_file(DIR_FS_CATALOG.'includes/error_reporting.php')) {
     define('LOGGING_LEVEL', 'WARN');
     require_once (DIR_FS_CATALOG.'includes/error_reporting.php');
+
+    $LogLevel = 'WARNING';
+    $LoggingManager = new LoggingManager(DIR_FS_LOG.'mod_installer_%s_%s.log', 'modified', strtolower($LogLevel));
   }
 
   // Base/PHP_SELF/SSL-PROXY
