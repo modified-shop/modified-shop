@@ -126,7 +126,7 @@ body {
 
   #col_left {
     display: block;
-    padding:10px;
+    padding:10px 10px 300px 10px;
     background:#fafafa;
     width:280px;
   }
