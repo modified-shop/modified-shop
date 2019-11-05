@@ -511,6 +511,19 @@ class xtcPrice {
   }
   
   /**
+   * Returns a non rounded price
+   *
+   * @param Double $price price
+   * @param integer $decimal_places
+   * @return Double price non rounded
+   */
+  function xtcPriceCut($price, $decimal_places = 0) {
+    $decimal_places = ($decimal_places > 0) ? $decimal_places : $this->currencies[$this->actualCurr]['decimal_places'];
+
+    return substr($price, 0, strpos($price, '.') + 1 + $decimal_places);
+  }
+
+  /**
    * Check if the product has attributes which can modify the price
    * If so, it returns a prefix ' from '
    *
