@@ -168,6 +168,10 @@
   .subcat_image_inner:before { padding-top: 52%; }
   .pd_small_image_tab { width:20%; }
   .lb_image img { max-width: 100% !important; }
+  .listingcontainer, .listingcontainer_full, .listingcontainer_details { margin: 0px -5px 0px -5px; }
+  .listingbox { padding: 0px 5px; margin: 0px 0px 10px 0px; }
+  .listingbox .lb_tax { margin: 0 0 0 -10px; white-space:nowrap; }
+  .listingbox .special_price .small_price { position:absolute; top:5px; right:0px; font-size:8px; }
 }
 
 
@@ -190,4 +194,5 @@
   .listingcontainer_full .listingbox { width:100%;}
   .pd_tabs .listingbox { width:100%; }
   .pd_accordion .listingbox { width:100%; }
+  .listingbox .special_price .small_price { position:initial; font-size:10px; }
 }
