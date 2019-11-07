@@ -32,9 +32,9 @@
         {$ADR_checkbox} <strong><label for="address">{#text_accept_adr#}</label></strong>
       </div>
     {/if}
-    {if isset($PRIVACY_checkbox)}
+    {if isset($PRIVACY_LINK)}
       <div class="checkoutconditions">
-        {$PRIVACY_checkbox} <strong><label for="privacy">{#text_privacy_accept#}</label></strong>&nbsp;{$PRIVACY_LINK}
+        {if $PRIVACY_checkbox}{$PRIVACY_checkbox} {/if}<strong><label for="privacy">{#text_privacy_accept#}</label></strong>&nbsp;{$PRIVACY_LINK}
       </div>
     {/if}
     {if isset($REVOCATION_checkbox)}
@@ -63,19 +63,19 @@
     {if isset($AGB_checkbox)}
       <tr>
         <td>{$AGB_checkbox}</td>
-        <td width="100%" style="text-align:left;"><strong><label for="conditions">{#text_accept_agb#}</label></strong></td>
+        <td width="100%" style="text-align:left;"><strong><label for="conditions">{#text_accept_agb#}</label></strong>&nbsp;{$AGB_LINK}</td>
       </tr>
     {/if}
     {if isset($REVOCATION_checkbox)}
       <tr>
         <td>{$REVOCATION_checkbox}</td>
-        <td width="100%" style="text-align:left;"><strong><label for="revocation">{#text_accept_revocation#}</label></strong></td>
+        <td width="100%" style="text-align:left;"><strong><label for="revocation">{#text_accept_revocation#}</label></strong>&nbsp;{$REVOCATION_LINK}</td>
       </tr>
     {/if}
-    {if isset($PRIVACY_checkbox)}
+    {if isset($PRIVACY_LINK)}
       <tr>
-        <td>{$PRIVACY_checkbox}</td>
-        <td width="100%" style="text-align:left;"><strong><label for="privacy">{#text_privacy_accept#}</label></strong></td>
+        {if $PRIVACY_checkbox}<td>{$PRIVACY_checkbox}</td>{/if}
+        <td width="100%"{if !$PRIVACY_checkbox} colspan="2"{/if} style="text-align:left;"><strong><label for="privacy">{#text_privacy_accept#}</label></strong>&nbsp;{$PRIVACY_LINK}</td>
       </tr>
     {/if}
     {if isset($ADR_checkbox)}
