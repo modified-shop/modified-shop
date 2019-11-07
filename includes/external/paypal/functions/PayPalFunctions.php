@@ -150,4 +150,14 @@ if (!function_exists('decode_htmlentities')) {
   }
 }
 
+
+if (!function_exists('encode_htmlentities')) {
+  function encode_htmlentities ($string, $flags = ENT_COMPAT, $encoding = '') {
+    $supported_charsets = explode(',', strtoupper(ENCODE_DEFINED_CHARSETS));  
+    $default_charset = isset($_SESSION['language_charset']) && in_array(strtoupper($_SESSION['language_charset']), $supported_charsets) ? strtoupper($_SESSION['language_charset']) : ENCODE_DEFAULT_CHARSET;
+    $encoding = !empty($encoding) && in_array(strtoupper($encoding), $supported_charsets) ? strtoupper($encoding) : $default_charset;  
+    return htmlentities($string, $flags , $encoding);
+  }
+}
+
 ?>
