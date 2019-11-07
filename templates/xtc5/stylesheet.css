@@ -611,7 +611,10 @@ h2.boxcartheader a {
   padding:3px 15px 0 0;
 }
 .productPreviewImage img {
-  border:solid 0 #999;
+  border: solid 0 #999;
+  width: 160px;
+  height: auto;
+  vertical-align: top;
 }
 .productPreviewContent .price {
   font-size:16px;
@@ -683,6 +686,13 @@ h2.boxcartheader a {
 #productinfoimages .hrlightgrey {
   margin:6px 0;
 }
+#productinfowrap img.productimage {
+  width:230px;
+  height:auto;
+  vertical-align:top;
+}
+
+
 #productinfoprice {
   padding:5px;
 }
