@@ -20,7 +20,7 @@
 .SumoSelect:focus > .CaptionCont,.SumoSelect:focus > .CaptionCont { background-color:#FFFFFF; border-color: #659EC9; color: #333333; outline: 0 none !important;}
 .SumoSelect > .CaptionCont { background-color: #fafafa; border: 1px solid; border-color: #dddddd; color:#999; font-size: 13px; line-height: 19px; position: relative; min-height: 13px; margin:0; -webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius: 2px;-webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box}
 
-.SumoSelect > .CaptionCont > span { display: block; padding-right: 30px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;cursor:default;}
+.SumoSelect > .CaptionCont > span { display: block; padding-right: 20px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;cursor:default;}
 .SumoSelect > .CaptionCont > span.placeholder { color: #ccc; font-style: italic; }
 
 .SumoSelect > .CaptionCont > label { position: absolute; top: 0; right: 0; bottom: 0; width: 30px;}
