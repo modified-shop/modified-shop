@@ -26,6 +26,9 @@ if (isset($_GET['checkout']) && $_SESSION['payment'] == 'paypalplus') {
   require_once (DIR_WS_CLASSES . 'order.php');
   $order = new order();
 
+  require_once (DIR_WS_CLASSES . 'order_total.php');
+  $order_total_modules = new order_total();
+
   $selection = get_third_party_payments();
   $paypal = new PayPalPayment('paypalplus');
   
@@ -37,11 +40,17 @@ if (isset($_GET['checkout']) && $_SESSION['payment'] == 'paypalplus') {
   }
   if (!isset($credit_selection) || !is_array($credit_selection) || count($credit_selection) < 1) {
     for ($i = 0, $n = sizeof($selection); $i < $n; $i++) {
-      $description = $paypal->get_config(strtoupper($selection[$i]['id'].'_'.$_SESSION['language_code']));
+      $modul_description = $paypal->get_config(strtoupper($selection[$i]['id'].'_'.$_SESSION['language_code']));
+      
+      $description = ($modul_description != '') ? $modul_description : strip_tags($selection[$i]['description']);
+      if (isset($selection[$i]['module_cost'])) {
+        $description = sprintf($description, $selection[$i]['module_cost']);
+      }
+      
       $module[] = array(
         'redirectUrl' => $paypal->encode_utf8($paypal->link_encoding(xtc_href_link('callback/paypal/paypalplus_redirect.php', 'payment='.$selection[$i]['id'], 'SSL'))),
         'methodName' => $paypal->encode_utf8(strip_tags($selection[$i]['module'])),
-        'description' => $paypal->encode_utf8(($description != '') ? $description : strip_tags($selection[$i]['description'])),
+        'description' => $paypal->encode_utf8($description),
         'imageUrl' => $paypal->encode_utf8((isset($selection[$i]['icon']) && $selection[$i]['icon'] != '') ? $paypal->link_encoding(DIR_WS_BASE.$selection[$i]['icon']) : NULL),
       );
     }
