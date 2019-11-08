@@ -42,6 +42,7 @@ if (isset($_GET['checkout']) && $_SESSION['payment'] == 'paypalplus') {
         'redirectUrl' => $paypal->encode_utf8($paypal->link_encoding(xtc_href_link('callback/paypal/paypalplus_redirect.php', 'payment='.$selection[$i]['id'], 'SSL'))),
         'methodName' => $paypal->encode_utf8(strip_tags($selection[$i]['module'])),
         'description' => $paypal->encode_utf8(($description != '') ? $description : strip_tags($selection[$i]['description'])),
+        'imageUrl' => $paypal->encode_utf8((isset($selection[$i]['icon']) && $selection[$i]['icon'] != '') ? $paypal->link_encoding(DIR_WS_BASE.$selection[$i]['icon']) : NULL),
       );
     }
   }
