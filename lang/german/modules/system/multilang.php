@@ -10,7 +10,7 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  define('MODULE_MULTILANG_TEXT_TITLE', 'Spracherweiterung für SEO URL');
+  define('MODULE_MULTILANG_TEXT_TITLE', 'Spracherweiterung f&uuml;r SEO URL');
   define('MODULE_MULTILANG_TEXT_DESCRIPTION', 'Bei aktivierten SEO URL werden diese um den Sprachparameter erweitert');    
 
   define('MODULE_MULTILANG_STATUS_TITLE', 'Status');
