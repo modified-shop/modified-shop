@@ -3036,6 +3036,8 @@ ul.ord_total_list li {
   display: -ms-flexbox;
   display: -webkit-flex;
   display: flex;
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
 }
 .pd_infobox {
   order:1;
@@ -3581,6 +3583,8 @@ ul.pd_iconlist li.wishlist:before {
 /* 30. START product_options */
 .productoptions {
   margin: 15px 0px 0px 0px;
+  width:100%;
+  order:3;
 }
 /* multi & dropdown */
 .options_row_multi {
