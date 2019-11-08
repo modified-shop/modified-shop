@@ -36,9 +36,9 @@ define('MODULE_PAYMENT_MCP_EBANK2PAY_TEXT_INFO', '
 define('MODULE_PAYMENT_MCP_EBANK2PAY_STATUS_TITLE','Sofort.');
 define('MODULE_PAYMENT_MCP_EBANK2PAY_STATUS_DESC','Sofort. Modul von micropayment&trade;');
 define('MODULE_PAYMENT_MCP_EBANK2PAY_MINIMUM_AMOUNT_TITLE','Minimum Warenkorbwert');
-define('MODULE_PAYMENT_MCP_EBANK2PAY_MINIMUM_AMOUNT_DESC','Mindestwert des Warenkorbs für diese Bezahlmethode');
+define('MODULE_PAYMENT_MCP_EBANK2PAY_MINIMUM_AMOUNT_DESC','Mindestwert des Warenkorbs f&uuml;r diese Bezahlmethode');
 define('MODULE_PAYMENT_MCP_EBANK2PAY_MAXIMUM_AMOUNT_TITLE','Maximum Warenkorbwert');
-define('MODULE_PAYMENT_MCP_EBANK2PAY_MAXIMUM_AMOUNT_DESC','Maximalwert des Warenkorbs für diese Bezahlmethode');
+define('MODULE_PAYMENT_MCP_EBANK2PAY_MAXIMUM_AMOUNT_DESC','Maximalwert des Warenkorbs f&uuml;r diese Bezahlmethode');
 define('MODULE_PAYMENT_MCP_EBANK2PAY_SORT_ORDER_TITLE','Positionierung');
 define('MODULE_PAYMENT_MCP_EBANK2PAY_SORT_ORDER_DESC','Positionierung in der Bezahlmethodenauswahl');
 define('MODULE_PAYMENT_MCP_EBANK2PAY_ALLOWED_TITLE','L&auml;nderauswahl');

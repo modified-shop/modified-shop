@@ -19,5 +19,5 @@
   define('MODULE_PAYMENT_MASTERPAYMENT_RATENZAHLUNG_ICON_TITLE', 'Logo der Zahlungsart anzeigen?');
   define('MODULE_PAYMENT_MASTERPAYMENT_RATENZAHLUNG_ICON_DESC', 'Logo wird bei der Zahlarten&uuml;bersicht angezeigt.');
   define('MODULE_PAYMENT_MASTERPAYMENT_RATENZAHLUNG_TEXT_ERROR_HEADING', ''); 
-  define('MODULE_PAYMENT_MASTERPAYMENT_RATENZAHLUNG_TEXT_ERROR_MESSAGE', 'Die Zahlung per Ratenzahlung ist leider nicht möglich. Bitte wählen Sie ein andere Zahlungsweise.');
+  define('MODULE_PAYMENT_MASTERPAYMENT_RATENZAHLUNG_TEXT_ERROR_MESSAGE', 'Die Zahlung per Ratenzahlung ist leider nicht m&ouml;glich. Bitte w&auml;hlen Sie ein andere Zahlungsweise.');
 ?>

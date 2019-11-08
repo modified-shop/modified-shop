@@ -37,7 +37,7 @@ define('TEXT_REMOVE_LINK', 'Newsletter abmelden');
 
 // BOF - DokuMan - 2011-12-12 - Texts for Newsletter E-Mail send status
 define('INFO_NEWSLETTER_SEND', '%d Newsletter verschickt');
-define('INFO_NEWSLETTER_LEFT', '%d Newsletter übrig');
+define('INFO_NEWSLETTER_LEFT', '%d Newsletter &uuml;brig');
 // EOF - DokuMan - 2011-12-12 - Texts for Newsletter E-Mail send status
 
 define('TEXT_NEWSLETTER_INFO', '<strong>ACHTUNG:</strong> Zum Versenden von Newslettern wird die Verwendung von externen Programmen empfohlen!<br /><br />Falls das Newsletter Shop Modul benutzt wird, sollte beim Provider nachgefragt werden, wie viele Emails in einem bestimmten Zeitraum &uuml;berhaupt versendet werden d&uuml;rfen.<br />Bei vielen Providern gibt es Einschr&auml;nkungen, oder das Versenden ist nur &uuml;ber spezielle Emailserver erlaubt.<br /><br />Standardm&auml;&szlig;ig wird an den Newsletter die Signatur bereits angeh&auml;ngt. Wenn Sie die Signatur jedoch anders formatiert &uuml;ber den Editor einf&uuml;gen m&ouml;chten, dann f&uuml;gen Sie bitte an das Ende des Newsletters den Code [NOSIGNATUR] (inkl. eckiger Klammern) ein.');

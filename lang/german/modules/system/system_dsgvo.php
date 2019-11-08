@@ -22,5 +22,5 @@ define('TEXT_DSGVO_HEADING', 'Aktualisierung erforderlich');
 define('TEXT_DSGVO_DESCRIPTION', 'Neue gesetzliche Bestimmungen erfordern, dass wir eine erneute Zustimmung unserer Kunden f&uuml;r folgende Punkte einholen:');
 define('TEXT_DSGVO_ACCEPT_CONDITIONS', 'Ich akzeptiere %s');
 
-define('TEXT_DSGVO_ERROR', 'Sofern sie unsere neuen Datenschutzbestimmungen nicht akzeptieren, können sie bedauerlicherweise nicht fortfahren.');
+define('TEXT_DSGVO_ERROR', 'Sofern Sie unsere neuen Datenschutzbestimmungen nicht akzeptieren, k&ouml;nnen Sie bedauerlicherweise nicht fortfahren.');
 ?>

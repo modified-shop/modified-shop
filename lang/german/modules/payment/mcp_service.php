@@ -49,7 +49,7 @@ define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_CANCELLED_ID_TITLE',' Bestellsta
 define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_CANCELLED_ID_DESC','Wenn eine Bestellung storniert wird, wird dieser Status gesetzt');
 
 define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_REFUNDED_ID_TITLE',' Bestellstatus: Refunded');
-define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_REFUNDED_ID_DESC','Wenn ein Refund ausgelöst wird, wird dieser Status gesetzt');
+define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_REFUNDED_ID_DESC','Wenn ein Refund ausgel&ouml;st wird, wird dieser Status gesetzt');
 
 define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PAYMENT_REVIEW_ID_TITLE',' Bestellstatus: Bezahlung pr&uuml;fen');
 define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PAYMENT_REVIEW_ID_DESC','Bei problemen, wird dieser Status gesetzt, damit Sie dies pr&uuml;fen k&ouml;nnen.');
@@ -60,7 +60,7 @@ define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_CONFLICT_ID_DESC','Sollte es zu 
 define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PARTPAY_ID_TITLE',' Bestellstatus: Vorkasse - Teilzahlung');
 define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PARTPAY_ID_DESC','Wenn ein Zahlungseingang bei Vorkasse gemeldet wird, die Bestellung aber nicht voll bezahlt ist, wird dieser Status gesetzt.');
 
-define('MODULE_PAYMENT_MCP_SERVICE_REFUND_COMMENT','Ein Refund wurde ausgelöst.');
+define('MODULE_PAYMENT_MCP_SERVICE_REFUND_COMMENT','Ein Refund wurde ausgel&ouml;st.');
 define('MODULE_PAYMENT_MCP_SERVICE_SUCCESS_TRANSACTION','Die Bestellung wurde bezahlt. Der Auth-Code ist: %s');
 define('MODULE_PAYMENT_MCP_SERVICE_ERROR_TERMINATED','Die Anfrage ist ung&uuml;ltig.');
 define('MODULE_PAYMENT_MCP_SERVICE_ERROR_UNKNOWN_ORDER_ID','Die Bestellung existiert nicht');
