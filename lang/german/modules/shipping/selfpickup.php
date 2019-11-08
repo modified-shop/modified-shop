@@ -31,19 +31,19 @@ define('MODULE_SHIPPING_SELFPICKUP_STATUS_DESC', 'M&ouml;chten Sie Selbstabholun
 define('MODULE_SHIPPING_SELFPICKUP_SORT_ORDER_TITLE', 'Sortierreihenfolge');
 define('MODULE_SHIPPING_SELFPICKUP_SORT_ORDER_DESC', 'Reihenfolge der Anzeige');
 define('MODULE_SHIPPING_SELFPICKUP_COMPANY_TITLE', 'Firmenname');
-define('MODULE_SHIPPING_SELFPICKUP_COMPANY_DESC', 'Geben sie den Firmennamen an.');
+define('MODULE_SHIPPING_SELFPICKUP_COMPANY_DESC', 'Geben Sie den Firmennamen an.');
 define('MODULE_SHIPPING_SELFPICKUP_FIRSTNAME_TITLE', 'Vorname');
-define('MODULE_SHIPPING_SELFPICKUP_FIRSTNAME_DESC', 'Geben sie den Vornamen an.');
+define('MODULE_SHIPPING_SELFPICKUP_FIRSTNAME_DESC', 'Geben Sie den Vornamen an.');
 define('MODULE_SHIPPING_SELFPICKUP_LASTNAME_TITLE', 'Nachname');
-define('MODULE_SHIPPING_SELFPICKUP_LASTNAME_DESC', 'Geben sie den Nachnamen an.');
+define('MODULE_SHIPPING_SELFPICKUP_LASTNAME_DESC', 'Geben Sie den Nachnamen an.');
 define('MODULE_SHIPPING_SELFPICKUP_STREET_ADDRESS_TITLE', 'Stra&szlig;e/Nr.');
-define('MODULE_SHIPPING_SELFPICKUP_STREET_ADDRESS_DESC', 'Geben sie die Stra&szlig;e und Hausnummer an.');
+define('MODULE_SHIPPING_SELFPICKUP_STREET_ADDRESS_DESC', 'Geben Sie die Stra&szlig;e und Hausnummer an.');
 define('MODULE_SHIPPING_SELFPICKUP_SUBURB_TITLE', 'Adresszusatz');
-define('MODULE_SHIPPING_SELFPICKUP_SUBURB_DESC', 'Geben sie den Adresszusatz an.');
+define('MODULE_SHIPPING_SELFPICKUP_SUBURB_DESC', 'Geben Sie den Adresszusatz an.');
 define('MODULE_SHIPPING_SELFPICKUP_POSTCODE_TITLE', 'Postleitzahl');
-define('MODULE_SHIPPING_SELFPICKUP_POSTCODE_DESC', 'Geben sie die Postleitzahl an.');
+define('MODULE_SHIPPING_SELFPICKUP_POSTCODE_DESC', 'Geben Sie die Postleitzahl an.');
 define('MODULE_SHIPPING_SELFPICKUP_CITY_TITLE', 'Ort');
-define('MODULE_SHIPPING_SELFPICKUP_CITY_DESC', 'Geben sie den Ort an.');
+define('MODULE_SHIPPING_SELFPICKUP_CITY_DESC', 'Geben Sie den Ort an.');
 define('MODULE_SHIPPING_SELFPICKUP_COUNTRY_TITLE', 'Land');
-define('MODULE_SHIPPING_SELFPICKUP_COUNTRY_DESC', 'Geben sie das Land an.');
+define('MODULE_SHIPPING_SELFPICKUP_COUNTRY_DESC', 'Geben Sie das Land an.');
 ?>

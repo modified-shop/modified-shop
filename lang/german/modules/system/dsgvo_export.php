@@ -13,5 +13,5 @@
   define('MODULE_DSGVO_EXPORT_TEXT_TITLE', 'DSGVO Export');
   define('MODULE_DSGVO_EXPORT_TEXT_DESCRIPTION', 'XML Export aller gespeicherten Daten f&uuml;r einen Kunden.');
   define('MODULE_DSGVO_EXPORT_SEARCH_TITLE', '<b>Kundensuche</b><br/>');
-  define('MODULE_DSGVO_EXPORT_SEARCH_DESC', 'Geben sie die E-Mail Adresse des Kunden ein.');
+  define('MODULE_DSGVO_EXPORT_SEARCH_DESC', 'Geben Sie die E-Mail Adresse des Kunden ein.');
 ?>

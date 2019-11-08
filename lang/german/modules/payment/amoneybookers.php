@@ -62,7 +62,7 @@ define('MODULE_PAYMENT_AMONEYBOOKERS_STATUS_DESC', 'M&ouml;chten Sie Zahlungen p
 define('MODULE_PAYMENT_AMONEYBOOKERS_EMAILID_TITLE', 'Skrill E-Mail-Adresse');
 define('MODULE_PAYMENT_AMONEYBOOKERS_EMAILID_DESC', 'E-Mail-Adresse, die bei Skrill registriert ist. <br /><font color="#ff0000">* Erforderlich</font>');
 define('MODULE_PAYMENT_AMONEYBOOKERS_PWD_TITLE', 'Skrill Geheimwort');
-define('MODULE_PAYMENT_AMONEYBOOKERS_PWD_DESC', 'Geben Sie Ihr Skrill Geheimwort ein (dies ist nicht ihr Passwort!)');
+define('MODULE_PAYMENT_AMONEYBOOKERS_PWD_DESC', 'Geben Sie Ihr Skrill Geheimwort ein (dies ist nicht Ihr Passwort!)');
 define('MODULE_PAYMENT_AMONEYBOOKERS_MERCHANTID_TITLE', 'H&auml;ndler ID ');
 define('MODULE_PAYMENT_AMONEYBOOKERS_MERCHANTID_DESC', 'Ihre pers&ouml;nliche H&auml;ndler ID bei Skrill <br /><font color="#ff0000">* Erforderlich</font>');
 define('MODULE_PAYMENT_AMONEYBOOKERS_SORT_ORDER_TITLE', 'Anzeigereihenfolge');
