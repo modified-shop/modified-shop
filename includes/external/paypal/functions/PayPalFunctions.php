@@ -27,12 +27,18 @@ function get_third_party_payments() {
       $payment_modules = new payment();
 
       if (is_array($payment_modules->modules)) {
+        if (isset($GLOBALS['ot_payment']) && is_object($GLOBALS['ot_payment'])) {
+          $GLOBALS['ot_payment']->xtc_order_total();
+        }
         reset($payment_modules->modules);
         foreach ($payment_modules->modules as $value) {
           $class = substr($value, 0, strrpos($value, '.'));
           if (isset($GLOBALS[$class]) && $GLOBALS[$class]->enabled && in_array($class, $payment_allowed)) {
             $module_selection = $GLOBALS[$class]->selection();
             if (is_array($module_selection)) {
+              if (isset($GLOBALS['ot_payment']) && is_object($GLOBALS['ot_payment']) && !isset($module_selection['module_cost'])) {
+                $module_selection['module_cost'] = $GLOBALS['ot_payment']->get_module_cost($module_selection);
+              }
               $selection[] = $module_selection;
             }
           }
