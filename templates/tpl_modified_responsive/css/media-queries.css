@@ -8,6 +8,12 @@
 
 --------------------------------------------------------------------------------------- */
 
+@supports (-webkit-overflow-scrolling: touch) {
+  input, select { font-size: 16px; line-height:20px; height:35px; }
+  textarea { font-size: 16px; line-height:20px; }
+  .SumoSelect > .CaptionCont { font-size: 16px; line-height: 18px; height:35px; } 
+}
+
 @media only screen and (max-width: 1160px) {
   .lr_content { width: 72.5%; }
   .lr_desc_box { width: 60%; }
