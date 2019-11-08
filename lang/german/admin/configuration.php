@@ -795,7 +795,7 @@ define('MODULE_CAPTCHA_ACTIVE_DESC', 'F&uuml;r welche Shopsektionen soll das Cap
 define('MODULE_CAPTCHA_LOGGED_IN_TITLE', 'Angemeldete Kunden');
 define('MODULE_CAPTCHA_LOGGED_IN_DESC', 'Anzeige des Captcha f&uuml;r angemeldete Kunden.');
 define('CAPTCHA_MOD_CLASS_TITLE', 'Captcha Modul');
-define('CAPTCHA_MOD_CLASS_DESC', 'W&auml;hlen sie das zu verwendende Captcha Modul. Stellen sie sicher, dass das Modul auch installiert ist.');
+define('CAPTCHA_MOD_CLASS_DESC', 'W&auml;hlen Sie das zu verwendende Captcha Modul. Stellen Sie sicher, dass das Modul auch installiert ist.');
 define('CFG_TXT_MODIFIED_CAPTCHA', 'Standard');
 define('CFG_TXT_PHP_CAPTCHA', 'PhpCaptcha');
 
