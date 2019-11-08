@@ -688,6 +688,9 @@ textarea {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
   width:100%;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;  
 }
 select {
   font-family: 'Poppins', sans-serif;
@@ -706,6 +709,9 @@ select {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
   width:100%;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;  
 }  
 input[type=text], input[type=password], input[type=email], input[type=tel] {
   background-color:#fafafa;
@@ -723,6 +729,9 @@ input[type=text], input[type=password], input[type=email], input[type=tel] {
   box-sizing: border-box;
   width:100%;
   height:35px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;  
 }
 input[type=radio], input[type=checkbox] {
   margin: 0 3px;
