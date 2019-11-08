@@ -519,8 +519,8 @@ ul.topnavigation li .far {
   height:35px;
   border-right:1px solid #eeeeee !important;
 }
-.search_inner .search_cat .SumoSelect:focus > .CaptionCont,.SumoSelect:hover > .CaptionCont { border-right:1px solid #eeeeee !important; }
-.search_inner .search_cat .SumoSelect:focus > .CaptionCont,.SumoSelect:focus > .CaptionCont { border-right:1px solid #659eC9 !important; }
+.search_inner .search_cat .SumoSelect:focus > .CaptionCont { border-right:1px solid #eeeeee !important; }
+.search_inner .search_cat .SumoSelect:focus > .CaptionCont { border-right:1px solid #659eC9 !important; }
 
 .search_inner .SumoSelect > .CaptionCont > span {
   padding-right: 20px;
