@@ -37,9 +37,9 @@ define('MODULE_PAYMENT_MCP_DEBIT_TEXT_INFO', '
 define('MODULE_PAYMENT_MCP_DEBIT_STATUS_TITLE','Lastschrift');
 define('MODULE_PAYMENT_MCP_DEBIT_STATUS_DESC','Lastschriftmodul von micropayment&trade;');
 define('MODULE_PAYMENT_MCP_DEBIT_MINIMUM_AMOUNT_TITLE','Minimum Warenkorbwert');
-define('MODULE_PAYMENT_MCP_DEBIT_MINIMUM_AMOUNT_DESC','Mindestwert des Warenkorbs für diese Bezahlmethode');
+define('MODULE_PAYMENT_MCP_DEBIT_MINIMUM_AMOUNT_DESC','Mindestwert des Warenkorbs f&uuml;r diese Bezahlmethode');
 define('MODULE_PAYMENT_MCP_DEBIT_MAXIMUM_AMOUNT_TITLE','Maximum Warenkorbwert');
-define('MODULE_PAYMENT_MCP_DEBIT_MAXIMUM_AMOUNT_DESC','Maximalwert des Warenkorbs für diese Bezahlmethode');
+define('MODULE_PAYMENT_MCP_DEBIT_MAXIMUM_AMOUNT_DESC','Maximalwert des Warenkorbs f&uuml;r diese Bezahlmethode');
 define('MODULE_PAYMENT_MCP_DEBIT_SORT_ORDER_TITLE','Positionierung');
 define('MODULE_PAYMENT_MCP_DEBIT_SORT_ORDER_DESC','Positionierung in der Bezahlmethodenauswahl');
 define('MODULE_PAYMENT_MCP_DEBIT_ALLOWED_TITLE','L&auml;nderauswahl');

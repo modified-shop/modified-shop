@@ -87,7 +87,7 @@ define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_NAME', '* Bitte geben Sie den Namen de
 
 define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_EULA', '* Bitte akzeptieren Sie die BillPay AGB!');
 define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_DOB', '* Bitte geben Sie Ihr Geburtsdatum ein.');
-define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_DOB_UNDER', 'Sie müssen über 18 Jahre alt zu BillPay nutzen.');
+define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_DOB_UNDER', 'Sie m&uuml;ssen &uuml;ber 18 Jahre alt zu BillPay nutzen.');
 define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_DEFAULT', 'Es ist ein interner Fehler aufgetreten. Bitte w&auml;len Sie eine andere Zahlart');
 define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_SHORT', 'Es ist ein interner Fehler aufgetreten!');
 define('MODULE_PAYMENT_BILLPAY_TEXT_INVOICE_CREATED_COMMENT', 'Das Zahlungsziel der Bestellung wurde erfolgreich bei BillPay gestartet.');
@@ -131,7 +131,7 @@ define('MODULE_PAYMENT_BILLPAY_B2BCONFIG_DESC', 'Wollen Sie die Zahlart f&uuml;r
 define('MODULE_PAYMENT_BILLPAY_B2B_COMPANY_NAME_TEXT', 'Firmenname');
 define('MODULE_PAYMENT_BILLPAY_B2B_COMPANY_LEGAL_FORM_TEXT', 'Rechtsform');
 define('MODULE_PAYMENT_BILLPAY_B2B_COMPANY_LEGAL_FORM_SELECT_HTML', "");
-define('MODULE_PAYMENT_BILLPAY_B2B_LEGALFORM_VALUES', 'ag:AG (Aktiengesellschaft)|eg:eG (eingetragene Genossenschaft)|ek:EK (eingetragener Kaufmann)|ev:e.V. (eingetragener Verein)|freelancer:Freiberufler/Kleingewerbetreibender/Handelsvertreter|gbr:GbR/BGB (Gesellschaft b&uuml;rgerlichen Rechts)|gmbh:GmbH (Gesellschaft mit beschr&auml;nkter Haftung)|gmbh_ig:GmbH in Gr&uuml;ndung|gmbh_co_kg:GmbH & Co. KG|kg:KG (Kommanditgesellschaft)|ltd:Limited|ltd_co_kg:Limited & Co. KG|ohg:OHG (offene Handelsgesellschaft)|public_inst:&Ouml;ffentliche Einrichtung|misc_capital:Sonstige Kapitalgesellschaft|misc:Sonstige Personengesellschaft|foundation:Stiftung|ug:UG (Unternehmensgesellschaft haftungsbeschr&auml;nkt)');
+define('MODULE_PAYMENT_BILLPAY_B2B_LEGALFORM_VALUES', 'ag:AG (Aktiengesellschaft)|eg:eG (eingetragene Genossenschaft)|ek:EK (eingetragener Kaufmann)|ev:e.V. (eingetragener Verein)|freelancer:Freiberufler/Kleingewerbetreibender/Handelsvertreter|gbr:GbR/BGB (Gesellschaft b&uuml;rgerlichen Rechts)|gmbh:GmbH (Gesellschaft mit beschr&auml;nkter Haftung)|gmbh_ig:GmbH in Gr&uuml;ndung|gmbh_co_kg:GmbH &amp; Co. KG|kg:KG (Kommanditgesellschaft)|ltd:Limited|ltd_co_kg:Limited &amp; Co. KG|ohg:OHG (offene Handelsgesellschaft)|public_inst:&Ouml;ffentliche Einrichtung|misc_capital:Sonstige Kapitalgesellschaft|misc:Sonstige Personengesellschaft|foundation:Stiftung|ug:UG (Unternehmensgesellschaft haftungsbeschr&auml;nkt)');
 define('MODULE_PAYMENT_BILLPAY_B2B_REGISTER_NUMBER_TEXT', 'Handelsregisternummer');
 define('MODULE_PAYMENT_BILLPAY_B2B_TAX_NUMBER_TEXT', 'Umsatzsteuer-ID');
 define('MODULE_PAYMENT_BILLPAY_B2B_HOLDER_NAME_TEXT', 'Name des Inhabers');
@@ -225,7 +225,7 @@ define('MODULE_PAYMENT_BILLPAY_SALUTATION_MALE', 'Herr');
 define('MODULE_PAYMENT_BILLPAY_SALUTATION_FEMALE', 'Frau');
 
 define('MODULE_PAYMENT_BILLPAY_TEXT_SEPA_INFORMATION',    "Die Gl&auml;ubiger-Identifikationsnummer von BillPay ist DE19ZZZ00000237180. Die Mandatsreferenznummer wird mir zu einem sp&auml;teren Zeitpunkt per Email zusammen mit einer Vorlage f&uuml;r ein schriftliches Mandat mitgeteilt. Ich werde zus&auml;tzlich dieses schriftliche Mandat unterschreiben und an BillPay senden.<br/><br/>Hinweis: Ich kann innerhalb von acht Wochen, beginnend mit dem Belastungsdatum, die Erstattung des belasteten Betrages verlangen. Es gelten dabei die mit meinem Geldinstitut vereinbarten Bedingungen. Bitte beachten Sie, dass die f&auml;llige Forderung auch bei einer R&uuml;cklastschrift bestehen bleibt. For more information visit <a href='https://www.billpay.de/sepa' target='_blank'>https://www.billpay.de/sepa</a>.");
-define('MODULE_PAYMENT_BILLPAY_TEXT_SEPA_INFORMATION_AT', "Die Gl&auml;ubiger-Identifikationsnummer von BillPay ist DE19ZZZ00000237180, die Gl&auml;ubiger-Identifikationsnummer der net-m privatbank AG ist DE62ZZZ00000009232. Die Mandatsreferenznummer wird mir zu einem späteren Zeitpunkt per Email zusammen mit einer Vorlage f&uuml;r ein schriftliches Mandat mitgeteilt. Ich werde zus&auml;tzlich dieses schriftliche Mandat unterschreiben und an BillPay senden.<br/><br/>Hinweis: Ich kann innerhalb von acht Wochen, beginnend mit dem Belastungsdatum, die Erstattung des belasteten Betrages verlangen. Es gelten dabei die mit meinem Geldinstitut vereinbarten Bedingungen. Bitte beachten Sie, dass die f&auml;llige Forderung auch bei einer R&uuml;cklastschrift bestehen bleibt. F&uuml;r weitere Informationen besuchen <a href='https://www.billpay.de/sepa' target='_blank'>https://www.billpay.de/sepa</a>.");
+define('MODULE_PAYMENT_BILLPAY_TEXT_SEPA_INFORMATION_AT', "Die Gl&auml;ubiger-Identifikationsnummer von BillPay ist DE19ZZZ00000237180, die Gl&auml;ubiger-Identifikationsnummer der net-m privatbank AG ist DE62ZZZ00000009232. Die Mandatsreferenznummer wird mir zu einem sp&auml;teren Zeitpunkt per Email zusammen mit einer Vorlage f&uuml;r ein schriftliches Mandat mitgeteilt. Ich werde zus&auml;tzlich dieses schriftliche Mandat unterschreiben und an BillPay senden.<br/><br/>Hinweis: Ich kann innerhalb von acht Wochen, beginnend mit dem Belastungsdatum, die Erstattung des belasteten Betrages verlangen. Es gelten dabei die mit meinem Geldinstitut vereinbarten Bedingungen. Bitte beachten Sie, dass die f&auml;llige Forderung auch bei einer R&uuml;cklastschrift bestehen bleibt. F&uuml;r weitere Informationen besuchen <a href='https://www.billpay.de/sepa' target='_blank'>https://www.billpay.de/sepa</a>.");
 
 // Plugin 1.7
 define('MODULE_PAYMENT_BILLPAY_THANK_YOU_TEXT', 'Vielen Dank, dass Sie sich beim Kauf der Ware f&uuml;r die BillPay Rechnung entschieden haben.');
@@ -238,4 +238,4 @@ define('MODULE_PAYMENT_BILLPAY_TEXT_IBAN_CH', 'Kontonummer');
 define('MODULE_PAYMENT_BILLPAY_TEXT_BIC_CH', 'BC-Nummer');
 define('MODULE_PAYMENT_BILLPAY_TEXT_BANK', 'Kreditinstitut');
 define('MODULE_PAYMENT_BILLPAY_TEXT_TOTAL_AMOUNT', 'Betrag');
-define('MODULE_PAYMENT_BILLPAY_UPDATE_AVAILABLE', 'Version %2s$ des BillPay Zahlarten Plugins ist verfügbar (aktuell installiert: %1s$). Klicken Sie <a href="%3s$">hier</a> zum Download.');
+define('MODULE_PAYMENT_BILLPAY_UPDATE_AVAILABLE', 'Version %2s$ des BillPay Zahlarten Plugins ist verf&uuml;gbar (aktuell installiert: %1s$). Klicken Sie <a href="%3s$">hier</a> zum Download.');

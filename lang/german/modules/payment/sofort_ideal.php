@@ -37,7 +37,7 @@ define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_DESCRIPTION_CHECKOUT_PAYMENT_TEXT',
     <li>Dienstleistungen/Waren werden bei Verf&uuml;gbarkeit SOFORT geliefert bzw. versendet</li>
   </ul>');
 
-define('MODULE_PAYMENT_'.$sofort_code.'_SELECTBOX', 'Bitte wählen Sie Ihre Bank aus');
+define('MODULE_PAYMENT_'.$sofort_code.'_SELECTBOX', 'Bitte w&auml;hlen Sie Ihre Bank aus');
 
 // admin
 define('MODULE_PAYMENT_'.$sofort_code.'_STATUS_TITLE', 'iDeal Modul aktivieren');
