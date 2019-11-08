@@ -64,7 +64,7 @@
       <th>{#text_hint#}</th>
     </tr>
   </table>
-  {if isset($smarty.const.SIGN_CONDITIONS_ON_CHECKOUT)}
+  {if defined($smarty.const.SIGN_CONDITIONS_ON_CHECKOUT)}
     <table width="100%" border="0" cellspacing="0" cellpadding="4">
       <tr>
         {if $PRIVACY_CHECKBOX}<td>{$PRIVACY_CHECKBOX}</td>{/if}
