@@ -20,7 +20,7 @@
     </div>
     <div class="checkoutconditions" style="padding: 10px 0px;">
       {if isset($ADR_checkbox)}{$ADR_checkbox} <strong><label for="address">{#text_accept_adr#}</label></strong><br/>{/if}
-      {if isset($smarty.const.SIGN_CONDITIONS_ON_CHECKOUT)}
+      {if defined($smarty.const.SIGN_CONDITIONS_ON_CHECKOUT)}
         {if $smarty.const.SIGN_CONDITIONS_ON_CHECKOUT == 'true'}{$AGB_checkbox} {/if}<strong><label for="conditions">{#text_accept_agb#}</label></strong>&nbsp;{$AGB_LINK}<br/>
       {else}
         {$AGB_checkbox} <strong><label for="conditions">{#text_accept_agb#}</label></strong>&nbsp;{$AGB_LINK}<br/>
@@ -66,7 +66,7 @@
     <p class="checkoutagb" style="text-align:left;">{$AGB}</p>
     <table width="100%" border="0" cellspacing="0" cellpadding="4">
       <tr>
-      {if isset($smarty.const.SIGN_CONDITIONS_ON_CHECKOUT)}
+      {if defined($smarty.const.SIGN_CONDITIONS_ON_CHECKOUT)}
         {if $smarty.const.SIGN_CONDITIONS_ON_CHECKOUT == 'true'}<td>{$AGB_checkbox}</td>{/if}
         <td width="100%"{if $smarty.const.SIGN_CONDITIONS_ON_CHECKOUT == 'false'} colspan="2"{/if} style="text-align:left;"><strong><label for="conditions">{#text_accept_agb#}</label></strong>&nbsp;{$AGB_LINK}</td>
       {else}
