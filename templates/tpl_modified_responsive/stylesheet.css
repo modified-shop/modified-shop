@@ -4503,6 +4503,7 @@ ul.historylist li.first {
 }
 .hl_price .item_price {
   display:block;
+  font-size:11px;
 }
 /* END Last viewed in account */
 
