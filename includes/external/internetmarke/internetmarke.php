@@ -61,14 +61,14 @@
       $price = xtc_db_fetch_array($price_query);
       
       $sender = new \Internetmarke\NamedAddress(
-          new \Internetmarke\Name(null, new \Internetmarke\CompanyName(MODULE_INTERNETMARKE_COMPANY, new \Internetmarke\PersonName('', '', MODULE_INTERNETMARKE_FIRSTNAME, MODULE_INTERNETMARKE_LASTNAME))),
-          new \Internetmarke\Address(MODULE_INTERNETMARKE_SUBURB, MODULE_INTERNETMARKE_STREET, '', MODULE_INTERNETMARKE_PLZ, MODULE_INTERNETMARKE_CITY, 'Country')
+          new \Internetmarke\Name(null, new \Internetmarke\CompanyName($this->encode_utf8(MODULE_INTERNETMARKE_COMPANY), new \Internetmarke\PersonName('', '', $this->encode_utf8(MODULE_INTERNETMARKE_FIRSTNAME), $this->encode_utf8(MODULE_INTERNETMARKE_LASTNAME)))),
+          new \Internetmarke\Address($this->encode_utf8(MODULE_INTERNETMARKE_SUBURB), $this->encode_utf8(MODULE_INTERNETMARKE_STREET), '', $this->encode_utf8(MODULE_INTERNETMARKE_PLZ), $this->encode_utf8(MODULE_INTERNETMARKE_CITY), 'Country')
       );
       
-      $person = new \Internetmarke\PersonName('', '', $this->order->delivery['firstname'], $this->order->delivery['lastname']);
+      $person = new \Internetmarke\PersonName('', '', $this->encode_utf8($this->order->delivery['firstname']), $this->encode_utf8($this->order->delivery['lastname']));
       $receiver = new \Internetmarke\NamedAddress(
-          new \Internetmarke\Name((($this->order->delivery['company'] == '') ? $person : null), (($this->order->delivery['company'] != '') ? new \Internetmarke\CompanyName($this->order->delivery['company'], $person) : null)),
-          new \Internetmarke\Address($this->order->delivery['suburb'], $this->order->delivery['street_address'], '', $this->order->delivery['postcode'], $this->order->delivery['city'], $this->get_country_iso_3($this->order->delivery['country_iso_2']))
+          new \Internetmarke\Name((($this->order->delivery['company'] == '') ? $person : null), (($this->order->delivery['company'] != '') ? new \Internetmarke\CompanyName($this->encode_utf8($this->order->delivery['company']), $person) : null)),
+          new \Internetmarke\Address($this->encode_utf8($this->order->delivery['suburb']), $this->encode_utf8($this->order->delivery['street_address']), '', $this->encode_utf8($this->order->delivery['postcode']), $this->encode_utf8($this->order->delivery['city']), $this->get_country_iso_3($this->order->delivery['country_iso_2']))
       );
       
       $address_binding = new \Internetmarke\AddressBinding($sender, $receiver);
@@ -158,6 +158,25 @@
       return $country_iso_2;
     }
     
+
+    function encode_utf8($string) {
+      if (is_array($string)) {
+        foreach ($string as $key => $value) {
+          $string[$key] = $this->encode_utf8($value);
+        }
+      } else {
+        $string = decode_htmlentities($string);
+        $cur_encoding = mb_detect_encoding($string);
+        if ($cur_encoding == "UTF-8" && mb_check_encoding($string, "UTF-8")) {
+          return $string;
+        } else {
+          return mb_convert_encoding($string, "UTF-8", $_SESSION['language_charset']);
+        }
+      }
+    
+      return $string;  
+    }
+
     
     function getError() {
       return $this->error;
