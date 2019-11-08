@@ -234,7 +234,8 @@ CREATE TABLE carriers (
   carrier_sort_order INT(11) NOT NULL,
   carrier_date_added DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
   carrier_last_modified DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (carrier_id)
+  PRIMARY KEY (carrier_id),
+  UNIQUE idx_carrier_name (carrier_name)
 );
 
 DROP TABLE IF EXISTS categories;

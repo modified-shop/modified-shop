@@ -231,4 +231,7 @@ ALTER TABLE admin_access DROP blz_update;
 #GTB - 2019-10-30 - removed start
 ALTER TABLE admin_access DROP `start`;
 
+#GTB - 2019-11-08 - add unique index
+ALTER TABLE `carriers` ADD UNIQUE KEY `idx_carrier_name` (`carrier_name`);
+
 # Keep an empty line at the end of this file for the db_updater to work properly
