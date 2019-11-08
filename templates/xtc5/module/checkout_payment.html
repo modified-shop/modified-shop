@@ -53,20 +53,20 @@
       {/if}
     </table>
   {else}
-    {if isset($PRIVACY_checkbox)}
+    {if isset($PRIVACY_LINK) || isset($REVOCATION_checkbox)}
       <table width="100%" border="0" cellspacing="0" cellpadding="4">
+        {if isset($PRIVACY_LINK)}
         <tr>
-          <td>{$PRIVACY_checkbox}</td>
-          <td width="100%"><strong><label for="privacy">{#text_privacy_accept#}</label></strong>&nbsp;{$PRIVACY_LINK}</td>
+          {if $PRIVACY_checkbox}<td>{$PRIVACY_checkbox}</td>{/if}
+          <td width="100%"{if !$PRIVACY_checkbox} colspan="2"{/if}><strong><label for="privacy">{if $PRIVACY_checkbox}{#text_privacy_accept#}{else}{#text_privacy_notice#}{/if}</label></strong>&nbsp;{$PRIVACY_LINK}</td>
         </tr>
-      </table>
-    {/if}
-    {if isset($REVOCATION_checkbox)}
-      <table width="100%" border="0" cellspacing="0" cellpadding="4">
+        {/if}
+        {if isset($REVOCATION_checkbox)}
         <tr>
           <td>{$REVOCATION_checkbox}</td>
           <td width="100%"><strong><label for="revocation">{#text_accept_revocation#}</label></strong>&nbsp;{$REVOCATION_LINK}</td>
         </tr>
+        {/if}
       </table>
     {/if}
   {/if}
