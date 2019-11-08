@@ -4494,6 +4494,12 @@ ul.historylist li.first {
   font-weight:normal;
   line-height:11px;
 }
+.hl_price .graduated_price {
+  display:block;
+}
+.hl_price .item_price {
+  display:block;
+}
 /* END Last viewed in account */
 
 
