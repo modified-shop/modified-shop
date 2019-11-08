@@ -521,7 +521,7 @@
                           'shipping_method' => isset($_SESSION['shipping']) && is_array($_SESSION['shipping']) ? $_SESSION['shipping']['title'] : '',
                           'shipping_cost' => isset($_SESSION['shipping']) && is_array($_SESSION['shipping']) ? $_SESSION['shipping']['cost'] : 0,
                           'comments' => isset($_SESSION['comments']) ? $_SESSION['comments'] : '',
-                          'shipping_class' => isset($_SESSION['shipping']) && is_array($_SESSION['shipping']) ? $_SESSION['shipping']['id'] : '',
+                          'shipping_class' => isset($_SESSION['shipping']) && is_array($_SESSION['shipping']) && array_key_exists('id', $_SESSION['shipping']) ? $_SESSION['shipping']['id'] : '',
                           'payment_class' => isset($_SESSION['payment']) ? $_SESSION['payment'] : '',
                           'subtotal' => 0,
                           'tax' => 0,

@@ -387,12 +387,19 @@ class ot_coupon {
   function get_shipping_cost() {
     global $order, $xtPrice;
 
-    $shipping_module = substr($_SESSION['shipping']['id'], 0, strpos($_SESSION['shipping']['id'], '_'));
+    $shipping_module = '';
+    if (isset($_SESSION['shipping']) 
+        && is_array($_SESSION['shipping'])
+        && array_key_exists('id', $_SESSION['shipping'])
+        )
+    {
+      $shipping_module = substr($_SESSION['shipping']['id'], 0, strpos($_SESSION['shipping']['id'], '_'));
+    }    
     $shipping_cost = $order->info['shipping_cost'];
 
     if ($shipping_cost > 0) {
       //Steuergruppe feststellen und setzen
-      $shipping_tax_class = constant('MODULE_SHIPPING_'.strtoupper($shipping_module).'_TAX_CLASS');
+      $shipping_tax_class = ((defined('MODULE_SHIPPING_'.strtoupper($shipping_module).'_TAX_CLASS')) ? constant('MODULE_SHIPPING_'.strtoupper($shipping_module).'_TAX_CLASS') : 0);
       $shipping_tax_rate_description = xtc_get_tax_description($shipping_tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
       $tax_index = $this->set_tax_group_index($shipping_tax_rate_description);
 

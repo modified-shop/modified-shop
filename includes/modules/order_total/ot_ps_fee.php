@@ -67,7 +67,12 @@
 				$count = xtc_db_fetch_array($count_query);
 
         //check if payment method is ps. If yes, check if ps is possible.
-        if (isset($_SESSION['shipping']['id']) && $count['count'] > 0) {
+        if (isset($_SESSION['shipping']) 
+            && is_array($_SESSION['shipping'])
+            && array_key_exists('id', $_SESSION['shipping'])
+            && $count['count'] > 0
+            )
+        {
           //process installed shipping modules
           $shipping_code = strtoupper(array_shift(explode('_',$_SESSION['shipping']['id'])));
           $shipping_code = ($shipping_code == 'FREEAMOUNT') ? 'FREEAMOUNT_FREE' : 'FEE_' . $shipping_code;
@@ -84,8 +89,6 @@
             }
             $i++;
           }
-        } else {
-          //PS selected, but no shipping module which offers PS
         }
         
         if ($ps_country) {
@@ -126,12 +129,6 @@
           $this->output[] = array('title' => $this->title . ':',
                                   'text' => $ps_cost,
                                   'value' => $ps_cost_value);
-        } else {
-//Following pse should be improved if we can't get the shipping modules disabled, who don't allow PS
-// as well as countries who do not have ps
-//          $this->output[] = array('title' => $this->title . ':',
-//                                  'text' => 'No PS for this module.',
-//                                  'value' => '');
         }
       }
     }

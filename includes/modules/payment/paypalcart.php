@@ -195,7 +195,9 @@ class paypalcart extends PayPalPayment {
       $shipping_found = false;
       for ($i = 0, $n = sizeof($quotes); $i < $n; $i ++) {
         for ($j = 0, $n2 = sizeof($quotes[$i]['methods']); $j < $n2; $j ++) {
-          if (isset($_SESSION['shipping']['id']) 
+          if (isset($_SESSION['shipping']) 
+              && is_array($_SESSION['shipping']) 
+              && array_key_exists('id', $_SESSION['shipping'])
               && $quotes[$i]['id'].'_'.$quotes[$i]['methods'][$j]['id'] == $_SESSION['shipping']['id']
               )
           {

@@ -60,7 +60,9 @@
         //check if payment method is cod. If yes, check if cod is possible.
         if (isset($_SESSION['payment']) 
             && $_SESSION['payment'] == 'cod' 
-            && isset($_SESSION['shipping']['id'])
+            && isset($_SESSION['shipping']) 
+            && is_array($_SESSION['shipping']) 
+            && array_key_exists('id', $_SESSION['shipping'])
             ) 
         {
           //process installed shipping modules

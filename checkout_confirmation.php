@@ -222,7 +222,11 @@ if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS 
                             'checkout_payment' => $_SESSION['payment'],
                             'checkout_payment_address' => $_SESSION['billto'],
                             );
-    if (isset($_SESSION['shipping']['id'])) {
+    if (isset($_SESSION['shipping']) 
+        && is_array($_SESSION['shipping'])
+        && array_key_exists('id', $_SESSION['shipping'])
+        )
+    {
       $sql_data_array['checkout_shipping'] = $_SESSION['shipping']['id'];
     }
     if (xtc_db_num_rows($check_query) < 1) {

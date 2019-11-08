@@ -85,75 +85,75 @@ class cod {
   }
 
   function selection() {
-    global $xtPrice,$order;
+    global $xtPrice, $order;
 
-      // limit sum where cod allowed
-      if($this->limit_subtotal && ($xtPrice->xtcRemoveCurr($_SESSION['cart']->show_total()) >= $this->limit_subtotal)) {
+    // limit sum where cod allowed
+    if($this->limit_subtotal && ($xtPrice->xtcRemoveCurr($_SESSION['cart']->show_total()) >= $this->limit_subtotal)) {
+      return;
+    }
+    
+    $cod_country = false;
+
+    if (MODULE_ORDER_TOTAL_COD_FEE_STATUS == 'true') {
+      //process installed shipping modules
+      $shipping_code = '';
+      if (isset($_SESSION['shipping']) 
+          && is_array($_SESSION['shipping'])
+          && array_key_exists('id', $_SESSION['shipping'])
+          )
+      {
+        $shipping_array = explode('_', $_SESSION['shipping']['id']);
+        $shipping_code = strtoupper(array_shift($shipping_array));
+      }
+      $shipping_code = (isset($shipping_code) && $shipping_code == 'FREEAMOUNT') ? 'FREEAMOUNT_FREE' : 'FEE_' . $shipping_code;
+
+      $cod_zones = array();
+      if (defined('MODULE_ORDER_TOTAL_COD_'. $shipping_code)) {
+        $cod_zones = preg_split("/[:,]/", constant('MODULE_ORDER_TOTAL_COD_'. $shipping_code));
+      }
+      // dont't show cod on checkout_payment when shipping module doesn't offer cod
+      if (count($cod_zones) == 0 || (!in_array(($order->delivery['country']['iso_code_2']), $cod_zones) && !in_array('00', $cod_zones))) {
         return;
       }
-      
-      if (MODULE_ORDER_TOTAL_COD_FEE_STATUS == 'true') {
 
-        $cod_country = false;
-        $cod_zones = array(); // added variable
-
-        //process installed shipping modules
-        $shipping_code = '';
-        if (isset($_SESSION['shipping']['id'])) {
-          $shipping_array = explode('_', $_SESSION['shipping']['id']);
-          $shipping_code = strtoupper(array_shift($shipping_array));
-        }
-        $shipping_code = (isset($shipping_code) && $shipping_code == 'FREEAMOUNT') ? 'FREEAMOUNT_FREE' : 'FEE_' . $shipping_code;
-
-        $cod_zones = array();
-        if (defined('MODULE_ORDER_TOTAL_COD_'. $shipping_code)) {
-          $cod_zones = preg_split("/[:,]/", constant('MODULE_ORDER_TOTAL_COD_'. $shipping_code));
-        }
-        // dont't show cod on checkout_payment when shipping module doesn't offer cod
-        if (count($cod_zones) == 0 || (!in_array(($order->delivery['country']['iso_code_2']), $cod_zones) && !in_array('00', $cod_zones))) {
-          return;
-        }
-
-        for ($i = 0; $i < count($cod_zones); $i++) {
-          if ($cod_zones[$i] == $order->delivery['country']['iso_code_2'] || $cod_zones[$i] == '00') {
-            $cod_cost = $cod_zones[$i + 1];
-            if ($cod_cost == '') {
-              return;
-            }
-            $cod_country = true;
-            break;
+      for ($i = 0; $i < count($cod_zones); $i++) {
+        if ($cod_zones[$i] == $order->delivery['country']['iso_code_2'] || $cod_zones[$i] == '00') {
+          $cod_cost = $cod_zones[$i + 1];
+          if ($cod_cost == '') {
+            return;
           }
-          $i++;
+          $cod_country = true;
+          break;
         }
-      } else {
-        //COD selected, but no shipping module which offers COD
+        $i++;
       }
 
       if ($cod_country) {
         $cod_cost = $xtPrice->xtcCalculateCurr($cod_cost);
         $cod_tax = xtc_get_tax_rate(MODULE_ORDER_TOTAL_COD_FEE_TAX_CLASS, $order->delivery['country']['id'], $order->delivery['zone_id']);
         $cod_tax_description = xtc_get_tax_description(MODULE_ORDER_TOTAL_COD_FEE_TAX_CLASS, $order->delivery['country']['id'], $order->delivery['zone_id']);
-        
+      
         if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1) {
-            $cod_cost_value= xtc_add_tax($cod_cost, $cod_tax);
-            $cod_cost= $xtPrice->xtcFormat($cod_cost_value,true);
+          $cod_cost_value= xtc_add_tax($cod_cost, $cod_tax);
+          $cod_cost= $xtPrice->xtcFormat($cod_cost_value,true);
         }
         if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1) {
-            $cod_cost_value=$cod_cost;
-            $cod_cost= $xtPrice->xtcFormat($cod_cost,true);
+          $cod_cost_value=$cod_cost;
+          $cod_cost= $xtPrice->xtcFormat($cod_cost,true);
         }
         if (!$cod_cost_value) {
-            $cod_cost_value=$cod_cost;
-            $cod_cost= $xtPrice->xtcFormat($cod_cost,true);
+          $cod_cost_value=$cod_cost;
+          $cod_cost= $xtPrice->xtcFormat($cod_cost,true);
         }
         $this->cost = '+ '.$cod_cost;
       }
-      
-      return array ('id' => $this->code,
-                    'module' => $this->title,
-                    'description' => $this->info,
-                    'module_cost'=>$this->cost
-                   );
+    }
+    
+    return array ('id' => $this->code,
+                  'module' => $this->title,
+                  'description' => $this->info,
+                  'module_cost' => $this->cost
+                 );
   }
 
   function pre_confirmation_check() {
