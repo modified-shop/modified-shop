@@ -130,7 +130,7 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
 
 	if ($email_address != $confirm_email_address) {
    		$error = true;    
-   		$messageStack->add('create_account', ENTRY_EMAIL_ERROR_NOT_MATCHING);
+   		$messageStack->add('account_edit', ENTRY_EMAIL_ERROR_NOT_MATCHING);
 	}
   
   if (ACCOUNT_TELEPHONE_OPTIONAL == 'false' && strlen($telephone) < ENTRY_TELEPHONE_MIN_LENGTH) {
@@ -175,6 +175,12 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
 		xtc_db_query("UPDATE ".TABLE_CUSTOMERS_INFO." 
 		                 SET customers_info_date_account_last_modified = now() 
 		               WHERE customers_info_id = '".(int) $_SESSION['customer_id']."'");
+
+    $_SESSION['customer_gender'] = ACCOUNT_GENDER == 'true' ? $gender : '';
+    $_SESSION['customer_first_name'] = $firstname;
+    $_SESSION['customer_last_name'] = $lastname;
+    $_SESSION['customer_email_address'] = $email_address;
+    $_SESSION['customer_vat_id'] = $vat;
 
 		// reset the session variables
 		$customer_first_name = $firstname;
