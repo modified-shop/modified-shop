@@ -31,8 +31,15 @@ class selfpickup
         $this->title = MODULE_SHIPPING_SELFPICKUP_TEXT_TITLE;
         $this->description = MODULE_SHIPPING_SELFPICKUP_TEXT_DESCRIPTION;
         $this->icon = '';   // change $this->icon =  DIR_WS_ICONS . 'shipping_ups.gif'; to some freeshipping icon
+        $this->tax_class = ((defined('MODULE_SHIPPING_SELFPICKUP_TAX_CLASS')) ? MODULE_SHIPPING_SELFPICKUP_TAX_CLASS : '');
         $this->sort_order = ((defined('MODULE_SHIPPING_SELFPICKUP_SORT_ORDER')) ? MODULE_SHIPPING_SELFPICKUP_SORT_ORDER : '');
         $this->enabled = ((defined('MODULE_SHIPPING_SELFPICKUP_STATUS') && MODULE_SHIPPING_SELFPICKUP_STATUS == 'True') ? true : false);
+
+        if ($this->check() > 0) {
+          if (!defined('MODULE_SHIPPING_SELFPICKUP_TAX_CLASS')) {
+            xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) values ('MODULE_SHIPPING_SELFPICKUP_TAX_CLASS', '0', '6', '0', 'xtc_get_tax_class_title', 'xtc_cfg_pull_down_tax_classes(', now())");
+          }
+        }
     }
 
     function quote($method = '')
@@ -139,6 +146,7 @@ class selfpickup
         xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_SELFPICKUP_POSTCODE', '', '6', '4', now())");
         xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_SELFPICKUP_CITY', '', '6', '4', now())");
         xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) values ('MODULE_SHIPPING_SELFPICKUP_COUNTRY', '".STORE_COUNTRY."', '6', '7', 'xtc_get_country_name', 'xtc_cfg_pull_down_country_list(', now())");
+        xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) values ('MODULE_SHIPPING_SELFPICKUP_TAX_CLASS', '0', '6', '0', 'xtc_get_tax_class_title', 'xtc_cfg_pull_down_tax_classes(', now())");
     }
 
     function remove()
