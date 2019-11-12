@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: start.php 4738 2013-05-07 15:57:00Z Tomcraft $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -21,7 +21,14 @@ require_once (DIR_FS_INC.'xtc_validate_vatid_status.inc.php');
 require_once (DIR_FS_INC.'xtc_get_geo_zone_code.inc.php');
 require_once (DIR_FS_INC.'xtc_encrypt_password.inc.php');
 require_once (DIR_FS_INC.'xtc_js_lang.php');
+
+// include needed classes
 require_once (DIR_WS_CLASSES . 'currencies.php');
+require_once (DIR_FS_CATALOG.DIR_WS_CLASSES.'modified_api.php');
+
+modified_api::reset();
+$response = modified_api::request('modified/start/'.$_SESSION['language_code']);
+
 $currencies = new currencies();
 
 $time_last_click = 900;
@@ -113,10 +120,6 @@ $turnover_query = xtc_db_query("SELECT round(coalesce(sum(if(date(o.date_purchas
                                  WHERE ot.class = 'ot_total'
                                        ".$where);
 $turnover = xtc_db_fetch_array($turnover_query);  
-
-
-require_once(DIR_FS_CATALOG.DIR_WS_CLASSES.'modified_api.php');
-$response = modified_api::request('modified/start/'.$_SESSION['language_code']);
 
 require (DIR_WS_INCLUDES.'head.php');
 ?>

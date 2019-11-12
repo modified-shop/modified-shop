@@ -28,7 +28,8 @@
         )
     {
       $db_version = get_database_version();
- 
+      
+      modified_api::reset();
       $response = modified_api::request('modified/news/'.$db_version['plain']);
 
       if ($response != null && is_array($response) && isset($response['channel'])) {

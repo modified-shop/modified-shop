@@ -25,7 +25,9 @@
         || $cache === false
         )
     {
+      modified_api::reset();
       $response = modified_api::request('modified/version');
+      
       if (is_array($response) && isset($response['stable'])) {
         $check_version = $response['stable'];
         file_put_contents($filename, $check_version);

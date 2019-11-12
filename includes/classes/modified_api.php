@@ -14,6 +14,7 @@
   class modified_api {
   
     private static $_endpoint = 'https://api.modified-shop.org/';
+    private static $_endpoint_backup = 'https://api.modified-shop.org/';
     private static $_method = NULL;
 
     /**
@@ -54,18 +55,23 @@
     /**
      * setEndpoint
      */
-    public function setEndpoint($endpoint) {
+    public static function setEndpoint($endpoint) {
       self::$_endpoint = $endpoint;
     }
 
-
     /**
-     * setEndpoint
+     * setMethod
      */
-    public function setMethod($method) {
-      self::$_method = $method;
+    public static function setMethod($method) {
+      self::$_method = strtoupper($method);
     }
 
+    /**
+     * reset
+     */
+    public static function reset() {
+      self::setEndpoint(self::$_endpoint_backup);
+    }
 
     /**
      * clean
@@ -96,6 +102,10 @@
      * request
      */
     public static function request($path, $data = '', $timeout = 5) {
+      
+      self::$_endpoint = rtrim(self::$_endpoint, '/').'/';
+      $path = ltrim($path, '/');
+      
       $ch = curl_init(self::$_endpoint.$path);
       
       curl_setopt($ch, CURLOPT_URL, self::$_endpoint.$path);

@@ -469,6 +469,7 @@ class PayPalAdmin extends PayPalPayment {
 
   
   function get_partner_details($mode) {
+    modified_api::reset();
     $response = modified_api::request('paypal/onboarding/'.$mode);
     
     if ($response != null && is_array($response)) {

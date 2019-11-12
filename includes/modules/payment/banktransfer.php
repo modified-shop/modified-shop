@@ -414,7 +414,9 @@
       
       $filename = DIR_FS_CATALOG.'cache/blz.txt';
       
+      modified_api::reset();
       $response = modified_api::request('bundesbank/blz');
+      
       if ($response != null && is_array($response) && isset($response['requestURL'])) {
         // include needed functions
         require_once (DIR_FS_INC.'get_external_content.inc.php');

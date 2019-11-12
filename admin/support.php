@@ -17,6 +17,7 @@ require_once (DIR_FS_INC.'xtc_php_mail.inc.php');
 
 require_once(DIR_FS_CATALOG.DIR_WS_CLASSES.'modified_api.php');
 
+modified_api::reset();
 $response = modified_api::request('modified/support/'.$_SESSION['language_code']);
 
 $error = false;
