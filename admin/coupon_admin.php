@@ -603,7 +603,7 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
     if (isset($_POST['coupon_categories'])) $coupon_categories = xtc_db_prepare_input($_POST['coupon_categories']);
     if (isset($_POST['coupon_startdate'])) $coupon_startdate = xtc_db_prepare_input($_POST['coupon_startdate']);
     if (isset($_POST['coupon_finishdate'])) $coupon_finishdate = xtc_db_prepare_input($_POST['coupon_finishdate']);
-    if (isset($_POST['coupon_groups'])) $coupon_groups = explode(',', xtc_db_prepare_input($_POST['coupon_groups']));
+    if (isset($_POST['coupon_groups'])) $coupon_groups = ((is_array($_POST['coupon_groups'])) ? $_POST['coupon_groups'] : explode(',', xtc_db_prepare_input($_POST['coupon_groups'])));
     
     if (isset($coupon_groups)) {
       $coupon_groups = array_filter($coupon_groups);
