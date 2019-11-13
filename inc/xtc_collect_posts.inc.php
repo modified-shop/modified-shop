@@ -44,7 +44,10 @@
                                        restrict_to_categories
                                   FROM " . TABLE_COUPONS . "
                                  WHERE coupon_code = '".xtc_db_input(trim($_POST['gv_redeem_code']))."'
-                                   AND coupon_active = 'Y'");
+                                   AND coupon_active = 'Y'
+                                   AND (restrict_to_customers = ''
+                                        OR FIND_IN_SET ('". (int)$_SESSION['customers_status']['customers_status_id'] ."', restrict_to_customers)
+                                        )");
       $gv_result = xtc_db_fetch_array($gv_query);
 
       if (xtc_db_num_rows($gv_query) != 0) {

@@ -179,7 +179,10 @@ class ot_coupon {
       $coupon_query = xtc_db_query("SELECT *
                                       FROM ".TABLE_COUPONS."
                                      WHERE coupon_id = '".$_SESSION['cc_id']."'
-                                       AND coupon_active = 'Y'");
+                                       AND coupon_active = 'Y'
+                                       AND (restrict_to_customers = ''
+                                            OR FIND_IN_SET ('". (int)$_SESSION['customers_status']['customers_status_id'] ."', restrict_to_customers)
+                                            )");
       if (xtc_db_num_rows($coupon_query) != 0) {
         $coupon_array = xtc_db_fetch_array($coupon_query);
 
