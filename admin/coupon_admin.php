@@ -713,6 +713,7 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
               ?>
             </td>
             <td class="dataTableConfig col-right"><?php echo COUPON_CUSTOMERS_HELP; ?></td>
+          </tr>
           <tr>
             <td class="dataTableConfig col-left"><?php echo COUPON_STARTDATE; ?></td>
             <td class="dataTableConfig col-middle nobr"><?php echo xtc_draw_input_field('coupon_startdate', $coupon_startdate ,'id="Datepicker1"'); ?></td>
