@@ -75,7 +75,7 @@ define('COUPON_USES_COUPON', 'Uses per Coupon');
 define('COUPON_USES_USER', 'Uses per Customer');
 define('COUPON_PRODUCTS', 'Valid Product List');
 define('COUPON_CATEGORIES', 'Valid Categories List');
-define('COUPON_CUSTOMERS', 'Valid Customers List');
+define('COUPON_CUSTOMERS', 'Valid Customers Group List');
 define('VOUCHER_NUMBER_USED', 'Number Used');
 define('DATE_CREATED', 'Date Created');
 define('DATE_MODIFIED', 'Date Modified');
@@ -95,7 +95,7 @@ define('COUPON_USES_COUPON_HELP', 'The maximum number of times the coupon can be
 define('COUPON_USES_USER_HELP', 'Number of times a user can use the coupon, leave blank for no limit.');
 define('COUPON_PRODUCTS_HELP', 'A comma separated list of Product IDs that this coupon can be used with. Leave blank for no restrictions.');
 define('COUPON_CATEGORIES_HELP', 'A comma separated list of Category IDs that this coupon can be used with, leave blank for no restrictions.');
-define('COUPON_CUSTOMERS_HELP', 'Choose valid customer groups for this coupon');
+define('COUPON_CUSTOMERS_HELP', 'Choose the valid customers groups for this coupon.');
 
 define('COUPON_ID', 'cID');
 define('BUTTON_DELETE_NO_CONFIRM', 'Delete without confirmation');
