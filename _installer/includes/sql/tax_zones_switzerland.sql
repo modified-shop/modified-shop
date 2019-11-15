@@ -261,3 +261,5 @@ INSERT INTO `zones_to_geo_zones` (`association_id`, `zone_country_id`, `zone_id`
 INSERT INTO `zones_to_geo_zones` (`association_id`, `zone_country_id`, `zone_id`, `geo_zone_id`, `last_modified`, `date_added`) VALUES (240, 240, 0, 6, NULL, NOW());
 INSERT INTO `zones_to_geo_zones` (`association_id`, `zone_country_id`, `zone_id`, `geo_zone_id`, `last_modified`, `date_added`) VALUES (241, 241, 0, 6, NULL, NOW());
 INSERT INTO `zones_to_geo_zones` (`association_id`, `zone_country_id`, `zone_id`, `geo_zone_id`, `last_modified`, `date_added`) VALUES (242, 242, 0, 6, NULL, NOW());
+
+# Keep an empty line at the end of this file for the installer to work properly

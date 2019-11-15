@@ -85,3 +85,4 @@ CREATE TABLE `personal_offers_by_customers_status_4` (
   KEY idx_products_id (products_id)
 );
 
+# Keep an empty line at the end of this file for the installer to work properly

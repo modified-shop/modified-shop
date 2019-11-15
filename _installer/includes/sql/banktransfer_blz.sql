@@ -3574,3 +3574,5 @@ INSERT INTO `banktransfer_blz` (`blz`, `bankname`, `prz`) VALUES(87095934, 'Volk
 INSERT INTO `banktransfer_blz` (`blz`, `bankname`, `prz`) VALUES(87095974, 'Volksbank-Raiffeisenbank Glauchau', '06');
 INSERT INTO `banktransfer_blz` (`blz`, `bankname`, `prz`) VALUES(87096124, 'Volksbank Mittweida', '06');
 INSERT INTO `banktransfer_blz` (`blz`, `bankname`, `prz`) VALUES(87096214, 'Volksbank Chemnitz', '06');
+
+# Keep an empty line at the end of this file for the installer to work properly
