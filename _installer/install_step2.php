@@ -335,14 +335,7 @@
       // set charset
       xtc_db_set_charset(DB_SERVER_CHARSET);
 
-      $sql_array = parse_sql_file(DIR_FS_INSTALLER.'includes/sql/'.$sql_file);
-
-      for ($i=0, $n=count($sql_array); $i<$n; $i++) {
-        if (DB_SERVER_CHARSET == 'utf8') {
-          $sql_array[$i] = encode_utf8($sql_array[$i], '', true);
-        }
-        xtc_db_query($sql_array[$i]);
-      }
+      sql_update(DIR_FS_INSTALLER.'includes/sql/'.$sql_file);
 
       // redirect
       xtc_redirect(xtc_href_link(DIR_WS_INSTALLER.'install_finished.php', '', $request_type));
