@@ -391,7 +391,7 @@ define('SESSION_WARNING', '<br /><br /><span class="col-red"><strong>CAUTION:</s
 define('SESSION_WRITE_DIRECTORY_TITLE' , 'Session Directory');
 define('SESSION_WRITE_DIRECTORY_DESC' , 'If sessions are file based, store them in this directory.');
 define('SESSION_FORCE_COOKIE_USE_TITLE' , 'Force Cookie Use');
-define('SESSION_FORCE_COOKIE_USE_DESC' , 'Force the use of sessions when cookies are only enabled (Default &quot;false&quot;)'.SESSION_WARNING);
+define('SESSION_FORCE_COOKIE_USE_DESC' , 'Force the use of sessions when cookies are only enabled (Default &quot;true&quot;)<br /><br /><span class="col-red"><strong>CAUTION:</strong></span> This feature prevents the session ID in the URL');
 define('SESSION_CHECK_SSL_SESSION_ID_TITLE' , 'Check SSL Session ID');
 define('SESSION_CHECK_SSL_SESSION_ID_DESC' , 'Validate the SSL_SESSION_ID on every secure HTTPS page request. (Default &quot;false&quot;)'.SESSION_WARNING);
 define('SESSION_CHECK_USER_AGENT_TITLE' , 'Check User Agent');

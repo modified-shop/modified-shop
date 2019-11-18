@@ -389,8 +389,8 @@ define('SESSION_WARNING', '<br /><br /><span class="col-red"><strong>ACHTUNG:</s
 
 define('SESSION_WRITE_DIRECTORY_TITLE' , 'Session Speicherort');
 define('SESSION_WRITE_DIRECTORY_DESC' , 'Wenn Sessions als Files gespeichert werden sollen, benutzen Sie folgenden Ordner.');
-define('SESSION_FORCE_COOKIE_USE_TITLE' , 'Cookie Benutzung bevorzugen');
-define('SESSION_FORCE_COOKIE_USE_DESC' , 'Session starten, falls Cookies vom Browser erlaubt werden. (Standard &quot;false&quot;)'.SESSION_WARNING);
+define('SESSION_FORCE_COOKIE_USE_TITLE' , 'Session Cookie forcieren');
+define('SESSION_FORCE_COOKIE_USE_DESC' , 'Session starten, falls Cookies vom Browser erlaubt werden. (Standard &quot;true&quot;)<br/><br/><span class="col-red"><strong>ACHTUNG:</strong></span> Diese Funktion verhindert, dass die Session ID in der URL vorhanden ist.');
 define('SESSION_CHECK_SSL_SESSION_ID_TITLE' , 'Checken der SSL-Session-ID');
 define('SESSION_CHECK_SSL_SESSION_ID_DESC' , '&Uuml;berpr&uuml;fen der SSL_SESSION_ID bei jedem HTTPS Seitenaufruf. (Standard &quot;false&quot;)'.SESSION_WARNING);
 define('SESSION_CHECK_USER_AGENT_TITLE' , '&Uuml;berpr&uuml;fen des Useragents');
