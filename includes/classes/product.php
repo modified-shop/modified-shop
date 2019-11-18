@@ -405,14 +405,14 @@ class product {
         } else {
           $quantity = GRADUATED_PRICE_MAX_VALUE.' '.$staffel[$i]['stk'];
         }
-        $vpe = '';
-        if (isset($this->data) && $this->data['products_vpe_status'] == 1 && $this->data['products_vpe_value'] != 0.0 && $staffel[$i]['price'] > 0) {
-          $vpe = $staffel[$i]['price'] - $staffel[$i]['price'] / 100 * $discount;
-          $vpe = $xtPrice->xtcPriceCut($vpe * (1 / $this->data['products_vpe_value']));
-          $vpe = $xtPrice->xtcFormatCurrency($xtPrice->xtcFormat($vpe, false, $this->data['products_tax_class_id']), 0, false).TXT_PER.xtc_get_vpe_name($this->data['products_vpe']);
-        }
 
         $Pprice = $xtPrice->xtcFormat($staffel[$i]['price'] - $staffel[$i]['price'] / 100 * $discount, false, $this->data['products_tax_class_id']);
+
+        $vpe = '';
+        if (isset($this->data) && $this->data['products_vpe_status'] == 1 && $this->data['products_vpe_value'] != 0.0 && $staffel[$i]['price'] > 0) {
+          $vpe = $Pprice * (1 / $this->data['products_vpe_value']);
+          $vpe = $xtPrice->xtcFormat($vpe, true).TXT_PER.xtc_get_vpe_name($this->data['products_vpe']);
+        }
 
         if ($_SESSION['customers_status']['customers_status_show_price_tax'] == '0') {
           $Bprice = $xtPrice->xtcFormatCurrency($xtPrice->xtcAddTax($Pprice, $xtPrice->TAX[$this->data['products_tax_class_id']]));

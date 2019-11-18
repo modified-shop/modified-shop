@@ -260,7 +260,7 @@ class main {
     if (isset($products['products_vpe_status']) && $products['products_vpe_status'] == 1 && $products['products_vpe_value'] != 0.0 && $price > 0) {
       $this->vpe_name = xtc_get_vpe_name($products['products_vpe']);
       //echo $this->vpe_name; //only for debugging
-      $vpeText = $xtPrice->xtcFormatCurrency($xtPrice->xtcPriceCut($price * (1 / $products['products_vpe_value'])), 0, true).TXT_PER.$this->vpe_name;
+      $vpeText = $xtPrice->xtcFormatCurrency(($price * (1 / $products['products_vpe_value'])), 0, true).TXT_PER.$this->vpe_name;
     }
     
     //new module support
