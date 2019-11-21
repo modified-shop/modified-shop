@@ -5550,3 +5550,12 @@ ol#address_block {
 }
 /* END Custom checkbox & radio */
 
+.external_links a:after {
+  font-family: 'Font Awesome 5 Free';
+  content: '\f35d';
+  font-weight: 900;
+  font-size: 9px;
+  line-height:9px;
+  margin: 0 0 0 5px;
+  vertical-align:2px;
+}
