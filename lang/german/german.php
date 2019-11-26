@@ -442,6 +442,7 @@ define('ERROR_INVALID_STARTDATE_COUPON','Ihr Coupon ist noch nicht verf&uuml;gba
 define('ERROR_INVALID_FINISDATE_COUPON','Ihr Coupon ist bereits abgelaufen.');
 define('ERROR_INVALID_MINIMUM_ORDER_COUPON', 'Dieser Coupon kann erst ab einem Mindestbestellwert von %s eingel&ouml;st werden!');
 define('ERROR_INVALID_MINIMUM_ORDER_COUPON_ADD','<br/>Sie m&uuml;ssen den Couponcode beim Erreichen des Mindestbestellwertes erneut eingeben!');
+define('ERROR_COUPON_REQUIRES_ACCOUNT', 'Zum Einl&ouml;sen des Coupons ben&ouml;tigen Sie ein Kundenkonto.');
 define('PERSONAL_MESSAGE', '%s schreibt:');
 
 define('TEXT_LINK_TITLE_INFORMATION', 'Information');

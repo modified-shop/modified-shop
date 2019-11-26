@@ -442,6 +442,7 @@ define('ERROR_INVALID_STARTDATE_COUPON','Your coupon is not available yet.');
 define('ERROR_INVALID_FINISDATE_COUPON','Your voucher is already expired.');
 define('ERROR_INVALID_MINIMUM_ORDER_COUPON', 'This coupon can be redeemed only with a minimum order value of %s!');
 define('ERROR_INVALID_MINIMUM_ORDER_COUPON_ADD','<br/>You have to enter the coupon code again when you reach the minimum order value!');
+define('ERROR_COUPON_REQUIRES_ACCOUNT', 'To redeem the voucher you need a customer account.');
 define('PERSONAL_MESSAGE', '%s writes:');
 
 define('TEXT_LINK_TITLE_INFORMATION', 'Information');
