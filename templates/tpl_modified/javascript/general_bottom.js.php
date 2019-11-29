@@ -25,7 +25,6 @@ $script_array = array(
   DIR_TMPL_JS.'jquery.cookieconsent.min.js',
   DIR_TMPL_JS.'jquery.easyTabs.min.js',
   DIR_TMPL_JS.'jquery.alertable.min.js',
-  DIR_TMPL_JS.'jquery.sidebar.min.js',
 );
 $script_min = DIR_TMPL_JS.'tpl_plugins.min.js';
   
