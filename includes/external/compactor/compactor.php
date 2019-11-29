@@ -429,7 +429,7 @@
 			$code = preg_replace('/\/\*(?!-)[\x00-\xff]*?\*\//', '', $code);
       // Remove single line comment
       // $code = preg_replace('/[^:]\/\/.*/', '', $code);
-			$code = preg_replace('/\\/\\/[^\\n\\r]*[\\n\\r]/', '', $code);
+			$code = preg_replace('/[^:]\\/\\/[^\\n\\r]*[\\n\\r]/', '', $code);			
 			$code = preg_replace('/\\/\\*[^*]*\\*+([^\\/][^*]*\\*+)*\\//', '', $code);
       // Remove extra spaces
 			$code = preg_replace('/\s+/', ' ', $code);
@@ -452,7 +452,7 @@
       $html = preg_replace('!^[ \t]*/\*.*?\*/[ \t]*[\r\n]!s', '', $html);
 
       //  Removes single line '//' comments, treats blank characters
-      $html = preg_replace('![ \t]*//.*[ \t]*[\r\n]!', '', $html);
+      $html = preg_replace('![ \t]*[^:]//.*[ \t]*[\r\n]!', '', $html);
 
       //  Strip blank lines
       $html = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $html);
