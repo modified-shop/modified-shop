@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: server_info.php 4981 2013-06-26 02:39:47Z Tomcraft $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -35,7 +35,7 @@ require (DIR_WS_INCLUDES.'head.php');
 <style type="text/css">
 #phpinfo table {
   border-collapse: collapse !important;
-  border: 0; width: 934px !important; 
+  border: 0; width:100% !important; 
   box-shadow: 1px 2px 3px #ccc !important;
 }
 #phpinfo .center table {
@@ -76,7 +76,7 @@ require (DIR_WS_INCLUDES.'head.php');
   overflow-x: auto !important;
 }
 #phpinfo hr {
-  width: 934px !important; 
+  width: 100% !important; 
   background-color: #ccc !important; 
   border: 0 !important; 
   height: 1px !important;
@@ -88,7 +88,7 @@ require (DIR_WS_INCLUDES.'head.php');
     <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
     <!-- header_eof //-->
     <!-- body //-->
-    <table class="tableBody">
+    <table class="tableBody" style="padding:10px;">
       <tr>
         <?php //left_navigation
         if (USE_ADMIN_TOP_MENU == 'false') {
@@ -148,7 +148,7 @@ require (DIR_WS_INCLUDES.'head.php');
       </tr>
     </table>
     
-    <table style="margin:10px auto">
+    <table style="margin: 0px auto; width: 100%; padding: 10px;">
       <tr>
         <td id="phpinfo" >
           <?php
