@@ -249,12 +249,12 @@ class ot_coupon {
             $cat_ids = explode(",", $coupon_array['restrict_to_categories']);
             $cat_ids = array_unique($cat_ids);
             for ($i = 0, $n = sizeof($order->products); $i < $n; ++$i) {
-              $p_flag = $coupon_array['restrict_to_products'] && in_array(xtc_get_prid($order->products[$i]['id']) ,$pr_ids) ? true : false;
+              $p_flag = $coupon_array['restrict_to_products'] && in_array(xtc_get_prid($order->products[$i]['id']), $pr_ids) ? true : false;
 
               $prod_cat_ids_array = $this->get_cat_ids_array(xtc_get_prid($order->products[$i]['id']));
               for ($ii = 0 , $nn = count($cat_ids); $ii < $nn ; $ii ++) {
-                if (in_array($cat_ids[$ii], $prod_cat_ids_array) && !$p_flag && !in_array(xtc_get_prid($order->products[$i]['id']),$_c_products_ids)) {
-                  $_c_products_ids[] = xtc_get_prid($order->products[$i]['id']);//prevent double counting
+                if (in_array($cat_ids[$ii], $prod_cat_ids_array) && !$p_flag && !in_array($order->products[$i]['id'],$_c_products_ids)) {
+                  $_c_products_ids[] = $order->products[$i]['id'];//prevent double counting
                   if ($coupon_array['coupon_type'] == 'P') {
                     $pr_c = $this->product_price($order->products[$i]['id']);
                     $pod_amount = round($pr_c*10)/10*$c_deduct/100;
