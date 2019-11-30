@@ -36,17 +36,23 @@ if (ACTIVATE_GIFT_SYSTEM == 'true') {
 }
 
 if (isset ($_SESSION['customer_id'])) {
-	$gv_query = xtc_db_query("select amount from ".TABLE_COUPON_GV_CUSTOMER." where customer_id = '".(int)$_SESSION['customer_id']."'");
-	$gv_result = xtc_db_fetch_array($gv_query);
-	if ($gv_result['amount'] > 0) {
-		$gift_smarty->assign('GV_AMOUNT', $xtPrice->xtcFormat($gv_result['amount'], true, 0, true));
-		$gift_smarty->assign('GV_SEND_TO_FRIEND_LINK', xtc_href_link(FILENAME_GV_SEND));
-	} else {
-		$gift_smarty->assign('GV_AMOUNT', 0);
+  $gv_amount = 0;
+	$gv_query = xtc_db_query("SELECT amount 
+	                            FROM ".TABLE_COUPON_GV_CUSTOMER." 
+	                           WHERE customer_id = '".(int)$_SESSION['customer_id']."'");
+	if (xtc_db_num_rows($gv_query) > 0) {
+	  $gv_result = xtc_db_fetch_array($gv_query);
+    if ($gv_result['amount'] > 0) {
+      $gv_amount = $xtPrice->xtcFormat($gv_result['amount'], true, 0, true);
+      $gift_smarty->assign('GV_SEND_TO_FRIEND_LINK', xtc_href_link(FILENAME_GV_SEND));
+    }
 	}
+  $gift_smarty->assign('GV_AMOUNT', $gv_amount);
 }
 if (isset ($_SESSION['gv_id'])) {
-	$gv_query = xtc_db_query("select coupon_amount from ".TABLE_COUPONS." where coupon_id = '".(int)$_SESSION['gv_id']."'");
+	$gv_query = xtc_db_query("SELECT coupon_amount 
+	                            FROM ".TABLE_COUPONS." 
+	                           WHERE coupon_id = '".(int)$_SESSION['gv_id']."'");
 	$coupon = xtc_db_fetch_array($gv_query);
 	$gift_smarty->assign('COUPON_AMOUNT2', $xtPrice->xtcFormat($coupon['coupon_amount'], true, 0, true));
 }
