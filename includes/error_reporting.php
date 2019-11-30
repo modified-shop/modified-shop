@@ -145,7 +145,7 @@ function mod_log_exception($e)
 function mod_check_for_fatal()
 {
     $error = error_get_last();
-    if ($error['type'] == E_ERROR) {
+    if (is_array($error) && $error['type'] == E_ERROR) {
         mod_log_error($error['type'], $error['message'], $error['file'], $error['line']);
     }
 }
