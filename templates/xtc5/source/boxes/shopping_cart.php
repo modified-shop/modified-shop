@@ -92,10 +92,12 @@
     $gv_query = xtc_db_query("SELECT amount
                                 FROM ".TABLE_COUPON_GV_CUSTOMER."
                                WHERE customer_id = '".(int)$_SESSION['customer_id']."'");
-    $gv_result = xtc_db_fetch_array($gv_query);
-    if ($gv_result['amount'] > 0) {
-      $box_smarty->assign('GV_AMOUNT', $xtPrice->xtcFormat($gv_result['amount'], true, 0, true));
-      $box_smarty->assign('GV_SEND_TO_FRIEND_LINK', '<a href="'.xtc_href_link(FILENAME_GV_SEND).'">');
+    if (xtc_db_num_rows($gv_query) > 0) {
+      $gv_result = xtc_db_fetch_array($gv_query);
+      if ($gv_result['amount'] > 0) {
+        $box_smarty->assign('GV_AMOUNT', $xtPrice->xtcFormat($gv_result['amount'], true, 0, true));
+        $box_smarty->assign('GV_SEND_TO_FRIEND_LINK', '<a href="'.xtc_href_link(FILENAME_GV_SEND).'">');
+      }
     }
     if (isset($_SESSION['gv_id'])) {
       $gv_query = xtc_db_query("SELECT coupon_amount
