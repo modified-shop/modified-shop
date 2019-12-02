@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: backup.php 1780 2011-02-08 02:09:45Z cybercosmonaut $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
