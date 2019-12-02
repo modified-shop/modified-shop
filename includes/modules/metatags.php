@@ -337,7 +337,7 @@
 
         if ($addContentShopTitle) $metadata_array['title'] .= ' - ' . ML_META_TITLE;
 
-        $metaGoWords .= ','.$categories_meta['content_title'];
+        $metaGoWords .= ','.$contents_meta['content_title'];
       }
       break;
 
