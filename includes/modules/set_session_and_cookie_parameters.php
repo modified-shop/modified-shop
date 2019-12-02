@@ -38,10 +38,12 @@ if (STORE_SESSIONS == 'mysql') {
     $check_query = xtc_db_query("SELECT expiry 
                                    FROM ".TABLE_SESSIONS." 
                                   WHERE sesskey = '".xtc_db_input(preg_replace('/[^0-9a-zA-Z]/', '', $_COOKIE[xtc_session_name()]))."'");
-    $check = xtc_db_fetch_array($check_query);
-    if (($check['expiry'] + (int)$SESS_LIFE) < time()) {
-      $cookie_params = session_get_cookie_params();
-      xtc_setcookie(xtc_session_name(), '', time()-3600, $cookie_params['path'], $cookie_params['domain']);
+    if (xtc_db_num_rows($check_query) > 0) {
+      $check = xtc_db_fetch_array($check_query);
+      if (($check['expiry'] + (int)$SESS_LIFE) < time()) {
+        $cookie_params = session_get_cookie_params();
+        xtc_setcookie(xtc_session_name(), '', time()-3600, $cookie_params['path'], $cookie_params['domain']);
+      }
     }
   }
 }
