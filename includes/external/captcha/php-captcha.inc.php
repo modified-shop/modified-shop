@@ -66,6 +66,8 @@
    define('CAPTCHA_FLITE_PATH', '/usr/bin/flite');
    define('CAPTCHA_AUDIO_PATH', '/tmp/'); // must be writeable by PHP process
    
+   require_once(DIR_FS_INC.'xtc_rand.inc.php');
+   
    /************************ End Default Options **********************/
    
    // don't edit below this line (unless you want to change the class!)
@@ -262,20 +264,20 @@
          for ($i = 0; $i < $this->iNumLines; $i++) {
             // allocate colour
             if ($this->bUseColour) {
-               $iLineColour = $this->iRandColour(mt_rand($minColor, $maxColor), mt_rand($minColor, $maxColor), mt_rand($minColor, $maxColor));
+               $iLineColour = $this->iRandColour(xtc_rand($minColor, $maxColor), xtc_rand($minColor, $maxColor), xtc_rand($minColor, $maxColor));
             } else {
                //BOC new code by web28 - www.rpa-com.de
                if(count($this->aLinesColors)) {
                   $iLineColour = $this->iRandColour($this->aLinesColors['R'], $this->aLinesColors['G'], $this->aLinesColors['B']);
                } else {
-                  $iRandColour = mt_rand($minColor, $maxColor);
+                  $iRandColour = xtc_rand($minColor, $maxColor);
                   $iLineColour = $this->iRandColour($iRandColour, $iRandColour, $iRandColour);
                }
                //EOC new code by web28 - www.rpa-com.de
             }
             
             // draw line
-            imageline($this->oImage, mt_rand(0, $this->iWidth), mt_rand(0, $this->iHeight), mt_rand(0, $this->iWidth), mt_rand(0, $this->iHeight), $iLineColour);
+            imageline($this->oImage, xtc_rand(0, $this->iWidth), xtc_rand(0, $this->iHeight), xtc_rand(0, $this->iWidth), xtc_rand(0, $this->iHeight), $iLineColour);
          }
       }
       
@@ -308,7 +310,7 @@
                $this->sCode .= $this->aCharSet[array_rand($this->aCharSet)];
             } else {
                // selectmt_random character and add to code string
-               $this->sCode .= chr(mt_rand(65, 90));
+               $this->sCode .= chr(xtc_rand(65, 90));
             }
          }
          
@@ -333,33 +335,33 @@
             //BOC new code by web28 - www.rpa-com.de
             // selectmt_random colour
             if ($this->bUseColour) {
-               $iTextColour = $this->iRandColour(mt_rand($minColor, $maxColor) , mt_rand($minColor, $maxColor), mt_rand($minColor, $maxColor));
+               $iTextColour = $this->iRandColour(xtc_rand($minColor, $maxColor) , xtc_rand($minColor, $maxColor), xtc_rand($minColor, $maxColor));
             
                if ($this->bCharShadow) {
                   // shadow colour
-                  $iShadowColour = $this->iRandColour(mt_rand($minColor, $maxColor), mt_rand($minColor, $maxColor), mt_rand($minColor, $maxColor));
+                  $iShadowColour = $this->iRandColour(xtc_rand($minColor, $maxColor), xtc_rand($minColor, $maxColor), xtc_rand($minColor, $maxColor));
                }
             } else {
                if (count($this->aCharsColors)) {
                   $iTextColour = $this->iRandColour($this->aCharsColors['R'], $this->aCharsColors['G'], $this->aCharsColors['B']);
                } else {
-                  $iRandColour = mt_rand($minColor, $maxColor);
+                  $iRandColour = xtc_rand($minColor, $maxColor);
                   $iTextColour = $this->iRandColour($iRandColour, $iRandColour, $iRandColour);
                }
             
                if ($this->bCharShadow) {
                   // shadow colour
-                  $iRandColour = mt_rand($minColor, $maxColor);
+                  $iRandColour = xtc_rand($minColor, $maxColor);
                   $iShadowColour = $this->iRandColour($iRandColour, $iRandColour, $iRandColour);
                }
             }
             //EOC new code by web28 - www.rpa-com.de
             
             // selectmt_random font size
-            $iFontSize = mt_rand($this->iMinFontSize, $this->iMaxFontSize);
+            $iFontSize = xtc_rand($this->iMinFontSize, $this->iMaxFontSize);
             
             // selectmt_random angle
-            $iAngle = mt_rand(-30, 30);
+            $iAngle = xtc_rand(-30, 30);
             
             // get dimensions of character in selected font and text size
             $aCharDetails = $this->ImageDimension($iFontSize, $iAngle, $sCurrentFont, $this->sCode[$i]);
@@ -373,9 +375,9 @@
             $this->WriteToImage($iFontSize, $iAngle, $iX, $iY, $iTextColour, $sCurrentFont, $this->sCode[$i]);
             
             if ($this->bCharShadow) {
-               $iOffsetAngle = mt_rand(-30, 30);
-               $iRandOffsetX = mt_rand(-5, 5);
-               $iRandOffsetY = mt_rand(-5, 5);
+               $iOffsetAngle = xtc_rand(-30, 30);
+               $iRandOffsetX = xtc_rand(-5, 5);
+               $iRandOffsetY = xtc_rand(-5, 5);
                
                $this->WriteToImage($iFontSize, $iOffsetAngle, $iX + $iRandOffsetX, $iY + $iRandOffsetY, $iShadowColour, $sCurrentFont, $this->sCode[$i]);
             }
@@ -399,7 +401,7 @@
             imagefttext($this->oImage, $iFontSize, $iOffsetAngle, $iRandOffsetX, $iRandOffsetY, $iTextColour, $sCurrentFont, $sCode);
           } else {
             $iFontSize = 5;
-            ImageString($this->oImage, $iFontSize, $iRandOffsetX, ($this->iHeight/2)-$iFontSize-mt_rand($iFontSize*(-1), $iFontSize), $sCode, $iTextColour);  
+            ImageString($this->oImage, $iFontSize, $iRandOffsetX, ($this->iHeight/2)-$iFontSize-xtc_rand($iFontSize*(-1), $iFontSize), $sCode, $iTextColour);  
           }
       }
       
