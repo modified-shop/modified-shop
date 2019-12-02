@@ -23,27 +23,9 @@ include ('includes/application_top.php');
 // include needed functions
 require_once (DIR_FS_INC.'xtc_random_name.inc.php');
 require_once (DIR_FS_INC.'xtc_unlink_temp_dir.inc.php');
+require_once (DIR_FS_INC.'readfile_chunked.inc.php');
 if (!function_exists('xtc_date_long')) {
 	require_once (DIR_FS_INC.'xtc_date_long.inc.php');
-}
-
-// function readfile
-function readfile_chunked($file, $chunksize) {
-  $buffer = '';
-  // Small files don't need to be chunked
-  if (filesize($file) <= $chunksize) {
-    $status = readfile($file);
-    return $status;
-  }
-  $handle = fopen($file, 'rb');
-  if ($handle === false)
-    return false;
-  while (!feof($handle)) {
-    echo fread($handle, $chunksize);
-  }
-  $status = fclose($handle);
-
-  return $status;
 }
 
 // init Smarty
