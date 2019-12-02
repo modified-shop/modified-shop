@@ -14,10 +14,5 @@
   $(window).on('load',function() {
     $(".unveil").show();
     $(".unveil").unveil(200);
-    $('.show_rating input').change(function () {
-      var $radio = $(this);
-      $('.show_rating .selected').removeClass('selected');
-      $radio.closest('label').addClass('selected');
-    });
   });
 </script>
