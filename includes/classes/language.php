@@ -73,19 +73,13 @@ if ( !class_exists( "language" ) ) {
 
       $this->catalog_languages = array();
       $where = !defined('RUN_MODE_ADMIN') ? ((isset($_SESSION['customers_status']['customers_status']) && $_SESSION['customers_status']['customers_status'] == '0') ? "WHERE status_admin = '1'" : "WHERE status = '1'") : '';
-      $languages_query = xtc_db_query("SELECT * 
-                                         FROM " . TABLE_LANGUAGES . " 
-                                         ".$where." 
-                                     ORDER BY sort_order"
-                                     );
-      while ($languages = xtc_db_fetch_array($languages_query)) {
-        $this->catalog_languages[$languages['code']] = array('id' => $languages['languages_id'],
-                                                             'name' => $languages['name'],
-                                                             'image' => $languages['image'],
-                                                             'status' => $languages['status'],
-                                                             'code' => $languages['code'],
-                                                             'language_charset' => $languages['language_charset'],
-                                                             'directory' => $languages['directory']);
+      $languages_query = xtDBquery("SELECT * 
+                                      FROM " . TABLE_LANGUAGES . " 
+                                           ".$where." 
+                                  ORDER BY sort_order");
+      while ($languages = xtc_db_fetch_array($languages_query, true)) {
+        $this->catalog_languages[$languages['code']] = $languages;
+        $this->catalog_languages[$languages['code']]['id'] = $languages['languages_id'];
       }
 
       $this->browser_languages = '';

@@ -75,13 +75,19 @@ if ($admin_access['languages'] == '1' || $admin_access['categories'] == '1') {
 if ($admin_access['orders'] == '1') {
   $orders_contents = '';
   $orders_status_validating = xtc_db_num_rows(xtc_db_query("SELECT orders_status FROM ".TABLE_ORDERS ." WHERE orders_status ='0'"));
-  $orders_contents .='<li><a href="'.xtc_href_link_admin(FILENAME_ORDERS, 'selected_box=customers&status=0', 'NONSSL').'"><em>'.$orders_status_validating.'</em>'.TEXT_VALIDATING.'</a></li>';
+  $orders_contents .='<li><a href="'.xtc_href_link_admin(FILENAME_ORDERS, 'status=0', 'NONSSL').'"><em>'.$orders_status_validating.'</em>'.TEXT_VALIDATING.'</a></li>';
 
-  $orders_status_query = xtc_db_query("SELECT orders_status_name, orders_status_id FROM ".TABLE_ORDERS_STATUS." WHERE language_id = '".(int)$_SESSION['languages_id']."' ORDER BY sort_order");
+  $orders_status_query = xtc_db_query("SELECT os.orders_status_name, 
+                                              os.orders_status_id, 
+                                              count(*) AS count 
+                                         FROM ".TABLE_ORDERS_STATUS." os 
+                                         JOIN ".TABLE_ORDERS." o
+                                              ON o.orders_status = os.orders_status_id  
+                                        WHERE os.language_id = '".(int)$_SESSION['languages_id']."'
+                                     GROUP BY os.orders_status_id
+                                     ORDER BY os.sort_order, os.orders_status_name");
   while ($orders_status = xtc_db_fetch_array($orders_status_query)) {
-    $orders_pending_query = xtc_db_query("SELECT count(*) AS count FROM ".TABLE_ORDERS." WHERE orders_status = '".$orders_status['orders_status_id']."'");
-    $orders_pending = xtc_db_fetch_array($orders_pending_query);
-    $orders_contents .= '<li><a href="'.xtc_href_link_admin(FILENAME_ORDERS, 'selected_box=customers&status='.$orders_status['orders_status_id'], 'NONSSL').'"><em>'.$orders_pending['count'].'</em>'.$orders_status['orders_status_name'].'</a></li>';
+    $orders_contents .= '<li><a href="'.xtc_href_link_admin(FILENAME_ORDERS, 'status='.$orders_status['orders_status_id'], 'NONSSL').'"><em>'.$orders_status['count'].'</em>'.$orders_status['orders_status_name'].'</a></li>';
   }
   $box_smarty->assign('ORDERS', xtc_href_link_admin(FILENAME_ORDERS,'', 'NONSSL'));
   $box_smarty->assign('ORDERS_CONTENT', $orders_contents);

@@ -39,7 +39,7 @@
                                                AND trim(pd.products_name) != ''                      
                                        JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
                                             ON p2c.products_id = p.products_id
-                                      WHERE (p.products_status = '1'".(($include_inactive === true) ? " || p.products_status = '0'" : '').")
+                                      WHERE (p.products_status = '1'".(($include_inactive === true) ? " OR p.products_status = '0'" : '').")
                                             ".PRODUCTS_CONDITIONS_P."
                                    GROUP BY p2c.categories_id");
       if (xtc_db_num_rows($categories_query, true)) {

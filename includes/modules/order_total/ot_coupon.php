@@ -290,8 +290,8 @@ class ot_coupon {
                                 FROM ".TABLE_SPECIALS."
                                WHERE products_id = '".xtc_get_prid($order->products[$i]['id'])."'
                                      ".SPECIALS_CONDITIONS;
-            $product_query = xtDBquery($product_query);
-            $product = xtc_db_fetch_array($product_query, true);
+            $product_query = xtc_db_query($product_query);
+            $product = xtc_db_fetch_array($product_query);
             if($product['specials_new_products_price']) {
               if ($coupon_array['coupon_type'] == 'P') {
                 $pr_c = $this->product_price($order->products[$i]['id']);

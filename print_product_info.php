@@ -84,8 +84,8 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
                                    FROM ".TABLE_SPECIALS."
                                   WHERE products_id = '".$product->data['products_id']."'
                                         ".SPECIALS_CONDITIONS;
-  $special_expires_date_query = xtDBquery($special_expires_date_query);
-  if (xtc_db_num_rows($special_expires_date_query, true) > 0) {
+  $special_expires_date_query = xtc_db_query($special_expires_date_query);
+  if (xtc_db_num_rows($special_expires_date_query) > 0) {
     $sDate = xtc_db_fetch_array($special_expires_date_query, true);
     $info_smarty->assign('PRODUCTS_EXPIRES', $sDate['expires_date'] != '0000-00-00 00:00:00' ? xtc_date_short($sDate['expires_date']) : '');
   }

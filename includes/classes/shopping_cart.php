@@ -459,19 +459,7 @@ class shoppingCart {
     foreach ($this->contents as $products_id => $data) {
       $qty = $this->contents[$products_id]['qty'];
       // products price
-      $product_query = xtc_db_query("SELECT ".ADD_SELECT_CART."
-                                            p.products_id,
-                                            p.products_price,
-                                            p.products_discount_allowed,
-                                            p.products_tax_class_id,
-                                            p.products_weight
-                                       FROM ".TABLE_PRODUCTS." p
-                                       JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
-                                            ON pd.products_id = p.products_id
-                                               AND pd.language_id = '".(int)$_SESSION['languages_id']."'
-                                               AND trim(pd.products_name) != ''
-                                      WHERE p.products_id='".(int)$products_id."'");
-      if ($product = xtc_db_fetch_array($product_query)) {
+      if ($product = $this->get_product($products_id)) {
 
         if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1
             && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0
@@ -585,6 +573,34 @@ class shoppingCart {
     return $attributes_price;
   }
 
+  /**
+   * get_product
+   *
+   * @param $products_id
+   * @return array
+   */
+  function get_product($products_id) {
+    static $products_array;
+    
+    if (!isset($products_array)) {
+      $products_array = array();
+    }
+    
+    if (!isset($products_array[(int)$products_id])) {
+      $product_query = xtc_db_query("SELECT *
+                                       FROM ".TABLE_PRODUCTS."
+                                      WHERE products_id = '".(int)$products_id."'");
+      $products_array[(int)$products_id] = xtc_db_fetch_array($product_query);
+    }
+    
+    return $products_array[(int)$products_id];
+  }
+
+  /**
+   * get_products
+   *
+   * @return array
+   */
   function get_products() {
     global $xtPrice,$main;
     if (!is_array($this->contents)){
@@ -870,18 +886,11 @@ class shoppingCart {
       reset($this->contents);
       foreach ($this->contents as $products_id => $data) {
         $no_count = false;
-        $gv_query = xtc_db_query("SELECT products_model 
-                                    FROM ".TABLE_PRODUCTS." 
-                                   WHERE products_id = '".(int)$products_id."'");
-        $gv_result = xtc_db_fetch_array($gv_query);
+        $gv_result = $this->get_product($products_id);
         if (preg_match('/^GIFT/', $gv_result['products_model'])) {
           $no_count = true;
         }
         if (defined('NO_COUNT_ZERO_WEIGHT') && NO_COUNT_ZERO_WEIGHT == 1) {
-          $gv_query = xtc_db_query("SELECT products_weight 
-                                      FROM ".TABLE_PRODUCTS." 
-                                     WHERE products_id = '".(int)$products_id."'");
-          $gv_result = xtc_db_fetch_array($gv_query);
           if ($gv_result['products_weight'] <= MINIMUM_WEIGHT) {
             $no_count = true;
           }
@@ -905,12 +914,12 @@ class shoppingCart {
     $conditions = str_replace('p.', '', $products_conditions_p);
 
     $status = false;
-    $check_query = xtc_db_query("SELECT products_id 
-                                   FROM ".TABLE_PRODUCTS."
-                                  WHERE products_id = '".(int)$products_id."'
-                                    AND products_status = '1'
-                                        ".$conditions);
-    if (xtc_db_num_rows($check_query) > 0) {
+    $check_query = xtDBquery("SELECT products_id 
+                                FROM ".TABLE_PRODUCTS."
+                               WHERE products_id = '".(int)$products_id."'
+                                 AND products_status = '1'
+                                     ".$conditions);
+    if (xtc_db_num_rows($check_query, true) > 0) {
       $status = true;
     }
     
