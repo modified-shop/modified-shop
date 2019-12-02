@@ -271,7 +271,7 @@
                     
             // create insert for admin access table if customers status is set to 0
             if ($_POST['customers_status'] == 0) {
-              xtc_db_query("INSERT INTO  ".TABLE_ADMIN_ACCESS." (customers_id,start) VALUES ('".$customers_id."','1')");
+              xtc_db_query("INSERT INTO  ".TABLE_ADMIN_ACCESS." (customers_id) VALUES ('".$customers_id."')");
             } else {
               xtc_db_query("DELETE FROM ".TABLE_ADMIN_ACCESS." WHERE customers_id = '".$customers_id."'");
             }
