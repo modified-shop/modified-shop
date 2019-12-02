@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_rand.inc.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -15,7 +15,7 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
    
-function xtc_rand($min = null, $max = null) {
+  function xtc_rand($min = null, $max = null) {
     static $seeded;
 
     if (!isset($seeded)) {
@@ -33,4 +33,4 @@ function xtc_rand($min = null, $max = null) {
       return mt_rand();
     }
   }
- ?>
+?>

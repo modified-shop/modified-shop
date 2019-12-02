@@ -100,4 +100,4 @@ function vvcode_render_code($code) {
     imagedestroy($imgh);
  }
 }
- ?>
+?>
