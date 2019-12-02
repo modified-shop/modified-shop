@@ -1,7 +1,7 @@
 <?php
 
 /* -----------------------------------------------------------------------------------------
-   $Id: campaigns.php 1180 2007-04-23 11:13:00Z Hetfield $
+   $Id$
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -350,7 +350,3 @@ class campaigns {
 
 }
 ?>
-
-
-
-

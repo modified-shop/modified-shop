@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_count_shipping_modules.inc.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -14,9 +14,11 @@
 
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
+  
   // include needed functions
   require_once(DIR_FS_INC . 'xtc_count_modules.inc.php');
+  
   function xtc_count_shipping_modules() {
     return xtc_count_modules(MODULE_SHIPPING_INSTALLED);
   }
- ?>
+?>

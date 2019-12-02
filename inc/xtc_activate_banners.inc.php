@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_activate_banners.inc.php 899 2005-04-29 02:40:57Z hhgag $
+   $Id$
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -15,7 +15,7 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-// Auto activate banners
+  // Auto activate banners
   function xtc_activate_banners() {
     $banners_query = xtc_db_query("SELECT banners_id, 
                                           date_scheduled 
@@ -29,4 +29,4 @@
       }
     }
   }
- ?>
+?>

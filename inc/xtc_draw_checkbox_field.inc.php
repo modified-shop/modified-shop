@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_draw_checkbox_field.inc.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -15,10 +15,10 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-   require_once(DIR_FS_INC . 'xtc_draw_selection_field.inc.php');
+  require_once(DIR_FS_INC . 'xtc_draw_selection_field.inc.php');
    
-// Output a form checkbox field
+  // Output a form checkbox field
   function xtc_draw_checkbox_field($name, $value = '', $checked = false, $parameters = '') {
     return xtc_draw_selection_field($name, 'checkbox', $value, $checked, $parameters);
   }
- ?>
+?>
