@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_get_countries.inc.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $   
+   $Id$   
 
 
    modified eCommerce Shopsoftware
@@ -18,43 +18,23 @@
    ---------------------------------------------------------------------------------------*/
    
   function xtc_get_countriesList($countries_id = '', $with_iso_codes = false) {
-    $countries_array = array();
-    $no_france_fx = " AND countries_iso_code_2 != 'FX' ";
-    if (xtc_not_null($countries_id)) {
-      if ($with_iso_codes == true) {
-        $countries = xtc_db_query("SELECT countries_name, countries_iso_code_2, countries_iso_code_3 
-                                     FROM " . TABLE_COUNTRIES . " 
-                                    WHERE countries_id = '" . (int)$countries_id . "' 
-                                      AND status = '1'
-                                          ".$no_france_fx."
-                                 ORDER BY countries_name
-                                  ");
-        $countries_values = xtc_db_fetch_array($countries);
-        $countries_array = array('countries_name' => $countries_values['countries_name'],
-                                 'countries_iso_code_2' => $countries_values['countries_iso_code_2'],
-                                 'countries_iso_code_3' => $countries_values['countries_iso_code_3']);
-      } else {
-        $countries = xtc_db_query("SELECT countries_name 
-                                     FROM " . TABLE_COUNTRIES . " 
-                                    WHERE countries_id = '" . (int)$countries_id . "'
-                                          ".$no_france_fx."                                    
-                                      AND status = '1'
-                                  ");
-        $countries_values = xtc_db_fetch_array($countries);
-        $countries_array = array('countries_name' => $countries_values['countries_name']);
-      }
-    } else {
-      $countries = xtc_db_query("SELECT countries_id, countries_name 
-                                   FROM " . TABLE_COUNTRIES . " 
-                                  WHERE status = '1'
-                                        ".$no_france_fx."                                  
-                               ORDER BY countries_name");
-      while ($countries_values = xtc_db_fetch_array($countries)) {
-        $countries_array[] = array('countries_id' => $countries_values['countries_id'],
-                                   'countries_name' => $countries_values['countries_name']);
+    static $countries_array;
+    
+    if (!isset($countries_array)) {
+      $countries_query = xtDBquery("SELECT *
+                                         FROM " . TABLE_COUNTRIES . " 
+                                        WHERE status = '1'
+                                          AND countries_iso_code_2 != 'FX'
+                                     ORDER BY countries_name");
+      while ($countries = xtc_db_fetch_array($countries_query, false)) {
+        $countries_array[$countries['countries_id']] = $countries;
       }
     }
-
-    return $countries_array;
+    
+    if (xtc_not_null($countries_id)) {
+      return $countries_array[$countries_id];
+    } else {
+      return array_values($countries_array);
+    }
   }
  ?>

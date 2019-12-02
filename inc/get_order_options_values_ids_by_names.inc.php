@@ -26,8 +26,8 @@
     }
     
     $order_lang_query = xtDBquery("SELECT languages_id
-                                  FROM ".TABLE_LANGUAGES."
-                                 WHERE directory = '".xtc_db_input($language)."'");
+                                     FROM ".TABLE_LANGUAGES."
+                                    WHERE directory = '".xtc_db_input($language)."'");
     if (xtc_db_num_rows($order_lang_query, true) > 0) {
       $tmp = xtc_db_fetch_array($order_lang_query, true);
       $language_id = $tmp['languages_id'];

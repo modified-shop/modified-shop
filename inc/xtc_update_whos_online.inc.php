@@ -30,14 +30,7 @@
     $crawler = 0; 
     if (isset($_SESSION['customer_id'])) {
       $wo_customer_id = (int)$_SESSION['customer_id'];
-
-      $customer_query = xtc_db_query("SELECT customers_firstname,
-                                             customers_lastname
-                                        FROM " . TABLE_CUSTOMERS . "
-                                       WHERE customers_id = '" . (int)$wo_customer_id . "'");
-      $customer = xtc_db_fetch_array($customer_query);
-
-      $wo_full_name = xtc_db_prepare_input($customer['customers_firstname'] . ' ' . $customer['customers_lastname']);
+      $wo_full_name = xtc_db_prepare_input($_SESSION['customer_first_name'] . ' ' . $_SESSION['customer_last_name']);
     } else {
       $wo_customer_id = '';
       $crawler = xtc_check_agent();

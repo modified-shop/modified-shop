@@ -46,29 +46,21 @@
 
       if (strpos(strtoupper($this->sql_query), 'DISTINCT') || strpos(strtoupper($this->sql_query), 'GROUP BY')) {
         $count_string = 'DISTINCT ' . xtc_db_input($count_key);
-        //$count_string = xtc_db_input($count_key);
       } else {
         $count_string = xtc_db_input($count_key);
       }
 
-      //BOF - DokuMan - 2010-08-26 - performance improvement
-      //$count_query = xtDBquery($query);
-      //$count = xtc_db_num_rows($count_query,true);
       $reviews_count_query = xtc_db_query("select count(" . $count_string . ") as total " . substr($query, $pos_from, ($pos_to - $pos_from)));
       $reviews_count = xtc_db_fetch_array($reviews_count_query);
       $count = $reviews_count['total'];
-      //EOF - DokuMan - 2010-08-26 - performance improvement
 
       $this->number_of_rows = $count;
 
-      //BOF -web28- 2010-08-07 - FIX Division by Zero
-      //$this->number_of_pages = ceil($this->number_of_rows / $this->number_of_rows_per_page);
       if ($this->number_of_rows_per_page > 0) {
       $this->number_of_pages = ceil($this->number_of_rows / $this->number_of_rows_per_page);
       } else {
       $this->number_of_pages = 0;
       }
-      //EOF -web28- 2010-08-07 - FIX Division by Zero
 
       if ($this->current_page_number > $this->number_of_pages) {
         $this->current_page_number = $this->number_of_pages;
@@ -76,17 +68,10 @@
 
       $offset = ($this->number_of_rows_per_page * ($this->current_page_number - 1));
 
-      //BOF -web28- 2010-08-07 - FIX possible $offset = -0
       if ($offset < 1) $offset = 0;
-      //EOF -web28- 2010-08-07 - FIX possible $offset = -0
 
-      //BOF - DokuMan - 2010-08-26 - limit by highest offset
-      //$this->sql_query .= " LIMIT " . $offset . ", " . $this->number_of_rows_per_page;
       $this->sql_query .= " LIMIT " . max((int)$offset, 0) . ", " . $this->number_of_rows_per_page;
-      //EOF - DokuMan - 2010-08-26 - limit by highest offset
     }
-
-    // class functions
 
     // display split-page-number-links
     function display_links($max_page_links, $parameters = '') {
