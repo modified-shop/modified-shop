@@ -12,6 +12,9 @@
 
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
+// include needed functions
+require_once(DIR_FS_INC . 'xtc_rand.inc.php');
+
 class it_recht_kanzlei {
   var $code;
   var $title;
@@ -53,7 +56,7 @@ class it_recht_kanzlei {
   // install
   function install() {
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_API_IT_RECHT_KANZLEI_STATUS', 'true',  '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
-    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_API_IT_RECHT_KANZLEI_TOKEN', '".md5(time() . rand(0,99999))."',  '6', '1', '', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_API_IT_RECHT_KANZLEI_TOKEN', '".md5(time() . xtc_rand(0, 99999))."',  '6', '1', '', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_API_IT_RECHT_KANZLEI_VERSION', '1.0',  '6', '1', '', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_API_IT_RECHT_KANZLEI_TYPE_AGB', '3',  '6', '1', 'xtc_cfg_select_content_module(', 'xtc_cfg_display_content', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_API_IT_RECHT_KANZLEI_TYPE_DSE', '2',  '6', '1', 'xtc_cfg_select_content_module(', 'xtc_cfg_display_content', now())");

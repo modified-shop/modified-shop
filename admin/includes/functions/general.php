@@ -1848,24 +1848,7 @@
    * @param mixed $length
    * @return
    */
-  function create_coupon_code($salt = "secret", $length = SECURITY_CODE_LENGTH) {
-    $ccid = md5(uniqid("", "salt"));
-    $ccid .= md5(uniqid("", "salt"));
-    $ccid .= md5(uniqid("", "salt"));
-    $ccid .= md5(uniqid("", "salt"));
-    srand((double) microtime() * 1000000); // seed the random number generator
-    $random_start = @ rand(0, (128 - $length));
-    $good_result = 0;
-    while ($good_result == 0) {
-      $id1 = substr($ccid, $random_start, $length);
-      $query = xtc_db_query("SELECT coupon_code
-                               FROM ".TABLE_COUPONS."
-                              WHERE coupon_code = '".xtc_db_input($id1)."'");
-      if (xtc_db_num_rows($query) == 0)
-        $good_result = 1;
-    }
-    return $id1;
-  }
+  require_once(DIR_FS_INC . 'create_coupon_code.inc.php'); // Use existing function from "/inc/" folder
 
   /**
    * xtc_gv_account_update()

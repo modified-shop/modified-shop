@@ -15,6 +15,9 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
    
+  // include needed functions
+  require_once(DIR_FS_INC . 'xtc_rand.inc.php');
+
   // Returns a random name, 16 to 20 characters long
   // There are more than 10^28 combinations
   // The directory is "hidden", i.e. starts with '.'

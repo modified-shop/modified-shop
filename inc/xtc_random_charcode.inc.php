@@ -12,6 +12,9 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
    
+  // include needed functions
+  require_once(DIR_FS_INC . 'xtc_rand.inc.php');
+
   // build to generate a random charcode
   function xtc_random_charcode($length) {
     $arraysize = 28; 
