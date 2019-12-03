@@ -61,6 +61,12 @@
       </li>
     {/if}
   
+    {if isset($CACHING)}
+      <li class="togglemenu">
+        {if isset($CACHING_LINK)}<a class="togglelink" href="{$CACHING_LINK}" title="{#ab_caching#}">{/if}<img src="{$tpl_path}img/adminbar_attention.png" alt="{#ab_caching#}" />{if isset($CACHING_LINK)}</a>{/if}
+      </li>
+    {/if}
+
     {if isset($SHOP_OFFLINE)}
       <li class="togglemenu">
         {if isset($SHOP_OFFLINE_LINK)}<a class="togglelink" href="{$SHOP_OFFLINE_LINK}" title="{#ab_offline#}">{/if}<img src="{$tpl_path}img/adminbar_offline.png" alt="{#ab_offline#}" />{if isset($SHOP_OFFLINE_LINK)}</a>{/if}
