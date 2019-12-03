@@ -25,6 +25,7 @@ ab_offline = 'Shop Offline'
 ab_update = 'Update'
 ab_support = 'Support'
 ab_shop = 'Shop'
+ab_caching = 'Caching'
 
 ab_edit_content = 'Edit content'
 ab_edit_product = 'Edit product'
