@@ -105,22 +105,22 @@
             <td class="dataTableHeadingContent" style="width:<?php echo (( USE_ADMIN_THUMBS_IN_LIST=='true' ) ? '37%' : '42%'); ?>"><?php echo HEADING_CATEGORY; ?></td>
           </tr>
         <?php
-          $cross_query = "SELECT cs.ID,cs.products_id,
-                                 pd.products_name,
-                                 cs.sort_order,
-                                 p.products_model,
-                                 p.products_id,
-                                 p.products_image,
-                                 cs.products_xsell_grp_name_id
-                            FROM ".TABLE_PRODUCTS_XSELL." cs,
-                                 ".TABLE_PRODUCTS_DESCRIPTION." pd,
-                                 ".TABLE_PRODUCTS." p
-                           WHERE cs.products_id = '".(int) $_GET['current_product_id']."'
-                             AND cs.xsell_id = p.products_id
-                             AND p.products_id = pd.products_id
-                             AND pd.language_id = '".(int)$_SESSION['languages_id']."'
-                        ORDER BY cs.sort_order";
-          $cross_query = xtc_db_query($cross_query);
+          $cross_query = xtc_db_query("SELECT cs.ID,
+                                              cs.products_id,
+                                              cs.sort_order,
+                                              cs.products_xsell_grp_name_id,
+                                              p.products_model,
+                                              p.products_id,
+                                              p.products_image,
+                                              pd.products_name
+                                         FROM ".TABLE_PRODUCTS_XSELL." cs
+                                         JOIN ".TABLE_PRODUCTS." p
+                                              ON cs.xsell_id = p.products_id
+                                         JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
+                                              ON p.products_id = pd.products_id
+                                                 AND pd.language_id = '".(int)$_SESSION['languages_id']."'
+                                        WHERE cs.products_id = '".(int)$_GET['current_product_id']."'                             
+                                     ORDER BY cs.sort_order");
           if (!xtc_db_num_rows($cross_query)) {
             ?>
             <tr>
@@ -158,27 +158,35 @@
           ?>
         </table>
         <div class="mrg5">
-          <input type="submit" class="button" value="<?php echo BUTTON_SAVE; ?>" <?php echo $confirm_save_entry;?>>
+          <div class="flt-r">
+            <?php if (!isset($_GET['search']) || $_GET['search'] == '') { ?>
+              <input type="submit" class="button" value="<?php echo BUTTON_SAVE; ?>" <?php echo $confirm_save_entry;?>>
+            <?php } ?>
+          </div>
         </div>
       </form>
-
-      <hr>
-      <div class="pageHeading pdg2"><?php echo CROSS_SELLING_SEARCH; ?></div>
-      <?php
-        echo xtc_draw_form('product_search', FILENAME_CATEGORIES, '', 'GET').PHP_EOL;
-        echo xtc_draw_hidden_field('action', 'edit_crossselling').PHP_EOL;
-        echo xtc_draw_hidden_field('current_product_id', $_GET['current_product_id']).PHP_EOL;
-        echo xtc_draw_hidden_field('cpath', $_GET['cpath']).PHP_EOL;
-        echo xtc_draw_hidden_field('page', $_GET['page']).PHP_EOL;
-      ?>
-      <div class="main pdg2 flt-l"><?php echo xtc_draw_input_field('search', ((isset($_GET['search'])) ? $_GET['search'] : ''), 'size="30"');?></div>
-      <div class="main pdg2 flt-l">
-      <?php
-        echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SEARCH . '"/>';
-      ?>
+      
+      <div class="mrg5">
+        <div class="flt-l">
+          <div class="main" style="display:inline-block; padding: 5px; vertical-align:top;">
+            <?php
+            echo xtc_draw_form('product_search', FILENAME_CATEGORIES, '', 'GET').PHP_EOL;
+            echo xtc_draw_hidden_field('action', 'edit_crossselling').PHP_EOL;
+            echo xtc_draw_hidden_field('current_product_id', $_GET['current_product_id']).PHP_EOL;
+            echo xtc_draw_hidden_field('cpath', $_GET['cpath']).PHP_EOL;
+            echo xtc_draw_hidden_field('page', $_GET['page']).PHP_EOL;
+            echo CROSS_SELLING_SEARCH.'&nbsp;'.xtc_draw_input_field('search', ((isset($_GET['search'])) ? $_GET['search'] : ''), 'size="30"');
+            echo '&nbsp;<input type="submit" class="button no_top_margin"  style="vertical-align:top;" onclick="this.blur();" value="' . BUTTON_SEARCH . '"/>';
+            if (isset($_GET['search']) && $_GET['search'] != '') {
+              echo '<a class="button no_top_margin" style="vertical-align:top;" href="'.xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('search'))).'">'.BUTTON_RESET.'</a>';
+            }
+            ?>
+            </form>
+          </div>
+        </div>
       </div>
-      </form>
       <div class="clear"></div>
+      
       <script type="text/javascript">
         $("#deleteall").click(function() {
           var checked = $("#deleteall").is(':checked');
@@ -186,13 +194,13 @@
         });
       </script>
     
-      <hr>
       <?php
       // search results
       if ($_GET['search']) {
         echo xtc_draw_form('product_search', FILENAME_CATEGORIES, xtc_get_all_get_params(array('search', 'special')), 'POST', $confirm_submit).PHP_EOL;
         echo xtc_draw_hidden_field('special', 'add_entries').PHP_EOL;
         ?>
+        <br>
         <table class="tableBoxCenter collapse">
           <tr>
             <td class="dataTableHeadingContent" align="center" style="width:4%"><?php echo HEADING_ADD.'<br/>'.xtc_draw_checkbox_field('addall', '', false, '', 'id="addall"'); ?></td>
@@ -298,7 +306,7 @@
             }
             ?>
           </table>
-          <div class="mrg5">
+          <div class="mrg5 txta-r">
             <input type="submit" class="button" value="<?php echo BUTTON_SAVE; ?>" <?php echo $confirm_save_entry;?>>
           </div>
         </form>
@@ -310,4 +318,4 @@
         </script>
         <?php
       } 
-      ?>
+?>

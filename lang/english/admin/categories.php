@@ -192,7 +192,7 @@ define('TEXT_PRODUCTS_VPE_VALUE',' Value:');
 
 define('CROSS_SELLING_1','Cross selling');
 define('CROSS_SELLING_2','for product');
-define('CROSS_SELLING_SEARCH','Search product:<br/><small><i>Products name or products model or GTIN/EAN</i></small>');
+define('CROSS_SELLING_SEARCH','Search product:');
 define('BUTTON_EDIT_CROSS_SELLING','Cross selling');
 define('HEADING_DEL','Delete');
 define('HEADING_ADD','Add?');
