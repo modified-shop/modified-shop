@@ -166,7 +166,7 @@ class cod {
 
   function process_button() {
     $note = '';
-    if (MODULE_PAYMENT_COD_DISPLAY_INFO == 'True') {
+    if (defined('MODULE_PAYMENT_COD_DISPLAY_INFO') && MODULE_PAYMENT_COD_DISPLAY_INFO == 'True') {
       $note = MODULE_PAYMENT_COD_DISPLAY_INFO_TEXT;
     }
     return $note;
