@@ -63,6 +63,13 @@ $transaction_array = array(
   array('id' => 'authorize', 'text' => 'Authorize'),
 ); 
 
+$color_array = array(
+  array('id' => 'white', 'text' => 'White'),
+  array('id' => 'blue', 'text' => 'Blue'),
+  array('id' => 'grey', 'text' => 'Grey'),
+  array('id' => 'black', 'text' => 'Black'),
+);
+
 $log_level_array = array(
   array('id' => 'ERROR', 'text' => 'Error'),
   array('id' => 'WARNING', 'text' => 'Warning'),
@@ -180,6 +187,16 @@ require (DIR_WS_INCLUDES.'head.php');
                 <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_CART; ?></td>
                 <td class="dataTableConfig col-middle"><?php echo draw_on_off_selection('config[PAYPAL_ADD_CART_DETAILS]', $status_array, (($paypal->get_config('PAYPAL_ADD_CART_DETAILS') == 1) ? true : false)); ?></td>
                 <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_CONFIG_CART_INFO; ?></td>
+              </tr>
+              <tr>
+                <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_INSTALLMENT_BANNER_DISPLAY; ?></td>
+                <td class="dataTableConfig col-middle"><?php echo draw_on_off_selection('config[PAYPAL_INSTALLMENT_BANNER_DISPLAY]', $status_array, $paypal->get_config('PAYPAL_INSTALLMENT_BANNER_DISPLAY')); ?></td>
+                <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_INSTALLMENT_BANNER_DISPLAY_INFO; ?></td>
+              </tr>
+              <tr>
+                <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_INSTALLMENT_BANNER_COLOR; ?></td>
+                <td class="dataTableConfig col-middle"><?php echo xtc_draw_pull_down_menu('config[PAYPAL_INSTALLMENT_BANNER_COLOR]', $color_array, $paypal->get_config('PAYPAL_INSTALLMENT_BANNER_COLOR')); ?></td>
+                <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_INSTALLMENT_BANNER_COLOR_INFO; ?></td>
               </tr>
               <tr>
                 <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_STATE_SUCCESS; ?></td>

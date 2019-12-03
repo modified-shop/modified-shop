@@ -40,6 +40,12 @@ $lang_array = array(
   'TEXT_PAYPAL_CONFIG_CART' => 'Cart:',
   'TEXT_PAYPAL_CONFIG_CART_INFO' => 'Transfer cart details to PayPal?<br/><br/><b>Note:</b> This setting can cause problems when using ot-modules under "Modules" -> "Order Total", which grant a discount or surcharge ("Discount [ot_discount]", "Discount Coupons [ot_coupon]", "Gift Vouchers [ot_gv]", "Payment type discount &amp; surcharge [ot_payment]", etc.).<br/>Recommended setting: "no"',
 
+  'TEXT_PAYPAL_INSTALLMENT_BANNER_DISPLAY' => 'Credit banner:',
+  'TEXT_PAYPAL_INSTALLMENT_BANNER_DISPLAY_INFO' => 'Display credit banner?<br/><br/><b>Note:</b> PayPal Installment is only available if your PayPal account is approved.',
+
+  'TEXT_PAYPAL_INSTALLMENT_BANNER_COLOR' => 'Banner color:',
+  'TEXT_PAYPAL_INSTALLMENT_BANNER_COLOR_INFO' => 'Choose color for the banner.',
+
   'TEXT_PAYPAL_CONFIG_STATE_SUCCESS' => 'Status success:',
   'TEXT_PAYPAL_CONFIG_STATE_SUCCESS_INFO' => 'Status for success order',
 

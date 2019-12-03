@@ -306,8 +306,8 @@ class PayPalPaymentBase extends PayPalCommon {
     global $PHP_SELF;
   
     if ($this->enabled === true
-        && $_SESSION['allow_checkout'] == 'true'
         && $_SESSION['cart']->show_total() > 0
+        && (!isset($_SESSION['allow_checkout']) || $_SESSION['allow_checkout'] == 'true')
         ) 
     {
       $unallowed_modules = explode(',', $_SESSION['customers_status']['customers_status_payment_unallowed']);
@@ -489,10 +489,7 @@ class PayPalPaymentBase extends PayPalCommon {
   
     // check tabs
     if ($this->code == 'paypalplus') {
-      $check_query = xtc_db_query("SELECT config_key
-                                     FROM ".TABLE_PAYPAL_CONFIG."
-                                    WHERE config_value = 'MODULE_PAYMENT_PAYPALPLUS_USE_TABS'");
-      if (xtc_db_num_rows($check_query) < 1) {
+      if ($this->get_config('MODULE_PAYMENT_PAYPALPLUS_USE_TABS') == '') {
         $sql_data_array = array(
           'config_key' => 'MODULE_PAYMENT_PAYPALPLUS_USE_TABS',
           'config_value' => '1'
@@ -503,10 +500,7 @@ class PayPalPaymentBase extends PayPalCommon {
 
     // check express button
     if ($this->code == 'paypalcart') {
-      $check_query = xtc_db_query("SELECT config_key
-                                     FROM ".TABLE_PAYPAL_CONFIG."
-                                    WHERE config_value = 'MODULE_PAYMENT_PAYPALCART_SHOW_PRODUCT'");
-      if (xtc_db_num_rows($check_query) < 1) {
+      if ($this->get_config('MODULE_PAYMENT_PAYPALCART_SHOW_PRODUCT') == '') {
         $sql_data_array = array(
           'config_key' => 'MODULE_PAYMENT_PAYPALCART_SHOW_PRODUCT',
           'config_value' => '1'
@@ -669,7 +663,27 @@ class PayPalPaymentBase extends PayPalCommon {
       )
     );
     $this->save_config($sql_data_array);
+    
+    if ($this->get_config('PAYPAL_INSTALLMENT_BANNER_DISPLAY') == '') {
+      $sql_data_array = array(
+        array(
+          'config_key' => 'PAYPAL_INSTALLMENT_BANNER_DISPLAY',
+          'config_value' => 1,
+        )
+      );
+      $this->save_config($sql_data_array);
+    }
 
+    if ($this->get_config('PAYPAL_INSTALLMENT_BANNER_COLOR') == '') {
+      $sql_data_array = array(
+        array(
+          'config_key' => 'PAYPAL_INSTALLMENT_BANNER_COLOR',
+          'config_value' => 'white',
+        )
+      );
+      $this->save_config($sql_data_array);
+    }
+    
     if (!defined('MODULE_PAYMENT_PAYPAL_SECRET')) {
       xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('MODULE_PAYMENT_PAYPAL_SECRET', '".md5(uniqid())."', '6', '3', NULL, now(), '', '')");
     }

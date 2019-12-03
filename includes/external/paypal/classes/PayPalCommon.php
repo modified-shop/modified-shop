@@ -107,12 +107,21 @@ class PayPalCommon extends PayPalAuth {
 
 
   function get_config($config_key) {
-    $config_query = xtc_db_query("SELECT config_value 
-                                    FROM ".TABLE_PAYPAL_CONFIG." 
-                                   WHERE config_key = '".xtc_db_input($config_key)."'");
-    $config = xtc_db_fetch_array($config_query);
+    static $config_array;
     
-    return $config['config_value'];
+    if (!is_array($config_array)) {
+      $config_array = array();
+    }
+    
+    if (!isset($config_array[$config_key])) {
+      $config_query = xtc_db_query("SELECT config_value 
+                                      FROM ".TABLE_PAYPAL_CONFIG." 
+                                     WHERE config_key = '".xtc_db_input($config_key)."'");
+      $config = xtc_db_fetch_array($config_query);
+      $config_array[$config_key] = $config['config_value'];
+    }
+    
+    return $config_array[$config_key];
   }
 
 
