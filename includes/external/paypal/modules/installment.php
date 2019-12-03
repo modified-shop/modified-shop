@@ -13,7 +13,7 @@
   $installment_container = '<div class="pp-message"></div>';
   
   $installment_html = '
-    <script src="https://www.paypal.com/sdk/js?client-id=%s&currency=%s&components=messages"></script>
+    <script defer src="https://www.paypal.com/sdk/js?client-id=%s&currency=%s&components=messages"></script>
     <div data-pp-message data-pp-amount="%s"></div>';
   
   $installment_js = "
