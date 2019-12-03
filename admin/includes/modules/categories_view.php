@@ -1003,7 +1003,7 @@
                                                  .(function_exists('tags_iframe_link') ? tags_iframe_link($pInfo->products_id) : '')
                                                  );
                   $contents[] = array('align' => 'center', 
-                                      'text' =>  '<a class="button" href="'.xtc_href_link(FILENAME_CATEGORIES, xtc_get_app_get_params(array('action', 'current_product_id', 'cpath', 'pID')).'action=edit_crossselling&current_product_id='.$pInfo->products_id.'&cpath='.$cPath).'">' . BUTTON_EDIT_CROSS_SELLING . '</a>
+                                      'text' =>  '<a class="button" href="'.xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('action', 'current_product_id', 'cpath', 'pID')).'action=edit_crossselling&current_product_id='.$pInfo->products_id.'&cpath='.$cPath).'">' . BUTTON_EDIT_CROSS_SELLING . '</a>
                                                   <a class="button" href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action')) . (isset($_GET['action']) ? 'last_action='.$_GET['action'].'&' : '') .'action=new_products_content'.'&set=product') . '">' . BUTTON_NEW_CONTENT . '</a>'
                                                  );                  
                   //Insert new Element Actions
