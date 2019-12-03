@@ -187,6 +187,7 @@ define('BOX_TRUSTEDSHOPS', 'Trusted Shops');
 define('BOX_NEWSLETTER_RECIPIENTS', 'Newsletter recipients');
 define('BOX_DSGVO_EXPORT', 'GDPR Export');
 define('BOX_SUPPORT', 'Support');
+define('BOX_CACHING', 'Caching');
 
 define('TXT_GROUPS','<b>Groups</b>:');
 define('TXT_SYSTEM','System');

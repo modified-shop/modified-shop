@@ -47,8 +47,14 @@
   // check update
   require_once(DIR_FS_INC.'check_version_update.inc.php');
   $update_array = check_version_update();
-  ?>
- 
+  
+  // caching
+  $configuration_query = xtc_db_query("SELECT count(*) as total 
+                                         FROM ".TABLE_CONFIGURATION."
+                                        WHERE configuration_value = 'true' 
+                                          AND (configuration_key = 'DB_CACHE' OR configuration_key = 'USE_CACHE')");
+  $configuration = xtc_db_fetch_array($configuration_query);
+?> 
 <div id="fixed-header"<?php echo ((USE_ADMIN_FIXED_SEARCH == 'true') ? ' class="active"' : ''); ?>>
   <div class="admin_spacer"></div>
   <div class="adminbar">
@@ -59,7 +65,7 @@
         <?php
           $favorites = array();
 
-          $favorites[0] = array(
+          $favorites[] = array(
               'file'  => 'index.php',
               'par'  => '', 
               'mode'  => 1,
@@ -67,8 +73,7 @@
               'name'  => BOX_SHOP,
               'class' => ''
             );
-
-          $favorites[1] = array(
+          $favorites[] = array(
               'file'  => 'orders.php',
               'par'  => '', 
               'mode'  => 0,
@@ -76,7 +81,7 @@
               'name'  => BOX_ORDERS,
               'class' => ''
             );
-          $favorites[2] = array(
+          $favorites[] = array(
               'file'  => 'customers.php',
               'par'  => '', 
               'mode'  => 0,
@@ -84,7 +89,7 @@
               'name'  => BOX_CUSTOMERS,
               'class' => ''
             );
-          $favorites[3] = array(
+          $favorites[] = array(
               'file'  => 'categories.php',
               'par'  => '', 
               'mode'  => 0,
@@ -92,7 +97,7 @@
               'name'  => BOX_CATEGORIES,
               'class' => ''
             );
-          $favorites[4] = array(
+          $favorites[] = array(
               'file'  => 'content_manager.php',
               'par'  => '', 
               'mode'  => 0,
@@ -100,7 +105,7 @@
               'name'  => BOX_CONTENT,
               'class' => ''
             );
-          $favorites[5] = array(
+          $favorites[] = array(
               'file'  => 'backup.php',
               'par'  => '', 
               'mode'  => 0,
@@ -109,8 +114,19 @@
               'class' => ''
             );
 
+          if ($configuration['total'] > 0) {
+            $favorites[] = array(
+                'file' => 'configuration.php',
+                'par' => 'gID=11',
+                'mode' => 0,
+                'icon' => 'icon_attention.png',
+                'name' => BOX_CACHING,
+                'class' => ''
+              );
+          }
+
           if (xtc_get_shop_conf('SHOP_OFFLINE') == 'checked') {
-            $favorites[6] = array(
+            $favorites[] = array(
                 'file' => 'shop_offline.php',
                 'par' => '',
                 'mode' => 0,
@@ -121,7 +137,7 @@
           }
           
           if (USE_ADMIN_FIXED_SEARCH == 'false') {
-            $favorites[7] = array(
+            $favorites[] = array(
                 'file' => "javascript:void(0)\" onclick=\"$('#searchbar_new').toggle('fast').parent('#fixed-header').toggleClass('active').siblings('.fixed-header-height').toggleClass('active');",
                 'par' => '',
                 'mode' => 2,
@@ -131,7 +147,7 @@
               );
           }
           
-          $favorites[8] = array(
+          $favorites[] = array(
               'file' => 'logoff.php',
               'par' => '', 
               'mode' => 1,
@@ -139,7 +155,7 @@
               'name' => BOX_LOGOUT,
               'class' => 'right'
             );    
-          $favorites[9] = array(
+          $favorites[] = array(
               'file'  => 'newsfeed.php',
               'par'   => '', 
               'mode'  => 0,
@@ -148,7 +164,7 @@
               'class' => 'right',
               'count' => $num_news['total']
             );
-          $favorites[10] = array(
+          $favorites[] = array(
               'file'  => 'credits.php',
               'par'   => '', 
               'mode'  => 0,
@@ -156,7 +172,7 @@
               'name'  => BOX_CREDITS,
               'class' => 'right'
             );
-          $favorites[11] = array(
+          $favorites[] = array(
               'file'  => 'check_update.php',
               'par'   => '', 
               'mode'  => 0,
@@ -165,7 +181,7 @@
               'class' => 'right',
               'count' => $update_array['update']
             );
-          $favorites[12] = array(
+          $favorites[] = array(
               'file'  => xtc_href_link('support.php'),
               'par'   => '', 
               'mode'  => 2,
@@ -173,7 +189,7 @@
               'name'  => BOX_SUPPORT,
               'class' => 'right',
             );
-          $favorites[13] = array(
+          $favorites[] = array(
               'file'  => 'https://www.modified-shop.org/shop/',
               'target' => '_blank',
               'par'   => '', 
