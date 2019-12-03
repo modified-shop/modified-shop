@@ -82,7 +82,7 @@
     <div class="pageHeading"><?php echo CROSS_SELLING_1; ?></div>
     <div class="main pdg2 flt-l"><?php echo CROSS_SELLING_2 . ' "' . $article_data['products_name'] . '"'; ?></div>
     <div class="clear mrg5">
-      <a class="button" onClick="this.blur()" href="<?php echo xtc_href_link(FILENAME_CATEGORIES,'cPath='.$_GET['cpath'].'&pID='.$_GET['current_product_id']); ?>"><?php echo BUTTON_BACK; ?></a>
+      <a class="button" onClick="this.blur()" href="<?php echo xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('action', 'current_product_id', 'cpath')).'cPath='.$_GET['cpath'].'&pID='.$_GET['current_product_id']); ?>"><?php echo BUTTON_BACK; ?></a>
     </div>
 
       <?php
@@ -169,6 +169,7 @@
         echo xtc_draw_hidden_field('action', 'edit_crossselling').PHP_EOL;
         echo xtc_draw_hidden_field('current_product_id', $_GET['current_product_id']).PHP_EOL;
         echo xtc_draw_hidden_field('cpath', $_GET['cpath']).PHP_EOL;
+        echo xtc_draw_hidden_field('page', $_GET['page']).PHP_EOL;
       ?>
       <div class="main pdg2 flt-l"><?php echo xtc_draw_input_field('search', ((isset($_GET['search'])) ? $_GET['search'] : ''), 'size="30"');?></div>
       <div class="main pdg2 flt-l">
