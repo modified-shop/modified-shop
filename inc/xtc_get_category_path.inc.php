@@ -17,6 +17,7 @@
    
   // Construct a category path
   function xtc_get_category_path($cID) {
+    global $modified_cache;
     static $cPath_cache;
   
     if (!is_array($cPath_cache)) {
