@@ -1117,7 +1117,10 @@
             action = true;
           }
           if (action === false && this.nodeName == 'TR') {
-            window.location.href = $(this).data('event');
+            var loc = $(this).data('event');
+            if (loc !== undefined) {
+              window.location.href = loc;
+            }
           }
           if (this.nodeName == 'TR') {
             action = false;
