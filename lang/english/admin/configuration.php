@@ -462,7 +462,7 @@ define('SHOW_IP_LOG_TITLE','IP-Log on Checkout?');
 define('SHOW_IP_LOG_DESC','Show Text "Your IP will be saved", in checkout?');
 
 define('ACTIVATE_GIFT_SYSTEM_TITLE','Activate Gift Voucher System');
-define('ACTIVATE_GIFT_SYSTEM_DESC','Activate gift voucher system<br/><br/><b>Attention: </b>You have to install the Modules ot_coupon <a href="'.xtc_href_link(FILENAME_MODULES, 'set=ordertotal&module=ot_coupon').'"><b>here</b></a> and ot_gv <a href="'.xtc_href_link(FILENAME_MODULES, 'set=ordertotal&module=ot_gv').'"><b>here</b></a>.');
+define('ACTIVATE_GIFT_SYSTEM_DESC','Activate gift voucher system<br/><br/><b>Attention:</b> You have to install the Modules ot_coupon <a href="'.xtc_href_link(FILENAME_MODULES, 'set=ordertotal&module=ot_coupon').'"><b>here</b></a> and ot_gv <a href="'.xtc_href_link(FILENAME_MODULES, 'set=ordertotal&module=ot_gv').'"><b>here</b></a>.');
 
 define('ACTIVATE_SHIPPING_STATUS_TITLE','Display Shipping Status');
 define('ACTIVATE_SHIPPING_STATUS_DESC','Show shipping status? (Different dispatch times can be specified for individual products. If enabled, a new item <b>Delivery Status</b> is displayed on product input)');
@@ -1020,5 +1020,5 @@ define('MODULE_NEWSLETTER_DISCOUNT_COUPON_DESC', 'For newsletter registration co
 define('ADMIN_START_TAB_SELECTED_TITLE', 'Tabs startpage');
 define('ADMIN_START_TAB_SELECTED_DESC', 'Which tab on the start page should be selected by default?');
 
-define('CACHE_LIFETIME_NOTE', '<b>Attention:</b> if the cache is activated, changes will only become visible in the shop after the cache lifetime expires!');
+define('CACHE_LIFETIME_NOTE', '<b>Attention:</b> If the cache is activated, changes will only become visible in the shop after the cache lifetime expires!');
 ?>

@@ -1012,5 +1012,5 @@ define('MODULE_NEWSLETTER_DISCOUNT_COUPON_DESC', 'F&uuml;r einen Coupon bei der 
 define('ADMIN_START_TAB_SELECTED_TITLE', 'Tabs Startseite');
 define('ADMIN_START_TAB_SELECTED_DESC', 'Welcher Tab auf der Startseite soll standardm&auml;&szlig;ig ausgew&auml;hlt sein?');
 
-define('CACHE_LIFETIME_NOTE', '<b>Achtung:</b> bei aktiviertem Cache werden &Auml;nderungen erst nach Ablauf der Cache Lebenszeit im Shop sichtbar!');
+define('CACHE_LIFETIME_NOTE', '<b>Achtung:</b> Bei aktiviertem Cache werden &Auml;nderungen erst nach Ablauf der Cache Lebenszeit im Shop sichtbar!');
 ?>
