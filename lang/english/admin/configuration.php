@@ -1019,4 +1019,6 @@ define('MODULE_NEWSLETTER_DISCOUNT_COUPON_DESC', 'For newsletter registration co
 
 define('ADMIN_START_TAB_SELECTED_TITLE', 'Tabs startpage');
 define('ADMIN_START_TAB_SELECTED_DESC', 'Which tab on the start page should be selected by default?');
+
+define('CACHE_LIFETIME_NOTE', '<b>Attention:</b> if the cache is activated, changes will only become visible in the shop after the cache lifetime expires!');
 ?>

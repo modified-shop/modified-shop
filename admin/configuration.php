@@ -151,6 +151,10 @@
   $cfg_group_query = xtc_db_query("select configuration_group_title, configuration_group_id from " . TABLE_CONFIGURATION_GROUP . " where configuration_group_id = '" . (int)$_GET['gID'] . "'"); // Hetfield - 2010-01-15 - multilanguage title in configuration
   $cfg_group = xtc_db_fetch_array($cfg_group_query);
   
+  if ((int)$_GET['gID'] == 11) {
+    $messageStack->add(CACHE_LIFETIME_NOTE, 'error');
+  }
+
   require (DIR_WS_INCLUDES.'head.php');
 ?>
   <script type="text/javascript" src="includes/general.js"></script>
