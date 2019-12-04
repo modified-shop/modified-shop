@@ -111,6 +111,8 @@ require (DIR_WS_INCLUDES.'head.php');
                         <dt>cYbercOsmOnauT</dt><dd>&lt;cybercosmonaut@modified-shop.org&gt;</dd> <!-- 6446 -->
                         <dt>hellwanger</dt><dd>&lt;hellwanger@modified-shop.org&gt;</dd> <!-- 21189 -->
                         <dt>webald</dt><dd>&lt;webald@modified-shop.org&gt;</dd> <!-- 18826 -->
+                        <dt>timopaul</dt><dd>&lt;timopaul@modified-shop.org&gt;</dd> <!-- 10390 -->
+                        <dt>AGI</dt><dd>&lt;agi@modified-shop.org&gt;</dd> <!-- 10246 -->
                       </dl>
                     </dd>
                   </dl>
