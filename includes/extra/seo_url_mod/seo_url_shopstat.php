@@ -180,8 +180,10 @@ class seo_url_shopstat extends modified_seo_url {
                                          FROM ".TABLE_PRODUCTS_DESCRIPTION."
                                         WHERE products_id = '".(int)$this->params_array['products_id']."'
                                           AND language_id = '".(int)$this->language_id."'");
-      $products_name = xtc_db_fetch_array($products_name_query, true);
-      self::$names_array['products'][$this->language_id][$this->params_array['products_id']] = self::seo_url_href_mask($products_name['products_name']);
+      if (xtc_db_num_rows($products_name_query, true) > 0) {
+        $products_name = xtc_db_fetch_array($products_name_query, true);
+        self::$names_array['products'][$this->language_id][$this->params_array['products_id']] = self::seo_url_href_mask($products_name['products_name']);
+      }
     }
     
     if (!empty(self::$names_array['products'][$this->language_id][$this->params_array['products_id']])) {
