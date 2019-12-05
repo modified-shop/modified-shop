@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id:$   
+   $Id$   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -37,7 +37,9 @@ function xtc_get_content_id($content_group) {
                                       FROM ".TABLE_CONTENT_MANAGER."
                                      WHERE content_group='".(int) $content_group."'
                                        AND languages_id='".(int) $_SESSION['languages_id']."'");
-  $content_group = xtc_db_fetch_array($content_group_query, true);
-  return $content_group['content_id'];
+  if (xtc_db_num_rows($content_group_query, true) > 0) {
+    $content_group = xtc_db_fetch_array($content_group_query, true);
+    return $content_group['content_id'];
+  }
 }
 ?>

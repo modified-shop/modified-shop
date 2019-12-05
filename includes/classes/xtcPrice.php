@@ -536,16 +536,18 @@ class xtcPrice {
     $pID = $this->priceModules->checkAttributes($pID);
     
     $products_attributes_query = "SELECT count(*) as total 
-                                    FROM " . TABLE_PRODUCTS_OPTIONS . " popt,
-                                         " . TABLE_PRODUCTS_ATTRIBUTES . " patrib
-                                   WHERE patrib.products_id = '" . $pID . "'
-                                     AND patrib.options_id = popt.products_options_id
-                                     AND popt.language_id = '" . (int) $_SESSION['languages_id'] . "'
-                                     AND patrib.options_values_price > 0";
+                                    FROM " . TABLE_PRODUCTS_ATTRIBUTES . " patrib
+                                    JOIN " . TABLE_PRODUCTS_OPTIONS . " popt
+                                         ON patrib.options_id = popt.products_options_id
+                                            AND popt.language_id = '" . (int) $_SESSION['languages_id'] . "'
+                                   WHERE patrib.options_values_price > 0
+                                     AND patrib.products_id = '" . (int)$pID . "'";
     $products_attributes = xtDBquery($products_attributes_query);
-    $products_attributes = xtc_db_fetch_array($products_attributes, true);
-    if ($products_attributes['total'] > 0) {
-      return ' ' . FROM . ' ';
+    if (xtc_db_num_rows($products_attributes, true) > 0) {
+      $products_attributes = xtc_db_fetch_array($products_attributes, true);
+      if ($products_attributes['total'] > 0) {
+        return ' ' . FROM . ' ';
+      }
     }
   }
   
