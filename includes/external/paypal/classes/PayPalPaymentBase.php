@@ -668,7 +668,7 @@ class PayPalPaymentBase extends PayPalCommon {
       $sql_data_array = array(
         array(
           'config_key' => 'PAYPAL_INSTALLMENT_BANNER_DISPLAY',
-          'config_value' => 1,
+          'config_value' => 0,
         )
       );
       $this->save_config($sql_data_array);
