@@ -235,10 +235,8 @@ elseif (isset($_SESSION['cc_id']) && $total <= 0) {
   $smarty->assign('GV_COVER', 'true');
 } 
 //Guthaben
-elseif (!isset($_SESSION['cot_gv'])) {
+elseif (!isset($_SESSION['cot_gv']) || $total <= 0) {
   $order_total_modules->pre_confirmation_check();
-  //$smarty->assign('GV_COVER', 'true');
-} elseif ($total <= 0) {
   unset($_SESSION['payment']);
   $smarty->assign('NO_PAYMENT', 'true');
 }
