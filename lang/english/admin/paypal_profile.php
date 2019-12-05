@@ -35,7 +35,7 @@ $lang_array = array(
   'TEXT_PAYPAL_PROFILE_ADDRESS' => 'Address override:',
   'TEXT_PAYPAL_PROFILE_ADDRESS_INFO' => 'Shall the shipping address provided by PayPal be taken over?',
 
-  'TEXT_PAYPAL_PROFILE_INFO' => 'No PayPal Profile available.<br/><br/>Use a PayPal Profile to:<ul><li>use an Image at PayPal</li><li>get Address from PayPal for Buyer Protection</li></ul>',  
+  'TEXT_PAYPAL_PROFILE_INFO' => 'No PayPal Profile available.<br/><br/>Use a PayPal Profile to:<ul><li>change the displayed account name at PayPal</li><li>use an Image at PayPal</li><li>set landingpage at PayPal</li></ul>',  
 );
 
 
