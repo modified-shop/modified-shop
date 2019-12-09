@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: currencies.php 11750 2019-04-12 07:20:09Z GTB $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -36,7 +36,7 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_currencies.html', $cach
   if (count($currencies_array) > 1 ) {
     $box_content = xtc_draw_form('currencies', xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('currency', 'language')), $request_type, false), 'get', 'class="box-currencies"')
                    . xtc_draw_pull_down_menu('currency', $currencies_array, $_SESSION['currency'], 'onchange="this.form.submit();"')
-                   . $hidden_get_variables . xtc_hide_session_id()
+                   . xtc_hide_session_id()
                    . '</form>';
 
     $box_smarty->assign('BOX_CONTENT', $box_content);
