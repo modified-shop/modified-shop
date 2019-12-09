@@ -553,9 +553,10 @@
         $this->billing = $customers_standard_arr;
       }
       
-      if (isset($_SESSION['shipping']) && $_SESSION['shipping'] != false) {
-        require_once (DIR_WS_CLASSES . 'shipping.php');
-        $shipping_modules = new shipping($_SESSION['shipping']);
+      if (isset($_SESSION['shipping']) 
+          && $_SESSION['shipping'] != false
+          )
+      {
         $shipping_class = substr($this->info['shipping_class'], 0, strpos($this->info['shipping_class'], '_'));
       
         if (isset($GLOBALS[$shipping_class])

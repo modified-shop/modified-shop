@@ -19,7 +19,7 @@
       // get all available shipping quotes
       $quotes = $shipping_modules->quote();
 
-      $module_error = $method_error = true;
+      $module_error = $method_error = ($free_shipping != true);
       foreach ($quotes as $modules) {
         if ($modules['id'] == $module) {
           $module_error = false;
