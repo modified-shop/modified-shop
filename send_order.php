@@ -67,6 +67,7 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
   $smarty->assign('SHIPPING_CLASS', $shipping_class[0]);
   
   //payment method
+  $payment_method = $payment_class = '';
   if ($order->info['payment_method'] != '' && $order->info['payment_method'] != 'no_payment') {    
     require_once (DIR_WS_CLASSES . 'payment.php');
     $payment_modules = new payment($order->info['payment_class']);

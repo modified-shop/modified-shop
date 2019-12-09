@@ -111,12 +111,13 @@ $order_total_modules->pre_confirmation_check();
 
 // GV Code line changed
 if ((is_array($payment_modules->modules) 
-     && (sizeof($payment_modules->modules) > 0) 
-     && (!is_object(${$_SESSION['payment']})) 
-     && (!isset($_SESSION['credit_covers']))) 
+     && sizeof($payment_modules->modules) > 0 
+     && !isset($_SESSION['credit_covers'])
+     && (!isset(${$_SESSION['payment']}) || !is_object(${$_SESSION['payment']})))
     || 
-    (is_object(${$_SESSION['payment']}) 
-     && (${$_SESSION['payment']}->enabled == false))
+    (isset(${$_SESSION['payment']})
+     && is_object(${$_SESSION['payment']}) 
+     && ${$_SESSION['payment']}->enabled == false)
     ||
     (isset($_SESSION['cot_gv'])
      && $_SESSION['cot_gv'] > 0
