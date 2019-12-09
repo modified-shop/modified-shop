@@ -19,7 +19,7 @@
     if ($free_shipping == true) {
       $module_smarty->assign('FREE_SHIPPING_TITLE', FREE_SHIPPING_TITLE);
       $module_smarty->assign('FREE_SHIPPING_DESCRIPTION', sprintf(FREE_SHIPPING_DESCRIPTION, $xtPrice->xtcFormat($free_shipping_value_over, true, 0, true)).xtc_draw_hidden_field('shipping', 'free_free'));
-      $module_smarty->assign('FREE_SHIPPING_ICON', $quotes[$i]['icon']);
+      $module_smarty->assign('FREE_SHIPPING_ICON', (isset($quotes[$i]['icon'])) ? $quotes[$i]['icon'] : '');
     } else {
       $radio_buttons = 0;
       #loop through installed shipping methods...
