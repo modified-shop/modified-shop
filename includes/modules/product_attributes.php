@@ -115,7 +115,7 @@ if ($product->getAttributesCount() > 0) {
           $price = $xtPrice->xtcFormat($products_options['options_values_price'], false, $product->data['products_tax_class_id'],$CalculateCurr);
         }
                 
-        if ($_SESSION['customers_status']['customers_status_discount_attributes'] == 1 && $products_options['price_prefix'] == '+') {
+        if ($_SESSION['customers_status']['customers_status_discount_attributes'] == 1 && $discount <> 0) {
           $price -= $price / 100 * $discount;
         }
 

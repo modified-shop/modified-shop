@@ -356,9 +356,10 @@ class xtcPrice {
       // calculate price and several currencies on product attributes
       $CalculateCurr = (($attribute_data['products_tax_class_id'] == 0) ? true : false);
       $price = $this->xtcFormat($attribute_data['options_values_price'], false, $attribute_data['products_tax_class_id'], $CalculateCurr);
-      if ($attribute_data['price_prefix'] == '+') {
+      if ($discount <> 0) {
         $price = $price - ($price / 100 * $discount);
-      } else {
+      }
+      if ($attribute_data['price_prefix'] == '-') {
         $price *= -1;
       }
     
