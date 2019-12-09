@@ -25,7 +25,6 @@ define('MODULE_SHIPPING_FREEAMOUNT_TEXT_TITLE', 'Free Shipping');
 define('MODULE_SHIPPING_FREEAMOUNT_TEXT_DESCRIPTION', 'Free Shipping w/ Minimum Order Amount');
 define('MODULE_SHIPPING_FREEAMOUNT_TEXT_WAY', 'Free Shipping minimum order: %s');
 define('MODULE_SHIPPING_FREEAMOUNT_INVALID_ZONE', 'Unfortunately it is not possible to dispatch into this country');
-define('MODULE_SHIPPING_FREEAMOUNT_SORT_ORDER', 'Sort Order');
 
 define('MODULE_SHIPPING_FREEAMOUNT_ALLOWED_TITLE' , 'Allowed Zones');
 define('MODULE_SHIPPING_FREEAMOUNT_ALLOWED_DESC' , 'Please enter the zones <b>separately</b> which should be allowed to use this modul (e. g. AT,DE (leave empty if you want to allow all zones))');

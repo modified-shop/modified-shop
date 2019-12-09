@@ -46,7 +46,8 @@
 
         $include_modules = array();
 
-        if (xtc_not_null($module) 
+        if (xtc_not_null($module)
+            && isset($module['id'])
             && in_array(substr($module['id'], 0, strpos($module['id'], '_')) . '.php', $this->modules) 
             ) 
         {
@@ -65,6 +66,7 @@
             );
           }
         }
+        
         // load unallowed modules into array - remove spaces and line breaks by web28
         $unallowed_modules = preg_replace("'[\r\n\s]+'",'',$_SESSION['customers_status']['customers_status_shipping_unallowed'].','. (isset($order->customer['shipping_unallowed']) ? $order->customer['shipping_unallowed']: ''));
         $unallowed_modules = explode(',',$unallowed_modules);
