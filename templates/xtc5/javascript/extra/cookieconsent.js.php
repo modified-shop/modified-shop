@@ -35,7 +35,7 @@
       "secure": <?php echo ((HTTP_SERVER == HTTPS_SERVER && $request_type == 'SSL') ? "true" : "false"); ?>
     },
     onInitialise: function(status) {
-      if (status == cookieconsent.status.allow) {
+      if (status == cookieconsent.status.allow || status == cookieconsent.status.dismiss) {
         TrackingScripts();
       } else {
         DeleteCookies();

@@ -67,7 +67,7 @@ $_SESSION['tracking']['pageview_history'] = array_values($_SESSION['tracking']['
 // allow
 $_SESSION['tracking']['allow'] = false;
 if (isset($_COOKIE['MODtrack'])) {
-  $_SESSION['tracking']['allow'] = ($_COOKIE['MODtrack'] == 'allow');
+  $_SESSION['tracking']['allow'] = ($_COOKIE['MODtrack'] == 'allow' || $_COOKIE['MODtrack'] == 'dismiss');
 }
 
 // order
