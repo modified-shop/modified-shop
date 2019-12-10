@@ -67,27 +67,30 @@
     var cookies = document.cookie.split(";");
     
     for (var c = 0; c < cookies.length; c++) {
-      var cookie_name = encodeURIComponent(cookies[c].split(";")[0].split("=")[0].trim());
-      for (var e = 0; e < essential.length; e++) {
+      var cookie_name = encodeURIComponent(cookies[c].trim().split("=")[0]);      
+      for (var e = 0; e < essential.length; e++) {        
         if (cookie_name.indexOf(essential[e]) >= 0) {
-          cookies.splice(c, 1);          
+          delete cookies[c];      
         }
       }
     }
-     
-    for (var c = 0; c < cookies.length; c++) {
-      var cookie_name = encodeURIComponent(cookies[c].split(";")[0].split("=")[0].trim());
-      var d = window.location.hostname.split(".");
-      while (d.length > 0) {
-        var p = location.pathname.split('/');
-        while (p.length > 0) {
-          document.cookie = cookie_name + '=; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=' + p.join('/');
-          document.cookie = cookie_name + '=; expires=Thu, 01-Jan-1970 00:00:01 GMT; domain=' + d.join('.') + ' ; path=' + p.join('/');
-          document.cookie = cookie_name + '=; expires=Thu, 01-Jan-1970 00:00:01 GMT; domain=.' + d.join('.') + ' ; path=' + p.join('/');
-          p.pop();
-        };
-        d.shift();
-      }        
+    cookies = cookies.filter(item => !!item);
+    
+    if (cookies.length > 0) {
+      for (var c = 0; c < cookies.length; c++) {
+        var cookie_name = encodeURIComponent(cookies[c].trim().split("=")[0]);
+        var d = window.location.hostname.split(".");
+        while (d.length > 0) {
+          var p = location.pathname.split('/');
+          while (p.length > 0) {
+            document.cookie = cookie_name + '=; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=' + p.join('/');
+            document.cookie = cookie_name + '=; expires=Thu, 01-Jan-1970 00:00:01 GMT; domain=' + d.join('.') + ' ; path=' + p.join('/');
+            document.cookie = cookie_name + '=; expires=Thu, 01-Jan-1970 00:00:01 GMT; domain=.' + d.join('.') + ' ; path=' + p.join('/');
+            p.pop();
+          };
+          d.shift();
+        }        
+      }
     }
   }
 </script>
