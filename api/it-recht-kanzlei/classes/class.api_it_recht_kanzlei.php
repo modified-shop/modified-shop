@@ -353,6 +353,9 @@ class api_it_recht_kanzlei {
   }
 
   function charset_decode_utf_8($string) {
+    // remove problem sign
+    $string = str_replace('&thinsp;', ' ', $string);
+
     if (!preg_match("/[\200-\237]/", $string) && !preg_match("/[\241-\377]/", $string)) {
       return $string;
     }
@@ -378,7 +381,7 @@ class api_it_recht_kanzlei {
     // remove problem sign
     $string = str_replace('&thinsp;', ' ', $string);
     
-    return decode_htmlentities($string, ENT_COMPAT, 'UTF-8');
+    return decode_utf8(decode_htmlentities($string, ENT_COMPAT, 'UTF-8'), ((DB_SERVER_CHARSET == 'utf8') ? 'UTF-8' : ''));
   }
     
   // return error and end script
