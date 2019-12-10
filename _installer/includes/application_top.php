@@ -67,6 +67,7 @@
   require_once (DIR_FS_INC.'xtc_random_charcode.inc.php');
   require_once (DIR_FS_INC.'xtc_rand.inc.php');
   require_once (DIR_FS_INC.'xtc_get_ip_address.inc.php');
+  require_once (DIR_FS_INC.'xtc_get_top_level_domain.inc.php');
   
   require_once (DIR_FS_INC.'xtc_not_null.inc.php');
   require_once (DIR_FS_INC.'xtc_href_link.inc.php');
@@ -76,6 +77,16 @@
   // delete dir
   clear_dir(DIR_FS_DOCUMENT_ROOT.'cache/');
   clear_dir(DIR_FS_DOCUMENT_ROOT.'templates_c/');
+
+  // set the top level domains
+  $http_domain_arr = xtc_get_top_level_domain(isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] != '' ? $_SERVER['HTTP_HOST'] : '');
+  $https_domain_arr = xtc_get_top_level_domain(isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] != '' ? $_SERVER['HTTP_HOST'] : '');
+  $http_domain = $http_domain_arr['domain'];
+  $https_domain = $https_domain_arr['domain'];
+  $current_domain = (($request_type == 'NONSSL') ? $http_domain : $https_domain);
+
+  // set the top level domains to delete
+  $current_domain_delete = (($request_type == 'NONSSL') ? $http_domain_arr['delete'] : $https_domain_arr['delete']);
 
   // define how the session functions will be used
   require_once (DIR_WS_FUNCTIONS.'sessions.php');
