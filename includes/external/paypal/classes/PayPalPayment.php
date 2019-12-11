@@ -1676,8 +1676,8 @@ class PayPalPayment extends PayPalPaymentBase {
       if ($address->getRecipientName() != '') {
         $name = explode(' ', $address->getRecipientName());
         $sql_data_array['delivery']['delivery_name'] = $address->getRecipientName();
-        $sql_data_array['delivery']['delivery_firstname'] = array_shift($name);
-        $sql_data_array['delivery']['delivery_lastname'] = implode(' ', $name);
+        $sql_data_array['delivery']['delivery_firstname'] = $sql_data_array['plain']['firstname'] = array_shift($name);
+        $sql_data_array['delivery']['delivery_lastname'] = $sql_data_array['plain']['lastname'] = implode(' ', $name);
       }
 
       $sql_data_array = array_map(array($this, 'decode_utf8'), $sql_data_array);
