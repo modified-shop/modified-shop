@@ -17,7 +17,8 @@ $lang_array = array(
   
   // transaction
   'TEXT_PAYPAL_TRANSACTION' => 'Paymentdetails',
-  'TEXT_PAYPAL_TRANSACTION_ADDRESS' => 'Address:',
+  'TEXT_PAYPAL_TRANSACTION_ACCOUNT_OWNER' => 'Account owner:',
+  'TEXT_PAYPAL_TRANSACTION_ADDRESS' => 'Shipping Address:',
   'TEXT_PAYPAL_TRANSACTION_METHOD' => 'Payment:',
   'TEXT_PAYPAL_TRANSACTION_EMAIL' => 'E-Mail Address:',
   'TEXT_PAYPAL_TRANSACTION_ACCOUNT_STATE' => 'Account Status:',
