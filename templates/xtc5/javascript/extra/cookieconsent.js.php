@@ -35,9 +35,9 @@
       "secure": <?php echo ((HTTP_SERVER == HTTPS_SERVER && $request_type == 'SSL') ? "true" : "false"); ?>
     },
     onInitialise: function(status) {
-      if (status == cookieconsent.status.allow || status == cookieconsent.status.dismiss) {
+      if (status == cookieconsent.status.allow) {
         TrackingScripts();
-      } else {
+      } else if (status != cookieconsent.status.dismiss) {
         DeleteCookies();
       }
     },
@@ -74,7 +74,10 @@
         }
       }
     }
-    cookies = cookies.filter(item => !!item);
+
+    var cookies = cookies.filter(function (el) { 
+      return el != null; 
+    });
     
     if (cookies.length > 0) {
       for (var c = 0; c < cookies.length; c++) {
