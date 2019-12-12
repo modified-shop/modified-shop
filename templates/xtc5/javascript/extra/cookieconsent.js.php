@@ -23,7 +23,7 @@
       "message": ((consent_type == 'info') ? "<?php echo TEXT_COOKIECONSENT_MESSAGE_INFO; ?>" : "<?php echo TEXT_COOKIECONSENT_MESSAGE_TRACKING; ?>"),
       "dismiss": "<?php echo TEXT_COOKIECONSENT_DISSMISS; ?>",
       "link": "<?php echo TEXT_COOKIECONSENT_LINK; ?>",
-      "href": "<?php echo ((isset($privacy_link)) ? $privacy_link : xtc_href_link(FILENAME_POPUP_CONTENT, 'coID=2', $request_type)); ?>",
+      "href": "<?php echo ((isset($privacy_link)) ? $privacy_link : xtc_href_link(FILENAME_POPUP_CONTENT, 'coID=2'.(defined('TPL_POPUP_CONTENT_LINK_PARAMETERS') ? TPL_POPUP_CONTENT_LINK_PARAMETERS : POPUP_CONTENT_LINK_PARAMETERS), $request_type)); ?>",
       "policy": "<?php echo TEXT_COOKIECONSENT_POLICY; ?>",
       "allow": "<?php echo TEXT_COOKIECONSENT_ALLOW; ?>",
       "deny": "<?php echo TEXT_COOKIECONSENT_DENY; ?>"
