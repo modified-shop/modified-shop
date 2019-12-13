@@ -103,7 +103,7 @@ Information and contribution at http://www.xt-commerce.com
 Please visit our website: www.modified-shop.org
 =========================================================
 -->
-<meta name="generator" content="(c) by <?php echo PROJECT_VERSION; ?> 7FA https://www.modified-shop.org" />
+<meta name="generator" content="(c) by <?php echo PROJECT_VERSION; ?> 802 https://www.modified-shop.org" />
 <?php
 if (DIR_WS_BASE == '') {
   echo '<base href="'.(($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.'" />'.PHP_EOL;
