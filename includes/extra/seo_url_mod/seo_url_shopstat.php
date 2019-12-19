@@ -106,7 +106,7 @@ class seo_url_shopstat extends modified_seo_url {
           if (!isset(self::$host_array[$this->language_id][$connection])) {
             self::get_host($connection);
           }
-          return self::$host_array[$this->language_id][$connection];
+          return self::$host_array[$this->language_id][$connection].self::get_link_params(false);;
         }
         break;
       
