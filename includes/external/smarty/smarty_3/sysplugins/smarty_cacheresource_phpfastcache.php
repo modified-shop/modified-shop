@@ -19,6 +19,7 @@ class Smarty_CacheResource_Phpfastcache extends Smarty_CacheResource_KeyValueSto
         global $modified_cache;
 
         $this->cache = $modified_cache;
+        $this->prefix = 'tpl_';
     }
 
     /**
@@ -32,7 +33,7 @@ class Smarty_CacheResource_Phpfastcache extends Smarty_CacheResource_KeyValueSto
     {
         $_keys = $_res = array();
         foreach ($keys as $k) {
-            $_k = sha1($k);
+            $_k = $this->prefix.sha1($k);
             $this->cache->setID($_k);
             $_res[$k] = $this->cache->get();
         }
@@ -49,7 +50,7 @@ class Smarty_CacheResource_Phpfastcache extends Smarty_CacheResource_KeyValueSto
     protected function write(array $keys, $expire = DB_CACHE_EXPIRE)
     {
        foreach ($keys as $k => $v) {
-            $_k = sha1($k);
+            $_k = $this->prefix.sha1($k);
             $this->cache->setID($_k);
             $this->cache->set($v, $expire);
         }
@@ -65,7 +66,7 @@ class Smarty_CacheResource_Phpfastcache extends Smarty_CacheResource_KeyValueSto
     protected function delete(array $keys)
     {
         foreach ($keys as $k) {
-            $this->cache->delete($k);
+            $this->cache->delete($this->prefix.$k);
         }
         return true;
     }
