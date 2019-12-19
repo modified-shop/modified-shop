@@ -42,10 +42,14 @@
       $file = array();
 
       if (isset($_FILES[$this->file])) {
-        $file = array('name' => $_FILES[$this->file]['name'],
-                      'type' => $_FILES[$this->file]['type'],
-                      'size' => $_FILES[$this->file]['size'],
-                      'tmp_name' => $_FILES[$this->file]['tmp_name']);
+        $finfo = new finfo(FILEINFO_MIME_TYPE);
+        
+        $file = array(
+          'name' => $_FILES[$this->file]['name'],
+          'size' => $_FILES[$this->file]['size'],
+          'tmp_name' => $_FILES[$this->file]['tmp_name'],
+          'type' => $finfo->file($_FILES[$this->file]['tmp_name']),
+        );
       }
 
       if (isset($file['tmp_name']) && !empty($file['tmp_name']) && ($file['tmp_name'] != 'none') && is_uploaded_file($file['tmp_name'])) {
