@@ -52,7 +52,7 @@
         $downloads_query = xtc_db_query("SELECT opd.orders_id,
                                                 opd.orders_products_id, 
                                                 opd.orders_products_filename,
-                                                opd.orders_products_download_id
+                                                opd.orders_products_download_id,
                                                 o.customers_id, 
                                                 o.customers_email_address
                                            FROM ".TABLE_ORDERS_PRODUCTS_DOWNLOAD." opd 
