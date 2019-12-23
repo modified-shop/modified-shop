@@ -181,9 +181,12 @@ if (!$action) {
       }
 
       // get languages
+      $languages_selected = '';
+      $languages_id = (int)$_SESSION['languages_id'];
+      
       $languages_array = array();
       for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-        if ($languages[$i]['id'] == $content['languages_id']) {
+        if (isset($content) && $languages[$i]['id'] == $content['languages_id']) {
           $languages_selected = $languages[$i]['code'];
           $languages_id = $languages[$i]['id'];
         }
@@ -247,10 +250,10 @@ if (!$action) {
       <div class="pageHeading"><br /><?php echo HEADING_PRODUCTS_CONTENT; ?><br /></div>
       <div class="main"><?php echo TEXT_CONTENT_DESCRIPTION; ?></div>
         <?php 
-        if ($action !='new_products_content') {
-          echo xtc_draw_form('edit_content',FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action')) . 'action=edit_products_content&id=update_product&coID='.$g_coID,'post','enctype="multipart/form-data"').xtc_draw_hidden_field('coID',$g_coID);
+        if ($action != 'new_products_content') {
+          echo xtc_draw_form('edit_content',FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action')) . 'action=edit_products_content&id=update_products&coID='.$g_coID,'post','enctype="multipart/form-data"').xtc_draw_hidden_field('coID',$g_coID);
         } else {
-          echo xtc_draw_form('edit_content',FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action')) . 'action=edit_products_content&id=insert_product','post','enctype="multipart/form-data"');
+          echo xtc_draw_form('edit_content',FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action')) . 'action=edit_products_content&id=insert_products','post','enctype="multipart/form-data"');
         }
         ?>
         <table class="tableConfig borderall">
