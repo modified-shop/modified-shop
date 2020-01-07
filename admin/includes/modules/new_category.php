@@ -155,7 +155,7 @@
       <input type="submit" class="button" name="cat_save" value="<?php echo BUTTON_SAVE; ?>" style="cursor:pointer" <?php echo $confirm_save_entry;?>>&nbsp;&nbsp;
       <?php
       if (isset($_GET['cID']) && $_GET['cID'] > 0) {
-        echo '<input type="submit" class="button" name="cat_update" value="'.BUTTON_UPDATE.'" style="cursor:pointer" '.$confirm_save_entry.'/>&nbsp;&nbsp';
+        echo '<input type="submit" class="button" name="cat_update" value="'.BUTTON_UPDATE.'" style="cursor:pointer" '.$confirm_save_entry.'/>&nbsp;&nbsp;';
       }
       ?>
       <a class="button" onclick="this.blur()" href="<?php echo xtc_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . ((isset($_GET['action']) && $_GET['action']=='edit_category') ? '&cID=' . (int)$_GET['cID'] : '') . ((isset($_GET['page']) && $_GET['page']>'1') ? '&page=' . (int)$_GET['page'] : '')); ?>"><?php echo BUTTON_CANCEL ; ?></a>
@@ -226,7 +226,7 @@
         <input type="submit" class="button" name="cat_save" value="<?php echo BUTTON_SAVE; ?>" style="cursor:pointer" <?php echo $confirm_save_entry;?>>&nbsp;&nbsp;
         <?php
         if (isset($_GET['cID']) && $_GET['cID'] > 0) {
-          echo '<input type="submit" class="button" name="cat_update" value="'.BUTTON_UPDATE.'" style="cursor:pointer" '.$confirm_save_entry.'/>&nbsp;&nbsp';
+          echo '<input type="submit" class="button" name="cat_update" value="'.BUTTON_UPDATE.'" style="cursor:pointer" '.$confirm_save_entry.'/>&nbsp;&nbsp;';
         }
         ?>
         <a class="button" onclick="this.blur()" href="<?php echo xtc_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . ((isset($_GET['action']) && $_GET['action']=='edit_category') ? '&cID=' . (int)$_GET['cID'] : '') . ((isset($_GET['page']) && $_GET['page']>'1') ? '&page=' . (int)$_GET['page'] : '')); ?>"><?php echo BUTTON_CANCEL ; ?></a>
