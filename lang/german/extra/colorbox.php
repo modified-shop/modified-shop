@@ -1,6 +1,6 @@
 <?php
  //additional fields
- define('TEXT_COLORBOX_CURRENT', 'Bild {current} von {total}');
+ define('TEXT_COLORBOX_CURRENT', 'Bild&nbsp;{current}&nbsp;von&nbsp;{total}');
  define('TEXT_COLORBOX_PREVIOUS', 'Zur&uuml;ck');
  define('TEXT_COLORBOX_NEXT', 'Vor');
  define('TEXT_COLORBOX_CLOSE', 'Schlie&szlig;en');
