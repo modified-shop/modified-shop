@@ -222,7 +222,10 @@
 
   // Output a form textarea field
   function xtc_draw_textarea_field($name, $wrap, $width, $height, $text = '', $params = '', $reinsert_value = true, $encode = false) {
-    $field = '<textarea id="'.$name.'" name="' . $name . '" wrap="' . $wrap . '" cols="' . $width . '" rows="' . $height . '"';
+    $id = str_replace('[', '_', $name);
+    $id = preg_replace('/[^a-zA-Z0-9_-]/', '', $id);
+
+    $field = '<textarea id="'.$id.'" name="' . $name . '" wrap="' . $wrap . '" cols="' . $width . '" rows="' . $height . '"';
     if ($params) $field .= ' ' . $params;
     $field .= '>';
     if (isset($GLOBALS[$name]) 
