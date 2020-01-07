@@ -39,6 +39,7 @@ function xtc_check_agent() {
       "awbot",
       "backrub",
       "bigbrother",
+      "bingbot",
       "bjaaland",
       "blackwidow",
       "blindekuh",
