@@ -40,14 +40,17 @@
             )
         {
           foreach ($feed['item'] as $item) {
-            xtc_db_query("REPLACE INTO newsfeed (news_title, 
-                                                 news_text, 
-                                                 news_link, 
-                                                 news_date) 
-                                         VALUES ('".xtc_db_input(decode_htmlentities(trim(decode_utf8($item['title']))))."', 
-                                                 '".xtc_db_input(decode_htmlentities(trim(decode_utf8($item['description']))))."',
-                                                 '".xtc_db_input(decode_utf8($item['link']))."',
-                                                 '".xtc_db_input(strtotime($item['pubDate']))."')");
+            xtc_db_query("INSERT INTO newsfeed (news_title, 
+                                                news_text, 
+                                                news_link, 
+                                                news_date)
+                                        VALUES ('".xtc_db_input(decode_htmlentities(trim(decode_utf8($item['title']))))."', 
+                                                '".xtc_db_input(decode_htmlentities(trim(decode_utf8($item['description']))))."', 
+                                                '".xtc_db_input(decode_utf8($item['link']))."', 
+                                                '".xtc_db_input(strtotime($item['pubDate']))."')
+                        ON DUPLICATE KEY UPDATE news_title = '".xtc_db_input(decode_htmlentities(trim(decode_utf8($item['title']))))."', 
+                                                news_text = '".xtc_db_input(decode_htmlentities(trim(decode_utf8($item['description']))))."', 
+                                                news_date = '".xtc_db_input(strtotime($item['pubDate']))."'");
           }
 
           xtc_db_query("UPDATE ".TABLE_CONFIGURATION." SET configuration_value = '".$time."' WHERE configuration_key = 'NEWSFEED_LAST_UPDATE'");
