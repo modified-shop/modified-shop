@@ -221,6 +221,11 @@
   margin:0;
   padding:0;
 }
+/* prevent flicker in responsive tabs */
+ul.resp-tabs-list{
+  display:none !important;
+}
+
 body {
   font-family: 'Poppins', sans-serif;
   font-weight: 300;
@@ -4581,16 +4586,6 @@ ul.address_block li .address {
 
 
 /* 46. START miscellaneous */
-
-/* START No Javascript Styles for Tabs */  
-/* Moved in general.css.php as inline-style */
-/*
-ul.resp-tabs-list{
-  display:none;
-}
-*/
-/* END No Javascript Styles for Tabs */
-
 
 /* START Subcontent navigation in content */
 .subcontent {
