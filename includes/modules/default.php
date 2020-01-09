@@ -254,6 +254,7 @@ switch ($category_depth) {
         $where .= " AND p.products_date_added > '".$date_new_products."' ";
         $daysfound = true;
       }
+      $sorting = ' ORDER BY p.products_date_added DESC ';
     }
 
     if (isset($_GET['manufacturers_id'])) {
