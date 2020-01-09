@@ -57,9 +57,13 @@
           $c_data['language_id'] = $insert_id;
           xtc_db_perform(TABLE_CUSTOMERS_STATUS, $c_data);
         }
+        
         if (isset($_POST['default']) && $_POST['default'] == 'on') {
           xtc_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . xtc_db_input($sql_data_array['code']) . "' where configuration_key = 'DEFAULT_LANGUAGE'");
         }
+        
+        unset($_SESSION['language_charset']);
+        
         xtc_redirect(xtc_href_link(FILENAME_LANGUAGES, 'page=' . (int)$_GET['page'] . '&lID=' . $insert_id));
         break;
       case 'save':
@@ -80,6 +84,9 @@
         if ($_POST['default'] == 'on') {
           xtc_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . xtc_db_input($sql_data_array['code']) . "' where configuration_key = 'DEFAULT_LANGUAGE'");
         }
+        
+        unset($_SESSION['language_charset']);
+        
         xtc_redirect(xtc_href_link(FILENAME_LANGUAGES, 'page=' . (int)$_GET['page'] . '&lID=' . $lID));
         break;
       case 'deleteconfirm':
@@ -101,6 +108,9 @@
         xtc_db_query("delete from " . TABLE_CONTENT_MANAGER . " where languages_id = '" . $lID . "'");
         xtc_db_query("delete from " . TABLE_PRODUCTS_CONTENT . " where languages_id = '" . $lID . "'");
         xtc_db_query("delete from " . TABLE_CUSTOMERS_STATUS . " where language_id = '" . $lID . "'");
+        
+        unset($_SESSION['language_charset']);
+        
         xtc_redirect(xtc_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page']));
         break;
       case 'delete':
