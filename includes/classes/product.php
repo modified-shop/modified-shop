@@ -533,7 +533,7 @@ class product {
     }
 
     if ($_SESSION['customers_status']['customers_status_show_price'] != '0') {
-      if ($tax_rate > 0) {
+      if ($tax_rate >= 0) {
         if (!isset($this->getTaxInfo[$tax_rate])) {
           $this->getTaxInfo[$tax_rate] = $main->getTaxInfo($tax_rate);
         }
