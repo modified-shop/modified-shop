@@ -364,7 +364,7 @@
               // Keep transparent color
               $transcol = imagecolortransparent($this->s);
               imagecolortransparent($this->t, $transcol);
-              //$this->sharpen();
+              $this->sharpen();
               imagegif($this->t, $this->d);
               break;
 
@@ -372,14 +372,14 @@
             case 3:
               imagealphablending($this->t, true);
               imagesavealpha($this->t, true);
-              //$this->sharpen();
+              $this->sharpen();
               imagepng($this->t, $this->d);
               break;
 
             // Other images
             default:
               imageinterlace($this->t, true);
-              //$this->sharpen();
+              $this->sharpen();
               imagejpeg($this->t, $this->d, $this->e);
           }
           ob_end_clean();
@@ -422,7 +422,10 @@
     
     function sharpen() {
       $sharpen = false;
- 
+      
+      /*
+       * example
+       *
       $sharpen_arr = array(
         array(-1.2, -1, -1.2),
         array(-1.0, 20, -1.0),
@@ -433,7 +436,8 @@
       $divisor = array_sum(array_map('array_sum', $sharpen_arr));
       
       $offest = 0;
-
+      */
+      
       require_once(DIR_FS_INC.'auto_include.inc.php');
       foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/image_sharpen/','php') as $file) require ($file);
 
