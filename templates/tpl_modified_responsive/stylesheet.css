@@ -222,8 +222,14 @@
   padding:0;
 }
 /* prevent flicker in responsive tabs */
-ul.resp-tabs-list{
+#horizontalAccordion ul.resp-tabs-list {
   display:none !important;
+}
+#horizontalTab ul.resp-tabs-list { 
+  list-style-type:none;  
+}
+#horizontalTab ul.resp-tabs-list li {
+  display: inline-block;
 }
 
 body {
