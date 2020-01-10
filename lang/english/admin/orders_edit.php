@@ -80,9 +80,6 @@ define('TEXT_SAVE', 'Save');
 define('TEXT_ACTUAL', 'actual:');
 define('TEXT_NEW', 'new:');
 
-define('TEXT_ADD_TAX','incl. ');
-define('TEXT_NO_TAX','plus ');
-
 define('TEXT_ORDERS_EDIT_INFO', '<b>Important Notes:</b><br />
 Please chose the right customer group with the address/customer data!<br />
 When changing the customer group, every invoice item has to be newly saved!<br />

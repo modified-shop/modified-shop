@@ -17,18 +17,41 @@
 
   require('includes/application_top.php');
 
+  // include needed function
+  require_once(DIR_FS_INC.'parse_multi_language_value.inc.php');
+
+  // set languages
+  $languages = xtc_get_languages();
+
   if ($_GET['action']) {
     switch ($_GET['action']) {
       case 'insert':
         $tax_zone_id = xtc_db_prepare_input($_POST['tax_zone_id']);
         $tax_class_id = xtc_db_prepare_input($_POST['tax_class_id']);
         $tax_rate = xtc_db_prepare_input($_POST['tax_rate']);
-        $tax_description = xtc_db_prepare_input($_POST['tax_description']);
         $tax_priority = xtc_db_prepare_input($_POST['tax_priority']);
-        $date_added = xtc_db_prepare_input($_POST['date_added']);
+        $tax_description = xtc_db_prepare_input($_POST['tax_description']);
+        
+        $tax_description_array = array();
+        foreach ($tax_description as $key => $value) {
+          if (xtc_not_null($value)) {
+            $tax_description_array[] =  $key . '::' . $value;
+          }
+        }
+        $tax_description = implode('||', $tax_description_array);
 
-        xtc_db_query("insert into " . TABLE_TAX_RATES . " (tax_zone_id, tax_class_id, tax_rate, tax_description, tax_priority, date_added) values ('" . xtc_db_input($tax_zone_id) . "', '" . xtc_db_input($tax_class_id) . "', '" . xtc_db_input($tax_rate) . "', '" . xtc_db_input($tax_description) . "', '" . xtc_db_input($tax_priority) . "', now())");
-        xtc_redirect(xtc_href_link(FILENAME_TAX_RATES));
+        $sql_data_array = array(
+          'tax_zone_id' => $tax_zone_id, 
+          'tax_class_id' => $tax_class_id, 
+          'tax_rate' => $tax_rate, 
+          'tax_description' => $tax_description, 
+          'tax_priority' => $tax_priority, 
+          'date_added' => 'now()'
+        );
+        xtc_db_perform(TABLE_TAX_RATES, $sql_data_array);
+        $tax_rates_id = xtc_db_insert_id();
+        
+        xtc_redirect(xtc_href_link(FILENAME_TAX_RATES, 'page=' . $_GET['page'] . '&tID=' . $tax_rates_id));
         break;
 
       case 'save':
@@ -36,11 +59,27 @@
         $tax_zone_id = xtc_db_prepare_input($_POST['tax_zone_id']);
         $tax_class_id = xtc_db_prepare_input($_POST['tax_class_id']);
         $tax_rate = xtc_db_prepare_input($_POST['tax_rate']);
-        $tax_description = xtc_db_prepare_input($_POST['tax_description']);
         $tax_priority = xtc_db_prepare_input($_POST['tax_priority']);
-        $last_modified = xtc_db_prepare_input($_POST['last_modified']);
+        $tax_description = xtc_db_prepare_input($_POST['tax_description']);
 
-        xtc_db_query("update " . TABLE_TAX_RATES . " set tax_rates_id = '" . xtc_db_input($tax_rates_id) . "', tax_zone_id = '" . xtc_db_input($tax_zone_id) . "', tax_class_id = '" . xtc_db_input($tax_class_id) . "', tax_rate = '" . xtc_db_input($tax_rate) . "', tax_description = '" . xtc_db_input($tax_description) . "', tax_priority = '" . xtc_db_input($tax_priority) . "', last_modified = now() where tax_rates_id = '" . xtc_db_input($tax_rates_id) . "'");
+        $tax_description_array = array();
+        foreach ($tax_description as $key => $value) {
+          if (xtc_not_null($value)) {
+            $tax_description_array[] =  $key . '::' . $value;
+          }
+        }
+        $tax_description = implode('||', $tax_description_array);
+        
+        $sql_data_array = array(
+          'tax_zone_id' => $tax_zone_id, 
+          'tax_class_id' => $tax_class_id, 
+          'tax_rate' => $tax_rate, 
+          'tax_description' => $tax_description, 
+          'tax_priority' => $tax_priority, 
+          'last_modified' => 'now()'
+        );        
+        xtc_db_perform(TABLE_TAX_RATES, $sql_data_array, 'update', "tax_rates_id = '" . (int)$tax_rates_id . "'");
+
         xtc_redirect(xtc_href_link(FILENAME_TAX_RATES, 'page=' . $_GET['page'] . '&tID=' . $tax_rates_id));
         break;
 
@@ -138,7 +177,14 @@
                   $contents[] = array('text' => '<br />' . TEXT_INFO_CLASS_TITLE . '<br />' . xtc_tax_classes_pull_down('name="tax_class_id" style="font-size:12px" class="SlectBox"'));
                   $contents[] = array('text' => '<br />' . TEXT_INFO_ZONE_NAME . '<br />' . xtc_geo_zones_pull_down('name="tax_zone_id" style="font-size:12px" class="SlectBox"'));
                   $contents[] = array('text' => '<br />' . TEXT_INFO_TAX_RATE . '<br />' . xtc_draw_input_field('tax_rate'));
-                  $contents[] = array('text' => '<br />' . TEXT_INFO_RATE_DESCRIPTION . '<br />' . xtc_draw_input_field('tax_description'));
+
+                  $description = '';
+                  for ($i=0, $n=count($languages); $i<$n; $i++) {
+                    $description .= xtc_image(DIR_WS_LANGUAGES . $languages[$i]['directory'] .'/admin/images/'. $languages[$i]['image'], $languages[$i]['name'], '18px');
+                    $description .= xtc_draw_input_field('tax_description[' . strtoupper($languages[$i]['code']) . ']', '', 'style="margin-left:2px; width:200px"').'<br>';
+                  }
+                  $contents[] = array('text' => '<br />' . TEXT_INFO_RATE_DESCRIPTION . '<br />' . $description);
+
                   $contents[] = array('text' => '<br />' . TEXT_INFO_TAX_RATE_PRIORITY . '<br />' . xtc_draw_input_field('tax_priority'));
                   $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_INSERT . '"/>&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_TAX_RATES, 'page=' . $_GET['page']) . '">' . BUTTON_CANCEL . '</a>');
                   break;
@@ -151,7 +197,14 @@
                   $contents[] = array('text' => '<br />' . TEXT_INFO_CLASS_TITLE . '<br />' . xtc_tax_classes_pull_down('name="tax_class_id" style="font-size:12px" class="SlectBox"', $trInfo->tax_class_id));
                   $contents[] = array('text' => '<br />' . TEXT_INFO_ZONE_NAME . '<br />' . xtc_geo_zones_pull_down('name="tax_zone_id" style="font-size:12px" class="SlectBox"', $trInfo->geo_zone_id));
                   $contents[] = array('text' => '<br />' . TEXT_INFO_TAX_RATE . '<br />' . xtc_draw_input_field('tax_rate', $trInfo->tax_rate));
-                  $contents[] = array('text' => '<br />' . TEXT_INFO_RATE_DESCRIPTION . '<br />' . xtc_draw_input_field('tax_description', $trInfo->tax_description));
+                                    
+                  $description = '';
+                  for ($i=0, $n=count($languages); $i<$n; $i++) {
+                    $description .= xtc_image(DIR_WS_LANGUAGES . $languages[$i]['directory'] .'/admin/images/'. $languages[$i]['image'], $languages[$i]['name'], '18px');
+                    $description .= xtc_draw_input_field('tax_description[' . strtoupper($languages[$i]['code']) . ']', parse_multi_language_value($trInfo->tax_description, $languages[$i]['code'], true), 'style="margin-left:2px; width:200px"').'<br>';
+                  }
+                  $contents[] = array('text' => '<br />' . TEXT_INFO_RATE_DESCRIPTION . '<br />' . $description);
+                  
                   $contents[] = array('text' => '<br />' . TEXT_INFO_TAX_RATE_PRIORITY . '<br />' . xtc_draw_input_field('tax_priority', $trInfo->tax_priority));
                   $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/>&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_TAX_RATES, 'page=' . $_GET['page'] . '&tID=' . $trInfo->tax_rates_id) . '">' . BUTTON_CANCEL . '</a>');
                   break;
@@ -171,7 +224,7 @@
                     $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_TAX_RATES, 'page=' . $_GET['page'] . '&tID=' . $trInfo->tax_rates_id . '&action=edit') . '">' . BUTTON_EDIT . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_TAX_RATES, 'page=' . $_GET['page'] . '&tID=' . $trInfo->tax_rates_id . '&action=delete') . '">' . BUTTON_DELETE . '</a>');
                     $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_ADDED . ' ' . xtc_date_short($trInfo->date_added));
                     $contents[] = array('text' => '' . TEXT_INFO_LAST_MODIFIED . ' ' . xtc_date_short($trInfo->last_modified));
-                    $contents[] = array('text' => '<br />' . TEXT_INFO_RATE_DESCRIPTION . '<br />' . $trInfo->tax_description);
+                    $contents[] = array('text' => '<br />' . TEXT_INFO_RATE_DESCRIPTION . '<br />' . parse_multi_language_value($trInfo->tax_description, $_SESSION['language_code']));
                   }
                   break;
               }

@@ -80,9 +80,6 @@ define('TEXT_SAVE', 'Speichern');
 define('TEXT_ACTUAL', 'Aktuell: ');
 define('TEXT_NEW', 'Neu: ');
 
-define('TEXT_ADD_TAX','inkl. ');
-define('TEXT_NO_TAX','zzgl. ');
-
 define('TEXT_ORDERS_EDIT_INFO', '<b>Wichtige Hinweise:</b><br />
 Bitte bei den Adress-/Kundendaten die richtige Kundengruppe w&auml;hlen.<br />
 Bei einem Wechsel der Kundengruppe sind alle Einzelposten der Rechnung neu abzuspeichern!<br />
