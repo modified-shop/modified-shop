@@ -216,10 +216,10 @@
 
       // tax rates
       xtc_db_query("TRUNCATE `tax_rates`");
-      xtc_db_query("INSERT INTO tax_rates (tax_rates_id, tax_zone_id, tax_class_id, tax_priority, tax_rate, tax_description, last_modified, date_added) VALUES (3, 6, 1, 1, '0.0000', 'EU-AUS-UST 0%', NULL, now())");
-      xtc_db_query("INSERT INTO tax_rates (tax_rates_id, tax_zone_id, tax_class_id, tax_priority, tax_rate, tax_description, last_modified, date_added) VALUES (4, 6, 2, 1, '0.0000', 'EU-AUS-UST 0%', NULL, now())");
+      xtc_db_query("INSERT INTO tax_rates (tax_rates_id, tax_zone_id, tax_class_id, tax_priority, tax_rate, tax_description, last_modified, date_added) VALUES (3, 6, 1, 1, '0.0000', 'DE::EU-AUS-UST 0%||EN::EU-OUT-VAT 0%', NULL, now())");
+      xtc_db_query("INSERT INTO tax_rates (tax_rates_id, tax_zone_id, tax_class_id, tax_priority, tax_rate, tax_description, last_modified, date_added) VALUES (4, 6, 2, 1, '0.0000', 'DE::EU-AUS-UST 0%||EN::EU-OUT-VAT 0%', NULL, now())");
       
-      $tax_text = 'UST %s%%';
+      $tax_text = 'DE::UST %s%%||EN::VAT %s%%';
       $sql_file = 'tax_zones_standard.sql';
       
       switch ($country) {
@@ -250,7 +250,7 @@
            break;
         case '81':
           // Germany
-          $tax_text = 'MwSt. %s%%';
+          $tax_text = 'DE::MwSt. %s%%||EN::VAT %s%%';
           $tax_normal = '19.0000';
           $tax_special = '7.0000';
           break;
@@ -312,14 +312,14 @@
           break;
       }
       
-      $tax_normal_text = sprintf($tax_text, round($tax_normal, 2));
-      $tax_special_text = sprintf($tax_text, round($tax_special, 2));
+      $tax_normal_text = sprintf($tax_text, round($tax_normal, 2), round($tax_normal, 2));
+      $tax_special_text = sprintf($tax_text, round($tax_special, 2), round($tax_special, 2));
       
       // switzerland
       if ($country == '204') {
-        $tax_zero_text = sprintf($tax_text, round($tax_zero, 2));
-        $tax_germany_normal_text = sprintf($tax_text, round($tax_germany_normal, 2));
-        $tax_germany_special_text = sprintf($tax_text, round($tax_germany_special, 2));
+        $tax_zero_text = sprintf($tax_text, round($tax_zero, 2), round($tax_zero, 2));
+        $tax_germany_normal_text = sprintf($tax_text, round($tax_germany_normal, 2), round($tax_germany_normal, 2));
+        $tax_germany_special_text = sprintf($tax_text, round($tax_germany_special, 2), round($tax_germany_special, 2));
         
         xtc_db_query("INSERT INTO tax_rates (tax_rates_id, tax_zone_id, tax_class_id, tax_priority, tax_rate, tax_description, last_modified, date_added) VALUES (5, 8, 1, 1, '".$tax_normal."', '".$tax_normal_text."', NULL, now())");
         xtc_db_query("INSERT INTO tax_rates (tax_rates_id, tax_zone_id, tax_class_id, tax_priority, tax_rate, tax_description, last_modified, date_added) VALUES (6, 8, 2, 1, '".$tax_special."', '".$tax_special_text."', NULL, now())");
