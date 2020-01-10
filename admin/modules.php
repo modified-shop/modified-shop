@@ -549,10 +549,10 @@ if (xtc_not_null($action) && !$box) {
                       }
                       $keys .= call_user_func_array(array(${$class_method[0]}, $class_method[1]), array($value['value'], $key));
                     } else {
-                      eval('$keys .= ' . $value['set_function'] . "'" . $value['value'] . "', '" . $key . "');");
+                      eval('$keys .= ' . $value['set_function'] . "'" . encode_htmlspecialchars($value['value'], ENT_QUOTES) . "', '" . $key . "');");
                     }
                   } else {
-                    $keys .= xtc_draw_input_field('configuration[' . $key . ']', $value['value'], 'class="inputModule"'); //web28- 2010-05-17 - set css definition
+                    $keys .= xtc_draw_input_field('configuration[' . $key . ']', encode_htmlspecialchars($value['value']), 'class="inputModule"');
                   }
                   $keys .= '<br /><br />';
                 }
@@ -586,7 +586,7 @@ if (xtc_not_null($action) && !$box) {
                           $keys .= xtc_call_function($use_function, $value['value']);
                         }
                       } else {
-                        $keys .=  (strlen($value['value']) > 30) ? substr($value['value'],0,30) . ' ...' : $value['value'];
+                        $keys .=  (strlen($value['value']) > 30) ? substr(strip_tags($value['value']),0,30) . ' ...' : $value['value'];
                       }
                       $keys .= '<br /><br />';
                     }

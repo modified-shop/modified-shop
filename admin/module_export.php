@@ -102,7 +102,10 @@
                   $value = implode(',', $_POST['configuration'][$key]);
                 }
               }
-              xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '" . xtc_db_input($value) . "' WHERE configuration_key = '" . $key . "'");
+              xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " 
+                               SET configuration_value = '" . xtc_db_input($value) . "',
+                                   last_modified = NOW()
+                             WHERE configuration_key = '" . $key . "'");
               if (@strpos($key,'FILE') !== false) $file = $value;
             }
           }
@@ -485,10 +488,10 @@ if (xtc_not_null($action) && !$box) {
                           }
                           $keys .= call_user_func_array(array(${$class_method[0]}, $class_method[1]), array($value['value'], $key));
                         } else {
-                          eval('$keys .= ' . $value['set_function'] . "'" . $value['value'] . "', '" . $key . "');");
+                          eval('$keys .= ' . $value['set_function'] . "'" . encode_htmlspecialchars($value['value'], ENT_QUOTES) . "', '" . $key . "');");
                         }
                       } else {
-                        $keys .= xtc_draw_input_field('configuration[' . $key . ']', $value['value']);
+                        $keys .= xtc_draw_input_field('configuration[' . $key . ']', encode_htmlspecialchars($value['value']), 'class="inputModule"');
                       }
                       $keys .= '<br /><br />';
                     }
@@ -500,7 +503,7 @@ if (xtc_not_null($action) && !$box) {
                     $contents[] = $module->display();                          
                     break;
 
-                case 'restore':
+                  case 'restore':
                     $heading[] = array('text' => '<b>' . $mInfo->title . '</b>');
                     $contents = array ('form' => (isset($mInfo->properties['form_restore']) ? $mInfo->properties['form_restore'] : xtc_draw_form('modules', FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $module_class . '&action=restoreconfirm')));
                     $contents[] = array ('text' => '<br />'.TEXT_INFO_MODULE_RESTORE);
@@ -511,7 +514,7 @@ if (xtc_not_null($action) && !$box) {
                     }
                     $contents[] = array ('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="'. BUTTON_RESTORE .'"><a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $module_class).'">' . BUTTON_CANCEL . '</a>');
                     break;
-                case 'backup':
+                  case 'backup':
                     $heading[] = array('text' => '<b>' . $mInfo->title . '</b>');
                     $contents = array ('form' => (isset($mInfo->properties['form_backup']) ? $mInfo->properties['form_backup'] : xtc_draw_form('modules', FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $module_class . '&action=backupconfirm')));
                     $contents[] = array ('text' => '<br />'.TEXT_INFO_MODULE_BACKUP);
@@ -522,7 +525,7 @@ if (xtc_not_null($action) && !$box) {
                     }
                     $contents[] = array ('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="'. BUTTON_BACKUP .'"><a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $module_class).'">' . BUTTON_CANCEL . '</a><br/><br/>');
                     break;
-                case 'remove':
+                  case 'remove':
                     $heading[] = array('text' => '<b>' . $mInfo->title . '</b>');
                     $contents = array ('form' => (isset($mInfo->properties['form_remove']) ? $mInfo->properties['form_remove'] : xtc_draw_form('modules', FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $module_class . '&action=removeconfirm')));
                     $contents[] = array ('text' => '<br />'.TEXT_INFO_MODULE_REMOVE);
@@ -555,7 +558,7 @@ if (xtc_not_null($action) && !$box) {
                               $keys .= xtc_call_function($use_function, $value['value']);
                             }
                           } else {
-                            $keys .=  (strlen($value['value']) > 30) ? substr($value['value'],0,30) . ' ...' : $value['value'];
+                            $keys .=  (strlen($value['value']) > 30) ? substr(strip_tags($value['value']),0,30) . ' ...' : $value['value'];
                           }
                           $keys .= '<br /><br />';
                         }
