@@ -119,7 +119,7 @@
             }
           }
           
-          if (!$cod_cost_value) {
+          if (!isset($cod_cost_value)) {
               $cod_cost_value = $cod_cost;
               $cod_cost = $xtPrice->xtcFormat($cod_cost,true);
               $order->info['subtotal'] += $cod_cost_value;
