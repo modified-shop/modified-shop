@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_get_tax_description.inc.php 1166 2005-08-21 00:52:02Z mz $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -15,6 +15,9 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
    
+  // include needed function
+  require_once(DIR_FS_INC.'parse_multi_language_value.inc.php');
+
   function xtc_get_tax_description($class_id, $country_id= -1, $zone_id= -1) {
     static $tax_description_array;
     
@@ -58,7 +61,7 @@
       if (xtc_db_num_rows($tax_query,true)) {
         $tax_description = '';
         while ($tax = xtc_db_fetch_array($tax_query,true)) {
-          $tax_description .= $tax['tax_description'] . ' + ';
+          $tax_description .= parse_multi_language_value($tax['tax_description'], $_SESSION['language_code']) . ' + ';
         }
         $tax_description = substr($tax_description, 0, -3);
 

@@ -1019,8 +1019,11 @@
 
   function orders_save_order($oID, $data_array) {
     global $order, $xtPrice, $status, $billpayOrderEdit;
-  
-    $lang_query = xtc_db_query("SELECT languages_id 
+    
+    require_once(DIR_FS_LANGUAGES.$order->info['language'].'/extra/tax.php');
+    
+    $lang_query = xtc_db_query("SELECT languages_id,
+                                       code 
                                   FROM ".TABLE_LANGUAGES." 
                                  WHERE directory = '".xtc_db_input($order->info['language'])."'");
     $lang = xtc_db_fetch_array($lang_query);
@@ -1307,12 +1310,12 @@
                                        WHERE tax_rate = '".$ust['tax_rate']."'");
       $ust_desc = xtc_db_fetch_array($ust_desc_query);
 
-      $title = $ust_desc['tax_description'];
+      $title = parse_multi_language_value($ust_desc['tax_description'], $lang['code']);
       $tax_info = '';
       if ($status['customers_status_show_price_tax'] == 1) {
-        $tax_info = TEXT_ADD_TAX;
+        $tax_info = TAX_ADD_TAX;
       } elseif ($status['customers_status_show_price_tax'] == 0) {
-        $tax_info = TEXT_NO_TAX;
+        $tax_info = TAX_NO_TAX;
       }
       $title = $tax_info . $title.':';
 
