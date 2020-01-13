@@ -894,6 +894,7 @@ class categories {
                                         WHERE products_id = '".$src_products_id."'");
       while ($tags_copy_data = xtc_db_fetch_array($tags_copy_query)) {
         $sql_data_array = $tags_copy_data;
+        unset($sql_data_array['products_tags_id']);
         $sql_data_array['products_id'] = $this->dup_products_id;
         //write tags data to DB
         xtc_db_perform(TABLE_PRODUCTS_TAGS, $sql_data_array);
