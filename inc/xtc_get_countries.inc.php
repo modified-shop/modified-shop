@@ -22,11 +22,11 @@
     
     if (!isset($countries_array)) {
       $countries_query = xtDBquery("SELECT *
-                                         FROM " . TABLE_COUNTRIES . " 
-                                        WHERE status = '1'
-                                          AND countries_iso_code_2 != 'FX'
-                                     ORDER BY countries_name");
-      while ($countries = xtc_db_fetch_array($countries_query, false)) {
+                                      FROM " . TABLE_COUNTRIES . " 
+                                     WHERE status = '1'
+                                       AND countries_iso_code_2 != 'FX'
+                                  ORDER BY countries_name");
+      while ($countries = xtc_db_fetch_array($countries_query, true)) {
         $countries_array[$countries['countries_id']] = $countries;
       }
     }
