@@ -1110,7 +1110,6 @@
         </tr>    
       </table>
       
-      <?php if (NEW_SELECT_CHECKBOX == 'true') { ?>
       <script>
         var action = false;
         $('.dataTableRow, .dataTableRowSelected, .dataTableRow a, .dataTableRowSelected a, .dataTableRow .ChkBox, .dataTableRowSelected .ChkBox').on('change, click', function (e) {          
@@ -1128,4 +1127,3 @@
           }
         });
       </script>
-      <?php } ?>

@@ -201,9 +201,9 @@
     $addtag = '';
     if (NEW_SELECT_CHECKBOX == 'true' && strpos($parameters,'noStyling') === false) {
       $addtag = '<em>&nbsp;</em>';
-      $parameters  = preg_replace("'\s+=\s+'",'=',$parameters);
-      $parameters = (strpos($parameters,'class="') !== false ? str_replace('class="', 'class="ChkBox ',$parameters) : $parameters . ' class="ChkBox"');
     }
+    $parameters  = preg_replace("'\s+=\s+'",'=',$parameters);
+    $parameters = (strpos($parameters,'class="') !== false ? str_replace('class="', 'class="ChkBox ',$parameters) : $parameters . ' class="ChkBox"');
     if (xtc_not_null($parameters)) $selection .= ' ' . $parameters;
     
     $selection .= '>'.$addtag;
