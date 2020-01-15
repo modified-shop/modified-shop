@@ -272,7 +272,9 @@ class paypalcart extends PayPalPayment {
       $shop_content_data = $main->getContentData(3);
       $module_smarty->assign('AGB', '<div class="agbframe">' . $shop_content_data['content_text'] . '</div>');
       $module_smarty->assign('AGB_LINK', $main->getContentLink(3, MORE_INFO,'SSL'));
-      $module_smarty->assign('AGB_checkbox', '<input type="checkbox" value="conditions" name="conditions" id="conditions"'.(isset($_GET['step']) && $_GET['step'] == 'step2' ? ' checked="checked"' : '').' />');
+      if (SIGN_CONDITIONS_ON_CHECKOUT == 'true') {
+        $module_smarty->assign('AGB_checkbox', '<input type="checkbox" value="conditions" name="conditions" id="conditions"'.(isset($_GET['step']) && $_GET['step'] == 'step2' ? ' checked="checked"' : '').' />');
+      }
     }
 
     if (defined('DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT')
