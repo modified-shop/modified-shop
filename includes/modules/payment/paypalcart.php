@@ -272,7 +272,7 @@ class paypalcart extends PayPalPayment {
       $shop_content_data = $main->getContentData(3);
       $module_smarty->assign('AGB', '<div class="agbframe">' . $shop_content_data['content_text'] . '</div>');
       $module_smarty->assign('AGB_LINK', $main->getContentLink(3, MORE_INFO,'SSL'));
-      if (SIGN_CONDITIONS_ON_CHECKOUT == 'true') {
+      if ((defined('SIGN_CONDITIONS_ON_CHECKOUT') && SIGN_CONDITIONS_ON_CHECKOUT == 'true') || (!defined('SIGN_CONDITIONS_ON_CHECKOUT') && DISPLAY_CONDITIONS_ON_CHECKOUT == 'true')) {
         $module_smarty->assign('AGB_checkbox', '<input type="checkbox" value="conditions" name="conditions" id="conditions"'.(isset($_GET['step']) && $_GET['step'] == 'step2' ? ' checked="checked"' : '').' />');
       }
     }
@@ -333,7 +333,9 @@ class paypalcart extends PayPalPayment {
           $_SESSION['comments'] = xtc_db_prepare_input($_POST['comments']);
         }
         $error_mess  = array();
-        if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true' && $_POST['conditions'] != 'conditions') {
+        if (((defined('SIGN_CONDITIONS_ON_CHECKOUT') && SIGN_CONDITIONS_ON_CHECKOUT == 'true')
+            || (!defined('SIGN_CONDITIONS_ON_CHECKOUT') && DISPLAY_CONDITIONS_ON_CHECKOUT == 'true')
+            ) && $_POST['conditions'] != 'conditions') {
           $error_mess[] = '1';
         }
         if ($_POST['check_address'] != 'address') {
