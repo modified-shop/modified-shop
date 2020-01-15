@@ -222,6 +222,9 @@
   padding:0;
 }
 /* prevent flicker in responsive tabs */
+#horizontalAccordion {
+  display:none;
+}
 #horizontalAccordion ul.resp-tabs-list {
   display:none !important;
 }
