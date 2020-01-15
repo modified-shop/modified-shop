@@ -24,9 +24,9 @@
       $this->a = $this->correctImageOrientation($resource_file);  // image to be thumbnailed
       $this->c = $transform;
       $this->d = $destination_file;  // thumbnail saved to
-      $this->e = $compression;  // compression ration for jpeg thumbnails
-      $this->m = $max_width;
-      $this->n = $max_height;
+      $this->e = (int)$compression;  // compression ration for jpeg thumbnails
+      $this->m = (int)$max_width;
+      $this->n = (int)$max_height;
       $this->compile();
       if($this->c !== "") {
         $this->manipulate();
