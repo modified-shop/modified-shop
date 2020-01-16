@@ -24,7 +24,7 @@
       $this->a = $this->correctImageOrientation($resource_file);  // image to be thumbnailed
       $this->c = $transform;
       $this->d = $destination_file;  // thumbnail saved to
-      $this->e = (int)$compression;  // compression ration for jpeg thumbnails
+		  $this->e = (((int)$compression != 0) ? (int)$compression : 80);	// compression ration for jpeg thumbnails
       $this->m = (int)$max_width;
       $this->n = (int)$max_height;
       $this->compile();
@@ -79,6 +79,9 @@
         $this->j = $this->h[1];
         $this->k = $this->h[2];
         
+        if ($this->m == 0) $this->m = $this->i;
+        if ($this->n == 0) $this->n = $this->j;
+
         if(PRODUCT_IMAGE_NO_ENLARGE_UNDER_DEFAULT == 'false'){
           if($this->i < $this->m) {$this->m = $this->i;}
           if($this->j < $this->n) {$this->n = $this->j;}
