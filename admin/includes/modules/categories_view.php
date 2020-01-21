@@ -1004,7 +1004,7 @@
                                                  );
                   $contents[] = array('align' => 'center', 
                                       'text' =>  '<a class="button" href="'.xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('action', 'current_product_id', 'cPath', 'pID')).'action=edit_crossselling&current_product_id='.$pInfo->products_id.'&cpath='.$cPath).'">' . BUTTON_EDIT_CROSS_SELLING . '</a>
-                                                  <a class="button" href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action')) . (isset($_GET['action']) ? 'last_action='.$_GET['action'].'&' : '') .'action=new_products_content'.'&set=product') . '">' . BUTTON_NEW_CONTENT . '</a>'
+                                                  <a class="button" href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action', 'pID')) . (isset($_GET['action']) ? 'last_action='.$_GET['action'].'&' : '') .'&pID='.$pInfo->products_id.'&action=new_products_content&set=product') . '">' . BUTTON_NEW_CONTENT . '</a>'
                                                  );                  
                   //Insert new Element Actions
                   $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%; border-top: 1px solid #aaa; margin-top: 5px;">' . TEXT_INSERT_ELEMENT . '</div>');
