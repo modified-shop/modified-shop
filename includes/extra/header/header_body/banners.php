@@ -15,7 +15,12 @@
   require_once(DIR_FS_INC . 'xtc_display_banner.inc.php');
   require_once(DIR_FS_INC . 'xtc_update_banner_display_count.inc.php');
   
-  if (MODULE_BANNER_MANAGER_STATUS == 'true') {
+  if (MODULE_BANNER_MANAGER_STATUS == 'true'
+      && basename($PHP_SELF) == FILENAME_DEFAULT 
+      && !isset($_GET['cPath']) 
+      && !isset($_GET['manufacturers_id'])
+      )
+  {
     $groups_query = xtc_db_query("SELECT DISTINCT banners_group 
                                              FROM " . TABLE_BANNERS . " 
                                             WHERE banners_group != 'slider'
