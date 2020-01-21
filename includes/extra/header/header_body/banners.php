@@ -21,9 +21,12 @@
       && !isset($_GET['manufacturers_id'])
       )
   {
+    $banners_group_condition = ((isset($banners_group_condition)) ? $banners_group_condition : '');
+    
     $groups_query = xtc_db_query("SELECT DISTINCT banners_group 
                                              FROM " . TABLE_BANNERS . " 
                                             WHERE banners_group != 'slider'
+                                                  ".$banners_group_condition."
                                          ORDER BY banners_group");
     while ($groups = xtc_db_fetch_array($groups_query)) {
       if ($banner = xtc_banner_exists('dynamic', $groups['banners_group'])) {
