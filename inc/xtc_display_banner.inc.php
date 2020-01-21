@@ -15,51 +15,27 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
     
+  require_once(DIR_FS_INC . 'xtc_banner_exists.inc.php');
+  
   // Display a banner from the specified group or banner id ($identifier)
   function xtc_display_banner($action, $identifier) {
     if ($action == 'dynamic') {
-      $banners_query = xtc_db_query("SELECT count(*) as count 
-                                       FROM " . TABLE_BANNERS . " 
-                                      WHERE status = '1' 
-                                        AND languages_id = '" . (int)$_SESSION['languages_id'] . "'
-                                        AND banners_group = '" . xtc_db_input($identifier) . "'");
-      $banners = xtc_db_fetch_array($banners_query);
-      if ($banners['count'] > 0) {
-        $banner = xtc_random_select("SELECT *
-                                       FROM " . TABLE_BANNERS . " 
-                                      WHERE status = '1' 
-                                        AND languages_id = '" . (int)$_SESSION['languages_id'] . "'
-                                        AND banners_group = '" . xtc_db_input($identifier) . "'");
+      if (is_array($identifier)) {
+        $banner = $identifier;
+      } else {
+        $banner = xtc_banner_exists($action, $identifier);
       }
     } elseif ($action == 'static') {
       if (is_array($identifier)) {
         $banner = $identifier;
       } else {
-        $banner_query = xtc_db_query("SELECT *
-                                        FROM " . TABLE_BANNERS . " 
-                                       WHERE status = '1' 
-                                         AND languages_id = '" . (int)$_SESSION['languages_id'] . "'
-                                         AND banners_id = '" . (int)$identifier . "'");
-        if (xtc_db_num_rows($banner_query)) {
-          $banner = xtc_db_fetch_array($banner_query);
-        }
+        $banner = xtc_banner_exists($action, $identifier);
       }
     } elseif ($action == 'slider') {
       if (is_array($identifier)) {
         $banner_content = $identifier;
       } else {
-        $banner_query = xtc_db_query("SELECT *
-                                        FROM " . TABLE_BANNERS . " 
-                                       WHERE status = '1' 
-                                         AND banners_image != ''
-                                         AND languages_id = '" . (int)$_SESSION['languages_id'] . "'
-                                         AND banners_group = '" . xtc_db_input($identifier) . "'");
-        if (xtc_db_num_rows($banner_query) > 0) {
-          $banner_content = array();
-          while ($banner = xtc_db_fetch_array($banner_query)) {
-            $banner_content[] = $banner;
-          }
-        }
+        $banner_content = xtc_banner_exists($action, $identifier);
       }
       
       if (count($banner_content) > 0) {

@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_expire_banners.inc.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -34,7 +34,8 @@
           if (date('Y-m-d H:i:s') >= $banners['expires_date']) {
             xtc_set_banner_status($banners['banners_id'], '0');
           }
-        } elseif (xtc_not_null($banners['expires_impressions'])) {
+        }
+        if (xtc_not_null($banners['expires_impressions'])) {
           if ($banners['banners_shown'] >= $banners['expires_impressions']) {
             xtc_set_banner_status($banners['banners_id'], '0');
           }

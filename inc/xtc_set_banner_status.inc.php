@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_set_banner_status.inc.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id$   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -29,8 +29,6 @@
                        SET status = '".(int)$status."', 
                            date_status_change = now()
                      WHERE banners_id = '" . (int)$banners_id . "'");
-    } else {
-      return -1;
     }
   }
 ?>

@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_update_banner_click_count.inc.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -17,6 +17,9 @@
 
   // Update the banner click statistics
   function xtc_update_banner_click_count($banner_id) {
-    xtc_db_query("UPDATE " . TABLE_BANNERS_HISTORY . " SET banners_clicked = banners_clicked + 1 WHERE banners_id = '" . (int)$banner_id . "' AND date_format(banners_history_date, '%Y%m%d') = date_format(now(), '%Y%m%d')");
+    xtc_db_query("UPDATE " . TABLE_BANNERS_HISTORY . " 
+                     SET banners_clicked = banners_clicked + 1 
+                   WHERE banners_id = '" . (int)$banner_id . "' 
+                     AND date_format(banners_history_date, '%Y%m%d') = date_format(now(), '%Y%m%d')");
   }
 ?>
