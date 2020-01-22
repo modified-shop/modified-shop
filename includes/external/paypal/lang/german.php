@@ -68,6 +68,7 @@ $lang_array = array(
   
   // error
   'TEXT_PAYPAL_ERROR_AMOUNT' => 'Bitte geben Sie einen Betrag ein.',
+  'TEXT_PAYPAL_ERROR_ALREADY_PAID' => 'Wir haben Ihre Zahlung bereits erhalten. Vielen Dank!',
   
   
   // diverse

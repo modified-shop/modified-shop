@@ -68,6 +68,7 @@ $lang_array = array(
   
   // error
   'TEXT_PAYPAL_ERROR_AMOUNT' => 'Please enter an valid amount',
+  'TEXT_PAYPAL_ERROR_ALREADY_PAID' => 'We have already received your payment. Thanks a lot!',
   
   
   // diverse

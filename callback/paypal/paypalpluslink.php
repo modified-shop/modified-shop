@@ -61,9 +61,7 @@ if (isset($_GET['oID'])
         $messageStack->add_session('logoff', MODULE_PAYMENT_PAYPALPLUSLINK_TEXT_COMPLETED, 'success');
         xtc_redirect(xtc_href_link(FILENAME_LOGOFF, '', 'SSL'));
       }
-    } else {
-      $approval = $paypal->payment_redirect(false, true, true);
-
+    } else {      
       // create smarty elements
       $smarty = new Smarty;
 
@@ -74,33 +72,42 @@ if (isset($_GET['oID'])
 
       require (DIR_WS_INCLUDES.'header.php');
 
-      $javascript = '<script type="text/javascript">
-      var ppp = PAYPAL.apps.PPP({	
-        "approvalUrl": "'.$approval.'",
-        "placeholder": "ppplus",
-        "mode": "'.$paypal->get_config('PAYPAL_MODE').'",
-        "language": "'.$_SESSION['language_code'].'_'.$order->billing['country_iso_2'].'",
-        "country": "'.$order->billing['country_iso_2'].'",
-        "buttonLocation": "outside",
-        "preselection": "paypal",
-        "useraction": "continue",
-        "showLoadingIndicator": true,
-        "showPuiOnSandbox": true
-      });
-      </script>'."\n";
-      $smarty->assign('javascript', $javascript);
+      $payment_data = $paypal->get_payment_data($_GET['oID']);
+      
+      if (count($payment_data) < 1) {
+        $approval = $paypal->payment_redirect(false, true, true);
 
-      if (isset($_GET['payment_error'])) {
-        $error = $paypal->get_error();
-        $smarty->assign('error',  $error['error']);
+        $javascript = '<script type="text/javascript">
+        var ppp = PAYPAL.apps.PPP({	
+          "approvalUrl": "'.$approval.'",
+          "placeholder": "ppplus",
+          "mode": "'.$paypal->get_config('PAYPAL_MODE').'",
+          "language": "'.$_SESSION['language_code'].'_'.$order->billing['country_iso_2'].'",
+          "country": "'.$order->billing['country_iso_2'].'",
+          "buttonLocation": "outside",
+          "preselection": "paypal",
+          "useraction": "continue",
+          "showLoadingIndicator": true,
+          "showPuiOnSandbox": true
+        });
+        </script>'."\n";
+        $smarty->assign('javascript', $javascript);
+
+        if (isset($_GET['payment_error'])) {
+          $error = $paypal->get_error();
+          $smarty->assign('error',  $error['error']);
+        }
+
+        $smarty->assign('BUTTON_CONTINUE', '<a href="#" onclick="ppp.doCheckout(); return false;">'.xtc_image_button('button_continue.gif', IMAGE_BUTTON_CONTINUE).'</a>');
+      } else {
+        $smarty->assign('error',  TEXT_PAYPAL_ERROR_ALREADY_PAID);
       }
-
+      
       $cancel_link = xtc_href_link(FILENAME_LOGOFF, '', 'SSL');
       if (isset($_SESSION['customer_id'])) {
         $cancel_link = xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id='.(int)$_GET['oID'], 'SSL');
       }
       $smarty->assign('BUTTON_BACK', '<a href="'.$cancel_link.'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
-      $smarty->assign('BUTTON_CONTINUE', '<a href="#" onclick="ppp.doCheckout(); return false;">'.xtc_image_button('button_continue.gif', IMAGE_BUTTON_CONTINUE).'</a>');
     
       $tpl_file = DIR_FS_EXTERNAL.'paypal/templates/ppp.html';
       if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/paypal/ppp.html')) {
