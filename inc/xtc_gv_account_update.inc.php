@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_gv_account_update.inc.php 899 2005-04-29 02:40:57Z hhgag $
+   $Id$
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -27,23 +27,30 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-   // Update the Customers GV account
-  function xtc_gv_account_update($customer_id, $gv_id) {
+  // Update the Customers GV account
+  function xtc_gv_account_update($customer_id, $coupon_id) {
+    $coupon_query = xtc_db_query("SELECT coupon_amount 
+                                       FROM " . TABLE_COUPONS . " 
+                                      WHERE coupon_id = '" . (int)$coupon_id . "'");
+    $coupon = xtc_db_fetch_array($coupon_query);
+    
     $customer_gv_query = xtc_db_query("SELECT amount 
                                          FROM " . TABLE_COUPON_GV_CUSTOMER . " 
                                         WHERE customer_id = '" . (int)$customer_id . "'");
-    $coupon_gv_query = xtc_db_query("SELECT coupon_amount 
-                                       FROM " . TABLE_COUPONS . " 
-                                      WHERE coupon_id = '" . (int)$gv_id . "'");
-    $coupon_gv = xtc_db_fetch_array($coupon_gv_query);
+    
     if (xtc_db_num_rows($customer_gv_query) > 0) {
       $customer_gv = xtc_db_fetch_array($customer_gv_query);
-      $new_gv_amount = $customer_gv['amount'] + $coupon_gv['coupon_amount'];
-      //prepare for DB insert
-      $new_gv_amount = str_replace(",", ".", $new_gv_amount);
-      $gv_query = xtc_db_query("UPDATE " . TABLE_COUPON_GV_CUSTOMER . " SET amount = '" . $new_gv_amount . "' WHERE customer_id = '" . (int)$customer_id . "'");
+      $new_gv_amount = $customer_gv['amount'] + $coupon['coupon_amount'];
+
+      $gv_query = xtc_db_query("UPDATE " . TABLE_COUPON_GV_CUSTOMER . " 
+                                   SET amount = '" . $new_gv_amount . "' 
+                                 WHERE customer_id = '" . (int)$customer_id . "'");
     } else {
-      $gv_query = xtc_db_query("INSERT INTO " . TABLE_COUPON_GV_CUSTOMER . " (customer_id, amount) VALUES ('" . (int)$customer_id . "', '" . $coupon_gv['coupon_amount'] . "')");
+      $sql_data_array = array(
+         'customer_id' => (int)$customer_id,
+         'amount' => $coupon['coupon_amount']
+      );
+      xtc_db_perform(TABLE_COUPON_GV_CUSTOMER, $sql_data_array);
     }
   }
 ?>
