@@ -517,9 +517,18 @@ class PayPalPayment extends PayPalPaymentBase {
   
   function validate_payment_paypalcart() {
     
+    $error = false;
+    $check_query = xtc_db_query("SELECT * 
+                                   FROM ".TABLE_PAYPAL_PAYMENT."
+                                  WHERE payment_id = '".xtc_db_input($_SESSION['paypal']['paymentId'])."'");
+    if (xtc_db_num_rows($check_query) > 0) {
+      $error = true;
+    }
+
     if (isset($_GET['paymentId']) 
         && isset($_GET['PayerID']) 
         && $_SESSION['paypal']['paymentId'] == $_GET['paymentId']
+        && $error == false
         ) 
     {
       // auth
@@ -585,10 +594,19 @@ class PayPalPayment extends PayPalPaymentBase {
 
   function validate_payment_paypal() {
     global $insert_id;
- 
+    
+    $error = false;
+    $check_query = xtc_db_query("SELECT * 
+                                   FROM ".TABLE_PAYPAL_PAYMENT."
+                                  WHERE payment_id = '".xtc_db_input($_SESSION['paypal']['paymentId'])."'");
+    if (xtc_db_num_rows($check_query) > 0) {
+      $error = true;
+    }
+         
     if (isset($_GET['paymentId']) 
         && isset($_GET['PayerID']) 
         && $_SESSION['paypal']['paymentId'] == $_GET['paymentId']
+        && $error == false
         ) 
     {
        // auth
