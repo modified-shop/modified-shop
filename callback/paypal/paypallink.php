@@ -62,15 +62,28 @@ if (isset($_GET['oID'])
         xtc_redirect(xtc_href_link(FILENAME_LOGOFF, '', 'SSL'));
       }
     } else {
-      if (!isset($_GET['payment_error'])) {
+      $payment_data = $paypal->get_payment_data($_GET['oID']);
+      
+      if (!isset($_GET['payment_error'])
+          && count($payment_data) < 1
+          )
+      {
         $redirect = $paypal->payment_redirect(false, true, true);
         xtc_redirect($redirect);
       } else {
         if (isset($_SESSION['customer_id'])) {
-          $messageStack->add_session('paypallink', MODULE_PAYMENT_PAYPALLINK_TEXT_ERROR_MESSAGE);
+          if (count($payment_data) > 0) {
+            $messageStack->add_session('paypallink', TEXT_PAYPAL_ERROR_ALREADY_PAID);          
+          } else {
+            $messageStack->add_session('paypallink', MODULE_PAYMENT_PAYPALLINK_TEXT_ERROR_MESSAGE);
+          }
           xtc_redirect(xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id='.(int)$_GET['oID'], 'SSL'));
         } else {
-          $messageStack->add_session('logoff', MODULE_PAYMENT_PAYPALLINK_TEXT_ERROR_MESSAGE);
+          if (count($payment_data) > 0) {
+            $messageStack->add_session('logoff', TEXT_PAYPAL_ERROR_ALREADY_PAID);          
+          } else {
+            $messageStack->add_session('logoff', MODULE_PAYMENT_PAYPALLINK_TEXT_ERROR_MESSAGE);
+          }
           xtc_redirect(xtc_href_link(FILENAME_LOGOFF, '', 'SSL'));
         }      
       }

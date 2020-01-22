@@ -524,7 +524,7 @@ class PayPalPayment extends PayPalPaymentBase {
     if (xtc_db_num_rows($check_query) > 0) {
       $error = true;
     }
-
+    
     if (isset($_GET['paymentId']) 
         && isset($_GET['PayerID']) 
         && $_SESSION['paypal']['paymentId'] == $_GET['paymentId']
@@ -602,7 +602,7 @@ class PayPalPayment extends PayPalPaymentBase {
     if (xtc_db_num_rows($check_query) > 0) {
       $error = true;
     }
-         
+    
     if (isset($_GET['paymentId']) 
         && isset($_GET['PayerID']) 
         && $_SESSION['paypal']['paymentId'] == $_GET['paymentId']
