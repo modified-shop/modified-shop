@@ -46,17 +46,38 @@
                                  WHERE coupon_code = '".xtc_db_input(trim($_POST['gv_redeem_code']))."'
                                    AND coupon_active = 'Y'
                                    AND (restrict_to_customers = ''
+                                        OR restrict_to_customers IS NULL
                                         OR FIND_IN_SET ('". (int)$_SESSION['customers_status']['customers_status_id'] ."', restrict_to_customers)
                                         )");
-      $gv_result = xtc_db_fetch_array($gv_query);
 
-      if (xtc_db_num_rows($gv_query) != 0) {
-        $redeem_query = xtc_db_query("SELECT * 
-                                        FROM " . TABLE_COUPON_REDEEM_TRACK . " 
-                                       WHERE coupon_id = '" . $gv_result['coupon_id'] . "'");
-        if ((xtc_db_num_rows($redeem_query) != 0) && ($gv_result['coupon_type'] == 'G')) {
-          $messageStack->add_session('coupon_message', ERROR_NO_INVALID_REDEEM_GV);
-          xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'));
+      if (xtc_db_num_rows($gv_query) > 0) {
+        $gv_result = xtc_db_fetch_array($gv_query);
+        
+        $track_query = xtc_db_query("SELECT *
+                                       FROM ".TABLE_COUPON_EMAIL_TRACK."
+                                      WHERE coupon_id = '".$gv_result['coupon_id']."'");
+        if (xtc_db_num_rows($track_query) > 0 && $gv_result['coupon_type'] == 'G') {   
+          $redeem_query = xtc_db_query("SELECT coupon_id 
+                                          FROM ".TABLE_COUPON_REDEEM_TRACK." 
+                                         WHERE coupon_id = '".$gv_result['coupon_id']."'");
+          if (xtc_db_num_rows($redeem_query) == 0 && isset($_SESSION['customer_id'])) {
+        
+            $sql_data_array = array('coupon_id' => $gv_result['coupon_id'],
+                                    'customer_id' => $_SESSION['customer_id'],
+                                    'redeem_date' => 'now()',
+                                    'redeem_ip' => $_SESSION['tracking']['ip']);
+            xtc_db_perform(TABLE_COUPON_REDEEM_TRACK, $sql_data_array);
+                               
+            xtc_db_query("UPDATE ".TABLE_COUPONS." 
+                             SET coupon_active = 'N' 
+                           WHERE coupon_id = '".$gv_result['coupon_id']."'");
+            xtc_gv_account_update($_SESSION['customer_id'], $gv_result['coupon_id']);
+
+            xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'));
+          } else {
+            $messageStack->add_session('coupon_message', ERROR_NO_INVALID_REDEEM_GV);
+            xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'));
+          }
         }
       } else {
         $messageStack->add_session('coupon_message', ERROR_NO_INVALID_REDEEM_GV);
