@@ -436,13 +436,30 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
                                   );
           xtc_db_perform(TABLE_COUPONS, $sql_data_array);
 
-          $insert_id = xtc_db_insert_id();
-          $sql_data_array = array('coupon_id' => $insert_id,
-                                  'customer_id_sent' => '0',
-                                  'sent_firstname' => 'Admin',
-                                  'emailed_to' => $email_address,
-                                  'date_sent' => 'now()'
-                                  );
+          $coupon_id = xtc_db_insert_id();
+
+          if (!isset($lng) || (isset($lng) && !is_object($lng))) {
+            require_once(DIR_WS_CLASSES . 'language.php');
+            $lng = new language;
+          }
+          
+          foreach ($lng->catalog_languages as $languages) {
+            $sql_data_array = array(
+              'coupon_id' => $coupon_id,
+              'language_id' => $languages['id'],
+              'coupon_name' => 'Registration',
+              'coupon_description' => '',
+            );
+            xtc_db_perform(TABLE_COUPONS_DESCRIPTION, $sql_data_array);
+          }
+                    
+          $sql_data_array = array(
+            'coupon_id' => $coupon_id,
+            'customer_id_sent' => '0',
+            'sent_firstname' => 'Admin',
+            'emailed_to' => $email_address,
+            'date_sent' => 'now()'
+          );
           xtc_db_perform(TABLE_COUPON_EMAIL_TRACK, $sql_data_array);
 
           $smarty->assign('SEND_GIFT', 'true');
@@ -451,29 +468,28 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
           $smarty->assign('GIFT_LINK', xtc_href_link(FILENAME_GV_REDEEM, 'gv_no='.$coupon_code, 'NONSSL', false));
         }
         if (NEW_SIGNUP_DISCOUNT_COUPON != '') {
-          $coupon_code = NEW_SIGNUP_DISCOUNT_COUPON;
           $coupon_query = xtc_db_query("SELECT * 
-                                          FROM ".TABLE_COUPONS." 
-                                         WHERE coupon_code = '".xtc_db_input($coupon_code)."'");
-          $coupon = xtc_db_fetch_array($coupon_query);
-          $coupon_id = $coupon['coupon_id'];
-          $coupon_desc_query = xtc_db_query("SELECT * 
-                                               FROM ".TABLE_COUPONS_DESCRIPTION." 
-                                              WHERE coupon_id = '".$coupon_id."' 
-                                                AND language_id = '".(int)$_SESSION['languages_id']."'");
-          $coupon_desc = xtc_db_fetch_array($coupon_desc_query);
+                                          FROM ".TABLE_COUPONS." c
+                                          JOIN ".TABLE_COUPONS_DESCRIPTION." cd
+                                               ON c.coupon_id = cd.coupon_id
+                                                  AND cd.language_id = '".(int)$_SESSION['languages_id']."'
+                                         WHERE c.coupon_code = '".xtc_db_input(trim(NEW_SIGNUP_DISCOUNT_COUPON))."'");
+          if (xtc_db_num_rows($coupon_query) > 0) {
+            $coupon = xtc_db_fetch_array($coupon_query);
         
-          $sql_data_array = array('coupon_id' => $coupon_id,
-                                  'customer_id_sent' => '0',
-                                  'sent_firstname' => 'Admin',
-                                  'emailed_to' => $email_address,
-                                  'date_sent' => 'now()'
-                                  );
-          xtc_db_perform(TABLE_COUPON_EMAIL_TRACK, $sql_data_array);
+            $sql_data_array = array(
+              'coupon_id' => $coupon['coupon_id'],
+              'customer_id_sent' => '0',
+              'sent_firstname' => 'Admin',
+              'emailed_to' => $email_address,
+              'date_sent' => 'now()'
+            );
+            xtc_db_perform(TABLE_COUPON_EMAIL_TRACK, $sql_data_array);
         
-          $smarty->assign('SEND_COUPON', 'true');
-          $smarty->assign('COUPON_DESC', $coupon_desc['coupon_description']);
-          $smarty->assign('COUPON_CODE', $coupon['coupon_code']);
+            $smarty->assign('SEND_COUPON', 'true');
+            $smarty->assign('COUPON_DESC', $coupon['coupon_description']);
+            $smarty->assign('COUPON_CODE', $coupon['coupon_code']);
+          }
         }
       }
 
