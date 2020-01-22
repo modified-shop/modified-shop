@@ -417,7 +417,7 @@ define('SECURITY_CODE_LENGTH_DESC', 'Geben Sie hier die L&auml;nge des Gutschein
 define('NEW_SIGNUP_GIFT_VOUCHER_AMOUNT_TITLE', 'Willkommens-Geschenk Gutschein Wert');
 define('NEW_SIGNUP_GIFT_VOUCHER_AMOUNT_DESC', 'Willkommens-Geschenk Gutschein Wert: Wenn Sie keinen Gutschein in Ihrer Willkommens-E-Mail versenden wollen, tragen Sie hier 0 ein, ansonsten geben Sie den Wert des Gutscheins an, z.B. 10.00 oder 50.00, aber keine W&auml;hrungszeichen.');
 define('NEW_SIGNUP_DISCOUNT_COUPON_TITLE', 'Willkommens-Rabatt Coupon Code');
-define('NEW_SIGNUP_DISCOUNT_COUPON_DESC', 'Willkommens-Rabatt Coupon Code: Wenn Sie keinen Coupon in Ihrer Willkommens-E-Mail versenden wollen, lassen Sie dieses Feld leer, ansonsten tragen Sie den Coupon Code ein, den Sie verwenden wollen.');
+define('NEW_SIGNUP_DISCOUNT_COUPON_DESC', 'Willkommens-Rabatt Coupon Code: Wenn Sie keinen Coupon in Ihrer Willkommens-E-Mail versenden wollen, lassen Sie dieses Feld leer, ansonsten tragen Sie den Coupon Code ein, den Sie verwenden wollen.<br /><b>Hinweis:</b> Der Coupon Code muss vorher im <a href="'.xtc_href_link(FILENAME_COUPON_ADMIN).'"><b>Coupon Admin</b></a> erstellt werden.');
 
 define('TXT_ALL','Alle');
 
