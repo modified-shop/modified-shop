@@ -86,10 +86,13 @@
           }
     
           $messageStack->add_session(sprintf(NOTICE_EMAIL_SENT_TO, $mail_sent_to), 'success');
-          if (isset($_GET['cID']) && $_GET['cID'] != '') {
-            xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array('action'))));
+          if (isset($_GET['oID']) && $_GET['oID'] != '') {
+            xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action', 'customer')).'action=edit'));
           }
-          xtc_redirect(xtc_href_link(FILENAME_MAIL, xtc_get_all_get_params(array('action', 'cID'))));
+          if (isset($_GET['cID']) && $_GET['cID'] != '') {
+            xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array('action', 'customer'))));
+          }
+          xtc_redirect(xtc_href_link(FILENAME_MAIL, xtc_get_all_get_params(array('action', 'customer'))));
         }
         break;
       
@@ -153,7 +156,7 @@
                 break;
             }  
 
-            echo xtc_draw_form('mail', FILENAME_MAIL, 'action=send_email_to_user');
+            echo xtc_draw_form('mail', FILENAME_MAIL, xtc_get_all_get_params(array('action')).'action=send_email_to_user');
               ?>
               <table class="tableConfig borderall">
                 <tr>
@@ -193,15 +196,17 @@
             
             if ($selected_customer != '') {
               $mail_query = xtc_db_query("SELECT *
-                                            FROM " . TABLE_CUSTOMERS . " 
+                                            FROM " . ((isset($_GET['oID']) && $_GET['oID'] != '') ? TABLE_ORDERS : TABLE_CUSTOMERS) . " 
                                            WHERE customers_email_address = '".xtc_db_input($selected_customer)."'
                                         GROUP BY customers_email_address
                                         ORDER BY customers_lastname");
-              while($customers_values = xtc_db_fetch_array($mail_query)) {
-                $customers[] = array(
-                  'id' => $customers_values['customers_email_address'],
-                  'text' => $customers_values['customers_lastname'] . ', ' . $customers_values['customers_firstname'] . ' (' . $customers_values['customers_email_address'] . ')'
-                );
+              if (xtc_db_num_rows($mail_query) > 0) {
+                while($customers_values = xtc_db_fetch_array($mail_query)) {
+                  $customers[] = array(
+                    'id' => $customers_values['customers_email_address'],
+                    'text' => $customers_values['customers_lastname'] . ', ' . $customers_values['customers_firstname'] . ' (' . $customers_values['customers_email_address'] . ')'
+                  );
+                }
               }
             }
             
@@ -222,7 +227,16 @@
                 </tr>                
               </table> 
 
-              <div class="smallText mrg5 txta-r"><?php echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SEND_EMAIL . '"/>'; ?></div>
+              <div class="smallText mrg5 txta-r">
+                <?php 
+                  if (isset($_GET['oID']) && $_GET['oID'] != '') {
+                    echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action', 'customer')).'action=edit') . '">' . BUTTON_BACK . '</a>';
+                  } elseif (isset($_GET['cID']) && $_GET['cID'] != '') {
+                    echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array('action', 'customer'))) . '">' . BUTTON_BACK . '</a>';
+                  }
+                  echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SEND_EMAIL . '"/>'; 
+                ?>
+              </div>
             </form>
           <?php
           }
