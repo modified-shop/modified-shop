@@ -424,7 +424,7 @@
                       }
                       $contents[] = array ('align' => 'center',
                                            'text' => '<a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_ORDERS, 'cID='.$cInfo->customers_id).'">'.BUTTON_ORDERS.'</a>
-                                                      <a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_MAIL, 'customer='.$cInfo->customers_email_address).'">'.BUTTON_EMAIL.'</a>'
+                                                      <a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_MAIL, xtc_get_all_get_params(array('customer')).'customer='.$cInfo->customers_email_address).'">'.BUTTON_EMAIL.'</a>'
                                            );
                       $contents[] = array ('align' => 'center',
                                            'text' => '<a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action')).'cID='.$cInfo->customers_id.'&action=iplog').'">'.BUTTON_IPLOG.'</a>

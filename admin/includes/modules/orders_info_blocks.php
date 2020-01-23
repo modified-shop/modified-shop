@@ -79,7 +79,7 @@
                 </tr>
                 <tr>
                   <td class="main"><b><?php echo ENTRY_EMAIL_ADDRESS; ?></b></td>
-                  <td class="main"><?php echo '<a href="mailto:' . $order->customer['email_address'] . '" style="font-size: 11px;">' . $order->customer['email_address'] . '</a>'; ?></td>
+                  <td class="main"><?php echo '<a href="' . xtc_href_link(FILENAME_MAIL, xtc_get_all_get_params(array('customer', 'action')).'customer='.$order->customer['email_address']) . '" style="font-size: 11px;">' . $order->customer['email_address'] . '</a>'; ?></td>
                 </tr>
                 <tr>
                   <td class="main"><b><?php echo ENTRY_CUSTOMERS_STATUS; ?></b></td>
