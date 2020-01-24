@@ -45,6 +45,7 @@ if ($_SESSION['customer_id'] == 1) {
   xtc_redirect(xtc_href_link(FILENAME_DEFAULT),'NONSSL');
 }
 
+$success = false;
 if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
   $password = xtc_db_prepare_input($_POST['password']);
   $check_customer_query = xtc_db_query("SELECT customers_password
@@ -57,7 +58,6 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
   } elseif (!xtc_validate_password($password, $check_customer['customers_password'], $_SESSION['customer_id'])) {
     $messageStack->add('account_delete', TEXT_LOGIN_ERROR);
   } else {
-
     $_SESSION['cart']->reset(true);
 
     xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS." WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
@@ -81,8 +81,9 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
     unset ($_SESSION['ccard']);
     unset ($_SESSION['gv_id']);
     unset ($_SESSION['cc_id']);
-
-    $smarty->assign('BUTTON_CONTINUE', '<a href="'.xtc_href_link(FILENAME_DEFAULT, '', 'NONSSL').'">'.xtc_image_button('button_continue.gif', IMAGE_BUTTON_CONTINUE).'</a>');
+    
+    $success = true;
+    require (DIR_WS_INCLUDES.'write_customers_status.php');
   }
 }
 
@@ -102,7 +103,9 @@ $smarty->assign('INPUT_PASSWORD', xtc_draw_password_field('password'));
 $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(FILENAME_ACCOUNT, '', 'SSL').'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
 $smarty->assign('BUTTON_SUBMIT', xtc_image_submit('button_continue.gif', IMAGE_BUTTON_CONTINUE));
 $smarty->assign('FORM_END', '</form>');
-
+if ($success === true) {
+  $smarty->assign('BUTTON_CONTINUE', '<a href="'.xtc_href_link(FILENAME_DEFAULT, '', 'NONSSL').'">'.xtc_image_button('button_continue.gif', IMAGE_BUTTON_CONTINUE).'</a>');
+}
 $smarty->assign('language', $_SESSION['language']);
 
 $smarty->caching = 0;
