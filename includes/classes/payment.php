@@ -108,7 +108,10 @@
         }
 
         // unallowed payment / shipping
-        if (MODULE_EXCLUDE_PAYMENT_STATUS == 'True') {
+        if (defined('MODULE_EXCLUDE_PAYMENT_STATUS')
+            && MODULE_EXCLUDE_PAYMENT_STATUS == 'True'
+            )
+        {
           for ($i=1; $i<=MODULE_EXCLUDE_PAYMENT_NUMBER; $i++) {
             $shipping_exclude = explode(',', constant('MODULE_EXCLUDE_PAYMENT_SHIPPING_'.$i));
             if (isset($_SESSION['shipping']) 
