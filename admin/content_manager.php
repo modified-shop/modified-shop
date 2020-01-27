@@ -270,14 +270,13 @@
         if ($content_file = xtc_try_upload('file_upload', DIR_FS_CATALOG.'media/'.$path.'/','644',$accepted_file_upload_files_extensions,$accepted_file_upload_files_mime_types)) {
           $content_file_name = $content_file->filename;
           if ($_POST['keep_filename'] != '1') {
-            $old_filename = $content_file->filename;
+            $old_filename = $content_file_name;
             $timestamp = str_replace('.','',microtime());
             $timestamp = str_replace(' ','',$timestamp);
             $content_file_name = $timestamp.strstr($content_file_name,'.');
-            $rename_string = DIR_FS_CATALOG.'media/'.$path.'/'.$content_file_name;
+            rename(DIR_FS_CATALOG.'media/'.$path.'/'.$old_filename, DIR_FS_CATALOG.'media/'.$path.'/'.$content_file_name);
           }
-          rename(DIR_FS_CATALOG.'media/'.$path.'/'.$old_filename, $rename_string);
-          copy($rename_string, DIR_FS_CATALOG.'media/'.$path.'/backup/'.$content_file_name);
+          copy(DIR_FS_CATALOG.'media/'.$path.'/'.$content_file_name, DIR_FS_CATALOG.'media/'.$path.'/backup/'.$content_file_name);
         }
         if ($content_file_name == '') {
           $content_file_name = $filename;
