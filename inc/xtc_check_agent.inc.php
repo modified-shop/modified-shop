@@ -38,6 +38,7 @@ function xtc_check_agent() {
       "auresys",
       "awbot",
       "backrub",
+      "baidu",
       "bigbrother",
       "bingbot",
       "bjaaland",
