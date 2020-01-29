@@ -63,7 +63,7 @@
   }
 
   function DeleteCookies() {
-    var essential = ["MODsid", "MODtest", "MODtrack"];
+    var essential = ["MODsid", "MODtest", "MODtrack", "paypal"];
     var cookies = document.cookie.split(";");
     
     for (var c = 0; c < cookies.length; c++) {
