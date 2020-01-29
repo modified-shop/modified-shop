@@ -42,6 +42,21 @@
   $smarty->assign('order_data', $order_data);
   $smarty->assign('order_total', $order_total['data']);
 
+  if ($order->customer['vat_id'] != '' 
+      count($order_data) > 0
+      && $order_data[0]['ALLOW_TAX'] == 0
+      )
+  {
+    $store_country = xtc_get_countriesList(STORE_COUNTRY);
+    $countries_array = xtc_get_isocodes_from_geozone(5);
+    if (in_array(strtoupper($order->delivery['country_iso_2']), $countries_array)
+        && in_array(strtoupper($store_country['countries_iso_code_2']), $countries_array)
+        )
+    {
+      $smarty->assign('vat_info', 1);
+    }
+  }
+
   // assign language to template for caching
   $languages_query = xtc_db_query("select code, language_charset from " . TABLE_LANGUAGES . " WHERE directory ='". $order->info['language'] ."'");
   $langcode = xtc_db_fetch_array($languages_query);

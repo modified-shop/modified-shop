@@ -2425,6 +2425,29 @@
     }
   }
 
+
+  /**
+   * xtc_get_isocodes_from_geozone()
+   *
+   * @param int $geo_zone_id
+   * @return array
+   */
+  function xtc_get_isocodes_from_geozone($geo_zone_id) {
+    $countries_array = array ();
+    $countries_query = xtc_db_query("SELECT c.countries_iso_code_2
+                                       FROM " . TABLE_COUNTRIES . " c
+                                       JOIN " . TABLE_ZONES_TO_GEO_ZONES . " gz 
+                                            ON c.countries_id = gz.zone_country_id
+                                      WHERE gz.geo_zone_id = '".(int)$geo_zone_id."'");
+    if (xtc_db_num_rows($countries_query)) {
+      while ($countries = xtc_db_fetch_array($countries_query)) {
+        $countries_array[] = $countries['countries_iso_code_2'];
+      }
+    }
+    return $countries_array;
+  }
+
+
   /********************************************** NOT USED FUNCTIONS **********************************************/
   
   /**
