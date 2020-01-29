@@ -43,14 +43,15 @@
   $smarty->assign('order_total', $order_total['data']);
 
   if ($order->customer['vat_id'] != '' 
-      count($order_data) > 0
+      && count($order_data) > 0
       && $order_data[0]['ALLOW_TAX'] == 0
       )
   {
     $store_country = xtc_get_countriesList(STORE_COUNTRY);
     $countries_array = xtc_get_isocodes_from_geozone(5);
-    if (in_array(strtoupper($order->delivery['country_iso_2']), $countries_array)
-        && in_array(strtoupper($store_country['countries_iso_code_2']), $countries_array)
+    if (in_array($order->delivery['country_iso_2'], $countries_array)
+        && in_array($store_country['countries_iso_code_2'], $countries_array)
+        && $order->delivery['country_iso_2'] != $store_country['countries_iso_code_2']
         )
     {
       $smarty->assign('vat_info', 1);
