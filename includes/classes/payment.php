@@ -205,7 +205,7 @@
       $js = '';
       if (is_array($this->modules)) {
         $js = '<script type="text/javascript"><!-- ' . "\n" .
-              'function check_form() {' . "\n" .
+              'function check_form_payment() {' . "\n" .
               '  var error = 0;' . "\n" .
               '  var error_message = unescape("' . xtc_js_lang(JS_ERROR) . '");' . "\n" .
               '  var payment_value = null;' . "\n" .
