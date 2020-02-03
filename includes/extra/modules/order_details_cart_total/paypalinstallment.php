@@ -26,7 +26,7 @@
     $amount = $_SESSION['cart']->show_total(); 
     $presentment = $paypal_installment->get_presentment_details($amount, $_SESSION['currency'], $country['countries_iso_code_2'], 'cart', true);
     $module_smarty->assign('PAYPAL_INSTALLMENT', $presentment);
-  } elseif ($paypal_installment->enabled === true
+  } elseif ($paypal_installment->check_install() === true
             && $paypal_installment->get_config('PAYPAL_MODE') == 'live'
             && $paypal_installment->get_config('PAYPAL_INSTALLMENT_BANNER_DISPLAY') == 1
             )
