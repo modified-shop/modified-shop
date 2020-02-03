@@ -22,7 +22,8 @@
     require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPayment.php');
     $paypal_installment = new PayPalPayment('paypalinstallment');
     
-    if ($paypal_installment->get_config('PAYPAL_MODE') == 'live'
+    if ($paypal_installment->check_install() === true
+        && $paypal_installment->get_config('PAYPAL_MODE') == 'live'
         && $paypal_installment->get_config('PAYPAL_INSTALLMENT_BANNER_DISPLAY') == 1
         )
     {
