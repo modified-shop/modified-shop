@@ -281,7 +281,7 @@ if (PRODUCT_LIST_FILTER == 'true') {
                                WHERE p.products_status = '1'
                                      ".$where."
                                      ".PRODUCTS_CONDITIONS_P."
-                            ORDER BY pto.sort_order, ptv.sort_order";                           
+                            ORDER BY pto.sort_order, pto.options_name, ptv.sort_order, ptv.values_name";                           
 
   $filterlist_query = xtDBquery($filterlist_sql);
   if (xtc_db_num_rows($filterlist_query, true) > 0) {
