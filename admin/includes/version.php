@@ -20,6 +20,6 @@ define('MINIMUM_DB_VERSION', '200'); // currently not in use
 
 // Define the project version
 $version = 'modified eCommerce Shopssoftware v' . PROJECT_MAJOR_VERSION . '.' . PROJECT_MINOR_VERSION . ' rev ' . PROJECT_REVISION . ((PROJECT_SERVICEPACK_VERSION != '') ? ' SP' . PROJECT_SERVICEPACK_VERSION : ''). ' dated: ' . PROJECT_RELEASE_DATE;
-define('PROJECT_VERSION', $version);
+defined('PROJECT_VERSION') OR define('PROJECT_VERSION', $version);
 
 define('PROJECT_VERSION_NO', PROJECT_MAJOR_VERSION . '.' . PROJECT_MINOR_VERSION);
