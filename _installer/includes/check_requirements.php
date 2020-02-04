@@ -102,6 +102,20 @@
     'status' => $status
   );
   
+  if (function_exists('mb_get_info')) {
+    $status = true;
+  } else {
+    $status = false;
+    $error = true;
+  }
+
+  $requirement_array[] = array(
+    'name' => 'MBSTRING',
+    'version' => '',
+    'version_min' => '',
+    'version_max' => '',
+    'status' => $status
+  );  
   
   $status = false;
   $gd = gd_info();
