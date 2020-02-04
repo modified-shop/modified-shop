@@ -258,7 +258,7 @@
 				}
 			}			
       // remove comments
-		  $html = preg_replace('/<!--(.*?)-->/is'.((DB_SERVER_CHARSET == 'utf8') ? 'u' : ''), '', $html);
+		  $html = preg_replace('/(?=<!--)([\s\S]*?-->)/', '', $html);
       // $html = preg_replace ('@<![\s\S]*?--[ \t\n\r]*>@', '', $html);
       // re sub-in the conditionals if required.
 			if($keep_conditionals)
