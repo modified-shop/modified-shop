@@ -75,17 +75,11 @@ define('BUTTON_NEW_TAX_CLASS', 'New Tax Class');
 define('BUTTON_NEW_TAX_RATE', 'New Tax Rate');
 define('BUTTON_SEND', 'Send');
 define('BUTTON_REVERSE', 'Reverse');
-
-// BOF - Dokuman - 2010-02-04 - delete cache files in admin section
 define('BUTTON_DELETE_CACHE', 'Delete Cache');
 define('BUTTON_DELETE_TEMP_CACHE', 'Delete Templatecache');
 define('BUTTON_DELETE_LOGS', 'Delete Logfiles');
-// EOF - Dokuman - 2010-02-04 - delete cache files in admin section
-
-// BOF - web28 - 2011-07-13 - New Button
 define('BUTTON_VIEW_PRODUCT', 'View Product');
-//EOF - web28 - 2011-07-13 - New Button
-
+define('BUTTON_VIEW_CATEGORY', 'View Category');
 define('BUTTON_VALUES', 'Values');
 define('BUTTON_DELETE_BANKTRANSFER', 'Delete Banktransfer data');
 define('BUTTON_BLACKLIST', 'Blacklist');
