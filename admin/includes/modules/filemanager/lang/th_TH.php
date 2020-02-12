@@ -11,8 +11,8 @@ return array(
 
     'Select' => 'เลือก',
     'Deselect_All' => 'Deselect All',
-	'Select_All' => 'Select All',
-	'Erase' => 'ลบ',
+    'Select_All' => 'Select All',
+    'Erase' => 'ลบ',
     'Open' => 'เปิด',
     'Confirm_del' => 'คุณต้องการลบไฟล์นี้ ใช่ หรือ ไม่ ?',
     'All' => 'ทั้งหมด',
@@ -72,7 +72,6 @@ return array(
         'abort' => 'File upload aborted',
         'image_resize' => 'Failed to resize image'
     ),
-    'Upload_url' => 'อัพโหลดจาก url',
     'Type_dir' => 'dir',
     'Type' => 'ชนิด',
     'Dimension' => 'Dimension',
@@ -103,7 +102,9 @@ return array(
     'Copy_Cut_Size_Limit' => 'The selected files/folders are too big to %1$s. Limit: %2$d MB/operation', // %1$s = cut or copy, %2$d = max size
     'Copy_Cut_Count_Limit' => 'You selected too many files/folders to %1$s. Limit: %2$d files/operation', // %1$s = cut or copy, %2$d = max count
     'Copy_Cut_Not_Allowed' => 'You are not allowed to %1$s %2$s.', // %12$s = cut or copy, %2$s = files or folders
-    'Aviary_No_Save' => 'Could not save image',
+    'Image_Editor_No_Save' => 'Could not save image',
+    'Image_Editor_Exit' => "Exit",
+    'Image_Editor_Save' => "Save",
     'Zip_No_Extract' => 'Could not extract. File might be corrupt.',
     'Zip_Invalid' => 'This extension is not supported. Valid: zip, gz, tar.',
     'Dir_No_Write' => 'The directory you selected is not writable.',
@@ -130,7 +131,7 @@ return array(
     'Upload_message' => "ลากไฟล์มาวางหรือคลิกที่นี่ เพื่ออัพโหลด",
 
     'SERVER ERROR' => "SERVER ERROR",
-    'forbiden' => "Forbiden",
+    'forbidden' => "Forbiden",
     'wrong path' => "Wrong path",
     'wrong name' => "Wrong name",
     'wrong extension' => "Wrong extension",
