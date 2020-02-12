@@ -24,6 +24,7 @@
     DIR_ADMIN.'includes/modules/carp',
     DIR_ADMIN.'includes/modules/export/idealo_lib', // neu
     DIR_ADMIN.'includes/modules/fckeditor',
+    DIR_ADMIN.'includes/modules/filemanager/js/cors',
     DIR_ADMIN.'includes/modules/kcfinder',
     DIR_ADMIN.'includes/modules/magpierss',
     DIR_ADMIN.'includes/safeterms',
