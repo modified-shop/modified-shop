@@ -11,11 +11,12 @@
  */
 
 if (isset($_REQUEST['speed'])) {
-  // auto include
   require_once (DIR_FS_INC.'auto_include.inc.php');
-
   require_once (DIR_FS_INC.'xtc_input_validation.inc.php');
+  
   require_once (DIR_FS_INC.'db_functions_'.DB_MYSQL_TYPE.'.inc.php');
+  require_once (DIR_FS_INC.'db_functions.inc.php');
+
   require_once (DIR_WS_INCLUDES.'database_tables.php');
 }
 
