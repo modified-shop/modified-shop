@@ -161,7 +161,10 @@ if (xtc_not_null($action)) {
       foreach(auto_include(DIR_FS_CATALOG.'includes/extra/cart_actions/add_product_before_redirect/','php') as $file) require ($file);
       if ($co_express === true) {
         xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SHIPPING, 'express=on', 'SSL'));
-      } else {
+      } elseif (isset($_POST['products_id'])
+                && is_numeric($_POST['products_id'])
+                )
+      {
         xtc_redirect(xtc_href_link($goto, xtc_get_all_get_params($parameters) . 'products_id=' . (int)$_POST['products_id'] . $info_message));
       }
       break;

@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: product_reviews.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -25,7 +25,8 @@
   // include needed functions
   require_once (DIR_FS_INC.'xtc_row_number_format.inc.php');
   require_once (DIR_FS_INC.'xtc_date_short.inc.php');
-    
+  
+  $reviews_count = 0;
   if (defined('MODULE_TS_TRUSTEDSHOPS_ID') && MODULE_TS_PRODUCT_STICKER_STATUS == '1') {
     $module_smarty->assign('MODULE_TS_PRODUCT_STICKER', sprintf(MODULE_TS_PRODUCT_STICKER, MODULE_TS_TRUSTEDSHOPS_ID, $product->data['products_model']));
   } else {
