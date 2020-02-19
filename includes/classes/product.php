@@ -229,7 +229,7 @@ class product {
             'TEXT' => nl2br($reviews['reviews_text'])
           );
           foreach ($reviews as $k => $v) {
-            $reviews_array[$pID][$i][strtoupper($k)] => $v;
+            $reviews_array[$pID][$i][strtoupper($k)] = $v;
           }
           $i ++;
           if (count($reviews_array[$pID]) == PRODUCT_REVIEWS_VIEW) break;
