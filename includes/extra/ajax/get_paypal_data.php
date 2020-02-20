@@ -10,28 +10,8 @@
  * Released under the GNU General Public License
  */
 
-if (isset($_REQUEST['speed'])) {
-  require_once (DIR_FS_INC.'auto_include.inc.php');
-  require_once (DIR_FS_INC.'xtc_not_null.inc.php');
-  require_once (DIR_FS_INC.'xtc_input_validation.inc.php');
-  
-  require_once (DIR_FS_INC.'db_functions_'.DB_MYSQL_TYPE.'.inc.php');
-  require_once (DIR_FS_INC.'db_functions.inc.php');
-
-  require_once (DIR_WS_INCLUDES.'database_tables.php');
-}
-
 function get_paypal_data() {
   require_once (DIR_WS_CLASSES.'order.php');
-
-  xtc_db_connect() or die('Unable to connect to database server!');
-
-  $configuration_query = xtc_db_query('select configuration_key as cfgKey, configuration_value as cfgValue from ' . TABLE_CONFIGURATION . '');
-  while ($configuration = xtc_db_fetch_array($configuration_query)) {
-    if (!defined($configuration['cfgKey'])) {
-      define($configuration['cfgKey'], stripslashes($configuration['cfgValue']));
-    }
-  }
   
   if (!isset($_GET['sec'])
       || $_GET['sec'] != MODULE_PAYMENT_PAYPAL_SECRET
