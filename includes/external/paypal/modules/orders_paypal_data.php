@@ -177,13 +177,9 @@ if (isset($order) && is_object($order)) {
               <div class="pp_capture pp_box">
                 <div class="pp_boxheading"><?php echo TEXT_PAYPAL_CAPTURE; ?></div>
                 <?php 
-                  if (defined('RUN_MODE_ADMIN')) {
-                    echo xtc_draw_form('capture', FILENAME_ORDERS, xtc_get_all_get_params(array('action','subaction')).'action=custom&subaction=paypalaction');
-                  } else {
-                    echo xtc_draw_form('capture', xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action','subaction', 'ext')).'action=custom&subaction=paypalaction', 'NONSSL'), 'post');
-                    if (CSRF_TOKEN_SYSTEM == 'true' && isset($_SESSION['CSRFToken']) && isset($_SESSION['CSRFName'])) {
-                      echo xtc_draw_hidden_field($_SESSION['CSRFName'], $_SESSION['CSRFToken']);
-                    }
+                  echo xtc_draw_form('capture', xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action','subaction', 'ext', 'sec')).'action=custom&subaction=paypalaction', 'NONSSL'), 'post');
+                  if (CSRF_TOKEN_SYSTEM == 'true' && isset($_SESSION['CSRFToken']) && isset($_SESSION['CSRFName'])) {
+                    echo xtc_draw_hidden_field($_SESSION['CSRFName'], $_SESSION['CSRFToken']);
                   }
                   echo xtc_draw_hidden_field('cmd', 'capture');
 
@@ -213,13 +209,9 @@ if (isset($order) && is_object($order)) {
               <div class="pp_capture pp_box">
                 <div class="pp_boxheading"><?php echo TEXT_PAYPAL_REFUND; ?></div>
                 <?php 
-                  if (defined('RUN_MODE_ADMIN')) {
-                    echo xtc_draw_form('capture', FILENAME_ORDERS, xtc_get_all_get_params(array('action','subaction')).'action=custom&subaction=paypalaction');
-                  } else {
-                    echo xtc_draw_form('capture', xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action','subaction', 'ext')).'action=custom&subaction=paypalaction', 'NONSSL'), 'post');
-                    if (CSRF_TOKEN_SYSTEM == 'true' && isset($_SESSION['CSRFToken']) && isset($_SESSION['CSRFName'])) {
-                      echo xtc_draw_hidden_field($_SESSION['CSRFName'], $_SESSION['CSRFToken']);
-                    }
+                  echo xtc_draw_form('capture', xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action','subaction', 'ext', 'sec')).'action=custom&subaction=paypalaction', 'NONSSL'), 'post');
+                  if (CSRF_TOKEN_SYSTEM == 'true' && isset($_SESSION['CSRFToken']) && isset($_SESSION['CSRFName'])) {
+                    echo xtc_draw_hidden_field($_SESSION['CSRFName'], $_SESSION['CSRFToken']);
                   }
                   echo xtc_draw_hidden_field('cmd', 'refund');
 
