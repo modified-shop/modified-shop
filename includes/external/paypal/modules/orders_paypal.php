@@ -65,36 +65,32 @@ if (isset($order) && is_object($order)) {
             unset($_SESSION['pp_error']);
             $show_error = 1;
           } 
-          if (is_file(DIR_FS_CATALOG.'includes/extra/ajax/get_paypal_data.php')) {
-            echo '<div id="pp"></div>';
-            echo "<script type=\"text/javascript\">
-                    var show_error = ".$show_error.";
-                    if (show_error == 1) {
-                      $('div#paypal').toggleClass('paypal_active');
-                      $('#pp').toggle();
-                      get_paypal_data();
-                    }
-                    function get_paypal_data() {
-                      var order_id = ".$order->info['orders_id'].";
-                      var lang = '".$_SESSION['language_code']."';
-                      var secret = '".MODULE_PAYMENT_PAYPAL_SECRET."';
-                      $.get('../ajax.php', {ext: 'get_paypal_data', oID: order_id, language: lang, sec: secret}, function(data) {
-                        if (data != '' && data != undefined) { 
-                          $('#pp').html(decodeEntities(atob(data)));
-                          $('.paypal_data').toggleClass('paypal_active');
-                          $('.paypal_data').show();
-                        }
-                      });
-                    }
-                    function decodeEntities(encodedString) {
-                      var textArea = document.createElement('textarea');
-                      textArea.innerHTML = encodedString;
-                      return textArea.value;
-                    }
-                  </script>";
-          } else {
-            include (DIR_FS_EXTERNAL.'paypal/modules/orders_paypal_data.php');
-          }
+          echo '<div id="pp"></div>';
+          echo "<script type=\"text/javascript\">
+                  var show_error = ".$show_error.";
+                  if (show_error == 1) {
+                    $('div#paypal').toggleClass('paypal_active');
+                    $('#pp').toggle();
+                    get_paypal_data();
+                  }
+                  function get_paypal_data() {
+                    var order_id = ".$order->info['orders_id'].";
+                    var lang = '".$_SESSION['language_code']."';
+                    var secret = '".MODULE_PAYMENT_PAYPAL_SECRET."';
+                    $.get('../ajax.php', {ext: 'get_paypal_data', oID: order_id, language: lang, sec: secret}, function(data) {
+                      if (data != '' && data != undefined) { 
+                        $('#pp').html(decodeEntities(atob(data)));
+                        $('.paypal_data').toggleClass('paypal_active');
+                        $('.paypal_data').show();
+                      }
+                    });
+                  }
+                  function decodeEntities(encodedString) {
+                    var textArea = document.createElement('textarea');
+                    textArea.innerHTML = encodedString;
+                    return textArea.value;
+                  }
+                </script>";
         ?>
       </td>
     </tr>
@@ -102,12 +98,10 @@ if (isset($order) && is_object($order)) {
       $(function() {
         $('div#paypal').click(function(e) {  
           $('#pp_error').hide();
-          <?php if (is_file(DIR_FS_CATALOG.'includes/extra/ajax/get_paypal_data.php')) { ?>
           $('#pp').toggle();
           if ($('#pp').is(':empty')) {
             get_paypal_data();
           }
-          <?php } ?>
           $('div#paypal').toggleClass('paypal_active');
           $('.paypal_data').toggleClass('paypal_active');
           if ($('.paypal_data').hasClass('paypal_active')) {
@@ -116,25 +110,6 @@ if (isset($order) && is_object($order)) {
             $('.paypal_data').hide();
           }
         });
-        <?php if (!is_file(DIR_FS_CATALOG.'includes/extra/ajax/get_paypal_data.php')) { ?>
-        $('div.pp_txstatus_received').not('.pp_txstatus_open').click(function(e) {
-          if ($(this).hasClass('pp_txstatus_open')) {
-            $('div.pp_txstatus_received').removeClass('pp_txstatus_open');
-            $('div.pp_txstatus_data', $(this).parent()).hide();
-          } else {
-            $('div.pp_txstatus_received').removeClass('pp_txstatus_open');
-            $(this).addClass('pp_txstatus_open');
-            $('div.pp_txstatus_data').hide();
-            $('div.pp_txstatus_data', $(this).parent()).show();
-          }
-          var show_error = <?php echo $show_error; ?>;
-          if (show_error == 1) {
-            $('div#paypal').toggleClass('paypal_active');
-            $('.paypal_data').toggleClass('paypal_active');
-            $('.paypal_data').show();
-          }
-        });
-        <?php } ?>
       });
     </script>
   <?php

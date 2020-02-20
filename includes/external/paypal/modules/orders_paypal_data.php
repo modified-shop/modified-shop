@@ -248,7 +248,6 @@ if (isset($order) && is_object($order)) {
     <?php
     }
   }
-  if (is_file(DIR_FS_CATALOG.'includes/extra/ajax/get_paypal_data.php')) {
   ?>
   <script type="text/javascript">
     $(function() {
@@ -265,7 +264,6 @@ if (isset($order) && is_object($order)) {
       });
     });
   </script>
-  <?php
-  }
+<?php
 }
 ?>
