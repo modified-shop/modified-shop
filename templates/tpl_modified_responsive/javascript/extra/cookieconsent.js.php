@@ -86,9 +86,13 @@
         while (d.length > 0) {
           var p = location.pathname.split('/');
           while (p.length > 0) {
-            document.cookie = cookie_name + '=; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=' + p.join('/');
-            document.cookie = cookie_name + '=; expires=Thu, 01-Jan-1970 00:00:01 GMT; domain=' + d.join('.') + ' ; path=' + p.join('/');
-            document.cookie = cookie_name + '=; expires=Thu, 01-Jan-1970 00:00:01 GMT; domain=.' + d.join('.') + ' ; path=' + p.join('/');
+            path = p.join('/');
+            if (path == '') { 
+              path = '/'; 
+            }
+            document.cookie = cookie_name + '=; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=' + path;
+            document.cookie = cookie_name + '=; expires=Thu, 01-Jan-1970 00:00:01 GMT; domain=' + d.join('.') + ' ; path=' + path;
+            document.cookie = cookie_name + '=; expires=Thu, 01-Jan-1970 00:00:01 GMT; domain=.' + d.join('.') + ' ; path=' + path;
             p.pop();
           };
           d.shift();
