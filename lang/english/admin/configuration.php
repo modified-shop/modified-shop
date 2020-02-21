@@ -885,10 +885,10 @@ define('TRACKING_GOOGLEANALYTICS_UNIVERSAL_TITLE' , 'Google Universal Analytics'
 define('TRACKING_GOOGLEANALYTICS_UNIVERSAL_DESC' , 'Use Google Universal Analytics Code?<br/><b>Attention:</b> This only works with a shop version 2.0.0.0 compatible template!');
 define('TRACKING_GOOGLEANALYTICS_DOMAIN_TITLE' , 'Google Universal Analytics Cookie Domain');
 define('TRACKING_GOOGLEANALYTICS_DOMAIN_DESC' , 'Please enter the Cookie Domain (<i>auto</i> or <i>example.com</i> or <i>www.example.com</i>). Only works with Google Universal Analytics.');
-define('TRACKING_GOOGLE_LINKID_TITLE' , 'Google Universal Analytics LinkID');
-define('TRACKING_GOOGLE_LINKID_DESC' , 'You can see separate information on multiple links on a page that all have the same goal. If there is for example two links are on the same side, both lead to the contact page, you will see separate click information for each link. Only works with Google Universal Analytics.');
-define('TRACKING_GOOGLE_DISPLAY_TITLE' , 'Google Universal Analytics Displayfeature');
-define('TRACKING_GOOGLE_DISPLAY_DESC' , 'The areas to demographics and interests included an overview and new reports about the performance by age, gender and interest categories. Only works with Google Universal Analytics.');
+define('TRACKING_GOOGLE_LINKID_TITLE' , 'Google Universal Analytics/Google Analytics GTAG LinkID');
+define('TRACKING_GOOGLE_LINKID_DESC' , 'You can see separate information on multiple links on a page that all have the same goal. If there is for example two links are on the same side, both lead to the contact page, you will see separate click information for each link. Only works with Google Universal Analytics &amp; Google Analytics GTAG.');
+define('TRACKING_GOOGLE_DISPLAY_TITLE' , 'Google Universal Analytics/Google Analytics GTAG Displayfeature');
+define('TRACKING_GOOGLE_DISPLAY_DESC' , 'The areas to demographics and interests included an overview and new reports about the performance by age, gender and interest categories. Only works with Google Universal Analytics &amp; Google Analytics GTAG.');
 define('TRACKING_GOOGLE_ECOMMERCE_TITLE' , 'Google E-Commerce Tracking');
 define('TRACKING_GOOGLE_ECOMMERCE_DESC' , 'Set up an E-Commerce tracking to find out what visitors buy from your website or app. In addition, you receive the following information:<br><br><strong>Products:</strong> Purchased products and the quantities and the revenues from these products<br><strong>Transactions:</strong> Information about sales, tax, shipping costs and quantities for each transaction<br><strong>time to Purchase:</strong> Number of days and visits, starting from the current campaign until the completion of the transaction');
 define('TRACKING_GOOGLEANALYTICS_GTAG_TITLE' , 'Google Analytics GTAG');

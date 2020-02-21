@@ -23,7 +23,9 @@
   gtag('js', new Date());
 
   gtag('config', '".TRACKING_GOOGLEANALYTICS_ID."', {
-    'anonymize_ip': true
+    'anonymize_ip': true,
+    'link_attribution': ".((TRACKING_GOOGLE_LINKID == 'true') ? 'true' : 'false').",
+    'allow_google_signals': ".((TRACKING_GOOGLE_DISPLAY == 'true') ? 'true' : 'false')."
   });
 ";
   
