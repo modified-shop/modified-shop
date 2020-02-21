@@ -1,3 +1,28 @@
-order deny,allow
-deny from all
-allow from 127.0.0.1
+#  -----------------------------------------------------------------------------------------
+#  $Id$
+#
+#  modified eCommerce Shopsoftware
+#  http://www.modified-shop.org
+#
+#  Copyright (c) 2009 - 2016 [www.modified-shop.org]
+#  -----------------------------------------------------------------------------------------
+#  Released under the GNU General Public License 
+#  -----------------------------------------------------------------------------------------
+#
+# This is used with Apache WebServers
+# The following blocks direct HTTP requests in this directory recursively
+
+<Files *.*>
+  <IfModule mod_authz_core.c>
+    # Apache 2.4
+    <RequireAll>
+      Require local
+    </RequireAll>
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    # Apache 2.2
+    Order Deny,Allow
+    Deny from all
+    Allow from 127.0.0.1
+  </IfModule>
+</Files>
