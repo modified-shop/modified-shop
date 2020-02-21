@@ -27,6 +27,7 @@
 #cboxLoadedContent{margin-bottom:34px;background:#fff;border-bottom:10px solid #fff;}
 /* #cboxTitle{position:absolute; bottom:7px; left:0; text-align:center; width:100%; color:#444444; } */
 #cboxTitle {font-weight:400;line-height:20px;font-size:10px;bottom: 6px;color: #444444;font-size: 10px;left: 0;position: absolute;text-align: center;-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; padding: 0 120px 0 120px;width: 100%;}
+#cboxTitle {overflow:hidden; display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical;}
 #cboxCurrent{font-weight:400;line-height:20px;position:absolute; bottom:6px; left:58px; color:#444444; font-size:10px; }
 #cboxLoadingOverlay{background:#fff}
 #cboxLoadingGraphic{background:url(images/loading.gif) no-repeat center center;}
