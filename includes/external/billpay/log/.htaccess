@@ -31,5 +31,3 @@
     Deny from all
   </IfModule>
 </Files>
-
-Deny From All
