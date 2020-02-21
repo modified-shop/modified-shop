@@ -199,6 +199,7 @@ class product {
     }
 
     if (!isset($reviews_array[$pID])) {
+      $reviews_array[$pID] = array();
       $reviews_query = xtc_db_query("SELECT r.reviews_rating,
                                             r.reviews_id,
                                             r.customers_name,
