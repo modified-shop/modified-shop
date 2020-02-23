@@ -913,8 +913,15 @@
 
 
   function orders_product_option_delete($oID, $data_array) {
-    global $xtPrice, $order;
+    global $order, $xtPrice, $lang;
   
+    $lang_query = xtc_db_query("SELECT languages_id 
+                                  FROM ".TABLE_LANGUAGES." 
+                                 WHERE directory = '".xtc_db_input($order->info['language'])."'");
+    $lang = xtc_db_fetch_array($lang_query);
+
+    $status = get_customers_taxprice_status();
+
     // Update Attributes Stock
     if (STOCK_LIMITED == 'true') {
       $delete_products_attributes_query = xtc_db_query("SELECT *
@@ -933,10 +940,13 @@
     xtc_db_query("DELETE FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES." WHERE orders_products_attributes_id = '".(int)($data_array['opAID'])."'");
 
     $products_query = xtc_db_query("SELECT op.products_id, 
-                                           op.products_quantity, 
-                                           p.products_tax_class_id 
+                                           op.products_quantity,
+                                           op.products_discount_made, 
+                                           op.products_tax, 
+                                           op.allow_tax,
+                                           p.products_tax_class_id
                                       FROM ".TABLE_ORDERS_PRODUCTS." op
-                                      JOIN ".TABLE_PRODUCTS." p 
+                                      JOIN ".TABLE_PRODUCTS." p
                                            ON op.products_id = p.products_id
                                      WHERE op.orders_products_id = '".(int)$data_array['opID']."'");
     $products = xtc_db_fetch_array($products_query);
@@ -952,7 +962,16 @@
 
     $products_old_price = $xtPrice->xtcGetPrice($products['products_id'], $format = false, $products['products_quantity'], '', '', '', $order->customer['ID']);
     $products_price = ($products_old_price + $options_values_price);
-    $price = $xtPrice->xtcGetPrice($products['products_id'], $format = false, $products['products_quantity'], $products['products_tax_class_id'], $products_price, '', $order->customer['ID']);
+
+    $tax_rate = $products['products_tax'];
+    if (($status['customers_status_show_price_tax'] == 0 
+         && $status['customers_status_add_tax_ot'] == 0
+         ) || $products['allow_tax'] != '1'
+        ) 
+    {
+      $tax_rate = 0;
+    }
+    $price = $xtPrice->xtcAddTax($products_price, $tax_rate); //tax by products
     $final_price = $price * (int)$products['products_quantity'];
 
     $sql_data_array = array(
