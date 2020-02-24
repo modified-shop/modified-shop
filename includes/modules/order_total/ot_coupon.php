@@ -445,6 +445,15 @@ class ot_coupon {
     global $order;
     
     $order_total = $_SESSION['cart']->show_total();
+    if (($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
+         && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1
+         ) || ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
+               && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0
+               )
+        )
+    {  
+      $order_total = $_SESSION['cart']->total_netto;
+    }
     $this->products_price = array();
     $this->products_tax_description = array();
     $this->products_tax_rate = array();
