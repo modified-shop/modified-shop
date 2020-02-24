@@ -197,8 +197,15 @@ if(!defined('SECURITY_CODE_LENGTH')) {
 }
 
 function CacheCheck() {
-  if (USE_CACHE == 'false') return false;
-  if (!isset($_COOKIE['MODsid'])) return false;
+  if (USE_CACHE == 'false'
+      || !isset($_COOKIE['MODsid'])
+      || (isset($GLOBALS['disable_smarty_cache']) 
+          && $GLOBALS['disable_smarty_cache'] === true
+          )
+      )
+  {
+    return false;
+  }
   return true;
 }
 

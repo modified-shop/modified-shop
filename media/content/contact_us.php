@@ -60,7 +60,6 @@
       }
     }
 
-    //jedes Feld kann hier auf die gewünschte Bedingung getestet und eine Fehlermeldung zugeordnet werden
     if (!xtc_validate_email(trim($email))) {
       $messageStack->add('contact_us', ERROR_EMAIL);
       $error = true;
@@ -93,9 +92,7 @@
       $smarty->assign('error_message', $messageStack->output('contact_us'));
     }
 
-    //Wenn kein Fehler Email formatieren und absenden
     if ($error === false) {
-      // Datum und Uhrzeit
       $datum = date("d.m.Y");
       $uhrzeit = date("H:i");
 
@@ -239,4 +236,7 @@
   $smarty->clear_assign('BUTTON_CONTINUE');
   $smarty->clear_assign('CONTENT_HEADING');
   $content_body = '';
+  
+  // disable cache
+  $disable_smarty_cache = true;
 ?>
