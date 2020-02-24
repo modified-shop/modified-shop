@@ -28,7 +28,7 @@
 #cboxLoadedContent{margin-bottom:34px;background:#fff;border-bottom:10px solid #fff;}
 /* #cboxTitle{position:absolute; bottom:7px; left:0; text-align:center; width:100%; color:#444444; } */
 #cboxTitle {font-family: 'fjallaoneregular', sans-serif; font-size:11px;bottom: 7px;color: #444444;font-size: 11px;left: 0;padding: 0 40%;position: absolute;text-align: center;width: 20%;}
-#cboxTitle {overflow:hidden; display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical;}
+#cboxTitle {overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
 #cboxCurrent{position:absolute; bottom:7px; left:58px; color:#444444; font-family: 'fjallaoneregular', sans-serif; font-size:11px; }
 #cboxLoadingOverlay{background:#fff}
 #cboxLoadingGraphic{background:url(images/loading.gif) no-repeat center center;}
