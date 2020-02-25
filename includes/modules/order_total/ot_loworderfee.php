@@ -65,10 +65,10 @@
         }
 
         if ($pass == true 
-            && $xtPrice->xtcRemoveCurr($order->info['total'] - $order->info['shipping_cost']) < $xtPrice->xtcRemoveCurr($low_order_fee_value_under)
+            && $xtPrice->xtcRemoveCurr($order->info['total'] - $order->info['shipping_cost']) < $low_order_fee_value_under
             )
         {
-          $low_order_fee_value = $xtPrice->xtcRemoveCurr($low_order_fee_value);
+          $low_order_fee_value = $xtPrice->xtcCalculateCurr($low_order_fee_value);
           $tax = xtc_get_tax_rate(MODULE_ORDER_TOTAL_LOWORDERFEE_TAX_CLASS, $order->delivery['country']['id'], $order->delivery['zone_id']);
           $tax_description = xtc_get_tax_description(MODULE_ORDER_TOTAL_LOWORDERFEE_TAX_CLASS, $order->delivery['country']['id'], $order->delivery['zone_id']);
 
