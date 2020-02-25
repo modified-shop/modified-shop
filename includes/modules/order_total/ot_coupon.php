@@ -286,13 +286,12 @@ class ot_coupon {
         {
           $pr_c = 0;
           for ($i = 0; $i < sizeof($order->products); $i ++) {
-            $product_query = "SELECT specials_new_products_price
-                                FROM ".TABLE_SPECIALS."
-                               WHERE products_id = '".xtc_get_prid($order->products[$i]['id'])."'
-                                     ".SPECIALS_CONDITIONS;
-            $product_query = xtc_db_query($product_query);
-            $product = xtc_db_fetch_array($product_query);
-            if($product['specials_new_products_price']) {
+            $product_query = xtc_db_query("SELECT specials_new_products_price
+                                             FROM ".TABLE_SPECIALS."
+                                            WHERE products_id = '".xtc_get_prid($order->products[$i]['id'])."'
+                                                  ".SPECIALS_CONDITIONS);
+            if (xtc_db_num_rows($product_query) > 0) {
+              $product = xtc_db_fetch_array($product_query);
               if ($coupon_array['coupon_type'] == 'P') {
                 $pr_c = $this->product_price($order->products[$i]['id']);
                 $pod_amount = round($pr_c*10)/10*$c_deduct/100;
