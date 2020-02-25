@@ -90,6 +90,7 @@
 
           $i = 0;
           while ($newsletter = xtc_db_fetch_array($newsletter_query)) {
+            $newsletter['customers_email_address_hash'] = md5($newsletter['customers_email_address']);
             if ($i == 0) {
               $header = array();
               foreach ($newsletter as $k => $v) {
