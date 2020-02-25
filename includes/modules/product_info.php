@@ -249,7 +249,12 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
     $info_smarty->caching = 1;
     $info_smarty->cache_lifetime = CACHE_LIFETIME;
     $info_smarty->cache_modified_check = CACHE_CHECK;
-    $cache_id = md5(xtc_input_validation($_GET['products_id'], 'products_id').$_SESSION['language'].$_SESSION['customers_status']['customers_status_name'].$_SESSION['currency'].$products_reviews_count);
+
+    //setting/clearing params
+    $get_params = xtc_get_all_get_params();
+    $get_params .= $products_reviews_count;
+    
+    $cache_id = md5(xtc_input_validation($_GET['products_id'], 'products_id').$_SESSION['language'].$_SESSION['customers_status']['customers_status_name'].$_SESSION['currency'].$get_params);
     $product_info = $info_smarty->fetch(CURRENT_TEMPLATE.'/module/product_info/'.$product->data['product_template'], $cache_id);
   }
   $smarty->assign('main_content', $product_info);
