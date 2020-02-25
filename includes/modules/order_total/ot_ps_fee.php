@@ -96,36 +96,41 @@
           $ps_tax = xtc_get_tax_rate(MODULE_ORDER_TOTAL_PS_FEE_TAX_CLASS, $order->delivery['country']['id'], $order->delivery['zone_id']);
           $ps_tax_description = xtc_get_tax_description(MODULE_ORDER_TOTAL_PS_FEE_TAX_CLASS, $order->delivery['country']['id'], $order->delivery['zone_id']);
 
-          if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1) {
-              $order->info['tax'] += xtc_add_tax($ps_cost, $ps_tax)-$ps_cost;
-              $order->info['tax_groups'][TAX_ADD_TAX . "$ps_tax_description"] += xtc_add_tax($ps_cost, $ps_tax)-$ps_cost;
-              $order->info['total'] += $ps_cost + (xtc_add_tax($ps_cost, $ps_tax)-$ps_cost);
-              $ps_cost_value = xtc_add_tax($ps_cost, $ps_tax);
-              $ps_cost= $xtPrice->xtcFormat($ps_cost_value, true);
-              $order->info['subtotal'] += $ps_cost_value;
-          }
-          if (($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
-               && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1
-               ) || ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
-                     && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0
-                     && $order->delivery['country_id'] == STORE_COUNTRY
-                     )
-              )
+          if ($cod_tax > 0) {
+            if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1) {
+                $order->info['tax'] += xtc_add_tax($ps_cost, $ps_tax)-$ps_cost;
+                $order->info['tax_groups'][TAX_ADD_TAX . "$ps_tax_description"] += xtc_add_tax($ps_cost, $ps_tax)-$ps_cost;
+                $order->info['total'] += $ps_cost + (xtc_add_tax($ps_cost, $ps_tax)-$ps_cost);
+                $ps_cost_value = xtc_add_tax($ps_cost, $ps_tax);
+                $ps_cost= $xtPrice->xtcFormat($ps_cost_value, true);
+                $order->info['subtotal'] += $ps_cost_value;
+            }
+            
+            if (($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
+                 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1
+                 ) || ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
+                       && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0
+                       && $order->delivery['country_id'] == STORE_COUNTRY
+                       )
+                )
         
-          {
-              $order->info['tax'] += xtc_add_tax($ps_cost, $ps_tax)-$ps_cost;
-              $order->info['tax_groups'][TAX_NO_TAX . "$ps_tax_description"] += xtc_add_tax($ps_cost, $ps_tax)-$ps_cost;
-              $ps_cost_value = $ps_cost;
-              $ps_cost = $xtPrice->xtcFormat($ps_cost, true);
-              $order->info['subtotal'] += $ps_cost_value;
-              $order->info['total'] += $ps_cost_value;
+            {
+                $order->info['tax'] += xtc_add_tax($ps_cost, $ps_tax)-$ps_cost;
+                $order->info['tax_groups'][TAX_NO_TAX . "$ps_tax_description"] += xtc_add_tax($ps_cost, $ps_tax)-$ps_cost;
+                $ps_cost_value = $ps_cost;
+                $ps_cost = $xtPrice->xtcFormat($ps_cost, true);
+                $order->info['subtotal'] += $ps_cost_value;
+                $order->info['total'] += $ps_cost_value;
+            }
           }
+          
           if (!$ps_cost_value) {
              $ps_cost_value = $ps_cost;
              $ps_cost = $xtPrice->xtcFormat($ps_cost, true);
              $order->info['subtotal'] += $ps_cost_value;
              $order->info['total'] += $ps_cost_value;
           }
+          
           $this->output[] = array('title' => $this->title . ':',
                                   'text' => $ps_cost,
                                   'value' => $ps_cost_value);
