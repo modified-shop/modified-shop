@@ -477,7 +477,7 @@ class shoppingCart {
         //new module support       
         $products_price = $this->shoppingCartModules->calculate_product_price($products_price, $product, $this->contents[$products_id],$products_id);
        
-        $this->total += $products_price * $qty;
+        $total = $products_price * $qty;
         $this->weight += ($qty * $product['products_weight']);
 
         //attributes price
@@ -489,12 +489,14 @@ class shoppingCart {
             //new module support       
             $values['price'] = $this->shoppingCartModules->calculate_option_price($values['price'], $option, $value, $products_id, $qty);
             $this->weight += $values['weight'] * $qty;
-            $this->total += $values['price'] * $qty;
+            $total += $values['price'] * $qty;
             $attribute_price += $values['price'];
           }
         }
-
-        $this->total_netto = $this->total;
+    
+        $this->total += $total;
+        $this->total_netto += $total;
+        
         
         // $this->total hat netto * Stück in der 1. Runde
         // Artikel Rabatt berücksichtigt
@@ -537,11 +539,11 @@ class shoppingCart {
       }
     }
     
-    $this->total = round($this->total,4); //4 Stellen entspricht Dezimalstellen in DB
+    $this->total = round($this->total,4);
     
     if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1) {
       foreach ($this->tax as $key => $val) {
-        $this->total_netto -= round($val['value'],4); //4 Stellen entspricht Dezimalstellen in DB
+        $this->total_netto -= round($val['value'], 4);
       }
     }
     
