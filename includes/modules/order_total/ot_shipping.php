@@ -104,19 +104,19 @@ class ot_shipping {
           $order->info['tax'] += $tax;
           $order->info['tax_groups'][TAX_ADD_TAX . "$shipping_tax_description"] += $tax;
           $order->info['total'] += $tax;
-        } else {
-          if (($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
-               && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1
-               ) || ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
-                     && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0
-                     && $order->delivery['country_id'] == STORE_COUNTRY
-                     )
-              )
+        }
         
-          {
-            $order->info['tax'] = $order->info['tax'] += $tax;
-            $order->info['tax_groups'][TAX_NO_TAX . "$shipping_tax_description"] = $order->info['tax_groups'][TAX_NO_TAX . "$shipping_tax_description"] += $tax;
-          }
+        if (($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
+             && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1
+             ) || ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
+                   && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0
+                   && $order->delivery['country_id'] == STORE_COUNTRY
+                   )
+            )
+      
+        {
+          $order->info['tax'] = $order->info['tax'] += $tax;
+          $order->info['tax_groups'][TAX_NO_TAX . "$shipping_tax_description"] = $order->info['tax_groups'][TAX_NO_TAX . "$shipping_tax_description"] += $tax;
         }
       }
       
