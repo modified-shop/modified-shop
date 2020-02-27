@@ -64,8 +64,11 @@ class ot_coupon {
     $this->output = array ();
     $this->products_price = array();
     $this->products_tax_description = array();
+    
     $this->tax_groups = array();
-    $this->price_total_by_tax_groups  = array();
+    
+    $this->price_total_by_tax_groups = array();
+    $this->price_total_by_tax_rate = array();
   }
 
 
@@ -172,6 +175,9 @@ class ot_coupon {
 
   function calculate_credit($amount) {
     global $order, $xtPrice, $tax_info_excl;
+
+    $this->price_total_by_tax_groups = array();
+    $this->price_total_by_tax_rate = array();
 
     $od_amount = 0;
     if (isset ($_SESSION['cc_id'])) {
@@ -378,11 +384,15 @@ class ot_coupon {
         $tod_amount += $god_amount; //hier wird die Steuer aufaddiert
       }
     }
+    
     //Gesamtsteuer neu berechnen
+    $order->info['tax'] = array_sum($order->info['tax_groups']);
+    /*
     $order->info['tax'] -= $tod_amount; //bei BRUTTO Preisen abziehen
     if ($_SESSION['customers_status']['customers_status_show_price_tax'] != '1') {
       $order->info['tax'] = $tod_amount; //bei NETTO Preisen ersetzen
     }
+    */
   }
 
 
@@ -461,9 +471,9 @@ class ot_coupon {
     for ($i = 0; $i < sizeof($products); $i ++) {
       $product_id = $products[$i]['id'];
       $products_price = $products[$i]['price'] * $products[$i]['qty'];
-      $this->products_price["$product_id"] = $products_price;
-      $this->products_tax_description["$product_id"] = $products[$i]['tax_description'];
-      $this->products_tax_rate["$product_id"] = xtc_get_tax_rate($products[$i]['tax_class_id'], $order->delivery['country']['id'], $order->delivery['zone_id']);
+      $this->products_price[$product_id] = $products_price;
+      $this->products_tax_description[$product_id] = $products[$i]['tax_description'];
+      $this->products_tax_rate[$product_id] = xtc_get_tax_rate($products[$i]['tax_class_id'], $order->delivery['country']['id'], $order->delivery['zone_id']);
       if (preg_match('/^GIFT/', addslashes($products[$i]['model']))) {
         $order_total -= $products_price;
       }
@@ -482,12 +492,13 @@ class ot_coupon {
 
 
   function product_price($product_id) {
-    $products_price = isset($this->products_price["$product_id"]) ? $this->products_price["$product_id"] : 0;
-    if (isset($this->products_tax_description["$product_id"])) {
-        $tax_index = $this->set_tax_group_index($this->products_tax_description["$product_id"]);
+    $products_price = isset($this->products_price[$product_id]) ? $this->products_price[$product_id] : 0;
+    if (isset($this->products_tax_description[$product_id])) {
+      $tax_index = $this->set_tax_group_index($this->products_tax_description[$product_id]);
     }
-    $this->price_total_by_tax_rate[$tax_index] = $this->products_tax_rate["$product_id"];
+    $this->price_total_by_tax_rate[$tax_index] = $this->products_tax_rate[$product_id];
     $this->price_total_by_tax_groups[$tax_index] += $products_price;
+    
     return $products_price;
   }
 
@@ -495,6 +506,7 @@ class ot_coupon {
   function set_tax_group_index($tax_description) {
     $tax_index = ($_SESSION['customers_status']['customers_status_show_price_tax'] == '1' ? TAX_ADD_TAX : TAX_NO_TAX) . $tax_description;
     $this->tax_groups[$tax_index] = true;
+    
     return $tax_index;
   }
 
@@ -524,6 +536,7 @@ class ot_coupon {
         }
       }
     }
+    
     return $cat_ids_array;
   }
 

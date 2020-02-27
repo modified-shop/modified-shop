@@ -72,7 +72,11 @@
           $tax = xtc_get_tax_rate(MODULE_ORDER_TOTAL_LOWORDERFEE_TAX_CLASS, $order->delivery['country']['id'], $order->delivery['zone_id']);
           $tax_description = xtc_get_tax_description(MODULE_ORDER_TOTAL_LOWORDERFEE_TAX_CLASS, $order->delivery['country']['id'], $order->delivery['zone_id']);
 
-          if ($tax > 0) {
+          if ($tax > 0
+              && defined('MODULE_ORDER_TOTAL_TAX_STATUS')
+              && MODULE_ORDER_TOTAL_TAX_STATUS == 'true'
+              )
+          {
             if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1) {
               $order->info['tax'] += xtc_calculate_tax($low_order_fee_value, $tax);
               $order->info['tax_groups'][TAX_ADD_TAX . "$tax_description"] += xtc_calculate_tax($low_order_fee_value, $tax);

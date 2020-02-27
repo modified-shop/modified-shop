@@ -91,7 +91,11 @@
           $cod_tax = xtc_get_tax_rate(MODULE_ORDER_TOTAL_COD_FEE_TAX_CLASS, $order->delivery['country']['id'], $order->delivery['zone_id']);
           $cod_tax_description = xtc_get_tax_description(MODULE_ORDER_TOTAL_COD_FEE_TAX_CLASS, $order->delivery['country']['id'], $order->delivery['zone_id']);
           
-          if ($cod_tax > 0) {
+          if ($cod_tax > 0
+              && defined('MODULE_ORDER_TOTAL_TAX_STATUS')
+              && MODULE_ORDER_TOTAL_TAX_STATUS == 'true'
+              )
+          {
             if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1) {
                 $order->info['tax'] += xtc_add_tax($cod_cost, $cod_tax)-$cod_cost;
                 $order->info['tax_groups'][TAX_ADD_TAX . "$cod_tax_description"] += xtc_add_tax($cod_cost, $cod_tax)-$cod_cost;
