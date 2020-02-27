@@ -128,22 +128,28 @@ class main {
    * @return string
    */
   function getTaxInfo($tax_rate) {
-    $tax_info = ''; //DokuMan - 2010-08-24 - set undefined variable
-    // price incl tax
-    if ($tax_rate > 0 && $_SESSION['customers_status']['customers_status_show_price_tax'] != 0) {
-      $tax_info = sprintf(TAX_INFO_INCL, $tax_rate.' %');
-    }
-    // excl tax + tax at checkout
-    if ($tax_rate > 0 && $_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1) {
-      $tax_info = sprintf(TAX_INFO_ADD, $tax_rate.' %');
-    }
-    // excl tax
-    if ($tax_rate > 0 && $_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0) {
-      $tax_info = sprintf(TAX_INFO_EXCL, $tax_rate.' %');
-    }
-    // no tax
-    if ($tax_rate == 0) {
-      $tax_info = sprintf(TAX_INFO_EXCL, '');
+    $tax_info = '';
+    
+    if (defined('MODULE_ORDER_TOTAL_TAX_STATUS')
+        && MODULE_ORDER_TOTAL_TAX_STATUS == 'true'
+        )
+    {
+      // price incl tax
+      if ($tax_rate > 0 && $_SESSION['customers_status']['customers_status_show_price_tax'] != 0) {
+        $tax_info = sprintf(TAX_INFO_INCL, $tax_rate.' %');
+      }
+      // excl tax + tax at checkout
+      if ($tax_rate > 0 && $_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1) {
+        $tax_info = sprintf(TAX_INFO_ADD, $tax_rate.' %');
+      }
+      // excl tax
+      if ($tax_rate > 0 && $_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0) {
+        $tax_info = sprintf(TAX_INFO_EXCL, $tax_rate.' %');
+      }
+      // no tax
+      if ($tax_rate == 0) {
+        $tax_info = sprintf(TAX_INFO_EXCL, '');
+      }
     }
     
     if (MODULE_SMALL_BUSINESS == 'true') {
