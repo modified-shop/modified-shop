@@ -522,7 +522,7 @@ class shoppingCart {
           }
 
           // price incl tax
-          if ($_SESSION['customers_status']['customers_status_show_price_tax'] == '1') {
+          if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1) {
             $this->tax[$product['products_tax_class_id']]['value'] += (($products_price_total / (100 + $products_tax)) * $products_tax) * $qty;
             $this->tax[$product['products_tax_class_id']]['desc'] = TAX_ADD_TAX.$products_tax_description;
           }

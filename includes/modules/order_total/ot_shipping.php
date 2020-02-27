@@ -113,7 +113,6 @@ class ot_shipping {
                    && $order->delivery['country_id'] == STORE_COUNTRY
                    )
             )
-      
         {
           $order->info['tax'] = $order->info['tax'] += $tax;
           $order->info['tax_groups'][TAX_NO_TAX . "$shipping_tax_description"] = $order->info['tax_groups'][TAX_NO_TAX . "$shipping_tax_description"] += $tax;
