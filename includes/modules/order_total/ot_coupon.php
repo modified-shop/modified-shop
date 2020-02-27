@@ -54,19 +54,20 @@ class ot_coupon {
     $this->sort_order = ((defined('MODULE_ORDER_TOTAL_COUPON_SORT_ORDER')) ? MODULE_ORDER_TOTAL_COUPON_SORT_ORDER : '');
 
     if ($this->check() > 0) {
-      $this->include_shipping = 'false'; //MODULE_ORDER_TOTAL_COUPON_INC_SHIPPING;
-      $this->include_tax = 'true'; //MODULE_ORDER_TOTAL_COUPON_INC_TAX;
+      $this->include_shipping = 'false';
+      $this->include_tax = 'true';
       $this->calculate_tax = MODULE_ORDER_TOTAL_COUPON_CALC_TAX;
       $this->tax_class = MODULE_ORDER_TOTAL_COUPON_TAX_CLASS;
     }
     
     $this->credit_class = true;
     $this->output = array ();
+    
     $this->products_price = array();
+    $this->products_tax_rate = array();
     $this->products_tax_description = array();
     
     $this->tax_groups = array();
-    
     $this->price_total_by_tax_groups = array();
     $this->price_total_by_tax_rate = array();
   }
@@ -75,23 +76,25 @@ class ot_coupon {
   function process() {
     global $order, $xtPrice;
     
-    $order_total = $this->get_order_total(); //Betrag, der für die Kuponberechnung verwendet wird
-    $od_amount = $this->calculate_credit($order_total);  //Kuponbetrag berechnen
+    $order_total = $this->get_order_total();
+    $od_amount = $this->calculate_credit($order_total);
     
-    $this->deduction = $od_amount;
-
     if ($od_amount > 0) {
       if ($od_amount > $order->info['total']) {
         $od_amount = $order->info['total'];
       }
+
+      $this->deduction = $od_amount;
+
       if ($this->calculate_tax != 'None') {
         $this->new_calculate_tax_deduction($od_amount, $order_total);
       }
       $order->info['total'] = $xtPrice->xtcFormat($order->info['total'] - $od_amount, false);
       $order->info['deduction'] = $od_amount;
       $order->info['subtotal'] = $order->info['subtotal'] - $od_amount;
-      $this->output[] = array (
-        'title' => $this->title.' '.$this->coupon_code.$this->tax_info.':',
+      
+      $this->output[] = array(
+        'title' => $this->title.' '.$this->coupon_code.':',
         'text'  => '<span class="color_ot_total"><b>'.$xtPrice->xtcFormat($od_amount * (-1), true).'</b></span>',
         'value' => $od_amount * (-1)
       );
@@ -176,12 +179,12 @@ class ot_coupon {
   function calculate_credit($amount) {
     global $order, $xtPrice, $tax_info_excl;
 
+    $this->tax_groups = array();
     $this->price_total_by_tax_groups = array();
     $this->price_total_by_tax_rate = array();
 
     $od_amount = 0;
     if (isset ($_SESSION['cc_id'])) {
-
       $coupon_query = xtc_db_query("SELECT *
                                       FROM ".TABLE_COUPONS."
                                      WHERE coupon_id = '".$_SESSION['cc_id']."'
@@ -192,7 +195,6 @@ class ot_coupon {
       if (xtc_db_num_rows($coupon_query) != 0) {
         $coupon_array = xtc_db_fetch_array($coupon_query);
 
-        // ERROR_INVALID_MINIMUM_ORDER_COUPON
         $cc_min_amount = $xtPrice->xtcCalculateCurr($coupon_array['coupon_minimum_order']);
         if ( $cc_min_amount > $amount && isset($_SESSION['cc_id'])) {
           unset($_SESSION['cc_id']);
@@ -200,12 +202,10 @@ class ot_coupon {
           return 0;
         }
 
-        // KUPON CODE
         $this->coupon_code = $coupon_array['coupon_code'];
 
         $c_deduct = $xtPrice->xtcCalculateCurr($coupon_array['coupon_amount']); 
 
-        // KUPON VERSANDKOSTENFREI
         if ($coupon_array['coupon_type'] == 'S') {
           $c_deduct = $this->get_shipping_cost();
         }
@@ -218,7 +218,7 @@ class ot_coupon {
 
         $flag_t = false;
         if ($coupon_array['coupon_type'] == 'T') {
-          $coupon_array['coupon_type'] = 'P'; //Berechung auf Prozent setzen
+          $coupon_array['coupon_type'] = 'P';
           $flag_t = true;
         }
 
@@ -260,7 +260,7 @@ class ot_coupon {
               $prod_cat_ids_array = $this->get_cat_ids_array(xtc_get_prid($order->products[$i]['id']));
               for ($ii = 0 , $nn = count($cat_ids); $ii < $nn ; $ii ++) {
                 if (in_array($cat_ids[$ii], $prod_cat_ids_array) && !$p_flag && !in_array($order->products[$i]['id'],$_c_products_ids)) {
-                  $_c_products_ids[] = $order->products[$i]['id'];//prevent double counting
+                  $_c_products_ids[] = $order->products[$i]['id'];
                   if ($coupon_array['coupon_type'] == 'P') {
                     $pr_c = $this->product_price($order->products[$i]['id']);
                     $pod_amount = round($pr_c*10)/10*$c_deduct/100;
@@ -280,11 +280,11 @@ class ot_coupon {
           if ($coupon_array['coupon_type'] != 'P') {
             $od_amount = $c_deduct;
           } else {
-            $od_amount = $amount * $coupon_array['coupon_amount'] / 100; //Calculation of percentage
+            $od_amount = $amount * $coupon_array['coupon_amount'] / 100;
           }
         }
 
-        if (MODULE_ORDER_TOTAL_COUPON_SPECIAL_PRICES != 'true'
+        if (MODULE_ORDER_TOTAL_COUPON_SPECIAL_PRICES == 'false'
             && (!isset($_SESSION['customers_status']['customers_status_specials'])
                 || $_SESSION['customers_status']['customers_status_specials'] == '1'
                 )
@@ -299,16 +299,20 @@ class ot_coupon {
             if (xtc_db_num_rows($product_query) > 0) {
               $product = xtc_db_fetch_array($product_query);
               if ($coupon_array['coupon_type'] == 'P') {
-                $pr_c = $this->product_price($order->products[$i]['id']);
+                $pr_c = $this->product_price($order->products[$i]['id'], false);
                 $pod_amount = round($pr_c*10)/10*$c_deduct/100;
                 $od_amount -= $pod_amount;
               } else {
-                $pr_c += $this->product_price($order->products[$i]['id']);
+                $pr_c += $this->product_price($order->products[$i]['id'], false);
+              }
+            } else {
+              if (count($this->price_total_by_tax_rate) < 1) {
+                $this->product_price($order->products[$i]['id']);
               }
             }
           }
           if ($od_amount < 0) $od_amount = 0;
-          if ($amount  <= $pr_c) $od_amount = 0;
+          if ($amount <= $pr_c) $od_amount = 0;
         }
       }
 
@@ -317,23 +321,13 @@ class ot_coupon {
       }
 
       if ($flag_s) {
-        $amount += $this->get_shipping_cost(); //Wenn Versandkostenfrei: Versandkosten und Gutscheinwert addieren
+        $amount += $this->get_shipping_cost();
       }
 
-      // RABATT ÜBERSTEIGT DEN BESTELLWERT, DANN RABATT GLEICH BESTELLWERT
       if ($od_amount > $amount) {
         $od_amount = $amount;
       }
     }
-
-    //KORREKTUR wenn Kunde Nettopreise und Steuer in Rechnung: Couponwert mit Steuersatz prozentual korrigiert
-    $this->tax_info = '';
-    /*
-    if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1 && $amount > 0 && $get_result['coupon_type'] != 'P') {
-      $od_amount = $od_amount / (1 + $order->info['tax'] / $amount);
-      $this->tax_info =  ' ('. trim(str_replace(array(' %s',','), array('',''),TAX_INFO_EXCL)) .')';
-    }
-    */
 
     return $od_amount;
   }
@@ -342,57 +336,31 @@ class ot_coupon {
   function new_calculate_tax_deduction($od_amount, $order_total) {
     global $order;
 
-    //Wenn der Kupon ohne Steuer definiert wurde, muss die Bestellsumme korrigiert werden
-    if ($this->include_tax == 'false'){
-      //$order_total = $order_total + $order->info['tax'];
-    }
-
-    //Einschränkungen
+    // restrictions 
     $restriction = isset($this->tax_groups) && count($this->tax_groups) ? true : false;
 
-    //Gutscheinwert in % berechnen, vereinheitlicht die Berechnungen
+    // reduction in percent
     $od_amount_pro = $od_amount/$order_total * 100;
 
-    reset($order->info['tax_groups']);
-    $tod_amount = 0;
-
-    //Steuer für jede Steuergruppe korrigieren
-    foreach ($order->info['tax_groups'] as $key => $value) {
-      // Bei Einschränkungen Gutscheinwert in % neu berechnen,  vereinheitlicht die Berechnungen
-      $od_amount_pro = $restriction ? $od_amount/$this->price_total_by_tax_groups[$key] * 100 : $od_amount_pro;
-      $t_flag = true;
-      //Steuer neu berechnen
-      if ($t_flag && (!$restriction || $restriction && isset($this->tax_groups[$key]))) {
-        if ($_SESSION['customers_status']['customers_status_show_price_tax'] != '1') { //NETTO Preise
-          if ($restriction) {
-            $od_amount_diff = $this->price_total_by_tax_groups[$key] * $od_amount_pro / 100;
-            $god_amount = ($od_amount_diff * ((100 + $this->price_total_by_tax_rate[$key]) / 100)) - $od_amount_diff;
-            $god_amount = $order->info['tax_groups'][$key] - $god_amount;
-          } else {
-            $god_amount = $order->info['tax_groups'][$key] - $order->info['tax_groups'][$key] * $od_amount_pro / 100;
-          }
-          $order->info['tax_groups'][$key] = $god_amount; //bei NETTO Preisen ersetzen
-        } else { //BRUTTO Preise
-          if ($restriction) {
-            $od_amount_diff = $this->price_total_by_tax_groups[$key] * $od_amount_pro / 100;
-            $god_amount = $od_amount_diff - ($od_amount_diff / ((100 + $this->price_total_by_tax_rate[$key]) / 100));
-          } else {
-            $god_amount = $order->info['tax_groups'][$key] * $od_amount_pro / 100;
-          }
-          $order->info['tax_groups'][$key] -= $god_amount; //bei BRUTTO Preisen abziehen
-        }
-        $tod_amount += $god_amount; //hier wird die Steuer aufaddiert
+    foreach ($order->info['tax_groups'] as $key => $value) {    
+      if (isset($this->tax_groups[$key])) {
+        // restriction
+        $od_amount_pro = $restriction ? ($od_amount / $this->price_total_by_tax_groups[$key] * 100) : $od_amount_pro;
+        
+        if ($_SESSION['customers_status']['customers_status_show_price_tax'] != '1') {
+          // netto
+          $god_amount = $order->info['tax_groups'][$key] - ($order->info['tax_groups'][$key] * $od_amount_pro / 100);
+          $order->info['tax_groups'][$key] = $god_amount;
+        } else { 
+          // brutto
+          $god_amount = $order->info['tax_groups'][$key] * $od_amount_pro / 100;
+          $order->info['tax_groups'][$key] -= $god_amount;
+        }        
       }
     }
-    
-    //Gesamtsteuer neu berechnen
+  
+    // recalculate tax
     $order->info['tax'] = array_sum($order->info['tax_groups']);
-    /*
-    $order->info['tax'] -= $tod_amount; //bei BRUTTO Preisen abziehen
-    if ($_SESSION['customers_status']['customers_status_show_price_tax'] != '1') {
-      $order->info['tax'] = $tod_amount; //bei NETTO Preisen ersetzen
-    }
-    */
   }
 
 
@@ -410,17 +378,15 @@ class ot_coupon {
     $shipping_cost = $order->info['shipping_cost'];
 
     if ($shipping_cost > 0) {
-      //Steuergruppe feststellen und setzen
       $shipping_tax_class = ((defined('MODULE_SHIPPING_'.strtoupper($shipping_module).'_TAX_CLASS')) ? constant('MODULE_SHIPPING_'.strtoupper($shipping_module).'_TAX_CLASS') : 0);
       $shipping_tax_rate_description = xtc_get_tax_description($shipping_tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
       $tax_index = $this->set_tax_group_index($shipping_tax_rate_description);
 
-      //BRUTTO PREISE - Steuer bei Versandkosten hinzufügen
       if ($_SESSION['customers_status']['customers_status_show_price_tax'] == '1') {
         $shipping_tax_rate = xtc_get_tax_rate($shipping_tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
         $shipping_tax = $order->info['shipping_cost'] * ($shipping_tax_rate / 100 +1) - $order->info['shipping_cost'];
         $shipping_cost = $order->info['shipping_cost'] + $shipping_tax;
-        $shipping_cost = $xtPrice->xtcFormat($shipping_cost, false); //RUNDEN
+        $shipping_cost = $xtPrice->xtcFormat($shipping_cost, false);
       }
     }
     
@@ -491,20 +457,24 @@ class ot_coupon {
   }
 
 
-  function product_price($product_id) {
+  function product_price($product_id, $set_tax = true) {
     $products_price = isset($this->products_price[$product_id]) ? $this->products_price[$product_id] : 0;
-    if (isset($this->products_tax_description[$product_id])) {
+    
+    if ($set_tax === true) {
       $tax_index = $this->set_tax_group_index($this->products_tax_description[$product_id]);
+      $this->price_total_by_tax_rate[$tax_index] = $this->products_tax_rate[$product_id];
+      if (!isset($this->price_total_by_tax_groups[$tax_index])) {
+        $this->price_total_by_tax_groups[$tax_index] = 0;
+      }
+      $this->price_total_by_tax_groups[$tax_index] += $products_price;
     }
-    $this->price_total_by_tax_rate[$tax_index] = $this->products_tax_rate[$product_id];
-    $this->price_total_by_tax_groups[$tax_index] += $products_price;
     
     return $products_price;
   }
 
 
   function set_tax_group_index($tax_description) {
-    $tax_index = ($_SESSION['customers_status']['customers_status_show_price_tax'] == '1' ? TAX_ADD_TAX : TAX_NO_TAX) . $tax_description;
+    $tax_index = (($_SESSION['customers_status']['customers_status_show_price_tax'] == '1') ? TAX_ADD_TAX : TAX_NO_TAX) . $tax_description;
     $this->tax_groups[$tax_index] = true;
     
     return $tax_index;
@@ -543,7 +513,9 @@ class ot_coupon {
 
   function check() {
     if (!isset ($this->check)) {
-      $check_query = xtc_db_query("select configuration_value from ".TABLE_CONFIGURATION." where configuration_key = 'MODULE_ORDER_TOTAL_COUPON_STATUS'");
+      $check_query = xtc_db_query("SELECT configuration_value 
+                                     FROM ".TABLE_CONFIGURATION." 
+                                    WHERE configuration_key = 'MODULE_ORDER_TOTAL_COUPON_STATUS'");
       $this->check = xtc_db_num_rows($check_query);
     }
 
@@ -562,18 +534,18 @@ class ot_coupon {
 
 
   function install() {
-    xtc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('', 'MODULE_ORDER_TOTAL_COUPON_STATUS', 'true', '6', '1','xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
-    xtc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('', 'MODULE_ORDER_TOTAL_COUPON_SORT_ORDER', '25', '6', '2', now())");
-    xtc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, set_function ,date_added) values ('', 'MODULE_ORDER_TOTAL_COUPON_INC_SHIPPING', 'false', '6', '5', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
-    xtc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, set_function ,date_added) values ('', 'MODULE_ORDER_TOTAL_COUPON_INC_TAX', 'true', '6', '6','xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
-    xtc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, set_function ,date_added) values ('', 'MODULE_ORDER_TOTAL_COUPON_CALC_TAX', 'Standard', '6', '7','xtc_cfg_select_option(array(\'None\', \'Standard\'), ', now())");
-    xtc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) values ('', 'MODULE_ORDER_TOTAL_COUPON_TAX_CLASS', '0', '6', '0', 'xtc_get_tax_class_title', 'xtc_cfg_pull_down_tax_classes(', now())");
-    xtc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, set_function ,date_added) values ('', 'MODULE_ORDER_TOTAL_COUPON_SPECIAL_PRICES', 'false', '6', '5', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
+    xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('', 'MODULE_ORDER_TOTAL_COUPON_STATUS', 'true', '6', '1','xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
+    xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('', 'MODULE_ORDER_TOTAL_COUPON_SORT_ORDER', '25', '6', '2', now())");
+    xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, set_function ,date_added) VALUES ('', 'MODULE_ORDER_TOTAL_COUPON_INC_SHIPPING', 'false', '6', '5', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
+    xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, set_function ,date_added) VALUES ('', 'MODULE_ORDER_TOTAL_COUPON_INC_TAX', 'true', '6', '6','xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
+    xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, set_function ,date_added) VALUES ('', 'MODULE_ORDER_TOTAL_COUPON_CALC_TAX', 'Standard', '6', '7','xtc_cfg_select_option(array(\'None\', \'Standard\'), ', now())");
+    xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) VALUES ('', 'MODULE_ORDER_TOTAL_COUPON_TAX_CLASS', '0', '6', '0', 'xtc_get_tax_class_title', 'xtc_cfg_pull_down_tax_classes(', now())");
+    xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, set_function ,date_added) VALUES ('', 'MODULE_ORDER_TOTAL_COUPON_SPECIAL_PRICES', 'false', '6', '5', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
   }
 
 
   function remove() {
-    xtc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key LIKE 'MODULE_ORDER_TOTAL_COUPON_%'");
+    xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key LIKE 'MODULE_ORDER_TOTAL_COUPON_%'");
   }
 }
 ?>
