@@ -519,7 +519,7 @@
                           'currency_value' => $xtPrice->currencies[$_SESSION['currency']]['value'],
                           'payment_method' => isset($_SESSION['payment']) ? $_SESSION['payment'] : '',
                           'shipping_method' => isset($_SESSION['shipping']) && is_array($_SESSION['shipping']) ? $_SESSION['shipping']['title'] : '',
-                          'shipping_cost' => isset($_SESSION['shipping']) && is_array($_SESSION['shipping']) ? $_SESSION['shipping']['cost'] : 0,
+                          'shipping_cost' => isset($_SESSION['shipping']) && is_array($_SESSION['shipping']) ? $xtPrice->xtcCalculateCurr($_SESSION['shipping']['cost']) : 0,
                           'comments' => isset($_SESSION['comments']) ? $_SESSION['comments'] : '',
                           'shipping_class' => isset($_SESSION['shipping']) && is_array($_SESSION['shipping']) && array_key_exists('id', $_SESSION['shipping']) ? $_SESSION['shipping']['id'] : '',
                           'payment_class' => isset($_SESSION['payment']) ? $_SESSION['payment'] : '',
@@ -663,21 +663,21 @@
 
         $products_tax = $this->products[$index]['tax'];
         $products_tax_description = $this->products[$index]['tax_description'];
-        if ($_SESSION['customers_status']['customers_status_show_price_tax'] == '1') {
+        if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1) {
           $tax_index = TAX_ADD_TAX.$products_tax_description;
           if (!isset($this->info['tax_groups'][$tax_index])) {
             $this->info['tax_groups'][$tax_index] = 0;
           }
-          if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == '1') {
+          if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == 1) {
             $this->info['tax'] += $shown_price_tax - ($shown_price_tax / (($products_tax < 10) ? "1.0" . str_replace('.', '', $products_tax) : "1." . str_replace('.', '', $products_tax)));
             $this->info['tax_groups'][$tax_index] += (($shown_price_tax /(100+$products_tax)) * $products_tax);
           } else {
             $this->info['tax'] += $shown_price - ($shown_price / (($products_tax < 10) ? "1.0" . str_replace('.', '', $products_tax) : "1." . str_replace('.', '', $products_tax)));
             $this->info['tax_groups'][$tax_index] += (($shown_price /(100+$products_tax)) * $products_tax);
           }
-        } elseif ($_SESSION['customers_status']['customers_status_add_tax_ot'] == '1'
-                  || ($_SESSION['customers_status']['customers_status_add_tax_ot'] == '0'
-                      && $_SESSION['customers_status']['customers_status_show_price_tax'] == '0'
+        } elseif ($_SESSION['customers_status']['customers_status_add_tax_ot'] == 1
+                  || ($_SESSION['customers_status']['customers_status_add_tax_ot'] == 0
+                      && $_SESSION['customers_status']['customers_status_show_price_tax'] == 0
                       && $this->delivery['country_id'] == STORE_COUNTRY
                       )
                   )

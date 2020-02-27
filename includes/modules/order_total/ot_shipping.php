@@ -120,12 +120,12 @@ class ot_shipping {
       }
       
       $this->output[] = array('title' => $order->info['shipping_method'] . ':',
-                              'text' => $xtPrice->xtcFormat($order->info['shipping_cost'], true, 0, true),
-                              'value' => $xtPrice->xtcFormat($order->info['shipping_cost'], false, 0, true));
+                              'text' => $xtPrice->xtcFormat($order->info['shipping_cost'], true),
+                              'value' => $xtPrice->xtcFormat($order->info['shipping_cost'], false));
     } elseif ($free_shipping === true) {
       $this->output[] = array('title' => $order->info['shipping_method'] . ':',
-                              'text' => $xtPrice->xtcFormat(0, true, 0, true),
-                              'value' => $xtPrice->xtcFormat(0, false, 0, true));
+                              'text' => $xtPrice->xtcFormat(0, true),
+                              'value' => $xtPrice->xtcFormat(0, false));
     }
   }
 
