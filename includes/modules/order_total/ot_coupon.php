@@ -60,6 +60,7 @@ class ot_coupon {
       $this->tax_class = MODULE_ORDER_TOTAL_COUPON_TAX_CLASS;
     }
     
+    $this->deduction = 0;
     $this->credit_class = true;
     $this->output = array ();
     
