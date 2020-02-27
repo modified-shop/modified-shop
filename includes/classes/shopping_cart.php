@@ -517,22 +517,30 @@ class shoppingCart {
           $products_tax = $xtPrice->TAX[$product['products_tax_class_id']];
           $products_tax_description = xtc_get_tax_description($product['products_tax_class_id']);
 
+          if (!isset($this->tax[$product['products_tax_class_id']])) {
+            $this->tax[$product['products_tax_class_id']]['value'] = 0;
+          }
+
           // price incl tax
           if ($_SESSION['customers_status']['customers_status_show_price_tax'] == '1') {
-            if (!isset($this->tax[$product['products_tax_class_id']])) $this->tax[$product['products_tax_class_id']]['value'] = 0; 
             $this->tax[$product['products_tax_class_id']]['value'] += (($products_price_total / (100 + $products_tax)) * $products_tax) * $qty;
             $this->tax[$product['products_tax_class_id']]['desc'] = TAX_ADD_TAX.$products_tax_description;
           }
 
           // excl tax + tax at checkout
-          if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1) {
-            if (!isset($this->tax[$product['products_tax_class_id']])) $this->tax[$product['products_tax_class_id']]['value'] = 0;
-            $this->tax[$product['products_tax_class_id']]['value'] += ($products_price_total / 100) * ($products_tax) * $qty;
+          if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
+              && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1
+              )
+          {
+            $tax = $products_price_total / 100 * $products_tax * $qty;
+            
+            $this->tax[$product['products_tax_class_id']]['value'] += $tax;
             $this->tax[$product['products_tax_class_id']]['desc'] = TAX_NO_TAX.$products_tax_description;
-            $this->total += ($products_price_total / 100) * ($products_tax)*$qty;            
+            $this->total += $tax;
+                   
             if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == 1) {
               if (!isset($this->tax_discount[$product['products_tax_class_id']])) $this->tax_discount[$product['products_tax_class_id']] = 0;
-              $this->tax_discount[$product['products_tax_class_id']] += ($products_price_total / 100) * ($products_tax) * $qty;
+              $this->tax_discount[$product['products_tax_class_id']] += $tax;
             } 
           }
         }
