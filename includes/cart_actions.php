@@ -55,6 +55,9 @@ if (xtc_not_null($action)) {
   $parameters = array ('action', 'pid', 'info_message_3', 'wishlist', 'prd_id', 'info_message');
   if (DISPLAY_CART == 'true') {
     $goto = FILENAME_SHOPPING_CART;
+    if ($wishlist === true) {
+      $goto = FILENAME_WISHLIST;
+    }
     array_push($parameters, 'products_id', 'cPath');
   } else {
     $goto = basename($PHP_SELF);
