@@ -192,8 +192,9 @@ if ($result != false) {
     $get_params .= isset($_GET['x']) && $_GET['x'] >= 0 ? '_'.(int)$_GET['x'] : '';
     $get_params .= isset($_GET['y']) && $_GET['y'] >= 0 ? '_'.(int)$_GET['y'] : '';
     $get_params .= isset($_SESSION['filter_sorting']) ? '_'.$_SESSION['filter_sorting'] : '';
+    $get_params .= isset($_SESSION['filter_set']) ? '_'.$_SESSION['filter_set'] : '';
 
-    $cache_id = md5($current_category_id.'_'.$_SESSION['language'].'_'.$_SESSION['customers_status']['customers_status_id'].'_'.$_SESSION['currency'].$max_display_results.$get_params);
+    $cache_id = md5(basename($PHP_SELF).$current_category_id.$_SESSION['language'].$_SESSION['customers_status']['customers_status_id'].$_SESSION['currency'].$max_display_results.$get_params);
     $module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/product_listing/'.$category['listing_template'], $cache_id);
   }
   $smarty->assign('main_content', $module);
