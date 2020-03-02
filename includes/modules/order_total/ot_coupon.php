@@ -59,15 +59,15 @@ class ot_coupon {
       $this->calculate_tax = MODULE_ORDER_TOTAL_COUPON_CALC_TAX;
       $this->tax_class = MODULE_ORDER_TOTAL_COUPON_TAX_CLASS;
     }
-    
+
     $this->deduction = 0;
     $this->credit_class = true;
     $this->output = array ();
-    
+
     $this->products_price = array();
     $this->products_tax_rate = array();
     $this->products_tax_description = array();
-    
+
     $this->tax_groups = array();
     $this->price_total_by_tax_groups = array();
     $this->price_total_by_tax_rate = array();
@@ -76,10 +76,10 @@ class ot_coupon {
 
   function process() {
     global $order, $xtPrice;
-    
+
     $order_total = $this->get_order_total();
     $od_amount = $this->calculate_credit($order_total);
-    
+
     if ($od_amount > 0) {
       if ($od_amount > $order->info['total']) {
         $od_amount = $order->info['total'];
@@ -93,7 +93,7 @@ class ot_coupon {
       $order->info['total'] = $xtPrice->xtcFormat($order->info['total'] - $od_amount, false);
       $order->info['deduction'] = $od_amount;
       $order->info['subtotal'] = $order->info['subtotal'] - $od_amount;
-      
+
       $this->output[] = array(
         'title' => $this->title.' '.$this->coupon_code.':',
         'text'  => '<span class="color_ot_total"><b>'.$xtPrice->xtcFormat($od_amount * (-1), true).'</b></span>',
@@ -127,13 +127,13 @@ class ot_coupon {
 
   function collect_posts() {
     global $xtPrice;
-    
+
     if (isset($_POST['gv_redeem_code']) && $_POST['gv_redeem_code']) {
 
-      // INFOS ÜBER KUPON AUSLESEN
+      // INFOS ÃœBER KUPON AUSLESEN
       $coupon_query = xtc_db_query("select *
                                       from ".TABLE_COUPONS."
-                                     where coupon_code='".$_POST['gv_redeem_code']."'
+                                     where coupon_code='".xtc_db_input($_POST['gv_redeem_code'])."'
                                        and coupon_active='Y'");
       $coupon_array = xtc_db_fetch_array($coupon_query);
 
@@ -153,13 +153,13 @@ class ot_coupon {
           xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode(ERROR_INVALID_FINISDATE_COUPON), 'SSL'));
         }
 
-        // ERROR : GESAMTES VERWENDUNGSLIMIT ÜBERSCHRITTEN
+        // ERROR : GESAMTES VERWENDUNGSLIMIT ÃœBERSCHRITTEN
         $coupon_count = xtc_db_query("select coupon_id from " . TABLE_COUPON_REDEEM_TRACK . " where coupon_id = '" . $coupon_array['coupon_id'] . "'");
         if (xtc_db_num_rows($coupon_count) >= $coupon_array['uses_per_coupon'] && $coupon_array['uses_per_coupon'] > 0) {
           xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode(ERROR_INVALID_USES_COUPON . $coupon_array['uses_per_coupon'] . TIMES), 'SSL'));
         }
 
-        // ERROR : VERWENDUNGSLIMIT FÜR EINZELNEN KUNDEN ÜBERSCHRITTEN
+        // ERROR : VERWENDUNGSLIMIT FÃœR EINZELNEN KUNDEN ÃœBERSCHRITTEN
         $coupon_count_customer = xtc_db_query("select coupon_id from " . TABLE_COUPON_REDEEM_TRACK . " where coupon_id = '" . $coupon_array['coupon_id'] . "' and customer_id = '" . (int) $_SESSION['customer_id'] . "'");
         if (xtc_db_num_rows($coupon_count_customer) >= $coupon_array['uses_per_user'] && $coupon_array['uses_per_user'] > 0) {
           xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode(ERROR_INVALID_USES_USER_COUPON . $coupon_array['uses_per_user'] . TIMES), 'SSL'));
@@ -170,7 +170,7 @@ class ot_coupon {
           xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'info_message=' . urlencode(ERROR_MINIMUM_ORDER_COUPON_1 . ' ' . $xtPrice->xtcFormat($coupon_array['coupon_minimum_order'], true, 0, true) . ' ' . ERROR_MINIMUM_ORDER_COUPON_2), 'SSL'));
         }
       }
-      
+
       if ($_POST['submit_redeem_coupon_x'] && !$_POST['gv_redeem_code'])
         xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message='.urlencode(ERROR_NO_REDEEM_CODE), 'SSL'));
       }
@@ -188,7 +188,7 @@ class ot_coupon {
     if (isset ($_SESSION['cc_id'])) {
       $coupon_query = xtc_db_query("SELECT *
                                       FROM ".TABLE_COUPONS."
-                                     WHERE coupon_id = '".$_SESSION['cc_id']."'
+                                     WHERE coupon_id = '".xtc_db_input($_SESSION['cc_id'])."'
                                        AND coupon_active = 'Y'
                                        AND (restrict_to_customers = ''
                                             OR FIND_IN_SET ('". (int)$_SESSION['customers_status']['customers_status_id'] ."', restrict_to_customers)
@@ -205,7 +205,7 @@ class ot_coupon {
 
         $this->coupon_code = $coupon_array['coupon_code'];
 
-        $c_deduct = $xtPrice->xtcCalculateCurr($coupon_array['coupon_amount']); 
+        $c_deduct = $xtPrice->xtcCalculateCurr($coupon_array['coupon_amount']);
 
         if ($coupon_array['coupon_type'] == 'S') {
           $c_deduct = $this->get_shipping_cost();
@@ -213,7 +213,7 @@ class ot_coupon {
 
         $flag_s = false;
         if ($coupon_array['coupon_type']=='S' && $coupon_array['coupon_amount'] > 0 ) {
-          $c_deduct = $c_deduct + $xtPrice->xtcCalculateCurr($coupon_array['coupon_amount']); 
+          $c_deduct = $c_deduct + $xtPrice->xtcCalculateCurr($coupon_array['coupon_amount']);
           $flag_s = true;
         }
 
@@ -275,7 +275,7 @@ class ot_coupon {
             }
           }
 
-          if ($coupon_array['coupon_type'] == 'F' && $od_amount > $pr_c ) {$od_amount = $pr_c;} 
+          if ($coupon_array['coupon_type'] == 'F' && $od_amount > $pr_c ) {$od_amount = $pr_c;}
 
         } else {
           if ($coupon_array['coupon_type'] != 'P') {
@@ -337,29 +337,29 @@ class ot_coupon {
   function new_calculate_tax_deduction($od_amount, $order_total) {
     global $order;
 
-    // restrictions 
+    // restrictions
     $restriction = isset($this->tax_groups) && count($this->tax_groups) ? true : false;
 
     // reduction in percent
     $od_amount_pro = $od_amount/$order_total * 100;
 
-    foreach ($order->info['tax_groups'] as $key => $value) {    
+    foreach ($order->info['tax_groups'] as $key => $value) {
       if (isset($this->tax_groups[$key])) {
         // restriction
         $od_amount_pro = $restriction ? ($od_amount / $this->price_total_by_tax_groups[$key] * 100) : $od_amount_pro;
-        
+
         if ($_SESSION['customers_status']['customers_status_show_price_tax'] != '1') {
           // netto
           $god_amount = $order->info['tax_groups'][$key] - ($order->info['tax_groups'][$key] * $od_amount_pro / 100);
           $order->info['tax_groups'][$key] = $god_amount;
-        } else { 
+        } else {
           // brutto
           $god_amount = $order->info['tax_groups'][$key] * $od_amount_pro / 100;
           $order->info['tax_groups'][$key] -= $god_amount;
-        }        
+        }
       }
     }
-  
+
     // recalculate tax
     $order->info['tax'] = array_sum($order->info['tax_groups']);
   }
@@ -369,13 +369,13 @@ class ot_coupon {
     global $order, $xtPrice;
 
     $shipping_module = '';
-    if (isset($_SESSION['shipping']) 
+    if (isset($_SESSION['shipping'])
         && is_array($_SESSION['shipping'])
         && array_key_exists('id', $_SESSION['shipping'])
         )
     {
       $shipping_module = substr($_SESSION['shipping']['id'], 0, strpos($_SESSION['shipping']['id'], '_'));
-    }    
+    }
     $shipping_cost = $order->info['shipping_cost'];
 
     if ($shipping_cost > 0) {
@@ -390,7 +390,7 @@ class ot_coupon {
         $shipping_cost = $xtPrice->xtcFormat($shipping_cost, false);
       }
     }
-    
+
     return $shipping_cost;
   }
 
@@ -419,15 +419,15 @@ class ot_coupon {
 
   function get_order_total() {
     global $order;
-    
+
     $order_total = $_SESSION['cart']->show_total();
-    if (($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
+    if (($_SESSION['customers_status']['customers_status_show_price_tax'] == 0
          && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1
-         ) || ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
+         ) || ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0
                && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0
                )
         )
-    {  
+    {
       $order_total = $_SESSION['cart']->total_netto;
     }
     $this->products_price = array();
@@ -446,10 +446,10 @@ class ot_coupon {
       }
     }
 
-    if ($this->include_shipping == 'true' 
-        && isset($order->info['shipping_cost']) 
+    if ($this->include_shipping == 'true'
+        && isset($order->info['shipping_cost'])
         && $order->info['shipping_cost'] > 0
-        ) 
+        )
     {
       $order_total += $order->info['shipping_cost'];
     }
@@ -460,7 +460,7 @@ class ot_coupon {
 
   function product_price($product_id, $set_tax = true) {
     $products_price = isset($this->products_price[$product_id]) ? $this->products_price[$product_id] : 0;
-    
+
     if ($set_tax === true) {
       $tax_index = $this->set_tax_group_index($this->products_tax_description[$product_id]);
       $this->price_total_by_tax_rate[$tax_index] = $this->products_tax_rate[$product_id];
@@ -469,7 +469,7 @@ class ot_coupon {
       }
       $this->price_total_by_tax_groups[$tax_index] += $products_price;
     }
-    
+
     return $products_price;
   }
 
@@ -477,7 +477,7 @@ class ot_coupon {
   function set_tax_group_index($tax_description) {
     $tax_index = (($_SESSION['customers_status']['customers_status_show_price_tax'] == '1') ? TAX_ADD_TAX : TAX_NO_TAX) . $tax_description;
     $this->tax_groups[$tax_index] = true;
-    
+
     return $tax_index;
   }
 
@@ -507,7 +507,7 @@ class ot_coupon {
         }
       }
     }
-    
+
     return $cat_ids_array;
   }
 
