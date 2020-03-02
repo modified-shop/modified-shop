@@ -85,7 +85,7 @@ class modified_captcha {
     require_once (DIR_FS_INC.'xtc_render_vvcode.inc.php');
     
     $this->set();
-    vvcode_render_code($this->get());
+    return vvcode_render_code($this->get());
   }
     
     
@@ -111,7 +111,7 @@ class modified_captcha {
    * @return   image code
    */
   public function get_image_code() {
-    return '<img src="'.xtc_href_link(FILENAME_DISPLAY_VVCODES, '', 'SSL') .'" alt="Captcha" />';
+    return '<img src="data:image/jpeg;base64,' . base64_encode($this->output()).'">';
   }
     
     

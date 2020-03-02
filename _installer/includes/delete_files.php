@@ -185,6 +185,7 @@
     'callback/sofort/sofortInstall.php',
     'checkout_iclear.php',
     'copyright.php',
+    'display_vvcodes.php',
     'export/_error_reporting.admin',
     'export/_error_reporting.dev',
     'export/_error_reporting.none',

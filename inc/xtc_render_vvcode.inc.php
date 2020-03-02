@@ -29,18 +29,9 @@ function vvcode_render_code($code) {
     $height =50;
 
     $imgh = imagecreate($width, $height);
-    // BOF - Tomcraft - 2009-11-06 - Set VVCODE Colors back to default
-    // BOF - Dokuman - 2009-10-14 - Set VVCODE Colors to default template color
     $fonts = imagecolorallocate($imgh, 112, 112, 112);
     $lines = imagecolorallocate($imgh, 220, 148, 002);
     $background = imagecolorallocate($imgh, 196, 196, 196);
-    /*
-    $fonts = imagecolorallocate($imgh, 137, 55, 105);
-    $lines = imagecolorallocate($imgh, 222, 222, 222);
-    $background = imagecolorallocate($imgh, 180, 180, 180);
-    */
-    // EOF - Dokuman - 2009-10-14 - Set VVCODE Colors to default template color
-    // BOF - Tomcraft - 2009-11-06 - Set VVCODE Colors back to default
 
     imagefill($imgh, 0, 0, $background);
 
@@ -94,10 +85,11 @@ function vvcode_render_code($code) {
               ImageString($imgh, $size, 26+(36*$i),20, substr($code, $i, 1), $tc);  
         }
     }                                                                              
-                                                                                   
-    header('Content-Type: image/jpeg');
+                                                                                       
+    ob_start();
     imagejpeg($imgh);
     imagedestroy($imgh);
+    return ob_get_clean(); 
  }
 }
 ?>

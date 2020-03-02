@@ -69,7 +69,7 @@ class php_captcha extends modified_captcha {
     $oPhpCaptcha->SetLinesColors(MODULE_SYSTEM_PHP_CAPTCHA_LINES_RGB);
     $oPhpCaptcha->SetCharsColors(MODULE_SYSTEM_PHP_CAPTCHA_CHARS_RGB);
     $oPhpCaptcha->CaseInsensitive(true);
-    $oPhpCaptcha->Create(); 
+    return $oPhpCaptcha->Create(); 
   }
 
 
