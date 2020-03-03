@@ -93,17 +93,26 @@ function getOrderDetailsCertificate($subaccount) {
 
   $total = get_order_total($last_order);
 
-  $query = xtc_db_query("SELECT value
-                           FROM " . TABLE_ORDERS_TOTAL . "
-                          WHERE orders_id = '" . $last_order . "' 
-                            AND class='ot_shipping'");
-  $orders_total_shipping = xtc_db_fetch_array($query);
-
-  $query = xtc_db_query("SELECT value
-                           FROM " . TABLE_ORDERS_TOTAL . "
-                          WHERE orders_id = '" . $last_order . "' 
-                            AND class='ot_tax'");
-  $orders_total_tax = xtc_db_fetch_array($query);
+  $shipping = 0;
+  $ot_shipping_query = xtc_db_query("SELECT value
+                                       FROM " . TABLE_ORDERS_TOTAL . "
+                                      WHERE orders_id = '" . (int)$last_order . "' 
+                                        AND class='ot_shipping'");
+  if (xtc_db_num_rows($ot_shipping_query) > 0) {
+    $ot_shipping = xtc_db_fetch_array($ot_shipping_query);
+    $shipping = $ot_shipping['value'];
+  }
+  
+  $tax = 0;
+  $ot_tax_query = xtc_db_query("SELECT value
+                                  FROM " . TABLE_ORDERS_TOTAL . "
+                                 WHERE orders_id = '" . (int)$last_order . "' 
+                                   AND class='ot_tax'");
+  if (xtc_db_num_rows($ot_shipping_query) > 0) {
+    while ($ot_tax = xtc_db_fetch_array($ot_tax_query)) {
+      $tax += $ot_tax['value'];
+    }
+  }
   
   $discount = 0;
   $query = xtc_db_query("SELECT value
@@ -147,8 +156,8 @@ function getOrderDetailsCertificate($subaccount) {
     <span id="gts-o-currency">'.$orders['currency'].'</span>
     <span id="gts-o-total">'.number_format($total, 2).'</span>
     <span id="gts-o-discounts">'.number_format($discount, 2).'</span>
-    <span id="gts-o-shipping-total">'.number_format($orders_total_shipping['value'], 2).'</span>
-    <span id="gts-o-tax-total">'.number_format($orders_total_tax["value"], 2).'</span>
+    <span id="gts-o-shipping-total">'.number_format($shipping, 2).'</span>
+    <span id="gts-o-tax-total">'.number_format($tax, 2).'</span>
     <span id="gts-o-est-ship-date">'.date('Y-m-d', $time).'</span>
     <span id="gts-o-est-delivery-date">'.date('Y-m-d', strtotime("+3 day", $time)).'</span>
     <span id="gts-o-has-preorder">N</span>
