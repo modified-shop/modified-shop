@@ -188,7 +188,7 @@ class ot_coupon {
     if (isset ($_SESSION['cc_id'])) {
       $coupon_query = xtc_db_query("SELECT *
                                       FROM ".TABLE_COUPONS."
-                                     WHERE coupon_id = '".xtc_db_input($_SESSION['cc_id'])."'
+                                     WHERE coupon_id = '".(int)$_SESSION['cc_id']."'
                                        AND coupon_active = 'Y'
                                        AND (restrict_to_customers = ''
                                             OR FIND_IN_SET ('". (int)$_SESSION['customers_status']['customers_status_id'] ."', restrict_to_customers)
