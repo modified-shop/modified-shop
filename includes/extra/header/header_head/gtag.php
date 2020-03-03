@@ -55,19 +55,28 @@
   
     require_once (DIR_FS_INC.'get_order_total.inc.php');
     $total = get_order_total($last_order);
-
-    $shipping_query = xtc_db_query("SELECT value
-                                      FROM " . TABLE_ORDERS_TOTAL . "
-                                     WHERE orders_id = '" . (int)$last_order . "' 
-                                       AND class='ot_shipping'");
-    $shipping = xtc_db_fetch_array($shipping_query);
-
-    $tax_query = xtc_db_query("SELECT value
-                                 FROM " . TABLE_ORDERS_TOTAL . "
-                                WHERE orders_id = '" . (int)$last_order . "' 
-                                  AND class='ot_tax'");
-    $tax = xtc_db_fetch_array($tax_query);
-
+    
+    $shipping = 0;
+    $ot_shipping_query = xtc_db_query("SELECT value
+                                         FROM " . TABLE_ORDERS_TOTAL . "
+                                        WHERE orders_id = '" . (int)$last_order . "' 
+                                          AND class='ot_shipping'");
+    if (xtc_db_num_rows($ot_shipping_query) > 0) {
+      $ot_shipping = xtc_db_fetch_array($ot_shipping_query);
+      $shipping = $ot_shipping['value'];
+    }
+    
+    $tax = 0;
+    $ot_tax_query = xtc_db_query("SELECT value
+                                    FROM " . TABLE_ORDERS_TOTAL . "
+                                   WHERE orders_id = '" . (int)$last_order . "' 
+                                     AND class='ot_tax'");
+    if (xtc_db_num_rows($ot_shipping_query) > 0) {
+      while ($ot_tax = xtc_db_fetch_array($ot_tax_query)) {
+        $tax += $ot_tax['value'];
+      }
+    }
+    
     $currency_query = xtc_db_query("SELECT currency
                                       FROM " . TABLE_ORDERS . "
                                      WHERE orders_id = '" . (int)$last_order . "'");
@@ -81,7 +90,6 @@
                                        op.products_price,
                                        op.products_quantity
                                   FROM " . TABLE_ORDERS_PRODUCTS . " op
-                                  
                                   JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c
                                        ON op.products_id = p2c.products_id
                                   JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd
@@ -112,8 +120,8 @@
     'affiliation': '".addslashes(STORE_NAME)."',
     'currency': '".$currency['currency']."',
     'value': ".number_format($total, 2).",
-    'tax': ".number_format($tax['value'], 2).",
-    'shipping': ".number_format($shipping['value'], 2).",
+    'tax': ".number_format($tax, 2).",
+    'shipping': ".number_format($shipping, 2).",
     'items': [".implode(',', $addItem)."
     ]
   });";

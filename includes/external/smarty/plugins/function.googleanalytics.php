@@ -159,17 +159,26 @@ function getOrderDetailsAnalytics() {
   
   $total = get_order_total($last_order);
   
-  $shipping_query = xtc_db_query("SELECT value
-                                    FROM " . TABLE_ORDERS_TOTAL . "
-                                   WHERE orders_id = '" . (int)$last_order . "' 
-                                     AND class='ot_shipping'");
-  $shipping = xtc_db_fetch_array($shipping_query);
-
-  $tax_query = xtc_db_query("SELECT value
-                               FROM " . TABLE_ORDERS_TOTAL . "
-                              WHERE orders_id = '" . (int)$last_order . "' 
-                                AND class='ot_tax'");
-  $tax = xtc_db_fetch_array($tax_query);
+  $shipping = 0;
+  $ot_shipping_query = xtc_db_query("SELECT value
+                                       FROM " . TABLE_ORDERS_TOTAL . "
+                                      WHERE orders_id = '" . (int)$last_order . "' 
+                                        AND class='ot_shipping'");
+  if (xtc_db_num_rows($ot_shipping_query) > 0) {
+    $ot_shipping = xtc_db_fetch_array($ot_shipping_query);
+    $shipping = $ot_shipping['value'];
+  }
+  
+  $tax = 0;
+  $ot_tax_query = xtc_db_query("SELECT value
+                                  FROM " . TABLE_ORDERS_TOTAL . "
+                                 WHERE orders_id = '" . (int)$last_order . "' 
+                                   AND class='ot_tax'");
+  if (xtc_db_num_rows($ot_shipping_query) > 0) {
+    while ($ot_tax = xtc_db_fetch_array($ot_tax_query)) {
+      $tax += $ot_tax['value'];
+    }
+  }
 
   $location_query = xtc_db_query("SELECT customers_city,
                                          customers_state,
@@ -195,8 +204,8 @@ function getOrderDetailsAnalytics() {
     $last_order,
     addslashes(STORE_NAME),
     $total,
-    $tax["value"],
-    $shipping['value'],
+    $tax,
+    $shipping,
     addslashes($location['customers_city']),
     addslashes($location['customers_state']),
     addslashes($location['customers_country'])
@@ -257,17 +266,26 @@ function getOrderDetailsAnalyticsUniversal() {
 
   $total = get_order_total($last_order);
   
-  $shipping_query = xtc_db_query("SELECT value
-                                    FROM " . TABLE_ORDERS_TOTAL . "
-                                   WHERE orders_id = '" . (int)$last_order . "' 
-                                     AND class='ot_shipping'");
-  $shipping = xtc_db_fetch_array($shipping_query);
-
-  $tax_query = xtc_db_query("SELECT value
-                               FROM " . TABLE_ORDERS_TOTAL . "
-                              WHERE orders_id = '" . (int)$last_order . "' 
-                                AND class='ot_tax'");
-  $tax = xtc_db_fetch_array($tax_query);
+  $shipping = 0;
+  $ot_shipping_query = xtc_db_query("SELECT value
+                                       FROM " . TABLE_ORDERS_TOTAL . "
+                                      WHERE orders_id = '" . (int)$last_order . "' 
+                                        AND class='ot_shipping'");
+  if (xtc_db_num_rows($ot_shipping_query) > 0) {
+    $ot_shipping = xtc_db_fetch_array($ot_shipping_query);
+    $shipping = $ot_shipping['value'];
+  }
+  
+  $tax = 0;
+  $ot_tax_query = xtc_db_query("SELECT value
+                                  FROM " . TABLE_ORDERS_TOTAL . "
+                                 WHERE orders_id = '" . (int)$last_order . "' 
+                                   AND class='ot_tax'");
+  if (xtc_db_num_rows($ot_shipping_query) > 0) {
+    while ($ot_tax = xtc_db_fetch_array($ot_tax_query)) {
+      $tax += $ot_tax['value'];
+    }
+  }
 
   $currency_query = xtc_db_query("SELECT currency
                                     FROM " . TABLE_ORDERS . "
@@ -289,8 +307,8 @@ function getOrderDetailsAnalyticsUniversal() {
     $last_order,
     addslashes(STORE_NAME),
     $total,
-    $shipping['value'],
-    $tax["value"],
+    $shipping,
+    $tax,
     $currency['currency']
   );
 
