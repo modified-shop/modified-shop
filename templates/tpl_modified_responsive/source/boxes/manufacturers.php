@@ -36,7 +36,13 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_manufacturers.html', $c
   $manufacturers_query = xtDBquery($manufacturers_query);
   $manufacturers_count = xtc_db_num_rows($manufacturers_query, true);
   if ($manufacturers_count > 0) {
+
     if ($manufacturers_count <= MAX_DISPLAY_MANUFACTURERS_IN_A_LIST) {
+
+      if (MAX_MANUFACTURERS_LIST > 1) {
+        $box_content .= '<div class="box_select_inner" style="height:'. (MAX_MANUFACTURERS_LIST * 30) .'px;">';
+      }
+
       // Display a list
       while ($manufacturers = xtc_db_fetch_array($manufacturers_query, true)) {
         $manufacturers_name = ((strlen($manufacturers['manufacturers_name']) > MAX_DISPLAY_MANUFACTURER_NAME_LEN) ? substr($manufacturers['manufacturers_name'], 0, MAX_DISPLAY_MANUFACTURER_NAME_LEN).'..' : $manufacturers['manufacturers_name']);
@@ -45,20 +51,24 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_manufacturers.html', $c
         }
         $box_content .= '<a href="'.xtc_href_link(FILENAME_DEFAULT, xtc_manufacturer_link($manufacturers['manufacturers_id'],$manufacturers['manufacturers_name'])).'">'.$manufacturers_name.'</a><br />';
       }
+
+      if (MAX_MANUFACTURERS_LIST > 1) {
+        $box_content .= '</div>';
+      }
+
     } else {
       // Display a drop-down
       $js = 'location = form.manufacturers_id.options[form.manufacturers_id.selectedIndex].value;';
       $manufacturers_array = array ();
-      if (MAX_MANUFACTURERS_LIST < 2) {
         $manufacturers_array[] = array ('id' => '', 'text' => PULL_DOWN_DEFAULT);
         $js = 'if (form.manufacturers_id.selectedIndex != 0) location = form.manufacturers_id.options[form.manufacturers_id.selectedIndex].value;';
-      }
+
       while ($manufacturers = xtc_db_fetch_array($manufacturers_query, true)) {
         $manufacturers_name = ((strlen($manufacturers['manufacturers_name']) > MAX_DISPLAY_MANUFACTURER_NAME_LEN) ? substr($manufacturers['manufacturers_name'], 0, MAX_DISPLAY_MANUFACTURER_NAME_LEN).'..' : $manufacturers['manufacturers_name']);
         $manufacturers_array[] = array ('id' => xtc_href_link(FILENAME_DEFAULT,xtc_manufacturer_link($manufacturers['manufacturers_id'],$manufacturers['manufacturers_name'])), 'text' => $manufacturers_name);
       }
       if (count($manufacturers_array) > 1) {
-        $box_content = xtc_draw_form('manufacturers', xtc_href_link(FILENAME_DEFAULT, '', $request_type, false), 'get').xtc_draw_pull_down_menu('manufacturers_id', $manufacturers_array, isset($_GET['manufacturers_id']) ? xtc_href_link(FILENAME_DEFAULT,xtc_manufacturer_link($_GET['manufacturers_id'], isset($_GET['manufacturers_name']) ? $_GET['manufacturers_name'] : '')) : '', 'onchange="'.$js.'" size="'.MAX_MANUFACTURERS_LIST.'" style="width: 100%;"').xtc_hide_session_id().'</form>';
+        $box_content = xtc_draw_form('manufacturers', xtc_href_link(FILENAME_DEFAULT, '', $request_type, false), 'get').xtc_draw_pull_down_menu('manufacturers_id', $manufacturers_array, isset($_GET['manufacturers_id']) ? xtc_href_link(FILENAME_DEFAULT,xtc_manufacturer_link($_GET['manufacturers_id'], isset($_GET['manufacturers_name']) ? $_GET['manufacturers_name'] : '')) : '', 'onchange="'.$js.'"').xtc_hide_session_id().'</form>';
       }
     }
     

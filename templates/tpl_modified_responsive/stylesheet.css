@@ -1254,6 +1254,11 @@ div.hr_15 {
 .box_select {
   padding:10px 0 0 0;
 }
+.box_select_inner {
+  padding: 5px 5px; 
+  background:#fff;
+  overflow-y:auto;
+}
 .box_select a {
   display:block;
   border-bottom: 1px solid #ddd;
