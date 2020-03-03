@@ -198,7 +198,6 @@ for ($i = 0, $n = sizeof($selection); $i < $n; $i++) {
   if (in_array($selection[$i]['id'], $disallowed_payment)
       || strpos($selection[$i]['id'], 'billpay') !== false
       || strpos($selection[$i]['id'], 'klarna') !== false
-      || strpos($selection[$i]['id'], 'masterpayment') !== false
       ) 
   {
     unset($selection[$i]);

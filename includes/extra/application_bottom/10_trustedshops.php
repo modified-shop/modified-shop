@@ -130,15 +130,12 @@
           $paymenttype = 'PAYPAL';
           break;
         case 'billpaydebit':
-        case 'masterpayment_credit_card':
-        case 'masterpayment_debit_card':
         case 'mcp_creditcard':
         case 'mcp_debit':
         case 'payone_cc':
           $paymenttype = 'CREDIT_CARD';
           break;
         case 'banktransfer':
-        case 'masterpayment_elv':
         case 'payone_elv':
           $paymenttype = 'DIRECT_DEBIT';
           break;
@@ -158,13 +155,11 @@
         case 'invoice':
         case 'billpay':
         case 'klarna_invoice':
-        case 'masterpayment_rechnungskauf':
         case 'payone_invoice':
           $paymenttype = 'INVOICE';
           break;
         case 'sofort_sofortueberweisung_classic':
         case 'sofort_sofortueberweisung_gateway':
-        case 'masterpayment_sofortbanking':
         case 'mcp_ebank2pay':
           $paymenttype = 'DIRECT_E_BANKING';
           break;
@@ -186,14 +181,10 @@
         case 'billpaypaylater':
         case 'billpaytransactioncredit':
         case 'klarna_partPayment':
-        case 'masterpayment_anzahlungskauf':
-        case 'masterpayment_finanzierung':
-        case 'masterpayment_ratenzahlung':
         case 'payone_installment':
           $paymenttype = 'FINANCING';
           break;
         case 'klarna_SpecCamp':
-        case 'masterpayment_phone':
         case 'payone_otrans':
         case 'shopgate':
         case 'sofort_ideal':
