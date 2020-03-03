@@ -247,12 +247,15 @@ class order_total {
   }
 
   function process() {
+    global $xtPrice;
+        
     $order_total_array = array ();
     if (is_array($this->modules)) {
       reset($this->modules);
       foreach ($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
         if ($GLOBALS[$class]->enabled) {
+          $xtPrice->show_price_tax = 0;
           $GLOBALS[$class]->output = array();
           $GLOBALS[$class]->process();
 
