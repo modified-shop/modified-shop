@@ -57,6 +57,7 @@ $products_tax_rate = xtc_get_tax_rate($pInfo->products_tax_class_id);
         // calculate brutto price for display
         if (PRICE_IS_BRUTTO == 'true') {
           $products_price = xtc_round($pInfo->products_price * ((100 + $products_tax_rate) / 100), $price_precision);
+          if ($products_price > 0) $products_price = sprintf("%01.".$price_precision."f", $products_price);
         } else {
           $products_price = xtc_round($pInfo->products_price, PRICE_PRECISION);
         }
@@ -81,6 +82,7 @@ $products_tax_rate = xtc_get_tax_rate($pInfo->products_tax_class_id);
         <?php
           if (PRICE_IS_BRUTTO == 'true') {
             $products_price = xtc_round(get_group_price($group_data['STATUS_ID'], $pInfo->products_id) * ((100 + $products_tax_rate) / 100), $price_precision);
+            if ($products_price > 0) $products_price = sprintf("%01.".$price_precision."f", $products_price);
           } else {
             $products_price = xtc_round(get_group_price($group_data['STATUS_ID'], $pInfo->products_id), PRICE_PRECISION);
           }
@@ -134,6 +136,7 @@ $products_tax_rate = xtc_get_tax_rate($pInfo->products_tax_class_id);
                         <?php
                         if (PRICE_IS_BRUTTO == 'true') {
                           $products_price = xtc_round($staffel_values['personal_offer'] * ((100 + xtc_get_tax_rate($pInfo->products_tax_class_id)) / 100), $price_precision);
+                          if ($products_price > 0) $products_price = sprintf("%01.".$price_precision."f", $products_price);
                         } else {
                           $products_price = xtc_round($staffel_values['personal_offer'], PRICE_PRECISION);
                         }
