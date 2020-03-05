@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: group_prices.php 5442 2013-08-28 11:00:33Z Tomcraft $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -28,7 +28,6 @@ require_once (DIR_FS_CATALOG.DIR_WS_CLASSES.'xtcPrice.php');
 $xtPrice = new xtcPrice(DEFAULT_CURRENCY, $_SESSION['customers_status']['customers_status_id']);
 
 $price_precision = $xtPrice->currencies[DEFAULT_CURRENCY]['decimal_places'];
-
 
 $group_array = array();
 $group_query = xtc_db_query("SELECT customers_status_image,
