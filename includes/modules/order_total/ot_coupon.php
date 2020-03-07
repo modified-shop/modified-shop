@@ -191,6 +191,7 @@ class ot_coupon {
                                      WHERE coupon_id = '".(int)$_SESSION['cc_id']."'
                                        AND coupon_active = 'Y'
                                        AND (restrict_to_customers = ''
+                                            OR restrict_to_customers IS NULL
                                             OR FIND_IN_SET ('". (int)$_SESSION['customers_status']['customers_status_id'] ."', restrict_to_customers)
                                             )");
       if (xtc_db_num_rows($coupon_query) != 0) {
