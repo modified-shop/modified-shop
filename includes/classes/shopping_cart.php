@@ -969,8 +969,7 @@ class shoppingCart {
    * @return boolean
    */
   function validate_attributes($products_id, $attributes, $flag = '') {
-    static $products_attributes_array;
-    if (!is_array($products_attributes_array)) {
+    if (!isset($products_attributes_array)) {
       $products_attributes_array = array();
     }
 
