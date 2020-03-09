@@ -127,7 +127,6 @@ CREATE TABLE admin_access (
   econda INT(1) NOT NULL DEFAULT 0,
   cleverreach INT(1) NOT NULL DEFAULT 0,
   shop_offline INT(1) NOT NULL DEFAULT 0,
-  blz_update INT(1) NOT NULL DEFAULT 0,
   removeoldpics INT(1) NOT NULL DEFAULT 0,
   janolaw INT(1) NOT NULL DEFAULT 0,
   haendlerbund INT(1) NOT NULL DEFAULT 0,
