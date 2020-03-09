@@ -115,7 +115,6 @@ CREATE TABLE admin_access (
   banner_manager INT(1) NOT NULL DEFAULT 0,
   banner_statistics INT(1) NOT NULL DEFAULT 0,
   module_newsletter INT(1) NOT NULL DEFAULT 0,
-  start INT(1) NOT NULL DEFAULT 0,
   content_manager INT(1) NOT NULL DEFAULT 0,
   content_preview INT(1) NOT NULL DEFAULT 0,
   credits INT(1) NOT NULL DEFAULT 0,
