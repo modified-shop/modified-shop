@@ -15,7 +15,7 @@
 {if $GV_SEND_LINK}
 <p>{#gv_has_vouchera#} {$GV_SEND_LINK} {#gv_has_voucherb#}</p>
 {/if}
-{if count($PAYMENT_INFO) > 0}
+{if is_array($PAYMENT_INFO) && count($PAYMENT_INFO) > 0}
 <div class="highlightbox">
   {foreach name=aussen item=data from=$PAYMENT_INFO}
     <h4>{$data.title|stripslashes}</h4>
