@@ -34,10 +34,18 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_currencies.html', $cach
 
   // dont show box if there's only 1 currency
   if (count($currencies_array) > 1 ) {
-    $box_content = xtc_draw_form('currencies', xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('currency', 'language')), $request_type, false), 'get', 'class="box-currencies"')
+    $box_content = xtc_draw_form('currencies', xtc_href_link(basename($PHP_SELF), '', $request_type, false), 'get', 'class="box-currencies"')
                    . xtc_draw_pull_down_menu('currency', $currencies_array, $_SESSION['currency'], 'onchange="this.form.submit();"')
-                   . xtc_hide_session_id()
-                   . '</form>';
+                   . xtc_hide_session_id();
+    
+    parse_str(xtc_get_all_get_params('currency', 'language'), $params_array);
+    if (is_array($params_array) && count($params_array) > 0) {
+      foreach ($params_array as $k => $v) {
+        $box_content .= xtc_draw_hidden_field($k, $v);
+      }
+    }
+        
+    $box_content .= '</form>';
 
     $box_smarty->assign('BOX_CONTENT', $box_content);
   }
