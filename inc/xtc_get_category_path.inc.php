@@ -15,6 +15,9 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
    
+  // include needed functions
+  require_once (DIR_FS_INC.'xtc_get_parent_categories.inc.php');
+
   // Construct a category path
   function xtc_get_category_path($cID) {
     global $modified_cache;
