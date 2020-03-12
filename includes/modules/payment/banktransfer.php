@@ -367,10 +367,13 @@
       if (isset($_POST['banktransfer_fax'])) {
         xtc_db_query("UPDATE banktransfer SET banktransfer_fax = '" . $_POST['banktransfer_fax'] ."' WHERE orders_id = '" . $insert_id . "'");
       }
+      
       if (isset($this->order_status) && $this->order_status) {
         xtc_db_query("UPDATE ".TABLE_ORDERS." SET orders_status='".$this->order_status."' WHERE orders_id='".$insert_id."'");
         xtc_db_query("UPDATE ".TABLE_ORDERS_STATUS_HISTORY." SET orders_status_id='".$this->order_status."' WHERE orders_id='".$insert_id."'");
       }
+      
+      unset($_SESSION['banktransfer_info']);
     }
     
     function info() {
