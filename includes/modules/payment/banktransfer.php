@@ -382,6 +382,7 @@
       if ($send_by_admin) {
         $banktransfer_query = xtc_db_query("SELECT banktransfer_iban,
                                                    banktransfer_bankname,
+                                                   banktransfer_owner,
                                                    banktransfer_owner_email
                                               FROM ".TABLE_BANKTRANSFER."
                                              WHERE orders_id = '".$order->info['order_id']."'");
@@ -393,6 +394,7 @@
       
       return array('banktransfer_iban' => $this->banktransfer_iban, 
                    'banktransfer_bankname' => $this->banktransfer_bankname,
+                   'banktransfer_owner' => $this->banktransfer_owner,
                    'banktransfer_owner_email' => $this->banktransfer_owner_email);
     }
     

@@ -30,6 +30,7 @@
       // separate pre-notification necessary?
       if ($rec['banktransfer_owner_email'] != $order->customer['email_address']) {
         $banktransfer_owner_email = $rec['banktransfer_owner_email'];
+        $banktransfer_owner = $rec['banktransfer_owner'];
         $sepa_html_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$order->info['language'].'/sepa_mail.html');
         $sepa_txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$order->info['language'].'/sepa_mail.txt');
       

@@ -201,13 +201,13 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
       xtc_php_mail(EMAIL_BILLING_ADDRESS,
                    EMAIL_BILLING_NAME,
                    $banktransfer_owner_email,
-                   '',
+                   $banktransfer_owner,
                    '',
                    EMAIL_BILLING_REPLY_ADDRESS,
                    EMAIL_BILLING_REPLY_ADDRESS_NAME,
                    '',
                    '',
-                   EMAIL_BILLING_SUBJECT,
+                   $order_subject,
                    $sepa_html_mail,
                    $sepa_txt_mail
                  );
