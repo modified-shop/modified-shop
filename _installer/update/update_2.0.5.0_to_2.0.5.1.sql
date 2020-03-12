@@ -24,6 +24,6 @@ ALTER TABLE `customers_status` MODIFY `customers_status_discount` DECIMAL(5,2) N
 ALTER TABLE `customers_status` MODIFY `customers_status_ot_discount` DECIMAL(5,2) NULL DEFAULT '0.00';
 ALTER TABLE `orders` MODIFY `customers_status_discount` DECIMAL(5,2) DEFAULT NULL;
 ALTER TABLE `orders_products` MODIFY `products_discount_made` DECIMAL(5,2) DEFAULT NULL;
-ALTER TABLE `products` MODIFY `customers_status_discount` DECIMAL(5,2)  NOT NULL DEFAULT '0.00';
+ALTER TABLE `products` MODIFY `products_discount_allowed` DECIMAL(5,2)  NOT NULL DEFAULT '0.00';
 
 # Keep an empty line at the end of this file for the db_updater to work properly
