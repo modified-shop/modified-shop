@@ -341,10 +341,11 @@
     }
 
     function before_process() {
-      //fp implement checking the post vars
       $this->pre_confirmation_check();
+      
       $this->banktransfer_bankname = xtc_db_prepare_input($_POST['banktransfer_bankname']);
-      $this->banktransfer_fax = xtc_db_prepare_input($_POST['banktransfer_fax']);
+      $this->banktransfer_fax = ((isset($_POST['banktransfer_fax'])) ? xtc_db_prepare_input($_POST['banktransfer_fax']) : '');
+      
       return false;
     }
 
