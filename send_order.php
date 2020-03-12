@@ -34,8 +34,8 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
     $xtPrice = new xtcPrice($order->info['currency'], $order->info['status']);
   }
 
-  if(!is_object($main)) {
-    require_once(DIR_FS_CATALOG.'includes/classes/main.php');
+  if (!isset($main) || !is_object($main)) {
+    require_once (DIR_FS_CATALOG.'includes/classes/main.php');
     $main = new main($order->info['languages_id']);
   }
 
@@ -69,8 +69,10 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
   //payment method
   $payment_method = $payment_class = '';
   if ($order->info['payment_method'] != '' && $order->info['payment_method'] != 'no_payment') {    
-    require_once (DIR_WS_CLASSES . 'payment.php');
-    $payment_modules = new payment($order->info['payment_class']);
+    if (!isset($payment_modules) || !is_object($payment_modules)) {
+      require_once (DIR_FS_CATALOG.'includes/classes/payment.php');
+      $payment_modules = new payment($order->info['payment_class']);
+    }
     $payment_method = $payment_modules::payment_title($order->info['payment_method'],$order->info['order_id']);
     $payment_class = $order->info['payment_class'];
   }
