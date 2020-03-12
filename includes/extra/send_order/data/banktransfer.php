@@ -25,7 +25,7 @@
       $sepa_info = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$order->info['language'].'/sepa_info.html');
     
       $smarty->assign('PAYMENT_INFO_HTML', $sepa_info);
-      $smarty->assign('PAYMENT_INFO_TXT', str_replace("<br />", "\n", $sepa_info));
+      $smarty->assign('PAYMENT_INFO_TXT', strip_tags(str_replace(array('<br />', '<br/>', '<br>'), "\n", $sepa_info)));
     
       // separate pre-notification necessary?
       if ($rec['banktransfer_owner_email'] != $order->customer['email_address']) {
