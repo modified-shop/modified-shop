@@ -20,10 +20,10 @@ ALTER TABLE `admin_access` DROP `blz_update`;
 ALTER TABLE `admin_access` DROP `start`;
 
 #Tomcraft - 2020-03-12 - Extend customers & products discount fields for 100% discount
-ALTER TABLE `customers_status` MODIFY `customers_status_discount` DECIMAL(5,2) NULL DEFAULT '0.00';
-ALTER TABLE `customers_status` MODIFY `customers_status_ot_discount` DECIMAL(5,2) NULL DEFAULT '0.00';
-ALTER TABLE `orders` MODIFY `customers_status_discount` DECIMAL(5,2) DEFAULT NULL;
+ALTER TABLE `customers_status` MODIFY `customers_status_discount` DECIMAL(5,2) DEFAULT '0.00';
+ALTER TABLE `customers_status` MODIFY `customers_status_ot_discount` DECIMAL(5,2) DEFAULT '0.00';
+ALTER TABLE `orders` MODIFY `customers_status_discount` DECIMAL(5,2);
 ALTER TABLE `orders_products` MODIFY `products_discount_made` DECIMAL(5,2) DEFAULT NULL;
-ALTER TABLE `products` MODIFY `products_discount_allowed` DECIMAL(5,2)  NOT NULL DEFAULT '0.00';
+ALTER TABLE `products` MODIFY `products_discount_allowed` DECIMAL(5,2) NOT NULL DEFAULT '0.00';
 
 # Keep an empty line at the end of this file for the db_updater to work properly
