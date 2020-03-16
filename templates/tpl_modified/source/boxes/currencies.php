@@ -41,7 +41,13 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_currencies.html', $cach
     parse_str(xtc_get_all_get_params(array('currency', 'language')), $params_array);
     if (is_array($params_array) && count($params_array) > 0) {
       foreach ($params_array as $k => $v) {
-        $box_content .= xtc_draw_hidden_field($k, $v);
+        if (is_array($v)) {
+          foreach ($v as $kk => $vv) {
+            $box_content .= xtc_draw_hidden_field($k.'['.$kk.']', $vv);
+          }
+        } else {
+          $box_content .= xtc_draw_hidden_field($k, $v);
+        }
       }
     }
         
