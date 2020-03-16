@@ -53,13 +53,6 @@ if (isset($_GET['action'])
     && $_SERVER['REQUEST_METHOD'] == 'POST'
     )
 {
-  $check_customer_query = xtc_db_query("SELECT customers_email_address, 
-                                               customers_id 
-                                          FROM ".TABLE_CUSTOMERS." 
-                                         WHERE customers_email_address = '".xtc_db_input($_POST['email'])."' 
-                                           AND account_type != '1'");
-
-
   if (check_secure_form($_POST) === false) {
     if (in_array('password', $use_captcha)) {
       $messageStack->add('password_double_opt_in', TEXT_CODE_ERROR);
@@ -75,10 +68,10 @@ if (isset($_GET['action'])
 
     if (xtc_db_num_rows($check_customer_query) < 1) {
       $case = 'wrong_mail';
-      $messageStack->add('password_double_opt_in', sprintf(TEXT_LINK_MAIL_SENDED, (VALID_REQUEST_TIME / 60)));
+      $messageStack->add('password_double_opt_in', sprintf(TEXT_LINK_MAIL_SENDED, (VALID_REQUEST_TIME / 60)), 'success');
     } else {
       $case = 'first_opt_in';
-      $messageStack->add('password_double_opt_in', sprintf(TEXT_LINK_MAIL_SENDED, (VALID_REQUEST_TIME / 60)));
+      $messageStack->add('password_double_opt_in', sprintf(TEXT_LINK_MAIL_SENDED, (VALID_REQUEST_TIME / 60)), 'success');
       $check_customer = xtc_db_fetch_array($check_customer_query);
     
       $vlcode = xtc_random_charcode(32);
@@ -239,6 +232,9 @@ switch ($case) {
     }
     if ($messageStack->size('password_double_opt_in') > 0) {
       $smarty->assign('info_message', $messageStack->output('password_double_opt_in'));
+    }
+    if ($messageStack->size('password_double_opt_in', 'success') > 0) {
+      $smarty->assign('success_message', $messageStack->output('password_double_opt_in', 'success'));
     }
     $smarty->assign('text_heading', HEADING_PASSWORD_FORGOTTEN);
     $smarty->assign('message', TEXT_PASSWORD_FORGOTTEN);
