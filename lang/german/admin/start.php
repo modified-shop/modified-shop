@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: start.php 2585 2012-01-03 14:25:49Z dokuman $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -158,4 +158,7 @@ define('WARNING_DB_FILE_PRIVILEGES', '<strong>WARNUNG:</strong> FILE-Privileges 
 
 // register_globals check
 define('WARNING_REGISTER_GLOBALS', '<strong>WARNUNG:</strong> Dieses Feature ist seit PHP 5.3.0 <strong>DEPRECATED</strong> (veraltet) und seit PHP 5.4.0 <strong>ENTFERNT</strong>. Bitte wenden Sie sich an Ihren Hoster um &quot;register_globals&quot; zu deaktivieren.');
+
+// domain check
+define('WARNING_DOMAIN_INVALID', '<strong>WARNUNG:</strong> Ihre Shop Domain wird nicht unterst&uuml;tzt');
 ?>

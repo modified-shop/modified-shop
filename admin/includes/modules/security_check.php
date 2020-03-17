@@ -172,6 +172,16 @@ while ($row = xtc_db_fetch_array($stmt)) {
 */
 
 /*******************************************************************************
+ ** umlaut domain
+ ******************************************************************************/
+if (filter_var(HTTP_SERVER, FILTER_VALIDATE_URL) === false
+    || filter_var(HTTPS_SERVER, FILTER_VALIDATE_URL) === false
+    )
+{
+  $warnings[] = WARNING_DOMAIN_INVALID;
+}
+
+/*******************************************************************************
  ** register_globals = off check:
  ******************************************************************************/
 $registerGlobals = ini_get('register_globals');

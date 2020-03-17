@@ -75,7 +75,15 @@
       if (!is_dir(DIR_FS_CATALOG.$admin_directory)) {
         @rename(DIR_FS_CATALOG.trim(DIR_ADMIN, '/'), DIR_FS_CATALOG.$admin_directory);
       }
-    }  
+    }
+
+    if (filter_var($http_server, FILTER_VALIDATE_URL) === false
+        || filter_var($https_server, FILTER_VALIDATE_URL) === false
+        )
+    {
+      $messageStack->add('install_step1', WARNING_INVALID_DOMAIN);
+      $messageStack->add_session('install_step2', WARNING_INVALID_DOMAIN);
+    }
     
     // Database
     require_once (DIR_FS_INC.'db_functions_'.$db_type.'.inc.php');
