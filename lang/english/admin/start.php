@@ -160,5 +160,5 @@ define('WARNING_DB_FILE_PRIVILEGES', '<strong>WARNING:</strong> FILE-Privileges 
 define('WARNING_REGISTER_GLOBALS', '<strong>WARNING:</strong> This feature has been <strong>DEPRECATED</strong> as of PHP 5.3.0 and <strong>REMOVED</strong> as of PHP 5.4.0. Please contact your hoster to deactivate &quot;register_globals&quot;.');
 
 // domain check
-define('WARNING_DOMAIN_INVALID', '<strong>WARNING:</strong> Your shop domain is not supportet');
+define('WARNING_DOMAIN_INVALID', '<strong>WARNING:</strong> Your shop domain could not be validated (Possible reasons: Invalid format or internationalized domain name (IDN))');
 ?>

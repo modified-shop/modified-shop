@@ -160,7 +160,7 @@
   define('ERROR_FTP_CHMOD_WAS_NOT_SUCCESSFUL', '&Auml;ndern der Verzeichnisrechte war nicht erfolgreich');
 
   // warning
-  define('WARNING_INVALID_DOMAIN', 'Ihre Shop Domain wird nicht unterst&uuml;tzt');
+  define('WARNING_INVALID_DOMAIN', 'Ihre Shop Domain konnte nicht validiert werden (M&ouml;gliche Ursachen: Fehler beim Format der Domain oder internationalisierte Domainnamen (internationalized domain name, IDN) - Umlautdomain)');
 
   define('ENTRY_FIRST_NAME_ERROR', 'Ihr Vorname muss aus mindestens ' . ENTRY_FIRST_NAME_MIN_LENGTH . ' Zeichen bestehen.');
   define('ENTRY_LAST_NAME_ERROR', 'Ihr Nachname muss aus mindestens ' . ENTRY_LAST_NAME_MIN_LENGTH . ' Zeichen bestehen.');

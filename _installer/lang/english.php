@@ -160,7 +160,7 @@
   define('ERROR_FTP_CHMOD_WAS_NOT_SUCCESSFUL', 'Changing the directory permissions was unsuccessful');
 
   // warning
-  define('WARNING_INVALID_DOMAIN', 'Your shop domain is not supportet');
+  define('WARNING_INVALID_DOMAIN', 'Your shop domain could not be validated (Possible reasons: Invalid format or internationalized domain name (IDN)');
 
   define('ENTRY_FIRST_NAME_ERROR', 'Your first name must consist of at least  ' . ENTRY_FIRST_NAME_MIN_LENGTH . ' characters.');
   define('ENTRY_LAST_NAME_ERROR', 'Your last name must consist of at least ' . ENTRY_LAST_NAME_MIN_LENGTH . ' characters.');
