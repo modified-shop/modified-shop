@@ -73,11 +73,16 @@ if (isset($order) && is_object($order)) {
               <?php
               $status_array = array();
               $type_array = array();
+              $amount_array = array();
+              
               for ($t=0, $z=count($admin_info_array['transactions']); $t<$z; $t++) {
                 for ($i=0, $n=count($admin_info_array['transactions'][$t]['relatedResource']); $i<$n; $i++) {
                   $status_array[] = $admin_info_array['transactions'][$t]['relatedResource'][$i]['state'];
                   $type_array[] = $admin_info_array['transactions'][$t]['relatedResource'][$i]['type'];
-                
+                  
+                  if (!isset($amount_array[$admin_info_array['transactions'][$t]['relatedResource'][$i]['type']])) {
+                    $amount_array[$admin_info_array['transactions'][$t]['relatedResource'][$i]['type']] = 0;
+                  }
                   $amount_array[$admin_info_array['transactions'][$t]['relatedResource'][$i]['type']] += (($admin_info_array['transactions'][$t]['relatedResource'][$i]['total'] < 0) ? ($admin_info_array['transactions'][$t]['relatedResource'][$i]['total'] * (-1)) : $admin_info_array['transactions'][$t]['relatedResource'][$i]['total']);
                   ?>
                   <div class="pp_txstatus">
@@ -172,7 +177,12 @@ if (isset($order) && is_object($order)) {
             }
 
             $count = array_count_values($type_array);
-            if ($admin_info_array['intent'] == 'authorize' && $admin_info_array['total'] > $amount_array['capture']) {
+            if ($admin_info_array['intent'] == 'authorize' 
+                && (!isset($amount_array['capture'])
+                    || $admin_info_array['total'] > $amount_array['capture']
+                    )
+                )
+              {
               ?>
               <div class="pp_capture pp_box">
                 <div class="pp_boxheading"><?php echo TEXT_PAYPAL_CAPTURE; ?></div>
@@ -202,7 +212,10 @@ if (isset($order) && is_object($order)) {
 
             if ((in_array('captured', $status_array)
                  || in_array('completed', $status_array)
-                 ) && $admin_info_array['total'] > $amount_array['refund']
+                 ) && (!isset($amount_array['refund'])
+                       || $admin_info_array['total'] > $amount_array['refund']
+                       )
+                   && isset($amount_array['capture'])  
                 )
             {
               ?>
