@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_get_products_stock.inc.php 1009 2005-07-11 16:19:29Z mz $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -16,13 +16,20 @@
    ---------------------------------------------------------------------------------------*/
    
   function xtc_get_products_stock($products_id) {
-    $products_id = xtc_get_prid($products_id);
-    $stock_query = xtc_db_query("SELECT products_quantity 
-                                FROM " . TABLE_PRODUCTS . " 
-                               WHERE products_id = '" . (int)$products_id . "'");
-    $stock_values = xtc_db_fetch_array($stock_query);
+    static $products_quantity_array;
 
-    return $stock_values['products_quantity'];
+    if (!isset($products_quantity_array)) {
+      $products_quantity_array = array();
+    }
+    
+    if (!isset($products_quantity_array[$products_id])) {
+      $products_query = xtc_db_query("SELECT products_quantity
+                                        FROM ".TABLE_PRODUCTS." 
+                                       WHERE products_id = '".(int)$products_id."'");
+      $products = xtc_db_fetch_array($products_query);
+      $products_quantity_array[$products_id] = $products['products_quantity'];
+    }
+    
+    return $products_quantity_array[$products_id];
   }
-
- ?>
+?>

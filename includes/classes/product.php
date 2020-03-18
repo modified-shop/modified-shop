@@ -78,6 +78,10 @@ class product {
       $this->isProduct = true;
       $this->data = xtc_db_fetch_array($product_query, true);
 
+      if (defined('DB_CACHE') && DB_CACHE == 'true') {
+        $this->data['products_quantity'] = xtc_get_products_stock($this->data['products_id']);
+      }
+
       if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1
           && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0
           && $xtPrice->get_content_type_product($this->data['products_id']) == 'virtual'
@@ -638,6 +642,10 @@ class product {
     // exclude some variables
     if (isset($array['products_date_available']) && $array['products_date_available'] < date('Y-m-d H:i:s')) {
       unset($array['products_date_available']);
+    }
+
+    if (defined('DB_CACHE') && DB_CACHE == 'true') {
+      $array['products_quantity'] = xtc_get_products_stock($array['products_id']);
     }
 
     //products data array
