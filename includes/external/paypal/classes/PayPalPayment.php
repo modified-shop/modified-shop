@@ -1176,7 +1176,7 @@ class PayPalPayment extends PayPalPaymentBase {
           'cart_amount_immutable' => $credit_financing_offered->getCartAmountImmutable(),
         );
       } else {
-        $this->LoggingManager->log('DEBUG', 'Installment', $payment);
+        $this->LoggingManager->log('DEBUG', 'Installment', array('exception' => $payment));
         
         unset($_SESSION['paypal']);
         xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
