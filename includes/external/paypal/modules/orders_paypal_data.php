@@ -177,12 +177,15 @@ if (isset($order) && is_object($order)) {
             }
 
             $count = array_count_values($type_array);
+            if (!isset($count['capture'])) $count['capture'] = 0;
+            if (!isset($count['refund'])) $count['refund'] = 0;
+            
             if ($admin_info_array['intent'] == 'authorize' 
                 && (!isset($amount_array['capture'])
                     || $admin_info_array['total'] > $amount_array['capture']
                     )
                 )
-              {
+            {
               ?>
               <div class="pp_capture pp_box">
                 <div class="pp_boxheading"><?php echo TEXT_PAYPAL_CAPTURE; ?></div>
@@ -215,7 +218,6 @@ if (isset($order) && is_object($order)) {
                  ) && (!isset($amount_array['refund'])
                        || $admin_info_array['total'] > $amount_array['refund']
                        )
-                   && isset($amount_array['capture'])  
                 )
             {
               ?>
