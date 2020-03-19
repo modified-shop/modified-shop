@@ -86,9 +86,9 @@
           'text' => $spacing . $categories['categories_name'],
           'link' => $link,
         );
-      }
-    
-      $category_tree_array = xtc_get_category_tree($categories['categories_id'], $spacing . '&nbsp;&nbsp;&nbsp;', $exclude, $category_tree_array, false, $cPath);
+      
+        $category_tree_array = xtc_get_category_tree($categories['categories_id'], $spacing . '&nbsp;&nbsp;&nbsp;', $exclude, $category_tree_array, false, $cPath);      
+      }    
     }
 
     return $category_tree_array;
