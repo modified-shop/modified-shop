@@ -471,22 +471,31 @@ class product {
       
       if (!$xtPrice->xtcCheckSpecial((int)$pID)) {
         $discount = $xtPrice->xtcCheckDiscount((int)$pID);
+                                          
         $staffel_query = xtDBquery("SELECT quantity,
                                            personal_offer
                                       FROM ".TABLE_PERSONAL_OFFERS_BY.(int) $_SESSION['customers_status']['customers_status_id']."
                                      WHERE products_id = '".(int)$pID."'
                                   ORDER BY quantity ASC");
-        $staffel = array ();
+        $staffel = array(
+          1 => array(
+            'stk' => 1,
+            'price' => '0.0000',
+          ),
+        );
         while ($staffel_values = xtc_db_fetch_array($staffel_query, true)) {
-          $staffel[] = array('stk' => $staffel_values['quantity'],
-                             'price' => $staffel_values['personal_offer']
-                             );
+          $staffel[$staffel_values['quantity']] = array(
+            'stk' => $staffel_values['quantity'],
+            'price' => $staffel_values['personal_offer'],
+          );
         }
+        $staffel = array_values($staffel);
+
         for ($i=0, $n=sizeof($staffel); $i<$n; $i++) {
           $to_quantity = '';
           if ($staffel[$i]['stk'] == 1 || (array_key_exists($i +1, $staffel) && $staffel[$i +1]['stk'] != '')) { 
             if ($staffel[$i]['stk'] == 1 && $staffel[$i]['price'] == '0.0000') {
-              $staffel[$i]['price'] = $this->data['products_price'];
+              $staffel[$i]['price'] = $xtPrice->getPprice((int)$pID);
             }
             $quantity = $staffel[$i]['stk'];
             if (array_key_exists($i + 1, $staffel) && $staffel[$i +1]['stk'] != '' && $staffel[$i +1]['stk'] != $staffel[$i]['stk'] + 1) {
