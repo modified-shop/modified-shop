@@ -140,6 +140,7 @@ class paypalcart extends PayPalPayment {
     }
     
     $free_shipping = $this->free_shipping;
+    $ot_shipping = $this->ot_shipping;
     
     if ($no_shipping === true) $_SESSION['shipping'] = false;
 
