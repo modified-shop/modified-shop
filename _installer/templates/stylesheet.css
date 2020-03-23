@@ -299,7 +299,7 @@ input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, inp
   width:100%;
   max-width:800px;
   border: 1px solid #ddd;
-  padding: 10px 10px;;
+  padding: 10px 10px;
   margin: 20px auto;
   min-height:300px;
   -moz-box-sizing: border-box;
