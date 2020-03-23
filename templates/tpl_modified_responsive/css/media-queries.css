@@ -53,7 +53,7 @@
 @media only screen and (max-width: 850px) {
   .cn_nomobile { display:none; }
   .twoColums { width:47.5%; margin: 0 5% 20px 0; }
-  .twoColums.last { margin: 0 0 20px 0;; }
+  .twoColums.last { margin: 0 0 20px 0; }
   .highlightbox {padding: 15px 10px !important;}
   .highlightbox.plainleft { padding: 16px 0px 16px 0 !important; }
   .highlightbox.plainright { padding: 16px 0 16px 0px !important; }
