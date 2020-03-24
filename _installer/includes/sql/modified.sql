@@ -824,7 +824,7 @@ CREATE TABLE orders (
   languages_id int(11) NOT NULL,
   afterbuy_success INT(1) DEFAULT 0 NOT NULL,
   afterbuy_id INT(32) DEFAULT 0 NOT NULL,
-  refferers_id VARCHAR(32) NOT NULL,
+  campaign VARCHAR(32) NOT NULL,
   conversion_type INT(1) DEFAULT 0 NOT NULL,
   orders_ident_key VARCHAR(128),
   PRIMARY KEY (orders_id),
