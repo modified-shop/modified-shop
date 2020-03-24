@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: stats_sales_report.php 1687 2011-01-23 12:12:04Z franky-n-xtcm $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -243,10 +243,10 @@ require (DIR_WS_INCLUDES.'head.php');
                         <td class="dataTableContent">&nbsp;</td>
                         <td class="dataTableContent"><?php echo $campaign->result[$n]['result'][$nn]['range']; ?></td>
                         <td class="dataTableContent txta-r"><?php echo $campaign->result[$n]['result'][$nn]['hits']; ?></td>
-                        <td class="dataTableContent txta-r"><?php echo $campaign->result[$n]['result'][$nn]['leads'].' ('.$campaign->result[$n]['result'][$nn]['leads_p'].'%)'; ?></td>
-                        <td class="dataTableContent txta-r"><?php echo $campaign->result[$n]['result'][$nn]['sells'].' ('.$campaign->result[$n]['result'][$nn]['sells_p'].'%)'; ?></td>
-                        <td class="dataTableContent txta-r"><?php echo $campaign->result[$n]['result'][$nn]['late_sells'].' ('.$campaign->result[$n]['result'][$nn]['late_sells_p'].'%)'; ?></td>
-                        <td class="dataTableContent txta-r"><?php echo $campaign->result[$n]['result'][$nn]['sum'].' ('.$campaign->result[$n]['result'][$nn]['sum_p'].'%)'; ?></td>
+                        <td class="dataTableContent txta-r"><?php echo $campaign->result[$n]['result'][$nn]['leads'].' ('.round($campaign->result[$n]['result'][$nn]['leads_p'],2).'%)'; ?></td>
+                        <td class="dataTableContent txta-r"><?php echo $campaign->result[$n]['result'][$nn]['sells'].' ('.round($campaign->result[$n]['result'][$nn]['sells_p'],2).'%)'; ?></td>
+                        <td class="dataTableContent txta-r"><?php echo $campaign->result[$n]['result'][$nn]['late_sells'].' ('.round($campaign->result[$n]['result'][$nn]['late_sells_p'],2).'%)'; ?></td>
+                        <td class="dataTableContent txta-r"><?php echo $campaign->result[$n]['result'][$nn]['sum'].' ('.round($campaign->result[$n]['result'][$nn]['sum_p'],2).'%)'; ?></td>
                       </tr>
                       <?php
                     }
@@ -254,10 +254,10 @@ require (DIR_WS_INCLUDES.'head.php');
                     <tr class="dataTableHeadingRow"> 
                       <td class="dataTableHeadingContent" colspan="2"><strong><?php echo HEADING_SUM; ?></strong></td>
                       <td class="dataTableHeadingContent txta-r"><strong><?php echo $campaign->result[$n]['hits_s']; ?></strong></td>
-                      <td class="dataTableHeadingContent txta-r"><strong><?php echo $campaign->result[$n]['leads_s'].' ('.($campaign->total['leads']> 0 ? ($campaign->result[$n]['leads_s']/$campaign->total['leads']*100):'0').'%)'; ?></strong></td>
-                      <td class="dataTableHeadingContent txta-r"><strong><?php echo $campaign->result[$n]['sells_s'].' ('.($campaign->total['sells']> 0 ? ($campaign->result[$n]['sells_s']/$campaign->total['sells']*100):'0').'%)'; ?></strong></td>
-                      <td class="dataTableHeadingContent txta-r"><strong><?php echo $campaign->result[$n]['late_sells_s'].' ('.($campaign->total['sells']> 0 ? ($campaign->result[$n]['late_sells_s']/$campaign->total['sells']*100):'0').'%)'; ?></strong></td>
-                      <td class="dataTableHeadingContent txta-r"><strong><?php echo $campaign->result[$n]['sum_s'].' ('.($campaign->total['sum_plain']> 0 ? round(($campaign->result[$n]['sum_s']/$campaign->total['sum_plain']*100),0):'0').'%)'; ?></strong></td>
+                      <td class="dataTableHeadingContent txta-r"><strong><?php echo $campaign->result[$n]['leads_s'].' ('.($campaign->total['leads']> 0 ? round(($campaign->result[$n]['leads_s']/$campaign->total['leads']*100),2):'0').'%)'; ?></strong></td>
+                      <td class="dataTableHeadingContent txta-r"><strong><?php echo $campaign->result[$n]['sells_s'].' ('.($campaign->total['sells']> 0 ? round(($campaign->result[$n]['sells_s']/$campaign->total['sells']*100),2):'0').'%)'; ?></strong></td>
+                      <td class="dataTableHeadingContent txta-r"><strong><?php echo $campaign->result[$n]['late_sells_s'].' ('.($campaign->total['sells']> 0 ? round(($campaign->result[$n]['late_sells_s']/$campaign->total['sells']*100),2):'0').'%)'; ?></strong></td>
+                      <td class="dataTableHeadingContent txta-r"><strong><?php echo $campaign->result[$n]['sum_s'].' ('.($campaign->total['sum_plain']> 0 ? round(($campaign->result[$n]['sum_s']/$campaign->total['sum_plain']*100),2):'0').'%)'; ?></strong></td>
                     </tr>
                     <?php
                   }
