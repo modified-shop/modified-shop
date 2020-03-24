@@ -26,4 +26,8 @@ ALTER TABLE `orders` MODIFY `customers_status_discount` DECIMAL(5,2);
 ALTER TABLE `orders_products` MODIFY `products_discount_made` DECIMAL(5,2) DEFAULT NULL;
 ALTER TABLE `products` MODIFY `products_discount_allowed` DECIMAL(5,2) NOT NULL DEFAULT '0.00';
 
+#GTB - 2020-03-24 - update campaigns
+ALTER TABLE `orders` CHANGE `refferers_id` `campaign` VARCHAR(32) NOT NULL;
+ALTER TABLE `customers` MODIFY `refferers_id` INT(11);
+
 # Keep an empty line at the end of this file for the db_updater to work properly
