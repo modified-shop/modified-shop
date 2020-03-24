@@ -481,7 +481,7 @@ CREATE TABLE customers (
   password_request_time DATETIME DEFAULT '0000-00-00 00:00:00',
   payment_unallowed VARCHAR(255) NOT NULL,
   shipping_unallowed VARCHAR(255) NOT NULL,
-  refferers_id VARCHAR(32) DEFAULT '0' NOT NULL,
+  refferers_id INT(11) DEFAULT 0 NOT NULL,
   customers_date_added DATETIME DEFAULT '0000-00-00 00:00:00',
   customers_last_modified DATETIME DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (customers_id),

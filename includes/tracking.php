@@ -34,10 +34,10 @@ if (!isset($_SESSION['tracking']['refID']) && isset($_GET['refID'])) {
   if (xtc_db_num_rows($campaign_check_query) > 0) {
     // include needed functions
     require_once (DIR_FS_INC.'ip_clearing.inc.php');
-    $_SESSION['tracking']['refID'] = xtc_db_input($_GET['refID']);
+    $_SESSION['tracking']['refID'] = $_GET['refID'];
     $sql_data_array = array(
       'user_ip' => ip_clearing($_SESSION['tracking']['ip']),
-      'campaign' => xtc_db_input($_GET['refID']),
+      'campaign' => $_GET['refID'],
       'time' => 'now()'
     );
     xtc_db_perform(TABLE_CAMPAIGNS_IP, $sql_data_array);

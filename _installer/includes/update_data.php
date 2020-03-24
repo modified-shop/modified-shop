@@ -173,6 +173,9 @@
     'newsletters' => array(),
     'newsletters_history' => array(),
     'orders' => array(
+      'rename' => array(
+        'campaign' => 'refferers_id',
+      ),
       'drop' => array(
         'col' => array(
           'cc_type',

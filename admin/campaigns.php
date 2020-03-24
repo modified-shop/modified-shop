@@ -53,15 +53,16 @@ if (xtc_not_null($_GET['action'])) {
       }
       
       if ($error === false) {
-        $sql_data_array = array ('campaigns_name' => $campaigns_name, 'campaigns_refID' => $campaigns_refID);
+        $sql_data_array = array (
+          'campaigns_name' => $campaigns_name, 
+          'campaigns_refID' => $campaigns_refID,
+        );
         if ($_GET['action'] == 'insert') {
-          $insert_sql_data = array ('date_added' => 'now()');
-          $sql_data_array = xtc_array_merge($sql_data_array, $insert_sql_data);
+          $sql_data_array['date_added'] = 'now()';
           xtc_db_perform(TABLE_CAMPAIGNS, $sql_data_array);
           $campaigns_id = xtc_db_insert_id();
         }	elseif ($_GET['action'] == 'save') {
-          $update_sql_data = array ('last_modified' => 'now()');
-          $sql_data_array = xtc_array_merge($sql_data_array, $update_sql_data);
+          $sql_data_array['last_modified'] = 'now()';
           xtc_db_perform(TABLE_CAMPAIGNS, $sql_data_array, 'update', "campaigns_id = '".(int)$campaigns_id."'");
         }
         xtc_redirect(xtc_href_link(FILENAME_CAMPAIGNS, 'page='.(int)$_GET['page'].'&cID='.(int)$campaigns_id));
@@ -71,17 +72,21 @@ if (xtc_not_null($_GET['action'])) {
       break;
     case 'deleteconfirm' :
       $campaigns_id = xtc_db_prepare_input($_GET['cID']);
-      xtc_db_query("delete from ".TABLE_CAMPAIGNS." where campaigns_id = '".(int)$campaigns_id."'");
       $check_query = xtc_db_query("SELECT * 
                                      FROM ".TABLE_CAMPAIGNS."
                                     WHERE campaigns_id = '".(int)$campaigns_id."'");
       if (xtc_db_num_rows($check_query) > 0) {
         $check = xtc_db_fetch_array($check_query);
-        xtc_db_query("delete from ".TABLE_CAMPAIGNS_IP." where campaign = '".xtc_db_input($check['campaigns_refID'])."'");
+        xtc_db_query("DELETE FROM ".TABLE_CAMPAIGNS_IP." WHERE campaign = '".xtc_db_input($check['campaigns_refID'])."'");
+        if (isset($_POST['delete_refferers']) && $_POST['delete_refferers'] == 'on') {
+          xtc_db_query("UPDATE ".TABLE_ORDERS." SET campaign = '' WHERE campaign = '".xtc_db_input($check['campaigns_refID'])."'");
+        }
       }
+      
+      xtc_db_query("DELETE FROM ".TABLE_CAMPAIGNS." WHERE campaigns_id = '".(int)$campaigns_id."'");
+      
       if (isset($_POST['delete_refferers']) && $_POST['delete_refferers'] == 'on') {
-        xtc_db_query("update ".TABLE_ORDERS." set refferers_id = '' where refferers_id = '".(int)$campaigns_id."'");
-        xtc_db_query("update ".TABLE_CUSTOMERS." set refferers_id = '' where refferers_id = '".(int)$campaigns_id."'");
+        xtc_db_query("UPDATE ".TABLE_CUSTOMERS." SET refferers_id = '0' WHERE refferers_id = '".(int)$campaigns_id."'");
       }
       xtc_redirect(xtc_href_link(FILENAME_CAMPAIGNS, 'page='.$_GET['page']));
       break;
@@ -129,6 +134,12 @@ require (DIR_WS_INCLUDES.'head.php');
               $campaigns_query = xtc_db_query($campaigns_query_raw);
               while ($campaigns = xtc_db_fetch_array($campaigns_query)) {
                 if ((!xtc_not_null($_GET['cID']) || (isset($_GET['cID']) && $_GET['cID'] == $campaigns['campaigns_id'])) && !isset($cInfo) && (substr($_GET['action'], 0, 3) != 'new')) {
+                  $check_query = xtc_db_query("SELECT count(*) as total
+                                                 FROM ".TABLE_CAMPAIGNS_IP."
+                                                WHERE campaign = '".xtc_db_input($campaigns['campaigns_refID'])."'");
+                  $check = xtc_db_fetch_array($check_query);
+                  $campaigns['refferers_count'] = $check['total'];
+                  
                   $cInfo = new objectInfo($campaigns);
                 }
                 if (isset($cInfo) && is_object($cInfo) && ($campaigns['campaigns_id'] == $cInfo->campaigns_id)) {

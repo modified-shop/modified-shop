@@ -345,23 +345,21 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
 
 	  // campaign tracking
     if (isset($_SESSION['tracking']['refID'])) {
-      $refID = $leads = 0;
       $campaign_check = xtc_db_query("SELECT campaigns_id, 
                                              campaigns_leads
                                         FROM ".TABLE_CAMPAIGNS."
-                                       WHERE campaigns_refID = '".$_SESSION['tracking']['refID']."'");
+                                       WHERE campaigns_refID = '".xtc_db_input($_SESSION['tracking']['refID'])."'");
       if (xtc_db_num_rows($campaign_check) > 0) {
         $campaign = xtc_db_fetch_array($campaign_check);
-        $refID = $campaign['campaigns_id'];
-		    $leads = $campaign['campaigns_leads'];
+      
+        xtc_db_query("UPDATE ".TABLE_CUSTOMERS."
+                         SET refferers_id = '".(int)$campaign['campaigns_id']."'
+                       WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
+      
+        xtc_db_query("UPDATE ".TABLE_CAMPAIGNS."
+                         SET campaigns_leads = campaigns_leads + 1
+                       WHERE campaigns_id = '".(int)$campaign['campaigns_id']."'");
       }
-      $leads++;
-      xtc_db_query("UPDATE " . TABLE_CUSTOMERS . "
-	                     SET refferers_id = '".$refID."'
-                     WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
-      xtc_db_query("UPDATE " . TABLE_CAMPAIGNS . "
-                       SET campaigns_leads = '".$leads."'
-                     WHERE campaigns_id = '".$refID."'");
     }
 
     if ($newsletter == '1') {
