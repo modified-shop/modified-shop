@@ -38,6 +38,8 @@ define('TEXT_CAMPAIGNS_REFID', 'RefID der Kampagne:');
 define('TEXT_DISPLAY_NUMBER_OF_CAMPAIGNS', 'Verfolgte Kampagnen:');
 
 define('TEXT_DELETE_INTRO', 'Sind Sie sicher, dass Sie diese Kampagne l&ouml;schen m&ouml;chten?');
+define('TEXT_DELETE_REFFERERS', 'Conversions l&ouml;schen');
+define('TEXT_DELETE_WARNING_REFFERERS', 'Sollen alle Conversions zu dieser Kampagne gel&ouml;scht werden?');
 
 define('TEXT_CAMPAIGNS_ERROR_REFID', 'Geben Sie eine g&uuml;ltige refID an');
 define('TEXT_CAMPAIGNS_ERROR_REFID_EXISTS', 'Die eingegebene refID existiert bereits');
