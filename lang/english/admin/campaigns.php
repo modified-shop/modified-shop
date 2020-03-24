@@ -38,7 +38,7 @@ define('TEXT_CAMPAIGNS_REFID', 'Campaigns refID:');
 define('TEXT_DISPLAY_NUMBER_OF_CAMPAIGNS', 'Tracked campaigns:');
 
 define('TEXT_DELETE_INTRO', 'Are you sure you want to delete the campaign?');
-define('TEXT_DELETE_REFFERERS', 'delete Conversions');
+define('TEXT_DELETE_REFFERERS', 'Delete Conversions');
 define('TEXT_DELETE_WARNING_REFFERERS', 'Delete all conversions for this campaign?');
 
 define('TEXT_CAMPAIGNS_ERROR_REFID', 'refID is invalid');
