@@ -2415,7 +2415,10 @@ class AccountCheck {
     if($markC2 != 0) {
       $markC2 = $this->Mark00($AccountNo);
     }
-  return $markC2;
+    if($markC2 != 0) {
+      $markC2 = $this->Mark04($AccountNo);
+    }
+    return $markC2;
   }
 
   /* --- Added FrankM 20070305 --- */
