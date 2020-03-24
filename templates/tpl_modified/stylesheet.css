@@ -1583,7 +1583,7 @@ table.paymentinfotable tr td   {
   padding:5px;
   margin-top:8px;
 }
-.button_right_checkout .checkoutconditions input[type=checkbox] {
+.button_right .checkoutconditions input[type=checkbox] {
   vertical-align: middle;
   bottom: inherit !important;
 }
