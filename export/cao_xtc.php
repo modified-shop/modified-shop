@@ -146,10 +146,13 @@ $order_total_class['ot_shipping']['tax'] = '19';
 $order_total_class['ot_payment']['prefix'] = '+';
 $order_total_class['ot_payment']['tax'] = '19';
 
+$post = $_POST;
 
 define ('_VALID_XTC',false);
 
 require('../includes/application_top_export.php');
+
+$_POST = $post;
 
 // Die Ausgabe von Fehlern bezüglich des Logins unterdruecken
 $debug_login = (defined('CAO_DEBUG_LOGIN') && CAO_DEBUG_LOGIN == 'true' ? true : false);
