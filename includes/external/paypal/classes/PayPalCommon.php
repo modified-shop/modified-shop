@@ -77,7 +77,7 @@ class PayPalCommon extends PayPalAuth {
 
 	function get_min_installment_amount() {
 		return array(
-		  'amount' => 99.00, 
+		  'amount' => 199.00, 
 		  'currency' => 'EUR',
 		);
 	}
