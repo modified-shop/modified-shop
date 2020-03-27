@@ -24,7 +24,7 @@ CREATE TABLE `newsletter_recipients_history` (
   `customers_email_address` VARCHAR(255) NOT NULL,
   `customers_action` VARCHAR(32) NOT NULL,
   `ip_address` VARCHAR(50) DEFAULT NULL,
-  `date_added datetime` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `date_added` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
   KEY `idx_customers_email_address` (`customers_email_address`)
 );
 
