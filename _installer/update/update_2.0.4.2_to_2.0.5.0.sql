@@ -19,8 +19,7 @@ ALTER TABLE admin_access ADD newsletter_recipients INT(1) NOT NULL DEFAULT '0' A
 UPDATE `admin_access` SET `newsletter_recipients` = 1 WHERE `customers_id` = 1 LIMIT 1;
 UPDATE `admin_access` SET `newsletter_recipients` = 5 WHERE `customers_id` = 'groups' LIMIT 1;
 
-DROP TABLE IF EXISTS `newsletter_recipients_history`;
-CREATE TABLE `newsletter_recipients_history` (
+CREATE TABLE IF NOT EXISTS `newsletter_recipients_history` (
   `customers_email_address` VARCHAR(255) NOT NULL,
   `customers_action` VARCHAR(32) NOT NULL,
   `ip_address` VARCHAR(50) DEFAULT NULL,
