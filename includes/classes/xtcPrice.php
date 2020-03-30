@@ -258,6 +258,12 @@ class xtcPrice {
    * @return Double graduated price
    */
   function xtcGetGraduatedPrice($pID, $qty, $graduated = true) {
+    static $graduated_price_array;
+    
+    if (!isset($graduated_price_array)) {
+      $graduated_price_array = array();
+    }
+
     if (defined('GRADUATED_ASSIGN') && GRADUATED_ASSIGN == 'true' && $graduated === true) {
       $actual_content_qty = xtc_get_qty($pID);
       $qty = $actual_content_qty > $qty ? $actual_content_qty : $qty;
@@ -267,27 +273,30 @@ class xtcPrice {
       $this->actualGroup = DEFAULT_CUSTOMERS_STATUS_ID_GUEST;
     }
     
-    $graduated_price_query = xtDBquery("SELECT max(quantity) AS qty
-                                          FROM " . TABLE_PERSONAL_OFFERS_BY . $this->actualGroup . "
-                                         WHERE products_id = '" . $pID . "'
-                                           AND quantity <= '" . $qty . "'");
-    if (xtc_db_num_rows($graduated_price_query, true) > 0) {
-      $graduated_price_data  = xtc_db_fetch_array($graduated_price_query, true);
-
-      if ($graduated_price_data['qty'] > 0) {
-        $graduated_price_query = xtDBquery("SELECT personal_offer
-                                              FROM " . TABLE_PERSONAL_OFFERS_BY . $this->actualGroup . "
-                                             WHERE products_id = '" . $pID . "'
-                                               AND quantity = '" . $graduated_price_data['qty'] . "'");
-        $graduated_price_data  = xtc_db_fetch_array($graduated_price_query, true);
-        $sPrice = $graduated_price_data['personal_offer'];
-
-        if ($sPrice != 0.00) {
-          return $sPrice;
+    if (!isset($graduated_price_array[$pID])) {
+      $graduated_price_array[$pID] = array();
+      $graduated_price_query = xtDBquery("SELECT *
+                                            FROM ".TABLE_PERSONAL_OFFERS_BY.$this->actualGroup."
+                                           WHERE products_id = '".(int)$pID."'");
+      while ($graduated_price  = xtc_db_fetch_array($graduated_price_query, true)) {
+        if ($graduated_price['personal_offer'] > 0) {
+          $graduated_price_array[$pID][$graduated_price['quantity']] = $graduated_price['personal_offer'];
         }
       }
-    } else {
-      return;
+      krsort($graduated_price_array[$pID]);
+    }
+    
+    if (count($graduated_price_array[$pID]) > 0) {
+      foreach ($graduated_price_array[$pID] as $quantity => $personal_offer) {
+        if ($quantity <= $qty) {
+          $key = $quantity;
+          break;
+        }
+      }
+      
+      if (isset($key)) {
+        return $graduated_price_array[$pID][$key];
+      }
     }
   }
   
