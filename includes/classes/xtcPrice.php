@@ -60,12 +60,13 @@ class xtcPrice {
       }
     }
 
-    // select Currencies
-    $currencies_query = xtDBquery("SELECT * FROM " . TABLE_CURRENCIES . " WHERE status = '1'");
+    $currencies_query = xtDBquery("SELECT * 
+                                     FROM " . TABLE_CURRENCIES . " 
+                                    WHERE status = '1'");
     while ($currencies = xtc_db_fetch_array($currencies_query, true)) {
-      // direct array assignment
       $this->currencies[$currencies['code']] = $currencies;
     }
+
     // if the currency in user's preference is not existing use default
     if (!isset($this->currencies[$this->actualCurr])) {
       $this->actualCurr = DEFAULT_CURRENCY;
@@ -76,13 +77,11 @@ class xtcPrice {
                                            FROM " . TABLE_CUSTOMERS_STATUS . "
                                           WHERE customers_status_id = '" . $this->actualGroup . "'
                                             AND language_id = '" . (int) $_SESSION['languages_id'] . "'");
-    // direct array assignment
     $this->cStatus = xtc_db_fetch_array($customers_status_query, true);    
     
     // prefetch tax rates for standard zone
     $zones_query = xtDBquery("SELECT tax_class_id as class FROM " . TABLE_TAX_CLASS);
     while ($zones_data = xtc_db_fetch_array($zones_query, true)) {
-      // calculate tax based on shipping or deliverey country (for downloads)
       if (isset($this->content_type) 
           && isset($_SESSION['billto']) 
           && isset($_SESSION['sendto'])
@@ -97,19 +96,15 @@ class xtcPrice {
         $tax_address = xtc_db_fetch_array($tax_address_query);
         $this->TAX[$zones_data['class']] = xtc_get_tax_rate($zones_data['class'], $tax_address['entry_country_id'], $tax_address['entry_zone_id']);
       } else {
-        // BOF VERSANDKOSTEN IM WARENKORB
-        //$this->TAX[$zones_data['class']]=xtc_get_tax_rate($zones_data['class']);
         $country_id = -1;
-        if (isset($_SESSION['country'])) { // && !isset($_SESSION['customer_id'])) {  //Steuerberechnung nach Versandland, auch bei eingeloggten Kunden
+        if (isset($_SESSION['country'])) {
           $country_id = $_SESSION['country'];
         }
-        $this->TAX[$zones_data['class']]= xtc_get_tax_rate($zones_data['class'], $country_id);        
-        // EOF VERSANDKOSTEN IM WARENKORB
+        $this->TAX[$zones_data['class']] = xtc_get_tax_rate($zones_data['class'], $country_id);        
       }
     }
     
     $currency = $this->priceModules->construct($currency, $cGroup);
-    
   }
   
   /**
@@ -204,10 +199,11 @@ class xtcPrice {
    * @return Double price
    */
   function getPprice($pID) {
-    $pQuery = xtDBquery("SELECT products_price FROM ".TABLE_PRODUCTS." WHERE products_id='".(int)$pID."'");
+    $pQuery = xtDBquery("SELECT products_price 
+                           FROM ".TABLE_PRODUCTS." 
+                          WHERE products_id='".(int)$pID."'");
     $pData = xtc_db_fetch_array($pQuery, true);
-    //new module support
-    $pData = $this->priceModules->getPprice($pData,$pID);                                                   
+    $pData = $this->priceModules->getPprice($pData, $pID);
     return $pData['products_price'];
   }
   
@@ -233,19 +229,19 @@ class xtcPrice {
    * @return Mixed boolean false if not found or 0.00, double if found and > 0.00
    */
   function xtcCheckDiscount($pID) {
-    // check if group got discount
     if ($this->cStatus['customers_status_discount'] != '0.00') {
-      $discount_query = xtDBquery("SELECT products_discount_allowed FROM ".TABLE_PRODUCTS." WHERE products_id = '".$pID."'");
-      $dData = xtc_db_fetch_array($discount_query, true);
+      $discount_query = xtDBquery("SELECT products_discount_allowed 
+                                     FROM ".TABLE_PRODUCTS." 
+                                    WHERE products_id = '".(int)$pID."'");
+      $discount = xtc_db_fetch_array($discount_query, true);
       
-      $discount = $dData['products_discount_allowed'];
-      if ($this->cStatus['customers_status_discount'] < $discount) {
-        $discount = $this->cStatus['customers_status_discount'];
+      if ((isset($discount['products_discount_allowed'])
+           && $this->cStatus['customers_status_discount'] < $discount['products_discount_allowed']
+           ) || $discount['products_discount_allowed'] == '0.00'
+          ) 
+      {
+       return $this->cStatus['customers_status_discount'];
       }
-      if ($discount == '0.00') {
-        return false;
-      }
-      return $discount;
     }
     return false;
   }
@@ -323,27 +319,25 @@ class xtcPrice {
     $price = $discount = $attributes_weight = 0;
     
     $dataArr = array(
-        'weight' => 0,
-        'price' => 0,
-        'discount' => 0,
-        'qty' => $qty,
-        'weight_prefix' => '',
-        'price_prefix' => ''
-      );
-      
-    $attribute_query = xtDBquery(
-       "SELECT p.products_discount_allowed,
-               p.products_tax_class_id,
-               p.products_price,
-               p.products_weight,
-               pa.*
-          FROM " . TABLE_PRODUCTS_ATTRIBUTES . " pa
-          JOIN " . TABLE_PRODUCTS . " p
-               ON p.products_id = pa.products_id
-         WHERE pa.products_id = '" . (int)$pID . "'
-           AND pa.options_id = '" . (int)$option . "'
-           AND pa.options_values_id = '" . (int)$value . "'
-       ");
+      'weight' => 0,
+      'price' => 0,
+      'discount' => 0,
+      'qty' => $qty,
+      'weight_prefix' => '',
+      'price_prefix' => ''
+    );
+    
+    $attribute_query = xtDBquery("SELECT p.products_discount_allowed,
+                                         p.products_tax_class_id,
+                                         p.products_price,
+                                         p.products_weight,
+                                         pa.*
+                                    FROM " . TABLE_PRODUCTS_ATTRIBUTES . " pa
+                                    JOIN " . TABLE_PRODUCTS . " p
+                                         ON p.products_id = pa.products_id
+                                   WHERE pa.products_id = '" . (int)$pID . "'
+                                     AND pa.options_id = '" . (int)$option . "'
+                                     AND pa.options_values_id = '" . (int)$value . "'");
     
     if (xtc_db_num_rows($attribute_query, true) > 0) {
       $attribute_data  = xtc_db_fetch_array($attribute_query, true);
@@ -381,8 +375,7 @@ class xtcPrice {
         'price_prefix' => $attribute_data['price_prefix']
       );
       
-      //new module support
-      $dataArr = $this->priceModules->GetOptionPrice($dataArr,$attribute_data,$pID, $option, $value, $qty);
+      $dataArr = $this->priceModules->GetOptionPrice($dataArr, $attribute_data, $pID, $option, $value, $qty);
     }
     return $dataArr;
   }
@@ -395,7 +388,7 @@ class xtcPrice {
    * @return String / Array of String
    */
   function xtcShowNote($vpeStatus = 0) {
-    if ($vpeStatus == 1)
+    if ($vpeStatus == 1) {
       return array(
         'formated' => NOT_ALLOWED_TO_SEE_PRICES,
         'not_allowed' => NOT_ALLOWED_TO_SEE_PRICES,
@@ -403,6 +396,8 @@ class xtcPrice {
         'from' =>  '',
         'flag' => 'NotAllowed'
       );
+    }
+    
     return NOT_ALLOWED_TO_SEE_PRICES;
   }
   
@@ -541,23 +536,15 @@ class xtcPrice {
    * @return String
    */
   function checkAttributes($pID) {
+    global $product;
+    
     if (!$this->showFrom_Attributes || $pID == 0) return;
     
     $pID = $this->priceModules->checkAttributes($pID);
+    $total = $product->getAttributesCount($pID);
     
-    $products_attributes_query = "SELECT count(*) as total 
-                                    FROM " . TABLE_PRODUCTS_ATTRIBUTES . " patrib
-                                    JOIN " . TABLE_PRODUCTS_OPTIONS . " popt
-                                         ON patrib.options_id = popt.products_options_id
-                                            AND popt.language_id = '" . (int) $_SESSION['languages_id'] . "'
-                                   WHERE patrib.options_values_price > 0
-                                     AND patrib.products_id = '" . (int)$pID . "'";
-    $products_attributes = xtDBquery($products_attributes_query);
-    if (xtc_db_num_rows($products_attributes, true) > 0) {
-      $products_attributes = xtc_db_fetch_array($products_attributes, true);
-      if ($products_attributes['total'] > 0) {
-        return ' ' . FROM . ' ';
-      }
+    if ($total > 0) {
+      return ' ' . FROM . ' ';
     }
   }
   
@@ -615,8 +602,9 @@ class xtcPrice {
       $price = $this->xtcAddTax($price, $products_tax);
     }
     $decimal_places = ($decimal_places > 0) ? $decimal_places : $this->currencies[$this->actualCurr]['decimal_places'];
-    $from = $this->checkAttributes($pID);
     if ($format) {
+      $from = $this->checkAttributes($pID);
+
       if ((int)$pID > 0) {
         $sQuery = xtDBquery("SELECT max(po.quantity) AS qty,
                                     p.products_tax_class_id
