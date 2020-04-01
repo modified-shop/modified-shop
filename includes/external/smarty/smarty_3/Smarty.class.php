@@ -33,7 +33,8 @@
 /**
  * define smarty plugindir in template
  */
-define('MY_TEMPLATE_PLUGINS', DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/smarty/');
+define('MY_CURRENT_TEMPLATE', defined('CURRENT_TEMPLATE') ? CURRENT_TEMPLATE : 'tpl_modified');
+define('MY_TEMPLATE_PLUGINS', DIR_FS_CATALOG.'templates/'.MY_CURRENT_TEMPLATE.'/smarty/');
 define('MY_SHOP_PLUGINS', DIR_FS_EXTERNAL.'smarty/plugins/');
 
 /**
@@ -42,13 +43,12 @@ define('MY_SHOP_PLUGINS', DIR_FS_EXTERNAL.'smarty/plugins/');
 if (isset($_SESSION['language_charset'])) {
   $charset = $_SESSION['language_charset'];
 } else {
-  switch (strtolower(DB_SERVER_CHARSET)) {
-    case 'utf8':
-      $charset = 'UTF-8';
-      break;
-    default:
-      $charset = 'ISO-8859-1';
-      break;
+  $charset = 'ISO-8859-1';
+  if (defined('DB_SERVER_CHARSET')
+      && DB_SERVER_CHARSET == 'utf8'
+      )
+  {
+    $charset = 'UTF-8';
   }
 }
 define('SMARTY_RESOURCE_CHAR_SET', $charset);
@@ -710,12 +710,12 @@ class Smarty extends Smarty_Compatibility
 
         // set default dirs
         $this->setTemplateDir(DIR_FS_CATALOG . 'templates' . DIRECTORY_SEPARATOR)
-             ->addTemplateDir(DIR_FS_CATALOG . 'templates' . DIRECTORY_SEPARATOR . CURRENT_TEMPLATE . DIRECTORY_SEPARATOR)
+             ->addTemplateDir(DIR_FS_CATALOG . 'templates' . DIRECTORY_SEPARATOR . MY_CURRENT_TEMPLATE . DIRECTORY_SEPARATOR)
              ->setCompileDir(DIR_FS_CATALOG . 'templates_c' . DIRECTORY_SEPARATOR)
              ->setPluginsDir(SMARTY_PLUGINS_DIR)
              ->setCacheDir(DIR_FS_CATALOG . 'cache' . DIRECTORY_SEPARATOR)
              ->setConfigDir(DIR_FS_CATALOG . 'lang' . DIRECTORY_SEPARATOR)
-             ->addConfigDir(DIR_FS_CATALOG . 'templates' . DIRECTORY_SEPARATOR . CURRENT_TEMPLATE . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR)
+             ->addConfigDir(DIR_FS_CATALOG . 'templates' . DIRECTORY_SEPARATOR . MY_CURRENT_TEMPLATE . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR)
              ->addPluginsDir(MY_TEMPLATE_PLUGINS)
              ->addPluginsDir(MY_SHOP_PLUGINS)
              ->registerCacheResource('phpfastcache', new Smarty_CacheResource_Phpfastcache());
