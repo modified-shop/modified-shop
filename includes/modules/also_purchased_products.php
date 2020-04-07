@@ -1,7 +1,7 @@
 <?php
 
 /* -----------------------------------------------------------------------------------------
-   $Id: also_purchased_products.php 1243 2005-09-25 09:33:02Z mz $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -20,8 +20,10 @@ $module_smarty = new Smarty;
 $module_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 
 $data = $product->getAlsoPurchased();
-if (count($data) >= MIN_DISPLAY_ALSO_PURCHASED) {
-
+if (count($data) > 0
+    && count($data) >= MIN_DISPLAY_ALSO_PURCHASED
+    )
+{
 	$module_smarty->assign('language', $_SESSION['language']);
 	$module_smarty->assign('module_content', $data);
 	

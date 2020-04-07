@@ -305,6 +305,10 @@ class product {
 	function getAlsoPurchased($pID = '') {
     static $also_purchased_array;
     
+    if (MAX_DISPLAY_ALSO_PURCHASED <= 0) {
+      return array();
+    }
+    
     if (!isset($also_purchased_array)) {
       $also_purchased_array = array();
     }
