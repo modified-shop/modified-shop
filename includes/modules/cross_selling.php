@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: cross_selling.php 1243 2005-09-25 09:33:02Z mz $ 
+   $Id$ 
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -18,15 +18,17 @@
 $module_smarty = new Smarty;
 $module_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 
-$data = $product->getCrossSells();
-if (count($data) > 0) {
-	$module_smarty->assign('language', $_SESSION['language']);
-	$module_smarty->assign('module_content', $data);
+if (ACTIVATE_CROSS_SELLING == 'true') {
+  $data = $product->getCrossSells();
+  if (count($data) > 0) {
+    $module_smarty->assign('language', $_SESSION['language']);
+    $module_smarty->assign('module_content', $data);
 
-	// set cache ID
-	$module_smarty->caching = 0;
-	$module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/cross_selling.html');
-	$info_smarty->assign('MODULE_cross_selling', $module);
+    // set cache ID
+    $module_smarty->caching = 0;
+    $module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/cross_selling.html');
+    $info_smarty->assign('MODULE_cross_selling', $module);
+  }
 }
 
 // reverse cross selling
