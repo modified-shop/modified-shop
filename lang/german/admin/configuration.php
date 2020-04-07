@@ -488,6 +488,8 @@ define('QUICKLINK_ACTIVATED_DESC','Die Multilink/Kopierfunktion erleichtert das 
 
 define('ACTIVATE_REVERSE_CROSS_SELLING_TITLE','Reverse Cross-Marketing');
 define('ACTIVATE_REVERSE_CROSS_SELLING_DESC','Reverse Cross-Marketing Funktion aktivieren?');
+define('ACTIVATE_CROSS_SELLING_TITLE','Cross-Marketing');
+define('ACTIVATE_CROSS_SELLING_DESC','Cross-Marketing Funktion aktivieren?');
 
 define('DOWNLOAD_UNALLOWED_PAYMENT_TITLE', 'Unerlaubte Download-Zahlungsmodule');
 define('DOWNLOAD_UNALLOWED_PAYMENT_DESC', '<strong>NICHT</strong> Erlaubte Zahlungsweisen f&uuml;r Downloadprodukte durch Komma getrennt. Z.B. {banktransfer,cod,invoice,moneyorder}');

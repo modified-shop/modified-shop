@@ -483,6 +483,8 @@ define('GROUP_CHECK_DESC','Restrict access to individual categories, products an
 
 define('ACTIVATE_REVERSE_CROSS_SELLING_TITLE', 'Reverse Cross-Selling');
 define('ACTIVATE_REVERSE_CROSS_SELLING_DESC', 'Activate reverse Cross-selling?');
+define('ACTIVATE_CROSS_SELLING_TITLE', 'Cross-Selling');
+define('ACTIVATE_CROSS_SELLING_DESC', 'Activate Cross-selling?');
 
 define('ACTIVATE_NAVIGATOR_TITLE','Activate Product Navigator?');
 define('ACTIVATE_NAVIGATOR_DESC','activate/deactivate product navigator in product_info, (deactivate for better performance if lots of articles are present in system)');
