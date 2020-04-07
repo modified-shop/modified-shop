@@ -188,12 +188,6 @@ define('SUBCATEGORY_IMAGE_WIDTH_DESC' , 'Width of subcategory images (in pixels)
 define('SUBCATEGORY_IMAGE_HEIGHT_TITLE' , 'Subcategory Image Height');
 define('SUBCATEGORY_IMAGE_HEIGHT_DESC' , 'Height of subcategory images (in pixels)');
 
-define('CONFIG_CALCULATE_IMAGE_SIZE_TITLE' , 'Calculate Image Size');
-define('CONFIG_CALCULATE_IMAGE_SIZE_DESC' , 'Calculate the size of images?');
-
-define('IMAGE_REQUIRED_TITLE' , 'Image Required');
-define('IMAGE_REQUIRED_DESC' , 'Enable to display broken images. Good for development.');
-
 define('MO_PICS_TITLE','Number of product images');
 define('MO_PICS_DESC','if this number is set > 0 , you will be able to upload/display more images per product');
 

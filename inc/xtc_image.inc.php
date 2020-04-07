@@ -29,23 +29,6 @@
     // the image filename as default
     $image = '<img src="' . xtc_parse_input_field_data(((defined('DIR_WS_BASE')) ? DIR_WS_BASE : '').$src, array('"' => '&quot;')) . '" alt="' . xtc_parse_input_field_data($alt, array('"' => '&quot;')) . '"';
 
-    if (defined('CONFIG_CALCULATE_IMAGE_SIZE') && CONFIG_CALCULATE_IMAGE_SIZE == 'true' && (empty($width) || empty($height)) && is_file($src)) {
-      if ($image_size = @getimagesize($src)) {
-        if (empty($width) && xtc_not_null($height)) {
-          $ratio = $height / $image_size[1];
-          $width = (int)($image_size[0] * $ratio);
-        } elseif (xtc_not_null($width) && empty($height)) {
-          $ratio = $width / $image_size[0];
-          $height = (int)($image_size[1] * $ratio);
-        } elseif (empty($width) && empty($height)) {
-          $width = $image_size[0];
-          $height = $image_size[1];
-        }
-      } elseif (defined('IMAGE_REQUIRED') && IMAGE_REQUIRED == 'false') { //DokuMan - 2010-02-26 - set undefined constant
-        return false;
-      }
-    }
-
     if (xtc_not_null($width) && xtc_not_null($height)) {
       $image .= ' width="' . xtc_parse_input_field_data($width, array('"' => '&quot;')) . '" height="' . xtc_parse_input_field_data($height, array('"' => '&quot;')) . '"';
     }
@@ -55,4 +38,4 @@
     $image .= ' />';
     return $image;
   }
-  ?>
+?>
