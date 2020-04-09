@@ -30,8 +30,7 @@ ALTER TABLE `products` MODIFY `products_discount_allowed` DECIMAL(5,2) NOT NULL 
 ALTER TABLE `orders` CHANGE `refferers_id` `campaign` VARCHAR(32) NOT NULL;
 ALTER TABLE `customers` MODIFY `refferers_id` INT(11);
 
-#GTB - 2020-04-07 - delete obolete configuration
-DELETE FROM `configuration` WHERE `configuration_key` = 'IMAGE_REQUIRED';
+#GTB - 2020-04-07 - delete obsolete configuration
 DELETE FROM `configuration` WHERE `configuration_key` = 'CONFIG_CALCULATE_IMAGE_SIZE';
 
 # Keep an empty line at the end of this file for the db_updater to work properly
