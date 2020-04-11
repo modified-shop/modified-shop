@@ -301,6 +301,8 @@
     'includes/external/shopgate/shopgate_library/build_config.php',
     'includes/external/shopgate/shopgate_library/build.properties',
     'includes/external/shopgate/shopgate_library/vendors/mobile_redirect.class.php',
+    'includes/external/smarty/smarty_2/plugins/outputfilter.note.php',
+    'includes/external/smarty/smarty_3/plugins/outputfilter.note.php',
     'includes/external/smarty/smarty_3/plugins/shared.mb_wordwrap.php',
     'includes/external/smarty/smarty_3/sysplugins/smarty_config_source.php',
     'includes/external/smarty/smarty_3/sysplugins/smarty_internal_config.php',
