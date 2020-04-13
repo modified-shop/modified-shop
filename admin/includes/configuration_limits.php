@@ -17,6 +17,7 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 $value_limits['SESSION_LIFE_ADMIN'] = array('min' => 1440, 'max' => 14400);
 $value_limits['SESSION_LIFE_CUSTOMERS'] = array('min' => 1440, 'max' => 14400);
 $value_limits['WHOS_ONLINE_TIME_LAST_CLICK'] = array('min' => 900, 'max' => 43200);
+$value_limits['MODULE_CAPTCHA_LOGIN_NUM'] = array('min' => 0, 'max' => 10);
 
 $value_limits['MAX_DISPLAY_SPECIAL_PRODUCTS'] = array('min' => 1);
 $value_limits['MAX_DISPLAY_SEARCH_RESULTS'] = array('min' => 1);

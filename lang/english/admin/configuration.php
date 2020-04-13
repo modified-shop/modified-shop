@@ -801,6 +801,8 @@ define('MODULE_CAPTCHA_ACTIVE_TITLE', 'Activate Captcha');
 define('MODULE_CAPTCHA_ACTIVE_DESC', 'For which shop sections shall the Captcha be activated?');
 define('MODULE_CAPTCHA_LOGGED_IN_TITLE', 'Logged in Customers');
 define('MODULE_CAPTCHA_LOGGED_IN_DESC', 'Show Captcha for logged in customers');
+define('MODULE_CAPTCHA_LOGIN_NUM_TITLE', 'Login attempts');
+define('MODULE_CAPTCHA_LOGIN_NUM_DESC', 'Number of failed login attempts before the captcha is displayed.');
 define('CAPTCHA_MOD_CLASS_TITLE', 'Captcha Module');
 define('CAPTCHA_MOD_CLASS_DESC', 'Choose the Captcha module to use. Make sure that the module is also installed.');
 define('CFG_TXT_MODIFIED_CAPTCHA', 'Standard');
