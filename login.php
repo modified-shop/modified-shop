@@ -22,8 +22,8 @@
 
 include ('includes/application_top.php');
 
-define('LOGIN_NUM', 2);
-defined('MODULE_CAPTCHA_CODE_LENGTH') or define('MODULE_CAPTCHA_CODE_LENGTH', 6);
+defined('MODULE_CAPTCHA_LOGIN_NUM') OR define('MODULE_CAPTCHA_LOGIN_NUM', 2);
+defined('MODULE_CAPTCHA_CODE_LENGTH') OR define('MODULE_CAPTCHA_CODE_LENGTH', 6);
 
 if (isset ($_SESSION['customer_id'])) {
 	xtc_redirect(xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
@@ -96,7 +96,7 @@ if (isset($_GET['action'])
 
   // captcha
   $captcha_error = false;	
-  if ($_SESSION['customers_login_tries'] >= LOGIN_NUM) {
+  if ($_SESSION['customers_login_tries'] >= MODULE_CAPTCHA_LOGIN_NUM) {
     $captcha_error = (($captcha_validation !== true) ? true : false);
   }
     
@@ -235,7 +235,7 @@ $smarty->assign('LINK_LOST_PASSWORD', xtc_href_link(FILENAME_PASSWORD_DOUBLE_OPT
 $smarty->assign('FORM_END', '</form>');
 
 // captcha
-if ($_SESSION['customers_login_tries'] >= LOGIN_NUM) {
+if ($_SESSION['customers_login_tries'] >= MODULE_CAPTCHA_LOGIN_NUM) {
   $smarty->assign('VVIMG', $mod_captcha->get_image_code());
   $smarty->assign('INPUT_CODE', $mod_captcha->get_input_code());
 }
