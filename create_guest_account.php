@@ -222,17 +222,10 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
   }
 
   if (in_array('create_account', $use_captcha)) {
-    if (!isset($_SESSION['vvcode'])
-        || !isset($_POST['vvcode'])
-        || $_SESSION['vvcode'] == ''
-        || $_POST['vvcode'] == ''
-        || strtoupper($_POST['vvcode']) != $_SESSION['vvcode']
-        ) 
-    {
+    if ($mod_captcha->validate((isset($_POST['vvcode'])) ? $_POST['vvcode'] : '') !== true) {
       $messageStack->add('create_account', strip_tags(ERROR_VVCODE, '<b><strong>'));
       $error = true;
     }
-    unset($_SESSION['vvcode']);
   }
   
   if (check_secure_form($_POST) === false) {
