@@ -51,7 +51,7 @@ if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/offline/login_
   // captcha
   if ($_SESSION['customers_login_tries'] >= LOGIN_NUM) {
     $smarty->assign('VVIMG', $mod_captcha->get_image_code());
-    $smarty->assign('INPUT_VVCODE', $mod_captcha->get_input_code());
+    $smarty->assign('INPUT_CODE', $mod_captcha->get_input_code());
   }
 
   $smarty->assign('charset', $_SESSION['language_charset']);
