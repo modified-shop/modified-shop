@@ -16,12 +16,12 @@
    ---------------------------------------------------------------------------------------*/
 
 
-function xtc_check_agent() {
+function xtc_check_agent($name = false) {
   if (CHECK_CLIENT_AGENT == 'true'
       && isset($_SERVER['HTTP_USER_AGENT'])
       )
   {
-    $Robots = array (
+    $bot_array = array(
       "acme.spider",
       "ahoythehomepagefinder",
       "alkaline",
@@ -330,13 +330,19 @@ function xtc_check_agent() {
       "google-structured-data-testing-tool"
     );
     
-    $botID = strtolower($_SERVER['HTTP_USER_AGENT']);
-    $botID2 = strtolower(getenv("HTTP_USER_AGENT"));
+    $user_agent_1 = strtolower($_SERVER['HTTP_USER_AGENT']);
+    $user_agent_2 = strtolower(getenv("HTTP_USER_AGENT"));
     
-    for ($i=0, $n=count($Robots); $i<$n; $i++) {
-      if (strstr($botID, $Robots[$i]) || strstr($botID2, $Robots[$i])) {
+    foreach ($bot_array as $bot) {
+      if (strpos($bot, $user_agent_1) !== false
+          || strpos($bot, $user_agent_2) !== false
+          )
+      {
+        if ($name === true) {
+          return $bot;
+        }
         return 1;
-      }
+      }    
     }
   }
   
