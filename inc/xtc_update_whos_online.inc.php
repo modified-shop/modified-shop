@@ -33,9 +33,9 @@
       $wo_full_name = xtc_db_prepare_input($_SESSION['customer_first_name'] . ' ' . $_SESSION['customer_last_name']);
     } else {
       $wo_customer_id = '';
-      $crawler = xtc_check_agent();
+      $crawler = xtc_check_agent(true);
       if ($crawler !== 0) {
-        $wo_full_name = '['.TEXT_SEARCH_ENGINE_AGENT.']';
+        $wo_full_name = '['.TEXT_SEARCH_ENGINE_AGENT.'] ('.$crawler.')';
       } else {
         $wo_full_name = TEXT_GUEST;
       }
