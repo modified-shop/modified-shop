@@ -18,7 +18,7 @@
 # This is used with Apache WebServers
 # The following blocks direct HTTP requests in this directory recursively
 
-<FilesMatch "(?<!\.pdf|\.jpg|\.jpeg|\.png|\.gif|\.webp|\.ico|\.svg|\.PDF|\.JPG|\.JPEG|\.PNG|\.GIF|\.WEBP|\.ICO|\.SVG)$">
+<FilesMatch ".*\.(php|php3|php4|php5|phtml|htm|html|xhtml|pl)$">
   <IfModule mod_authz_core.c>
     # Apache 2.4
     <RequireAll>
