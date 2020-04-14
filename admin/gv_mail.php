@@ -59,14 +59,14 @@
       $template = 'send_coupon';
       
       $smarty->assign('COUPON_ID', $data['coupon_code']);
-      $smarty->assign('COUPON_AMOUNT', $currencies->format($data['coupon_amount']));
+      $smarty->assign('COUPON_AMOUNT', $data['coupon_amount']);
     } else {
       $template = 'send_gift';
       
       $coupon_code = create_coupon_code($data['customers_email_address']);
       $link = HTTP_SERVER.DIR_WS_CATALOG.'gv_redeem.php?gv_no='.$coupon_code;
       
-      $smarty->assign('AMMOUNT', $data['coupon_amount']);
+      $smarty->assign('AMMOUNT', $currencies->format($data['coupon_amount']));
       $smarty->assign('GIFT_ID', $coupon_code);
       $smarty->assign('GIFT_LINK', $link);     
     }
@@ -205,7 +205,8 @@
   
           if (isset($_POST['email_to']) && $_POST['email_to'] != '') {
             $mail['subject'] = $subject; 
-            $mail['message'] = $message; 
+            $mail['message'] = $message;
+            $mail['coupon_code'] = $coupon_code;
             $mail['coupon_amount'] = $coupon_amount;
             $mail['customers_email_address'] = $_POST['email_to'];
             $mail['customers_firstname'] = $_POST['email_to'];
