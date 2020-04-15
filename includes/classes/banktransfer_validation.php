@@ -254,14 +254,14 @@ class AccountCheck {
   private function Method06($AccountNo, $Significance, $Modified, $Checkpoint, $Modulator) {
     $Help = 0;
     $Method06 = 1;
-     $AccountNo = $this->ExpandAccount($AccountNo);
-     switch ($Modified) {
-       case FALSE :
+    $AccountNo = $this->ExpandAccount($AccountNo);
+    switch ($Modified) {
+      case FALSE :
         for ($Run = 0; $Run < strlen($Significance);$Run++) {
           $Help += (substr($AccountNo,$Run,1) * substr($Significance,$Run,1));
         }
         break;
-      case TRUE  :
+      case TRUE :
         for ($Run = 0; $Run < strlen($Significance);$Run++) {
           $Help += (substr($AccountNo,$Run,1) * HexDec(substr($Significance,$Run,1)));
         }
@@ -272,6 +272,10 @@ class AccountCheck {
     // Bedingung bei Modulator 7
     /* --- Fix by Christian Rothe 20110327 --- */
     if ($Help == 0 && $Modulator == 7) {
+      $Checksum = 0;
+    }
+    // --- fix vr 20200414
+    if ($Help == 0 && $Modulator == 10) {
       $Checksum = 0;
     }
     // Bedingung bei Modulator 11
