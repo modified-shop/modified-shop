@@ -61,8 +61,8 @@ class shopvote
     function install() 
     {
         xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SHOPVOTE_STATUS', 'false',  '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
-        xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SHIPPING_EASYREVIEWS', '', '6', '0', 'xtc_cfg_textarea(', now())");
-        xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SHIPPING_RATINGSTARS', '', '6', '0', 'xtc_cfg_textarea(', now())");
+        xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SHOPVOTE_SHOPID', '', '6', '0', '', now())");
+        xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SHOPVOTE_API', '', '6', '0', '', now())");
     }
 
     function remove()
@@ -74,8 +74,8 @@ class shopvote
     {
         return array(
           'MODULE_SHOPVOTE_STATUS',
-          'MODULE_SHIPPING_EASYREVIEWS',
-          'MODULE_SHIPPING_RATINGSTARS',
+          'MODULE_SHOPVOTE_SHOPID',
+          'MODULE_SHOPVOTE_API',
         );
     }    
 }
