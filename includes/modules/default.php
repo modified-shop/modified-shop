@@ -232,17 +232,18 @@ switch ($category_depth) {
     $sorting = ' ORDER BY '.$sorting_data['products_sorting'].' '.$sorting_data['products_sorting2'].' ';
 
     if (basename($PHP_SELF) == FILENAME_SPECIALS) {
-        $select .= "s.expires_date,
-                    s.specials_new_products_price,
-                    s.specials_new_products_price AS price, ";
-        $from   .= "JOIN ".TABLE_SPECIALS." s
-                      ON p.products_id = s.products_id 
-                         ".SPECIALS_CONDITIONS_S." ";
+      $select .= "s.expires_date,
+                  s.specials_new_products_price,
+                  s.specials_new_products_price AS price, ";
+      $from   .= "JOIN ".TABLE_SPECIALS." s
+                    ON p.products_id = s.products_id 
+                       ".SPECIALS_CONDITIONS_S." ";
+      $sorting = ' ORDER BY s.specials_date_added DESC ';
     } else {
-        $select .= "IFNULL(s.specials_new_products_price, p.products_price) AS price, ";
-        $from   .= "LEFT JOIN ".TABLE_SPECIALS." s
-                           ON p.products_id = s.products_id 
-                              ".SPECIALS_CONDITIONS_S." ";
+      $select .= "IFNULL(s.specials_new_products_price, p.products_price) AS price, ";
+      $from   .= "LEFT JOIN ".TABLE_SPECIALS." s
+                         ON p.products_id = s.products_id 
+                            ".SPECIALS_CONDITIONS_S." ";
     }
   
     if (basename($PHP_SELF) == FILENAME_PRODUCTS_NEW) {
