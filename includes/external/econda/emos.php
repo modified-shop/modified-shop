@@ -63,7 +63,7 @@ class EMOS{
 	*          emos2.js you can set it here
 	*/
 	function EMOS($pathToFile="econda/", $scriptFileName="emos32_xtc.js"){
-		$this->pathToFile = DIR_WS_EXTERNAL.$pathToFile;
+		$this->pathToFile = DIR_WS_CATALOG.DIR_WS_EXTERNAL.$pathToFile;
 		$this->scriptFileName = $scriptFileName;
 		$this->prepareInScript();
 
