@@ -14,6 +14,7 @@
   require_once ('includes/application_top.php');
 
   // Database
+  defined('DB_MYSQL_TYPE') OR define('DB_MYSQL_TYPE', get_mysql_type());
   require_once (DIR_FS_INC.'db_functions_'.DB_MYSQL_TYPE.'.inc.php');
   require_once (DIR_FS_INC.'db_functions.inc.php');
 
