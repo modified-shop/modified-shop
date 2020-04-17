@@ -318,36 +318,28 @@ class product {
     }
         
     if (!isset($also_purchased_array[$pID])) {	
-      $check_array = array();
       $also_purchased_array[$pID] = array();
-      
-      $orders_query = xtDBquery("SELECT orders_id 
-                                   FROM ".TABLE_ORDERS_PRODUCTS." 
-                                  WHERE products_id = '".(int)$pID."'
-                               ORDER BY orders_id DESC");
-      while ($orders = xtc_db_fetch_array($orders_query, true)) {
-        $products_query = xtDBquery("SELECT ".$this->default_select."
-                                       FROM ".TABLE_ORDERS_PRODUCTS." op
-                                       JOIN ".TABLE_PRODUCTS." p 
-                                            ON p.products_id = op.products_id
-                                               AND p.products_status = '1'
-                                               AND p.products_id != '".(int)$pID."'
-                                       JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd 
-                                            ON pd.products_id = p.products_id
-                                               AND pd.language_id = '".(int) $_SESSION['languages_id']."'
-                                               AND trim(pd.products_name) != ''
-                                      WHERE op.orders_id = '".$orders['orders_id']."'
-                                            ".PRODUCTS_CONDITIONS_P."
-                                   GROUP BY p.products_id");
-        while ($products = xtc_db_fetch_array($products_query, true)) {
-          if (!in_array($products['products_id'], $check_array)) {
-            $also_purchased_array[$pID][] = $this->buildDataArray($products);
-            $check_array[] = $products['products_id'];
-          }
-          if (count($also_purchased_array[$pID]) >= MAX_DISPLAY_ALSO_PURCHASED) {
-            break 2;
-          }
-        }
+            
+      $products_query = xtDBquery("SELECT ".$this->default_select."
+                                     FROM ".TABLE_ORDERS_PRODUCTS." op
+                                     JOIN ".TABLE_PRODUCTS." p 
+                                          ON p.products_id = op.products_id
+                                             AND p.products_status = '1'
+                                             AND p.products_id != '".(int)$pID."'
+                                     JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd 
+                                          ON pd.products_id = p.products_id
+                                             AND pd.language_id = '".(int) $_SESSION['languages_id']."'
+                                             AND trim(pd.products_name) != ''
+                                    WHERE op.orders_id IN (SELECT orders_id 
+                                                             FROM ".TABLE_ORDERS_PRODUCTS." 
+                                                            WHERE products_id = '".(int)$pID."' 
+                                                         GROUP BY orders_id 
+                                                         ORDER BY orders_id DESC)
+                                          ".PRODUCTS_CONDITIONS_P."
+                                 GROUP BY p.products_id
+                                    LIMIT ".MAX_DISPLAY_ALSO_PURCHASED);
+      while ($products = xtc_db_fetch_array($products_query, true)) {
+        $also_purchased_array[$pID][] = $this->buildDataArray($products);
       }
     }
     
