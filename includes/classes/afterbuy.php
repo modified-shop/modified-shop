@@ -188,7 +188,7 @@ class xtc_afterbuy_functions {
 		$nr = 0;
 		$anzahl = 0;
 		if (!class_exists (xtcPrice)) {
-		  require_once (DIR_WS_CLASSES . 'xtcPrice.php');
+		  require_once (defined('RUN_MODE_ADMIN') ? DIR_FS_CATALOG : '').DIR_WS_CLASSES . 'xtcPrice.php');
 		  $xtPrice = new xtcPrice($oData['currency'],$oData['customers_status']);
 		}
 		while ($pDATA = xtc_db_fetch_array($p_query)) {
