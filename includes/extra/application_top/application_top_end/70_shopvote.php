@@ -22,14 +22,19 @@
         ) 
     {
       // include needed classes
-      require_once (DIR_FS_CATALOG.DIR_WS_CLASSES.'modified_api.php');
+      require_once (DIR_WS_CLASSES.'modified_api.php');
       
       modified_api::setEndpoint('https://api.shopvote.de/');
       $response = modified_api::request('product-reviews/v1/'.MODULE_SHOPVOTE_API.'/reviews?rs=RF5&limit=50&sd=false&lang='.$_SESSION['language_code'].'&sku='.$product->data['products_model']);
 
-      
-      if (is_array($response) && count($response) > 0) {
-        foreach ($response as $reviews) {
+      if (is_array($response) 
+          && count($response) > 0
+          && isset($response['reviews']) 
+          && is_array($response['reviews']) 
+          && count($response['reviews']) > 0
+          )
+      {
+        foreach ($response['reviews'] as $reviews) {          
           $check_query = xtc_db_query("SELECT customers_id  
                                          FROM ".TABLE_REVIEWS."
                                         WHERE customers_name = '".xtc_db_input($reviews['author'])."'
@@ -42,7 +47,7 @@
                                     'reviews_rating' => (int)$reviews['rating_value'],
                                     'date_added' => date('Y-m-d H:i:s', strtotime($reviews['created'])),
                                     );
-    
+            
             xtc_db_perform(TABLE_REVIEWS, $sql_data_array);
             $insert_id = xtc_db_insert_id();
 
@@ -54,11 +59,6 @@
           } 
         }
       }
-      
-      // update product for caching
-      xtc_db_query("UPDATE ".TABLE_PRODUCTS."
-                       SET products_last_modified = now()
-                     WHERE products_id = '".$product->data['products_id']."'");
     }   
   }
 ?>
