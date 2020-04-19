@@ -11,7 +11,7 @@
 require('includes/application_top.php');
 include_once('classes/impl.KlarnaMobile.php');
 include_once('classes/class.KlarnaHTTPContext.php');
-//include_once(DIR_FS_CATALOG . DIR_WS_CLASSES . 'klarna/klarnautils.php');
+//include_once(DIR_WS_CLASSES . 'klarna/klarnautils.php');
 include_once('../api/Klarna.php');
 include_once(DIR_FS_DOCUMENT_ROOT.'includes/external/klarna/api/transport/xmlrpc-3.0.0.beta/lib/xmlrpc.inc');
 include_once(DIR_FS_DOCUMENT_ROOT.'includes/external/klarna/api/transport/xmlrpc-3.0.0.beta/lib/xmlrpc_wrappers.inc');
@@ -40,7 +40,7 @@ if ($sPage == null)
     </head>
     <?php
 
-    $oAPI    = new KlarnaMobile($oKlarna, 'se', DIR_FS_CATALOG . DIR_WS_CLASSES . 'klarna/standardRegister', 'default');
+    $oAPI    = new KlarnaMobile($oKlarna, 'se', DIR_WS_CLASSES . 'klarna/standardRegister', 'default');
     $oAPI->addInput('placeholder', '0731234567');
     $oAPI->addInput('pId', $pId);
     
@@ -66,7 +66,7 @@ else if ($sPage == 'ajax'){
         $oKlarna->config($sEID, $sSecret, KlarnaCountry::SE, KlarnaLanguage::SV, KlarnaCurrency::SEK, $iMode, MODULE_PAYMENT_KLARNA_PC_TYPE, MODULE_PAYMENT_KLARNA_PC_URI, false);
         $oKlarna->setCountry('se');
         
-        $oAPI        = new KlarnaMobile(&$oKlarna, 'se', DIR_FS_CATALOG . DIR_WS_CLASSES . 'klarna/standardRegister');
+        $oAPI        = new KlarnaMobile(&$oKlarna, 'se', DIR_WS_CLASSES . 'klarna/standardRegister');
         $mResult    = $oAPI->requestCode($iPid, $sTelNo);
         
         echo $mResult;
@@ -88,7 +88,7 @@ else if ($sPage == 'ajax'){
         $oKlarna->config($sEID, $sSecret, KlarnaCountry::SE, KlarnaLanguage::SV, KlarnaCurrency::SEK, $iMode, MODULE_PAYMENT_KLARNA_PC_TYPE, MODULE_PAYMENT_KLARNA_PC_URI, false);
         $oKlarna->setCountry('se');
         
-        $oAPI        = new KlarnaMobile($oKlarna, 'se', DIR_FS_CATALOG . DIR_WS_CLASSES . 'klarna/standardRegister');
+        $oAPI        = new KlarnaMobile($oKlarna, 'se', DIR_WS_CLASSES . 'klarna/standardRegister');
         $mResult    = $oAPI->makePurchase($iPid, $sTelNo, $sPinCode, $iRefNo);
         
         $iStatusCode = -1;
