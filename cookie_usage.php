@@ -18,6 +18,13 @@
 
 include ('includes/application_top.php');
 
+if (isset($_GET['return_to_login'])
+    && $session_started == true
+    )
+{
+  xtc_redirect(xtc_href_link(FILENAME_LOGIN, xtc_get_all_get_params(array('return_to_login')), 'SSL'));
+}
+
 $smarty = new Smarty;
 
 // include boxes

@@ -43,8 +43,8 @@ require_once (DIR_WS_CLASSES.'modified_captcha.php');
 $mod_captcha = $_mod_captcha_class::getInstance();
 
 // redirect the customer to a friendly cookie-must-be-enabled page if cookies are disabled (or the session has not started)
-if ($session_started == false) {
-	xtc_redirect(xtc_href_link(FILENAME_COOKIE_USAGE));
+if ($session_started == false) {  
+	xtc_redirect(xtc_href_link(FILENAME_COOKIE_USAGE, xtc_get_all_get_params(array('return_to_login')).'return_to_login=1'));
 }
 
 $account_options = ACCOUNT_OPTIONS;
