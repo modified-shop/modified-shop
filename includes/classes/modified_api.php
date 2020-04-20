@@ -15,6 +15,7 @@
   
     private static $_endpoint = 'https://api.modified-shop.org/';
     private static $_endpoint_backup = 'https://api.modified-shop.org/';
+    private static $_options = array();
     private static $_method = NULL;
 
     /**
@@ -67,10 +68,18 @@
     }
 
     /**
+     * setMethod
+     */
+    public static function setOptions($options) {
+      self::$_options = (array)$options;
+    }
+
+    /**
      * reset
      */
     public static function reset() {
       self::setEndpoint(self::$_endpoint_backup);
+      self::$_options = array();
     }
 
     /**
@@ -116,8 +125,8 @@
       curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
       curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
       curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-      curl_setopt($ch, CURLOPT_USERAGENT, 'modified eCommerce Shopsoftware');
-      
+      curl_setopt($ch, CURLOPT_USERAGENT, 'modified.eCommerce.Shopsoftware');
+            
       curl_setopt($ch, CURLINFO_HEADER_OUT, true);
 
       switch (self::$_method) {
@@ -134,6 +143,12 @@
 
       if (self::$_method != null) {
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, self::$_method);
+      }
+
+      if (is_array(self::$_options) && count(self::$_options) > 0) {
+        foreach (self::$_options as $option => $value) {
+          curl_setopt($ch, $option, $value);
+        }
       }
 
       $result = curl_exec($ch);
