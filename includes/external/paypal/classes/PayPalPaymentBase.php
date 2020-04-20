@@ -241,6 +241,7 @@ class PayPalPaymentBase extends PayPalCommon {
       
       $sql_data_array = array(
         'orders_id' => $orders_id,
+        'method' => $payment['instruction']['type'],
         'amount' => $payment['instruction']['amount']['total'],
         'currency' => $payment['instruction']['amount']['currency'],
         'reference' => $payment['instruction']['reference'],
@@ -451,6 +452,7 @@ class PayPalPaymentBase extends PayPalCommon {
     xtc_db_query("CREATE TABLE IF NOT EXISTS ".TABLE_PAYPAL_INSTRUCTIONS." (
                     paypal_inctructions_id int(11) NOT NULL auto_increment, 
                     orders_id int(11) NOT NULL DEFAULT '0',
+                    method varchar(64) NOT NULL,
                     amount decimal(15,4) DEFAULT NULL,
                     currency varchar(8) DEFAULT NULL,
                     reference varchar(128) DEFAULT NULL,
@@ -610,7 +612,7 @@ class PayPalPaymentBase extends PayPalCommon {
   
   function paypal_update() {
     $table_array = array(
-      array('column' => 'transaction_id', 'default' => "varchar(64) NOT NULL default ''"),
+      array('column' => 'transaction_id', 'default' => "varchar(64) NOT NULL DEFAULT ''"),
     );
     foreach ($table_array as $table) {
       $check_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_PAYPAL_PAYMENT." LIKE '".xtc_db_input($table['column'])."'");
@@ -622,6 +624,7 @@ class PayPalPaymentBase extends PayPalCommon {
     xtc_db_query("CREATE TABLE IF NOT EXISTS ".TABLE_PAYPAL_INSTRUCTIONS." (
                     paypal_inctructions_id int(11) NOT NULL auto_increment, 
                     orders_id int(11) NOT NULL DEFAULT '0',
+                    method varchar(64) NOT NULL,
                     amount decimal(15,4) DEFAULT NULL,
                     currency varchar(8) DEFAULT NULL,
                     reference varchar(128) DEFAULT NULL,
@@ -634,6 +637,16 @@ class PayPalPaymentBase extends PayPalCommon {
                     KEY idx_orders_id (orders_id)
                   );");
     
+    $table_array = array(
+      array('column' => 'method', 'default' => "varchar(64) NOT NULL AFTER orders_id"),
+    );
+    foreach ($table_array as $table) {
+      $check_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_PAYPAL_INSTRUCTIONS." LIKE '".xtc_db_input($table['column'])."'");
+      if (xtc_db_num_rows($check_query) < 1) {
+        xtc_db_query("ALTER TABLE ".TABLE_PAYPAL_INSTRUCTIONS." ADD ".$table['column']." ".$table['default']."");
+      }
+    }
+
     // add new column
     $admin_query = xtc_db_query("SELECT * 
                                    FROM ".TABLE_ADMIN_ACCESS."
