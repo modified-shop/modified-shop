@@ -25,7 +25,7 @@
       require_once (DIR_WS_CLASSES.'modified_api.php');
       
       modified_api::setEndpoint('https://api.shopvote.de/');
-      $response = modified_api::request('product-reviews/v1/'.MODULE_SHOPVOTE_API.'/reviews?rs=RF5&limit=50&sd=false&lang='.$_SESSION['language_code'].'&sku='.preg_replace("'[^A-Za-z0-9]+'", '', $product->data['products_model']));
+      $response = modified_api::request('product-reviews/v1/'.MODULE_SHOPVOTE_API.'/reviews?rs=RF5&limit=50&sd=false&lang='.$_SESSION['language_code'].'&sku='.$product->data['products_id']);
 
       if (is_array($response) 
           && count($response) > 0

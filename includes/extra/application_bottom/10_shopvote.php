@@ -47,7 +47,7 @@
           <span class="sv-i-product-image-url">'.$product->productImage($item['products_image'], 'info').'</span>
           <span class="sv-i-product-name">'.$item['products_name'].'</span>
           <span class="sv-i-product-gtin">'.$item['products_ean'].'</span>
-          <span class="sv-i-product-sku">'.preg_replace("'[^A-Za-z0-9]+'", '', $item['products_model']).'</span>
+          <span class="sv-i-product-sku">'.$item['products_id'].'</span>
           <span class="sv-i-product-brand">'.$item['manufacturers_name'].'</span>
         </span>';
         
