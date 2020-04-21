@@ -75,12 +75,12 @@
     
     if (MODULE_SHOPVOTE_SHOPID != '') {
       echo '
-      <script src="https://widgets.shopvote.de/js/reputation-badge-v2.min.js"></script>
+      <script src="https://widgets.shopvote.de/js/reputation-badge.min.js"></script>
       <script>
         var myShopID = '.(int)MODULE_SHOPVOTE_SHOPID.';
-        var myBadgetType = 1;
+        var myBadgetType = '.(int)MODULE_SHOPVOTE_BADGE.';
         var myLanguage = "'.$language_code.'";
-          var mySrc = ("https:" === document.location.protocol ? "https" : "http");
+        var mySrc = ("https:" === document.location.protocol ? "https" : "http");
         createRBadge(myShopID, myBadgetType, mySrc);
       </script>';
     }

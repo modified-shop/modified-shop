@@ -21,4 +21,6 @@
   define('MODULE_SHOPVOTE_API_KEY_DESC', 'Enter the API-Key.');
   define('MODULE_SHOPVOTE_API_SECRET_TITLE', 'API-Secret');
   define('MODULE_SHOPVOTE_API_SECRET_DESC', 'Enter the API-Secret.');
+  define('MODULE_SHOPVOTE_BADGE_TITLE', 'Badge Type');
+  define('MODULE_SHOPVOTE_BADGE_DESC', 'Choose the badge type.');
 ?>
