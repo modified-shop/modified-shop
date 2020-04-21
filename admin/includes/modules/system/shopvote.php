@@ -64,7 +64,7 @@ class shopvote
         xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SHOPVOTE_SHOPID', '', '6', '0', '', now())");
         xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SHOPVOTE_API_KEY', '', '6', '0', '', now())");
         xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SHOPVOTE_API_SECRET', '', '6', '0', '', now())");
-        xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SHOPVOTE_BADGE', 'false',  '6', '1', 'xtc_cfg_select_option(array(\'1\', \'2\', \'3\', \'4\'), ', now())");
+        xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SHOPVOTE_BADGE', '1',  '6', '1', 'xtc_cfg_select_option(array(\'1\', \'2\', \'3\', \'4\'), ', now())");
     }
 
     function remove()
