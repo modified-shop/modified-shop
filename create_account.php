@@ -532,8 +532,11 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
         $newsletter = new newsletter;
         $newsletter->AddUserAuto($email_address);
       }
-
-      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
+      
+      if ($_SESSION['cart']->count_contents() > 0) {
+        xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
+      }
+      xtc_redirect(xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
     } else {
       $messageStack->add('create_account', ENTRY_EMAIL_ADDRESS_ERROR);
     }
