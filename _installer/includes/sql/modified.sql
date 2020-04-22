@@ -2170,7 +2170,7 @@ INSERT INTO currencies VALUES (3,'Schweizer Franken','CHF', 'CHF', '', '.', '', 
 INSERT INTO currencies VALUES (4,'Great Britain Pound','GBP', '', '£', '.', ',', '2','0.8094',NOW(),'0');
 
 # database Version
-INSERT INTO database_version(version) VALUES ('MOD_2.0.5.0');
+INSERT INTO database_version(version) VALUES ('MOD_2.0.5.1');
 
 # languages
 INSERT INTO languages VALUES (1,'English','en','icon.gif','english',2,'iso-8859-15',1,1);
