@@ -68,9 +68,12 @@ class paypalinstallment extends PayPalPayment {
     
     if ($this->enabled === true) {
       $this->total_amount = $this->calculate_total();
-      
-      $this->presentment_array = $this->get_presentment($this->total_amount, $order->info['currency'], $order->billing['country']['iso_code_2']);
-      if (count($this->presentment_array) < 1) {
+      if ($this->total_amount > $this->get_min_installment_amount()) {
+        $this->presentment_array = $this->get_presentment($this->total_amount, $order->info['currency'], $order->billing['country']['iso_code_2']);
+        if (count($this->presentment_array) < 1) {
+          $this->enabled = false;
+        }
+      } else {
         $this->enabled = false;
       }
     }
