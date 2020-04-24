@@ -19,7 +19,7 @@
 
     if (basename($PHP_SELF) == FILENAME_CHECKOUT_SUCCESS
         && isset($last_order)
-        && MODULE_SHOPVOTE_API != ''
+        && MODULE_SHOPVOTE_API_KEY != ''
         )
     {
       $item_query = xtc_db_query("SELECT op.products_id,
@@ -66,7 +66,7 @@
       echo '
       <script src="https://feedback.shopvote.de/srt-v4.min.js"></script>
       <script type="text/javascript">
-        var myToken = "'.MODULE_SHOPVOTE_API.'";
+        var myToken = "'.MODULE_SHOPVOTE_API_KEY.'";
         var myLanguage = "'.$language_code.'";
         var mySrc = ("https:" === document.location.protocol ? "https" : "http");
         loadSRT(myToken, mySrc);
