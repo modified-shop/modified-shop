@@ -17,13 +17,14 @@
    
   function xtc_get_ip_address() {
     if (isset($_SERVER)) {
+      $tmp_ip = '';
       if (isset($_SERVER['HTTP_X_CLUSTER_CLIENT_IP']) && $_SERVER['HTTP_X_CLUSTER_CLIENT_IP'] != '') {
         $tmp_ip = $_SERVER['HTTP_X_CLUSTER_CLIENT_IP'];
       } elseif (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR'] != '') {
         $tmp_ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
       } elseif (isset($_SERVER['HTTP_CLIENT_IP']) && $_SERVER['HTTP_CLIENT_IP'] != '') {
         $tmp_ip = $_SERVER['HTTP_CLIENT_IP'];
-      } else {
+      } elseif (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] != '') {
         $tmp_ip = $_SERVER['REMOTE_ADDR'];
       }
       $ip_array = explode(',', $tmp_ip);
