@@ -231,9 +231,6 @@ $current_domain = (($request_type == 'NONSSL') ? $http_domain : $https_domain);
 // set the top level domains to delete
 $current_domain_delete = (($request_type == 'NONSSL') ? $http_domain_arr['delete'] : $https_domain_arr['delete']);
 
-// include shopping cart class
-require_once (DIR_WS_CLASSES.'shopping_cart.php');
-
 // some code to solve compatibility issues
 require_once (DIR_WS_FUNCTIONS.'compatibility.php');
 
@@ -287,6 +284,9 @@ $main = new main();
 // price class
 require_once (DIR_WS_CLASSES.'xtcPrice.php');
 $xtPrice = new xtcPrice($_SESSION['currency'], $_SESSION['customers_status']['customers_status_id']);
+
+// include shopping cart class
+require_once (DIR_WS_CLASSES.'shopping_cart.php'); 
 
 // create the shopping cart & fix the cart if necesary
 if (!isset($_SESSION['cart']) || !is_object($_SESSION['cart'])) {
