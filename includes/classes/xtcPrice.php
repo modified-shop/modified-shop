@@ -82,6 +82,7 @@ class xtcPrice {
     // prefetch tax rates for standard zone
     $zones_query = xtDBquery("SELECT tax_class_id as class FROM " . TABLE_TAX_CLASS);
     while ($zones_data = xtc_db_fetch_array($zones_query, true)) {
+      // calculate tax based on shipping or deliverey country (for downloads) 
       if (isset($this->content_type) 
           && isset($_SESSION['billto']) 
           && isset($_SESSION['sendto'])
