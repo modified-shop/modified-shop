@@ -64,9 +64,11 @@ if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS 
                                           checkout_payment_address
                                      FROM ".TABLE_CUSTOMERS_CHECKOUT." 
                                     WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
-    $express = xtc_db_fetch_array($express_query);
-    if ($express['checkout_payment_address'] != '') {
-      $_SESSION['billto'] = $express['checkout_payment_address'];
+    if (xtc_db_num_rows($express_query) > 0) {
+      $express = xtc_db_fetch_array($express_query);
+      if ($express['checkout_payment_address'] != '') {
+        $_SESSION['billto'] = $express['checkout_payment_address'];
+      }
     }
   }
 }
@@ -198,7 +200,11 @@ if ($total > 0 || ($credit_amount && $total > 0) || (isset($_SESSION['credit_cov
     //express checkout
     if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS == 'true') {
       if ($credit_amount == 0 && isset($_GET['express']) && $_GET['express'] == 'on' && $error === false) {
-        if ($express['checkout_payment'] != '' && $selection[$i]['id'] == $express['checkout_payment']) {
+        if (isset($express['checkout_payment']) 
+            && $express['checkout_payment'] != '' 
+            && $selection[$i]['id'] == $express['checkout_payment']
+            )
+        {
           $_SESSION['payment'] = $express['checkout_payment'];
           xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, xtc_get_all_get_params(array('conditions')).'conditions=on', 'SSL'));
         }
