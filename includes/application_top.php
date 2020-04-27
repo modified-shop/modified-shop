@@ -277,6 +277,9 @@ if (strpos($PHP_SELF, FILENAME_SHOPPING_CART) === false) {
   unset($_SESSION['country']);
 }
 
+// include shopping cart class
+require_once (DIR_WS_CLASSES.'shopping_cart.php'); 
+
 // main class
 require_once (DIR_WS_CLASSES.'main.php');
 $main = new main();
@@ -284,9 +287,6 @@ $main = new main();
 // price class
 require_once (DIR_WS_CLASSES.'xtcPrice.php');
 $xtPrice = new xtcPrice($_SESSION['currency'], $_SESSION['customers_status']['customers_status_id']);
-
-// include shopping cart class
-require_once (DIR_WS_CLASSES.'shopping_cart.php'); 
 
 // create the shopping cart & fix the cart if necesary
 if (!isset($_SESSION['cart']) || !is_object($_SESSION['cart'])) {
