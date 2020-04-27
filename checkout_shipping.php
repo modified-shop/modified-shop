@@ -48,12 +48,14 @@ require (DIR_WS_INCLUDES.'checkout_requirements.php');
 if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS == 'true') {
   if (isset($_GET['express']) && $_GET['express'] == 'on') {
     $express_query = xtc_db_query("SELECT checkout_shipping,
-                                        checkout_shipping_address
-                                   FROM ".TABLE_CUSTOMERS_CHECKOUT." 
-                                  WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
-    $express = xtc_db_fetch_array($express_query);
-    if ($express['checkout_shipping_address'] != '') {
-      $_SESSION['sendto'] = $express['checkout_shipping_address'];
+                                          checkout_shipping_address
+                                     FROM ".TABLE_CUSTOMERS_CHECKOUT." 
+                                    WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
+    if (xtc_db_num_rows($express_query) > 0) {
+      $express = xtc_db_fetch_array($express_query);
+      if ($express['checkout_shipping_address'] != '') {
+        $_SESSION['sendto'] = $express['checkout_shipping_address'];
+      }
     }
   }
 }
@@ -118,7 +120,7 @@ $ot_shipping->process();
 //express checkout
 if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS == 'true') {
   if (isset($_GET['express']) && $_GET['express'] == 'on') {
-    if ($express['checkout_shipping'] != '') {
+    if (isset($express['checkout_shipping']) && $express['checkout_shipping'] != '') {
       if ($free_shipping === false && $express['checkout_shipping'] == 'free_free') {
         unset($express['checkout_shipping']);
       } elseif ($free_shipping === false && $express['checkout_shipping'] == 'cheapest_cheapest') {
