@@ -241,7 +241,7 @@ class xtcPrice {
         $discount_value = $this->cStatus['customers_status_discount'];
       }
       
-      if ($discount_value > '0.00') {
+      if ($discount_value != '0.00') {
         return $discount_value;
       }
     }
