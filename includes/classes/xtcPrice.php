@@ -236,12 +236,13 @@ class xtcPrice {
                                     WHERE products_id = '".(int)$pID."'");
       $discount = xtc_db_fetch_array($discount_query, true);
       
-      if ((isset($discount['products_discount_allowed'])
-           && $this->cStatus['customers_status_discount'] < $discount['products_discount_allowed']
-           ) || $discount['products_discount_allowed'] == '0.00'
-          ) 
-      {
-       return $this->cStatus['customers_status_discount'];
+      $discount_value = $discount['products_discount_allowed'];
+      if ($this->cStatus['customers_status_discount'] < $discount_value) {
+        $discount_value = $this->cStatus['customers_status_discount'];
+      }
+      
+      if ($discount_value > '0.00') {
+        return $discount_value;
       }
     }
     return false;
