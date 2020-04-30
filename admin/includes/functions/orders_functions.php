@@ -678,7 +678,8 @@
     $products_query = xtc_db_query("SELECT op.products_id,
                                            op.products_quantity,
                                            op.products_discount_made,
-                                           op.products_tax
+                                           op.products_tax,
+                                           op.allow_tax
                                       FROM ".TABLE_ORDERS_PRODUCTS." op
                                      WHERE op.orders_products_id = '".(int)$data_array['opID']."'");
     $products = xtc_db_fetch_array($products_query);
