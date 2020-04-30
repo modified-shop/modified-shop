@@ -13,6 +13,21 @@
 
   require_once ('includes/application_top.php');
 
+  if ($upgrade === true) {  
+    // Database
+    require_once (DIR_FS_INC.'db_functions_'.DB_MYSQL_TYPE.'.inc.php');
+    require_once (DIR_FS_INC.'db_functions.inc.php');
+
+    // make a connection to the database... now
+    xtc_db_connect() or die('Unable to connect to database server!');
+
+    // load configuration
+    $configuration_query = xtc_db_query('SELECT configuration_key, configuration_value FROM '.TABLE_CONFIGURATION);
+    while ($configuration = xtc_db_fetch_array($configuration_query)) {
+      defined($configuration['configuration_key']) OR define($configuration['configuration_key'], stripslashes($configuration['configuration_value']));
+    }
+  }
+
   // language
   require_once(DIR_FS_INSTALLER.'lang/'.$_SESSION['language'].'.php');
 
