@@ -447,114 +447,135 @@ class shoppingCart {
    */
   function calculate() {
     global $xtPrice;
+    static $calculate_cache_array;
+    
+    if (!isset($calculate_cache_array)) {
+      $calculate_cache_array = array();
+    }
+    
     $this->total = 0;
     $this->total_netto = 0;
     $this->weight = 0;
     $this->tax = array ();
     $this->tax_discount = array ();
+    
     if (!is_array($this->contents)) {
       return 0;
     }
     reset($this->contents);
-    foreach ($this->contents as $products_id => $data) {
-      $qty = $this->contents[$products_id]['qty'];
-      // products price
-      if ($product = $this->get_product($products_id)) {
-
-        if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1
-            && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0
-            && $xtPrice->get_content_type_product($product['products_id']) == 'virtual'
-            ) 
-        {
-          $product['products_tax_class_id'] = xtc_get_tax_class($product['products_tax_class_id']);
-        }
-
-        $products_price = $xtPrice->xtcGetPrice($product['products_id'],
-                                                $format = false,
-                                                $qty,
-                                                $product['products_tax_class_id'],
-                                                $product['products_price']);
-        //new module support       
-        $products_price = $this->shoppingCartModules->calculate_product_price($products_price, $product, $this->contents[$products_id],$products_id);
-       
-        $total = $products_price * $qty;
-        $this->weight += ($qty * $product['products_weight']);
-
-        //attributes price
-        $attribute_price = 0;
-        if (isset($this->contents[$products_id]['attributes'])) {
-          reset($this->contents[$products_id]['attributes']);
-          foreach ($this->contents[$products_id]['attributes'] as $option => $value) {
-            $values = $xtPrice->xtcGetOptionPrice($product['products_id'], $option, $value);
-            //new module support       
-            $values['price'] = $this->shoppingCartModules->calculate_option_price($values['price'], $option, $value, $products_id, $qty);
-            $this->weight += $values['weight'] * $qty;
-            $total += $values['price'] * $qty;
-            $attribute_price += $values['price'];
-          }
-        }
+    $cache_id = md5(serialize($this->contents));
     
-        $this->total += $total;
-        $this->total_netto += $total;
-        
-        
-        // $this->total hat netto * Stück in der 1. Runde
-        // Artikel Rabatt berücksichtigt
-        // Gesamt Rabatt auf Bestellung nicht
-        // Nur weiterrechnen, falls Product nicht ohne Steuer
-        // $this->total + $this->tax wird berechnet
-        if ($product['products_tax_class_id'] != 0) {
+    if (!isset($calculate_cache_array[$cache_id])) {
+      foreach ($this->contents as $products_id => $data) {
+        $qty = $this->contents[$products_id]['qty'];
+        // products price
+        if ($product = $this->get_product($products_id)) {
 
-          $products_price_total = $products_price + $attribute_price;
-          if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == 1) {
-            // Rabatt für die Steuerberechnung
-            // der eigentliche Rabatt wird im order-details_cart abgezogen
-            $products_price_tax = $products_price - ($products_price / 100 * $_SESSION['customers_status']['customers_status_ot_discount']);
-            $attribute_price_tax = $attribute_price - ($attribute_price / 100 * $_SESSION['customers_status']['customers_status_ot_discount']);
-            $products_price_total = $products_price_tax + $attribute_price_tax;  //Evtl. einzeln auf 4 Stellen runden ???
-          }
-
-          $products_tax = $xtPrice->TAX[$product['products_tax_class_id']];
-          $products_tax_description = xtc_get_tax_description($product['products_tax_class_id']);
-
-          if (!isset($this->tax[$product['products_tax_class_id']])) {
-            $this->tax[$product['products_tax_class_id']]['value'] = 0;
-          }
-
-          // price incl tax
-          if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1) {
-            $this->tax[$product['products_tax_class_id']]['value'] += (($products_price_total / (100 + $products_tax)) * $products_tax) * $qty;
-            $this->tax[$product['products_tax_class_id']]['desc'] = TAX_ADD_TAX.$products_tax_description;
-          }
-
-          // excl tax + tax at checkout
-          if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
-              && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1
-              )
+          if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1
+              && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0
+              && $xtPrice->get_content_type_product($product['products_id']) == 'virtual'
+              ) 
           {
-            $tax = $products_price_total / 100 * $products_tax * $qty;
-            
-            $this->tax[$product['products_tax_class_id']]['value'] += $tax;
-            $this->tax[$product['products_tax_class_id']]['desc'] = TAX_NO_TAX.$products_tax_description;
-            $this->total += $tax;
-                   
+            $product['products_tax_class_id'] = xtc_get_tax_class($product['products_tax_class_id']);
+          }
+
+          $products_price = $xtPrice->xtcGetPrice($product['products_id'],
+                                                  $format = false,
+                                                  $qty,
+                                                  $product['products_tax_class_id'],
+                                                  $product['products_price']);
+          //new module support       
+          $products_price = $this->shoppingCartModules->calculate_product_price($products_price, $product, $this->contents[$products_id],$products_id);
+       
+          $total = $products_price * $qty;
+          $this->weight += ($qty * $product['products_weight']);
+
+          //attributes price
+          $attribute_price = 0;
+          if (isset($this->contents[$products_id]['attributes'])) {
+            reset($this->contents[$products_id]['attributes']);
+            foreach ($this->contents[$products_id]['attributes'] as $option => $value) {
+              $values = $xtPrice->xtcGetOptionPrice($product['products_id'], $option, $value);
+              //new module support       
+              $values['price'] = $this->shoppingCartModules->calculate_option_price($values['price'], $option, $value, $products_id, $qty);
+              $this->weight += $values['weight'] * $qty;
+              $total += $values['price'] * $qty;
+              $attribute_price += $values['price'];
+            }
+          }
+    
+          $this->total += $total;
+          $this->total_netto += $total;
+        
+          // $this->total hat netto * Stück in der 1. Runde
+          // Artikel Rabatt berücksichtigt
+          // Gesamt Rabatt auf Bestellung nicht
+          // Nur weiterrechnen, falls Product nicht ohne Steuer
+          // $this->total + $this->tax wird berechnet
+          if ($product['products_tax_class_id'] != 0) {
+
+            $products_price_total = $products_price + $attribute_price;
             if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == 1) {
-              if (!isset($this->tax_discount[$product['products_tax_class_id']])) $this->tax_discount[$product['products_tax_class_id']] = 0;
-              $this->tax_discount[$product['products_tax_class_id']] += $tax;
-            } 
+              // Rabatt für die Steuerberechnung
+              // der eigentliche Rabatt wird im order-details_cart abgezogen
+              $products_price_tax = $products_price - ($products_price / 100 * $_SESSION['customers_status']['customers_status_ot_discount']);
+              $attribute_price_tax = $attribute_price - ($attribute_price / 100 * $_SESSION['customers_status']['customers_status_ot_discount']);
+              $products_price_total = $products_price_tax + $attribute_price_tax;  //Evtl. einzeln auf 4 Stellen runden ???
+            }
+
+            $products_tax = $xtPrice->TAX[$product['products_tax_class_id']];
+            $products_tax_description = xtc_get_tax_description($product['products_tax_class_id']);
+
+            if (!isset($this->tax[$product['products_tax_class_id']])) {
+              $this->tax[$product['products_tax_class_id']]['value'] = 0;
+            }
+
+            // price incl tax
+            if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1) {
+              $this->tax[$product['products_tax_class_id']]['value'] += (($products_price_total / (100 + $products_tax)) * $products_tax) * $qty;
+              $this->tax[$product['products_tax_class_id']]['desc'] = TAX_ADD_TAX.$products_tax_description;
+            }
+
+            // excl tax + tax at checkout
+            if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
+                && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1
+                )
+            {
+              $tax = $products_price_total / 100 * $products_tax * $qty;
+            
+              $this->tax[$product['products_tax_class_id']]['value'] += $tax;
+              $this->tax[$product['products_tax_class_id']]['desc'] = TAX_NO_TAX.$products_tax_description;
+              $this->total += $tax;
+                   
+              if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == 1) {
+                if (!isset($this->tax_discount[$product['products_tax_class_id']])) $this->tax_discount[$product['products_tax_class_id']] = 0;
+                $this->tax_discount[$product['products_tax_class_id']] += $tax;
+              } 
+            }
           }
         }
       }
+      
+      $calculate_cache_array[$cache_id] = array(
+        'total' => $this->total,
+        'total_netto' => $this->total_netto,
+        'weight' => $this->weight,
+        'tax' => $this->tax,
+        'tax_discount' => $this->tax_discount,
+      );
+    } else {
+      foreach ($calculate_cache_array[$cache_id] as $k => $v) {
+        $this->{$k} = $v;
+      }
     }
     
-    $this->total = round($this->total,4);
+    $this->total = round($this->total, 4);
     
     if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1) {
       foreach ($this->tax as $key => $val) {
         $this->total_netto -= round($val['value'], 4);
       }
     }
-    
   }
 
 
