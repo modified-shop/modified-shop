@@ -486,27 +486,18 @@ class shoppingCart {
                                                   $product['products_price']);
           //new module support       
           $products_price = $this->shoppingCartModules->calculate_product_price($products_price, $product, $this->contents[$products_id],$products_id);
-       
+          
           $total = $products_price * $qty;
           $this->weight += ($qty * $product['products_weight']);
-
+          
           //attributes price
-          $attribute_price = 0;
-          if (isset($this->contents[$products_id]['attributes'])) {
-            reset($this->contents[$products_id]['attributes']);
-            foreach ($this->contents[$products_id]['attributes'] as $option => $value) {
-              $values = $xtPrice->xtcGetOptionPrice($product['products_id'], $option, $value);
-              //new module support       
-              $values['price'] = $this->shoppingCartModules->calculate_option_price($values['price'], $option, $value, $products_id, $qty);
-              $this->weight += $values['weight'] * $qty;
-              $total += $values['price'] * $qty;
-              $attribute_price += $values['price'];
-            }
-          }
-    
+          $attribute_price = $this->attributes_price($product['products_id'], $qty);
+          $this->weight += $this->attr_weight * $qty;
+          $total += $this->attr_price * $qty;
+          
           $this->total += $total;
           $this->total_netto += $total;
-        
+          
           // $this->total hat netto * Stück in der 1. Runde
           // Artikel Rabatt berücksichtigt
           // Gesamt Rabatt auf Bestellung nicht
@@ -570,7 +561,7 @@ class shoppingCart {
     }
     
     $this->total = round($this->total, 4);
-    
+        
     if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1) {
       foreach ($this->tax as $key => $val) {
         $this->total_netto -= round($val['value'], 4);
