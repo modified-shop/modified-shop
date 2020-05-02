@@ -543,7 +543,7 @@ class xtcPrice {
     if (!$this->showFrom_Attributes || $pID == 0) return;
     
     $pID = $this->priceModules->checkAttributes($pID);
-    $total = $product->getAttributesCount($pID);
+    $total = $product->getAttributesCount($pID, true);
     
     if ($total > 0) {
       return ' ' . FROM . ' ';

@@ -99,7 +99,7 @@ class product {
    *
    * @return integer
    */
-  function getAttributesCount($pID = '') {
+  function getAttributesCount($pID = '', $price_check = false) {
     static $attributes_count_array;
 
     if (!isset($attributes_count_array)) {
@@ -111,17 +111,18 @@ class product {
     }
     
     if (!isset($attributes_count_array[$pID])) {
-      $products_attributes_query = xtDBquery("SELECT count(*) AS total
+      $products_attributes_query = xtDBquery("SELECT count(*) AS total_a,
+                                                     count(IF(patrib.options_values_price > 0, 1, null)) as total_p 
                                                 FROM ".TABLE_PRODUCTS_OPTIONS." popt
                                                 JOIN ".TABLE_PRODUCTS_ATTRIBUTES." patrib
                                                      ON patrib.options_id = popt.products_options_id
                                                         AND popt.language_id = '".(int) $_SESSION['languages_id']."'
                                                WHERE patrib.products_id = '".(int)$pID."'");
       $products_attributes = xtc_db_fetch_array($products_attributes_query, true);
-      $attributes_count_array[$pID] = $products_attributes['total'];
+      $attributes_count_array[$pID] = $products_attributes;
     }
     
-    return $attributes_count_array[$pID];
+    return $attributes_count_array[$pID][($price_check !== false) ? 'total_p' : 'total_a'];
   }
 
   /**
