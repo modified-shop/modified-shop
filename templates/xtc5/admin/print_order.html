@@ -141,7 +141,7 @@
         </td>
       </tr>
       {/if}
-      {if count($PAYMENT_INFO) > 0}
+      {if is_array($PAYMENT_INFO) && count($PAYMENT_INFO) > 0}
       <tr>
         <td>
           <table style="border:1px solid;" width="100%" border="0" cellpadding="0" cellspacing="0">
