@@ -103,7 +103,7 @@
       {$COMMENTS}
     </div>
     {/if}
-    {if count($PAYMENT_INFO) > 0}
+    {if is_array($PAYMENT_INFO) && count($PAYMENT_INFO) > 0}
     <br /><br />
     <div class="highlightbox">
       {foreach name=aussen item=data from=$PAYMENT_INFO}

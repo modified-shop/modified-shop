@@ -90,7 +90,7 @@
     {if $DELIVERY_DUTY_INFO}
     <div class="dutyinfo">{#text_duty_info#}</div>
     {/if}
-    {if count($PAYMENT_INFO) > 0}
+    {if is_array($PAYMENT_INFO) && count($PAYMENT_INFO) > 0}
     <br /><br />
     <div class="highlightbox">
       {foreach name=aussen item=data from=$PAYMENT_INFO}
