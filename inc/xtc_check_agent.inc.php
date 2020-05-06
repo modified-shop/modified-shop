@@ -332,10 +332,10 @@ function xtc_check_agent($name = false) {
     
     $user_agent_1 = strtolower($_SERVER['HTTP_USER_AGENT']);
     $user_agent_2 = strtolower(getenv("HTTP_USER_AGENT"));
-    
+
     foreach ($bot_array as $bot) {
-      if (strpos($bot, $user_agent_1) !== false
-          || strpos($bot, $user_agent_2) !== false
+      if (strpos($user_agent_1, $bot) !== false
+          || strpos($user_agent_2, $bot) !== false
           )
       {
         if ($name === true) {
