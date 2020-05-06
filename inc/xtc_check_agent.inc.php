@@ -23,6 +23,7 @@ function xtc_check_agent($name = false) {
   {
     $bot_array = array(
       "acme.spider",
+      "ahrefsbot",
       "ahoythehomepagefinder",
       "alkaline",
       "antibot",
@@ -47,7 +48,6 @@ function xtc_check_agent($name = false) {
       "bloodhound",
       "bobby",
       "boris",
-      "bot",
       "brightnet",
       "bspider",
       "bumblebee",
@@ -327,7 +327,10 @@ function xtc_check_agent($name = false) {
       "xget",
       "yahoo",
       "yandex",
-      "google-structured-data-testing-tool"
+      "google-structured-data-testing-tool",
+      
+      // last entry
+      "bot",
     );
     
     $user_agent_1 = strtolower($_SERVER['HTTP_USER_AGENT']);
