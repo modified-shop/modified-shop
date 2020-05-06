@@ -26,19 +26,36 @@
       
       modified_api::reset();
       modified_api::setEndpoint('https://api.shopvote.de/');
-
-      $options = array(
-        CURLOPT_HTTPHEADER => array(
-          'Apikey: '.MODULE_SHOPVOTE_API_KEY,
-          'Apisecret: '.MODULE_SHOPVOTE_API_SECRET,
-          'Origin: '.HTTP_SERVER,
-        ),
-        CURLOPT_USERAGENT => 'App.RF5.'.MODULE_SHOPVOTE_SHOPID,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-      );
-      modified_api::setOptions($options);      
-      $response = modified_api::request('auth');
+            
+      $response = unserialize(file_get_contents(SQL_CACHEDIR.'shopvote.cache'));
       
+      if ($response === false
+          || $response['exp'] < time()
+          )
+      {
+        $options = array(
+          CURLOPT_HTTPHEADER => array(
+            'Apikey: '.MODULE_SHOPVOTE_API_KEY,
+            'Apisecret: '.MODULE_SHOPVOTE_API_SECRET,
+            'Origin: '.HTTP_SERVER,
+          ),
+          CURLOPT_USERAGENT => 'App.RF5.'.MODULE_SHOPVOTE_SHOPID,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        );
+        modified_api::setOptions($options);      
+        $response = modified_api::request('auth');
+        
+        if (is_array($response)
+            && isset($response['Token'])
+            )
+        {
+          $token = explode('.', $response['Token']);
+          $response = array_merge($response, json_decode(base64_decode($token[1]), true));
+        
+          file_put_contents(SQL_CACHEDIR.'shopvote.cache', serialize($response));
+        }
+      }
+            
       if (is_array($response)
           && isset($response['Code']) 
           && $response['Code'] == 200
@@ -52,7 +69,7 @@
         );
         modified_api::setOptions($options);      
         $response = modified_api::request('product-reviews/v2/reviews?days=14&sd=false&lang='.$_SESSION['language_code'].'&sku='.$product->data['products_id']);
-
+        
         if (is_array($response) 
             && count($response) > 0
             && isset($response['reviews']) 
@@ -60,10 +77,11 @@
             && count($response['reviews']) > 0
             )
         {
-          foreach ($response['reviews'] as $reviews) {          
+          foreach ($response['reviews'] as $reviews) {       
             $check_query = xtc_db_query("SELECT customers_id  
                                            FROM ".TABLE_REVIEWS."
                                           WHERE customers_name = '".xtc_db_input($reviews['author'])."'
+                                            AND products_id = '".(int)$product->data['products_id']."'
                                             AND date_added = '".xtc_db_input(date('Y-m-d H:i:s', strtotime($reviews['created'])))."'
                                             AND customers_id = '0'");
             if (xtc_db_num_rows($check_query) < 1) {
