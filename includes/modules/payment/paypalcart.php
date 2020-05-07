@@ -44,13 +44,22 @@ class paypalcart extends PayPalPayment {
   
   function pre_confirmation_check() {
     global $order, $smarty, $total_weight, $total_count, $free_shipping;
-
+    
+    if (isset($_SESSION['shipping'])) {
+      $shipping = $_SESSION['shipping'];
+      unset($_SESSION['shipping']);
+    }
+    
     $free_shipping = false;
     require_once (DIR_WS_MODULES.'order_total/ot_shipping.php');
     include_once (DIR_WS_LANGUAGES.$_SESSION['language'].'/modules/order_total/ot_shipping.php');
     $this->ot_shipping = new ot_shipping;
     $this->ot_shipping->process();
     $this->free_shipping = $free_shipping;
+    
+    if (isset($shipping)) {
+      $_SESSION['shipping'] = $shipping;
+    }
     
     // process the selected shipping method
     if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
