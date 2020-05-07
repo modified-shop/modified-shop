@@ -415,7 +415,9 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
                          WHERE campaigns_id = '".(int)$campaign['campaigns_id']."'");
         }
       }
-
+      
+      $send_mail = ((SEND_MAIL_ACCOUNT_CREATED == 'true') ? true : false);
+      
       // GV Code - CREDIT CLASS CODE BLOCK
       if (ACTIVATE_GIFT_SYSTEM == 'true') {
         $check_query = xtc_db_query("SELECT *
@@ -462,6 +464,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
             $smarty->assign('GIFT_AMMOUNT', $xtPrice->xtcFormat(NEW_SIGNUP_GIFT_VOUCHER_AMOUNT, true));
             $smarty->assign('GIFT_CODE', $coupon_code);
             $smarty->assign('GIFT_LINK', xtc_href_link(FILENAME_GV_REDEEM, 'gv_no='.$coupon_code, 'NONSSL', false));
+            $send_mail = true;
           }
           
           if (NEW_SIGNUP_DISCOUNT_COUPON != '') {
@@ -486,6 +489,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
               $smarty->assign('SEND_COUPON', 'true');
               $smarty->assign('COUPON_DESC', $coupon['coupon_description']);
               $smarty->assign('COUPON_CODE', $coupon['coupon_code']);
+              $send_mail = true;
             }
           }
         }
@@ -496,30 +500,14 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
       $html_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/create_account_mail.html');
       $txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/create_account_mail.txt');
     
-      if (SEND_EMAILS == 'true' && SEND_MAIL_ACCOUNT_CREATED == 'true') {
+      if (SEND_EMAILS == 'true' && $send_mail == true) {
         xtc_php_mail(EMAIL_SUPPORT_ADDRESS, 
                      EMAIL_SUPPORT_NAME, 
                      $email_address, 
                      $name, 
-                     '', 
+                     EMAIL_SUPPORT_FORWARDING_STRING, 
                      EMAIL_SUPPORT_REPLY_ADDRESS, 
                      EMAIL_SUPPORT_REPLY_ADDRESS_NAME, 
-                     '', 
-                     '', 
-                     EMAIL_SUPPORT_SUBJECT, 
-                     $html_mail, 
-                     $txt_mail);
-      }
-    
-      // send mail to admin
-      if (EMAIL_SUPPORT_FORWARDING_STRING != '') {
-        xtc_php_mail(EMAIL_SUPPORT_ADDRESS, 
-                     EMAIL_SUPPORT_NAME, 
-                     EMAIL_SUPPORT_ADDRESS, 
-                     EMAIL_SUPPORT_NAME, 
-                     EMAIL_SUPPORT_FORWARDING_STRING, 
-                     $email_address, 
-                     $name, 
                      '', 
                      '', 
                      EMAIL_SUPPORT_SUBJECT, 
