@@ -57,6 +57,11 @@
   // backup
   define('DIR_FS_BACKUP', DIR_FS_ADMIN . 'backups/');
 
+  // download
+  define('DIR_WS_DOWNLOAD_PUBLIC', DIR_WS_CATALOG . 'pub/');
+  define('DIR_FS_DOWNLOAD', DIR_FS_CATALOG . 'download/');
+  define('DIR_FS_DOWNLOAD_PUBLIC', DIR_FS_CATALOG . 'pub/');
+
   // inc
   define('DIR_FS_INC', DIR_FS_CATALOG . 'inc/');
 
