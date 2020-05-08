@@ -42,6 +42,7 @@
             $check_query = xtc_db_query("SELECT customers_id  
                                            FROM ".TABLE_REVIEWS."
                                           WHERE customers_name = '".xtc_db_input($reviews->reviewer->firstname . ' ' . $reviews->reviewer->lastname)."'
+                                            AND products_id = '".(int)$product->data['products_id']."'
                                             AND date_added = '".xtc_db_input(date('Y-m-d H:i:s', strtotime($reviews->creationDate)))."'
                                             AND customers_id = '0'");
             if (xtc_db_num_rows($check_query) < 1) {
@@ -50,7 +51,6 @@
                                       'customers_name' => xtc_db_prepare_input($reviews->reviewer->firstname . ' ' . $reviews->reviewer->lastname),
                                       'reviews_rating' => (int)$reviews->mark,
                                       'date_added' => date('Y-m-d H:i:s', strtotime($reviews->creationDate)),
-                                      //'ts_uid' => $reviews->UID
                                       );
       
               xtc_db_perform(TABLE_REVIEWS, $sql_data_array);
