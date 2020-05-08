@@ -51,7 +51,6 @@ if ($product->isProduct() === true && $_SESSION['customers_status']['customers_s
                       JOIN ".TABLE_REVIEWS_DESCRIPTION." rd
                            ON r.reviews_id = rd.reviews_id
                               AND rd.languages_id = '" . (int)$_SESSION['languages_id'] . "'
-                              AND trim(rd.reviews_text) != ''
                       JOIN ".TABLE_PRODUCTS." p
                            ON p.products_id = r.products_id
                               ".$product_select."
