@@ -21,6 +21,10 @@
       && !isset($_GET['manufacturers_id'])
       )
   {
+    // auto activate and expire banners
+    xtc_activate_banners();
+    xtc_expire_banners();
+
     $banners_group_condition = ((isset($banners_group_condition)) ? $banners_group_condition : '');
     
     $groups_query = xtc_db_query("SELECT DISTINCT banners_group 

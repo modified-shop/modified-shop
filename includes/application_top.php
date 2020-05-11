@@ -319,12 +319,6 @@ xtc_update_whos_online();
 // split-page-results
 require_once (DIR_WS_CLASSES.'split_page_results.php');
 
-// auto activate and expire banners
-if (MODULE_BANNER_MANAGER_STATUS == 'true') {
-  xtc_activate_banners();
-  xtc_expire_banners();
-}
-
 // auto expire special products
 xtc_expire_specials();
 
