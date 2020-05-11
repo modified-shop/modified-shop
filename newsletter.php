@@ -94,6 +94,7 @@ if (isset($_GET['action'])
 // Accountaktivierung per Emaillink
 if (isset ($_GET['action']) && ($_GET['action'] == 'activate')) {
   $newsletter->ActivateAddress($_GET['key'], $_GET['email']);
+  unset($_GET['email']);
   $info_message = $newsletter->message;
   if ($newsletter->message_class == 'info') {
     $smarty->assign('activated', true);
@@ -103,6 +104,7 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'activate')) {
 // Accountdeaktivierung per Emaillink
 if (isset ($_GET['action']) && ($_GET['action'] == 'remove')) {
   $newsletter->RemoveFromList($_GET['key'], $_GET['email']);
+  unset($_GET['email']);
   $info_message = $newsletter->message;
 }
 
