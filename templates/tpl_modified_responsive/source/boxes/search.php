@@ -55,8 +55,8 @@ $box_smarty->assign('BUTTON_SUBMIT', xtc_image_submit('button_quick_find.gif', I
 $box_smarty->assign('FORM_END', '</form>');
 $box_smarty->assign('LINK_ADVANCED', xtc_href_link(FILENAME_ADVANCED_SEARCH));
 
+$box_smarty->caching = 0;
 $box_search = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_search.html');
 
-$box_smarty->caching = 0;
 $smarty->assign('box_SEARCH',$box_search);
 ?>
