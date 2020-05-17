@@ -171,6 +171,9 @@ class shoppingCart {
       }
     }
     $this->cleanup();
+
+    // assign a temporary unique ID to the order contents to prevent hack attempts during the checkout procedure
+    $this->cartID = $this->generate_cart_id();
   }
 
   /**
@@ -327,7 +330,7 @@ class shoppingCart {
       if (isset($this->contents[$key]['qty']) && $this->contents[$key]['qty'] < 1) {
         unset ($this->contents[$key]);
         // remove from database
-        if (isset($_SESSION['customer_id'])) { // Hetfield - 2009-08-19 - removed deprecated function session_is_registered to be ready for PHP >= 5.3
+        if (isset($_SESSION['customer_id'])) {
           xtc_db_query("DELETE FROM ".$this->table_basket." WHERE customers_id = '".(int)$_SESSION['customer_id']."' AND products_id = '".xtc_db_input($key)."'");
           xtc_db_query("DELETE FROM ".$this->table_basket_attributes." WHERE customers_id = '".(int)$_SESSION['customer_id']."' AND products_id = '".xtc_db_input($key)."'");
         }
@@ -511,7 +514,7 @@ class shoppingCart {
               // der eigentliche Rabatt wird im order-details_cart abgezogen
               $products_price_tax = $products_price - ($products_price / 100 * $_SESSION['customers_status']['customers_status_ot_discount']);
               $attribute_price_tax = $attribute_price - ($attribute_price / 100 * $_SESSION['customers_status']['customers_status_ot_discount']);
-              $products_price_total = $products_price_tax + $attribute_price_tax;  //Evtl. einzeln auf 4 Stellen runden ???
+              $products_price_total = $products_price_tax + $attribute_price_tax;
             }
 
             $products_tax = $xtPrice->TAX[$product['products_tax_class_id']];
@@ -636,11 +639,6 @@ class shoppingCart {
       if($this->contents[$products_id]['qty'] != 0 || $this->contents[$products_id]['qty'] !=''){
         $products_query = xtc_db_query("SELECT ".ADD_SELECT_CART."
                                                p.products_id,
-                                               pd.products_name,
-                                               pd.products_heading_title,
-                                               pd.products_description,
-                                               pd.products_short_description,
-                                               pd.products_order_description,
                                                p.products_shippingtime,
                                                p.products_image,
                                                p.products_model,
@@ -655,7 +653,12 @@ class shoppingCart {
                                                p.products_status,
                                                p.products_fsk18,
                                                p.products_price as products_price_origin,
-                                               p.products_quantity as products_stock
+                                               p.products_quantity as products_stock,
+                                               pd.products_name,
+                                               pd.products_heading_title,
+                                               pd.products_description,
+                                               pd.products_short_description,
+                                               pd.products_order_description
                                           FROM ".TABLE_PRODUCTS." p
                                           JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
                                                ON pd.products_id = p.products_id
