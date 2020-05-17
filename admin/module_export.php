@@ -224,7 +224,7 @@
               }
               include_once($module_directory . $file);
               $class = substr($file, 0, strrpos($file, '.'));
-              if (xtc_class_exists($class)) {
+              if (class_exists($class)) {
                 $module = new $class();
               }
               if (method_exists($module,'check') && $module->check() > 0) {
@@ -281,7 +281,7 @@
           }
           include_once($module_directory . $file);
           $class = substr($file, 0, strpos($file, '.'));
-          if (xtc_class_exists($class)) {
+          if (class_exists($class)) {
             $module = new $class();
             if ($module instanceof $class && $module->check() > 0) {     
               $key_array = $module->keys();     
@@ -362,7 +362,7 @@ if (xtc_not_null($action) && !$box) {
                             }
                             include_once($module_directory . $file);
                             $class = substr($file, 0, strrpos($file, '.'));
-                            if (xtc_class_exists($class)) {
+                            if (class_exists($class)) {
                               $module = new $class();
                               if ($module->check() > 0) {
                                 if (($module->sort_order > 0) && !isset($installed_modules[$module->sort_order])) {
@@ -463,7 +463,7 @@ if (xtc_not_null($action) && !$box) {
                         include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $class . '.php');
                       }
                       include($module_directory . $class . '.php');
-                      if (xtc_class_exists($class)) {
+                      if (class_exists($class)) {
                         $module = new $class();
                         $module_info = get_module_info($module);
                         $mInfo = new objectInfo($module_info);
