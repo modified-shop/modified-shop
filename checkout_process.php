@@ -154,6 +154,36 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
     'languages_id' => (int)$_SESSION['languages_id'],
     'comments' => $order->info['comments'],
   );
+
+  // refID
+  $refID = '';
+  $sql_data_array = array();
+  if (isset($_SESSION['tracking']['refID'])) {
+    $refID = $_SESSION['tracking']['refID'];
+  } else {
+    $campaign_query = xtc_db_query("SELECT cp.campaigns_refID
+                                      FROM ".TABLE_CUSTOMERS." c
+                                      JOIN ".TABLE_CAMPAIGNS." cp
+                                           ON cp.campaigns_id = c.refferers_id
+                                     WHERE c.customers_id = '".(int)$_SESSION['customer_id']."'");
+    if (xtc_db_num_rows($campaign_query) > 0) {
+      $campaign = xtc_db_fetch_array($campaign_query);
+      $refID = $campaign['campaigns_refID'];
+    }
+  }
+  
+  if ($refID != '') {
+    $sql_data_array['campaign'] = $refID;
+  }
+  
+  // check if late or direct sale
+  $customers_logon_query = xtc_db_query("SELECT customers_info_number_of_logons
+                                           FROM ".TABLE_CUSTOMERS_INFO."
+                                          WHERE customers_info_id  = '".(int)$_SESSION['customer_id']."'");
+  $customers_logon = xtc_db_fetch_array($customers_logon_query);
+  if ($customers_logon['customers_info_number_of_logons'] > 1) {
+    $sql_data_array['conversion_type'] = 2;
+  }
   
   xtc_db_perform(TABLE_ORDERS, $sql_data_array);
   $insert_id = xtc_db_insert_id();
@@ -189,7 +219,8 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
 
   $_SESSION['disable_products'] = array();
   for ($i = 0, $n = sizeof($order->products); $i < $n; $i ++) {
-    // Stock Update - Joao Correia
+    // Stock Update
+    $stock_set = '';
     if (STOCK_LIMITED == 'true') {
       if (DOWNLOAD_ENABLED == 'true') {
         $add_stock_query_raw = '';
@@ -222,10 +253,8 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
         } else {
           $stock_left = $stock_values['products_quantity'];
         }
-
-        xtc_db_query("UPDATE ".TABLE_PRODUCTS."
-                         SET products_quantity = '".$stock_left."'
-                       WHERE products_id = '".xtc_get_prid($order->products[$i]['id'])."'");
+        
+        $stock_set = " products_quantity = '".$stock_left."', ";
         
         if (($stock_left < 1) && (STOCK_CHECKOUT_UPDATE_PRODUCTS_STATUS == 'true')) {
           $_SESSION['disable_products'][] = xtc_get_prid($order->products[$i]['id']);
@@ -233,9 +262,10 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
       }
     }
 
-    // Update products_ordered (for bestsellers list)
+    // update product
     xtc_db_query("UPDATE ".TABLE_PRODUCTS."
-                     SET products_ordered = products_ordered + ".sprintf('%d', $order->products[$i]['qty'])."
+                     SET ".$stock_set."
+                         products_ordered = products_ordered + ".sprintf('%d', $order->products[$i]['qty'])."
                    WHERE products_id = '".xtc_get_prid($order->products[$i]['id'])."'");
 
     $sql_data_array = array (
@@ -260,25 +290,25 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
     $order_products_id = xtc_db_insert_id();
 
     // update specials quantity
-    $specials_result = xtc_db_query("SELECT products_id,
-                                            specials_quantity
-                                       FROM ".TABLE_SPECIALS."
-                                      WHERE products_id = '".xtc_get_prid($order->products[$i]['id'])."'
-                                            ".SPECIALS_CONDITIONS);
-    if (xtc_db_num_rows($specials_result)) {
-      $spq = xtc_db_fetch_array($specials_result);
-      if ($spq['specials_quantity'] != 0) {
-        $new_sp_quantity = ($spq['specials_quantity'] - $order->products[$i]['qty']);
-        if ($new_sp_quantity >= 1) {
-          xtc_db_query("UPDATE ".TABLE_SPECIALS." 
-                           SET specials_quantity = '".$new_sp_quantity."' 
-                         WHERE products_id = '".xtc_get_prid($order->products[$i]['id'])."' ");
-        } else {
-          xtc_db_query("UPDATE ".TABLE_SPECIALS." 
-                           SET status = '0', 
-                               specials_quantity = '".$new_sp_quantity."'
-                         WHERE products_id = '".xtc_get_prid($order->products[$i]['id'])."' ");
+    $specials_query = xtc_db_query("SELECT products_id,
+                                           specials_quantity
+                                      FROM ".TABLE_SPECIALS."
+                                     WHERE products_id = '".xtc_get_prid($order->products[$i]['id'])."'
+                                           ".SPECIALS_CONDITIONS);
+    if (xtc_db_num_rows($specials_query)) {
+      $specials = xtc_db_fetch_array($specials_query);
+      if ($specials['specials_quantity'] != 0) {
+        $specials_quantity = ($specials['specials_quantity'] - $order->products[$i]['qty']);
+        
+        $stock_set = '';
+        if ($specials_quantity < 1) {
+          $stock_set = " status = '0', ";
         }
+        
+        xtc_db_query("UPDATE ".TABLE_SPECIALS." 
+                         SET ".$stock_set."
+                             specials_quantity = '".$specials_quantity."' 
+                       WHERE products_id = '".xtc_get_prid($order->products[$i]['id'])."' ");
       }
     }
 
@@ -321,7 +351,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
                          ");
         }
 
-        //update attributes
+        // attributes
         $sql_data_array = array (
           'orders_id' => $insert_id,
           'orders_products_id' => $order_products_id,
@@ -338,7 +368,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
         foreach(auto_include(DIR_FS_CATALOG.'includes/extra/checkout/checkout_process_attributes/','php') as $file) require ($file);
         xtc_db_perform(TABLE_ORDERS_PRODUCTS_ATTRIBUTES, $sql_data_array);
 
-        // update attributes download
+        // attributes download
         if (DOWNLOAD_ENABLED == 'true') {
           $attributes_dl_query = xtc_db_query("SELECT pad.products_attributes_maxdays,
                                                       pad.products_attributes_maxcount,
@@ -368,40 +398,6 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
 
       }
     }
-  }
-
-  // check refID
-  $refID = '';
-  $sql_data_array = array();
-  if (isset($_SESSION['tracking']['refID'])) {
-    $refID = $_SESSION['tracking']['refID'];
-  } else {
-    $campaign_query = xtc_db_query("SELECT cp.campaigns_refID
-                                      FROM ".TABLE_CUSTOMERS." c
-                                      JOIN ".TABLE_CAMPAIGNS." cp
-                                           ON cp.campaigns_id = c.refferers_id
-                                     WHERE c.customers_id = '".(int)$_SESSION['customer_id']."'");
-    if (xtc_db_num_rows($campaign_query) > 0) {
-      $campaign = xtc_db_fetch_array($campaign_query);
-      $refID = $campaign['campaigns_refID'];
-    }
-  }
-  
-  if ($refID != '') {
-    $sql_data_array['campaign'] = $refID;
-  }
-  
-  // check if late or direct sale
-  $customers_logon_query = xtc_db_query("SELECT customers_info_number_of_logons
-                                           FROM ".TABLE_CUSTOMERS_INFO."
-                                          WHERE customers_info_id  = '".(int)$_SESSION['customer_id']."'");
-  $customers_logon = xtc_db_fetch_array($customers_logon_query);
-  if ($customers_logon['customers_info_number_of_logons'] > 1) {
-    $sql_data_array['conversion_type'] = 2;
-  }
-  
-  if (count($sql_data_array) > 0) {
-    xtc_db_perform(TABLE_ORDERS, $sql_data_array, 'update', "orders_id = '".(int)$insert_id."'");
   }
 
   // redirect to payment service
