@@ -248,11 +248,7 @@
 
     case FILENAME_DEFAULT :
       if (isset($current_category_id) && (int)$current_category_id > 0) {
-        $categories_meta_query = xtDBquery("SELECT categories_meta_keywords,
-                                                   categories_meta_description,
-                                                   categories_meta_title,
-                                                   categories_name,
-                                                   categories_description
+        $categories_meta_query = xtDBquery("SELECT *
                                               FROM ".TABLE_CATEGORIES_DESCRIPTION."
                                              WHERE categories_id='".(int)$current_category_id."'
                                                AND language_id='".(int)$_SESSION['languages_id']."'");
@@ -302,14 +298,7 @@
       break;
 
     case FILENAME_CONTENT :
-      $contents_meta_query = xtDBquery("SELECT content_meta_title,
-                                               content_meta_description,
-                                               content_meta_keywords,
-                                               content_meta_robots,
-                                               content_title,
-                                               content_heading,
-                                               content_text,
-                                               content_file
+      $contents_meta_query = xtDBquery("SELECT *
                                           FROM ".TABLE_CONTENT_MANAGER."
                                          WHERE content_group = '".(int)$_GET['coID']."'
                                            AND languages_id = '".(int)$_SESSION['languages_id']."'");
