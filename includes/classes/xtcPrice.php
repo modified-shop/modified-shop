@@ -230,22 +230,33 @@ class xtcPrice {
    * @return Mixed boolean false if not found or 0.00, double if found and > 0.00
    */
   function xtcCheckDiscount($pID) {
-    if ($this->cStatus['customers_status_discount'] != '0.00') {
-      $discount_query = xtDBquery("SELECT products_discount_allowed 
-                                     FROM ".TABLE_PRODUCTS." 
-                                    WHERE products_id = '".(int)$pID."'");
-      $discount = xtc_db_fetch_array($discount_query, true);
+    static $discount_array;
+    
+    if (!isset($discount_array)) {
+      $discount_array = array();
+    }
+    
+    if (!isset($discount_array[$pID])) {
+      $discount_array[$pID] = 0;
       
-      $discount_value = $discount['products_discount_allowed'];
-      if ($this->cStatus['customers_status_discount'] < $discount_value) {
-        $discount_value = $this->cStatus['customers_status_discount'];
-      }
+      if ($this->cStatus['customers_status_discount'] != '0.00') {
+        $discount_query = xtDBquery("SELECT products_discount_allowed 
+                                       FROM ".TABLE_PRODUCTS." 
+                                      WHERE products_id = '".(int)$pID."'");
+        $discount = xtc_db_fetch_array($discount_query, true);
       
-      if ($discount_value != '0.00') {
-        return $discount_value;
+        $discount_value = $discount['products_discount_allowed'];
+        if ($this->cStatus['customers_status_discount'] < $discount_value) {
+          $discount_value = $this->cStatus['customers_status_discount'];
+        }
+      
+        if ($discount_value != '0.00') {
+          $discount_array[$pID] = $discount_value;
+        }
       }
     }
-    return false;
+    
+    return $discount_array[$pID];
   }
   
   /**
@@ -351,11 +362,8 @@ class xtcPrice {
       }
       
       // calculate discount
-      if ($this->cStatus['customers_status_discount_attributes'] == '1' && $this->cStatus['customers_status_discount'] != 0.00) {
-        $discount = $this->cStatus['customers_status_discount'];
-        if ($attribute_data['products_discount_allowed'] < $this->cStatus['customers_status_discount']) {
-          $discount = $attribute_data['products_discount_allowed'];
-        }
+      if ($this->cStatus['customers_status_discount_attributes'] == '1') {
+        $discount = $this->xtcCheckDiscount($pID);
       }
       
       // calculate price and several currencies on product attributes

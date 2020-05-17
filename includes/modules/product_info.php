@@ -174,13 +174,11 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
   }
 
   // product discount
-  $discount = 0.00;
-  if ($_SESSION['customers_status']['customers_status_public'] == '1' && $_SESSION['customers_status']['customers_status_discount'] != '0.00') {
-    $discount = $_SESSION['customers_status']['customers_status_discount'];
-    if ($product->data['products_discount_allowed'] < $_SESSION['customers_status']['customers_status_discount'])
-      $discount = $product->data['products_discount_allowed'];
-    if ($discount != '0.00')
+  if ($_SESSION['customers_status']['customers_status_public'] == '1') {
+    $discount = $xtPrice->xtcCheckDiscount($product->data['products_id']);
+    if ($discount != '0.00') {
       $info_smarty->assign('PRODUCTS_DISCOUNT', $discount.'%');
+    }
   }
 
   // date available/added
