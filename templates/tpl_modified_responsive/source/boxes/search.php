@@ -57,5 +57,6 @@ $box_smarty->assign('LINK_ADVANCED', xtc_href_link(FILENAME_ADVANCED_SEARCH));
 
 $box_search = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_search.html');
 
+$box_smarty->caching = 0;
 $smarty->assign('box_SEARCH',$box_search);
 ?>
