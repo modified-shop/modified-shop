@@ -157,7 +157,6 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
 
   // refID
   $refID = '';
-  $sql_data_array = array();
   if (isset($_SESSION['tracking']['refID'])) {
     $refID = $_SESSION['tracking']['refID'];
   } else {
