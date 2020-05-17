@@ -115,8 +115,15 @@ if ($product->getAttributesCount() > 0) {
           $price = $xtPrice->xtcFormat($products_options['options_values_price'], false, $product->data['products_tax_class_id'],$CalculateCurr);
         }
                 
-        if ($_SESSION['customers_status']['customers_status_discount_attributes'] == 1 && $discount <> 0) {
-          $price -= $price / 100 * $discount;
+        // product discount
+        if ($_SESSION['customers_status']['customers_status_public'] == '1'
+            && $_SESSION['customers_status']['customers_status_discount_attributes'] == 1
+            )
+        {
+          $discount = $xtPrice->xtcCheckDiscount($product->data['products_id']);
+          if ($discount != '0.00') {
+            $price -= $price / 100 * $discount;
+          }
         }
 
         $attr_price = $price;
