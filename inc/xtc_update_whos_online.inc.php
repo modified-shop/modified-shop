@@ -42,7 +42,7 @@
     }
 
     if ($crawler !== 0) {
-      $wo_session_id = '';
+      $wo_session_id = 'BOT#'.substr(md5($crawler), 4);
     } else {
       $wo_session_id = xtc_session_id();
     }
