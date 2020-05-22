@@ -53,14 +53,14 @@ function get_sc_service() {
           for ($i=0, $n=count($sc_data['services']); $i<$n; $i++) {
             $sc_carriers['carrier'][] = array(
               'id' => $sc_data['services'][$i],
-              'text' => constant('TEXT_SHIPCLOUD_'.strtoupper($sc_data['services'][$i])),
+              'text' => ((defined('TEXT_SHIPCLOUD_'.strtoupper($sc_data['services'][$i]))) ? constant('TEXT_SHIPCLOUD_'.strtoupper($sc_data['services'][$i])) : $sc_data['services'][$i]),
             );
           }
 
           for ($i=0, $n=count($sc_data['package_types']); $i<$n; $i++) {
             $sc_carriers['parcel'][] = array(
               'id' => $sc_data['package_types'][$i],
-              'text' => constant('TEXT_SHIPCLOUD_'.strtoupper($sc_data['package_types'][$i])),
+              'text' => ((defined('TEXT_SHIPCLOUD_'.strtoupper($sc_data['package_types'][$i]))) ? constant('TEXT_SHIPCLOUD_'.strtoupper($sc_data['package_types'][$i])) : $sc_data['package_types'][$i]),
             );
           }
         }

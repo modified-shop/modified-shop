@@ -149,6 +149,9 @@ define('TEXT_SHIPCLOUD_INSURANCE_NO', 'H&ouml;herversicherung Nein');
 define('TEXT_SHIPCLOUD_INSURANCE_YES', 'H&ouml;herversicherung JA');
 define('TEXT_SHIPCLOUD_BULK', 'Sperrgut');
 define('TEXT_SHIPCLOUD_PARCEL', 'Paket');
+define('TEXT_SHIPCLOUD_DPAG_WARENPOST', 'Warenpost');
+define('TEXT_SHIPCLOUD_DPAG_WARENPOST_UNTRACKED', 'Warenpost (untracked)');
+define('TEXT_SHIPCLOUD_DPAG_WARENPOST_SIGNATURE', 'Warenpost (signature)');
 
 define('DOWNLOAD_LABEL', 'Paketschein herunterladen');
 define('CREATE_LABEL', 'Paketschein erstellen');
