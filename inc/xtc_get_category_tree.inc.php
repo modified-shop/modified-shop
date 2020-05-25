@@ -33,7 +33,8 @@
   
     $conditions = '';
     if (!defined('RUN_MODE_ADMIN')) {
-      $conditions = CATEGORIES_CONDITIONS_C;
+      $conditions .= " AND c.categories_status = 1 ";
+      $conditions .= CATEGORIES_CONDITIONS_C;
     }
   
     if ($include_itself) {
@@ -43,9 +44,8 @@
                                           ON c.categories_id = cd.categories_id
                                              AND cd.language_id = ".(int)$_SESSION['languages_id']."
                                              AND trim(cd.categories_name) != ''
-                                    WHERE c.categories_status = 1
+                                    WHERE c.categories_id = '".(int)$parent_id."'
                                           ".$conditions."
-                                      AND c.categories_id = '".(int)$parent_id."'
                                     LIMIT 1");
       $category = xtc_db_fetch_array($category_query, true);
 
@@ -70,7 +70,6 @@
                                              AND cd.language_id = ".(int)$_SESSION['languages_id']."
                                              AND trim(cd.categories_name) != ''
                                     WHERE c.parent_id = '".(int)$parent_id."'
-                                      AND c.categories_status = '1'
                                           ".$conditions."
                                  ORDER BY c.sort_order, cd.categories_name");
     while ($categories = xtc_db_fetch_array($categories_query,true)) {
@@ -86,9 +85,9 @@
           'text' => $spacing . $categories['categories_name'],
           'link' => $link,
         );
-      
-        $category_tree_array = xtc_get_category_tree($categories['categories_id'], $spacing . '&nbsp;&nbsp;&nbsp;', $exclude, $category_tree_array, false, $cPath);      
-      }    
+      }
+    
+      $category_tree_array = xtc_get_category_tree($categories['categories_id'], $spacing . '&nbsp;&nbsp;&nbsp;', $exclude, $category_tree_array, false, $cPath);
     }
 
     return $category_tree_array;
