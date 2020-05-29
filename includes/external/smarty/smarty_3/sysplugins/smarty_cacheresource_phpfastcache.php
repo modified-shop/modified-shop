@@ -18,6 +18,14 @@ class Smarty_CacheResource_Phpfastcache extends Smarty_CacheResource_KeyValueSto
     {
         global $modified_cache;
 
+        if (!is_object($modified_cache)) {
+          $_mod_cache_class = strtolower(DB_CACHE_TYPE).'_cache';
+          if (!class_exists($_mod_cache_class)) {
+            $_mod_cache_class = 'modified_cache';
+          }
+          $modified_cache = $_mod_cache_class::getInstance();
+        }
+
         $this->cache = $modified_cache;
         $this->prefix = 'tpl_';
     }
