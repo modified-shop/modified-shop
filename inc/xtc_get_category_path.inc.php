@@ -30,6 +30,14 @@
     if (defined('DB_CACHE') && DB_CACHE == 'true') {
       require_once(DIR_FS_CATALOG.'includes/classes/modified_cache.php');
       
+      if (!is_object($modified_cache)) {
+        $_mod_cache_class = strtolower(DB_CACHE_TYPE).'_cache';
+        if (!class_exists($_mod_cache_class)) {
+          $_mod_cache_class = 'modified_cache';
+        }
+        $modified_cache = $_mod_cache_class::getInstance();
+      }
+
       $modified_cache->setId('cp_'.$cID);
       if ($modified_cache->isHit() !== false) {
         $cPath_cache[$cID] = $modified_cache->get();
