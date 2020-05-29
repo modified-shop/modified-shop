@@ -62,6 +62,7 @@ function xtc_wysiwyg($type, $lang, $langID = '',$addonType='')
     
     //Upload Tab entfernen
     //$customConfig['removeDialogTabs'] = "removeDialogTabs: 'image:Link;link:Link',";
+    $customConfig['removeDialogTabs'] = "removeDialogTabs: 'image:Upload',";
     
     //toolbarGroups
     $customConfig['toolbarGroups'] ="
@@ -95,7 +96,7 @@ function xtc_wysiwyg($type, $lang, $langID = '',$addonType='')
 
     //Smiley Path Frontend
     $customConfig['smiley_path'] =  "smiley_path : '".DIR_WS_CATALOG."images/smiley/',";
-    
+        
     //Filebrowser settings
     $filebrowser_settings = PHP_EOL .
                 $codetab.'
