@@ -45,7 +45,7 @@
 
   $customers_statuses_array = xtc_get_customers_statuses(true);
   unset($customers_statuses_array[0]); //Admin
-  unset($customers_statuses_array[DEFAULT_CUSTOMERS_STATUS_ID_GUEST]); //Guest
+  //unset($customers_statuses_array[DEFAULT_CUSTOMERS_STATUS_ID_GUEST]); //Guest
 
   // initiate template engine for mail
   $smarty = new Smarty;
