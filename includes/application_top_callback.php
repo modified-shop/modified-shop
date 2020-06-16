@@ -161,6 +161,9 @@ while ($configuration = xtc_db_fetch_array($configuration_query)) {
 
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/application_top_callback/application_top_callback_begin/','php') as $file) require ($file);
 
+// include shopping cart class
+require_once (DIR_WS_CLASSES.'shopping_cart.php');
+
 // Paypal API Modul
 require (DIR_WS_FUNCTIONS.'sessions.php');
 
