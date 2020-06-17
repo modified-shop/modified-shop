@@ -14,14 +14,19 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-function product_redirect_link($products_id = false, $current_link) {
+function product_redirect_link($products_id = false, $current_link, $categories_id = 0) {
   global $products_link_cat_id;  
 
   $return_arr = array('redirect' => true,
                       'RedirectionLink' => '');
 
   if ($products_id !== false) {
+    $where_cat = '';
+    if ((int)$categories_id > 0) {
+      $where_cat = " AND c.categories_id = '".(int)$categories_id."' ";
+    }
     $order_by = ((defined('PRODUCTS_CANONICAL_CAT_ID') && PRODUCTS_CANONICAL_CAT_ID) ? "ORDER BY FIELD(p2c.categories_id, p.products_canonical_cat_id) DESC" : 'ORDER BY p2c.categories_id < 1, p2c.categories_id ASC');
+
     $check_link_query = xtDBquery("SELECT p.products_id, 
                                           pd.products_name,
                                           p2c.categories_id
@@ -35,9 +40,10 @@ function product_redirect_link($products_id = false, $current_link) {
                                      JOIN " . TABLE_CATEGORIES . " c
                                           ON c.categories_id = p2c.categories_id 
                                              AND c.categories_status = '1'
+                                                 " . $where . "
                                     WHERE p.products_id = '" . (int)$products_id . "'
-                                          " . PRODUCTS_CONDITIONS_P . "
                                       AND p.products_status = '1'
+                                          " . PRODUCTS_CONDITIONS_P . "
                                           " . $order_by);
                     
     if (xtc_db_num_rows($check_link_query, true) > 0) {
@@ -94,7 +100,12 @@ function product_redirect($actual_products_id) {
     if (defined('ADD_CAT_NAMES_TO_PRODUCT_LINK') && ADD_CAT_NAMES_TO_PRODUCT_LINK === false) {
       $shortURL = ((strlen(DIR_WS_CATALOG) > 1) ? str_replace(DIR_WS_CATALOG, '', $current_link) : ltrim($current_link, '/'));
       if (isset($_SESSION['CatPath']) && trim($_SESSION['CatPath']) != '' && strpos($shortURL, '/') === false) {
-        return $_SESSION['CatPath'];
+        $cPath_array = explode('_', $_SESSION['CatPath']);
+        $redirect_arr = product_redirect_link($actual_products_id, $current_link, array_pop($cPath_array));
+                
+        if ($redirect_arr['redirect'] === false) {
+          return $_SESSION['CatPath'];
+        }
       }
     }
    
@@ -103,7 +114,10 @@ function product_redirect($actual_products_id) {
     }
 
     // redirect
-    $redirect_arr = product_redirect_link($actual_products_id, $current_link);
+    if (!isset($redirect_arr)) {
+      $redirect_arr = product_redirect_link($actual_products_id, $current_link);
+    }
+    
     if ($redirect_arr['redirect']) {
       if ($redirect_arr['RedirectionLink'] != '') {
         header('HTTP/1.1 301 Moved Permanently' );
