@@ -13,10 +13,7 @@
   // include needed defaults
   require_once(DIR_FS_EXTERNAL.'trustedshops/trustedshops.php');
 
-  if (defined('MODULE_TS_TRUSTEDSHOPS_ID')
-      && $_SESSION['tracking']['allow'] === true
-      )
-  {
+  if (defined('MODULE_TS_TRUSTEDSHOPS_ID')) {
     // trustedshops badge
     if (MODULE_TS_TRUSTBADGE_CODE != '' && MODULE_TS_TRUSTBADGE_VARIANT == 'custom') {
       echo sprintf(MODULE_TS_TRUSTBADGE_CODE).PHP_EOL;
