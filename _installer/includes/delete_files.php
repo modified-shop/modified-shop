@@ -315,6 +315,7 @@
     'includes/external/smarty/smarty_3/sysplugins/smarty_internal_write_file.php',
     'includes/external/sofort/classes/sofortLibIdealBanks.inc.php',
     'includes/external/sofort/classes/sofortLibSofortueberweisungGateway.inc.php',
+    'includes/extra/ajax/cookie_consent.php',
     'includes/extra/application_bottom/10_easymarketing.php',
     'includes/extra/application_bottom/10_findologic.php',
     'includes/extra/checkout/checkout_process_end/20_easybill.php',

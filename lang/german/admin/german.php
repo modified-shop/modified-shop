@@ -188,6 +188,7 @@ define('BOX_NEWSLETTER_RECIPIENTS', 'Newsletter Empf&auml;nger');
 define('BOX_DSGVO_EXPORT', 'DSGVO Export');
 define('BOX_SUPPORT', 'Support');
 define('BOX_CACHING', 'Caching');
+define('BOX_COOKIE_CONSENT', 'Cookie Consent');
 
 define('TXT_GROUPS','<b>Gruppen</b>:');
 define('TXT_SYSTEM','System');
