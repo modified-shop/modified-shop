@@ -208,6 +208,7 @@ echo mainMenue(BOX_HEADING_CONFIGURATION);
     if ($admin_access['products_vpe'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_PRODUCTS_VPE, '', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_PRODUCTS_VPE . '</a></li>';
     if ($admin_access['campaigns'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_CAMPAIGNS, '', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_CAMPAIGNS . '</a></li>';
     if ($admin_access['cross_sell_groups'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_XSELL_GROUPS, '', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_ORDERS_XSELL_GROUP . '</a></li>';
+    if ($admin_access['cookie_consent'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_COOKIE_CONSENT, '', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_COOKIE_CONSENT . '</a></li>';
 echo endMenue(BOX_HEADING_CONFIGURATION);
 
 //---------------------------KONFIGURATION 2
