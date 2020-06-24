@@ -65,9 +65,20 @@ if (count($_SESSION['tracking']['pageview_history']) > 6) {
 $_SESSION['tracking']['pageview_history'] = array_values($_SESSION['tracking']['pageview_history']);
 
 // allow
-$_SESSION['tracking']['allow'] = false;
-if (isset($_COOKIE['MODtrack'])) {
-  $_SESSION['tracking']['allow'] = ($_COOKIE['MODtrack'] == 'allow' || $_COOKIE['MODtrack'] == 'dismiss');
+$_SESSION['tracking']['allow'] = array();
+if (isset($_COOKIE['MODOilTrack'])) {
+  $_SESSION['tracking']['allow'] = json_decode(stripslashes($_COOKIE['MODOilTrack']), true);
+}
+
+// check allowed tracking
+if (defined('MODULE_COOKIE_CONSENT_STATUS') && MODULE_COOKIE_CONSENT_STATUS == 'true') {
+  $qr = xtDBquery("SELECT DISTINCT `cookies_id` 
+                     FROM " . TABLE_COOKIE_CONSENT_COOKIES . " 
+                    WHERE `status` = 1");
+  $_SESSION['tracking']['allowed'] = array();
+  while ($row = xtc_db_fetch_array($qr, true)) {
+    $_SESSION['tracking']['allowed'][] = $row['cookies_id'];
+  }
 }
 
 // order
