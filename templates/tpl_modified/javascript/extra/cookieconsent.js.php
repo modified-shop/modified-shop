@@ -18,7 +18,7 @@ if (defined('MODULE_COOKIE_CONSENT_STATUS') && strtolower(MODULE_COOKIE_CONSENT_
   "preview_mode": <?php echo defined('COOKIE_CONSENT_NO_TRACKING') ? 'true' : 'false'; ?>,
   "advanced_settings": true,
   "timeout": 0,
-  "iabVendorListUrl": "<?php echo xtc_href_link('ajax.php', 'ext=cookie_consent'); ?>",
+  "iabVendorListUrl": "<?php echo xtc_href_link('ajax.php', 'ext=get_cookie_consent&speed=1&lang='.(int)$_SESSION['languages_id']); ?>",
   "locale": {
     "localeId": "<?php echo $_SESSION['language_code']; ?>",
     "version": 1,
