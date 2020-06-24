@@ -35,9 +35,11 @@ function smarty_function_googleanalytics($params, $smarty) {
   
   $google_linkid = null;
   $google_display = null;
-  
-  $beginCode = '
-      <script type="text/javascript">
+  $beginCode = '<script>';
+  if (defined('MODULE_COOKIE_CONSENT_STATUS') && strtolower(MODULE_COOKIE_CONSENT_STATUS) == 'true' && (in_array(3, $_SESSION['tracking']['allowed']) || in_array(4, $_SESSION['tracking']['allowed']) || defined('COOKIE_CONSENT_NO_TRACKING'))) {
+    $beginCode = '<script async data-type="text/javascript" type="as-oil" data-purposes="'.(TRACKING_GOOGLEANALYTICS_UNIVERSAL == 'false' ? 4 : 3).'" data-managed="as-oil">';
+  }
+  $beginCode .= '
         // Set to the same value as the web property used on the site
         var gaProperty = \''.$account.'\';
 
@@ -56,7 +58,7 @@ function smarty_function_googleanalytics($params, $smarty) {
         var _gaq = _gaq || [];
         var gaLoaded = false;
         
-        function TrackingGoogle () {'."\n";
+        '."\n";
   
   if (TRACKING_GOOGLEANALYTICS_UNIVERSAL == 'false') {
     $beginCode .= '
@@ -88,7 +90,6 @@ function smarty_function_googleanalytics($params, $smarty) {
             })();
             gaLoaded = true;
           }
-        }
       </script>
     ';
   } else {
@@ -125,7 +126,6 @@ function smarty_function_googleanalytics($params, $smarty) {
     }
   
     $endCode = "          ga('send', 'pageview');
-        }
       </script>";
   }
   

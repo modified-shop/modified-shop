@@ -13,7 +13,6 @@
 // GOOGLE CONV. TRACKING
 if (basename($PHP_SELF) == FILENAME_CHECKOUT_SUCCESS 
     && GOOGLE_CONVERSION == 'true'
-    && $_SESSION['tracking']['allow'] === true
     )
 {
   require_once (DIR_FS_INC.'get_order_total.inc.php');
@@ -23,10 +22,23 @@ if (basename($PHP_SELF) == FILENAME_CHECKOUT_SUCCESS
                                     FROM " . TABLE_ORDERS . "
                                    WHERE orders_id = '" . (int)$last_order . "'");
   $currency = xtc_db_fetch_array($currency_query);
+  
+  $script = '<script type="text/javascript">';
+  $script_js = '<script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js"></script>';
+  if (defined('MODULE_COOKIE_CONSENT_STATUS') 
+      && MODULE_COOKIE_CONSENT_STATUS == 'true' 
+      && (in_array(8, $_SESSION['tracking']['allowed']) 
+          || defined('COOKIE_CONSENT_NO_TRACKING')
+          )
+      )
+  {
+    $script = '<script async data-type="text/javascript" type="as-oil" data-purposes="8" data-managed="as-oil">';
+    $script_js = '<script async data-src="//www.googleadservices.com/pagead/conversion.js" data-type="text/javascript" type="as-oil" data-purposes="8" data-managed="as-oil"></script>';
+  }
 ?>
 <div style="height:0px;overflow:hidden;">
 <!-- Google Code for Purchase Conversion Page -->
-<script type="text/javascript">
+<?php echo $script; ?>
   /* <![CDATA[ */
   var google_conversion_id = <?php echo GOOGLE_CONVERSION_ID; ?>;
   var google_conversion_language = "<?php echo GOOGLE_LANG; ?>";
@@ -36,12 +48,7 @@ if (basename($PHP_SELF) == FILENAME_CHECKOUT_SUCCESS
   var google_remarketing_only = false;
   /* ]]> */
 </script>
-<script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js"></script>
-<noscript>
-  <div style="display:inline;">
-    <img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/<?php echo GOOGLE_CONVERSION_ID; ?>/?value=<?php echo number_format($total, 2); ?>&amp;currency_code=<?php echo $currency['currency']; ?>&amp;label=<?php echo GOOGLE_CONVERSION_LABEL; ?>&amp;guid=ON&amp;script=0"/>
-  </div>
-</noscript>
+<?php echo $script_js; ?>
 </div>
 <?php
 }

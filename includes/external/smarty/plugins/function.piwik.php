@@ -52,11 +52,12 @@ function smarty_function_piwik($params, $smarty) {
 
   $url = str_replace(array('http://', 'https://'), '', $url);
   $url = trim($url, '/');
-
-  $beginCode = '
-    <script type="text/javascript">
+  $beginCode = '<script>';
+  if (defined('MODULE_COOKIE_CONSENT_STATUS') && strtolower(MODULE_COOKIE_CONSENT_STATUS) == 'true' && (in_array(7, $_SESSION['tracking']['allowed']) || defined('COOKIE_CONSENT_NO_TRACKING'))) {
+    $beginCode = '<script async data-type="text/javascript" type="as-oil" data-purposes="7" data-managed="as-oil">';
+  }
+  $beginCode .= '
       var _paq = _paq || [];
-      function TrackingPiwik () {
         var u="//'.$url.'/";
         _paq.push([\'setSiteId\', '.$id.']);
         _paq.push([\'setTrackerUrl\', u+\'piwik.php\']);
@@ -74,13 +75,8 @@ function smarty_function_piwik($params, $smarty) {
           g.src=u+\'piwik.js\';
           s.parentNode.insertBefore(g,s);
         })();
-      }
     </script>
   ';
-  
-  if ($_SESSION['tracking']['allow'] === true) {
-    $endCode .= '<noscript><p><img src="//'.$url.'/piwik.php?idsite='.$id.'&rec=1" style="border:0" alt="" /></p></noscript>';
-  }
   
   $orderCode = null;
   if ((basename($PHP_SELF) == FILENAME_DEFAULT) && (isset($_GET['cPath'])) && ($_GET['cPath'] != '')) {

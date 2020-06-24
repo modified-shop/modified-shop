@@ -1,10 +1,26 @@
 <?php
- //additional fields
- define('TEXT_COOKIECONSENT_MESSAGE_INFO', 'Um Ihnen ein besseres Nutzererlebnis zu bieten, verwenden wir Cookies. Durch Nutzung der Website stimmen Sie der Verwendung von Cookies zu.');
- define('TEXT_COOKIECONSENT_MESSAGE_TRACKING', 'Um unsere Webseiten fortlaufend zu optimieren und Ihnen damit einen angenehmen Kaufprozess anbieten zu k&ouml;nnen, m&ouml;chten wir mit Hilfe von Cookies die Seitennutzung analysieren. Als Besucher bleiben Sie f&uuml;r uns anonym. Wir bitten Sie daher, in die Cookie-Setzung einzuwilligen. Ihre Einwilligung k&ouml;nnen Sie jederzeit widerrufen.');
- define('TEXT_COOKIECONSENT_DISSMISS', 'Verstanden!');
- define('TEXT_COOKIECONSENT_LINK', 'Mehr Erfahren');
- define('TEXT_COOKIECONSENT_POLICY', 'Cookie Einstellungen');
- define('TEXT_COOKIECONSENT_ALLOW', 'Akzeptieren');
- define('TEXT_COOKIECONSENT_DENY', 'Ablehnen');
-?>
+  /* --------------------------------------------------------------
+   $Id: cookie_consent.js.php $
+
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
+
+   Copyright (c) 2009 - 2019 [www.modified-shop.org]
+   --------------------------------------------------------------
+   Released under the GNU General Public License
+   --------------------------------------------------------------*/
+
+  define('TEXT_COOKIE_CONSENT_LABEL_INTRO_HEADING', 'Diese Webseite verwendet Cookies und andere Technologien');
+  define('TEXT_COOKIE_CONSENT_LABEL_INTRO', 'Wir verwenden Cookies und &auml;hnliche Technologien, auch von Drittanbietern, um die ordentliche Funktionsweise der Website zu gew&auml;hrleisten, die Nutzung unseres Angebotes zu analysieren und Ihnen ein bestm&ouml;gliches Einkaufserlebnis bieten zu k&ouml;nnen. Weitere Informationen finden Sie in unserer Datenschutzerkl&auml;rung.');
+  define('TEXT_COOKIE_CONSENT_LABEL_INTRO_TEXT_PRIVACY', 'Datenschutzerkl&auml;rung');
+  define('TEXT_COOKIE_CONSENT_LABEL_INTRO_TEXT_IMPRINT', 'Impressum');
+
+  define('TEXT_COOKIE_CONSENT_LABEL_BUTTON_YES','Speichern');
+  define('TEXT_COOKIE_CONSENT_LABEL_BUTTON_BACK','Zur&uuml;ck');
+  define('TEXT_COOKIE_CONSENT_LABEL_BUTTON_YES_ALL','Alle Akzeptieren');
+  define('TEXT_COOKIE_CONSENT_LABEL_BUTTON_ADVANCED_SETTINGS','Weitere Informationen');
+  define('TEXT_COOKIE_CONSENT_LABEL_CPC_HEADING','Cookie Einstellungen');
+  define('TEXT_COOKIE_CONSENT_LABEL_CPC_ACTIVATE_ALL','Alle aktivieren');
+  define('TEXT_COOKIE_CONSENT_LABEL_CPC_DEACTIVATE_ALL','Alle deaktivieren');
+  define('TEXT_COOKIE_CONSENT_LABEL_NOCOOKIE_HEAD','Keine Cookies erlaubt.');
+  define('TEXT_COOKIE_CONSENT_LABEL_NOCOOKIE_TEXT','Bitte aktivieren Sie Cookies in den Einstellungen Ihres Browsers.');

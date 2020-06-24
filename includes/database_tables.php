@@ -120,6 +120,10 @@
   // trusted shops
   define('TABLE_TRUSTEDSHOPS', 'trustedshops');
   
+  // cookie consent
+  define('TABLE_COOKIE_CONSENT_COOKIES', 'cookie_consent_cookies');
+  define('TABLE_COOKIE_CONSENT_CATEGORIES', 'cookie_consent_categories');
+
   require_once(DIR_FS_INC.'auto_include.inc.php');
   foreach(auto_include(DIR_FS_CATALOG.'includes/extra/database_tables/','php') as $file) require ($file);
 ?>
