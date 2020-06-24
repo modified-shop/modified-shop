@@ -10,19 +10,39 @@
    Released under the GNU General Public License
    --------------------------------------------------------------*/
 
-  function cookie_consent() {
+  if (isset($_REQUEST['speed'])) {
+    require_once (DIR_FS_INC.'auto_include.inc.php');
+
+    require_once (DIR_FS_INC.'db_functions_'.DB_MYSQL_TYPE.'.inc.php');
+    require_once (DIR_FS_INC.'db_functions.inc.php');
+
+    require_once (DIR_WS_INCLUDES.'database_tables.php');
+  }
+
+
+  function get_cookie_consent() {
+    xtc_db_connect() or die('Unable to connect to database server!');
+  
+    // load configuration
+    $configuration_query = xtc_db_query('SELECT configuration_key, configuration_value FROM '.TABLE_CONFIGURATION);
+    while ($configuration = xtc_db_fetch_array($configuration_query)) {
+      defined($configuration['configuration_key']) OR define($configuration['configuration_key'], stripslashes($configuration['configuration_value']));
+    }
+
     $response = array();
-    if (defined('MODULE_COOKIE_CONSENT_STATUS') && strtolower(MODULE_COOKIE_CONSENT_STATUS) == 'true') {
+    if (defined('MODULE_COOKIE_CONSENT_STATUS') && MODULE_COOKIE_CONSENT_STATUS == 'true') {
       $response['vendorListVersion'] = MODULE_COOKIE_CONSENT_VERSION;
       $response['lastUpdated'] = date('c',strtotime(MODULE_COOKIE_CONSENT_LAST_UPDATE));
       $response['categories'] = array();
       $response['purposes'] = array();
       $response['features'] = array();
       $response['vendors'] = array();
-
+      
+      $languages_id = (int)$_GET['lang'];
       $cookies_query = xtDBquery("SELECT *
                                     FROM " . TABLE_COOKIE_CONSENT_COOKIES . " 
-                                   WHERE languages_id = '".(int)$_SESSION['languages_id']."' AND `status`=1
+                                   WHERE languages_id = '".$languages_id."' 
+                                     AND `status` = 1
                                 ORDER BY sort_order, cookies_name");
       $cookies_cat = array();
       while ($row = xtc_db_fetch_array($cookies_query, true)) {
@@ -34,7 +54,7 @@
     
       $options_query = xtDBquery("SELECT *
                                     FROM " . TABLE_COOKIE_CONSENT_CATEGORIES . " 
-                                   WHERE languages_id = '".(int)$_SESSION['languages_id']."'
+                                   WHERE languages_id = '".$languages_id."'
                                 ORDER BY sort_order, categories_name");
       while ($options = xtc_db_fetch_array($options_query, true)) {
         if (!empty($cookies_cat[$options['categories_id']])) {
