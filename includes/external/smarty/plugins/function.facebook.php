@@ -41,9 +41,11 @@ function smarty_function_facebook($params, $smarty) {
   if (!in_array('FB-'.$last_order, $_SESSION['tracking']['order'])) {  
     $_SESSION['tracking']['order'][] = 'FB-'.$last_order;
     $total = get_order_total($last_order);
-
-    $beginCode = '<script>
-  function TrackingFacebook () {
+    $beginCode = '<script>';
+    if (defined('MODULE_COOKIE_CONSENT_STATUS') && strtolower(MODULE_COOKIE_CONSENT_STATUS) == 'true' && (in_array(6, $_SESSION['tracking']['allowed']) || defined('COOKIE_CONSENT_NO_TRACKING'))) {
+      $beginCode = '<script async data-type="text/javascript" type="as-oil" data-purposes="6" data-managed="as-oil">';
+    }
+    $beginCode .= '
     (function() {
       var _fbq = window._fbq || (window._fbq = []);
       if (!_fbq.loaded) {
@@ -59,13 +61,8 @@ function smarty_function_facebook($params, $smarty) {
 
     $endCode = 'window._fbq = window._fbq || [];
     window._fbq.push([\'track\', \''.$id.'\', {\'value\':\''.$total.'\',\'currency\':\''.$orders['currency'].'\'}]);
-  }
   </script>
     ';
-
-    if ($_SESSION['tracking']['allow'] === true) {
-      $endCode .= '<noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?ev='.$id.'&amp;cd[value]='.$total.'&amp;cd[currency]='.$orders['currency'].'&amp;noscript=1" /></noscript>';
-    }
   }
   
   return $beginCode . $endCode;

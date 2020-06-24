@@ -19,8 +19,8 @@
   $css_array = array(
     DIR_TMPL_CSS.'jquery.colorbox.css',
     DIR_TMPL_CSS.'jquery.alertable.css',
-    DIR_TMPL_CSS.'jquery.cookieconsent.css',
     DIR_TMPL_CSS.'jquery.bxslider.css',    
+    DIR_TMPL_CSS.'cookieconsent.css',
   );
   $css_min = DIR_TMPL_CSS.'tpl_plugins.min.css';
 
