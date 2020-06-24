@@ -95,6 +95,7 @@ $filename_array = array(
   'FILENAME_CHECKOUT_PROCESS' => '../checkout_process.php',
   'FILENAME_NEWSLETTER' => 'newsletter.php',
   'FILENAME_GV_REDEEM' => 'gv_redeem.php',
+  'FILENAME_COOKIE_CONSENT' => 'cookie_consent.php',
 );
 
 // define 
