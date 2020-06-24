@@ -21,7 +21,6 @@
 <?php
 $script_array = array(
   DIR_TMPL_JS.'thickbox.js',
-  DIR_TMPL_JS.'jquery.cookieconsent.min.js',
   DIR_TMPL_JS.'jquery.alertable.min.js',
 );
 $script_min = DIR_TMPL_JS.'tpl_plugins.min.js';
