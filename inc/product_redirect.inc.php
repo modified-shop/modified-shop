@@ -40,7 +40,7 @@ function product_redirect_link($products_id = false, $current_link, $categories_
                                      JOIN " . TABLE_CATEGORIES . " c
                                           ON c.categories_id = p2c.categories_id 
                                              AND c.categories_status = '1'
-                                                 " . $where . "
+                                                 " . $where_cat . "
                                     WHERE p.products_id = '" . (int)$products_id . "'
                                       AND p.products_status = '1'
                                           " . PRODUCTS_CONDITIONS_P . "
