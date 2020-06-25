@@ -19,7 +19,7 @@ $link_parameters = defined('TPL_POPUP_CONTENT_LINK_PARAMETERS') ? TPL_POPUP_CONT
   "preview_mode": <?php echo defined('COOKIE_CONSENT_NO_TRACKING') ? 'true' : 'false'; ?>,
   "advanced_settings": true,
   "timeout": 0,
-  "iabVendorListUrl": "<?php echo decode_htmlentities(xtc_href_link('ajax.php', 'ext=get_cookie_consent&speed=1&language='.$_SESSION['language_code'], false)); ?>",
+  "iabVendorListUrl": "<?php echo decode_htmlentities(xtc_href_link('ajax.php', 'ext=get_cookie_consent&speed=1&language='.$_SESSION['language_code'], $request_type, false)); ?>",
   "locale": {
     "localeId": "<?php echo $_SESSION['language_code']; ?>",
     "version": 1,
