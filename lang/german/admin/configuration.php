@@ -997,13 +997,6 @@ define('MODULE_BANNER_MANAGER_STATUS_DESC', 'Banner Manager aktivieren?');
 define('MODULE_NEWSLETTER_STATUS_TITLE', 'Newsletter');
 define('MODULE_NEWSLETTER_STATUS_DESC', 'Newsletter-System aktivieren?');
 
-define('GOOGLE_CERTIFIED_SHOPS_MERCHANT_ACTIVE_TITLE', 'Google Certified Shops Merchant aktivieren');
-define('GOOGLE_CERTIFIED_SHOPS_MERCHANT_ACTIVE_DESC', 'Soll der Google Certified Shops Merchant Code verwendet werden?<br/><br/><b>Achtung:</b> Das funktioniert nur mit einem ab Shopversion 2.0.1.0 kompatiblem Template!');
-define('GOOGLE_SHOPPING_ID_TITLE', 'Google Shopping ID');
-define('GOOGLE_SHOPPING_ID_DESC', 'Ihre Google Shopping ID');
-define('GOOGLE_TRUSTED_ID_TITLE', 'Google Trusted ID');
-define('GOOGLE_TRUSTED_ID_DESC', 'Ihre Google Trusted ID');
-
 define('EMAIL_ARCHIVE_ADDRESS_TITLE', 'Archiv - E-Mail-Adresse');
 define('EMAIL_ARCHIVE_ADDRESS_DESC', 'Bitte geben Sie eine E-Mail-Adresse f&uuml;r die Archivierung aller ausgehenden E-Mails ein. Damit werden per BCC die E-Mails an ein Archivpostfach geschickt.');
 

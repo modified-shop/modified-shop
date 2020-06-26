@@ -497,10 +497,6 @@ $values_group_update = array();
   $values[] = "(NULL, 'TRACKING_FACEBOOK_ACTIVE', 'false', 24, 8, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
   $values[] = "(NULL, 'TRACKING_FACEBOOK_ID','', 24, 9, NULL, NOW(), NULL, NULL);";
 
-  $values[] = "(NULL, 'GOOGLE_CERTIFIED_SHOPS_MERCHANT_ACTIVE', 'false', 24, 10, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
-  $values[] = "(NULL, 'GOOGLE_SHOPPING_ID','', 24, 11, NULL, NOW(), NULL, NULL);";
-  $values[] = "(NULL, 'GOOGLE_TRUSTED_ID','', 24, 12, NULL, NOW(), NULL, NULL);";
-
 //configuration_group_id 25 --- "captcha"
   $values_group[] = "(25,'Captcha','Captcha Configuration',25,1);";
   $values[] = "(NULL, 'MODULE_CAPTCHA_ACTIVE', 'newsletter,contact,password', 25, 1, NULL, NOW(), NULL, 'xtc_cfg_multi_checkbox(array(\'newsletter\' => \'Newsletter\', \'contact\' => \'Contact\', \'password\' => \'Password\', \'reviews\' => \'Reviews\', \'create_account\' => \'Registration\'), \',\',');";
