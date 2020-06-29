@@ -108,6 +108,7 @@ function load_state() {
       }
       $('select').SumoSelect();
       $("[name='state']").val(state);
+      $("[name='state']").prop('selectedIndex',0);
       stateSelect.parent().parent().parent().parent().show();
     } else {
       if (tmpParent.attr("class").indexOf("SumoSelect") > -1) {

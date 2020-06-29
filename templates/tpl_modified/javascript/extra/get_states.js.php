@@ -97,6 +97,7 @@ function load_state() {
         }).appendTo(stateSelect);
       });
       $("[name='state']").val(state);
+      $("[name='state']").prop('selectedIndex',0);
       stateSelect.parent().parent().parent().show();
     } else {
       $("[name='state']").replaceWith('<input type="text" name="state"></input>');
