@@ -808,7 +808,7 @@ td.checkbox {
   background: #363839;
   min-height:280px;
   margin: 40px 0 0 0;  
-  padding: 0 0 70px 0;
+  padding: 0 0 20px 0;
 }
 .layout_footer_inner {
   width:100%;
@@ -936,7 +936,7 @@ span.cop_grey {
   line-height:16px;
   font-weight:400;
   padding:0 0 10px 0;
-  margin: -88px 0 0 0;
+  margin: -40px 0 0 0;
   width:100%;
 }
 .copyright a {
