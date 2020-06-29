@@ -73,7 +73,7 @@ if (isset($_GET['checkout']) && $_SESSION['payment'] == 'paypalplus') {
 	if (count($module) > 0) {
 	  echo ','."\n";
 	  echo '"onContinue": function() { 
-            var check = check_form();
+            var check = check_form_payment();
             if (check == true) {
               var payment = ppp.getPaymentMethod();
               if (payment.substring(0, 2) != "pp") {
