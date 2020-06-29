@@ -482,7 +482,7 @@ if (xtc_not_null($action) && !$box) {
                       if ($value['set_function']) {
                         if (strpos($value['set_function'], '->') !== false) {
                           $class_method = explode('->', $value['set_function']);
-                          if (!isset(${$class_method[0]}) || !is_object(${$class_method[0]})) { // DokuMan - 2011-05-10 - check if object is first set
+                          if (!isset(${$class_method[0]}) || !is_object(${$class_method[0]})) {
                             include(DIR_WS_CLASSES . $class_method[0] . '.php');
                             ${$class_method[0]} = new $class_method[0]();
                           }
@@ -491,7 +491,7 @@ if (xtc_not_null($action) && !$box) {
                           eval('$keys .= ' . $value['set_function'] . "'" . encode_htmlspecialchars($value['value'], ENT_QUOTES) . "', '" . $key . "');");
                         }
                       } else {
-                        $keys .= xtc_draw_input_field('configuration[' . $key . ']', encode_htmlspecialchars($value['value']), 'class="inputModule"');
+                        $keys .= xtc_draw_input_field('configuration[' . $key . ']', $value['value'], 'class="inputModule"');
                       }
                       $keys .= '<br /><br />';
                     }

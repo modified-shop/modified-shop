@@ -552,7 +552,7 @@ if (xtc_not_null($action) && !$box) {
                       eval('$keys .= ' . $value['set_function'] . "'" . encode_htmlspecialchars($value['value'], ENT_QUOTES) . "', '" . $key . "');");
                     }
                   } else {
-                    $keys .= xtc_draw_input_field('configuration[' . $key . ']', encode_htmlspecialchars($value['value']), 'class="inputModule"');
+                    $keys .= xtc_draw_input_field('configuration[' . $key . ']', $value['value'], 'class="inputModule"');
                   }
                   $keys .= '<br /><br />';
                 }
