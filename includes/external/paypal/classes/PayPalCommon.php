@@ -488,24 +488,21 @@ class PayPalCommon extends PayPalAuth {
 
     $password = xtc_create_password(8);
     
-    $sql_data_array = array('customers_cid' => generate_customers_cid(true),
-                            'customers_status' => DEFAULT_CUSTOMERS_STATUS_ID,
-                            'customers_firstname' => $customer['customers']['customers_firstname'],
-                            'customers_lastname' => $customer['customers']['customers_lastname'],
-                            'customers_email_address' => $customer['info']['email_address'],
-                            'customers_telephone' => $customer['info']['telephone'],
-                            'customers_password' => xtc_encrypt_password($password),
-                            'customers_date_added' => 'now()',
-                            'customers_last_modified' => 'now()',
-                            'password_request_time' => 'now()',
-                            );
+    $sql_data_array = array(
+      'customers_cid' => generate_customers_cid(true),
+      'customers_status' => DEFAULT_CUSTOMERS_STATUS_ID,
+      'customers_gender' => $customer['info']['gender'],
+      'customers_firstname' => $customer['customers']['customers_firstname'],
+      'customers_lastname' => $customer['customers']['customers_lastname'],
+      'customers_email_address' => $customer['info']['email_address'],
+      'customers_telephone' => $customer['info']['telephone'],
+      'customers_dob' => xtc_date_raw($customer['info']['dob']),
+      'customers_password' => xtc_encrypt_password($password),
+      'customers_date_added' => 'now()',
+      'customers_last_modified' => 'now()',
+      'password_request_time' => 'now()',
+    );
 
-    if (ACCOUNT_GENDER == 'true') {
-      $sql_data_array['customers_gender'] = $customer['info']['gender'];
-    }
-    if (ACCOUNT_DOB == 'true') {
-      $sql_data_array['customers_dob'] = xtc_date_raw($customer['info']['dob']);
-    }
     xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array);
 
     $customer_id = xtc_db_insert_id();
@@ -541,30 +538,22 @@ class PayPalCommon extends PayPalAuth {
       $type = 'delivery';
     }
     
-    $sql_data_array = array('customers_id' => $customer_id,
-                            'entry_firstname' => $data[$type.'_firstname'],
-                            'entry_lastname' => $data[$type.'_lastname'],
-                            'entry_street_address' => $data[$type.'_street_address'],
-                            'entry_postcode' => $data[$type.'_postcode'],
-                            'entry_city' => $data[$type.'_city'],
-                            'entry_country_id' => $data[$type.'_country_id'],
-                            'address_date_added' => 'now()',
-                            'address_last_modified' => 'now()'
-                            );
-
-    if (ACCOUNT_GENDER == 'true' && isset($data['gender'])) {
-      $sql_data_array['entry_gender'] = $data['gender'];
-    }
-    if (ACCOUNT_COMPANY == 'true') {
-      $sql_data_array['entry_company'] = $data[$type.'_company'];
-    }
-    if (ACCOUNT_SUBURB == 'true') {
-      $sql_data_array['entry_suburb'] = $data[$type.'_suburb'];
-    }
-    if (ACCOUNT_STATE == 'true') {
-      $sql_data_array['entry_zone_id'] = $data[$type.'_zone_id'];
-      $sql_data_array['entry_state'] = $data[$type.'_state'];
-    }
+    $sql_data_array = array(
+      'customers_id' => $customer_id,
+      'entry_gender' => $data['gender'],
+      'entry_firstname' => $data[$type.'_firstname'],
+      'entry_lastname' => $data[$type.'_lastname'],
+      'entry_company' => $data[$type.'_company'],
+      'entry_street_address' => $data[$type.'_street_address'],
+      'entry_suburb' => $data[$type.'_suburb'],
+      'entry_postcode' => $data[$type.'_postcode'],
+      'entry_city' => $data[$type.'_city'],
+      'entry_country_id' => $data[$type.'_country_id'],
+      'entry_zone_id' => $data[$type.'_zone_id'],
+      'entry_state' => $data[$type.'_state'],
+      'address_date_added' => 'now()',
+      'address_last_modified' => 'now()'
+    );
         
     xtc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array);
 
