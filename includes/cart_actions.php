@@ -28,7 +28,10 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-$action = (isset($_GET['action']) ? $_GET['action'] : '');
+$action = '';
+if (isset($_GET['action'])) {
+  $action = $_GET['action'] = preg_replace('/[^0-9a-zA-Z_-]/', '', $_GET['action']);
+}
 
 // Shopping cart actions
 if (xtc_not_null($action)) {
@@ -61,7 +64,7 @@ if (xtc_not_null($action)) {
     array_push($parameters, 'products_id', 'cPath');
   } else {
     $goto = basename($PHP_SELF);
-    if ($_GET['action'] == 'buy_now') {
+    if ($action == 'buy_now') {
       if ($goto == FILENAME_PRODUCT_INFO) {
         $_GET['products_id'] = $_GET['BUYproducts_id'];
       }
