@@ -183,9 +183,9 @@
                   }
 
                   if (isset($oInfo) && is_object($oInfo) && ($newsletter['customers_email_address'] == $oInfo->customers_email_address) ) {
-                    echo '                  <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_NEWSLETTER_RECIPIENTS, 'page=' . $_GET['page'] . '&mail=' . md5($oInfo->customers_email_address) . '&action=edit') . '\'">' . "\n";
+                    echo '                  <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_NEWSLETTER_RECIPIENTS, xtc_get_all_get_params(array('action','mail')).'mail=' . md5($oInfo->customers_email_address) . '&action=edit') . '\'">' . "\n";
                   } else {
-                    echo '                  <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_NEWSLETTER_RECIPIENTS, 'page=' . $_GET['page'] . '&mail=' . md5($newsletter['customers_email_address'])) . '\'">' . "\n";
+                    echo '                  <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_NEWSLETTER_RECIPIENTS, xtc_get_all_get_params(array('action','mail')).'mail=' . md5($newsletter['customers_email_address'])) . '\'">' . "\n";
                   }
                   ?>
                   <td class="dataTableContent txta-l"><?php echo $newsletter['customers_email_address']; ?></td>
@@ -211,10 +211,10 @@
               case 'delete':
                 $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_DELETE_NEWSLETTER . '</b>');
 
-                $contents = array('form' => xtc_draw_form('status', FILENAME_NEWSLETTER_RECIPIENTS, 'page=' . $_GET['page'] . '&mail=' . md5($oInfo->customers_email_address)  . '&action=deleteconfirm'));
+                $contents = array('form' => xtc_draw_form('status', FILENAME_NEWSLETTER_RECIPIENTS, xtc_get_all_get_params(array('action','mail')).'mail=' . md5($oInfo->customers_email_address)  . '&action=deleteconfirm'));
                 $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
                 $contents[] = array('text' => '<br /><b>' . $oInfo->customers_email_address . '</b>');
-                $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UNSUBSCRIBE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_NEWSLETTER_RECIPIENTS, 'page=' . $_GET['page'] . '&mail=' . md5($oInfo->customers_email_address)) . '">' . BUTTON_CANCEL . '</a>');
+                $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UNSUBSCRIBE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_NEWSLETTER_RECIPIENTS, xtc_get_all_get_params(array('action','mail')).'mail=' . md5($oInfo->customers_email_address)) . '">' . BUTTON_CANCEL . '</a>');
                 break;
 
               default:
@@ -243,11 +243,11 @@
                   }
 
                   if ($oInfo->mail_status == '1') {
-                    $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_NEWSLETTER_RECIPIENTS, 'page=' . $_GET['page'] . '&mail=' . md5($oInfo->customers_email_address) . '&action=delete') . '">' . BUTTON_UNSUBSCRIBE . '</a>');
+                    $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_NEWSLETTER_RECIPIENTS, xtc_get_all_get_params(array('action','mail')).'mail=' . md5($oInfo->customers_email_address) . '&action=delete') . '">' . BUTTON_UNSUBSCRIBE . '</a>');
                   }
 
                   if ($oInfo->mail_status == '0') {
-                    $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_NEWSLETTER_RECIPIENTS, 'page=' . $_GET['page'] . '&mail=' . md5($oInfo->customers_email_address) . '&action=remind') . '">' . BUTTON_REMIND . '</a>');
+                    $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_NEWSLETTER_RECIPIENTS, xtc_get_all_get_params(array('action','mail')).'mail=' . md5($oInfo->customers_email_address) . '&action=remind') . '">' . BUTTON_REMIND . '</a>');
                   }
                 }
                 break;
