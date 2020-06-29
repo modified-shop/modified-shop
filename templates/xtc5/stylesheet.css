@@ -1257,7 +1257,7 @@ ul#checkoutnavigation li.inactive .description {
   text-align:center;
   color:#666;
   font-size:11px;
-  padding:0 0 10px 0;
+  padding:0 0 5px 0;
 }
 .copyright a {
   text-decoration:none;
@@ -1276,7 +1276,7 @@ span.cop_grey {
   text-align:center;
   color:#666;
   font-size:11px;
-  padding:0 0 10px 0;
+  padding:0 0 5px 0;
 }
 /* Mehr Bilder unterhalb der Beschreibung */
 .morepics {
