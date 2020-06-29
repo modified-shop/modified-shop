@@ -88,12 +88,12 @@ function smarty_function_piwik($params, $smarty) {
   if (strpos($PHP_SELF, FILENAME_SHOPPING_CART) != false) {
     $orderCode .= getShoppingCartContents();
   }
-  if ((strpos($PHP_SELF, FILENAME_CHECKOUT_SUCCESS) != false) && isset($_SESSION['customer_id'])) {
-    $orderCode .= getOrders();
-  }
-  if ((strpos($PHP_SELF, FILENAME_CHECKOUT_SUCCESS) !== false) && ($goal > 0) && (!in_array('PW-'.$last_order, $_SESSION['tracking']['order']))) {
+  if ((strpos($PHP_SELF, FILENAME_CHECKOUT_SUCCESS) != false) && (!in_array('PW-'.$last_order, $_SESSION['tracking']['order']))) {
     $_SESSION['tracking']['order'][] = 'PW-'.$last_order;
-    $orderCode .= getOrderDetailsPiwik($goal);
+    $orderCode .= getOrders();
+    if ($goal > 0) {
+      $orderCode .= getOrderDetailsPiwik($goal);
+    }
   }
   
   return $beginCode . $orderCode . $endCode;
@@ -154,11 +154,11 @@ function getShoppingCartContents() {
 
 /* get orders */
 function getOrders () {
-  global $piwik_language_id;
+  global $piwik_language_id, $last_order;
   
   $orders_query = xtc_db_query("SELECT orders_id
                                   FROM " . TABLE_ORDERS . "
-                                 WHERE customers_id = '" . (int)$_SESSION['customer_id'] . "'
+                                 WHERE orders_id = '" . (int)$last_order . "'
                               ORDER BY date_purchased DESC 
                                  LIMIT 1"
                               );
