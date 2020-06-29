@@ -50,7 +50,7 @@ function cc_popup_content(trgt) {
 }
 (function() {
   // Cross browser event handler definition
-  let eventMethod = window.addEventListener ? 'addEventListener' : 'attachEvent',
+  let eventMethod = window.addEventListener ? 'addEventListener' : 'attachEvent';
    messageEvent = eventMethod === 'attachEvent' ? 'onmessage' : 'message';
    eventer = window[eventMethod];
 
