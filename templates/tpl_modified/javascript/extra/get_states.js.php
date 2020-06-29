@@ -96,8 +96,11 @@ function load_state() {
           "text"    : arr.name
         }).appendTo(stateSelect);
       });
-      $("[name='state']").val(state);
-      $("[name='state']").prop('selectedIndex',0);
+      if (state != 0) {
+        $("[name='state']").val(state);
+      } else {
+        $("[name='state']").prop('selectedIndex',0);
+      }
       stateSelect.parent().parent().parent().show();
     } else {
       $("[name='state']").replaceWith('<input type="text" name="state"></input>');
