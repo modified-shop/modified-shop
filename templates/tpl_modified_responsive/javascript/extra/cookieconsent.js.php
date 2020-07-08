@@ -57,7 +57,7 @@ function cc_popup_content(trgt) {
   function receiveMessage(event) {
     let eventDataContains = function(str) {
 			return JSON.stringify(event.data).indexOf(str) !== -1;
-		}
+		};
 		<?php if (defined('MODULE_COOKIE_CONSENT_SET_READABLE_COOKIE') && strtolower(MODULE_COOKIE_CONSENT_SET_READABLE_COOKIE) == 'true') { ?>
 		let oilGtagCookie = function(data) {
 			let cookieDate = new Date;
@@ -66,7 +66,7 @@ function cc_popup_content(trgt) {
 			
 			let cookieString = 'MODOilTrack=' + JSON.stringify(data.purposeConsents) + ';';
 			cookieString += 'expires=' + cookieDate.toUTCString() + ';';
-			cookieString += 'path=/;samesite=lax;'
+			cookieString += 'path=/;samesite=lax;';
 			
 			document.cookie = cookieString;
 		};
