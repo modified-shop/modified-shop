@@ -745,8 +745,7 @@ class vat_validation {
     $id = substr($vat_id, 1);
     $checksum = 0;
     for ($i = 9; $i > 0; $i --) {
-      $digit = $vat_id {
-        $i};
+      $digit = $vat_id[$i];
       if ($i % 2 == 1)
         $digit *= 2;
       if ($digit >= 10) {
