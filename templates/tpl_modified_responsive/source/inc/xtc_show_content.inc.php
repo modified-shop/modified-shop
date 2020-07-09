@@ -1,6 +1,6 @@
 <?php
   /* -----------------------------------------------------------------------------------------
-   $Id: xtc_show_category.inc.php 3072 2012-06-18 15:01:13Z hhacker $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -30,7 +30,7 @@
     if ($level > $oldlevel) { //neue Unterebene
       $ul = "\n" . $tab. '<ul>'. "\n";
       $content_string = rtrim($content_string, "\n"); //Zeilenumbruch entfernen
-      $content_string = substr($content_string, 0, strlen($content_string) -5);  //letztes  </li>  entfernen  
+      $content_string = substr($content_string, 0, -5);  //letztes  </li>  entfernen  
     } elseif ($level < $oldlevel) { //zurück zur höheren Ebene
       $ul = close_ul_tags($level,$oldlevel);      
     }
