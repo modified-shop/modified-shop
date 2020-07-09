@@ -60,7 +60,7 @@
         $status, 
         $outlet;
 
-    function __construct($mode, $startDate = 0, $endDate = 0, $sort = 0, $statusFilter = 0, $filter = 0,$payment = 0,$cgroup = '') {
+    function __construct($mode, $startDate = 0, $endDate = 0, $sort = 0, $statusFilter = 0, $filter = 0, $payment = 0, $cgroup = '', $country = '') {
       // startDate and endDate have to be a unix timestamp. Use mktime !
       // if set then both have to be valid startDate and endDate
       $this->mode = $mode;
@@ -69,6 +69,7 @@
       $this->statusFilter = $statusFilter;
       $this->paymentFilter = $payment;     
       $this->cgroupFilter = $cgroup;
+      $this->countryFilter = $country;
 
       // get date of first sale
       /*
@@ -205,6 +206,11 @@
        
       if ($this->cgroupFilter != '') {
          $filterString .= " AND o.customers_status ='" . (int)$this->cgroupFilter . "' ";
+      }
+
+      if ($this->countryFilter != '') {
+        $country = xtc_get_countriesList($this->countryFilter, $with_iso_codes = false);
+      	$filterString .= " AND o.delivery_country_iso_code_2 ='" . xtc_db_prepare_input($country['countries_iso_code_2']) . "' ";
       }
        
       $rqOrders = xtc_db_query($this->queryOrderCnt . " WHERE o.date_purchased >= '" . xtc_db_input(date("Y-m-d H:i:s", $sd)) . "' AND o.date_purchased < '" . xtc_db_input(date("Y-m-d H:i:s", $ed)) . "'" . $filterString);

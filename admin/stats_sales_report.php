@@ -106,11 +106,18 @@
   // customers status/group
   $srCgroup = (isset($_GET['cgroup']) && preg_match("/^[0-9\,]+$/", $_GET['cgroup'])) ? $_GET['cgroup'] : '';
   
-   // paymenttype
+  // paymenttype
   if (isset($_GET['payment']) && (xtc_not_null($_GET['payment'])) ) {
     $srPayment = $_GET['payment'];
   } else {
     $srPayment = '0';
+  }
+
+  // country
+  if (isset($_GET['country']) && (xtc_not_null($_GET['country'])) ) {
+    $srCountry = $_GET['country'];
+  } else {
+    $srCountry = '';
   }
 
   // sort
@@ -164,7 +171,7 @@
   $endDate = mktime(0, 0, 0, $eMon, $eDay + 1, $eYear);
   
   require(DIR_WS_CLASSES . 'sales_report.php');
-  $sr = new sales_report($srView, $startDate, $endDate, $srSort, $srStatus, $srFilter, $srPayment, $srCgroup);
+  $sr = new sales_report($srView, $startDate, $endDate, $srSort, $srStatus, $srFilter, $srPayment, $srCgroup, $srCountry);
   $startDate = $sr->startDate;
   $endDate = $sr->endDate;
   
@@ -303,6 +310,10 @@
                                   echo '<p class="pdg2 mrg0"><b>'.REPORT_STATUS_FILTER.'</b></p>'; 
                                   echo xtc_draw_pull_down_menu('status', $status_array, $srStatus);
                                   echo '</div>';
+                                ?>
+                              </td>
+                              <td class="menuBoxHeading txta-l">
+                                <?php
                                   echo '<div class="flt-l">'; 
                                   echo '<p class="pdg2 mrg0"><b>'.ENTRY_CUSTOMERS_STATUS.'</b></p>'; 
                                   echo xtc_draw_pull_down_menu('cgroup', $customers_statuses_array, $srCgroup);
@@ -335,6 +346,14 @@
                                 <?php
                                   echo '<p class="pdg2 mrg0"><b>'.REPORT_PAYMENT_FILTER.'</b></p>'; 
                                   echo xtc_draw_pull_down_menu('payment', $payment_array, $srPayment);
+                                ?>
+                              </td>
+                              <td class="menuBoxHeading txta-l">
+                                <?php
+                                  echo '<div class="flt-l">'; 
+                                  echo '<p class="pdg2 mrg0"><b>'.ENTRY_COUNTRY.'</b></p>'; 
+                                  echo xtc_draw_pull_down_menu('country', array_merge(array(array('id' => '', 'text' => REPORT_ALL)), xtc_get_countries('', 1)), $srCountry, 'style="max-width:200px;"');
+                                  echo '</div>';
                                 ?>
                               </td>
                               <td class="menuBoxHeading txta-l">
