@@ -51,8 +51,8 @@ function cc_popup_content(trgt) {
 (function() {
   // Cross browser event handler definition
   let eventMethod = window.addEventListener ? 'addEventListener' : 'attachEvent';
-   messageEvent = eventMethod === 'attachEvent' ? 'onmessage' : 'message';
-   eventer = window[eventMethod];
+  let messageEvent = eventMethod === 'attachEvent' ? 'onmessage' : 'message';
+  let eventer = window[eventMethod];
 
   // Callback to be executed when event is fired
   function receiveMessage(event) {
