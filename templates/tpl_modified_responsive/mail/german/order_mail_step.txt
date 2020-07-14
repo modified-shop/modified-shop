@@ -1,13 +1,17 @@
 {config_load file="$language/lang_$language.conf" section="duty_info"} 
 {$address_label_customer}
 
-{if $SHIPPING_METHOD}Versandart: {$SHIPPING_METHOD}{/if}
-{if $PAYMENT_METHOD}Zahlungsmethode: {$PAYMENT_METHOD}{/if}
+{if $SHIPPING_METHOD}Versandart: {$SHIPPING_METHOD}
+{/if}
+{if $PAYMENT_METHOD}Zahlungsmethode: {$PAYMENT_METHOD}
+{/if}
 Bestellnummer: {$oID}
 Datum: {$DATE}
-{if $csID}Kundennummer: {$csID}{/if}
+{if $csID}Kundennummer: {$csID}
+{/if}
 Ihre E-Mail-Adresse: {$EMAIL}
-{if $vatID}Ihre USt-IdNr.: {$vatID}{/if}
+{if $vatID}Ihre USt-IdNr.: {$vatID}
+{/if}
 ----------------------------------------------------------------------
 
 
@@ -30,9 +34,12 @@ Ihre bestellten Produkte zur Kontrolle
 {foreach name=aussen item=order_values from=$order_data} 
 {$order_values.PRODUCTS_QTY} x {$order_values.PRODUCTS_NAME} {$order_values.PRODUCTS_PRICE}
 Art.-Nr. {$order_values.PRODUCTS_MODEL}{$order_values.PRODUCTS_ATTRIBUTES_MODEL}
-{if $order_values.PRODUCTS_ORDER_DESCRIPTION != ''}{$order_values.PRODUCTS_ORDER_DESCRIPTION}{/if}
-{if $order_values.PRODUCTS_SHIPPING_TIME != ''}Lieferzeit: {$order_values.PRODUCTS_SHIPPING_TIME}{/if}
-{if $order_values.PRODUCTS_ATTRIBUTES != ''}{$order_values.PRODUCTS_ATTRIBUTES}{/if}
+{if $order_values.PRODUCTS_ORDER_DESCRIPTION != ''}{$order_values.PRODUCTS_ORDER_DESCRIPTION}
+{/if}
+{if $order_values.PRODUCTS_SHIPPING_TIME != ''}Lieferzeit: {$order_values.PRODUCTS_SHIPPING_TIME}
+{/if}
+{if $order_values.PRODUCTS_ATTRIBUTES != ''}{$order_values.PRODUCTS_ATTRIBUTES}
+{/if}
 
 {/foreach}
 
@@ -43,12 +50,16 @@ Art.-Nr. {$order_values.PRODUCTS_MODEL}{$order_values.PRODUCTS_ATTRIBUTES_MODEL}
 {$downloads_content_txt}
 
 {if $address_label_payment != $address_label_shipping}
-{if isset($SHIPPING_CLASS) && strstr($SHIPPING_CLASS, 'selfpickup')}Abholadresse{else}Versandadresse{/if} 
+{if isset($SHIPPING_CLASS) && strstr($SHIPPING_CLASS, 'selfpickup')}Abholadresse
+{else}Versandadresse
+{/if} 
 ----------------------------------------------------------------------
 {$address_label_shipping}{/if}
 
 {if $address_label_payment}
-{if $address_label_payment != $address_label_shipping}Rechnungsadresse{else}Rechnungs-/Lieferadresse{/if}
+{if $address_label_payment != $address_label_shipping}Rechnungsadresse
+{else}Rechnungs-/Lieferadresse
+{/if}
 ----------------------------------------------------------------------
 {$address_label_payment}
 {/if}
@@ -57,7 +68,8 @@ Art.-Nr. {$order_values.PRODUCTS_MODEL}{$order_values.PRODUCTS_ATTRIBUTES_MODEL}
 
 ----------------------------------------------------------------------
 {#text_duty_info#}
-----------------------------------------------------------------------{/if}
+----------------------------------------------------------------------
+{/if}
 
 [SIGNATUR]
 
