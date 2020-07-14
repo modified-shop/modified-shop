@@ -232,10 +232,10 @@ if (!class_exists('cookie_consent')) {
           2 => 'Google Analytics'
         ),
         'desc'      => array(
-          1 => "_ga,_gid: Contains a randomly generated user ID. Using this ID, Google Analytics can recognize returning users on this website and combine the data from previous visits.  _gat: Certain data is only sent to Google Analytics once a minute. The cookie has a lifespan of one minute. As long as it is set, certain data transfers are prevented.",
-          2 => "_ga,_gid: Enthält eine zufallsgenerierte User-ID. Anhand dieser ID kann Google Analytics wiederkehrende User auf dieser Website wiedererkennen und die Daten von früheren Besuchen zusammenführen.  _gat: Bestimmte Daten werden nur maximal einmal pro Minute an Google Analytics gesendet. Das Cookie hat eine Lebensdauer von einer Minute. Solange es gesetzt ist, werden bestimmte Datenübertragungen unterbunden."
+          1 => "_ga,_gid: Contains a randomly generated user ID. Using this ID, Google Analytics can recognize returning users on this website and combine the data from previous visits.  _gat: Certain data is only sent to Google Analytics once a minute. The cookie has a lifespan of one minute. As long as it is set, certain data transfers are prevented.  _gali: This cookie is used by Google Analytics. It is used to anonymously record the clicked elements within a page.",
+          2 => "_ga,_gid: Enthält eine zufallsgenerierte User-ID. Anhand dieser ID kann Google Analytics wiederkehrende User auf dieser Website wiedererkennen und die Daten von früheren Besuchen zusammenführen.  _gat: Bestimmte Daten werden nur maximal einmal pro Minute an Google Analytics gesendet. Das Cookie hat eine Lebensdauer von einer Minute. Solange es gesetzt ist, werden bestimmte Datenübertragungen unterbunden.  _gali: Dieses Cookie wird von Google Analytics eingesetzt. Es dient zur anonymen Erfassung der angeklickten Elemente innerhalb einer Seite."
         ),
-        'cookies'   => '_ga,_gid,_gat',
+        'cookies'   => '_ga,_gid,_gat,_gali',
         'sort_order'=> 1,
         'status'    => 0,
         'fixed'     => 1
