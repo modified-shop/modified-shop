@@ -12,7 +12,7 @@ next = 'next &raquo;'
 last = 'last &raquo;'
 
 heading_miscellaneous = 'Payment methods'
-text_miscellaneous = 'Die Box kann unter tpl_modified/boxes/box_miscellaneous.html ver&auml;ndert werden. Die Sprachvariablen befinden sich in der Datei tpl_modified/lang/german/lang_german.custom.'
+text_miscellaneous = 'Die Box kann unter tpl_modified_responsive/boxes/box_miscellaneous.html ver&auml;ndert werden. Die Sprachvariablen befinden sich in der Datei tpl_modified_responsive/lang/german/lang_german.custom.'
 
 ab_admin = 'Adminarea'
 ab_orders = 'Orders'
