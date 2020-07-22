@@ -112,7 +112,7 @@ if (!CacheCheck()) {
   $smarty->caching = 1;
   $smarty->cache_lifetime = CACHE_LIFETIME;
   $smarty->cache_modified_check = CACHE_CHECK;
-  $cache_id = md5($_SESSION['language'].(isset($_GET['page']) ? (int)$_GET['page'] : 1));
+  $cache_id = md5($_SESSION['language'].'&row='.$reviews_split->number_of_rows.'&page='.(isset($_GET['page']) ? (int)$_GET['page'] : 1));
   $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/reviews.html', $cache_id);
 }
 
