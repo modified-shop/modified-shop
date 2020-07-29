@@ -10,6 +10,10 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+// set the level of error reporting
+@ini_set('display_errors', false);
+error_reporting(0);
+
 include 'includes/' . (isset($_REQUEST['speed']) ? (file_exists('includes/local/configure.php') ? 'local/configure.php' : 'configure.php') : 'application_top.php');
 
 // extension
