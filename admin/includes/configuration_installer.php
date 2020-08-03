@@ -531,14 +531,13 @@ $values_group_update = array();
   $values[] = "(NULL, 'ADMIN_SEARCH_IN_DESC', 'false', '1000', '25', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
   $values[] = "(NULL, 'USE_ADMIN_THUMBS_IN_LIST', 'true', '1000', '32', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
   $values[] = "(NULL, 'USE_ADMIN_THUMBS_IN_LIST_STYLE', 'max-width:40px;max-height:40px;', '1000', '33', NULL, NOW(), NULL, NULL);";
-  $values[] = "(NULL, 'MAX_DISPLAY_ORDER_RESULTS', '30', '1000', '50', NULL , NOW(), NULL , NULL);";
+  $values[] = "(NULL, 'MAX_DISPLAY_ORDER_RESULTS', '30', '1000', '-1', NULL , NOW(), NULL , NULL);";
   $values[] = "(NULL, 'MAX_DISPLAY_LIST_PRODUCTS', '50', '1000', '51', NULL , NOW(), NULL , NULL);";
-  $values[] = "(NULL, 'MAX_DISPLAY_LIST_CUSTOMERS', '100', '1000', '52', NULL , NOW(), NULL , NULL);";
+  $values[] = "(NULL, 'MAX_DISPLAY_LIST_CUSTOMERS', '100', '1000', '-1', NULL , NOW(), NULL , NULL);";
   $values[] = "(NULL, 'WHOS_ONLINE_TIME_LAST_CLICK', '900', '1000', '60', NULL, NOW(), NULL, NULL);";
   $values[] = "(NULL, 'WHOS_ONLINE_IP_WHOIS_SERVICE', 'http://www.utrace.de/?query=', '1000', '62', NULL, NOW(), NULL, NULL);"; 
   $values[] = "(NULL, 'CONFIRM_SAVE_ENTRY', 'true', '1000', '70', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
-  $values[] = "(NULL, 'MAX_DISPLAY_STATS_RESULTS', '30', '1000', '55', NULL , NOW(), NULL , NULL);";
-  $values[] = "(NULL, 'MAX_DISPLAY_COUPON_RESULTS', '30', '1000', '56', NULL , NOW(), NULL , NULL);";
+  $values[] = "(NULL, 'MAX_DISPLAY_COUPON_RESULTS', '30', '1000', '-1', NULL , NOW(), NULL , NULL);";
   $values[] = "(NULL, 'MIN_GROUP_PRICE_STAFFEL', '2', '1000', '34', NULL , NOW(), NULL , NULL);";
   $values[] = "(NULL, 'ORDER_STATUSES_FOR_SALES_STATISTICS', '3', 1000, 100, NULL, NOW(), NULL, 'xtc_cfg_multi_checkbox(\'order_statuses\', \',\',');";
   $values[] = "(NULL, 'USE_ATTRIBUTES_IFRAME', 'true', '1000', '110', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
@@ -555,6 +554,18 @@ $values_group_update = array();
   $values_update[] = array (
                            'values' => "configuration_group_id = '1000', sort_order = '26'",
                            'configuration_key' => 'USE_ADMIN_LANG_TABS'
+                           );
+  $values_update[] = array (
+                           'values' => "configuration_group_id = '1000', sort_order = '-1'",
+                           'configuration_key' => 'MAX_DISPLAY_LIST_CUSTOMERS'
+                           );
+  $values_update[] = array (
+                           'values' => "configuration_group_id = '1000', sort_order = '-1'",
+                           'configuration_key' => 'MAX_DISPLAY_COUPON_RESULTS'
+                           );
+  $values_update[] = array (
+                           'values' => "configuration_group_id = '1000', sort_order = '-1'",
+                           'configuration_key' => 'MAX_DISPLAY_ORDER_RESULTS'
                            );
 
 //##############################//

@@ -645,16 +645,8 @@ define('SHOW_BUTTON_BUY_NOW_DESC', '<span class="col-red"><strong>CAUTION:</stro
 //EOC - h-h-h - 2011-12-23 - Button "Buy Now" optional - default off
 
 //split page results
-define('MAX_DISPLAY_ORDER_RESULTS_TITLE', 'Number of orders per page');
-define('MAX_DISPLAY_ORDER_RESULTS_DESC', 'Maximum number of orders that are to be displayed in the grid per page.');
 define('MAX_DISPLAY_LIST_PRODUCTS_TITLE', 'Number of products per page');
 define('MAX_DISPLAY_LIST_PRODUCTS_DESC', 'Maximum number of products that are to be displayed in the grid per page.');
-define('MAX_DISPLAY_LIST_CUSTOMERS_TITLE', 'Number of customers per page');
-define('MAX_DISPLAY_LIST_CUSTOMERS_DESC', 'Maximum number of customers that are to be displayed in the grid per page.');
-define('MAX_DISPLAY_STATS_RESULTS_TITLE', 'Number of statistic results per page');
-define('MAX_DISPLAY_STATS_RESULTS_DESC', 'Maximum number of statistic results to be displayed per page.');
-define('MAX_DISPLAY_COUPON_RESULTS_TITLE', 'Number of coupons per page');
-define('MAX_DISPLAY_COUPON_RESULTS_DESC', 'Maximum number of coupons to be displayed per page.');
 
 // Whos online
 define ('WHOS_ONLINE_TIME_LAST_CLICK_TITLE', 'Who\'s Online - Display period in seconds');
