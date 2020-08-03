@@ -548,7 +548,7 @@ $values_group_update = array();
   $values[] = "(NULL, 'ATTRIBUTE_MODEL_DELIMITER', '<br />', '1000', '116', NULL, NOW(), NULL, NULL);";
   $values[] = "(NULL, 'ORDER_STATUSES_DISPLAY_DEFAULT', '', 1000, 90, NULL, NOW(), NULL, 'xtc_cfg_multi_checkbox(\'order_statuses\', \',\',');";
   $values_update[] = array (
-                           'values' => "configuration_group_id = '1000', sort_order = '30'",
+                           'values' => "configuration_group_id = '1000', sort_order = '-1'",
                            'configuration_key' => 'MAX_DISPLAY_ORDER_RESULTS'
                            );
   $values_update[] = array (
