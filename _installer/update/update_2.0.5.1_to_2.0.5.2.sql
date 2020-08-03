@@ -15,4 +15,8 @@ DELETE FROM `configuration` WHERE `configuration_key` = 'GOOGLE_CERTIFIED_SHOPS_
 DELETE FROM `configuration` WHERE `configuration_key` = 'GOOGLE_SHOPPING_ID';
 DELETE FROM `configuration` WHERE `configuration_key` = 'GOOGLE_TRUSTED_ID';
 
+#Tomcraft - 2020-08-03 - delete obsolete configuration
+DELETE FROM `configuration` WHERE `configuration_key` = 'MAX_ROW_LISTS_ATTR_VALUES';
+DELETE FROM `configuration` WHERE `configuration_key` = 'MAX_ROW_LISTS_ATTR_OPTIONS';
+
 # Keep an empty line at the end of this file for the db_updater to work properly
