@@ -628,6 +628,7 @@ class shoppingCart {
    */
   function get_products() {
     global $xtPrice,$main;
+    
     if (!is_array($this->contents)){
       return false;
     }
@@ -636,7 +637,7 @@ class shoppingCart {
     reset($this->contents);
     $index = 0;
     foreach ($this->contents as $products_id => $data) {
-      if($this->contents[$products_id]['qty'] != 0 || $this->contents[$products_id]['qty'] !=''){
+      if (!empty($this->contents[$products_id]['qty'])) {
         $products_query = xtc_db_query("SELECT ".ADD_SELECT_CART."
                                                p.products_id,
                                                p.products_shippingtime,
