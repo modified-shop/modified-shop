@@ -357,7 +357,14 @@ class paypalcart extends PayPalPayment {
         {
           $error_mess[] = '3';
         }
-        if (defined('DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT') && DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT == 'true' && $_POST['revocation'] != 'revocation') {
+        if (defined('DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT')
+            && DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT == 'true'
+            && ($_SESSION['cart']->content_type == 'virtual'
+                || $_SESSION['cart']->content_type == 'mixed'
+                )
+            && $_POST['revocation'] != 'revocation'
+            )
+        {
           $error_mess[] = '4';
         }
         if (defined('DISPLAY_PRIVACY_ON_CHECKOUT') && DISPLAY_PRIVACY_ON_CHECKOUT == 'true' && $_POST['privacy'] != 'privacy') {
