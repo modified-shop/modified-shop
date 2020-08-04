@@ -167,8 +167,19 @@ $smarty->assign('PRODUCTS_EDIT', xtc_href_link(FILENAME_SHOPPING_CART, '', 'NONS
 
 if ($_SESSION['sendto'] != false) {
   if ($order->info['shipping_method']) {
+
+    //shipping method
+    $shipping_class = explode('_', $order->info['shipping_class']);
+    if ($order->info['shipping_class'] != '' && $shipping_class[0] != 'free') {
+      include_once (DIR_FS_CATALOG . 'lang/'.$order->info['language'].'/modules/shipping/'.$shipping_class[0].'.php');
+      $shipping_method = constant(strtoupper('MODULE_SHIPPING_'.$shipping_class[0].'_TEXT_TITLE'));
+    } else {
+      include_once (DIR_FS_CATALOG . 'lang/'.$order->info['language'].'/modules/order_total/ot_shipping.php');
+      $shipping_method = FREE_SHIPPING_TITLE;
+    }
+    $smarty->assign('SHIPPING_METHOD', $shipping_method);
     $smarty->assign('SHIPPING_CLASS', $order->info['shipping_class']);
-    $smarty->assign('SHIPPING_METHOD', $order->info['shipping_method']);
+
     $smarty->assign('SHIPPING_EDIT', xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
   }
 }
