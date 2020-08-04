@@ -235,7 +235,7 @@
         );
         $canonical_flag = false;
       
-        if ($addProdShopTitle) $metadata_array['title'] .= ' - ' . ML_META_TITLE;
+        if ($addProdShopTitle === true) $metadata_array['title'] .= ' - ' . ML_META_TITLE;
       
         // no hreflang if not canonical URL
         $product_link = str_replace(array(HTTP_SERVER,HTTPS_SERVER), '', preg_replace("/([^\?]*)(\?.*)/", "$1", $metadata_array['link']));
@@ -261,8 +261,9 @@
             'keywords' => (($categories_meta['categories_meta_keywords'] != '') ? $categories_meta['categories_meta_keywords'] : metaKeyWords($categories_meta['categories_name'].' '.$categories_meta['categories_description'])),
             'link' => xtc_href_link(FILENAME_DEFAULT, 'cPath='.$cPath.$page_param, 'NONSSL', false),
           );
-
-          if ($addCatShopTitle) $metadata_array['title'] .= ' - ' . ML_META_TITLE;
+		  
+		      if ($Page != '') $metadata_array['title'] .= ' - ' . $Page;
+          if ($addCatShopTitle === true) $metadata_array['title'] .= ' - ' . ML_META_TITLE;
         
           $metaGoWords .= ','.$categories_meta['categories_name'];
         }
@@ -283,7 +284,8 @@
             'link' => xtc_href_link(FILENAME_DEFAULT, 'manufacturers_id='.(int)$manu_id.$page_param, 'NONSSL', false),
           );
           
-          if ($addCatShopTitle) $metadata_array['title'] .= ' - ' . ML_META_TITLE;
+		      if ($Page != '') $metadata_array['title'] .= ' - ' . $Page;
+          if ($addCatShopTitle === true) $metadata_array['title'] .= ' - ' . ML_META_TITLE;
 
           $metaGoWords .= ','.$manufacturer['manufacturers_name'];
         }
@@ -324,7 +326,7 @@
           'link' => xtc_href_link(FILENAME_CONTENT, 'coID='.(int)$_GET['coID'], 'NONSSL', false),
         );
 
-        if ($addContentShopTitle) $metadata_array['title'] .= ' - ' . ML_META_TITLE;
+        if ($addContentShopTitle === true) $metadata_array['title'] .= ' - ' . ML_META_TITLE;
 
         $metaGoWords .= ','.$contents_meta['content_title'];
       }
@@ -362,7 +364,7 @@
         } 
       }
 
-      if ($addSearchShopTitle) $metadata_array['title'] .= ' - ' . ML_META_TITLE;
+      if ($addSearchShopTitle === true) $metadata_array['title'] .= ' - ' . ML_META_TITLE;
       break;
 
     case FILENAME_SPECIALS :
@@ -374,7 +376,7 @@
         'robot' => '',
       );
 
-      if ($addSpecialsShopTitle) $metadata_array['title'] .= ' - ' . ML_META_TITLE;
+      if ($addSpecialsShopTitle === true) $metadata_array['title'] .= ' - ' . ML_META_TITLE;
       break;
 
     case FILENAME_PRODUCTS_NEW :
@@ -386,7 +388,7 @@
         'robot' => '',
       );
 
-      if ($addNewsShopTitle) $metadata_array['title'] .= ' - ' . ML_META_TITLE;
+      if ($addNewsShopTitle === true) $metadata_array['title'] .= ' - ' . ML_META_TITLE;
       break;
 
     default:
@@ -398,7 +400,7 @@
         'robot' => '',
       );
 
-      if ($addOthersShopTitle) $metadata_array['title'] .= ' - ' . ML_META_TITLE;
+      if ($addOthersShopTitle == true) $metadata_array['title'] .= ' - ' . ML_META_TITLE;
       break;
   }
 
