@@ -312,7 +312,7 @@ $values_group_update = array();
   $values[] = "(NULL, 'SAVE_IP_LOG', 'false', 17, 11, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\', \'xxx\'),');";
   //$values[] = "(NULL, 'SHIPPING_STATUS_INFOS', '', 17, 14, NULL, NOW(), NULL, 'xtc_cfg_select_content(\'SHIPPING_STATUS_INFOS\',');"; // Tomcraft - 2015-09-23 - Moved to update_1.0.6.0_to_2.0.0.0.sql for dynamic update
   $values[] = "(NULL, 'MODULE_SMALL_BUSINESS', 'false', 17, 14, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
-  $values[] = "(NULL, 'WYSIWYG_SKIN', 'moonocolor', 17, 2, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'moono\', \'moonocolor\'),');";
+  $values[] = "(NULL, 'WYSIWYG_SKIN', 'moonocolor', 17, 2, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'moono\', \'moonocolor\', \'moono-lisa\'),');";
   $values[] = "(NULL, 'CHECK_FIRST_PAYMENT_MODUL', 'false', '17', '24', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
   $values[] = "(NULL, 'DISPLAY_PRIVACY_CHECK', 'true', '17', '19', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
   $values[] = "(NULL, 'DISPLAY_PRIVACY_ON_CHECKOUT', 'false', '17', '18', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
@@ -449,6 +449,10 @@ $values_group_update = array();
   $values_update[] = array (
                            'values' => "sort_order = '29'",
                            'configuration_key' => 'MODULE_NEWSLETTER_DISCOUNT_COUPON'
+                           );
+  $values_update[] = array (
+                           'values' => "set_function = 'xtc_cfg_select_option(array(\'moono\', \'moonocolor\', \'moono-lisa\'),'",
+                           'configuration_key' => 'WYSIWYG_SKIN'
                            );
 
 //configuration_group_id 18 --- "UST-ID"
