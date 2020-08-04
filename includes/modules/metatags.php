@@ -261,8 +261,8 @@
             'keywords' => (($categories_meta['categories_meta_keywords'] != '') ? $categories_meta['categories_meta_keywords'] : metaKeyWords($categories_meta['categories_name'].' '.$categories_meta['categories_description'])),
             'link' => xtc_href_link(FILENAME_DEFAULT, 'cPath='.$cPath.$page_param, 'NONSSL', false),
           );
-		  
-		      if ($Page != '') $metadata_array['title'] .= ' - ' . $Page;
+
+          if ($Page != '') $metadata_array['title'] .= ' - ' . $Page;
           if ($addCatShopTitle === true) $metadata_array['title'] .= ' - ' . ML_META_TITLE;
         
           $metaGoWords .= ','.$categories_meta['categories_name'];
@@ -283,8 +283,8 @@
             'keywords' => (($manufacturer['manufacturers_meta_keywords'] != '') ? $manufacturer['manufacturers_meta_keywords'] : metaKeyWords($manufacturer['manufacturers_name'].' '.$manufacturer['manufacturers_description'])),
             'link' => xtc_href_link(FILENAME_DEFAULT, 'manufacturers_id='.(int)$manu_id.$page_param, 'NONSSL', false),
           );
-          
-		      if ($Page != '') $metadata_array['title'] .= ' - ' . $Page;
+
+          if ($Page != '') $metadata_array['title'] .= ' - ' . $Page;
           if ($addCatShopTitle === true) $metadata_array['title'] .= ' - ' . ML_META_TITLE;
 
           $metaGoWords .= ','.$manufacturer['manufacturers_name'];
