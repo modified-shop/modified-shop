@@ -400,7 +400,7 @@
         'robot' => '',
       );
 
-      if ($addOthersShopTitle == true) $metadata_array['title'] .= ' - ' . ML_META_TITLE;
+      if ($addOthersShopTitle === true) $metadata_array['title'] .= ' - ' . ML_META_TITLE;
       break;
   }
 
