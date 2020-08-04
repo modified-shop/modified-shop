@@ -419,7 +419,7 @@ define('HEADING_PASSWORD_FORGOTTEN','Password renewal?');
 define('TEXT_PASSWORD_FORGOTTEN','Change your password in three easy steps.');
 define('TEXT_EMAIL_PASSWORD_FORGOTTEN','Confirmation mail for password renewal');
 define('TEXT_EMAIL_PASSWORD_NEW_PASSWORD','Your new password');
-define('ERROR_MAIL','Please check the data entered in the form');
+define('ERROR_MAIL','Please check the data entered in the form.');
 
 define('CATEGORIE_NOT_FOUND','Category not found');
 
