@@ -67,7 +67,7 @@ function cc_popup_content(trgt) {
 			let cookieString = 'MODOilTrack=' + JSON.stringify(data.purposeConsents) + ';';
 			cookieString += 'expires=' + cookieDate.toUTCString() + ';';
 			cookieString += 'path=/;SameSite=Lax;';
-			if (SetSecCookie == true) {
+			if (typeof SetSecCookie !== 'undefined' && SetSecCookie == true) {
 			  cookieString += 'Secure;';
 			}
 			
