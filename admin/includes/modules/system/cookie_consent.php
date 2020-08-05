@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: cookie_consent.js.php $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -27,6 +27,7 @@ if (!class_exists('cookie_consent')) {
       }
       $this->description .= '<br /><br /><small>'.MODULE_COOKIE_CONSENT_MORE_INFO.' <a href="https://github.com/as-ideas/oil" target="_blank">https://github.com/as-ideas/oil</a></small>';
       $this->enabled = ((MODULE_COOKIE_CONSENT_STATUS == 'true') ? true : false);
+      $this->sort_order = 0;
     }
 
     function process($file) {
@@ -63,27 +64,25 @@ if (!class_exists('cookie_consent')) {
         xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_COOKIE_CONSENT_SET_READABLE_COOKIE', 'false',  '6', '4', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
       }
       
-      
       // load language-data
       $languages = array();
-      $qr = xtc_db_query("SELECT `languages_id`,`language_charset` FROM " . TABLE_LANGUAGES . " WHERE `languages_id` IN (1,2)");
+      $qr = xtc_db_query("SELECT * FROM " . TABLE_LANGUAGES);
       while ($row = xtc_db_fetch_array($qr)) {
-        $languages[$row['languages_id']] = $row['language_charset'];
+        $languages[$row['languages_id']] = $row;
       }
       
-      $q = "CREATE TABLE IF NOT EXISTS `".TABLE_COOKIE_CONSENT_CATEGORIES."` (
-        `categories_id` int(11) NOT NULL,
-        `categories_name` varchar(128) NOT NULL,
-        `categories_description` text NOT NULL,
-        `sort_order` int(11) NOT NULL DEFAULT '0',
-        `languages_id` int(11) NOT NULL,
-        `last_modified` datetime DEFAULT NULL,
-        `date_added` datetime NOT NULL,
-        `fixed` tinyint(1) NOT NULL DEFAULT '0',
-        PRIMARY KEY (`categories_id`,`languages_id`),
-        KEY `idx_cookie_multi` (`languages_id`,`categories_id`,`sort_order`)
-      ) ENGINE=MyISAM";
-      xtc_db_query($q);
+      xtc_db_query("CREATE TABLE IF NOT EXISTS `".TABLE_COOKIE_CONSENT_CATEGORIES."` (
+                      `categories_id` int(11) NOT NULL,
+                      `categories_name` varchar(128) NOT NULL,
+                      `categories_description` text NOT NULL,
+                      `sort_order` int(11) NOT NULL DEFAULT '0',
+                      `languages_id` int(11) NOT NULL,
+                      `last_modified` datetime DEFAULT NULL,
+                      `date_added` datetime NOT NULL,
+                      `fixed` tinyint(1) NOT NULL DEFAULT '0',
+                      PRIMARY KEY (`categories_id`,`languages_id`),
+                      KEY `idx_cookie_multi` (`languages_id`,`categories_id`,`sort_order`)
+                    )");
       
       $defined_categories = array();
       // Essential
@@ -144,49 +143,38 @@ if (!class_exists('cookie_consent')) {
       );
       
       foreach ($defined_categories as $row) {
-        if (array_key_exists(1, $languages)) {
-          $sql_data = array(
-            'categories_id'       => $row['id'],
-            'categories_name'     => decode_utf8($row['name'][1], $languages[1]['language_charset']),
-            'categories_description' => decode_utf8($row['desc'][1], $languages[1]['language_charset']),
-            'sort_order'          => $row['sort_order'],
-            'languages_id'        => 1,
-            'date_added'          => 'now()',
-            'fixed'               => $row['fixed']
-          );
-          xtc_db_perform(TABLE_COOKIE_CONSENT_CATEGORIES, $sql_data);
-        }
-        if (array_key_exists(2, $languages)) {
-          $sql_data = array(
-            'categories_id'       => $row['id'],
-            'categories_name'     => decode_utf8($row['name'][2], $languages[2]['language_charset']),
-            'categories_description' => decode_utf8($row['desc'][2], $languages[2]['language_charset']),
-            'sort_order'          => $row['sort_order'],
-            'languages_id'        => 2,
-            'date_added'          => 'now()',
-            'fixed'               => $row['fixed']
-          );
-          xtc_db_perform(TABLE_COOKIE_CONSENT_CATEGORIES, $sql_data);
+        foreach ($languages as $language_id => $language) {
+          if (array_key_exists($language_id, $row['name'])) {
+            $sql_data_array = array(
+              'categories_id' => $row['id'],
+              'categories_name' => decode_utf8($row['name'][$language_id], $language['language_charset']),
+              'categories_description' => decode_utf8($row['desc'][$language_id], $language['language_charset']),
+              'sort_order' => $row['sort_order'],
+              'languages_id' => $language_id,
+              'date_added' => 'now()',
+              'fixed' => $row['fixed']
+            );
+            xtc_db_perform(TABLE_COOKIE_CONSENT_CATEGORIES, $sql_data_array);
+          }
         }
       }
       
-      $q = "CREATE TABLE IF NOT EXISTS `".TABLE_COOKIE_CONSENT_COOKIES."` (
-        `cookies_id` int(11) NOT NULL,
-        `categories_id` int(11) NOT NULL,
-        `cookies_name` varchar(128) NOT NULL,
-        `cookies_description` text NOT NULL,
-        `cookies_list` varchar(512) NOT NULL,
-        `sort_order` int(11) NOT NULL DEFAULT '0',
-        `languages_id` int(11) NOT NULL,
-        `status` int(1) NOT NULL DEFAULT '1',
-        `last_modified` datetime DEFAULT NULL,
-        `date_added` datetime NOT NULL,
-        `fixed` tinyint(1) NOT NULL DEFAULT '0',
-        PRIMARY KEY (`cookies_id`,`languages_id`),
-        KEY `idx_categories_id` (`categories_id`),
-        KEY `idx_categories_multi` (`languages_id`,`categories_id`,`sort_order`)
-      ) ENGINE=MyISAM";
-      xtc_db_query($q);
+      xtc_db_query("CREATE TABLE IF NOT EXISTS `".TABLE_COOKIE_CONSENT_COOKIES."` (
+                      `cookies_id` int(11) NOT NULL,
+                      `categories_id` int(11) NOT NULL,
+                      `cookies_name` varchar(128) NOT NULL,
+                      `cookies_description` text NOT NULL,
+                      `cookies_list` varchar(512) NOT NULL,
+                      `sort_order` int(11) NOT NULL DEFAULT '0',
+                      `languages_id` int(11) NOT NULL,
+                      `status` int(1) NOT NULL DEFAULT '1',
+                      `last_modified` datetime DEFAULT NULL,
+                      `date_added` datetime NOT NULL,
+                      `fixed` tinyint(1) NOT NULL DEFAULT '0',
+                      PRIMARY KEY (`cookies_id`,`languages_id`),
+                      KEY `idx_categories_id` (`categories_id`),
+                      KEY `idx_categories_multi` (`languages_id`,`categories_id`,`sort_order`)
+                    )");
       
       $defined_cookies = array();
       // session cookie
@@ -344,35 +332,22 @@ if (!class_exists('cookie_consent')) {
       );
       
       foreach ($defined_cookies as $row) {
-        if (array_key_exists(1, $languages)) {
-          $sql_data = array(
-            'cookies_id'          => $row['id'],
-            'categories_id'       => $row['category'],
-            'cookies_name'        => decode_utf8($row['name'][1], $languages[1]['language_charset']),
-            'cookies_description' => decode_utf8($row['desc'][1], $languages[1]['language_charset']),
-            'cookies_list'        => $row['cookies'],
-            'sort_order'          => $row['sort_order'],
-            'languages_id'        => 1,
-            'status'              => $row['status'],
-            'date_added'          => 'now()',
-            'fixed'               => $row['fixed']
-          );
-          xtc_db_perform(TABLE_COOKIE_CONSENT_COOKIES, $sql_data);
-        }
-        if (array_key_exists(2, $languages)) {
-          $sql_data = array(
-            'cookies_id'          => $row['id'],
-            'categories_id'       => $row['category'],
-            'cookies_name'        => decode_utf8($row['name'][2], $languages[2]['language_charset']),
-            'cookies_description' => decode_utf8($row['desc'][2], $languages[2]['language_charset']),
-            'cookies_list'        => $row['cookies'],
-            'sort_order'          => $row['sort_order'],
-            'languages_id'        => 2,
-            'status'              => $row['status'],
-            'date_added'          => 'now()',
-            'fixed'               => $row['fixed']
-          );
-          xtc_db_perform(TABLE_COOKIE_CONSENT_COOKIES, $sql_data);
+        foreach ($languages as $language_id => $language) {
+          if (array_key_exists($language_id, $row['name'])) {
+            $sql_data = array(
+              'cookies_id'          => $row['id'],
+              'categories_id'       => $row['category'],
+              'cookies_name'        => decode_utf8($row['name'][$language_id], $language['language_charset']),
+              'cookies_description' => decode_utf8($row['desc'][$language_id], $language['language_charset']),
+              'cookies_list'        => $row['cookies'],
+              'sort_order'          => $row['sort_order'],
+              'languages_id'        => $language_id,
+              'status'              => $row['status'],
+              'date_added'          => 'now()',
+              'fixed'               => $row['fixed']
+            );
+            xtc_db_perform(TABLE_COOKIE_CONSENT_COOKIES, $sql_data);
+          }
         }
       }
       

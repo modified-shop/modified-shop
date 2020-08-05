@@ -1,17 +1,14 @@
 <?php
-/* --------------------------------------------------------------
-   $Id: cookie_consent.php $
+  /* --------------------------------------------------------------
+   $Id$
 
-   XT-Commerce - community made shopping
-   http://www.xt-commerce.com
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2003 XT-Commerce
+   Copyright (c) 2009 - 2019 [www.modified-shop.org]
    --------------------------------------------------------------
-   based on:
-   (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
-   (c) 2002-2003 osCommerce(geo_TAGs.php,v 1.11 2003/05/07); www.oscommerce.com
-   (c) 2003	 nextcommerce ( geo_TAGs.php,v 1.4 2003/08/1); www.nextcommerce.org
-
+   Copyright (c) 2019, Andreas Guder [info@andreas-guder.de]     
+   --------------------------------------------------------------   
    Released under the GNU General Public License
    --------------------------------------------------------------*/
 
