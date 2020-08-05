@@ -838,6 +838,9 @@ define('SEND_MAIL_ACCOUNT_CREATED_DESC', 'Send an E-Mail to customer upon accoun
 define('STATUS_EMAIL_SENT_COPY_TO_ADMIN_TITLE', 'E-Mail upon status change');
 define('STATUS_EMAIL_SENT_COPY_TO_ADMIN_DESC', 'Send an E-Mail to admin upon status change of order?');
 
+define('ORDER_EMAIL_SEND_COPY_TO_ADMIN_TITLE', 'E-Mail order confirmation to admin');
+define('ORDER_EMAIL_SEND_COPY_TO_ADMIN_DESC', 'Send a copy of the order confirmation E-Mail to admin?');
+
 define('STOCK_CHECK_SPECIALS_TITLE', 'Check Specials Stock');
 define('STOCK_CHECK_SPECIALS_DESC', 'Check to see if sufficent specials stock is available<br/><br/><b>ATTENTION:</b> If there is insufficient specials stock, the order can only be processed after a reduction of the quantity.');
 

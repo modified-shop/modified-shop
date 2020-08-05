@@ -835,6 +835,9 @@ define('SEND_MAIL_ACCOUNT_CREATED_DESC', 'Soll eine E-Mail an den Kunden versend
 define('STATUS_EMAIL_SENT_COPY_TO_ADMIN_TITLE', 'E-Mail bei Status&auml;nderung');
 define('STATUS_EMAIL_SENT_COPY_TO_ADMIN_DESC', 'Soll eine E-Mail an den Admin versendet werden, wenn der Status einer Bestellung ge&auml;ndert wird?');
 
+define('ORDER_EMAIL_SEND_COPY_TO_ADMIN_TITLE', 'E-Mail Bestellbest&auml;tigung an Admin');
+define('ORDER_EMAIL_SEND_COPY_TO_ADMIN_DESC', 'Soll eine Kopie der Bestellbest&auml;tigung an den Admin versendet werden?');
+
 define('STOCK_CHECK_SPECIALS_TITLE', '&Uuml;berpr&uuml;fen der Sonderangebote');
 define('STOCK_CHECK_SPECIALS_DESC', 'Pr&uuml;fen, ob noch genug Sonderangebote zum Ausliefern der Bestellung verf&uuml;gbar sind.<br/><br/><b>ACHTUNG:</b> Sollten nicht gen&uuml;gend Sonderangebote zur Verf&uuml;gung stehen, kann die Bestellung erst nach einer Reduzierung der Menge abgeschlossen werden.');
 

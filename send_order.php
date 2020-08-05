@@ -167,20 +167,22 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
   foreach(auto_include(DIR_FS_CATALOG.'includes/extra/send_order/mail/','php') as $file) require ($file);
     
   // send mail to admin
-  xtc_php_mail(EMAIL_BILLING_ADDRESS,
-               EMAIL_BILLING_NAME,
-               EMAIL_BILLING_ADDRESS,
-               STORE_NAME,
-               EMAIL_BILLING_FORWARDING_STRING,
-               $order->customer['email_address'],
-               $order->customer['firstname'].' '.$order->customer['lastname'],
-               $email_attachments,
-               '',
-               $order_subject,
-               $html_mail,
-               $txt_mail
-               );
-
+  if (ORDER_EMAIL_SEND_COPY_TO_ADMIN == 'true') {
+    xtc_php_mail(EMAIL_BILLING_ADDRESS,
+                 EMAIL_BILLING_NAME,
+                 EMAIL_BILLING_ADDRESS,
+                 STORE_NAME,
+                 EMAIL_BILLING_FORWARDING_STRING,
+                 $order->customer['email_address'],
+                 $order->customer['firstname'].' '.$order->customer['lastname'],
+                 $email_attachments,
+                 '',
+                 $order_subject,
+                 $html_mail,
+                 $txt_mail
+                 );
+  }
+  
   // send mail to customer
   if (SEND_EMAILS == 'true' || $send_by_admin) {
     xtc_php_mail(EMAIL_BILLING_ADDRESS,
