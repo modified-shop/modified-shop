@@ -15,7 +15,19 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-  function xtc_setcookie($name, $value = '', $expire = 0, $path = '/', $domain = '', $secure = false, $httponly = false) {
-    setcookie($name, $value, $expire, $path, (xtc_not_null($domain) ? $domain : ''), $secure, $httponly);
+  function xtc_setcookie($name, $value = '', $expire = 0, $path = '/', $domain = '', $secure = false, $httponly = false, $samesite = 'None') {
+    if (version_compare(PHP_VERSION, '7.3', '>=')) {
+      $cookie_options = array (
+        'expires' => $lifetime,
+        'path' => $path,
+        'domain' => $domain,
+        'secure' => $secure,
+        'httponly' => $httponly,
+        'samesite' => $samesite
+      );
+      setcookie($name, $value, $cookie_options);   
+    } else {
+      setcookie($name, $value, $expire, $path, (xtc_not_null($domain) ? $domain : ''), $secure, $httponly);
+    }
   }
 ?>

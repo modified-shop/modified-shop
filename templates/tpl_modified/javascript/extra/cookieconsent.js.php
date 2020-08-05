@@ -66,7 +66,10 @@ function cc_popup_content(trgt) {
 			
 			let cookieString = 'MODOilTrack=' + JSON.stringify(data.purposeConsents) + ';';
 			cookieString += 'expires=' + cookieDate.toUTCString() + ';';
-			cookieString += 'path=/;samesite=lax;';
+			cookieString += 'path=/;SameSite=Lax;';
+			if (SetSecCookie == true) {
+			  cookieString += 'Secure;';
+			}
 			
 			document.cookie = cookieString;
 		};

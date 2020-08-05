@@ -1,6 +1,6 @@
 <?php
 /*-----------------------------------------------------------
-   $Id:$
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -16,4 +16,7 @@ define('DIR_TMPL_JS', DIR_TMPL.'javascript/');
 // this javascriptfile get includes at the TOP of every template page in shop
 // you can add your template specific js scripts here
 ?>
-<script type="text/javascript">var DIR_WS_BASE="<?php echo DIR_WS_BASE ?>"</script>
+<script type="text/javascript">
+  var DIR_WS_BASE = "<?php echo DIR_WS_BASE ?>";
+  var SetSecCookie = <?php echo ((HTTP_SERVER == HTTPS_SERVER && $request_type == 'SSL') ? true : false); ?>;
+</script>

@@ -60,7 +60,7 @@ if (is_array($current_domain_delete)
 }
 
 // set the session cookie
-set_session_cookie(0, DIR_WS_CATALOG, (xtc_not_null($current_domain) ? '.'.$current_domain : ''), ((HTTP_SERVER == HTTPS_SERVER && $request_type == 'SSL') ? true : false), true);
+set_session_cookie(0, DIR_WS_CATALOG, (xtc_not_null($current_domain) ? '.'.$current_domain : ''), ((HTTP_SERVER == HTTPS_SERVER && $request_type == 'SSL') ? true : false), true, 'lax');
 
 // set the session ID if it exists
 if (SESSION_FORCE_COOKIE_USE != 'True') {
@@ -78,7 +78,7 @@ if (SESSION_FORCE_COOKIE_USE != 'True') {
 $session_started = false;
 $truncate_session_id = false;
 if (SESSION_FORCE_COOKIE_USE == 'True') {
-  xtc_setcookie('MODtest', 'please_accept_for_session', time()+60*60*24*30, DIR_WS_CATALOG, (xtc_not_null($current_domain) ? $current_domain : ''));
+  xtc_setcookie('MODtest', 'please_accept_for_session', time()+60*60*24*30, DIR_WS_CATALOG, (xtc_not_null($current_domain) ? $current_domain : ''), ((HTTP_SERVER == HTTPS_SERVER && $request_type == 'SSL') ? true : false), true, 'lax');
   if (isset($_COOKIE['MODtest'])) {
     $session_started = xtc_session_start();
   }
