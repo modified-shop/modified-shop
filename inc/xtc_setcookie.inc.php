@@ -18,7 +18,7 @@
   function xtc_setcookie($name, $value = '', $expire = 0, $path = '/', $domain = '', $secure = false, $httponly = false, $samesite = 'None') {
     if (version_compare(PHP_VERSION, '7.3', '>=')) {
       $cookie_options = array (
-        'expires' => $lifetime,
+        'expires' => $expire,
         'path' => $path,
         'domain' => $domain,
         'secure' => $secure,

@@ -14,7 +14,7 @@
     if (function_exists('session_set_cookie_params')) {
       if (version_compare(PHP_VERSION, '7.3', '>=')) {
         $cookie_options = array (
-          'expires' => $lifetime,
+          'lifetime' => $lifetime,
           'path' => $path,
           'domain' => $domain,
           'secure' => $secure,
