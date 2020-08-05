@@ -1,14 +1,16 @@
 <?php
-/* -----------------------------------------------------------------------------------------
-   $Id: cookie_consent.php $
+  /* --------------------------------------------------------------
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
 
-   Copyright (c) 2009 - 2013 [www.modified-shop.org]
-   -----------------------------------------------------------------------------------------
-   Released under the GNU General Public License 
-   ---------------------------------------------------------------------------------------*/
+   Copyright (c) 2009 - 2019 [www.modified-shop.org]
+   --------------------------------------------------------------
+   Copyright (c) 2019, Andreas Guder [info@andreas-guder.de]     
+   --------------------------------------------------------------   
+   Released under the GNU General Public License
+   --------------------------------------------------------------*/
   
   require('includes/application_top.php');
 
@@ -128,7 +130,6 @@
         $fixed = xtc_get_cookies_detail($vID, $_SESSION['languages_id'], 'fixed');
         if (!$fixed) {
           xtc_db_query("DELETE FROM " . TABLE_COOKIE_CONSENT_COOKIES . " WHERE cookies_id = '" . $vID . "'");
-          xtc_db_query("DELETE FROM " . TABLE_COOKIE_CONSENT_CATEGORIES . " WHERE cookies_id = '" . $vID . "'");
         }
         update_cookie_consent_version_data();
         xtc_redirect(xtc_href_link(basename($PHP_SELF), 'page=' . (int)$_GET['page'] . '&oID=' . $oID . '&action=list&spage=' . (int)$_GET['spage']));
@@ -251,19 +252,19 @@ require (DIR_WS_INCLUDES.'head.php');
                                      JOIN " . TABLE_COOKIE_CONSENT_CATEGORIES . " pto
                                           ON pto.categories_id = ptv.categories_id
                                              AND pto.languages_id = '".(int)$_SESSION['languages_id']."'
-                                    WHERE ptv.categories_id = '".$_GET['oID']."'
+                                    WHERE ptv.categories_id = '".(int)$_GET['oID']."'
                                       AND ptv.languages_id = '".(int)$_SESSION['languages_id']."'
                                  ORDER BY ptv.sort_order, ptv.cookies_name";
-              $values_split = new splitPageResults($_GET['spage'], $page_max_display_values_results, $values_query_raw, $values_query_numrows);
+              $values_split = new splitPageResults((int)$_GET['spage'], $page_max_display_values_results, $values_query_raw, $values_query_numrows);
               $values_query = xtc_db_query($values_query_raw);
               while ($values = xtc_db_fetch_array($values_query)) {
                 if (((!$_GET['vID']) || (@$_GET['vID'] == $values['cookies_id'])) && (!$vInfo) && (substr($_GET['saction'], 0, 3) != 'new_value')) {
                   $vInfo = new objectInfo($values);
                 }
                 if ( (is_object($vInfo)) && ($values['cookies_id'] == $vInfo->cookies_id) ) {
-                  echo '<tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(basename($PHP_SELF), 'page=' . $_GET['page'] . '&oID=' . $_GET['oID'] . '&action=list&spage=' . $_GET['spage'] . '&vID=' . $vInfo->cookies_id . '&saction=edit_value') . '\'">' . "\n";
+                  echo '<tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(basename($PHP_SELF), 'page=' . (int)$_GET['page'] . '&oID=' . (int)$_GET['oID'] . '&action=list&spage=' . (int)$_GET['spage'] . '&vID=' . $vInfo->cookies_id . '&saction=edit_value') . '\'">' . "\n";
                 } else {
-                  echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(basename($PHP_SELF), 'page=' . $_GET['page'] . '&oID=' . $_GET['oID'] . '&action=list&spage=' . $_GET['spage'] . '&vID=' . $values['cookies_id']) . '\'">' . "\n";
+                  echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(basename($PHP_SELF), 'page=' . (int)$_GET['page'] . '&oID=' . (int)$_GET['oID'] . '&action=list&spage=' . (int)$_GET['spage'] . '&vID=' . $values['cookies_id']) . '\'">' . "\n";
                 }
                 ?>
                 <td class="dataTableContent" style="width:50px;"><?php echo $values['sort_order']; ?></td>
@@ -283,7 +284,7 @@ require (DIR_WS_INCLUDES.'head.php');
                   }
                   ?>
                 </td>
-                <td class="dataTableContent txta-r"><?php if ( (is_object($vInfo)) && ($values['cookies_id'] == $vInfo->cookies_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(basename($PHP_SELF), 'page=' . $_GET['page'] . '&oID=' . $_GET['oID'] . '&action=list&spage=' . $_GET['spage'] . '&vID=' . $values['cookies_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent txta-r"><?php if ( (is_object($vInfo)) && ($values['cookies_id'] == $vInfo->cookies_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(basename($PHP_SELF), 'page=' . (int)$_GET['page'] . '&oID=' . (int)$_GET['oID'] . '&action=list&spage=' . (int)$_GET['spage'] . '&vID=' . $values['cookies_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
               <?php
               }
@@ -291,10 +292,10 @@ require (DIR_WS_INCLUDES.'head.php');
             </table>
             
             <div class="smallText pdg2 flt-l"><?php echo $values_split->display_count($values_query_numrows, $page_max_display_values_results, $_GET['spage'], TEXT_DISPLAY_NUMBER_OF_VALUES); ?></div>
-            <div class="smallText pdg2 flt-r"><?php echo $values_split->display_links($values_query_numrows, $page_max_display_values_results, MAX_DISPLAY_PAGE_LINKS, $_GET['spage'], 'page=' . $_GET['page'] . '&oID=' . $_GET['oID'] . '&action=list', 'spage'); ?></div>
+            <div class="smallText pdg2 flt-r"><?php echo $values_split->display_links($values_query_numrows, $page_max_display_values_results, MAX_DISPLAY_PAGE_LINKS, (int)$_GET['spage'], 'page=' . (int)$_GET['page'] . '&oID=' . (int)$_GET['oID'] . '&action=list', 'spage'); ?></div>
             <div class="clear"></div>
             <?php echo draw_input_per_page($PHP_SELF.'?'.xtc_get_all_get_params(array('page')),$cfg_max_display_values_key,$page_max_display_values_results); ?>
-            <div class="smallText pdg2 flt-r"><?php if (!$_GET['saction']) echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(basename($PHP_SELF), 'page=' . $_GET['page'] . '&oID=' . $_GET['oID']) . '">' . BUTTON_BACK . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(basename($PHP_SELF), 'page=' . $_GET['page'] . '&oID=' . $_GET['oID'] . '&action=list&spage=' . $_GET['spage'] . '&vID=' . $vInfo->cookies_id . '&saction=new_value') . '">' . BUTTON_INSERT . '</a>'; ?></div>
+            <div class="smallText pdg2 flt-r"><?php if (!$_GET['saction']) echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(basename($PHP_SELF), 'page=' . (int)$_GET['page'] . '&oID=' . (int)$_GET['oID']) . '">' . BUTTON_BACK . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(basename($PHP_SELF), 'page=' . (int)$_GET['page'] . '&oID=' . (int)$_GET['oID'] . '&action=list&spage=' . (int)$_GET['spage'] . '&vID=' . $vInfo->cookies_id . '&saction=new_value') . '">' . BUTTON_INSERT . '</a>'; ?></div>
             <?php
             } else {
             ?>
@@ -334,21 +335,21 @@ require (DIR_WS_INCLUDES.'head.php');
                   }
                   ?>
                   <td class="dataTableContent" style="width:50px;"><?php echo $options['sort_order']; ?></td>
-                  <td class="dataTableContent"><?php echo '<a href="' . xtc_href_link(basename($PHP_SELF), 'page=' . $_GET['page'] . '&oID=' . $options['categories_id'] . '&action=list') . '">' . xtc_image(DIR_WS_ICONS . 'folder.gif', ICON_FOLDER) . '</a>&nbsp;' . encode_htmlentities($options['categories_name']); ?></td>
+                  <td class="dataTableContent"><?php echo '<a href="' . xtc_href_link(basename($PHP_SELF), 'page=' . (int)$_GET['page'] . '&oID=' . $options['categories_id'] . '&action=list') . '">' . xtc_image(DIR_WS_ICONS . 'folder.gif', ICON_FOLDER) . '</a>&nbsp;' . encode_htmlentities($options['categories_name']); ?></td>
                   <td class="dataTableContent"><?php echo encode_htmlentities($options['categories_description']); ?></td>
-                  <td class="dataTableContent txta-r"><?php if (isset($oInfo) && (is_object($oInfo)) && ($options['categories_id'] == $oInfo->categories_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(basename($PHP_SELF), 'page=' . $_GET['page'] . '&oID=' . $options['categories_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                  <td class="dataTableContent txta-r"><?php if (isset($oInfo) && (is_object($oInfo)) && ($options['categories_id'] == $oInfo->categories_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(basename($PHP_SELF), 'page=' . (int)$_GET['page'] . '&oID=' . $options['categories_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
                 </tr>
                 <?php
                 }
               ?>
             </table>
             
-            <div class="smallText pdg2 flt-l"><?php echo $options_split->display_count($options_query_numrows, $page_max_display_options_results, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_OPTIONS); ?></div>
-            <div class="smallText pdg2 flt-r"><?php echo $options_split->display_links($options_query_numrows, $page_max_display_options_results, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], '', 'page'); ?></div>
+            <div class="smallText pdg2 flt-l"><?php echo $options_split->display_count($options_query_numrows, $page_max_display_options_results, (int)$_GET['page'], TEXT_DISPLAY_NUMBER_OF_OPTIONS); ?></div>
+            <div class="smallText pdg2 flt-r"><?php echo $options_split->display_links($options_query_numrows, $page_max_display_options_results, MAX_DISPLAY_PAGE_LINKS, (int)$_GET['page'], '', 'page'); ?></div>
             <div class="clear"></div>
             <?php echo draw_input_per_page($PHP_SELF,$cfg_max_display_options_key,$page_max_display_options_results); ?> 
             <div class="smallText pdg2 flt-r">
-              <?php if (!$_GET['action']) echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(basename($PHP_SELF), 'page=' . $_GET['page'] . '&oID=' . $oInfo->categories_id . '&action=new_option') . '">' . BUTTON_INSERT . '</a>'; ?>
+              <?php if (!$_GET['action']) echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(basename($PHP_SELF), 'page=' . (int)$_GET['page'] . '&oID=' . $oInfo->categories_id . '&action=new_option') . '">' . BUTTON_INSERT . '</a>'; ?>
             </div>
             <?php
             }
@@ -363,7 +364,7 @@ require (DIR_WS_INCLUDES.'head.php');
                   case 'new_value':
                     $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_NEW_VALUE . '</b>');
 
-                    $contents = array('form' => xtc_draw_form('values', basename($PHP_SELF), 'page=' . $_GET['page'] . '&oID=' . $_GET['oID'] . '&action=list&spage=' . $_GET['spage'] . '&vID=' . $_GET['vID'] . '&saction=insert_values', 'post', 'enctype="multipart/form-data"'));
+                    $contents = array('form' => xtc_draw_form('values', basename($PHP_SELF), 'page=' . (int)$_GET['page'] . '&oID=' . (int)$_GET['oID'] . '&action=list&spage=' . (int)$_GET['spage'] . '&vID=' . (int)$_GET['vID'] . '&saction=insert_values', 'post', 'enctype="multipart/form-data"'));
                     $contents[] = array('text' => TEXT_INFO_NEW_VALUE_INTRO);
                     $contents[] = array('text' => '<br />' . TEXT_INFO_VALUE_NAME . '<br />');
                     for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
@@ -375,13 +376,13 @@ require (DIR_WS_INCLUDES.'head.php');
                     }
                     $contents[] = array('text' => '<br />' . TEXT_INFO_VALUE_COOKIES . '<br />' . xtc_draw_input_field('cookies_list'));
                     $contents[] = array('text' => '<br />' . TEXT_INFO_VALUE_SORT . '<br />' . xtc_draw_input_field('sort_order'));
-                    $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_INSERT . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(basename($PHP_SELF), 'page=' . $_GET['page'] . '&oID=' . $_GET['oID'] . '&action=list&spage=' . $_GET['spage'] . '&vID=' . $_GET['vID']) . '">' . BUTTON_CANCEL . '</a>');
+                    $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_INSERT . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(basename($PHP_SELF), 'page=' . (int)$_GET['page'] . '&oID=' . (int)$_GET['oID'] . '&action=list&spage=' . (int)$_GET['spage'] . '&vID=' . (int)$_GET['vID']) . '">' . BUTTON_CANCEL . '</a>');
                     break;
 
                   case 'edit_value':
                     $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_EDIT_VALUE . '</b>');
 
-                    $contents = array('form' => xtc_draw_form('values', basename($PHP_SELF), 'page=' . $_GET['page'] . '&oID=' . $_GET['oID'] . '&action=list&spage=' . $_GET['spage'] . '&vID=' . $vInfo->cookies_id . '&saction=save_values', 'post', 'enctype="multipart/form-data"'));
+                    $contents = array('form' => xtc_draw_form('values', basename($PHP_SELF), 'page=' . (int)$_GET['page'] . '&oID=' . (int)$_GET['oID'] . '&action=list&spage=' . (int)$_GET['spage'] . '&vID=' . $vInfo->cookies_id . '&saction=save_values', 'post', 'enctype="multipart/form-data"'));
                     $contents[] = array('text' => TEXT_INFO_EDIT_VALUE_INTRO);
                     $contents[] = array('text' => '<br />' . TEXT_INFO_VALUE_NAME . '<br />');
                     for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
@@ -393,16 +394,16 @@ require (DIR_WS_INCLUDES.'head.php');
                     }
                     $contents[] = array('text' => '<br />' . TEXT_INFO_VALUE_COOKIES . '<br />' . xtc_draw_input_field('cookies_list', $vInfo->cookies_list) . '<br /><small>' . TEXT_INFO_VALUE_COOKIES_DESC . '</small><br />');
                     $contents[] = array('text' => '<br />' . TEXT_INFO_VALUE_SORT . '<br />' . xtc_draw_input_field('sort_order', $vInfo->sort_order));
-                    $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(basename($PHP_SELF), 'page=' . $_GET['page'] . '&oID=' . $_GET['oID'] . '&action=list&spage=' . $_GET['spage'] . '&vID=' . $vInfo->cookies_id) . '">' . BUTTON_CANCEL . '</a>');
+                    $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(basename($PHP_SELF), 'page=' . (int)$_GET['page'] . '&oID=' . (int)$_GET['oID'] . '&action=list&spage=' . (int)$_GET['spage'] . '&vID=' . $vInfo->cookies_id) . '">' . BUTTON_CANCEL . '</a>');
                     break;
 
                   case 'delete_value':
                     $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_DELETE_VALUE . '</b>');
 
-                    $contents = array('form' => xtc_draw_form('values', basename($PHP_SELF), 'page=' . $_GET['page'] . '&oID=' . $_GET['oID'] . '&action=list&spage=' . $_GET['spage'] . '&vID=' . $vInfo->cookies_id . '&saction=deleteconfirm_values'));
+                    $contents = array('form' => xtc_draw_form('values', basename($PHP_SELF), 'page=' . (int)$_GET['page'] . '&oID=' . (int)$_GET['oID'] . '&action=list&spage=' . (int)$_GET['spage'] . '&vID=' . $vInfo->cookies_id . '&saction=deleteconfirm_values'));
                     $contents[] = array('text' => TEXT_INFO_DELETE_VALUE_INTRO);
                     $contents[] = array('text' => '<br /><b>' . xtc_get_cookies_detail($vInfo->cookies_id, $_SESSION['languages_id'], 'cookies_name') . '</b>');
-                    $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(basename($PHP_SELF), 'page=' . $_GET['page'] . '&oID=' . $_GET['oID'] . '&action=list&spage=' . $_GET['spage'] . '&vID=' . $vInfo->cookies_id) . '">' . BUTTON_CANCEL . '</a>');
+                    $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(basename($PHP_SELF), 'page=' . (int)$_GET['page'] . '&oID=' . (int)$_GET['oID'] . '&action=list&spage=' . (int)$_GET['spage'] . '&vID=' . $vInfo->cookies_id) . '">' . BUTTON_CANCEL . '</a>');
                     break;
 
                   default:
@@ -410,9 +411,9 @@ require (DIR_WS_INCLUDES.'head.php');
                       $heading[] = array('text' => '<b>' . xtc_get_cookies_detail($vInfo->cookies_id, $_SESSION['languages_id'], 'cookies_name') . '</b>');
                       
                       $consent_buttons = '';
-                      $consent_buttons .= '<a class="button" onclick="this.blur();" href="' . xtc_href_link(basename($PHP_SELF), 'page=' . $_GET['page'] . '&oID=' . $_GET['oID'] . '&action=list&spage=' . $_GET['spage'] . '&vID=' . $vInfo->cookies_id . '&saction=edit_value') . '">' . BUTTON_EDIT . '</a> ';
+                      $consent_buttons .= '<a class="button" onclick="this.blur();" href="' . xtc_href_link(basename($PHP_SELF), 'page=' . (int)$_GET['page'] . '&oID=' . (int)$_GET['oID'] . '&action=list&spage=' . (int)$_GET['spage'] . '&vID=' . $vInfo->cookies_id . '&saction=edit_value') . '">' . BUTTON_EDIT . '</a> ';
                       if (!$vInfo->fixed) {
-                        $consent_buttons .= '<a class="button" onclick="this.blur();" href="' . xtc_href_link(basename($PHP_SELF), 'page=' . $_GET['page'] . '&oID=' . $_GET['oID'] . '&action=list&spage=' . $_GET['spage'] . '&vID=' . $vInfo->cookies_id . '&saction=delete_value') . '">' . BUTTON_DELETE . '</a> ';
+                        $consent_buttons .= '<a class="button" onclick="this.blur();" href="' . xtc_href_link(basename($PHP_SELF), 'page=' . (int)$_GET['page'] . '&oID=' . (int)$_GET['oID'] . '&action=list&spage=' . (int)$_GET['spage'] . '&vID=' . $vInfo->cookies_id . '&saction=delete_value') . '">' . BUTTON_DELETE . '</a> ';
                       }
                       $contents[] = array('align' => 'center', 'text' => $consent_buttons);
 
@@ -438,7 +439,7 @@ require (DIR_WS_INCLUDES.'head.php');
                   case 'new_option':
                     $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_NEW_OPTION . '</b>');
 
-                    $contents = array('form' => xtc_draw_form('options', basename($PHP_SELF), 'page=' . $_GET['page'] . '&oID=' . $_GET['oID'] . '&action=insert_options'));
+                    $contents = array('form' => xtc_draw_form('options', basename($PHP_SELF), 'page=' . (int)$_GET['page'] . '&oID=' . (int)$_GET['oID'] . '&action=insert_options'));
                     $contents[] = array('text' => TEXT_INFO_NEW_OPTION_INTRO);
                     $contents[] = array('text' => '<br />' . TEXT_INFO_OPTION_NAME . '<br />');
                     for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
@@ -449,13 +450,13 @@ require (DIR_WS_INCLUDES.'head.php');
                       $contents[] = array('text' => xtc_image(DIR_WS_LANGUAGES.$languages[$i]['directory'].'/admin/images/'.$languages[$i]['image']) . '&nbsp;' . xtc_draw_textarea_field('categories_description[' . $languages[$i]['id'] . ']', '', '45', '5'));
                     }
                     $contents[] = array('text' => '<br />' . TEXT_INFO_OPTION_SORT . '<br />' . xtc_draw_input_field('sort_order'));
-                    $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_INSERT . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(basename($PHP_SELF), 'page=' . $_GET['page'] . '&oID=' . $_GET['oID']) . '">' . BUTTON_CANCEL . '</a>');
+                    $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_INSERT . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(basename($PHP_SELF), 'page=' . (int)$_GET['page'] . '&oID=' . (int)$_GET['oID']) . '">' . BUTTON_CANCEL . '</a>');
                     break;
 
                   case 'edit_option':
                     $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_EDIT_OPTION . '</b>');
 
-                    $contents = array('form' => xtc_draw_form('options', basename($PHP_SELF), 'page=' . $_GET['page'] . '&oID=' . $oInfo->categories_id . '&action=save_options'));
+                    $contents = array('form' => xtc_draw_form('options', basename($PHP_SELF), 'page=' . (int)$_GET['page'] . '&oID=' . $oInfo->categories_id . '&action=save_options'));
                     $contents[] = array('text' => TEXT_INFO_EDIT_OPTION_INTRO);
                     $contents[] = array('text' => '<br />' . TEXT_INFO_OPTION_NAME . '<br />');
                     for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
@@ -466,13 +467,13 @@ require (DIR_WS_INCLUDES.'head.php');
                       $contents[] = array('text' => xtc_image(DIR_WS_LANGUAGES.$languages[$i]['directory'].'/admin/images/'.$languages[$i]['image']) . '&nbsp;' . xtc_draw_textarea_field('categories_description[' . $languages[$i]['id'] . ']', '', '45', '5', xtc_get_cookies_categories_detail($oInfo->categories_id, $languages[$i]['id'], 'categories_description')));
                     }
                     $contents[] = array('text' => '<br />' . TEXT_INFO_OPTION_SORT . '<br />' . xtc_draw_input_field('sort_order', $oInfo->sort_order));
-                    $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(basename($PHP_SELF), 'page=' . $_GET['page'] . '&oID=' . $oInfo->categories_id) . '">' . BUTTON_CANCEL . '</a>');
+                    $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(basename($PHP_SELF), 'page=' . (int)$_GET['page'] . '&oID=' . $oInfo->categories_id) . '">' . BUTTON_CANCEL . '</a>');
                     break;
 
                   case 'delete_option':
                     $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_DELETE_OPTION . '</b>');
 
-                    $contents = array('form' => xtc_draw_form('options', basename($PHP_SELF), 'page=' . $_GET['page'] . '&oID=' . $oInfo->categories_id . '&action=deleteconfirm_options'));
+                    $contents = array('form' => xtc_draw_form('options', basename($PHP_SELF), 'page=' . (int)$_GET['page'] . '&oID=' . $oInfo->categories_id . '&action=deleteconfirm_options'));
                     $contents[] = array('text' => TEXT_INFO_DELETE_OPTION_INTRO);
                     $contents[] = array('text' => '<br /><b>' . xtc_get_cookies_categories_detail($oInfo->categories_id, $_SESSION['languages_id'], 'categories_name') . '</b>');
                     $products_query = xtc_db_query("SELECT * 
@@ -483,7 +484,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     if ($products_total > 0) {
                       $contents[] = array('text' => '<br />' . sprintf(TEXT_INFO_WARNING_PRODUCTS, $products_total));
                     }
-                    $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(basename($PHP_SELF), 'page=' . $_GET['page'] . '&oID=' . $oInfo->categories_id) . '">' . BUTTON_CANCEL . '</a>');
+                    $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(basename($PHP_SELF), 'page=' . (int)$_GET['page'] . '&oID=' . $oInfo->categories_id) . '">' . BUTTON_CANCEL . '</a>');
                     break;
 
                   default:
@@ -491,11 +492,11 @@ require (DIR_WS_INCLUDES.'head.php');
                       $heading[] = array('text' => '<b>' . xtc_get_cookies_categories_detail($oInfo->categories_id, $_SESSION['languages_id'], 'categories_name') . '</b>');
 
                       $consent_buttons = '';
-                      $consent_buttons .= '<a class="button btnbox" onclick="this.blur();" href="' . xtc_href_link(basename($PHP_SELF), 'page=' . $_GET['page'] . '&oID=' . $oInfo->categories_id . '&action=edit_option') . '">' . BUTTON_EDIT . '</a> ';
+                      $consent_buttons .= '<a class="button btnbox" onclick="this.blur();" href="' . xtc_href_link(basename($PHP_SELF), 'page=' . (int)$_GET['page'] . '&oID=' . $oInfo->categories_id . '&action=edit_option') . '">' . BUTTON_EDIT . '</a> ';
                       if (!$oInfo->fixed) {
-                        $consent_buttons .= '<a class="button btnbox" onclick="this.blur();" href="' . xtc_href_link(basename($PHP_SELF), 'page=' . $_GET['page'] . '&oID=' . $oInfo->categories_id . '&action=delete_option') . '">' . BUTTON_DELETE . '</a> ';
+                        $consent_buttons .= '<a class="button btnbox" onclick="this.blur();" href="' . xtc_href_link(basename($PHP_SELF), 'page=' . (int)$_GET['page'] . '&oID=' . $oInfo->categories_id . '&action=delete_option') . '">' . BUTTON_DELETE . '</a> ';
                       }
-                      $consent_buttons .= '<a class="button btnbox" onclick="this.blur();" href="' . xtc_href_link(basename($PHP_SELF), 'page=' . $_GET['page'] . '&oID=' . $oInfo->categories_id . '&action=list') . '">' . BUTTON_COOKIES . '</a>';
+                      $consent_buttons .= '<a class="button btnbox" onclick="this.blur();" href="' . xtc_href_link(basename($PHP_SELF), 'page=' . (int)$_GET['page'] . '&oID=' . $oInfo->categories_id . '&action=list') . '">' . BUTTON_COOKIES . '</a>';
                       $contents[] = array('align' => 'center', 'text' => $consent_buttons);
                       $contents[] = array('text' => '<br />' . TEXT_INFO_NUMBER_OPTION . ' ' . $oInfo->num_options);
                       $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_ADDED . ' ' . xtc_date_short($oInfo->date_added));
