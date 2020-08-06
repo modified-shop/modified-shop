@@ -255,7 +255,7 @@ require (DIR_WS_INCLUDES.'head.php');
                                     WHERE ptv.categories_id = '".(int)$_GET['oID']."'
                                       AND ptv.languages_id = '".(int)$_SESSION['languages_id']."'
                                  ORDER BY ptv.sort_order, ptv.cookies_name";
-              $values_split = new splitPageResults((int)$_GET['spage'], $page_max_display_values_results, $values_query_raw, $values_query_numrows);
+              $values_split = new splitPageResults($_GET['spage'], $page_max_display_values_results, $values_query_raw, $values_query_numrows);
               $values_query = xtc_db_query($values_query_raw);
               while ($values = xtc_db_fetch_array($values_query)) {
                 if (((!$_GET['vID']) || (@$_GET['vID'] == $values['cookies_id'])) && (!$vInfo) && (substr($_GET['saction'], 0, 3) != 'new_value')) {
