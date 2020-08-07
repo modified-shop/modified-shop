@@ -39,7 +39,7 @@
                 }
             },
             "issupply": {
-                "label": "Was ist es?",
+                "label": "What is it?",
                 "key": "_#_platform_#_.issupply",
                 "type": "selection",
                 "desc": "",

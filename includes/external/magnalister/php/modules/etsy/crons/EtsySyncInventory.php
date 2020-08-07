@@ -52,6 +52,11 @@ class EtsySyncInventory extends MagnaCompatibleSyncInventory {
             $this->config['StockSync'] = 'auto';
             $this->blHandleZeroStock = true;
         }
+        // like for eBay, not 'quantity.maxquantity'
+        $iQuantityMax = (int)getDBConfigValue('etsy.maxquantity', $this->mpID, 0);
+        if ($iQuantityMax) {
+            $this->config['QuantityMax'] = $iQuantityMax;
+        }
     }
 
     protected function updateCustomFields(&$data) {
@@ -61,6 +66,15 @@ class EtsySyncInventory extends MagnaCompatibleSyncInventory {
         }
         if (array_key_exists('Quantity', $data) || array_key_exists('Price', $data)) {
             $data['HandleZeroStock'] = $this->blHandleZeroStock;
+        }
+    }
+    /* catch wrongly uploaded items */
+    protected function identifySKU() {
+        parent::identifySKU();
+        if (    empty($this->cItem['pID'])
+             && (getDBConfigValue('general.keytype', '0') != 'artNr')
+             && is_numeric($this->cItem['SKU']) ) {
+            $this->cItem['pID'] = $this->cItem['SKU'];
         }
     }
 }

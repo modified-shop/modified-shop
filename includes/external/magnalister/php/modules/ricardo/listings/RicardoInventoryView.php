@@ -11,9 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id$
- *
- * (c) 2010 - 2014 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2019 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -374,7 +372,7 @@ $(document).ready(function() {
 				<div id="infodiag" class="dialog2" title="' . ML_LABEL_NOTE . '">' . ML_RICARDO_TEXT_CHECKIN_DELAY. '</div>';
 	}
 
-	private function getInventory() {
+	protected function getInventory() {
 		try {
 			$request = array(
 				'ACTION' => 'GetInventory',

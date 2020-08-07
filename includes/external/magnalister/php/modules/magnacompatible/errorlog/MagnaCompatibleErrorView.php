@@ -182,7 +182,7 @@ class MagnaCompatibleErrorView {
 			foreach ($result['DATA'] as $item) {
 				$this->processErrorAdditonalData($item['ErrorData']);
 				$data = array (
-					'mpID' => $item['MpId'],
+					'mpID' => isset($item['MpId']) ? $item['MpId'] : $item['MarketplaceId'],
 					'BatchId' => !empty($item['BatchId']) ? $item['BatchId'] : null,
 					'origin' => isset($item['Origin']) ? $item['Origin'] : '',
 					'dateadded' => $item['DateAdded'],

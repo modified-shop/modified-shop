@@ -1,19 +1,17 @@
 <?php
 /**
- * 888888ba                 dP  .88888.                    dP                
- * 88    `8b                88 d8'   `88                   88                
- * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b. 
- * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88 
- * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88 
- * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P' 
+ * 888888ba                 dP  .88888.                    dP
+ * 88    `8b                88 d8'   `88                   88
+ * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b.
+ * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88
+ * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88
+ * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P'
  *
  *                          m a g n a l i s t e r
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: AmazonCheckinSubmit.php 6865 2016-08-23 08:22:31Z tim.neumann $
- *
- * (c) 2010 - 2014 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2019 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -250,6 +248,11 @@ class AmazonCheckinSubmit extends CheckinSubmit {
             $imagePath = SHOP_URL_POPUP_IMAGES;
             $imagePath = trim($imagePath, '/ ').'/';
         }
+        if ('gambioProperties' == getDBConfigValue('general.options', 0, 'old')) {
+            $imagePathVariations = getDBConfigValue($this->_magnasession['currentPlatform'].'.imagepath.variations', $this->_magnasession['mpID'], HTTP_CATALOG_SERVER.DIR_WS_CATALOG.DIR_WS_IMAGES.'product_images/properties_combis_images/');
+        } else {
+           $imagePathVariations = $imagePath; 
+        } 
 		$images = array();
 		if (!empty($data['submit']['Images'])) {
 			foreach ($data['submit']['Images'] as $image => $use) {
@@ -284,9 +287,6 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 			$this->unsetB2BData($data['submit']);
 		}
 
-		// get price without taxes with business options. this is used for calculating variation prices
-		$productPrice = $this->simpleprice->setPriceFromDB($pID, $this->mpID, 'b2b.')->getPrice();
-
         // skip all variations if this is set
         $sVariationTheme = json_decode($productApply['variation_theme'], true);
         if (is_array($sVariationTheme) && key($sVariationTheme) == 'skip_variations') {
@@ -298,8 +298,9 @@ class AmazonCheckinSubmit extends CheckinSubmit {
             $sVariationTheme = array();
         }
 
+
         $preparedAttributes = $this->getPreparedAttributes($productApply);
-        foreach ($data['submit']['Variations'] as &$vItem) {
+        foreach ($data['submit']['Variations'] as $vNo => &$vItem) {
 			$vItem['SKU'] = ($this->settings['keytype'] == 'artNr')
 				? $vItem['MarketplaceSku']
 				: $vItem['MarketplaceId'];
@@ -334,8 +335,13 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 
 			if (isset($vItem['Images']) && !empty($vItem['Images'])) {
 				foreach ($vItem['Images'] as $imgKey => $imgVal) {
-					$vItem['Images'][$imgKey] = (preg_match('/http(s{0,1}):\/\//', $imgVal) ? '' : $imagePath ).$imgVal;
+					if (empty($imgVal)) continue;
+					$vItem['Images'][$imgKey] = (preg_match('/http(s{0,1}):\/\//', $imgVal) ? '' : $imagePathVariations ).$imgVal;
 				}
+			} else if (    isset($product['VariationPictures'])
+			            && ($product['VariationPictures'][$vNo]['VariationId'] == $vItem['VariationId'])
+			            && (!empty($product['VariationPictures'][$vNo]['Image']))) {
+				$vItem['Images'][0] = (preg_match('/http(s{0,1}):\/\//', $product['VariationPictures'][$vNo]['Image']) ? '' : $imagePathVariations ).$product['VariationPictures'][$vNo]['Image'];
 			} else {
 				unset($vItem['Images']);
 			}
@@ -347,7 +353,7 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 
 			// B2B
 			if ($b2bActive) {
-				$this->setB2BVariationData($vItem, $data, $b2bOnly);
+				$this->setB2BVariationData($vItem, $data, $pID, $b2bOnly);
 			} else {
 				$this->unsetB2BData($vItem);
 			}
@@ -398,9 +404,14 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 		$this->setB2BPrice($pID, $data, $product, $b2bOnly);
 	}
 
-	private function setB2BVariationData(&$vItem, $data, $b2bOnly) {
-		$vItem['BusinessPrice'] = $this->simpleprice->finalizePrice($vItem['VariationId'], $this->mpID, 'b2b.')
-			->getPrice();
+	private function setB2BVariationData(&$vItem, $data, $productId, $b2bOnly) {
+        $aPriceConfig = $this->simpleprice->loadPriceSettings($this->mpID, 'b2b.');
+
+        $vItem['BusinessPrice'] = $this->simpleprice
+            ->setPriceFromDB($productId, $this->mpID, $aPriceConfig)
+            ->addAttributeSurcharge((int)magnaSKU2aID($vItem['SKU']))
+            ->finalizePrice($productId, $this->mpID, $aPriceConfig)
+            ->getPrice();
 
 		$vItem['ProductTaxCode'] = $data['submit']['ProductTaxCode'];
 		$vItem['QuantityPriceType'] = $data['submit']['QuantityPriceType'];
@@ -787,6 +798,15 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 	}
 
 	protected function postSubmit() {
+        $doUploadItems = true;
+        if (($hp = magnaContribVerify('AmazonCheckinSubmit_PostUploadItems', 1)) !== false) {
+            require($hp);
+        }
+
+        if ($doUploadItems === false) {
+            return;
+        }
+
 		try {
 			//*
 			$result = MagnaConnector::gi()->submitRequest(array(

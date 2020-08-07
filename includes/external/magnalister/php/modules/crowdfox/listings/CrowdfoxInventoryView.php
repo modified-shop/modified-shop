@@ -11,9 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id$
- *
- * (c) 2010 - 2014 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2019 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -21,11 +19,9 @@
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 require_once(DIR_MAGNALISTER_MODULES . 'magnacompatible/listings/MagnaCompatibleInventoryView.php');
 
-class CrowdfoxInventoryView extends MagnaCompatibleInventoryView
-{
+class CrowdfoxInventoryView extends MagnaCompatibleInventoryView {
 
-    public function __construct($settings = array())
-    {
+    public function __construct($settings = array()) {
         global $_MagnaShopSession, $_MagnaSession, $_url, $_modules;
 
         $this->marketplace = $_MagnaSession['currentPlatform'];
@@ -167,9 +163,8 @@ class CrowdfoxInventoryView extends MagnaCompatibleInventoryView
 			/*]]>*/</script>';
     }
 
-    private function getInventory()
-    {
-        try{
+    protected function getInventory() {
+        try {
             $request = array(
                 'ACTION' => 'GetInventory',
                 'LIMIT' => $this->settings['itemLimit'],
@@ -177,14 +172,14 @@ class CrowdfoxInventoryView extends MagnaCompatibleInventoryView
                 'ORDERBY' => $this->sort['order'],
                 'SORTORDER' => $this->sort['type'],
             );
-            if (!empty($this->search)){
+            if (!empty($this->search)) {
                 $request['SEARCH'] = $this->search;
             }
             $result = MagnaConnector::gi()->submitRequest($request);
             $this->numberofitems = (int)$result['NUMBEROFLISTINGS'];
             return $result;
 
-        } catch (MagnaException $e){
+        } catch (MagnaException $e) {
             return false;
         }
     }

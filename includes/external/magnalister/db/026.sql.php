@@ -27,7 +27,7 @@ $queries[] = '
     CREATE TABLE IF NOT EXISTS `'.TABLE_MAGNA_HITMEISTER_PREPARE.'` (
   `mpID` int(11) NOT NULL,
   `products_id` int(11) NOT NULL,
-  `products_model` varchar(255) NOT NULL,
+  `products_model` varchar(64) NOT NULL,
   `mp_category_id` varchar(9) NOT NULL default 0,
   `mp_category_name` varchar(127) default \'\',
   `condition_id` int(4) NOT NULL default 100,

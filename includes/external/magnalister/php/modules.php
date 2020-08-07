@@ -11,9 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: modules.php 6799 2016-07-14 08:05:07Z tim.neumann $
- *
- * (c) 2010 - 2012 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2019 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -26,8 +24,8 @@ $_modules = array(
 		'displayAlways' => true,
 		'requiredConfigKeys' => array (
 			'amazon.firstactivation',
-			'amazon.username',
-			'amazon.password',
+			/*'amazon.username',
+			'amazon.password',*/
 			'amazon.merchantid',
 			'amazon.marketplaceid',
 			'amazon.mwstoken',
@@ -93,6 +91,7 @@ $_modules = array(
 		'logo' => 'ebay',
 		'displayAlways' => true,
 		'requiredConfigKeys' => array (
+            'ebay.username',
 			'ebay.firstactivation',
 			'ebay.token',
 			'ebay.lang',
@@ -104,7 +103,7 @@ $_modules = array(
                 'title' => ML_GENERIC_PREPARE,
                 'views' => array (
                     'apply' => ML_AMAZON_NEW_ITMES,
-                    'match' => ML_AMAZON_PRODUCT_MATCHING,
+                    #'match' => ML_AMAZON_PRODUCT_MATCHING,     #PBSE# suspended
                     'varmatch' => ML_GENERIC_VARIANTEN_MATCHING,
                 )
             ),
@@ -289,8 +288,6 @@ $_modules = array(
 			'hitmeister.firstactivation',
 			'hitmeister.clientkey',
 			'hitmeister.secretkey',
-			'hitmeister.mpusername',
-			'hitmeister.mppassword',
 			'hitmeister.lang',
 			'hitmeister.shippingtime',
 			'hitmeister.itemcondition',
@@ -375,7 +372,6 @@ $_modules = array(
             'priceminister.firstactivation',
             'priceminister.apitoken',
             'priceminister.mpusername',
-            'priceminister.mppassword',
             'priceminister.lang',
             'priceminister.itemcondition',
             'priceminister.import',
@@ -457,7 +453,7 @@ $_modules = array(
 		'referer' => array('guenstiger.de'),
 		'requiredConfigKeys' => array (
 			'guenstiger.lang',
-			'guenstiger.inventorysync',
+			'guenstiger.inventorysync.price',
 			'guenstiger.shipping.country',
 			'guenstiger.shipping.method',
 			'guenstiger.shipping.cost',
@@ -488,7 +484,7 @@ $_modules = array(
 		'referer' => array('getdeal.de'),
 		'requiredConfigKeys' => array (
 			'getdeal.lang',
-			'getdeal.inventorysync',
+			'getdeal.inventorysync.price',
 			'getdeal.shipping.country',
 			'getdeal.shipping.method',
 			'getdeal.shipping.cost',
@@ -523,6 +519,7 @@ $_modules = array(
 			'idealo.shipping.country',
 			'idealo.shipping.method',
 			'idealo.shipping.cost',
+			'idealo.deliverytime',
 		),
 		'pages' => array (
 			'prepare' => ML_GENERIC_PREPARE,
@@ -551,7 +548,7 @@ $_modules = array(
 		'referer' => array('kelkoo.de'),
 		'requiredConfigKeys' => array (
 			'kelkoo.lang',
-			'kelkoo.inventorysync',
+			'kelkoo.inventorysync.price',
 			'kelkoo.shipping.country',
 			'kelkoo.shipping.method',
 			'kelkoo.shipping.cost',
@@ -583,7 +580,7 @@ $_modules = array(
 		'referer' => array('preissuchmaschine.de', 'preissuchmaschine.ch'),
 		'requiredConfigKeys' => array (
 			'preissuchmaschine.lang',
-			'preissuchmaschine.inventorysync',
+			'preissuchmaschine.inventorysync.price',
 			'preissuchmaschine.shipping.country',
 			'preissuchmaschine.shipping.method',
 			'preissuchmaschine.shipping.cost',
@@ -614,7 +611,7 @@ $_modules = array(
 		'referer' => array('billiger.de'),
 		'requiredConfigKeys' => array (
 			'billiger.lang',
-			'billiger.inventorysync',
+			'billiger.inventorysync.price',
 			'billiger.shipping.country',
 			'billiger.shipping.method',
 			'billiger.shipping.cost',
@@ -647,7 +644,7 @@ $_modules = array(
 			'daparto.tecdoc',
 			'daparto.condition',
 			'daparto.lang',
-			'daparto.inventorysync',
+			'daparto.inventorysync.price',
 			'daparto.shipping.country',
 			'daparto.shipping.method',
 			'daparto.shipping.cost',
@@ -711,7 +708,6 @@ $_modules = array(
 		'requiredConfigKeys' => array (
 			'tradoria.apikey',
 			'tradoria.mpusername',
-			'tradoria.mppassword',
 			'tradoria.import',
 		),
 		'pages' => array (
@@ -777,8 +773,12 @@ $_modules = array(
 		'displayAlways' => false,
 		'requiredConfigKeys' => array (
 			'hood.mpusername',
-			'hood.mppassword',
+			//'hood.mppassword',
 			'hood.apikey',
+                        'hood.orderstatus.canceled.nostock',
+			'hood.orderstatus.canceled.defect',
+			'hood.orderstatus.canceled.revoked',
+			'hood.orderstatus.canceled.nopayment',
 		),
 		'pages' => array (
 			'prepare' => ML_GENERIC_PREPARE,
@@ -808,7 +808,7 @@ $_modules = array(
 		'referer' => array('twenga.de'),
 		'requiredConfigKeys' => array (
 			'twenga.lang',
-			'twenga.inventorysync',
+			'twenga.inventorysync.price',
 			'twenga.shipping.country',
 			'twenga.shipping.method',
 			'twenga.shipping.cost',
@@ -845,9 +845,9 @@ $_modules = array(
             'etsy.imagepath',
             'etsy.price.addkind',
             'etsy.price.factor',
-            'etsy.price.group',
+            //'etsy.price.group', // do not check - because its doesn't exists in oscommerce
             'etsy.import',
-            'etsy.CustomerGroup',
+            //'etsy.CustomerGroup', // do not check - because its doesn't exists in oscommerce
             'etsy.preimport.start',
             'etsy.orderstatus.open',
             'etsy.orderstatus.shipped',
@@ -1045,6 +1045,84 @@ $_modules = array(
 		),
 		'type' => 'marketplace',
 	),
+    'googleshopping' => array(
+        'title' => 'Google Shopping',
+        'logo' => 'googleshopping',
+        'displayAlways' => false,
+        'requiredConfigKeys' => array (
+            'googleshopping.firstactivation',
+            'googleshopping.lang',
+            'googleshopping.lang.match.googleshopping',
+            'googleshopping.targetCountry',
+            'googleshopping.currency',
+        ),
+        'pages' => array (
+            'prepare' => array (
+                'title' => ML_GENERIC_PREPARE,
+                'views' => array (
+                    'apply' => ML_AMAZON_NEW_ITMES,
+                    'varmatch' => ML_GENERIC_VARIANTEN_MATCHING,
+                )
+            ),
+            'checkin' => ML_GENERIC_CHECKIN,
+            'listings' => array (
+                'title' => ML_GENERIC_LISTINGS,
+                'views' => array (
+                    'inventory' => ML_GENERIC_INVENTORY,
+                    'deleted' => ML_GENERIC_DELETED,
+                )
+            ),
+            'errorlog' => ML_GENERIC_ERRORLOG,
+            'conf' => ML_GENERIC_CONFIGURATION,
+        ),
+        'settings' => array (
+            'defaultpage' => 'prepare',
+            'subsystem' => 'Googleshopping',
+            'currency' => '__depends__',
+            'hasOrderImport' => true,
+        ),
+        'type' => 'marketplace',
+    ),
+    'metro' => array(
+        'title' => 'METRO',
+        'logo' => 'metro',
+        'displayAlways' => false,
+        'requiredConfigKeys' => array (
+            'metro.clientkey',
+            'metro.secretkey',
+            'metro.lang',
+            'metro.mwst.fallback',
+            'metro.price.addkind',
+            'metro.stocksync.tomarketplace',
+            'metro.orderstatus.cancelled',
+        ),
+        'pages' => array (
+            'prepare' => array (
+                'title' => ML_GENERIC_PREPARE,
+                'views' => array (
+                    'apply' => ML_AMAZON_NEW_ITMES,
+                    'varmatch' => ML_GENERIC_VARIANTEN_MATCHING,
+                )
+            ),
+            'checkin' => ML_GENERIC_CHECKIN,
+            'listings' => array (
+                'title' => ML_GENERIC_LISTINGS,
+                'views' => array (
+                    'inventory' => ML_GENERIC_INVENTORY,
+                    'deleted' => ML_GENERIC_DELETED,
+                )
+            ),
+            'errorlog' => ML_GENERIC_ERRORLOG,
+            'conf' => ML_GENERIC_CONFIGURATION,
+        ),
+        'settings' => array (
+            'defaultpage' => 'prepare',
+            'subsystem' => 'Metro',
+            'currency' => 'EUR',
+            'hasOrderImport' => true,
+        ),
+        'type' => 'marketplace',
+    ),
 	'more' => array (
 		'title' => '&hellip;',
 		'displayAlways' => true,

@@ -70,17 +70,29 @@ class YategoImportOrders extends MagnaCompatibleImportOrders {
 				$class = 'uos_lastschrift_de_modul';
 			
 		} else if (stripos($paymentMethod, 'paypal') !== false) {
-			# PayPal
-			if (in_array('paypal.php', $paymentModules))
-				$class = 'paypal';
-			else if (in_array('paypalng.php', $paymentModules))
-				$class = 'paypalng';
-			else if (in_array('paypal_ipn.php', $paymentModules))
-				$class = 'paypal_ipn';
-			else if (in_array('paypalexpress.php', $paymentModules))
-				$class = 'paypalexpress';
-			else if (in_array('paypal3.php', $paymentModules))
-				$class = 'paypal3';
+            # PayPal
+            if (in_array('paypal.php', $paymentModules))
+                $class = 'paypal';
+            else if (in_array('paypalng.php', $paymentModules))
+                $class = 'paypalng';
+            else if (in_array('paypal_ipn.php', $paymentModules))
+                $class = 'paypal_ipn';
+            else if (in_array('paypalexpress.php', $paymentModules))
+                $class = 'paypalexpress';
+            else if (in_array('paypal3.php', $paymentModules))
+                $class = 'paypal3';
+            else if (in_array('paypalclassic.php', $paymentModules))
+                $class = 'paypalclassic';
+            else if (in_array('paypalplus.php', $paymentModules))
+                $class = 'paypalplus';
+            else if (in_array('paypallink.php', $paymentModules))
+                $class = 'paypallink';
+            else if (in_array('paypalpluslink.php', $paymentModules))
+                $class = 'paypalpluslink';
+            else if (in_array('paypalgambio_alt.php', $paymentModules))
+                $class = 'paypalgambio_alt';
+            else if (in_array('wcp_paypal.php', $paymentModules))
+                $class = 'wcp_paypal';
 		} else if (stripos($paymentMethod, 'Rechnung') !== false) {
 			# Auf Rechnung
 			if (in_array('invoice.php', $paymentModules))

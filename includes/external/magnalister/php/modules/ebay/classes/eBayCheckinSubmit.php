@@ -1,11 +1,11 @@
 <?php
 /**
- * 888888ba                 dP  .88888.                    dP                
- * 88    `8b                88 d8'   `88                   88                
- * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b. 
- * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88 
- * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88 
- * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P' 
+ * 888888ba                 dP  .88888.                    dP
+ * 88    `8b                88 d8'   `88                   88
+ * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b.
+ * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88
+ * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88
+ * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P'
  *
  *                          m a g n a l i s t e r
  *                                      boost your Online-Shop
@@ -25,13 +25,13 @@ require_once(DIR_MAGNALISTER_MODULES.'ebay/EbayHelper.php');
 class eBayCheckinSubmit extends CheckinSubmit {
 	private $verify = false;
 	private $lastException = null;
-	
+
 	protected $ignoreErrors = true;
 
 	protected $properties = array();
 
 	private $errorVariationMatchingFailed = false; // for the case all data are dropped in preSubmit
-	
+
 	public function __construct($settings = array()) {
 		global $_MagnaSession;
 		$settings = array_merge(array(
@@ -41,7 +41,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
 			'currency' => getCurrencyFromMarketplace($_MagnaSession['mpID']),
 		), $settings);
 
-		
+
 		parent::__construct($settings);
 		if (!getDBConfigValue('ebay.zerostockontrol', $this->mpID, false)) {
 			$this->summaryAddText = "<br />\n".ML_EBAY_SUBMIT_ADD_TEXT_ZERO_STOCK_ITEMS_REMOVED;
@@ -55,7 +55,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
 
 	protected function setUpMLProduct() {
 		parent::setUpMLProduct();
-		
+
 		MLProduct::gi()->useMultiDimensionalVariations(true);
 		MLProduct::gi()->setOptions(array(
 			'sameVariationsToAttributes' => false,
@@ -63,7 +63,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
 			'useGambioProperties' => (getDBConfigValue('general.options', '0', 'old') == 'gambioProperties')
 		));
 	}
-	
+
 	protected function generateRequestHeader() {
 		# das Request braucht nur action, subsystem und data
 		return array(
@@ -71,7 +71,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
 			'SUBSYSTEM' => 'eBay'
 		);
 	}
-	
+
 	protected function initSelection($offset, $limit) {
 		if ($this->verify) {
 			# fuer Verify nur Artikel mit gueltiger Menge und Preis nehmen, ausser man findet keine
@@ -98,7 +98,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
 		}
 		parent::initSelection($offset, $limit);
 	}
-	
+
 	protected function getProduct($pID) {
 		if (!$this->settings['mlProductsUseLegacy']) {
 			// (pre)load prepare-data and check what listing type it is
@@ -133,7 +133,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
 		}
 		return parent::getProduct($pID);
 	}
-	
+
 
 	protected function arrayPicture($value ,$product_id) {
 		$blPicturePack = getDBConfigValue(array('ebay.picturepack', 'val'), $this->_magnasession['mpID']);
@@ -141,7 +141,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
 			$aPictureUrls = MLProduct::gi()->getAllImagesByProductsId($product_id);
 			if(!$blPicturePack){
 				$aPictureUrls = current($aPictureUrls);
-			}			
+			}
 		} else {
 			$aPictureUrls = json_decode(fixBrokenJsonUmlauts($value),true);
 		}
@@ -194,7 +194,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
     protected function shouldSendShopData() {
         return true;
     }
-	
+
 	/**
 	 * @todo check if ((masterArticle && haveVariants)||normalArticle)
 	 */
@@ -204,61 +204,57 @@ class eBayCheckinSubmit extends CheckinSubmit {
 		}
 		$propertiesRow = $this->properties;
 		$data['submit']['SKU'] = magnaPID2SKU($pID);
-		
-		$listingMasterType = ($propertiesRow['ListingType'] == 'Chinese') ? 'chinese' : 'fixed';
-		
 
-		$data['submit']['Tax']      = getDBConfigValue('ebay.mwst', $this->_magnasession['mpID'], 0);// default
-		if (0 == $data['submit']['Tax']) {
-			if (getDBConfigValue(array('ebay.mwst.always', 'val'), $this->_magnasession['mpID'], false)) {
-				$data['submit']['Tax'] = 'zero';
-			}
-		}
+		$listingMasterType = ($propertiesRow['ListingType'] == 'Chinese') ? 'chinese' : 'fixed';
+
+
+
 		$isPicturePackActive = getDBConfigValue(array('ebay.picturepack', 'val'), $this->_magnasession['mpID']);
 		$blBusinessPoliciesSet = geteBayBusinessPolicies();
 		$defaultSellerProfiles = $blBusinessPoliciesSet
 			? json_encode(array(
 				'Payment'  => getDBConfigValue('ebay.default.paymentsellerprofile', $this->_magnasession['mpID']),
 				'Shipping' => getDBConfigValue('ebay.default.shippingsellerprofile', $this->_magnasession['mpID']),
-				'Return'   => getDBConfigValue('ebay.default.returnsellerprofile', $this->_magnasession['mpID']) 
+				'Return'   => getDBConfigValue('ebay.default.returnsellerprofile', $this->_magnasession['mpID'])
 			))
 			: '';
 		//data which comes direct from variables
 		foreach (array(
-			array('var' => 'db',		'varKey' => 'ebay.country',		'submitKey' => 'Country',		'empty' => true), 
-			array('var' => 'property',	'varKey' => 'DispatchTimeMax',		'submitKey' => 'DispatchTimeMax',	'empty' => true, 'sanitize' => 'string'), 
-			array('var' => 'db',		'varKey' => 'ebay.site',			'submitKey' => 'Site',			'empty' => true), 
-			array('var' => 'db',		'varKey' => 'ebay.location',		'submitKey' => 'Location',		'empty' => true), 
-			array('var' => 'db',		'varKey' => 'ebay.postalcode',		'submitKey' => 'PostalCode',		'empty' => true), 
-			array('var' => 'product',	'varKey' => 'tecDocKType',		'submitKey' => 'tecDocKType',		'empty' => false), 
-			array('var' => 'property',	'varKey' => 'PaymentMethods',		'submitKey' => 'PaymentMethods',	'empty' => false, 'sanitize' => 'json'), 
-			array('var' => 'property',	'varKey' => 'PrimaryCategory',		'submitKey' => 'PrimaryCategory',		'empty' => true), 
-			array('var' => 'property',	'varKey' => 'ListingType',		'submitKey' => 'ListingType',		'empty' => true), 
-			array('var' => 'property',	'varKey' => 'ListingDuration',		'submitKey' => 'ListingDuration',		'empty' => true), 
+			array('var' => 'db',		'varKey' => 'ebay.country',		'submitKey' => 'Country',		'empty' => true),
+			array('var' => 'property',	'varKey' => 'DispatchTimeMax',		'submitKey' => 'DispatchTimeMax',	'empty' => true, 'sanitize' => 'string'),
+			array('var' => 'db',		'varKey' => 'ebay.site',			'submitKey' => 'Site',			'empty' => true),
+			array('var' => 'db',		'varKey' => 'ebay.location',		'submitKey' => 'Location',		'empty' => true),
+			array('var' => 'db',		'varKey' => 'ebay.postalcode',		'submitKey' => 'PostalCode',		'empty' => true),
+			array('var' => 'product',	'varKey' => 'tecDocKType',		'submitKey' => 'tecDocKType',		'empty' => false),
+			array('var' => 'property',	'varKey' => 'PaymentMethods',		'submitKey' => 'PaymentMethods',	'empty' => false, 'sanitize' => 'json'),
+			array('var' => 'property',	'varKey' => 'PrimaryCategory',		'submitKey' => 'PrimaryCategory',		'empty' => true),
+			array('var' => 'property',	'varKey' => 'ListingType',		'submitKey' => 'ListingType',		'empty' => true),
+			array('var' => 'property',	'varKey' => 'ListingDuration',		'submitKey' => 'ListingDuration',		'empty' => true),
 			array('var' => 'property',	'varKey' => 'PictureURL',		'submitKey' => 'PictureURL',		'empty' => true, 'sanitize' => 'arraypicture'),
-			array('var' => 'property',	'varKey' => 'StartTime',		'submitKey' => 'StartTime',		'empty' => false), 
-			array('var' => 'db',		'varKey' => 'ebay.paypal.address',	                  'submitKey' => 'PayPalEmailAddress',	'empty' => false), 
-			array('var' => 'property',	'varKey' => 'HitCounter',		'submitKey' => 'HitCounter',		'empty' => false), 
+			array('var' => 'property',	'varKey' => 'StartTime',		'submitKey' => 'StartTime',		'empty' => false),
+			array('var' => 'db',		'varKey' => 'ebay.paypal.address',	                  'submitKey' => 'PayPalEmailAddress',	'empty' => false),
+			array('var' => 'property',	'varKey' => 'HitCounter',		'submitKey' => 'HitCounter',		'empty' => false),
 			# ShippingDetails will be manipulated later
-			array('var' => 'property',	'varKey' => 'ShippingDetails',		'submitKey' => 'ShippingDetails',		'empty' => true, 'sanitize' => 'json'), 
-			array('var' => 'property',	'varKey' => 'SellerProfiles',		'submitKey' => 'SellerProfiles',		'default' => $defaultSellerProfiles, 'empty' => false, 'sanitize' => 'json'), 
-			array('var' => 'property',	'varKey' => 'Subtitle',			'submitKey' => 'ItemSubTitle',		'empty' => false), 
-			array('var' => 'property',	'varKey' => 'ConditionID',		'submitKey' => 'ConditionID',		'empty' => false), 
+			array('var' => 'property',	'varKey' => 'ShippingDetails',		'submitKey' => 'ShippingDetails',		'empty' => true, 'sanitize' => 'json'),
+			array('var' => 'property',	'varKey' => 'SellerProfiles',		'submitKey' => 'SellerProfiles',		'default' => $defaultSellerProfiles, 'empty' => false, 'sanitize' => 'json'),
+			array('var' => 'property',	'varKey' => 'Subtitle',			'submitKey' => 'ItemSubTitle',		'empty' => false),
+			array('var' => 'property',	'varKey' => 'ConditionID',		'submitKey' => 'ConditionID',		'empty' => false),
 			array('var' => 'property',	'varKey' => 'SecondaryCategory',	'submitKey' => 'SecondaryCategory',		'empty' => false),
 			# Der Preis wurde mit der in der Config festgelegten Currency berechnet. Nicht die Currency aus der Vorbereitung nehmen, sondern aus der Config.
-			array('var' => 'settings',	'varKey' => 'currency',			'submitKey' => 'currencyID',	                     'empty' => true), 
-			array('var' => 'property',	'varKey' => 'StoreCategory',		'submitKey' => 'StoreCategory',		   'empty' => false), 
-			array('var' => 'property',	'varKey' => 'StoreCategory2',		'submitKey' => 'StoreCategory2',		   'empty' => false), 
-			array('var' => 'property',	'varKey' => 'Attributes',                                   'submitKey' => 'Attributes',	                     'empty' => false, 'sanitize' => 'json'), 
-			array('var' => 'property',	'varKey' => 'ItemSpecifics',		'submitKey' => 'ItemSpecifics',		    'empty' => false, 'sanitize' => 'json'), 
-			array('var' => 'property',	'varKey' => 'GalleryType',		'submitKey' => 'GalleryType',	                      'default' => getDBConfigValue('ebay.gallery.type', $this->_magnasession['mpID'], 'Gallery')), 
+			array('var' => 'settings',	'varKey' => 'currency',			'submitKey' => 'currencyID',	                     'empty' => true),
+			array('var' => 'property',	'varKey' => 'StoreCategory',		'submitKey' => 'StoreCategory',		   'empty' => false),
+			array('var' => 'property',	'varKey' => 'StoreCategory2',		'submitKey' => 'StoreCategory2',		   'empty' => false),
+			array('var' => 'property',	'varKey' => 'Attributes',                                   'submitKey' => 'Attributes',	                     'empty' => false, 'sanitize' => 'json'),
+			array('var' => 'property',	'varKey' => 'ItemSpecifics',		'submitKey' => 'ItemSpecifics',		    'empty' => false, 'sanitize' => 'json'),
+			array('var' => 'property',	'varKey' => 'GalleryType',		'submitKey' => 'GalleryType',	                      'default' => getDBConfigValue('ebay.gallery.type', $this->_magnasession['mpID'], 'Gallery')),
 			array('var' => 'property',	'varKey' => 'PrivateListing',		'submitKey' => 'PrivateListing',		    'empty' => false, 'sanitize' => 'bool'),
 			array('var' => 'property',	'varKey' => 'VariationDimensionForPictures',	'submitKey' => 'VariationDimensionForPictures', 'empty' => false, 'sanitize' => 'string'),
 			array('var' => 'property',	'varKey' => 'eBayPicturePackPurge',                 'submitKey' => 'PurgePictures',                            'empty' => false, 'sanitize' => 'bool','condition'=>$isPicturePackActive ),
 			array('var' => 'db',                          'varKey' => 'ebay.picturepack',		'submitKey' => 'PicturePack',                               'empty' => false, 'sanitize' => 'bool','condition'=>$isPicturePackActive ),
-			array('var' => 'property',	'varKey' => 'ePID',			'submitKey' => 'ePID',		'empty' => false), 
-			
-		) as $config) {
+			array('var' => 'property',	'varKey' => 'ePID',			'submitKey' => 'ePID',		'empty' => false),
+            array('var' => 'property',	'varKey' => 'mwst',		'submitKey' => 'Tax',	'default' => getDBConfigValue('ebay.mwst', $this->_magnasession['mpID'], 0)),
+
+                 ) as $config) {
 			if(isset($config['condition']) && !$config['condition'] ){
 				continue;
 			}
@@ -289,7 +285,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
 					$value = $config['default'];
 				} elseif ($config['empty'] === false) {
 					continue;
-				} 
+				}
 			}
 			if (isset($config['sanitize'])) {
 				switch ($config['sanitize']) {
@@ -317,28 +313,32 @@ class eBayCheckinSubmit extends CheckinSubmit {
 			}
 			$data['submit'][$config['submitKey']] = $value;
 		}
-		
+        if (0 == $data['submit']['Tax']) {
+            if (getDBConfigValue(array('ebay.mwst.always', 'val'), $this->_magnasession['mpID'], false)) {
+                $data['submit']['Tax'] = 'zero';
+            }
+        }
 		//if picture was reset in ebay_properties_table
 		$propertiesRow['PictureURL'] = $data['submit']['PictureURL'];
 		// DispatchTimeMax: use default if property not set properly
 		if ($data['submit']['DispatchTimeMax'] > 40) {
 			$data['submit']['DispatchTimeMax'] = getDBConfigValue('ebay.DispatchTimeMax', $this->_magnasession['mpID'], 30);
 		}
-		
+
 		if (!$this->verify) { // && ML_ShopAddOns::mlAddOnIsBooked('EbayPicturePack'))
 			$data['submit']['Asynchronous'] = true;
 		}
-		
+
 		if(    getDBConfigValue(array('ebay.picturepack', 'val'), $this->_magnasession['mpID'])
 		    && array_key_exists('Variations', $product)
 		    && is_array($product['Variations'])) {
 			$imagePath = getDBConfigValue('ebay.imagepath',$this->_magnasession['mpID']);
-			
+
 			$configVariationDimensionForPictures = getDBConfigValue('ebay.variationdimensionforpictures', $this->_magnasession['mpID']);
-			$data['submit']['VariationDimensionForPictures'] = 
+			$data['submit']['VariationDimensionForPictures'] = $sVariationDimensionForPictures =
 				empty($data['submit']['VariationDimensionForPictures']) ? $configVariationDimensionForPictures : $data['submit']['VariationDimensionForPictures'];
 			if (MAGNA_GAMBIO_VARIATIONS && getDBConfigValue('general.gambio.useproperties', '0', 'true') == 'true') {
-				$VarImagePath = HTTP_CATALOG_SERVER.DIR_WS_CATALOG.DIR_WS_IMAGES.'product_images/properties_combis_images/';
+				$VarImagePath = getDBConfigValue('ebay.imagepath.variations',$this->_magnasession['mpID'], HTTP_CATALOG_SERVER.DIR_WS_CATALOG.DIR_WS_IMAGES.'product_images/properties_combis_images/');
 				if(!empty($data['submit']['VariationDimensionForPictures'])){
 					foreach ($product['VariationPictures'] as $aVariation) {
 						foreach($aVariation['Variation'] as $aVar){
@@ -385,7 +385,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
 					foreach ($aVariationPictures as $aVariationPicture) {
 						if (empty($aVariationPicture['attributes_image'])) continue;
 						$data['submit']['VariationPictures'][stringToUTF8($aVariationPicture['products_options_values_name'])] = array ( rtrim($VarImagePath, '/').'/'.$aVariationPicture['attributes_image'] );
-					} 
+					}
 					if (empty($data['submit']['VariationPictures'])) unset($data['submit']['VariationPictures']);
 					$sVariationDimensionForPicturesName = MagnaDb::gi()->fetchOne('SELECT products_options_name
 						 FROM '.TABLE_PRODUCTS_OPTIONS.'
@@ -402,7 +402,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
 		}
 		// look for data in $data, then in $propertiesRow, then in $product
 		$data['submit']['Quantity']        = (!empty($data['quantity'])) ? $data['quantity'] : $product['Quantity'];
-		
+
 		if (!empty($data['price']) && $data['price'] != 0) {
 			$data['submit']['Price'] = $data['price'];
 		} elseif (!empty($propertiesRow['Price']) && $propertiesRow['Price'] != 0  && ('chinese' === $listingMasterType)) {
@@ -463,14 +463,14 @@ class eBayCheckinSubmit extends CheckinSubmit {
 				else $v['ePID'] = $ePIDsForVariationsByKey[$v['MarketplaceId']];
 			}
 		}
-		
+
 		if (!empty($product['BasePrice']) && !empty($product['BasePrice']['Value'])) {
 			$formatted_vpe = $this->simpleprice->setPrice($data['submit']['Price'] * (1.0 / $product['BasePrice']['Value']))->format(). ' / '. $product['BasePrice']['Unit'];
 			$data['submit']['BasePrice'] = $product['BasePrice'];
 		} else {
 			$formatted_vpe = '';
 		}
-		
+
 		# Titel zurückgesetzt, live ermitteln
 		if (empty($propertiesRow['Title'])) {
 			$eBayTitleTemplate = getDBConfigValue('ebay.template.name',$this->_magnasession['mpID'], '#TITLE#');
@@ -486,7 +486,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
 		$data['submit']['Title'] = $this->restoreCutBaseprice(
 			eBaySubstituteTemplate(
 				$this->_magnasession['mpID'], $pID,
-				html_entity_decode(fixHTMLUTF8Entities($propertiesRow['Title']), ENT_COMPAT, 'UTF-8'), 
+				html_entity_decode(fixHTMLUTF8Entities($propertiesRow['Title']), ENT_COMPAT, 'UTF-8'),
 				array(
 					'#VPE#' => $formatted_vpe,
 					'#BASEPRICE#' => $formatted_vpe
@@ -511,7 +511,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
 			if ($fWeight > 0.0) $sWeight = (string)$fWeight;
 			else $sWeight = '';
 		}
-	
+
 		if (!empty($data['submit']['Description'])) {
 			$data['submit']['Description'] = stringToUTF8($data['submit']['Description']);
 			if (array_key_exists('MobileDescription', $data['submit'])
@@ -531,9 +531,9 @@ class eBayCheckinSubmit extends CheckinSubmit {
 		} elseif(!empty($propertiesRow['Description'])) {
 			# Beim Uebermitteln Preis einsetzen
 			$data['submit']['Description'] = eBaySubstituteTemplate(
-				$this->_magnasession['mpID'], 
-				$pID, 
-				$propertiesRow['Description'], 
+				$this->_magnasession['mpID'],
+				$pID,
+				$propertiesRow['Description'],
 				array(
 					'#PRICE#' => $this->simpleprice->setPrice($data['submit']['Price'])->formatWOCurrency(),
 					'#VPE#' => $formatted_vpe,
@@ -566,9 +566,9 @@ class eBayCheckinSubmit extends CheckinSubmit {
 			$data['submit']['Description'] = stringToUTF8(
 				substitutePictures(
 					eBaySubstituteTemplate(
-						$this->_magnasession['mpID'], 
-						$pID, 
-						getDBConfigValue('ebay.template.content', $this->_magnasession['mpID']), 
+						$this->_magnasession['mpID'],
+						$pID,
+						getDBConfigValue('ebay.template.content', $this->_magnasession['mpID']),
 						array(
 							'#TITLE#' => fixHTMLUTF8Entities($product['Title']),
 							'#ARTNR#' => $product['ProductsModel'],
@@ -582,9 +582,9 @@ class eBayCheckinSubmit extends CheckinSubmit {
 							'#VPE#' => $formatted_vpe,
 							'#BASEPRICE#' => $formatted_vpe,
 						)
-					), 
-					$pID, 
-					getDBConfigValue('ebay.imagepath', $this->_magnasession['mpID']) 
+					),
+					$pID,
+					getDBConfigValue('ebay.imagepath', $this->_magnasession['mpID'])
 				)
 			);
 			$this->appendMobileDescriptionIfConfigured($data['submit']['Description'], $pID, $product, $data, $sWeight, $formatted_vpe);
@@ -616,8 +616,8 @@ class eBayCheckinSubmit extends CheckinSubmit {
 		$data['submit']['rawDescription'] = stringToUTF8(html_entity_decode(fixHTMLUTF8Entities($product['Description']), null, iconv_get_encoding('output_encoding')));
 
 		# Subtitel: Wird 1:1 weitergegeben. Wenn zurückgesetzt, gibts keinen (ist nicht vorkonfigurierbar)
-		
-		
+
+
 		// listingtype depending data
 		if ('Chinese' == $propertiesRow['ListingType']) {
 			if (!empty($propertiesRow['BuyItNowPrice'])) {
@@ -637,7 +637,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
 				}
 			}
 		}
-		
+
 		# EAN, wenn aktiviert (default false)
 		# compatibility for older revisions (removed from config ~ >5780)
 		if (
@@ -646,12 +646,12 @@ class eBayCheckinSubmit extends CheckinSubmit {
 		) {
 			$data['submit']['EAN'] = $product['EAN'];
 		}
-		
+
 		# IncludePrefilledItemInformation, wenn aktiviert (default false)
 		if (getDBConfigValue(array($this->_magnasession['currentPlatform'].'.usePrefilledInfo', 'val'), $this->_magnasession['mpID'], false)) {
 			$data['submit']['IncludePrefilledItemInformation'] = 'true';
 		}
-		
+
 
 		// returnPolicy
 		$data['submit']['ReturnPolicy'] = array();
@@ -684,7 +684,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
 		 * @todo check configValue
 		 * add marketplacesku to variations
 		 */
-		if (  
+		if (
 			('Chinese' <> $propertiesRow['ListingType'])
 		    && getDBConfigValue(array($this->_magnasession['currentPlatform'].'.usevariations', 'val'), $this->_magnasession['mpID'], true)
 		    && VariationsEnabled($data['submit']['PrimaryCategory'])
@@ -709,6 +709,12 @@ class eBayCheckinSubmit extends CheckinSubmit {
 					array(),
 					$variationThemeBlacklist
 				);
+				// if the variations have been matched, match also the variation dimension for pictures
+				if (    is_array($matchedAttributesNameIdValueId)
+				     && isset($data['submit']['VariationDimensionForPictures'])
+				     && array_key_exists($sVariationDimensionForPictures, $matchedAttributesNameIdValueId)) {
+					$data['submit']['VariationDimensionForPictures'] = $sVariationDimensionForPicturesName = current(array_keys($matchedAttributesNameIdValueId[$sVariationDimensionForPictures]));
+				}
 
 				$isFirstVariation = true;
 				foreach ($product['Variations'] as $dbVariation) {
@@ -770,7 +776,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
 		if ($value = getDBConfigValue('ebay.paymentinstructions', $this->_magnasession['mpID'], null)) {
 			$data['submit']['ShippingDetails']['PaymentInstructions'] = $value;
 		}
-		
+
 		# =GEWICHT beruecksichtigen
 		if (isset($data['submit']['ShippingDetails']['ShippingServiceOptions']) && is_array($data['submit']['ShippingDetails']['ShippingServiceOptions'])) {
 			foreach ($data['submit']['ShippingDetails']['ShippingServiceOptions'] as &$options) {
@@ -802,7 +808,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
 				}
 			}
 		}
-		
+
 		# Versandprofil Inland
 		if ( array_key_exists('LocalProfile', $data['submit']['ShippingDetails'])
 			&& (0 != $data['submit']['ShippingDetails']['LocalProfile'])) {
@@ -892,7 +898,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
 		//echo '<table><tr><td>$data[submit]</td><td>$product</td><td>$data</td><td>$propertiesRow (<em>'.$this->properties['ListingType'].'</em>)</td></tr><tr><td style="vertical-align:top">'.print_m($data['submit']).'</td><td style="vertical-align:top">'.print_m($product).'</td><td style="vertical-align:top">'.print_m($data).'</td><td style="vertical-align:top">'.print_m($propertiesRow).'</td></tr></table>';
 
 		$aListingDetails = EbayHelper::getProductListingDetailsFromProduct($pID, $this->settings['language']);
-        
+
         if (array_key_exists('ItemSpecifics', $data['submit']) && !empty($data['submit']['ItemSpecifics'])) {
             global $_MagnaSession;
             $aMatchingSwap = array(
@@ -900,7 +906,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
                 'details2specific' => array(),
             );
             foreach(array(
-                'EAN' => array('EAN', 'ISBN', 'UPC'), 
+                'EAN' => array('EAN', 'ISBN', 'UPC'),
                 'MPN' => array('Herstellernummer', 'MPN')
             ) as $sMatchingName => $aMatchingValues) {
                 $aMatching = getDBConfigValue($_MagnaSession['currentPlatform'] . '.listingdetails.'.strtolower($sMatchingName).'.dbmatching.table', $_MagnaSession['mpID'], false);
@@ -945,7 +951,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
 				     : 'products_id=\''.$pID.'\''
 				).' AND mpID = '.$this->_magnasession['mpID']);
 		require_once(DIR_MAGNALISTER_MODULES.'ebay/ebayFunctions.php');
-		
+
 		if (!empty($propertiesRow['Subtitle'])) $data['submit']['ItemSubTitle'] = $propertiesRow['Subtitle'];
 		$shortdesc = '';
 		#if (!empty($propertiesRow['Subtitle'])) {
@@ -1026,7 +1032,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
 			$data['submit']['Description'] = stringToUTF8($data['submit']['Description']);
 		}
 			$data['submit']['PictureURL'] = str_replace(array(' ','&'),array('%20','%26'), trim($propertiesRow['PictureURL']));
-		
+
 		if ($propertiesRow['ConditionID']) {
 			$data['submit']['ConditionID'] = $propertiesRow['ConditionID'];
 		}
@@ -1168,7 +1174,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
 			if(!empty($localProfileID)) {
 				$localAddCost = $shippingProfiles['Profiles']["$localProfileID"]['EachAdditionalAmount'];
 			}
-			if(!empty($internationalProfileID)) {	
+			if(!empty($internationalProfileID)) {
 				$internationalAddCost = $shippingProfiles['Profiles']["$internationalProfileID"]['EachAdditionalAmount'];
 			}
 			foreach ( $data['submit']['ShippingDetails']['ShippingServiceOptions'] as &$options) {
@@ -1197,7 +1203,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
 		# RateTableDetails: possibly switchable-off by config in the future
 		$data['submit']['ShippingDetails']['UseRateTables'] = 'true';
 	}
-	
+
 	# Hilfsfunktion: Fuer den Fall dass am Ende des Titels ein #BASEPRICE# steht,
 	# das durch die 80-Zeichen-Beschraenkung abgeschnitten wurde
 	private function restoreCutBaseprice($str, $bp) {
@@ -1210,7 +1216,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
 			$str = substr($str, 0, $lastHashPos).'#BASEPRICE#';
 		} else {
 			return $str;
-		} 
+		}
 		# ersetzen
 		$str = str_replace('#BASEPRICE#', $bp, $str);
 
@@ -1327,7 +1333,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
 				'ListingType'    => $itemResult['DATA']['ListingType'],
 				'Quantity'       => $itemResult['DATA']['Quantity']
 			);
-		
+
 			if(!empty($itemResult['DATA']['ItemID'])) {
 				$listing_data[$i]['ItemID']    = $itemResult['DATA']['ItemID'];
 				$listing_data[$i]['StartTime'] = eBayTimeToTs($itemResult['DATA']['StartTime']);
@@ -1339,7 +1345,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
 			if(!empty($itemResult['ERRORS'])) {
 				$listing_data[$i]['Errors'] = serialize($itemResult['ERRORS']);
 			}
-			
+
 			if (!$this->verify) {
 				MagnaDB::gi()->query('
 					UPDATE '.TABLE_MAGNA_EBAY_PROPERTIES.'
@@ -1347,7 +1353,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
 				 	WHERE  products_id ="'.$listing_data[$i]['products_id'].'"
 				');
 			}
-			
+
 			if ('ERROR' == $itemResult['STATUS']) {
 		 		$listing_data[$i]['Timestamp'] = eBayTimeToTs($itemResult['DATA']['Timestamp']);
 				MagnaDB::gi()->insert(TABLE_MAGNA_EBAY_ERRORLOG, $listing_data[$i]);
@@ -1362,7 +1368,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
 
 	protected function filterSelection() {
 		# Anzahlen <=0 wegfiltern, soweit Nullbestandsführung nicht aktiv (dann sind Änderungen OK)
-		foreach ($this->selection as $pID => &$data) { 
+		foreach ($this->selection as $pID => &$data) {
 			if (empty($data['submit']['Description'])) {
 				unset($this->selection[$pID]);
 				$this->badItems[] = $pID;
@@ -1410,7 +1416,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
 			if (!isset($errors['RESPONSEDATA'][0]['ERRORS'][0]['ERRORCODE'])) {
 				continue;
 			}
-				
+
 			/* ... als unkrittisch markieren. */
 			$ex->setCriticalStatus(false);
 
@@ -1461,7 +1467,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
 		$this->settings['selectionName'] = $this->settings['selectionName'].'Verify';
 		$item['selectionname'] = $this->settings['selectionName'];
 		MagnaDB::gi()->insert(TABLE_MAGNA_SELECTION, $item);
-		
+
 		//echo print_m($this->settings, '$this->settings');
 
 		$this->initSelection(0, 1);
@@ -1478,10 +1484,10 @@ class eBayCheckinSubmit extends CheckinSubmit {
 			'selectionname' => $this->settings['selectionName'],
 			'session_id' => session_id()
 		));
-		
+
 		// restore selection name
 		$this->settings['selectionName'] = $oldSelectionName;
-		
+
 		# Liste der pIDs um die ebay_properties upzudaten
 		$selectedPidsArray = MagnaDB::gi()->fetchArray("
 			SELECT DISTINCT pID
@@ -1531,7 +1537,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
 					}
 				}
 			}
-				
+
 			if ($ErrorCode == '21920000') {
 				// if EPID required, we return OK and set EPID in upload.
 				$setproductRequired = ',
@@ -1560,7 +1566,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
 				)
 			);
 		}
-		
+
 		return $result;
 	}
 

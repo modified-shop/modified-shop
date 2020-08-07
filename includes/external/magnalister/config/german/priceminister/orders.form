@@ -41,7 +41,7 @@
             "onlycomplete": false,
             "customersgroup": {
                 "label": "Kundengruppe",
-                "desc": "Kundengruppe, zu der Kunden bei neuen Bestellungen zugeordnet werden sollen.",
+                "desc": "Kundengruppe, zu der Kunden bei neuen Bestellungen zugeordnet werden sollen.<br><br> <b>Hinweis:<\/b> Wenn Sie die Kundengruppe &quot;Gast&quot; w&auml;hlen, wird das Kundenkonto sofort na Anlegen der Bestellung gel&ouml;scht.",
                 "key": "_#_platform_#_.CustomerGroup",
                 "type": "selection",
                 "values": null,

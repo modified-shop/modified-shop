@@ -1,0 +1,61 @@
+{
+    "prepare": {
+        "headline": "Produkte vorbereiten",
+        "fields": {
+            "filter": {
+                "label": "Status Filter",
+                "key": "_#_platform_#_.prepare.status",
+                "type": "checkbox",
+                "values": {
+                    "val": "nur aktiver Artikel"
+                },
+                "default": {
+                    "val": false
+                }
+            },
+            "lang": {
+                "label": "Produktsprache Matching",
+                "desc": "Description about product language matching.",
+                "morefields": {
+                    "webshop": {
+                        "label": "Web-shop",
+                        "key": "_#_platform_#_.lang",
+                        "type": "selection",
+                        "value": null,
+                        "cssClasses": [
+                            "autoWidth",
+                            "rightSpacer"
+                        ]
+                    },
+                    "googleshopping": {
+                        "label": "Google Shopping",
+                        "key": "_#_platform_#_.lang.match.googleshopping",
+                        "type": "selection",
+                        "value": null,
+                        "cssClasses": [
+                            "autoWidth"
+                        ]
+                    }
+
+                }
+            },
+            "shippingtemplate": {
+                "label": "Versandvorlage",
+                "key": "_#_platform_#_.shippingtemplate",
+                "type": "extern",
+                "procFunc": "GoogleshoppingConfigure::renderShippingTemplatesFromApi",
+                "params": [],
+                "morefields": {
+                    "shippintemplate": {
+                        "label": "Versandvorlage erstellen",
+                        "key": "createshippingtemplate",
+                        "type": "extern",
+                        "procFunc": "GoogleshoppingConfigure::renderShippingTemplate",
+                        "expertsetting": false,
+                        "params": []
+                    }
+                }
+            }
+        }
+    }
+}

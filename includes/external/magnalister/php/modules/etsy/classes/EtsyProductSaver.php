@@ -99,7 +99,7 @@ class EtsyProductSaver {
 	public function saveSingleProductProperties($iProductId, $aItemDetails) {
 		$aRow = $this->preparePropertiesRow($iProductId, $aItemDetails);
 		$aRow['Title'] = $aItemDetails['Title'];
-		$aRow['Description'] = $aItemDetails['Description'];
+		$aRow['Description'] = EtsyHelper::sanitizeDescription($aItemDetails['Description']);
 		if (    empty($aItemDetails['GalleryPictures'])
 		     || !isset($aItemDetails['GalleryPictures']['Images'])
 		     || empty($aItemDetails['GalleryPictures']['Images'])  ) {
@@ -157,7 +157,7 @@ class EtsyProductSaver {
 		foreach ($aProductIds as $iProductId) {
 			$aRow = $this->preparePropertiesRow($iProductId, $aItemDetails);
 			$aRow['Title'] = $aProductDescDataByPId[$iProductId]['products_name'];
-			$aRow['Description'] = $aProductDescDataByPId[$iProductId]['products_description'];
+			$aRow['Description'] = EtsyHelper::sanitizeDescription($aProductDescDataByPId[$iProductId]['products_description']);
 			$aRow['Image'] = json_encode($aProductDescDataByPId[$iProductId]['images']);
 			$this->insertPrepareData($aRow);
 		}

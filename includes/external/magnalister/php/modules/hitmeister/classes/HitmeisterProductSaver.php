@@ -109,7 +109,14 @@ class HitmeisterProductSaver {
                 'useGambioProperties' => (getDBConfigValue('general.options', '0', 'old') == 'gambioProperties'),
             ));
 
-		if (isset($aItemDetails['Images'])) {
+		if (    array_key_exists('allimages', $aItemDetails)
+		     && $aItemDetails['allimages'] = 'on') {
+			// all images: Leave empty (will be fetched on upload)
+			$aRow['PictureURL'] = '';
+		} else if (!isset($aItemDetails['Images'])) {
+			// multi preparation: Leave empty (will be fetched on upload)
+			$aRow['PictureURL'] = '';
+		} else {
 			$aImages = (array)$aItemDetails['Images'];
 			if (in_array('false', $aImages) && count($aImages) > 1) {
 				array_shift($aImages);
@@ -121,14 +128,6 @@ class HitmeisterProductSaver {
 			}
 			
 			$aRow['PictureURL'] = json_encode($aPictureURL);
-		} else {
-			$images = array();
-
-			foreach ($aProduct['Images'] as $image) {
-				$images[$image] = 'true';
-			}
-
-			$aRow['PictureURL'] = json_encode($images);
 		}
 
 		if (!isset($aItemDetails['PrimaryCategory']) || $aItemDetails['PrimaryCategory'] === '') {

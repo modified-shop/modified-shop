@@ -754,7 +754,7 @@ function autoupdateAmazonOrdersStatus($mpID) {
 		if (   (($status != $shippedState) && ($status != $cancelledState))
 			|| ($order['internaldata']['FulfillmentChannel'] == 'AFN')
 		) {
-			$unprocessed[] = $order['orders_id'];
+			$unprocessed[$order['orders_id']] = $order['orders_status_shop'];
 			unset($orders[$key]);
 			continue;
 		}
@@ -821,7 +821,7 @@ function autoupdateAmazonOrdersStatus($mpID) {
 		//$order['internaldata'] = serialize($order['internaldata']);
 		if (isset($preparedOrders[$order['data']['AmazonOrderID']]) && ($status != $shippedState)) {
 			/* This is a lie, but meh... the result will be correct. */
-			$unprocessed[] = $preparedOrders[$order['data']['AmazonOrderID']]['orders_id'];
+			$unprocessed[$preparedOrders[$order['data']['AmazonOrderID']]['orders_id']] = $status;
 		}
 		$preparedOrders[$order['data']['AmazonOrderID']] = &$order;
 		if ($iCounter > 99) {
@@ -854,7 +854,7 @@ function autoupdateAmazonOrdersStatus($mpID) {
 					if (!isset($preparedOrders[$cData['AmazonOrderID']])) continue;
 					$tO = &$preparedOrders[$cData['AmazonOrderID']];
 					if (!isset($tO['orders_tmp_status'])) {
-						$unprocessed[] = $tO['orders_id'];
+						$unprocessed[$tO['orders_id']] = $tO['orders_status_shop'];
 						continue;
 					}
 					$tO['orders_status'] = $tO['orders_tmp_status'];
@@ -888,7 +888,7 @@ function autoupdateAmazonOrdersStatus($mpID) {
 					if (!isset($preparedOrders[$cData['AmazonOrderID']])) continue;
 					$tO = &$preparedOrders[$cData['AmazonOrderID']];
 					if (!isset($tO['orders_tmp_status'])) {
-						$unprocessed[] = $tO['orders_id'];
+                        $unprocessed[$tO['orders_id']] = $tO['orders_status_shop'];
 						continue;
 					}
 					$tO['orders_status'] = $tO['orders_tmp_status'];
@@ -901,12 +901,16 @@ function autoupdateAmazonOrdersStatus($mpID) {
 	}
 	
 	if (!empty($unprocessed)) {
-		MagnaDB::gi()->query("
-			UPDATE `".TABLE_MAGNA_ORDERS."` mo, `".TABLE_ORDERS."` o 
-			   SET mo.orders_status=o.orders_status
-		     WHERE mo.orders_id=o.orders_id
-		           AND mo.orders_id IN ('".implode("', '", $unprocessed)."')
-		");
+	    // just set the order status for an order that will not be processed to the value that it have at the beginning of the process
+        //  not that is in the database because while processing it can be changed
+        foreach ($unprocessed as $sOrderId => $sOrderStatus) {
+            MagnaDB::gi()->update(TABLE_MAGNA_ORDERS, array(
+                'orders_status' => $sOrderStatus
+            ), array(
+                'orders_id' => $sOrderId,
+                'mpID' => $mpID,
+            ));
+        }
 		if (function_exists('ml_debug_out')) ml_debug_out(print_m($unprocessed, '$unprocessed'));
 	}
 	if (empty($successfullySubmittedOrders)) return true;

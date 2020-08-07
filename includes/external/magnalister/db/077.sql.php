@@ -27,7 +27,7 @@ function ml_db_update_createCdiscountPrepareTable()
 		CREATE TABLE IF NOT EXISTS `" . TABLE_MAGNA_CDISCOUNT_PREPARE . "` (
 			`mpID` int(8) NOT NULL,
 			`products_id` int(11) NOT NULL,
-			`products_model` varchar(255) NOT NULL,
+			`products_model` varchar(64) NOT NULL,
 			`EAN` VARCHAR(13) DEFAULT NULL,
 			`MarketplaceCategoriesName` TEXT DEFAULT NULL,
 			`PrimaryCategory` VARCHAR(30) DEFAULT NULL,
@@ -60,7 +60,7 @@ $functions[] = 'ml_db_update_createCdiscountPrepareTable';
 $queries[] = 'CREATE TABLE IF NOT EXISTS `' . TABLE_MAGNA_CDISCOUNT_VARIANTMATCHING . '` (
 	`MpId` int(11) NOT NULL,
 	`MpIdentifier` varchar(50) NOT NULL,
-	`CustomIdentifier` varchar(255) NOT NULL DEFAULT "",
+	`CustomIdentifier` varchar(64) NOT NULL DEFAULT "",
 	`ShopVariation` text NOT NULL,
 	`IsValid` bit NOT NULL DEFAULT 1,
 	`ModificationDate` DATETIME NOT NULL DEFAULT \'0000-00-00 00:00:00\',

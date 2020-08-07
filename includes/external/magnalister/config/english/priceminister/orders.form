@@ -48,7 +48,7 @@
             "onlycomplete": false,
             "customersgroup": {
                 "label": "Customer Group",
-                "desc": "Allocate customers from _#_platformName_#_ to a customer group of the shop.",
+                "desc": "Allocate customers from _#_platformName_#_ to a customer group of the shop.<br><br> <b>Note<\/b>: If you choose the customer group &quot;Guest&quot;, the customer account will be removed directly after the order is created.",
                 "key": "_#_platform_#_.CustomerGroup",
                 "type": "selection",
                 "values": null,

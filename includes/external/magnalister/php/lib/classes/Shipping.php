@@ -37,6 +37,7 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
+defined('DIR_MAGNA_LANGUAGES') or define('DIR_MAGNA_LANGUAGES', DIR_FS_LANGUAGES);
 class FakeOrder {
 	public $delivery = array();
 	

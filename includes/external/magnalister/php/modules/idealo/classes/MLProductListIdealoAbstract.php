@@ -11,12 +11,11 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id$
- *
- * (c) 2010 - 2014 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2020 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
+
 require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/MLProductList.php');
 
 abstract class MLProductListIdealoAbstract extends MLProductList {
@@ -39,21 +38,5 @@ abstract class MLProductListIdealoAbstract extends MLProductList {
         } else {
             return isset($this->aPrepareData[$aRow['products_id']][$sFieldName]) ? $this->aPrepareData[$aRow['products_id']][$sFieldName] : null;
         }
-    }
-
-    protected function getIdealoPrice($aRow) {
-        $productTax = SimplePrice::getTaxByPID($aRow['products_id']);
-        $taxFromConfig = getDBConfigValue($this->aMagnaSession['currentPlatform'] . '.checkin.mwst', $this->aMagnaSession['mpID']);
-
-        $this->getPrice()->setFinalPriceFromDB($aRow['products_id'], $this->aMagnaSession['mpID']);
-        if (isset($taxFromConfig) && $taxFromConfig !== '') {
-            $this->getPrice()
-                ->removeTax($productTax)
-                ->addTax($taxFromConfig);
-        }
-
-        return $this->getPrice()
-            ->roundPrice()
-            ->getPrice();
     }
 }

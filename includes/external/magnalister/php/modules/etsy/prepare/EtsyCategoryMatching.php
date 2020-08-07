@@ -65,7 +65,7 @@ class EtsyCategoryMatching {
 		if (!is_array($categories['DATA']) || empty($categories['DATA'])) {
 			return false;
 		}
-		$now = time();
+		$now = date('Y-m-d H:i:s');
 		foreach($categories['DATA'] as &$curRow) {
 			$curRow['InsertTimestamp'] = $now;
 			$curRow['Language'] = getDBConfigValue('etsy.shop.language', $_MagnaSession['mpID'], 'en');
@@ -245,9 +245,6 @@ class EtsyCategoryMatching {
 					<tr>
 						<td id="etsyCats" class="catView"><div class="catView">'.$this->renderEtsyCategories('').'</div></td>
 					</tr>
-					<tr style="height: 0.5em">
-						<td id="selectedEtsyCategory" class="catView"><div class="catView"></div></td>
-					</tr>
 					<tr><td class="catVisual" id="tmpSelectedCat"></td></tr>
 				</tbody></table>
 				<div id="messageDialog" class="dialog2"></div>
@@ -273,13 +270,13 @@ function resetEverything() {
 	collapseAllNodes($('#etsyCats'));
 	/* Expand Top-Node */
 	$('#s_toggle_0').removeClass('plus').addClass('minus').parent().children('div.catname').children('div.catelem').css({display: 'block'});
-	$('#selectedEtsyCategory div.catView').empty();
+	$('#etsyCategorySelector td.catVisual').empty();
 	selectedEtsyCategory = '';
 }
 
 function selectEtsyCategory(yID, html) {
 	madeChanges = true;
-	$('#selectedEtsyCategory div.catView').html(html);
+	$('#etsyCategorySelector td.catVisual').html(html);
 
 	selectedEtsyCategory = yID;
 	myConsole.log('selectedEtsyCategory', selectedEtsyCategory);
@@ -304,7 +301,7 @@ function clickEtsyCategory(elem) {
 		type: 'POST',
 		url: '<?php echo toURL($this->url, array('where' => 'prepareView', 'kind' => 'ajax'), true);?>',
 		data: {
-			'action': 'renderEtsyCategoryItem',
+			'action': 'getEtsyCategoryPath',
 			'id': tmpNewID,
 			'isStoreCategory': isStoreCategory
 		},
@@ -362,7 +359,7 @@ function addEtsyCategoriesEventListener(elem) {
 				clickEtsyCategory($(this));
 			});
 			if ($(this).parent().attr('id') == selectedEtsyCategory) {
-				$(this).addClass('selected').css({'font-weight':'bold'});	
+				$(this).addClass('selected').css({'font-weight':'bold'});
 			}
 		});
 	});
@@ -523,19 +520,9 @@ $(document).ready(function() {
 				return $this->renderEtsyCategoryItem($id);
 			}
 			case 'getEtsyCategoryPath': {
-/*
-  HIER parent::LoadMPVariations triggern bzw. nachbauen
-*/
-				//$eh = new EtsyHelper();
-				//#$eh = new AttributesMatchingHelper();
-				//$data = $eh->getMPVariations($id, false, true, null, '');
-				//echo json_encode($data);
 				return $this->getEtsyCategoryPath($id, $this->isStoreCategory);
 			}
 			case 'GetMpCategoryAttributes': {
-				//return '';
-				#return print_m($_GET, '$_GET') . print_m($_POST, '$_POST') . print_m($id, '$id') .
-				//EtsyHelper::gi()->getAttributesFromMP($_POST['cId'], '','');
 				if (isset($_POST['cId'])) {
 					return json_encode(EtsyHelper::gi()->getAttributesFromMP($_POST['cId']));
 				} else {

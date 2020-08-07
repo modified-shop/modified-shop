@@ -60,9 +60,100 @@ class TradoriaSyncOrderStatus extends MagnaCompatibleSyncOrderStatus {
 		);
 	}
 
-	protected function prepareSingleOrder($date) {
-		parent::prepareSingleOrder($date);
+	/**
+	 * Checks whether the status of the current order should be synchronized with
+	 * the marketplace.
+	 * @return bool
+	 */
+	protected function isProcessable() {
+		return (in_array($this->oOrder['orders_status_shop'], $this->config['StatusShipped']) 
+			|| ($this->oOrder['orders_status_shop'] == $this->config['StatusCancelled']));
+	}
+	
+	/**
+	 * Builds an element for the ConfirmShipment request.
+	 * @return array
+	 */
+	protected function confirmShipment($date) {
+		$cfirm = array (
+			'MOrderID' => $this->oOrder['special'],
+			'ShippingDate' => localTimeToMagnaTime($date),
+		);
+		$this->oOrder['data']['ML_LABEL_SHIPPING_DATE'] = $cfirm['ShippingDate'];
+		
+		$trackercode = $this->getTrackingCode($this->oOrder['orders_id']);
+		$carrier = $this->getCarrier($this->oOrder['orders_id']);
+		if (false != $carrier) {
+			$this->oOrder['data']['ML_LABEL_CARRIER'] = $cfirm['Carrier'] = $carrier;
+		}
+		if (false != $trackercode) {
+			$this->oOrder['data']['ML_LABEL_TRACKINGCODE'] = $cfirm['TrackingCode'] = $trackercode;
+		}
 
+		// Place of Departure: Country, City, Street, Zip
+		$iStatusNumber = array_search($this->oOrder['orders_status_shop'], $this->config['StatusShipped']);
+		$aStatusCountries = getDBConfigValue('tradoria.orderstatus.address.country', $this->mpID, array());
+		$aStatusCities    = getDBConfigValue('tradoria.orderstatus.address.city', $this->mpID, array());
+		$aStatusStreets   = getDBConfigValue('tradoria.orderstatus.address.streetandnr', $this->mpID, array());
+		$aStatusZips      = getDBConfigValue('tradoria.orderstatus.address.zip', $this->mpID, array());
+		if (    array_key_exists($iStatusNumber, $aStatusCountries)
+		     && !empty($aStatusCountries[$iStatusNumber])) {
+			$this->oOrder['data']['Country'] = $cfirm['Country'] = $aStatusCountries[$iStatusNumber];
+		}
+		if (    array_key_exists($iStatusNumber, $aStatusCities)
+		     && !empty($aStatusCities[$iStatusNumber])) {
+			$this->oOrder['data']['City'] = $cfirm['City'] = $aStatusCities[$iStatusNumber];
+		}
+		if (    array_key_exists($iStatusNumber, $aStatusStreets)
+		     && !empty($aStatusStreets[$iStatusNumber])) {
+			$this->oOrder['data']['Street'] = $cfirm['Street'] = $aStatusStreets[$iStatusNumber];
+		}
+		if (    array_key_exists($iStatusNumber, $aStatusZips)
+		     && !empty($aStatusZips[$iStatusNumber])) {
+			$this->oOrder['data']['Zip'] = $cfirm['Zip'] = $aStatusZips[$iStatusNumber];
+		}
+		
+		// flag order as dirty, meaning that it has to be saved.
+		$this->oOrder['__dirty'] = true;
+		return $cfirm;
+	}
+	
+	/**
+	 * Tries to get the timestamp of the first status change for Shipped status, else last status change.
+	 * Returns now if it can not be determined.
+	 * @return string
+	 *   A mysql datetime
+	 */
+	protected function getStatusChangeTimestamp() {
+		if (in_array($this->oOrder['orders_status_shop'], $this->config['StatusShipped'])) {
+			$sSortOrder = 'ASC';
+		} else {
+			$sSortOrder = 'DESC';
+		}
+		$date = MagnaDB::gi()->fetchOne('
+		    SELECT date_added
+		      FROM `'.TABLE_ORDERS_STATUS_HISTORY.'`
+		     WHERE orders_id='.$this->oOrder['orders_id'].'
+		           AND orders_status_id = '.$this->oOrder['orders_status_shop'].'
+		  ORDER BY date_added '.$sSortOrder.'
+		     LIMIT 1
+		');
+		if ($date === false) {
+			$date = date('Y-m-d H:i:s');
+		}
+		return $date;
+	}
+	
+	/**
+	 * Processes the current order.
+	 * @return void
+	 */
+	protected function prepareSingleOrder($date) {
+		if (in_array($this->oOrder['orders_status_shop'], $this->config['StatusShipped'])) {
+			$this->confirmations[] = $this->confirmShipment($date);
+		} else if ($this->oOrder['orders_status_shop'] == $this->config['StatusCancelled']) {
+			$this->cancellations[] = $this->cancelOrder($date);
+		}
 		# Redmine Enhancement #834 !Hack!
 		$this->oOrder['__dirty'] = false;
 	}

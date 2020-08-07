@@ -83,3 +83,19 @@ define('TABLE_MAGNA_EBAY_VARIANTMATCHING', 'magnalister_ebay_variantmatching');
 define('TABLE_MAGNA_ETSY_CATEGORIES', 'magnalister_etsy_categories');
 define('TABLE_MAGNA_ETSY_PREPARE', 'magnalister_etsy_prepare');
 define('TABLE_MAGNA_ETSY_VARIANTMATCHING', 'magnalister_etsy_variantmatching');
+define('TABLE_MAGNA_GOOGLESHOPPING_PROPERTIES', 'magnalister_googleshopping_properties');
+define('TABLE_MAGNA_GOOGLESHOPPING_CATEGORIES', 'magnalister_googleshopping_categories');
+define('TABLE_MAGNA_GOOGLESHOPPING_PREPARE', 'magnalister_googleshopping_prepare');
+define('TABLE_MAGNA_GOOGLESHOPPING_VARIANTMATCHING', 'magnalister_googleshopping_variantmatching');
+define('TABLE_MAGNA_METRO_PROPERTIES', 'magnalister_metro_properties');
+define('TABLE_MAGNA_METRO_CATEGORIES', 'magnalister_metro_categories');
+define('TABLE_MAGNA_METRO_PREPARE', 'magnalister_metro_prepare');
+define('TABLE_MAGNA_METRO_VARIANTMATCHING', 'magnalister_metro_variantmatching');
+
+
+// for Gambio 4.1 and newer
+if (TABLE_CONFIGURATION == 'gx_configurations') {
+    define('TABLE_CONFIGURATION_MLDEF', 'configuration');
+} else {
+    define('TABLE_CONFIGURATION_MLDEF', TABLE_CONFIGURATION);
+}

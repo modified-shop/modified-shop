@@ -68,16 +68,16 @@ if (isset($_POST['conf']['general.passphrase'])) {
 	if (!loadMaranonCacheConfig(true)) {
 		echo '<p class="errorBox">'.ML_ERROR_UNAUTHED.'</p>';
 	} else {
-		if (MagnaDB::gi()->recordExists(TABLE_CONFIGURATION, array (
+		if (MagnaDB::gi()->recordExists(TABLE_CONFIGURATION_MLDEF, array (
 			'configuration_key' => 'MAGNALISTER_PASSPHRASE'
 		))) {
-			MagnaDB::gi()->update(TABLE_CONFIGURATION, array (
+			MagnaDB::gi()->update(TABLE_CONFIGURATION_MLDEF, array (
 				'configuration_value' => $_POST['conf']['general.passphrase']
 			), array (
 				'configuration_key' => 'MAGNALISTER_PASSPHRASE'
 			));
 		} else {
-			MagnaDB::gi()->insert(TABLE_CONFIGURATION, array (
+			MagnaDB::gi()->insert(TABLE_CONFIGURATION_MLDEF, array (
 				'configuration_value' => $_POST['conf']['general.passphrase'],
 				'configuration_key' => 'MAGNALISTER_PASSPHRASE'
 			));
@@ -137,7 +137,7 @@ if (empty($passPhrase) || isset($_GET['welcome'])) {
 				})(jQuery);
 			/*]]>*/</script>
 		</div>';
-	MagnaDB::gi()->delete(TABLE_CONFIGURATION, array (
+	MagnaDB::gi()->delete(TABLE_CONFIGURATION_MLDEF, array (
 		'configuration_key' => 'MAGNALISTER_PASSPHRASE'
 	));
 } else {

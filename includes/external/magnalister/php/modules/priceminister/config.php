@@ -26,7 +26,7 @@ if (!isset($_MagnaSession)) {
 
 require(DIR_MAGNALISTER_MODULES.'magnacompatible/config.php');
 
-$mpconfig['auth']['authkeys'] = array('apitoken', 'mpusername', 'mppassword');
+$mpconfig['auth']['authkeys'] = array('apitoken', 'mpusername');
 
 $mpconfig['pages']['conf']['class'] = 'PriceministerConfigure';
 $mpconfig['pages']['prepare']['class'] = 'PriceministerPrepare';

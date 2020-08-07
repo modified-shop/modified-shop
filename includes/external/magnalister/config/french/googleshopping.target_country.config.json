@@ -1,0 +1,362 @@
+{
+  "googleshopping": {
+    "targetCountry": {
+      "AR": "Argentinien",
+      "AU": "Australie",
+      "AT": "&Ouml;sterreich",
+      "BE": "Belgique",
+      "BR": "Br&eacute;sil",
+      "CA": "Kanada",
+      "CL": "Chile",
+      "CO": "Kolumbien",
+      "CZ": "Tschechien",
+      "DK": "D&auml;nemark",
+      "FR": "Frankreich",
+      "DE": "Deutschland",
+      "HK": "Hongkong",
+      "IN": "Indien",
+      "ID": "Indonesien",
+      "IE": "Ireland",
+      "IL": "Israel",
+      "IT": "Italien",
+      "JP": "Japan",
+      "MY": "Malaysien",
+      "MX": "Mexiko",
+      "NL": "Niederlande",
+      "NZ": "Neuseeland",
+      "NO": "Norwegen",
+      "PH": "Philippinen",
+      "PL": "Polen",
+      "PT": "Portugal",
+      "RU": "Russland",
+      "SA": "Saudi-Arabien",
+      "SG": "Singapur",
+      "ZA": "S&uuml;dafrika",
+      "KR": "S&uuml;ddkorea",
+      "ES": "Spanien",
+      "SE": "Schweden",
+      "CH": "Schweiz",
+      "TW": "Taiwan",
+      "TH": "Thailand",
+      "TR": "T&uuml;rkei",
+      "UA": "Ukraine",
+      "AE": "Vereinigte Arabische Emirate",
+      "GB": "Vereinigtes K&ouml;nigreich Gro&szlig;britannien",
+      "US": "Vereinigte Staaten von Amerika",
+      "VN": "Vietnam"
+    },
+    "currencies": {
+      "AR": ["ARS"],
+      "AU": ["AUD"],
+      "AT": ["EUR"],
+      "BE": ["EUR"],
+      "BR": ["BRL"],
+      "CA": ["CAD"],
+      "CL": ["CLP"],
+      "CO": ["COP"],
+      "CZ": ["CZK"],
+      "DK": ["DKK"],
+      "FR": ["EUR"],
+      "DE": ["EUR"],
+      "HK": ["HKD"],
+      "IN": ["INR"],
+      "ID": ["IDR"],
+      "IE": ["EUR"],
+      "IL": ["ILS"],
+      "IT": ["EUR"],
+      "JP": ["JPY"],
+      "MY": ["MYR"],
+      "MX": ["MXN"],
+      "NL": ["EUR"],
+      "NZ": ["NZD"],
+      "NO": ["NOK"],
+      "PH": ["PHP"],
+      "PL": ["PLN"],
+      "PT": ["EUR"],
+      "RU": ["RUB"],
+      "SA": ["SAR"],
+      "SG": ["SGD"],
+      "ZA": ["ZAR"],
+      "KR": ["KRW"],
+      "ES": ["EUR"],
+      "SE": ["SEK"],
+      "CH": ["CHF"],
+      "TW": ["TWD"],
+      "TH": ["THB"],
+      "TR": ["TRY"],
+      "UA": ["UAH"],
+      "AE": ["AED"],
+      "GB": ["GBP"],
+      "US": ["USD"],
+      "VN": ["VND"]
+    },
+    "languages": {
+      "AR": [
+        {
+          "title": "Spanisch",
+          "code": "es"
+        }
+      ],
+      "AU": [
+        {
+          "title": "Chinesisch",
+          "code": "zh"
+        }
+      ],
+      "AT": [
+        {
+          "title": "Deutsch",
+          "code": "de"
+        }
+      ],
+      "BE": [
+        {
+          "title": "Franz&ouml;sisch",
+          "code": "fr"
+        },
+        {
+          "title": "Niederl&auml;ndisch",
+          "code": "nl"
+        }
+      ],
+      "BR": [
+        {
+          "title": "Portugiesisch",
+          "code": "pt"
+        }
+      ],
+      "CA": [
+        {
+          "title": "Franz&ouml;sisch",
+          "code": "fr"
+        },
+        {
+          "title": "Chinesisch",
+          "code": "zh"
+        }
+      ],
+      "CL": [
+        {
+          "title": "Spanisch",
+          "code": "es"
+        }
+      ],
+      "CO": [
+        {
+          "title": "Spanisch",
+          "code": "es"
+        }
+      ],
+      "CZ": [
+        {
+          "title": "Tschechisch",
+          "code": "cs"
+        }
+      ],
+      "DK": [
+        {
+          "title": "D&auml;nisch",
+          "code": "da"
+        }
+      ],
+      "FR": [
+        {
+          "title": "Franz&ouml;sisch",
+          "code": "fr"
+        }
+      ],
+      "DE": [
+        {
+          "title": "Deutsch",
+          "code": "de"
+        }
+      ],
+      "HK": [
+        {
+          "title": "Chinesisch",
+          "code": "zh"
+        }
+      ],
+      "IN": [
+        {
+          "title": "Hindi",
+          "code": "hi"
+        }
+      ],
+      "ID": [
+        {
+          "title": "Bahasa Indonesia",
+          "code": "id"
+        }
+      ],
+      "IE": [],
+      "IL": [
+        {
+          "title": "Hebr&auml;isch",
+          "code": "he"
+        }
+      ],
+      "IT": [
+        {
+          "title": "Italienisch",
+          "code": "it"
+        }
+      ],
+      "JP": [
+        {
+          "title": "Japanisch",
+          "code": "ja"
+        }
+      ],
+      "MY": [
+        {
+          "title": "Chinesisch",
+          "code": "zh"
+        }
+      ],
+      "MX": [
+        {
+          "title": "Spanisch",
+          "code": "es"
+        }
+      ],
+      "NL": [
+        {
+          "title": "Niederl&auml;ndisch",
+          "code": "nl"
+        }
+      ],
+      "NZ": [],
+      "NO": [
+        {
+          "title": "Norwegisch",
+          "code": "no"
+        }
+      ],
+      "PH": [],
+      "PL": [
+        {
+          "title": "Polnisch",
+          "code": "pl"
+        }
+      ],
+      "PT": [
+        {
+          "title": "Portugiesisch",
+          "code": "pt"
+        }
+      ],
+      "RU": [
+        {
+          "title": "Russisch",
+          "code": "ru"
+        }
+      ],
+      "SA": [
+        {
+          "title": "Franz&ouml;sisch",
+          "code": "fr"
+        },
+        {
+          "title": "Niederl&auml;ndisch",
+          "code": "nl"
+        }
+      ],
+      "SG": [
+        {
+          "title": "Chinesisch",
+          "code": "zh"
+        }
+      ],
+      "ZA": [],
+      "KR": [
+        {
+          "title": "Koreanisch",
+          "code": "ko"
+        }
+      ],
+      "ES": [
+        {
+          "title": "Spanisch",
+          "code": "es"
+        }
+      ],
+      "SE": [
+        {
+          "title": "Schwedisch",
+          "code": "sv"
+        }
+      ],
+      "CH": [
+        {
+          "title": "Deutsch",
+          "code": "de"
+        },
+        {
+          "title": "Franz&ouml;sisch",
+          "code": "fr"
+        },
+        {
+          "title": "Italienisch",
+          "code": "it"
+        }
+      ],
+      "TW": [
+        {
+          "title": "Chinesisch",
+          "code": "zh"
+        }
+      ],
+      "TH": [
+        {
+          "title": "Thail&auml;ndisch",
+          "code": "th"
+        }
+      ],
+      "TR": [
+        {
+          "title": "T&uuml;rkisch",
+          "code": "tr"
+        }
+      ],
+      "UA": [
+        {
+          "title": "Ukrainisch",
+          "code": "uk"
+        },
+        {
+          "title": "Russisch",
+          "code": "ru"
+        }
+      ],
+      "AE": [
+        {
+          "title": "Arabisch",
+          "code": "ar"
+        }
+      ],
+      "GB": [
+        {
+          "title": "Englisch",
+          "code": "en"
+        }
+      ],
+      "US": [
+        {
+          "title": "Spanisch",
+          "code": "es"
+        },
+        {
+          "title": "Chinesisch",
+          "code": "zh"
+        }
+      ],
+      "VN": [
+        {
+          "title": "Vietnamesisch",
+          "code": "vi"
+        }
+      ]
+    }
+  }
+}

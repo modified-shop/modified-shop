@@ -292,7 +292,7 @@ class ComparisonShoppingCheckinSubmit extends CheckinSubmit {
 		$data['submit']['Image']			= $imageUrl;					# Vollstaendiger Pfad zum Bild im Shop.
 		$data['submit']['ShippingCost']		= (string)$data['shippingcost'];
 		$data['submit']['ShippingTime']		= $shippingTime;				# in Tagen
-		$data['submit']['ItemWeight']		= ($product['Weight']['Value'] != 'null') ? $product['Weight']['Value'] : '';	# in kg
+		$data['submit']['ItemWeight']		= (!empty($product['Weight']) && $product['Weight']['Value'] != 'null') ? $product['Weight']['Value'] : '';	# in kg
         $data['submit']['Quantity']			= $product['Quantity'];
         if (defined('MAGNA_FIELD_PRODUCTS_EAN') && array_key_exists('EAN', $product)) {
 			$data['submit']['EAN']			= $product['EAN'];

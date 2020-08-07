@@ -398,6 +398,39 @@ function magnaUpdateEbayOrders($mpID) {
 					$sMagnaOrdersData = serialize(array_merge($aOldMagnaOrdersData, $order['magnaOrders']));
 					$MagnaDB->update(TABLE_MAGNA_ORDERS, array ('data' => $sMagnaOrdersData), array('orders_id' => $currentOrderID));
 				}
+				# ExtendedOrderID, wenn neu vorhanden
+				if (array_key_exists('ExtendedOrderID', $order)) {
+					if (isset($sMagnaOrdersData)) {
+						$aOldMagnaOrdersData = unserialize($sMagnaOrdersData);
+					} else {
+						$aOldMagnaOrdersData = unserialize(MagnaDB::gi()->fetchOne('SELECT data FROM '.TABLE_MAGNA_ORDERS.' WHERE orders_id = '.$currentOrderID));
+						
+					}
+					if (!array_key_exists('ExtendedOrderID', $aOldMagnaOrdersData)) {
+						$aMagnaOrdersData = array();
+						foreach ($aOldMagnaOrdersData as $k => $v) {
+							$aMagnaOrdersData[$k] = $v;
+							if ($k == 'eBayOrderID') {
+							# nach eBayOrderID einfügen
+								$aMagnaOrdersData['ExtendedOrderID'] = $order['ExtendedOrderID'];
+							}
+						}
+						unset($k); unset($v);
+						$sMagnaOrdersData = serialize($aMagnaOrdersData);
+						$MagnaDB->update(TABLE_MAGNA_ORDERS, array ('data' => $sMagnaOrdersData), array('orders_id' => $currentOrderID));
+						$sOrdersComment = MagnaDB::gi()->fetchOne('SELECT comments FROM '.TABLE_ORDERS.' WHERE orders_id = '.$currentOrderID, true);
+						if (!strpos($sOrdersComment, 'ExtendedOrderID')) {
+							$iInsertPos = strpos($sOrdersComment, "\n", strpos($sOrdersComment, 'eBayOrderID'));
+							$sNewOrdersComment = substr($sOrdersComment, 0, $iInsertPos) . "\nExtendedOrderID: ".$order['ExtendedOrderID']. substr($sOrdersComment, $iInsertPos);
+							$MagnaDB->update(TABLE_ORDERS,  array ('comments' => $sNewOrdersComment), array('orders_id' => $currentOrderID));
+						}
+						
+					}
+				}
+				# für die nächste Bestellung
+				if (isset($aOldMagnaOrdersData)) unset($aOldMagnaOrdersData);
+				if (isset($aMagnaOrdersData))    unset($aMagnaOrdersData);
+				if (isset($sMagnaOrdersData))    unset($sMagnaOrdersData);
 
 	            $blUpdateMainAddress = array_key_exists('MainAddressTakenFromShippingAddress', $order);
 

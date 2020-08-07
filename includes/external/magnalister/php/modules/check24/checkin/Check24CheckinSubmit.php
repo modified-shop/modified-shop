@@ -11,9 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id$
- *
- * (c) 2010 - 2013 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2019 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -61,6 +59,12 @@ class Check24CheckinSubmit extends MagnaCompatibleCheckinSubmit {
 		// Set Price and Quantity settings
 		MLProduct::gi()->setPriceConfig(Check24Helper::loadPriceSettings($this->mpID));
 		MLProduct::gi()->setQuantityConfig(Check24Helper::loadQuantitySettings($this->mpID));
+        MLProduct::gi()->useMultiDimensionalVariations(true);
+        MLProduct::gi()->setOptions(array(
+            'sameVariationsToAttributes' => false,
+            'purgeVariations' => true,
+            'useGambioProperties' => (getDBConfigValue('general.options', '0', 'old') == 'gambioProperties')
+        ));
 	}
 
 	protected function appendAdditionalData($iPID, $aProduct, &$aData) {
@@ -107,9 +111,10 @@ class Check24CheckinSubmit extends MagnaCompatibleCheckinSubmit {
 			$aData['submit']['EAN'] = $aProduct['EAN'];
 		}
 
+		$sImagePath = getDBConfigValue($this->marketplace . '.imagepath', $this->mpID, SHOP_URL_POPUP_IMAGES);
 		if (empty($aProduct['Images']) === false) {
 			foreach($aProduct['Images'] as $sImg) {
-				$aData['submit']['Images'][] = array('URL' => SHOP_URL_POPUP_IMAGES . $sImg);
+				$aData['submit']['Images'][] = array('URL' => $sImagePath.$sImg);
 			}
 		}
 

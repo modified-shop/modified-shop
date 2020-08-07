@@ -315,10 +315,12 @@ class SimplePrice {
 	public static function getTaxByClassID($taxClassID, $countryID = -1) {
 		if ($countryID == -1) {
 			# Fallback to shop default
-			$countryID = (int)self::queryCache('
-				SELECT configuration_value FROM '.TABLE_CONFIGURATION.'
+			$countryID = ((defined('STORE_COUNTRY') && (int)(STORE_COUNTRY)>0)
+				? (int)STORE_COUNTRY
+				: (int)self::queryCache('
+				SELECT configuration_value FROM '.TABLE_CONFIGURATION_MLDEF.'
 				 WHERE configuration_key="STORE_COUNTRY"
-			');
+			'));
 		}
 		$taxRate = self::queryCache(eecho('
 			SELECT MAX(tax_rate)

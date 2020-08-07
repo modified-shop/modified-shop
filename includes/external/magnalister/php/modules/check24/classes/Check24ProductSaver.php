@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 888888ba                 dP  .88888.                    dP
  * 88    `8b                88 d8'   `88                   88
@@ -12,12 +11,11 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: $
- *
- * (c) 2010 - 2014 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2019 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
+
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
 class Check24ProductSaver {
@@ -71,7 +69,7 @@ class Check24ProductSaver {
 			$this->addToErrorLog(ML_CHECK24_ERROR_SHIPPING_COST, $aRow['products_model']);
 		}
 		
-		$aRow['ShippingCost'] = $aItemDetails['ShippingCost'];		
+		$aRow['ShippingCost'] = $aItemDetails['ShippingCost'];
 		
 		return $aRow;
 	}

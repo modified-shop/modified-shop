@@ -37,9 +37,11 @@ class MLProductListDependencySelectionAction extends MLProductListDependency {
 						TABLE_MAGNA_SELECTION, 
 						array(
 							'pID' => $aRequest[0],
+							'data' => '',
 							'session_id' => $this->getConfig('session_id'),
 							'mpID' => $this->getConfig('mpID'),
-							'selectionname' => $this->getConfig('selectionname')
+							'selectionname' => $this->getConfig('selectionname'),
+                            'expires' => gmdate('Y-m-d H:i:s'),
 						),
 						true
 					);

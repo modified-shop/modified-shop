@@ -25,6 +25,8 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
 
     /** @var int Number of allowed custom attributes */
     protected $numberOfMaxAdditionalAttributes = 0;
+    /** @var int if this is exceeded in the preparation, use only the values for the product(s) */
+    protected $reasonableNumberOfVariationValues = 256;
     protected $mpId;
     protected $marketplace;
     protected $defaultLanguage;
@@ -40,7 +42,9 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
         $languageId = getDBConfigValue($this->marketplace . '.lang', $this->mpId, $this->defaultLanguage);
         $languageId = is_int($languageId) ? $languageId : $this->defaultLanguage;
 
-        if (defined('TABLE_PRODUCTS_OPTIONS') && MagnaDB::gi()->tableExists(TABLE_PRODUCTS_OPTIONS)) {
+        if (    defined('TABLE_PRODUCTS_OPTIONS')
+             && MagnaDB::gi()->tableExists(TABLE_PRODUCTS_OPTIONS)
+             && (getDBConfigValue('general.options', '0', 'old') != 'gambioProperties')) {
             $defaultGroupsOptions = $this->getVariationGroupsOptions($this->defaultLanguage);
             $groupsOptions = $this->getVariationGroupsOptions($languageId);
 
@@ -94,7 +98,9 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
             $groupsOptions = array();
         }
 
-        if (defined('TABLE_MAGNA_PROPERTIES_DESCRIPTION') && MagnaDB::gi()->tableExists(TABLE_MAGNA_PROPERTIES_DESCRIPTION)) {
+        if (    defined('TABLE_MAGNA_PROPERTIES_DESCRIPTION')
+             && MagnaDB::gi()->tableExists(TABLE_MAGNA_PROPERTIES_DESCRIPTION)
+             && (getDBConfigValue('general.options', '0', 'old') == 'gambioProperties')) {
             $defaultGroupsProperties = $this->getVariationGroupsProperties($this->defaultLanguage);
             $groupsProperties = $this->getVariationGroupsProperties($languageId);
 
@@ -235,15 +241,18 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
      * @return array|bool
      */
     private function getVariationGroupsPropertyValues($propertyCode, $languageId) {
+        $aPVValues = MagnaDB::gi()->fetchArray('SELECT properties_values_id
+            FROM '. TABLE_MAGNA_PROPERTIES_VALUES .' 
+            WHERE properties_id = '.$propertyCode.'
+            ORDER BY properties_values_id', true);
+        if (empty($aPVValues)) return $aPVValues;
         return MagnaDB::gi()->fetchArray('
-            SELECT pov.properties_values_id Id, pov.values_name AS Value
-            FROM ' . TABLE_MAGNA_PROPERTIES_DESCRIPTION_VALUES . ' pov
-            INNER JOIN ' . TABLE_MAGNA_PROPERTIES_VALUES . ' ov2po ON
-                    ov2po.properties_values_id = pov.properties_values_id
-                AND ov2po.properties_id = "' . $propertyCode . '"
-            WHERE pov.language_id = "' . $languageId . '"
-            ORDER BY pov.values_name ASC
-        ');
+            SELECT properties_values_id AS Id, values_name AS Value
+            FROM ' . TABLE_MAGNA_PROPERTIES_DESCRIPTION_VALUES . '
+            WHERE properties_values_id IN ('.implode(',', $aPVValues).')
+            AND language_id = "' . $languageId . '"
+            ORDER BY values_name ASC
+        '); 
     }
 
     /**
@@ -556,31 +565,33 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
 
         arrayEntitiesToUTF8($mpData);
         $attributes = array();
-        foreach ($mpData['attributes'] as $code => $value) {
-            $utf8Code = $this->fixHTMLUTF8Entities($code);
-            $attributes[$utf8Code] = array(
-                'AttributeCode' => $utf8Code,
-                'AttributeName' => $value['title'],
-                'AllowedValues' => isset($value['values']) ? $value['values'] : array(),
-                'AttributeDescription' => isset($value['desc']) ? $value['desc'] : '',
-                'CurrentValues' => isset($dbData[$utf8Code]) ? $dbData[$utf8Code] : array('Values' => array()),
-                'ChangeDate' => isset($value['changed']) ? $value['changed'] : false,
-                'Required' => isset($value['mandatory']) ? $value['mandatory'] : false,
-                'DataType' => isset($value['type']) ? $value['type'] : 'text',
-            );
+        if (!empty($mpData['attributes'])) {
+            foreach ($mpData['attributes'] as $code => $value) {
+                $utf8Code = $this->fixHTMLUTF8Entities($code);
+                $attributes[$utf8Code] = array(
+                    'AttributeCode' => $utf8Code,
+                    'AttributeName' => $value['title'],
+                    'AllowedValues' => isset($value['values']) ? $value['values'] : array(),
+                    'AttributeDescription' => isset($value['desc']) ? $value['desc'] : '',
+                    'CurrentValues' => isset($dbData[$utf8Code]) ? $dbData[$utf8Code] : array('Values' => array()),
+                    'ChangeDate' => isset($value['changed']) ? $value['changed'] : false,
+                    'Required' => isset($value['mandatory']) ? $value['mandatory'] : false,
+                    'DataType' => isset($value['type']) ? $value['type'] : 'text',
+                );
 
-            if (isset($value['limit'])) {
-                $attributes[$utf8Code]['Limit'] = $value['limit'];
-            }
-
-            if (isset($dbData[$utf8Code])) {
-                if (!isset($dbData[$utf8Code]['Required'])) {
-                    $dbData[$utf8Code]['Required'] = isset($value['mandatory']) ? $value['mandatory'] : true;
-                    $dbData[$utf8Code]['Code'] = !empty($value['values']) ? 'attribute_value' : 'freetext';
-                    $dbData[$utf8Code]['AttributeName'] = $value['title'];
+                if (isset($value['limit'])) {
+                    $attributes[$utf8Code]['Limit'] = $value['limit'];
                 }
 
-                $attributes[$utf8Code]['CurrentValues'] = $dbData[$utf8Code];
+                if (isset($dbData[$utf8Code])) {
+                    if (!isset($dbData[$utf8Code]['Required'])) {
+                        $dbData[$utf8Code]['Required'] = isset($value['mandatory']) ? $value['mandatory'] : true;
+                        $dbData[$utf8Code]['Code'] = !empty($value['values']) ? 'attribute_value' : 'freetext';
+                        $dbData[$utf8Code]['AttributeName'] = $value['title'];
+                    }
+
+                    $attributes[$utf8Code]['CurrentValues'] = $dbData[$utf8Code];
+                }
             }
         }
 
@@ -1130,8 +1141,8 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
             $sAttributeName = $value['AttributeName'];
             $isVariationThemeAttribute = $variationThemeExists && in_array($key, $variationThemeAttributes);
 
-            if ($value['Code'] == 'null' || !isset($value['Values']) || empty($value['Values'])) {
-                if (isset($value['Required']) && $value['Required'] == true || $isVariationThemeAttribute) {
+            if (in_array($value['Code'], array('null', 0), true)  || !isset($value['Values']) || in_array($value['Values'], array( '', null), true)) {
+                if ((isset($value['Required']) && $value['Required'] == true) || $isVariationThemeAttribute) {
 
                     if ($savePrepare || $isSelectedAttribute) {
                         if ($savePrepare) {
@@ -1243,9 +1254,11 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
         }
 
         if ($fromPrepare) {
+
             if ($validateCustomAttributesNumber && ($numberOfMatchedAdditionalAttributes > $maxNumberOfAdditionalAttributes)) {
                 $errors[] = str_replace('%number_of_attributes%', $maxNumberOfAdditionalAttributes, ML_GENERAL_VARMATCH_MAX_NUMBER_OF_ADDITIONAL_ATTRIBUTES_EXCEEDED);
             }
+            $this->checkNumberOfVariationValues($matching['ShopVariation']);
 
             // If variation theme is defined for that category and mandatory but nothing is selected.
             if ($variationThemeAttributes === 'null') {
@@ -1588,6 +1601,53 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
             'mpOptionalAttributeTitle' => str_replace('%marketplace%', ucfirst($this->marketplace), ML_GENERAL_VARMATCH_MP_OPTIONAL_ATTRIBUTE),
             'mpCustomAttributeTitle' => str_replace('%marketplace%', ucfirst($this->marketplace), ML_GENERAL_VARMATCH_MP_CUSTOM_ATTRIBUTE),
         );
+    }
+
+    /*
+     * If we have more than 256 variation values, see if we can constraint it
+     * according to the products chosen
+     */
+    protected function checkNumberOfVariationValues(&$ShopVariation) {
+        if (getDBConfigValue('general.options', '0', 'old') != 'gambioProperties') {
+            // for now, only for Gambio properties
+            return;
+        } 
+        $aProducts = array();
+        foreach ($ShopVariation as &$aAttr) {
+            if (    !array_key_exists('CustomAttributeValue', $aAttr)
+                 || !array_key_exists('Values', $aAttr)
+                 || !is_array($aAttr['Values'])
+                 || count($aAttr['Values']) <= $this->reasonableNumberOfVariationValues) {
+                continue;
+            }
+            if ( array_key_exists('CustomName', $aAttr)
+                 && strpos($aAttr['CustomName'], 'Varia' !== 0)) {
+                // has to start with "Variations:" or "Varianten:"
+                continue;
+            }
+            $iNameKey = $aAttr['CustomAttributeValue'];
+            // check the products chosen, and the values they have
+            if (empty($aProducts)) {
+                $aProducts = MagnaDB::gi()->fetchArray('SELECT pID
+                     FROM '.TABLE_MAGNA_SELECTION.'
+                    WHERE mpID = '. $this->mpId .'
+                      AND selectionname = \'prepare\'', true);
+            } 
+            $aUsedValues = array();
+            foreach ($aProducts as $pID) {
+                $aUsedValues = array_merge($aUsedValues, 
+                    MagnaDB::gi()->fetchArray('SELECT DISTINCT properties_values_id
+                     FROM products_properties_index
+                    WHERE products_id = '.$pID.'
+                      AND properties_id = '.$iNameKey, true));
+            }
+            foreach ($aAttr['Values'] as $vKey => $vVal) {
+                if (!in_array($vVal['Shop']['Key'], $aUsedValues)) {
+                    unset($aAttr['Values'][ $vKey]);
+                }
+            }
+            unset($aUsedValues);
+        }
     }
 
 }

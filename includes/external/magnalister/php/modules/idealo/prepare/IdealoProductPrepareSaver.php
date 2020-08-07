@@ -30,6 +30,8 @@ class IdealoProductPrepareSaver {
 	protected $isAjax = false;
 	
 	protected $prepareSettings = array();
+
+	protected $generalKeyType;
 	
 	public function __construct(&$resources, $prepareSettings) {
 		$this->resources = &$resources;
@@ -39,6 +41,8 @@ class IdealoProductPrepareSaver {
 		$this->isAjax = isset($_GET['kind']) && ($_GET['kind'] == 'ajax');
 		
 		$this->prepareSettings = $prepareSettings;
+
+		$this->generalKeyType = getDBConfigValue('general.keytype', '0');
 	}
 	
 	public function loadDefaults() {
@@ -49,6 +53,10 @@ class IdealoProductPrepareSaver {
 			'ShippingCountry' => getDBConfigValue($this->marketplace . '.shipping.country', $this->mpId),
 			'ShippingCostMethod' => getDBConfigValue($this->marketplace . '.shipping.method', $this->mpId),
 			'ShippingCost' => getDBConfigValue($this->marketplace . '.shipping.cost', $this->mpId),
+			'DeliveryTime' => getDBConfigValue($this->marketplace . '.deliverytime', $this->mpId),
+			'FulFillmentType' => getDBConfigValue($this->marketplace . '.shipping.methods', $this->mpId),
+			'TwoManHandlingFee' => getDBConfigValue($this->marketplace . '.shipping.methods.twomanhandlingfee', $this->mpId),
+			'DisposalFee' => getDBConfigValue($this->marketplace . '.shipping.methods.disposalfee', $this->mpId),
 		);
 	}
 	
@@ -168,6 +176,12 @@ class IdealoProductPrepareSaver {
 			}
 			$set['PaymentMethod'] = json_encode((array)$set['PaymentMethod']);
 			MagnaDB::gi()->insert(TABLE_MAGNA_IDEALO_PROPERTIES, $set, true);
+			// remove outdated entries
+			if ('artNr' == $this->generalKeyType) {
+				MagnaDB::gi()->query('DELETE FROM '.TABLE_MAGNA_IDEALO_PROPERTIES.'
+					WHERE products_model = \''.$set['products_model'].'\'
+					  AND products_id != '.$set['products_id']);
+			}
 		}
 		
 		return true;

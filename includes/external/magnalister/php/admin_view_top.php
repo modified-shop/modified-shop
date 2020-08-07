@@ -322,7 +322,11 @@ echo '		<script type="text/javascript" src="'.$js.'"></script>'."\n";
 					// prevent multiple clicks on the button.
 					var executed = false;
 					return function (e) {
-						if ($(e.target).data('disabled') == 'yes') {
+                        if ($(e.target).data('disabled') == 'yes' && $(e.target).hasClass('update')) {
+                            $('<div title="<?php echo ML_MESSAGE_BEFORE_UPDATE_TITLE; ?>"><?php echo ML_MESSAGE_UPDATE_DISABLED_GAMBIOCLOUD; ?></div>').jDialog();
+                            return;
+                        }
+                        if ($(e.target).data('disabled') == 'yes' && !$(e.target).hasClass('update')) {
 							$('<div title="<?php echo ML_LABEL_NOTE; ?>"><?php echo ML_POPUP_NOT_AVAILABLE; ?></div>').jDialog();
 							return;
 						}
@@ -506,6 +510,7 @@ $globalButtons = array (
 		'title' => ML_LABEL_IMPORT_ORDERS,
 		'icon' => 'cart',
 		'link' => array('do' => 'ImportOrders'),
+        'disabled' => $_MagnaSession['currentPlatform'] == 'googleshopping' ? 'yes' : 'no',
 	),
 	array (
 		'title' => ML_LABEL_SYNC_ORDERSTATUS,
@@ -517,11 +522,12 @@ $globalButtons = array (
 		'icon' => 'sync',
 		'link' => array('do' => 'SyncInventory', 'MLDEBUG' => 'true'),
 	),
-	array (
-	 	'title' => ML_LABEL_UPDATE,
-		'icon' => 'update',
-		'link' => array('update' => 'true'),
-	),
+    array (
+        'title' => ML_LABEL_UPDATE,
+        'icon' => 'update'.((defined('SHOPSYSTEM_GAMBIO_CLOUD') && SHOPSYSTEM_GAMBIO_CLOUD === true) ? 'inactive' : ' '),
+        'link' => array('update' => 'true'),
+        'disabled' => (defined('SHOPSYSTEM_GAMBIO_CLOUD') && SHOPSYSTEM_GAMBIO_CLOUD === true) ? 'yes' : 'no',
+    ),
 );
 
 if ($_MagnaSession['currentPlatform'] == 'ebay') {

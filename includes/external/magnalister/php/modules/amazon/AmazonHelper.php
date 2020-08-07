@@ -164,7 +164,7 @@ class AmazonHelper extends AttributesMatchingHelper {
             $result = array();
             foreach ($dataFromDB as $preparedData) {
                 $data = unserialize(base64_decode($preparedData['data']));
-                if ($data['ShopVariation'] && ($customIdentifier == $dataFromDB['topProductType'])) {
+                if ($data['ShopVariation'] && isset($dataFromDB['topProductType']) && ($customIdentifier == $dataFromDB['topProductType'])) {
                     $result[] = json_decode($data['ShopVariation'], true);
                 }
             }
@@ -256,8 +256,8 @@ class AmazonHelper extends AttributesMatchingHelper {
 	{
 		$noProductTypeOption = '<option value="">'.ML_AMAZON_LABEL_APPLY_PLEASE_SELECT.'</option>' . "\n";
 
-		$category = $_POST['PrimaryCategory'];
-		$customIdentifier = $_POST['CustomIdentifier'];
+        $category = isset($_POST['PrimaryCategory']) ? $_POST['PrimaryCategory'] : null;
+        $customIdentifier = isset($_POST['CustomIdentifier']) ? $_POST['CustomIdentifier'] : null;
 		if (empty($category)) {
 			return $noProductTypeOption;
 		}

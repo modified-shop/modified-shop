@@ -458,7 +458,7 @@ var mpCategorySelector = (function() {
 	function returnCategoryID() {
 		if (selectedCategory == '') {
 			$('#messageDialog').html(
-				'Bitte w&auml;hlen Sie eine Kategorie aus.'
+				'<?php echo ML_ERROR_NOTE_CATEGORY_NOT_SELECTED; ?>'
 			).jDialog({
 				title: '<?php echo ML_LABEL_NOTE; ?>'
 			});

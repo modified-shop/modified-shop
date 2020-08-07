@@ -622,6 +622,20 @@ $_dbUpdateErrors = null;
 if (MAGNA_SAFE_MODE || $_updatedSuccessfully || isset($_GET['dbupdate']) || !MagnaDB::gi()->tableExists(TABLE_MAGNA_CONFIG)) {
 	$_dbUpdateErrors = $mlUpdater->updateDatabase();
 }
+// DB Update trigger for Gambio Cloud
+if (MagnaDB::gi()->recordExists(TABLE_MAGNA_CONFIG, array(
+    'mpID' => 0,
+    'mkey' => 'trigger.dbupdate',
+    'value' => 'true',
+))) {
+    $_dbUpdateErrors = $mlUpdater->updateDatabase();
+    MagnaDB::gi()->update(TABLE_MAGNA_CONFIG, array(
+        'value' => 'false'
+    ), array(
+        'mpID' => 0,
+        'mkey' => 'trigger.dbupdate',
+    ));
+}
 unset($mlUpdater);
 #echo __FILE__.'{L'.__LINE__.'}';
 #die();
@@ -639,7 +653,7 @@ $_langISO = strtolower(magnaGetLanguageCode($_lang));
 if (!array_key_exists('languages_id', $_SESSION) || empty($_SESSION['languages_id'])) {
 	$_SESSION['languages_id'] = MagnaDB::gi()->fetchOne(
 		'SELECT languages_id '.
-		'FROM '.TABLE_LANGUAGES.' l, '.TABLE_CONFIGURATION.' c '.
+		'FROM '.TABLE_LANGUAGES.' l, '.TABLE_CONFIGURATION_MLDEF.' c '.
 		'WHERE l.code=c.configuration_value '.
 		'AND c.configuration_key=\'DEFAULT_LANGUAGE\'');
 }

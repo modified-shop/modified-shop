@@ -1,0 +1,74 @@
+{
+    "price": {
+        "headline": "Preisberechnung",
+        "fields": {
+            "price": {
+                "label": "Preis",
+                "desc": "Geben Sie einen prozentualen oder fest definierten Preis Auf- oder Abschlag an. Abschlag mit vorgesetztem Minus-Zeichen.",
+                "key": "_#_platform_#_.price.addkind",
+                "type": "selection",
+                "values": {
+                    "percent": "x% Shop-Preis Auf-/Abschlag",
+                    "addition": "x  Shop-Preis Auf-/Abschlag"
+                },
+                "default": "percent",
+                "morefields": {
+                    "cost": {
+                        "key": "_#_platform_#_.price.factor",
+                        "type": "text",
+                        "default": "0",
+                        "verify": "float",
+                        "cssClasses": [
+                            "autoWidth",
+                            "rightSpacer"
+                        ],
+                        "formatstr": "%.2f"
+                    },
+                    "signaluse": {
+                        "label": "Schwellenpreis",
+                        "desc": "Der Schwellenpreis wird beim &Uuml;bermitteln der Daten zu _#_platformName_#_ als Nachkommastelle an Ihrem Preis &uuml;bernommen.<br/><br/>\n\t\t\t\t\t\t           <strong>Beispiel:</strong> <br />\n\t\t\t\t\t\t\t\t   Wert im Textfeld: 99 <br />\n\t\t\t\t\t\t\t\t   Preis-Ursprung: 5.58 <br />\n\t\t\t\t\t\t\t\t   Finales Ergebnis: 5.99 <br /><br />\n\t\t\t\t\t\t           Die Funktion hilft insbesondere bei prozentualen Preis-Auf-/Abschl&auml;gen.<br/>\n\t\t\t\t\t\t           Lassen Sie das Feld leer, wenn Sie keinen Schwellenpreis &uuml;bermitteln wollen.<br/>\n\t\t\t\t\t\t           Das Eingabe-Format ist eine ganzstellige Zahl mit max. 2 Ziffern.",
+                        "key": "_#_platform_#_.price.signal",
+                        "type": "text",
+                        "cssClasses": [
+                            "autoWidth"
+                        ]
+                    }
+                }
+            },
+            "whichprice": {
+              "label": "Preis berechnen aus",
+              "leftlabel": "Preis aus Kundengruppe",
+              "key": "_#_platform_#_.price.group",
+              "type": "selection",
+              "values": null,
+              "cssClasses": [
+                "rightSpacer"
+              ],
+              "morefields": {
+                "cost": {
+                  "key": "_#_platform_#_.price.usespecialoffer",
+                  "type": "checkbox",
+                  "values": {
+                    "val": "auch Sonderpreise verwenden"
+                  },
+                  "default": {
+                    "val": false
+                  }
+                }
+              }
+            },
+            "exchangerate": {
+                "label": "Wechselkurs",
+                "desc": "<b>Grunds&auml;tzlich:</b><br /> <br /> Wenn die Web-Shop Standard-W&auml;hrung von der Marktplatz-W&auml;hrung abweicht, berechnet magnalister beim Bestellimport und beim Artikelupload anhand des W&auml;hrungskurses, der im Web-Shop hinterlegt ist.<br /> Beim Bestellimport verh&auml;lt sich magnalister beim Speichern der W&auml;hrungen und Betr&auml;ge 1:1 so, wie der Web-Shop sie bei Bestelleingang auch anlegt.<br /> <br /> <b>Achtung:</b><br /> <br /> Durch Aktivieren dieser Funktion hier wird der <span style='color:red'>im Web-Shop hinterlegte Wechselkurs mit dem aktuellen Kurs aus Yahoo-Finance aktualisiert</span>.  Dadurch werden <span style='color:red'>auch die Preise in Ihrem Web-Shop</span> mit dem aktualisierten Wechselkurs zum Verkauf angezeigt.<br /> <br /> Folgende Funktionen l&ouml;sen die Aktualisierung aus:<ul> <li>Bestellimport</li> <li>Artikel-Vorbereitung</li> <li>Artikel-Upload</li> <li>Lager-/Preis-Synchronisation</li> </ul><br /> Sollte der W&auml;hrungskurs eines Marktplatzes in der W&auml;hrungskonfiguration des Web-Shops nicht angelegt sein, gibt magnalister eine Fehlermeldung aus.<br /> <br /> <b>Haftungshinweis:</b><br /> RedGecko GmbH &uuml;bernimmt keine Haftung f&uuml;r die Richtigkeit des Wechselkurses. Bitte pr&uuml;fen Sie die &uuml;bermittelten Werte in Ihrem _#_platformName_#_-Konto.",
+                "key": "_#_platform_#_.exchangerate",
+                "type": "checkbox",
+                "values": {
+                    "update": "Wechselkurs automatisch aktualisieren"
+                },
+                "default": {
+                    "update": false
+                }
+            }
+        }
+    }
+}

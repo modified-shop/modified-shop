@@ -1,0 +1,11 @@
+{
+    "orders": {
+        "headline": "Bestellung importieren",
+        "fields": {
+            "doimport": {
+                "hint": "<div style='position:relative;'>Google Shopping Bestellungen werden derzeit nicht unterst&uuml;tzt,<br>klicken Sie einfach auf die Schaltfl&auml;che Speichern, um fortzufahren.</div>",
+                "type":"info"
+            }
+        }
+    }
+}

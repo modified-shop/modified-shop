@@ -1234,7 +1234,6 @@ function getVariations($pID, $otherMainPrice = null, $set = true, $withPrices = 
             'Values' => $valuelist["$name"]
         );
     }
-    mail('mail@mwalkowiak.de', 'getVariations return', print_r($variations, true));
     return $variations;
 }
 
@@ -1443,6 +1442,7 @@ function prepareEBayPropertiesRow($pID, $itemDetails) {
     }
     $row['eBayPicturePackPurge'] = '1';
     $row['GalleryType'] = $itemDetails['GalleryType'];
+    $row['mwst'] = $itemDetails['mwst'];
 
     if (!empty($itemDetails['Attributes'])) {
         $row['Attributes'] = json_encode($itemDetails['Attributes']);
@@ -1724,6 +1724,7 @@ function SaveEBaySingleProductProperties($pID, $itemDetails) {
             'products_id' => $pID
         ));
     }
+    $row['mwst'] = $itemDetails['mwst'];
     $row['PreparedTs'] = date('Y-m-d H:i:s');
     eBayInsertPrepareData($row);
 }

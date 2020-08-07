@@ -11,17 +11,10 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * (c) 2018 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2019 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
-
-/*
- BAUSTELLE kopiert von tradoria
- TODO
-     das matching zeug muss raus
-     ajax / LoadMPVariations muss rein
-*/
 
 require_once(DIR_MAGNALISTER_MODULES.'etsy/EtsyHelper.php');
 
@@ -44,7 +37,7 @@ class EtsyPrepare extends MagnaCompatibleBase {
         $this->prepareSettings['selectionName'] = isset($_GET['view']) ? $_GET['view'] : 'prepare';
         $this->resources['url']['mode'] = 'prepare';
         $this->resources['url']['view'] = $this->prepareSettings['selectionName'];
-	if ('apply' == $this->prepareSettings['selectionName']) $this->prepareSettings['selectionName'] = 'prepare';
+        if ('apply' == $this->prepareSettings['selectionName']) $this->prepareSettings['selectionName'] = 'prepare';
     }
 
     public function process() {
@@ -232,14 +225,11 @@ echo print_m(func_get_args(), __METHOD__);
     }*/
 
     protected function savePrepare() {
-        #if (!array_key_exists('saveMatching', $_POST)) {
-        #    if (!isset($_POST['Action']) || $_POST['Action'] !== 'SaveMatching' || $_GET['where'] === 'varmatchView') {
-        #        return;
-        #    }
-        #}
         if (!array_key_exists('savePrepareData', $_POST)) {
-		return;
-	}
+            if (!isset($_POST['Action']) || $_POST['Action'] !== 'SaveMatching' || $_GET['where'] === 'varmatchView') {
+                return;
+            }
+        }
 
         require_once(DIR_MAGNALISTER_MODULES.'etsy/classes/EtsyProductSaver.php');
 #echo print_m($_POST, '$_POST');
@@ -267,19 +257,20 @@ echo print_m(func_get_args(), __METHOD__);
 
         $savePrepareData = array_key_exists('savePrepareData', $_POST);
 
-        if (count($oProductSaver->aErrors) === 0) {
+        if (count($oProductSaver->aErrors) === 0 || !$savePrepareData) {
             $isAjax = false;
             if (!$savePrepareData) {
                 # stay on prepare product form
                 $_POST['prepare'] = 'prepare';
                 $isAjax = true;
-            } else {
+            }
+            if (!$isAjax) {
                 # prepared successfully, remove from selection
-                MagnaDB::gi()->query('DELETE FROM '.TABLE_MAGNA_SELECTION.'
-                    WHERE     mpID = '.$this->mpID.'
-                      AND selectionname = "'.$this->prepareSettings['selectionName'].'"
-                      AND session_id = "'.session_id().'"
-                ');
+                MagnaDB::gi()->delete(TABLE_MAGNA_SELECTION, array(
+                    'mpID' => $this->mpID,
+                    'selectionname' => $this->prepareSettings['selectionName'],
+                    'session_id' => session_id()
+                ));
             }
         } else {
             # stay on prepare product form
@@ -391,7 +382,6 @@ echo print_m(func_get_args(), __METHOD__);
 
             return;
         }
-#echo print_m($class, __METHOD__.' '.__LINE__.' $class');
 
         $params = array();
         foreach (array('mpID', 'marketplace', 'marketplaceName', 'resources', 'prepareSettings') as $attr) {
@@ -400,6 +390,7 @@ echo print_m(func_get_args(), __METHOD__);
             }
         }
 
+        /** @var $cMDiag EtsyPrepareView | EtsyVariationMatching */
         $cMDiag = new $class($params);
 
         echo $this->isAjax ? $cMDiag->renderAjax() : $cMDiag->process();

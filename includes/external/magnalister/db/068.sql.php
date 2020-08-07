@@ -24,7 +24,7 @@ $functions = array();
 $queries[] = 'CREATE TABLE IF NOT EXISTS `' . TABLE_MAGNA_FYNDIQ_PROPERTIES . '` (
 	`mpID` int(11) NOT NULL,
 	`products_id` int(11) NOT NULL,
-	`products_model` varchar(255) NOT NULL,
+	`products_model` varchar(64) NOT NULL,
 	`MarketplaceCategory` varchar(30) NOT NULL,
 	`TopMarketplaceCategory` varchar(255) NOT NULL,
 	`Title` varchar(64),

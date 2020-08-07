@@ -158,6 +158,7 @@ define('ML_LABEL_TAX_FREE', 'Steuerfrei');
 define('ML_LABEL_UPDATE', 'Update durchf&uuml;hren');
 define('ML_MESSAGE_BEFORE_UPDATE_TITLE', 'magnalister Update');
 define('ML_MESSAGE_BEFORE_UPDATE_TEXT', 'Das magnalister Update aktualisiert nun auf die neueste Version. Der Vorgang dauert 1-3 Minuten.');
+define('ML_MESSAGE_UPDATE_DISABLED_GAMBIOCLOUD', 'Die magnalister Update-Funktion ist für Gambio Cloud deaktiviert: magnalister wird in dem Fall regelmäßig von Gambio aktualisiert. Bei Fragen wenden Sie sich bitte an support@magnalister.de');
 define('ML_MESSAGE_BEFORE_XTMC_UPDATE_TITLE', 'xt:MultiConnect Update');
 define('ML_MESSAGE_BEFORE_XTMC_UPDATE_TEXT', 'Das xt:MultiConnect Update aktualisiert nun auf die neueste Version. Der Vorgang dauert 1-3 Minuten.');
 define('ML_LABEL_IMPORT_ORDERS', 'Bestellungen importieren');
@@ -173,7 +174,7 @@ define('ML_LABEL_SYNC_INVENTORY_LOG', 'Protokoll-Start: Inventar-Abgleich Shop >
 define('ML_LABEL_SYNC_CONTINUE_MODE', ' im Continue-Modus');
 define('ML_LABEL_SYNC_ORDERSTATUS', 'Bestellstatus synchronisieren');
 define('ML_MESSAGE_BEFORE_SYNC_ORDERSTATUS_TITLE', 'Bestellstatus Synchronisation');
-define('ML_MESSAGE_BEFORE_SYNC_ORDERSTATUS_TEXT', 'Es werden nun alle verf&uuml;gbaren Bestellstati vom Webshop zu den Marktpl&auml;tzen &uuml;bermittelt. Der Prozess dauert 3-10 Minuten.<br /><br />Der Vorgang l&auml;uft zus&auml;tzlich automatisch in 30-60 Minuten Intervallen im Hintergrund.');
+define('ML_MESSAGE_BEFORE_SYNC_ORDERSTATUS_TEXT', 'Es werden nun alle verf&uuml;gbaren Bestellstatus vom Webshop zu den Marktpl&auml;tzen &uuml;bermittelt. Der Prozess dauert 3-10 Minuten.<br /><br />Der Vorgang l&auml;uft zus&auml;tzlich automatisch in 30-60 Minuten Intervallen im Hintergrund.');
 define('ML_LABEL_LISTINGSBASED', 'Courtage');
 define('ML_LABEL_PARENT', 'Elternartikel');
 define('ML_LABEL_MARKETPLACE_ORDER_ID', 'Marketplace Bestellnummer');
@@ -375,6 +376,7 @@ define('ML_TEXT_LISTING_GOING_TO_EXCEED', '
 	   <a target="_blank" href="'.MAGNA_PUBLIC_SERVER.'frontend/rate.php" title="Preis&uuml;bersicht">hier</a> entnehmen.</p>
 	<p>Sie k&ouml;nnen einfach ein <a target="_blank" href="'.MAGNA_PUBLIC_SERVER.'frontend/login.php/rateupgrade:%d" title="Tarif-Upgrade">Tarif-Upgrade</a>
 	   r&uuml;ckwirkend zum Monatsanfang vornehmen und haben damit volle Kostenkontrolle.</p>');
+define('ML_TEXT_LISTING_GOING_TO_EXCEED_GAMBIO_CLOUD', 'Achtung, Sie überschreiten das Upload-Limit Ihres Tarifs (20 Produkt-Uploads & Bestellungen kombiniert pro Monat). Wenn Sie den Produkt-Upload fortsetzen, wird dieser Tarif kostenpflichtig. Es gelten dann unsere regulären Preise für den von Ihnen gewählten Tarif (Business, Ultimate, Flat).');
 define('ML_TEXT_CURRENT_MODULE_NOT_BOOKED', 'Zur Aktivierung von <b>%s</b> loggen Sie sich unter
 	<a href="'.MAGNA_PUBLIC_SERVER.'frontend/login.php" title="Kunden Login" target=_blank">'.str_replace('http://', 'www.', MAGNA_PUBLIC_SERVER).'login</a> ein,
 	w&auml;hlen "Meine Shops" und beantragen &uuml;ber den "Bearbeiten-Button" weitere Marketplaces.');
@@ -560,6 +562,7 @@ define('ML_GENERIC_CURRENCY_EUR', 'EUR');
 define('ML_GENERIC_LABEL_PRICE', 'Berechneter Preis <small>(gem. Konfig)</small>');
 define('ML_GENERIC_IMAGES', 'Bilder');
 define('ML_GENERIC_NO_IMAGE', 'Kein Bild');
+define('ML_GENERIC_TAKE_ALL_IMAGES', 'Alle Bilder &uuml;bernehmen');
 define('ML_GENERIC_PRODUCTDESCRIPTION', 'Produktbeschreibung');
 define('ML_GENERIC_MY_PRODUCTDESCRIPTION', 'Meine Produktbeschreibung');
 define('ML_GENERIC_CHECKINDATE', 'Einstelldatum');
@@ -605,6 +608,10 @@ define('ML_GENERIC_INVENTORY_STATUS_PENDING_UPDATE', 'Artikel wird aktualisiert'
 define('ML_GENERIC_INVENTORY_STATUS_ACTIVE', 'Aktiv');
 define('ML_GENERIC_INVENTORY_STATUS_TRANSFERRED', 'Transferred');
 define('ML_GENERIC_INVENTORY_STATUS', 'Status');
+define('ML_GENERIC_STATUS_PRODUCT_IS_CREATED', 'Produkt wird erstellt');
+define('ML_GENERIC_STATUS_PRODUCT_IS_UPDATED', 'Produkt wird aktualisiert');
+define('ML_GENERIC_STATUS_OFFER_IS_UPDATED', 'Angebot wird aktualisiert');
+define('ML_GENERIC_STATUS_OFFER_IS_CREATED', 'Angebot wird erstellt');
 
 define('ML_GENERIC_FILTER_MP_SYNC_DELETED', 'Gleiche gel&ouml;schte Artikel ab.');
 define('ML_GENERIC_FILTER_MP_SYNC_INVENTORY', 'Gleiche Artikel mit Marketplace Inventar ab.');
@@ -983,6 +990,18 @@ define('ML_IDEALO_LABEL_SHIPPING_COUNTRY', 'Versand nach');
 define('ML_IDEALO_LABEL_SHIPPING_COST', 'Versandkosten');
 define('ML_IDEALO_INFO_SHIPPING_COST', 'Es wird zun&auml;chst versucht die Versandkosten aus der Versandmethode zu berechnen. Falls diese kein Ergebnis liefert wird der hier angegebene Wert verwendet.
 Bei Versandkostenmodul "Pauschal" wird ebenfalls der hier angegebene Wert verwendet.');
+define('ML_IDEALO_LABEL_DELIVERY_TIME', 'Lieferzeit');
+define('ML_IDEALO_LABEL_DELIVERY_TIME_FROM_SHOP', 'Immer aus Web-Shop &uuml;bernehmen');
+define('ML_IDEALO_LABEL_SPEDITION_INFO', 'Wenn Sie 0.00 hinterlegen, wird die Funktion nicht auf dem Markplatz aktiviert');
+define('ML_IDEALO_LABEL_DIRECT_CHECKOUT', 'Direktkauf');
+define('ML_IDEALO_LABEL_DIRECT_FULFILLMENT_TYPE', 'Versandart');
+define('ML_IDEALO_LABEL_DIRECT_TWO_MAN_HANDLING_FEE', 'Direktkauf Spedition - Lieferkosten bis zum Aufstellort');
+define('ML_IDEALO_LABEL_DIRECT_DISPOSAL_FEE', 'Direktkauf Spedition - Kosten Altgerätemitnahme');
+define('ML_IDEALO_OPTION_DIRECT_FULFILLMENTTYPE_SPEDITION', 'Spedition');
+define('ML_IDEALO_OPTION_DIRECT_FULFILLMENTTYPE_PACKETDIENST', 'Paketdienst');
+define('ML_IDEALO_OPTION_DIRECT_FULFILLMENTTYPE_DOWNLOAD', 'Download');
+define('ML_IDEALO_LABEL_DELIVERY_TIME_MANUAL', 'Pauschal aus rechtem Feld');
+define('ML_IDEALO_INFO_DELIVERY_TIME', 'Bitte geben Sie Lieferzeiten so genau wie m&oumlglich an. Onlineh&aumlndler sind gesetzlich dazu verpflichtet, dem Verbraucher anhand der Lieferzeitangabe mitzuteilen, wann die Ware bei ihm eintrifft. Daraus resultiert, dass die immer noch weitverbreiteten Angaben wie „versandfertig“ oder „lieferbar“ nicht mehr zul&aumlssig sind. Ebenso d&uumlrfen keine relativierenden Zus&aumltze wie „voraussichtlich“ oder „in der Regel“ verwendet werden. Bitte geben Sie daher m&oumlglichst Lieferzeiten in Werktagen an, z. B. “Lieferung in 1-3 Werktagen”.');
 define('ML_IDEALO_LABEL_SHIPPING_CURRENCY', 'EUR');
 define('ML_IDEALO_TEXT_APPLY_PRODUCTS_IMAGES', 'Maximal 3 Produktbilder');
 define('ML_IDEALO_PAYMENTMETHOD_OPTION_GROUPS', '
@@ -1116,6 +1135,9 @@ define('ML_EBAY_LABEL_PRODUCT_IN_REVIEW', 'Wird von eBay gepr&uuml;ft');
 define('ML_EBAY_LABEL_PRODUCT_APPLIED', 'Katalog-Produkt, manuell beantragt');
 define('ML_EBAY_LABEL_PRODUCT_AUTO_APPLIED', 'Katalog-Produkt, automatisch beantragt');
 define('ML_EBAY_LABEL_PRODUCT_REJECTED', 'Von eBay abgelehnt'); /* deprecated */
+define('ML_EBAY_VAT', 'Mehrwertsteuersatz');
+define('ML_EBAY_VAT_HINT', 'Mehrwertsteuersatz f&uuml;r dieses Produkt in %');
+
 
 /* Inventory View */
 define('ML_EBAY_INVENTORY_STATUS_PENDING_UPLOAD', 'Artikel wird eingestellt<br /><span class="small">Verarbeitung bei magnalister</span>');
@@ -1328,7 +1350,12 @@ define('ML_EBAY_BUTTON_TOKEN_NEW', 'Token beantragen / &auml;ndern');
 
 define('ML_EBAY_SUBMIT_ADD_TEXT_ZERO_STOCK_ITEMS_REMOVED','Artikel ohne Lagerbestand wurden ausgelassen.');
 define('ML_EBAY_SUBMIT_ADD_TEXT_ZERO_STOCK_ITEMS_ONLY_UPDATED','Artikel ohne Lagerbestand werden nicht neu hochgeladen (nur aktualisiert, falls schon da).');
-define('ML_EBAY_SUBMIT_ADD_TEXT_ASYNC_EXPLANATION','<b>Hinweis zur Verarbeitungszeit und Aktivierung:</b><br /><br />Die Verarbeitung kann wenige Sekunden bis zu 6 Stunden dauern:<br /><br />Artikel ohne eBay-Katalogpflicht: eBay ben&ouml;tigt f&uuml;r die Verarbeitung pro Artikel 5-10 Sekunden (inkl. Bilderpaket). <br /><br />eBay-Katalog-Artikel (ePID-Pflicht): Die Verarbeitung und Pr&uuml;fung kann seitens eBay 4-6 Stunden dauern, insbesondere wenn ein neues Produkt dem eBay Katalog vorgeschlagen wird (erfolgt automatisch).<br /><br />Sie k&ouml;nnen den Verarbeitungs-Status jederzeit im Reiter &quot;Inventar&quot; einsehen. Etwaige Fehlermeldungen nach der Verarbeitung werden im Reiter &quot;Fehlerlog&quot; angezeigt.');
+// #PBSE# suspended
+#define('ML_EBAY_SUBMIT_ADD_TEXT_ASYNC_EXPLANATION','<b>Hinweis zur Verarbeitungszeit und Aktivierung:</b><br /><br />Die Verarbeitung kann wenige Sekunden bis zu 6 Stunden dauern:<br /><br />Artikel ohne eBay-Katalogpflicht: eBay ben&ouml;tigt f&uuml;r die Verarbeitung pro Artikel 5-10 Sekunden (inkl. Bilderpaket). <br /><br />eBay-Katalog-Artikel (ePID-Pflicht): Die Verarbeitung und Pr&uuml;fung kann seitens eBay 4-6 Stunden dauern, insbesondere wenn ein neues Produkt dem eBay Katalog vorgeschlagen wird (erfolgt automatisch).<br /><br />Sie k&ouml;nnen den Verarbeitungs-Status jederzeit im Reiter &quot;Inventar&quot; einsehen. Etwaige Fehlermeldungen nach der Verarbeitung werden im Reiter &quot;Fehlerlog&quot; angezeigt.');
+# english:
+#define('ML_EBAY_SUBMIT_ADD_TEXT_ASYNC_EXPLANATION','<b>Note about processing time and activation:</b><br /><br />Processing can just take a few seconds or up to 6 hours.<br /><br />Articles not requiring eBay catalog matching: eBay needs 5-10 seconds to process each article (incl. image package).<br /><br />eBay catalog articles (requiring ePID): Processing time and testing can take eBay 4-6 hours, especially when a new product is suggested for eBay&apos;s catalog (happens automatically).<br /><br />You can always check the processing status via the inventory tab. Possible error reports after processing will be shown in the &quot;error log&quot; tab.');
+// #PBSE# suspended END
+define('ML_EBAY_SUBMIT_ADD_TEXT_ASYNC_EXPLANATION','<b>Hinweis zur Verarbeitungszeit und Aktivierung:</b><br /><br />eBay braucht f&uuml;r die Verarbeitung pro Artikel 5-10 Sekunden. Bei Nutzung des Bilderpakets wird zus&auml;tzlich ist die gleiche Zeit pro Bild ben&ouml;tigt.<br /><br />Die Daten werden zun&auml;chst auf unsere Server hochgeladen, und anschlie&szlig;end von dort aus zu eBay.<br /><br />Sie k&ouml;nnen den Verarbeitungs-Status jederzeit im Reiter &quot;Inventar&quot; einsehen. Etwaige Fehlermeldungen nach der Verarbeitung werden im Reiter &quot;Fehlerlog&quot; angezeigt.');
 
 define('ML_EBAY_ERROR_VARMATCH_FAILED', 'Keine der Varianten konnte korrekt zugeordnet werden. Bitte pr&uuml;fen Sie die Eintr&auml;ge f&uuml;r eBay Attribute (Varianten)');
 
@@ -1341,7 +1368,7 @@ define('ML_EBAY_PUI_MSG_TO_BUYER', "eBay Rechnungskauf, eBay Nachricht an den Ku
 
 define('ML_LABEL_EBAY_SALES_RECORD_NUMBER', 'Verkaufsprotokollnummer');
 define('ML_EBAY_PP_TRANSACTION_ID', 'PayPal Transaction ID');
-
+define('ML_EBAY_ORDER_DETAIL_INFORMATION_TO_EBAY_SELLER_HUB', 'Klicken Sie auf diesen <a href="%s">Link</a>, um die (Teil-)Rückerstattung einer Bestellung über den eBay Seller Hub manuell abzuwickeln.');
 /* Laendernamen (fuer eBay, vllt spaeter auch fuer andere */
 define('ML_COUNTRY_AUSTRALIA', 'Australien');
 define('ML_COUNTRY_AUSTRIA', '&Ouml;sterreich');
@@ -1487,7 +1514,8 @@ Bitte &auml;ndern Sie die EANs, so dass keine davon mehrfach vergeben wird.');
 define('ML_HITMEISTER_UNIT_ATTRIBUTES', 'Allgemeine Einstellungen');
 define('ML_HITMEISTER_PRODUCT_DETAILS', 'Produktdetails');
 define('ML_HITMEISTER_ITEM_NAME_TITLE', 'Titel');
-define('ML_HITMEISTER_SUBTITLE', 'Untertitel');
+define('ML_HITMEISTER_KEYWORDS', 'Keywords');
+define('ML_HITMEISTER_KEYWORDS_INFO', 'Suchw&ouml;rter f&uuml;r Preissuchmaschinen (werden nicht angezeigt, nur in den Metadaten hinterlegt), Flie&szlig;text, bis zu 1024 Zeichen');
 define('ML_HITMEISTER_DESCRIPTION', 'Beschreibung');
 define('ML_HITMEISTER_PRICE', 'real.de Preis');
 define('ML_HITMEISTER_CATEGORY', 'real.de Kategorie');
@@ -2017,6 +2045,11 @@ define('ML_HOOD_TEXT_SET_PROD_INFOS', 'Die Produkt-Infos k&ouml;nnen nur aktivie
 
 define('ML_HOOD_SUBMIT_ADD_TEXT_ZERO_STOCK_ITEMS_REMOVED','Artikel ohne Lagerbestand wurden ausgelassen.'); /* deprecated */
 
+/* Nur bezahlte Bestellungen importieren */
+define('ML_HOOD_IMPORTONLYPAID_LABEL', 'Nur bezahlt-markierte<br />Bestellungen importieren');
+define('ML_HOOD_IMPORTONLYPAID_DESC', ' <p>Durch Aktivieren der Funktion werden Bestellungen erst dann importiert, wenn Sie auf Hood als „bezahlt“ markiert wurden. F&uuml;r Zahlarten wie PayPal, Amazon Pay oder Sofort&uuml;berweisung erfolgt das automatisch, sonst muss die Zahlung auf Hood entsprechend markiert werden.  </p> <p> <strong>Vorteil:</strong> Die importierte Bestellung kann sofort versendet werden.</p>');
+define('ML_HOOD_IMPORTONLYPAID_RIGHTLABEL', 'Import nur wenn Bestellung komplett bezahlt');
+
 /* Status-Aenderung bei Bestellungen */
 define('ML_HOOD_ORDER_PAID', "magnalister-Verarbeitung:\nZahlung bei Hood eingegangen.");
 
@@ -2109,6 +2142,8 @@ define('ML_RICARDO_ERROR_CATEGORY', 'Bitte geben Sie eine Kategorie an.');
 define('ML_RICARDO_ERROR_TITLE', 'Bitte geben Sie einen Titel an.');
 define('ML_RICARDO_ERROR_DESCRIPTION', 'Bitte geben Sie eine Artikelbeschreibung an.');
 define('ML_RICARDO_ERROR_WARRANTY', 'Bitte geben Sie eine Garantiebeschreibung an.');
+define('ML_RICARDO_ERROR_GTIN', 'Bitte geben Sie eine GTIN Kode.');
+define('ML_RICARDO_ERROR_IMAGES', 'Bitte geben Sie einen Image.');
 define('ML_RICARDO_ERROR_SHIPPING', 'Bitte geben Sie eine Versandbeschreibung an.');
 define('ML_RICARDO_ERROR_START_PRICE', 'Der Start-Preis muss gr&ouml;&szlig;er als null sein.');
 define('ML_RICARDO_ERROR_INCREMENT', 'Der Erh&ouml;hungsschritt muss gr&ouml;&szlig;er als null sein');
@@ -2186,7 +2221,7 @@ define('ML_FYNDIQ_ERROR_CATEGORY_ATTRIBUTE', ' (Kategorie Attribute) ist erforde
 
 /* Tradoria */
 define('ML_TRADORIA_UPLOAD_EXPLANATION', '<b>Hinweis</b>:<br /><br />
-Uploaded items are usually placed within one hour on Rakuten. After that, you can see items on your Rakuten management page.');
+Hochgeladene Artikel werden in der Regel innerhalb einer Stunde auf Rakuten platziert. Danach können Sie die Produkte in Ihrer Rakuten-Shop-Administration sehen.');
 
 /* Etsy */
 define('ML_ETSY_MAX_PICTURES', 'Maximal 10 Bilder');
@@ -2226,3 +2261,60 @@ define('ML_ETSY_LABEL_TITLE', 'Etsy Titel');
 define('ML_TITLE_ETSY_WARNING_ZERO_STOCK_COST', 'Automatische Synchronisierung mit Null-Bestand (empfohlen)');
 define('ML_TEXT_ETSY_WARNING_ZERO_STOCK_COST', 'Die Option bewirkt, dass Ihre Angebote reaktiviert werden, wenn der Lagerbestand im Webshop > 0 ist. Bei einer Lagerbestands&auml;nderung auf < 1 werden Ihre Angebote deaktiviert. F&uuml;r die Reaktivierung von Angeboten werden Ihnen seitens Etsy Geb&uuml;hren berechnet.');
 
+/* Google Shopping */
+define('ML_GOOGLESHOPPING_PRICE', 'Preis');
+define('ML_GOOGLESHOPPING_DESCRIPTION', 'Description');
+define('ML_GOOGLESHOPPING_BRAND', 'Brand');
+define('ML_GOOGLESHOPPING_LABEL_GOOGLESHOPPING_PRICE', 'Berechneter Preis <small>(gem. Konfig)</small>');
+define('ML_GOOGLESHOPPING_PRODUCT_DETAILS', 'Produktdetails');
+define('ML_GOOGLESHOPPING_ERROR_CATEGORY', 'Bitte geben Sie eine Kategorie an.');
+define('ML_GOOGLESHOPPING_ITEM_NAME_TITLE', 'Titel');
+define('ML_GOOGLESHOPPING_SUBTITLE', 'Untertitel');
+define('ML_GOOGLESHOPPING_LABEL_ONLY_NOT_PREPARED', 'Nur Artikel die noch nicht vorbereitet sind');
+define('ML_GOOGLESHOPPING_BUTTON_PREPARE', 'Vorbereiten');
+define('ML_GOOGLESHOPPING_LABEL_PREPARE', 'Vorbereitungsart');
+define('ML_GOOGLESHOPPING_BUTTON_UNPREPARE', 'Vorbereitung f&uuml;r komplette Auswahl aufheben');
+define('ML_GOOGLESHOPPING_BUTTON_RESET_DESCRIPTION', 'Vorbereitung f&uuml;r Artikelbeschreibung aufheben');
+define('ML_GOOGLESHOPPING_COMMENT', 'Hinweise zu Ihrem Artikel');
+define('ML_GOOGLESHOPPING_PREORDER', 'Preorder');
+define('ML_GOOGLESHOPPING_UPLOAD_EXPLANATION', 'In der Regel werden die hochgeladenen Produkte innerhalb von zwei Stunden auf Google platziert. Danach sind die Artikel in Ihrem Google H&auml;ndler Konto zu finden.');
+define('ML_GOOGLESHOPPING_NEW_ITMES', 'Neue Produkte erstellen');
+define('ML_GOOGLESHOPPING_BUTTON_TOKEN_NEW', 'Token beantragen / &auml;ndern');
+
+define('ML_ERROR_NOTE_CATEGORY_NOT_SELECTED', 'Bitte w&auml;hlen Sie eine Kategorie aus.');
+
+define('ML_METRO_PRODUCT_DETAILS', 'Angebotseinstellungen');
+define('ML_METRO_PRODUCT_TITLE', 'Titel');
+define('ML_METRO_PRODUCT_IMAGES', 'Produktbilder');
+define('ML_METRO_SHORTDESCRIPTION', 'Kurzbeschreibung');
+define('ML_METRO_PRODUCT_GTIN', 'GTIN (Global Trade Item Number)');
+define('ML_METRO_PRODUCT_MANUFACTURER', 'Hersteller');
+define('ML_METRO_PRODUCT_MPN', 'Herstellerartikelnummer');
+define('ML_METRO_PRODUCT_BRAND', 'Marke');
+define('ML_METRO_PRODUCT_MSRP', 'Unverbindliche Preisempfehlung des Herstellers');
+define('ML_METRO_PRODUCT_KEYFEATURE', 'Wichtige Merkmale');
+define('ML_METRO_PREPARE_PRODUCT_TITLE_INFO', 'Maximal 150 Zeichen');
+define('ML_METRO_PREPARE_PRODUCT_SHORTDESCRIPTION_INFO', 'Kurze Beschreibung des Produkts mit einer Zusammenfassung der wichtigsten Produkteigenschaften.<br/>Maximal 150 Zeichen');
+define('ML_METRO_PREPARE_PRODUCT_DESCRIPTION_INFO', 'Detaillierte und informative Beschreibung des Produkts mit seinen Spezifikationen und Eigenschaften. Angebotsdetails, Versand- oder Shopinformationen wie Preise, Lieferbedingungen, etc. sind nicht erlaubt. Bitte beachten Sie, dass es nur eine Produktdetailseite pro Produkt gibt, die von allen Verk&auml;ufern, die dieses Produkt anbieten, geteilt wird. F&uuml;gen Sie keine Hyperlinks, Bilder oder Videos hinzu.<br><br>Folgende HTML-Tags sind erlaubt: P, B, BR, A, UL, OL, LI, SPAN<br><br>Maximal 4000 Zeichen');
+define('ML_METRO_PREPARE_PRODUCT_IMAGES_INFO', 'Maximal 10 Produktbilder');
+define('ML_METRO_PREPARE_PRODUCT_GTIN_INFO', 'Zum Beispiel: EAN, ISBN, ...<br/>Maximal 14 Zeichen');
+define('ML_METRO_PREPARE_PRODUCT_MANUFACTURER_INFO', 'Maximal 100 Zeichen');
+define('ML_METRO_PREPARE_PRODUCT_MPN_INFO', 'Maximal 100 Zeichen');
+define('ML_METRO_PREPARE_PRODUCT_BRAND_INFO', 'Maximal 100 Zeichen');
+define('ML_METRO_PREPARE_PRODUCT_MSRP_INFO', 'Maximal 100 Zeichen');
+define('ML_METRO_PREPARE_PRODUCT_KEY_FEATURE_INFO', 'Maximal 200 Zeichen je Merkmal');
+define('ML_METRO_PRODUCT_GENERALSETTINGS', 'Allgemeine Einstellungen');
+define('ML_METRO_LABEL_SELECT_CATEGORY', 'Marktplatz-Kategorie');
+define('ML_METRO_LABEL_PROCESSINGTIME', 'Bearbeitungszeit in Werktagen');
+define('ML_METRO_LABEL_BUSINESSMODEL', 'K&auml;ufergruppe festlegen');
+define('ML_METRO_LABEL_FREIGHTFORWARDING', 'Lieferung per Spedition');
+define('ML_METRO_LABEL_SHIPPINGPROFILE', 'Versandkosten-Profile');
+define('ML_METRO_STOCK_FOR_METRO', 'METRO Bestand');
+define('ML_METRO_PRICE_FOR_METRO', 'METRO Preis');
+define('ML_METRO_LABEL_TITLE', 'METRO Titel');
+define('ML_METRO_LISTING_ID', 'METRO ListingId');
+define('ML_METRO_PRICE_SHOP_METRO', 'Preis Shop (brutto) / METRO');
+define('ML_METRO_STOCK_SHOP_METRO', 'Bestand Shop / METRO');
+define('ML_METRO_ERROR_GTIN', 'Bitte geben Sie eine GTIN Kode oder pr&uuml;fen Sie, ob der GTIN-Code g&uuml;ltig ist.');
+define('ML_METRO_STATUS_PRODUCT_IS_PENDING_DELETE', 'Angebot wird gel&ouml;scht');
+define('ML_METRO_DELETED_OFFER_PURGE_INFO', 'Gel&ouml;schte Artikel werden nach 30 Tagen final aus der Datenbank und &Uuml;bersicht gel&ouml;scht.');

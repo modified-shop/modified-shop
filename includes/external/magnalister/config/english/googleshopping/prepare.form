@@ -1,0 +1,65 @@
+{
+    "prepare": {
+        "headline": "Item Preparation",
+        "fields": {
+            "filter": {
+                "label": "Status Filter",
+                "key": "_#_platform_#_.prepare.status",
+                "type": "checkbox",
+                "values": {
+                    "val": "only active products"
+                },
+                "default": {
+                    "val": false
+                }
+            },
+            "lang": {
+                "label": "Product Language Matching",
+                "desc": "",
+                "morefields": {
+                    "webshop": {
+                        "label": "Web-shop",
+                        "key": "_#_platform_#_.lang",
+                        "type": "selection",
+                        "value": null,
+                        "cssClasses": [
+                            "autoWidth",
+                            "rightSpacer"
+                        ]
+                    },
+                    "googleshopping": {
+                        "label": "Google Shopping",
+                        "key": "_#_platform_#_.lang.match.googleshopping",
+                        "type": "selection",
+                        "value": null,
+                        "cssClasses": [
+                            "autoWidth"
+                        ]
+                    }
+
+                }
+            },
+            "shippingtemplate": {
+                "label": "Shipping Templates",
+                "key": "_#_platform_#_.shippingtemplate",
+                "type": "extern",
+                "procFunc": "GoogleshoppingConfigure::renderShippingTemplatesFromApi",
+                "params": [],
+                "cssClasses": [
+                    "autoWidth",
+                    "rightSpacer"
+                ],
+                "morefields": {
+                    "shippintemplate": {
+                        "label": "Create shipping template",
+                        "key": "createshippingtemplate",
+                        "type": "extern",
+                        "procFunc": "GoogleshoppingConfigure::renderShippingTemplate",
+                        "expertsetting": false,
+                        "params": []
+                    }
+                }
+            }
+        }
+    }
+}

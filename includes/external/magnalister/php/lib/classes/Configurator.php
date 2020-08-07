@@ -586,6 +586,9 @@ class MLConfigurator {
 		}
 		
 		$html = '';
+		if(!isset($item['type'])){
+		    return $html;
+        }
 		switch ($item['type']) {
 			case 'text':
 			case 'password':
@@ -1064,7 +1067,7 @@ class MLConfigurator {
 				}
 				$idkey = str_replace('.', '_', $item['key']);
 				$input = $this->renderInput($item);
-				if ($item['type'] != 'hidden') {
+				if (!isset($item['type']) || $item['type'] != 'hidden') {
 					if (isset($item['rightlabel'])) {
 						$input .= $this->renderLabel($item['rightlabel'], $idkey);
 					}
@@ -1123,7 +1126,7 @@ class MLConfigurator {
 					if (array_key_exists($item['key'], $this->notCorrect)) {
 						$colspan = 1;
 					}
-					if ($item['type'] == 'textarea') {
+					if (isset($item['type']) && $item['type'] == 'textarea') {
 						if (isset($item['buttons']) && !empty($item['buttons']) && is_array($item['buttons'])) {
 							$content = '';
 							foreach ($item['buttons'] as $button) {
@@ -1155,7 +1158,7 @@ class MLConfigurator {
 					}
 					$html .= '
 						</tr>';
-					if ($item['type'] == 'textarea') {
+					if (isset($item['type']) && $item['type'] == 'textarea') {
 						if (isset($item['externalDesc']) && !empty($item['externalDesc'])) {
 							$html .= '
 							<tr>

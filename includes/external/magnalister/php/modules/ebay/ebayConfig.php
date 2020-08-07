@@ -1,19 +1,17 @@
 <?php
 /**
- * 888888ba                 dP  .88888.                    dP                
- * 88    `8b                88 d8'   `88                   88                
- * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b. 
- * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88 
- * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88 
- * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P' 
+ * 888888ba                 dP  .88888.                    dP
+ * 88    `8b                88 d8'   `88                   88
+ * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b.
+ * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88
+ * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88
+ * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P'
  *
  *                          m a g n a l i s t e r
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: ebayConfig.php 733 2011-01-21 07:42:58Z derpapst $
- *
- * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2019 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -256,6 +254,18 @@ $form = loadConfigForm($_lang,
 	)
 );
 
+tokenAvailable(); //each time, so that we have the correct token expiration time
+$blResult = false;
+try {
+    $aResponse = MagnaConnector::gi()->submitRequest(array(
+        'ACTION' => 'CheckPaymentProgramAvailability',
+    ));
+    $blResult = isset($aResponse['IsAvailable']) ? $aResponse['IsAvailable'] : false;
+} catch (MagnaException $oEx) {
+}
+if (!$blResult) {
+    unset($form['orderRefund']);
+}
 $cG = new MLConfigurator($form, $_MagnaSession['mpID'], 'conf_ebay');
 
 $boxes = '';
@@ -272,33 +282,20 @@ if (   (!is_array($auth) || !$auth['state'])
 
 if (array_key_exists('conf', $_POST)) {
 	$nUser = trim($_POST['conf']['ebay.username']);
-	$nPass = trim($_POST['conf']['ebay.password']);
 	$nSite = $_POST['conf']['ebay.site'];
 	setDBConfigValue('ebay.site', $_MagnaSession['mpID'], $nSite, true);
-
-    if (!empty($nUser) && (getDBConfigValue('ebay.password', $_MagnaSession['mpID']) == '__saved__') && empty($nPass)) {
-        $nPass = '__saved__'; 
-    }
-
-    if ((strpos($nPass, '&#9679;') === false) && (strpos($nPass, '&#8226;') === false)) {
-
-        if (!empty($nUser) && !empty($nPass)) {
+        if (!empty($nUser)) {
             try {
                 $result = MagnaConnector::gi()->submitRequest(array(
                     'ACTION' => 'SetCredentials',
                     'USERNAME' => $nUser,
-                    'PASSWORD' => $nPass,
                 ));
             } catch (MagnaException $e) {
                 $boxes .= '
                     <p class="errorBox">'.ML_GENERIC_STATUS_LOGIN_SAVEERROR.'</p>
                 ';
             }
-        } else {
-            $boxes .= '
-                <p class="errorBox">'.ML_ERROR_INVALID_PASSWORD.'</p>';
-	    }
-	}
+        }
 
 	// Business Policies / Shipping Seller Profile: set the shipping discount rules as the Profile defines
 	if (array_key_exists('ebay.default.shippingsellerprofile', $_POST['conf'])) {
@@ -382,12 +379,15 @@ if (isset($currencyError) && (getCurrencyFromMarketplace($_MagnaSession['mpID'])
 	$boxes .= $currencyError;
 }
 
-$form['ebayaccount']['fields']['site']['values'] = $magnaConfig['ebay']['sites'];
+$form['ebayaccount']['fields']['site']['values'] = isset($magnaConfig['ebay']['sites'])? $magnaConfig['ebay']['sites']: array();
+$magnaConfig['ebay']['currencies'] = isset($magnaConfig['ebay']['currencies'])? $magnaConfig['ebay']['currencies']: array();
 if ($nSite !== null) {
 	$curVal = array();
-	foreach ($magnaConfig['ebay']['currencies'][$nSite] as $cur) {
-		$curVal[$cur] = $cur;
-	}
+	if(isset($magnaConfig['ebay']['currencies'][$nSite])) {
+        foreach ($magnaConfig['ebay']['currencies'][$nSite] as $cur) {
+            $curVal[$cur] = $cur;
+        }
+    }
 	$form['ebayaccount']['fields']['currency']['values'] = $curVal;
 	$form['ebayaccount']['fields']['site']['ajaxlinkto']['initload'] = false;
 }
@@ -526,7 +526,7 @@ if (!$auth['state']) {
 	if (!MagnaDB::gi()->columnExistsInTable('products_status', TABLE_PRODUCTS)) {
 		unset($form['listingdefaults']['fields']['Statusfilter']);
 	}
-	$form['location']['fields']['country']['values'] = $magnaConfig['ebay']['countries'];
+	$form['location']['fields']['country']['values'] = isset($magnaConfig['ebay']['countries']) ? $magnaConfig['ebay']['countries']:array();
 	mlGetCustomersStatus($form['fixedsettings']['fields']['whichprice'], true);
 	if (!empty($form['fixedsettings']['fields']['whichprice'])) {
 		$form['fixedsettings']['fields']['whichprice']['values']['0'] = ML_LABEL_SHOP_PRICE;
@@ -642,20 +642,29 @@ if (!$auth['state']) {
 	# Bestellstatus-Sync
 	mlGetOrderStatus($form['orderSyncState']['fields']['shippedstatus']);
 	mlGetOrderStatus($form['orderSyncState']['fields']['cancelstatus']);
-	
+	mlGetOrderStatus($form['orderRefund']['fields']['ebayrefundconfig']['params']['subfields']['status']);
+    $form['orderRefund']['fields']['ebayrefundconfig']['params']['subfields']['status']['values'] = array('--' => ML_AMAZON_LABEL_APPLY_PLEASE_SELECT) + $form['orderRefund']['fields']['ebayrefundconfig']['params']['subfields']['status']['values'];
 	mlGetShippingModules($form['import']['fields']['defaultshipping']);
 	mlGetPaymentModules($form['import']['fields']['defaultpayment']);
 
 	mlPresetTrackingCodeMatching($_MagnaSession['mpID'], 'ebay.orderstatus.carrier.dbmatching', 'ebay.orderstatus.trackingcode.dbmatching');
 
-	if (false === getDBConfigValue('ebay.imagepath', $_MagnaSession['mpID'], false)) {
-		#$form['listingdefaults']['fields']['imagepath']['default'] =
+	if (false == getDBConfigValue('ebay.imagepath', $_MagnaSession['mpID'], false)) {
 		$form['images']['fields']['imagepath']['default'] =
 			defined('DIR_WS_CATALOG_POPUP_IMAGES')
 				? HTTP_CATALOG_SERVER.DIR_WS_CATALOG_POPUP_IMAGES
 				: HTTP_CATALOG_SERVER.DIR_WS_CATALOG_IMAGES;
-		#setDBConfigValue('ebay.imagepath', $_MagnaSession['mpID'], $form['listingdefaults']['fields']['imagepath']['default'], true);
 		setDBConfigValue('ebay.imagepath', $_MagnaSession['mpID'], $form['images']['fields']['imagepath']['default'], true);
+	}
+	if (   'gambioProperties' == getDBConfigValue('general.options', 0, 'old')
+	    && ML_ShopAddOns::mlAddOnIsBooked('EbayPicturePack')) {
+		if (false == getDBConfigValue('ebay.imagepath.variations', $_MagnaSession['mpID'], false)) {
+			$form['images']['fields']['imagepathvariations']['default'] =
+				HTTP_CATALOG_SERVER.DIR_WS_CATALOG.DIR_WS_IMAGES.'product_images/properties_combis_images/';
+			setDBConfigValue('ebay.imagepath.variations', $_MagnaSession['mpID'], $form['images']['fields']['imagepathvariations']['default'], true);
+		}
+	} else {
+		unset($form['images']['fields']['imagepathvariations']);
 	}
 	# Bilder
 //	if (false === getDBConfigValue('ebay.gallery.imagepath', $_MagnaSession['mpID'], false)) {
@@ -1040,4 +1049,19 @@ $('input[id="conf_ebay.order.importonlypaid_false"]').change(function() {
 	ML_ShopAddOns::generateConfigPopup('EbayZeroStockAndRelisting', 'conf_ebay.autorelist', '#conf_ebay');
 	ML_ShopAddOns::generateConfigPopup('EbayZeroStockAndRelisting', 'conf_ebay.zerostockontrol', '#conf_ebay');
 	ML_ShopAddOns::generateConfigPopup('EbayPicturePack', 'conf_ebay.picturepack_val', '#conf_ebay','checkbox');
+}
+
+
+function mlEbayRefundConfig($args) {
+    global $_MagnaSession;
+    $sHtml = '<table class="inlinetable nowrap">';
+    $form = array();
+    $cG = new MLConfigurator($form, $_MagnaSession['mpID'], 'conf_ebay');
+
+    foreach ($args['subfields'] as $item) {
+        $idkey = str_replace('.', '_', $item['key']);
+        $sHtml .= '<tr><td>'.$cG->renderLabel($item['label'], $idkey).':</td><td>'.$cG->renderInput($item).'</td></tr>';
+    }
+    $sHtml .= '</table>';
+    return $sHtml;
 }

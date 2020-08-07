@@ -40,6 +40,8 @@ class MagnaCompatibleInventoryView {
 	protected $magnaShopSession = array();
 
 	protected $search = '';
+	protected $additionalParameters = array();
+	protected $saveDeletedLocally = true;
 
 	public function __construct($settings = array()) {
 		global $_MagnaShopSession, $_MagnaSession, $_url, $_modules;
@@ -88,8 +90,9 @@ class MagnaCompatibleInventoryView {
 				'LIMIT' => $this->settings['itemLimit'],
 				'OFFSET' => $this->offset,
 				'ORDERBY' => $this->sort['order'],
-				'SORTORDER' => $this->sort['type']
+				'SORTORDER' => $this->sort['type'],
 			);
+            $request = array_merge($request, $this->additionalParameters);
 			if (!empty($this->search)) {
 				#$request['SEARCH'] = (!magnalisterIsUTF8($this->search)) ? utf8_encode($this->search) : $this->search;
 				$request['SEARCH'] = $this->search;
@@ -200,7 +203,7 @@ class MagnaCompatibleInventoryView {
 						);
 					}
 
-					if ($result['STATUS'] == 'SUCCESS') {
+					if ($this->saveDeletedLocally && $result['STATUS'] == 'SUCCESS') {
 						MagnaDB::gi()->batchinsert(
 							TABLE_MAGNA_COMPAT_DELETEDLOG,
 							$insertData
@@ -245,7 +248,12 @@ class MagnaCompatibleInventoryView {
 				}
 
 				$item['MarketplaceTitle'] = $item['Title'];
-				$item['MarketplaceTitleShort'] = (mb_strlen($item['MarketplaceTitle'], 'UTF-8') > $this->settings['maxTitleChars'] + 2)
+				if(function_exists('mb_strlen')) {
+                    $iLengthOfMarketplaceTitle = mb_strlen($item['MarketplaceTitle'], 'UTF-8');
+                } else {
+                    $iLengthOfMarketplaceTitle = strlen($item['MarketplaceTitle']);
+                }
+				$item['MarketplaceTitleShort'] = ($iLengthOfMarketplaceTitle > $this->settings['maxTitleChars'] + 2)
 					? (fixHTMLUTF8Entities(mb_substr($item['MarketplaceTitle'], 0, $this->settings['maxTitleChars'], 'UTF-8')) . '&hellip;')
 					: fixHTMLUTF8Entities($item['MarketplaceTitle']);
 
@@ -259,7 +267,13 @@ class MagnaCompatibleInventoryView {
 				if (!empty($sTitle)) {
 					$item['Title'] = $sTitle;
 				}
-				$item['TitleShort'] = (mb_strlen($item['Title'], 'UTF-8') > $this->settings['maxTitleChars'] + 2)
+
+                if(function_exists('mb_strlen')) {
+                    $iLengthOfTitle = mb_strlen($item['Title'], 'UTF-8');
+                } else {
+                    $iLengthOfTitle = strlen($item['Title']);
+                }
+				$item['TitleShort'] = ($iLengthOfTitle > $this->settings['maxTitleChars'] + 2)
 						? (fixHTMLUTF8Entities(mb_substr($item['Title'], 0, $this->settings['maxTitleChars'], 'UTF-8')).'&hellip;')
 						: fixHTMLUTF8Entities($item['Title']);
 			}

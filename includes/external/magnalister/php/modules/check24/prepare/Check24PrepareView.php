@@ -202,7 +202,7 @@ class Check24PrepareView extends MagnaCompatibleBase {
 					<td colspan="3"><h4>' . ML_CHECK24_SHIPPING . '</h4></td>
 				</tr>
 				<tr class="' . (($oddEven = !$oddEven) ? 'odd' : 'even') . '">
-					<th>' . ML_CHECK24_SHIPPING_TIME . '</th>
+					<th>' . ML_RICARDO_AVAILABILITY . '</th>
 					<td class="input">
 						<select name="ShippingTime">';
 			foreach (array_slice(range(0, 30), 1, null, true) as $sKey => $sVal) {

@@ -1,0 +1,62 @@
+{
+    "price": {
+        "headline": "Price Calculation",
+        "fields": {
+            "price": {
+                "label": "Price",
+                "desc": "Specify a percentage or fixed price markup or markdown. Markdown with a minus (-) sign before it.",
+                "key": "_#_platform_#_.price.addkind",
+                "type": "selection",
+                "values": {
+                    "percent": "x% markup or markdown",
+                    "addition": "x fix markup or markdown"
+                },
+                "default": "percent",
+                "morefields": {
+                    "cost": {
+                        "key": "_#_platform_#_.price.factor",
+                        "type": "text",
+                        "default": "0",
+                        "verify": "float",
+                        "cssClasses": [
+                            "autoWidth",
+                            "rightSpacer"
+                        ],
+                        "formatstr": "%.2f"
+                    },
+                    "signaluse": {
+                        "label": "Treshold price",
+                        "desc": "The threshold price is taken as the decimal place at your price when you transfer the data to Google Shopping.<br/><br/>\n\t\t\t\t\t\t           <strong>Example:</strong> <br />\n\t\t\t\t\t\t\t\t   Value in text field: 99 <br />\n\t\t\t\t\t\t\t\t   Original price: 5.58 <br />\n\t\t\t\t\t\t\t\t   Final result: 5.99 <br /><br />\n\t\t\t\t\t\t           This function is particularly useful for percentage markups and markdowns.<br/>\n\t\t\t\t\t\t           If you do not want to transfer a threshold price, leave the field blank.<br/>\n\t\t\t\t\t\t           The input format is a integer number with a maximum of 2 digits.",
+                        "key": "_#_platform_#_.price.signal",
+                        "type": "text",
+                        "cssClasses": [
+                            "autoWidth"
+                        ]
+                    }
+                }
+            },
+            "whichprice": {
+              "label": "Price Option",
+              "leftlabel": "Price from customer group",
+              "key": "_#_platform_#_.price.group",
+              "type": "selection",
+              "values": null,
+              "cssClasses": [
+                "rightSpacer"
+              ],
+              "morefields": {
+                "cost": {
+                  "key": "_#_platform_#_.price.usespecialoffer",
+                  "type": "checkbox",
+                  "values": {
+                    "val": "use special pricing"
+                  },
+                  "default": {
+                    "val": false
+                  }
+                }
+              }
+            }
+        }
+    }
+}

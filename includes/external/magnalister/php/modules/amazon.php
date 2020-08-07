@@ -33,8 +33,8 @@ loadDBConfig($_MagnaSession['mpID']);
 
 $requiredConfigKeys = $_modules[$_MagnaSession['currentPlatform']]['requiredConfigKeys'];
 $authConfigKeys = array(
-	'amazon.username',
-	'amazon.password',
+	/*'amazon.username',
+	'amazon.password',*/
 	'amazon.marketplaceid',
 	'amazon.merchantid',
 	'amazon.site',

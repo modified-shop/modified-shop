@@ -38,7 +38,7 @@ $queries[] = '
 	CREATE TABLE IF NOT EXISTS '.TABLE_MAGNA_COMPAT_CATEGORYMATCHING.' (
 		mpID int(11) NOT NULL,
 		products_id int(11) NOT NULL,
-		products_model varchar(255) NOT NULL,
+		products_model varchar(64) NOT NULL,
 		mp_category_id varchar(255) NOT NULL,
 		store_category_id varchar(255) NOT NULL,
 		UNIQUE KEY UniqueEntry (mpID,products_id,products_model)

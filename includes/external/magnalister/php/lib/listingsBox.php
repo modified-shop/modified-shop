@@ -83,6 +83,18 @@ function generateListingsBox() {
         } else {//he cancled contract
             $tarif = sprintf(ML_RATE_END, $currentRate, $contractends);
         }
+
+    $isGambioCloudFreePlan = false;
+    if (defined('SHOPSYSTEM_GAMBIO_CLOUD') && SHOPSYSTEM_GAMBIO_CLOUD === true) {
+        if ((int)$usedListings < 20) {
+            $listings['available'] = 20;
+            $isGambioCloudFreePlan = true;
+            $tarif = 'Gambio Cloud';
+        } else {
+            $tarif = 'Gambio Cloud '.$tarif;
+        }
+    }
+
 	$tarif ='
 		<tr>
 			<th>'.ML_LABEL_RATE.':</th>
@@ -124,7 +136,7 @@ function generateListingsBox() {
 					'.sprintf(ML_TEXT_LISTING_EXCEEDED, ($listings['used'] - $listings['available']), $magnaConfig['maranon']['ShopID']).'
 				</td></tr>';
 		
-		} else if (($percent >= 80) && ($magnaConfig['maranon']['Tariff'] != 'FreeTrial')) {
+		} else if (($percent >= 80) && ($magnaConfig['maranon']['Tariff'] != 'FreeTrial') && $isGambioCloudFreePlan === false) {
 			$upgrade = '
 				<tr><th>'.ML_LABEL_LISTINGS_UPGRADE_HEADLINE.'</th><td>
 					'.sprintf(ML_TEXT_LISTING_ALMOST_EMPTY, 

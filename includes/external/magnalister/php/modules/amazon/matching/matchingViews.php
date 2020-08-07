@@ -100,6 +100,13 @@ function renderDetailView($product) {
 				<td>'.$product['products_details']['manufacturer'].'</td>
 			</tr>';
 	}
+    if (!empty($product['products_details']['manufacturer_model'])) {
+        $html .= '
+			<tr>
+				<th class="smallwidth">'.ML_GENERIC_MANUFACTURER_PARTNO.':</th>
+				<td>'.$product['products_details']['manufacturer_model'].'</td>
+			</tr>';
+    }
 	if (!empty($product['products_details']['model'])) {
 		$html .= '
 			<tr>

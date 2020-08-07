@@ -296,6 +296,11 @@ class MagnaUpdater {
 
 		$tdata = fileGetContents($origin.$name, $foobar, -1);
 		if ($tdata === false) {
+		// happened that it didn't succeed at first, wait a bit
+			usleep(rand(300000, 987654));
+			$tdata = fileGetContents($origin.$name, $foobar, -1);
+		}
+		if ($tdata === false) {
 			$this->updaterAllErrors[] = array('file' => $name, 'error' => MagnaUpdaterFailedOnLoadingFile);
 			return MagnaUpdaterFailedOnLoadingFile;
 		}

@@ -161,3 +161,89 @@ function magnaGetInvolvedMPIDs($marketplace) {
 	}
 	return $mpIDs;
 }
+
+function magnaResetEbayOrderStatus20191206() {
+	// prevent multiple usage
+	if ('1' == getDBConfigValue('ResetOrderStatus20191206', 0, 0)) return;
+	$mpIDs = magnaGetIDsByMarketplace('ebay');
+	$mpIDsList = implode(',', $mpIDs);
+	// fetch status sync config for eBay
+	$aStats = MagnaDB::gi()->fetchArray('SELECT mpID, mkey, value
+		 FROM magnalister_config
+		WHERE mkey in (\'ebay.orderstatus.sync\', \'ebay.orderstatus.open\', \'ebay.orderstatus.shipped\', \'ebay.orderstatus.cancelled\')
+		  AND mpID in ('.$mpIDsList.')
+		ORDER BY mpID');
+	$aStatsByMpId = array();
+	foreach ($mpIDs as $mpID) {
+		$aStatsByMpId[$mpID] = array();
+	}
+	foreach ($aStats as $aStat) {
+		$aStatsByMpId[$aStat['mpID']][$aStat['mkey']] = $aStat['value'];
+	}
+	// take only the mpIDs where sync is on
+	foreach ($mpIDs as $no => $mpID) {
+		if ($aStatsByMpId[$mpID]['ebay.orderstatus.sync'] <> 'auto') {
+			unset($aStatsByMpId[$mpID]);
+			unset($mpIDs[$no]);
+		}
+	}
+	$aDoneStats = array();
+	// fetch relevant stats
+	foreach ($aStatsByMpId as $aStatByMpId) {
+		foreach ($aStatByMpId as $mkey => $val) {
+			if (    ('ebay.orderstatus.shipped'   == $mkey)
+			     || ('ebay.orderstatus.cancelled' == $mkey)) {
+				$aDoneStats[] = $val;
+			}
+		}
+	}
+	array_unique($aDoneStats);
+	$doneStatsList = implode(',', $aDoneStats);
+	do {
+		// find orders
+		$aOrdersIds =  MagnaDB::gi()->fetchArray('SELECT orders_id, MAX(date_added) 
+			 FROM '.TABLE_ORDERS_STATUS_HISTORY.'
+			WHERE orders_status_id in ('.$doneStatsList.')
+			  AND date_added BETWEEN \'2019-12-05 11:00:00\' AND \'2019-12-06 11:00:00\'
+			GROUP BY orders_id');
+		$orderIdsList = '';
+		foreach ($aOrdersIds as $aOrdersId) {
+			$orderIdsList .= ','.$aOrdersId['orders_id'];
+		}
+		$orderIdsList = ltrim($orderIdsList , ',');
+		if (empty($orderIdsList)) {
+			break;
+		}
+		// find out which are from eBay
+		$aOrdersIdsInMLTable = MagnaDB::gi()->fetchArray('SELECT orders_id, mpID
+			 FROM magnalister_orders
+			WHERE platform=\'ebay\'
+			  AND orders_id IN ('.$orderIdsList.')');
+		if (empty($aOrdersIdsInMLTable)) {
+			break;
+		}
+		$aOrdersIdsByMpId = array();
+		foreach ($mpIDs as $mpID) {
+			$aOrdersIdsByMpId[$mpID] = '';
+		}
+		foreach ($aOrdersIdsInMLTable as $aOrder) {
+			$aOrdersIdsByMpId[$aOrder['mpID']] .= ",'".$aOrder['orders_id']."'";
+		}
+		foreach ($mpIDs as $mpID) {
+			$aOrdersIdsByMpId[$mpID] = ltrim($aOrdersIdsByMpId[$mpID], ',');
+		}
+		if (empty($aOrdersIdsByMpId)) {
+			break;
+		}
+		// reset send status
+		foreach ($mpIDs as $mpID) {
+			$q = 'UPDATE `magnalister_orders`
+				  SET `orders_status` = \''.$aStatsByMpId[$mpID]['ebay.orderstatus.open'].'\'
+				WHERE `orders_id` IN ('.$aOrdersIdsByMpId[$mpID].')';
+			MagnaDB::gi()->query($q);
+		}
+	} while(false);
+	// config setting to prevent multiple usage
+	MagnaDB::gi()->query('REPLACE INTO magnalister_config(mpID, mkey, value)
+		VALUES(0, \'ResetOrderStatus20191206\', 1)');
+}

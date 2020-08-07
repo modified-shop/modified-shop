@@ -42,8 +42,8 @@ if ('de' == $_langISO) {
 		-moz-box-sizing: border-box; box-sizing: border-box; -webkit-box-sizing: border-box; 
 		min-height: 500px;
 		margin-bottom: 5px;" 
-	src="//wiki.magnalister.com/wiki/Hauptseite">
-	<a href="http://wiki.magnalister.com/wiki/Hauptseite">http://wiki.magnalister.com/</a>
+	src="//otrs.magnalister.com/otrs/public.pl?Action=PublicFAQExplorer;CategoryID=5">
+	<a href="https://otrs.magnalister.com/otrs/public.pl?Action=PublicFAQExplorer;CategoryID=5">https://otrs.magnalister.com/otrs/public.pl?Action=PublicFAQExplorer;CategoryID=5</a>
 </iframe>
 
 <script>/*<![CDATA[*/

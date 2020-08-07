@@ -345,6 +345,11 @@ class MagnaConnector {
 		$requestFields['CLIENTVERSION'] = LOCAL_CLIENT_VERSION;
 		$requestFields['CLIENTBUILDVERSION'] = CLIENT_BUILD_VERSION;
 		$requestFields['SHOPSYSTEM'] = SHOPSYSTEM;
+
+        if (defined('SHOPSYSTEM_GAMBIO_CLOUD') && SHOPSYSTEM_GAMBIO_CLOUD === true) {
+            $requestFields['SHOPSYSTEM'] = 'gambiocloud';
+        }
+
 	}
 
 	protected function decodeResponse($response, $timePerRequest) {
@@ -508,6 +513,9 @@ class MagnaConnector {
 		);
 		$this->setShortTimeCache($requestHash, $response);
 		
+		if (empty($response)) {
+			return array ('ERRORS' => array('Empty response from magnalister server'));
+		}
 		$result = $this->decodeResponse($response, $timePerRequest);
 		
 		$this->preprocessResult($result, $response, $timePerRequest);

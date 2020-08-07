@@ -1,0 +1,46 @@
+{
+    "login": {
+        "headline": "_#_platformName_#_ Account",
+        "fields": [{
+                "label": "Username",
+                "key": "_#_platform_#_.username",
+                "type": "text"
+            },
+            {
+                "label": "Password",
+                "key": "_#_platform_#_.password",
+                "type": "hidden"
+            },
+            {
+                "label": "Google Shopping Token",
+                "key": "forceRegenerateToken",
+                "desc": "To apply for an Google Shopping Token, please click the button.<br>\n\t\t\t\t    If no pop-up window to Google account selection appear, please check your pop-up blocker.<br><br>\n\t\t\t\t\tThe Token is neccessary to submit data between your shop-system and Google Shopping via an application as magnalister.<br>\n\t\t\t\t\tPlease follow the instructions on the Google Shopping page, to apply for the Token and to connect your shop via magnalister.",
+                "type": "extern",
+                "procFunc": "GoogleshoppingConfigure::renderForceRegenerateTokenButton",
+                "params": [{"button":"Apply / Change Token"}]
+            },
+            {
+                "label": "Google Shopping Target Country",
+                "key": "_#_platform_#_.targetCountry",
+                "desc": "Select target country of sale.",
+                "type": "selection",
+                "default": "DE",
+                "ajaxlinkto": {
+                    "key": "_#_platform_#_.lang.match.googleshopping",
+                    "func": "GoogleShoppingUpdateSupportedLanguages",
+                    "initload": false
+                }
+            },
+            {
+                "label": "Google Shopping Currency",
+                "key": "_#_platform_#_.currency",
+                "desc": "Select shop currency you want to use for product upload on Google Shopping.<br>\n\t\t\t\tIf selected currency is not the preferred currency for Google Shopping target country of sale, Google Shopping will convert price and currency by its own exchange rate service and both prices will be displayed for given product.",
+                "type": "selection",
+                "verify": "notempty",
+                "values": {
+                    "": "Bitte erst Zielland w&auml;hlen"
+                }
+            }
+        ]
+    }
+}

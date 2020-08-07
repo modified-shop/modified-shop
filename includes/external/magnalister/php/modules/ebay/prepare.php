@@ -40,6 +40,7 @@ function eBayGetSelection() {
             .' PrimaryCategory, SecondaryCategory, StoreCategory, StoreCategory2, '
             .' Attributes, ItemSpecifics, eBayPicturePackPurge, VariationDimensionForPictures, GalleryType, '
             .' ListingType, ListingDuration, PaymentMethods, ShippingDetails, SellerProfiles, DispatchTimeMax, ePID '
+            .', mwst'
             .' FROM '.TABLE_MAGNA_EBAY_PROPERTIES .' ep, '.TABLE_MAGNA_SELECTION.' ms, '
             . TABLE_PRODUCTS .' p, ' . TABLE_PRODUCTS_DESCRIPTION .' pd '
             .' WHERE ep.products_model = p.products_model '
@@ -62,6 +63,7 @@ function eBayGetSelection() {
             .' PrimaryCategory, SecondaryCategory, StoreCategory, StoreCategory2, '
             .' Attributes, ItemSpecifics, eBayPicturePackPurge, VariationDimensionForPictures, GalleryType, '
             .' ListingType, ListingDuration, PaymentMethods, ShippingDetails, SellerProfiles, DispatchTimeMax , ePID'
+            .', mwst'
             .' FROM '.TABLE_MAGNA_EBAY_PROPERTIES .' ep, '.TABLE_MAGNA_SELECTION.' ms, '
             . TABLE_PRODUCTS_DESCRIPTION .' pd, '.TABLE_PRODUCTS.' p '
             .' WHERE p.products_id=pd.products_id and ep.products_id = ms.pID AND ep.mpID = ms.mpID  AND pd.products_id = ep.products_id '
@@ -132,11 +134,13 @@ function eBayGetSelection() {
     if (!empty($matchingSelection)) {
 	foreach ($matchingSelection as $mrow) {
 		foreach ($dbSelection as &$dbrow) {
-			if ($keytypeIsArtNr && $mrow['products_model'] == $dbrow['products_model']) {
+			if (
+			    ($keytypeIsArtNr && $mrow['products_model'] == $dbrow['products_model'])
+            ||
+			    (!$keytypeIsArtNr && $mrow['products_id'] == $dbrow['products_id'])
+            ) {
 				$dbrow['ePID'] = $mrow['ePID'];
-			}
-			if (!$keytypeIsArtNr && $mrow['products_id'] == $dbrow['products_id']) {
-				$dbrow['ePID'] = $mrow['ePID'];
+                $dbrow['mwst'] = (int)$mrow['mwst'];
 			}
 		}
 	}
@@ -188,6 +192,10 @@ function eBayGetSelection() {
         }
         if(empty($current_row['GalleryType'])){
             $current_row['GalleryType'] = getDBConfigValue('ebay.gallery.type', $_MagnaSession['mpID'], 'Gallery');
+        }
+
+        if(empty($current_row['mwst'])){
+            $current_row['mwst'] = getDBConfigValue('ebay.mwst', $_MagnaSession['mpID'], 0);
         }
     }
 

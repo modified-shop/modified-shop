@@ -87,11 +87,23 @@ class MagnaDBDriverMysqli extends MagnaDBDriver {
 			$this->access['sock'] = $this->access['host'];
 			$this->access['host'] = '.';
 		} else if (strpos($this->access['host'], '.sock') !== false) {
+			// modified >= 2.0.5.0:
+			$blMsock3 = false;
+			if (is_file(DIR_FS_INC.'get_database_version.inc.php')) {
+				require_once(DIR_FS_INC.'get_database_version.inc.php');
+				$modified_shop_version = get_database_version();
+				if ($shop_version['plain'] >= '2.0.5.0') {
+					$blMsock3 = true;
+				}
+			}
 			$this->access['type'] = 'socket'; // Unix domain sockets use the file system as their address name space.
 			$msock = array();
 			if (preg_match('/^([^\:]+)\:(.*)$/', $this->access['host'], $msock)) {
 				$this->access['host'] = $msock[1];
 				$this->access['sock'] = $msock[2];
+				if ($blMsock3) {
+					$this->access['sock'] = $msock[3];
+				}
 			} else {
 				$this->access['sock'] = $this->access['host'];
 				$this->access['host'] = '';
@@ -886,6 +898,7 @@ class MagnaDB {
 	protected function initSession() {
 		global $_MagnaSession, $_MagnaShopSession;
 		
+		if (!defined('TABLE_MAGNA_SESSION')) define('TABLE_MAGNA_SESSION', 'magnalister_session');
 		if ($this->tableExists(TABLE_MAGNA_SESSION)) {
 			$this->sessionLifetime = (int)ini_get("session.gc_maxlifetime");
 			$this->sessionGarbageCollector();

@@ -24,7 +24,7 @@ $functions = array();
 $queries[] = 'CREATE TABLE IF NOT EXISTS `' . TABLE_MAGNA_IDEALO_PROPERTIES . '` (
 	`mpID` int(11) NOT NULL,
 	`products_id` int(11) NOT NULL,
-	`products_model` varchar(255) NOT NULL,
+	`products_model` varchar(64) NOT NULL,
 	`Title` varchar(255),
   	`Description` text,
   	`PictureUrl` text,

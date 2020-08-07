@@ -79,6 +79,18 @@ class EtsyInventoryView extends MagnaCompatibleInventoryView {
 	                           AND pd.language_id='.$language.'
 	                           AND CONCAT(\'ML\',p.products_id) IN ('.$SKUlist.')
 	                ');
+	                $ShopDataForSimpleItems2 = MagnaDB::gi()->fetchArray('
+	                    SELECT DISTINCT p.products_id SKU, p.products_id products_id, 
+	                           CAST(p.products_quantity AS SIGNED) ShopQuantity, p.products_price ShopPrice,
+	                           pd.products_name ShopTitle
+	                      FROM '.TABLE_PRODUCTS.' p, '.TABLE_PRODUCTS_DESCRIPTION.' pd
+	                     WHERE p.products_id=pd.products_id
+	                           AND pd.language_id='.$language.'
+	                           AND p.products_id IN ('.$SKUlist.')
+	                ');
+	                if (!empty($ShopDataForSimpleItems2)) {
+	                    $ShopDataForSimpleItems = array_merge($ShopDataForSimpleItems,$ShopDataForSimpleItems2);
+	                }
 	            }
 				if (getDBConfigValue('general.options', '0', 'old') == 'gambioProperties') {
 					if ('artNr' == getDBConfigValue('general.keytype', '0')) {
@@ -125,6 +137,9 @@ class EtsyInventoryView extends MagnaCompatibleInventoryView {
 	                if (empty($aSkusWithExistingMaster)) {
 	                    $ShopDataForVariationItems = array();
 	                } else {
+			    if (('utf8' == $character_set_system) && ('utf8' != $character_set_client)) {
+				arrayEntitiesToLatin1($aSkusWithExistingMaster);
+			    }
 	                    $sSkusWithExistingMaster = '"'.implode('", "', $aSkusWithExistingMaster).'"';
 	                    $ShopDataForVariationItems = MagnaDB::gi()->fetchArray(eecho('
 	                        SELECT DISTINCT v.'.mlGetVariationSkuField().' AS SKU, v.variation_products_model AS SKUDeprecated,
@@ -196,8 +211,8 @@ class EtsyInventoryView extends MagnaCompatibleInventoryView {
 			'SKU' => array (
 				'Label' => ML_LABEL_SKU,
 				'Sorter' => 'sku',
-				'Getter' => null,
-				'Field' => 'SKU'
+				'Getter' => 'getSKU',
+				'Field' => null
 			),
 			'ShopTitle' => array (
 				'Label' => ML_LABEL_SHOP_TITLE,
@@ -248,6 +263,10 @@ class EtsyInventoryView extends MagnaCompatibleInventoryView {
  				'Field' => null
  			),
 		);
+	}
+
+	protected function getSKU($item) {
+		return '<td>'.fixHTMLUTF8Entities($item['SKU'], ENT_COMPAT).'</td>';
 	}
 
 	protected function getMpTitle($item) {

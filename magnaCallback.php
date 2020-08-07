@@ -11,9 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id$
- *
- * (c) 2010 - 2013 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2019 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -22,7 +20,6 @@ defined('E_RECOVERABLE_ERROR') OR define('E_RECOVERABLE_ERROR', 0x1000);
 defined('E_DEPRECATED')        OR define('E_DEPRECATED',        0x2000);
 defined('E_USER_DEPRECATED')   OR define('E_USER_DEPRECATED',   0x4000);
 defined('PHP_INT_MAX')         OR define('PHP_INT_MAX',     2147483647); // for PHP < 5.0.5
-
 
 //The timestamp of the start of the request. Available since PHP 5.1.0.
 $_SERVER['REQUEST_TIME'] = isset($_SERVER['REQUEST_TIME']) ? $_SERVER['REQUEST_TIME'] : time();
@@ -531,6 +528,7 @@ function magnaActivated() {
 		$_magnaIsActivated = false;
 		return $_magnaIsActivated;
 	}
+	if (!defined('TABLE_ADMIN_ACCESS')) define('TABLE_ADMIN_ACCESS', 'admin_access');
 	if (MagnaDB::gi()->tableExists(TABLE_ADMIN_ACCESS)) {
 		$adminAccess = MagnaDB::gi()->fetchRow('SELECT * FROM '.TABLE_ADMIN_ACCESS.' LIMIT 1');
 		$_magnaIsActivated = isset($adminAccess['magnalister']) && MagnaDB::gi()->tableExists(TABLE_MAGNA_CONFIG);
@@ -645,7 +643,7 @@ function magnaCallbackRun() {
 			echo 'Floats are represented with "," instead of ".". '.
 			     'The behavior could not be changed. '.
 			     'Please contact your administrator to fix this issue.';
-			die();
+			return; // do nothing
 		}
 	}
 	unset($str);
@@ -716,6 +714,17 @@ function magnaCallbackRun() {
 	define('DIR_MAGNALISTER_WS_IMAGECACHE', DIR_MAGNALISTER_WS_CACHE.'images/');
 	define('DIR_MAGNALISTER_WS_IMAGES',     DIR_MAGNALISTER_WS.'images/');
 
+    // HTTP_CATALOG_SERVER defined only in admin area, used by some magnaCallback called functions
+    if (!defined('HTTP_SERVER')) {
+        $sServer = '';
+        if (isset($_SERVER) && array_key_exists('HTTP_HOST', $_SERVER)) {
+            $sServer = $_SERVER['HTTP_HOST'];
+        }
+    } else {
+        $sServer = HTTP_SERVER;
+    }
+    defined('HTTP_CATALOG_SERVER') OR define('HTTP_CATALOG_SERVER', $sServer);
+
 	/* Issued a compart check (eiter get or post)? */
 	if ((MAGNA_CALLBACK_MODE == 'STANDALONE') && array_key_exists('function', $_REQUEST) && ($_REQUEST['function'] == 'magnaCompartCheck')) {
 		echo magnaEncodeResult(magnaCompartCheck());
@@ -749,11 +758,29 @@ function magnaCallbackRun() {
 			define('ML_GAMBIO_USE_IFRAME', true);
 		}
 	}
+
+    // DB Update trigger for Gambio Cloud
+    if (MagnaDB::gi()->recordExists(TABLE_MAGNA_CONFIG, array(
+        'mpID' => 0,
+        'mkey' => 'trigger.dbupdate',
+        'value' => 'true',
+    ))) {
+        require_once(DIR_MAGNALISTER_FS.'MagnaUpdater.php');
+        $mlUpdater = new MagnaUpdater(0, 0);
+        $mlUpdater->updateDatabase();
+        MagnaDB::gi()->update(TABLE_MAGNA_CONFIG, array(
+            'value' => 'false'
+        ), array(
+            'mpID' => 0,
+            'mkey' => 'trigger.dbupdate',
+        ));
+    }
+
 	/* Language-Foo */
 	$_magnaAvailableLanguages = magnaGetAvailableLanguages();
 	$defaultLanguage = MagnaDB::gi()->fetchOne('
 	    SELECT directory
-	      FROM '.TABLE_LANGUAGES.' l, '.TABLE_CONFIGURATION.' c
+	      FROM '.TABLE_LANGUAGES.' l, '.TABLE_CONFIGURATION_MLDEF.' c
 	     WHERE c.configuration_key = "DEFAULT_LANGUAGE"
 	           AND c.configuration_value = l.code
 	     LIMIT 1
@@ -915,7 +942,11 @@ if (MAGNA_CALLBACK_MODE == 'STANDALONE') {
 			'POST'    => $_POST,
 			'COOKIE'  => $_COOKIE
 		);
-		$_GET['language'] = '__notExistingLanguageToForceDefault__';
+		// Gambio 4.1 and newer doesn't like our language placeholder
+		if (    !file_exists(dirname(__FILE__).'/GambioCore/Application/Kernel/Bootstrapper/Language/LanguageFinder.php')
+		     && !file_exists(dirname(__FILE__).'/GambioCore/Language/Services/LanguageService.php')) {
+			$_GET['language'] = '__notExistingLanguageToForceDefault__';
+		}
 		require_once('includes/application_top.php');
 
 		/* Kein MagicQuotes mist mitmachen... */

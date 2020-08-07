@@ -1,0 +1,49 @@
+{
+    "login": {
+        "headline": "_#_platformName_#_ Zugangsdaten",
+        "fields": [{
+                "label": "Merchant Account ID",
+                "key": "_#_platform_#_.merchantid",
+                "desc": "If you own Google Shopping Multi Client Account, please, enter sub-account ID you want to use.",
+                "type": "text",
+                "submit": "Access.MerchantId"
+        },
+            {
+                "label": "Password",
+                "key": "_#_platform_#_.password",
+                "type": "hidden"
+            },
+            {
+                "label": "Google Shopping Token",
+                "desc": "Um einen neuen Google Shopping-Token zu beantragen, klicken Sie bitte auf den Button.<br>\n\t\t\t\t    Sollte kein Fenster zu Google Shopping aufgehen, wenn Sie auf den Button klicken, haben Sie einen Pop-Up Blocker aktiv.<br><br>\n\t\t\t\t\tDer Token ist notwendig, um &uuml;ber elektronische\tSchnittstellen wie den magnalister Artikel auf Google Shopping einzustellen und zu verwalten.<br>\n\t\t\t\t\tFolgen Sie von da an den Anweisungen auf der Google Shopping Seite, um den Token zu beantragen und Ihren Online-Shop &uuml;ber magnalister mit Google Shopping zu verbinden.",
+                "key": "forceRegenerateToken",
+                "type": "extern",
+                "procFunc": "GoogleshoppingConfigure::renderForceRegenerateTokenButton",
+                "params": [{"button": "Token beantragen / &auml;ndern"}]
+            },
+            {
+                "label": "Google Shopping Zielland",
+                "key": "_#_platform_#_.targetCountry",
+                "desc": "W&auml;hlen Sie das Zielland des Verkaufs aus.",
+                "type": "selection",
+                "default": "DE",
+                "ajaxlinkto": {
+                    "key": "_#_platform_#_.lang.match.googleshopping",
+                    "func": "GoogleShoppingUpdateSupportedLanguages",
+                    "type": "selection",
+                    "initload": false
+                }
+            },
+            {
+                "label": "Google Shopping W&auml;hrung",
+                "key": "_#_platform_#_.currency",
+                "desc": "Wählen Sie die Shop-W&auml;hrung aus, die Sie f&uuml;r den Produkt-Upload bei Google Shopping verwenden m&ouml;chten.<br>\n\t\t\t\tWenn die gew&auml;hlte W&auml;hrung nicht die bevorzugte W&auml;hrung f&uuml;r das Zielland des Google Shopping ist, konvertiert Google Shopping Preis und W&auml;hrung mit einem eigenen Wechselkursdienst und beide Preise werden f&uuml;r das jeweilige Produkt angezeigt.",
+                "type": "selection",
+                "verify": "notempty",
+                "values": {
+                    "": "Bitte erst Zielland w&auml;hlen"
+                }
+            }
+        ]
+    }
+}

@@ -29,7 +29,7 @@ function ml_db_update_replaceOldHitmeisterTableWithNew() {
 		CREATE TABLE IF NOT EXISTS `".TABLE_MAGNA_HITMEISTER_PREPARE."` (
 			`mpID` int(8) NOT NULL,
 			`products_id` int(11) NOT NULL,
-			`products_model` varchar(255) NOT NULL,
+			`products_model` varchar(64) NOT NULL,
 			`EAN` VARCHAR(30) DEFAULT NULL,
 			`MarketplaceCategoriesName` TEXT DEFAULT NULL,
 			`MarketplaceCategories` INT(11) DEFAULT NULL,

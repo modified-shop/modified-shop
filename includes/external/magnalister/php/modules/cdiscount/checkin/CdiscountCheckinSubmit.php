@@ -171,7 +171,7 @@ class CdiscountCheckinSubmit extends MagnaCompatibleCheckinSubmit {
         $data['submit']['ManufacturerPartNumber'] = '';
 		$data['submit']['Price'] = $data['price'];
 		$data['submit']['Currency'] = $this->settings['currency'];
-		$data['submit']['Tax'] = !empty($product['Tax']) ? $product['Tax'] : 0;
+        $data['submit']['Tax'] = !empty($product['TaxPercent']) ? $product['TaxPercent'] : 0;
 		$data['submit']['Quantity'] = $data['quantity'] < 0 ? 0 : $data['quantity'];
 
 		$data['submit']['ShippingInfo'] =

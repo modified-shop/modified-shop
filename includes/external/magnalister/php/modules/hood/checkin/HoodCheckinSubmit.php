@@ -185,6 +185,7 @@ class HoodCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 	}
 
 	private function getProperties($pID, $product, &$data) {
+        MLProduct::gi()->setPriceConfig($this->priceConfig['Fixed']);
 		MLProduct::gi()->setOptions(array ('useGambioProperties' => true));
 		$p = MLProduct::gi()->getProductById($pID);
 		$vars = array();
@@ -419,6 +420,27 @@ class HoodCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 		}
 		
 		$this->appendOfferData($pID, $product, $data);
+
+		# Variation pictures, if any
+		if ($maxImages === true) $maxImages = 9999; // not constrained
+		while (    $maxImages > 0
+		        && (getDBConfigValue('general.options', '0', 'old') == 'gambioProperties')) {
+			$aPropertiesPics = MagnaDB::gi()->fetchArray('SELECT combi_image
+				FROM products_properties_combis
+				WHERE products_id = '.$pID.'
+				AND LENGTH(combi_image) > 1
+				ORDER BY products_properties_combis_id
+				LIMIT '.$maxImages);
+			if (empty($aPropertiesPics)) break;
+			if (    !array_key_exists('Images', $data['submit'])
+			     || !is_array($data['submit']['Images'])) {
+				$data['submit']['Images'] = array();
+			}
+			foreach($aPropertiesPics as $aPic) {
+				$data['submit']['Images'][] = array ('URL' => HTTP_CATALOG_SERVER.DIR_WS_CATALOG.DIR_WS_IMAGES.'product_images/properties_combis_images/'.$aPic['combi_image']);
+			}
+			break;
+		}
 		
 		# The BasePrice string(!) for the title depends on the price. So this has to be created once the price is
 		# known.

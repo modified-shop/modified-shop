@@ -906,19 +906,32 @@ function magnaSKU2aID($sku, $pId = false, $multiple = false) {
 		$multiVar = MagnaDB::gi()->fetchRow(eecho('
 			SELECT mv.products_id, mv.products_sku, mv.variation_attributes
 			  FROM '.TABLE_MAGNA_VARIATIONS.' mv, '.TABLE_PRODUCTS.' p
-			 WHERE ('.mlGetVariationSkuField().'="'.MagnaDB::gi()->escape($sku).'" OR variation_products_model="'.MagnaDB::gi()->escape($sku).'")
-			   AND mv.products_id=p.products_id AND mv.products_sku=p.products_model
+			 WHERE (mv.'.mlGetVariationSkuField().'="'.MagnaDB::gi()->escape($sku).'" OR mv.variation_products_model="'.MagnaDB::gi()->escape($sku).'")
+			   AND mv.products_id = p.products_id AND mv.products_sku = p.products_model
 			 LIMIT 1
 		', false));
-		if(empty($multiVar)) {
+
+		if (empty($multiVar)) {
 			// if products_model and _id don't match the product table
-			// leave the check out
+			// look if at least one matches
 			$multiVar = MagnaDB::gi()->fetchRow(eecho('
-				SELECT products_id, products_sku, variation_attributes
-				  FROM '.TABLE_MAGNA_VARIATIONS.'
-				 WHERE ('.mlGetVariationSkuField().'="'.MagnaDB::gi()->escape($sku).'" OR variation_products_model="'.MagnaDB::gi()->escape($sku).'")
-				 LIMIT 1
+			SELECT mv.products_id, mv.products_sku, mv.variation_attributes
+			  FROM '.TABLE_MAGNA_VARIATIONS.' mv, '.TABLE_PRODUCTS.' p
+			 WHERE (mv.'.mlGetVariationSkuField().' = "'.MagnaDB::gi()->escape($sku).'" OR mv.variation_products_model = "'.MagnaDB::gi()->escape($sku).'")
+			   AND mv.products_id = p.products_id
+			 LIMIT 1
 			', false));
+
+            // Do not make (AND (mv.products_id = p.products_id OR mv.products_sku = p.products_model) its really slow...
+            if (empty($multiVar)) {
+                $multiVar = MagnaDB::gi()->fetchRow(eecho("
+                    SELECT mv.products_id, mv.products_sku, mv.variation_attributes
+                      FROM ".TABLE_MAGNA_VARIATIONS." mv, ".TABLE_PRODUCTS." p
+                     WHERE     (mv.".mlGetVariationSkuField()." = '".MagnaDB::gi()->escape($sku)."' OR mv.variation_products_model = '".MagnaDB::gi()->escape($sku)."')
+                           AND mv.products_sku = p.products_model
+                    LIMIT 1
+                ", false));
+            }
 		}
 		if(!empty($multiVar)) {
 			// if key type is product model try to fetch the actual product_id
@@ -2080,13 +2093,21 @@ function cleanPrepareData() {
 }
 
 function magnaGetDefaultLanguageID() {
-	$lID = MagnaDB::gi()->fetchOne('
-		SELECT languages_id
-		  FROM '.TABLE_LANGUAGES.' l, '.TABLE_CONFIGURATION.' c
-		 WHERE c.configuration_key = \'DEFAULT_LANGUAGE\'
-		       AND c.configuration_value = l.code
-		 LIMIT 1
-	');
+	if (defined('DEFAULT_LANGUAGE')) {
+		$lID = MagnaDB::gi()->fetchOne("
+			SELECT languages_id
+			  FROM ".TABLE_LANGUAGES."
+			 WHERE code='".DEFAULT_LANGUAGE."'
+		");
+	} else {
+		$lID = MagnaDB::gi()->fetchOne('
+			SELECT languages_id
+			  FROM '.TABLE_LANGUAGES.' l, '.TABLE_CONFIGURATION_MLDEF.' c
+			 WHERE c.configuration_key = \'DEFAULT_LANGUAGE\'
+			       AND c.configuration_value = l.code
+			 LIMIT 1
+		');
+	}
 	if ($lID == false) {
 		/* very bad fallback, but one fallback at least. */
 		$lID = MagnaDB::gi()->fetchOne('

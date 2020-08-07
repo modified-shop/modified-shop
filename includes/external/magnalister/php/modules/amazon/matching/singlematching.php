@@ -91,6 +91,13 @@ if ($productsData['manufacturers_id'] > 0) {
 }
 
 $productsData[MAGNA_FIELD_PRODUCTS_EAN] = isset($productsData[MAGNA_FIELD_PRODUCTS_EAN]) ? $productsData[MAGNA_FIELD_PRODUCTS_EAN] : '';
+// If exists products_manufacturers_model it will be provided (modified 2.0) and products_manufacturers_sku (modified 1.0)
+if (array_key_exists('products_manufacturers_sku', $productsData)) {
+    $productsData['products_manufacturers_model'] = $productsData['products_manufacturers_sku'];
+    unset($productsData['products_manufacturers_sku']);
+} elseif (!array_key_exists('products_manufacturers_model', $productsData)) {
+    $productsData['products_manufacturers_model'] = '';
+}
 
 $products = array(array(
 	'product' => array(
@@ -100,6 +107,7 @@ $products = array(array(
 			'desc' => $productsData['products_description'],
 			'images' => $productsData['products_allimages'],
 			'manufacturer' => $manufacturerName,
+            'manufacturer_model' => $productsData['products_manufacturers_model'],
 			'model' => $productsData['products_model'],
 			'ean' => $productsData[MAGNA_FIELD_PRODUCTS_EAN],
 			'price' => $sprice->format(),

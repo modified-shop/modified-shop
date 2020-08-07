@@ -35,7 +35,7 @@ function ml_db_update_96() {
 		CREATE TABLE IF NOT EXISTS `" . TABLE_MAGNA_CROWDFOX_PREPARE . "` (
 			`mpID` int(8) NOT NULL,
 			`products_id` int(11) NOT NULL,
-			`products_model` varchar(255) NOT NULL,
+			`products_model` varchar(64) NOT NULL,
 			`PreparedTS` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
 			`ItemTitle` varchar(255) DEFAULT NULL,
 			`Description` varchar(5000) DEFAULT NULL,
@@ -56,7 +56,7 @@ function ml_db_update_96() {
     MagnaDB::gi()->query('CREATE TABLE IF NOT EXISTS `' . TABLE_MAGNA_CROWDFOX_VARIANTMATCHING . '` (
 	`MpId` int(11) NOT NULL,
 	`MpIdentifier` varchar(50) NOT NULL,
-	`CustomIdentifier` varchar(255) NOT NULL DEFAULT "",
+	`CustomIdentifier` varchar(64) NOT NULL DEFAULT "",
 	`ShopVariation` text NOT NULL,
 	`IsValid` bit NOT NULL DEFAULT 1,
 	`ModificationDate` DATETIME NOT NULL DEFAULT \'0000-00-00 00:00:00\',

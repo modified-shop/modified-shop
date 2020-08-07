@@ -63,7 +63,10 @@ class EbayTopTen extends TopTen {
 			$aTopTenCatIds[$iCatId] = geteBayCategoryPath($iCatId,$blStoreCat);
 			if ('<span class="invalid">'.ML_LABEL_INVALID.'</span>' == $aTopTenCatIds[$iCatId]) {
 				unset($aTopTenCatIds[$iCatId]);
-				MagnaDB::gi()->query("UPDATE ".TABLE_MAGNA_EBAY_PROPERTIES." SET ".$sType."=10 WHERE ".$sType." = '".$iCatId."'"); // no mpID
+                // only update it if its not already 10
+                if ('10' != $iCatId) {
+                    MagnaDB::gi()->query("UPDATE ".TABLE_MAGNA_EBAY_PROPERTIES." SET ".$sType."=10 WHERE ".$sType." = '".$iCatId."'"); // no mpID
+                }
 			}
 		}
         asort($aTopTenCatIds);

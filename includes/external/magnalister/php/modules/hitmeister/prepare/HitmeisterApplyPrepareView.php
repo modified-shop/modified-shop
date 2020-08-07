@@ -468,6 +468,10 @@ class HitmeisterApplyPrepareView extends MagnaCompatibleBase {
 			foreach ($aProduct['Images'] as $img) {
 				$pictureUrls[$img] = 'true';
 			}
+			$sAllImagesChecked = 'checked="checked"';
+			$sImgCheckboxDisabled = 'disabled="disabled"';
+		} else {
+			$sAllImagesChecked = $sImgCheckboxDisabled = '';
 		}
 
 		foreach ($aProduct['Images'] as $img) {
@@ -496,12 +500,12 @@ class HitmeisterApplyPrepareView extends MagnaCompatibleBase {
 			<td class="info"></td>
 		</tr>
 		<tr class="<?php echo ($oddEven = !$oddEven) ? 'odd' : 'even' ?>">
-			<th><?php echo ML_HITMEISTER_SUBTITLE ?></th>
+			<th><?php echo ML_HITMEISTER_KEYWORDS ?></th>
 			<td class="input">
 				<input type="text" class="fullwidth" name="Subtitle" id="Subtitle"
 					   value="<?php echo fixHTMLUTF8Entities(HitmeisterHelper::sanitizeDescription($data['Subtitle']), ENT_COMPAT) ?>">
 			</td>
-			<td class="info"></td>
+			<td class="info"><?php echo ML_HITMEISTER_KEYWORDS_INFO ?></td>
 		</tr>
 		<tr class="<?php echo ($oddEven = !$oddEven) ? 'odd' : 'even' ?>">
 			<th><?php echo ML_HITMEISTER_DESCRIPTION ?></th>
@@ -539,12 +543,15 @@ class HitmeisterApplyPrepareView extends MagnaCompatibleBase {
 			<th><?php echo ML_LABEL_PRODUCTS_IMAGES ?></th>
 			<td class="input">
 				<input type="hidden" id="image_hidden" name="Images[]" value="false"/>
+				<input type="checkbox" name="allimages" id="allimages" <?php echo $sAllImagesChecked;?>><?php echo ML_GENERIC_TAKE_ALL_IMAGES ?><br />
+				<?php if(!empty($data['Images'])): ?>
 				<?php foreach ($data['Images'] as $img => $checked) : ?>
 					<table class="imageBox"><tbody>
 						<tr><td class="image"><label for="image_<?php echo $img ?>"><?php echo generateProductCategoryThumb($img, 60, 60) ?></label></td></tr>
-						<tr><td class="cb"><input type="checkbox" id="image_<?php echo $img ?>" name="Images[<?php echo urlencode($img) ?>]" value="true" <?php echo $checked == 'true' ? 'checked="checked"' : '' ?> /></td></tr>
+						<tr><td class="cb"><input type="checkbox" id="image_<?php echo $img ?>" name="Images[<?php echo urlencode($img) ?>]" value="true" <?php echo $checked == 'true' ? 'checked="checked"' : '' ?> <?php echo $sImgCheckboxDisabled; ?>/></td></tr>
 						</tbody></table>
 				<?php endforeach; ?>
+				<?php endif; ?>
 			</td>
 			<td class="info"></td>
 		</tr>
@@ -552,6 +559,22 @@ class HitmeisterApplyPrepareView extends MagnaCompatibleBase {
 			<td colspan="3">&nbsp;</td>
 		</tr>
 		</tbody>
+
+<?php if(!empty($data['Images'])): ?>
+<script type="text/javascript">/*<![CDATA[*/
+$('input[id="allimages"]').change(function() {
+    if ($('input[id="allimages"]').attr('checked') == 'checked') {
+        <?php foreach ($data['Images'] as $img => $checked) : ?>
+        $('input[id="image_<?php echo $img ?>"]').prop('disabled', true);
+        <?php endforeach; ?>
+    } else {
+        <?php foreach ($data['Images'] as $img => $checked) : ?>
+        $('input[id="image_<?php echo $img ?>"]').prop('disabled', false);
+        <?php endforeach; ?>
+    }
+});
+/*]]>*/</script>
+<?php endif; ?>
 
 		<?php
 		$html = ob_get_contents();

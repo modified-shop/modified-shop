@@ -1,0 +1,43 @@
+{
+    "login": {
+        "headline": "_#_platformName_#_ Zugangsdaten",
+        "fields": [{
+                "label": "Merchant Account ID",
+                "key": "_#_platform_#_.username",
+                "type": "text"
+            },
+            {
+                "label": "Password",
+                "key": "_#_platform_#_.password",
+                "type": "hidden"
+            },
+            {
+                "label": "Google Shopping Token",
+                "key": "forceRegenerateToken",
+                "type": "extern",
+                "procFunc": "GoogleshoppingConfigure::renderForceRegenerateTokenButton",
+                "params": []
+            },
+            {
+                "label": "Google Shopping Zielland",
+                "key": "_#_platform_#_.targetCountry",
+                "type": "selection",
+                "default": "DE",
+                "ajaxlinkto": {
+                    "key": "_#_platform_#_.lang.match.googleshopping",
+                    "func": "GoogleShoppingUpdateSupportedLanguages",
+                    "initload": false
+                }
+            },
+            {
+                "label": "Google Shopping W&auml;hrung",
+                "key": "_#_platform_#_.currency",
+                "type": "selection",
+                "verify": "notempty",
+                "values": {
+                    "": "Bitte erst Zielland w&auml;hlen"
+                }
+            }
+        ]
+    }
+}

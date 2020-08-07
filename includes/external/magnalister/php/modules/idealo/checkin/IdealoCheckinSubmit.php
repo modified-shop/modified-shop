@@ -100,8 +100,9 @@ class IdealoCheckinSubmit extends ComparisonShoppingCheckinSubmit {
 				? 'products_model = "' . MagnaDB::gi()->escape($product['ProductsModel']) . '"'
 				: 'products_id = "' . $pID . '"'
 			) . '
-				AND mpID = ' . $this->_magnasession['mpID']
-		);
+				AND mpID = ' . $this->_magnasession['mpID'] . '
+			ORDER BY PreparedTS DESC LIMIT 1
+		');
 
 		if (!empty($aPropertiesRow['Title'])) {
 			$data['submit']['ItemTitle'] = $aPropertiesRow['Title'];
@@ -165,7 +166,7 @@ class IdealoCheckinSubmit extends ComparisonShoppingCheckinSubmit {
 				$data['submit']['ShippingCost'] = $data['submit']['ItemWeight'];
 			}
 		}
-
+		$data['submit']['ShippingTime'] = $aPropertiesRow['DeliveryTime'];
 		$data['submit']['Quantity'] = $product['Quantity'];
 		$catname = $this->getcategoriesname($product['ProductId']);
 		if (!empty($catname)) {
@@ -175,6 +176,20 @@ class IdealoCheckinSubmit extends ComparisonShoppingCheckinSubmit {
 		if (!$this->getIdealoVariations($product, $data, $imagePath)) {
 			return;
 		}
+		$format = $this->simpleprice->getFormatOptions();
+        if ($data['submit']['Checkout']) {
+            $data['submit']['FulFillmentType'] = $aPropertiesRow['FulFillmentType'];
+            if ($data['submit']['FulFillmentType'] == 'Spedition') {
+                $TwoManHandlingFee = priceToFloat($aPropertiesRow['TwoManHandlingFee'], $format);
+                if (!empty($TwoManHandlingFee)) {
+                    $data['submit']['TwoManHandlingFee'] = $TwoManHandlingFee;
+                }
+                $DisposalFee = priceToFloat($aPropertiesRow['DisposalFee'], $format);
+                if (!empty($DisposalFee)) {
+                    $data['submit']['DisposalFee'] = $DisposalFee;
+                }
+            }
+        }
 	}
 
 	protected function getIdealoVariations($product, &$data, $imagePath) {

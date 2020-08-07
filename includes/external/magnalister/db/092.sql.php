@@ -21,7 +21,7 @@ $queries = array('
 	CREATE TABLE IF NOT EXISTS `' . TABLE_MAGNA_HITMEISTER_VARIANTMATCHING . '` (
 		`MpId` int(11) NOT NULL,
 		`MpIdentifier` varchar(50) NOT NULL,
-		`CustomIdentifier` varchar(255) NOT NULL DEFAULT "",
+		`CustomIdentifier` varchar(64) NOT NULL DEFAULT "",
 		`ShopVariation` text NOT NULL,
 		`IsValid` bit NOT NULL DEFAULT 1,
 		`ModificationDate` DATETIME NOT NULL DEFAULT \'0000-00-00 00:00:00\',

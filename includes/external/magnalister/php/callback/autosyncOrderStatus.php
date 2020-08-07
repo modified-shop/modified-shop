@@ -24,6 +24,7 @@ function magnaAutosyncOrderStatus() {
 	global $_MagnaShopSession, $magnaConfig;
 	
 	$modules = magnaGetInvolvedMarketplaces();
+	magnaResetEbayOrderStatus20191206();
 	$skippedMPs = array();
 	$skippedMPIDs = array();
 

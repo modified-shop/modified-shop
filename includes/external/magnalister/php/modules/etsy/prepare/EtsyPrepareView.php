@@ -157,7 +157,7 @@ class EtsyPrepareView extends MagnaCompatibleBase {
 		// Only one item will be prepared. Prepare the description and title if they aren't set yet.
 		if (1 == $rowCount) {
 			if (empty($dbSelection[0]['Description'])) {
-				$dbSelection[0]['Description'] = fixHTMLUTF8Entities(stripLocalWindowsLinks($dbSelection[0]['products_description']));
+				$dbSelection[0]['Description'] = fixHTMLUTF8Entities(EtsyHelper::sanitizeDescription(stripLocalWindowsLinks($dbSelection[0]['products_description'])));
 			}
 			if (empty($dbSelection[0]['Title'])) {
 				$dbSelection[0]['Title'] = fixHTMLUTF8Entities($dbSelection[0]['products_name']);
@@ -258,14 +258,7 @@ class EtsyPrepareView extends MagnaCompatibleBase {
 				<tr class="' . (($oddEven = !$oddEven) ? 'odd' : 'even') . '">
 					<th>' . ML_GENERIC_ITEM_DESCRIPTION . '</th>
 					<td class="input">
-						' . magna_wysiwyg(array(
-							'id' => 'Description',
-							'name' => 'Description',
-							'class' => 'fullwidth',
-							'cols' => '80',
-							'rows' => '40',
-							'wrap' => 'virtual'
-						), $data['Description']) . '
+                        <textarea class="fullwidth" name="Description" id="Description" rows="40" cols="80">'.fixHTMLUTF8Entities($data['Description'], ENT_COMPAT).'</textarea>
 					</td>
 					<td class="info">
 						' . ML_GENERIC_PRODUCTDESCRIPTION . '
@@ -525,8 +518,8 @@ class EtsyPrepareView extends MagnaCompatibleBase {
 		$mpOptionalAttributeTitle = str_replace('%marketplace%', 'Etsy', ML_GENERAL_VARMATCH_MP_OPTIONAL_ATTRIBUTE);
 		$mpCustomAttributeTitle = str_replace('%marketplace%', 'Etsy', ML_GENERAL_VARMATCH_MP_CUSTOM_ATTRIBUTE);
 
-		// hier keine Pflichtattribute
-		/*<tbody id="tbodyDynamicMatchingHeadline" style="display:none;">
+		$html = '
+		<tbody id="tbodyDynamicMatchingHeadline" style="display:none;">
 			<tr class="headline">
 				<td colspan="1"><h4>'.$mpAttributeTitle.'</h4></td>
 				<td colspan="2"><h4>'.ML_GENERAL_VARMATCH_MY_WEBSHOP_ATTRIB.'</h4></td>
@@ -538,8 +531,7 @@ class EtsyPrepareView extends MagnaCompatibleBase {
 				<td class="input">'.ML_GENERAL_VARMATCH_SELECT_CATEGORY.'</td>
 				<td class="info"></td>
 			</tr>
-		</tbody>*/
-		$html = '
+		</tbody>
 		<tbody id="tbodyDynamicMatchingOptionalHeadline" style="display:none;">
                    <tr class="headline">
                        <td colspan="1"><h4>'.$mpOptionalAttributeTitle.'</h4></td>
@@ -645,69 +637,29 @@ class EtsyPrepareView extends MagnaCompatibleBase {
 		$ycm = new EtsyCategoryMatching('view');
 		return $this->renderPrepareView($this->getSelection()).$ycm->render();
 	}
-	
-/*
-  wird angesprochen im Category Selector
-*/
-	public function renderAjax() {
-		if (array_key_exists('action', $_POST)) { //action war lowercase
-			switch ($_POST['action']) {
-				case 'getListingDurations': {
-					$html = '';
-					if (isset($_POST['ListingType']) && ($_POST['ListingType'] == 'shopProduct')) {
-						$html .= '<option selected="selected" value="-1">'.ML_LABEL_UNLIMITED.'</option>';
-					} else {
-						$listingDurations = EtsyApiConfigValues::gi()->getListingDurations();
-						if (!in_array($_POST['preselected'], $listingDurations)) {
-							$highestKeyOfListingDurations = count($listingDurations) - 1;
-							$_POST['preselected'] = $listingDurations['DATA']['ListingDurations'][$highestKeyOfListingDurations];
-						}
-						foreach ($listingDurations as $duration) {
-							$define = 'ML_HOOD_LABEL_LISTINGDURATION_DAYS_' . strtoupper($duration);
-							$selected = '';
-							if ($_POST['preselected'] == $duration) {
-								$selected = 'selected="selected"';
-							}
-							$html .= '
-								<option '.$selected.' value="' . $duration . '">' . (defined($define) ? constant($define) : $duration) . '</option>';
-						}
-					}
-					echo $html;
-					break;
-				}
-				case 'extern': {
-					$args = $_POST;
-					unset($args['function']);
-					unset($args['action']);
-					global $_url;
-					$tmpURL = $_url;
-					$tmpURL['where'] = 'prepareView';
-					if ('true' == $args['international']) {
-						$shipProc = new EtsyShippingDetailsProcessor($args, 'etsy.default.shipping.international', $tmpURL);
-					} else {
-						$shipProc = new EtsyShippingDetailsProcessor($args, 'etsy.default.shipping.local', $tmpURL);
-					}
-					echo $shipProc->process();
-					break;
-				}
-				case 'LoadMPVariations': {
-					if (isset($_POST['SelectValue'])) {
-						$select = $_POST['SelectValue'];
-					} else {
-						$select = $_POST['PrimaryCategory'];
-					}
-					$productModel = EtsyHelper::gi()->getProductModel('prepare');
-					return json_encode(EtsyHelper::gi()->getMPVariations($select, $productModel, true));
-					break;
-				}
-				default: {
-					$ycm = new EtsyCategoryMatching('ajax');
-					echo $ycm->render();
-					break;
-				}
-			}
-		}
-		
-		#echo print_m($_POST);
-	}
+
+    public function renderAjax() {
+        if (isset($_GET['where']) && ($_GET['where'] == 'prepareView')) {
+            $oCatMatching = new EtsyCategoryMatching('ajax');
+            echo $oCatMatching->renderAjax();
+
+        } else if ($_POST['prepare'] === 'prepare' || (isset($_POST['Action']) && ($_POST['Action'] == 'LoadMPVariations'))) {
+            if (isset($_POST['SelectValue'])) {
+                $select = $_POST['SelectValue'];
+            } else {
+                $select = $_POST['PrimaryCategory'];
+            }
+
+            $productModel = EtsyHelper::gi()->getProductModel('prepare');
+            return json_encode(EtsyHelper::gi()->getMPVariations($select, $productModel, true));
+        } else if (isset($_POST['Action']) && ($_POST['Action'] === 'DBMatchingColumns')) {
+            $columns = MagnaDB::gi()->getTableCols($_POST['Table']);
+            $editedColumns = array();
+            foreach ($columns as $column) {
+                $editedColumns[$column] = $column;
+            }
+
+            echo json_encode($editedColumns, JSON_FORCE_OBJECT);
+        }
+    }
 }

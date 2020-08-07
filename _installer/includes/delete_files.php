@@ -281,7 +281,9 @@
     'includes/configure.org.php',
     'includes/external/janolaw/send_order.php', // from r9293
     'includes/external/magnalister/config/german/hood.form',
+    'ncludes/external/magnalister/images/logos/modules.php',
     'includes/external/magnalister/js/marketplaces/meinpaket/variationmatching.js',
+    'includes/external/magnalister/lang/ababab',
     'includes/external/magnalister/php/modules/idealo/classes/IdealoCheckinSubmit.php',
     'includes/external/payone/modules/send_order.php', // from r9293
     'includes/external/paypal/lib/PayPal/Core/PayPalLoggingLevel.php',

@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * (c) 2018 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2019 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -31,25 +31,17 @@ class EtsyConfigure extends MagnaCompatibleConfigure {
             unset($_POST['conf'][$this->marketplace.'.shop.language']);
         }
 
+        if (!is_array($aData)) $aData = array();
         return array_merge($aData, array('LANGUAGE' => $sLanguage));
     }
 
     protected function getFormFiles() {
-
         return array (
             'login', 'prepare', 'checkin',
             'price', 'inventorysync',
             'orders', 'orderStatus',
             'setImagePath'
         );
-        //return array_merge(parent::getFormFiles(), array('orderStatus'));
-
-        /*
-         * 'login', 'prepare', 'checkin',
-			'price', 'inventorysync', 'orders',
-			'setImagePath'
-         */
-
     }
 
     public static function EtsyGetToken($args, &$value = '') {
@@ -171,6 +163,24 @@ $(document).ready(function() {
         echo $this->zeroStockSyncConfirmationPopup();
     }
 
+    protected function finalizeForm() {
+        parent::finalizeForm();
+
+        if (    (isset($_POST['conf'][$this->marketplace.'.ShippingTemplate']) && empty($_POST['conf'][$this->marketplace.'.ShippingTemplate']))
+            || empty($this->form['prepare']['fields']['shippingtemplate']['values'])
+        ) {
+            $aResponse = MagnaConnector::gi()->submitRequest(array(
+                'ACTION' => 'GetShippingTemplates'
+            ));
+
+            if (!empty($aResponse['ERRORS'])) {
+                foreach ($aResponse['ERRORS'] as $sError) {
+                    $this->boxes .= '<p class="errorBox">'.$sError.'</p>';
+                }
+            }
+        }
+    }
+
 }
 if (isset($_GET['what'])) {
     if ($_GET['what'] == 'GetTokenCreationLink') {
@@ -183,7 +193,7 @@ if (isset($_GET['what'])) {
             $iframeURL = $result['DATA']['tokenCreationLink'];
             //*/
         } catch (MagnaException $e) {
-echo print_m($e, '$e');
+            echo print_m($e, '$e');
         }
         echo $iframeURL;
         #require(DIR_WS_INCLUDES . 'application_bottom.php');

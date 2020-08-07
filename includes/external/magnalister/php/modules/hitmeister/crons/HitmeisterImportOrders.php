@@ -66,7 +66,7 @@ class HitmeisterImportOrders extends MagnaCompatibleImportOrders {
 				# Fallback for default language
 				$languageId = MagnaDB::gi()->fetchOne('
 					SELECT languages_id
-					  FROM '.TABLE_LANGUAGES.' l, '.TABLE_CONFIGURATION.' c
+					  FROM '.TABLE_LANGUAGES.' l, '.TABLE_CONFIGURATION_MLDEF.' c
 					 WHERE c.configuration_key = "DEFAULT_LANGUAGE"
 						   AND c.configuration_value = l.code
 				');

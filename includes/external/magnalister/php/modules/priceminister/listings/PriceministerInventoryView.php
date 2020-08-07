@@ -11,9 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id$
- *
- * (c) 2010 - 2014 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2019 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -21,8 +19,7 @@
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 require_once(DIR_MAGNALISTER_MODULES . 'magnacompatible/listings/MagnaCompatibleInventoryView.php');
 
-class PriceministerInventoryView extends MagnaCompatibleInventoryView
-{
+class PriceministerInventoryView extends MagnaCompatibleInventoryView {
 
     public function __construct($settings = array())
     {
@@ -183,9 +180,8 @@ class PriceministerInventoryView extends MagnaCompatibleInventoryView
 			/*]]>*/</script>';
     }
 
-    private function getInventory()
-    {
-        try{
+    protected function getInventory() {
+        try {
             $request = array(
                 'ACTION' => 'GetInventory',
                 'LIMIT' => $this->settings['itemLimit'],
@@ -194,14 +190,14 @@ class PriceministerInventoryView extends MagnaCompatibleInventoryView
                 'SORTORDER' => $this->sort['type'],
                 'EXTRA' => 'ShowPending',
             );
-            if (!empty($this->search)){
+            if (!empty($this->search)) {
                 $request['SEARCH'] = $this->search;
             }
             $result = MagnaConnector::gi()->submitRequest($request);
             $this->numberofitems = (int)$result['NUMBEROFLISTINGS'];
             return $result;
 
-        } catch (MagnaException $e){
+        } catch (MagnaException $e) {
             return false;
         }
     }

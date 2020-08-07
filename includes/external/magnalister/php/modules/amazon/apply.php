@@ -141,6 +141,7 @@ function populateGenericData($pID, $edit = false) {
 	if (!empty($genericDataStructure['BulletPoints'])) {
 		foreach ($genericDataStructure['BulletPoints'] as &$bullet) {
 			$bullet = trim($bullet);
+            $bullet = !magnalisterIsUTF8($bullet) ? utf8_encode($bullet) : $bullet;
 			if (empty($bullet)) continue;
 			$bullet = substr($bullet, 0, strpos(wordwrap($bullet, 500, "\n", true) . "\n", "\n"));
 		}
@@ -154,6 +155,7 @@ function populateGenericData($pID, $edit = false) {
 	if (!empty($genericDataStructure['Keywords'])) {
 		foreach ($genericDataStructure['Keywords'] as &$keyword) {
 			$keyword = trim($keyword);
+            $keyword = !magnalisterIsUTF8($keyword) ? utf8_encode($keyword) : $keyword;
 			if (empty($keyword)) continue;
 			$keyword = substr($keyword, 0, strpos(wordwrap($keyword, 1000, "\n", true) . "\n", "\n"));
 		}
@@ -313,7 +315,6 @@ if (array_key_exists('saveApplyData', $_POST) || (array_key_exists('Action', $_P
 			$_POST = $postVariables;
 		}
 	}
-
 	$requiredData = array(
 		'MainCategory' => ML_LABEL_MAINCATEGORY,
 		'BrowseNodes' => ML_AMAZON_LABEL_APPLY_BROWSENODES,
@@ -357,7 +358,7 @@ if (array_key_exists('saveApplyData', $_POST) || (array_key_exists('Action', $_P
 	$itemDetails = $_POST;
 	unset($itemDetails['saveApplyData']);
 
-	$errors = (!$postAction ? $errors . validateB2BTierPrices($itemDetails) : '');
+	$errors = (!$postAction ? (isset($errors) ? $errors: '') . validateB2BTierPrices($itemDetails) : '');
 	if (isset($itemDetails['Errors'])) {
 		if (!$postAction) {
 			$errors = $itemDetails['Errors'];

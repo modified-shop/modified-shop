@@ -25,6 +25,11 @@ function identShopSystem() {
 		define('SHOPSYSTEM', 'commerceseo');
 	} else if (defined('_GM_VALID_CALL') || (stripos($content, 'gambio') !== false)) {
 		define('SHOPSYSTEM', 'gambio');
+
+        // try to detect the gambio cloud
+        if (function_exists('gm_get_conf') && gm_get_conf('IS_CLOUD') === 'true') {
+            define('SHOPSYSTEM_GAMBIO_CLOUD', true);
+        }
 	} else if (defined('PROJECT_VERSION')
 	            && (
 	                   stripos(PROJECT_VERSION, 'modified') !== false

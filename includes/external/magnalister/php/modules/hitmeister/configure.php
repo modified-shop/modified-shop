@@ -29,9 +29,8 @@ class HitmeisterConfigure extends MagnaCompatibleConfigure {
 		$nSecretKey = trim($_POST['conf'][$this->marketplace.'.secretkey']);
 		$nSecretKey = $this->processPasswordFromPost('secretkey', $nSecretKey);
 		
-		$nMPUser = trim($_POST['conf'][$this->marketplace.'.mpusername']);
-		$nMPPass = trim($_POST['conf'][$this->marketplace.'.mppassword']);
-		$nMPPass = $this->processPasswordFromPost('mppassword', $nMPPass);
+		
+		
 
 		if (empty($nClientKey)) {
 			unset($_POST['conf'][$this->marketplace.'.clientkey']);
@@ -41,21 +40,11 @@ class HitmeisterConfigure extends MagnaCompatibleConfigure {
 			unset($_POST['conf'][$this->marketplace.'.secretkey']);
 			return false;
 		}
-		
-		if (empty($nMPUser)) {
-			unset($_POST['conf'][$this->marketplace.'.mpusername']);
-		}
-		
-		if ($nMPPass === false) {
-			unset($_POST['conf'][$this->marketplace.'.mppassword']);
-			return false;
-		}
-		
+							
 		$data = array (
 			'CLIENTKEY' => $nClientKey,
 			'SECRETKEY' => $nSecretKey,
-			'MPUSERNAME' => $nMPUser,
-			'MPPASSWORD' => $nMPPass,
+			
 		);
 		#echo print_m($data);
 		return $data;
@@ -163,8 +152,7 @@ class HitmeisterConfigure extends MagnaCompatibleConfigure {
 		if (!$this->isAuthed) {
 			global $magnaConfig;
 
-			unset($magnaConfig['db'][$this->mpID]['hitmeister.secretkey']);
-			unset($magnaConfig['db'][$this->mpID]['hitmeister.mppassword']);
+			unset($magnaConfig['db'][$this->mpID]['hitmeister.secretkey']);			
 		}
 	}
 	

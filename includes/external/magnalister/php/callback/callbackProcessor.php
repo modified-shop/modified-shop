@@ -73,8 +73,14 @@ function magnaProcessCallbackRequest() {
 		magnaAutoEbaySyncListingDetails();
 	}
 
-	/* Build or refresh Variations table */
-	if (in_array('updateVariationsTable', $do)) {
-		require_once(DIR_MAGNALISTER_CALLBACK.'updateVariationsTable.php');
-	}
+    /* Build or refresh Variations table */
+    if (in_array('updateVariationsTable', $do)) {
+        require_once(DIR_MAGNALISTER_CALLBACK.'updateVariationsTable.php');
+    }
+
+	/* Upload Invoices to Amazon */
+    if (in_array('UploadInvoices', $do)) {
+        require_once(DIR_MAGNALISTER_CALLBACK.'uploadInvoices.php');
+        magnaUploadInvoices();
+    }
 }

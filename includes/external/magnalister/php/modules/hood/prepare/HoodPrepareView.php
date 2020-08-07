@@ -317,7 +317,7 @@ class HoodPrepareView extends MagnaCompatibleBase {
 				<tr class="' . (($oddEven = !$oddEven) ? 'odd' : 'even') . '">
 					<th>' . ML_HOOD_SUBTITLE . '</th>
 					<td class="input">
-						<input class="fullwidth" type="text" maxlength="55" value="' . $data['Subtitle'] . '" name="Subtitle" id="Subtitle" />
+						<input class="fullwidth blocked" type="text" maxlength="55" value="' . $data['Subtitle'] . '" name="Subtitle" id="Subtitle" disabled="disabled"/>
 						<input type="hidden" name="enableSubtitle" value="false" />
 						<input type="checkbox" name="enableSubtitle" value="true" /> ' . ML_HOOD_SUBTITLE_USE_YES_NO . '
 					</td>
@@ -703,7 +703,7 @@ class HoodPrepareView extends MagnaCompatibleBase {
 			$selected = (isset($preSelected['Features'][$featureKey]) && $preSelected['Features'][$featureKey]);
 			$html .= '
 						<input type="hidden"   name="Features['.$featureKey.']" value="false">
-						<input type="checkbox" name="Features['.$featureKey.']" value="true" id="'.$featureId.'" '.($selected ? 'selected' : '').'>
+						<input type="checkbox" name="Features['.$featureKey.']" value="true" id="'.$featureId.'" '.($selected ? 'checked' : '').'>
 						&nbsp;
 						<label for="'.$featureId.'">'.$featureDesc.'</label>
 						<br>';
@@ -946,6 +946,19 @@ class HoodPrepareView extends MagnaCompatibleBase {
 			}
 			
 			$(document).ready(function() {
+                $('input[name="enableSubtitle"]').change(function() {
+                    var oSubtitleInput = $('input[name="Subtitle"]');
+
+                    if ($(this).is(":checked")) {
+                        oSubtitleInput.removeClass('blocked');
+                        oSubtitleInput.prop('disabled', false);
+                        return;
+                    }
+
+                    oSubtitleInput.prop('disabled', true);
+                    oSubtitleInput.addClass('blocked');
+                });
+
 				$('#PrimaryCategoryVisual > select').change(function() {
 					var cID = this.value;
 					if (cID != '') {

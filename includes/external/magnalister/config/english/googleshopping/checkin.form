@@ -1,0 +1,78 @@
+{
+    "createshippingtemplate": {
+        "headline": "Create shipping template",
+        "fields": {
+            "title": {
+                "label": "Title",
+                "key": "_#_platform_#_.shipping.title",
+                "type": "text"
+            },
+            "originCountry": {
+                "label": "Target Country",
+                "key": "_#_platform_#_.shipping.originCountry",
+                "type": "selection",
+                "values": {
+                    "de": "Germany",
+                    "en": "Great Britain",
+                    "us": "United States of America"
+                }
+            },
+            "currencyValue": {
+                "label": "Currency",
+                "key": "_#_platform_#_.shipping.currencyValue",
+                "type": "selection",
+                "values": {
+                    "EUR": "EUR",
+                    "GBP": "GBP",
+                    "USD": "USD",
+                    "AED": "AED",
+                    "ARS": "ARS",
+                    "AUD": "AUD",
+                    "BRL": "BRL",
+                    "CAD": "CAD",
+                    "CHF": "CHF",
+                    "CLP": "CLP",
+                    "CNY": "CNY",
+                    "COP": "COP",
+                    "CZK": "CZK",
+                    "DKK": "DKK",
+                    "HKD": "HKD",
+                    "IDR": "IDR",
+                    "ILS": "ILS",
+                    "INR": "INR",
+                    "JPY": "JPY",
+                    "KRW": "KRW",
+                    "MXN": "MXN",
+                    "MYR": "MYR",
+                    "NOK": "NOK",
+                    "NZD": "NZD",
+                    "PHP": "PHP",
+                    "PLN": "PLN",
+                    "RUB": "RUB",
+                    "SAR": "SAR",
+                    "SEK": "SEK",
+                    "SGD": "SGD",
+                    "THB": "THB",
+                    "TRY": "TRY",
+                    "TWD": "TWD",
+                    "UAH": "UAH",
+                    "VND": "VND",
+                    "ZAR": "ZAR"
+                }
+            },
+            "primaryCost": {
+                "label": "Shipping Price",
+                "key": "_#_platform_#_.shipping.primaryCost",
+                "type": "text"
+            },
+            "shippintemplate": {
+                "label": "Create shipping template",
+                "key": "createshippingtemplate",
+                "type": "extern",
+                "procFunc": "GoogleshoppingConfigure::renderShippingButton",
+                "expertsetting": false,
+                "params": {"button": "Create shipping template"}
+            }
+        }
+    }
+}

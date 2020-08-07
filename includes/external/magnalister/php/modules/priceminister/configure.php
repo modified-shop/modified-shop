@@ -1,19 +1,17 @@
 <?php
 /**
- * 888888ba                 dP  .88888.                    dP                
- * 88    `8b                88 d8'   `88                   88                
- * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b. 
- * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88 
- * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88 
- * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P' 
+ * 888888ba                 dP  .88888.                    dP
+ * 88    `8b                88 d8'   `88                   88
+ * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b.
+ * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88
+ * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88
+ * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P'
  *
  *                          m a g n a l i s t e r
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id$
- *
- * (c) 2010 - 2014 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2020 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -30,16 +28,8 @@ class PriceministerConfigure extends MagnaCompatibleConfigure {
 
 		$nMPUser = trim($_POST['conf'][$this->marketplace.'.mpusername']);
 
-		$nMPPass = trim($_POST['conf'][$this->marketplace.'.mppassword']);
-		$nMPPass = $this->processPasswordFromPost('mppassword', $nMPPass);
-
 		if (empty($nMPUser)) {
 			unset($_POST['conf'][$this->marketplace.'.mpusername']);
-		}
-		
-		if ($nMPPass === false) {
-			unset($_POST['conf'][$this->marketplace.'.mppassword']);
-			return false;
 		}
 
         if (empty($nAPIToken)) {
@@ -50,7 +40,6 @@ class PriceministerConfigure extends MagnaCompatibleConfigure {
 		$data = array (
 			'TOKEN' => $nAPIToken,
 			'USERNAME' => $nMPUser,
-			'PASSWORD' => $nMPPass,
 		);
 
 		return $data;
@@ -97,7 +86,6 @@ class PriceministerConfigure extends MagnaCompatibleConfigure {
 		global $magnaConfig;
 		if (!$this->isAuthed) {
 			unset($magnaConfig['db'][$this->mpID]['priceminister.secretkey']);
-			unset($magnaConfig['db'][$this->mpID]['priceminister.mppassword']);
 		} elseif (isset($magnaConfig['db'][$this->mpID]['priceminister.orderstatus.autoacceptance'])
 			&& $magnaConfig['db'][$this->mpID]['priceminister.orderstatus.autoacceptance']['val'] == false) {
 			$this->boxes .= '<p class="noticeBox">' . ML_PRICEMINISTER_ERROR_ORDERSTATUS_AUTOACCEPTANCE . '</p>';

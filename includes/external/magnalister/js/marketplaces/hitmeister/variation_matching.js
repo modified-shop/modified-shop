@@ -23,11 +23,9 @@ $(document).ready(function() {
             matchingHeadline: '#tbodyDynamicMatchingHeadline',
             matchingOptionalHeadline: '#tbodyDynamicMatchingOptionalHeadline',
             matchingCustomHeadline: '#tbodyDynamicMatchingCustomHeadline',
-            matchingOptionalHeadline: '#tbodyDynamicMatchingOptionalHeadline',
             matchingInput: '#tbodyDynamicMatchingInput',
             matchingOptionalInput: '#tbodyDynamicMatchingOptionalInput',
             matchingCustomInput: '#tbodyDynamicMatchingCustomInput',
-            matchingOptionalInput: '#tbodyDynamicMatchingOptionalInput',
             categoryInfo: '#categoryInfo'
         },
         shopVariations: ml_vm_config.shopVariations

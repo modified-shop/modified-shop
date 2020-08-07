@@ -19,10 +19,22 @@
  */
 
 require_once(DIR_MAGNALISTER_MODULES . 'magnacompatible/checkin/MagnaCompatibleSummaryView.php');
+require_once(DIR_MAGNALISTER_MODULES . 'etsy/EtsyHelper.php');
 
 class EtsySummaryView extends MagnaCompatibleSummaryView {
+
 	protected function getAdditionalHeadlines() {
 		return str_replace(ML_MAGNACOMPAT_LABEL_MP_PRICE_SHORT, ML_ETSY_PRICE_FOR_ETSY,
 			parent::getAdditionalHeadlines());
+	}
+
+	protected function extendProductAttributes($pID, &$data) {
+		global $_MagnaSession;
+		parent::extendProductAttributes($pID, $data);
+		$iMaxQuantity = getDBConfigValue('etsy.maxquantity', $_MagnaSession['mpID'], 0);
+		if (    ($iMaxQuantity > 0)
+		     && ($iMaxQuantity < $data['quantity'])) {
+			$data['quantity'] = $iMaxQuantity;
+		}
 	}
 }

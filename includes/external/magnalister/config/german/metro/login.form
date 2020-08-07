@@ -1,0 +1,22 @@
+{
+    "login": {
+        "headline": "_#_platformName_#_ Zugangsdaten",
+        "fields": [
+            {
+                "label": "METRO-Client-Key",
+                "key": "_#_platform_#_.clientkey",
+                "desc": "Geben Sie hier den “METRO-Client-Key” ein.<br>Aktuell können Sie diesen ausschließlich beim METRO Marktplatz Seller-Support anfordern. Schreiben Sie dazu eine E-Mail an: seller@metro-marketplace.eu",
+                "type": "text"
+            },
+            {
+                "label": "METRO-Secret-Key",
+                "key": "_#_platform_#_.secretkey",
+                "desc": "Geben Sie hier den “METRO-Secret-Key” ein.<br>Aktuell können Sie diesen ausschließlich beim METRO Marktplatz Seller-Support anfordern. Schreiben Sie dazu eine E-Mail an: seller@metro-marketplace.eu",
+                "type": "password",
+                "settings": {
+                    "save": false
+                }
+            }
+        ]
+    }
+}

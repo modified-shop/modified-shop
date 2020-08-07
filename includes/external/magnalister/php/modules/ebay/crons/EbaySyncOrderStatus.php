@@ -23,9 +23,21 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 require_once(DIR_MAGNALISTER_MODULES.'magnacompatible/crons/MagnaCompatibleSyncOrderStatus.php');
 
 class EbaySyncOrderStatus extends MagnaCompatibleSyncOrderStatus {
+
+    protected $blIsPaymentProgramAvailable;
 	public function __construct($mpID, $marketplace) {
 		parent::__construct($mpID, $marketplace);
-		
+
+        $this->blIsPaymentProgramAvailable = false;
+        try {
+            $aResponse = MagnaConnector::gi()->submitRequest(array(
+                'SUBSYSTEM' => $marketplace,
+                'MARKETPLACEID' => $mpID,
+                'ACTION' => 'CheckPaymentProgramAvailability',
+            ));
+            $this->blIsPaymentProgramAvailable = isset($aResponse['IsAvailable']) ? $aResponse['IsAvailable'] : false;
+        } catch (MagnaException $oEx) {
+        }
 		$this->confirmationResponseField = 'DATA';
 		$this->sizeOfBatch = 256;
 	}
@@ -141,4 +153,74 @@ class EbaySyncOrderStatus extends MagnaCompatibleSyncOrderStatus {
 			return parent::getCarrier($orderId);
 		}
 	}
+
+    protected function getConfigKeys() {
+	    $aReturn = parent::getConfigKeys();
+
+        $aReturn['OrderRefundStatus'] = array (
+            'key' => 'refundstatus',
+            'default' => '--',
+        );
+        $aReturn['OrderRefundReason'] = array (
+            'key' => 'refundreason',
+            'default' => false,
+        );
+        $aReturn['OrderRefundComment'] = array (
+            'key' => 'refundcomment',
+            'default' => false,
+        );
+	    return $aReturn;
+    }
+
+
+    protected function isProcessable() {
+        if ($this->blIsPaymentProgramAvailable && $this->config['OrderRefundStatus'] !== '--' && $this->oOrder['orders_status_shop'] === $this->config['OrderRefundStatus']) {
+            $aRequest = array(
+                'ACTION' => 'DoRefund',
+                'MagnalisterOrderId' => $this->oOrder['special'],
+                'ReasonOfRefund' => $this->config['OrderRefundReason'],
+                'Comment' => $this->config['OrderRefundComment'],
+            );
+
+            try {
+                $aData = unserialize($this->oOrder['data']);
+                if(!isset($aData['refund'])) {
+                    MagnaConnector::gi()->submitRequest($aRequest);
+                    $aData['refund'] = 'requested';
+                    $this->oOrder['data'] = serialize($aData);
+                    MagnaDB::gi()->update(TABLE_MAGNA_ORDERS,
+                        array(
+                            'data' => $this->oOrder['data']
+                        )
+                        , array(
+                            'orders_id' => $this->oOrder['orders_id']
+                        )
+                    );
+                }
+            } catch (MagnaException $oEx) {
+                echo print_m($oEx->getMessage());
+                $aErrorData = array(
+                    'MOrderID' => $this->oOrder['special'],
+                );
+
+                if (is_numeric(substr($oEx->getMessage(), 0, 5))) {
+                    $sOrigin = 'eBay';
+                } else {
+                    $sOrigin = 'magnalister';
+                }
+
+                MagnaDB::gi()->insert(
+                    TABLE_MAGNA_COMPAT_ERRORLOG,
+                    array(
+                        'mpID' => $this->mpID,
+                        'errormessage' => $oEx->getMessage(),
+                        'dateadded' => date('Y-m-d H:i:s'),
+                        'additionaldata' => serialize($aErrorData),
+                        'origin' => $sOrigin
+                    )
+                );
+            }
+        }
+        return parent::isProcessable();
+    }
 }

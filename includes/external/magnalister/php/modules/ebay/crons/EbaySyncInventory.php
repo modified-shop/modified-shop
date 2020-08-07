@@ -427,7 +427,7 @@ class EbaySyncInventory extends MagnaCompatibleSyncInventory {
 		"\n\teBay Quantity: ".$this->cItem['Quantity'].
 		"\n\tShop Main Quantity: ". $data['NewQuantity'].
 		"\n\teBay Price: ".$this->cItem['Price'].
-		"\n\tShop Price: ".$product['Price'][$listingMasterType]
+		"\n\tShop Price: ".((isset($product['PriceReduced'][$listingMasterType])) ? $product['PriceReduced'][$listingMasterType] : $product['Price'][$listingMasterType])
 		);
 
 		if ($this->config['StatusMode'] == 'true') {

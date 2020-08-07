@@ -65,7 +65,6 @@ class HoodShippingDetailsProcessor {
 				array(
 					'Service' => '',
 					'Cost' => '',
-					'location' => '',
 				),
 				$settings
 			);
@@ -100,27 +99,13 @@ class HoodShippingDetailsProcessor {
 			).'>'.$service.'</option>'."\n";
 		}
 		$serviceSelect .= '</select>';
-
-		$locationSelect = '';
-		if (!empty($locations)) {
-			if (empty($settings['location'])) $settings['location'] = 'None';
-			$locationSelect .= '<select name="'.$nameKey.'['.$uniqueKey.'][location]">'."\n";
-			foreach ($locations as $key => $loc) {
-				$locationSelect .= '<option value="'.$key.'"'.(
-					($settings['location'] == $key)
-						? ' selected="selected"'
-						: ''
-				).'>'.$loc.'</option>'."\n";
-			}
-			$locationSelect .= '</select>';
-		}
 		$shippingCost = '<input type="text" name="'.$nameKey.'['.$uniqueKey.'][Cost]" value="'.(isset($settings['Cost']) ? $settings['Cost'] : '').'">';
 		$idkey = (isset($this->args['key'])? str_replace('.', '_', $this->args['key']):'').'_'.$uniqueKey;
 
 		$html = '
 			<table id="'.$idkey.'" class="shippingDetails inlinetable nowrap autoWidth"><tbody>
 				<tr class="row1">
-					<td class="paddingRight" '.(empty($locationSelect) ? ' rowspan="2"' : '').'>'.$serviceSelect.'</td>
+					<td class="paddingRight">'.$serviceSelect.'</td>
 					<td class="textright">'.ML_HOOD_LABEL_SHIPPING_COSTS.':&nbsp;</td>
 					<td class="paddingRight">'.$shippingCost.'</td>
 					<td rowspan="2">
@@ -132,9 +117,7 @@ class HoodShippingDetailsProcessor {
 					</td>
 				</tr>
 				<tr class="bottomDashed">
-					'.(!empty($locationSelect) ? '<td class="paddingRight">'.$locationSelect.'</td>' : '')."\n";/*'
-					<td class="textright">'.ML_HOOD_LABEL_EACH_ONE_MORE.':&nbsp;</td>
-					<td class="paddingRight">'.$additionalShippingCost."\n";*/
+        '."\n";
 		ob_start();?>
 		<script type="text/javascript">/*<![CDATA[*/
 			$(document).ready(function() {
