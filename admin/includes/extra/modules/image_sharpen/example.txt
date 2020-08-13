@@ -1,0 +1,21 @@
+<?php
+# MUSTER für DATEI in admin\includes\extra\modules\image_sharpen\ - Dateiname 10_image_sharpen.php
+# Damit ist es möglich Bilder nachzuschärfen, die schmaler sind als 400 Pixel
+# Die Reihenfolge der neuen Einträge kann mit einer vorangestellten Nummer im Dateinamen gesteuert werden
+# https://www.php.net/manual/de/function.imageconvolution.php#104006
+
+// sharpen matrix
+$sharpen_arr = array(
+  array(-1.2, -1, -1.2),
+  array(-1.0, 20, -1.0),
+  array(-1.2, -1, -1.2) 
+);
+
+// calculate the sharpen divisor
+$divisor = array_sum(array_map('array_sum', $sharpen_arr));
+
+// offset
+$offset = 0;
+
+// only sharpen images smaller then 400px
+if ($this->q < 400) $sharpen = true;

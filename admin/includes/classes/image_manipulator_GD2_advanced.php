@@ -427,8 +427,10 @@
       $sharpen = false;
       
       /*
-       * example
+       * example - put a file named 10_image_sharpen.php in /admin/includes/extra/modules/image_sharpen with following code to sharpen images smaller than 400px
        *
+      
+      <?php
       $sharpen_arr = array(
         array(-1.2, -1, -1.2),
         array(-1.0, 20, -1.0),
@@ -439,6 +441,10 @@
       $divisor = array_sum(array_map('array_sum', $sharpen_arr));
       
       $offest = 0;
+      
+      if ($this->q < 400) $sharpen = true;
+      ?>
+      
       */
       
       require_once(DIR_FS_INC.'auto_include.inc.php');
