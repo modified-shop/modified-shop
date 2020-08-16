@@ -44,7 +44,7 @@
   define('TABLE_HEADING_VALUES_PURPOSEID', 'PURPOSE-ID');
   define('TEXT_INFO_HEADING_JSCRIPT_SRC', 'Javascript-Tag f&uuml;r zu ladende Scripts');
   define('TEXT_INFO_HEADING_JSCRIPT_DIRECT', 'Javascript-Tag f&uuml;r direkte Scripts');
-  define('TEXT_INFO_HEADING_JSCRIPT_OTHER_CODE', 'Code f&uuml;r andere Tracking_Elemente');
+  define('TEXT_INFO_HEADING_JSCRIPT_OTHER_CODE', 'Code f&uuml;r andere Tracking-Elemente');
   define('TEXT_INFO_DELETE_VALUE_INTRO', 'Sind Sie sicher, dass Sie diesen Cookie l&ouml;schen wollen?');
   define('TEXT_INFO_HEADING_EXTERNAL_TRIGGER', '&quot;MODOilTrack&quot; enth&auml;lt');
 
