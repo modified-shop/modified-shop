@@ -418,7 +418,7 @@ ALTER TABLE countries ADD UNIQUE idx_countries_iso_code_3 (countries_iso_code_3)
 ALTER TABLE coupon_gv_customer DROP INDEX customer_id;
 ALTER TABLE coupons_description DROP INDEX coupon_id;
 ALTER TABLE coupons_description ADD PRIMARY KEY (coupon_id, language_id);
-ALTER TABLE coupon_email_track ADD UNIQUE idx_coupon_id (coupon_id);
+#ALTER TABLE coupon_email_track ADD UNIQUE idx_coupon_id (coupon_id);
 ALTER TABLE customers_status DROP INDEX idx_orders_status_name;
 ALTER TABLE customers_status ADD UNIQUE idx_customers_status_name (customers_status_name, language_id);
 ALTER TABLE module_newsletter MODIFY title VARCHAR(255) NOT NULL;
