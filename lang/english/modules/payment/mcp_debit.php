@@ -11,28 +11,27 @@ define('MODULE_PAYMENT_MCP_DEBIT_TEXT_DESCRIPTION', 'micropayment&trade; debit m
 links<br />
 <b>tools</b><br />
 <a target="_new" href="../callback/micropayment/cleanup.php">
-    <input type="button" value="clear old orders">
+  <input type="button" value="clear old orders">
 </a><br />
 <br />
 <b>Extern</b><br />
 <a href="http://ecommerce.micropayment.de/download/modified/micropayment_modified-shop_2.x.pdf?version=2.1.0">
-    <input type="button" value="Manual">
+  <input type="button" value="Manual">
 </a>&nbsp;
 <a target="_new" href="https://r120.micropayment.de">
-    <input type="button" value="Micropayment register">
-    </a>
-');
+  <input type="button" value="Micropayment register">
+</a>');
 define('MODULE_PAYMENT_MCP_DEBIT_TEXT_TITLE', 'micropayment&trade; debit');
 define('MODULE_PAYMENT_MCP_DEBIT_TEXT_TITLE_EXTERN', 'Debit');
 define('MODULE_PAYMENT_MCP_DEBIT_TEXT_INFO', '
-<div style="margin:10px;">
-<div style="float:right;"><img src="./images/micropayment/logo_small.png" width="150"/></div><div style="float:left;">
-<b>Please have your debit card details at hand.</b><br />
-To conclude your order, you will now be forwarded to our payment service provider, micropayment&trade;.<br /><br />
-&#10004; secure &nbsp; &#10004; simple &nbsp; &#10004; no registration needed
-</div>
-');
-
+<div style="margin:10px; height:140px;">
+  <div style="float:right;"><img src="./images/micropayment/logo_small.png" width="150"/></div>
+  <div style="float:left;">
+    <b>Please have your debit card details at hand.</b><br />
+    To conclude your order, you will now be forwarded to our payment service provider, micropayment&trade;.<br /><br />
+    &#10004; secure &nbsp; &#10004; simple &nbsp; &#10004; no registration needed
+  </div>
+</div>');
 define('MODULE_PAYMENT_MCP_DEBIT_STATUS_TITLE','Debit');
 define('MODULE_PAYMENT_MCP_DEBIT_STATUS_DESC','Debitmodule by micropayment&trade;');
 define('MODULE_PAYMENT_MCP_DEBIT_MINIMUM_AMOUNT_TITLE','Minimum amount');

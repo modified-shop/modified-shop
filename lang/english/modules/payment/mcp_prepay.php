@@ -11,28 +11,27 @@ define('MODULE_PAYMENT_MCP_PREPAY_TEXT_DESCRIPTION', 'micropayment&trade; Prepay
 links<br />
 <b>tools</b><br />
 <a target="_new" href="../callback/micropayment/cleanup.php">
-    <input type="button" value="clear old orders">
+  <input type="button" value="clear old orders">
 </a><br />
 <br />
 <b>Extern</b><br />
 <a href="http://ecommerce.micropayment.de/download/modified/micropayment_modified-shop_2.x.pdf?version=2.1.0">
-    <input type="button" value="Manual">
+  <input type="button" value="Manual">
 </a>&nbsp;
 <a target="_new" href="https://r120.micropayment.de">
-    <input type="button" value="Micropayment register">
-    </a>
-');
+  <input type="button" value="Micropayment register">
+</a>');
 define('MODULE_PAYMENT_MCP_PREPAY_TEXT_TITLE', 'micropayment&trade; Prepay');
 define('MODULE_PAYMENT_MCP_PREPAY_TEXT_TITLE_EXTERN', 'Prepay');
 define('MODULE_PAYMENT_MCP_PREPAY_TEXT_INFO', '
-<div style="margin:10px;">
-<div style="float:right;"><img src="./images/micropayment/logo_small.png" width="150"/></div><div style="float:left;">
-<b>The pre-filled payment form will be sent to you by Email.</b><br />
-To conclude your order, you will now be forwarded to our payment service provider, micropayment&trade;.<br /><br />
-&#10004; secure &nbsp; &#10004; simple &nbsp; &#10004; no registration needed
-</div>
-');
-
+<div style="margin:10px; height:140px;">
+  <div style="float:right;"><img src="./images/micropayment/logo_small.png" width="150"/></div>
+  <div style="float:left;">
+    <b>The pre-filled payment form will be sent to you by Email.</b><br />
+    To conclude your order, you will now be forwarded to our payment service provider, micropayment&trade;.<br /><br />
+    &#10004; secure &nbsp; &#10004; simple &nbsp; &#10004; no registration needed
+  </div>
+</div>');
 define('MODULE_PAYMENT_MCP_PREPAY_STATUS_TITLE','Prepay');
 define('MODULE_PAYMENT_MCP_PREPAY_STATUS_DESC','Prepay-Module by micropayment&trade;');
 define('MODULE_PAYMENT_MCP_PREPAY_MINIMUM_AMOUNT_TITLE','Minimum amount');
@@ -47,4 +46,5 @@ define('MODULE_PAYMENT_MCP_PREPAY_ALLOWED_DESC','Allow orders only from these co
 define('MODULE_PAYMENT_MCP_PREPAY_COMMENT_INIT','Pending Payment. Expires on %s');
 define('MODULE_PAYMENT_MCP_PREPAY_COMMENT_PAYIN','Paid in %s %s');
 define('MODULE_PAYMENT_MCP_PREPAY_COMMENT_EXPIRED','No deposit');
-?>
+
+define('MODULE_PAYMENT_MCP_SERVICE_TRANSACTION_CANCELLED','The order was cancelled.');

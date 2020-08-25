@@ -24,12 +24,14 @@ links<br />
 define('MODULE_PAYMENT_MCP_CREDITCARD_TEXT_TITLE', 'micropayment&trade; Creditcard');
 define('MODULE_PAYMENT_MCP_CREDITCARD_TEXT_TITLE_EXTERN', 'Creditcard');
 define('MODULE_PAYMENT_MCP_CREDITCARD_TEXT_INFO', '
-<div style="margin:10px;">
-<div style="float:right;"><img src="./images/micropayment/logo_small.png" width="150"/></div><div style="float:left;">
-<b>Please have your credit card details at hand.</b><br />
-To conclude your order, you will now be forwarded to our payment service provider, micropayment&trade;.<br /><br />
-&#10004; secure &nbsp; &#10004; simple &nbsp; &#10004; no registration needed</div>
-');
+<div style="margin:10px; height:140px;">
+  <div style="float:right;"><img src="./images/micropayment/logo_small.png" width="150"/></div>
+  <div style="float:left;">
+    <b>Please have your credit card details at hand.</b><br />
+    To conclude your order, you will now be forwarded to our payment service provider, micropayment&trade;.<br /><br />
+    &#10004; secure &nbsp; &#10004; simple &nbsp; &#10004; no registration needed
+  </div>
+</div>');
 define('MODULE_PAYMENT_MCP_CREDITCARD_STATUS_TITLE','Creditcard');
 define('MODULE_PAYMENT_MCP_CREDITCARD_STATUS_DESC','The following configuration settings are used globally for all micropayment&trade; payment modules and only need to be configured once<br />Creditcard module by micropayment&trade;');
 define('MODULE_PAYMENT_MCP_CREDITCARD_MINIMUM_AMOUNT_TITLE','Minimum amount');
