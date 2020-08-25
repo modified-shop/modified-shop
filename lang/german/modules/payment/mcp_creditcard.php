@@ -20,21 +20,18 @@ Links<br />
 </a>&nbsp;
 <a target="_new" href="https://r120.micropayment.de">
     <input type="button" value="Micropayment Registrierung">
-    </a>
-');
+    </a>');
 define('MODULE_PAYMENT_MCP_CREDITCARD_TEXT_TITLE', 'micropayment&trade; Kreditkarte');
 define('MODULE_PAYMENT_MCP_CREDITCARD_TEXT_TITLE_EXTERN', 'Kreditkarte');
-
 define('MODULE_PAYMENT_MCP_CREDITCARD_TEXT_INFO', '
-<div style="margin:10px;">
-    <div style="float:right;"><img src="./images/micropayment/logo_small.png" width="150"/></div><div style="float:left;">
+<div style="margin:10px; height:140px;">
+  <div style="float:right;"><img src="./images/micropayment/logo_small.png" width="150"/></div>
+  <div style="float:left;">
     <b>Bitte halten Sie Ihre Kreditkartendaten bereit.</b></br />
     Um Ihre Bestellung abzuschlie&szlig;en, leiten wir Sie nun auf die Webseite<br /> unseres Zahlungsdienstleisters micropayment&trade; weiter.<br /><br />
     &#10004; sicher &nbsp; &#10004; einfach &nbsp; &#10004; registrierungsfrei
-
-    </div>
-</div>
-');
+  </div>
+</div>');
 define('MODULE_PAYMENT_MCP_CREDITCARD_STATUS_TITLE','Kreditkarte');
 define('MODULE_PAYMENT_MCP_CREDITCARD_STATUS_DESC','Kreditkartenmodul von micropayment&trade;');
 define('MODULE_PAYMENT_MCP_CREDITCARD_MINIMUM_AMOUNT_TITLE','Mindestbestellwert');

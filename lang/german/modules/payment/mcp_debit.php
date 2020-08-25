@@ -11,29 +11,27 @@ define('MODULE_PAYMENT_MCP_DEBIT_TEXT_DESCRIPTION', 'micropayment&trade; Lastsch
 Links<br />
 <b>Tools</b><br />
 <a target="_new" href="../callback/micropayment/cleanup.php">
-    <input type="button" value="Bestellungen aufr&auml;umen">
+  <input type="button" value="Bestellungen aufr&auml;umen">
 </a><br />
 <br />
 <b>Extern</b><br />
 <a href="http://ecommerce.micropayment.de/download/modified/micropayment_modified-shop_2.x.pdf?version=2.1.0">
-    <input type="button" value="Handbuch">
+  <input type="button" value="Handbuch">
 </a>&nbsp;
 <a target="_new" href="https://r120.micropayment.de">
-    <input type="button" value="Micropayment Registrierung">
-    </a>
-');
+  <input type="button" value="Micropayment Registrierung">
+</a>');
 define('MODULE_PAYMENT_MCP_DEBIT_TEXT_TITLE', 'micropayment&trade; Lastschrift');
 define('MODULE_PAYMENT_MCP_DEBIT_TEXT_TITLE_EXTERN', 'Lastschrift');
 define('MODULE_PAYMENT_MCP_DEBIT_TEXT_INFO', '
-<div style="margin:10px;">
-<div style="float:right;"><img src="./images/micropayment/logo_small.png" width="150"/></div><div style="float:left;">
+<div style="margin:10px; height:140px;">
+  <div style="float:right;"><img src="./images/micropayment/logo_small.png" width="150"/></div>
+  <div style="float:left;">
     <b>Bitte halten Sie Ihre Kontodaten bereit.</b><br />
     Um Ihre Bestellung abzuschlie&szlig;en, leiten wir Sie nun auf die Webseite<br /> unseres Zahlungsdienstleisters micropayment&trade; weiter.<br /><br />
     &#10004; sicher &nbsp; &#10004; einfach &nbsp; &#10004; registrierungsfrei
-
-</div>
-');
-
+  </div>
+</div>');
 define('MODULE_PAYMENT_MCP_DEBIT_STATUS_TITLE','Lastschrift');
 define('MODULE_PAYMENT_MCP_DEBIT_STATUS_DESC','Lastschriftmodul von micropayment&trade;');
 define('MODULE_PAYMENT_MCP_DEBIT_MINIMUM_AMOUNT_TITLE','Minimum Warenkorbwert');
