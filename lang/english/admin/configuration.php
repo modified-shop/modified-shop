@@ -462,9 +462,9 @@ define('SECURITY_CODE_LENGTH_TITLE', 'Length of Gift Voucher Code');
 define('SECURITY_CODE_LENGTH_DESC', 'Enter here the length of the Gift Voucher Code (max. 16 characters)');
 
 define('NEW_SIGNUP_GIFT_VOUCHER_AMOUNT_TITLE', 'Welcome Gift Voucher Amount');
-define('NEW_SIGNUP_GIFT_VOUCHER_AMOUNT_DESC', 'Welcome Gift Voucher Amount: If you do not wish to send a Gift Voucher in your create account E-Mail, put 0 for no amount, else place the amount here, i.e. 10.00 or 50.00, no currency signs');
+define('NEW_SIGNUP_GIFT_VOUCHER_AMOUNT_DESC', 'Welcome Gift Voucher Amount: If you do not wish to send a Gift Voucher in your create account E-Mail, put 0 for no amount, else place the amount here, i.e. 10.00 or 50.00, no currency signs. The Gift Voucher Code is generated automatically by the store.<br /><b>Attention:</b> Under "Configuration" -> "<a href="'.xtc_href_link(FILENAME_CONFIGURATION, 'gID=12').'"><strong>"E-Mail Options"</strong></a>" the setting "E-Mail upon Create Account" must be set to "Yes".');
 define('NEW_SIGNUP_DISCOUNT_COUPON_TITLE', 'Welcome Discount Coupon Code');
-define('NEW_SIGNUP_DISCOUNT_COUPON_DESC', 'Welcome Discount Coupon Code: if you do not want to send a Discount Coupon in your create account E-Mail, leave this field blank, else place the coupon code here you wish to use.<br /><b>Attention:</b> The coupon code must be created in the <a href="'.xtc_href_link(FILENAME_COUPON_ADMIN).'"><b>Coupon Admin</b></a> before.');
+define('NEW_SIGNUP_DISCOUNT_COUPON_DESC', 'Welcome Discount Coupon Code: If you do not want to send a Discount Coupon in your create account E-Mail, leave this field blank, else place the coupon code here you wish to use.<br /><b>Attention:</b> Under "Configuration" -> "<a href="'.xtc_href_link(FILENAME_CONFIGURATION, 'gID=12').'"><strong>"E-Mail Options"</strong></a>" the setting "E-Mail upon Create Account" must be set to "Yes" and the coupon code must be created in the <a href="'.xtc_href_link(FILENAME_COUPON_ADMIN).'"><b>Coupon Admin</b></a> before.');
 
 define('ACTIVATE_SHIPPING_STATUS_TITLE','Display Shipping Status');
 define('ACTIVATE_SHIPPING_STATUS_DESC','Show shipping status? (Different dispatch times can be specified for individual products. If enabled, a new item <b>Delivery Status</b> is displayed on product input)');
