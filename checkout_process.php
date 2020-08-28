@@ -29,6 +29,7 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+define('SESSION_FORCE_COOKIE_USE', 'False');
 include ('includes/application_top.php');
 
 // include needed functions
