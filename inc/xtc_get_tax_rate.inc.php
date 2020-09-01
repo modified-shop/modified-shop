@@ -30,9 +30,6 @@
         $country_id = $_SESSION['customer_country_id'];
         $zone_id = $_SESSION['customer_zone_id'];
       }
-    } else {
-      $country_id = $country_id;
-      $zone_id = $zone_id;
     }
     
     if (!isset($tax_rate_array[$country_id][$zone_id][$class_id])) {
