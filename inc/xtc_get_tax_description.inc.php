@@ -30,7 +30,7 @@
       $country_id = $_SESSION['country'];
     }
   	
-  	if ( ($country_id == -1) && ($zone_id == -1) ) {
+    if ($country_id == -1 && $zone_id == -1) {
       if (!isset($_SESSION['customer_id'])) {
         $country_id = STORE_COUNTRY;
         $zone_id = STORE_ZONE;
@@ -38,9 +38,6 @@
         $country_id = $_SESSION['customer_country_id'];
         $zone_id = $_SESSION['customer_zone_id'];
       }
-    } else {
-      $country_id = $country_id;
-      $zone_id = $zone_id;
     }
   	
   	if (!isset($tax_description_array[$country_id][$zone_id][$class_id])) {
