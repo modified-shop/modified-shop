@@ -138,11 +138,7 @@ if (xtc_not_null($action)) {
       xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_path($categories_id).'&cID='.$categories_id)); 
       break;
     case 'update_product' :
-      if (isset($_POST['action']) && $_POST['action'] == 'update') {
-        $result = $catfunc->update_product($_POST);
-      } else {
-        $result = $catfunc->insert_product($_POST, '', 'update');
-      }
+      $result = $catfunc->insert_product($_POST, '', 'update');
       //redirect by update button
       if(isset($_POST['prod_update']) || $result['error'] === true) {
         xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('action', 'pID')).'action=new_product&pID='.$result['products_id']));
