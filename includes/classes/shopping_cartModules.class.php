@@ -154,7 +154,7 @@ class shoppingCartModules {
     public static function remove_custom_inputs_session($products_id,$type)
     {
         self::$function_call = 'remove_custom_inputs_session';
-        return self::call_module_method($products_id);
+        return self::call_module_method($products_id,$type);
     }
     
     public static function calculate_product_price($products_price, $product, $contents, $products_id)
