@@ -120,7 +120,7 @@ class InputFilter {
     if (strtolower(trim($source)) == 'null') { return ''; }
     if (strtolower(trim($source)) == 'now()') { return ''; }
     
-    return strip_tags($source);
+    return preg_replace('~<\S[^<>]*>~', '', $source);
 	}
 
 	/** 
