@@ -22,4 +22,7 @@ DELETE FROM `configuration` WHERE `configuration_key` = 'MAX_ROW_LISTS_ATTR_OPTI
 #Tomcraft - 2020-08-03 - delete obsolete configuration
 DELETE FROM `configuration` WHERE `configuration_key` = 'MAX_DISPLAY_STATS_RESULTS';
 
+#GTB - 2020-09-10 - delete obsolete downloads
+DELETE pad FROM `products_attributes_download` pad LEFT JOIN `products_attributes` pa ON pad.products_attributes_id = pa.products_attributes_id WHERE pa.products_attributes_id IS NULL;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
