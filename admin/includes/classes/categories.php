@@ -424,11 +424,25 @@ class categories {
     xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_IMAGES." WHERE products_id = '".(int)$product_id."'");
     xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_TO_CATEGORIES." WHERE products_id = '".(int)$product_id."'");
     xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_DESCRIPTION." WHERE products_id = '".(int)$product_id."'");
+    
+    xtc_db_query("DELETE pad 
+                    FROM ".TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD." pad
+                    JOIN ".TABLE_PRODUCTS_ATTRIBUTES." pa 
+                         ON pa.products_attributes_id = pad.products_attributes_id
+                            AND pa.products_id = '".(int)$product_id."'");
     xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_ATTRIBUTES." WHERE products_id = '".(int)$product_id."'");
+
     xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_BASKET." WHERE products_id = '" . (int)$product_id . "' OR products_id LIKE '" . (int)$product_id . "{%'");
     xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_BASKET_ATTRIBUTES." WHERE products_id = '" . (int)$product_id . "' OR products_id LIKE '" . (int)$product_id . "{%'");
     xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_TAGS." WHERE products_id = '".(int)$product_id."'");
 
+    xtc_db_query("DELETE rd
+                    FROM ".TABLE_REVIEWS_DESCRIPTION." rd
+                    JOIN ".TABLE_REVIEWS." r
+                         ON r.reviews_id = rd.reviews_id
+                            AND r.products_id = '".(int)$product_id."'");
+    xtc_db_query("DELETE FROM ".TABLE_REVIEWS." WHERE products_id = '".(int)$product_id."'");
+    
     if (defined('MODULE_WISHLIST_SYSTEM_STATUS') && MODULE_WISHLIST_SYSTEM_STATUS == 'true') {
       xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_WISHLIST." WHERE products_id = '" . (int)$product_id . "' OR products_id LIKE '" . (int)$product_id . "{%'");
       xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_WISHLIST_ATTRIBUTES." WHERE products_id = '" . (int)$product_id . "' OR products_id LIKE '" . (int)$product_id . "{%'");
@@ -439,14 +453,6 @@ class categories {
       if (isset($customers_statuses_array[$i]['id']))
         xtc_db_query("DELETE FROM ".TABLE_PERSONAL_OFFERS_BY.$customers_statuses_array[$i]['id']." WHERE products_id = '".(int)$product_id."'");
     }
-
-    $product_reviews_query = xtc_db_query("SELECT reviews_id 
-                                             FROM ".TABLE_REVIEWS." 
-                                            WHERE products_id = '".(int)$product_id."'");
-    while ($product_reviews = xtc_db_fetch_array($product_reviews_query)) {
-      xtc_db_query("DELETE FROM ".TABLE_REVIEWS_DESCRIPTION." WHERE reviews_id = '".$product_reviews['reviews_id']."'");
-    }
-    xtc_db_query("DELETE FROM ".TABLE_REVIEWS." WHERE products_id = '".(int)$product_id."'");
   }
 
 
@@ -468,6 +474,33 @@ class categories {
     }
     //new module support
     $this->catModules->delete_product($product_id, $product_categories);
+  }
+
+
+  function update_product($products_data) {
+    $products_id = xtc_db_prepare_input($products_data['products_id']);
+
+    $prod_quantity_query = xtc_db_query("SELECT products_quantity 
+                                           FROM ".TABLE_PRODUCTS." 
+                                          WHERE products_id = '".$products_id."'");
+    $prod_quantity = xtc_db_fetch_array($prod_quantity_query);
+    if ($prod_quantity['products_quantity'] != $products_data['products_quantity_before_edit']) {
+      $messageStack->add_session(ERROR_QTY_SAVE_CHANGED, 'error');
+    } else {
+      xtc_db_query("UPDATE ".TABLE_PRODUCTS." 
+                       SET products_quantity = '".xtc_db_input($products_data['products_quantity'])."' 
+                     WHERE products_id = '".(int)$products_id."'");  
+    
+      if (xtc_db_affected_rows() > 0) {
+        $messageStack->add_session(TEXT_STOCK_UPDATE_SUCCESS, 'success');
+      } else {
+        $messageStack->add_session(TEXT_STOCK_UPDATE_ERROR, 'error');
+      }
+    }
+    
+    return array('error' => true,
+                 'products_id' => $products_id
+                 );
   }
 
 
