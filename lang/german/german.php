@@ -509,20 +509,8 @@ define('HEADER_TOTAL','Summe');
 define('HEADER_MODEL', 'Artikel Nr.');
 
 ### PayPal API Modul
-define('NAVBAR_TITLE_PAYPAL_CHECKOUT','PayPal-Checkout');
-define('PAYPAL_ERROR','PayPal Abbruch');
-define('PAYPAL_NOT_AVIABLE','PayPal Express steht zur Zeit leider nicht zur Verf&uuml;gung.<br />Bitte w&auml;hlen Sie eine andere Zahlungsart<br />oder versuchen Sie es sp&auml;ter noch einmal.<br />Danke f&uuml;r Ihr Verst&auml;ndnis.<br />');
-define('PAYPAL_FEHLER','PayPal hat einen Fehler bei der Abwicklung gemeldet.<br />Ihre Bestellung ist gespeichert, wird aber nicht ausgef&uuml;hrt.<br />Bitte geben Sie eine neue Bestellung ein.<br />Danke f&uuml;r Ihr Verst&auml;ndnis.<br />');
-define('PAYPAL_WARTEN','PayPal hat einen Fehler bei der Abwicklung gemeldet.<br />Sie m&uuml;ssen noch einmal zu PayPal, um die Bestellung zu bezahlen.<br />Unten sehen Sie die gespeicherte Bestellung.<br />Danke f&uuml;r Ihr Verst&auml;ndnis.<br />Bitte dr&uuml;cken Sie erneut den Button PayPal Express.<br />');
-define('PAYPAL_NEUBUTTON','Bitte erneut dr&uuml;cken, um die Bestellung zu bezahlen.<br />Jede andere Taste f&uuml;hrt zum Abbruch der Bestellung.');
 define('ERROR_ADDRESS_NOT_ACCEPTED', '* Solange Sie Ihre Rechnungs- und Versandadresse nicht akzeptieren,\n k&ouml;nnen wir Ihre Bestellung bedauerlicherweise nicht entgegennehmen!\n\n');
-define('PAYPAL_GS','Gutschein/Coupon');
-define('PAYPAL_TAX','MwSt.');
-define('PAYPAL_EXP_WARN','Achtung! Eventuell anfallende Versandkosten werden erst im Shop endg&uuml;ltig berechnet.');
 define('PAYPAL_EXP_VORL','Vorl&auml;ufige Versandkosten');
-define('PAYPAL_EXP_VERS','6.90');
-define('PAYPAL_ADRESSE','Das Land in Ihrer PayPal-Versand-Adresse ist in unserem Shop nicht eingetragen.<br />Bitte nehmen Sie mit uns Kontakt auf.<br />Danke f&uuml;r Ihr Verst&auml;ndnis.<br />Von PayPal empfangenes Land: ');
-define('PAYPAL_AMMOUNT_NULL','Die zu erwartende Auftrags-Summe (ohne Versand) ist gleich 0.<br />Dadurch steht PayPal Express nicht zur Verf&uuml;gung.<br />Bitte w&auml;hlen Sie eine andere Zahlungsart.<br />Danke f&uuml;r Ihr Verst&auml;ndnis.<br />');
 ### PayPal API Modul
 
 define('BASICPRICE_VPE_TEXT','bei dieser Menge nur ');

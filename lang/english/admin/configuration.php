@@ -555,51 +555,6 @@ define('REVOCATION_ID_DESC','Select content to display revocation');
 define('DISPLAY_REVOCATION_ON_CHECKOUT_TITLE','Display right of revocation');
 define('DISPLAY_REVOCATION_ON_CHECKOUT_DESC','Display right of revocation on checkout_confirmation.<br/><b>Attention:</b> "Display Conditions on Checkout" must be enabled.');
 
-// BOF - Tomcraft - 2009-10-03 - Paypal Express Modul
-define('PAYPAL_MODE_TITLE','PayPal Mode:');
-define('PAYPAL_MODE_DESC','Live (Default) or Test (Sandbox). Depending on the mode, you first have to create the PayPal API access: <br/>Link: <a href="https://www.paypal.com/de/cgi-bin/webscr?cmd=_get-api-signature&generic-flow=true" target="_blank"><strong>Create API-access for live-mode</strong></a><br/>Link: <a href="https://www.sandbox.paypal.com/de/cgi-bin/webscr?cmd=_get-api-signature&generic-flow=true" target="_blank"><strong>Create API-access for sandbox-mode</strong></a><br/>You still have no PayPal account? <a href="https://www.paypal.com/de/cgi-bin/webscr?cmd=_registration-run" target="_blank"><strong>Click here to create one.</strong></a>');
-define('PAYPAL_API_USER_TITLE','PayPal API-User (Live)');
-define('PAYPAL_API_USER_DESC','Enter user name (live)');
-define('PAYPAL_API_PWD_TITLE','PayPal API-Password (Live)');
-define('PAYPAL_API_PWD_DESC','Enter password (live)');
-define('PAYPAL_API_SIGNATURE_TITLE','PayPal API-Signature (Live)');
-define('PAYPAL_API_SIGNATURE_DESC','Enter API signature (live)');
-define('PAYPAL_API_SANDBOX_USER_TITLE','PayPal-API-User (Sandbox)');
-define('PAYPAL_API_SANDBOX_USER_DESC','Enter user name (sandbox)');
-define('PAYPAL_API_SANDBOX_PWD_TITLE','PayPal API-Password (Sandbox)');
-define('PAYPAL_API_SANDBOX_PWD_DESC','Enter password (sandbox)');
-define('PAYPAL_API_SANDBOX_SIGNATURE_TITLE','PayPal API-Signature (Sandbox)');
-define('PAYPAL_API_SANDBOX_SIGNATURE_DESC','Enter API signature (sandbox)');
-define('PAYPAL_API_VERSION_TITLE','PayPal API-Version');
-define('PAYPAL_API_VERSION_DESC','Enter PayPal API version, e.g. 119.0');
-define('PAYPAL_API_IMAGE_TITLE','PayPal Shop Logo');
-define('PAYPAL_API_IMAGE_DESC','Please enter the name of the logo file to be displayed with PayPal.<br />Note: Only displayed if the shop uses SSL.<br />Max. width: 750px, max. height: 90px.<br />The logo file is called from: '.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
-define('PAYPAL_API_CO_BACK_TITLE','PayPal Background Colour');
-define('PAYPAL_API_CO_BACK_DESC','Enter a background colour to be displayed with PayPal. e.g. FEE8B9');
-define('PAYPAL_API_CO_BORD_TITLE','PayPal Border Colour');
-define('PAYPAL_API_CO_BORD_DESC','Enter a border colour to be displayed with PayPal. e.g. E4C558');
-define('PAYPAL_ERROR_DEBUG_TITLE','PayPal Error Message');
-define('PAYPAL_ERROR_DEBUG_DESC','Display PayPal error message? default=false');
-define('PAYPAL_ORDER_STATUS_TMP_ID_TITLE','Order Status "cancel"');
-define('PAYPAL_ORDER_STATUS_TMP_ID_DESC','Select the order status for aborted transaction (e.g. PayPal abort)');
-define('PAYPAL_ORDER_STATUS_SUCCESS_ID_TITLE','Order Status OK');
-define('PAYPAL_ORDER_STATUS_SUCCESS_ID_DESC','Select the order status for a successful transaction (e.g. open PP paid)');
-define('PAYPAL_ORDER_STATUS_PENDING_ID_TITLE','Order Status "pending"');
-define('PAYPAL_ORDER_STATUS_PENDING_ID_DESC','Select the order status for a transaction which hasn\'t been fully processed by PayPal (e.g. open PP waiting)');
-define('PAYPAL_ORDER_STATUS_REJECTED_ID_TITLE','Order Status "rejected"');
-define('PAYPAL_ORDER_STATUS_REJECTED_ID_DESC','Select the order status for a rejected transaction (e.g. PayPal rejected)');
-define('PAYPAL_COUNTRY_MODE_TITLE','PayPal Country Mode');
-define('PAYPAL_COUNTRY_MODE_DESC','Select a country mode. Some PayPal functions are available only in the UK (e.g. DirectPayment)');
-define('PAYPAL_EXPRESS_ADDRESS_CHANGE_TITLE','PayPal-Express Address Data');
-define('PAYPAL_EXPRESS_ADDRESS_CHANGE_DESC','Permits changing address data transferred by PayPal.');
-define('PAYPAL_EXPRESS_ADDRESS_OVERRIDE_TITLE','Ship-To-Address Overwrite');
-define('PAYPAL_EXPRESS_ADDRESS_OVERRIDE_DESC','Permits changing address data transferred by PayPal (existing account)');
-define('PAYPAL_INVOICE_TITLE','Shop prefix for PayPal invoice no.');
-define('PAYPAL_INVOICE_DESC','Arbitrary string of letters (prefix), which is placed in front of each order number and is used for generating the PayPal invoice number.<br />This allows multiple store operation with only one PayPal account. Conflicts regarding the order numbers are avoided. Each order has its own invoice numbers within the PayPal account.');
-define('PAYPAL_BRANDNAME_TITLE','PayPal shop-name');
-define('PAYPAL_BRANDNAME_DESC','Enter the name wich should be displayed at PayPal.');
-// EOF - Tomcraft - 2009-10-03 - Paypal Express Modul
-
 // BOF - Tomcraft - 2009-11-02 - New admin top menu
 define('USE_ADMIN_TOP_MENU_TITLE' , 'Admin Top Navigation');
 define('USE_ADMIN_TOP_MENU_DESC' , 'Activate Admin Top Navigation? Otherwise the menu will be displayed on the left (classic view)');
@@ -852,8 +807,6 @@ define('GUEST_ACCOUNT_EDIT_DESC', 'enable guest accounts to see and edit avvount
 
 define('EMAIL_SIGNATURE_ID_TITLE', 'E-Mail signature');
 define('EMAIL_SIGNATURE_ID_DESC', 'Select the content to be used for the signature in shop E-Mails.');
-
-define('TEXT_PAYPAL_NOT_INSTALLED', '<div class="important_info">PayPal not installed. This can be done <a href="'.xtc_href_link(FILENAME_MODULES, 'set=payment&module=paypal').'">here</a>.</div>');
 
 define('POLICY_MIN_LOWER_CHARS_TITLE', 'Password lower case');
 define('POLICY_MIN_LOWER_CHARS_DESC', 'How many lower case signs should to the password at least have?');
