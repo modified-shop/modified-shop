@@ -83,5 +83,6 @@ if (xtc_db_num_rows($content_query, true) > 0) {
   $module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/products_media.html');
 
   $smarty->assign('MODULE_conent_manager_media', $module);
+  $smarty->assign('MODULE_content_manager_media', $module); // Additional Smarty for fix typo
 }
 ?>
