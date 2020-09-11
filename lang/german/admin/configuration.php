@@ -554,51 +554,6 @@ define('REVOCATION_ID_DESC','W&auml;hle den Content zur Anzeige des Widerrufsrec
 define('DISPLAY_REVOCATION_ON_CHECKOUT_TITLE','Anzeige Widerrufsrecht');
 define('DISPLAY_REVOCATION_ON_CHECKOUT_DESC','Widerrufsrecht auf checkout_confirmation anzeigen.<br/><b>Hinweis:</b> "Anzeigen der AGB" muss aktiv sein.');
 
-// BOF - Tomcraft - 2009-10-03 - Paypal Express Modul
-define('PAYPAL_MODE_TITLE','PayPal-Modus:');
-define('PAYPAL_MODE_DESC','Live (Normal) oder Testbetrieb (Sandbox). Je nach Modus muss bei PayPal zun&auml;chst ein API-Zugriff erstellt werden: <br/>Link: <a href="https://www.paypal.com/de/cgi-bin/webscr?cmd=_get-api-signature&generic-flow=true" target="_blank"><strong>API-Zugriff f&uuml;r live-Modus einrichten</strong></a><br/>Link: <a href="https://www.sandbox.paypal.com/de/cgi-bin/webscr?cmd=_get-api-signature&generic-flow=true" target="_blank"><strong>API-Zugriff f&uuml;r sandbox-Modus einrichten</strong></a><br/>Sie haben noch gar kein PayPal Konto? <a href="https://www.paypal.com/de/cgi-bin/webscr?cmd=_registration-run" target="_blank"><strong>Klicken Sie hier, um eins zu erstellen.</strong></a>');
-define('PAYPAL_API_USER_TITLE','PayPal-API-Benutzer (Live)');
-define('PAYPAL_API_USER_DESC','Tragen Sie hier den Benutzernamen ein.');
-define('PAYPAL_API_PWD_TITLE','PayPal-API-Passwort (Live)');
-define('PAYPAL_API_PWD_DESC','Tragen Sie hier das Passwort ein.');
-define('PAYPAL_API_SIGNATURE_TITLE','PayPal-API-Signatur (Live)');
-define('PAYPAL_API_SIGNATURE_DESC','Tragen Sie hier die API Signatur ein.');
-define('PAYPAL_API_SANDBOX_USER_TITLE','PayPal-API-Benutzer (Sandbox)');
-define('PAYPAL_API_SANDBOX_USER_DESC','Tragen Sie hier den Benutzernamen ein.');
-define('PAYPAL_API_SANDBOX_PWD_TITLE','PayPal-API-Passwort (Sandbox)');
-define('PAYPAL_API_SANDBOX_PWD_DESC','Tragen Sie hier das Passwort ein.');
-define('PAYPAL_API_SANDBOX_SIGNATURE_TITLE','PayPal-API-Signatur (Sandbox)');
-define('PAYPAL_API_SANDBOX_SIGNATURE_DESC','Tragen Sie hier die API Signatur ein.');
-define('PAYPAL_API_VERSION_TITLE','PayPal-API-Version');
-define('PAYPAL_API_VERSION_DESC','Tragen Sie hier die aktuelle PayPal API Version ein - z.B.: 119.0');
-define('PAYPAL_API_IMAGE_TITLE','PayPal Shop-Logo');
-define('PAYPAL_API_IMAGE_DESC','Tragen Sie hier die Logo-Datei ein, die bei PayPal angezeigt werden soll.<br />Achtung: Wird nur &uuml;bertragen, wenn der Shop mit SSL arbeitet.<br />Das Bild darf max. 750px breit und 90px hoch sein.<br />Aufgerufen wird die Datei aus: '.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
-define('PAYPAL_API_CO_BACK_TITLE','PayPal Hintergrund-Farbe');
-define('PAYPAL_API_CO_BACK_DESC','Tragen Sie hier die Hintergrundfarbe ein, die bei PayPal angezeigt werden soll. z.B. FEE8B9');
-define('PAYPAL_API_CO_BORD_TITLE','PayPal Rahmen-Farbe');
-define('PAYPAL_API_CO_BORD_DESC','Tragen Sie hier die Rahmenfarbe ein, die bei PayPal angezeigt werden soll. z.B. E4C558');
-define('PAYPAL_ERROR_DEBUG_TITLE','PayPal Fehler Anzeige');
-define('PAYPAL_ERROR_DEBUG_DESC','Soll der original PayPal Fehler angezeigt werden? Normal=false');
-define('PAYPAL_ORDER_STATUS_TMP_ID_TITLE','Bestellstatus "abgebrochen"');
-define('PAYPAL_ORDER_STATUS_TMP_ID_DESC','W&auml;hlen Sie den Bestellstatus f&uuml;r eine abgebrochene Aktion aus (z.B. PayPal Abbruch)');
-define('PAYPAL_ORDER_STATUS_SUCCESS_ID_TITLE','Bestellstatus OK');
-define('PAYPAL_ORDER_STATUS_SUCCESS_ID_DESC','W&auml;hlen Sie den Bestellstatus f&uuml;r eine erfolgreiche Transaktion aus (z.B. Offen PP bezahlt)');
-define('PAYPAL_ORDER_STATUS_PENDING_ID_TITLE','Bestellstatus "in Bearbeitung"');
-define('PAYPAL_ORDER_STATUS_PENDING_ID_DESC','W&auml;hlen Sie den Bestellstatus f&uuml;r eine Transaktion aus, die noch nicht von PayPal bearbeitet wurde (z.B. Offen PP wartend)');
-define('PAYPAL_ORDER_STATUS_REJECTED_ID_TITLE','Bestellstatus "abgewiesen"');
-define('PAYPAL_ORDER_STATUS_REJECTED_ID_DESC','W&auml;hlen Sie den Bestellstatus f&uuml;r eine abgelehnte Transaktion aus (z.B. PayPal abgelehnt)');
-define('PAYPAL_COUNTRY_MODE_TITLE','PayPal-L&auml;ndermodus');
-define('PAYPAL_COUNTRY_MODE_DESC','W&auml;hlen Sie hier die Einstellung f&uuml;r den L&auml;ndermodus. Verschiedene Funktionen von PayPal sind nur in UK m&ouml;glich (z.b. DirectPayment )');
-define('PAYPAL_EXPRESS_ADDRESS_CHANGE_TITLE','PayPal-Express-Adressdaten');
-define('PAYPAL_EXPRESS_ADDRESS_CHANGE_DESC','Erlaubt das &Auml;ndern der von PayPal &uuml;bermittelten Adressdaten');
-define('PAYPAL_EXPRESS_ADDRESS_OVERRIDE_TITLE','Lieferadresse &uuml;berschreiben');
-define('PAYPAL_EXPRESS_ADDRESS_OVERRIDE_DESC','Erlaubt das &Auml;ndern der von PayPal &uuml;bermittelten Adressdaten (bestehendes Konto)');
-define('PAYPAL_INVOICE_TITLE','Shop-Pr&auml;fix f&uuml;r PayPal Rechnungs-Nr.');
-define('PAYPAL_INVOICE_DESC','Frei w&auml;hlbare Buchstabenfolge (Pr&auml;fix), die der Bestellnummer vorangestellt und f&uuml;r die Erzeugung der PayPal-Rechnungsnummer genutzt wird.<br />Dadurch k&ouml;nnen mehrere Shops mit nur einem PayPal Konto arbeiten. Konflikte bei gleichen Bestellnummern werden vermieden. Jede Bestellung erh&auml;lt eine eigene Rechnungs-Nummer im PayPal Konto.');
-define('PAYPAL_BRANDNAME_TITLE','PayPal Shop-Name');
-define('PAYPAL_BRANDNAME_DESC','Tragen Sie hier den den Namen ein, der bei PayPal angezeigt werden soll.');
-// EOF - Tomcraft - 2009-10-03 - Paypal Express Modul
-
 // BOF - Tomcraft - 2009-11-02 - New admin top menu
 define('USE_ADMIN_TOP_MENU_TITLE' , 'Admin Top Navigation');
 define('USE_ADMIN_TOP_MENU_DESC' , 'Admin Top Navigation aktivieren? Ansonsten wird das Men&uuml; am linken Rand angezeigt (klassisch)');
@@ -849,8 +804,6 @@ define('GUEST_ACCOUNT_EDIT_DESC', 'D&uuml;rfen G&auml;ste ihre Accountdetails se
 
 define('EMAIL_SIGNATURE_ID_TITLE', 'E-Mail Signatur');
 define('EMAIL_SIGNATURE_ID_DESC', 'W&auml;hlen Sie den Content aus, der als Signatur in den Shop E-Mails verwendet werden soll.');
-
-define('TEXT_PAYPAL_NOT_INSTALLED', '<div class="important_info">PayPal wurde noch nicht installiert. Dies kann <a href="'.xtc_href_link(FILENAME_MODULES, 'set=payment&module=paypal').'">hier</a> gemacht werden.</div>');
 
 define('POLICY_MIN_LOWER_CHARS_TITLE', 'Passwort Kleinbuchstaben');
 define('POLICY_MIN_LOWER_CHARS_DESC', 'Wie viele Kleinbuchstaben soll das Passwort mindestens haben?');
