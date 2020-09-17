@@ -567,14 +567,14 @@ class PayPalCommon extends PayPalAuth {
     
     $where = '';
     if (ACCOUNT_COMPANY == 'true') {
-      $where .= " AND entry_company = '".$data['delivery_company']."'";
+      $where .= " AND entry_company = '".xtc_db_input($data['delivery_company'])."'";
     }
     if (ACCOUNT_SUBURB == 'true') {
-      $where .= " AND entry_suburb = '".$data['delivery_suburb']."'";
+      $where .= " AND entry_suburb = '".xtc_db_input($data['delivery_suburb'])."'";
     }
     if (ACCOUNT_STATE == 'true') {
-      $where .= " AND entry_zone_id = '".$data['delivery_zone_id']."'";
-      $where .= " AND entry_state = '".$data['delivery_state']."'";
+      $where .= " AND entry_zone_id = '".xtc_db_input($data['delivery_zone_id'])."'";
+      $where .= " AND entry_state = '".xtc_db_input($data['delivery_state'])."'";
     }
 
     $check_address_query = xtc_db_query("SELECT address_book_id
