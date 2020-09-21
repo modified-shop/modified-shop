@@ -67,6 +67,7 @@ class PayPalAdmin extends PayPalPayment {
           'status' => (($this->get_config('PAYPAL_STANDARD_PROFILE') == $profile->getId()) ? true : false),
           'flow_config' => array(
             'landing_page_type' => ((is_object($flowConfig)) ? $flowConfig->getLandingPageType() : ''),
+            'user_action' => ((is_object($flowConfig)) ? $flowConfig->getUserAction() : ''),
           ),
           'input_fields' => array(
             'allow_note' => ((is_object($inputFields)) ? $inputFields->getAllowNote() : ''),
@@ -94,6 +95,7 @@ class PayPalAdmin extends PayPalPayment {
     // set FlowConfig
     $flowConfig = new FlowConfig();
     $flowConfig->setLandingPageType($config['flow_config']['landing_page_type']);
+    $flowConfig->setUserAction('commit');
 
     // set Presentation
     $presentation = new Presentation();
@@ -138,6 +140,7 @@ class PayPalAdmin extends PayPalPayment {
     // set FlowConfig
     $flowConfig = new FlowConfig();
     $flowConfig->setLandingPageType($config['flow_config']['landing_page_type']);
+    $flowConfig->setUserAction('commit');
 
     // set Presentation
     $presentation = new Presentation();

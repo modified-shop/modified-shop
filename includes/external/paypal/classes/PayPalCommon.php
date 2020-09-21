@@ -361,6 +361,7 @@ class PayPalCommon extends PayPalAuth {
         'status' => (($this->get_config('PAYPAL_STANDARD_PROFILE') == $profile->getId()) ? true : false),
         'flow_config' => array(
           'landing_page_type' => ((is_object($flowConfig)) ? $flowConfig->getLandingPageType() : ''),
+          'user_action' => ((is_object($flowConfig)) ? $flowConfig->getUserAction() : ''),
         ),
         'input_fields' => array(
           'allow_note' => ((is_object($inputFields)) ? $inputFields->getAllowNote() : ''),
