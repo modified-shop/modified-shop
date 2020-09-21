@@ -64,7 +64,6 @@
       // startDate and endDate have to be a unix timestamp. Use mktime !
       // if set then both have to be valid startDate and endDate
       $this->mode = $mode;
-      $this->tax_include = defined('DISPLAY_PRICE_WITH_TAX')?DISPLAY_PRICE_WITH_TAX:'';
 
       $this->statusFilter = $statusFilter;
       $this->paymentFilter = $payment;     

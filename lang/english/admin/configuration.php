@@ -70,9 +70,6 @@ define('STORE_NAME_ADDRESS_DESC' , 'Store details used for display and printing'
 define('SHOW_COUNTS_TITLE' , 'Display Number of Products after Category Name');
 define('SHOW_COUNTS_DESC' , 'Display number of products after each category name, counting products recursively');
 
-define('DISPLAY_PRICE_WITH_TAX_TITLE' , 'Display Prices with Tax');
-define('DISPLAY_PRICE_WITH_TAX_DESC' , 'Display prices with tax included (true) or add the tax at the end (false)');
-
 define('DEFAULT_CUSTOMERS_STATUS_ID_ADMIN_TITLE' , 'Customer Status of Administrators for the frontend');
 define('DEFAULT_CUSTOMERS_STATUS_ID_ADMIN_DESC' , 'Choose the default customer status for administrators for the frontend');
 define('DEFAULT_CUSTOMERS_STATUS_ID_GUEST_TITLE' , 'Customer Status of Guests');

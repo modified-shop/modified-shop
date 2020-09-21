@@ -47,11 +47,7 @@ class KlarnaMobile extends KlarnaMobileImpl
 
         $iTax    = tep_get_tax_rate($aProduct_info['products_tax_class_id']);
 
-        if(DISPLAY_PRICE_WITH_TAX == 'true') {
-            $iPrice_with_tax = $currencies->get_value($currency) * $aProduct_info['products_price'];
-        } else {
-            $iPrice_with_tax = $currencies->get_value($currency) * $aProduct_info['products_price'] * (($iTax/100)+1);
-        }
+        $iPrice_with_tax = $currencies->get_value($currency) * $aProduct_info['products_price'] * (($iTax/100)+1);
 
         // Add goods
         $this->oKlarna->addArticle(
