@@ -128,13 +128,13 @@
                                     ON o.orders_id = op.orders_id";
 
       // query for shipping
-      $this->queryShipping = "SELECT sum(ot.value/o.currency_value) as shipping 
+      $this->queryShipping = "SELECT sum(round(ot.value, 2)/o.currency_value) as shipping 
                                 FROM " . TABLE_ORDERS . " o
                                 JOIN " . TABLE_ORDERS_TOTAL . " ot 
                                      ON (ot.orders_id = o.orders_id AND  ot.class = 'ot_shipping')";
 
       // query for additional
-      $this->queryAdditional = "SELECT sum(ot.value/o.currency_value) as additional 
+      $this->queryAdditional = "SELECT sum(round(ot.value, 2)/o.currency_value) as additional 
                                   FROM " . TABLE_ORDERS . " o
                                   JOIN " . TABLE_ORDERS_TOTAL . " ot 
                                        ON (ot.orders_id = o.orders_id AND  ot.class NOT IN ('ot_subtotal', 'ot_shipping', 'ot_subtotal_no_tax', 'ot_tax', 'ot_total', 'ot_z_bpytc_total', 'ot_z_paylater_total', 'ot_easycredit_fee', 'ot_paypalinstallment_fee'))";
