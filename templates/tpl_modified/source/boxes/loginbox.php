@@ -32,6 +32,7 @@ if (!isset($_SESSION['customer_id'])) {
   $box_smarty->assign('FORM_END', '</form>');
 }
 
+$box_smarty->caching = 0;
 $box_loginbox = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_login.html');
 $smarty->assign('box_LOGIN', $box_loginbox);
 ?>
