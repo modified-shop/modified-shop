@@ -423,21 +423,16 @@
 		 * @param string $code Code string
 		 * @return string
 		 **/
-		private function _simpleCodeCompress($code)
-		{
-      // Remove multiline comment
-			$code = preg_replace('/\/\*(?!-)[\x00-\xff]*?\*\//', '', $code);
-      // Removes single line '//' comments
-      $code = $this->_removeSingleLineComments($code);
-      $code = preg_replace('/[^:]\\/\\/[^\\n\\r]*[\\n\\r]/', '', $code);
-      $code = preg_replace('/\\/\\*[^*]*\\*+([^\\/][^*]*\\*+)*\\//', '', $code);
+    private function _simpleCodeCompress($code)
+    {
+      $code = $this->_removeMultiLineAndSingleLineComments($code); 
       // Remove extra spaces
-			$code = preg_replace('/\s+/', ' ', $code);
+      $code = preg_replace('/\s+/', ' ', $code);
       // prevent negative px styles
       $code = preg_replace('/(?<!px)\s?(-)\s?/', "\\1", $code);
       // Remove spaces that can be removed
-			return trim(preg_replace('/\s?([\{\};\=\(\)\/\+\*])\s?/', "\\1", $code));
-		}
+      return trim(preg_replace('/\s?([\{\};\=\(\)\/\+\*])\s?/', "\\1", $code));
+    }
 
 		/**
 		 * Strips PHP Comments from the buffer 
@@ -447,26 +442,26 @@
 		 * @return string
 		 */
     private function _stripPHPComments($html) {
-      // Removes single line '//' comments
-      $html = $this->_removeSingleLineComments($html);
-      
+      $html = $this->_removeMultiLineAndSingleLineComments($html); 
       // Strip blank lines
       $html = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $html);
-      
-      return trim(preg_replace('/\/\*.*?\*\//s', '', $html));
+      return trim($html);
     }
     
 		/**
-		 * Strips single line Comments from the buffer 
+		 * Strips Comments from the buffer 
 		 *
 		 * @access private
 		 * @param string $code Code string
 		 * @return string
 		 */
-    private function _removeSingleLineComments($code) {
+    private function _removeMultiLineAndSingleLineComments($code) {  
       if ($this->_options['compress_css'] == false) {
-        $code = preg_replace('/(?:(?:\/\*(?:[^*]|(?:\*+[^*\/]))*\*+\/)|(?:(?<!\:|\\\|\'|\")\/\/.*))/', '', $code);
+        // removes single line '//' comments.
+        $code = preg_replace('/(?:(?<!\:|\\\|\'|\")\/\/.*)/', '', $code);
       }
+      // removes multi line '/* */' comments.
+      $code = preg_replace('/(?:\/\*(?:[^*]|(?:\*+[^*\/]))*\*+\/)/', '', $code);     
       return $code;
     }
 	}
