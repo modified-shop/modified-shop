@@ -114,4 +114,16 @@ class priceModules {
         return $this->call_module_method($pData,$pID); //Return parameter must be in first place
     }
     
+    function CheckExtension($price, $pID)
+    {
+        $this->function_call = 'CheckExtension';
+        return $this->call_module_method($price, $pID); //Return parameter must be in first place
+    }
+
+    function FormatExtension($return, $pID, $ePrice, $pPrice, $format, $vpeStatus)
+    {
+        $this->function_call = 'FormatExtension';
+        return $this->call_module_method($return, $pID, $ePrice, $pPrice, $format, $vpeStatus); //Return parameter must be in first place
+    }
+
 }
