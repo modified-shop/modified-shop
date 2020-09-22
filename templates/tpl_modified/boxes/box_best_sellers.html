@@ -10,7 +10,7 @@
     <div class="carousel_box">
       <a href="{$box_data.PRODUCTS_LINK}" title="{$box_data.PRODUCTS_NAME|onlytext}">
         <span class="cb_image">{if $box_data.PRODUCTS_IMAGE}<img src="{$box_data.PRODUCTS_IMAGE}" alt="{$box_data.PRODUCTS_NAME|onlytext}" title="{$box_data.PRODUCTS_NAME|onlytext}" />{/if}</span>
-        <span class="cb_title">{$box_data.PRODUCTS_NAME|mb_substr:"0":"36":"`$smarty.session.language_charset`"}</span>
+        <span class="cb_title"><span class="cb_title_inner">{$box_data.PRODUCTS_NAME}</span></span>
       </a>
     </div>
   </li>
