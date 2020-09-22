@@ -575,7 +575,7 @@ function WriteToDumpFile($data) {
   if (isset($data) && $data!='') {
     if (isset($dump['utf8-convert']) && $dump['utf8-convert'] == 'yes') {
       $data = mb_convert_encoding($data, 'UTF-8', 'ISO-8859-15');
-      $data = mb_convert_encoding($data, 'UTF-8', 'HTML-ENTITIES');
+      $data = html_entity_decode($data, ENT_COMPAT|ENT_HTML401, 'UTF-8');
     }
     if ($dump['compress']) {
       if ($data!='') {
