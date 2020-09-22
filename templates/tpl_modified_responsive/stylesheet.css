@@ -4264,12 +4264,18 @@ ul.bxcarousel_bestseller li .carousel_box .cb_title {
   border-top: 1px solid #ddd;
   margin: 7px 0 0 0;
   padding:5px 0 2px 0;
-  font-size:11px;
   text-align:center;
-  line-height:15px;
-  height:30px;
   color:#7c2759;
   font-weight:400;
+}
+ul.bxcarousel_bestseller li .carousel_box .cb_title_inner {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;  
+  overflow: hidden;
+  font-size:11px;
+  line-height:15px;
+  height:30px;
 }
 ul.bxcarousel_bestseller li .carousel_box a:hover {
   text-decoration:none;
