@@ -3006,6 +3006,14 @@ body.popupcontent {
   min-width:100%;
   background:#fff none;
 }
+body.popupcontent h1 {
+  margin-top:0px !important;
+}
+body.popupcontent img {
+  max-width:100%;
+  width:auto;
+  height:auto;
+}
 /* 32. END popup content */
 
 
