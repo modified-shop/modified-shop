@@ -168,6 +168,11 @@ class xtcPrice {
     }
     $pPrice = $this->xtcAddTax($pPrice, $products_tax);
     
+    // check extension
+    if ($ePrice = $this->xtcCheckExtension($pID)) {
+      return $this->xtcFormatExtension($pID, $this->xtcAddTax($ePrice, $products_tax), $pPrice, $format, $vpeStatus);
+    }
+
     // check specialprice
     if ($sPrice = $this->xtcCheckSpecial($pID)) {
       return $this->xtcFormatSpecial($pID, $this->xtcAddTax($sPrice, $products_tax), $pPrice, $format, $vpeStatus);
@@ -438,6 +443,17 @@ class xtcPrice {
       
       return $special_price;
     }
+  }
+
+  /**
+   * Returns the extension price of a product
+   *
+   * @param Integer $pID product id
+   * @return Double extension price
+   */
+  function xtcCheckExtension($pID) {     
+    $price = $this->priceModules->CheckExtension(0, $pID);
+    return $price;
   }
   
   /**
@@ -860,6 +876,51 @@ class xtcPrice {
     }
   }
   
+  /**
+   * xtcFormatExtension
+   *
+   * @param integer $pID
+   * @param double $ePrice
+   * @param double $pPrice
+   * @param bpplean $format
+   * @param integer $vpeStatus
+   * @return unknown
+   */
+  function xtcFormatExtension($pID, $ePrice, $pPrice, $format, $vpeStatus = 0) {
+    if ($format) {      
+      $from = $this->checkAttributes($pID);
+      $price = $this->xtcFormat($ePrice, $format);;
+
+      if ($this->cStatus['customers_status_show_price_tax'] == '0') {
+        $Bprice = $this->xtcFormatCurrency($this->xtcAddTax($ePrice, ((isset($this->tax_class) && isset($this->TAX[$this->tax_class])) ? $this->TAX[$this->tax_class] : 0)));
+        $Nprice = $ePrice;
+      } else {
+        $Bprice = $ePrice;
+        $Nprice = $this->xtcFormatCurrency($this->xtcRemoveTax($ePrice, ((isset($this->tax_class) && isset($this->TAX[$this->tax_class])) ? $this->TAX[$this->tax_class] : 0)));
+      }
+
+      if ($vpeStatus == 0) {
+        $return = $price;
+      } else {
+        $return = array(
+          'formated' => $from.$price,
+          'standard_price' => $price,
+          'plain' => $ePrice,
+          'from' =>  $from,
+          'flag' => 'standard',
+          'netto' => $Nprice,
+          'brutto' => $Bprice
+        );
+      }
+    } else {
+      $return = $this->show_price_tax ? round($ePrice, $this->currencies[$this->actualCurr]['decimal_places']) : $ePrice;
+    }
+    
+    $return = $this->priceModules->FormatExtension($return, $pID, $ePrice, $pPrice, $format, $vpeStatus);
+    
+    return $return;
+  }
+
   /**
    * get_decimal_places
    *
