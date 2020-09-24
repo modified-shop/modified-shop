@@ -18,7 +18,8 @@
 
 define('MODULE_SHIPPING_TABLE_TEXT_TITLE', 'Tabellarische Versandkosten');
 define('MODULE_SHIPPING_TABLE_TEXT_DESCRIPTION', 'Tabellarische Versandkosten');
-define('MODULE_SHIPPING_TABLE_TEXT_WAY', 'Bester Weg (%01.2f kg)');
+define('MODULE_SHIPPING_TABLE_TEXT_WAY', 'Bester Weg');
+define('MODULE_SHIPPING_TABLE_TEXT_UNITS', 'kg');
 define('MODULE_SHIPPING_TABLE_TEXT_WEIGHT', 'Gewicht');
 define('MODULE_SHIPPING_TABLE_TEXT_AMOUNT', 'Menge');
 define('MODULE_SHIPPING_TABLE_UNDEFINED_RATE', 'Die Versandkosten k&ouml;nnen im Moment nicht berechnet werden.');

@@ -113,7 +113,7 @@
         for ($i=0; $i<sizeof($ap_table); $i+=2) {
           if ($shipping_weight <= $ap_table[$i]) {
             $shipping = $ap_table[$i+1];
-            $shipping_method = MODULE_SHIPPING_AP_TEXT_WAY . ' ' . $dest_country . ' : ' . $shipping_weight . ' ' . MODULE_SHIPPING_AP_TEXT_UNITS;
+            $shipping_method = MODULE_SHIPPING_AP_TEXT_WAY . ' ' . $dest_country . ': ';
             break;
           }
         }
@@ -127,7 +127,7 @@
         } else {
           $shipping_cost = (($shipping * $shipping_num_boxes) + constant('MODULE_SHIPPING_AP_HANDLING_' . $dest_zone));
           $this->quotes['methods'] = array(array('id' => $this->code,
-                                                 'title' => $shipping_method . ' (' . $shipping_num_boxes . ' x ' . $shipping_weight . ' ' . MODULE_SHIPPING_AP_TEXT_UNITS .')',
+                                                 'title' => $shipping_method . ' (' . ($shipping_num_boxes > 1 ? $shipping_num_boxes . ' x ' : '') . round($shipping_weight, 2) . ' ' . MODULE_SHIPPING_AP_TEXT_UNITS .')',
                                                  'cost'  => $shipping_cost));
         }
       }

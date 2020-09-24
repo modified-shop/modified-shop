@@ -126,7 +126,7 @@
         for ($i=0; $i<sizeof($table_table); $i+=2) {
           if ($order_total <= $table_table[$i]) {
             $shipping = $table_table[$i+1];
-            $shipping_method = sprintf(MODULE_SHIPPING_TABLE_TEXT_WAY, $shipping_weight) . ' ' . $dest_country . ': ';
+            $shipping_method = MODULE_SHIPPING_TABLE_TEXT_WAY . ' ' . $dest_country . ': ';
             break;
           }
         }
@@ -145,7 +145,7 @@
           $shipping_cost = ($shipping + constant('MODULE_SHIPPING_TABLE_HANDLING_' . $dest_zone));
 
           $this->quotes['methods'] = array(array('id' => $this->code,
-                                                 'title' => $shipping_method,
+                                                 'title' => $shipping_method . ' (' . ($shipping_num_boxes > 1 ? $shipping_num_boxes . ' x ' : '') . round($shipping_weight, 2) . ' ' . MODULE_SHIPPING_TABLE_TEXT_UNITS .')',
                                                  'cost'  => $shipping_cost));
         }
         

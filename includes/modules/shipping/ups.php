@@ -146,19 +146,19 @@ function quote($method = '') {
 		$this->quotes = array('id' => $this->code,
 			'module' => MODULE_SHIPPING_UPS_TEXT_TITLE,
 			'methods' => array(array('id' => $this->code,
-			'title' => $shipping_method . ' (' . $shipping_num_boxes . ' x ' . $shipping_weight . ' ' . MODULE_SHIPPING_UPS_TEXT_UNITS .')<br />' . MODULE_SHIPPING_UPS_TEXT_FREE,
+			'title' => $shipping_method . ' (' . ($shipping_num_boxes > 1 ? $shipping_num_boxes . ' x ' : '') . round($shipping_weight, 2) . ' ' . MODULE_SHIPPING_UPS_TEXT_UNITS .')<br />' . MODULE_SHIPPING_UPS_TEXT_FREE,
 			'cost' => $shipping_cost * $shipping_num_boxes,)));
 	} elseif ($lowship == true) {
 		$this->quotes = array('id' => $this->code,
 			'module' => MODULE_SHIPPING_UPS_TEXT_TITLE,
 			'methods' => array(array('id' => $this->code,
-			'title' => $shipping_method . ' (' . $shipping_num_boxes . ' x ' . $shipping_weight . ' ' . MODULE_SHIPPING_UPS_TEXT_UNITS .')<br />' . MODULE_SHIPPING_UPS_TEXT_LOW,
+			'title' => $shipping_method . ' (' . ($shipping_num_boxes > 1 ? $shipping_num_boxes . ' x ' : '') . round($shipping_weight, 2) . ' ' . MODULE_SHIPPING_UPS_TEXT_UNITS .')<br />' . MODULE_SHIPPING_UPS_TEXT_LOW,
 			'cost' => $shipping_cost * $shipping_num_boxes,)));
 	} else {
 		$this->quotes = array('id' => $this->code,
 			'module' => MODULE_SHIPPING_UPS_TEXT_TITLE,
 			'methods' => array(array('id' => $this->code,
-			'title' => $shipping_method . ' (' . $shipping_num_boxes . ' x ' . $shipping_weight . ' ' . MODULE_SHIPPING_UPS_TEXT_UNITS .')',
+			'title' => $shipping_method . ' (' . ($shipping_num_boxes > 1 ? $shipping_num_boxes . ' x ' : '') . round($shipping_weight, 2) . ' ' . MODULE_SHIPPING_UPS_TEXT_UNITS .')',
 			'cost' => $shipping_cost * $shipping_num_boxes,)));
 	}
 

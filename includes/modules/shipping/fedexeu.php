@@ -186,7 +186,7 @@
       }
 
       $this->quotes = array('id' => $this->code,
-                            'module' => $this->title . ' (' . $shipping_num_boxes . ' x ' . $shipping_weight . ' ' . MODULE_SHIPPING_FEDEXEU_TEXT_UNITS .')');
+                            'module' => $this->title . ' (' . ($shipping_num_boxes > 1 ? $shipping_num_boxes . ' x ' : '') . round($shipping_weight, 2) . ' ' . MODULE_SHIPPING_FEDEXEU_TEXT_UNITS .')');
 
       $this->quotes['methods'] = $methods;
 
