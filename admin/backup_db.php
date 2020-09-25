@@ -17,9 +17,27 @@ $Id$
   ***************************************************************/
 
   define ('VERSION', 'Database Backup Ver. 2.20 UTF-8');
-
+  define ('_IS_FILEMANAGER', true);
+  
   require('includes/application_top.php');
   
+  // check permission
+  if (is_file(DIR_FS_ADMIN.$current_page) == false || $_SESSION['customers_status']['customers_status_id'] !== '0') {
+    xtc_redirect(xtc_catalog_href_link(FILENAME_LOGIN));
+  }
+
+  // verfiy CSRF Token
+  if (defined('CSRF_TOKEN_SYSTEM') && CSRF_TOKEN_SYSTEM == 'true') {
+    require_once(DIR_FS_INC . 'csrf_token.inc.php');
+  }
+
+  if (!isset($_SESSION['customer_id'])) {
+    xtc_redirect(xtc_catalog_href_link(FILENAME_LOGIN));
+  }
+
+  $pagename = strtok($current_page, '.');
+  xtc_check_permission($pagename);
+
   //#################################
   defined ('ANZAHL_ZEILEN_BKUP') or define ('ANZAHL_ZEILEN_BKUP', 20000); //Anzahl der Zeilen die beim Backup pro Durchlauf maximal aus einer Tabelle  gelesen werden.
   defined ('MAX_RELOADS') or define ('MAX_RELOADS', 600); //Anzahl der maximalen Seitenreloads beim Backup  - falls etwas nicht richtig funktioniert stoppt das Script nach 600 Seitenaufrufen
