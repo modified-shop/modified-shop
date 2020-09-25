@@ -34,6 +34,7 @@ $value_limits['REVIEW_TEXT_MIN_LENGTH'] = array('min' => 0);
 $value_limits['NEW_SIGNUP_GIFT_VOUCHER_AMOUNT'] = array('min' => 0);
 $value_limits['MODULE_NEWSLETTER_VOUCHER_AMOUNT'] = array('min' => 0);
 
+$value_limits['MAX_DISPLAY_ALSO_PURCHASED_ORDERS'] = array('min' => 1);
 $value_limits['MAX_DISPLAY_BESTSELLERS_DAYS'] = array('min' => 0);
 
 $value_limits['SEARCH_MIN_LENGTH'] = array('min' => 1);

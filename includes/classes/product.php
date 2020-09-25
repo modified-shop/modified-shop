@@ -326,17 +326,23 @@ class product {
                                           ON p.products_id = op.products_id
                                              AND p.products_status = '1'
                                              AND p.products_id != '".(int)$pID."'
+                                             AND p.products_gift != 1
                                      JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd 
                                           ON pd.products_id = p.products_id
                                              AND pd.language_id = '".(int) $_SESSION['languages_id']."'
                                              AND trim(pd.products_name) != ''
-                                    WHERE op.orders_id IN (SELECT orders_id 
-                                                             FROM ".TABLE_ORDERS_PRODUCTS." 
-                                                            WHERE products_id = '".(int)$pID."' 
-                                                         GROUP BY orders_id 
-                                                         ORDER BY orders_id DESC)
-                                          ".PRODUCTS_CONDITIONS_P."
+                                    WHERE op.orders_id IN (SELECT * 
+                                                             FROM (SELECT orders_id 
+                                                                     FROM ".TABLE_ORDERS_PRODUCTS." 
+                                                                    WHERE products_id = '".(int)$pID."' 
+                                                                 GROUP BY orders_id 
+                                                                 ORDER BY orders_id DESC
+                                                                    LIMIT ".MAX_DISPLAY_ALSO_PURCHASED_ORDERS."
+                                                                  ) o
+                                                           )
+                                          ".PRODUCTS_CONDITIONS_P." 
                                  GROUP BY p.products_id
+                                 ORDER BY op.orders_id DESC
                                     LIMIT ".MAX_DISPLAY_ALSO_PURCHASED);
       while ($products = xtc_db_fetch_array($products_query, true)) {
         $also_purchased_array[$pID][] = $this->buildDataArray($products);
