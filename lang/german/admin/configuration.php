@@ -150,6 +150,8 @@ define('MAX_DISPLAY_BESTSELLERS_DAYS_TITLE' , 'Anzahl der Tage f&uuml;r Bestsell
 define('MAX_DISPLAY_BESTSELLERS_DAYS_DESC' , 'Maximum Anzahl an Tagen die Bestseller Artikel angezeigt werden sollen.');
 define('MAX_DISPLAY_ALSO_PURCHASED_TITLE' , 'Ebenfalls gekauft');
 define('MAX_DISPLAY_ALSO_PURCHASED_DESC' , 'Maximum Anzahl der ebenfalls gekauften Artikel, die bei der Artikelansicht angezeigt werden sollen.');
+define('MAX_DISPLAY_ALSO_PURCHASED_ORDERS_TITLE' , 'Anzahl Bestellungen Ebenfalls gekauft');
+define('MAX_DISPLAY_ALSO_PURCHASED_ORDERS_DESC' , 'Maximum Anzahl an Bestellungen die durchsucht werden um ebenfalls gekaufte Artikel zu ermitteln.');
 define('MAX_DISPLAY_PRODUCTS_IN_ORDER_HISTORY_BOX_TITLE' , 'Bestell&uuml;bersichts Box');
 define('MAX_DISPLAY_PRODUCTS_IN_ORDER_HISTORY_BOX_DESC' , 'Maximum Anzahl an Artikeln die in der pers&ouml;nlichen Bestell&uuml;bersichts Box des Kunden angezeigt werden sollen.');
 define('MAX_DISPLAY_ORDER_HISTORY_TITLE' , 'Bestell&uuml;bersicht');
