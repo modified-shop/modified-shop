@@ -142,7 +142,8 @@
     }
 
     function cheapest() {
-
+      global $xtPrice;
+      
       if (is_array($this->modules)) {
         $rates = array();
 
@@ -160,10 +161,16 @@
               if (array_key_exists('cost', $quotes['methods'][$i])
                   && (!method_exists($GLOBALS[$class], 'ignore_cheapest') || $GLOBALS[$class]->ignore_cheapest() !== true)
                   )
-              {
+              {                
+                if ($quotes['methods'][$i]['cost'] > 0) {
+                  if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 || !isset($quotes['tax'])) {
+                    $quotes['tax'] = 0;
+                  }
+                  $quotes['methods'][$i]['cost'] = $xtPrice->xtcFormat(xtc_add_tax($quotes['methods'][$i]['cost'], $quotes['tax']), false);						
+                } 
                 $rates[] = array(
                   'id' => $quotes['id'] . '_' . $quotes['methods'][$i]['id'],
-                  'title' => $quotes['module'] . ' (' . $quotes['methods'][$i]['title'] . ')',
+                  'title' => $quotes['module'] . ((trim($quotes['methods'][$i]['title']) != '') ? ' (' . $quotes['methods'][$i]['title'] . ')' : ''),
                   'cost' => $quotes['methods'][$i]['cost']
                 );
               }
