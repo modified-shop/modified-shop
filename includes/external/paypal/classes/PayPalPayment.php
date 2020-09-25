@@ -77,7 +77,7 @@ class PayPalPayment extends PayPalPaymentBase {
    
   
   function payment_redirect($cart = false, $approval = false, $order_exists = false) {
-    global $order, $xtPrice;
+    global $order, $xtPrice, $free_shipping, $total_weight, $total_count;
     
     // auth
     $apiContext = $this->apiContext();
@@ -156,19 +156,44 @@ class PayPalPayment extends PayPalPaymentBase {
           $this->details->setTax($this->details->getTax() + ($amount_total - $total));
         } 
       }
+      
+      // shipping cost
+      if ($_SESSION['cart']->get_content_type() != 'virtual') {
+        require_once(DIR_WS_CLASSES.'shipping.php');
+        require_once(DIR_WS_CLASSES.'product.php');
+        require_once(DIR_WS_CLASSES.'order.php');
+        $order = new order();
 
-      $shipping_cost = $this->get_config('MODULE_PAYMENT_'.strtoupper($this->code).'_SHIPPING_COST');
-      if ((int)$shipping_cost > 0) {
-        $i = count($item);
-        $item[$i] = new Item(); 
-        $item[$i]->setName($this->encode_utf8(PAYPAL_EXP_VORL))
-                ->setCurrency($_SESSION['currency']) 
-                ->setQuantity(1) 
-                ->setPrice($shipping_cost); 
-        $this->amount->setTotal($this->amount->getTotal() + (double)$shipping_cost);
-        $this->details->setSubtotal($this->amount->getTotal() - $this->details->getTax() - $this->details->getShippingDiscount());
-      }    
-          
+        $total_weight = $_SESSION['cart']->show_weight();
+        $total_count = $_SESSION['cart']->count_contents();
+
+        // load all enabled shipping modules
+        $shipping_modules = new shipping();
+
+        $free_shipping = false;
+        require_once (DIR_WS_MODULES.'order_total/ot_shipping.php');
+        include_once (DIR_WS_LANGUAGES.$_SESSION['language'].'/modules/order_total/ot_shipping.php');
+        $ot_shipping = new ot_shipping;
+        $ot_shipping->process();
+
+        $shipping_modules->quote();
+        $shipping_data = $shipping_modules->cheapest();
+
+        if (is_array($shipping_data)) {
+          $shipping_cost = new Item(); 
+          $shipping_cost->setName($this->encode_utf8(PAYPAL_EXP_VORL))
+                        ->setCurrency($_SESSION['currency']) 
+                        ->setQuantity(1) 
+                        ->setPrice($shipping_data['cost']); 
+
+          $i = count($item);
+          $item[$i] = $shipping_cost;
+
+          $this->amount->setTotal($this->amount->getTotal() + (double)$shipping_data['cost']);
+          $this->details->setSubtotal($this->amount->getTotal() - $this->details->getTax() - $this->details->getShippingDiscount());
+        }
+      }
+      
       // set amount 
       $this->amount->setCurrency($_SESSION['currency'])
                    ->setDetails($this->details); 
@@ -251,30 +276,17 @@ class PayPalPayment extends PayPalPaymentBase {
         ) 
     { 
       $item = array();
-    
-      if ($cart === true) {
-        $shipping_cost = $this->get_config('MODULE_PAYMENT_'.strtoupper($this->code).'_SHIPPING_COST');
-        
-        $item[0] = new Item(); 
-        $item[0]->setName($this->encode_utf8(MODULE_PAYMENT_PAYPAL_TEXT_ORDER))
-                ->setCurrency($_SESSION['currency']) 
-                ->setQuantity(1) 
-                ->setPrice($this->details->getSubtotal() - (double)$shipping_cost); 
 
-        if ((int)$shipping_cost > 0) {
-          $item[1] = new Item(); 
-          $item[1]->setName($this->encode_utf8(PAYPAL_EXP_VORL))
-                  ->setCurrency($_SESSION['currency']) 
-                  ->setQuantity(1) 
-                  ->setPrice($shipping_cost); 
-        }    
-      } else {
-        $item[0] = new Item(); 
-        $item[0]->setName($this->encode_utf8(MODULE_PAYMENT_PAYPAL_TEXT_ORDER))
-                ->setCurrency($_SESSION['currency']) 
-                ->setQuantity(1) 
-                ->setPrice($this->details->getSubtotal()); 
-      }
+      $item[0] = new Item(); 
+      $item[0]->setName($this->encode_utf8(MODULE_PAYMENT_PAYPAL_TEXT_ORDER))
+              ->setCurrency($_SESSION['currency']) 
+              ->setQuantity(1) 
+              ->setPrice($this->details->getSubtotal());
+    
+      if (isset($shipping_cost) && is_object($shipping_cost)) {
+        $item[1] = $shipping_cost;
+        $item[0]->setPrice($this->details->getSubtotal() - (double)$shipping_cost->getPrice());
+      }    
     }
     $itemList->setItems($item);
     

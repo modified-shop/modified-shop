@@ -238,11 +238,6 @@ require (DIR_WS_INCLUDES.'head.php');
                   if ($module->code == 'paypalcart') {
                     ?>
                     <tr>
-                      <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_MODULE_SHIPPING_COST; ?></td>
-                      <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('config[profile][MODULE_PAYMENT_'.strtoupper($module->code).'_SHIPPING_COST]', $paypal->get_config('MODULE_PAYMENT_'.strtoupper($module->code).'_SHIPPING_COST'), 'style="width: 300px;"'); ?></td>
-                      <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_MODULE_SHIPPING_COST_INFO; ?></td>
-                    </tr>
-                    <tr>
                       <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_MODULE_LINK_PRODUCT; ?></td>
                       <td class="dataTableConfig col-middle"><?php echo draw_on_off_selection('config[profile][MODULE_PAYMENT_'.strtoupper($module->code).'_SHOW_PRODUCT]', $status_array, (($paypal->get_config('MODULE_PAYMENT_'.strtoupper($module->code).'_SHOW_PRODUCT') == '1') ? true : false)); ?></td>
                       <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_MODULE_LINK_PRODUCT_INFO; ?></td>
