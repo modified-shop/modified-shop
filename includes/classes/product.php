@@ -326,7 +326,6 @@ class product {
                                           ON p.products_id = op.products_id
                                              AND p.products_status = '1'
                                              AND p.products_id != '".(int)$pID."'
-                                             AND p.products_gift != 1
                                      JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd 
                                           ON pd.products_id = p.products_id
                                              AND pd.language_id = '".(int) $_SESSION['languages_id']."'
