@@ -131,6 +131,7 @@ if ($product->isProduct() === false) {
     $smarty->assign('error', $messageStack->output('product_reviews_write'));
   }
   if (!isset($author)) {
+    $author = '';
     if(isset($_SESSION['customer_id'])) {
       $customer_info_query = xtc_db_query("SELECT customers_firstname,
                                                   customers_lastname
