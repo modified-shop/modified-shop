@@ -164,6 +164,12 @@ class PayPalPayment extends PayPalPaymentBase {
         require_once(DIR_WS_CLASSES.'order.php');
         $order = new order();
 
+        if (!isset($_SESSION['delivery_zone']) || $_SESSION['delivery_zone'] == '') {
+          require_once (DIR_FS_INC.'xtc_get_countries.inc.php');
+          $country = xtc_get_countriesList(STORE_COUNTRY, true);
+          $_SESSION['delivery_zone'] = $country['countries_iso_code_2'];
+        }
+        
         $total_weight = $_SESSION['cart']->show_weight();
         $total_count = $_SESSION['cart']->count_contents();
 
@@ -178,7 +184,13 @@ class PayPalPayment extends PayPalPaymentBase {
 
         $shipping_modules->quote();
         $shipping_data = $shipping_modules->cheapest();
-
+        
+        if ($free_shipping === true) {
+          $shipping_data = array(
+            'cost' => 0
+          );
+        }
+        
         if (is_array($shipping_data)) {
           $shipping_cost = new Item(); 
           $shipping_cost->setName($this->encode_utf8(PAYPAL_EXP_VORL))
@@ -350,7 +362,7 @@ class PayPalPayment extends PayPalPaymentBase {
     if (isset($profile_id) && $profile_id != '') {
       $payment->setExperienceProfileId($profile_id);
     }
-       
+
     try { 
     
       $payment->create($apiContext);
