@@ -13,6 +13,10 @@
   defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
   if (defined('MODULE_INTERNETMARKE_STATUS') && MODULE_INTERNETMARKE_STATUS == 'true') {
+    require_once(DIR_FS_EXTERNAL.'internetmarke/internetmarke.php');
+    $internetmarke = new mod_internetmarke($oID);
+    
+    if ($internetmarke->error === false) {
     ?>
     <div class="heading"><?php echo TABLE_HEADING_INTERNETMARKE; ?></div>
     <?php echo xtc_draw_form('internetmarke', FILENAME_ORDERS, xtc_get_all_get_params(array('action')) . 'action=custom&subaction=im_insert'); ?>
@@ -51,9 +55,7 @@
           }
         ?>
         <tr>
-          <?php
-            require_once(DIR_FS_EXTERNAL.'internetmarke/internetmarke.php');
-            $internetmarke = new mod_internetmarke($oID);
+          <?php            
             $PageFormats = $internetmarke->getPageFormats(MODULE_INTERNETMARKE_PAGEFORMATS);
             $id = key($PageFormats);
         
@@ -150,5 +152,6 @@
       }
     </script>
     <?php
+    }
   }
 ?>
