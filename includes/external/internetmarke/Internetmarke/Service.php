@@ -14,12 +14,18 @@ class Service extends \SoapClient {
      */
     public function __construct($partner_information, $options = array(), $wsdl = null) {
         $this->partner_information = $partner_information;
-        $options = array_merge(array('features' => SOAP_SINGLE_ELEMENT_ARRAYS), $options);
+        $options = array_merge(array('features' => SOAP_SINGLE_ELEMENT_ARRAYS, 'exceptions' => true), $options);
         if($wsdl === null) {
             $wsdl = 'https://internetmarke.deutschepost.de/OneClickForAppV3?wsdl';
         }
-        parent::__construct($wsdl, $options);
-        $this->__setSoapHeaders($this->partner_information->soapHeaderArray());
+               
+        try {        
+          parent::__construct($wsdl, $options);
+          $this->__setSoapHeaders($this->partner_information->soapHeaderArray());
+        } catch (\SoapFault $fault) {
+           $this->error = true;
+           $this->message = $fault->getMessage();
+        }
     }
 
     /**
