@@ -74,8 +74,8 @@ $products_query = xtc_db_query("SELECT count(if(products_status = 0, products_id
 $products = xtc_db_fetch_array($products_query);            
     
 // orders (status)    
-$orders_query = xtc_db_query("SELECT os.orders_status_name 
-                                     status, 
+$orders_query = xtc_db_query("SELECT os.orders_status_name AS status,
+                                     os.orders_status_id AS id,
                                      coalesce(o.order_count, 0) order_count
                                 FROM " . TABLE_ORDERS_STATUS . " os
                            LEFT JOIN (SELECT orders_status, 
@@ -361,7 +361,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     <table class="admin_table">
                     <?php
                       foreach ($orders as $order) {
-                        echo '<tr class="content_row"><td><strong>' . $order['status'] . ':</strong></td>';
+                        echo '<tr class="content_row"><td><a href="'.xtc_href_link(FILENAME_ORDERS, 'status='.((isset($order['id']) && $order['id'] > 0) ? $order['id'] : '0'), 'SSL').'"><strong>' . $order['status'] . ':</strong></a></td>';
                         echo '<td align="right">' . $order['order_count'] . '</td></tr>';
                       }
                     ?>   
