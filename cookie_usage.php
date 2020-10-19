@@ -18,11 +18,11 @@
 
 include ('includes/application_top.php');
 
-if (isset($_GET['return_to_login'])
+if (isset($_GET['return_to'])
     && $session_started == true
     )
 {
-  xtc_redirect(xtc_href_link(FILENAME_LOGIN, xtc_get_all_get_params(array('return_to_login')), 'SSL'));
+  xtc_redirect(xtc_href_link(basename($_GET['return_to']), xtc_get_all_get_params(array('return_to')), 'SSL'));
 }
 
 $smarty = new Smarty;
