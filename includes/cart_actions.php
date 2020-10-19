@@ -37,7 +37,7 @@ if (isset($_GET['action'])) {
 if (xtc_not_null($action)) {
   // redirect the customer to a friendly cookie-must-be-enabled page if cookies are disabled
   if ($session_started == false) {
-    xtc_redirect(xtc_href_link(FILENAME_COOKIE_USAGE));
+    xtc_redirect(xtc_href_link(FILENAME_COOKIE_USAGE, xtc_get_all_get_params(array('return_to')).'return_to='.basename($PHP_SELF)));
   }
     
   $wishlist = false;
