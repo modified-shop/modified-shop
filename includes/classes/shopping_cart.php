@@ -702,13 +702,13 @@ class shoppingCart {
             $products_data['vpe'] = $main->getVPEtext($products, $products_price);
             $products_data['quantity'] = $products_data['qty'] = $this->contents[$products_id]['qty'];
             $products_data['shipping_time'] = (ACTIVATE_SHIPPING_STATUS == 'true') ? $main->getShippingStatusName($products['products_shippingtime']) : null;
-            $products_data['final_price'] = $products_data['price'] * $this->contents[$products_id]['qty'];
+            $products_data['final_price'] = round($products_data['price'], $xtPrice->currencies[$xtPrice->actualCurr]['decimal_places']) * $this->contents[$products_id]['qty'];
             $products_data['weight'] =  $products['products_weight'] + $this->attr_weight;
             $products_data['final_weight'] =  $products_data['weight'] * $this->contents[$products_id]['qty'];
             $products_data['tax'] = isset($xtPrice->TAX[$products['products_tax_class_id']]) ? $xtPrice->TAX[$products['products_tax_class_id']] : 0;
             $products_data['attributes'] = isset($this->contents[$products_id]['attributes']) ? $this->contents[$products_id]['attributes'] : null;
 
-            $products_data = $this->shoppingCartModules->get_products($products_data, $products, $this->contents[$products_id]);
+            $products_data = $this->shoppingCartModules->get_products($products_data, $products, $this->contents[$products_id], $this->type);
 
             $products_array[$index++] = $products_data;
           }
