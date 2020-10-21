@@ -48,7 +48,7 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_information.html', $cac
 
   if (xtc_db_num_rows($content_query, true) > 0) {
 		unset ($prev_cid);
-		unset ($first_content_element);
+		unset ($first_information_element);
     while ($content_data = xtc_db_fetch_array($content_query, true)) {
       $content_array[$content_data['content_id']] = array(
           'name' => $content_data['content_title'],
