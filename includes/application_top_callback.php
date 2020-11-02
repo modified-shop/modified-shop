@@ -79,9 +79,6 @@ if (file_exists(DIR_WS_INCLUDES.'request_type.php')) {
 require_once(DIR_FS_INC . 'set_php_self.inc.php');
 $PHP_SELF = set_php_self();
 
-//compatibility for modified eCommerce Shopsoftware 1.06 files
-defined('DIR_WS_BASE') OR define('DIR_WS_BASE', '');
-
 // include the list of project filenames
 require(DIR_WS_INCLUDES . 'filenames.php');
 
@@ -168,4 +165,7 @@ require_once (DIR_WS_CLASSES.'shopping_cart.php');
 require (DIR_WS_FUNCTIONS.'sessions.php');
 
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/application_top_callback/application_top_callback_end/','php') as $file) require ($file);
+
+//compatibility for modified eCommerce Shopsoftware 1.06 files
+defined('DIR_WS_BASE') OR define('DIR_WS_BASE', '');
 ?>
