@@ -80,7 +80,7 @@ require_once(DIR_FS_INC . 'set_php_self.inc.php');
 $PHP_SELF = set_php_self();
 
 //compatibility for modified eCommerce Shopsoftware 1.06 files
-define('DIR_WS_BASE', '');
+defined('DIR_WS_BASE') OR define('DIR_WS_BASE', '');
 
 // include the list of project filenames
 require(DIR_WS_INCLUDES . 'filenames.php');
