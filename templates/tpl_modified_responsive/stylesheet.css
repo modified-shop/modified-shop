@@ -522,6 +522,10 @@ ul.topnavigation li .far {
   z-index: 1200;
   width:80px;
 }
+.search_inner .search_cat select {
+  height:35px !important;
+  padding-left:8px !important;
+}
 .search_inner .search_cat .SumoSelect > .CaptionCont {
   background-color: #eeeeee !important;
   -webkit-border-top-right-radius: 0px !important;
@@ -533,7 +537,7 @@ ul.topnavigation li .far {
   height:35px;
   border-right:1px solid #eeeeee !important;
 }
-.search_inner .search_cat .SumoSelect:focus > .CaptionCont { border-right:1px solid #eeeeee !important; }
+.search_inner .search_cat .SumoSelect:hover > .CaptionCont { border-right:1px solid #eeeeee !important; }
 .search_inner .search_cat .SumoSelect:focus > .CaptionCont { border-right:1px solid #659eC9 !important; }
 
 .search_inner .SumoSelect > .CaptionCont > span {
