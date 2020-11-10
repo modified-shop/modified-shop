@@ -178,7 +178,7 @@ CREATE TABLE banners (
   banners_title VARCHAR(64) NOT NULL,
   banners_url VARCHAR(255) NOT NULL,
   banners_image VARCHAR(255) NOT NULL,
-  banners_group VARCHAR(10) NOT NULL,
+  banners_group VARCHAR(32) NOT NULL,
   banners_html_text TEXT,
   languages_id INT(11) NOT NULL,
   expires_impressions INT(7) DEFAULT NULL,
