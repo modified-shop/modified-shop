@@ -28,4 +28,7 @@ DELETE pad FROM `products_attributes_download` pad LEFT JOIN `products_attribute
 #Tomcraft - 2020-09-21 - delete obsolete configuration
 DELETE FROM `configuration` WHERE `configuration_key` = 'DISPLAY_PRICE_WITH_TAX';
 
+#GTB - 2020-11-11 - extend banners_group to 32 chars
+ALTER TABLE `banners` MODIFY `banners_group` VARCHAR(32) NOT NULL;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
