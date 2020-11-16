@@ -214,11 +214,19 @@ switch ($category_depth) {
     } else {
       $categories_id = (int)$current_category_id;
     }
-    $sorting_query = xtDBquery("SELECT products_sorting,
-                                       products_sorting2
-                                  FROM ".TABLE_CATEGORIES."
-                                 WHERE categories_id IN ('".$categories_id ."')");
-    $sorting_data = xtc_db_fetch_array($sorting_query,true);
+
+    $sorting_data = array(
+      'products_sorting' => '',
+      'products_sorting2' => '',
+    );
+    
+    if (isset($categories_id)) {
+      $sorting_query = xtDBquery("SELECT products_sorting,
+                                         products_sorting2
+                                    FROM ".TABLE_CATEGORIES."
+                                   WHERE categories_id IN ('".$categories_id."')");
+      $sorting_data = xtc_db_fetch_array($sorting_query,true);
+    }
   
     //Fallback for products_sorting to products_name
     if (empty($sorting_data['products_sorting'])) { 
