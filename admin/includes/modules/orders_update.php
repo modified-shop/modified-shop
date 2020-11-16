@@ -64,6 +64,7 @@
       $smarty->assign('ORDER_DATE', xtc_date_long($order->info['date_purchased']));
       $smarty->assign('NOTIFY_COMMENTS', nl2br($notify_comments));
       $smarty->assign('ORDER_STATUS', $orders_status_lang_array[$lang][$status]);
+      $smarty->assign('ORDER_STATUS_ID', $status);
 
       // assign language
       $smarty->assign('language', $order->info['language']);
