@@ -258,7 +258,7 @@ class newsletter {
     switch ($action) {
       case 'opt_in':
         $sendmail = true;
-        $link = $function(FILENAME_NEWSLETTER, 'action=activate&email='.md5($mail).'&key='.$this->vlCode, 'NONSSL', false);
+        $link = $function(FILENAME_NEWSLETTER, 'action=activate&language='.$_SESSION['language_code'].'&email='.md5($mail).'&key='.$this->vlCode, 'NONSSL', false);
         $smarty->assign('EMAIL', xtc_db_input($mail));
         $smarty->assign('LINK', $link);
         
