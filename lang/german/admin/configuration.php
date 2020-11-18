@@ -485,7 +485,7 @@ define('ACTIVATE_CROSS_SELLING_TITLE','Cross-Marketing');
 define('ACTIVATE_CROSS_SELLING_DESC','Cross-Marketing Funktion aktivieren?');
 
 define('DOWNLOAD_UNALLOWED_PAYMENT_TITLE', 'Unerlaubte Download-Zahlungsmodule');
-define('DOWNLOAD_UNALLOWED_PAYMENT_DESC', '<strong>NICHT</strong> Erlaubte Zahlungsweisen f&uuml;r Downloadprodukte durch Komma getrennt. Z.B. {banktransfer,cod,invoice,moneyorder}');
+define('DOWNLOAD_UNALLOWED_PAYMENT_DESC', '<strong>NICHT</strong> erlaubte Zahlungsweisen f&uuml;r Downloadprodukte.');
 define('DOWNLOAD_MIN_ORDERS_STATUS_TITLE', 'Bestellstatus');
 define('DOWNLOAD_MIN_ORDERS_STATUS_DESC', 'Bestellstatus, mit dem bestellte Downloads freigegeben sind.');
 

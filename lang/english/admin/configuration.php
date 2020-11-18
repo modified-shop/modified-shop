@@ -480,15 +480,15 @@ define('ACTIVATE_CROSS_SELLING_TITLE', 'Cross-Selling');
 define('ACTIVATE_CROSS_SELLING_DESC', 'Activate Cross-selling?');
 
 define('ACTIVATE_NAVIGATOR_TITLE','Activate Product Navigator?');
-define('ACTIVATE_NAVIGATOR_DESC','activate/deactivate product navigator in product_info, (deactivate for better performance if lots of articles are present in system)');
+define('ACTIVATE_NAVIGATOR_DESC','Activate/deactivate product navigator in product_info, (deactivate for better performance if lots of articles are present in system)');
 
 define('QUICKLINK_ACTIVATED_TITLE','Activate Multilink / Copy Function');
-define('QUICKLINK_ACTIVATED_DESC','Allows selection of multiple categories when performing "copy product to"');
+define('QUICKLINK_ACTIVATED_DESC','Allows selection of multiple categories when performing "copy product to".');
 
 define('DOWNLOAD_UNALLOWED_PAYMENT_TITLE', 'Disallowed Download Payment Modules');
-define('DOWNLOAD_UNALLOWED_PAYMENT_DESC', '<strong>DISALLOWED</strong> payment modules for downloads. Comma separated list, e.g. {banktransfer,cod,invoice,moneyorder}');
+define('DOWNLOAD_UNALLOWED_PAYMENT_DESC', '<strong>DISALLOWED</strong> payment modules for download products.');
 define('DOWNLOAD_MIN_ORDERS_STATUS_TITLE', 'Order Status');
-define('DOWNLOAD_MIN_ORDERS_STATUS_DESC', 'order status to allow download of files.');
+define('DOWNLOAD_MIN_ORDERS_STATUS_DESC', 'Order status to allow download of files.');
 
 // Vat Check
 define('STORE_OWNER_VAT_ID_TITLE' , 'VAT Reg No of Shop Owner');
