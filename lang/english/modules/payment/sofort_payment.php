@@ -43,7 +43,7 @@ defined('MODULE_PAYMENT_'.$sofort_code.'_TEXT_DESCRIPTION_CHECKOUT_PAYMENT_TEXT'
 defined('MODULE_PAYMENT_'.$sofort_code.'_STATUS_TITLE') OR define('MODULE_PAYMENT_'.$sofort_code.'_STATUS_TITLE', 'Activate Online Bank Transfer.');
 defined('MODULE_PAYMENT_'.$sofort_code.'_STATUS_DESC') OR define('MODULE_PAYMENT_'.$sofort_code.'_STATUS_DESC', 'Activates/deactivates Online Bank Transfer.');
 define('MODULE_PAYMENT_'.$sofort_code.'_ALLOWED_TITLE', 'Allowed zones');
-define('MODULE_PAYMENT_'.$sofort_code.'_ALLOWED_DESC', 'Please enter <b>einzeln</b> the zones, which should be allowed for this module. (eg allow AT, DE (if empty, all zones))');
+define('MODULE_PAYMENT_'.$sofort_code.'_ALLOWED_DESC', 'Please enter the zones <b>separately</b> which should be allowed to use this module. (e. g. AT,DE (leave empty if you want to allow all zones))');
 define('MODULE_PAYMENT_'.$sofort_code.'_TMP_ORDER_TITLE', 'Temporary Order');
 define('MODULE_PAYMENT_'.$sofort_code.'_TMP_ORDER_DESC', 'Do you want to create a temporary order?');
 define('MODULE_PAYMENT_'.$sofort_code.'_LOGGING_TITLE', 'activate Logging');

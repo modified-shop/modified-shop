@@ -58,7 +58,7 @@
   define('MODULE_PAYMENT_EUSTANDARDTRANSFER_SORT_ORDER_DESC', 'Sort order of display. Lowest is displayed first.');
 
   define('MODULE_PAYMENT_EUSTANDARDTRANSFER_ALLOWED_TITLE', 'Allowed zones');
-  define('MODULE_PAYMENT_EUSTANDARDTRANSFER_ALLOWED_DESC', 'Please enter the zones <b>separately</b> which should be allowed to use this modul. (e. g. AT,DE (leave empty if you want to allow all zones))');
+  define('MODULE_PAYMENT_EUSTANDARDTRANSFER_ALLOWED_DESC', 'Please enter the zones <b>separately</b> which should be allowed to use this module. (e. g. AT,DE (leave empty if you want to allow all zones))');
 
   define('MODULE_PAYMENT_EUSTANDARDTRANSFER_ZONE_TITLE', 'Payment Zone');
   define('MODULE_PAYMENT_EUSTANDARDTRANSFER_ZONE_DESC', 'If a zone is selected, only enable this payment method for that zone.');
