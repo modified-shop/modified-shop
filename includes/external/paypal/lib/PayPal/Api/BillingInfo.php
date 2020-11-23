@@ -20,6 +20,11 @@ use PayPal\Common\PayPalModel;
  * @property string additional_info
  * @property string notification_channel
  * @property \PayPal\Api\Phone phone
+ * @property \PayPal\Api\Currency outstanding_balance
+ * @property \PayPal\Api\CycleExecutions[] billing_cycles
+ * @property string next_billing_time
+ * @property string final_payment_time
+ * @property integer failed_payments_count
  */
 class BillingInfo extends PayPalModel
 {
@@ -230,6 +235,151 @@ class BillingInfo extends PayPalModel
     public function getPhone()
     {
         return $this->phone;
+    }
+
+    /**
+     *  The total pending bill amount, to be paid by the subscriber. 
+     *
+     * @param \PayPal\Api\Currency $outstanding_balance
+     * 
+     * @return $this
+     */
+    public function setOutstandingBalance($outstanding_balance)
+    {
+        $this->outstanding_balance = $outstanding_balance;
+        return $this;
+    }
+
+    /**
+     *  The total pending bill amount, to be paid by the subscriber. 
+     *
+     * @return \PayPal\Api\Currency
+     */
+    public function getOutstandingBalance()
+    {
+        return $this->outstanding_balance;
+    }
+
+    /**
+     * Array of BillingCycles for this billing plan.
+     *
+     * @param \PayPal\Api\CycleExecutions[] $billing_cycles
+     * 
+     * @return $this
+     */
+    public function setCycleExecutions($cycle_executions)
+    {
+        $this->cycle_executions = $cycle_executions;
+        return $this;
+    }
+
+    /**
+     * Array of BillingCycles for this billing plan.
+     *
+     * @return \PayPal\Api\CycleExecutions[]
+     */
+    public function getCycleExecutions()
+    {
+        return $this->cycle_executions;
+    }
+
+    /**
+     * Append BillingCycles to the list.
+     *
+     * @param \PayPal\Api\CycleExecutions $cycle_executions
+     * @return $this
+     */
+    public function addCycleExecutions($cycle_executions)
+    {
+        if (!$this->getCycleExecutions()) {
+            return $this->setCycleExecutions(array($cycle_executions));
+        } else {
+            return $this->setCycleExecutions(
+                array_merge($this->getCycleExecutions(), array($cycle_executions))
+            );
+        }
+    }
+
+    /**
+     * Remove BillingCycles from the list.
+     *
+     * @param \PayPal\Api\CycleExecutions $billing_cycles
+     * @return $this
+     */
+    public function removeCycleExecutions($cycle_executions)
+    {
+        return $this->setCycleExecutions(
+            array_diff($this->getCycleExecutions(), array($cycle_executions))
+        );
+    }
+
+    /**
+     * The next date and time for billing this subscription. Format YYYY-MM-DDTimeTimezone, as defined in [ISO8601](http://tools.ietf.org/html/rfc3339#section-5.6).
+     *
+     * @param string $next_billing_time
+     * 
+     * @return $this
+     */
+    public function setNextBillingTime($next_billing_time)
+    {
+        $this->next_billing_time = $next_billing_time;
+        return $this;
+    }
+
+    /**
+     * The next date and time for billing this subscription. Format YYYY-MM-DDTimeTimezone, as defined in [ISO8601](http://tools.ietf.org/html/rfc3339#section-5.6).
+     *
+     * @return string
+     */
+    public function getNextBillingTime()
+    {
+        return $this->next_billing_time;
+    }
+
+    /**
+     * The date and time when the final billing cycle occurs. Format YYYY-MM-DDTimeTimezone, as defined in [ISO8601](http://tools.ietf.org/html/rfc3339#section-5.6).
+     *
+     * @param string $final_payment_time
+     * 
+     * @return $this
+     */
+    public function setFinalPaymentTime($final_payment_time)
+    {
+        $this->final_payment_time = $final_payment_time;
+        return $this;
+    }
+
+    /**
+     * The date and time when the final billing cycle occurs. Format YYYY-MM-DDTimeTimezone, as defined in [ISO8601](http://tools.ietf.org/html/rfc3339#section-5.6).
+     *
+     * @return string
+     */
+    public function getFinalPaymentTime()
+    {
+        return $this->final_payment_time;
+    }
+
+    /**
+     * The number of consecutive payment failures. Resets to 0 after a successful payment. If this reaches the payment_failure_threshold value, the subscription updates to the SUSPENDED state. 
+     *
+     * @param integer $failed_payments_count
+     * 
+     * @return $this
+     */
+    public function setFailedPaymentsCount($failed_payments_count)
+    {
+        $this->failed_payments_count = (int)$failed_payments_count;
+        return $this;
+    }
+
+    /**
+     * The number of consecutive payment failures. Resets to 0 after a successful payment. If this reaches the payment_failure_threshold value, the subscription updates to the SUSPENDED state. 
+     *
+     * @return integer
+     */
+    public function getFailedPaymentsCount()
+    {
+        return $this->failed_payments_count;
     }
 
 }

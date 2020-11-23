@@ -403,12 +403,17 @@ class PayPalCommon extends PayPalAuth {
   }
 
 
-  function login_customer($customer) {
+  function login_customer($customer, $customer_id = '') {
     global $econda, $messageStack;
     
     // include needed function
     require_once (DIR_FS_INC.'xtc_write_user_info.inc.php');
-
+    
+    $where = " WHERE customers_email_address = '".xtc_db_input($customer['info']['email_address'])."' AND account_type = '0' ";
+    if ($customer_id != '') {
+      $where = " WHERE customers_id = '".(int)$customer_id."' ";
+    }
+    
     // check if customer exists
     $check_customer_query = xtc_db_query("SELECT customers_id, 
                                                  customers_vat_id, 
@@ -420,8 +425,7 @@ class PayPalCommon extends PayPalAuth {
                                                  customers_default_address_id,
                                                  account_type
                                             FROM ".TABLE_CUSTOMERS." 
-                                           WHERE customers_email_address = '".xtc_db_input($customer['info']['email_address'])."' 
-                                             AND account_type = '0'");
+                                                 ".$where);
     if (xtc_db_num_rows($check_customer_query) < 1) {
       $this->create_account($customer);
     } else {
@@ -490,8 +494,7 @@ class PayPalCommon extends PayPalAuth {
     $password = xtc_create_password(8);
     
     $sql_data_array = array(
-      'customers_cid' => generate_customers_cid(true),
-      'customers_status' => DEFAULT_CUSTOMERS_STATUS_ID,
+      'customers_status' => DEFAULT_CUSTOMERS_STATUS_ID_GUEST,
       'customers_gender' => $customer['info']['gender'],
       'customers_firstname' => $customer['customers']['customers_firstname'],
       'customers_lastname' => $customer['customers']['customers_lastname'],
@@ -501,9 +504,19 @@ class PayPalCommon extends PayPalAuth {
       'customers_password' => xtc_encrypt_password($password),
       'customers_date_added' => 'now()',
       'customers_last_modified' => 'now()',
-      'password_request_time' => 'now()',
+      'account_type' => '1',
     );
 
+    if (ACCOUNT_OPTIONS == 'account') {
+      $sql_data_array['account_type'] = '0';
+      $sql_data_array['customers_cid'] = generate_customers_cid(true);
+      $sql_data_array['customers_status'] = DEFAULT_CUSTOMERS_STATUS_ID;
+      $sql_data_array['password_request_time'] = 'now()';
+      
+      // send password with order mail
+      $_SESSION['paypal_express_new_customer'] = 'true';
+    }
+    
     xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array);
 
     $customer_id = xtc_db_insert_id();
@@ -523,12 +536,9 @@ class PayPalCommon extends PayPalAuth {
                             'customers_info_date_of_last_logon' => 'now()'
                             );
     xtc_db_perform(TABLE_CUSTOMERS_INFO, $sql_data_array);
-    
-    // send password with order mail
-    $_SESSION['paypal_express_new_customer'] = 'true';
-    
+        
     // login
-    $this->login_customer($customer);
+    $this->login_customer($customer, $customer_id);
   }
 
 

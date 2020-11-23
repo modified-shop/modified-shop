@@ -50,18 +50,24 @@ if (isset($order) && is_object($order)) {
                 <dt><?php echo TEXT_PAYPAL_TRANSACTION_EMAIL; ?></dt>
                 <dd><?php echo $admin_info_array['email_address']; ?></dd>
               </dl>
+              <?php if ($admin_info_array['account_status'] != '') { ?>
               <dl class="pp_transaction">
                 <dt><?php echo TEXT_PAYPAL_TRANSACTION_ACCOUNT_STATE; ?></dt>
                 <dd><?php echo $admin_info_array['account_status']; ?></dd>
               </dl>
+              <?php } ?>
+              <?php if ($admin_info_array['intent'] != '') { ?>
               <dl class="pp_transaction">
                 <dt><?php echo TEXT_PAYPAL_TRANSACTION_INTENT; ?></dt>
                 <dd><?php echo $admin_info_array['intent']; ?></dd>
               </dl>
+              <?php } ?>
+              <?php if ($admin_info_array['total'] > 0) { ?>
               <dl class="pp_transaction">
                 <dt><?php echo TEXT_PAYPAL_TRANSACTIONS_TOTAL; ?></dt>
                 <dd><?php echo xtc_format_price_order($admin_info_array['total'], 1, $admin_info_array['transactions'][0]['relatedResource'][0]['currency'], 1); ?></dd>
               </dl>
+              <?php } ?>
               <dl class="pp_transaction">
                 <dt><?php echo TEXT_PAYPAL_TRANSACTION_STATE; ?></dt>
                 <dd><?php echo $admin_info_array['state']; ?></dd>
@@ -69,6 +75,13 @@ if (isset($order) && is_object($order)) {
             </div>
 
             <div class="pp_txstatus pp_box">
+            <?php
+            if (isset($admin_info_array['transactions'])
+                && count($admin_info_array['transactions']) > 0
+                )
+            {
+              ?>
+              <div class="pp_txstatus pp_box">
               <div class="pp_boxheading"><?php echo TEXT_PAYPAL_TRANSACTIONS_STATUS; ?></div>
               <?php
               $status_array = array();
