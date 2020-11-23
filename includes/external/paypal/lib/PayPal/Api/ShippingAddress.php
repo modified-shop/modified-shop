@@ -105,4 +105,50 @@ class ShippingAddress extends Address
         return $this->preferred_address;
     }
 
+    /**
+     * Name of the recipient at this address.
+     *
+     * @param \PayPal\Api\Name $name
+     * 
+     * @return $this
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    /**
+     * Name of the recipient at this address.
+     *
+     * @return \PayPal\Api\Name
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * The address of the person to whom to ship the items. Supports only the address_line_1, address_line_2, admin_area_1, admin_area_2, postal_code, and country_code properties. 
+     *
+     * @param \PayPal\Api\BaseAddress $address
+     * 
+     * @return $this
+     */
+    public function setAddress($address)
+    {
+        $this->address = $address;
+        return $this;
+    }
+
+    /**
+     * The address of the person to whom to ship the items. Supports only the address_line_1, address_line_2, admin_area_1, admin_area_2, postal_code, and country_code properties. 
+     *
+     * @return \PayPal\Api\BaseAddress
+     */
+    public function getAddress()
+    {
+        return $this->address;
+    }
+
 }
