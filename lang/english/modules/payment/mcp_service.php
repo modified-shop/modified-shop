@@ -9,7 +9,7 @@
 define('MODULE_PAYMENT_MCP_SERVICE_STATUS_TITLE','Status');
 define('MODULE_PAYMENT_MCP_SERVICE_STATUS_DESC','Enable the micropayment&trade; module');
 define('MODULE_PAYMENT_MCP_SERVICE_SORT_ORDER_TITLE','Positioning');
-define('MODULE_PAYMENT_MCP_SERVICE_SORT_ORDER_DESC','Position in the liste');
+define('MODULE_PAYMENT_MCP_SERVICE_SORT_ORDER_DESC','Position in the list');
 define('MODULE_PAYMENT_MCP_SERVICE_ACCOUNT_ID_TITLE','<div style="color:#850000;font-style: italic;">The following configuration settings are used globally for all micropayment&trade; payment modules and only need to be configured once</div><br />Account-ID');
 define('MODULE_PAYMENT_MCP_SERVICE_ACCOUNT_ID_DESC','Account-ID from micropayment&trade;');
 define('MODULE_PAYMENT_MCP_SERVICE_ACCESS_KEY_TITLE','Access-Key');
