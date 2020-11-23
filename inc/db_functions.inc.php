@@ -101,6 +101,15 @@
   function xtc_db_queryCached($query, $link='db_link') {
     global ${$link}, $modified_cache;
     
+    if (!is_object($modified_cache)) {
+      require_once(DIR_FS_CATALOG.'includes/classes/modified_cache.php');
+      $_mod_cache_class = strtolower(DB_CACHE_TYPE).'_cache';
+      if (!class_exists($_mod_cache_class)) {
+        $_mod_cache_class = 'modified_cache';
+      }
+      $modified_cache = $_mod_cache_class::getInstance();
+    }
+
     if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS == 'true') {    
       $queryStartTime = array_sum(explode(" ",microtime()));
     }
