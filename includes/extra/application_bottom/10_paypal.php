@@ -35,3 +35,21 @@
       }
     }
   }
+
+  if (strstr($PHP_SELF, FILENAME_PRODUCT_INFO )) {
+    ?>
+    <script>
+      $(document).ready(function () {      
+        if (typeof $.fn.easyResponsiveTabs === 'function') {
+          $('#horizontalAccordionPlan').easyResponsiveTabs({
+            type: 'accordion', //Types: default, vertical, accordion     
+            closed: true,     
+            activate: function(event) { // Callback function if tab is switched
+              $(".resp-tab-active input[type=radio]").prop('checked', true);
+            }
+          });
+        }
+      });
+    </script>
+    <?php
+  }

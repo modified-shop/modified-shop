@@ -32,6 +32,7 @@
     'paypalclassic',
     'paypallink',
     'paypalinstallment',
+    'paypalsubscription',
     'sofort_sofortueberweisung_classic',
     'sofort_sofortueberweisung_gateway',
   );

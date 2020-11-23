@@ -192,6 +192,65 @@ class PayPalInfo extends PayPalPayment {
   }
 
 
+  function subscription_info($oID) {
+    
+    // set payment_array
+    $payment_array = array();
+    
+    $orders_query = xtc_db_query("SELECT p.*
+                                    FROM `paypal_subscription` p
+                                   WHERE p.orders_id = '".(int)$oID."'");
+    if (xtc_db_num_rows($orders_query) > 0) {
+      $orders = xtc_db_fetch_array($orders_query);
+      
+      $subscription = $this->get_subscription_details($orders['subscription_id']);
+      $subscriber = $subscription->getSubscriber();
+      $shipping_address = $subscriber->getShippingAddress();
+      $billing_info = $subscription->getBillingInfo();
+      
+      
+      $payment_array = array(
+        'id' => $subscription->getId(),
+        'payment_method' => 'Subscription',
+        'email_address' => ((isset($subscriber) && is_object($subscriber)) ? $subscriber->getEmailAddress() : ''),
+        'account_status' => '',
+        'intent' => '',
+        'total' => 0,
+        'state' => $subscription->getStatus(),
+        'address' => array(
+          'name' => $shipping_address->getName()->getFullName(),
+          'company' => '',
+          'firstname' => '',
+          'lastname' => '',
+          'street_address' => $shipping_address->getAddress()->getAddressLine1(),
+          'suburb' => $shipping_address->getAddress()->getAddressLine2(),
+          'city' => $shipping_address->getAddress()->getAdminArea2(),
+          'state' => $shipping_address->getAddress()->getAdminArea1(),
+          'postcode' => $shipping_address->getAddress()->getPostalCode(),
+          'country_iso_code_2' => $shipping_address->getAddress()->getCountryCode(),
+        ),
+        'billing' => array(
+          'outstanding_balance' => $billing_info->getOutstandingBalance()->getValue(),
+          'currency' => $billing_info->getOutstandingBalance()->getCurrencyCode(),
+          'next_billing_time' => $billing_info->getNextBillingTime(),
+          'final_payment_time' => $billing_info->getFinalPaymentTime(),
+          'failed_payments_count' => $billing_info->getFailedPaymentsCount(),
+          'cycle_executions' => array(
+            'tenure_type' => $billing_info->getCycleExecutions()[0]->getTenureType(),
+            'sequence' => $billing_info->getCycleExecutions()[0]->getSequence(),
+            'cycles_completed' => $billing_info->getCycleExecutions()[0]->getCyclesCompleted(),
+            'cycles_remaining' => $billing_info->getCycleExecutions()[0]->getCyclesRemaining(),
+            'total_cycles' => $billing_info->getCycleExecutions()[0]->getTotalCycles(),
+          ),
+        ),
+        'transactions' => array(),
+      );
+    }
+        
+    return $payment_array;
+  }
+
+
   function get_payments($count, $offset) {
 
      // auth

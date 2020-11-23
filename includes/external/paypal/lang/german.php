@@ -64,16 +64,64 @@ $lang_array = array(
   'TEXT_PAYPAL_CAPTURE_AMOUNT' => 'Betrag:',
   'TEXT_PAYPAL_CAPTURE_SUBMIT' => 'Zahlung erfassen',
   'TEXT_PAYPAL_CAPTURED' => 'Zahlung erfasst',
+
   
+  // products
+  'TEXT_PAYPAL_PRODUCTS_TYPE' => 'Produktart',
+  'TEXT_PAYPAL_CREATE_PRODUCT' => 'Artikel erstellen',
+  
+  
+  // subscriptions
+  'TEXT_PAYPAL_SUBSCRIPTIONS_HEADING' => 'PayPal Abonnement',
+  'TEXT_PAYPAL_PLANS' => 'Plan',
+  'TEXT_PAYPAL_NEW_PLAN' => 'Neuer Plan',
+  'TEXT_PAYPAL_PLAN_SAVE' => 'Plan erstellen',
+  'TEXT_PAYPAL_PLAN_PATCH' => 'Plan aktualisieren',
+  'TEXT_PAYPAL_PLAN_STATUS' => 'Status',
+  'TEXT_PAYPAL_PLAN_NAME' => 'Bezeichnung',
+  'TEXT_PAYPAL_PLAN_DAY_NAME_INFO' => 'Die Bezeichnung wird dem Kunden anzgeigt und kann nicht mehr ge&auml;ndert werden.',
+  'TEXT_PAYPAL_PLAN_INTERVAL' => 'Zahlung',
+  'TEXT_PAYPAL_PLAN_CYCLE' => 'Laufzeit',
+  'TEXT_PAYPAL_PLAN_CYCLE_NO_LIMIT' => 'bis auf Widerruf',
+  'TEXT_PAYPAL_PLAN_FIXED_PRICE' => 'Preis',
+  'TEXT_PAYPAL_PLAN_SETUP_FEE' => 'Einrichtungsgeb&uuml;hr',
+  'TEXT_PAYPAL_PLAN_TAX_CLASS' => 'Steuerklasse',
+  'TEXT_PAYPAL_PLAN_TAX_INCLUDE' => 'Steuer enthalten',
+  
+  'TEXT_PAYPAL_PLAN_DAY' => 'T&auml;glich',
+  'TEXT_PAYPAL_PLAN_WEEK' => 'W&ouml;chentlich',
+  'TEXT_PAYPAL_PLAN_MONTH' => 'Monatlich',
+  'TEXT_PAYPAL_PLAN_YEAR' => 'J&auml;hrlich',
+  
+  'TEXT_PAYPAL_NO_CHANGE' => 'kann nicht mehr ge&auml;ndert werden',
+  'TEXT_ACTIVE' => 'Aktiviert',
+  'TEXT_INACTIVE' => 'Deaktiviert',
+
+  'TEXT_NONE' => '--keine--',
+  'TEXT_YES' => 'ja',
+  'TEXT_NO' => 'nein',
+  
+  'TEXT_PAYPAL_BILLING' => 'Zahlungen',
+  'TEXT_PAYPAL_BILLING_OUTSTANDING' => 'offener Betrag:',
+  'TEXT_PAYPAL_BILLING_CYCLES_COMPLETED' => 'Zahlungen erfolgt:',
+  'TEXT_PAYPAL_BILLING_CYCLES_REMAINING' => 'Zahlungen offen:',
+  'TEXT_PAYPAL_BILLING_CYCLES_TOTAL' => 'Zahlungen gesamt:',
+  'TEXT_PAYPAL_BILLING_TIME_NEXT' => 'Nächste Zahlung:',
+  'TEXT_PAYPAL_BILLING_TIME_FINAL' => 'Letzte Zahlung:',
+  'TEXT_PAYPAL_BILLING_FAILED' => 'Fehlgeschlagen:',
+  'TEXT_PAYPAL_CANCEL' => 'Zahlungen abbrechen',
+  'TEXT_PAYPAL_CANCEL_SUBMIT' => 'Best&auml;tigen',
   
   // error
   'TEXT_PAYPAL_ERROR_AMOUNT' => 'Bitte geben Sie einen Betrag ein.',
   'TEXT_PAYPAL_ERROR_ALREADY_PAID' => 'Wir haben Ihre Zahlung bereits erhalten. Vielen Dank!',
-  
+  'TEXT_PAYPAL_ERROR_NO_PLAN' => 'Bitte w&auml;hlen Sie einen Plan.',
+  'TEXT_PAYPAL_ERROR_MAX_PRODUCTS' => 'Dieser Artikel kann nur alleine gekauft werden.',
+  'TEXT_PAYPAL_ERROR_CANCEL' => 'Bei der Stornierung ist ein Fehler aufgetreten.',
+  'TEXT_PAYPAL_ERROR_SUBSCRIPTION_PRODUCTS' => 'Sie haben einen Abo Artikel im Warenkorb welcher nur alleine gekauft werden kann.',
   
   // diverse
   'MODULE_PAYMENT_PAYPAL_TEXT_ORDER' => 'Ihre Bestellung bei '.STORE_NAME,
-
 
   // status
   'TEXT_PAYPAL_NO_STATUS_CHANGE' => 'keine Status&auml;nderung',

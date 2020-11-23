@@ -61,6 +61,7 @@ $payment_array = array(
   'paypallink',
   'paypalpluslink',
   'paypalinstallment',
+  'paypalsubscription',
 );
 
 $payment_disallowed_array = array(
