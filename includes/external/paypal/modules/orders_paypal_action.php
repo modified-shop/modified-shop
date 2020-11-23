@@ -19,6 +19,7 @@ if (isset($oID) && $oID != '') {
       || $order->info['payment_method'] == 'paypallink'
       || $order->info['payment_method'] == 'paypalpluslink'
       || $order->info['payment_method'] == 'paypalinstallment'
+      || $order->info['payment_method'] == 'paypalsubscription'
       ) 
   {
     require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalInfo.php');
@@ -38,6 +39,12 @@ if (isset($oID) && $oID != '') {
           $paypal->capture_payment_admin($order->info['order_id'], $_POST['capture_price'], (isset($_POST['final_capture'])));
         } else {
           $_SESSION['pp_error'] = TEXT_PAYPAL_ERROR_AMOUNT;
+        }
+      }
+      if ($_POST['cmd'] == 'cancel') {
+        $response = $paypal->cancel_subscription($order->info['order_id']);
+        if ($response === false) {
+          $_SESSION['pp_error'] = TEXT_PAYPAL_ERROR_CANCEL;
         }
       }
     }

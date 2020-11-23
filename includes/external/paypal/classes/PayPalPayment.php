@@ -64,6 +64,21 @@ use PayPal\Api\Currency;
 use PayPal\Api\Presentment;
 use PayPal\Api\CreditFinancing;
 
+use PayPal\Api\Plans;
+use PayPal\Api\BillingCycles;
+use PayPal\Api\Frequency;
+use PayPal\Api\PricingScheme;
+use PayPal\Api\PricingSchemes;
+use PayPal\Api\PaymentPreferences;
+use PayPal\Api\Taxes;
+use PayPal\Api\Product;
+
+use PayPal\Api\Subscriptions;
+use PayPal\Api\Subscriber;
+use PayPal\Api\Name;
+use PayPal\Api\ApplicationContext;
+use PayPal\Api\PaymentMethod;
+
 
 class PayPalPayment extends PayPalPaymentBase {
 
@@ -1740,5 +1755,366 @@ class PayPalPayment extends PayPalPaymentBase {
   }
     
     
+  function create_subscription() {
+    global $order;
+        
+    // auth
+    $apiContext = $this->apiContext();
+
+    $subscriber_name = new Name();
+    $subscriber_name->setGivenName($order->customer['firstname'])
+                    ->setSurname($order->customer['lastname']);
+    
+    $shipping_address_name = new Name();
+    $shipping_address_name->setFullName($order->delivery['firstname'].' '.$order->delivery['lastname']);
+    
+    $address = new Address();
+    $address->setAddressLine1($order->delivery['street_address'])
+            ->setAddressLine2($order->delivery['suburb'])
+            ->setAdminArea1('')
+            ->setAdminArea2($order->delivery['city'])
+            ->setPostalCode($order->delivery['postcode'])
+            ->setCountryCode($order->delivery['country']['iso_code_2']);
+            
+    $shipping_address = new ShippingAddress();
+    $shipping_address->setName($shipping_address_name)
+                     ->setAddress($address);
+    
+    $subscriber = new Subscriber();
+    $subscriber->setName($subscriber_name)
+               ->setEmailAddress($order->customer['email_address'])
+               ->setShippingAddress($shipping_address);
+    
+    $shipping_cost = 0;
+    $order_totals = $this->calculate_total(false);
+    foreach ($order_totals as $totals) {
+      if ($totals['code'] == 'ot_shipping') {
+        $shipping_cost = round($totals['value'], 2);
+      }
+    }
+    
+    $shipping_amount = new Currency();
+    $shipping_amount->setCurrencyCode('EUR')
+                    ->setValue($shipping_cost);
+    
+    $payment_method = new PaymentMethod();
+    $payment_method->setPayerSelected('PAYPAL')
+                   ->setPayeePreferred('IMMEDIATE_PAYMENT_REQUIRED');
+                   
+    $application_context = new ApplicationContext();
+    $application_context->setBrandName(STORE_NAME)
+                        ->setLocale($_SESSION['language_code'].'-'.strtoupper($_SESSION['language_code']))
+                        ->setShippingPreference('SET_PROVIDED_ADDRESS')
+                        ->setUserAction('SUBSCRIBE_NOW')
+                        ->setPaymentMethod($payment_method)
+                        ->setReturnUrl($this->link_encoding(xtc_href_link(FILENAME_CHECKOUT_PROCESS, xtc_session_name().'='.xtc_session_id(), 'SSL', false)))
+                        ->setCancelUrl($this->link_encoding(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code.'&'.xtc_session_name().'='.xtc_session_id(), 'SSL', false)));
+    
+    $subscriptions = new Subscriptions();
+    $subscriptions->setPlanId($_SESSION['cart']->plans[$order->products[0]['id']])
+                  ->setQuantity($order->products[0]['qty'])
+                  ->setShippingAmount($shipping_amount)
+                  ->setSubscriber($subscriber)
+                  ->setApplicationContext($application_context);
+            
+    try {
+      $payment = $subscriptions->create($apiContext);
+      
+      $_SESSION['paypal']['paymentId'] = $payment->getId();      
+      xtc_redirect($payment->getApprovalLink());
+    } catch (Exception $ex) {      
+      $this->LoggingManager->log('DEBUG', 'create_subscription', array('exception' => $ex));
+      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
+    }
+  }
+  
+
+  function cancel_subscription($oID) {    
+    $orders_query = xtc_db_query("SELECT p.*
+                                    FROM `paypal_subscription` p
+                                   WHERE p.orders_id = '".(int)$oID."'");
+    if (xtc_db_num_rows($orders_query) > 0) {
+      $orders = xtc_db_fetch_array($orders_query);
+
+      // auth
+      $apiContext = $this->apiContext();
+      
+      $subscriptions = new Subscriptions();
+    
+      try {
+        $subscriptions->cancel($orders['subscription_id'], $apiContext);
+        return  true;
+      } catch (Exception $ex) {       
+        $this->LoggingManager->log('DEBUG', 'cancel_subscription', array('exception' => $ex));
+        return false;
+      }
+    }
+    
+    return false;
+  }
+  
+  
+  function get_subscription_details($subscription_id) {
+    // auth
+    $apiContext = $this->apiContext();
+    
+    $subscriptions = new Subscriptions();
+    
+    try {
+      $resonse = $subscriptions->get($subscription_id, $apiContext);
+      return  $resonse;
+    } catch (Exception $ex) { 
+      $this->LoggingManager->log('DEBUG', 'get_subscription_details', array('exception' => $ex));
+    }
+  }
+
+
+  function create_plans($data) {
+    // auth
+    $apiContext = $this->apiContext();
+    
+    $frequency = new Frequency();
+    $frequency->setIntervalUnit($data['paypal_plan_interval'])
+              ->setIntervalCount(1);
+    
+    $fixed_price = new Currency();
+    $fixed_price->setCurrencyCode(DEFAULT_CURRENCY)
+                ->setValue($data['paypal_plan_fixed_price']);
+
+    $setup_fee = new Currency();
+    $setup_fee->setCurrencyCode(DEFAULT_CURRENCY)
+              ->setValue($data['paypal_plan_setup_fee']);
+                   
+    $pricing_scheme = new PricingScheme();
+    $pricing_scheme->setFixedPrice($fixed_price);
+    
+    $billing_cycles[0] = new BillingCycles();
+    $billing_cycles[0]->setPricingScheme($pricing_scheme)
+                      ->setFrequency($frequency)
+                      ->setTenureType('REGULAR')
+                      ->setSequence(1)
+                      ->setTotalCycles($data['paypal_plan_cycle']);
+    
+    $payment_preferences = new PaymentPreferences();
+    $payment_preferences->setAutoBillOutstanding(true)
+                        ->setSetupFee($setup_fee)
+                        ->setSetupFeeFailureAction('CONTINUE')
+                        ->setPaymentFailureThreshold(3);
+    
+    $taxes = new Taxes();
+    $taxes->setPercentage($data['paypal_plan_tax'])
+          ->setInclusive($data['paypal_plan_tax_include'] == 1 ? true : false);
+          
+    $plans = new Plans();
+    $plans->setProductId(str_pad($data['products_id'], 6, 0, STR_PAD_LEFT))
+          ->setName($data['paypal_plan_name'])
+          ->setStatus($data['paypal_plan_status'])
+          ->setBillingCycles($billing_cycles)
+          ->setPaymentPreferences($payment_preferences)
+          ->setTaxes($taxes);
+    
+    try {
+      $resonse = $plans->create($apiContext);
+      
+      $sql_data_array = array(
+        'plan_id' => $resonse->getId(),
+        'products_id' => $data['products_id'],
+        'plan_status' => (($data['paypal_plan_status'] == 'ACTIVE') ? 1 : 0),
+        'plan_name' => $data['paypal_plan_name'],
+        'plan_interval' => $data['paypal_plan_interval'],
+        'plan_cycle' => $data['paypal_plan_cycle'],
+        'plan_price' => $data['paypal_plan_fixed_price'],
+        'plan_fee' => $data['paypal_plan_setup_fee'],
+        'plan_tax' => $data['paypal_plan_tax'],
+        'plan_tax_included' => $data['paypal_plan_tax_include'],
+      );
+      xtc_db_perform('paypal_plan', $sql_data_array);
+      
+      return true;
+    } catch (Exception $ex) { 
+      $this->LoggingManager->log('DEBUG', 'create_plans', array('exception' => $ex));
+      return false;
+    }
+  }
+
+
+  function patch_plan($data) {
+    // auth
+    $apiContext = $this->apiContext();
+    
+    $plans = new Plans();
+    $plans->setId($data['paypal_plan_id']);
+    
+    $patches_array = array();
+    $patchRequest = new PatchRequest();
+
+    $fixed_price = new Currency();
+    $fixed_price->setCurrencyCode(DEFAULT_CURRENCY)
+                ->setValue($data['paypal_plan_fixed_price']);
+
+    $pricing_scheme = new PricingScheme();
+    $pricing_scheme->setFixedPrice($fixed_price);
+
+    $billing_cycles = new BillingCycles();
+    $billing_cycles->setPricingScheme($pricing_scheme)
+                   ->setBillingCycleSequence(1);
+
+    $pricing_schemes = new PricingSchemes();
+    $pricing_schemes->addPricingSchemes($billing_cycles);
+
+    $setup_fee = new Currency();
+    $setup_fee->setCurrencyCode(DEFAULT_CURRENCY)
+              ->setValue($data['paypal_plan_setup_fee']);
+
+    $patch_setup_fee = new Patch();
+    $patch_setup_fee->setOp('replace')
+                    ->setPath('/payment_preferences/setup_fee')
+                    ->setValue($setup_fee);
+    $patches_array[] = $patch_setup_fee;
+
+    $patch_taxes = new Patch();
+    $patch_taxes->setOp('replace')
+                ->setPath('/taxes/percentage')
+                ->setValue($data['paypal_plan_tax']);
+    $patches_array[] = $patch_taxes;
+
+    $patchRequest->setPatches($patches_array);
+              
+    try {
+      // activate
+      if ($data['paypal_plan_status_old'] != 'ACTIVE') {
+        $plans->status_update('activate', $apiContext); 
+      }
+      
+      // patch
+      $plans->update($patchRequest, $apiContext);  
+      
+      // set correct status
+      if ($data['paypal_plan_status'] != 'ACTIVE') {
+        $plans->status_update('deactivate', $apiContext); 
+      }
+
+      // update price
+      if ($data['paypal_plan_fixed_price'] != $data['paypal_plan_fixed_price_old']) {
+        $plans->price_update($pricing_schemes, $apiContext);  
+      }
+      
+      $sql_data_array = array(
+        'plan_status' => (($data['paypal_plan_status'] == 'ACTIVE') ? 1 : 0),
+        'plan_price' => $data['paypal_plan_fixed_price'],
+        'plan_fee' => $data['paypal_plan_setup_fee'],
+        'plan_tax' => $data['paypal_plan_tax'],
+      );
+      xtc_db_perform('paypal_plan', $sql_data_array, 'update', "plan_id = '".xtc_db_input($data['paypal_plan_id'])."'");
+
+      return true;
+    } catch (Exception $ex) {
+      $this->LoggingManager->log('DEBUG', 'patch_plan', array('exception' => $ex));
+      return false;
+    }    
+  } 
+  
+  
+  function get_plan_details($id) {
+    // auth
+    $apiContext = $this->apiContext();
+    
+    $plans = new Plans();
+    
+    try {
+      $resonse = $plans->get($id, $apiContext);
+      return $resonse;      
+    } catch (Exception $ex) { 
+      $this->LoggingManager->log('DEBUG', 'get_plan_details', array('exception' => $ex));
+    }
+  }
+  
+
+  function get_all_plans($products_id) {
+    // auth
+    $apiContext = $this->apiContext();
+
+    $params = array(
+      'product_id' => str_pad($products_id, 6, 0, STR_PAD_LEFT),
+      'page_size' => 20,
+      'page' => 1
+    );
+    $plans = new Plans();
+    
+    try {
+      $resonse = $plans::all($params, $apiContext);
+      return $resonse;      
+    } catch (Exception $ex) { 
+      $this->LoggingManager->log('DEBUG', 'get_all_plans', array('exception' => $ex));
+    }
+  } 
+
+  
+  function create_product($data) {
+    // auth
+    $apiContext = $this->apiContext();
+    
+    $product = new Product();
+    $product->setId(str_pad($data['products_id'], 6, 0, STR_PAD_LEFT))
+            ->setName(substr($data['products_name'], 0, 126))
+           // ->setDescription(substr($data['products_description'], 0, 255))
+            ->setType($data['products_type']);
+        
+    try {
+      $resonse = $product->create($apiContext);
+      return true;
+    } catch (Exception $ex) { 
+      $this->LoggingManager->log('DEBUG', 'create_product', array('exception' => $ex));
+      return false;
+    }
+  } 
+  
+  
+  function get_product($products_id) {
+    // auth
+    $apiContext = $this->apiContext();
+    
+    $product = new Product();
+    $products_id = str_pad($products_id, 6, 0, STR_PAD_LEFT);
+    
+    try {
+      $resonse = $product->get($products_id, $apiContext);
+      return $resonse;
+      
+    } catch (Exception $ex) { 
+      $this->LoggingManager->log('DEBUG', 'get_product', array('exception' => $ex));
+    }
+  } 
+
+
+  function patch_product($data) {
+    // auth
+    $apiContext = $this->apiContext();
+    
+    $product = new Product();
+    $product->setId(str_pad($data['products_id'], 6, 0, STR_PAD_LEFT));
+    
+    $patches_array = array();
+    $patchRequest = new PatchRequest();
+
+    $patch_description = new Patch();
+    $patch_description->setOp('replace')
+                      ->setPath('/description')
+                      ->setValue(substr($data['products_description'], 0, 255));
+    $patches_array[] = $patch_description;
+
+    $patchRequest->setPatches($patches_array);
+          
+    try {
+      // update payment
+      $product->update($patchRequest, $apiContext);  
+      return true;   
+    } catch (Exception $ex) {
+      $this->LoggingManager->log('DEBUG', 'patch_product', array('exception' => $ex));
+      return false;
+    }    
+  } 
+
+
 }
 ?>

@@ -17,6 +17,7 @@ if (isset($order) && is_object($order)) {
       || $order->info['payment_method'] == 'paypallink'
       || $order->info['payment_method'] == 'paypalpluslink'
       || $order->info['payment_method'] == 'paypalinstallment'
+      || $order->info['payment_method'] == 'paypalsubscription'
       ) 
   {
     require_once (DIR_FS_INC.'xtc_format_price_order.inc.php');
@@ -24,8 +25,12 @@ if (isset($order) && is_object($order)) {
     require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalInfo.php');
     $paypal = new PayPalInfo($order->info['payment_method']);
       
-    // payment
-    $admin_info_array = $paypal->order_info($order->info['order_id']);
+    if ($order->info['payment_method'] == 'paypalsubscription') {
+      $admin_info_array = $paypal->subscription_info($order->info['order_id']);
+    } else {
+      // payment
+      $admin_info_array = $paypal->order_info($order->info['order_id']);
+    }
   
     if (count($admin_info_array) > 0) {
       ?>          
@@ -73,8 +78,47 @@ if (isset($order) && is_object($order)) {
                 <dd><?php echo $admin_info_array['state']; ?></dd>
               </dl>
             </div>
-
-            <div class="pp_txstatus pp_box">
+            
+            <?php
+            if (isset($admin_info_array['billing'])
+                && count($admin_info_array['billing']) > 0
+                )
+            {
+              ?>
+              <div class="pp_txstatus pp_box">
+                <div class="pp_boxheading"><?php echo TEXT_PAYPAL_BILLING; ?></div>
+                <dl class="pp_transaction">
+                  <dt><?php echo TEXT_PAYPAL_BILLING_OUTSTANDING; ?></dt>
+                  <dd><?php echo xtc_format_price_order($admin_info_array['billing']['outstanding_balance'], 1, $admin_info_array['billing']['currency'], 1); ?></dd>
+                </dl>
+                <dl class="pp_transaction">
+                  <dt><?php echo TEXT_PAYPAL_BILLING_CYCLES_COMPLETED; ?></dt>
+                  <dd><?php echo $admin_info_array['billing']['cycle_executions']['cycles_completed']; ?></dd>
+                </dl>
+                <dl class="pp_transaction">
+                  <dt><?php echo TEXT_PAYPAL_BILLING_CYCLES_REMAINING; ?></dt>
+                  <dd><?php echo $admin_info_array['billing']['cycle_executions']['cycles_remaining']; ?></dd>
+                </dl>
+                <dl class="pp_transaction">
+                  <dt><?php echo TEXT_PAYPAL_BILLING_CYCLES_TOTAL; ?></dt>
+                  <dd><?php echo $admin_info_array['billing']['cycle_executions']['total_cycles']; ?></dd>
+                </dl>
+                <dl class="pp_transaction">
+                  <dt><?php echo TEXT_PAYPAL_BILLING_TIME_NEXT; ?></dt>
+                  <dd><?php echo xtc_datetime_short($admin_info_array['billing']['next_billing_time']); ?></dd>
+                </dl>
+                <dl class="pp_transaction">
+                  <dt><?php echo TEXT_PAYPAL_BILLING_TIME_FINAL; ?></dt>
+                  <dd><?php echo xtc_datetime_short($admin_info_array['billing']['final_payment_time']); ?></dd>
+                </dl>
+                <dl class="pp_transaction">
+                  <dt><?php echo TEXT_PAYPAL_BILLING_FAILED; ?></dt>
+                  <dd><?php echo $admin_info_array['billing']['failed_payments_count']; ?></dd>
+                </dl>
+              </div>
+              <div style="clear:both;"></div>
+            <?php } ?>
+            
             <?php
             if (isset($admin_info_array['transactions'])
                 && count($admin_info_array['transactions']) > 0
@@ -188,6 +232,24 @@ if (isset($order) && is_object($order)) {
               </div>
               <?php
             }
+
+            if ($admin_info_array['state'] == 'ACTIVE') {
+              ?>
+              <div class="pp_capture pp_box">
+                <div class="pp_boxheading"><?php echo TEXT_PAYPAL_CANCEL; ?></div>
+                <?php 
+                  echo xtc_draw_form('capture', xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action','subaction', 'ext', 'sec')).'action=custom&subaction=paypalaction', 'NONSSL'), 'post');
+                  if (CSRF_TOKEN_SYSTEM == 'true' && isset($_SESSION['CSRFToken']) && isset($_SESSION['CSRFName'])) {
+                    echo xtc_draw_hidden_field($_SESSION['CSRFName'], $_SESSION['CSRFToken']);
+                  }
+                  echo xtc_draw_hidden_field('cmd', 'cancel');
+                ?>
+                <br />
+                <input type="submit" class="button" name="capture_submit" value="<?php echo TEXT_PAYPAL_CANCEL_SUBMIT; ?>">
+                </form>
+              </div>
+              <?php 
+            } 
 
             $count = array_count_values($type_array);
             if (!isset($count['capture'])) $count['capture'] = 0;
