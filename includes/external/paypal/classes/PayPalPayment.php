@@ -209,7 +209,8 @@ class PayPalPayment extends PayPalPaymentBase {
         
         if ($free_shipping === true) {
           $shipping_data = array(
-            'cost' => 0
+            'cost' => 0,
+            'total' => 0
           );
         }
         
