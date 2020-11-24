@@ -88,6 +88,12 @@ class paypalsubscription extends PayPalPayment {
     if ($paypal_plan_checkout->check() > 0) {
       $paypal_plan_checkout->remove();
     }
+
+    require_once(DIR_FS_CATALOG.DIR_WS_MODULES.'order/paypal_plan_order.php');
+    $paypal_plan_order = new paypal_plan_order();
+    if ($paypal_plan_order->check() < 1) {
+      $paypal_plan_order->install();
+    }
   }
 
 
@@ -110,6 +116,12 @@ class paypalsubscription extends PayPalPayment {
     $paypal_plan_checkout = new paypal_plan_checkout();
     if ($paypal_plan_checkout->check() < 1) {
       $paypal_plan_checkout->install();
+    }
+
+    require_once(DIR_FS_CATALOG.DIR_WS_MODULES.'order/paypal_plan_order.php');
+    $paypal_plan_order = new paypal_plan_order();
+    if ($paypal_plan_order->check() > 0) {
+      $paypal_plan_order->remove();
     }
 	}
 
