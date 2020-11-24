@@ -419,7 +419,7 @@ class ot_coupon {
 
 
   function get_order_total() {
-    global $order;
+    global $order, $xtPrice;
 
     $order_total = $_SESSION['cart']->show_total();
     if (($_SESSION['customers_status']['customers_status_show_price_tax'] == 0
@@ -438,7 +438,7 @@ class ot_coupon {
     $products = $order->products;
     for ($i = 0; $i < sizeof($products); $i ++) {
       $product_id = $products[$i]['id'];
-      $products_price = $products[$i]['price'] * $products[$i]['qty'];
+      $products_price = round($products[$i]['price'], $xtPrice->currencies[$xtPrice->actualCurr]['decimal_places']) * $products[$i]['qty'];
       $this->products_price[$product_id] = $products_price;
       $this->products_tax_description[$product_id] = $products[$i]['tax_description'];
       $this->products_tax_rate[$product_id] = xtc_get_tax_rate($products[$i]['tax_class_id'], $order->delivery['country']['id'], $order->delivery['zone_id']);

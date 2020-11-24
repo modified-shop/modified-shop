@@ -100,11 +100,7 @@ class PayPalPayment extends PayPalPaymentBase {
     // set payment
     $payer = new Payer(); 
     $payer->setPaymentMethod('paypal');
-    
-    if ($this->code == 'paypalinstallment') {
-      $payer->setExternalSelectedFundingInstrumentType('CREDIT');
-    }
-    
+        
     // set payer_info
     $payer_info = new PayerInfo();
 
@@ -298,10 +294,6 @@ class PayPalPayment extends PayPalPaymentBase {
         $redirectUrls->setReturnUrl($this->link_encoding(xtc_href_link('callback/paypal/'.$this->code.'.php', 'oID='.$order->info['order_id'].'&key='.md5($order->customer['email_address']).'&'.xtc_session_name().'='.xtc_session_id(), 'SSL', false)))
                      ->setCancelUrl($this->link_encoding(xtc_href_link('callback/paypal/'.$this->code.'.php', 'payment_error='.$this->code.'&oID='.$order->info['order_id'].'&key='.md5($order->customer['email_address']).'&'.xtc_session_name().'='.xtc_session_id(), 'SSL', false)));
       }
-      
-      if ($this->code == 'paypalinstallment') {
-        $redirectUrls->setReturnUrl($this->link_encoding(xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'conditions=true&&pp_conditions=true&'.xtc_session_name().'='.xtc_session_id(), 'SSL')));
-      }
     }
     
     if ($this->amount->getTotal() == 0) {
@@ -337,39 +329,12 @@ class PayPalPayment extends PayPalPaymentBase {
     if (($cart === false 
          && $approval === false
          && $address_override === false) 
-         || ($order_exists === true)
-         || ($this->code == 'paypalinstallment')
+         || $order_exists === true
         ) 
     {
       $itemList->setShippingAddress($shipping_address);
     }
-    
-    if ($this->code == 'paypalinstallment') {
-      // set payment address
-      $payment_address = new Address();
-      $payment_address->setLine1($this->encode_utf8($order->billing['street_address']))
-                      ->setCity($this->encode_utf8($order->billing['city']))
-                      ->setState($this->encode_utf8(((isset($order->billing['state']) && $order->billing['state'] != '') ? xtc_get_zone_code($order->billing['country_id'], $order->billing['zone_id'], $order->billing['state']) : '')))
-                      ->setPostalCode($this->encode_utf8($order->billing['postcode']))
-                      ->setCountryCode($this->encode_utf8($order->billing['country']['iso_code_2']));
-
-      if ($order->billing['company'] != '') {
-        $payment_address->setLine2($this->encode_utf8($order->billing['company']));
-      }
-
-      if ($order->billing['suburb'] != '') {
-        $payment_address->setLine1($this->encode_utf8($order->billing['street_address'].', '.$order->billing['suburb']));
-      }
-
-      $payer_info->setBillingAddress($payment_address)
-                 ->setShippingAddress($shipping_address)
-                 ->setEmail($this->encode_utf8($order->customer['email_address']))
-                 ->setFirstName($this->encode_utf8($order->billing['firstname']))
-                 ->setLastName($this->encode_utf8($order->billing['lastname']));
-      
-      $payer->setPayerInfo($payer_info);
-    }
-    
+        
     // set transaction
     $transaction = new Transaction(); 
     $transaction->setAmount($this->amount) 
@@ -1099,231 +1064,6 @@ class PayPalPayment extends PayPalPaymentBase {
       }
     } catch (Exception $ex) {
       $this->LoggingManager->log('DEBUG', 'Capture', array('exception' => $ex));
-    }
-  }
-
-
-  function get_presentment($amount, $currency, $country_iso, $single = false) {    
-    $presentment_array = array();
-    
-    // auth
-    $apiContext = $this->apiContext();
-    
-    // transaction Amount
-    $transactionAmount = new Currency();
-    $transactionAmount->setCurrencyCode($currency)
-                      ->setValue($amount);
-    
-    // presentment
-    $presentment = new Presentment();
-    $presentment->setFinancingCountryCode($country_iso)
-                ->setTransactionAmount($transactionAmount);
-    
-    try {
-      $presentment->create($apiContext);
-    
-      $financing_options = $presentment->getFinancingOptions();
-      foreach ($financing_options as $financing_option) {
-        $qualifying_financing_options = $financing_option->getQualifyingFinancingOptions();
-        if (count($qualifying_financing_options) > 0) {
-          foreach ($qualifying_financing_options as $qualifying_financing_option) {
-            $credit_financing = $qualifying_financing_option->getCreditFinancing();
-            
-            if ($credit_financing->getEnabled() === true
-                && (string)$presentment->getTransactionAmount()->getValue() >= (string)$qualifying_financing_option->getMinAmount()->getValue()
-                ) 
-            {              
-              $presentment_array[] = array(
-                'mark' => false,
-                'financing_code' => $credit_financing->getFinancingCode(),
-                'apr' => $credit_financing->getApr(),
-                'nominal_rate' => $credit_financing->getNominalRate(),
-                'term' => $credit_financing->getTerm(),
-                'country_code' => $credit_financing->getCountryCode(),
-                'credit_type' => $credit_financing->getCreditType(),
-                'vendor_financing_id' => $credit_financing->getVendorFinancingId(),              
-                
-                'monthly_percentage_rate' => $qualifying_financing_option->getMonthlyPercentageRate(),
-                'currency_code' => $qualifying_financing_option->getMonthlyPayment()->getCurrencyCode(),
-                'min_amount' => $qualifying_financing_option->getMinAmount()->getValue(),
-                'monthly_payment_plain' => $qualifying_financing_option->getMonthlyPayment()->getValue(),
-                'monthly_payment' => $this->format_price_currency($qualifying_financing_option->getMonthlyPayment()->getValue()),
-                'total_cost' => $this->format_price_currency($qualifying_financing_option->getTotalCost()->getValue()),
-                'total_interest' => $this->format_price_currency($qualifying_financing_option->getTotalInterest()->getValue()),
-              );
-            }
-          }
-        }
-      }
-    } catch (Exception $ex) { 
-      $this->LoggingManager->log('DEBUG', 'Presentment', array('exception' => $ex));
-      
-    }
-    
-    if (count($presentment_array) > 0) {
-      $presentment_array = $this->validate_presentment($presentment_array, $single);
-    }
-    
-    return $presentment_array;
-  }
-  
-  
-  function validate_presentment($presentments, $single = false) {
-    
-    foreach($presentments as $key => $presentment) {
-      if (!isset($highest_apr)) {
-        $highest_apr = $presentment['apr'];
-      }
-      if (!isset($lowest_monthly_payment)) {
-        $lowest_monthly_payment = $presentment['monthly_payment_plain'];
-      }
-      
-      if ($presentment['apr'] >= $highest_apr) {
-        $highest_apr = $presentment['apr'];
-        if ($presentment['monthly_payment_plain'] <= $lowest_monthly_payment) {
-          $lowest_monthly_payment = $presentment['monthly_payment_plain'];
-          $representative_option = $key;
-        }
-      }
-    }
-    
-    $presentments[$representative_option]['mark'] = true;
-    
-    if ($single === true) {
-      return $presentments[$representative_option];
-    }
-    
-    usort($presentments, function($a, $b) {
-      return $a['term'] - $b['term'];
-    });
-    
-    return $presentments;
-  }
-      
-
-  function validate_paypal_installment() {
-    // auth
-    $apiContext = $this->apiContext();
-    
-    // set PayerID
-    $_SESSION['paypal']['PayerID'] = $_GET['PayerID'];
-    
-    try {
-      // get payment
-      $payment = Payment::get($_SESSION['paypal']['paymentId'], $apiContext);
-      
-      // get financing offered
-      $credit_financing_offered = $payment->getCreditFinancingOffered();
-      
-      // set installment
-      if (is_object($credit_financing_offered)) {
-        $_SESSION['paypal']['installment'] = array(
-          'total_cost' => $credit_financing_offered->getTotalCost()->getValue(),
-          'term' => $credit_financing_offered->getTerm(),
-          'monthly_payment' => $credit_financing_offered->getMonthlyPayment()->getValue(),
-          'total_interest' => $credit_financing_offered->getTotalInterest()->getValue(),
-          'payer_acceptance' => $credit_financing_offered->getPayerAcceptance(),
-          'cart_amount_immutable' => $credit_financing_offered->getCartAmountImmutable(),
-        );
-      } else {
-        $this->LoggingManager->log('DEBUG', 'Installment', array('exception' => $payment));
-        
-        unset($_SESSION['paypal']);
-        xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
-      }
-    } catch (Exception $ex) { 
-      $this->LoggingManager->log('DEBUG', 'Installment', array('exception' => $ex));
-      unset($_SESSION['paypal']);
-      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
-    }
-  }
-  
-  
-  function complete_payment_paypal_installment() {
-    global $insert_id;
- 
-    if (isset($_SESSION['paypal']['paymentId']) 
-        && isset($_SESSION['paypal']['PayerID']) 
-        ) 
-    {
-       // auth
-      $apiContext = $this->apiContext();
-      
-      try {
-        // Get the payment Object by passing paymentId
-        $payment = Payment::get($_SESSION['paypal']['paymentId'], $apiContext);       
-          
-      } catch (Exception $ex) {
-        $this->LoggingManager->log('DEBUG', 'Payment', array('exception' => $ex));
-
-        // redirect
-        unset($_SESSION['paypal']);
-        xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));      
-      }
-    
-      // PaymentExecution
-      $execution = new PaymentExecution();
-      $execution->setPayerId($_SESSION['paypal']['PayerID']);
-            
-      try {
-        // Execute the payment
-        $payment->execute($execution, $apiContext);
-        
-      } catch (Exception $ex) {
-        $this->LoggingManager->log('DEBUG', 'Execute', array('exception' => $ex)); 
-
-        $this->remove_order($insert_id);
-        unset($_SESSION['paypal']);
-        xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
-      }
-
-      // capture
-      if (($this->transaction_type == 'order'
-          || $this->transaction_type == 'authorize'
-          ) && $this->get_config('PAYPAL_CAPTURE_MANUELL') == '0')
-      {
-        $this->capture_payment($payment);
-      }
-  
-      $sql_data_array = array(
-        'orders_id' => $insert_id,
-        'payment_id' => $_SESSION['paypal']['paymentId'],
-        'payer_id' => $_SESSION['paypal']['PayerID'],
-      );
-      xtc_db_perform(TABLE_PAYPAL_PAYMENT, $sql_data_array);
-
-      try {
-        // Get the payment Object by passing paymentId
-        $payment = Payment::get($_SESSION['paypal']['paymentId'], $apiContext);
-  
-      } catch (Exception $ex) {
-        $this->LoggingManager->log('DEBUG', 'Payment', array('exception' => $ex));
-
-        $this->remove_order($insert_id);
-        unset($_SESSION['paypal']);
-        xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
-      }
-
-      $status = $this->get_orders_status($payment);
-      $status['status_id'] = $this->get_config('PAYPAL_ORDER_STATUS_ACCEPTED_ID');
-      
-      if ($status['status_id'] < 0) {
-        $check_query = xtc_db_query("SELECT orders_status
-                                       FROM ".TABLE_ORDERS." 
-                                      WHERE orders_id = '".(int)$insert_id."'");
-        $check = xtc_db_fetch_array($check_query);
-        $status['status_id'] = $check['orders_status'];
-      }
-      $this->update_order($status['comment'], $status['status_id'], $insert_id);    
-
-      xtc_db_query("UPDATE ".TABLE_PAYPAL_PAYMENT." 
-                       SET transaction_id = '".xtc_db_input($status['transaction_id'])."'
-                     WHERE orders_id = '".$insert_id."'");
-
-    } else {
-      // redirect
-      unset($_SESSION['paypal']);
-      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
     }
   }
 

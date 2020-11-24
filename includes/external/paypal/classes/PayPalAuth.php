@@ -59,8 +59,6 @@ class PayPalAuth {
     
     if (strpos($this->code, 'paypalplus') !== false) {
       $apiContext->addRequestHeader('PayPal-Partner-Attribution-Id', 'ModifiedeCommerce_Cart_REST_Plus');
-    } elseif (strpos($this->code, 'paypalinstallment') !== false) {
-      $apiContext->addRequestHeader('PayPal-Partner-Attribution-Id', 'ModifiedeCommerce_Cart_Inst');
     } else {
       $apiContext->addRequestHeader('PayPal-Partner-Attribution-Id', 'ModifiedeCommerce_Cart_REST_EC');
     }

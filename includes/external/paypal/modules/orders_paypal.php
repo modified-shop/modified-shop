@@ -16,7 +16,6 @@ if (isset($order) && is_object($order)) {
       || $order->info['payment_method'] == 'paypalplus'
       || $order->info['payment_method'] == 'paypallink'
       || $order->info['payment_method'] == 'paypalpluslink'
-      || $order->info['payment_method'] == 'paypalinstallment'
       || $order->info['payment_method'] == 'paypalsubscription'
       ) 
   {

@@ -39,12 +39,6 @@ function get_module_info($module) {
     }
     $keys_extra[$module_keys[$j]]['use_function'] = $key_value['use_function'];
     $keys_extra[$module_keys[$j]]['set_function'] = $key_value['set_function'];
-
-    if ($module->code == 'paypalinstallment') {
-      if ($module_keys[$j] == 'MODULE_PAYMENT_PAYPALINSTALLMENT_ALLOWED') {
-        unset($keys_extra[$module_keys[$j]]);
-      }
-    }
   }
   $module_info['keys'] = $keys_extra;
   
@@ -60,7 +54,6 @@ $payment_array = array(
   'paypalcart',
   'paypallink',
   'paypalpluslink',
-  'paypalinstallment',
   'paypalsubscription',
 );
 
@@ -242,31 +235,6 @@ require (DIR_WS_INCLUDES.'head.php');
                       <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_MODULE_LINK_PRODUCT; ?></td>
                       <td class="dataTableConfig col-middle"><?php echo draw_on_off_selection('config[profile][MODULE_PAYMENT_'.strtoupper($module->code).'_SHOW_PRODUCT]', $status_array, (($paypal->get_config('MODULE_PAYMENT_'.strtoupper($module->code).'_SHOW_PRODUCT') == '1') ? true : false)); ?></td>
                       <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_MODULE_LINK_PRODUCT_INFO; ?></td>
-                    </tr>
-                    <?php
-                  }
-
-                  if ($module->code == 'paypalinstallment') {
-                    ?>
-                    <tr>
-                      <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_MODULE_ORDER_STATUS_ACCEPTED; ?></td>
-                      <td class="dataTableConfig col-middle"><?php echo xtc_draw_pull_down_menu('config[profile][PAYPAL_ORDER_STATUS_ACCEPTED_ID]', xtc_get_orders_status(), $paypal->get_config('PAYPAL_ORDER_STATUS_ACCEPTED_ID')); ?></td>
-                      <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_MODULE_ORDER_STATUS_ACCEPTED_INFO; ?></td>
-                    </tr>
-                    <tr>
-                      <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_MODULE_UPSTREAM_PRODUCT; ?></td>
-                      <td class="dataTableConfig col-middle"><?php echo draw_on_off_selection('config[profile][MODULE_PAYMENT_'.strtoupper($module->code).'_UPSTREAM_PRODUCT]', $status_array, (($paypal->get_config('MODULE_PAYMENT_'.strtoupper($module->code).'_UPSTREAM_PRODUCT') == '1') ? true : false)); ?></td>
-                      <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_MODULE_UPSTREAM_PRODUCT_INFO; ?></td>
-                    </tr>
-                    <tr>
-                      <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_MODULE_UPSTREAM_CART; ?></td>
-                      <td class="dataTableConfig col-middle"><?php echo draw_on_off_selection('config[profile][MODULE_PAYMENT_'.strtoupper($module->code).'_UPSTREAM_CART]', $status_array, (($paypal->get_config('MODULE_PAYMENT_'.strtoupper($module->code).'_UPSTREAM_CART') == '1') ? true : false)); ?></td>
-                      <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_MODULE_UPSTREAM_CART_INFO; ?></td>
-                    </tr>
-                    <tr>
-                      <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_MODULE_UPSTREAM_PAYMENT; ?></td>
-                      <td class="dataTableConfig col-middle"><?php echo draw_on_off_selection('config[profile][MODULE_PAYMENT_'.strtoupper($module->code).'_UPSTREAM_PAYMENT]', $status_array, (($paypal->get_config('MODULE_PAYMENT_'.strtoupper($module->code).'_UPSTREAM_PAYMENT') == '1') ? true : false)); ?></td>
-                      <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_MODULE_UPSTREAM_PAYMENT_INFO; ?></td>
                     </tr>
                     <?php
                   }

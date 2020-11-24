@@ -119,7 +119,6 @@
         case 'paypal_ipn':
         case 'paypalcart':
         case 'paypalclassic':
-        case 'paypalinstallment':
         case 'paypallink':
         case 'paypalplus':
         case 'paypalpluslink':
