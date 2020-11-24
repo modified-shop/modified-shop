@@ -53,7 +53,7 @@ class paypal_plan_price {  //Important same name as filename
           $paypal_plan_cart->install();
         }
 
-        require_once(DIR_FS_CATALOG.DIR_WS_MODULES.'checkout/paypal_plan_order.php');
+        require_once(DIR_FS_CATALOG.DIR_WS_MODULES.'order/paypal_plan_order.php');
         $paypal_plan_order = new paypal_plan_order();
         if ($paypal_plan_order->check() < 1) {
           $paypal_plan_order->install();
@@ -81,7 +81,7 @@ class paypal_plan_price {  //Important same name as filename
           $paypal_plan_cart->remove();
         }
 
-        require_once(DIR_FS_CATALOG.DIR_WS_MODULES.'checkout/paypal_plan_order.php');
+        require_once(DIR_FS_CATALOG.DIR_WS_MODULES.'order/paypal_plan_order.php');
         $paypal_plan_order = new paypal_plan_order();
         if ($paypal_plan_order->check() > 0) {
           $paypal_plan_order->remove();
