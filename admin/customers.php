@@ -546,8 +546,12 @@
               'customers_last_modified' => 'now()'
             );
 
-          if ($password != "") {
+          if ($password != '') {
             $sql_data_array['customers_password'] = xtc_encrypt_password($password);
+            $sql_data_array['customers_password_time'] = time();
+            if ($_SESSION['customer_id'] == $customers_id) {
+              $_SESSION['customer_time'] = $sql_data_array['customers_password_time'];
+            }
           }
           if (ACCOUNT_GENDER == 'true') {
             $sql_data_array['customers_gender'] = $customers_gender;

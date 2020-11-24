@@ -415,15 +415,7 @@ class PayPalCommon extends PayPalAuth {
     }
     
     // check if customer exists
-    $check_customer_query = xtc_db_query("SELECT customers_id, 
-                                                 customers_vat_id, 
-                                                 customers_firstname,
-                                                 customers_lastname, 
-                                                 customers_gender, 
-                                                 customers_password, 
-                                                 customers_email_address, 
-                                                 customers_default_address_id,
-                                                 account_type
+    $check_customer_query = xtc_db_query("SELECT *
                                             FROM ".TABLE_CUSTOMERS." 
                                                  ".$where);
     if (xtc_db_num_rows($check_customer_query) < 1) {
@@ -451,7 +443,17 @@ class PayPalCommon extends PayPalAuth {
 			$_SESSION['customer_country_id'] = $check_country['entry_country_id'];
 			$_SESSION['customer_zone_id'] = $check_country['entry_zone_id'];
 			$_SESSION['account_type'] = $check_customer['account_type'];
-
+      
+      if (isset($check_customer['customers_password_time'])) {
+        $_SESSION['customer_time'] = $check_customer['customers_password_time'];
+        if ($_SESSION['customer_time'] == 0) {
+          $_SESSION['customer_time'] = time();
+          xtc_db_query("UPDATE ".TABLE_CUSTOMERS."
+                           SET customers_password_time = '".(int)$_SESSION['customer_time']."'
+                         WHERE customers_id = '".(int)$_SESSION['customer_id']."' ");
+        }
+      }
+      
 			xtc_db_query("UPDATE ".TABLE_CUSTOMERS_INFO." 
 			                 SET customers_info_date_of_last_logon = now(), 
 			                     customers_info_number_of_logons = customers_info_number_of_logons+1 
@@ -515,6 +517,15 @@ class PayPalCommon extends PayPalAuth {
       
       // send password with order mail
       $_SESSION['paypal_express_new_customer'] = 'true';
+    }
+
+    if (is_file(DIR_FS_INC.'get_database_version.inc.php')) {
+      require_once (DIR_FS_INC.'get_database_version.inc.php');
+      $version = get_database_version();
+      if (version_compare('2.0.5.1', $version['plain'], '>')) {
+        $_SESSION['customer_time'] = time();
+        $sql_data_array['customers_password_time'] = $_SESSION['customer_time'];
+      }    
     }
     
     xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array);
