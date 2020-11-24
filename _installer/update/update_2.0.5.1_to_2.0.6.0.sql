@@ -8,7 +8,7 @@
 #  -----------------------------------------------------------------------------------------
 
 #Tomcraft - 2020-06-26 - changed database_version
-INSERT INTO `database_version` (`version`) VALUES ('MOD_2.0.5.2');
+INSERT INTO `database_version` (`version`) VALUES ('MOD_2.0.6.0');
 
 #Tomcraft - 2020-06-26 - delete obsolete configuration
 DELETE FROM `configuration` WHERE `configuration_key` = 'GOOGLE_CERTIFIED_SHOPS_MERCHANT_ACTIVE';
