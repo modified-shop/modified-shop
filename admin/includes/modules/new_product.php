@@ -152,7 +152,7 @@
             <td>
               <span class="main flt-l"><?php echo xtc_draw_input_field('products_quantity', $pInfo->products_quantity, 'style="width: 155px"'); ?></span>
               <span class="smallText pdg2 flt-l">
-                <button type="submit" name="action" class="button" id="stock_save" value="update_stock" />
+                <button type="submit" name="action" class="button" id="stock_save" value="update_stock" <?php echo $confirm_save_entry;?>>
               </span>
             </td>
           </tr>
