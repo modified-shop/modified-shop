@@ -149,7 +149,12 @@
           </tr>
           <tr>
             <td><span class="main"><?php echo TEXT_PRODUCTS_QUANTITY; ?></span></td>
-            <td><span class="main"><?php echo xtc_draw_input_field('products_quantity', $pInfo->products_quantity, 'style="width: 155px"'); ?></span></td>
+            <td>
+              <span class="main flt-l"><?php echo xtc_draw_input_field('products_quantity', $pInfo->products_quantity, 'style="width: 155px"'); ?></span>
+              <span class="smallText pdg2 flt-l">
+                <button type="submit" name="action" class="button" id="stock_save" value="update_stock" />
+              </span>
+            </td>
           </tr>
           <tr>
             <td><span class="main"><?php echo TEXT_PRODUCTS_MODEL; ?></span></td>

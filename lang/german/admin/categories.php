@@ -256,4 +256,6 @@ define('TEXT_TAGS_COPY', 'Artikeleigenschaften mitkopieren');
 define('TEXT_TAGS_COPY_INFO', 'Artikeleigenschaften mitkopieren<br/ >Nur bei Einzelkopie (1 Artikel) empfohlen');
 
 define('TEXT_PRODUCTS_LAST_MODIFIED', 'Zuletzt aktualisiert:');
+define('TEXT_STOCK_UPDATE_SUCCESS', 'Lagerbestand aktualisiert');
+define('TEXT_STOCK_UPDATE_ERROR', 'Lagerbestand nicht aktualisiert');
 ?>
