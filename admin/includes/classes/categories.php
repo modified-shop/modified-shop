@@ -478,6 +478,8 @@ class categories {
 
 
   function update_product($products_data) {
+    global $messageStack;
+    
     $products_id = xtc_db_prepare_input($products_data['products_id']);
 
     $prod_quantity_query = xtc_db_query("SELECT products_quantity 
