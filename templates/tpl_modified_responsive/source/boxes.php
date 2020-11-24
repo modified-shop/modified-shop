@@ -150,8 +150,7 @@ $bestsellers = array(FILENAME_DEFAULT,
                      FILENAME_LOGOFF, 
                      FILENAME_CHECKOUT_SUCCESS, 
                      FILENAME_SHOPPING_CART, 
-                     FILENAME_NEWSLETTER,
-                     FILENAME_ADVANCED_SEARCH_RESULT,
+                     FILENAME_NEWSLETTER
                      );
 if (in_array(basename($PHP_SELF), $bestsellers) && !isset($_GET['cPath']) && !isset($_GET['manufacturers_id'])) {
   require_once(DIR_FS_BOXES . 'best_sellers.php');
