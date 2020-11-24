@@ -100,6 +100,8 @@ if (MODULE_ORDER_TOTAL_INSTALLED) {
     //ot_total nur anzeigen wenn unterschiedlich
     if (round($ot_subtotal_value, 2) == round($ot_total_value, 2) && isset($order_total_array[$ot_total_key]) ) {
       unset($order_total_array[$ot_total_key]);
+    } else {
+      $order->info['total'] = $ot_subtotal_value;
     }
     //Array Indexe neu erstellen
     $order_total_array = array_merge($order_total_array);
