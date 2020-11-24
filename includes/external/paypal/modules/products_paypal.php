@@ -11,7 +11,9 @@
    ---------------------------------------------------------------------------------------*/
 
 if (isset($_GET['pID']) && $_GET['pID'] != '') {
-  if (1 == 1) 
+  if (defined('MODULE_PAYMENT_PAYPALSUBSCRIPTION_STATUS')
+      && MODULE_PAYMENT_PAYPALSUBSCRIPTION_STATUS == 'True'
+      ) 
   {
     require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalInfo.php');
     $paypal = new PayPalInfo('subscriptions');        
