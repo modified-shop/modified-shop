@@ -136,6 +136,9 @@
 
       case 'deltempcache':
         clear_dir(DIR_FS_CATALOG.'templates_c/');
+        file_put_contents(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/stylesheet.min.css', '');
+        file_put_contents(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/css/tpl_plugins.min.css', '');        
+        file_put_contents(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/javascript/tpl_plugins.min.js', '');
         $messageStack->add_session(DELETE_TEMP_CACHE_SUCCESSFUL, 'success');
         xtc_redirect(xtc_href_link(FILENAME_CONFIGURATION, 'gID=' . (int)$_GET['gID']));
         break;
