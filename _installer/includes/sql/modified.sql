@@ -472,6 +472,7 @@ CREATE TABLE customers (
   customers_telephone VARCHAR(32) NOT NULL,
   customers_fax VARCHAR(32),
   customers_password VARCHAR(60) NOT NULL,
+  customers_password_time INT(11) DEFAULT 0 NOT NULL,
   customers_newsletter CHAR(1),
   customers_newsletter_mode CHAR(1) DEFAULT '0' NOT NULL,
   member_flag CHAR(1) DEFAULT '0' NOT NULL,
