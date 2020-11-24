@@ -252,6 +252,8 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
   $password = xtc_create_password(8);
 
   if ($error == false) {
+    $customers_password_time = time();
+    
     $sql_data_array = array('customers_vat_id' => $vat,
                             'customers_vat_id_status' => $customers_vat_id_status,
                             'customers_status' => $customers_status,
@@ -263,6 +265,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
                             'customers_newsletter' => (int)$newsletter,
                             'account_type' => '1',
                             'customers_password' => $password,
+                            'customers_password_time' => $customers_password_time,
                             'customers_date_added' => 'now()',
                             'customers_last_modified' => 'now()',
                             );
@@ -328,6 +331,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     $_SESSION['customer_first_name'] = $firstname;
     $_SESSION['customer_last_name'] = $lastname;
     $_SESSION['customer_email_address'] = $email_address;
+    $_SESSION['customer_time'] = $customers_password_time;
     $_SESSION['customer_default_address_id'] = $address_id;
     $_SESSION['customer_country_id'] = (int)$country;
     $_SESSION['customer_zone_id'] = ((isset($zone_id) && $zone_id > 0) ? (int)$zone_id : 0);

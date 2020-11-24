@@ -25,13 +25,18 @@
   
   // write customers status in session
   if (isset($_SESSION['customer_id'])) {
-    $customer_status_query = xtc_db_query("SELECT customers_status
+    $customer_status_query = xtc_db_query("SELECT *
                                              FROM " . TABLE_CUSTOMERS . "
                                             WHERE customers_id = '" . (int)$_SESSION['customer_id'] . "'");
 
     if (xtc_db_num_rows($customer_status_query) == 1) {
-      $customer_status = xtc_db_fetch_array($customer_status_query);      
-
+      $customer_status = xtc_db_fetch_array($customer_status_query);
+      
+      if ($_SESSION['customer_time'] != $customer_status['customers_password_time']) {
+        xtc_session_destroy();
+        xtc_redirect(xtc_href_link(FILENAME_LOGIN, 'action=relogin', 'SSL')); 
+      }      
+      
       if ($customer_status['customers_status'] == '0' && !defined('RUN_MODE_ADMIN')) {
         set_customers_status_by_id(DEFAULT_CUSTOMERS_STATUS_ID_ADMIN);
         

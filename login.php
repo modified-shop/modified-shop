@@ -104,17 +104,7 @@ if (isset($_GET['action'])
   $_SESSION['customers_login_tries'] ++;
 
 	// check if email exists
-	$check_customer_query = xtc_db_query("SELECT customers_id, 
-	                                             customers_vat_id, 
-	                                             customers_firstname,
-	                                             customers_lastname, 
-	                                             customers_gender, 
-	                                             customers_password, 
-	                                             customers_email_address, 
-	                                             customers_default_address_id,
-	                                             password_request_key,
-	                                             password_request_time,
-	                                             account_type
+	$check_customer_query = xtc_db_query("SELECT *
 	                                        FROM ".TABLE_CUSTOMERS." 
 	                                       WHERE customers_email_address = '".xtc_db_input($email_address)."' 
 	                                         AND account_type = '0'");
@@ -149,13 +139,21 @@ if (isset($_GET['action'])
 			$_SESSION['customer_first_name'] = $check_customer['customers_firstname'];
 			$_SESSION['customer_last_name'] = $check_customer['customers_lastname'];
 			$_SESSION['customer_email_address'] = $check_customer['customers_email_address'];
+			$_SESSION['customer_time'] = $check_customer['customers_password_time'];
 			$_SESSION['customer_id'] = $check_customer['customers_id'];
 			$_SESSION['customer_vat_id'] = $check_customer['customers_vat_id'];
 			$_SESSION['customer_default_address_id'] = $check_customer['customers_default_address_id'];
 			$_SESSION['customer_country_id'] = $check_country['entry_country_id'];
 			$_SESSION['customer_zone_id'] = $check_country['entry_zone_id'];
 			$_SESSION['account_type'] = $check_customer['account_type'];
-
+      
+      if ($_SESSION['customer_time'] == 0) {
+        $_SESSION['customer_time'] = time();
+        xtc_db_query("UPDATE ".TABLE_CUSTOMERS."
+                         SET customers_password_time = '".(int)$_SESSION['customer_time']."'
+                       WHERE customers_id = '".(int)$_SESSION['customer_id']."' ");
+      }
+      
 			xtc_db_query("UPDATE ".TABLE_CUSTOMERS_INFO." 
 			                 SET customers_info_date_of_last_logon = now(), 
 			                     customers_info_number_of_logons = customers_info_number_of_logons+1 
@@ -207,6 +205,10 @@ if (isset($captcha_error) && $captcha_error === true) {
   $messageStack->add('login', TEXT_WRONG_CODE);
 }
 
+if (isset($_GET['action']) && $_GET['action'] === 'relogin') {	
+  $messageStack->add('login', TEXT_RELOGIN_NEEDED);
+}
+
 // include boxes
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
@@ -228,7 +230,7 @@ $smarty->assign('account_option', $account_options);
 $smarty->assign('BUTTON_NEW_ACCOUNT', '<a href="'.xtc_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL').'">'.xtc_image_button('button_continue.gif', IMAGE_BUTTON_CONTINUE).'</a>');
 $smarty->assign('BUTTON_LOGIN', xtc_image_submit('button_login.gif', IMAGE_BUTTON_LOGIN));
 $smarty->assign('BUTTON_GUEST', '<a href="'.xtc_href_link(FILENAME_CREATE_GUEST_ACCOUNT, '', 'SSL').'">'.xtc_image_button('button_continue.gif', IMAGE_BUTTON_CONTINUE).'</a>');
-$smarty->assign('FORM_ACTION', xtc_draw_form('login', xtc_href_link(FILENAME_LOGIN, xtc_get_all_get_params().'action=process', 'SSL')));
+$smarty->assign('FORM_ACTION', xtc_draw_form('login', xtc_href_link(FILENAME_LOGIN, xtc_get_all_get_params(array('action')).'action=process', 'SSL')));
 $smarty->assign('INPUT_MAIL', xtc_draw_input_field('email_address'));
 $smarty->assign('INPUT_PASSWORD', xtc_draw_password_field('password'));
 $smarty->assign('LINK_LOST_PASSWORD', xtc_href_link(FILENAME_PASSWORD_DOUBLE_OPT, '', 'SSL'));

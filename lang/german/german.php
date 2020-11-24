@@ -314,6 +314,7 @@ define('JS_PRICE_TO_MUST_BE_NUM', '* \"Preis bis\" muss eine Zahl sein\n\n');
 define('JS_PRICE_TO_LESS_THAN_PRICE_FROM', '* Preis bis muss gr&ouml;&szlig;er oder gleich Preis ab sein.\n');
 define('JS_INVALID_KEYWORDS', '* Suchbegriff unzul&auml;ssig\n');
 define('TEXT_LOGIN_ERROR', '<b>FEHLER:</b> Keine &Uuml;bereinstimmung der eingegebenen \'E-Mail-Adresse\' und/oder dem \'Passwort\'.');
+define('TEXT_RELOGIN_NEEDED', 'Bitte melden Sie sich erneut an.');
 //define('TEXT_NO_EMAIL_ADDRESS_FOUND', '<span class="color_error_message"><b>ACHTUNG:</b></span> Die eingegebene E-Mail-Adresse ist nicht registriert. Bitte versuchen Sie es noch einmal.'); // Not used anymore as we do not give a hint that an e-mail address is or is not in the database!
 define('TEXT_PASSWORD_SENT', 'Ein neues Passwort wurde per E-Mail verschickt.');
 define('TEXT_PRODUCT_NOT_FOUND', 'Artikel wurde nicht gefunden!');
