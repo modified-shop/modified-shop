@@ -47,6 +47,11 @@
             {/if}
           {/if}
         
+          {if $PAYPALPLAN}
+            <br class="clearfix" />
+            {$PAYPALPLAN}
+          {/if}
+
           {if $ADD_CART_BUTTON != ''}
           <div class="addtobasket cf">
             <span class="addtobasket_input">{$ADD_QTY}</span>

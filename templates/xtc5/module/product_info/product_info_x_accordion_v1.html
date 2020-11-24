@@ -76,6 +76,10 @@
         </td>
       </tr>
     </table>
+    {if $PAYPALPLAN}
+      <br class="clearfix" />
+      {$PAYPALPLAN}
+    {/if}
     {if $MODULE_product_options != ''}
       <div class="productoptions">{$MODULE_product_options}</div>
     {/if}
