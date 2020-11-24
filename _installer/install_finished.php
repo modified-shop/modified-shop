@@ -61,7 +61,6 @@
   $payment_methods_array = array(
     'paypalclassic',
     'paypalplus',
-    'paypalinstallment',
 
     'paypallink',
     'paypalpluslink',

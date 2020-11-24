@@ -13,9 +13,6 @@
   if (defined('MODULE_PAYMENT_PAYPAL_SECRET')
       && MODULE_PAYMENT_PAYPAL_SECRET != ''
       && basename($PHP_SELF) == FILENAME_CHECKOUT_PAYMENT
-      && (!defined('MODULE_PAYMENT_PAYPALINSTALLMENT_STATUS')
-         || MODULE_PAYMENT_PAYPALINSTALLMENT_STATUS == 'False'
-         )
       )
   {
     // include needed classes
