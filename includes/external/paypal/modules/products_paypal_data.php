@@ -70,6 +70,26 @@ if (isset($_GET['pID']) && $_GET['pID'] != '') {
                 $fixed_price = $billing_cycles[0]->GetPricingScheme()->getFixedPrice();          
                 $setup_fee = $detail->getPaymentPreferences()->getSetupFee();
                 $taxes = $detail->getTaxes();                
+
+                $check_query = xtc_db_query("SELECT * 
+                                               FROM `paypal_plan` 
+                                              WHERE plan_id = '".xtc_db_input($plan->getId())."'");
+                if (xtc_db_num_rows($check_query) < 1) {
+                  $sql_data_array = array(
+                    'plan_id' => $plan->getId(),
+                    'products_id' => (int)$_GET['pID'],
+                    'plan_status' => (($plan->getStatus() == 'ACTIVE') ? 1 : 0),
+                    'plan_name' => $plan->getName(),
+                    'plan_interval' => $frequency->getIntervalUnit(),
+                    'plan_cycle' => $billing_cycles[0]->getTotalCycles(),
+                    'plan_price' => $fixed_price->getValue(),
+                    'plan_fee' => $setup_fee->getValue(),
+                    'plan_tax' => $taxes->getPercentage(),
+                    'plan_tax_included' => $taxes->getInclusive(),
+                  );
+
+                  xtc_db_perform('paypal_plan', $sql_data_array);
+                }
                 ?>
                 <div class="pp_txstatus">
                   <div class="pp_txstatus_received pp_received_icon">

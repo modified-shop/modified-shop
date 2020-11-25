@@ -180,12 +180,12 @@ class paypal_plan_cart {  //Important same name as filename
     function add_cart_products_session($products_id, $type, $qty, $attributes) {
       if (isset($_POST['plan_id'])) {
         if (!property_exists($_SESSION[$type], 'plans')) {
-          $_SESSION['cart']->plans = array();
+          $_SESSION[$type]->plans = array();
         }
         $_SESSION[$type]->plans[$products_id] = $_POST['plan_id'];
 
         // insert into database
-        if (isset($_SESSION['customer_id'])){
+        if (isset($_SESSION['customer_id'])) {
           xtc_db_query("DELETE FROM customers_".(($type == 'cart') ? 'basket' : 'wishlist')."_plans
                               WHERE customers_id = '".(int)$_SESSION['customer_id']."' 
                                 AND products_id = '".xtc_db_input($products_id)."'");
