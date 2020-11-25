@@ -52,7 +52,7 @@
             'module' => $plan['plan_name'],
             'description' => '',
             'fields' => $fields,
-            'module_cost' => $xtPrice->xtcFormat($price, true),
+            'module_cost' => $xtPrice->xtcFormat($plan['plan_price'], true),
             'radio_buttons' => $i,
             'checked' => 0,
             'selection' => xtc_draw_radio_field('plan_id', $plan['plan_id'], false, 'id="rd-'.($i+1).'"'),
