@@ -91,8 +91,8 @@ class paypalsubscription extends PayPalPayment {
 
     require_once(DIR_FS_CATALOG.DIR_WS_MODULES.'order/paypal_plan_order.php');
     $paypal_plan_order = new paypal_plan_order();
-    if ($paypal_plan_order->check() < 1) {
-      $paypal_plan_order->install();
+    if ($paypal_plan_order->check() > 0) {
+      $paypal_plan_order->remove();
     }
   }
 
@@ -120,8 +120,8 @@ class paypalsubscription extends PayPalPayment {
 
     require_once(DIR_FS_CATALOG.DIR_WS_MODULES.'order/paypal_plan_order.php');
     $paypal_plan_order = new paypal_plan_order();
-    if ($paypal_plan_order->check() > 0) {
-      $paypal_plan_order->remove();
+    if ($paypal_plan_order->check() < 1) {
+      $paypal_plan_order->install();
     }
 	}
 
