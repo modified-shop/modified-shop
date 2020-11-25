@@ -181,25 +181,25 @@
                          'status' => $module->check());
     $module_info['properties'] = isset($module->properties) ? $module->properties : array();
     $module_keys = method_exists($module,'keys') ? $module->keys() : array();
+
     $keys_extra = array();
-    for ($j = 0, $k = sizeof($module_keys); $j < $k; $j++) {
-      $key_value_query = xtc_db_query("SELECT configuration_key,
-                                              configuration_value,
-                                              use_function,
-                                              set_function
-                                         FROM " . TABLE_CONFIGURATION . "
-                                        WHERE configuration_key = '" . $module_keys[$j] . "'");
-      $key_value = xtc_db_fetch_array($key_value_query);
-      if ($key_value['configuration_key'] !='') {
-        $keys_extra[$module_keys[$j]]['title'] = constant(strtoupper($key_value['configuration_key'] .'_TITLE'));
-      }
-      $keys_extra[$module_keys[$j]]['value'] = $key_value['configuration_value'];
-      if ($key_value['configuration_key'] !='') {
-        $keys_extra[$module_keys[$j]]['description'] = constant(strtoupper($key_value['configuration_key'] .'_DESC'));
-      }
-      $keys_extra[$module_keys[$j]]['use_function'] = $key_value['use_function'];
-      $keys_extra[$module_keys[$j]]['set_function'] = $key_value['set_function'];
+    $key_value_query = xtc_db_query("SELECT configuration_key,
+                                            configuration_value,
+                                            use_function,
+                                            set_function
+                                       FROM " . TABLE_CONFIGURATION . "
+                                      WHERE configuration_key IN ('" . implode("', '", $module_keys) . "')
+                                   ORDER BY FIELD(configuration_key, '".implode("', '", $module_keys)."')");
+    while ($key_value = xtc_db_fetch_array($key_value_query)) {
+      $keys_extra[$key_value['configuration_key']] = array(
+        'title' => constant(strtoupper($key_value['configuration_key'] .'_TITLE')),
+        'description' => constant(strtoupper($key_value['configuration_key'] .'_DESC')),
+        'value' => $key_value['configuration_value'],
+        'use_function' => $key_value['use_function'],
+        'set_function' => $key_value['set_function'],
+      );
     }
+    
     $module_info['keys'] = $keys_extra;
     
     return $module_info;
