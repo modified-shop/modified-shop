@@ -32,5 +32,5 @@ define('MODULE_PAYMENT_COD_LIMIT_ALLOWED_TITLE', 'Maximum amount');
 define('MODULE_PAYMENT_COD_LIMIT_ALLOWED_DESC', 'From which amount shall cod not be allowed?<br />The entered value will be compared with the subtotal which will be rounded.<br />This means, that only the pure merchandise value will be considered, without shipping costs and any possible additional fees.');
 define('MODULE_PAYMENT_COD_DISPLAY_INFO_TITLE', 'Display in checkout');
 define('MODULE_PAYMENT_COD_DISPLAY_INFO_DESC', 'Dispaly a note about additional costs in the checkout?');
-define('MODULE_PAYMENT_COD_DISPLAY_INFO_TEXT', 'Please note that an additional 2 euros delivery fee must be paid to the delivery site.<br/>');
+define('MODULE_PAYMENT_COD_DISPLAY_INFO_TEXT', 'The invoice amount must be paid to the deliverer when the shipment is handed out.<br/>');
 ?>
