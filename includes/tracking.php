@@ -44,25 +44,47 @@ if (!isset($_SESSION['tracking']['refID']) && isset($_GET['refID'])) {
   }
 }
 
+// request 
+$req_url = strip_tags($_SERVER['REQUEST_URI']);
+
 // referrer
-$ref_url = parse_url((isset($_SERVER['HTTP_REFERER']) ? strip_tags($_SERVER['HTTP_REFERER']) : $current_domain.$_SERVER['REQUEST_URI']));
-if (!isset($_SESSION['tracking']['http_referer']))  $_SESSION['tracking']['http_referer']= $ref_url;
-// host
-if (!isset ($_SESSION['tracking']['http_referer']['host']))  $_SESSION['tracking']['http_referer']['host'] = strip_tags($_SERVER['HTTP_HOST']);
+if (!isset($_SESSION['tracking']['http_referer'])) {
+  $_SESSION['tracking']['http_referer'] = array(
+    'host' => strip_tags($_SERVER['HTTP_HOST']),
+    'url' => '---',
+  );
+  if (isset($_SERVER['HTTP_REFERER'])) {
+    $_SESSION['tracking']['http_referer'] = parse_url(strip_tags($_SERVER['HTTP_REFERER']));
+    $_SESSION['tracking']['http_referer']['url'] = strip_tags($_SERVER['HTTP_REFERER']);
+  }
+}
+
 // datetime
-if (!isset ($_SESSION['tracking']['date']))  $_SESSION['tracking']['date'] = (date("Y-m-d H:i:s"));
+if (!isset($_SESSION['tracking']['date'])) {
+  $_SESSION['tracking']['date'] = (date("Y-m-d H:i:s"));
+}
+
 // browser
-if (!isset ($_SESSION['tracking']['browser']) && isset($_SERVER['HTTP_USER_AGENT']))  $_SESSION['tracking']['browser'] = strip_tags($_SERVER['HTTP_USER_AGENT']);
+if (!isset($_SESSION['tracking']['browser']) && isset($_SERVER['HTTP_USER_AGENT'])) {
+  $_SESSION['tracking']['browser'] = strip_tags($_SERVER['HTTP_USER_AGENT']);
+}
 
 // pageview history
-if (!isset($_SESSION['tracking']['pageview_history'])) $_SESSION['tracking']['pageview_history'] = array();
-if (end($_SESSION['tracking']['pageview_history']) != $_SESSION['tracking']['http_referer']) {
-  array_push($_SESSION['tracking']['pageview_history'], $ref_url);
+if (!isset($_SESSION['tracking']['pageview_history'])) {
+  $_SESSION['tracking']['pageview_history'] = array();
+}
+if (end($_SESSION['tracking']['pageview_history']) != $req_url) {
+  array_push($_SESSION['tracking']['pageview_history'], $req_url);
 }
 if (count($_SESSION['tracking']['pageview_history']) > 6) {
   array_shift($_SESSION['tracking']['pageview_history']); 
 }
 $_SESSION['tracking']['pageview_history'] = array_values($_SESSION['tracking']['pageview_history']);
+
+// order
+if (!isset($_SESSION['tracking']['order'])) {
+  $_SESSION['tracking']['order'] = array();
+}
 
 // allow
 $_SESSION['tracking']['allow'] = array();
@@ -70,7 +92,7 @@ if (isset($_COOKIE['MODOilTrack'])) {
   $_SESSION['tracking']['allow'] = json_decode(stripslashes($_COOKIE['MODOilTrack']), true);
 }
 
-// check allowed tracking
+// allowed tracking
 if (defined('MODULE_COOKIE_CONSENT_STATUS') && MODULE_COOKIE_CONSENT_STATUS == 'true') {
   $qr = xtDBquery("SELECT DISTINCT `cookies_id` 
                      FROM " . TABLE_COOKIE_CONSENT_COOKIES . " 
@@ -79,10 +101,5 @@ if (defined('MODULE_COOKIE_CONSENT_STATUS') && MODULE_COOKIE_CONSENT_STATUS == '
   while ($row = xtc_db_fetch_array($qr, true)) {
     $_SESSION['tracking']['allowed'][] = $row['cookies_id'];
   }
-}
-
-// order
-if (!isset($_SESSION['tracking']['order'])) {
-  $_SESSION['tracking']['order'] = array();
 }
 ?>

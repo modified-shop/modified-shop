@@ -50,8 +50,8 @@
     // include needed functions
     require_once (DIR_FS_INC.'ip_clearing.inc.php');
     $wo_ip_address = xtc_db_prepare_input(ip_clearing($_SESSION['tracking']['ip']));
-    $wo_last_page_url = xtc_db_prepare_input(strip_tags($_SERVER['REQUEST_URI']));
-    $wo_referer = xtc_db_prepare_input(isset($_SERVER['HTTP_REFERER']) ? strip_tags($_SERVER['HTTP_REFERER']) : '---');
+    $wo_last_page_url = xtc_db_prepare_input(end($_SESSION['tracking']['pageview_history']));
+    $wo_referer = xtc_db_prepare_input($_SESSION['tracking']['http_referer']['url']);
 
     $current_time = time();
     $time_last_click = 900;
