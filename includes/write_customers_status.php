@@ -34,8 +34,12 @@
       
       if ($_SESSION['customer_time'] != $customer_status['customers_password_time']) {
         xtc_session_destroy();
-        xtc_redirect(xtc_href_link(FILENAME_LOGIN, 'action=relogin', 'SSL')); 
-      }      
+        $link = xtc_href_link(FILENAME_LOGIN, 'action=relogin', 'SSL');
+        if (defined('RUN_MODE_ADMIN')) {
+          $link = xtc_catalog_href_link(FILENAME_LOGIN, 'action=relogin', 'SSL');
+        }
+        xtc_redirect($link);
+      }
       
       if ($customer_status['customers_status'] == '0' && !defined('RUN_MODE_ADMIN')) {
         set_customers_status_by_id(DEFAULT_CUSTOMERS_STATUS_ID_ADMIN);
