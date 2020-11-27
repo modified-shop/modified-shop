@@ -101,6 +101,11 @@ if ($reviews_split->number_of_rows > 0) {
       $messageStack->add_session('product_reviews', $messageStack->messages['product_reviews']['error'][$i]);
     }
   }
+  if ($messageStack->size('product_reviews', 'success') > 0) {
+    for ($i=0, $n=$messageStack->size('product_reviews', 'success'); $i<$n; $i++) {
+      $messageStack->add_session('product_reviews', $messageStack->messages['product_reviews']['success'][$i], 'success');
+    }
+  }
   xtc_redirect(xtc_href_link(FILENAME_REVIEWS, '', 'NONSSL'));
 }
 
