@@ -103,6 +103,9 @@ $smarty->assign('language', $_SESSION['language']);
 if ($messageStack->size('product_reviews') > 0) {
   $smarty->assign('error', $messageStack->output('product_reviews'));
 }
+if ($messageStack->size('product_reviews', 'success') > 0) {
+  $smarty->assign('success_message', $messageStack->output('product_reviews', 'success'));
+}
 
 // set cache ID
 if (!CacheCheck()) {
