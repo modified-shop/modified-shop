@@ -17,7 +17,7 @@
 
 define('MODULE_PAYMENT_COD_TEXT_TITLE', 'Nachnahme');
 define('MODULE_PAYMENT_COD_TEXT_DESCRIPTION', 'Bezahlung per Nachnahme');
-define('MODULE_PAYMENT_COD_TEXT_INFO', 'Bitte beachten Sie, dass zus&auml;tzlich 2 Euro Zustellgeb&uuml;hr an den Zusteller vor Ort zu entrichten sind.');
+define('MODULE_PAYMENT_COD_TEXT_INFO', 'Der Rechnungsbetrag ist bei Sendungs&uuml;bergabe an den Zusteller zu entrichten.');
 define('MODULE_PAYMENT_COD_ZONE_TITLE', 'Zahlungszone');
 define('MODULE_PAYMENT_COD_ZONE_DESC', 'Wenn eine Zone ausgew&auml;hlt ist, gilt die Zahlungsmethode nur f&uuml;r diese Zone.');
 define('MODULE_PAYMENT_COD_ALLOWED_TITLE', 'Erlaubte Zonen');
