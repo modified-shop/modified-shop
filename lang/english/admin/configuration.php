@@ -333,9 +333,9 @@ define('CONTACT_US_EMAIL_SUBJECT_DESC' , 'Please enter an e-mail subject for "Co
 
 //Constants for support system
 define('EMAIL_SUPPORT_ADDRESS_TITLE' , 'Technical Support - E-Mail address');
-define('EMAIL_SUPPORT_ADDRESS_DESC' , 'Please enter an e-mail address for sending e-mails over the <b>Support System</b> (account creation, lost password).');
+define('EMAIL_SUPPORT_ADDRESS_DESC' , 'Please enter an e-mail address for sending e-mails over the <b>Support System</b> (account creation, lost password, newsletter system).');
 define('EMAIL_SUPPORT_NAME_TITLE' , 'Technical Support - E-Mail Name');
-define('EMAIL_SUPPORT_NAME_DESC' , 'Please enter a name for sending E-Mails over the <b>Support System</b> (account creation, lost password).');
+define('EMAIL_SUPPORT_NAME_DESC' , 'Please enter a name for sending E-Mails over the <b>Support System</b>.');
 define('EMAIL_SUPPORT_FORWARDING_STRING_TITLE' , 'Technical Support - Forwarding-To');
 define('EMAIL_SUPPORT_FORWARDING_STRING_DESC' , 'Please enter forwarding addresses for mails of the <b>Support System</b> (seperated by , )');
 define('EMAIL_SUPPORT_REPLY_ADDRESS_TITLE' , 'Technical Support - Reply-To');
