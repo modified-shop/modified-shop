@@ -48,7 +48,7 @@ if (is_dir($fs_dir)) {
     foreach ($apple_touch_icon_array as $apple_touch_icon) {
       $apple_touch_icon = basename($apple_touch_icon);
       preg_match('/(\d+)x(\d+)/', $apple_touch_icon, $match);
-      echo '<link rel="mask-icon"'.((isset($match[0]) && $match[0] != '') ? ' sizes="'.$match[0].'"' : '').' href="'.xtc_href_link($ws_dir.$apple_touch_icon, '', $request_type, false).'" color="#ffffff" />'."\n";
+      echo '<link rel="mask-icon"'.((isset($match[0]) && $match[0] != '') ? ' sizes="'.$match[0].'"' : '').' href="'.xtc_href_link($ws_dir.$apple_touch_icon, '', $request_type, false).'" color="#888888" />'."\n";
     }
   }
 
