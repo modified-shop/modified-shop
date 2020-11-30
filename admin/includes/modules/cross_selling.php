@@ -81,9 +81,6 @@
     <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_news.png'); ?></div>
     <div class="pageHeading"><?php echo CROSS_SELLING_1; ?></div>
     <div class="main pdg2 flt-l"><?php echo CROSS_SELLING_2 . ' "' . $article_data['products_name'] . '"'; ?></div>
-    <div class="clear mrg5">
-      <a class="button" onClick="this.blur()" href="<?php echo xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('action', 'current_product_id', 'cpath')).'cPath='.$_GET['cpath'].'&pID='.$_GET['current_product_id']); ?>"><?php echo BUTTON_BACK; ?></a>
-    </div>
 
       <?php
       echo xtc_draw_form('cross_selling', FILENAME_CATEGORIES, xtc_get_all_get_params(array('search', 'special')), 'POST', $confirm_submit);
@@ -158,7 +155,8 @@
           ?>
         </table>
         <div class="mrg5">
-          <div class="flt-r">
+          <div class="flt-l">
+            <a class="button" onClick="this.blur()" href="<?php echo xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('action', 'current_product_id', 'cpath')).'cPath='.$_GET['cpath'].'&pID='.$_GET['current_product_id']); ?>"><?php echo BUTTON_BACK; ?></a>
             <?php if (!isset($_GET['search']) || $_GET['search'] == '') { ?>
               <input type="submit" class="button" value="<?php echo BUTTON_SAVE; ?>" <?php echo $confirm_save_entry;?>>
             <?php } ?>
@@ -167,7 +165,7 @@
       </form>
       
       <div class="mrg5">
-        <div class="flt-l">
+        <div class="flt-r">
           <div class="main" style="display:inline-block; padding: 5px; vertical-align:top;">
             <?php
             echo xtc_draw_form('product_search', FILENAME_CATEGORIES, '', 'GET').PHP_EOL;
@@ -306,7 +304,7 @@
             }
             ?>
           </table>
-          <div class="mrg5 txta-r">
+          <div class="mrg5 txta-l">
             <input type="submit" class="button" value="<?php echo BUTTON_SAVE; ?>" <?php echo $confirm_save_entry;?>>
           </div>
         </form>
