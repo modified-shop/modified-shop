@@ -456,12 +456,12 @@
 		 * @return string
 		 */
     private function _removeMultiLineAndSingleLineComments($code) {  
-      if ($this->_options['compress_css'] == false) {
-        // removes single line '//' comments.
-        $code = preg_replace('/(?:(?<!\:|\\\|\'|\")\/\/.*)/', '', $code);
-      }
       // removes multi line '/* */' comments.
       $code = preg_replace('/(?:\/\*(?:[^*]|(?:\*+[^*\/]))*\*+\/)/', '', $code);     
+      if ($this->_options['compress_css'] == false) { 
+        // removes single line '//' comments.
+        $code = preg_replace('/(?:(?<!\:|\\\|\'|\")\/\/.*)/', '', $code);
+      }        
       return $code;
     }
 	}
