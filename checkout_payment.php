@@ -130,6 +130,9 @@ $smarty->assign('ADDRESS_LABEL', xtc_address_label($_SESSION['customer_id'], $_S
 $smarty->assign('BUTTON_ADDRESS', '<a href="' . xtc_href_link(FILENAME_CHECKOUT_PAYMENT_ADDRESS, '', 'SSL') . '">' . xtc_image_button('button_change_address.gif', IMAGE_BUTTON_CHANGE_ADDRESS) . '</a>');
 $smarty->assign('BUTTON_CONTINUE', xtc_image_submit('button_continue.gif', IMAGE_BUTTON_CONTINUE));
 $smarty->assign('BUTTON_CHECKOUT_STEP3', xtc_image_submit('button_checkout_step3.gif', IMAGE_BUTTON_CHECKOUT_STEP3));
+if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weight') || ($_SESSION['cart']->count_contents_virtual() == 0)) {
+  $smarty->assign('BUTTON_CHECKOUT_STEP3', xtc_image_submit('button_checkout_step2.gif', IMAGE_BUTTON_CHECKOUT_STEP2));
+}
 $smarty->assign('FORM_END', '</form>');
 
 $total = $xtPrice->xtcFormat($order->info['total'], false);
