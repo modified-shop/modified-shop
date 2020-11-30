@@ -20,6 +20,7 @@
 
 <h1 class="checkout">{#heading_shipping#}</h1>
 {if $error != ''}<div class="errormessage">{$error}</div>{/if}
+{if $success_message}<div class="infomessage">{$success_message}</div>{/if}
 
 {$FORM_ACTION}
 <div class="twoColums">

@@ -537,6 +537,7 @@ define('GV_NO_PAYMENT_INFO', '<div class="infomessage">You can pay the order wit
 define('GV_ADD_PAYMENT_INFO', '<div class="errormessage">Your credit is not sufficient or may not be used for all accounting-positions to pay the order completely. Please select a payment method in addition!</div>');
 
 define('_SHIPPING_FREE','Free Shipping');
+define('TEXT_INFO_FREE_SHIPPING_COUPON', 'The shipping costs are covered by your coupon.');
 
 define('TEXT_CONTENT_NOT_FOUND', 'Page not found!');
 define('TEXT_SITE_NOT_FOUND', 'Page not found!');
