@@ -192,6 +192,31 @@ if (SHOW_SELFPICKUP_FREE == 'true') {
   }
 }
 
+if (isset ($_SESSION['cc_id'])) {
+  $coupon_query = xtc_db_query("SELECT *
+                                  FROM ".TABLE_COUPONS."
+                                 WHERE coupon_id = '".(int)$_SESSION['cc_id']."'
+                                   AND coupon_active = 'Y'
+                                   AND (restrict_to_customers = ''
+                                        OR restrict_to_customers IS NULL
+                                        OR FIND_IN_SET ('". (int)$_SESSION['customers_status']['customers_status_id'] ."', restrict_to_customers)
+                                        )");
+  if (xtc_db_num_rows($coupon_query) != 0) {
+    $coupon_array = xtc_db_fetch_array($coupon_query);
+    if ($coupon_array['coupon_type'] == 'S') {
+      $messageStack->add('checkout_shipping', TEXT_INFO_FREE_SHIPPING_COUPON, 'success');
+    }
+  }
+}
+
+if ($messageStack->size('checkout_shipping') > 0) {
+	$smarty->assign('error', $messageStack->output('checkout_shipping'));
+}
+
+if ($messageStack->size('checkout_shipping', 'success') > 0) {
+	$smarty->assign('success_message', $messageStack->output('checkout_shipping', 'success'));
+}
+    
 // build shipping block
 require(DIR_WS_INCLUDES.'shipping_block.php');
 

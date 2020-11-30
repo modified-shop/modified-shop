@@ -8,6 +8,7 @@
 </ul>
 <div style="clear:both"></div>
 {if $error != ''}<div class="errormessage">{$error}</div>{/if}
+{if $success_message}<div class="infomessage">{$success_message}</div>{/if}
 <h1>{#heading_shipping#}</h1>
 {$FORM_ACTION}
 <p><strong>{#title_address#}:</strong><br />{$ADDRESS_LABEL}</p>
