@@ -161,7 +161,15 @@ class paypalcart extends PayPalPayment {
     // a javascript force-selection method, also automatically select the cheapest shipping
     // method if more than one module is now enabled
     if ((!isset($_SESSION['shipping']) && CHECK_CHEAPEST_SHIPPING_MODUL == 'true') || (isset($_SESSION['shipping']) && ($_SESSION['shipping'] == false) && (xtc_count_shipping_modules() == 1))) {
-      $_SESSION['shipping'] = $shipping_modules->cheapest();
+      if ($free_shipping == true) {
+        $_SESSION['shipping'] = array(
+          'id' => 'free_free',
+          'title' => FREE_SHIPPING_TITLE,
+          'cost' => 0
+        );
+      } else {
+        $_SESSION['shipping'] = $shipping_modules->cheapest();
+      }
       $order = new order();
     }
 
@@ -186,13 +194,6 @@ class paypalcart extends PayPalPayment {
           }
         }
         $quotes = $quotes_array;
-      }
-    }
-
-    if (defined('SHOW_SELFPICKUP_FREE') && SHOW_SELFPICKUP_FREE == 'true') {
-      if ($free_shipping == true) {
-        $free_shipping = false;
-        $quotes = array_merge($this->ot_shipping->quote(), $shipping_modules->quote('selfpickup', 'selfpickup'));
       }
     }
 
@@ -250,6 +251,11 @@ class paypalcart extends PayPalPayment {
     $smarty->clear_assign('SHIPPING_EDIT');
     $smarty->clear_assign('PAYMENT_EDIT');
     //$smarty->clear_assign('PRODUCTS_EDIT');
+    
+    echo '<pre>';
+    print_r($_SESSION);
+    print_r($order);
+    exit();
   }
 
 
