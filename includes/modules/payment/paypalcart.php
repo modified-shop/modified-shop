@@ -251,11 +251,6 @@ class paypalcart extends PayPalPayment {
     $smarty->clear_assign('SHIPPING_EDIT');
     $smarty->clear_assign('PAYMENT_EDIT');
     //$smarty->clear_assign('PRODUCTS_EDIT');
-    
-    echo '<pre>';
-    print_r($_SESSION);
-    print_r($order);
-    exit();
   }
 
 
