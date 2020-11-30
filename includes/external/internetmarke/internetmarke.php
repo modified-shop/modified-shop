@@ -84,7 +84,7 @@
           $sql_data_array = array(
             'orders_id' => $this->order->info['orders_id'],
             'carrier_id' => MODULE_INTERNETMARKE_CARRIER,
-            'parcel_id' => $voucher->trackId,
+            'parcel_id' => ((isset($voucher->trackId) && $voucher->trackId != '') ? $voucher->trackId : $voucher->voucherId),
             'date_added' => 'now()',
             'external' => '1',
             'im_orders_id' => $label->shoppingCart->shopOrderId,
