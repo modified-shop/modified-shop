@@ -710,6 +710,25 @@ class PayPalPaymentBase extends PayPalCommon {
     if (xtc_db_num_rows($check_query) == 0) {
       xtc_db_query("ALTER TABLE ".TABLE_PAYPAL_INSTRUCTIONS." ADD `paypal_inctructions_id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST");
     }
+
+    // set all files to be deleted                     
+    $unlink_file = array(
+      'callback/paypal/paypalinstallment.php',
+      'includes/external/paypal/templates/presentment.html',
+      'includes/external/paypal/templates/presentment_info.html',
+      'includes/modules/order_total/ot_paypalinstallment_fee.php',
+      'includes/modules/payment/paypalinstallment.php',
+      'lang/english/modules/order_total/ot_paypalinstallment_fee.php',
+      'lang/english/modules/payment/paypalinstallment.php',
+      'lang/german/modules/order_total/ot_paypalinstallment_fee.php',
+      'lang/german/modules/payment/paypalinstallment.php',
+    );
+  
+    foreach ($unlink_file as $unlink) {
+      if (trim($unlink) != '' && is_file(DIR_FS_CATALOG.$unlink)) {  
+        unlink(DIR_FS_CATALOG.$unlink);
+      }
+    }
   }
 
 }
