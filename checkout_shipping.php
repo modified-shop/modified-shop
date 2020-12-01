@@ -210,11 +210,11 @@ if (isset ($_SESSION['cc_id'])) {
 }
 
 if ($messageStack->size('checkout_shipping') > 0) {
-	$smarty->assign('error', $messageStack->output('checkout_shipping'));
+  $smarty->assign('error', $messageStack->output('checkout_shipping'));
 }
 
 if ($messageStack->size('checkout_shipping', 'success') > 0) {
-	$smarty->assign('success_message', $messageStack->output('checkout_shipping', 'success'));
+  $smarty->assign('success_message', $messageStack->output('checkout_shipping', 'success'));
 }
     
 // build shipping block
