@@ -2049,6 +2049,17 @@
     return $statuses_array;
   }
 
+  function xtc_cfg_display_orders_statuses($cfg_val) {
+    $orders_status_id_array = explode(',', $cfg_val);
+    
+    $status_names_array = array();
+    foreach ($orders_status_id_array as $orders_status_id) {
+      $status_names_array[] = xtc_get_orders_status_name($orders_status_id);
+    }
+    
+    return implode('<br>', $status_names_array);
+  }
+
   /**
    * xtc_cfg_multi_checkbox()
    *
@@ -2063,20 +2074,23 @@
    *
    * @return string html checkboxes by configuration set_function
    */
-  function xtc_cfg_multi_checkbox($format, $separator, $checked) {
+  function xtc_cfg_multi_checkbox($format, $separator, $checked, $key = '') {
+    $name = (($key) ? 'configuration['.$key.'][]' : 'configuration_value[]');
+    
     if (preg_match("'chr\(([0-9]{1,3})\)'",$separator, $matches)) {
       $separator  = chr($matches[1]);
     }
     $checkboxes = '';
     $checkedboxes = (array) explode($separator, $checked);
     $format_array =  (!is_array($format) && function_exists($format)) ? (array)$format() : (array)$format;
+        
     foreach ($format_array as $key => $value) {
       if (is_array($value)) {
         $key   = isset($value['id'])   ? $value['id']   : $key;
         $value = isset($value['text']) ? $value['text'] : $value;
       }
       $checkboxes .= '<label>';
-      $checkboxes .= xtc_draw_checkbox_field('configuration_value[]', $key, (bool)in_array($key, $checkedboxes));
+      $checkboxes .= xtc_draw_checkbox_field($name, $key, (bool)in_array($key, $checkedboxes));
       $checkboxes .= $value . '</label><br>';
     }
     return $checkboxes;
