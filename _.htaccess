@@ -222,5 +222,6 @@ ErrorDocument 500 /sitemap.html?error=500
 
   ##-- language
   RewriteCond %{SCRIPT_FILENAME} !-d
+  RewriteCond %{SCRIPT_FILENAME} !-f
   RewriteRule ^([\/]?)([a-z]{2})\/(.*)([^.]*)$ $3?language=$2 [QSA,L]
 </IfModule>
