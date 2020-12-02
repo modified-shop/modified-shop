@@ -34,4 +34,9 @@ ALTER TABLE `banners` MODIFY `banners_group` VARCHAR(32) NOT NULL;
 #GTB - 2020-11-24 - account password security
 ALTER TABLE `customers` ADD `customers_password_time` INT(11) DEFAULT 0 NOT NULL;
 
+#Hetfield - 2020-12-02 - stock limited true/false for downloads
+INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'STOCK_LIMITED_DOWNLOADS', 'false', 9, 4, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
+UPDATE configuration SET sort_order = 5 WHERE configuration_key = 'STOCK_ALLOW_CHECKOUT';
+UPDATE configuration SET sort_order = 6 WHERE configuration_key = 'STOCK_MARK_PRODUCT_OUT_OF_STOCK';
+UPDATE configuration SET sort_order = 7 WHERE configuration_key = 'STOCK_REORDER_LEVEL';
 # Keep an empty line at the end of this file for the db_updater to work properly

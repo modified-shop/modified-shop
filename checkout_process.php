@@ -29,6 +29,7 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+defined('STOCK_LIMITED_DOWNLOADS') or define('STOCK_LIMITED_DOWNLOADS', 'false');
 define('SESSION_FORCE_COOKIE_USE', 'False');
 include ('includes/application_top.php');
 
@@ -248,7 +249,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
       if (xtc_db_num_rows($stock_query) > 0) {
         $stock_values = xtc_db_fetch_array($stock_query);
         // do not decrement quantities if products_attributes_filename exists
-        if ((DOWNLOAD_ENABLED != 'true') || (!$stock_values['products_attributes_filename'])) {
+        if ((DOWNLOAD_ENABLED != 'true') || (STOCK_LIMITED_DOWNLOADS == 'false')) {
           $stock_left = $stock_values['products_quantity'] - $order->products[$i]['qty'];
         } else {
           $stock_left = $stock_values['products_quantity'];
@@ -329,7 +330,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
             ) 
         {
           $update_attr_stock = true;
-          if (DOWNLOAD_ENABLED == 'true') {
+          if (DOWNLOAD_ENABLED == 'true' && STOCK_LIMITED_DOWNLOADS == 'false') {
             $attr_stock_query = xtc_db_query("SELECT pad.products_attributes_filename
                                                 FROM ".TABLE_PRODUCTS_ATTRIBUTES." pa 
                                                 JOIN ".TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD." pad 
