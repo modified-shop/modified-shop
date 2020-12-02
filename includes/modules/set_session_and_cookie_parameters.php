@@ -48,6 +48,8 @@ if (STORE_SESSIONS == 'mysql') {
   }
 }
 
+foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/set_session_and_cookie_parameters/','php') as $file) require_once ($file); 
+
 // delete old cookie
 if (is_array($current_domain_delete) 
     && count($current_domain_delete) > 0

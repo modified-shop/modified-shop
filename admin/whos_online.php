@@ -188,6 +188,11 @@
           if (isset($info)) {
             $heading[] = array('text' => '<strong>' . TABLE_HEADING_SHOPPING_CART . '</strong>');
             $session_data = '';
+            
+            //autoload new product addons 
+            require_once(DIR_FS_INC.'auto_include.inc.php');
+            foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/whos_online/','php') as $file) require ($file);
+            
             if (STORE_SESSIONS == 'mysql') {
               $session_data = _sess_read($info['session_id']);
             } elseif (STORE_SESSIONS == '') {
