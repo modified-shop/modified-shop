@@ -247,6 +247,8 @@ define('ATTRIBUTE_STOCK_CHECK_TITLE' , '&Uuml;berpr&uuml;fen des Artikelattribut
 define('ATTRIBUTE_STOCK_CHECK_DESC' , '&Uuml;berpr&uuml;fen des Bestandes an Ware mit bestimmten Artikelattributen');
 define('STOCK_LIMITED_TITLE' , 'Warenmenge abziehen');
 define('STOCK_LIMITED_DESC' , 'Warenmenge im Warenbestand abziehen, wenn die Ware bestellt wurde');
+define('STOCK_LIMITED_DOWNLOADS_TITLE' , 'Downloads von Warenmenge abziehen');
+define('STOCK_LIMITED_DOWNLOADS_DESC' , 'Soll die Warenmenge auch bei Downloadartikeln abgezogen werden?');
 define('STOCK_ALLOW_CHECKOUT_TITLE' , 'Einkaufen nicht vorr&auml;tiger Ware erlauben');
 define('STOCK_ALLOW_CHECKOUT_DESC' , 'M&ouml;chten Sie auch dann erlauben zu bestellen, wenn bestimmte Ware laut Warenbestand nicht verf&uuml;gbar ist?');
 define('STOCK_MARK_PRODUCT_OUT_OF_STOCK_TITLE' , 'Kennzeichnung vergriffener Artikel');
