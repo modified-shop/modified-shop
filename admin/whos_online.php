@@ -189,7 +189,7 @@
             $heading[] = array('text' => '<strong>' . TABLE_HEADING_SHOPPING_CART . '</strong>');
             $session_data = '';
             
-            //autoload new product addons 
+            //autoload new session addons 
             require_once(DIR_FS_INC.'auto_include.inc.php');
             foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/whos_online/','php') as $file) require ($file);
             
