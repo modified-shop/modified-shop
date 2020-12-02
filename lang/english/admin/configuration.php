@@ -583,10 +583,10 @@ define('DELETE_CACHE_SUCCESSFUL', 'Cache deleted successfully.');
 define('DELETE_TEMP_CACHE_SUCCESSFUL', 'Templatecache deleted successfully.');
 // EOF - Dokuman - 2010-02-04 - delete cache files in admin section
 
-// BOF - web28 - 2010-08-17 -  Bildgroessenberechnung kleinerer Bilder
+// BOF - web28 - 2010-08-17 -  Bildgrößenberechnung kleinerer Bilder
 define('PRODUCT_IMAGE_NO_ENLARGE_UNDER_DEFAULT_TITLE','Upscaling low-res images)');
 define('PRODUCT_IMAGE_NO_ENLARGE_UNDER_DEFAULT_DESC','If set to <strong>false</strong>, upscaling of low-res images to default settings for image size is disabled. Set to <strong>true</strong> to enable upscaling of low-res images. In this case those images will be shown blurry.');
-// EOF - web28 - 2010-08-17 -  Bildgroessenberechnung kleinerer Bilder
+// EOF - web28 - 2010-08-17 -  Bildgrößenberechnung kleinerer Bilder
 
 //BOF - hendrik - 2011-05-14 - independent invoice number and date
 //define('IBN_BILLNR_TITLE', 'Next invoice number');
