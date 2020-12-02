@@ -70,7 +70,7 @@
         </div>
       </div>
       <div class="checkoutconditions">
-      {if defined($smarty.const.SIGN_CONDITIONS_ON_CHECKOUT)}
+      {if "SIGN_CONDITIONS_ON_CHECKOUT"|defined}
         {if $smarty.const.SIGN_CONDITIONS_ON_CHECKOUT == 'true'}{$AGB_checkbox} {/if}<strong><label for="conditions">{#text_accept_agb#}</label></strong>&nbsp;{$AGB_LINK}
       {else}
         {$AGB_checkbox} <strong><label for="conditions">{#text_accept_agb#}</label></strong>&nbsp;{$AGB_LINK}
