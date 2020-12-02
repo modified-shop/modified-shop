@@ -21,7 +21,9 @@
   @ini_set("session.gc_maxlifetime", 1440);
   @ini_set("session.gc_probability", 100);
   @ini_set('session.cookie_httponly', true);
-
+  
+  foreach(auto_include(DIR_FS_CATALOG.'includes/extra/sessions/','php') as $file) require_once ($file);
+  
   if (STORE_SESSIONS == 'mysql') {  
     if (!$SESS_LIFE = xtc_get_cfg_var('session.gc_maxlifetime')) {
       $SESS_LIFE = 1440;
