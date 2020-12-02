@@ -37,7 +37,7 @@
           </td>
         </tr>
       </table>
-      {if defined($smarty.const.SIGN_CONDITIONS_ON_CHECKOUT)}
+      {if "SIGN_CONDITIONS_ON_CHECKOUT"|defined}
         <br />
         <div class="cus_check cus_check_small cus_mb_10">
           {if $PRIVACY_CHECKBOX}{$PRIVACY_CHECKBOX}{/if}

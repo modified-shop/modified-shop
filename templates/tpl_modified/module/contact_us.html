@@ -52,7 +52,7 @@
           <td><span class="fieldtext">{#text_message#}</span><span class="stern">{$INPUT_TEXT}<span class="inputRequirement_textarea"> *</span></span></td>
         </tr>
       </table>    
-      {if defined($smarty.const.SIGN_CONDITIONS_ON_CHECKOUT)}
+      {if "SIGN_CONDITIONS_ON_CHECKOUT"|defined}
         <br />
         <table>
           <tr>

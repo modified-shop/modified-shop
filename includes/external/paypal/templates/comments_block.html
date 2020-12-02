@@ -66,7 +66,7 @@
     <p class="checkoutagb" style="text-align:left;">{$AGB}</p>
     <table width="100%" border="0" cellspacing="0" cellpadding="4">
       <tr>
-      {if defined($smarty.const.SIGN_CONDITIONS_ON_CHECKOUT)}
+      {if "SIGN_CONDITIONS_ON_CHECKOUT"|defined}
         {if $smarty.const.SIGN_CONDITIONS_ON_CHECKOUT == 'true'}<td>{$AGB_checkbox}</td>{/if}
         <td width="100%"{if $smarty.const.SIGN_CONDITIONS_ON_CHECKOUT == 'false'} colspan="2"{/if} style="text-align:left;"><strong><label for="conditions">{#text_accept_agb#}</label></strong>&nbsp;{$AGB_LINK}</td>
       {else}
