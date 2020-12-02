@@ -134,6 +134,20 @@ $values_group_update = array();
   $values[] = "(NULL, 'STOCK_CHECKOUT_UPDATE_PRODUCTS_STATUS', 'false', '9', '20', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
   $values[] = "(NULL, 'STOCK_CHECK_SPECIALS', 'false', '9', '21', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
   $values[] = "(NULL, 'ATTRIBUTES_VALID_CHECK', 'true', '9', '22', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
+  $values[] = "(NULL, 'STOCK_LIMITED_DOWNLOADS', 'false', '9', '4', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
+
+  $values_update[] = array (
+                           'values' => "sort_order = '5'",
+                           'configuration_key' => 'STOCK_ALLOW_CHECKOUT'
+                           );
+  $values_update[] = array (
+                           'values' => "sort_order = '6'",
+                           'configuration_key' => 'STOCK_MARK_PRODUCT_OUT_OF_STOCK'
+                           );
+  $values_update[] = array (
+                           'values' => "sort_order = '7'",
+                           'configuration_key' => 'STOCK_REORDER_LEVEL'
+                           );
 
 //configuration_group_id 10 --- "Logging Optionen"
   $values[] = "(NULL, 'STORE_PAGE_PARSE_TIME_THRESHOLD', '1.0', '10', '2', NULL, NOW(), NULL, NULL);";
