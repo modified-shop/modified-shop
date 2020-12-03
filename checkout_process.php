@@ -401,6 +401,8 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
     }
   }
 
+  foreach(auto_include(DIR_FS_CATALOG.'includes/extra/checkout/checkout_process_order/','php') as $file) require ($file);
+
   // redirect to payment service
   if ($tmp) {
     $payment_modules->payment_action();
