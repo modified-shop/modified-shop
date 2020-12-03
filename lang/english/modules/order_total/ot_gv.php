@@ -47,4 +47,6 @@
   define('MODULE_ORDER_TOTAL_GV_TAX_CLASS_DESC', 'Use the following tax class when treating Gift Voucher as Credit Note.');
   define('MODULE_ORDER_TOTAL_GV_CREDIT_TAX_TITLE', 'Credit including Tax');
   define('MODULE_ORDER_TOTAL_GV_CREDIT_TAX_DESC', 'Add tax to purchased Gift Voucher when crediting to Account');
+  define('MODULE_ORDER_TOTAL_GV_UNALLOWED_PAYMENT_TITLE', 'Disallowed Payment Modules');
+  define('MODULE_ORDER_TOTAL_GV_UNALLOWED_PAYMENT_DESC', '<strong>DISALLOWED</strong> payment modules for gift products.');
 ?>

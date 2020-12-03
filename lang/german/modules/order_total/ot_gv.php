@@ -47,4 +47,6 @@
   define('MODULE_ORDER_TOTAL_GV_TAX_CLASS_DESC', 'Folgenden MwSt. Satz benutzen, wenn Sie den Gutschein als Gutschrift verwenden.');
   define('MODULE_ORDER_TOTAL_GV_CREDIT_TAX_TITLE', 'Guthaben enth&auml;lt MwSt.');
   define('MODULE_ORDER_TOTAL_GV_CREDIT_TAX_DESC', 'MwSt. dem Gutscheinwert anrechnen');
+  define('MODULE_ORDER_TOTAL_GV_UNALLOWED_PAYMENT_TITLE', 'Unerlaubte Zahlungsmodule');
+  define('MODULE_ORDER_TOTAL_GV_UNALLOWED_PAYMENT_DESC', '<strong>NICHT</strong> erlaubte Zahlungsweisen f&uuml;r Gutscheine.');
 ?>
