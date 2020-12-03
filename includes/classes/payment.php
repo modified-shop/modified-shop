@@ -105,6 +105,9 @@
           {
             $unallowed_modules_string .= (($unallowed_modules_string != '') ? ',' : '').DOWNLOAD_UNALLOWED_PAYMENT;
           }
+          if ($_SESSION['cart']->count_contents_virtual() != $_SESSION['cart']->count_contents()) {
+            $unallowed_modules_string .= (($unallowed_modules_string != '') ? ',' : '').MODULE_ORDER_TOTAL_GV_UNALLOWED_PAYMENT;
+          }
         }
 
         // unallowed payment / shipping
