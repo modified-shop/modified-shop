@@ -29,9 +29,13 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-defined('STOCK_LIMITED_DOWNLOADS') or define('STOCK_LIMITED_DOWNLOADS', 'false');
+// use always session_id from URL for payment providers
 define('SESSION_FORCE_COOKIE_USE', 'False');
+
 include ('includes/application_top.php');
+
+// stock decrement for downloads
+defined('STOCK_LIMITED_DOWNLOADS') or define('STOCK_LIMITED_DOWNLOADS', 'false');
 
 // include needed functions
 require_once (DIR_FS_INC.'xtc_calculate_tax.inc.php');
