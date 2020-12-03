@@ -15,7 +15,7 @@
         <a class="cbimages" title="{$PRODUCTS_NAME|onlytext}" href="{$PRODUCTS_IMAGE|replace:"info_images":"popup_images"}"><img itemprop="image" src="{$PRODUCTS_IMAGE}" alt="{$PRODUCTS_NAME|onlytext}" title="{$PRODUCTS_NAME|onlytext}" /></a>
       </div>
       <div class="zoomtext">{#zoomtext#}</div>
-      {if $more_images|@count > 0}
+      {if isset($more_images) && count($more_images) > 0}
       <div class="pd_small_image_row cf">
         {foreach item=more_images_data from=$more_images} 
         <div class="pd_small_image">

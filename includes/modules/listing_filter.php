@@ -340,12 +340,12 @@ if (PRODUCT_LIST_FILTER == 'true') {
       $filter_dropdown[$options_id] .= xtc_hide_session_id() .PHP_EOL;
       $filter_dropdown[$options_id] .= '</form>'.PHP_EOL;
     }
-    $filter_smarty->assign('FILTER_TAG', $filter_dropdown);
   }
 
   $filter_smarty->assign('LINK_FILTER_RESET', xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('filter', 'show', 'filter_id')), 'NONSSL'));
 }
 
+$filter_smarty->assign('FILTER_TAG', $filter_dropdown);
 $filter_smarty->assign('language', $_SESSION['language']);
 $filter_smarty->assign('LINK_DISPLAY_LIST', xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('show')).'show=list', 'NONSSL'));
 $filter_smarty->assign('LINK_DISPLAY_BOX', xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('show')).'show=box', 'NONSSL'));

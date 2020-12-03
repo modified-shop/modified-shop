@@ -235,7 +235,7 @@ class campaigns {
 		$this->total['sum'] = $sale_data['Summe'];
 	}
 
-	function getSells($date_start, $date_end = '', $type) {
+	function getSells($date_start, $date_end, $type) {
 		global $currencies;
 
 		switch ($type) {

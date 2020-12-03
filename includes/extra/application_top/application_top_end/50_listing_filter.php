@@ -25,7 +25,7 @@
 
   if (isset($_POST['filter_set'])) {
     $_SESSION['filter_set'] = (int)$_POST['filter_set'];
-    $_SESSION['filter_set_id'] = array_search((int)$_POST['filter_set'], $filter_vars_array);
+    $_SESSION['filter_set_id'] = array_search($_POST['filter_set'], $filter_vars_array);
     
     xtc_redirect(xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(), $request_type));
   }

@@ -134,7 +134,7 @@
 <div id="accordion_product_info">
   {if $PRODUCTS_DESCRIPTION != ''}<h3><a href="#">{#description#}</a></h3><div>{$PRODUCTS_DESCRIPTION}</div>{/if}
   {if $MODULE_product_tags != ''}<h3><a href="#">{#products_tags#}</a></h3><div>{$MODULE_product_tags}</div>{/if}
-  {if $more_images|@count > 0}<h3><a href="#">{#more_images#}</a></h3>
+  {if isset($more_images) && count($more_images) > 0}<h3><a href="#">{#more_images#}</a></h3>
     <div>
       <div id="accordion_more_images">
         {* More Pictures *}

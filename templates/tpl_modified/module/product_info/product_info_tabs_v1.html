@@ -147,7 +147,7 @@
     <ul class="resp-tabs-list">
       {if $PRODUCTS_DESCRIPTION != ''}<li>{#description#}</li>{/if}
       {if isset($MODULE_product_tags) && $MODULE_product_tags != ''}<li>{#products_tags#}</li>{/if}
-      {if $more_images|@count > 0}<li>{#more_images#}</li>{/if}
+      {if isset($more_images) && count($more_images) > 0}<li>{#more_images#}</li>{/if}
       {if isset($MODULE_products_media) && $MODULE_products_media != ''}<li>{#products_media#}</li>{/if}
       {if isset($MODULE_products_reviews) && $MODULE_products_reviews != ''}<li>{#products_reviews#}</li>{/if}
       {if (isset($MODULE_cross_selling) && $MODULE_cross_selling != '') || (isset($MODULE_reverse_cross_selling) && $MODULE_reverse_cross_selling != '')}<li>{#cross_selling#}</li>{/if}
@@ -157,7 +157,7 @@
     <div class="resp-tabs-container">
       {if $PRODUCTS_DESCRIPTION != ''}<div class="pd_description"><h4 class="detailbox">{#products_desc#}</h4><div itemprop="description">{$PRODUCTS_DESCRIPTION}</div></div>{/if}
       {if isset($MODULE_product_tags) && $MODULE_product_tags != ''}<div>{$MODULE_product_tags}</div>{/if}
-      {if $more_images|@count > 0}
+      {if isset($more_images) && count($more_images) > 0}
       <div class="cf">
         {foreach item=more_images_data from=$more_images} 
           <div class="pd_small_image_tab">

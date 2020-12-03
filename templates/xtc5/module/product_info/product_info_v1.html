@@ -128,7 +128,7 @@
     {if $PRODUCTS_DESCRIPTION != ''}<div>{$PRODUCTS_DESCRIPTION}</div>{/if}
   </div>
 
-  {if $more_images|@count > 0}
+  {if isset($more_images) && count($more_images) > 0}
     {* More Pictures *}
     <div class="morepics">
       {foreach item=more_images_data from=$more_images}

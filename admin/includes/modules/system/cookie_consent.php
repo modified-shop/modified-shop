@@ -26,7 +26,7 @@ if (!class_exists('cookie_consent')) {
         $this->description .= '<br /><br />'.MODULE_COOKIE_CONSENT_EXTENDED_DESCRIPTION;
       }
       $this->description .= '<br /><br /><small>'.MODULE_COOKIE_CONSENT_MORE_INFO.' <a href="https://github.com/as-ideas/oil" target="_blank">https://github.com/as-ideas/oil</a></small>';
-      $this->enabled = ((MODULE_COOKIE_CONSENT_STATUS == 'true') ? true : false);
+      $this->enabled = ((defined('MODULE_COOKIE_CONSENT_STATUS') && MODULE_COOKIE_CONSENT_STATUS == 'true') ? true : false);
       $this->sort_order = 0;
     }
 

@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: export_functions.php 950 2005-05-14 16:45:21Z mz $
+   $Id$
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -45,7 +45,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
     }
   }
 
-function xtc_get_products_price_export($products_id,$price_special,$quantity,$group_id=0,$add_tax=1,$currency,$calculate_currencies=true)
+function xtc_get_products_price_export($products_id,$price_special,$quantity,$group_id=0,$add_tax=1,$currency=DEFAULT_CURRENCY,$calculate_currencies=true)
     {
 
 

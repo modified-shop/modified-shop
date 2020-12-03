@@ -139,7 +139,7 @@
   <ul>
     {if $PRODUCTS_DESCRIPTION != ''}<li><a href="#tab_description">{#description#}</a></li>{/if}
     {if $MODULE_product_tags != ''}<li><a href="#tab_tags">{#products_tags#}</a></li>{/if}
-    {if $more_images|@count > 0}<li><a href="#tab_more_images">{#more_images#}</a></li>{/if}
+    {if isset($more_images) && count($more_images) > 0}<li><a href="#tab_more_images">{#more_images#}</a></li>{/if}
     {if $MODULE_products_media != ''}<li><a href="#tab_media">{#products_media#}</a></li>{/if}
     {if $MODULE_products_reviews != ''}<li><a href="#tab_reviews">{#products_reviews#}</a></li>{/if}
     {if $MODULE_cross_selling != '' || $MODULE_reverse_cross_selling != ''}<li><a href="#tab_cross_selling">{#cross_selling#}</a></li>{/if}
@@ -148,7 +148,7 @@
   </ul>
   {if $PRODUCTS_DESCRIPTION != ''}<div id="tab_description">{$PRODUCTS_DESCRIPTION}</div>{/if}
   {if $MODULE_product_tags != ''}<div id="tab_tags">{$MODULE_product_tags}</div>{/if}
-  {if $more_images|@count > 0}
+  {if isset($more_images) && count($more_images) > 0}
     <div id="tab_more_images">
       {* More Pictures *}
       <div class="morepics">
