@@ -223,7 +223,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
     // Stock Update
     $stock_set = '';
     if (STOCK_LIMITED == 'true') {
-      if (DOWNLOAD_ENABLED == 'true') {
+      if (DOWNLOAD_ENABLED == 'true' && STOCK_LIMITED_DOWNLOADS == 'false') {
         $add_stock_query_raw = '';
         $products_attributes = $order->products[$i]['attributes'];
         if (is_array($products_attributes)) {
@@ -249,7 +249,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
       if (xtc_db_num_rows($stock_query) > 0) {
         $stock_values = xtc_db_fetch_array($stock_query);
         // do not decrement quantities if products_attributes_filename exists
-        if ((DOWNLOAD_ENABLED != 'true') || (STOCK_LIMITED_DOWNLOADS == 'false')) {
+        if ((DOWNLOAD_ENABLED != 'true') || (!$stock_values['products_attributes_filename'])) {
           $stock_left = $stock_values['products_quantity'] - $order->products[$i]['qty'];
         } else {
           $stock_left = $stock_values['products_quantity'];
