@@ -20,7 +20,7 @@ include_once(DIR_FS_INC . 'xtc_get_countries.inc.php');
 
 require_once(DIR_FS_EXTERNAL . 'nusoap/nusoap.php');
 
-define ('VAT_LIVE_CHECK_URL', 'http://ec.europa.eu/taxation_customs/vies/checkVatService.wsdl');
+define ('VAT_LIVE_CHECK_URL', 'https://ec.europa.eu/taxation_customs/vies/checkVatService.wsdl');
 
 class vat_validation {
   var $vat_info, $vat_errors;
