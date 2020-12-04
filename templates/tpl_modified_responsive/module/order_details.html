@@ -41,7 +41,7 @@
 </ul>
 
 <div class="ord_subtotal cf">
-  {if sizeof($TOTAL_BLOCK_ARRAY) > 0}
+  {if isset($TOTAL_BLOCK_ARRAY) && count($TOTAL_BLOCK_ARRAY) > 0}
   <ul class="ord_total_list">
     {foreach name=aussen item=order_total_values from=$TOTAL_BLOCK_ARRAY}
     <li class="otl_row1 cf">
@@ -49,7 +49,7 @@
       <span class="otl_col2"><strong>{$order_total_values.text}</strong></span>
     </li>
     {/foreach}
-    {if sizeof($shipping_content) > 0}
+    {if isset($shipping_content) && count($shipping_content) > 0}
       {if $SELECT_COUNTRY}
       <li class="otl_row2 cf">
         <span class="otl_col1">{$smarty.const._SHIPPING_TO}</span>
@@ -76,7 +76,7 @@
       {if $UST_CONTENT}{$UST_CONTENT}{else}{$smarty.const.TAX_INFO_EXCL|sprintf:''}<br />{/if}
     {/if}
     <strong>{$TOTAL_CONTENT}</strong>
-    {if sizeof($shipping_content) > 0}
+    {if isset($shipping_content) && count($shipping_content) > 0}
       {if $SELECT_COUNTRY}<div class="shipping_container">{$SELECT_COUNTRY}</div>{else}<br />{/if}
       {foreach name=aussen item=shipping_data from=$shipping_content}
         <div class="shipping_hinweis">{$shipping_data.NAME} ({$COUNTRY}): {$shipping_data.VALUE}</div>

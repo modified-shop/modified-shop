@@ -47,7 +47,7 @@
         {if $UST_CONTENT}{$UST_CONTENT}{else}{$smarty.const.TAX_INFO_EXCL|sprintf:''}<br />{/if}
       {/if}
       <strong>{$TOTAL_CONTENT}</strong><br />
-      {if sizeof($shipping_content) > 0}
+      {if isset($shipping_content) && count($shipping_content) > 0}
         {if $SELECT_COUNTRY}{$SELECT_COUNTRY}<br />{/if}
         {foreach name=aussen item=shipping_data from=$shipping_content}
           {$shipping_data.NAME} ({$COUNTRY}): {$shipping_data.VALUE}<br />
