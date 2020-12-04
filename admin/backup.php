@@ -251,7 +251,7 @@
                                         $file_array['tables_row_count'] += $table_info[1];
                                       }
                                       if (substr($line, 0, 10) == "-- Charset") {
-                                        $file_array['charset'] = substr($line, 11);
+                                        $file_array['charset'] = trim(substr($line, 11));
                                       }
                                     }
                                   }                          
@@ -272,7 +272,7 @@
                                         $file_array['tables_row_count'] += $table_info[1];
                                       }
                                       if (substr($line, 0, 10) == "-- Charset") {
-                                        $file_array['charset'] = substr($line, 11);
+                                        $file_array['charset'] = trim(substr($line, 11));
                                       }
                                     }
                                   }
