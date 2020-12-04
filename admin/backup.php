@@ -250,6 +250,9 @@
                                                                             );
                                         $file_array['tables_row_count'] += $table_info[1];
                                       }
+                                      if (substr($line, 0, 10) == "-- Charset") {
+                                        $file_array['charset'] = substr($line, 11);
+                                      }
                                     }
                                   }                          
                                   break;
@@ -267,6 +270,9 @@
                                                                              'update_time' => (isset($table_info[3]) ? $table_info[3] : ''),
                                                                             );
                                         $file_array['tables_row_count'] += $table_info[1];
+                                      }
+                                      if (substr($line, 0, 10) == "-- Charset") {
+                                        $file_array['charset'] = substr($line, 11);
                                       }
                                     }
                                   }
@@ -339,7 +345,7 @@
                       $contents = array('form' => xtc_draw_form('restore', RS_FILENAME, 'action=restorenow&file=' . $buInfo->file));
                       //$heading[] = array('text' => '<b>' . $buInfo->date . '</b>');
                       $contents[] = array('text' => xtc_break_string(sprintf(TEXT_INFO_RESTORE, DIR_FS_BACKUP . (($buInfo->compression != TEXT_NO_EXTENSION) ? substr($buInfo->file, 0, strrpos($buInfo->file, '.')) : $buInfo->file), ($buInfo->compression != TEXT_NO_EXTENSION) ? TEXT_INFO_UNPACK : ''), 35, ' '));
-                      if (!$check_utf8) {
+                      if (!$check_utf8 && $buInfo->charset == 'utf8') {
                         $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('utf8-convert', 'yes', false) . ' ' . TEXT_IMPORT_UTF);
                       }
                       require_once (DIR_FS_INC . 'xtc_create_password.inc.php'); // needed for xtc_RandomString

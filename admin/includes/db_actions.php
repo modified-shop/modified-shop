@@ -72,6 +72,8 @@
       if (isset($_POST['utf8-convert']) && $_POST['utf8-convert'] == 'yes') {
         $dump['utf8-convert']	= 'yes';
       }
+      $schema .= '-- Charset: ' . ((isset($dump['utf8-convert'])) ? 'utf8' : $charset) . "\n";
+
       $backup_file = 'dbd_' . DB_DATABASE . '-' . date('YmdHis');
       $dump['file'] = DIR_FS_BACKUP . $backup_file;
 
@@ -280,6 +282,7 @@
           $actual_table = $restore['actual_table'];
           if (!RESTORE_TEST) {
             if ($restore['utf8'] == true) {
+              xtc_db_set_charset('utf8');
               $sql_command = encode_utf8($sql_command, '', true); 
             }
             $res = xtc_db_query($sql_command);
