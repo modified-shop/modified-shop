@@ -446,7 +446,7 @@ class PayPalPaymentBase extends PayPalCommon {
                   );");
 
     xtc_db_query("CREATE TABLE IF NOT EXISTS ".TABLE_PAYPAL_INSTRUCTIONS." (
-                    paypal_inctructions_id int(11) NOT NULL auto_increment, 
+                    paypal_instructions_id int(11) NOT NULL auto_increment, 
                     orders_id int(11) NOT NULL DEFAULT '0',
                     method varchar(64) NOT NULL,
                     amount decimal(15,4) DEFAULT NULL,
@@ -457,7 +457,7 @@ class PayPalPaymentBase extends PayPalCommon {
                     holder varchar(128) DEFAULT NULL,
                     iban varchar(34) DEFAULT NULL,
                     bic varchar(11) DEFAULT NULL,
-                    PRIMARY KEY (paypal_inctructions_id),
+                    PRIMARY KEY (paypal_instructions_id),
                     KEY idx_orders_id (orders_id)
                   );");
   
@@ -618,7 +618,7 @@ class PayPalPaymentBase extends PayPalCommon {
     }
     
     xtc_db_query("CREATE TABLE IF NOT EXISTS ".TABLE_PAYPAL_INSTRUCTIONS." (
-                    paypal_inctructions_id int(11) NOT NULL auto_increment, 
+                    paypal_instructions_id int(11) NOT NULL auto_increment, 
                     orders_id int(11) NOT NULL DEFAULT '0',
                     method varchar(64) NOT NULL,
                     amount decimal(15,4) DEFAULT NULL,
@@ -629,7 +629,7 @@ class PayPalPaymentBase extends PayPalCommon {
                     holder varchar(128) DEFAULT NULL,
                     iban varchar(34) DEFAULT NULL,
                     bic varchar(11) DEFAULT NULL,
-                    PRIMARY KEY (paypal_inctructions_id),
+                    PRIMARY KEY (paypal_instructions_id),
                     KEY idx_orders_id (orders_id)
                   );");
     
@@ -706,9 +706,13 @@ class PayPalPaymentBase extends PayPalCommon {
     if (xtc_db_num_rows($check_query) == 0) {
       xtc_db_query("ALTER TABLE ".TABLE_PAYPAL_IPN." ADD `paypal_ipn_id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST");
     }
-    $check_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_PAYPAL_INSTRUCTIONS." LIKE 'paypal_inctructions_id'");
+    $check_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_PAYPAL_INSTRUCTIONS." LIKE 'paypal_instructions_id'");
     if (xtc_db_num_rows($check_query) == 0) {
-      xtc_db_query("ALTER TABLE ".TABLE_PAYPAL_INSTRUCTIONS." ADD `paypal_inctructions_id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST");
+      xtc_db_query("ALTER TABLE ".TABLE_PAYPAL_INSTRUCTIONS." ADD `paypal_instructions_id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST");
+    }
+    $check_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_PAYPAL_INSTRUCTIONS." LIKE 'paypal_inctructions_id'");
+    if (xtc_db_num_rows($check_query) == 1) {
+      xtc_db_query("ALTER TABLE ".TABLE_PAYPAL_INSTRUCTIONS." CHANGE `paypal_inctructions_id` `paypal_instructions_id` INT(11) NOT NULL AUTO_INCREMENT");
     }
 
     // set all files to be deleted                     
