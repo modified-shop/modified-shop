@@ -24,23 +24,39 @@
   $languages = xtc_get_languages();
 
   function xtc_get_cookies_detail($cookies_id, $languages_id, $db_field) {
-    $values_query = xtc_db_query("SELECT ".$db_field." 
-                                    FROM ".TABLE_COOKIE_CONSENT_COOKIES."
-                                   WHERE cookies_id = '".$cookies_id."'
-                                     AND languages_id = '".$languages_id."'");
-    $values = xtc_db_fetch_array($values_query);
+    static $cookies_detail_array;
     
-    return $values[$db_field];
+    if (!isset($cookies_detail_array)) {
+      $cookies_detail_array = array();
+    }
+    
+    if (!isset($cookies_detail_array[$cookies_id][$languages_id])) {
+      $values_query = xtc_db_query("SELECT *
+                                      FROM ".TABLE_COOKIE_CONSENT_COOKIES."
+                                     WHERE cookies_id = '".$cookies_id."'
+                                       AND languages_id = '".$languages_id."'");
+      $cookies_detail_array[$cookies_id][$languages_id] = xtc_db_fetch_array($values_query);
+    }
+    
+    return $cookies_detail_array[$cookies_id][$languages_id][$db_field];
   }
 
   function xtc_get_cookies_categories_detail($categories_id, $languages_id, $db_field) {
-    $options_query = xtc_db_query("SELECT ".$db_field." 
-                                     FROM ".TABLE_COOKIE_CONSENT_CATEGORIES."
-                                    WHERE categories_id = '".$categories_id."'
-                                      AND languages_id = '".$languages_id."'");
-    $options = xtc_db_fetch_array($options_query);
+    static $cookies_categories_detail_array;
     
-    return $options[$db_field];
+    if (!isset($cookies_categories_detail_array)) {
+      $cookies_categories_detail_array = array();
+    }
+    
+    if (!isset($cookies_categories_detail_array[$categories_id][$languages_id])) {
+      $options_query = xtc_db_query("SELECT *
+                                       FROM ".TABLE_COOKIE_CONSENT_CATEGORIES."
+                                      WHERE categories_id = '".$categories_id."'
+                                        AND languages_id = '".$languages_id."'");
+      $cookies_categories_detail_array[$categories_id][$languages_id] = xtc_db_fetch_array($options_query);
+    }
+    
+    return $cookies_categories_detail_array[$categories_id][$languages_id][$db_field];
   }
 
   function update_cookie_consent_version_data() {
@@ -476,14 +492,14 @@ require (DIR_WS_INCLUDES.'head.php');
                     $contents = array('form' => xtc_draw_form('options', basename($PHP_SELF), 'page=' . (int)$_GET['page'] . '&oID=' . $oInfo->categories_id . '&action=deleteconfirm_options'));
                     $contents[] = array('text' => TEXT_INFO_DELETE_OPTION_INTRO);
                     $contents[] = array('text' => '<br /><b>' . xtc_get_cookies_categories_detail($oInfo->categories_id, $_SESSION['languages_id'], 'categories_name') . '</b>');
-                    $products_query = xtc_db_query("SELECT * 
-                                                      FROM ".TABLE_COOKIE_CONSENT_CATEGORIES." 
+                    $cookies_query = xtc_db_query("SELECT * 
+                                                      FROM ".TABLE_COOKIE_CONSENT_COOKIES." 
                                                      WHERE categories_id = '".(int)$oInfo->categories_id."' 
-                                                  GROUP BY products_id");
-                    $products_total = xtc_db_num_rows($products_query);
-                    if ($products_total > 0) {
-                      $contents[] = array('text' => '<br />' . sprintf(TEXT_INFO_WARNING_PRODUCTS, $products_total));
-                    }
+                                                  GROUP BY cookies_id");
+                    $cookies_total = xtc_db_num_rows($cookies_query);
+                    if ($cookies_total > 0) {
+                      $contents[] = array('text' => '<br />' . sprintf(TEXT_INFO_WARNING_COOKIES, $cookies_total));
+                    }  
                     $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(basename($PHP_SELF), 'page=' . (int)$_GET['page'] . '&oID=' . $oInfo->categories_id) . '">' . BUTTON_CANCEL . '</a>');
                     break;
 

@@ -49,7 +49,7 @@
   define('TEXT_INFO_HEADING_EXTERNAL_TRIGGER', '&quot;MODOilTrack&quot; enth&auml;lt');
 
   define('TEXT_DISPLAY_NUMBER_OF_VALUES', 'Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> Cookies/Gruppen)');
-
+  define('TEXT_INFO_WARNING_COOKIES', '<b>WARNUNG:</b> Es existieren noch %s Cookies, die mit dieser Kategorie verbunden sind! Diese Cookies werden zusammen mit der Kategorie gel&ouml;scht.');
 
   define('TEXT_INFO_OPTION_NAME', 'Name:');
   define('TEXT_INFO_OPTION_DESCRIPTION', 'Beschreibung:');

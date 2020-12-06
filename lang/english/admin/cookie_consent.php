@@ -49,7 +49,7 @@
   define('TEXT_INFO_HEADING_EXTERNAL_TRIGGER', '&quot;MODOilTrack&quot; contains');
 
   define('TEXT_DISPLAY_NUMBER_OF_VALUES', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> cookies)');
-
+  define('TEXT_INFO_WARNING_COOKIES', '<b>WARNING:</b> There are still %s cookies associated with this category! These cookies are deleted together with the category.');
 
   define('TEXT_INFO_OPTION_NAME', 'Name:');
   define('TEXT_INFO_OPTION_DESCRIPTION', 'Description:');

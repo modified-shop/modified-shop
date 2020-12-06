@@ -11,6 +11,22 @@
    --------------------------------------------------------------*/
 
 if (defined('MODULE_COOKIE_CONSENT_STATUS') && strtolower(MODULE_COOKIE_CONSENT_STATUS) == 'true') {
+  $lang_links = '';
+  if (!isset($lng) || (isset($lng) && !is_object($lng))) {
+    require_once(DIR_WS_CLASSES . 'language.php');
+    $lng = new language;
+  }
+
+  if (count($lng->catalog_languages) > 1) {
+    $lang_content = array();
+    reset($lng->catalog_languages);
+    foreach ($lng->catalog_languages as $key => $value) {
+      $lng_link_url = xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('language', 'currency')) . 'language=' . $key, $request_type);
+      if ($lng_link_url != '#') {
+        $lang_links .= '<a class="as-oil-lang" href="' . $lng_link_url . '">' . $value['name'] . '</a>';
+      }
+    }
+  }
 ?>
 <script id="oil-configuration" type="application/configuration">
 {
@@ -35,7 +51,7 @@ if (defined('MODULE_COOKIE_CONSENT_STATUS') && strtolower(MODULE_COOKIE_CONSENT_
       "label_nocookie_head": "<?php echo TEXT_COOKIE_CONSENT_LABEL_NOCOOKIE_HEAD; ?>",
       "label_nocookie_text": "<?php echo TEXT_COOKIE_CONSENT_LABEL_NOCOOKIE_TEXT; ?>",
       "label_third_party": " ",
-      "label_imprint_links": "<a href='<?php echo xtc_href_link(FILENAME_POPUP_CONTENT, "coID=2"); ?>' onclick='return cc_popup_content(this)'><?php echo TEXT_COOKIE_CONSENT_LABEL_INTRO_TEXT_PRIVACY; ?></a> <a href='<?php echo xtc_href_link(FILENAME_POPUP_CONTENT, "coID=4"); ?>' onclick='return cc_popup_content(this)'><?php echo TEXT_COOKIE_CONSENT_LABEL_INTRO_TEXT_IMPRINT; ?></a>"
+      "label_imprint_links": "<?php echo $lang_links; ?><a href='<?php echo xtc_href_link(FILENAME_POPUP_CONTENT, "coID=2"); ?>' onclick='return cc_popup_content(this)'><?php echo TEXT_COOKIE_CONSENT_LABEL_INTRO_TEXT_PRIVACY; ?></a> <a href='<?php echo xtc_href_link(FILENAME_POPUP_CONTENT, "coID=4"); ?>' onclick='return cc_popup_content(this)'><?php echo TEXT_COOKIE_CONSENT_LABEL_INTRO_TEXT_IMPRINT; ?></a>"
     }
   }
 }

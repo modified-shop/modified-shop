@@ -71,282 +71,289 @@ if (!class_exists('cookie_consent')) {
         $languages[$row['languages_id']] = $row;
       }
       
-      xtc_db_query("CREATE TABLE IF NOT EXISTS `".TABLE_COOKIE_CONSENT_CATEGORIES."` (
-                      `categories_id` int(11) NOT NULL,
-                      `categories_name` varchar(128) NOT NULL,
-                      `categories_description` text NOT NULL,
-                      `sort_order` int(11) NOT NULL DEFAULT '0',
-                      `languages_id` int(11) NOT NULL,
-                      `last_modified` datetime DEFAULT NULL,
-                      `date_added` datetime NOT NULL,
-                      `fixed` tinyint(1) NOT NULL DEFAULT '0',
-                      PRIMARY KEY (`categories_id`,`languages_id`),
-                      KEY `idx_cookie_multi` (`languages_id`,`categories_id`,`sort_order`)
-                    )");
+      $check_query = xtc_db_query("SHOW TABLES LIKE `".TABLE_COOKIE_CONSENT_CATEGORIES."`");
+      if (xtc_db_num_rows($check_query) < 1) {
+        xtc_db_query("CREATE TABLE `".TABLE_COOKIE_CONSENT_CATEGORIES."` (
+                        `categories_id` int(11) NOT NULL,
+                        `categories_name` varchar(128) NOT NULL,
+                        `categories_description` text NOT NULL,
+                        `sort_order` int(11) NOT NULL DEFAULT '0',
+                        `languages_id` int(11) NOT NULL,
+                        `last_modified` datetime DEFAULT NULL,
+                        `date_added` datetime NOT NULL,
+                        `fixed` tinyint(1) NOT NULL DEFAULT '0',
+                        PRIMARY KEY (`categories_id`,`languages_id`),
+                        KEY `idx_cookie_multi` (`languages_id`,`categories_id`,`sort_order`)
+                      )");
       
-      $defined_categories = array();
-      // Essential
-      $defined_categories[] = array(
-        'id'        => 1,
-        'name'      => array(
-          1 => 'Essential',
-          2 => 'Notwendig'
-        ),
-        'desc'      => array(
-          1 => 'Technically essential Cookies contribute to ensuring the basic functionalities of the website.',
-          2 => 'Technisch notwendige Cookies tragen dazu bei, grundlegende Funktionalitäten der Website zu gewährleisten.'
-        ),
-        'sort_order'=> 1,
-        'fixed'     => 1
-      );
-      // Functional
-      $defined_categories[] = array(
-        'id'        => 2,
-        'name'      => array(
-          1 => 'Functional',
-          2 => 'Funktional'
-        ),
-        'desc'      => array(
-          1 => 'Functional Cookies help make the user experience more pleasant.',
-          2 => 'Funktionale Cookies helfen, das Benutzererlebnis noch angenehmer zu machen.'
-        ),
-        'sort_order'=> 2,
-        'fixed'     => 1
-      );
-      // Statistics
-      $defined_categories[] = array(
-        'id'        => 3,
-        'name'      => array(
-          1 => 'Statistics',
-          2 => 'Statistik'
-        ),
-        'desc'      => array(
-          1 => 'Statistical Cookies help us understand how our website is being used and how we can improve it.',
-          2 => 'Statistik Cookies helfen uns zu verstehen, wie unsere Website verwendet wird und wie wir sie verbessern können.'
-        ),
-        'sort_order'=> 3,
-        'fixed'     => 1
-      );
-      // Marketing
-      $defined_categories[] = array(
-        'id'        => 4,
-        'name'      => array(
-          1 => 'Marketing',
-          2 => 'Marketing'
-        ),
-        'desc'      => array(
-          1 => 'Marketing Cookies help us adjust our marketing measures to the individual interests of our visitors.',
-          2 => 'Marketing Cookies helfen dabei, unsere Werbemaßnahmen auf die individuellen Interessen unserer Besucher abzustimmen.'
-        ),
-        'sort_order'=> 4,
-        'fixed'     => 1
-      );
+        $defined_categories = array();
+        // Essential
+        $defined_categories[] = array(
+          'id'        => 1,
+          'name'      => array(
+            1 => 'Essential',
+            2 => 'Notwendig'
+          ),
+          'desc'      => array(
+            1 => 'Technically essential Cookies contribute to ensuring the basic functionalities of the website.',
+            2 => 'Technisch notwendige Cookies tragen dazu bei, grundlegende Funktionalitäten der Website zu gewährleisten.'
+          ),
+          'sort_order'=> 1,
+          'fixed'     => 1
+        );
+        // Functional
+        $defined_categories[] = array(
+          'id'        => 2,
+          'name'      => array(
+            1 => 'Functional',
+            2 => 'Funktional'
+          ),
+          'desc'      => array(
+            1 => 'Functional Cookies help make the user experience more pleasant.',
+            2 => 'Funktionale Cookies helfen, das Benutzererlebnis noch angenehmer zu machen.'
+          ),
+          'sort_order'=> 2,
+          'fixed'     => 1
+        );
+        // Statistics
+        $defined_categories[] = array(
+          'id'        => 3,
+          'name'      => array(
+            1 => 'Statistics',
+            2 => 'Statistik'
+          ),
+          'desc'      => array(
+            1 => 'Statistical Cookies help us understand how our website is being used and how we can improve it.',
+            2 => 'Statistik Cookies helfen uns zu verstehen, wie unsere Website verwendet wird und wie wir sie verbessern können.'
+          ),
+          'sort_order'=> 3,
+          'fixed'     => 1
+        );
+        // Marketing
+        $defined_categories[] = array(
+          'id'        => 4,
+          'name'      => array(
+            1 => 'Marketing',
+            2 => 'Marketing'
+          ),
+          'desc'      => array(
+            1 => 'Marketing Cookies help us adjust our marketing measures to the individual interests of our visitors.',
+            2 => 'Marketing Cookies helfen dabei, unsere Werbemaßnahmen auf die individuellen Interessen unserer Besucher abzustimmen.'
+          ),
+          'sort_order'=> 4,
+          'fixed'     => 1
+        );
       
-      foreach ($defined_categories as $row) {
-        foreach ($languages as $language_id => $language) {
-          if (array_key_exists($language_id, $row['name'])) {
-            $sql_data_array = array(
-              'categories_id' => $row['id'],
-              'categories_name' => decode_utf8($row['name'][$language_id], $language['language_charset']),
-              'categories_description' => decode_utf8($row['desc'][$language_id], $language['language_charset']),
-              'sort_order' => $row['sort_order'],
-              'languages_id' => $language_id,
-              'date_added' => 'now()',
-              'fixed' => $row['fixed']
-            );
-            xtc_db_perform(TABLE_COOKIE_CONSENT_CATEGORIES, $sql_data_array);
+        foreach ($defined_categories as $row) {
+          foreach ($languages as $language_id => $language) {
+            if (array_key_exists($language_id, $row['name'])) {
+              $sql_data_array = array(
+                'categories_id' => $row['id'],
+                'categories_name' => decode_utf8($row['name'][$language_id], $language['language_charset']),
+                'categories_description' => decode_utf8($row['desc'][$language_id], $language['language_charset']),
+                'sort_order' => $row['sort_order'],
+                'languages_id' => $language_id,
+                'date_added' => 'now()',
+                'fixed' => $row['fixed']
+              );
+              xtc_db_perform(TABLE_COOKIE_CONSENT_CATEGORIES, $sql_data_array);
+            }
           }
         }
       }
       
-      xtc_db_query("CREATE TABLE IF NOT EXISTS `".TABLE_COOKIE_CONSENT_COOKIES."` (
-                      `cookies_id` int(11) NOT NULL,
-                      `categories_id` int(11) NOT NULL,
-                      `cookies_name` varchar(128) NOT NULL,
-                      `cookies_description` text NOT NULL,
-                      `cookies_list` varchar(512) NOT NULL,
-                      `sort_order` int(11) NOT NULL DEFAULT '0',
-                      `languages_id` int(11) NOT NULL,
-                      `status` int(1) NOT NULL DEFAULT '1',
-                      `last_modified` datetime DEFAULT NULL,
-                      `date_added` datetime NOT NULL,
-                      `fixed` tinyint(1) NOT NULL DEFAULT '0',
-                      PRIMARY KEY (`cookies_id`,`languages_id`),
-                      KEY `idx_categories_id` (`categories_id`),
-                      KEY `idx_categories_multi` (`languages_id`,`categories_id`,`sort_order`)
-                    )");
+
+      $check_query = xtc_db_query("SHOW TABLES LIKE `".TABLE_COOKIE_CONSENT_COOKIES."`");
+      if (xtc_db_num_rows($check_query) < 1) {
+        xtc_db_query("CREATE TABLE `".TABLE_COOKIE_CONSENT_COOKIES."` (
+                        `cookies_id` int(11) NOT NULL,
+                        `categories_id` int(11) NOT NULL,
+                        `cookies_name` varchar(128) NOT NULL,
+                        `cookies_description` text NOT NULL,
+                        `cookies_list` varchar(512) NOT NULL,
+                        `sort_order` int(11) NOT NULL DEFAULT '0',
+                        `languages_id` int(11) NOT NULL,
+                        `status` int(1) NOT NULL DEFAULT '1',
+                        `last_modified` datetime DEFAULT NULL,
+                        `date_added` datetime NOT NULL,
+                        `fixed` tinyint(1) NOT NULL DEFAULT '0',
+                        PRIMARY KEY (`cookies_id`,`languages_id`),
+                        KEY `idx_categories_id` (`categories_id`),
+                        KEY `idx_categories_multi` (`languages_id`,`categories_id`,`sort_order`)
+                      )");
       
-      $defined_cookies = array();
-      // session cookie
-      $defined_cookies[] = array(
-        'id'        => 1,
-        'category'  => 1,
-        'name'      => array(
-          1 => 'Session Cookies',
-          2 => 'Session Cookies'
-        ),
-        'desc'      => array(
-          1 => 'A session cookie stores information that assigns online activities to a single browser session. The session cookie is usually deleted when the browser is closed.',
-          2 => 'Ein Session Cookie speichert Informationen, die Onlineaktivitäten einer einzelnen Browser-Sitzung zuordnen. Der Session Cookie wird in der Regel beim Schließen des Browsers wieder gelöscht.'
-        ),
-        'cookies'   => 'MODsid,PHPSESSID',
-        'sort_order'=> 1,
-        'status'    => 1,
-        'fixed'     => 1
-      );
-      // oil cookie
-      $defined_cookies[] = array(
-        'id'        => 2,
-        'category'  => 1,
-        'name'      => array(
-          1 => 'Cookies Setting',
-          2 => 'Cookie-Entscheidung'
-        ),
-        'desc'      => array(
-          1 => 'Necessary to save your cookie settings.',
-          2 => 'Notwendig, um Ihre Cookie-Entscheidung zu speichern.'
-        ),
-        'cookies'   => 'oil_data',
-        'sort_order'=> 2,
-        'status'    => 1,
-        'fixed'     => 1
-      );
-      // Google Analytics
-      $defined_cookies[] = array(
-        'id'        => 3,
-        'category'  => 3,
-        'name'      => array(
-          1 => 'Google Analytics',
-          2 => 'Google Analytics'
-        ),
-        'desc'      => array(
-          1 => "_ga,_gid: Contains a randomly generated user ID. Using this ID, Google Analytics can recognize returning users on this website and combine the data from previous visits.  _gat: Certain data is only sent to Google Analytics once a minute. The cookie has a lifespan of one minute. As long as it is set, certain data transfers are prevented.  _gali: This cookie is used by Google Analytics. It is used to anonymously record the clicked elements within a page.",
-          2 => "_ga,_gid: Enthält eine zufallsgenerierte User-ID. Anhand dieser ID kann Google Analytics wiederkehrende User auf dieser Website wiedererkennen und die Daten von früheren Besuchen zusammenführen.  _gat: Bestimmte Daten werden nur maximal einmal pro Minute an Google Analytics gesendet. Das Cookie hat eine Lebensdauer von einer Minute. Solange es gesetzt ist, werden bestimmte Datenübertragungen unterbunden.  _gali: Dieses Cookie wird von Google Analytics eingesetzt. Es dient zur anonymen Erfassung der angeklickten Elemente innerhalb einer Seite."
-        ),
-        'cookies'   => '_ga,_gid,_gat,_gali',
-        'sort_order'=> 1,
-        'status'    => 0,
-        'fixed'     => 1
-      );
-      // Google Analytics Classic
-      $defined_cookies[] = array(
-        'id'        => 4,
-        'category'  => 3,
-        'name'      => array(
-          1 => 'Google Analytics Classic',
-          2 => 'Google Analytics Classic'
-        ),
-        'desc'      => array(
-          1 => "__utma: Contains a randomly generated user ID. Using this ID, Google Analytics can recognize returning users on this website and combine the data from previous visits. __utmb: Contains a randomly generated session ID. This cookie has a storage time of only 30 minutes. All actions that a user takes on the website within this period of time are summarized in Google Analytics in a \"visit\" (a session). __utmt: Certain data is only sent to Google Analytics once every 10 minutes. The cookie has a lifespan of 10 minutes. As long as it is set, certain data transfers are prevented. __utmz: This cookie stores information about the source from which a user last came to the website.",
-          2 => "__utma: Enthält eine zufallsgenerierte User-ID. Anhand dieser ID kann Google Analytics wiederkehrende User auf dieser Website wiedererkennen und die Daten von früheren Besuchen zusammenführen. __utmb: Enthält eine zufallsgenerierte Session-ID. Dieses Cookie hat eine Speicherdauer von nur 30 Minuten. Alle Aktionen, die ein User innerhalb dieser Zeitspanne auf der Website tätigt, werden in Google Analytics zu einem \"Besuch\" (einer Session) zusammengefasst. __utmt: Bestimmte Daten werden nur maximal einmal pro 10 Minuten an Google Analytics gesendet. Das Cookie hat eine Lebensdauer von 10 Minuten. Solange es gesetzt ist, werden bestimmte Datenübertragungen unterbunden. __utmz: Dieses Cookie speichert Informationen darüber, aus welcher Quelle ein User zuletzt auf die Website gekommen ist."
-        ),
-        'cookies'   => '__utma,__utmb,__utmc,__utmt,__utmz,__utmv,__utmx',
-        'sort_order'=> 2,
-        'status'    => 0,
-        'fixed'     => 1
-      );
-      // PayPal
-      $defined_cookies[] = array(
-        'id'        => 5,
-        'category'  => 1,
-        'name'      => array(
-          1 => 'PayPal',
-          2 => 'PayPal'
-        ),
-        'desc'      => array(
-          1 => 'Is required for payment via PayPal.',
-          2 => 'Wird für die Zahlung via PayPal benötigt.'
-        ),
-        'cookies'   => 'paypal',
-        'sort_order'=> 3,
-        'status'    => 1,
-        'fixed'     => 1
-      );
-      // Facebook
-      $defined_cookies[] = array(
-        'id'        => 6,
-        'category'  => 4,
-        'name'      => array(
-          1 => 'Facebook',
-          2 => 'Facebook'
-        ),
-        'desc'      => array(
-          1 => 'Facebook',
-          2 => 'Facebook'
-        ),
-        'cookies'   => '_fbp',
-        'sort_order'=> 1,
-        'status'    => 0,
-        'fixed'     => 1
-      );
-      // Matomo (ehem. Piwik)
-      $defined_cookies[] = array(
-        'id'        => 7,
-        'category'  => 3,
-        'name'      => array(
-          1 => 'Matomo (ehem. Piwik)',
-          2 => 'Matomo (ehem. Piwik)'
-        ),
-        'desc'      => array(
-          1 => 'analyses and statistic',
-          2 => 'Besucher-Analyse und Statistik'
-        ),
-        'cookies'   => 'pk_ref,_pk_cvar,_pk_id,_pk_ses',
-        'sort_order'=> 3,
-        'status'    => 0,
-        'fixed'     => 1
-      );
-      // Google Conversion
-      $defined_cookies[] = array(
-        'id'        => 8,
-        'category'  => 4,
-        'name'      => array(
-          1 => 'Google Conversion',
-          2 => 'Google Conversion'
-        ),
-        'desc'      => array(
-          1 => '',
-          2 => ''
-        ),
-        'cookies'   => 'IDE,__gcl',
-        'sort_order'=> 2,
-        'status'    => 0,
-        'fixed'     => 1
-      );
-      // Readable Cookie
-      $defined_cookies[] = array(
-        'id'        => 9,
-        'category'  => 1,
-        'name'      => array(
-          1 => 'readable Cookies Setting',
-          2 => 'lesbare Cookie-Entscheidung'
-        ),
-        'desc'      => array(
-          1 => 'Necessary for external services like Google Tag Manager to get your cookie-decision',
-          2 => 'Benögtigt um externen Diensten wie dem Google-Tag-Manger Ihre Cookie-Entscheidung mitteilen zu können.'
-        ),
-        'cookies'   => 'MODOilTrack',
-        'sort_order'=> 4,
-        'status'    => 0,
-        'fixed'     => 1
-      );
+        $defined_cookies = array();
+        // session cookie
+        $defined_cookies[] = array(
+          'id'        => 1,
+          'category'  => 1,
+          'name'      => array(
+            1 => 'Session Cookies',
+            2 => 'Session Cookies'
+          ),
+          'desc'      => array(
+            1 => 'A session cookie stores information that assigns online activities to a single browser session. The session cookie is usually deleted when the browser is closed.',
+            2 => 'Ein Session Cookie speichert Informationen, die Onlineaktivitäten einer einzelnen Browser-Sitzung zuordnen. Der Session Cookie wird in der Regel beim Schließen des Browsers wieder gelöscht.'
+          ),
+          'cookies'   => 'MODsid,PHPSESSID',
+          'sort_order'=> 1,
+          'status'    => 1,
+          'fixed'     => 1
+        );
+        // oil cookie
+        $defined_cookies[] = array(
+          'id'        => 2,
+          'category'  => 1,
+          'name'      => array(
+            1 => 'Cookies Setting',
+            2 => 'Cookie-Entscheidung'
+          ),
+          'desc'      => array(
+            1 => 'Necessary to save your cookie settings.',
+            2 => 'Notwendig, um Ihre Cookie-Entscheidung zu speichern.'
+          ),
+          'cookies'   => 'oil_data',
+          'sort_order'=> 2,
+          'status'    => 1,
+          'fixed'     => 1
+        );
+        // Google Analytics
+        $defined_cookies[] = array(
+          'id'        => 3,
+          'category'  => 3,
+          'name'      => array(
+            1 => 'Google Analytics',
+            2 => 'Google Analytics'
+          ),
+          'desc'      => array(
+            1 => "_ga,_gid: Contains a randomly generated user ID. Using this ID, Google Analytics can recognize returning users on this website and combine the data from previous visits.  _gat: Certain data is only sent to Google Analytics once a minute. The cookie has a lifespan of one minute. As long as it is set, certain data transfers are prevented.  _gali: This cookie is used by Google Analytics. It is used to anonymously record the clicked elements within a page.",
+            2 => "_ga,_gid: Enthält eine zufallsgenerierte User-ID. Anhand dieser ID kann Google Analytics wiederkehrende User auf dieser Website wiedererkennen und die Daten von früheren Besuchen zusammenführen.  _gat: Bestimmte Daten werden nur maximal einmal pro Minute an Google Analytics gesendet. Das Cookie hat eine Lebensdauer von einer Minute. Solange es gesetzt ist, werden bestimmte Datenübertragungen unterbunden.  _gali: Dieses Cookie wird von Google Analytics eingesetzt. Es dient zur anonymen Erfassung der angeklickten Elemente innerhalb einer Seite."
+          ),
+          'cookies'   => '_ga,_gid,_gat,_gali',
+          'sort_order'=> 1,
+          'status'    => 0,
+          'fixed'     => 1
+        );
+        // Google Analytics Classic
+        $defined_cookies[] = array(
+          'id'        => 4,
+          'category'  => 3,
+          'name'      => array(
+            1 => 'Google Analytics Classic',
+            2 => 'Google Analytics Classic'
+          ),
+          'desc'      => array(
+            1 => "__utma: Contains a randomly generated user ID. Using this ID, Google Analytics can recognize returning users on this website and combine the data from previous visits. __utmb: Contains a randomly generated session ID. This cookie has a storage time of only 30 minutes. All actions that a user takes on the website within this period of time are summarized in Google Analytics in a \"visit\" (a session). __utmt: Certain data is only sent to Google Analytics once every 10 minutes. The cookie has a lifespan of 10 minutes. As long as it is set, certain data transfers are prevented. __utmz: This cookie stores information about the source from which a user last came to the website.",
+            2 => "__utma: Enthält eine zufallsgenerierte User-ID. Anhand dieser ID kann Google Analytics wiederkehrende User auf dieser Website wiedererkennen und die Daten von früheren Besuchen zusammenführen. __utmb: Enthält eine zufallsgenerierte Session-ID. Dieses Cookie hat eine Speicherdauer von nur 30 Minuten. Alle Aktionen, die ein User innerhalb dieser Zeitspanne auf der Website tätigt, werden in Google Analytics zu einem \"Besuch\" (einer Session) zusammengefasst. __utmt: Bestimmte Daten werden nur maximal einmal pro 10 Minuten an Google Analytics gesendet. Das Cookie hat eine Lebensdauer von 10 Minuten. Solange es gesetzt ist, werden bestimmte Datenübertragungen unterbunden. __utmz: Dieses Cookie speichert Informationen darüber, aus welcher Quelle ein User zuletzt auf die Website gekommen ist."
+          ),
+          'cookies'   => '__utma,__utmb,__utmc,__utmt,__utmz,__utmv,__utmx',
+          'sort_order'=> 2,
+          'status'    => 0,
+          'fixed'     => 1
+        );
+        // PayPal
+        $defined_cookies[] = array(
+          'id'        => 5,
+          'category'  => 1,
+          'name'      => array(
+            1 => 'PayPal',
+            2 => 'PayPal'
+          ),
+          'desc'      => array(
+            1 => 'Is required for payment via PayPal.',
+            2 => 'Wird für die Zahlung via PayPal benötigt.'
+          ),
+          'cookies'   => 'paypal',
+          'sort_order'=> 3,
+          'status'    => 1,
+          'fixed'     => 1
+        );
+        // Facebook
+        $defined_cookies[] = array(
+          'id'        => 6,
+          'category'  => 4,
+          'name'      => array(
+            1 => 'Facebook',
+            2 => 'Facebook'
+          ),
+          'desc'      => array(
+            1 => 'Facebook',
+            2 => 'Facebook'
+          ),
+          'cookies'   => '_fbp',
+          'sort_order'=> 1,
+          'status'    => 0,
+          'fixed'     => 1
+        );
+        // Matomo (ehem. Piwik)
+        $defined_cookies[] = array(
+          'id'        => 7,
+          'category'  => 3,
+          'name'      => array(
+            1 => 'Matomo (ehem. Piwik)',
+            2 => 'Matomo (ehem. Piwik)'
+          ),
+          'desc'      => array(
+            1 => 'analyses and statistic',
+            2 => 'Besucher-Analyse und Statistik'
+          ),
+          'cookies'   => 'pk_ref,_pk_cvar,_pk_id,_pk_ses',
+          'sort_order'=> 3,
+          'status'    => 0,
+          'fixed'     => 1
+        );
+        // Google Conversion
+        $defined_cookies[] = array(
+          'id'        => 8,
+          'category'  => 4,
+          'name'      => array(
+            1 => 'Google Conversion',
+            2 => 'Google Conversion'
+          ),
+          'desc'      => array(
+            1 => '',
+            2 => ''
+          ),
+          'cookies'   => 'IDE,__gcl',
+          'sort_order'=> 2,
+          'status'    => 0,
+          'fixed'     => 1
+        );
+        // Readable Cookie
+        $defined_cookies[] = array(
+          'id'        => 9,
+          'category'  => 1,
+          'name'      => array(
+            1 => 'readable Cookies Setting',
+            2 => 'lesbare Cookie-Entscheidung'
+          ),
+          'desc'      => array(
+            1 => 'Necessary for external services like Google Tag Manager to get your cookie-decision',
+            2 => 'Benögtigt um externen Diensten wie dem Google-Tag-Manger Ihre Cookie-Entscheidung mitteilen zu können.'
+          ),
+          'cookies'   => 'MODOilTrack',
+          'sort_order'=> 4,
+          'status'    => 0,
+          'fixed'     => 1
+        );
       
-      foreach ($defined_cookies as $row) {
-        foreach ($languages as $language_id => $language) {
-          if (array_key_exists($language_id, $row['name'])) {
-            $sql_data = array(
-              'cookies_id'          => $row['id'],
-              'categories_id'       => $row['category'],
-              'cookies_name'        => decode_utf8($row['name'][$language_id], $language['language_charset']),
-              'cookies_description' => decode_utf8($row['desc'][$language_id], $language['language_charset']),
-              'cookies_list'        => $row['cookies'],
-              'sort_order'          => $row['sort_order'],
-              'languages_id'        => $language_id,
-              'status'              => $row['status'],
-              'date_added'          => 'now()',
-              'fixed'               => $row['fixed']
-            );
-            xtc_db_perform(TABLE_COOKIE_CONSENT_COOKIES, $sql_data);
+        foreach ($defined_cookies as $row) {
+          foreach ($languages as $language_id => $language) {
+            if (array_key_exists($language_id, $row['name'])) {
+              $sql_data = array(
+                'cookies_id'          => $row['id'],
+                'categories_id'       => $row['category'],
+                'cookies_name'        => decode_utf8($row['name'][$language_id], $language['language_charset']),
+                'cookies_description' => decode_utf8($row['desc'][$language_id], $language['language_charset']),
+                'cookies_list'        => $row['cookies'],
+                'sort_order'          => $row['sort_order'],
+                'languages_id'        => $language_id,
+                'status'              => $row['status'],
+                'date_added'          => 'now()',
+                'fixed'               => $row['fixed']
+              );
+              xtc_db_perform(TABLE_COOKIE_CONSENT_COOKIES, $sql_data);
+            }
           }
         }
       }
@@ -367,18 +374,7 @@ if (!class_exists('cookie_consent')) {
     }
 
     function remove() {
-      xtc_db_query("DROP TABLE `".TABLE_COOKIE_CONSENT_COOKIES."`");
-      xtc_db_query("DROP TABLE `".TABLE_COOKIE_CONSENT_CATEGORIES."`");
       xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE `configuration_key` LIKE 'MODULE_COOKIE_CONSENT_%'");
-      
-      $query_result = xtc_db_query("SHOW COLUMNS FROM `" . TABLE_ADMIN_ACCESS . "`");
-      $db_table_rows = array();
-      while ($row = xtc_db_fetch_array($query_result)) {
-        $db_table_rows[] = $row['Field'];
-      }
-      if (in_array('cookie_consent', $db_table_rows)) {
-        xtc_db_query("ALTER TABLE `".TABLE_ADMIN_ACCESS."` DROP `cookie_consent`;");
-      }
     }
 
     function keys() {
