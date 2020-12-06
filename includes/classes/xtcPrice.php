@@ -163,7 +163,7 @@ class xtcPrice {
     }
     
     // add taxes
-    if ($pPrice == 0) {
+    if ((float)$pPrice == 0) {
       $pPrice = $this->getPprice($pID);
     }
     $pPrice = $this->xtcAddTax($pPrice, $products_tax);
