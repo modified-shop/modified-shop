@@ -91,14 +91,17 @@
           $cookie_list = implode(',',$cookie_list);
         }
         for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-          $sql_data_array = array('cookies_id' => $cookies_id,
-                                  'categories_id' => $oID,
-                                  'cookies_name' => xtc_db_prepare_input($_POST['cookies_name'][$languages[$i]['id']]),
-                                  'cookies_description' => xtc_db_prepare_input($_POST['cookies_description'][$languages[$i]['id']]),
-                                  'cookies_list' => $cookie_list,
-                                  'languages_id' => $languages[$i]['id'],
-                                  'sort_order' => (int)$_POST['sort_order'],
-                                  'date_added' => 'now()');
+          $sql_data_array = array(
+            'cookies_id' => $cookies_id,
+            'categories_id' => $oID,
+            'cookies_name' => xtc_db_prepare_input($_POST['cookies_name'][$languages[$i]['id']]),
+            'cookies_description' => xtc_db_prepare_input($_POST['cookies_description'][$languages[$i]['id']]),
+            'cookies_list' => $cookie_list,
+            'languages_id' => $languages[$i]['id'],
+            'sort_order' => (int)$_POST['sort_order'],
+            'fixed' => (int)$_POST['fixed'],
+            'date_added' => 'now()',
+          );
           xtc_db_perform(TABLE_COOKIE_CONSENT_COOKIES, $sql_data_array);
         }
 
@@ -116,13 +119,16 @@
           $cookie_list = implode(',',$cookie_list);
         }
         for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {     
-          $sql_data_array = array('cookies_id' => $vID,
-                                  'categories_id' => $oID,
-                                  'cookies_name' => xtc_db_prepare_input($_POST['cookies_name'][$languages[$i]['id']]),
-                                  'cookies_description' => xtc_db_prepare_input($_POST['cookies_description'][$languages[$i]['id']]),
-                                  'cookies_list' => $cookie_list,
-                                  'languages_id' => $languages[$i]['id'],
-                                  'sort_order' => (int)$_POST['sort_order']);
+          $sql_data_array = array(
+            'cookies_id' => $vID,
+            'categories_id' => $oID,
+            'cookies_name' => xtc_db_prepare_input($_POST['cookies_name'][$languages[$i]['id']]),
+            'cookies_description' => xtc_db_prepare_input($_POST['cookies_description'][$languages[$i]['id']]),
+            'cookies_list' => $cookie_list,
+            'languages_id' => $languages[$i]['id'],
+            'sort_order' => (int)$_POST['sort_order'],
+            'fixed' => (int)$_POST['fixed'],
+          );
           $values_description_query = xtc_db_query("SELECT * 
                                                       FROM ".TABLE_COOKIE_CONSENT_COOKIES." 
                                                      WHERE languages_id = '".$languages[$i]['id']."' 
@@ -263,14 +269,14 @@ require (DIR_WS_INCLUDES.'head.php');
                 <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
               <?php
-              $values_query_raw = "SELECT ptv.*
-                                     FROM " . TABLE_COOKIE_CONSENT_COOKIES . " ptv
-                                     JOIN " . TABLE_COOKIE_CONSENT_CATEGORIES . " pto
-                                          ON pto.categories_id = ptv.categories_id
-                                             AND pto.languages_id = '".(int)$_SESSION['languages_id']."'
-                                    WHERE ptv.categories_id = '".(int)$_GET['oID']."'
-                                      AND ptv.languages_id = '".(int)$_SESSION['languages_id']."'
-                                 ORDER BY ptv.sort_order, ptv.cookies_name";
+              $values_query_raw = "SELECT co.*
+                                     FROM " . TABLE_COOKIE_CONSENT_COOKIES . " co
+                                     JOIN " . TABLE_COOKIE_CONSENT_CATEGORIES . " ca
+                                          ON ca.categories_id = co.categories_id
+                                             AND ca.languages_id = '".(int)$_SESSION['languages_id']."'
+                                    WHERE co.categories_id = '".(int)$_GET['oID']."'
+                                      AND co.languages_id = '".(int)$_SESSION['languages_id']."'
+                                 ORDER BY co.sort_order, co.cookies_name";
               $values_split = new splitPageResults($_GET['spage'], $page_max_display_values_results, $values_query_raw, $values_query_numrows);
               $values_query = xtc_db_query($values_query_raw);
               while ($values = xtc_db_fetch_array($values_query)) {
@@ -380,7 +386,7 @@ require (DIR_WS_INCLUDES.'head.php');
                   case 'new_value':
                     $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_NEW_VALUE . '</b>');
 
-                    $contents = array('form' => xtc_draw_form('values', basename($PHP_SELF), 'page=' . (int)$_GET['page'] . '&oID=' . (int)$_GET['oID'] . '&action=list&spage=' . (int)$_GET['spage'] . '&vID=' . (int)$_GET['vID'] . '&saction=insert_values', 'post', 'enctype="multipart/form-data"'));
+                    $contents = array('form' => xtc_draw_form('values', basename($PHP_SELF), 'page=' . (int)$_GET['page'] . '&oID=' . (int)$_GET['oID'] . '&action=list&spage=' . (int)$_GET['spage'] . '&vID=' . (int)$_GET['vID'] . '&saction=insert_values').xtc_draw_hidden_field('fixed', xtc_get_cookies_categories_detail((int)$_GET['oID'], $languages[$i]['id'], 'fixed')));
                     $contents[] = array('text' => TEXT_INFO_NEW_VALUE_INTRO);
                     $contents[] = array('text' => '<br />' . TEXT_INFO_VALUE_NAME . '<br />');
                     for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
@@ -398,7 +404,7 @@ require (DIR_WS_INCLUDES.'head.php');
                   case 'edit_value':
                     $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_EDIT_VALUE . '</b>');
 
-                    $contents = array('form' => xtc_draw_form('values', basename($PHP_SELF), 'page=' . (int)$_GET['page'] . '&oID=' . (int)$_GET['oID'] . '&action=list&spage=' . (int)$_GET['spage'] . '&vID=' . $vInfo->cookies_id . '&saction=save_values', 'post', 'enctype="multipart/form-data"'));
+                    $contents = array('form' => xtc_draw_form('values', basename($PHP_SELF), 'page=' . (int)$_GET['page'] . '&oID=' . (int)$_GET['oID'] . '&action=list&spage=' . (int)$_GET['spage'] . '&vID=' . $vInfo->cookies_id . '&saction=save_values').xtc_draw_hidden_field('fixed', xtc_get_cookies_categories_detail((int)$_GET['oID'], $languages[$i]['id'], 'fixed')));
                     $contents[] = array('text' => TEXT_INFO_EDIT_VALUE_INTRO);
                     $contents[] = array('text' => '<br />' . TEXT_INFO_VALUE_NAME . '<br />');
                     for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
