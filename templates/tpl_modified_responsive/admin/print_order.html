@@ -90,9 +90,9 @@
     </div>
     <br class="clearfix" />
     {/if}
-    {if isset($vat_info)}
+    {if isset($vat_info) && $vat_info != 0}
       <br />
-      {#vat_info#}
+      {if $vat_info == 2}{#vat_info_2#}{else}{#vat_info#}{/if}
       <br class="clearfix" />
     {/if}
     {if $COMMENTS}
