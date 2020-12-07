@@ -41,7 +41,8 @@
 
   $smarty->assign('order_data', $order_data);
   $smarty->assign('order_total', $order_total['data']);
-
+  
+  $smarty->assign('vat_info', 0);
   if ($order->customer['vat_id'] != '' 
       && count($order_data) > 0
       && $order_data[0]['ALLOW_TAX'] == 0
@@ -55,6 +56,8 @@
         )
     {
       $smarty->assign('vat_info', 1);
+    } elseif ($order->delivery['country_iso_2'] != $store_country['countries_iso_code_2']) {
+      $smarty->assign('vat_info', 2);
     }
   }
 
