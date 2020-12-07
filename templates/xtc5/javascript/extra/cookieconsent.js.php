@@ -24,7 +24,7 @@ if (defined('MODULE_COOKIE_CONSENT_STATUS') && strtolower(MODULE_COOKIE_CONSENT_
     foreach ($lng->catalog_languages as $key => $value) {
       $lng_link_url = xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('language', 'currency')) . 'language=' . $key, $request_type);
       if ($lng_link_url != '#') {
-        $lang_links .= '<a class="as-oil-lang" href="' . $lng_link_url . '">' . $value['name'] . '</a>';
+        $lang_links .= "<a class='as-oil-lang' href='" . $lng_link_url . "'>" . $value['name'] . "</a>";
       }
     }
   }
