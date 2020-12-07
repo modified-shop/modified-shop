@@ -120,7 +120,7 @@ class xtcPrice {
    * @param Integer $cedit_id customer specify tax conditions
    * @return String/Array Price (if format = true both plain and formatted)
    */
-  function xtcGetPrice($pID, $format = true, $qty, $tax_class, $pPrice = 0, $vpeStatus = 0, $cedit_id = 0) {
+  function xtcGetPrice($pID, $format = true, $qty = 1, $tax_class = '', $pPrice = 0, $vpeStatus = 0, $cedit_id = 0) {
     
     $this->tax_class = $tax_class;
     

@@ -12,7 +12,7 @@
 
 require_once(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/lang/buttons_'.$_SESSION['language'].'.php');
 
-function css_button($image, $alt, $parameters = '', $submit) {
+function css_button($image, $alt, $parameters = '', $submit = false) {
   
   // default class for color 1
   $default_class = 'cssButtonColor1';
