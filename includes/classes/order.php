@@ -208,7 +208,11 @@
         // build products array dynamically
         $this->products[$index] = array();
         foreach ($orders_products as $key => $val) {
-          $this->products[$index][str_replace('products_', '', $key)] = $val;
+          if ($key == 'orders_products_id') {
+            $this->products[$index][$key] = $val;
+          } else {
+            $this->products[$index][str_replace('products_', '', $key)] = $val;
+          }
         }
         
         //new module support
