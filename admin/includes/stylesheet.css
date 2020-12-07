@@ -1484,6 +1484,7 @@ border-width: 1px;
 box-sizing: border-box;
 color: #000;
 padding: 6px 4px;
+width: 100%;
 }
 select {
 /*-webkit-appearance: menulist-button;*/
