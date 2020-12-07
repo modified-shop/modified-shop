@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: cookie_consent.js.php $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -64,7 +64,7 @@
           $response['categories'][] = array(
             'id' => (int)$options['categories_id'],
             'name' => encode_htmlentities($options['categories_name'], ENT_COMPAT, $lng->language['language_charset']),
-            'description' => encode_htmlentities($options['categories_description'], ENT_COMPAT, $lng->language['language_charset']),
+            'description' => nl2br(encode_htmlentities($options['categories_description'], ENT_COMPAT, $lng->language['language_charset'])),
             'value' => $options['categories_id'] == 1 ? true : false,
             'locked' => $options['categories_id'] == 1 ? true : false
           );
@@ -77,7 +77,7 @@
           $response['purposes'][] = array(
             'id' => (int)$value['cookies_id'],
             'name' => encode_htmlentities($value['cookies_name'], ENT_COMPAT, $lng->language['language_charset']),
-            'description' => encode_htmlentities($value['cookies_description'], ENT_COMPAT, $lng->language['language_charset']),
+            'description' => nl2br(encode_htmlentities($value['cookies_description'], ENT_COMPAT, $lng->language['language_charset'])),
             'category' => (int)$cat,
             'value' => $cat == 1 ? true : false
           );
