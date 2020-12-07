@@ -37,7 +37,7 @@
 .as-oil-l-item{float:right;clear:both;text-align:right}
 .as-oil-l-item:first-of-type{margin-left:0}
 .as-oil-l-item:last-of-type{margin-right:0}
-
+.as-oil-lang{float:left;}
 
 #oil-preference-center{overflow:hidden}
 #oil-preference-center .as-oil-back-button{display:none}
