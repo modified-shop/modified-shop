@@ -692,7 +692,7 @@ class xtcPrice {
    * @param integer $vpeStatus
    * @return unknown
    */
-  function xtcFormatSpecialDiscount($pID, $discount, $pPrice, $format, $vpeStatus = 0, $qty = 1) {
+  function xtcFormatSpecialDiscount($pID, $discount, $pPrice, $format, $vpeStatus, $qty = 1) {
     $sPrice = $this->xtcFormat($pPrice - ($pPrice / 100) * $discount, false) * $qty;
     if ($format) {
       $old_price = $this->xtcFormat($pPrice * $qty, $format);
@@ -747,7 +747,7 @@ class xtcPrice {
    * @param integer $vpeStatus
    * @return unknown
    */
-  function xtcFormatSpecial($pID, $sPrice, $pPrice, $format, $vpeStatus = 0) {
+  function xtcFormatSpecial($pID, $sPrice, $pPrice, $format, $vpeStatus) {
     if ($format) {      
       if (!isset($pPrice) || $pPrice == 0) {
         $discount = 0;
@@ -805,7 +805,7 @@ class xtcPrice {
    * @param integer $pID
    * @return unknown
    */
-  function xtcFormatSpecialGraduated($pID, $sPrice, $pPrice, $format, $vpeStatus = 0, $tax_class) {
+  function xtcFormatSpecialGraduated($pID, $sPrice, $pPrice, $format, $vpeStatus, $tax_class) {
     if ($pPrice == 0) {
       return $this->xtcFormat($sPrice, $format, 0, false, $vpeStatus);
     }
@@ -886,7 +886,7 @@ class xtcPrice {
    * @param integer $vpeStatus
    * @return unknown
    */
-  function xtcFormatExtension($pID, $ePrice, $pPrice, $format, $vpeStatus = 0) {
+  function xtcFormatExtension($pID, $ePrice, $pPrice, $format, $vpeStatus) {
     if ($format) {      
       $from = $this->checkAttributes($pID);
       $price = $this->xtcFormat($ePrice, $format);;
