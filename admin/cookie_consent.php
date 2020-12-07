@@ -30,15 +30,18 @@
       $cookies_detail_array = array();
     }
     
-    if (!isset($cookies_detail_array[$cookies_id][$languages_id])) {
+    if (!isset($cookies_detail_array[$cookies_id])) {
       $values_query = xtc_db_query("SELECT *
                                       FROM ".TABLE_COOKIE_CONSENT_COOKIES."
-                                     WHERE cookies_id = '".$cookies_id."'
-                                       AND languages_id = '".$languages_id."'");
-      $cookies_detail_array[$cookies_id][$languages_id] = xtc_db_fetch_array($values_query);
+                                     WHERE cookies_id = '".$cookies_id."'");
+      while ($values = xtc_db_fetch_array($values_query)) {
+        $cookies_detail_array[$cookies_id][$values['languages_id']] = $values;
+      }
     }
     
-    return $cookies_detail_array[$cookies_id][$languages_id][$db_field];
+    if (isset($cookies_detail_array[$cookies_id][$languages_id])) {
+      return $cookies_detail_array[$cookies_id][$languages_id][$db_field];
+    }
   }
 
   function xtc_get_cookies_categories_detail($categories_id, $languages_id, $db_field) {
@@ -48,15 +51,18 @@
       $cookies_categories_detail_array = array();
     }
     
-    if (!isset($cookies_categories_detail_array[$categories_id][$languages_id])) {
+    if (!isset($cookies_categories_detail_array[$categories_id])) {
       $options_query = xtc_db_query("SELECT *
                                        FROM ".TABLE_COOKIE_CONSENT_CATEGORIES."
-                                      WHERE categories_id = '".$categories_id."'
-                                        AND languages_id = '".$languages_id."'");
-      $cookies_categories_detail_array[$categories_id][$languages_id] = xtc_db_fetch_array($options_query);
+                                      WHERE categories_id = '".$categories_id."'");
+      while ($options = xtc_db_fetch_array($options_query)) {
+        $cookies_categories_detail_array[$categories_id][$options['languages_id']] = $options;
+      }
     }
     
-    return $cookies_categories_detail_array[$categories_id][$languages_id][$db_field];
+    if (isset($cookies_categories_detail_array[$categories_id][$languages_id])) {
+      return $cookies_categories_detail_array[$categories_id][$languages_id][$db_field];
+    }
   }
 
   function update_cookie_consent_version_data() {
