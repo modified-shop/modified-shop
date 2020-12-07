@@ -99,7 +99,6 @@
             'cookies_list' => $cookie_list,
             'languages_id' => $languages[$i]['id'],
             'sort_order' => (int)$_POST['sort_order'],
-            'fixed' => (int)$_POST['fixed'],
             'date_added' => 'now()',
           );
           xtc_db_perform(TABLE_COOKIE_CONSENT_COOKIES, $sql_data_array);
@@ -127,7 +126,6 @@
             'cookies_list' => $cookie_list,
             'languages_id' => $languages[$i]['id'],
             'sort_order' => (int)$_POST['sort_order'],
-            'fixed' => (int)$_POST['fixed'],
           );
           $values_description_query = xtc_db_query("SELECT * 
                                                       FROM ".TABLE_COOKIE_CONSENT_COOKIES." 
@@ -138,9 +136,17 @@
             xtc_db_perform(TABLE_COOKIE_CONSENT_COOKIES, $sql_data_array);
           } else {
             $sql_data_array['last_modified'] = 'now()';
+            $check_query = xtc_db_query("SELECT *
+                                           FROM ".TABLE_COOKIE_CONSENT_COOKIES."
+                                          WHERE cookies_id = '".$vID."'
+                                            AND fixed = 1");
+            if (xtc_db_num_rows($check_query) > 0) {
+              $sql_data_array['fixed'] = 1;
+            }
             xtc_db_perform(TABLE_COOKIE_CONSENT_COOKIES, $sql_data_array, 'update', "cookies_id = '".$vID."' AND languages_id = '".$languages[$i]['id']."'");                    
           }      
         }
+
 
         update_cookie_consent_version_data();
         xtc_redirect(xtc_href_link(basename($PHP_SELF), 'page=' . (int)$_GET['page'] . '&oID=' . $oID . '&action=list&spage=' . (int)$_GET['spage'] . '&vID=' . $vID));
@@ -201,6 +207,13 @@
             xtc_db_perform(TABLE_COOKIE_CONSENT_CATEGORIES, $sql_data_array);
           } else {
             $sql_data_array['last_modified'] = 'now()';
+            $check_query = xtc_db_query("SELECT *
+                                           FROM ".TABLE_COOKIE_CONSENT_CATEGORIES."
+                                          WHERE categories_id = '".$oID."'
+                                            AND fixed = 1");
+            if (xtc_db_num_rows($check_query) > 0) {
+              $sql_data_array['fixed'] = 1;
+            }
             xtc_db_perform(TABLE_COOKIE_CONSENT_CATEGORIES, $sql_data_array, 'update', "categories_id = '".$oID."' AND languages_id = '".$languages[$i]['id']."'");                    
           }
         }
@@ -386,7 +399,7 @@ require (DIR_WS_INCLUDES.'head.php');
                   case 'new_value':
                     $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_NEW_VALUE . '</b>');
 
-                    $contents = array('form' => xtc_draw_form('values', basename($PHP_SELF), 'page=' . (int)$_GET['page'] . '&oID=' . (int)$_GET['oID'] . '&action=list&spage=' . (int)$_GET['spage'] . '&vID=' . (int)$_GET['vID'] . '&saction=insert_values').xtc_draw_hidden_field('fixed', xtc_get_cookies_categories_detail((int)$_GET['oID'], $languages[$i]['id'], 'fixed')));
+                    $contents = array('form' => xtc_draw_form('values', basename($PHP_SELF), 'page=' . (int)$_GET['page'] . '&oID=' . (int)$_GET['oID'] . '&action=list&spage=' . (int)$_GET['spage'] . '&vID=' . (int)$_GET['vID'] . '&saction=insert_values'));
                     $contents[] = array('text' => TEXT_INFO_NEW_VALUE_INTRO);
                     $contents[] = array('text' => '<br />' . TEXT_INFO_VALUE_NAME . '<br />');
                     for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
@@ -404,7 +417,7 @@ require (DIR_WS_INCLUDES.'head.php');
                   case 'edit_value':
                     $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_EDIT_VALUE . '</b>');
 
-                    $contents = array('form' => xtc_draw_form('values', basename($PHP_SELF), 'page=' . (int)$_GET['page'] . '&oID=' . (int)$_GET['oID'] . '&action=list&spage=' . (int)$_GET['spage'] . '&vID=' . $vInfo->cookies_id . '&saction=save_values').xtc_draw_hidden_field('fixed', xtc_get_cookies_categories_detail((int)$_GET['oID'], $languages[$i]['id'], 'fixed')));
+                    $contents = array('form' => xtc_draw_form('values', basename($PHP_SELF), 'page=' . (int)$_GET['page'] . '&oID=' . (int)$_GET['oID'] . '&action=list&spage=' . (int)$_GET['spage'] . '&vID=' . $vInfo->cookies_id . '&saction=save_values'));
                     $contents[] = array('text' => TEXT_INFO_EDIT_VALUE_INTRO);
                     $contents[] = array('text' => '<br />' . TEXT_INFO_VALUE_NAME . '<br />');
                     for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
