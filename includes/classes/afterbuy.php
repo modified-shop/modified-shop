@@ -503,10 +503,10 @@ class xtc_afterbuy_functions {
       case 'paypalclassic':
       case 'paypallink':
       case 'paypalpluslink':
+      case 'paypalsubscription':
         $this->payment_id   = '5';
         $this->payment_name = "Paypal";
         break;
-
       case 'sofort_sofortueberweisung_gateway':
       case 'sofort_sofortueberweisung_classic':
         $this->payment_id   = '12';
