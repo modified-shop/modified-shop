@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<klarna>
-    <string id="invoice">
-        <fi>lasku</fi>
-        <sv>faktura</sv>
-        <de>rechnung</de>
-    </string>
-</klarna>

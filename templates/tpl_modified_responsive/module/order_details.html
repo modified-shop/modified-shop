@@ -88,7 +88,6 @@
   {if isset($FREE_SHIPPING_INFO)}{$FREE_SHIPPING_INFO}{/if}
 
   {*if $TOTAL_WEIGHT}<br />{#text_total_weight#} {$TOTAL_WEIGHT|number_format:2:",":"."} kg{/if*}
-  {if $KLARNA_PPBOX}<div class="karna_container cf">{$KLARNA_PPBOX}</div>{/if}
   {if $PAYPAL_INSTALLMENT}{$PAYPAL_INSTALLMENT}{/if}
 </div>
 <div class="clearer"></div>
