@@ -12,9 +12,7 @@
 
 $lang_array = array(
   'MODULE_PAYMENT_'.$klarna_code.'_TEXT_TITLE' => '',
-  'MODULE_PAYMENT_'.$klarna_code.'_TEXT_DESCRIPTION' => '<img src="../lang/german/admin/images/icon.gif" border="0" />
-    <a href="https://www.klarna.com/de/verkaeufer/" target="_blank" style="text-decoration: underline; font-weight: bold;">Jetzt Klarna Konto hier erstellen.</a>
-    <img src="images/icon_popup.gif" border="0" />',
+  'MODULE_PAYMENT_'.$klarna_code.'_TEXT_DESCRIPTION' => 'Bevor Sie die Klarna Payments Zahlungsarten einrichten können, ist die <a href="https://www.klarna.com/de/verkaeufer/" target="_blank" style="text-decoration: underline; font-weight: bold;">Eröffnung eines Kontos für Händler bei Klarna</a><img src="images/icon_popup.gif" border="0" /> erforderlich. Sie erhalten im Anschluss Informationen sowie Zugangsdaten, die Sie für das Einrichten benötigen. Sollten sie bereits eine Kundennummer bei Klarna haben, diese aber nicht nach Schema Kxxxxxx ist, senden Sie bitte eine E-Mail an <a href="mailto:vertrieb@klarna.com">vertrieb@klarna.com</a>.',
   'MODULE_PAYMENT_'.$klarna_code.'_TEXT_INFO' => '',
   'MODULE_PAYMENT_'.$klarna_code.'_ALLOWED_TITLE' => 'Erlaubte Zonen',
   'MODULE_PAYMENT_'.$klarna_code.'_ALLOWED_DESC' => 'Geben Sie <b>einzeln</b> die Zonen an, welche f&uuml;r dieses Modul erlaubt sein sollen. (z.B. AT,DE (wenn leer, werden alle Zonen erlaubt))',

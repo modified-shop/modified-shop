@@ -12,7 +12,9 @@
 
 $lang_array = array(
   'MODULE_PAYMENT_'.$klarna_code.'_TEXT_TITLE' => '',
-  'MODULE_PAYMENT_'.$klarna_code.'_TEXT_DESCRIPTION' => '<img src="../lang/english/admin/images/icon.gif" border="0" />
+  'MODULE_PAYMENT_'.$klarna_code.'_TEXT_DESCRIPTION' => 'Before you can set up the Klarna Payments payment methods, you must <a href="https://www.klarna.com/uk/business/" target="_blank" style="text-decoration: underline; font-weight: bold;">open an account for merchants with Klarna</a><img src="images/icon_popup.gif" border="0" />. You will then receive information and access data that you need for the setup. If you already have a Klarna customer number, but it is not Kxxxxxx, please send an email to <a href="mailto:vertrieb@klarna.com"> vertrieb@klarna.com</a>.
+  
+  <img src="../lang/english/admin/images/icon.gif" border="0" />
     <a href="https://www.klarna.com/uk/business/" target="_blank" style="text-decoration: underline; font-weight: bold;">Create Klarna account now.</a>
     <img src="images/icon_popup.gif" border="0" />',
   'MODULE_PAYMENT_'.$klarna_code.'_TEXT_INFO' => '',
