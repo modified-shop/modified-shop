@@ -12,7 +12,7 @@
 
 $lang_array = array(
   'MODULE_PAYMENT_'.$klarna_code.'_TEXT_TITLE' => '',
-  'MODULE_PAYMENT_'.$klarna_code.'_TEXT_DESCRIPTION' => 'Bevor Sie die Klarna Payments Zahlungsarten einrichten k&ouml;nnen, ist die Er&ouml;ffnung eines Kontos f&uuml;r H&auml;ndler bei Klarna erforderlich. Sie erhalten im Anschluss Informationen sowie Zugangsdaten, die Sie f&uuml;r das Einrichten ben&ouml;tigen. Sollten Sie bereits eine Kundennummer bei Klarna haben, diese aber nicht nach Schema Kxxxxxx ist, senden Sie bitte eine E-Mail an <a href="mailto:vertrieb@klarna.com">vertrieb@klarna.com</a>.
+  'MODULE_PAYMENT_'.$klarna_code.'_TEXT_DESCRIPTION' => 'Bevor Sie die Klarna Payments Zahlungsarten einrichten k&ouml;nnen, ist die Er&ouml;ffnung eines Kontos f&uuml;r H&auml;ndler bei Klarna erforderlich. Sie erhalten im Anschluss Informationen sowie Zugangsdaten, die Sie f&uuml;r das Einrichten ben&ouml;tigen. Sollten Sie bereits eine Kundennummer bei Klarna haben, diese aber nicht nach Schema Kxxxxxx ist, senden Sie bitte eine E-Mail an <a href="mailto:vertrieb@klarna.com">vertrieb@klarna.com</a>.<br /><br />
     <img src="../lang/german/admin/images/icon.gif" border="0" />
     <a href="https://www.klarna.com/de/verkaeufer/" target="_blank" style="text-decoration: underline; font-weight: bold;">Jetzt Klarna Konto hier erstellen.</a>
     <img src="images/icon_popup.gif" border="0" />',
