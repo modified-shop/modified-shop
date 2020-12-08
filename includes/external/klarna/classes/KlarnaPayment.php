@@ -44,8 +44,8 @@ class KlarnaPayment extends KlarnaPaymentBase {
 
     KlarnaPaymentBase::init();
 
-    $this->merchant_id = MODULE_PAYMENT_KLARNA_MERCHANT_ID;
-    $this->shared_secret = MODULE_PAYMENT_KLARNA_SHARED_SECRET;
+    $this->merchant_id = ((defined('MODULE_PAYMENT_KLARNA_MERCHANT_ID')) ? MODULE_PAYMENT_KLARNA_MERCHANT_ID : '');
+    $this->shared_secret = ((defined('MODULE_PAYMENT_KLARNA_SHARED_SECRET')) ? MODULE_PAYMENT_KLARNA_SHARED_SECRET : '');;
     
     if (MODULE_PAYMENT_KLARNA_MODE == 'LIVE') {
       $this->api_endpoint = Klarna\Rest\Transport\ConnectorInterface::EU_BASE_URL;
