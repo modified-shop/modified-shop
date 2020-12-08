@@ -34,7 +34,4 @@ ALTER TABLE `banners` MODIFY `banners_group` VARCHAR(32) NOT NULL;
 #GTB - 2020-11-24 - account password security
 ALTER TABLE `customers` ADD `customers_password_time` INT(11) DEFAULT 0 NOT NULL;
 
-#GTB - 2020-12-08 - remove klarna_check_orderstatus
-ALTER TABLE `admin_access` DROP `klarna_check_orderstatus`;
-
 # Keep an empty line at the end of this file for the db_updater to work properly
