@@ -122,6 +122,7 @@
         case 'paypallink':
         case 'paypalplus':
         case 'paypalpluslink':
+        case 'paypalsubscription':
         case 'payone_wlt':
           $paymenttype = 'PAYPAL';
           break;
@@ -139,6 +140,7 @@
         case 'eustandardtransfer':
         case 'mcp_prepay':
         case 'payone_prepay':
+        case 'klarna_directdebit':
           $paymenttype = 'PREPAYMENT';
           break;
         case 'cash':
@@ -150,10 +152,11 @@
           break;
         case 'invoice':
         case 'billpay':
-        case 'klarna_invoice':
+        case 'klarna_paylater':
         case 'payone_invoice':
           $paymenttype = 'INVOICE';
           break;
+        case 'klarna_directbanktransfer':
         case 'sofort_sofortueberweisung_classic':
         case 'sofort_sofortueberweisung_gateway':
         case 'mcp_ebank2pay':
@@ -176,11 +179,10 @@
           break;
         case 'billpaypaylater':
         case 'billpaytransactioncredit':
-        case 'klarna_partPayment':
+        case 'klarna_payovertime':
         case 'payone_installment':
           $paymenttype = 'FINANCING';
           break;
-        case 'klarna_SpecCamp':
         case 'payone_otrans':
         case 'shopgate':
         case 'sofort_ideal':
