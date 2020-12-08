@@ -43,7 +43,7 @@ class paypalcart extends PayPalPayment {
   
   
   function pre_confirmation_check() {
-    global $order, $smarty, $total_weight, $total_count, $free_shipping;
+    global $order, $smarty, $total_weight, $total_count, $free_shipping, $messageStack;
     
     if (isset($_SESSION['shipping'])) {
       $shipping = $_SESSION['shipping'];
