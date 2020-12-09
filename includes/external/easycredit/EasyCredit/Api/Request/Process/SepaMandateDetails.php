@@ -17,7 +17,7 @@ class SepaMandateDetails extends AbstractRequest implements RequestInterface
     /**
      * @var string
      */
-    protected $path = '/vorgang/%s/zustimmung/sepa';
+    protected $path = '/v2/vorgang/%s/zustimmung/sepa';
 
     /**
      * @var string

@@ -17,7 +17,7 @@ class PlanGet extends AbstractRequest implements RequestInterface
     /**
      * @var string
      */
-    protected $path = '/modellrechnung/durchfuehren';
+    protected $path = '/v2/modellrechnung/durchfuehren';
 
     /**
      * @var string

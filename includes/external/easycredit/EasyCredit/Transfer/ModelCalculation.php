@@ -23,6 +23,8 @@ class ModelCalculation extends AbstractObject
      * @apiName repraesentativesBeispiel
      */
     protected $representativeExample;
+    
+    
 
     /**
      * @return InstallmentPlanCollection

@@ -23,7 +23,7 @@ class ResidualAmountPurchaseLimit extends AbstractRequest implements RequestInte
     /**
      * @var string
      */
-    protected $path = '/webshop/%s/restbetragankaufobergrenze';
+    protected $path = '/v1/webshop/%s/restbetragankaufobergrenze';
 
     /**
      * @var string

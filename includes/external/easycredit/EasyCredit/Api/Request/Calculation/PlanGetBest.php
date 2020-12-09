@@ -17,7 +17,7 @@ class PlanGetBest extends AbstractRequest implements RequestInterface
     /**
      * @var string
      */
-    protected $path = '/modellrechnung/guenstigsterRatenplan';
+    protected $path = '/v2/modellrechnung/guenstigsterRatenplan';
 
     /**
      * @var string

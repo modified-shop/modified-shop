@@ -23,7 +23,7 @@ class GetCommonProcessData extends AbstractRequest implements RequestInterface
     /**
      * @var string
      */
-    protected $path = '/vorgang/%s';
+    protected $path = '/v2/vorgang/%s';
     
     /**
      * @var string

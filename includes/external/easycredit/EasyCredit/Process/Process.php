@@ -15,6 +15,10 @@ use EasyCredit\Transfer\ProcessInitialize;
 use EasyCredit\Transfer\ProcessSave;
 use EasyCredit\Transfer\ProcessSaveInput;
 use EasyCredit\Transfer\TechnicalShopParams;
+use EasyCredit\Process\Validator\MTanValidator;
+use EasyCredit\Transfer\ProcessVerifyMTan;
+use EasyCredit\Transfer\GetCommonProcessDataResponse;
+use EasyCredit\Transfer\ProcessConfirm;
 
 /**
  * Class Process
@@ -142,12 +146,13 @@ class Process extends MessageCollector
 
     /**
      * @param string $expectedStatus
+     * @param string $integrationType
      * @throws Exception\InvalidTransitionException
      */
-    protected function checkExpectedStatus($expectedStatus)
+    protected function checkExpectedStatus($expectedStatus, $integrationType = ProcessInitialize::INTEGRATION_TYPE_PAYMENT_PAGE)
     {
         // Check transition
-        if (!Status::isValidTransition($this->processData->getStatus(), $expectedStatus)) {
+        if (!Status::isValidTransition($this->processData->getStatus(), $expectedStatus, $integrationType)) {
             throw new Exception\InvalidTransitionException(
                 "The transition"
                 ." from status ".$this->processData->getStatus()
@@ -161,18 +166,21 @@ class Process extends MessageCollector
      * Initializes the EC process.
      * @param string $integrationType
      * @param TechnicalShopParams $shopParams
-     * @return boolean
+     * @param string $processIdentifierShop
+     * @return boolean|ProcessInitializeResponse
+     * 
+     * @throws Exception\InvalidTransitionException
      */
-    public function initialize($integrationType, TechnicalShopParams $shopParams = null)
+    public function initialize(string $integrationType, TechnicalShopParams $shopParams = null, $processIdentifierShop = null)
     {
         $this->clearMessages();
         $targetStatus = Status::INITIALIZED;
-        $this->checkExpectedStatus($targetStatus);
+        $this->checkExpectedStatus($targetStatus, $integrationType);
 
         $this->getEventHandlerRegistry()->fire('beforeInitialize');
         // Create process data
-        $processInitialize = $this->createProcessInitialize($integrationType, $shopParams);
-
+        $processInitialize = $this->createProcessInitialize($integrationType, $shopParams, $processIdentifierShop);
+        
         // validate process data
         $initializeValidator = new InitializeValidator($this->getProcessData());
         if (!$initializeValidator->validate()) {
@@ -205,12 +213,12 @@ class Process extends MessageCollector
                 $this->processData->save();
                 $this->initialize();
 
-                return false;
+                return $processInitializeResponse;
             }
         }
 
         if ($error || $processInitializeResponse->getTbProcessIdentifier() === null) {
-            return false;
+            return $processInitializeResponse;
         }
         // Process response
         $this->processData->setTbaId($processInitializeResponse->getTbProcessIdentifier());
@@ -223,14 +231,18 @@ class Process extends MessageCollector
 
         $this->getEventHandlerRegistry()->fire('afterInitialize');
 
-        return true;
+        return $processInitializeResponse;
     }
 
-    public function updateSepa()
+    /**
+     * @param string $integrationType
+     * @return boolean
+     */
+    public function updateSepa($integrationType)
     {
         $this->clearMessages();
         $targetStatus = Status::SAVED;
-        $this->checkExpectedStatus($targetStatus);
+        $this->checkExpectedStatus($targetStatus, $integrationType);
         // validate process data
         $updateSepaValidator = new UpdateSepaValidator($this->getProcessData());
         if (!$updateSepaValidator->validate()) {
@@ -298,7 +310,11 @@ class Process extends MessageCollector
         return false;
     }
 
-    public function update()
+    /**
+     * @param string $integrationType
+     * @return boolean|\EasyCredit\Transfer\BaseResponse
+     */
+    public function update($integrationType)
     {
         if ($this->validHash()) {
             return true;
@@ -308,7 +324,7 @@ class Process extends MessageCollector
 
         $this->clearMessages();
         $targetStatus = Status::SAVED;
-        $this->checkExpectedStatus($targetStatus);
+        $this->checkExpectedStatus($targetStatus, $integrationType);
 
         $this->getEventHandlerRegistry()->fire('beforeUpdate');
 
@@ -332,7 +348,7 @@ class Process extends MessageCollector
         $processInitializeResponse = $this->apiClient->update($this->getProcessData()->getTbaId(), $processSave);
 
         if ($processInitializeResponse->getUuid() === null) {
-            return false;
+            return $processInitializeResponse;
         }
 
         $messages = $processInitializeResponse->getMessages();
@@ -348,7 +364,7 @@ class Process extends MessageCollector
                 $this->processData->save();
                 $this->initialize();
 
-                return false;
+                return $processInitializeResponse;
             }
         }
 
@@ -356,7 +372,7 @@ class Process extends MessageCollector
             $this->getEventHandlerRegistry()->fire('errorUpdate');
             $this->processData->save();
 
-            return false;
+            return $processInitializeResponse;
         }
 
         // Process response
@@ -365,10 +381,14 @@ class Process extends MessageCollector
 
         $this->getEventHandlerRegistry()->fire('afterUpdate');
 
-        return true;
+        return $processInitializeResponse;
     }
 
-    public function decide()
+    /**
+     * @param string $integrationType
+     * @return boolean|\EasyCredit\Transfer\DecisionResponse
+     */
+    public function decide($integrationType)
     {
         $this->clearMessages();
         $targetStatus = Status::ACCEPTED;
@@ -379,7 +399,7 @@ class Process extends MessageCollector
             return true;
         }
 
-        $this->checkExpectedStatus($targetStatus);
+        $this->checkExpectedStatus($targetStatus, $integrationType);
 
         $this->getEventHandlerRegistry()->fire('beforeDecide');
 
@@ -408,7 +428,7 @@ class Process extends MessageCollector
         }
 
         if ($success === false) {
-            return false;
+            return $processDecideResponse;
         }
 
         // Process response
@@ -418,16 +438,17 @@ class Process extends MessageCollector
 
         $this->getEventHandlerRegistry()->fire('afterInitialize');
 
-        return true;
+        return $processDecideResponse;
     }
 
     /**
      * Internal helper function to prepare the initialize process
      * @param string $integrationType
      * @param TechnicalShopParams $shopParams
+     * @param string $processIdentifierShop
      * @return ProcessInitialize
      */
-    protected function createProcessInitialize($integrationType, TechnicalShopParams $shopParams = null)
+    protected function createProcessInitialize($integrationType, TechnicalShopParams $shopParams = null, $processIdentifierShop = null)
     {
         // Prepare initialize process transfer objects
         $processInitialize = new ProcessInitialize();
@@ -439,6 +460,9 @@ class Process extends MessageCollector
         if (!$this->getProcessData()->getCustomer()->getContact()->isEmpty()) {
             $processInitialize->setContact($this->getProcessData()->getCustomer()->getContact());
         }
+        if($integrationType == ProcessInitialize::INTEGRATION_TYPE_SERVICE_INTEGRATION) {
+            $processInitialize->setEmploymentData($this->getProcessData()->getCustomer()->getEmploymentData());
+        }
         $processInitialize->setDeliveryAddress($this->processData->getDeliveryAddress());
         $processInitialize->setAmount($this->processData->getOrderTotal());
         $processInitialize->setShopId($this->apiClient->getShopId());
@@ -449,6 +473,9 @@ class Process extends MessageCollector
         $processInitialize->setIntegrationType($integrationType);
         if (null != $shopParams) {
             $processInitialize->setTechnicalShopParams($shopParams);
+        }
+        if (null != $processIdentifierShop) {
+            $processInitialize->setProcessIdentifierShop($processIdentifierShop);
         }
         
         return $processInitialize;
@@ -478,15 +505,19 @@ class Process extends MessageCollector
     }
 
     /**
-     * @return bool
+     * @param string $integrationType
+     * @param string $processIdentifierShop
+     * @return \EasyCredit\Transfer\TransferInterface
      */
-    public function agree()
+    public function agree($integrationType, $processIdentifierShop = null)
     {
         $this->clearMessages();
-        $this->checkExpectedStatus(Status::CONFIRMED);
+        $this->checkExpectedStatus(Status::CONFIRMED, $integrationType);
+        
+        $processConfirm = $this->createProcessConfirm($processIdentifierShop);
 
-        $this->getEventHandlerRegistry()->fire('beforeDecide');
-        $agreeResponse = $this->apiClient->agreeInstallment($this->getProcessData()->getTbaId());
+        $this->getEventHandlerRegistry()->fire('beforeConfirm');
+        $agreeResponse = $this->apiClient->agreeInstallment($this->getProcessData()->getTbaId(), $processConfirm);
 
         $verified = false;
         if ($agreeResponse->getMessages() !== null) {
@@ -510,7 +541,7 @@ class Process extends MessageCollector
         $this->processData->setStatus(Status::CONFIRMED);
         $this->processData->save();
 
-        $this->getEventHandlerRegistry()->fire('afterInitialize');
+        $this->getEventHandlerRegistry()->fire('afterConfirm');
 
         return $verified;
     }
@@ -550,11 +581,16 @@ class Process extends MessageCollector
     }
 
     /**
+     * @param string $tbProcessIdentifier
+     * 
      * @return \EasyCredit\Transfer\FinancingDetails
      */
-    public function getFinancingDetails()
+    public function getFinancingDetails($tbProcessIdentifier = null)
     {
-        return $this->apiClient->getFinancingDetails($this->getProcessData()->getTbaId());
+        if (null == $tbProcessIdentifier) {
+            $tbProcessIdentifier = $this->getProcessData()->getTbaId();
+        }
+        return $this->apiClient->getFinancingDetails($tbProcessIdentifier);
     }
 
     /**
@@ -566,19 +602,26 @@ class Process extends MessageCollector
     }
     
     /**
-     * @return \EasyCredit\Transfer\CommonProcessData
+     * @param string $tbProcessIdentifier
+     * @return GetCommonProcessDataResponse
      */
-    public function getCommonProcessData()
+    public function getCommonProcessData($tbProcessIdentifier = null)
     {
-        return $this->apiClient->getCommonProcessData($this->getProcessData()->getTbaId());
+        if (null == $tbProcessIdentifier) {
+            $tbProcessIdentifier = $this->getProcessData()->getTbaId();
+        }
+        return $this->apiClient->getCommonProcessData($tbProcessIdentifier);
     }
     
     /**
      * @return \EasyCredit\Transfer\GetDecisionResponse
      */
-    public function getDecision()
+    public function getDecision($tbProcessIdentifier = null)
     {
-        $decisionResponse = $this->apiClient->getDecision($this->getProcessData()->getTbaId());
+        if (null == $tbProcessIdentifier) {
+            $tbProcessIdentifier = $this->getProcessData()->getTbaId();
+        }
+        $decisionResponse = $this->apiClient->getDecision($tbProcessIdentifier);
         
         if ($decisionResponse->getDecision()->getResult() == 'ROT') {
             $this->processData->setStatus(Status::DECLINED);
@@ -594,5 +637,134 @@ class Process extends MessageCollector
         }
         
         return null;
+    }
+    
+   /**
+    * @param string $integrationType
+    * @return boolean|\EasyCredit\Transfer\TransferInterface
+    */
+    public function verifyMtan($integrationType)
+    {
+        $this->clearMessages();
+        $targetStatus = Status::MTAN;
+        
+        $this->checkExpectedStatus($targetStatus, $integrationType);
+        $this->getEventHandlerRegistry()->fire('beforeVerifyMtan');
+    
+        // validate process data
+        $mTanValidator = new MTanValidator($this->getProcessData());
+        if (!$mTanValidator->validate()) {
+            $messages = $mTanValidator->getMessages();
+            $this->addMessages($messages);
+            $this->getEventHandlerRegistry()->fire('errorVerifyMtan');
+
+            return false;
+        }
+        
+        $processVerifyMTan = $this->createProcessVerifyMTan();
+        // Execute caller
+        $processVerifyMTanResponse = $this->apiClient->verifyMTan($this->getProcessData()->getTbaId(), $processVerifyMTan);
+
+        if ($processVerifyMTanResponse->getUuid() === null) {
+            return $processVerifyMTanResponse;
+        }
+        
+        $messages = $processVerifyMTanResponse->getMessages();
+        $error = false;
+        foreach ($messages['messages'] as $message) {
+            if ($message['key'] == 'FreigabeFuerEcommerceDurchfuehrenActivityMsg.Errors.MTAN_NICHT_VALIDE_KEIN_WEITERER_VERSUCH' ||
+                $message['key'] == 'FreigabeFuerEcommerceDurchfuehrenActivityMsg.Errors.MTAN_NICHT_VALIDE_WEITERER_VERSUCH') {
+                    
+                $this->processData->addMessage($message['renderedMessage'], $message['key']);
+                $error = true;
+            }
+            
+            if ($message['key'] == 'FreigabeFuerEcommerceDurchfuehrenActivityMsg.Errors.MTAN_VORGANG_UNGUELTIG') {
+                $this->processData->addMessage($message['renderedMessage'], $message['key']);
+                $error = true;
+                
+                $this->processData->initEmpty();
+                $this->processData->save();
+                $this->initialize();
+        
+                return $processVerifyMTanResponse;
+            }
+        }
+        
+        if ($error) {
+            $this->getEventHandlerRegistry()->fire('errorVerifyMtan');
+            $this->processData->save();
+        
+            return $processVerifyMTanResponse;
+        }
+        
+    
+        // Process response
+        $this->processData->setStatus($targetStatus);
+        $this->processData->setHash($this->processData->generateHash());
+        $this->processData->save();
+        $this->getEventHandlerRegistry()->fire('afterVerifyMtan');
+    
+        return $processVerifyMTanResponse;
+    }
+    
+    /**
+     * @param string $tbProcessIdentifier
+     * 
+     * @return \EasyCredit\Transfer\TransferInterface
+     */
+    public function resendMtan($tbProcessIdentifier = null)
+    {
+        $this->clearMessages();
+        
+        if (null == $tbProcessIdentifier) {
+            $tbProcessIdentifier = $this->getProcessData()->getTbaId();
+        }
+        
+        $this->getEventHandlerRegistry()->fire('beforeResendMtan');
+        $resendMTanResponse = $this->apiClient->resendMTan($tbProcessIdentifier);
+        
+        if ($resendMTanResponse->getUuid() === null) {
+            return $resendMTanResponse;
+        }
+        
+        if($resendMTanResponse->getHttpStatusCode() != 200) {
+            $this->getEventHandlerRegistry()->fire('errorResendMtan');
+            $messages = $resendMTanResponse->getMessages();
+            
+            foreach ($messages['messages'] as $message) {
+                $this->processData->addMessage($message['renderedMessage'], $message['key']);
+            }
+            
+            return $resendMTanResponse;
+        }
+        
+        $this->getEventHandlerRegistry()->fire('afterResendMtan');
+        
+        return $resendMTanResponse;
+    }
+    
+    /**
+     * 
+     * @return \EasyCredit\Transfer\ProcessVerifyMTan
+     */
+    protected function createProcessVerifyMTan()
+    {
+        $processVerifyMan = new ProcessVerifyMTan();
+        $processVerifyMan->setMTan($this->getProcessData()->getMTan());
+    
+        return $processVerifyMan;
+    }
+    
+    /**
+     * @param string $processIdentifierShop
+     * @return \EasyCredit\Transfer\ProcessConfirm
+     */
+    protected function createProcessConfirm($processIdentifierShop = null)
+    {
+        $processConfirm = new ProcessConfirm();
+        $processConfirm->setCustomIdentifier($processIdentifierShop);
+    
+        return $processConfirm;
     }
 }

@@ -23,7 +23,7 @@ class GetLegislativeText extends AbstractRequest implements RequestInterface
     /**
      * @var string
      */
-    protected $path = '/texte/zustimmung/%s';
+    protected $path = '/v2/texte/zustimmung/%s';
 
     /**
      * @var string

@@ -22,6 +22,8 @@ class BaseResponse extends AbstractObject
      * @apiName wsMessages
      */
     protected $messages;
+    
+    protected $httpStatusCode;
 
     /**
      * @return string
@@ -54,4 +56,21 @@ class BaseResponse extends AbstractObject
     {
         $this->messages = $messages;
     }
+
+    /**
+     * @return integer|null
+     */
+    public function getHttpStatusCode()
+    {
+        return $this->httpStatusCode;
+    }
+
+    /**
+     * @param integer $httpStatusCode
+     */
+    public function setHttpStatusCode($httpStatusCode)
+    {
+        $this->httpStatusCode = $httpStatusCode;
+    }
+ 
 }

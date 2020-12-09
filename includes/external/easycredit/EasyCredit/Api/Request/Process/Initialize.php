@@ -20,7 +20,7 @@ class Initialize extends AbstractRequest implements RequestInterface
     /**
      * @var string
      */
-    protected $path = '/vorgang';
+    protected $path = '/v2/vorgang';
 
     /**
      * @var string

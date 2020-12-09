@@ -98,7 +98,7 @@ class Curl extends AbstractAdapter
         $this->setCurlOption(CURLOPT_CUSTOMREQUEST, $this->getMethod());
 
         if ($this->getMethod() !== Request::METHOD_GET) {
-            $postFields = ($this->getBody() ? json_encode($this->getBody()) : http_build_query($this->getParameters(), '', '&'));
+            $postFields = ($this->getBody() ? json_encode($this->getBody()) : http_build_query($this->getParameters()));
             $this->setCurlOption(CURLOPT_POSTFIELDS, $postFields);
         }
 

@@ -188,7 +188,7 @@ class Socket extends AbstractAdapter
      */
     protected function preparePath()
     {
-        return $this->getPath().(!$this->getParameters() ? '' : '?'.http_build_query($this->getParameters(), '', '&'));
+        return $this->getPath().(!$this->getParameters() ? '' : '?'.http_build_query($this->getParameters()));
     }
 
     /**

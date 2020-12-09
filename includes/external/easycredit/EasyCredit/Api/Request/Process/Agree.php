@@ -9,6 +9,7 @@ use EasyCredit\Api\Request\AbstractRequest;
 use EasyCredit\Api\Request\RequestInterface;
 use EasyCredit\Transfer\BaseResponse;
 use EasyCredit\Transfer\DecisionResponse;
+use EasyCredit\Transfer\ProcessConfirm;
 
 /**
  * Class Agree
@@ -20,7 +21,7 @@ class Agree extends AbstractRequest implements RequestInterface
     /**
      * @var string
      */
-    protected $path = '/vorgang/%s/bestaetigen';
+    protected $path = '/v2/vorgang/%s/bestaetigen';
 
     /**
      * @var string
@@ -41,12 +42,20 @@ class Agree extends AbstractRequest implements RequestInterface
      * @param string $shopId
      * @param string $shopToken
      * @param string $tbProcessIdentifier
+     * @param ProcessConfirm $processConfirm
+     * @param DataMapper        $dataMapper
      */
-    public function __construct($shopId, $shopToken, $tbProcessIdentifier)
+    public function __construct(
+        $shopId,
+        $shopToken, 
+        $tbProcessIdentifier,
+        ProcessConfirm $processConfirm,
+        DataMapper $dataMapper)
     {
         $this->headers[] = 'tbk-rk-shop: '.$shopId;
         $this->headers[] = 'tbk-rk-token: '.$shopToken;
         $this->path = sprintf($this->path, $tbProcessIdentifier);
+        $this->body = $dataMapper->mapRequest($processConfirm);
     }
 
     /**
