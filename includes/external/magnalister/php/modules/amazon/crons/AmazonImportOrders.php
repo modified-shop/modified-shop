@@ -187,6 +187,18 @@ class AmazonImportOrders extends MagnaCompatibleImportOrders {
 		$this->p['products_name'] = str_replace('GiftWrapType', ML_AMAZON_LABEL_GIFT_PAPER, $this->p['products_name']);
 		parent::insertProduct();
 	}
+
+	/*
+	 * remove 'blacklisted-' from customer's e-mail address
+	 * if configured so (not recommended)
+	 */
+	protected function insertCustomer() {
+		if (!getDBConfigValue(array($this->marketplace . '.mailaddress.blacklist', 'val'), $this->mpID, true)) {
+			if ($this->verbose) echo __FUNCTION__.": amazon.mailaddress.blacklist == false\n";
+			$this->o['customer']['customers_email_address'] = str_replace('blacklisted-', '', $this->o['customer']['customers_email_address']);
+		}
+		return parent::insertCustomer();
+	}
 	
 	/**
 	 * Returns true if the stock of the imported and identified item has to be reduced.
@@ -201,6 +213,36 @@ class AmazonImportOrders extends MagnaCompatibleImportOrders {
 		$aContent = parent::generatePromoMailContent();
 		$aContent['#SHOPURL#'] = ''; /* @deprecated: amazon desperately hates this. */
 		return $aContent;
+	}
+
+	protected function sendPromoMail() {
+		if (($this->config['MailSend'] != 'true') || (get_class($this->db) == 'MagnaTestDB')) {
+			// echo print_m($this->generatePromoMailContent());
+			return;
+		}
+		// mail addresses for Amazon customers have a 'blacklisted-' added by us,
+		// by default. Therefore, if the merchant wishes to send an e-mail, we have to
+		// remove this prefix.
+		sendSaleConfirmationMail(
+			$this->mpID,
+			str_replace('blacklisted-', '', $this->o['customer']['customers_email_address']),
+			$this->generatePromoMailContent()
+		);
+	}
+
+	/*
+	 * remove 'blacklisted-' from customer's e-mail address
+	 * (for the order data)
+	 * if configured so (not recommended)
+	 *
+	 * (could be done in insertCustomer, but for the case the order of inserting data
+	 *  will change, it's safer here)
+	 */
+	protected function doBeforeInsertOrder() {
+		if (!getDBConfigValue(array($this->marketplace . '.mailaddress.blacklist', 'val'), $this->mpID, true)) {
+			if ($this->verbose) echo __FUNCTION__.": amazon.mailaddress.blacklist == false\n";
+			$this->o['order']['customers_email_address'] = str_replace('blacklisted-', '', $this->o['order']['customers_email_address']);
+		}
 	}
 
     protected function doBeforeInsertOrdersProducts() {

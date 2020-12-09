@@ -117,10 +117,22 @@ function variation_products_model2pOpt($variation_products_model, $products_id, 
 }
 
 function isDomestic($countryISO) {
-	$storeCountry = strtoupper(MagnaDB::gi()->fetchOne('SELECT ctr.countries_iso_code_2
-		FROM '.TABLE_CONFIGURATION_MLDEF.' config, '.TABLE_COUNTRIES.' ctr
-		WHERE config.configuration_key = \'STORE_COUNTRY\'
-		 AND config.configuration_value = ctr.countries_id'));
+    if (defined('ML_GAMBIO_41_NEW_CONFIG_TABLE')) {
+        $storeCountry = strtoupper(MagnaDB::gi()->fetchOne("
+            SELECT ctr.`countries_iso_code_2`
+              FROM ".TABLE_CONFIGURATION." config, ".TABLE_COUNTRIES." ctr
+             WHERE     config.`key` = 'configuration/STORE_COUNTRY'
+                   AND config.`value` = ctr.`countries_id`'
+        "));
+    } else {
+        $storeCountry = strtoupper(MagnaDB::gi()->fetchOne('
+            SELECT ctr.`countries_iso_code_2`
+              FROM '.TABLE_CONFIGURATION.' config, '.TABLE_COUNTRIES.' ctr
+             WHERE     config.`configuration_key` = \'STORE_COUNTRY\'
+                   AND config.`configuration_value` = ctr.`countries_id`')
+        );
+    }
+
 	if (strtoupper($countryISO) == $storeCountry) {	
 		return true;
 	} else {

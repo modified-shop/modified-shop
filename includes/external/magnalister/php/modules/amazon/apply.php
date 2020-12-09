@@ -60,7 +60,7 @@ function populateGenericData($pID, $edit = false) {
 		'Images' => array(),
 		'BulletPoints' => array('', '', '', '', ''),
 		'Description' => '',
-		'Keywords' => array('', '', '', '', ''),
+		'Keywords' => '',
 		'Attributes' => array(),
 		'LeadtimeToShip' => getDBConfigValue('amazon.leadtimetoship', $mpId, '0'),
 		'ConditionType' => getDBConfigValue('amazon.itemCondition', $mpId, '0'),
@@ -148,19 +148,8 @@ function populateGenericData($pID, $edit = false) {
 	}
 	$genericDataStructure['BulletPoints'] = array_pad($genericDataStructure['BulletPoints'], 5, '');
 
-	$product['products_meta_keywords'] = explode(',', $product['products_meta_keywords']);
-	array_walk($product['products_meta_keywords'], $trimFunc);
-	$genericDataStructure['Keywords'] = array_slice($product['products_meta_keywords'], 0, 5);
-	# Laenge auf 50 Zeichen beschraenken
-	if (!empty($genericDataStructure['Keywords'])) {
-		foreach ($genericDataStructure['Keywords'] as &$keyword) {
-			$keyword = trim($keyword);
-            $keyword = !magnalisterIsUTF8($keyword) ? utf8_encode($keyword) : $keyword;
-			if (empty($keyword)) continue;
-			$keyword = substr($keyword, 0, strpos(wordwrap($keyword, 1000, "\n", true) . "\n", "\n"));
-		}
-	}
-	$genericDataStructure['Keywords'] = array_pad($genericDataStructure['Keywords'], 5, '');
+	$genericDataStructure['Keywords'] =  trim($product['products_meta_keywords']);
+    $genericDataStructure['Keywords'] = substr($genericDataStructure['Keywords'], 0, strpos(wordwrap($genericDataStructure['Keywords'], 1000, "\n", true) . "\n", "\n"));
 
 	$prepData = MagnaDB::gi()->fetchRow('
 		SELECT category, data, leadtimeToShip, ConditionType, ConditionNote, ShippingTemplate
@@ -191,6 +180,10 @@ function populateGenericData($pID, $edit = false) {
 		$prepData['category'] = unserialize($prepData['category']);
 		$dbData = base64_decode($dbData);
 		$dbData = unserialize($dbData);
+
+        if(isset($dbData['Keywords']) && is_array($dbData['Keywords'])){
+            $dbData['Keywords'] = implode(' ', $dbData['Keywords']);
+        }
 		if (is_array($prepData['category']) && !empty($prepData['category'])
 			&& is_array($dbData) && !empty($dbData)
 		) {
@@ -377,6 +370,13 @@ if (array_key_exists('saveApplyData', $_POST) || (array_key_exists('Action', $_P
 	} else {
 		$itemDetails['variationTheme'] = null;
 	}
+	foreach($itemDetails as $sKey => $sValue) {
+	    if(strpos($sKey, '__FromWebShop')){
+	        $sMainKey = str_replace('__FromWebShop', '', $sKey);
+            $itemDetails[$sMainKey] = null;
+            unset($itemDetails[$sKey]);
+        }
+    }
 
 	if (!empty($pIDs)) {
 		$missingItems = array();

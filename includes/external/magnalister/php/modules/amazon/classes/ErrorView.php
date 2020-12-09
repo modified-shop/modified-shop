@@ -31,7 +31,7 @@ class ErrorView {
 	private $url = array();
 
 	private $mpID = '';
-	
+
 	public function __construct($settings = array()) {
 		global $_MagnaSession, $_url;
 
@@ -92,6 +92,7 @@ class ErrorView {
 				if ($begin < $item['DateAdded']) {
 					$begin = $item['DateAdded'];
 				}
+                $data['recommendation'] = $item['ErrorRecommendation'];
 				if (!MagnaDB::gi()->recordExists(TABLE_MAGNA_AMAZON_ERRORLOG, $data)) {
 					if (isset($item['ErrorLogURL'])) {
 						$item['AdditionalData']['ErrorLogURL'] = $item['ErrorLogURL'];
@@ -155,7 +156,7 @@ class ErrorView {
 		$this->offset = ($this->currentPage - 1) * $this->settings['itemLimit'];
 
 		$this->errorLog = MagnaDB::gi()->fetchArray('
-		    SELECT al.id, al.batchid, al.dateadded, al.errorcode, al.errormessage, al.additionaldata
+		    SELECT al.id, al.batchid, al.dateadded, al.errorcode, al.errormessage, al.recommendation, al.additionaldata
 		      FROM '.TABLE_MAGNA_AMAZON_ERRORLOG.' al
 		     WHERE al.mpID=\''.$this->mpID.'\'
 		  GROUP BY al.id
@@ -164,6 +165,7 @@ class ErrorView {
 		');
 		if (!empty($this->errorLog)) {
 			foreach ($this->errorLog as &$item) {
+                $item['recommendation'] = fixHTMLUTF8Entities($item['recommendation']);
 				$item['additionaldata'] = @unserialize($item['additionaldata']);
 			}
 		}
@@ -207,6 +209,23 @@ class ErrorView {
 			MagnaDB::gi()->update(TABLE_MAGNA_ORDERS, array('data' => $o), array('special' => $data['AmazonOrderID']));
 		}
 	}
+
+
+    protected function processErrorRecommendation($item) {
+        $ret = array (
+            'long' => $item['recommendation'],
+            'short' => '',
+        );
+        $ret['short'] = (
+        (strlen($ret['long']) > $this->settings['maxTitleChars'] + 2) ?
+            (substr($ret['long'], 0, $this->settings['maxTitleChars']).'&hellip;') :
+            $ret['long']
+        );
+        if (strpos($ret['long'], '&lt;div') !== false) {
+            $ret['long'] = html_entity_decode($ret['long']);
+        }
+        return $ret;
+    }
 
 	private function sortByType($type) {
 		return '
@@ -272,6 +291,7 @@ $(document).ready(function() {
 	}
 	
 	private function additionalDataHandler($data) {
+        $data = is_array($data) ? $data: array();
 		$fData = array();
 		if ((array_key_exists('SKU', $data) && !empty($data['SKU'])) || (array_key_exists('PID', $data) && !empty($data['PID']))) {
 			if (isset($data['PID'])) {
@@ -344,6 +364,7 @@ $(document).ready(function() {
 						<td>'.ML_AMAZON_LABEL_ADDITIONAL_DATA.'</td>
 						<td>'.ML_GENERIC_ERROR_CODE.'&nbsp;'.$this->sortByType('errorcode').'</td>
 						<td>'.ML_GENERIC_ERROR_MESSAGES.'&nbsp;'.$this->sortByType('errormessage').'</td>
+						<td>'.ML_GENERIC_LABEL_ADDITIONAL_HELP.'</td>
 						<td>'.ML_GENERIC_COMMISSIONDATE.'&nbsp;'.$this->sortByType('commissiondate').'</td>
 					</tr></thead>
 					<tbody>';
@@ -360,6 +381,7 @@ $(document).ready(function() {
 				$batchErrorlogURL = '';
 			}
 			$item['errormessage'] = fixHTMLUTF8Entities($item['errormessage']);
+            $recommendation = $this->processErrorRecommendation($item);
 			$dateadded = strtotime($item['dateadded']);
 			$hdate = date("d.m.Y", $dateadded).' &nbsp;&nbsp;<span class="small">'.date("H:i", $dateadded).'</span>';
 			$shortMessage = (
@@ -381,13 +403,15 @@ $(document).ready(function() {
 									? $shortMessage.'&hellip;<span>'.$item['errormessage'].'</span>' 
 									: $item['errormessage']
 							).'</td>
+							<td class="errorrecommendation">' . $recommendation['short'] . '<span style="display:none;">' . $recommendation['long'] . '</span></td>
 							<td>'.$hdate.'</td>
 						</tr>';
 		}
 		$html .= '
 					</tbody>
 				</table>
-				<div id="errordetails" class="dialog2" title="'.ML_GENERIC_ERROR_DETAILS.'"></div>';
+				<div id="errordetails" class="dialog2" title="'.ML_GENERIC_ERROR_DETAILS.'"></div>
+				<div id="recommendationdetails" class="dialog2" title="'.ML_GENERIC_ERROR_RECOMMENDATIONS.'"></div>';
 		ob_start(); ?>
 <script type="text/javascript">/*<![CDATA[*/
 	$(document).ready(function() {
@@ -395,6 +419,10 @@ $(document).ready(function() {
 			if ($('span', this).length == 0) return;
 			$('#errordetails').html($('span', this).html()).jDialog();
 		});
+
+        $('table#errorlog tbody td.errorrecommendation').click(function() {
+            $('#recommendationdetails').html($('span', this).html()).jDialog();
+        });
 		
 		$('#selectAll').click(function() {
 			state = $(this).attr('checked');

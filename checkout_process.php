@@ -206,10 +206,10 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
     xtc_db_perform(TABLE_ORDERS_TOTAL, $sql_data_array);
   }
 
-  ### magnalister v1.0.1
+  /* magnalister v1.0.1 */
   if (function_exists('magnaExecute')) magnaExecute('magnaInsertOrderDetails', array('oID' => $insert_id), array('order_details.php'));
   if (function_exists('magnaExecute')) magnaExecute('magnaInventoryUpdate', array('action' => 'inventoryUpdateOrder'), array('inventoryUpdate.php'));
-  ### magnalister
+  /* END magnalister */
 
   $customer_notification = (SEND_EMAILS == 'true') ? '1' : '0';
 

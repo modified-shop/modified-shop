@@ -118,6 +118,10 @@ class Check24CheckinSubmit extends MagnaCompatibleCheckinSubmit {
 			}
 		}
 
+		if (isset($aProduct['Weight']) && !empty($aProduct['Weight'])) {
+			$aData['submit']['Weight'] = $aProduct['Weight'];
+		}
+
 		$aData['submit']['ProductUrl'] = $aProduct['ProductUrl'];
 		$aData['submit']['Quantity'] = $aData['quantity'];
 		$aData['submit']['Price'] = $aData['price'];
@@ -146,6 +150,9 @@ class Check24CheckinSubmit extends MagnaCompatibleCheckinSubmit {
 				$aVariationData['submit']['Quantity'] = $aVariation['Quantity'];
 				$aVariationData['submit']['Price'] = $aVariation['Price']['Price'];
 				$aVariationData['submit']['EAN'] = $aVariation['EAN'];
+				if (isset($aVariation['Weight'])) {
+					$aVariationData['submit']['Weight'] = $aVariation['Weight'];
+				}
 
 				$attributes = array();
 				foreach ($aVariation['Variation'] as $var) {

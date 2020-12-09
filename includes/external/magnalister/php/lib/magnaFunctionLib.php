@@ -2093,20 +2093,30 @@ function cleanPrepareData() {
 }
 
 function magnaGetDefaultLanguageID() {
-	if (defined('DEFAULT_LANGUAGE')) {
-		$lID = MagnaDB::gi()->fetchOne("
-			SELECT languages_id
-			  FROM ".TABLE_LANGUAGES."
-			 WHERE code='".DEFAULT_LANGUAGE."'
-		");
-	} else {
-		$lID = MagnaDB::gi()->fetchOne('
-			SELECT languages_id
-			  FROM '.TABLE_LANGUAGES.' l, '.TABLE_CONFIGURATION_MLDEF.' c
-			 WHERE c.configuration_key = \'DEFAULT_LANGUAGE\'
-			       AND c.configuration_value = l.code
-			 LIMIT 1
-		');
+    if (defined('DEFAULT_LANGUAGE')) {
+        $lID = MagnaDB::gi()->fetchOne("
+            SELECT `languages_id`
+              FROM ".TABLE_LANGUAGES." l
+             WHERE l.`code` = '".DEFAULT_LANGUAGE."'
+        ");
+    } else {
+        if (defined('ML_GAMBIO_41_NEW_CONFIG_TABLE')) {
+            $lID = MagnaDB::gi()->fetchOne("
+                SELECT `languages_id`
+                  FROM ".TABLE_LANGUAGES." l, ".TABLE_CONFIGURATION." c
+                 WHERE     l.`code` = c.`value`
+                       AND c.`key` = 'configuration/DEFAULT_LANGUAGE'
+                 LIMIT 1
+            ");
+        } else {
+            $lID = MagnaDB::gi()->fetchOne("
+                SELECT `languages_id`
+                  FROM ".TABLE_LANGUAGES." l, ".TABLE_CONFIGURATION." c 
+                 WHERE     l.`code` = c.`configuration_value` 
+                       AND c.`configuration_key` = 'DEFAULT_LANGUAGE'
+                LIMIT 1
+            ");
+        }
 	}
 	if ($lID == false) {
 		/* very bad fallback, but one fallback at least. */

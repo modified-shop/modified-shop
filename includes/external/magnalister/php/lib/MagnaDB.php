@@ -521,7 +521,11 @@ class MagnaDB {
 	 */
 	public function setEscapeStrings ($bl = null) {
 		// magic quotes are deprecated as of php 5.4
-		$this->escapeStrings = $bl === null ? get_magic_quotes_gpc() : $bl;
+		if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
+			$this->escapeStrings = $bl === null ? false : $bl;
+		} else {
+			$this->escapeStrings = $bl === null ? get_magic_quotes_gpc() : $bl;
+		}
 		return $this;
 	}
 	

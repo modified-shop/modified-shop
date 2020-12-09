@@ -35,6 +35,11 @@ defined('MAGNA_DEV_PRODUCTLIST') OR define('MAGNA_DEV_PRODUCTLIST', true);
 defined('DIR_MAGNALISTER_FS') OR define('DIR_MAGNALISTER_FS', DIR_MAGNALISTER);
 defined('DIR_MAGNALISTER_WS') OR define('DIR_MAGNALISTER_WS', DIR_MAGNALISTER);
 
+// for Gambio 4.1 and newer
+if (TABLE_CONFIGURATION == 'gx_configurations') {
+    define('ML_GAMBIO_41_NEW_CONFIG_TABLE', true);
+}
+
 if (!array_key_exists('language', $_SESSION)) $_SESSION['language'] = 'english';
 
 function outOfOrder() {
@@ -601,6 +606,8 @@ if (defined('DB_SERVER_CHARSET')) {
 	MagnaDB::gi()->setCharset(DB_SERVER_CHARSET);
 }
 if (SHOPSYSTEM == 'gambio' && (($sVersion = mlGetGambioShopSystemVersion()) !== false)) {
+    define('ML_GAMBIO_VERSION', $sVersion);
+
 	if (version_compare($sVersion, '2.1', '>=')) {
 		MagnaDB::gi()->setCharset('utf8');
 	}
@@ -651,11 +658,20 @@ $_langISO = strtolower(magnaGetLanguageCode($_lang));
 @include_once(DIR_MAGNALISTER_FS.'lang/'.$_lang.'.php');
 
 if (!array_key_exists('languages_id', $_SESSION) || empty($_SESSION['languages_id'])) {
-	$_SESSION['languages_id'] = MagnaDB::gi()->fetchOne(
-		'SELECT languages_id '.
-		'FROM '.TABLE_LANGUAGES.' l, '.TABLE_CONFIGURATION_MLDEF.' c '.
-		'WHERE l.code=c.configuration_value '.
-		'AND c.configuration_key=\'DEFAULT_LANGUAGE\'');
+    if (defined('ML_GAMBIO_41_NEW_CONFIG_TABLE')) {
+        $_SESSION['languages_id'] = MagnaDB::gi()->fetchOne("
+            SELECT `languages_id`
+              FROM ".TABLE_LANGUAGES." l, ".TABLE_CONFIGURATION." c
+             WHERE     l.`code` = c.`value`
+                   AND c.`key` = 'configuration/DEFAULT_LANGUAGE'
+        ");
+    } else {
+        $_SESSION['languages_id'] = MagnaDB::gi()->fetchOne(
+            'SELECT languages_id '.
+            'FROM '.TABLE_LANGUAGES.' l, '.TABLE_CONFIGURATION.' c '.
+            'WHERE l.code=c.configuration_value '.
+            'AND c.configuration_key=\'DEFAULT_LANGUAGE\'');
+    }
 }
 
 /* Title of page */
@@ -763,13 +779,15 @@ $requiredConfigKeys = array (
 	'general.callback.importorders',
 );
 
-/* Is magic_quotes on? */
-if (get_magic_quotes_gpc()) {
-	/* Strip the added slashes */
-	$_REQUEST = arrayMap('stripslashes', $_REQUEST);
-	$_GET     = arrayMap('stripslashes', $_GET);
-	$_POST    = arrayMap('stripslashes', $_POST);
-	$_COOKIE  = arrayMap('stripslashes', $_COOKIE);
+/* Is magic_quotes on? (only old PHP versions) */
+if (version_compare(PHP_VERSION, '5.4.0', '<')) {
+	if (get_magic_quotes_gpc()) {
+		/* Strip the added slashes */
+		$_REQUEST = arrayMap('stripslashes', $_REQUEST);
+		$_GET     = arrayMap('stripslashes', $_GET);
+		$_POST    = arrayMap('stripslashes', $_POST);
+		$_COOKIE  = arrayMap('stripslashes', $_COOKIE);
+	}
 }
 
 /**

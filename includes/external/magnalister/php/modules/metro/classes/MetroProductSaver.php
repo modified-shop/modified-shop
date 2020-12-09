@@ -237,6 +237,7 @@ class MetroProductSaver {
             $aItemDetails['Title'] = $aProductDescDataByPId[$iProductId]['products_name'];
             $aItemDetails['GTIN'] = $aProductDescDataByPId[$iProductId]['products_ean'];
             $aRow = $this->preparePropertiesRow($iProductId, $aItemDetails);
+            $aRow['BusinessModel'] = $aItemDetails['BusinessModel'];
             $aRow['Description'] = strip_tags($aProductDescDataByPId[$iProductId]['products_description'], '<p><ul><ol><li><span><br><b>');
             if(array_key_exists('products_short_description', $aProductDescDataByPId[$iProductId])) {
                 $aRow['ShortDescription'] = MetroHelper::sanitizeDescription($aProductDescDataByPId[$iProductId]['products_short_description']);

@@ -314,13 +314,21 @@ class SimplePrice {
 	
 	public static function getTaxByClassID($taxClassID, $countryID = -1) {
 		if ($countryID == -1) {
-			# Fallback to shop default
-			$countryID = ((defined('STORE_COUNTRY') && (int)(STORE_COUNTRY)>0)
-				? (int)STORE_COUNTRY
-				: (int)self::queryCache('
-				SELECT configuration_value FROM '.TABLE_CONFIGURATION_MLDEF.'
-				 WHERE configuration_key="STORE_COUNTRY"
-			'));
+            if (defined('STORE_COUNTRY') && (int)(STORE_COUNTRY) > 0) {
+                $countryID = (int)STORE_COUNTRY;
+            } elseif (defined('ML_GAMBIO_41_NEW_CONFIG_TABLE')) {
+                $countryID = (int)self::queryCache("
+                    SELECT `value`
+                      FROM ".TABLE_CONFIGURATION."
+                     WHERE `key` = 'configuration/STORE_COUNTRY'
+                ");
+            } else {
+                $countryID = (int)self::queryCache('
+                    SELECT `configuration_value` 
+                      FROM '.TABLE_CONFIGURATION.'
+                     WHERE `configuration_key` = "STORE_COUNTRY"
+                ');
+            }
 		}
 		$taxRate = self::queryCache(eecho('
 			SELECT MAX(tax_rate)

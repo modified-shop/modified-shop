@@ -1241,9 +1241,34 @@ class MLProduct {
 			foreach ($combis as $combi) {
 				$v = array (
 					'VariationId' => $combi['products_properties_combis_id'],
-					'Image' => $combi['combi_image'],
+					'Image' => (array_key_exists('combi_image', $combi)) ? $combi['combi_image'] : '',
 					'Variation' => $this->translateProductsProperties($combi['products_properties_combis_id']),
 				);
+
+				// Since Gambio 4.1 Multiple Images for one Variation are supported
+                if (!MagnaDB::gi()->columnExistsInTable('combi_image', 'products_properties_combis')) {
+                    // product_image_list_combi -> products_properties_combis_id we get product_image_list_id
+                    // products_properties_combis -> products_properties_combis_id
+                    $imageListId = MagnaDB::gi()->fetchOne("
+                        SELECT product_image_list_id 
+                          FROM product_image_list_combi
+                         WHERE products_properties_combis_id = ".(int)MagnaDB::gi()->escape($combi['products_properties_combis_id'])."
+                    ");
+                    $variationImages = MagnaDB::gi()->fetchArray("
+                        SELECT * 
+                          FROM product_image_list_image
+                         WHERE product_image_list_id = ".(int)MagnaDB::gi()->escape($imageListId)."
+                      ORDER BY product_image_list_image_sort_order ASC
+                    ");
+
+                    $firstImage = current($variationImages);
+                    $v['Image'] = $firstImage['product_image_list_image_local_path'];
+
+                    $v['Images'] = array();
+                    foreach ($variationImages as $variationImage) {
+                        $v['Images'][] = $variationImage['product_image_list_image_local_path'];
+                    }
+                }
 
 				$attrs[] = $v;
 			}

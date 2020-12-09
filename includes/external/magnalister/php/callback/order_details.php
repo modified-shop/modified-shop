@@ -78,6 +78,16 @@ function magnaGetOrderPlatformIcon($order) {
 			$suffix = '';
 			if ($fulfillment === 'MFN-Prime') {
 				$suffix = '_prime';
+                if (isset($order['internaldata']['ShipServiceLevel'])) {
+                    $sShipServiceLevel = $order['internaldata']['ShipServiceLevel'];
+                    if ($sShipServiceLevel === 'NextDay') {
+                        $suffix .= '_nextday';
+                    } else if ($sShipServiceLevel === 'SameDay') {
+                        $suffix .= '_sameday';
+                    } else if ($sShipServiceLevel === 'SecondDay') {
+                        $suffix .= '_secondday';
+                    }
+                }
 			} elseif ($fulfillment === 'Business') {
 				$suffix = '_business';
 			}

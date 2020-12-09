@@ -84,7 +84,7 @@ echo '
 											<td rowspan="2" class="ml-td-right">
 												<span class="build">
 													Build: '.((defined('CLIENT_BUILD_VERSION')) ? CLIENT_BUILD_VERSION : ML_LABEL_UNKNOWN).' ::
-													<a href="'.toURL(array('module' => 'viewchangelog')).'" title="Changelog">Current: '.((defined('CURRENT_BUILD_VERSION')) ? CURRENT_BUILD_VERSION : ML_LABEL_UNKNOWN).'</a>
+													<a href="'.toURL(array('module' => 'viewchangelog')).'" title="Changelog">Latest: '.((defined('CURRENT_BUILD_VERSION')) ? CURRENT_BUILD_VERSION : ML_LABEL_UNKNOWN).'</a>
 												</span>
 											</td>
 										</tr>

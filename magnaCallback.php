@@ -211,6 +211,12 @@ function magnaCompartCheck() {
 		require_once(DIR_MAGNALISTER_FS_INCLUDES . 'lib/MagnaDB.php');
 	}
 
+	if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
+		$magicquotes = false;
+	} else {
+		$magicquotes = (boolean)get_magic_quotes_gpc();
+	}
+
 	return array(
 		'timeout' => array (
 			'changeable' => (($maxExecutionTime == '0') || ($maxExecutionTime != $newMaxExecutionTime)),
@@ -221,7 +227,7 @@ function magnaCompartCheck() {
 			'default' => $maxRam
 		),
 		'safemode' => MAGNA_SAFE_MODE,
-		'magicquotes' => (get_magic_quotes_gpc() != 0),
+		'magicquotes' => $magicquotes,
 		'phpversion' => PHP_VERSION,
 		'mysqlversion' => class_exists('MagnaDB') ? MagnaDB::gi()->fetchOne('SELECT VERSION()') : mysql_result(mysql_query('SELECT VERSION()'), 0),
 		'curl' => array (
@@ -749,6 +755,12 @@ function magnaCallbackRun() {
 	if (defined('DB_SERVER_CHARSET')) {
 		MagnaDB::gi()->setCharset(DB_SERVER_CHARSET);
 	}
+
+    // for Gambio 4.1 and newer
+    if (TABLE_CONFIGURATION == 'gx_configurations' && !defined('ML_GAMBIO_41_NEW_CONFIG_TABLE')) {
+        define('ML_GAMBIO_41_NEW_CONFIG_TABLE', true);
+    }
+
 	if (SHOPSYSTEM == 'gambio' && (($sVersion = mlGetGambioShopSystemVersion()) !== false)) {
 		if (version_compare($sVersion, '2.1', '>=')) {
 			MagnaDB::gi()->setCharset('utf8');
@@ -778,13 +790,23 @@ function magnaCallbackRun() {
 
 	/* Language-Foo */
 	$_magnaAvailableLanguages = magnaGetAvailableLanguages();
-	$defaultLanguage = MagnaDB::gi()->fetchOne('
-	    SELECT directory
-	      FROM '.TABLE_LANGUAGES.' l, '.TABLE_CONFIGURATION_MLDEF.' c
-	     WHERE c.configuration_key = "DEFAULT_LANGUAGE"
-	           AND c.configuration_value = l.code
-	     LIMIT 1
-	');
+    if (defined('ML_GAMBIO_41_NEW_CONFIG_TABLE')) {
+        $defaultLanguage = MagnaDB::gi()->fetchOne("
+            SELECT `directory`
+              FROM ".TABLE_LANGUAGES." l, ".TABLE_CONFIGURATION." c
+             WHERE     l.`code` = c.`value`
+                   AND c.`key` = 'configuration/DEFAULT_LANGUAGE'
+             LIMIT 1
+        ");
+    } else {
+        $defaultLanguage = MagnaDB::gi()->fetchOne('
+            SELECT `directory`
+              FROM '.TABLE_LANGUAGES.' l, '.TABLE_CONFIGURATION.' c
+             WHERE c.`configuration_key` = "DEFAULT_LANGUAGE"
+                   AND c.`configuration_value` = l.`code`
+             LIMIT 1
+        ');
+    }
 	if (in_array($defaultLanguage, $_magnaAvailableLanguages)) {
 		$_magnaLanguage = $defaultLanguage;
 	} else {

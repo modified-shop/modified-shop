@@ -63,13 +63,22 @@ class HitmeisterImportOrders extends MagnaCompatibleImportOrders {
 					   AND l.code = "'.strtolower($this->o['orderInfo']['BuyerCountryISO']).'"
 			');
 			if ($this->p['products_name'] == false) {
-				# Fallback for default language
-				$languageId = MagnaDB::gi()->fetchOne('
-					SELECT languages_id
-					  FROM '.TABLE_LANGUAGES.' l, '.TABLE_CONFIGURATION_MLDEF.' c
-					 WHERE c.configuration_key = "DEFAULT_LANGUAGE"
-						   AND c.configuration_value = l.code
-				');
+                # Fallback for default language
+                if (defined('ML_GAMBIO_41_NEW_CONFIG_TABLE')) {
+                    $languageId = MagnaDB::gi()->fetchOne("
+                        SELECT `languages_id`
+                          FROM ".TABLE_LANGUAGES." l, ".TABLE_CONFIGURATION." c
+                         WHERE     l.`code` = c.`value`
+                               AND c.`key` = 'configuration/DEFAULT_LANGUAGE'
+                    ");
+                } else {
+                    $languageId = MagnaDB::gi()->fetchOne("
+                        SELECT `languages_id`
+                          FROM ".TABLE_LANGUAGES." l, ".TABLE_CONFIGURATION." c 
+                        WHERE l.`code` = c.`configuration_value` 
+                        AND c.`configuration_key` = 'DEFAULT_LANGUAGE'
+                    ");
+                }
 				$this->p['products_name'] = MagnaDB::gi()->fetchOne('
 					SELECT products_name
 					  FROM '.TABLE_PRODUCTS_DESCRIPTION.'

@@ -91,11 +91,3 @@ define('TABLE_MAGNA_METRO_PROPERTIES', 'magnalister_metro_properties');
 define('TABLE_MAGNA_METRO_CATEGORIES', 'magnalister_metro_categories');
 define('TABLE_MAGNA_METRO_PREPARE', 'magnalister_metro_prepare');
 define('TABLE_MAGNA_METRO_VARIANTMATCHING', 'magnalister_metro_variantmatching');
-
-
-// for Gambio 4.1 and newer
-if (TABLE_CONFIGURATION == 'gx_configurations') {
-    define('TABLE_CONFIGURATION_MLDEF', 'configuration');
-} else {
-    define('TABLE_CONFIGURATION_MLDEF', TABLE_CONFIGURATION);
-}

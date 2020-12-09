@@ -337,18 +337,57 @@ class eBayCheckinSubmit extends CheckinSubmit {
 			$configVariationDimensionForPictures = getDBConfigValue('ebay.variationdimensionforpictures', $this->_magnasession['mpID']);
 			$data['submit']['VariationDimensionForPictures'] = $sVariationDimensionForPictures =
 				empty($data['submit']['VariationDimensionForPictures']) ? $configVariationDimensionForPictures : $data['submit']['VariationDimensionForPictures'];
-			if (MAGNA_GAMBIO_VARIATIONS && getDBConfigValue('general.gambio.useproperties', '0', 'true') == 'true') {
-				$VarImagePath = getDBConfigValue('ebay.imagepath.variations',$this->_magnasession['mpID'], HTTP_CATALOG_SERVER.DIR_WS_CATALOG.DIR_WS_IMAGES.'product_images/properties_combis_images/');
-				if(!empty($data['submit']['VariationDimensionForPictures'])){
-					foreach ($product['VariationPictures'] as $aVariation) {
-						foreach($aVariation['Variation'] as $aVar){
-							if($aVar['NameId'] == $data['submit']['VariationDimensionForPictures'] && !empty($aVariation['Image'])){
-								$data['submit']['VariationPictures'][$aVar['Value']][]= $VarImagePath.$aVariation['Image'];
-								$sVariationDimensionForPicturesName = $aVar['Name'];
-							}
-						}
-					}
-				}
+
+			// Support for Variation Images for Gambio Properties
+            if (MAGNA_GAMBIO_VARIATIONS && getDBConfigValue('general.gambio.useproperties', '0', 'true') == 'true') {
+                // We only use path before Gambio 4.1 (since in Gambio 4.1 the image path is included in the Database)
+                if (version_compare(ML_GAMBIO_VERSION, '4.1', '>=')) {
+                    $VarImagePath = HTTP_CATALOG_SERVER.DIR_WS_CATALOG;
+                } else {
+                    $VarImagePath = getDBConfigValue('ebay.imagepath.variations', $this->_magnasession['mpID'], HTTP_CATALOG_SERVER.DIR_WS_CATALOG.DIR_WS_IMAGES.'product_images/properties_combis_images/');
+                }
+
+                // iterate through the variation images
+                if (!empty($data['submit']['VariationDimensionForPictures'])) {
+                    foreach ($product['VariationPictures'] as $aVariation) {
+                        foreach ($aVariation['Variation'] as $aVar) {
+                            // if variation name matches the configured / prepared variation level name
+                            if ($aVar['NameId'] == $data['submit']['VariationDimensionForPictures']) {
+                                // Support for one Variation Image (if shop not support multiple variation images)
+                                if (empty($aVariation['Images'])) {
+                                    $aVariation['Images'] = array($aVariation['Image']);
+                                }
+
+                                // Support for Multiple Variation Images - see Fallback above if shop supports only one variation image
+                                if (!empty($aVariation['Images'])) {
+                                    foreach($aVariation['Images'] as $varImage) {
+                                        if (!empty($varImage)
+                                            && (!is_array($data['submit']['VariationPictures'])
+                                                || !array_key_exists($aVar['Value'], $data['submit']['VariationPictures'])
+                                                || !in_array($VarImagePath.$varImage, $data['submit']['VariationPictures'][$aVar['Value']])
+                                            )
+                                        ) {
+                                            $data['submit']['VariationPictures'][$aVar['Value']][] = $VarImagePath.$varImage;
+                                        }
+                                    }
+                                    $sVariationDimensionForPicturesName = $aVar['Name'];
+                                }
+                            }
+
+
+                            if (   $aVar['NameId'] == $data['submit']['VariationDimensionForPictures']
+                                && !empty($aVariation['Image'])
+                                && (!is_array($data['submit']['VariationPictures'])
+                                    || !array_key_exists($aVar['Value'], $data['submit']['VariationPictures'])
+                                    || !in_array($VarImagePath.$aVariation['Image'], $data['submit']['VariationPictures'][$aVar['Value']])
+                                )
+                            ) {
+                                $data['submit']['VariationPictures'][$aVar['Value']][] = $VarImagePath.$aVariation['Image'];
+                                $sVariationDimensionForPicturesName = $aVar['Name'];
+                            }
+                        }
+                    }
+                }
 			} else if (MagnaDb::gi()->columnExistsInTable('attributes_image', TABLE_PRODUCTS_ATTRIBUTES)) {
 				$VarImagePath = getDBConfigValue('ebay.variation.imagepath', $this->_magnasession['mpID'], $imagePath);
 				$aVarAttrs = MagnaDb::gi()->fetchArray('SELECT variation_attributes
@@ -501,6 +540,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
 			    && array_key_exists('Value', $product['Weight'])
 			    && ((float)$product['Weight']['Value'] > 0.0)
 			) {
+				$data['submit']['Weight'] = $product['Weight'];
 				$sWeight = $product['Weight']['Value']
 				.' '.$product['Weight']['Unit'];
 			} else {
@@ -712,7 +752,8 @@ class eBayCheckinSubmit extends CheckinSubmit {
 				// if the variations have been matched, match also the variation dimension for pictures
 				if (    is_array($matchedAttributesNameIdValueId)
 				     && isset($data['submit']['VariationDimensionForPictures'])
-				     && array_key_exists($sVariationDimensionForPictures, $matchedAttributesNameIdValueId)) {
+				     && array_key_exists($sVariationDimensionForPictures, $matchedAttributesNameIdValueId)
+				     && (strpos(current(array_keys($matchedAttributesNameIdValueId[$sVariationDimensionForPictures])), 'additional_attribute') === false)) {
 					$data['submit']['VariationDimensionForPictures'] = $sVariationDimensionForPicturesName = current(array_keys($matchedAttributesNameIdValueId[$sVariationDimensionForPictures]));
 				}
 

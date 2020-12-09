@@ -670,7 +670,7 @@ class CdiscountApplyPrepareView extends MagnaCompatibleBase {
                     endforeach;
                 endif; ?>
             </td>
-            <td class="info"></td>
+            <td class="info"><?php echo ML_CDISCOUNT_MAX_4_IMAGES ?></td>
         </tr>
         <tr class="spacer">
             <td colspan="3">&nbsp;</td>

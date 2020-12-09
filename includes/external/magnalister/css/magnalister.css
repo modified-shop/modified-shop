@@ -1,10 +1,10 @@
 /**
- * 888888ba                 dP  .88888.                    dP                
- * 88    `8b                88 d8'   `88                   88                
- * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b. 
- * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88 
- * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88 
- * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P' 
+ * 888888ba                 dP  .88888.                    dP
+ * 88    `8b                88 d8'   `88                   88
+ * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b.
+ * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88
+ * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88
+ * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P'
  *
  *                          m a g n a l i s t e r
  *                                      boost your Online-Shop
@@ -33,7 +33,7 @@ body.magna table {
 }
 body.magna td,
 body.magna th,
-body.magna div, 
+body.magna div,
 body.magna select,
 body.magna option {
 	font-family: Arial, sans-serif;
@@ -260,7 +260,7 @@ body.magna .fullWidth {
 }
 body.magna .autoWidth {
 	width: auto !important;
-} 
+}
 body.magna .inline {
 	display: inline !important;
 }
@@ -289,7 +289,7 @@ body.magna .valignbottom {
 }
 .successBox,
 .successBoxBlue,
-.noticeBox, 
+.noticeBox,
 .errorBox {
 	padding: 9px 15px;
 	margin: 0 0 1em 0;
@@ -342,7 +342,7 @@ h1#magnalogo {
 }
 h1#magnalogo a,
 h1#magnalogo a img {
-	padding: 0; 
+	padding: 0;
 	margin: 0;
 	border: none;
 }
@@ -491,7 +491,7 @@ input#unprepare.ml-button, input#reset_description.ml-button {
 }
 input#unprepare.ml-button {
 	margin-bottom: 4px !important;
-} 
+}
 input#reset_description.ml-button{
 	margin-top: 0px !important;
 }
@@ -647,7 +647,7 @@ body.magna .gfxbutton.border {
 }
 body.magna .gfxbutton.border:hover {
 	border: 1px solid #aaa;
-	
+
 	-moz-box-shadow: inset 1px 1px 3px rgba(255, 255, 255, 1), inset -1px -1px 2px rgba(0, 0, 0, 0.2);
 	-webkit-box-shadow: inset 1px 1px 3px rgba(255, 255, 255, 1), inset -1px -1px 2px rgba(0, 0, 0, 0.2);
 	box-shadow: inset 1px 1px 3px rgba(255, 255, 255, 1), inset -1px -1px 2px rgba(0, 0, 0, 0.2);
@@ -679,13 +679,13 @@ body.magna div#globalButtonBox .gfxbutton {
 	margin-left: 5px;
 }
 body.magna div#globalButtonBox .gfxbutton.cart {
-	background-position: 0px 0;	
+	background-position: 0px 0;
 }
 body.magna div#globalButtonBox .gfxbutton.sync {
-	background-position: -22px 0;	
+	background-position: -22px 0;
 }
 body.magna div#globalButtonBox .gfxbutton.upload {
-	background-position: -44px 0;	
+	background-position: -44px 0;
 }
 body.magna div#globalButtonBox .gfxbutton.update {
 	background-position: -66px 0;
@@ -735,18 +735,18 @@ div#magnaErrors table tbody.even td {
 	background: #ccc;
 	color: #000;
 }
-div#magnaErrors table tbody td.level {	
+div#magnaErrors table tbody td.level {
 	font-weight: bold;
 }
-div#magnaErrors table tbody td.level.notice {	
+div#magnaErrors table tbody td.level.notice {
 	background: #C9FF48;
 	color: #000;
 }
-div#magnaErrors table tbody td.level.warning {	
+div#magnaErrors table tbody td.level.warning {
 	background: #FFB548;
 	color: #000;
 }
-div#magnaErrors table tbody td.level.fatal {	
+div#magnaErrors table tbody td.level.fatal {
 	background: #FF4848;
 	color: #000;
 }
@@ -935,7 +935,7 @@ table.matching tbody.func td {
 table.matching tbody.func td div {
 	float: left;
 	margin-right: 1em;
-	
+
 }
 /*
 table.matching tbody.product div.productDescBtn {
@@ -978,7 +978,7 @@ table.matchingDetailInfo {
 table.matchingDetailInfo tbody tr th,
 table.matchingDetailInfo tbody tr td {
 	padding: 4px;
-	-webkit-border-radius: 3px;	
+	-webkit-border-radius: 3px;
 	border-radius: 3px;
 }
 table.matchingDetailInfo tbody tr th {
@@ -1115,7 +1115,7 @@ form.config table.conftbl tr.text.noheadline p {
 	margin: 0.5em 0;
 }
 form.config table.conftbl tr.conf {
-	border-top: 1px solid #999;	
+	border-top: 1px solid #999;
 }
 form.config table.conftbl tr.conf td,
 form.config table.conftbl tr.conf th {
@@ -1346,7 +1346,7 @@ form.config table.conftbl tr table.nostyle td {
 	box-shadow: none;
 	border-bottom: 1px solid #999999;
 	border-top: none;
-	border-bottom: none;	
+	border-bottom: none;
 }
 form.config table.conftbl tr table.inlinetable td.nowrap {
 	white-space: nowrap;
@@ -1358,9 +1358,9 @@ form.config table.conftbl tr table.inlinetable {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
-form.config table.conftbl tr.conf td.subtable table td, 
+form.config table.conftbl tr.conf td.subtable table td,
 form.config table.conftbl tr.conf td.subtable table th,
-form.config table.conftbl tr td.subconf table.subtable td.noborder, 
+form.config table.conftbl tr td.subconf table.subtable td.noborder,
 form.config table.conftbl tr td.subconf table.subtable th.noborder,
 form.config table.conftbl tr table.inlinetable {
 	border-top: none;
@@ -1548,7 +1548,7 @@ table.datagrid.autoOddEven tbody tr:nth-child(odd) td,
 table.datagrid.autoOddEven tbody tr:nth-child(odd) th {
 	background: #eaeaea;
 	border-top: 1px solid #e0e0e0;
-	border-bottom: 1px solid #e0e0e0;	
+	border-bottom: 1px solid #e0e0e0;
 }
 table.actions tr td {
 	background: #eaeaea;
@@ -1763,12 +1763,12 @@ body.magna table.actions .gfxbutton {
 	margin-top: -3px;
 }
 
-table.datagrid table.nostyle.addData th, 
+table.datagrid table.nostyle.addData th,
 table.datagrid table.nostyle.addData td {
 	border-bottom: 1px solid #FAFAFA;
 	border-top: 1px solid #FAFAFA;
 }
-table.datagrid tr.odd table.nostyle.addData th, 
+table.datagrid tr.odd table.nostyle.addData th,
 table.datagrid tr.odd table.nostyle.addData td,
 table.datagrid tr:hover td table.nostyle.addData tr td,
 table.datagrid tr:hover td table.nostyle.addData tr th {
@@ -1949,6 +1949,9 @@ table.attributesTable td textarea.wrong {
 	border-color: #d30;
 	background-color: #fff0d8;
 }
+table.attributesTable td input:disabled{
+	background-color: lightgray;
+}
 table.attributesTable td input.blocked,
 table.attributesTable td select.blocked,
 table.attributesTable td textarea.blocked {
@@ -2094,8 +2097,8 @@ body.magna div.productList table.ml-pagination a {
 }
 
 /* Filter GUI */
-body.magna div.productList button.n, 
-body.magna div.productList input.n, 
+body.magna div.productList button.n,
+body.magna div.productList input.n,
 body.magna div.productList select.n,
 body.magna div.productList textarea.n {
 	margin: 0;
@@ -2104,11 +2107,11 @@ body.magna div.productList select.n,
 body.magna div.productList input[type="text"].n {
 	border: 1px solid #9C9C9C;
 	border-radius: 3px;
-	
+
 	padding: 2px 2px 2px 4px;
 
 	font-size: 12px;
-	
+
 	line-height: 17px;
 	height: 17px;
 	background-color: #f9f9f9;
@@ -2116,7 +2119,7 @@ body.magna div.productList input[type="text"].n {
 body.magna div.productList select.n {
 	line-height: 23px;
 	height: 23px;
-	
+
 	box-shadow: 0px -1px 2px rgba(0, 0, 0, 0.2) inset, 1px 1px 3px -1px #fff inset;
 }
 body.magna div.productList input[type="text"].n {
@@ -2183,15 +2186,15 @@ body.magna div.productList div.newSearch button span {
 	background-image: url(data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIGJhc2VQcm9maWxlPSJmdWxsIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4bWxuczpldj0iaHR0cDovL3d3dy53My5vcmcvMjAwMS94bWwtZXZlbnRzIj4NCjxnPg0KCTxjaXJjbGUgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNjY2NjY2IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIgY3g9IjUuNjg2IiBjeT0iNC43OTYiIHI9IjQuMiIvPg0KCTxsaW5lIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzY2NjY2NiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiIHgxPSI4LjM2OCIgeTE9IjguMDIxIiB4Mj0iMTEuNTgzIiB5Mj0iMTEuMjM3Ii8%2BDQo8L2c%2BDQo8L3N2Zz4=);
 	background-repeat: no-repeat;
 	background-position: 0px 0px;
-	
+
 	width: 13px;
 	height: 13px;
 	display: block;
-	
+
 	position: relative;
 	left: 0px;
 	top: 1px;
-	
+
 	margin: 0 auto;
 }
 body.magna div.productList div.newSearch button.mlbtn.action span {
@@ -2264,7 +2267,7 @@ body.magna div.productList table.price td {
 	background-color: #e6e6e6;
 	*background-color: #d9d9d9;
 	/* Buttons in IE7 don't get borders, so darken on hover */
-	
+
 	background-position: 0 -15px;
 	-webkit-transition: background-position 0.1s linear;
 	   -moz-transition: background-position 0.1s linear;
@@ -2481,7 +2484,7 @@ div#listingsBar img {
 	position: absolute;
 	top: 0;
 	left: 0;
-	height: 100%;	
+	height: 100%;
 	width: 100%;
 }
 div#listingsBar div.bar {
@@ -2562,7 +2565,7 @@ div#debugBox pre {
 }
 textarea#debugBox,
 textarea.debugBox {
-	height: 300px;	
+	height: 300px;
 	border: 1px solid #999;
 	background: #fff;
 	position: relative;
@@ -3158,8 +3161,8 @@ textarea.apiRequestTime:hover {
 
 /* jqueryui und tinyMCE fixes */
 body.jqueryui .ui-widget-overlay,
-body.magna div#mceModalBlocker { 
-	background: #000; 
+body.magna div#mceModalBlocker {
+	background: #000;
 	opacity: .50;
 	filter:Alpha(Opacity=50);
 }
@@ -3213,7 +3216,7 @@ body.magna .ui-datepicker.ui-helper-hidden-accessible {
 /* eBay prepare view */
 .iceCrystal {
 	display: inline-block;
-	width: 16px;	
+	width: 16px;
 	height: 16px;
 	background: transparent url('../images/icons/ice_crystal.png') no-repeat 0px 0px;
 }

@@ -657,7 +657,9 @@ if (!$auth['state']) {
 		setDBConfigValue('ebay.imagepath', $_MagnaSession['mpID'], $form['images']['fields']['imagepath']['default'], true);
 	}
 	if (   'gambioProperties' == getDBConfigValue('general.options', 0, 'old')
-	    && ML_ShopAddOns::mlAddOnIsBooked('EbayPicturePack')) {
+	    && ML_ShopAddOns::mlAddOnIsBooked('EbayPicturePack')
+        && version_compare(ML_GAMBIO_VERSION, '4.1', '<')
+    ) {
 		if (false == getDBConfigValue('ebay.imagepath.variations', $_MagnaSession['mpID'], false)) {
 			$form['images']['fields']['imagepathvariations']['default'] =
 				HTTP_CATALOG_SERVER.DIR_WS_CATALOG.DIR_WS_IMAGES.'product_images/properties_combis_images/';
@@ -934,6 +936,11 @@ if ($('input[id="conf_ebay.order.importonlypaid_true"]').attr('checked') == 'che
     	$('select[id="config_ebay_updateable_orderstatus"]').prop('disabled', true);
     	$('input[id="conf_ebay.update.orderstatus_val"]').prop('checked', false);
     	$('input[id="conf_ebay.update.orderstatus_val"]').prop('disabled', true);
+
+    	$('select[id="config_ebay_orderstatus_closed"]').css('color', '#d3d3d3');
+    	$('select[id="config_ebay_orderstatus_paid"]').css('color', '#d3d3d3');
+    	$('select[id="config_ebay_updateable_orderstatus"]').css('color', '#d3d3d3');
+    	$('input[id="conf_ebay.update.orderstatus_val"]').css('color', '#d3d3d3');
 }
 $('input[id="conf_ebay.order.importonlypaid_true"]').change(function() {
     		var rdio = $(this);
@@ -949,16 +956,26 @@ $('input[id="conf_ebay.order.importonlypaid_true"]').change(function() {
 					'<?php echo ML_BUTTON_LABEL_YES; ?>': function() {
 						$('input[id="conf_ebay.order.importonlypaid_false"]').removeAttr('checked');
 						rdio.attr('checked', 'checked');
+       					$('select[id="config_ebay_orderstatus_paid"]').val($('select[id="config_ebay_orderstatus_open"]').val());
     					$('select[id="config_ebay_orderstatus_closed"]').prop('disabled', true);
     					$('select[id="config_ebay_orderstatus_paid"]').prop('disabled', true);
     					$('select[id="config_ebay_updateable_orderstatus"]').prop('disabled', true);
     					$('input[id="conf_ebay.update.orderstatus_val"]').prop('checked', false);
     					$('input[id="conf_ebay.update.orderstatus_val"]').prop('disabled', true);
+					$('select[id="config_ebay_orderstatus_closed"]').css('color', '#d3d3d3');
+					$('select[id="config_ebay_orderstatus_paid"]').css('color', '#d3d3d3');
+					$('select[id="config_ebay_updateable_orderstatus"]').css('color', '#d3d3d3');
+					$('input[id="conf_ebay.update.orderstatus_val"]').css('color', '#d3d3d3');
 						jQuery(this).dialog('close');
 					}
 				}
 			})
 		});
+$('select[id="config_ebay_orderstatus_open"]').change(function() {
+    if ($('input[id="conf_ebay.order.importonlypaid_true"]').attr('checked') == 'checked') {
+       $('select[id="config_ebay_orderstatus_paid"]').val($('select[id="config_ebay_orderstatus_open"]').val());
+    }
+});
 $('input[id="conf_ebay.order.importonlypaid_false"]').change(function() {
     		var rdio = $(this);
     		if (rdio.attr('checked') == 'checked') {
@@ -966,9 +983,13 @@ $('input[id="conf_ebay.order.importonlypaid_false"]').change(function() {
     			$('select[id="config_ebay_orderstatus_paid"]').prop('disabled', false);
     			$('select[id="config_ebay_updateable_orderstatus"]').prop('disabled', false);
     			$('input[id="conf_ebay.update.orderstatus_val"]').prop('disabled', false);
+    			$('select[id="config_ebay_orderstatus_closed"]').css('color', 'black');
+    			$('select[id="config_ebay_orderstatus_paid"]').css('color', 'black');
+    			$('select[id="config_ebay_updateable_orderstatus"]').css('color', 'black');
+    			$('input[id="conf_ebay.update.orderstatus_val"]').css('color', 'black');
 			}
 					
-		});
+});
 /*]]>*/</script><?php
 ?><script>/*<!CDATA[*/
 	$(document).ready(function() {

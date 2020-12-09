@@ -86,17 +86,26 @@ function mlGetOrderStatus(&$form) {
 	if (!isset($_SESSION['languages_id'])) {
 		if (defined('DEFAULT_LANGUAGE')) {
 			$_SESSION['languages_id'] = MagnaDB::gi()->fetchOne("
-				SELECT languages_id
-				  FROM ".TABLE_LANGUAGES."
-				 WHERE l.code='".DEFAULT_LANGUAGE."'
+				SELECT `languages_id`
+				  FROM ".TABLE_LANGUAGES." l
+				 WHERE l.`code` = '".DEFAULT_LANGUAGE."'
 			");
 		} else {
-			$_SESSION['languages_id'] = MagnaDB::gi()->fetchOne("
-				SELECT languages_id
-				  FROM ".TABLE_LANGUAGES." l, ".TABLE_CONFIGURATION_MLDEF." c 
-				WHERE l.code=c.configuration_value 
-				AND c.configuration_key='DEFAULT_LANGUAGE'
-			");
+            if (defined('ML_GAMBIO_41_NEW_CONFIG_TABLE')) {
+                $_SESSION['languages_id'] = MagnaDB::gi()->fetchOne("
+                    SELECT `languages_id`
+                      FROM ".TABLE_LANGUAGES." l, ".TABLE_CONFIGURATION." c
+                     WHERE     l.`code` = c.`value`
+                           AND c.`key` = 'configuration/DEFAULT_LANGUAGE'
+                ");
+            } else {
+                $_SESSION['languages_id'] = MagnaDB::gi()->fetchOne("
+                    SELECT `languages_id`
+                      FROM ".TABLE_LANGUAGES." l, ".TABLE_CONFIGURATION." c 
+                    WHERE l.`code` = c.`configuration_value` 
+                    AND c.`configuration_key` = 'DEFAULT_LANGUAGE'
+                ");
+            }
 		}
 	}
 	$orders_status_array = MagnaDB::gi()->fetchArray(
@@ -177,20 +186,29 @@ function mlGetShippingModules(&$form) {
 
 function mlGetProductOptions(&$form) {
 	if (!isset($_SESSION['languages_id'])) {
-		if (defined('DEFAULT_LANGUAGE')) {
-			$_SESSION['languages_id'] = MagnaDB::gi()->fetchOne("
-				SELECT languages_id
-				  FROM ".TABLE_LANGUAGES."
-				 WHERE l.code='".DEFAULT_LANGUAGE."'
+        if (defined('DEFAULT_LANGUAGE')) {
+            $_SESSION['languages_id'] = MagnaDB::gi()->fetchOne("
+				SELECT `languages_id`
+				  FROM ".TABLE_LANGUAGES." l
+				 WHERE l.`code` = '".DEFAULT_LANGUAGE."'
 			");
-		} else {
-			$_SESSION['languages_id'] = MagnaDB::gi()->fetchOne("
-				SELECT languages_id
-				  FROM ".TABLE_LANGUAGES." l, ".TABLE_CONFIGURATION_MLDEF." c 
-				 WHERE l.code=c.configuration_value 
-				 AND c.configuration_key='DEFAULT_LANGUAGE'
-			");
-		}
+        } else {
+            if (defined('ML_GAMBIO_41_NEW_CONFIG_TABLE')) {
+                $_SESSION['languages_id'] = MagnaDB::gi()->fetchOne("
+                    SELECT `languages_id`
+                      FROM ".TABLE_LANGUAGES." l, ".TABLE_CONFIGURATION." c
+                     WHERE     l.`code` = c.`value`
+                           AND c.`key` = 'configuration/DEFAULT_LANGUAGE'
+                ");
+            } else {
+                $_SESSION['languages_id'] = MagnaDB::gi()->fetchOne("
+                    SELECT `languages_id`
+                      FROM ".TABLE_LANGUAGES." l, ".TABLE_CONFIGURATION." c 
+                    WHERE l.`code` = c.`configuration_value` 
+                    AND c.`configuration_key` = 'DEFAULT_LANGUAGE'
+                ");
+            }
+        }
 	}
 	$products_options_array = MagnaDB::gi()->fetchArray(
 		'SELECT products_options_id, products_options_name '.

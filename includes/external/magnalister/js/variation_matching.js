@@ -1921,8 +1921,11 @@
                 var newHiddenEl = $('<input type="hidden" name="' + $(this).attr('name') + '">').val($(this).val());
                 newForm.append(newHiddenEl);
             });
-
-            newForm.appendTo('body').submit().remove();
+            if(!!navigator.userAgent.match(/Version\/[\d]+.*Safari/) === true) {//safari 14.0 doesn't submit before remove function
+                newForm.appendTo('body').submit()//.remove();
+            } else {
+                newForm.appendTo('body').submit().remove();
+            }
 
             return false;
         }

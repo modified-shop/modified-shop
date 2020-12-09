@@ -787,8 +787,16 @@ function autoupdateAmazonOrdersStatus($mpID) {
 			}
 			if (isset($order['internaldata']['Request']['Data'])) {
 				$cfirm = $order['internaldata']['Request']['Data'];
+                // if we send tracking again don't forget the carrier and tracking code
+                if (empty($cfirm['Carrier'])) {
+                    $cfirm['Carrier'] = $carrier;
+                }
+                if (empty($cfirm['TrackingCode'])) {
+                    $cfirm['TrackingCode'] = $trackercode;
+                }
 				if (   array_key_exists('ShippingDate', $cfirm)
-				    && ($cfirm['ShippingDate'] > $date)) {
+				    && ($cfirm['ShippingDate'] > $date)
+                ) {
 					// use the first found ShippingDate for Shipping confirmations
 					$cfirm['ShippingDate'] = $date;
 				}

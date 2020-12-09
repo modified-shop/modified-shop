@@ -169,7 +169,9 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 		if (empty($productApply['data'])) {
 			return false;
 		}
-
+        if (array_key_exists('Keywords', $productApply['data']) && $productApply['data']['Keywords'] === null) {
+            $productApply['data']['Keywords'] = $product['Keywords'];
+        }
 		if (!empty($product['Attributes'])) {
 			$data['submit']['CustomAttributes'] = array();
 			foreach ($product['Attributes'] as $attribSet) {
@@ -249,7 +251,12 @@ class AmazonCheckinSubmit extends CheckinSubmit {
             $imagePath = trim($imagePath, '/ ').'/';
         }
         if ('gambioProperties' == getDBConfigValue('general.options', 0, 'old')) {
-            $imagePathVariations = getDBConfigValue($this->_magnasession['currentPlatform'].'.imagepath.variations', $this->_magnasession['mpID'], HTTP_CATALOG_SERVER.DIR_WS_CATALOG.DIR_WS_IMAGES.'product_images/properties_combis_images/');
+            // We only use path before Gambio 4.1 (since in Gambio 4.1 the image path is included in the Database)
+            if (version_compare(ML_GAMBIO_VERSION, '4.1', '>=')) {
+                $imagePathVariations = HTTP_CATALOG_SERVER.DIR_WS_CATALOG;
+            } else {
+                $imagePathVariations = getDBConfigValue($this->_magnasession['currentPlatform'].'.imagepath.variations', $this->_magnasession['mpID'], HTTP_CATALOG_SERVER.DIR_WS_CATALOG.DIR_WS_IMAGES.'product_images/properties_combis_images/');
+            }
         } else {
            $imagePathVariations = $imagePath; 
         } 
@@ -298,7 +305,6 @@ class AmazonCheckinSubmit extends CheckinSubmit {
             $sVariationTheme = array();
         }
 
-
         $preparedAttributes = $this->getPreparedAttributes($productApply);
         foreach ($data['submit']['Variations'] as $vNo => &$vItem) {
 			$vItem['SKU'] = ($this->settings['keytype'] == 'artNr')
@@ -340,8 +346,22 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 				}
 			} else if (    isset($product['VariationPictures'])
 			            && ($product['VariationPictures'][$vNo]['VariationId'] == $vItem['VariationId'])
-			            && (!empty($product['VariationPictures'][$vNo]['Image']))) {
-				$vItem['Images'][0] = (preg_match('/http(s{0,1}):\/\//', $product['VariationPictures'][$vNo]['Image']) ? '' : $imagePathVariations ).$product['VariationPictures'][$vNo]['Image'];
+            ) {
+                // Support for one Variation Image (if shop not support multiple variation images)
+                if (empty($product['VariationPictures'][$vNo]['Images'])) {
+                    $product['VariationPictures'][$vNo]['Images'] = array($product['VariationPictures'][$vNo]['Image']);
+                }
+
+                // Support for Multiple Variation Images - see Fallback above if shop supports only one variation image
+                if (!empty($product['VariationPictures'][$vNo]['Images'])) {
+                    foreach ($product['VariationPictures'][$vNo]['Images'] as $varImage) {
+                        if (!empty($varImage)
+                            && !in_array($imagePathVariations.$varImage, $vItem['Images'])
+                        ) {
+                            $vItem['Images'][] = (preg_match('/http(s{0,1}):\/\//', $varImage) ? '' : $imagePathVariations ).$varImage;
+                        }
+                    }
+                }
 			} else {
 				unset($vItem['Images']);
 			}
@@ -382,6 +402,10 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 			}
 			if (isset($aTemplates[$defaultTemplateIndex])) {
 				$data['submit']['Attributes']['MerchantShippingGroupName'] = $aTemplates[$defaultTemplateIndex];
+                // Set MerchantShippingGroup also for Variations!
+                foreach ($data['submit']['Variations'] as &$varItem) {
+                    $varItem['Attributes']['MerchantShippingGroupName'] = $aTemplates[$defaultTemplateIndex];
+                }
 			}
 		} else if (isset($data['submit']['Attributes']) && isset($data['submit']['Attributes']['MerchantShippingGroupName'])) {
 			unset($data['submit']['Attributes']['MerchantShippingGroupName']);

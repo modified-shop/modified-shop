@@ -498,14 +498,25 @@ function renderSingleApplication($data) {
 		<td class="info">' . ML_AMAZON_TEXT_APPLY_PRODUCTDESCRIPTION . '</td>
 			</tr>
 			<tr class="even">
-				<th>' . ML_AMAZON_LABEL_APPLY_KEYWORDS . '</th>
+				<th><table class="nostyle actions">
+						<tr>
+							<td>' . ML_AMAZON_LABEL_APPLY_KEYWORDS . '</td>
+							<td style="width: 20px;">
+								<div class="desc" title="<?php echo ML_LABEL_INFO ?>">
+									<span style="display: none">' . ML_AMAZON_INFO_APPLY_KEYWORDS . '</span>
+								</div>
+							</td>
+						</tr>
+					</table></th>
 				<td class="input">
-				    <input type="text" class="fullwidth" name="Keywords[0]" value="' . fixHTMLUTF8Entities($data['Keywords'][0]) . '"/><br/>
-				    <input type="text" class="fullwidth" name="Keywords[1]" value="' . fixHTMLUTF8Entities($data['Keywords'][1]) . '"/><br/>
-				    <input type="text" class="fullwidth" name="Keywords[2]" value="' . fixHTMLUTF8Entities($data['Keywords'][2]) . '"/><br/>
-				    <input type="text" class="fullwidth" name="Keywords[3]" value="' . fixHTMLUTF8Entities($data['Keywords'][3]) . '"/><br/>
-				    <input type="text" class="fullwidth" name="Keywords[4]" value="' . fixHTMLUTF8Entities($data['Keywords'][4]) . '"/><br/></td>
-				<td class="info">' . ML_AMAZON_TEXT_APPLY_KEYWORDS . '</td>
+				    <div>
+                        <input class="ml-always-from-web-shop" id="ml-keywords-always-from-web-shop" name="Keywords__FromWebShop" type="checkbox" '.($data['Keywords'] === null ? 'checked=checked' : '').'">
+                        <label style="color:black;" for="ml-keywords-always-from-web-shop">
+                            '.ML_AMAZON_FROMWEBSHOP_APPLY_KEYWORDS.'
+                        </label>
+                    </div>
+				    <input type="text" '.($data['Keywords'] === null ? 'disabled="true"' : '').' class="fullwidth" name="Keywords" value="'.fixHTMLUTF8Entities($data['Keywords']).'"/></td>
+				<td class="info">'.ML_AMAZON_TEXT_APPLY_KEYWORDS.'</td>
 			</tr>
 			<tr class="spacer">
 				<td colspan="3">&nbsp;</td>
@@ -930,6 +941,20 @@ if ($applyAction != 'multiapplication') {
 					}
 				});
 			});
+			$('.ml-always-from-web-shop').change(function (){
+                var self = $(this);
+                if(self.is(':checked')){
+                    console.log(self.parent().parent().children('input'));
+                    self.parent().parent().children('input').prop( "disabled", true );
+                    self.parent().parent().children('input').css( "color", '#818181' );
+                    self.parent().parent().children('input').css( "background-color", '#d3d3d3' );
+                } else{
+                    self.parent().parent().children('input').prop( "disabled", false );
+                    self.parent().parent().children('input').css( "color", 'black' );
+                    self.parent().parent().children('input').css( "background-color", 'white' );
+                }
+            });
+            $('.ml-always-from-web-shop').change();
 		});
 	/*]]>*/</script>
 <?php

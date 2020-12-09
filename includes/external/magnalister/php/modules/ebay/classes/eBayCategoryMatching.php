@@ -28,7 +28,7 @@ class eBayCategoryMatching {
 	private $isStoreCategory = false;
 
 	private $url;
-    private $SiteID;
+	private $SiteID;
 
 	public function __construct($request = 'view') {
 		global $_url;
@@ -107,6 +107,7 @@ class eBayCategoryMatching {
 	}
 
 	private function geteBayCategories($ParentID = 0, $purge = false) {
+		global $_MagnaSession;
 		if ($purge) {
 			MagnaDB::gi()->delete(TABLE_MAGNA_EBAY_CATEGORIES, array (
 				'StoreCategory' => '0',
@@ -117,6 +118,10 @@ class eBayCategoryMatching {
 			$whereCondition = 'CategoryID = ParentID';
 		} else {
 			$whereCondition = "CategoryID != ParentID AND ParentID = $ParentID";
+		}
+		if (getDBConfigValue(array($_MagnaSession['currentPlatform'].'.restrictToBusiness', 'val'), $_MagnaSession['mpID'], false)) {
+			$whereCondition .= "
+		           AND B2BVATEnabled = '1'";
 		}
 
 		$ebayCategories = MagnaDB::gi()->fetchArray('
@@ -259,9 +264,16 @@ class eBayCategoryMatching {
 	}
 
 	public function renderView() {
+		global $_MagnaSession;
+		if (getDBConfigValue(array($_MagnaSession['currentPlatform'].'.restrictToBusiness', 'val'), $_MagnaSession['mpID'], false)) {
+			$sNotice = '<tr><td><div class="noticeBox">'.ML_EBAY_ONLY_B2B_CATS.'</div></td></tr>';
+		} else {
+			$sNotice = '';
+		}
 		$html = '
 			<div id="ebayCategorySelector" class="dialog2" title="'.ML_EBAY_LABEL_SELECT_CATEGORY.'">
 				<table id="catMatch"><tbody>
+					'.$sNotice.'
 					<tr>
 						<td id="ebayCats" class="catView"><div class="catView">'.$this->rendereBayCategories('').'</div></td>
 					</tr>

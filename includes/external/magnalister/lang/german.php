@@ -707,6 +707,33 @@ define('ML_AMAZON_LABEL_APPLY_ATTRIBUTES', 'Attribute');
 define('ML_AMAZON_LABEL_APPLY_BROWSENODES', 'Browsenodes');
 define('ML_AMAZON_LABEL_APPLY_BULLETPOINTS', 'Bulletpoints');
 define('ML_AMAZON_LABEL_APPLY_KEYWORDS', 'Allgemeine Schl&uuml;sselw&ouml;rter');
+define('ML_AMAZON_INFO_APPLY_KEYWORDS', '<h3>Produkt-Ranking mit Amazon Schlüsselwörtern optimieren</h3>
+<br>
+Allgemeine Schlüsselwörter dienen zur Optimierung des Rankings und zur besseren Filterbarkeit auf Amazon. Sie werden während des magnalister Produkt-Uploads unsichtbar am Produkt hinterlegt.
+<br><br>
+<h2>Optionen für die Übergabe von Allgemeinen Schlüsselwörtern</h2>
+1. Keywords immer aktuell aus Web-Shop verwenden (Metakeywords): 
+<br><br>
+Dabei werden die Schlüsselwörter aus dem Metakeywords-Feld des jeweiligen Produktes im Web-Shop gezogen und an Amazon übermittelt.
+<br><br>
+2. Allgemeine Schlüsselwörter in magnalister manuell eintragen: 
+<br><br>
+Wenn Sie nicht die am Web-Shop-Produkt hinterlegten Metakeywords übernehmen möchten, können Sie eigene Schlüsselwörter in diesem Freitextfeld eintragen.
+<br><br>
+<b>Wichtige Hinweise:</b>
+<br><ul>
+<li>Wenn Sie Schlüsselwörter manuell eintragen, trennen Sie sie mit einem Leerzeichen (nicht mit Komma!) und achten Sie darauf, dass Sie insgesamt 250 Bytes (Faustregel: 1 Zeichen = 1 Byte. Ausnahme: Sonderzeichen wie Ä, Ö, Ü = 2 Byte) nicht überschreiten.
+</li><li>
+Wenn im Metakeywords-Feld des Web-Shop-Produkts die Keywords kommagetrennt vorliegen, wandelt magnalister beim Produkt-Upload die Kommas automatisch in Leerzeichen um. Auch hier gilt die Begrenzung auf 250 Bytes.
+</li><li>
+Wird die zulässige Byte-Zahl überschritten, gibt Amazon nach dem Produkt-Upload möglicherweise eine Fehlermeldung zurück, die Sie im magnalister Fehler-Log einsehen können (Wartezeit bis zu 60 Minuten).
+</li><li>
+Übergabe von Platinum-Keywords: Sofern Sie Amazon Platin-Händler sind, informieren Sie den magnalister Support darüber. Wir schalten dann die Übergabe der Platinum-Keywords frei. Dabei greift magnalister auf die Allgemeinen Schlüsselbegriffe zurück und übermittelt diese 1:1 an Amazon. Allgemeine Schlüsselbegriffe und Platinum-Keywords sind also identisch.
+</li><li>
+Abweichende Platinum-Keywords übermitteln: Nutzen Sie das magnalister Attributs-Matching in der Produktvorbereitung. Wählen Sie dafür aus der Liste der verfügbaren Amazon Attribute “Platinum-Schlüsselwörter 1-5” und matchen Sie das entsprechende Webshop-Attribut.
+</li><li>
+Neben Allgemeinen Schlüsselwörtern gibt es weitere Amazon-relevante Keywords (z.B. Thesaurus Attributschlüsselwörter, Zielgruppen-Keywords oder Themenschlüsselwörter), die Sie ebenfalls über das Attributs-Matching an Amazon übergeben können.
+</li></ul>');
 define('ML_AMAZON_LABEL_APPLY_ADDITIONAL_DETAILS', 'Weitere Details (Empfohlen)');
 define('ML_AMAZON_LABEL_APPLY_NOT_PREPARED', 'Nicht vorbereitet');
 define('ML_AMAZON_LABEL_APPLY_PREPARE_COMPLETE', 'Vollst&auml;ndig');
@@ -766,9 +793,12 @@ define('ML_AMAZON_TEXT_APPLY_BULLETPOINTS', 'Key-Features des Artikels (z. B. &q
 	Diese Daten werden aus Meta-Description gezogen und m&uuml;ssen dort mit Kommas getrennt sein.<br />
 	Maximal je 500 Zeichen.');
 define('ML_AMAZON_TEXT_APPLY_PRODUCTDESCRIPTION', 'Maximal 2000 Zeichen. Einige HTML-Tags und deren Attribute sind erlaubt. Diese Z&auml;hlen zu den 2000 Zeichen dazu.');
-define('ML_AMAZON_TEXT_APPLY_KEYWORDS', 'Werden bei Suche verwendet (z. B. &quot;vergoldet&quot;, &quot;edel&quot;, &quot;kitschig&quot;)<br /><br />
-	Diese Daten werden aus Meta-Keywords gezogen und m&uuml;ssen dort mit Kommas getrennt sein.<br />
-	Je nach Kategorie maximal zwischen 50 und 1000 Zeichen.');
+define('ML_AMAZON_TEXT_APPLY_KEYWORDS', 'Bei manueller Eingabe zu beachten:
+<br><br>
+Einzelne Schlüsselwörter mit Leerzeichen (nicht mit Komma!) trennen
+<br><br>
+Alle Schlüsselwörter zusammen dürfen nicht größer als 250 Bytes sein (1 Zeichen = 1 Byte. Ausnahme: Sonderzeichen wie Ä, Ö, Ü = 2 Byte)');
+define('ML_AMAZON_FROMWEBSHOP_APPLY_KEYWORDS', 'Keywords immer aktuell aus Web-Shop verwenden (Metakeywords)');
 define('ML_AMAZON_TEXT_APPLY_DATA_INCOMPLETE', 'Einige Pflichtfelder wurden nicht ausgef&uuml;llt. Bitte korrigieren Sie dies durch Klick auf die Schaltfl&auml;che "'.
 	ML_AMAZON_BUTTON_PREPARE.'"');
 define('ML_AMAZON_TEXT_APPLY_REQUIERD_EAN', 'Nicht relevant, wenn an den Varianten EAN hinterlegt ist');
@@ -1293,6 +1323,7 @@ define('ML_EBAY_NO_HITCOUNTER', 'keiner');
 define('ML_EBAY_BASIC_HITCOUNTER', 'Einfach');
 define('ML_EBAY_RETRO_HITCOUNTER', 'Retro-Style');
 define('ML_EBAY_HIDDEN_HITCOUNTER', 'versteckt');
+define('ML_EBAY_ONLY_B2B_CATS', '<b>Hinweis</b>: Sie haben in der Konfiguration ausgew&auml;hlt, dass Sie nur an Gesch&auml;ftskunden verkaufen wollen. Daher werden nur Kategorien angezeigt, die das erlauben.');
 define('ML_EBAY_NOTE_VARIATIONS_ENABLED', '<div class="successBox"><b>Hinweis</b>: F&uuml;r diese Kategorie werden Varianten hochgeladen, soweit erw&uuml;nscht (Konfig-Einstellung) und vorhanden.</div>');
 define('ML_EBAY_NOTE_VARIATIONS_DISABLED', '<div class="errorBox"><b class="error">Hinweis</b>: F&uuml;r diese Kategorie sieht eBay keine Varianten vor, es wird nur der Stammartikel hochgeladen.</div>');
 define('ML_EBAY_NOTE_PRODUCT_REQUIRED_SHORT', '<b>Hinweis</b>: F&uuml;r diese Kategorie ist eine Angabe der eBay Produkt ID Pflicht, Details siehe Info-Icon.');
@@ -1643,6 +1674,7 @@ define('ML_CDISCOUNT_LABEL_ORDER_ID', 'Cdiscount-Bestellnummer');
 define('ML_CDISCOUNT_IS_PORN', 'Porno');
 define('ML_CDISCOUNT_AGE_RATING', 'Altersbeschr&auml;nkung');
 define('ML_CDISCOUNT_CONDITION', 'Zustand');
+define('ML_CDISCOUNT_MAX_4_IMAGES', 'Seitens Cdiscount wird der Upload von maximal 4 Bildern pro Artikel zugelassen.<br/><br/>Dar&uuml;ber hinaus gilt: F&uuml;r jede hochgeladene Variante sind ebenfalls maximal vier Bilder erlaubt.');
 
 define('ML_CDISCOUNT_SHIPPINGTYPE_STANDARD', 'Shipping standard');
 define('ML_CDISCOUNT_SHIPPINGTYPE_REGISTERED', 'Shipping registered');
