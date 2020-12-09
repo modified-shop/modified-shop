@@ -144,7 +144,7 @@ class Curl extends AbstractAdapter
      */
     protected function curlClose()
     {
-        if (get_resource_type($this->curlResource) == 'curl') {
+        if (is_object($this->curlResource) && stripos(get_class($this->curlResource), 'curl') !== false) {
             curl_close($this->curlResource);
             $this->curlResource = curl_init();
         }
