@@ -53,7 +53,7 @@
                                  'date' => 'now()',
                                  'body' => xtc_db_prepare_input($_POST['newsletter_body']));
 
-        if ($id!='') {
+        if ($id != 0) {
            xtc_db_perform(TABLE_MODULE_NEWSLETTER, $sql_data_array, 'update', "newsletter_id = '" . $id . "'");
            // create temp table
            xtc_db_query("DROP TABLE IF EXISTS module_newsletter_temp_".$id);
