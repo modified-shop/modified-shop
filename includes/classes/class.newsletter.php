@@ -239,6 +239,8 @@ class newsletter {
 
 
   function sendRequestMail($mail, $action = 'opt_in') {
+    global $xtPrice;
+    
     $sendmail = false;
     $smarty = new Smarty;
     
@@ -278,6 +280,11 @@ class newsletter {
           {
             $sendmail = true;
             require_once (DIR_FS_INC.'create_coupon_code.inc.php');
+
+            if (!isset($xtPrice) || !is_object($xtPrice)) {
+              require_once (DIR_FS_CATALOG.'includes/classes/xtcPrice.php');
+              $xtPrice = new xtcPrice($_SESSION['currency'], $_SESSION['customers_status']['customers_status_id']);
+            }
 
             $coupon_code = create_coupon_code();
             $sql_data_array = array('coupon_code' => $coupon_code,
