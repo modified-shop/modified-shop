@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: image_processing_step.php 2992 2012-06-07 16:59:49Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -40,6 +40,9 @@ define('MODULE_STEP_READY_STYLE_TEXT', '<div class="ready_info">%s</div>');
 define('MODULE_STEP_READY_STYLE_BACK', MODULE_STEP_READY_STYLE_TEXT);
 define('TEXT_LOWER_FILE_EXT','Convert file extension to lowercase. Example: <b> JPG -> jpg</b>');
 define('IMAGE_COUNT_INFO','Number of images in %s: %s pieces. ');
+define('TEXT_THUMBNAIL_IMAGES','Thumbnail images');
+define('TEXT_INFO_IMAGES','Info images');
+define('TEXT_POPUP_IMAGES','Popup images');
 
 define('TEXT_LOGFILE','Enable logging, useful for debugging. The log file is saved in the folder /log in the root directory.');
 

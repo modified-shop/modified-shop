@@ -117,13 +117,22 @@ if ( !class_exists( "image_processing_step" ) ) {
 
         if (isset($_POST['only_missing_images']) && $_POST['only_missing_images'] == 1) {
           $flag = false;
-          if (!is_file(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$products_image_name_process)) {
+          if (!is_file(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$products_image_name_process)
+              && isset($_POST['thumbnail_images']) && $_POST['thumbnail_images'] == 1
+              )
+          {
             require(DIR_WS_INCLUDES . 'product_thumbnail_images.php'); $flag = true;
           }
-          if (!is_file(DIR_FS_CATALOG_INFO_IMAGES.$products_image_name_process)) {
+          if (!is_file(DIR_FS_CATALOG_INFO_IMAGES.$products_image_name_process)
+              && isset($_POST['info_images']) && $_POST['info_images'] == 1
+              )
+          {
             require(DIR_WS_INCLUDES . 'product_info_images.php'); $flag = true;
           }
-          if (!is_file(DIR_FS_CATALOG_POPUP_IMAGES.$products_image_name_process)) {
+          if (!is_file(DIR_FS_CATALOG_POPUP_IMAGES.$products_image_name_process)
+              && isset($_POST['popup_images']) && $_POST['popup_images'] == 1
+              )
+          {
             require(DIR_WS_INCLUDES . 'product_popup_images.php'); $flag = true;
           }
           if ($flag) {
@@ -133,9 +142,15 @@ if ( !class_exists( "image_processing_step" ) ) {
             }  
           }
         } else {
-          require(DIR_WS_INCLUDES . 'product_thumbnail_images.php');
-          require(DIR_WS_INCLUDES . 'product_info_images.php');
-          require(DIR_WS_INCLUDES . 'product_popup_images.php');
+          if (isset($_POST['thumbnail_images']) && $_POST['thumbnail_images'] == 1) {
+            require(DIR_WS_INCLUDES . 'product_thumbnail_images.php');
+          }
+          if (isset($_POST['info_images']) && $_POST['info_images'] == 1) {
+            require(DIR_WS_INCLUDES . 'product_info_images.php');
+          }
+          if (isset($_POST['popup_images']) && $_POST['popup_images'] == 1) {
+            require(DIR_WS_INCLUDES . 'product_popup_images.php');
+          }
           $count += 1;
           if (isset($_POST['logging']) && $_POST['logging'] == 1) {
             $handle = fopen($this->logfile, "a"); fwrite($handle, $rData['imgname'].'|process'."\n"); fclose($handle);
@@ -161,7 +176,6 @@ if ( !class_exists( "image_processing_step" ) ) {
 
     function display() {
 
-      //Array f�r max. Bilder pro Seitenreload
       $max_array = array (array ('id' => '1', 'text' => '1'));
       $max_array[] = array ('id' => '5', 'text' => '5');
       $max_array[] = array ('id' => '10', 'text' => '10');
@@ -184,8 +198,14 @@ if ( !class_exists( "image_processing_step" ) ) {
                              IMAGE_EXPORT.'<br />'.
                              '<br />' . sprintf(IMAGE_COUNT_INFO, basename(DIR_FS_CATALOG_ORIGINAL_IMAGES), $this->max_files) . '['.$this->formatBytes($this->data_volume).']'.'<br />'.
                              '<br />' . xtc_draw_pull_down_menu('max_datasets', $max_array, '5'). ' ' . TEXT_MAX_IMAGES. '<br />'.
-                             '<br />' . xtc_draw_checkbox_field('only_missing_images', '1', false, '', 'class="only_missing_images"') . ' ' . TEXT_ONLY_MISSING_IMAGES. '<br />'.
+
+                             '<br />' . xtc_draw_checkbox_field('thumbnail_images', '1', false, '', 'class="thumbnail_images"') . ' ' . TEXT_THUMBNAIL_IMAGES.
+                             '<br />' . xtc_draw_checkbox_field('info_images', '1', false, '', 'class="info_images"') . ' ' . TEXT_INFO_IMAGES. 
+                             '<br />' . xtc_draw_checkbox_field('popup_images', '1', false, '', 'class="popup_images"') . ' ' . TEXT_POPUP_IMAGES. '<br />'.
+
+                             '<br />' . xtc_draw_checkbox_field('only_missing_images', '1', false, '', 'class="only_missing_images"') . ' ' . TEXT_ONLY_MISSING_IMAGES.
                              '<br />' . xtc_draw_checkbox_field('lower_file_ext', '1', false, '', 'class="lower_file_ext"') . ' ' . TEXT_LOWER_FILE_EXT. '<br />'.
+                             
                              '<br />' . xtc_draw_checkbox_field('logging', '1', false, '', 'class="logfile"') . ' ' . TEXT_LOGFILE. '<br />'.
                              '<br />' . xtc_button(BUTTON_START). '&nbsp;' .
                              xtc_button_link(BUTTON_CANCEL, xtc_href_link($this->module_filename, 'set=' . $_GET['set'] . '&module='.$this->code)) .
