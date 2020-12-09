@@ -67,4 +67,7 @@ define('TEXT_REMOVE_COLLATE', "<b>Without encoding 'COLLATE' and 'DEFAULT CHARSE
 
 //TEXT_REMOVE_ENGINE
 define('TEXT_REMOVE_ENGINE', "<b>Without storage engines 'ENGINE'</b><br> - The storage engine statements (MyISAM,InnoDB) are not beeing inserted.");
+
+define('TEXT_IMPORT_UTF_NOTICE', '<b>Attention:</b> the database is converted to UTF-8.');
+define('TEXT_INFO_CHARSET', 'Charset:');
 ?>

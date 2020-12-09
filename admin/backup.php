@@ -14,47 +14,12 @@
    (c) 2006  xt-commerce (backup.php 1023 2005-07-14); www.xt-commerce.com
 
    Released under the GNU General Public License
-
-   Datenbank Backup Ver. 2.10
-   modified by web28 - www.rpa-com.de 07.06.2017
-   //remove_engine option
-
-  Datenbank Backup Ver. 2.00
-   modified by web28 - www.rpa-com.de 14.09.2014
-   //jquery ajax handling
-   
-   Datenbank Backup Ver. 1.92
-   modified by web28 - www.rpa-com.de 23.11.2011
-   //new restore_backup.php - no admin restrictions
-
-   Datenbank Backup Ver. 1.91f
-   modified by DokuMan - 31.10.2010
-   //kleinere Anpassungen, um PHP-Notices zu vermeiden
-
-   Datenbank Backup Ver. 1.91e
-   modified by web28 - www.rpa-com.de 06.10.2010
-   //upload mit xtc_try_upload beschraenkt auf sql und gz Dateien
-
-   Datenbank Backup Ver. 1.91d
-   modified by web28 - www.rpa-com.de 09.09.2010
-   //Admin Rechte automatisch neu setzen bei Restore -> kompatibel mit alten Backups
-
-   Datenbank Backup Ver. 1.91b
-   modified by web28 - www.rpa-com.de 05.06.2010
-   //Rechte automatisch setzen fuer Unteradmin
-
-   Datenbank Backup Ver. 1.91a
-   modified by web28 - www.rpa-com.de 28.04.2010
-   New Restore Method:  like MySqlDumper
-   New Backup Method:  single tables with reload site
-   Backup includes - depends on database version - engine, auto_increment, default charset, collate
-   no exec needed
-   used upzip.lib.php , zip.lib.php for zip compress/uncompress
    --------------------------------------------------------------*/
+
   define('BK_FILENAME', 'backup_db.php'); //BACKUP
   define('RS_FILENAME', 'backup_restore.php'); //RESTORE
 
-  define ('VERSION', 'Database Backup/Restore Ver. 2.10');
+  define ('VERSION', 'Database Backup/Restore Ver. 2.20');
 
   require('includes/application_top.php');
 
@@ -346,7 +311,7 @@
                       //$heading[] = array('text' => '<b>' . $buInfo->date . '</b>');
                       $contents[] = array('text' => xtc_break_string(sprintf(TEXT_INFO_RESTORE, DIR_FS_BACKUP . (($buInfo->compression != TEXT_NO_EXTENSION) ? substr($buInfo->file, 0, strrpos($buInfo->file, '.')) : $buInfo->file), ($buInfo->compression != TEXT_NO_EXTENSION) ? TEXT_INFO_UNPACK : ''), 35, ' '));
                       if (!$check_utf8 && $buInfo->charset == 'utf8') {
-                        $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('utf8-convert', 'yes', false) . ' ' . TEXT_IMPORT_UTF);
+                        $contents[] = array('text' => '<div class="messageStackError">' . TEXT_IMPORT_UTF_NOTICE . '</div>' . xtc_draw_hidden_field('utf8-convert', 'yes'));
                       }
                       require_once (DIR_FS_INC . 'xtc_create_password.inc.php'); // needed for xtc_RandomString
                       $_SESSION['SECName'] = xtc_RandomString(6);
@@ -379,6 +344,7 @@
                         $contents[] = array('text' => '<br />' . TEXT_INFO_DATE . ' ' . $buInfo->date);
                         $contents[] = array('text' => TEXT_INFO_SIZE . ' ' . $buInfo->size);
                         $contents[] = array('text' => '<br />' . TEXT_INFO_COMPRESSION . ' ' . $buInfo->compression);
+                        $contents[] = array('text' => TEXT_INFO_CHARSET . ' ' . $buInfo->charset);
                         $contents[] = array('text' => TEXT_INFO_TABLES_IN_BACKUP . ($buInfo->table_list != TEXT_INFO_NO_INFORMATION ? count($buInfo->table_list) : '') . '<br>' . createDBTableList($buInfo->table_list));
                       }
                       break;
