@@ -11,7 +11,6 @@ use EasyCredit\Api\Request\Process\Get;
 use EasyCredit\Api\Request\Process\GetFinancingDetails;
 use EasyCredit\Api\Request\Process\GetCommonProcessData;
 use EasyCredit\Api\Request\Process\GetDecision;
-use EasyCredit\Api\Request\Process\GetPersonDetail;
 use EasyCredit\Api\Request\Process\Initialize;
 use EasyCredit\Api\Request\Process\Save;
 use EasyCredit\Api\Request\Process\SepaMandateDetails;
@@ -28,6 +27,11 @@ use EasyCredit\Transfer\SepaDirectDebitText;
 use EasyCredit\Transfer\VerificationSnipped;
 use EasyCredit\Api\Request\Text\GetLegislativeText;
 use EasyCredit\Api\Request\Limit\ResidualAmountPurchaseLimit;
+use EasyCredit\Transfer\GetCommonProcessDataResponse;
+use EasyCredit\Transfer\ProcessVerifyMTan;
+use EasyCredit\Api\Request\Process\VerifyMTAN;
+use EasyCredit\Api\Request\Process\ResendMTAN;
+use EasyCredit\Transfer\ProcessConfirm;
 
 /**
  * Class ApiClient
@@ -93,7 +97,11 @@ class ApiClient
 
         $response = $this->request->doRequest($requestType);
 
-        return $this->dataMapper->mapResponse($requestType->getTransferClass(), $response->getBody());
+        $transferInterface = $this->dataMapper->mapResponse($requestType->getTransferClass(), $response->getBody());
+        
+        $transferInterface->setHttpStatusCode($response->getStatusCode());
+        
+        return $transferInterface;
     }
 
     /**
@@ -109,7 +117,11 @@ class ApiClient
 
         $response = $this->request->doRequest($requestType);
 
-        return $this->dataMapper->mapResponse($requestType->getTransferClass(), $response->getBody());
+        $transferInterface = $this->dataMapper->mapResponse($requestType->getTransferClass(), $response->getBody());
+        
+        $transferInterface->setHttpStatusCode($response->getStatusCode());
+        
+        return $transferInterface;
     }
 
     /**
@@ -124,21 +136,11 @@ class ApiClient
 
         $response = $this->request->doRequest($requestType);
         
-        return $this->dataMapper->mapResponse($requestType->getTransferClass(), $response->getBody());
-    }
-
-    /**
-     * @param string $tbProcessIdentifier
-     *
-     * @return \EasyCredit\Transfer\GetPersonResponse
-     */
-    public function getProcessPersonDetail($tbProcessIdentifier)
-    {
-        $requestType = new GetPersonDetail($this->shopId, $this->shopToken, $tbProcessIdentifier);
-
-        $response = $this->request->doRequest($requestType);
-
-        return $this->dataMapper->mapResponse($requestType->getTransferClass(), $response->getBody());
+        $transferInterface = $this->dataMapper->mapResponse($requestType->getTransferClass(), $response->getBody());
+        
+        $transferInterface->setHttpStatusCode($response->getStatusCode());
+        
+        return $transferInterface;
     }
 
     /**
@@ -153,7 +155,11 @@ class ApiClient
 
         $response = $this->request->doRequest($requestType);
 
-        return $this->dataMapper->mapResponse($requestType->getTransferClass(), $response->getBody());
+        $transferInterface = $this->dataMapper->mapResponse($requestType->getTransferClass(), $response->getBody());
+        
+        $transferInterface->setHttpStatusCode($response->getStatusCode());
+        
+        return $transferInterface;
     }
 
     /**
@@ -167,7 +173,11 @@ class ApiClient
 
         $response = $this->request->doRequest($requestType);
 
-        return $this->dataMapper->mapResponse($requestType->getTransferClass(), $response->getBody());
+        $transferInterface = $this->dataMapper->mapResponse($requestType->getTransferClass(), $response->getBody());
+        
+        $transferInterface->setHttpStatusCode($response->getStatusCode());
+        
+        return $transferInterface;
     }
 
     /**
@@ -181,7 +191,11 @@ class ApiClient
 
         $response = $this->request->doRequest($requestType);
 
-        return $this->dataMapper->mapResponse($requestType->getTransferClass(), $response->getBody());
+        $transferInterface = $this->dataMapper->mapResponse($requestType->getTransferClass(), $response->getBody());
+        
+        $transferInterface->setHttpStatusCode($response->getStatusCode());
+        
+        return $transferInterface;
     }
 
     /**
@@ -189,13 +203,17 @@ class ApiClient
      *
      * @return \EasyCredit\Transfer\TransferInterface
      */
-    public function agreeInstallment($tbProcessIdentifier)
+    public function agreeInstallment($tbProcessIdentifier, ProcessConfirm $processConfirm)
     {
-        $requestType = new Agree($this->shopId, $this->shopToken, $tbProcessIdentifier);
+        $requestType = new Agree($this->shopId, $this->shopToken, $tbProcessIdentifier, $processConfirm, $this->dataMapper);
 
         $response = $this->request->doRequest($requestType);
 
-        return $this->dataMapper->mapResponse($requestType->getTransferClass(), $response->getBody());
+        $transferInterface = $this->dataMapper->mapResponse($requestType->getTransferClass(), $response->getBody());
+        
+        $transferInterface->setHttpStatusCode($response->getStatusCode());
+        
+        return $transferInterface;
     }
 
     /**
@@ -209,7 +227,11 @@ class ApiClient
         
         $response = $this->request->doRequest($requestType);
         
-        return $this->dataMapper->mapResponse($requestType->getTransferClass(), $response->getBody());
+        $transferInterface = $this->dataMapper->mapResponse($requestType->getTransferClass(), $response->getBody());
+        
+        $transferInterface->setHttpStatusCode($response->getStatusCode());
+        
+        return $transferInterface;
     }
 
     /**
@@ -237,12 +259,16 @@ class ApiClient
 
         $response = $this->request->doRequest($requestType);
 
-        return $this->dataMapper->mapResponse($requestType->getTransferClass(), $response->getBody());
+        $transferInterface = $this->dataMapper->mapResponse($requestType->getTransferClass(), $response->getBody());
+        
+        $transferInterface->setHttpStatusCode($response->getStatusCode());
+        
+        return $transferInterface;
     }
     
     /**
      * @param string $tbProcessIdentifier
-     * @return \EasyCredit\Transfer\CommonProcessData
+     * @return GetCommonProcessDataResponse
      */
     public function getCommonProcessData($tbProcessIdentifier)
     {
@@ -250,7 +276,11 @@ class ApiClient
         
         $response = $this->request->doRequest($requestType);
         
-        return $this->dataMapper->mapResponse($requestType->getTransferClass(), $response->getBody());
+        $transferInterface = $this->dataMapper->mapResponse($requestType->getTransferClass(), $response->getBody());
+        
+        $transferInterface->setHttpStatusCode($response->getStatusCode());
+        
+        return $transferInterface;
     }
     
     /**
@@ -263,7 +293,11 @@ class ApiClient
         
         $response = $this->request->doRequest($requestType);
         
-        return $this->dataMapper->mapResponse($requestType->getTransferClass(), $response->getBody());
+        $transferInterface = $this->dataMapper->mapResponse($requestType->getTransferClass(), $response->getBody());
+        
+        $transferInterface->setHttpStatusCode($response->getStatusCode());
+        
+        return $transferInterface;
     }
     
     /**
@@ -275,6 +309,47 @@ class ApiClient
     
         $response = $this->request->doRequest($requestType);
     
-        return $this->dataMapper->mapResponse($requestType->getTransferClass(), $response->getBody());
+        $transferInterface = $this->dataMapper->mapResponse($requestType->getTransferClass(), $response->getBody());
+        
+        $transferInterface->setHttpStatusCode($response->getStatusCode());
+        
+        return $transferInterface;
+    }
+    
+    /**
+     * 
+     * @param string $tbProcessIdentifier
+     * @param ProcessVerifyMTan $processVerifyMtan
+     * @return \EasyCredit\Transfer\TransferInterface
+     */
+    public function verifyMTan($tbProcessIdentifier, ProcessVerifyMTan $processVerifyMtan)
+    {
+        $requestType = new VerifyMTAN($this->shopId, $this->shopToken, $tbProcessIdentifier, $processVerifyMtan, $this->dataMapper);
+    
+        $response = $this->request->doRequest($requestType);
+    
+        $transferInterface = $this->dataMapper->mapResponse($requestType->getTransferClass(), $response->getBody());
+        
+        $transferInterface->setHttpStatusCode($response->getStatusCode());
+        
+        return $transferInterface;
+    }
+    
+    /**
+     * 
+     * @param string $tbProcessIdentifier
+     * @return \EasyCredit\Transfer\TransferInterface
+     */
+    public function resendMTan($tbProcessIdentifier)
+    {
+        $requestType = new ResendMTAN($this->shopId, $this->shopToken, $tbProcessIdentifier);
+    
+        $response = $this->request->doRequest($requestType);
+    
+        $transferInterface = $this->dataMapper->mapResponse($requestType->getTransferClass(), $response->getBody());
+        
+        $transferInterface->setHttpStatusCode($response->getStatusCode());
+        
+        return $transferInterface;
     }
 }

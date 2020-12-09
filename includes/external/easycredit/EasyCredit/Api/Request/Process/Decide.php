@@ -19,7 +19,7 @@ class Decide extends AbstractRequest implements RequestInterface
     /**
      * @var string
      */
-    protected $path = '/vorgang/%s/entscheiden';
+    protected $path = '/v2/vorgang/%s/entscheiden';
 
     /**
      * @var string

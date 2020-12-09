@@ -23,7 +23,7 @@ class GetDecision extends AbstractRequest implements RequestInterface
     /**
      * @var string
      */
-    protected $path = '/vorgang/%s/entscheidung';
+    protected $path = '/v2/vorgang/%s/entscheidung';
     
     /**
      * @var string

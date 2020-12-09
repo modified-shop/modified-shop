@@ -90,4 +90,13 @@ class Response
     {
         return $this->body;
     }
+    
+    /**
+     * 
+     * @return integer|null
+     */
+    public function getStatusCode()
+    {
+        return $this->statusCode;
+    }
 }

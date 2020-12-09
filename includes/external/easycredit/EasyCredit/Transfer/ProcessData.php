@@ -131,6 +131,8 @@ class ProcessData extends AbstractObject
      * @transferClass EasyCredit\Transfer\CallbackUrls
      */
     protected $callbackUrls;
+    
+    protected $mTan;
 
     public function __construct(array $data = array())
     {
@@ -538,5 +540,24 @@ class ProcessData extends AbstractObject
     {
         $this->callbackUrls = $callbackUrls;
     }
+
+    /**
+     *
+     * @return string
+     */
+    public function getMTan()
+    {
+        return $this->mTan;
+    }
+
+    /**
+     *
+     * @param string $mTan            
+     */
+    public function setMTan($mTan)
+    {
+        $this->mTan = $mTan;
+    }
+ 
  
 }

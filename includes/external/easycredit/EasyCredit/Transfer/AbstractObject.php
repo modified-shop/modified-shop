@@ -17,6 +17,8 @@ abstract class AbstractObject implements \ArrayAccess, \Serializable, TransferIn
      * @var AnnotationReader
      */
     private $annotationReader;
+    
+    protected $httpStatusCode;
 
     /**
      * AbstractObject constructor.
@@ -226,4 +228,16 @@ abstract class AbstractObject implements \ArrayAccess, \Serializable, TransferIn
 
         return $this->annotationReader = new AnnotationReader();
     }
+
+    public function getHttpStatusCode()
+    {
+        return $this->httpStatusCode;
+    }
+
+    public function setHttpStatusCode($httpStatusCode)
+    {
+        $this->httpStatusCode = $httpStatusCode;
+        return $this;
+    }
+ 
 }

@@ -3,7 +3,7 @@
 namespace EasyCredit;
 
 /**
- * Class EasyCredit
+ * Class Config
  *
  * @package EasyCredit
  */
@@ -17,7 +17,7 @@ class Config
     /**
      * @const string
      */
-    const EASYCREDIT_API_ROOT_URI = 'ratenkauf-ws/rest/v1';
+    const EASYCREDIT_API_ROOT_URI = 'ratenkauf-ws/rest';
 
     /**
      * @const string
@@ -56,6 +56,8 @@ class Config
      * @const float
      */
     const MAX_ORDER_AMOUNT = 10000.0;
+    
+    const ALLOWED_ISO2_CODES = ['DE'];
 
 
     /**
@@ -92,5 +94,16 @@ class Config
     public static function isValidOrderAmount($amount)
     {
         return (($amount >= self::MIN_ORDER_AMOUNT) && ($amount <= self::MAX_ORDER_AMOUNT));
+    }
+    
+    /**
+     * checks if payment method is available for given country iso 2 code  
+     * 
+     * @param string $isoCode
+     * @return boolean
+     */
+    public static function isValidCountryIso2Code($isoCode)
+    {
+        return in_array(strtoupper($isoCode), self::ALLOWED_ISO2_CODES);
     }
 }

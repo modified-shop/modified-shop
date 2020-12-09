@@ -8,19 +8,19 @@ use EasyCredit\Api\DataMapper;
 use EasyCredit\Api\Request\AbstractRequest;
 use EasyCredit\Api\Request\RequestInterface;
 use EasyCredit\Transfer\BaseResponse;
-use EasyCredit\Transfer\ProcessSave;
+use EasyCredit\Transfer\ProcessVerifyMTan;
 
 /**
- * Class Save
+ * Class VerifyMTAN
  *
  * @package EasyCredit\Api\Request\Process
  */
-class Save extends AbstractRequest implements RequestInterface
+class VerifyMTAN extends AbstractRequest implements RequestInterface
 {
     /**
      * @var string
      */
-    protected $path = '/v2/vorgang/';
+    protected $path = '/v2/vorgang/%s/mTAN';
 
     /**
      * @var string
@@ -36,25 +36,25 @@ class Save extends AbstractRequest implements RequestInterface
     );
 
     /**
-     * Save constructor.
+     * VerifyMTAN constructor.
      *
-     * @param string      $shopId
-     * @param string      $shopToken
-     * @param string      $tbProcessIdentifier
-     * @param ProcessSave $processSave
-     * @param DataMapper  $dataMapper
+     * @param string            $shopId
+     * @param string            $shopToken
+     * @param string            $tbProcessIdentifier
+     * @param ProcessVerifyMTan $processVerifyMTan
+     * @param DataMapper        $dataMapper
      */
     public function __construct(
         $shopId,
         $shopToken,
         $tbProcessIdentifier,
-        ProcessSave $processSave,
+        ProcessVerifyMTan $processVerifyMTan,
         DataMapper $dataMapper
     ) {
         $this->headers[] = 'tbk-rk-shop: '.$shopId;
         $this->headers[] = 'tbk-rk-token: '.$shopToken;
-        $this->path .= $tbProcessIdentifier;
-        $this->body = $dataMapper->mapRequest($processSave);
+        $this->path = sprintf($this->path, $tbProcessIdentifier);
+        $this->body = $dataMapper->mapRequest($processVerifyMTan);
     }
 
     /**

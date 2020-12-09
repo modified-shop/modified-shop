@@ -35,10 +35,11 @@ class DataMapper
     /**
      * @param TransferInterface $transfer
      * @param array             $data
+     * @param integer           $statusCode
      *
      * @return TransferInterface
      */
-    public function mapResponse(TransferInterface $transfer, $data)
+    public function mapResponse(TransferInterface $transfer, $data, $statusCode = null)
     {
         $transferProperties = $this->annotationReader->getProperties($transfer, 'apiName');
         foreach ($transferProperties as $transferProperty => $annotations) {
@@ -57,6 +58,7 @@ class DataMapper
 
             $transfer->{'set'.Inflector::classify($transferProperty)}($value);
         }
+        
         return $transfer;
     }
 

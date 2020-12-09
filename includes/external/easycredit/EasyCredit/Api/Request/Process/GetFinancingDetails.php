@@ -19,7 +19,7 @@ class GetFinancingDetails extends AbstractRequest implements RequestInterface
     /**
      * @var string
      */
-    protected $path = '/vorgang/%s/finanzierung';
+    protected $path = '/v2/vorgang/%s/finanzierung';
 
     /**
      * @var string
