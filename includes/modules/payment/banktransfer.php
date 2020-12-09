@@ -353,25 +353,25 @@
       global $insert_id, $_POST;
       
       $sql_data_array = array('orders_id' => $insert_id,
-                              'banktransfer_owner' => $_POST['banktransfer_owner'],
-                              'banktransfer_number' => $_POST['banktransfer_number'],
-                              'banktransfer_bankname' => $_POST['banktransfer_bankname'],
-                              'banktransfer_blz' => $_POST['banktransfer_blz'],
-                              'banktransfer_status' => $_POST['banktransfer_status'],
-                              'banktransfer_prz' => $_POST['banktransfer_prz'],
-                              'banktransfer_iban' => $_POST['banktransfer_iban'],
-                              'banktransfer_bic' => $_POST['banktransfer_bic'],
-                              'banktransfer_owner_email' => $_POST['banktransfer_owner_email'],
+                              'banktransfer_owner' => xtc_db_prepare_input($_POST['banktransfer_owner']),
+                              'banktransfer_number' => xtc_db_prepare_input($_POST['banktransfer_number']),
+                              'banktransfer_bankname' => xtc_db_prepare_input($_POST['banktransfer_bankname']),
+                              'banktransfer_blz' => xtc_db_prepare_input($_POST['banktransfer_blz']),
+                              'banktransfer_status' => xtc_db_prepare_input($_POST['banktransfer_status']),
+                              'banktransfer_prz' => xtc_db_prepare_input($_POST['banktransfer_prz']),
+                              'banktransfer_iban' => xtc_db_prepare_input($_POST['banktransfer_iban']),
+                              'banktransfer_bic' => xtc_db_prepare_input($_POST['banktransfer_bic']),
+                              'banktransfer_owner_email' => xtc_db_prepare_input($_POST['banktransfer_owner_email']),
                               );
       xtc_db_perform(TABLE_BANKTRANSFER, $sql_data_array);
 
       if (isset($_POST['banktransfer_fax'])) {
-        xtc_db_query("UPDATE banktransfer SET banktransfer_fax = '" . $_POST['banktransfer_fax'] ."' WHERE orders_id = '" . $insert_id . "'");
+        xtc_db_query("UPDATE banktransfer SET banktransfer_fax = '" . xtc_db_prepare_input($_POST['banktransfer_fax']) ."' WHERE orders_id = " . $insert_id);
       }
       
       if (isset($this->order_status) && $this->order_status) {
-        xtc_db_query("UPDATE ".TABLE_ORDERS." SET orders_status='".$this->order_status."' WHERE orders_id='".$insert_id."'");
-        xtc_db_query("UPDATE ".TABLE_ORDERS_STATUS_HISTORY." SET orders_status_id='".$this->order_status."' WHERE orders_id='".$insert_id."'");
+        xtc_db_query("UPDATE ".TABLE_ORDERS." SET orders_status = ".$this->order_status." WHERE orders_id = ".$insert_id);
+        xtc_db_query("UPDATE ".TABLE_ORDERS_STATUS_HISTORY." SET orders_status_id = ".$this->order_status." WHERE orders_id = ".$insert_id);
       }
       
       unset($_SESSION['banktransfer_info']);
@@ -386,7 +386,7 @@
                                                    banktransfer_owner,
                                                    banktransfer_owner_email
                                               FROM ".TABLE_BANKTRANSFER."
-                                             WHERE orders_id = '".$order->info['order_id']."'");
+                                             WHERE orders_id = ".$order->info['order_id']);
         if (xtc_db_num_rows($banktransfer_query) > 0) {
           $banktransfer = xtc_db_fetch_array($banktransfer_query);
           return $banktransfer;
