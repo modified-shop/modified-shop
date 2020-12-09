@@ -21,6 +21,7 @@
     '_installer/includes/templates',
     '_installer/language',
     DIR_ADMIN.'includes/local',
+    DIR_ADMIN.'includes/haendlerbund/images/_notes',
     DIR_ADMIN.'includes/modules/carp',
     DIR_ADMIN.'includes/modules/export/idealo_lib',
     DIR_ADMIN.'includes/modules/fckeditor',
