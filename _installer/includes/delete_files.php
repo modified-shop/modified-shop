@@ -135,6 +135,7 @@
     DIR_ADMIN.'includes/functions/languages.php',
     DIR_ADMIN.'includes/functions/validations.php',
     DIR_ADMIN.'includes/haendlerbund/css/ui_custom.css',
+    DIR_ADMIN.'includes/haendlerbund/images/_notes/dwsync.xml',
     DIR_ADMIN.'includes/haendlerbund/images/groesster-onlinehandelsverband-europas.png',
     DIR_ADMIN.'includes/haendlerbund/jquery-1.4.4.js',
     DIR_ADMIN.'includes/javascript/jquery.products_tags.js',
