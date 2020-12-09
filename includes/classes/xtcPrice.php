@@ -889,7 +889,7 @@ class xtcPrice {
   function xtcFormatExtension($pID, $ePrice, $pPrice, $format, $vpeStatus) {
     if ($format) {      
       $from = $this->checkAttributes($pID);
-      $price = $this->xtcFormat($ePrice, $format);;
+      $price = $this->xtcFormat($ePrice, $format);
 
       if ($this->cStatus['customers_status_show_price_tax'] == '0') {
         $Bprice = $this->xtcFormatCurrency($this->xtcAddTax($ePrice, ((isset($this->tax_class) && isset($this->TAX[$this->tax_class])) ? $this->TAX[$this->tax_class] : 0)));
