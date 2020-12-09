@@ -348,8 +348,8 @@ class KlarnaPayment extends KlarnaPaymentBase {
       
       $products_array[$i] = array(
         'type' => (($type == 'virtual') ? 'digital' : 'physical'),
-        'reference' => (($products['model'] != '' && mb_strlen($products['model'], $_SESSION['language_charset']) <= 64) ? $products['model'] : (int)$products['id']),
-        'name' => strip_tags($products['name']),
+        'reference' =>  encode_utf8((($products['model'] != '' && mb_strlen($products['model'], $_SESSION['language_charset']) <= 64) ? $products['model'] : (int)$products['id']), $_SESSION['language_charset'], true),
+        'name' => encode_utf8(strip_tags($products['name']), $_SESSION['language_charset'], true),
         'quantity' => $products['qty'],
         'unit_price' => $this->format_amount($amount),
         'tax_rate' => $this->format_amount($products['tax']),
@@ -381,7 +381,7 @@ class KlarnaPayment extends KlarnaPaymentBase {
       $products_array[$i] = array(
         'type' => 'shipping_fee',
         'reference' => $_SESSION['shipping']['id'],
-        'name' => strip_tags($order->info['shipping_method']),
+        'name' => encode_utf8(strip_tags($order->info['shipping_method']), $_SESSION['language_charset'], true),
         'quantity' => 1,
         'unit_price' => $this->format_amount($shipping_cost),
         'tax_rate' => $this->format_amount($tax),
@@ -420,7 +420,7 @@ class KlarnaPayment extends KlarnaPaymentBase {
           $products_array[$i] = array(
             'type' => (($total['value'] > 0) ? 'surcharge' : 'discount'),
             'reference' => $total['code'],
-            'name' => strip_tags($total['title']),
+            'name' => encode_utf8(strip_tags($total['title']), $_SESSION['language_charset'], true),
             'quantity' => 1,
             'unit_price' => $this->format_amount($amount),
             'tax_rate' => $this->format_amount(($tax != '') ? $tax : 0),
