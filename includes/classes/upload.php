@@ -48,7 +48,7 @@
           'name' => $_FILES[$this->file]['name'],
           'size' => $_FILES[$this->file]['size'],
           'tmp_name' => $_FILES[$this->file]['tmp_name'],
-          'type' => $finfo->file($_FILES[$this->file]['tmp_name']),
+          'type' => (($_FILES[$this->file]['tmp_name'] != '') ? $finfo->file($_FILES[$this->file]['tmp_name']) : ''),
         );
       }
 

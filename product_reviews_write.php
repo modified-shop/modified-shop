@@ -83,14 +83,8 @@ if (isset ($_GET['action']) && $_GET['action'] == 'process' && $review_error ===
     }
     
     if ($error === false) {
-      $customer = xtc_db_query("SELECT customers_firstname,
-                                       customers_lastname
-                                  FROM ".TABLE_CUSTOMERS."
-                                 WHERE customers_id = '".(int) $_SESSION['customer_id']."'");
-      $customer_values = xtc_db_fetch_array($customer);
-
       $sql_data_array = array('products_id' => $product->data['products_id'],
-                              'customers_id' => (int) $_SESSION['customer_id'],
+                              'customers_id' => ((isset($_SESSION['customer_id'])) ? (int)$_SESSION['customer_id'] : 0),
                               'customers_name' => $author,
                               'reviews_rating' => $rating,
                               'reviews_status' => $_SESSION['customers_status']['customers_status_reviews_status'],

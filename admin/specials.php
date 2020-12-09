@@ -109,13 +109,13 @@ require (DIR_WS_INCLUDES.'head.php');
             $product = xtc_db_fetch_array($product_query);
             $sInfo = new objectInfo($product);
             // build the expires date in the format YYYY-MM-DD
-            if ($sInfo->expires_date != 0) {
+            if (strtotime($sInfo->expires_date) > 0 && strtotime($sInfo->expires_date) !== false) {
               $expires_date = date('Y-m-d', strtotime($sInfo->expires_date));
             }	else {
               $expires_date = '';
             }
             // build the start date in the format YYYY-MM-DD
-            if ($sInfo->start_date != 0) {
+            if (strtotime($sInfo->start_date) > 0 && strtotime($sInfo->start_date) !== false) {
               $start_date = date('Y-m-d', strtotime($sInfo->start_date));
             }	else {
               $start_date = '';

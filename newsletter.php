@@ -81,7 +81,7 @@ if (isset($_GET['action'])
     if (!in_array('newsletter', $use_captcha) || (isset($_SESSION['customer_id']) && MODULE_CAPTCHA_LOGGED_IN == 'False')) {
       $newsletter->auto = true;
     }
-    $newsletter->AddUser($_POST['check'], strtoupper($_POST['vvcode']), $email);
+    $newsletter->AddUser($_POST['check'], ((isset($_POST['vvcode'])) ? $_POST['vvcode'] : ''), $email);
     $info_message = $newsletter->message;
   } else {
     if ($messageStack->size('newsletter') > 0) {
