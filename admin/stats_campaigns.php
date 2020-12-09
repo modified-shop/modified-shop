@@ -177,29 +177,33 @@ require (DIR_WS_INCLUDES.'head.php');
                         </td>
                         <td class="menuBoxHeading">
                           <?php 
-                            echo REPORT_START_DATE.'<br/>';
+                            echo '<p class="pdg2 mrg0"><b>'.REPORT_START_DATE.'</b></p>';
                             echo xtc_draw_pull_down_menu('startD', $day_array, $sDay);
                             echo xtc_draw_pull_down_menu('startM', $month_array, $sMon);
                             echo xtc_draw_pull_down_menu('startY', $year_array, $sYear);
                           ?>
                         </td>
-                        <td rowspan="2" class="menuBoxHeading txta-l">
-                          <?php echo REPORT_STATUS_FILTER; ?><br />
-                          <?php echo xtc_draw_pull_down_menu('status', array_merge(array(array('id' => '0', 'text' => REPORT_ALL)), $orders_statuses), ((isset($_GET['status']) && $_GET['status'] != '') ? $_GET['status'] : 0)); ?> 
-                          <br /><?php echo REPORT_CAMPAIGN_FILTER; ?><br /> 
-                          <?php echo xtc_draw_pull_down_menu('campaign', array_merge(array(array('id' => '0', 'text' => REPORT_ALL)), $campaigns), ((isset($_GET['campaign']) && $_GET['campaign'] != '') ? $_GET['campaign'] : 0)); ?> 
+                        <td class="menuBoxHeading">
+                          <?php 
+                            echo '<p class="pdg2 mrg0"><b>'.REPORT_STATUS_FILTER.'</b></p>';
+                            echo xtc_draw_pull_down_menu('status', array_merge(array(array('id' => '0', 'text' => REPORT_ALL)), $orders_statuses), ((isset($_GET['status']) && $_GET['status'] != '') ? $_GET['status'] : 0)); 
+                          ?> 
                         </td>
-                        <td rowspan="2" align="left" class="menuBoxHeading"><br /></td>
-                        <td rowspan="2" align="left" class="menuBoxHeading"><br /></td>
                       </tr>
                       <tr>
                         <td class="menuBoxHeading">
                           <?php 
-                            echo REPORT_END_DATE.'<br/>';
+                            echo '<p class="pdg2 mrg0"><b>'.REPORT_END_DATE.'</b></p>';
                             echo xtc_draw_pull_down_menu('endD', $day_array, $eDay);
                             echo xtc_draw_pull_down_menu('endM', $month_array, $eMon);
                             echo xtc_draw_pull_down_menu('endY', $year_array, $eYear);
                           ?>
+                        </td>
+                        <td class="menuBoxHeading">
+                          <?php 
+                            echo '<p class="pdg2 mrg0"><b>'.REPORT_CAMPAIGN_FILTER.'</b></p>';
+                            echo xtc_draw_pull_down_menu('campaign', array_merge(array(array('id' => '0', 'text' => REPORT_ALL)), $campaigns), ((isset($_GET['campaign']) && $_GET['campaign'] != '') ? $_GET['campaign'] : 0)); 
+                          ?> 
                         </td>
                       </tr>
                     </table>  
