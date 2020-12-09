@@ -19,7 +19,7 @@ define('TABLE_KLARNA_PAYMENTS', 'klarna_payments');
 require_once(DIR_FS_EXTERNAL.'GuzzleHttp/functions_include.php');
 require_once(DIR_FS_EXTERNAL.'GuzzleHttp/Promise/functions_include.php');
 require_once(DIR_FS_EXTERNAL.'GuzzleHttp/Psr7/functions_include.php');
-
+require_once(DIR_FS_INC.'xtc_get_products_image.inc.php');
 
 // include needed classes
 require_once(DIR_FS_EXTERNAL.'klarna/classes/KlarnaPaymentBase.php');
@@ -348,8 +348,8 @@ class KlarnaPayment extends KlarnaPaymentBase {
       
       $products_array[$i] = array(
         'type' => (($type == 'virtual') ? 'digital' : 'physical'),
-        'reference' => $products['id'],
-        'name' => $products['name'],
+        'reference' => (($products['model'] != '' && mb_strlen($products['model'], $_SESSION['language_charset']) <= 64) ? $products['model'] : (int)$products['id']),
+        'name' => strip_tags($products['name']),
         'quantity' => $products['qty'],
         'unit_price' => $this->format_amount($amount),
         'tax_rate' => $this->format_amount($products['tax']),
@@ -381,7 +381,7 @@ class KlarnaPayment extends KlarnaPaymentBase {
       $products_array[$i] = array(
         'type' => 'shipping_fee',
         'reference' => $_SESSION['shipping']['id'],
-        'name' => $order->info['shipping_method'],
+        'name' => strip_tags($order->info['shipping_method']),
         'quantity' => 1,
         'unit_price' => $this->format_amount($shipping_cost),
         'tax_rate' => $this->format_amount($tax),
@@ -420,7 +420,7 @@ class KlarnaPayment extends KlarnaPaymentBase {
           $products_array[$i] = array(
             'type' => (($total['value'] > 0) ? 'surcharge' : 'discount'),
             'reference' => $total['code'],
-            'name' => $total['title'],
+            'name' => strip_tags($total['title']),
             'quantity' => 1,
             'unit_price' => $this->format_amount($amount),
             'tax_rate' => $this->format_amount(($tax != '') ? $tax : 0),
