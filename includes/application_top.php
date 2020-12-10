@@ -234,9 +234,6 @@ $current_domain_delete = (($request_type == 'NONSSL') ? $http_domain_arr['delete
 // include shopping cart class
 require_once (DIR_WS_CLASSES.'shopping_cart.php');
 
-// some code to solve compatibility issues
-require_once (DIR_WS_FUNCTIONS.'compatibility.php');
-
 // define how the session functions will be used
 require_once (DIR_WS_FUNCTIONS.'sessions.php');
 
