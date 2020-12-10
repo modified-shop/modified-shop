@@ -89,7 +89,7 @@
               $customers_status_id = $next_id['customers_status_id'] + 1;
             }
             $insert_sql_data = array('customers_status_id' => xtc_db_prepare_input($customers_status_id), 'language_id' => xtc_db_prepare_input($language_id));
-            $sql_data_array = xtc_array_merge($sql_data_array, $insert_sql_data);
+            $sql_data_array = array_merge($sql_data_array, $insert_sql_data);
             xtc_db_perform(TABLE_CUSTOMERS_STATUS, $sql_data_array);
           } elseif ($action == 'save') {
             $customers_status_query = xtc_db_query("SELECT * FROM ".TABLE_CUSTOMERS_STATUS." WHERE language_id = '".$language_id."' AND customers_status_id = '".xtc_db_input($customers_status_id)."'");

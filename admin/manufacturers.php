@@ -38,12 +38,12 @@
 
       if ($_GET['action'] == 'insert') {
         $insert_sql_data = array('date_added' => 'now()');
-        $sql_data_array = xtc_array_merge($sql_data_array, $insert_sql_data);
+        $sql_data_array = array_merge($sql_data_array, $insert_sql_data);
         xtc_db_perform(TABLE_MANUFACTURERS, $sql_data_array);
         $manufacturers_id = xtc_db_insert_id();
       } elseif ($_GET['action'] == 'save') {
         $update_sql_data = array('last_modified' => 'now()');
-        $sql_data_array = xtc_array_merge($sql_data_array, $update_sql_data);
+        $sql_data_array = array_merge($sql_data_array, $update_sql_data);
         xtc_db_perform(TABLE_MANUFACTURERS, $sql_data_array, 'update', "manufacturers_id = '" . (int)$manufacturers_id . "'");
       }
 
@@ -89,7 +89,7 @@
         if ($_GET['action'] == 'insert') {
           $insert_sql_data = array('manufacturers_id' => $manufacturers_id,
                                    'languages_id' => $language_id);
-          $sql_data_array = xtc_array_merge($sql_data_array, $insert_sql_data);
+          $sql_data_array = array_merge($sql_data_array, $insert_sql_data);
           xtc_db_perform(TABLE_MANUFACTURERS_INFO, $sql_data_array);
         } elseif ($_GET['action'] == 'save') {
           $manufacturers_query = xtc_db_query("SELECT * 
@@ -306,7 +306,7 @@ if (USE_WYSIWYG == 'true') {
                                                                      FROM " . TABLE_PRODUCTS . " 
                                                                     WHERE manufacturers_id = '" . $manufacturers['manufacturers_id'] . "'");
                       $manufacturer_products = xtc_db_fetch_array($manufacturer_products_query);
-                      $mInfo_array = xtc_array_merge($manufacturers, $manufacturer_products);
+                      $mInfo_array = array_merge($manufacturers, $manufacturer_products);
                       $mInfo = new objectInfo($mInfo_array);
                     }
 

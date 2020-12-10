@@ -121,12 +121,12 @@
       
       if ($_GET['action'] == 'insert') {
         $insert_sql_data = array('date_added' => 'now()');
-        $sql_data_array = xtc_array_merge($sql_data_array, $insert_sql_data);
+        $sql_data_array = array_merge($sql_data_array, $insert_sql_data);
         xtc_db_perform(TABLE_TRUSTEDSHOPS, $sql_data_array);
         $tID = xtc_db_insert_id();
       } elseif ($_GET['action'] == 'save') {
         $update_sql_data = array('last_modified' => 'now()');
-        $sql_data_array = xtc_array_merge($sql_data_array, $update_sql_data);
+        $sql_data_array = array_merge($sql_data_array, $update_sql_data);
         xtc_db_perform(TABLE_TRUSTEDSHOPS, $sql_data_array, 'update', "id = '" . (int)$tID . "'");
       }
       

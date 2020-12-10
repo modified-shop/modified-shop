@@ -970,7 +970,7 @@
     $zones = xtc_get_country_zones($country_id);
     if (sizeof($zones) > 0) {
       $zones_select = array (array ('id' => '', 'text' => PLEASE_SELECT));
-      $zones = xtc_array_merge($zones_select, $zones);
+      $zones = array_merge($zones_select, $zones);
     } else {
       $zones = array (array ('id' => '', 'text' => TYPE_BELOW));
       // create dummy options for Netscape to preset the height of the drop-down

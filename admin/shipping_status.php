@@ -40,7 +40,7 @@
 
           $insert_sql_data = array('shipping_status_id' => $shipping_status_id,
                                    'language_id' => $language_id);
-          $sql_data_array = xtc_array_merge($sql_data_array, $insert_sql_data);
+          $sql_data_array = array_merge($sql_data_array, $insert_sql_data);
           xtc_db_perform(TABLE_SHIPPING_STATUS, $sql_data_array);
         } elseif ($_GET['action'] == 'save') {
           $shipping_status_query = xtc_db_query("select * from ".TABLE_SHIPPING_STATUS." where language_id = '".$language_id."' and shipping_status_id = '".xtc_db_input($shipping_status_id)."'");
