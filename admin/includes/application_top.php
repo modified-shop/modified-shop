@@ -77,9 +77,6 @@ $_REQUEST = $inputfilter->validate($_REQUEST);
 // auto include
 require_once (DIR_FS_INC . 'auto_include.inc.php');
 
-// solve compatibility issues
-require_once (DIR_WS_FUNCTIONS.'compatibility.php');
-
 // project versison
 require_once (DIR_WS_INCLUDES.'version.php');
 
