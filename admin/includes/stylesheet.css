@@ -1505,7 +1505,9 @@ font-size: 12px;
 padding: 5px 4px;
 vertical-align: middle;
 }
-
+.main input[type="text"], .main input[type="password"] {
+  width: auto;
+}
 td.main table {
 border-collapse: collapse;
 }
