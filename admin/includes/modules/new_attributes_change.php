@@ -109,7 +109,7 @@
           $sql_data_array['attributes_vpe_id'] = xtc_db_prepare_input($_POST[$cv_id .'_vpe_id']);
       }    
     
-      $sql_data_array = xtc_array_merge($sql_data_array, $add_data_array);
+      $sql_data_array = array_merge($sql_data_array, $add_data_array);
     
       foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/new_attributes/new_attributes_change/','php') as $file) require ($file);
     

@@ -301,7 +301,7 @@
                                                             WHERE configuration_id = '" . $configuration['configuration_id'] . "'
                                                           ");
                           $cfg_extra = xtc_db_fetch_array($cfg_extra_query);
-                          $cInfo_array = xtc_array_merge($configuration, $cfg_extra);
+                          $cInfo_array = array_merge($configuration, $cfg_extra);
                           $cInfo = new objectInfo($cInfo_array);
                         }
                         if ($configuration['set_function']) {

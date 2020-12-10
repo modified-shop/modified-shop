@@ -48,7 +48,7 @@
 
             $insert_sql_data = array('orders_status_id' => $orders_status_id,
                                      'language_id' => $language_id);
-            $sql_data_array = xtc_array_merge($sql_data_array, $insert_sql_data);
+            $sql_data_array = array_merge($sql_data_array, $insert_sql_data);
             xtc_db_perform(TABLE_ORDERS_STATUS, $sql_data_array);
           } elseif ($action == 'save') {
             $orders_status_query = xtc_db_query("SELECT * 

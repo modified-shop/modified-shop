@@ -61,14 +61,14 @@
         </div>
         <div class="main flt-l pdg2 mrg5" style="margin-left:20px;">
           <?php echo xtc_draw_form('payment', FILENAME_ORDERS, '', 'get'); ?>
-          <?php echo TEXT_INFO_PAYMENT_METHOD . ' ' . xtc_draw_pull_down_menu('payment',xtc_array_merge(array (array ('id' => '', 'text' => TXT_ALL)), $payment_array), isset($_GET['payment']) ? $_GET['payment'] : '', 'onChange="this.form.submit();"'); ?>
+          <?php echo TEXT_INFO_PAYMENT_METHOD . ' ' . xtc_draw_pull_down_menu('payment',array_merge(array (array ('id' => '', 'text' => TXT_ALL)), $payment_array), isset($_GET['payment']) ? $_GET['payment'] : '', 'onChange="this.form.submit();"'); ?>
           <?php echo xtc_draw_hidden_filter_field('status', ((isset($_GET['status'])) ? $_GET['status'] : ''))?>
           <?php echo xtc_draw_hidden_filter_field('cgroup', ((isset($_GET['cgroup'])) ? $_GET['cgroup'] : ''))?>
           </form>
         </div>
         <div class="main flt-l pdg2 mrg5" style="margin-left:20px;">
           <?php echo xtc_draw_form('cgroup', FILENAME_ORDERS, '', 'get'); ?>
-          <?php echo ENTRY_CUSTOMERS_STATUS . ' ' . xtc_draw_pull_down_menu('cgroup',xtc_array_merge(array (array ('id' => '', 'text' => TXT_ALL)), $customers_statuses_array), isset($_GET['cgroup']) ? $_GET['cgroup'] : '', 'onChange="this.form.submit();"'); ?>
+          <?php echo ENTRY_CUSTOMERS_STATUS . ' ' . xtc_draw_pull_down_menu('cgroup',array_merge(array (array ('id' => '', 'text' => TXT_ALL)), $customers_statuses_array), isset($_GET['cgroup']) ? $_GET['cgroup'] : '', 'onChange="this.form.submit();"'); ?>
           <?php echo xtc_draw_hidden_filter_field('status', ((isset($_GET['status'])) ? $_GET['status'] : ''))?>
           <?php echo xtc_draw_hidden_filter_field('payment', ((isset($_GET['payment'])) ? $_GET['payment'] : ''))?>
           </form>

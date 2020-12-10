@@ -45,7 +45,7 @@
 
             $insert_sql_data = array('products_vpe_id' => $products_vpe_id,
                                      'language_id' => $language_id);
-            $sql_data_array = xtc_array_merge($sql_data_array, $insert_sql_data);
+            $sql_data_array = array_merge($sql_data_array, $insert_sql_data);
             xtc_db_perform(TABLE_PRODUCTS_VPE, $sql_data_array);
           } elseif ($action == 'save') {
             //BOF - web28 - 2010-07-11 - BUGFIX no entry stored for previous deactivated languages

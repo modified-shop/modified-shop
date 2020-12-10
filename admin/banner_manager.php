@@ -361,7 +361,7 @@ require (DIR_WS_INCLUDES.'javascript/jQueryDateTimePicker/datepicker.js.php');
                                                      WHERE banners_id = '" . $banners['banners_id'] . "'");
                         $info = xtc_db_fetch_array($info_query);
                         if ((!isset($_GET['bID']) || (isset($_GET['bID']) && ($_GET['bID'] == $banners['banners_id']))) && !isset($bInfo) && (substr($action, 0, 3) != 'new')) {
-                          $bInfo_array = xtc_array_merge($banners, $info);
+                          $bInfo_array = array_merge($banners, $info);
                           $bInfo = new objectInfo($bInfo_array);
                         }
                         $banners_shown = ($info['banners_shown'] != '') ? $info['banners_shown'] : '0';

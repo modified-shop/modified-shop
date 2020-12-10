@@ -155,12 +155,12 @@ class categories {
     
     if ($action == 'insert') {
       $insert_sql_data = array ('parent_id' => $dest_category_id, 'date_added' => 'now()');
-      $sql_data_array = xtc_array_merge($sql_data_array, $insert_sql_data);
+      $sql_data_array = array_merge($sql_data_array, $insert_sql_data);
       xtc_db_perform(TABLE_CATEGORIES, $sql_data_array);
       $categories_id = xtc_db_insert_id();
     } elseif ($action == 'update') {
       $update_sql_data = array ('last_modified' => 'now()');
-      $sql_data_array = xtc_array_merge($sql_data_array, $update_sql_data);
+      $sql_data_array = array_merge($sql_data_array, $update_sql_data);
       xtc_db_perform(TABLE_CATEGORIES, $sql_data_array, 'update', "categories_id = '".$categories_id."'");
     }
 
@@ -191,7 +191,7 @@ class categories {
       
       if ($action == 'insert') {
         $insert_sql_data = array ('categories_id' => $categories_id, 'language_id' => $lang['id']);
-        $sql_data_array = xtc_array_merge($sql_data_array, $insert_sql_data);
+        $sql_data_array = array_merge($sql_data_array, $insert_sql_data);
         xtc_db_perform(TABLE_CATEGORIES_DESCRIPTION, $sql_data_array);
       } elseif ($action == 'update') {
         $category_query = xtc_db_query("SELECT * 
@@ -599,7 +599,7 @@ class categories {
     
     if ($action == 'insert') {
       $insert_sql_data = array ('products_date_added' => 'now()');
-      $sql_data_array = xtc_array_merge($sql_data_array, $insert_sql_data);
+      $sql_data_array = array_merge($sql_data_array, $insert_sql_data);
       xtc_db_perform(TABLE_PRODUCTS, $sql_data_array);
       $products_id = xtc_db_insert_id();
       $products_data['products_id'] = $products_id;
@@ -608,7 +608,7 @@ class categories {
       xtc_db_perform(TABLE_PRODUCTS_TO_CATEGORIES, $sql_data_array);                   
     } elseif ($action == 'update') {
       $update_sql_data = array ('products_last_modified' => 'now()');
-      $sql_data_array = xtc_array_merge($sql_data_array, $update_sql_data);
+      $sql_data_array = array_merge($sql_data_array, $update_sql_data);
       xtc_db_perform(TABLE_PRODUCTS, $sql_data_array, 'update', "products_id = '".(int)$products_id."'");
     }
     
@@ -761,7 +761,7 @@ class categories {
    
       if ($action == 'insert') {
         $insert_sql_data = array ('products_id' => $products_id, 'language_id' => $language_id);
-        $sql_data_array = xtc_array_merge($sql_data_array, $insert_sql_data);
+        $sql_data_array = array_merge($sql_data_array, $insert_sql_data);
         xtc_db_perform(TABLE_PRODUCTS_DESCRIPTION, $sql_data_array);
       } elseif ($action == 'update') {
         $product_query = xtc_db_query("SELECT * 

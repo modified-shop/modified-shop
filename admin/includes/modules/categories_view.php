@@ -599,7 +599,7 @@
                  // find out the rating average from customer reviews
                  $reviews_query = xtc_db_query("SELECT (avg(reviews_rating) / 5 * 100) AS average_rating FROM " . TABLE_REVIEWS . " WHERE products_id = '" . (int)$products['products_id'] . "'");
                  $reviews = xtc_db_fetch_array($reviews_query);
-                 $pInfo_array = xtc_array_merge($products, $reviews);
+                 $pInfo_array = array_merge($products, $reviews);
                  $pInfo = new objectInfo($pInfo_array);
                }
                if (isset($pInfo) && (is_object($pInfo)) && ($products['products_id'] == $pInfo->products_id) ) {
@@ -769,7 +769,7 @@
                     $category = xtc_db_fetch_array($category_query);
                     $category_childs   = array('childs_count'   => $catfunc->count_category_childs($multi_category));
                     $category_products = array('products_count' => $catfunc->count_category_products($multi_category, true));
-                    $cInfo_array = xtc_array_merge($category, $category_childs, $category_products);
+                    $cInfo_array = array_merge($category, $category_childs, $category_products);
                     $cInfo = new objectInfo($cInfo_array);
                     $contents[] = array('text' => '<tr><td style="border-bottom: 1px solid #af417e; margin-bottom: 10px;" class="infoBoxContent"><b>' . $cInfo->categories_name . '</b></td></tr>');
                     if ($cInfo->childs_count > 0) {
@@ -835,7 +835,7 @@
                     $category = xtc_db_fetch_array($category_query);
                     $category_childs   = array('childs_count'   => $catfunc->count_category_childs($multi_category));
                     $category_products = array('products_count' => $catfunc->count_category_products($multi_category, true));
-                    $cInfo_array = xtc_array_merge($category, $category_childs, $category_products);
+                    $cInfo_array = array_merge($category, $category_childs, $category_products);
                     $cInfo = new objectInfo($cInfo_array);
                     $contents[] = array('text' => '<tr><td style="border-bottom: 1px solid #af417e; margin-bottom: 10px;" class="infoBoxContent"><b>' . $cInfo->categories_name . '</b></td></tr>');
                     if ($cInfo->childs_count > 0) {
@@ -897,7 +897,7 @@
                     $category = xtc_db_fetch_array($category_query);
                     $category_childs   = array('childs_count'   => $catfunc->count_category_childs($multi_category));
                     $category_products = array('products_count' => $catfunc->count_category_products($multi_category, true));
-                    $cInfo_array = xtc_array_merge($category, $category_childs, $category_products);
+                    $cInfo_array = array_merge($category, $category_childs, $category_products);
                     $cInfo = new objectInfo($cInfo_array);
                     $contents[] = array('text' => '<tr><td style="border-bottom: 1px solid #af417e; margin-bottom: 10px;" class="infoBoxContent"><b>' . $cInfo->categories_name . '</b></td></tr>');
                     if ($cInfo->childs_count > 0) {
