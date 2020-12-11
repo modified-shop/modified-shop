@@ -55,10 +55,12 @@
               <td class="dataTableContent" align="left"><?php echo  $content_array['content_id']; ?> </td>
               <td class="dataTableContent" align="left">
                 <?php
-                  if ($content_array['content_file']!='') {
-                    echo xtc_image('../'. DIR_WS_IMAGES.'icons/filetype/icon_'.str_replace('.','',strstr($content_array['content_file'],'.')).'.gif');
+                  if ($content_array['content_file'] != '') {
+                    $filename = DIR_FS_CATALOG . 'media/products/' . $content_array['content_file'];
+                    $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+                    echo xtc_image('../' . DIR_WS_IMAGES . 'icons/filetype/icon_' . $ext . '.gif');
                   } else {
-                    echo xtc_image('../'. DIR_WS_IMAGES.'icons/filetype/icon_link.gif');
+                    echo xtc_image('../' . DIR_WS_IMAGES . 'icons/filetype/icon_link.gif');
                   }
                 ?>
               </td>
