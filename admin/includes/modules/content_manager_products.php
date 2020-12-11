@@ -98,10 +98,12 @@ if (!$action) {
                       <td class="dataTableContent txta-c"><?php echo  $content_array[$ii]['id']; ?> </td>
                       <td class="dataTableContent txta-c">
                         <?php
-                          if ($content_array[$ii]['file']!='') {
-                            echo xtc_image('../'. DIR_WS_IMAGES.'icons/filetype/icon_'.str_replace('.','',strstr($content_array[$ii]['file'],'.')).'.gif'); //web28 - 2010-09-03 - change path
+                          if ($content_array[$ii]['file'] != '') {
+                            $filename = DIR_FS_CATALOG . 'media/products/' . $content_array[$ii]['file'];
+                            $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+                            echo xtc_image('../' . DIR_WS_IMAGES . 'icons/filetype/icon_' . $ext . '.gif');
                           } else {
-                            echo xtc_image('../'. DIR_WS_IMAGES.'icons/filetype/icon_link.gif');
+                            echo xtc_image('../' . DIR_WS_IMAGES . 'icons/filetype/icon_link.gif');
                           }
                           for ($xx=0,$zz=sizeof($languages); $xx<$zz;$xx++){
                             if ($languages[$xx]['id'] == $content_array[$ii]['languages_id']) {
