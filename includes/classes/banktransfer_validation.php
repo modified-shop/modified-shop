@@ -3312,7 +3312,7 @@ class IbanAccountCheck extends AccountCheck {
 																								'bank_length' => 4),
 															// Faröer Insel 
 																'FO' => array(	'scheme' => 'FOpp bbbb kkkk kkkk kK',
-																								'regex' => 'FO[0-9]{2}[0-9]{4}[0-9][9][0-9]{1}', 
+																								'regex' => 'FO[0-9]{2}[0-9]{4}[0-9]{9}[0-9]{1}', 
 																								'length' => 18,
 																								'sepa_ctry' => true,
 																								'bank_start_pos' => 5,
@@ -3354,7 +3354,7 @@ class IbanAccountCheck extends AccountCheck {
 																								'bank_length' => 7),
 															// Grönland
 																'GL' => array(	'scheme' => 'GLpp bbbb kkkk kkkk kK',
-																								'regex' => 'GL[0-9]{2}[0-9]{4}[0-9][9][0-9]{1}', 
+																								'regex' => 'GL[0-9]{2}[0-9]{4}[0-9]{9}[0-9]{1}', 
 																								'length' => 18,
 																								'sepa_ctry' => true,
 																								'bank_start_pos' => 5,
