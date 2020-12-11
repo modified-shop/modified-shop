@@ -1344,7 +1344,7 @@
    * @param bool $restock
    * @return
    */
-  function xtc_reverse_order($order_id, $restock = false, $order_status_id, $activate = true) {
+  function xtc_reverse_order($order_id, $restock, $order_status_id, $activate = true) {
     if ($restock == 'on') {
       xtc_restock_order($order_id, $activate);
     }

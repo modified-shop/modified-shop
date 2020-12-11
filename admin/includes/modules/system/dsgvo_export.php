@@ -175,7 +175,7 @@ class dsgvo_export
         }
     }
 
-    function convert($node_name, $arr=array(), $xml)
+    function convert($node_name, $arr, $xml)
     {
         $node = $xml->createElement($node_name);
         
