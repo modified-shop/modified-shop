@@ -70,4 +70,9 @@ define('TEXT_REMOVE_ENGINE', "<b>Ohne Speicherengines 'ENGINE'</b><br> - Die Ang
 
 define('TEXT_IMPORT_UTF8_NOTICE', '<b>Achtung:</b> die Datenbank wird nach UTF-8 konvertiert.');
 define('TEXT_INFO_CHARSET', 'Charset:');
+
+define('TEXT_TABLES_BACKUP_TYPE', '<b>Sicherung</b><br> - Welche Tabellen sollen gesichert werden?');
+define('TEXT_BACKUP_ALL', 'Alle Tabellen');
+define('TEXT_BACKUP_CUSTOM', 'Ausgew&auml;hlte Tabellen');
+define('TEXT_TABLES_TO_BACKUP', '<b>Folgende Tabellen sollen gesichert werden:</b>');
 ?>

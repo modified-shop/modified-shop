@@ -1,14 +1,17 @@
 <?php
-/*
-  $Id: backup.php,v 1.16 2002/03/16 21:30:02 hpdl Exp $
+  /* --------------------------------------------------------------
+   $Id$
 
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-  Copyright (c) 2002 osCommerce
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   --------------------------------------------------------------
+   based on:
+   (c) 2011 (c) by  web28 - www.rpa-com.de
 
-  Released under the GNU General Public License
-*/
+   Released under the GNU General Public License
+   --------------------------------------------------------------*/
 
 define('HEADING_TITLE', 'Database Backup Manager');
 

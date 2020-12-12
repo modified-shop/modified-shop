@@ -1,13 +1,19 @@
 <?php 
-/* -------------------------------------------------------------------------------------
-$Id$
+  /* --------------------------------------------------------------
+   $Id$
 
-jquery.backup_db.js.php
-Vers. 1.01 (c) www.rpa-com.de
-* ----------------------------------------------------------------------------------- */
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   --------------------------------------------------------------
+   based on:
+   (c) 2011 (c) by  web28 - www.rpa-com.de
 
+   Released under the GNU General Public License
+   --------------------------------------------------------------*/
+
+  defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 ?>
 
 <script type="text/javascript">
@@ -16,8 +22,7 @@ var ajax_url = 'backup_restore.php?ajax=1&action=restoredb<?php echo defined('SI
 var ajax_type = 'POST';
 var dataStr = '';
 
-//var maxReloads = <?php echo MAX_RELOADS;?>;
-var maxReloads = 10000;
+var maxReloads = 100000000;
 
 ajaxCall(dataStr);
 
@@ -50,6 +55,7 @@ function JStoPHPResponse(data) {
       data_ok += '<div><b>' + '<br />Aktuell in Bearbeitung: ' + response.actual_table + '</b></div>';
     }
     data_ok += '<div><b>' + '<br />Seitenaufrufe: ' + response.aufruf + '</b></div>';
+    data_ok += '<div><b>' + '<br />Anzahl Zeilen: ' + response.anzahl_zeilen + '</b></div>';
     data_ok += '<div><b>' + '<br />Scriptlaufzeit: ' +  response.time  + '</b></div>';
     
     $('#data_ok').html(data_ok);

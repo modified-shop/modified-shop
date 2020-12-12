@@ -12,31 +12,33 @@
    (c) 2002-2003 osCommerce(backup.php,v 1.57 2003/03/22); www.oscommerce.com
    (c) 2003  nextcommerce (backup.php,v 1.11 2003/08/2); www.nextcommerce.org
    (c) 2006  xt-commerce (backup.php 1023 2005-07-14); www.xt-commerce.com
+   (c) 2011 (c) by  web28 - www.rpa-com.de
 
    Released under the GNU General Public License
    --------------------------------------------------------------*/
 
-  define('BK_FILENAME', 'backup_db.php'); //BACKUP
-  define('RS_FILENAME', 'backup_restore.php'); //RESTORE
-
-  define ('VERSION', 'Database Backup/Restore Ver. 2.20');
+  define('BK_FILENAME', 'backup_db.php');
+  define('RS_FILENAME', 'backup_restore.php'); 
+  define('VERSION', 'Database Backup Ver. 2.20 UTF-8');
 
   require('includes/application_top.php');
-
+  
+  // include needed functions
+  include('includes/functions/db_functions.php');
+  
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
   $utf8_query = xtc_db_query("SHOW TABLE STATUS WHERE Name='customers'");
   $utf8_array = xtc_db_fetch_array($utf8_query);
   $check_utf8 = (strpos($utf8_array['Collation'], 'utf8') === false ? false : true);
   
-  //Adminrechte automatisch für backup_db setzen
+  //admin access
   $result = xtc_db_query("select * from ".TABLE_ADMIN_ACCESS."");
   if ($result_array = xtc_db_fetch_array($result)) {
     if (!isset($result_array['backup_db'])) {
       xtc_db_query("ALTER TABLE `". TABLE_ADMIN_ACCESS."` ADD `backup_db` INT( 1 ) DEFAULT '0' NOT NULL");
       xtc_db_query("UPDATE `".TABLE_ADMIN_ACCESS."` SET `backup_db` = '5' WHERE `customers_id` = 'groups' LIMIT 1");
       xtc_db_query("UPDATE `".TABLE_ADMIN_ACCESS."` SET `backup_db` = '1' WHERE `customers_id` = '1' LIMIT 1");
-      //Rechte automatisch setzen fuer Unteradmin
       if ($_SESSION['customer_id'] > 1) {
         xtc_db_query("UPDATE `".TABLE_ADMIN_ACCESS."` SET `backup_db` = '1' WHERE `customers_id` = '".$_SESSION['customer_id']."' LIMIT 1") ;
       }
@@ -56,10 +58,8 @@
   function createDBTableList($data)
   {
     if(!is_array($data)) return $data;
-    //echo '<pre>'.print_r($data,1).'</pre>';
     $newdata = array();
     foreach($data as $keys) {
-      //$newdata[] = $keys['name'] . ($keys['rows'] != '' ? ' ['.$keys['rows'].']' : '') . ($keys['data_length'] != '' ? ' ['.$keys['data_length'].']' : '') . ($keys['update_time'] != '' ? ' ['.$keys['update_time'].']' : '');
       $newdata[] = $keys['name'] . ($keys['rows'] != '' ? ' ['.$keys['rows'].']' : '');
     }
     return implode('<br>',$newdata);
@@ -117,18 +117,7 @@
     $messageStack->add(ERROR_BACKUP_DIRECTORY_DOES_NOT_EXIST, 'error');
   }
   
-  if(is_file(DIR_WS_INCLUDES.'head.php')) {
-      require (DIR_WS_INCLUDES.'head.php');
-  } else {
-      ?>
-      <!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-      <html <?php echo HTML_PARAMS; ?>>
-      <head>
-      <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $_SESSION['language_charset']; ?>"> 
-      <title><?php echo TITLE; ?></title>
-      <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
-      <?php 
-  }
+  require (DIR_WS_INCLUDES.'head.php');
   ?>
   <link rel="stylesheet" type="text/css" href="includes/css/backup_db.css">
   <script type="text/javascript">
@@ -191,59 +180,9 @@
                             $entry = $contents[$files];
                             $check = 0;
                             if ((!isset($_GET['file']) || ($_GET['file'] == $entry)) && !isset($buInfo) && ($action != 'backup') && ($action != 'restorelocal')) {
-                              $file_array['file'] = $entry;
-                              $file_array['date'] = date(PHP_DATE_TIME_FORMAT, filemtime(DIR_FS_BACKUP . $entry));
-                              $file_array['size'] = number_format(filesize(DIR_FS_BACKUP . $entry)) . ' bytes';
-                              $file_array['table_list'] = array();
-                              $file_array['tables_row_count'] = 0;
-                              switch (substr($entry, -3)) {
-                                case 'zip': 
-                                  $file_array['compression'] = 'ZIP'; 
-                                  break;
-                                case '.gz': 
-                                  $file_array['compression'] = 'GZIP';
-                                  if ($fp = gzopen(DIR_FS_BACKUP . $entry, 'r')) {
-                                    while ( ! gzeof($fp) ) {
-                                      $line = gzgets($fp, 4096);
-                                      if (substr($line, 0, 2) != "--") break; // backed up tables are in head of file
-                                      if (substr($line, 0, 9) == "-- TABLE|") {
-                                        $table_info = explode('|',trim(substr($line, 9)));
-                                        $file_array['table_list'][]  = array('name' => $table_info[0],
-                                                                             'rows' => $table_info[1],
-                                                                             'data_length' => (isset($table_info[2]) ? $table_info[2] : ''),
-                                                                             'update_time' => (isset($table_info[3]) ? $table_info[3] : ''),
-                                                                            );
-                                        $file_array['tables_row_count'] += $table_info[1];
-                                      }
-                                      if (substr($line, 0, 10) == "-- Charset") {
-                                        $file_array['charset'] = trim(substr($line, 11));
-                                      }
-                                    }
-                                  }                          
-                                  break;
-                                default: 
-                                  $file_array['compression'] = TEXT_NO_EXTENSION; 
-                                  if ($fp = fopen(DIR_FS_BACKUP . $entry, 'r')) {
-                                    while ( ! feof($fp) ) {
-                                      $line = fgets($fp, 4096);
-                                      if (substr($line, 0, 2) != "--") break; // backed up tables are in head of file
-                                      if (substr($line, 0, 9) == "-- TABLE|") {
-                                        $table_info = explode('|',trim(substr($line, 9)));
-                                        $file_array['table_list'][]  = array('name' => $table_info[0],
-                                                                             'rows' => $table_info[1],
-                                                                             'data_length' => (isset($table_info[2]) ? $table_info[2] : ''),
-                                                                             'update_time' => (isset($table_info[3]) ? $table_info[3] : ''),
-                                                                            );
-                                        $file_array['tables_row_count'] += $table_info[1];
-                                      }
-                                      if (substr($line, 0, 10) == "-- Charset") {
-                                        $file_array['charset'] = trim(substr($line, 11));
-                                      }
-                                    }
-                                  }
-                                  break;
-                              }
+                              $file_array = getBackupData($entry);
                               $file_array['table_list'] = !$file_array['table_list'] ? TEXT_INFO_NO_INFORMATION : $file_array['table_list'];
+                              
                               $buInfo = new objectInfo($file_array);
                             }
                             if (isset($buInfo) && is_object($buInfo) && ($entry == $buInfo->file)) {
@@ -303,6 +242,20 @@
                       if (!$check_utf8) {
                         $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('utf8-convert', 'yes', false) . ' ' . TEXT_CONVERT_TO_UTF);
                       }
+                      
+                      $type_array = array();
+                      $type_array[] = array('id' => 'all', 'text' => TEXT_BACKUP_ALL);
+                      $type_array[] = array('id' => 'custom', 'text' => TEXT_BACKUP_CUSTOM);
+                      
+                      $contents[] = array('text' => '<br />' . TEXT_TABLES_BACKUP_TYPE . '<br />' . xtc_draw_pull_down_menu('backup_type', $type_array, 'all', 'id="backup_type"'));
+                      
+                      $tables_data = '';
+                      $tables_query = xtc_db_query("SHOW TABLES FROM `".DB_DATABASE."`");
+                      while ($tables = xtc_db_fetch_array($tables_query)) {
+                        $tables_data .= xtc_draw_checkbox_field('backup_tables[]', $tables['Tables_in_'.DB_DATABASE]) . ' ' . $tables['Tables_in_'.DB_DATABASE] . '<br />';
+                      }
+                      $contents[] = array('text' => '<div id="tables_backup" style="display:none;"><br />' . TEXT_TABLES_TO_BACKUP . '<br />' . $tables_data . '</div>');
+                      
                       $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_BACKUP . '"/>&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BACKUP) . '">' . BUTTON_CANCEL . '</a>');
                       break;
                     case 'restore':
@@ -368,6 +321,15 @@
     <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
     <!-- footer_eof //-->
     <br />
+    <script>
+      $('#backup_type').on('change', function() {
+        if ($(this).val() == 'custom') {
+          $('#tables_backup').show();
+        } else {
+          $('#tables_backup').hide();
+        }
+      });
+    </script>
   </body>
 </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>

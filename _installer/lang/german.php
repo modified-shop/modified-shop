@@ -11,6 +11,8 @@
    ---------------------------------------------------------------------------------------*/
   
   
+  define('PHP_DATE_TIME_FORMAT', 'd.m.Y H:i:s');
+
   // buttons
   define('BUTTON_BACK', 'Zur&uuml;ck');
   define('BUTTON_SUBMIT', 'Best&auml;tigen');
@@ -68,6 +70,8 @@
   define('TEXT_DB_COMPRESS_RAW', 'Keine Komprimierung (Raw SQL)');
   define('TEXT_DB_SIZE', 'Gr&ouml;&szlig;e');
   define('TEXT_DB_DATE', 'Datum');
+  define('TEXT_DB_BACKUP_ALL', 'Alle Tabellen sichern');
+  define('TEXT_DB_BACKUP_CUSTOM', 'Ausgew&auml;hlte Tabellen sichern');
   
   define('TEXT_INFO_DO_UPDATE_OK', 'Die Datenbank wurde erfolgreich aktualisiert!');
   define('TEXT_INFO_DO_UPDATE', 'Die Datenbank wird aktualisiert!');
@@ -82,8 +86,10 @@
   define('TEXT_INFO_LAST', 'Zuletzt bearbeitet: ');
   define('TEXT_INFO_CALLS', 'Seitenaufrufe: ');
   define('TEXT_INFO_TIME', 'Scriptlaufzeit: ');
+  define('TEXT_INFO_ROWS', 'Anzahl Zeilen: ');
   define('TEXT_INFO_FROM', ' von ');
   define('TEXT_INFO_MAX_RELOADS', 'Maximale Seitenreloads wurden erreicht: ');
+  define('TEXT_NO_EXTENSION', 'Keine');
   
   define('TEXT_DB_UPDATE', 'Datenbankstruktur Update');
   define('TEXT_DB_UPDATE_DESC', 'Hier k&ouml;nnen Sie die Datenbank Ihrer Shopinstallation auf den aktuellen Stand bringen.');

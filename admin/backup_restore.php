@@ -1,20 +1,19 @@
 <?php
-  /**************************************************************
-  * XTC Datenbank Manager Version 2.00
-  *(c) by  web28 - www.rpa-com.de
-  * backup_restore.php
-  * Backup pro Tabelle und limitierter Zeilenzahl (Neuladen der Seite) , einstellbar mit ANZAHL_ZEILEN_BKUP
-  * Restore mit limitierter Zeilennanzahl aus SQL-Datei (Neuladen der Seite), einstellbar mit ANZAHL_ZEILEN
-  * 2014-12-02 - fix TITLE, actual_table
-  * 2014-09-14 - jquery ajax handling
-  * 2010-09-09 - add set_admin_access
-  * 2011-07-02 - Security Fix - PHP_SELF
-  * 2011-09-13 - fix some PHP notices
-  ***************************************************************/
+  /* --------------------------------------------------------------
+   $Id$
 
-  define ('VERSION', 'Database Restore Ver. 2.00');
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-  // ?file=dbd_mod105sp1b-20111123170925.sql.gz&action=restorenow
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   --------------------------------------------------------------
+   based on:
+   (c) 2011 (c) by  web28 - www.rpa-com.de
+
+   Released under the GNU General Public License
+   --------------------------------------------------------------*/
+
+  define ('VERSION', 'Database Backup Ver. 2.20 UTF-8');
 
   define ('_VALID_XTC', true);
   define('RUN_MODE_ADMIN',true);
@@ -22,56 +21,25 @@
   // no error reporting
   error_reporting(0);
 
-  //check for modified 2.00
-  if(is_file('includes/paths.php')) {
-      // Set the local configuration parameters - mainly for developers or the main-configure
-      if (file_exists('../includes/local/configure.php')) {
-        include('../includes/local/configure.php');
-      } else {
-        require('../includes/configure.php');
-      }
-
-      // include functions
-      require_once(DIR_FS_INC.'auto_include.inc.php');
-      require_once(DIR_FS_CATALOG . DIR_WS_INCLUDES . 'database_tables.php');
-      require_once(DIR_FS_ADMIN.DIR_WS_FUNCTIONS.'general.php');
-
-      // Database
-      require_once (DIR_FS_INC.'db_functions_'.DB_MYSQL_TYPE.'.inc.php');
-      require_once (DIR_FS_INC.'db_functions.inc.php');
+  // Set the local configuration parameters
+  if (file_exists('../includes/local/configure.php')) {
+    include('../includes/local/configure.php');
   } else {
-      // Set the local configuration parameters - mainly for developers or the main-configure
-      if (file_exists('includes/local/configure.php')) {
-        include('includes/local/configure.php');
-      } else {
-        require('includes/configure.php');
-      }
-
-      require_once(DIR_FS_CATALOG . DIR_WS_INCLUDES . 'database_tables.php');
-
-      require_once('includes/functions/general.php');
-
-      // Database
-      require_once(DIR_FS_INC . 'xtc_db_connect.inc.php');
-      require_once(DIR_FS_INC . 'xtc_db_close.inc.php');
-      require_once(DIR_FS_INC . 'xtc_db_error.inc.php');
-      require_once(DIR_FS_INC . 'xtc_db_query.inc.php');
-      require_once(DIR_FS_INC . 'xtc_db_queryCached.inc.php');
-      require_once(DIR_FS_INC . 'xtc_db_perform.inc.php');
-      require_once(DIR_FS_INC . 'xtc_db_fetch_array.inc.php');
-      require_once(DIR_FS_INC . 'xtc_db_num_rows.inc.php');
-      require_once(DIR_FS_INC . 'xtc_db_data_seek.inc.php');
-      require_once(DIR_FS_INC . 'xtc_db_insert_id.inc.php');
-      require_once(DIR_FS_INC . 'xtc_db_free_result.inc.php');
-      require_once(DIR_FS_INC . 'xtc_db_fetch_fields.inc.php');
-      require_once(DIR_FS_INC . 'xtc_db_output.inc.php');
-      require_once(DIR_FS_INC . 'xtc_db_input.inc.php');
+    require('../includes/configure.php');
   }
+
+  // include functions
+  require_once(DIR_FS_INC.'auto_include.inc.php');
+  require_once(DIR_FS_CATALOG . DIR_WS_INCLUDES . 'database_tables.php');
+  require_once(DIR_FS_ADMIN.DIR_WS_FUNCTIONS.'general.php');
+
+  // Database
+  require_once (DIR_FS_INC.'db_functions_'.DB_MYSQL_TYPE.'.inc.php');
+  require_once (DIR_FS_INC.'db_functions.inc.php');
   
-  //#################################
-  defined ('ANZAHL_ZEILEN') or define ('ANZAHL_ZEILEN', 10000); //Anzahl der Zeilen die pro Durchlauf bei der Wiederherstellung aus der SQL-Datei eingelesen werden sollen
-  defined ('RESTORE_TEST') or define ('RESTORE_TEST', false); //Standard: false - auf true ändern für Simulation für die Wiederherstellung, die SQL Befehle werden in eine Protokolldatei (log) im Backup-Verzeichnis geschrieben
-  //#################################
+  // config
+  defined ('ANZAHL_ZEILEN') or define ('ANZAHL_ZEILEN', 5000);
+  defined ('RESTORE_TEST') or define ('RESTORE_TEST', false);
 
   xtc_db_connect() or die('Unable to connect to database server!');
 
@@ -142,18 +110,7 @@
 
   include ('includes/db_actions.php');
   
-if(is_file(DIR_WS_INCLUDES.'head.php')) {
-    require (DIR_WS_INCLUDES.'head.php');
-} else {
-    ?>
-    <!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-    <html <?php echo HTML_PARAMS; ?>>
-    <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $_SESSION['language_charset']; ?>"> 
-    <title><?php echo TITLE; ?></title>
-    <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
-    <?php 
-}
+  require (DIR_WS_INCLUDES.'head.php');
 ?>
 <link rel="stylesheet" type="text/css" href="includes/css/backup_db.css">
 <script type="text/javascript">
@@ -182,7 +139,6 @@ if(is_file(DIR_WS_INCLUDES.'head.php')) {
                 </div>
              <div id="data_ok" class="main txta-c" style="margin-top:30px;"></div>
              <div id="button_back" class="main txta-c" style="margin-top:20px;"></div>
-             <?php //if($button_log != '') ?>
              <div id="button_log" class="main txta-c" style="margin-top:10px;"></div>
              <div style="clear:both"></div>
           </div>       

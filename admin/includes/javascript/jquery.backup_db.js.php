@@ -1,13 +1,19 @@
 <?php 
-/* -------------------------------------------------------------------------------------
-$Id$
+  /* --------------------------------------------------------------
+   $Id$
 
-jquery.backup_db.js.php
-Vers. 1.01 (c) www.rpa-com.de
-* ----------------------------------------------------------------------------------- */
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   --------------------------------------------------------------
+   based on:
+   (c) 2011 (c) by  web28 - www.rpa-com.de
 
+   Released under the GNU General Public License
+   --------------------------------------------------------------*/
+
+  defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 ?>
 
 <script type="text/javascript">
@@ -47,6 +53,7 @@ function JStoPHPResponse(data) {
     var data_ok = '<div><b>' + 'Tabellen gesichert: ' + (response.nr) + ' von ' + (response.num_tables) + '</b></div>';
     data_ok += '<div><b>' + '<br />Zuletzt bearbeitet: ' + response.actual_table + '</b></div>';
     data_ok += '<div><b>' + '<br />Seitenaufrufe: ' + response.aufruf + '</b></div>';
+    data_ok += '<div><b>' + '<br />Anzahl Zeilen: ' + response.anzahl_zeilen + '</b></div>';
     data_ok += '<div><b>' + '<br />Scriptlaufzeit: ' +  response.time  + '</b></div>';
     
     $('#data_ok').html(data_ok);
@@ -71,7 +78,7 @@ function JStoPHPResponse(data) {
       if (maxReloadsText != '') infoText = maxReloadsText;
       $('#info_text').html(infoText);
     
-      var button_back = '<a href="backup.php<?php echo SID ? '?'. SID : '';?>" class="button">'+ '<?php echo BUTTON_BACK;?>' +'</a>';
+      var button_back = '<a href="backup.php?file='+ response.file +'<?php echo SID ? '&'. SID : '';?>" class="button">'+ '<?php echo BUTTON_BACK;?>' +'</a>';
       $('#button_back').html(button_back);
       
     }

@@ -20,9 +20,7 @@
   }
   
   if (RESTORE_TEST) $sim = TEXT_SIMULATION; else $sim = '';
-  
-  $disallowed_tables_array = array();
-  
+    
   switch ($action) {
     case 'backupnow':
       $info_text = TEXT_INFO_DO_BACKUP;
@@ -46,14 +44,12 @@
     
       $dump['starttime'] = time();
 
-      @xtc_set_time_limit(0);
+      xtc_set_time_limit(0);
 
-      //BOF Disable "STRICT" mode!
-      $vers = @xtc_db_get_client_info();
+      $vers = xtc_db_get_client_info();
       if(substr($vers,0,1) > 4) {
-        @xtc_db_query("SET SESSION sql_mode=''");
+        xtc_db_query("SET SESSION sql_mode=''");
       }
-      //EOF Disable "STRICT" mode!
 
       if (function_exists('xtc_db_get_client_info')) {
         $mysql_version = '-- MySQL-Client-Version: ' . xtc_db_get_client_info() . "\n--\n";
@@ -74,12 +70,14 @@
       if (isset($_POST['utf8-convert']) && $_POST['utf8-convert'] == 'yes') {
         $dump['utf8-convert']	= 'yes';
       }
+      
       $schema .= '-- Charset: ' . ((isset($dump['utf8-convert'])) ? 'utf8' : $charset) . "\n";
 
+      
       $backup_file = 'dbd_' . DB_DATABASE . '-' . date('YmdHis');
       $dump['file'] = DIR_FS_BACKUP . $backup_file;
-
-      if ($_POST['compress'] == 'gzip') {
+      
+      if (isset($_POST['compress']) && $_POST['compress'] == 'gzip') {
         $dump['compress'] = true;
         $dump['file'] .= '.sql.gz';
       } else {
@@ -101,18 +99,28 @@
       
       $table_collations = $table_engines = array();
 
+      $dump['backup_type'] = isset($_POST['backup_type']) ? $_POST['backup_type'] : 'all';
+      if ($dump['backup_type'] != 'all' && isset($_POST['backup_tables'])) {
+        $dump['backup_tables'] = $_POST['backup_tables'];
+      }
+      
       $tables_query = xtc_db_query('SHOW TABLE STATUS');
       $dump['num_tables'] = xtc_db_num_rows($tables_query);
-
+      $dump['num_rows'] = 0;
+      
       $table_info = '--' . "\n";
       $table_info .= '-- TABLE-INFO' . "\n";
-      //Tabellennamen in Array einlesen
+      
       $dump['tables'] = array();
-      if ($dump['num_tables'] > 0){
-        for ($i=0; $i < $dump['num_tables']; $i++){
+      if ($dump['num_tables'] > 0) {
+        for ($i=0; $i < $dump['num_tables']; $i++) {
           $erg = xtc_db_fetch_array($tables_query);
-          //echo '<pre>'.print_r($erg,1).'</pre>';
-          if (!in_array($erg['Name'], $disallowed_tables_array)) {
+          if ($dump['backup_type'] == 'all'
+              || ($dump['backup_type'] == 'custom'
+                  && in_array($erg['Name'], $dump['backup_tables'])
+                  )
+              )
+          {
             if ($erg['Collation'] != '') {
               $table_collations[$erg['Collation']] = 1;
             }
@@ -136,11 +144,13 @@
             $data_array = xtc_db_fetch_array($data_query);
           
             $erg['Rows'] = $data_array['count_records'];
+            $dump['num_rows'] += $erg['Rows'];
+
             $table_info .= '-- TABLE|'.$erg['Name'].'|'.(($erg['Name'] != TABLE_SESSIONS && $erg['Name'] != TABLE_WHOS_ONLINE) ? $erg['Rows'] : '0').'|'.(($erg['Name'] != TABLE_SESSIONS && $erg['Name'] != TABLE_WHOS_ONLINE) ? ($erg['Data_length']+$erg['Index_length']) : '0').'|'.$erg['Update_time']. (!isset($_POST['remove_engine']) ? '|'.$erg['Engine'] :'') ."\n";
           }
         }
         $dump['nr'] = 0;
-      } //else ERROR
+      }
 
       $dump['tables'] = array_values($dump['tables']);
       $dump['num_tables'] = count($dump['tables']);
@@ -162,36 +172,48 @@
     case 'readdb':
       if ($dump['num_tables'] > 0) {
         $info_text = TEXT_INFO_DO_BACKUP;
-        @xtc_set_time_limit(0);
+        xtc_set_time_limit(0);
         $nr = $dump['nr'];
         $dump['aufruf']++;
     
-        //Neue Tabelle
         if ($dump['table_offset'] == 0) {
           $dump['table_records'] = GetTableInfo($dump['tables'][$nr]);
           $dump['anzahl_zeilen']= ANZAHL_ZEILEN_BKUP;
           $dump['table_offset'] = 1;
           $dump['zeilen_offset'] = 0;
+          $dump['time_gap'] = time();
         } else {
-          //Daten aus  Tabelle lesen
           GetTableData($dump['tables'][$nr]);
         }
-    
+        
+        $time_gap = time() - $dump['time_gap']; 
+        if ($time_gap > 3 && $dump['anzahl_zeilen'] > 10) {
+          $dump['anzahl_zeilen'] -= 1000;
+          if ($dump['anzahl_zeilen'] < 10) {
+            $dump['anzahl_zeilen'] = 10;
+          }
+        } elseif ($time_gap < 3) {
+          $dump['anzahl_zeilen'] += 1000;
+        }
+        $dump['time_gap'] = time();
+
         if (isset($_SESSION['dump'])) {
           $_SESSION['dump'] = $dump;
         }
     
         $sec = time() - $dump['starttime']; 
         $time = sprintf('%d:%02d Min.', floor($sec/60), $sec % 60);
-    
+        
         $json_output = array();
         $json_output['aufruf'] = $dump['aufruf'];
         $json_output['nr'] = $dump['nr'];
         $json_output['num_tables'] = $dump['num_tables'];
         $json_output['time'] = $time;
         $json_output['actual_table'] = $dump['tables'][$nr];
+        $json_output['anzahl_zeilen'] = $dump['anzahl_zeilen'];
+        $json_output['file'] = basename($dump['file']);
         $json_output['dump'] = base64_encode(serialize($dump));
-    
+
         if (isset($_SESSION['CSRFName']) && isset($_SESSION['CSRFToken'])) {
           $json_output[$_SESSION['CSRFName']] = $_SESSION['CSRFToken'];
         }
@@ -212,22 +234,20 @@
       $restore['starttime'] = time();
     
       xtc_set_time_limit(0);
-      //BOF Disable "STRICT" mode!
-      $vers = @xtc_db_get_client_info();
+
+      $vers = xtc_db_get_client_info();
       if(substr($vers,0,1) > 4) {
-        @xtc_db_query("SET SESSION sql_mode=''");
+        xtc_db_query("SET SESSION sql_mode=''");
       }
-      //EOF Disable "STRICT" mode!
+
       $_GET['file'] = isset($_GET['file']) ? basename($_GET['file']) : '';
       $_GET['file'] = preg_replace('/[^0-9a-zA-Z._-]/','',$_GET['file']);
       $restore['file'] = DIR_FS_BACKUP . $_GET['file'];
 
-      //Testen ob Backupdatei existiert, bei nein Abbruch
       if (!is_file($restore['file'])) {
         die('Direct Access to this location is not allowed.');
       }
 
-      //Protokollfatei löschen wenn sie schon existiert
       $extension = substr($restore['file'], -3);
       if($extension == '.gz') {
         $protdatei = substr($restore['file'],0, -3). '.log.gz';
@@ -243,48 +263,46 @@
       }
       if($extension == '.gz') {
         $restore['compressed'] = true;
-      }
-      
+      }      
       $restore['utf8'] = false;
       if (isset($_POST['utf8-convert']) && $_POST['utf8-convert'] == 'yes') {
         $restore['utf8'] = true;
       }
+      $restore['anzahl_zeilen'] = ANZAHL_ZEILEN;
+      $restore['time_gap'] = time();
     
-      //Testen ob Backupdatei existiert, bei nein Abbruch
       if (!is_file($restore['file'])) {
         die('Direct Access to this location is not allowed.');
       }
-      
+            
       $_SESSION['restore'] = isset($restore) ? $restore : '';
       break;
     
     case 'restoredb':
-      //Testen ob Backupdatei existiert, bei nein Abbruch
       if (!is_file($restore['file'])) {
         die('Direct Access to this location is not allowed.');
       }
       $info_text = TEXT_INFO_DO_RESTORE . $sim;
       $restore['filehandle']=($restore['compressed'] == true) ? gzopen($restore['file'],'r') : fopen($restore['file'],'r');
-      if (!$restore['compressed'])
+      if (!$restore['compressed']) {
         $filegroesse = filesize($restore['file']);
-      // Dateizeiger an die richtige Stelle setzen
-      ($restore['compressed']) ? gzseek($restore['filehandle'],$restore['offset']) : fseek($restore['filehandle'],$restore['offset']);
-      // Jetzt basteln wir uns mal unsere Befehle zusammen...
-      $a=0;
-      $restore['EOB'] = false;
-      $config['minspeed'] = ANZAHL_ZEILEN;
-      $restore['anzahl_zeilen'] = $config['minspeed'];
+      }
 
+      ($restore['compressed']) ? gzseek($restore['filehandle'],$restore['offset']) : fseek($restore['filehandle'],$restore['offset']);
+
+      $a = 0;
+      $restore['EOB'] = false;
+      
       // Disable Keys of actual table to speed up restoring
       if (sizeof($restore['tables_to_restore']) == 0 && ($restore['actual_table'] > '' && $restore['actual_table'] != 'unbekannt')) {
-        @xtc_db_query('/*!40000 ALTER TABLE `'.$restore['actual_table'].'` DISABLE KEYS */;');
+        xtc_db_query('/*!40000 ALTER TABLE `'.$restore['actual_table'].'` DISABLE KEYS */;');
       }
     
       $actual_table = '';
       while (($a < $restore['anzahl_zeilen']) && (!$restore['fileEOF']) && !$restore['EOB']) {
         xtc_set_time_limit(0);
         $sql_command = get_sqlbefehl();
-        //Echo $sql_command;
+
         if ($sql_command > '') {
           $actual_table = $restore['actual_table'];
           if (!RESTORE_TEST) {
@@ -293,11 +311,12 @@
               $sql_command = encode_utf8($sql_command, '', true); 
             }
             $res = xtc_db_query($sql_command);
-            if ($res===false) {
-              // Bei MySQL-Fehlern sofort abbrechen und Info ausgeben
-              $meldung=((defined('DB_MYSQL_TYPE') && DB_MYSQL_TYPE=='mysqli') ? @xtc_db_error($query, mysqli_errno(${$link}), mysqli_error(${$link})) : @xtc_db_error($query, mysql_errno(${$link}), mysql_error(${$link})));
-              if ($meldung!='')
+            if ($res === false) {
+
+              $meldung = ((defined('DB_MYSQL_TYPE') && DB_MYSQL_TYPE=='mysqli') ? xtc_db_error($query, mysqli_errno(${$link}), mysqli_error(${$link})) : xtc_db_error($query, mysql_errno(${$link}), mysql_error(${$link})));
+              if ($meldung != '') {
                 die($sql_command.' -> '.$meldung);
+              }
             }
           } else {
             protokoll($sql_command);
@@ -308,7 +327,18 @@
       $restore['offset']=($restore['compressed']) ? gztell($restore['filehandle']) : ftell($restore['filehandle']);
       $restore['compressed'] ? gzclose($restore['filehandle']) : fclose($restore['filehandle']);
       $restore['aufruf']++;
-    
+
+      $time_gap = time() - $restore['time_gap']; 
+      if ($time_gap > 2 && $restore['anzahl_zeilen'] > 10) {
+        $restore['anzahl_zeilen'] -= 1000;
+        if ($restore['anzahl_zeilen'] < 10) {
+          $restore['anzahl_zeilen'] = 10;
+        }
+      } elseif ($time_gap < 2) {
+        $restore['anzahl_zeilen'] += 1000;
+      }
+      $restore['time_gap'] = time();
+
       if (isset($_SESSION['restore'])) {
         $_SESSION['restore'] = $restore;
       }
@@ -320,6 +350,7 @@
       $json_output['aufruf'] = $restore['aufruf'];
       $json_output['table_ready'] = ($restore['table_ready'] > 0) ? $restore['table_ready'] : '0';
       $json_output['time'] = $time;
+      $json_output['anzahl_zeilen'] = $restore['anzahl_zeilen'];
       $json_output['actual_table'] = $restore['fileEOF'] ? '' : $actual_table;
       $json_output['fileEOF'] = $restore['fileEOF'] ? 1 : 0;
       $json_output['filesize'] = filesize($restore['file']);

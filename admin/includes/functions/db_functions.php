@@ -738,81 +738,61 @@ function GetTableData($table) {
   }
 }
 
-//BOC compatility functions
-if (!function_exists('xtc_db_get_client_info')) {
-  function xtc_db_get_client_info($link='db_link') {
-    global ${$link};
-
-    return mysql_get_client_info();
-  }
-}
-
-if (!function_exists('xtc_db_fetch_row')) {
-  function xtc_db_fetch_row(&$db_query, $cq=false) {
-
-    if ($db_query === false) {
-      return false;
-    }
-    if (defined('DB_CACHE') && DB_CACHE=='true' && $cq) {
-      if (!is_array($db_query) || !count($db_query)) {
-        return false;
+function getBackupData($file) {
+  $file_array = array();
+  $file_array['file'] = $file;
+  $file_array['date'] = date(PHP_DATE_TIME_FORMAT, filemtime(DIR_FS_BACKUP . $file));
+  $file_array['size'] = number_format(filesize(DIR_FS_BACKUP . $file)) . ' bytes';
+  $file_array['table_list'] = array();
+  $file_array['tables_row_count'] = 0;
+  switch (substr($file, -3)) {
+    case 'zip': 
+      $file_array['compression'] = 'ZIP'; 
+      break;
+    case '.gz': 
+      $file_array['compression'] = 'GZIP';
+      if ($fp = gzopen(DIR_FS_BACKUP . $file, 'r')) {
+        while ( ! gzeof($fp) ) {
+          $line = gzgets($fp, 4096);
+          if (substr($line, 0, 2) != "--") break; // backed up tables are in head of file
+          if (substr($line, 0, 9) == "-- TABLE|") {
+            $table_info = explode('|',trim(substr($line, 9)));
+            $file_array['table_list'][]  = array('name' => $table_info[0],
+                                                 'rows' => $table_info[1],
+                                                 'data_length' => (isset($table_info[2]) ? $table_info[2] : ''),
+                                                 'update_time' => (isset($table_info[3]) ? $table_info[3] : ''),
+                                                );
+            $file_array['tables_row_count'] += $table_info[1];
+          }
+          if (substr($line, 0, 10) == "-- Charset") {
+            $file_array['charset'] = trim(substr($line, 11));
+          }
+        }
+      }                          
+      break;
+    default: 
+      $file_array['compression'] = TEXT_NO_EXTENSION; 
+      if ($fp = fopen(DIR_FS_BACKUP . $file, 'r')) {
+        while ( ! feof($fp) ) {
+          $line = fgets($fp, 4096);
+          if (substr($line, 0, 2) != "--") break; // backed up tables are in head of file
+          if (substr($line, 0, 9) == "-- TABLE|") {
+            $table_info = explode('|',trim(substr($line, 9)));
+            $file_array['table_list'][]  = array('name' => $table_info[0],
+                                                 'rows' => $table_info[1],
+                                                 'data_length' => (isset($table_info[2]) ? $table_info[2] : ''),
+                                                 'update_time' => (isset($table_info[3]) ? $table_info[3] : ''),
+                                                );
+            $file_array['tables_row_count'] += $table_info[1];
+          }
+          if (substr($line, 0, 10) == "-- Charset") {
+            $file_array['charset'] = trim(substr($line, 11));
+          }
+        }
       }
-      $curr = current($db_query);
-      next($db_query);
-      return $curr;
-    } else {
-      if (is_array($db_query)) {
-        $curr = current($db_query);
-        next($db_query);
-        return $curr;
-      }
-      return mysql_fetch_row($db_query);
-    }
+      break;
   }
-}
-
-if (!function_exists('xtc_db_get_client_info')) {
-  function xtc_db_get_client_info($link='db_link') {
-    global ${$link};
-
-    return mysql_get_client_info();
-  }
-}
-
-if (!function_exists('xtc_db_fetch_row')) {
-  function xtc_db_fetch_row(&$db_query, $cq=false) {
-
-    if ($db_query === false) {
-      return false;
-    }
-    if (defined('DB_CACHE') && DB_CACHE=='true' && $cq) {
-      if (!is_array($db_query) || !count($db_query)) {
-        return false;
-      }
-      $curr = current($db_query);
-      next($db_query);
-      return $curr;
-    } else {
-      if (is_array($db_query)) {
-        $curr = current($db_query);
-        next($db_query);
-        return $curr;
-      }
-      return mysql_fetch_row($db_query);
-    }
-  }
-}
-
-if (!function_exists('xtc_db_set_charset')) {
-  function xtc_db_set_charset($charset, $link='db_link') {
-    global ${$link};
   
-    if (function_exists('mysql_set_charset')) {
-      mysql_set_charset($charset, ${$link});
-    } else {
-      xtc_db_query('SET NAMES '.$charset);
-    }  
-  }
-}
-//EOC compatility functions
+  return $file_array;
+}                        
 ?>

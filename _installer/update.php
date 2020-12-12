@@ -236,6 +236,21 @@
         $smarty->assign('INPUT_REMOVE_ENGINE', xtc_draw_checkbox_field('remove_engine', 'yes', false, 'id="remove_engine"'));
         $smarty->assign('INPUT_COMPLETE_INSERTS', xtc_draw_checkbox_field('complete_inserts', 'yes', true, 'id="complete_inserts"'));
 
+        $type_array = array();
+        $type_array[] = array('id' => 'all', 'text' => TEXT_DB_BACKUP_ALL);
+        $type_array[] = array('id' => 'custom', 'text' => TEXT_DB_BACKUP_CUSTOM);
+        $smarty->assign('INPUT_BACKUP_TYPE', xtc_draw_pull_down_menu('backup_type', $type_array, 'all', 'id="backup_type"'));
+                              
+        $tables_data = array();
+        $tables_query = xtc_db_query("SHOW TABLES FROM `".DB_DATABASE."`");
+        while ($tables = xtc_db_fetch_array($tables_query)) {
+          $tables_data[] = array(
+            'CHECKBOX' => xtc_draw_checkbox_field('backup_tables[]', $tables['Tables_in_'.DB_DATABASE], false, 'id="'.$tables['Tables_in_'.DB_DATABASE].'"'),
+            'TABLE' => $tables['Tables_in_'.DB_DATABASE],
+          );
+        }
+        $smarty->assign('BACKUP_TABLES_ARRAY', $tables_data);
+
         $utf8_query = xtc_db_query("SHOW TABLE STATUS WHERE Name='customers'");
         $utf8_array = xtc_db_fetch_array($utf8_query);
         $check_utf8 = (strpos($utf8_array['Collation'], 'utf8') === false ? false : true);
@@ -316,13 +331,23 @@
             )
         {
           define('_VALID_XTC', true);
+          include (DIR_FS_CATALOG.DIR_ADMIN.'includes/functions/db_functions.php');
+
           $action = (isset($_GET['action']) ? $_GET['action'] : '');
           if (isset($_POST['action']) && $_POST['action'] == 'restorenow') {
             $action = 'restorenow';
           }
           $_GET['file'] = $_POST['restore_file'];
+
+          $utf8_query = xtc_db_query("SHOW TABLE STATUS WHERE Name='customers'");
+          $utf8_array = xtc_db_fetch_array($utf8_query);
+          $check_utf8 = (strpos($utf8_array['Collation'], 'utf8') === false ? false : true);
+
+          $file_array = getBackupData($_GET['file']);
+          if (!$check_utf8 && $file_array['charset'] == 'utf8') {
+            $_POST['utf8-convert'] = 'yes';
+          }
           
-          include (DIR_FS_CATALOG.DIR_ADMIN.'includes/functions/db_functions.php');
           include (DIR_FS_CATALOG.DIR_ADMIN.'includes/db_actions.php');
           
           $javascript = '

@@ -141,7 +141,36 @@
             </div>
           </li>
           {/if}
+
+          <li>
+            <div>
+              {$INPUT_BACKUP_TYPE}
+              <label for="backup_type">{$smarty.const.TEXT_DB_BACKUP_TYPE}</label>
+            </div>
+          </li>
+          
+          <li id="backup_tables" style="display:none;">
+            <div>
+              <ul>
+              {foreach name=inner item=backup_tables from=$BACKUP_TABLES_ARRAY}
+                <li>
+                  {$backup_tables.CHECKBOX}
+                  <label for="{$backup_tables.TABLE}">{$backup_tables.TABLE}</label>
+                </li>
+              {/foreach}
+              </ul>
+            </div>
+          </li>
         </ul>
+        <script>
+          $('#backup_type').on('change', function() {          
+            if ($(this).val() == 'custom') {
+              $('#backup_tables').show();
+            } else {
+              $('#backup_tables').hide();
+            }
+          });
+        </script>
       {/if}
     {elseif $UPDATE_ACTION == 'db_restore'}
       {if isset($PROCESSING)}

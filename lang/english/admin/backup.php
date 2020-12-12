@@ -70,4 +70,9 @@ define('TEXT_REMOVE_ENGINE', "<b>Without storage engines 'ENGINE'</b><br> - The 
 
 define('TEXT_IMPORT_UTF8_NOTICE', '<b>Attention:</b> the database is converted to UTF-8.');
 define('TEXT_INFO_CHARSET', 'Charset:');
+
+define('TEXT_TABLES_BACKUP_TYPE', '<b>Backup</b><br> - Which tables should be saved?');
+define('TEXT_BACKUP_ALL', 'All tables');
+define('TEXT_BACKUP_CUSTOM', 'Selected tables');
+define('TEXT_TABLES_TO_BACKUP', '<b>The following tables should be saved:</b>');
 ?>

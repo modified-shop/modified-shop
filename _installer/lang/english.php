@@ -11,6 +11,8 @@
    ---------------------------------------------------------------------------------------*/
   
   
+  define('PHP_DATE_TIME_FORMAT', 'd/m/Y H:i:s');
+
   // buttons
   define('BUTTON_BACK', 'Back');
   define('BUTTON_SUBMIT', 'Confirm');
@@ -68,6 +70,8 @@
   define('TEXT_DB_COMPRESS_RAW', 'No Compression (Pure SQL)');
   define('TEXT_DB_SIZE', 'Size');
   define('TEXT_DB_DATE', 'Date');
+  define('TEXT_DB_BACKUP_ALL', 'Backup all tables');
+  define('TEXT_DB_BACKUP_CUSTOM', 'Backup selected tables');
   
   define('TEXT_INFO_DO_UPDATE_OK', 'The database was successfully updated!');
   define('TEXT_INFO_DO_UPDATE', 'The database is being updated!');
@@ -82,8 +86,10 @@
   define('TEXT_INFO_LAST', 'Last edited: ');
   define('TEXT_INFO_CALLS', 'Page views: ');
   define('TEXT_INFO_TIME', 'Script runtime: ');
+  define('TEXT_INFO_ROWS', 'Rows processing: ');
   define('TEXT_INFO_FROM', ' of ');
   define('TEXT_INFO_MAX_RELOADS', 'Maximum page reloads were reached: ');
+  define('TEXT_NO_EXTENSION', 'None');
   
   define('TEXT_DB_UPDATE', 'Database structure update');
   define('TEXT_DB_UPDATE_DESC', 'Here you can bring the database of your shop installation up to date.');
