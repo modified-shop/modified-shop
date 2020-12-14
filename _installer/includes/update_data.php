@@ -124,6 +124,7 @@
         'col' => array(
           'customers_login_tries',
           'customers_login_time',
+          'customers_newsletter_mode',
         ),
       ),
     ),

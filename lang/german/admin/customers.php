@@ -72,4 +72,5 @@ define('WARNING_CUSTOMER_ALREADY_EXISTS', 'Kundengruppe kann nicht ge&auml;ndert
 define('TEXT_INFO_HEADING_STATUS_NEW_ORDER','Neue Bestellung');
 define('TEXT_INFO_PAYMENT','Zahlart:');
 define('TEXT_INFO_SHIPPING','Versandart:');
+define('TEXT_INFO_NEWSLETTER_AT_REGISTRATION', 'Newsletter bei Registrierung:');
 ?>
