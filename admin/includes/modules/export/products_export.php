@@ -198,7 +198,7 @@
 
       $campaign_array = array(array('id' => '', 'text' => TEXT_NONE));
       $campaign_query = xtc_db_query("SELECT *
-                                        FROM ".TABLE_MODULE_EXPORT_CAMPAIGNS." 
+                                        FROM ".TABLE_CAMPAIGNS." 
                                     ORDER BY campaigns_id");
       while ($campaign = xtc_db_fetch_array($campaign_query)) {
         $campaign_array[] = array(
