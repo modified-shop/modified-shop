@@ -135,6 +135,7 @@
                                                c.customers_status,
                                                c.customers_firstname,
                                                c.customers_lastname,
+                                               c.customers_newsletter,
                                                c.customers_email_address,
                                                c.customers_default_address_id,
                                                c.customers_date_added as date_account_created,
@@ -438,6 +439,7 @@
                       $contents[] = array ('text' => '<br />'.TEXT_DATE_ACCOUNT_LAST_MODIFIED.' '.xtc_datetime_short($cInfo->date_account_last_modified));
                       $contents[] = array ('text' => '<br />'.TEXT_INFO_DATE_LAST_LOGON.' '.xtc_datetime_short($cInfo->date_last_logon));
                       $contents[] = array ('text' => '<br />'.TEXT_INFO_NUMBER_OF_LOGONS.' '.$cInfo->number_of_logons);
+                      $contents[] = array ('text' => '<br />'.TEXT_INFO_NEWSLETTER_AT_REGISTRATION.' '.(($cInfo->customers_newsletter == 1) ? CFG_TXT_YES : CFG_TXT_NO));
                       $contents[] = array ('text' => '<br />'.TEXT_INFO_COUNTRY.' '.$cInfo->countries_name);
                       $contents[] = array ('text' => '<br />'.TEXT_INFO_NUMBER_OF_REVIEWS.' '.$cInfo->number_of_reviews);
                     }

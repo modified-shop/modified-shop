@@ -30,7 +30,6 @@
                                                     c.customers_default_address_id,
                                                     c.customers_telephone,
                                                     c.customers_fax,
-                                                    c.customers_newsletter,
                                                     c.member_flag,
                                                     c.payment_unallowed,
                                                     c.shipping_unallowed,
