@@ -76,7 +76,7 @@ echo mainMenue(BOX_HEADING_CUSTOMERS);
     if ($admin_access['customers_status'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_CUSTOMERS_STATUS, '', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_CUSTOMERS_STATUS . '</a></li>';
     if ($admin_access['customers_group'] == '1' && GROUP_CHECK == 'true') echo '<li><a href="' . xtc_href_link('customers_group.php', '', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_CUSTOMERS_GROUP . '</a></li>';
     if ($admin_access['orders'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_ORDERS, '', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_ORDERS . '</a></li>';
-    if ($admin_access['module_export'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system&module=dsgvo_export', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_DSGVO_EXPORT . '</a></li>';
+    if ($admin_access['module_export'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=export&module=dsgvo_export', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_DSGVO_EXPORT . '</a></li>';
 echo endMenue(BOX_HEADING_CUSTOMERS);
 
 //---------------------------ARTIKELKATALOG
@@ -98,7 +98,7 @@ echo mainMenue(BOX_HEADING_MODULES);
     if ($admin_access['modules'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_MODULES, 'set=shipping', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_SHIPPING . '</a></li>';
     if ($admin_access['modules'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_MODULES, 'set=ordertotal', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_ORDER_TOTAL . '</a></li>';
     if ($admin_access['modules'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_MODULES, 'set=categories', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_MODULE_TYPE . '</a></li>';
-    if ($admin_access['module_export'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system&module=sitemaporg', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_GOOGLE_SITEMAP . '</a></li>';
+    if ($admin_access['module_export'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=export&module=sitemaporg', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_GOOGLE_SITEMAP . '</a></li>';
     if ($admin_access['module_export'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_MODULE_SYSTEM . '</a></li>';
     if ($admin_access['module_export'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=export', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_MODULE_EXPORT . '</a></li>';
 echo endMenue(BOX_HEADING_MODULES);
