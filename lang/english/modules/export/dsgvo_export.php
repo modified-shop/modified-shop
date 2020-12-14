@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: dsgvo_export.php 12020 2019-07-27 08:33:23Z Tomcraft $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
