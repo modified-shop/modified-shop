@@ -524,7 +524,7 @@
     'lang/german/modules/payment/sofortueberweisungredirect.php',
     'lang/german/modules/payment/sofortueberweisungvorkasse.php',
     'lang/german/modules/payment/worldpay.php',
-    'ang/german/modules/system/dsgvo_export.php',
+    'lang/german/modules/system/dsgvo_export.php',
     'lang/german/modules/system/easybill.php',
     'lang/german/modules/system/easybillcsv.php',
     'lang/german/modules/system/easymarketing.php',
