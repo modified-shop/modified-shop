@@ -77,6 +77,10 @@ if (!isset($_SESSION['sendto'])) {
 	}
 }
 
+if (!isset($_SESSION['billto'])) {
+  $_SESSION['billto'] = $_SESSION['customer_default_address_id'];
+}
+
 require_once (DIR_WS_CLASSES.'order.php');
 $order = new order();
 
