@@ -295,7 +295,6 @@
         $customers_email_address = xtc_db_prepare_input($_POST['customers_email_address']);
         $customers_telephone = xtc_db_prepare_input($_POST['customers_telephone']);
         $customers_fax = xtc_db_prepare_input($_POST['customers_fax']);
-        $customers_newsletter = (isset($_POST['customers_newsletter']) ? xtc_db_prepare_input($_POST['customers_newsletter']) : '');
         if (ACCOUNT_GENDER == 'true') $customers_gender = xtc_db_prepare_input($_POST['customers_gender']);
         if (ACCOUNT_DOB == 'true') $customers_dob = xtc_db_prepare_input($_POST['customers_dob']);
         $customers_default_address_id = xtc_db_prepare_input($_POST['customers_default_address_id']);
@@ -542,7 +541,6 @@
               'customers_fax' => $customers_fax,
               'payment_unallowed' => $payment_unallowed,
               'shipping_unallowed' => $shipping_unallowed,
-              'customers_newsletter' => $customers_newsletter,
               'customers_last_modified' => 'now()'
             );
 
