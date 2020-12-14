@@ -336,9 +336,6 @@ if (xtc_not_null($action) && !$box) {
           <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_modules.png'); ?></div>
           <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?><br /></div>
           <div class="main">Modules</div>
-          <?php if ($set == 'export' && !xtc_not_null($action)) { ?>
-          <div style="clear:both;margin:10px 0;"><span class="main important_info"><?php echo TEXT_MODULE_INFO; ?></span></div>
-          <?php } ?>
           <table class="tableCenter">
             <tr>
               <?php 
