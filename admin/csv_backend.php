@@ -154,7 +154,7 @@ require (DIR_WS_INCLUDES.'head.php');
                 $value_field = xtc_draw_input_field($configuration['configuration_key'], $configuration['configuration_value'],'size=40');
               }
 
-              if (strstr($value_field,'configuration_value')) $value_field=str_replace('configuration_value',$configuration['configuration_key'],$value_field);
+              if (strpos($value_field,'configuration_value')) $value_field=str_replace('configuration_value',$configuration['configuration_key'],$value_field);
 
               echo '<tr>
                       <td class="dataTableConfig col-left">'.constant(strtoupper($configuration['configuration_key'].'_TITLE')).'</td>

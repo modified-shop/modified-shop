@@ -88,7 +88,7 @@
         }
         break;
       case 'deleteconfirm':
-        if (strstr($_GET['file'], '..')) {
+        if (strpos($_GET['file'], '..')) {
           xtc_redirect(xtc_href_link(FILENAME_BACKUP));
         }
 
