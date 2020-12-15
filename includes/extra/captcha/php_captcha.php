@@ -49,7 +49,7 @@ class php_captcha extends modified_captcha {
     $aFonts = array();
     if ($dir= opendir(DIR_WS_INCLUDES.'fonts/')){
       while  (($file = readdir($dir)) !==false) {
-        if (is_file(DIR_WS_INCLUDES.'fonts/'.$file) and (strstr(strtoupper($file),'.TTF'))){
+        if (is_file(DIR_WS_INCLUDES.'fonts/'.$file) && (strpos(strtoupper($file),'.TTF'))){
           $aFonts[] = DIR_FS_CATALOG.'includes/fonts/'.$file;
         }
       }

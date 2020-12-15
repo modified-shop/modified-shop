@@ -37,7 +37,7 @@ if (isset($send_by_admin)) {
   $customer_id = $orders['customers_id'];
   $language = $orders['language'];
   $order_status = $orders['orders_status'];
-} elseif (!strstr($PHP_SELF, FILENAME_ACCOUNT_HISTORY_INFO)) {
+} elseif (basename($PHP_SELF) != FILENAME_ACCOUNT_HISTORY_INFO) {
   // Get last order id for checkout_success
   $orders_query = xtc_db_query("SELECT orders_id, 
                                        orders_status 

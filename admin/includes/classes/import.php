@@ -710,7 +710,7 @@ class xtcImport {
         $line_data['data'] = $file_content[$line];
         $lc = 1;
         // check if next line got ; in first 50 chars
-        while (!strstr(substr($file_content[$line + $lc], 0, 6), 'XTSOL') && $line + $lc <= $max_lines) {
+        while (!strpos(substr($file_content[$line + $lc], 0, 6), 'XTSOL') && $line + $lc <= $max_lines) {
             $line_data['data'] .= $file_content[$line + $lc];
             $lc ++;
         }

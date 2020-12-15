@@ -136,7 +136,7 @@
             }
           }
           $customers_statuses_array = xtc_get_customers_statuses();
-          if (strstr($group_ids,'c_all_group')) {
+          if (strpos($group_ids,'c_all_group')) {
             $group_ids = 'c_all_group,';
             for ($g=0, $x=count($customers_statuses_array); $g<$x; $g++) {
               $group_ids .= 'c_'.$customers_statuses_array[$g]['id'].'_group,';
@@ -233,7 +233,7 @@
       $group_ids .= 'c_'.$b."_group ,";
     }
     $customers_statuses_array=xtc_get_customers_statuses();
-    if (strstr($group_ids,'c_all_group')) {
+    if (strpos($group_ids,'c_all_group')) {
       $group_ids='c_all_group,';
       for ($i=0;$n=sizeof($customers_statuses_array),$i<$n;$i++) {
         $group_ids .='c_'.$customers_statuses_array[$i]['id'].'_group,';
@@ -292,7 +292,7 @@
         $group_ids .= 'c_'.$b."_group ,";
       }
       $customers_statuses_array=xtc_get_customers_statuses();
-      if (strstr($group_ids,'c_all_group')) {
+      if (strpos($group_ids,'c_all_group')) {
         $group_ids = 'c_all_group,';
         for ($i=0;$n=sizeof($customers_statuses_array),$i<$n;$i++) {
           $group_ids .='c_'.$customers_statuses_array[$i]['id'].'_group,';
