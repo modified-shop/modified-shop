@@ -21,6 +21,11 @@
       && !isset($_GET['manufacturers_id'])
       )
   {
+    $banner_smarty = new Smarty;
+    $banner_smarty->caching = false;
+    $banner_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+    $banner_smarty->assign('language', $_SESSION['language']);
+
     // auto activate and expire banners
     xtc_activate_banners();
     xtc_expire_banners();
@@ -34,7 +39,22 @@
                                          ORDER BY banners_group");
     while ($groups = xtc_db_fetch_array($groups_query)) {
       if ($banner = xtc_banner_exists('dynamic', $groups['banners_group'])) {
-        $smarty->assign(strtoupper($groups['banners_group']), xtc_display_banner('static', $banner));
+        $banner_array = xtc_display_banner('static', $banner);
+
+        if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/banners.html')) {
+          $banner_smarty->assign('banner_data', $banner_array);
+          $banner_smarty->caching = 0;
+          $banners = $banner_smarty->fetch(CURRENT_TEMPLATE.'/module/banners.html');
+        } else {
+          if (xtc_not_null($banner_array['TEXT'])) {
+            $banners = $banner_array['TEXT'];
+          } elseif (xtc_not_null($banner_array['LINK'])) {      
+            $banners = '<a title="'.$banner_array['TITLE'].'" href="'.$banner_array['LINK'].'"'.$banner_array['TARGET'].'>'.$banner_array['IMAGE_IMG'].'</a>';
+          } else {
+            $banners = $banner_array['IMAGE_IMG'];
+          }
+        }
+        $smarty->assign(strtoupper($groups['banners_group']), $banners);
       }
     }
 

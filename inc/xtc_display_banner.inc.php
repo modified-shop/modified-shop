@@ -45,36 +45,48 @@
         foreach ($banner_content as $banner) {
           $banner_url = xtc_get_top_level_domain($banner['banners_url']);
           $banner_title = xtc_parse_input_field_data($banner['banners_title'], array('"' => '&quot;'));
+          $banner_link = xtc_href_link(FILENAME_REDIRECT, 'action=banner&goto=' . $banner['banners_id']);
+          $banner_target = (($shop_url['domain'] != $banner_url['domain']) ? ' target="_blank" rel="noopener"' : '');
+          $banner_image = xtc_image(DIR_WS_IMAGES.'banner/'.$banner['banners_image'], $banner['banners_title'], '', '', 'title="'.$banner['banners_title'].'"');
           
           $banner_array[] = array(
-            'IMAGE' => ((xtc_not_null($banner['banners_url'])) ? '<a title="'.$banner_title.'" href="' . xtc_href_link(FILENAME_REDIRECT, 'action=banner&goto=' . $banner['banners_id']) . '"' . (($shop_url['domain'] != $banner_url['domain']) ? ' target="_blank" rel="noopener"' : '') . '>' . xtc_image(DIR_WS_IMAGES.'banner/'.$banner['banners_image'], $banner['banners_title'], '', '', 'title="'.$banner['banners_title'].'"') . '</a>' : xtc_image(DIR_WS_IMAGES.'banner/'.$banner['banners_image'], $banner['banners_title'], '', '', 'title="'.$banner['banners_title'].'"')),
+            'IMAGE' => ((xtc_not_null($banner['banners_url'])) ? '<a title="'.$banner_title.'" href="'.$banner_link.'"'.$banner_target.'>'.$banner_image.'</a>' : $banner_image),
             'IMAGE_SRC' => DIR_WS_BASE.DIR_WS_IMAGES.'banner/'.$banner['banners_image'],
-            'LINK' => ((xtc_not_null($banner['banners_url'])) ? xtc_href_link(FILENAME_REDIRECT, 'action=banner&goto=' . $banner['banners_id']) : ''),
+            'IMAGE_IMG' => $banner_image,
+            'LINK' => ((xtc_not_null($banner['banners_url'])) ? $banner_link : ''),
+            'TARGET' => $banner_target,
             'TEXT' => $banner['banners_html_text'],
             'TITLE' => $banner_title,
+            'GROUP' => $banner['banners_group'],
           );
           xtc_update_banner_display_count($banner['banners_id']);
         }
         
         return $banner_array;
       }
-    }
-
-    
-    if (xtc_not_null($banner['banners_html_text'])) {
-      $banner_string = $banner['banners_html_text'];
-    } elseif (xtc_not_null($banner['banners_url'])) {
-      $banner_url = xtc_get_top_level_domain($banner['banners_url']);
-      $banner_title = xtc_parse_input_field_data($banner['banners_title'], array('"' => '&quot;'));
-      $shop_url = xtc_get_top_level_domain(HTTP_SERVER);
       
-      $banner_string = '<a title="'.$banner_title.'" href="' . xtc_href_link(FILENAME_REDIRECT, 'action=banner&goto=' . $banner['banners_id']) . '"' . (($shop_url['domain'] != $banner_url['domain']) ? ' target="_blank" rel="noopener"' : '') . '>' . xtc_image(DIR_WS_IMAGES.'banner/' . $banner['banners_image'], $banner['banners_title'], '', '', 'title="'.$banner['banners_title'].'"') . '</a>';
-    } else {
-      $banner_string = xtc_image(DIR_WS_IMAGES.'banner/'.$banner['banners_image'], $banner['banners_title'], '', '', 'title="'.$banner['banners_title'].'"');
+      return false;
     }
 
+    $banner_url = xtc_get_top_level_domain($banner['banners_url']);
+    $banner_title = xtc_parse_input_field_data($banner['banners_title'], array('"' => '&quot;'));
+    $banner_link = xtc_href_link(FILENAME_REDIRECT, 'action=banner&goto=' . $banner['banners_id']);
+    $banner_target = (($shop_url['domain'] != $banner_url['domain']) ? ' target="_blank" rel="noopener"' : '');
+    $banner_image = xtc_image(DIR_WS_IMAGES.'banner/'.$banner['banners_image'], $banner['banners_title'], '', '', 'title="'.$banner['banners_title'].'"');
+    
+    $banner_array = array(
+      'IMAGE' => ((xtc_not_null($banner['banners_url'])) ? '<a title="'.$banner_title.'" href="'.$banner_link.'"'.$banner_target.'>'.$banner_image.'</a>' : $banner_image),
+      'IMAGE_SRC' => DIR_WS_BASE.DIR_WS_IMAGES.'banner/'.$banner['banners_image'],
+      'IMAGE_IMG' => $banner_image,
+      'LINK' => ((xtc_not_null($banner['banners_url'])) ? $banner_link : ''),
+      'TARGET' => $banner_target,
+      'TEXT' => $banner['banners_html_text'],
+      'TITLE' => $banner_title,
+      'GROUP' => $banner['banners_group'],
+    );
+    
     xtc_update_banner_display_count($banner['banners_id']);
-
-    return $banner_string;
+        
+    return $banner_array;
   }
 ?>
