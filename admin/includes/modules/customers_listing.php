@@ -447,7 +447,7 @@
                       $contents[] = array ('text' => TEXT_INFO_DATE_LAST_LOGON.' '.xtc_datetime_short($cInfo->date_last_logon));
                       $contents[] = array ('text' => TEXT_INFO_NUMBER_OF_LOGONS.' '.$cInfo->number_of_logons);
                       $contents[] = array ('text' => TEXT_INFO_NEWSLETTER_AT_REGISTRATION.' '.(($cInfo->customers_newsletter == 1) ? CFG_TXT_YES : CFG_TXT_NO));
-                      $contents[] = array ('text' => TEXT_INFO_NEWSLETTER_STATUS.' '.(($cInfo->newsletter_status == 1) ? CFG_TXT_YES : CFG_TXT_NO));
+                      $contents[] = array ('text' => TEXT_INFO_NEWSLETTER_STATUS.' '.(($cInfo->newsletter_status == 1) ? IMAGE_ICON_STATUS_GREEN : IMAGE_ICON_STATUS_RED));
                       $contents[] = array ('text' => TEXT_INFO_COUNTRY.' '.$cInfo->countries_name);
                       $contents[] = array ('text' => TEXT_INFO_NUMBER_OF_REVIEWS.' '.$cInfo->number_of_reviews);
                     }
