@@ -114,11 +114,11 @@ class IBANValidator extends AbstractValidator
      */
     protected static function getVal($char)
     {
-        if (strstr('0123456789', $char)) {
+        if (strpos('0123456789', $char)) {
             return (int) $char;
         }
 
-        if (strstr('ABCDEFGHIJKLMNOPQRSTUVWXYZ', $char)) {
+        if (strpos('ABCDEFGHIJKLMNOPQRSTUVWXYZ', $char)) {
             return (ord($char) - 55);
         }
 
