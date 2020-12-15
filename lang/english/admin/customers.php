@@ -73,4 +73,5 @@ define('TEXT_INFO_HEADING_STATUS_NEW_ORDER','New order');
 define('TEXT_INFO_PAYMENT','Payment:');
 define('TEXT_INFO_SHIPPING','Shipping:');
 define('TEXT_INFO_NEWSLETTER_AT_REGISTRATION', 'Newsletter at registration:');
+define('TEXT_INFO_NEWSLETTER_STATUS', 'Newsletter status:');
 ?>

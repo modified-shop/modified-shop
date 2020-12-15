@@ -185,7 +185,14 @@
                                                            WHERE customers_info_id = '".(int)$customers['customers_id']."'");
                     $customers_info = xtc_db_fetch_array($customers_info_query);
                     $customers = array_merge($customers, (array)$customers_info);
-
+                    
+                    $newsletter_query = xtc_db_query("SELECT *
+                                                        FROM ".TABLE_NEWSLETTER_RECIPIENTS."
+                                                       WHERE customers_email_address = '".xtc_db_input($customers['customers_email_address'])."'
+                                                         AND mail_status = 1");
+                    $newsletter_status = array('newsletter_status' => xtc_db_num_rows($newsletter_query));
+                    $customers = array_merge($customers, $newsletter_status);
+                    
                     $cInfo = new objectInfo($customers);
                   }
 
@@ -436,12 +443,13 @@
                       }
                       
                       $contents[] = array ('text' => '<br />'.TEXT_DATE_ACCOUNT_CREATED.' '.xtc_datetime_short($cInfo->date_account_created));
-                      $contents[] = array ('text' => '<br />'.TEXT_DATE_ACCOUNT_LAST_MODIFIED.' '.xtc_datetime_short($cInfo->date_account_last_modified));
-                      $contents[] = array ('text' => '<br />'.TEXT_INFO_DATE_LAST_LOGON.' '.xtc_datetime_short($cInfo->date_last_logon));
-                      $contents[] = array ('text' => '<br />'.TEXT_INFO_NUMBER_OF_LOGONS.' '.$cInfo->number_of_logons);
-                      $contents[] = array ('text' => '<br />'.TEXT_INFO_NEWSLETTER_AT_REGISTRATION.' '.(($cInfo->customers_newsletter == 1) ? CFG_TXT_YES : CFG_TXT_NO));
-                      $contents[] = array ('text' => '<br />'.TEXT_INFO_COUNTRY.' '.$cInfo->countries_name);
-                      $contents[] = array ('text' => '<br />'.TEXT_INFO_NUMBER_OF_REVIEWS.' '.$cInfo->number_of_reviews);
+                      $contents[] = array ('text' => TEXT_DATE_ACCOUNT_LAST_MODIFIED.' '.xtc_datetime_short($cInfo->date_account_last_modified));
+                      $contents[] = array ('text' => TEXT_INFO_DATE_LAST_LOGON.' '.xtc_datetime_short($cInfo->date_last_logon));
+                      $contents[] = array ('text' => TEXT_INFO_NUMBER_OF_LOGONS.' '.$cInfo->number_of_logons);
+                      $contents[] = array ('text' => TEXT_INFO_NEWSLETTER_AT_REGISTRATION.' '.(($cInfo->customers_newsletter == 1) ? CFG_TXT_YES : CFG_TXT_NO));
+                      $contents[] = array ('text' => TEXT_INFO_NEWSLETTER_STATUS.' '.(($cInfo->newsletter_status == 1) ? CFG_TXT_YES : CFG_TXT_NO));
+                      $contents[] = array ('text' => TEXT_INFO_COUNTRY.' '.$cInfo->countries_name);
+                      $contents[] = array ('text' => TEXT_INFO_NUMBER_OF_REVIEWS.' '.$cInfo->number_of_reviews);
                     }
 
                     if ($action == 'iplog') {
