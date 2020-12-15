@@ -1043,7 +1043,7 @@ class shoppingCart {
                 && strpos($referer['path'], 'checkout_') === false
                 )
             {
-              $basename = ltrim($referer['path'], '/');
+              $basename = ltrim($referer['path'], DIR_WS_CATALOG);
             }
             break;
         }
