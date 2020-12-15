@@ -34,4 +34,8 @@ ALTER TABLE `banners` MODIFY `banners_group` VARCHAR(32) NOT NULL;
 #GTB - 2020-11-24 - account password security
 ALTER TABLE `customers` ADD `customers_password_time` INT(11) DEFAULT 0 NOT NULL;
 
+#GTB - 2020-12-15 - fix #1047 - update banner manager
+ALTER TABLE `banners` ADD `banners_group_id` INT(11) NOT NULL AFTER `banners_id`;
+ALTER TABLE `banners` ADD `banners_sort` INT(11) NOT NULL AFTER `banners_html_text`;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
