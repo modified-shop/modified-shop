@@ -175,11 +175,13 @@ CREATE TABLE banktransfer_blz (
 DROP TABLE IF EXISTS banners;
 CREATE TABLE banners (
   banners_id INT(11) NOT NULL AUTO_INCREMENT,
+  banners_group_id INT(11) NOT NULL,
   banners_title VARCHAR(64) NOT NULL,
   banners_url VARCHAR(255) NOT NULL,
   banners_image VARCHAR(255) NOT NULL,
   banners_group VARCHAR(32) NOT NULL,
   banners_html_text TEXT,
+  banners_sort INT(11) NOT NULL,
   languages_id INT(11) NOT NULL,
   expires_impressions INT(7) DEFAULT NULL,
   expires_date DATETIME DEFAULT NULL,

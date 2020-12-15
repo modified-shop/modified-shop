@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: banner_yearly.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -15,7 +15,7 @@
    Released under the GNU General Public License 
    --------------------------------------------------------------*/
 
-  require(DIR_WS_CLASSES . 'phplot.php');
+  require_once(DIR_WS_CLASSES . 'phplot.php');
 
   $stats = array(array('0', '0', '0'));
   $banner_stats_query = xtc_db_query("select year(banners_history_date) as year, sum(banners_shown) as value, sum(banners_clicked) as dvalue from " . TABLE_BANNERS_HISTORY . " where banners_id = '" . $banner_id . "' group by year");

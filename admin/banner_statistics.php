@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: banner_statistics.php 1125 2005-07-28 09:59:44Z novalis $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -84,7 +84,7 @@ require (DIR_WS_INCLUDES.'head.php');
         <div class="clear div_box mrg5">
         
           <?php echo xtc_draw_form('year', FILENAME_BANNER_STATISTICS, '', 'get'); ?>
-          <?php echo xtc_draw_hidden_field('page', $_GET['page']) . xtc_draw_hidden_field('bID', $_GET['bID']); ?>
+          <?php echo xtc_draw_hidden_field('page', $_GET['page']) . xtc_draw_hidden_field('bID', $_GET['bID']) . xtc_draw_hidden_field('gID', $_GET['gID']); ?>
 
           <div class="main flt-l" style="width:100%">
             <table class="tableCenter collapse">
@@ -165,7 +165,7 @@ require (DIR_WS_INCLUDES.'head.php');
               }
             }
           ?>
-          <div class="pdg2 txta-l"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $_GET['bID']) . '">' . BUTTON_BACK . '</a>'; ?></div>
+          <div class="pdg2 txta-l"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $_GET['gID']) . '">' . BUTTON_BACK . '</a>'; ?></div>
         </div>
 
       </td>

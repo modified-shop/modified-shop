@@ -23,12 +23,12 @@
                        SET status = '".(int)$status."', 
                            date_status_change = now(), 
                            date_scheduled = NULL 
-                     WHERE banners_id = '" . (int)$banners_id . "'");
+                     WHERE banners_group_id = '" . (int)$banners_id . "'");
     } elseif ($status == '0') {
       xtc_db_query("UPDATE " . TABLE_BANNERS . " 
                        SET status = '".(int)$status."', 
                            date_status_change = now()
-                     WHERE banners_id = '" . (int)$banners_id . "'");
+                     WHERE banners_group_id = '" . (int)$banners_id . "'");
     }
   }
 ?>
