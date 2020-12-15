@@ -69,8 +69,8 @@
             $banner_error = true;
           }
 
-          $banners_image_{$languages[$i]['id']} = xtc_try_upload('banners_image_'.$languages[$i]['id'], DIR_FS_CATALOG_IMAGES.'banner/', '644', $accepted_banners_image_files_extensions, $accepted_banners_image_files_mime_types);
-          if ($banners_image_exist == '' && $html_text == '' && !$banners_image_{$languages[$i]['id']}) {
+          ${'banners_image_'.$languages[$i]['id']} = xtc_try_upload('banners_image_'.$languages[$i]['id'], DIR_FS_CATALOG_IMAGES.'banner/', '644', $accepted_banners_image_files_extensions, $accepted_banners_image_files_mime_types);
+          if ($banners_image_exist == '' && $html_text == '' && !${'banners_image_'.$languages[$i]['id']}) {
             $messageStack->add(strtoupper($languages[$i]['code']) . ': ' . ERROR_BANNER_IMAGE_HTML_REQUIRED, 'error');
             $banner_error = true;
           }
@@ -88,8 +88,8 @@
 
       
             // new banner available & delete old
-            if (is_object($banners_image_{$languages[$i]['id']}) && $banners_image_{$languages[$i]['id']}->filename != '') {
-              $banners_image_exist = $banners_image_{$languages[$i]['id']}->filename;
+            if (is_object(${'banners_image_'.$languages[$i]['id']}) && ${'banners_image_'.$languages[$i]['id']}->filename != '') {
+              $banners_image_exist = ${'banners_image_'.$languages[$i]['id']}->filename;
               $banner_query = xtc_db_query("SELECT banners_image 
                                               FROM " . TABLE_BANNERS . " 
                                              WHERE banners_id = '" . (int)$banners_id . "'");
@@ -144,8 +144,8 @@
           
           // remove uploaded images
           for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-            if (is_file(DIR_FS_CATALOG_IMAGES.'banner/'.$banners_image_{$languages[$i]['id']}->filename)) {
-              unlink(DIR_FS_CATALOG_IMAGES.'banner/'.$banners_image_{$languages[$i]['id']}->filename);
+            if (is_file(DIR_FS_CATALOG_IMAGES.'banner/'.${'banners_image_'.$languages[$i]['id']}->filename)) {
+              unlink(DIR_FS_CATALOG_IMAGES.'banner/'.${'banners_image_'.$languages[$i]['id']}->filename);
             }
           }
         }
