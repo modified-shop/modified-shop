@@ -51,7 +51,7 @@
           <table class="small" style="border-top:1px solid; border-bottom:1px solid;" width="100%" border="0">
             <tr bgcolor="#f1f1f1">
               <td width="50%">
-                <p><strong>{if isset($SHIPPING_CLASS) && strstr($SHIPPING_CLASS, 'selfpickup')}{#pickup_address#}{else}{#shipping_address#}{/if}</strong></p>
+                <p><strong>{if isset($SHIPPING_CLASS) && strpos($SHIPPING_CLASS, 'selfpickup')}{#pickup_address#}{else}{#shipping_address#}{/if}</strong></p>
               </td>
               <td>
                 <p><strong>{if $address_label_payment}{#payment_address#}{/if}</strong></p>

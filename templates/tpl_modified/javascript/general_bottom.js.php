@@ -49,7 +49,7 @@ if (COMPRESS_JAVASCRIPT == 'true') {
 }
 echo $javascript.PHP_EOL;
 
-if (strstr($PHP_SELF, FILENAME_CONTENT) && isset($_GET['coID']) && $_GET['coID'] == 8) {
+if (basename($PHP_SELF) == FILENAME_CONTENT && isset($_GET['coID']) && $_GET['coID'] == 8) {
 ?>
 <!--[if lt IE 10]>
 <script src="<?php echo DIR_WS_BASE.DIR_TMPL_JS; ?>jquery.css3-multi-column.js"></script>

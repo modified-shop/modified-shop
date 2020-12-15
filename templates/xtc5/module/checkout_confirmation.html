@@ -46,7 +46,7 @@
   
   {if $DELIVERY_LABEL}
   <div class="checkoutNavBoxes">
-    {if isset($SHIPPING_CLASS) && strstr($SHIPPING_CLASS, 'selfpickup')}
+    {if isset($SHIPPING_CLASS) && strpos($SHIPPING_CLASS, 'selfpickup')}
       <h2>{#text_pickup_address#}</h2>
     {else}
       <h2>{#text_shipping_address#}</h2>

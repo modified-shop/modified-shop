@@ -10,7 +10,7 @@
    Released under the GNU General Public License
    --------------------------------------------------------------*/
 ?>
-<?php if (strstr($PHP_SELF, FILENAME_PRODUCT_INFO )) { // TABS/ACCORDION in product_info - web28 ?>
+<?php if (basename($PHP_SELF) == FILENAME_PRODUCT_INFO) { ?>
 <script src="<?php echo DIR_WS_BASE.DIR_TMPL_JS; ?>jquery-ui.js" type="text/javascript"></script>
 <script type="text/javascript">
 /* <![CDATA[ */
@@ -23,4 +23,4 @@
   });
 /*]]>*/
 </script>
-<?php } // TABS/ACCORDION in product_info - web28 ?>
+<?php }

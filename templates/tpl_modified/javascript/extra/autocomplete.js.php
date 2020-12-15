@@ -89,7 +89,7 @@
 	  $('#inputString').val('');
 	});	
   <?php } ?>
-	<?php if (SEARCH_AC_STATUS == 'true' || (!strstr($PHP_SELF, FILENAME_SHOPPING_CART) && !strstr($PHP_SELF, 'checkout'))) { ?>	
+	<?php if (SEARCH_AC_STATUS == 'true' || (basename($PHP_SELF) != FILENAME_SHOPPING_CART && !strpos($PHP_SELF, 'checkout'))) { ?>	
 	function ac_closing() {
 		setTimeout("$('#suggestions').slideUp();", 100);
 		ac_page = 1;

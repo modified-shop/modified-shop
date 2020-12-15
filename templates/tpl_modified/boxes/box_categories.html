@@ -8,12 +8,12 @@
       {$BOX_CONTENT}
       {if $smarty.const.SPECIALS_CATEGORIES === true}
         {if $smarty.const.SPECIALS_EXISTS === true}
-          <li class="level1{if strstr($smarty.server.PHP_SELF, $smarty.const.FILENAME_SPECIALS)} active1{/if}"><a href="{$smarty.const.FILENAME_SPECIALS|xtc_href_link}">{#heading_specials#}</a></li>
+          <li class="level1{if strpos($smarty.server.PHP_SELF, $smarty.const.FILENAME_SPECIALS)} active1{/if}"><a href="{$smarty.const.FILENAME_SPECIALS|xtc_href_link}">{#heading_specials#}</a></li>
         {/if}
       {/if}
       {if $smarty.const.WHATSNEW_CATEGORIES === true}
         {*if $smarty.const.WHATSNEW_EXISTS === true*}
-          <li class="level1{if strstr($smarty.server.PHP_SELF, $smarty.const.FILENAME_PRODUCTS_NEW)} active1{/if}"><a href="{$smarty.const.FILENAME_PRODUCTS_NEW|xtc_href_link}">{#heading_whatsnew#}</a></li>
+          <li class="level1{if strpos($smarty.server.PHP_SELF, $smarty.const.FILENAME_PRODUCTS_NEW)} active1{/if}"><a href="{$smarty.const.FILENAME_PRODUCTS_NEW|xtc_href_link}">{#heading_whatsnew#}</a></li>
         {*/if*}
       {/if}
     </ul>

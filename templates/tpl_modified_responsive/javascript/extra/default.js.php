@@ -28,7 +28,7 @@
     $('#alertable-title').html(title);
   }
 
-  <?php if (!strstr($PHP_SELF, FILENAME_SHOPPING_CART) && !strstr($PHP_SELF, 'checkout')) { ?>
+  <?php if (basename($PHP_SELF) != FILENAME_SHOPPING_CART && !strpos($PHP_SELF, 'checkout')) { ?>
     $(function() {
       $('#toggle_cart').click(function() {
         $('.toggle_cart').slideToggle('slow');

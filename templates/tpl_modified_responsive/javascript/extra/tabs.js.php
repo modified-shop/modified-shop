@@ -10,7 +10,7 @@
    Released under the GNU General Public License
    --------------------------------------------------------------*/
 ?>
-<?php if (strstr($PHP_SELF, FILENAME_PRODUCT_INFO )) { ?>
+<?php if (basename($PHP_SELF) == FILENAME_PRODUCT_INFO) { ?>
 <script>  
   $.get("<?php echo DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE; ?>"+"/css/jquery.easyTabs.css", function(css) {
     $("head").append("<style type='text/css'>"+css+"<\/style>");
@@ -25,7 +25,7 @@
   });
 </script>
 <?php } ?>
-<?php if (strstr($PHP_SELF, 'checkout')) { ?>
+<?php if (strpos($PHP_SELF, 'checkout')) { ?>
 <script>  
   $.get("<?php echo DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE; ?>"+"/css/jquery.easyTabs.css", function(css) {
     $("head").append("<style type='text/css'>"+css+"<\/style>");

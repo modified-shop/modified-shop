@@ -35,7 +35,7 @@
     <br class="clearfix" />
     <div class="hr_15"></div>
     <div class="printColumsLeft">
-      <strong>{if isset($SHIPPING_CLASS) && strstr($SHIPPING_CLASS, 'selfpickup')}{#pickup_address#}{else}{#shipping_address#}{/if}</strong><br />{$address_label_shipping}
+      <strong>{if isset($SHIPPING_CLASS) && strpos($SHIPPING_CLASS, 'selfpickup')}{#pickup_address#}{else}{#shipping_address#}{/if}</strong><br />{$address_label_shipping}
     </div>
     <div class="printColumsRight">
       {if $address_label_payment}<strong>{#payment_address#}</strong>{/if}<br />{$address_label_payment}
