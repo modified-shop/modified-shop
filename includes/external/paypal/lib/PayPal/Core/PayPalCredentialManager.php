@@ -78,7 +78,7 @@ class PayPalCredentialManager
 
         $arr = array();
         foreach ($config as $k => $v) {
-            if (strstr($k, $prefix)) {
+            if (strpos($k, $prefix)) {
                 $arr[$k] = $v;
             }
         }
@@ -87,7 +87,7 @@ class PayPalCredentialManager
         $arr = array();
         foreach ($config as $key => $value) {
             $pos = strpos($key, '.');
-            if (strstr($key, "acct")) {
+            if (strpos($key, "acct")) {
                 $arr[] = substr($key, 0, $pos);
             }
         }

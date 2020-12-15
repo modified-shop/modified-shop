@@ -33,7 +33,7 @@
     }
   }
 
-  if (strstr($PHP_SELF, FILENAME_PRODUCT_INFO )) {
+  if (basename($PHP_SELF) == FILENAME_PRODUCT_INFO) {
     ?>
     <script>
       $(document).ready(function () {      

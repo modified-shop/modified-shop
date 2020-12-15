@@ -101,7 +101,7 @@ class PayPalConfigManager
             $arr = array();
             if ($searchKey !== '') {
                 foreach ($this->configs as $k => $v) {
-                    if (strstr($k, $searchKey)) {
+                    if (strpos($k, $searchKey)) {
                         $arr[$k] = $v;
                     }
                 }
@@ -127,7 +127,7 @@ class PayPalConfigManager
             $arr = array();
             foreach ($this->configs as $key => $value) {
                 $pos = strpos($key, '.');
-                if (strstr($key, "acct")) {
+                if (strpos($key, "acct")) {
                     $arr[] = substr($key, 0, $pos);
                 }
             }

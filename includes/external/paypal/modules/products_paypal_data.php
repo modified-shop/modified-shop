@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: orders_paypal_data.php 12576 2020-02-20 17:14:51Z GTB $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -51,7 +51,7 @@ if (isset($_GET['pID']) && $_GET['pID'] != '') {
       array('id' => 0, 'text' => TEXT_NO),
     );
     
-    if (count($products_info_array) > 0) {
+    if (is_object($products_info_array) && (int)$products_info_array->getId() == (int)$_GET['pID']) {
     ?>
       <div class="pp-overlay" style="display:none"></div>
       <table border="0" width="100%" cellspacing="0" cellpadding="2" class="dataTableRow paypal_data" style="display:none;">

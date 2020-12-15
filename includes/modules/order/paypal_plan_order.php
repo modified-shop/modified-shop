@@ -111,6 +111,13 @@ class paypal_plan_order {  //Important same name as filename
           && array_key_exists($products_id, $_SESSION['cart']->plans)  
           ) 
       {  
+        // language
+        if (is_file(DIR_FS_EXTERNAL.'paypal/lang/'.$_SESSION['language'].'.php')) {
+          require_once(DIR_FS_EXTERNAL.'paypal/lang/'.$_SESSION['language'].'.php');
+        } else {
+          require_once(DIR_FS_EXTERNAL.'paypal/lang/english.php');
+        }
+
         $plan_query = xtDBquery("SELECT *
                                    FROM `paypal_plan`
                                   WHERE plan_id = '".xtc_db_input($_SESSION['cart']->plans[$products_id])."'

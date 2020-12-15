@@ -337,49 +337,51 @@ require (DIR_WS_INCLUDES.'head.php');
                   </tr>
                   <?php
                   foreach ($payment_array as $payment_module) {
-                    require_once(DIR_FS_CATALOG.'includes/modules/payment/'.$payment_module.'.php');
-                    require_once(DIR_FS_CATALOG.'lang/'.$_SESSION['language'].'/modules/payment/'.$payment_module.'.php');
-                    $module = new $payment_module;
-                    ?>
-                      <tr class="dataTableRow">
-                        <td class="dataTableContent">
-                          <?php
-                            echo $module->title;
-                            if (isset($module->icons_available)) {
-                              echo '<br />'.$module->icons_available;
-                            }
-                          ?>
-                        </td>
-                        <td class="dataTableContent">
-                          <?php
-                            echo $payment_module;
-                          ?>
-                        </td>
-                        <td class="dataTableContent txta-r">
-                        <?php if (isset($module->sort_order) && is_numeric($module->sort_order)) echo $module->sort_order; ?>&nbsp;</td>
-                        <td class="dataTableContent txta-c">
-                          <?php
-                            if ($module->check() > 0) {
-                              if (isset($module->enabled) && $module->enabled) {
-                                echo xtc_image(DIR_WS_IMAGES . 'icon_lager_green.gif', ICON_ARROW_RIGHT);
-                              } else {
-                                echo xtc_image(DIR_WS_IMAGES . 'icon_lager_red.gif', ICON_ARROW_RIGHT);
+                    if (is_file(DIR_FS_CATALOG.'includes/modules/payment/'.$payment_module.'.php')) {
+                      require_once(DIR_FS_CATALOG.'includes/modules/payment/'.$payment_module.'.php');
+                      require_once(DIR_FS_CATALOG.'lang/'.$_SESSION['language'].'/modules/payment/'.$payment_module.'.php');
+                      $module = new $payment_module;
+                      ?>
+                        <tr class="dataTableRow">
+                          <td class="dataTableContent">
+                            <?php
+                              echo $module->title;
+                              if (isset($module->icons_available)) {
+                                echo '<br />'.$module->icons_available;
                               }
-                            }
-                          ?>
-                          &nbsp;
-                        </td>
-                        <td class="dataTableContent txta-r">
-                          <?php
-                            if ($module->_check == 1) {
-                              echo '<a class="button" href="'.xtc_href_link(basename($PHP_SELF), 'action=edit&module='.$module->code).'">'.BUTTON_EDIT.'</a>';
-                            } else {
-                              echo '<a class="button" href="'.xtc_href_link(basename($PHP_SELF), 'action=install&module='.$module->code).'">'.BUTTON_MODULE_INSTALL.'</a>';                            
-                            }
-                          ?>
-                        </td>
-                      </tr>
-                    <?php                  
+                            ?>
+                          </td>
+                          <td class="dataTableContent">
+                            <?php
+                              echo $payment_module;
+                            ?>
+                          </td>
+                          <td class="dataTableContent txta-r">
+                          <?php if (isset($module->sort_order) && is_numeric($module->sort_order)) echo $module->sort_order; ?>&nbsp;</td>
+                          <td class="dataTableContent txta-c">
+                            <?php
+                              if ($module->check() > 0) {
+                                if (isset($module->enabled) && $module->enabled) {
+                                  echo xtc_image(DIR_WS_IMAGES . 'icon_lager_green.gif', ICON_ARROW_RIGHT);
+                                } else {
+                                  echo xtc_image(DIR_WS_IMAGES . 'icon_lager_red.gif', ICON_ARROW_RIGHT);
+                                }
+                              }
+                            ?>
+                            &nbsp;
+                          </td>
+                          <td class="dataTableContent txta-r">
+                            <?php
+                              if ($module->_check == 1) {
+                                echo '<a class="button" href="'.xtc_href_link(basename($PHP_SELF), 'action=edit&module='.$module->code).'">'.BUTTON_EDIT.'</a>';
+                              } else {
+                                echo '<a class="button" href="'.xtc_href_link(basename($PHP_SELF), 'action=install&module='.$module->code).'">'.BUTTON_MODULE_INSTALL.'</a>';                            
+                              }
+                            ?>
+                          </td>
+                        </tr>
+                      <?php                  
+                    }
                   }
               }
             ?>
