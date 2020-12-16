@@ -25,7 +25,6 @@ define('TABLE_HEADING_STATUS', 'Status');
 define('TABLE_HEADING_ACTION', 'Action');
 define('TABLE_HEADING_LANGUAGE', 'Language');
 define('TABLE_HEADING_SORT', 'Sorting');
-define('TABLE_HEADING_SORT_NOTE', 'The order only affects dynamic sliders - not static banners.');
 
 define('TEXT_BANNERS_TITLE', 'Banner Title:');
 define('TEXT_BANNERS_URL', 'Banner URL:');
@@ -58,6 +57,7 @@ define('TEXT_BANNERS_LAST_3_DAYS', 'Last 3 Days');
 define('TEXT_BANNERS_BANNER_VIEWS', 'Banner Views');
 define('TEXT_BANNERS_BANNER_CLICKS', 'Banner Clicks');
 define('TEXT_BANNERS_SORT', 'Sorting:');
+define('TEXT_BANNERS_SORT_NOTE', 'The order only affects dynamic sliders - not static banners.');
 
 define('TEXT_INFO_DELETE_INTRO', 'Are you sure you want to delete this banner?');
 define('TEXT_INFO_DELETE_IMAGE', 'Delete banner image');
