@@ -213,11 +213,13 @@ if (!$action) {
       sort($files_array);
 
       // get used content files
-      $content_files_query=xtc_db_query("SELECT DISTINCT *
-                                                    FROM ".TABLE_PRODUCTS_CONTENT."
-                                                   WHERE content_file != ''");
+      $content_files_query = xtc_db_query("SELECT *
+                                             FROM ".TABLE_PRODUCTS_CONTENT."
+                                            WHERE content_file != ''
+                                         GROUP BY content_file
+                                         ORDER BY content_name");
       $content_files = array();
-      while ($content_files_data=xtc_db_fetch_array($content_files_query)) {
+      while ($content_files_data = xtc_db_fetch_array($content_files_query)) {
         $content_files[] = array(
           'id' => $content_files_data['content_file'],
           'text' => $content_files_data['content_name'],
