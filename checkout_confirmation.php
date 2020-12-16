@@ -30,6 +30,9 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+// use always session_id from URL for payment providers
+define('SESSION_FORCE_COOKIE_USE', 'False');
+
 include ('includes/application_top.php');
 
 // create smarty elements
