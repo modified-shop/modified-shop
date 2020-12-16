@@ -25,7 +25,7 @@
 
   $lang_array = array();
   $lang_array_id = array();
-  for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+  for ($i = 0, $n = count($languages); $i < $n; $i++) {
     $lang_array[] = array('id' => $languages[$i]['id'], 'text' => $languages[$i]['name']);
     $lang_array_id[$languages[$i]['id']] = $languages[$i]['name'];
   }
@@ -59,7 +59,7 @@
         $accepted_banners_image_files_extensions = array("jpg","jpeg","jpe","gif","png","bmp","tiff","tif","bmp","swf","cab");
         $accepted_banners_image_files_mime_types = array("image/jpeg","image/gif","image/png","image/bmp","application/x-shockwave-flash");
         
-        for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+        for ($i = 0, $n = count($languages); $i < $n; $i++) {
           $banners_title = xtc_db_prepare_input($_POST['banners_title'][$languages[$i]['id']]);
           $html_text = xtc_db_prepare_input($_POST['html_text'][$languages[$i]['id']]);
           $banners_image_exist = xtc_db_prepare_input($_POST['banners_image_exist'][$languages[$i]['id']]);
@@ -77,7 +77,7 @@
         }
         
         if ($banner_error === false) {
-          for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+          for ($i = 0, $n = count($languages); $i < $n; $i++) {
            
             $banners_id = NULL;
             if (isset($_POST['banners_id'][$languages[$i]['id']])) $banners_id = xtc_db_prepare_input($_POST['banners_id'][$languages[$i]['id']]);
@@ -86,18 +86,20 @@
             $html_text = xtc_db_prepare_input($_POST['html_text'][$languages[$i]['id']]);
             $banners_image_exist = xtc_db_prepare_input($_POST['banners_image_exist'][$languages[$i]['id']]);
 
+            if (isset($_POST['del_image_'.$languages[$i]['id']])
+                && $_POST['del_image_'.$languages[$i]['id']] != ''
+                )
+            {
+              $image_location = DIR_FS_CATALOG_IMAGES . 'banner/' . $_POST['del_image_'.$languages[$i]['id']];
+              if (is_file($image_location)) {
+                $banners_image_exist = '';
+                @unlink($image_location);
+              }
+            }
       
             // new banner available & delete old
             if (is_object(${'banners_image_'.$languages[$i]['id']}) && ${'banners_image_'.$languages[$i]['id']}->filename != '') {
               $banners_image_exist = ${'banners_image_'.$languages[$i]['id']}->filename;
-              $banner_query = xtc_db_query("SELECT banners_image 
-                                              FROM " . TABLE_BANNERS . " 
-                                             WHERE banners_id = '" . (int)$banners_id . "'");
-              $banner = xtc_db_fetch_array($banner_query);
-              $image_location = DIR_FS_CATALOG_IMAGES . 'banner/'.$banner['banners_image'];
-              if (is_file($image_location)) {
-                @unlink($image_location);
-              }          
             }
 
             $sql_data_array = array(
@@ -143,7 +145,7 @@
           $action = 'new';
           
           // remove uploaded images
-          for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+          for ($i = 0, $n = count($languages); $i < $n; $i++) {
             if (is_file(DIR_FS_CATALOG_IMAGES.'banner/'.${'banners_image_'.$languages[$i]['id']}->filename)) {
               unlink(DIR_FS_CATALOG_IMAGES.'banner/'.${'banners_image_'.$languages[$i]['id']}->filename);
             }
@@ -220,10 +222,20 @@
     }
   }
 
-require (DIR_WS_INCLUDES.'head.php');
+  require (DIR_WS_INCLUDES.'head.php');
 
-//jQueryDatepicker
-require (DIR_WS_INCLUDES.'javascript/jQueryDateTimePicker/datepicker.js.php');
+  if (USE_WYSIWYG == 'true') {
+    require_once(DIR_FS_INC . 'xtc_wysiwyg.inc.php');
+    if (isset($_GET['action']) && $_GET['action'] == 'new') {
+      echo PHP_EOL . (!function_exists('editorJSLink') ? '<script type="text/javascript" src="includes/modules/fckeditor/fckeditor.js"></script>' : '') . PHP_EOL;
+      for ($i = 0; $i < count($languages); $i++) {
+        echo xtc_wysiwyg('banner_manager', $data['code'], $languages[$i]['id']);
+      }
+    }
+  }
+
+  //jQueryDatepicker
+  require (DIR_WS_INCLUDES.'javascript/jQueryDateTimePicker/datepicker.js.php');
 ?>
 </head>
 <body>
@@ -310,12 +322,12 @@ require (DIR_WS_INCLUDES.'javascript/jQueryDateTimePicker/datepicker.js.php');
               <div style="padding:5px 10px 20px 5px;clear:both;">
                 <table class="tableConfig">
                   <tr>
-                    <td class="dataTableConfig col-left" rowspan="2" style="border-left: 1px solid #ccc;"><?php echo TEXT_BANNERS_NEW_GROUP; ?></td>
-                    <td class="dataTableConfig col-middle"><?php echo xtc_draw_pull_down_menu('banners_group', $groups_array, $bInfo->banners_group); ?></td>
+                    <td class="dataTableConfig col-left" rowspan="2" style="width: 20%; border-left: 1px solid #ccc;"><?php echo TEXT_BANNERS_NEW_GROUP; ?></td>
+                    <td class="dataTableConfig col-middle" style="width:50%"><?php echo xtc_draw_pull_down_menu('banners_group', $groups_array, $bInfo->banners_group); ?></td>
                     <td class="dataTableConfig col-right" rowspan="2" style="border-right: 1px solid #ccc;"><?php echo TEXT_BANNERS_NEW_GROUP_NOTE; ?></td>
                   </tr> 
                   <tr>
-                    <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('new_banners_group'); ?></td>
+                    <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('new_banners_group', '', 'style="width:100%"'); ?></td>
                   </tr> 
                   <tr>
                     <td class="dataTableConfig col-left" style="border-left: 1px solid #ccc;"><?php echo TEXT_BANNERS_SCHEDULED_AT; ?><br /><small><?php echo TEXT_BANNERS_DATE_FORMAT; ?></small></td>
@@ -345,7 +357,7 @@ require (DIR_WS_INCLUDES.'javascript/jQueryDateTimePicker/datepicker.js.php');
               <div style="padding:5px;clear:both;">
                 <?php
                 include('includes/lang_tabs.php');
-                for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+                for ($i = 0, $n = count($languages); $i < $n; $i++) {
                   echo ('<div id="tab_lang_' . $i . '">');
                   if (xtc_not_null($_POST)) {
                     $banner = array();
@@ -372,26 +384,34 @@ require (DIR_WS_INCLUDES.'javascript/jQueryDateTimePicker/datepicker.js.php');
                   ?>
                   <table class="tableConfig">
                     <tr>
-                      <td class="dataTableConfig col-left"><?php echo TEXT_BANNERS_TITLE; ?></td>
-                      <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('banners_title[' . $languages[$i]['id'] . ']', $bInfo->banners_title, 'style="width:380px;"'); ?></td>
+                      <td class="dataTableConfig col-left" style="width:20%"><?php echo TEXT_BANNERS_TITLE; ?></td>
+                      <td class="dataTableConfig col-middle" style="width:50%"><?php echo xtc_draw_input_field('banners_title[' . $languages[$i]['id'] . ']', $bInfo->banners_title, 'style="width:100%;"'); ?></td>
                       <td class="dataTableConfig col-right">&nbsp;</td>
                     </tr>
                     <tr>
                       <td class="dataTableConfig col-left"><?php echo TEXT_BANNERS_URL; ?></td>
-                      <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('banners_url[' . $languages[$i]['id'] . ']', $bInfo->banners_url, 'style="width:380px;"'); ?></td>
+                      <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('banners_url[' . $languages[$i]['id'] . ']', $bInfo->banners_url, 'style="width:100%;"'); ?></td>
                       <td class="dataTableConfig col-right"><?php echo TEXT_BANNERS_URL_NOTE; ?></td>
                     </tr>
                     <tr>
                       <td class="dataTableConfig col-left"><?php echo TEXT_BANNERS_IMAGE; ?></td>
                       <td class="dataTableConfig col-middle">
-                        <?php
-                        if ($bInfo->banners_image_exist != '') {
-                          echo '<img style="max-width:360px; margin-bottom:10px;" src="'.DIR_WS_CATALOG_IMAGES . 'banner/'.$bInfo->banners_image_exist.'" />';
-                        }
-                        echo xtc_draw_file_field('banners_image_'.$languages[$i]['id']);
-                        echo '<br/><br/>';
-                        echo xtc_draw_pull_down_menu('banners_image_exist[' . $languages[$i]['id'] . ']', array_merge(array(array('id' => '','text' => (($bInfo->banners_image_exist != '') ? TEXT_NO_FILE : TEXT_SELECT))), $files), $bInfo->banners_image_exist);
-                        ?>
+                        <table class="tableConfig borderall">
+                          <?php if ($bInfo->banners_image_exist != '') { ?>
+                            <tr>
+                              <td class="main"><img style="max-width:360px; margin-bottom:10px;" src="<?php echo DIR_WS_CATALOG_IMAGES . 'banner/'.$bInfo->banners_image_exist; ?>" /></td>
+                            </tr>
+                            <tr>
+                              <td class="main"><?php echo xtc_draw_checkbox_field('del_image_'.$languages[$i]['id'], $bInfo->banners_image_exist) . ' ' . TEXT_INFO_DELETE_IMAGE; ?></td>
+                            </tr>    
+                          <?php } ?>
+                          <tr>
+                            <td class="main"><?php echo xtc_draw_file_field('banners_image_'.$languages[$i]['id']); ?></td>
+                          </tr>    
+                          <tr>
+                            <td class="main"><?php echo xtc_draw_pull_down_menu('banners_image_exist[' . $languages[$i]['id'] . ']', array_merge(array(array('id' => '','text' => (($bInfo->banners_image_exist != '') ? TEXT_NO_FILE : TEXT_SELECT))), $files), $bInfo->banners_image_exist); ?></td>
+                          </tr>
+                        </table>
                       </td>
                       <td class="dataTableConfig col-right"><?php echo TEXT_BANNERS_IMAGE_LOCAL;?></td>
                     </tr>
@@ -503,7 +523,7 @@ require (DIR_WS_INCLUDES.'javascript/jQueryDateTimePicker/datepicker.js.php');
                            $contents[] = array('align' => 'center', 'text' => '<br><img style="max-width:250px; margin-bottom:10px;" src="'.DIR_WS_CATALOG_IMAGES . 'banner/'.$bInfo->banners_image.'" />');
                         }
                         
-                        for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+                        for ($i = 0, $n = count($languages); $i < $n; $i++) {
                           $banner_query = xtc_db_query("SELECT banners_id
                                                           FROM " . TABLE_BANNERS . " 
                                                          WHERE banners_group_id = '" . xtc_db_input($bInfo->banners_group_id) . "'

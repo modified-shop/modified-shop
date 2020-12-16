@@ -169,6 +169,12 @@ function xtc_wysiwyg($type, $lang, $langID = '',$addonType='')
             $editorName = 'manufacturers_description_'.$langID;
             $default_editor_height = 400;
             break;
+
+        // WYSIWYG editor banner_manager textarea
+        case 'banner_manager':
+          $editorName = 'html_text[' . $langID . ']';
+          $default_editor_height = 200;
+          break;
     }
     
     $html = '';
