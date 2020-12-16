@@ -57,7 +57,7 @@ define('TEXT_BANNERS_LAST_3_DAYS', 'letzten 3 Tage');
 define('TEXT_BANNERS_BANNER_VIEWS', 'Banneranzeigen');
 define('TEXT_BANNERS_BANNER_CLICKS', 'Bannerklicks');
 define('TEXT_BANNERS_SORT', 'Reihenfolge:');
-define('TEXT_BANNERS_SORT_NOTE', 'Die Reihenfolge hat nur Auswirkung auf dynamische Slider - nicht auf statische Banner.');
+define('TEXT_BANNERS_SORT_NOTE', 'Die Reihenfolge hat nur Auswirkung auf dynamische Slider und nicht auf statische Banner.');
 
 define('TEXT_INFO_DELETE_INTRO', 'Sind Sie sicher, dass Sie diesen Banner l&ouml;schen m&ouml;chten?');
 define('TEXT_INFO_DELETE_IMAGE', 'Bannerbild l&ouml;schen');
