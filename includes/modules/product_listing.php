@@ -52,7 +52,7 @@ $image = '';
 
 if ($listing_split->number_of_rows == 0
     && (basename($PHP_SELF) == FILENAME_PRODUCTS_NEW
-        || (basename($PHP_SELF) == FILENAME_SPECIALS|| $_SESSION['customers_status']['customers_status_specials'] != '1')
+        || basename($PHP_SELF) == FILENAME_SPECIALS
         )
     )
 {
