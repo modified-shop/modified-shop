@@ -200,7 +200,7 @@
               ?>
             </table>
               
-            <div class="smallText pdg2 flt-l"><?php echo $newsletter_split->display_count($newsletter_query_numrows, $page_max_display_results, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_ORDERS_STATUS); ?></div>
+            <div class="smallText pdg2 flt-l"><?php echo $newsletter_split->display_count($newsletter_query_numrows, $page_max_display_results, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_NEWSLETTERS_RECIPIENTS); ?></div>
             <div class="smallText pdg2 flt-r"><?php echo $newsletter_split->display_links($newsletter_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], xtc_get_all_get_params(array('page'))); ?></div>
             <?php echo draw_input_per_page($PHP_SELF,$cfg_max_display_results_key,$page_max_display_results); ?>
           </td>
