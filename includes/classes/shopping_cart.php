@@ -482,11 +482,8 @@ class shoppingCart {
             $product['products_tax_class_id'] = xtc_get_tax_class($product['products_tax_class_id']);
           }
 
-          $products_price = $xtPrice->xtcGetPrice($product['products_id'],
-                                                  $format = false,
-                                                  $qty,
-                                                  $product['products_tax_class_id'],
-                                                  $product['products_price']);
+          $products_price = $xtPrice->xtcGetPrice($product['products_id'], false, $qty, $product['products_tax_class_id'], $product['products_price']);
+          
           //new module support       
           $products_price = $this->shoppingCartModules->calculate_product_price($products_price, $product, $this->contents[$products_id],$products_id);
           
@@ -494,7 +491,7 @@ class shoppingCart {
           $this->weight += ($qty * $product['products_weight']);
           
           //attributes price
-          $attribute_price = $this->attributes_price($product['products_id'], $qty);
+          $attribute_price = $this->attributes_price($products_id, $qty);
           $this->weight += $this->attr_weight * $qty;
           $total += $this->attr_price * $qty;
           
@@ -682,12 +679,7 @@ class shoppingCart {
               $products['products_tax_class_id'] = xtc_get_tax_class($products['products_tax_class_id']);
             }
             
-            $products_price = $xtPrice->xtcGetPrice($products['products_id'],
-                                                    $format = false,
-                                                    $this->contents[$products_id]['qty'], //only used by xtcGetGraduatedPrice
-                                                    $products['products_tax_class_id'],
-                                                    $products['products_price']
-                                                    );
+            $products_price = $xtPrice->xtcGetPrice($products['products_id'], false, $this->contents[$products_id]['qty'], $products['products_tax_class_id'], $products['products_price']);
 
             //new module support                                    
             $products_price = $this->shoppingCartModules->calculate_product_price($products_price, $products, $this->contents[$products_id],$products_id);
