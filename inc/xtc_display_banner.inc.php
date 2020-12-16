@@ -67,7 +67,8 @@
       
       return false;
     }
-
+    
+    $shop_url = xtc_get_top_level_domain(HTTP_SERVER);
     $banner_url = xtc_get_top_level_domain($banner['banners_url']);
     $banner_title = xtc_parse_input_field_data($banner['banners_title'], array('"' => '&quot;'));
     $banner_link = xtc_href_link(FILENAME_REDIRECT, 'action=banner&goto=' . $banner['banners_id']);
