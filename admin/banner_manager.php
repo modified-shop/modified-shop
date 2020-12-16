@@ -327,19 +327,19 @@
                     <td class="dataTableConfig col-right" rowspan="2" style="border-right: 1px solid #ccc;"><?php echo TEXT_BANNERS_NEW_GROUP_NOTE; ?></td>
                   </tr> 
                   <tr>
-                    <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('new_banners_group', '', 'style="width:100%"'); ?></td>
+                    <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('new_banners_group'); ?></td>
                   </tr> 
                   <tr>
                     <td class="dataTableConfig col-left" style="border-left: 1px solid #ccc;"><?php echo TEXT_BANNERS_SCHEDULED_AT; ?><br /><small><?php echo TEXT_BANNERS_DATE_FORMAT; ?></small></td>
                     <td class="dataTableConfig col-middle">
-                      <?php echo xtc_draw_input_field('date_scheduled', $bInfo->date_scheduled ,'id="Datepicker1"'); ?>
+                      <?php echo xtc_draw_input_field('date_scheduled', $bInfo->date_scheduled ,'id="Datepicker1" style="width:155px"'); ?>
                     </td>
                     <td class="dataTableConfig col-right" style="border-right: 1px solid #ccc;">&nbsp;</td>
                   </tr>                     
                   <tr>
                     <td class="dataTableConfig col-left" style="border-left: 1px solid #ccc;"><?php echo TEXT_BANNERS_EXPIRES_ON; ?><br /><small><?php echo TEXT_BANNERS_DATE_FORMAT; ?></small></td>
                     <td class="dataTableConfig col-middle">
-                      <?php echo xtc_draw_input_field('expires_date', $bInfo->expires_date ,'id="Datepicker2"'); ?>
+                      <?php echo xtc_draw_input_field('expires_date', $bInfo->expires_date ,'id="Datepicker2" style="width:155px"'); ?>
                       <?php echo TEXT_BANNERS_OR_AT . '<br />' . xtc_draw_input_field('expires_impressions', $bInfo->expires_impressions) . ' ' . TEXT_BANNERS_IMPRESSIONS; ?>
                     </td>
                     <td class="dataTableConfig col-right" style="border-right: 1px solid #ccc;">&nbsp;</td>
@@ -347,7 +347,7 @@
                   <tr>
                     <td class="dataTableConfig col-left" style="border-left: 1px solid #ccc;"><?php echo TEXT_BANNERS_SORT; ?></td>
                     <td class="dataTableConfig col-middle">
-                      <?php echo xtc_draw_input_field('banners_sort', $bInfo->banners_sort); ?>
+                      <?php echo xtc_draw_input_field('banners_sort', $bInfo->banners_sort, 'style="width:155px"'); ?>
                     </td>
                     <td class="dataTableConfig col-right" style="border-right: 1px solid #ccc;">&nbsp;</td>
                   </tr>                     
@@ -385,12 +385,12 @@
                   <table class="tableConfig">
                     <tr>
                       <td class="dataTableConfig col-left" style="width:20%"><?php echo TEXT_BANNERS_TITLE; ?></td>
-                      <td class="dataTableConfig col-middle" style="width:50%"><?php echo xtc_draw_input_field('banners_title[' . $languages[$i]['id'] . ']', $bInfo->banners_title, 'style="width:100%;"'); ?></td>
+                      <td class="dataTableConfig col-middle" style="width:50%"><?php echo xtc_draw_input_field('banners_title[' . $languages[$i]['id'] . ']', $bInfo->banners_title); ?></td>
                       <td class="dataTableConfig col-right">&nbsp;</td>
                     </tr>
                     <tr>
                       <td class="dataTableConfig col-left"><?php echo TEXT_BANNERS_URL; ?></td>
-                      <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('banners_url[' . $languages[$i]['id'] . ']', $bInfo->banners_url, 'style="width:100%;"'); ?></td>
+                      <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('banners_url[' . $languages[$i]['id'] . ']', $bInfo->banners_url); ?></td>
                       <td class="dataTableConfig col-right"><?php echo TEXT_BANNERS_URL_NOTE; ?></td>
                     </tr>
                     <tr>
