@@ -349,7 +349,7 @@
                     <td class="dataTableConfig col-middle">
                       <?php echo xtc_draw_input_field('banners_sort', $bInfo->banners_sort, 'style="width:155px"'); ?>
                     </td>
-                    <td class="dataTableConfig col-right" style="border-right: 1px solid #ccc;">&nbsp;</td>
+                    <td class="dataTableConfig col-right" style="border-right: 1px solid #ccc;"><?php echo TEXT_BANNERS_SORT_NOTE; ?></td>
                   </tr>                     
                 </table>
               </div>
