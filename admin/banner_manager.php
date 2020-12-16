@@ -340,7 +340,7 @@
                     <td class="dataTableConfig col-left" style="border-left: 1px solid #ccc;"><?php echo TEXT_BANNERS_EXPIRES_ON; ?><br /><small><?php echo TEXT_BANNERS_DATE_FORMAT; ?></small></td>
                     <td class="dataTableConfig col-middle">
                       <?php echo xtc_draw_input_field('expires_date', $bInfo->expires_date ,'id="Datepicker2" style="width:155px"'); ?>
-                      <?php echo TEXT_BANNERS_OR_AT . '<br />' . xtc_draw_input_field('expires_impressions', $bInfo->expires_impressions) . ' ' . TEXT_BANNERS_IMPRESSIONS; ?>
+                      <?php echo TEXT_BANNERS_OR_AT . '<br />' . xtc_draw_input_field('expires_impressions', $bInfo->expires_impressions, 'style="width:155px"') . ' ' . TEXT_BANNERS_IMPRESSIONS; ?>
                     </td>
                     <td class="dataTableConfig col-right" style="border-right: 1px solid #ccc;">&nbsp;</td>
                   </tr>
