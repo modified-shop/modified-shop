@@ -353,6 +353,7 @@ if (isset($order) && is_object($order)) {
       });
     });
   </script>
-<?php
+  <?php
+  }
 }
 ?>
