@@ -706,13 +706,13 @@ class PayPalPaymentBase extends PayPalCommon {
     if (xtc_db_num_rows($check_query) == 0) {
       xtc_db_query("ALTER TABLE ".TABLE_PAYPAL_IPN." ADD `paypal_ipn_id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST");
     }
-    $check_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_PAYPAL_INSTRUCTIONS." LIKE 'paypal_instructions_id'");
-    if (xtc_db_num_rows($check_query) == 0) {
-      xtc_db_query("ALTER TABLE ".TABLE_PAYPAL_INSTRUCTIONS." ADD `paypal_instructions_id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST");
-    }
     $check_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_PAYPAL_INSTRUCTIONS." LIKE 'paypal_inctructions_id'");
     if (xtc_db_num_rows($check_query) == 1) {
       xtc_db_query("ALTER TABLE ".TABLE_PAYPAL_INSTRUCTIONS." CHANGE `paypal_inctructions_id` `paypal_instructions_id` INT(11) NOT NULL AUTO_INCREMENT");
+    }
+    $check_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_PAYPAL_INSTRUCTIONS." LIKE 'paypal_instructions_id'");
+    if (xtc_db_num_rows($check_query) == 0) {
+      xtc_db_query("ALTER TABLE ".TABLE_PAYPAL_INSTRUCTIONS." ADD `paypal_instructions_id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST");
     }
 
     // set all files to be deleted                     
