@@ -60,7 +60,7 @@
               </ul>
             </div>
           {/if}
-          {if isset($BANNER)}<div class="content_banner cf">{$BANNER}</div>{/if}
+          {if isset($BANNER) && $BANNER != ''}<div class="content_banner cf">{$BANNER}</div>{/if}
           {if isset($main_content)}{$main_content}{/if}
           {if isset($box_BESTSELLERS)}{$box_BESTSELLERS}{/if}
         </div>

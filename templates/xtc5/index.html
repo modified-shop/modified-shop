@@ -40,7 +40,7 @@
     {/if}
     <div id="content{if (strpos($smarty.server.PHP_SELF, 'checkout')) && (!strpos($smarty.server.PHP_SELF, 'checkout_express'))}full{/if}">
       {if $home}
-        {if isset($BANNER)}<div class="banner_item">{$BANNER}</div>{/if}
+        {if isset($BANNER) && $BANNER != ''}<div class="banner_item">{$BANNER}</div>{/if}
       {/if}
       {if isset($main_content)}{$main_content}{/if}
     </div>

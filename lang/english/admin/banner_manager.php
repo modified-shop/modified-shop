@@ -25,6 +25,7 @@ define('TABLE_HEADING_STATUS', 'Status');
 define('TABLE_HEADING_ACTION', 'Action');
 define('TABLE_HEADING_LANGUAGE', 'Language');
 define('TABLE_HEADING_SORT', 'Sorting');
+define('TABLE_HEADING_IMAGE', 'Image');
 
 define('TEXT_BANNERS_TITLE', 'Banner Title:');
 define('TEXT_BANNERS_URL', 'Banner URL:');

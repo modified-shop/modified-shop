@@ -47,11 +47,11 @@
           $banner_title = xtc_parse_input_field_data($banner['banners_title'], array('"' => '&quot;'));
           $banner_link = xtc_href_link(FILENAME_REDIRECT, 'action=banner&goto=' . $banner['banners_id']);
           $banner_target = (($shop_url['domain'] != $banner_url['domain']) ? ' target="_blank" rel="noopener"' : '');
-          $banner_image = xtc_image(DIR_WS_IMAGES.'banner/'.$banner['banners_image'], $banner['banners_title'], '', '', 'title="'.$banner['banners_title'].'"');
+          $banner_image = (($banner['banners_image'] != '') ? xtc_image(DIR_WS_IMAGES.'banner/'.$banner['banners_image'], $banner['banners_title'], '', '', 'title="'.$banner['banners_title'].'"') : '');
           
           $banner_array[] = array(
             'IMAGE' => ((xtc_not_null($banner['banners_url'])) ? '<a title="'.$banner_title.'" href="'.$banner_link.'"'.$banner_target.'>'.$banner_image.'</a>' : $banner_image),
-            'IMAGE_SRC' => DIR_WS_BASE.DIR_WS_IMAGES.'banner/'.$banner['banners_image'],
+            'IMAGE_SRC' => (($banner['banners_image'] != '') ? DIR_WS_BASE.DIR_WS_IMAGES.'banner/'.$banner['banners_image'] : ''),
             'IMAGE_IMG' => $banner_image,
             'LINK' => ((xtc_not_null($banner['banners_url'])) ? $banner_link : ''),
             'TARGET' => $banner_target,
@@ -73,11 +73,11 @@
     $banner_title = xtc_parse_input_field_data($banner['banners_title'], array('"' => '&quot;'));
     $banner_link = xtc_href_link(FILENAME_REDIRECT, 'action=banner&goto=' . $banner['banners_id']);
     $banner_target = (($shop_url['domain'] != $banner_url['domain']) ? ' target="_blank" rel="noopener"' : '');
-    $banner_image = xtc_image(DIR_WS_IMAGES.'banner/'.$banner['banners_image'], $banner['banners_title'], '', '', 'title="'.$banner['banners_title'].'"');
+    $banner_image = (($banner['banners_image'] != '') ? xtc_image(DIR_WS_IMAGES.'banner/'.$banner['banners_image'], $banner['banners_title'], '', '', 'title="'.$banner['banners_title'].'"') : '');
     
     $banner_array = array(
       'IMAGE' => ((xtc_not_null($banner['banners_url'])) ? '<a title="'.$banner_title.'" href="'.$banner_link.'"'.$banner_target.'>'.$banner_image.'</a>' : $banner_image),
-      'IMAGE_SRC' => DIR_WS_BASE.DIR_WS_IMAGES.'banner/'.$banner['banners_image'],
+      'IMAGE_SRC' => (($banner['banners_image'] != '') ? DIR_WS_BASE.DIR_WS_IMAGES.'banner/'.$banner['banners_image'] : ''),
       'IMAGE_IMG' => $banner_image,
       'LINK' => ((xtc_not_null($banner['banners_url'])) ? $banner_link : ''),
       'TARGET' => $banner_target,
