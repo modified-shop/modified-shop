@@ -64,6 +64,7 @@
           $html_text = xtc_db_prepare_input($_POST['html_text'][$languages[$i]['id']]);
           $banners_image_exist = xtc_db_prepare_input($_POST['banners_image_exist'][$languages[$i]['id']]);
           
+          /*
           if (empty($banners_title)) {
             $messageStack->add(strtoupper($languages[$i]['code']) . ': ' . ERROR_BANNER_TITLE_REQUIRED, 'error');
             $banner_error = true;
@@ -74,6 +75,7 @@
             $messageStack->add(strtoupper($languages[$i]['code']) . ': ' . ERROR_BANNER_IMAGE_HTML_REQUIRED, 'error');
             $banner_error = true;
           }
+          */
         }
         
         if ($banner_error === false) {
@@ -121,11 +123,9 @@
               $sql_data_array['status'] = '0';
               xtc_db_perform(TABLE_BANNERS, $sql_data_array);
               $banners_id = xtc_db_insert_id();
-              $messageStack->add_session(SUCCESS_BANNER_INSERTED, 'success');
             } elseif ($action == 'update') {
               $sql_data_array['date_status_change'] = 'now()';
               xtc_db_perform(TABLE_BANNERS, $sql_data_array, 'update', "banners_id = '" . (int)$banners_id . "'");
-              $messageStack->add_session(SUCCESS_BANNER_UPDATED, 'success');
             }
 
             if ($_POST['expires_date'] != '' && $_POST['expires_date'] != '0000-00-00 00:00:00') {          
@@ -140,6 +140,12 @@
               $date_scheduled = date('Y-m-d H:i:s', strtotime($_POST['date_scheduled']));
               xtc_db_query("update " . TABLE_BANNERS . " set status = '0', date_scheduled = '" . xtc_db_input($date_scheduled) . "' where banners_id = '" . (int)$banners_id . "'");
             }
+          }
+
+          if ($action == 'insert') {
+            $messageStack->add_session(SUCCESS_BANNER_INSERTED, 'success');
+          } elseif ($action == 'update') {
+            $messageStack->add_session(SUCCESS_BANNER_UPDATED, 'success');
           }
         } else {
           $action = 'new';
@@ -442,8 +448,9 @@
                 <td class="boxCenterLeft">
                   <table class="tableBoxCenter collapse">
                     <tr class="dataTableHeadingRow">
-                      <td class="dataTableHeadingContent txta-c" style="width:10%;"><?php echo TABLE_HEADING_SORT; ?></td>
-                      <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_BANNERS; ?></td>
+                      <td class="dataTableHeadingContent txta-c" style="width:20%;"><?php echo TABLE_HEADING_IMAGE; ?></td>
+                      <td class="dataTableHeadingContent txta-c" style="width:8%;"><?php echo TABLE_HEADING_SORT; ?></td>
+                      <td class="dataTableHeadingContent" style="width:40%;"><?php echo TABLE_HEADING_BANNERS; ?></td>
                       <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_GROUPS; ?></td>
                       <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_STATISTICS; ?></td>
                       <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_STATUS; ?></td>
@@ -475,6 +482,7 @@
                         }
                         ?>
                         <tr <?php echo $tr_attributes;?>>
+                          <td class="dataTableContent"><img style="border:0;max-width:200px;max-height:60px;" src="<?php echo DIR_WS_CATALOG_IMAGES.'banner/'.(($banners['banners_image'] != '') ? $banners['banners_image'] : 'noimage.gif'); ?>" /></td>
                           <td class="dataTableContent txta-c"><?php echo $banners['banners_sort']; ?></td>
                           <td class="dataTableContent"><?php echo $banners['banners_title']; ?></td>
                           <td class="dataTableContent txta-c"><?php echo $banners['banners_group']; ?></td>

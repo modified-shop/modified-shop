@@ -2,6 +2,6 @@
   {$banner_data.TEXT}
 {else if $banner_data.LINK != ''}
   <a title="{$banner_data.TITLE}" href="{$banner_data.LINK}" {$banner_data.TARGET}>{$banner_data.IMAGE_IMG}</a>
-{else}
+{else if $banner_data.IMAGE_IMG != ''}
   {$banner_data.IMAGE_IMG}
 {/if}
