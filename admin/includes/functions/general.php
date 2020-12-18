@@ -1364,6 +1364,7 @@
     xtc_db_query("UPDATE ".TABLE_ORDERS_TOTAL." SET value = '0.0000' WHERE orders_id = '".(int)$order_id."'");
     xtc_db_query("UPDATE ".TABLE_ORDERS_TOTAL." SET text = '0.00' WHERE orders_id = '".(int)$order_id."'");
     xtc_db_query("UPDATE ".TABLE_ORDERS_PRODUCTS_DOWNLOAD." SET download_count = '0' WHERE orders_id = '".(int)$order_id."'");    
+    xtc_db_query("UPDATE ".TABLE_COUPON_GV_QUEUE." SET amount = '0.0000' WHERE order_id = '".(int)$order_id."'");
   }
 
   /**
