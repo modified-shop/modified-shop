@@ -63,8 +63,9 @@
           $banners_title = xtc_db_prepare_input($_POST['banners_title'][$languages[$i]['id']]);
           $html_text = xtc_db_prepare_input($_POST['html_text'][$languages[$i]['id']]);
           $banners_image_exist = xtc_db_prepare_input($_POST['banners_image_exist'][$languages[$i]['id']]);
+          ${'banners_image_'.$languages[$i]['id']} = xtc_try_upload('banners_image_'.$languages[$i]['id'], DIR_FS_CATALOG_IMAGES.'banner/', '644', $accepted_banners_image_files_extensions, $accepted_banners_image_files_mime_types);
           
-          /*
+          /*          
           if (empty($banners_title)) {
             $messageStack->add(strtoupper($languages[$i]['code']) . ': ' . ERROR_BANNER_TITLE_REQUIRED, 'error');
             $banner_error = true;
