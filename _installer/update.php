@@ -83,6 +83,19 @@
           xtc_db_query("ALTER TABLE '".TABLE_WHOS_ONLINE."' ADD PRIMARY KEY (session_id)");
         }
         
+        // exclude payments
+        if (defined('MODULE_EXCLUDE_PAYMENT_NUMBER')) {
+          for ($i = 1, $i < MODULE_EXCLUDE_PAYMENT_NUMBER; $i ++) {
+            xtc_db_query("UPDATE " . TABLE_CONFIGURATION . "
+                             SET set_function = 'xtc_cfg_checkbox_unallowed_module(\'shipping\', \'configuration[MODULE_EXCLUDE_PAYMENT_SHIPPING_".$i."]\','
+                           WHERE configuration_key = 'MODULE_EXCLUDE_PAYMENT_SHIPPING_".$i."'");
+
+            xtc_db_query("UPDATE " . TABLE_CONFIGURATION . "
+                             SET set_function = 'xtc_cfg_checkbox_unallowed_module(\'shipping\', \'configuration[MODULE_EXCLUDE_PAYMENT_PAYMENT_".$i."]\','
+                           WHERE configuration_key = 'MODULE_EXCLUDE_PAYMENT_PAYMENT_".$i."'");
+          }
+        }
+        
         $messageStack->add_session('update', TEXT_UPDATE_SYSTEM_SUCCESS, 'success');
         xtc_redirect(xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), '', $request_type));
         break;

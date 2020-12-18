@@ -2010,7 +2010,7 @@
    *
    * @return string html checkboxes by configuration set_function
    */
-  function xtc_cfg_checkbox_unallowed_module($module_type,$checkbox_name,$data)
+  function xtc_cfg_checkbox_unallowed_module($module_type,$checkbox_name,$data,$name='')
   {
     $module_unallowed = array();
     $unallowed_module = '';

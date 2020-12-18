@@ -36,10 +36,6 @@ class exclude_payment {
   }
 
   function process($file) {
-    for ($i=1; $i<=$this->num_exclude_payment; $i++) {
-      xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '".xtc_db_input(implode(',', $_POST['MODULE_EXCLUDE_PAYMENT_SHIPPING_'.$i]))."', last_modified = NOW() WHERE configuration_key = 'MODULE_EXCLUDE_PAYMENT_SHIPPING_".$i."'");
-      xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '".xtc_db_input(implode(',', $_POST['MODULE_EXCLUDE_PAYMENT_PAYMENT_'.$i]))."', last_modified = NOW() WHERE configuration_key = 'MODULE_EXCLUDE_PAYMENT_PAYMENT_".$i."'");
-    }
   }
 
   function display() {
@@ -70,8 +66,8 @@ class exclude_payment {
       for ($i = (($number_of_exclude_payment==0) ? 1 : $number_of_exclude_payment); $i <= $this->num_exclude_payment; $i ++) {
         $check_exclude_payment_query = xtc_db_query("SELECT * FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_EXCLUDE_PAYMENT_SHIPPING_".$i."'");
         if (xtc_db_num_rows($check_exclude_payment_query) < 1) {
-          xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_EXCLUDE_PAYMENT_SHIPPING_".$i."', '', '6', '0', 'xtc_cfg_checkbox_unallowed_module(\'shipping\', \'MODULE_EXCLUDE_PAYMENT_SHIPPING_".$i."\',', now())");
-          xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_EXCLUDE_PAYMENT_PAYMENT_".$i."', '0', '6', '0', 'xtc_cfg_checkbox_unallowed_module(\'payment\', \'MODULE_EXCLUDE_PAYMENT_PAYMENT_".$i."\',',  now())");
+          xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_EXCLUDE_PAYMENT_SHIPPING_".$i."', '', '6', '0', 'xtc_cfg_checkbox_unallowed_module(\'shipping\', \'configuration[MODULE_EXCLUDE_PAYMENT_SHIPPING_".$i."]\',', now())");
+          xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_EXCLUDE_PAYMENT_PAYMENT_".$i."', '0', '6', '0', 'xtc_cfg_checkbox_unallowed_module(\'payment\', \'configuration[MODULE_EXCLUDE_PAYMENT_PAYMENT_".$i."]\',',  now())");
         }
       }      
     } else {
