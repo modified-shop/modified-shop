@@ -194,8 +194,9 @@ if (isset($order) && is_object($order)) {
               ?>
             </div>
             <div style="clear:both;"></div>
-
             <?php
+            }
+            
             if (isset($admin_info_array['instruction'])) {
               ?>
               <div class="pp_transactions pp_box">
@@ -354,6 +355,5 @@ if (isset($order) && is_object($order)) {
     });
   </script>
   <?php
-  }
 }
 ?>
