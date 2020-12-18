@@ -12,7 +12,10 @@
 
   if (TRACKING_GOOGLEANALYTICS_ACTIVE == 'true'
       && TRACKING_GOOGLEANALYTICS_GTAG == 'true'
-     )
+      && ((TRACKING_COUNT_ADMIN_ACTIVE == 'true' && $_SESSION['customers_status']['customers_status_id'] == '0')
+          || $_SESSION['customers_status']['customers_status_id'] != '0'
+          )
+      )
   {
     $beginCode = '<script async src="https://www.googletagmanager.com/gtag/js?id='.TRACKING_GOOGLEANALYTICS_ID.'"></script>
 <script>';
