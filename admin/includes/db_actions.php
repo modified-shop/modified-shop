@@ -11,6 +11,20 @@
    ---------------------------------------------------------------------------------------*/
 
 
+  // DB Backup / Restore
+  define('MAX_RELOADS', 100000000);
+  define('RESTORE_TEST', false);
+
+  define('BACKUP_ROWS', 5000);
+  define('BACKUP_ROWS_MAX', 50000);
+  define('BACKUP_ROWS_STEP', 1000);
+  define('BACKUP_GAP', 3);
+  
+  define('RESTORE_ROWS', 5000);
+  define('RESTORE_ROWS_MAX', 50000);
+  define('RESTORE_ROWS_STEP', 500);
+  define('RESTORE_GAP', 2);
+
   if (isset($_SESSION['dump'])) {
     $dump = $_SESSION['dump'];
   }
@@ -178,7 +192,7 @@
     
         if ($dump['table_offset'] == 0) {
           $dump['table_records'] = GetTableInfo($dump['tables'][$nr]);
-          $dump['anzahl_zeilen']= ANZAHL_ZEILEN_BKUP;
+          $dump['anzahl_zeilen']= BACKUP_ROWS;
           $dump['table_offset'] = 1;
           $dump['zeilen_offset'] = 0;
           $dump['time_gap'] = time();
@@ -187,13 +201,16 @@
         }
         
         $time_gap = time() - $dump['time_gap']; 
-        if ($time_gap > 3 && $dump['anzahl_zeilen'] > 10) {
-          $dump['anzahl_zeilen'] -= 1000;
+        if ($time_gap > BACKUP_GAP && $dump['anzahl_zeilen'] > 10) {
+          $dump['anzahl_zeilen'] -= BACKUP_ROWS_STEP;
           if ($dump['anzahl_zeilen'] < 10) {
             $dump['anzahl_zeilen'] = 10;
           }
-        } elseif ($time_gap < 3) {
-          $dump['anzahl_zeilen'] += 1000;
+        } elseif ($time_gap < BACKUP_GAP) {
+          $dump['anzahl_zeilen'] += BACKUP_ROWS_STEP;
+        }
+        if ($dump['anzahl_zeilen'] >= BACKUP_ROWS_MAX) {
+          $dump['anzahl_zeilen'] = BACKUP_ROWS_MAX;
         }
         $dump['time_gap'] = time();
 
@@ -268,7 +285,7 @@
       if (isset($_POST['utf8-convert']) && $_POST['utf8-convert'] == 'yes') {
         $restore['utf8'] = true;
       }
-      $restore['anzahl_zeilen'] = ANZAHL_ZEILEN;
+      $restore['anzahl_zeilen'] = RESTORE_ROWS;
       $restore['time_gap'] = time();
     
       if (!is_file($restore['file'])) {
@@ -329,13 +346,16 @@
       $restore['aufruf']++;
 
       $time_gap = time() - $restore['time_gap']; 
-      if ($time_gap > 2 && $restore['anzahl_zeilen'] > 10) {
-        $restore['anzahl_zeilen'] -= 1000;
+      if ($time_gap > RESTORE_GAP && $restore['anzahl_zeilen'] > 10) {
+        $restore['anzahl_zeilen'] -= RESTORE_ROWS_STEP;
         if ($restore['anzahl_zeilen'] < 10) {
           $restore['anzahl_zeilen'] = 10;
         }
-      } elseif ($time_gap < 2) {
-        $restore['anzahl_zeilen'] += 1000;
+      } elseif ($time_gap < RESTORE_GAP) {
+        $restore['anzahl_zeilen'] += RESTORE_ROWS_STEP;
+      }
+      if ($restore['anzahl_zeilen'] >= RESTORE_ROWS_MAX) {
+        $restore['anzahl_zeilen'] = RESTORE_ROWS_MAX;
       }
       $restore['time_gap'] = time();
 

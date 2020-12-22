@@ -37,10 +37,6 @@
   require_once (DIR_FS_INC.'db_functions_'.DB_MYSQL_TYPE.'.inc.php');
   require_once (DIR_FS_INC.'db_functions.inc.php');
   
-  // config
-  defined ('ANZAHL_ZEILEN') or define ('ANZAHL_ZEILEN', 5000);
-  defined ('RESTORE_TEST') or define ('RESTORE_TEST', false);
-
   xtc_db_connect() or die('Unable to connect to database server!');
 
   //Start Session
