@@ -34,11 +34,6 @@
 
   $pagename = strtok($current_page, '.');
   xtc_check_permission($pagename);
-
-  // config
-  defined ('ANZAHL_ZEILEN_BKUP') or define ('ANZAHL_ZEILEN_BKUP', 5000);
-  defined ('MAX_RELOADS') or define ('MAX_RELOADS', 100000000);
-  defined ('RESTORE_TEST') or define ('RESTORE_TEST', false); 
   
   include ('includes/functions/db_functions.php');
 
