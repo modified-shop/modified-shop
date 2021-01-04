@@ -357,7 +357,10 @@ class xtcImport {
                                 ");
 
         if (!xtc_db_num_rows($man_query)) {
-            $manufacturers_array = array ('manufacturers_name' => $manufacturer);
+            $manufacturers_array = array (
+              'manufacturers_name' => $manufacturer,
+              'date_added' => 'now()'
+            );
             xtc_db_perform(TABLE_MANUFACTURERS, $manufacturers_array);
             $this->mfn[$manufacturer]['id'] = xtc_db_insert_id();
             for ($i = 0; $i < $this->sizeof_languages; $i ++) {
