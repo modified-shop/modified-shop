@@ -32,7 +32,7 @@
         );
 
         if ($_GET['action'] == 'insert') {
-          if (!xtc_not_null($cross_sell_id)) {
+          if ($cross_sell_id < 1) {
             $next_id_query = xtc_db_query("SELECT MAX(products_xsell_grp_name_id) as products_xsell_grp_name_id 
                                              FROM " . TABLE_PRODUCTS_XSELL_GROUPS);
             $next_id = xtc_db_fetch_array($next_id_query);
@@ -111,14 +111,16 @@
             <td class="boxCenterLeft">
               <table class="tableBoxCenter collapse">
               <tr class="dataTableHeadingRow">
+                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_XSELL_GROUP_ID; ?></td>
                 <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_XSELL_GROUP_NAME; ?></td>
+                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_XSELL_GROUP_SORT_ORDER; ?></td>
                 <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
               <?php
                 $cross_sell_query_raw = "SELECT *
                                            FROM " . TABLE_PRODUCTS_XSELL_GROUPS . " 
                                           WHERE language_id = '" . (int)$_SESSION['languages_id'] . "' 
-                                       ORDER BY products_xsell_grp_name_id";
+                                       ORDER BY xsell_sort_order, products_xsell_grp_name_id";
                 $cross_sell_split = new splitPageResults($_GET['page'], '20', $cross_sell_query_raw, $cross_sell_query_numrows);
                 $cross_sell_query = xtc_db_query($cross_sell_query_raw);
                 while ($cross_sell = xtc_db_fetch_array($cross_sell_query)) {
@@ -127,12 +129,14 @@
                   }
 
                   if ( (is_object($oInfo)) && ($cross_sell['products_xsell_grp_name_id'] == $oInfo->products_xsell_grp_name_id) ) {
-                    echo '                  <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_XSELL_GROUPS, 'page=' . $_GET['page'] . '&oID=' . $oInfo->products_xsell_grp_name_id . '&action=edit') . '\'">' . "\n";
+                    echo '<tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_XSELL_GROUPS, 'page=' . $_GET['page'] . '&oID=' . $oInfo->products_xsell_grp_name_id . '&action=edit') . '\'">' . "\n";
                   } else {
-                    echo '                  <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_XSELL_GROUPS, 'page=' . $_GET['page'] . '&oID=' . $cross_sell['products_xsell_grp_name_id']) . '\'">' . "\n";
+                    echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_XSELL_GROUPS, 'page=' . $_GET['page'] . '&oID=' . $cross_sell['products_xsell_grp_name_id']) . '\'">' . "\n";
                   }
 
-                  echo '                <td class="dataTableContent">' . $cross_sell['groupname'] . '</td>' . "\n";
+                  echo '<td class="dataTableContent">' . $cross_sell['products_xsell_grp_name_id'] . '</td>' . "\n";
+                  echo '<td class="dataTableContent">' . $cross_sell['groupname'] . '</td>' . "\n";
+                  echo '<td class="dataTableContent">' . $cross_sell['xsell_sort_order'] . '</td>' . "\n";
                   
               ?>
                 <td class="dataTableContent" align="right"><?php if ( (is_object($oInfo)) && ($cross_sell['products_xsell_grp_name_id'] == $oInfo->products_xsell_grp_name_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_XSELL_GROUPS, 'page=' . $_GET['page'] . '&oID=' . $cross_sell['products_xsell_grp_name_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
@@ -143,17 +147,14 @@
               </table>
               <div class="smallText pdg2 flt-l"><?php echo $cross_sell_split->display_count($cross_sell_query_numrows, '20', $_GET['page'], TEXT_DISPLAY_NUMBER_OF_XSELL_GROUP); ?></div>
               <div class="smallText pdg2 flt-r"><?php echo $cross_sell_split->display_links($cross_sell_query_numrows, '20', MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></div>
-
               <?php
               if (substr($_GET['action'], 0, 3) != 'new') {
-              ?>
+                ?>
                 <div class="clear"></div>
                 <div class="pdg2 flt-r smallText"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_XSELL_GROUPS, 'page=' . $_GET['page'] . '&action=new') . '">' . BUTTON_INSERT . '</a>'; ?></div>
-              
-              <?php
+                <?php
               }
               ?>
-
             </td>
           <?php
             $heading = array();
@@ -226,7 +227,7 @@
               echo $box->infoBox($heading, $contents);
               echo '            </td>' . "\n";
             }
-          ?>
+            ?>
           </tr>
         </table>
       </td>

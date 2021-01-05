@@ -17,7 +17,9 @@
 
 define('HEADING_TITLE', 'Cross-sell groups');
 
+define('TABLE_HEADING_XSELL_GROUP_ID', 'ID');
 define('TABLE_HEADING_XSELL_GROUP_NAME', 'Groupname');
+define('TABLE_HEADING_XSELL_GROUP_SORT_ORDER', 'Sort order');
 define('TABLE_HEADING_ACTION', 'Action');
 
 define('TEXT_INFO_EDIT_INTRO', 'Please make any necessary changes');

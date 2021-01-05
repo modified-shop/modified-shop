@@ -17,7 +17,9 @@
 
 define('HEADING_TITLE', 'Cross-Marketing Gruppen');
 
+define('TABLE_HEADING_XSELL_GROUP_ID', 'ID');
 define('TABLE_HEADING_XSELL_GROUP_NAME', 'Gruppenname');
+define('TABLE_HEADING_XSELL_GROUP_SORT_ORDER', 'Sortierung');
 define('TABLE_HEADING_ACTION', 'Aktion');
 
 define('TEXT_INFO_EDIT_INTRO', 'Bitte f&uuml;hren Sie alle notwendigen &Auml;nderungen durch');
