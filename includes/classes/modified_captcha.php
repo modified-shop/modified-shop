@@ -71,7 +71,7 @@ class modified_captcha {
    */
   public function set() {
     require_once (DIR_FS_INC.'xtc_random_charcode.inc.php');
-    $vvcode = xtc_random_charcode(6);
+    $vvcode = xtc_random_charcode(6, true);
     $_SESSION['vvcode'] = strtoupper($vvcode);
   }
     

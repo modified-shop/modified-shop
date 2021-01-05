@@ -199,7 +199,9 @@
   }
   
   function xtc_generate_session_id() {
-    $session_id = md5(openssl_random_pseudo_bytes(128));
+    require_once (DIR_FS_INC.'xtc_random_charcode.inc.php');
+    
+    $session_id = md5(xtc_random_charcode(256));
     $check_query = xtc_db_query("SELECT sesskey
                                    FROM " . TABLE_SESSIONS . "
                                   WHERE sesskey = '" . xtc_db_input($session_id) . "'");
