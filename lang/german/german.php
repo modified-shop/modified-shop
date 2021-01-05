@@ -52,6 +52,7 @@ define('LANGUAGE_CURRENCY', 'EUR');
 
 define('MALE', 'Herr');
 define('FEMALE', 'Frau');
+define('DIVERS', 'Divers');
 
 /*
  * 

@@ -16,6 +16,7 @@ function get_customers_gender($id=false)
   $gender_array = array(array('id' => '', 'text' => PULL_DOWN_DEFAULT),
                         array('id' => 'm', 'text' => MALE),
                         array('id' => 'f', 'text' => FEMALE),
+                        array('id' => 'd', 'text' => DIVERS),
                         );
   if ($id === false) {
     return $gender_array;

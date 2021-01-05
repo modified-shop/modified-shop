@@ -208,11 +208,13 @@ if ($messageStack->size('account_edit') > 0)
   $smarty->assign('error', $messageStack->output('account_edit'));
 
 if (ACCOUNT_GENDER == 'true') {
-  $smarty->assign('gender', '1');
-  $male = ($account['customers_gender'] == 'm') ? true : false;
-  $female = !$male;
-  $smarty->assign('INPUT_MALE', xtc_draw_radio_field(array ('name' => 'gender', 'suffix' => MALE.'&nbsp;'), 'm', $male));
-  $smarty->assign('INPUT_FEMALE', xtc_draw_radio_field(array ('name' => 'gender', 'suffix' => FEMALE.'&nbsp;', 'text' => (xtc_not_null(ENTRY_GENDER_TEXT) ? '<span class="inputRequirement">'.ENTRY_GENDER_TEXT.'</span>' : '')), 'f', $female));
+  $male = (isset($account['customers_gender']) && $account['customers_gender'] == 'm') ? true : false;
+  $female = (isset($account['customers_gender']) && $account['customers_gender'] == 'f') ? true : false;
+  $diverse = (isset($account['customers_gender']) && $account['customers_gender'] == 'd') ? true : false;
+  $smarty->assign('gender','1');
+  $smarty->assign('INPUT_MALE', xtc_draw_radio_field(array('name'=>'gender','suffix' => MALE), 'm', $male));
+  $smarty->assign('INPUT_FEMALE', xtc_draw_radio_field(array('name'=>'gender','suffix' => FEMALE), 'f', $female));
+  $smarty->assign('INPUT_DIVERSE', xtc_draw_radio_field(array('name'=>'gender','suffix' => DIVERSE, 'text' => (xtc_not_null(ENTRY_GENDER_TEXT) ? '<span class="inputRequirement">&nbsp;' . ENTRY_GENDER_TEXT . '</span>': '')), 'd', $diverse));
   // Gender Dropdown
   $gender = ((isset($gender)) ? $gender : $account['customers_gender']);
   $smarty->assign('INPUT_GENDER', xtc_draw_pull_down_menuNote(array ('name' => 'gender', 'text' => '&nbsp;'. (xtc_not_null(ENTRY_GENDER_TEXT) ? '<span class="inputRequirement">'.ENTRY_GENDER_TEXT.'</span>' : '')), get_customers_gender(), $gender));
