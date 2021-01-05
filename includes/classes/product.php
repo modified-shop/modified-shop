@@ -375,7 +375,8 @@ class product {
                                              ON px.products_xsell_grp_name_id = pxg.products_xsell_grp_name_id
                                                 AND pxg.language_id = '".(int)$_SESSION['languages_id']."'
                                        WHERE px.products_id = '".(int)$pID."'
-                                    GROUP BY px.products_xsell_grp_name_id");
+                                    GROUP BY px.products_xsell_grp_name_id
+                                    ORDER BY pxg.xsell_sort_order ASC");
       $cross_sells_array[$pID] = array ();
       if (xtc_db_num_rows($cross_sells_query, true) > 0) {
         while ($cross_sells = xtc_db_fetch_array($cross_sells_query, true)) {

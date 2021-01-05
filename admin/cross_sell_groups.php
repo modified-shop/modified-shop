@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: cross_sell_groups.php 1231 2005-09-21 13:05:36Z mz $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -20,56 +20,63 @@
   switch ($_GET['action']) {
     case 'insert':
     case 'save':
-      $cross_sell_id = xtc_db_prepare_input($_GET['oID']);
+      $cross_sell_id = (int)$_GET['oID'];
 
       $languages = xtc_get_languages();
       for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
         $cross_sell_name_array = $_POST['cross_sell_group_name'];
-        $language_id = $languages[$i]['id'];
 
-        $sql_data_array = array('groupname' => xtc_db_prepare_input($cross_sell_name_array[$language_id]));
+        $sql_data_array = array(
+          'groupname' => xtc_db_prepare_input($cross_sell_name_array[$languages[$i]['id']]),
+          'xsell_sort_order' => (int)$_POST['xsell_sort_order']
+        );
 
         if ($_GET['action'] == 'insert') {
           if (!xtc_not_null($cross_sell_id)) {
-            $next_id_query = xtc_db_query("select max(products_xsell_grp_name_id) as products_xsell_grp_name_id from " . TABLE_PRODUCTS_XSELL_GROUPS . "");
+            $next_id_query = xtc_db_query("SELECT MAX(products_xsell_grp_name_id) as products_xsell_grp_name_id 
+                                             FROM " . TABLE_PRODUCTS_XSELL_GROUPS);
             $next_id = xtc_db_fetch_array($next_id_query);
             $cross_sell_id = $next_id['products_xsell_grp_name_id'] + 1;
           }
-
-          $insert_sql_data = array('products_xsell_grp_name_id' => $cross_sell_id,
-                                   'language_id' => $language_id);
+          $insert_sql_data = array(
+            'products_xsell_grp_name_id' => $cross_sell_id,
+            'language_id' => $languages[$i]['id'],
+          );
           $sql_data_array = array_merge($sql_data_array, $insert_sql_data);
           xtc_db_perform(TABLE_PRODUCTS_XSELL_GROUPS, $sql_data_array);
         } elseif ($_GET['action'] == 'save') {
-			//BOF - web28 - 2010-07-11 - BUGFIX no entry stored for previous deactivated languages
-			$cross_sell_query = xtc_db_query("select * from ".TABLE_PRODUCTS_XSELL_GROUPS." where language_id = '".$language_id."' and products_xsell_grp_name_id = '".xtc_db_input($cross_sell_id)."'");
-			if (xtc_db_num_rows($cross_sell_query) == 0) xtc_db_perform(TABLE_PRODUCTS_XSELL_GROUPS, array ('products_xsell_grp_name_id' => xtc_db_input($cross_sell_id), 'language_id' => $language_id));
-			//EOF - web28 - 2010-07-11 - BUGFIX no entry stored for previous deactivated languages
-			xtc_db_perform(TABLE_PRODUCTS_XSELL_GROUPS, $sql_data_array, 'update', "products_xsell_grp_name_id = '" . xtc_db_input($cross_sell_id) . "' and language_id = '" . $language_id . "'");
+          $cross_sell_query = xtc_db_query("SELECT * 
+                                              FROM ".TABLE_PRODUCTS_XSELL_GROUPS." 
+                                             WHERE language_id = '".$languages[$i]['id']."' 
+                                               AND products_xsell_grp_name_id = '".$cross_sell_id."'");
+          if (xtc_db_num_rows($cross_sell_query) == 0) {
+            xtc_db_perform(TABLE_PRODUCTS_XSELL_GROUPS, array ('products_xsell_grp_name_id' => $cross_sell_id, 'language_id' => $languages[$i]['id']));
+          }
+          xtc_db_perform(TABLE_PRODUCTS_XSELL_GROUPS, $sql_data_array, 'update', "products_xsell_grp_name_id = '" . $cross_sell_id . "' and language_id = '" . $languages[$i]['id'] . "'");
         }
       }
-
 
       xtc_redirect(xtc_href_link(FILENAME_XSELL_GROUPS, 'page=' . $_GET['page'] . '&oID=' . $cross_sell_id));
       break;
 
     case 'deleteconfirm':
-      $oID = xtc_db_prepare_input($_GET['oID']);
-
-      xtc_db_query("delete from " . TABLE_PRODUCTS_XSELL_GROUPS . " where products_xsell_grp_name_id = '" . xtc_db_input($oID) . "'");
+      $cross_sell_id = (int)$_GET['oID'];
+      xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_XSELL_GROUPS . " 
+                          WHERE products_xsell_grp_name_id = '" . $cross_sell_id . "'");
 
       xtc_redirect(xtc_href_link(FILENAME_XSELL_GROUPS, 'page=' . $_GET['page']));
       break;
 
     case 'delete':
-      $oID = xtc_db_prepare_input($_GET['oID']);
+      $cross_sell_id = (int)$_GET['oID'];
+      $cross_sell_query = xtc_db_query("SELECT COUNT(*) as count 
+                                          FROM " . TABLE_PRODUCTS_XSELL . " 
+                                         WHERE products_xsell_grp_name_id = '" . $cross_sell_id . "'");
+      $cross_sell = xtc_db_fetch_array($cross_sell_query);
 
-      $cross_sell_query = xtc_db_query("select count(*) as count from " . TABLE_PRODUCTS_XSELL . " where products_xsell_grp_name_id = '" . xtc_db_input($oID) . "'");
-      $status = xtc_db_fetch_array($cross_sell_query);
-
-      $remove_status = true;
-      if ($status['count'] > 0) {
-        $remove_status = false;
+      $remove_group = true;
+      if ($cross_sell['count'] > 0) {
+        $remove_group = false;
         $messageStack->add(ERROR_STATUS_USED_IN_CROSS_SELLS, 'error');
       }
       break;
@@ -108,7 +115,10 @@
                 <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
               <?php
-                $cross_sell_query_raw = "select products_xsell_grp_name_id, groupname from " . TABLE_PRODUCTS_XSELL_GROUPS . " where language_id = '" . (int)$_SESSION['languages_id'] . "' order by products_xsell_grp_name_id";
+                $cross_sell_query_raw = "SELECT *
+                                           FROM " . TABLE_PRODUCTS_XSELL_GROUPS . " 
+                                          WHERE language_id = '" . (int)$_SESSION['languages_id'] . "' 
+                                       ORDER BY products_xsell_grp_name_id";
                 $cross_sell_split = new splitPageResults($_GET['page'], '20', $cross_sell_query_raw, $cross_sell_query_numrows);
                 $cross_sell_query = xtc_db_query($cross_sell_query_raw);
                 while ($cross_sell = xtc_db_fetch_array($cross_sell_query)) {
@@ -162,6 +172,7 @@
                 }
 
                 $contents[] = array('text' => '<br />' . TEXT_INFO_XSELL_GROUP_NAME . $cross_sell_inputs_string);
+                $contents[] = array('text' => '<br />' . TEXT_INFO_XSELL_GROUP_SORT_ORDER . '<br />' . xtc_draw_input_field('xsell_sort_order'));
                 $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_INSERT . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_XSELL_GROUPS, 'page=' . $_GET['page']) . '">' . BUTTON_CANCEL . '</a>');
                 break;
 
@@ -178,6 +189,8 @@
                 }
 
                 $contents[] = array('text' => '<br />' . TEXT_INFO_XSELL_GROUP_NAME . $cross_sell_inputs_string);
+                $contents[] = array('text' => '<br />' . TEXT_INFO_XSELL_GROUP_SORT_ORDER . '<br />' . xtc_draw_input_field('xsell_sort_order', $oInfo->xsell_sort_order));
+                
                 $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_XSELL_GROUPS, 'page=' . $_GET['page'] . '&oID=' . $oInfo->products_xsell_grp_name_id) . '">' . BUTTON_CANCEL . '</a>');
                 break;
 
@@ -186,13 +199,13 @@
 
                 $contents = array('form' => xtc_draw_form('status', FILENAME_XSELL_GROUPS, 'page=' . $_GET['page'] . '&oID=' . $oInfo->products_xsell_grp_name_id  . '&action=deleteconfirm'));
                 $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
-                $contents[] = array('text' => '<br /><b>' . $oInfo->orders_status_name . '</b>');
-                if ($remove_status) $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_XSELL_GROUPS, 'page=' . $_GET['page'] . '&oID=' . $oInfo->products_xsell_grp_name_id) . '">' . BUTTON_CANCEL . '</a>');
+                $contents[] = array('text' => '<br /><b>' . $oInfo->groupname . '</b>');
+                if ($remove_group) $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_XSELL_GROUPS, 'page=' . $_GET['page'] . '&oID=' . $oInfo->products_xsell_grp_name_id) . '">' . BUTTON_CANCEL . '</a>');
                 break;
 
               default:
                 if (is_object($oInfo)) {
-                  $heading[] = array('text' => '<b>' . $oInfo->orders_status_name . '</b>');
+                  $heading[] = array('text' => '<b>' . $oInfo->groupname . '</b>');
 
                   $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_XSELL_GROUPS, 'page=' . $_GET['page'] . '&oID=' . $oInfo->products_xsell_grp_name_id . '&action=edit') . '">' . BUTTON_EDIT . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_XSELL_GROUPS, 'page=' . $_GET['page'] . '&oID=' . $oInfo->products_xsell_grp_name_id . '&action=delete') . '">' . BUTTON_DELETE . '</a>');
 
