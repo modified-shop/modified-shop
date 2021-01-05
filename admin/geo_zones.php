@@ -177,7 +177,7 @@ function update_zone(theForm) {
                                LEFT JOIN " . TABLE_ZONES . " z 
                                          ON a.zone_id = z.zone_id 
                                    WHERE a.geo_zone_id = " . (int)$_GET['zID'] . " 
-                                ORDER BY association_id";
+                                ORDER BY c.countries_name";
               $zones_split = new splitPageResults($_GET['spage'], $page_max_display_countries_results, $zones_query_raw, $zones_query_numrows);
               $zones_query = xtc_db_query($zones_query_raw);
               while ($zones = xtc_db_fetch_array($zones_query)) {
