@@ -30,5 +30,5 @@ define('TEXT_INFO_DELETE_INTRO', 'Are you sure you want to delete this order sta
 define('TEXT_INFO_HEADING_NEW_XSELL_GROUP', 'New gruppenname');
 define('TEXT_INFO_HEADING_EDIT_XSELL_GROUP', 'Edit gruppenname');
 define('TEXT_INFO_HEADING_DELETE_XSELL_GROUP', 'Delete gruppenname');
-define('ERROR_STATUS_USED_IN_ORDERS', 'Error: This group is currently used in cross-sell articles.');
+define('ERROR_STATUS_USED_IN_CROSS_SELLS', 'Error: This group is currently used in cross-sell articles.');
 ?>
