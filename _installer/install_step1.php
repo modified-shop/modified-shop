@@ -311,7 +311,7 @@
   $smarty->assign('INPUT_USE_SSL', xtc_draw_pull_down_menuNote(array ('name' => 'use_ssl'), $boolean_array, $use_ssl));
   
   $smarty->assign('INPUT_ADMIN_DIRECTORY', xtc_draw_input_fieldNote(array('name' => 'admin_directory'), trim(DIR_ADMIN, '/'))); 
-  $smarty->assign('ADMIN_DIRECTORY_SUGGEST', 'admin_'.xtc_random_charcode(10));
+  $smarty->assign('ADMIN_DIRECTORY_SUGGEST', 'admin_'.xtc_random_charcode(10, true));
   
   if ($upgrade === true) {
     $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.'index.php', '', $request_type).'">'.BUTTON_BACK.'</a>');

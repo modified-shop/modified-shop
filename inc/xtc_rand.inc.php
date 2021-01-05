@@ -28,7 +28,9 @@
   }
 
   function crypto_rand_secure($min, $max) {
-    if (function_exists("openssl_random_pseudo_bytes")) {
+    if (function_exists("random_int")) {
+      return random_int($min, $max);
+    } elseif (function_exists("openssl_random_pseudo_bytes")) {
       $range = 1 + $max - $min;
       if ($range <= 0) return $min; // not so random...
       $log = log($range, 2);
@@ -39,6 +41,7 @@
         $rnd = hexdec(bin2hex(openssl_random_pseudo_bytes($bytes)));
         $rnd = $rnd & $filter; // discard irrelevant bits
       } while ($rnd >= $range);
+      
       return $min + $rnd;
     } else {
       return mt_rand($min, $max);
