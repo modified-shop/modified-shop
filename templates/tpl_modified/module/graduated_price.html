@@ -11,7 +11,7 @@
     </div>
   {if $smarty.foreach.aussen.first}
     {assign var=maxPrice value=$module_data.PLAIN_PRICE}
-  {else if $smarty.foreach.aussen.last}
+  {elseif $smarty.foreach.aussen.last}
     {assign var=minPrice value=$module_data.PLAIN_PRICE}
   {/if}
   {/foreach}
