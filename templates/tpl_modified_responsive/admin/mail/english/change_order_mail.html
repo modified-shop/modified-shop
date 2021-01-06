@@ -11,7 +11,7 @@
 	<tr> 
 		<td>
         <br />
-        <font size="2" face="Tahoma, Verdana, sans-serif"><b>{if $GENDER == $smarty.const.MALE}Dear Mr.{elseif $GENDER == $smarty.const.FEMALE}Dear Ms./Mrs.{else}Hello{/if} {$NAME},</b>
+        <font size="2" face="Tahoma, Verdana, sans-serif"><b>{if $GENDER == 'm'}Dear Mr.{elseif $GENDER == 'f'}Dear Ms./Mrs.{else}Hello{/if} {$NAME},</b>
         <br /><br />
         The status of your order {if $ORDER_NR}No. {$ORDER_NR}{/if} {if $ORDER_DATE}from {$ORDER_DATE}{/if} has been changed.
         

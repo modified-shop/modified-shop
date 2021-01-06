@@ -1,4 +1,5 @@
-{if $GENDER != ''}Dear {$GENDER}{else}Hello{/if} {$NAME},
+
+{if $GENDER == 'm'}Dear Mr.{elseif $GENDER == 'f'}Dear Ms./Mrs.{else}Hello{/if} {$NAME},
 
 your account has been successfully created!
 

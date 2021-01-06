@@ -11,7 +11,7 @@
 	<tr> 
 		<td>
       <br />
-      <font size="2" face="Tahoma, Verdana, sans-serif"><b>{if $GENDER != ''}Sehr geehrte{if $GENDER == 'Herr'}r{/if} {$GENDER}{else}Hallo{/if} {$NAME},</b><br />
+      <font size="2" face="Tahoma, Verdana, sans-serif"><b>{if $GENDER == 'm'}Sehr geehrter Herr{elseif $GENDER == 'f'}Sehr geehrte Frau{else}Hallo{/if} {$NAME},</b><br />
       <br />
       Sie haben soeben Ihr Kundenkonto erfolgreich erstellt.<br />
       Als registrierter Kunde haben Sie folgende Vorteile in unserem Shop:<br />

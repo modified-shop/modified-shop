@@ -11,7 +11,7 @@
 	<tr> 
 		<td>
       <br />
-      <font size="2" face="Tahoma, Verdana, sans-serif"><b>{if $GENDER != ''}Dear {$GENDER}{else}Hello{/if} {$NAME},</b><br />
+      <font size="2" face="Tahoma, Verdana, sans-serif"><b>{if $GENDER == 'm'}Dear Mr.{elseif $GENDER == 'f'}Dear Ms./Mrs.{else}Hello{/if} {$NAME},</b><br />
       <br />
       your account has been successfully created.<br />
       You now have access to the following features:<br />
