@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-  $Id: module_newsletter.php 2515 2011-12-12 16:15:44Z dokuman $
+  $Id$
 
   modified eCommerce Shopsoftware
   http://www.modified-shop.org
@@ -34,12 +34,8 @@ define('TITLE_DATE','Datum');
 define('TEXT_SEND_TO','Empf&auml;nger:');
 define('TEXT_PREVIEW','<b>Vorschau:</b>');
 define('TEXT_REMOVE_LINK', 'Newsletter abmelden');
-
-// BOF - DokuMan - 2011-12-12 - Texts for Newsletter E-Mail send status
 define('INFO_NEWSLETTER_SEND', '%d Newsletter verschickt');
 define('INFO_NEWSLETTER_LEFT', '%d Newsletter &uuml;brig');
-// EOF - DokuMan - 2011-12-12 - Texts for Newsletter E-Mail send status
-
 define('TEXT_NEWSLETTER_INFO', '<strong>ACHTUNG:</strong> Zum Versenden von Newslettern wird die Verwendung von externen Programmen empfohlen!<br /><br />Falls das Newsletter Shop Modul benutzt wird, sollte beim Provider nachgefragt werden, wie viele Emails in einem bestimmten Zeitraum &uuml;berhaupt versendet werden d&uuml;rfen.<br />Bei vielen Providern gibt es Einschr&auml;nkungen, oder das Versenden ist nur &uuml;ber spezielle Emailserver erlaubt.<br /><br />Standardm&auml;&szlig;ig wird an den Newsletter die Signatur bereits angeh&auml;ngt. Wenn Sie die Signatur jedoch anders formatiert &uuml;ber den Editor einf&uuml;gen m&ouml;chten, dann f&uuml;gen Sie bitte an das Ende des Newsletters den Code [NOSIGNATUR] (inkl. eckiger Klammern) ein.');
-
+define('TEXT_INFO_SENDING', 'Bitte Warten, der Newsletter wird versendet. Dies kann einige Zeit in Anspruch nehmen.');
 ?>
