@@ -19,17 +19,17 @@
   // include needed functions
   require_once (DIR_FS_INC.'xtc_get_tax_class_id.inc.php');
   require_once (DIR_FS_INC.'xtc_get_tax_rate.inc.php');
-
   require_once (DIR_FS_INC.'xtc_oe_get_options_name.inc.php');
   require_once (DIR_FS_INC.'xtc_oe_get_options_values_name.inc.php');
   require_once (DIR_FS_INC.'xtc_oe_customer_infos.inc.php');
-
   require_once (DIR_FS_INC.'xtc_get_countries.inc.php');
   require_once (DIR_FS_INC.'xtc_get_address_format_id.inc.php');
-
+  require_once (DIR_FS_INC.'get_customers_gender.inc.php');
+  
   // include needed classes
   require_once (DIR_WS_CLASSES.'order.php');
   require_once (DIR_FS_CATALOG.DIR_WS_CLASSES.'xtcPrice.php');
+  
   if (defined('MODULE_PAYMENT_BILLPAY_STATUS') && MODULE_PAYMENT_BILLPAY_STATUS == 'True' && file_exists(DIR_FS_EXTERNAL . 'billpay/base/BillpayOrderEdit.php')) {
     require_once (DIR_FS_EXTERNAL . 'billpay/base/BillpayOrderEdit.php');
     $billpayOrderEdit = new BillpayOrderEdit();
