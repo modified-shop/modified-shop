@@ -1,6 +1,6 @@
 <?php
   /* -----------------------------------------------------------------------------------------
-   $Id: create_account.php 5140 2013-07-18 15:09:39Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -28,7 +28,8 @@
   require_once (DIR_FS_INC.'xtc_get_geo_zone_code.inc.php');
   require_once (DIR_FS_INC.'xtc_php_mail.inc.php');
   require_once (DIR_FS_INC.'generate_customers_cid.inc.php');
-  
+  require_once (DIR_FS_INC.'get_customers_gender.inc.php');
+
   require(DIR_WS_INCLUDES . 'get_states.php');
 
   // initiate template engine for mail
@@ -81,8 +82,8 @@
     $error = false; // reset error flag
 
     $entry_gender_error = false;
-    if (ACCOUNT_GENDER == 'true' && $customers_gender != 'm' && $customers_gender != 'f') {
-        $error = $entry_gender_error = true;
+    if (ACCOUNT_GENDER == 'true' && $customers_gender == '') {
+      $error = $entry_gender_error = true;
     }
 
     $entry_password_error = false;
@@ -305,24 +306,24 @@
 
       // Create eMail
       if (($customers_send_mail == 'yes')) {
-
-        $smarty->assign('GENDER', ($customers_gender == 'f' ? FEMALE : ($customers_gender == 'm' ? MALE : '')));
-        $smarty->assign('FIRSTNAME',$customers_firstname);
-        $smarty->assign('LASTNAME',$customers_lastname);
-        // assign language to template for caching
-        $smarty->assign('language', $_SESSION['language']);
         // set dirs manual
         $smarty->template_dir = DIR_FS_CATALOG.'templates';
         $smarty->compile_dir = DIR_FS_CATALOG.'templates_c';
         $smarty->config_dir = DIR_FS_CATALOG.'lang';
+        
         $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
         $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
+
+        $smarty->assign('GENDER', get_customers_gender($gender));
+        $smarty->assign('FIRSTNAME',$customers_firstname);
+        $smarty->assign('LASTNAME',$customers_lastname);
         $smarty->assign('NAME', $customers_firstname.' '.$customers_lastname);
         $smarty->assign('EMAIL', $customers_email_address);
         $smarty->assign('COMMENTS', $customers_mail_comments);
         $smarty->assign('PASSWORD', $customers_password_encrypted);
-        $smarty->caching = 0;
 
+        $smarty->caching = 0;
+        $smarty->assign('language', $_SESSION['language']);
         $html_mail = $smarty->fetch(CURRENT_TEMPLATE.'/admin/mail/'.$_SESSION['language'].'/create_account_mail.html');
         $txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/admin/mail/'.$_SESSION['language'].'/create_account_mail.txt');
 
@@ -379,8 +380,7 @@ require (DIR_WS_INCLUDES.'head.php');
                         <td class="dataTableConfig col-left"><?php echo ENTRY_GENDER; ?></td>
                         <td class="dataTableConfig col-single-right">
                         <?php
-                          echo '<label>'.xtc_draw_radio_field('customers_gender', 'm', false, isset($customers_gender)?$customers_gender:'').'&nbsp;&nbsp;'.MALE.'</label>&nbsp;&nbsp;';
-                          echo '<label>'.xtc_draw_radio_field('customers_gender', 'f', false, isset($customers_gender)?$customers_gender:'').'&nbsp;&nbsp;'.FEMALE.'</label>';
+                          echo xtc_draw_pull_down_menu('customers_gender', get_customers_gender(), isset($customers_gender)?$customers_gender:'');
                           if ($error && $entry_gender_error) echo '&nbsp;'.ENTRY_GENDER_ERROR;
                         ?>
                         </td>                        
@@ -587,7 +587,7 @@ require (DIR_WS_INCLUDES.'head.php');
                         if (isset($processed) && $processed == true) {
                           echo xtc_draw_hidden_field('status');
                         } else {                         
-                          echo xtc_draw_pull_down_menu('status', $customers_statuses_array, DEFAULT_CUSTOMERS_STATUS_ID);
+                          echo xtc_draw_pull_down_menu('status', $customers_statuses_array, DEFAULT_CUSTOMERS_STATUS_ID, 'style="width:145px;"');
                         }
                       ?>
                       </td>

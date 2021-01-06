@@ -79,7 +79,7 @@
           <div class="main" style="margin:12px 0;"><b><?php echo HEADING_TITLE_STATUS  .':</b> ' . $customers_statuses_id_array[$cInfo->customers_status]['text'] ; ?></div>
         </div>
         <div class="clear"></div>
-        <?php echo xtc_draw_form('customers', FILENAME_CUSTOMERS, xtc_get_all_get_params(array('action')) . 'action=update', 'post', 'onSubmit="return check_form();"') .
+        <?php echo xtc_draw_form('customers', FILENAME_CUSTOMERS, xtc_get_all_get_params(array('action')) . 'action=update', 'post') .
                    xtc_draw_hidden_field('customers_default_address_id', $cInfo->customers_default_address_id) .
                    xtc_draw_hidden_field('address_book_id', $cInfo->address_book_id) .
                    xtc_draw_hidden_field('customers_status', $cInfo->customers_status); ?>
@@ -95,13 +95,13 @@
               <?php
               if ($error == true) {
                 if ($entry_gender_error == true) {
-                  echo xtc_draw_radio_field('customers_gender', 'm', false, $cInfo->customers_gender).'&nbsp;&nbsp;'.MALE.'&nbsp;&nbsp;'.xtc_draw_radio_field('customers_gender', 'f', false, $cInfo->customers_gender).'&nbsp;&nbsp;'.FEMALE.'&nbsp;'.ENTRY_GENDER_ERROR;
+                  echo xtc_draw_pull_down_menu('customers_gender', get_customers_gender(), $cInfo->customers_gender).'&nbsp;'.ENTRY_GENDER_ERROR;
                 } else {
-                  echo ($cInfo->customers_gender == 'm') ? MALE : FEMALE;
+                  echo get_customers_gender($cInfo->customers_gender);
                   echo xtc_draw_hidden_field('customers_gender', $cInfo->customers_gender);
                 }
               } else {
-                echo xtc_draw_radio_field('customers_gender', 'm', false, $cInfo->customers_gender).'&nbsp;&nbsp;'.MALE.'&nbsp;&nbsp;'.xtc_draw_radio_field('customers_gender', 'f', false, $cInfo->customers_gender).'&nbsp;&nbsp;'.FEMALE;
+                echo xtc_draw_pull_down_menu('customers_gender', get_customers_gender(), $cInfo->customers_gender);
               }
               ?>
               </td>

@@ -32,6 +32,7 @@ require_once (DIR_FS_INC.'xtc_get_attributes_model.inc.php');
 require_once (DIR_FS_INC.'xtc_php_mail.inc.php');
 require_once (DIR_FS_INC.'get_tracking_link.inc.php');
 require_once (DIR_FS_INC.'get_order_total.inc.php');
+require_once (DIR_FS_INC.'get_customers_gender.inc.php');
 
 /* magnalister v1.0.1 */
 if (function_exists('magnaExecute')) magnaExecute('magnaSubmitOrderStatus', array(), array('order_details.php'));

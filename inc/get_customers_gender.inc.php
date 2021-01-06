@@ -24,8 +24,6 @@ function get_customers_gender($id=false)
     for ($i=0, $n=count($gender_array); $i<$n; $i++) {
       if ($gender_array[$i]['id'] == $id && $id != '') {
         return $gender_array[$i]['text'];
-      } else {
-        return '';
       }
     }
   }

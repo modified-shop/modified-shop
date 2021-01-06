@@ -62,6 +62,7 @@ define('HEADER_TITLE_ADMINISTRATION', 'Administration');
 // text for gender
 define('MALE', 'Herr');
 define('FEMALE', 'Frau');
+define('DIVERSE', 'Divers');
 
 // text for date of birth example
 define('DOB_FORMAT_STRING', 'tt.mm.jjjj');
@@ -285,6 +286,7 @@ define('SAVE_ENTRY','&Auml;nderungen Speichern?');
 define('TEXT_CHOOSE_INFO_TEMPLATE','Vorlage f&uuml;r Artikeldetails');
 define('TEXT_CHOOSE_OPTIONS_TEMPLATE','Vorlage f&uuml;r Artikeloptionen');
 define('TEXT_SELECT','-- Bitte w&auml;hlen Sie --');
+define('PULL_DOWN_DEFAULT', 'Bitte w&auml;hlen');
 
 // BOF - Tomcraft - 2009-06-10 - added some missing alternative text on admin icons
 // Icons

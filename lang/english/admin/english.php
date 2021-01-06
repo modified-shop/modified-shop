@@ -62,6 +62,7 @@ define('HEADER_TITLE_ADMINISTRATION', 'Administration');
 // text for gender
 define('MALE', 'Mr.');
 define('FEMALE', 'Ms./Mrs.');
+define('DIVERSE', 'Diverse');
 
 // text for date of birth example
 define('DOB_FORMAT_STRING', 'dd/mm/yyyy');
@@ -285,6 +286,7 @@ define('SAVE_ENTRY','Save changes?');
 define('TEXT_CHOOSE_INFO_TEMPLATE','Template for product details');
 define('TEXT_CHOOSE_OPTIONS_TEMPLATE','Template for product options');
 define('TEXT_SELECT','-- Please Select --');
+define('PULL_DOWN_DEFAULT', 'Please Select');
 
 // BOF - Tomcraft - 2009-06-10 - added some missing alternative text on admin icons
 // Icons

@@ -79,13 +79,13 @@ if ($_GET['edit_action']=='address') {
     <?php echo TEXT_GENDER;?>
     </td>
     <td class="dataTableContent"><span class="select_f12">
-    <?php echo xtc_draw_gender_pull_down('customers_gender', $order->customer['gender'], 'style="width:200px;"');?>
+    <?php echo xtc_draw_pull_down_menu('customers_gender', get_customers_gender(), $order->customer['gender'], 'style="width:200px;"');?>
     </span></td>
     <td class="dataTableContent"><span class="select_f12">
-    <?php echo xtc_draw_gender_pull_down('delivery_gender', $order->delivery['gender'], 'style="width: 200px"');?>
+    <?php echo xtc_draw_pull_down_menu('customers_gender', get_customers_gender(), $order->delivery['gender'], 'style="width:200px;"');?>
     </span></td>
     <td class="dataTableContent"><span class="select_f12">
-    <?php echo xtc_draw_gender_pull_down('billing_gender', $order->billing['gender'], 'style="width: 200px"');?>
+    <?php echo xtc_draw_pull_down_menu('customers_gender', get_customers_gender(), $order->billing['gender'], 'style="width:200px;"');?>
     </span></td>
   </tr>
   <?php } ?>

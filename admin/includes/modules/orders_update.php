@@ -34,13 +34,7 @@
         $gender_array = xtc_db_fetch_array($gender_query);
         $order->customer['gender'] = $gender_array['customers_gender'];
       } 
-      if ($order->customer['gender'] == 'f') {
-        $smarty->assign('GENDER', FEMALE);
-      } elseif ($order->customer['gender'] == 'm') {
-        $smarty->assign('GENDER', MALE);
-      } else {
-        $smarty->assign('GENDER', '');
-      }
+      $smarty->assign('GENDER', get_customers_gender($order->customer['gender']));
       $smarty->assign('FIRSTNAME',$order->customer['firstname'] != '' ? $order->customer['firstname'] : $order->customer['name']);
       $smarty->assign('LASTNAME',$order->customer['lastname'] != '' ? $order->customer['lastname'] : $order->customer['name']);
     
