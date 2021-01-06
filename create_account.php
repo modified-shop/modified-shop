@@ -396,7 +396,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
       $smarty->assign('language', $_SESSION['language']);
       $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
       $smarty->assign('content', $module_content);
-      $smarty->assign('GENDER', get_customers_gender($gender));
+      $smarty->assign('GENDER', $gender);
       $smarty->assign('FIRSTNAME', $firstname);
       $smarty->assign('LASTNAME', $lastname);
       $smarty->assign('NAME', $name);

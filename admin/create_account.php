@@ -314,7 +314,7 @@
         $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
         $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
 
-        $smarty->assign('GENDER', get_customers_gender($gender));
+        $smarty->assign('GENDER', $customers_gender);
         $smarty->assign('FIRSTNAME',$customers_firstname);
         $smarty->assign('LASTNAME',$customers_lastname);
         $smarty->assign('NAME', $customers_firstname.' '.$customers_lastname);

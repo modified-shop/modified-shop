@@ -29,8 +29,10 @@
       }
       if ($_SESSION['customer_gender'] == 'f') {
         $greeting_string = sprintf(TEXT_GREETING_PERSONAL, FEMALE . '&nbsp;'. $_SESSION['customer_first_name'] . '&nbsp;'. $_SESSION['customer_last_name'], xtc_href_link(FILENAME_PRODUCTS_NEW));
-      } else {
+      } elseif ($_SESSION['customer_gender'] == 'm') {
         $greeting_string = sprintf(TEXT_GREETING_PERSONAL, MALE . '&nbsp;'. $_SESSION['customer_first_name'] . '&nbsp;' . $_SESSION['customer_last_name'], xtc_href_link(FILENAME_PRODUCTS_NEW));
+      } else {
+        $greeting_string = sprintf(TEXT_GREETING_PERSONAL, $_SESSION['customer_first_name'] . '&nbsp;' . $_SESSION['customer_last_name'], xtc_href_link(FILENAME_PRODUCTS_NEW));
       }
     } else {
       $greeting_string = sprintf(TEXT_GREETING_GUEST, xtc_href_link(FILENAME_LOGIN, '', 'SSL'), xtc_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL'));
