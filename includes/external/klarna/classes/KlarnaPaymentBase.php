@@ -23,7 +23,7 @@ class KlarnaPaymentBase extends KlarnaAutoload {
 
 
   function init() {    
-    $this->klarna_version = '1.00';
+    $this->klarna_version = '1.01';
     
     $this->title = constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_TITLE');
     $this->description = constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_DESCRIPTION');
@@ -98,6 +98,9 @@ class KlarnaPaymentBase extends KlarnaAutoload {
           $this->enabled = true;
           break;
         }
+      }
+      if ($this->enabled === false) {
+        $this->logger->log('klarna', 'not available: '.$this->klarna_code, array('methods' => $_SESSION['klarna']['methods']));
       }
     } else {
       $this->enabled = false;
