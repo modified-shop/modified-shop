@@ -165,7 +165,16 @@
       ?>
       <!-- body_text //-->
       <td class="boxCenter">
-        <div class="pageHeading pdg2 mrg5"><?php echo HEADING_TITLE; ?></div>          
+        <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'resources.png'); ?></div>
+        <div class="flt-l">
+          <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?></div>
+          <div class="main pdg2">Products</div>
+        </div>
+        <?php if (empty($action)) { ?>
+        <div class="main flt-l pdg2 mrg5" style="margin-left:20px;">
+          <a class="button" onclick="this.blur();" href="<?php echo xtc_href_link(FILENAME_SPECIALS, xtc_get_all_get_params(array('action', 'sID')) . '&action=new'); ?>'"><?php echo  BUTTON_NEW_PRODUCTS; ?></a>
+        </div>
+        <?php } ?>
         <?php
         if ($action == 'new' || $action == 'edit') {
           $form_action = 'insert';
@@ -284,7 +293,7 @@
            <?php echo (($form_action == 'insert') ?
            '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_INSERT . '"/>'
            :
-           '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/>'). '&nbsp;&nbsp;&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_SPECIALS, xtc_get_all_get_params(array('action', 'sID')) . 'sID=' . $sID) . '">' . BUTTON_CANCEL . '</a>'; ?>
+           '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/>'). '&nbsp;&nbsp;&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_SPECIALS, xtc_get_all_get_params(array('action'))) . '">' . BUTTON_CANCEL . '</a>'; ?>
           </div>
         </form>
       </td>                   
@@ -471,13 +480,6 @@
               <div class="smallText flt-l pdg2"><?php echo $specials_split->display_count($specials_query_numrows, $page_max_display_results, $page_id, TEXT_DISPLAY_NUMBER_OF_SPECIALS); ?></div>
               <div class="smallText flt-r pdg2"><?php echo $specials_split->display_links($specials_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $page_id); ?></div>
               <?php echo draw_input_per_page($PHP_SELF,$cfg_max_display_results_key,$page_max_display_results); ?>
-              <?php
-              if (empty($action)) {
-              ?>
-                <div class="smallText flt-r pdg2"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_SPECIALS, xtc_get_all_get_params(array('action', 'sID')) . '&action=new') . '">' . BUTTON_NEW_PRODUCTS . '</a>'; ?></div>
-              <?php
-              }
-              ?>                                
             </td>
             <td>&nbsp;</td>
           </tr>
