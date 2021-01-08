@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: products_expected.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -46,7 +46,11 @@ require (DIR_WS_INCLUDES.'head.php');
       ?>
       <!-- body_text //-->
       <td class="boxCenter">
-        <div class="pageHeading pdg2 mrg5"><?php echo HEADING_TITLE; ?></div>
+        <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'resources.png'); ?></div>
+        <div class="flt-l">
+          <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?></div>
+          <div class="main pdg2">Products</div>
+        </div>
         <table class="tableCenter">
           <tr>
             <td class="boxCenterLeft">

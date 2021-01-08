@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: manufacturers.php 5850 2013-09-30 09:37:43Z Tomcraft $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -178,7 +178,11 @@ if (USE_WYSIWYG == 'true') {
       ?>
       <!-- body_text //-->
       <td class="boxCenter">   
-        <div class="pageHeading pdg2 mrg5"><?php echo HEADING_TITLE; ?></div>
+        <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'factory.png'); ?></div>
+        <div class="flt-l">
+          <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?></div>
+          <div class="main pdg2">Products</div>
+        </div>
         <?php
         if (isset($_GET['action']) && ($_GET['action']=='edit' || $_GET['action']=='new')) {
           if ($_GET['action'] == 'new') {
