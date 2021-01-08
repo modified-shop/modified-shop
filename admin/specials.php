@@ -425,8 +425,15 @@
                   if (xtc_not_null($_POST['multi_delete'])) {
                     $heading[]  = array('text' => '<b>' . TEXT_INFO_HEADING_DELETE_ELEMENTS . '</b>');
                     if (is_array($_POST['multi_products'])) {
-                      foreach ($_POST['multi_products'] AS $products_id) {
-                        $contents[] = array('text' => xtc_draw_checkbox_field('multi_products_confirm[]', $products_id, true) . '&nbsp;' . xtc_get_products_name($products_id));
+                      foreach ($_POST['multi_products'] AS $specials_id) {
+                        $product_query = xtc_db_query("SELECT pd.products_name
+                                                         FROM ".TABLE_SPECIALS." s
+                                                         JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
+                                                              ON pd.products_id = s.products_id
+                                                                 AND pd.language_id = '".(int)$_SESSION['languages_id']."'
+                                                        WHERE s.specials_id = '".(int)$specials_id."'");
+                        $product = xtc_db_fetch_array($product_query);
+                        $contents[] = array('text' => xtc_draw_checkbox_field('multi_products_confirm[]', $specials_id, true) . '&nbsp;' . $product['products_name']);
                       }
                     }
                     $contents[] = array('align' => 'center', 'text' => '<input class="button" type="submit" name="multi_delete_confirm" value="' . BUTTON_DELETE . '"> <a class="button" href="' . xtc_href_link(FILENAME_SPECIALS, xtc_get_all_get_params(array('action', 'sID'))) . '">' . BUTTON_CANCEL . '</a>');
