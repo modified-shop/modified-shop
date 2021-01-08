@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: specials.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $   
+   $Id$   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -26,6 +26,7 @@ define('TABLE_HEADING_EXPIRES_DATE', 'Expiry Date');
 define('TABLE_HEADING_PRODUCTS_PRICE', 'Products Price');
 define('TABLE_HEADING_STATUS', 'Status');
 define('TABLE_HEADING_ACTION', 'Action');
+define('TABLE_HEADING_EDIT','Edit');
 
 define('TEXT_SPECIALS_PRODUCT', 'Product:');
 define('TEXT_SPECIALS_SPECIAL_PRICE', 'Special Price:');
@@ -41,6 +42,10 @@ define('TEXT_INFO_PERCENTAGE', 'Percentage:');
 define('TEXT_INFO_START_DATE', 'Start at:');
 define('TEXT_INFO_EXPIRES_DATE', 'Expires at:');
 define('TEXT_INFO_STATUS_CHANGE', 'Deactivated on:');
+
+define('TEXT_ACTIVE_ELEMENT','Active Element');
+define('TEXT_MARKED_ELEMENTS','Marked Elements');
+define('TEXT_INFO_HEADING_DELETE_ELEMENTS', 'Delete Elements');
 
 define('TEXT_INFO_HEADING_DELETE_SPECIALS', 'Delete Special');
 define('TEXT_INFO_DELETE_INTRO', 'Are you sure you want to delete the special products price?');
