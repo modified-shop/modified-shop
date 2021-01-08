@@ -82,7 +82,11 @@ require (DIR_WS_INCLUDES.'head.php');
       ?>
       <!-- body_text //-->
       <td class="boxCenter">        
-        <div class="pageHeading pdg2 mrg5"><?php echo HEADING_TITLE; ?></div>          
+        <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'page_white_star.png'); ?></div>
+        <div class="flt-l">
+          <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?></div>
+          <div class="main pdg2">Products</div>
+        </div>
         <?php
           if ($_GET['action'] == 'edit') {
             $reviews_query = xtc_db_query("SELECT r.*,
