@@ -129,6 +129,7 @@ class PayPalCommon extends PayPalAuth {
 
 
   function get_totals($totals, $calc_total = false, $subtotal = 0) {
+    global $order;
     
     for ($i = 0, $n = sizeof($totals); $i < $n; $i ++) {
       switch(((isset($totals[$i]['code'])) ? $totals[$i]['code'] : $totals[$i]['class'])) {
@@ -152,8 +153,12 @@ class PayPalCommon extends PayPalAuth {
           $this->details->setShipping($totals[$i]['value']);
           break;
         case 'ot_tax':
-          if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
-              && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1
+          if (($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
+               && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1
+               ) || ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
+                     && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0
+                     && $order->delivery['country_id'] == STORE_COUNTRY
+                     )
               ) 
           {
             $this->details->setTax($this->details->getTax() + $totals[$i]['value']);
@@ -176,10 +181,14 @@ class PayPalCommon extends PayPalAuth {
 
     if ($calc_total === true && $this->details->getSubtotal() > 0) {
       $this->amount->setTotal($total);
-    } elseif ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
-        && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1
-        && $this->details->getShippingDiscount() == 0
-        ) 
+    } elseif ((($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
+                && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1
+                ) || ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
+                      && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0
+                      && $order->delivery['country_id'] == STORE_COUNTRY
+                      )
+              ) && $this->details->getShippingDiscount() == 0
+             ) 
     {      
       if ((string)$amount_total != (string)$total) {
         $this->details->setTax($this->details->getTax() + ($amount_total - $total));
