@@ -85,8 +85,11 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'submit')) {
     $check_address = xtc_db_fetch_array($check_address_query);
 
     if ($check_address['total'] == '1') {
-      if ($reset_shipping == true && !isset($_SESSION['paypal']['PayerID'])) {
+      if ($reset_shipping == true) {
         unset ($_SESSION['shipping']);
+        if (isset($_SESSION['paypal']['PayerID'])) {
+          $_SESSION['shipping'] = '';
+        }
       }
       xtc_redirect(xtc_href_link($link_checkout_shipping, $params, 'SSL'));
     } else {
