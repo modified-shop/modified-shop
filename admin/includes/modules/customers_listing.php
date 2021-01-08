@@ -14,7 +14,15 @@
   //display per page
   $cfg_max_display_results_key = 'MAX_DISPLAY_LIST_CUSTOMERS';
   $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
-
+  
+  $form_action = 'action=multi_action';
+  if (isset($_POST['multi_customers']) && xtc_not_null($_POST['multi_customers'])) {
+    if (xtc_not_null($_POST['multi_delete'])) {
+      $form_action = 'action=deleteconfirm';
+    } elseif (xtc_not_null($_POST['multi_status'])) {
+      $form_action = 'action=statusconfirm';
+    }
+  }
  ?>
 
         <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_customers.png'); ?></div>
@@ -36,9 +44,16 @@
 
         <table class="tableCenter">
           <tr>
+          <?php echo xtc_draw_form('multi_action_form', FILENAME_CUSTOMERS, xtc_get_all_get_params(array('action')) . $form_action, 'post', 'onsubmit="javascript:return CheckMultiForm()"'); ?>
             <td class="boxCenterLeft">
               <table class="tableBoxCenter collapse">
                 <tr class="dataTableHeadingRow">
+                  <td class="dataTableHeadingContent txta-c" style="width:4%">
+                    <?php 
+                      echo TABLE_HEADING_EDIT; 
+                      echo xtc_draw_checkbox_field('select_all', '1', false, '', 'onclick="javascript:CheckAll(this.checked);"');   
+                    ?>
+                  </td>
                   <td class="dataTableHeadingContent" style="width:40px;"><?php echo TABLE_HEADING_ACCOUNT_TYPE; ?></td>
                   <td class="dataTableHeadingContent" style="width:80px;"><?php echo TABLE_HEADING_CUSTOMERSCID.xtc_sorting(FILENAME_CUSTOMERS,'customers_cid'); ?></td>
                   <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_LASTNAME.xtc_sorting(FILENAME_CUSTOMERS,'customers_lastname'); ?></td>
@@ -197,14 +212,23 @@
                   }
 
                   if (isset($cInfo) && is_object($cInfo) && ($customers['customers_id'] == $cInfo->customers_id)) {
-                    echo '          <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\''.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action', 'edit')).'cID='.$cInfo->customers_id.'&action=edit').'\'">'."\n";
+                    echo '          <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" data-event="'.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action', 'edit')).'cID='.$cInfo->customers_id.'&action=edit').'">'."\n";
                   } else {
-                    echo '          <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\''.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'edit', 'action')).'cID='.$customers['customers_id']).'\'">'."\n";
+                    echo '          <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" data-event="'.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'edit', 'action')).'cID='.$customers['customers_id']).'">'."\n";
                   }
 
                   $account_type = ($customers['account_type'] == 1) ? TEXT_GUEST : TEXT_ACCOUNT;
-                  ?>
 
+                  $is_checked = false;
+                  if (isset($_POST['multi_customers']) && is_array($_POST['multi_customers'])) {
+                    if (in_array($customers['customers_id'], $_POST['multi_customers'])) {
+                      $is_checked = true;
+                    }
+                  }
+                  ?>
+                  <td class="dataTableContent txta-c">
+                   <?php if ($customers['customers_id'] != '1') echo xtc_draw_checkbox_field('multi_customers[]', $customers['customers_id'], $is_checked); ?>
+                  </td>
                   <td class="dataTableContent"><?php echo $account_type; ?></td>
                   <td class="dataTableContent"><?php echo $customers['customers_cid']; ?>&nbsp;</td>
                   <td class="dataTableContent"><?php echo $customers['customers_lastname']; ?></td>
@@ -269,22 +293,45 @@
                   }
                 ?>
               </table>
-              <div class="smallText pdg2 flt-l"><?php echo $customers_split->display_count($customers_query_numrows, $page_max_display_results, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_CUSTOMERS); ?></div>
-              <div class="smallText pdg2 flt-r"><?php echo $customers_split->display_links($customers_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], xtc_get_all_get_params(array('page', 'info', 'x', 'y', 'cID'))); ?></div>
-              <?php echo draw_input_per_page($PHP_SELF,$cfg_max_display_results_key,$page_max_display_results); ?>
-              <?php
-              if (isset($_GET['search'])) {
-              ?>
-                <div class="clear"></div>
-                <div class="smallText pdg2 flt-r"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CUSTOMERS) . '">' . BUTTON_RESET . '</a>'; ?></div>
-              <?php
-              }
-              ?>
             </td>
               <?php
                 $heading = array ();
                 $contents = array ();
                 switch ($action) {
+                  case 'multi_action':                    
+                    if (xtc_not_null($_POST['multi_delete'])) {
+                      $heading[]  = array('text' => '<b>' . TEXT_INFO_HEADING_DELETE_ELEMENTS . '</b>');
+                      if (is_array($_POST['multi_customers'])) {
+                        foreach ($_POST['multi_customers'] AS $customers_id) {
+                          $check_query = xtc_db_query("SELECT customers_firstname,
+                                                              customers_lastname
+                                                         FROM ".TABLE_CUSTOMERS."
+                                                        WHERE customers_id = '".(int)$customers_id."'");
+                          $check = xtc_db_fetch_array($check_query);
+                          $contents[] = array('text' => xtc_draw_checkbox_field('multi_customers_confirm[]', $customers_id, true) . '&nbsp;' . $check['customers_firstname'].' '.$check['customers_lastname']);
+                        }
+                      }
+                      $contents[] = array ('text' => '<br />'.xtc_draw_checkbox_field('delete_reviews', 'on', true).' '.TEXT_DELETE_REVIEWS_ELEMENTS);
+                      $contents[] = array('align' => 'center', 'text' => '<input class="button" type="submit" name="multi_delete_confirm" value="' . BUTTON_DELETE . '"> <a class="button" href="' . xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action')).'cID='.$cInfo->customers_id) . '">' . BUTTON_CANCEL . '</a>');
+                    }
+                    
+                    if (xtc_not_null($_POST['multi_status'])) {
+                      $heading[]  = array('text' => '<b>' . TEXT_INFO_HEADING_STATUS_ELEMENTS . '</b>');
+                      if (is_array($_POST['multi_customers'])) {
+                        foreach ($_POST['multi_customers'] AS $customers_id) {
+                          $check_query = xtc_db_query("SELECT customers_firstname,
+                                                              customers_lastname
+                                                         FROM ".TABLE_CUSTOMERS."
+                                                        WHERE customers_id = '".(int)$customers_id."'");
+                          $check = xtc_db_fetch_array($check_query);
+                          $contents[] = array('text' => xtc_draw_checkbox_field('multi_customers_confirm[]', $customers_id, true) . '&nbsp;' . $check['customers_firstname'].' '.$check['customers_lastname']);
+                        }
+                      }
+                      $contents[] = array ('text' => '<br />'.xtc_draw_pull_down_menu('customers_status', $customers_statuses_array));
+                      $contents[] = array ('align' => 'center', 'text' => '<br /><input type="submit" class="button" value="'.BUTTON_UPDATE.'"><a class="button" href="'.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action')).'cID='.$cInfo->customers_id).'">'.BUTTON_CANCEL.'</a>');
+                    }
+                    break;
+                
                   case 'confirm' :
                     $heading[] = array ('text' => '<b>'.TEXT_INFO_HEADING_DELETE_CUSTOMER.'</b>');
 
@@ -415,6 +462,11 @@
                   default :
                     if (isset($cInfo) && is_object($cInfo)) {
                       $heading[] = array ('text' => '<b>'.$cInfo->customers_firstname.' '.$cInfo->customers_lastname.'</b>');
+                      //Multi Element Actions
+                      $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%;">' . TEXT_MARKED_ELEMENTS . '</div>');
+                      $contents[] = array('align' => 'center', 'text' => '<input type="submit" class="button" name="multi_status" value="' . BUTTON_STATUS . '"> <input type="submit" class="button" name="multi_delete" value="' . BUTTON_DELETE . '">');
+
+                      $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%; border-top: 1px solid #aaa; margin-top: 5px;">' . TEXT_ACTIVE_ELEMENT . '</div>');
                       if ($cInfo->customers_id != 1 || ($cInfo->customers_id == 1 && $_SESSION['customer_id'] == 1)) {
                         $contents[] = array ('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action')).'cID='.$cInfo->customers_id.'&action=edit').'">'.BUTTON_EDIT.'</a>');
                       }
@@ -474,5 +526,40 @@
                   echo '          </td>'."\n";
                 }
               ?>
+            </form>
+          </tr>
+          <tr>
+            <td>
+              <!-- PAGINATION-->
+              <div class="smallText pdg2 flt-l"><?php echo $customers_split->display_count($customers_query_numrows, $page_max_display_results, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_CUSTOMERS); ?></div>
+              <div class="smallText pdg2 flt-r"><?php echo $customers_split->display_links($customers_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], xtc_get_all_get_params(array('page', 'info', 'x', 'y', 'cID'))); ?></div>
+              <?php echo draw_input_per_page($PHP_SELF,$cfg_max_display_results_key,$page_max_display_results); ?>
+              <?php
+              if (isset($_GET['search'])) {
+              ?>
+                <div class="clear"></div>
+                <div class="smallText pdg2 flt-r"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CUSTOMERS) . '">' . BUTTON_RESET . '</a>'; ?></div>
+              <?php
+              }
+              ?>
+            </td>
+            <td>&nbsp;</td>
           </tr>
         </table>
+        <script>
+          var action = false;
+          $('.dataTableRow, .dataTableRowSelected, .dataTableRow a, .dataTableRowSelected a, .dataTableRow .ChkBox, .dataTableRowSelected .ChkBox').on('change, click', function (e) {          
+            if (this.nodeName == 'A' || this.nodeName == 'INPUT') {
+              action = true;
+            }
+            if (action === false && this.nodeName == 'TR') {
+              var loc = $(this).data('event');
+              if (loc !== undefined) {
+                window.location.href = loc;
+              }
+            }
+            if (this.nodeName == 'TR') {
+              action = false;
+            }
+          });
+        </script>

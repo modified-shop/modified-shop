@@ -233,56 +233,64 @@
           xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action', 'update_default_adressbook', 'default')).'cID='.$customers_id.'&action=address_book'));
           break;
 
-      case 'statusconfirm' :
-        $error = false;
-        $check_status_query = xtc_db_query("SELECT customers_firstname,
-                                                   customers_lastname,
-                                                   customers_email_address,
-                                                   customers_status,
-                                                   member_flag
-                                              FROM ".TABLE_CUSTOMERS."
-                                             WHERE customers_id = '".$customers_id."'");
-        $check_status = xtc_db_fetch_array($check_status_query);
-        if ($check_status['customers_status'] != (int)$_POST['customers_status']) {
-          $sql_data_array = array('customers_status' => (int)$_POST['customers_status']);
+      case 'statusconfirm' :    
+        if (!isset($_POST['multi_customers_confirm']) && (int)$customers_id > 0) {
+          $_POST['multi_customers_confirm'] = array($customers_id);
+        }
+        
+        if (isset($_POST['multi_customers_confirm']) && is_array($_POST['multi_customers_confirm'])) {
+          foreach ($_POST['multi_customers_confirm'] as $customers_id) {
+            $error = false;
+            $check_status_query = xtc_db_query("SELECT customers_firstname,
+                                                       customers_lastname,
+                                                       customers_email_address,
+                                                       customers_status,
+                                                       member_flag
+                                                  FROM ".TABLE_CUSTOMERS."
+                                                 WHERE customers_id = '".$customers_id."'");
+            $check_status = xtc_db_fetch_array($check_status_query);
+            if ($check_status['customers_status'] != (int)$_POST['customers_status']) {
+              $sql_data_array = array('customers_status' => (int)$_POST['customers_status']);
           
-          $sql_add_data_array['account_type'] = '1';                        
-          if ($_POST['customers_status'] != DEFAULT_CUSTOMERS_STATUS_ID_GUEST) {
-            $sql_add_data_array['account_type'] = '0';
-          }
+              $sql_add_data_array['account_type'] = '1';                        
+              if ($_POST['customers_status'] != DEFAULT_CUSTOMERS_STATUS_ID_GUEST) {
+                $sql_add_data_array['account_type'] = '0';
+              }
           
-          // check existing account
-          if ($sql_add_data_array['account_type'] == '0') {
-            $check_existing_customer_query = xtc_db_query("SELECT customers_id
-                                                             FROM ".TABLE_CUSTOMERS."
-                                                            WHERE customers_email_address = '".xtc_db_input($check_status['customers_email_address'])."'
-                                                              AND account_type = '0'
-                                                              AND customers_id != '".$customers_id."'");
-            if (xtc_db_num_rows($check_existing_customer_query) > 0) {
-              $error = true;
-              $messageStack->add_session(WARNING_CUSTOMER_ALREADY_EXISTS, 'warning');
-            }
-          }
+              // check existing account
+              if ($sql_add_data_array['account_type'] == '0') {
+                $check_existing_customer_query = xtc_db_query("SELECT customers_id
+                                                                 FROM ".TABLE_CUSTOMERS."
+                                                                WHERE customers_email_address = '".xtc_db_input($check_status['customers_email_address'])."'
+                                                                  AND account_type = '0'
+                                                                  AND customers_id != '".$customers_id."'");
+                if (xtc_db_num_rows($check_existing_customer_query) > 0) {
+                  $error = true;
+                  $messageStack->add_session(WARNING_CUSTOMER_ALREADY_EXISTS, 'warning');
+                }
+              }
           
-          if ($error === false) {
-            xtc_db_perform(TABLE_CUSTOMERS, array_merge($sql_data_array, $sql_add_data_array), 'update', "customers_id = '".$customers_id."'"); 
+              if ($error === false) {
+                xtc_db_perform(TABLE_CUSTOMERS, array_merge($sql_data_array, $sql_add_data_array), 'update', "customers_id = '".$customers_id."'"); 
 
-            // update customers status in newsletters_recipients
-            xtc_db_perform(TABLE_NEWSLETTER_RECIPIENTS, $sql_data_array, 'update', "customers_id = '".$customers_id."'"); 
+                // update customers status in newsletters_recipients
+                xtc_db_perform(TABLE_NEWSLETTER_RECIPIENTS, $sql_data_array, 'update', "customers_id = '".$customers_id."'"); 
                     
-            // create insert for admin access table if customers status is set to 0
-            if ($_POST['customers_status'] == 0) {
-              xtc_db_query("INSERT INTO  ".TABLE_ADMIN_ACCESS." (customers_id) VALUES ('".$customers_id."')");
-            } else {
-              xtc_db_query("DELETE FROM ".TABLE_ADMIN_ACCESS." WHERE customers_id = '".$customers_id."'");
+                // create insert for admin access table if customers status is set to 0
+                if ($_POST['customers_status'] == 0) {
+                  xtc_db_query("INSERT INTO  ".TABLE_ADMIN_ACCESS." (customers_id) VALUES ('".$customers_id."')");
+                } else {
+                  xtc_db_query("DELETE FROM ".TABLE_ADMIN_ACCESS." WHERE customers_id = '".$customers_id."'");
+                }
+                $sql_data_array = array('customers_id' => $customers_id,
+                                        'new_value' => (int)$_POST['customers_status'],
+                                        'old_value' => $check_status['customers_status'],
+                                        'date_added' => 'now()',
+                                        'customer_notified' => '0');
+                xtc_db_perform(TABLE_CUSTOMERS_STATUS_HISTORY, $sql_data_array);  
+              }        
             }
-            $sql_data_array = array('customers_id' => $customers_id,
-                                    'new_value' => (int)$_POST['customers_status'],
-                                    'old_value' => $check_status['customers_status'],
-                                    'date_added' => 'now()',
-                                    'customer_notified' => '0');
-            xtc_db_perform(TABLE_CUSTOMERS_STATUS_HISTORY, $sql_data_array);  
-          }        
+          }
         }
         xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array('cID', 'action')).'cID='.$customers_id));
         break;
@@ -618,35 +626,44 @@
         break;
 
       case 'deleteconfirm' :
-        if ($_POST['delete_reviews'] == 'on') {
-          $reviews_query = xtc_db_query("SELECT reviews_id FROM ".TABLE_REVIEWS." WHERE customers_id = '".$customers_id."'");
-          while ($reviews = xtc_db_fetch_array($reviews_query)) {
-            xtc_db_query("DELETE FROM ".TABLE_REVIEWS_DESCRIPTION." WHERE reviews_id = '".$reviews['reviews_id']."'");
-          }
-          xtc_db_query("DELETE FROM ".TABLE_REVIEWS." WHERE customers_id = '".$customers_id."'");
-        } else {
-          xtc_db_query("UPDATE ".TABLE_REVIEWS." SET customers_id = null WHERE customers_id = '".$customers_id."'");
+        if (!isset($_POST['multi_customers_confirm']) && (int)$customers_id > 0) {
+          $_POST['multi_customers_confirm'] = array($customers_id);
         }
-        xtc_db_query("DELETE FROM ".TABLE_ADDRESS_BOOK." WHERE customers_id = '".$customers_id."'");
-        xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS." WHERE customers_id = '".$customers_id."'");
-        xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_INFO." WHERE customers_info_id = '".$customers_id."'");
-        xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_BASKET." WHERE customers_id = '".$customers_id."'");
-        xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_BASKET_ATTRIBUTES." WHERE customers_id = '".$customers_id."'");
-        xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_NOTIFICATIONS." WHERE customers_id = '".$customers_id."'");
-        xtc_db_query("DELETE FROM ".TABLE_WHOS_ONLINE." WHERE customer_id = '".$customers_id."'");
-        xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_STATUS_HISTORY." WHERE customers_id = '".$customers_id."'");
-        xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_IP." WHERE customers_id = '".$customers_id."'");
-        xtc_db_query("DELETE FROM ".TABLE_ADMIN_ACCESS." WHERE customers_id = '".$customers_id."'");
-        xtc_db_query("DELETE FROM ".TABLE_NEWSLETTER_RECIPIENTS." WHERE customers_id = '".$customers_id."'");
-        xtc_db_query("DELETE FROM ".TABLE_COUPON_GV_CUSTOMER." WHERE customer_id = '".$customers_id."'");
+        
+        if (isset($_POST['multi_customers_confirm']) && is_array($_POST['multi_customers_confirm'])) {
+          foreach ($_POST['multi_customers_confirm'] as $customers_id) {
+            if ($_POST['delete_reviews'] == 'on') {
+              $reviews_query = xtc_db_query("SELECT reviews_id FROM ".TABLE_REVIEWS." WHERE customers_id = '".$customers_id."'");
+              while ($reviews = xtc_db_fetch_array($reviews_query)) {
+                xtc_db_query("DELETE FROM ".TABLE_REVIEWS_DESCRIPTION." WHERE reviews_id = '".$reviews['reviews_id']."'");
+              }
+              xtc_db_query("DELETE FROM ".TABLE_REVIEWS." WHERE customers_id = '".$customers_id."'");
+            } else {
+              xtc_db_query("UPDATE ".TABLE_REVIEWS." SET customers_id = null WHERE customers_id = '".$customers_id."'");
+            }
+            xtc_db_query("DELETE FROM ".TABLE_ADDRESS_BOOK." WHERE customers_id = '".$customers_id."'");
+            xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS." WHERE customers_id = '".$customers_id."'");
+            xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_INFO." WHERE customers_info_id = '".$customers_id."'");
+            xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_BASKET." WHERE customers_id = '".$customers_id."'");
+            xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_BASKET_ATTRIBUTES." WHERE customers_id = '".$customers_id."'");
+            xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_NOTIFICATIONS." WHERE customers_id = '".$customers_id."'");
+            xtc_db_query("DELETE FROM ".TABLE_WHOS_ONLINE." WHERE customer_id = '".$customers_id."'");
+            xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_STATUS_HISTORY." WHERE customers_id = '".$customers_id."'");
+            xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_IP." WHERE customers_id = '".$customers_id."'");
+            xtc_db_query("DELETE FROM ".TABLE_ADMIN_ACCESS." WHERE customers_id = '".$customers_id."'");
+            xtc_db_query("DELETE FROM ".TABLE_NEWSLETTER_RECIPIENTS." WHERE customers_id = '".$customers_id."'");
+            xtc_db_query("DELETE FROM ".TABLE_COUPON_GV_CUSTOMER." WHERE customer_id = '".$customers_id."'");
+          }
+        }
         xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action'))));
         break;
     }
   }
 
-require (DIR_WS_INCLUDES.'head.php');
-?>
-<script type="text/javascript" src="includes/general.js"></script>
+  require (DIR_WS_INCLUDES.'head.php');
+  ?>
+  <script type="text/javascript" src="includes/general.js"></script>
+  <script type="text/javascript" src="includes/javascript/categories.js"></script>
 </head>
 <body>
   <!-- header //-->
