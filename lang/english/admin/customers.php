@@ -23,6 +23,7 @@ define('TABLE_HEADING_FIRSTNAME', 'Firstname');
 define('TABLE_HEADING_LASTNAME', 'Lastname');
 define('TABLE_HEADING_ACCOUNT_CREATED', 'created');
 define('TABLE_HEADING_ACTION', 'Action');
+define('TABLE_HEADING_EDIT','Edit');
 
 define('TEXT_DATE_ACCOUNT_CREATED', 'Account Created:');
 define('TEXT_DATE_ACCOUNT_LAST_MODIFIED', 'Last Modified:');
@@ -74,4 +75,10 @@ define('TEXT_INFO_PAYMENT','Payment:');
 define('TEXT_INFO_SHIPPING','Shipping:');
 define('TEXT_INFO_NEWSLETTER_AT_REGISTRATION', 'Newsletter at registration:');
 define('TEXT_INFO_NEWSLETTER_STATUS', 'Newsletter subscribed:');
+
+define('TEXT_ACTIVE_ELEMENT','Active Element');
+define('TEXT_MARKED_ELEMENTS','Marked Elements');
+define('TEXT_INFO_HEADING_DELETE_ELEMENTS', 'Delete Elements');
+define('TEXT_INFO_HEADING_STATUS_ELEMENTS', 'Customers Group Elements');
+define('TEXT_DELETE_REVIEWS_ELEMENTS', 'Delete reviews');
 ?>
