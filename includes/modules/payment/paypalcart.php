@@ -151,8 +151,6 @@ class paypalcart extends PayPalPayment {
     $free_shipping = $this->free_shipping;
     $ot_shipping = $this->ot_shipping;
     
-    if ($no_shipping === true) $_SESSION['shipping'] = false;
-
     // get all available shipping quotes
     $quotes = $shipping_modules->quote();
 
@@ -232,6 +230,10 @@ class paypalcart extends PayPalPayment {
     
       if ($no_shipping === false) {
         $module_smarty->assign('SHIPPING_BLOCK', $shipping_block);
+      }
+      
+      if (xtc_count_shipping_modules() == 1) {
+        $_SESSION['shipping'] = '';
       }
       
       $module_smarty->assign('language', $_SESSION['language']);
