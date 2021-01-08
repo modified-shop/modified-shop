@@ -97,7 +97,11 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
     $country = xtc_get_customers_country($_SESSION['customer_id']);
     require_once(DIR_WS_CLASSES.'vat_validation.php');
     $vatID = new vat_validation($vat, $_SESSION['customer_id'], '', $country, ($_SESSION['account_type'] != '0'));
-    if (ACCOUNT_COMPANY_VAT_GROUP == 'true' && $vat != '') {
+    if (ACCOUNT_COMPANY_VAT_GROUP == 'true' 
+        && $_SESSION['customers_status']['customers_status'] != '0'
+        && $vat != '' 
+        )
+    {
       $customers_status = $vatID->vat_info['status'];
     }
     $customers_vat_id_status = isset($vatID->vat_info['vat_id_status']) ? $vatID->vat_info['vat_id_status'] : '';
