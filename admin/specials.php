@@ -354,7 +354,7 @@
                     if ((!isset($sID) || (isset($sID) && ($sID == $specials['specials_id']))) && !isset($sInfo) ) {
                       $products_query = xtc_db_query("select products_image from " . TABLE_PRODUCTS . " where products_id = '" . (int)$specials['products_id'] . "'");
                       $products = xtc_db_fetch_array($products_query);
-                      $sInfo_array = xtc_array_merge($specials, $products);
+                      $sInfo_array = array_merge($specials, $products);
                       $sInfo = new objectInfo($sInfo_array);
                       $sInfo->specials_new_products_price = $specials['specials_new_products_price'];
                       $sInfo->products_price = $specials['products_price'];
