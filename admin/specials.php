@@ -67,8 +67,8 @@
         break;
       
       case 'multi_action_confirm':
-        if (is_array($_POST['multi_products'])) {
-          foreach ($_POST['multi_products'] as $product_id) {
+        if (is_array($_POST['multi_products_confirm'])) {
+          foreach ($_POST['multi_products_confirm'] as $product_id) {
             xtc_db_query("DELETE FROM " . TABLE_SPECIALS . " WHERE specials_id = '" . (int)$product_id . "'");
           }
         }        
@@ -300,10 +300,10 @@
         <?php
         // BEGIN LISTING TABLE
         } else {
-          echo xtc_draw_form('multi_action_form', FILENAME_SPECIALS, xtc_get_all_get_params(array('action')) . ((isset($_POST['multi_products']) && xtc_not_null($_POST['multi_products'])) ? 'action=multi_action_confirm' : 'action=multi_action'), 'post', 'onsubmit="javascript:return CheckMultiForm()"');
           ?>              
           <table class="tableCenter">
             <tr>
+              <?php echo xtc_draw_form('multi_action_form', FILENAME_SPECIALS, xtc_get_all_get_params(array('action')) . ((isset($_POST['multi_products']) && xtc_not_null($_POST['multi_products'])) ? 'action=multi_action_confirm' : 'action=multi_action'), 'post', 'onsubmit="javascript:return CheckMultiForm()"'); ?>
               <td class="boxCenterLeft">
                 <table class="tableBoxCenter collapse">
                   <tr class="dataTableHeadingRow">
@@ -425,8 +425,8 @@
                   if (xtc_not_null($_POST['multi_delete'])) {
                     $heading[]  = array('text' => '<b>' . TEXT_INFO_HEADING_DELETE_ELEMENTS . '</b>');
                     if (is_array($_POST['multi_products'])) {
-                      foreach ($_POST['multi_products'] AS $multi_product) {
-                        $contents[] = array('text' => xtc_draw_checkbox_field('multi_products_categories['.$multi_product.'][]', $product_categories[$i][sizeof($product_categories[$i])-1]['id'], true) . '&nbsp;' . xtc_get_products_name($multi_product));
+                      foreach ($_POST['multi_products'] AS $products_id) {
+                        $contents[] = array('text' => xtc_draw_checkbox_field('multi_products_confirm[]', $products_id, true) . '&nbsp;' . xtc_get_products_name($products_id));
                       }
                     }
                     $contents[] = array('align' => 'center', 'text' => '<input class="button" type="submit" name="multi_delete_confirm" value="' . BUTTON_DELETE . '"> <a class="button" href="' . xtc_href_link(FILENAME_SPECIALS, xtc_get_all_get_params(array('action', 'sID'))) . '">' . BUTTON_CANCEL . '</a>');
