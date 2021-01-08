@@ -303,12 +303,12 @@
                       $heading[]  = array('text' => '<b>' . TEXT_INFO_HEADING_DELETE_ELEMENTS . '</b>');
                       if (is_array($_POST['multi_customers'])) {
                         foreach ($_POST['multi_customers'] AS $customers_id) {
-                          $check_query = xtc_db_query("SELECT customers_firstname,
-                                                              customers_lastname
-                                                         FROM ".TABLE_CUSTOMERS."
-                                                        WHERE customers_id = '".(int)$customers_id."'");
-                          $check = xtc_db_fetch_array($check_query);
-                          $contents[] = array('text' => xtc_draw_checkbox_field('multi_customers_confirm[]', $customers_id, true) . '&nbsp;' . $check['customers_firstname'].' '.$check['customers_lastname']);
+                          $customer_query = xtc_db_query("SELECT customers_firstname,
+                                                                 customers_lastname
+                                                            FROM ".TABLE_CUSTOMERS."
+                                                           WHERE customers_id = '".(int)$customers_id."'");
+                          $customer = xtc_db_fetch_array($customer_query);
+                          $contents[] = array('text' => xtc_draw_checkbox_field('multi_customers_confirm[]', $customers_id, true) . '&nbsp;' . $customer['customers_firstname'].' '.$customer['customers_lastname']);
                         }
                       }
                       $contents[] = array ('text' => '<br />'.xtc_draw_checkbox_field('delete_reviews', 'on', true).' '.TEXT_DELETE_REVIEWS_ELEMENTS);
@@ -319,12 +319,12 @@
                       $heading[]  = array('text' => '<b>' . TEXT_INFO_HEADING_STATUS_ELEMENTS . '</b>');
                       if (is_array($_POST['multi_customers'])) {
                         foreach ($_POST['multi_customers'] AS $customers_id) {
-                          $check_query = xtc_db_query("SELECT customers_firstname,
-                                                              customers_lastname
-                                                         FROM ".TABLE_CUSTOMERS."
-                                                        WHERE customers_id = '".(int)$customers_id."'");
-                          $check = xtc_db_fetch_array($check_query);
-                          $contents[] = array('text' => xtc_draw_checkbox_field('multi_customers_confirm[]', $customers_id, true) . '&nbsp;' . $check['customers_firstname'].' '.$check['customers_lastname']);
+                          $customer_query = xtc_db_query("SELECT customers_firstname,
+                                                                 customers_lastname
+                                                            FROM ".TABLE_CUSTOMERS."
+                                                           WHERE customers_id = '".(int)$customers_id."'");
+                          $customer = xtc_db_fetch_array($customer_query);
+                          $contents[] = array('text' => xtc_draw_checkbox_field('multi_customers_confirm[]', $customers_id, true) . '&nbsp;' . $customer['customers_firstname'].' '.$customer['customers_lastname']);
                         }
                       }
                       $contents[] = array ('text' => '<br />'.xtc_draw_pull_down_menu('customers_status', $customers_statuses_array));
