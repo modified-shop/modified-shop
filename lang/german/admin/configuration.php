@@ -297,6 +297,8 @@ define('SEND_EMAILS_TITLE' , 'Senden von E-Mails');
 define('SEND_EMAILS_DESC' , 'E-Mails an Kunden versenden (bei Bestellungen etc.)');
 define('SENDMAIL_PATH_TITLE' , 'Der Pfad zu Sendmail');
 define('SENDMAIL_PATH_DESC' , 'Wenn Sie Sendmail benutzen, geben Sie hier den Pfad zum Sendmail Programm an (normalerweise: /usr/bin/sendmail):');
+define('USE_SENDMAIL_OPTIONS_TITLE', 'Sendmail Options');
+define('USE_SENDMAIL_OPTIONS_DESC', 'Gibt an, ob mail() einen vollst&auml;ndig sendmail-kompatiblen MTA verwendet');
 define('SMTP_MAIN_SERVER_TITLE' , 'Adresse des SMTP-Servers');
 define('SMTP_MAIN_SERVER_DESC' , 'Geben Sie die Adresse Ihres Haupt SMTP-Servers ein.');
 define('SMTP_BACKUP_SERVER_TITLE' , 'Adresse des SMTP-Backup-Servers');

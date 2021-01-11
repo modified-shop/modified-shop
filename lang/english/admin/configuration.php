@@ -298,6 +298,8 @@ define('SEND_EMAILS_TITLE' , 'Send E-Mails');
 define('SEND_EMAILS_DESC' , 'Send out E-Mails');
 define('SENDMAIL_PATH_TITLE' , 'The Path to sendmail');
 define('SENDMAIL_PATH_DESC' , 'If you use sendmail, please give the right path (default: /usr/bin/sendmail):');
+define('USE_SENDMAIL_OPTIONS_TITLE', 'Sendmail Options');
+define('USE_SENDMAIL_OPTIONS_DESC', 'Whether mail() uses a fully sendmail-compatible MTA');
 define('SMTP_MAIN_SERVER_TITLE' , 'Address of the SMTP Server');
 define('SMTP_MAIN_SERVER_DESC' , 'Please enter the address of your main SMTP Server.');
 define('SMTP_BACKUP_SERVER_TITLE' , 'Address of the SMTP Backup Server');
