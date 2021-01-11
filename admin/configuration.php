@@ -243,7 +243,7 @@
                                                              FROM " . TABLE_CONFIGURATION . " 
                                                             WHERE configuration_group_id = '" . (int)$_GET['gID'] . "'
                                                               AND sort_order >= 0
-                                                         ORDER BY sort_order"
+                                                         ORDER BY sort_order, configuration_id"
                                                          );
                       while ($configuration = xtc_db_fetch_array($configuration_query)) {
                         $configuration['configuration_value'] = stripslashes($configuration['configuration_value']); //Web28 - 2012-08-09 - fix slashes
@@ -290,20 +290,6 @@
                         } else {
                           $cfgValue = encode_htmlspecialchars($configuration['configuration_value']);
                         }
-                        if ((!isset($_GET['cID']) || (isset($_GET['cID']) && ($_GET['cID'] == $configuration['configuration_id']))) && !isset($cInfo) && (substr($action, 0, 3) != 'new')) {
-                          $cfg_extra_query = xtc_db_query("SELECT configuration_key,
-                                                                  configuration_value, 
-                                                                  date_added, 
-                                                                  last_modified, 
-                                                                  use_function, 
-                                                                  set_function 
-                                                             FROM " . TABLE_CONFIGURATION . " 
-                                                            WHERE configuration_id = '" . $configuration['configuration_id'] . "'
-                                                          ");
-                          $cfg_extra = xtc_db_fetch_array($cfg_extra_query);
-                          $cInfo_array = array_merge($configuration, $cfg_extra);
-                          $cInfo = new objectInfo($cInfo_array);
-                        }
                         if ($configuration['set_function']) {
                           if (strpos($configuration['set_function'], '(') !== false) {
                             eval('$value_field = ' . $configuration['set_function'] . ' "' . encode_htmlspecialchars($configuration['configuration_value']) . '");');
@@ -326,7 +312,7 @@
                         // catch up warnings if no language-text defined for configuration-key
                         $configuration_key_title = strtoupper($configuration['configuration_key'].'_TITLE');
                         $configuration_key_desc  = strtoupper($configuration['configuration_key'].'_DESC');
-                        if( defined($configuration_key_title) ) {                                          // if language definition
+                        if (defined($configuration_key_title) ) {                                         // if language definition
                           $configuration_key_title = constant($configuration_key_title);
                           $configuration_key_desc  = constant($configuration_key_desc);
                         } else {                                                                          // if no language
