@@ -25,9 +25,9 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  define('MODULE_ORDER_TOTAL_GV_TITLE', 'Gift Vouchers');
-  define('MODULE_ORDER_TOTAL_GV_HEADER', 'Gift Vouchers');
-  define('MODULE_ORDER_TOTAL_GV_DESCRIPTION', 'Gift Vouchers');
+  define('MODULE_ORDER_TOTAL_GV_TITLE', 'Gift Voucher');
+  define('MODULE_ORDER_TOTAL_GV_HEADER', 'Gift Voucher');
+  define('MODULE_ORDER_TOTAL_GV_DESCRIPTION', 'Gift Voucher');
   define('MODULE_ORDER_TOTAL_GV_USER_PROMPT', 'Tick to use Gift Voucher account balance ->&nbsp;');
   define('TEXT_ENTER_GV_CODE', 'Enter Redeem Code&nbsp;&nbsp;');
   

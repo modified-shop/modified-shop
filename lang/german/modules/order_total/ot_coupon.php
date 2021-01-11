@@ -26,8 +26,8 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  define('MODULE_ORDER_TOTAL_COUPON_TITLE', 'Rabatt Coupons');
-  define('MODULE_ORDER_TOTAL_COUPON_HEADER', 'Gutscheine / Rabatt Coupons');
+  define('MODULE_ORDER_TOTAL_COUPON_TITLE', 'Rabatt Coupon');
+  define('MODULE_ORDER_TOTAL_COUPON_HEADER', 'Gutschein / Rabatt Coupon');
   define('MODULE_ORDER_TOTAL_COUPON_DESCRIPTION', 'Rabatt Coupon');
   define('MODULE_ORDER_TOTAL_COUPON_USER_PROMPT', '');
   define('ERROR_NO_INVALID_REDEEM_COUPON', 'Ung&uuml;ltiger Gutscheincode');

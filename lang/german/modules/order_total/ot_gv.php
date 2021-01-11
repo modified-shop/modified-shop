@@ -25,9 +25,9 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  define('MODULE_ORDER_TOTAL_GV_TITLE', 'Gutscheine');
-  define('MODULE_ORDER_TOTAL_GV_HEADER', 'Gutscheine');
-  define('MODULE_ORDER_TOTAL_GV_DESCRIPTION', 'Gutscheine');
+  define('MODULE_ORDER_TOTAL_GV_TITLE', 'Gutschein');
+  define('MODULE_ORDER_TOTAL_GV_HEADER', 'Gutschein');
+  define('MODULE_ORDER_TOTAL_GV_DESCRIPTION', 'Gutschein');
   define('MODULE_ORDER_TOTAL_GV_USER_PROMPT', 'Anw&auml;hlen, wenn Sie Ihr Guthaben verwenden m&ouml;chten');
   define('TEXT_ENTER_GV_CODE', 'Geben Sie bitte hier Ihren Gutscheincode ein &nbsp;&nbsp;');
 

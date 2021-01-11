@@ -26,8 +26,8 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  define('MODULE_ORDER_TOTAL_COUPON_TITLE', 'Discount Coupons');
-  define('MODULE_ORDER_TOTAL_COUPON_HEADER', 'Gift Vouchers/Discount Coupons');
+  define('MODULE_ORDER_TOTAL_COUPON_TITLE', 'Discount Coupon');
+  define('MODULE_ORDER_TOTAL_COUPON_HEADER', 'Gift Voucher / Discount Coupon');
   define('MODULE_ORDER_TOTAL_COUPON_DESCRIPTION', 'Discount Coupon');
   define('MODULE_ORDER_TOTAL_COUPON_USER_PROMPT', '');
   define('ERROR_NO_INVALID_REDEEM_COUPON', 'Invalid Coupon Code');
