@@ -310,7 +310,7 @@
                           } else {
                             $parameters = explode(';', $configuration['set_function']);
                             $function = trim($parameters[0]);
-                            $parameters[0] = encode_htmlspecialchars($configuration['configuration_value']);
+                            $parameters[0] = $configuration['configuration_value'];
                             $value_field = xtc_call_function($function, $parameters);
                           }
                         } else {
