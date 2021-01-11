@@ -153,7 +153,7 @@ function xtc_php_mail($from_email_address, $from_email_name,
   $mail->Debugoutput = new LoggingManager(DIR_FS_LOG.'mod_mailer_%s_'.((defined('RUN_MODE_ADMIN')) ? 'admin_' : '').'%s.log', 'mailer', (($LogLevel != '') ? $LogLevel : 'info'));
   $mail->CharSet = $lang_data['language_charset'];
   $mail->Priority = $priority;
-  $mail->UseSendmailOptions = ((defined('USE_SENDMAIL_OPTIONS') && USE_SENDMAIL_OPTIONS != 'true') : false : true);
+  $mail->UseSendmailOptions = ((defined('USE_SENDMAIL_OPTIONS') && USE_SENDMAIL_OPTIONS != 'true') ? false : true);
   
   if (EMAIL_TRANSPORT == 'smtp') {
     require_once (DIR_FS_EXTERNAL.'phpmailer/SMTP.php');
