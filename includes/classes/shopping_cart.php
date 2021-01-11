@@ -483,6 +483,10 @@ class shoppingCart {
           }
 
           $products_price = $xtPrice->xtcGetPrice($product['products_id'], false, $qty, $product['products_tax_class_id'], $product['products_price']);
+
+          if ($_SESSION['customers_status']['customers_status_show_price_tax'] != 1) {
+            $products_price = round($products_price, $xtPrice->currencies[$xtPrice->actualCurr]['decimal_places']);
+          }
           
           //new module support       
           $products_price = $this->shoppingCartModules->calculate_product_price($products_price, $product, $this->contents[$products_id],$products_id);
@@ -492,6 +496,11 @@ class shoppingCart {
           
           //attributes price
           $attribute_price = $this->attributes_price($products_id, $qty);
+          
+          if ($_SESSION['customers_status']['customers_status_show_price_tax'] != 1) {
+            $attribute_price = round($attribute_price, $xtPrice->currencies[$xtPrice->actualCurr]['decimal_places']);
+          }
+
           $this->weight += $this->attr_weight * $qty;
           $total += $this->attr_price * $qty;
           
@@ -578,6 +587,7 @@ class shoppingCart {
    */
   function attributes_price($products_id, $qty = 1) {
     global $xtPrice;
+    
     $attributes_price = 0;
     $attributes_weight = 0;
     if (isset($this->contents[$products_id]['attributes'])) {
@@ -590,8 +600,14 @@ class shoppingCart {
         $attributes_weight += $values['weight'];
       }
     }
-    $this->attr_price = $attributes_price;
+
     $this->attr_weight = $attributes_weight;
+    $this->attr_price = $attributes_price;
+
+    if ($_SESSION['customers_status']['customers_status_show_price_tax'] != 1) {
+      $this->attr_price = round($this->attr_price, $xtPrice->currencies[$xtPrice->actualCurr]['decimal_places']);
+    }
+
     return $attributes_price;
   }
 
@@ -678,9 +694,13 @@ class shoppingCart {
             {
               $products['products_tax_class_id'] = xtc_get_tax_class($products['products_tax_class_id']);
             }
-            
-            $products_price = $xtPrice->xtcGetPrice($products['products_id'], false, $this->contents[$products_id]['qty'], $products['products_tax_class_id'], $products['products_price']);
 
+            $products_price = $xtPrice->xtcGetPrice($products['products_id'], false, $this->contents[$products_id]['qty'], $products['products_tax_class_id'], $products['products_price']);
+            
+            if ($_SESSION['customers_status']['customers_status_show_price_tax'] != 1) {
+              $products_price = round($products_price, $xtPrice->currencies[$xtPrice->actualCurr]['decimal_places']);
+            }
+            
             //new module support                                    
             $products_price = $this->shoppingCartModules->calculate_product_price($products_price, $products, $this->contents[$products_id],$products_id);
         

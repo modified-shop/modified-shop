@@ -79,7 +79,11 @@ class ot_coupon {
 
     $order_total = $this->get_order_total();
     $od_amount = $this->calculate_credit($order_total);
-
+    
+    if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0) {
+      $od_amount = round($od_amount, $xtPrice->currencies[$xtPrice->actualCurr]['decimal_places']);
+    }
+    
     if ($od_amount > 0) {
       if ($od_amount > $order->info['total']) {
         $od_amount = $order->info['total'];
@@ -284,6 +288,10 @@ class ot_coupon {
           } else {
             $od_amount = $amount * $coupon_array['coupon_amount'] / 100;
           }
+          
+          for ($i = 0; $i < sizeof($order->products); $i ++) {
+            $this->product_price($order->products[$i]['id']);
+          }
         }
 
         if (MODULE_ORDER_TOTAL_COUPON_SPECIAL_PRICES == 'false'
@@ -419,7 +427,7 @@ class ot_coupon {
 
 
   function get_order_total() {
-    global $order;
+    global $order, $xtPrice;
 
     $order_total = $_SESSION['cart']->show_total();
     if (($_SESSION['customers_status']['customers_status_show_price_tax'] == 0
@@ -431,6 +439,15 @@ class ot_coupon {
     {
       $order_total = $_SESSION['cart']->total_netto;
     }
+    
+    if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == '1' 
+        && $_SESSION['customers_status']['customers_status_ot_discount'] != '0.00'
+        && (int)MODULE_ORDER_TOTAL_DISCOUNT_SORT_ORDER < (int)$this->sort_order
+        ) 
+    {
+      $order_total -= round($xtPrice->xtcFormat(($xtPrice->xtcFormat($order_total, false) / 100 * $_SESSION['customers_status']['customers_status_ot_discount']), false), $xtPrice->currencies[$xtPrice->actualCurr]['decimal_places']);
+    }
+
     $this->products_price = array();
     $this->products_tax_description = array();
     $this->products_tax_rate = array();
@@ -438,7 +455,19 @@ class ot_coupon {
     $products = $order->products;
     for ($i = 0; $i < sizeof($products); $i ++) {
       $product_id = $products[$i]['id'];
+      if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0) {
+        $products[$i]['price'] = round($products[$i]['price'], $xtPrice->currencies[$xtPrice->actualCurr]['decimal_places']);
+      }
       $products_price = $products[$i]['price'] * $products[$i]['qty'];
+
+      if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == '1' 
+          && $_SESSION['customers_status']['customers_status_ot_discount'] != '0.00'
+          && (int)MODULE_ORDER_TOTAL_DISCOUNT_SORT_ORDER < (int)$this->sort_order
+          ) 
+      {
+        $products_price -= $xtPrice->xtcFormat(($xtPrice->xtcFormat($products_price, false) / 100 * $_SESSION['customers_status']['customers_status_ot_discount']), false);
+      }
+
       $this->products_price[$product_id] = $products_price;
       $this->products_tax_description[$product_id] = $products[$i]['tax_description'];
       $this->products_tax_rate[$product_id] = xtc_get_tax_rate($products[$i]['tax_class_id'], $order->delivery['country']['id'], $order->delivery['zone_id']);
