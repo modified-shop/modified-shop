@@ -324,14 +324,14 @@ class ot_coupon {
           if ($od_amount < 0) $od_amount = 0;
           if ($amount <= $pr_c) $od_amount = 0;
         }
-      }
 
-      if ($flag_t) {
-        $od_amount += $this->get_shipping_cost();
-      }
+        if ($flag_t) {
+          $od_amount += $this->get_shipping_cost();
+        }
 
-      if ($flag_s) {
-        $amount += $this->get_shipping_cost();
+        if ($flag_s) {
+          $amount += $this->get_shipping_cost();
+        }
       }
 
       if ($od_amount > $amount) {
