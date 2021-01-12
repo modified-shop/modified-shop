@@ -33,6 +33,8 @@ $lang_array = array(
   'MODULE_PAYMENT_'.$klarna_code.'_TEXT_ERROR_HEADING' => 'Klarna',
   'MODULE_PAYMENT_'.$klarna_code.'_TEXT_ERROR_MESSAGE' => 'Die Zahlung wurde abgebrochen.',
 
+  'MODULE_PAYMENT_'.$klarna_code.'_TEXT_VERSION' => '<b>Modul Version</b><br/>',
+
   'MODULE_PAYMENT_KLARNA_MERCHANT_ID_TITLE' => 'Benutzername',
   'MODULE_PAYMENT_KLARNA_MERCHANT_ID_DESC' => 'Klarna API Benutzername',
   'MODULE_PAYMENT_KLARNA_SHARED_SECRET_TITLE' => 'Passwort',
