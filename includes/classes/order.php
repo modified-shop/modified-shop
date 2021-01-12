@@ -380,10 +380,10 @@
       }
 
       return array(
-          'data' => $order_total,
-          'total' => $total,
-          'shipping' => $shipping
-        );
+        'data' => $order_total,
+        'total' => $total,
+        'shipping' => $shipping
+      );
     }
 
     function parse_customers_data($customers_data, $customers_array) {
@@ -410,34 +410,34 @@
 
       // used for customer, billing, delivery array
       $customers_standard_arr = array(
-            'firstname' => '',
-            'lastname' => '',
-            'gender' => '',
-            'company' => '',
-            'street_address' => '',
-            'suburb' => '',
-            'city' => '',
-            'postcode' => '',
-            'state' => '',
-            'zone_id' => '',
-            'country' => array(
-                'id' => '',
-                'title' => '',
-                'iso_code_2' => '',
-                'iso_code_3' => ''
-              ),
-            'country_id' => '',
-            'format_id' => ''
-          );
+        'firstname' => '',
+        'lastname' => '',
+        'gender' => '',
+        'company' => '',
+        'street_address' => '',
+        'suburb' => '',
+        'city' => '',
+        'postcode' => '',
+        'state' => '',
+        'zone_id' => '',
+        'country' => array(
+          'id' => '',
+          'title' => '',
+          'iso_code_2' => '',
+          'iso_code_3' => ''
+        ),
+        'country_id' => '',
+        'format_id' => ''
+      );
 
       // only used for customer array
       $customers_extended_arr = array(
-            'csID' => '',
-            'telephone' => '',
-            'payment_unallowed' => '',
-            'shipping_unallowed' => '',
-            'email_address' => ''
-          );
+        'csID' => '',
+        'telephone' => '',
+        'payment_unallowed' => '',
+        'shipping_unallowed' => '',
+        'email_address' => ''
+      );
 
       $default_select =
         "ab.entry_company as company,
@@ -518,19 +518,20 @@
         $tax_address['zone_id'] = -1;
       }
 
-      $this->info = array('order_status' => DEFAULT_ORDERS_STATUS_ID,
-                          'currency' => $_SESSION['currency'],
-                          'currency_value' => $xtPrice->currencies[$_SESSION['currency']]['value'],
-                          'payment_method' => isset($_SESSION['payment']) ? $_SESSION['payment'] : '',
-                          'shipping_method' => isset($_SESSION['shipping']) && is_array($_SESSION['shipping']) ? $_SESSION['shipping']['title'] : '',
-                          'shipping_cost' => isset($_SESSION['shipping']) && is_array($_SESSION['shipping']) ? $xtPrice->xtcCalculateCurr($_SESSION['shipping']['cost']) : 0,
-                          'comments' => isset($_SESSION['comments']) ? $_SESSION['comments'] : '',
-                          'shipping_class' => isset($_SESSION['shipping']) && is_array($_SESSION['shipping']) && array_key_exists('id', $_SESSION['shipping']) ? $_SESSION['shipping']['id'] : '',
-                          'payment_class' => isset($_SESSION['payment']) ? $_SESSION['payment'] : '',
-                          'subtotal' => 0,
-                          'tax' => 0,
-                          'tax_groups' => array(),
-                          );
+      $this->info = array(
+        'order_status' => DEFAULT_ORDERS_STATUS_ID,
+        'currency' => $_SESSION['currency'],
+        'currency_value' => $xtPrice->currencies[$_SESSION['currency']]['value'],
+        'payment_method' => isset($_SESSION['payment']) ? $_SESSION['payment'] : '',
+        'shipping_method' => isset($_SESSION['shipping']) && is_array($_SESSION['shipping']) ? $_SESSION['shipping']['title'] : '',
+        'shipping_cost' => isset($_SESSION['shipping']) && is_array($_SESSION['shipping']) ? $xtPrice->xtcCalculateCurr($_SESSION['shipping']['cost']) : 0,
+        'comments' => isset($_SESSION['comments']) ? $_SESSION['comments'] : '',
+        'shipping_class' => isset($_SESSION['shipping']) && is_array($_SESSION['shipping']) && array_key_exists('id', $_SESSION['shipping']) ? $_SESSION['shipping']['id'] : '',
+        'payment_class' => isset($_SESSION['payment']) ? $_SESSION['payment'] : '',
+        'subtotal' => 0,
+        'tax' => 0,
+        'tax_groups' => array(),
+      );
 
       if (isset($_SESSION['payment']) && is_object($_SESSION['payment'])) {
         $this->info['payment_method'] = $_SESSION['payment']->title;
@@ -631,15 +632,15 @@
               $attributes_model[] = $attributes['attributes_model'];
             }
             $this->products[$index]['attributes'][$subindex] = array(
-                'option' => $attributes['products_options_name'],
-                'value' => $attributes['products_options_values_name'],
-                'option_id' => $option,
-                'value_id' => $value,
-                'weight' => $attributes['options_values_weight'],
-                'prefix' => $attributes['price_prefix'],
-                'price' => $attributes['options_values_price'],
-                'price_formated' => $xtPrice->xtcFormat($attributes['options_values_price'], true)
-              );
+              'option' => $attributes['products_options_name'],
+              'value' => $attributes['products_options_values_name'],
+              'option_id' => $option,
+              'value_id' => $value,
+              'weight' => $attributes['options_values_weight'],
+              'prefix' => $attributes['price_prefix'],
+              'price' => $attributes['options_values_price'],
+              'price_formated' => $xtPrice->xtcFormat($attributes['options_values_price'], true)
+            );
 
             // extend attributes array dynamically
             foreach ($attributes as $key => $val) {
