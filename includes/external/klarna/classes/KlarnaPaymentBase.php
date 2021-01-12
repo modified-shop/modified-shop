@@ -30,6 +30,7 @@ class KlarnaPaymentBase extends KlarnaAutoload {
     $this->sort_order = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_SORT_ORDER')) ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_SORT_ORDER') : '');
     $this->enabled = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_STATUS') && constant('MODULE_PAYMENT_'.strtoupper($this->code).'_STATUS') == 'True') ? true : false);
     $this->info = constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_INFO');
+    $this->extended_description = constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_VERSION').$this->klarna_version;
     
     if ($this->check() > 0) {
       $this->order_status = DEFAULT_ORDERS_STATUS_ID;
