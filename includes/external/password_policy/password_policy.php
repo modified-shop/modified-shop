@@ -61,7 +61,7 @@ class password_policy
                                 
         $this->rules['min_nonalphanumeric_chars'] = array(
             'value' => ((POLICY_MIN_SPECIAL_CHARS > 0) ? POLICY_MIN_SPECIAL_CHARS : false),
-            'test'  => 'return preg_match_all("/[\W]/", $p, $x) >= $v;',
+            'test'  => 'return preg_match_all("/[\W_]/", $p, $x) >= $v;',
             'error' => ENTRY_PASSWORD_ERROR_MIN_CHAR);
     }
     
