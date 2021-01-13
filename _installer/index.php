@@ -15,7 +15,8 @@
 
   if ($upgrade === true) {  
     // Database
-    require_once (DIR_FS_INC.'db_functions_'.DB_MYSQL_TYPE.'.inc.php');
+    $db_type = get_mysql_type();
+    require_once (DIR_FS_INC.'db_functions_'.$db_type.'.inc.php');
     require_once (DIR_FS_INC.'db_functions.inc.php');
 
     // make a connection to the database... now
