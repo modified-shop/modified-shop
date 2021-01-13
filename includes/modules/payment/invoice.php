@@ -53,7 +53,10 @@ class invoice {
     if ($order_check['count'] < MODULE_PAYMENT_INVOICE_MIN_ORDER) {
       $check_flag = false;
       $this->enabled = false;
-    } elseif ($xtPrice->xtcRemoveCurr($order->info['total']) > MODULE_PAYMENT_INVOICE_MAX_AMOUNT) {
+    } elseif (MODULE_PAYMENT_INVOICE_MAX_AMOUNT > 0 
+              && $xtPrice->xtcRemoveCurr($order->info['total']) > MODULE_PAYMENT_INVOICE_MAX_AMOUNT
+              )
+    {
       $check_flag = false;
       $this->enabled = false;
     } else {
