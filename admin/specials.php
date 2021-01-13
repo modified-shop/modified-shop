@@ -481,6 +481,7 @@
             ?>
             </form>
           </tr>
+          <?php if (isset($specials_split) && is_object($specials_split)) { ?>
           <tr>
             <td>
               <!-- PAGINATION-->
@@ -490,6 +491,7 @@
             </td>
             <td>&nbsp;</td>
           </tr>
+          <?php } ?>
         </table>
       </td>
       <!-- body_text_eof //-->
