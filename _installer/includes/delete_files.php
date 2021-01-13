@@ -467,7 +467,7 @@
     'lang/english/modules/payment/sofortueberweisungredirect.php',
     'lang/english/modules/payment/sofortueberweisungvorkasse.php',
     'lang/english/modules/payment/worldpay.php',
-    'lang/english/modules/system/dsgvo_export.php'
+    'lang/english/modules/system/dsgvo_export.php',
     'lang/english/modules/system/easybill.php',
     'lang/english/modules/system/easybillcsv.php',
     'lang/english/modules/system/easymarketing.php',
