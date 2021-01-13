@@ -14,8 +14,8 @@
   require_once ('includes/application_top.php');
 
   // Database
-  defined('DB_MYSQL_TYPE') OR define('DB_MYSQL_TYPE', get_mysql_type());
-  require_once (DIR_FS_INC.'db_functions_'.DB_MYSQL_TYPE.'.inc.php');
+  $db_type = get_mysql_type();
+  require_once (DIR_FS_INC.'db_functions_'.$db_type.'.inc.php');
   require_once (DIR_FS_INC.'db_functions.inc.php');
 
   // make a connection to the database... now
@@ -85,7 +85,7 @@
         
         // exclude payments
         if (defined('MODULE_EXCLUDE_PAYMENT_NUMBER')) {
-          for ($i = 1, $i < MODULE_EXCLUDE_PAYMENT_NUMBER; $i ++) {
+          for ($i = 1; $i < MODULE_EXCLUDE_PAYMENT_NUMBER; $i ++) {
             xtc_db_query("UPDATE " . TABLE_CONFIGURATION . "
                              SET set_function = 'xtc_cfg_checkbox_unallowed_module(\'shipping\', \'configuration[MODULE_EXCLUDE_PAYMENT_SHIPPING_".$i."]\','
                            WHERE configuration_key = 'MODULE_EXCLUDE_PAYMENT_SHIPPING_".$i."'");
@@ -108,7 +108,7 @@
           $db_password = DB_SERVER_PASSWORD;
           $db_database = DB_DATABASE;
     
-          $db_type = DB_MYSQL_TYPE;
+          $db_type = get_mysql_type();
           $db_charset = DB_SERVER_CHARSET;
           $db_pconnect = USE_PCONNECT;
 
