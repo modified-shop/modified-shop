@@ -331,7 +331,13 @@ if (!$action) {
           <?php echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SAVE . '"/>'; ?>
         </div>
         <div class="flt-r mrg5 pdg2">
-          <a class="button" onclick="this.blur();" href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action'))); ?>"><?php echo BUTTON_BACK; ?></a>
+          <?php
+          if (isset($_GET['last_action']) && isset($_GET['cPath'])) {
+            echo '<a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('set', 'last_action', 'action', 'coID', 'search')) . 'action='.$_GET['last_action']).'">'.BUTTON_BACK.'</a>';
+          } else {
+            echo '<a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action'))).'">'.BUTTON_BACK.'</a>';
+          }
+          ?>
         </div>
       </form>
       </div>

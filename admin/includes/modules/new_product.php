@@ -98,93 +98,94 @@
   <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_news.png'); ?></div>
   <div class="pageHeading"><?php echo $pInfo->products_name; ?><br /></div>
   <div class="main pdg2 flt-l"><?php echo sprintf($text_new_or_edit,$breadcrumb_html); ?></div>
-    <div class="clear div_box mrg5">
-      <div style="float:left; width:57%; vertical-align:top">
-        <table class="tableInput border0">
-          <tr>
-            <td style="width:260px"><span class="main"><?php echo TEXT_PRODUCTS_STATUS; ?></span></td>
-            <td><span class="main"><?php echo draw_on_off_selection('products_status', $product_status_array, ($pInfo->products_status == '0' ? false : true), 'style="width: 155px"'); ?></span></td>
-          </tr>
-          <tr>
-            <td><span class="main"><?php echo TEXT_PRODUCTS_DATE_AVAILABLE; ?> <small><?php echo TEXT_PRODUCTS_DATE_FORMAT; ?></small></span></td>
-            <td><span class="main"><?php echo xtc_draw_input_field('products_date_available', isset($pInfo->products_date_available) ? $pInfo->products_date_available : '' ,'id="DatepickerProduct" style="width: 155px"'); ?></span></td>
-          </tr>
-          <tr>
-            <td><span class="main"><?php echo TEXT_PRODUCTS_STARTPAGE; ?></span></td>
-            <td><span class="main"><?php echo draw_on_off_selection('products_startpage', 'checkbox', (isset($pInfo->products_startpage) && $pInfo->products_startpage==1 ? true : false)) ?></span></td>
-          </tr>
-          <tr>
-            <td><span class="main"><?php echo TEXT_PRODUCTS_STARTPAGE_SORT; ?></span></td>
-            <td><span class="main"><?php echo xtc_draw_input_field('products_startpage_sort', $pInfo->products_startpage_sort ,'style="width: 155px"'); ?></span></td>
-          </tr>
-          <tr>
-            <td><span class="main"><?php echo TEXT_PRODUCTS_SORT; ?></span></td>
-            <td><span class="main"><?php echo xtc_draw_input_field('products_sort', $pInfo->products_sort,'style="width: 155px"'); ?></span></td>
-          </tr>
-          <tr>
-            <td>
-              <span class="main"><div class="flt-l" style="margin-top:8px"><?php echo TEXT_PRODUCTS_VPE_VISIBLE. '</div>&nbsp;' . xtc_draw_pull_down_menu('products_vpe_status', 'checkbox', (isset($pInfo->products_vpe_status) && $pInfo->products_vpe_status==1 ? true : false));?></span>
-              <div class="flt-r" style="margin-top:8px">
-              <span class="main"><?php echo TEXT_PRODUCTS_VPE_VALUE; ?></span>
-              </div>                
-            </td>
-            <td><span class="main"><?php echo xtc_draw_input_field('products_vpe_value', $pInfo->products_vpe_value,'style="width: 155px"'); ?></span></td>
-          </tr>
-          <tr>
-            <td><span class="main"><?php echo TEXT_PRODUCTS_VPE ?></span></td>
-            <td><span class="main"><?php echo xtc_draw_pull_down_menu('products_vpe', $vpe_array, $pInfo->products_vpe=='' ?  DEFAULT_PRODUCTS_VPE_ID : $pInfo->products_vpe, 'style="width: 155px"'); ?></span></td>
-          </tr>
-          <tr>
-            <td><span class="main"><?php echo TEXT_FSK18; ?></span></td>
-            <td><span class="main"><?php echo xtc_draw_pull_down_menu('fsk18', 'checkbox', (isset($pInfo->products_fsk18) && $pInfo->products_fsk18==1 ? true : false)); ?></span></td>
-          </tr>
-        </table>
-      </div>
-      
-      <div style="float:left;width:43%; vertical-align:top">
-        <table class="tableInput border0">
-          <tr>
-            <td style="width:180px; line-height: 35px;"><span class="main"><?php echo TEXT_PRODUCTS_LAST_MODIFIED; ?></span></td>
-            <td><span class="main"><?php echo (($pInfo->products_last_modified != NULL && strtotime($pInfo->products_last_modified) > 0 && strtotime($pInfo->products_last_modified) !== false) ? xtc_datetime_short($pInfo->products_last_modified) : '---'); ?></span></td>
-          </tr>
-          <tr>
-            <td><span class="main"><?php echo TEXT_PRODUCTS_QUANTITY; ?></span></td>
-            <td>
-              <span class="main flt-l"><?php echo xtc_draw_input_field('products_quantity', $pInfo->products_quantity, 'style="width: 155px"'); ?></span>
-              <span class="smallText pdg2 flt-l">
-                <button type="submit" name="action" class="button" id="stock_save" value="update_stock" <?php echo $confirm_save_entry;?>>
-              </span>
-            </td>
-          </tr>
-          <tr>
-            <td><span class="main"><?php echo TEXT_PRODUCTS_MODEL; ?></span></td>
-            <td><span class="main"><?php echo xtc_draw_input_field('products_model', $pInfo->products_model, 'style="width: 155px"'); ?></span></td>
-          </tr>
-          <tr>
-            <td><span class="main"><?php echo TEXT_PRODUCTS_EAN; ?></span></td>
-            <td><span class="main"><?php echo xtc_draw_input_field('products_ean', $pInfo->products_ean, 'style="width: 155px"'); ?></span></td>
-          </tr>
-          <tr>
-            <td><span class="main"><?php echo TEXT_PRODUCTS_MANUFACTURER; ?></span></td>
-            <td><span class="main"><?php echo xtc_draw_pull_down_menu('manufacturers_id', $manufacturers_array, $pInfo->manufacturers_id, 'style="width: 155px"'); ?></span></td>
-          </tr>
-          <tr>
-            <td><span class="main"><?php echo TEXT_PRODUCTS_MANUFACTURER_MODEL; ?></span></td>
-            <td><span class="main"><?php echo xtc_draw_input_field('products_manufacturers_model', $pInfo->products_manufacturers_model, 'style="width: 155px"'); ?></span></td>
-          </tr>
-          <tr>
-            <td><span class="main"><?php echo TEXT_PRODUCTS_WEIGHT; ?><?php echo TEXT_PRODUCTS_WEIGHT_INFO; ?></span></td>
-            <td><span class="main"><?php echo xtc_draw_input_field('products_weight', $pInfo->products_weight, 'style="width: 155px"'); ?></span></td>
-          </tr>
-          <?php if (ACTIVATE_SHIPPING_STATUS=='true') { ?>
-          <tr>
-            <td><span class="main"><?php echo BOX_SHIPPING_STATUS.':'; ?></span></td>
-            <td><span class="main"><?php echo xtc_draw_pull_down_menu('shipping_status', $shipping_statuses, $pInfo->products_shippingtime=='' ? (int)(DEFAULT_SHIPPING_STATUS_ID) : $pInfo->products_shippingtime, 'style="width: 155px"'); ?></span></td>
-          </tr>
-          <?php } ?>
-        </table>
-      </div>
-      
+  
+  <div class="clear div_box mrg5">
+    <div style="float:left; width:57%; vertical-align:top">
+      <table class="tableInput border0">
+        <tr>
+          <td style="width:260px"><span class="main"><?php echo TEXT_PRODUCTS_STATUS; ?></span></td>
+          <td><span class="main"><?php echo draw_on_off_selection('products_status', $product_status_array, ($pInfo->products_status == '0' ? false : true), 'style="width: 155px"'); ?></span></td>
+        </tr>
+        <tr>
+          <td><span class="main"><?php echo TEXT_PRODUCTS_DATE_AVAILABLE; ?> <small><?php echo TEXT_PRODUCTS_DATE_FORMAT; ?></small></span></td>
+          <td><span class="main"><?php echo xtc_draw_input_field('products_date_available', isset($pInfo->products_date_available) ? $pInfo->products_date_available : '' ,'id="DatepickerProduct" style="width: 155px"'); ?></span></td>
+        </tr>
+        <tr>
+          <td><span class="main"><?php echo TEXT_PRODUCTS_STARTPAGE; ?></span></td>
+          <td><span class="main"><?php echo draw_on_off_selection('products_startpage', 'checkbox', (isset($pInfo->products_startpage) && $pInfo->products_startpage==1 ? true : false)) ?></span></td>
+        </tr>
+        <tr>
+          <td><span class="main"><?php echo TEXT_PRODUCTS_STARTPAGE_SORT; ?></span></td>
+          <td><span class="main"><?php echo xtc_draw_input_field('products_startpage_sort', $pInfo->products_startpage_sort ,'style="width: 155px"'); ?></span></td>
+        </tr>
+        <tr>
+          <td><span class="main"><?php echo TEXT_PRODUCTS_SORT; ?></span></td>
+          <td><span class="main"><?php echo xtc_draw_input_field('products_sort', $pInfo->products_sort,'style="width: 155px"'); ?></span></td>
+        </tr>
+        <tr>
+          <td>
+            <span class="main"><div class="flt-l" style="margin-top:8px"><?php echo TEXT_PRODUCTS_VPE_VISIBLE. '</div>&nbsp;' . xtc_draw_pull_down_menu('products_vpe_status', 'checkbox', (isset($pInfo->products_vpe_status) && $pInfo->products_vpe_status==1 ? true : false));?></span>
+            <div class="flt-r" style="margin-top:8px">
+            <span class="main"><?php echo TEXT_PRODUCTS_VPE_VALUE; ?></span>
+            </div>                
+          </td>
+          <td><span class="main"><?php echo xtc_draw_input_field('products_vpe_value', $pInfo->products_vpe_value,'style="width: 155px"'); ?></span></td>
+        </tr>
+        <tr>
+          <td><span class="main"><?php echo TEXT_PRODUCTS_VPE ?></span></td>
+          <td><span class="main"><?php echo xtc_draw_pull_down_menu('products_vpe', $vpe_array, $pInfo->products_vpe=='' ?  DEFAULT_PRODUCTS_VPE_ID : $pInfo->products_vpe, 'style="width: 155px"'); ?></span></td>
+        </tr>
+        <tr>
+          <td><span class="main"><?php echo TEXT_FSK18; ?></span></td>
+          <td><span class="main"><?php echo xtc_draw_pull_down_menu('fsk18', 'checkbox', (isset($pInfo->products_fsk18) && $pInfo->products_fsk18==1 ? true : false)); ?></span></td>
+        </tr>
+      </table>
+    </div>
+    
+    <div style="float:left;width:43%; vertical-align:top">
+      <table class="tableInput border0">
+        <tr>
+          <td style="width:180px; line-height: 35px;"><span class="main"><?php echo TEXT_PRODUCTS_LAST_MODIFIED; ?></span></td>
+          <td><span class="main"><?php echo (($pInfo->products_last_modified != NULL && strtotime($pInfo->products_last_modified) > 0 && strtotime($pInfo->products_last_modified) !== false) ? xtc_datetime_short($pInfo->products_last_modified) : '---'); ?></span></td>
+        </tr>
+        <tr>
+          <td><span class="main"><?php echo TEXT_PRODUCTS_QUANTITY; ?></span></td>
+          <td>
+            <span class="main flt-l"><?php echo xtc_draw_input_field('products_quantity', $pInfo->products_quantity, 'style="width: 155px"'); ?></span>
+            <span class="smallText pdg2 flt-l">
+              <button type="submit" name="action" class="button" id="stock_save" value="update_stock" <?php echo $confirm_save_entry;?>>
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td><span class="main"><?php echo TEXT_PRODUCTS_MODEL; ?></span></td>
+          <td><span class="main"><?php echo xtc_draw_input_field('products_model', $pInfo->products_model, 'style="width: 155px"'); ?></span></td>
+        </tr>
+        <tr>
+          <td><span class="main"><?php echo TEXT_PRODUCTS_EAN; ?></span></td>
+          <td><span class="main"><?php echo xtc_draw_input_field('products_ean', $pInfo->products_ean, 'style="width: 155px"'); ?></span></td>
+        </tr>
+        <tr>
+          <td><span class="main"><?php echo TEXT_PRODUCTS_MANUFACTURER; ?></span></td>
+          <td><span class="main"><?php echo xtc_draw_pull_down_menu('manufacturers_id', $manufacturers_array, $pInfo->manufacturers_id, 'style="width: 155px"'); ?></span></td>
+        </tr>
+        <tr>
+          <td><span class="main"><?php echo TEXT_PRODUCTS_MANUFACTURER_MODEL; ?></span></td>
+          <td><span class="main"><?php echo xtc_draw_input_field('products_manufacturers_model', $pInfo->products_manufacturers_model, 'style="width: 155px"'); ?></span></td>
+        </tr>
+        <tr>
+          <td><span class="main"><?php echo TEXT_PRODUCTS_WEIGHT; ?><?php echo TEXT_PRODUCTS_WEIGHT_INFO; ?></span></td>
+          <td><span class="main"><?php echo xtc_draw_input_field('products_weight', $pInfo->products_weight, 'style="width: 155px"'); ?></span></td>
+        </tr>
+        <?php if (ACTIVATE_SHIPPING_STATUS=='true') { ?>
+        <tr>
+          <td><span class="main"><?php echo BOX_SHIPPING_STATUS.':'; ?></span></td>
+          <td><span class="main"><?php echo xtc_draw_pull_down_menu('shipping_status', $shipping_statuses, $pInfo->products_shippingtime=='' ? (int)(DEFAULT_SHIPPING_STATUS_ID) : $pInfo->products_shippingtime, 'style="width: 155px"'); ?></span></td>
+        </tr>
+        <?php } ?>
+      </table>
+    </div>
+
     <div style="clear:both;"></div>
     <table class="tableInput border0">
       <tr>
@@ -206,49 +207,53 @@
     include(DIR_WS_MODULES.'group_prices.php');
     
     // customers group
-    if (GROUP_CHECK=='true') {?>
-    <div style="padding:4px;">
-      <div class="main div_header"><?php echo BOX_CUSTOMERS_STATUS; ?></div>
-      <div class="div_box" style="margin-bottom:0;">
-        <div class="main flt-l" style="width:175px;"><?php echo ENTRY_CUSTOMERS_STATUS; ?></div>
-        <div class="main customers-groups">
-          <?php
-          echo $catfunc->create_permission_checkboxes($product);
-          ?>
-        </div>
-        <div style="clear:both;"></div>
-      </div>      
-    </div>
-    <?php } ?>
-          
+    if (GROUP_CHECK=='true') {
+      ?>
+      <div style="padding:4px;">
+        <div class="main div_header"><?php echo BOX_CUSTOMERS_STATUS; ?></div>
+        <div class="div_box" style="margin-bottom:0;">
+          <div class="main flt-l" style="width:175px;"><?php echo ENTRY_CUSTOMERS_STATUS; ?></div>
+          <div class="main customers-groups">
+            <?php
+            echo $catfunc->create_permission_checkboxes($product);
+            ?>
+          </div>
+          <div style="clear:both;"></div>
+        </div>      
+      </div>
+      <?php 
+    }
+    
+    if (is_file('includes/modules/products_tags_iframe.php')) {
+      include_once("includes/modules/products_tags_iframe.php");
+    }
+    if (is_file('includes/modules/products_attributes_iframe.php')) {
+      include_once("includes/modules/products_attributes_iframe.php");
+    }
+    ?>
     <div class="main" style="margin:20px 5px;float:right;">
-      <input type="submit" class="button" value="<?php echo BUTTON_SAVE; ?>" <?php echo $confirm_save_entry;?>>
       <?php
+      echo '<input type="submit" class="button" value="'.BUTTON_SAVE.'" '.$confirm_save_entry.'/>';
       if (isset($_GET['pID']) && $_GET['pID'] > 0) {
-        echo '&nbsp;&nbsp;<input type="submit" class="button" name="prod_update" value="'.BUTTON_UPDATE.'" '.$confirm_save_entry.'/>';
+        echo '&nbsp;<input type="submit" class="button" name="prod_update" value="'.BUTTON_UPDATE.'" '.$confirm_save_entry.'/>';
         
-        if (is_file('includes/modules/products_tags_iframe.php')) {
-          include_once("includes/modules/products_tags_iframe.php");
-        }
         if (function_exists('tags_iframe_link')) {
-          echo '&nbsp;&nbsp;'.tags_iframe_link($_GET['pID']);
+          echo '&nbsp;'.tags_iframe_link($_GET['pID']);
         } else {
-          echo '&nbsp;&nbsp;<a class="button" href="' . xtc_href_link('products_tags.php','cpath='. $cPath . $catfunc->page_parameter.'&current_product_id='.$_GET['pID'].'&action=edit&oldaction=new_product').'" onclick="this.blur()">'.TEXT_PRODUCTS_TAGS.'</a>';
+          echo '&nbsp;<a class="button" href="' . xtc_href_link('products_tags.php','cpath='. $cPath . $catfunc->page_parameter.'&current_product_id='.$_GET['pID'].'&action=edit&oldaction=new_product').'" onclick="this.blur()">'.TEXT_PRODUCTS_TAGS.'</a>';
         }
         
-        if (is_file('includes/modules/products_attributes_iframe.php')) {
-          include_once("includes/modules/products_attributes_iframe.php");
-        }
         if (function_exists('attributes_iframe_link')) {
-          echo '&nbsp;&nbsp;'.attributes_iframe_link($_GET['pID']);
+          echo '&nbsp;'.attributes_iframe_link($_GET['pID']);
         } else {
-          echo '&nbsp;&nbsp;<a class="button" href="' . xtc_href_link('new_attributes.php','cpath='. $cPath . $catfunc->page_parameter.'&current_product_id='.$_GET['pID'].'&action=edit&oldaction=new_product').'" onclick="this.blur()">'.BUTTON_EDIT_ATTRIBUTES.'</a>';
+          echo '&nbsp;<a class="button" href="' . xtc_href_link('new_attributes.php','cpath='. $cPath . $catfunc->page_parameter.'&current_product_id='.$_GET['pID'].'&action=edit&oldaction=new_product').'" onclick="this.blur()">'.BUTTON_EDIT_ATTRIBUTES.'</a>';
         }
         
-        echo '&nbsp;&nbsp;<a onclick="return confirmLink(\''. CONTINUE_WITHOUT_SAVE .'\', \'\' ,this)" class="button" href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action','last_action', 'set', 'id')) . 'last_action='.$_GET['action'].'&action=new_products_content&set=product') . '">' . BUTTON_NEW_CONTENT . '</a>';
-        echo '&nbsp;&nbsp;<a class="button" href="' . xtc_catalog_href_link('product_info.php', 'products_id=' . $_GET['pID']) . '" target="_blank">' . BUTTON_VIEW_PRODUCT . '</a>';
+        echo '&nbsp;<a onclick="return confirmLink(\''. CONTINUE_WITHOUT_SAVE .'\', \'\' ,this)" class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('action','last_action', 'set', 'id', 'pID', 'cPath')) . 'last_action='.$_GET['action'].'&action=edit_crossselling&current_product_id='.(int)$_GET['pID'].'&cpath='.$cPath) . '">' . BUTTON_EDIT_CROSS_SELLING . '</a>';
+        echo '&nbsp;<a onclick="return confirmLink(\''. CONTINUE_WITHOUT_SAVE .'\', \'\' ,this)" class="button" href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action','last_action', 'set', 'id')) . 'last_action='.$_GET['action'].'&action=new_products_content&set=product') . '">' . BUTTON_NEW_CONTENT . '</a>';
+        echo '&nbsp;<a class="button" href="' . xtc_catalog_href_link('product_info.php', 'products_id=' . $_GET['pID']) . '" target="_blank">' . BUTTON_VIEW_PRODUCT . '</a>';
       }
-      echo '&nbsp;&nbsp;<a class="button" href="' . ((isset($_GET['origin']) && $_GET['origin'] != '') ? xtc_href_link(basename($_GET['origin']), 'pID=' . (int)$_GET['pID'].$catfunc->page_parameter) : xtc_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . $catfunc->page_parameter . ((isset($_GET['pID']) && $_GET['pID']!='') ? '&pID=' . (int)$_GET['pID'] : ''))) . '">' . BUTTON_CANCEL . '</a>';
+      echo '&nbsp;<a class="button" href="' . ((isset($_GET['origin']) && $_GET['origin'] != '') ? xtc_href_link(basename($_GET['origin']), 'pID=' . (int)$_GET['pID'].$catfunc->page_parameter) : xtc_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . $catfunc->page_parameter . ((isset($_GET['pID']) && $_GET['pID']!='') ? '&pID=' . (int)$_GET['pID'] : ''))) . '">' . BUTTON_CANCEL . '</a>';
       ?>
     </div>
 
@@ -333,10 +338,10 @@
         echo xtc_draw_hidden_field('products_id', $pInfo->products_id);
         echo '<input type="submit" class="button" value="'.BUTTON_SAVE.'" '.$confirm_save_entry.'/>';
         if (isset($_GET['pID']) && $_GET['pID'] > 0) {
-          echo '&nbsp;&nbsp;<input type="submit" class="button" name="prod_update" value="'.BUTTON_UPDATE.'" '.$confirm_save_entry.'/>';
-          echo '&nbsp;&nbsp;<a class="button" href="' . xtc_catalog_href_link('product_info.php', 'products_id=' . $_GET['pID']) . '" target="_blank">' . BUTTON_VIEW_PRODUCT . '</a>';
+          echo '&nbsp;<input type="submit" class="button" name="prod_update" value="'.BUTTON_UPDATE.'" '.$confirm_save_entry.'/>';
+          echo '&nbsp;<a class="button" href="' . xtc_catalog_href_link('product_info.php', 'products_id=' . $_GET['pID']) . '" target="_blank">' . BUTTON_VIEW_PRODUCT . '</a>';
         }
-        echo '&nbsp;&nbsp;<a class="button" href="' . ((isset($_GET['origin']) && $_GET['origin'] != '') ? xtc_href_link(basename($_GET['origin']), 'pID=' . (int)$_GET['pID'].$catfunc->page_parameter) : xtc_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . $catfunc->page_parameter . ((isset($_GET['pID']) && $_GET['pID']!='') ? '&pID=' . (int)$_GET['pID'] : ''))) . '">' . BUTTON_CANCEL . '</a>';
+        echo '&nbsp;<a class="button" href="' . ((isset($_GET['origin']) && $_GET['origin'] != '') ? xtc_href_link(basename($_GET['origin']), 'pID=' . (int)$_GET['pID'].$catfunc->page_parameter) : xtc_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . $catfunc->page_parameter . ((isset($_GET['pID']) && $_GET['pID']!='') ? '&pID=' . (int)$_GET['pID'] : ''))) . '">' . BUTTON_CANCEL . '</a>';
         ?>
       </div>
       <!-- EOF Save //-->

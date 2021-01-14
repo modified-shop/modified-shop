@@ -66,7 +66,7 @@
   }
   
   if (empty($action) && isset($_GET['cPath'])) {
-    xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('special', 'last_action', 'action', 'coID', 'coIndex')) . 'action='.$_GET['last_action']));
+    xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('special', 'last_action', 'action', 'coID', 'coIndex', 'search')) . 'action='.$_GET['last_action']));
   }
 
   if ($id == 'update' || $id == 'insert') {    
