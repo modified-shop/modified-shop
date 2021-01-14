@@ -204,7 +204,7 @@ class ot_payment {
   }
 
   function xtc_order_total() {
-    global $order;
+    global $order, $xtPrice;
   
     $this->amounts['total'] = 0;
 
@@ -216,15 +216,20 @@ class ot_payment {
     $products = $_SESSION['cart']->get_products();
     for ($i=0; $i<sizeof($products); $i++) {
       $t_prid = xtc_get_prid($products[$i]['id']);
-      $gv_query = xtc_db_query("select products_price, products_tax_class_id, products_model from " . TABLE_PRODUCTS . " where products_id = '" . $t_prid . "'");
+      $gv_query = xtc_db_query("SELECT products_price, 
+                                       products_tax_class_id, 
+                                       products_model 
+                                  FROM " . TABLE_PRODUCTS . " 
+                                 WHERE products_id = '" . $t_prid . "'");
       $gv_result = xtc_db_fetch_array($gv_query);
+      $products_price = $xtPrice->xtcGetPrice($t_prid, false, 1, 0, $gv_result['products_price']);
       $qty = $_SESSION['cart']->get_quantity($products[$i]['id']);
       $products_tax = xtc_get_tax_rate($gv_result['products_tax_class_id']);
       if (!isset($this->amounts[(string)$products_tax])) {
         $this->amounts[(string)$products_tax] = 0;
       }
-      $this->amounts[(string)$products_tax] += $gv_result['products_price'] * (int)$qty;
-      $this->amounts['total'] += $gv_result['products_price'] * $qty;
+      $this->amounts[(string)$products_tax] += $products_price * (int)$qty;
+      $this->amounts['total'] += $products_price * $qty;
     }
     
     if ($this->include_tax == 'false') {
