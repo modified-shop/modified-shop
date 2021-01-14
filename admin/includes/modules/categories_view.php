@@ -40,7 +40,6 @@
     define('MAX_DISPLAY_LIST_PRODUCTS', 50);     // display products per page
   }
 
-  //BOF - web28 -  2012-08-25 - change imagesize by css size
   define('BOX_CAT_IMAGE_SIZE', '150px');
   $box_cat_image_size = 'style="max-width: '. BOX_CAT_IMAGE_SIZE .'; max-height: '.BOX_CAT_IMAGE_SIZE.';"';
   
@@ -51,7 +50,6 @@
   } else {
     $admin_thumbs_size = 'style="max-width: 40px; max-height: 40px;"';
   }
-  //EOF - web28 - 2012-08-25 - change imagesize by css size
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
   $search = (isset($_GET['search']) ? $_GET['search'] : '');
@@ -97,27 +95,27 @@
         $prodsort   = 'p.products_status DESC';
         break;
       case 'price':
-        $catsort    = 'c.sort_order ASC'; //default
+        $catsort    = 'c.sort_order ASC';
         $prodsort   = 'price ASC';
         break;
       case 'price-desc':
-        $catsort    = 'c.sort_order ASC'; //default
+        $catsort    = 'c.sort_order ASC';
         $prodsort   = 'price DESC';
         break;
       case 'stock':
-        $catsort    = 'c.sort_order ASC'; //default
+        $catsort    = 'c.sort_order ASC';
         $prodsort   = 'p.products_quantity ASC';
         break;
       case 'stock-desc':
-        $catsort    = 'c.sort_order ASC'; //default
+        $catsort    = 'c.sort_order ASC';
         $prodsort   = 'p.products_quantity DESC';
         break;
       case 'discount':
-        $catsort    = 'c.sort_order ASC'; //default
+        $catsort    = 'c.sort_order ASC';
         $prodsort   = 'p.products_discount_allowed ASC';
         break;
       case 'discount-desc':
-        $catsort    = 'c.sort_order ASC'; //default
+        $catsort    = 'c.sort_order ASC';
         $prodsort   = 'p.products_discount_allowed DESC';
         break;
       case 'image'         :
@@ -125,7 +123,7 @@
         $prodsort   = 'p.products_image ASC';
         break;
       case 'image-desc'   :
-        $catsort    = 'c.sort_order ASC'; //default
+        $catsort    = 'c.sort_order ASC';
         $prodsort   = 'p.products_image DESC';
         break;
       case 'startpage':
@@ -146,13 +144,11 @@
         $prodsort   = (isset($_GET['cPath']) && $_GET['cPath'] != '0') ? 'p.products_sort, pd.products_name ASC' : 'p.products_startpage_sort, pd.products_name ASC';
   }
 
-  // BOF DokuMan - 2011-03-05 - show category name in heading title
   $category_query_name = xtc_db_query("SELECT categories_name
                                          FROM " . TABLE_CATEGORIES_DESCRIPTION . "
                                         WHERE categories_id = '" . $current_category_id . "'
                                           AND language_id = " . (int)$_SESSION['languages_id']);
   $category_name = xtc_db_fetch_array($category_query_name);
-  // EOF DokuMan - 2011-03-05 - show category name in heading title
   ?>
   <!-- categories_view HTML part begin -->
       <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_categories.png'); ?></div>
@@ -298,7 +294,6 @@
                                                  ORDER BY " . $catsort);
                }
 
-              //BOF - web28- 2010-11-24 FIX undefined $cPath_back
               $cPath_back = '';
               if (!isset($cPath_array)) {
                 $cPath_array = array();
@@ -315,9 +310,7 @@
               if ($cPath_back != '') {
                 $cPath_back = 'cPath=' . $cPath_back;
               }
-              //EOF - web28- 2010-11-24 FIX undefined $cPath_back
 
-              // BOC - web28 - 2012-03-11 - added "go to parent category" icon
               if (!xtc_not_null($search) && count($cPath_array) > 0 && $_GET['cPath'] != '0') {
                 ?>
                  <tr class="dataTableRow" onmouseover="this.className='dataTableRowOver';this.style.cursor='pointer'" onmouseout="this.className='dataTableRow'">
@@ -351,17 +344,19 @@
                  </tr>
                  <?php
               }
-              // EOC - web28 - 2012-03-11 - added "go to parent category" icon
 
                while ($categories = xtc_db_fetch_array($categories_query)) {
 
+                 if (xtc_not_null($search)) {
+                   $cPath = xtc_get_category_path($categories['parent_id']);
+                   $cPath_full = xtc_get_category_path($categories['categories_id']);
+                 }
+
                  $categories_count++;
                  $rows++;
-                 if (xtc_not_null($search)) {
-                   $cPath = $categories['parent_id'];
-                 }
                  if (((!isset($_GET['cID']) || $_GET['cID'] == '') && !isset($_GET['pID']) || (isset($_GET['cID']) && ($_GET['cID'] == $categories['categories_id']))) && !isset($cInfo) && (substr($action, 0, 4) != 'new_') ) {
                    $cInfo = new objectInfo($categories);
+                   $cInfo->cPath = $cPath;
                  }
                  if (isset($cInfo) && is_object($cInfo) && ($categories['categories_id'] == $cInfo->categories_id) ) {
                      echo '<tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" data-event="'.xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array ('cID', 'pID', 'action')).'cID='.$cInfo->categories_id.'&action=edit_category').'">' . "\n";
@@ -386,7 +381,7 @@
                    ?>
                    <td class="categories_view_data txta-l" style="padding-left: 5px;">
                      <?php
-                     echo '<a href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . xtc_get_path($categories['categories_id'])) . '">' . xtc_image(DIR_WS_ICONS . 'folder.gif', ICON_FOLDER, '', '', $icon_padding) . '</a>';
+                     echo '<a href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . xtc_get_category_path($categories['categories_id'])) . '">' . xtc_image(DIR_WS_ICONS . 'folder.gif', ICON_FOLDER, '', '', $icon_padding) . '</a>';
                      echo '<a href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '&cID=' . $categories['categories_id']. '&action=edit_category') . '">' . xtc_image(DIR_WS_ICONS . 'icon_edit.gif', ICON_EDIT, '', '', $icon_padding) . '</a>';
                      echo '<span style="vertical-align: 3px;">'.$categories['categories_name'].'</span>';
                      ?>
@@ -589,18 +584,19 @@
              // ----------------------------------------------------------------------------------------------------- //
 
              while ($products = xtc_db_fetch_array($products_query)) {
+               if (xtc_not_null($search)) {
+                 $cPath = xtc_get_category_path($products['categories_id']);
+               }
                $products_count++;
                $rows++;
                // Get categories_id for product if search
-               if (xtc_not_null($search)) {
-                 $cPath=$products['categories_id'];
-               }
                if (((!isset($_GET['pID']) || $_GET['pID'] == '') && !isset($_GET['cID']) || (isset($_GET['pID']) && $_GET['pID'] == $products['products_id'])) && !isset($pInfo) && !isset($cInfo) && (substr($action, 0, 4) != 'new_') ) {
                  // find out the rating average from customer reviews
                  $reviews_query = xtc_db_query("SELECT (avg(reviews_rating) / 5 * 100) AS average_rating FROM " . TABLE_REVIEWS . " WHERE products_id = '" . (int)$products['products_id'] . "'");
                  $reviews = xtc_db_fetch_array($reviews_query);
                  $pInfo_array = array_merge($products, $reviews);
                  $pInfo = new objectInfo($pInfo_array);
+                 $pInfo->cPath = $cPath;
                }
                if (isset($pInfo) && (is_object($pInfo)) && ($products['products_id'] == $pInfo->products_id) ) {
                  echo '<tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" data-event="'.xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array ('pID', 'cID', 'action')).'pID='.$pInfo->products_id.'&action=new_product').'">' . "\n";
@@ -945,11 +941,8 @@
                 $contents[] = array('text' => '<strong>' . TEXT_HOW_TO_COPY . '</strong><br />' . xtc_draw_radio_field('copy_as', 'link', true) . ' ' . TEXT_COPY_AS_LINK . '<br />' . xtc_draw_radio_field('copy_as', 'duplicate') . ' ' . TEXT_COPY_AS_DUPLICATE . '<br /><hr noshade>');
                 $contents[] = array('text' => '<br />' . TEXT_HOW_TO_LINK . '<br />' . xtc_draw_checkbox_field('link_to_product', 'link_to_product', true).'<font size="1">'.TEXT_HOW_TO_LINK_INFO.'</font><br /><hr noshade>');
                 $contents[] = array('text' => '<strong>' . TEXT_ATTRIBUTE_COPY . '</strong><br />' . xtc_draw_checkbox_field('attr_copy', 'attr_copy', false).'<font size="1">'.TEXT_ATTRIBUTE_COPY_INFO.'</font><br /><hr noshade>');
-                // BOF - Timo Paul (mail[at]timopaul[dot]biz) - 2014-01-17 - duplicate products content and links
                 $contents[] = array('text' => '<strong>' . TEXT_CONTENT_COPY . '</strong><br />' . xtc_draw_checkbox_field('cnt_copy', 'cnt_copy', false).'<font size="1">'.TEXT_CONTENT_COPY_INFO.'</font><br /><hr noshade>');
                 $contents[] = array('text' => '<strong>' . TEXT_LINKS_COPY . '</strong><br />' . xtc_draw_checkbox_field('links_copy', 'links_copy', false).'<font size="1">'.TEXT_LINKS_COPY_INFO.'</font><br /><hr noshade>');
-                // EOF - Timo Paul (mail[at]timopaul[dot]biz) - 2014-01-17 - duplicate products content and links
-                $contents[] = array('text' => '<strong>' . TEXT_TAGS_COPY . '</strong><br />' . xtc_draw_checkbox_field('tags_copy', 'tags_copy', false).'<font size="1">'.TEXT_TAGS_COPY_INFO.'</font><br /><hr noshade>');
                 $contents[] = array('align' => 'center', 'text' => '<input class="button" type="submit" name="multi_copy_confirm" value="' . BUTTON_COPY . '"> <a class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '&pID=' . $pInfo->products_id . '&cID=' . $cInfo->categories_id) . '">' . BUTTON_CANCEL . '</a>');
               }
               // multi_copy confirm ENDS
@@ -966,12 +959,12 @@
                   $contents[] = array('align' => 'center', 'text' => '<input type="submit" class="button" name="multi_status_on" value="'. BUTTON_STATUS_ON . '">&nbsp;<input type="submit" class="button" name="multi_status_off" value="' . BUTTON_STATUS_OFF . '">');
                   //Single Element Actions
                   $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%; border-top: 1px solid #aaa; margin-top: 5px;">' . TEXT_ACTIVE_ELEMENT . '</div>');
-                  $contents[] = array('align' => 'center', 'text' => '<a class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '&cID=' . $cInfo->categories_id . '&action=edit_category') . '">' . BUTTON_EDIT . '</a>');
-                  $contents[] = array('align' => 'center', 'text' => '<a class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '_' . $cInfo->categories_id . '&action=new_category') . '">' . BUTTON_NEW_CATEGORIES . '&nbsp;' . TEXT_IN .'<br />' . $cInfo->categories_name .'</a>
-                                                                      <a class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '_' . $cInfo->categories_id . '&action=new_product') . '">' . BUTTON_NEW_PRODUCTS . '&nbsp;' . TEXT_IN .'<br />' . $cInfo->categories_name . '</a>');
+                  $contents[] = array('align' => 'center', 'text' => '<a class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cInfo->cPath . '&cID=' . $cInfo->categories_id . '&action=edit_category') . '">' . BUTTON_EDIT . '</a>');
+                  $contents[] = array('align' => 'center', 'text' => '<a class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cInfo->cPath . '_' . $cInfo->categories_id . '&action=new_category') . '">' . BUTTON_NEW_CATEGORIES . '&nbsp;' . TEXT_IN .'<br />' . $cInfo->categories_name .'</a>
+                                                                      <a class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cInfo->cPath . '_' . $cInfo->categories_id . '&action=new_product') . '">' . BUTTON_NEW_PRODUCTS . '&nbsp;' . TEXT_IN .'<br />' . $cInfo->categories_name . '</a>');
                   //Insert new Element Actions
-                  $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%; border-top: 1px solid #aaa; margin-top: 5px;">' . TEXT_INSERT_ELEMENT . '</div>');
                   if (!xtc_not_null($search)) {
+                    $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%; border-top: 1px solid #aaa; margin-top: 5px;">' . TEXT_INSERT_ELEMENT . '</div>');
                     $buttons_new_elements = '<a class="button" onclick="this.blur()" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '&action=new_category') . '">' . BUTTON_NEW_CATEGORIES . '</a>';
                     if ($cPath != '0') {
                       $buttons_new_elements .= '&nbsp;';
@@ -996,26 +989,27 @@
                   //Single Product Actions
                   $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%; border-top: 1px solid #aaa; margin-top: 5px;">' . TEXT_ACTIVE_ELEMENT . '</div>');
                   $contents[] = array('align' => 'center', 
-                                      'text' => '<a class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '&pID=' . $pInfo->products_id . '&action=new_product') . '">' . BUTTON_EDIT . '</a>'
+                                      'text' => '<a class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $pInfo->cPath . '&pID=' . $pInfo->products_id . '&action=new_product') . '">' . BUTTON_EDIT . '</a>'
                                                  .(function_exists('attributes_iframe_link') ? attributes_iframe_link($pInfo->products_id) :
-                                                 '<a href="'.xtc_href_link(FILENAME_NEW_ATTRIBUTES, 'action=edit&current_product_id='.$pInfo->products_id.'&cpath='.$cPath.'&page='.(int)$_GET['page']).'" class="button">' . BUTTON_EDIT_ATTRIBUTES . '</a>'                                                 
+                                                 '<a href="'.xtc_href_link(FILENAME_NEW_ATTRIBUTES, 'action=edit&current_product_id='.$pInfo->products_id.'&cpath='.$pInfo->cPath.'&page='.(int)$_GET['page']).'" class="button">' . BUTTON_EDIT_ATTRIBUTES . '</a>'                                                 
                                                  )
                                                  .(function_exists('tags_iframe_link') ? tags_iframe_link($pInfo->products_id) : '')
                                                  );
                   $contents[] = array('align' => 'center', 
-                                      'text' =>  '<a class="button" href="'.xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('action', 'current_product_id', 'cPath', 'pID')).'action=edit_crossselling&current_product_id='.$pInfo->products_id.'&cpath='.$cPath).'">' . BUTTON_EDIT_CROSS_SELLING . '</a>
-                                                  <a class="button" href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action', 'pID')) . (isset($_GET['action']) ? 'last_action='.$_GET['action'].'&' : '') .'&pID='.$pInfo->products_id.'&action=new_products_content&set=product') . '">' . BUTTON_NEW_CONTENT . '</a>'
+                                      'text' =>  '<a class="button" href="'.xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('action', 'current_product_id', 'cPath', 'pID')).'action=edit_crossselling&last_action=list&current_product_id='.$pInfo->products_id.'&cpath='.$pInfo->cPath).'">' . BUTTON_EDIT_CROSS_SELLING . '</a>
+                                                  <a class="button" href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action', 'pID')).'pID='.$pInfo->products_id.'&cPath='.$pInfo->cPath.'&action=new_products_content&set=product&last_action=list') . '">' . BUTTON_NEW_CONTENT . '</a>'
                                                  );                  
                   //Insert new Element Actions
-                  $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%; border-top: 1px solid #aaa; margin-top: 5px;">' . TEXT_INSERT_ELEMENT . '</div>');
                   if (!xtc_not_null($search)) {
-                    $buttons_new_elements = '<a class="button" onclick="this.blur()" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '&action=new_category') . '">' . BUTTON_NEW_CATEGORIES . '</a>';
-                    if ($cPath != '0') {
+                    $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%; border-top: 1px solid #aaa; margin-top: 5px;">' . TEXT_INSERT_ELEMENT . '</div>');
+                    $buttons_new_elements = '<a class="button" onclick="this.blur()" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $pInfo->cPath . '&action=new_category') . '">' . BUTTON_NEW_CATEGORIES . '</a>';
+                    if ($pInfo->cPath != '0') {
                       $buttons_new_elements .= '&nbsp;';
-                      $buttons_new_elements .= '<a class="button" onclick="this.blur()" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '&action=new_product') . '">' . BUTTON_NEW_PRODUCTS . '</a>';
+                      $buttons_new_elements .= '<a class="button" onclick="this.blur()" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $pInfo->cPath . '&action=new_product') . '">' . BUTTON_NEW_PRODUCTS . '</a>';
                     }
                     $contents[] = array('align' => 'center', 'text' => $buttons_new_elements);
                   }
+                  
                   //Informations
                   $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%; border-top: 1px solid #aaa; margin-top: 5px;">' . TEXT_INFORMATIONS . '</div>');
                   $contents[] = array('text'  => '<div style="padding-left: 10px;">' . TEXT_DATE_ADDED . ' ' . xtc_date_short($pInfo->products_date_added) . '</div>');
@@ -1025,8 +1019,8 @@
                   if (date('Y-m-d') < $pInfo->products_date_available) {
                     $contents[] = array('text' => '<div style="padding-left: 10px;">' . TEXT_DATE_AVAILABLE . ' ' . xtc_date_short($pInfo->products_date_available) . '</div>');
                   }
-
-                  // START IN-SOLUTION Berechung des Bruttopreises
+                  
+                  //Price
                   $price = $pInfo->products_price;
                   $price = xtc_round($price,PRICE_PRECISION);
                   $price_string = '' . TEXT_PRODUCTS_PRICE_INFO . '&nbsp;' . $currencies->format($price);
@@ -1036,9 +1030,8 @@
                     $price_string = '' . TEXT_PRODUCTS_PRICE_INFO . '&nbsp;' . $currencies->format($price) . '<br/>' . TXT_NETTO . $currencies->format($price_netto);
                   }
                   $contents[] = array('text' => '<div style="padding-left: 10px;">' . $price_string.  '</div><div style="padding-left: 10px;">' . TEXT_PRODUCTS_DISCOUNT_ALLOWED_INFO . '&nbsp;' . $pInfo->products_discount_allowed . ' %</div><div style="padding-left: 10px;">' .  TEXT_PRODUCTS_QUANTITY_INFO . '&nbsp;' . $pInfo->products_quantity . '</div>');
-                  // END IN-SOLUTION
 
-                  //SPECIALS
+                  //Specials
                   if ($pInfo->specials_status == 1) {
                     $special_price = $pInfo->specials_new_products_price;
                     $special_price = xtc_round($special_price,PRICE_PRECISION);
@@ -1053,7 +1046,7 @@
                                                   ($pInfo->specials_quantity > 0 ? '<div class="col-red" style="padding-left: 10px;">' .  TEXT_SPECIALS_SPECIAL_QUANTITY . '&nbsp;' . $pInfo->specials_quantity . '</div>' : '')
                                         );
                   }
-                  //$contents[] = array('text' => '<br />' . TEXT_PRODUCTS_PRICE_INFO . ' ' . $currencies->format($pInfo->products_price) . '<br />' . TEXT_PRODUCTS_QUANTITY_INFO . ' ' . $pInfo->products_quantity);
+                  
                   $contents[] = array('text' => '<div style="padding-left: 10px; padding-bottom: 10px;">' . TEXT_PRODUCTS_AVERAGE_RATING . ' ' . number_format($pInfo->average_rating, 2) . '</div>');
                   $contents[] = array('text' => '<div style="padding-left: 10px; padding-bottom: 10px;">' . TEXT_PRODUCT_LINKED_TO . '<br />' . xtc_output_generated_category_path($pInfo->products_id, 'product') . '</div>');
                   $contents[] = array('align' => 'center', 'text' => '<div style="padding: 10px;">' . xtc_product_thumb_image($pInfo->products_image, $pInfo->products_name)  . '</div><div style="padding-bottom: 10px;">' . $pInfo->products_image.'</div>');
@@ -1070,7 +1063,8 @@
                 $contents[] = array('align' => 'center', 'text' => $buttons_new_elements);
               }
               break;
-          } //end switch
+          }
+
           if ((xtc_not_null($heading)) && (xtc_not_null($contents))) {
             //display info box
             echo '<td class="boxRight">' . "\n";
