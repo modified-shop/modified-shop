@@ -156,8 +156,8 @@
         </table>
         <div class="mrg5">
           <div class="flt-l">
-            <a class="button" onClick="this.blur()" href="<?php echo xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('action', 'current_product_id', 'cpath')).'cPath='.$_GET['cpath'].'&pID='.$_GET['current_product_id']); ?>"><?php echo BUTTON_BACK; ?></a>
-            <?php if (!isset($_GET['search']) || $_GET['search'] == '') { ?>
+            <a class="button" onClick="this.blur()" href="<?php echo xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('action', 'current_product_id', 'cpath', 'keywords', 'last_action')).'cPath='.$_GET['cpath'].'&pID='.$_GET['current_product_id'].'&action='.$_GET['last_action']); ?>"><?php echo BUTTON_BACK; ?></a>
+            <?php if (!isset($_GET['keywords']) || $_GET['keywords'] == '') { ?>
               <input type="submit" class="button" value="<?php echo BUTTON_SAVE; ?>" <?php echo $confirm_save_entry;?>>
             <?php } ?>
           </div>
@@ -168,15 +168,16 @@
         <div class="flt-r">
           <div class="main" style="display:inline-block; padding: 5px; vertical-align:top;">
             <?php
-            echo xtc_draw_form('product_search', FILENAME_CATEGORIES, '', 'GET').PHP_EOL;
+            echo xtc_draw_form('product_keywords', FILENAME_CATEGORIES, '', 'GET').PHP_EOL;
             echo xtc_draw_hidden_field('action', 'edit_crossselling').PHP_EOL;
             echo xtc_draw_hidden_field('current_product_id', $_GET['current_product_id']).PHP_EOL;
+            echo xtc_draw_hidden_field('last_action', $_GET['last_action']).PHP_EOL;
             echo xtc_draw_hidden_field('cpath', $_GET['cpath']).PHP_EOL;
             echo xtc_draw_hidden_field('page', $_GET['page']).PHP_EOL;
-            echo CROSS_SELLING_SEARCH.'&nbsp;'.xtc_draw_input_field('search', ((isset($_GET['search'])) ? $_GET['search'] : ''), 'size="30"');
+            echo CROSS_SELLING_SEARCH.'&nbsp;'.xtc_draw_input_field('keywords', ((isset($_GET['keywords'])) ? $_GET['keywords'] : ''), 'size="30"');
             echo '&nbsp;<input type="submit" class="button no_top_margin"  style="vertical-align:top;" onclick="this.blur();" value="' . BUTTON_SEARCH . '"/>';
-            if (isset($_GET['search']) && $_GET['search'] != '') {
-              echo '<a class="button no_top_margin" style="vertical-align:top;" href="'.xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('search'))).'">'.BUTTON_RESET.'</a>';
+            if (isset($_GET['keywords']) && $_GET['keywords'] != '') {
+              echo '<a class="button no_top_margin" style="vertical-align:top;" href="'.xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('keywords'))).'">'.BUTTON_RESET.'</a>';
             }
             ?>
             </form>
@@ -194,8 +195,8 @@
     
       <?php
       // search results
-      if ($_GET['search']) {
-        echo xtc_draw_form('product_search', FILENAME_CATEGORIES, xtc_get_all_get_params(array('search', 'special')), 'POST', $confirm_submit).PHP_EOL;
+      if ($_GET['keywords']) {
+        echo xtc_draw_form('product_keywords', FILENAME_CATEGORIES, xtc_get_all_get_params(array('keywords', 'special')), 'POST', $confirm_submit).PHP_EOL;
         echo xtc_draw_hidden_field('special', 'add_entries').PHP_EOL;
         ?>
         <br>
@@ -214,7 +215,7 @@
             <td class="dataTableHeadingContent" style="width:<?php echo (( USE_ADMIN_THUMBS_IN_LIST=='true' ) ? '37%' : '42%'); ?>"><?php echo HEADING_CATEGORY; ?></td>
           </tr>
           <?php
-            $keywords = $_GET['search'] = !empty($_GET['search']) ? stripslashes(trim(urldecode($_GET['search']))) : false;
+            $keywords = $_GET['keywords'] = !empty($_GET['keywords']) ? stripslashes(trim(urldecode($_GET['keywords']))) : false;
 
             $from_str = ''; 
             if (SEARCH_IN_MANU == 'true') {
@@ -240,7 +241,7 @@
 
             if ($keywords) {
               require_once (DIR_FS_INC.'xtc_parse_search_string.inc.php');
-              $keywordcheck = xtc_parse_search_string($_GET['search'], $search_keywords);
+              $keywordcheck = xtc_parse_search_string($_GET['keywords'], $search_keywords);
 
               if ($keywordcheck) {
                 include(DIR_FS_CATALOG.DIR_WS_INCLUDES.'build_search_query.php');
