@@ -6,7 +6,7 @@
     <div class="box3_line"></div>
     <ul class="footerlist">
       {$BOX_CONTENT}
-      {if $smarty.const.MODULE_COOKIE_CONSENT_STATUS == 'true'}
+      {if "MODULE_COOKIE_CONSENT_STATUS"|defined && $smarty.const.MODULE_COOKIE_CONSENT_STATUS == 'true'}
         <li class="level1"><a href="javascript:;" trigger-cookie-consent-panel=""><i class="fas fa-angle-right"></i>{$smarty.const.TEXT_COOKIE_CONSENT_LABEL_CPC_HEADING}</a></li>
       {/if}
     </ul>
