@@ -94,8 +94,12 @@ class xtcPrice {
                                         LEFT JOIN " . TABLE_ZONES . " z on (ab.entry_zone_id = z.zone_id)
                                             WHERE ab.customers_id = '" . $_SESSION['customer_id'] . "'
                                               AND ab.address_book_id = '" . ($this->content_type == 'virtual' ? $_SESSION['billto'] : $_SESSION['sendto']) . "'");
-        $tax_address = xtc_db_fetch_array($tax_address_query);
-        $this->TAX[$zones_data['class']] = xtc_get_tax_rate($zones_data['class'], $tax_address['entry_country_id'], $tax_address['entry_zone_id']);
+        if (xtc_db_num_rows($tax_address_query) == 1) {
+          $tax_address = xtc_db_fetch_array($tax_address_query);
+          $this->TAX[$zones_data['class']] = xtc_get_tax_rate($zones_data['class'], $tax_address['entry_country_id'], $tax_address['entry_zone_id']);
+        } else {
+          $this->TAX[$zones_data['class']] = xtc_get_tax_rate($zones_data['class']);      
+        }
       } else {
         $country_id = -1;
         if (isset($_SESSION['country'])) {
