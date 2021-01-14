@@ -265,7 +265,7 @@
                  if (xtc_not_null($search_id)) {
                    $where_search = " AND c.categories_id = '" . (int)$search_id . "' ";
                  }
-                 $search_category = $current_category_id != '' ? "AND c.parent_id = '" . (int)$current_category_id ."'" : '';
+                 $search_category = ((int)$current_category_id > 0) ? "AND c.parent_id = '" . (int)$current_category_id ."'" : '';
                  $categories_query = xtc_db_query("SELECT c.categories_id,
                                                           cd.categories_name,
                                                           c.categories_image,
@@ -469,7 +469,7 @@
                $from_str .= "LEFT OUTER JOIN ".TABLE_SPECIALS." AS s ON (p.products_id = s.products_id) AND s.status = '1' AND (now() >= s.start_date OR s.start_date IS NULL) ";
                //where-string
                $where_str = " WHERE pd.language_id = '".(int) $_SESSION['languages_id']."'";
-               $where_str .= $current_category_id != '' ? " AND p2c.categories_id = '" . (int)$current_category_id ."'" : '';
+               $where_str .= ((int)$current_category_id > 0) ? " AND p2c.categories_id = '" . (int)$current_category_id ."'" : '';
                
                //go for keywords... this is the main search process
                if (xtc_not_null($search)) {
