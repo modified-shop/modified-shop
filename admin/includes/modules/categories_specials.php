@@ -56,39 +56,40 @@ if (isset($_GET['pID'])) {
     $sInfo = new objectInfo($special);
   }
 }
+
 $price = $sInfo->products_price;
 $new_price = $sInfo->specials_new_products_price;
 $new_price_netto = '';
-if (PRICE_IS_BRUTTO=='true') {
-  $price_netto = xtc_round($price,PRICE_PRECISION);
+if (PRICE_IS_BRUTTO == 'true') {
+  $price_netto = xtc_round($price, PRICE_PRECISION);
   if ($price > 0) {
-    $new_price_netto = TEXT_NETTO.'<strong>'.xtc_round($new_price,PRICE_PRECISION).'</strong>';
+    $new_price_netto = TEXT_NETTO.'<strong>'.xtc_round($new_price, PRICE_PRECISION).'</strong>';
   }
-  $price = ($price*(xtc_get_tax_rate($sInfo->products_tax_class_id)+100)/100);
-  $new_price = ($new_price*(xtc_get_tax_rate($sInfo->products_tax_class_id)+100)/100);
+  $price = ($price * (xtc_get_tax_rate($sInfo->products_tax_class_id) + 100) / 100);
+  $new_price = ($new_price * (xtc_get_tax_rate($sInfo->products_tax_class_id) + 100) / 100);
 }
-$price = xtc_round($price,PRICE_PRECISION);
-$new_price = xtc_round($new_price,PRICE_PRECISION);
+$price = xtc_round($price, PRICE_PRECISION);
+$new_price = xtc_round($new_price, PRICE_PRECISION);
 
 // build the expires date in the format YYYY-MM-DD
-if(isset($_GET['pID']) and xtc_db_num_rows($specials_query, true) > 0 and $sInfo->expires_date != 0) {
+if (isset($_GET['pID']) && xtc_db_num_rows($specials_query) > 0 && strtotime($sInfo->expires_date) !== false && strtotime($sInfo->expires_date) > 0) {
   $expires_date = date('Y-m-d', strtotime($sInfo->expires_date));
 } else {
-  $expires_date = "";
+  $expires_date = '';
 }
 
 // build the start date in the format YYYY-MM-DD
-if(isset($_GET['pID']) and xtc_db_num_rows($specials_query, true) > 0 and $sInfo->start_date != 0) {
+if (isset($_GET['pID']) && xtc_db_num_rows($specials_query) > 0 && strtotime($sInfo->start_date) !== false && strtotime($sInfo->start_date) > 0) {
   $start_date = date('Y-m-d', strtotime($sInfo->start_date));
 } else {
-  $start_date = "";
+  $start_date = '';
 }
 
 // tell the storing script if to update existing special,
 // or to insert a new one
 echo xtc_draw_hidden_field('specials_action', ((isset($_GET['pID']) && xtc_db_num_rows($specials_query, true) > 0) ? "update" : "insert"));
 echo xtc_draw_hidden_field('products_price_hidden', $pInfo->products_price);
-if(isset($_GET['pID']) and xtc_db_num_rows($specials_query, true) > 0) {
+if (isset($_GET['pID']) && xtc_db_num_rows($specials_query) > 0) {
   echo xtc_draw_hidden_field('specials_id', $sInfo->specials_id);
 }
 
@@ -123,7 +124,7 @@ echo SPECIALS_TITLE;
       <td class="main"><?php echo TEXT_SPECIALS_SPECIAL_QUANTITY; ?></td>
       <td class="main"><?php echo xtc_draw_input_field('specials_quantity', $sInfo->specials_quantity, 'style="width: 135px"') . draw_tooltip(TEXT_CATSPECIALS_SPECIAL_QUANTITY_TT);?></td>
     </tr>
-    <?php if(isset($_GET['pID']) and xtc_db_num_rows($specials_query, true) > 0) { ?>
+    <?php if (isset($_GET['pID']) && xtc_db_num_rows($specials_query) > 0) { ?>
       <tr>
         <td class="main"><?php echo TEXT_INFO_DATE_ADDED; ?></td>
         <td class="main"><?php echo xtc_date_short($sInfo->specials_date_added); ?></td>
@@ -141,7 +142,7 @@ echo SPECIALS_TITLE;
       <td class="main"><?php echo TEXT_SPECIALS_EXPIRES_DATE; ?></td>
       <td class="main"><?php echo xtc_draw_input_field('specials_expires', $expires_date ,'id="DatepickerSpecials" style="width: 135px"') . draw_tooltip(TEXT_CATSPECIALS_EXPIRES_DATE_TT.SPECIALS_DATE_END_TT); ?></td>
     </tr>
-    <?php if(isset($_GET['pID']) and xtc_db_num_rows($specials_query, true) > 0) { ?>
+    <?php if (isset($_GET['pID']) && xtc_db_num_rows($specials_query) > 0) { ?>
     <tr>
       <td class="main"><?php echo TEXT_EDIT_STATUS; ?></td>
       <td class="main" style="line-height:18px;"><?php echo draw_on_off_selection('specials_status', $product_status_array, $sInfo->status, 'style="width: 140px"'); ?></td>
