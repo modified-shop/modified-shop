@@ -25,7 +25,7 @@
   define('DIR_FS_CATALOG', DIR_FS_DOCUMENT_ROOT);
 
   // define our database connection
-  define('DB_MYSQL_TYPE', 'mysql'); // define mysql type set to 'mysql' or 'mysqli'
+  define('DB_MYSQL_TYPE', 'mysqli'); // define mysql type set to 'mysql' or 'mysqli'
   define('DB_SERVER', 'localhost'); // eg, localhost - should not be empty for productive servers
   define('DB_SERVER_USERNAME', '');
   define('DB_SERVER_PASSWORD', '');
