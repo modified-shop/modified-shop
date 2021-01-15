@@ -23,17 +23,23 @@
    --------------------------------------------------------------*/
 
 require_once ('includes/application_top.php');
-require_once (DIR_WS_CLASSES.FILENAME_IMAGEMANIPULATOR);
+
 /* magnalister v1.0.1 */
 if (function_exists('magnaExecute')) magnaExecute('magnaInventoryUpdate', array('action' => 'inventoryUpdate'), array('inventoryUpdate.php'));
 /* END magnalister */
-require_once (DIR_WS_CLASSES.'categories.php');
+
+// include needed function
 require_once (DIR_FS_INC.'xtc_get_tax_rate.inc.php');
 require_once (DIR_FS_INC.'xtc_get_products_mo_images.inc.php');
-require_once (DIR_WS_CLASSES.'currencies.php');
 require_once (DIR_FS_INC.'xtc_wysiwyg.inc.php');
 require_once (DIR_FS_INC.'xtc_get_order_description.inc.php');
 require_once (DIR_FS_INC.'xtc_parse_category_path.inc.php');
+require_once (DIR_FS_INC.'parse_multi_language_value.inc.php');
+
+// include needed classes
+require_once (DIR_WS_CLASSES.FILENAME_IMAGEMANIPULATOR);
+require_once (DIR_WS_CLASSES.'categories.php');
+require_once (DIR_WS_CLASSES.'currencies.php');
 
 $currencies = new currencies();
 $catfunc = new categories();
