@@ -240,7 +240,10 @@ define('SHIPPING_DEFAULT_TAX_CLASS_METHOD_DESC' , 'keine: keine Versandkostenste
 define('SHOW_SHIPPING_TITLE_TITLE' , 'Bezeichnung Versandkosten');
 define('SHOW_SHIPPING_TITLE_DESC' , 'W&auml;hle die Bezeichnung der Versandkosten in der Zusammenfassung');
 define('CUSTOM_SHIPPING_TITLE_TITLE' , 'Individuelle Bezeichnung Versandkosten');
-define('CUSTOM_SHIPPING_TITLE_DESC' , 'Geben Sie eine Bezeichnung an. Diese Einstellung greift nur, wenn die Bezeichnung Versandkosten auf "custom" steht.');
+define('CUSTOM_SHIPPING_TITLE_DESC' , 'Geben Sie eine Bezeichnung an. Diese Einstellung greift nur, wenn die Bezeichnung Versandkosten auf "Benutzerdefiniert" steht.');
+define('CFG_TXT_SHIPPING_DEFAULT', 'Standard');
+define('CFG_TXT_SHIPPING_TITLE', 'Titel');
+define('CFG_TXT_SHIPPING_CUSTOM', 'Benutzerdefiniert');
 
 define('PRODUCT_LIST_FILTER_TITLE' , 'Anzeige der Sortierungsfilter in Produktlisten?');
 define('PRODUCT_LIST_FILTER_DESC' , 'Anzeige der Sortierungsfilter f&uuml;r Warengruppen/Hersteller etc. Filter (false=inaktiv; true=aktiv)');

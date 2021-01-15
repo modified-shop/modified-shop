@@ -57,9 +57,9 @@
                 $title = $quote[0]['methods'][0]['title'];
               } else {
                 $title = $quote[0]['module'];
-                if (!defined('SHOW_SHIPPING_TITLE') || SHOW_SHIPPING_TITLE == 'standard') {
+                if (!defined('SHOW_SHIPPING_TITLE') || SHOW_SHIPPING_TITLE == 'shipping_default') {
                   $title .= ((trim($quote[0]['methods'][0]['title']) != '') ? ' ('.$quote[0]['methods'][0]['title'].')' : '');
-                } elseif (SHOW_SHIPPING_TITLE == 'custom' && parse_multi_language_value(CUSTOM_SHIPPING_TITLE, $_SESSION['language_code']) != '') {
+                } elseif (SHOW_SHIPPING_TITLE == 'shipping_custom' && parse_multi_language_value(CUSTOM_SHIPPING_TITLE, $_SESSION['language_code']) != '') {
                   $title = parse_multi_language_value(CUSTOM_SHIPPING_TITLE, $_SESSION['language_code']);
                 }
               }
