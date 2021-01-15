@@ -192,8 +192,12 @@ if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weigh
           }
         }
         $total += $value;
+        $title = $quote['module'];
+        if (!defined('SHOW_SHIPPING_TITLE') || SHOW_SHIPPING_TITLE == 'shipping_default') {
+          $title .= ' - ' . $quote['methods'][0]['title'];
+        }
         $shipping_content[$i] = array(
-          'NAME' => $quote['module'] . ' - ' . $quote['methods'][0]['title'],
+          'NAME' => $title,
           'VALUE' => $xtPrice->xtcFormat($value, true),
           'QUOTE' => $quote
         );
