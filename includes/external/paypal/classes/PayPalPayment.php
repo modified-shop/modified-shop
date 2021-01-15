@@ -11,6 +11,10 @@
    ---------------------------------------------------------------------------------------*/
 
 
+// compatibillity
+defined('DIR_WS_BASE') OR define('DIR_WS_BASE', '');
+
+
 // database tables
 defined('TABLE_PAYPAL_PAYMENT') OR define('TABLE_PAYPAL_PAYMENT', 'paypal_payment');
 defined('TABLE_PAYPAL_CONFIG') OR define('TABLE_PAYPAL_CONFIG', 'paypal_config');

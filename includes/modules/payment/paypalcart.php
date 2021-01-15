@@ -232,7 +232,7 @@ class paypalcart extends PayPalPayment {
         $module_smarty->assign('SHIPPING_BLOCK', $shipping_block);
       }
       
-      if (xtc_count_shipping_modules() == 1) {
+      if (xtc_count_shipping_modules() == 0) {
         $_SESSION['shipping'] = '';
       }
       
