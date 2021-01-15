@@ -443,6 +443,8 @@
    * @return
    */
   function xtc_tax_classes_pull_down($parameters, $selected = '') {
+    require_once(DIR_FS_INC.'parse_multi_language_value.inc.php');
+    
     $select_string = '<select '.$parameters.'>';
     $classes_query = xtc_db_query("SELECT tax_class_id,
                                           tax_class_title
@@ -452,7 +454,7 @@
       $select_string .= '<option value="'.$classes['tax_class_id'].'"';
       if ($selected == $classes['tax_class_id'])
         $select_string .= ' SELECTED';
-      $select_string .= '>'.$classes['tax_class_title'].'</option>';
+      $select_string .= '>'.parse_multi_language_value($classes['tax_class_title'], $_SESSION['language_code']).'</option>';
     }
     $select_string .= '</select>';
     return $select_string;
@@ -466,6 +468,8 @@
    * @return
    */
   function xtc_geo_zones_pull_down($parameters, $selected = '') {
+    require_once(DIR_FS_INC.'parse_multi_language_value.inc.php');
+    
     $select_string = '<select '.$parameters.'>';
     $zones_query = xtc_db_query("SELECT geo_zone_id,
                                         geo_zone_name
@@ -475,7 +479,7 @@
       $select_string .= '<option value="'.$zones['geo_zone_id'].'"';
       if ($selected == $zones['geo_zone_id'])
         $select_string .= ' SELECTED';
-      $select_string .= '>'.$zones['geo_zone_name'].'</option>';
+      $select_string .= '>'.parse_multi_language_value($zones['geo_zone_name'], $_SESSION['language_code']).'</option>';
     }
     $select_string .= '</select>';
     return $select_string;

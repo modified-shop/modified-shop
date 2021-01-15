@@ -626,7 +626,7 @@ CREATE TABLE email_content (
 DROP TABLE IF EXISTS geo_zones;
 CREATE TABLE geo_zones (
   geo_zone_id INT(11) NOT NULL AUTO_INCREMENT,
-  geo_zone_name VARCHAR(32) NOT NULL,
+  geo_zone_name VARCHAR(255) NOT NULL,
   geo_zone_description VARCHAR(255) NOT NULL,
   geo_zone_info INT(1) DEFAULT 0,
   last_modified DATETIME NULL,
@@ -1293,7 +1293,7 @@ CREATE TABLE specials (
 DROP TABLE IF EXISTS tax_class;
 CREATE TABLE tax_class (
   tax_class_id INT(11) NOT NULL AUTO_INCREMENT,
-  tax_class_title VARCHAR(32) NOT NULL,
+  tax_class_title VARCHAR(255) NOT NULL,
   tax_class_description VARCHAR(255) NOT NULL,
   last_modified DATETIME NULL,
   date_added DATETIME NOT NULL,
