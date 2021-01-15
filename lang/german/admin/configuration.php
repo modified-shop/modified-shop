@@ -237,6 +237,11 @@ define('SHIPPING_INFOS_DESC' , 'W&auml;hle den Content zur Anzeige der Versandko
 define('SHIPPING_DEFAULT_TAX_CLASS_METHOD_TITLE' , 'Berechnungsmethode der Standard-Steuerklasse');
 define('SHIPPING_DEFAULT_TAX_CLASS_METHOD_DESC' , 'keine: keine Versandkostensteuer ausweisen<br />auto proportional: Versandkostensteuer anteilig zur Bestellung ausweisen<br />auto max: Steuersatz der gr&ouml;&szlig;ten Umsatzgruppe als Versandkostensteuer ausweisen');
 
+define('SHOW_SHIPPING_TITLE_TITLE' , 'Bezeichnung Versandkosten');
+define('SHOW_SHIPPING_TITLE_DESC' , 'W&auml;hle die Bezeichnung der Versandkosten in der Zusammenfassung');
+define('CUSTOM_SHIPPING_TITLE_TITLE' , 'Individuelle Bezeichnung Versandkosten');
+define('CUSTOM_SHIPPING_TITLE_DESC' , 'Geben Sie eine Bezeichnung an. Diese Einstellung greift nur, wenn die Bezeichnung Versandkosten auf "custom" steht.');
+
 define('PRODUCT_LIST_FILTER_TITLE' , 'Anzeige der Sortierungsfilter in Produktlisten?');
 define('PRODUCT_LIST_FILTER_DESC' , 'Anzeige der Sortierungsfilter f&uuml;r Warengruppen/Hersteller etc. Filter (false=inaktiv; true=aktiv)');
 

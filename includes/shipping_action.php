@@ -53,9 +53,19 @@
             unset ($_SESSION['shipping']);
           } else {
             if ((isset($quote[0]['methods'][0]['title'])) && (isset($quote[0]['methods'][0]['cost']))) {
+              if ($free_shipping == true) {
+                $title = $quote[0]['methods'][0]['title'];
+              } else {
+                $title = $quote[0]['module'];
+                if (!defined('SHOW_SHIPPING_TITLE') || SHOW_SHIPPING_TITLE == 'standard') {
+                  $title .= ((trim($quote[0]['methods'][0]['title']) != '') ? ' ('.$quote[0]['methods'][0]['title'].')' : '');
+                } elseif (SHOW_SHIPPING_TITLE == 'custom' && parse_multi_language_value(CUSTOM_SHIPPING_TITLE, $_SESSION['language_code']) != '') {
+                  $title = parse_multi_language_value(CUSTOM_SHIPPING_TITLE, $_SESSION['language_code']);
+                }
+              }
               $_SESSION['shipping'] = array (
                 'id' => $_SESSION['shipping'], 
-                'title' => (($free_shipping == true) ? $quote[0]['methods'][0]['title'] : $quote[0]['module'].((trim($quote[0]['methods'][0]['title']) != '') ? ' ('.$quote[0]['methods'][0]['title'].')' : '')), 
+                'title' => $title, 
                 'cost' => $quote[0]['methods'][0]['cost']
               );
               if (isset(${$module}) && is_object(${$module}) && method_exists(${$module}, 'session') ) {
