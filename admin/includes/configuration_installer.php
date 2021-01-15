@@ -115,6 +115,8 @@ $values_group_update = array();
   $values[] = "(NULL, 'SHOW_SHIPPING_EXCL', 'true', '7', '6', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
   $values[] = "(NULL, 'CHECK_CHEAPEST_SHIPPING_MODUL', 'false', '7', '8', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
   $values[] = "(NULL, 'SHOW_SELFPICKUP_FREE', 'false', '7', '9', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
+  $values[] = "(NULL, 'SHOW_SHIPPING_TITLE', 'standard', '7', '10', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'standard\', \'title\', \'custom\'), ');";
+  $values[] = "(NULL, 'CUSTOM_SHIPPING_TITLE', '', '7', '11', NULL, NOW(), NULL, 'xtc_cfg_input_email_language;CUSTOM_SHIPPING_TITLE');";
 
   $values_update[] = array (
                            'values' => "set_function = 'xtc_cfg_select_content(\'SHIPPING_INFOS\','",

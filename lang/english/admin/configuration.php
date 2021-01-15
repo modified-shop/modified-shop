@@ -238,6 +238,11 @@ define('SHIPPING_INFOS_DESC' , 'Select content to display shipping costs');
 define('SHIPPING_DEFAULT_TAX_CLASS_METHOD_TITLE' , 'Calculation method of default tax class');
 define('SHIPPING_DEFAULT_TAX_CLASS_METHOD_DESC' , 'none: do not show shipping tax<br />auto proportional: show shipping tax proportional to order<br />auto max: show shipping tax, use tax rate of biggest turnover group');
 
+define('SHOW_SHIPPING_TITLE_TITLE' , 'Title of shipping costs');
+define('SHOW_SHIPPING_TITLE_DESC' , 'Choose the title of the shipping costs in the order total');
+define('CUSTOM_SHIPPING_TITLE_TITLE' , 'Individual title shipping costs');
+define('CUSTOM_SHIPPING_TITLE_DESC' , 'Enter a name. This setting only applies if the title shipping costs is set to "custom".');
+
 define('PRODUCT_LIST_FILTER_TITLE' , 'Display Category/Manufacturer Filter (false=disable; true=enable)');
 define('PRODUCT_LIST_FILTER_DESC' , 'Do you want to display the Category/Manufacturer Filter?');
 
