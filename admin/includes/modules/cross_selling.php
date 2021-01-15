@@ -172,6 +172,7 @@
             echo xtc_draw_hidden_field('action', 'edit_crossselling').PHP_EOL;
             echo xtc_draw_hidden_field('current_product_id', $_GET['current_product_id']).PHP_EOL;
             echo xtc_draw_hidden_field('last_action', $_GET['last_action']).PHP_EOL;
+            echo xtc_draw_hidden_field('sorting', $_GET['sorting']).PHP_EOL;
             echo xtc_draw_hidden_field('cpath', $_GET['cpath']).PHP_EOL;
             echo xtc_draw_hidden_field('page', $_GET['page']).PHP_EOL;
             echo CROSS_SELLING_SEARCH.'&nbsp;'.xtc_draw_input_field('keywords', ((isset($_GET['keywords'])) ? $_GET['keywords'] : ''), 'size="30"');
