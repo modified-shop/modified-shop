@@ -184,12 +184,14 @@ class shoppingCart {
   function reset($reset_database = false) {
     $this->contents = array ();
     $this->total = 0;
-    $this->tax = 0;
+    $this->total_netto = 0;
     $this->weight = 0;
     $this->content_type = false;
     $this->attr_price = 0; 
-    $this->attr_weight = 0;
-
+    $this->attr_weight = 0;    
+    $this->tax = array ();
+    $this->tax_discount = array();
+    
     if (isset($_SESSION['customer_id']) && ($reset_database == true)) {
       xtc_db_query("DELETE FROM ".$this->table_basket." WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
       xtc_db_query("DELETE FROM ".$this->table_basket_attributes." WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
