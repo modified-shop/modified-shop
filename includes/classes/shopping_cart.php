@@ -760,22 +760,22 @@ class shoppingCart {
    */
   function show_tax($format = true) {
     global $xtPrice;
+    
     $this->calculate();
-    $output = "";
     $val = 0;
     $gval = 0;
+    $output = '';
     foreach ($this->tax as $key => $value) {
       if ($this->tax[$key]['value'] > 0 ) {
-      $output .= $this->tax[$key]['desc'].": ".$xtPrice->xtcFormat($this->tax[$key]['value'], true)."<br />";
-      $val = $this->tax[$key]['value'];
-      $gval+=$this->tax[$key]['value'];
+        $output .= $this->tax[$key]['desc'].": ".$xtPrice->xtcFormat($this->tax[$key]['value'], true)."<br />";
+        $val = $this->tax[$key]['value'];
+        $gval += $this->tax[$key]['value'];
       }
     }
     if ($format) {
       return $output;
-    } else {
-      return $gval; 
     }
+    return $gval; 
   }
 
   /**
