@@ -18,20 +18,18 @@
 
   define('SESSION_LIFE_ADMIN_DEFAULT', 7200);
 
-  @ini_set("session.gc_maxlifetime", 1440);
+  $SESS_LIFE = (int)SESSION_LIFE_CUSTOMERS;
+  if (defined('RUN_MODE_ADMIN')) {
+    $SESS_LIFE = defined('SESSION_LIFE_ADMIN') ? (int)SESSION_LIFE_ADMIN : (int)SESSION_LIFE_ADMIN_DEFAULT;
+  }
+  
+  @ini_set("session.gc_maxlifetime", $SESS_LIFE);
   @ini_set("session.gc_probability", 100);
   @ini_set('session.cookie_httponly', true);
   
   foreach(auto_include(DIR_FS_CATALOG.'includes/extra/sessions/','php') as $file) require_once ($file);
   
   if (STORE_SESSIONS == 'mysql') {  
-    if (!$SESS_LIFE = xtc_get_cfg_var('session.gc_maxlifetime')) {
-      $SESS_LIFE = 1440;
-    }
-    if (defined('SESSION_LIFE_CUSTOMERS')) {
-      $SESS_LIFE = (int)SESSION_LIFE_CUSTOMERS;
-    }
-
     function _sess_open($save_path, $session_name) {
       return true;
     }
@@ -146,12 +144,14 @@
     }
   }
 
-  function xtc_session_destroy() {    
+  function xtc_session_destroy() {
     if (isset($_COOKIE[xtc_session_name()])) {
       $cookie_params = session_get_cookie_params();
       xtc_setcookie(xtc_session_name(), '', time()-3600, $cookie_params['path'], $cookie_params['domain']);
     }
-    return session_destroy();
+    if (session_status() === PHP_SESSION_ACTIVE) {
+      return session_destroy();
+    }
   }
 
   function xtc_session_save_path($path = '') {
@@ -209,6 +209,29 @@
       xtc_generate_session_id();
     }
     return $session_id;
+  }
+  
+  function xtc_session_reset() {
+    $valid_session_array = array(
+      'customers_status',
+      'language',
+      'languages_id',
+      'language_charset',
+      'language_code',
+      'tracking',
+      'currency',
+      'cart',
+    );
+
+    if (defined('MODULE_WISHLIST_SYSTEM_STATUS') && MODULE_WISHLIST_SYSTEM_STATUS == 'true') {
+      $valid_session_array[] = 'wishlist';
+    }
+
+    foreach ($_SESSION as $k => $v) {
+      if (!in_array($k, $valid_session_array)) {
+        unset($_SESSION[$k]);
+      }
+    }
   }
   
   function unserialize_session_data( $session_data ) {
