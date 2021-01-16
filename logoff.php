@@ -50,24 +50,13 @@ if (isset($_SESSION['account_type'])
   xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_IP." WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
 }
 
-xtc_session_destroy();
-
-unset ($_SESSION['customer_id']);
-unset ($_SESSION['customer_default_address_id']);
-unset ($_SESSION['customer_first_name']);
-unset ($_SESSION['customer_country_id']);
-unset ($_SESSION['customer_zone_id']);
-unset ($_SESSION['comments']);
-unset ($_SESSION['user_info']);
-unset ($_SESSION['customers_status']);
-unset ($_SESSION['selected_box']);
-unset ($_SESSION['shipping']);
-unset ($_SESSION['payment']);
-unset ($_SESSION['ccard']);
-unset ($_SESSION['gv_id']);
-unset ($_SESSION['cc_id']);
-
 $_SESSION['cart']->reset();
+if (defined('MODULE_WISHLIST_SYSTEM_STATUS') && MODULE_WISHLIST_SYSTEM_STATUS == 'true') {
+  $_SESSION['wishlist']->reset();
+}
+
+xtc_session_destroy();
+xtc_session_reset();
 
 // write customers status guest in session again
 require (DIR_WS_INCLUDES.'write_customers_status.php');
