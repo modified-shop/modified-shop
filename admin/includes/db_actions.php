@@ -286,6 +286,7 @@
         $restore['utf8'] = true;
       }
       $restore['anzahl_zeilen'] = RESTORE_ROWS;
+      $restore['tables_to_restore'] = array();
       $restore['time_gap'] = time();
     
       if (!is_file($restore['file'])) {

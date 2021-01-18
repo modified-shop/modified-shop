@@ -43,6 +43,9 @@
     $LoggingManager = new LoggingManager(DIR_FS_LOG.'mod_installer_%s_%s.log', 'modified', strtolower($LogLevel));
   }
 
+  // include the list of project filenames
+  require_once (DIR_WS_INCLUDES.'filenames.php');
+
   // Base/PHP_SELF/SSL-PROXY
   require_once (DIR_FS_INC . 'set_php_self.inc.php');
   $PHP_SELF = set_php_self();
