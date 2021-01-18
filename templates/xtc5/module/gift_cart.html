@@ -1,7 +1,16 @@
 {config_load file="$language/lang_$language.conf" section="gift_cart"}
 {if $ACTIVATE_GIFT == 'true'}
   {$FORM_ACTION}
+  {if $D_FLAG == 'checkout'}
+  <h2>{#title#}</h2>
+  <div style="clear:both"></div>
+  {else}
   <h1>{#title#}</h1>
+  {/if}
+  {if $D_FLAG == 'checkout'}
+    {if $coupon_message != ''}<div class="errormessage">{$coupon_message}</div>{/if}
+    {if $success_message != ''}<div class="infomessage">{$success_message}</div>{/if}
+  {/if}
   {if $GV_AMOUNT neq ''}
     <p>{#text_info#}</p>
     <p>{#voucher_balance#} <strong>{$GV_AMOUNT}</strong></p>
@@ -11,12 +20,12 @@
     <p>{#voucher_redeemed#}</p>
     <p>{$COUPON_AMOUNT2}</p>
   {/if}
-  {if $COUPON_HELP_LINK neq ''}
-    <p><div class="infomessage">{*#cart_coupon#*} {$smarty.const.REDEEMED_COUPON} {$COUPON_HELP_LINK} {#cart_coupon_info#}</a></div></p>
-  {/if}
   {if $C_FLAG == 'true'}
+    {if $COUPON_HELP_LINK neq ''}
+      <p>{#cart_coupon_info#} {$COUPON_HELP_LINK} {#cart_coupon_info#}</a></p>
+    {/if}
     <p>{#text_gift#}</p>
-    <div class="highlightbox">
+    <div class="highlightbox"{if $D_FLAG == 'checkout'} style="margin-right:20px;"{/if}>
       <table border="0" cellspacing="0" cellpadding="4">
         <tr>
           <td><strong>{#text_code#}</strong></td>
