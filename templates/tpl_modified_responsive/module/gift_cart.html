@@ -24,7 +24,7 @@
       <p>{$COUPON_AMOUNT2}</p>
     {/if}
 
-    {if $COUPON_HELP_LINK neq ''}<p>{#cart_coupon_info#} {$COUPON_HELP_LINK} {#cart_coupon_info#}</a></p>{/if}
+    {if isset($COUPON_HELP_LINK)}<p>{$COUPON_HELP_LINK}{#cart_coupon_info#}</a></p>{/if}
     {#text_gift#}
   </div>
 
