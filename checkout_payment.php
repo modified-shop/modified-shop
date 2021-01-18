@@ -145,14 +145,9 @@ $credit_amount = 0;
 if (ACTIVATE_GIFT_SYSTEM == 'true') {
   $credit_selection = $order_total_modules->credit_selection();
   for ($i = 0, $n = sizeof($credit_selection); $i < $n; $i++) {
-    if ((isset($_SESSION['c'.$credit_selection[$i]['id']]) && $credit_selection[$i]['id'] == $_SESSION['c'.$credit_selection[$i]['id']])) {
-      $credit_selection[$i]['checked'] = 1;
-    } else {
-      $credit_selection[$i]['checked'] = 0;
-    }
     $credit_amount =  $credit_selection[$i]['credit_amount'];
     $credit_order_total = $xtPrice->xtcFormat($credit_selection[$i]['credit_order_total'], false);
-    $credit_selection[$i]['selection'] = xtc_draw_checkbox_field('c'.$credit_selection[$i]['id'], $xtPrice->xtcFormat($credit_amount, false), $credit_selection[$i]['checked'], 'id="rd-'.'c'.$credit_selection[$i]['id'].'"');
+    $credit_selection[$i]['selection'] = xtc_draw_checkbox_field('c'.$credit_selection[$i]['id'], $xtPrice->xtcFormat($credit_amount, false), true, 'id="rd-'.'c'.$credit_selection[$i]['id'].'"');
     $credit_selection[$i]['selection'] .= '<input type="hidden" name="credit_order_total"  id="cot-'.'c'.$credit_selection[$i]['id'].'" value="'.$total.'">';
     $credit_selection[$i]['credit_amount'] = $xtPrice->xtcFormat($credit_amount, true);
     $module_smarty->assign('credit_amount_payment_info', $credit_amount >= $total ? GV_NO_PAYMENT_INFO : GV_ADD_PAYMENT_INFO);
