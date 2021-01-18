@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: gv_queue.php 899 2005-04-29 02:40:57Z hhgag $
+   $Id$
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -44,4 +44,6 @@ define('TEXT_REDEEM_COUPON_MESSAGE_AMOUNT', 'Der von Ihnen bestellte Gutschein h
 define('TEXT_REDEEM_COUPON_MESSAGE_BODY', '');
 define('TEXT_REDEEM_COUPON_MESSAGE_FOOTER', '');
 define('TEXT_REDEEM_COUPON_SUBJECT', 'Gutschein kaufen');
+define('TEXT_INFO_DELETE_INTRO', 'Soll der Gutschein gel&ouml;scht werden?');
+define('TEXT_INFO_RELEASE_INTRO', 'Soll der Gutschein eingel&ouml;st werden?');
 ?>

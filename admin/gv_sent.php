@@ -27,18 +27,31 @@
    ---------------------------------------------------------------------------------------*/
 
 
-require('includes/application_top.php');
+  require('includes/application_top.php');
 
-//display per page
-$cfg_max_display_results_key = 'MAX_DISPLAY_GV_SENT_RESULTS';
-$page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
+  //display per page
+  $cfg_max_display_results_key = 'MAX_DISPLAY_GV_SENT_RESULTS';
+  $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
 
-require(DIR_WS_CLASSES . 'currencies.php');
-$currencies = new currencies();
+  require(DIR_WS_CLASSES . 'currencies.php');
+  $currencies = new currencies();
 
-require (DIR_WS_INCLUDES.'head.php');
+  $action = (isset($_GET['action']) ? $_GET['action'] : '');
+  
+  switch ($action) {
+    case 'deleteconfirm':
+      // delete coupon from DB
+      xtc_db_query("DELETE FROM ".TABLE_COUPONS." WHERE coupon_id = '".(int)$_GET['gid']."'");
+      xtc_db_query("DELETE FROM ".TABLE_COUPONS_DESCRIPTION." WHERE coupon_id = '".(int)$_GET['gid']."'");
+      // delete coupon reports from DB
+      xtc_db_query("DELETE FROM ".TABLE_COUPON_EMAIL_TRACK." WHERE coupon_id='".(int)$_GET['gid']."'");
+			xtc_db_query("DELETE FROM ".TABLE_COUPON_REDEEM_TRACK." WHERE coupon_id='".(int)$_GET['gid']."'");
+      xtc_redirect(xtc_href_link('gv_sent.php', xtc_get_all_get_params(array('action', 'gid'))));
+      break;
+  }
+  
+  require (DIR_WS_INCLUDES.'head.php');
 ?>
-
 </head>
 <body>
   <!-- header //-->
@@ -122,22 +135,33 @@ require (DIR_WS_INCLUDES.'head.php');
               $heading = array();
               $contents = array();
 
-              $heading[] = array('text' => '<b>[' . $gInfo->coupon_id . '] ' . ' ' . $currencies->format($gInfo->coupon_amount).'</b>');
-              $redeem_query = xtc_db_query("select * from " . TABLE_COUPON_REDEEM_TRACK . " where coupon_id = '" . $gInfo->coupon_id . "'");
-              $redeemed = 'No';
-              if (xtc_db_num_rows($redeem_query) > 0) $redeemed = 'Yes';
-              $contents[] = array('text' => TEXT_INFO_SENDERS_ID . ' ' . $gInfo->customer_id_sent);
-              $contents[] = array('text' => TEXT_INFO_AMOUNT_SENT . ' ' . $currencies->format($gInfo->coupon_amount));
-              $contents[] = array('text' => TEXT_INFO_DATE_SENT . ' ' . xtc_date_short($gInfo->date_sent));
-              $contents[] = array('text' => TEXT_INFO_VOUCHER_CODE . ' ' . $gInfo->coupon_code);
-              $contents[] = array('text' => TEXT_INFO_EMAIL_ADDRESS . ' ' . $gInfo->emailed_to);
-              if ($redeemed=='Yes') {
-                $redeem = xtc_db_fetch_array($redeem_query);
-                $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_REDEEMED . ' ' . xtc_date_short($redeem['redeem_date']));
-                $contents[] = array('text' => TEXT_INFO_IP_ADDRESS . ' ' . $redeem['redeem_ip']);
-                $contents[] = array('text' => TEXT_INFO_CUSTOMERS_ID . ' ' . $redeem['customer_id']);
-              } else {
-                $contents[] = array('text' => '<br />' . TEXT_INFO_NOT_REDEEMED);
+              switch ($action) {
+                case 'delete':
+                  $heading[] = array('text' => '<b>[' . $gInfo->coupon_id . '] ' . ' ' . $currencies->format($gInfo->coupon_amount).'</b>');
+                  $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
+                  $contents[] = array('align' => 'center', 'text' => '<a class="button col-red" onclick="this.blur();" href="' . xtc_href_link('gv_sent.php','action=deleteconfirm&gid='.$gInfo->coupon_id,'NONSSL').'">'. BUTTON_CONFIRM . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link('gv_sent.php','action=cancel&gid=' . $gInfo->coupon_id,'NONSSL') . '">' . BUTTON_CANCEL . '</a>');
+                  break;
+                
+                default:
+                  $heading[] = array('text' => '<b>[' . $gInfo->coupon_id . '] ' . ' ' . $currencies->format($gInfo->coupon_amount).'</b>');
+                  $redeem_query = xtc_db_query("select * from " . TABLE_COUPON_REDEEM_TRACK . " where coupon_id = '" . $gInfo->coupon_id . "'");
+                  $redeemed = 'No';
+                  if (xtc_db_num_rows($redeem_query) > 0) $redeemed = 'Yes';
+                  $contents[] = array('text' => TEXT_INFO_SENDERS_ID . ' ' . $gInfo->customer_id_sent);
+                  $contents[] = array('text' => TEXT_INFO_AMOUNT_SENT . ' ' . $currencies->format($gInfo->coupon_amount));
+                  $contents[] = array('text' => TEXT_INFO_DATE_SENT . ' ' . xtc_date_short($gInfo->date_sent));
+                  $contents[] = array('text' => TEXT_INFO_VOUCHER_CODE . ' ' . $gInfo->coupon_code);
+                  $contents[] = array('text' => TEXT_INFO_EMAIL_ADDRESS . ' ' . $gInfo->emailed_to);
+                  if ($redeemed=='Yes') {
+                    $redeem = xtc_db_fetch_array($redeem_query);
+                    $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_REDEEMED . ' ' . xtc_date_short($redeem['redeem_date']));
+                    $contents[] = array('text' => TEXT_INFO_IP_ADDRESS . ' ' . $redeem['redeem_ip']);
+                    $contents[] = array('text' => TEXT_INFO_CUSTOMERS_ID . ' ' . $redeem['customer_id']);
+                  } else {
+                    $contents[] = array('text' => '<br />' . TEXT_INFO_NOT_REDEEMED);
+                    $contents[] = array('align' => 'center','text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link('gv_sent.php','action=delete&gid=' . $gInfo->coupon_id,'NONSSL'). '">' . BUTTON_DELETE . '</a>');
+                  }
+                  break;
               }
             }
             if ( (xtc_not_null($heading)) && (xtc_not_null($contents)) ) {

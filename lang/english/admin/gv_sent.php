@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: gv_sent.php 899 2005-04-29 02:40:57Z hhgag $
+   $Id$
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -42,4 +42,5 @@ define('TEXT_INFO_DATE_REDEEMED', 'Date Redeemed:');
 define('TEXT_INFO_IP_ADDRESS', 'IP Address:');
 define('TEXT_INFO_CUSTOMERS_ID', 'Customer Id:');
 define('TEXT_INFO_NOT_REDEEMED', 'Not Redeemed');
+define('TEXT_INFO_DELETE_INTRO', 'Delete this Gift Voucher?');
 ?>

@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: gv_sent.php 899 2005-04-29 02:40:57Z hhgag $
+   $Id$
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -42,4 +42,5 @@ define('TEXT_INFO_DATE_REDEEMED', 'Einl&ouml;sedatum:');
 define('TEXT_INFO_IP_ADDRESS', 'IP-Adresse:');
 define('TEXT_INFO_CUSTOMERS_ID', 'Kunden-Nr.:');
 define('TEXT_INFO_NOT_REDEEMED', 'Nicht eingel&ouml;st');
+define('TEXT_INFO_DELETE_INTRO', 'Soll der Gutschein gel&ouml;scht werden?');
 ?>
