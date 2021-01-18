@@ -79,8 +79,6 @@
     $txt_mail = $smarty->fetch(CURRENT_TEMPLATE . '/admin/mail/'.$_SESSION['language'].'/'.$template.'.txt');
     $txt_mail = strip_tags($txt_mail);
     
-    if ($data['subject'] == '') $data['subject'] = EMAIL_BILLING_SUBJECT;
-
     xtc_php_mail(EMAIL_BILLING_ADDRESS,
                  EMAIL_BILLING_NAME, 
                  $data['customers_email_address'], 
