@@ -303,7 +303,11 @@
           ?>              
           <table class="tableCenter">
             <tr>
-              <?php echo xtc_draw_form('multi_action_form', FILENAME_SPECIALS, xtc_get_all_get_params(array('action')) . ((isset($_POST['multi_products']) && xtc_not_null($_POST['multi_products'])) ? 'action=multi_action_confirm' : 'action=multi_action'), 'post', 'onsubmit="javascript:return CheckMultiForm()"'); ?>
+              <?php 
+              if ($action == '' || strpos($action, 'multi') !== false) {
+                echo xtc_draw_form('multi_action_form', FILENAME_SPECIALS, xtc_get_all_get_params(array('action')) . ((isset($_POST['multi_products']) && xtc_not_null($_POST['multi_products'])) ? 'action=multi_action_confirm' : 'action=multi_action'), 'post', 'onsubmit="javascript:return CheckMultiForm()"');
+              }
+              ?>
               <td class="boxCenterLeft">
                 <table class="tableBoxCenter collapse">
                   <tr class="dataTableHeadingRow">
@@ -478,8 +482,10 @@
               }
             }
             // END LISTING TABLE
+            if ($action == '' || strpos($action, 'multi') !== false) {
+              echo '</form>';
+            }
             ?>
-            </form>
           </tr>
           <?php if (isset($specials_split) && is_object($specials_split)) { ?>
           <tr>
