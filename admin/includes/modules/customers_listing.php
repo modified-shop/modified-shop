@@ -44,7 +44,11 @@
 
         <table class="tableCenter">
           <tr>
-          <?php echo xtc_draw_form('multi_action_form', FILENAME_CUSTOMERS, xtc_get_all_get_params(array('action')) . $form_action, 'post', 'onsubmit="javascript:return CheckMultiForm()"'); ?>
+          <?php 
+            if ($action == '' || strpos($action, 'multi') !== false) {
+              echo xtc_draw_form('multi_action_form', FILENAME_CUSTOMERS, xtc_get_all_get_params(array('action')) . $form_action, 'post', 'onsubmit="javascript:return CheckMultiForm()"');
+            }
+            ?>
             <td class="boxCenterLeft">
               <table class="tableBoxCenter collapse">
                 <tr class="dataTableHeadingRow">
@@ -525,8 +529,11 @@
                   echo $box->infoBox($heading, $contents);
                   echo '          </td>'."\n";
                 }
+                
+                if ($action == '' || strpos($action, 'multi') !== false) {
+                  echo '</form>';
+                }
               ?>
-            </form>
           </tr>
           <tr>
             <td>
