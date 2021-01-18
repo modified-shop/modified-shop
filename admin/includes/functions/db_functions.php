@@ -13,6 +13,8 @@ $Id$
 * 2010-09-09 - - add set_admin_access                          
 ***************************************************************/
 
+define('VERSION', 'Database Backup Ver. 2.20 UTF-8');
+
 defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
 $lang['L_UNKNOWN_SQLCOMMAND']= 'Unbekannter SQL-Befehl';

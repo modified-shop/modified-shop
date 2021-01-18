@@ -13,8 +13,6 @@
    Released under the GNU General Public License
    --------------------------------------------------------------*/
 
-  define ('VERSION', 'Database Backup Ver. 2.20 UTF-8');
-
   define ('_VALID_XTC', true);
   define('RUN_MODE_ADMIN',true);
 
