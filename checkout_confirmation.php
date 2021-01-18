@@ -39,6 +39,7 @@ include ('includes/application_top.php');
 $smarty = new Smarty;
 
 // include needed functions
+require_once (DIR_FS_INC . 'xtc_collect_posts.inc.php');
 require_once (DIR_FS_INC . 'xtc_calculate_tax.inc.php');
 require_once (DIR_FS_INC . 'xtc_display_tax_value.inc.php');
 
@@ -81,6 +82,14 @@ if (DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT == 'true'
     $error = str_replace('\n', '<br />', ERROR_REVOCATION_NOT_ACCEPTED);
     xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode($error), 'SSL', true, false));
   }
+}
+
+if (ACTIVATE_GIFT_SYSTEM == 'true'
+    && isset($_GET['action'])
+    && $_GET['action'] == 'check_gift_checkout'
+    )
+{
+  xtc_collect_posts();
 }
 
 // load the selected payment module
@@ -132,6 +141,10 @@ if ((is_array($payment_modules->modules)
 
 // include boxes
 require (DIR_FS_CATALOG . 'templates/' . CURRENT_TEMPLATE . '/source/boxes.php');
+
+if (ACTIVATE_GIFT_SYSTEM == 'true') {
+  include (DIR_WS_MODULES.'gift_cart.php');
+}
 
 if (is_array($payment_modules->modules)) {
   $payment_modules->pre_confirmation_check();

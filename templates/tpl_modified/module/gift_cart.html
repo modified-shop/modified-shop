@@ -3,7 +3,11 @@
 {config_load file="lang_`$language`.section" section="gift_cart"}
 {if $ACTIVATE_GIFT == 'true'}
 {$FORM_ACTION}
+{if $D_FLAG == 'checkout'}
+<h4>{#title#}</h4>
+{else}
 <h1>{#title#}</h1>
+{/if}
 
 {if $coupon_message != ''}<div class="errormessage">{$coupon_message}</div>{/if}
 {if $success_message != ''}<div class="infomessage">{$success_message}</div>{/if}
@@ -19,12 +23,10 @@
   <p>{$COUPON_AMOUNT2}</p>
 {/if}
 
-{if $COUPON_HELP_LINK neq ''}
-  <br />
-  <div class="infomessage">{*#cart_coupon#*} {$smarty.const.REDEEMED_COUPON} {$COUPON_HELP_LINK} {#cart_coupon_info#}</a></div>
-{/if}
-
 {if $C_FLAG == 'true'}
+  {if $COUPON_HELP_LINK neq ''}
+    <p>{#cart_coupon_info#} {$COUPON_HELP_LINK} {#cart_coupon_info#}</a></p>
+  {/if}
   <p>{#text_gift#}</p>
   <div class="highlightbox cf">
     <table>
