@@ -45,5 +45,5 @@ define('TEXT_REDEEM_COUPON_MESSAGE_BODY', '');
 define('TEXT_REDEEM_COUPON_MESSAGE_FOOTER', '');
 define('TEXT_REDEEM_COUPON_SUBJECT', 'Gift Voucher Purchase');
 define('TEXT_INFO_DELETE_INTRO', 'Delete this Gift Voucher?');
-define('TEXT_INFO_RELEASE_INTRO', 'Release this Gift Voucher?');
+define('TEXT_INFO_REDEEM_INTRO', 'Redeem this Gift Voucher?');
 ?>
