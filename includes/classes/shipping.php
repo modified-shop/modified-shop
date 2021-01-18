@@ -168,10 +168,16 @@
                     $quotes['tax'] = 0;
                   }
                   $quotes['methods'][$i]['total'] = $xtPrice->xtcFormat(xtc_add_tax($quotes['methods'][$i]['cost'], $quotes['tax']), false);						
-                } 
+                }
+                $title = $quotes['module'];
+                if (!defined('SHOW_SHIPPING_TITLE') || SHOW_SHIPPING_TITLE == 'shipping_default') {
+                  $title .= ((trim($quotes['methods'][$i]['title']) != '') ? ' ('.$quotes['methods'][$i]['title'].')' : '');
+                } elseif (SHOW_SHIPPING_TITLE == 'shipping_custom' && parse_multi_language_value(CUSTOM_SHIPPING_TITLE, $_SESSION['language_code']) != '') {
+                  $title = parse_multi_language_value(CUSTOM_SHIPPING_TITLE, $_SESSION['language_code']);
+                }
                 $rates[] = array(
                   'id' => $quotes['id'] . '_' . $quotes['methods'][$i]['id'],
-                  'title' => $quotes['module'] . ((trim($quotes['methods'][$i]['title']) != '') ? ' (' . $quotes['methods'][$i]['title'] . ')' : ''),
+                  'title' => $title,
                   'cost' => $quotes['methods'][$i]['cost'],
                   'total' => $quotes['methods'][$i]['total'],
                 );
