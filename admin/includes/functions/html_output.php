@@ -118,7 +118,10 @@
         ) 
     {
       $field .= ' value="' . encode_htmlspecialchars(trim($GLOBALS[$name])) . '"';
-    } elseif ($value != '') {
+    } elseif ((gettype($value) == 'double' && $value > 0) 
+              || (gettype($value) != 'double' && $value != '')
+              )
+    {
       $field .= ' value="' . encode_htmlspecialchars(trim($value)) . '"';
     }
     if ($parameters != '') {
