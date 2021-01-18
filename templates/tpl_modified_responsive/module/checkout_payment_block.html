@@ -1,14 +1,20 @@
+{foreach name=outer item=gift_data from=$module_gift}
+  <div class="resp-easy-accordion">
+    <h2 class="resp-accordion resp-tab-active">{$gift_data.module|onlytext}<span class="payment_costs">{$gift_data.credit_amount}</span></h2>
+    <div class="resp-tab-content resp-tab-content-active">
+      <div class="cus_check cus_check_gift">
+        {$gift_data.selection}
+        <label>{if $gift_data.description != ''}{$gift_data.description}{/if}</label>
+      </div> 
+      <br />
+      {$credit_amount_payment_info}
+    </div>  
+  </div>
+  <br />
+{/foreach}
+
 <div id="horizontalAccordion" class="checkout_accordion">
   <ul class="resp-tabs-list nonjs-fallback">
-    {foreach name=outer item=gift_data from=$module_gift}
-      <li>
-        <div class="cus_check cus_check_gift">
-          {$gift_data.selection}
-          <label>{$gift_data.module|onlytext}<span class="payment_costs">{$gift_data.credit_amount}</span></label>
-        </div> 
-      </li>
-    {/foreach}
-    
     {foreach name=outer item=module_data from=$module_content}
       <li>
         <div class="cus_radio">
@@ -19,10 +25,6 @@
     {/foreach}
   </ul>
   <div class="resp-tabs-container">
-    {foreach name=outer item=gift_data from=$module_gift}
-      <div>{if $gift_data.description != ''}{$gift_data.description}<br />{/if}{$credit_amount_payment_info}</div>
-    {/foreach}
-
     {foreach name=outer item=module_data from=$module_content}
       <div>
         <noscript>
