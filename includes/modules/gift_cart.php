@@ -87,10 +87,18 @@ if ($messageStack->size('coupon_message') > 0) {
 if ($messageStack->size('coupon_message', 'success') > 0) {
 	$gift_smarty->assign('success_message', $messageStack->output('coupon_message', 'success'));
 }
+
+$dflag = 'cart';
+$action = 'action=check_gift';
+if (strpos(basename($PHP_SELF), 'checkout') !== false) {
+  $action = 'action=check_gift_checkout&conditions=on';
+  $dflag = 'checkout';
+}
+$gift_smarty->assign('D_FLAG', $dflag);
 $gift_smarty->assign('LINK_ACCOUNT', xtc_href_link(FILENAME_CREATE_ACCOUNT,'','SSL'));
-$gift_smarty->assign('FORM_ACTION', xtc_draw_form('gift_coupon', xtc_href_link(FILENAME_SHOPPING_CART, 'action=check_gift', $request_type)));
+$gift_smarty->assign('FORM_ACTION', xtc_draw_form('gift_coupon', xtc_href_link(basename($PHP_SELF), $action, $request_type)));
 $gift_smarty->assign('INPUT_CODE', xtc_draw_input_field('gv_redeem_code'));
-$gift_smarty->assign('BUTTON_SUBMIT', xtc_image_submit('button_redeem.gif', IMAGE_REDEEM_GIFT));
+$gift_smarty->assign('BUTTON_SUBMIT', xtc_image_submit('button_redeem.gif', IMAGE_REDEEM_GIFT, 'name="check_gift"'));
 $gift_smarty->assign('language', $_SESSION['language']);
 $gift_smarty->assign('FORM_END', '</form>');
 $gift_smarty->caching = 0;
