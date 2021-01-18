@@ -58,7 +58,10 @@
     function output($class, $type = 'error') {
       $output = '';
       if ($this->size($class, $type) > 0) {
-        if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/message_stack.html')) {
+        if (defined('CURRENT_TEMPLATE')
+            && is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/message_stack.html')
+            )
+        {
           $smarty = new Smarty();
           $smarty->caching = 0;
           $smarty->assign('type', $type);
