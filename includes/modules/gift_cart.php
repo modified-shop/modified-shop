@@ -48,7 +48,9 @@ if (isset ($_SESSION['customer_id'])) {
     }
 	}
   $gift_smarty->assign('GV_AMOUNT', $gv_amount);
+  $gift_smarty->assign('C_FLAG', 'true');
 }
+
 if (isset ($_SESSION['gv_id'])) {
 	$gv_query = xtc_db_query("SELECT coupon_amount 
 	                            FROM ".TABLE_COUPONS." 
@@ -56,6 +58,7 @@ if (isset ($_SESSION['gv_id'])) {
 	$coupon = xtc_db_fetch_array($gv_query);
 	$gift_smarty->assign('COUPON_AMOUNT2', $xtPrice->xtcFormat($coupon['coupon_amount'], true, 0, true));
 }
+
 $cc_check = isset($_SESSION['cc_amount_min_order']) && $_SESSION['cc_amount_min_order'] <= $_SESSION['cart']->show_total() ? true : false;
 if (isset ($_SESSION['cc_id']) && $cc_check) {
   if (!defined('POPUP_COUPON_HELP_LINK_PARAMETERS')) {
@@ -67,9 +70,6 @@ if (isset ($_SESSION['cc_id']) && $cc_check) {
   $clink_parameters = defined('TPL_POPUP_CONTENT_LINK_PARAMETERS') ? TPL_POPUP_COUPON_HELP_LINK_PARAMETERS : POPUP_COUPON_HELP_LINK_PARAMETERS;
   $clink_class = defined('TPL_POPUP_CONTENT_LINK_CLASS') ? TPL_POPUP_SHIPPING_LINK_CLASS : POPUP_SHIPPING_LINK_CLASS;
 	$gift_smarty->assign('COUPON_HELP_LINK', '<a target="_blank" class="'.$clink_class.'" href="'.xtc_href_link(FILENAME_POPUP_COUPON_HELP, 'cID='.$_SESSION['cc_id'].$clink_parameters, $request_type).'">');
-}
-if (isset ($_SESSION['customer_id'])) {
-	$gift_smarty->assign('C_FLAG', 'true');
 }
 
 //check coupon minimum order

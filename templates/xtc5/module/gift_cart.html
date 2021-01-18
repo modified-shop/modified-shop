@@ -11,12 +11,12 @@
     {if $coupon_message != ''}<div class="errormessage">{$coupon_message}</div>{/if}
     {if $success_message != ''}<div class="infomessage">{$success_message}</div>{/if}
   {/if}
-  {if $GV_AMOUNT neq ''}
+  {if isset($GV_AMOUNT) && $GV_AMOUNT > 0}
     <p>{#text_info#}</p>
     <p>{#voucher_balance#} <strong>{$GV_AMOUNT}</strong></p>
     <p>{#text_send_to_friend#} <a href="{$GV_SEND_TO_FRIEND_LINK}">{#box_send_to_friend#}</a></p>
   {/if}
-  {if $COUPON_AMOUNT2 neq ''}
+  {if isset($COUPON_AMOUNT2) && $COUPON_AMOUNT2 > 0}
     <p>{#voucher_redeemed#}</p>
     <p>{$COUPON_AMOUNT2}</p>
   {/if}
