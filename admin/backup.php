@@ -19,7 +19,6 @@
 
   define('BK_FILENAME', 'backup_db.php');
   define('RS_FILENAME', 'backup_restore.php'); 
-  define('VERSION', 'Database Backup Ver. 2.20 UTF-8');
 
   require('includes/application_top.php');
   

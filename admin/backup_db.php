@@ -13,7 +13,6 @@
    Released under the GNU General Public License
    --------------------------------------------------------------*/
 
-  define ('VERSION', 'Database Backup Ver. 2.20 UTF-8');
   define ('_IS_FILEMANAGER', true);
   
   require('includes/application_top.php');

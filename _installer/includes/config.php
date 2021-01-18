@@ -29,10 +29,7 @@
   // DB Backup / Restore
   define('MAX_RELOADS', 100000000);
   define('RESTORE_TEST', false);
-  
-  // version
-  define('VERSION', '2.0.5.1');
-  
+    
   define('ENTRY_FIRST_NAME_MIN_LENGTH', 2);
   define('ENTRY_LAST_NAME_MIN_LENGTH', 2);
   define('ENTRY_EMAIL_ADDRESS_MIN_LENGTH', 6);
