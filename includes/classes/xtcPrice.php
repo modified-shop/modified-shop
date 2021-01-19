@@ -48,16 +48,23 @@ class xtcPrice {
     $this->actualGroup = (int) $cGroup;
     $this->actualCurr = $currency;
     $this->TAX = array();
-    $this->SHIPPING = array();
     $this->showFrom_Attributes = true;
     $this->flagSpecial = false;
-    
     $this->show_price_tax = 0;
+    $this->country_id = STORE_COUNTRY;
+    $this->zone_id = STORE_ZONE;
 
-    if (!defined('HTTP_CATALOG_SERVER') && isset($_SESSION['cart'])) {
-      if (is_object($_SESSION['cart'])) {
-        $this->content_type = $_SESSION['cart']->get_content_type();
-      }
+    if (!defined('HTTP_CATALOG_SERVER') 
+        && isset($_SESSION['cart'])
+        && is_object($_SESSION['cart'])
+        )
+    {
+      $this->content_type = $_SESSION['cart']->get_content_type();
+    }
+
+    if (isset($_SESSION['customer_id'])) {
+      $this->country_id = $_SESSION['customer_country_id'];
+      $this->zone_id = $_SESSION['customer_zone_id'];
     }
 
     $currencies_query = xtDBquery("SELECT * 
@@ -95,6 +102,9 @@ class xtcPrice {
                                             WHERE ab.customers_id = '" . $_SESSION['customer_id'] . "'
                                               AND ab.address_book_id = '" . ($this->content_type == 'virtual' ? $_SESSION['billto'] : $_SESSION['sendto']) . "'");
         if (xtc_db_num_rows($tax_address_query) == 1) {
+          $this->country_id = $tax_address['entry_country_id'];
+          $this->zone_id = $tax_address['entry_zone_id'];
+          
           $tax_address = xtc_db_fetch_array($tax_address_query);
           $this->TAX[$zones_data['class']] = xtc_get_tax_rate($zones_data['class'], $tax_address['entry_country_id'], $tax_address['entry_zone_id']);
         } else {
@@ -104,6 +114,8 @@ class xtcPrice {
         $country_id = -1;
         if (isset($_SESSION['country'])) {
           $country_id = $_SESSION['country'];
+          $this->country_id = $country_id;
+          $this->zone_id = -1;
         }
         $this->TAX[$zones_data['class']] = xtc_get_tax_rate($zones_data['class'], $country_id);        
       }
