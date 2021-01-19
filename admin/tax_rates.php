@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: tax_rates.php 1123 2005-07-27 09:00:31Z novalis $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -143,8 +143,8 @@
                       }
                   ?>
                   <td class="dataTableContent"><?php echo $rates['tax_priority']; ?></td>
-                  <td class="dataTableContent"><?php echo $rates['tax_class_title']; ?></td>
-                  <td class="dataTableContent"><?php echo $rates['geo_zone_name']; ?></td>
+                  <td class="dataTableContent"><?php echo parse_multi_language_value($rates['tax_class_title'], $_SESSION['language_code']); ?></td>
+                  <td class="dataTableContent"><?php echo parse_multi_language_value($rates['geo_zone_name'], $_SESSION['language_code']); ?></td>
                   <td class="dataTableContent"><?php echo xtc_display_tax_value($rates['tax_rate']); ?>%</td>
                   <td class="dataTableContent txta-r"><?php if ( (is_object($trInfo)) && ($rates['tax_rates_id'] == $trInfo->tax_rates_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_TAX_RATES, 'page=' . $_GET['page'] . '&tID=' . $rates['tax_rates_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
                 </tr>
