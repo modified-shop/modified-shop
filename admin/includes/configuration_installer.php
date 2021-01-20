@@ -100,6 +100,14 @@ $values_group_update = array();
   $values[] = "(NULL, 'PRODUCT_IMAGE_MIDI_MERGE', '', '4', '18', NULL, NOW(), NULL, NULL);";
 
   $values_update[] = array (
+                           'values' => "sort_order = '5'",
+                           'configuration_key' => 'PRODUCT_IMAGE_THUMBNAIL_WIDTH'
+                           );
+  $values_update[] = array (
+                           'values' => "sort_order = '6'",
+                           'configuration_key' => 'PRODUCT_IMAGE_THUMBNAIL_HEIGHT'
+                           );
+  $values_update[] = array (
                            'values' => "sort_order = '2'",
                            'configuration_key' => 'PRODUCT_IMAGE_NO_ENLARGE_UNDER_DEFAULT'
                            );
