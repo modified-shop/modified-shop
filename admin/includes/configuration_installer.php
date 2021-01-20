@@ -88,10 +88,33 @@ $values_group_update = array();
   $values[] = "(NULL, 'MAX_DISPLAY_ALSO_PURCHASED_ORDERS', '100', '3', '16', NULL, NOW(), NULL, NULL);";
 
 //configuration_group_id 4 --- "Bild Optionen"
-  $values[] = "(NULL, 'PRODUCT_IMAGE_NO_ENLARGE_UNDER_DEFAULT', 'false', '4', '6', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
-  $values[] = "(NULL, 'PRODUCT_IMAGE_SHOW_NO_IMAGE', 'true', '4', '6', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
-  $values[] = "(NULL, 'CATEGORIES_IMAGE_SHOW_NO_IMAGE', 'false', '4', '6', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
-  $values[] = "(NULL, 'MANUFACTURER_IMAGE_SHOW_NO_IMAGE', 'false', '4', '6', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
+  $values[] = "(NULL, 'PRODUCT_IMAGE_NO_ENLARGE_UNDER_DEFAULT', 'false', '4', '2', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
+  $values[] = "(NULL, 'PRODUCT_IMAGE_SHOW_NO_IMAGE', 'true', '4', '2', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
+  $values[] = "(NULL, 'CATEGORIES_IMAGE_SHOW_NO_IMAGE', 'false', '4', '2', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
+  $values[] = "(NULL, 'MANUFACTURER_IMAGE_SHOW_NO_IMAGE', 'false', '4', '2', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
+  $values[] = "(NULL, 'PRODUCT_IMAGE_MINI_WIDTH', '100', '4', '3', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'PRODUCT_IMAGE_MINI_HEIGHT', '100', '4', '4', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'PRODUCT_IMAGE_MINI_MERGE', '', '4', '16', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'PRODUCT_IMAGE_MIDI_WIDTH', '200', '7', '3', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'PRODUCT_IMAGE_MIDI_HEIGHT', '200', '8', '4', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'PRODUCT_IMAGE_MIDI_MERGE', '', '4', '18', NULL, NOW(), NULL, NULL);";
+
+  $values_update[] = array (
+                           'values' => "sort_order = '2'",
+                           'configuration_key' => 'PRODUCT_IMAGE_NO_ENLARGE_UNDER_DEFAULT'
+                           );
+  $values_update[] = array (
+                           'values' => "sort_order = '2'",
+                           'configuration_key' => 'PRODUCT_IMAGE_SHOW_NO_IMAGE'
+                           );
+  $values_update[] = array (
+                           'values' => "sort_order = '2'",
+                           'configuration_key' => 'CATEGORIES_IMAGE_SHOW_NO_IMAGE'
+                           );
+  $values_update[] = array (
+                           'values' => "sort_order = '2'",
+                           'configuration_key' => 'MANUFACTURER_IMAGE_SHOW_NO_IMAGE'
+                           );
 
 //configuration_group_id 5 --- "Kundendetails"
   $values[] = "(NULL, 'ACCOUNT_TELEPHONE_OPTIONAL', 'false', '5', '70', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";

@@ -47,14 +47,20 @@
       case 'original' :
         $path = DIR_FS_CATALOG_ORIGINAL_IMAGES;
         break;
+      case 'popup' :
+        $path = DIR_FS_CATALOG_POPUP_IMAGES;
+        break;
       case 'info' :
         $path = DIR_FS_CATALOG_INFO_IMAGES;
+        break;
+      case 'midi' :
+        $path = DIR_FS_CATALOG_MIDI_IMAGES;
         break;
       case 'thumbnail' :
         $path = DIR_FS_CATALOG_THUMBNAIL_IMAGES;
         break;
-      case 'popup' :
-        $path = DIR_FS_CATALOG_POPUP_IMAGES;
+      case 'mini' :
+        $path = DIR_FS_CATALOG_MINI_IMAGES;
         break;
     }
 
@@ -102,9 +108,11 @@
         <div class="main mrg5">
         <?php
           echo '<a class="button" href="'.xtc_href_link('removeoldpics.php', 'action=delete&path=original').'">'.LINK_ORIGINAL.'</a>';
-          echo '<a class="button" href="'.xtc_href_link('removeoldpics.php', 'action=delete&path=info').'">'.LINK_INFO.'</a>';
-          echo '<a class="button" href="'.xtc_href_link('removeoldpics.php', 'action=delete&path=thumbnail').'">'.LINK_THUMBNAIL.'</a>';
           echo '<a class="button" href="'.xtc_href_link('removeoldpics.php', 'action=delete&path=popup').'">'.LINK_POPUP.'</a>';
+          echo '<a class="button" href="'.xtc_href_link('removeoldpics.php', 'action=delete&path=info').'">'.LINK_INFO.'</a>';
+          echo '<a class="button" href="'.xtc_href_link('removeoldpics.php', 'action=delete&path=midi').'">'.LINK_MIDI.'</a>';
+          echo '<a class="button" href="'.xtc_href_link('removeoldpics.php', 'action=delete&path=thumbnail').'">'.LINK_THUMBNAIL.'</a>';
+          echo '<a class="button" href="'.xtc_href_link('removeoldpics.php', 'action=delete&path=mini').'">'.LINK_MINI.'</a>';
         ?>
         </div>
       </td>

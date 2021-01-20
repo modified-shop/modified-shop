@@ -162,10 +162,20 @@ define('MAX_PRODUCTS_QTY_DESC', 'Maximum quantity per product in cart');
 define('MAX_DISPLAY_NEW_PRODUCTS_DAYS_TITLE' , 'Maximum Age (days) for New Products');
 define('MAX_DISPLAY_NEW_PRODUCTS_DAYS_DESC' , 'Maximum age (in days) for products to be displayed as "new products"');
 
+define('PRODUCT_IMAGE_MINI_WIDTH_TITLE' , 'Width of Product Mini');
+define('PRODUCT_IMAGE_MINI_WIDTH_DESC' , 'Maximum width of product mini (in pixels) (Standard: 100). For larger values possibly "productPreviewImage" is adjusted in the templates stylesheet.css file.');
+define('PRODUCT_IMAGE_MINI_HEIGHT_TITLE' , 'Height of Product Mini');
+define('PRODUCT_IMAGE_MINI_HEIGHT_DESC' , 'Maximum height of product mini (in pixels) (Standard: 100).');
+
 define('PRODUCT_IMAGE_THUMBNAIL_WIDTH_TITLE' , 'Width of Product Thumbnails');
 define('PRODUCT_IMAGE_THUMBNAIL_WIDTH_DESC' , 'Maximum width of product thumbnails (in pixels) (Standard: 160). For larger values possibly "productPreviewImage" is adjusted in the templates stylesheet.css file.');
 define('PRODUCT_IMAGE_THUMBNAIL_HEIGHT_TITLE' , 'Height of Product Thumbnails');
 define('PRODUCT_IMAGE_THUMBNAIL_HEIGHT_DESC' , 'Maximum height of product thumbnails (in pixels) (Standard: 160).');
+
+define('PRODUCT_IMAGE_MIDI_WIDTH_TITLE' , 'Width of Product Midi');
+define('PRODUCT_IMAGE_MIDI_WIDTH_DESC' , 'Maximum width of product midi (in pixels) (Standard: 200). For larger values possibly "productPreviewImage" is adjusted in the templates stylesheet.css file.');
+define('PRODUCT_IMAGE_MIDI_HEIGHT_TITLE' , 'Height of Product Midi');
+define('PRODUCT_IMAGE_MIDI_HEIGHT_DESC' , 'Maximum height of product midi (in pixels) (Standard: 200).');
 
 define('PRODUCT_IMAGE_INFO_WIDTH_TITLE' , 'Width of Product Info Images');
 define('PRODUCT_IMAGE_INFO_WIDTH_DESC' , 'Maximum width of product info images (in pixels) (Standard: 230).');
@@ -190,12 +200,14 @@ define('SUBCATEGORY_IMAGE_HEIGHT_DESC' , 'Height of subcategory images (in pixel
 define('MO_PICS_TITLE','Number of product images');
 define('MO_PICS_DESC','if this number is set > 0 , you will be able to upload/display more images per product');
 
-//This is for the Images showing your products for preview. All the small stuff.
+define('PRODUCT_IMAGE_MINI_MERGE_TITLE' , 'Product Mini:Merge<br /><img src="images/config_merge.gif">');
+define('PRODUCT_IMAGE_MINI_MERGE_DESC' , 'Product Mini:Merge<br /><br />Default-values: (overlay.gif,10,-50,60,FF0000)<br /><br />overlay merge image<br />Usage:<br />(merge image,x start [neg = from right],y start [neg = from base],opacity, transparent colour on merge image)');
 
 define('PRODUCT_IMAGE_THUMBNAIL_MERGE_TITLE' , 'Product Thumbnails:Merge<br /><img src="images/config_merge.gif">');
 define('PRODUCT_IMAGE_THUMBNAIL_MERGE_DESC' , 'Product Thumbnails:Merge<br /><br />Default-values: (overlay.gif,10,-50,60,FF0000)<br /><br />overlay merge image<br />Usage:<br />(merge image,x start [neg = from right],y start [neg = from base],opacity, transparent colour on merge image)');
 
-//And this is for the Images showing your products in single-view
+define('PRODUCT_IMAGE_MIDI_MERGE_TITLE' , 'Product Midi:Merge<br /><img src="images/config_merge.gif">');
+define('PRODUCT_IMAGE_MIDI_MERGE_DESC' , 'Product Midi:Merge<br /><br />Default-values: (overlay.gif,10,-50,60,FF0000)<br /><br />overlay merge image<br />Usage:<br />(merge image,x start [neg = from right],y start [neg = from base],opacity, transparent colour on merge image)');
 
 define('PRODUCT_IMAGE_INFO_MERGE_TITLE' , 'Product Images:Merge');
 define('PRODUCT_IMAGE_INFO_MERGE_DESC' , 'Product Images:Merge<br /><br />Default-values: (overlay.gif,10,-50,60,FF0000)<br /><br />overlay merge image<br />Usage:<br />(merge image,x start [neg = from right],y start [neg = from base],opacity,transparent colour on merge image)');

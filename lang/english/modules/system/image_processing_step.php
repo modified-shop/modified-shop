@@ -40,7 +40,9 @@ define('MODULE_STEP_READY_STYLE_TEXT', '<div class="ready_info">%s</div>');
 define('MODULE_STEP_READY_STYLE_BACK', MODULE_STEP_READY_STYLE_TEXT);
 define('TEXT_LOWER_FILE_EXT','Convert file extension to lowercase. Example: <b> JPG -> jpg</b>');
 define('IMAGE_COUNT_INFO','Number of images in %s: %s pieces. ');
+define('TEXT_MINI_IMAGES','Mini images');
 define('TEXT_THUMBNAIL_IMAGES','Thumbnail images');
+define('TEXT_MIDI_IMAGES','Midi images');
 define('TEXT_INFO_IMAGES','Info images');
 define('TEXT_POPUP_IMAGES','Popup images');
 

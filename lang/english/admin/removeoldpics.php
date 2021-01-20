@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: removeoldpics.php 3503 2012-08-23 11:24:07Z dokuman $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -24,9 +24,11 @@ define('LINK_INFO_TEXT', '<p>With this function you can delete dispensable produ
 - /images/product_images/thumbnail_images<br/>
 <p>if there are no more references to them in the database.<br/>When a picture is no more needed by an article it can be removed savely from the webserver.</p><br/>');
 define('LINK_ORIGINAL', 'Remove old original images');
-define('LINK_INFO', 'Remove old info images');
-define('LINK_THUMBNAIL', 'Remove old thumbnail images');
 define('LINK_POPUP', 'Remove old popup images');
+define('LINK_INFO', 'Remove old info images');
+define('LINK_MIDI', 'Remove old midi images');
+define('LINK_THUMBNAIL', 'Remove old thumbnail images');
+define('LINK_MINI', 'Remove old mini images');
 define ('LINK_MESSAGE', 'Superfluous item images from the directory "/images/product_images/%s_images" have been deleted.');
 define ('LINK_MESSAGE_NO_DELETE', 'There are no superfluous items in the images directory was "/images/product_images/%s_images" found.');
 ?>

@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: file_permissions.php 3119 2012-06-23 14:45:52Z Tomcraft1980 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -46,10 +46,12 @@ $writeableDirs = array(
   DIR_FS_CATALOG.'images/banner',
   DIR_FS_CATALOG.'images/categories',
   DIR_FS_CATALOG.'images/content',
-  DIR_FS_CATALOG.'images/product_images/info_images',
   DIR_FS_CATALOG.'images/product_images/original_images',
   DIR_FS_CATALOG.'images/product_images/popup_images',
+  DIR_FS_CATALOG.'images/product_images/info_images',
+  DIR_FS_CATALOG.'images/product_images/midi_images',
   DIR_FS_CATALOG.'images/product_images/thumbnail_images',
+  DIR_FS_CATALOG.'images/product_images/mini_images',
   DIR_FS_CATALOG.'images/manufacturers',
   DIR_FS_CATALOG.'images/icons',
   DIR_FS_CATALOG.'import',

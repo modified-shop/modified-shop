@@ -13,7 +13,9 @@
   // images
   define('DIR_WS_IMAGES', 'images/');
   define('DIR_WS_ORIGINAL_IMAGES', DIR_WS_IMAGES .'product_images/original_images/');
+  define('DIR_WS_MINI_IMAGES', DIR_WS_IMAGES .'product_images/mini_images/');
   define('DIR_WS_THUMBNAIL_IMAGES', DIR_WS_IMAGES .'product_images/thumbnail_images/');
+  define('DIR_WS_MIDI_IMAGES', DIR_WS_IMAGES .'product_images/midi_images/');
   define('DIR_WS_INFO_IMAGES', DIR_WS_IMAGES .'product_images/info_images/');
   define('DIR_WS_POPUP_IMAGES', DIR_WS_IMAGES .'product_images/popup_images/');
   define('DIR_WS_ICONS', DIR_WS_IMAGES . 'icons/');

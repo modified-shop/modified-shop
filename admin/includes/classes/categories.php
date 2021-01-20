@@ -1329,7 +1329,9 @@ class categories {
 
 
   function image_process($products_image_name, $products_image_name_process) {
+    require(DIR_WS_INCLUDES . 'product_mini_images.php');
     require(DIR_WS_INCLUDES . 'product_thumbnail_images.php');
+    require(DIR_WS_INCLUDES . 'product_midi_images.php');
     require(DIR_WS_INCLUDES . 'product_info_images.php');
     require(DIR_WS_INCLUDES . 'product_popup_images.php');
   }
