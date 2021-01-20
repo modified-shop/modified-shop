@@ -25,12 +25,12 @@ class KlarnaPaymentBase extends KlarnaAutoload {
   function init() {    
     $this->klarna_version = '1.01';
     
-    $this->title = constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_TITLE');
-    $this->description = constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_DESCRIPTION');
+    $this->title = defined('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_TITLE') ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_TITLE') : '';
+    $this->description = defined('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_DESCRIPTION') ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_DESCRIPTION') : '';
     $this->sort_order = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_SORT_ORDER')) ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_SORT_ORDER') : '');
     $this->enabled = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_STATUS') && constant('MODULE_PAYMENT_'.strtoupper($this->code).'_STATUS') == 'True') ? true : false);
-    $this->info = constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_INFO');
-    $this->extended_description = constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_VERSION').$this->klarna_version;
+    $this->info = defined('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_INFO') ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_INFO') : '';
+    $this->extended_description = defined('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_VERSION') ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_VERSION').$this->klarna_version : '';
     
     if ($this->check() > 0) {
       $this->order_status = DEFAULT_ORDERS_STATUS_ID;
