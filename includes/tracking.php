@@ -73,7 +73,7 @@ if (!isset($_SESSION['tracking']['browser']) && isset($_SERVER['HTTP_USER_AGENT'
 if (!isset($_SESSION['tracking']['pageview_history'])) {
   $_SESSION['tracking']['pageview_history'] = array();
 }
-if (end($_SESSION['tracking']['pageview_history']) != $req_url) {
+if (basename($PHP_SELF) != 'ajax.php' && end($_SESSION['tracking']['pageview_history']) != $req_url) {
   array_push($_SESSION['tracking']['pageview_history'], $req_url);
 }
 if (count($_SESSION['tracking']['pageview_history']) > 6) {
