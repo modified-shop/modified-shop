@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: product_info_images.php 899 2005-04-29 02:40:57Z hhgag $
+   $Id$
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -17,7 +17,11 @@ if (!isset($products_image_name_process)) {
   $products_image_name_process = $products_image_name;
 }
 
-$a = new image_manipulation(DIR_FS_CATALOG_ORIGINAL_IMAGES . $products_image_name,PRODUCT_IMAGE_INFO_WIDTH,PRODUCT_IMAGE_INFO_HEIGHT,DIR_FS_CATALOG_INFO_IMAGES . $products_image_name_process,IMAGE_QUALITY,'');
+if (is_file(DIR_FS_CATALOG_INFO_IMAGES.$products_image_name_process)) {
+  unlink(DIR_FS_CATALOG_INFO_IMAGES.$products_image_name_process);
+}
+
+$a = new image_manipulation(DIR_FS_CATALOG_ORIGINAL_IMAGES.$products_image_name, PRODUCT_IMAGE_INFO_WIDTH, PRODUCT_IMAGE_INFO_HEIGHT, DIR_FS_CATALOG_INFO_IMAGES.$products_image_name_process, IMAGE_QUALITY, '');
 
 if (PRODUCT_IMAGE_INFO_MERGE != '') {
   $string=str_replace("'",'',PRODUCT_IMAGE_INFO_MERGE);
