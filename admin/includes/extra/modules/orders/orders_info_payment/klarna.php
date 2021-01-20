@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: orders_klarna.php 11169 2018-05-30 13:57:32Z GTB $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -18,6 +18,7 @@ if (isset($order) && is_object($order)) {
       || $order->info['payment_method'] == 'klarna_payovertime'
       || $order->info['payment_method'] == 'klarna_directdebit'
       || $order->info['payment_method'] == 'klarna_directbanktransfer'
+      || $order->info['payment_method'] == 'klarna_paynow'
       ) 
   {
     require_once(DIR_FS_EXTERNAL.'klarna/classes/KlarnaPayment.php');
