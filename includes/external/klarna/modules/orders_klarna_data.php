@@ -32,7 +32,7 @@ if (isset($order) && is_object($order)) {
       $admin_info_array = $klarna->fetchOrder($order_id);
     }
 
-    if (count($admin_info_array) > 0) {
+    if (is_array($admin_info_array) && count($admin_info_array) > 0) {
       ?>          
       <table border="0" width="100%" cellspacing="0" cellpadding="2" class="dataTableRow klarna_data" style="display:none;">
         <tr>
