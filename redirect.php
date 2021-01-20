@@ -19,21 +19,7 @@
 include ('includes/application_top.php');
 
 require_once (DIR_FS_INC.'xtc_update_banner_click_count.inc.php');
-
-function check_url_scheme($url) {
-  $parse_url = parse_url($url);
-  if (!isset($parse_url['scheme'])) {
-    $shop_url = xtc_get_top_level_domain((isset($parse_url['host'])) ? $parse_url['host'] : substr($parse_url['path'], 0, strpos($parse_url['path'], '/')));
-    if (strpos(HTTP_SERVER, $shop_url['domain']) !== false) {
-      $parse_url_host = parse_url(HTTP_SERVER);
-      $url = $parse_url_host['scheme'].'://'.$url;
-    } else {
-      $url = 'http://'.$url;
-    }
-  }
-  
-  return $url;
-}
+require_once (DIR_FS_INC.'xtc_get_banners_url.inc.php');
 
 if (isset($_GET['action'])) {
   switch ($_GET['action']) {
@@ -45,32 +31,7 @@ if (isset($_GET['action'])) {
         $banner = xtc_db_fetch_array($banner_query);
         xtc_update_banner_click_count($_GET['goto']);
       
-        // remove session id
-        if (strrpos($banner['banners_url'], session_name()) !== false) {
-          $banner['banners_url'] = substr($banner['banners_url'], 0, strrpos($banner['banners_url'], session_name()));
-        }
-        $banner['banners_url'] = rtrim($banner['banners_url'], '&?');
-            
-        // Add the session ID when SID is defined
-        $banner_url = xtc_get_top_level_domain($banner['banners_url']);
-        $shop_url = xtc_get_top_level_domain(HTTP_SERVER);
-      
-        if ((!isset($truncate_session_id) || $truncate_session_id === false)
-            && (SESSION_FORCE_COOKIE_USE == 'False' && !$cookie)
-            && $shop_url['domain'] == $banner_url['domain']
-           )
-        {
-          $separator = ((strpos($banner['banners_url'], '?') === false) ? '?' : '&');
-          if (defined('SID')
-              && constant('SID') != '')
-          {
-            $banner['banners_url'] .= $separator . session_name() . '=' . session_id();
-          } elseif ($http_domain != $https_domain) {
-            $banner['banners_url'] .= $separator . session_name() . '=' . session_id();
-          }
-        }
-      
-        xtc_redirect(check_url_scheme($banner['banners_url']));
+        xtc_redirect(xtc_get_banners_url($banner['banners_url']));
       }
       break;
 

@@ -30,6 +30,8 @@ define('TABLE_HEADING_IMAGE', 'Image');
 define('TEXT_BANNERS_TITLE', 'Banner Title:');
 define('TEXT_BANNERS_URL', 'Banner URL:');
 define('TEXT_BANNERS_URL_NOTE', 'URL target when clicking the banner.'); 
+define('TEXT_BANNERS_REDIRECT', 'Banner Statistc:'); 
+define('TEXT_BANNERS_REDIRECT_NOTE', 'Do you want to generate statistics about the clicks? (no direct link to the banner URL)'); 
 define('TEXT_BANNERS_GROUP', 'Banner Group:');
 define('TEXT_BANNERS_NEW_GROUP', 'Choose an existing banner group (if exists) or enter a new banner group below.');
 define('TEXT_BANNERS_NEW_GROUP_NOTE', 'To display a Banner in the template, the template must be extended<br/>Example: Banner Group banner , the banner can be displayed in the template in the index.html with ${BANNER}');

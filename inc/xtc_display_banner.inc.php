@@ -16,9 +16,12 @@
    ---------------------------------------------------------------------------------------*/
     
   require_once(DIR_FS_INC . 'xtc_banner_exists.inc.php');
+  require_once(DIR_FS_INC . 'xtc_get_banners_url.inc.php');
   
   // Display a banner from the specified group or banner id ($identifier)
   function xtc_display_banner($action, $identifier) {
+    $shop_url = xtc_get_top_level_domain(HTTP_SERVER);
+
     if ($action == 'dynamic') {
       if (is_array($identifier)) {
         $banner = $identifier;
@@ -39,13 +42,12 @@
       }
       
       if (count($banner_content) > 0) {
-        $shop_url = xtc_get_top_level_domain(HTTP_SERVER);
   
         $banner_array = array();
         foreach ($banner_content as $banner) {
           $banner_url = xtc_get_top_level_domain($banner['banners_url']);
           $banner_title = xtc_parse_input_field_data($banner['banners_title'], array('"' => '&quot;'));
-          $banner_link = xtc_href_link(FILENAME_REDIRECT, 'action=banner&goto=' . $banner['banners_id']);
+          $banner_link = (($banner['banners_redirect'] == 0) ? xtc_get_banners_url($banner['banners_url']) : xtc_href_link(FILENAME_REDIRECT, 'action=banner&goto=' . $banner['banners_id']));
           $banner_target = (($shop_url['domain'] != $banner_url['domain']) ? ' target="_blank" rel="noopener"' : '');
           $banner_image = (($banner['banners_image'] != '') ? xtc_image(DIR_WS_IMAGES.'banner/'.$banner['banners_image'], $banner['banners_title'], '', '', 'title="'.$banner['banners_title'].'"') : '');
           
@@ -68,10 +70,9 @@
       return false;
     }
     
-    $shop_url = xtc_get_top_level_domain(HTTP_SERVER);
     $banner_url = xtc_get_top_level_domain($banner['banners_url']);
     $banner_title = xtc_parse_input_field_data($banner['banners_title'], array('"' => '&quot;'));
-    $banner_link = xtc_href_link(FILENAME_REDIRECT, 'action=banner&goto=' . $banner['banners_id']);
+    $banner_link = (($banner['banners_redirect'] == 0) ? xtc_get_banners_url($banner['banners_url']) : xtc_href_link(FILENAME_REDIRECT, 'action=banner&goto=' . $banner['banners_id']));
     $banner_target = (($shop_url['domain'] != $banner_url['domain']) ? ' target="_blank" rel="noopener"' : '');
     $banner_image = (($banner['banners_image'] != '') ? xtc_image(DIR_WS_IMAGES.'banner/'.$banner['banners_image'], $banner['banners_title'], '', '', 'title="'.$banner['banners_title'].'"') : '');
     
