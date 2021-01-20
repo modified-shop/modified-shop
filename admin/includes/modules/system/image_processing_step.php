@@ -117,23 +117,40 @@ if ( !class_exists( "image_processing_step" ) ) {
 
         if (isset($_POST['only_missing_images']) && $_POST['only_missing_images'] == 1) {
           $flag = false;
+          if (!is_file(DIR_FS_CATALOG_MINI_IMAGES.$products_image_name_process)
+              && isset($_POST['mini_images']) && $_POST['mini_images'] == 1
+              )
+          {
+            require(DIR_WS_INCLUDES . 'product_mini_images.php'); 
+            $flag = true;
+          }
           if (!is_file(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$products_image_name_process)
               && isset($_POST['thumbnail_images']) && $_POST['thumbnail_images'] == 1
               )
           {
-            require(DIR_WS_INCLUDES . 'product_thumbnail_images.php'); $flag = true;
+            require(DIR_WS_INCLUDES . 'product_thumbnail_images.php'); 
+            $flag = true;
+          }
+          if (!is_file(DIR_FS_CATALOG_MIDI_IMAGES.$products_image_name_process)
+              && isset($_POST['midi_images']) && $_POST['midi_images'] == 1
+              )
+          {
+            require(DIR_WS_INCLUDES . 'product_midi_images.php'); 
+            $flag = true;
           }
           if (!is_file(DIR_FS_CATALOG_INFO_IMAGES.$products_image_name_process)
               && isset($_POST['info_images']) && $_POST['info_images'] == 1
               )
           {
-            require(DIR_WS_INCLUDES . 'product_info_images.php'); $flag = true;
+            require(DIR_WS_INCLUDES . 'product_info_images.php'); 
+            $flag = true;
           }
           if (!is_file(DIR_FS_CATALOG_POPUP_IMAGES.$products_image_name_process)
               && isset($_POST['popup_images']) && $_POST['popup_images'] == 1
               )
           {
-            require(DIR_WS_INCLUDES . 'product_popup_images.php'); $flag = true;
+            require(DIR_WS_INCLUDES . 'product_popup_images.php'); 
+            $flag = true;
           }
           if ($flag) {
             $count += 1;
@@ -142,8 +159,14 @@ if ( !class_exists( "image_processing_step" ) ) {
             }  
           }
         } else {
+          if (isset($_POST['mini_images']) && $_POST['mini_images'] == 1) {
+            require(DIR_WS_INCLUDES . 'product_mini_images.php');
+          }
           if (isset($_POST['thumbnail_images']) && $_POST['thumbnail_images'] == 1) {
             require(DIR_WS_INCLUDES . 'product_thumbnail_images.php');
+          }
+          if (isset($_POST['midi_images']) && $_POST['midi_images'] == 1) {
+            require(DIR_WS_INCLUDES . 'product_midi_images.php');
           }
           if (isset($_POST['info_images']) && $_POST['info_images'] == 1) {
             require(DIR_WS_INCLUDES . 'product_info_images.php');
@@ -199,7 +222,9 @@ if ( !class_exists( "image_processing_step" ) ) {
                              '<br />' . sprintf(IMAGE_COUNT_INFO, basename(DIR_FS_CATALOG_ORIGINAL_IMAGES), $this->max_files) . '['.$this->formatBytes($this->data_volume).']'.'<br />'.
                              '<br />' . xtc_draw_pull_down_menu('max_datasets', $max_array, '5'). ' ' . TEXT_MAX_IMAGES. '<br />'.
 
+                             '<br />' . xtc_draw_checkbox_field('mini_images', '1', false, '', 'class="mini_images"') . ' ' . TEXT_MINI_IMAGES.
                              '<br />' . xtc_draw_checkbox_field('thumbnail_images', '1', false, '', 'class="thumbnail_images"') . ' ' . TEXT_THUMBNAIL_IMAGES.
+                             '<br />' . xtc_draw_checkbox_field('midi_images', '1', false, '', 'class="midi_images"') . ' ' . TEXT_MIDI_IMAGES.
                              '<br />' . xtc_draw_checkbox_field('info_images', '1', false, '', 'class="info_images"') . ' ' . TEXT_INFO_IMAGES. 
                              '<br />' . xtc_draw_checkbox_field('popup_images', '1', false, '', 'class="popup_images"') . ' ' . TEXT_POPUP_IMAGES. '<br />'.
 

@@ -713,13 +713,19 @@ class product {
    */
   function productImage($name, $type) {
     switch ($type) {
-      case 'info' :
-        $path = DIR_WS_INFO_IMAGES;
+      case 'mini':
+        $path = DIR_WS_MINI_IMAGES;
         break;
-      case 'thumbnail' :
+      case 'thumbnail':
         $path = DIR_WS_THUMBNAIL_IMAGES;
         break;
-      case 'popup' :
+      case 'midi':
+        $path = DIR_WS_MIDI_IMAGES;
+        break;
+      case 'info':
+        $path = DIR_WS_INFO_IMAGES;
+        break;
+      case 'popup':
         $path = DIR_WS_POPUP_IMAGES;
         break;
     }

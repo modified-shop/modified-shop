@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: removeoldpics.php 3503 2012-08-23 11:24:07Z dokuman $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -23,10 +23,12 @@ define('LINK_INFO_TEXT', '<p>&Uuml;ber diese Funktion k&ouml;nnen &uuml;berfl&uu
 - /images/product_images/popup_images<br/>
 - /images/product_images/thumbnail_images<br/>
 <p>vom Webserver gel&ouml;scht werden, wenn in der Datenbank kein Bezug mehr zu diesen Artikelbildern vorhanden ist.<br/>Wenn ein Bild von keinem Produkt mehr genutzt wird, so kann das Bild vom Webserver gefahrlos gel&ouml;scht werden.</p><br/>');
-define('LINK_ORIGINAL', 'Alte Originalbilder l&ouml;schen');
-define('LINK_INFO', 'Alte Infobilder l&ouml;schen');
-define('LINK_THUMBNAIL', 'Alte Thumbnailbilder l&ouml;schen');
-define('LINK_POPUP', 'Alte Popupbilder l&ouml;schen');
+define('LINK_ORIGINAL', 'Alte Original Bilder l&ouml;schen');
+define('LINK_POPUP', 'Alte Popup Bilder l&ouml;schen');
+define('LINK_INFO', 'Alte Info Bilder l&ouml;schen');
+define('LINK_MIDI', 'Alte Midi Bilder l&ouml;schen');
+define('LINK_THUMBNAIL', 'Alte Thumbnail Bilder l&ouml;schen');
+define('LINK_MINI', 'Alte Mini Bilder l&ouml;schen');
 define('LINK_MESSAGE', '&Uuml;berfl&uuml;ssige Artikelbilder aus dem Verzeichnis "/images/product_images/%s_images" wurden gel&ouml;scht.');
 define('LINK_MESSAGE_NO_DELETE', 'Es wurden keine &uuml;berfl&uuml;ssigen Artikelbilder im Verzeichnis "/images/product_images/%s_images" gefunden.');
 ?>
