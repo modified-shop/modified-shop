@@ -24,7 +24,9 @@
 define('MODULE_STEP_IMAGE_PROCESS_TEXT_DESCRIPTION', 'Es werden alle Bilder in den Verzeichnissen<br /><br />
 /images/product_images/popup_images/<br />
 /images/product_images/info_images/<br />
-/images/product_images/thumbnail_images/ <br /> <br /> neu erstellt.<br /> <br />
+/images/product_images/midi_images/<br />
+/images/product_images/thumbnail_images/<br />
+/images/product_images/mini_images/ <br /> <br /> neu erstellt.<br /> <br />
 Hierzu verarbeitet das Script nur eine begrenzte Anzahl von %s Bildern und ruft sich danach selbst wieder auf.<br /> <br />');
 define('MODULE_STEP_IMAGE_PROCESS_TEXT_TITLE', 'Imageprocessing - Produktbilder');
 define('MODULE_STEP_IMAGE_PROCESS_STATUS_DESC','Modulstatus');
