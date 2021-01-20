@@ -95,8 +95,8 @@ $values_group_update = array();
   $values[] = "(NULL, 'PRODUCT_IMAGE_MINI_WIDTH', '100', '4', '3', NULL, NOW(), NULL, NULL);";
   $values[] = "(NULL, 'PRODUCT_IMAGE_MINI_HEIGHT', '100', '4', '4', NULL, NOW(), NULL, NULL);";
   $values[] = "(NULL, 'PRODUCT_IMAGE_MINI_MERGE', '', '4', '16', NULL, NOW(), NULL, NULL);";
-  $values[] = "(NULL, 'PRODUCT_IMAGE_MIDI_WIDTH', '200', '7', '3', NULL, NOW(), NULL, NULL);";
-  $values[] = "(NULL, 'PRODUCT_IMAGE_MIDI_HEIGHT', '200', '8', '4', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'PRODUCT_IMAGE_MIDI_WIDTH', '200', '4', '7', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'PRODUCT_IMAGE_MIDI_HEIGHT', '200', '4', '8', NULL, NOW(), NULL, NULL);";
   $values[] = "(NULL, 'PRODUCT_IMAGE_MIDI_MERGE', '', '4', '18', NULL, NOW(), NULL, NULL);";
 
   $values_update[] = array (
