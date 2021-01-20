@@ -507,7 +507,7 @@ class KlarnaPayment extends KlarnaPaymentBase {
       $shipping_address->street_address2 = (($order->delivery['suburb'] != '') ? $order->delivery['suburb'] : NULL);
       $shipping_address->postal_code = $order->delivery['postcode'];
       $shipping_address->city = $order->delivery['city'];
-      $shipping_address->region = (($order->delivery['state'] != '') ? $order->delivery['state'] : NULL);
+      $shipping_address->region = ((isset($order->delivery['state']) && $order->delivery['state'] != '') ? $order->delivery['state'] : NULL);
       $shipping_address->email = $order->customer['email_address'];
       $shipping_address->phone = $order->customer['telephone'];
     }
@@ -524,7 +524,7 @@ class KlarnaPayment extends KlarnaPaymentBase {
       $billing_address->street_address2 = (($order->billing['suburb'] != '') ? $order->billing['suburb'] : NULL);
       $billing_address->postal_code = $order->billing['postcode'];
       $billing_address->city = $order->billing['city'];
-      $billing_address->region = (($order->billing['state'] != '') ? $order->billing['state'] : NULL);
+      $billing_address->region = ((isset($order->billing['state']) && $order->billing['state'] != '') ? $order->billing['state'] : NULL);
       $billing_address->email = $order->customer['email_address'];
       $billing_address->phone = $order->customer['telephone'];
     }
