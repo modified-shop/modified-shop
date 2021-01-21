@@ -731,10 +731,12 @@ CREATE TABLE newsletter_recipients (
 
 DROP TABLE IF EXISTS newsletter_recipients_history;
 CREATE TABLE newsletter_recipients_history (
+  history_id INT(11) NOT NULL AUTO_INCREMENT,
   customers_email_address VARCHAR(255) NOT NULL,
   customers_action VARCHAR(32) NOT NULL,
   ip_address varchar(50) DEFAULT NULL,
   date_added datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (history_id),
   KEY idx_customers_email_address (customers_email_address)
 );
 
