@@ -94,11 +94,15 @@
         // check if uploaded file = gif
         if ($this->destination==DIR_FS_CATALOG_ORIGINAL_IMAGES) {
           // check if merge image is defined .gif
-          if (strpos(PRODUCT_IMAGE_THUMBNAIL_MERGE,'.gif') ||
-              strpos(PRODUCT_IMAGE_INFO_MERGE,'.gif') ||
-              strpos(PRODUCT_IMAGE_POPUP_MERGE,'.gif')) {
-              $this->set_message(ERROR_GIF_MERGE);
-              return false;
+          if (strpos(PRODUCT_IMAGE_MINI_MERGE,'.gif')
+              || strpos(PRODUCT_IMAGE_THUMBNAIL_MERGE,'.gif')
+              || strpos(PRODUCT_IMAGE_MIDI_MERGE,'.gif')
+              || strpos(PRODUCT_IMAGE_INFO_MERGE,'.gif')
+              || strpos(PRODUCT_IMAGE_POPUP_MERGE,'.gif')
+              )
+          {
+            $this->set_message(ERROR_GIF_MERGE);
+            return false;
           }
           // check if uploaded image = .gif
           if (strpos($this->filename,'.gif')) {
