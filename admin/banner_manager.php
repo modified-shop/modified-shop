@@ -108,7 +108,7 @@
             $sql_data_array = array(
               'banners_title' => $banners_title,
               'banners_url' => $banners_url,
-              'banners_redirect' => isset($_POST['banners_redirect_'.$languages[$i]['id']]) ? 1 : 0,
+              'banners_redirect' => !isset($_POST['banners_redirect_'.$languages[$i]['id']]) ? 1 : 0,
               'languages_id' => $languages[$i]['id'],
               'banners_group' => $banners_group,
               'banners_image' => $banners_image_exist,
@@ -403,7 +403,7 @@
                     </tr>
                     <tr>
                       <td class="dataTableConfig col-left"><?php echo TEXT_BANNERS_REDIRECT; ?></td>
-                      <td class="dataTableConfig col-middle"><?php echo xtc_draw_checkbox_field('banners_redirect_' . $languages[$i]['id'], '', $bInfo->banners_redirect); ?></td>
+                      <td class="dataTableConfig col-middle"><?php echo xtc_draw_checkbox_field('banners_redirect_' . $languages[$i]['id'], '', (($bInfo->banners_redirect == 0) ? true : false)); ?></td>
                       <td class="dataTableConfig col-right"><?php echo TEXT_BANNERS_REDIRECT_NOTE; ?></td>
                     </tr>
                     <tr>
