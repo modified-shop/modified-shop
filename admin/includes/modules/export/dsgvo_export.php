@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: dsgvo_export.php 13055 2020-12-11 15:10:59Z GTB $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -119,14 +119,14 @@ class dsgvo_export
               $order = new order($orders['orders_id']);
               
               $dsgvo_export['orders']['order'][$orders['orders_id']] = array(
-                'customer' => $this->clean_order($order->customer),
-                'delivery' => $this->clean_order($order->delivery),
-                'billing' => $this->clean_order($order->billing),
+                'customer' => $this->clean_data($order->customer),
+                'delivery' => $this->clean_data($order->delivery),
+                'billing' => $this->clean_data($order->billing),
                 'products' => array(),
               );
               
               foreach ($order->products as $product) {
-                $dsgvo_export['orders']['order'][$orders['orders_id']]['products']['product'][] = $this->clean_order($product);
+                $dsgvo_export['orders']['order'][$orders['orders_id']]['products']['product'][] = $this->clean_data($product);
               }
             }
             
@@ -141,18 +141,46 @@ class dsgvo_export
             $order = new order($orders['orders_id']);
             
             $dsgvo_export['orders']['order'][$orders['orders_id']] = array(
-              'customer' => $this->clean_order($order->customer),
-              'delivery' => $this->clean_order($order->delivery),
-              'billing' => $this->clean_order($order->billing),
+              'customer' => $this->clean_data($order->customer),
+              'delivery' => $this->clean_data($order->delivery),
+              'billing' => $this->clean_data($order->billing),
               'products' => array(),
             );
             
+            if ($order->info['comments'] != '') {
+              $dsgvo_export['orders']['order'][$orders['orders_id']]['comment'] = $order->info['comments'];
+            }
+            
             foreach ($order->products as $product) {
-              $dsgvo_export['orders']['order'][$orders['orders_id']]['products']['product'][] = $this->clean_order($product);
+              $dsgvo_export['orders']['order'][$orders['orders_id']]['products']['product'][] = $this->clean_data($product);
             }
           }
         }
-                
+
+        $newsletter_query = xtc_db_query("SELECT customers_firstname as firstname,
+                                                 customers_lastname as lastname,
+                                                 date_added,
+                                                 ip_date_added,
+                                                 date_confirmed,
+                                                 ip_date_confirmed
+                                            FROM ".TABLE_NEWSLETTER_RECIPIENTS."
+                                           WHERE LOWER(customers_email_address) = '".xtc_db_input(strtolower($_POST['customer_email_address']))."'");
+        if (xtc_db_num_rows($newsletter_query)) {
+          $newsletter = xtc_db_fetch_array($newsletter_query);
+          $dsgvo_export['newsletter']['customer'] = $newsletter;          
+        } 
+
+        $newsletter_history_query = xtc_db_query("SELECT customers_action as action,
+                                                         ip_address as ip,
+                                                         date_added
+                                                    FROM ".TABLE_NEWSLETTER_RECIPIENTS_HISTORY."
+                                                   WHERE LOWER(customers_email_address) = '".xtc_db_input(strtolower($_POST['customer_email_address']))."'");
+        if (xtc_db_num_rows($newsletter_history_query)) {
+          while ($newsletter_history = xtc_db_fetch_array($newsletter_history_query)) {
+            $dsgvo_export['newsletter']['history'][$newsletter_history['action']] = $this->clean_data($newsletter_history);
+          }
+        }
+                        
         if (count($dsgvo_export) > 0) {  
           array_walk_recursive($dsgvo_export, function(&$value, $key) {
               if ($value == '') {
@@ -206,7 +234,7 @@ class dsgvo_export
         return $v;
     }
 
-    function clean_order($array)
+    function clean_data($array)
     {
         $array = $this->remove_key($array, 'gender');
         $array = $this->remove_key($array, 'address_format_id');
@@ -242,7 +270,7 @@ class dsgvo_export
         $array = $this->remove_key($array, 'weight_prefix');
         $array = $this->remove_key($array, 'price');
         $array = $this->remove_key($array, 'discount_made');
-        
+        $array = $this->remove_key($array, 'action');        
         
         return $array;
     }
@@ -252,11 +280,11 @@ class dsgvo_export
         if (isset($array[$key])) {
           unset($array[$key]);
           if (isset($array['attributes'])) {
-            $array['attributes'] = $this->clean_order($array['attributes']);
+            $array['attributes'] = $this->clean_data($array['attributes']);
           }
         } elseif ($this->isAssoc($array) === false) {
           foreach ($array as $k => $product) {
-            $array[$k] = $this->clean_order($product);
+            $array[$k] = $this->clean_data($product);
           }
         }
         
