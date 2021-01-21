@@ -69,7 +69,7 @@ if (isset ($_SESSION['cc_id']) && $cc_check) {
   }
   $clink_parameters = defined('TPL_POPUP_CONTENT_LINK_PARAMETERS') ? TPL_POPUP_COUPON_HELP_LINK_PARAMETERS : POPUP_COUPON_HELP_LINK_PARAMETERS;
   $clink_class = defined('TPL_POPUP_CONTENT_LINK_CLASS') ? TPL_POPUP_SHIPPING_LINK_CLASS : POPUP_SHIPPING_LINK_CLASS;
-	$gift_smarty->assign('COUPON_HELP_LINK', '<a target="_blank" class="'.$clink_class.'" href="'.xtc_href_link(FILENAME_POPUP_COUPON_HELP, 'cID='.$_SESSION['cc_id'].$clink_parameters, $request_type).'">');
+	$gift_smarty->assign('COUPON_HELP_LINK', '<a title="'.TEXT_LINK_TITLE_INFORMATION.'" target="_blank" class="'.$clink_class.'" href="'.xtc_href_link(FILENAME_POPUP_COUPON_HELP, 'cID='.$_SESSION['cc_id'].$clink_parameters, $request_type).'">');
 }
 
 //check coupon minimum order
