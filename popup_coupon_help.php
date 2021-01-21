@@ -1,5 +1,4 @@
 <?php
-
 /* -----------------------------------------------------------------------------------------
    $Id$
 
@@ -35,6 +34,10 @@ if (xtc_not_null($coupon['coupon_description'])) {
 	$text_coupon_help .= sprintf(TEXT_COUPON_HELP_DESC, $coupon['coupon_description']);
 }
 
+if (MODULE_ORDER_TOTAL_COUPON_SPECIAL_PRICES == 'false') {
+  $text_coupon_help .= TEXT_COUPON_HELP_SPECIALS;
+}
+
 switch ($coupon['coupon_type']) {
 	case 'F' :
 		$text_coupon_help .= sprintf(TEXT_COUPON_HELP_FIXED, $xtPrice->xtcFormat($coupon['coupon_amount'], true));
@@ -53,48 +56,53 @@ if ($coupon['coupon_minimum_order'] > 0) {
 	$text_coupon_help .= sprintf(TEXT_COUPON_HELP_MINORDER, $xtPrice->xtcFormat($coupon['coupon_minimum_order'], true));
 }
 $text_coupon_help .= sprintf(TEXT_COUPON_HELP_DATE, xtc_date_short($coupon['coupon_start_date']), xtc_date_short($coupon['coupon_expire_date']));
-$text_coupon_help .= '<strong>'.TEXT_COUPON_HELP_RESTRICT.'</strong>';
-
-$text_coupon_help .= '<br /><br />'.TEXT_COUPON_HELP_CATEGORIES;
-$cats = '<br />---';
 
 $coupon['restrict_to_categories'] = preg_replace("'[\r\n\s]+'", '', $coupon['restrict_to_categories']);
-if (trim($coupon['restrict_to_categories'])) {
-  $cat_ids = explode(",", $coupon['restrict_to_categories']);
-  $cat_ids = array_unique($cat_ids);
-  $categories_query = xtc_db_query("SELECT categories_name
-                                      FROM ".TABLE_CATEGORIES_DESCRIPTION."
-                                     WHERE categories_id IN ('" . implode("', '", $cat_ids) . "')
-                                       AND language_id = '".(int)$_SESSION['languages_id']."'
-                                       AND trim(categories_name) != ''");
-  if (xtc_db_num_rows($categories_query) > 0) {
-    $cats = '';
-    while ($categories = xtc_db_fetch_array($categories_query)) {
-      $cats .= '<br />'.$categories["categories_name"];
-    }
-  }
-}
-$text_coupon_help .= $cats;
-
-$text_coupon_help .= '<br /><br />'.TEXT_COUPON_HELP_PRODUCTS;
-$prods = '<br />---';
 $coupon['restrict_to_products'] = preg_replace("'[\r\n\s]+'", '', $coupon['restrict_to_products']);
-if (trim($coupon['restrict_to_products'])) {
-  $pr_ids = explode(",", $coupon['restrict_to_products']);
-  $pr_ids = array_unique($pr_ids);
-  $products_query = xtc_db_query("SELECT products_name
-                                    FROM ".TABLE_PRODUCTS_DESCRIPTION."
-                                   WHERE products_id IN ('" . implode("', '", $pr_ids) . "')
-                                     AND language_id = '".(int)$_SESSION['languages_id']."'
-                                     AND trim(products_name) != ''");
-  if (xtc_db_num_rows($products_query) > 0) {
-    $prods = '';
-    while ($products = xtc_db_fetch_array($products_query)) {
-      $prods .= '<br />'.$products["products_name"];
+
+if (trim($coupon['restrict_to_categories']) || trim($coupon['restrict_to_products'])) {
+  $text_coupon_help .= '<strong>'.TEXT_COUPON_HELP_RESTRICT.'</strong>';
+
+  if (trim($coupon['restrict_to_categories'])) {
+    $text_coupon_help .= '<br /><br />'.TEXT_COUPON_HELP_CATEGORIES;
+    $cats = '<br />---';
+
+    $cat_ids = explode(",", $coupon['restrict_to_categories']);
+    $cat_ids = array_unique($cat_ids);
+    $categories_query = xtc_db_query("SELECT categories_name
+                                        FROM ".TABLE_CATEGORIES_DESCRIPTION."
+                                       WHERE categories_id IN ('" . implode("', '", $cat_ids) . "')
+                                         AND language_id = '".(int)$_SESSION['languages_id']."'
+                                         AND trim(categories_name) != ''");
+    if (xtc_db_num_rows($categories_query) > 0) {
+      $cats = '';
+      while ($categories = xtc_db_fetch_array($categories_query)) {
+        $cats .= '<br />'.$categories["categories_name"];
+      }
     }
+    $text_coupon_help .= $cats;
+  }
+
+  if (trim($coupon['restrict_to_products'])) {
+    $text_coupon_help .= '<br /><br />'.TEXT_COUPON_HELP_PRODUCTS;
+    $prods = '<br />---';
+
+    $pr_ids = explode(",", $coupon['restrict_to_products']);
+    $pr_ids = array_unique($pr_ids);
+    $products_query = xtc_db_query("SELECT products_name
+                                      FROM ".TABLE_PRODUCTS_DESCRIPTION."
+                                     WHERE products_id IN ('" . implode("', '", $pr_ids) . "')
+                                       AND language_id = '".(int)$_SESSION['languages_id']."'
+                                       AND trim(products_name) != ''");
+    if (xtc_db_num_rows($products_query) > 0) {
+      $prods = '';
+      while ($products = xtc_db_fetch_array($products_query)) {
+        $prods .= '<br />'.$products["products_name"];
+      }
+    }
+    $text_coupon_help .= $prods;
   }
 }
-$text_coupon_help .= $prods;
 
 $popup_smarty->assign('TEXT_HELP', $text_coupon_help);
 $popup_smarty->assign('link_close', 'javascript:window.close()');

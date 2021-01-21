@@ -455,6 +455,7 @@ define('TEXT_LINK_TITLE_INFORMATION', 'Information');
 define('TEXT_CLOSE_WINDOW', 'Fenster schliessen [x]');
 define('TEXT_COUPON_HELP_HEADER', 'Ihr Gutschein/Coupon wurde erfolgreich verbucht.');
 define('TEXT_COUPON_HELP_NAME', '<br /><br />Gutschein-/Couponbezeichnung: %s');
+define('TEXT_COUPON_HELP_SPECIALS', '<br /><br />Ihr Coupon kann nicht auf Sonderangebote angewendet werden.');
 define('TEXT_COUPON_HELP_FIXED', '<br /><br />Der Gutschein-/Couponwert betr&auml;gt %s ');
 define('TEXT_COUPON_HELP_MINORDER', '<br /><br />Der Mindestbestellwert betr&auml;gt %s ');
 define('TEXT_COUPON_HELP_FREESHIP', '<br /><br />Gutschein f&uuml;r kostenlosen Versand');
@@ -474,10 +475,10 @@ define('ENTRY_VAT_ERROR', 'Die eingegebene USt-IdNr. ist ung&uuml;ltig oder kann
 define('MSRP','UVP');
 define('YOUR_PRICE','Ihr Preis ');
 define('UNIT_PRICE','St&uuml;ckpreis ');
-define('ONLY',' Jetzt nur ');// DokuMan - Werbung mit durchgestrichenen Statt-Preisen ist zulässig
+define('ONLY',' Jetzt nur ');
 define('FROM','ab ');
 define('YOU_SAVE','Sie sparen ');
-define('INSTEAD','Unser bisheriger Preis ');// DokuMan - Werbung mit durchgestrichenen Statt-Preisen ist zulässig
+define('INSTEAD','Unser bisheriger Preis ');
 define('TXT_PER',' pro ');
 define('TAX_INFO_INCL','inkl. %s MwSt.');
 define('TAX_INFO_EXCL','exkl. %s MwSt.');
