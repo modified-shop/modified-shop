@@ -455,6 +455,7 @@ define('TEXT_LINK_TITLE_INFORMATION', 'Information');
 define('TEXT_CLOSE_WINDOW', 'Close window [x]');
 define('TEXT_COUPON_HELP_HEADER', 'Your voucher/coupon has been successfully redeemed.');
 define('TEXT_COUPON_HELP_NAME', '<br /><br />Voucher/Coupon name : %s');
+define('TEXT_COUPON_HELP_SPECIALS', '<br /><br />Your coupon cannot be used on special offers.');
 define('TEXT_COUPON_HELP_FIXED', '<br /><br />This voucher/coupon is worth %s off your next order');
 define('TEXT_COUPON_HELP_MINORDER', '<br /><br />You need to spend at least %s to be able to use the voucher.');
 define('TEXT_COUPON_HELP_FREESHIP', '<br /><br />This voucher gives you free shipping on your order');
@@ -469,7 +470,7 @@ define('TEXT_COUPON_PRODUCTS_RESTRICT', 'Your voucher/coupon is limited to some 
 define('TEXT_COUPON_CATEGORIES_RESTRICT', 'Your voucher/coupon is limited to some categories.');
 
 // VAT Reg No
-define('ENTRY_VAT_TEXT','* for EU-Countries only'); // anmerkung: besser wenn laden im EU ausland ist
+define('ENTRY_VAT_TEXT','* for EU-Countries only');
 define('ENTRY_VAT_ERROR', 'The chosen VAT Reg No is not valid or cannot be verified at the moment! Please enter a valid VAT Reg No or leave this field empty.');
 define('MSRP','MSRP');
 define('YOUR_PRICE','your price ');
