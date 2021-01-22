@@ -121,14 +121,7 @@ class xtcPrice {
         $this->TAX[$zones_data['class']] = xtc_get_tax_rate($zones_data['class'], $country_id);        
       }
     }
-    
-    $this->TAX_DEAULT = $this->TAX;
-    if ($this->country_id != STORE_COUNTRY) {
-      foreach ($this->TAX as $tax_class_id => $tax_rate) {
-        $this->TAX_DEAULT[$tax_class_id] = xtc_get_tax_rate($tax_class_id, STORE_COUNTRY, STORE_ZONE); 
-      }
-    }
-    
+        
     $currency = $this->priceModules->construct($currency, $cGroup);
   }
   
@@ -189,17 +182,6 @@ class xtcPrice {
     // add taxes
     if ((float)$pPrice == 0) {
       $pPrice = $this->getPprice($pID);
-    }
-
-    if ($products_tax > 0
-        && $this->country_id != STORE_COUNTRY
-        && isset($this->TAX[$this->tax_class])
-        && isset($this->TAX_DEAULT[$this->tax_class])
-        && $this->TAX[$this->tax_class] != $this->TAX_DEAULT[$this->tax_class]
-        )
-    {      
-      $pPrice = $this->xtcAddTax($pPrice, $this->TAX_DEAULT[$this->tax_class]);
-      $pPrice = $this->xtcRemoveTax($pPrice, $products_tax);
     }
 
     $pPrice = $this->xtcAddTax($pPrice, $products_tax);
