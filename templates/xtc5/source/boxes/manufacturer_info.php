@@ -23,28 +23,13 @@ include(DIR_FS_BOXES_INC . 'smarty_default.php');
 $cache_id = md5($_SESSION['language'].((isset($product->data['manufacturers_id']) && $product->data['manufacturers_id'] != '') ? $product->data['manufacturers_id'] : '0'));
 
 if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_manufacturers_info.html', $cache_id) || !$cache) {
+  $manufacturers_array = xtc_get_manufacturers();
+  if (isset($manufacturers_array[$product->data['manufacturers_id']])) {
+    $manufacturer = $manufacturers_array[$product->data['manufacturers_id']];
+    $image = $main->getImage($manufacturer['manufacturers_image'], '', MANUFACTURER_IMAGE_SHOW_NO_IMAGE, 'manufacturers/noimage.gif');
 
-  $manufacturer_query = xtDBquery("SELECT m.manufacturers_id,
-                                          m.manufacturers_name,
-                                          m.manufacturers_image,
-                                          mi.manufacturers_url
-                                     FROM " . TABLE_MANUFACTURERS . " m
-                                     JOIN " . TABLE_MANUFACTURERS_INFO . " mi
-                                       ON (m.manufacturers_id = mi.manufacturers_id
-                                           AND mi.languages_id = '" . (int)$_SESSION['languages_id'] . "')
-                                    WHERE m.manufacturers_id = '" . $product->data['manufacturers_id'] . "'");
-
-  if (xtc_db_num_rows($manufacturer_query, true)) {
-    $manufacturer = xtc_db_fetch_array($manufacturer_query, true);
-    $image = '';
-    if ($manufacturer['manufacturers_image'] != '') {
-      $image = DIR_WS_IMAGES.$manufacturer['manufacturers_image'];
-    }    
-    if (!is_file(DIR_FS_CATALOG.$image)) {
-      $image = ((MANUFACTURER_IMAGE_SHOW_NO_IMAGE == 'true') ? DIR_WS_IMAGES.'manufacturers/noimage.gif' : '');
-    }
-    $box_smarty->assign('IMAGE', (($image != '') ? DIR_WS_BASE . $image : ''));
-    $box_smarty->assign('NAME',$manufacturer['manufacturers_name']);
+    $info_smarty->assign('IMAGE', (($image != '') ? DIR_WS_BASE . $image : ''));
+    $info_smarty->assign('NAME', $manufacturer['manufacturers_name']);
     if ($manufacturer['manufacturers_url'] != '') {
       $box_smarty->assign('URL','<a href="' . xtc_href_link(FILENAME_REDIRECT, 'action=manufacturer&'.xtc_manufacturer_link($manufacturer['manufacturers_id'],$manufacturer['manufacturers_name'])) . '" onclick="window.open(this.href); return false;">' . sprintf(BOX_MANUFACTURER_INFO_HOMEPAGE, $manufacturer['manufacturers_name']) . '</a>');
     }
