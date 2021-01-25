@@ -94,6 +94,7 @@
   
   echo xtc_draw_form('new_product', FILENAME_CATEGORIES, 'cPath=' . $_GET['cPath'] . $catfunc->page_parameter . '&pID=' . $_GET['pID'] . '&action='.$form_action, 'post', 'id="new_product" enctype="multipart/form-data"' . $confirm_submit); 
   echo xtc_draw_hidden_field('products_quantity_before_edit', $prod_quantity['products_quantity']);
+  echo '<input type="submit" style="display:none;" value="'.BUTTON_SAVE.'"/>';
   ?>
   <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_news.png'); ?></div>
   <div class="pageHeading"><?php echo $pInfo->products_name; ?><br /></div>
