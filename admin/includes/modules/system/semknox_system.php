@@ -65,6 +65,10 @@ class semknox_system {
     if ($semknox_categories->check() < 1) {
       $semknox_categories->install();
     }
+    
+    xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                     SET configuration_value = 'false'
+                   WHERE configuration_key IN ('SEARCH_AC_STATUS', 'SEARCH_AC_CATEGORIES')");
   }
 
   function install_language() {
