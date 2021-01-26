@@ -1,0 +1,33 @@
+{config_load file="$language/lang_$language.conf" section="index"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="index"}
+<div class="listingbox">
+  <div class="lb_inner">
+    <div class="lb_image">
+    {$TAG_TEXT|sprintf:"# image"}
+      <a href="{$TAG_TEXT|sprintf:"link"}"><img src="{$TAG_TEXT|sprintf:"image"}" alt="{$TAG_TEXT|sprintf:"name"}" title="{$TAG_TEXT|sprintf:"name"}" /></a>
+    {$TAG_TEXT|sprintf:"/ image"}
+    </div>
+    <div class="lb_title"><h2><a href="{$TAG_TEXT|sprintf:"link"}">{$TAG_TEXT|sprintf:"name"}</a></h2></div>
+    {$TAG_TEXT|sprintf:"# dataPointHash.shipping_name[0]"}<div class="lb_shipping">{#text_shippingtime#} {$TAG_HTML|sprintf:"dataPointHash.shipping_name[0]"}</div>{$TAG_TEXT|sprintf:"/ dataPointHash.shipping_name[0]"}
+    <div class="lb_price">
+      <span class="standard_price">
+        <span class="value_price">{$TAG_TEXT|sprintf:"dataPointHash.price_formatted[0]"}</span>
+      </span>
+      {$TAG_TEXT|sprintf:"# dataPointHash.vpe_price[0]"}<div class="lb_vpe">{$TAG_TEXT|sprintf:"dataPointHash.vpe_price[0]"}{$smarty.const.TXT_PER}{$TAG_TEXT|sprintf:"dataPointHash.vpe_name[0]"}</div>{$TAG_TEXT|sprintf:"/ dataPointHash.vpe_price[0]"}
+    </div>
+    <div class="lb_tax">
+    {foreach item=data from=$TAX_DATA}
+      {$TAG_TEXT|sprintf:"# dataPointHash.tax_rate_`$data.tax_rate`[0]"}{$data.tax_info} {$TAG_TEXT|sprintf:"/ dataPointHash.tax_rate_`$data.tax_rate`[0]"}
+    {/foreach}
+    {$SHIPPING_INFO}
+    </div>
+    <div class="lb_buttons cf">
+      <div class="cssButtonPos11">
+        <a href="{$TAG_TEXT|sprintf:"link"}">
+          <span class="cssButton cssButtonColor1" title="Details"><i class="fas fa-chevron-circle-right"></i></span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

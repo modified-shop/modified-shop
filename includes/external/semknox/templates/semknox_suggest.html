@@ -1,0 +1,20 @@
+{config_load file="$language/lang_$language.conf" section="index"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="index"}
+<a class="autocomplete cf" href="{$TAG_TEXT|sprintf:"link"}">
+  {$TAG_TEXT|sprintf:"# image"}
+    <span class="autocomplete_image cf"><img src="{$TAG_TEXT|sprintf:"image"}" alt="{$TAG_TEXT|sprintf:"name"}" title="{$TAG_TEXT|sprintf:"name"}" /></span>
+  {$TAG_TEXT|sprintf:"/ image"}
+  <span class="ac_text">{$TAG_HTML|sprintf:"highlightedName"}</span>
+  {$TAG_TEXT|sprintf:"# history"}
+	  <button class="unibox__delete-history">x</button>
+  {$TAG_TEXT|sprintf:"/ history"}
+  {$TAG_TEXT|sprintf:"# dataPointHash.price_formatted[0]"}
+  <span class="ac_price">
+    <span class="standard_price">
+      <span class="value_price">{$TAG_TEXT|sprintf:"dataPointHash.price_formatted[0]"}</span>
+    </span>
+    {$TAG_TEXT|sprintf:"# dataPointHash.vpe_price[0]"}<div class="ac_vpe">{$TAG_TEXT|sprintf:"dataPointHash.vpe_price[0]"}{$smarty.const.TXT_PER}{$TAG_TEXT|sprintf:"dataPointHash.vpe_name[0]"}</div>{$TAG_TEXT|sprintf:"/ dataPointHash.vpe_price[0]"}
+  </span>
+  {$TAG_TEXT|sprintf:"/ dataPointHash.price_formatted[0]"}
+</a>
