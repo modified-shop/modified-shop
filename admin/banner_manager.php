@@ -18,6 +18,9 @@
 
   require('includes/application_top.php');
 
+  // include needed classes
+  require_once (DIR_WS_CLASSES.FILENAME_IMAGEMANIPULATOR);
+
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
   $banner_extension = xtc_banner_image_extension();
@@ -29,6 +32,11 @@
     $lang_array[] = array('id' => $languages[$i]['id'], 'text' => $languages[$i]['name']);
     $lang_array_id[$languages[$i]['id']] = $languages[$i]['name'];
   }
+
+  $images_type_array = array(
+    '',
+    '_mobile'
+  );
 
   if (xtc_not_null($action)) {
     switch ($action) {
@@ -62,9 +70,11 @@
         for ($i = 0, $n = count($languages); $i < $n; $i++) {
           $banners_title = xtc_db_prepare_input($_POST['banners_title'][$languages[$i]['id']]);
           $html_text = xtc_db_prepare_input($_POST['html_text'][$languages[$i]['id']]);
-          $banners_image_exist = xtc_db_prepare_input($_POST['banners_image_exist'][$languages[$i]['id']]);
-          ${'banners_image_'.$languages[$i]['id']} = xtc_try_upload('banners_image_'.$languages[$i]['id'], DIR_FS_CATALOG_IMAGES.'banner/', '644', $accepted_banners_image_files_extensions, $accepted_banners_image_files_mime_types);
           
+          foreach ($images_type_array as $images_type) {
+            ${'banners_image'.$images_type.'_exist'} = xtc_db_prepare_input($_POST['banners_image'.$images_type.'_exist'][$languages[$i]['id']]);
+            ${'banners_image'.$images_type.'_'.$languages[$i]['id']} = xtc_try_upload('banners_image'.$images_type.'_'.$languages[$i]['id'], DIR_FS_CATALOG_IMAGES.'banner/original_images/', '644', $accepted_banners_image_files_extensions, $accepted_banners_image_files_mime_types);
+          }
           /*          
           if (empty($banners_title)) {
             $messageStack->add(strtoupper($languages[$i]['code']) . ': ' . ERROR_BANNER_TITLE_REQUIRED, 'error');
@@ -87,22 +97,38 @@
             $banners_title = xtc_db_prepare_input($_POST['banners_title'][$languages[$i]['id']]);
             $banners_url = xtc_db_prepare_input($_POST['banners_url'][$languages[$i]['id']]);
             $html_text = xtc_db_prepare_input($_POST['html_text'][$languages[$i]['id']]);
-            $banners_image_exist = xtc_db_prepare_input($_POST['banners_image_exist'][$languages[$i]['id']]);
+            
+            foreach ($images_type_array as $images_type) {
+              ${'banners_image'.$images_type.'_exist'} = xtc_db_prepare_input($_POST['banners_image'.$images_type.'_exist'][$languages[$i]['id']]);
 
-            if (isset($_POST['del_image_'.$languages[$i]['id']])
-                && $_POST['del_image_'.$languages[$i]['id']] != ''
-                )
-            {
-              $image_location = DIR_FS_CATALOG_IMAGES . 'banner/' . $_POST['del_image_'.$languages[$i]['id']];
-              if (is_file($image_location)) {
-                $banners_image_exist = '';
-                @unlink($image_location);
+              if (isset($_POST['del_image'.$images_type.'_'.$languages[$i]['id']])
+                  && $_POST['del_image'.$images_type.'_'.$languages[$i]['id']] != ''
+                  )
+              {
+                $image_location = DIR_FS_CATALOG_IMAGES.'banner/original_images/'.$_POST['del_image'.$images_type.'_'.$languages[$i]['id']];
+                if (is_file($image_location)) {
+                  ${'banners_image'.$images_type.'_exist'} = '';
+                  unlink($image_location);
+                }
+                $image_location = DIR_FS_CATALOG_IMAGES.'banner/'.$_POST['del_image'.$images_type.'_'.$languages[$i]['id']];
+                if (is_file($image_location)) {
+                  ${'banners_image'.$images_type.'_exist'} = '';
+                  unlink($image_location);
+                }
               }
-            }
       
-            // new banner available & delete old
-            if (is_object(${'banners_image_'.$languages[$i]['id']}) && ${'banners_image_'.$languages[$i]['id']}->filename != '') {
-              $banners_image_exist = ${'banners_image_'.$languages[$i]['id']}->filename;
+              if (is_object(${'banners_image'.$images_type.'_'.$languages[$i]['id']}) && ${'banners_image'.$images_type.'_'.$languages[$i]['id']}->filename != '') {
+                $bname_arr = explode('.', ${'banners_image'.$images_type.'_'.$languages[$i]['id']}->filename);
+                $bnsuffix = array_pop($bname_arr);
+
+                $bname = str_replace($images_type, '', implode('_', $bname_arr));
+                $bname .= $images_type;
+                   
+                $banners_image_name_process = $banners_image_name = ${'banners_image'.$images_type.'_exist'} = $bname.'.'.$bnsuffix;
+                rename(DIR_FS_CATALOG_IMAGES.'banner/original_images/'.${'banners_image'.$images_type.'_'.$languages[$i]['id']}->filename, DIR_FS_CATALOG_IMAGES.'banner/original_images/'.$banners_image_name);
+
+                require(DIR_WS_INCLUDES.'banners_image'.$images_type.'.php');
+              }
             }
 
             $sql_data_array = array(
@@ -112,6 +138,7 @@
               'languages_id' => $languages[$i]['id'],
               'banners_group' => $banners_group,
               'banners_image' => $banners_image_exist,
+              'banners_image_mobile' => $banners_image_mobile_exist,
               'banners_html_text' => $html_text,
               'banners_sort' => $banners_sort,
               'banners_group_id' => $banners_group_id,
@@ -119,7 +146,7 @@
               'expires_impressions' => 'null',
               'date_scheduled' => 'null',
             );
-                                    
+                                  
             if ($action == 'insert') {
               $sql_data_array['date_added'] = 'now()';
               $sql_data_array['status'] = '0';
@@ -297,12 +324,15 @@
             );              
 
             // banner file
-            $files = array();
+            $files = $files_mobile = array();
             if ($dir= opendir(DIR_FS_CATALOG.'images/banner/')) {
               while (($file = readdir($dir)) !== false) {
-                if (is_file( DIR_FS_CATALOG.'images/banner/'.$file) and ($file != 'index.html')) {
-                  $files[] = array('id' => $file,
-                                   'text' => $file);
+                if (is_file( DIR_FS_CATALOG.'images/banner/'.$file) && ($file != 'index.html')) {
+                  if (strpos($file, '_mobile.') !== false) {
+                    $files_mobile[] = array('id' => $file, 'text' => $file);
+                  } else {
+                    $files[] = array('id' => $file, 'text' => $file);
+                  }
                 }
               }
               closedir($dir);
@@ -376,6 +406,7 @@
                   } elseif (isset($bInfo->banners_group)) {
                     $banner_query = xtc_db_query("SELECT *,
                                                          banners_image as banners_image_exist,
+                                                         banners_image_mobile as banners_image_mobile_exist,
                                                          date_format(date_scheduled, '%Y-%m-%d') as date_scheduled, 
                                                          date_format(expires_date, '%Y-%m-%d') as expires_date
                                                     FROM " . TABLE_BANNERS . " 
@@ -406,28 +437,34 @@
                       <td class="dataTableConfig col-middle"><?php echo xtc_draw_checkbox_field('banners_redirect_' . $languages[$i]['id'], '', (($bInfo->banners_redirect == 0) ? true : false)); ?></td>
                       <td class="dataTableConfig col-right"><?php echo TEXT_BANNERS_REDIRECT_NOTE; ?></td>
                     </tr>
-                    <tr>
-                      <td class="dataTableConfig col-left"><?php echo TEXT_BANNERS_IMAGE; ?></td>
-                      <td class="dataTableConfig col-middle">
-                        <table class="tableConfig borderall">
-                          <?php if ($bInfo->banners_image_exist != '') { ?>
+                    <?php 
+                    foreach ($images_type_array as $images_type) {
+                      ?>
+                      <tr>
+                        <td class="dataTableConfig col-left"><?php echo constant('TEXT_BANNERS_IMAGE'.strtoupper($images_type)); ?></td>
+                        <td class="dataTableConfig col-middle">
+                          <table class="tableConfig borderall">
+                            <?php if ($bInfo->{'banners_image'.$images_type.'_exist'} != '') { ?>
+                              <tr>
+                                <td class="main"><img style="max-width:360px; margin-bottom:10px;" src="<?php echo DIR_WS_CATALOG_IMAGES . 'banner/'.$bInfo->{'banners_image'.$images_type.'_exist'}; ?>" /></td>
+                              </tr>
+                              <tr>
+                                <td class="main"><?php echo xtc_draw_checkbox_field('del_image'.$images_type.'_'.$languages[$i]['id'], $bInfo->{'banners_image'.$images_type.'_exist'}) . ' ' . TEXT_INFO_DELETE_IMAGE; ?></td>
+                              </tr>    
+                            <?php } ?>
                             <tr>
-                              <td class="main"><img style="max-width:360px; margin-bottom:10px;" src="<?php echo DIR_WS_CATALOG_IMAGES . 'banner/'.$bInfo->banners_image_exist; ?>" /></td>
-                            </tr>
-                            <tr>
-                              <td class="main"><?php echo xtc_draw_checkbox_field('del_image_'.$languages[$i]['id'], $bInfo->banners_image_exist) . ' ' . TEXT_INFO_DELETE_IMAGE; ?></td>
+                              <td class="main"><?php echo xtc_draw_file_field('banners_image'.$images_type.'_'.$languages[$i]['id']); ?></td>
                             </tr>    
-                          <?php } ?>
-                          <tr>
-                            <td class="main"><?php echo xtc_draw_file_field('banners_image_'.$languages[$i]['id']); ?></td>
-                          </tr>    
-                          <tr>
-                            <td class="main"><?php echo xtc_draw_pull_down_menu('banners_image_exist[' . $languages[$i]['id'] . ']', array_merge(array(array('id' => '','text' => (($bInfo->banners_image_exist != '') ? TEXT_NO_FILE : TEXT_SELECT))), $files), $bInfo->banners_image_exist); ?></td>
-                          </tr>
-                        </table>
-                      </td>
-                      <td class="dataTableConfig col-right"><?php echo TEXT_BANNERS_IMAGE_LOCAL;?></td>
-                    </tr>
+                            <tr>
+                              <td class="main"><?php echo xtc_draw_pull_down_menu('banners_image'.$images_type.'_exist[' . $languages[$i]['id'] . ']', array_merge(array(array('id' => '','text' => (($bInfo->{'banners_image'.$images_type.'_exist'} != '') ? TEXT_NO_FILE : TEXT_SELECT))), ${'files'.$images_type}), $bInfo->{'banners_image'.$images_type.'_exist'}); ?></td>
+                            </tr>
+                          </table>
+                        </td>
+                        <td class="dataTableConfig col-right"><?php echo TEXT_BANNERS_IMAGE_LOCAL;?></td>
+                      </tr>
+                      <?php
+                    }
+                    ?>
                     <tr>
                       <td class="dataTableConfig col-left"><?php echo TEXT_BANNERS_HTML_TEXT; ?></td>
                       <td class="dataTableConfig col-middle"><?php echo xtc_draw_textarea_field('html_text[' . $languages[$i]['id'] . ']', 'soft', '40', '5', $bInfo->banners_html_text, 'class="textareaModule"'); ?></td>

@@ -16,6 +16,9 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+// include needed functions
+require_once (DIR_FS_INC.'get_pictureset_data.inc.php');
+
 if (MAX_DISPLAY_NEW_PRODUCTS != '0') {
   //count products on startpage
   $count_query = xtc_db_query("SELECT count(*) as total
@@ -99,6 +102,13 @@ if (MAX_DISPLAY_NEW_PRODUCTS != '0') {
 
       $module_smarty->assign('language', $_SESSION['language']);
       $module_smarty->assign('module_content', $module_content);
+
+      if (defined('PICTURESET_BOX')) {
+        $module_smarty->assign('pictureset_box', get_pictureset_data(PICTURESET_BOX));
+      }
+      if (defined('PICTURESET_ROW')) {
+        $module_smarty->assign('pictureset_row', get_pictureset_data(PICTURESET_ROW));
+      }
 
       // set cache ID
       if (!CacheCheck()) {

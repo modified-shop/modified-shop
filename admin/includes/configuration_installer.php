@@ -92,19 +92,46 @@ $values_group_update = array();
   $values[] = "(NULL, 'PRODUCT_IMAGE_SHOW_NO_IMAGE', 'true', '4', '2', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
   $values[] = "(NULL, 'CATEGORIES_IMAGE_SHOW_NO_IMAGE', 'false', '4', '2', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
   $values[] = "(NULL, 'MANUFACTURER_IMAGE_SHOW_NO_IMAGE', 'false', '4', '2', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
-  $values[] = "(NULL, 'PRODUCT_IMAGE_MINI_WIDTH', '100', '4', '3', NULL, NOW(), NULL, NULL);";
-  $values[] = "(NULL, 'PRODUCT_IMAGE_MINI_HEIGHT', '100', '4', '4', NULL, NOW(), NULL, NULL);";
-  $values[] = "(NULL, 'PRODUCT_IMAGE_MINI_MERGE', '', '4', '16', NULL, NOW(), NULL, NULL);";
-  $values[] = "(NULL, 'PRODUCT_IMAGE_MIDI_WIDTH', '200', '4', '7', NULL, NOW(), NULL, NULL);";
-  $values[] = "(NULL, 'PRODUCT_IMAGE_MIDI_HEIGHT', '200', '4', '8', NULL, NOW(), NULL, NULL);";
-  $values[] = "(NULL, 'PRODUCT_IMAGE_MIDI_MERGE', '', '4', '18', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'PRODUCT_IMAGE_MINI_WIDTH', '80', '4', '3', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'PRODUCT_IMAGE_MINI_HEIGHT', '80', '4', '4', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'PRODUCT_IMAGE_MINI_MERGE', '', '4', '15', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'PRODUCT_IMAGE_MIDI_WIDTH', '160', '4', '5', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'PRODUCT_IMAGE_MIDI_HEIGHT', '160', '4', '6', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'PRODUCT_IMAGE_MIDI_MERGE', '', '4', '16', NULL, NOW(), NULL, NULL);";
+
+  $values[] = "(NULL, 'CATEGORIES_IMAGE_WIDTH', '200', '4', '31', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'CATEGORIES_IMAGE_HEIGHT', '200', '4', '32', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'CATEGORIES_IMAGE_MOBILE_WIDTH', '200', '4', '33', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'CATEGORIES_IMAGE_MOBILE_HEIGHT', '200', '4', '34', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'CATEGORIES_IMAGE_LIST_WIDTH', '200', '4', '35', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'CATEGORIES_IMAGE_LIST_HEIGHT', '200', '4', '36', NULL, NOW(), NULL, NULL);";
+
+  $values[] = "(NULL, 'MANUFACTURER_IMAGE_WIDTH', '200', '4', '51', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'MANUFACTURER_IMAGE_HEIGHT', '200', '4', '52', NULL, NOW(), NULL, NULL);";
+
+  $values[] = "(NULL, 'BANNERS_IMAGE_WIDTH', '200', '4', '60', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'BANNERS_IMAGE_HEIGHT', '200', '4', '61', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'BANNERS_IMAGE_MOBILE_WIDTH', '200', '4', '62', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'BANNERS_IMAGE_MOBILE_HEIGHT', '200', '4', '63', NULL, NOW(), NULL, NULL);";
 
   $values_update[] = array (
-                           'values' => "sort_order = '5'",
+                           'values' => "sort_order = '1'",
+                           'configuration_key' => 'IMAGE_QUALITY'
+                           );
+  $values_update[] = array (
+                           'values' => "sort_order = '1'",
+                           'configuration_key' => 'IMAGE_MANIPULATOR'
+                           );
+  $values_update[] = array (
+                           'values' => "sort_order = '2'",
+                           'configuration_key' => 'MO_PICS'
+                           );
+  $values_update[] = array (
+                           'values' => "sort_order = '7'",
                            'configuration_key' => 'PRODUCT_IMAGE_THUMBNAIL_WIDTH'
                            );
   $values_update[] = array (
-                           'values' => "sort_order = '6'",
+                           'values' => "sort_order = '8'",
                            'configuration_key' => 'PRODUCT_IMAGE_THUMBNAIL_HEIGHT'
                            );
   $values_update[] = array (
@@ -116,11 +143,15 @@ $values_group_update = array();
                            'configuration_key' => 'PRODUCT_IMAGE_SHOW_NO_IMAGE'
                            );
   $values_update[] = array (
-                           'values' => "sort_order = '2'",
+                           'values' => "sort_order = '26'",
+                           'configuration_key' => 'PRODUCT_IMAGE_POPUP_MERGE'
+                           );
+  $values_update[] = array (
+                           'values' => "sort_order = '30'",
                            'configuration_key' => 'CATEGORIES_IMAGE_SHOW_NO_IMAGE'
                            );
   $values_update[] = array (
-                           'values' => "sort_order = '2'",
+                           'values' => "sort_order = '50'",
                            'configuration_key' => 'MANUFACTURER_IMAGE_SHOW_NO_IMAGE'
                            );
 

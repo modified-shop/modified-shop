@@ -60,4 +60,9 @@ ALTER TABLE `banners` ADD `banners_redirect` INT(11) NOT NULL DEFAULT '1' AFTER 
 #GTB - 2021-01-21 - add primary key
 ALTER TABLE `newsletter_recipients_history` ADD `history_id` INT(11) NOT NULL AUTO_INCREMENT FIRST, ADD PRIMARY KEY (`history_id`); 
 
+#GTB - 2021-01-26 - add additional images
+ALTER TABLE `categories` ADD `categories_image_mobile` VARCHAR(255) NOT NULL AFTER `categories_image`; 
+ALTER TABLE `categories` ADD `categories_image_list` VARCHAR(255) NOT NULL AFTER `categories_image_mobile`;
+ALTER TABLE `banners` ADD `banners_image_mobile` VARCHAR(255) NOT NULL AFTER `banners_image`; 
+
 # Keep an empty line at the end of this file for the db_updater to work properly

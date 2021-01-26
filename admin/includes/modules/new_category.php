@@ -64,21 +64,21 @@
   $text_new_or_edit = ($_GET['action']=='new_category') ? TEXT_INFO_HEADING_NEW_CATEGORY : TEXT_INFO_HEADING_EDIT_CATEGORY;
 
   $order_array='';
-  $order_array=array(array('id' => 'p.products_price','text'=>TXT_PRICES),
-                     array('id' => 'pd.products_name','text'=>TXT_NAME),
-                     array('id' => 'p.products_date_added','text'=>TXT_DATE),
-                     array('id' => 'p.products_model','text'=>TXT_MODEL),
-                     array('id' => 'p.products_ordered','text'=>TXT_ORDERED),
-                     array('id' => 'p.products_sort','text'=>TXT_SORT),
-                     array('id' => 'p.products_weight','text'=>TXT_WEIGHT),
-                     array('id' => 'p.products_quantity','text'=>TXT_QTY));
+  $order_array=array(array('id' => 'p.products_price', 'text' => TXT_PRICES),
+                     array('id' => 'pd.products_name', 'text' => TXT_NAME),
+                     array('id' => 'p.products_date_added', 'text' => TXT_DATE),
+                     array('id' => 'p.products_model', 'text' => TXT_MODEL),
+                     array('id' => 'p.products_ordered', 'text' => TXT_ORDERED),
+                     array('id' => 'p.products_sort', 'text' => TXT_SORT),
+                     array('id' => 'p.products_weight', 'text' => TXT_WEIGHT),
+                     array('id' => 'p.products_quantity', 'text' => TXT_QTY));
   $default_value='pd.products_name';
   $order_array_desc='';
-  $order_array_desc = array(array('id' => 'ASC','text'=>TEXT_SORT_ASC),
-                            array('id' => 'DESC','text'=>TEXT_SORT_DESC));
+  $order_array_desc = array(array('id' => 'ASC', 'text' => TEXT_SORT_ASC),
+                            array('id' => 'DESC', 'text' => TEXT_SORT_DESC));
 
-  $category_status_array = array(array('id' => '1','text'=>TEXT_PRODUCT_AVAILABLE),
-                                 array('id' => '0','text'=>TEXT_PRODUCT_NOT_AVAILABLE),
+  $category_status_array = array(array('id' => '1', 'text' => TEXT_PRODUCT_AVAILABLE),
+                                 array('id' => '0', 'text' => TEXT_PRODUCT_NOT_AVAILABLE),
                                  );
 
   $form_action = isset($_GET['cID']) ? 'update_category' : 'insert_category';    
@@ -197,30 +197,33 @@
     <div style="clear:both;"></div>
     <div style="padding:5px;">
       <div class="main div_header"><?php echo TEXT_EDIT_CATEGORIES_IMAGE; ?></div>
-        <?php
-          echo '<div class="div_box">';
-          // display images fields:  
-          $rowspan = ' rowspan="'. 3 .'"';
+      <?php
+        echo '<div class="div_box">';
+        // display images fields:  
+        $rowspan = ' rowspan="'. 3 .'"';
+
+        foreach ($catfunc->images_type_array as $image_type) {
+          if ($image_type != '') echo '<div class="clear">&nbsp;</div>';
           ?>
           <table class="tableConfig borderall">
             <tr>
-              <td class="dataTableConfig col-left"><?php echo TEXT_EDIT_CATEGORIES_IMAGE; ?></td>
-              <td class="dataTableConfig col-middle"><?php echo $cInfo->categories_image; ?></td>
-              <td class="dataTableConfig col-right"<?php echo $rowspan;?>><?php if ($cInfo->categories_image) { ?><img class="thumbnail-catimage" src="<?php echo DIR_WS_CATALOG.'images/categories/'.$cInfo->categories_image; ?>" /><?php } ?></td>
+              <td class="dataTableConfig col-left"><?php echo constant('TEXT_EDIT_CATEGORIES_IMAGE'.strtoupper($image_type)); ?></td>
+              <td class="dataTableConfig col-middle"><?php echo $cInfo->{'categories_image'.$image_type}; ?></td>
+              <td class="dataTableConfig col-right"<?php echo $rowspan;?>><?php if ($cInfo->{'categories_image'.$image_type}) { ?><img class="thumbnail-catimage" src="<?php echo DIR_WS_CATALOG.'images/categories/'.$cInfo->{'categories_image'.$image_type}; ?>" /><?php } ?></td>
             </tr>
             <tr>
-              <td class="dataTableConfig col-left"><?php echo TEXT_EDIT_CATEGORIES_IMAGE; ?></td>
-              <td class="dataTableConfig col-middle"><?php echo xtc_draw_file_field('categories_image', false, 'class="imgupload"') . xtc_draw_hidden_field('categories_previous_image', $cInfo->categories_image); ?></td>
+              <td class="dataTableConfig col-left"><?php echo constant('TEXT_EDIT_CATEGORIES_IMAGE'.strtoupper($image_type)); ?></td>
+              <td class="dataTableConfig col-middle"><?php echo xtc_draw_file_field('categories_image'.$image_type, false, 'class="imgupload"') . xtc_draw_hidden_field('categories_previous_image'.$image_type, $cInfo->{'categories_image'.$image_type}); ?></td>
             </tr>
             <tr>
               <td class="dataTableConfig col-left"><?php echo TEXT_DELETE; ?></td>
-              <td class="dataTableConfig col-middle"><?php echo xtc_draw_checkbox_field('del_cat_pic', 'yes'); ?></td>
+              <td class="dataTableConfig col-middle"><?php echo xtc_draw_checkbox_field('del_cat_pic'.$image_type, 'yes'); ?></td>
             </tr>
           </table>
           <?php
-          echo '</div>';
-        ?>
-
+        }
+        echo '</div>';
+      ?>
       <div class="main" style="margin-top:10px;text-align:right;">
         <?php echo xtc_draw_hidden_field('categories_date_added', (($cInfo->date_added) ? $cInfo->date_added : date('Y-m-d'))) . xtc_draw_hidden_field('parent_id', $cInfo->parent_id); ?>
         <?php echo xtc_draw_hidden_field('categories_id', $cInfo->categories_id); ?>

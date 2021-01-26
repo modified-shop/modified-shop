@@ -70,6 +70,8 @@ define('TEXT_EDIT_CATEGORIES_NAME', 'Kategorie Name:');
 define('TEXT_EDIT_CATEGORIES_HEADING_TITLE', 'Kategorie &Uuml;berschrift:');
 define('TEXT_EDIT_CATEGORIES_DESCRIPTION', 'Kategorie Beschreibung:');
 define('TEXT_EDIT_CATEGORIES_IMAGE', 'Kategorie Bild:');
+define('TEXT_EDIT_CATEGORIES_IMAGE_LIST', 'Kategorie Bild Listing:');
+define('TEXT_EDIT_CATEGORIES_IMAGE_MOBILE', 'Kategorie Bild Mobil:');
 
 define('TEXT_EDIT_SORT_ORDER', 'Sortierreihenfolge:');
 

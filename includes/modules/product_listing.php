@@ -28,6 +28,7 @@ $result = true;
 
 // include needed functions
 require_once (DIR_FS_INC.'xtc_get_vpe_name.inc.php');
+require_once (DIR_FS_INC.'get_pictureset_data.inc.php');
 
 $max_display_results = (isset($_SESSION['filter_set']) ? (int)$_SESSION['filter_set'] : MAX_DISPLAY_SEARCH_RESULTS);
 if (strpos($PHP_SELF, FILENAME_ADVANCED_SEARCH_RESULT) !== false && defined('MAX_DISPLAY_ADVANCED_SEARCH_RESULTS') && MAX_DISPLAY_ADVANCED_SEARCH_RESULTS != '') {
@@ -73,13 +74,15 @@ if ($listing_split->number_of_rows == 0
   $module_smarty->assign('PAGINATION', $pagination);
   
   if ($current_category_id != '0') {
-
     $category_query = xtDBquery("SELECT ".ADD_SELECT_CATEGORIES."
-                                        cd.categories_description,
-                                        cd.categories_name,
-                                        cd.categories_heading_title,
+                                        c.categories_id,
+                                        c.categories_image,
+                                        c.categories_image_list,
+                                        c.categories_image_mobile,
                                         c.listing_template,
-                                        c.categories_image
+                                        cd.categories_name,
+                                        cd.categories_description,
+                                        cd.categories_heading_title
                                    FROM ".TABLE_CATEGORIES." c
                                    JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd
                                      ON (c.categories_id = cd.categories_id AND cd.language_id = '".(int)$_SESSION['languages_id']."')
@@ -89,6 +92,8 @@ if ($listing_split->number_of_rows == 0
     $category = xtc_db_fetch_array($category_query, true);
     
     $image = $main->getImage($category['categories_image']);
+    $image_list = $main->getImage($category['categories_image_list']);
+    $image_mobile = $main->getImage($category['categories_image_mobile']);
   }
 
   if (isset($_GET['manufacturers_id']) && $_GET['manufacturers_id'] > 0) {
@@ -101,7 +106,7 @@ if ($listing_split->number_of_rows == 0
     $manufacturers_array = xtc_get_manufacturers();
     if (isset($manufacturers_array[$manufacturers_id])) {
       $manufacturer = $manufacturers_array[$manufacturers_id];
-      $manufacturer_image = $main->getImage($manufacturer['manufacturers_image'], '', MANUFACTURER_IMAGE_SHOW_NO_IMAGE, 'manufacturers/noimage.gif');
+      $manufacturer_image = $main->getImage($manufacturer['manufacturers_image'], 'manufacturers/', MANUFACTURER_IMAGE_SHOW_NO_IMAGE);
 
       if ($current_category_id != '0') {
         $module_smarty->assign('MANUFACTURER_IMAGE', ((isset($manufacturer_image) && $manufacturer_image != '') ? DIR_WS_BASE . $manufacturer_image : ''));
@@ -135,6 +140,8 @@ if ($listing_split->number_of_rows == 0
   $module_smarty->assign('CATEGORIES_HEADING_TITLE', isset($category['categories_heading_title']) ? $category['categories_heading_title'] : '');
   $module_smarty->assign('CATEGORIES_DESCRIPTION', isset($category['categories_description']) ? $category['categories_description'] : '');
   $module_smarty->assign('CATEGORIES_IMAGE', ((isset($image) && $image != '') ? DIR_WS_BASE . $image : ''));
+  $module_smarty->assign('CATEGORIES_IMAGE_LIST', ((isset($image_list) && $image_list != '') ? DIR_WS_BASE . $image_list : ''));
+  $module_smarty->assign('CATEGORIES_IMAGE_MOBILE', ((isset($image_mobile) && $image_mobile != '') ? DIR_WS_BASE . $image_mobile : ''));
 
   foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/product_listing_begin/','php') as $file) require ($file);
 
@@ -171,6 +178,14 @@ if ($result != false) {
   
   $module_smarty->assign('language', $_SESSION['language']);
   $module_smarty->assign('module_content', $module_content);
+
+  if (defined('PICTURESET_BOX')) {
+    $module_smarty->assign('pictureset_box', get_pictureset_data(PICTURESET_BOX));
+  }
+  if (defined('PICTURESET_ROW')) {
+    $module_smarty->assign('pictureset_row', get_pictureset_data(PICTURESET_ROW));
+  }
+
   // support for own manufacturers template
   $template = CURRENT_TEMPLATE.'/module/product_listing/'.$category['listing_template'];
   if (isset ($_GET['manufacturers_id']) && $_GET['manufacturers_id'] > 0 && strpos($PHP_SELF, FILENAME_ADVANCED_SEARCH_RESULT) === false) {
@@ -178,6 +193,7 @@ if ($result != false) {
       $template = CURRENT_TEMPLATE.'/module/manufacturers_listing.html';
     }
   }
+  
   // set cache ID
    if (!CacheCheck()) {
     $module_smarty->caching = 0;

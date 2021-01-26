@@ -163,29 +163,59 @@ define('MAX_DISPLAY_NEW_PRODUCTS_DAYS_TITLE' , 'Maximum Age (days) for New Produ
 define('MAX_DISPLAY_NEW_PRODUCTS_DAYS_DESC' , 'Maximum age (in days) for products to be displayed as "new products"');
 
 define('PRODUCT_IMAGE_MINI_WIDTH_TITLE' , 'Width of Product Mini Images');
-define('PRODUCT_IMAGE_MINI_WIDTH_DESC' , 'Maximum width of product mini (in pixels) (Standard: 100). For larger values possibly "productPreviewImage" is adjusted in the templates stylesheet.css file.');
+define('PRODUCT_IMAGE_MINI_WIDTH_DESC' , 'Maximum width of product mini (in pixels) (Standard: 80). For larger values possibly "productPreviewImage" is adjusted in the templates stylesheet.css file.');
 define('PRODUCT_IMAGE_MINI_HEIGHT_TITLE' , 'Height of Product Mini Images');
-define('PRODUCT_IMAGE_MINI_HEIGHT_DESC' , 'Maximum height of product mini (in pixels) (Standard: 100).');
+define('PRODUCT_IMAGE_MINI_HEIGHT_DESC' , 'Maximum height of product mini (in pixels) (Standard: 80).');
 
 define('PRODUCT_IMAGE_THUMBNAIL_WIDTH_TITLE' , 'Width of Product Thumbnails');
-define('PRODUCT_IMAGE_THUMBNAIL_WIDTH_DESC' , 'Maximum width of product thumbnails (in pixels) (Standard: 160). For larger values possibly "productPreviewImage" is adjusted in the templates stylesheet.css file.');
+define('PRODUCT_IMAGE_THUMBNAIL_WIDTH_DESC' , 'Maximum width of product thumbnails (in pixels) (Standard: 240). For larger values possibly "productPreviewImage" is adjusted in the templates stylesheet.css file.');
 define('PRODUCT_IMAGE_THUMBNAIL_HEIGHT_TITLE' , 'Height of Product Thumbnails');
-define('PRODUCT_IMAGE_THUMBNAIL_HEIGHT_DESC' , 'Maximum height of product thumbnails (in pixels) (Standard: 160).');
+define('PRODUCT_IMAGE_THUMBNAIL_HEIGHT_DESC' , 'Maximum height of product thumbnails (in pixels) (Standard: 240).');
 
 define('PRODUCT_IMAGE_MIDI_WIDTH_TITLE' , 'Width of Product Midi Images');
-define('PRODUCT_IMAGE_MIDI_WIDTH_DESC' , 'Maximum width of product midi (in pixels) (Standard: 200). For larger values possibly "productPreviewImage" is adjusted in the templates stylesheet.css file.');
+define('PRODUCT_IMAGE_MIDI_WIDTH_DESC' , 'Maximum width of product midi (in pixels) (Standard: 160). For larger values possibly "productPreviewImage" is adjusted in the templates stylesheet.css file.');
 define('PRODUCT_IMAGE_MIDI_HEIGHT_TITLE' , 'Height of Product Midi Images');
-define('PRODUCT_IMAGE_MIDI_HEIGHT_DESC' , 'Maximum height of product midi (in pixels) (Standard: 200).');
+define('PRODUCT_IMAGE_MIDI_HEIGHT_DESC' , 'Maximum height of product midi (in pixels) (Standard: 160).');
 
 define('PRODUCT_IMAGE_INFO_WIDTH_TITLE' , 'Width of Product Info Images');
-define('PRODUCT_IMAGE_INFO_WIDTH_DESC' , 'Maximum width of product info images (in pixels) (Standard: 230).');
+define('PRODUCT_IMAGE_INFO_WIDTH_DESC' , 'Maximum width of product info images (in pixels) (Standard: 520).');
 define('PRODUCT_IMAGE_INFO_HEIGHT_TITLE' , 'Height of Product Info Images');
-define('PRODUCT_IMAGE_INFO_HEIGHT_DESC' , 'Maximum height of product info images (in pixels) (Standard: 230).');
+define('PRODUCT_IMAGE_INFO_HEIGHT_DESC' , 'Maximum height of product info images (in pixels) (Standard: 520).');
 
 define('PRODUCT_IMAGE_POPUP_WIDTH_TITLE' , 'Width of Popup Images');
 define('PRODUCT_IMAGE_POPUP_WIDTH_DESC' , 'Maximum width of popup images (in pixels) (Standard: 800).');
 define('PRODUCT_IMAGE_POPUP_HEIGHT_TITLE' , 'Height of Popup Images');
 define('PRODUCT_IMAGE_POPUP_HEIGHT_DESC' , 'Maximum height of popup images (in pixels) (Standard: 800).');
+
+define('CATEGORIES_IMAGE_WIDTH_TITLE' , 'Width of Category Images');
+define('CATEGORIES_IMAGE_WIDTH_DESC' , 'Maximum width of category images (in pixels) (Standard: 985).');
+define('CATEGORIES_IMAGE_HEIGHT_TITLE' , 'Height of Category Images');
+define('CATEGORIES_IMAGE_HEIGHT_DESC' , 'Maximum height of category images (in pixels) (Standard: 370).');
+
+define('CATEGORIES_IMAGE_MOBILE_WIDTH_TITLE' , 'Width of Category Images Mobile');
+define('CATEGORIES_IMAGE_MOBILE_WIDTH_DESC' , 'Maximum width of category images mobile (in pixels) (Standard: 600).');
+define('CATEGORIES_IMAGE_MOBILE_HEIGHT_TITLE' , 'Height of Category Images Mobile');
+define('CATEGORIES_IMAGE_MOBILE_HEIGHT_DESC' , 'Maximum height of category images mobile (in pixels) (Standard: 400).');
+
+define('CATEGORIES_IMAGE_LIST_WIDTH_TITLE' , 'Width of Category Images Listing');
+define('CATEGORIES_IMAGE_LIST_WIDTH_DESC' , 'Maximum width of category images listing (in pixels) (Standard: 225).');
+define('CATEGORIES_IMAGE_LIST_HEIGHT_TITLE' , 'Height of Category Images Listing');
+define('CATEGORIES_IMAGE_LIST_HEIGHT_DESC' , 'Maximum height of category images listing (in pixels) (Standard: 170).');
+
+define('MANUFACTURER_IMAGE_WIDTH_TITLE' , 'Width of Manufacturer Images');
+define('MANUFACTURER_IMAGE_WIDTH_DESC' , 'Maximum width of manufacturer images (in pixels) (Standard: 100).');
+define('MANUFACTURER_IMAGE_HEIGHT_TITLE' , 'Height of Manufacturer Images');
+define('MANUFACTURER_IMAGE_HEIGHT_DESC' , 'Maximum height of manufacturer images (in pixels) (Standard: 60).');
+
+define('BANNERS_IMAGE_WIDTH_TITLE' , 'Width of Banner Images');
+define('BANNERS_IMAGE_WIDTH_DESC' , 'Maximum width of banner images (in pixels) (Standard: 985).');
+define('BANNERS_IMAGE_HEIGHT_TITLE' , 'Height of Banner Images');
+define('BANNERS_IMAGE_HEIGHT_DESC' , 'Maximum height of banner images (in pixels) (Standard: 370).');
+
+define('BANNERS_IMAGE_MOBILE_WIDTH_TITLE' , 'Width of Banner Images Mobile');
+define('BANNERS_IMAGE_MOBILE_WIDTH_DESC' , 'Maximum width of banner images mobile (in pixels) (Standard: 600).');
+define('BANNERS_IMAGE_MOBILE_HEIGHT_TITLE' , 'Height of Banner Images Mobile');
+define('BANNERS_IMAGE_MOBILE_HEIGHT_DESC' , 'Maximum height of banner images mobile (in pixels) (Standard: 600).');
 
 define('SMALL_IMAGE_WIDTH_TITLE' , 'Small Image Width');
 define('SMALL_IMAGE_WIDTH_DESC' , 'Width of small images (in pixels)');
@@ -200,10 +230,10 @@ define('SUBCATEGORY_IMAGE_HEIGHT_DESC' , 'Height of subcategory images (in pixel
 define('MO_PICS_TITLE','Number of product images');
 define('MO_PICS_DESC','if this number is set > 0 , you will be able to upload/display more images per product');
 
-define('PRODUCT_IMAGE_MINI_MERGE_TITLE' , 'Product Mini Images:Merge');
+define('PRODUCT_IMAGE_MINI_MERGE_TITLE' , 'Product Mini Images:Merge<br /><img src="images/config_merge.gif">');
 define('PRODUCT_IMAGE_MINI_MERGE_DESC' , 'Product Mini Images:Merge<br /><br />Default-values: (overlay.gif,10,-50,60,FF0000)<br /><br />overlay merge image<br />Usage:<br />(merge image,x start [neg = from right],y start [neg = from base],opacity, transparent colour on merge image)');
 
-define('PRODUCT_IMAGE_THUMBNAIL_MERGE_TITLE' , 'Product Thumbnails:Merge<br /><img src="images/config_merge.gif">');
+define('PRODUCT_IMAGE_THUMBNAIL_MERGE_TITLE' , 'Product Thumbnails:Merge');
 define('PRODUCT_IMAGE_THUMBNAIL_MERGE_DESC' , 'Product Thumbnails:Merge<br /><br />Default-values: (overlay.gif,10,-50,60,FF0000)<br /><br />overlay merge image<br />Usage:<br />(merge image,x start [neg = from right],y start [neg = from base],opacity, transparent colour on merge image)');
 
 define('PRODUCT_IMAGE_MIDI_MERGE_TITLE' , 'Product Midi Images:Merge');

@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: categories_listing.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -16,12 +16,14 @@
   if (isset ($cPath) && preg_match('/_/', $cPath)) { 
     $category_links = array_reverse($cPath_array);
     $categories_query = "SELECT ".ADD_SELECT_CATEGORIES."
-                                cd.categories_description,
                                 c.categories_id,
-                                cd.categories_name,
-                                cd.categories_heading_title,
                                 c.categories_image,
-                                c.parent_id 
+                                c.categories_image_list,
+                                c.categories_image_mobile,
+                                c.parent_id,
+                                cd.categories_name,
+                                cd.categories_description,
+                                cd.categories_heading_title
                            FROM ".TABLE_CATEGORIES." c
                            JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd 
                                 ON c.categories_id = cd.categories_id
@@ -31,15 +33,16 @@
                             AND cd.language_id = '".(int) $_SESSION['languages_id']."'
                             " . CATEGORIES_CONDITIONS_C . "
                        ORDER BY sort_order, cd.categories_name";
-    $categories_query = xtDBquery($categories_query); 
   } else {
     $categories_query = "select ".ADD_SELECT_CATEGORIES."
-                                cd.categories_description,
                                 c.categories_id,
-                                cd.categories_name,
-                                cd.categories_heading_title,
                                 c.categories_image,
-                                c.parent_id
+                                c.categories_image_list,
+                                c.categories_image_mobile,
+                                c.parent_id,
+                                cd.categories_name,
+                                cd.categories_description,
+                                cd.categories_heading_title
                            FROM ".TABLE_CATEGORIES." c
                            JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd 
                                 ON c.categories_id = cd.categories_id
@@ -50,8 +53,8 @@
                             AND cd.language_id = '".(int) $_SESSION['languages_id']."'
                             " . CATEGORIES_CONDITIONS_C . "
                          ORDER BY sort_order, cd.categories_name";
-    $categories_query = xtDBquery($categories_query);
   }
+  $categories_query = xtDBquery($categories_query); 
   
   $categories_listing = array();
   if ( xtc_db_num_rows($categories_query, true) >= 1 ) {
@@ -61,13 +64,19 @@
       $cPath_new = xtc_category_link($categories['categories_id'],$categories['categories_name']);
      
       $image = $main->getImage($categories['categories_image']);
+      $image_list = $main->getImage($categories['categories_image_list']);
+      $image_mobile = $main->getImage($categories['categories_image_mobile']);
       
-      $categories_content[$rows] = array ('CATEGORIES_NAME' => $categories['categories_name'], 
-                                         'CATEGORIES_HEADING_TITLE' => $categories['categories_heading_title'],
-                                         'CATEGORIES_IMAGE' => (($image != '') ? DIR_WS_BASE . $image : ''),
-                                         'CATEGORIES_LINK' => xtc_href_link(FILENAME_DEFAULT, $cPath_new), 
-                                         'CATEGORIES_DESCRIPTION' => $categories['categories_description']);
-                                         
+      $categories_content[$rows] = array (
+        'CATEGORIES_NAME' => $categories['categories_name'], 
+        'CATEGORIES_HEADING_TITLE' => $categories['categories_heading_title'],
+        'CATEGORIES_IMAGE' => (($image != '') ? DIR_WS_BASE . $image : ''),
+        'CATEGORIES_IMAGE_LIST' => (($image_list != '') ? DIR_WS_BASE . $image_list : ''),
+        'CATEGORIES_IMAGE_MOBILE' => (($image_mobile != '') ? DIR_WS_BASE . $image_mobile : ''),
+        'CATEGORIES_LINK' => xtc_href_link(FILENAME_DEFAULT, $cPath_new), 
+        'CATEGORIES_DESCRIPTION' => $categories['categories_description']
+      );
+
       foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/categories_listing/categories_content/','php') as $file) require ($file);
                                      
       $rows ++;
