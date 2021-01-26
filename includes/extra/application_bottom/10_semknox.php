@@ -117,12 +117,12 @@
           searchHistoryLabel: "<?php echo TEXT_SEMKNOX_RECENTLY_SEARCHED; ?>",
           viewAllLabel: "<?php echo TEXT_SEMKNOX_ALL_RESULTS; ?>",
           suggestTemplate: {
-            template: <?php echo ((MODULE_SEMKNOX_SYSTEM_DEFAULT_CSS == 'true') ? undefined : "'".$template_suggest."'"); ?>
+            template: <?php echo ((MODULE_SEMKNOX_SYSTEM_DEFAULT_CSS == 'true') ? 'undefined' : "'".$template_suggest."'"); ?>
           },
         },
         results: {
           resultTemplate: {
-            template: <?php echo ((MODULE_SEMKNOX_SYSTEM_DEFAULT_CSS == 'true') ? undefined : "'".$template_result."'"); ?>
+            template: <?php echo ((MODULE_SEMKNOX_SYSTEM_DEFAULT_CSS == 'true') ? 'undefined' : "'".$template_result."'"); ?>
           },
           embedConfig: {
             'url': "<?php echo xtc_href_link(FILENAME_ADVANCED_SEARCH_RESULT, '', 'NONSSL', false); ?>",
