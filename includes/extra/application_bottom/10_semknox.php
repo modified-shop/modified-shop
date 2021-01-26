@@ -98,7 +98,7 @@
       const userGroup = "<?php echo $_SESSION['customers_status']['customers_status_id']; ?>";
       window.ss360Config = {
         siteId: projectId,
-        showErrors: <?php echo MODULE_SEMKNOX_SYSTEM_DISPLAY_ERRORS; ?>,
+        showErrors: false,
         allowCookies: true,
         baseUrl: 'https://api-v3.semknox.com/search?userGroup=' + userGroup + '&projectId=' + projectId,
         suggestBaseUrl: 'https://api-v3.semknox.com/search/suggestions?userGroup=' + userGroup + '&projectId=' + projectId,
