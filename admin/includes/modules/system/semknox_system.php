@@ -17,8 +17,8 @@ class semknox_system {
 
   function __construct() {
     $this->code = 'semknox_system';
-    $this->title = MODULE_SEMKNOX_SYSTEM_TEXT_TITLE;
-    $this->description = MODULE_SEMKNOX_SYSTEM_TEXT_DESCRIPTION;
+    $this->title = defined('MODULE_SEMKNOX_SYSTEM_TEXT_TITLE') ? MODULE_SEMKNOX_SYSTEM_TEXT_TITLE : '';
+    $this->description = defined('MODULE_SEMKNOX_SYSTEM_TEXT_DESCRIPTION') ? MODULE_SEMKNOX_SYSTEM_TEXT_DESCRIPTION : '';
     $this->sort_order = ((defined('MODULE_SEMKNOX_SYSTEM_SORT_ORDER')) ? MODULE_SEMKNOX_SYSTEM_SORT_ORDER : '');
     $this->enabled = ((defined('MODULE_SEMKNOX_SYSTEM_STATUS') && MODULE_SEMKNOX_SYSTEM_STATUS == 'true') ? true : false);
 

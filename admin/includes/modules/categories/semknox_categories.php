@@ -18,8 +18,8 @@ class semknox_categories {
   function __construct() {
     $this->code = 'semknox_categories';
     $this->name = 'MODULE_CATEGORIES_'.strtoupper($this->code);
-    $this->title = constant($this->name.'_TITLE');
-    $this->description = constant($this->name.'_DESCRIPTION');
+    $this->title = defined($this->name.'_TITLE') ? constant($this->name.'_TITLE') : '';
+    $this->description = defined($this->name.'_DESCRIPTION') ? constant($this->name.'_DESCRIPTION') : '';
     $this->enabled = defined($this->name.'_STATUS') && constant($this->name.'_STATUS') == 'true' ? true : false;
     $this->sort_order = defined($this->name.'_SORT_ORDER') ? constant($this->name.'_SORT_ORDER') : ''; 
     
