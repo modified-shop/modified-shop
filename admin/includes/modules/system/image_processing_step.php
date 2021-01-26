@@ -371,7 +371,7 @@ if ( !class_exists( "image_processing_step" ) ) {
                              
                              '<div class="ajax_responce" style="margin-bottom:15px;"><hr>'.
                              '<div class="ajax_imgname"></div>'.
-                               sprintf(MODULE_STEP_READY_STYLE_TEXT,$ajax_img . IMAGE_STEP_INFO . '<span class="ajax_count"></span> / <span id="ajax_total">' .(int)$this->max_files . '</span><span class="ajax_ready_info">' . IMAGE_STEP_INFO_READY .'<span>') . 
+                               sprintf(MODULE_STEP_READY_STYLE_TEXT,$ajax_img . IMAGE_STEP_INFO . '<span class="ajax_count"></span> / <span id="ajax_total">' .(int)$max_files_products . '</span><span class="ajax_ready_info">' . IMAGE_STEP_INFO_READY .'<span>') . 
                                '<div class="process_wrapper">
                                 <div class="process_inner_wrapper">
                                   <div id="show_image_process" style="width:'. 0 .'%;"></div>
