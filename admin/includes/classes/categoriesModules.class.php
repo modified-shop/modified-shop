@@ -128,10 +128,10 @@ class categoriesModules {
         $this->secure_call_module_method($src_pic, $dest_pic);
     }
     
-    function categories_image_process($categories_image_name, $categories_image_name_process)
+    function categories_image_process($categories_image_name, $categories_image_name_process, $image_type)
     {
         $this->function_call = 'categories_image_process';
-        $this->secure_call_module_method($categories_image_name, $categories_image_name_process);
+        $this->secure_call_module_method($categories_image_name, $categories_image_name_process, $image_type);
     }
 
     //----- PRODUCTS FUNCTIONS -----//
@@ -189,12 +189,6 @@ class categoriesModules {
         return $this->call_module_method($sql_data_array,$src_products_id,$dest_categories_id,$dup_products_id); //Return parameter must be in first place
     }
     
-    function duplicate_product_end($product_id)
-    {
-        $this->function_call = 'duplicate_product_end';
-        $this->secure_call_module_method($product_id);
-    }
-
     function image_name($image_name, $id, $counter, $suffix, $name_arr, $srcID, $data_arr)
     {
         $this->function_call = 'image_name';

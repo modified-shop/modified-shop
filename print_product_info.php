@@ -62,7 +62,7 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
   $manufacturers_array = xtc_get_manufacturers();
   if (isset($manufacturers_array[$product->data['manufacturers_id']])) {
     $manufacturer = $manufacturers_array[$product->data['manufacturers_id']];
-    $image = $main->getImage($manufacturer['manufacturers_image'], '', MANUFACTURER_IMAGE_SHOW_NO_IMAGE, 'manufacturers/noimage.gif');
+    $image = $main->getImage($manufacturer['manufacturers_image'], 'manufacturers/', MANUFACTURER_IMAGE_SHOW_NO_IMAGE);
 
     $info_smarty->assign('MANUFACTURER_IMAGE', (($image != '') ? DIR_WS_BASE . $image : ''));
     $info_smarty->assign('MANUFACTURER', $manufacturer['manufacturers_name']);

@@ -324,7 +324,9 @@
                         }
                         $class_mark = strpos(strtoupper($configuration['configuration_key']), 'SMTP') !== false || 
                                       strpos(strtoupper($configuration['configuration_key']), 'CONTACT_US') !== false || 
-                                      strpos(strtoupper($configuration['configuration_key']), 'EMAIL_BILLING') !== false
+                                      strpos(strtoupper($configuration['configuration_key']), 'EMAIL_BILLING') !== false ||
+                                      strpos(strtoupper($configuration['configuration_key']), 'PRODUCT_IMAGE_') !== false ||
+                                      strpos(strtoupper($configuration['configuration_key']), 'MANUFACTURER_IMAGE_') !== false  
                                       ? ' mark' 
                                       : '';
                         echo '

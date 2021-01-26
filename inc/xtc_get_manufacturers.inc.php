@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_get_manufacturers.inc.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -29,6 +29,7 @@
                                                 AND mi.languages_id = '" . (int)$_SESSION['languages_id'] . "'
                                     ORDER BY m.manufacturers_name");
     while ($manufacturers = xtc_db_fetch_array($manufacturers_query, true)) {
+      $manufacturers['manufacturers_image'] = str_replace('manufacturers/', '', $manufacturers['manufacturers_image']);
       $manufacturers_array[$manufacturers['manufacturers_id']] = $manufacturers;
       
       // dropdown

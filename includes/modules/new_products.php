@@ -21,6 +21,9 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+// include needed functions
+require_once (DIR_FS_INC.'get_pictureset_data.inc.php');
+
 $days = '';
 if (MAX_DISPLAY_NEW_PRODUCTS_DAYS != '0') {
     $date_new_products = date("Y-m-d", mktime(1, 1, 1, date("m"), date("d") - MAX_DISPLAY_NEW_PRODUCTS_DAYS, date("Y")));
@@ -60,6 +63,13 @@ if (!empty($module_content)) {
 
   $module_smarty->assign('language', $_SESSION['language']);
   $module_smarty->assign('module_content', $module_content);
+
+  if (defined('PICTURESET_BOX')) {
+    $module_smarty->assign('pictureset_box', get_pictureset_data(PICTURESET_BOX));
+  }
+  if (defined('PICTURESET_ROW')) {
+    $module_smarty->assign('pictureset_row', get_pictureset_data(PICTURESET_ROW));
+  }
 
   // set cache ID
   if (!CacheCheck()) {

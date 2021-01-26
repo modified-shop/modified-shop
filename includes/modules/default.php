@@ -114,11 +114,15 @@ foreach(auto_include(DIR_FS_CATALOG.'includes/extra/default/category_depth/','ph
 switch ($category_depth) {
   case 'nested':
     $category_query = "SELECT ".ADD_SELECT_CATEGORIES."
+                              c.categories_id,
                               c.categories_image,
+                              c.categories_image_list,
+                              c.categories_image_mobile,
                               c.categories_template,
+                              c.parent_id,
                               cd.categories_name,
-                              cd.categories_heading_title,
-                              cd.categories_description
+                              cd.categories_description,
+                              cd.categories_heading_title
                          FROM ".TABLE_CATEGORIES." c
                          JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd 
                               ON cd.categories_id = c.categories_id
@@ -135,10 +139,12 @@ switch ($category_depth) {
       $categories_query = "SELECT ".ADD_SELECT_CATEGORIES."
                                   c.categories_id,
                                   c.categories_image,
+                                  c.categories_image_list,
+                                  c.categories_image_mobile,
                                   c.parent_id,
                                   cd.categories_name,
-                                  cd.categories_heading_title,
-                                  cd.categories_description
+                                  cd.categories_description,
+                                  cd.categories_heading_title
                              FROM ".TABLE_CATEGORIES." c
                              JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd 
                                   ON cd.categories_id = c.categories_id
@@ -155,12 +161,18 @@ switch ($category_depth) {
         $cPath_new = xtc_category_link($categories['categories_id'],$categories['categories_name']);
       
         $image = $main->getImage($categories['categories_image']);
+        $image_list = $main->getImage($categories['categories_image_list']);
+        $image_mobile = $main->getImage($categories['categories_image_mobile']);
 
-        $categories_content[$cindex] = array ('CATEGORIES_NAME' => $categories['categories_name'],
-                                       'CATEGORIES_HEADING_TITLE' => $categories['categories_heading_title'],
-                                       'CATEGORIES_IMAGE' => (($image != '') ? DIR_WS_BASE . $image : ''),
-                                       'CATEGORIES_LINK' => xtc_href_link(FILENAME_DEFAULT, $cPath_new),
-                                       'CATEGORIES_DESCRIPTION' => $categories['categories_description']);
+        $categories_content[$cindex] = array (
+          'CATEGORIES_NAME' => $categories['categories_name'],
+          'CATEGORIES_HEADING_TITLE' => $categories['categories_heading_title'],
+          'CATEGORIES_IMAGE' => (($image != '') ? DIR_WS_BASE . $image : ''),
+          'CATEGORIES_IMAGE_LIST' => (($image_list != '') ? DIR_WS_BASE . $image_list : ''),
+          'CATEGORIES_IMAGE_MOBILE' => (($image_mobile != '') ? DIR_WS_BASE . $image_mobile : ''),
+          'CATEGORIES_LINK' => xtc_href_link(FILENAME_DEFAULT, $cPath_new),
+          'CATEGORIES_DESCRIPTION' => $categories['categories_description']
+        );
                                      
         foreach(auto_include(DIR_FS_CATALOG.'includes/extra/default/categories_content/','php') as $file) require ($file);
       
@@ -172,6 +184,8 @@ switch ($category_depth) {
     include (DIR_WS_MODULES.FILENAME_NEW_PRODUCTS);
 
     $image = $main->getImage($category['categories_image']);
+    $image_list = $main->getImage($category['categories_image_list']);
+    $image_mobile = $main->getImage($category['categories_image_mobile']);
 
     // get default template
     if ($category['categories_template'] == '' 
@@ -192,6 +206,8 @@ switch ($category_depth) {
     $default_smarty->assign('CATEGORIES_NAME', $category['categories_name']);
     $default_smarty->assign('CATEGORIES_HEADING_TITLE', $category['categories_heading_title']);
     $default_smarty->assign('CATEGORIES_IMAGE', (($image != '') ? DIR_WS_BASE . $image : ''));
+    $default_smarty->assign('CATEGORIES_IMAGE_LIST', (($image_list != '') ? DIR_WS_BASE . $image_list : ''));
+    $default_smarty->assign('CATEGORIES_IMAGE_MOBILE', (($image_mobile != '') ? DIR_WS_BASE . $image_mobile : ''));
     $default_smarty->assign('CATEGORIES_DESCRIPTION', $category['categories_description']);
     $default_smarty->assign('language', $_SESSION['language']);
     $default_smarty->assign('module_content', $categories_content);
