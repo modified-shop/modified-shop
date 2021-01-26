@@ -796,6 +796,9 @@ class categories {
       }
     }
     
+    //new module support 
+    $this->catModules->insert_product_end($products_id);
+
     return array('error' => $error,
                  'products_id' => $products_id
                  );
@@ -991,6 +994,9 @@ class categories {
         xtc_db_perform(TABLE_PRODUCTS_TO_CATEGORIES, $sql_data_array);
       }
     }
+
+    //new module support 
+    $this->catModules->duplicate_product_end($this->dup_products_id);
   }
 
 
