@@ -193,7 +193,7 @@ if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weigh
         }
         $total += $value;
         $title = $quote['module'];
-        if (!defined('SHOW_SHIPPING_TITLE') || SHOW_SHIPPING_TITLE == 'shipping_default') {
+        if (!defined('SHOW_SHIPPING_MODULE_TITLE') || SHOW_SHIPPING_MODULE_TITLE == 'shipping_default') {
           $title .= ' - ' . $quote['methods'][0]['title'];
         }
         $shipping_content[$i] = array(
