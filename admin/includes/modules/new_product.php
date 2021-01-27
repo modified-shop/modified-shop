@@ -54,7 +54,40 @@
     $products_startpage_sort = $_POST['products_startpage_sort'];
     $pInfo->products_startpage = $_POST['products_startpage'];
   } else {
-    $pInfo = new objectInfo(array ());
+    $product_array = array();
+    $product_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_PRODUCTS."");
+    while ($product = xtc_db_fetch_array($product_query)) {      
+      $value = '';
+      if ($product['Default'] != '') {
+        $value = $product['Default'];
+      } elseif (strtolower($product['Null']) == 'no'
+                && (strpos(strtolower($product['Type']), 'int') !== false
+                    || strpos(strtolower($product['Type']), 'decimal') !== false
+                    )
+                )
+      {
+        $value = 0;
+      }
+      $product_array[$product['Field']] = $value ;
+    }
+    
+    $product_description_array = array();
+    $product_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_PRODUCTS_DESCRIPTION."");
+    while ($product = xtc_db_fetch_array($product_query)) {      
+      $value = '';
+      if ($product['Default'] != '') {
+        $value = $product['Default'];
+      } elseif (strtolower($product['Null']) == 'no'
+                && (strpos(strtolower($product['Type']), 'int') !== false
+                    || strpos(strtolower($product['Type']), 'decimal') !== false
+                    )
+                )
+      {
+        $value = 0;
+      }
+      $product_description_array[$product['Field']] = $value ;
+    }
+    $pInfo = new objectInfo(array_merge($product_array, $product_description_array));
     $text_new_or_edit = TEXT_NEW_PRODUCT;
   }
 
@@ -92,8 +125,8 @@
   $form_action = isset($_GET['pID']) ? 'update_product' : 'insert_product';
   $form_action .= ((isset($_GET['origin']) && $_GET['origin'] != '') ? '&origin='.$_GET['origin'] : '');
   
-  echo xtc_draw_form('new_product', FILENAME_CATEGORIES, 'cPath=' . $_GET['cPath'] . $catfunc->page_parameter . '&pID=' . $_GET['pID'] . '&action='.$form_action, 'post', 'id="new_product" enctype="multipart/form-data"' . $confirm_submit); 
-  echo xtc_draw_hidden_field('products_quantity_before_edit', $prod_quantity['products_quantity']);
+  echo xtc_draw_form('new_product', FILENAME_CATEGORIES, 'cPath=' . $_GET['cPath'] . $catfunc->page_parameter . ((isset($_GET['pID'])) ? '&pID=' . $_GET['pID'] : '') . '&action='.$form_action, 'post', 'id="new_product" enctype="multipart/form-data"' . $confirm_submit); 
+  echo xtc_draw_hidden_field('products_quantity_before_edit', isset($prod_quantity['products_quantity']) ? $prod_quantity['products_quantity'] : 0);
   echo '<input type="submit" style="display:none;" value="'.BUTTON_SAVE.'"/>';
   ?>
   <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_news.png'); ?></div>
@@ -265,7 +298,11 @@
       for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
         echo ('<div id="tab_lang_' . $i . '">');
         $lng_image = xtc_image(DIR_WS_LANGUAGES . $languages[$i]['directory'] .'/admin/images/'. $languages[$i]['image'], $languages[$i]['name']);
-        $products_desc_fields = $catfunc->get_products_desc_fields($pInfo->products_id, $languages[$i]['id']);
+        if (isset($_GET['pID'])) {
+          $products_desc_fields = $catfunc->get_products_desc_fields($pInfo->products_id, $languages[$i]['id']);
+        } else {
+          $products_desc_fields = $product_description_array;
+        }
         ?>
         <div class="bg_notice" style="height:5px;"></div>
         <div class="main bg_notice" style="padding:3px; line-height:20px;">
@@ -303,7 +340,7 @@
         </div>
         <?php
         
-        if (file_exists("includes/modules/new_products_content.php")) {
+        if (isset($_GET['pID']) && file_exists("includes/modules/new_products_content.php")) {
           include("includes/modules/new_products_content.php");
         }
 
@@ -313,13 +350,6 @@
     <!-- EOF Block2 //-->
 
     <div style="clear:both;"></div>
-
-    <?php
-    if (file_exists("includes/modules/new_products_content.php")) {
-      include_once("includes/modules/new_products_content.php");
-    }
-    ?>
-
     <div style="padding:5px;">
        <!-- BOF Product images //-->
         <?php

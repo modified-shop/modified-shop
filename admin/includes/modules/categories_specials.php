@@ -29,6 +29,7 @@ if (PRICE_IS_BRUTTO == 'true') {
 
 $price = $new_price = 0;
 $new_price_netto = '';
+$specials_quantity = '';
 
 // if editing an existing product
 if (isset($_GET['pID'])) {
@@ -57,17 +58,19 @@ if (isset($_GET['pID'])) {
   if(xtc_db_num_rows($specials_query) > 0) {
     $special = xtc_db_fetch_array($specials_query);
     $sInfo = new objectInfo($special);
-  }
 
-  $price = $sInfo->products_price;
-  $new_price = $sInfo->specials_new_products_price;
-  if (PRICE_IS_BRUTTO == 'true') {
-    $price_netto = xtc_round($price, PRICE_PRECISION);
-    if ($price > 0) {
-      $new_price_netto = TEXT_NETTO.'<strong>'.xtc_round($new_price, PRICE_PRECISION).'</strong>';
+    $specials_quantity = $sInfo->specials_quantity;
+
+    $price = $sInfo->products_price;
+    $new_price = $sInfo->specials_new_products_price;
+    if (PRICE_IS_BRUTTO == 'true') {
+      $price_netto = xtc_round($price, PRICE_PRECISION);
+      if ($price > 0) {
+        $new_price_netto = TEXT_NETTO.'<strong>'.xtc_round($new_price, PRICE_PRECISION).'</strong>';
+      }
+      $price = ($price * (xtc_get_tax_rate($sInfo->products_tax_class_id) + 100) / 100);
+      $new_price = ($new_price * (xtc_get_tax_rate($sInfo->products_tax_class_id) + 100) / 100);
     }
-    $price = ($price * (xtc_get_tax_rate($sInfo->products_tax_class_id) + 100) / 100);
-    $new_price = ($new_price * (xtc_get_tax_rate($sInfo->products_tax_class_id) + 100) / 100);
   }
 }
 $price = xtc_round($price, PRICE_PRECISION);
@@ -119,7 +122,7 @@ echo SPECIALS_TITLE;
     </tr>
     <tr>
       <td class="main"><?php echo TEXT_SPECIALS_SPECIAL_QUANTITY; ?></td>
-      <td class="main"><?php echo xtc_draw_input_field('specials_quantity', $sInfo->specials_quantity, 'style="width: 135px"') . draw_tooltip(TEXT_CATSPECIALS_SPECIAL_QUANTITY_TT);?></td>
+      <td class="main"><?php echo xtc_draw_input_field('specials_quantity', $specials_quantity, 'style="width: 135px"') . draw_tooltip(TEXT_CATSPECIALS_SPECIAL_QUANTITY_TT);?></td>
     </tr>
     <?php if (isset($_GET['pID']) && xtc_db_num_rows($specials_query) > 0) { ?>
       <tr>
