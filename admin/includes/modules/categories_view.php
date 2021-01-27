@@ -601,7 +601,7 @@
                if (isset($pInfo) && (is_object($pInfo)) && ($products['products_id'] == $pInfo->products_id) ) {
                  echo '<tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" data-event="'.xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array ('pID', 'cID', 'action')).'pID='.$pInfo->products_id.'&action=new_product').'">' . "\n";
                } else {
-                 echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" data-event="'.xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array ('pID','cID')).'pID='.$products['products_id']).'">' . "\n";
+                 echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" data-event="'.xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array ('pID', 'cID', 'action')).'pID='.$products['products_id']).'">' . "\n";
                }
                  //checkbox again after submit and before final submit
                  $is_checked = false;
@@ -744,7 +744,7 @@
               // --------------------
               // multi_move confirm
               // --------------------
-              if (xtc_not_null($_POST['multi_move'])) {
+              if (isset($_POST['multi_move']) && xtc_not_null($_POST['multi_move'])) {
                 $heading[]  = array('text' => '<b>' . TEXT_INFO_HEADING_MOVE_ELEMENTS . '</b>');
                 $contents[] = array('text' => '<table width="100%" border="0">');
                 if (is_array($_POST['multi_categories'])) {
@@ -808,7 +808,7 @@
               // --------------------
               // multi_delete confirm
               // --------------------
-              if (xtc_not_null($_POST['multi_delete'])) {
+              if (isset($_POST['multi_delete']) && xtc_not_null($_POST['multi_delete'])) {
                 $heading[]  = array('text' => '<b>' . TEXT_INFO_HEADING_DELETE_ELEMENTS . '</b>');
                 $contents[] = array('text' => '<a class="button" href="javascript:SwitchCheckDeleteConfirm()" onclick="this.blur()">' . BUTTON_REVERSE_SELECTION . '</a>');
                 $contents[] = array('text' => '<table width="100%" border="0">');
@@ -875,7 +875,7 @@
                 $heading[]  = array('text' => '<b>' . TEXT_INFO_HEADING_COPY_TO . '</b>');
                 $contents[] = array('text' => '<a class="button" href="javascript:SwitchCheckCopyConfirm()" onclick="this.blur()">' . BUTTON_REVERSE_SELECTION . '</a>');
                 $contents[] = array('text' => '<table width="100%" border="0">');
-                if (is_array($_POST['multi_categories'])) {
+                if (isset($_POST['multi_categories']) && is_array($_POST['multi_categories'])) {
                   foreach ($_POST['multi_categories'] AS $multi_category) {
                     $category_query = xtc_db_query("SELECT c.categories_id,
                                                            cd.categories_name,
@@ -943,7 +943,7 @@
                 $contents[] = array('text' => '<strong>' . TEXT_ATTRIBUTE_COPY . '</strong><br />' . xtc_draw_checkbox_field('attr_copy', 'attr_copy', false).'<font size="1">'.TEXT_ATTRIBUTE_COPY_INFO.'</font><br /><hr noshade>');
                 $contents[] = array('text' => '<strong>' . TEXT_CONTENT_COPY . '</strong><br />' . xtc_draw_checkbox_field('cnt_copy', 'cnt_copy', false).'<font size="1">'.TEXT_CONTENT_COPY_INFO.'</font><br /><hr noshade>');
                 $contents[] = array('text' => '<strong>' . TEXT_LINKS_COPY . '</strong><br />' . xtc_draw_checkbox_field('links_copy', 'links_copy', false).'<font size="1">'.TEXT_LINKS_COPY_INFO.'</font><br /><hr noshade>');
-                $contents[] = array('align' => 'center', 'text' => '<input class="button" type="submit" name="multi_copy_confirm" value="' . BUTTON_COPY . '"> <a class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '&pID=' . $pInfo->products_id . '&cID=' . $cInfo->categories_id) . '">' . BUTTON_CANCEL . '</a>');
+                $contents[] = array('align' => 'center', 'text' => '<input class="button" type="submit" name="multi_copy_confirm" value="' . BUTTON_COPY . '"> <a class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '&pID=' . $pInfo->products_id) . '">' . BUTTON_CANCEL . '</a>');
               }
               // multi_copy confirm ENDS
               break;
