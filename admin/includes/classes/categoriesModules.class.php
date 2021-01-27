@@ -174,7 +174,7 @@ class categoriesModules {
     function duplicate_product_before($sql_data_array,$src_products_id,$dest_categories_id)
     {
         $this->function_call = 'duplicate_product_before';
-        return $this->call_module_method($sql_data_array,$products_data,$products_id,$language_id); //Return parameter must be in first place
+        return $this->call_module_method($sql_data_array,$src_products_id,$dest_categories_id); //Return parameter must be in first place
     }
 
     function duplicate_product_after($sql_data_array,$src_products_id,$dest_categories_id,$dup_products_id)
