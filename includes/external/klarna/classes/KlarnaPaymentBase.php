@@ -529,7 +529,7 @@ class KlarnaPaymentBase extends KlarnaAutoload {
     $amount = round($amount, 2);
     $amount = $amount * 100;
     
-    return $amount;
+    return round($amount);
   }
 
 
