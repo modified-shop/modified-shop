@@ -153,7 +153,7 @@
   <!-- categories_view HTML part begin -->
       <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_categories.png'); ?></div>
       <div class="flt-l">
-        <div class="pageHeading pdg2"><?php echo ($category_name['categories_name'] ? $category_name['categories_name'] : TEXT_TOP); ?></div>
+        <div class="pageHeading pdg2"><?php echo ((isset($category_name['categories_name'])) ? $category_name['categories_name'] : TEXT_TOP); ?></div>
         <div class="main pdg2"><?php echo HEADING_TITLE .sprintf(HEADING_TITLE_CAT_BREADCRUMB,$breadcrumb_html); ?></div>
 
       </div>
