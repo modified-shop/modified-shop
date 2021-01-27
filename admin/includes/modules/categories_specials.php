@@ -27,6 +27,9 @@ if (PRICE_IS_BRUTTO == 'true') {
   $products_price_netto_sp = '';
 }
 
+$price = $new_price = 0;
+$new_price_netto = '';
+
 // if editing an existing product
 if (isset($_GET['pID'])) {
   $specials_query = "SELECT p.products_tax_class_id,
@@ -55,18 +58,17 @@ if (isset($_GET['pID'])) {
     $special = xtc_db_fetch_array($specials_query);
     $sInfo = new objectInfo($special);
   }
-}
 
-$price = $sInfo->products_price;
-$new_price = $sInfo->specials_new_products_price;
-$new_price_netto = '';
-if (PRICE_IS_BRUTTO == 'true') {
-  $price_netto = xtc_round($price, PRICE_PRECISION);
-  if ($price > 0) {
-    $new_price_netto = TEXT_NETTO.'<strong>'.xtc_round($new_price, PRICE_PRECISION).'</strong>';
+  $price = $sInfo->products_price;
+  $new_price = $sInfo->specials_new_products_price;
+  if (PRICE_IS_BRUTTO == 'true') {
+    $price_netto = xtc_round($price, PRICE_PRECISION);
+    if ($price > 0) {
+      $new_price_netto = TEXT_NETTO.'<strong>'.xtc_round($new_price, PRICE_PRECISION).'</strong>';
+    }
+    $price = ($price * (xtc_get_tax_rate($sInfo->products_tax_class_id) + 100) / 100);
+    $new_price = ($new_price * (xtc_get_tax_rate($sInfo->products_tax_class_id) + 100) / 100);
   }
-  $price = ($price * (xtc_get_tax_rate($sInfo->products_tax_class_id) + 100) / 100);
-  $new_price = ($new_price * (xtc_get_tax_rate($sInfo->products_tax_class_id) + 100) / 100);
 }
 $price = xtc_round($price, PRICE_PRECISION);
 $new_price = xtc_round($new_price, PRICE_PRECISION);
@@ -94,12 +96,7 @@ if (isset($_GET['pID']) && xtc_db_num_rows($specials_query) > 0) {
 }
 
 $arrow = 'arrow_down.gif';
-if (isset($sInfo->specials_quantity) 
-    || isset($sInfo->specials_new_products_price) 
-    || isset($sInfo->specials_date_added) 
-    || $sInfo->expires_date > 0
-   ) 
-{
+if (isset($sInfo)) {
   $arrow = 'arrow_down_red.gif';
   if ($sInfo->status == 1) {
     $arrow = 'arrow_down_green.gif';
