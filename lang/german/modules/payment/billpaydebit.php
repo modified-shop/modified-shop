@@ -66,6 +66,8 @@ define('MODULE_PAYMENT_BILLPAYDEBIT_TEXT_REQ', '');
 define('MODULE_PAYMENT_BILLPAYDEBIT_TEXT_GENDER', 'Geschlecht');
 define('MODULE_PAYMENT_BILLPAYDEBIT_TEXT_MALE', 'm&auml;nnlich');
 define('MODULE_PAYMENT_BILLPAYDEBIT_TEXT_FEMALE', 'weiblich');
+define('MODULE_PAYMENT_BILLPAYDEBIT_SALUTATION_MALE', 'Herr');
+define('MODULE_PAYMENT_BILLPAYDEBIT_SALUTATION_FEMALE', 'Frau');
 
 define('JS_BILLPAYDEBIT_EULA', '* Bitte best%E4tigen Sie die BillPay AGB!\n\n');
 define('JS_BILLPAYDEBIT_DOBDAY', '* Bitte geben Sie Ihr Geburtstag ein.\n\n');
@@ -121,8 +123,8 @@ define('MODULE_PAYMENT_BILLPAYDEBIT_UTF8_ENCODE_DESC', 'Deaktivieren Sie diese O
 define('MODULE_PAYMENT_BILLPAYDEBIT_ACTIVATE_ORDER', 'Die Bestellung wurde noch nicht bei BillPay aktiviert. Bitte aktivieren Sie die Bestellung unmittelbar vor der Versendung, in dem Sie den entsprechenden Status setzen.');
 define('MODULE_PAYMENT_BILLPAYDEBIT_ACTIVATE_ORDER_WARNING', "<strong style='color:red'>Achtung: Das Zahlungsziel wurde noch nicht bei BillPay gestartet!</strong><br/>");
 
-define('MODULE_PAYMENT_BILLPAYDEBIT_SALUTATION_MALE', 'Herr');
-define('MODULE_PAYMENT_BILLPAYDEBIT_SALUTATION_FEMALE', 'Frau');
+define('MODULE_PAYMENT_BILLPAYDEBIT_TEXT_EULA_CHECK', MODULE_PAYMENT_BILLPAY_TEXT_EULA_CHECK);
+define('MODULE_PAYMENT_BILLPAYDEBIT_TEXT_EULA_CHECK_DE', MODULE_PAYMENT_BILLPAY_TEXT_EULA_CHECK_CH);
 
 define('MODULE_PAYMENT_BILLPAYDEBIT_TEXT_EULA_CHECK_SEPA',    "Mit der &Uuml;bermittlung der f&uuml;r die Abwicklung der Zahlung und einer Identit&auml;ts- und Bonit&auml;tspr&uuml;fung erforderlichen Daten an die <a href='https://www.billpay.de/endkunden/' target='_blank'>BillPay GmbH</a> bin ich einverstanden. Es gelten die <a href='%s' target='_blank'>Datenschutzbestimmungen</a> von BillPay.<br/><br/>Ich erteile BillPay ein SEPA-Lastschriftmandat (<a href='#' class='bpy-btn-details'>Einzelheiten</a>) zur Einziehung f&auml;lliger Zahlungen und weise mein Geldinstitut an, die Lastschriften einzul&ouml;sen.");
 define('MODULE_PAYMENT_BILLPAYDEBIT_TEXT_EULA_CHECK_SEPA_AT', "Mit der &Uuml;bermittlung der f&uuml;r die Abwicklung der Zahlung und einer Identit&auml;ts- und Bonit&auml;tspr&uuml;fung erforderlichen Daten an die <a href='https://www.billpay.de/endkunden/' target='_blank'>BillPay GmbH</a> bin ich einverstanden. Es gelten die <a href='%s' target='_blank'>Datenschutzbestimmungen</a> von BillPay.<br/><br/>Ich erteile BillPay und der <a href='https://www.privatbank1891.com/' target='_blank'>net-m privatbank 1891 AG</a> ein SEPA-Lastschriftmandat (<a href='#' class='bpy-btn-details'>Einzelheiten</a>) zur Einziehung f&auml;lliger Zahlungen und weise mein Geldinstitut an, die Lastschriften einzul&ouml;sen.");
