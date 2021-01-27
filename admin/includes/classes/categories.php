@@ -998,14 +998,6 @@ class categories {
       }
     }
 
-
-    xtc_db_query("DELETE pad 
-                    FROM ".TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD." pad
-                    JOIN ".TABLE_PRODUCTS_ATTRIBUTES." pa 
-                         ON pa.products_attributes_id = pad.products_attributes_id
-                            AND pa.products_id = '".(int)$product_id."'");
-
-
     //dublicate products tags
     if (isset($_POST['tags_copy']) && $_POST['tags_copy'] == 'tags_copy') {
       $tags_copy_query = xtc_db_query("SELECT *
