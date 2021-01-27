@@ -189,6 +189,12 @@ class categoriesModules {
         return $this->call_module_method($sql_data_array,$src_products_id,$dest_categories_id,$dup_products_id); //Return parameter must be in first place
     }
     
+    function duplicate_product_end($product_id) 
+    { 
+        $this->function_call = 'duplicate_product_end'; 
+        $this->secure_call_module_method($product_id); 
+    } 
+
     function image_name($image_name, $id, $counter, $suffix, $name_arr, $srcID, $data_arr)
     {
         $this->function_call = 'image_name';
