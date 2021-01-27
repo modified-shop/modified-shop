@@ -983,8 +983,28 @@ class categories {
         $sql_data_array['products_id'] = $this->dup_products_id;
         //write attributes data to DB
         xtc_db_perform(TABLE_PRODUCTS_ATTRIBUTES, $sql_data_array);
+        $products_attributes_id = xtc_db_insert_id();
+        
+        $dl_copy_data_query = xtc_db_query("SELECT *
+                                              FROM ".TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD."
+                                             WHERE products_attributes_id = '".$attribute_copy_data['products_attributes_id']."'");
+        while ($dl_copy_data = xtc_db_fetch_array($dl_copy_data_query)) {
+          $sql_data_array = $dl_copy_data;
+
+          unset($sql_data_array['products_attributes_id']);
+          $sql_data_array['products_attributes_id'] = $products_attributes_id;
+          xtc_db_perform(TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD, $sql_data_array);          
+        }
       }
     }
+
+
+    xtc_db_query("DELETE pad 
+                    FROM ".TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD." pad
+                    JOIN ".TABLE_PRODUCTS_ATTRIBUTES." pa 
+                         ON pa.products_attributes_id = pad.products_attributes_id
+                            AND pa.products_id = '".(int)$product_id."'");
+
 
     //dublicate products tags
     if (isset($_POST['tags_copy']) && $_POST['tags_copy'] == 'tags_copy') {
