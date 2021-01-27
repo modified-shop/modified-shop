@@ -136,7 +136,7 @@
                     'ip' => $whos_online['ip_address'],
                   );
                 }
-                if ($whos_online['session_id'] === $info['session_id']) {
+                if (isset($info) && $whos_online['session_id'] === $info['session_id']) {
                   echo '              <tr class="dataTableRowSelected">' . "\n";
                   } elseif (($whos_online['session_id'] == '') || (substr($whos_online['session_id'],0,1) == '[')) {
                     echo '              <tr class="dataTableRow">' . "\n";
