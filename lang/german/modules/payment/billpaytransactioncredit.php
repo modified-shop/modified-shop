@@ -79,7 +79,7 @@ define('JS_BILLPAYTRANSACTIONCREDIT_PHONE', '* Bitte geben Sie Ihre Telefonnumme
 
 define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_ERROR_EULA', '* Bitte best&auml;tigen Sie die BillPay AGB!');
 define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_ERROR_DEFAULT', 'Es ist ein interner Fehler aufgetreten. Bitte w&auml;len Sie eine andere Zahlart');
-define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_ERROR_BOD' ,'You have entered an incorrect date of birth!');
+define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_ERROR_DOB' ,'You have entered an incorrect date of birth!');
 define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_ERROR_SHORT', 'Es ist ein interner Fehler aufgetreten!');
 define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_INVOICE_CREATED_COMMENT', 'Das Zahlungsziel der Bestellung wurde erfolgreich bei BillPay gestartet');
 define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_CANCEL_COMMENT', 'Die Bestellung wurde erfolgreich bei BillPay storniert');
@@ -108,7 +108,6 @@ define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_INVOICE_INFO3', '');
 define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_DUEDATE_TITLE', 'F&auml;lligkeitsdatum');
 
 define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_PURPOSE', 'Verwendungszweck');
-
 
 define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_SANDBOX', 'Sie befinden sich im Sandbox-Modus:');
 define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_CHECK', 'Sie befinden sich im Abnahme-Modus:');
