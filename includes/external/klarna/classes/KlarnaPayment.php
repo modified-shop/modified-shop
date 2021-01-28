@@ -338,6 +338,7 @@ class KlarnaPayment extends KlarnaPaymentBase {
         
     $i = 0;
     $tax_total = 0;
+    $products_total = 0;
     $products_array = array();
     foreach ($order->products as $products) {
       $amount = $products['price'];
@@ -366,9 +367,11 @@ class KlarnaPayment extends KlarnaPaymentBase {
       }
       
       $tax_total += $products_array[$i]['total_tax_amount'];
+      $products_total += $products_array[$i]['total_amount'];
       $i ++;
     }
-        
+    $tax_total_products = $tax_total;
+    
     if (isset($_SESSION['shipping']) && $_SESSION['shipping'] !== false) {
       $shipping_method = substr($_SESSION['shipping']['id'], 0, strpos($_SESSION['shipping']['id'], '_'));
       $tax_class_id = constant('MODULE_SHIPPING_'.strtoupper($shipping_method).'_TAX_CLASS');
@@ -390,6 +393,13 @@ class KlarnaPayment extends KlarnaPaymentBase {
       );
       
       $tax_total += $products_array[$i]['total_tax_amount'];
+      
+      if (defined('MODULE_ORDER_TOTAL_DISCOUNT_SORT_ORDER')
+          && (int)MODULE_ORDER_TOTAL_DISCOUNT_SORT_ORDER > (int)MODULE_ORDER_TOTAL_SHIPPING_SORT_ORDER
+          )
+      {
+        $products_total += $products_array[$i]['total_amount'];
+      }
       $i ++;
     }
         
@@ -415,6 +425,10 @@ class KlarnaPayment extends KlarnaPaymentBase {
           $amount = $total['value'];
           if ($add_tax === true) {
             $amount = $this->xtcAddTax($amount, $tax);
+          }
+                    
+          if ($total['code'] == 'ot_discount') {          
+            $tax = round(($tax_total_products / ($products_total - $tax_total_products)), 2) * 100;
           }
           
           $products_array[$i] = array(
