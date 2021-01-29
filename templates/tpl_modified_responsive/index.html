@@ -51,15 +51,41 @@
               {if isset($box_WISHLIST)}<li class="wishlist">{$box_WISHLIST}</li>{/if}
             </ul>
           </div>
+ 
           {if isset($SLIDER)}
-            <div class="content_banner cf">
-              <ul class="bxcarousel_slider">
-              {foreach name=outer item=slider from=$SLIDER}
-                <li>{$slider.IMAGE}</li>
-              {/foreach}
-              </ul>
-            </div>
+            <div class="content_slider cf">
+              <div class="slider_home">
+                {foreach name=outer item=slider from=$SLIDER}
+                  <div class="slider_item">          
+                    {if $slider.LINK != ''}
+                      {if isset($slider.IMAGE_SRC_MOBILE) && $slider.IMAGE_SRC_MOBILE != ''}
+                        <a title="{$slider.TITLE}" href="{$slider.LINK}" {$slider.TARGET}>
+                          <picture>
+                            <source media="(max-width:600px)" data-srcset="{$slider.IMAGE_SRC_MOBILE}">
+                            <source data-srcset="{$slider.IMAGE_SRC}">
+                            <img class="lazyload" data-src="{$slider.IMAGE_SRC}" alt="{$slider.TITLE|onlytext}" title="{$slider.TITLE|onlytext}">
+                          </picture>
+                        </a>
+                      {else}
+                        <a title="{$slider.TITLE}" href="{$slider.LINK}" {$slider.TARGET}>{$slider.IMAGE_IMG}</a>
+                      {/if}
+                    {elseif $slider.IMAGE_IMG != ''}
+                      {if isset($slider.IMAGE_SRC_MOBILE) && $slider.IMAGE_SRC_MOBILE != ''}
+                        <picture>
+                          <source media="(max-width:600px)" data-srcset="{$slider.IMAGE_SRC_MOBILE}">
+                          <source data-srcset="{$slider.IMAGE_SRC}">
+                          <img class="lazyload" data-src="{$slider.IMAGE_SRC}" alt="{$slider.TITLE|onlytext}" title="{$slider.TITLE|onlytext}">
+                        </picture>
+                      {else}
+                        {$slider.IMAGE_IMG}
+                      {/if}
+                    {/if}
+                  </div>
+                {/foreach}
+              </div>
+            </div>            
           {/if}
+          
           {if isset($BANNER) && $BANNER != ''}<div class="content_banner cf">{$BANNER}</div>{/if}
           {if isset($main_content)}{$main_content}{/if}
           {if isset($box_BESTSELLERS)}{$box_BESTSELLERS}{/if}

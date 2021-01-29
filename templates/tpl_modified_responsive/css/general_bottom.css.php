@@ -20,7 +20,7 @@
     DIR_TMPL_CSS.'jquery.colorbox.css',
     DIR_TMPL_CSS.'jquery.sumoselect.css',
     DIR_TMPL_CSS.'jquery.alertable.css',
-    DIR_TMPL_CSS.'jquery.bxslider.css',
+    DIR_TMPL_CSS.'jquery.slick.css',
     DIR_TMPL_CSS.'jquery.sidebar.css',
     DIR_TMPL_CSS.'fontawesome-all.css',
     DIR_TMPL_CSS.'cookieconsent.css',

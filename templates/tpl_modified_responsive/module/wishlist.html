@@ -17,10 +17,8 @@
       <div class="lb_inner">
         <div class="lb_image">
         {if $module_data.PRODUCTS_IMAGE != ''}
-          <a href="{$module_data.PRODUCTS_LINK}"><img class="unveil" src="{$tpl_path}css/images/loading.gif" data-src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" title="{$module_data.PRODUCTS_NAME|onlytext}" /></a>
+          <a href="{$module_data.PRODUCTS_LINK}"><img class="lazyload" data-src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" title="{$module_data.PRODUCTS_NAME|onlytext}" /></a>
           <noscript><a href="{$module_data.PRODUCTS_LINK}"><img src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" title="{$module_data.PRODUCTS_NAME|onlytext}" /></a></noscript>
-        {else}
-          &nbsp;
         {/if}
         </div>
         <div class="lb_title"><h2><a href="{$module_data.PRODUCTS_LINK}">{$module_data.PRODUCTS_NAME}</a></h2></div>
@@ -40,10 +38,8 @@
       <div class="lr_inner cf">
         <div class="lr_image">
         {if $module_data.PRODUCTS_IMAGE != ''}
-          <a href="{$module_data.PRODUCTS_LINK}"><img class="unveil" src="{$tpl_path}css/images/loading.gif" data-src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" title="{$module_data.PRODUCTS_NAME|onlytext}" /></a>
+          <a href="{$module_data.PRODUCTS_LINK}"><img class="lazyload" data-src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" title="{$module_data.PRODUCTS_NAME|onlytext}" /></a>
           <noscript><a href="{$module_data.PRODUCTS_LINK}"><img src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" title="{$module_data.PRODUCTS_NAME|onlytext}" /></a></noscript>
-        {else}
-          &nbsp;
         {/if}      
         </div>
         <div class="lr_content cf">

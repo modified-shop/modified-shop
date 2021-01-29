@@ -8,12 +8,27 @@
 {/if}
 
 {if (isset($CATEGORIES_DESCRIPTION) && $CATEGORIES_DESCRIPTION != '')
-     || isset($CATEGORIES_IMAGE) && $CATEGORIES_IMAGE != ''}
+     || (isset($CATEGORIES_IMAGE) && $CATEGORIES_IMAGE != '')
+     || (isset($CATEGORIES_IMAGE_MOBILE) && $CATEGORIES_IMAGE_MOBILE != '')
+     }
 <div class="cat_description cf">
-  {if isset($CATEGORIES_IMAGE) && $CATEGORIES_IMAGE != ''}<img class="cat_image{if !$CATEGORIES_DESCRIPTION} ci_nomargin{/if}" src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME|onlytext}" />{/if}
-  {if (isset($CATEGORIES_DESCRIPTION) && $CATEGORIES_DESCRIPTION != '')}{$CATEGORIES_DESCRIPTION}{/if}
+  {if isset($CATEGORIES_IMAGE) && $CATEGORIES_IMAGE != ''}
+    {if isset($CATEGORIES_IMAGE_MOBILE) && $CATEGORIES_IMAGE_MOBILE != ''}
+      <picture>
+        <source media="(max-width:600px)" data-srcset="{$CATEGORIES_IMAGE_MOBILE}">
+        <source data-srcset="{$CATEGORIES_IMAGE}">
+        <img class="lazyload cat_image{if !$CATEGORIES_DESCRIPTION} ci_nomargin{/if}" data-src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME|onlytext}" />
+        <noscript><img class="cat_image{if !$CATEGORIES_DESCRIPTION} ci_nomargin{/if}" src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME|onlytext}" /></noscript>
+      </picture>
+    {else}
+      <img class="lazyload cat_image{if !$CATEGORIES_DESCRIPTION} ci_nomargin{/if}" data-src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME|onlytext}" />
+      <noscript><img class="cat_image{if !$CATEGORIES_DESCRIPTION} ci_nomargin{/if}" src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME|onlytext}" /></noscript>
+    {/if}
+  {/if}
+  {if isset($CATEGORIES_DESCRIPTION) && $CATEGORIES_DESCRIPTION != ''}{$CATEGORIES_DESCRIPTION}{/if}
 </div>
 {/if}
+
 
 {if $module_content != '' && $TR_COLS > 0}
 <h4>{#heading_more_categories#}</h4>
@@ -22,7 +37,19 @@
   <div class="subcatlist">
     <div class="subcatlist_inner cf">
       <a href="{$module_data.CATEGORIES_LINK}">
-        {if $module_data.CATEGORIES_IMAGE}<span class="subcat_image"><span class="subcat_image_inner cf"><img src="{$module_data.CATEGORIES_IMAGE}" alt="{$module_data.CATEGORIES_NAME|onlytext}" /></span></span>{/if}
+        {if $module_data.CATEGORIES_IMAGE != '' || (isset($module_data.CATEGORIES_IMAGE_LIST) && $module_data.CATEGORIES_IMAGE_LIST != '')}
+          <span class="subcat_image">
+            <span class="subcat_image_inner cf">
+              {if isset($module_data.CATEGORIES_IMAGE_LIST) && $module_data.CATEGORIES_IMAGE_LIST != ''}
+                <img class="lazyload" data-src="{$module_data.CATEGORIES_IMAGE_LIST}" alt="{$module_data.CATEGORIES_NAME|onlytext}" />
+                <noscript><img src="{$module_data.CATEGORIES_IMAGE_LIST}" alt="{$module_data.CATEGORIES_NAME|onlytext}" /></noscript>
+              {else}
+                <img class="lazyload" data-src="{$module_data.CATEGORIES_IMAGE}" alt="{$module_data.CATEGORIES_NAME|onlytext}" />
+                <noscript><img src="{$module_data.CATEGORIES_IMAGE}" alt="{$module_data.CATEGORIES_NAME|onlytext}" /></noscript>
+              {/if}
+            </span>
+          </span>
+        {/if}
         <span class="subcat_title"><span class="subcat_title_inner">{$module_data.CATEGORIES_NAME}</span></span>
       </a>
     </div>
