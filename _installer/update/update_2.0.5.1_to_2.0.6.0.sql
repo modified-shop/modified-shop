@@ -65,4 +65,8 @@ ALTER TABLE `categories` ADD `categories_image_mobile` VARCHAR(255) NOT NULL AFT
 ALTER TABLE `categories` ADD `categories_image_list` VARCHAR(255) NOT NULL AFTER `categories_image_mobile`;
 ALTER TABLE `banners` ADD `banners_image_mobile` VARCHAR(255) NOT NULL AFTER `banners_image`; 
 
+#GTB - 2021-01-29 - update banner for new image handling
+UPDATE `banners` SET `banners_image` = 'modified_banner.jpg', `banners_image_mobile` = 'modified_banner_mobile.jpg' WHERE banners_image = 'banner_modified-ecommerce-shopsoftware_de.jpg';
+UPDATE `banners` SET `banners_image` = 'modified_banner.jpg', `banners_image_mobile` = 'modified_banner_mobile.jpg' WHERE banners_image = 'banner_modified-ecommerce-shopsoftware_en.jpg';
+
 # Keep an empty line at the end of this file for the db_updater to work properly

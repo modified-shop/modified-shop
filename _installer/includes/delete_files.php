@@ -218,6 +218,8 @@
     'findologic.php',
     'google_conversiontracking.js.php',
     'google_sitemap.php',
+    'images/banner/banner_modified-ecommerce-shopsoftware_de.jpg',
+    'images/banner/banner_modified-ecommerce-shopsoftware_en.jpg',
     'images/icons/kl_epaypal_de.gif',
     'images/icons/kl_epaypal_en.gif',
     'images/icons/luupay.gif',
