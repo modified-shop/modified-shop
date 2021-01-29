@@ -4,7 +4,14 @@
 <div itemscope itemtype="http://schema.org/Product">
   {$FORM_ACTION}
   <div class="product_headline cf">
-    {if isset($MANUFACTURER_IMAGE) && $MANUFACTURER_IMAGE != ''}<div class="pd_manu_image"><a title="{$MANUFACTURER|onlytext}" href="{$MANUFACTURER_LINK}"><img src="{$MANUFACTURER_IMAGE}" alt="{$MANUFACTURER|onlytext}" /></a></div>{/if}
+    {if isset($MANUFACTURER_IMAGE) && $MANUFACTURER_IMAGE != ''}
+      <div class="pd_manu_image">
+        <a title="{$MANUFACTURER|onlytext}" href="{$MANUFACTURER_LINK}">
+          <img class="lazyload" data-src="{$MANUFACTURER_IMAGE}" alt="{$MANUFACTURER|onlytext}" />
+          <noscript><img src="{$MANUFACTURER_IMAGE}" alt="{$MANUFACTURER|onlytext}" /></noscript>
+        </a>
+      </div>
+    {/if}
     <h1 itemprop="name">{if $PRODUCTS_HEADING_TITLE != ''}{$PRODUCTS_HEADING_TITLE}{else}{$PRODUCTS_NAME}{/if}</h1>
   </div>
 
@@ -18,12 +25,18 @@
       {if isset($more_images) && count($more_images) > 0}
       <div class="pd_small_image_row cf">
         {foreach item=more_images_data from=$more_images} 
-        <div class="pd_small_image">
-          <div class="pd_small_image_inner cf">
-            <a class="cbimages" title="{$PRODUCTS_NAME|onlytext}" href="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"popup_images"}"><img class="unveil" src="{$tpl_path}css/images/loading.gif" data-src="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"thumbnail_images"}" alt="{$PRODUCTS_NAME|onlytext}" title="{$PRODUCTS_NAME|onlytext}" /></a>
-            <noscript><a title="{$PRODUCTS_NAME|onlytext}" href="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"popup_images"}"><img src="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"thumbnail_images"}" alt="{$PRODUCTS_NAME|onlytext}" title="{$PRODUCTS_NAME|onlytext}" /></a></noscript>
+          <div class="pd_small_image">
+            <div class="pd_small_image_inner cf">
+              <a class="cbimages" title="{$PRODUCTS_NAME|onlytext}" href="{$more_images_data.PRODUCTS_IMAGE|replace:"info_":"popup_"}">
+                {if $smarty.const.PICTURESET_ACTIVE === true}
+                  <img class="lazyload" data-src="{$more_images_data.PRODUCTS_IMAGE|replace:"info_":"mini_"}" alt="{$PRODUCTS_NAME|onlytext}" title="{$PRODUCTS_NAME|onlytext}" />
+                {else}
+                  <img class="lazyload" data-src="{$more_images_data.PRODUCTS_IMAGE|replace:"info_":"thumbnail_"}" alt="{$PRODUCTS_NAME|onlytext}" title="{$PRODUCTS_NAME|onlytext}" />
+                {/if}
+                <noscript><img src="{$more_images_data.PRODUCTS_IMAGE|replace:"info_":"thumbnail_"}" alt="{$PRODUCTS_NAME|onlytext}" title="{$PRODUCTS_NAME|onlytext}" /></noscript>
+              </a>
+            </div>
           </div>
-        </div>
         {/foreach}
       </div>
       {/if}

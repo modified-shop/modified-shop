@@ -57,6 +57,11 @@
     define('WHATSNEW_EXISTS', check_whatsnew());
   }
   */
+    
+  // picture set listing box
+  define('PICTURESET_ACTIVE', defined('DIR_WS_MINI_IMAGES'));
+  define('PICTURESET_BOX', '360:thumbnail,480:midi,600:thumbnail,690:thumbnail,920:thumbnail,985:midi');
+  define('PICTURESET_ROW', '985:midi');
   
   // set base
   define('DIR_WS_BASE', xtc_href_link('', '', $request_type, false, false));

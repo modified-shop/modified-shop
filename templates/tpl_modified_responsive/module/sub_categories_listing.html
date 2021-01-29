@@ -8,7 +8,18 @@
   <div class="subcatlist">
     <div class="subcatlist_inner cf">
       <a href="{$categories_data.CATEGORIES_LINK}">
-        {if $categories_data.CATEGORIES_IMAGE}<span class="subcat_image"><span class="subcat_image_inner cf"><img src="{$categories_data.CATEGORIES_IMAGE}" alt="{$categories_data.CATEGORIES_NAME|onlytext}" /></span></span>{/if}
+        {if $categories_data.CATEGORIES_IMAGE != '' || (isset($categories_data.CATEGORIES_IMAGE_LIST) && $categories_data.CATEGORIES_IMAGE_LIST != '')}
+          <span class="subcat_image">
+            <span class="subcat_image_inner cf">
+              {if isset($categories_data.CATEGORIES_IMAGE_LIST) && $categories_data.CATEGORIES_IMAGE_LIST != ''}
+                <img class="lazyload" data-src="{$categories_data.CATEGORIES_IMAGE_LIST}" alt="{$categories_data.CATEGORIES_NAME|onlytext}" />
+              {else}
+                <img class="lazyload" data-src="{$categories_data.CATEGORIES_IMAGE}" alt="{$categories_data.CATEGORIES_NAME|onlytext}" />
+              {/if}
+              <noscript><img src="{$categories_data.CATEGORIES_IMAGE}" alt="{$categories_data.CATEGORIES_NAME|onlytext}" /></noscript>
+            </span>
+          </span>
+        {/if}
         <span class="subcat_title"><span class="subcat_title_inner">{$categories_data.CATEGORIES_NAME}</span></span>
       </a>
     </div>

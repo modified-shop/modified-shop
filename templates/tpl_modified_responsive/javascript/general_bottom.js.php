@@ -20,8 +20,8 @@
 <?php
 $script_array = array(
   DIR_TMPL_JS.'jquery.colorbox.min.js',
-  DIR_TMPL_JS.'jquery.unveil.min.js',
-  DIR_TMPL_JS.'jquery.bxslider.min.js',
+  DIR_TMPL_JS.'jquery.lazysizes.min.js',
+  DIR_TMPL_JS.'jquery.slick.min.js',
   DIR_TMPL_JS.'jquery.easyTabs.min.js',
   DIR_TMPL_JS.'jquery.alertable.min.js',
   DIR_TMPL_JS.'jquery.sumoselect.min.js',

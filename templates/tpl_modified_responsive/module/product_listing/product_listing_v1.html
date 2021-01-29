@@ -4,9 +4,23 @@
 <h1>{$LIST_TITLE}</h1>
 
 {if (isset($CATEGORIES_DESCRIPTION) && $CATEGORIES_DESCRIPTION != '')
-     || (isset($CATEGORIES_IMAGE) && $CATEGORIES_IMAGE != '')}
+     || (isset($CATEGORIES_IMAGE) && $CATEGORIES_IMAGE != '')
+     || (isset($CATEGORIES_IMAGE_MOBILE) && $CATEGORIES_IMAGE_MOBILE != '')
+     }
 <div class="cat_description cf">
-  {if isset($CATEGORIES_IMAGE) && $CATEGORIES_IMAGE != ''}<img class="cat_image{if !$CATEGORIES_DESCRIPTION} ci_nomargin{/if}" src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME|onlytext}" />{/if}
+  {if isset($CATEGORIES_IMAGE) && $CATEGORIES_IMAGE != ''}
+    {if isset($CATEGORIES_IMAGE_MOBILE) && $CATEGORIES_IMAGE_MOBILE != ''}
+      <picture>
+        <source media="(max-width:600px)" data-srcset="{$CATEGORIES_IMAGE_MOBILE}">
+        <source data-srcset="{$CATEGORIES_IMAGE}">
+        <img class="lazyload cat_image{if !$CATEGORIES_DESCRIPTION} ci_nomargin{/if}" data-src="{$CATEGORIES_IMAGE}" title="{$CATEGORIES_NAME|onlytext}" alt="{$CATEGORIES_NAME|onlytext}" />
+        <noscript><img class="cat_image{if !$CATEGORIES_DESCRIPTION} ci_nomargin{/if}" src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME|onlytext}" /></noscript>
+      </picture>
+    {else}
+      <img class="lazyload cat_image{if !$CATEGORIES_DESCRIPTION} ci_nomargin{/if}" data-src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME|onlytext}" />
+      <noscript><img class="cat_image{if !$CATEGORIES_DESCRIPTION} ci_nomargin{/if}" src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME|onlytext}" /></noscript>
+    {/if}
+  {/if}
   {if isset($CATEGORIES_DESCRIPTION) && $CATEGORIES_DESCRIPTION != ''}{$CATEGORIES_DESCRIPTION}{/if}
 </div>
 {/if}
@@ -20,7 +34,10 @@
     || (isset($MANUFACTURER_NAME) && $MANUFACTURER_NAME != '')}
 <h4>{$MANUFACTURER_NAME}</h4>
 <div class="manu_description cf">
-  {if $MANUFACTURER_IMAGE}<img class="manu_image{if !$MANUFACTURER_DESCRIPTION} mi_nomargin{/if}" src="{$MANUFACTURER_IMAGE}" alt="{$MANUFACTURER_NAME|onlytext}" />{/if}
+  {if $MANUFACTURER_IMAGE}
+    <img class="lazyload manu_image{if !$MANUFACTURER_DESCRIPTION} mi_nomargin{/if}" data-src="{$MANUFACTURER_IMAGE}" alt="{$MANUFACTURER_NAME|onlytext}" />
+    <noscript><img class="manu_image{if !$MANUFACTURER_DESCRIPTION} mi_nomargin{/if}" src="{$MANUFACTURER_IMAGE}" alt="{$MANUFACTURER_NAME|onlytext}" /></noscript>
+  {/if}
   {if $MANUFACTURER_DESCRIPTION}{$MANUFACTURER_DESCRIPTION}{/if}
 </div>  
 {/if}
