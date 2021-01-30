@@ -13,19 +13,19 @@ define('MODULE_PAYMENT_BILLPAY_LOGGING_TITLE' , 'Absolute path for log-file');
 define('MODULE_PAYMENT_BILLPAY_LOGGING_DESC' , 'Payment module will write all communication with BillPay server to the file. If empty, it will use default path (/includes/external/billpay/log).');
 
 define('MODULE_PAYMENT_BILLPAY_GS_MERCHANT_ID_TITLE' , 'Merchant ID');
-define('MODULE_PAYMENT_BILLPAY_GS_MERCHANT_ID_DESC' , MODULE_PAYMENT_BILLPAY_DATA_PROVIDED_BY_BILLPAY);
+define('MODULE_PAYMENT_BILLPAY_GS_MERCHANT_ID_DESC' , 'You will receive this data from BillPay');
 
 define('MODULE_PAYMENT_BILLPAY_ORDER_STATUS_TITLE' , 'Default order status');
 define('MODULE_PAYMENT_BILLPAY_ORDER_STATUS_DESC' , 'All orders made with this payment method and approved by BillPay, will be created with this status. (default setting: "BillPay pending")');
 
 define('MODULE_PAYMENT_BILLPAY_GS_PORTAL_ID_TITLE' , 'Portal ID');
-define('MODULE_PAYMENT_BILLPAY_GS_PORTAL_ID_DESC' , MODULE_PAYMENT_BILLPAY_DATA_PROVIDED_BY_BILLPAY);
+define('MODULE_PAYMENT_BILLPAY_GS_PORTAL_ID_DESC' , 'You will receive this data from BillPay');
 
 define('MODULE_PAYMENT_BILLPAY_GS_SECURE_TITLE' , 'API password');
-define('MODULE_PAYMENT_BILLPAY_GS_SECURE_DESC' , MODULE_PAYMENT_BILLPAY_DATA_PROVIDED_BY_BILLPAY);
+define('MODULE_PAYMENT_BILLPAY_GS_SECURE_DESC' , 'You will receive this data from BillPay');
 
 define('MODULE_PAYMENT_BILLPAY_GS_PUBLIC_API_KEY_TITLE', 'Public API Key');
-define('MODULE_PAYMENT_BILLPAY_GS_PUBLIC_API_KEY_DESC', MODULE_PAYMENT_BILLPAY_DATA_PROVIDED_BY_BILLPAY);
+define('MODULE_PAYMENT_BILLPAY_GS_PUBLIC_API_KEY_DESC', 'You will receive this data from BillPay');
 
 define('MODULE_PAYMENT_BILLPAY_SORT_ORDER_TITLE' , 'Display order');
 define('MODULE_PAYMENT_BILLPAY_SORT_ORDER_DESC' , 'Order of display. Smallest number are displayed first.');
