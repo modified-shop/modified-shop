@@ -37,7 +37,7 @@
   switch ($action) {
     case 'insert':
     case 'save':
-      $manufacturers_id = (int)$_GET['mID'];
+      $manufacturers_id = ((isset($_GET['mID'])) ? (int)$_GET['mID'] : null);
       $manufacturers_name = xtc_db_prepare_input($_POST['manufacturers_name']);
 
       $sql_data_array = array('manufacturers_name' => $manufacturers_name);
