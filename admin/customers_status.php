@@ -54,7 +54,7 @@
       case 'insert':
       case 'save':
         if (isset($_POST) && count($_POST) > 0) {
-          $customers_status_id = xtc_db_prepare_input($_GET['cID']);
+          $customers_status_id = ((isset($_GET['cID'])) ? (int)$_GET['cID'] : null);
           $languages = xtc_get_languages();
           for ($i=0; $i < sizeof($languages); $i++) {
             $language_id = $languages[$i]['id'];
@@ -211,7 +211,7 @@
         $status = xtc_db_fetch_array($status_query);
 
         $remove_status = true;
-        if (($cID == DEFAULT_CUSTOMERS_STATUS_ID) || ($cID == DEFAULT_CUSTOMERS_STATUS_ID_GUEST) || ($cID == DEFAULT_CUSTOMERS_STATUS_ID_NEWSLETTER)) {
+        if ($cID == DEFAULT_CUSTOMERS_STATUS_ID || $cID == DEFAULT_CUSTOMERS_STATUS_ID_GUEST) {
           $remove_status = false;
           $messageStack->add(ERROR_REMOVE_DEFAULT_CUSTOMERS_STATUS, 'error');
         } elseif ($status['count'] > 0) {
