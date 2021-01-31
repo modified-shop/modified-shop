@@ -82,10 +82,10 @@ if ($_GET['edit_action']=='address') {
     <?php echo xtc_draw_pull_down_menu('customers_gender', get_customers_gender(), $order->customer['gender'], 'style="width:200px;"');?>
     </span></td>
     <td class="dataTableContent"><span class="select_f12">
-    <?php echo xtc_draw_pull_down_menu('customers_gender', get_customers_gender(), $order->delivery['gender'], 'style="width:200px;"');?>
+    <?php echo xtc_draw_pull_down_menu('delivery_gender', get_customers_gender(), $order->delivery['gender'], 'style="width:200px;"');?>
     </span></td>
     <td class="dataTableContent"><span class="select_f12">
-    <?php echo xtc_draw_pull_down_menu('customers_gender', get_customers_gender(), $order->billing['gender'], 'style="width:200px;"');?>
+    <?php echo xtc_draw_pull_down_menu('billing_gender', get_customers_gender(), $order->billing['gender'], 'style="width:200px;"');?>
     </span></td>
   </tr>
   <?php } ?>
