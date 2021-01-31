@@ -210,6 +210,7 @@ if (USE_WYSIWYG == 'true') {
         if ($action == 'edit' || $action == 'new') {
           if ($action == 'new') {
             unset($_GET['mID']);
+            $manufact = xtc_get_default_table_data(TABLE_MANUFACTURERS);
           } else {
             $manufact_query = xtc_db_query("SELECT manufacturers_name,
                                                    manufacturers_image
@@ -236,11 +237,15 @@ if (USE_WYSIWYG == 'true') {
               for ($i=0; $i<sizeof($languages); $i++) {
                 echo ('<div id="tab_lang_' . $i . '">');
                 $lng_image = '<div style="float:left;margin-right:5px;">'.xtc_image(DIR_WS_LANGUAGES.$languages[$i]['directory'].'/admin/images/'.$languages[$i]['image']).'</div>';
-                $manufacturers_query = xtc_db_query("SELECT *
-                                                       FROM " . TABLE_MANUFACTURERS_INFO . "
-                                                      WHERE manufacturers_id='".(int)$_GET['mID']."'
-                                                        AND languages_id='".$languages[$i]['id']."'");
-                $manufacturer = xtc_db_fetch_array($manufacturers_query);
+                if ($action == 'new') {
+                  $manufacturer = xtc_get_default_table_data(TABLE_MANUFACTURERS_INFO);
+                } else {
+                  $manufacturers_query = xtc_db_query("SELECT *
+                                                         FROM " . TABLE_MANUFACTURERS_INFO . "
+                                                        WHERE manufacturers_id='".(int)$_GET['mID']."'
+                                                          AND languages_id='".$languages[$i]['id']."'");
+                  $manufacturer = xtc_db_fetch_array($manufacturers_query);
+                }
                 ?>
                 <table class="tableInput border0">
                   <tr>
