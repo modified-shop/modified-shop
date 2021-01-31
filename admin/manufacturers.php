@@ -309,7 +309,7 @@ if (USE_WYSIWYG == 'true') {
             <!-- BOF Save block //-->
             <div style="clear:both;"></div>
             <div class="txta-r">
-              <?php echo xtc_button_link(BUTTON_CANCEL, xtc_href_link(FILENAME_MANUFACTURERS, 'page=' . $page . '&mID=' . (int)$_GET['mID'])) . '&nbsp;' . xtc_button(BUTTON_SAVE); ?>
+              <?php echo xtc_button_link(BUTTON_CANCEL, xtc_href_link(FILENAME_MANUFACTURERS, 'page=' . $page . ((isset($_GET['mID'])) ? '&mID=' . (int)$_GET['mID'] : ''))) . '&nbsp;' . xtc_button(BUTTON_SAVE); ?>
             </div>
             <!-- EOF Save block //-->
           </div>
