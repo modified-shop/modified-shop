@@ -21,6 +21,11 @@
 
   $languages = xtc_get_languages();
 
+  $action = (isset($_GET['action']) ? $_GET['action'] : '');
+  $saction = (isset($_GET['saction']) ? $_GET['saction'] : '');
+  $page = (isset($_GET['page']) ? (int)$_GET['page'] : 1);
+  $spage = (isset($_GET['spage']) ? (int)$_GET['spage'] : 1);
+
   function xtc_get_attributes_values_detail($products_options_values_id, $languages_id, $db_field) {
     $values_query = xtc_db_query("SELECT ".$db_field." 
                                     FROM ".TABLE_PRODUCTS_OPTIONS_VALUES."
@@ -95,140 +100,137 @@
   }
 
 
-  if (isset($_GET['saction'])) {
-    switch ($_GET['saction']) {
-  
-      case 'insert_values':
-        $oID = (int)$_GET['oID'];
-        $next_id_query = xtc_db_query("SELECT max(products_options_values_id) as products_options_values_id 
-                                         FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . "");
-        $next_id = xtc_db_fetch_array($next_id_query);
-        $values_id = $next_id['products_options_values_id'] + 1;
+  switch ($saction) {
 
-        for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {     
-          $sql_data_array = array('products_options_values_id' => $values_id,
-                                  'products_options_values_name' => xtc_db_prepare_input($_POST['products_options_values_name'][$languages[$i]['id']]),
-                                  'language_id' => $languages[$i]['id'],
-                                  'products_options_values_sortorder' => (int)$_POST['products_options_values_sortorder'],
-                                  );
-          xtc_db_perform(TABLE_PRODUCTS_OPTIONS_VALUES, $sql_data_array);
-        }
+    case 'insert_values':
+      $oID = (int)$_GET['oID'];
+      $next_id_query = xtc_db_query("SELECT max(products_options_values_id) as products_options_values_id 
+                                       FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . "");
+      $next_id = xtc_db_fetch_array($next_id_query);
+      $values_id = $next_id['products_options_values_id'] + 1;
 
-        $sql_data_array = array('products_options_id' => $oID,
-                                'products_options_values_id' => $values_id,
+      for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {     
+        $sql_data_array = array('products_options_values_id' => $values_id,
+                                'products_options_values_name' => xtc_db_prepare_input($_POST['products_options_values_name'][$languages[$i]['id']]),
+                                'language_id' => $languages[$i]['id'],
+                                'products_options_values_sortorder' => (int)$_POST['products_options_values_sortorder'],
                                 );
-        xtc_db_perform(TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS, $sql_data_array);
+        xtc_db_perform(TABLE_PRODUCTS_OPTIONS_VALUES, $sql_data_array);
+      }
 
-        xtc_redirect(xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action', 'vID', 'saction')) . 'list=detail&vID=' . $values_id));
-        break;
+      $sql_data_array = array('products_options_id' => $oID,
+                              'products_options_values_id' => $values_id,
+                              );
+      xtc_db_perform(TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS, $sql_data_array);
 
-      case 'save_values':
-        $vID = (int)$_GET['vID'];
-        $oID = (int)$_GET['oID'];
-        for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {     
-          $sql_data_array = array('products_options_values_id' => $vID,
-                                  'products_options_values_name' => xtc_db_prepare_input($_POST['products_options_values_name'][$languages[$i]['id']]),
-                                  'language_id' => $languages[$i]['id'],
-                                  'products_options_values_sortorder' => (int)$_POST['products_options_values_sortorder'],
-                                  );
-          $values_description_query = xtc_db_query("SELECT * 
-                                                      FROM ".TABLE_PRODUCTS_OPTIONS_VALUES." 
-                                                     WHERE language_id = '".$languages[$i]['id']."' 
-                                                       AND products_options_values_id = '".$vID."'");
-          if (xtc_db_num_rows($values_description_query) == 0) {
-            xtc_db_perform(TABLE_PRODUCTS_OPTIONS_VALUES, $sql_data_array);
-          } else {
-            xtc_db_perform(TABLE_PRODUCTS_OPTIONS_VALUES, $sql_data_array, 'update', "products_options_values_id = '".$vID."' AND language_id = '".$languages[$i]['id']."'");                    
-          }      
-        }
+      xtc_redirect(xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action', 'vID', 'saction')) . 'list=detail&vID=' . $values_id));
+      break;
 
-        xtc_redirect(xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action', 'saction')) . 'list=detail'));
-        break;
-
-      case 'deleteconfirm_values':
-        $vID = (int)$_GET['vID'];
-        $oID = (int)$_GET['oID'];
-
-        $products_array = xtc_check_attributes_values($vID);
-        if (count($products_array) > 0) {
-          $messageStack->add_session(TEXT_WARNING_OF_DELETE, 'error');
+    case 'save_values':
+      $vID = (int)$_GET['vID'];
+      $oID = (int)$_GET['oID'];
+      for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {     
+        $sql_data_array = array('products_options_values_id' => $vID,
+                                'products_options_values_name' => xtc_db_prepare_input($_POST['products_options_values_name'][$languages[$i]['id']]),
+                                'language_id' => $languages[$i]['id'],
+                                'products_options_values_sortorder' => (int)$_POST['products_options_values_sortorder'],
+                                );
+        $values_description_query = xtc_db_query("SELECT * 
+                                                    FROM ".TABLE_PRODUCTS_OPTIONS_VALUES." 
+                                                   WHERE language_id = '".$languages[$i]['id']."' 
+                                                     AND products_options_values_id = '".$vID."'");
+        if (xtc_db_num_rows($values_description_query) == 0) {
+          xtc_db_perform(TABLE_PRODUCTS_OPTIONS_VALUES, $sql_data_array);
         } else {
-          xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . " WHERE products_options_values_id = '" . $vID . "'");
-          xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " WHERE products_options_values_id = '" . $vID . "' AND products_options_id = '" . $oID . "'");
-        }
+          xtc_db_perform(TABLE_PRODUCTS_OPTIONS_VALUES, $sql_data_array, 'update', "products_options_values_id = '".$vID."' AND language_id = '".$languages[$i]['id']."'");                    
+        }      
+      }
 
-        xtc_redirect(xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action', 'vID', 'saction')) . 'list=detail'));
-        break;
-    }
+      xtc_redirect(xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action', 'saction')) . 'list=detail'));
+      break;
+
+    case 'deleteconfirm_values':
+      $vID = (int)$_GET['vID'];
+      $oID = (int)$_GET['oID'];
+
+      $products_array = xtc_check_attributes_values($vID);
+      if (count($products_array) > 0) {
+        $messageStack->add_session(TEXT_WARNING_OF_DELETE, 'error');
+      } else {
+        xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . " WHERE products_options_values_id = '" . $vID . "'");
+        xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " WHERE products_options_values_id = '" . $vID . "' AND products_options_id = '" . $oID . "'");
+      }
+
+      xtc_redirect(xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action', 'vID', 'saction')) . 'list=detail'));
+      break;
   }
+  
 
-  if (isset($_GET['action'])) {
-    switch ($_GET['action']) {
+  switch ($action) {
 
-      case 'insert_options':
-        $next_id_query = xtc_db_query("SELECT max(products_options_id) as products_options_id 
-                                         FROM " . TABLE_PRODUCTS_OPTIONS . "");
-        $next_id = xtc_db_fetch_array($next_id_query);
-        $options_id = $next_id['products_options_id'] + 1;
+    case 'insert_options':
+      $next_id_query = xtc_db_query("SELECT max(products_options_id) as products_options_id 
+                                       FROM " . TABLE_PRODUCTS_OPTIONS . "");
+      $next_id = xtc_db_fetch_array($next_id_query);
+      $options_id = $next_id['products_options_id'] + 1;
 
-        for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {     
-          $sql_data_array = array('products_options_id' => $options_id,
-                                  'products_options_name' => xtc_db_prepare_input($_POST['products_options_name'][$languages[$i]['id']]),
-                                  'language_id' => $languages[$i]['id'],
-                                  'products_options_sortorder' => (int)$_POST['products_options_sortorder'],
-                                  );
+      for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {     
+        $sql_data_array = array('products_options_id' => $options_id,
+                                'products_options_name' => xtc_db_prepare_input($_POST['products_options_name'][$languages[$i]['id']]),
+                                'language_id' => $languages[$i]['id'],
+                                'products_options_sortorder' => (int)$_POST['products_options_sortorder'],
+                                );
+        xtc_db_perform(TABLE_PRODUCTS_OPTIONS, $sql_data_array);
+      }                  
+
+      xtc_redirect(xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action', 'oID', 'search')) . 'oID=' . $options_id));
+      break;
+
+    case 'save_options':
+      $oID = (int)$_GET['oID'];
+      for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {     
+        $sql_data_array = array('products_options_id' => $oID,
+                                'products_options_name' => xtc_db_prepare_input($_POST['products_options_name'][$languages[$i]['id']]),
+                                'language_id' => $languages[$i]['id'],
+                                'products_options_sortorder' => (int)$_POST['products_options_sortorder'],
+                                );
+        $options_name_query = xtc_db_query("SELECT * 
+                                              FROM ".TABLE_PRODUCTS_OPTIONS." 
+                                             WHERE language_id = '".$languages[$i]['id']."' 
+                                               AND products_options_id = '".$oID."'");
+        if (xtc_db_num_rows($options_name_query) == 0) {
           xtc_db_perform(TABLE_PRODUCTS_OPTIONS, $sql_data_array);
-        }                  
-
-        xtc_redirect(xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action', 'oID', 'search')) . 'oID=' . $options_id));
-        break;
-
-      case 'save_options':
-        $oID = (int)$_GET['oID'];
-        for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {     
-          $sql_data_array = array('products_options_id' => $oID,
-                                  'products_options_name' => xtc_db_prepare_input($_POST['products_options_name'][$languages[$i]['id']]),
-                                  'language_id' => $languages[$i]['id'],
-                                  'products_options_sortorder' => (int)$_POST['products_options_sortorder'],
-                                  );
-          $options_name_query = xtc_db_query("SELECT * 
-                                                FROM ".TABLE_PRODUCTS_OPTIONS." 
-                                               WHERE language_id = '".$languages[$i]['id']."' 
-                                                 AND products_options_id = '".$oID."'");
-          if (xtc_db_num_rows($options_name_query) == 0) {
-            xtc_db_perform(TABLE_PRODUCTS_OPTIONS, $sql_data_array);
-          } else {
-            xtc_db_perform(TABLE_PRODUCTS_OPTIONS, $sql_data_array, 'update', "products_options_id = '".$oID."' AND language_id = '".$languages[$i]['id']."'");                    
-          }
-        }
-
-        xtc_redirect(xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action'))));
-        break;
-
-      case 'deleteconfirm_options':
-        $oID = (int)$_GET['oID'];
-
-        $products_array = xtc_check_attributes_options($oID);
-        if (count($products_array) > 0) {
-          $messageStack->add_session(TEXT_WARNING_OF_DELETE, 'error');
         } else {
-          xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_OPTIONS . " WHERE products_options_id = '" . $oID . "'");
+          xtc_db_perform(TABLE_PRODUCTS_OPTIONS, $sql_data_array, 'update', "products_options_id = '".$oID."' AND language_id = '".$languages[$i]['id']."'");                    
+        }
+      }
 
-          $options_query = xtc_db_query("SELECT products_options_values_id
-                                           FROM " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " 
-                                          WHERE products_options_id = '" . $oID . "'");
-          if (xtc_db_num_rows($options_query) > 0) {
-            while ($options = xtc_db_fetch_array($options_query)) {
-              xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . " WHERE products_options_values_id = '" . $options['products_options_values_id'] . "'");
-              xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " WHERE products_options_values_id = '" . $options['products_options_values_id'] . "' AND products_options_id = '" . $oID . "'");
-            }
+      xtc_redirect(xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action'))));
+      break;
+
+    case 'deleteconfirm_options':
+      $oID = (int)$_GET['oID'];
+
+      $products_array = xtc_check_attributes_options($oID);
+      if (count($products_array) > 0) {
+        $messageStack->add_session(TEXT_WARNING_OF_DELETE, 'error');
+      } else {
+        xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_OPTIONS . " WHERE products_options_id = '" . $oID . "'");
+
+        $options_query = xtc_db_query("SELECT products_options_values_id
+                                         FROM " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " 
+                                        WHERE products_options_id = '" . $oID . "'");
+        if (xtc_db_num_rows($options_query) > 0) {
+          while ($options = xtc_db_fetch_array($options_query)) {
+            xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . " WHERE products_options_values_id = '" . $options['products_options_values_id'] . "'");
+            xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " WHERE products_options_values_id = '" . $options['products_options_values_id'] . "' AND products_options_id = '" . $oID . "'");
           }
         }
+      }
 
-        xtc_redirect(xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action', 'oID'))));
-        break;
+      xtc_redirect(xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action', 'oID'))));
+      break;
 
-    }
   }
 
   $option_sort = 'po.products_options_sortorder, po.products_options_name';
@@ -296,10 +298,10 @@ require (DIR_WS_INCLUDES.'head.php');
         <div>
           <div class="main pdg2 flt-l" style="margin-left:100px;margin-top:-20px;height: 25px;min-width: 200px;">&nbsp;
           <?php 
-            if (!isset($_GET['saction'])) {
+            if (!xtc_not_null($saction)) {
               if (isset($_GET['list']) && $_GET['list'] == 'detail') {
                 echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action', 'list', 'spage', 'vID'))) . '">' . BUTTON_BACK . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('saction', 'search', 'vID')) . 'saction=new_value') . '">' . BUTTON_INSERT . '</a>'; 
-              } elseif (!isset($_GET['action'])) {
+              } elseif (!xtc_not_null($action)) {
                 echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action', 'search')) . 'action=new_option') . '">' . BUTTON_INSERT . '</a>';
               }
             }
@@ -333,13 +335,13 @@ require (DIR_WS_INCLUDES.'head.php');
                                       AND pov.language_id = '".(int)$_SESSION['languages_id']."'
                                  ORDER BY ".$value_sort;
 
-              $values_split = new splitPageResults($_GET['spage'], $page_max_display_values_results, $values_query_raw, $values_query_numrows);
+              $values_split = new splitPageResults($spage, $page_max_display_values_results, $values_query_raw, $values_query_numrows);
               $values_query = xtc_db_query($values_query_raw);
               while ($values = xtc_db_fetch_array($values_query)) {
-                if (((!$_GET['vID']) || (@$_GET['vID'] == $values['products_options_values_id'])) && (!$vInfo) && (substr($_GET['saction'], 0, 3) != 'new_value')) {
+                if ((!isset($_GET['vID']) || $_GET['vID'] == $values['products_options_values_id']) && !isset($vInfo) && substr($action, 0, 3) != 'new_value') {
                   $vInfo = new objectInfo($values);
                 }
-                if ( (is_object($vInfo)) && ($values['products_options_values_id'] == $vInfo->products_options_values_id) ) {
+                if (isset($vInfo) && is_object($vInfo) && $values['products_options_values_id'] == $vInfo->products_options_values_id) {
                   echo '<tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action', 'saction', 'vID')) . 'vID=' . $vInfo->products_options_values_id . '&saction=edit_value') . '\'">' . "\n";
                 } else {
                   echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action', 'vID', 'list')) . 'list=detail&vID=' . $values['products_options_values_id']) . '\'">' . "\n";
@@ -348,18 +350,18 @@ require (DIR_WS_INCLUDES.'head.php');
                 <td class="dataTableContent" style="width:50px;"><?php echo $values['products_options_values_id']; ?></td>
                 <td class="dataTableContent" style="width:50px;"><?php echo $values['products_options_values_sortorder']; ?></td>
                 <td class="dataTableContent"><?php echo $values['products_options_values_name']; ?></td>
-                <td class="dataTableContent txta-r"><?php if ( (is_object($vInfo)) && ($values['products_options_values_id'] == $vInfo->products_options_values_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('vID', 'action', 'saction', 'list')) . 'list=detail&vID=' . $values['products_options_values_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent txta-r"><?php if (isset($vInfo) && is_object($vInfo) && $values['products_options_values_id'] == $vInfo->products_options_values_id) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('vID', 'action', 'saction', 'list')) . 'list=detail&vID=' . $values['products_options_values_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
               <?php
               }
               ?>
             </table>
   
-            <div class="smallText pdg2 flt-l"><?php echo $values_split->display_count($values_query_numrows, $page_max_display_values_results, $_GET['spage'], TEXT_DISPLAY_NUMBER_OF_VALUES); ?></div>
-            <div class="smallText pdg2 flt-r"><?php echo $values_split->display_links($values_query_numrows, $page_max_display_values_results, MAX_DISPLAY_PAGE_LINKS, $_GET['spage'], xtc_get_all_get_params(array('page', 'vID', 'action', 'saction', 'list', 'spage')) . 'list=detail', 'spage'); ?></div>
+            <div class="smallText pdg2 flt-l"><?php echo $values_split->display_count($values_query_numrows, $page_max_display_values_results, $spage, TEXT_DISPLAY_NUMBER_OF_VALUES); ?></div>
+            <div class="smallText pdg2 flt-r"><?php echo $values_split->display_links($values_query_numrows, $page_max_display_values_results, MAX_DISPLAY_PAGE_LINKS, $spage, xtc_get_all_get_params(array('page', 'vID', 'action', 'saction', 'list', 'spage')) . 'list=detail', 'spage'); ?></div>
             <div class="clear"></div>
             <?php echo draw_input_per_page($PHP_SELF.'?'.xtc_get_all_get_params(array('spage', 'saction')),$cfg_max_display_values_key,$page_max_display_values_results); ?>
-            <div class="smallText pdg2 flt-r"><?php if (!$_GET['saction']) echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action', 'spage', 'vID', 'list'))) . '">' . BUTTON_BACK . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action', 'saction', 'vID', 'list')) . 'list=detail&vID=' . $vInfo->products_options_values_id . '&saction=new_value') . '">' . BUTTON_INSERT . '</a>'; ?></div>
+            <div class="smallText pdg2 flt-r"><?php if (!xtc_not_null($saction)) echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action', 'spage', 'vID', 'list'))) . '">' . BUTTON_BACK . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action', 'saction', 'vID', 'list')) . 'list=detail&vID=' . $vInfo->products_options_values_id . '&saction=new_value') . '">' . BUTTON_INSERT . '</a>'; ?></div>
             <?php
             } else {
             ?>
@@ -389,10 +391,10 @@ require (DIR_WS_INCLUDES.'head.php');
                                              ".$where."
                                     GROUP BY po.products_options_id
                                     ORDER BY ".$option_sort;
-                $options_split = new splitPageResults($_GET['page'], $page_max_display_options_results, $options_query_raw, $options_query_numrows, 'po.products_options_id');
+                $options_split = new splitPageResults($page, $page_max_display_options_results, $options_query_raw, $options_query_numrows, 'po.products_options_id');
                 $options_query = xtc_db_query($options_query_raw);
                 while ($options = xtc_db_fetch_array($options_query)) {
-                  if (((!$_GET['oID']) || (@$_GET['oID'] == $options['products_options_id'])) && (!isset($oInfo)) && (substr($_GET['action'], 0, 3) != 'new_value')) {
+                  if ((!isset($_GET['oID']) || $_GET['oID'] == $options['products_options_id']) && !isset($oInfo) && substr($action, 0, 3) != 'new_value') {
                     $num_options_query = xtc_db_query("SELECT count(*) as num_options 
                                                          FROM " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " 
                                                         WHERE products_options_id = '" . $options['products_options_id'] . "' 
@@ -405,7 +407,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     }
                     $oInfo = new objectInfo($options);
                   }
-                  if (isset($oInfo) && (is_object($oInfo)) && ($options['products_options_id'] == $oInfo->products_options_id) ) {
+                  if (isset($oInfo) && is_object($oInfo) && $options['products_options_id'] == $oInfo->products_options_id) {
                     echo '<tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action', 'oID', 'list')) . 'oID=' . $oInfo->products_options_id . '&list=detail') . '\'">' . "\n";
                   } else {
                     echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action', 'oID')) . 'oID=' . $options['products_options_id']) . '\'">' . "\n";
@@ -414,19 +416,19 @@ require (DIR_WS_INCLUDES.'head.php');
                   <td class="dataTableContent" style="width:50px;"><?php echo $options['products_options_id']; ?></td>
                   <td class="dataTableContent" style="width:50px;"><?php echo $options['products_options_sortorder']; ?></td>
                   <td class="dataTableContent"><?php echo '<a href="' . xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action', 'oID', 'list')) . 'oID=' . $options['products_options_id'] . '&list=detail') . '">' . xtc_image(DIR_WS_ICONS . 'folder.gif', ICON_FOLDER) . '</a>&nbsp;' . $options['products_options_name']; ?></td>
-                  <td class="dataTableContent txta-r"><?php if (isset($oInfo) && (is_object($oInfo)) && ($options['products_options_id'] == $oInfo->products_options_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action', 'oID')) . 'oID=' . $options['products_options_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                  <td class="dataTableContent txta-r"><?php if (isset($oInfo) && is_object($oInfo) && $options['products_options_id'] == $oInfo->products_options_id) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action', 'oID')) . 'oID=' . $options['products_options_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
                 </tr>
                 <?php
                 }
               ?>
             </table>
   
-            <div class="smallText pdg2 flt-l"><?php echo $options_split->display_count($options_query_numrows, $page_max_display_options_results, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_OPTIONS); ?></div>
-            <div class="smallText pdg2 flt-r"><?php echo $options_split->display_links($options_query_numrows, $page_max_display_options_results, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], xtc_get_all_get_params(array('page', 'oID', 'action')), 'page'); ?></div>
+            <div class="smallText pdg2 flt-l"><?php echo $options_split->display_count($options_query_numrows, $page_max_display_options_results, $page, TEXT_DISPLAY_NUMBER_OF_OPTIONS); ?></div>
+            <div class="smallText pdg2 flt-r"><?php echo $options_split->display_links($options_query_numrows, $page_max_display_options_results, MAX_DISPLAY_PAGE_LINKS, $page, xtc_get_all_get_params(array('page', 'oID', 'action')), 'page'); ?></div>
             <div class="clear"></div>
             <?php echo draw_input_per_page($PHP_SELF.'?'.xtc_get_all_get_params(array('page', 'action')),$cfg_max_display_options_key,$page_max_display_options_results); ?> 
             <div class="smallText pdg2 flt-r">
-              <?php if (!$_GET['action']) echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action', 'oID')) . 'oID=' . $oInfo->products_options_id . '&action=new_option') . '">' . BUTTON_INSERT . '</a>'; ?>
+              <?php if (!xtc_not_null($action)) echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action', 'oID')) . 'oID=' . $oInfo->products_options_id . '&action=new_option') . '">' . BUTTON_INSERT . '</a>'; ?>
             </div>
             <?php
             }
@@ -437,7 +439,7 @@ require (DIR_WS_INCLUDES.'head.php');
               $contents = array();
 
               if (isset($_GET['list']) && $_GET['list'] == 'detail') {
-                switch ($_GET['saction']) {
+                switch ($action) {
                   case 'new_value':
                     $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_NEW_VALUE . '</b>');
 
@@ -494,7 +496,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     break;
                 }
               } else {
-                switch ($_GET['action']) {
+                switch ($action) {
                   case 'new_option':
                     $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_NEW_OPTION . '</b>');
 

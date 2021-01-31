@@ -41,6 +41,8 @@
   $cfg_max_display_results_key = 'MAX_DISPLAY_COUPON_RESULTS';
   $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
 
+  $page = (isset($_GET['page']) ? (int)$_GET['page'] : 1);
+
   $currencies = new currencies();
 
   $customers_statuses_array = xtc_get_customers_statuses(true);
@@ -244,13 +246,13 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
                 </tr>
                 <?php
                 $cc_query_raw = "SELECT * FROM " . TABLE_COUPON_REDEEM_TRACK . " WHERE coupon_id = '" . (int)$_GET['cid'] . "'";
-                $cc_split = new splitPageResults($_GET['page'], $page_max_display_results, $cc_query_raw, $cc_query_numrows);
+                $cc_split = new splitPageResults($page, $page_max_display_results, $cc_query_raw, $cc_query_numrows);
                 $cc_query = xtc_db_query($cc_query_raw);
                 while ($cc_list = xtc_db_fetch_array($cc_query)) {
-                  if (((!$_GET['uid']) || (@$_GET['uid'] == $cc_list['unique_id'])) && (!$cInfo)) {
+                  if ((!isset($_GET['uid']) || ($_GET['uid'] == $cc_list['unique_id'])) && !isset($cInfo)) {
                     $cInfo = new objectInfo($cc_list);
                   }
-                  if ( (is_object($cInfo)) && ($cc_list['unique_id'] == $cInfo->unique_id) ) {
+                  if (isset($cInfo) && is_object($cInfo) && $cc_list['unique_id'] == $cInfo->unique_id) {
                     $tr_attributes = 'class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('cid', 'action', 'uid')) . 'cid=' . $cInfo->coupon_id . '&action=voucherreport&uid=' . $cinfo->unique_id) . '\'"';
                   } else {
                     $tr_attributes = 'class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('cid', 'action', 'uid')) . 'cid=' . $cc_list['coupon_id'] . '&action=voucherreport&uid=' . $cc_list['unique_id']) . '\'"';
@@ -264,7 +266,7 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
                   <td class="dataTableContent">&nbsp;<?php echo $customer['customers_firstname'] . ' ' . $customer['customers_lastname']; ?></td>
                   <td class="dataTableContent">&nbsp;<?php echo $cc_list['redeem_ip']; ?></td>
                   <td class="dataTableContent">&nbsp;<?php echo xtc_date_short($cc_list['redeem_date']); ?></td>
-                  <td class="dataTableContent txta-r"><?php if (isset($cInfo) && is_object($cInfo) && ($cc_list['unique_id'] == $cInfo->unique_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('cid', 'action', 'uid')) . 'cid=' . $cc_list['coupon_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                  <td class="dataTableContent txta-r"><?php if (isset($cInfo) && is_object($cInfo) && $cc_list['unique_id'] == $cInfo->unique_id) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('cid', 'action', 'uid')) . 'cid=' . $cc_list['coupon_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
                 </tr>
                 <?php
                 }
@@ -273,8 +275,8 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
               <?php
               if (is_object($cc_split)) {
               ?>
-                <div class="smallText pdg2 flt-l">&nbsp;<?php echo $cc_split->display_count($cc_query_numrows, $page_max_display_results, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_COUPONS); ?>&nbsp;</div>
-                <div class="smallText pdg2 flt-r">&nbsp;<?php echo $cc_split->display_links($cc_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $_GET['page'],xtc_get_all_get_params(array('page','uid'))); ?>&nbsp;</div>
+                <div class="smallText pdg2 flt-l">&nbsp;<?php echo $cc_split->display_count($cc_query_numrows, $page_max_display_results, $page, TEXT_DISPLAY_NUMBER_OF_COUPONS); ?>&nbsp;</div>
+                <div class="smallText pdg2 flt-r">&nbsp;<?php echo $cc_split->display_links($cc_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $page,xtc_get_all_get_params(array('page','uid'))); ?>&nbsp;</div>
                 <?php echo draw_input_per_page($PHP_SELF,$cfg_max_display_results_key,$page_max_display_results); ?>
               <?php
               }
@@ -809,7 +811,7 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
                                         $coupon_active
                                   ORDER BY c.coupon_id DESC";
 
-                $cc_split = new splitPageResults($_GET['page'], $page_max_display_results, $cc_query_raw, $cc_query_numrows);
+                $cc_split = new splitPageResults($page, $page_max_display_results, $cc_query_raw, $cc_query_numrows);
                 $cc_query = xtc_db_query($cc_query_raw);
                 while ($cc_list = xtc_db_fetch_array($cc_query)) {
                   if ((!isset($_GET['cid']) || (isset($_GET['cid']) && ($_GET['cid'] == $cc_list['coupon_id']))) && !isset($cInfo)) {
@@ -839,7 +841,7 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
                   <td class="dataTableContent">&nbsp;<?php echo $currencies->format($cc_list['coupon_minimum_order']); ?></td>
                   <td class="dataTableContent nobr">&nbsp;<?php echo $cc_list['coupon_code']; ?></td>
                   <td class="dataTableContent txta-c"><?php if ($cc_list['coupon_active'] == 'N') { echo xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 10, 10); } else { echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 10, 10); } ?></td>
-                  <td class="dataTableContent txta-r"><?php if (isset($cInfo) && is_object($cInfo) && ($cc_list['coupon_id'] == $cInfo->coupon_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('page', 'cid', 'action', 'oldaction')) . 'page=' . $_GET['page'] . '&cid=' . $cc_list['coupon_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                  <td class="dataTableContent txta-r"><?php if (isset($cInfo) && is_object($cInfo) && ($cc_list['coupon_id'] == $cInfo->coupon_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('page', 'cid', 'action', 'oldaction')) . 'page=' . $page . '&cid=' . $cc_list['coupon_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
                 </tr>
                 <?php
                 }
@@ -849,8 +851,8 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
               <?php
               if (is_object($cc_split)) {
               ?>
-              <div class="smallText pdg2 flt-l">&nbsp;<?php echo $cc_split->display_count($cc_query_numrows, $page_max_display_results, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_COUPONS); ?>&nbsp;</div>
-              <div class="smallText pdg2 flt-r">&nbsp;<?php echo $cc_split->display_links($cc_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $_GET['page'],xtc_get_all_get_params(array('page','uid','cid'))); ?>&nbsp;</div>
+              <div class="smallText pdg2 flt-l">&nbsp;<?php echo $cc_split->display_count($cc_query_numrows, $page_max_display_results, $page, TEXT_DISPLAY_NUMBER_OF_COUPONS); ?>&nbsp;</div>
+              <div class="smallText pdg2 flt-r">&nbsp;<?php echo $cc_split->display_links($cc_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $page,xtc_get_all_get_params(array('page','uid','cid'))); ?>&nbsp;</div>
               <?php echo draw_input_per_page($PHP_SELF,$cfg_max_display_results_key,$page_max_display_results); ?>
               <?php
               }

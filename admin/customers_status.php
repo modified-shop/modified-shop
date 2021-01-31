@@ -47,6 +47,7 @@
   }
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
+  $page = (isset($_GET['page']) ? (int)$_GET['page'] : 1);
 
   if (xtc_not_null($action)) {
     switch ($action) {
@@ -182,7 +183,7 @@
           xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '" . xtc_db_input($customers_status_id) . "' WHERE configuration_key = 'DEFAULT_CUSTOMERS_STATUS_ID'");
         }
         }
-        xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS_STATUS, 'page=' . $_GET['page'] . '&cID=' . $customers_status_id));
+        xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS_STATUS, 'page=' . $page . '&cID=' . $customers_status_id));
         break;
 
       case 'deleteconfirm':
@@ -200,7 +201,7 @@
         xtc_db_query("DROP TABLE IF EXISTS personal_offers_by_customers_status_" . (int)$cID);
         xtc_db_query("ALTER TABLE `products` DROP `group_permission_" . (int)$cID . "`");
         xtc_db_query("ALTER TABLE `categories` DROP `group_permission_" . (int)$cID . "`");
-        xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS_STATUS, 'page=' . (int)$_GET['page']));
+        xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS_STATUS, 'page=' . $page));
         break;
 
       case 'delete':
@@ -301,7 +302,7 @@ if (xtc_not_null($action) && $action != 'delete') {
                   </tr>
                   <?php
 
-                  $customers_status_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $customers_status_query_raw, $customers_status_query_numrows);
+                  $customers_status_split = new splitPageResults($page, MAX_DISPLAY_SEARCH_RESULTS, $customers_status_query_raw, $customers_status_query_numrows);
                   $customers_status_query = xtc_db_query($customers_status_query_raw);
                   while ($customers_status = xtc_db_fetch_array($customers_status_query)) {
                     if ((!isset($_GET['cID']) || (isset($_GET['cID']) && ($_GET['cID'] == $customers_status['customers_status_id']))) && !isset($cInfo) && (substr($action, 0, 3) != 'new')) {
@@ -309,9 +310,9 @@ if (xtc_not_null($action) && $action != 'delete') {
                     }
 
                     if (isset($cInfo) && is_object($cInfo) && ($customers_status['customers_status_id'] == $cInfo->customers_status_id) ) {
-                      $tr_attributes = 'class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_CUSTOMERS_STATUS, 'page=' . $_GET['page'] . '&cID=' . $cInfo->customers_status_id . '&action=edit') .'\'"';
+                      $tr_attributes = 'class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_CUSTOMERS_STATUS, 'page=' . $page . '&cID=' . $cInfo->customers_status_id . '&action=edit') .'\'"';
                     } else {
-                      $tr_attributes = 'class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_CUSTOMERS_STATUS, 'page=' . $_GET['page'] . '&cID=' . $customers_status['customers_status_id']) .'\'"';
+                      $tr_attributes = 'class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_CUSTOMERS_STATUS, 'page=' . $page . '&cID=' . $customers_status['customers_status_id']) .'\'"';
                     }
                     ?>
                     <tr <?php echo $tr_attributes;?>>
@@ -326,20 +327,20 @@ if (xtc_not_null($action) && $action != 'delete') {
                       <td class="dataTableContent txta-c"><?php echo $customers_status['customers_status_specials'] == 0 ? NO : YES;?></td>
                       <td class="dataTableContent txta-c"><?php echo $customers_status['customers_status_payment_unallowed'];?></td>
                       <td class="dataTableContent txta-c"><?php echo $customers_status['customers_status_shipping_unallowed'];?></td>
-                      <td class="dataTableContent txta-r"><?php if (isset($cInfo) && is_object($cInfo) && ($customers_status['customers_status_id'] == $cInfo->customers_status_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_CUSTOMERS_STATUS, 'page=' . $_GET['page'] . '&cID=' . $customers_status['customers_status_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                      <td class="dataTableContent txta-r"><?php if (isset($cInfo) && is_object($cInfo) && ($customers_status['customers_status_id'] == $cInfo->customers_status_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_CUSTOMERS_STATUS, 'page=' . $page . '&cID=' . $customers_status['customers_status_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
                     </tr>
                     <?php
                   }
                   ?>
                   <tr>                          
                 </table>
-                <div class="smallText pdg2 flt-l"><?php echo $customers_status_split->display_count($customers_status_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_CUSTOMERS_STATUS); ?></div>
-                <div class="smallText pdg2 flt-r"><?php echo $customers_status_split->display_links($customers_status_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></div>
+                <div class="smallText pdg2 flt-l"><?php echo $customers_status_split->display_count($customers_status_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $page, TEXT_DISPLAY_NUMBER_OF_CUSTOMERS_STATUS); ?></div>
+                <div class="smallText pdg2 flt-r"><?php echo $customers_status_split->display_links($customers_status_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $page); ?></div>
                 <?php
                 if (empty($action)) {
                   ?>
                   <div class="clear"></div>
-                  <div class="pdg2 flt-r"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CUSTOMERS_STATUS, 'page=' . $_GET['page'] . '&action=new') . '">' . BUTTON_INSERT . '</a>'; ?></div>
+                  <div class="pdg2 flt-r"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CUSTOMERS_STATUS, 'page=' . $page . '&action=new') . '">' . BUTTON_INSERT . '</a>'; ?></div>
                   <?php
                 }
                 ?>        
@@ -357,7 +358,7 @@ if (xtc_not_null($action) && $action != 'delete') {
             switch ($action) {
               case 'new':
                 $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_NEW_CUSTOMERS_STATUS . '</b>');
-                $contents = array('form' => xtc_draw_form('status', FILENAME_CUSTOMERS_STATUS, 'page=' . $_GET['page'] . '&action=insert', 'post', 'enctype="multipart/form-data"'));
+                $contents = array('form' => xtc_draw_form('status', FILENAME_CUSTOMERS_STATUS, 'page=' . $page . '&action=insert', 'post', 'enctype="multipart/form-data"'));
                 $contents[] = array('text' => TEXT_INFO_INSERT_INTRO);
                 $customers_status_inputs_string = '';
                 $languages = xtc_get_languages();
@@ -388,12 +389,12 @@ if (xtc_not_null($action) && $action != 'delete') {
                 $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_STATUS_BASE . '<br />' . ENTRY_CUSTOMERS_STATUS_BASE . '<br />' . xtc_draw_pull_down_menu('customers_base_status', xtc_get_customers_statuses()));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_GROUP_ADOPT_PERMISSION . '<br />' . ENTRY_CUSTOMERS_GROUP_ADOPT_PERMISSION . '<br />' . xtc_draw_pull_down_menu('customers_group_adopt_permission', array_merge(array(array('id' => '', 'text' => CUSTOMERS_GROUP_ADOPT_PERMISSIONS)), xtc_get_customers_statuses())));
                 $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('default') . ' ' . TEXT_SET_DEFAULT);
-                $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_INSERT . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CUSTOMERS_STATUS, 'page=' . $_GET['page']) . '">' . BUTTON_CANCEL . '</a>');
+                $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_INSERT . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CUSTOMERS_STATUS, 'page=' . $page) . '">' . BUTTON_CANCEL . '</a>');
                 break;
 
               case 'edit':
                 $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_EDIT_CUSTOMERS_STATUS . '</b>');
-                $contents = array('form' => xtc_draw_form('status', FILENAME_CUSTOMERS_STATUS, 'page=' . $_GET['page'] . '&cID=' . $cInfo->customers_status_id  .'&action=save', 'post', 'enctype="multipart/form-data"'));
+                $contents = array('form' => xtc_draw_form('status', FILENAME_CUSTOMERS_STATUS, 'page=' . $page . '&cID=' . $cInfo->customers_status_id  .'&action=save', 'post', 'enctype="multipart/form-data"'));
                 $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
                 $customers_status_inputs_string = '';
                 $languages = xtc_get_languages();
@@ -428,25 +429,25 @@ if (xtc_not_null($action) && $action != 'delete') {
                 if (DEFAULT_CUSTOMERS_STATUS_ID != $cInfo->customers_status_id) {
                   $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('default') . ' ' . TEXT_SET_DEFAULT);
                 }
-                $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CUSTOMERS_STATUS, 'page=' . $_GET['page'] . '&cID=' . $cInfo->customers_status_id) . '">' . BUTTON_CANCEL . '</a>');
+                $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CUSTOMERS_STATUS, 'page=' . $page . '&cID=' . $cInfo->customers_status_id) . '">' . BUTTON_CANCEL . '</a>');
                 break;
 
               case 'delete':
                 $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_DELETE_CUSTOMERS_STATUS . '</b>');
 
-                $contents = array('form' => xtc_draw_form('status', FILENAME_CUSTOMERS_STATUS, 'page=' . $_GET['page'] . '&cID=' . $cInfo->customers_status_id  . '&action=deleteconfirm'));
+                $contents = array('form' => xtc_draw_form('status', FILENAME_CUSTOMERS_STATUS, 'page=' . $page . '&cID=' . $cInfo->customers_status_id  . '&action=deleteconfirm'));
                 $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
                 $contents[] = array('text' => '<br /><b>' . $cInfo->customers_status_name . '</b>');
 
                 if ($remove_status)
-                  $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE . '"> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CUSTOMERS_STATUS, 'page=' . $_GET['page'] . '&cID=' . $cInfo->customers_status_id) . '">' . BUTTON_CANCEL . '</a>');
+                  $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE . '"> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CUSTOMERS_STATUS, 'page=' . $page . '&cID=' . $cInfo->customers_status_id) . '">' . BUTTON_CANCEL . '</a>');
                 break;
 
               default:
                 if (isset($cInfo) && is_object($cInfo)) {
                   $heading[] = array('text' => '<b>' . $cInfo->customers_status_name . '</b>');
 
-                  $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CUSTOMERS_STATUS, 'page=' . $_GET['page'] . '&cID=' . $cInfo->customers_status_id . '&action=edit') . '">' . BUTTON_EDIT . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CUSTOMERS_STATUS, 'page=' . $_GET['page'] . '&cID=' . $cInfo->customers_status_id . '&action=delete') . '">' . BUTTON_DELETE . '</a>');
+                  $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CUSTOMERS_STATUS, 'page=' . $page . '&cID=' . $cInfo->customers_status_id . '&action=edit') . '">' . BUTTON_EDIT . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CUSTOMERS_STATUS, 'page=' . $page . '&cID=' . $cInfo->customers_status_id . '&action=delete') . '">' . BUTTON_DELETE . '</a>');
                   $customers_status_inputs_string = '';
                   $languages = xtc_get_languages();
                   for ($i=0; $i<sizeof($languages); $i++) {

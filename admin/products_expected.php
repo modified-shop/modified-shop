@@ -22,6 +22,8 @@ require('includes/application_top.php');
 $cfg_max_display_results_key = 'MAX_DISPLAY_PRODUCTS_EXPECTED_RESULTS';
 $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
 
+$page = (isset($_GET['page']) ? (int)$_GET['page'] : 1);
+
 xtc_db_query("update " . TABLE_PRODUCTS . " set products_date_available = '' where to_days(now()) > to_days(products_date_available)");
 
 require (DIR_WS_INCLUDES.'head.php');
@@ -61,8 +63,7 @@ require (DIR_WS_INCLUDES.'head.php');
                   <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
                 </tr>
                 <?php
-                $products_query_raw = "SELECT
-                                              pd.products_id,
+                $products_query_raw = "SELECT pd.products_id,
                                               pd.products_name,
                                               p.products_date_available
                                          FROM " . TABLE_PRODUCTS_DESCRIPTION . " pd,
@@ -71,29 +72,29 @@ require (DIR_WS_INCLUDES.'head.php');
                                           AND p.products_date_available != ''
                                           AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
                                      ORDER BY p.products_date_available DESC";
-                $products_split = new splitPageResults($_GET['page'], $page_max_display_results, $products_query_raw, $products_query_numrows);
+                $products_split = new splitPageResults($page, $page_max_display_results, $products_query_raw, $products_query_numrows);
                 $products_query = xtc_db_query($products_query_raw);
                 while ($products = xtc_db_fetch_array($products_query)) {
                   if ((!isset($_GET['pID']) || (isset($_GET['pID']) && ($_GET['pID'] == $products['products_id']))) && !isset($pInfo) ) {
                     $pInfo = new objectInfo($products);
                   }
                   if (isset($pInfo) && is_object($pInfo) && ($products['products_id'] == $pInfo->products_id) ) {
-                    echo '                  <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_CATEGORIES, 'pID=' . $products['products_id'] . '&action=new_product') . '\'">' . "\n";
+                    echo '<tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_CATEGORIES, 'pID=' . $products['products_id'] . '&action=new_product') . '\'">' . "\n";
                   } else {
-                    echo '                  <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_PRODUCTS_EXPECTED, 'page=' . $_GET['page'] . '&pID=' . $products['products_id']) . '\'">' . "\n";
+                    echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_PRODUCTS_EXPECTED, 'page=' . $page . '&pID=' . $products['products_id']) . '\'">' . "\n";
                   }
                     ?>
                     <td class="dataTableContent"><?php echo $products['products_name']; ?></td>
                     <td class="dataTableContent txta-c"><?php echo xtc_date_short($products['products_date_available']); ?></td>
-                    <td class="dataTableContent txta-r"><?php if (isset($pInfo) && is_object($pInfo) && ($products['products_id'] == $pInfo->products_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_PRODUCTS_EXPECTED, 'page=' . $_GET['page'] . '&pID=' . $products['products_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                    <td class="dataTableContent txta-r"><?php if (isset($pInfo) && is_object($pInfo) && ($products['products_id'] == $pInfo->products_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_PRODUCTS_EXPECTED, 'page=' . $page . '&pID=' . $products['products_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
                   </tr>
                   <?php
                 }
                 ?>
               </table>
                           
-              <div class="smallText pdg2 flt-l"><?php echo $products_split->display_count($products_query_numrows, $page_max_display_results, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS_EXPECTED); ?></div>
-              <div class="smallText pdg2 flt-r"><?php echo $products_split->display_links($products_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></div>
+              <div class="smallText pdg2 flt-l"><?php echo $products_split->display_count($products_query_numrows, $page_max_display_results, $page, TEXT_DISPLAY_NUMBER_OF_PRODUCTS_EXPECTED); ?></div>
+              <div class="smallText pdg2 flt-r"><?php echo $products_split->display_links($products_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $page); ?></div>
               <?php echo draw_input_per_page($PHP_SELF,$cfg_max_display_results_key,$page_max_display_results); ?>
             </td>
             <?php

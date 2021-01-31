@@ -22,6 +22,8 @@
   require (DIR_FS_CATALOG.DIR_WS_CLASSES.'main.php');
   require (DIR_FS_CATALOG.DIR_WS_CLASSES.'xtcPrice.php');
   
+  $page = (isset($_GET['page']) ? (int)$_GET['page'] : 1);
+
   $whosonline_status_array = array(
     array('id' => '1','text'=> CFG_TXT_YES),
     array('id' => '0','text'=> CFG_TXT_NO)
@@ -126,7 +128,7 @@
                                                http_referer
                                           FROM " . TABLE_WHOS_ONLINE ."
                                       ORDER BY time_last_click desc";
-              $whos_online_split = new splitPageResults($_GET['page'], $page_max_display_results, $whos_online_query_raw, $whos_online_query_numrows);
+              $whos_online_split = new splitPageResults($page, $page_max_display_results, $whos_online_query_raw, $whos_online_query_numrows);
               $whos_online_query = xtc_db_query($whos_online_query_raw);                        
               while ($whos_online = xtc_db_fetch_array($whos_online_query)) {
                 $time_online = (time() - $whos_online['time_entry']);
@@ -178,8 +180,8 @@
               ?>
               </table>
                 
-              <div class="smallText pdg2 flt-l"><?php echo $whos_online_split->display_count($whos_online_query_numrows, $page_max_display_results, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_WHOS_ONLINE); ?></div>
-              <div class="smallText pdg2 flt-r"><?php echo $whos_online_split->display_links($whos_online_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></div>
+              <div class="smallText pdg2 flt-l"><?php echo $whos_online_split->display_count($whos_online_query_numrows, $page_max_display_results, $page, TEXT_DISPLAY_NUMBER_OF_WHOS_ONLINE); ?></div>
+              <div class="smallText pdg2 flt-r"><?php echo $whos_online_split->display_links($whos_online_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $page); ?></div>
               <?php echo draw_input_per_page($PHP_SELF,$cfg_max_display_results_key,$page_max_display_results); ?>
             </td>
           <?php

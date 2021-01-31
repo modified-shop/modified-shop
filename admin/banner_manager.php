@@ -22,6 +22,7 @@
   require_once (DIR_WS_CLASSES.FILENAME_IMAGEMANIPULATOR);
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
+  $page = (isset($_GET['page']) ? (int)$_GET['page'] : 1);
 
   $banner_extension = xtc_banner_image_extension();
   $languages = xtc_get_languages();
@@ -47,7 +48,7 @@
         } else {
           $messageStack->add_session(ERROR_UNKNOWN_STATUS_FLAG, 'error');
         }
-        xtc_redirect(xtc_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . (int)$_GET['bID']));
+        xtc_redirect(xtc_href_link(FILENAME_BANNER_MANAGER, 'page=' . $page . '&bID=' . (int)$_GET['bID']));
         break;
       
       case 'insert':
@@ -188,7 +189,7 @@
         }
 
         if ($action != 'new') {
-          xtc_redirect(xtc_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banners_group_id));
+          xtc_redirect(xtc_href_link(FILENAME_BANNER_MANAGER, 'page=' . $page . '&bID=' . $banners_group_id));
         }
         break;
       
@@ -238,7 +239,7 @@
         xtc_db_query("DELETE FROM " . TABLE_BANNERS . " WHERE banners_group_id = '" . (int)$banners_group_id . "'");
         
         $messageStack->add_session(SUCCESS_BANNER_REMOVED, 'success');
-        xtc_redirect(xtc_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page']));
+        xtc_redirect(xtc_href_link(FILENAME_BANNER_MANAGER, 'page=' . $page));
         break;
     }
   }
@@ -354,7 +355,7 @@
               $group_id = xtc_db_fetch_array($group_id_query);
               $bInfo->banners_group_id = $group_id['banners_group_id'] + 1;
             }
-            echo xtc_draw_form('new_banner', FILENAME_BANNER_MANAGER, (isset($_GET['bID']) ? 'bID=' . $_GET['bID'] . '&' : '') . (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'action=' . $form_action, 'post', 'enctype="multipart/form-data"'); 
+            echo xtc_draw_form('new_banner', FILENAME_BANNER_MANAGER, (isset($_GET['bID']) ? 'bID=' . $_GET['bID'] . '&' : '') . (isset($page) ? 'page=' . $page . '&' : '') . 'action=' . $form_action, 'post', 'enctype="multipart/form-data"'); 
             echo xtc_draw_hidden_field('banners_group_id', $bInfo->banners_group_id);
               ?>
               <div style="padding:5px 10px 20px 5px;clear:both;">
@@ -477,7 +478,7 @@
                 ?>
               </div>
               <div class="pdg2 flt-r">
-                <?php echo (($form_action == 'insert') ? '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_INSERT . '"/>' : '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SAVE . '"/>'). '&nbsp;&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['bID']) ? 'bID=' . $_GET['bID'] : '')) . '">' . BUTTON_CANCEL . '</a>'; ?>
+                <?php echo (($form_action == 'insert') ? '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_INSERT . '"/>' : '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SAVE . '"/>'). '&nbsp;&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BANNER_MANAGER, (isset($page) ? 'page=' . $page . '&' : '') . (isset($_GET['bID']) ? 'bID=' . $_GET['bID'] : '')) . '">' . BUTTON_CANCEL . '</a>'; ?>
               </div>
         
               <div class="pdg2 customers-groups smallText" style="width:100%;margin-top:10px;">
@@ -505,7 +506,7 @@
                                               FROM " . TABLE_BANNERS . " 
                                              WHERE languages_id = '".(int)$_SESSION['languages_id']."'
                                           ORDER BY banners_group, banners_sort";
-                      $banners_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $banners_query_raw, $banners_query_numrows);
+                      $banners_split = new splitPageResults($page, MAX_DISPLAY_SEARCH_RESULTS, $banners_query_raw, $banners_query_numrows);
                       $banners_query = xtc_db_query($banners_query_raw);
                       while ($banners = xtc_db_fetch_array($banners_query)) {
                         $info_query = xtc_db_query("SELECT sum(banners_shown) as banners_shown, 
@@ -520,9 +521,9 @@
                         $banners_shown = ($info['banners_shown'] != '') ? $info['banners_shown'] : '0';
                         $banners_clicked = ($info['banners_clicked'] != '') ? $info['banners_clicked'] : '0';
                         if (isset($bInfo) && is_object($bInfo) && ($banners['banners_id'] == $bInfo->banners_id) ) {
-                          $tr_attributes = 'class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_BANNER_STATISTICS, 'page=' . $_GET['page'] . '&bID=' . $bInfo->banners_group_id) . '\'"';
+                          $tr_attributes = 'class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_BANNER_STATISTICS, 'page=' . $page . '&bID=' . $bInfo->banners_group_id) . '\'"';
                         } else {
-                          $tr_attributes = 'class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banners['banners_group_id']) . '\'"';
+                          $tr_attributes = 'class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_BANNER_MANAGER, 'page=' . $page . '&bID=' . $banners['banners_group_id']) . '\'"';
                         }
                         ?>
                         <tr <?php echo $tr_attributes;?>>
@@ -534,13 +535,13 @@
                           <td class="dataTableContent txta-c">
                             <?php                                      
                               if ($banners['status'] == '1') {
-                                echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 10, 10) . '&nbsp;&nbsp;<a href="' . xtc_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banners['banners_group_id'] . '&action=setflag&flag=0') . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 10, 10) . '</a>';
+                                echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 10, 10) . '&nbsp;&nbsp;<a href="' . xtc_href_link(FILENAME_BANNER_MANAGER, 'page=' . $page . '&bID=' . $banners['banners_group_id'] . '&action=setflag&flag=0') . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 10, 10) . '</a>';
                               } else {
-                                echo '<a href="' . xtc_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banners['banners_group_id'] . '&action=setflag&flag=1') . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 10, 10) . '</a>&nbsp;&nbsp;' . xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 10, 10);
+                                echo '<a href="' . xtc_href_link(FILENAME_BANNER_MANAGER, 'page=' . $page . '&bID=' . $banners['banners_group_id'] . '&action=setflag&flag=1') . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 10, 10) . '</a>&nbsp;&nbsp;' . xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 10, 10);
                               }
                             ?>
                           </td>
-                          <td class="dataTableContent txta-r"><?php if (isset($bInfo) && is_object($bInfo) && ($banners['banners_id'] == $bInfo->banners_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banners['banners_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                          <td class="dataTableContent txta-r"><?php if (isset($bInfo) && is_object($bInfo) && ($banners['banners_id'] == $bInfo->banners_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_BANNER_MANAGER, 'page=' . $page . '&bID=' . $banners['banners_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
                         </tr>
                         <?php
                       }
@@ -548,8 +549,8 @@
                     <tr>                      
                   </table>
                 
-                  <div class="smallText pdg2 flt-l"><?php echo $banners_split->display_count($banners_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_BANNERS); ?></div>
-                  <div class="smallText pdg2 flt-r"><?php echo $banners_split->display_links($banners_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></div>
+                  <div class="smallText pdg2 flt-l"><?php echo $banners_split->display_count($banners_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $page, TEXT_DISPLAY_NUMBER_OF_BANNERS); ?></div>
+                  <div class="smallText pdg2 flt-r"><?php echo $banners_split->display_links($banners_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $page); ?></div>
                   <div class="clear"></div>
                   <div class="smallText pdg2 flt-r"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BANNER_MANAGER, 'action=new') . '">' . BUTTON_NEW_BANNER . '</a>'; ?></div>
               
@@ -560,17 +561,17 @@
                   switch ($action) {
                     case 'delete':
                       $heading[] = array('text' => '<b>' . $bInfo->banners_title . '</b>');
-                      $contents = array('form' => xtc_draw_form('banners', FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $bInfo->banners_group_id . '&action=deleteconfirm'));
+                      $contents = array('form' => xtc_draw_form('banners', FILENAME_BANNER_MANAGER, 'page=' . $page . '&bID=' . $bInfo->banners_group_id . '&action=deleteconfirm'));
                       $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
                       $contents[] = array('text' => '<br /><b>' . $bInfo->banners_title . '</b>');
                       if ($bInfo->banners_image)
                         $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('delete_image', 'on', true) . ' ' . TEXT_INFO_DELETE_IMAGE);
-                      $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE . '"/>&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $_GET['bID']) . '">' . BUTTON_CANCEL . '</a>');
+                      $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE . '"/>&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BANNER_MANAGER, 'page=' . $page . '&bID=' . $_GET['bID']) . '">' . BUTTON_CANCEL . '</a>');
                       break;
                     default:
                       if (isset($bInfo) && is_object($bInfo)) {
                         $heading[] = array('text' => '<b>' . $bInfo->banners_title . '</b>');
-                        $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $bInfo->banners_group_id . '&action=new') . '">' . BUTTON_EDIT . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $bInfo->banners_group_id . '&action=delete') . '">' . BUTTON_DELETE . '</a>');
+                        $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BANNER_MANAGER, 'page=' . $page . '&bID=' . $bInfo->banners_group_id . '&action=new') . '">' . BUTTON_EDIT . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BANNER_MANAGER, 'page=' . $page . '&bID=' . $bInfo->banners_group_id . '&action=delete') . '">' . BUTTON_DELETE . '</a>');
                         if ($bInfo->banners_image != '') {
                            $contents[] = array('align' => 'center', 'text' => '<br><img style="max-width:250px; margin-bottom:10px;" src="'.DIR_WS_CATALOG_IMAGES . 'banner/'.$bInfo->banners_image.'" />');
                         }
@@ -586,10 +587,10 @@
                             $banner_id = $banner['banners_id'];
                             $days = '3';
                             include(DIR_WS_INCLUDES . 'graphs/banner_infobox.php');
-                            $contents[] = array('align' => 'center', 'text' => $languages[$i]['name'].'<br /><a href="' . xtc_href_link(FILENAME_BANNER_STATISTICS, 'page=' . $_GET['page'] . '&bID=' . $banner_id . '&gID=' . $bInfo->banners_group_id) . '">' . xtc_image(DIR_WS_IMAGES . 'graphs/banner_infobox-' . $banner_id . '.' . $banner_extension).'</a>');
+                            $contents[] = array('align' => 'center', 'text' => $languages[$i]['name'].'<br /><a href="' . xtc_href_link(FILENAME_BANNER_STATISTICS, 'page=' . $page . '&bID=' . $banner_id . '&gID=' . $bInfo->banners_group_id) . '">' . xtc_image(DIR_WS_IMAGES . 'graphs/banner_infobox-' . $banner_id . '.' . $banner_extension).'</a>');
                           } else {
                             include_once(DIR_WS_FUNCTIONS . 'html_graphs.php');
-                            $contents[] = array('align' => 'center', 'text' => '<br /><a href="' . xtc_href_link(FILENAME_BANNER_STATISTICS, 'page=' . $_GET['page'] . '&bID=' . $banner_id . '&gID=' . $bInfo->banners_group_id) . '">' . xtc_banner_graph_infoBox($banner_id, $days).'</a>');
+                            $contents[] = array('align' => 'center', 'text' => '<br /><a href="' . xtc_href_link(FILENAME_BANNER_STATISTICS, 'page=' . $page . '&bID=' . $banner_id . '&gID=' . $bInfo->banners_group_id) . '">' . xtc_banner_graph_infoBox($banner_id, $days).'</a>');
                           }
                         }
 
