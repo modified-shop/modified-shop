@@ -183,6 +183,7 @@
    */
   function xtc_get_path($current_category_id = '', $clean = false) {
     global $cPath_array;
+    
     if (empty($current_category_id)) {
       $cPath_new = implode('_', (array)$cPath_array);
     } else {
@@ -194,11 +195,17 @@
                                                FROM ".TABLE_CATEGORIES."
                                               WHERE categories_id = '".(int)$cPath_array[(sizeof($cPath_array) - 1)]."'");
         $last_category = xtc_db_fetch_array($last_category_query);
+        
         $current_category_query = xtc_db_query("SELECT parent_id
                                                   FROM ".TABLE_CATEGORIES."
                                                  WHERE categories_id = '".(int)$current_category_id."'");
         $current_category = xtc_db_fetch_array($current_category_query);
-        if ($last_category['parent_id'] == $current_category['parent_id']) {
+                        
+        if (isset($last_category['parent_id']) 
+            && isset($current_category['parent_id']) 
+            && $last_category['parent_id'] == $current_category['parent_id']
+            )
+        {
           for ($i = 0, $n = sizeof($cPath_array) - 1; $i < $n; $i ++) {
             $cPath_new .= '_'.$cPath_array[$i];
           }
@@ -213,11 +220,13 @@
         }
       }
     }
+    
     if ($clean) {
       $cleanPath = explode('0_', $cPath_new);
       $cleanPath = array_reverse($cleanPath);
       return $cleanPath[0];
     }
+    
     return 'cPath='.$cPath_new;
   }
 
