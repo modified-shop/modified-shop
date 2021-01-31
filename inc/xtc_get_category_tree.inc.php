@@ -30,9 +30,11 @@
     if ((sizeof($category_tree_array) < 1) && ($exclude != '0') ) {
       $category_tree_array[] = array('id' => '0', 'text' => TEXT_TOP);
     }
-  
+    
+    $join = '';
     $conditions = '';
     if (!defined('RUN_MODE_ADMIN')) {
+      $join = " AND trim(cd.categories_name) != '' ";
       $conditions .= " AND c.categories_status = 1 ";
       $conditions .= CATEGORIES_CONDITIONS_C;
     }
@@ -43,7 +45,7 @@
                                      JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd
                                           ON c.categories_id = cd.categories_id
                                              AND cd.language_id = ".(int)$_SESSION['languages_id']."
-                                             AND trim(cd.categories_name) != ''
+                                             ".$join."
                                     WHERE c.categories_id = '".(int)$parent_id."'
                                           ".$conditions."
                                     LIMIT 1");
