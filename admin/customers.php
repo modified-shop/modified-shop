@@ -53,6 +53,7 @@
   $entry_vat_error_text = '';
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
   $customers_id = (isset($_GET['cID']) ? (int)$_GET['cID'] : 0);
+  $page = (isset($_GET['page']) ? (int)$_GET['page'] : 1);
 
   if (isset($_GET['special']) && $_GET['special'] == 'remove_memo') {
     $mID = xtc_db_prepare_input($_GET['mID']);
@@ -483,7 +484,7 @@
           if ($entry_country_error == true) {
             $entry_state_error = true;
           } else {
-            $zone_id = 0;
+            $entry_zone_id = 0;
             $entry_state_error = false;
             $check_query = xtc_db_query("SELECT count(*) as total FROM ".TABLE_ZONES." WHERE zone_country_id = '".xtc_db_input($entry_country_id)."'");
             $check_value = xtc_db_fetch_array($check_query);
@@ -497,7 +498,7 @@
                 $zone_query = xtc_db_query("SELECT zone_id FROM ".TABLE_ZONES." WHERE zone_country_id = '".xtc_db_input($entry_country_id)."' AND zone_code = '".xtc_db_input($entry_state)."'");
                 if (xtc_db_num_rows($zone_query) >= 1) {
                   $zone_values = xtc_db_fetch_array($zone_query);
-                  $zone_id = $zone_values['zone_id'];
+                  $entry_zone_id = $zone_values['zone_id'];
                 } else {
                   $error = true;
                   $entry_state_error = true;
@@ -573,9 +574,6 @@
                            SET customers_info_date_account_last_modified = now()
                          WHERE customers_info_id = '".$customers_id."'");
 
-          if ($entry_zone_id > 0)
-            $entry_state = '';
-
           $sql_data_array = array (
               'entry_firstname' => $customers_firstname,
               'entry_lastname' => $customers_lastname,
@@ -596,6 +594,9 @@
             $sql_data_array['entry_suburb'] = $entry_suburb;
           }
           if (ACCOUNT_STATE == 'true') {
+            if ($entry_zone_id > 0) {
+              $entry_state = '';
+            }
             $sql_data_array['entry_zone_id'] = (int)$entry_zone_id;
             $sql_data_array['entry_state'] = $entry_state;
           }
@@ -632,7 +633,7 @@
         
         if (isset($_POST['multi_customers_confirm']) && is_array($_POST['multi_customers_confirm'])) {
           foreach ($_POST['multi_customers_confirm'] as $customers_id) {
-            if ($_POST['delete_reviews'] == 'on') {
+            if (isset($_POST['delete_reviews']) && $_POST['delete_reviews'] == 'on') {
               $reviews_query = xtc_db_query("SELECT reviews_id FROM ".TABLE_REVIEWS." WHERE customers_id = '".$customers_id."'");
               while ($reviews = xtc_db_fetch_array($reviews_query)) {
                 xtc_db_query("DELETE FROM ".TABLE_REVIEWS_DESCRIPTION." WHERE reviews_id = '".$reviews['reviews_id']."'");

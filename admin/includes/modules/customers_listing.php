@@ -176,7 +176,7 @@
                                       GROUP BY c.customers_id
                                                ".$sort;
 
-                $customers_split = new splitPageResults($_GET['page'], $page_max_display_results, $customers_query_raw, $customers_query_numrows, 'c.customers_id');
+                $customers_split = new splitPageResults($page, $page_max_display_results, $customers_query_raw, $customers_query_numrows, 'c.customers_id');
                 $customers_query = xtc_db_query($customers_query_raw);
                 while ($customers = xtc_db_fetch_array($customers_query)) {
                   $umsatz_query = xtc_db_query("SELECT SUM(op.final_price) as ordersum
@@ -250,7 +250,7 @@
                   <?php
                   }
                   ?>
-                  <td class="dataTableContent"><?php echo $customers_statuses_id_array[$customers['customers_status']]['text'] . ' (' . $customers['customers_status'] . ')' ; ?></td><?php // web28 - 2011-10-31 - change  $customers_statuses_array  to $customers_statuses_id_array ?>
+                  <td class="dataTableContent"><?php echo $customers_statuses_id_array[$customers['customers_status']]['text'] . ' (' . $customers['customers_status'] . ')' ; ?></td>
                   <?php
                     if (ACCOUNT_COMPANY_VAT_CHECK == 'true' && ACCOUNT_COMPANY == 'true') {
                       echo '<td class="dataTableContent">';
@@ -291,7 +291,7 @@
                     }
                   ?>
                   <td class="dataTableContent txta-r"><?php echo xtc_date_short($customers['date_account_created']); ?>&nbsp;</td>
-                  <td class="dataTableContent txta-r"><?php if (isset($cInfo) && is_object($cInfo) && ($customers['customers_id'] == $cInfo->customers_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array('cID')) . 'cID=' . $customers['customers_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                  <td class="dataTableContent txta-r"><?php if (isset($cInfo) && is_object($cInfo) && ($customers['customers_id'] == $cInfo->customers_id)) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array('cID')) . 'cID=' . $customers['customers_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
                 </tr>
                 <?php
                   }
@@ -303,9 +303,9 @@
                 $contents = array ();
                 switch ($action) {
                   case 'multi_action':                    
-                    if (xtc_not_null($_POST['multi_delete'])) {
+                    if (isset($_POST['multi_delete']) && xtc_not_null($_POST['multi_delete'])) {
                       $heading[]  = array('text' => '<b>' . TEXT_INFO_HEADING_DELETE_ELEMENTS . '</b>');
-                      if (is_array($_POST['multi_customers'])) {
+                      if (isset($_POST['multi_customers']) && is_array($_POST['multi_customers'])) {
                         foreach ($_POST['multi_customers'] AS $customers_id) {
                           $customer_query = xtc_db_query("SELECT customers_firstname,
                                                                  customers_lastname
@@ -319,9 +319,9 @@
                       $contents[] = array('align' => 'center', 'text' => '<input class="button" type="submit" name="multi_delete_confirm" value="' . BUTTON_DELETE . '"> <a class="button" href="' . xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action')).'cID='.$cInfo->customers_id) . '">' . BUTTON_CANCEL . '</a>');
                     }
                     
-                    if (xtc_not_null($_POST['multi_status'])) {
+                    if (isset($_POST['multi_status']) && xtc_not_null($_POST['multi_status'])) {
                       $heading[]  = array('text' => '<b>' . TEXT_INFO_HEADING_STATUS_ELEMENTS . '</b>');
-                      if (is_array($_POST['multi_customers'])) {
+                      if (isset($_POST['multi_customers']) && is_array($_POST['multi_customers'])) {
                         foreach ($_POST['multi_customers'] AS $customers_id) {
                           $customer_query = xtc_db_query("SELECT customers_firstname,
                                                                  customers_lastname
@@ -538,8 +538,8 @@
           <tr>
             <td>
               <!-- PAGINATION-->
-              <div class="smallText pdg2 flt-l"><?php echo $customers_split->display_count($customers_query_numrows, $page_max_display_results, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_CUSTOMERS); ?></div>
-              <div class="smallText pdg2 flt-r"><?php echo $customers_split->display_links($customers_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], xtc_get_all_get_params(array('page', 'info', 'x', 'y', 'cID'))); ?></div>
+              <div class="smallText pdg2 flt-l"><?php echo $customers_split->display_count($customers_query_numrows, $page_max_display_results, $page, TEXT_DISPLAY_NUMBER_OF_CUSTOMERS); ?></div>
+              <div class="smallText pdg2 flt-r"><?php echo $customers_split->display_links($customers_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $page, xtc_get_all_get_params(array('page', 'info', 'x', 'y', 'cID'))); ?></div>
               <?php echo draw_input_per_page($PHP_SELF,$cfg_max_display_results_key,$page_max_display_results); ?>
               <?php
               if (isset($_GET['search'])) {
