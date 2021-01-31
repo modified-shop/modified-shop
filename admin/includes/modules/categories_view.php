@@ -843,7 +843,7 @@
                   }
                 }
 
-                if (is_array($_POST['multi_products'])) {
+                if (isset($_POST['multi_products']) && is_array($_POST['multi_products'])) {
                   foreach ($_POST['multi_products'] AS $multi_product) {
                     $contents[] = array('text' => '<tr><td style="border-bottom: 1px solid #af417e; margin-bottom: 10px;" class="infoBoxContent"><b>' . xtc_get_products_name($multi_product) . '</b></td></tr>');
                     $product_categories_string = '';
@@ -864,14 +864,14 @@
 
                 //close list table
                 $contents[] = array('text' => '</table>');
-                $contents[] = array('align' => 'center', 'text' => '<input class="button" type="submit" name="multi_delete_confirm" value="' . BUTTON_DELETE . '"> <a class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '&pID=' . $pInfo->products_id . '&cID=' . $cInfo->categories_id) . '">' . BUTTON_CANCEL . '</a>');
+                $contents[] = array('align' => 'center', 'text' => '<input class="button" type="submit" name="multi_delete_confirm" value="' . BUTTON_DELETE . '"> <a class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . ((isset($pInfo)) ? '&pID=' . $pInfo->products_id : '') . ((isset($cInfo)) ? '&cID=' . $cInfo->categories_id : '')) . '">' . BUTTON_CANCEL . '</a>');
               }
               // multi_delete confirm ENDS
 
               // --------------------
               // multi_copy confirm
               // --------------------
-              if (xtc_not_null($_POST['multi_copy'])) {
+              if (isset($_POST['multi_copy']) && xtc_not_null($_POST['multi_copy'])) {
                 $heading[]  = array('text' => '<b>' . TEXT_INFO_HEADING_COPY_TO . '</b>');
                 $contents[] = array('text' => '<a class="button" href="javascript:SwitchCheckCopyConfirm()" onclick="this.blur()">' . BUTTON_REVERSE_SELECTION . '</a>');
                 $contents[] = array('text' => '<table width="100%" border="0">');
@@ -905,7 +905,7 @@
                   }
                 }
 
-                if (is_array($_POST['multi_products'])) {
+                if (isset($_POST['multi_products']) && is_array($_POST['multi_products'])) {
                   foreach ($_POST['multi_products'] AS $multi_product) {
                     $contents[] = array('text' => '<tr><td style="border-bottom: 1px solid #af417e; margin-bottom: 10px;" class="infoBoxContent"><b>' . xtc_get_products_name($multi_product) . '</b></td></tr>');
                     $product_categories_string = '';
@@ -920,7 +920,7 @@
                 if (QUICKLINK_ACTIVATED=='true') {
                   $contents[] = array('text' => '<hr noshade>');
                   $contents[] = array('text' => '<b>'.TEXT_MULTICOPY.'</b><br />'.TEXT_MULTICOPY_DESC);
-                  if (is_array($_POST['multi_products'])) {
+                  if (isset($_POST['multi_products']) && is_array($_POST['multi_products'])) {
                     $cat_tree=xtc_get_category_tree('0','','0');
                   } else {
                     $cat_tree=xtc_get_category_tree();
@@ -932,7 +932,7 @@
                   $contents[] = array('text' => $tree.'<br /><hr noshade>');
                   $contents[] = array('text' => '<b>'.TEXT_SINGLECOPY.'</b><br />'.TEXT_SINGLECOPY_DESC);
                 }
-                if (is_array($_POST['multi_products'])) {
+                if (isset($_POST['multi_products']) && is_array($_POST['multi_products'])) {
                   $category_tree=xtc_get_category_tree('0','','0');
                 } else {
                   $category_tree=xtc_get_category_tree();
@@ -943,7 +943,7 @@
                 $contents[] = array('text' => '<strong>' . TEXT_ATTRIBUTE_COPY . '</strong><br />' . xtc_draw_checkbox_field('attr_copy', 'attr_copy', false).'<font size="1">'.TEXT_ATTRIBUTE_COPY_INFO.'</font><br /><hr noshade>');
                 $contents[] = array('text' => '<strong>' . TEXT_CONTENT_COPY . '</strong><br />' . xtc_draw_checkbox_field('cnt_copy', 'cnt_copy', false).'<font size="1">'.TEXT_CONTENT_COPY_INFO.'</font><br /><hr noshade>');
                 $contents[] = array('text' => '<strong>' . TEXT_LINKS_COPY . '</strong><br />' . xtc_draw_checkbox_field('links_copy', 'links_copy', false).'<font size="1">'.TEXT_LINKS_COPY_INFO.'</font><br /><hr noshade>');
-                $contents[] = array('align' => 'center', 'text' => '<input class="button" type="submit" name="multi_copy_confirm" value="' . BUTTON_COPY . '"> <a class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '&pID=' . $pInfo->products_id) . '">' . BUTTON_CANCEL . '</a>');
+                $contents[] = array('align' => 'center', 'text' => '<input class="button" type="submit" name="multi_copy_confirm" value="' . BUTTON_COPY . '"> <a class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . ((isset($pInfo)) ? '&pID=' . $pInfo->products_id : '') . ((isset($cInfo)) ? '&cID=' . $cInfo->categories_id : '')) . '">' . BUTTON_CANCEL . '</a>');
               }
               // multi_copy confirm ENDS
               break;
