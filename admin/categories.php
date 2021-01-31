@@ -63,13 +63,13 @@ if (xtc_not_null($function)) {
 // --- MULTI STATUS ---
 if (isset ($_POST['multi_status_on'])) {
   //set multi_categories status=on
-  if (is_array($_POST['multi_categories'])) {
+  if (isset($_POST['multi_categories']) && is_array($_POST['multi_categories'])) {
     foreach ($_POST['multi_categories'] AS $category_id) {
       $catfunc->set_category_recursive((int)$category_id, '1');
     }
   }
   //set multi_products status=on
-  if (is_array($_POST['multi_products'])) {
+  if (isset($_POST['multi_products']) && is_array($_POST['multi_products'])) {
     foreach ($_POST['multi_products'] AS $product_id) {
       $catfunc->set_product_status((int)$product_id, '1');
     }
@@ -79,13 +79,13 @@ if (isset ($_POST['multi_status_on'])) {
 
 if (isset ($_POST['multi_status_off'])) {
   //set multi_categories status=off
-  if (is_array($_POST['multi_categories'])) {
+  if (isset($_POST['multi_categories']) && is_array($_POST['multi_categories'])) {
     foreach ($_POST['multi_categories'] AS $category_id) {
       $catfunc->set_category_recursive((int)$category_id, "0");
     }
   }
   //set multi_products status=off
-  if (is_array($_POST['multi_products'])) {
+  if (isset($_POST['multi_products']) && is_array($_POST['multi_products'])) {
     foreach ($_POST['multi_products'] AS $product_id) {
       $catfunc->set_product_status((int)$product_id, "0");
     }
@@ -169,13 +169,18 @@ if (xtc_not_null($action)) {
       // --- MULTI DELETE ---
       if (isset ($_POST['multi_delete_confirm'])) {
         //delete multi_categories
-        if (is_array($_POST['multi_categories'])) {
+        if (isset($_POST['multi_categories']) && is_array($_POST['multi_categories'])) {
           foreach ($_POST['multi_categories'] AS $category_id) {
             $catfunc->remove_categories($category_id);
           }
         }
         //delete multi_products
-        if (is_array($_POST['multi_products']) && is_array($_POST['multi_products_categories'])) {
+        if (isset($_POST['multi_products']) 
+            && is_array($_POST['multi_products']) 
+            && isset($_POST['multi_products_categories'])
+            && is_array($_POST['multi_products_categories'])
+            )
+        {
           foreach ($_POST['multi_products'] AS $product_id) {
             $catfunc->delete_product($product_id, $_POST['multi_products_categories'][$product_id]);
           }
@@ -186,7 +191,12 @@ if (xtc_not_null($action)) {
       // --- MULTI MOVE ---
       if (isset ($_POST['multi_move_confirm'])) {
         //move multi_categories
-        if (is_array($_POST['multi_categories']) && xtc_not_null($_POST['move_to_category_id'])) {
+        if (isset($_POST['multi_categories']) 
+            && is_array($_POST['multi_categories']) 
+            && isset($_POST['move_to_category_id'])
+            && xtc_not_null($_POST['move_to_category_id'])
+            )
+        {
           foreach ($_POST['multi_categories'] AS $category_id) {
             $dest_category_id = xtc_db_prepare_input($_POST['move_to_category_id']);
             if ($category_id != $dest_category_id) {
@@ -195,7 +205,14 @@ if (xtc_not_null($action)) {
           }
         }
         //move multi_products
-        if (is_array($_POST['multi_products']) && xtc_not_null($_POST['move_to_category_id']) && xtc_not_null($_POST['src_category_id'])) {
+        if (isset($_POST['multi_products']) 
+            && is_array($_POST['multi_products']) 
+            && isset($_POST['move_to_category_id']) 
+            && xtc_not_null($_POST['move_to_category_id']) 
+            && isset($_POST['src_category_id'])
+            && xtc_not_null($_POST['src_category_id'])
+            )
+        {
           foreach ($_POST['multi_products'] AS $product_id) {
             $product_id = xtc_db_prepare_input($product_id);
             $src_category_id = xtc_db_prepare_input($_POST['src_category_id']);
@@ -210,14 +227,19 @@ if (xtc_not_null($action)) {
       // --- MULTI COPY ---
       if (isset ($_POST['multi_copy_confirm'])) {
         //copy multi_categories
-        if (is_array($_POST['multi_categories']) && (is_array($_POST['dest_cat_ids']) || xtc_not_null($_POST['dest_category_id']))) {
-          //BOF - DokuMan - 2010-09-27 - do not create copied categories under TOP-category, but in the chosen category
-          if (!isset($_POST['dest_cat_ids']) and isset($_POST['dest_category_id'])) {
+        if (isset($_POST['multi_categories'])
+            && is_array($_POST['multi_categories']) 
+            && ((isset($_POST['dest_cat_ids']) && is_array($_POST['dest_cat_ids'])) 
+                || (isset($_POST['dest_category_id']) && xtc_not_null($_POST['dest_category_id']))
+                )
+            )
+        {
+          if (!isset($_POST['dest_cat_ids']) && isset($_POST['dest_category_id'])) {
             $_POST['dest_cat_ids'] = array($_POST['dest_category_id']);
           }
           $_SESSION['copied'] = array ();
           foreach ($_POST['multi_categories'] AS $category_id) {
-            if (is_array($_POST['dest_cat_ids'])) {
+            if (isset($_POST['dest_cat_ids']) && is_array($_POST['dest_cat_ids'])) {
               foreach ($_POST['dest_cat_ids'] AS $dest_category_id) {
                 if ($_POST['copy_as'] == 'link') {
                   $catfunc->copy_category($category_id, $dest_category_id, 'link');
@@ -227,10 +249,9 @@ if (xtc_not_null($action)) {
                   $messageStack->add_session(ERROR_COPY_METHOD_NOT_SPECIFIED, 'error');
                 }
               }
-            } elseif (xtc_not_null($_POST['dest_category_id'])) {
-              $dest_category_id = xtc_db_prepare_input($_POST['dest_category_id']); // web28 - 2012-04-14 - BUGFIX $dest_category_id
+            } elseif (isset($_POST['dest_category_id']) && xtc_not_null($_POST['dest_category_id'])) {
+              $dest_category_id = xtc_db_prepare_input($_POST['dest_category_id']);
               if ($_POST['copy_as'] == 'link') {
-                //$catfunc->copy_category($category_id, $dest_category_id, 'link');
                 $messageStack->add_session(ERROR_COPY_METHOD_NOT_ALLOWED, 'error');
               } elseif ($_POST['copy_as'] == 'duplicate') {
                 $catfunc->copy_category($category_id, $dest_category_id, 'duplicate');
@@ -242,10 +263,16 @@ if (xtc_not_null($action)) {
           unset ($_SESSION['copied']);
         }
         //copy multi_products
-        if (is_array($_POST['multi_products']) && (is_array($_POST['dest_cat_ids']) || xtc_not_null($_POST['dest_category_id']))) {
+        if (isset($_POST['multi_products'])
+            && is_array($_POST['multi_products']) 
+            && ((isset($_POST['dest_cat_ids']) && is_array($_POST['dest_cat_ids']))
+                || (isset($_POST['dest_category_id']) && xtc_not_null($_POST['dest_category_id']))
+                )
+            )
+        {
           foreach ($_POST['multi_products'] AS $product_id) {
             $product_id = xtc_db_prepare_input($product_id);
-            if (is_array($_POST['dest_cat_ids'])) {
+            if (isset($_POST['dest_cat_ids']) && is_array($_POST['dest_cat_ids'])) {
               foreach ($_POST['dest_cat_ids'] AS $dest_category_id) {
                 $dest_category_id = xtc_db_prepare_input($dest_category_id);
                 if ($_POST['copy_as'] == 'link') {
@@ -258,7 +285,7 @@ if (xtc_not_null($action)) {
                   $messageStack->add_session(ERROR_COPY_METHOD_NOT_SPECIFIED, 'error');
                 }
               }
-            } elseif (xtc_not_null($_POST['dest_category_id'])) {
+            } elseif (isset($_POST['dest_category_id']) && xtc_not_null($_POST['dest_category_id'])) {
               $dest_category_id = xtc_db_prepare_input($_POST['dest_category_id']);
               if ($_POST['copy_as'] == 'link') {
                 $catfunc->link_product($product_id, $dest_category_id);
@@ -272,18 +299,17 @@ if (xtc_not_null($action)) {
             }
           }
         }
-        //BOC - web28 - redirect to product input mask
-        $action = is_array($_POST['multi_products']) && isset($_POST['link_to_product']) ? '&action=new_product' : '';
+
+        $action = isset($_POST['multi_products']) && is_array($_POST['multi_products']) && isset($_POST['link_to_product']) ? '&action=new_product' : '';
         $pID = isset($pID) && $pID > 0 ? '&pID='. $pID : '';
         xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array ('cPath', 'action', 'pID', 'cID')).'cPath='.$dest_category_id.$pID.$action));
-        //EOC - web28 - redirect to product input mask
       }
       // --- MULTI COPY ENDS ---
       xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array ('cPath', 'action', 'pID', 'cID')).'cPath='.$_GET['cPath']));
       break;
       #EOB multi_action_confirm
-  } //EOB switch action
-} //EOB if action
+  }
+}
 
 // check if the catalog image directory exists
 if (is_dir(DIR_FS_CATALOG_IMAGES)) {
