@@ -54,7 +54,7 @@
       }
 
       //delete manufacturers_image
-      if ($_POST['delete_image'] == 'on') {
+      if (isset($_POST['delete_image']) && $_POST['delete_image'] == 'on') {
         $manufacturer_query = xtc_db_query("SELECT manufacturers_image 
                                               FROM " . TABLE_MANUFACTURERS . " 
                                              WHERE manufacturers_id = '" . (int)$manufacturers_id . "'");
