@@ -17,9 +17,9 @@
   
   $form_action = 'action=multi_action';
   if (isset($_POST['multi_customers']) && xtc_not_null($_POST['multi_customers'])) {
-    if (xtc_not_null($_POST['multi_delete'])) {
+    if (isset($_POST['multi_delete']) && xtc_not_null($_POST['multi_delete'])) {
       $form_action = 'action=deleteconfirm';
-    } elseif (xtc_not_null($_POST['multi_status'])) {
+    } elseif (isset($_POST['multi_status']) && xtc_not_null($_POST['multi_status'])) {
       $form_action = 'action=statusconfirm';
     }
   }
