@@ -57,12 +57,12 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'submit')) {
   // process the selected billing destination
   } elseif (isset ($_POST['address'])) {
     $reset_payment = false;
-    if (isset ($_SESSION['billto'])) {
-      if ($billto != $_POST['address']) {
-        if (isset ($_SESSION['payment'])) {
-          $reset_payment = true;
-        }
-      }
+    if (isset ($_SESSION['billto'])
+        && $_SESSION['billto'] != $_POST['address']
+        && isset ($_SESSION['payment'])
+        )
+    {
+      $reset_payment = true;
     }
 
     $_SESSION['billto'] = (int)$_POST['address'];

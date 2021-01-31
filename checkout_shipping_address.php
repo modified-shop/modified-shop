@@ -68,12 +68,12 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'submit')) {
   // process the selected shipping destination
   } elseif (isset ($_POST['address'])) {
     $reset_shipping = false;
-    if (isset ($_SESSION['sendto'])) {
-      if ($_SESSION['sendto'] != $_POST['address']) {
-        if (isset ($_SESSION['shipping'])) {
-          $reset_shipping = true;
-        }
-      }
+    if (isset ($_SESSION['sendto'])
+        && $_SESSION['sendto'] != $_POST['address']
+        && isset ($_SESSION['shipping'])
+        )
+    {
+      $reset_shipping = true;
     }
 
     $_SESSION['sendto'] = (int)$_POST['address'];
