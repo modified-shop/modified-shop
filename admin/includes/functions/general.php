@@ -540,7 +540,7 @@
    */
   function xtc_get_languages() {
     $languages_array = array();
-    $languages_query = xtc_db_query("SELECT *.
+    $languages_query = xtc_db_query("SELECT *,
                                             languages_id as id
                                        FROM ".TABLE_LANGUAGES."
                                       WHERE status_admin = '1'
