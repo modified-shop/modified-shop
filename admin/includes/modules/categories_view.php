@@ -747,7 +747,7 @@
               if (isset($_POST['multi_move']) && xtc_not_null($_POST['multi_move'])) {
                 $heading[]  = array('text' => '<b>' . TEXT_INFO_HEADING_MOVE_ELEMENTS . '</b>');
                 $contents[] = array('text' => '<table width="100%" border="0">');
-                if (is_array($_POST['multi_categories'])) {
+                if (isset($_POST['multi_categories']) && is_array($_POST['multi_categories'])) {
                   foreach ($_POST['multi_categories'] AS $multi_category) {
                     $category_query = xtc_db_query("SELECT c.categories_id,
                                                            cd.categories_name,
@@ -778,7 +778,7 @@
                   $category_tree = xtc_get_category_tree();
                 }
 
-                if (is_array($_POST['multi_products'])) {
+                if (isset($_POST['multi_products']) && is_array($_POST['multi_products'])) {
                   if ($current_category_id != 0) {
                     foreach ($_POST['multi_products'] AS $multi_product) {
                       $contents[] = array('text' => '<tr><td style="border-bottom: 1px solid #af417e; margin-bottom: 10px;" class="infoBoxContent"><b>' . xtc_get_products_name($multi_product) . '</b></td></tr>');
@@ -813,7 +813,7 @@
                 $contents[] = array('text' => '<a class="button" href="javascript:SwitchCheckDeleteConfirm()" onclick="this.blur()">' . BUTTON_REVERSE_SELECTION . '</a>');
                 $contents[] = array('text' => '<table width="100%" border="0">');
 
-                if (is_array($_POST['multi_categories'])) {
+                if (isset($_POST['multi_categories']) && is_array($_POST['multi_categories'])) {
                   foreach ($_POST['multi_categories'] AS $multi_category) {
                     $category_query = xtc_db_query("SELECT c.categories_id,
                                                            cd.categories_name,
