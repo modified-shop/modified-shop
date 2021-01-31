@@ -539,22 +539,15 @@
    * @return
    */
   function xtc_get_languages() {
-    $languages_query = xtc_db_query("SELECT languages_id,
-                                            name,
-                                            code,
-                                            image,
-                                            directory
+    $languages_array = array();
+    $languages_query = xtc_db_query("SELECT *.
+                                            languages_id as id
                                        FROM ".TABLE_LANGUAGES."
                                       WHERE status_admin = '1'
                                    ORDER BY sort_order");
 
     while ($languages = xtc_db_fetch_array($languages_query)) {
-      $languages_array[] = array ('id' => $languages['languages_id'],
-                                  'name' => $languages['name'],
-                                  'code' => $languages['code'],
-                                  'image' => $languages['image'],
-                                  'directory' => $languages['directory']
-                                  );
+      $languages_array[] = $languages;
     }
     return $languages_array;
   }
@@ -601,8 +594,10 @@
                                       FROM ".TABLE_CATEGORIES_DESCRIPTION."
                                      WHERE categories_id = '".(int)$category_id."'
                                        AND language_id = '".(int)$language_id."'");
-    $category = xtc_db_fetch_array($category_query);
-    return $category['categories_name'];
+    if (xtc_db_num_rows($category_query) > 0) {
+      $category = xtc_db_fetch_array($category_query);
+      return $category['categories_name'];
+    }
   }
 
   /**
@@ -617,8 +612,10 @@
                                       FROM ".TABLE_CATEGORIES_DESCRIPTION."
                                      WHERE categories_id = '".(int)$category_id."'
                                        AND language_id = '".(int)$language_id."'");
-    $category = xtc_db_fetch_array($category_query);
-    return $category['categories_heading_title'];
+    if (xtc_db_num_rows($category_query) > 0) {
+      $category = xtc_db_fetch_array($category_query);
+      return $category['categories_heading_title'];
+    }
   }
 
   /**
@@ -633,8 +630,10 @@
                                       FROM ".TABLE_CATEGORIES_DESCRIPTION."
                                      WHERE categories_id = '".(int)$category_id."'
                                        AND language_id = '".(int)$language_id."'");
-    $category = xtc_db_fetch_array($category_query);
-    return $category['categories_description'];
+    if (xtc_db_num_rows($category_query) > 0) {
+      $category = xtc_db_fetch_array($category_query);
+      return $category['categories_description'];
+    }
   }
 
   /**
@@ -649,8 +648,10 @@
                                       FROM ".TABLE_CATEGORIES_DESCRIPTION."
                                      WHERE categories_id = '".(int)$category_id."'
                                        AND language_id = '".(int)$language_id."'");
-    $category = xtc_db_fetch_array($category_query);
-    return $category['categories_meta_title'];
+    if (xtc_db_num_rows($category_query) > 0) {
+      $category = xtc_db_fetch_array($category_query);
+      return $category['categories_meta_title'];
+    }
   }
 
   /**
@@ -665,8 +666,10 @@
                                       FROM ".TABLE_CATEGORIES_DESCRIPTION."
                                      WHERE categories_id = '".(int)$category_id."'
                                        AND language_id = '".(int)$language_id."'");
-    $category = xtc_db_fetch_array($category_query);
-    return $category['categories_meta_description'];
+    if (xtc_db_num_rows($category_query) > 0) {
+      $category = xtc_db_fetch_array($category_query);
+      return $category['categories_meta_description'];
+    }
   }
 
   /**
@@ -681,8 +684,10 @@
                                       FROM ".TABLE_CATEGORIES_DESCRIPTION."
                                      WHERE categories_id = '".(int)$category_id."'
                                        AND language_id = '".(int)$language_id."'");
-    $category = xtc_db_fetch_array($category_query);
-    return $category['categories_meta_keywords'];
+    if (xtc_db_num_rows($category_query) > 0) {
+      $category = xtc_db_fetch_array($category_query);
+      return $category['categories_meta_keywords'];
+    }
   }
 
   /**
@@ -700,8 +705,10 @@
                                            FROM ".TABLE_ORDERS_STATUS."
                                           WHERE orders_status_id = '".(int)$orders_status_id."'
                                             AND language_id = '".(int)$language_id."'");
-    $orders_status = xtc_db_fetch_array($orders_status_query);
-    return $orders_status['orders_status_name'];
+    if (xtc_db_num_rows($orders_status_query) > 0) {
+      $orders_status = xtc_db_fetch_array($orders_status_query);
+      return $orders_status['orders_status_name'];
+    }
   }
 
   /**
@@ -729,8 +736,10 @@
                                             WHERE shipping_status_id = '".(int)$shipping_status_id."'
                                               AND language_id = '".(int)$language_id."'
                                          ORDER BY sort_order");
-    $shipping_status = xtc_db_fetch_array($shipping_status_query);
-    return $shipping_status['shipping_status_name'];
+    if (xtc_db_num_rows($shipping_status_query) > 0) {
+      $shipping_status = xtc_db_fetch_array($shipping_status_query);
+      return $shipping_status['shipping_status_name'];
+    }
   }
 
   /**
@@ -784,8 +793,10 @@
                                           FROM ".TABLE_PRODUCTS_VPE."
                                          WHERE products_vpe_id = '".(int)$products_vpe_id."'
                                            AND language_id = '".(int)$language_id."'");
-    $products_vpe = xtc_db_fetch_array($products_vpe_query);
-    return $products_vpe['products_vpe_name'];
+    if (xtc_db_num_rows($products_vpe_query) > 0) {
+      $products_vpe = xtc_db_fetch_array($products_vpe_query);
+      return $products_vpe['products_vpe_name'];
+    }
   }
 
   /**
@@ -827,8 +838,10 @@
                                      FROM ".TABLE_PRODUCTS_DESCRIPTION."
                                     WHERE products_id = '".(int)$product_id."'
                                       AND language_id = '".(int)$language_id."'");
-    $product = xtc_db_fetch_array($product_query);
-    return $product['products_description'];
+    if (xtc_db_num_rows($product_query) > 0) {
+      $product = xtc_db_fetch_array($product_query);
+      return $product['products_description'];
+    }
   }
 
   /**
@@ -843,8 +856,10 @@
                                      FROM ".TABLE_PRODUCTS_DESCRIPTION."
                                     WHERE products_id = '".(int)$product_id."'
                                       AND language_id = '".(int)$language_id."'");
-    $product = xtc_db_fetch_array($product_query);
-    return $product['products_short_description'];
+    if (xtc_db_num_rows($product_query) > 0) {
+      $product = xtc_db_fetch_array($product_query);
+      return $product['products_short_description'];
+    }
   }
 
   /**
@@ -859,8 +874,10 @@
                                      FROM ".TABLE_PRODUCTS_DESCRIPTION."
                                     WHERE products_id = '".(int)$product_id."'
                                       AND language_id = '".(int)$language_id."'");
-    $product = xtc_db_fetch_array($product_query);
-    return $product['products_keywords'];
+    if (xtc_db_num_rows($product_query) > 0) {
+      $product = xtc_db_fetch_array($product_query);
+      return $product['products_keywords'];
+    }
   }
 
   /**
@@ -875,8 +892,10 @@
                                      FROM ".TABLE_PRODUCTS_DESCRIPTION."
                                     WHERE products_id = '".(int)$product_id."'
                                       AND language_id = '".(int)$language_id."'");
-    $product = xtc_db_fetch_array($product_query);
-    return $product['products_meta_title'];
+    if (xtc_db_num_rows($product_query) > 0) {
+      $product = xtc_db_fetch_array($product_query);
+      return $product['products_meta_title'];
+    }
   }
 
   /**
@@ -891,8 +910,10 @@
                                      FROM ".TABLE_PRODUCTS_DESCRIPTION."
                                     WHERE products_id = '".(int)$product_id."'
                                       AND language_id = '".(int)$language_id."'");
-    $product = xtc_db_fetch_array($product_query);
-    return $product['products_meta_description'];
+    if (xtc_db_num_rows($product_query) > 0) {
+      $product = xtc_db_fetch_array($product_query);
+      return $product['products_meta_description'];
+    }
   }
 
   /**
@@ -907,8 +928,10 @@
                                      FROM ".TABLE_PRODUCTS_DESCRIPTION."
                                     WHERE products_id = '".(int)$product_id."'
                                       AND language_id = '".(int)$language_id."'");
-    $product = xtc_db_fetch_array($product_query);
-    return $product['products_meta_keywords'];
+    if (xtc_db_num_rows($product_query) > 0) {
+      $product = xtc_db_fetch_array($product_query);
+      return $product['products_meta_keywords'];
+    }
   }
 
   /**
@@ -923,8 +946,10 @@
                                      FROM ".TABLE_PRODUCTS_DESCRIPTION."
                                     WHERE products_id = '".(int)$product_id."'
                                       AND language_id = '".(int)$language_id."'");
-    $product = xtc_db_fetch_array($product_query);
-    return $product['products_url'];
+    if (xtc_db_num_rows($product_query) > 0) {
+      $product = xtc_db_fetch_array($product_query);
+      return $product['products_url'];
+    }
   }
 
   /**
@@ -939,8 +964,10 @@
                                           FROM ".TABLE_MANUFACTURERS_INFO."
                                          WHERE manufacturers_id = '".(int)$manufacturer_id."'
                                            AND languages_id = '".(int)$language_id."'");
-    $manufacturer = xtc_db_fetch_array($manufacturer_query);
-    return $manufacturer['manufacturers_url'];
+    if (xtc_db_num_rows($manufacturer_query) > 0) {
+      $manufacturer = xtc_db_fetch_array($manufacturer_query);
+      return $manufacturer['manufacturers_url'];
+    }
   }
 
   /**
@@ -1448,8 +1475,10 @@
       $classes_query = xtc_db_query("SELECT tax_class_title
                                        FROM ".TABLE_TAX_CLASS."
                                       WHERE tax_class_id = '".(int)$tax_class_id."'");
-      $classes = xtc_db_fetch_array($classes_query);
-      return $classes['tax_class_title'];
+      if (xtc_db_num_rows($classes_query) > 0) {
+        $classes = xtc_db_fetch_array($classes_query);
+        return $classes['tax_class_title'];
+      }
     }
   }
 
@@ -1506,8 +1535,10 @@
       $classes_query = xtc_db_query("SELECT geo_zone_name
                                        FROM ".TABLE_GEO_ZONES."
                                       WHERE geo_zone_id = '".(int)$zone_class_id."'");
-      $classes = xtc_db_fetch_array($classes_query);
-      return $classes['geo_zone_name'];
+      if (xtc_db_num_rows($classes_query) > 0) {
+        $classes = xtc_db_fetch_array($classes_query);
+        return $classes['geo_zone_name'];
+      }
     }
   }
 
@@ -1586,8 +1617,10 @@
                                     FROM ".TABLE_ORDERS_STATUS."
                                    WHERE orders_status_id = '".(int)$order_status_id."'
                                      AND language_id = '".(int)$language_id."'");
-    $status = xtc_db_fetch_array($status_query);
-    return $status['orders_status_name'] . (($order_status_id == DEFAULT_ORDERS_STATUS_ID) ? ' ('.TEXT_DEFAULT.')' : '');
+    if (xtc_db_num_rows($status_query) > 0) {
+      $status = xtc_db_fetch_array($status_query);
+      return $status['orders_status_name'] . (($order_status_id == DEFAULT_ORDERS_STATUS_ID) ? ' ('.TEXT_DEFAULT.')' : '');
+    }
   }
 
   /**
@@ -1633,8 +1666,10 @@
                                               FROM ".TABLE_CUSTOMERS_STATUS."
                                              WHERE customers_status_id = '".(int)$customers_status_id."'
                                                AND language_id = '".(int)$language_id."'");
-    $customers_status = xtc_db_fetch_array($customers_status_query);
-    return $customers_status['customers_status_name'];
+    if (xtc_db_num_rows($customers_status_query) > 0) {
+      $customers_status = xtc_db_fetch_array($customers_status_query);
+      return $customers_status['customers_status_name'];
+    }
   }
 
   /**
@@ -1964,8 +1999,10 @@
                                     WHERE products_id = '" . (int)$product_id . "'
                                       AND status = '1'
                                       AND (now() >= s.start_date OR s.start_date IS NULL)");
-    $product = xtc_db_fetch_array($product_query);
-    return $product['specials_new_products_price'];
+    if (xtc_db_num_rows($product_query) > 0) {
+      $product = xtc_db_fetch_array($product_query);
+      return $product['specials_new_products_price'];
+    }
   }
 
   /**
@@ -2276,8 +2313,10 @@
                                     WHERE languages_id = '".(int)$_SESSION['languages_id']."' 
                                       AND content_group = '".$content_group."'
                                     LIMIT 1");
-    $content = xtc_db_fetch_array($content_query);
-    return $content['content_title'];
+    if (xtc_db_num_rows($content_query) > 0) {
+      $content = xtc_db_fetch_array($content_query);
+      return $content['content_title'];
+    }
   }
 
   /**
