@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id:$
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -15,6 +15,8 @@
   //display per page
   $cfg_max_display_results_key = 'MAX_DISPLAY_GV_CUSTOMERS_RESULTS';
   $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
+
+  $page = (isset($_GET['page']) ? (int)$_GET['page'] : 1);
 
   require(DIR_WS_CLASSES . 'currencies.php');
   $currencies = new currencies();
@@ -70,7 +72,7 @@ require (DIR_WS_INCLUDES.'head.php');
                                      FROM " . TABLE_COUPON_GV_CUSTOMER . " cgc
                                      JOIN " . TABLE_CUSTOMERS . " c
                                           ON c.customers_id = cgc.customer_id";
-                  $gv_split = new splitPageResults($_GET['page'], $page_max_display_results, $gv_query_raw, $gv_query_numrows);
+                  $gv_split = new splitPageResults($page, $page_max_display_results, $gv_query_raw, $gv_query_numrows);
                   $gv_query = xtc_db_query($gv_query_raw);
                   while ($gv_list = xtc_db_fetch_array($gv_query)) {
                     $tr_attributes ='class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_CUSTOMERS, 'cID=' . $gv_list['customers_id'] . '&action=edit') .'\'"';
@@ -84,8 +86,8 @@ require (DIR_WS_INCLUDES.'head.php');
                   }
                 ?>
               </table>
-              <div class="smallText pdg2 flt-l"><?php echo $gv_split->display_count($gv_query_numrows, $page_max_display_results, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_CUSTOMERS); ?></div>
-              <div class="smallText pdg2 flt-r"><?php echo $gv_split->display_links($gv_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></div>
+              <div class="smallText pdg2 flt-l"><?php echo $gv_split->display_count($gv_query_numrows, $page_max_display_results, $page, TEXT_DISPLAY_NUMBER_OF_CUSTOMERS); ?></div>
+              <div class="smallText pdg2 flt-r"><?php echo $gv_split->display_links($gv_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $page); ?></div>
               <?php echo draw_input_per_page($PHP_SELF,$cfg_max_display_results_key,$page_max_display_results); ?>
             </td>            
           </tr>

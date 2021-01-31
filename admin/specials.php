@@ -33,7 +33,7 @@
   $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
 
   $sID = (isset($_GET['sID']) ? (int)$_GET['sID'] : NULL);
-  $page_id = (isset($_GET['page']) ? (int)$_GET['page'] : 0);
+  $page = (isset($_GET['page']) ? (int)$_GET['page'] : 1);
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
 
@@ -351,7 +351,7 @@
                                                    AND pd.language_id = '" .(int) $_SESSION['languages_id'] . "'
                                        ORDER BY ".$spsort;
                                    
-                  $specials_split = new splitPageResults($page_id, $page_max_display_results, $specials_query_raw, $specials_query_numrows);
+                  $specials_split = new splitPageResults($page, $page_max_display_results, $specials_query_raw, $specials_query_numrows);
                   $specials_query = xtc_db_query($specials_query_raw);
                   while ($specials = xtc_db_fetch_array($specials_query)) {
                     $price=$specials['products_price'];
@@ -491,8 +491,8 @@
           <tr>
             <td>
               <!-- PAGINATION-->
-              <div class="smallText flt-l pdg2"><?php echo $specials_split->display_count($specials_query_numrows, $page_max_display_results, $page_id, TEXT_DISPLAY_NUMBER_OF_SPECIALS); ?></div>
-              <div class="smallText flt-r pdg2"><?php echo $specials_split->display_links($specials_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $page_id); ?></div>
+              <div class="smallText flt-l pdg2"><?php echo $specials_split->display_count($specials_query_numrows, $page_max_display_results, $page, TEXT_DISPLAY_NUMBER_OF_SPECIALS); ?></div>
+              <div class="smallText flt-r pdg2"><?php echo $specials_split->display_links($specials_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $page); ?></div>
               <?php echo draw_input_per_page($PHP_SELF,$cfg_max_display_results_key,$page_max_display_results); ?>
             </td>
             <td>&nbsp;</td>

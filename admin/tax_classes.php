@@ -22,9 +22,12 @@
 
   // set languages
   $languages = xtc_get_languages();
-
-  if ($_GET['action']) {
-    switch ($_GET['action']) {
+  
+  $action = (isset($_GET['action']) ? $_GET['action'] : '');
+  $page = (isset($_GET['page']) ? (int)$_GET['page'] : 1);
+  
+  if (xtc_not_null($action)) {
+    switch ($action) {
       case 'insert':
         $tax_class_title = xtc_db_prepare_input($_POST['tax_class_title']);
         $tax_class_description = xtc_db_prepare_input($_POST['tax_class_description']);
@@ -84,14 +87,14 @@
         );
         xtc_db_perform(TABLE_TAX_CLASS, $sql_data_array, 'update', "tax_class_id = '" . $tax_class_id . "'");
 
-        xtc_redirect(xtc_href_link(FILENAME_TAX_CLASSES, 'page=' . (int)$_GET['page'] . '&tID=' . $tax_class_id));
+        xtc_redirect(xtc_href_link(FILENAME_TAX_CLASSES, 'page=' . (int)$page . '&tID=' . $tax_class_id));
         break;
 
       case 'deleteconfirm':
         $tax_class_id = (int)$_GET['tID'];
 
         xtc_db_query("DELETE FROM " . TABLE_TAX_CLASS . " WHERE tax_class_id = '" . $tax_class_id . "'");
-        xtc_redirect(xtc_href_link(FILENAME_TAX_CLASSES, 'page=' . (int)$_GET['page']));
+        xtc_redirect(xtc_href_link(FILENAME_TAX_CLASSES, 'page=' . (int)$page));
         break;
     }
   }
@@ -130,36 +133,38 @@
                   <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
                 </tr>
                 <?php
-                $classes_query_raw = "select tax_class_id, tax_class_title, tax_class_description, last_modified, date_added from " . TABLE_TAX_CLASS . " order by tax_class_title";
-                $classes_split = new splitPageResults($_GET['page'], '20', $classes_query_raw, $classes_query_numrows);
+                $classes_query_raw = "SELECT *
+                                        FROM " . TABLE_TAX_CLASS . " 
+                                    ORDER BY tax_class_title";
+                $classes_split = new splitPageResults($page, '20', $classes_query_raw, $classes_query_numrows);
                 $classes_query = xtc_db_query($classes_query_raw);
                 while ($classes = xtc_db_fetch_array($classes_query)) {
-                  if (((!$_GET['tID']) || (@$_GET['tID'] == $classes['tax_class_id'])) && (!$tcInfo) && (substr($_GET['action'], 0, 3) != 'new')) {
+                  if ((!isset($_GET['tID']) || $_GET['tID'] == $classes['tax_class_id']) && !isset($tcInfo) && (substr($action, 0, 3) != 'new')) {
                     $tcInfo = new objectInfo($classes);
                   }
 
-                  if ( (is_object($tcInfo)) && ($classes['tax_class_id'] == $tcInfo->tax_class_id) ) {
-                    echo '              <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $tcInfo->tax_class_id . '&action=edit') . '\'">' . "\n";
+                  if (isset($tcInfo) && is_object($tcInfo) && $classes['tax_class_id'] == $tcInfo->tax_class_id) {
+                    echo '<tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_TAX_CLASSES, 'page=' . $page . '&tID=' . $tcInfo->tax_class_id . '&action=edit') . '\'">' . "\n";
                   } else {
-                    echo'              <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $classes['tax_class_id']) . '\'">' . "\n";
+                    echo'<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_TAX_CLASSES, 'page=' . $page . '&tID=' . $classes['tax_class_id']) . '\'">' . "\n";
                   }
                 ?>
                   <td class="dataTableContent"><?php echo parse_multi_language_value($classes['tax_class_title'], $_SESSION['language_code']); ?></td>
-                  <td class="dataTableContent txta-r"><?php if ( (is_object($tcInfo)) && ($classes['tax_class_id'] == $tcInfo->tax_class_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $classes['tax_class_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                  <td class="dataTableContent txta-r"><?php if (isset($tcInfo) && is_object($tcInfo) && $classes['tax_class_id'] == $tcInfo->tax_class_id) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_TAX_CLASSES, 'page=' . $page . '&tID=' . $classes['tax_class_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
                 </tr>
                   <?php
                     }
                   ?>
               </table>
    
-              <div class="smallText pdg2 flt-l"><?php echo $classes_split->display_count($classes_query_numrows, '20', $_GET['page'], TEXT_DISPLAY_NUMBER_OF_TAX_CLASSES); ?></div>  
-              <div class="smallText pdg2 flt-r"><?php echo $classes_split->display_links($classes_query_numrows, '20', MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></div>  
+              <div class="smallText pdg2 flt-l"><?php echo $classes_split->display_count($classes_query_numrows, '20', $page, TEXT_DISPLAY_NUMBER_OF_TAX_CLASSES); ?></div>  
+              <div class="smallText pdg2 flt-r"><?php echo $classes_split->display_links($classes_query_numrows, '20', MAX_DISPLAY_PAGE_LINKS, $page); ?></div>  
 
               <?php
-              if (!$_GET['action']) {
+              if (!xtc_not_null($action)) {
               ?>
                 <div class="clear"></div>  
-                <div class="smallText pdg2 flt-r"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&action=new') . '">' . BUTTON_NEW_TAX_CLASS . '</a>'; ?></div>  
+                <div class="smallText pdg2 flt-r"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_TAX_CLASSES, 'page=' . $page . '&action=new') . '">' . BUTTON_NEW_TAX_CLASS . '</a>'; ?></div>  
               <?php
               }
               ?>
@@ -167,11 +172,11 @@
             <?php
             $heading = array();
             $contents = array();
-            switch ($_GET['action']) {
+            switch ($action) {
               case 'new':
                 $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_NEW_TAX_CLASS . '</b>');
 
-                $contents = array('form' => xtc_draw_form('classes', FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&action=insert'));
+                $contents = array('form' => xtc_draw_form('classes', FILENAME_TAX_CLASSES, 'page=' . $page . '&action=insert'));
                 $contents[] = array('text' => TEXT_INFO_INSERT_INTRO);
 
                 $tax_class_title = '';
@@ -185,13 +190,13 @@
                 }
                 $contents[] = array('text' => '<br />' . TEXT_INFO_CLASS_TITLE . '<br />' . $tax_class_title);
                 $contents[] = array('text' => '<br />' . TEXT_INFO_CLASS_DESCRIPTION . '<br />' . $tax_class_description);
-                $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_INSERT . '"/>&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page']) . '">' . BUTTON_CANCEL . '</a>');
+                $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_INSERT . '"/>&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_TAX_CLASSES, 'page=' . $page) . '">' . BUTTON_CANCEL . '</a>');
                 break;
 
               case 'edit':
                 $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_EDIT_TAX_CLASS . '</b>');
 
-                $contents = array('form' => xtc_draw_form('classes', FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $tcInfo->tax_class_id . '&action=save'));
+                $contents = array('form' => xtc_draw_form('classes', FILENAME_TAX_CLASSES, 'page=' . $page . '&tID=' . $tcInfo->tax_class_id . '&action=save'));
                 $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
 
                 $tax_class_title = '';
@@ -205,23 +210,23 @@
                 }
                 $contents[] = array('text' => '<br />' . TEXT_INFO_CLASS_TITLE . '<br />' . $tax_class_title);
                 $contents[] = array('text' => '<br />' . TEXT_INFO_CLASS_DESCRIPTION . '<br />' . $tax_class_description);
-                $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/>&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $tcInfo->tax_class_id) . '">' . BUTTON_CANCEL . '</a>');
+                $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/>&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_TAX_CLASSES, 'page=' . $page . '&tID=' . $tcInfo->tax_class_id) . '">' . BUTTON_CANCEL . '</a>');
                 break;
 
               case 'delete':
                 $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_DELETE_TAX_CLASS . '</b>');
 
-                $contents = array('form' => xtc_draw_form('classes', FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $tcInfo->tax_class_id . '&action=deleteconfirm'));
+                $contents = array('form' => xtc_draw_form('classes', FILENAME_TAX_CLASSES, 'page=' . $page . '&tID=' . $tcInfo->tax_class_id . '&action=deleteconfirm'));
                 $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
                 $contents[] = array('text' => '<br /><b>' . parse_multi_language_value($tcInfo->tax_class_title, $_SESSION['language_code']) . '</b>');
-                $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE . '"/>&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $tcInfo->tax_class_id) . '">' . BUTTON_CANCEL . '</a>');
+                $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE . '"/>&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_TAX_CLASSES, 'page=' . $page . '&tID=' . $tcInfo->tax_class_id) . '">' . BUTTON_CANCEL . '</a>');
                 break;
 
               default:
                 if (is_object($tcInfo)) {
                   $heading[] = array('text' => '<b>' . parse_multi_language_value($tcInfo->tax_class_title, $_SESSION['language_code']) . '</b>');
 
-                  $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $tcInfo->tax_class_id . '&action=edit') . '">' . BUTTON_EDIT . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $tcInfo->tax_class_id . '&action=delete') . '">' . BUTTON_DELETE . '</a>');
+                  $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_TAX_CLASSES, 'page=' . $page . '&tID=' . $tcInfo->tax_class_id . '&action=edit') . '">' . BUTTON_EDIT . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_TAX_CLASSES, 'page=' . $page . '&tID=' . $tcInfo->tax_class_id . '&action=delete') . '">' . BUTTON_DELETE . '</a>');
                   $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_ADDED . ' ' . xtc_date_short($tcInfo->date_added));
                   $contents[] = array('text' => '' . TEXT_INFO_LAST_MODIFIED . ' ' . xtc_date_short($tcInfo->last_modified));
                   $contents[] = array('text' => '<br />' . TEXT_INFO_CLASS_DESCRIPTION . '<br />' . parse_multi_language_value($tcInfo->tax_class_description, $_SESSION['language_code']));

@@ -224,7 +224,7 @@
             $installed_modules[] = $file;
           }
         }
-        if ((!$module_class || (isset($module_class) && ($module_class == $class))) && !isset($mInfo)) {
+        if ((!isset($module_class) || (isset($module_class) && ($module_class == $class))) && !isset($mInfo)) {
           $module_info = get_module_info($module);
           $mInfo = new objectInfo($module_info);                          
         }

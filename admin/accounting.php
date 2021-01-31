@@ -21,7 +21,7 @@
   $confirm_save_entry = ' onclick="ButtonClicked(this);"';
   $confirm_submit = defined('CONFIRM_SAVE_ENTRY') && CONFIRM_SAVE_ENTRY == 'true' ? ' onsubmit="return confirmSubmit(\'\',\''. SAVE_ENTRY .'\',this)"' : '';
 
-  if ($_GET['action']) {
+  if (isset($_GET['action'])) {
     switch ($_GET['action']) {
       case 'save':
 

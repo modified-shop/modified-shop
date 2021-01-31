@@ -20,6 +20,8 @@
   $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
+  $page = (isset($_GET['page']) ? (int)$_GET['page'] : 1);
+
   $customers_statuses_array = xtc_get_customers_statuses();
   $mail_statuses_array = array(
     array('id' => '', 'text' => TXT_ALL), 
@@ -175,7 +177,7 @@
                 <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
               <?php
-                $newsletter_split = new splitPageResults($_GET['page'], $page_max_display_results, $newsletter_query_raw, $newsletter_query_numrows);
+                $newsletter_split = new splitPageResults($page, $page_max_display_results, $newsletter_query_raw, $newsletter_query_numrows);
                 $newsletter_query = xtc_db_query($newsletter_query_raw);
                 while ($newsletter = xtc_db_fetch_array($newsletter_query)) {
                   if ((!isset($_GET['mail']) || (isset($_GET['mail']) && $_GET['mail'] == md5($newsletter['customers_email_address']))) && !isset($oInfo)) {                  
@@ -183,9 +185,9 @@
                   }
 
                   if (isset($oInfo) && is_object($oInfo) && ($newsletter['customers_email_address'] == $oInfo->customers_email_address) ) {
-                    echo '                  <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_NEWSLETTER_RECIPIENTS, xtc_get_all_get_params(array('action','mail')).'mail=' . md5($oInfo->customers_email_address) . '&action=edit') . '\'">' . "\n";
+                    echo '<tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_NEWSLETTER_RECIPIENTS, xtc_get_all_get_params(array('action','mail')).'mail=' . md5($oInfo->customers_email_address) . '&action=edit') . '\'">' . "\n";
                   } else {
-                    echo '                  <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_NEWSLETTER_RECIPIENTS, xtc_get_all_get_params(array('action','mail')).'mail=' . md5($newsletter['customers_email_address'])) . '\'">' . "\n";
+                    echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_NEWSLETTER_RECIPIENTS, xtc_get_all_get_params(array('action','mail')).'mail=' . md5($newsletter['customers_email_address'])) . '\'">' . "\n";
                   }
                   ?>
                   <td class="dataTableContent txta-l"><?php echo $newsletter['customers_email_address']; ?></td>
@@ -193,15 +195,15 @@
                   <td class="dataTableContent txta-l"><?php echo $newsletter['customers_lastname']; ?></td>
                   <td class="dataTableContent txta-l"><?php echo $newsletter['customers_status_name']; ?></td>
                   <td class="dataTableContent txta-c"><?php echo xtc_image(DIR_WS_ICONS.(($newsletter['mail_status'] == '1') ? 'tick.gif' : 'cross.gif')); ?></td>
-                  <td class="dataTableContent txta-r"><?php if (isset($oInfo) && is_object($oInfo) && ($newsletter['customers_email_address'] == $oInfo->customers_email_address) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_NEWSLETTER_RECIPIENTS, 'page=' . $_GET['page'] . '&mail=' . md5($newsletter['customers_email_address'])) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                  <td class="dataTableContent txta-r"><?php if (isset($oInfo) && is_object($oInfo) && ($newsletter['customers_email_address'] == $oInfo->customers_email_address) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_NEWSLETTER_RECIPIENTS, 'page=' . $page . '&mail=' . md5($newsletter['customers_email_address'])) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
                 </tr>
                 <?php
                 }
               ?>
             </table>
               
-            <div class="smallText pdg2 flt-l"><?php echo $newsletter_split->display_count($newsletter_query_numrows, $page_max_display_results, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_NEWSLETTERS_RECIPIENTS); ?></div>
-            <div class="smallText pdg2 flt-r"><?php echo $newsletter_split->display_links($newsletter_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], xtc_get_all_get_params(array('page'))); ?></div>
+            <div class="smallText pdg2 flt-l"><?php echo $newsletter_split->display_count($newsletter_query_numrows, $page_max_display_results, $page, TEXT_DISPLAY_NUMBER_OF_NEWSLETTERS_RECIPIENTS); ?></div>
+            <div class="smallText pdg2 flt-r"><?php echo $newsletter_split->display_links($newsletter_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $page, xtc_get_all_get_params(array('page'))); ?></div>
             <?php echo draw_input_per_page($PHP_SELF,$cfg_max_display_results_key,$page_max_display_results); ?>
           </td>
           <?php

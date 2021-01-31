@@ -23,8 +23,11 @@
   // set languages
   $languages = xtc_get_languages();
 
-  if ($_GET['action']) {
-    switch ($_GET['action']) {
+  $action = (isset($_GET['action']) ? $_GET['action'] : '');
+  $page = (isset($_GET['page']) ? (int)$_GET['page'] : 1);
+  
+  if (xtc_not_null($action)) {
+    switch ($action) {
       case 'insert':
         $tax_zone_id = xtc_db_prepare_input($_POST['tax_zone_id']);
         $tax_class_id = xtc_db_prepare_input($_POST['tax_class_id']);
@@ -51,7 +54,7 @@
         xtc_db_perform(TABLE_TAX_RATES, $sql_data_array);
         $tax_rates_id = xtc_db_insert_id();
         
-        xtc_redirect(xtc_href_link(FILENAME_TAX_RATES, 'page=' . $_GET['page'] . '&tID=' . $tax_rates_id));
+        xtc_redirect(xtc_href_link(FILENAME_TAX_RATES, 'page=' . $page . '&tID=' . $tax_rates_id));
         break;
 
       case 'save':
@@ -80,14 +83,14 @@
         );        
         xtc_db_perform(TABLE_TAX_RATES, $sql_data_array, 'update', "tax_rates_id = '" . (int)$tax_rates_id . "'");
 
-        xtc_redirect(xtc_href_link(FILENAME_TAX_RATES, 'page=' . $_GET['page'] . '&tID=' . $tax_rates_id));
+        xtc_redirect(xtc_href_link(FILENAME_TAX_RATES, 'page=' . $page . '&tID=' . $tax_rates_id));
         break;
 
       case 'deleteconfirm':
         $tax_rates_id = xtc_db_prepare_input($_GET['tID']);
 
         xtc_db_query("delete from " . TABLE_TAX_RATES . " where tax_rates_id = '" . xtc_db_input($tax_rates_id) . "'");
-        xtc_redirect(xtc_href_link(FILENAME_TAX_RATES, 'page=' . $_GET['page']));
+        xtc_redirect(xtc_href_link(FILENAME_TAX_RATES, 'page=' . $page));
         break;
     }
   }
@@ -138,38 +141,38 @@
                                                ON r.tax_class_id = tc.tax_class_id
                                      LEFT JOIN " . TABLE_GEO_ZONES . " z 
                                                ON r.tax_zone_id = z.geo_zone_id";
-                    $rates_split = new splitPageResults($_GET['page'], '20', $rates_query_raw, $rates_query_numrows);
+                    $rates_split = new splitPageResults($page, '20', $rates_query_raw, $rates_query_numrows);
                     $rates_query = xtc_db_query($rates_query_raw);
                     while ($rates = xtc_db_fetch_array($rates_query)) {
-                      if (((!$_GET['tID']) || (@$_GET['tID'] == $rates['tax_rates_id'])) && (!$trInfo) && (substr($_GET['action'], 0, 3) != 'new')) {
+                      if ((!isset($_GET['tID']) || $_GET['tID'] == $rates['tax_class_id']) && !isset($trInfo) && (substr($action, 0, 3) != 'new')) {
                         $trInfo = new objectInfo($rates);
                       }
 
-                      if ( (is_object($trInfo)) && ($rates['tax_rates_id'] == $trInfo->tax_rates_id) ) {
-                        echo '              <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_TAX_RATES, 'page=' . $_GET['page'] . '&tID=' . $trInfo->tax_rates_id . '&action=edit') . '\'">' . "\n";
+                      if (isset($trInfo) && is_object($trInfo) && $rates['tax_rates_id'] == $trInfo->tax_rates_id) {
+                        echo '<tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_TAX_RATES, 'page=' . $page . '&tID=' . $trInfo->tax_rates_id . '&action=edit') . '\'">' . "\n";
                       } else {
-                        echo '              <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_TAX_RATES, 'page=' . $_GET['page'] . '&tID=' . $rates['tax_rates_id']) . '\'">' . "\n";
+                        echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_TAX_RATES, 'page=' . $page . '&tID=' . $rates['tax_rates_id']) . '\'">' . "\n";
                       }
                   ?>
                   <td class="dataTableContent"><?php echo $rates['tax_priority']; ?></td>
                   <td class="dataTableContent"><?php echo parse_multi_language_value($rates['tax_class_title'], $_SESSION['language_code']); ?></td>
                   <td class="dataTableContent"><?php echo parse_multi_language_value($rates['geo_zone_name'], $_SESSION['language_code']); ?></td>
                   <td class="dataTableContent"><?php echo xtc_display_tax_value($rates['tax_rate']); ?>%</td>
-                  <td class="dataTableContent txta-r"><?php if ( (is_object($trInfo)) && ($rates['tax_rates_id'] == $trInfo->tax_rates_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_TAX_RATES, 'page=' . $_GET['page'] . '&tID=' . $rates['tax_rates_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                  <td class="dataTableContent txta-r"><?php if (isset($trInfo) && is_object($trInfo) && $rates['tax_rates_id'] == $trInfo->tax_rates_id) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_TAX_RATES, 'page=' . $page . '&tID=' . $rates['tax_rates_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
                 </tr>
                 <?php
                   }
                 ?>
               </table>
                 
-              <div class="smallText pdg2 flt-l"><?php echo $rates_split->display_count($rates_query_numrows, '20', $_GET['page'], TEXT_DISPLAY_NUMBER_OF_TAX_RATES); ?></div> 
-              <div class="smallText pdg2 flt-r"><?php echo $rates_split->display_links($rates_query_numrows, '20', MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></div> 
+              <div class="smallText pdg2 flt-l"><?php echo $rates_split->display_count($rates_query_numrows, '20', $page, TEXT_DISPLAY_NUMBER_OF_TAX_RATES); ?></div> 
+              <div class="smallText pdg2 flt-r"><?php echo $rates_split->display_links($rates_query_numrows, '20', MAX_DISPLAY_PAGE_LINKS, $page); ?></div> 
 
               <?php
-              if (!$_GET['action']) {
+              if (!xtc_not_null($action)) {
               ?>
                 <div class="clear"></div>   
-                <div class="smallText pdg2 flt-r"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_TAX_RATES, 'page=' . $_GET['page'] . '&action=new') . '">' . BUTTON_NEW_TAX_RATE . '</a>'; ?></div> 
+                <div class="smallText pdg2 flt-r"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_TAX_RATES, 'page=' . $page . '&action=new') . '">' . BUTTON_NEW_TAX_RATE . '</a>'; ?></div> 
               <?php
               }
               ?>
@@ -177,11 +180,11 @@
             <?php
               $heading = array();
               $contents = array();
-              switch ($_GET['action']) {
+              switch ($action) {
                 case 'new':
                   $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_NEW_TAX_RATE . '</b>');
 
-                  $contents = array('form' => xtc_draw_form('rates', FILENAME_TAX_RATES, 'page=' . $_GET['page'] . '&action=insert'));
+                  $contents = array('form' => xtc_draw_form('rates', FILENAME_TAX_RATES, 'page=' . $page . '&action=insert'));
                   $contents[] = array('text' => TEXT_INFO_INSERT_INTRO);
                   $contents[] = array('text' => '<br />' . TEXT_INFO_CLASS_TITLE . '<br />' . xtc_tax_classes_pull_down('name="tax_class_id" style="font-size:12px" class="SlectBox"'));
                   $contents[] = array('text' => '<br />' . TEXT_INFO_ZONE_NAME . '<br />' . xtc_geo_zones_pull_down('name="tax_zone_id" style="font-size:12px" class="SlectBox"'));
@@ -195,13 +198,13 @@
                   $contents[] = array('text' => '<br />' . TEXT_INFO_RATE_DESCRIPTION . '<br />' . $description);
 
                   $contents[] = array('text' => '<br />' . TEXT_INFO_TAX_RATE_PRIORITY . '<br />' . xtc_draw_input_field('tax_priority'));
-                  $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_INSERT . '"/>&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_TAX_RATES, 'page=' . $_GET['page']) . '">' . BUTTON_CANCEL . '</a>');
+                  $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_INSERT . '"/>&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_TAX_RATES, 'page=' . $page) . '">' . BUTTON_CANCEL . '</a>');
                   break;
 
                 case 'edit':
                   $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_EDIT_TAX_RATE . '</b>');
 
-                  $contents = array('form' => xtc_draw_form('rates', FILENAME_TAX_RATES, 'page=' . $_GET['page'] . '&tID=' . $trInfo->tax_rates_id  . '&action=save'));
+                  $contents = array('form' => xtc_draw_form('rates', FILENAME_TAX_RATES, 'page=' . $page . '&tID=' . $trInfo->tax_rates_id  . '&action=save'));
                   $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
                   $contents[] = array('text' => '<br />' . TEXT_INFO_CLASS_TITLE . '<br />' . xtc_tax_classes_pull_down('name="tax_class_id" style="font-size:12px" class="SlectBox"', $trInfo->tax_class_id));
                   $contents[] = array('text' => '<br />' . TEXT_INFO_ZONE_NAME . '<br />' . xtc_geo_zones_pull_down('name="tax_zone_id" style="font-size:12px" class="SlectBox"', $trInfo->geo_zone_id));
@@ -215,22 +218,22 @@
                   $contents[] = array('text' => '<br />' . TEXT_INFO_RATE_DESCRIPTION . '<br />' . $description);
                   
                   $contents[] = array('text' => '<br />' . TEXT_INFO_TAX_RATE_PRIORITY . '<br />' . xtc_draw_input_field('tax_priority', $trInfo->tax_priority));
-                  $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/>&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_TAX_RATES, 'page=' . $_GET['page'] . '&tID=' . $trInfo->tax_rates_id) . '">' . BUTTON_CANCEL . '</a>');
+                  $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/>&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_TAX_RATES, 'page=' . $page . '&tID=' . $trInfo->tax_rates_id) . '">' . BUTTON_CANCEL . '</a>');
                   break;
 
                 case 'delete':
                   $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_DELETE_TAX_RATE . '</b>');
 
-                  $contents = array('form' => xtc_draw_form('rates', FILENAME_TAX_RATES, 'page=' . $_GET['page'] . '&tID=' . $trInfo->tax_rates_id  . '&action=deleteconfirm'));
+                  $contents = array('form' => xtc_draw_form('rates', FILENAME_TAX_RATES, 'page=' . $page . '&tID=' . $trInfo->tax_rates_id  . '&action=deleteconfirm'));
                   $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
                   $contents[] = array('text' => '<br /><b>' . parse_multi_language_value($trInfo->tax_class_title, $_SESSION['language_code']) . ' ' . number_format($trInfo->tax_rate, TAX_DECIMAL_PLACES) . '%</b>');
-                  $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE . '"/>&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_TAX_RATES, 'page=' . $_GET['page'] . '&tID=' . $trInfo->tax_rates_id) . '">' . BUTTON_CANCEL . '</a>');
+                  $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE . '"/>&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_TAX_RATES, 'page=' . $page . '&tID=' . $trInfo->tax_rates_id) . '">' . BUTTON_CANCEL . '</a>');
                   break;
 
                 default:
                   if (is_object($trInfo)) {
                     $heading[] = array('text' => '<b>' . parse_multi_language_value($trInfo->tax_class_title, $_SESSION['language_code']) . '</b>');
-                    $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_TAX_RATES, 'page=' . $_GET['page'] . '&tID=' . $trInfo->tax_rates_id . '&action=edit') . '">' . BUTTON_EDIT . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_TAX_RATES, 'page=' . $_GET['page'] . '&tID=' . $trInfo->tax_rates_id . '&action=delete') . '">' . BUTTON_DELETE . '</a>');
+                    $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_TAX_RATES, 'page=' . $page . '&tID=' . $trInfo->tax_rates_id . '&action=edit') . '">' . BUTTON_EDIT . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_TAX_RATES, 'page=' . $page . '&tID=' . $trInfo->tax_rates_id . '&action=delete') . '">' . BUTTON_DELETE . '</a>');
                     $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_ADDED . ' ' . xtc_date_short($trInfo->date_added));
                     $contents[] = array('text' => '' . TEXT_INFO_LAST_MODIFIED . ' ' . xtc_date_short($trInfo->last_modified));
                     $contents[] = array('text' => '<br />' . TEXT_INFO_RATE_DESCRIPTION . '<br />' . parse_multi_language_value($trInfo->tax_description, $_SESSION['language_code']));
