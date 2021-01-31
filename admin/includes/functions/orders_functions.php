@@ -114,7 +114,7 @@
                                       WHERE countries_iso_code_2 = '".$delivery_country_iso_code_2."'");
     $countries = xtc_db_fetch_array($countries_query);
 
-    $zone_id = '';
+    $zone_id = -1;
     if ($countries['countries_id'] > 0) {
       $zones_query = xtc_db_query("SELECT z.zone_id
                                      FROM " . TABLE_ORDERS . " o
@@ -122,8 +122,10 @@
                                           ON z.zone_name = o.delivery_state
                                     WHERE o.customers_id = '" . $customers_id . "'
                                       AND z.zone_country_id = '" . $countries['countries_id'] . "'");
-      $zones = xtc_db_fetch_array($zones_query);
-      $zone_id = $zones['zone_id'];
+      if (xtc_db_num_rows($zones_query) > 0) {
+        $zones = xtc_db_fetch_array($zones_query);
+        $zone_id = $zones['zone_id'];
+      }
     }
 
     $c_info_array = array(
