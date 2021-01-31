@@ -207,7 +207,7 @@ if (USE_WYSIWYG == 'true') {
           <div class="main pdg2">Products</div>
         </div>
         <?php
-        if ($action == 'edit' || $action == 'new')) {
+        if ($action == 'edit' || $action == 'new') {
           if ($action == 'new') {
             unset($_GET['mID']);
           } else {
