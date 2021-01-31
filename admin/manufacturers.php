@@ -126,7 +126,7 @@
     case 'deleteconfirm':
       $manufacturers_id = xtc_db_prepare_input($_GET['mID']);
 
-      if ($_POST['delete_image'] == 'on') {
+      if (isset($_POST['delete_image']) && $_POST['delete_image'] == 'on') {
         $manufacturer_query = xtc_db_query("SELECT * 
                                               FROM " . TABLE_MANUFACTURERS . " 
                                              WHERE manufacturers_id = '" . (int)$manufacturers_id . "'");
@@ -144,7 +144,7 @@
       xtc_db_query("DELETE FROM " . TABLE_MANUFACTURERS . " WHERE manufacturers_id = '" . (int)$manufacturers_id . "'");
       xtc_db_query("DELETE FROM " . TABLE_MANUFACTURERS_INFO . " WHERE manufacturers_id = '" . (int)$manufacturers_id . "'");
 
-      if ($_POST['delete_products'] == 'on') {
+      if (isset($_POST['delete_products']) && $_POST['delete_products'] == 'on') {
         $products_query = xtc_db_query("SELECT products_id 
                                           FROM " . TABLE_PRODUCTS . " 
                                          WHERE manufacturers_id = '" . (int)$manufacturers_id . "'");
