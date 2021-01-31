@@ -65,26 +65,30 @@
   
   $text_new_or_edit = ($_GET['action']=='new_category') ? TEXT_INFO_HEADING_NEW_CATEGORY : TEXT_INFO_HEADING_EDIT_CATEGORY;
 
-  $order_array='';
-  $order_array=array(array('id' => 'p.products_price', 'text' => TXT_PRICES),
-                     array('id' => 'pd.products_name', 'text' => TXT_NAME),
-                     array('id' => 'p.products_date_added', 'text' => TXT_DATE),
-                     array('id' => 'p.products_model', 'text' => TXT_MODEL),
-                     array('id' => 'p.products_ordered', 'text' => TXT_ORDERED),
-                     array('id' => 'p.products_sort', 'text' => TXT_SORT),
-                     array('id' => 'p.products_weight', 'text' => TXT_WEIGHT),
-                     array('id' => 'p.products_quantity', 'text' => TXT_QTY));
-  $default_value='pd.products_name';
-  $order_array_desc='';
-  $order_array_desc = array(array('id' => 'ASC', 'text' => TEXT_SORT_ASC),
-                            array('id' => 'DESC', 'text' => TEXT_SORT_DESC));
+  $order_array = array(
+    array('id' => 'p.products_price', 'text' => TXT_PRICES),
+    array('id' => 'pd.products_name', 'text' => TXT_NAME),
+    array('id' => 'p.products_date_added', 'text' => TXT_DATE),
+    array('id' => 'p.products_model', 'text' => TXT_MODEL),
+    array('id' => 'p.products_ordered', 'text' => TXT_ORDERED),
+    array('id' => 'p.products_sort', 'text' => TXT_SORT),
+    array('id' => 'p.products_weight', 'text' => TXT_WEIGHT),
+    array('id' => 'p.products_quantity', 'text' => TXT_QTY)
+  );
+  $default_value = 'pd.products_name';
 
-  $category_status_array = array(array('id' => '1', 'text' => TEXT_PRODUCT_AVAILABLE),
-                                 array('id' => '0', 'text' => TEXT_PRODUCT_NOT_AVAILABLE),
-                                 );
+  $order_array_desc = array(
+    array('id' => 'ASC', 'text' => TEXT_SORT_ASC),
+    array('id' => 'DESC', 'text' => TEXT_SORT_DESC)
+  );
+
+  $category_status_array = array(
+    array('id' => '1', 'text' => TEXT_PRODUCT_AVAILABLE),
+    array('id' => '0', 'text' => TEXT_PRODUCT_NOT_AVAILABLE)
+  );
 
   $form_action = isset($_GET['cID']) ? 'update_category' : 'insert_category';    
-  echo xtc_draw_form('new_category', FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . (int)$_GET['cID'] . '&action='.$form_action, 'post', 'enctype="multipart/form-data"' . $confirm_submit);
+  echo xtc_draw_form('new_category', FILENAME_CATEGORIES, 'cPath=' . $cPath . ((isset($_GET['cID'])) ? '&cID=' . (int)$_GET['cID'] : '') . '&action='.$form_action, 'post', 'enctype="multipart/form-data"' . $confirm_submit);
 ?>
 <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_news.png'); ?></div>
 <div class="pageHeading"><?php echo $cInfo->categories_name; ?><br /></div>
@@ -171,7 +175,11 @@
       for ($i = 0; $i < sizeof($languages); $i++) {
         echo ('<div id="tab_lang_' . $i . '">');
         $lng_image = xtc_image(DIR_WS_LANGUAGES . $languages[$i]['directory'] .'/admin/images/'. $languages[$i]['image'], $languages[$i]['name']);
-        $categories_desc_fields = $catfunc->get_categories_desc_fields($cInfo->categories_id, $languages[$i]['id']);
+        if (isset($_GET['cID'])) {
+          $categories_desc_fields = $catfunc->get_categories_desc_fields($cInfo->categories_id, $languages[$i]['id']);
+        } else {
+          $categories_desc_fields = $category_description_array;
+        }
         ?>
         <div class="bg_notice" style="height:5px;"></div>
         <div class="main bg_notice" style="padding:3px; line-height:20px;">
