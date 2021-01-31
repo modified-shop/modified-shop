@@ -23,11 +23,14 @@
     }
     
     if (!isset($products_quantity_array[$products_id])) {
+      $products_quantity_array[$products_id] = 0;
       $products_query = xtc_db_query("SELECT products_quantity
                                         FROM ".TABLE_PRODUCTS." 
                                        WHERE products_id = '".(int)$products_id."'");
-      $products = xtc_db_fetch_array($products_query);
-      $products_quantity_array[$products_id] = $products['products_quantity'];
+      if (xtc_db_num_rows($products_query) > 0) {
+        $products = xtc_db_fetch_array($products_query);
+        $products_quantity_array[$products_id] = $products['products_quantity'];
+      }
     }
     
     return $products_quantity_array[$products_id];
