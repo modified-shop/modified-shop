@@ -161,21 +161,24 @@ if (!$action) {
   switch ($action) {
     case 'edit_products_content':
     case 'new_products_content':
-      if ($action =='edit_products_content') {
-        $content_query=xtc_db_query("SELECT*
-                                       FROM ".TABLE_PRODUCTS_CONTENT."
-                                      WHERE content_id = '".$g_coID."'
-                                      LIMIT 1");
-        $content=xtc_db_fetch_array($content_query);
+      if ($action == 'edit_products_content') {
+        $content_query = xtc_db_query("SELECT *
+                                         FROM ".TABLE_PRODUCTS_CONTENT."
+                                        WHERE content_id = '".$g_coID."'
+                                        LIMIT 1");
+        $content = xtc_db_fetch_array($content_query);
+      } else {
+        $content = xtc_get_default_table_data(TABLE_PRODUCTS_CONTENT);
       }
+      
       // get products names
-      $products_query=xtc_db_query("SELECT products_id,
-                                           products_name
-                                      FROM ".TABLE_PRODUCTS_DESCRIPTION."
-                                     WHERE language_id = '".(int)$_SESSION['languages_id']."'
-                                  ORDER BY products_name");
+      $products_query = xtc_db_query("SELECT products_id,
+                                             products_name
+                                        FROM ".TABLE_PRODUCTS_DESCRIPTION."
+                                       WHERE language_id = '".(int)$_SESSION['languages_id']."'
+                                    ORDER BY products_name");
       $products_array = array();
-      while ($products_data=xtc_db_fetch_array($products_query)) {
+      while ($products_data = xtc_db_fetch_array($products_query)) {
         $products_array[] = array(
           'id' => $products_data['products_id'],
           'text' => $products_data['products_name'],

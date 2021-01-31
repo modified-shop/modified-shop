@@ -13,7 +13,7 @@
    Released under the GNU General Public License 
    --------------------------------------------------------------*/
    
- define('HEADING_TITLE','Content Manager');
+ defined('HEADING_TITLE') OR define('HEADING_TITLE','Content Manager');
  define('HEADING_CONTENT','Site');
  define('HEADING_PRODUCTS_CONTENT','Products content');
  define('HEADING_CONTENT_MANAGER_CONTENT','Site content');
@@ -40,7 +40,7 @@
  define('TEXT_YES','Yes');
  define('TEXT_NO','No');
  define('TABLE_HEADING_CONTENT_ACTION','Action');
- define('TEXT_DELETE','Delete');
+ defined('TEXT_DELETE') OR define('TEXT_DELETE','Delete');
  define('TEXT_EDIT','Edit');
  define('TEXT_PREVIEW','Preview');
  define('CONFIRM_DELETE','Delete Content?');
@@ -59,7 +59,7 @@
  define('TEXT_UPLOAD_FILE_LOCAL','(from local system)');
  define('TEXT_CHOOSE_FILE','Choose File:');
  define('TEXT_CHOOSE_FILE_DESC','You also can choose an existing file from the list.');
- define('TEXT_NO_FILE','Delete Selection');
+ defined('TEXT_NO_FILE') OR define('TEXT_NO_FILE','Delete Selection');
  define('TEXT_CHOOSE_FILE_SERVER','(If you uploaded your files already via FTP to <i>(media/content)</i>, you can select the file here.');
  define('TEXT_CURRENT_FILE','Current File:');
  define('TEXT_FILE_DESCRIPTION','<b>Info:</b><br />You also have the option to include a <b>.html</b> or <b>.htm</b> file as content.<br />If you select or upload a file, you have the option to create additional text in the text box.<br />This will then appear before the text from the uploaded file.<br />If you do not want additional text, please leave the text field empty.');
@@ -71,7 +71,7 @@
  define('TEXT_PARENT_DESCRIPTION','Assign to this document as sub-content');
  define('TEXT_PRODUCT','Product:');
  define('TEXT_LINK','Link:');
- define('TEXT_SORT_ORDER','Sort:'); 
+ defined('TEXT_SORT_ORDER') OR define('TEXT_SORT_ORDER','Sort:'); 
  define('TEXT_GROUP','coID');
  define('TEXT_GROUP_DESC','With this ID you link togehther similar subjects from different languages.');
 
@@ -95,6 +95,6 @@
  define('TEXT_STATUS_ACTIVE_DESCRIPTION', 'Enable content?');
  
  define('TEXT_CONTENT_DOUBLE_GROUP_INDEX', 'Duplicate Content Group Index! Please save again. The problem is thus automatically corrected!');
- define('TEXT_CHARACTERS','Signs');
+ defined('TEXT_CHARACTERS') OR define('TEXT_CHARACTERS','Signs');
  define('TEXT_KEEP_FILENAME', 'Keep filename:');
 ?>
