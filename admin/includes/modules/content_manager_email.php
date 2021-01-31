@@ -156,11 +156,13 @@ if (!$action) {
     case 'edit_email_content':
     case 'new_email_content':
       if ($action =='edit_email_content') {
-        $content_query=xtc_db_query("SELECT*
-                                       FROM ".TABLE_EMAIL_CONTENT."
-                                      WHERE content_id = '".$g_coID."'
-                                      LIMIT 1");
-        $content=xtc_db_fetch_array($content_query);
+        $content_query = xtc_db_query("SELECT *
+                                         FROM ".TABLE_EMAIL_CONTENT."
+                                        WHERE content_id = '".$g_coID."'
+                                        LIMIT 1");
+        $content = xtc_db_fetch_array($content_query);
+      } else {
+        $content = xtc_get_default_table_data(TABLE_EMAIL_CONTENT);
       }
       
       // get templates

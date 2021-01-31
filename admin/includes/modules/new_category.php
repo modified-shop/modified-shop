@@ -48,7 +48,9 @@
     $categories_meta_description = $_POST['categories_meta_description'];
     $categories_meta_keywords = $_POST['categories_meta_keywords'];
   } else {
-    $cInfo = new objectInfo(array());
+    $category_array = xtc_get_default_table_data(TABLE_CATEGORIES);
+    $category_description_array = xtc_get_default_table_data(TABLE_CATEGORIES_DESCRIPTION);
+    $cInfo = new objectInfo(array_merge($category_array, $category_description_array));
   }
 
   $languages = xtc_get_languages();

@@ -2473,6 +2473,32 @@
   }
 
 
+  /**
+   * xtc_get_default_table_data()
+   *
+   * @param string $table
+   * @return array
+   */
+  function xtc_get_default_table_data($table) {
+    $default_array = array();
+    $default_query = xtc_db_query("SHOW COLUMNS FROM ".$table."");
+    while ($default = xtc_db_fetch_array($default_query)) {      
+      $value = '';
+      if ($default['Default'] != '') {
+        $value = $default['Default'];
+      } elseif (strtolower($default['Null']) == 'no'
+                && (strpos(strtolower($default['Type']), 'int') !== false
+                    || strpos(strtolower($default['Type']), 'decimal') !== false
+                    )
+                )
+      {
+        $value = 0;
+      }
+      $default_array[$default['Field']] = $value ;
+    }
+    return $default_array;
+  }
+
   /********************************************** NOT USED FUNCTIONS **********************************************/
   
   /**

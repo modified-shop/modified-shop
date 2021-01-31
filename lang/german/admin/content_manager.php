@@ -13,7 +13,7 @@
    Released under the GNU General Public License 
    --------------------------------------------------------------*/
    
- define('HEADING_TITLE','Content Manager');
+ defined('HEADING_TITLE') OR define('HEADING_TITLE','Content Manager');
  define('HEADING_CONTENT','Seiten');
  define('HEADING_PRODUCTS_CONTENT','Artikel Content');
  define('HEADING_CONTENT_MANAGER_CONTENT','Seiten Content');
@@ -40,7 +40,7 @@
  define('TEXT_YES','Ja');
  define('TEXT_NO','Nein');
  define('TABLE_HEADING_CONTENT_ACTION','Aktion');
- define('TEXT_DELETE','L&ouml;schen');
+ defined('TEXT_DELETE') OR define('TEXT_DELETE','L&ouml;schen');
  define('TEXT_EDIT','Bearbeiten');
  define('TEXT_PREVIEW','Vorschau');
  define('CONFIRM_DELETE','Wollen Sie den Content wirklich l&ouml;schen?');
@@ -59,7 +59,7 @@
  define('TEXT_UPLOAD_FILE_LOCAL','(von Ihrem lokalen System)');
  define('TEXT_CHOOSE_FILE','Datei w&auml;hlen:');
  define('TEXT_CHOOSE_FILE_DESC','Sie k&ouml;nnen ebenfalls eine bereits verwendete Datei aus der Liste ausw&auml;hlen.');
- define('TEXT_NO_FILE','Auswahl L&ouml;schen');
+ defined('TEXT_NO_FILE') OR define('TEXT_NO_FILE','Auswahl L&ouml;schen');
  define('TEXT_CHOOSE_FILE_SERVER','(Falls Sie Ihre Dateien selbst via FTP auf Ihren Server gespeichert haben <i>(media/content)</i>, k&ouml;nnen Sie hier die Datei ausw&auml;hlen.');
  define('TEXT_CURRENT_FILE','Aktuelle Datei:');
  define('TEXT_FILE_DESCRIPTION','<b>Info:</b><br />Sie haben ebenfalls die M&ouml;glichkeit eine <b>.html</b> oder <b>.htm</b> Datei als Content einzubinden.<br />Falls Sie eine Datei ausw&auml;hlen oder hochladen, haben Sie die M&ouml;glichkeit zus&auml;tzlichen Text im Textfeld zu erstellen.<br />Dieser erscheint dann vor dem Text aus der hochgeladenen Datei.<br />Sollten Sie keine zus&auml;tzlichen Text w&uuml;nschen, lassen Sie das Textfeld bitte leer.');
@@ -71,7 +71,7 @@
  define('TEXT_PARENT_DESCRIPTION','Diesem Dokument als Unter-Content zuweisen');
  define('TEXT_PRODUCT','Artikel:');
  define('TEXT_LINK','Link:');
- define('TEXT_SORT_ORDER','Sortierung:');
+ defined('TEXT_SORT_ORDER') OR define('TEXT_SORT_ORDER','Sortierung:');
  define('TEXT_GROUP','coID:');
  define('TEXT_GROUP_DESC','Mit dieser ID verkn&uuml;pfen Sie gleiche Themen unterschiedlicher Sprachen miteinander.');
  
@@ -95,6 +95,6 @@
  define('TEXT_STATUS_ACTIVE_DESCRIPTION', 'Content aktivieren?');
   
  define('TEXT_CONTENT_DOUBLE_GROUP_INDEX', 'Doppelter Content Gruppen Index! Bitte neu speichern. Das Problem wird damit automatisch behoben!');
- define('TEXT_CHARACTERS','Zeichen');
+ defined('TEXT_CHARACTERS') OR define('TEXT_CHARACTERS','Zeichen');
  define('TEXT_KEEP_FILENAME', 'Dateiname beibehalten:');
 ?>

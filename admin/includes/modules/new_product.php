@@ -54,39 +54,8 @@
     $products_startpage_sort = $_POST['products_startpage_sort'];
     $pInfo->products_startpage = $_POST['products_startpage'];
   } else {
-    $product_array = array();
-    $product_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_PRODUCTS."");
-    while ($product = xtc_db_fetch_array($product_query)) {      
-      $value = '';
-      if ($product['Default'] != '') {
-        $value = $product['Default'];
-      } elseif (strtolower($product['Null']) == 'no'
-                && (strpos(strtolower($product['Type']), 'int') !== false
-                    || strpos(strtolower($product['Type']), 'decimal') !== false
-                    )
-                )
-      {
-        $value = 0;
-      }
-      $product_array[$product['Field']] = $value ;
-    }
-    
-    $product_description_array = array();
-    $product_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_PRODUCTS_DESCRIPTION."");
-    while ($product = xtc_db_fetch_array($product_query)) {      
-      $value = '';
-      if ($product['Default'] != '') {
-        $value = $product['Default'];
-      } elseif (strtolower($product['Null']) == 'no'
-                && (strpos(strtolower($product['Type']), 'int') !== false
-                    || strpos(strtolower($product['Type']), 'decimal') !== false
-                    )
-                )
-      {
-        $value = 0;
-      }
-      $product_description_array[$product['Field']] = $value ;
-    }
+    $product_array = xtc_get_default_table_data(TABLE_PRODUCTS);
+    $product_description_array = xtc_get_default_table_data(TABLE_PRODUCTS_DESCRIPTION);
     $pInfo = new objectInfo(array_merge($product_array, $product_description_array));
     $text_new_or_edit = TEXT_NEW_PRODUCT;
   }
