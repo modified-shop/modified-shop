@@ -323,7 +323,7 @@ if (isset($_GET['zID']) && ($saction == 'edit' || $saction == 'new')) {
             <div class="smallText pdg2 flt-r"><?php echo $zones_split->display_links($zones_query_numrows, $page_max_display_tax_results, MAX_DISPLAY_PAGE_LINKS, $zpage, '', 'zpage'); ?></div>
             <div class="clear"></div>
             <?php echo draw_input_per_page($PHP_SELF,$cfg_max_display_tax_key,$page_max_display_tax_results); ?> 
-            <div class="smallText pdg2 flt-r"><?php if (!xtc_not_null($action)) echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $zpage . '&zID=' . $zInfo->geo_zone_id . '&action=new_zone') . '">' . BUTTON_INSERT . '</a>'; ?></div>
+            <div class="smallText pdg2 flt-r"><?php if (!xtc_not_null($action)) echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $zpage . ((isset($zInfo)) ? '&zID=' . $zInfo->geo_zone_id : '') . '&action=new_zone') . '">' . BUTTON_INSERT . '</a>'; ?></div>
             <?php
             }
             ?>
