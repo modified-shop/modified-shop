@@ -1,5 +1,4 @@
 <?php
-
 /* -----------------------------------------------------------------------------------------
    $Id$   
 
@@ -27,9 +26,9 @@ if (count($data) > 0
     && count($data) >= MIN_DISPLAY_ALSO_PURCHASED
     )
 {
-	$module_smarty->assign('language', $_SESSION['language']);
-	$module_smarty->assign('module_content', $data);
-	
+  $module_smarty->assign('language', $_SESSION['language']);
+  $module_smarty->assign('module_content', $data);
+
   if (defined('PICTURESET_BOX')) {
     $module_smarty->assign('pictureset_box', get_pictureset_data(PICTURESET_BOX));
   }
@@ -37,10 +36,10 @@ if (count($data) > 0
     $module_smarty->assign('pictureset_row', get_pictureset_data(PICTURESET_ROW));
   }
 
-	// set cache ID
-	$module_smarty->caching = 0;
-	$module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/also_purchased.html');
+  // set cache ID
+  $module_smarty->caching = 0;
+  $module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/also_purchased.html');
 
-	$info_smarty->assign('MODULE_also_purchased', $module);
+  $info_smarty->assign('MODULE_also_purchased', $module);
 }
 ?>
