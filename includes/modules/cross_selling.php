@@ -15,6 +15,9 @@
    (c) 2003	 nextcommerce (also_purchased_products.php,v 1.9 2003/08/17); www.nextcommerce.org 
    ---------------------------------------------------------------------------------------*/
 
+// include needed functions
+require_once (DIR_FS_INC.'get_pictureset_data.inc.php');
+
 $module_smarty = new Smarty;
 $module_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 
