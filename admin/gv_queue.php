@@ -202,9 +202,9 @@
             <?php echo draw_input_per_page($PHP_SELF,$cfg_max_display_results_key,$page_max_display_results); ?>
           </td>
           <?php
+            $heading = array();
+            $contents = array();
             if (isset($gInfo) && is_object($gInfo)) {
-              $heading = array();
-              $contents = array();
               switch ($action) {
                 case 'delete':
                   $heading[] = array('text' => '<b>[' . $gInfo->unique_id . '] ' . xtc_datetime_short($gInfo->date_created) . ' ' . $currencies->format($gInfo->amount).'</b>');
