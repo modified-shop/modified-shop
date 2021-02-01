@@ -23,7 +23,7 @@
   switch ($action) {
     case 'insert':
     case 'save':
-      $cross_sell_id = (int)$_GET['oID'];
+      $cross_sell_id = ((isset($_GET['oID'])) ? (int)$_GET['oID'] : 0);
 
       $languages = xtc_get_languages();
       for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
