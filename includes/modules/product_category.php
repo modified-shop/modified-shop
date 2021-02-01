@@ -44,8 +44,15 @@ if (sizeof($module_content) >= 1) {
   $module_smarty->assign('language', $_SESSION['language']);
   $module_smarty->assign('module_content', $module_content);
 
+  if (defined('PICTURESET_BOX')) {
+    $module_smarty->assign('pictureset_box', get_pictureset_data(PICTURESET_BOX));
+  }
+  if (defined('PICTURESET_ROW')) {
+    $module_smarty->assign('pictureset_row', get_pictureset_data(PICTURESET_ROW));
+  }
+
   // set cache ID
-   if (!CacheCheck()) {
+  if (!CacheCheck()) {
     $module_smarty->caching = 0;
     $module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/products_category.html');
   } else {
