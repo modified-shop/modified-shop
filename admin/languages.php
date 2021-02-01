@@ -97,15 +97,6 @@
         break;
       case 'deleteconfirm':
         $lID = (int)$_GET['lID'];
-        $lng_query = xtc_db_query("SELECT languages_id 
-                                     FROM " . TABLE_LANGUAGES . " 
-                                    WHERE code = '" . xtc_db_input(DEFAULT_CURRENCY) . "'");
-        $lng = xtc_db_fetch_array($lng_query);
-        if ($lng['languages_id'] == $lID) {
-          xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " 
-                           SET configuration_value = '' 
-                         WHERE configuration_key = 'DEFAULT_CURRENCY'");
-        }
         xtc_db_query("DELETE FROM " . TABLE_CATEGORIES_DESCRIPTION . " WHERE language_id = '" . $lID . "'");
         xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_DESCRIPTION . " WHERE language_id = '" . $lID . "'");
         xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_OPTIONS . " WHERE language_id = '" . $lID . "'");
