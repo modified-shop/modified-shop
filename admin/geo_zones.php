@@ -163,35 +163,35 @@ require (DIR_WS_INCLUDES.'head.php');
 ?>
 <script type="text/javascript" src="includes/general.js"></script>
 <?php
-  if (isset($_GET['zID'])  && ($saction == 'edit' || $saction == 'new'))) {
-?>
-<script type="text/javascript"><!--
-function resetZoneSelected(theForm) {
-  if (theForm.state.value != '') {
-    theForm.zone_id.selectedIndex = '0';
-    if (theForm.zone_id.options.length > 0) {
-      theForm.state.value = '<?php echo JS_STATE_SELECT; ?>';
+if (isset($_GET['zID']) && ($saction == 'edit' || $saction == 'new')) {
+  ?>
+  <script type="text/javascript">
+    function resetZoneSelected(theForm) {
+      if (theForm.state.value != '') {
+        theForm.zone_id.selectedIndex = '0';
+        if (theForm.zone_id.options.length > 0) {
+          theForm.state.value = '<?php echo JS_STATE_SELECT; ?>';
+        }
+      }
     }
-  }
+
+    function update_zone(theForm) {
+      var NumState = theForm.zone_id.options.length;
+      var SelectedCountry = "";
+
+      while(NumState > 0) {
+        NumState--;
+        theForm.zone_id.options[NumState] = null;
+      }         
+
+      SelectedCountry = theForm.zone_country_id.options[theForm.zone_country_id.selectedIndex].value;
+
+    <?php echo xtc_js_zone_list('SelectedCountry', 'theForm', 'zone_id'); ?>
+
+    }
+  </script>
+  <?php
 }
-
-function update_zone(theForm) {
-  var NumState = theForm.zone_id.options.length;
-  var SelectedCountry = "";
-
-  while(NumState > 0) {
-    NumState--;
-    theForm.zone_id.options[NumState] = null;
-  }         
-
-  SelectedCountry = theForm.zone_country_id.options[theForm.zone_country_id.selectedIndex].value;
-
-<?php echo xtc_js_zone_list('SelectedCountry', 'theForm', 'zone_id'); ?>
-
-}
-//--></script>
-<?php
-  }
 ?>
 </head>
 <body>
