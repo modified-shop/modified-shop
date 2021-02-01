@@ -446,7 +446,7 @@
                         <td class="dataTableConfig col-left"><?php echo constant('TEXT_BANNERS_IMAGE'.strtoupper($images_type)); ?></td>
                         <td class="dataTableConfig col-middle">
                           <table class="tableConfig borderall">
-                            <?php if ($bInfo->{'banners_image'.$images_type.'_exist'} != '') { ?>
+                            <?php if (isset($bInfo->{'banners_image'.$images_type.'_exist'}) && $bInfo->{'banners_image'.$images_type.'_exist'} != '') { ?>
                               <tr>
                                 <td class="main"><img style="max-width:360px; margin-bottom:10px;" src="<?php echo DIR_WS_CATALOG_IMAGES . 'banner/'.$bInfo->{'banners_image'.$images_type.'_exist'}; ?>" /></td>
                               </tr>
@@ -458,7 +458,7 @@
                               <td class="main"><?php echo xtc_draw_file_field('banners_image'.$images_type.'_'.$languages[$i]['id']); ?></td>
                             </tr>    
                             <tr>
-                              <td class="main"><?php echo xtc_draw_pull_down_menu('banners_image'.$images_type.'_exist[' . $languages[$i]['id'] . ']', array_merge(array(array('id' => '','text' => (($bInfo->{'banners_image'.$images_type.'_exist'} != '') ? TEXT_NO_FILE : TEXT_SELECT))), ${'files'.$images_type}), $bInfo->{'banners_image'.$images_type.'_exist'}); ?></td>
+                              <td class="main"><?php echo xtc_draw_pull_down_menu('banners_image'.$images_type.'_exist[' . $languages[$i]['id'] . ']', array_merge(array(array('id' => '','text' => ((isset($bInfo->{'banners_image'.$images_type.'_exist'}) && $bInfo->{'banners_image'.$images_type.'_exist'} != '') ? TEXT_NO_FILE : TEXT_SELECT))), ${'files'.$images_type}), ((isset($bInfo->{'banners_image'.$images_type.'_exist'})) ? $bInfo->{'banners_image'.$images_type.'_exist'} : '')); ?></td>
                             </tr>
                           </table>
                         </td>
