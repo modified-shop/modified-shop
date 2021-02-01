@@ -24,7 +24,6 @@
   $cfg_max_display_results_key = 'MAX_DISPLAY_COUNTRIES_RESULTS';
   $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
 
-  $_GET['cID'] = isset($_GET['cID']) ? (int)$_GET['cID'] : '';
   $_GET['status'] = isset($_GET['status']) && $_GET['status'] != '' ? (int)$_GET['status'] : '';
   $status_param = $_GET['status'] !== '' ? '&status='.$_GET['status'] : '';
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
@@ -39,37 +38,42 @@
         'address_format_id' => xtc_db_prepare_input($_POST['address_format_id'])
       );
       xtc_db_perform(TABLE_COUNTRIES,$sql_data_array);
-      xtc_redirect(xtc_href_link(FILENAME_COUNTRIES));
+      $cID = xtc_db_insert_id();
+      xtc_redirect(xtc_href_link(FILENAME_COUNTRIES, 'page=' . $page . '&cID=' . $cID));      
       break;
     case 'save':       
+      $cID = (int)$_GET['cID'];
       $sql_data_array = array(
         'countries_name' => xtc_db_prepare_input($_POST['countries_name']), 
         'countries_iso_code_2' => xtc_db_prepare_input($_POST['countries_iso_code_2']), 
         'countries_iso_code_3' => xtc_db_prepare_input($_POST['countries_iso_code_3']), 
         'address_format_id' => xtc_db_prepare_input($_POST['address_format_id'])
       );
-      xtc_db_perform(TABLE_COUNTRIES, $sql_data_array, 'update', "countries_id = '".$_GET['cID']."'");
-      xtc_redirect(xtc_href_link(FILENAME_COUNTRIES, 'page=' . $page . '&cID=' . $_GET['cID'].$status_param));
+      xtc_db_perform(TABLE_COUNTRIES, $sql_data_array, 'update', "countries_id = '".$cID."'");
+      xtc_redirect(xtc_href_link(FILENAME_COUNTRIES, 'page=' . $page . '&cID=' . $cID . $status_param));
       break;
     case 'deleteconfirm':
-      xtc_db_query("DELETE FROM " . TABLE_COUNTRIES . " WHERE countries_id = '" . $_GET['cID'] . "'");
-      xtc_db_query("DELETE FROM " . TABLE_ZONES . " WHERE zone_country_id = '" . $_GET['cID'] . "'");
-      xtc_db_query("DELETE FROM " . TABLE_ZONES_TO_GEO_ZONES . " WHERE zone_country_id = '" . $_GET['cID'] . "'");
+      $cID = (int)$_GET['cID'];
+      xtc_db_query("DELETE FROM " . TABLE_COUNTRIES . " WHERE countries_id = '" . $cID . "'");
+      xtc_db_query("DELETE FROM " . TABLE_ZONES . " WHERE zone_country_id = '" . $cID . "'");
+      xtc_db_query("DELETE FROM " . TABLE_ZONES_TO_GEO_ZONES . " WHERE zone_country_id = '" . $cID . "'");
       xtc_redirect(xtc_href_link(FILENAME_COUNTRIES, 'page=' . $page));
       break;
     case 'setlflag':
+      $cID = (int)$_GET['cID'];
       $sql_data_array = array(
         'status' => xtc_db_prepare_input($_GET['flag'])
       );
-      xtc_db_perform(TABLE_COUNTRIES, $sql_data_array, 'update', "countries_id = '".$_GET['cID']."'");       
-      xtc_redirect(xtc_href_link(FILENAME_COUNTRIES, 'page=' . $page . '&cID=' . $_GET['cID']));      
+      xtc_db_perform(TABLE_COUNTRIES, $sql_data_array, 'update', "countries_id = '".$cID."'");       
+      xtc_redirect(xtc_href_link(FILENAME_COUNTRIES, 'page=' . $page . '&cID=' . $cID));      
     break;
     case 'setzones':
+      $cID = (int)$_GET['cID'];
       $sql_data_array = array(
         'required_zones' => xtc_db_prepare_input($_GET['required_zones'])
       );
-      xtc_db_perform(TABLE_COUNTRIES, $sql_data_array, 'update', "countries_id = '".$_GET['cID']."'");
-      xtc_redirect(xtc_href_link(FILENAME_COUNTRIES, 'page=' . $page . '&cID=' . $_GET['cID'].$status_param));
+      xtc_db_perform(TABLE_COUNTRIES, $sql_data_array, 'update', "countries_id = '".$cID."'");
+      xtc_redirect(xtc_href_link(FILENAME_COUNTRIES, 'page=' . $page . '&cID=' . $cID . $status_param));
     break;
     case 'setallflags':
       $sql_data_array = array(
@@ -231,7 +235,7 @@
                 $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE . '"/>&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_COUNTRIES, xtc_get_all_get_params(array('page', 'action', 'cID')).'page=' . $page . '&cID=' . $cInfo->countries_id) . '">' . BUTTON_CANCEL . '</a>');
                 break;
               default:
-                if (is_object($cInfo)) {
+                if (isset($cInfo) && is_object($cInfo)) {
                   $heading[] = array('text' => '<b>' . $cInfo->countries_name . '</b>');
 
                   $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_COUNTRIES, xtc_get_all_get_params(array('page', 'action', 'cID')).'page=' . $page . '&cID=' . $cInfo->countries_id . '&action=edit') . '">' . BUTTON_EDIT . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_COUNTRIES, xtc_get_all_get_params(array('page', 'action', 'cID')).'page=' . $page . '&cID=' . $cInfo->countries_id . '&action=delete') . '">' . BUTTON_DELETE . '</a>');
