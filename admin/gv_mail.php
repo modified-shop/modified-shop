@@ -37,6 +37,8 @@
   require(DIR_WS_CLASSES . 'currencies.php');
   $currencies = new currencies();
 
+  $action = (isset($_GET['action']) ? $_GET['action'] : '');
+
   // initiate template engine for mail
   $smarty = new Smarty;
 
@@ -114,139 +116,137 @@
   }
 
   $error = false;
-  if (isset($_GET['action']) && $_GET['action'] != '') {
-    switch ($_GET['action']) {
-      case 'send_email_to_user':
-        if (((isset($_POST['customers_email_address']) && $_POST['customers_email_address'] != '')
-             || (isset($_POST['email_to']) && $_POST['email_to'] != '')
-             ) && !isset($_POST['back'])
-            )
-        {
-          switch ($_POST['customers_email_address']) {
-            case '***':
+  switch ($action) {
+    case 'send_email_to_user':
+      if (((isset($_POST['customers_email_address']) && $_POST['customers_email_address'] != '')
+           || (isset($_POST['email_to']) && $_POST['email_to'] != '')
+           ) && !isset($_POST['back'])
+          )
+      {
+        switch ($_POST['customers_email_address']) {
+          case '***':
+            $mail_query = xtc_db_query("SELECT *
+                                          FROM " . TABLE_CUSTOMERS . " 
+                                      GROUP BY customers_email_address");
+            $mail_sent_to = TEXT_ALL_CUSTOMERS;
+            break;
+          case '**D':
+            $mail_query = xtc_db_query("SELECT *
+                                          FROM " . TABLE_NEWSLETTER_RECIPIENTS . " 
+                                         WHERE mail_status = '1'");
+            $mail_sent_to = TEXT_NEWSLETTER_CUSTOMERS;
+            break;
+          default:
+            $mail_sent_to = xtc_db_prepare_input($_POST['customers_email_address']);
+            if ($mail_sent_to != '') {
               $mail_query = xtc_db_query("SELECT *
                                             FROM " . TABLE_CUSTOMERS . " 
+                                           WHERE customers_status = '" . (int)$mail_sent_to . "'
                                         GROUP BY customers_email_address");
-              $mail_sent_to = TEXT_ALL_CUSTOMERS;
-              break;
-            case '**D':
-              $mail_query = xtc_db_query("SELECT *
-                                            FROM " . TABLE_NEWSLETTER_RECIPIENTS . " 
-                                           WHERE mail_status = '1'");
-              $mail_sent_to = TEXT_NEWSLETTER_CUSTOMERS;
-              break;
-            default:
-              $mail_sent_to = xtc_db_prepare_input($_POST['customers_email_address']);
-              if ($mail_sent_to != '') {
-                $mail_query = xtc_db_query("SELECT *
-                                              FROM " . TABLE_CUSTOMERS . " 
-                                             WHERE customers_status = '" . (int)$mail_sent_to . "'
-                                          GROUP BY customers_email_address");
-                                                          
-                $customers_status = xtc_get_customers_statuses(true);
-                $mail_sent_to = $customers_status[$mail_sent_to]['text'];
-              }
-              if (isset($_POST['email_to']) && $_POST['email_to'] != '') {
-                $mail_sent_to = $_POST['email_to'];
-              }
-              break;
+                                                        
+              $customers_status = xtc_get_customers_statuses(true);
+              $mail_sent_to = $customers_status[$mail_sent_to]['text'];
+            }
+            if (isset($_POST['email_to']) && $_POST['email_to'] != '') {
+              $mail_sent_to = $_POST['email_to'];
+            }
+            break;
+        }
+
+        $subject = xtc_db_prepare_input($_POST['subject']);
+        $message = xtc_db_prepare_input($_POST['message']);
+        $coupon_amount = xtc_db_prepare_input($_POST['coupon_amount']);
+        $coupon_code = '';
+        
+        if (isset($_GET['cid']) && $_GET['cid'] != '') {
+          $coupon_query = xtc_db_query("SELECT * 
+                                          FROM " . TABLE_COUPONS . " 
+                                         WHERE coupon_id = '" . (int)$_GET['cid'] . "'");
+          $coupon = xtc_db_fetch_array($coupon_query);
+          $coupon_code = $coupon['coupon_code'];
+
+          $coupon_amount = '';
+          if ($coupon_result['coupon_type'] == 'S') {
+            $coupon_amount = COUPON_INFO . COUPON_FREE_SHIPPING;
+          } else {
+            $coupon_amount = COUPON_INFO . $currencies->format($coupon['coupon_amount']) . ' ';
           }
-
-          $subject = xtc_db_prepare_input($_POST['subject']);
-          $message = xtc_db_prepare_input($_POST['message']);
-          $coupon_amount = xtc_db_prepare_input($_POST['coupon_amount']);
-          $coupon_code = '';
-          
-          if (isset($_GET['cid']) && $_GET['cid'] != '') {
-            $coupon_query = xtc_db_query("SELECT * 
-                                            FROM " . TABLE_COUPONS . " 
-                                           WHERE coupon_id = '" . (int)$_GET['cid'] . "'");
-            $coupon = xtc_db_fetch_array($coupon_query);
-            $coupon_code = $coupon['coupon_code'];
-
-            $coupon_amount = '';
-            if ($coupon_result['coupon_type'] == 'S') {
-              $coupon_amount = COUPON_INFO . COUPON_FREE_SHIPPING;
-            } else {
-              $coupon_amount = COUPON_INFO . $currencies->format($coupon['coupon_amount']) . ' ';
-            }
-            if ($coupon_result['coupon_type'] == 'P') {
-              $coupon_amount = COUPON_INFO . number_format($coupon['coupon_amount'], 2) . '% ';
-            }
-            if ($coupon_result['coupon_type'] == 'T') {
-              $coupon_amount = COUPON_INFO . COUPON_FREE_SHIPPING . ' | '. number_format($coupon['coupon_amount'], 2) . '% ';
-            }
-            if ($coupon_result['coupon_minimum_order'] > 0) {
-              $coupon_amount .= COUPON_MINORDER_INFO . $currencies->format($coupon['coupon_minimum_order']) . ' ';
-            }
-            if (trim($coupon_result['restrict_to_products']) != '' || trim($coupon['restrict_to_categories']) != '') {
-              $coupon_amount .= COUPON_RESTRICT_INFO;
-            }
-            
-            $coupon_amount = nl2br($coupon_amount);
+          if ($coupon_result['coupon_type'] == 'P') {
+            $coupon_amount = COUPON_INFO . number_format($coupon['coupon_amount'], 2) . '% ';
+          }
+          if ($coupon_result['coupon_type'] == 'T') {
+            $coupon_amount = COUPON_INFO . COUPON_FREE_SHIPPING . ' | '. number_format($coupon['coupon_amount'], 2) . '% ';
+          }
+          if ($coupon_result['coupon_minimum_order'] > 0) {
+            $coupon_amount .= COUPON_MINORDER_INFO . $currencies->format($coupon['coupon_minimum_order']) . ' ';
+          }
+          if (trim($coupon_result['restrict_to_products']) != '' || trim($coupon['restrict_to_categories']) != '') {
+            $coupon_amount .= COUPON_RESTRICT_INFO;
           }
           
-          if (isset($mail_query) 
-              && is_object($mail_query)
-              && xtc_db_num_rows($mail_query) > 0
-              )
-          {
-            while ($mail = xtc_db_fetch_array($mail_query)) {
-              $mail['subject'] = $subject; 
-              $mail['message'] = $message; 
-              $mail['coupon_amount'] = $coupon_amount;
-              $mail['coupon_code'] = $coupon_code;
-      
-              send_gv_mail($mail);
-            }
-          }
-  
-          if (isset($_POST['email_to']) && $_POST['email_to'] != '') {
+          $coupon_amount = nl2br($coupon_amount);
+        }
+        
+        if (isset($mail_query) 
+            && is_object($mail_query)
+            && xtc_db_num_rows($mail_query) > 0
+            )
+        {
+          while ($mail = xtc_db_fetch_array($mail_query)) {
             $mail['subject'] = $subject; 
-            $mail['message'] = $message;
-            $mail['coupon_code'] = $coupon_code;
+            $mail['message'] = $message; 
             $mail['coupon_amount'] = $coupon_amount;
-            $mail['customers_email_address'] = $_POST['email_to'];
-            $mail['customers_firstname'] = $_POST['email_to'];
-            $mail['customers_lastname'] = '';
-  
+            $mail['coupon_code'] = $coupon_code;
+    
             send_gv_mail($mail);
           }
-  
-          $messageStack->add_session(sprintf(NOTICE_EMAIL_SENT_TO, $mail_sent_to), 'success');
-          if (isset($_GET['oID']) && $_GET['oID'] != '') {
-            xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action', 'cID')).'action=edit'));
-          }
-          if (isset($_GET['cid']) && $_GET['cid'] != '') {
-            xtc_redirect(xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('action', 'cid')).'cid='.(int)$_GET['cid']));
-          }
-          xtc_redirect(xtc_href_link(FILENAME_GV_MAIL, xtc_get_all_get_params(array('action', 'cID'))));
         }
-        break;
-      
-      case 'preview':
-        if ((!isset($_POST['customers_email_address']) || $_POST['customers_email_address'] == '')
-            && (!isset($_POST['email_to']) || $_POST['email_to'] == '')
-            )
-        {
-          $messageStack->add(ERROR_NO_CUSTOMER_SELECTED, 'error');
-          $error = true;
+
+        if (isset($_POST['email_to']) && $_POST['email_to'] != '') {
+          $mail['subject'] = $subject; 
+          $mail['message'] = $message;
+          $mail['coupon_code'] = $coupon_code;
+          $mail['coupon_amount'] = $coupon_amount;
+          $mail['customers_email_address'] = $_POST['email_to'];
+          $mail['customers_firstname'] = $_POST['email_to'];
+          $mail['customers_lastname'] = '';
+
+          send_gv_mail($mail);
         }
-      
-        if ((!isset($_POST['coupon_amount']) || $_POST['coupon_amount'] == '')
-            && (!isset($_GET['cid']) || $_GET['cid'] == '')
-            )
-        {
-          $messageStack->add(ERROR_NO_AMOUNT_SELECTED, 'error');
-          $error = true;
+
+        $messageStack->add_session(sprintf(NOTICE_EMAIL_SENT_TO, $mail_sent_to), 'success');
+        if (isset($_GET['oID']) && $_GET['oID'] != '') {
+          xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action', 'cID')).'action=edit'));
         }
-        break;
-    }
+        if (isset($_GET['cid']) && $_GET['cid'] != '') {
+          xtc_redirect(xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('action', 'cid')).'cid='.(int)$_GET['cid']));
+        }
+        xtc_redirect(xtc_href_link(FILENAME_GV_MAIL, xtc_get_all_get_params(array('action', 'cID'))));
+      }
+      break;
+    
+    case 'preview':
+      if ((!isset($_POST['customers_email_address']) || $_POST['customers_email_address'] == '')
+          && (!isset($_POST['email_to']) || $_POST['email_to'] == '')
+          )
+      {
+        $messageStack->add(ERROR_NO_CUSTOMER_SELECTED, 'error');
+        $error = true;
+      }
+    
+      if ((!isset($_POST['coupon_amount']) || $_POST['coupon_amount'] == '')
+          && (!isset($_GET['cid']) || $_GET['cid'] == '')
+          )
+      {
+        $messageStack->add(ERROR_NO_AMOUNT_SELECTED, 'error');
+        $error = true;
+      }
+      break;
   }
 
   require (DIR_WS_INCLUDES.'head.php');
 
-  if (USE_WYSIWYG == 'true' && ($_GET['action'] != 'preview' || $error == true)) {
+  if (USE_WYSIWYG == 'true' && ($action != 'preview' || $error == true)) {
     $query=xtc_db_query("SELECT code FROM ". TABLE_LANGUAGES ." WHERE languages_id='".(int)$_SESSION['languages_id']."'");
     $data=xtc_db_fetch_array($query);
     echo xtc_wysiwyg('gv_mail', $data['code']);
@@ -278,7 +278,7 @@
         <div class="clear"></div>
         <div class="div_box brd-none pdg2">
           <?php
-          if ($_GET['action'] == 'preview' && $error === false) {
+          if ($action == 'preview' && $error === false) {
             switch ($_POST['customers_email_address']) {
               case '***':
                 $mail_sent_to = TEXT_ALL_CUSTOMERS;
