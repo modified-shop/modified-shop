@@ -47,7 +47,7 @@
       // delete coupon reports from DB
       xtc_db_query("DELETE FROM ".TABLE_COUPON_EMAIL_TRACK." WHERE coupon_id='".(int)$_GET['gid']."'");
 			xtc_db_query("DELETE FROM ".TABLE_COUPON_REDEEM_TRACK." WHERE coupon_id='".(int)$_GET['gid']."'");
-      xtc_redirect(xtc_href_link('gv_sent.php', xtc_get_all_get_params(array('action', 'gid'))));
+      xtc_redirect(xtc_href_link(FILENAME_GV_SENT, xtc_get_all_get_params(array('action', 'gid'))));
       break;
   }
   
@@ -109,9 +109,9 @@
                 $gInfo = new objectInfo($gv_list);
                 }
                 if (isset($gInfo) && is_object($gInfo) && $gv_list['coupon_id'] == $gInfo->coupon_id) {
-                  $tr_attributes = 'class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link('gv_sent.php', xtc_get_all_get_params(array('gid', 'action')) . 'gid=' . $gInfo->coupon_id . '&action=edit') .'\'"';
+                  $tr_attributes = 'class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_GV_SENT, xtc_get_all_get_params(array('gid', 'action')) . 'gid=' . $gInfo->coupon_id . '&action=edit') .'\'"';
                 } else {
-                  $tr_attributes = 'class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link('gv_sent.php', xtc_get_all_get_params(array('gid', 'action')) . 'gid=' . $gv_list['coupon_id']) .'\'"';
+                  $tr_attributes = 'class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_GV_SENT, xtc_get_all_get_params(array('gid', 'action')) . 'gid=' . $gv_list['coupon_id']) .'\'"';
                 }
               ?>
               <tr <?php echo $tr_attributes;?>>
@@ -132,15 +132,14 @@
           
           </td>
           <?php
+            $heading = array();
+            $contents = array();
             if (isset($gInfo) && is_object($gInfo)) {
-              $heading = array();
-              $contents = array();
-
               switch ($action) {
                 case 'delete':
                   $heading[] = array('text' => '<b>[' . $gInfo->coupon_id . '] ' . ' ' . $currencies->format($gInfo->coupon_amount).'</b>');
                   $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
-                  $contents[] = array('align' => 'center', 'text' => '<a class="button col-red" onclick="this.blur();" href="' . xtc_href_link('gv_sent.php','action=deleteconfirm&gid='.$gInfo->coupon_id,'NONSSL').'">'. BUTTON_CONFIRM . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link('gv_sent.php','action=cancel&gid=' . $gInfo->coupon_id,'NONSSL') . '">' . BUTTON_CANCEL . '</a>');
+                  $contents[] = array('align' => 'center', 'text' => '<a class="button col-red" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GV_SENT,'action=deleteconfirm&gid='.$gInfo->coupon_id,'NONSSL').'">'. BUTTON_CONFIRM . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GV_SENT,'action=cancel&gid=' . $gInfo->coupon_id,'NONSSL') . '">' . BUTTON_CANCEL . '</a>');
                   break;
                 
                 default:
@@ -160,7 +159,7 @@
                     $contents[] = array('text' => TEXT_INFO_CUSTOMERS_ID . ' ' . $redeem['customer_id']);
                   } else {
                     $contents[] = array('text' => '<br />' . TEXT_INFO_NOT_REDEEMED);
-                    $contents[] = array('align' => 'center','text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link('gv_sent.php','action=delete&gid=' . $gInfo->coupon_id,'NONSSL'). '">' . BUTTON_DELETE . '</a>');
+                    $contents[] = array('align' => 'center','text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GV_SENT,'action=delete&gid=' . $gInfo->coupon_id,'NONSSL'). '">' . BUTTON_DELETE . '</a>');
                   }
                   break;
               }
