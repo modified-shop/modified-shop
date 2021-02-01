@@ -160,7 +160,7 @@ require (DIR_WS_INCLUDES.'head.php');
             if (!xtc_not_null($action)) {
             ?>
               <div class="clear"></div>
-              <div class="pdg2 flt-r smallText"><?php echo xtc_button_link(BUTTON_INSERT, xtc_href_link(FILENAME_CAMPAIGNS, 'page=' . $page . '&cID=' . $cInfo->campaigns_id . '&action=new')); ?></div>
+              <div class="pdg2 flt-r smallText"><?php echo xtc_button_link(BUTTON_INSERT, xtc_href_link(FILENAME_CAMPAIGNS, 'page=' . $page . ((isset($cInfo)) ? '&cID=' . $cInfo->campaigns_id : '') . '&action=new')); ?></div>
 
             <?php
             }
