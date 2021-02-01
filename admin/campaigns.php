@@ -21,14 +21,13 @@
   $cfg_max_display_results_key = 'MAX_DISPLAY_CAMPAIGNS_RESULTS';
   $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
 
-  $_GET['cID'] = (isset($_GET['cID']) ? $_GET['cID'] : '');
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
   $page = (isset($_GET['page']) ? (int)$_GET['page'] : 1);
 
   switch ($action) {
     case 'insert' :
     case 'save' :
-      $campaigns_id = xtc_db_prepare_input($_GET['cID']);
+      $campaigns_id = (isset($_GET['cID']) ? $_GET['cID'] : 0);
       $campaigns_name = xtc_db_prepare_input($_POST['campaigns_name']);
       $campaigns_refID = xtc_db_prepare_input($_POST['campaigns_refID']);
 
@@ -37,7 +36,7 @@
         $error = true;
         $messageStack->add_session(TEXT_CAMPAIGNS_ERROR_REFID, 'warning');
       } else {
-        $where = "";
+        $where = '';
         if ($campaigns_id > 0) {
           $where = " AND campaigns_id != '".(int)$campaigns_id."' ";
         }
@@ -70,7 +69,7 @@
       }
       break;
     case 'deleteconfirm' :
-      $campaigns_id = xtc_db_prepare_input($_GET['cID']);
+      $campaigns_id = (int)$_GET['cID'];
       $check_query = xtc_db_query("SELECT * 
                                      FROM ".TABLE_CAMPAIGNS."
                                     WHERE campaigns_id = '".(int)$campaigns_id."'");
@@ -177,7 +176,7 @@ require (DIR_WS_INCLUDES.'head.php');
                 $contents[] = array ('text' => TEXT_NEW_INTRO);
                 $contents[] = array ('text' => '<br />'.TEXT_CAMPAIGNS_NAME.'<br />'.xtc_draw_input_field('campaigns_name', $campaigns_name));
                 $contents[] = array ('text' => '<br />'.TEXT_CAMPAIGNS_REFID.'<br />'.xtc_draw_input_field('campaigns_refID', $campaigns_refID));
-                $contents[] = array ('align' => 'center', 'text' => '<br />'.xtc_button(BUTTON_SAVE).'&nbsp;'.xtc_button_link(BUTTON_CANCEL, xtc_href_link(FILENAME_CAMPAIGNS, 'page='.$page.'&cID='.$_GET['cID'])));
+                $contents[] = array ('align' => 'center', 'text' => '<br />'.xtc_button(BUTTON_SAVE).'&nbsp;'.xtc_button_link(BUTTON_CANCEL, xtc_href_link(FILENAME_CAMPAIGNS, 'page='.$page.((isset($_GET['cID'])) ? '&cID='.$_GET['cID'] : ''))));
                 break;
               case 'edit' :
                 $heading[] = array ('text' => '<b>'.TEXT_HEADING_EDIT_CAMPAIGN.'</b>');
