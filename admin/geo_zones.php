@@ -364,7 +364,7 @@ if (isset($_GET['zID']) && ($saction == 'edit' || $saction == 'new')) {
                     break;
 
                   default:
-                    if (is_object($sInfo)) {
+                    if (isset($sInfo) && is_object($sInfo)) {
                       $heading[] = array('text' => '<b>' . $sInfo->countries_name . '</b>');
 
                       $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $zpage . ((isset($_GET['zID'])) ? '&zID=' . (int)$_GET['zID'] : '') . '&action=list&spage=' . $spage . '&sID=' . $sInfo->association_id . '&saction=edit') . '">' . BUTTON_EDIT . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $zpage . ((isset($_GET['zID'])) ? '&zID=' . (int)$_GET['zID'] : '') . '&action=list&spage=' . $spage . '&sID=' . $sInfo->association_id . '&saction=delete') . '">' . BUTTON_DELETE . '</a>');
@@ -427,7 +427,7 @@ if (isset($_GET['zID']) && ($saction == 'edit' || $saction == 'new')) {
                     break;
 
                   default:
-                    if (is_object($zInfo)) {
+                    if (isset($zInfo) && is_object($zInfo)) {
                       $heading[] = array('text' => '<b>' . parse_multi_language_value($zInfo->geo_zone_name, $_SESSION['language_code']) . '</b>');
 
                       $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $zpage . '&zID=' . $zInfo->geo_zone_id . '&action=edit_zone') . '">' . BUTTON_EDIT . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $zpage . '&zID=' . $zInfo->geo_zone_id . '&action=delete_zone') . '">' . BUTTON_DELETE . '</a>' . ' <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $zpage . '&zID=' . $zInfo->geo_zone_id . '&action=list') . '">' . BUTTON_DETAILS . '</a>');
