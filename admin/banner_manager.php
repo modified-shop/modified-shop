@@ -262,7 +262,7 @@
 
   if (USE_WYSIWYG == 'true') {
     require_once(DIR_FS_INC . 'xtc_wysiwyg.inc.php');
-    if (isset($_GET['action']) && $_GET['action'] == 'new') {
+    if ($action == 'new') {
       echo PHP_EOL . (!function_exists('editorJSLink') ? '<script type="text/javascript" src="includes/modules/fckeditor/fckeditor.js"></script>' : '') . PHP_EOL;
       for ($i = 0; $i < count($languages); $i++) {
         echo xtc_wysiwyg('banner_manager', $data['code'], $languages[$i]['id']);
@@ -300,7 +300,7 @@
           <?php
           if ($action == 'new') {
             $form_action = 'insert';
-            if (xtc_not_null($_POST)) {
+            if (isset($_POST) && count($_POST) > 0) {
               if (isset($_GET['bID'])) {
                 $form_action = 'update';
               }
@@ -316,7 +316,8 @@
               $banner = xtc_db_fetch_array($banner_query);
               $bInfo = new objectInfo($banner);
             } else {
-              $bInfo = new objectInfo(array());
+              $banner_array = xtc_get_default_table_data(TABLE_BANNERS);
+              $bInfo = new objectInfo($banner_array);
             }
 
             $groups_array = array(
@@ -398,13 +399,13 @@
                 include('includes/lang_tabs.php');
                 for ($i = 0, $n = count($languages); $i < $n; $i++) {
                   echo ('<div id="tab_lang_' . $i . '">');
-                  if (xtc_not_null($_POST)) {
+                  if (isset($_POST) && count($_POST) > 0) {
                     $banner = array();
                     foreach ($_POST as $key => $value) {
                       $banner[$key] = ((is_array($value)) ? $value[$languages[$i]['id']] : $value);
                     }
                     $bInfo = new objectInfo($banner);                  
-                  } elseif (isset($bInfo->banners_group)) {
+                  } elseif (isset($_GET['bID'])) {
                     $banner_query = xtc_db_query("SELECT *,
                                                          banners_image as banners_image_exist,
                                                          banners_image_mobile as banners_image_mobile_exist,
@@ -416,7 +417,7 @@
                     $banner = xtc_db_fetch_array($banner_query);
                     $bInfo = new objectInfo($banner);
                   } else {
-                    $bInfo = new objectInfo(array());
+                    $bInfo = new objectInfo($banner_array);
                   }
                   if ($bInfo->banners_id != '') {
                     echo xtc_draw_hidden_field('banners_id[' . $languages[$i]['id'] . ']', $bInfo->banners_id); 
