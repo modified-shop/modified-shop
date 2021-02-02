@@ -24,44 +24,50 @@
     switch ($action) {
     case 'insert':
     case 'save':
-        
-      $shipping_status_id = xtc_db_prepare_input($_GET['oID']);
+      $oID = ((isset($_GET['oID'])) ? (int)$_GET['oID'] : 0);
 
       $languages = xtc_get_languages();
       for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
         $shipping_status_name_array = $_POST['shipping_status_name'];
         $language_id = $languages[$i]['id'];
 
-        $sql_data_array = array('shipping_status_name' => xtc_db_prepare_input($shipping_status_name_array[$language_id]),
-                                'sort_order' => (int)$_POST['sort_order']);
+        $sql_data_array = array(
+          'shipping_status_name' => xtc_db_prepare_input($shipping_status_name_array[$language_id]),
+          'sort_order' => (int)$_POST['sort_order']
+        );
 
         if ($action == 'insert') {
-          if (!xtc_not_null($shipping_status_id)) {
-            $next_id_query = xtc_db_query("SELECT max(shipping_status_id) as shipping_status_id FROM " . TABLE_SHIPPING_STATUS . "");
+          if ($oID == 0) {
+            $next_id_query = xtc_db_query("SELECT max(shipping_status_id) as shipping_status_id FROM " . TABLE_SHIPPING_STATUS);
             $next_id = xtc_db_fetch_array($next_id_query);
-            $shipping_status_id = $next_id['shipping_status_id'] + 1;
+            $oID = $next_id['shipping_status_id'] + 1;
           }
 
-          $insert_sql_data = array('shipping_status_id' => $shipping_status_id,
-                                   'language_id' => $language_id);
+          $insert_sql_data = array(
+            'shipping_status_id' => $oID,
+            'language_id' => $language_id
+          );
           $sql_data_array = array_merge($sql_data_array, $insert_sql_data);
           xtc_db_perform(TABLE_SHIPPING_STATUS, $sql_data_array);
         } elseif ($action == 'save') {
-          $shipping_status_query = xtc_db_query("select * from ".TABLE_SHIPPING_STATUS." where language_id = '".$language_id."' and shipping_status_id = '".xtc_db_input($shipping_status_id)."'");
+          $shipping_status_query = xtc_db_query("SELECT * 
+                                                   FROM ".TABLE_SHIPPING_STATUS." 
+                                                  WHERE language_id = '".$language_id."' 
+                                                    AND shipping_status_id = '".$oID."'");
           if (xtc_db_num_rows($shipping_status_query) == 0) {
-            xtc_db_perform(TABLE_SHIPPING_STATUS, array ('shipping_status_id' => xtc_db_input($shipping_status_id), 'language_id' => $language_id));
+            xtc_db_perform(TABLE_SHIPPING_STATUS, array('shipping_status_id' => $oID, 'language_id' => $language_id));
           }
-          xtc_db_perform(TABLE_SHIPPING_STATUS, $sql_data_array, 'update', "shipping_status_id = '" . xtc_db_input($shipping_status_id) . "' and language_id = '" . $language_id . "'");
+          xtc_db_perform(TABLE_SHIPPING_STATUS, $sql_data_array, 'update', "shipping_status_id = '" . $oID . "' AND language_id = '" . $language_id . "'");
         }
       }
 
-      if ($_POST['delete_image'] == 'on') {
+      if (isset($_POST['delete_image']) && $_POST['delete_image'] == 'on') {
         $image_location = DIR_FS_DOCUMENT_ROOT . DIR_WS_IMAGES . $_POST['shipping_image'];        
-        if (file_exists($image_location)) {
-          @unlink($image_location);
+        if (is_file($image_location)) {
+          unlink($image_location);
           xtc_db_query("UPDATE " . TABLE_SHIPPING_STATUS . " 
                            SET shipping_status_image = '' 
-                         WHERE shipping_status_id = '" . xtc_db_input($shipping_status_id) . "'");
+                         WHERE shipping_status_id = '" . xtc_db_input($oID) . "'");
         }
       }
 
@@ -70,20 +76,20 @@
       if ($shipping_status_image = xtc_try_upload('shipping_status_image', DIR_FS_DOCUMENT_ROOT.DIR_WS_IMAGES, '644', $accepted_shipping_status_files_extensions, $accepted_shipping_status_files_mime_types)) {
         xtc_db_query("UPDATE " . TABLE_SHIPPING_STATUS . " 
                          SET shipping_status_image = '" . $shipping_status_image->filename . "' 
-                       WHERE shipping_status_id = '" . xtc_db_input($shipping_status_id) . "'");
+                       WHERE shipping_status_id = '" . xtc_db_input($oID) . "'");
       }
 
-      if ($_POST['default'] == 'on') {
+      if (isset($_POST['default']) && $_POST['default'] == 'on') {
         xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " 
-                         SET configuration_value = '" . xtc_db_input($shipping_status_id) . "' 
+                         SET configuration_value = '" . xtc_db_input($oID) . "' 
                        WHERE configuration_key = 'DEFAULT_SHIPPING_STATUS_ID'");
       }
 
-      xtc_redirect(xtc_href_link(FILENAME_SHIPPING_STATUS, 'page=' . $page . '&oID=' . $shipping_status_id));
+      xtc_redirect(xtc_href_link(FILENAME_SHIPPING_STATUS, 'page=' . $page . '&oID=' . $oID));
       break;
 
     case 'deleteconfirm':
-      $oID = xtc_db_prepare_input($_GET['oID']);
+      $oID = (int)$_GET['oID'];
 
       $shipping_status_query = xtc_db_query("SELECT configuration_value 
                                                FROM " . TABLE_CONFIGURATION . " 
@@ -99,23 +105,21 @@
                                                     WHERE shipping_status_id='".(int)$oID."'");
       $shipping_status_image = xtc_db_fetch_array($shipping_status_image_query);
       $image_location = DIR_FS_DOCUMENT_ROOT . DIR_WS_IMAGES . $shipping_status_image['shipping_status_image'];        
-      if (file_exists($image_location)) 
-        @unlink($image_location);
-      
+      if (is_file($image_location)) {
+        unlink($image_location);
+      }
       xtc_db_query("DELETE FROM " . TABLE_SHIPPING_STATUS . " WHERE shipping_status_id = '" . xtc_db_input($oID) . "'");
 
       xtc_redirect(xtc_href_link(FILENAME_SHIPPING_STATUS, 'page=' . $page));
       break;
 
     case 'delete':
-      $oID = xtc_db_prepare_input($_GET['oID']);
+      $oID = (int)$_GET['oID'];
 
       $remove_status = true;
       if ($oID == DEFAULT_SHIPPING_STATUS_ID) {
         $remove_status = false;
         $messageStack->add(ERROR_REMOVE_DEFAULT_SHIPPING_STATUS, 'error');
-      } else {
-
       }
       break;
   }
@@ -257,11 +261,15 @@
                 $contents = array('form' => xtc_draw_form('status', FILENAME_SHIPPING_STATUS, 'page=' . $page . '&oID=' . $oInfo->shipping_status_id  . '&action=deleteconfirm'));
                 $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
                 $contents[] = array('text' => '<br /><b>' . $oInfo->shipping_status_name . '</b>');
-                if ($remove_status) $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_SHIPPING_STATUS, 'page=' . $page . '&oID=' . $oInfo->shipping_status_id) . '">' . BUTTON_CANCEL . '</a>');
+                if ($remove_status) {
+                  $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_SHIPPING_STATUS, 'page=' . $page . '&oID=' . $oInfo->shipping_status_id) . '">' . BUTTON_CANCEL . '</a>');
+                } else {
+                  $contents[] = array('align' => 'center', 'text' => '<br /><a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_SHIPPING_STATUS, 'page=' . $page . '&oID=' . $oInfo->shipping_status_id) . '">' . BUTTON_CANCEL . '</a>');
+                }
                 break;
 
               default:
-                if (is_object($oInfo)) {
+                if (isset($oInfo) && is_object($oInfo)) {
                   $heading[] = array('text' => '<b>' . $oInfo->shipping_status_name . '</b>');
 
                   $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_SHIPPING_STATUS, 'page=' . $page . '&oID=' . $oInfo->shipping_status_id . '&action=edit') . '">' . BUTTON_EDIT . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_SHIPPING_STATUS, 'page=' . $page . '&oID=' . $oInfo->shipping_status_id . '&action=delete') . '">' . BUTTON_DELETE . '</a>');
