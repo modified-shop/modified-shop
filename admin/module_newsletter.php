@@ -123,7 +123,7 @@
             xtc_db_perform('module_newsletter_temp_'.$id, $sql_data_array);
           }
         }
-        xtc_redirect(xtc_href_link(FILENAME_MODULE_NEWSLETTER));
+        xtc_redirect(xtc_href_link(FILENAME_MODULE_NEWSLETTER, 'ID='.$id));
       }
       break;
 
