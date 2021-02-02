@@ -257,7 +257,11 @@
                 $contents = array('form' => xtc_draw_form('status', FILENAME_ORDERS_STATUS, 'page=' . $page . '&oID=' . $oInfo->orders_status_id  . '&action=deleteconfirm'));
                 $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
                 $contents[] = array('text' => '<br /><b>' . $oInfo->orders_status_name . '</b>');
-                if ($remove_status) $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_ORDERS_STATUS, 'page=' . $page . '&oID=' . $oInfo->orders_status_id) . '">' . BUTTON_CANCEL . '</a>');
+                if ($remove_status) {
+                  $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_ORDERS_STATUS, 'page=' . $page . '&oID=' . $oInfo->orders_status_id) . '">' . BUTTON_CANCEL . '</a>');
+                } else {
+                  $contents[] = array('align' => 'center', 'text' => '<br /><a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_ORDERS_STATUS, 'page=' . $page . '&oID=' . $oInfo->orders_status_id) . '">' . BUTTON_CANCEL . '</a>');
+                }
                 break;
 
               default:
