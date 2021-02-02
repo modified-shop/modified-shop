@@ -155,7 +155,7 @@ if (!$action) {
   switch ($action) {
     case 'edit_email_content':
     case 'new_email_content':
-      if ($action =='edit_email_content' && isset($g_coID) && $g_coID != 0) {
+      if ($action =='edit_email_content' && isset($g_coID) && (int)$g_coID != 0) {
         $content_query = xtc_db_query("SELECT *
                                          FROM ".TABLE_EMAIL_CONTENT."
                                         WHERE content_id = '".$g_coID."'
