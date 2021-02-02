@@ -21,11 +21,12 @@
         $carrier_tracking_link = xtc_db_prepare_input($_POST['carrier_tracking_link']);
         $carrier_sort_order = xtc_db_prepare_input($_POST['carrier_sort_order']);
         $date_added = xtc_db_prepare_input($_POST['carrier_date_added']);
-        $sql_data_array = array('carrier_name' => $carrier_name,
-                                'carrier_tracking_link' => $carrier_tracking_link,
-                                'carrier_sort_order' => $carrier_sort_order,
-                                'carrier_date_added' => 'now()'
-                                );
+        $sql_data_array = array(
+          'carrier_name' => $carrier_name,
+          'carrier_tracking_link' => $carrier_tracking_link,
+          'carrier_sort_order' => $carrier_sort_order,
+          'carrier_date_added' => 'now()'
+        );
         xtc_db_perform(TABLE_CARRIERS, $sql_data_array);
         xtc_redirect(xtc_href_link(FILENAME_PARCEL_CARRIERS));
         break;
@@ -35,11 +36,12 @@
         $carrier_name = xtc_db_prepare_input($_POST['carrier_name']);
         $carrier_tracking_link = xtc_db_prepare_input($_POST['carrier_tracking_link']);
         $carrier_sort_order = xtc_db_prepare_input($_POST['carrier_sort_order']);
-        $sql_data_array = array('carrier_name' => $carrier_name,
-                                'carrier_tracking_link' => $carrier_tracking_link,
-                                'carrier_sort_order' => $carrier_sort_order,
-                                'carrier_last_modified' => 'now()'
-                                );
+        $sql_data_array = array(
+          'carrier_name' => $carrier_name,
+          'carrier_tracking_link' => $carrier_tracking_link,
+          'carrier_sort_order' => $carrier_sort_order,
+          'carrier_last_modified' => 'now()'
+        );
         xtc_db_perform(TABLE_CARRIERS, $sql_data_array, 'update', "carrier_id = '" . (int)$carrier_id . "'");
         xtc_redirect(xtc_href_link(FILENAME_PARCEL_CARRIERS, 'page=' . $page_parcel . '&cID=' . $carrier_id));
         break;
@@ -100,11 +102,11 @@ require (DIR_WS_INCLUDES.'head.php');
                   $carriers_split = new splitPageResults($page_parcel, '20', $carriers_query_raw, $carriers_query_numrows);
                   $carriers_query = xtc_db_query($carriers_query_raw);
                   while ($carriers = xtc_db_fetch_array($carriers_query)) {
-                    if ((!isset($_GET['cID']) || (isset($_GET['cID']) && ($_GET['cID'] == $carriers['carrier_id']))) && !isset($carriersInfo) && (substr($action, 0, 3) != 'new')) {
-                      $carriersInfo = new objectInfo($carriers);
+                    if ((!isset($_GET['cID']) || (isset($_GET['cID']) && ($_GET['cID'] == $carriers['carrier_id']))) && !isset($cInfo) && (substr($action, 0, 3) != 'new')) {
+                      $cInfo = new objectInfo($carriers);
                     }
-                    if (isset($carriersInfo) && is_object($carriersInfo) && ($carriers['carrier_id'] == $carriersInfo->carrier_id) ) {
-                      echo '              <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_PARCEL_CARRIERS, 'page=' . $page_parcel . '&cID=' . $carriersInfo->carrier_id . '&action=edit') . '\'">' . "\n";
+                    if (isset($cInfo) && is_object($cInfo) && ($carriers['carrier_id'] == $cInfo->carrier_id) ) {
+                      echo '              <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_PARCEL_CARRIERS, 'page=' . $page_parcel . '&cID=' . $cInfo->carrier_id . '&action=edit') . '\'">' . "\n";
                     } else {
                       echo'              <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_PARCEL_CARRIERS, 'page=' . $page_parcel . '&cID=' . $carriers['carrier_id']) . '\'">' . "\n";
                     }
@@ -112,7 +114,7 @@ require (DIR_WS_INCLUDES.'head.php');
                       <td class="dataTableContent"><?php echo $carriers['carrier_name']; ?></td>
                       <td class="dataTableContent"><?php echo $carriers['carrier_tracking_link']; ?></td>
                       <td class="dataTableContent"><?php echo $carriers['carrier_sort_order']; ?></td>
-                      <td class="dataTableContent txta-r"><?php if (isset($carriersInfo) && is_object($carriersInfo) && ($carriers['carrier_id'] == $carriersInfo->carrier_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_PARCEL_CARRIERS, 'page=' . $page_parcel . '&cID=' . $carriers['carrier_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                      <td class="dataTableContent txta-r"><?php if (isset($cInfo) && is_object($cInfo) && ($carriers['carrier_id'] == $cInfo->carrier_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_PARCEL_CARRIERS, 'page=' . $page_parcel . '&cID=' . $carriers['carrier_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
                     </tr>
                     <?php
                   }
@@ -144,32 +146,32 @@ require (DIR_WS_INCLUDES.'head.php');
                 $contents[] = array('text' => TEXT_INFO_INSERT_INTRO);
                 $contents[] = array('text' => '<br />' . TEXT_INFO_CARRIER_NAME . '<br />' . xtc_draw_input_field('carrier_name'));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_CARRIER_TRACKING_LINK . '<br />' . xtc_draw_input_field('carrier_tracking_link','','style="width:300px;"'));
-                $contents[] = array('text' => '<br />' . TEXT_INFO_CARRIER_SORT_ORDER . '<br />' . xtc_draw_input_field('carrier_sort_order', $carriersInfo->carrier_sort_order));
+                $contents[] = array('text' => '<br />' . TEXT_INFO_CARRIER_SORT_ORDER . '<br />' . xtc_draw_input_field('carrier_sort_order'));
                 $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_INSERT . '"/>&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PARCEL_CARRIERS, 'page=' . $page_parcel) . '">' . BUTTON_CANCEL . '</a>');
                 break;
               case 'edit':
                 $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_EDIT_CARRIER . '</b>');
-                $contents = array('form' => xtc_draw_form('carrier', FILENAME_PARCEL_CARRIERS, 'page=' . $page_parcel . '&cID=' . $carriersInfo->carrier_id . '&action=save'));
+                $contents = array('form' => xtc_draw_form('carrier', FILENAME_PARCEL_CARRIERS, 'page=' . $page_parcel . '&cID=' . $cInfo->carrier_id . '&action=save'));
                 $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
-                $contents[] = array('text' => '<br />' . TEXT_INFO_CARRIER_NAME . '<br />' . xtc_draw_input_field('carrier_name', $carriersInfo->carrier_name));
-                $contents[] = array('text' => '<br />' . TEXT_INFO_CARRIER_TRACKING_LINK . '<br />' . xtc_draw_input_field('carrier_tracking_link', $carriersInfo->carrier_tracking_link,'style="width:300px;"'));
-                $contents[] = array('text' => '<br />' . TEXT_INFO_CARRIER_SORT_ORDER . '<br />' . xtc_draw_input_field('carrier_sort_order', $carriersInfo->carrier_sort_order));
-                $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/>&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PARCEL_CARRIERS, 'page=' . $page_parcel . '&cID=' . $carriersInfo->carrier_id) . '">' . BUTTON_CANCEL . '</a>');
+                $contents[] = array('text' => '<br />' . TEXT_INFO_CARRIER_NAME . '<br />' . xtc_draw_input_field('carrier_name', $cInfo->carrier_name));
+                $contents[] = array('text' => '<br />' . TEXT_INFO_CARRIER_TRACKING_LINK . '<br />' . xtc_draw_input_field('carrier_tracking_link', $cInfo->carrier_tracking_link,'style="width:300px;"'));
+                $contents[] = array('text' => '<br />' . TEXT_INFO_CARRIER_SORT_ORDER . '<br />' . xtc_draw_input_field('carrier_sort_order', $cInfo->carrier_sort_order));
+                $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/>&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PARCEL_CARRIERS, 'page=' . $page_parcel . '&cID=' . $cInfo->carrier_id) . '">' . BUTTON_CANCEL . '</a>');
                 break;
               case 'delete':
                 $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_DELETE_CARRIER . '</b>');
-                $contents = array('form' => xtc_draw_form('carrier', FILENAME_PARCEL_CARRIERS, 'page=' . $page_parcel . '&cID=' . $carriersInfo->carrier_id . '&action=deleteconfirm'));
+                $contents = array('form' => xtc_draw_form('carrier', FILENAME_PARCEL_CARRIERS, 'page=' . $page_parcel . '&cID=' . $cInfo->carrier_id . '&action=deleteconfirm'));
                 $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
-                $contents[] = array('text' => '<br /><b>' . $carriersInfo->carrier_name . '</b>');
-                $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE . '"/>&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PARCEL_CARRIERS, 'page=' . $page_parcel . '&cID=' . $carriersInfo->carrier_id) . '">' . BUTTON_CANCEL . '</a>');
+                $contents[] = array('text' => '<br /><b>' . $cInfo->carrier_name . '</b>');
+                $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE . '"/>&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PARCEL_CARRIERS, 'page=' . $page_parcel . '&cID=' . $cInfo->carrier_id) . '">' . BUTTON_CANCEL . '</a>');
                 break;
               default:
-                if (isset($carriersInfo) && is_object($carriersInfo)) {
-                  $heading[] = array('text' => '<b>' . $carriersInfo->carrier_name . '</b>');
-                  $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PARCEL_CARRIERS, 'page=' . $page_parcel . '&cID=' . $carriersInfo->carrier_id . '&action=edit') . '">' . BUTTON_EDIT . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PARCEL_CARRIERS, 'page=' . $page_parcel . '&cID=' . $carriersInfo->carrier_id . '&action=delete') . '">' . BUTTON_DELETE . '</a>');
-                  $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_ADDED . ' ' . xtc_date_short($carriersInfo->carrier_date_added));
-                  $contents[] = array('text' => '' . TEXT_INFO_LAST_MODIFIED . ' ' . xtc_date_short($carriersInfo->carrier_last_modified));
-                  $contents[] = array('text' => '<br />' . TEXT_INFO_CARRIER_NAME . '<br />' . $carriersInfo->carrier_name);
+                if (isset($cInfo) && is_object($cInfo)) {
+                  $heading[] = array('text' => '<b>' . $cInfo->carrier_name . '</b>');
+                  $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PARCEL_CARRIERS, 'page=' . $page_parcel . '&cID=' . $cInfo->carrier_id . '&action=edit') . '">' . BUTTON_EDIT . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PARCEL_CARRIERS, 'page=' . $page_parcel . '&cID=' . $cInfo->carrier_id . '&action=delete') . '">' . BUTTON_DELETE . '</a>');
+                  $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_ADDED . ' ' . xtc_date_short($cInfo->carrier_date_added));
+                  $contents[] = array('text' => '' . TEXT_INFO_LAST_MODIFIED . ' ' . xtc_date_short($cInfo->carrier_last_modified));
+                  $contents[] = array('text' => '<br />' . TEXT_INFO_CARRIER_NAME . '<br />' . $cInfo->carrier_name);
                 }
                 break;
             }
