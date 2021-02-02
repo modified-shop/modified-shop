@@ -752,7 +752,7 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
 			    $status_array[] = array('id' => 'Y', 'text' => TEXT_COUPON_ACTIVE);
 			    $status_array[] = array('id' => 'N', 'text' => TEXT_COUPON_INACTIVE);
 			    $status_array[] = array('id' => '*', 'text' => TEXT_COUPON_ALL);
-			    $status = $_GET['status'] ? xtc_db_prepare_input($_GET['status']) : 'Y';
+			    $status = isset($_GET['status']) ? xtc_db_prepare_input($_GET['status']) : 'Y';
 			    echo HEADING_TITLE_STATUS . ' &nbsp; ' . xtc_draw_pull_down_menu('status', $status_array, $status, '');
 			    //echo HEADING_TITLE_STATUS . ' ' . xtc_draw_pull_down_menu('status', $status_array, $status, 'onChange="this.form.submit();"');
 			    $input_id = !isset($_POST['input_id']) ? !isset($_GET['input_id']) ? '' : (int)$_GET['input_id'] : (int)$_POST['input_id'];
