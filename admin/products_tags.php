@@ -614,7 +614,7 @@ require (DIR_WS_INCLUDES.'head.php');
                   case 'new_value':
                     $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_NEW_VALUE . '</b>');
 
-                    $contents = array('form' => xtc_draw_form('values', FILENAME_PRODUCTS_TAGS, 'page=' . $page . '&oID=' . $_GET['oID'] . '&action=list&spage=' . $spage . '&vID=' . $_GET['vID'] . '&saction=insert_values', 'post', 'enctype="multipart/form-data"'));
+                    $contents = array('form' => xtc_draw_form('values', FILENAME_PRODUCTS_TAGS, 'page=' . $page . '&oID=' . $_GET['oID'] . '&action=list&spage=' . $spage . ((isset($_GET['vID'])) ? '&vID=' . $_GET['vID'] : '') . '&saction=insert_values', 'post', 'enctype="multipart/form-data"'));
                     $contents[] = array('text' => TEXT_INFO_NEW_VALUE_INTRO);
                     $contents[] = array('text' => '<br />' . TEXT_INFO_VALUE_NAME . '<br />');
                     for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
@@ -628,7 +628,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     $contents[] = array('text' => xtc_draw_file_field('values_image', false, 'class="imgupload"'));
                     $contents[] = array('text' => '<br />' . TEXT_INFO_VALUE_CONTENT . '<br />' . xtc_cfg_select_content('values_content_group', ''));
                     $contents[] = array('text' => '<br />' . TEXT_INFO_VALUE_SORT . '<br />' . xtc_draw_input_field('sort_order'));
-                    $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_INSERT . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PRODUCTS_TAGS, 'page=' . $page . '&oID=' . $_GET['oID'] . '&action=list&spage=' . $spage . '&vID=' . $_GET['vID']) . '">' . BUTTON_CANCEL . '</a>');
+                    $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_INSERT . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PRODUCTS_TAGS, 'page=' . $page . '&oID=' . $_GET['oID'] . '&action=list&spage=' . $spage . ((isset($_GET['vID'])) ? '&vID=' . $_GET['vID'] : '')) . '">' . BUTTON_CANCEL . '</a>');
                     break;
 
                   case 'edit_value':
@@ -687,7 +687,7 @@ require (DIR_WS_INCLUDES.'head.php');
                   case 'new_option':
                     $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_NEW_OPTION . '</b>');
 
-                    $contents = array('form' => xtc_draw_form('options', FILENAME_PRODUCTS_TAGS, 'page=' . $page . '&oID=' . $_GET['oID'] . '&action=insert_options'));
+                    $contents = array('form' => xtc_draw_form('options', FILENAME_PRODUCTS_TAGS, 'page=' . $page . '&action=insert_options'));
                     $contents[] = array('text' => TEXT_INFO_NEW_OPTION_INTRO);
                     $contents[] = array('text' => '<br />' . TEXT_INFO_OPTION_NAME . '<br />');
                     for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
@@ -699,7 +699,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     }
                     $contents[] = array('text' => '<br />' . TEXT_INFO_OPTION_CONTENT . '<br />' . xtc_cfg_select_content('options_content_group', ''));
                     $contents[] = array('text' => '<br />' . TEXT_INFO_OPTION_SORT . '<br />' . xtc_draw_input_field('sort_order'));
-                    $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_INSERT . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PRODUCTS_TAGS, 'page=' . $page . '&oID=' . $_GET['oID']) . '">' . BUTTON_CANCEL . '</a>');
+                    $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_INSERT . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PRODUCTS_TAGS, 'page=' . $page . ((isset($_GET['oID'])) ? '&oID=' . $_GET['oID'] : '')) . '">' . BUTTON_CANCEL . '</a>');
                     break;
 
                   case 'edit_option':
