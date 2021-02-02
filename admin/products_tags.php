@@ -17,9 +17,11 @@
   $iframe = (isset($_GET['iframe']) ? '&iframe=1' : '');
   $oldaction = isset($_GET['oldaction']) ? '&oldaction='.$_GET['oldaction'] : (isset($_POST['oldaction']) ? '&oldaction='.$_POST['oldaction']: '');
   $oldpage = isset($_GET['page']) ? '&page='.$_GET['page'] : (isset($_POST['page']) ? '&page='.$_POST['page']: '') ;
-
-  $_GET['current_product_id'] = (isset($_GET['pID']) ? (int)$_GET['pID'] : (int)$_GET['current_product_id']); //new_product or iframe
-
+  
+  if (isset($_GET['pID']) || isset($_GET['current_product_id'])) {
+    $_GET['current_product_id'] = (isset($_GET['pID']) ? (int)$_GET['pID'] : (int)$_GET['current_product_id']); //new_product or iframe
+  }
+  
   if (isset($_POST['current_product_id']) && $_POST['current_product_id'] > 0 && isset($_POST['action']) && $_POST['action'] == 'change') {
     require_once (DIR_WS_CLASSES.'categories.php');
     $catfunc = new categories();
@@ -30,16 +32,16 @@
   }
 
   if (isset($_GET['cPath'])) {
-    xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, 'cPath=' . $_GET['cPath'] . '&pID=' . $_GET['current_product_id'] . str_replace('old','',$oldaction). $oldpage));
+    xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, 'cPath=' . $_GET['cPath'] . ((isset($_GET['current_product_id'])) ? '&pID=' . $_GET['current_product_id'] : '') . str_replace('old','',$oldaction). $oldpage));
   }
 
-  if ($_GET['current_product_id'] > 0 && !isset($_POST['action'])) {
+  if (isset($_GET['current_product_id']) && $_GET['current_product_id'] > 0 && !isset($_POST['action'])) {
     $_POST = $_GET;
   }
 
-	if (isset($_GET['iframe']) || $_GET['current_product_id'] > 0) {
+	if (isset($_GET['iframe']) || (isset($_GET['current_product_id']) && $_GET['current_product_id'] > 0)) {
 	  require(DIR_WS_MODULES.'products_tags.php');
-    exit;    
+    exit;
 	}
 
   //display per page
