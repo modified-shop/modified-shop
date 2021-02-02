@@ -2,14 +2,15 @@
 /* -----------------------------------------------------------------------------------------
    $Id$
 
-   XT-Commerce - community made shopping
-   http://www.xt-commerce.com
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2003 XT-Commerce
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(coupon_admin.php,v 1.1.2.5 2003/05/13); www.oscommerce.com
+   (c) 2006 XT-Commerce
 
    Released under the GNU General Public License
    -----------------------------------------------------------------------------------------
@@ -18,7 +19,7 @@
    Credit Class/Gift Vouchers/Discount Coupons (Version 5.10)
    http://www.oscommerce.com/community/contributions,282
    Copyright (c) Strider | Strider@oscworks.com
-   Copyright (c  Nick Stanko of UkiDev.com, nick@ukidev.com
+   Copyright (c) Nick Stanko of UkiDev.com, nick@ukidev.com
    Copyright (c) Andre ambidex@gmx.net
    Copyright (c) 2001,2002 Ian C Wilson http://www.phesis.org
 
@@ -99,7 +100,7 @@ define('COUPON_CUSTOMERS_HELP', 'Choose the valid customers groups for this coup
 
 define('COUPON_ID', 'cID');
 define('BUTTON_DELETE_NO_CONFIRM', 'Delete without confirmation');
-define('TEXT_NONE', 'no restrictions');
+define('TEXT_NO_RESTRICTION', 'no restrictions');
 define('TEXT_COUPON_DELETE', 'Delete');
 define('TEXT_COUPON_STATUS', 'Status');
 define('TEXT_COUPON_DETAILS', 'Coupon details');

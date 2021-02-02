@@ -900,11 +900,11 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
                                         '<a class="button" href="'.xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('cid', 'action')). 'cid='.$cInfo->coupon_id,'NONSSL').'">'.BUTTON_CANCEL.'</a></div>'
                                        );
                   } else {
-                    $prod_details = TEXT_NONE;
+                    $prod_details = TEXT_NO_RESTRICTION;
                     if ($cInfo->restrict_to_products) {
                       $prod_details = '<a href="listproducts.php?cid=' . $cInfo->coupon_id . '" target="_blank" onclick="window.open(\'listproducts.php?cid=' . $cInfo->coupon_id . '\', \'Valid_Categories\', \'scrollbars=yes,resizable=yes,menubar=yes,width=600,height=600\'); return false"><strong>' . TEXT_VIEW_SHORT .'</strong></a>';
                     }
-                    $cat_details = TEXT_NONE;
+                    $cat_details = TEXT_NO_RESTRICTION;
                     if ($cInfo->restrict_to_categories) {
                       $cat_details = '<a href="listcategories.php?cid=' . $cInfo->coupon_id . '" target="_blank" onclick="window.open(\'listcategories.php?cid=' . $cInfo->coupon_id . '\', \'Valid_Categories\', \'scrollbars=yes,resizable=yes,menubar=yes,width=600,height=600\'); return false"><strong>' . TEXT_VIEW_SHORT .'</strong></a>';
                     }
