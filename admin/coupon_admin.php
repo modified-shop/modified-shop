@@ -97,7 +97,7 @@
         $update_errors = 1;
         $messageStack->add(ERROR_NO_COUPON_NAME, 'error');
       }
-      if ((!$_POST['coupon_amount']) && (!$_POST['coupon_free_ship'])) {
+      if (empty($_POST['coupon_amount']) && !isset($_POST['coupon_free_ship'])) {
         $update_errors = 1;
         $messageStack->add(ERROR_NO_COUPON_AMOUNT, 'error');
       }
@@ -127,9 +127,9 @@
       } else {
         $coupon_type = "F";
         if (substr($_POST['coupon_amount'], -1) == '%') $coupon_type='P';
-        if ($_POST['coupon_free_ship']) $coupon_type = 'S';
+        if (isset($_POST['coupon_free_ship'])) $coupon_type = 'S';
 
-        if ($_POST['coupon_free_ship'] && substr($_POST['coupon_amount'], -1) == '%') {
+        if (isset($_POST['coupon_free_ship']) && substr($_POST['coupon_amount'], -1) == '%') {
           $coupon_type = 'T';
         }
 
@@ -484,7 +484,7 @@ if (USE_WYSIWYG == 'true' && $_GET['action'] == 'email') {
         </tr>
         <tr>
           <td class="dataTableConfig col-left"><?php echo COUPON_FREE_SHIP; ?></td>
-          <td class="dataTableConfig col-single-right"><?php echo $_POST['coupon_free_ship'] ? TEXT_FREE_SHIPPING : TEXT_NO_FREE_SHIPPING; ?></td>
+          <td class="dataTableConfig col-single-right"><?php echo isset($_POST['coupon_free_ship']) ? TEXT_FREE_SHIPPING : TEXT_NO_FREE_SHIPPING; ?></td>
         </tr>
         <tr>
           <td class="dataTableConfig col-left"><?php echo COUPON_CODE; ?></td>
@@ -549,7 +549,6 @@ if (USE_WYSIWYG == 'true' && $_GET['action'] == 'email') {
       }
       echo xtc_draw_hidden_field('coupon_amount', $_POST['coupon_amount']).PHP_EOL;
       echo xtc_draw_hidden_field('coupon_min_order', $_POST['coupon_min_order']).PHP_EOL;
-      echo xtc_draw_hidden_field('coupon_free_ship', $_POST['coupon_free_ship']).PHP_EOL;
       echo xtc_draw_hidden_field('coupon_code', $_POST['coupon_code']).PHP_EOL;
       echo xtc_draw_hidden_field('coupon_uses_coupon', $_POST['coupon_uses_coupon']).PHP_EOL;
       echo xtc_draw_hidden_field('coupon_uses_user', $_POST['coupon_uses_user']).PHP_EOL;
@@ -558,6 +557,9 @@ if (USE_WYSIWYG == 'true' && $_GET['action'] == 'email') {
       echo xtc_draw_hidden_field('coupon_groups', ((isset($_POST['coupon_groups']) && $_POST['coupon_groups'][0] != 'all') ? implode(',', $_POST['coupon_groups']) : '')).PHP_EOL;
       echo xtc_draw_hidden_field('coupon_startdate', $_POST['coupon_startdate']).PHP_EOL;
       echo xtc_draw_hidden_field('coupon_finishdate', $_POST['coupon_finishdate']).PHP_EOL;
+      if (isset($_POST['coupon_free_ship'])) {
+        echo xtc_draw_hidden_field('coupon_free_ship', $_POST['coupon_free_ship']).PHP_EOL;
+      }
       ?>
       <div class="mrg5">
       <?php echo '<input type="submit" class="button" value="' . BUTTON_CONFIRM . '"/>'; ?>
