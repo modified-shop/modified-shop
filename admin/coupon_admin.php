@@ -275,12 +275,12 @@ if (USE_WYSIWYG == 'true' && $_GET['action'] == 'email') {
                 ?>
               </table>
               <?php
-              if (is_object($cc_split)) {
-              ?>
+              if (isset($cc_split) && is_object($cc_split)) {
+                ?>
                 <div class="smallText pdg2 flt-l">&nbsp;<?php echo $cc_split->display_count($cc_query_numrows, $page_max_display_results, $page, TEXT_DISPLAY_NUMBER_OF_COUPONS); ?>&nbsp;</div>
                 <div class="smallText pdg2 flt-r">&nbsp;<?php echo $cc_split->display_links($cc_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $page,xtc_get_all_get_params(array('page','uid'))); ?>&nbsp;</div>
                 <?php echo draw_input_per_page($PHP_SELF,$cfg_max_display_results_key,$page_max_display_results); ?>
-              <?php
+                <?php
               }
               ?>
               <div class="clear"></div>
@@ -288,14 +288,25 @@ if (USE_WYSIWYG == 'true' && $_GET['action'] == 'email') {
           <?php
           $heading = array();
           $contents = array();
-          $coupon_description_query = xtc_db_query("SELECT coupon_name FROM " . TABLE_COUPONS_DESCRIPTION . " WHERE coupon_id = '" . (int)$_GET['cid'] . "' AND language_id = '" . (int)$_SESSION['languages_id'] . "'");
+          $coupon_description_query = xtc_db_query("SELECT coupon_name 
+                                                      FROM " . TABLE_COUPONS_DESCRIPTION . " 
+                                                     WHERE coupon_id = '" . (int)$_GET['cid'] . "' 
+                                                       AND language_id = '" . (int)$_SESSION['languages_id'] . "'");
           $coupon_desc = xtc_db_fetch_array($coupon_description_query);
-          $count_customers = xtc_db_query("SELECT * FROM " . TABLE_COUPON_REDEEM_TRACK . " WHERE coupon_id = '" . (int)$_GET['cid'] . "' AND customer_id = '" . (int)$cInfo->customer_id . "'");
-
+          
+          $total = 0;
+          if (isset($cInfo)) {
+            $count_customers = xtc_db_query("SELECT * 
+                                               FROM " . TABLE_COUPON_REDEEM_TRACK . " 
+                                              WHERE coupon_id = '" . (int)$_GET['cid'] . "' 
+                                                AND customer_id = '" . (int)$cInfo->customer_id . "'");
+            $total = xtc_db_num_rows($count_customers);
+          }
+          
           $heading[] = array('text' => '<b>[' . (int)$_GET['cid'] . ']' . COUPON_NAME . ' ' . $coupon_desc['coupon_name'] . '</b>');
           $contents[] = array('text' => '<b>' . TEXT_REDEMPTIONS . '</b>');
-          $contents[] = array('text' => TEXT_REDEMPTIONS_TOTAL . '=' . $cc_query_numrows);
-          $contents[] = array('text' => TEXT_REDEMPTIONS_CUSTOMER . '=' . xtc_db_num_rows($count_customers));
+          $contents[] = array('text' => TEXT_REDEMPTIONS_TOTAL . ' ' . $cc_query_numrows);
+          $contents[] = array('text' => TEXT_REDEMPTIONS_CUSTOMER . ' ' . $total);
           $contents[] = array('text' => '<a class="button" href="' . xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('action','uid','oldaction'))) . '">' . BUTTON_BACK . '</a>');
           ?>
           <td class="boxRight">
