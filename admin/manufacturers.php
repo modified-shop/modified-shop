@@ -386,7 +386,7 @@ if (USE_WYSIWYG == 'true') {
                     break;
 
                   default:
-                    if (is_object($mInfo)) {
+                    if (isset($mInfo) && is_object($mInfo)) {
                       $heading[] = array('text' => '<b>' . $mInfo->manufacturers_name . '</b>');
                       $contents[] = array('align' => 'center', 'text' => xtc_button_link(BUTTON_EDIT, xtc_href_link(FILENAME_MANUFACTURERS, 'page=' . $page . '&mID=' . $mInfo->manufacturers_id . '&action=edit')) . '&nbsp;' . xtc_button_link(BUTTON_DELETE, xtc_href_link(FILENAME_MANUFACTURERS, 'page=' . $page . '&mID=' . $mInfo->manufacturers_id . '&action=delete')));
                       $contents[] = array('text' => '<br />' . TEXT_DATE_ADDED . ' ' . xtc_date_short($mInfo->date_added));
