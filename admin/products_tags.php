@@ -164,7 +164,7 @@
         while ($values = xtc_db_fetch_array($values_query)) {
           if ($values['values_image'] != '') {
             $image_location = DIR_FS_CATALOG_IMAGES . $values['values_image'];
-            if (file_exists($image_location)) {
+            if (is_file($image_location)) {
               @unlink($image_location);
               $sql_data_array = array('values_image' => '');
               xtc_db_perform(TABLE_PRODUCTS_TAGS_VALUES, $sql_data_array, 'update', "values_id = '" . $vID . "'"); 
@@ -192,7 +192,7 @@
                                      WHERE values_id = '" . $vID . "'");
       while ($values = xtc_db_fetch_array($values_query)) {
         $image_location = DIR_FS_CATALOG_IMAGES . $values['values_image'];
-        if (file_exists($image_location)) {
+        if (is_file($image_location)) {
           @unlink($image_location);
           $sql_data_array = array('values_image' => '');
           xtc_db_perform(TABLE_PRODUCTS_TAGS_VALUES, $sql_data_array, 'update', "values_id = '" . $vID . "'"); 
@@ -522,7 +522,7 @@ require (DIR_WS_INCLUDES.'head.php');
             <div class="smallText pdg2 flt-r"><?php echo $values_split->display_links($values_query_numrows, $page_max_display_values_results, MAX_DISPLAY_PAGE_LINKS, $spage, 'page=' . $page . '&oID=' . $_GET['oID'] . '&action=list', 'spage'); ?></div>
             <div class="clear"></div>
             <?php echo draw_input_per_page($PHP_SELF.'?'.xtc_get_all_get_params(array('page')),$cfg_max_display_values_key,$page_max_display_values_results); ?>
-            <div class="smallText pdg2 flt-r"><?php if (!xtc_not_null($saction)) echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PRODUCTS_TAGS, 'page=' . $page . '&oID=' . $_GET['oID']) . '">' . BUTTON_BACK . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PRODUCTS_TAGS, 'page=' . $page . '&oID=' . $_GET['oID'] . '&action=list&spage=' . $spage . '&vID=' . $vInfo->values_id . '&saction=new_value') . '">' . BUTTON_INSERT . '</a>'; ?></div>
+            <div class="smallText pdg2 flt-r"><?php if (!xtc_not_null($saction)) echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PRODUCTS_TAGS, 'page=' . $page . '&oID=' . $_GET['oID']) . '">' . BUTTON_BACK . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PRODUCTS_TAGS, 'page=' . $page . '&oID=' . $_GET['oID'] . '&action=list&spage=' . $spage . ((isset($vInfo)) ? '&vID=' . $vInfo->values_id : '') . '&saction=new_value') . '">' . BUTTON_INSERT . '</a>'; ?></div>
             <?php
             } else {
             ?>
@@ -598,8 +598,8 @@ require (DIR_WS_INCLUDES.'head.php');
             <div class="clear"></div>
             <?php echo draw_input_per_page($PHP_SELF,$cfg_max_display_options_key,$page_max_display_options_results); ?> 
             <div class="smallText pdg2 flt-r">
-              <?php if (!xtc_not_null($action)) echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PRODUCTS_TAGS, 'page=' . $page . '&oID=' . $oInfo->options_id . '&action=new_option') . '">' . BUTTON_INSERT . '</a>'; ?>
-              <?php if (!xtc_not_null($action)) echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PRODUCTS_TAGS, 'page=' . $page . '&oID=' . $oInfo->options_id . '&action=import_attributes') . '">' . BUTTON_IMPORT . '</a>'; ?>            
+              <?php if (!xtc_not_null($action)) echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PRODUCTS_TAGS, 'page=' . $page . ((isset($oInfo)) ? '&oID=' . $oInfo->options_id : '') . '&action=new_option') . '">' . BUTTON_INSERT . '</a>'; ?>
+              <?php if (!xtc_not_null($action)) echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PRODUCTS_TAGS, 'page=' . $page . ((isset($oInfo)) ? '&oID=' . $oInfo->options_id : '') . '&action=import_attributes') . '">' . BUTTON_IMPORT . '</a>'; ?>            
             </div>
             <?php
             }
@@ -673,7 +673,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     break;
 
                   default:
-                    if (is_object($vInfo)) {
+                    if (isset($vInfo) && is_object($vInfo)) {
                       $heading[] = array('text' => '<b>' . xtc_get_values_detail($vInfo->values_id, $_SESSION['languages_id'], 'values_name') . '</b>');
 
                       $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PRODUCTS_TAGS, 'page=' . $page . '&oID=' . $_GET['oID'] . '&action=list&spage=' . $spage . '&vID=' . $vInfo->values_id . '&saction=edit_value') . '">' . BUTTON_EDIT . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PRODUCTS_TAGS, 'page=' . $page . '&oID=' . $_GET['oID'] . '&action=list&spage=' . $spage . '&vID=' . $vInfo->values_id . '&saction=delete_value') . '">' . BUTTON_DELETE . '</a>');
@@ -768,7 +768,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     break;
 
                   default:
-                    if (is_object($oInfo)) {
+                    if (isset($oInfo) && is_object($oInfo)) {
                       $heading[] = array('text' => '<b>' . xtc_get_options_detail($oInfo->options_id, $_SESSION['languages_id'], 'options_name') . '</b>');
 
                       $contents[] = array('align' => 'center', 'text' => '<a class="button btnbox" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PRODUCTS_TAGS, 'page=' . $page . '&oID=' . $oInfo->options_id . '&action=edit_option') . '">' . BUTTON_EDIT . '</a> <a class="button btnbox" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PRODUCTS_TAGS, 'page=' . $page . '&oID=' . $oInfo->options_id . '&action=delete_option') . '">' . BUTTON_DELETE . '</a>' . ' <a class="button btnbox" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PRODUCTS_TAGS, 'page=' . $page . '&oID=' . $oInfo->options_id . '&action=list') . '">' . BUTTON_VALUES . '</a>');
