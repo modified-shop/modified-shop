@@ -52,7 +52,12 @@
         );
       }
 
-      if (isset($file['tmp_name']) && !empty($file['tmp_name']) && ($file['tmp_name'] != 'none') && is_uploaded_file($file['tmp_name'])) {
+      if (isset($file['tmp_name']) 
+          && !empty($file['tmp_name']) 
+          && $file['tmp_name'] != 'none' 
+          && is_uploaded_file($file['tmp_name'])
+          )
+      {
         if (sizeof($this->mime_types) > 0) {
           if (!in_array(strtolower($file['type']), $this->mime_types)) {
             $this->set_message(ERROR_FILETYPE_NOT_ALLOWED);
@@ -77,7 +82,7 @@
         return $this->check_destination();
         
       } else {
-        if (isset($file['tmp_name']) &&  (empty($file['tmp_name']) || $file['tmp_name'] == 'none')) {
+        if (isset($file['tmp_name']) &&  $file['tmp_name'] == 'none') {
           $this->set_message(WARNING_NO_FILE_UPLOADED);
         }
         return false;
