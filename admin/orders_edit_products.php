@@ -133,7 +133,7 @@ $currencies = new currencies();
       echo xtc_draw_hidden_field('action', 'product_search');
       echo xtc_draw_hidden_field('oID', $_GET['oID']);
       ?>
-      <td class="dataTableContent" style="width:40px"><?php echo xtc_draw_input_field('search', ((isset($_GET['search'])) ? $_GET['search'] : ''), 'size="30"');?></td>
+      <td class="dataTableContent"><?php echo xtc_draw_input_field('search', ((isset($_GET['search'])) ? $_GET['search'] : ''), 'size="30"');?></td>
       <td class="dataTableContent">
         <?php
         echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SEARCH . '"/>';
@@ -270,7 +270,7 @@ if (isset($_GET['action']) && $_GET['action'] =='product_search') {
           ?>
           <td class="dataTableContent">&nbsp;<?php echo $products['products_id'];?></td>
           <td class="dataTableContent">&nbsp;<?php echo $products_status;?></td>
-          <td class="dataTableContent">&nbsp;<?php echo '<a target="_blank" href="'. xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID', 'edit_action', 'search', 'page', 'oID')) . 'pID=' . $products['products_id'] ) . '&action=new_product' . '">' . xtc_image(DIR_WS_ICONS . 'icon_edit.gif', ICON_EDIT, '', '', $icon_padding). '</a> '. $products['products_name'];?></td>
+          <td class="dataTableContent">&nbsp;<?php echo '<a target="_blank" href="'. xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID', 'edit_action', 'search', 'page', 'oID')) . 'pID=' . $products['products_id'] ) . '&action=new_product' . '">' . xtc_image(DIR_WS_ICONS . 'icon_edit.gif', ICON_EDIT, '', '', 'style="padding-right:8px;"'). '</a> '. $products['products_name'];?></td>
           <td class="dataTableContent">&nbsp;<?php echo xtc_product_thumb_image($products['products_image'], $products['products_name'], '','',$admin_thumbs_size);?></td>
           <td class="dataTableContent">&nbsp;<?php echo $products['products_model'];?></td>
           <td class="dataTableContent">&nbsp;<?php echo $products['products_ean'];?></td>
