@@ -186,7 +186,7 @@ if (!$action) {
       }
 
       // get languages
-      $languages_selected = '';
+      $languages_selected = $_SESSION['language_code'];
       $languages_id = (int)$_SESSION['languages_id'];
       
       $languages_array = array();

@@ -55,7 +55,7 @@ if (!$action) {
           </td>
         </tr>
         <?php
-        if ($_GET['cID'] && $_GET['cID'] != '') {
+        if (isset($_GET['cID']) && $_GET['cID'] != '') {
           // display content elements
           $content_query=xtc_db_query("SELECT *
                                          FROM ".TABLE_CONTENT_MANAGER_CONTENT."
@@ -186,6 +186,9 @@ if (!$action) {
       }
 
       // get languages
+      $languages_selected = $_SESSION['language_code'];
+      $languages_id = (int)$_SESSION['languages_id'];
+
       $languages_array = array();
       for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
         if ($languages[$i]['id'] == $content['languages_id']) {
