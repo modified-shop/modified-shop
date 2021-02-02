@@ -56,6 +56,9 @@
       }
     } else {
       unset($_SESSION['customer_id']);
+      if (defined('RUN_MODE_ADMIN')) {
+        xtc_redirect(xtc_catalog_href_link(FILENAME_LOGOFF));
+      }
       xtc_redirect(xtc_href_link(FILENAME_LOGOFF, '', 'SSL'));
     }
   } else {
