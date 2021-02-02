@@ -367,7 +367,7 @@ if (xtc_not_null($action) && !$box) {
                                   $installed_modules[] = $file;
                                 }
                               }
-                              if ((!isset($module_class) || (isset($module_class) && ($module_class == $class))) && !isset($mInfo)) {
+                              if (($module_class == '' || (isset($module_class) && ($module_class == $class))) && !isset($mInfo)) {
                                 $module_info = get_module_info($module);
                                 $mInfo = new objectInfo($module_info);
                               }
