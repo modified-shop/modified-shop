@@ -29,7 +29,7 @@
     switch ($action) {
       case 'insert':
       case 'save':
-        if (isset($_GET['oID'])) $orders_status_id = xtc_db_prepare_input($_GET['oID']);
+        $orders_status_id = ((isset($_GET['oID'])) ? (int)$_GET['oID'] : 0);
 
         $languages = xtc_get_languages();
         for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
@@ -41,7 +41,7 @@
                                   );
 
           if ($action == 'insert') {
-            if (!xtc_not_null($orders_status_id)) {
+            if ($orders_status_id == 0) {
               $next_id_query = xtc_db_query("SELECT max(orders_status_id) as orders_status_id FROM " . TABLE_ORDERS_STATUS . "");
               $next_id = xtc_db_fetch_array($next_id_query);
               $orders_status_id = $next_id['orders_status_id'] + 1;
@@ -87,7 +87,7 @@
         break;
 
       case 'deleteconfirm':
-        $oID = xtc_db_prepare_input($_GET['oID']);
+        $oID = (int)$_GET['oID'];
 
         $orders_status_query = xtc_db_query("SELECT configuration_value 
                                                FROM " . TABLE_CONFIGURATION . " 
@@ -105,7 +105,7 @@
         break;
 
       case 'delete':
-        $oID = xtc_db_prepare_input($_GET['oID']);
+        $oID = (int)$_GET['oID'];
 
         $status_query = xtc_db_query("SELECT count(*) as count 
                                         FROM " . TABLE_ORDERS . " 
