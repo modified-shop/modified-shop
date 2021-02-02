@@ -231,7 +231,7 @@
                   break;
 
                 default:
-                  if (is_object($trInfo)) {
+                  if (isset($trInfo) && is_object($trInfo)) {
                     $heading[] = array('text' => '<b>' . parse_multi_language_value($trInfo->tax_class_title, $_SESSION['language_code']) . '</b>');
                     $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_TAX_RATES, 'page=' . $page . '&tID=' . $trInfo->tax_rates_id . '&action=edit') . '">' . BUTTON_EDIT . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_TAX_RATES, 'page=' . $page . '&tID=' . $trInfo->tax_rates_id . '&action=delete') . '">' . BUTTON_DELETE . '</a>');
                     $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_ADDED . ' ' . xtc_date_short($trInfo->date_added));
