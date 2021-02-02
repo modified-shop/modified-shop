@@ -612,7 +612,7 @@ require (DIR_WS_INCLUDES.'head.php');
               $contents = array();
 
               if ($action == 'list') {
-                switch ($action) {
+                switch ($saction) {
                   case 'new_value':
                     $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_NEW_VALUE . '</b>');
 
