@@ -20,7 +20,6 @@
         $carrier_name = xtc_db_prepare_input($_POST['carrier_name']);
         $carrier_tracking_link = xtc_db_prepare_input($_POST['carrier_tracking_link']);
         $carrier_sort_order = xtc_db_prepare_input($_POST['carrier_sort_order']);
-        $date_added = xtc_db_prepare_input($_POST['carrier_date_added']);
         $sql_data_array = array(
           'carrier_name' => $carrier_name,
           'carrier_tracking_link' => $carrier_tracking_link,
@@ -91,12 +90,7 @@ require (DIR_WS_INCLUDES.'head.php');
                   <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
                 </tr>
                 <?php
-                  $carriers_query_raw = "SELECT carrier_id,
-                                                carrier_name,
-                                                carrier_tracking_link,
-                                                carrier_sort_order,
-                                                carrier_date_added,
-                                                carrier_last_modified
+                  $carriers_query_raw = "SELECT *
                                            FROM " . TABLE_CARRIERS . "
                                        ORDER BY carrier_sort_order";
                   $carriers_split = new splitPageResults($page_parcel, '20', $carriers_query_raw, $carriers_query_numrows);
