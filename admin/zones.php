@@ -109,7 +109,7 @@ require (DIR_WS_INCLUDES.'head.php');
                 <td class="dataTableContent txta-c"><?php echo $zones['zone_code']; ?></td>
                 <td class="dataTableContent txta-r"><?php if (isset($cInfo) && is_object($cInfo) && $zones['zone_id'] == $cInfo->zone_id) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_ZONES, 'page=' . $page . '&cID=' . $zones['zone_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
-            <?php
+              <?php
               }
             ?>
             </table>
