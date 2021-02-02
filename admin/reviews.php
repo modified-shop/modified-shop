@@ -35,7 +35,6 @@
         
       case 'update':
         $reviews_rating = (int)$_POST['reviews_rating'];
-        $last_modified = xtc_db_prepare_input($_POST['last_modified']);
         $reviews_text = xtc_db_prepare_input($_POST['reviews_text']);
         
         $sql_data_array = array(
@@ -140,12 +139,6 @@ require (DIR_WS_INCLUDES.'head.php');
                 </table>
                 <div class="main mrg5 txta-r">
                   <?php 
-                    echo xtc_draw_hidden_field('reviews_id', $rInfo->reviews_id) . 
-                         xtc_draw_hidden_field('products_id', $rInfo->products_id) . 
-                         xtc_draw_hidden_field('customers_name', encode_htmlspecialchars($rInfo->customers_name)) . 
-                         xtc_draw_hidden_field('products_name', encode_htmlspecialchars($rInfo->products_name)) . 
-                         xtc_draw_hidden_field('products_image', $rInfo->products_image) . 
-                         xtc_draw_hidden_field('date_added', $rInfo->date_added);
                     echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_PREVIEW . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_REVIEWS, 'page=' . $page . '&rID=' . $_GET['rID']) . '">' . BUTTON_CANCEL . '</a>'; 
                   ?>
                 </div>
@@ -203,7 +196,6 @@ require (DIR_WS_INCLUDES.'head.php');
                 </table>
                 <?php
                 if (isset($_POST) && count($_POST) > 0) {
-                  // Re-Post all POST'ed variables
                   reset($_POST);
                   foreach ($_POST as $key => $value) echo '<input type="hidden" name="' . $key . '" value="' . encode_htmlspecialchars(stripslashes($value)) . '">';
                   ?>
@@ -308,7 +300,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     break;
 
                   default:
-                    if (is_object($rInfo)) {
+                    if (isset($rInfo) && is_object($rInfo)) {
                       $heading[] = array('text' => '<b>' . $rInfo->products_name . '</b>');
 
                       $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_REVIEWS, 'page=' . $page . '&rID=' . $rInfo->reviews_id . '&action=edit') . '">' . BUTTON_EDIT . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_REVIEWS, 'page=' . $page . '&rID=' . $rInfo->reviews_id . '&action=delete') . '">' . BUTTON_DELETE . '</a>');
