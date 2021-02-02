@@ -20,8 +20,7 @@
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
   $page = (isset($_GET['page']) ? (int)$_GET['page'] : 1);
   
-  if (xtc_not_null($action)) {
-    switch ($action) {
+  switch ($action) {
     case 'insert':
     case 'save':
       $oID = ((isset($_GET['oID'])) ? (int)$_GET['oID'] : 0);
