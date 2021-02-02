@@ -229,14 +229,16 @@
         
     // set allowed c.groups
     $group_ids = '';
-    if(isset($_POST['groups'])) foreach($_POST['groups'] as $b){
-      $group_ids .= 'c_'.$b."_group ,";
+    if(isset($_POST['groups']) && is_array($_POST['groups']))  {
+      foreach($_POST['groups'] as $b){
+        $group_ids .= 'c_'.$b."_group,";
+      }
     }
     $customers_statuses_array=xtc_get_customers_statuses();
     if (strpos($group_ids,'c_all_group')) {
-      $group_ids='c_all_group,';
+      $group_ids = 'c_all_group,';
       for ($i=0;$n=sizeof($customers_statuses_array),$i<$n;$i++) {
-        $group_ids .='c_'.$customers_statuses_array[$i]['id'].'_group,';
+        $group_ids .= 'c_'.$customers_statuses_array[$i]['id'].'_group,';
      }
     }
 
@@ -244,13 +246,12 @@
     $content_link = xtc_db_prepare_input($_POST['cont_link']);
     $content_language_code = xtc_db_prepare_input($_POST['language_code']);
     $product = xtc_db_prepare_input($_POST['product']);
-    $filename = xtc_db_prepare_input($_POST['file_name']);
-    $coID = xtc_db_prepare_input($_POST['coID']);
     $file_comment = xtc_db_prepare_input($_POST['file_comment']);
     $select_file = xtc_db_prepare_input($_POST['select_file']);
-    $group_ids = $group_ids;
-    $error = false;
 
+    $filename = ((isset($_POST['file_name'])) ? xtc_db_prepare_input($_POST['file_name']) : '');
+
+    $error = false;
     for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
       if ($languages[$i]['code'] == $content_language_code) {
         $content_language_id = $languages[$i]['id'];
@@ -277,25 +278,11 @@
           }
           copy(DIR_FS_CATALOG.'media/'.$path.'/'.$content_file_name, DIR_FS_CATALOG.'media/'.$path.'/backup/'.$content_file_name);
         }
-        if ($content_file_name == '') {
+        if (!isset($content_file_name) || $content_file_name == '') {
           $content_file_name = $filename;
         }
       } else {
         $content_file_name = $select_file;
-      }
-
-      // update data in table
-      // set allowed c.groups
-      $group_ids = '';
-      if(isset($_POST['groups'])) foreach($_POST['groups'] as $b){
-        $group_ids .= 'c_'.$b."_group ,";
-      }
-      $customers_statuses_array=xtc_get_customers_statuses();
-      if (strpos($group_ids,'c_all_group')) {
-        $group_ids = 'c_all_group,';
-        for ($i=0;$n=sizeof($customers_statuses_array),$i<$n;$i++) {
-          $group_ids .='c_'.$customers_statuses_array[$i]['id'].'_group,';
-       }
       }
 
       $sql_data_array = array(
@@ -309,6 +296,7 @@
       );
 
       if ($subaction == 'update') {
+        $coID = xtc_db_prepare_input($_POST['coID']);
         xtc_db_perform($table, $sql_data_array, 'update', "content_id = '" . $coID . "'");
       } else {
         xtc_db_perform($table, $sql_data_array);
