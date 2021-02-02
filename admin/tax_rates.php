@@ -144,7 +144,7 @@
                     $rates_split = new splitPageResults($page, '20', $rates_query_raw, $rates_query_numrows);
                     $rates_query = xtc_db_query($rates_query_raw);
                     while ($rates = xtc_db_fetch_array($rates_query)) {
-                      if ((!isset($_GET['tID']) || $_GET['tID'] == $rates['tax_class_id']) && !isset($trInfo) && (substr($action, 0, 3) != 'new')) {
+                      if ((!isset($_GET['tID']) || $_GET['tID'] == $rates['tax_rates_id']) && !isset($trInfo) && (substr($action, 0, 3) != 'new')) {
                         $trInfo = new objectInfo($rates);
                       }
 
