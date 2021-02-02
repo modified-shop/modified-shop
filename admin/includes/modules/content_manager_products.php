@@ -55,7 +55,7 @@ if (!$action) {
           </td>
         </tr>
         <?php
-        if ($_GET['pID'] && $_GET['pID'] != '') {
+        if (isset($_GET['pID']) && $_GET['pID'] != '') {
           // display content elements
           $content_query=xtc_db_query("SELECT *
                                          FROM ".TABLE_PRODUCTS_CONTENT."
@@ -161,7 +161,7 @@ if (!$action) {
   switch ($action) {
     case 'edit_products_content':
     case 'new_products_content':
-      if ($action == 'edit_products_content') {
+      if ($action == 'edit_products_content' && isset($g_coID) && $g_coID > 0) {
         $content_query = xtc_db_query("SELECT *
                                          FROM ".TABLE_PRODUCTS_CONTENT."
                                         WHERE content_id = '".$g_coID."'

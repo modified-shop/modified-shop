@@ -161,7 +161,7 @@ if (!$action) {
   switch ($action) {
     case 'edit_content_manager_content':
     case 'new_content_manager_content':
-      if ($action =='edit_content_manager_content') {
+      if ($action =='edit_content_manager_content' && isset($g_coID) && $g_coID != 0) {
         $content_query = xtc_db_query("SELECT *
                                          FROM ".TABLE_CONTENT_MANAGER_CONTENT."
                                         WHERE content_id = '".$g_coID."'
