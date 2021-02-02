@@ -347,7 +347,7 @@
                       </td>
                     </tr>
                     <?php
-                    if ($_GET['ID'] != '' && $_GET['ID'] == $news_data[$i]['id']) {
+                    if (isset($_GET['ID']) && $_GET['ID'] != '' && $_GET['ID'] == $news_data[$i]['id']) {
                       $total_query = xtc_db_query("SELECT count(*) as count
                                                      FROM module_newsletter_temp_".(int)$_GET['ID']);
                       $total_data = xtc_db_fetch_array($total_query);
