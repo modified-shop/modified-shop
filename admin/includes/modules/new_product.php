@@ -94,7 +94,7 @@
   $form_action = isset($_GET['pID']) ? 'update_product' : 'insert_product';
   $form_action .= ((isset($_GET['origin']) && $_GET['origin'] != '') ? '&origin='.$_GET['origin'] : '');
   
-  echo xtc_draw_form('new_product', FILENAME_CATEGORIES, 'cPath=' . $_GET['cPath'] . $catfunc->page_parameter . ((isset($_GET['pID'])) ? '&pID=' . $_GET['pID'] : '') . '&action='.$form_action, 'post', 'id="new_product" enctype="multipart/form-data"' . $confirm_submit); 
+  echo xtc_draw_form('new_product', FILENAME_CATEGORIES, ((isset($_GET['cPath'])) ? 'cPath=' . $_GET['cPath'] : '') . $catfunc->page_parameter . ((isset($_GET['pID'])) ? '&pID=' . $_GET['pID'] : '') . '&action='.$form_action, 'post', 'id="new_product" enctype="multipart/form-data"' . $confirm_submit); 
   echo xtc_draw_hidden_field('products_quantity_before_edit', isset($prod_quantity['products_quantity']) ? $prod_quantity['products_quantity'] : 0);
   echo '<input type="submit" style="display:none;" value="'.BUTTON_SAVE.'"/>';
   ?>
