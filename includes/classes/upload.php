@@ -77,7 +77,7 @@
         return $this->check_destination();
         
       } else {
-        if (!isset($file['tmp_name']) || empty($file['tmp_name']) || $file['tmp_name'] == 'none') {
+        if (isset($file['tmp_name']) &&  (empty($file['tmp_name']) || $file['tmp_name'] == 'none')) {
           $this->set_message(WARNING_NO_FILE_UPLOADED);
         }
         return false;
