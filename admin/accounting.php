@@ -59,7 +59,7 @@
             $exists = true;
           }
         }
-        if ($exists === false) {
+        if ($exists === false && $new_field != '') {
           xtc_db_query("ALTER TABLE ".TABLE_ADMIN_ACCESS." ADD ".$new_field." INT(1) NOT NULL DEFAULT 0;");
           xtc_db_query("UPDATE ".TABLE_ADMIN_ACCESS."
                            SET ".$new_field." = '1'
