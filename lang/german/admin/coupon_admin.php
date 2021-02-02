@@ -99,7 +99,7 @@ define('COUPON_CUSTOMERS_HELP', 'W&auml;hlen Sie die g&uuml;ltigen Kundengruppen
 
 define('COUPON_ID', 'cID');
 define('BUTTON_DELETE_NO_CONFIRM', 'ohne Abfrage l&ouml;schen');
-define('TEXT_NONE', 'keine Einschr&auml;nkung');
+define('TEXT_NO_RESTRICTION', 'keine Einschr&auml;nkung');
 define('TEXT_COUPON_DELETE', 'L&ouml;schen');
 define('TEXT_COUPON_STATUS', 'Status');
 define('TEXT_COUPON_DETAILS', 'Coupon Daten');
