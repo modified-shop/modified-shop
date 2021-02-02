@@ -624,6 +624,24 @@ if (USE_WYSIWYG == 'true' && $_GET['action'] == 'email') {
     if (isset($_POST['coupon_finishdate'])) $coupon_finishdate = xtc_db_prepare_input($_POST['coupon_finishdate']);
     if (isset($_POST['coupon_groups'])) $coupon_groups = ((is_array($_POST['coupon_groups'])) ? $_POST['coupon_groups'] : explode(',', xtc_db_prepare_input($_POST['coupon_groups'])));
     
+    if (!isset($coupon_amount)) {
+      $coupon_amount = '';
+    }
+    if (!isset($coupon_min_order)) {
+      $coupon_min_order = '';
+    }
+    if (!isset($coupon_code)) {
+      $coupon_code = '';
+    }
+    if (!isset($coupon_products)) {
+      $coupon_products = '';
+    }
+    if (!isset($coupon_categories)) {
+      $coupon_categories = '';
+    }
+    if (!isset($coupon_free_ship)) {
+      $coupon_free_ship = false;
+    }
     if (isset($coupon_groups)) {
       $coupon_groups = array_filter($coupon_groups);
     }
@@ -652,8 +670,8 @@ if (USE_WYSIWYG == 'true' && $_GET['action'] == 'email') {
         $coupon_desc[$language_id] = xtc_db_prepare_input($_POST['coupon_desc'][$language_id]);
       }
       $lang_img = '<span style="float:left; padding-top:2px;">'. xtc_image(DIR_WS_LANGUAGES . $languages[$i]['directory'].'/admin/images/'.$languages[$i]['image'], $languages[$i]['name']) . '</span>';
-      $input_name .= $lang_img . '&nbsp;'. xtc_draw_input_field('coupon_name[' . $languages[$i]['id'] . ']', $coupon_name[$language_id]) . '&nbsp;<br />';
-      $input_desc .= $lang_img . '&nbsp;'. xtc_draw_textarea_field('coupon_desc[' . $languages[$i]['id'] . ']','physical','24','3', $coupon_desc[$language_id], 'class="textareaModule"') . '&nbsp;<br />';
+      $input_name .= $lang_img . '&nbsp;'. xtc_draw_input_field('coupon_name[' . $languages[$i]['id'] . ']', ((isset($coupon_name[$language_id])) ? $coupon_name[$language_id] : '')) . '&nbsp;<br />';
+      $input_desc .= $lang_img . '&nbsp;'. xtc_draw_textarea_field('coupon_desc[' . $languages[$i]['id'] . ']','physical','24','3', ((isset($coupon_desc[$language_id])) ? $coupon_desc[$language_id] : ''), 'class="textareaModule"') . '&nbsp;<br />';
     }
     ?>
     <td class="boxCenter">
