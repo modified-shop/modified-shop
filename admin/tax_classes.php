@@ -223,7 +223,7 @@
                 break;
 
               default:
-                if (is_object($tcInfo)) {
+                if (isset($tcInfo) && is_object($tcInfo)) {
                   $heading[] = array('text' => '<b>' . parse_multi_language_value($tcInfo->tax_class_title, $_SESSION['language_code']) . '</b>');
 
                   $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_TAX_CLASSES, 'page=' . $page . '&tID=' . $tcInfo->tax_class_id . '&action=edit') . '">' . BUTTON_EDIT . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_TAX_CLASSES, 'page=' . $page . '&tID=' . $tcInfo->tax_class_id . '&action=delete') . '">' . BUTTON_DELETE . '</a>');
