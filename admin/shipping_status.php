@@ -178,14 +178,14 @@
                   if (DEFAULT_SHIPPING_STATUS_ID == $shipping_status['shipping_status_id']) {
                     echo '<td class="dataTableContent" align="left">';
                     if ($shipping_status['shipping_status_image'] != '') {
-                      echo xtc_image(DIR_WS_CATALOG.DIR_WS_IMAGES . $shipping_status['shipping_status_image'] , IMAGE_ICON_INFO);
+                      echo xtc_image(DIR_WS_CATALOG.DIR_WS_IMAGES . $shipping_status['shipping_status_image'], IMAGE_ICON_INFO, '', '', 'style="border:0;max-width:200px;max-height:60px;"');
                     }
                     echo '</td>';
                     echo '<td class="dataTableContent"><b>' . $shipping_status['shipping_status_name'] . ' (' . TEXT_DEFAULT . ')</b></td>' . "\n";
                   } else {
                     echo '<td class="dataTableContent">';
                     if ($shipping_status['shipping_status_image'] != '') {
-                      echo xtc_image(DIR_WS_CATALOG.DIR_WS_IMAGES . $shipping_status['shipping_status_image'] , IMAGE_ICON_INFO);
+                      echo xtc_image(DIR_WS_CATALOG.DIR_WS_IMAGES . $shipping_status['shipping_status_image'] , IMAGE_ICON_INFO, '', '', 'style="border:0;max-width:200px;max-height:60px;"');
                     }
                     echo '</td>';
                     echo '<td class="dataTableContent">' . $shipping_status['shipping_status_name'] . '</td>' . "\n";
