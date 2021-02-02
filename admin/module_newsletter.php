@@ -58,40 +58,26 @@
 
         if ($id != 0) {
            xtc_db_perform(TABLE_MODULE_NEWSLETTER, $sql_data_array, 'update', "newsletter_id = '" . $id . "'");
-           // create temp table
-           xtc_db_query("DROP TABLE IF EXISTS module_newsletter_temp_".$id);
-           xtc_db_query("CREATE TABLE module_newsletter_temp_".$id."
-                          (
-                            id int(11) NOT NULL auto_increment,
-                            customers_id int(11) NOT NULL default '0',
-                            customers_status int(11) NOT NULL default '0',
-                            customers_firstname varchar(64) NOT NULL default '',
-                            customers_lastname varchar(64) NOT NULL default '',
-                            customers_email_address text NOT NULL,
-                            mail_key varchar(32) NOT NULL,
-                            date datetime NOT NULL default '0000-00-00 00:00:00',
-                            comment varchar(64) NOT NULL default '',
-                            PRIMARY KEY  (id)
-                          )");
         } else {
            xtc_db_perform(TABLE_MODULE_NEWSLETTER, $sql_data_array);
-           // create temp table
            $id = xtc_db_insert_id();
-           xtc_db_query("DROP TABLE IF EXISTS module_newsletter_temp_".$id);
-           xtc_db_query("CREATE TABLE module_newsletter_temp_".$id."
-                          (
-                            id int(11) NOT NULL auto_increment,
-                            customers_id int(11) NOT NULL default '0',
-                            customers_status int(11) NOT NULL default '0',
-                            customers_firstname varchar(64) NOT NULL default '',
-                            customers_lastname varchar(64) NOT NULL default '',
-                            customers_email_address text NOT NULL,
-                            mail_key varchar(32) NOT NULL,
-                            date datetime NOT NULL default '0000-00-00 00:00:00',
-                            comment varchar(64) NOT NULL default '',
-                            PRIMARY KEY  (id)
-                          )");
         }
+        
+        // create temp table
+        xtc_db_query("DROP TABLE IF EXISTS module_newsletter_temp_".$id);
+        xtc_db_query("CREATE TABLE module_newsletter_temp_".$id."
+                      (
+                        id int(11) NOT NULL auto_increment,
+                        customers_id int(11) NOT NULL default '0',
+                        customers_status int(11) NOT NULL default '0',
+                        customers_firstname varchar(64) NOT NULL default '',
+                        customers_lastname varchar(64) NOT NULL default '',
+                        customers_email_address text NOT NULL,
+                        mail_key varchar(32) NOT NULL,
+                        date datetime NOT NULL default '0000-00-00 00:00:00',
+                        comment varchar(64) NOT NULL default '',
+                        PRIMARY KEY (id)
+                      )");
 
         // filling temp table with data!
         $flag = '';
@@ -459,12 +445,12 @@
               case 'safe':
               case 'new':
                 $customers_status = xtc_get_customers_statuses();
-                echo xtc_draw_form('edit_newsletter',FILENAME_MODULE_NEWSLETTER,'action=save','post','enctype="multipart/form-data"').xtc_draw_hidden_field('ID', (int)$_GET['ID']);
+                echo xtc_draw_form('edit_newsletter',FILENAME_MODULE_NEWSLETTER,'action=save','post','enctype="multipart/form-data"').xtc_draw_hidden_field('ID', (isset($_GET['ID'])) ? (int)$_GET['ID'] : 0);
                 ?>
                 <table class="tableConfig borderall">
                   <tr>
                     <td class="dataTableConfig col-left"><?php echo TEXT_TITLE; ?></td>
-                    <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('title',$newsletters_data['title'],'size=100'); ?></td>
+                    <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('title', ((isset($newsletters_data)) ? $newsletters_data['title'] : ''), 'size=100'); ?></td>
                   </tr>
                   <tr>
                     <td class="dataTableConfig col-left"><?php echo TEXT_TO; ?></td>
@@ -482,7 +468,7 @@
                                                       WHERE customers_status = '".$customers_status[$i]['id']."'");
                         $group_data_all = xtc_db_fetch_array($group_query);
 
-                        $bc_array = explode(',', $newsletters_data['bc']);
+                        $bc_array = explode(',', (isset($newsletters_data)) ? $newsletters_data['bc'] : array());
                         echo xtc_draw_checkbox_field('status['.$i.']','yes', in_array($customers_status[$i]['id'], $bc_array)).' '.$customers_status[$i]['text'].'  <i>(<b>'.$group_data['count'].'</b>'.TEXT_USERS.$group_data_all['count'].TEXT_CUSTOMERS.'<br />';
                       }
                       echo xtc_draw_checkbox_field('status_all', 'yes',in_array('all', $bc_array)).' <b>'.TEXT_NEWSLETTER_ONLY.'</b>';
@@ -491,11 +477,11 @@
                   </tr>
                   <tr>
                     <td class="dataTableConfig col-left"><?php echo TEXT_CC; ?></td>
-                    <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('cc',$newsletters_data['cc'],'size=100'); ?></td>
+                    <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('cc', ((isset($newsletters_data)) ? $newsletters_data['cc'] : ''), 'size=100'); ?></td>
                   </tr>
                   <tr>
                     <td class="dataTableConfig col-left"><?php echo TEXT_BODY; ?></td>
-                    <td class="dataTableConfig col-single-right"><?php echo xtc_draw_textarea_field('newsletter_body', 'soft', '150', '45', stripslashes($newsletters_data['body'])); ?></td>
+                    <td class="dataTableConfig col-single-right"><?php echo xtc_draw_textarea_field('newsletter_body', 'soft', '150', '45', ((isset($newsletters_data)) ? stripslashes($newsletters_data['body']) : '')); ?></td>
                   </tr>
                 </table>
                 <div class="smallText flt-r mrg5"><a class="button" onclick="this.blur();" href="<?php echo xtc_href_link(FILENAME_MODULE_NEWSLETTER); ?>"><?php echo BUTTON_BACK; ?></a>
