@@ -25,6 +25,7 @@
   
   require_once (DIR_FS_CATALOG.DIR_WS_CLASSES.'class.newsletter.php');
   
+  $limits = 0;
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
   switch ($action) {
@@ -246,8 +247,11 @@
 <!-- header //-->
 <?php
   require(DIR_WS_INCLUDES . 'header.php');
-  echo xtc_draw_form('newsletter_send', FILENAME_MODULE_NEWSLETTER, 'send='.($limits + NEWSLETTER_EXECUTE_LIMIT).'&ID='.(int)$_GET['ID'], 'post');
-  echo '</form>';
+  
+  if (isset($_GET['ID'])) {
+    echo xtc_draw_form('newsletter_send', FILENAME_MODULE_NEWSLETTER, 'send='.($limits + NEWSLETTER_EXECUTE_LIMIT).'&ID='.(int)$_GET['ID'], 'post');
+    echo '</form>';
+  }
 ?>
 <!-- header_eof //-->
 <!-- body //-->
