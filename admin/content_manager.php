@@ -101,11 +101,12 @@
       $content_group = $content_data[0] + 1;
     }
 
-    $sql_data_array = array('content_group' => (int)$content_group,
-                            'sort_order' => $sort_order,
-                            'file_flag' => $file_flag,
-                            'content_meta_robots' => $content_meta_robots,
-                            );
+    $sql_data_array = array(
+      'content_group' => (int)$content_group,
+      'sort_order' => $sort_order,
+      'file_flag' => $file_flag,
+      'content_meta_robots' => $content_meta_robots,
+    );
 
     
     for ($i=0; $i<$content_count; $i++) {
@@ -143,33 +144,32 @@
             }
           }
 
-          $sql_data_lang_array = array('content_status' => (int)$content_status[$i][$languages[$l]['id']],
-                                       'content_active' => (int)$content_active[$i][$languages[$l]['id']],
-                                       'languages_id' => $languages[$l]['id'],
-                                       'parent_id' => ((isset($parent_id) && is_array($parent_id) && array_key_exists($languages[$l]['id'], $parent_id)) ? $parent_id[$languages[$l]['id']] : ''),
-                                       'group_ids' => $group_ids,
-                                       'content_title' => $content_title[$i][$languages[$l]['id']],
-                                       'content_heading' => $content_heading[$i][$languages[$l]['id']],
-                                       'content_text' => $content_text[$i][$languages[$l]['id']],
-                                       'content_meta_title' => $content_meta_title[$i][$languages[$l]['id']],
-                                       'content_meta_description' => $content_meta_description[$i][$languages[$l]['id']],
-                                       'content_meta_keywords' => $content_meta_keywords[$i][$languages[$l]['id']],
-                                       'content_file' => $content_file_name
-                                       );
+          $sql_data_lang_array = array(
+            'content_status' => (int)$content_status[$i][$languages[$l]['id']],
+            'content_active' => (int)$content_active[$i][$languages[$l]['id']],
+            'languages_id' => $languages[$l]['id'],
+            'parent_id' => ((isset($parent_id) && is_array($parent_id) && array_key_exists($languages[$l]['id'], $parent_id)) ? $parent_id[$languages[$l]['id']] : ''),
+            'group_ids' => $group_ids,
+            'content_title' => $content_title[$i][$languages[$l]['id']],
+            'content_heading' => $content_heading[$i][$languages[$l]['id']],
+            'content_text' => $content_text[$i][$languages[$l]['id']],
+            'content_meta_title' => $content_meta_title[$i][$languages[$l]['id']],
+            'content_meta_description' => $content_meta_description[$i][$languages[$l]['id']],
+            'content_meta_keywords' => $content_meta_keywords[$i][$languages[$l]['id']],
+            'content_file' => $content_file_name
+          );
         
           // check content_group_index 
           $add_and = '';          
           if ($id == 'update' && $content_id[$i][$languages[$l]['id']] > 0) {
             $add_and = " AND content_id != '" . $content_id[$i][$languages[$l]['id']] ."'";
           }          
-          $dbQuery = xtc_db_query(
-             "SELECT MAX(content_group_index)
-               FROM ".TABLE_CONTENT_MANAGER."
-               WHERE languages_id ='" . $sql_data_lang_array['languages_id'] . "'
-                     ".$add_and."
-                 AND content_group ='" . $sql_data_array['content_group'] . "'
-               ");
-               
+          $dbQuery = xtc_db_query("SELECT MAX(content_group_index)
+                                     FROM ".TABLE_CONTENT_MANAGER."
+                                    WHERE languages_id ='" . $sql_data_lang_array['languages_id'] . "'
+                                          ".$add_and."
+                                      AND content_group ='" . $sql_data_array['content_group'] . "'");
+                                                     
           //check change content_group
           $change_content_group = (isset($coID) && $coID != $content_group) ? true : false;    
           $dbData = xtc_db_fetch_row($dbQuery);
@@ -180,7 +180,7 @@
             }
             $content_group_index = $sql_data_array['content_group_index'];
           } else {
-            $sql_data_array['content_group_index'] = $change_content_group ? 0 : $content_group_index;
+            $sql_data_array['content_group_index'] = 0;
           }
           
           if (isset($content_new_group_index[$i][$languages[$l]['id']])) {
