@@ -249,7 +249,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     $reviews_split = new splitPageResults($page, $page_max_display_results, $reviews_query_raw, $reviews_query_numrows);
                     $reviews_query = xtc_db_query($reviews_query_raw);
                     while ($reviews = xtc_db_fetch_array($reviews_query)) {
-                      if ((!isset($_GET['rID']) || ($_GET['rID'] == $reviews['reviews_id'])) && !$rInfo) {
+                      if ((!isset($_GET['rID']) || ($_GET['rID'] == $reviews['reviews_id'])) && !isset($rInfo)) {
                         $reviews_average_query = xtc_db_query("SELECT (avg(reviews_rating) / 5 * 100) as average_rating 
                                                                  FROM " . TABLE_REVIEWS . " 
                                                                 WHERE products_id = '" . $reviews['products_id'] . "'");
