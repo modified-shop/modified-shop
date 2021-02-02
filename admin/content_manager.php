@@ -243,12 +243,11 @@
     }
 
     $content_title = xtc_db_prepare_input($_POST['cont_title']);
-    $content_link = xtc_db_prepare_input($_POST['cont_link']);
+    $content_link = ((isset($_POST['cont_link'])) ? xtc_db_prepare_input($_POST['cont_link']) : '');
     $content_language_code = xtc_db_prepare_input($_POST['language_code']);
     $product = xtc_db_prepare_input($_POST['product']);
-    $file_comment = xtc_db_prepare_input($_POST['file_comment']);
+    $file_comment = ((isset($_POST['file_comment'])) ? xtc_db_prepare_input($_POST['file_comment']) : '');
     $select_file = xtc_db_prepare_input($_POST['select_file']);
-
     $filename = ((isset($_POST['file_name'])) ? xtc_db_prepare_input($_POST['file_name']) : '');
 
     $error = false;
