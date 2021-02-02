@@ -130,9 +130,9 @@ if (!$action) {
 } else {
 
   $content_status_array = array(
-                                array('id'=>1,'text'=>CFG_TXT_YES),
-                                array('id'=>0,'text'=>CFG_TXT_NO),
-                               );
+    array('id'=>1,'text'=>CFG_TXT_YES),
+    array('id'=>0,'text'=>CFG_TXT_NO),
+  );
   
   // content array
   $content = array();
@@ -151,7 +151,9 @@ if (!$action) {
         $z++;
       }
     } else {
-      $content[$z][$languages[$i]['id']] = array('languages_id' => $languages[$i]['id']);
+      $content_array = xtc_get_default_table_data(TABLE_CONTENT_MANAGER);
+      $content_array['languages_id'] = $languages[$i]['id'];
+      $content[$z][$languages[$i]['id']] = $content_array;
       $z++;
     }
   }

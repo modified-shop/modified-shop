@@ -244,7 +244,6 @@
     $content_link = xtc_db_prepare_input($_POST['cont_link']);
     $content_language_code = xtc_db_prepare_input($_POST['language_code']);
     $product = xtc_db_prepare_input($_POST['product']);
-    $upload_file = xtc_db_prepare_input($_POST['file_upload']);
     $filename = xtc_db_prepare_input($_POST['file_name']);
     $coID = xtc_db_prepare_input($_POST['coID']);
     $file_comment = xtc_db_prepare_input($_POST['file_comment']);
