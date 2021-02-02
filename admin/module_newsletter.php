@@ -25,7 +25,9 @@
   
   require_once (DIR_FS_CATALOG.DIR_WS_CLASSES.'class.newsletter.php');
   
-  switch ($_GET['action']) {
+  $action = (isset($_GET['action']) ? $_GET['action'] : '');
+
+  switch ($action) {
     case 'save':
       $id = xtc_db_prepare_input((int)$_POST['ID']);
       $status_all = xtc_db_prepare_input($_POST['status_all']);
@@ -234,7 +236,7 @@
                              FROM ". TABLE_LANGUAGES ." 
                             WHERE languages_id='".(int)$_SESSION['languages_id']."'");
     $data = xtc_db_fetch_array($query);
-    if ($_GET['action'] != '') {
+    if ($action != '') {
       echo xtc_wysiwyg('newsletter',$data['code']);
     }
   }
@@ -269,7 +271,7 @@
         <div class="clear div_box brd-none pdg2">
           <div class="main important_info"><?php echo TEXT_NEWSLETTER_INFO; ?></div>
           <?php
-          switch ($_GET['action']) {
+          switch ($action) {
             default:
             // Get Customers Groups
             $customer_group_query = xtc_db_query("SELECT customers_status_name,
