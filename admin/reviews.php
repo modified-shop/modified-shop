@@ -139,6 +139,12 @@ require (DIR_WS_INCLUDES.'head.php');
                 </table>
                 <div class="main mrg5 txta-r">
                   <?php 
+                    echo xtc_draw_hidden_field('reviews_id', $rInfo->reviews_id) . 
+                         xtc_draw_hidden_field('products_id', $rInfo->products_id) . 
+                         xtc_draw_hidden_field('customers_name', encode_htmlspecialchars($rInfo->customers_name)) . 
+                         xtc_draw_hidden_field('products_name', encode_htmlspecialchars($rInfo->products_name)) . 
+                         xtc_draw_hidden_field('products_image', $rInfo->products_image) . 
+                         xtc_draw_hidden_field('date_added', $rInfo->date_added);
                     echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_PREVIEW . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_REVIEWS, 'page=' . $page . '&rID=' . $_GET['rID']) . '">' . BUTTON_CANCEL . '</a>'; 
                   ?>
                 </div>
