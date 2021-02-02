@@ -308,20 +308,25 @@ if (USE_WYSIWYG == 'true' && $_GET['action'] == 'email') {
                     </td>' . "\n";
     break;
   case 'preview_email':
-    $coupon_query = xtc_db_query("SELECT coupon_code FROM " .TABLE_COUPONS . " WHERE coupon_id = '" . (int)$_GET['cid'] . "'");
+    $coupon_query = xtc_db_query("SELECT coupon_code 
+                                    FROM " .TABLE_COUPONS . " 
+                                   WHERE coupon_id = '" . (int)$_GET['cid'] . "'");
     $coupon_result = xtc_db_fetch_array($coupon_query);
-    $coupon_name_query = xtc_db_query("SELECT coupon_name FROM " . TABLE_COUPONS_DESCRIPTION . " WHERE coupon_id = '" . (int)$_GET['cid'] . "' AND language_id = '" . (int)$_SESSION['languages_id'] . "'");
+    $coupon_name_query = xtc_db_query("SELECT coupon_name 
+                                         FROM " . TABLE_COUPONS_DESCRIPTION . " 
+                                        WHERE coupon_id = '" . (int)$_GET['cid'] . "' 
+                                          AND language_id = '" . (int)$_SESSION['languages_id'] . "'");
     $coupon_name = xtc_db_fetch_array($coupon_name_query);
     switch ($_POST['customers_email_address']) {
-    case '***':
-      $mail_sent_to = TEXT_ALL_CUSTOMERS;
-      break;
-    case '**D':
-      $mail_sent_to = TEXT_NEWSLETTER_CUSTOMERS;
-      break;
-    default:
-      $mail_sent_to = $_POST['customers_email_address'];
-      break;
+      case '***':
+        $mail_sent_to = TEXT_ALL_CUSTOMERS;
+        break;
+      case '**D':
+        $mail_sent_to = TEXT_NEWSLETTER_CUSTOMERS;
+        break;
+      default:
+        $mail_sent_to = $_POST['customers_email_address'];
+        break;
     }
     ?>
     <td class="boxCenter">
@@ -392,7 +397,7 @@ if (USE_WYSIWYG == 'true' && $_GET['action'] == 'email') {
                                            customers_lastname 
                                       FROM " . TABLE_CUSTOMERS . " 
                                   ORDER BY customers_lastname");
-        while($customers_values = xtc_db_fetch_array($mail_query)) {
+        while ($customers_values = xtc_db_fetch_array($mail_query)) {
           $customers[] = array(
             'id' => $customers_values['customers_email_address'],
             'text' => $customers_values['customers_lastname'] . ', ' . $customers_values['customers_firstname'] . ' (' . $customers_values['customers_email_address'] . ')'
@@ -623,7 +628,7 @@ if (USE_WYSIWYG == 'true' && $_GET['action'] == 'email') {
     if (!isset($coupon_uses_user)) {
       $coupon_uses_user = 1;
 		}
-		if(!isset($cou($coupon_uses_coupon)) {
+		if (!isset($coupon_uses_coupon)) {
       $coupon_uses_coupon = '';
     }
     if (!isset($coupon_startdate)) {
