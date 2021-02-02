@@ -393,7 +393,9 @@ if (USE_WYSIWYG == 'true') {
                       if (xtc_not_null($mInfo->last_modified)) {
                         $contents[] = array('text' => TEXT_LAST_MODIFIED . ' ' . xtc_date_short($mInfo->last_modified));
                       }
-                      $contents[] = array('text' => '<br />' . xtc_info_image('manufacturers/' . $mInfo->manufacturers_image, $mInfo->manufacturers_name, '', '', 'class="thumbnail-manufacturer"'));
+                      if (xtc_not_null($mInfo->manufacturers_image)) {
+                        $contents[] = array('text' => '<br />' . xtc_info_image('manufacturers/' . $mInfo->manufacturers_image, $mInfo->manufacturers_name, '', '', 'class="thumbnail-manufacturer"'));
+                      }
                       $contents[] = array('text' => '<br />' . TEXT_PRODUCTS . ' ' . $mInfo->products_count);
                     }
                     break;
