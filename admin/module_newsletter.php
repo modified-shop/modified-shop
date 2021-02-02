@@ -31,29 +31,34 @@
   switch ($action) {
     case 'save':
       $id = xtc_db_prepare_input((int)$_POST['ID']);
-      $status_all = xtc_db_prepare_input($_POST['status_all']);
-      if ($newsletter_title=='') $newsletter_title='no title';
       $customers_status = xtc_get_customers_statuses();
 
+      $title = xtc_db_prepare_input($_POST['title']);
+      if ($title == '') $title = 'no title';
+      $cc = xtc_db_prepare_input($_POST['title']);
+      $newsletter_body = xtc_db_prepare_input($_POST['title']);
+
       $rzp = '';
-      for ($i=0,$n=count($customers_status); $i<$n; $i++) {
-        if (xtc_db_prepare_input($_POST['status'][$i]) == 'yes') {
-          if ($rzp!='') $rzp .= ',';
-          $rzp .= $customers_status[$i]['id'];
+      if (isset($_POST['status'])) {
+        for ($i=0,$n=count($customers_status); $i<$n; $i++) {
+          if (isset($_POST['status'][$i]) && $_POST['status'][$i] == 'yes') {
+            if ($rzp!='') $rzp .= ',';
+            $rzp .= $customers_status[$i]['id'];
+          }
         }
       }
-
-      if (xtc_db_prepare_input($_POST['status_all'])=='yes') $rzp.=',all';
+      
+      if (isset($_POST['status_all']) && $_POST['status_all'] == 'yes') $rzp.=',all';
 
       $error = false;
       if ($error == false) {
         $sql_data_array = array(
-          'title' => xtc_db_prepare_input($_POST['title']),
+          'title' => $title,
           'status' => '0',
           'bc' => $rzp,
-          'cc' => xtc_db_prepare_input($_POST['cc']),
+          'cc' => $cc,
           'date' => 'now()',
-          'body' => xtc_db_prepare_input($_POST['newsletter_body'])
+          'body' => $newsletter_body
         );
 
         if ($id != 0) {
@@ -87,7 +92,7 @@
 
         for ($i=0,$n=count($groups); $i<$n; $i++) {
           // check if customer wants newsletter
-          if (xtc_db_prepare_input($_POST['status_all'])=='yes') {
+          if (isset($_POST['status_all']) && $_POST['status_all'] == 'yes') {
             $customers_query = xtc_db_query("SELECT customers_id,
                                                     customers_firstname,
                                                     customers_lastname,
