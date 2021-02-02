@@ -122,7 +122,7 @@
       }
       break;
     case 'update_confirm':
-      if ( $_POST['back_x'] || $_POST['back_y'] || $_POST['back'] ) {
+      if (isset($_POST['back_x']) || isset($_POST['back_y']) || isset($_POST['back'])) {
         $_GET['action'] = $_GET['oldaction'];
       } else {
         $coupon_type = "F";
