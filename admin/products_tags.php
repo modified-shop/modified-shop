@@ -82,130 +82,128 @@
   $page = (isset($_GET['page']) ? (int)$_GET['page'] : 1);
   $spage = (isset($_GET['spage']) ? (int)$_GET['spage'] : 1);
   
-  if (xtc_not_null($action)) {
-    switch ($action) {    
-      case 'setvaluesflag':
-        $vID = (int)$_GET['vID'];
-        $oID = (int)$_GET['oID'];
-        $status = (int)$_GET['flag'];
-        xtc_db_query("UPDATE " . TABLE_PRODUCTS_TAGS_VALUES . " 
-                         SET status = '" . xtc_db_input($status) . "' 
-                       WHERE values_id = '" . $vID . "'"); 
-        xtc_redirect(xtc_href_link(FILENAME_PRODUCTS_TAGS, 'page=' . $page . '&oID=' . $oID . '&action=list&spage=' . $spage . '&vID=' . $vID));
-        break;
+  switch ($saction) {    
+    case 'setvaluesflag':
+      $vID = (int)$_GET['vID'];
+      $oID = (int)$_GET['oID'];
+      $status = (int)$_GET['flag'];
+      xtc_db_query("UPDATE " . TABLE_PRODUCTS_TAGS_VALUES . " 
+                       SET status = '" . xtc_db_input($status) . "' 
+                     WHERE values_id = '" . $vID . "'"); 
+      xtc_redirect(xtc_href_link(FILENAME_PRODUCTS_TAGS, 'page=' . $page . '&oID=' . $oID . '&action=list&spage=' . $spage . '&vID=' . $vID));
+      break;
 
-      case 'setvaluesfilter':
-        $vID = (int)$_GET['vID'];
-        $oID = (int)$_GET['oID'];
-        $status = (int)$_GET['flag'];
-        xtc_db_query("UPDATE " . TABLE_PRODUCTS_TAGS_VALUES . " 
-                         SET filter = '" . xtc_db_input($status) . "' 
-                       WHERE values_id = '" . $vID . "'"); 
-        xtc_redirect(xtc_href_link(FILENAME_PRODUCTS_TAGS, 'page=' . $page . '&oID=' . $oID . '&action=list&spage=' . (int)$_GET['spage'] . '&vID=' . $vID));
-        break;
-        
-      case 'insert_values':
-        $oID = (int)$_GET['oID'];
-        $next_id_query = xtc_db_query("SELECT max(values_id) as values_id 
-                                         FROM " . TABLE_PRODUCTS_TAGS_VALUES . "");
-        $next_id = xtc_db_fetch_array($next_id_query);
-        $values_id = $next_id['values_id'] + 1;
-        
-        for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {     
-          $sql_data_array = array('values_id' => $values_id,
-                                  'options_id' => $oID,
-                                  'values_name' => xtc_db_prepare_input($_POST['values_name'][$languages[$i]['id']]),
-                                  'values_description' => xtc_db_prepare_input($_POST['values_description'][$languages[$i]['id']]),
-                                  'values_content_group' => (($_POST['values_content_group'] != '') ? (int)$_POST['values_content_group'] : 'null'),
-                                  'languages_id' => $languages[$i]['id'],
-                                  'sort_order' => (int)$_POST['sort_order'],
-                                  'date_added' => 'now()');
+    case 'setvaluesfilter':
+      $vID = (int)$_GET['vID'];
+      $oID = (int)$_GET['oID'];
+      $status = (int)$_GET['flag'];
+      xtc_db_query("UPDATE " . TABLE_PRODUCTS_TAGS_VALUES . " 
+                       SET filter = '" . xtc_db_input($status) . "' 
+                     WHERE values_id = '" . $vID . "'"); 
+      xtc_redirect(xtc_href_link(FILENAME_PRODUCTS_TAGS, 'page=' . $page . '&oID=' . $oID . '&action=list&spage=' . (int)$_GET['spage'] . '&vID=' . $vID));
+      break;
+      
+    case 'insert_values':
+      $oID = (int)$_GET['oID'];
+      $next_id_query = xtc_db_query("SELECT max(values_id) as values_id 
+                                       FROM " . TABLE_PRODUCTS_TAGS_VALUES . "");
+      $next_id = xtc_db_fetch_array($next_id_query);
+      $values_id = $next_id['values_id'] + 1;
+      
+      for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {     
+        $sql_data_array = array('values_id' => $values_id,
+                                'options_id' => $oID,
+                                'values_name' => xtc_db_prepare_input($_POST['values_name'][$languages[$i]['id']]),
+                                'values_description' => xtc_db_prepare_input($_POST['values_description'][$languages[$i]['id']]),
+                                'values_content_group' => (($_POST['values_content_group'] != '') ? (int)$_POST['values_content_group'] : 'null'),
+                                'languages_id' => $languages[$i]['id'],
+                                'sort_order' => (int)$_POST['sort_order'],
+                                'date_added' => 'now()');
+        xtc_db_perform(TABLE_PRODUCTS_TAGS_VALUES, $sql_data_array);
+      }
+  
+      //store image
+      if ($values_image = xtc_try_upload('values_image', $dir_values, '644', $accepted_values_image_files_extensions, $accepted_values_image_files_mime_types)) {
+        $sql_data_array = array('values_image' => 'tags/'.$values_image->filename);
+        xtc_db_perform(TABLE_PRODUCTS_TAGS_VALUES, $sql_data_array, 'update', "values_id = '" . (int)$values_id . "'");
+      }
+
+      xtc_redirect(xtc_href_link(FILENAME_PRODUCTS_TAGS, 'page=' . $page . '&oID=' . $oID . '&action=list&spage=' . (int)$_GET['spage'] . '&vID=' . $values_id));
+      break;
+
+    case 'save_values':
+      $vID = (int)$_GET['vID'];
+      $oID = (int)$_GET['oID'];
+      for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {     
+        $sql_data_array = array('values_id' => $vID,
+                                'options_id' => $oID,
+                                'values_name' => xtc_db_prepare_input($_POST['values_name'][$languages[$i]['id']]),
+                                'values_description' => xtc_db_prepare_input($_POST['values_description'][$languages[$i]['id']]),
+                                'values_content_group' => (($_POST['values_content_group'] != '') ? (int)$_POST['values_content_group'] : 'null'),
+                                'languages_id' => $languages[$i]['id'],
+                                'sort_order' => (int)$_POST['sort_order'],
+                                'date_added' => 'now()');
+        $values_description_query = xtc_db_query("SELECT * 
+                                                    FROM ".TABLE_PRODUCTS_TAGS_VALUES." 
+                                                   WHERE languages_id = '".$languages[$i]['id']."' 
+                                                     AND values_id = '".$vID."'");
+        if (xtc_db_num_rows($values_description_query) == 0) {
+          $sql_data_array['last_modified'] = 'now()';
+          $sql_data_array['values_image'] = xtc_get_values_detail($vID, $languages[$i]['id'], 'values_image');
           xtc_db_perform(TABLE_PRODUCTS_TAGS_VALUES, $sql_data_array);
-        }
-    
-        //store image
-        if ($values_image = xtc_try_upload('values_image', $dir_values, '644', $accepted_values_image_files_extensions, $accepted_values_image_files_mime_types)) {
-          $sql_data_array = array('values_image' => 'tags/'.$values_image->filename);
-          xtc_db_perform(TABLE_PRODUCTS_TAGS_VALUES, $sql_data_array, 'update', "values_id = '" . (int)$values_id . "'");
-        }
+        } else {
+          xtc_db_perform(TABLE_PRODUCTS_TAGS_VALUES, $sql_data_array, 'update', "values_id = '".$vID."' AND languages_id = '".$languages[$i]['id']."'");                    
+        }      
+      }
 
-        xtc_redirect(xtc_href_link(FILENAME_PRODUCTS_TAGS, 'page=' . $page . '&oID=' . $oID . '&action=list&spage=' . (int)$_GET['spage'] . '&vID=' . $values_id));
-        break;
-
-      case 'save_values':
-        $vID = (int)$_GET['vID'];
-        $oID = (int)$_GET['oID'];
-        for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {     
-          $sql_data_array = array('values_id' => $vID,
-                                  'options_id' => $oID,
-                                  'values_name' => xtc_db_prepare_input($_POST['values_name'][$languages[$i]['id']]),
-                                  'values_description' => xtc_db_prepare_input($_POST['values_description'][$languages[$i]['id']]),
-                                  'values_content_group' => (($_POST['values_content_group'] != '') ? (int)$_POST['values_content_group'] : 'null'),
-                                  'languages_id' => $languages[$i]['id'],
-                                  'sort_order' => (int)$_POST['sort_order'],
-                                  'date_added' => 'now()');
-          $values_description_query = xtc_db_query("SELECT * 
-                                                      FROM ".TABLE_PRODUCTS_TAGS_VALUES." 
-                                                     WHERE languages_id = '".$languages[$i]['id']."' 
-                                                       AND values_id = '".$vID."'");
-          if (xtc_db_num_rows($values_description_query) == 0) {
-            $sql_data_array['last_modified'] = 'now()';
-            $sql_data_array['values_image'] = xtc_get_values_detail($vID, $languages[$i]['id'], 'values_image');
-            xtc_db_perform(TABLE_PRODUCTS_TAGS_VALUES, $sql_data_array);
-          } else {
-            xtc_db_perform(TABLE_PRODUCTS_TAGS_VALUES, $sql_data_array, 'update', "values_id = '".$vID."' AND languages_id = '".$languages[$i]['id']."'");                    
-          }      
-        }
- 
-        //delete image
-        if (isset($_POST['delete_image']) && $_POST['delete_image'] == 'on') {
-          $values_query = xtc_db_query("SELECT values_image 	 
-                                           FROM " . TABLE_PRODUCTS_TAGS_VALUES . " 
-                                          WHERE values_id = '" . $vID . "'");
-          while ($values = xtc_db_fetch_array($values_query)) {
-            if ($values['values_image'] != '') {
-              $image_location = DIR_FS_CATALOG_IMAGES . $values['values_image'];
-              if (file_exists($image_location)) {
-                @unlink($image_location);
-                $sql_data_array = array('values_image' => '');
-                xtc_db_perform(TABLE_PRODUCTS_TAGS_VALUES, $sql_data_array, 'update', "values_id = '" . $vID . "'"); 
-              }
+      //delete image
+      if (isset($_POST['delete_image']) && $_POST['delete_image'] == 'on') {
+        $values_query = xtc_db_query("SELECT values_image 	 
+                                         FROM " . TABLE_PRODUCTS_TAGS_VALUES . " 
+                                        WHERE values_id = '" . $vID . "'");
+        while ($values = xtc_db_fetch_array($values_query)) {
+          if ($values['values_image'] != '') {
+            $image_location = DIR_FS_CATALOG_IMAGES . $values['values_image'];
+            if (file_exists($image_location)) {
+              @unlink($image_location);
+              $sql_data_array = array('values_image' => '');
+              xtc_db_perform(TABLE_PRODUCTS_TAGS_VALUES, $sql_data_array, 'update', "values_id = '" . $vID . "'"); 
             }
           }
         }
-       
-        //store image
-        if ($values_image = xtc_try_upload('values_image', $dir_values, '644', $accepted_values_image_files_extensions, $accepted_values_image_files_mime_types)) {
-          $sql_data_array = array('values_image' => 'tags/'.$values_image->filename);
-          xtc_db_perform(TABLE_PRODUCTS_TAGS_VALUES, $sql_data_array, 'update', "values_id = '" . $vID . "'");
+      }
+     
+      //store image
+      if ($values_image = xtc_try_upload('values_image', $dir_values, '644', $accepted_values_image_files_extensions, $accepted_values_image_files_mime_types)) {
+        $sql_data_array = array('values_image' => 'tags/'.$values_image->filename);
+        xtc_db_perform(TABLE_PRODUCTS_TAGS_VALUES, $sql_data_array, 'update', "values_id = '" . $vID . "'");
+      }
+
+      xtc_redirect(xtc_href_link(FILENAME_PRODUCTS_TAGS, 'page=' . $page . '&oID=' . $oID . '&action=list&spage=' . (int)$_GET['spage'] . '&vID=' . $vID));
+      break;
+
+    case 'deleteconfirm_values':
+      $vID = (int)$_GET['vID'];
+      $oID = (int)$_GET['oID'];
+
+      //delete image
+      $values_query = xtc_db_query("SELECT values_image 	 
+                                      FROM " . TABLE_PRODUCTS_TAGS_VALUES . " 
+                                     WHERE values_id = '" . $vID . "'");
+      while ($values = xtc_db_fetch_array($values_query)) {
+        $image_location = DIR_FS_CATALOG_IMAGES . $values['values_image'];
+        if (file_exists($image_location)) {
+          @unlink($image_location);
+          $sql_data_array = array('values_image' => '');
+          xtc_db_perform(TABLE_PRODUCTS_TAGS_VALUES, $sql_data_array, 'update', "values_id = '" . $vID . "'"); 
         }
+      }
 
-        xtc_redirect(xtc_href_link(FILENAME_PRODUCTS_TAGS, 'page=' . $page . '&oID=' . $oID . '&action=list&spage=' . (int)$_GET['spage'] . '&vID=' . $vID));
-        break;
+      xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_TAGS_VALUES . " WHERE values_id = '" . $vID . "'");
+      xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_TAGS . " WHERE values_id = '" . $vID . "'");
 
-      case 'deleteconfirm_values':
-        $vID = (int)$_GET['vID'];
-        $oID = (int)$_GET['oID'];
-
-        //delete image
-        $values_query = xtc_db_query("SELECT values_image 	 
-                                        FROM " . TABLE_PRODUCTS_TAGS_VALUES . " 
-                                       WHERE values_id = '" . $vID . "'");
-        while ($values = xtc_db_fetch_array($values_query)) {
-          $image_location = DIR_FS_CATALOG_IMAGES . $values['values_image'];
-          if (file_exists($image_location)) {
-            @unlink($image_location);
-            $sql_data_array = array('values_image' => '');
-            xtc_db_perform(TABLE_PRODUCTS_TAGS_VALUES, $sql_data_array, 'update', "values_id = '" . $vID . "'"); 
-          }
-        }
-
-        xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_TAGS_VALUES . " WHERE values_id = '" . $vID . "'");
-        xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_TAGS . " WHERE values_id = '" . $vID . "'");
-
-        xtc_redirect(xtc_href_link(FILENAME_PRODUCTS_TAGS, 'page=' . $page . '&oID=' . $oID . '&action=list&spage=' . (int)$_GET['spage']));
-        break;
-    }
+      xtc_redirect(xtc_href_link(FILENAME_PRODUCTS_TAGS, 'page=' . $page . '&oID=' . $oID . '&action=list&spage=' . (int)$_GET['spage']));
+      break;
   }
   
   switch ($action) {
