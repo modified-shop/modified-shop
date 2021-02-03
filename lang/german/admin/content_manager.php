@@ -37,8 +37,8 @@
  define('TABLE_HEADING_CONTENT_HITS','Hits');
  define('TABLE_HEADING_CONTENT_GROUP','coID');
  define('TABLE_HEADING_CONTENT_SORT','Reihenfolge');
- define('TEXT_YES','Ja');
- define('TEXT_NO','Nein');
+ defined('TEXT_YES') OR define('TEXT_YES','Ja');
+ defined('TEXT_NO') OR define('TEXT_NO','Nein');
  define('TABLE_HEADING_CONTENT_ACTION','Aktion');
  defined('TEXT_DELETE') OR define('TEXT_DELETE','L&ouml;schen');
  define('TEXT_EDIT','Bearbeiten');
