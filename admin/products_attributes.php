@@ -17,21 +17,21 @@
   $iframe = (isset($_GET['iframe']) ? $iframe = '&iframe=1' : '');
 
   if (isset($_POST['products_options_id']) && $_POST['action'] == 'change') {
-     include(DIR_WS_MODULES.'new_attributes_change.php');
-     $options_id = isset($_POST['options_id']) ? '&options_id='.implode(',',$_POST['options_id']) : '';
-     xtc_redirect(xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'cpath='. $_POST['cpath'].'&current_product_id='. $_POST['current_product_id'].'&option_order_by='.$_POST['option_order_by'].'&products_options_id=' .$_POST['products_options_id'].$oldaction.$oldpage.$options_id.$iframe));
+    include(DIR_WS_MODULES.'new_attributes_change.php');
+    $options_id = isset($_POST['options_id']) ? '&options_id='.implode(',',$_POST['options_id']) : '';
+    xtc_redirect(xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'current_product_id='.$_POST['current_product_id'].((isset($_POST['cpath'])) ? 'cpath='.$_POST['cpath'] : '').'&option_order_by='.$_POST['option_order_by'].'&products_options_id='.$_POST['products_options_id'].$oldaction.$oldpage.$options_id.$iframe));
   }
 
   if (isset($_GET['cPath'])) {
-     include(DIR_WS_MODULES.'new_attributes_change.php');
-     xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, 'cPath=' . $_GET['cPath'] . '&pID=' . $_GET['current_product_id'] . str_replace('old','',$oldaction). $oldpage));
+    include(DIR_WS_MODULES.'new_attributes_change.php');
+    xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, 'cPath=' . $_GET['cPath'] . '&pID=' . $_GET['current_product_id'] . str_replace('old','',$oldaction). $oldpage));
   }
 
   if (isset($_GET['action']) && !isset($_POST['action'])) {
     $_POST = $_GET;
   }
 
-	if (isset($_GET['iframe']) || $_GET['current_product_id'] > 0) {
+	if (isset($_GET['iframe']) || (isset($_GET['current_product_id']) && $_GET['current_product_id'] > 0)) {
     include(DIR_WS_MODULES.'new_attributes_include.php');
     exit;    
 	}
