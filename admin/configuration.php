@@ -66,7 +66,8 @@
             $configuration['configuration_value'] = stripslashes($configuration['configuration_value']);
             if (is_array($_POST[$configuration['configuration_key']])) {
               // multi language config
-              if (gettype(array_shift(array_keys($_POST[$configuration['configuration_key']]))) == 'string') {
+              $keys = array_keys($_POST[$configuration['configuration_key']]);
+              if (gettype(array_shift($keys)) == 'string') {
                 $config_value = array();
                 foreach ($_POST[$configuration['configuration_key']] as $key => $value) {
                   if (xtc_not_null($value)) {
