@@ -20,6 +20,9 @@ $prefix = 'MODULE_ORDER_TOTAL_BILLPAY_';
   define($prefix.'FEE_VALUE_TITLE','Fixed amount');
   define($prefix.'FEE_VALUE_DESC','Enter fixed amount for each country (i.e. DE:5;CH:7).');
 
+  define($prefix.'FEE_GRADUATE_TITLE','Staffelung');
+  define($prefix.'FEE_GRADUATE_DESC','Geben Sie hier die Geb&uuml;hrenstaffelung in der Form {Rechnungssumme}={Nettogeb&uuml;hr};{Rechnungssumme}={Nettogeb&uuml;hr}; ein. Diese Staffelung wird auf die Rechnungssumme erhoben, falls der Geb&uuml;hrtyp "Staffelung" aktiviert ist.');
+
   define($prefix.'FEE_TAX_CLASS_TITLE','Tax class');
   define($prefix.'FEE_TAX_CLASS_DESC','Choose a tax class for the fee');
 

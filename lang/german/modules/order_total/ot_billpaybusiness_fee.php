@@ -16,5 +16,5 @@ $fields = array(
 );
 foreach ($fields as $field)
 {
-    define($prefix.$field, constant($parent.$field));
+    defined($prefix.$field) OR define($prefix.$field, constant($parent.$field));
 }
