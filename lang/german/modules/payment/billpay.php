@@ -57,6 +57,9 @@ define('MODULE_PAYMENT_BILLPAY_LOGPATH_DESC', '');
 define('MODULE_PAYMENT_BILLPAY_GS_HTTP_X_TITLE', 'X_FORWARDED_FOR erlauben');
 define('MODULE_PAYMENT_BILLPAY_GS_HTTP_X_DESC', 'Aktivieren Sie dieses Funktion wenn Ihr Shop in einem Cloud System l&auml;uft.');
 
+define('MODULE_PAYMENT_BILLPAY_HTTP_X_TITLE', 'X_FORWARDED_FOR erlauben');
+define('MODULE_PAYMENT_BILLPAY_HTTP_X_DESC', 'Aktivieren Sie dieses Funktion wenn Ihr Shop in einem Cloud System l&auml;uft.');
+
 // Payment selection texts
 define('MODULE_PAYMENT_BILLPAY_TEXT_BIRTHDATE', 'Geburtsdatum');
 define('MODULE_PAYMENT_BILLPAY_TEXT_PHONE', 'Telefonnummer');
@@ -228,15 +231,15 @@ define('MODULE_PAYMENT_BILLPAY_STATUS_ERROR_TITLE_DE' , 'BillPay Fehler!');
 // -- end of Order States
 
 
-define('MODULE_PAYMENT_BILLPAY_STATUS_PENDING_DESC', 'BillPay - Warte auf Best&auml;tigung'); // "BillPay - waiting for approvement"
-define('MODULE_PAYMENT_BILLPAY_STATUS_APPROVED_DESC', 'BillPay - Best&auml;tigt'); // "BillPay - approved"
-define('MODULE_PAYMENT_BILLPAY_STATUS_ACTIVATED_DESC', 'BillPay - Aktiviert'); // "BillPay - activated"
-define('MODULE_PAYMENT_BILLPAY_STATUS_CANCELLED_DESC', 'BillPay - Storniert'); // "BillPay - cancelled"
-define('MODULE_PAYMENT_BILLPAY_STATUS_ERROR_DESC', 'BillPay - Aufgrund eines Fehlers ben&ouml;tigt diese Bestellung eine manuelle Korrektur. Bitte kontaktieren Sie den BillPay Support.'); // "BillPay - Due to an error, this order requires a manual correction. Please contact BillPay's support"
+define('MODULE_PAYMENT_BILLPAY_STATUS_PENDING_DESC', 'BillPay - Warte auf Best&auml;tigung');
+define('MODULE_PAYMENT_BILLPAY_STATUS_APPROVED_DESC', 'BillPay - Best&auml;tigt');
+define('MODULE_PAYMENT_BILLPAY_STATUS_ACTIVATED_DESC', 'BillPay - Aktiviert');
+define('MODULE_PAYMENT_BILLPAY_STATUS_CANCELLED_DESC', 'BillPay - Storniert');
+define('MODULE_PAYMENT_BILLPAY_STATUS_ERROR_DESC', 'BillPay - Aufgrund eines Fehlers ben&ouml;tigt diese Bestellung eine manuelle Korrektur. Bitte kontaktieren Sie den BillPay Support.');
 
 
-define('MODULE_PAYMENT_BILLPAY_SALUTATION_MALE', 'Herr');
-define('MODULE_PAYMENT_BILLPAY_SALUTATION_FEMALE', 'Frau');
+define('MODULE_PAYMENT_BILLPAY_SALUTATION_MALE', MODULE_PAYMENT_BILLPAY_TEXT_MR);
+define('MODULE_PAYMENT_BILLPAY_SALUTATION_FEMALE', MODULE_PAYMENT_BILLPAY_TEXT_MRS);
 
 define('MODULE_PAYMENT_BILLPAY_TEXT_SEPA_INFORMATION',    "Die Gl&auml;ubiger-Identifikationsnummer von BillPay ist DE19ZZZ00000237180. Die Mandatsreferenznummer wird mir zu einem sp&auml;teren Zeitpunkt per Email zusammen mit einer Vorlage f&uuml;r ein schriftliches Mandat mitgeteilt. Ich werde zus&auml;tzlich dieses schriftliche Mandat unterschreiben und an BillPay senden.<br/><br/>Hinweis: Ich kann innerhalb von acht Wochen, beginnend mit dem Belastungsdatum, die Erstattung des belasteten Betrages verlangen. Es gelten dabei die mit meinem Geldinstitut vereinbarten Bedingungen. Bitte beachten Sie, dass die f&auml;llige Forderung auch bei einer R&uuml;cklastschrift bestehen bleibt. For more information visit <a href='https://www.billpay.de/sepa' target='_blank'>https://www.billpay.de/sepa</a>.");
 define('MODULE_PAYMENT_BILLPAY_TEXT_SEPA_INFORMATION_AT', "Die Gl&auml;ubiger-Identifikationsnummer von BillPay ist DE19ZZZ00000237180, die Gl&auml;ubiger-Identifikationsnummer der net-m privatbank AG ist DE62ZZZ00000009232. Die Mandatsreferenznummer wird mir zu einem sp&auml;teren Zeitpunkt per Email zusammen mit einer Vorlage f&uuml;r ein schriftliches Mandat mitgeteilt. Ich werde zus&auml;tzlich dieses schriftliche Mandat unterschreiben und an BillPay senden.<br/><br/>Hinweis: Ich kann innerhalb von acht Wochen, beginnend mit dem Belastungsdatum, die Erstattung des belasteten Betrages verlangen. Es gelten dabei die mit meinem Geldinstitut vereinbarten Bedingungen. Bitte beachten Sie, dass die f&auml;llige Forderung auch bei einer R&uuml;cklastschrift bestehen bleibt. F&uuml;r weitere Informationen besuchen <a href='https://www.billpay.de/sepa' target='_blank'>https://www.billpay.de/sepa</a>.");
