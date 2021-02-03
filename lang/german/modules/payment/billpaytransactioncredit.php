@@ -52,9 +52,6 @@ define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_MIN_AMOUNT_DESC', 'Ab diesem Bes
 define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_LOGPATH_TITLE', 'Logging Pfad');
 define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_LOGPATH_DESC', '');
 
-define('MODULE_PAYMENT_BILLPAY_HTTP_X_TITLE', 'X_FORWARDED_FOR erlauben');
-define('MODULE_PAYMENT_BILLPAY_HTTP_X_DESC', 'Aktivieren Sie dieses Funktion wenn Ihr Shop in einem Cloud System l&auml;uft.');
-
 // Payment selection texts
 define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_BIRTHDATE', 'Bitte geben Sie Ihr Geburtsdatum ein');
 define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_ENTER_BIRTHDATE', 'Bitte geben Sie Ihr Geburtsdatum ein');

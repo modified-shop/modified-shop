@@ -57,6 +57,9 @@ define('MODULE_PAYMENT_BILLPAY_LOGPATH_DESC', '');
 define('MODULE_PAYMENT_BILLPAY_GS_HTTP_X_TITLE', 'X_FORWARDED_FOR allow');
 define('MODULE_PAYMENT_BILLPAY_GS_HTTP_X_DESC', 'Activate this function if your shop is using Cloud System');
 
+define('MODULE_PAYMENT_BILLPAY_HTTP_X_TITLE', 'X_FORWARDED_FOR allow');
+define('MODULE_PAYMENT_BILLPAY_HTTP_X_DESC', 'Activate this function if your shop is using Cloud System');
+
 // Payment selection texts
 define('MODULE_PAYMENT_BILLPAY_TEXT_BIRTHDATE', 'Date of birth');
 define('MODULE_PAYMENT_BILLPAY_TEXT_PHONE', 'Phone number');
