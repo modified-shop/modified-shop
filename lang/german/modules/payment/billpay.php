@@ -64,13 +64,13 @@ define('MODULE_PAYMENT_BILLPAY_HTTP_X_DESC', 'Aktivieren Sie dieses Funktion wen
 define('MODULE_PAYMENT_BILLPAY_TEXT_BIRTHDATE', 'Geburtsdatum');
 define('MODULE_PAYMENT_BILLPAY_TEXT_PHONE', 'Telefonnummer');
 define('MODULE_PAYMENT_BILLPAY_TEXT_EULA_CHECK',    'Mit der &Uuml;bermittlung der f&uuml;r die Abwicklung des Rechnungskaufs und einer Identit&auml;ts und Bonit&auml;tspr&uuml;fung erforderlichen Daten an die <a href="https://www.billpay.de/endkunden/" target="blank">BillPay GmbH</a> bin ich einverstanden. Es gelten die <a href="%s" target="_blank">Datenschutzbestimmungen</a> von BillPay.');
-define('MODULE_PAYMENT_BILLPAY_TEXT_EULA_CHECK_CH', '<label for="billpay_eula">Here I confirm the <a href="https://www.billpay.de/kunden/agb-ch" target="_blank">AGB</a> and the <a href="https://www.billpay.de/kunden/agb-ch#datenschutz" target="_blank">data protection regulations</a> of BillPay GmbH </label> <br />');
+define('MODULE_PAYMENT_BILLPAY_TEXT_EULA_CHECK_CH', '<label for="billpay_eula">Hiermit best&auml;tige ich die <a href="https://www.billpay.de/kunden/agb-ch" target="_blank">AGB</a> und die <a href="https://www.billpay.de/kunden/agb-ch#datenschutz" target="_blank">Datenschutzbestimmungen</a> der BillPay GmbH</label> <br />');
 
-define('MODULE_PAYMENT_BILLPAY_TEXT_EULA_CHECK_SEPA', "I agree with the transfer of the data required for the processing of the payment and an identity and credit check to the <a href='https://www.billpay.de/endkunden/' target='_blank'>BillPay GmbH</a>. The <a href='%s' target='_blank'>data protection regulations</a> of BillPay.<br/><br/> I give BillPay a SEPA direct debit mandate (<a href='#' class='bpy-btn-details'>details</a>) for the collection of due payments and instruct my financial institution to collect the direct debits.");
-define('MODULE_PAYMENT_BILLPAY_TEXT_EULA_CHECK_SEPA_AT', "I agree with the transfer of the data required for the processing of the payment and an identity and creditworthiness check to the <a href='https://www.billpay.de/endkunden/' target='_blank'>BillPay GmbH</a>. The <a href='%s' target='_blank'>data protection regulations</a> of BillPay.<br/><br/> I grant BillPay and the <a href='https://www.privatbank1891.com/' target='_blank'>net-m privatbank 1891 AG</a> a SEPA Direct Debit Mandate (<a href='#' class='bpy-btn-details'>details</a>) for the collection of outstanding payments and instruct my financial institution to collect the direct debits.");
+define('MODULE_PAYMENT_BILLPAY_TEXT_EULA_CHECK_SEPA', "Ich bin mit der &Uuml;bermittlung der f&uuml;r die Abwicklung der Zahlung und einer Identit&auml;ts- und Bonit&auml;tspr&uuml;fung erforderlichen Daten an die <a href='https://www.billpay.de/endkunden/' target='_blank'>BillPay GmbH</a> einverstanden. Die <a href='%s' target='_blank'>Datenschutzbestimmungen</a> von BillPay.<br/><br/> Ich erteile BillPay ein SEPA-Lastschriftmandat (<a href='#' class='bpy-btn-details'>Details</a>) zum Einzug f&auml;lliger Zahlungen und weise mein Kreditinstitut an, die Lastschriften einzuziehen.");
+define('MODULE_PAYMENT_BILLPAY_TEXT_EULA_CHECK_SEPA_AT', "Ich bin mit der &Uuml;bermittlung der f&uuml;r die Abwicklung der Zahlung und einer Identit&auml;ts- und Bonit&auml;tspr&uuml;fung erforderlichen Daten an die <a href='https://www.billpay.de/endkunden/' target='_blank'>BillPay GmbH</a> einverstanden. Die <a href='%s' target='_blank'>Datenschutzbestimmungen</a> von BillPay.<br/><br/> Ich erteile BillPay und der <a href='https://www.privatbank1891.com/' target='_blank'>net-m privatbank 1891 AG</a> ein SEPA-Lastschriftmandat (<a href='#' class='bpy-btn-details'>Details</a>) zum Einzug offener Zahlungen und weise mein Kreditinstitut an, die Lastschriften einzuziehen.");
 
-define('MODULE_PAYMENT_BILLPAY_UTF8_ENCODE_TITLE', 'Enable UTF8 encoding');
-define('MODULE_PAYMENT_BILLPAY_UTF8_ENCODE_DESC', 'Disable this option if you use UTF-8 encoding in your online store');
+define('MODULE_PAYMENT_BILLPAY_UTF8_ENCODE_TITLE', 'UTF8-Kodierung aktivieren');
+define('MODULE_PAYMENT_BILLPAY_UTF8_ENCODE_DESC', 'Deaktivieren Sie diese Option, wenn Sie in Ihrem Online-Shop die UTF-8 Kodierung einsetzen.');
 
 define('MODULE_PAYMENT_BILLPAY_TEXT_ENTER_BIRTHDATE', 'Bitte geben Sie Ihr Geburtsdatum ein');
 define('MODULE_PAYMENT_BILLPAY_TEXT_ENTER_GENDER', 'Bitte geben Sie Ihr Geschlecht ein');
@@ -92,15 +92,15 @@ define('JS_BILLPAY_DOBMONTH', '* Bitte geben Sie Ihr Geburtsmonat.\n\n');
 define('JS_BILLPAY_DOBYEAR', '* Bitte geben Sie Ihr Geburtsjahr ein.\n\n');
 define('JS_BILLPAY_GENDER', '* Bitte geben Sie Ihr Geschlecht ein.\n\n');
 
-define('JS_BILLPAY_CODE', '* Please provide bank account code.\n\n');
-define('JS_BILLPAY_NUMBER', '* Please provide bank account number.\n\n');
-define('JS_BILLPAY_NAME', '* Please provide name of the holder of selected bank account.\n\n');
-define('JS_BILLPAY_PHONE', '* Please provide your telephone number.\n\n');
+define('JS_BILLPAY_CODE', '* Bitte geben Sie die BIC ein.\n\n');
+define('JS_BILLPAY_NUMBER', '* Bitte geben Sie die IBAN ein.\n\n');
+define('JS_BILLPAY_NAME', '* Bitte geben Sie den Namen des Kontoinhabers ein.\n\n');
+define('JS_BILLPAY_PHONE', '* Bitte geben Sie Ihre Telefonnummer ein.\n\n');
 
 define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_NUMBER', '* Bitte geben Sie die IBAN ein.');
 define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_CODE', '* Bitte geben Sie die BIC ein.');
 define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_NAME', '* Bitte geben Sie den Namen des Kontoinhabers ein.');
-define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_PHONE', '* Please provide your telephone number.');
+define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_PHONE', '* Bitte geben Sie Ihre Telefonnummer ein.');
 
 define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_EULA', '* Bitte akzeptieren Sie die BillPay AGB!');
 define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_DOB', '* Bitte geben Sie Ihr Geburtsdatum ein.');
