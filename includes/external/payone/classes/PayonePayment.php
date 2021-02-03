@@ -41,6 +41,7 @@ class PayonePayment {
         $this->global_config = $this->pg_config['global_override'] == 'true' ? $this->pg_config['global'] : $this->config['global'];
         $this->tmpStatus = $this->config['orders_status']['tmp'];
 			}
+  		$this->order_status = $this->config['orders_status']['paid'];
 		}
 		!empty($this->code) OR $this->code = 'payone';
 		$this->title = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_TITLE')) ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_TITLE') : ''); 
@@ -48,7 +49,6 @@ class PayonePayment {
 		$this->sort_order = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_SORT_ORDER')) ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_SORT_ORDER') : '');
 		$this->enabled = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_STATUS') && constant('MODULE_PAYMENT_'.strtoupper($this->code).'_STATUS') == 'True') ? true : false);
 		$this->info = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_INFO')) ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_INFO') : ''); 
-		$this->order_status = $this->config['orders_status']['paid'];
 
 		if (is_object($order)) {
 			$this->update_status();
