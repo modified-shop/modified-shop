@@ -177,10 +177,14 @@
         <?php } ?>
         <?php
         if ($action == 'new' || $action == 'edit') {
+
+          $price = 0;
+          $new_price = 0;
+          $price_netto = '';
+          $new_price_netto = '';
           $form_action = 'insert';
-          $expires_date = '';
+          
           if ($action == 'edit' && isset($sID)) {
-            $form_action = 'update';
             $product_query = xtc_db_query("SELECT p.products_id,
                                                   p.products_model,
                                                   p.products_price,
@@ -197,22 +201,29 @@
                                              JOIN " . TABLE_SPECIALS . " s
                                                   ON p.products_id = s.products_id
                                                      AND s.specials_id = '" . $sID ."'");
-            $product = xtc_db_fetch_array($product_query);
-            $sInfo = new objectInfo($product);
-            // build the expires date in the format YYYY-MM-DD
-            if ($sInfo->expires_date != 0) {
-              $expires_date = date('Y-m-d', strtotime($sInfo->expires_date));
-            }	else {
-              $expires_date = '';
+            if (xtc_db_num_rows($product_query) > 0) {
+              $form_action = 'update';
+              $product = xtc_db_fetch_array($product_query);
+              $sInfo = new objectInfo($product);
+
+              $price_netto = '';
+              $new_price_netto = '';
+              $price = $sInfo->products_price;
+              $new_price = $sInfo->specials_new_products_price;
+              if (PRICE_IS_BRUTTO == 'true') {
+                $price_netto = ' ' . TEXT_NETTO.'<strong>'.xtc_round($price,PRICE_PRECISION).'</strong>  ';
+                if ($price > 0) {
+                  $new_price_netto = TEXT_NETTO.'<strong>'.xtc_round($new_price,PRICE_PRECISION).'</strong>';
+                }            
+                $price = ($price*(xtc_get_tax_rate($sInfo->products_tax_class_id)+100)/100);
+                $new_price = ($new_price*(xtc_get_tax_rate($sInfo->products_tax_class_id)+100)/100);
+              }
             }
-            // build the start date in the format YYYY-MM-DD
-            if ($sInfo->start_date != 0) {
-              $start_date = date('Y-m-d', strtotime($sInfo->start_date));
-            }	else {
-              $start_date = '';
-            }
-          } else {
-            $sInfo = new objectInfo(array());
+          } 
+          
+          if ($form_action == 'insert') {
+            $product_array = xtc_get_default_table_data(TABLE_SPECIALS);
+            $sInfo = new objectInfo($product_array);
             // create an array of products on special, which will be excluded from the pull down menu of products
             // (when creating a new product on special)
             $specials_array = array();
@@ -225,28 +236,29 @@
             }
           }
 
-          $price_netto = '';
-          $new_price_netto = '';
-          $price = $sInfo->products_price;
-          $new_price = $sInfo->specials_new_products_price;
-          if (PRICE_IS_BRUTTO == 'true') {
-            $price_netto = ' ' . TEXT_NETTO.'<strong>'.xtc_round($price,PRICE_PRECISION).'</strong>  ';
-            if ($price > 0) {
-              $new_price_netto = TEXT_NETTO.'<strong>'.xtc_round($new_price,PRICE_PRECISION).'</strong>';
-            }            
-            $price = ($price*(xtc_get_tax_rate($sInfo->products_tax_class_id)+100)/100);
-            $new_price = ($new_price*(xtc_get_tax_rate($sInfo->products_tax_class_id)+100)/100);
-          }
           $price = xtc_round($price,PRICE_PRECISION);
           $new_price = xtc_round($new_price,PRICE_PRECISION);           
 
+          // build the expires date in the format YYYY-MM-DD
+          if (strtotime($sInfo->expires_date) !== false && strtotime($sInfo->expires_date) > 0) {
+            $expires_date = date('Y-m-d', strtotime($sInfo->expires_date));
+          } else {
+            $expires_date = '';
+          }
+
+          // build the start date in the format YYYY-MM-DD
+          if (strtotime($sInfo->start_date) !== false && strtotime($sInfo->start_date) > 0) {
+            $start_date = date('Y-m-d', strtotime($sInfo->start_date));
+          } else {
+            $start_date = '';
+          }
 
           echo xtc_draw_form('new_special', FILENAME_SPECIALS, xtc_get_all_get_params(array('action', 'info', 'sID')) . 'action=' . $form_action);
           if ($form_action == 'update') { 
             echo xtc_draw_hidden_field('specials_id', $sID);                
+            echo xtc_draw_hidden_field('products_tax_class_id', $sInfo->products_tax_class_id);
+            echo xtc_draw_hidden_field('products_price', $sInfo->products_price);
           }
-          echo xtc_draw_hidden_field('products_tax_class_id', $sInfo->products_tax_class_id);
-          echo xtc_draw_hidden_field('products_price', $sInfo->products_price);
           echo xtc_draw_hidden_field('specials_action', $form_action);
           ?>
           
@@ -290,15 +302,17 @@
           </table>
 
           <div class="main mrg5 nobr">
-           <?php echo (($form_action == 'insert') ?
-           '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_INSERT . '"/>'
-           :
-           '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/>'). '&nbsp;&nbsp;&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_SPECIALS, xtc_get_all_get_params(array('action'))) . '">' . BUTTON_CANCEL . '</a>'; ?>
+            <?php
+            if ($form_action == 'insert') {
+              echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_INSERT . '"/>';
+            } else {
+              echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_SPECIALS, xtc_get_all_get_params(array('action'))) . '">' . BUTTON_CANCEL . '</a>'; 
+            }
+            ?>
           </div>
         </form>
       </td>                   
         <?php
-        // BEGIN LISTING TABLE
         } else {
           ?>              
           <table class="tableCenter">
@@ -324,7 +338,7 @@
                     <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_START_DATE.xtc_sorting(FILENAME_SPECIALS, 'start-date'); ?></td>
                     <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_EXPIRES_DATE.xtc_sorting(FILENAME_SPECIALS, 'expires-date'); ?></td>
                     <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_PRODUCTS_PRICE.xtc_sorting(FILENAME_SPECIALS, 'price'); ?></td>
-                    <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_STATUS.xtc_sorting(FILENAME_SPECIALS, 'status'); ?></td>
+                    <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_STATUS.xtc_sorting(FILENAME_SPECIALS, 'status'); ?></td>
                     <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
                   </tr>
                   <?php
@@ -333,6 +347,7 @@
                                                 p.products_quantity,
                                                 p.products_price,
                                                 p.products_tax_class_id,
+                                                p.products_image,
                                                 s.specials_id,
                                                 s.specials_quantity,
                                                 s.specials_new_products_price,
@@ -354,24 +369,22 @@
                   $specials_split = new splitPageResults($page, $page_max_display_results, $specials_query_raw, $specials_query_numrows);
                   $specials_query = xtc_db_query($specials_query_raw);
                   while ($specials = xtc_db_fetch_array($specials_query)) {
-                    $price=$specials['products_price'];
-                    $new_price=$specials['specials_new_products_price'];
+                    
+                    $price = $specials['products_price'];
+                    $new_price = $specials['specials_new_products_price'];
                     if (PRICE_IS_BRUTTO=='true'){
-                      $price_netto=xtc_round($price,PRICE_PRECISION);
-                      $new_price_netto=xtc_round($new_price,PRICE_PRECISION);
-                      $price= ($price*(xtc_get_tax_rate($specials['products_tax_class_id'])+100)/100);
-                      $new_price= ($new_price*(xtc_get_tax_rate($specials['products_tax_class_id'])+100)/100);
+                      $price_netto = xtc_round($price,PRICE_PRECISION);
+                      $new_price_netto = xtc_round($new_price,PRICE_PRECISION);
+                      $price = ($price*(xtc_get_tax_rate($specials['products_tax_class_id'])+100)/100);
+                      $new_price = ($new_price*(xtc_get_tax_rate($specials['products_tax_class_id'])+100)/100);
                     }
-                    $specials['products_price']=xtc_round($price,PRICE_PRECISION);
-                    $specials['specials_new_products_price']=xtc_round($new_price,PRICE_PRECISION);
+                    $specials['products_price'] = xtc_round($price,PRICE_PRECISION);
+                    $specials['specials_new_products_price'] = xtc_round($new_price,PRICE_PRECISION);
+                    
                     if ((!isset($sID) || (isset($sID) && ($sID == $specials['specials_id']))) && !isset($sInfo) ) {
-                      $products_query = xtc_db_query("select products_image from " . TABLE_PRODUCTS . " where products_id = '" . (int)$specials['products_id'] . "'");
-                      $products = xtc_db_fetch_array($products_query);
-                      $sInfo_array = array_merge($specials, $products);
-                      $sInfo = new objectInfo($sInfo_array);
-                      $sInfo->specials_new_products_price = $specials['specials_new_products_price'];
-                      $sInfo->products_price = $specials['products_price'];
+                      $sInfo = new objectInfo($specials);
                     }
+                    
                     if (isset($sInfo) && is_object($sInfo) && ($specials['specials_id'] == $sInfo->specials_id) ) {
                       $tr_attributes = 'class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" data-event="' . xtc_href_link(FILENAME_SPECIALS, xtc_get_all_get_params(array('action', 'sID')) . 'sID=' . $sInfo->specials_id . '&action=edit') . '"';
                     } else {
@@ -405,7 +418,7 @@
                           <?php echo $xtPrice->xtcFormat($specials['specials_new_products_price'],true); ?>
                         </span>
                       </td>
-                      <td  class="dataTableContent txta-r">
+                      <td  class="dataTableContent txta-c">
                         <?php
                         if ($specials['status'] == '1') {
                           echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 10, 10, 'style="margin-right:5px;"') . '<a href="' . xtc_href_link(FILENAME_SPECIALS, xtc_get_all_get_params(array('action', 'sID', 'flag', 'id')).'action=setflag&flag=0&id=' . $specials['specials_id'], 'NONSSL') . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 10, 10) . '</a>';
