@@ -69,4 +69,7 @@ ALTER TABLE `banners` ADD `banners_image_mobile` VARCHAR(255) NOT NULL AFTER `ba
 UPDATE `banners` SET `banners_image` = 'modified_banner.jpg', `banners_image_mobile` = 'modified_banner_mobile.jpg' WHERE banners_image = 'banner_modified-ecommerce-shopsoftware_de.jpg';
 UPDATE `banners` SET `banners_image` = 'modified_banner.jpg', `banners_image_mobile` = 'modified_banner_mobile.jpg' WHERE banners_image = 'banner_modified-ecommerce-shopsoftware_en.jpg';
 
+#GTB - 2021-02-03 - new_attributes
+ALTER TABLE `admin_access` DROP `new_attributes`;
+
 # Keep an empty line at the end of this file for the db_updater to work properly

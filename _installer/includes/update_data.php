@@ -36,6 +36,7 @@
           'start',
           'xajax',
           'xtbooster',
+          'new_attributes',
         ),
       ),
     ),
