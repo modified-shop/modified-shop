@@ -27,4 +27,4 @@ $prefix = 'MODULE_ORDER_TOTAL_BILLPAY_';
   define($prefix.'FEE_TAX_CLASS_DESC','W&auml;hlen Sie eine Steuerklasse.');
 
   // display
-  define($prefix.'FEE_FROM_TOTAL', 'vom Rechnungsbetrag');
+  defined($prefix.'FEE_FROM_TOTAL') OR define($prefix.'FEE_FROM_TOTAL', 'vom Rechnungsbetrag');
