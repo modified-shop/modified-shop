@@ -51,7 +51,6 @@ $filename_array = array(
   'FILENAME_ZONES' => 'zones.php',
   'FILENAME_START' => 'start.php',
   'FILENAME_STATS_STOCK_WARNING' => 'stats_stock_warning.php',
-  'FILENAME_NEW_ATTRIBUTES' => 'new_attributes.php',
   'FILENAME_LOGOFF' => 'logoff.php',
   'FILENAME_LOGIN' => 'login.php',
   'FILENAME_CREATE_ACCOUNT' => 'create_account.php',

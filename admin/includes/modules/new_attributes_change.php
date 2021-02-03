@@ -20,41 +20,34 @@
 
    Released under the GNU General Public License
    --------------------------------------------------------------*/
+
   defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
+
   require_once(DIR_FS_INC .'xtc_get_tax_rate.inc.php');
   require_once(DIR_FS_INC .'xtc_get_tax_class_id.inc.php');
-  
-  //require_once(DIR_FS_INC .'xtc_format_price.inc.php');
-  
-  // I found the easiest way to do this is just delete the current attributes & start over =)
-  // download function start
+
   function delete_attributes($options_id = '') {
     $options_id = $options_id != '' ? " AND options_id = '". (int)$options_id . "'" : '';
     $delete_sql = xtc_db_query("SELECT products_attributes_id
                                   FROM ".TABLE_PRODUCTS_ATTRIBUTES."
                                  WHERE products_id = '" . (int)$_POST['current_product_id'] . "'
-                                       ".$options_id."
-                               ");
+                                       ".$options_id);
 
     while($delete_res = xtc_db_fetch_array($delete_sql)) {
         $delete_download_sql = xtc_db_query("SELECT products_attributes_filename
                                                FROM ".TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD."
-                                              WHERE products_attributes_id = '" . (int)$delete_res['products_attributes_id'] . "'"); //Web28 - 2010-12-16 - fix typo
+                                              WHERE products_attributes_id = '" . (int)$delete_res['products_attributes_id'] . "'");
 
         $delete_download_file = xtc_db_fetch_array($delete_download_sql);
         xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD." 
-                            WHERE products_attributes_id = '" . (int)$delete_res['products_attributes_id'] . "'
-                     ");
+                            WHERE products_attributes_id = '" . (int)$delete_res['products_attributes_id'] . "'");
     }
 
-    // download function end
     xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_ATTRIBUTES." 
-                        WHERE products_id = '" . $_POST['current_product_id'] . "'
-                              ".$options_id."
-                 ");
+                        WHERE products_id = '" . (int)$_POST['current_product_id'] . "'
+                              ".$options_id);
   }
   
-  //echo '<pre>'.print_r($_POST,true).'</pre>';EXIT;
   if (isset($_POST['options_id']) && is_array($_POST['options_id'])) {
     $delete_options_array = $_POST['options_id'];
     for ($i = 0, $n = sizeof($delete_options_array); $i < $n; $i++) {
@@ -65,14 +58,12 @@
     delete_attributes();
   }
   
-  // Simple, yet effective.. loop through the selected Option Values.. find the proper price & prefix.. insert.. yadda yadda yadda.
   if (isset($_POST['optionValues']) && is_array($_POST['optionValues'])) {
     for ($i = 0, $n = sizeof($_POST['optionValues']); $i < $n; $i++) {
-      $query = "SELECT * 
-                  FROM ".TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS." 
-                 WHERE products_options_values_id = '" . (int)$_POST['optionValues'][$i] . "'";
-      $result = xtc_db_query($query);
-      $matches = xtc_db_num_rows($result);
+      $result = xtc_db_query("SELECT * 
+                                FROM ".TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS." 
+                               WHERE products_options_values_id = '" . (int)$_POST['optionValues'][$i] . "'");
+
       while ($line = xtc_db_fetch_array($result)) {
         $optionsID = $line['products_options_id'];
       }
@@ -80,33 +71,35 @@
       $cv_id = $_POST['optionValues'][$i];
       $value_price =  $_POST[$cv_id . '_price'];
 
-      if (PRICE_IS_BRUTTO=='true'){
-        $value_price= ($value_price/((xtc_get_tax_rate(xtc_get_tax_class_id($_POST['current_product_id'])))+100)*100);
+      if (PRICE_IS_BRUTTO == 'true'){
+        $value_price = ($value_price/((xtc_get_tax_rate(xtc_get_tax_class_id($_POST['current_product_id'])))+100)*100);
       }
 
-      $value_price=xtc_round($value_price,PRICE_PRECISION);
+      $value_price = xtc_round($value_price, PRICE_PRECISION);
     
       //default values
-      $sql_data_array = array ('products_id' => (int)$_POST['current_product_id'],
-                               'options_id' => (int)$optionsID,
-                               'options_values_id' => (int)$_POST['optionValues'][$i],
-                               'options_values_price' => $value_price,
-                               'price_prefix' => xtc_db_prepare_input($_POST[$cv_id . '_prefix']),
-                               'attributes_model' => xtc_db_prepare_input($_POST[$cv_id . '_model']),
-                               'attributes_stock' => (int)$_POST[$cv_id . '_stock'],
-                               'options_values_weight' => $_POST[$cv_id . '_weight'],
-                               'weight_prefix' => xtc_db_prepare_input($_POST[$cv_id . '_weight_prefix']),
-                               'sortorder' => (int)$_POST[$cv_id . '_sortorder']
-                               );
+      $sql_data_array = array(
+        'products_id' => (int)$_POST['current_product_id'],
+        'options_id' => (int)$optionsID,
+        'options_values_id' => (int)$_POST['optionValues'][$i],
+        'options_values_price' => $value_price,
+        'price_prefix' => xtc_db_prepare_input($_POST[$cv_id . '_prefix']),
+        'attributes_model' => xtc_db_prepare_input($_POST[$cv_id . '_model']),
+        'attributes_stock' => (int)$_POST[$cv_id . '_stock'],
+        'options_values_weight' => $_POST[$cv_id . '_weight'],
+        'weight_prefix' => xtc_db_prepare_input($_POST[$cv_id . '_weight_prefix']),
+        'sortorder' => (int)$_POST[$cv_id . '_sortorder']
+      );
+      
       //additional values
       $add_data_array = array ('attributes_ean' => xtc_db_prepare_input($_POST[$cv_id . '_ean']));
     
       //VPE
       if (isset($_POST[$cv_id . '_vpe_value'])) {
-          $sql_data_array['attributes_vpe_value'] = xtc_db_prepare_input($_POST[$cv_id .'_vpe_value']);
+        $sql_data_array['attributes_vpe_value'] = xtc_db_prepare_input($_POST[$cv_id .'_vpe_value']);
       }
       if (isset($_POST[$cv_id . '_vpe_id'])) {
-          $sql_data_array['attributes_vpe_id'] = xtc_db_prepare_input($_POST[$cv_id .'_vpe_id']);
+        $sql_data_array['attributes_vpe_id'] = xtc_db_prepare_input($_POST[$cv_id .'_vpe_id']);
       }    
     
       $sql_data_array = array_merge($sql_data_array, $add_data_array);
@@ -121,11 +114,12 @@
         $value_download_expire = $_POST[$cv_id . '_download_expire'];
         $value_download_count = (int)$_POST[$cv_id . '_download_count'];
 
-        $sql_data_array = array ('products_attributes_id' => $products_attributes_id,
-                                 'products_attributes_filename' => xtc_db_prepare_input($value_download_file),
-                                 'products_attributes_maxdays' => $value_download_expire,
-                                 'products_attributes_maxcount' => $value_download_count
-                                );
+        $sql_data_array = array(
+          'products_attributes_id' => $products_attributes_id,
+          'products_attributes_filename' => xtc_db_prepare_input($value_download_file),
+          'products_attributes_maxdays' => $value_download_expire,
+          'products_attributes_maxcount' => $value_download_count
+        );
                               
         foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/new_attributes/new_attributes_change_dl/','php') as $file) require ($file);
             
@@ -133,5 +127,8 @@
       }
     }
   }
-  xtc_db_query('UPDATE ' . TABLE_PRODUCTS . ' SET products_last_modified=now() WHERE products_id=' . (int)$_POST['current_product_id']); //DokuMan - 2010-09-21 - set modified date on product
+  
+  xtc_db_query("UPDATE " . TABLE_PRODUCTS . " 
+                   SET products_last_modified = now() 
+                 WHERE products_id = " . (int)$_POST['current_product_id']);
 ?>

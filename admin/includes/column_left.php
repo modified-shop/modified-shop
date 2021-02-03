@@ -82,7 +82,6 @@ echo endMenue(BOX_HEADING_CUSTOMERS);
 //---------------------------ARTIKELKATALOG
 echo mainMenue(BOX_HEADING_PRODUCTS);
     if ($admin_access['categories'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_CATEGORIES, '', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_CATEGORIES . '</a></li>';
-    //if ($admin_access['new_attributes'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_NEW_ATTRIBUTES, '', 'NONSSL') . '" class="menuBoxContentLink"> -'.BOX_ATTRIBUTES_MANAGER.'</a></li>';
     if ($admin_access['products_attributes'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, '', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_PRODUCTS_ATTRIBUTES . '</a></li>';
     if ($admin_access['products_tags'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_PRODUCTS_TAGS, '', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_PRODUCTS_TAGS . '</a></li>';
     if ($admin_access['manufacturers'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_MANUFACTURERS, '', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_MANUFACTURERS . '</a></li>';

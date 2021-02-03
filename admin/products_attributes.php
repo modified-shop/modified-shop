@@ -12,6 +12,30 @@
 
   require('includes/application_top.php');
 
+  $oldaction = isset($_GET['oldaction']) ? '&oldaction='.$_GET['oldaction'] : (isset($_POST['oldaction']) ? '&oldaction='.$_POST['oldaction']: '');
+  $oldpage = isset($_GET['page']) ? '&page='.$_GET['page'] : (isset($_POST['page']) ? '&page='.$_POST['page']: '') ;
+  $iframe = (isset($_GET['iframe']) ? $iframe = '&iframe=1' : '');
+
+  if (isset($_POST['products_options_id']) && $_POST['action'] == 'change') {
+     include(DIR_WS_MODULES.'new_attributes_change.php');
+     $options_id = isset($_POST['options_id']) ? '&options_id='.implode(',',$_POST['options_id']) : '';
+     xtc_redirect(xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'cpath='. $_POST['cpath'].'&current_product_id='. $_POST['current_product_id'].'&option_order_by='.$_POST['option_order_by'].'&products_options_id=' .$_POST['products_options_id'].$oldaction.$oldpage.$options_id.$iframe));
+  }
+
+  if (isset($_GET['cPath'])) {
+     include(DIR_WS_MODULES.'new_attributes_change.php');
+     xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, 'cPath=' . $_GET['cPath'] . '&pID=' . $_GET['current_product_id'] . str_replace('old','',$oldaction). $oldpage));
+  }
+
+  if (isset($_GET['action']) && !isset($_POST['action'])) {
+    $_POST = $_GET;
+  }
+
+	if (isset($_GET['iframe']) || $_GET['current_product_id'] > 0) {
+    include(DIR_WS_MODULES.'new_attributes_include.php');
+    exit;    
+	}
+
   //display per page
   $cfg_max_display_options_key = 'MAX_DISPLAY_NUMBER_OF_OPTIONS';
   $page_max_display_options_results = xtc_cfg_save_max_display_results($cfg_max_display_options_key);
@@ -439,7 +463,7 @@ require (DIR_WS_INCLUDES.'head.php');
               $contents = array();
 
               if (isset($_GET['list']) && $_GET['list'] == 'detail') {
-                switch ($action) {
+                switch ($saction) {
                   case 'new_value':
                     $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_NEW_VALUE . '</b>');
 

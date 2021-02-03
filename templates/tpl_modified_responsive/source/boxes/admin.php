@@ -116,9 +116,9 @@ if ($admin_access['categories'] == '1') {
     $box_smarty->assign('EDIT_XSELL', xtc_href_link_admin((defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'categories.php', 'cpath='.$cPath.'&current_product_id='.$product->data['products_id'].'&action=edit_crossselling'));
   }
   // attributes
-  if ($admin_access['new_attributes'] == '1') {
+  if ($admin_access['products_attributes'] == '1') {
     if ($product->isProduct() === true) {
-      $box_smarty->assign('EDIT_PRODUCT_ATTRIBUTES', xtc_href_link_admin((defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'new_attributes.php', 'cpath='.$cPath.'&current_product_id='.$product->data['products_id'].'&action=edit'));
+      $box_smarty->assign('EDIT_PRODUCT_ATTRIBUTES', xtc_href_link_admin((defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'products_attributes.php', 'cpath='.$cPath.'&current_product_id='.$product->data['products_id'].'&action=edit'));
     }
   }
   // tags

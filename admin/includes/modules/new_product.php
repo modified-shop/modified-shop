@@ -243,13 +243,13 @@
         if (function_exists('tags_iframe_link')) {
           echo '&nbsp;'.tags_iframe_link($_GET['pID']);
         } else {
-          echo '&nbsp;<a class="button" href="' . xtc_href_link('products_tags.php','cpath='. $cPath . $catfunc->page_parameter.'&current_product_id='.$_GET['pID'].'&action=edit&oldaction=new_product').'" onclick="this.blur()">'.TEXT_PRODUCTS_TAGS.'</a>';
+          echo '&nbsp;<a class="button" href="' . xtc_href_link(FILENAME_PRODUCTS_TAGS,'cpath='. $cPath . $catfunc->page_parameter.'&current_product_id='.$_GET['pID'].'&action=edit&oldaction=new_product').'" onclick="this.blur()">'.TEXT_PRODUCTS_TAGS.'</a>';
         }
         
         if (function_exists('attributes_iframe_link')) {
           echo '&nbsp;'.attributes_iframe_link($_GET['pID']);
         } else {
-          echo '&nbsp;<a class="button" href="' . xtc_href_link('new_attributes.php','cpath='. $cPath . $catfunc->page_parameter.'&current_product_id='.$_GET['pID'].'&action=edit&oldaction=new_product').'" onclick="this.blur()">'.BUTTON_EDIT_ATTRIBUTES.'</a>';
+          echo '&nbsp;<a class="button" href="' . xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES,'cpath='. $cPath . $catfunc->page_parameter.'&current_product_id='.$_GET['pID'].'&action=edit&oldaction=new_product').'" onclick="this.blur()">'.BUTTON_EDIT_ATTRIBUTES.'</a>';
         }
         
         echo '&nbsp;<a onclick="return confirmLink(\''. CONTINUE_WITHOUT_SAVE .'\', \'\' ,this)" class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('action','last_action', 'set', 'id', 'pID', 'cPath')) . 'last_action='.$_GET['action'].'&action=edit_crossselling&current_product_id='.(int)$_GET['pID'].'&cpath='.$cPath) . '">' . BUTTON_EDIT_CROSS_SELLING . '</a>';
