@@ -70,6 +70,8 @@
   $smarty->assign('ADDRESS_SMALL', $invoice_data['content_heading']);
   $smarty->assign('ADDRESS_LARGE', $invoice_data['content_text']);
 
+  foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/orders/orders_print/','php') as $file) require ($file);
+
   // dont allow cache
   $smarty->caching = false;
   $smarty->template_dir=DIR_FS_CATALOG.'templates';
