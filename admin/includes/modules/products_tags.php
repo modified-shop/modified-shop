@@ -10,6 +10,8 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
+  defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
+
   $pageTitle = TITLE_EDIT.': ' . xtc_get_products_name($_GET['current_product_id']);
 
   $noStylingClass = '';
@@ -102,7 +104,6 @@
   }
 
 require (DIR_WS_INCLUDES.'head.php');
-
 ?>
   <link rel="stylesheet" type="text/css" href="includes/css/new_attributes.css">
   <script type="text/javascript" src="includes/javascript/jquery.new_attributes.js"></script>
