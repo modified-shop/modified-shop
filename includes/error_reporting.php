@@ -127,6 +127,7 @@ function mod_log_exception($e)
             $error_exceptions[$error['name']][$index] .= '</table>' . PHP_EOL;
 
             // write Logfile
+            $LoggingManager->log($error['name'], $error['name'].' found for URL: ' . $_SERVER['REQUEST_URI']);
             $LoggingManager->log($error['name'], html_entity_decode($error['message']) . ' in File: ' . $error['file'] . ' on Line: ' . $error['line']);
             $err = 0;
             for ($i=0, $n=count($backtrace); $i<$n; $i++) {
