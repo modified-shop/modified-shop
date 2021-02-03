@@ -27,4 +27,4 @@ $prefix = 'MODULE_ORDER_TOTAL_BILLPAY_';
   define($prefix.'FEE_TAX_CLASS_DESC','Choose a tax class for the fee');
 
   // display
-  define($prefix.'FEE_FROM_TOTAL', 'of order amount');
+  defined($prefix.'FEE_FROM_TOTAL') OR define($prefix.'FEE_FROM_TOTAL', 'of order amount');
