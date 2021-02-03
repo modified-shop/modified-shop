@@ -50,6 +50,7 @@ function mod_get_log_level($error_reporting_array) {
       break;
     case 'dev':
       $LogLevel = 'DEBUG';
+      @ini_set('display_errors', true);
       error_reporting(-1);
       break;
     case 'none':
@@ -70,7 +71,7 @@ function mod_get_log_level($error_reporting_array) {
  */
 function mod_log_error($num, $str, $file, $line, $context=null)
 {
-    mod_log_exception_handler(new ErrorException($str, 0, $num, $file, $line));
+  mod_log_exception_handler(new ErrorException($str, 0, $num, $file, $line));
 }
 
 /**
@@ -87,57 +88,57 @@ function mod_log_exception_handler($e) {
  */
 function mod_log_exception($e)
 {
-    global $error_exceptions, $sql_error, $sql_query, $LoggingManager, $LogLevel;
-    
-    if (!is_object($LoggingManager)) {
-        $LoggingManager = new LoggingManager(DIR_FS_LOG.'mod_%s_'.((defined('RUN_MODE_ADMIN')) ? 'admin_' : '').'%s.log', 'modified', strtolower($LogLevel));
-    }
-    
-    if (strpos($e->getFile(), 'templates_c') !== false
-        || strpos($e->getFile(), 'cache') !== false
-        || $LogLevel === 'NONE') return;
+  global $error_exceptions, $sql_error, $sql_query, $LoggingManager, $LogLevel;
+  
+  if (!is_object($LoggingManager)) {
+    $LoggingManager = new LoggingManager(DIR_FS_LOG.'mod_%s_'.((defined('RUN_MODE_ADMIN')) ? 'admin_' : '').'%s.log', 'modified', strtolower($LogLevel));
+  }
+  
+  if (strpos($e->getFile(), 'templates_c') !== false
+      || strpos($e->getFile(), 'cache') !== false
+      || $LogLevel === 'NONE') return;
 
-    if (!is_array($error_exceptions)) {
-      $error_exceptions = array();
-    }
+  if (!is_array($error_exceptions)) {
+    $error_exceptions = array();
+  }
 
-    if (is_object($e)) {
-        $backtrace = debug_backtrace();
-        $error = array();
-        $error['number'] = (method_exists($e, 'getseverity') ? $e->getseverity() : 'UNDEFINED_ERROR');
-        $error['name'] = (($error['number'] != 'UNDEFINED_ERROR') ? mod_error_level($error['number']) : 'ERROR');
-        $error['line'] = $e->getLine();
-        $error['file'] = $e->getFile();
-        $error['message'] = $e->getMessage();
-        $index = md5($error['name'].$error['line'].$error['file'].$error['message']);
-    
-        if (!isset($error_exceptions[$error['name']][$index])) {
-            $error_exceptions[$error['name']][$index] = '<table style="width: 1000px; display: inline-block;">' . PHP_EOL .
-                                                        '  <tr style="color:#000; background-color:#e6e6e6;"><th style="width:100px;">Type</th><td style="width:900px;">'.$error['name'].'</td></tr>' . PHP_EOL .
-                                                        '  <tr style="color:#000; background-color:#F0F0F0;"><th>Message</th><td>'.$error['message'].'</td></tr>' . PHP_EOL .
-                                                        '  <tr style="color:#000; background-color:#e6e6e6;"><th>File</th><td>'.$error['file'].'</td></tr>' . PHP_EOL .
-                                                        '  <tr style="color:#000; background-color:#F0F0F0;"><th>Line</th><td>'.$error['line'].'</td></tr>' . PHP_EOL;
-                                                        $err = 0;
-                                                        for ($i=0, $n=count($backtrace); $i<$n; $i++) {
-                                                            if (isset($backtrace[$i]['file']) && $backtrace[$i]['file'] != $error['file'] && basename($backtrace[$i]['file']) != 'error_reporting.php') {
-                                                                $error_exceptions[$error['name']][$index] .= '  <tr style="color:#000; background-color:#e6e6e6;"><th>Backtrace #'.$err.'</th><td>'.$backtrace[$i]['file'].' called at Line '.$backtrace[$i]['line'].'</td></tr>' . PHP_EOL;
-                                                                $err ++;
-                                                            }
-                                                        }
-            $error_exceptions[$error['name']][$index] .= '</table>' . PHP_EOL;
+  if (is_object($e)) {
+    $backtrace = debug_backtrace();
+    $error = array();
+    $error['number'] = (method_exists($e, 'getseverity') ? $e->getseverity() : 'UNDEFINED_ERROR');
+    $error['name'] = (($error['number'] != 'UNDEFINED_ERROR') ? mod_error_level($error['number']) : 'ERROR');
+    $error['line'] = $e->getLine();
+    $error['file'] = $e->getFile();
+    $error['message'] = $e->getMessage();
+    $index = md5($error['name'].$error['line'].$error['file'].$error['message']);
 
-            // write Logfile
-            $LoggingManager->log($error['name'], $error['name'].' found for URL: ' . $_SERVER['REQUEST_URI']);
-            $LoggingManager->log($error['name'], html_entity_decode($error['message']) . ' in File: ' . $error['file'] . ' on Line: ' . $error['line']);
-            $err = 0;
-            for ($i=0, $n=count($backtrace); $i<$n; $i++) {
-                if (isset($backtrace[$i]['file']) && $backtrace[$i]['file'] != $error['file'] && basename($backtrace[$i]['file']) != 'error_reporting.php') {
-                    $LoggingManager->log($error['name'], 'Backtrace #'.$err.' - '.$backtrace[$i]['file'].' called at Line '.$backtrace[$i]['line']);
-                    $err ++;
-                }
-            }
+    if (!isset($error_exceptions[$error['name']][$index])) {
+      $error_exceptions[$error['name']][$index] = '<table style="width: 1000px; display: inline-block;">' . PHP_EOL .
+                                                  '  <tr style="color:#000; background-color:#e6e6e6;"><th style="width:100px;">Type</th><td style="width:900px;">'.$error['name'].'</td></tr>' . PHP_EOL .
+                                                  '  <tr style="color:#000; background-color:#F0F0F0;"><th>Message</th><td>'.$error['message'].'</td></tr>' . PHP_EOL .
+                                                  '  <tr style="color:#000; background-color:#e6e6e6;"><th>File</th><td>'.$error['file'].'</td></tr>' . PHP_EOL .
+                                                  '  <tr style="color:#000; background-color:#F0F0F0;"><th>Line</th><td>'.$error['line'].'</td></tr>' . PHP_EOL;
+                                                  $err = 0;
+                                                  for ($i=0, $n=count($backtrace); $i<$n; $i++) {
+                                                      if (isset($backtrace[$i]['file']) && $backtrace[$i]['file'] != $error['file'] && basename($backtrace[$i]['file']) != 'error_reporting.php') {
+                                                          $error_exceptions[$error['name']][$index] .= '  <tr style="color:#000; background-color:#e6e6e6;"><th>Backtrace #'.$err.'</th><td>'.$backtrace[$i]['file'].' called at Line '.$backtrace[$i]['line'].'</td></tr>' . PHP_EOL;
+                                                          $err ++;
+                                                      }
+                                                  }
+      $error_exceptions[$error['name']][$index] .= '</table>' . PHP_EOL;
+
+      // write Logfile
+      $LoggingManager->log($error['name'], $error['name'].' found for URL: ' . mod_error_url());
+      $LoggingManager->log($error['name'], html_entity_decode($error['message']) . ' in File: ' . $error['file'] . ' on Line: ' . $error['line']);
+      $err = 0;
+      for ($i=0, $n=count($backtrace); $i<$n; $i++) {
+        if (isset($backtrace[$i]['file']) && $backtrace[$i]['file'] != $error['file'] && basename($backtrace[$i]['file']) != 'error_reporting.php') {
+          $LoggingManager->log($error['name'], 'Backtrace #'.$err.' - '.$backtrace[$i]['file'].' called at Line '.$backtrace[$i]['line']);
+          $err ++;
         }
+      }
     }
+  }
 }
 
 /**
@@ -145,10 +146,10 @@ function mod_log_exception($e)
  */
 function mod_check_for_fatal()
 {
-    $error = error_get_last();
-    if (is_array($error) && $error['type'] == E_ERROR) {
-        mod_log_error($error['type'], $error['message'], $error['file'], $error['line']);
-    }
+  $error = error_get_last();
+  if (is_array($error) && $error['type'] == E_ERROR) {
+    mod_log_error($error['type'], $error['message'], $error['file'], $error['line']);
+  }
 }
 
 /**
@@ -156,40 +157,60 @@ function mod_check_for_fatal()
  */
 function mod_error_level($type)
 {
-    switch($type) {
-        case E_ERROR: // 1 //
-            return 'ERROR';
-        case E_WARNING: // 2 //
-            return 'WARNING';
-        case E_PARSE: // 4 //
-            return 'INFO';
-        case E_NOTICE: // 8 //
-            return 'NOTICE';
-        case E_CORE_ERROR: // 16 //
-            return 'ERROR';
-        case E_CORE_WARNING: // 32 //
-            return 'WARNING';
-        case E_CORE_ERROR: // 64 //
-            return 'ERROR';
-        case E_CORE_WARNING: // 128 //
-            return 'WARNING';
-        case E_USER_ERROR: // 256 //
-            return 'ERROR';
-        case E_USER_WARNING: // 512 //
-            return 'WARNING';
-        case E_USER_NOTICE: // 1024 //
-            return 'CUSTOM';
-        case E_STRICT: // 2048 //
-            return 'INFO';
-        case E_RECOVERABLE_ERROR: // 4096 //
-            return 'ERROR';
-        case E_DEPRECATED: // 8192 //
-            return 'DEBUG';
-        case E_USER_DEPRECATED: // 16384 //
-            return 'DEBUG';
-    }
-    return $type;
+  switch($type) {
+    case E_ERROR: // 1 //
+      return 'ERROR';
+    case E_WARNING: // 2 //
+      return 'WARNING';
+    case E_PARSE: // 4 //
+      return 'INFO';
+    case E_NOTICE: // 8 //
+      return 'NOTICE';
+    case E_CORE_ERROR: // 16 //
+      return 'ERROR';
+    case E_CORE_WARNING: // 32 //
+      return 'WARNING';
+    case E_CORE_ERROR: // 64 //
+      return 'ERROR';
+    case E_CORE_WARNING: // 128 //
+      return 'WARNING';
+    case E_USER_ERROR: // 256 //
+      return 'ERROR';
+    case E_USER_WARNING: // 512 //
+      return 'WARNING';
+    case E_USER_NOTICE: // 1024 //
+      return 'CUSTOM';
+    case E_STRICT: // 2048 //
+      return 'INFO';
+    case E_RECOVERABLE_ERROR: // 4096 //
+      return 'ERROR';
+    case E_DEPRECATED: // 8192 //
+      return 'DEBUG';
+    case E_USER_DEPRECATED: // 16384 //
+      return 'DEBUG';
+  }
+  return $type;
 }
+
+
+/**
+ * clean url params
+ */
+function mod_error_url() {
+  $uri = $_SERVER['REQUEST_URI'];
+  if (strpos($uri, '?') !== false) {
+    $params = explode('?', $uri);
+    parse_str($params[1], $params_array);
+    
+    if (isset($params_array['MODsid'])) unset($params_array['MODsid']);
+    if (isset($params_array['sec'])) unset($params_array['sec']);
+    
+    $params[1] = http_build_query($params_array, '', '&');
+    $uri = implode('?', $params);
+  }
+  return $uri;
+}
+
 
 /**
  * set error functions.
