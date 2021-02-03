@@ -38,7 +38,7 @@ class PayoneModified {
 		$bootstrap->init();
 		
 		$global_config = $this->getConfig('global');
-		$this->logging = (($global_config['logging'] == 'true') ? true : false);
+		$this->logging = ((isset($global_config['logging']) && $global_config['logging'] == 'true') ? true : false);
 	}
 
 	public function log($message) {

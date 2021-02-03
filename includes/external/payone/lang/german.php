@@ -207,8 +207,8 @@ define('TEXT_EXTERN_CALLBACK_URL', 'URL Statusweiterleitung');
 define('TEXT_EXTERN_CALLBACK_TIMEOUT', 'Timeout');
 
 // global
-define('TEXT_YES', 'Ja');
-define('TEXT_NO', 'Nein');
+defined('TEXT_YES') OR define('TEXT_YES', 'Ja');
+defined('TEXT_NO') OR define('TEXT_NO', 'Nein');
 define('ERROR_OCCURED', 'Fehler aufgetreten');
 define('BOX_PAYONE_CONFIG', 'PAYONE Konfiguration');
 define('BOX_PAYONE_LOGS', 'PAYONE API Log');
