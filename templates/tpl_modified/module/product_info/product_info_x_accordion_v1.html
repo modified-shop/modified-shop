@@ -96,14 +96,14 @@
         <div class="addtobasket">
           <span class="addtobasket_input">{$ADD_QTY}</span>
           <span class="addtobasket_button">{$ADD_CART_BUTTON}</span>
-          {if isset($ADD_CART_BUTTON_EXPRESS)}
+          {if isset($ADD_CART_BUTTON_EXPRESS) && !$PAYPALPLAN}
             <br class="clearfix" />
             <span class="addtobasket_button">{$ADD_CART_BUTTON_EXPRESS}</span>
           {elseif $ACTIVATE_EXPRESS_LINK}
             <br class="clearfix" />
             <span class="express_info"><a href="{$ACTIVATE_EXPRESS_LINK}">{#checkout_express_activate#}</a></span>
           {/if}
-          {if $ADD_CART_BUTTON_PAYPAL}
+          {if $ADD_CART_BUTTON_PAYPAL && !$PAYPALPLAN}
             <br class="clearfix" />
             <span class="addtobasket_button">{$ADD_CART_BUTTON_PAYPAL}</span>
           {/if}
@@ -114,12 +114,12 @@
         </div>
         {/if}
 
-        {if $PAYPAL_INSTALLMENT}
+        {if $PAYPAL_INSTALLMENT && !$PAYPALPLAN}
           <br class="clearfix" />
           {$PAYPAL_INSTALLMENT}
         {/if}
 
-        {if $EASYCREDIT}
+        {if $EASYCREDIT && !$PAYPALPLAN}
           <br class="clearfix" />
           {$EASYCREDIT}
         {/if}

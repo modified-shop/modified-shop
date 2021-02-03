@@ -95,7 +95,7 @@
             <td>{$ADD_CART_BUTTON_WISHLIST}</td>
           </tr>
         {/if}
-        {if isset($ADD_CART_BUTTON_EXPRESS)}
+        {if isset($ADD_CART_BUTTON_EXPRESS) && !$PAYPALPLAN}
           <tr>
             <td style="width:100%; padding-right:5px;">&nbsp;</td>
             <td>{$ADD_CART_BUTTON_EXPRESS}</td>
@@ -105,7 +105,7 @@
             <td colspan="2" style="text-align:right;"><a href="{$ACTIVATE_EXPRESS_LINK}">{#checkout_express_activate#}</a></td>
           </tr>
         {/if}
-        {if $ADD_CART_BUTTON_PAYPAL}
+        {if $ADD_CART_BUTTON_PAYPAL && !$PAYPALPLAN}
           <tr>
             <td style="width:100%; padding-right:5px;">&nbsp;</td>
             <td>{$ADD_CART_BUTTON_PAYPAL}</td>
@@ -114,12 +114,12 @@
       </table>
       {/if}
 
-      {if $PAYPAL_INSTALLMENT}
+      {if $PAYPAL_INSTALLMENT && !$PAYPALPLAN}
         <br class="clearfix" />
         {$PAYPAL_INSTALLMENT}
       {/if}
 
-      {if $EASYCREDIT}
+      {if $EASYCREDIT && !$PAYPALPLAN}
         <br class="clearfix" />
         {$EASYCREDIT}
       {/if}

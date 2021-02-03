@@ -21,11 +21,16 @@ function get_paypal_products() {
   require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalInfo.php');
   $paypal = new PayPalInfo('subscription');
   
+  $action = (isset($_GET['action']) ? $_GET['action'] : '');
+  
   ob_start();
-  switch ($_GET['action']) {
+  switch ($action) {
     case 'create_plan':
     case 'patch_plan':
       $data = array_merge(array('products_id' => (int)$_GET['pID']), $_POST);
+      $data['paypal_plan_fixed_price'] = str_replace(',', '.', preg_replace('/[^0-9,.]/', '', $data['paypal_plan_fixed_price']));
+      $data['paypal_plan_setup_fee'] = str_replace(',', '.', preg_replace('/[^0-9,.]/', '', $data['paypal_plan_setup_fee']));
+      
       if ($_GET['action'] == 'patch_plan') {
         $success = $paypal->patch_plan($data);      
       } else {
