@@ -183,7 +183,7 @@ class micropayment_helper
               WHERE `configuration_key` = "'.self::CONFIG_NAME_REFRESH_INTERVAL.'"');
         $check = xtc_db_fetch_array($check);
 
-        if($check['result'] != 1) {
+        if(!is_array($check) || (isset($check['result']) && $check['result'] != 1)) {
             return false;
         } else {
             if (!$this->getConfig('MODULE_PAYMENT_MCP_SERVICE_ACCOUNT_ID')) {
