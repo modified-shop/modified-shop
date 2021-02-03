@@ -9,11 +9,8 @@
    --------------------------------------------------------------
    Released under the GNU General Public License
    --------------------------------------------------------------*/
-defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
-if (!defined('NEW_TAGS_IFRAME_FILENAME')) {
-  define ('NEW_TAGS_IFRAME_FILENAME','products_tags.php');
-}
+defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
 if (!defined('USE_ATTRIBUTES_IFRAME')) {
   define ('USE_ATTRIBUTES_IFRAME','true');
@@ -30,9 +27,9 @@ if (defined('USE_ATTRIBUTES_IFRAME') && USE_ATTRIBUTES_IFRAME == 'true') {
     global $icon_padding;
     $sid = SID ? '&'. SID : '';
     if ($icon) {
-      $link = '<a href="javascript:iframeBox_show('. $pID .', \''.TEXT_PRODUCTS_TAGS.'\' , \''.NEW_TAGS_IFRAME_FILENAME.'\',\''.$sid.'\');">' . xtc_image(DIR_WS_ICONS . 'icon_edit_tags.gif', TEXT_PRODUCTS_TAGS,'', '', $icon_padding). '</a>';
+      $link = '<a href="javascript:iframeBox_show('. $pID .', \''.TEXT_PRODUCTS_TAGS.'\' , \''.FILENAME_PRODUCTS_TAGS.'\',\''.$sid.'\');">' . xtc_image(DIR_WS_ICONS . 'icon_edit_tags.gif', TEXT_PRODUCTS_TAGS,'', '', $icon_padding). '</a>';
     } else {
-      $link = '<a href="javascript:iframeBox_show('. $pID .', \''.TEXT_PRODUCTS_TAGS.'\' , \''.NEW_TAGS_IFRAME_FILENAME.'\',\''.$sid.'\');" class="button">'. TEXT_PRODUCTS_TAGS.'</a>';
+      $link = '<a href="javascript:iframeBox_show('. $pID .', \''.TEXT_PRODUCTS_TAGS.'\' , \''.FILENAME_PRODUCTS_TAGS.'\',\''.$sid.'\');" class="button">'. TEXT_PRODUCTS_TAGS.'</a>';
     }
     return $link;
   }
