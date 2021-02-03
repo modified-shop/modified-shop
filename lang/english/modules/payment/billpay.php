@@ -165,7 +165,7 @@ define('MODULE_PAYMENT_BILLPAY_B2B_REGISTER_NUMBER_EMPTY', 'Please provide regis
 define('MODULE_PAYMENT_BILLPAY_B2B_TAX_NUMBER_EMPTY', 'Please provide Tax-ID');
 
 
-define('MODULE_ORDER_TOTAL_BILLPAY_FEE_FROM_TOTAL', 'of the invoice amount');
+defined('MODULE_ORDER_TOTAL_BILLPAY_FEE_FROM_TOTAL') OR define('MODULE_ORDER_TOTAL_BILLPAY_FEE_FROM_TOTAL', 'of the invoice amount');
 
 define('MODULE_PAYMENT_BILLPAY_GS_UTF8_ENCODE_TITLE', 'Local encoding');
 define('MODULE_PAYMENT_BILLPAY_GS_UTF8_ENCODE_DESC', 'Does your site uses local encoding (other than utf-8)?');

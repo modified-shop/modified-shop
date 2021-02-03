@@ -165,7 +165,7 @@ define('MODULE_PAYMENT_BILLPAY_B2B_REGISTER_NUMBER_EMPTY', 'Bitte geben Sie die 
 define('MODULE_PAYMENT_BILLPAY_B2B_TAX_NUMBER_EMPTY', 'Bitte geben Sie die Umsatzsteuer-ID ein');
 
 
-define('MODULE_ORDER_TOTAL_BILLPAY_FEE_FROM_TOTAL', 'vom Rechnungsbetrag');
+defined('MODULE_ORDER_TOTAL_BILLPAY_FEE_FROM_TOTAL') OR define('MODULE_ORDER_TOTAL_BILLPAY_FEE_FROM_TOTAL', 'vom Rechnungsbetrag');
 
 define('MODULE_PAYMENT_BILLPAY_GS_UTF8_ENCODE_TITLE', 'Local-Kodierung');
 define('MODULE_PAYMENT_BILLPAY_GS_UTF8_ENCODE_DESC', 'Ist Ihre Seite nutzt lokale Kodierung (andere als UTF-8)?');
