@@ -215,9 +215,6 @@
           }
         }
         
-        //new module support
-        $this->products[$index] = $this->orderModules->add_products($this->products[$index],$orders_products);
-
         $attributes_query = xtc_db_query("SELECT *,
                                                  products_options as `option`,
                                                  products_options_values as value,
@@ -242,6 +239,10 @@
         if(!defined('RUN_MODE_ADMIN')) {
           $this->info['tax_groups']["{$this->products[$index]['tax']}"] = '1';
         }
+
+        //new module support
+        $this->products[$index] = $this->orderModules->add_products($this->products[$index],$orders_products);
+
         $index++;
       }
     }
