@@ -27,10 +27,10 @@
     {if $info_message_1 != ''}<div class="errormessage">{$info_message_1}{$min_order}{$info_message_2}{$order_amount}</div>{/if}
     <div class="button_left">{if $CONTINUE_LINK}<a style="margin-right:5px;" href="{$CONTINUE_LINK}">{$BUTTON_CONTINUE_SHOPPING}</a>{/if}{$BUTTON_RELOAD}</div>
     <div class="button_right">
-      {if !isset($BUTTON_CHECKOUT_EXPRESS)}{if $BUTTON_PAYPAL != ''}<span class="paypal_button">{$BUTTON_PAYPAL}</span>{/if}{/if}
-      {if isset($BUTTON_CHECKOUT_EXPRESS)}<span class="express_button">{$BUTTON_CHECKOUT_EXPRESS}</span>{/if}
+      {if !isset($BUTTON_CHECKOUT_EXPRESS)}{if $BUTTON_PAYPAL != '' && !$PAYPALPLAN}<span class="paypal_button">{$BUTTON_PAYPAL}</span>{/if}{/if}
+      {if isset($BUTTON_CHECKOUT_EXPRESS) && !$PAYPALPLAN}<span class="express_button">{$BUTTON_CHECKOUT_EXPRESS}</span>{/if}
       {$BUTTON_CHECKOUT}
-      {if isset($BUTTON_CHECKOUT_EXPRESS)}{if $BUTTON_PAYPAL != ''}<span class="paypal_button2">{$BUTTON_PAYPAL}</span>{/if}{/if}
+      {if isset($BUTTON_CHECKOUT_EXPRESS)}{if $BUTTON_PAYPAL != '' && !$PAYPALPLAN}<span class="paypal_button2">{$BUTTON_PAYPAL}</span>{/if}{/if}
     </div>
     <br class="clearfix" />
     {if isset($ACTIVATE_EXPRESS_LINK)}<span class="express_info_cart"><a href="{$ACTIVATE_EXPRESS_LINK}">{#checkout_express_activate#}</a></span>{/if}

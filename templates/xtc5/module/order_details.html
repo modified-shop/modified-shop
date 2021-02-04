@@ -55,7 +55,7 @@
       {if $total}<strong>{#text_total#}: {$total}</strong>{/if}
       {if isset($FREE_SHIPPING_INFO)}{$FREE_SHIPPING_INFO}{/if}
       {*if $TOTAL_WEIGHT}<br />{#text_total_weight#} {$TOTAL_WEIGHT} kg{/if*}
-      {if $PAYPAL_INSTALLMENT}<br/>{$PAYPAL_INSTALLMENT}{/if}
+      {if $PAYPAL_INSTALLMENT && !$PAYPALPLAN}<br/>{$PAYPAL_INSTALLMENT}{/if}
     </td>
     <td class="subtotal">&nbsp;</td>
   </tr>

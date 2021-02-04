@@ -43,6 +43,9 @@
       $module_content[$i]['ATTRIBUTES'][-1] = array(
         'NAME' => TEXT_PAYPAL_PLAN_SETUP_FEE,
         'VALUE_NAME' => $xtPrice->xtcFormat($plan['plan_fee'], true)
-      );     
+      );
+      
+      $smarty->assign('PAYPALPLAN', 1);  
+      $module_smarty->assign('PAYPALPLAN', 1);  
     }
   }

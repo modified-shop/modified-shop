@@ -30,8 +30,8 @@
     </div>
     <div class="button_right_cart cf">
       <div class="cssButtonPos8">{$BUTTON_CHECKOUT}</div>
-      {if $BUTTON_PAYPAL != ''}<div class="cssButtonPos8">{$BUTTON_PAYPAL}</div>{/if}
-      {if isset($BUTTON_CHECKOUT_EXPRESS)}<div class="cssButtonPos8">{$BUTTON_CHECKOUT_EXPRESS}</div>{/if}
+      {if $BUTTON_PAYPAL != '' && !$PAYPALPLAN}<div class="cssButtonPos8">{$BUTTON_PAYPAL}</div>{/if}
+      {if isset($BUTTON_CHECKOUT_EXPRESS) && !$PAYPALPLAN}<div class="cssButtonPos8">{$BUTTON_CHECKOUT_EXPRESS}</div>{/if}
     </div>
     <br class="clearfix" />
     {if isset($ACTIVATE_EXPRESS_LINK)}<span class="express_info_cart"><a href="{$ACTIVATE_EXPRESS_LINK}">{#checkout_express_activate#}</a></span>{/if}

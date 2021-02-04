@@ -79,5 +79,5 @@
   {if isset($FREE_SHIPPING_INFO)}{$FREE_SHIPPING_INFO}{/if}
   
   {*if $TOTAL_WEIGHT}<br />{#text_total_weight#} {$TOTAL_WEIGHT|number_format:2:",":"."} kg{/if*}
-  {if $PAYPAL_INSTALLMENT}{$PAYPAL_INSTALLMENT}{/if}
+  {if $PAYPAL_INSTALLMENT}{$PAYPAL_INSTALLMENT && !$PAYPALPLAN}{/if}
 </div>
