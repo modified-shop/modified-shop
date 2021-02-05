@@ -145,8 +145,8 @@
             {
               $allowed_zones = explode(',', constant('MODULE_PAYMENT_' . strtoupper($include_modules[$i]['class']) . '_ALLOWED'));
             }
-            if ((isset($_SESSION['delivery_zone']) 
-                 && in_array($_SESSION['delivery_zone'], $allowed_zones) == true
+            if ((isset($_SESSION['billing_zone']) 
+                 && in_array($_SESSION['billing_zone'], $allowed_zones) == true
                  ) || count($allowed_zones) == 0
                 )
             {

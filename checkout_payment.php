@@ -112,10 +112,8 @@ $content_type = $_SESSION['cart']->get_content_type();
 $total_weight = $_SESSION['cart']->show_weight();
 $total_count = $_SESSION['cart']->count_contents_virtual(); // GV Code ICW ADDED FOR CREDIT CLASS SYSTEM
 
-if ($order->billing['country']['iso_code_2'] != '' && $order->delivery['country']['iso_code_2'] == '') {
-  $_SESSION['delivery_zone'] = $order->billing['country']['iso_code_2'];
-} else {
-  $_SESSION['delivery_zone'] = $order->delivery['country']['iso_code_2'];
+if ($order->billing['country']['iso_code_2'] != '') {
+	$_SESSION['billing_zone'] = $order->delivery['country']['iso_code_2'];
 }
 
 // load all enabled payment modules

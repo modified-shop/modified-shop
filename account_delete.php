@@ -40,6 +40,7 @@ unset($_SESSION['billto']);
 unset($_SESSION['shipping']);
 unset($_SESSION['payment']);
 unset($_SESSION['delivery_zone']);
+unset($_SESSION['billing_zone']);
 
 if ($_SESSION['customer_id'] == 1) {
   xtc_redirect(xtc_href_link(FILENAME_DEFAULT),'NONSSL');
@@ -59,28 +60,20 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
     $messageStack->add('account_delete', TEXT_LOGIN_ERROR);
   } else {
     $_SESSION['cart']->reset(true);
+    
+    if (defined('MODULE_WISHLIST_SYSTEM_STATUS') && MODULE_WISHLIST_SYSTEM_STATUS == 'true') {
+      $_SESSION['wishlist']->reset(true);
+    }
 
     xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS." WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
     xtc_db_query("DELETE FROM ".TABLE_ADDRESS_BOOK." WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
     xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_INFO." WHERE customers_info_id = '".(int)$_SESSION['customer_id']."'");
     xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_IP." WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
+    xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_MEMO." WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
+    xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_STATUS_HISTORY." WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
     
     xtc_session_destroy();
-
-    unset ($_SESSION['customer_id']);
-    unset ($_SESSION['customer_default_address_id']);
-    unset ($_SESSION['customer_first_name']);
-    unset ($_SESSION['customer_country_id']);
-    unset ($_SESSION['customer_zone_id']);
-    unset ($_SESSION['comments']);
-    unset ($_SESSION['user_info']);
-    unset ($_SESSION['customers_status']);
-    unset ($_SESSION['selected_box']);
-    unset ($_SESSION['shipping']);
-    unset ($_SESSION['payment']);
-    unset ($_SESSION['ccard']);
-    unset ($_SESSION['gv_id']);
-    unset ($_SESSION['cc_id']);
+    xtc_session_reset();
     
     $success = true;
     require (DIR_WS_INCLUDES.'write_customers_status.php');
