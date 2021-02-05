@@ -78,7 +78,7 @@ class ot_payment {
 
     $allowed_zones = explode(',', MODULE_ORDER_TOTAL_PAYMENT_ALLOWED);
 
-    if ($this->enabled && (in_array($_SESSION['delivery_zone'], $allowed_zones) == true || MODULE_ORDER_TOTAL_PAYMENT_ALLOWED == '')) {
+    if ($this->enabled && (in_array($_SESSION['billing_zone'], $allowed_zones) == true || MODULE_ORDER_TOTAL_PAYMENT_ALLOWED == '')) {
       $this->xtc_order_total();
       $this->calculate_credit();
       if (basename($PHP_SELF) != FILENAME_CHECKOUT_PAYMENT && isset($this->discount['sum']) && $this->discount['sum']!=0) {
@@ -137,7 +137,7 @@ class ot_payment {
       if (strpos($this->percentage[$j], "|") !== false) {
         $strings = explode('|', $this->percentage[$j]);
         $allowed_zones = explode(',', $strings[0]);
-        if (!in_array($_SESSION['delivery_zone'], $allowed_zones) == true && $strings[0] != '00') {
+        if (!in_array($_SESSION['billing_zone'], $allowed_zones) == true && $strings[0] != '00') {
           continue;
         }
         $string = $strings[1];
@@ -243,7 +243,7 @@ class ot_payment {
     $string = '';
     $allowed_zones = explode(',', MODULE_ORDER_TOTAL_PAYMENT_ALLOWED);
 
-    if ($this->enabled && (in_array($_SESSION['delivery_zone'], $allowed_zones) == true || MODULE_ORDER_TOTAL_PAYMENT_ALLOWED == '')) {
+    if ($this->enabled && (in_array($_SESSION['billing_zone'], $allowed_zones) == true || MODULE_ORDER_TOTAL_PAYMENT_ALLOWED == '')) {
       $this->calculate_credit($payment);
       if ($this->discount['sum']!=0) {
         for ($i=1; $i<=$this->num_payment; $i++) {

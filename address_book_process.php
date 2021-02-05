@@ -44,6 +44,7 @@ unset($_SESSION['billto']);
 unset($_SESSION['shipping']);
 unset($_SESSION['payment']);
 unset($_SESSION['delivery_zone']);
+unset($_SESSION['billing_zone']);
 
 if (isset ($_GET['action']) && ($_GET['action'] == 'deleteconfirm') && isset ($_GET['delete']) && is_numeric($_GET['delete'])) {
   xtc_db_query("delete from ".TABLE_ADDRESS_BOOK." where address_book_id = '".(int) $_GET['delete']."' and customers_id = '".(int) $_SESSION['customer_id']."'");

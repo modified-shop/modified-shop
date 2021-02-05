@@ -88,6 +88,7 @@ unset($_SESSION['billto']);
 unset($_SESSION['shipping']);
 unset($_SESSION['payment']);
 unset($_SESSION['delivery_zone']);
+unset($_SESSION['billing_zone']);
 
 $account_query = xtc_db_query("SELECT *
                                  FROM ".TABLE_CUSTOMERS_CHECKOUT." 
@@ -262,6 +263,7 @@ unset($_SESSION['billto']);
 unset($_SESSION['shipping']);
 unset($_SESSION['payment']);
 unset($_SESSION['delivery_zone']);
+unset($_SESSION['billing_zone']);
 
 if (isset($_POST['action']) && $_POST['action'] == 'process' && $error === false) {
   if (isset($_GET['products_id']) && (int)$_GET['products_id'] > '0') {
