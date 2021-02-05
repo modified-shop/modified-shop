@@ -76,7 +76,7 @@ class paypalcart extends PayPalPayment {
       }
 
       if ($order->billing['country']['iso_code_2'] != '') {
-        $_SESSION['billing_zone'] = $order->delivery['country']['iso_code_2'];
+        $_SESSION['billing_zone'] = $order->billing['country']['iso_code_2'];
       }
 
       // load all enabled shipping modules
@@ -123,7 +123,7 @@ class paypalcart extends PayPalPayment {
     }
 
     if ($order->billing['country']['iso_code_2'] != '') {
-      $_SESSION['billing_zone'] = $order->delivery['country']['iso_code_2'];
+      $_SESSION['billing_zone'] = $order->billing['country']['iso_code_2'];
     }
 
     $no_shipping = false;
