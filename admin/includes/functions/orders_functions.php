@@ -619,6 +619,10 @@
       xtc_db_query("UPDATE " . TABLE_PRODUCTS . " 
                        SET products_quantity = products_quantity - " . (double)$data_array['products_quantity'] . " 
                      WHERE products_id= " . (int)$data_array['products_id']);
+
+      xtc_db_query("UPDATE " . TABLE_SPECIALS . " 
+                       SET specials_quantity = specials_quantity - " . (double)$data_array['products_quantity'] . " 
+                     WHERE products_id= " . (int)$data_array['products_id']);
     
       // Update products_ordered (for bestsellers list)
       xtc_db_query("UPDATE " . TABLE_PRODUCTS . " 
@@ -653,6 +657,10 @@
 
     xtc_db_query("UPDATE ".TABLE_PRODUCTS." 
                      SET products_quantity = products_quantity + ".xtc_db_input($data_array['del_qty'])." 
+                   WHERE products_id = ".(int)$data_array['del_pID']);
+
+    xtc_db_query("UPDATE ".TABLE_SPECIALS." 
+                     SET specials_quantity = specials_quantity + ".xtc_db_input($data_array['del_qty'])." 
                    WHERE products_id = ".(int)$data_array['del_pID']);
 
     xtc_db_perform(TABLE_ORDERS, array('last_modified' => 'now()'), 'update', "orders_id = '".(int)$oID."'");
