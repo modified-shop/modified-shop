@@ -818,6 +818,7 @@
     'templates/tpl_modified/module/masterpayment_response.html',
     'templates/tpl_modified/module/new_products_overview.html',
     'templates/tpl_modified/module/specials.html',
+    'templates/tpl_modified_responsive/css/images/loading.gif',
     'templates/tpl_modified_responsive/css/jquery.bxslider.css',
     'templates/tpl_modified_responsive/css/jquery.cookieconsent.css',
     'templates/tpl_modified_responsive/css/masterpayment.css',
