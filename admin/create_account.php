@@ -531,16 +531,16 @@ require (DIR_WS_INCLUDES.'head.php');
                     <?php if (ACCOUNT_STATE == 'true') { ?>
                     <tr id="states">
                       <td class="dataTableConfig col-left"><?php echo ENTRY_STATE; ?></td>
-                      <td class="dataTableConfig col-single-right" id="states_container">
-                      <?php
-                        $entry_state = xtc_get_zone_name(isset($entry_country_id) ? $entry_country_id : xtc_get_countries(xtc_get_country_name(STORE_COUNTRY)), isset($entry_zone_id) ? $entry_zone_id :'', isset($entry_state) ? $entry_state:'');
+                      <td class="dataTableConfig col-single-right" id="entry_state">
+                      <?php                      
+                        $entry_state = xtc_get_zone_code(isset($entry_country_id) ? $entry_country_id : xtc_get_countries(xtc_get_country_name(STORE_COUNTRY)), isset($entry_zone_id) ? $entry_zone_id :'', isset($entry_state) ? $entry_state:'');
                         $entry_state_str = xtc_draw_input_field('entry_state', $entry_state);
                         if ($error && $entry_state_error) {
                           if ($entry_state_has_zones) {
                             $zones_array = array ();
-                            $zones_query = xtc_db_query("SELECT zone_name FROM ".TABLE_ZONES." WHERE zone_country_id = '".xtc_db_input($entry_country_id)."' ORDER BY zone_name");
-                            while ($zones_values = xtc_db_fetch_array($zones_query)) $zones_array[] = array ('id' => $zones_values['zone_name'], 'text' => $zones_values['zone_name']);
-                            $entry_state_str = xtc_draw_pull_down_menu('entry_state', $zones_array).'&nbsp;'.ENTRY_STATE_ERROR;
+                            $zones_query = xtc_db_query("SELECT zone_code, zone_name FROM ".TABLE_ZONES." WHERE zone_country_id = '".xtc_db_input($entry_country_id)."' ORDER BY zone_name");
+                            while ($zones_values = xtc_db_fetch_array($zones_query)) $zones_array[] = array ('id' => $zones_values['zone_code'], 'text' => $zones_values['zone_name']);
+                            $entry_state_str = xtc_draw_pull_down_menu('entry_state', $zones_array, $entry_state).'&nbsp;'.ENTRY_STATE_ERROR;
                           } else {
                             $entry_state_str .= '&nbsp;'.ENTRY_STATE_ERROR;
                           }
@@ -683,7 +683,16 @@ require (DIR_WS_INCLUDES.'head.php');
         <!-- body_text_eof //-->
       </tr>
     </table>
-    <?php require(DIR_WS_INCLUDES . 'javascript/jquery.entry_state.js.php'); ?>                                                          
+    <?php require(DIR_WS_INCLUDES . 'javascript/jquery.entry_state.js.php'); ?>
+    <script>
+      $(document).ready(function () {
+        create_states($('select[name="entry_country_id"]').val(), 'entry_state');
+    
+        $('select[name="entry_country_id"]').change(function() {
+          create_states($(this).val(), 'entry_state');
+        });
+      });
+    </script>
     <!-- body_eof //-->
     <!-- footer //-->
     <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
