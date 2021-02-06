@@ -109,7 +109,7 @@
             'customers_suburb' => xtc_db_prepare_input($customers['entry_suburb']),
             'customers_city' => xtc_db_prepare_input($customers['entry_city']),
             'customers_postcode' => xtc_db_prepare_input($customers['entry_postcode']),
-            'customers_state' => xtc_db_prepare_input($customers['entry_state']),
+            'customers_state' => xtc_db_prepare_input(xtc_get_zone_code($customers['entry_country_id'], $customers['entry_zone_id'], $customers['entry_state'])),
             'customers_country' => xtc_db_prepare_input($country['countries_name']),
             'customers_telephone' => xtc_db_prepare_input($customers1['customers_telephone']),
             'customers_email_address' => xtc_db_prepare_input($customers1['customers_email_address']),
@@ -124,7 +124,7 @@
             'delivery_suburb' => xtc_db_prepare_input($customers['entry_suburb']),
             'delivery_city' => xtc_db_prepare_input($customers['entry_city']),
             'delivery_postcode' => xtc_db_prepare_input($customers['entry_postcode']),
-            'delivery_state' => xtc_db_prepare_input($customers['entry_state']),
+            'delivery_state' => xtc_db_prepare_input(xtc_get_zone_code($customers['entry_country_id'], $customers['entry_zone_id'], $customers['entry_state'])),
             'delivery_country' => xtc_db_prepare_input($country['countries_name']),
             'delivery_country_iso_code_2' => xtc_db_prepare_input($country['countries_iso_code_2']),
             'delivery_address_format_id' => xtc_db_prepare_input($country['address_format_id']),
@@ -137,7 +137,7 @@
             'billing_suburb' => xtc_db_prepare_input($customers['entry_suburb']),
             'billing_city' => xtc_db_prepare_input($customers['entry_city']),
             'billing_postcode' => xtc_db_prepare_input($customers['entry_postcode']),
-            'billing_state' => xtc_db_prepare_input($customers['entry_state']),
+            'billing_state' => xtc_db_prepare_input(xtc_get_zone_code($customers['entry_country_id'], $customers['entry_zone_id'], $customers['entry_state'])),
             'billing_country' => xtc_db_prepare_input($country['countries_name']),
             'billing_country_iso_code_2' => xtc_db_prepare_input($country['countries_iso_code_2']),
             'billing_address_format_id' => xtc_db_prepare_input($country['address_format_id']),
@@ -686,9 +686,9 @@
       <td class="boxCenter">
       <?php
       if ($action == 'edit' || $action == 'update') {
-        include (DIR_WS_MODULES.'customers_edit.php'); // ACTION EDIT - UPDATE
+        include (DIR_WS_MODULES.'customers_edit.php');
       } else {
-        include (DIR_WS_MODULES.'customers_listing.php'); // ACTION EDIT - UPDATE
+        include (DIR_WS_MODULES.'customers_listing.php');
       }
       ?>
       </td>

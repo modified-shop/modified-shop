@@ -27,7 +27,7 @@
 ?>
 <!-- Adressbearbeitung Anfang //-->
 <?php
-if ($_GET['edit_action']=='address') {
+if ($_GET['edit_action'] == 'address') {
   // dropdown countries boxes
   function get_country_id($country_name, $country_iso_2) {
     $where = " WHERE countries_name = '".xtc_db_input($country_name)."'";
@@ -194,15 +194,15 @@ if ($_GET['edit_action']=='address') {
     <td class="dataTableContent">
     <?php echo ENTRY_STATE;?>
     </td>
-    <td class="dataTableContent">
+    <td class="dataTableContent"><span class="select_f12" id="customers_state">
     <?php echo xtc_draw_input_field('customers_state', $order->customer['state'], 'style="width: 200px"');?>
-    </td>
-    <td class="dataTableContent">
+    </span></td>
+    <td class="dataTableContent"><span class="select_f12" id="delivery_state">
     <?php echo xtc_draw_input_field('delivery_state', $order->delivery['state'], 'style="width: 200px"');?>
-    </td>
-    <td class="dataTableContent">
+    </span></td>
+    <td class="dataTableContent"><span class="select_f12" id="billing_state">
     <?php echo xtc_draw_input_field('billing_state', $order->billing['state'], 'style="width: 200px"');?>
-    </td>
+    </span></td>
   </tr>
   <?php } ?>
   <tr class="dataTableRow">
@@ -261,3 +261,24 @@ if ($_GET['edit_action']=='address') {
 }
 ?>
 <!-- Adressbearbeitung Ende //-->
+
+<?php require(DIR_WS_INCLUDES . 'javascript/jquery.entry_state.js.php'); ?>
+<script>
+  $(document).ready(function () {
+    create_states($('select[name="customers_country_id"]').val(), 'customers_state');
+    create_states($('select[name="delivery_country_id"]').val(), 'delivery_state');
+    create_states($('select[name="billing_country_id"]').val(), 'billing_state');
+
+    $('[name="customers_country_id"]').on('change', function() {
+      create_states($(this).val(), 'customers_state');
+    });
+
+    $('[name="delivery_country_id"]').on('change', function() {
+      create_states($(this).val(), 'delivery_state');
+    });
+
+    $('[name="billing_country_id"]').on('change', function() {
+      create_states($(this).val(), 'billing_state');
+    });
+  });  
+</script>

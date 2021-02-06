@@ -14,18 +14,12 @@
    (c) 2006 xt:Commerce; www.xt-commerce.com
 
    Released under the GNU General Public License
-   v.1.32 - 2012-05-23 (c) by web28 - www.rpa-com.de: Korrektur f�r Nettosumme bei Modulen ohne Steuersatz
-   v.1.31 - 2012-05-23 (c) by web28 - www.rpa-com.de: FIX Preisberechnung Kundengruppenwechsel, Optionspreise bei Sonderpreisen
-   v.1.30 - 2012-04-05 (c) by web28 - www.rpa-com.de: FIX order tax by $order->delivery['country_iso_2']
-   v.1.28 - 2012-03-22 (c) by web28 - www.rpa-com.de: FIX tax guest account, tax ot_payment, tax cod_fee
-   v.1.26 - 2011-11-01 (c) by web28 - www.rpa-com.de: L�nderwechsel -> delivery_country_iso_code_2, billing_country_iso_code_2
-   TODO Attributpreise und Sonderangebote
-        Bei Sonderangeboten wird der Attributpreis nicht zum Artikelpreis addiert
-        Anpassung in checkout_process.php
    --------------------------------------------------------------*/
 
-
   require ('includes/application_top.php');
+  
+  $styles = ' style="width:200px;"';
+  require(DIR_WS_INCLUDES . 'get_states.php');
 
   // include needed functions
   require_once (DIR_WS_FUNCTIONS.'orders_functions.php');
