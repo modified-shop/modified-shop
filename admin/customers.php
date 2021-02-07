@@ -486,16 +486,24 @@
           } else {
             $entry_zone_id = 0;
             $entry_state_error = false;
-            $check_query = xtc_db_query("SELECT count(*) as total FROM ".TABLE_ZONES." WHERE zone_country_id = '".xtc_db_input($entry_country_id)."'");
+            $check_query = xtc_db_query("SELECT count(*) as total 
+                                           FROM ".TABLE_ZONES." 
+                                          WHERE zone_country_id = '".xtc_db_input($entry_country_id)."'");
             $check_value = xtc_db_fetch_array($check_query);
             $entry_state_has_zones = ($check_value['total'] > 0);
             if ($entry_state_has_zones == true) {
-              $zone_query = xtc_db_query("SELECT zone_id FROM ".TABLE_ZONES." WHERE zone_country_id = '".xtc_db_input($entry_country_id)."' AND zone_name = '".xtc_db_input($entry_state)."'");
+              $zone_query = xtc_db_query("SELECT zone_id 
+                                            FROM ".TABLE_ZONES." 
+                                           WHERE zone_country_id = '".xtc_db_input($entry_country_id)."' 
+                                             AND zone_name = '".xtc_db_input($entry_state)."'");
               if (xtc_db_num_rows($zone_query) == 1) {
                 $zone_values = xtc_db_fetch_array($zone_query);
                 $entry_zone_id = $zone_values['zone_id'];
               } else {
-                $zone_query = xtc_db_query("SELECT zone_id FROM ".TABLE_ZONES." WHERE zone_country_id = '".xtc_db_input($entry_country_id)."' AND zone_code = '".xtc_db_input($entry_state)."'");
+                $zone_query = xtc_db_query("SELECT zone_id 
+                                              FROM ".TABLE_ZONES." 
+                                             WHERE zone_country_id = '".xtc_db_input($entry_country_id)."' 
+                                               AND zone_code = '".xtc_db_input($entry_state)."'");
                 if (xtc_db_num_rows($zone_query) >= 1) {
                   $zone_values = xtc_db_fetch_array($zone_query);
                   $entry_zone_id = $zone_values['zone_id'];
