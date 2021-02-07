@@ -210,7 +210,7 @@
           } else {
             $zone_query = xtc_db_query("SELECT zone_id
                                           FROM ".TABLE_ZONES."
-                                         WHERE zone_country_id = '".xtc_db_input($entry_country)."'
+                                         WHERE zone_country_id = '".xtc_db_input($entry_country_id)."'
                                            AND zone_code = '".xtc_db_input($entry_state)."'");
             if (xtc_db_num_rows($zone_query) >= 1) {
               $zone_values = xtc_db_fetch_array($zone_query);
