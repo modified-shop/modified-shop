@@ -49,18 +49,20 @@
                                     WHERE c.categories_id = '".(int)$parent_id."'
                                           ".$conditions."
                                     LIMIT 1");
-      $category = xtc_db_fetch_array($category_query, true);
+      if (xtc_db_num_rows($category_query, true) > 0) {
+        $category = xtc_db_fetch_array($category_query, true);
 
-      $link = '';
-      if (!defined('RUN_MODE_ADMIN')) {
-        $link = xtc_href_link(FILENAME_DEFAULT, xtc_category_link($category['categories_id'], $category['categories_name']));
+        $link = '';
+        if (!defined('RUN_MODE_ADMIN')) {
+          $link = xtc_href_link(FILENAME_DEFAULT, xtc_category_link($category['categories_id'], $category['categories_name']));
+        }
+
+        $category_tree_array[] = array(
+          'id' => $parent_id, 
+          'text' => $category['categories_name'],
+          'link' => $link,
+        );
       }
-
-      $category_tree_array[] = array(
-        'id' => $parent_id, 
-        'text' => $category['categories_name'],
-        'link' => $link,
-      );
     }
 
     $categories_query = xtDBquery("SELECT c.categories_id, 
@@ -70,28 +72,30 @@
                                      JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd
                                           ON c.categories_id = cd.categories_id
                                              AND cd.language_id = ".(int)$_SESSION['languages_id']."
-                                             AND trim(cd.categories_name) != ''
+                                             ".$join."
                                     WHERE c.parent_id = '".(int)$parent_id."'
                                           ".$conditions."
                                  ORDER BY c.sort_order, cd.categories_name");
-    while ($categories = xtc_db_fetch_array($categories_query,true)) {
-      if ($exclude != $categories['categories_id']) {
+    if (xtc_db_num_rows($categories_query, true) > 0) {
+      while ($categories = xtc_db_fetch_array($categories_query, true)) {
+        if ($exclude != $categories['categories_id']) {
      
-        $link = '';
-        if (!defined('RUN_MODE_ADMIN')) {
-          $link = xtc_href_link(FILENAME_DEFAULT, xtc_category_link($categories['categories_id'], $categories['categories_name']));
-        }
+          $link = '';
+          if (!defined('RUN_MODE_ADMIN')) {
+            $link = xtc_href_link(FILENAME_DEFAULT, xtc_category_link($categories['categories_id'], $categories['categories_name']));
+          }
       
-        $category_tree_array[] = array(
-          'id' => $categories['categories_id'],
-          'text' => $spacing . $categories['categories_name'],
-          'link' => $link,
-        );
-      }
+          $category_tree_array[] = array(
+            'id' => $categories['categories_id'],
+            'text' => $spacing . $categories['categories_name'],
+            'link' => $link,
+          );
+        }
     
-      $category_tree_array = xtc_get_category_tree($categories['categories_id'], $spacing . '&nbsp;&nbsp;&nbsp;', $exclude, $category_tree_array, false, $cPath);
+        $category_tree_array = xtc_get_category_tree($categories['categories_id'], $spacing . '&nbsp;&nbsp;&nbsp;', $exclude, $category_tree_array, false, $cPath);
+      }
     }
-
+    
     return $category_tree_array;
   }
 ?>

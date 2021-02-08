@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_get_subcategories.inc.php 976 2005-06-08 13:23:10Z mz $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -56,14 +56,22 @@
   
   
   function xtc_get_subcategories_data(&$subcategories_cache_array, $parent_id = 0) {
-    $subcategories_query = "SELECT categories_id 
-                              FROM " . TABLE_CATEGORIES . " 
-                             WHERE parent_id = '" . (int)$parent_id . "'";
-    $subcategories_query  = xtDBquery($subcategories_query);
-    while ($subcategories = xtc_db_fetch_array($subcategories_query,true)) {
-      $subcategories_cache_array[sizeof($subcategories_cache_array)] = $subcategories['categories_id'];
-      if ($subcategories['categories_id'] != $parent_id) {
-        xtc_get_subcategories_data($subcategories_cache_array, $subcategories['categories_id']);
+    $subcategories_query = xtDBquery("SELECT c.categories_id 
+                                        FROM " . TABLE_CATEGORIES . " c
+                                        JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd
+                                             ON c.categories_id = cd.categories_id
+                                                AND cd.language_id = '" . (int)$_SESSION['languages_id'] . "'
+                                                AND trim(cd.categories_name) != ''
+                                       WHERE c.parent_id = '" . (int)$parent_id . "'
+                                             ".CATEGORIES_CONDITIONS_C);
+    
+    if (xtc_db_num_rows($subcategories_query, true) > 0) {
+      while ($subcategories = xtc_db_fetch_array($subcategories_query, true)) {
+        $subcategories_cache_array[count($subcategories_cache_array)] = $subcategories['categories_id'];
+      
+        if ($subcategories['categories_id'] != $parent_id) {
+          xtc_get_subcategories_data($subcategories_cache_array, $subcategories['categories_id']);
+        }
       }
     }
   }
