@@ -926,6 +926,9 @@ width:80%;
 .tableConfig td.mark{
 background-color:#c8c8c8;
 }
+.tableConfig td.col-error{
+background-color:#F2DEDE;
+}
 .valign_m td.col-left, .valign_m td.col-middle{
 vertical-align: middle;
 }
