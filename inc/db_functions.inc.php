@@ -117,6 +117,7 @@
     $id = 'db_'.md5(strtolower(preg_replace("'[\r\n\s]+'", '', $query)));
     $modified_cache->setID($id);
     
+    $records = '';
     if ($modified_cache->isHit() === true) {
       $records = $modified_cache->get();
     }
