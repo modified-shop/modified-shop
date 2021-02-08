@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: countries.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $   
+   $Id$   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -34,5 +34,17 @@ define('TEXT_INFO_HEADING_NEW_COUNTRY', 'neues Land');
 define('TEXT_INFO_HEADING_EDIT_COUNTRY', 'Land bearbeiten');
 define('TEXT_INFO_HEADING_DELETE_COUNTRY', 'Land l&ouml;schen');
 
-define('TABLE_HEADING_REQUIRED_ZONES','Bundesl&auml;nder anzeigen');
+define('TABLE_HEADING_REQUIRED_ZONES','Bundesl&auml;nder');
+
+
+define('TEXT_INFO_ADDRESS_FORMAT_HEADING', 'Adressformat');
+define('TEXT_INFO_FIRSTNAME', 'Max');
+define('TEXT_INFO_LASTNAME', 'Mustermann');
+define('TEXT_INFO_COMPANY', 'Firma');
+define('TEXT_INFO_STREET_ADDRESS', 'Musterstr. 12');
+define('TEXT_INFO_SUBURB', 'Adresszusatz');
+define('TEXT_INFO_CITY', 'Musterstadt');
+define('TEXT_INFO_POSTCODE', '12345');
+define('TEXT_INFO_STATE', 'BE');
+define('TEXT_INFO_COUNTRY', 'Germany');
 ?>

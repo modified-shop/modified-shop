@@ -137,10 +137,10 @@
               <table class="tableBoxCenter collapse">
                 <tr class="dataTableHeadingRow">
                   <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_COUNTRY_NAME; ?></td>
-                  <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_REQUIRED_ZONES; ?></td>
-                  <td class="dataTableHeadingContent txta-c" colspan="2"><?php echo TABLE_HEADING_COUNTRY_CODES; ?></td>
-                  <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_STATUS; ?></td>                
-                  <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
+                  <td class="dataTableHeadingContent txta-c" style="width:100px"><?php echo TABLE_HEADING_REQUIRED_ZONES; ?></td>
+                  <td class="dataTableHeadingContent txta-c" style="width:50px" colspan="2"><?php echo TABLE_HEADING_COUNTRY_CODES; ?></td>
+                  <td class="dataTableHeadingContent txta-c" style="width:100px"><?php echo TABLE_HEADING_STATUS; ?></td>                
+                  <td class="dataTableHeadingContent txta-r" style="width:100px"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
                 </tr>
                 <?php
                   $where = isset($_GET['status']) && $_GET['status'] !== '' ? " WHERE status = ". (int)$_GET['status'] : '';
@@ -177,9 +177,9 @@
                 ?>
                 <tr <?php echo $tr_attributes;?>>
                   <td class="dataTableContent"><?php echo $countries['countries_name']; ?></td>
-                  <td class="dataTableContent txta-c" style="width:100px">&nbsp;<?php echo $required_zones; ?></td>
-                  <td class="dataTableContent txta-c" style="width:40px"><?php echo $countries['countries_iso_code_2']; ?></td>
-                  <td class="dataTableContent txta-c" style="width:40px"><?php echo $countries['countries_iso_code_3']; ?></td>
+                  <td class="dataTableContent txta-c">&nbsp;<?php echo $required_zones; ?></td>
+                  <td class="dataTableContent txta-c"><?php echo $countries['countries_iso_code_2']; ?></td>
+                  <td class="dataTableContent txta-c"><?php echo $countries['countries_iso_code_3']; ?></td>
                   <td class="dataTableContent txta-c"><?php echo $status; ?></td>
                   <td class="dataTableContent txta-r"><?php if (isset($cInfo) && is_object($cInfo) && $countries['countries_id'] == $cInfo->countries_id) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_COUNTRIES, xtc_get_all_get_params(array('page', 'action', 'cID')).'page=' . $page . '&cID=' . $countries['countries_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
                 </tr>
@@ -251,6 +251,35 @@
               echo '            <td class="boxRight">' . "\n";
               $box = new box;
               echo $box->infoBox($heading, $contents);
+              
+              if ($action != 'delete') {
+                $heading_format = array(array('text' => '<b>' . TEXT_INFO_ADDRESS_FORMAT_HEADING . '</b>'));
+                $contents_format = array();
+                $address_array = array(
+                  'firstname' => TEXT_FIRSTNAME,
+                  'lastname' => TEXT_LASTNAME,
+                  'company' => TEXT_COMPANY,
+                  'street_address' => TEXT_STREET_ADDRESS,
+                  'suburb' => TEXT_SUBURB,
+                  'city' => TEXT_CITY,
+                  'postcode' => TEXT_POSTCODE,
+                  'state' => TEXT_STATE,
+                  'country' => TEXT_COUNTRY,
+                );
+                $i = 1;
+                $address_format = '<table class="table" style="width:100%"><tr>';
+                foreach (xtc_get_address_formats() as $address_formats) {
+                  $address_format .= '<td style="vertical-align:top;padding:10px;"><b>Format '.$address_formats['id'].':</b><br/>'.xtc_address_format($address_formats['id'], $address_array, 1, '', '<br />').'</td>';
+                  if ($i % 2 == 0)  {
+                    $address_format .= '</tr><tr>';
+                  }
+                  $i++;
+                }
+                $address_format .= '</tr></table>';
+                $contents_format[] = array('text' => $address_format);
+
+                echo '<br/>'.$box->infoBox($heading_format, $contents_format);
+              }
               echo '            </td>' . "\n";
             }
           ?>
