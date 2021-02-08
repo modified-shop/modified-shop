@@ -44,6 +44,9 @@ require_once (DIR_FS_INC.'xtc_count_shipping_modules.inc.php');
 
 require (DIR_WS_INCLUDES.'checkout_requirements.php');
 
+unset ($_SESSION['tmp_oID']);
+unset ($_SESSION['paypal']);
+
 //express checkout
 if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS == 'true') {
   if (isset($_GET['express']) && $_GET['express'] == 'on') {
