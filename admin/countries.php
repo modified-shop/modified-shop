@@ -256,15 +256,15 @@
                 $heading_format = array(array('text' => '<b>' . TEXT_INFO_ADDRESS_FORMAT_HEADING . '</b>'));
                 $contents_format = array();
                 $address_array = array(
-                  'firstname' => TEXT_FIRSTNAME,
-                  'lastname' => TEXT_LASTNAME,
-                  'company' => TEXT_COMPANY,
-                  'street_address' => TEXT_STREET_ADDRESS,
-                  'suburb' => TEXT_SUBURB,
-                  'city' => TEXT_CITY,
-                  'postcode' => TEXT_POSTCODE,
-                  'state' => TEXT_STATE,
-                  'country' => TEXT_COUNTRY,
+                  'firstname' => TEXT_INFO_FIRSTNAME,
+                  'lastname' => TEXT_INFO_LASTNAME,
+                  'company' => TEXT_INFO_COMPANY,
+                  'street_address' => TEXT_INFO_STREET_ADDRESS,
+                  'suburb' => TEXT_INFO_SUBURB,
+                  'city' => TEXT_INFO_CITY,
+                  'postcode' => TEXT_INFO_POSTCODE,
+                  'state' => TEXT_INFO_STATE,
+                  'country' => TEXT_INFO_COUNTRY,
                 );
                 $i = 1;
                 $address_format = '<table class="table" style="width:100%"><tr>';
