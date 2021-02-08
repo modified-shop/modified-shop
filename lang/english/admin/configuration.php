@@ -288,6 +288,9 @@ define('CFG_TXT_SHIPPING_DEFAULT', 'Standard');
 define('CFG_TXT_SHIPPING_TITLE', 'Title');
 define('CFG_TXT_SHIPPING_CUSTOM', 'Custom');
 
+define('CAPITALIZE_ADDRESS_FORMAT_TITLE' , 'Address in capital letters');
+define('CAPITALIZE_ADDRESS_FORMAT_DESC' , 'Display country and city names in capital letters');
+
 define('PRODUCT_LIST_FILTER_TITLE' , 'Display Category/Manufacturer Filter (false=disable; true=enable)');
 define('PRODUCT_LIST_FILTER_DESC' , 'Do you want to display the Category/Manufacturer Filter?');
 

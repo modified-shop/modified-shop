@@ -68,7 +68,12 @@
     if ($firstname == '' && isset($address['name'])) $firstname = addslashes($address['name']);
     if ($country == '' && isset($address['country'])) $country = addslashes((is_array($address['country']) && array_key_exists('title', $address['country'])) ? $address['country']['title'] : $address['country']);
     if ($state != '') $statecomma = $state . ', ';
-
+    
+    if (defined('CAPITALIZE_ADDRESS_FORMAT') && CAPITALIZE_ADDRESS_FORMAT == 'true') {
+      $city = strtoupper($city);
+      $country = strtoupper($country);
+    }
+    
     $fmt = $address_format['format'];
     eval("\$address = \"$fmt\";");
 
