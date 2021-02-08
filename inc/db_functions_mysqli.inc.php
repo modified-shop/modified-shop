@@ -86,13 +86,13 @@
 
     $socket = explode(':', $server);
     if (USE_PCONNECT == 'true') {
-      ${$link} = @mysqli_connect('p:'.$socket[0], $username, $password, NULL, ((isset($socket[1]) && $socket[1] != '') ? $socket[1] : NULL), ((isset($socket[2]) && $socket[2] != '') ? $socket[2] : NULL));
+      ${$link} = mysqli_connect('p:'.$socket[0], $username, $password, NULL, ((isset($socket[1]) && $socket[1] != '') ? $socket[1] : NULL), ((isset($socket[2]) && $socket[2] != '') ? $socket[2] : NULL));
     } else {
-      ${$link} = @mysqli_connect($socket[0], $username, $password, NULL, ((isset($socket[1]) && $socket[1] != '') ? $socket[1] : NULL), ((isset($socket[2]) && $socket[2] != '') ? $socket[2] : NULL));
+      ${$link} = mysqli_connect($socket[0], $username, $password, NULL, ((isset($socket[1]) && $socket[1] != '') ? $socket[1] : NULL), ((isset($socket[2]) && $socket[2] != '') ? $socket[2] : NULL));
     }
 
     if (${$link}) {
-      if (!@mysqli_select_db(${$link}, $database)) {
+      if (!mysqli_select_db(${$link}, $database)) {
         xtc_db_error('', mysqli_errno(${$link}), mysqli_error(${$link}));
         return false;
       }
@@ -116,29 +116,21 @@
 
 
   function xtc_db_data_seek($db_query, $row_number, $cq=false) {
-
     if (defined('DB_CACHE') && DB_CACHE == 'true' && $cq) {
-      if (!count($db_query)) {
-        return;
+      if (is_array($db_query) && isset($db_query[$row_number])) {
+        return $db_query[$row_number];
       }
-      return $db_query[$row_number];
     } else {
-      if (!is_array($db_query)) {
+      if (is_object($db_query)) {
         return mysqli_data_seek($db_query, $row_number);
       }
     }
+
+    return false;
   }
 
 
   function xtc_db_error($query, $errno, $error) { 
-  
-    // Deliver 503 Error on database error (so crawlers won't index the error page)
-    if (!defined('DIR_FS_ADMIN')) {
-      //header("HTTP/1.1 503 Service Temporarily Unavailable");
-      //header("Status: 503 Service Temporarily Unavailable");
-      //header("Connection: Close");
-    }
-    
     // Send an email to the shop owner if a sql error occurs
     if (defined('EMAIL_SQL_ERRORS') && EMAIL_SQL_ERRORS == 'true') {
       require_once (DIR_FS_INC.'xtc_php_mail.inc.php');
@@ -163,48 +155,36 @@
 
 
   function xtc_db_fetch_array(&$db_query, $cq=false, $result_type=MYSQLI_ASSOC) {
-    
-    if ($db_query === false) {
-      return false;
-    }
     if (defined('DB_CACHE') && DB_CACHE=='true' && $cq) {
-      if (!is_array($db_query) || !count($db_query)) {
-        return false;
-      }
-      $curr = current($db_query);
-      next($db_query);
-      return $curr;
-    } else {
       if (is_array($db_query)) {
         $curr = current($db_query);
         next($db_query);
         return $curr;
       }
-      return mysqli_fetch_array($db_query, $result_type);
+    } else {
+      if (is_object($db_query)) {
+        return mysqli_fetch_array($db_query, $result_type);
+      }
     }
+
+    return false;
   }
 
 
   function xtc_db_fetch_row(&$db_query, $cq=false) {
-
-    if ($db_query === false) {
-      return false;
-    }
     if (defined('DB_CACHE') && DB_CACHE=='true' && $cq) {
-      if (!is_array($db_query) || !count($db_query)) {
-        return false;
-      }
-      $curr = current($db_query);
-      next($db_query);
-      return $curr;
-    } else {
       if (is_array($db_query)) {
         $curr = current($db_query);
         next($db_query);
         return $curr;
       }
-      return mysqli_fetch_row($db_query);
+    } else {
+      if (is_object($db_query)) {
+        return mysqli_fetch_row($db_query);
+      }
     }
+
+    return false;
   }
 
 
@@ -279,18 +259,16 @@
 
 
   function xtc_db_num_rows($db_query, $cq=false) {
-    if ($db_query === false) {
-      return false;
-    }
     if (defined('DB_CACHE') && DB_CACHE == 'true' && $cq) {
-      if (!count($db_query)) {
-        return false;
+      if (is_array($db_query)) {
+        return count($db_query);
       }
-      return count($db_query);
     } else {
-      if (!is_array($db_query)) {
+      if (is_object($db_query)) {
         return mysqli_num_rows($db_query);
       }
     }
+    
+    return false;
   }
 ?>
