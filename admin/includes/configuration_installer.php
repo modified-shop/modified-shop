@@ -179,6 +179,7 @@ $values_group_update = array();
   $values[] = "(NULL, 'SHOW_SELFPICKUP_FREE', 'false', '7', '9', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
   $values[] = "(NULL, 'SHOW_SHIPPING_MODULE_TITLE', 'standard', '7', '10', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'shipping_default\', \'shipping_title\', \'shipping_custom\'), ');";
   $values[] = "(NULL, 'CUSTOM_SHIPPING_TITLE', 'DE::Versandkosten||EN::Shipping costs', '7', '11', NULL, NOW(), NULL, 'xtc_cfg_input_email_language;CUSTOM_SHIPPING_TITLE');";
+  $values[] = "(NULL, 'CAPITALIZE_ADDRESS_FORMAT', 'false', '7', '15', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
 
   $values_update[] = array (
                            'values' => "set_function = 'xtc_cfg_select_content(\'SHIPPING_INFOS\','",

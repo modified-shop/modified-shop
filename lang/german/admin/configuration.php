@@ -287,6 +287,9 @@ define('CFG_TXT_SHIPPING_DEFAULT', 'Standard');
 define('CFG_TXT_SHIPPING_TITLE', 'Titel');
 define('CFG_TXT_SHIPPING_CUSTOM', 'Benutzerdefiniert');
 
+define('CAPITALIZE_ADDRESS_FORMAT_TITLE' , 'Adresse in Gro&szlig;buchstaben');
+define('CAPITALIZE_ADDRESS_FORMAT_DESC' , 'L&auml;ndernamen und Ortsnamen in Gro&szlig;buchstaben ausgeben');
+
 define('PRODUCT_LIST_FILTER_TITLE' , 'Anzeige der Sortierungsfilter in Produktlisten?');
 define('PRODUCT_LIST_FILTER_DESC' , 'Anzeige der Sortierungsfilter f&uuml;r Warengruppen/Hersteller etc. Filter (false=inaktiv; true=aktiv)');
 
