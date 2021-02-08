@@ -264,7 +264,8 @@
                   'city' => TEXT_INFO_CITY,
                   'postcode' => TEXT_INFO_POSTCODE,
                   'state' => TEXT_INFO_STATE,
-                  'country' => TEXT_INFO_COUNTRY,
+                  'country_id' => STORE_COUNTRY,
+                  'zone_id' => STORE_ZONE,
                 );
                 $i = 1;
                 $address_format = '<table class="table" style="width:100%"><tr>';
