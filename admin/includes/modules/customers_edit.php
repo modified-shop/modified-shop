@@ -89,7 +89,7 @@
             ?>
             <tr>
               <td class="dataTableConfig col-left"><?php echo ENTRY_GENDER; ?></td>
-              <td class="dataTableConfig col-single-right">
+              <td class="dataTableConfig col-single-right<?php echo (($error == true && $entry_gender_error == true) ? ' col-error' : ''); ?>">
               <?php
               if ($error == true) {
                 if ($entry_gender_error == true) {
@@ -119,7 +119,7 @@
             </tr>
             <tr>
               <td class="dataTableConfig col-left"><?php echo ENTRY_FIRST_NAME; ?></td>
-              <td class="dataTableConfig col-single-right">
+              <td class="dataTableConfig col-single-right<?php echo (($error == true && $entry_firstname_error == true) ? ' col-error' : ''); ?>">
                 <?php
                 if ($error == true) {
                   if ($entry_firstname_error == true) {
@@ -136,7 +136,7 @@
             </tr>
             <tr>
               <td class="dataTableConfig col-left"><?php echo ENTRY_LAST_NAME; ?></td>
-              <td class="dataTableConfig col-single-right">
+              <td class="dataTableConfig col-single-right<?php echo (($error == true && $entry_lastname_error == true) ? ' col-error' : ''); ?>">
                 <?php
                 if ($error == true) {
                   if ($entry_lastname_error == true) {
@@ -156,7 +156,7 @@
               echo ($cInfo->customers_default_address_id != $cInfo->address_book_id) ? '<tr style="display:none;">' : '<tr>';
             ?>
               <td class="dataTableConfig col-left"><?php echo ENTRY_DATE_OF_BIRTH; ?></td>
-              <td class="dataTableConfig col-single-right">
+              <td class="dataTableConfig col-single-right<?php echo (($error == true && $entry_date_of_birth_error == true) ? ' col-error' : ''); ?>">
                  <?php
                 if ($error == true) {
                   if ($entry_date_of_birth_error == true) {
@@ -176,7 +176,7 @@
              echo ($cInfo->customers_default_address_id != $cInfo->address_book_id) ? '<tr style="display:none;">' : '<tr>';
             ?>
               <td class="dataTableConfig col-left"><?php echo ENTRY_EMAIL_ADDRESS; ?></td>
-              <td class="dataTableConfig col-single-right">
+              <td class="dataTableConfig col-single-right<?php echo (($error == true && $entry_email_address_error == true) ? ' col-error' : ''); ?>">
                 <?php
                 if ($error == true) {
                   if ($entry_email_address_error == true) {
@@ -205,7 +205,7 @@
           <table class="tableConfig borderall">
             <tr>
               <td class="dataTableConfig col-left"><?php echo ENTRY_COMPANY; ?></td>
-              <td class="dataTableConfig col-single-right">
+              <td class="dataTableConfig col-single-right<?php echo (($error == true && $entry_company_error == true) ? ' col-error' : ''); ?>">
                 <?php
                 if ($error == true) {
                   if ($entry_company_error == true) {
@@ -287,7 +287,7 @@
          <table class="tableConfig borderall">
             <tr>
               <td class="dataTableConfig col-left"><?php echo ENTRY_STREET_ADDRESS; ?></td>
-              <td class="dataTableConfig col-single-right">
+              <td class="dataTableConfig col-single-right<?php echo (($error == true && $entry_street_address_error == true) ? ' col-error' : ''); ?>">
                 <?php
                 if ($error == true) {
                   if ($entry_street_address_error == true) {
@@ -307,7 +307,7 @@
             ?>
             <tr>
               <td class="dataTableConfig col-left"><?php echo ENTRY_SUBURB; ?></td>
-              <td class="dataTableConfig col-single-right">
+              <td class="dataTableConfig col-single-right<?php echo (($error == true && $entry_suburb_error == true) ? ' col-error' : ''); ?>">
                 <?php
                 if ($error == true) {
                   if ($entry_suburb_error == true) {
@@ -327,7 +327,7 @@
             ?>
             <tr>
               <td class="dataTableConfig col-left"><?php echo ENTRY_POST_CODE; ?></td>
-              <td class="dataTableConfig col-single-right">
+              <td class="dataTableConfig col-single-right<?php echo (($error == true && $entry_post_code_error == true) ? ' col-error' : ''); ?>">
                 <?php
                 if ($error == true) {
                   if ($entry_post_code_error == true) {
@@ -344,7 +344,7 @@
             </tr>
             <tr>
               <td class="dataTableConfig col-left"><?php echo ENTRY_CITY; ?></td>
-              <td class="dataTableConfig col-single-right">
+              <td class="dataTableConfig col-single-right<?php echo (($error == true && $entry_city_error == true) ? ' col-error' : ''); ?>">
                 <?php
                 if ($error == true) {
                   if ($entry_city_error == true) {
@@ -362,7 +362,7 @@
             
             <tr>
               <td class="dataTableConfig col-left"><?php echo ENTRY_COUNTRY; ?></td>
-              <td class="dataTableConfig col-single-right">
+              <td class="dataTableConfig col-single-right<?php echo (($error == true && $entry_country_error == true) ? ' col-error' : ''); ?>">
                 <?php
                 if ($error == true) {
                   if ($entry_country_error == true) {
@@ -381,7 +381,7 @@
             ?>
             <tr id="states">
               <td class="dataTableConfig col-left"><?php echo ENTRY_STATE; ?></td>
-              <td class="dataTableConfig col-single-right" id="entry_state">
+              <td class="dataTableConfig col-single-right<?php echo (($error == true && $entry_state_error == true) ? ' col-error' : ''); ?>" id="entry_state">
                 <?php
                 $entry_state = xtc_get_zone_code($cInfo->entry_country_id, $cInfo->entry_zone_id, $cInfo->entry_state);
                 if ($error == true) {
@@ -425,7 +425,7 @@
           <table class="tableConfig borderall">
             <tr>
               <td class="dataTableConfig col-left"><?php echo ENTRY_TELEPHONE_NUMBER; ?></td>
-              <td class="dataTableConfig col-single-right">
+              <td class="dataTableConfig col-single-right<?php echo (($error == true && $entry_telephone_error == true) ? ' col-error' : ''); ?>">
               <?php
                 if ($error == true) {
                   if ($entry_telephone_error == true) {
@@ -480,7 +480,7 @@
            </tr>
            <tr>
               <td class="dataTableConfig col-left"><?php echo ENTRY_NEW_PASSWORD; ?></td>
-              <td class="dataTableConfig col-single-right bg_notice">
+              <td class="dataTableConfig col-single-right bg_notice<?php echo (($error == true && $entry_password_error == true) ? ' col-error' : ''); ?>">
               <?php
                 if ($error == true) {
                   if ($entry_password_error == true) {
