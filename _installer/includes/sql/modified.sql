@@ -2094,7 +2094,7 @@ INSERT INTO countries VALUES (146,'Myanmar','MM','MMR',1,1,0);
 INSERT INTO countries VALUES (147,'Namibia','NA','NAM',1,1,0);
 INSERT INTO countries VALUES (148,'Nauru','NR','NRU',1,1,0);
 INSERT INTO countries VALUES (149,'Nepal','NP','NPL',1,1,0);
-INSERT INTO countries VALUES (150,'Netherlands','NL','NLD',1,1,0);
+INSERT INTO countries VALUES (150,'Netherlands','NL','NLD',5,1,0);
 INSERT INTO countries VALUES (151,'Netherlands Antilles','AN','ANT',1,1,0);
 INSERT INTO countries VALUES (152,'New Caledonia','NC','NCL',1,1,0);
 INSERT INTO countries VALUES (153,'New Zealand','NZ','NZL',1,1,0);

@@ -72,4 +72,7 @@ UPDATE `banners` SET `banners_image` = 'modified_banner.jpg', `banners_image_mob
 #GTB - 2021-02-03 - new_attributes
 ALTER TABLE `admin_access` DROP `new_attributes`;
 
+#GTB - 2021-02-08 - address format for netherlands
+UPDATE `countries` SET `address_format_id` = 5 WHERE `countries_iso_code_2` = 'NL';
+
 # Keep an empty line at the end of this file for the db_updater to work properly
