@@ -63,15 +63,12 @@
     $customers_firstname = xtc_db_prepare_input($_POST['customers_firstname']);
     $customers_cid = xtc_db_prepare_input($_POST['csID']);
     $customers_vat_id = xtc_db_prepare_input($_POST['customers_vat_id']);
-    $customers_vat_id_status = xtc_db_prepare_input($_POST['customers_vat_id_status']);
     $customers_lastname = xtc_db_prepare_input($_POST['customers_lastname']);
     $customers_email_address = xtc_db_prepare_input($_POST['customers_email_address']);
     $customers_telephone = xtc_db_prepare_input($_POST['customers_telephone']);
     $customers_fax = xtc_db_prepare_input($_POST['customers_fax']);
     $customers_status_c = xtc_db_prepare_input($_POST['status']);
-    $customers_gender = xtc_db_prepare_input($_POST['customers_gender']);
-    $customers_dob = xtc_db_prepare_input($_POST['customers_dob']);
-
+    
     $default_address_id = xtc_db_prepare_input($_POST['default_address_id']);
     $entry_street_address = xtc_db_prepare_input($_POST['entry_street_address']);
     $entry_suburb = xtc_db_prepare_input($_POST['entry_suburb']);
@@ -79,8 +76,6 @@
     $entry_city = xtc_db_prepare_input($_POST['entry_city']);
     $entry_country_id = xtc_db_prepare_input($_POST['entry_country_id']);
     $entry_company = xtc_db_prepare_input($_POST['entry_company']);
-    $entry_state = xtc_db_prepare_input($_POST['entry_state']);
-    $entry_zone_id = xtc_db_prepare_input($_POST['entry_zone_id']);
 
     $customers_send_mail = xtc_db_prepare_input($_POST['customers_mail']);
     $customers_password_encrypted = xtc_db_prepare_input($_POST['entry_password']);
@@ -96,8 +91,11 @@
       $customers_password = xtc_encrypt_password($customers_password_encrypted);
     }
 
-    if (ACCOUNT_GENDER == 'true' && $customers_gender == '') {
-      $error = $entry_gender_error = true;
+    if (ACCOUNT_GENDER == 'true') {
+      $customers_gender = xtc_db_prepare_input($_POST['customers_gender']);
+      if ($customers_gender == '') {
+        $error = $entry_gender_error = true;
+      }
     }
 
     if (strlen($customers_password) < ENTRY_PASSWORD_MIN_LENGTH) {
@@ -116,8 +114,11 @@
       $error = $entry_lastname_error = true;
     }
 
-    if (ACCOUNT_DOB == 'true' && !checkdate(substr(xtc_date_raw($customers_dob), 4, 2), substr(xtc_date_raw($customers_dob), 6, 2), substr(xtc_date_raw($customers_dob), 0, 4))) {
-      $error = $entry_date_of_birth_error = true;
+    if (ACCOUNT_DOB == 'true') {
+      $customers_dob = xtc_db_prepare_input($_POST['customers_dob']);
+      if (!checkdate(substr(xtc_date_raw($customers_dob), 4, 2), substr(xtc_date_raw($customers_dob), 6, 2), substr(xtc_date_raw($customers_dob), 0, 4))) {
+        $error = $entry_date_of_birth_error = true;
+      }
     }
 
     // VAT Check
@@ -161,7 +162,7 @@
           $entry_vat_error_text = '';
           break;
       }
-      if($vatID->vat_info['error']==1){
+      if (isset($vatID->vat_info['error']) && $vatID->vat_info['error'] == 1) {
         $entry_vat_error = true;
         $error = true;
       }
@@ -192,6 +193,8 @@
     }
 
     if (ACCOUNT_STATE == 'true') {
+      $entry_state = xtc_db_prepare_input($_POST['entry_state']);
+      
       if ($entry_country_error == true) {
         $entry_state_error = true;
       } else {
