@@ -38,6 +38,10 @@
   $action = isset($_GET['action']) && $_GET['action'] != '' ? $_GET['action'] : '';
   $privacy = isset($_POST['privacy']) && $_POST['privacy'] == 'privacy' ? true : false;
   
+  if (!isset($smarty) || !is_object($smarty)) {
+    $smarty = new Smarty();
+  }
+  
   $error = false;
   if ($action == 'send') {
 
