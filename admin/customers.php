@@ -297,7 +297,7 @@
         break;
 
       case 'update' :
-        $customers_cid = xtc_db_prepare_input($_POST['csID']);
+        $customers_cid = xtc_db_prepare_input($_POST['customers_cid']);
         $customers_vat_id = xtc_db_prepare_input($_POST['customers_vat_id']);
         $customers_vat_id_status = (isset($_POST['customers_vat_id_status']) ? xtc_db_prepare_input($_POST['customers_vat_id_status']) : '');
         $customers_firstname = xtc_db_prepare_input($_POST['customers_firstname']);
@@ -321,7 +321,7 @@
         $memo_text = xtc_db_prepare_input($_POST['memo_text']);
         $payment_unallowed = implode(',', (isset($_POST['payment_unallowed']) && is_array($_POST['payment_unallowed']) ? $_POST['payment_unallowed'] : array()));
         $shipping_unallowed = implode(',', (isset($_POST['shipping_unallowed']) && is_array($_POST['shipping_unallowed']) ? $_POST['shipping_unallowed'] : array()));
-        $password = xtc_db_prepare_input($_POST['entry_password']);
+        $password = xtc_db_prepare_input($_POST['customers_password']);
         /*
         $amount = xtc_db_prepare_input($_POST['amount']);
         if ($amount != '') {

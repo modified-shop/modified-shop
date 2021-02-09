@@ -112,7 +112,7 @@
               <td class="dataTableConfig col-left"><?php echo ENTRY_CID; ?></td>
               <td class="dataTableConfig col-single-right bg_notice">
                 <?php
-                echo xtc_draw_input_field('csID', $cInfo->customers_cid, 'maxlength="32"', false);
+                echo xtc_draw_input_field('customers_cid', $cInfo->customers_cid, 'maxlength="32"', false);
                 ?>
               </td>
 
@@ -468,12 +468,12 @@
               <?php
                 if ($error == true) {
                   if ($entry_password_error == true) {
-                    echo xtc_draw_password_field('entry_password', $cInfo->customers_password, false, 'autocomplete="off" readonly="readonly" onfocus="this.removeAttribute(\'readonly\');" onblur="this.setAttribute(\'readonly\', \'readonly\');"').'&nbsp;'.ENTRY_PASSWORD_ERROR;
+                    echo xtc_draw_password_field('customers_password', $cInfo->customers_password, false, 'autocomplete="off" readonly="readonly" onfocus="this.removeAttribute(\'readonly\');" onblur="this.setAttribute(\'readonly\', \'readonly\');"').'&nbsp;'.ENTRY_PASSWORD_ERROR;
                   } else {
-                    echo xtc_draw_password_field('entry_password', $cInfo->customers_password, false, 'autocomplete="off" readonly="readonly" onfocus="this.removeAttribute(\'readonly\');" onblur="this.setAttribute(\'readonly\', \'readonly\');"');
+                    echo xtc_draw_password_field('customers_password', $cInfo->customers_password, false, 'autocomplete="off" readonly="readonly" onfocus="this.removeAttribute(\'readonly\');" onblur="this.setAttribute(\'readonly\', \'readonly\');"');
                   }
                 } else {
-                  echo xtc_draw_password_field('entry_password', '', false, 'autocomplete="off" readonly="readonly" onfocus="this.removeAttribute(\'readonly\');" onblur="this.setAttribute(\'readonly\', \'readonly\');"');
+                  echo xtc_draw_password_field('customers_password', '', false, 'autocomplete="off" readonly="readonly" onfocus="this.removeAttribute(\'readonly\');" onblur="this.setAttribute(\'readonly\', \'readonly\');"');
                 }
                 ?>
               </td>
@@ -484,7 +484,7 @@
            <tr>
             <td class="dataTableConfig col-left"><?php echo TABLE_HEADING_AMOUNT; ?></td>
             <td class="dataTableConfig col-single-right">
-            <?php  echo $xtPrice->xtcFormat($cInfo->amount, true);
+            <?php  echo $xtPrice->xtcFormatCurrency($cInfo->amount).xtc_draw_hidden_field('amount', $cInfo->amount);
               /*
               if ($processed == true) {
                 echo $cInfo->amount.xtc_draw_hidden_field('amount', $cInfo->amount);
