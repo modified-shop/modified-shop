@@ -40,6 +40,25 @@
     $customers_password_encrypted = xtc_RandomString(8);
     $customers_password = xtc_encrypt_password($customers_password_encrypted);
   }
+
+  $error = false;
+  $entry_gender_error = false;
+  $entry_password_error = false;
+  $entry_mail_error = false;
+  $entry_firstname_error = false;
+  $entry_lastname_error = false;
+  $entry_date_of_birth_error = false;
+  $entry_vat_error = false;
+  $entry_email_address_error = false;
+  $entry_email_address_check_error = false;
+  $entry_street_address_error = false;
+  $entry_post_code_error = false;
+  $entry_city_error = false;
+  $entry_country_error = false;
+  $entry_state_error = false;
+  $entry_email_address_exists = false;
+  $entry_telephone_error = false;
+
   if (isset($_GET['action']) && $_GET['action'] == 'edit') {
     $customers_firstname = xtc_db_prepare_input($_POST['customers_firstname']);
     $customers_cid = xtc_db_prepare_input($_POST['csID']);
@@ -50,7 +69,6 @@
     $customers_telephone = xtc_db_prepare_input($_POST['customers_telephone']);
     $customers_fax = xtc_db_prepare_input($_POST['customers_fax']);
     $customers_status_c = xtc_db_prepare_input($_POST['status']);
-
     $customers_gender = xtc_db_prepare_input($_POST['customers_gender']);
     $customers_dob = xtc_db_prepare_input($_POST['customers_dob']);
 
@@ -60,7 +78,6 @@
     $entry_postcode = xtc_db_prepare_input($_POST['entry_postcode']);
     $entry_city = xtc_db_prepare_input($_POST['entry_city']);
     $entry_country_id = xtc_db_prepare_input($_POST['entry_country_id']);
-
     $entry_company = xtc_db_prepare_input($_POST['entry_company']);
     $entry_state = xtc_db_prepare_input($_POST['entry_state']);
     $entry_zone_id = xtc_db_prepare_input($_POST['entry_zone_id']);
@@ -79,34 +96,26 @@
       $customers_password = xtc_encrypt_password($customers_password_encrypted);
     }
 
-    $error = false; // reset error flag
-
-    $entry_gender_error = false;
     if (ACCOUNT_GENDER == 'true' && $customers_gender == '') {
       $error = $entry_gender_error = true;
     }
 
-    $entry_password_error = false;
     if (strlen($customers_password) < ENTRY_PASSWORD_MIN_LENGTH) {
       $error = $entry_password_error = true;
     }
 
-    $entry_mail_error = false;
     if ($customers_send_mail != 'yes' && $customers_send_mail != 'no') {
       $error = $entry_mail_error = true;
     }
 
-    $entry_firstname_error = false;
     if (strlen($customers_firstname) < ENTRY_FIRST_NAME_MIN_LENGTH) {
       $error = $entry_firstname_error = true;
     }
 
-    $entry_lastname_error = false;
     if (strlen($customers_lastname) < ENTRY_LAST_NAME_MIN_LENGTH) {
       $error = $entry_lastname_error = true;
     }
 
-    $entry_date_of_birth_error = false;
     if (ACCOUNT_DOB == 'true' && !checkdate(substr(xtc_date_raw($customers_dob), 4, 2), substr(xtc_date_raw($customers_dob), 6, 2), substr(xtc_date_raw($customers_dob), 0, 4))) {
       $error = $entry_date_of_birth_error = true;
     }
@@ -158,32 +167,26 @@
       }
     }
 
-    $entry_email_address_error = false;
     if (strlen($customers_email_address) < ENTRY_EMAIL_ADDRESS_MIN_LENGTH) {
       $error = $entry_email_address_error = true;
     }
 
-    $entry_email_address_check_error = false;
     if (!xtc_validate_email($customers_email_address)) {
       $error = $entry_email_address_check_error = true;
     }
 
-    $entry_street_address_error = false;
     if (strlen($entry_street_address) < ENTRY_STREET_ADDRESS_MIN_LENGTH) {
       $error = $entry_street_address_error = true;
     }
 
-    $entry_post_code_error = false;
     if (strlen($entry_postcode) < ENTRY_POSTCODE_MIN_LENGTH) {
       $error = $entry_post_code_error = true;
     }
 
-    $entry_city_error = false;
     if (strlen($entry_city) < ENTRY_CITY_MIN_LENGTH) {
       $error = $entry_city_error = true;
     }
 
-    $entry_country_error = false;
     if ($entry_country_id == false) {
       $error = $entry_country_error = true;
     }
@@ -193,7 +196,6 @@
         $entry_state_error = true;
       } else {
         $zone_id = 0;
-        $entry_state_error = false;
         $check_query = xtc_db_query("SELECT count(*) as total
                                        FROM ".TABLE_ZONES."
                                       WHERE zone_country_id = '".xtc_db_input($entry_country_id)."'");
@@ -229,12 +231,10 @@
       }
     }
 
-    $entry_telephone_error = false;
     if (ACCOUNT_TELEPHONE_OPTIONAL == 'false' && strlen($customers_telephone) < ENTRY_TELEPHONE_MIN_LENGTH) {
       $error = $entry_telephone_error = true;
     }
 
-    $entry_email_address_exists = false;
     $check_email = xtc_db_query("SELECT customers_email_address
                                    FROM ".TABLE_CUSTOMERS."
                                   WHERE customers_email_address = '".xtc_db_input($customers_email_address)."'
@@ -609,7 +609,7 @@ require (DIR_WS_INCLUDES.'head.php');
                       <td class="dataTableConfig col-single-right">
                       <?php
                         $customers_payment_unallowed = array();
-                        $payment_unallowed = explode(',', $payment_unallowed); #reduce code complexity?
+                        $payment_unallowed = explode(',', isset($payment_unallowed) ? $payment_unallowed : array());
                         foreach ($payment_unallowed as $value) {
                           $customers_payment_unallowed[] = $value;
                         }
@@ -633,7 +633,7 @@ require (DIR_WS_INCLUDES.'head.php');
                       <td class="dataTableConfig col-single-right">
                       <?php
                         $customers_shipping_unallowed = array();
-                        $shipping_unallowed = explode(',', $shipping_unallowed); #reduce code complexity?
+                        $shipping_unallowed = explode(',', isset($shipping_unallowed) ? $shipping_unallowed : array());
                         foreach ($shipping_unallowed as $value) {
                           $customers_shipping_unallowed[] = $value;
                         }
