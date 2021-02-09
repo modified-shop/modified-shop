@@ -339,6 +339,8 @@
         // reset error flag
         $error = false;
         
+        $entry_memo_title_error = false;
+        $entry_memo_text_error = false;
         if ($memo_text != '' || $memo_title != '') {
           if ($memo_text != '' && $memo_title == '') {
             $error = true;

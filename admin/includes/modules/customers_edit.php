@@ -205,17 +205,9 @@
           <table class="tableConfig borderall">
             <tr>
               <td class="dataTableConfig col-left"><?php echo ENTRY_COMPANY; ?></td>
-              <td class="dataTableConfig col-single-right<?php echo (($error == true && $entry_company_error == true) ? ' col-error' : ''); ?>">
+              <td class="dataTableConfig col-single-right">
                 <?php
-                if ($error == true) {
-                  if ($entry_company_error == true) {
-                    echo xtc_draw_input_field('entry_company', $cInfo->entry_company, 'maxlength="64"').'&nbsp;'.ENTRY_COMPANY_ERROR;
-                  } else {
-                    echo $cInfo->entry_company.xtc_draw_hidden_field('entry_company', $cInfo->entry_company);
-                  }
-                } else {
                   echo xtc_draw_input_field('entry_company', $cInfo->entry_company, 'maxlength="64"');
-                }
                 ?>
               </td>
 
@@ -307,17 +299,9 @@
             ?>
             <tr>
               <td class="dataTableConfig col-left"><?php echo ENTRY_SUBURB; ?></td>
-              <td class="dataTableConfig col-single-right<?php echo (($error == true && $entry_suburb_error == true) ? ' col-error' : ''); ?>">
+              <td class="dataTableConfig col-single-right">
                 <?php
-                if ($error == true) {
-                  if ($entry_suburb_error == true) {
-                    echo xtc_draw_input_field('suburb', $cInfo->entry_suburb, 'maxlength="32"').'&nbsp;'.ENTRY_SUBURB_ERROR;
-                  } else {
-                    echo $cInfo->entry_suburb.xtc_draw_hidden_field('entry_suburb', $cInfo->entry_suburb);
-                  }
-                } else {
                   echo xtc_draw_input_field('entry_suburb', $cInfo->entry_suburb, 'maxlength="32"');
-                }
                 ?>
               </td>
 
