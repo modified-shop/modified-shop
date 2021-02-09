@@ -610,7 +610,7 @@ require (DIR_WS_INCLUDES.'head.php');
                       <td class="dataTableConfig col-single-right">
                       <?php
                         $customers_payment_unallowed = array();
-                        $payment_unallowed = explode(',', isset($payment_unallowed) ? $payment_unallowed : array());
+                        $payment_unallowed = explode(',', isset($payment_unallowed) ? $payment_unallowed : '');
                         foreach ($payment_unallowed as $value) {
                           $customers_payment_unallowed[] = $value;
                         }
@@ -634,7 +634,7 @@ require (DIR_WS_INCLUDES.'head.php');
                       <td class="dataTableConfig col-single-right">
                       <?php
                         $customers_shipping_unallowed = array();
-                        $shipping_unallowed = explode(',', isset($shipping_unallowed) ? $shipping_unallowed : array());
+                        $shipping_unallowed = explode(',', isset($shipping_unallowed) ? $shipping_unallowed : '');
                         foreach ($shipping_unallowed as $value) {
                           $customers_shipping_unallowed[] = $value;
                         }
