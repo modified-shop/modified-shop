@@ -32,16 +32,23 @@
   require_once(DIR_FS_ADMIN.DIR_WS_FUNCTIONS.'general.php');
 
   // Database
-  require_once (DIR_FS_INC.'db_functions_'.DB_MYSQL_TYPE.'.inc.php');
-  require_once (DIR_FS_INC.'db_functions.inc.php');
+  require_once(DIR_FS_INC.'db_functions_'.DB_MYSQL_TYPE.'.inc.php');
+  require_once(DIR_FS_INC.'db_functions.inc.php');
   
   xtc_db_connect() or die('Unable to connect to database server!');
 
   //Start Session
   @ini_set('session.use_only_cookies', 1);
   require(DIR_WS_FUNCTIONS . 'sessions.php');
+
+  // set the session name and save path
   xtc_session_name('MODsid');
-  $session_started = xtc_session_start();
+  if (STORE_SESSIONS == '') {
+    define('SESSION_WRITE_DIRECTORY', sys_get_temp_dir());
+    xtc_session_save_path(SESSION_WRITE_DIRECTORY);
+  }
+  $session_started = xtc_session_start();  
+  
   // verfiy SECURE Token
   if (is_array($_POST) && count($_POST) > 0) {
     if (isset($_POST[$_SESSION['SECName']])) {
