@@ -83,8 +83,8 @@
 
     $customers_mail_comments = xtc_db_prepare_input($_POST['mail_comments']);
 
-    $payment_unallowed = implode(',', (is_array($_POST['payment_unallowed']) ? $_POST['payment_unallowed'] : array()));
-    $shipping_unallowed = implode(',', (is_array($_POST['shipping_unallowed']) ? $_POST['shipping_unallowed'] : array()));
+    $payment_unallowed = implode(',', (isset($_POST['payment_unallowed']) && is_array($_POST['payment_unallowed']) ? $_POST['payment_unallowed'] : array()));
+    $shipping_unallowed = implode(',', (isset($_POST['shipping_unallowed']) && is_array($_POST['shipping_unallowed']) ? $_POST['shipping_unallowed'] : array()));
 
     if ($customers_password == '') {
       $customers_password_encrypted =  xtc_RandomString(8);
@@ -241,7 +241,7 @@
     $check_email = xtc_db_query("SELECT customers_email_address
                                    FROM ".TABLE_CUSTOMERS."
                                   WHERE customers_email_address = '".xtc_db_input($customers_email_address)."'
-                                    AND customers_id <> '".xtc_db_input($customers_id)."'");
+                                    AND account_type = '0'");
     if (xtc_db_num_rows($check_email)) {
       $error = $entry_email_address_exists = true;
     }
@@ -450,10 +450,9 @@ require (DIR_WS_INCLUDES.'head.php');
 
                     <tr>
                       <td class="dataTableConfig col-left"><?php echo ENTRY_COMPANY; ?></td>
-                      <td class="dataTableConfig col-single-right<?php echo (($error == true && $entry_company_error == true) ? ' col-error' : ''); ?>">
+                      <td class="dataTableConfig col-single-right">
                       <?php
                         echo xtc_draw_input_field('entry_company', isset($entry_company)?$entry_company:'', 'maxlength="64"');
-                        if ($error && $entry_company_error) echo '&nbsp;'.ENTRY_COMPANY_ERROR;
                       ?>
                       </td>
                     </tr>
@@ -492,10 +491,9 @@ require (DIR_WS_INCLUDES.'head.php');
                     <?php if (ACCOUNT_SUBURB == 'true') { ?>
                     <tr>
                       <td class="dataTableConfig col-left"><?php echo ENTRY_SUBURB; ?></td>
-                      <td class="dataTableConfig col-single-right<?php echo (($error == true && $entry_suburb_error == true) ? ' col-error' : ''); ?>">
+                      <td class="dataTableConfig col-single-right">
                       <?php
                         echo xtc_draw_input_field('entry_suburb', isset($entry_suburb)?$entry_suburb:'', 'maxlength="32"');
-                        if ($error && $entry_suburb_error) echo '&nbsp;'.ENTRY_SUBURB_ERROR;
                       ?>
                       </td>
                     </tr>
