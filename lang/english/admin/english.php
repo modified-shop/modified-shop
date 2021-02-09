@@ -267,6 +267,7 @@ define('ENTRY_CITY_ERROR', '&nbsp;<span class="errorText">min. ' . ENTRY_CITY_MI
 define('ENTRY_STATE', 'State:');
 define('ENTRY_STATE_ERROR', '&nbsp;<span class="errorText">required</font></small>');
 define('ENTRY_COUNTRY', 'Country:');
+define('ENTRY_COUNTRY_ERROR', 'Please choose your country.');
 define('ENTRY_TELEPHONE_NUMBER', 'Telephone Number:');
 define('ENTRY_TELEPHONE_NUMBER_ERROR', '&nbsp;<span class="errorText">min. ' . ENTRY_TELEPHONE_MIN_LENGTH . ' chars</span>');
 define('ENTRY_FAX_NUMBER', 'Fax Number:');
