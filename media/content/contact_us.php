@@ -42,6 +42,10 @@
     $smarty = new Smarty();
   }
   
+  if (!isset($main) || !is_object($main)) {
+    $main = new main();
+  }
+  
   $error = false;
   if ($action == 'send') {
 
