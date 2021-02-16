@@ -17,6 +17,7 @@
   define('EMAIL_SQL_ERRORS', 'false');
   define('TEMPLATE_ENGINE','smarty_3');
   define('SEARCH_ENGINE_FRIENDLY_URLS', 'false');
+  define('DEFAULT_TEMPLATE', 'tpl_modified_responsive');
 
   // min / max  
   define('SSL_VERSION_MIN', '1.2');
@@ -26,9 +27,8 @@
   // permission
   define('CHMOD_WRITEABLE', 0775);
   
-  // DB Backup / Restore
-  define('MAX_RELOADS', 100000000);
-  define('RESTORE_TEST', false);
+  // update
+  define('UPDATE_MAX_RELOADS', 100000000);
     
   define('ENTRY_FIRST_NAME_MIN_LENGTH', 2);
   define('ENTRY_LAST_NAME_MIN_LENGTH', 2);

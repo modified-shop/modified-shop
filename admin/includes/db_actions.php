@@ -285,8 +285,10 @@
       if (isset($_POST['utf8-convert']) && $_POST['utf8-convert'] == 'yes') {
         $restore['utf8'] = true;
       }
+      if(isset($_GET['convert']) && $_GET['convert'] == 'utf-8') {
+        $restore['utf8'] = true;
+      }
       $restore['anzahl_zeilen'] = RESTORE_ROWS;
-      $restore['tables_to_restore'] = array();
       $restore['time_gap'] = time();
     
       if (!is_file($restore['file'])) {
@@ -310,9 +312,10 @@
 
       $a = 0;
       $restore['EOB'] = false;
-      
+      $restore['fileEOF'] = false;
+            
       // Disable Keys of actual table to speed up restoring
-      if (sizeof($restore['tables_to_restore']) == 0 && ($restore['actual_table'] > '' && $restore['actual_table'] != 'unbekannt')) {
+      if (is_array($restore['tables_to_restore']) && sizeof($restore['tables_to_restore']) == 0 && ($restore['actual_table'] > '' && $restore['actual_table'] != 'unbekannt')) {
         xtc_db_query('/*!40000 ALTER TABLE `'.$restore['actual_table'].'` DISABLE KEYS */;');
       }
     

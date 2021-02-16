@@ -101,50 +101,51 @@
           $error = true;
         }
       }
-      
-      if (($error === false && !isset($db_install))
-          || isset($write_configure)
-          )
-      {        
-        $collation = 'latin1_german1_ci';
-        if ($_SESSION['language_charset'] == 'utf-8') {
-          $collation = 'utf8_general_ci';
-        }
-        xtc_db_query('ALTER DATABASE `'.$db_database.'` DEFAULT CHARACTER SET '.$db_charset.' COLLATE '.$collation);
-        xtc_db_query('SET NAMES '.$db_charset.' COLLATE '.$collation);
-        
-        $engine = '';
-        xtc_db_query("CREATE TABLE IF NOT EXISTS `engine` (`type` VARCHAR( 16 ) NOT NULL)");
-        $check_query = xtc_db_query("SHOW CREATE TABLE `engine`");
-        $check = xtc_db_fetch_array($check_query);
-        
-        if (strpos($http_server, 'https:')) {
-          $use_ssl = 'true';
-        }
-        
-        $pos = stripos($check['Create Table'], 'engine=');
-        if ($pos !== false) {
-          $engine = trim(substr($check['Create Table'], ($pos + 7), (strpos($check['Create Table'], ' ', $pos) - $pos - 7)));
-        }
-        if ($engine == '') {
-          $pos = stripos($check['Create Table'], 'type=');
-          if ($pos !== false) {
-            $engine = trim(substr($check['Create Table'], ($pos + 5), (strpos($check['Create Table'], ' ', $pos) - $pos - 5)));
+            
+      if ($error === false || isset($db_install) || isset($write_configure)) {
+        if ($error === false || isset($db_install)) {     
+          $collation = 'latin1_german1_ci';
+          if ($_SESSION['language_charset'] == 'utf-8') {
+            $collation = 'utf8_general_ci';
           }
-        }
-        xtc_db_query("TRUNCATE `engine`");
-        xtc_db_query("INSERT INTO `engine` VALUES ('".xtc_db_input($engine)."')");
+          xtc_db_query('ALTER DATABASE `'.$db_database.'` DEFAULT CHARACTER SET '.$db_charset.' COLLATE '.$collation);
+          xtc_db_query('SET NAMES '.$db_charset.' COLLATE '.$collation);
         
-        //create  includes/configure.php
-        include (DIR_FS_INSTALLER.'templates/configure.php');
-        if (file_exists(DIR_FS_CATALOG.'/includes/local/configure.php')) {
-          $fp = fopen(DIR_FS_CATALOG . 'includes/local/configure.php', 'w');
-        } else {
-          $fp = fopen(DIR_FS_CATALOG . 'includes/configure.php', 'w');
+          $engine = '';
+          xtc_db_query("CREATE TABLE IF NOT EXISTS `engine` (`type` VARCHAR( 16 ) NOT NULL)");
+          $check_query = xtc_db_query("SHOW CREATE TABLE `engine`");
+          $check = xtc_db_fetch_array($check_query);
+                
+          $pos = stripos($check['Create Table'], 'engine=');
+          if ($pos !== false) {
+            $engine = trim(substr($check['Create Table'], ($pos + 7), (strpos($check['Create Table'], ' ', $pos) - $pos - 7)));
+          }
+          if ($engine == '') {
+            $pos = stripos($check['Create Table'], 'type=');
+            if ($pos !== false) {
+              $engine = trim(substr($check['Create Table'], ($pos + 5), (strpos($check['Create Table'], ' ', $pos) - $pos - 5)));
+            }
+          }
+          xtc_db_query("TRUNCATE `engine`");
+          xtc_db_query("INSERT INTO `engine` VALUES ('".xtc_db_input($engine)."')");
         }
-        fputs($fp, $file_contents);
-        fclose($fp);
-               
+        
+        if ($error === false || isset($write_configure)) {  
+          if (strpos($http_server, 'https:')) {
+            $use_ssl = 'true';
+          }
+
+          //create  includes/configure.php
+          include (DIR_FS_INSTALLER.'templates/configure.php');
+          if (file_exists(DIR_FS_CATALOG.'/includes/local/configure.php')) {
+            $fp = fopen(DIR_FS_CATALOG . 'includes/local/configure.php', 'w');
+          } else {
+            $fp = fopen(DIR_FS_CATALOG . 'includes/configure.php', 'w');
+          }
+          fputs($fp, $file_contents);
+          fclose($fp);
+        }
+            
         if (isset($write_configure) && $error === true) {
           xtc_redirect(xtc_href_link(DIR_WS_INSTALLER.'install_finished.php', '', $request_type));
         }
@@ -249,7 +250,7 @@
             var debug = true;
             var continue_url = \''.xtc_href_link(DIR_WS_INSTALLER.'install_step2.php', '', $request_type).'\';
             var ajax_url = \''.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=convertdb', $request_type).'\';
-            var maxReloads = '.MAX_RELOADS.';
+            var maxReloads = '.UPDATE_MAX_RELOADS.';
           </script>
           ';
 

@@ -28,6 +28,8 @@
       defined($configuration['configuration_key']) OR define($configuration['configuration_key'], stripslashes($configuration['configuration_value']));
     }
   }
+  
+  defined('CURRENT_TEMPLATE') OR define('CURRENT_TEMPLATE', DEFAULT_TEMPLATE);
 
   // language
   require_once(DIR_FS_INSTALLER.'lang/'.$_SESSION['language'].'.php');

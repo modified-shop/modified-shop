@@ -218,7 +218,7 @@
             var debug = true;
             var button_back = \'<a href="'.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), '', $request_type).'">'.BUTTON_BACK.'</a>\';
             var ajax_url = \''.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=doupdate', $request_type).'\';
-            var maxReloads = '.MAX_RELOADS.';
+            var maxReloads = '.UPDATE_MAX_RELOADS.';
           </script>
           ';
 
