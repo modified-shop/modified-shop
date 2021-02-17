@@ -149,7 +149,11 @@ if ($product->isProduct() === false) {
     $link = xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$product->data['products_id'], 'NONSSL');    
   } 
     
-  $smarty->assign('PRODUCTS_NAME', $product->data['products_name']);
+  // load all definitions from product class
+  foreach ($product->buildDataArray($product->data, 'info') as $key => $value) {
+    $info_smarty->assign($key, $value);
+  }
+
   $smarty->assign('INPUT_AUTHOR', xtc_draw_input_field('author', $author, 'style="width:235px;"'));
   $smarty->assign('INPUT_TEXT', xtc_draw_textarea_field('review', 'soft', '60', '15', $review));
   $smarty->assign('FORM_ACTION', xtc_draw_form('product_reviews_write', xtc_href_link(FILENAME_PRODUCT_REVIEWS_WRITE, xtc_get_all_get_params(array('action')).'action=process'), 'post', 'onSubmit="return check_form_review();"').xtc_draw_hidden_field('get_params', xtc_get_all_get_params(array('action'))).secure_form());
