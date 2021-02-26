@@ -127,6 +127,8 @@ class cash {
 	  // install selfpickup
 	  if (is_file(DIR_FS_CATALOG_MODULES . 'shipping/selfpickup.php')) {
 	    require_once(DIR_FS_CATALOG_MODULES . 'shipping/selfpickup.php');
+	    include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/selfpickup.php');
+	    
 	    $selfpickup = new selfpickup();
 	    if ($selfpickup->check() < 1) {
 	      $selfpickup->install();
