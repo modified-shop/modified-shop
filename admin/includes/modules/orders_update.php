@@ -75,6 +75,8 @@
       $order_subject_replace = array($oID, xtc_date_long($order->info['date_purchased']), $order->customer['lastname'], $order->customer['firstname']);
       $order_subject = str_replace($order_subject_search, $order_subject_replace, EMAIL_BILLING_SUBJECT);
 
+      foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/orders/orders_update/','php') as $file) require ($file);
+
       //EMAIL PREVIEW
       include ('includes/modules/email_preview/email_preview.php');
     
