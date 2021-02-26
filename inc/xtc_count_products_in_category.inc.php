@@ -36,7 +36,7 @@
                                        JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
                                             ON p.products_id = pd.products_id
                                                AND pd.language_id = '".(int)$_SESSION['languages_id']."' 
-                                               AND trim(pd.products_name) != ''                      
+                                               AND trim(pd.products_name) != ''
                                        JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
                                             ON p2c.products_id = p.products_id
                                       WHERE (p.products_status = '1'".(($include_inactive === true) ? " OR p.products_status = '0'" : '').")
@@ -50,13 +50,16 @@
     }
     
     if (!isset($products_count_array[$active][$category_id])) {
-      $products_count_array[$active][$category_id] = 0;        
+      $products_count_array[$active][$category_id] = 0;
       $products_count_array[$active][$category_id] += ((isset($products_in_category_array[$active][$category_id])) ? $products_in_category_array[$active][$category_id] : 0);
-    
-  
+      
       // check sub categories		
       $child_categories_query = xtDBquery("SELECT c.categories_id
                                              FROM ".TABLE_CATEGORIES." c
+                                             JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd
+                                                  ON c.categories_id = cd.categories_id
+                                                     AND cd.language_id = '".(int)$_SESSION['languages_id']."' 
+                                                     AND trim(cd.categories_name) != ''
                                             WHERE c.parent_id = '".(int)$category_id."'
                                                   ".CATEGORIES_CONDITIONS_C);
       if (xtc_db_num_rows($child_categories_query, true)) {
