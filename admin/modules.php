@@ -18,6 +18,9 @@
 
   require('includes/application_top.php');
 
+  // include needed functions
+  require_once (DIR_FS_INC.'update_module_configuration.inc.php');
+
   $preferred_modules = array(
     'banktransfer',
     'cash',
@@ -347,68 +350,55 @@ if (xtc_not_null($action) && !$box) {
                 echo '<div class="error_message">'.TEXT_MODULE_UPDATE_NEEDED.'<ul>'.implode('', $info).'</ul></div>';
               }
               
-              $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
+              $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.') + 1);
+              
               $directory_array = array(
                 'installed' => array(),
                 'preferred' => array(),
                 'uninstalled' => array(),
               );
-              if ($dir = @dir($module_directory)) {
-                while ($file = $dir->read()) {
-                  if (!is_dir($module_directory . $file)) {
-                    if (substr($file, strrpos($file, '.')) == $file_extension) {
-                      if (is_file(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $file)) {
-                        include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $file);
-                      } elseif ($check_language_file) {
-                        $messageStack->add_session(sprintf(TEXT_MODULE_FILE_MISSING, $_SESSION['language'], $file), 'warning');
-                      }
-                      include_once($module_directory . $file);
-                      $class = substr($file, 0, strpos($file, '.'));
-                      if (class_exists($class)) {
-                        $module = new $class();
-                      }
-                      if (method_exists($module,'check')) {
-                        if ($module instanceof $class && $module->check() > 0) {
-                          if (!is_numeric($module->sort_order)) {
-                            $module->sort_order = 0;
-                          }
-                          if (!array_key_exists(($module->sort_order*100), $directory_array['installed'])) {
-                            $directory_array['installed'][($module->sort_order*100)] = $file;
-                          } else {
-                            // search for next free index in array
-                            $index = ($module->sort_order*100);
-                            while (1==1) {
-                              if (!array_key_exists($index, $directory_array['installed'])) {
-                                $directory_array['installed'][$index] = $file;
-                                break;
-                              }
-                              $index++;
-                            }
-                          }
-                        } elseif (in_array($class, $preferred_modules)) {
-                          $directory_array['preferred'][] = $file;
-                        } else {
-                          $directory_array['uninstalled'][] = $file;
-                        }
-                      }
-                      unset($module);
+
+              foreach(auto_include($module_directory, $file_extension) as $file) {
+                $filename = basename($file);
+                
+                if (is_file(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $filename)) {
+                  include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $filename);
+                } elseif ($check_language_file) {
+                  $messageStack->add_session(sprintf(TEXT_MODULE_FILE_MISSING, $_SESSION['language'], $filename), 'warning');
+                }
+                include_once($module_directory . $filename);
+        
+                $class = substr($filename, 0, strpos($filename, '.'));
+                if (class_exists($class)) {
+                  $module = new $class();
+                }
+
+                if (method_exists($module,'check')) {
+                  if ($module instanceof $class && $module->check() > 0) {
+                    if (!isset($module->sort_order) || !is_numeric($module->sort_order)) {
+                      $module->sort_order = 0;
                     }
+                    $directory_array['installed'][get_module_configuration_sorting($directory_array['installed'], $module->sort_order)] = $filename;
+                  } elseif (in_array($class, $preferred_modules)) {
+                    $directory_array['preferred'][] = $filename;
+                  } else {
+                    $directory_array['uninstalled'][] = $filename;
                   }
                 }
-                if (count($directory_array['installed']) > 0) {
-                  ksort($directory_array['installed']);
-                  foreach ($directory_array['installed'] as $key => $val){
-                    $directory_array['installed'][$key] = $val;
-                  }
-                  $directory_array['installed'] = array_values($directory_array['installed']);
-                }
-                if (count($directory_array['preferred']) > 0) {
-                  sort($directory_array['preferred']);
-                }
-                if (count($directory_array['uninstalled']) > 0) {
-                  sort($directory_array['uninstalled']);
-                }
-                $dir->close();
+                unset($module);
+              }
+
+              if (count($directory_array['installed']) > 0) {
+                ksort($directory_array['installed']);
+                $directory_array['installed'] = array_values($directory_array['installed']);
+              }
+              
+              if (count($directory_array['preferred']) > 0) {
+                sort($directory_array['preferred']);
+              }
+              
+              if (count($directory_array['uninstalled']) > 0) {
+                sort($directory_array['uninstalled']);
               }
               ?>
               <td class="boxCenterLeft">

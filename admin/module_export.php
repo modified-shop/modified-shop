@@ -23,8 +23,9 @@
 
   require('includes/application_top.php');
 
-  // include needed functions (for modules)
-  require_once(DIR_WS_FUNCTIONS . 'export_functions.php');
+  // include needed functions
+  require_once(DIR_WS_FUNCTIONS.'export_functions.php');
+  require_once(DIR_FS_INC.'update_module_configuration.inc.php');
 
   if (!is_writeable(DIR_FS_CATALOG . 'export/')) {
     $messageStack->add(ERROR_EXPORT_FOLDER_NOT_WRITEABLE, 'error');
@@ -178,78 +179,83 @@
 
   //########## FUNCTIONS ##########//
 
-  function get_module_info($module)
-  {
-      $module_info = array('code' => $module->code,
-                           'title' => $module->title,
-                           'description' => $module->description,
-                           'extended_description' => isset($module->extended_description) ? $module->extended_description : '',
-                           'status' => $module->check());
-      $module_info['properties'] = isset($module->properties) ? $module->properties : array();
-      $module_info['keys_dispnone'] = isset($module->keys_dispnone) ? $module->keys_dispnone : array();
-      $module_keys = method_exists($module,'keys') ? $module->keys() : array();
+  function get_module_info($module) {
+    $module_info = array('code' => $module->code,
+                         'title' => $module->title,
+                         'description' => $module->description,
+                         'extended_description' => isset($module->extended_description) ? $module->extended_description : '',
+                         'status' => $module->check());
+    $module_info['properties'] = isset($module->properties) ? $module->properties : array();
+    $module_info['keys_dispnone'] = isset($module->keys_dispnone) ? $module->keys_dispnone : array();
+    $module_keys = method_exists($module,'keys') ? $module->keys() : array();
 
-      $keys_extra = array();
-      $key_value_query = xtc_db_query("SELECT configuration_key,
-                                              configuration_value,
-                                              use_function,
-                                              set_function
-                                         FROM " . TABLE_CONFIGURATION . "
-                                        WHERE configuration_key IN ('" . implode("', '", $module_keys) . "')
-                                     ORDER BY FIELD(configuration_key, '".implode("', '", $module_keys)."')");
-      while ($key_value = xtc_db_fetch_array($key_value_query)) {
-        $keys_extra[$key_value['configuration_key']] = array(
-          'title' => constant(strtoupper($key_value['configuration_key'] .'_TITLE')),
-          'description' => constant(strtoupper($key_value['configuration_key'] .'_DESC')),
-          'value' => $key_value['configuration_value'],
-          'use_function' => $key_value['use_function'],
-          'set_function' => $key_value['set_function'],
-        );
-      }
-      $module_info['keys'] = $keys_extra;
+    $keys_extra = array();
+    $key_value_query = xtc_db_query("SELECT configuration_key,
+                                            configuration_value,
+                                            use_function,
+                                            set_function
+                                       FROM " . TABLE_CONFIGURATION . "
+                                      WHERE configuration_key IN ('" . implode("', '", $module_keys) . "')
+                                   ORDER BY FIELD(configuration_key, '".implode("', '", $module_keys)."')");
+    while ($key_value = xtc_db_fetch_array($key_value_query)) {
+      $keys_extra[$key_value['configuration_key']] = array(
+        'title' => constant(strtoupper($key_value['configuration_key'] .'_TITLE')),
+        'description' => constant(strtoupper($key_value['configuration_key'] .'_DESC')),
+        'value' => $key_value['configuration_value'],
+        'use_function' => $key_value['use_function'],
+        'set_function' => $key_value['set_function'],
+      );
+    }
+    $module_info['keys'] = $keys_extra;
+    
+    return $module_info;
+  }
+
+  function create_directory_array($module_directory,$file_extension) {
+    global $module, $module_type;
+    
+    $directory_array = array(array());
+    $alphabet = range('A', 'Z');
+    
+    foreach(auto_include($module_directory, substr($file_extension, 1)) as $file) {
+      $filename = basename($file);
       
-      return $module_info;
+      if (is_file(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $filename)) {
+        include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $filename);
+      }
+      
+      include_once($module_directory . $filename);
+
+      $class = substr($filename, 0, strpos($filename, '.'));
+      if (class_exists($class)) {
+        $module = new $class();
+      }
+
+      if (method_exists($module,'check')) {
+        $title = strtoupper(preg_replace('/[^A-Za-z]/', '', $module->title));
+        $module->sort_order = array_search($title[0], $alphabet);
+        if ($module instanceof $class && $module->check() > 0) {
+          $directory_array[0][get_module_configuration_sorting($directory_array[0], $module->sort_order)] = $filename;
+        } else {
+          $directory_array[1][get_module_configuration_sorting($directory_array[1], $module->sort_order)] = $filename;
+        }
+      }
+      unset($module);
+    }
+    
+    if (isset($directory_array[0])) {
+      ksort($directory_array[0]);
+      $directory_array[0] = array_values($directory_array[0]);
+    }
+    
+    if (isset($directory_array[1])) {
+      ksort($directory_array[1]);
+      $directory_array[1] = array_values($directory_array[1]);
+    }
+    
+    return $directory_array;
   }
 
-  function create_directory_array($module_directory,$file_extension)
-  {
-      global $module, $module_type;
-      $directory_array = array(array());
-      if ($dir = @dir($module_directory)) {
-        while ($file = $dir->read()) {
-          if (!is_dir($module_directory . $file)) {
-            if (substr($file, strrpos($file, '.')) == $file_extension) {
-              if (file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $file)) {
-                include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $file);
-              }
-              include_once($module_directory . $file);
-              $class = substr($file, 0, strrpos($file, '.'));
-              if (class_exists($class)) {
-                $module = new $class();
-              }
-              if (method_exists($module,'check') && $module->check() > 0) {
-                $directory_array[0][] = $file;
-              } else {
-                $directory_array[1][] = $file;
-              }
-              unset($module);
-            }
-          }
-        }
-        if (is_array($directory_array[0])) {
-          sort($directory_array[0]);
-          $directory_array[0] = array_values($directory_array[0]);
-        }
-        if (is_array($directory_array[1])) {
-          sort($directory_array[1]);
-          $directory_array[1] = array_values($directory_array[1]);
-        }
-        ksort($directory_array);
-        $dir->close();
-      }
-      return $directory_array;
-  }
-  
   function convert_params_array_to_string($params_array)
   {
     reset($params_array);
