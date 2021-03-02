@@ -45,9 +45,7 @@
             if (!isset($module->sort_order) || !is_numeric($module->sort_order)) {
               $module->sort_order = 0;
             }
-            if ($module->check() > 0) {
-              $installed_modules[get_module_configuration_sorting($installed_modules, $module->sort_order)] = $filename;
-            }
+            $installed_modules[get_module_configuration_sorting($installed_modules, $module->sort_order)] = $filename;
           }
         }              
       }
