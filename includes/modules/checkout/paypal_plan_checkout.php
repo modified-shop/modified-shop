@@ -47,56 +47,68 @@ class paypal_plan_checkout {  //Important same name as filename
         xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('".$this->name."_STATUS', 'true','6', '1','xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
         xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('".$this->name."_SORT_ORDER', '10','6', '2', now())");
 
+  	    require_once(DIR_FS_INC.'update_module_configuration.inc.php');
+
         require_once(DIR_FS_CATALOG.DIR_WS_MODULES.'shopping_cart/paypal_plan_cart.php');
         $paypal_plan_cart = new paypal_plan_cart();
         if ($paypal_plan_cart->check() < 1) {
           $paypal_plan_cart->install();
+    	    update_module_configuration('shopping_cart');
         }
 
         require_once(DIR_FS_CATALOG.DIR_WS_MODULES.'xtcPrice/paypal_plan_price.php');
         $paypal_plan_price = new paypal_plan_price();
         if ($paypal_plan_price->check() < 1) {
           $paypal_plan_price->install();
+    	    update_module_configuration('xtcPrice');
         }
 
         require_once(DIR_FS_CATALOG.DIR_WS_MODULES.'order/paypal_plan_order.php');
         $paypal_plan_order = new paypal_plan_order();
         if ($paypal_plan_order->check() < 1) {
           $paypal_plan_order->install();
+    	    update_module_configuration('order');
         }
 
         require_once(DIR_FS_CATALOG.DIR_WS_MODULES.'payment/paypalsubscription.php');
         $paypalsubscription = new paypalsubscription();
         if ($paypalsubscription->check() < 1) {
           $paypalsubscription->install();
+    	    update_module_configuration('payment');
         }
     }
 
     function remove() {
         xtc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key LIKE '".$this->name."_%'");
 
+  	    require_once(DIR_FS_INC.'update_module_configuration.inc.php');
+
         require_once(DIR_FS_CATALOG.DIR_WS_MODULES.'shopping_cart/paypal_plan_cart.php');
         $paypal_plan_cart = new paypal_plan_cart();
         if ($paypal_plan_cart->check() > 0) {
           $paypal_plan_cart->remove();
+    	    update_module_configuration('shopping_cart');
         }
 
         require_once(DIR_FS_CATALOG.DIR_WS_MODULES.'xtcPrice/paypal_plan_price.php');
         $paypal_plan_price = new paypal_plan_price();
         if ($paypal_plan_price->check() > 0) {
           $paypal_plan_price->remove();
+    	    update_module_configuration('xtcPrice');
         }
 
         require_once(DIR_FS_CATALOG.DIR_WS_MODULES.'order/paypal_plan_order.php');
         $paypal_plan_order = new paypal_plan_order();
         if ($paypal_plan_order->check() > 0) {
           $paypal_plan_order->remove();
+    	    update_module_configuration('order');
         }
 
         require_once(DIR_FS_CATALOG.DIR_WS_MODULES.'payment/paypalsubscription.php');
         $paypalsubscription = new paypalsubscription();
         if ($paypalsubscription->check() > 0) {
           $paypalsubscription->remove();
+    	    update_module_configuration('payment');
         }
     }
     

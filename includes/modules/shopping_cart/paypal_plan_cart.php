@@ -88,56 +88,68 @@ class paypal_plan_cart {  //Important same name as filename
                         PRIMARY KEY (orders_id)
                       );");
 
+  	    require_once(DIR_FS_INC.'update_module_configuration.inc.php');
+  
         require_once(DIR_FS_CATALOG.DIR_WS_MODULES.'xtcPrice/paypal_plan_price.php');
         $paypal_plan_price = new paypal_plan_price();
         if ($paypal_plan_price->check() < 1) {
           $paypal_plan_price->install();
+    	    update_module_configuration('xtcPrice');
         }
 
         require_once(DIR_FS_CATALOG.DIR_WS_MODULES.'order/paypal_plan_order.php');
         $paypal_plan_order = new paypal_plan_order();
         if ($paypal_plan_order->check() < 1) {
           $paypal_plan_order->install();
+    	    update_module_configuration('order');
         }
 
         require_once(DIR_FS_CATALOG.DIR_WS_MODULES.'checkout/paypal_plan_checkout.php');
         $paypal_plan_checkout = new paypal_plan_checkout();
         if ($paypal_plan_checkout->check() < 1) {
           $paypal_plan_checkout->install();
+    	    update_module_configuration('checkout');
         }
 
         require_once(DIR_FS_CATALOG.DIR_WS_MODULES.'payment/paypalsubscription.php');
         $paypalsubscription = new paypalsubscription();
         if ($paypalsubscription->check() < 1) {
           $paypalsubscription->install();
+    	    update_module_configuration('payment');
         }
     }
 
     function remove() {
         xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key LIKE '".$this->name."_%'");
 
+  	    require_once(DIR_FS_INC.'update_module_configuration.inc.php');
+
         require_once(DIR_FS_CATALOG.DIR_WS_MODULES.'xtcPrice/paypal_plan_price.php');
         $paypal_plan_price = new paypal_plan_price();
         if ($paypal_plan_price->check() > 0) {
           $paypal_plan_price->remove();
+    	    update_module_configuration('xtcPrice');
         }
 
         require_once(DIR_FS_CATALOG.DIR_WS_MODULES.'order/paypal_plan_order.php');
         $paypal_plan_order = new paypal_plan_order();
         if ($paypal_plan_order->check() > 0) {
           $paypal_plan_order->remove();
+    	    update_module_configuration('order');
         }
 
         require_once(DIR_FS_CATALOG.DIR_WS_MODULES.'checkout/paypal_plan_checkout.php');
         $paypal_plan_checkout = new paypal_plan_checkout();
         if ($paypal_plan_checkout->check() > 0) {
           $paypal_plan_checkout->remove();
+    	    update_module_configuration('checkout');
         }
 
         require_once(DIR_FS_CATALOG.DIR_WS_MODULES.'payment/paypalsubscription.php');
         $paypalsubscription = new paypalsubscription();
         if ($paypalsubscription->check() > 0) {
           $paypalsubscription->remove();
+    	    update_module_configuration('payment');
         }
     }
     
