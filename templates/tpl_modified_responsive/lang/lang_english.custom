@@ -43,3 +43,4 @@ text_search_again = 'Sorry, we could not find a product matching your search req
 
 listing_listview = 'List view'
 listing_boxview = 'Box view'
+header_menu = 'Menu'

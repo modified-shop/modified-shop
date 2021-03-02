@@ -17,8 +17,6 @@
   border-radius: 0px;
   padding: 20px;
   margin: 0 auto;
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
   box-sizing: border-box;
   -webkit-box-shadow: 0px 0px 15px #3d3d3d;
   -moz-box-shadow: 0px 0px 15px #3d3d3d;
@@ -85,13 +83,9 @@
   line-height:17px;
   font-weight:bold;
   text-transform:uppercase;
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
   box-sizing: border-box;
   white-space:nowrap;
   text-decoration:none;
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
 	border-radius: 2px;
 	border:1px solid #ccc;
 	text-decoration:none;
