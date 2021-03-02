@@ -32,6 +32,9 @@
   if (isset($_GET['action']) && $_GET['action'] == 'install') {
     $payment_method = $_GET['code'];
     if (is_file(DIR_WS_MODULES.'payment/'.$payment_method.'.php')) {
+      if (is_file(DIR_WS_LANGUAGES.$_SESSION['language'].'/modules/payment/'.$payment_method.'.php')) {
+        include_once(DIR_WS_LANGUAGES.$_SESSION['language'].'/modules/payment/'.$payment_method.'.php');
+      }
       include_once(DIR_WS_MODULES.'payment/'.$payment_method.'.php');
       $module = new $payment_method();
       $module->install();
@@ -73,10 +76,10 @@
   
   foreach ($payment_methods_array as $payment_method) {
     if (is_file(DIR_WS_MODULES.'payment/'.$payment_method.'.php')) {
-      include_once(DIR_WS_MODULES.'payment/'.$payment_method.'.php');
       if (is_file(DIR_WS_LANGUAGES.$_SESSION['language'].'/modules/payment/'.$payment_method.'.php')) {
         include_once(DIR_WS_LANGUAGES.$_SESSION['language'].'/modules/payment/'.$payment_method.'.php');
       }
+      include_once(DIR_WS_MODULES.'payment/'.$payment_method.'.php');
       $module = new $payment_method();
       $payment = array(
         'CODE' => $payment_method,
