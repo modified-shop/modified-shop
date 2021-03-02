@@ -13,9 +13,22 @@
   function update_module_configuration($module_type) {
     $installed_modules = array();
     
-    foreach(auto_include(DIR_FS_CATALOG.'includes/modules/'.$module_type.'/','php') as $file) {
+    $language_dir = defined('DIR_FS_LANGUAGES') ? DIR_FS_LANGUAGES : DIR_WS_LANGUAGES;
+    
+    switch ($module_type) {
+      case 'system':
+      case 'export':
+      case 'categories':
+        $module_dir = DIR_FS_CATALOG.DIR_ADMIN.'includes/modules/';
+        break;
+        
+      default:
+        $module_dir = DIR_FS_CATALOG.'includes/modules/';
+        break;
+    }
+    
+    foreach(auto_include($module_dir.$module_type.'/','php') as $file) {
       $filename = basename($file);
-      $language_dir = defined('DIR_FS_LANGUAGES') ? DIR_FS_LANGUAGES : DIR_WS_LANGUAGES;
       
       if (is_file($language_dir . $_SESSION['language'] . '/modules/' . $module_type . '/' . $filename)) {
         include_once($language_dir . $_SESSION['language'] . '/modules/' . $module_type . '/' . $filename);
@@ -23,7 +36,7 @@
       
       require_once($file);
 
-      $class = substr(basename($file), 0, strpos(basename($file), '.'));
+      $class = substr($filename, 0, strpos($filename, '.'));
       if (class_exists($class)) {
         $module = new $class();
         
