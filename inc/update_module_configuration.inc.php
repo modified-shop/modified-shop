@@ -10,7 +10,7 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  function update_module_configuration($module_type, $module_key) {
+  function update_module_configuration($module_type) {
     $installed_modules = array();
     
     foreach(auto_include(DIR_FS_CATALOG.'includes/modules/'.$module_type.'/','php') as $file) {
@@ -46,7 +46,7 @@
     xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " 
                      SET configuration_value = '" . implode(';', $installed_modules) . "', 
                          last_modified = now() 
-                   WHERE configuration_key = '" . $module_key . "'");
+                   WHERE configuration_key = 'MODULE_" . strtoupper($module_type) . "_INSTALLED'");
 
     return $installed_modules;
   }
