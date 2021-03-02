@@ -651,8 +651,8 @@ class easycredit {
     if ($ot_easycredit_fee->check() != 1) {
       $ot_easycredit_fee->install();
 
-	    require_once(DIR_FS_INC.'update_module_configuration.inc.php');
-	    update_module_configuration('order_total');
+      require_once(DIR_FS_INC.'update_module_configuration.inc.php');
+      update_module_configuration('order_total');
     }
   }
 
