@@ -132,6 +132,9 @@ class cash {
 	    $selfpickup = new selfpickup();
 	    if ($selfpickup->check() < 1) {
 	      $selfpickup->install();
+
+        require_once(DIR_FS_INC.'update_module_configuration.inc.php');
+        update_module_configuration('shipping');
 	    }
 	  }
 	}
