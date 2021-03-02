@@ -180,6 +180,9 @@ class paypalplus extends PayPalPayment {
 	  $paypalcart = new paypalcart();
 	  if ($paypalcart->check() != 1) {
 	    $paypalcart->install();
+
+	    require_once(DIR_FS_INC.'update_module_configuration.inc.php');
+	    update_module_configuration('payment');
 	  }
 	}
 
