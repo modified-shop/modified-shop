@@ -3,9 +3,9 @@
 {config_load file="lang_`$language`.custom"}
 <div id="wishlist_short"{if $empty == 'false'} style="cursor:pointer"{/if}>
   {if $empty == 'false'}
-  <a {if $deny_cart neq 'true'}id="toggle_wishlist"{/if} href="{$LINK_WISHLIST}"><span class="wish_01"><i class="fas fa-star"></i></span><span class="wish_02">{#heading_wishlist#}<i class="fas fa-angle-right"></i></span><span class="wish_03"><span class="wish_05">(</span>{$PRODUCTS}<span class="wish_05">)</span></span><span class="wish_04">{#text_article#}</span></a>
+  <a {if $deny_cart neq 'true'}id="toggle_wishlist"{/if} title="{#heading_wishlist#}" href="{$LINK_WISHLIST}"><span class="wish_01"><i class="fas fa-star"></i></span><span class="wish_02">{#heading_wishlist#}<i class="fas fa-angle-right"></i></span><span class="wish_03"><span class="wish_05">(</span>{$PRODUCTS}<span class="wish_05">)</span></span><span class="wish_04">{#text_article#}</span></a>
   {else}
-  <a {if $deny_cart neq 'true'}id="toggle_wishlist"{/if} href="{$LINK_WISHLIST}"><span class="wish_01"><i class="fas fa-star"></i></span><span class="wish_02">{#heading_wishlist#}<i class="fas fa-angle-right"></i></span><span class="wish_03"><span class="wish_05">(</span>0<span class="wish_05">)</span></span><span class="wish_04">{#text_article#}</span></a>
+  <a {if $deny_cart neq 'true'}id="toggle_wishlist"{/if} title="{#heading_wishlist#}" href="{$LINK_WISHLIST}"><span class="wish_01"><i class="fas fa-star"></i></span><span class="wish_02">{#heading_wishlist#}<i class="fas fa-angle-right"></i></span><span class="wish_03"><span class="wish_05">(</span>0<span class="wish_05">)</span></span><span class="wish_04">{#text_article#}</span></a>
   {/if}
 </div>
 

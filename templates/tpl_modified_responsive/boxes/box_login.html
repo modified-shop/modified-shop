@@ -6,14 +6,16 @@
     <div class="box_sidebar cf">
       <div class="box_line"></div>
       {$FORM_ACTION}
-      <p class="box_sub">{#text_email#}:</p>
-      {$FIELD_EMAIL|replace:"type=\"text\"":"type=\"email\""}
-      <p class="box_sub">{#text_pwd#}:</p>
-      {$FIELD_PWD}
-      <div class="box_sub_button cf">
-        <a href="{$LINK_LOST_PASSWORD}">{#text_password_forgotten#}</a>
-        <div class="cssButtonPos3 cf">{$BUTTON}</div>
-      </div>
+      <label>
+        <p class="box_sub">{#text_email#}:</p>
+        {$FIELD_EMAIL|replace:"type=\"text\"":"type=\"email\""}
+        <p class="box_sub">{#text_pwd#}:</p>
+        {$FIELD_PWD}
+        <div class="box_sub_button cf">
+          <a href="{$LINK_LOST_PASSWORD}">{#text_password_forgotten#}</a>
+          <div class="cssButtonPos3 cf">{$BUTTON}</div>
+        </div>
+      </label>
       {$FORM_END}
     </div>
   </div>
