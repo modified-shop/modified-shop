@@ -531,7 +531,7 @@ class PayPalCommon extends PayPalAuth {
     if (is_file(DIR_FS_INC.'get_database_version.inc.php')) {
       require_once (DIR_FS_INC.'get_database_version.inc.php');
       $version = get_database_version();
-      if (version_compare('2.0.5.1', $version['plain'], '>')) {
+      if (version_compare('2.0.5.1', $version['plain'], '<')) {
         $_SESSION['customer_time'] = time();
         $sql_data_array['customers_password_time'] = $_SESSION['customer_time'];
       }    
