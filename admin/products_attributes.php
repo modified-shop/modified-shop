@@ -27,7 +27,7 @@
     xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, 'cPath=' . $_GET['cPath'] . '&pID=' . $_GET['current_product_id'] . str_replace('old','',$oldaction). $oldpage));
   }
 
-  if (isset($_GET['action']) && !isset($_POST['action'])) {
+  if (isset($_GET['current_product_id']) && $_GET['current_product_id'] > 0 && !isset($_POST['action'])) {
     $_POST = $_GET;
   }
 
