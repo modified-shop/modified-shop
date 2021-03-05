@@ -118,13 +118,21 @@
   );  
   
   $status = false;
-  $gd = gd_info();
-  if ($gd['GD Version'] == '') {
-    $gd['GD Version'] = 'undefined';
-  }
-  if ($gd['GIF Read Support'] == 1 || $gd['GIF Support'] == 1) {
-    $status = true;
+  if (function_exists('gd_info')) {
+    $gd = gd_info();
+    if ($gd['GD Version'] == '') {
+      $gd['GD Version'] = 'undefined';
+    }
+    if ($gd['GIF Read Support'] == 1 || $gd['GIF Support'] == 1) {
+      $status = true;
+    } else {
+      $error = true;
+    }
   } else {
+    $gd = array(
+      'GD Version' => 'undefined'
+    );
+    $status = false;
     $error = true;
   }
 
