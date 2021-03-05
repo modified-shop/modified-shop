@@ -24,7 +24,7 @@
     
     $from_str = $where_str = '';
     
-    $queryString = xtc_db_input(trim(decode_utf8($_POST['queryString'])));
+    $queryString = stripslashes(trim(decode_utf8(urldecode($_POST['queryString']))));    
     $categories_id = !empty($_POST['categories_id']) ? (int)$_POST['categories_id'] : false;
     $inc_subcat = !empty($_POST['inc_subcat']) ? (int)$_POST['inc_subcat'] : null;
 

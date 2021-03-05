@@ -69,7 +69,7 @@
           // Turn the flag off for future iterations
           $flag = 'off';
 
-          $objects[] = trim($pieces[$k]);
+          $objects[] = trim($tmpstring);
 
           for ($j=0, $x=count($post_objects); $j<$x; $j++) {
             $objects[] = $post_objects[$j];
