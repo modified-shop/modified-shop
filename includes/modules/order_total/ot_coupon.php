@@ -228,6 +228,7 @@ class ot_coupon {
           $flag_t = true;
         }
 
+        $_c_products_ids = $pr_ids = array();
         if ($coupon_array['restrict_to_products'] || $coupon_array['restrict_to_categories']) {
 
           $pr_c = 0;
@@ -255,7 +256,6 @@ class ot_coupon {
           }
 
           //allowed categories
-          $_c_products_ids = array();
           $coupon_array['restrict_to_categories'] = preg_replace("'[\r\n\s]+'", '', $coupon_array['restrict_to_categories']);
           if (trim($coupon_array['restrict_to_categories']) != '') {
             $cat_ids = explode(",", $coupon_array['restrict_to_categories']);
@@ -302,27 +302,33 @@ class ot_coupon {
         {
           $pr_c = 0;
           for ($i = 0; $i < sizeof($order->products); $i ++) {
-            $product_query = xtc_db_query("SELECT specials_new_products_price
-                                             FROM ".TABLE_SPECIALS."
-                                            WHERE products_id = '".xtc_get_prid($order->products[$i]['id'])."'
-                                                  ".SPECIALS_CONDITIONS);
-            if (xtc_db_num_rows($product_query) > 0) {
-              $product = xtc_db_fetch_array($product_query);
-              if ($coupon_array['coupon_type'] == 'P') {
-                $pr_c = $this->product_price($order->products[$i]['id'], false);
-                $pod_amount = round($pr_c*10)/10*$c_deduct/100;
-                $od_amount -= $pod_amount;
+            if ((count($_c_products_ids) == 0 && count($pr_ids) == 0)
+                || in_array(xtc_get_prid($order->products[$i]['id']), $pr_ids)
+                || in_array($order->products[$i]['id'], $_c_products_ids)
+                )
+            {
+              $product_query = xtc_db_query("SELECT specials_new_products_price
+                                               FROM ".TABLE_SPECIALS."
+                                              WHERE products_id = '".xtc_get_prid($order->products[$i]['id'])."'
+                                                    ".SPECIALS_CONDITIONS);
+              if (xtc_db_num_rows($product_query) > 0) {
+                $product = xtc_db_fetch_array($product_query);
+                if ($coupon_array['coupon_type'] == 'P') {
+                  $pr_c = $this->product_price($order->products[$i]['id'], false);
+                  $pod_amount = round($pr_c*10)/10*$c_deduct/100;
+                  $od_amount -= $pod_amount;
+                } else {
+                  $pr_c += $this->product_price($order->products[$i]['id'], false);
+                }
               } else {
-                $pr_c += $this->product_price($order->products[$i]['id'], false);
-              }
-            } else {
-              if (count($this->price_total_by_tax_rate) < 1) {
-                $this->product_price($order->products[$i]['id']);
+                if (count($this->price_total_by_tax_rate) < 1) {
+                  $this->product_price($order->products[$i]['id']);
+                }
               }
             }
+            if ($od_amount < 0) $od_amount = 0;
+            if ($amount <= $pr_c) $od_amount = 0;
           }
-          if ($od_amount < 0) $od_amount = 0;
-          if ($amount <= $pr_c) $od_amount = 0;
         }
 
         if ($flag_t) {
