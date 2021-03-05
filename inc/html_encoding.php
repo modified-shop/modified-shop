@@ -43,7 +43,7 @@ function encode_utf8($string, $encoding = '', $force_utf8 = false)
 {
   if (strtolower($_SESSION['language_charset']) == 'utf-8' || $force_utf8 === true) {
     $supported_charsets = explode(',', strtoupper(ENCODE_DEFINED_CHARSETS));  
-    $cur_encoding = !empty($encoding) && in_array(strtoupper($encoding), $supported_charsets) ? strtoupper($encoding) : mb_detect_encoding($string, ENCODE_DEFINED_CHARSETS);
+    $cur_encoding = !empty($encoding) && in_array(strtoupper($encoding), $supported_charsets) ? strtoupper($encoding) : mb_detect_encoding($string, ENCODE_DEFINED_CHARSETS, true);
     if ($cur_encoding == 'UTF-8' && mb_check_encoding($string, 'UTF-8')) {
       return $string;
     } else {
@@ -85,7 +85,7 @@ function decode_utf8($string, $encoding = '', $force_utf8 = false)
   $default_charset = isset($_SESSION['language_charset']) && in_array(strtoupper($_SESSION['language_charset']), $supported_charsets) ? strtoupper($_SESSION['language_charset']) : ENCODE_DEFAULT_CHARSET;
   $encoding = !empty($encoding) && in_array(strtoupper($encoding), $supported_charsets) ? strtoupper($encoding) : $default_charset;  
   if (strtolower($_SESSION['language_charset']) != 'utf-8' || $force_utf8 === true) {
-    $cur_encoding = mb_detect_encoding($string);
+    $cur_encoding = mb_detect_encoding($string, 'UTF-8', true);
     if ($cur_encoding == 'UTF-8' && mb_check_encoding($string, 'UTF-8')) {
       return mb_convert_encoding($string, $encoding, 'UTF-8');
     } else {
