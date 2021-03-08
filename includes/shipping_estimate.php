@@ -47,6 +47,9 @@ if (!isset($_SESSION['customer_id']) || SHOW_ALWAYS_LANG_DROPDOWN) {
   }
   $module_smarty->assign('SELECT_COUNTRY', _SHIPPING_TO. xtc_get_country_list(array ('name' => 'country'), (int)$selected, 'onchange="this.form.submit()"'));
   $module_smarty->assign('SELECT_COUNTRY_PLAIN', xtc_get_country_list(array ('name' => 'country'), (int)$selected, 'onchange="this.form.submit()"'));
+
+  $smarty->assign('SELECT_COUNTRY', _SHIPPING_TO. xtc_get_country_list(array ('name' => 'country'), (int)$selected, 'onchange="this.form.submit()"'));
+  $smarty->assign('SELECT_COUNTRY_PLAIN', xtc_get_country_list(array ('name' => 'country'), (int)$selected, 'onchange="this.form.submit()"'));
 }
 
 if (!isset($order->delivery['country']['iso_code_2']) || $order->delivery['country']['iso_code_2'] == ''  || SHOW_ALWAYS_LANG_DROPDOWN) {
@@ -109,9 +112,12 @@ if (MODULE_ORDER_TOTAL_INSTALLED) {
     //Array Indexe neu erstellen
     $order_total_array = array_merge($order_total_array);
   }
-  $module_smarty->assign('TOTAL_BLOCK_ARRAY', $order_total_array);
   $total_block = $order_total_modules->output();
+
+  $module_smarty->assign('TOTAL_BLOCK_ARRAY', $order_total_array);
   $module_smarty->assign('TOTAL_BLOCK', $total_block);
+
+  $smarty->assign('TOTAL_BLOCK_ARRAY', $order_total_array);
   $smarty->assign('TOTAL_BLOCK', $total_block);
 }
 
@@ -125,6 +131,7 @@ if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weigh
   $shipping_content = array(array('NAME' => _SHIPPING_FREE));
   if (DOWNLOAD_SHOW_LANG_DROPDOWN == 'false') {
     $module_smarty->clear_assign('SELECT_COUNTRY');
+    $smarty->clear_assign('SELECT_COUNTRY');
   }
 } elseif (defined('MODULE_ORDER_TOTAL_SHIPPING_STATUS')
           && MODULE_ORDER_TOTAL_SHIPPING_STATUS == 'true'
@@ -175,6 +182,7 @@ if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weigh
         )
     {
       $module_smarty->assign('FREE_SHIPPING_INFO', sprintf(FREE_SHIPPING_DESCRIPTION, $xtPrice->xtcFormat($free_shipping_value_over, true, 0, true)));
+      $smarty->assign('FREE_SHIPPING_INFO', sprintf(FREE_SHIPPING_DESCRIPTION, $xtPrice->xtcFormat($free_shipping_value_over, true, 0, true)));
     }
   
     $i = 0;
@@ -224,6 +232,11 @@ if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weigh
 unset($_SESSION['delivery_zone']);
 $module_smarty->assign('shipping_content', $shipping_content);
 $module_smarty->assign('COUNTRY', $order->delivery['country']['title']);
+$module_smarty->assign('TOTAL_WEIGHT', $_SESSION['cart']->weight + SHIPPING_BOX_WEIGHT);
+
+$smarty->assign('shipping_content', $shipping_content);
+$smarty->assign('COUNTRY', $order->delivery['country']['title']);
+$smarty->assign('TOTAL_WEIGHT', $_SESSION['cart']->weight + SHIPPING_BOX_WEIGHT);
 
 if ($order->content_type == 'virtual' 
     || $order->content_type == 'virtual_weight'
@@ -232,9 +245,13 @@ if ($order->content_type == 'virtual'
 {
   $module_smarty->clear_assign('shipping_content');
   $module_smarty->clear_assign('COUNTRY');
+
+  $smarty->clear_assign('shipping_content');
+  $smarty->clear_assign('COUNTRY');
 }
 
 if (count($shipping_content) <= 1) {
   $module_smarty->assign('total', $xtPrice->xtcFormat($total, true));
+  $smarty->assign('total', $xtPrice->xtcFormat($total, true));
 }
 ?>
