@@ -44,6 +44,7 @@
   $module = '';
   if (($_SESSION['customers_status']['customers_status_read_reviews'] == '1' && $reviews_count > 0) || $_SESSION['customers_status']['customers_status_write_reviews'] == 1) {    
     $module_smarty->assign('reviews_count', $reviews_count);
+    $module_smarty->assign('reviews_avg', $product->getReviewsAverage());
     $module_smarty->assign('module_content', $product->getReviews());
     $module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/products_reviews.html');
   }
