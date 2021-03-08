@@ -139,6 +139,11 @@ if (xtc_not_null($action) && basename($PHP_SELF) != FILENAME_COOKIE_USAGE) {
           unset($cart_quantity);
         }
       }
+      
+      // check gift
+      require_once (DIR_FS_INC . 'xtc_collect_posts.inc.php');
+      xtc_collect_posts();
+
       foreach(auto_include(DIR_FS_CATALOG.'includes/extra/cart_actions/update_product_before_redirect/','php') as $file) require ($file);
       if (isset($_POST['checkout_redirect']) || (isset($_POST['checkout_redirect_x']) && isset($_POST['checkout_redirect_y']))) {
         xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
