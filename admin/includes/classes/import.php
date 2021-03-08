@@ -1063,18 +1063,9 @@ class xtcExport {
             $cat_data = xtc_db_fetch_array($cat_query);
             $line .= $this->buildCAT($cat_data['categories_id']);
 
-
-      fputs($fp, $line."\n");
+            fputs($fp, $line."\n");
         }
-
         fclose($fp);
-        /*
-        if (COMPRESS_EXPORT=='true') {
-            $backup_file = DIR_FS_CATALOG.'export/' . $this->filename;
-            exec(LOCAL_EXE_ZIP . ' -j ' . $backup_file . '.zip ' . $backup_file);
-            unlink($backup_file);
-        }
-        */
 
         return array (
             0 => $this->counter, 1 => '',

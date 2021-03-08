@@ -86,12 +86,6 @@ $PHP_SELF = set_php_self();
 
 define('TAX_DECIMAL_PLACES', 0);
 
-// Used in the "Backup Manager" to compress backups
-define('LOCAL_EXE_GZIP', '/usr/bin/gzip');
-define('LOCAL_EXE_GUNZIP', '/usr/bin/gunzip');
-define('LOCAL_EXE_ZIP', '/usr/local/bin/zip');
-define('LOCAL_EXE_UNZIP', '/usr/local/bin/unzip');
-
 // include the list of project filenames
 require (DIR_FS_ADMIN.DIR_WS_INCLUDES.'filenames.php');
 
