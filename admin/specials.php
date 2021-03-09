@@ -327,7 +327,7 @@
                   <tr class="dataTableHeadingRow">
                     <td class="dataTableHeadingContent txta-c" style="width:4%">
                       <?php 
-                        echo TABLE_HEADING_EDIT; 
+                        echo TABLE_HEADING_EDIT . '<br />'; 
                         echo xtc_draw_checkbox_field('select_all', '1', false, '', 'onclick="javascript:CheckAll(this.checked);"');   
                       ?>
                     </td>
