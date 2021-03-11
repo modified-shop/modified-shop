@@ -69,7 +69,7 @@
           'model' => $export['products_model'],
           'brand' => $export['manufacturers_name'],
           'name' => $this->cleanText($export['products_name']),
-          'description' => $this->cleanText($export['products_name']),
+          'description' => $this->cleanText($export['products_description']),
           'categories' => $this->buildCAT($export['categories_id'], $lng->language['id']),
           'link' => xtc_catalog_href_link('product_info.php', 'products_id='.$export['products_id'].'&language='.$lng->language['code'].((!empty($_POST['campaign'])) ? '&'.$_POST['campaign'] : ''), 'NONSSL', false),
           'image' => (($export['products_image'] != '') ? xtc_catalog_href_link(DIR_WS_CATALOG_POPUP_IMAGES . $export['products_image'], '', 'NONSSL', false) : ''),
