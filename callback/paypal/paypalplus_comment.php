@@ -27,7 +27,7 @@ if ($url_host['host'] == $url_request['host']
     && isset($_POST['comments'])
     )
 {
-  $_SESSION['comments'] = $_POST['comments'];  
+  $_SESSION['comments'] = decode_utf8($_POST['comments'],'',true);
   session_write_close();
   xtc_db_close();
 }
