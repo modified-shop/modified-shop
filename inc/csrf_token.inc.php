@@ -31,11 +31,11 @@ if (defined('RUN_MODE_ADMIN')) {
     'bill', 
     'haendlerbund', 
     'magnalister', 
-    'new_attributes', 
     'popup', 
     'popup_memo',
     'print_order', 
     'print_packingslip', 
+    'products_attributes', 
     'products_tags', 
     'validproducts', 
     'validcategories',
@@ -55,23 +55,17 @@ if (defined('RUN_MODE_ADMIN')) {
 
 // verfiy CSRF Token
 if (is_array($_POST) && count($_POST) > 0) {
+  $error = false;
   if (isset($_POST[$_SESSION['CSRFName']])) {
     if ($_POST[$_SESSION['CSRFName']] != $_SESSION['CSRFToken']) {
-      trigger_error("CSRFToken manipulation.\n".print_r($_POST, true), E_USER_WARNING);
-      unset($_POST);
-      unset($_GET['action']);
-      unset($_GET['saction']);
-      
-      // create CSRF Token
-      $_SESSION['CSRFName'] = xtc_RandomString(6);
-      $_SESSION['CSRFToken'] = xtc_RandomString(32);
-      if (defined('RUN_MODE_ADMIN')) {
-        $messageStack->add(CSRF_TOKEN_MANIPULATION, 'warning');
-        $messageStack->add_session(CSRF_TOKEN_MANIPULATION, 'warning');
-      }
+      $error = CSRF_TOKEN_MANIPULATION;
     }
-  } else {
-    trigger_error("CSRFToken not defined.\n".print_r($_POST, true), E_USER_WARNING);
+  } elseif ($CSRFKeep !== true) {
+    $error = CSRF_TOKEN_NOT_DEFINED;
+  }
+  
+  if ($error !== false) {
+    trigger_error($error."\n".print_r($_POST, true), E_USER_WARNING);
     unset($_POST);
     unset($_GET['action']);
     unset($_GET['saction']);
@@ -79,17 +73,13 @@ if (is_array($_POST) && count($_POST) > 0) {
     // create CSRF Token
     $_SESSION['CSRFName'] = xtc_RandomString(6);
     $_SESSION['CSRFToken'] = xtc_RandomString(32);
-    
-    if (defined('RUN_MODE_ADMIN') 
-        && isset($messageStack) 
-        && is_object($messageStack)
-        )
-    {
-      $messageStack->add(CSRF_TOKEN_NOT_DEFINED, 'warning');
-      $messageStack->add_session(CSRF_TOKEN_NOT_DEFINED, 'warning');
+
+    if (defined('RUN_MODE_ADMIN')) {
+      $messageStack->add($error, 'warning');
     }
   }
 } elseif ($CSRFKeep === false) {
+  // create CSRF Token
   $_SESSION['CSRFName'] = xtc_RandomString(6);
   $_SESSION['CSRFToken'] = xtc_RandomString(32);
 }
