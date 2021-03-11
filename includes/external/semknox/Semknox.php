@@ -36,12 +36,19 @@
     protected $api_key;
     protected $version = '1.0';
   
-    function __construct($language_id) {
+    function __construct($language_id, $timeout = 3) {
       // logger
       $this->logger = new LoggingManager(DIR_FS_LOG.'mod_%s_%s.log', 'info', 'error');
       
-      $this->language_id = $language_id;
+      $languages_query = xtc_db_query("SELECT * 
+                                         FROM ".TABLE_LANGUAGES." 
+                                         WHERE languages_id = '".(int)$language_id."'");
+      $languages = xtc_db_fetch_array($languages_query);
+      $this->language_id = $languages['languages_id'];
+      $this->language_charset = $languages['language_charset'];
+
       $this->api_key = constant('MODULE_SEMKNOX_SYSTEM_API_'.$this->language_id);
+      $this->project_id = constant('MODULE_SEMKNOX_SYSTEM_PROJECT_'.$this->language_id);
       
       $this->main = new main($this->language_id);
       
@@ -75,78 +82,25 @@
       $this->client = new Client(
         array(
           'base_uri' => 'https://api-v3.semknox.com/',
-          'timeout' => 3,
-            'headers' => array(
-              'SHOPSYSVER' => 'modified-eCommerce-Shopsoftware-v'.$db_version['plain'],
-              'EXTVER' => $this->version,
-            ),
-        ),
-      );  
-    }
-  
-
-    private function getText($string) {
-      $string = strip_tags($string);
-      $string = preg_replace ("/\s++/u", ' ', $string);
-      $string = trim($string);
-
-      return $string;
-    }
-
-
-    private function convertToString($string) {
-      if (is_array($string)) {
-        foreach ($string as $key => $value) {
-          $string[$key] = $this->convertToString($value);
-        }
-      } else {
-        $string = strval($string);
-        return $string;
-      }
-    
-      return $string;  
-    }
-
-
-    private function getVpeData($products, $price) {
-      static $vpe_name_array;
-      
-      if (!isset($vpe_name_array)) {
-        $vpe_name_array = array();
-      }
-      
-      if (isset($products['products_vpe_status']) 
-          && $products['products_vpe_status'] == 1 
-          && $products['products_vpe_value'] != 0.0 
-          && $price > 0
+          'timeout' => $timeout,
+          'headers' => array(
+            'SHOPSYS' => 'MODIFIED',
+            'SHOPSYSVER' => $db_version['plain'],
+            'EXTVER' => $this->version,
           )
-      {        
-        if (!isset($vpe_name_array[$this->language_id][$products['products_vpe']])) {
-          $vpe_name_query = xtc_db_query("SELECT products_vpe_name 
-                                            FROM ".TABLE_PRODUCTS_VPE." 
-                                           WHERE language_id = '".(int)$this->language_id."' 
-                                             AND products_vpe_id = '".(int)$products['products_vpe']."'");
-          $vpe_name = xtc_db_fetch_array($vpe_name_query);
-          $vpe_name_array[$this->language_id][$products['products_vpe']] = $vpe_name['products_vpe_name'];
-        }
-
-        return array(
-          'vpe_name' => $vpe_name_array[$this->language_id][$products['products_vpe']],
-          'vpe_price' => $price * (1 / $products['products_vpe_value']),
-        );
-      }
-      
-      return false;
+        )
+      );
     }
 
     
     public function initBatch() {
       try {
         $response = $this->client->post(
-          'products/batch/initiate?apiKey='.$this->api_key
+          sprintf('products/batch/initiate?apiKey=%s&projectId=%s', $this->api_key, $this->project_id)
         );
         $json = $response->getBody();
         $response = json_decode($json);
+        $this->logger->log('semknox', __FUNCTION__.': '.date('Y-m-d H:i:s'));
       } catch (Exception $e) {
         $this->logger->log('semknox', __FUNCTION__.': '.$e->getMessage());
       }
@@ -163,11 +117,12 @@
       
       try {
         $response = $this->client->post(
-          'products/batch/upload?apiKey='.$this->api_key, 
+          sprintf('products/batch/upload?apiKey=%s&projectId=%s', $this->api_key, $this->project_id),
           array(GuzzleHttp\RequestOptions::JSON => $this->convertToString($products_array))
         );
         $json = $response->getBody();
         $response = json_decode($json, true);
+        $this->logger->log('semknox', __FUNCTION__.': '.date('Y-m-d H:i:s'));
       } catch (Exception $e) {
         $this->logger->log('semknox', __FUNCTION__.': '.$e->getMessage());
       }
@@ -179,10 +134,11 @@
     public function startBatch() {
       try {
         $response = $this->client->post(
-          'products/batch/start?apiKey='.$this->api_key
+          sprintf('products/batch/start?apiKey=%s&projectId=%s', $this->api_key, $this->project_id)
         );
         $json = $response->getBody();
         $response = json_decode($json);
+        $this->logger->log('semknox', __FUNCTION__.': '.date('Y-m-d H:i:s'));
       } catch (Exception $e) {
         $this->logger->log('semknox', __FUNCTION__.': '.$e->getMessage());
       }
@@ -197,11 +153,12 @@
       
       try {
         $response = $this->client->post(
-          'products?apiKey='.$this->api_key, 
+          sprintf('products?apiKey=%s&projectId=%s', $this->api_key, $this->project_id),
           array(GuzzleHttp\RequestOptions::JSON => $this->convertToString($products_array))
         );
         $json = $response->getBody();
         $response = json_decode($json, true);
+        $this->logger->log('semknox', __FUNCTION__.': '.date('Y-m-d H:i:s'));
       } catch (Exception $e) {
         $this->logger->log('semknox', __FUNCTION__.': '.$e->getMessage());
       }
@@ -219,11 +176,12 @@
       
       try {
         $response = $this->client->delete(
-          'products?apiKey='.$this->api_key, 
+          sprintf('products?apiKey=%s&projectId=%s', $this->api_key, $this->project_id),
           array(GuzzleHttp\RequestOptions::JSON => $this->convertToString($product_data))
         );
         $json = $response->getBody();
         $response = json_decode($json);
+        $this->logger->log('semknox', __FUNCTION__.': '.date('Y-m-d H:i:s'));
       } catch (Exception $e) {
         $this->logger->log('semknox', __FUNCTION__.': '.$e->getMessage());
       }
@@ -235,10 +193,11 @@
     public function getTask($taskId) {
       try {
         $response = $this->client->get(
-          'tasks/'.$taskId.'?apiKey='.$this->api_key
+          sprintf('tasks/%s?apiKey=%s&projectId=%s', $taskId, $this->api_key, $this->project_id)
         );
         $json = $response->getBody();
         $response = json_decode($json);
+        $this->logger->log('semknox', __FUNCTION__.': '.date('Y-m-d H:i:s'));
       } catch (Exception $e) {
         $this->logger->log('semknox', __FUNCTION__.': '.$e->getMessage());
       }
@@ -257,7 +216,7 @@
       if (defined('RUN_MODE_ADMIN')) {
         $xtc_href_link = 'xtc_catalog_href_link';
       }
-                
+        
       $products_query = xtc_db_query("SELECT p.*,
                                              m.*,
                                              pd.*
@@ -270,7 +229,7 @@
                                        WHERE p.products_id = ".$products_id."
                                          AND p.products_status = 1");
       $products = xtc_db_fetch_array($products_query);
-                                   
+
       $products_array = array(
         'identifier' => $products['products_id'],
         'groupIdentifier' => $products['products_id'],
@@ -297,9 +256,27 @@
       }
     
       $products_array['attributes'][] = array(
+        'key' => 'viewed',
+        'value' => $products['products_viewed'],
+          'userGroups' => $this->customers_status_all_array,
+      );
+
+      $products_array['attributes'][] = array(
         'key' => 'quantity',
         'value' => $products['products_quantity'],
           'userGroups' => $this->customers_status_all_array,
+      );
+
+      $products_array['attributes'][] = array(
+        'key' => 'date_added',
+        'value' => $this->getText($products['products_date_added']),
+        'userGroups' => $this->customers_status_all_array,
+      );
+
+      $products_array['attributes'][] = array(
+        'key' => 'purchased',
+        'value' => $this->getText($products['products_ordered']),
+        'userGroups' => $this->customers_status_all_array,
       );
 
       if ($products['products_description'] != '') {
@@ -357,6 +334,30 @@
           'userGroups' => $this->customers_status_all_array,
         );
       }      
+      
+      $reviews_avg = $product->getReviewsAverage($products['products_id']);
+      $products_array['attributes'][] = array(
+        'key' => 'reviews_avg',
+        'value' => $reviews_avg,
+        'userGroups' => $this->customers_status_all_array,
+      );
+
+      $reviews_count = $product->getReviewsCount($products['products_id']);
+      if ($reviews_count > 0) {
+        $products_array['attributes'][] = array(
+          'key' => 'reviews_count',
+          'value' => $reviews_count,
+          'userGroups' => $this->customers_status_all_array,
+        );
+        
+        for($i=1; $i<=$reviews_avg; $i++) {
+          $products_array['attributes'][] = array(
+            'key' => 'reviews_avg_'.$i,
+            'value' => 1,
+            'userGroups' => $this->customers_status_all_array,
+          );
+        }
+      }
       
       if ((int)$products['products_shippingtime'] > 0 && ACTIVATE_SHIPPING_STATUS == 'true') {
         $shipping_status_array = array(
@@ -416,6 +417,7 @@
             );
           }
         }
+
         $price_array[$products_price['plain']]['userGroups'][] = $customers_status['id'];
         $price_formatted_array[$products_price['plain']]['userGroups'][] = $customers_status['id'];
         if (count($vpe_price_array) > 0) {
@@ -439,12 +441,13 @@
           }
         }
       }
+
       $products_array['attributes'] = array_merge($products_array['attributes'], array_values($price_array));
       $products_array['attributes'] = array_merge($products_array['attributes'], array_values($price_formatted_array));
       $products_array['attributes'] = array_merge($products_array['attributes'], array_values($vpe_price_array));
       $products_array['attributes'] = array_merge($products_array['attributes'], array_values($tax_info_array));
       
-      return $products_array;
+      return $this->encode_utf8($products_array);
     }
   
   
@@ -486,9 +489,7 @@
     private function getTags($products_id) {
       $tags_array = array();                     
       $tags_query = xtDBquery("SELECT pto.options_name,
-                                      pto.options_description,
-                                      ptv.values_name,
-                                      ptv.values_description
+                                      ptv.values_name
                                  FROM ".TABLE_PRODUCTS_TAGS." pt
                                  JOIN ".TABLE_PRODUCTS_TAGS_OPTIONS." pto
                                       ON pt.options_id = pto.options_id
@@ -504,12 +505,7 @@
       if (xtc_db_num_rows($tags_query, true) > 0) {
         while ($tags = xtc_db_fetch_array($tags_query, true)) {
           $tags_array[] = array(
-            'key' => 'tags',
-            'value' => $tags['options_name'],
-            'userGroups' => $this->customers_status_all_array,
-          );
-          $tags_array[] = array(
-            'key' => 'tags',
+            'key' => $tags['options_name'],
             'value' => $tags['values_name'],
             'userGroups' => $this->customers_status_all_array,
           );
@@ -519,4 +515,77 @@
       return $tags_array;
     }
   
+  
+    private function getText($string) {
+      $string = strip_tags($string);
+      $string = preg_replace ("/\s++/u", ' ', $string);
+      $string = trim($string);
+
+      return $string;
+    }
+
+
+    private function convertToString($string) {
+      if (is_array($string)) {
+        foreach ($string as $key => $value) {
+          $string[$key] = $this->convertToString($value);
+        }
+      } else {
+        $string = strval($string);
+        return $string;
+      }
+    
+      return $string;  
+    }
+
+
+    private function getVpeData($products, $price) {
+      static $vpe_name_array;
+      
+      if (!isset($vpe_name_array)) {
+        $vpe_name_array = array();
+      }
+      
+      if (isset($products['products_vpe_status']) 
+          && $products['products_vpe_status'] == 1 
+          && $products['products_vpe_value'] != 0.0 
+          )
+      {        
+        if (!isset($vpe_name_array[$this->language_id][$products['products_vpe']])) {
+          $vpe_name_query = xtc_db_query("SELECT products_vpe_name 
+                                            FROM ".TABLE_PRODUCTS_VPE." 
+                                           WHERE language_id = '".(int)$this->language_id."' 
+                                             AND products_vpe_id = '".(int)$products['products_vpe']."'");
+          $vpe_name = xtc_db_fetch_array($vpe_name_query);
+          $vpe_name_array[$this->language_id][$products['products_vpe']] = $vpe_name['products_vpe_name'];
+        }
+
+        return array(
+          'vpe_name' => $vpe_name_array[$this->language_id][$products['products_vpe']],
+          'vpe_price' => $price * (1 / $products['products_vpe_value']),
+        );
+      }
+      
+      return false;
+    }
+
+
+    function encode_utf8($string) {
+      if (is_array($string)) {
+        foreach ($string as $key => $value) {
+          $string[$key] = $this->encode_utf8($value);
+        }
+      } else {
+        $string = decode_htmlentities($string);
+        $cur_encoding = mb_detect_encoding($string);
+        if ($cur_encoding == "UTF-8" && mb_check_encoding($string, "UTF-8")) {
+          return $string;
+        } else {
+          return mb_convert_encoding($string, "UTF-8", $this->language_charset);
+        }
+      }
+    
+      return $string;  
+    }
+
   }
