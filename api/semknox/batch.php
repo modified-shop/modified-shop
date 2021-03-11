@@ -42,19 +42,27 @@
           && constant('MODULE_SEMKNOX_SYSTEM_API_'.$language['id']) != ''
           )
       {
-        $semknox_array[$language['id']] = new Semknox($language['id']);
+        $semknox_array[$language['id']] = new Semknox($language['id'], 30);
       }
-    }
-
-    $products_query = xtc_db_query("SELECT products_id 
-                                      FROM ".TABLE_PRODUCTS);
-    if (xtc_db_num_rows($products_query) > 0) {
-      foreach ($semknox_array as $semknox) {
-        $response = $semknox->initBatch();
+    }    
+    
+    if (count($semknox_array) > 0) {
+      $products_array = array();
+      $products_query = xtc_db_query("SELECT p.products_id 
+                                        FROM ".TABLE_PRODUCTS." p
+                                       WHERE p.products_status = 1");
+      if (xtc_db_num_rows($products_query) > 0) {
         while ($products = xtc_db_fetch_array($products_query)) {
-          $response = $semknox->uploadBatch(array($products['products_id']));
+          $products_array[] = $products['products_id'];
         }
-        $response = $semknox->startBatch();
+      }
+    
+      if (count($products_array) > 0) {
+        foreach ($semknox_array as $semknox) {
+        $response = $semknox->initBatch();
+          $response = $semknox->uploadBatch($products_array);
+          $response = $semknox->startBatch();
+        }
       }
     }
   }

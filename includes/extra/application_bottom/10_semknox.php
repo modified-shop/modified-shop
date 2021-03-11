@@ -43,13 +43,12 @@
     }
 
     if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/semknox_result.html')) {
-      $template_result_file = CURRENT_TEMPLATE.'/module/semknox_container.html';
+      $template_result_file = CURRENT_TEMPLATE.'/module/semknox_result.html';
     } else {
       $template_result_file = DIR_FS_EXTERNAL.'semknox/templates/semknox_result.html';
     }
 
     if (!$module_smarty->is_cached($template_result_file, $cache_id) || !$module_smarty->is_cached($template_suggest_file, $cache_id) || !$cache) {
-
       $module_smarty->assign('language', $_SESSION['language']);
       $module_smarty->assign('TAG_TEXT', '{{%s}}');
       $module_smarty->assign('TAG_HTML', '{{{%s}}}');
@@ -152,10 +151,23 @@
           },
         },
         callbacks: {
+          filterRendered: function (event) {
+            $(document).ready(function() {
+              $('select').each(function(index, select){
+                if (typeof select.sumo === 'object') {
+                  select.sumo.unload();
+                  $(this).removeClass('SumoUnder');
+                }
+              });
+            });
+          },
           postSearch: function (event) {
             $('#search_keyword').html(event.interpretedQuery.corrected);
             
             <?php echo $callback_js; ?>
+            if (typeof lazySizes == 'object') {
+              lazySizes.init();
+            }
             if (typeof colorbox == 'object') {               
               $(".iframe").colorbox({iframe:true, width:"780", height:"560", maxWidth: "90%", maxHeight: "90%", fixed: true, close: '<i class="fas fa-times"></i>'});
             }
