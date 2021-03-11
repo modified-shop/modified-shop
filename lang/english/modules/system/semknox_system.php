@@ -22,8 +22,8 @@
   $languages = xtc_get_languages();
   foreach ($languages as $language) {
     define('MODULE_SEMKNOX_SYSTEM_API_'.$language['id'].'_TITLE', '['.strtoupper($language['code']).'] API Key');
-    define('MODULE_SEMKNOX_SYSTEM_API_'.$language['id'].'_DESC', 'API Key f&uuml;r '.strtoupper($language['code']).'');
+    define('MODULE_SEMKNOX_SYSTEM_API_'.$language['id'].'_DESC', 'API Key for '.strtoupper($language['code']).'');
 
     define('MODULE_SEMKNOX_SYSTEM_PROJECT_'.$language['id'].'_TITLE', '['.strtoupper($language['code']).'] Project ID');
-    define('MODULE_SEMKNOX_SYSTEM_PROJECT_'.$language['id'].'_DESC', 'Project ID f&uuml;r '.strtoupper($language['code']).'');
+    define('MODULE_SEMKNOX_SYSTEM_PROJECT_'.$language['id'].'_DESC', 'Project ID for '.strtoupper($language['code']).'');
   }
