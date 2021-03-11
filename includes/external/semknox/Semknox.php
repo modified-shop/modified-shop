@@ -258,13 +258,19 @@
       $products_array['attributes'][] = array(
         'key' => 'viewed',
         'value' => $products['products_viewed'],
-          'userGroups' => $this->customers_status_all_array,
+        'userGroups' => $this->customers_status_all_array,
+      );
+
+      $products_array['attributes'][] = array(
+        'key' => 'ordered',
+        'value' => $products['products_ordered'],
+        'userGroups' => $this->customers_status_all_array,
       );
 
       $products_array['attributes'][] = array(
         'key' => 'quantity',
         'value' => $products['products_quantity'],
-          'userGroups' => $this->customers_status_all_array,
+        'userGroups' => $this->customers_status_all_array,
       );
 
       $products_array['attributes'][] = array(
