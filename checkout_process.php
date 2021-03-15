@@ -93,7 +93,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
     $discount = '0.00';
   }
 
-  $sql_data_array = array (
+  $sql_data_array = array(
     'customers_id' => $_SESSION['customer_id'],
     'customers_name' => $order->customer['firstname'].' '.$order->customer['lastname'],
     'customers_firstname' => $order->customer['firstname'],
@@ -195,7 +195,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
   $_SESSION['tmp_oID'] = $insert_id;
 
   for ($i = 0, $n = sizeof($order_totals); $i < $n; $i ++) {
-    $sql_data_array = array (
+    $sql_data_array = array(
       'orders_id' => $insert_id,
       'title' => $order_totals[$i]['title'],
       'text' => $order_totals[$i]['text'],
@@ -213,7 +213,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
 
   $customer_notification = (SEND_EMAILS == 'true') ? '1' : '0';
 
-  $sql_data_array = array (
+  $sql_data_array = array(
     'orders_id' => $insert_id,
     'orders_status_id' => $orders_status_id,
     'date_added' => 'now()',
@@ -273,21 +273,22 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
                          products_ordered = products_ordered + ".sprintf('%d', $order->products[$i]['qty'])."
                    WHERE products_id = '".xtc_get_prid($order->products[$i]['id'])."'");
 
-    $sql_data_array = array (
+    $sql_data_array = array(
       'orders_id' => $insert_id,
       'products_id' => xtc_get_prid($order->products[$i]['id']),
       'products_model' => $order->products[$i]['model'],
-      'products_name' => $order->products[$i]['name'],
       'products_ean' => $order->products[$i]['ean'],
-      'products_shipping_time' => strip_tags($order->products[$i]['shipping_time']),
-      'products_price_origin' => $order->products[$i]['price_origin'],
+      'products_name' => $order->products[$i]['name'],
       'products_price' => $order->products[$i]['price'],
+      'products_price_origin' => $order->products[$i]['price_origin'],
+      'products_shipping_time' => strip_tags($order->products[$i]['shipping_time']),
+      'products_discount_made' => $order->products[$i]['discount_allowed'],
       'final_price' => $order->products[$i]['final_price'],
       'products_tax' => $order->products[$i]['tax'],
-      'products_discount_made' => $order->products[$i]['discount_allowed'],
       'products_quantity' => $order->products[$i]['qty'],
       'allow_tax' => $_SESSION['customers_status']['customers_status_show_price_tax'],
       'products_order_description' => $order->products[$i]['order_description'],
+      'products_weight' => $order->products[$i]['weight'],
     );
     
     foreach(auto_include(DIR_FS_CATALOG.'includes/extra/checkout/checkout_process_products/','php') as $file) require ($file);
@@ -357,7 +358,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
         }
 
         // attributes
-        $sql_data_array = array (
+        $sql_data_array = array(
           'orders_id' => $insert_id,
           'orders_products_id' => $order_products_id,
           'products_options' => $order->products[$i]['attributes'][$j]['option'],
@@ -387,7 +388,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
                                              ");
           $attributes_dl_array = xtc_db_fetch_array($attributes_dl_query);
           if (isset($attributes_dl_array['products_attributes_filename']) && xtc_not_null($attributes_dl_array['products_attributes_filename'])) {
-            $sql_data_array = array (
+            $sql_data_array = array(
               'orders_id' => $insert_id,
               'orders_products_id' => $order_products_id,
               'orders_products_filename' => $attributes_dl_array['products_attributes_filename'],
