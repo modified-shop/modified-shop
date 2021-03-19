@@ -289,11 +289,7 @@
 
 
   function get_document_root() {
-    if (strpos($_SERVER['DOCUMENT_ROOT'],'strato') !== false) {
-      return rtrim(strato_document_root(),'/') . '/';
-    } else {
-      return rtrim(detectDocumentRoot(),'/') . '/';
-    }    
+    return rtrim(strato_document_root(),'/') . '/';   
   }
   
   
@@ -325,6 +321,9 @@
       $document_root = '/home/strato/www/'.substr($domain, 0, 2). '/www.'.$domain.$htdocs.$subdir;
     } else {
       $document_root .= $subdir;
+    }
+    if (!is_dir($document_root)) {
+      $document_root = detectDocumentRoot();
     }
     return $document_root;
   }
