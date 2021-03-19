@@ -12,15 +12,15 @@
 
 
   function scanDirectories($dir, $allData=array()) {
-      foreach (glob($dir.'/*') as $file) {
-          if (is_dir($file)) {
-              $allData['dirs'][] = str_replace(DIR_FS_CATALOG, '', $file);
-              $allData = scanDirectories($file, $allData);
-          } else {
-              $allData['files'][] = str_replace(DIR_FS_CATALOG, '', $file);
-          }
+    foreach (glob($dir.'/*') as $file) {
+      if (is_dir($file)) {
+        $allData['dirs'][] = str_replace(DIR_FS_CATALOG, '', $file);
+        $allData = scanDirectories($file, $allData);
+      } else {
+        $allData['files'][] = str_replace(DIR_FS_CATALOG, '', $file);
       }
-      return $allData;
+    }
+    return $allData;
   }
   
   
