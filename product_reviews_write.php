@@ -151,7 +151,7 @@ if ($product->isProduct() === false) {
     
   // load all definitions from product class
   foreach ($product->buildDataArray($product->data, 'info') as $key => $value) {
-    $info_smarty->assign($key, $value);
+    $smarty->assign($key, $value);
   }
 
   $smarty->assign('INPUT_AUTHOR', xtc_draw_input_field('author', $author, 'style="width:235px;"'));
