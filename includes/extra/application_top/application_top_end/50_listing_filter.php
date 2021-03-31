@@ -42,7 +42,8 @@
   // filter sort
   if (isset($_POST['filter_sort'])) {
     $_SESSION['filter_sort'] = intval($_POST['filter_sort']);
-
+    
+    $sorting = '';
     switch ((int)$_POST['filter_sort']) {
       case 1:
         $sorting = ' ORDER BY pd.products_name ASC';
