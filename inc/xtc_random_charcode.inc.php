@@ -28,7 +28,7 @@
       $code = substr(bin2hex($bytes), 0, $length);
     } else {
       for ($i = 1; $i <= $length; $i++) {
-        $j = floor(xtc_rand(0, count($chars)));
+        $j = floor(xtc_rand(0, (count($chars) - 1)));
         $code .= $chars[$j];
       }
     }
