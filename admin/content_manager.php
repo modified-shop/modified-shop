@@ -198,6 +198,8 @@
       }
     }
 
+    foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/content_manager/action/','php') as $file) require ($file);
+
     if (isset($page_update)) {
       $setparam = 'action=edit&coID='.$content_group.'&coIndex='.$sql_data_array['content_group_index'];
     }
@@ -301,6 +303,8 @@
         xtc_db_perform($table, $sql_data_array);
         $_GET[$type[0].'ID'] = $product;
       }
+
+      foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/content_manager/action/','php') as $file) require ($file);
 
       if (isset($_GET['cPath'])) {
         xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('last_action', 'action', 'id', 'coID')) . 'action='.$_GET['last_action']));
