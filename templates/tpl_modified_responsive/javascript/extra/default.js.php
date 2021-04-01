@@ -36,8 +36,10 @@
         ac_closing();
         return false;
       });
-      $("html").not('.toggle_cart').bind('click',function(e) {
-        $('.toggle_cart').slideUp('slow');
+      $('html').on('click', function(e) {
+        if (!$(e.target).closest('.toggle_cart').length > 0 ) {
+          $('.toggle_cart').slideUp('slow');
+        }
       });
       <?php if (DISPLAY_CART == 'false' && isset($_SESSION['new_products_id_in_cart'])) {
         unset($_SESSION['new_products_id_in_cart']); ?>
@@ -54,8 +56,10 @@
         ac_closing();
         return false;
       });
-      $("html").not('.toggle_wishlist').bind('click',function(e) {
-        $('.toggle_wishlist').slideUp('slow');
+      $('html').on('click', function(e) {
+        if (!$(e.target).closest('.toggle_wishlist').length > 0 ) {
+          $('.toggle_wishlist').slideUp('slow');
+        }
       });
       <?php if (DISPLAY_CART == 'false' && isset($_SESSION['new_products_id_in_wishlist'])) {
         unset($_SESSION['new_products_id_in_wishlist']); ?>
