@@ -290,7 +290,7 @@ define('NOT_ALLOWED_TO_SEE_PRICES_TEXT','Sie haben keine Erlaubnis, Preise zu se
 define('TEXT_DOWNLOAD','Download');
 define('TEXT_VIEW','Ansehen');
 
-define('TEXT_BUY', '1 x \'');
+define('TEXT_BUY', '%s x \'');
 define('TEXT_NOW', '\' bestellen');
 define('TEXT_GUEST',' Gast');
 define('TEXT_SEARCH_ENGINE_AGENT','Suchmaschine');
