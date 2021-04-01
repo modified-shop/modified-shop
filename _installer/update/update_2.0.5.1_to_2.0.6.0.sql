@@ -32,7 +32,7 @@ DELETE FROM `configuration` WHERE `configuration_key` = 'DISPLAY_PRICE_WITH_TAX'
 ALTER TABLE `banners` MODIFY `banners_group` VARCHAR(32) NOT NULL;
 
 #GTB - 2020-11-24 - account password security
-ALTER TABLE `customers` ADD `customers_password_time` INT(11) DEFAULT 0 NOT NULL;
+ALTER TABLE `customers` ADD `customers_password_time` INT(11) DEFAULT 0 NOT NULL AFTER `customers_password`;
 
 #GTB - 2020-12-15 - fix #1047 - update banner manager
 ALTER TABLE `banners` ADD `banners_group_id` INT(11) NOT NULL AFTER `banners_id`;
