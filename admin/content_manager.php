@@ -58,6 +58,8 @@
         break;
     }
     
+    foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/content_manager/action/','php') as $file) require ($file);
+
     if (isset($_GET['cPath'])) {
       xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('special', 'last_action', 'action', 'coID', 'coIndex')) . 'action='.$_GET['last_action']));
     } else {
