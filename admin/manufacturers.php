@@ -120,6 +120,8 @@
         }
       }
 
+      foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/manufacturers/action/','php') as $file) require ($file);
+
       xtc_redirect(xtc_href_link(FILENAME_MANUFACTURERS, 'page=' . $page . '&mID=' . $manufacturers_id));
       break;
 
@@ -160,6 +162,8 @@
                          SET manufacturers_id = '' 
                        WHERE manufacturers_id = '" . (int)$manufacturers_id . "'");
       }
+
+      foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/manufacturers/action/','php') as $file) require ($file);
 
       xtc_redirect(xtc_href_link(FILENAME_MANUFACTURERS, 'page=' . $page));
       break;
@@ -230,6 +234,10 @@ if (USE_WYSIWYG == 'true') {
                 </tr>
               </table>
               <div style="width:100%; height: 20px;"></div>
+
+              <?php 
+                foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/manufacturers/details/','php') as $file) require ($file);
+              ?>    
 
               <!-- BOF manufacturer description block //-->
               <?php
