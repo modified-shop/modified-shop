@@ -69,6 +69,18 @@ class semknox_system {
     xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
                      SET configuration_value = 'false'
                    WHERE configuration_key IN ('SEARCH_AC_STATUS', 'SEARCH_AC_CATEGORIES')");
+    $admin_query = xtc_db_query("SELECT * 
+                                   FROM ".TABLE_ADMIN_ACCESS."
+                                  LIMIT 1");
+    $admin = xtc_db_fetch_array($admin_query);
+    if (!isset($admin['semknox'])) {
+      xtc_db_query("ALTER TABLE ".TABLE_ADMIN_ACCESS." ADD `semknox` INT(1) DEFAULT '0' NOT NULL");
+      xtc_db_query("UPDATE ".TABLE_ADMIN_ACCESS." SET semknox = '1' WHERE customers_id = 'groups' LIMIT 1");
+      xtc_db_query("UPDATE ".TABLE_ADMIN_ACCESS." SET semknox = '1' WHERE customers_id = '1' LIMIT 1");        
+      if ($_SESSION['customer_id'] > 1) {
+        xtc_db_query("UPDATE ".TABLE_ADMIN_ACCESS." SET semknox = '1' WHERE customers_id = '".$_SESSION['customer_id']."' LIMIT 1") ;
+      }
+    }
   }
 
   function install_language() {

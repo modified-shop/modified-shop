@@ -78,4 +78,9 @@ UPDATE `countries` SET `address_format_id` = 5 WHERE `countries_iso_code_2` = 'N
 #GTB - 2021-04-01 - remove GB from EU
 UPDATE `zones_to_geo_zones` SET `geo_zone_id` = '6' WHERE `zone_country_id` = 222;
 
+#Tomcraft - 2021-04-01 - add semknox
+ALTER TABLE `admin_access` ADD `semknox` INT(1) NOT NULL DEFAULT '0' AFTER `newsletter_recipients`;
+UPDATE `admin_access` SET `semknox` = 1 WHERE `customers_id` = 1 LIMIT 1;
+UPDATE `admin_access` SET `semknox` = 1 WHERE `customers_id` = 'groups' LIMIT 1;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
