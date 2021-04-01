@@ -331,6 +331,11 @@ if (!$action) {
             }
           ?>          
         </table>
+
+        <?php 
+          foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/content_manager/content/','php') as $file) require ($file);
+        ?>    
+
         <div class="flt-r mrg5 pdg2">
           <?php echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SAVE . '"/>'; ?>
         </div>
