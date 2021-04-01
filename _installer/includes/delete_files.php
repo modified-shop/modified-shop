@@ -167,6 +167,7 @@
     DIR_ADMIN.'includes/modules/export/shipcloud.php',
     DIR_ADMIN.'includes/modules/export/shopboy.php',
     DIR_ADMIN.'includes/modules/export/tag_cloud.php',
+    DIR_ADMIN.'includes/modules/export/testeo.php',
     DIR_ADMIN.'includes/modules/export/wein.php',
     DIR_ADMIN.'includes/modules/export/wein2.php',
     DIR_ADMIN.'includes/modules/export/xtbooster.php',
