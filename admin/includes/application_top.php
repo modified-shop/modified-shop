@@ -190,11 +190,11 @@ include (DIR_FS_CATALOG.DIR_WS_MODULES.'verify_session.php');
 include (DIR_FS_CATALOG.DIR_WS_MODULES.'set_language_sessions.php');
 
 // include the language translations
-require(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/'.$_SESSION['language'] . '.php');
-require(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/buttons.php');
+require_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/'.$_SESSION['language'] . '.php');
+require_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/buttons.php');
 $current_page = basename($PHP_SELF);
 if (is_file(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/' . $current_page)) {
-  require(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/' . $current_page);
+  require_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/' . $current_page);
 }
 
 // write customers status in session
