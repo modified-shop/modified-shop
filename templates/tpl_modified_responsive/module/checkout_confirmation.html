@@ -158,7 +158,7 @@
           {/if}
           <p class="ol_model">{$smarty.const.HEADER_MODEL}: {$data.model}</p>
           {if $data.shipping_time}<p class="ol_model">{$smarty.const.SHIPPING_TIME} {$data.shipping_time}</p>{/if}
-          {if $data.attributes != ''}
+          {if is_array($data.attributes) && count($data.attributes) > 0}
           <ul class="attributes_list">
             {foreach key=a_data item=attrib_data from=$data.attributes}
             <li><strong>{$attrib_data.option}:</strong> {$attrib_data.value}</li>

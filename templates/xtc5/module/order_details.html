@@ -12,7 +12,7 @@
     <td class="quantity">{$module_data.PRODUCTS_QTY}</td>
     <td class="productname">
     <strong><a href="{$module_data.PRODUCTS_LINK}">{$module_data.PRODUCTS_NAME}</a></strong>
-    {if $module_data.ATTRIBUTES != ''}
+    {if is_array($module_data.ATTRIBUTES) && count($module_data.ATTRIBUTES) > 0}
       <table class="productattributes" width="100%" border="0" cellspacing="0" cellpadding="0">
       {foreach key=key_data item=item_data from=$module_data.ATTRIBUTES}
         <tr>
@@ -22,7 +22,7 @@
       {/foreach}
       </table>
     {/if}
-    {if $module_data.ATTRIBUTES == ''}<br />{/if}
+    {if is_array($module_data.ATTRIBUTES) && count($module_data.ATTRIBUTES) > 0}<br />{/if}
     {if $module_data.BUTTON_WISHLIST != ''}&laquo; {$module_data.BUTTON_WISHLIST}{/if}
     </td>
     <td class="singleprice">{$module_data.PRODUCTS_SINGLE_PRICE}</td>

@@ -32,7 +32,7 @@
       </span>
       <span class="ol_productsname ol_width3">
         <span class="ol_distance"><a class="ord_prdoducts_name" href="{$module_data.PRODUCTS_LINK}">{$module_data.PRODUCTS_NAME}</a></span>
-        {if $module_data.ATTRIBUTES != ''}
+        {if is_array($module_data.ATTRIBUTES) && count($module_data.ATTRIBUTES) > 0}
         <ul class="attributes_list">
           {foreach key=key_data item=item_data from=$module_data.ATTRIBUTES}
           <li><strong>{$item_data.NAME}:</strong> {$item_data.VALUE_NAME}</li>
