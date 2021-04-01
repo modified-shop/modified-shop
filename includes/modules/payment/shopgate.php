@@ -20,4 +20,10 @@
  *
  * @author Shopgate GmbH <interfaces@shopgate.com>
  */
-include_once DIR_FS_CATALOG . 'includes/external/shopgate/base/includes/modules/payment/shopgate.php';
+if(version_compare(phpversion(), '8.0', ">=")){
+  class shopgate {
+    
+  }
+} else {
+  include_once DIR_FS_CATALOG . 'includes/external/shopgate/base/includes/modules/payment/shopgate.php';
+}
