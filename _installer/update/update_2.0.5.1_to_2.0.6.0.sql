@@ -75,4 +75,7 @@ ALTER TABLE `admin_access` DROP `new_attributes`;
 #GTB - 2021-02-08 - address format for netherlands
 UPDATE `countries` SET `address_format_id` = 5 WHERE `countries_iso_code_2` = 'NL';
 
+#GTB - 2021-04-01 - remove GB from EU
+UPDATE `zones_to_geo_zones` SET `geo_zone_id` = '6' WHERE `zone_country_id` = 222;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
