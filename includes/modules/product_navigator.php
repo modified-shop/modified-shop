@@ -32,7 +32,8 @@ if (!$sorting_data['products_sorting']) {
 $sorting = ' ORDER BY '.$sorting_data['products_sorting'].' '.$sorting_data['products_sorting2'];
 
 $products_query = xtDBquery("SELECT p2c.products_id,
-                                    pd.products_name
+                                    pd.products_name,
+                                    p.products_image
                                FROM ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
                                JOIN ".TABLE_PRODUCTS." p
                                     ON p.products_id = p2c.products_id
@@ -45,46 +46,57 @@ $products_query = xtDBquery("SELECT p2c.products_id,
                                     ".PRODUCTS_CONDITIONS_P."
                                     ".$sorting);
 
-$i = $actual_key = 0;
+$i = 0;
 $p_data = array();
 while ($products_data = xtc_db_fetch_array($products_query, true)) {
-	$p_data[$i] = array ('pID' => $products_data['products_id'], 'pName' => $products_data['products_name']);
+	$p_data[$i] = array (
+	  'ID' => $products_data['products_id'], 
+	  'NAME' => $products_data['products_name'], 
+	  'IMAGE' => $products_data['products_image'],
+	  'LINK' => '',
+	);
 	if ($products_data['products_id'] == $product->data['products_id']) {
 		$actual_key = $i;
+		//$p_data[$i]['LINK'] = xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$products_data['products_id']);
 	}
 	$i ++;
 }
 
-// first set variables
-$first_link = $prev_link = $next_link = $last_link = '';
-
-// check if array key = first
-if ($actual_key == 0) {
-	// aktuel key = first product
-} else {
-	$prev_id = $actual_key -1;
-	$prev_link = xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$p_data[$prev_id]['pID']);
-	// check if prev id = first
-	if ($prev_id != 0)
-		$first_link = xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$p_data[0]['pID']);
+$navigator_array = array(
+  'overview' => array('LINK' => xtc_href_link(FILENAME_DEFAULT, xtc_category_link($current_category_id))),
+  'first' => array('LINK' => ''),
+  'prev' => array('LINK' => ''),
+  'actual' => $p_data[$actual_key],
+  'next' => array('LINK' => ''),
+  'last' => array('LINK' => ''),
+);
+if ($actual_key != 0 && ($actual_key - 1) != 0) {
+  $navigator_array['first'] = $p_data[0];
+  $navigator_array['first']['LINK'] = xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$navigator_array['first']['ID']);
+  $navigator_array['first']['IMAGE'] = $product->productImage($navigator_array['first']['IMAGE'], 'thumbnail');
 }
-// check if key = last
-if ($actual_key == (count($p_data) - 1)) {
-	// actual key is last
-} else {
-	$next_id = $actual_key +1;
-	$next_link = xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$p_data[$next_id]['pID']);
-	// check if next id = last
-	if ($next_id != (count($p_data) - 1))
-		$last_link = xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$p_data[(count($p_data) - 1)]['pID']);
+if (isset($p_data[$actual_key - 1])) {
+  $navigator_array['prev'] = $p_data[$actual_key - 1];
+  $navigator_array['prev']['LINK'] = xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$navigator_array['prev']['ID']);
+  $navigator_array['prev']['IMAGE'] = $product->productImage($navigator_array['prev']['IMAGE'], 'thumbnail');
 }
-$overview_link = xtc_href_link(FILENAME_DEFAULT, xtc_category_link($current_category_id));
+if (isset($p_data[$actual_key + 1])) {
+  $navigator_array['next'] = $p_data[$actual_key + 1];
+  $navigator_array['next']['LINK'] = xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$navigator_array['next']['ID']);
+  $navigator_array['next']['IMAGE'] = $product->productImage($navigator_array['next']['IMAGE'], 'thumbnail');
+}
+if ($actual_key != (count($p_data) - 1) && $actual_key != (count($p_data) - 2)) {
+  $navigator_array['last'] = $p_data[count($p_data) - 1];
+  $navigator_array['last']['LINK'] = xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$navigator_array['last']['ID']);
+  $navigator_array['last']['IMAGE'] = $product->productImage($navigator_array['last']['IMAGE'], 'thumbnail');
+}
 
-$module_smarty->assign('FIRST', $first_link);
-$module_smarty->assign('PREVIOUS', $prev_link);
+$module_smarty->assign('module_content', $navigator_array);
+$module_smarty->assign('FIRST', $navigator_array['first']['LINK']);
+$module_smarty->assign('PREVIOUS', $navigator_array['prev']['LINK']);
 $module_smarty->assign('OVERVIEW', $overview_link);
-$module_smarty->assign('NEXT', $next_link);
-$module_smarty->assign('LAST', $last_link);
+$module_smarty->assign('NEXT', $navigator_array['next']['LINK']);
+$module_smarty->assign('LAST', $navigator_array['last']['LINK']);
 $module_smarty->assign('ACTUAL_PRODUCT', $actual_key +1);
 $module_smarty->assign('PRODUCTS_COUNT', count($p_data));
 
