@@ -19,6 +19,7 @@
   {  
     // include needed functions
     require_once (DIR_FS_INC.'get_order_total.inc.php');
+    require_once (DIR_FS_INC.'xtc_get_products_name.inc.php');
 
     // include needed classes
     require_once (DIR_WS_CLASSES.'language.php');
