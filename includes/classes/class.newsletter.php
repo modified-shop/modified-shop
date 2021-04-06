@@ -89,8 +89,7 @@ class newsletter {
                                                mail_status,
                                                customers_email_address
                                           FROM ".TABLE_NEWSLETTER_RECIPIENTS."
-                                         WHERE MD5(customers_email_address) = '".xtc_db_input($mail)."'
-                                       ");
+                                         WHERE MD5(customers_email_address) = '".xtc_db_input($mail)."'");
       if (xtc_db_num_rows($check_mail_query) > 0) {
         $check_mail = xtc_db_fetch_array($check_mail_query);
         if($check_mail['mail_status'] == '1') {
@@ -100,10 +99,11 @@ class newsletter {
           $this->message = TEXT_EMAIL_ACTIVE_ERROR;
           $this->message_class = 'error';
         } else {
-          $sql_data_array = array('mail_status' => '1',
-                                  'date_confirmed' => 'now()',
-                                  'ip_date_confirmed' => ip_clearing($_SESSION['tracking']['ip'])
-                                  );
+          $sql_data_array = array(
+            'mail_status' => '1',
+            'date_confirmed' => 'now()',
+            'ip_date_confirmed' => ip_clearing($_SESSION['tracking']['ip'])
+          );
           xtc_db_perform(TABLE_NEWSLETTER_RECIPIENTS, $sql_data_array, 'update', "customers_email_address = '".xtc_db_input($check_mail['customers_email_address'])."'");
           $this->sendRequestMail($check_mail['customers_email_address'], 'subscribe');
           $this->message = TEXT_EMAIL_ACTIVE;
@@ -140,8 +140,7 @@ class newsletter {
           $check_mail_query = xtc_db_query("SELECT customers_email_address,
                                                    mail_status 
                                               FROM ".TABLE_NEWSLETTER_RECIPIENTS."
-                                             WHERE customers_email_address = '".xtc_db_input($mail)."'
-                                           ");
+                                             WHERE customers_email_address = '".xtc_db_input($mail)."'");
           if (xtc_db_num_rows($check_mail_query) > 0) {
 
             $check_mail = xtc_db_fetch_array($check_mail_query);
@@ -152,17 +151,23 @@ class newsletter {
               $this->message_class = 'info';
 
               if (SEND_EMAILS_DOUBLE_OPT_IN == 'true' && SEND_EMAILS == 'true') {
-                $sql_data_array = array('mail_key' => $this->vlCode,
-                                        'mail_status' => '0'
-                                        );
+                $sql_data_array = array(
+                  'mail_key' => $this->vlCode,
+                  'mail_status' => '0'
+                  'date_added' => 'now()',
+                  'ip_date_added' => ip_clearing($_SESSION['tracking']['ip'])
+                );
                 xtc_db_perform(TABLE_NEWSLETTER_RECIPIENTS, $sql_data_array, 'update', "customers_email_address = '".xtc_db_input($mail)."'");
                 $this->sendRequestMail($mail);
               } else {
-                $sql_data_array = array('mail_status' => '1',
-                                        'date_confirmed' => 'now()',
-                                        'mail_key' => $this->vlCode,
-                                        'ip_date_confirmed' => ip_clearing($_SESSION['tracking']['ip'])
-                                        );
+                $sql_data_array = array(
+                  'mail_status' => '1',
+                  'mail_key' => $this->vlCode,
+                  'date_added' => 'now()',
+                  'ip_date_added' => ip_clearing($_SESSION['tracking']['ip'])
+                  'date_confirmed' => 'now()',
+                  'ip_date_confirmed' => ip_clearing($_SESSION['tracking']['ip'])
+                );
                 xtc_db_perform(TABLE_NEWSLETTER_RECIPIENTS, $sql_data_array, 'update', "customers_email_address = '".xtc_db_input($mail)."'");
                 $this->sendRequestMail($mail, 'subscribe');
                 $this->message = TEXT_EMAIL_ACTIVE;
@@ -180,8 +185,7 @@ class newsletter {
                                                               customers_lastname,
                                                               customers_email_address
                                                          FROM ".TABLE_CUSTOMERS."
-                                                        WHERE customers_email_address = '".xtc_db_input($mail)."'
-                                                      ");
+                                                        WHERE customers_email_address = '".xtc_db_input($mail)."'");
             if (xtc_db_num_rows($check_customer_mail_query) > 0) {
               $check_customer = xtc_db_fetch_array($check_customer_mail_query);
               $customers_id = $check_customer['customers_id'];
@@ -195,16 +199,17 @@ class newsletter {
               $customers_lastname = '';
             }
 
-            $sql_data_array = array ('customers_email_address' => $mail,
-                                     'customers_id' => $customers_id,
-                                     'customers_status' => $customers_status,
-                                     'customers_firstname' => $customers_firstname,
-                                     'customers_lastname' => $customers_lastname,
-                                     'mail_status' => '0',
-                                     'mail_key' => $this->vlCode,
-                                     'date_added' => 'now()',
-                                     'ip_date_added' => ip_clearing($_SESSION['tracking']['ip'])
-                                     );
+            $sql_data_array = array(
+              'customers_email_address' => $mail,
+              'customers_id' => $customers_id,
+              'customers_status' => $customers_status,
+              'customers_firstname' => $customers_firstname,
+              'customers_lastname' => $customers_lastname,
+              'mail_status' => '0',
+              'mail_key' => $this->vlCode,
+              'date_added' => 'now()',
+              'ip_date_added' => ip_clearing($_SESSION['tracking']['ip'])
+            );
             xtc_db_perform(TABLE_NEWSLETTER_RECIPIENTS, $sql_data_array);
 
             $this->message = TEXT_EMAIL_INPUT;
@@ -213,10 +218,11 @@ class newsletter {
             if (SEND_EMAILS_DOUBLE_OPT_IN == 'true' && SEND_EMAILS == 'true') {
               $this->sendRequestMail($mail);
             } else {
-              $sql_data_array = array('mail_status' => '1',
-                                      'date_confirmed' => 'now()',
-                                      'ip_date_confirmed' => ip_clearing($_SESSION['tracking']['ip'])
-                                      );
+              $sql_data_array = array(
+                'mail_status' => '1',
+                'date_confirmed' => 'now()',
+                'ip_date_confirmed' => ip_clearing($_SESSION['tracking']['ip'])
+              );
               xtc_db_perform(TABLE_NEWSLETTER_RECIPIENTS, $sql_data_array, 'update', "customers_email_address = '".xtc_db_input($mail)."'");
               $this->sendRequestMail($mail, 'subscribe');
               $this->message = TEXT_EMAIL_ACTIVE;
@@ -287,20 +293,22 @@ class newsletter {
             }
 
             $coupon_code = create_coupon_code();
-            $sql_data_array = array('coupon_code' => $coupon_code,
-                                    'coupon_type' => 'G',
-                                    'coupon_amount' => MODULE_NEWSLETTER_VOUCHER_AMOUNT,
-                                    'date_created' => 'now()'
-                                    );
+            $sql_data_array = array(
+              'coupon_code' => $coupon_code,
+              'coupon_type' => 'G',
+              'coupon_amount' => MODULE_NEWSLETTER_VOUCHER_AMOUNT,
+              'date_created' => 'now()'
+            );
             xtc_db_perform(TABLE_COUPONS, $sql_data_array);
 
             $insert_id = xtc_db_insert_id();
-            $sql_data_array = array('coupon_id' => $insert_id,
-                                    'customer_id_sent' => '0',
-                                    'sent_firstname' => 'Newsletter',
-                                    'emailed_to' => $mail,
-                                    'date_sent' => 'now()'
-                                    );
+            $sql_data_array = array(
+              'coupon_id' => $insert_id,
+              'customer_id_sent' => '0',
+              'sent_firstname' => 'Newsletter',
+              'emailed_to' => $mail,
+              'date_sent' => 'now()'
+            );
             xtc_db_perform(TABLE_COUPON_EMAIL_TRACK, $sql_data_array);
 
             $smarty->assign('SEND_GIFT', 'true');
@@ -328,12 +336,13 @@ class newsletter {
                                                     AND language_id = '".(int)$_SESSION['languages_id']."'");
               $coupon_desc = xtc_db_fetch_array($coupon_desc_query);
         
-              $sql_data_array = array('coupon_id' => $coupon_id,
-                                      'customer_id_sent' => '0',
-                                      'sent_firstname' => 'Newsletter',
-                                      'emailed_to' => $mail,
-                                      'date_sent' => 'now()'
-                                      );
+              $sql_data_array = array(
+                'coupon_id' => $coupon_id,
+                'customer_id_sent' => '0',
+                'sent_firstname' => 'Newsletter',
+                'emailed_to' => $mail,
+                'date_sent' => 'now()'
+              );
               xtc_db_perform(TABLE_COUPON_EMAIL_TRACK, $sql_data_array);
         
               $smarty->assign('SEND_COUPON', 'true');
