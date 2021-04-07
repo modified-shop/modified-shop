@@ -19,6 +19,8 @@
 define('HEADING_TITLE', 'Alte Artikelbilder l&ouml;schen');
 define('LINK_INFO_TEXT', '<p>&Uuml;ber diese Funktion k&ouml;nnen &uuml;berfl&uuml;ssige Artikelbilder in den Verzeichnissen:</p>
 - /images/product_images/info_images<br/>
+- /images/product_images/midi_images<br/>
+- /images/product_images/mini_images<br/>
 - /images/product_images/original_images<br/>
 - /images/product_images/popup_images<br/>
 - /images/product_images/thumbnail_images<br/>

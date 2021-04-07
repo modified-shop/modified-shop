@@ -19,6 +19,8 @@
 define('HEADING_TITLE','Remove old product pictures');
 define('LINK_INFO_TEXT', '<p>With this function you can delete dispensable product pictures from following directories:</p>
 - /images/product_images/info_images<br/>
+- /images/product_images/midi_images<br/>
+- /images/product_images/mini_images<br/>
 - /images/product_images/original_images<br/>
 - /images/product_images/popup_images<br/>
 - /images/product_images/thumbnail_images<br/>
