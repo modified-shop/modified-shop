@@ -213,17 +213,20 @@
 
   function create_directory_array($module_directory,$file_extension) {
     global $module, $module_type;
-    
-    $directory_array = array(array());
+  
+    $directory_array = array(
+      0 => array(),
+      1 => array(),
+    );
     $alphabet = range('A', 'Z');
-    
+  
     foreach(auto_include($module_directory, substr($file_extension, 1)) as $file) {
       $filename = basename($file);
-      
+    
       if (is_file(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $filename)) {
         include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $filename);
       }
-      
+    
       include_once($module_directory . $filename);
 
       $class = substr($filename, 0, strpos($filename, '.'));
@@ -242,17 +245,18 @@
       }
       unset($module);
     }
-    
+  
     if (isset($directory_array[0])) {
       ksort($directory_array[0]);
       $directory_array[0] = array_values($directory_array[0]);
     }
-    
+  
     if (isset($directory_array[1])) {
       ksort($directory_array[1]);
       $directory_array[1] = array_values($directory_array[1]);
     }
-    
+    $directory_array = array_filter($directory_array);
+  
     return $directory_array;
   }
 
