@@ -71,7 +71,7 @@
         
         // whos online
         $primary = false;
-        $whosonline_query = xtc_db_query("SHOW INDEX FROM '".TABLE_WHOS_ONLINE."'");
+        $whosonline_query = xtc_db_query("SHOW INDEX FROM ".TABLE_WHOS_ONLINE);
         while ($whosonline = xtc_db_fetch_array($whosonline_query)) {
           if ($whosonline['Key_name'] == 'PRIMARY' && $whosonline['Column_name'] == 'session_id') {
             $primary = true;
@@ -79,8 +79,8 @@
         }
         
         if ($primary === false) {
-          xtc_db_query("TRUNCATE '".TABLE_WHOS_ONLINE."'");
-          xtc_db_query("ALTER TABLE '".TABLE_WHOS_ONLINE."' ADD PRIMARY KEY (session_id)");
+          xtc_db_query("TRUNCATE ".TABLE_WHOS_ONLINE);
+          xtc_db_query("ALTER TABLE ".TABLE_WHOS_ONLINE." ADD PRIMARY KEY (session_id)");
         }
         
         // exclude payments
@@ -144,7 +144,7 @@
             foreach ($_POST['sql_files'] as $sql_file) {
               sql_update(DIR_FS_INSTALLER.'update/'.$sql_file);
             }
-            xtc_db_query("TRUNCATE `session`");
+            xtc_db_query("TRUNCATE `sessions`");
           } else {
             $messageStack->add_session('update', ERROR_SQL_UPDATE_NO_FILE);
           }
