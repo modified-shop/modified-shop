@@ -55,10 +55,10 @@ define('MODULE_PAYMENT_BILLPAY_LOGPATH_TITLE', 'Logging Pfad');
 define('MODULE_PAYMENT_BILLPAY_LOGPATH_DESC', '');
 
 define('MODULE_PAYMENT_BILLPAY_GS_HTTP_X_TITLE', 'X_FORWARDED_FOR erlauben');
-define('MODULE_PAYMENT_BILLPAY_GS_HTTP_X_DESC', 'Aktivieren Sie dieses Funktion wenn Ihr Shop in einem Cloud System l&auml;uft.');
+define('MODULE_PAYMENT_BILLPAY_GS_HTTP_X_DESC', 'Aktivieren Sie diese Funktion wenn Ihr Shop in einem Cloud System l&auml;uft.');
 
 define('MODULE_PAYMENT_BILLPAY_HTTP_X_TITLE', 'X_FORWARDED_FOR erlauben');
-define('MODULE_PAYMENT_BILLPAY_HTTP_X_DESC', 'Aktivieren Sie dieses Funktion wenn Ihr Shop in einem Cloud System l&auml;uft.');
+define('MODULE_PAYMENT_BILLPAY_HTTP_X_DESC', 'Aktivieren Sie diese Funktion wenn Ihr Shop in einem Cloud System l&auml;uft.');
 
 // Payment selection texts
 define('MODULE_PAYMENT_BILLPAY_TEXT_BIRTHDATE', 'Geburtsdatum');
@@ -104,7 +104,7 @@ define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_PHONE', '* Bitte geben Sie Ihre Telefo
 
 define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_EULA', '* Bitte akzeptieren Sie die BillPay AGB!');
 define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_DOB', '* Bitte geben Sie Ihr Geburtsdatum ein.');
-define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_DOB_UNDER', 'Sie m&uuml;ssen &uuml;ber 18 Jahre alt zu BillPay nutzen.');
+define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_DOB_UNDER', 'Sie m&uuml;ssen &uuml;ber 18 Jahre alt um BillPay zu nutzen.');
 define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_DEFAULT', 'Es ist ein interner Fehler aufgetreten. Bitte w&auml;len Sie eine andere Zahlart');
 define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_SHORT', 'Es ist ein interner Fehler aufgetreten!');
 define('MODULE_PAYMENT_BILLPAY_TEXT_INVOICE_CREATED_COMMENT', 'Das Zahlungsziel der Bestellung wurde erfolgreich bei BillPay gestartet.');
@@ -167,8 +167,8 @@ define('MODULE_PAYMENT_BILLPAY_B2B_TAX_NUMBER_EMPTY', 'Bitte geben Sie die Umsat
 
 defined('MODULE_ORDER_TOTAL_BILLPAY_FEE_FROM_TOTAL') OR define('MODULE_ORDER_TOTAL_BILLPAY_FEE_FROM_TOTAL', 'vom Rechnungsbetrag');
 
-define('MODULE_PAYMENT_BILLPAY_GS_UTF8_ENCODE_TITLE', 'Local-Kodierung');
-define('MODULE_PAYMENT_BILLPAY_GS_UTF8_ENCODE_DESC', 'Ist Ihre Seite nutzt lokale Kodierung (andere als UTF-8)?');
+define('MODULE_PAYMENT_BILLPAY_GS_UTF8_ENCODE_TITLE', 'Locale-Kodierung');
+define('MODULE_PAYMENT_BILLPAY_GS_UTF8_ENCODE_DESC', 'Nutzt Ihre Seite Locale-Kodierung (anders als UTF-8)?');
 
 
 define('MODULE_PAYMENT_BILLPAY_ACTIVATE_ORDER', 'Die Bestellung wurde noch nicht bei BillPay aktiviert. Bitte aktivieren Sie die Bestellung unmittelbar vor der Versendung, in dem Sie den entsprechenden Status setzen.');

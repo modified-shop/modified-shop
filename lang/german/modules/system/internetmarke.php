@@ -21,7 +21,7 @@
   define('MODULE_INTERNETMARKE_STATUS_DESC','Modulstatus');
 
   define('MODULE_INTERNETMARKE_PORTO_USER_TITLE', 'Portokasse E-Mail Adresse');
-  define('MODULE_INTERNETMARKE_PORTO_USER_DESC', 'Bitte geben Sie den Portokasse E-Mail Adresse an.');
+  define('MODULE_INTERNETMARKE_PORTO_USER_DESC', 'Bitte geben Sie die Portokasse E-Mail Adresse an.');
 
   define('MODULE_INTERNETMARKE_PORTO_PASS_TITLE', 'Portokasse Passwort');
   define('MODULE_INTERNETMARKE_PORTO_PASS_DESC', 'Bitte geben Sie das Portokasse Passwort an.');

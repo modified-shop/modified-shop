@@ -104,7 +104,7 @@ define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_PHONE', '* Please provide your telepho
 
 define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_EULA', '* Please accept EULA to continue.');
 define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_DOB', 'You have entered an incorrect date of birth!');
-define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_DOB_UNDER', 'Sie m&uuml;ssen &uuml;ber 18 Jahre alt zu BillPay nutzen.');
+define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_DOB_UNDER', 'You must be 18 years of age or older to use BillPay.');
 define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_DEFAULT', 'Internal error, please pick different payment method.');
 define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_SHORT', 'Internal error, please pick different payment method.');
 define('MODULE_PAYMENT_BILLPAY_TEXT_INVOICE_CREATED_COMMENT', 'Invoice has been created.');
@@ -167,8 +167,8 @@ define('MODULE_PAYMENT_BILLPAY_B2B_TAX_NUMBER_EMPTY', 'Please provide Tax-ID');
 
 defined('MODULE_ORDER_TOTAL_BILLPAY_FEE_FROM_TOTAL') OR define('MODULE_ORDER_TOTAL_BILLPAY_FEE_FROM_TOTAL', 'of the invoice amount');
 
-define('MODULE_PAYMENT_BILLPAY_GS_UTF8_ENCODE_TITLE', 'Local encoding');
-define('MODULE_PAYMENT_BILLPAY_GS_UTF8_ENCODE_DESC', 'Does your site uses local encoding (other than utf-8)?');
+define('MODULE_PAYMENT_BILLPAY_GS_UTF8_ENCODE_TITLE', 'Locale encoding');
+define('MODULE_PAYMENT_BILLPAY_GS_UTF8_ENCODE_DESC', 'Does your site uses locale encoding (other than utf-8)?');
 
 
 define('MODULE_PAYMENT_BILLPAY_ACTIVATE_ORDER', 'The order has not been activated by BillPay. Please activate the order immediately prior to dispatch in which you set the appropriate status.');

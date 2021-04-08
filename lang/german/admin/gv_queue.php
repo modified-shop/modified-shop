@@ -37,7 +37,7 @@ define('TABLE_HEADING_ACTION', 'Aktion');
 define('TEXT_REDEEM_COUPON_MESSAGE_HEADER', 'Sie haben k&uuml;rzlich in unserem Online-Shop einen Gutschein bestellt, ' . "\n"
                                           . 'welcher aus Sicherheitsgr&uuml;nden nicht sofort freigeschaltet wurde.' . "\n"
                                           . 'Dieses Guthaben steht Ihnen nun zur Verf&uuml;gung. Sie k&ouml;nnen nun auch unseren Online Shop besuchen' . "\n"
-                                          . 'und einen Teilbetrag Ihres Gutschens per E-Mail an jemanden versenden' . "\n\n");
+                                          . 'und einen Teilbetrag Ihres Gutscheins per E-Mail an jemanden versenden' . "\n\n");
 
 define('TEXT_REDEEM_COUPON_MESSAGE_AMOUNT', 'Der von Ihnen bestellte Gutschein hat einen Wert von %s' . "\n\n");
 

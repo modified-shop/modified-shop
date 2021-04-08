@@ -128,7 +128,7 @@ define('MODULE_PAYMENT_BILLPAYPAYLATER_ACTIVATE_ORDER_WARNING', MODULE_PAYMENT_B
 # only this payment
 
 define('MODULE_PAYMENT_BILLPAYPAYLATER_TEXT_INVOICE_INFO1', 'Vielen Dank, dass Sie sich f&uuml;r die Zahlung mit PayLater entschieden haben. Die f&auml;lligen Betr&auml;ge werden von dem bei der Bestellung angegebenen Konto abgebucht. Zus&auml;tzlich zu dieser Rechnung bekommen Sie von BillPay in K&uuml;rze einen Teilzahlungsplan mit detaillierten Informationen &uuml;ber Ihre Teilzahlung.');
-define('MODULE_PAYMENT_BILLPAYPAYLATER_TEXT_INVOICE_INFO2', 'Bestellen Sie wurde ausgestellt von ');
+define('MODULE_PAYMENT_BILLPAYPAYLATER_TEXT_INVOICE_INFO2', 'Auftrag wurde erteilt von ');
 define('MODULE_PAYMENT_BILLPAYPAYLATER_TEXT_INVOICE_INFO3', '');
 
 define('MODULE_PAYMENT_BILLPAYPAYLATER_TEXT_FEE_INFO1', 'PayLater Geb&uuml;hr f&uuml;r diesen Auftrag ist ');
