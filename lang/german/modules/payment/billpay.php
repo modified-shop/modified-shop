@@ -104,7 +104,7 @@ define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_PHONE', '* Bitte geben Sie Ihre Telefo
 
 define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_EULA', '* Bitte akzeptieren Sie die BillPay AGB!');
 define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_DOB', '* Bitte geben Sie Ihr Geburtsdatum ein.');
-define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_DOB_UNDER', 'Sie m&uuml;ssen &uuml;ber 18 Jahre alt um BillPay zu nutzen.');
+define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_DOB_UNDER', 'Sie m&uuml;ssen &uuml;ber 18 Jahre alt sein um BillPay zu nutzen.');
 define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_DEFAULT', 'Es ist ein interner Fehler aufgetreten. Bitte w&auml;len Sie eine andere Zahlart');
 define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_SHORT', 'Es ist ein interner Fehler aufgetreten!');
 define('MODULE_PAYMENT_BILLPAY_TEXT_INVOICE_CREATED_COMMENT', 'Das Zahlungsziel der Bestellung wurde erfolgreich bei BillPay gestartet.');
