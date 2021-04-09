@@ -11,7 +11,8 @@
    --------------------------------------------------------------*/
 
     
-  if (TRACKING_GOOGLEANALYTICS_GTAG != 'true'
+  if (TRACKING_GOOGLEANALYTICS_ACTIVE == 'true'
+      && TRACKING_GOOGLEANALYTICS_GTAG != 'true'
       && ((TRACKING_COUNT_ADMIN_ACTIVE == 'true' && $_SESSION['customers_status']['customers_status_id'] == '0')
           || $_SESSION['customers_status']['customers_status_id'] != '0'
           )
