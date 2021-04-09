@@ -456,6 +456,12 @@ table td {
   -webkit-transform: rotate(180deg); 
   transform: rotate(180deg); 
 }
+@media only screen and (min-width: 985px) {
+  .box_header.sidebar_inactive .fas { display:none; } 
+  .box_header.sidebar_active .fas { display:none; }  
+  .sidebar_inactive { cursor: default; }
+  .sidebar_active { cursor: default; }
+}
 
 #layout_navbar { z-index: 1000; }
 #layout_logo { z-index: 1000; }
