@@ -200,6 +200,31 @@ class Details extends PayPalModel
     }
 
     /**
+     * Discount charged by PayPal. In case of a refund, this is the fee amount refunded to the original receipient of the payment.
+     *
+     * @param string|double $fee
+     * 
+     * @return $this
+     */
+    public function setDiscount($discount)
+    {
+        NumericValidator::validate($discount, "Discount");
+        $discount = FormatConverter::formatToPrice($discount);
+        $this->discount = $discount;
+        return $this;
+    }
+
+    /**
+     * Amount being charged as Discount.
+     *
+     * @return string
+     */
+    public function getDiscount()
+    {
+        return $this->discount;
+    }
+
+    /**
      * Fee charged by PayPal. In case of a refund, this is the fee amount refunded to the original receipient of the payment.
      *
      * @param string|double $fee
