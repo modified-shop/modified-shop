@@ -237,7 +237,7 @@ class main {
       $content_data_array['content_text'] = @ob_get_contents();
       ob_end_clean();
       //check for txt file and format output
-      if (strpos($content_data_array['content_file'], '.txt')) {
+      if (strpos($content_data_array['content_file'], '.txt') !== false) {
         $content_data_array['content_text'] = '<pre>' . $content_data_array['content_text'] . '</pre>';
       }
     }

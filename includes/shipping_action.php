@@ -11,7 +11,7 @@
    ---------------------------------------------------------------------------------------*/
 
 	if ((xtc_count_shipping_modules() > 0) || ($free_shipping == true)) {
-		if ((isset($_POST['shipping'])) && (strpos($_POST['shipping'], '_'))) {
+		if ((isset($_POST['shipping'])) && (strpos($_POST['shipping'], '_') !== false)) {
 			$_SESSION['shipping'] = $_POST['shipping'];#sec
 
 			list ($module, $method) = explode('_', $_SESSION['shipping']);

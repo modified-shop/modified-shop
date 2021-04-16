@@ -47,14 +47,14 @@ if (isset($_GET['coID']) && (int)$_GET['coID'] > 0) {
     if ($content_data['content_file'] != '' && is_file(DIR_FS_CATALOG.'media/'.$path.'/'.$content_data['content_file'])) {
       $mime_type = mime_content_type(DIR_FS_CATALOG.'media/'.$path.'/'.$content_data['content_file']);
       ob_start();
-      if (strpos($content_data['content_file'], '.txt'))
+      if (strpos($content_data['content_file'], '.txt') !== false)
         echo '<pre>';
       if (strpos($mime_type, 'image') !== false) {
         echo xtc_image('media/'.$path.'/'.$content_data['content_file'], $content_data['content_name']);
       } else {
         include (DIR_FS_CATALOG.'media/'.$path.'/'.$content_data['content_file']);
       }
-      if (strpos($content_data['content_file'], '.txt'))
+      if (strpos($content_data['content_file'], '.txt') !== false)
         echo '</pre>';
       $content_text = ob_get_contents();
       ob_end_clean();

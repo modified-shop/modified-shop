@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: content_preview.php 1304 2005-10-12 18:04:43Z mz $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -47,7 +47,7 @@ require (DIR_WS_INCLUDES.'head.php');
             <td class="main">
  <?php
  if ($content_data['content_file']!=''){
-if (strpos($content_data['content_file'],'.txt')) echo '<pre>';
+if (strpos($content_data['content_file'],'.txt') !== false) echo '<pre>';
 if ($_GET['pID']=='media') {
 	// display image
 	if (preg_match('/.gif/i',$content_data['content_file']) or preg_match('/.jpg/i',$content_data['content_file']) or  preg_match('/.png/i',$content_data['content_file']) or  preg_match('/.tif/i',$content_data['content_file']) or  preg_match('/.bmp/i',$content_data['content_file'])) { // Hetfield - 2009-08-19 - replaced deprecated function eregi with preg_match to be ready for PHP >= 5.3	
@@ -58,7 +58,7 @@ if ($_GET['pID']=='media') {
 } else {
 include(DIR_FS_CATALOG.'media/content/'.$content_data['content_file']);	
 }
-if (strpos($content_data['content_file'],'.txt')) echo '</pre>';
+if (strpos($content_data['content_file'],'.txt') !== false) echo '</pre>';
  } else {	      
 echo $content_data['content_text'];
 }

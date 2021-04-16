@@ -860,7 +860,7 @@ class xtcExport {
         } elseif(substr($data,0,1)==$this->TextSign) {
             $delim = true;
         //BOC set TextSign also when TextSign occurs within $data
-        } elseif(strpos($data, $this->TextSign) != false) {
+        } elseif(strpos($data, $this->TextSign) !== false) {
             $delim = true;
         }
         //EOC set TextSign also when TextSign occurs within $data

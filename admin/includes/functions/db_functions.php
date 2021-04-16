@@ -457,7 +457,7 @@ function DownGrade($s, $show=true)
   {
     $t=strtolower($tmp[$i]);
   
-    if (strpos($t,"collate "))
+    if (strpos($t,"collate ") !== false)
     {
       $tmp2=explode(" ",$tmp[$i]);
       for ($j=0; $j<count($tmp2); $j++)
@@ -472,7 +472,7 @@ function DownGrade($s, $show=true)
       $tmp[$i]=implode(" ",$tmp2);
     }
   
-    if (strpos($t,"engine="))
+    if (strpos($t,"engine=") !== false)
     {
       $tmp2=explode(" ",$tmp[$i]);
       for ($j=0; $j<count($tmp2); $j++)
@@ -493,7 +493,7 @@ function DownGrade($s, $show=true)
     }
   
     // character Set sprache  entfernen
-    if (strpos($t,"character set"))
+    if (strpos($t,"character set") !== false)
     {
       $tmp2=explode(" ",$tmp[$i]);
       $end=false;
@@ -510,7 +510,7 @@ function DownGrade($s, $show=true)
       $tmp[$i]=implode(" ",$tmp2);
     }
   
-    if (strpos($t,"timestamp"))
+    if (strpos($t,"timestamp") !== false)
     {
       $tmp2=explode(" ",$tmp[$i]);
       $end=false;

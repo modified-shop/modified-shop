@@ -131,7 +131,7 @@
         }
         
         if ($error === false || isset($write_configure)) {  
-          if (strpos($http_server, 'https:')) {
+          if (strpos($http_server, 'https:') !== false) {
             $use_ssl = 'true';
           }
 

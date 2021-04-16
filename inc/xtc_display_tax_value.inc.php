@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_display_tax_value.inc.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -17,7 +17,7 @@
    
 // Output the tax percentage with optional padded decimals
   function xtc_display_tax_value($value, $padding = TAX_DECIMAL_PLACES) {
-    if (strpos($value, '.')) {
+    if (strpos($value, '.') !== false) {
       $loop = true;
       while ($loop) {
         if (substr($value, -1) == '0') {

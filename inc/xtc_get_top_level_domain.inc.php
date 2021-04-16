@@ -17,7 +17,7 @@
    ---------------------------------------------------------------------------------------*/
 
 function xtc_get_top_level_domain($url) {  
-  if (strpos($url, '://')) {
+  if (strpos($url, '://') !== false) {
     $url = parse_url($url);
     $url = $url['host'];
   }
