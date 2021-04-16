@@ -223,6 +223,8 @@ if (USE_WYSIWYG == 'true') {
                                            ");
             $manufact = xtc_db_fetch_array($manufact_query);          
           }
+          $manufact['manufacturers_image'] = str_replace('manufacturers/', '', $manufact['manufacturers_image']);
+          
           echo xtc_draw_form('manufacturers', FILENAME_MANUFACTURERS, 'page=' . $page . ((isset($_GET['mID'])) ? '&mID=' . (int)$_GET['mID'] : ''). '&action='.(($action=='new') ? 'insert' : 'save'), 'post', 'enctype="multipart/form-data"');
           ?>
           <div class="div_box mrg5">       
