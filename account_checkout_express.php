@@ -123,14 +123,16 @@ $module_shipping = array(array('FIELD' => xtc_draw_radio_field('shipping', $modu
                          );
 
 foreach ($quotes as $shipping) {
-  $module_name = $shipping['id'].'_'.$shipping['methods'][0]['id'];
-  if ($account['checkout_shipping'] == $module_name) {
-    $check_shipping = true;
+  if (isset($shipping['methods'])) {
+    $module_name = $shipping['id'].'_'.$shipping['methods'][0]['id'];
+    if ($account['checkout_shipping'] == $module_name) {
+      $check_shipping = true;
+    }
+    $module_shipping[] = array('FIELD' => xtc_draw_radio_field('shipping', $module_name, (($account['checkout_shipping'] == $module_name) ? true : false), 'id="shipping_'.strtok($module_name,'_').'"'),
+                               'NAME' => strip_tags($shipping['module']),
+                               'ID' => strtok($module_name,'_')
+                               );
   }
-  $module_shipping[] = array('FIELD' => xtc_draw_radio_field('shipping', $module_name, (($account['checkout_shipping'] == $module_name) ? true : false), 'id="shipping_'.strtok($module_name,'_').'"'),
-                             'NAME' => strip_tags($shipping['module']),
-                             'ID' => strtok($module_name,'_')
-                             );
 }
 if ($check_shipping === false) {
   $error = true;
