@@ -153,7 +153,7 @@ class newsletter {
               if (SEND_EMAILS_DOUBLE_OPT_IN == 'true' && SEND_EMAILS == 'true') {
                 $sql_data_array = array(
                   'mail_key' => $this->vlCode,
-                  'mail_status' => '0'
+                  'mail_status' => '0',
                   'date_added' => 'now()',
                   'ip_date_added' => ip_clearing($_SESSION['tracking']['ip'])
                 );
@@ -164,7 +164,7 @@ class newsletter {
                   'mail_status' => '1',
                   'mail_key' => $this->vlCode,
                   'date_added' => 'now()',
-                  'ip_date_added' => ip_clearing($_SESSION['tracking']['ip'])
+                  'ip_date_added' => ip_clearing($_SESSION['tracking']['ip']),
                   'date_confirmed' => 'now()',
                   'ip_date_confirmed' => ip_clearing($_SESSION['tracking']['ip'])
                 );
