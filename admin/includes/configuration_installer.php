@@ -90,8 +90,6 @@ $values_group_update = array();
 //configuration_group_id 4 --- "Bild Optionen"
   $values[] = "(NULL, 'PRODUCT_IMAGE_NO_ENLARGE_UNDER_DEFAULT', 'false', '4', '2', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
   $values[] = "(NULL, 'PRODUCT_IMAGE_SHOW_NO_IMAGE', 'true', '4', '2', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
-  $values[] = "(NULL, 'CATEGORIES_IMAGE_SHOW_NO_IMAGE', 'false', '4', '2', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
-  $values[] = "(NULL, 'MANUFACTURER_IMAGE_SHOW_NO_IMAGE', 'false', '4', '2', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
   $values[] = "(NULL, 'PRODUCT_IMAGE_MINI_WIDTH', '80', '4', '3', NULL, NOW(), NULL, NULL);";
   $values[] = "(NULL, 'PRODUCT_IMAGE_MINI_HEIGHT', '80', '4', '4', NULL, NOW(), NULL, NULL);";
   $values[] = "(NULL, 'PRODUCT_IMAGE_MINI_MERGE', '', '4', '15', NULL, NOW(), NULL, NULL);";
@@ -99,20 +97,22 @@ $values_group_update = array();
   $values[] = "(NULL, 'PRODUCT_IMAGE_MIDI_HEIGHT', '160', '4', '6', NULL, NOW(), NULL, NULL);";
   $values[] = "(NULL, 'PRODUCT_IMAGE_MIDI_MERGE', '', '4', '16', NULL, NOW(), NULL, NULL);";
 
-  $values[] = "(NULL, 'CATEGORIES_IMAGE_WIDTH', '200', '4', '31', NULL, NOW(), NULL, NULL);";
-  $values[] = "(NULL, 'CATEGORIES_IMAGE_HEIGHT', '200', '4', '32', NULL, NOW(), NULL, NULL);";
-  $values[] = "(NULL, 'CATEGORIES_IMAGE_MOBILE_WIDTH', '200', '4', '33', NULL, NOW(), NULL, NULL);";
-  $values[] = "(NULL, 'CATEGORIES_IMAGE_MOBILE_HEIGHT', '200', '4', '34', NULL, NOW(), NULL, NULL);";
-  $values[] = "(NULL, 'CATEGORIES_IMAGE_LIST_WIDTH', '200', '4', '35', NULL, NOW(), NULL, NULL);";
-  $values[] = "(NULL, 'CATEGORIES_IMAGE_LIST_HEIGHT', '200', '4', '36', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'CATEGORIES_IMAGE_SHOW_NO_IMAGE', 'false', '4', '30', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
+  $values[] = "(NULL, 'CATEGORIES_IMAGE_WIDTH', '985', '4', '31', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'CATEGORIES_IMAGE_HEIGHT', '370', '4', '32', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'CATEGORIES_IMAGE_MOBILE_WIDTH', '600', '4', '33', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'CATEGORIES_IMAGE_MOBILE_HEIGHT', '400', '4', '34', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'CATEGORIES_IMAGE_LIST_WIDTH', '225', '4', '35', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'CATEGORIES_IMAGE_LIST_HEIGHT', '170', '4', '36', NULL, NOW(), NULL, NULL);";
 
-  $values[] = "(NULL, 'MANUFACTURER_IMAGE_WIDTH', '200', '4', '51', NULL, NOW(), NULL, NULL);";
-  $values[] = "(NULL, 'MANUFACTURER_IMAGE_HEIGHT', '200', '4', '52', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'MANUFACTURER_IMAGE_SHOW_NO_IMAGE', 'false', '4', '50', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
+  $values[] = "(NULL, 'MANUFACTURER_IMAGE_WIDTH', '100', '4', '51', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'MANUFACTURER_IMAGE_HEIGHT', '60', '4', '52', NULL, NOW(), NULL, NULL);";
 
-  $values[] = "(NULL, 'BANNERS_IMAGE_WIDTH', '200', '4', '60', NULL, NOW(), NULL, NULL);";
-  $values[] = "(NULL, 'BANNERS_IMAGE_HEIGHT', '200', '4', '61', NULL, NOW(), NULL, NULL);";
-  $values[] = "(NULL, 'BANNERS_IMAGE_MOBILE_WIDTH', '200', '4', '62', NULL, NOW(), NULL, NULL);";
-  $values[] = "(NULL, 'BANNERS_IMAGE_MOBILE_HEIGHT', '200', '4', '63', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'BANNERS_IMAGE_WIDTH', '985', '4', '60', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'BANNERS_IMAGE_HEIGHT', '400', '4', '61', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'BANNERS_IMAGE_MOBILE_WIDTH', '600', '4', '62', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'BANNERS_IMAGE_MOBILE_HEIGHT', '400', '4', '63', NULL, NOW(), NULL, NULL);";
 
   $values_update[] = array (
                            'values' => "sort_order = '1'",
