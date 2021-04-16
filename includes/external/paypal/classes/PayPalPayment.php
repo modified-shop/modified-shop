@@ -151,10 +151,10 @@ class PayPalPayment extends PayPalPaymentBase {
         {
           $price = $total - $_SESSION['cart']->show_tax(false);
         }
-        $this->details->setShippingDiscount($this->details->getShippingDiscount() + ($xtPrice->xtcGetDC($price, $_SESSION['customers_status']['customers_status_ot_discount']) * (-1)));
+        $this->details->setDiscount($this->details->getDiscount() + ($xtPrice->xtcGetDC($price, $_SESSION['customers_status']['customers_status_ot_discount'])));
       }
 
-      $this->amount->setTotal($total + $this->details->getShippingDiscount());
+      $this->amount->setTotal($total - $this->details->getDiscount());
 
       if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
           && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1
@@ -229,7 +229,7 @@ class PayPalPayment extends PayPalPaymentBase {
           $item[$i] = $shipping_cost;
 
           $this->amount->setTotal($this->amount->getTotal() + (double)$shipping_data['total']);
-          $this->details->setSubtotal($this->amount->getTotal() - $this->details->getTax() - $this->details->getShippingDiscount());
+          $this->details->setSubtotal($this->amount->getTotal() - $this->details->getTax() + $this->details->getDiscount());
         }
       }
       

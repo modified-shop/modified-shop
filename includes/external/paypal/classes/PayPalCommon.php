@@ -167,7 +167,7 @@ class PayPalCommon extends PayPalAuth {
         default:
           if ($totals[$i]['sort_order'] > $sortorder_subtotal) {
             if($totals[$i]['value'] < 0) {
-              $this->details->setShippingDiscount($this->details->getShippingDiscount() + $totals[$i]['value']);
+              $this->details->setDiscount($this->details->getDiscount() + ($totals[$i]['value'] * (-1)));
             } else {
               $this->details->setHandlingFee($this->details->getHandlingFee() + $totals[$i]['value']);
             }
@@ -187,7 +187,7 @@ class PayPalCommon extends PayPalAuth {
                       && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0
                       && $order->delivery['country_id'] == STORE_COUNTRY
                       )
-              ) && $this->details->getShippingDiscount() == 0
+              ) && $this->details->getDiscount() == 0
              ) 
     {      
       if ((string)$amount_total != (string)$total) {
@@ -195,8 +195,8 @@ class PayPalCommon extends PayPalAuth {
       } 
     } else {
       if ((string)$amount_total != (string)$total) {
-        if ($this->details->getShippingDiscount() < 0) {
-          $this->details->setShippingDiscount($this->details->getShippingDiscount() + ($amount_total - $total));
+        if ($this->details->getDiscount() > 0) {
+          $this->details->setDiscount($this->details->getDiscount() + (($amount_total - $total) * (-1)));
         } elseif ($this->details->getHandlingFee() > 0) {
           $this->details->setHandlingFee($this->details->getHandlingFee() + ($amount_total - $total));
         }
@@ -215,6 +215,7 @@ class PayPalCommon extends PayPalAuth {
     $total += $this->details->getInsurance();
     $total += $this->details->getGiftWrap();
     $total += $this->details->getFee();
+    $total -= $this->details->getDiscount();
     
     return $total;
   }
@@ -239,6 +240,7 @@ class PayPalCommon extends PayPalAuth {
         || $this->details->getInsurance() > 0
         || $this->details->getGiftWrap() > 0
         || $this->details->getFee() > 0
+        || $this->details->getDiscount() > 0
         )
     {
       return true;
