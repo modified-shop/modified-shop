@@ -19,7 +19,7 @@
 // BOF - Tomcraft - 2009-11-02 - Admin language tabs
 define('TEXT_EDIT_STATUS', 'Status aktiv');
 // BOF - Tomcraft - 2009-11-02 - Admin language tabs
-define('HEADING_TITLE', 'Kategorie');
+define('HEADING_TITLE', 'Kategorien');
 define('HEADING_TITLE_SEARCH', 'Suche: ');
 define('HEADING_TITLE_GOTO', 'Gehe zu:');
 
@@ -79,7 +79,7 @@ define('TEXT_INFO_COPY_TO_INTRO', 'Bitte w&auml;hlen Sie eine neue Kategorie aus
 define('TEXT_INFO_CURRENT_CATEGORIES', 'Aktuelle Kategorien:');
 
 define('TEXT_INFO_HEADING_NEW_CATEGORY', 'Neue Kategorie in &quot;%s&quot;');
-define('TEXT_INFO_HEADING_EDIT_CATEGORY', 'Kategorie &quot;%s&quot; bearbeiten');
+define('TEXT_INFO_HEADING_EDIT_CATEGORY', 'Kategorie bearbeiten in &quot;%s&quot;');
 define('TEXT_INFO_HEADING_DELETE_CATEGORY', 'Kategorie l&ouml;schen');
 define('TEXT_INFO_HEADING_MOVE_CATEGORY', 'Kategorie verschieben');
 define('TEXT_INFO_HEADING_DELETE_PRODUCT', 'Artikel l&ouml;schen');

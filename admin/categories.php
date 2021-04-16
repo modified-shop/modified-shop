@@ -133,6 +133,13 @@ if (xtc_not_null($action)) {
       //EOB setsflag
     case 'update_category' :
       $categories_id = $catfunc->insert_category($_POST, '', 'update');
+      
+      $cPath = xtc_get_category_path($categories_id);
+      $cPath_array = xtc_parse_category_path($cPath);
+      array_unshift($cPath_array, 0);
+      array_pop($cPath_array);
+      $_GET['cPath'] = implode('_', $cPath_array);
+
       //redirect by update button
       if (isset($_POST['cat_update'])) {
         xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('action', 'cID')).'action=edit_category&cID='.$categories_id));
@@ -327,7 +334,10 @@ $breadcrumb->add(TEXT_TOP, xtc_href_link(FILENAME_CATEGORIES, (isset($_GET['page
 if (isset ($cPath_array)) {
   $cPathLinkParam = array();
   for ($i = 0, $n = sizeof($cPath_array); $i < $n; $i ++) {
-    if ($cPath_array[$i]) {
+    if ($cPath_array[$i]
+        && (!isset($_GET['cID']) || (int)$_GET['cID'] != $cPath_array[$i])
+        )
+    {
       $cPathLinkParam[] = $cPath_array[$i];
       $categories_query = xtc_db_query("SELECT categories_name
                                           FROM ".TABLE_CATEGORIES_DESCRIPTION."
