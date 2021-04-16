@@ -789,10 +789,11 @@ class PayoneModified {
 			$txstatus_id = xtc_db_insert_id();
 			
 			foreach($txstatus as $key => $value) {
-        $sql_data_statusdata_array = array('`payone_txstatus_id`' => $txstatus_id,
-                                           '`key`' => $key,
-                                           '`value`' => ((is_array($value)) ? implode('||', $value) : $value)
-                                           );
+        $sql_data_statusdata_array = array(
+          'payone_txstatus_id' => $txstatus_id,
+          'key' => $key,
+          'value' => ((is_array($value)) ? implode('||', $value) : $value)
+        );
         xtc_db_perform('payone_txstatus_data', $sql_data_statusdata_array);
 			}
 
@@ -806,13 +807,14 @@ class PayoneModified {
                                          'last_modified' => 'now()');
           xtc_db_perform(TABLE_ORDERS, $sql_data_orders_array, 'update', "orders_id='".(int)$txstatus['reference']."'");                              
 
-          $sql_data_array = array('orders_id' => (int)$txstatus['reference'],
-                                  'orders_status_id' => (int)$config['orders_status'][$txstatus['txaction']],
-                                  'date_added' => 'now()',
-                                  'customer_notified' => '0',
-                                  'comments' => STATUS_UPDATED_BY_PAYONE,
-                                  'comments_sent' => '0'
-                                  );
+          $sql_data_array = array(
+            'orders_id' => (int)$txstatus['reference'],
+            'orders_status_id' => (int)$config['orders_status'][$txstatus['txaction']],
+            'date_added' => 'now()',
+            'customer_notified' => '0',
+            'comments' => STATUS_UPDATED_BY_PAYONE,
+            'comments_sent' => '0'
+          );
           xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
         }
         // send Transaction Status
@@ -831,12 +833,14 @@ class PayoneModified {
 		}
 		$message = implode('|', $message_parts);
 		list($msec, $sec) = explode(' ', microtime());
-		$sql_data_array = array('event_id' => (int)(($sec + $msec) * 1000),
-		                        'date_created' => 'now()',
-		                        'log_count' => '0',
-		                        'log_level' => '0',
-		                        'message' => $message,
-		                        'customers_id' => '0');
+		$sql_data_array = array(
+		  'event_id' => (int)(($sec + $msec) * 1000),
+      'date_created' => 'now()',
+      'log_count' => '0',
+      'log_level' => '0',
+      'message' => $message,
+      'customers_id' => '0'
+    );
 		xtc_db_perform('payone_transactions_log', $sql_data_array);
 	}
 
@@ -1028,21 +1032,19 @@ class PayoneModified {
   }
 
   protected function _get_customers_infos($customers_id, $delivery_country_iso_code_2) {
-    $countries_query = xtc_db_query("select c.countries_id
-                                      from  " . TABLE_COUNTRIES . " c
-                                     where c.countries_iso_code_2  = '" . $delivery_country_iso_code_2 . "'
-                                   ");
+    $countries_query = xtc_db_query("SELECT c.countries_id
+                                      FROM  " . TABLE_COUNTRIES . " c
+                                     WHERE c.countries_iso_code_2  = '" . $delivery_country_iso_code_2 . "'");
     $countries = xtc_db_fetch_array($countries_query);
 
     $zone_id = '';
     if ($countries['countries_id'] > 0) {
-      $zones_query = xtc_db_query("select z.zone_id
-                                      from " . TABLE_ORDERS . " o,
+      $zones_query = xtc_db_query("SELECT z.zone_id
+                                      frFROMom " . TABLE_ORDERS . " o,
                                            " . TABLE_ZONES . " z
-                                     where o.customers_id  = '" . $customers_id . "'
-                                       and z.zone_country_id = '" . $countries['countries_id'] . "'
-                                       and z.zone_name = o.delivery_state
-                                   ");
+                                     WHERE o.customers_id  = '" . $customers_id . "'
+                                       AND z.zone_country_id = '" . $countries['countries_id'] . "'
+                                       AND z.zone_name = o.delivery_state");
       $zones = xtc_db_fetch_array($zones_query);
       $zone_id = $zones['zone_id'];
     }
@@ -1207,7 +1209,7 @@ class PayoneModified {
 			'zip' => $cdata['entry_postcode'],
 			'city' => $cdata['entry_city'],
 			'country' => $cdata['countries_iso_code_2'],
-			'birthday' => date('Ymd', strtotime($cdate['dob_date'])),
+			'birthday' => date('Ymd', strtotime($cdata['dob_date'])),
 			'telephonenumber' => $cdata['customers_telephone'],
 		);
 		$address_hash = md5(implode('', $addressData));
