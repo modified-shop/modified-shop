@@ -1040,7 +1040,7 @@ class PayoneModified {
     $zone_id = '';
     if ($countries['countries_id'] > 0) {
       $zones_query = xtc_db_query("SELECT z.zone_id
-                                      frFROMom " . TABLE_ORDERS . " o,
+                                      FROM " . TABLE_ORDERS . " o,
                                            " . TABLE_ZONES . " z
                                      WHERE o.customers_id  = '" . $customers_id . "'
                                        AND z.zone_country_id = '" . $countries['countries_id'] . "'
