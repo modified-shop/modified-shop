@@ -35,8 +35,8 @@
 
       $title = xtc_db_prepare_input($_POST['title']);
       if ($title == '') $title = 'no title';
-      $cc = xtc_db_prepare_input($_POST['title']);
-      $newsletter_body = xtc_db_prepare_input($_POST['title']);
+      $cc = xtc_db_prepare_input($_POST['cc']);
+      $newsletter_body = xtc_db_prepare_input($_POST['newsletter_body']);
 
       $rzp = '';
       if (isset($_POST['status'])) {
