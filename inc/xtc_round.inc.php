@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_round.inc.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -17,7 +17,7 @@
    ---------------------------------------------------------------------------------------*/
    
   function xtc_round($number, $precision) {
-    if (strpos($number, '.') && (strlen(substr($number, strpos($number, '.')+1)) > $precision)) {
+    if (strpos($number, '.') !== false && (strlen(substr($number, strpos($number, '.')+1)) > $precision)) {
       $number = substr($number, 0, strpos($number, '.') + 1 + $precision + 1);
 
       if (substr($number, -1) >= 5) {

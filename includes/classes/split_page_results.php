@@ -44,7 +44,7 @@
       $pos_order_by = strpos(strtoupper($this->sql_query), ' ORDER BY', $pos_from);
       if (($pos_order_by < $pos_to) && ($pos_order_by !== false)) $pos_to = $pos_order_by;
 
-      if (strpos(strtoupper($this->sql_query), 'DISTINCT') || strpos(strtoupper($this->sql_query), 'GROUP BY')) {
+      if (strpos(strtoupper($this->sql_query), 'DISTINCT') !== false || strpos(strtoupper($this->sql_query), 'GROUP BY') !== false) {
         $count_string = 'DISTINCT ' . xtc_db_input($count_key);
       } else {
         $count_string = xtc_db_input($count_key);

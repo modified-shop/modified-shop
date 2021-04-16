@@ -83,10 +83,10 @@ if ($language_not_found === true) {
     $content_body = $shop_content_data['content_text'];
     if ($shop_content_data['content_file'] != '' && is_file(DIR_FS_CATALOG.'media/content/'.$shop_content_data['content_file'])) {
       ob_start();
-      if (strpos($shop_content_data['content_file'], '.txt'))
+      if (strpos($shop_content_data['content_file'], '.txt') !== false)
         echo '<pre>';
       include (DIR_FS_CATALOG.'media/content/'.$shop_content_data['content_file']);
-      if (strpos($shop_content_data['content_file'], '.txt'))
+      if (strpos($shop_content_data['content_file'], '.txt') !== false)
         echo '</pre>';
       $smarty->assign('file', ob_get_contents());
       ob_end_clean();

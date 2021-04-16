@@ -2848,7 +2848,7 @@
    */
   function xtc_convert_value($number) {
     // Correct wrong input number
-    if ((strpos($number, ",")) && (strpos($number, "."))) {
+    if ((strpos($number, ",") !== false) && (strpos($number, ".")) !== false) {
       // if price scheme like 1.000,00 change to 1000.00
       $number = str_replace(".","", $number);
       $number = str_replace(",",".", $number);
