@@ -85,8 +85,13 @@ class ot_coupon {
     }
     
     if ($od_amount > 0) {
-      if ($od_amount > $order->info['total']) {
-        $od_amount = $order->info['total'];
+      $total = $order_total + $this->get_shipping_cost();
+      if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0) {
+        $total = round($total, $xtPrice->currencies[$xtPrice->actualCurr]['decimal_places']);
+      }
+      
+      if ($od_amount > $total) {
+        $od_amount = $total;
       }
 
       $this->deduction = $od_amount;
