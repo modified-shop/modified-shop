@@ -32,6 +32,7 @@ define('TEXT_SALES', 'Sales:');
 define('TEXT_LATE_CONVERSIONS', 'Late Conversions:');
 define('TEXT_NEW_INTRO', 'Please setup a new campaign.');
 define('TEXT_EDIT_INTRO', 'Please make all neccessary changes.');
+define('TEXT_REFERER','Referer: ');
 
 define('TEXT_CAMPAIGNS_NAME', 'Campaignname:');
 define('TEXT_CAMPAIGNS_REFID', 'Campaigns refID:');
