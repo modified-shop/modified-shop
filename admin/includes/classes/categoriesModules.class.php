@@ -128,10 +128,10 @@ class categoriesModules {
         $this->secure_call_module_method($src_pic, $dest_pic);
     }
     
-    function categories_image_process($categories_image_name, $categories_image_name_process, $image_type)
+    function categories_image_process($categories_image_name, $image_type)
     {
         $this->function_call = 'categories_image_process';
-        $this->secure_call_module_method($categories_image_name, $categories_image_name_process, $image_type);
+        $this->secure_call_module_method($categories_image_name, $image_type);
     }
 
     //----- PRODUCTS FUNCTIONS -----//
