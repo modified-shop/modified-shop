@@ -289,7 +289,7 @@ function SendOrders ()
   }
 
   if (!$order_status && !$order_from) {    
-    $sql .= " and orders_status IN ('". DEFAULT_ORDERS_STATUS_ID ."', '". PAYPAL_ORDER_STATUS_SUCCESS_ID ."', '". PAYPAL_ORDER_STATUS_PENDING_ID ."')";
+    $sql .= " and orders_status IN ('". DEFAULT_ORDERS_STATUS_ID ."')";
   } elseif ($order_status) {
     $sql .= " and orders_status = " . $order_status;
   }
