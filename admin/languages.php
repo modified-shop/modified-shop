@@ -271,7 +271,7 @@
               xtc_db_perform(TABLE_CONTENT_MANAGER,$sql_data_array);               
             }
           }
-          // create additional product_contents records
+          // create additional product_content records
           if (isset($_POST['p_content'])) {
             xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_CONTENT . " WHERE languages_id = '" . $lngID_to . "'");
             $products_content_query = xtc_db_query("SELECT * 
@@ -282,6 +282,32 @@
               $sql_data_array['languages_id'] = $lngID_to;
               unset($sql_data_array['content_id']);
               xtc_db_perform(TABLE_PRODUCTS_CONTENT,$sql_data_array);               
+            }
+          }
+          // create additional content_manager_content records
+          if (isset($_POST['c_content'])) {
+            xtc_db_query("DELETE FROM " . TABLE_CONTENT_MANAGER_CONTENT . " WHERE languages_id = '" . $lngID_to . "'");
+            $products_content_query = xtc_db_query("SELECT * 
+                                                      FROM " . TABLE_CONTENT_MANAGER_CONTENT . " 
+                                                     WHERE languages_id = '" . $lngID_from . "'");
+            while ($products_content = xtc_db_fetch_array($products_content_query)) {
+              $sql_data_array = $products_content;
+              $sql_data_array['languages_id'] = $lngID_to;
+              unset($sql_data_array['content_id']);
+              xtc_db_perform(TABLE_CONTENT_MANAGER_CONTENT,$sql_data_array);               
+            }
+          }
+          // create additional email_content records
+          if (isset($_POST['e_content'])) {
+            xtc_db_query("DELETE FROM " . TABLE_EMAIL_CONTENT . " WHERE languages_id = '" . $lngID_to . "'");
+            $products_content_query = xtc_db_query("SELECT * 
+                                                      FROM " . TABLE_EMAIL_CONTENT . " 
+                                                     WHERE languages_id = '" . $lngID_from . "'");
+            while ($products_content = xtc_db_fetch_array($products_content_query)) {
+              $sql_data_array = $products_content;
+              $sql_data_array['languages_id'] = $lngID_to;
+              unset($sql_data_array['content_id']);
+              xtc_db_perform(TABLE_EMAIL_CONTENT,$sql_data_array);               
             }
           }
           $messageStack->add_session(TEXT_LANGUAGE_TRANSFER_OK, 'success');
@@ -406,18 +432,20 @@ require (DIR_WS_INCLUDES.'head.php');
                     while ($lng = xtc_db_fetch_array($lng_query)) {
                       $lng_array[] = array ('id' => $lng['languages_id'], 'text' => $lng['name']);
                     }
-                    echo '<div class="mrg5">'. xtc_draw_checkbox_field('c_desc', '1', false) . ' ' . TABLE_CATEGORIES_DESCRIPTION .' <em>(categories_name, categories_description, categories_meta_title, categories_meta_description, categories_meta_keywords)</em>'.'</div>'.PHP_EOL;
-                    echo '<div class="mrg5">'. xtc_draw_checkbox_field('p_desc', '1', false) . ' ' . TABLE_PRODUCTS_DESCRIPTION . ' <em>(products_name, products_description, products_short_description, products_order_description, products_keywords, products_url, products_meta_title, products_meta_description, products_meta_keywords)</em>'.'</div>'.PHP_EOL;
-                    echo '<div class="mrg5">'. xtc_draw_checkbox_field('p_opt', '1', false) . ' ' . TABLE_PRODUCTS_OPTIONS . ' <em>(products_options_name)</em>'.'</div>'.PHP_EOL;
-                    echo '<div class="mrg5">'. xtc_draw_checkbox_field('p_opt_val', '1', false) . ' ' . TABLE_PRODUCTS_OPTIONS_VALUES . ' <em>(products_options_values_name)</em>'.'</div>'.PHP_EOL;
-                    echo '<div class="mrg5">'. xtc_draw_checkbox_field('p_tags_opt', '1', false) . ' ' . TABLE_PRODUCTS_TAGS_OPTIONS . ' <em>(products_tags_options_name)</em>'.'</div>'.PHP_EOL;
-                    echo '<div class="mrg5">'. xtc_draw_checkbox_field('p_tags_val', '1', false) . ' ' . TABLE_PRODUCTS_TAGS_VALUES . ' <em>(products_tags_values_name)</em>'.'</div>'.PHP_EOL;
-                    echo '<div class="mrg5">'. xtc_draw_checkbox_field('m_info', '1', false) . ' ' . TABLE_MANUFACTURERS_INFO . ' <em>(manufacturers_url, manufacturers_description, manufacturers_meta_title, manufacturers_meta_description, manufacturers_meta_keywords)</em>'.'</div>'.PHP_EOL;
-                    echo '<div class="mrg5">'. xtc_draw_checkbox_field('o_status', '1', false) . ' ' . TABLE_ORDERS_STATUS .' <em>(orders_status_name)</em>'.'</div>'.PHP_EOL;
-                    echo '<div class="mrg5">'. xtc_draw_checkbox_field('s_status', '1', false) . ' ' . TABLE_SHIPPING_STATUS .' <em>(shipping_status_name)</em>'.'</div>'.PHP_EOL;
-                    echo '<div class="mrg5">'. xtc_draw_checkbox_field('x_groups', '1', false) . ' ' . TABLE_PRODUCTS_XSELL_GROUPS . ' <em>(xsell_sort_order, groupname)</em>'.'</div>'.PHP_EOL;
-                    echo '<div class="mrg5">'. xtc_draw_checkbox_field('c_manager', '1', false) . ' ' . TABLE_CONTENT_MANAGER . ' <em></em>'.'</div>'.PHP_EOL;
-                    echo '<div class="mrg5">'. xtc_draw_checkbox_field('p_content', '1', false) . ' ' . TABLE_PRODUCTS_CONTENT . ' <em></em>'.'</div>'.PHP_EOL;
+                    echo '<div class="mrg5">'. xtc_draw_checkbox_field('c_desc', '1', false) . ' ' . TABLE_CATEGORIES_DESCRIPTION . '</div>'.PHP_EOL;
+                    echo '<div class="mrg5">'. xtc_draw_checkbox_field('p_desc', '1', false) . ' ' . TABLE_PRODUCTS_DESCRIPTION . '</div>'.PHP_EOL;
+                    echo '<div class="mrg5">'. xtc_draw_checkbox_field('p_opt', '1', false) . ' ' . TABLE_PRODUCTS_OPTIONS . '</div>'.PHP_EOL;
+                    echo '<div class="mrg5">'. xtc_draw_checkbox_field('p_opt_val', '1', false) . ' ' . TABLE_PRODUCTS_OPTIONS_VALUES . '</div>'.PHP_EOL;
+                    echo '<div class="mrg5">'. xtc_draw_checkbox_field('p_tags_opt', '1', false) . ' ' . TABLE_PRODUCTS_TAGS_OPTIONS . '</div>'.PHP_EOL;
+                    echo '<div class="mrg5">'. xtc_draw_checkbox_field('p_tags_val', '1', false) . ' ' . TABLE_PRODUCTS_TAGS_VALUES . '</div>'.PHP_EOL;
+                    echo '<div class="mrg5">'. xtc_draw_checkbox_field('m_info', '1', false) . ' ' . TABLE_MANUFACTURERS_INFO . '</div>'.PHP_EOL;
+                    echo '<div class="mrg5">'. xtc_draw_checkbox_field('o_status', '1', false) . ' ' . TABLE_ORDERS_STATUS . '</div>'.PHP_EOL;
+                    echo '<div class="mrg5">'. xtc_draw_checkbox_field('s_status', '1', false) . ' ' . TABLE_SHIPPING_STATUS . '</div>'.PHP_EOL;
+                    echo '<div class="mrg5">'. xtc_draw_checkbox_field('x_groups', '1', false) . ' ' . TABLE_PRODUCTS_XSELL_GROUPS . '</div>'.PHP_EOL;
+                    echo '<div class="mrg5">'. xtc_draw_checkbox_field('c_manager', '1', false) . ' ' . TABLE_CONTENT_MANAGER . '</div>'.PHP_EOL;
+                    echo '<div class="mrg5">'. xtc_draw_checkbox_field('p_content', '1', false) . ' ' . TABLE_PRODUCTS_CONTENT . '</div>'.PHP_EOL;
+                    echo '<div class="mrg5">'. xtc_draw_checkbox_field('c_content', '1', false) . ' ' . TABLE_CONTENT_MANAGER_CONTENT . '</div>'.PHP_EOL;
+                    echo '<div class="mrg5">'. xtc_draw_checkbox_field('e_content', '1', false) . ' ' . TABLE_EMAIL_CONTENT . '</div>'.PHP_EOL;
                     echo '<br />'.PHP_EOL;
                     echo '<div class="main important_info mrg5">'.TEXT_LANGUAGE_TRANSFER_INFO2.'</div>';
                     echo '<br />'.PHP_EOL;
