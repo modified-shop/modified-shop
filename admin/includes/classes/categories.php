@@ -93,10 +93,10 @@ class categories {
       $duplicate_image = xtc_db_fetch_array($duplicate_image_query);
 
       if ($duplicate_image['total'] < 2) {
-        if (file_exists(DIR_FS_CATALOG_IMAGES.'categories/'.$category_image['categories_image'.$image_type])) {
+        if (is_file(DIR_FS_CATALOG_IMAGES.'categories/'.$category_image['categories_image'.$image_type])) {
           unlink(DIR_FS_CATALOG_IMAGES.'categories/'.$category_image['categories_image'.$image_type]);
         }
-        if (file_exists(DIR_FS_CATALOG_IMAGES.'categories/original_images/'.$category_image['categories_image'.$image_type])) {
+        if (is_file(DIR_FS_CATALOG_IMAGES.'categories/original_images/'.$category_image['categories_image'.$image_type])) {
           unlink(DIR_FS_CATALOG_IMAGES.'categories/original_images/'.$category_image['categories_image'.$image_type]);
         }
         
