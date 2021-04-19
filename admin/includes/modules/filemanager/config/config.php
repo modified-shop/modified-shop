@@ -627,7 +627,12 @@ $config_array = array_merge(
     )
 );
 
-if (isset($_SESSION) && $_SESSION['customers_status']['customers_status_id'] == '0') {
+if (isset($_SESSION) 
+    && isset($_SESSION['customers_status'])
+    && array_key_exists('customers_status_id', $_SESSION['customers_status'])
+    && $_SESSION['customers_status']['customers_status_id'] == '0'
+    )
+{
   $access_permission_query = xtc_db_query("SELECT * 
                                              FROM ".TABLE_ADMIN_ACCESS." 
                                             WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
