@@ -438,8 +438,6 @@ define('TEXT_VAT_CONNECTION_NOT_POSSIBLE','<span class="messageStackError">ERROR
 define('ERROR_GIF_MERGE','Missing GDlib Gif-Support, merge failed');
 define('ERROR_GIF_UPLOAD','Missing GDlib Gif-Support, processing of Gif image failed');
 
-define('TEXT_REFERER','Referer: ');
-
 // BOF - Tomcraft - 2009-06-17 Google Sitemap
 define('BOX_GOOGLE_SITEMAP', 'Google Sitemap');
 // EOF - Tomcraft - 2009-06-17 Google Sitemap

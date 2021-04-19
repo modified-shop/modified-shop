@@ -437,8 +437,6 @@ define('TEXT_VAT_CONNECTION_NOT_POSSIBLE','<span class="messageStackError">FEHLE
 define('ERROR_GIF_MERGE','Fehlender GDlib Gif Support, kein Wasserzeichen (Merge) m&ouml;glich');
 define('ERROR_GIF_UPLOAD','Fehlender GDlib Gif Support, kein Upload von GIF Bildern m&ouml;glich');
 
-define('TEXT_REFERER','Referer: ');
-
 // BOF - Tomcraft - 2009-06-17 Google Sitemap
 define('BOX_GOOGLE_SITEMAP', 'Google Sitemap');
 // EOF - Tomcraft - 2009-06-17 Google Sitemap
