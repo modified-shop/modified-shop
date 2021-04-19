@@ -30,6 +30,8 @@ require (DIR_WS_CLASSES.'campaigns.php');
 // default view (monthly)
 $srDefaultView = 2;
 
+$srExp = 0;
+
 $orders_statuses = array();
 $orders_status_array = array();
 $orders_status_query = xtc_db_query("SELECT orders_status_id,
