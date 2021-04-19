@@ -60,7 +60,7 @@
           $optFlag = ($is_checked ? true : $optFlag);
           $module_values_content[] = array(
             'checkbox' => xtc_draw_checkbox_field('product_tags['.$options['options_id'].']['.$values['values_id'].']', 'on', $is_checked, '', 'class="cbx_optval cb check_'.$options['options_id'].$noStyling.'"'),
-            'sort_order' => xtc_draw_input_field('product_tags_sort['.$options['options_id'].']['.$values['values_id'].']', $data_array['sort_order'], 'size="8"'),
+            'sort_order' => xtc_draw_input_field('product_tags_sort['.$options['options_id'].']['.$values['values_id'].']', ((isset($data_array['sort_order'])) ? $data_array['sort_order'] : ''), 'size="8"'),
             'title' => (($values['values_name'] != '') ? $values['values_name'] : $values['values_description'])
           );
           
