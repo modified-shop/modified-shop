@@ -94,7 +94,7 @@ if ($actual_key != (count($p_data) - 1) && $actual_key != (count($p_data) - 2)) 
 $module_smarty->assign('module_content', $navigator_array);
 $module_smarty->assign('FIRST', $navigator_array['first']['LINK']);
 $module_smarty->assign('PREVIOUS', $navigator_array['prev']['LINK']);
-$module_smarty->assign('OVERVIEW', $overview_link);
+$module_smarty->assign('OVERVIEW', $navigator_array['overview']['LINK']);
 $module_smarty->assign('NEXT', $navigator_array['next']['LINK']);
 $module_smarty->assign('LAST', $navigator_array['last']['LINK']);
 $module_smarty->assign('ACTUAL_PRODUCT', $actual_key +1);
