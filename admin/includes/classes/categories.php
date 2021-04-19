@@ -262,7 +262,7 @@ class categories {
         chmod(DIR_FS_CATALOG_IMAGES.'categories/original_images/'.$categories_image_name, 0644);
 
         //categories image processing
-        $this->catModules->categories_image_process($categories_image_name, $categories_image_name_process, $image_type);
+        $this->catModules->categories_image_process($categories_image_name, $image_type);
       }
     }
    
