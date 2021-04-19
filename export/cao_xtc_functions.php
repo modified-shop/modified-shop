@@ -1120,7 +1120,7 @@ function ShowHTMLMenu ()
 {
   global $version_nr, $version_datum, $user, $password, $PHP_SELF;
 
-  SendHTMLHeader;
+  SendHTMLHeader();
 
   $Url = $PHP_SELF . "?user=" . $user . "&password=" . $password;
 
@@ -1158,7 +1158,7 @@ function UpdateTables ()
 {
   global $version_nr, $version_datum;
 
-  SendHTMLHeader;
+  SendHTMLHeader();
 
   echo '<html><head></head><body>';
   echo '<h3>Tabellen-Update / Erweiterung für CAO-Faktura</h3>';
@@ -2726,7 +2726,7 @@ function SendLog ()
 {
   global $version_nr, $version_datum, $logger;
 
-  SendHTMLHeader;
+  SendHTMLHeader();
 
   echo '<html><head></head><body>';
   echo '<h3>Shoptransfer XTC<->CAO-Faktura</h3>';
