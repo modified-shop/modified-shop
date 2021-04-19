@@ -452,7 +452,7 @@ require (DIR_WS_INCLUDES.'head.php');
             <div class="clear"></div>
             <?php echo draw_input_per_page($PHP_SELF.'?'.xtc_get_all_get_params(array('page', 'action')),$cfg_max_display_options_key,$page_max_display_options_results); ?> 
             <div class="smallText pdg2 flt-r">
-              <?php if (!xtc_not_null($action)) echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action', 'oID')) . 'oID=' . $oInfo->products_options_id . '&action=new_option') . '">' . BUTTON_INSERT . '</a>'; ?>
+              <?php if (!xtc_not_null($action)) echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action', 'oID')) . '&action=new_option') . '">' . BUTTON_INSERT . '</a>'; ?>
             </div>
             <?php
             }
@@ -570,7 +570,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     break;
 
                   default:
-                    if (is_object($oInfo)) {
+                    if (isset($oInfo) && is_object($oInfo)) {
                       $heading[] = array('text' => '<b>' . xtc_get_attributes_options_detail($oInfo->products_options_id, $_SESSION['languages_id'], 'products_options_name') . '</b>');
 
                       $contents[] = array('align' => 'center', 'text' => '<a class="button btnbox" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action', 'oID')) . 'oID=' . $oInfo->products_options_id . '&action=edit_option') . '">' . BUTTON_EDIT . '</a> <a class="button btnbox" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action', 'oID')) . 'oID=' . $oInfo->products_options_id . '&action=delete_option') . '">' . BUTTON_DELETE . '</a>' . ' <a class="button btnbox" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action', 'oID', 'list')) . 'oID=' . $oInfo->products_options_id . '&list=detail') . '">' . BUTTON_VALUES . '</a>');
