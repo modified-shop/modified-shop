@@ -288,8 +288,12 @@ function SendOrders ()
     $sql .= " and orders_id <= " . $order_to;
   }
 
-  if (!$order_status && !$order_from) {    
-    $sql .= " and orders_status IN ('". DEFAULT_ORDERS_STATUS_ID ."')";
+  if (!$order_status && !$order_from) {
+    $o_status = DEFAULT_ORDERS_STATUS_ID;
+    if (defined('MODULE_CAO_FAKTURA_ORDERS_STATUS') && MODULE_CAO_FAKTURA_ORDERS_STATUS != '') {
+      $o_status = MODULE_CAO_FAKTURA_ORDERS_STATUS;
+    }
+    $sql .= " and orders_status IN (". $o_status .")";
   } elseif ($order_status) {
     $sql .= " and orders_status = " . $order_status;
   }

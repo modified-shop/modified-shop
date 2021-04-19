@@ -21,4 +21,6 @@ define('MODULE_CAO_FAKTURA_EMAIL_DESC', 'Enter an E-Mail address. This has to be
 define('MODULE_CAO_FAKTURA_PASSWORD_TITLE', 'Password');
 define('MODULE_CAO_FAKTURA_PASSWORD_DESC', 'Enter a password. This has to be equal to the entererd password in CAO Faktura.');
 
+define('MODULE_CAO_FAKTURA_ORDERS_STATUS_TITLE', 'Order status');
+define('MODULE_CAO_FAKTURA_ORDERS_STATUS_DESC', 'Select the order status which should be exported.');
 ?>
