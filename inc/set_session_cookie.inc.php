@@ -23,7 +23,7 @@
         );
         session_set_cookie_params($cookie_options);
       } else {
-        session_set_cookie_params($lifetime, $path, $domain, $secure, $httponly);
+        session_set_cookie_params($lifetime, $path.'; samesite='.$samesite, $domain, $secure, $httponly);
       }
     } elseif (function_exists('ini_set')) {
       ini_set('session.cookie_lifetime', $lifetime);
