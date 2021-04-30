@@ -593,6 +593,9 @@
     }
 
     $price = $xtPrice->xtcGetPrice($data_array['products_id'], $format = false, $data_array['products_quantity'], $product['products_tax_class_id'], '', '', $order->customer['ID']);
+    if ($status['customers_status_show_price_tax'] != 1) {
+      $price = round($price, $xtPrice->currencies[$xtPrice->actualCurr]['decimal_places']);
+    }
 
     $final_price = $price * (int)$data_array['products_quantity'];
   
@@ -741,7 +744,11 @@
     {
       $tax_rate = 0;
     }
+    
     $price = $xtPrice->xtcAddTax($products_price, $tax_rate);
+    if ($status['customers_status_show_price_tax'] != 1) {
+      $price = round($price, $xtPrice->currencies[$xtPrice->actualCurr]['decimal_places']);
+    }
 
     $final_price = $price * (int)$products['products_quantity'];
 
@@ -908,7 +915,12 @@
     {
       $tax_rate = 0;
     }
+    
     $price = $xtPrice->xtcAddTax($products_price, $tax_rate); //tax by products
+    if ($status['customers_status_show_price_tax'] != 1) {
+      $price = round($price, $xtPrice->currencies[$xtPrice->actualCurr]['decimal_places']);
+    }
+
     $final_price = $price * (int)$products['products_quantity'];
 
     $sql_data_array = array(
@@ -982,7 +994,12 @@
     {
       $tax_rate = 0;
     }
+    
     $price = $xtPrice->xtcAddTax($products_price, $tax_rate); //tax by products
+    if ($status['customers_status_show_price_tax'] != 1) {
+      $price = round($price, $xtPrice->currencies[$xtPrice->actualCurr]['decimal_places']);
+    }
+
     $final_price = $price * (int)$products['products_quantity'];
 
     $sql_data_array = array(
