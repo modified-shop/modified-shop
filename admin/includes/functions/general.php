@@ -1067,6 +1067,8 @@
    * @return
    */
   function xtc_cfg_pull_down_tax_classes($tax_class_id, $key = '') {
+    require_once(DIR_FS_INC.'parse_multi_language_value.inc.php');
+
     $name = (($key) ? 'configuration['.$key.']' : 'configuration_value');
     $tax_class_array = array (array ('id' => '0', 'text' => TEXT_NONE));
     $tax_class_query = xtc_db_query("SELECT tax_class_id,
@@ -1074,7 +1076,7 @@
                                        FROM ".TABLE_TAX_CLASS."
                                    ORDER BY tax_class_title");
     while ($tax_class = xtc_db_fetch_array($tax_class_query)) {
-      $tax_class_array[] = array ('id' => $tax_class['tax_class_id'], 'text' => $tax_class['tax_class_title']);
+      $tax_class_array[] = array ('id' => $tax_class['tax_class_id'], 'text' => parse_multi_language_value($tax_class['tax_class_title'], $_SESSION['language_code']));
     }
     return xtc_draw_pull_down_menu($name, $tax_class_array, $tax_class_id);
   }
@@ -1469,6 +1471,8 @@
    * @return
    */
   function xtc_get_tax_class_title($tax_class_id) {
+    require_once(DIR_FS_INC.'parse_multi_language_value.inc.php');
+
     if ($tax_class_id == '0') {
       return TEXT_NONE;
     } else {
@@ -1477,7 +1481,7 @@
                                       WHERE tax_class_id = '".(int)$tax_class_id."'");
       if (xtc_db_num_rows($classes_query) > 0) {
         $classes = xtc_db_fetch_array($classes_query);
-        return $classes['tax_class_title'];
+        return parse_multi_language_value($classes['tax_class_title'], $_SESSION['language_code']);
       }
     }
   }
@@ -1529,6 +1533,8 @@
    * @return
    */
   function xtc_get_zone_class_title($zone_class_id) {
+    require_once(DIR_FS_INC.'parse_multi_language_value.inc.php');
+
     if ($zone_class_id == '0') {
       return TEXT_NONE;
     } else {
@@ -1537,7 +1543,7 @@
                                       WHERE geo_zone_id = '".(int)$zone_class_id."'");
       if (xtc_db_num_rows($classes_query) > 0) {
         $classes = xtc_db_fetch_array($classes_query);
-        return $classes['geo_zone_name'];
+        return parse_multi_language_value($classes['geo_zone_name'], $_SESSION['language_code']);
       }
     }
   }
@@ -1569,11 +1575,13 @@
    * @return
    */
   function xtc_cfg_pull_down_zone_classes($zone_class_id, $key = '') {
+    require_once(DIR_FS_INC.'parse_multi_language_value.inc.php');
+
     $name = (($key) ? 'configuration['.$key.']' : 'configuration_value');
     $zone_class_array = array (array ('id' => '0', 'text' => TEXT_NONE));
     $zone_class_query = xtc_db_query("select geo_zone_id, geo_zone_name from ".TABLE_GEO_ZONES." order by geo_zone_name");
     while ($zone_class = xtc_db_fetch_array($zone_class_query)) {
-      $zone_class_array[] = array ('id' => $zone_class['geo_zone_id'], 'text' => $zone_class['geo_zone_name']);
+      $zone_class_array[] = array ('id' => $zone_class['geo_zone_id'], 'text' => parse_multi_language_value($zone_class['geo_zone_name'], $_SESSION['language_code']));
     }
     return xtc_draw_pull_down_menu($name, $zone_class_array, $zone_class_id);
   }
@@ -2204,8 +2212,6 @@
    * @return input fields
    */
   function xtc_cfg_input_email_language($parameters) {
-
-    // include needed function
     require_once(DIR_FS_INC.'parse_multi_language_value.inc.php');
 
     // set languages
@@ -2664,6 +2670,8 @@
    * @return
    */
   function xtc_get_geo_zone_name($geo_zone_id) {
+    require_once(DIR_FS_INC.'parse_multi_language_value.inc.php');
+
     $zones_query = xtc_db_query("SELECT geo_zone_name
                                    FROM ".TABLE_GEO_ZONES."
                                   WHERE geo_zone_id = '".(int)$geo_zone_id."'");
@@ -2671,7 +2679,7 @@
       $geo_zone_name = $geo_zone_id;
     } else {
       $zones = xtc_db_fetch_array($zones_query);
-      $geo_zone_name = $zones['geo_zone_name'];
+      $geo_zone_name = parse_multi_language_value($zones['geo_zone_name'], $_SESSION['language_code']);
     }
     return $geo_zone_name;
   }
