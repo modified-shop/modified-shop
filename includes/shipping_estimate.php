@@ -7,25 +7,12 @@
 
    Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
-   based on:
-   (c) 2003 nextcommerce (write_customers_status.php,v 1.8 2003/08/1); www.nextcommerce.org
-   (c) 2006 xtCommerce (write_customers_status.php)
-
-   Released under the GNU General Public License
-   ---------------------------------------------------------------------------------------
-
-   based on Third Party contribution:
-   Customers Status v3.x  (c) 2002-2003 Copyright Elari elari@free.fr | www.unlockgsm.com/dload-osc/ | CVS : http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/elari/?sortby=date#dirlist
-
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
-// 2013-12-31
-// http://rpa-com.de -web28- add support for //MAXIMALE VERSANDKOSTEN
-// http://neunzehn83.de/blog/2011/03/09/xtc-land-dropdown-im-warenkorb/
-// http://www.xtc-modified.org/forum/topic.php?id=9883
+
 
 if (!defined('SHOW_ALWAYS_LANG_DROPDOWN')) {
-  define('SHOW_ALWAYS_LANG_DROPDOWN', true); // true: Zeigt immer das Länderauswahlfeld an - false: Zeigt Länderauswahlfeld nur bei nicht eingeloggten Kunden
+  define('SHOW_ALWAYS_LANG_DROPDOWN', true); // show dropdown true: always // false: only logged in customers
 }
 
 // unset SESSION payment + shipping
