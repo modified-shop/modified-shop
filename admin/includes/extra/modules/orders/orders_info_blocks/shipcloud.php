@@ -92,79 +92,79 @@
       </tr>
     </table>
     </form>
+    <script type="text/javascript">
+      $('#sc_carrier').on('change', function() {
+        get_sc_service();
+      });
+
+      $(document).ready(function(){
+        get_sc_service();
+      });
+
+      function get_sc_service() {
+        var sc_carrier = $('#sc_carrier').val();
+        var lang = "<?php echo $_SESSION['language_code']; ?>";
+
+        $.get('../ajax.php', {ext: 'get_sc_service', carrier: sc_carrier, language: lang, speed: 1}, function(data) {
+          if (data != '' && data != undefined) { 
+            <?php if (NEW_SELECT_CHECKBOX == 'true') { ?>
+              $('#sc_service').replaceWith('<select id="sc_service" name="service" class="SlectBox" style="visibility: hidden;"></select>');
+              $('#sc_service').nextAll('.optWrapper').replaceWith('<div class="optWrapper"><ul class="options" id="service"></ul></div>');
+              $('#sc_type').replaceWith('<select id="sc_type" name="type" class="SlectBox" style="visibility: hidden;"></select>');
+              $('#sc_type').nextAll('.optWrapper').replaceWith('<div class="optWrapper"><ul class="options" id="type"></ul></div>');
+            <?php } else { ?>
+              $('#sc_service').replaceWith('<select id="sc_service" name="service" class="SlectBox"></select>');
+              $('#sc_type').replaceWith('<select id="sc_type" name="type" class="SlectBox"></select>');        
+            <?php } ?>
+        
+            $.each(data.carrier, function(id, arr) {
+              $('<option value="'+arr.id+'">'+arr.text+'</option>').appendTo('#sc_service');
+              <?php if (NEW_SELECT_CHECKBOX == 'true') { ?>
+                $('<li data-val="'+arr.id+'"><label>'+arr.text+'</label></li>').appendTo('#service');        
+              <?php } ?>
+            });
+
+            $.each(data.parcel, function(id, arr) {
+              $('<option value="'+arr.id+'">'+arr.text+'</option>').appendTo('#sc_type');
+              <?php if (NEW_SELECT_CHECKBOX == 'true') { ?>
+                $('<li data-val="'+arr.id+'"><label>'+arr.text+'</label></li>').appendTo('#type');        
+              <?php } ?>
+            });
+      
+            if (sc_carrier != 'dhl' && sc_carrier != 'dhl_express') {
+              $('#sc_insurance').hide();
+              if (sc_carrier == 'ups') {
+                $('#sc_description_1').show();
+                $('#sc_description_2').show();
+              } else {
+                $('#sc_description_1').hide();
+                $('#sc_description_2').hide();
+              }
+            } else {
+              if (sc_carrier != 'dhl') {
+                $('#sc_insurance').hide();
+              } else {
+                $('#sc_insurance').show();
+              }
+              $('#sc_description_1').hide();
+              $('#sc_description_2').show();
+            }
+
+            <?php if (NEW_SELECT_CHECKBOX == 'true') { ?>
+              $('.SlectBox').not('.noStyling').SumoSelect({ createElems: 'mod', placeholder: '-'});
+              if (sc_carrier != 'dhl') {
+                $('#sc_insurance').nextAll('.SlectBox').hide();
+              } else {
+                $('#sc_insurance').nextAll('.SlectBox').show();
+              }
+            <?php } ?>
+        
+            $('#sc_description_1').css('width', $('#sc_data').width());
+            $('#sc_description_2').css('width', $('#sc_data').width());
+          }
+        });
+      }
+    </script>
     <?php
   }
 ?>
-<script type="text/javascript">
-  $('#sc_carrier').on('change', function() {
-    get_sc_service();
-  });
-
-  $(document).ready(function(){
-    get_sc_service();
-  });
-
-  function get_sc_service() {
-    var sc_carrier = $('#sc_carrier').val();
-    var lang = "<?php echo $_SESSION['language_code']; ?>";
-
-    $.get('../ajax.php', {ext: 'get_sc_service', carrier: sc_carrier, language: lang, speed: 1}, function(data) {
-      if (data != '' && data != undefined) { 
-        <?php if (NEW_SELECT_CHECKBOX == 'true') { ?>
-          $('#sc_service').replaceWith('<select id="sc_service" name="service" class="SlectBox" style="visibility: hidden;"></select>');
-          $('#sc_service').nextAll('.optWrapper').replaceWith('<div class="optWrapper"><ul class="options" id="service"></ul></div>');
-          $('#sc_type').replaceWith('<select id="sc_type" name="type" class="SlectBox" style="visibility: hidden;"></select>');
-          $('#sc_type').nextAll('.optWrapper').replaceWith('<div class="optWrapper"><ul class="options" id="type"></ul></div>');
-        <?php } else { ?>
-          $('#sc_service').replaceWith('<select id="sc_service" name="service" class="SlectBox"></select>');
-          $('#sc_type').replaceWith('<select id="sc_type" name="type" class="SlectBox"></select>');        
-        <?php } ?>
-        
-        $.each(data.carrier, function(id, arr) {
-          $('<option value="'+arr.id+'">'+arr.text+'</option>').appendTo('#sc_service');
-          <?php if (NEW_SELECT_CHECKBOX == 'true') { ?>
-            $('<li data-val="'+arr.id+'"><label>'+arr.text+'</label></li>').appendTo('#service');        
-          <?php } ?>
-        });
-
-        $.each(data.parcel, function(id, arr) {
-          $('<option value="'+arr.id+'">'+arr.text+'</option>').appendTo('#sc_type');
-          <?php if (NEW_SELECT_CHECKBOX == 'true') { ?>
-            $('<li data-val="'+arr.id+'"><label>'+arr.text+'</label></li>').appendTo('#type');        
-          <?php } ?>
-        });
-      
-        if (sc_carrier != 'dhl' && sc_carrier != 'dhl_express') {
-          $('#sc_insurance').hide();
-          if (sc_carrier == 'ups') {
-            $('#sc_description_1').show();
-            $('#sc_description_2').show();
-          } else {
-            $('#sc_description_1').hide();
-            $('#sc_description_2').hide();
-          }
-        } else {
-          if (sc_carrier != 'dhl') {
-            $('#sc_insurance').hide();
-          } else {
-            $('#sc_insurance').show();
-          }
-          $('#sc_description_1').hide();
-          $('#sc_description_2').show();
-        }
-
-        <?php if (NEW_SELECT_CHECKBOX == 'true') { ?>
-          $('.SlectBox').not('.noStyling').SumoSelect({ createElems: 'mod', placeholder: '-'});
-          if (sc_carrier != 'dhl') {
-            $('#sc_insurance').nextAll('.SlectBox').hide();
-          } else {
-            $('#sc_insurance').nextAll('.SlectBox').show();
-          }
-        <?php } ?>
-        
-        $('#sc_description_1').css('width', $('#sc_data').width());
-        $('#sc_description_2').css('width', $('#sc_data').width());
-      }
-    });
-  }
-</script>
