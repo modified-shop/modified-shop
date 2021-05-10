@@ -135,8 +135,9 @@ if ((is_array($payment_modules->modules)
      && $_SESSION['cot_gv'] > 0
      && $xtPrice->xtcFormat($order->info['total'], false) > $_SESSION['cot_gv']
      && $_SESSION['payment'] == 'no_payment')
-  ) {
-  xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode(ERROR_NO_PAYMENT_MODULE_SELECTED), 'SSL'));
+  ) 
+{
+  xtc_redirect(xtc_href_link(((isset($payment_modules->selected_module) && $payment_modules->selected_module == 'paypalcart') ? FILENAME_CHECKOUT_SHIPPING : FILENAME_CHECKOUT_PAYMENT), 'error_message=' . urlencode(ERROR_NO_PAYMENT_MODULE_SELECTED), 'SSL'));
 }
 
 // include boxes
