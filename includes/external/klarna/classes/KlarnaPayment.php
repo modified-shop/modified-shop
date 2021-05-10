@@ -470,6 +470,14 @@ class KlarnaPayment extends KlarnaPaymentBase {
           }
           $order_array['order_lines'][$k]['tax_rate'] = $this->format_amount((($order_array['order_lines'][$k]['total_amount'] / ($order_array['order_lines'][$k]['total_amount'] - $order_array['order_lines'][$k]['total_tax_amount']) - 1)) * 100);
         }
+        if ($order_lines['reference'] == 'ot_discount') {
+          $order_array['order_lines'][$k]['total_tax_amount'] += ($order_array['order_tax_amount'] - $tax_total);
+          if ($add_tax === true) {
+             $order_array['order_lines'][$k]['unit_price'] += $order_array['order_lines'][$k]['total_tax_amount'];
+             $order_array['order_lines'][$k]['total_amount'] += $order_array['order_lines'][$k]['total_tax_amount'];
+          }
+          $order_array['order_lines'][$k]['tax_rate'] = $this->format_amount((($order_array['order_lines'][$k]['total_amount'] / ($order_array['order_lines'][$k]['total_amount'] - $order_array['order_lines'][$k]['total_tax_amount']) - 1)) * 100);
+        }
       }
     }
 
