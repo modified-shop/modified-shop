@@ -15,26 +15,26 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
   
-  require_once(DIR_FS_INC . 'xtc_get_countries.inc.php'); 
   
   function xtc_get_country_name($country_id) {
     static $countries_name_cache;
     
-    if (!is_array($countries_name_cache)) $countries_name_cache = array();
-
-    if (isset($countries_name_cache[$country_id])) return $countries_name_cache[$country_id];
-    
-    $country_query = xtc_db_query("SELECT countries_name
-                                     FROM ".TABLE_COUNTRIES."
-                                    WHERE countries_id = '".(int)$country_id."'");
-    if (!xtc_db_num_rows($country_query)) {
-      return $country_id;
-    } else {
-      $country = xtc_db_fetch_array($country_query);
-      $countries_name_cache[$country_id] = $country['countries_name'];
+    if (!isset($countries_name_cache)) {
+      $countries_name_cache = array();
     }
-
+    
+    if (!isset($countries_name_cache[$country_id])) {
+      $countries_name_cache[$country_id] = $country_id;
+      
+      $country_query = xtDBquery("SELECT countries_name
+                                    FROM ".TABLE_COUNTRIES."
+                                   WHERE countries_id = '".(int)$country_id."'");
+      if (xtc_db_num_rows($country_query, true)) {
+        $country = xtc_db_fetch_array($country_query, true);
+        $countries_name_cache[$country_id] = $country['countries_name'];
+      }
+    }
+    
     return $countries_name_cache[$country_id];
   }
-  
 ?>
