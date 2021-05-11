@@ -15,14 +15,20 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-  require_once(DIR_FS_INC . 'xtc_set_specials_status.inc.php');
 
   // Auto expire products on special
   function xtc_expire_specials() {
-    xtc_db_query("UPDATE ".TABLE_SPECIALS." 
-                     SET status = '0', 
-                         date_status_change = now() 
-                   WHERE expires_date <= now() 
-                     AND expires_date > 0");
+    $specials_query = xtc_db_query("SELECT specials_id  
+                                      FROM ".TABLE_SPECIALS."  
+                                     WHERE status = '1'  
+                                       AND expires_date <= now() 
+                                       AND expires_date > 0"); 
+    if (xtc_db_num_rows($specials_query)) { 
+      xtc_db_query("UPDATE ".TABLE_SPECIALS." 
+                       SET status = '0', 
+                           date_status_change = now() 
+                     WHERE expires_date <= now() 
+                       AND expires_date > 0");
+    } 
   }
 ?>
