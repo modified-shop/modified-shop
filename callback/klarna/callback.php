@@ -28,6 +28,7 @@ require_once (DIR_FS_INC.'xtc_count_shipping_modules.inc.php');
 require_once (DIR_FS_INC.'xtc_create_password.inc.php');
 require_once (DIR_FS_INC.'xtc_write_user_info.inc.php');
 require_once (DIR_FS_INC.'get_country_id.inc.php');
+require_once (DIR_FS_INC.'write_customers_session.inc.php');
 
 // include needed classes
 require_once(DIR_WS_MODULES.'payment/klarna_checkout.php');
