@@ -29,6 +29,7 @@ require_once (DIR_FS_INC.'xtc_get_geo_zone_code.inc.php');
 require_once (DIR_FS_INC.'xtc_get_customers_country.inc.php');
 require_once (DIR_FS_INC.'get_customers_gender.inc.php');
 require_once (DIR_FS_INC.'secure_form.inc.php');
+require_once (DIR_FS_INC.'write_customers_session.inc.php');
 
 if (!isset($_SESSION['customer_id'])) { 
   xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
@@ -149,14 +150,16 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
   }
 
   if ($error == false) {
-    $sql_data_array = array('customers_vat_id' => $vat, 
-                            'customers_vat_id_status' => $customers_vat_id_status, 
-                            'customers_firstname' => $firstname, 
-                            'customers_lastname' => $lastname, 
-                            'customers_email_address' => $email_address, 
-                            'customers_telephone' => $telephone, 
-                            'customers_fax' => $fax,
-                            'customers_last_modified' => 'now()');
+    $sql_data_array = array(
+      'customers_vat_id' => $vat, 
+      'customers_vat_id_status' => $customers_vat_id_status, 
+      'customers_firstname' => $firstname, 
+      'customers_lastname' => $lastname, 
+      'customers_email_address' => $email_address, 
+      'customers_telephone' => $telephone, 
+      'customers_fax' => $fax,
+      'customers_last_modified' => 'now()'
+    );
 
     if (isset($customers_status) && $_SESSION['account_type'] == '0') {
       if ((int)$customers_status == 0) {
@@ -176,19 +179,15 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
       $sql_data_array['customers_dob'] = xtc_date_raw($dob);
     }
     
-    xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '".(int) $_SESSION['customer_id']."'");
+    xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '".(int)$_SESSION['customer_id']."'");
+
     xtc_db_query("UPDATE ".TABLE_CUSTOMERS_INFO." 
                      SET customers_info_date_account_last_modified = now() 
-                   WHERE customers_info_id = '".(int) $_SESSION['customer_id']."'");
+                   WHERE customers_info_id = '".(int)$_SESSION['customer_id']."'");
 
-    $_SESSION['customer_gender'] = ACCOUNT_GENDER == 'true' ? $gender : '';
-    $_SESSION['customer_first_name'] = $firstname;
-    $_SESSION['customer_last_name'] = $lastname;
-    $_SESSION['customer_email_address'] = $email_address;
-    $_SESSION['customer_vat_id'] = $vat;
+    // write customers session
+    write_customers_session((int)$_SESSION['customer_id']);
 
-    // reset the session variables
-    $customer_first_name = $firstname;
     $messageStack->add_session('account', SUCCESS_ACCOUNT_UPDATED, 'success');
     xtc_redirect(xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
   }

@@ -27,6 +27,7 @@ require_once (DIR_FS_INC.'xtc_address_label.inc.php');
 require_once (DIR_FS_INC.'xtc_get_country_name.inc.php');
 require_once (DIR_FS_INC.'check_country_required_zones.inc.php');
 require_once (DIR_FS_INC.'secure_form.inc.php');
+require_once (DIR_FS_INC.'write_customers_session.inc.php');
 
 if (!isset($_SESSION['customer_id'])) { 
   xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
@@ -175,13 +176,15 @@ if (isset ($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['act
   }
 
   if ($error == false) {
-    $sql_data_array = array('entry_firstname' => $firstname, 
-                            'entry_lastname' => $lastname, 
-                            'entry_street_address' => $street_address, 
-                            'entry_postcode' => $postcode, 
-                            'entry_city' => $city, 
-                            'entry_country_id' => (int) $country,
-                            'address_last_modified' => 'now()');
+    $sql_data_array = array(
+      'entry_firstname' => $firstname, 
+      'entry_lastname' => $lastname, 
+      'entry_street_address' => $street_address, 
+      'entry_postcode' => $postcode, 
+      'entry_city' => $city, 
+      'entry_country_id' => (int) $country,
+      'address_last_modified' => 'now()'
+    );
 
     if (ACCOUNT_GENDER == 'true') {
       $sql_data_array['entry_gender'] = $gender;
@@ -201,18 +204,16 @@ if (isset ($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['act
       xtc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array, 'update', "address_book_id = '".(int) $_GET['edit']."' and customers_id ='".(int) $_SESSION['customer_id']."'");
 
       // reregister session variables
-      if ((isset ($_POST['primary']) && ($_POST['primary'] == 'on')) || ($_GET['edit'] == $_SESSION['customer_default_address_id'])) {
-        $_SESSION['customer_gender'] = ACCOUNT_GENDER == 'true' ? $gender : '';
-        $_SESSION['customer_first_name'] = $firstname;
-        $_SESSION['customer_last_name'] = $lastname;
-        $_SESSION['customer_country_id'] = (int)$country;
-        $_SESSION['customer_zone_id'] = ((isset($zone_id) && $zone_id > 0) ? (int)$zone_id : 0);
-        $_SESSION['customer_default_address_id'] = (int) $_GET['edit'];
-
-        $sql_data_array = array('customers_firstname' => $firstname, 
-                                'customers_lastname' => $lastname, 
-                                'customers_default_address_id' => (int) $_GET['edit'],
-                                'customers_last_modified' => 'now()');
+      if ((isset($_POST['primary']) && $_POST['primary'] == 'on') 
+          || ((int)$_GET['edit'] == $_SESSION['customer_default_address_id'])
+          )
+      {
+        $sql_data_array = array(
+          'customers_firstname' => $firstname, 
+          'customers_lastname' => $lastname, 
+          'customers_default_address_id' => (int) $_GET['edit'],
+          'customers_last_modified' => 'now()'
+        );
 
         if (ACCOUNT_GENDER == 'true') {
           $sql_data_array['customers_gender'] = $gender;
@@ -228,18 +229,13 @@ if (isset ($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['act
       $new_address_book_id = xtc_db_insert_id();
 
       // reregister session variables
-      if (isset ($_POST['primary']) && ($_POST['primary'] == 'on')) {
-        $_SESSION['customer_gender'] = ACCOUNT_GENDER == 'true' ? $gender : '';
-        $_SESSION['customer_first_name'] = $firstname;
-        $_SESSION['customer_last_name'] = $lastname;
-        $_SESSION['customer_country_id'] = (int)$country;
-        $_SESSION['customer_zone_id'] = ((isset($zone_id) && $zone_id > 0) ? (int)$zone_id : 0);
-        $_SESSION['customer_default_address_id'] = $new_address_book_id;
-        
-        $sql_data_array = array('customers_firstname' => $firstname, 
-                                'customers_lastname' => $lastname,
-                                'customers_last_modified' => 'now()',
-                                'customers_date_added' => 'now()');
+      if (isset ($_POST['primary']) && ($_POST['primary'] == 'on')) {        
+        $sql_data_array = array(
+          'customers_firstname' => $firstname, 
+          'customers_lastname' => $lastname,
+          'customers_last_modified' => 'now()',
+          'customers_date_added' => 'now()'
+        );
 
         if (ACCOUNT_GENDER == 'true') {
           $sql_data_array['customers_gender'] = $gender;
@@ -251,6 +247,10 @@ if (isset ($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['act
         xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '".(int) $_SESSION['customer_id']."'");
       }
     }
+
+    // write customers session
+    write_customers_session((int)$_SESSION['customer_id']);
+
     $messageStack->add_session('addressbook', SUCCESS_ADDRESS_BOOK_ENTRY_UPDATED, 'success');
 
     xtc_redirect(xtc_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));

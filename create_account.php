@@ -69,6 +69,7 @@ require_once (DIR_FS_INC.'parse_multi_language_value.inc.php');
 require_once (DIR_FS_INC.'generate_customers_cid.inc.php');
 require_once (DIR_FS_INC.'check_country_required_zones.inc.php');
 require_once (DIR_FS_INC.'secure_form.inc.php');
+require_once (DIR_FS_INC.'write_customers_session.inc.php');
 
 // include needed classes
 require_once (DIR_FS_EXTERNAL.'password_policy/password_policy.php');
@@ -290,23 +291,22 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
   if ($error == false) {
     $customers_password_time = time();
     
-    $sql_data_array = array('customers_cid' => generate_customers_cid(true),
-                            'customers_vat_id' => $vat,
-                            'customers_vat_id_status' => $customers_vat_id_status,
-                            'customers_status' => $customers_status,
-                            'customers_firstname' => $firstname,
-                            'customers_lastname' => $lastname,
-                            'customers_email_address' => $email_address,
-                            'customers_telephone' => $telephone,
-                            'customers_fax' => $fax,
-                            'customers_newsletter' => (int)$newsletter,
-                            'customers_password' => xtc_encrypt_password($password),
-                            'customers_password_time' => $customers_password_time,
-                            'customers_date_added' => 'now()',
-                            'customers_last_modified' => 'now()',
-                            );
-
-    $_SESSION['account_type'] = '0';
+    $sql_data_array = array(
+      'customers_cid' => generate_customers_cid(true),
+      'customers_vat_id' => $vat,
+      'customers_vat_id_status' => $customers_vat_id_status,
+      'customers_status' => $customers_status,
+      'customers_firstname' => $firstname,
+      'customers_lastname' => $lastname,
+      'customers_email_address' => $email_address,
+      'customers_telephone' => $telephone,
+      'customers_fax' => $fax,
+      'customers_newsletter' => (int)$newsletter,
+      'customers_password' => xtc_encrypt_password($password),
+      'customers_password_time' => $customers_password_time,
+      'customers_date_added' => 'now()',
+      'customers_last_modified' => 'now()',
+    );
 
     if (ACCOUNT_GENDER == 'true') {
       $sql_data_array['customers_gender'] = $gender;
@@ -325,18 +325,19 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
       xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array);
 
       $_SESSION['customer_id'] = xtc_db_insert_id();
-      xtc_write_user_info($_SESSION['customer_id']);
-    
-      $sql_data_array = array('customers_id' => $_SESSION['customer_id'],
-                              'entry_firstname' => $firstname,
-                              'entry_lastname' => $lastname,
-                              'entry_street_address' => $street_address,
-                              'entry_postcode' => $postcode,
-                              'entry_city' => $city,
-                              'entry_country_id' => (int)$country,
-                              'address_date_added' => 'now()',
-                              'address_last_modified' => 'now()'
-                              );
+      $_SESSION['customer_time'] = $customers_password_time;
+      
+      $sql_data_array = array(
+        'customers_id' => $_SESSION['customer_id'],
+        'entry_firstname' => $firstname,
+        'entry_lastname' => $lastname,
+        'entry_street_address' => $street_address,
+        'entry_postcode' => $postcode,
+        'entry_city' => $city,
+        'entry_country_id' => (int)$country,
+        'address_date_added' => 'now()',
+        'address_last_modified' => 'now()'
+      );
 
       if (ACCOUNT_GENDER == 'true') {
         $sql_data_array['entry_gender'] = $gender;
@@ -360,27 +361,24 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
                        SET customers_default_address_id = '".(int)$address_id."' 
                      WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
     
-      $sql_data_array = array('customers_info_id' => (int)$_SESSION['customer_id'],
-                              'customers_info_number_of_logons' => '1',
-                              'customers_info_date_account_created' => 'now()',
-                              'customers_info_date_of_last_logon' => 'now()'
-                              );
+      $sql_data_array = array(
+        'customers_info_id' => (int)$_SESSION['customer_id'],
+        'customers_info_number_of_logons' => '1',
+        'customers_info_date_account_created' => 'now()',
+        'customers_info_date_of_last_logon' => 'now()'
+      );
       xtc_db_perform(TABLE_CUSTOMERS_INFO, $sql_data_array);
 
       if (SESSION_RECREATE == 'True') {
         xtc_session_recreate();
       }
 
-      $_SESSION['customer_gender'] = $gender;
-      $_SESSION['customer_first_name'] = $firstname;
-      $_SESSION['customer_last_name'] = $lastname;
-      $_SESSION['customer_email_address'] = $email_address;
-			$_SESSION['customer_time'] = $customers_password_time;
-      $_SESSION['customer_default_address_id'] = $address_id;
-      $_SESSION['customer_country_id'] = (int)$country;
-      $_SESSION['customer_zone_id'] = ((isset($zone_id) && $zone_id > 0) ? (int)$zone_id : 0);
-      $_SESSION['customer_vat_id'] = $vat;
+      // write customers session
+      write_customers_session((int)$_SESSION['customer_id']);
     
+      // user info
+			xtc_write_user_info((int)$_SESSION['customer_id']);
+
       // restore cart contents
       $_SESSION['cart']->restore_contents();
 
@@ -431,11 +429,12 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
         if (xtc_db_num_rows($check_query) < 1) {
           if (NEW_SIGNUP_GIFT_VOUCHER_AMOUNT > 0) {
             $coupon_code = create_coupon_code();
-            $sql_data_array = array('coupon_code' => $coupon_code,
-                                    'coupon_type' => 'G',
-                                    'coupon_amount' => NEW_SIGNUP_GIFT_VOUCHER_AMOUNT,
-                                    'date_created' => 'now()'
-                                    );
+            $sql_data_array = array(
+              'coupon_code' => $coupon_code,
+              'coupon_type' => 'G',
+              'coupon_amount' => NEW_SIGNUP_GIFT_VOUCHER_AMOUNT,
+              'date_created' => 'now()'
+            );
             xtc_db_perform(TABLE_COUPONS, $sql_data_array);
 
             $coupon_id = xtc_db_insert_id();

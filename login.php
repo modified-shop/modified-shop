@@ -29,6 +29,11 @@ if (isset ($_SESSION['customer_id'])) {
 	xtc_redirect(xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
 }
 
+// redirect the customer to a friendly cookie-must-be-enabled page if cookies are disabled (or the session has not started)
+if ($session_started == false) {
+  xtc_redirect(xtc_href_link(FILENAME_COOKIE_USAGE, xtc_get_all_get_params(array('return_to')).'return_to='.basename($PHP_SELF)));
+}
+
 // create smarty elements
 $smarty = new Smarty;
 
@@ -36,16 +41,12 @@ $smarty = new Smarty;
 require_once (DIR_FS_INC.'xtc_validate_password.inc.php');
 require_once (DIR_FS_INC.'xtc_array_to_string.inc.php');
 require_once (DIR_FS_INC.'xtc_write_user_info.inc.php');
+require_once (DIR_FS_INC.'write_customers_session.inc.php');
 
 // include needed classes
 require_once (DIR_WS_CLASSES.'modified_captcha.php');
 
 $mod_captcha = $_mod_captcha_class::getInstance();
-
-// redirect the customer to a friendly cookie-must-be-enabled page if cookies are disabled (or the session has not started)
-if ($session_started == false) {
-  xtc_redirect(xtc_href_link(FILENAME_COOKIE_USAGE, xtc_get_all_get_params(array('return_to')).'return_to='.basename($PHP_SELF)));
-}
 
 $account_options = ACCOUNT_OPTIONS;
 $products = $_SESSION['cart']->get_products();
@@ -128,24 +129,9 @@ if (isset($_GET['action'])
                           WHERE (customers_email_address = '".xtc_db_input($email_address)."'
                                  OR customers_ip = '".xtc_db_input($_SESSION['tracking']['ip'])."')");
 
-			$check_country_query = xtc_db_query("SELECT entry_country_id, 
-			                                            entry_zone_id 
-			                                       FROM ".TABLE_ADDRESS_BOOK." 
-			                                      WHERE customers_id = '".(int) $check_customer['customers_id']."' 
-			                                        AND address_book_id = '".$check_customer['customers_default_address_id']."'");
-			$check_country = xtc_db_fetch_array($check_country_query);
-
-			$_SESSION['customer_gender'] = $check_customer['customers_gender'];
-			$_SESSION['customer_first_name'] = $check_customer['customers_firstname'];
-			$_SESSION['customer_last_name'] = $check_customer['customers_lastname'];
-			$_SESSION['customer_email_address'] = $check_customer['customers_email_address'];
-			$_SESSION['customer_time'] = $check_customer['customers_password_time'];
+			// default session
 			$_SESSION['customer_id'] = $check_customer['customers_id'];
-			$_SESSION['customer_vat_id'] = $check_customer['customers_vat_id'];
-			$_SESSION['customer_default_address_id'] = $check_customer['customers_default_address_id'];
-			$_SESSION['customer_country_id'] = $check_country['entry_country_id'];
-			$_SESSION['customer_zone_id'] = $check_country['entry_zone_id'];
-			$_SESSION['account_type'] = $check_customer['account_type'];
+			$_SESSION['customer_time'] = $check_customer['customers_password_time'];
       
       if ($_SESSION['customer_time'] == 0) {
         $_SESSION['customer_time'] = time();
@@ -157,14 +143,19 @@ if (isset($_GET['action'])
 			xtc_db_query("UPDATE ".TABLE_CUSTOMERS_INFO." 
 			                 SET customers_info_date_of_last_logon = now(), 
 			                     customers_info_number_of_logons = customers_info_number_of_logons+1 
-			               WHERE customers_info_id = '".(int) $_SESSION['customer_id']."'");
-			xtc_write_user_info((int) $_SESSION['customer_id']);
+			               WHERE customers_info_id = '".(int)$_SESSION['customer_id']."'");
+      
+      // write customers status session
+      require(DIR_WS_INCLUDES.'write_customers_status.php');
+
+      // write customers session
+      write_customers_session((int)$_SESSION['customer_id']);
+
+      // user info
+			xtc_write_user_info((int)$_SESSION['customer_id']);
 			
       // who's online
       xtc_update_whos_online();
-
-      // write customers status in session
-      require(DIR_WS_INCLUDES.'write_customers_status.php');
 
 			// restore cart contents
 			$_SESSION['cart']->restore_contents();
@@ -186,7 +177,13 @@ if (isset($_GET['action'])
                               FILENAME_CHECKOUT_SHIPPING, 
                               FILENAME_PRODUCT_REVIEWS_WRITE
                               );
-      if (isset($_SESSION['REFERER']) && xtc_not_null($_SESSION['REFERER']) && in_array($_SESSION['REFERER'], $redirect_array) && $_SESSION['old_customers_basket_cart'] === false) {
+      
+      if (isset($_SESSION['REFERER']) 
+          && xtc_not_null($_SESSION['REFERER']) 
+          && in_array($_SESSION['REFERER'], $redirect_array) 
+          && $_SESSION['old_customers_basket_cart'] === false
+          )
+      {
         xtc_redirect(xtc_href_link($_SESSION['REFERER'], xtc_get_all_get_params(array('review_prod_id', 'action')).(isset($_GET['review_prod_id']) ? 'products_id=' .$_GET['review_prod_id'] : ''))); 
       } elseif ($_SESSION['cart']->count_contents() > 0) {
         if ($_SESSION['old_customers_basket_cart'] === true) {

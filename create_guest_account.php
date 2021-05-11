@@ -56,6 +56,7 @@ require_once (DIR_FS_INC.'xtc_write_user_info.inc.php');
 require_once (DIR_FS_INC.'get_customers_gender.inc.php');
 require_once (DIR_FS_INC.'check_country_required_zones.inc.php');
 require_once (DIR_FS_INC.'secure_form.inc.php');
+require_once (DIR_FS_INC.'write_customers_session.inc.php');
 
 // include needed classes
 require_once (DIR_WS_CLASSES.'modified_captcha.php');
@@ -254,23 +255,22 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
   if ($error == false) {
     $customers_password_time = time();
     
-    $sql_data_array = array('customers_vat_id' => $vat,
-                            'customers_vat_id_status' => $customers_vat_id_status,
-                            'customers_status' => $customers_status,
-                            'customers_firstname' => $firstname,
-                            'customers_lastname' => $lastname,
-                            'customers_email_address' => $email_address,
-                            'customers_telephone' => $telephone,
-                            'customers_fax' => $fax,
-                            'customers_newsletter' => (int)$newsletter,
-                            'account_type' => '1',
-                            'customers_password' => $password,
-                            'customers_password_time' => $customers_password_time,
-                            'customers_date_added' => 'now()',
-                            'customers_last_modified' => 'now()',
-                            );
-
-    $_SESSION['account_type'] = '1';
+    $sql_data_array = array(
+      'customers_vat_id' => $vat,
+      'customers_vat_id_status' => $customers_vat_id_status,
+      'customers_status' => $customers_status,
+      'customers_firstname' => $firstname,
+      'customers_lastname' => $lastname,
+      'customers_email_address' => $email_address,
+      'customers_telephone' => $telephone,
+      'customers_fax' => $fax,
+      'customers_newsletter' => (int)$newsletter,
+      'account_type' => '1',
+      'customers_password' => $password,
+      'customers_password_time' => $customers_password_time,
+      'customers_date_added' => 'now()',
+      'customers_last_modified' => 'now()',
+    );
 
     if (ACCOUNT_GENDER == 'true') {
       $sql_data_array['customers_gender'] = $gender;
@@ -281,7 +281,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array);
 
     $_SESSION['customer_id'] = xtc_db_insert_id();
-    xtc_write_user_info($_SESSION['customer_id']);
+    $_SESSION['customer_time'] = $customers_password_time;
     
     $sql_data_array = array('customers_id' => $_SESSION['customer_id'],
                             'entry_firstname' => $firstname,
@@ -326,17 +326,13 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     if (SESSION_RECREATE == 'True') {
       xtc_session_recreate();
     }
-
-    $_SESSION['customer_gender'] = $gender;
-    $_SESSION['customer_first_name'] = $firstname;
-    $_SESSION['customer_last_name'] = $lastname;
-    $_SESSION['customer_email_address'] = $email_address;
-    $_SESSION['customer_time'] = $customers_password_time;
-    $_SESSION['customer_default_address_id'] = $address_id;
-    $_SESSION['customer_country_id'] = (int)$country;
-    $_SESSION['customer_zone_id'] = ((isset($zone_id) && $zone_id > 0) ? (int)$zone_id : 0);
-    $_SESSION['customer_vat_id'] = $vat;
     
+    // write customers session
+    write_customers_session((int)$_SESSION['customer_id']);
+  
+    // user info
+    xtc_write_user_info((int)$_SESSION['customer_id']);
+
     // restore cart contents
     $_SESSION['cart']->restore_contents();
 
