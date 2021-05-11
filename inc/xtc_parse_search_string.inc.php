@@ -62,7 +62,7 @@
         */
 
         // Add this word to the $tmpstring, starting the $tmpstring
-        $tmpstring = trim(preg_replace('/"/', ' ', $pieces[$k]));
+        $tmpstring = trim(str_replace('"', ' ', $pieces[$k]));
 
         // Check for one possible exception to the rule. That there is a single quoted word.
         if (substr($pieces[$k], -1 ) == '"') {
@@ -112,7 +112,7 @@
               $piece onto the tail of the string, push the $tmpstring onto the $haves,
               kill the $tmpstring, turn the $flag "off", and return.
             */
-            $tmpstring .= ' ' . trim(preg_replace('/"/', ' ', $pieces[$k]));
+            $tmpstring .= ' ' . trim(str_replace('"', ' ', $pieces[$k]));
 
             // Push the $tmpstring onto the array of stuff to search for
             $objects[] = trim($tmpstring);
