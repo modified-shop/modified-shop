@@ -50,7 +50,7 @@ $req_url = strip_tags($_SERVER['REQUEST_URI']);
 // referrer
 if (!isset($_SESSION['tracking']['http_referer'])) {
   $_SESSION['tracking']['http_referer'] = array(
-    'host' => strip_tags($_SERVER['HTTP_HOST']),
+    'host' => ((isset($_SERVER['HTTP_HOST'])) ? strip_tags($_SERVER['HTTP_HOST']) : '---'),
     'url' => '---',
   );
   if (isset($_SERVER['HTTP_REFERER'])) {
