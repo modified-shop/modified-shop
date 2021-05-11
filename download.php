@@ -96,7 +96,9 @@ if (isset ($_GET['order']) && is_numeric($_GET['order']) && isset ($_GET['id']) 
             $smarty->assign('dl_prevented', 'true');
           } else {
             // Now decrement counter
-            xtc_db_query("update ".TABLE_ORDERS_PRODUCTS_DOWNLOAD." set download_count = download_count-1 where orders_products_download_id = '".(int) $_GET['id']."'");
+            xtc_db_query("UPDATE ".TABLE_ORDERS_PRODUCTS_DOWNLOAD." 
+                             SET download_count = download_count-1 
+                           WHERE orders_products_download_id = '".(int) $_GET['id']."'");
 
             if (DOWNLOAD_BY_REDIRECT == 'true') {
               // This will work only on Unix/Linux hosts
