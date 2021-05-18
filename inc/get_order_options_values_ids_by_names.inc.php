@@ -60,7 +60,7 @@
                                     JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS." AS	pov2po
                                          ON pov2po.products_options_values_id = pov.products_options_values_id
                                    WHERE pov2po.products_options_values_id IN(".implode(',', $options_values).")
-                                     AND pov.products_options_values_name = '".xtc_db_input($values_name)."' AND
+                                     AND pov.products_options_values_name = '".xtc_db_input($values_name)."'
                                      AND pov.language_id = ".$language_id);
           if (xtc_db_num_rows($result)) {
             return xtc_db_fetch_array($result);
