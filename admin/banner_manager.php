@@ -21,8 +21,12 @@
   // include needed classes
   require_once (DIR_WS_CLASSES.FILENAME_IMAGEMANIPULATOR);
 
+  $cfg_max_display_results_key = 'MAX_DISPLAY_BANNER_RESULTS';
+  $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
+
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
   $page = (isset($_GET['page']) ? (int)$_GET['page'] : 1);
+  $sorting = (isset($_GET['sorting']) ? $_GET['sorting'] : '');
 
   $banner_extension = xtc_banner_image_extension();
   $languages = xtc_get_languages();
@@ -495,19 +499,49 @@
                   <table class="tableBoxCenter collapse">
                     <tr class="dataTableHeadingRow">
                       <td class="dataTableHeadingContent txta-c" style="width:20%;"><?php echo TABLE_HEADING_IMAGE; ?></td>
-                      <td class="dataTableHeadingContent txta-c" style="width:8%;"><?php echo TABLE_HEADING_SORT; ?></td>
-                      <td class="dataTableHeadingContent" style="width:40%;"><?php echo TABLE_HEADING_BANNERS; ?></td>
-                      <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_GROUPS; ?></td>
+                      <td class="dataTableHeadingContent txta-c" style="width:8%;"><?php echo TABLE_HEADING_SORT.xtc_sorting(FILENAME_BANNER_MANAGER, 'sort'); ?></td>
+                      <td class="dataTableHeadingContent" style="width:40%;"><?php echo TABLE_HEADING_BANNERS.xtc_sorting(FILENAME_BANNER_MANAGER, 'name'); ?></td>
+                      <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_GROUPS.xtc_sorting(FILENAME_BANNER_MANAGER, 'group'); ?></td>
                       <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_STATISTICS; ?></td>
-                      <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_STATUS; ?></td>
+                      <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_STATUS.xtc_sorting(FILENAME_BANNER_MANAGER, 'status'); ?></td>
                       <td class="dataTableHeadingContent txta-r" style="width:5%;"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
                     </tr>
                     <?php
+                      switch ($sorting) {
+                        case 'name':
+                          $bsort = 'banners_title ASC';
+                          break;
+                        case 'name-desc':
+                          $bsort = 'banners_title DESC';
+                          break;
+                        case 'sort':
+                          $bsort = 'banners_sort ASC';
+                          break;
+                        case 'sort-desc':
+                          $bsort = 'banners_sort DESC';
+                          break;
+                        case 'group':
+                          $bsort = 'banners_group ASC';
+                          break;
+                        case 'group-desc':
+                          $bsort = 'banners_group DESC';
+                          break;
+                        case 'status':
+                          $bsort = 'status ASC';
+                          break;
+                        case 'status-desc':
+                          $bsort = 'status DESC';
+                          break;
+                        default:
+                          $bsort = 'banners_sort ASC';
+                          break;
+                      }
+
                       $banners_query_raw = "SELECT * 
                                               FROM " . TABLE_BANNERS . " 
                                              WHERE languages_id = '".(int)$_SESSION['languages_id']."'
-                                          ORDER BY banners_group, banners_sort";
-                      $banners_split = new splitPageResults($page, MAX_DISPLAY_SEARCH_RESULTS, $banners_query_raw, $banners_query_numrows);
+                                          ORDER BY ".$bsort;
+                      $banners_split = new splitPageResults($page, $page_max_display_results, $banners_query_raw, $banners_query_numrows);
                       $banners_query = xtc_db_query($banners_query_raw);
                       while ($banners = xtc_db_fetch_array($banners_query)) {
                         $info_query = xtc_db_query("SELECT sum(banners_shown) as banners_shown, 
@@ -522,7 +556,7 @@
                         $banners_shown = ($info['banners_shown'] != '') ? $info['banners_shown'] : '0';
                         $banners_clicked = ($info['banners_clicked'] != '') ? $info['banners_clicked'] : '0';
                         if (isset($bInfo) && is_object($bInfo) && ($banners['banners_id'] == $bInfo->banners_id) ) {
-                          $tr_attributes = 'class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_BANNER_STATISTICS, 'page=' . $page . '&bID=' . $bInfo->banners_group_id) . '\'"';
+                          $tr_attributes = 'class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_BANNER_MANAGER, 'page=' . $page . '&action=new&bID=' . $bInfo->banners_group_id) . '\'"';
                         } else {
                           $tr_attributes = 'class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_BANNER_MANAGER, 'page=' . $page . '&bID=' . $banners['banners_group_id']) . '\'"';
                         }
@@ -542,16 +576,17 @@
                               }
                             ?>
                           </td>
-                          <td class="dataTableContent txta-r"><?php if (isset($bInfo) && is_object($bInfo) && ($banners['banners_id'] == $bInfo->banners_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_BANNER_MANAGER, 'page=' . $page . '&bID=' . $banners['banners_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                          <td class="dataTableContent txta-r"><?php if (isset($bInfo) && is_object($bInfo) && ($banners['banners_group_id'] == $bInfo->banners_group_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_BANNER_MANAGER, 'page=' . $page . '&bID=' . $banners['banners_group_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
                         </tr>
                         <?php
                       }
                       ?>
-                    <tr>                      
+                    <tr>
                   </table>
                 
-                  <div class="smallText pdg2 flt-l"><?php echo $banners_split->display_count($banners_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $page, TEXT_DISPLAY_NUMBER_OF_BANNERS); ?></div>
-                  <div class="smallText pdg2 flt-r"><?php echo $banners_split->display_links($banners_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $page); ?></div>
+                  <div class="smallText pdg2 flt-l"><?php echo $banners_split->display_count($banners_query_numrows, $page_max_display_results, $page, TEXT_DISPLAY_NUMBER_OF_BANNERS); ?></div>
+                  <div class="smallText pdg2 flt-r"><?php echo $banners_split->display_links($banners_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $page, xtc_get_all_get_params(array('page', 'action', 'bID'))); ?></div>
+                  <?php echo draw_input_per_page($PHP_SELF, $cfg_max_display_results_key, $page_max_display_results); ?>
                   <div class="clear"></div>
                   <div class="smallText pdg2 flt-r"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BANNER_MANAGER, 'action=new') . '">' . BUTTON_NEW_BANNER . '</a>'; ?></div>
               
