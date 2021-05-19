@@ -23,9 +23,13 @@
   // set languages
   $languages = xtc_get_languages();
 
+  $cfg_max_display_results_key = 'MAX_DISPLAY_TAX_RATES_RESULTS';
+  $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
+
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
   $page = (isset($_GET['page']) ? (int)$_GET['page'] : 1);
-  
+  $sorting = (isset($_GET['sorting']) ? $_GET['sorting'] : '');
+
   if (xtc_not_null($action)) {
     switch ($action) {
       case 'insert':
@@ -124,13 +128,43 @@
             <td class="boxCenterLeft">
               <table class="tableBoxCenter collapse">
                 <tr class="dataTableHeadingRow">
-                  <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_TAX_RATE_PRIORITY; ?></td>
-                  <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_TAX_CLASS_TITLE; ?></td>
-                  <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_ZONE; ?></td>
-                  <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_TAX_RATE; ?></td>
+                  <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_TAX_RATE_PRIORITY.xtc_sorting(FILENAME_TAX_RATES, 'prio'); ?></td>
+                  <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_TAX_CLASS_TITLE.xtc_sorting(FILENAME_TAX_RATES, 'title'); ?></td>
+                  <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_ZONE.xtc_sorting(FILENAME_TAX_RATES, 'name'); ?></td>
+                  <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_TAX_RATE.xtc_sorting(FILENAME_TAX_RATES, 'tax'); ?></td>
                   <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
                 </tr>
                   <?php
+                    switch ($sorting) {
+                      case 'prio':
+                        $tsort = 'r.tax_priority ASC';
+                        break;
+                      case 'prio-desc':
+                        $tsort = 'r.tax_priority DESC';
+                        break;
+                      case 'title':
+                        $tsort = 'tc.tax_class_title ASC';
+                        break;
+                      case 'title-desc':
+                        $tsort = 'tc.tax_class_title DESC';
+                        break;
+                      case 'name':
+                        $tsort = 'z.geo_zone_name ASC';
+                        break;
+                      case 'name-desc':
+                        $tsort = 'z.geo_zone_name DESC';
+                        break;
+                      case 'tax':
+                        $tsort = 'r.tax_rate ASC';
+                        break;
+                      case 'tax-desc':
+                        $tsort = 'r.tax_rate DESC';
+                        break;
+                      default:
+                        $tsort = 'r.tax_rates_id ASC';
+                        break;
+                    }
+
                     $rates_query_raw = "SELECT r.*, 
                                                z.geo_zone_id, 
                                                z.geo_zone_name, 
@@ -140,8 +174,9 @@
                                           JOIN " . TABLE_TAX_RATES . " r 
                                                ON r.tax_class_id = tc.tax_class_id
                                      LEFT JOIN " . TABLE_GEO_ZONES . " z 
-                                               ON r.tax_zone_id = z.geo_zone_id";
-                    $rates_split = new splitPageResults($page, '20', $rates_query_raw, $rates_query_numrows);
+                                               ON r.tax_zone_id = z.geo_zone_id
+                                         ORDER BY ".$tsort;
+                    $rates_split = new splitPageResults($page, $page_max_display_results, $rates_query_raw, $rates_query_numrows);
                     $rates_query = xtc_db_query($rates_query_raw);
                     while ($rates = xtc_db_fetch_array($rates_query)) {
                       if ((!isset($_GET['tID']) || $_GET['tID'] == $rates['tax_rates_id']) && !isset($trInfo) && (substr($action, 0, 3) != 'new')) {
@@ -165,8 +200,9 @@
                 ?>
               </table>
                 
-              <div class="smallText pdg2 flt-l"><?php echo $rates_split->display_count($rates_query_numrows, '20', $page, TEXT_DISPLAY_NUMBER_OF_TAX_RATES); ?></div> 
-              <div class="smallText pdg2 flt-r"><?php echo $rates_split->display_links($rates_query_numrows, '20', MAX_DISPLAY_PAGE_LINKS, $page); ?></div> 
+              <div class="smallText pdg2 flt-l"><?php echo $rates_split->display_count($rates_query_numrows, $page_max_display_results, $page, TEXT_DISPLAY_NUMBER_OF_TAX_RATES); ?></div> 
+              <div class="smallText pdg2 flt-r"><?php echo $rates_split->display_links($rates_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $page); ?></div> 
+              <?php echo draw_input_per_page($PHP_SELF, $cfg_max_display_results_key, $page_max_display_results); ?>
 
               <?php
               if (!xtc_not_null($action)) {
