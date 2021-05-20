@@ -223,7 +223,8 @@ switch ($category_depth) {
     $from = '';
     $filter_join = '';
     $where = '';
-
+    $p2c_condition = '';
+    
     // sorting query
     if (isset($_GET['manufacturers_id']) && isset($_GET['filter_id'])) {
       $categories_id = implode("', '", (array)$_GET['filter_id']);
@@ -293,16 +294,12 @@ switch ($category_depth) {
       
       // We are asked to show only a specific category
       if (isset($_GET['filter_id']) && xtc_not_null($_GET['filter_id'])) {
-        $filter_join .= "JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
-                           ON p2c.products_id = pd.products_id 
-                              AND p2c.categories_id = '".(int)$_GET['filter_id']."' ";
+        $p2c_condition = " AND p2c.categories_id = '".(int)$_GET['filter_id']."'  ";
       }
     } else {
       if (basename($PHP_SELF) == FILENAME_DEFAULT && $subcat_list != '') {
         // show the products in a given categorie
-        $from   .= "JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
-                         ON p2c.products_id = pd.products_id
-                            AND p2c.categories_id IN ('".$subcat_list."') ";
+        $p2c_condition = " AND p2c.categories_id IN ('".$subcat_list."') ";
       }
       // We are asked to show only specific manufacturer                    
       if (isset($_GET['filter_id']) && xtc_not_null($_GET['filter_id'])) {
@@ -353,6 +350,13 @@ switch ($category_depth) {
                            ON p.products_id = pd.products_id 
                               AND pd.language_id = '".(int) $_SESSION['languages_id']."'
                               AND trim(pd.products_name) != '' 
+                      JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
+                           ON p2c.products_id = pd.products_id
+                              ".$p2c_condition."
+                      JOIN ".TABLE_CATEGORIES." c
+                           ON c.categories_id = p2c.categories_id
+                              AND c.categories_status = 1
+                                  ".CATEGORIES_CONDITIONS_C."
                            ".$from."
                            ".$filter_join."
                      WHERE p.products_status = '1'
