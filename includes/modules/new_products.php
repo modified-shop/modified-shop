@@ -42,9 +42,10 @@ $new_products_query = "SELECT ".$product->default_select.",
                               ON p.products_id = p2c.products_id
                          JOIN ".TABLE_CATEGORIES." c
                               ON p2c.categories_id = c.categories_id
+                                 AND c.categories_status = 1
+                                 AND c.parent_id = '".(int)$new_products_category_id."'
+                                     ".CATEGORIES_CONDITIONS_C."
                         WHERE p.products_status = 1
-                          AND c.categories_status = 1
-                          AND c.parent_id = '".(int)$new_products_category_id."'
                               ".PRODUCTS_CONDITIONS_P."
                               ".$days."
                      GROUP BY p.products_id

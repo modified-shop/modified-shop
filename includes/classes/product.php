@@ -330,6 +330,12 @@ class product {
                                           ON pd.products_id = p.products_id
                                              AND pd.language_id = '".(int) $_SESSION['languages_id']."'
                                              AND trim(pd.products_name) != ''
+                                     JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
+                                          ON p.products_id = p2c.products_id
+                                     JOIN ".TABLE_CATEGORIES." c
+                                          ON c.categories_id = p2c.categories_id
+                                             AND c.categories_status = 1
+                                                 ".CATEGORIES_CONDITIONS_C."
                                     WHERE op.orders_id IN (SELECT * 
                                                              FROM (SELECT orders_id 
                                                                      FROM ".TABLE_ORDERS_PRODUCTS." 
@@ -390,6 +396,12 @@ class product {
                                            ON p.products_id = pd.products_id
                                               AND pd.language_id = '".(int)$_SESSION['languages_id']."'
                                               AND trim(pd.products_name) != ''
+                                      JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
+                                           ON p.products_id = p2c.products_id
+                                      JOIN ".TABLE_CATEGORIES." c
+                                           ON c.categories_id = p2c.categories_id
+                                              AND c.categories_status = 1
+                                                  ".CATEGORIES_CONDITIONS_C."
                                      WHERE xp.products_id = '".(int)$pID."'
                                        AND xp.products_xsell_grp_name_id='".$cross_sells['products_xsell_grp_name_id']."'
                                            ".PRODUCTS_CONDITIONS_P."
@@ -437,6 +449,12 @@ class product {
                                        ON p.products_id = pd.products_id
                                           AND pd.language_id = '".(int)$_SESSION['languages_id']."'
                                           AND trim(pd.products_name) != ''
+                                  JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
+                                       ON p.products_id = p2c.products_id
+                                  JOIN ".TABLE_CATEGORIES." c
+                                       ON c.categories_id = p2c.categories_id
+                                          AND c.categories_status = 1
+                                              ".CATEGORIES_CONDITIONS_C."
                                  WHERE xp.xsell_id = '".(int)$pID."'
                                        ".PRODUCTS_CONDITIONS_P."
                               ORDER BY xp.sort_order ASC");
