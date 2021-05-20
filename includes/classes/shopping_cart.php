@@ -1054,10 +1054,13 @@ class shoppingCart {
           
           default:
             if (basename($referer['path']) != FILENAME_SHOPPING_CART
-                && strpos($referer['path'], 'checkout_') === false
+                && strpos(basename($referer['path']), 'checkout_') === false
                 )
             {
-              $basename = ltrim($referer['path'], DIR_WS_CATALOG);
+              $basename = $referer['path'];
+              if (substr($basename, 0, strlen(DIR_WS_CATALOG)) == DIR_WS_CATALOG) {
+                $basename = substr($basename, strlen(DIR_WS_CATALOG));
+              }
             }
             break;
         }
