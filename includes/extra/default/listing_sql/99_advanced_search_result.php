@@ -18,7 +18,8 @@
     $tax_where    = '';
     $cats_list    = '';
     $left_join    = '';
-
+    $p2c_condition = '';
+    
     //set $_GET variables for function xtc_get_all_get_params()
     $keywords = $_GET['keywords'] = !empty($_GET['keywords']) ? stripslashes(trim(urldecode($_GET['keywords']))) : false;
     $pfrom = $_GET['pfrom'] = !empty($_GET['pfrom']) ? str_replace(',', '.', stripslashes(trim(urldecode($_GET['pfrom'])))) : false;
@@ -33,17 +34,12 @@
     //include subcategories if needed
     if ($categories_id !== false) {
       if (isset($_GET['inc_subcat']) && $_GET['inc_subcat'] == '1') {
-        $subcategories_array = array();
+        $subcategories_array = array ();
         xtc_get_subcategories($subcategories_array, $categories_id);
-        $subcat_join = " LEFT OUTER JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." AS p2c ON (p.products_id = p2c.products_id) ";
-        $subcat_where = " AND p2c.categories_id IN ('".$categories_id."' ";
-        foreach ($subcategories_array AS $scat) {
-          $subcat_where .= ", '".$scat."'";
-        }
-        $subcat_where .= ") ";
+        $subcategories_array[] = $categories_id;
+        $p2c_condition = " AND p2c.categories_id IN ('".implode("', '", $subcategories_array)."') ";
       } else {
-        $subcat_join = " LEFT OUTER JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." AS p2c ON (p.products_id = p2c.products_id) ";
-        $subcat_where = " AND p2c.categories_id = '".$categories_id."' ";
+        $p2c_condition = " AND p2c.categories_id = '".$categories_id."' ";
       }
     }
 
@@ -108,7 +104,18 @@
     }
   
     $from_str  = "FROM ".TABLE_PRODUCTS." AS p 
-                  JOIN ".TABLE_PRODUCTS_DESCRIPTION." AS pd ON (p.products_id = pd.products_id AND trim(pd.products_name) != '' AND pd.language_id = '".(int)$_SESSION['languages_id']."') ";
+                  JOIN ".TABLE_PRODUCTS_DESCRIPTION." AS pd 
+                       ON p.products_id = pd.products_id 
+                          AND trim(pd.products_name) != '' 
+                          AND pd.language_id = '".(int)$_SESSION['languages_id']."'
+                  JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
+                       ON p2c.products_id = pd.products_id
+                          ".$p2c_condition."
+                  JOIN ".TABLE_CATEGORIES." c
+                       ON c.categories_id = p2c.categories_id
+                          AND c.categories_status = 1
+                              ".CATEGORIES_CONDITIONS_C." ";
+                           
     $from_str .= $subcat_join;
     $from_str .= SEARCH_IN_ATTR == 'true' ? " LEFT OUTER JOIN ".TABLE_PRODUCTS_ATTRIBUTES." AS pa ON (p.products_id = pa.products_id) 
                                               LEFT OUTER JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." AS pov ON (pa.options_values_id = pov.products_options_values_id) " : "";

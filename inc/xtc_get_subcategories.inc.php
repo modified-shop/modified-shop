@@ -62,7 +62,8 @@
                                              ON c.categories_id = cd.categories_id
                                                 AND cd.language_id = '" . (int)$_SESSION['languages_id'] . "'
                                                 AND trim(cd.categories_name) != ''
-                                       WHERE c.parent_id = '" . (int)$parent_id . "'
+                                       WHERE c.categories_status = 1
+                                         AND c.parent_id = '" . (int)$parent_id . "'
                                              ".CATEGORIES_CONDITIONS_C);
     
     if (xtc_db_num_rows($subcategories_query, true) > 0) {
