@@ -16,7 +16,7 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-defined('SPECIALS_CONDITIONS_S') or define('SPECIALS_CONDITIONS_S', 'AND s.status = \'1\'');
+defined('SPECIALS_CONDITIONS_S') or define('SPECIALS_CONDITIONS_S', 'AND s.status = \'1\' AND (now() >= s.start_date OR s.start_date IS NULL)');
 
 // include smarty
 include(DIR_FS_BOXES_INC . 'smarty_default.php');
@@ -32,6 +32,12 @@ $specials_query = xtc_db_query("SELECT ".$product->default_select.",
                                        ON pd.products_id = p.products_id
                                           AND trim(pd.products_name) != ''
                                           AND pd.language_id = '".(int)$_SESSION['languages_id']."'
+                                  JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
+                                       ON p.products_id = p2c.products_id
+                                  JOIN ".TABLE_CATEGORIES." c
+                                       ON c.categories_id = p2c.categories_id
+                                          AND c.categories_status = 1
+                                              ".CATEGORIES_CONDITIONS_C."
                                   JOIN ".TABLE_SPECIALS." s 
                                        ON p.products_id = s.products_id
                                           ".SPECIALS_CONDITIONS_S."

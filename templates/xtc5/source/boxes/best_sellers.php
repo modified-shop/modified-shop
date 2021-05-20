@@ -74,6 +74,7 @@ if (MIN_DISPLAY_BESTSELLERS > 0 && (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/b
                                      AND c.categories_status = 1
                                      AND (c.categories_id = '" . (int)$current_category_id . "' 
                                           OR c.parent_id = '" . (int)$current_category_id . "')
+                                         ".CATEGORIES_CONDITIONS_C." 
                             WHERE p.products_status = 1
                               AND p.products_ordered > 0
                                   ".PRODUCTS_CONDITIONS_P."
@@ -97,6 +98,12 @@ if (MIN_DISPLAY_BESTSELLERS > 0 && (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/b
                                   ON p.products_id = pd.products_id
                                      AND pd.language_id = '".(int)$_SESSION['languages_id']."'
                                      AND trim(pd.products_name) != ''
+                             JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
+                                  ON p.products_id = p2c.products_id
+                             JOIN ".TABLE_CATEGORIES." c
+                                  ON c.categories_id = p2c.categories_id
+                                     AND c.categories_status = 1
+                                         ".CATEGORIES_CONDITIONS_C."
                             WHERE p.products_status = 1
                               AND p.products_ordered > 0
                                   ".$where."
