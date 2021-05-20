@@ -64,6 +64,12 @@ if ($product->isProduct() === true && $_SESSION['customers_status']['customers_s
                            ON p.products_id = pd.products_id
                               AND trim(pd.products_name) != ''
                               AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
+                      JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
+                           ON p.products_id = p2c.products_id
+                      JOIN ".TABLE_CATEGORIES." c
+                           ON c.categories_id = p2c.categories_id
+                              AND c.categories_status = 1
+                                  ".CATEGORIES_CONDITIONS_C."
                      WHERE p.products_status = '1'
                            ".PRODUCTS_CONDITIONS_P."
                            ".$reviews_status."

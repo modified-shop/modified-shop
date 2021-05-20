@@ -30,14 +30,18 @@ if (isset($_SESSION['tracking']['products_history']) && count($_SESSION['trackin
     $random_query = "SELECT ".$product->default_select.",
                             p2c.categories_id,
                             cd.categories_name
-                       FROM " . TABLE_PRODUCTS . " p
-                       JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd
+                       FROM ".TABLE_PRODUCTS." p
+                       JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
                             ON p.products_id = pd.products_id
                                AND pd.language_id = '".(int)$_SESSION['languages_id']."'
                                AND trim(pd.products_name) != ''
-                       JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c
+                       JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
                             ON p.products_id = p2c.products_id
-                       JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd
+                       JOIN ".TABLE_CATEGORIES." c
+                            ON c.categories_id = p2c.categories_id
+                               AND c.categories_status = 1
+                                   ".CATEGORIES_CONDITIONS_C."
+                       JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd
                             ON cd.categories_id = p2c.categories_id
                                AND cd.language_id = '".(int)$_SESSION['languages_id']."'
                       WHERE p.products_status = '1'
