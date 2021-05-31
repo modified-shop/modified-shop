@@ -227,7 +227,8 @@
                     'MODULE_SHIPPING_FREEAMOUNT_ZONE',
                     'MODULE_SHIPPING_FREEAMOUNT_SORT_ORDER',
                     'MODULE_SHIPPING_FREEAMOUNT_NUMBER_ZONES',
-                    'MODULE_SHIPPING_FREEAMOUNT_DISPLAY'
+                    'MODULE_SHIPPING_FREEAMOUNT_DISPLAY',
+                    'MODULE_SHIPPING_FREEAMOUNT_TAX_CLASS',
                     );
       $keys = array_merge($keys, $this->keys_zones($this->num_zones));
 
