@@ -514,9 +514,21 @@
                         $customers_id = xtc_db_prepare_input($_GET['cID']);
                         $customers_log_info_array = xtc_get_user_info($customers_id);
                         if (xtc_db_num_rows($customers_log_info_array)) {
+                          $customers_log  = '<table cellspacing="0" cellpadding="5" class="table borderall" style="width: 100%;">';
+                          $customers_log .= '<tr>
+                                               <td class="smallText"><b>'.TEXT_INFO_DATE.'</b></td>
+                                               <td class="smallText"><b>'.TEXT_INFO_IP.'</b></td>
+                                               <td class="smallText"><b>'.TEXT_INFO_REFID.'</b></td>
+                                             </tr>';
                           while ($customers_log_info = xtc_db_fetch_array($customers_log_info_array)) {
-                            $contents[] = array ('text' => '<tr>'."\n".'<td class="smallText">'.xtc_datetime_short($customers_log_info['customers_ip_date']).' '.$customers_log_info['customers_ip'].' '.$customers_log_info['customers_advertiser']);
+                            $customers_log .= '<tr>
+                                                 <td class="smallText">'.xtc_datetime_short($customers_log_info['customers_ip_date']).'</td>
+                                                 <td class="smallText">'.$customers_log_info['customers_ip'].'</td>
+                                                 <td class="smallText">'.$customers_log_info['customers_advertiser'].'</td>
+                                               </tr>';
                           }
+                          $customers_log .= '</table>';
+                          $contents[] = array ('text' => $customers_log);
                         }
                       }
                     }
