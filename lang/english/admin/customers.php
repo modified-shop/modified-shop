@@ -81,4 +81,8 @@ define('TEXT_MARKED_ELEMENTS','Marked Elements');
 define('TEXT_INFO_HEADING_DELETE_ELEMENTS', 'Delete Elements');
 define('TEXT_INFO_HEADING_STATUS_ELEMENTS', 'Customers Group Elements');
 define('TEXT_DELETE_REVIEWS_ELEMENTS', 'Delete reviews');
+
+define('TEXT_INFO_DATE','Date');
+define('TEXT_INFO_IP','IP');
+define('TEXT_INFO_REFID','RefiD');
 ?>
