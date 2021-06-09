@@ -12,6 +12,7 @@
 
   if (defined('MODULE_SHOPVOTE_STATUS')
       && MODULE_SHOPVOTE_STATUS == 'true'
+      && $shop_is_offline === false
       )
   {
     $language_array = array('DE', 'EN', 'FR', 'IT', 'NL', 'ES');
