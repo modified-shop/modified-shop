@@ -403,7 +403,7 @@
 
 
     function cart() {
-      global $currencies, $xtPrice, $main;
+      global $currencies, $xtPrice, $main, $PHP_SELF;
 
       require_once(DIR_FS_INC . 'xtc_get_description.inc.php');
 
@@ -513,8 +513,11 @@
         $tax_address = xtc_db_fetch_array($tax_address_query);
       }
 
-      // web28 - set tax country id for using order total in shopping cart
-      if (!isset($tax_address['country_id']) || isset($_SESSION['country'])) {
+      // set tax country id for using order total in shopping cart
+      if (!isset($tax_address['country_id']) 
+          || (isset($_SESSION['country']) && strpos(basename($PHP_SELF), 'checkout') === false)
+          )
+      {
         $tax_address['country_id'] = isset($_SESSION['country']) ?  $_SESSION['country'] : STORE_COUNTRY;
         $tax_address['zone_id'] = -1;
       }

@@ -633,6 +633,7 @@ CREATE TABLE geo_zones (
   geo_zone_name VARCHAR(255) NOT NULL,
   geo_zone_description VARCHAR(255) NOT NULL,
   geo_zone_info INT(1) DEFAULT 0,
+  geo_zone_tax INT(1) DEFAULT 0,
   last_modified DATETIME NULL,
   date_added DATETIME NOT NULL,
   PRIMARY KEY (geo_zone_id),
@@ -1072,6 +1073,14 @@ CREATE TABLE products_description (
   products_order_description text,
   PRIMARY KEY (products_id, language_id),
   KEY idx_products_name (products_name)
+);
+
+DROP TABLE IF EXISTS products_geo_zones_to_tax_class;
+CREATE TABLE products_geo_zones_to_tax_class (
+  products_id INT(11) NOT NULL,
+  geo_zone_id INT(11) NOT NULL,
+  tax_class_id INT(11) NOT NULL,
+  PRIMARY KEY (products_id, geo_zone_id)
 );
 
 DROP TABLE IF EXISTS products_graduated_prices;

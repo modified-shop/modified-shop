@@ -124,7 +124,7 @@ class xtcPrice {
         
     $currency = $this->priceModules->construct($currency, $cGroup);
   }
-  
+    
   /**
    * This function searchs the inividual price for a product using the product id $pID
    *
@@ -139,8 +139,8 @@ class xtcPrice {
    */
   function xtcGetPrice($pID, $format = true, $qty = 1, $tax_class = '', $pPrice = 0, $vpeStatus = 0, $cedit_id = 0) {
     
-    $this->tax_class = $tax_class;
-    
+    $this->tax_class = $this->xtc_get_tax_class($pID, $tax_class);
+
     // check if group is allowed to see prices
     if ($this->cStatus['customers_status_show_price'] == '0') {
       return $this->xtcShowNote($vpeStatus);
@@ -377,6 +377,7 @@ class xtcPrice {
     
     if (xtc_db_num_rows($attribute_query, true) > 0) {
       $attribute_data  = xtc_db_fetch_array($attribute_query, true);
+      $attribute_data['products_tax_class_id'] = $this->xtc_get_tax_class($pID, $attribute_data['products_tax_class_id']);
       
       // calculate weight
       $attributes_weight = $attribute_data['options_values_weight'];
@@ -659,6 +660,8 @@ class xtcPrice {
                            GROUP BY p.products_id");
         if (xtc_db_num_rows($sQuery, true) > 0) {
           $sQuery = xtc_db_fetch_array($sQuery, true);
+          $sQuery['products_tax_class_id'] = $this->xtc_get_tax_class($pID, $sQuery['products_tax_class_id']);
+          
           if (($this->cStatus['customers_status_graduated_prices'] == '1') && ($sQuery['qty'] > 1)) {
             $from = ' ' . FROM . ' ';
             $price = $this->xtcGetGraduatedPrice($pID, $sQuery['qty']);
@@ -1000,5 +1003,52 @@ class xtcPrice {
     return $this->content_type_product[$products_id];
   }
   
+  /**
+   * xtc_get_tax_class
+   *
+   * @param integer $pID
+   * @param integer $tax_class_id
+   * @return integer
+   */
+  function xtc_get_tax_class($pID, $tax_class_id) {
+    static $tax_class_array;
+        
+    if (!isset($tax_class_array)) {
+      $tax_class_array = array();
+    }
+    
+    if (isset($this->country_id)
+        && $this->country_id != STORE_COUNTRY
+        )
+    {
+      $geo_zone_query = xtDBquery("SELECT gz.geo_zone_id 
+                                     FROM ".TABLE_GEO_ZONES." gz
+                                     JOIN ".TABLE_ZONES_TO_GEO_ZONES." ztgz
+                                          ON gz.geo_zone_id = ztgz.geo_zone_id
+                                             AND ztgz.zone_country_id = '".(int)$this->country_id."'
+                                    WHERE gz.geo_zone_tax = 1");
+      if (xtc_db_num_rows($geo_zone_query, true) > 0) {
+        $geo_zone = xtc_db_fetch_array($geo_zone_query, true);
+      
+        if (!isset($tax_class_array[$pID][$geo_zone['geo_zone_id']])) {
+          $tax_class_array[$pID][$geo_zone['geo_zone_id']] = $tax_class_id;
+        
+          $tax_class_query = xtDBquery("SELECT *
+                                          FROM ".TABLE_PRODUCTS_GEO_ZONES_TO_TAX_CLASS."
+                                         WHERE products_id = '".(int)$pID."'
+                                           AND geo_zone_id = '".(int)$geo_zone['geo_zone_id']."'");
+          if (xtc_db_num_rows($tax_class_query, true) > 0) {
+            $tax_class = xtc_db_fetch_array($tax_class_query, true);
+            $tax_class_array[$pID][$geo_zone['geo_zone_id']] = $tax_class['tax_class_id'];
+          }
+        }    
+        
+        return $tax_class_array[$pID][$geo_zone['geo_zone_id']];
+      }
+    }
+    
+    return $tax_class_id;
+  }
+
 }
 ?>

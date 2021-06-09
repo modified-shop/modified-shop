@@ -19,6 +19,7 @@
   require_once(DIR_FS_INC.'parse_multi_language_value.inc.php');
 
   function xtc_get_tax_description($class_id, $country_id= -1, $zone_id= -1) {
+    global $PHP_SELF;
     static $tax_description_array;
     
     if (!is_array($tax_description_array)) {
@@ -26,7 +27,7 @@
     }
     
     // VERSANDKOSTEN IM WARENKORB
-    if (isset($_SESSION['country'])) {
+    if (isset($_SESSION['country']) && strpos(basename($PHP_SELF), 'checkout') === false) {
       $country_id = $_SESSION['country'];
     }
   	

@@ -52,6 +52,7 @@ define('TEXT_CATEGORIES', 'Categories:');
 define('TEXT_PRODUCTS', 'Products:');
 define('TEXT_PRODUCTS_PRICE_INFO', 'Price:');
 define('TEXT_PRODUCTS_TAX_CLASS', 'Tax Class:');
+define('TEXT_PRODUCTS_TAX_CLASS_FOR', 'Tax Class for ');
 define('TEXT_PRODUCTS_AVERAGE_RATING', 'Average Rating:');
 define('TEXT_PRODUCTS_QUANTITY_INFO', 'Stock:');
 define('TEXT_PRODUCTS_DISCOUNT_ALLOWED_INFO', 'Max. allowed Discount:');

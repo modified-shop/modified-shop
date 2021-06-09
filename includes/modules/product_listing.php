@@ -209,6 +209,7 @@ if ($result != false) {
     $get_params .= isset($_GET['y']) && $_GET['y'] >= 0 ? '_'.(int)$_GET['y'] : '';
     $get_params .= isset($_SESSION['filter_sorting']) ? '_'.$_SESSION['filter_sorting'] : '';
     $get_params .= isset($_SESSION['filter_set']) ? '_'.$_SESSION['filter_set'] : '';
+    $get_params .= '_'.((isset($_SESSION['customer_country_id'])) ? $_SESSION['customer_country_id'] : ((isset($_SESSION['country'])) ? $_SESSION['country'] : STORE_COUNTRY));
 
     $cache_id = md5(basename($PHP_SELF).$current_category_id.$_SESSION['language'].$_SESSION['customers_status']['customers_status_id'].$_SESSION['currency'].$max_display_results.$get_params);
     $module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/product_listing/'.$category['listing_template'], $cache_id);

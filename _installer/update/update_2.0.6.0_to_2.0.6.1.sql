@@ -24,4 +24,13 @@ UPDATE `tax_rates` SET `tax_description` = 'DE::MwSt. 7%||EN::VAT 7%' WHERE `tax
 UPDATE `tax_rates` SET `tax_description` = 'DE::MwSt. 19%||EN::VAT 19%' WHERE `tax_description` = 'MwSt. 19%';
 UPDATE `tax_rates` SET `tax_description` = 'DE::MwSt. 19%||EN::VAT 19%' WHERE `tax_description` = 'DE::MwSt. 19%';
 
+#GTB - 2021-06-09 - add tax for geo zones
+ALTER TABLE `geo_zones` ADD `geo_zone_tax` INT(1) DEFAULT 0 AFTER `geo_zone_info`;
+CREATE TABLE products_geo_zones_to_tax_class (
+  `products_id` INT(11) NOT NULL,
+  `geo_zone_id` INT(11) NOT NULL,
+  `tax_class_id` INT(11) NOT NULL,
+  PRIMARY KEY (`products_id`, `geo_zone_id`)
+);
+
 # Keep an empty line at the end of this file for the db_updater to work properly

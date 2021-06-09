@@ -620,6 +620,7 @@ class shoppingCart {
    * @return array
    */
   function get_product($products_id) {
+    global $xtPrice;
     static $products_array;
     
     if (!isset($products_array)) {
@@ -631,6 +632,7 @@ class shoppingCart {
                                        FROM ".TABLE_PRODUCTS."
                                       WHERE products_id = '".(int)$products_id."'");
       $products_array[(int)$products_id] = xtc_db_fetch_array($product_query);
+      $products_array[(int)$products_id]['products_tax_class_id'] = $xtPrice->xtc_get_tax_class($products_id, $products_array[(int)$products_id]['products_tax_class_id']);
     }
     
     return $products_array[(int)$products_id];
@@ -689,6 +691,8 @@ class shoppingCart {
           } elseif (ATTRIBUTES_VALID_CHECK == 'true' && isset($this->contents[$products_id]['attributes']) && !$this->validate_attributes($products_id, $this->contents[$products_id]['attributes'], 'get_products')) {
             $this->remove($products_id); //TODO info message
           } else {
+            $products['products_tax_class_id'] = $xtPrice->xtc_get_tax_class($products_id, $products['products_tax_class_id']);
+            
             if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1
                 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0
                 && $xtPrice->get_content_type_product($products['products_id']) == 'virtual'

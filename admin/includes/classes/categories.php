@@ -657,6 +657,20 @@ class categories {
       xtc_db_perform(TABLE_PRODUCTS, $sql_data_array, 'update', "products_id = '".(int)$products_id."'");
     }
     
+    if (isset($products_data['products_geo_to_tax'])
+        && is_array($products_data['products_geo_to_tax'])
+        )
+    {
+      foreach ($products_data['products_geo_to_tax'] as $geo_zone_id => $tax_class_id) {
+        $sql_data_array = array(
+          'products_id' => $products_id,
+          'geo_zone_id' => $geo_zone_id,
+          'tax_class_id' => $tax_class_id,
+        );
+        xtc_db_perform(TABLE_PRODUCTS_GEO_ZONES_TO_TAX_CLASS, $sql_data_array);
+      }
+    }    
+    
     //upload products image
     if ($products_image_name = $this->uploadImage($products_id,$products_data)) {
       if (xtc_not_null($products_image_name) && $products_image_name != 'none') {
