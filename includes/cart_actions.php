@@ -185,6 +185,13 @@ if (xtc_not_null($action) && basename($PHP_SELF) != FILENAME_COOKIE_USAGE) {
       xtc_collect_posts();
       break;
 
+    case 'shipping_country':
+      if (isset($_POST['country'])) {
+        $_SESSION['country'] = (int)$_POST['country'];
+      }
+      xtc_redirect(xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action'))));
+      break;
+
     // customer wants to add a quickie to the cart (called from a box)
     case 'add_a_quickie' :
         foreach(auto_include(DIR_FS_CATALOG.'includes/extra/cart_actions/add_a_quickie_prepare_post/','php') as $file) require ($file);

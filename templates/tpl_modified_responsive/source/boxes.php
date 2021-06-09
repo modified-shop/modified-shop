@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: boxes.php 10016 2016-06-26 14:11:26Z GTB $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -134,6 +134,7 @@ $fullcontent = array(FILENAME_CHECKOUT_SHIPPING,
 // -----------------------------------------------------------------------------------------
   if (substr(basename($PHP_SELF), 0, 8) != 'checkout') {
     require_once(DIR_FS_BOXES . 'currencies.php');
+    require_once(DIR_FS_BOXES . 'shipping_country.php');
   }
 // -----------------------------------------------------------------------------------------
 

@@ -272,11 +272,6 @@ require_once (DIR_WS_INCLUDES.'define_conditions.php');
 // add_select
 require_once (DIR_WS_INCLUDES.'define_add_select.php');
 
-// shippingcost shoppingcart
-if (strpos($PHP_SELF, FILENAME_SHOPPING_CART) === false) {
-  unset($_SESSION['country']);
-}
-
 // main class
 require_once (DIR_WS_CLASSES.'main.php');
 $main = new main();

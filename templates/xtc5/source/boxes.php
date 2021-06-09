@@ -94,6 +94,7 @@
 // -----------------------------------------------------------------------------------------
   if (substr(basename($PHP_SELF), 0, 8) != 'checkout') {
     require_once(DIR_FS_BOXES . 'currencies.php');
+    require_once(DIR_FS_BOXES . 'shipping_country.php');
   }
 // -----------------------------------------------------------------------------------------
 //EOC require boxes

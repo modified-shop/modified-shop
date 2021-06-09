@@ -52,6 +52,7 @@ define('TEXT_CATEGORIES', 'Kategorien:');
 define('TEXT_PRODUCTS', 'Produkte:');
 define('TEXT_PRODUCTS_PRICE_INFO', 'Preis:');
 define('TEXT_PRODUCTS_TAX_CLASS', 'Steuerklasse:');
+define('TEXT_PRODUCTS_TAX_CLASS_FOR', 'Steuerklasse f&uuml;r ');
 define('TEXT_PRODUCTS_AVERAGE_RATING', 'Durchschn. Bewertung:');
 define('TEXT_PRODUCTS_QUANTITY_INFO', 'Lagerbestand:');
 define('TEXT_PRODUCTS_DISCOUNT_ALLOWED_INFO', 'Maximal erlaubter Rabatt:');

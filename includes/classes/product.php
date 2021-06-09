@@ -81,7 +81,8 @@ class product {
       if (defined('DB_CACHE') && DB_CACHE == 'true') {
         $this->data['products_quantity'] = xtc_get_products_stock($this->data['products_id']);
       }
-
+      
+      $this->data['products_tax_class_id'] = $xtPrice->xtc_get_tax_class($this->data['products_id'], $this->data['products_tax_class_id']);
       if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1
           && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0
           && $xtPrice->get_content_type_product($this->data['products_id']) == 'virtual'
@@ -602,6 +603,7 @@ class product {
   function buildDataArray(&$array, $image='thumbnail') {
     global $xtPrice, $main;
         
+    $array['products_tax_class_id'] = $xtPrice->xtc_get_tax_class($array['products_id'], $array['products_tax_class_id']);
     if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1
         && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0
         && $xtPrice->get_content_type_product($array['products_id']) == 'virtual'

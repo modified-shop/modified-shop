@@ -87,6 +87,7 @@
       $geo_zone_name = xtc_db_prepare_input($_POST['geo_zone_name']);
       $geo_zone_description = xtc_db_prepare_input($_POST['geo_zone_description']);
       $geo_zone_info = ((isset($_POST['geo_zone_info'])) ? '1' : '0');
+      $geo_zone_tax = ((isset($_POST['geo_zone_tax'])) ? '1' : '0');
 
       $geo_zone_name_array = array();
       foreach ($geo_zone_name as $key => $value) {
@@ -108,6 +109,7 @@
         'geo_zone_name' => $geo_zone_name,
         'geo_zone_description' => $geo_zone_description,
         'geo_zone_info' => $geo_zone_info,
+        'geo_zone_tax' => $geo_zone_tax,
         'date_added' => 'now()',
       );
       xtc_db_perform(TABLE_GEO_ZONES, $sql_data_array);
@@ -121,6 +123,7 @@
       $geo_zone_name = xtc_db_prepare_input($_POST['geo_zone_name']);
       $geo_zone_description = xtc_db_prepare_input($_POST['geo_zone_description']);
       $geo_zone_info = ((isset($_POST['geo_zone_info'])) ? '1' : '0');
+      $geo_zone_tax = ((isset($_POST['geo_zone_tax'])) ? '1' : '0');
 
       $geo_zone_name_array = array();
       foreach ($geo_zone_name as $key => $value) {
@@ -142,6 +145,7 @@
         'geo_zone_name' => $geo_zone_name,
         'geo_zone_description' => $geo_zone_description,
         'geo_zone_info' => $geo_zone_info,
+        'geo_zone_tax' => $geo_zone_tax,
         'last_modified' => 'now()',
       );
       xtc_db_perform(TABLE_GEO_ZONES, $sql_data_array, 'update', "geo_zone_id = '" . $zID . "'");
@@ -281,12 +285,7 @@ if (isset($_GET['zID']) && ($saction == 'edit' || $saction == 'new')) {
                 <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
               <?php
-                $zones_query_raw = "SELECT geo_zone_id, 
-                                           geo_zone_name, 
-                                           geo_zone_description, 
-                                           geo_zone_info, 
-                                           last_modified, 
-                                           date_added 
+                $zones_query_raw = "SELECT *
                                       FROM " . TABLE_GEO_ZONES . " 
                                   ORDER BY geo_zone_name";
                 $zones_split = new splitPageResults($zpage, $page_max_display_tax_results, $zones_query_raw, $zones_query_numrows);
@@ -393,6 +392,7 @@ if (isset($_GET['zID']) && ($saction == 'edit' || $saction == 'new')) {
                     $contents[] = array('text' => '<br />' . TEXT_INFO_ZONE_NAME . '<br />' . $geo_zone_name);
                     $contents[] = array('text' => '<br />' . TEXT_INFO_ZONE_DESCRIPTION . '<br />' . $geo_zone_description);
                     $contents[] = array('text' => '<br />' . TEXT_INFO_ZONE_INFO . '<br />' . xtc_draw_checkbox_field('geo_zone_info', '1', false));
+                    $contents[] = array('text' => '<br />' . TEXT_INFO_ZONE_TAX . '<br />' . xtc_draw_checkbox_field('geo_zone_tax', '1', false));
                     $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_INSERT . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $zpage . ((isset($_GET['zID'])) ? '&zID=' . (int)$_GET['zID'] : '')) . '">' . BUTTON_CANCEL . '</a>');
                     break;
 
@@ -414,6 +414,7 @@ if (isset($_GET['zID']) && ($saction == 'edit' || $saction == 'new')) {
                     $contents[] = array('text' => '<br />' . TEXT_INFO_ZONE_NAME . '<br />' . $geo_zone_name);
                     $contents[] = array('text' => '<br />' . TEXT_INFO_ZONE_DESCRIPTION . '<br />' . $geo_zone_description);
                     $contents[] = array('text' => '<br />' . TEXT_INFO_ZONE_INFO . '<br />' . xtc_draw_checkbox_field('geo_zone_info', '1', (($zInfo->geo_zone_info == '1') ? true : false)));
+                    $contents[] = array('text' => '<br />' . TEXT_INFO_ZONE_TAX . '<br />' . xtc_draw_checkbox_field('geo_zone_tax', '1', (($zInfo->geo_zone_tax == '1') ? true : false)));
                     $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $zpage . '&zID=' . $zInfo->geo_zone_id) . '">' . BUTTON_CANCEL . '</a>');
                     break;
 
@@ -432,8 +433,9 @@ if (isset($_GET['zID']) && ($saction == 'edit' || $saction == 'new')) {
 
                       $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $zpage . '&zID=' . $zInfo->geo_zone_id . '&action=edit_zone') . '">' . BUTTON_EDIT . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $zpage . '&zID=' . $zInfo->geo_zone_id . '&action=delete_zone') . '">' . BUTTON_DELETE . '</a>' . ' <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $zpage . '&zID=' . $zInfo->geo_zone_id . '&action=list') . '">' . BUTTON_DETAILS . '</a>');
                       $contents[] = array('text' => '<br />' . TEXT_INFO_NUMBER_ZONES . ' ' . $zInfo->num_zones);
-                      $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_ADDED . ' ' . xtc_date_short($zInfo->date_added));
                       if ($zInfo->geo_zone_info == '1') $contents[] = array('text' => TEXT_INFO_ZONE_INFO_DEFAULT);
+                      if ($zInfo->geo_zone_tax == '1') $contents[] = array('text' => TEXT_INFO_ZONE_TAX_DEFAULT);
+                      $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_ADDED . ' ' . xtc_date_short($zInfo->date_added));
                       if (xtc_not_null($zInfo->last_modified)) $contents[] = array('text' => TEXT_INFO_LAST_MODIFIED . ' ' . xtc_date_short($zInfo->last_modified));
                       $contents[] = array('text' => '<br />' . TEXT_INFO_ZONE_DESCRIPTION . '<br />' . parse_multi_language_value($zInfo->geo_zone_description, $_SESSION['language_code']));
                     }

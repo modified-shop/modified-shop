@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: geo_zones.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -53,4 +53,7 @@ define('TEXT_ALL_COUNTRIES', 'All Countries');
 
 define('TEXT_INFO_ZONE_INFO', 'Show duty info for this zone?');
 define('TEXT_INFO_ZONE_INFO_DEFAULT', 'Duty info selected.');
+
+define('TEXT_INFO_ZONE_TAX', 'Should a separate tax class for products be possible for this tax zone?');
+define('TEXT_INFO_ZONE_TAX_DEFAULT', 'For this tax zone a separate tax class is displayed for products.');
 ?>
