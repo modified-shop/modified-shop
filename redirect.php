@@ -26,7 +26,8 @@ if (isset($_GET['action'])) {
     case 'banner' :
       $banner_query = xtc_db_query("SELECT banners_url 
                                       FROM ".TABLE_BANNERS." 
-                                     WHERE banners_id = '".(int) $_GET['goto']."'");
+                                     WHERE banners_id = '".(int) $_GET['goto']."'
+                                       AND trim(banners_url) != ''");
       if (xtc_db_num_rows($banner_query)) {
         $banner = xtc_db_fetch_array($banner_query);
         xtc_update_banner_click_count($_GET['goto']);
@@ -41,13 +42,12 @@ if (isset($_GET['action'])) {
                                          FROM ".TABLE_PRODUCTS_DESCRIPTION." 
                                         WHERE products_id='".(int) $_GET['id']."'
                                           AND trim(products_name) != ''           
+                                          AND trim(products_url) != ''           
                                           AND language_id='".(int) $_SESSION['languages_id']."'");
         if (xtc_db_num_rows($product_query)) {
           $product = xtc_db_fetch_array($product_query);
 
           xtc_redirect(check_url_scheme($product['products_url']));
-        } else {
-          xtc_redirect(xtc_href_link(FILENAME_DEFAULT));
         }
       }
       break;
@@ -57,8 +57,9 @@ if (isset($_GET['action'])) {
         $manufacturer_query = xtc_db_query("SELECT manufacturers_url 
                                               FROM ".TABLE_MANUFACTURERS_INFO." 
                                              WHERE manufacturers_id = '".(int) $_GET['manufacturers_id']."' 
-                                               AND languages_id = '".(int) $_SESSION['languages_id']."'");
-        if (!xtc_db_num_rows($manufacturer_query)) {
+                                               AND languages_id = '".(int) $_SESSION['languages_id']."'
+                                               AND trim(manufacturers_url) != ''");
+        if (xtc_db_num_rows($manufacturer_query) < 1) {
           // no url exists for the selected language, lets use the default language then
           $manufacturer_query = xtc_db_query("SELECT mi.languages_id, 
                                                      mi.manufacturers_url 
@@ -66,17 +67,17 @@ if (isset($_GET['action'])) {
                                                 JOIN ".TABLE_LANGUAGES." l 
                                                      ON mi.languages_id = l.languages_id
                                                         AND l.code = '".DEFAULT_LANGUAGE."'
-                                               WHERE mi.manufacturers_id = '".(int) $_GET['manufacturers_id']."'");
-          if (!xtc_db_num_rows($manufacturer_query)) {
-            // no url exists, return to the site
-            xtc_redirect(xtc_href_link(FILENAME_DEFAULT));
-          } else {
+                                               WHERE mi.manufacturers_id = '".(int) $_GET['manufacturers_id']."'
+                                                 AND trim(mi.manufacturers_url) != ''");
+          if (xtc_db_num_rows($manufacturer_query) > 0) {
             $manufacturer = xtc_db_fetch_array($manufacturer_query);
             xtc_db_query("UPDATE ".TABLE_MANUFACTURERS_INFO." 
                              SET url_clicked = url_clicked+1, 
                                  date_last_click = now() 
                            WHERE manufacturers_id = '".(int) $_GET['manufacturers_id']."' 
                              AND languages_id = '".$manufacturer['languages_id']."'");
+
+            xtc_redirect(check_url_scheme($manufacturer['manufacturers_url']));
           }
         } else {
           // url exists in selected language
@@ -86,9 +87,9 @@ if (isset($_GET['action'])) {
                                date_last_click = now() 
                          WHERE manufacturers_id = '".(int) $_GET['manufacturers_id']."' 
                            AND languages_id = '".(int)$_SESSION['languages_id']."'");
-        }
 
-        xtc_redirect(check_url_scheme($manufacturer['manufacturers_url']));
+          xtc_redirect(check_url_scheme($manufacturer['manufacturers_url']));
+        }
       }
       break;
   }
