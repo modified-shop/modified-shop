@@ -615,4 +615,5 @@ define('ONLY',' Now only ');
 define('FROM','from ');
 define('YOU_SAVE','you save ');
 define('INSTEAD','Our previous price ');
+define('TXT_PER',' per ');
 ?>
