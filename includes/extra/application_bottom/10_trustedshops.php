@@ -13,7 +13,10 @@
   // include needed defaults
   require_once(DIR_FS_EXTERNAL.'trustedshops/trustedshops.php');
 
-  if (defined('MODULE_TS_TRUSTEDSHOPS_ID')) {
+  if (defined('MODULE_TS_TRUSTEDSHOPS_ID')
+      && $shop_is_offline === false
+      )
+  {
     // trustedshops badge
     if (MODULE_TS_TRUSTBADGE_CODE != '' && MODULE_TS_TRUSTBADGE_VARIANT == 'custom') {
       echo sprintf(MODULE_TS_TRUSTBADGE_CODE).PHP_EOL;
