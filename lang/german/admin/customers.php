@@ -84,5 +84,5 @@ define('TEXT_DELETE_REVIEWS_ELEMENTS', 'Rezensionen l&ouml;schen');
 
 define('TEXT_INFO_DATE','Datum');
 define('TEXT_INFO_IP','IP');
-define('TEXT_INFO_REFID','RefiD');
+define('TEXT_INFO_REFID','RefID');
 ?>
