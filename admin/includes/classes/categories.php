@@ -661,6 +661,9 @@ class categories {
         && is_array($products_data['products_geo_to_tax'])
         )
     {
+      xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_GEO_ZONES_TO_TAX_CLASS."
+                          WHERE products_id = '".(int)$products_id."'");
+                          
       foreach ($products_data['products_geo_to_tax'] as $geo_zone_id => $tax_class_id) {
         $sql_data_array = array(
           'products_id' => $products_id,
