@@ -1807,6 +1807,8 @@ input[type=radio].noStyling,
 input[type=checkbox].noStyling {
   width: 12px;
   height: 12px;
+  opacity: 1 !important;
+  transform: scale(1)!important;
 }
 
 .smallText.pdg2.flt-l .button {
