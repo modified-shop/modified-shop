@@ -83,7 +83,7 @@ function cc_popup_content(trgt) {
 			
 			let cookieString = 'MODOilTrack=' + JSON.stringify(data.purposeConsents) + ';';
 			cookieString += 'expires=' + cookieDate.toUTCString() + ';';
-			cookieString += 'path=/;SameSite=Lax;';
+			cookieString += 'path=' + DIR_WS_CATALOG + ';SameSite=Lax;';
 			if (typeof SetSecCookie !== 'undefined' && SetSecCookie == true) {
 			  cookieString += 'Secure;';
 			}
