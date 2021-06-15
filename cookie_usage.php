@@ -45,7 +45,7 @@ $smarty->assign('language', $_SESSION['language']);
 	$smarty->caching = 1;
 	$smarty->cache_lifetime = CACHE_LIFETIME;
 	$smarty->cache_modified_check = CACHE_CHECK;
-	$cache_id = md5($_SESSION['language']);
+	$cache_id = md5('lID:'.$_SESSION['language']);
 	$main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/cookie_usage.html', $cache_id);
 }
 

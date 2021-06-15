@@ -94,7 +94,7 @@ $smarty->assign('language', $_SESSION['language']);
 	$smarty->caching = 1;
 	$smarty->cache_lifetime = CACHE_LIFETIME;
 	$smarty->cache_modified_check = CACHE_CHECK;
-	$cache_id = md5($_SESSION['language'].$product_reviews['reviews_id']);
+	$cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|pID:'.(int)$_GET['products_id'].'|rID:'.(int)$_GET['reviews_id']);
 	$main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/product_reviews_info.html', $cache_id);
 }
 

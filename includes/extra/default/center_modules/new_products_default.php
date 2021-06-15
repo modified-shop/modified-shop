@@ -132,7 +132,7 @@ if (MAX_DISPLAY_NEW_PRODUCTS != '0') {
           $module_smarty->cache_lifetime = CACHE_LIFETIME;
           $module_smarty->cache_modified_check = CACHE_CHECK;
           
-          $cache_id = md5('0'.$_SESSION['language'].$_SESSION['customers_status']['customers_status_id'].$_SESSION['currency'].'_'.((isset($_SESSION['country'])) ? $_SESSION['country'] : ((isset($_SESSION['customer_country_id'])) ? $_SESSION['customer_country_id'] : STORE_COUNTRY)));
+          $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|curr:'.$_SESSION['currency'].'|country:'.((isset($_SESSION['country'])) ? $_SESSION['country'] : ((isset($_SESSION['customer_country_id'])) ? $_SESSION['customer_country_id'] : STORE_COUNTRY)));
           $module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/new_products_default.html', $cache_id);
       }
       $default_smarty->assign('MODULE_new_products', $module);

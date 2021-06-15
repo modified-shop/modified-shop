@@ -80,7 +80,7 @@ if (!empty($module_content)) {
     $module_smarty->caching = 1;
     $module_smarty->cache_lifetime = CACHE_LIFETIME;
     $module_smarty->cache_modified_check = CACHE_CHECK;
-    $cache_id = md5($new_products_category_id.$_SESSION['language'].$_SESSION['customers_status']['customers_status_name'].$_SESSION['currency']);
+    $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|curr:'.$_SESSION['currency'].'|pID:'.$new_products_category_id);
     $module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/new_products.html', $cache_id);
   }
   $default_smarty->assign('MODULE_new_products', $module);
