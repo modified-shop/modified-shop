@@ -122,14 +122,22 @@ switch(basename($PHP_SELF)) {
 
   case FILENAME_CHECKOUT_PAYMENT:
       require('includes/form_check.js.php');
-      if (method_exists($payment_modules, 'javascript_validation')) {
+      if (isset($payment_modules)
+          && is_object($payment_modules)
+          && method_exists($payment_modules, 'javascript_validation')
+          )
+      {
         echo $payment_modules->javascript_validation();
       }
     break;
 
   case FILENAME_CHECKOUT_SHIPPING:
       require('includes/form_check.js.php');
-      if (method_exists($shipping_modules, 'javascript_validation')) {
+      if (isset($shipping_modules) 
+          && is_object($shipping_modules)
+          && method_exists($shipping_modules, 'javascript_validation')
+          )
+      {
         echo $shipping_modules->javascript_validation();
       }
     break;
