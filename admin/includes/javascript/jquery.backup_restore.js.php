@@ -65,7 +65,7 @@ function JStoPHPResponse(data) {
     var maxReloadsText = '';
     if (response.aufruf > maxReloads) {
       response.nr = response.num_tables;
-      maxReloadsText = '<span>' + '<?php echo TEXT_MAX_RELOADS;?>' + maxReloads + '</span>';
+      maxReloadsText = '<span>' + '<?php echo (defined('TEXT_MAX_RELOADS') ? TEXT_MAX_RELOADS : 'Maximale Seitenreloads wurden erreicht: ');?>' + maxReloads + '</span>';
     }
     
     if (debug) console.log('fileEOF:' + response.fileEOF);

@@ -26,6 +26,11 @@
     require('../includes/configure.php');
   }
 
+  // new error handling
+  if (is_file(DIR_FS_CATALOG.DIR_WS_INCLUDES.'error_reporting.php')) {
+    require_once (DIR_FS_CATALOG.DIR_WS_INCLUDES.'error_reporting.php');
+  }
+
   // include functions
   require_once(DIR_FS_INC.'auto_include.inc.php');
   require_once(DIR_FS_CATALOG . DIR_WS_INCLUDES . 'database_tables.php');
@@ -36,6 +41,20 @@
   require_once(DIR_FS_INC.'db_functions.inc.php');
   
   xtc_db_connect() or die('Unable to connect to database server!');
+
+  // set application wide parameters
+  define('DB_CACHE', 'false');
+  $duplicate_configuration = array();
+  $configuration_query = xtc_db_query('select configuration_key as cfgKey, configuration_value as cfgValue from ' . TABLE_CONFIGURATION . '');
+  while ($configuration = xtc_db_fetch_array($configuration_query)) {
+    if ($configuration['cfgKey'] != 'DB_CACHE' && $configuration['cfgKey'] != 'STORE_DB_TRANSACTIONS') {
+      if (!defined($configuration['cfgKey'])) {
+        define($configuration['cfgKey'], stripslashes($configuration['cfgValue']));
+      } else {
+        $duplicate_configuration[] = $configuration['cfgKey'];
+      }
+    }
+  }
 
   //Start Session
   @ini_set('session.use_only_cookies', 1);
