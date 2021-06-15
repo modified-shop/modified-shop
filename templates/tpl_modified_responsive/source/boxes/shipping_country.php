@@ -25,7 +25,7 @@ if (isset($_SESSION['country'])) {
 }
 
 // set cache id
-$cache_id = md5(basename($PHP_SELF).$selected.$_SESSION['language'].xtc_get_all_get_params(array('currency', 'language')));
+$cache_id = md5('lID:'.$_SESSION['language'].'|sel:'.$selected.'|site:'.basename($PHP_SELF).'|params:'.xtc_get_all_get_params(array('currency', 'language')));
 
 if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_shipping_country.html', $cache_id) || !$cache) {  
   require_once (DIR_FS_INC.'xtc_get_country_list.inc.php');
