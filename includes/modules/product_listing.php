@@ -92,7 +92,7 @@ if ($listing_split->number_of_rows == 0
     $category = xtc_db_fetch_array($category_query, true);
     
     $image = $main->getImage($category['categories_image']);
-    $image_list = $main->getImage($category['categories_image_list']);
+    $image_list = $main->getImage($category['categories_image_list'] != '' ? $category['categories_image_list'] : $category['categories_image']);
     $image_mobile = $main->getImage($category['categories_image_mobile']);
   }
 
