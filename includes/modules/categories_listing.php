@@ -64,7 +64,7 @@
       $cPath_new = xtc_category_link($categories['categories_id'],$categories['categories_name']);
      
       $image = $main->getImage($categories['categories_image']);
-      $image_list = $main->getImage($categories['categories_image_list']);
+      $image_list = $main->getImage($categories['categories_image_list'] != '' ? $categories['categories_image_list'] : $categories['categories_image']);
       $image_mobile = $main->getImage($categories['categories_image_mobile']);
       
       $categories_content[$rows] = array (
