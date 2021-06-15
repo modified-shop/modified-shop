@@ -389,7 +389,7 @@ switch ($category_depth) {
       $default_smarty->caching = 1;
       $default_smarty->cache_lifetime = CACHE_LIFETIME;
       $default_smarty->cache_modified_check = CACHE_CHECK;
-      $cache_id = md5($_SESSION['language'].$_SESSION['currency'].((isset($_SESSION['customer_id'])) ? $_SESSION['customer_id'] : '').'_'.((isset($_SESSION['country'])) ? $_SESSION['country'] : ((isset($_SESSION['customer_country_id'])) ? $_SESSION['customer_country_id'] : STORE_COUNTRY)));
+      $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|curr:'.$_SESSION['currency'].((isset($_SESSION['customer_id'])) ? '|cID:'.$_SESSION['customer_id'] : '').'|country:'.((isset($_SESSION['country'])) ? $_SESSION['country'] : ((isset($_SESSION['customer_country_id'])) ? $_SESSION['customer_country_id'] : STORE_COUNTRY)));
       $main_content = $default_smarty->fetch(CURRENT_TEMPLATE.'/module/'.$content_main_template, $cache_id);
     }
     $smarty->assign('main_content', $main_content);

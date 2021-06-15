@@ -34,7 +34,7 @@
     }
 
     // set cache id
-    $cache_id = md5($_SESSION['language'].'_'.$_SESSION['customers_status']['customers_status_id']);
+    $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|curr:'.$_SESSION['currency']);
 
     if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/semknox_suggest.html')) {
       $template_suggest_file = CURRENT_TEMPLATE.'/module/semknox_suggest.html';

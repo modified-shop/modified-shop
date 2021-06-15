@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: ssl_check.php 4221 2013-01-11 10:18:52Z gtb-modified $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -37,7 +37,7 @@ $smarty->assign('language', $_SESSION['language']);
 	$smarty->caching = 1;
 	$smarty->cache_lifetime = CACHE_LIFETIME;
 	$smarty->cache_modified_check = CACHE_CHECK;
-	$cache_id = md5($_SESSION['language']);
+	$cache_id = md5('lID:'.$_SESSION['language']);
 	$main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/ssl_check.html', $cache_id);
 }
 

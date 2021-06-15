@@ -246,11 +246,11 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
     $info_smarty->cache_modified_check = CACHE_CHECK;
 
     //setting/clearing params
-    $get_params = xtc_get_all_get_params();
-    $get_params .= $products_reviews_count;
-    $get_params .= '_'.((isset($_SESSION['country'])) ? $_SESSION['country'] : ((isset($_SESSION['customer_country_id'])) ? $_SESSION['customer_country_id'] : STORE_COUNTRY));
+    $get_params = '|params:'.xtc_get_all_get_params();
+    $get_params .= '|count:'.$products_reviews_count;
+    $get_params .= '|country:'.((isset($_SESSION['country'])) ? $_SESSION['country'] : ((isset($_SESSION['customer_country_id'])) ? $_SESSION['customer_country_id'] : STORE_COUNTRY));
     
-    $cache_id = md5(xtc_input_validation($_GET['products_id'], 'products_id').$_SESSION['language'].$_SESSION['customers_status']['customers_status_name'].$_SESSION['currency'].$get_params);
+    $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|curr:'.$_SESSION['currency'].'|pID:'.(int)$_GET['products_id'].$get_params);
     $product_info = $info_smarty->fetch(CURRENT_TEMPLATE.'/module/product_info/'.$product->data['product_template'], $cache_id);
   }
   $smarty->assign('main_content', $product_info);

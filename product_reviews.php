@@ -134,7 +134,7 @@ if (!CacheCheck()) {
   $smarty->caching = 1;
   $smarty->cache_lifetime = CACHE_LIFETIME;
   $smarty->cache_modified_check = CACHE_CHECK;
-  $cache_id = md5($_SESSION['language'].'_'.$_GET['products_id'].'_'.$product->getReviewsCount());
+  $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|pID:'.$_GET['products_id'].'|count:'.$product->getReviewsCount());
   $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/product_reviews.html', $cache_id);
 }
 

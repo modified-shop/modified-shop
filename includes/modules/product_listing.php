@@ -204,14 +204,12 @@ if ($result != false) {
     $module_smarty->cache_modified_check = CACHE_CHECK;
 
     //setting/clearing params
-    $get_params = xtc_get_all_get_params();
-    $get_params .= isset($_GET['x']) && $_GET['x'] >= 0 ? '_'.(int)$_GET['x'] : '';
-    $get_params .= isset($_GET['y']) && $_GET['y'] >= 0 ? '_'.(int)$_GET['y'] : '';
-    $get_params .= isset($_SESSION['filter_sorting']) ? '_'.$_SESSION['filter_sorting'] : '';
-    $get_params .= isset($_SESSION['filter_set']) ? '_'.$_SESSION['filter_set'] : '';
-    $get_params .= '_'.((isset($_SESSION['country'])) ? $_SESSION['country'] : ((isset($_SESSION['customer_country_id'])) ? $_SESSION['customer_country_id'] : STORE_COUNTRY));
+    $get_params = '|params:'.xtc_get_all_get_params();
+    $get_params .= isset($_SESSION['filter_sorting']) ? '|fsort:'.$_SESSION['filter_sorting'] : '';
+    $get_params .= isset($_SESSION['filter_set']) ? '|fset:'.$_SESSION['filter_set'] : '';
+    $get_params .= '|country:'.((isset($_SESSION['country'])) ? $_SESSION['country'] : ((isset($_SESSION['customer_country_id'])) ? $_SESSION['customer_country_id'] : STORE_COUNTRY));
 
-    $cache_id = md5(basename($PHP_SELF).$current_category_id.$_SESSION['language'].$_SESSION['customers_status']['customers_status_id'].$_SESSION['currency'].$max_display_results.$get_params);
+    $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|curr:'.$_SESSION['currency'].'|self:'.basename($PHP_SELF).'|cID:'.$current_category_id.'|page:'.$max_display_results.$get_params);
     $module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/product_listing/'.$category['listing_template'], $cache_id);
   }
   $smarty->assign('main_content', $module);

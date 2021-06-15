@@ -172,7 +172,7 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
     $info_smarty->cache_lifetime = CACHE_LIFETIME;
     $info_smarty->cache_modified_check = CACHE_CHECK;
   }
-  $cache_id = md5($_SESSION['language'].'_'.$product->data['products_id']);
+  $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|curr:'.$_SESSION['currency'].'|pID:'.$product->data['products_id']);
 
   $info_smarty->display(CURRENT_TEMPLATE.'/module/print_product_info.html', $cache_id);
 }
