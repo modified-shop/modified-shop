@@ -264,7 +264,7 @@ if (isset($_GET['zID']) && ($saction == 'edit' || $saction == 'new')) {
                 ?>
                 <td class="dataTableContent"><?php echo (($zones['countries_name'] != '') ? $zones['countries_name'] : '---'); ?></td>
                 <td class="dataTableContent"><?php echo (($zones['zone_id']) ? $zones['zone_name'] : PLEASE_SELECT); ?></td>
-                <td class="dataTableContent txta-r"><?php if ( (is_object($sInfo)) && ($zones['association_id'] == $sInfo->association_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $zpage . ((isset($_GET['zID'])) ? '&zID=' . (int)$_GET['zID'] : '') . '&action=list&spage=' . $spage . '&sID=' . $zones['association_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent txta-r"><?php if (isset($sInfo) && is_object($sInfo) && $zones['association_id'] == $sInfo->association_id) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $zpage . ((isset($_GET['zID'])) ? '&zID=' . (int)$_GET['zID'] : '') . '&action=list&spage=' . $spage . '&sID=' . $zones['association_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
               <?php
               }
