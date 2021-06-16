@@ -57,13 +57,13 @@
 
     <div class="twoColumsInner last">
       <h4>{#heading_text#}</h4>
-      <p>{#text_zusatz#}</p>
+      <p>{if isset($NEWSLETTER_INFOS)}{$NEWSLETTER_INFOS}{else}{#text_zusatz#}{/if}</p>
     </div>
   </div> 
   {$FORM_END}
 {else}
   <div class="highlightbox cf">
     <h4>{#heading_text#}</h4>
-    <p>{#text_zusatz#}</p>
+    <p>{if isset($NEWSLETTER_INFOS)}{$NEWSLETTER_INFOS}{else}{#text_zusatz#}{/if}</p>
   </div>
 {/if}

@@ -406,6 +406,7 @@ $values_group_update = array();
   $values[] = "(NULL, 'DISPLAY_HEADQUARTER_ON_CHECKOUT', 'true', '17', '12', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
   $values[] = "(NULL, 'SIGN_CONDITIONS_ON_CHECKOUT', 'false', '17', '9', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
   $values[] = "(NULL, 'ACTIVATE_CROSS_SELLING', 'true', '17', '17', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
+  $values[] = "(NULL, 'MODULE_NEWSLETTER_INFOS', '', 17, 30, NULL, NOW(), NULL, 'xtc_cfg_select_content(\'MODULE_NEWSLETTER_INFOS\',');";
 
   $values_update[] = array (
                            'values' => "set_function = 'xtc_cfg_select_content(\'REVOCATION_ID\','",
