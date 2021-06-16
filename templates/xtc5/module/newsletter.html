@@ -67,6 +67,6 @@
 {else}
   <div class="highlightbox">
     <h4>{#heading_text#}</h4>
-    <p>{#text_zusatz#}</p>
+    <p>{if isset($NEWSLETTER_INFOS)}{$NEWSLETTER_INFOS}{else}{#text_zusatz#}{/if}</p>
   </div>
 {/if}
