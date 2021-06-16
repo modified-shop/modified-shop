@@ -192,9 +192,11 @@
       }
 
       // update whos_online
-      xtc_db_query("UPDATE " . TABLE_WHOS_ONLINE . "
-                       SET session_id = '".xtc_db_input($new_session_id)."' 
-                     WHERE session_id = '".xtc_db_input($old_session_id)."'");      
+      if (!defined('MODULE_WHOS_ONLINE_STATUS') || MODULE_WHOS_ONLINE_STATUS == 'true') {
+        xtc_db_query("UPDATE " . TABLE_WHOS_ONLINE . "
+                         SET session_id = '".xtc_db_input($new_session_id)."' 
+                       WHERE session_id = '".xtc_db_input($old_session_id)."'"); 
+      }     
     }
   }
   
@@ -202,11 +204,20 @@
     require_once (DIR_FS_INC.'xtc_random_charcode.inc.php');
     
     $session_id = md5(xtc_random_charcode(256));
-    $check_query = xtc_db_query("SELECT sesskey
-                                   FROM " . TABLE_SESSIONS . "
-                                  WHERE sesskey = '" . xtc_db_input($session_id) . "'");
-    if (xtc_db_num_rows($check_query) > 0) {
-      xtc_generate_session_id();
+    if (STORE_SESSIONS == 'mysql') {
+      $check_query = xtc_db_query("SELECT sesskey
+                                     FROM " . TABLE_SESSIONS . "
+                                    WHERE sesskey = '" . xtc_db_input($session_id) . "'");
+      if (xtc_db_num_rows($check_query) > 0) {
+        xtc_generate_session_id();
+      }
+    } else {
+      xtc_session_id($session_id);
+      xtc_session_start();
+      if (count($_SESSION) > 0) {
+        session_destroy();
+        xtc_generate_session_id();
+      }
     }
     return $session_id;
   }
