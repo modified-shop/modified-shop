@@ -218,6 +218,7 @@
         session_destroy();
         xtc_generate_session_id();
       }
+      session_destroy();
     }
     return $session_id;
   }
