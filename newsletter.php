@@ -134,7 +134,8 @@ if(isset($_POST['check']) && $_POST['check'] == 'del') {$inp = ''; $del = 'true'
 $smarty->assign('CHECK_INP', xtc_draw_radio_field('check', 'inp', ((isset($inp)) ? $inp : ''), 'id="inp"'));
 $smarty->assign('CHECK_DEL', xtc_draw_radio_field('check', 'del', ((isset($del)) ? $del : ''), 'id="del"'));
 if (defined('MODULE_NEWSLETTER_INFOS') && MODULE_NEWSLETTER_INFOS != '') {
-  $smarty->assign('NEWSLETTER_INFOS', getContentData(MODULE_NEWSLETTER_INFOS));
+  $newsletter_content = $main->getContentData(MODULE_NEWSLETTER_INFOS);
+  $smarty->assign('NEWSLETTER_INFOS', $newsletter_content['content_text']);
 }
 $smarty->assign('BUTTON_SEND', xtc_image_submit('button_send.gif', IMAGE_BUTTON_SEND));
 $smarty->assign('FORM_END', '</form>');
