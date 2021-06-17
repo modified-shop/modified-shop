@@ -148,7 +148,7 @@ if (ACTIVATE_GIFT_SYSTEM == 'true') {
     $credit_selection[$i]['selection'] = xtc_draw_checkbox_field('c'.$credit_selection[$i]['id'], $xtPrice->xtcFormat($credit_amount, false), true, 'id="rd-'.'c'.$credit_selection[$i]['id'].'"');
     $credit_selection[$i]['selection'] .= '<input type="hidden" name="credit_order_total"  id="cot-'.'c'.$credit_selection[$i]['id'].'" value="'.$total.'">';
     $credit_selection[$i]['credit_amount'] = $xtPrice->xtcFormat($credit_amount, true);
-    $module_smarty->assign('credit_amount_payment_info', $credit_amount >= $total ? GV_NO_PAYMENT_INFO : GV_ADD_PAYMENT_INFO);
+    $module_smarty->assign('credit_amount_payment_info', ($credit_amount >= $total && MODULE_ORDER_TOTAL_GV_INC_TAX == 'true') ? GV_NO_PAYMENT_INFO : GV_ADD_PAYMENT_INFO);
   }
   $module_smarty->assign('module_gift', $credit_selection);
 }
