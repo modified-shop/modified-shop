@@ -96,7 +96,7 @@ if (ACTIVATE_GIFT_SYSTEM == 'true'
 require_once (DIR_WS_CLASSES . 'payment.php');
 if (isset($_SESSION['credit_covers']) 
     || (isset($_SESSION['cot_gv']) && !isset($_SESSION['payment']))
-    || (isset($_SESSION['cot_gv']) && isset($_POST['credit_order_total']) && $_SESSION['cot_gv'] >= $_POST['credit_order_total'])
+    || (isset($_SESSION['cot_gv']) && isset($_POST['credit_order_total']) && $_SESSION['cot_gv'] >= $_POST['credit_order_total'] && MODULE_ORDER_TOTAL_GV_INC_TAX == 'true')
     ) 
 {
   $_SESSION['payment'] = 'no_payment'; // GV Code Start/End ICW added for CREDIT CLASS
