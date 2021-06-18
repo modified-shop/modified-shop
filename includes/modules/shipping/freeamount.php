@@ -209,7 +209,7 @@
     }
 
     function remove() {
-      xtc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key LIKE 'MODULE_SHIPPING_SELFPICKUP_%'");
+      xtc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key LIKE 'MODULE_SHIPPING_FREEAMOUNT_%'");
     }
 
     function keys_zones($zones) {
