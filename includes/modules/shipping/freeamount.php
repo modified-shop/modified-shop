@@ -209,7 +209,7 @@
     }
 
     function remove() {
-      xtc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
+      xtc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key LIKE 'MODULE_SHIPPING_SELFPICKUP_%'");
     }
 
     function keys_zones($zones) {
@@ -228,7 +228,6 @@
                     'MODULE_SHIPPING_FREEAMOUNT_SORT_ORDER',
                     'MODULE_SHIPPING_FREEAMOUNT_NUMBER_ZONES',
                     'MODULE_SHIPPING_FREEAMOUNT_DISPLAY',
-                    'MODULE_SHIPPING_FREEAMOUNT_TAX_CLASS',
                     );
       $keys = array_merge($keys, $this->keys_zones($this->num_zones));
 

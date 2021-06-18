@@ -151,7 +151,7 @@ class selfpickup
 
     function remove()
     {
-        xtc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
+        xtc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key LIKE 'MODULE_SHIPPING_SELFPICKUP_%'");
     }
 
     function keys()
@@ -168,7 +168,6 @@ class selfpickup
           'MODULE_SHIPPING_SELFPICKUP_POSTCODE',
           'MODULE_SHIPPING_SELFPICKUP_CITY',
           'MODULE_SHIPPING_SELFPICKUP_COUNTRY',
-          'MODULE_SHIPPING_SELFPICKUP_TAX_CLASS',
         );
     }
 }
