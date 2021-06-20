@@ -1135,6 +1135,7 @@ ul.contentnavigation li {
   line-height:45px;
   color:#666;
   font-size:13px;
+  height:43px;
 }
 
 ul.contentnavigation li.cn_nomobile {
@@ -1175,6 +1176,7 @@ ul.contentnavigation li.cart {
   line-height:43px;
   height:43px;
   position:static;
+  box-sizing:border-box;
 }
 @media only screen and (min-width: 600px) {
   ul.contentnavigation li.cart { position:relative; }
@@ -1188,6 +1190,7 @@ ul.contentnavigation li.wishlist {
   line-height:43px;
   height:43px;
   position:static;
+  box-sizing:border-box;
 }
 @media only screen and (min-width: 600px) {
   ul.contentnavigation li.wishlist { position:relative; }
