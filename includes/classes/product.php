@@ -406,6 +406,7 @@ class product {
                                      WHERE xp.products_id = '".(int)$pID."'
                                        AND xp.products_xsell_grp_name_id='".$cross_sells['products_xsell_grp_name_id']."'
                                            ".PRODUCTS_CONDITIONS_P."
+                                  GROUP BY p.products_id
                                   ORDER BY xp.sort_order ASC");
           if (xtc_db_num_rows($xsell_query, true) > 0) {
             $cross_sells_array[$pID][$cross_sells['products_xsell_grp_name_id']] = array(
@@ -458,6 +459,7 @@ class product {
                                               ".CATEGORIES_CONDITIONS_C."
                                  WHERE xp.xsell_id = '".(int)$pID."'
                                        ".PRODUCTS_CONDITIONS_P."
+                              GROUP BY p.products_id
                               ORDER BY xp.sort_order ASC");
       $reverse_cross_sells_array[$pID] = array();
       if (xtc_db_num_rows($cross_query, true) > 0) {
