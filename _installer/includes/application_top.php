@@ -11,6 +11,10 @@
    ---------------------------------------------------------------------------------------*/
 
 
+  // set the level of error reporting
+  @ini_set('display_errors', false);
+  error_reporting(0);
+
   // set the type of request (secure or not)
   if (file_exists('../includes/request_type.php')) {
     include_once('../includes/request_type.php');
@@ -27,16 +31,11 @@
   // default time zone
   date_default_timezone_set('Europe/Berlin');
 
-  // set the level of error reporting
-  @ini_set('display_errors', true);
-  error_reporting(-1);
-
   // new error handling
   if (!defined('STORE_PARSE_DATE_TIME_FORMAT')) {
     define('STORE_PARSE_DATE_TIME_FORMAT', '%d/%m/%Y %H:%M:%S');
   }
   if (is_file(DIR_FS_CATALOG.'includes/error_reporting.php')) {
-    define('LOGGING_LEVEL', 'WARN');
     require_once (DIR_FS_CATALOG.'includes/error_reporting.php');
 
     $LogLevel = 'WARNING';
