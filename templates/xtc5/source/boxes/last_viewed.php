@@ -58,13 +58,13 @@ if (isset($_SESSION['tracking']['products_history']) && count($_SESSION['trackin
       $box_smarty->assign('CATEGORY_NAME', $random_product['categories_name']);
     }
   }
-}
 
-if (!$cache) {
-  $box_last_viewed = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_last_viewed.html');
-} else {
-  $box_last_viewed = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_last_viewed.html', $cache_id);
-}
+  if (!$cache) {
+    $box_last_viewed = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_last_viewed.html');
+  } else {
+    $box_last_viewed = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_last_viewed.html', $cache_id);
+  }
 
-$smarty->assign('box_LAST_VIEWED', $box_last_viewed);
+  $smarty->assign('box_LAST_VIEWED', $box_last_viewed);
+}
 ?>
