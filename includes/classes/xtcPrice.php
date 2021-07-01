@@ -300,26 +300,22 @@ class xtcPrice {
       $actual_content_qty = xtc_get_qty($pID);
       $qty = $actual_content_qty > $qty ? $actual_content_qty : $qty;
     }
-    
-    if (empty($this->actualGroup)) {
-      $this->actualGroup = DEFAULT_CUSTOMERS_STATUS_ID_GUEST;
-    }
-    
-    if (!isset($graduated_price_array[$pID])) {
-      $graduated_price_array[$pID] = array();
+        
+    if (!isset($graduated_price_array[$this->actualGroup][$pID])) {
+      $graduated_price_array[$this->actualGroup][$pID] = array();
       $graduated_price_query = xtDBquery("SELECT *
                                             FROM ".TABLE_PERSONAL_OFFERS_BY.$this->actualGroup."
                                            WHERE products_id = '".(int)$pID."'");
       while ($graduated_price  = xtc_db_fetch_array($graduated_price_query, true)) {
         if ($graduated_price['personal_offer'] > 0) {
-          $graduated_price_array[$pID][$graduated_price['quantity']] = $graduated_price['personal_offer'];
+          $graduated_price_array[$this->actualGroup][$pID][$graduated_price['quantity']] = $graduated_price['personal_offer'];
         }
       }
-      krsort($graduated_price_array[$pID]);
+      krsort($graduated_price_array[$this->actualGroup][$pID]);
     }
     
-    if (count($graduated_price_array[$pID]) > 0) {
-      foreach ($graduated_price_array[$pID] as $quantity => $personal_offer) {
+    if (count($graduated_price_array[$this->actualGroup][$pID]) > 0) {
+      foreach ($graduated_price_array[$this->actualGroup][$pID] as $quantity => $personal_offer) {
         if ($quantity <= $qty) {
           $key = $quantity;
           break;
@@ -327,7 +323,7 @@ class xtcPrice {
       }
       
       if (isset($key)) {
-        return $graduated_price_array[$pID][$key];
+        return $graduated_price_array[$this->actualGroup][$pID][$key];
       }
     }
   }
