@@ -30,9 +30,9 @@ if (!isset($_SESSION['customer_id'])) {
   $box_smarty->assign('BUTTON', xtc_image_submit('button_login_small.gif', IMAGE_BUTTON_LOGIN));
   $box_smarty->assign('LINK_LOST_PASSWORD', xtc_href_link(FILENAME_PASSWORD_DOUBLE_OPT, '', 'SSL'));
   $box_smarty->assign('FORM_END', '</form>');
-}
 
-$box_smarty->caching = 0;
-$box_loginbox = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_login.html');
-$smarty->assign('box_LOGIN', $box_loginbox);
+  $box_smarty->caching = 0;
+  $box_loginbox = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_login.html');
+  $smarty->assign('box_LOGIN', $box_loginbox);
+}
 ?>
