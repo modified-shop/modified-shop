@@ -1526,6 +1526,9 @@ height:1px;
 margin-bottom:5px;
 border: none;
 }
+td.infoBoxContent ul {
+padding-left:10px;
+}
 .icon_count {
 background: none repeat scroll 0 0 #dc143c;
 -webkit-border-radius: 50%;
