@@ -143,7 +143,10 @@
         $catsort    = 'c.sort_order, cd.categories_name ASC';
         $prodsort   = (isset($_GET['cPath']) && $_GET['cPath'] != '0') ? 'p.products_sort, pd.products_name ASC' : 'p.products_startpage_sort, pd.products_name ASC';
   }
-
+  
+  $catsort .= ', c.categories_id ASC';
+  $prodsort .= ', p.products_id ASC';
+  
   $category_query_name = xtc_db_query("SELECT categories_name
                                          FROM " . TABLE_CATEGORIES_DESCRIPTION . "
                                         WHERE categories_id = '" . $current_category_id . "'
