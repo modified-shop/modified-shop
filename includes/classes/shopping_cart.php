@@ -700,7 +700,11 @@ class shoppingCart {
             {
               $products['products_tax_class_id'] = xtc_get_tax_class($products['products_tax_class_id']);
             }
-
+            
+            if ($products_price_origin = $xtPrice->xtcGetGraduatedPrice($products['products_id'], 1)) {
+              $products['products_price_origin'] = $products_price_origin;
+            }
+            
             $products_price = $xtPrice->xtcGetPrice($products['products_id'], false, $this->contents[$products_id]['qty'], $products['products_tax_class_id'], $products['products_price']);
             
             if ($_SESSION['customers_status']['customers_status_show_price_tax'] != 1) {
