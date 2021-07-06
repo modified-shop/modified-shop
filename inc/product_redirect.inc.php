@@ -114,7 +114,7 @@ function product_redirect($actual_products_id) {
     }
 
     // redirect
-    if (!isset($redirect_arr)) {
+    if (!isset($redirect_arr) || $redirect_arr['RedirectionLink'] == '') {
       $redirect_arr = product_redirect_link($actual_products_id, $current_link);
     }
     
