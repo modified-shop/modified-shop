@@ -194,6 +194,11 @@ $values_group_update = array();
   $values[] = "(NULL, 'DISPLAY_FILTER_SPECIALS', '3,12,27,all', '8', '101', NULL, NOW(), NULL, NULL);";
   $values[] = "(NULL, 'DISPLAY_FILTER_PRODUCTS_NEW', '3,12,27,all', '8', '102', NULL, NOW(), NULL, NULL);";
   $values[] = "(NULL, 'DISPLAY_FILTER_ADVANCED_SEARCH_RESULT', '4,12,32,all', '8', '103', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'PRODUCTS_NEW_SORT', 'desc', '8', '6', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'asc\', \'desc\'),');";
+  $values[] = "(NULL, 'PRODUCTS_NEW_FIELD', 'p.products_date_added', '8', '7', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'p.products_price\', \'pd.products_name\', \'p.products_date_added\', \'p.products_model\', \'p.products_ordered\', \'p.products_sort\', \'p.products_weight\', \'p.products_quantity\'),');";
+  $values[] = "(NULL, 'SPECIALS_SORT', 'desc', '8', '8', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'asc\', \'desc\'),');";
+  $values[] = "(NULL, 'SPECIALS_FIELD', 's.specials_date_added', '8', '9', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'p.products_price\', \'pd.products_name\', \'s.specials_date_added\', \'p.products_model\', \'p.products_ordered\', \'p.products_sort\', \'p.products_weight\', \'p.products_quantity\'),');";
+
 
 //configuration_group_id 9 --- "Lagerverwaltungs Optionen"
   $values[] = "(NULL, 'STOCK_CHECKOUT_UPDATE_PRODUCTS_STATUS', 'false', '9', '20', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";

@@ -45,6 +45,16 @@ define('EXPECTED_PRODUCTS_SORT_DESC' , 'Das ist die Reihenfolge, wie angek&uuml;
 define('EXPECTED_PRODUCTS_FIELD_TITLE' , 'Sortierfeld f&uuml;r Artikelank&uuml;ndigungen');
 define('EXPECTED_PRODUCTS_FIELD_DESC' , 'Das ist die Spalte, die zum Sortieren angek&uuml;ndigter Artikel benutzt wird.');
 
+define('PRODUCTS_NEW_SORT_TITLE', 'Reihenfolge f&uuml;r neue Artikel');
+define('PRODUCTS_NEW_SORT_DESC', 'Das ist die Reihenfolge, wie neue Artikel angezeigt werden.');
+define('PRODUCTS_NEW_FIELD_TITLE', 'Sortierfeld f&uuml;r neue Artikel');
+define('PRODUCTS_NEW_FIELD_DESC', 'Das ist die Spalte, die zum Sortieren neuer Artikel benutzt wird.');
+
+define('SPECIALS_SORT_TITLE', 'Reihenfolge f&uuml;r Sonderangebote');
+define('SPECIALS_SORT_DESC', 'Das ist die Reihenfolge, wie Sonderangebote angezeigt werden.');
+define('SPECIALS_FIELD_TITLE', 'Sortierfeld f&uuml;r Sonderangebote');
+define('SPECIALS_FIELD_DESC', 'Das ist die Spalte, die zum Sortieren von Sonderangebote benutzt wird.');
+
 define('USE_DEFAULT_LANGUAGE_CURRENCY_TITLE' , 'Auf die Landesw&auml;hrung automatisch umstellen');
 define('USE_DEFAULT_LANGUAGE_CURRENCY_DESC' , 'Automatisch auf die Landesw&auml;hrung des Kunden umstellen, sofern verf&uuml;gbar.');
 

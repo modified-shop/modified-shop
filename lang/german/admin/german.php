@@ -567,6 +567,15 @@ define('CFG_TXT_ORDERS', 'Bestellungen');
 define('CFG_TXT_CUSTOMERS', 'Kunden');
 define('CFG_TXT_SALES_REPORT', 'Statistik');
 define('CFG_TXT_BLOG', 'Blog');
+define('CFG_TXT_P.PRODUCTS_PRICE', 'Preis');
+define('CFG_TXT_PD.PRODUCTS_NAME', 'Artikelname');
+define('CFG_TXT_P.PRODUCTS_DATE_ADDED', 'Einstelldatum');
+define('CFG_TXT_P.PRODUCTS_MODEL', 'Artikelnummer');
+define('CFG_TXT_P.PRODUCTS_ORDERED', 'Bestellte Artikel');
+define('CFG_TXT_P.PRODUCTS_SORT', 'Sortierreihenfolge');
+define('CFG_TXT_P.PRODUCTS_WEIGHT', 'Gewicht');
+define('CFG_TXT_P.PRODUCTS_QUANTITY', 'Auf Lager');
+define('CFG_TXT_S.SPECIALS_DATE_ADDED', 'Einstelldatum');
 
 define('CSRF_TOKEN_MANIPULATION', 'CSRFToken Manipulation (Aus Sicherheits-Aspekten ist es nicht mehr erlaubt im Adminbereich in verschiedenen Tabs zu arbeiten.)');
 define('CSRF_TOKEN_NOT_DEFINED', 'CSRFToken nicht definiert (Aus Sicherheits-Aspekten ist es nicht mehr erlaubt im Adminbereich in verschiedenen Tabs zu arbeiten.)');

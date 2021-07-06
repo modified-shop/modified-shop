@@ -263,7 +263,7 @@ switch ($category_depth) {
       $from   .= "JOIN ".TABLE_SPECIALS." s
                     ON p.products_id = s.products_id 
                        ".SPECIALS_CONDITIONS_S." ";
-      $sorting = ' ORDER BY s.specials_date_added DESC ';
+      $sorting = ' ORDER BY '.SPECIALS_FIELD.' '.SPECIALS_SORT.' ';
     } else {
       $select .= "IFNULL(s.specials_new_products_price, p.products_price) AS price, ";
       $from   .= "LEFT JOIN ".TABLE_SPECIALS." s
@@ -280,7 +280,7 @@ switch ($category_depth) {
         $where .= " AND p.products_date_added > '".$date_new_products."' ";
         $daysfound = true;
       }
-      $sorting = ' ORDER BY p.products_date_added DESC ';
+      $sorting = ' ORDER BY '.PRODUCTS_NEW_FIELD.' '.PRODUCTS_NEW_SORT.' ';
     }
 
     if (isset($_GET['manufacturers_id'])) {

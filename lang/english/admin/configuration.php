@@ -46,6 +46,16 @@ define('EXPECTED_PRODUCTS_SORT_DESC' , 'This is the sort order used in the expec
 define('EXPECTED_PRODUCTS_FIELD_TITLE' , 'Expexted Products Sort Field');
 define('EXPECTED_PRODUCTS_FIELD_DESC' , 'The column to sort by in the expected products box.');
 
+define('PRODUCTS_NEW_SORT_TITLE', 'New Products Sort Order');
+define('PRODUCTS_NEW_SORT_DESC', 'This is the sort order used for new products.');
+define('PRODUCTS_NEW_FIELD_TITLE', 'New Products Sort Field');
+define('PRODUCTS_NEW_FIELD_DESC', 'The column to sort by for new products.');
+
+define('SPECIALS_SORT_TITLE', 'Specials Sort Order');
+define('SPECIALS_SORT_DESC', 'This is the sort order used for specials.');
+define('SPECIALS_FIELD_TITLE', 'Specials Sort Field');
+define('SPECIALS_FIELD_DESC', 'The column to sort by for specials.');
+
 define('USE_DEFAULT_LANGUAGE_CURRENCY_TITLE' , 'Switch to language specific currency');
 define('USE_DEFAULT_LANGUAGE_CURRENCY_DESC' , 'Automatically switch currency to customers country if currency is available.');
 
