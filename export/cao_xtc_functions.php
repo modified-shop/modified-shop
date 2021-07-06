@@ -282,7 +282,7 @@ function SendOrders ()
             '<ORDER>' . "\n";
   echo $schema;
 
-  $sql ="select * from " . TABLE_ORDERS . " where orders_id >= '" . xtc_db_input($order_from) . "'";
+  $sql ="select c.countries_id, o.* from " . TABLE_ORDERS . " o JOIN ".TABLE_COUNTRIES." c on o.delivery_country_iso_code_2 = c.countries_iso_code_2 where o.orders_id >= '" . xtc_db_input($order_from) . "'";
   
   if ($order_to) {
     $sql .= " and orders_id <= " . $order_to;
@@ -367,6 +367,7 @@ function SendOrders ()
                '<SUBURB>' . encode_htmlspecialchars($orders['delivery_suburb']) . '</SUBURB>' . "\n" .
                '<STATE>' . encode_htmlspecialchars($orders['delivery_state']) . '</STATE>' . "\n" .
                '<COUNTRY>' . encode_htmlspecialchars($orders['delivery_country_iso_code_2']) . '</COUNTRY>' . "\n" .
+               '<OTHER_TAX>1</OTHER_TAX>' . "\n" .
                '</DELIVERY_ADDRESS>' . "\n" .
                '<PAYMENT>' . "\n" .
                '<PAYMENT_METHOD>' . encode_htmlspecialchars($orders['payment_method']) . '</PAYMENT_METHOD>'  . "\n" .
@@ -375,15 +376,15 @@ function SendOrders ()
     switch ($orders['payment_class'])
     {
       case 'banktransfer':
-             // Bankverbindung laden, wenn aktiv
-             $bank_name = '';
-             $bank_blz  = '';
-             $bank_kto  = '';
-             $bank_inh  = '';
-             $bank_stat = -1;
+            // Bankverbindung laden, wenn aktiv
+            $bank_name = '';
+            $bank_blz  = '';
+            $bank_kto  = '';
+            $bank_inh  = '';
+            $bank_stat = -1;
 
-              $bank_sql = "select * from banktransfer where orders_id = " . $orders['orders_id'];
-             $bank_query = xtc_db_query($bank_sql);
+            $bank_sql = "select * from banktransfer where orders_id = " . $orders['orders_id'];
+            $bank_query = xtc_db_query($bank_sql);
             if (($bank_query) && ($bankdata = xtc_db_fetch_array($bank_query)))
             {
               $bank_name = $bankdata['banktransfer_bankname'];
@@ -392,11 +393,11 @@ function SendOrders ()
               $bank_inh  = $bankdata['banktransfer_owner'];
               $bank_stat = $bankdata['banktransfer_status'];
             }
-             $schema .= '<PAYMENT_BANKTRANS_BNAME>' . encode_htmlspecialchars($bank_name) . '</PAYMENT_BANKTRANS_BNAME>' . "\n" .
-                        '<PAYMENT_BANKTRANS_BLZ>' . encode_htmlspecialchars($bank_blz) . '</PAYMENT_BANKTRANS_BLZ>' . "\n" .
-                        '<PAYMENT_BANKTRANS_NUMBER>' . encode_htmlspecialchars($bank_kto) . '</PAYMENT_BANKTRANS_NUMBER>' . "\n" .
-                        '<PAYMENT_BANKTRANS_OWNER>' . encode_htmlspecialchars($bank_inh) . '</PAYMENT_BANKTRANS_OWNER>' . "\n" .
-                        '<PAYMENT_BANKTRANS_STATUS>' . encode_htmlspecialchars($bank_stat) . '</PAYMENT_BANKTRANS_STATUS>' . "\n";
+            $schema .= '<PAYMENT_BANKTRANS_BNAME>' . encode_htmlspecialchars($bank_name) . '</PAYMENT_BANKTRANS_BNAME>' . "\n" .
+                       '<PAYMENT_BANKTRANS_BLZ>' . encode_htmlspecialchars($bank_blz) . '</PAYMENT_BANKTRANS_BLZ>' . "\n" .
+                       '<PAYMENT_BANKTRANS_NUMBER>' . encode_htmlspecialchars($bank_kto) . '</PAYMENT_BANKTRANS_NUMBER>' . "\n" .
+                       '<PAYMENT_BANKTRANS_OWNER>' . encode_htmlspecialchars($bank_inh) . '</PAYMENT_BANKTRANS_OWNER>' . "\n" .
+                       '<PAYMENT_BANKTRANS_STATUS>' . encode_htmlspecialchars($bank_stat) . '</PAYMENT_BANKTRANS_STATUS>' . "\n";
              break;
     }
     $schema .= '</PAYMENT>' . "\n" .
@@ -456,8 +457,15 @@ function SendOrders ()
     {
       $total_prefix = "";
       $total_tax  = "";
-      $total_prefix = $order_total_class[$totals['class']]['prefix'];
-      $total_tax = $order_total_class[$totals['class']]['tax'];
+      $total_prefix = "";
+      $total_tax = "";
+      
+      if (defined('MODULE_ORDER_TOTAL_'.strtoupper(str_replace('ot_', '', $totals['class'])).'_TAX_CLASS')) {
+        $total_prefix = '+';
+        if ($totals['value'] < 0) $total_prefix = '-';
+        $total_tax = xtc_get_tax_rate(constant('MODULE_ORDER_TOTAL_'.strtoupper(str_replace('ot_', '', $totals['class'])).'_TAX_CLASS'), $orders['countries_id']);
+      }    
+
       $schema .= '<TOTAL>' . "\n" .
                  '<TOTAL_TITLE>' . encode_htmlspecialchars($totals['title']) . '</TOTAL_TITLE>' . "\n" .
                  '<TOTAL_VALUE>' . encode_htmlspecialchars($totals['value']) . '</TOTAL_VALUE>' . "\n" .
