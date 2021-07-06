@@ -187,7 +187,7 @@ class xtc_afterbuy_functions {
     if (isset($Artikelerkennung) && is_numeric($Artikelerkennung)) $DATAstring .= "Artikelerkennung=" . $Artikelerkennung . "&";
 		$nr = 0;
 		$anzahl = 0;
-		if (!class_exists (xtcPrice)) {
+		if (!class_exists ('xtcPrice')) {
 		  require_once ((defined('RUN_MODE_ADMIN') ? DIR_FS_CATALOG : '').DIR_WS_CLASSES . 'xtcPrice.php');
 		  $xtPrice = new xtcPrice($oData['currency'],$oData['customers_status']);
 		}
