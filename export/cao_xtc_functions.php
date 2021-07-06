@@ -297,7 +297,13 @@ function SendOrders ()
   } elseif ($order_status) {
     $sql .= " and orders_status = " . $order_status;
   }
- 
+  
+  $countries_array = array();
+  $countries_query = xtc_db_query("SELECT * FROM " . TABLE_ZONES_TO_GEO_ZONES . " ztgz JOIN " . TABLE_TAX_RATES . " tr ON ztgz.geo_zone_id = tr.tax_zone_id WHERE tr.tax_rate > 0 GROUP BY ztgz.zone_country_id");
+  while ($countries = xtc_db_fetch_array($countries_query)) {
+    $countries_array[] = $countries['zone_country_id'];
+  }
+  
   $orders_query = xtc_db_query($sql);
 
   while ($orders = xtc_db_fetch_array($orders_query))
@@ -367,7 +373,7 @@ function SendOrders ()
                '<SUBURB>' . encode_htmlspecialchars($orders['delivery_suburb']) . '</SUBURB>' . "\n" .
                '<STATE>' . encode_htmlspecialchars($orders['delivery_state']) . '</STATE>' . "\n" .
                '<COUNTRY>' . encode_htmlspecialchars($orders['delivery_country_iso_code_2']) . '</COUNTRY>' . "\n" .
-               '<OTHER_TAX>1</OTHER_TAX>' . "\n" .
+               ((in_array($orders['countries_id'], $countries_array)) ? '<OTHER_TAX>1</OTHER_TAX>' . "\n" : '') . 
                '</DELIVERY_ADDRESS>' . "\n" .
                '<PAYMENT>' . "\n" .
                '<PAYMENT_METHOD>' . encode_htmlspecialchars($orders['payment_method']) . '</PAYMENT_METHOD>'  . "\n" .
