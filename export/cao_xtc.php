@@ -126,31 +126,12 @@ define('SEND_ACCOUNT_MAIL',false);
 $LangID = 2;
 $Lang_folder = 'german';
 
-// Steuer Einstellungen für CAO-Faktura
-
-$order_total_class['ot_cod_fee']['prefix'] = '+';
-$order_total_class['ot_cod_fee']['tax'] = '19';
-
-$order_total_class['ot_customer_discount']['prefix'] = '-';
-$order_total_class['ot_customer_discount']['tax'] = '19';
-
-$order_total_class['ot_gv']['prefix'] = '-';
-$order_total_class['ot_gv']['tax'] = '0';
-
-$order_total_class['ot_loworderfee']['prefix'] = '+';
-$order_total_class['ot_loworderfee']['tax'] = '19';
-
-$order_total_class['ot_shipping']['prefix'] = '+';
-$order_total_class['ot_shipping']['tax'] = '19';
-
-$order_total_class['ot_payment']['prefix'] = '+';
-$order_total_class['ot_payment']['tax'] = '19';
-
 $post = $_POST;
 
 define ('_VALID_XTC',false);
 
 require('../includes/application_top_export.php');
+require_once (DIR_FS_INC.'xtc_get_tax_rate.inc.php');
 
 $_POST = $post;
 
