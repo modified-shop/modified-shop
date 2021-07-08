@@ -194,6 +194,9 @@ body {
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust:     100%;
 }
+strong, b {
+  font-weight:700;
+}
 .clearfix, .clear, .clearer {
   line-height:0px;
   height:0px;
