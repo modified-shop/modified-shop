@@ -33,4 +33,7 @@ CREATE TABLE products_geo_zones_to_tax_class (
   PRIMARY KEY (`products_id`, `geo_zone_id`)
 );
 
+#GTB - 2021-07-13 - add sort_order for geo tax_class
+ALTER TABLE `tax_class` ADD `sort_order` INT(11) DEFAULT 0 NOT NULL AFTER `tax_class_description`; 
+
 # Keep an empty line at the end of this file for the db_updater to work properly

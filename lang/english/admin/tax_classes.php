@@ -18,11 +18,13 @@
 define('HEADING_TITLE', 'Tax Classes');
 
 define('TABLE_HEADING_TAX_CLASSES', 'Tax Classes');
+define('TABLE_HEADING_SORT_ORDER', 'Sortorder');
 define('TABLE_HEADING_ACTION', 'Action');
 
 define('TEXT_INFO_EDIT_INTRO', 'Please make any necessary changes');
 define('TEXT_INFO_CLASS_TITLE', 'Tax Class Title:');
 define('TEXT_INFO_CLASS_DESCRIPTION', 'Description:');
+define('TEXT_INFO_CLASS_SORT_ORDER', 'Sortorder:');
 define('TEXT_INFO_DATE_ADDED', 'Date Added:');
 define('TEXT_INFO_LAST_MODIFIED', 'Last Modified:');
 define('TEXT_INFO_INSERT_INTRO', 'Please enter the new tax class with its related data');
