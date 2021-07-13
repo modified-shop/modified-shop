@@ -458,7 +458,7 @@
     $classes_query = xtc_db_query("SELECT tax_class_id,
                                           tax_class_title
                                      FROM ".TABLE_TAX_CLASS."
-                                 ORDER BY tax_class_title");
+                                 ORDER BY sort_order, tax_class_id");
     while ($classes = xtc_db_fetch_array($classes_query)) {
       $select_string .= '<option value="'.$classes['tax_class_id'].'"';
       if ($selected == $classes['tax_class_id'])
@@ -1074,7 +1074,7 @@
     $tax_class_query = xtc_db_query("SELECT tax_class_id,
                                             tax_class_title
                                        FROM ".TABLE_TAX_CLASS."
-                                   ORDER BY tax_class_title");
+                                   ORDER BY sort_order, tax_class_id");
     while ($tax_class = xtc_db_fetch_array($tax_class_query)) {
       $tax_class_array[] = array ('id' => $tax_class['tax_class_id'], 'text' => parse_multi_language_value($tax_class['tax_class_title'], $_SESSION['language_code']));
     }
