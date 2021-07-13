@@ -42,6 +42,7 @@ require_once (DIR_FS_INC.'xtc_has_product_attributes.inc.php');
 require_once (DIR_WS_CLASSES.'currencies.php');
 $currencies = new currencies();
 
+$c_info = get_c_infos($order->customer['ID'], trim($order->delivery['country_iso_2']));
 ?>
 <!-- Begin Infotext //-->
 <div class="main important_info"><?php echo TEXT_ORDERS_PRODUCT_EDIT_INFO;?></div>
@@ -228,6 +229,7 @@ if (isset($_GET['action']) && $_GET['action'] =='product_search') {
     $products_split = new splitPageResults($_GET['page'], MAX_DISPLAY_PRODUCTS_SEARCH_RESULTS, $products_query_raw, $products_query_numrows, 'p.products_id');
     $products_query = xtc_db_query($products_query_raw);
     while($products = xtc_db_fetch_array($products_query)) {
+      $products['products_tax_class_id'] = $xtPrice->xtc_get_tax_class($products['products_id'], $products['products_tax_class_id']);
       ?>
       <tr class="dataTableRow">
         <?php
@@ -239,7 +241,7 @@ if (isset($_GET['action']) && $_GET['action'] =='product_search') {
           }
           
           $products_special_price_qty = '';
-          $products_tax_rate = xtc_get_tax_rate($products['products_tax_class_id']);
+          $products_tax_rate = xtc_get_tax_rate($products['products_tax_class_id'], $c_info['country_id'], $c_info['zone_id']);
           // calculate brutto price for display
           if (PRICE_IS_BRUTTO == 'true') {
             $products_price = xtc_round($products['products_price'] * ((100 + $products_tax_rate) / 100), PRICE_PRECISION);

@@ -441,6 +441,8 @@
 
     $c_info = get_c_infos($order->customer['ID'], trim($order->delivery['country_iso_2']));
 
+    $product['products_tax_class_id'] = $xtPrice->xtc_get_tax_class($product['products_id'], $product['products_tax_class_id']);
+
     if ($status['customers_status_show_price_tax'] == 1
         && $status['customers_status_add_tax_ot'] == 0
         && $xtPrice->get_content_type_product((int)$data_array['products_id']) == 'virtual'
@@ -578,6 +580,8 @@
 
     $c_info = get_c_infos($order->customer['ID'], trim($order->delivery['country_iso_2']));
 
+    $product['products_tax_class_id'] = $xtPrice->xtc_get_tax_class($product['products_id'], $product['products_tax_class_id']);
+    
     if ($status['customers_status_show_price_tax'] == 1
         && $status['customers_status_add_tax_ot'] == 0
         && $xtPrice->get_content_type_product((int)$data_array['products_id']) == 'virtual'
@@ -814,11 +818,8 @@
                                            op.products_quantity,
                                            op.products_discount_made, 
                                            op.products_tax, 
-                                           op.allow_tax,
-                                           p.products_tax_class_id
+                                           op.allow_tax
                                       FROM ".TABLE_ORDERS_PRODUCTS." op
-                                      JOIN ".TABLE_PRODUCTS." p
-                                           ON op.products_id = p.products_id
                                      WHERE op.orders_products_id = '".(int)$data_array['opID']."'");
     $products = xtc_db_fetch_array($products_query);
 
@@ -966,11 +967,8 @@
                                            op.products_quantity,
                                            op.products_discount_made, 
                                            op.products_tax, 
-                                           op.allow_tax,
-                                           p.products_tax_class_id
+                                           op.allow_tax
                                       FROM ".TABLE_ORDERS_PRODUCTS." op
-                                      JOIN ".TABLE_PRODUCTS." p
-                                           ON op.products_id = p.products_id
                                      WHERE op.orders_products_id = '".(int)$data_array['opID']."'");
     $products = xtc_db_fetch_array($products_query);
     
