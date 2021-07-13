@@ -2,8 +2,11 @@
 -- Daten für Tabelle `tax_class`
 -- 
 
-INSERT INTO `tax_class` (`tax_class_id`, `tax_class_title`, `tax_class_description`, `last_modified`, `date_added`) VALUES (1, 'DE::Standardsatz||EN::Standard rate', '', NULL, NOW());
-INSERT INTO `tax_class` (`tax_class_id`, `tax_class_title`, `tax_class_description`, `last_modified`, `date_added`) VALUES (2, 'DE::ermäßigter Steuersatz||EN::reduced tax rate', '', NULL, NOW());
+INSERT INTO `tax_class` (`tax_class_id`, `tax_class_title`, `tax_class_description`, `sort_order`, `last_modified`, `date_added`) VALUES (1, 'DE::Standardsatz||EN::Standard rate', '', 10, NULL, NOW());
+INSERT INTO `tax_class` (`tax_class_id`, `tax_class_title`, `tax_class_description`, `sort_order`, `last_modified`, `date_added`) VALUES (2, 'DE::ermäßigter Satz 1||EN::reduced rate 1', '', 20, NULL, NOW());
+INSERT INTO `tax_class` (`tax_class_id`, `tax_class_title`, `tax_class_description`, `sort_order`, `last_modified`, `date_added`) VALUES (3, 'DE::ermäßigter Satz 2||EN::reduced rate 2', '', 30, NULL, NOW());
+INSERT INTO `tax_class` (`tax_class_id`, `tax_class_title`, `tax_class_description`, `sort_order`, `last_modified`, `date_added`) VALUES (4, 'DE::stark ermäßigter Satz||EN::highly reduced rate', '', 40, NULL, NOW());
+INSERT INTO `tax_class` (`tax_class_id`, `tax_class_title`, `tax_class_description`, `sort_order`, `last_modified`, `date_added`) VALUES (5, 'DE::Zwischensatz||EN::Intermediate rate', '', 50, NULL, NOW());
 
 -- 
 -- Daten für Tabelle `geo_zones`

@@ -76,7 +76,12 @@
   }
 
   $tax_class_array = array (array ('id' => '0', 'text' => TEXT_NONE));
-  $tax_class_query = xtc_db_query("SELECT tax_class_id, tax_class_title FROM ".TABLE_TAX_CLASS." ORDER BY tax_class_id");
+  $tax_class_query = xtc_db_query("SELECT tc.*
+                                     FROM ".TABLE_TAX_CLASS." tc
+                                     JOIN ".TABLE_TAX_RATES." tr
+                                          ON tr.tax_class_id = tc.tax_class_id
+                                             AND tr.tax_zone_id = ".(int)STORE_COUNTRY."
+                                 ORDER BY tc.sort_order, tc.tax_class_id");
   while ($tax_class = xtc_db_fetch_array($tax_class_query)) {
     $tax_class_array[] = array ('id' => $tax_class['tax_class_id'], 'text' => parse_multi_language_value($tax_class['tax_class_title'], $_SESSION['language_code']));
   }

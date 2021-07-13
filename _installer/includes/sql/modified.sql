@@ -1310,6 +1310,7 @@ CREATE TABLE tax_class (
   tax_class_id INT(11) NOT NULL AUTO_INCREMENT,
   tax_class_title VARCHAR(255) NOT NULL,
   tax_class_description VARCHAR(255) NOT NULL,
+  sort_order INT(11) DEFAULT 0 NOT NULL,
   last_modified DATETIME NULL,
   date_added DATETIME NOT NULL,
   PRIMARY KEY (tax_class_id)
