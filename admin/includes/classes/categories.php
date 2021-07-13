@@ -665,12 +665,14 @@ class categories {
                           WHERE products_id = '".(int)$products_id."'");
                           
       foreach ($products_data['products_geo_to_tax'] as $geo_zone_id => $tax_class_id) {
-        $sql_data_array = array(
-          'products_id' => $products_id,
-          'geo_zone_id' => $geo_zone_id,
-          'tax_class_id' => $tax_class_id,
-        );
-        xtc_db_perform(TABLE_PRODUCTS_GEO_ZONES_TO_TAX_CLASS, $sql_data_array);
+        if ($tax_class_id != $products_data['products_tax_class_id']) {
+          $sql_data_array = array(
+            'products_id' => $products_id,
+            'geo_zone_id' => $geo_zone_id,
+            'tax_class_id' => $tax_class_id,
+          );
+          xtc_db_perform(TABLE_PRODUCTS_GEO_ZONES_TO_TAX_CLASS, $sql_data_array);
+        }
       }
     }    
     
