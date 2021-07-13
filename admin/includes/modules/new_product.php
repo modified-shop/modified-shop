@@ -75,12 +75,16 @@
     $vpe_array[] = array ('id' => $vpe['products_vpe_id'], 'text' => $vpe['products_vpe_name']);
   }
 
-  $tax_class_array = array (array ('id' => '0', 'text' => TEXT_NONE));
+  $geo_zones_query = xtc_db_query("SELECT geo_zone_id
+                                     FROM ".TABLE_ZONES_TO_GEO_ZONES."
+                                    WHERE zone_country_id = ".(int)STORE_COUNTRY);
+  $geo_zones = xtc_db_fetch_array($geo_zones_query);
+  $tax_class_array = array(array ('id' => '0', 'text' => TEXT_NONE));
   $tax_class_query = xtc_db_query("SELECT tc.*
                                      FROM ".TABLE_TAX_CLASS." tc
                                      JOIN ".TABLE_TAX_RATES." tr
                                           ON tr.tax_class_id = tc.tax_class_id
-                                             AND tr.tax_zone_id = ".(int)STORE_COUNTRY."
+                                             AND tr.tax_zone_id = ".$geo_zones['geo_zone_id']."
                                  ORDER BY tc.sort_order, tc.tax_class_id");
   while ($tax_class = xtc_db_fetch_array($tax_class_query)) {
     $tax_class_array[] = array ('id' => $tax_class['tax_class_id'], 'text' => parse_multi_language_value($tax_class['tax_class_title'], $_SESSION['language_code']));
