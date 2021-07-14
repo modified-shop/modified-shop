@@ -626,9 +626,8 @@ class micropayment_callback
         global $smarty, $order, $insert_id, $send_by_admin, $messageStack;
         $send_by_admin = true;
 
-        if(!defined('COMMENT_SEND_ORDER_BY_ADMIN')) {
-            define('COMMENT_SEND_ORDER_BY_ADMIN','new order email send by notification from micropayment');
-        }
+        defined('COMMENT_SEND_ORDER_BY_ADMIN') OR define('COMMENT_SEND_ORDER_BY_ADMIN', 'new order email send by notification from micropayment');
+        defined('SUCCESS_ORDER_SEND') OR define('SUCCESS_ORDER_SEND', 'Order confirmation sent successfully');
 
         $insert_id = $this->getParam('orderid',self::REGEX_INTEGER);
 
