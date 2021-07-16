@@ -1286,9 +1286,11 @@ function xtc_remove_product($product_id)
 
         // rewrite values to use resample classes
         define('DIR_FS_CATALOG_ORIGINAL_IMAGES',DIR_FS_CATALOG.DIR_WS_ORIGINAL_IMAGES);
+        define('DIR_FS_CATALOG_MIDI_IMAGES',DIR_FS_CATALOG.DIR_WS_MIDI_IMAGES);
         define('DIR_FS_CATALOG_INFO_IMAGES',DIR_FS_CATALOG.DIR_WS_INFO_IMAGES);
         define('DIR_FS_CATALOG_POPUP_IMAGES',DIR_FS_CATALOG.DIR_WS_POPUP_IMAGES);
         define('DIR_FS_CATALOG_THUMBNAIL_IMAGES',DIR_FS_CATALOG.DIR_WS_THUMBNAIL_IMAGES);
+        define('DIR_FS_CATALOG_MINI_IMAGES',DIR_FS_CATALOG.DIR_WS_MINI_IMAGES);
         define('DIR_FS_CATALOG_IMAGES',DIR_FS_CATALOG.DIR_WS_IMAGES);
 
         $product_image_query = xtc_db_query("select products_image from " . TABLE_PRODUCTS . " where products_id = '" . xtc_db_input($product_id) . "'");
@@ -1304,12 +1306,19 @@ function xtc_remove_product($product_id)
           if (is_file(DIR_FS_CATALOG_ORIGINAL_IMAGES.$product_image['products_image'])) {
             @ unlink(DIR_FS_CATALOG_ORIGINAL_IMAGES.$product_image['products_image']);
           }
+					if (is_file(DIR_FS_CATALOG_MINI_IMAGES.$product_image['products_image'])) {
+            @ unlink(DIR_FS_CATALOG_MINI_IMAGES.$product_image['products_image']);
+          }
           if (is_file(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$product_image['products_image'])) {
             @ unlink(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$product_image['products_image']);
+          }
+					if (is_file(DIR_FS_CATALOG_MIDI_IMAGES.$product_image['products_image'])) {
+            @ unlink(DIR_FS_CATALOG_MIDI_IMAGES.$product_image['products_image']);
           }
           if (is_file(DIR_FS_CATALOG_INFO_IMAGES.$product_image['products_image'])) {
             @ unlink(DIR_FS_CATALOG_INFO_IMAGES.$product_image['products_image']);
           }
+					
         }
 
         //delete more images
@@ -1328,8 +1337,14 @@ function xtc_remove_product($product_id)
             if (is_file(DIR_FS_CATALOG_ORIGINAL_IMAGES.$mo_images_values['image_name'])) {
               @ unlink(DIR_FS_CATALOG_ORIGINAL_IMAGES.$mo_images_values['image_name']);
             }
+						if (is_file(DIR_FS_CATALOG_MINI_IMAGES.$mo_images_values['image_name'])) {
+              @ unlink(DIR_FS_CATALOG_MINI_IMAGES.$mo_images_values['image_name']);
+            }
             if (is_file(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$mo_images_values['image_name'])) {
               @ unlink(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$mo_images_values['image_name']);
+            }
+						if (is_file(DIR_FS_CATALOG_MIDI_IMAGES.$mo_images_values['image_name'])) {
+              @ unlink(DIR_FS_CATALOG_MIDI_IMAGES.$mo_images_values['image_name']);
             }
             if (is_file(DIR_FS_CATALOG_INFO_IMAGES.$mo_images_values['image_name'])) {
               @ unlink(DIR_FS_CATALOG_INFO_IMAGES.$mo_images_values['image_name']);
@@ -1422,14 +1437,18 @@ function ProductsImageUpload ()
     
     // rewrite values to use resample classes
     define('DIR_FS_CATALOG_ORIGINAL_IMAGES',DIR_FS_CATALOG.DIR_WS_ORIGINAL_IMAGES);
+		define('DIR_FS_CATALOG_MIDI_IMAGES',DIR_FS_CATALOG.DIR_WS_MIDI_IMAGES);
     define('DIR_FS_CATALOG_INFO_IMAGES',DIR_FS_CATALOG.DIR_WS_INFO_IMAGES);
     define('DIR_FS_CATALOG_POPUP_IMAGES',DIR_FS_CATALOG.DIR_WS_POPUP_IMAGES);
     define('DIR_FS_CATALOG_THUMBNAIL_IMAGES',DIR_FS_CATALOG.DIR_WS_THUMBNAIL_IMAGES);
+		define('DIR_FS_CATALOG_MINI_IMAGES',DIR_FS_CATALOG.DIR_WS_MINI_IMAGES);
     define('DIR_FS_CATALOG_IMAGES',DIR_FS_CATALOG.DIR_WS_IMAGES);
 
     // generate resampled images
     require(DIR_FS_DOCUMENT_ROOT.(defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'includes/product_thumbnail_images.php');
+		require(DIR_FS_DOCUMENT_ROOT.(defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'includes/product_mini_images.php');
     require(DIR_FS_DOCUMENT_ROOT.(defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'includes/product_info_images.php');
+		require(DIR_FS_DOCUMENT_ROOT.(defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'includes/product_midi_images.php');
     require(DIR_FS_DOCUMENT_ROOT.(defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'includes/product_popup_images.php');
 
     $code = 0;
@@ -1463,14 +1482,21 @@ function CheckImages ($FileName)
 
   // rewrite values to use resample classes
   define('DIR_FS_CATALOG_ORIGINAL_IMAGES',DIR_FS_CATALOG.DIR_WS_ORIGINAL_IMAGES);
+	define('DIR_FS_CATALOG_MIDI_IMAGES',DIR_FS_CATALOG.DIR_WS_MIDI_IMAGES);
   define('DIR_FS_CATALOG_INFO_IMAGES',DIR_FS_CATALOG.DIR_WS_INFO_IMAGES);
   define('DIR_FS_CATALOG_POPUP_IMAGES',DIR_FS_CATALOG.DIR_WS_POPUP_IMAGES);
   define('DIR_FS_CATALOG_THUMBNAIL_IMAGES',DIR_FS_CATALOG.DIR_WS_THUMBNAIL_IMAGES);
+	define('DIR_FS_CATALOG_MINI_IMAGES',DIR_FS_CATALOG.DIR_WS_MINI_IMAGES);
   define('DIR_FS_CATALOG_IMAGES',DIR_FS_CATALOG.DIR_WS_IMAGES);
 
   // generate resampled images
   if  (file_exists (DIR_FS_CATALOG_ORIGINAL_IMAGES . $FileName))
   {
+
+		if (!file_exists (DIR_FS_CATALOG_MIDI_IMAGES . $FileName))
+    {
+      require(DIR_FS_DOCUMENT_ROOT.(defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'includes/product_midi_images.php');
+    }
 
     if (!file_exists (DIR_FS_CATALOG_INFO_IMAGES . $FileName))
     {
@@ -1485,6 +1511,11 @@ function CheckImages ($FileName)
     if (!file_exists (DIR_FS_CATALOG_POPUP_IMAGES . $FileName))
     {
       require(DIR_FS_DOCUMENT_ROOT.(defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'includes/product_popup_images.php');
+    }
+		
+		if (!file_exists (DIR_FS_CATALOG_MINI_IMAGES . $FileName))
+    {
+      require(DIR_FS_DOCUMENT_ROOT.(defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'includes/product_mini_images.php');
     }
   }
 }
