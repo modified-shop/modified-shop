@@ -107,7 +107,7 @@
           ((isset($response->CreationState->LabelData->exportLabelUrl)) ? $response->CreationState->LabelData->exportLabelUrl : '')
         );
       
-        return $response->CreationState->LabelData->shipmentNumber;
+        return $response->CreationState->shipmentNumber;
       } else {
         $this->LoggingManager->log('DEBUG', 'CreateLabel', array('exception' => $response->CreationState->LabelData->Status->statusMessage));
         return array('message' => 'ERROR - <b>Code:</b> '.$response->Status->statusCode.' <b>Message:</b> '.utf8_encode($response->Status->statusText));
