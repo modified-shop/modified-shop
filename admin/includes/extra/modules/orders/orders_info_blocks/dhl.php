@@ -102,9 +102,9 @@
       </table>
     </form>
     <?php
-    if (isset($_SESSION['DHLparcel_id']) 
+    if (MODULE_DHL_DISPLAY_LABEL == 'True'
+        && isset($_SESSION['DHLparcel_id']) 
         && $_SESSION['DHLparcel_id'] != ''
-        && MODULE_DHL_DISPLAY_LABEL == 'True'
         )
     {                                    
       $check_query = xtc_db_query("SELECT *
