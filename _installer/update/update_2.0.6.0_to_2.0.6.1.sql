@@ -36,4 +36,10 @@ CREATE TABLE products_geo_zones_to_tax_class (
 #GTB - 2021-07-13 - add sort_order for geo tax_class
 ALTER TABLE `tax_class` ADD `sort_order` INT(11) DEFAULT 0 NOT NULL AFTER `tax_class_description`; 
 
+#GTB - 2021-07-23 - add tariff & origin
+ALTER TABLE `products` ADD `products_origin` INT(2) DEFAULT 0 NOT NULL; 
+ALTER TABLE `products` ADD `products_tariff` INT(32) DEFAULT 0 NOT NULL; 
+ALTER TABLE `orders_products` ADD `products_origin` INT(2) DEFAULT 0 NOT NULL; 
+ALTER TABLE `orders_products` ADD `products_tariff` INT(32) DEFAULT 0 NOT NULL; 
+
 # Keep an empty line at the end of this file for the db_updater to work properly

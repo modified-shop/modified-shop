@@ -182,6 +182,8 @@ define('TXT_QTY','On Stock');
 define('TXT_DATE','Release date');
 define('TXT_MODEL','Products Model');
 // EOF - Tomcraft - 2009-09-12 - add option to sort by date and products model
+define('TEXT_PRODUCTS_ORIGIN', 'Country of Origin:');
+define('TEXT_PRODUCTS_TARIFF', 'Tariff Code:');
 
 define('TEXT_MULTICOPY','Multiple');
 define('TEXT_MULTICOPY_DESC','Copy elements into following categories (If one box selected, Single settings will be ignored.)');
