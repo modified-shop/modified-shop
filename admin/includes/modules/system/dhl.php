@@ -74,14 +74,14 @@
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_DHL_BIC', '',  '6', '1', '', now())");
 
       $table_array = array(
-        array('column' => 'external', 'default' => 'INT(1) NOT NULL'),
-        array('column' => 'dhl_label_url', 'default' => 'VARCHAR(512) NOT NULL'),
-        array('column' => 'dhl_export_url', 'default' => 'VARCHAR(512) NOT NULL'),
+        array('table' => TABLE_ORDERS_TRACKING, 'column' => 'external', 'default' => 'INT(1) NOT NULL'),
+        array('table' => TABLE_ORDERS_TRACKING, 'column' => 'dhl_label_url', 'default' => 'VARCHAR(512) NOT NULL'),
+        array('table' => TABLE_ORDERS_TRACKING, 'column' => 'dhl_export_url', 'default' => 'VARCHAR(512) NOT NULL'),
       );
       foreach ($table_array as $table) {
-        $check_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_ORDERS_TRACKING." LIKE '".xtc_db_input($table['column'])."'");
+        $check_query = xtc_db_query("SHOW COLUMNS FROM ".$table['table']." LIKE '".xtc_db_input($table['column'])."'");
         if (xtc_db_num_rows($check_query) < 1) {
-          xtc_db_query("ALTER TABLE ".TABLE_ORDERS_TRACKING." ADD ".$table['column']." ".$table['default']."");
+          xtc_db_query("ALTER TABLE ".$table['table']." ADD ".$table['column']." ".$table['default']."");
         }
       }
     }
