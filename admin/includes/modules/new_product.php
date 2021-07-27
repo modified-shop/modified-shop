@@ -108,15 +108,6 @@
     array('id' => 0, 'text' => TEXT_PRODUCT_NOT_AVAILABLE),
   );
 
-  $countries_array = array(array('id' => '', 'text' => TEXT_NONE));
-  $countries_query = xtc_db_query("SELECT countries_iso_code_2,
-                                          countries_name
-                                     FROM ".TABLE_COUNTRIES."
-                                 ORDER BY countries_name");
-  while ($countries = xtc_db_fetch_array($countries_query)) {
-    $countries_array[] = array('id' => $countries['countries_iso_code_2'], 'text' => $countries['countries_name']);
-  }
-
   $form_action = isset($_GET['pID']) ? 'update_product' : 'insert_product';
   $form_action .= ((isset($_GET['origin']) && $_GET['origin'] != '') ? '&origin='.$_GET['origin'] : '');
   
@@ -168,10 +159,6 @@
           <td><span class="main"><?php echo TEXT_FSK18; ?></span></td>
           <td><span class="main"><?php echo xtc_draw_pull_down_menu('fsk18', 'checkbox', (isset($pInfo->products_fsk18) && $pInfo->products_fsk18==1 ? true : false)); ?></span></td>
         </tr>
-        <tr>
-          <td><span class="main"><?php echo TEXT_PRODUCTS_ORIGIN; ?></span></td>
-          <td><span class="main"><?php echo xtc_draw_pull_down_menu('products_origin', $countries_array, $pInfo->products_origin, 'style="width: 155px"'); ?></span></td>
-        </tr>
       </table>
     </div>
     
@@ -209,10 +196,6 @@
         <tr>
           <td><span class="main"><?php echo TEXT_PRODUCTS_WEIGHT; ?><?php echo TEXT_PRODUCTS_WEIGHT_INFO; ?></span></td>
           <td><span class="main"><?php echo xtc_draw_input_field('products_weight', $pInfo->products_weight, 'style="width: 155px"'); ?></span></td>
-        </tr>
-        <tr>
-          <td><span class="main"><?php echo TEXT_PRODUCTS_TARIFF; ?></span></td>
-          <td><span class="main"><?php echo xtc_draw_input_field('products_tariff', $pInfo->products_tariff,'style="width: 155px"'); ?></span></td>
         </tr>
         <?php if (ACTIVATE_SHIPPING_STATUS=='true') { ?>
         <tr>

@@ -182,8 +182,6 @@ define('TXT_QTY','Auf Lager');
 define('TXT_DATE','Einstelldatum');
 define('TXT_MODEL','Artikelnummer');
 // EOF - Tomcraft - 2009-09-12 - add option to sort by date and products model
-define('TEXT_PRODUCTS_ORIGIN', 'Herstellungsland:');
-define('TEXT_PRODUCTS_TARIFF', 'Zolltarif:');
 
 define('TEXT_MULTICOPY','Mehrfach');
 define('TEXT_MULTICOPY_DESC','Elemente in folgende Kategorien kopieren:<br />(Falls ausgew&auml;hlt werden Einstellungen von "Einfach" ignoriert.)');

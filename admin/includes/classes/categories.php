@@ -620,8 +620,6 @@ class categories {
       'products_vpe_value' => xtc_db_prepare_input($products_data['products_vpe_value']),
       'products_vpe_status' => xtc_db_prepare_input($products_data['products_vpe_status']),
       'products_vpe' => xtc_db_prepare_input($products_data['products_vpe']),
-      'products_origin' => xtc_db_prepare_input($products_data['products_origin']),
-      'products_tariff' => xtc_db_prepare_input($products_data['products_tariff']),
     );
 
     if (trim(ADD_PRODUCTS_FIELDS) != '') {

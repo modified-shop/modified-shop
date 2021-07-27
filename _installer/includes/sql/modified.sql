@@ -861,8 +861,6 @@ CREATE TABLE orders_products (
   allow_tax INT(1) NOT NULL,
   products_order_description text,
   products_weight DECIMAL(15,4) NOT NULL,
-  products_origin VARCHAR(2) NOT NULL,
-  products_tariff VARCHAR(32) NOT NULL,
   PRIMARY KEY (orders_products_id),
   KEY idx_orders_id (orders_id),
   KEY idx_products_id (products_id)
@@ -1006,8 +1004,6 @@ CREATE TABLE products (
   products_vpe_value DECIMAL(15,4) NOT NULL,
   products_startpage INT(1) NOT NULL DEFAULT 0,
   products_startpage_sort INT(4) NOT NULL DEFAULT 0,
-  products_origin VARCHAR(2) NOT NULL,
-  products_tariff VARCHAR(32) NOT NULL,
   PRIMARY KEY (products_id),
   KEY idx_products_date_added (products_date_added),
   KEY idx_products_model (products_model),
