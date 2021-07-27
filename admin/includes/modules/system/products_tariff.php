@@ -21,19 +21,6 @@
       $this->description = defined('MODULE_PRODUCTS_TARIFF_TEXT_DESCRIPTION') ? MODULE_PRODUCTS_TARIFF_TEXT_DESCRIPTION : '';
       $this->sort_order = ((defined('MODULE_PRODUCTS_TARIFF_SORT_ORDER')) ? MODULE_PRODUCTS_TARIFF_SORT_ORDER : '');
       $this->enabled = ((defined('MODULE_PRODUCTS_TARIFF_STATUS') && MODULE_PRODUCTS_TARIFF_STATUS == 'true') ? true : false);
-
-      $this->languages = xtc_get_languages();
-
-      if ($this->check() > 0) {      
-        $check_api_query = xtc_db_query("SELECT * 
-                                           FROM " . TABLE_CONFIGURATION . " 
-                                          WHERE configuration_key LIKE 'MODULE_PRODUCTS_TARIFF_API_%'");
-        $check_api_num = xtc_db_num_rows($check_api_query);
-
-        if ($check_api_num != (count($this->languages) * 2)) {
-            $this->install_language();
-        }        
-      }
     }
 
     function process($file) {
