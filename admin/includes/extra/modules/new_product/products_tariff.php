@@ -30,7 +30,7 @@
     <div class="clear div_box mrg5">
       <table class="tableInput border0">
         <tr>
-          <td style="width:260px; line-height: 35px;"><span class="main"><?php echo TEXT_PRODUCTS_TARIFF; ?></span></td>
+          <td style="width:250px; line-height: 35px;"><span class="main"><?php echo TEXT_PRODUCTS_TARIFF; ?></span></td>
           <td><span class="main"><?php echo xtc_draw_input_field('products_tariff', $pInfo->products_tariff, 'style="width: 155px"'); ?></span></td>
         </tr>
         <tr>
