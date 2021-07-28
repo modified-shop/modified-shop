@@ -3204,6 +3204,12 @@ p.underline {
   float:right;
   width:360px;
 }
+.rb_rezension p {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;  
+  overflow: hidden;
+}
 .rb_rezension_small {
   float:right;
   width:230px;

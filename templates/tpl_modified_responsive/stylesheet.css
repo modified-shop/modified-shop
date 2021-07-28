@@ -4397,6 +4397,12 @@ p.underline {
   float:right;
   width:70%;
 }
+.rb_rezension p {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;  
+  overflow: hidden;
+}
 .rb_rezension_small {
   float:right;
   width: calc(100% - 80px);
