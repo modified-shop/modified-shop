@@ -3209,6 +3209,7 @@ p.underline {
   -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;  
   overflow: hidden;
+  max-height:74px;
 }
 .rb_rezension_small {
   float:right;
