@@ -4109,6 +4109,8 @@ ul.pd_iconlist li.wishlist:before {
 body.popupcontent {
   min-width:100%;
   background:#fff none;
+  box-sizing:border-box;
+  padding: 0 10px 0 0;
 }
 body.popupcontent h1 {
   margin-top:0px !important;
