@@ -181,8 +181,16 @@
   select { font-size: 16px !important;  }
   textarea { font-size: 16px !important; line-height:20px !important; }
   .SumoSelect > .CaptionCont { font-size:16px !important; line-height:18px !important; } 
+}   
+    
+/* Disable font boosting on mobile browsers */
+body * {
+  max-height: 1000000em;          /* Chrome for Android */
+  -moz-text-size-adjust: none;    /* Firefox Mobile */
+  -webkit-text-size-adjust: 100%; /* Safari */
+  -ms-text-size-adjust:     100%; /* Windows Mobile */
 }
-
+    
 body {
   position: relative;
   font-family: 'Poppins', sans-serif;
@@ -191,8 +199,6 @@ body {
   background-color:#fff;
   color:#555;
   line-height:21px;
-  -webkit-text-size-adjust: 100%;
-  -ms-text-size-adjust:     100%;
 }
 strong, b {
   font-weight:700;
