@@ -58,12 +58,12 @@ $lang_array = array(
   
   
   // capture
-  'TEXT_PAYPAL_CAPTURE' => 'Zahlung erfassen',
-  'TEXT_PAYPAL_CAPTURE_LEFT' => 'Anzahl m&ouml;glicher Erfassungen: ',
-  'TEXT_PAYPAL_CAPTURE_IS_FINAL' => 'Letzte Erfassung:',
+  'TEXT_PAYPAL_CAPTURE' => 'Zahlung einziehen',
+  'TEXT_PAYPAL_CAPTURE_LEFT' => 'Anzahl m&ouml;glicher Einziehungen: ',
+  'TEXT_PAYPAL_CAPTURE_IS_FINAL' => 'Letzte Einziehung:',
   'TEXT_PAYPAL_CAPTURE_AMOUNT' => 'Betrag:',
-  'TEXT_PAYPAL_CAPTURE_SUBMIT' => 'Zahlung erfassen',
-  'TEXT_PAYPAL_CAPTURED' => 'Zahlung erfasst',
+  'TEXT_PAYPAL_CAPTURE_SUBMIT' => 'Zahlung einziehen',
+  'TEXT_PAYPAL_CAPTURED' => 'Zahlung eingezogen',
 
   
   // products
