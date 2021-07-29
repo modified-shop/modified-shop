@@ -250,7 +250,7 @@ class PayPalPayment extends PayPalPaymentBase {
                        ->setPostalCode($this->encode_utf8($order->delivery['postcode']))
                        ->setState($this->encode_utf8(((isset($order->delivery['state']) && $order->delivery['state'] != '') ? xtc_get_zone_code($order->delivery['country_id'], $order->delivery['zone_id'], $order->delivery['state']) : '')));
 
-      if ($order->delivery['company'] != '') {
+      if (isset($order->delivery['company']) && $order->delivery['company'] != '') {
         $shipping_address->setLine2($this->encode_utf8($order->delivery['company']));
       }
 
@@ -472,7 +472,7 @@ class PayPalPayment extends PayPalPaymentBase {
                     ->setPostalCode($this->encode_utf8($order->billing['postcode']))
                     ->setCountryCode($this->encode_utf8($order->billing['country']['iso_code_2']));
 
-    if ($order->billing['company'] != '') {
+    if (isset($order->billing['company']) && $order->billing['company'] != '') {
       $payment_address->setLine2($this->encode_utf8($order->billing['company']));
     }
 
@@ -505,7 +505,7 @@ class PayPalPayment extends PayPalPaymentBase {
                      ->setPostalCode($this->encode_utf8($order->delivery['postcode']))
                      ->setState($this->encode_utf8(((isset($order->delivery['state']) && $order->delivery['state'] != '') ? xtc_get_zone_code($order->delivery['country_id'], $order->delivery['zone_id'], $order->delivery['state']) : '')));
 
-    if ($order->delivery['company'] != '') {
+    if (isset($order->delivery['company']) && $order->delivery['company'] != '') {
       $shipping_address->setLine2($this->encode_utf8($order->delivery['company']));
     }
 
@@ -801,11 +801,11 @@ class PayPalPayment extends PayPalPaymentBase {
     $payment_address = new Address();
     $payment_address->setLine1($this->encode_utf8($order->billing['street_address']))
                     ->setCity($this->encode_utf8($order->billing['city']))
-                    ->setState($this->encode_utf8(((isset($order->billing['state']) && $order->billing['state'] != '') ? xtc_get_zone_code($order->billing['country_id'], $order->billing['zone_id'], $order->billing['state']) : '')))
+                    ->setCountryCode($this->encode_utf8(((isset($order->billing['country_iso_2'])) ? $order->billing['country_iso_2'] : $order->billing['country']['iso_code_2'])))
                     ->setPostalCode($this->encode_utf8($order->billing['postcode']))
-                    ->setCountryCode($this->encode_utf8(((isset($order->billing['country_iso_2'])) ? $order->billing['country_iso_2'] : $order->billing['country']['iso_code_2'])));
+                    ->setState($this->encode_utf8(((isset($order->billing['state']) && $order->billing['state'] != '') ? xtc_get_zone_code(((isset($order->billing['country_id'])) ? $order->billing['country_id'] : 0), ((isset($order->billing['zone_id'])) ? $order->billing['zone_id'] : 0), $order->billing['state']) : '')));
 
-    if ($order->billing['company'] != '') {
+    if (isset($order->billing['company']) && $order->billing['company'] != '') {
       $payment_address->setLine2($this->encode_utf8($order->billing['company']));
     }
 
@@ -835,9 +835,9 @@ class PayPalPayment extends PayPalPaymentBase {
                      ->setCity($this->encode_utf8($order->delivery['city']))
                      ->setCountryCode($this->encode_utf8(((isset($order->delivery['country_iso_2'])) ? $order->delivery['country_iso_2'] : $order->delivery['country']['iso_code_2'])))
                      ->setPostalCode($this->encode_utf8($order->delivery['postcode']))
-                     ->setState($this->encode_utf8(((isset($order->delivery['state']) && $order->delivery['state'] != '') ? xtc_get_zone_code($order->delivery['country_id'], $order->delivery['zone_id'], $order->delivery['state']) : '')));
+                     ->setState($this->encode_utf8(((isset($order->delivery['state']) && $order->delivery['state'] != '') ? xtc_get_zone_code(((isset($order->delivery['country_id'])) ? $order->delivery['country_id'] : 0), ((isset($order->delivery['zone_id'])) ? $order->delivery['zone_id'] : 0), $order->delivery['state']) : '')));
 
-    if ($order->delivery['company'] != '') {
+    if (isset($order->delivery['company']) && $order->delivery['company'] != '') {
       $shipping_address->setLine2($this->encode_utf8($order->delivery['company']));
     }
 

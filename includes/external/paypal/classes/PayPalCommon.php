@@ -567,7 +567,7 @@ class PayPalCommon extends PayPalAuth {
     
     $sql_data_array = array(
       'customers_id' => $customer_id,
-      'entry_gender' => $data['gender'],
+      'entry_gender' => ((isset($data['gender'])) ? $data['gender'] : ''),
       'entry_firstname' => $data[$type.'_firstname'],
       'entry_lastname' => $data[$type.'_lastname'],
       'entry_company' => $data[$type.'_company'],
