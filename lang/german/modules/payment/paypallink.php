@@ -14,7 +14,7 @@
 $lang_array = array(
   'MODULE_PAYMENT_PAYPALLINK_TEXT_TITLE' => 'PayPal',
   'MODULE_PAYMENT_PAYPALLINK_TEXT_ADMIN_TITLE' => 'PayPal Classic Zahlungslink',
-  'MODULE_PAYMENT_PAYPALLINK_TEXT_INFO' => ((!defined('RUN_MODE_ADMIN') && function_exists('xtc_href_link')) ? '<img src="'.xtc_href_link(DIR_WS_ICONS.'paypal.png', '', 'SSL', false, false).'" />' : ''),
+  'MODULE_PAYMENT_PAYPALLINK_TEXT_INFO' => ((!defined('RUN_MODE_ADMIN') && function_exists('xtc_href_link')) ? '<img src="'.xtc_href_link(DIR_WS_ICONS.'paypal.png', '', 'SSL', false).'" />' : ''),
   'MODULE_PAYMENT_PAYPALLINK_TEXT_DESCRIPTION' => 'PayPal als Zahlungslink der den Kunden erst nach Bestellabschluss zur Verf&uuml;gung steht. Entscheiden Sie selber, wo der Kunde die Aufforderung zur Zahlung erh&auml;lt.',
   'MODULE_PAYMENT_PAYPALLINK_ALLOWED_TITLE' => 'Erlaubte Zonen',
   'MODULE_PAYMENT_PAYPALLINK_ALLOWED_DESC' => 'Geben Sie <b>einzeln</b> die Zonen an, welche f&uuml;r dieses Modul erlaubt sein sollen. (z.B. AT,DE (wenn leer, werden alle Zonen erlaubt))',
