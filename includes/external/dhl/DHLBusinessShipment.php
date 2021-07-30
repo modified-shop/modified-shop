@@ -352,7 +352,7 @@
       $request = new stdClass();
       $request->Version = $this->buildVersion();
       $request->ShipmentOrder = $ShipmentOrder;
-            
+        
       return $request;
     }
 
@@ -478,7 +478,8 @@
       $ExportDocument = new stdClass();
       $ExportDocument->exportType = 'COMMERCIAL_GOODS';
       $ExportDocument->placeOfCommital = MODULE_DHL_CITY;
-      $ExportDocument->additionalFee = '0';
+      $ExportDocument->additionalFee = $this->order->info['pp_shipping'] + $this->order->info['pp_fee'];
+      $ExportDocument->customsCurrency = $this->order->info['currency'];
       
       $ExportDocument->ExportDocPosition = array();
       for ($i=0, $n=count($this->order->products); $i<$n; $i++) {
