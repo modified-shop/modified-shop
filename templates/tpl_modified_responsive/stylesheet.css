@@ -188,7 +188,7 @@ body * {
   -moz-text-size-adjust: none;    /* Firefox Mobile */
   -webkit-text-size-adjust: 100%; /* Safari */
   -ms-text-size-adjust:     100%; /* Windows Mobile */
-  max-height:               100%; /* Chrome for Android */
+  max-height:          1000000px; /* Chrome for Android */
 }
     
 body {
