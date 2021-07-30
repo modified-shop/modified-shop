@@ -71,7 +71,7 @@
                                            ON c.categories_id = p2c.categories_id
                                               AND c.categories_status = 1
                                                   ".CATEGORIES_CONDITIONS_C."
-                                          ".$from_str."
+                                           ".$from_str."
                                      WHERE p.products_status = '1'
                                        AND p.products_price > 0 
                                             ".$where_str."
