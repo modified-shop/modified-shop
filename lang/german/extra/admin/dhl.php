@@ -28,5 +28,4 @@
   define('TEXT_DHL_BUTTON_CREATE', 'DHL Label erstellen');
   define('TEXT_DHL_CREATE_SUCCESS', 'DHL Paketschein wurde erstellt');
   define('TEXT_DHL_DELETE_SUCCESS', 'DHL Paketschein wurde gel&ouml;scht');
-  define('TEXT_DHL_ORDER_COMMENT', 'DHL Tracking Information %s');
   
