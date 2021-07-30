@@ -32,8 +32,6 @@ if (MAX_DISPLAY_NEW_PRODUCTS_DAYS != '0') {
 $new_products_query = "SELECT ".$product->default_select.",
                               m.manufacturers_name
                          FROM ".TABLE_PRODUCTS." p
-                    LEFT JOIN ".TABLE_MANUFACTURERS." m
-                              ON p.manufacturers_id = m.manufacturers_id
                          JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
                               ON p.products_id = pd.products_id
                                  AND pd.products_name <> ''
@@ -45,6 +43,8 @@ $new_products_query = "SELECT ".$product->default_select.",
                                  AND c.categories_status = 1
                                  AND c.parent_id = '".(int)$new_products_category_id."'
                                      ".CATEGORIES_CONDITIONS_C."
+                    LEFT JOIN ".TABLE_MANUFACTURERS." m
+                              ON p.manufacturers_id = m.manufacturers_id
                         WHERE p.products_status = 1
                               ".PRODUCTS_CONDITIONS_P."
                               ".$days."

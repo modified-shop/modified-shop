@@ -23,10 +23,8 @@ if (isset($current_category_id)) {
                                 FROM ".TABLE_PRODUCTS." p
                                 JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
                                      ON p.products_id = pd.products_id
-                                        AND trim(pd.products_name) != ''
                                         AND pd.language_id = '".(int) $_SESSION['languages_id']."'
-                           LEFT JOIN ".TABLE_MANUFACTURERS." m
-                                     ON p.manufacturers_id = m.manufacturers_id
+                                        AND trim(pd.products_name) != ''
                                 JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
                                      ON p.products_id = p2c.products_id
                                         AND p2c.categories_id = '".(int)$current_category_id."'
@@ -34,6 +32,8 @@ if (isset($current_category_id)) {
                                      ON p2c.categories_id = c.categories_id
                                         AND c.categories_status = 1
                                             ".CATEGORIES_CONDITIONS_C."
+                           LEFT JOIN ".TABLE_MANUFACTURERS." m
+                                     ON p.manufacturers_id = m.manufacturers_id
                                WHERE p.products_status = '1'
                                  AND p.products_id != '".$product->data['products_id']."'
                                      ".PRODUCTS_CONDITIONS_P."

@@ -26,7 +26,8 @@ function check_whatsnew() {
                                              ON p.products_id = p2c.products_id
                                         JOIN ".TABLE_CATEGORIES." c
                                              ON c.categories_id = p2c.categories_id
-                                                AND c.categories_status=1
+                                                AND c.categories_status = 1
+                                                    ".CATEGORIES_CONDITIONS_C."
                                        WHERE p.products_status = '1'
                                              ".PRODUCTS_CONDITIONS_P."
                                              ".$days);

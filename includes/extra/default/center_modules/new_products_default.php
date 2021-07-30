@@ -25,16 +25,16 @@ if (MAX_DISPLAY_NEW_PRODUCTS != '0') {
                                  FROM ".TABLE_PRODUCTS." p
                                  JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
                                       ON p.products_id = pd.products_id
-                                         AND trim(pd.products_name) != ''
                                          AND pd.language_id = '".(int) $_SESSION['languages_id']."'
+                                         AND trim(pd.products_name) != ''
                                  JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
                                       ON p.products_id = p2c.products_id
                                  JOIN ".TABLE_CATEGORIES." c
                                       ON c.categories_id = p2c.categories_id
                                          AND c.categories_status = 1
                                              ".CATEGORIES_CONDITIONS_C."
-                                WHERE p.products_startpage = 1
-                                  AND p.products_status = 1
+                                WHERE p.products_status = 1
+                                  AND p.products_startpage = 1
                                       ".PRODUCTS_CONDITIONS_P);
   $count = xtc_db_fetch_array($count_query);
   $startpage_total = $count['total'];
@@ -48,20 +48,20 @@ if (MAX_DISPLAY_NEW_PRODUCTS != '0') {
     $new_products_query = "SELECT ".$product->default_select.",
                                   m.manufacturers_name
                              FROM ".TABLE_PRODUCTS." p
-                        LEFT JOIN ".TABLE_MANUFACTURERS." m
-                                  ON p.manufacturers_id = m.manufacturers_id
                              JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
                                   ON p.products_id = pd.products_id
-                                     AND pd.products_name <> ''
                                      AND pd.language_id = '".(int) $_SESSION['languages_id']."'
+                                     AND trim(pd.products_name) != ''
                              JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
                                   ON p.products_id = p2c.products_id
                              JOIN ".TABLE_CATEGORIES." c
                                   ON c.categories_id = p2c.categories_id
                                      AND c.categories_status = 1
                                          ".CATEGORIES_CONDITIONS_C."
-                            WHERE p.products_startpage = 1
-                              AND p.products_status = 1
+                        LEFT JOIN ".TABLE_MANUFACTURERS." m
+                                  ON p.manufacturers_id = m.manufacturers_id
+                            WHERE p.products_status = 1
+                              AND p.products_startpage = 1
                                   ".PRODUCTS_CONDITIONS_P."
                          GROUP BY p.products_id
                          ORDER BY ".$order_by."
@@ -80,18 +80,18 @@ if (MAX_DISPLAY_NEW_PRODUCTS != '0') {
       $new_products_query = "SELECT ".$product->default_select.",
                                     m.manufacturers_name
                                FROM ".TABLE_PRODUCTS." p
-                          LEFT JOIN ".TABLE_MANUFACTURERS." m
-                                    ON p.manufacturers_id = m.manufacturers_id
                                JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
                                     ON p.products_id = pd.products_id
-                                       AND pd.products_name <> ''
                                        AND pd.language_id = '".(int)$_SESSION['languages_id']."'
+                                       AND trim(pd.products_name) != ''
                                JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
                                     ON p.products_id = p2c.products_id
                                JOIN ".TABLE_CATEGORIES." c
                                     ON c.categories_id = p2c.categories_id
                                        AND c.categories_status = 1
                                            ".CATEGORIES_CONDITIONS_C."
+                          LEFT JOIN ".TABLE_MANUFACTURERS." m
+                                    ON p.manufacturers_id = m.manufacturers_id
                               WHERE p.products_status = 1
                                     ".PRODUCTS_CONDITIONS_P."
                                     ".$days."

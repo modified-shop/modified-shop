@@ -44,7 +44,8 @@ function xtc_get_product_path($products_id) {
                                 FROM ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
                                 JOIN ".TABLE_CATEGORIES." c
                                      ON c.categories_id = p2c.categories_id
-                                        AND c.categories_status = '1'
+                                        AND c.categories_status = 1
+                                            ".CATEGORIES_CONDITIONS_C."
                                WHERE p2c.products_id = '".(int)$products_id."'
                                      ".$where);
     $check = xtc_db_fetch_array($check_query, true);
@@ -71,9 +72,10 @@ function xtc_get_product_path($products_id) {
                                    ".$category_check."
                        JOIN " . TABLE_CATEGORIES ." c
                             ON p2c.categories_id = c.categories_id 
-                               AND c.categories_status = '1' 
+                               AND c.categories_status = 1
+                                   ".CATEGORIES_CONDITIONS_C."
                       WHERE p.products_id = '" . (int)$products_id . "' 
-                        AND p.products_status = '1' 
+                        AND p.products_status = 1 
                             ".$order_by."
                             ".$limit;
 
