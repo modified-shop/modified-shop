@@ -113,6 +113,7 @@ class sitemaporg {
                                        JOIN ".TABLE_PRODUCTS." as p 
                                             ON m.manufacturers_id = p.manufacturers_id
                                               AND p.products_status = '1'
+                                      WHERE trim(m.manufacturers_name) != ''
                                    ORDER BY m.manufacturers_name";
 
     $manufacturers_query = xtc_db_query($manufacturers_query);
@@ -132,10 +133,11 @@ class sitemaporg {
                                 c.date_added,
                                 c.last_modified
                            FROM " . TABLE_CATEGORIES . " c 
-                      LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION ." cd 
+                           JOIN " . TABLE_CATEGORIES_DESCRIPTION ." cd 
                                 ON c.categories_id = cd.categories_id
+                                   AND cd.language_id = ".(int)$this->languages_id." 
+                                   AND trim(cd.categories_name) != ''
                           WHERE c.categories_status = '1'                      
-                            AND cd.language_id = ".(int)$this->languages_id." 
                                 ".$c_group_check."
                        ORDER BY c.sort_order ASC";
 
@@ -158,11 +160,12 @@ class sitemaporg {
                                           p.products_image,
                                           pd.products_name
                                      FROM " . TABLE_PRODUCTS . " p, 
-                                          " . TABLE_PRODUCTS_DESCRIPTION . " pd
+                                     JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd
+                                          ON p.products_id = pd.products_id
+                                             AND pd.language_id = ".(int)$this->languages_id."
+                                             AND trim(pd.products_name) != ''
                                     WHERE p.products_status = 1
-                                      AND p.products_id = pd.products_id
                                           ".$p_group_check."
-                                      AND pd.language_id = ".(int)$this->languages_id."
                                  ORDER BY p.products_id");
 
     while ($products = xtc_db_fetch_array($products_query)) {
