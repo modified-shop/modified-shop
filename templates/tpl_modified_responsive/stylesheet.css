@@ -185,10 +185,10 @@
     
 /* Disable font boosting on mobile browsers */
 body * {
-  max-height: 1000000em;          /* Chrome for Android */
   -moz-text-size-adjust: none;    /* Firefox Mobile */
   -webkit-text-size-adjust: 100%; /* Safari */
   -ms-text-size-adjust:     100%; /* Windows Mobile */
+  max-height:               100%; /* Chrome for Android */
 }
     
 body {
