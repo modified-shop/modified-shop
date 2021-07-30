@@ -109,8 +109,17 @@
       
         return $response->CreationState->shipmentNumber;
       } else {
+        $message = array('ERROR - <b>Code:</b> '.$response->Status->statusCode.' <b>Message:</b> '.utf8_encode($response->Status->statusText));
+        if (isset($response->CreationState->LabelData->Status->statusMessage)) {
+          foreach ($response->CreationState->LabelData->Status->statusMessage as $status_message) {
+            if (!isset($message[md5($status_message)])) {
+              $message[md5($status_message)] = utf8_encode($status_message);
+            }
+          }
+        }
+        
         $this->LoggingManager->log('DEBUG', 'CreateLabel', array('exception' => $response->CreationState->LabelData->Status->statusMessage));
-        return array('message' => 'ERROR - <b>Code:</b> '.$response->Status->statusCode.' <b>Message:</b> '.utf8_encode($response->Status->statusText));
+        return array('message' => implode('<br>- ',$message));
       }
     }
 
