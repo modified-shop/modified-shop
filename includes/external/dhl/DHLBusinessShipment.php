@@ -466,7 +466,7 @@
             $shipping_details->Address = $Address;
             $shipping_details->Address->name2 = $Name->name2;
           }
-          $shipping_details->Communication = $Communication;
+          //$shipping_details->Communication = $Communication;
           break;
       }
   
