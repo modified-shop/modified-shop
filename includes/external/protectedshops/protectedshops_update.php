@@ -23,8 +23,8 @@ class protectedshops_update {
   
   
   function __construct() {
-    $this->token = MODULE_PROTECTEDSHOPS_TOKEN;
-    $this->enabled = ((MODULE_PROTECTEDSHOPS_STATUS == 'true') ? true : false);
+    $this->token = defined('MODULE_PROTECTEDSHOPS_TOKEN') ? MODULE_PROTECTEDSHOPS_TOKEN : '';
+    $this->enabled = ((defined('MODULE_PROTECTEDSHOPS_STATUS') && MODULE_PROTECTEDSHOPS_STATUS == 'true') ? true : false);
   }
   
   
