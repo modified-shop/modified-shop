@@ -1008,6 +1008,7 @@ CREATE TABLE products (
   KEY idx_products_date_added (products_date_added),
   KEY idx_products_model (products_model),
   KEY idx_products_status (products_status),
+  KEY idx_products_startpage (products_startpage),
   KEY idx_manufacturers_id (manufacturers_id)
 );
 
