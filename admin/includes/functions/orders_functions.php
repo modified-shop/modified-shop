@@ -1018,36 +1018,36 @@
     $check_total_query = xtc_db_query("SELECT orders_total_id 
                                          FROM ".TABLE_ORDERS_TOTAL." 
                                         WHERE orders_id = '".(int)$oID."' 
-                                          AND class = '".$data_array['class']."'");
+                                          AND class = '".$data_array['ot_class']."'");
     if (xtc_db_num_rows($check_total_query) > 0) {
       $check_total = xtc_db_fetch_array($check_total_query);
 
-      $text = $xtPrice->xtcFormat($data_array['value'], true);
-      if ($data_array['value'] < 0 ) {
-        $text = ' '. sprintf(FORMAT_NEGATIVE, trim($xtPrice->xtcFormat($data_array['value'], true)));
+      $text = $xtPrice->xtcFormat($data_array['ot_value'], true);
+      if ($data_array['ot_value'] < 0 ) {
+        $text = ' '. sprintf(FORMAT_NEGATIVE, trim($xtPrice->xtcFormat($data_array['ot_value'], true)));
       }
 
       $sql_data_array = array(
-        'title' => xtc_db_prepare_input($data_array['title']),
+        'title' => xtc_db_prepare_input($data_array['ot_title']),
         'text' => xtc_db_prepare_input($text),
-        'value' => xtc_db_prepare_input($data_array['value']),
-        'sort_order' => xtc_db_prepare_input($data_array['sort_order']),
+        'value' => xtc_db_prepare_input($data_array['ot_value']),
+        'sort_order' => xtc_db_prepare_input($data_array['ot_sort_order']),
       );
 
       xtc_db_perform(TABLE_ORDERS_TOTAL, $sql_data_array, 'update', "orders_total_id = '".(int)($check_total['orders_total_id'])."'");
     } else {
-      $text = $xtPrice->xtcFormat($data_array['value'], true);
-      if ($data_array['value'] < 0 ) {
-        $text = ' '. sprintf(FORMAT_NEGATIVE, trim($xtPrice->xtcFormat($data_array['value'], true)));
+      $text = $xtPrice->xtcFormat($data_array['ot_value'], true);
+      if ($data_array['ot_value'] < 0 ) {
+        $text = ' '. sprintf(FORMAT_NEGATIVE, trim($xtPrice->xtcFormat($data_array['ot_value'], true)));
       }
 
       $sql_data_array = array(
         'orders_id' => (int)($oID),
-        'title' => xtc_db_prepare_input($data_array['title']),
+        'title' => xtc_db_prepare_input($data_array['ot_title']),
         'text' => xtc_db_prepare_input($text),
-        'value' => xtc_db_prepare_input($data_array['value']),
-        'class' => xtc_db_prepare_input($data_array['class']),
-        'sort_order' => xtc_db_prepare_input($data_array['sort_order'])
+        'value' => xtc_db_prepare_input($data_array['ot_value']),
+        'class' => xtc_db_prepare_input($data_array['ot_class']),
+        'sort_order' => xtc_db_prepare_input($data_array['ot_sort_order'])
       );
       xtc_db_perform(TABLE_ORDERS_TOTAL, $sql_data_array);
     }

@@ -223,12 +223,12 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
     <tr class="dataTableRow">
       <?php echo xtc_draw_form('ot_edit', FILENAME_ORDERS_EDIT, 'action=ot_edit', 'post'); ?>
         <td class="dataTableContent"><?php echo $total_text; ?></td>
-        <td class="dataTableContent"><?php echo xtc_draw_input_field('title', $ototal['title'], 'size=40'); ?></td>
-        <td class="dataTableContent"><?php echo xtc_draw_input_field('value', $ototal['value'], 'class="txta-r"'); ?></td>
+        <td class="dataTableContent"><?php echo xtc_draw_input_field('ot_title', $ototal['title'], 'size=40'); ?></td>
+        <td class="dataTableContent"><?php echo xtc_draw_input_field('ot_value', $ototal['value'], 'class="txta-r"'); ?></td>
         <td class="dataTableContent">
         <?php
-          echo xtc_draw_hidden_field('class', $total);
-          echo xtc_draw_hidden_field('sort_order', constant('MODULE_ORDER_TOTAL_'.strtoupper($total_name).'_SORT_ORDER'));
+          echo xtc_draw_hidden_field('ot_class', $total);
+          echo xtc_draw_hidden_field('ot_sort_order', constant('MODULE_ORDER_TOTAL_'.strtoupper($total_name).'_SORT_ORDER'));
           echo xtc_draw_hidden_field('oID', (int)$_GET['oID']);
           echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SAVE . '"/>';
         ?>
