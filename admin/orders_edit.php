@@ -97,11 +97,11 @@
           xtc_redirect(xtc_href_link(FILENAME_ORDERS_EDIT, 'edit_action=other&oID='.(int)$_POST['oID']));
         }
       }
-      if ($_POST['value'] != '' && trim($_POST['title']) == '') {
+      if ($_POST['ot_value'] != '' && trim($_POST['ot_title']) == '') {
         $messageStack->add_session(ERROR_INPUT_TITLE, 'error');
         xtc_redirect(xtc_href_link(FILENAME_ORDERS_EDIT, 'edit_action=other&oID='.(int)$_POST['oID']));
       }
-      if ($_POST['value'] == '' && trim($_POST['title']) == '') {
+      if ($_POST['ot_value'] == '' && trim($_POST['ot_title']) == '') {
         $messageStack->add_session(ERROR_INPUT_EMPTY, 'error');
         xtc_redirect(xtc_href_link(FILENAME_ORDERS_EDIT, 'edit_action=other&oID='.(int)$_POST['oID']));
       }
