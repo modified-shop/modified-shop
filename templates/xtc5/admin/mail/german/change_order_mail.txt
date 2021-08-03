@@ -13,7 +13,7 @@ Neuer Status: {$ORDER_STATUS}
 
 {if $PARCEL_COUNT > 0}
 Die Sendung besteht aus {$PARCEL_COUNT} Paket(en).
-Sie können sich über den Zustellstatus durch einen Klick auf die nachstende(n) Paketnummer(n) informieren:
+Sie können sich über den Zustellstatus durch einen Klick auf die nachstehende(n) Paketnummer(n) informieren:
 {foreach name=aussen item=tracking_data from=$PARCEL_ARRAY}
 {$tracking_data.tracking_link}
 {/foreach}{/if}

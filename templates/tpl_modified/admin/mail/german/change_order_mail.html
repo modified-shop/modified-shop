@@ -32,7 +32,7 @@
         {if $PARCEL_COUNT > 0}
           <br /><br />
           Die Sendung besteht aus {$PARCEL_COUNT} Paket(en).<br />
-          Sie k&ouml;nnen sich &uuml;ber den Zustellstatus durch einen Klick auf die nachstende(n) Paketnummer(n) informieren:<br />
+          Sie k&ouml;nnen sich &uuml;ber den Zustellstatus durch einen Klick auf die nachstehende(n) Paketnummer(n) informieren:<br />
           {foreach name=aussen item=tracking_data from=$PARCEL_ARRAY}
             <a target="_blank" href="{$tracking_data.tracking_link}">{$tracking_data.parcel_id}</a><br />
           {/foreach}
