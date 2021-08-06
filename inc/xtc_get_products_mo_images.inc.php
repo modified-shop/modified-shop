@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_get_products_mo_images.inc.php 4217 2013-01-11 09:38:42Z gtb-modified $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -11,20 +11,19 @@
    ---------------------------------------------------------------------------------------*/
    
 	function xtc_get_products_mo_images($products_id = '') {
-   	$mo_query = "SELECT * 
-   	               from " . TABLE_PRODUCTS_IMAGES . " 
-   	              WHERE products_id = '" . (int)$products_id ."' 
-   	           ORDER BY image_nr";
-   	$products_mo_images_query = xtDBquery($mo_query);
-   
-   	$results = array();
-		while ($row = xtc_db_fetch_array($products_mo_images_query,true)) {
-			$results[($row['image_nr']-1)] = $row;
+   	$products_mo_images_query = xtDBquery("SELECT * 
+                                             FROM ".TABLE_PRODUCTS_IMAGES." 
+                                            WHERE products_id = '".(int)$products_id."' 
+                                         ORDER BY image_nr");   
+   	$more_images_array = array();
+		while ($products_mo_images = xtc_db_fetch_array($products_mo_images_query,true)) {
+			$more_images_array[($products_mo_images['image_nr'] - 1)] = $products_mo_images;
 		}
-		if (sizeof($results)>0) {
-			 return $results;
+		
+		if (count($more_images_array)>0) {
+			return $more_images_array;
 		} else {
-			 return false;
+		  return false;
 		}
 	}
 ?>
