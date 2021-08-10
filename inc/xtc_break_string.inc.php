@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_break_string.inc.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -18,8 +18,8 @@
   function xtc_break_string($string, $len, $break_char = '-') {
     $l = 0;
     $output = '';
-    for ($i=0, $n=strlen($string); $i<$n; $i++) {
-      $char = substr($string, $i, 1);
+    for ($i=0, $n=mb_strlen($string); $i<$n; $i++) {
+      $char = mb_substr($string, $i, 1);
       if ($char != ' ') {
         $l++;
       } else {
@@ -34,4 +34,4 @@
 
     return $output;
   }
- ?>
+?>
