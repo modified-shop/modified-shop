@@ -67,6 +67,6 @@
   define('DIR_WS_BASE', xtc_href_link('', '', $request_type, false, false));
 
   // css buttons
-  if (file_exists(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/inc/css_button.inc.php')) {
-    require_once ('templates/'.CURRENT_TEMPLATE.'/source/inc/css_button.inc.php');
+  if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/inc/css_button.inc.php')) {
+    require_once(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/inc/css_button.inc.php');
   }
