@@ -29,32 +29,5 @@
 </div>
 {/if}
 
-
-{if $module_content != '' && $TR_COLS > 0}
-<h4>{#heading_more_categories#}</h4>
-<div class="subcats cf">
-  {foreach name=aussen item=module_data from=$module_content key=spalten}
-  <div class="subcatlist">
-    <div class="subcatlist_inner cf">
-      <a href="{$module_data.CATEGORIES_LINK}">
-        {if $module_data.CATEGORIES_IMAGE != '' || (isset($module_data.CATEGORIES_IMAGE_LIST) && $module_data.CATEGORIES_IMAGE_LIST != '')}
-          <span class="subcat_image">
-            <span class="subcat_image_inner cf">
-              {if isset($module_data.CATEGORIES_IMAGE_LIST) && $module_data.CATEGORIES_IMAGE_LIST != ''}
-                <img class="lazyload" data-src="{$module_data.CATEGORIES_IMAGE_LIST}" alt="{$module_data.CATEGORIES_NAME|onlytext}" />
-                <noscript><img src="{$module_data.CATEGORIES_IMAGE_LIST}" alt="{$module_data.CATEGORIES_NAME|onlytext}" /></noscript>
-              {else}
-                <img class="lazyload" data-src="{$module_data.CATEGORIES_IMAGE}" alt="{$module_data.CATEGORIES_NAME|onlytext}" />
-                <noscript><img src="{$module_data.CATEGORIES_IMAGE}" alt="{$module_data.CATEGORIES_NAME|onlytext}" /></noscript>
-              {/if}
-            </span>
-          </span>
-        {/if}
-        <span class="subcat_title"><span class="subcat_title_inner">{$module_data.CATEGORIES_NAME}</span></span>
-      </a>
-    </div>
-  </div>
-  {/foreach}
-</div>
-{/if}
+{if isset($CATEGORIES_LISTING)}{$CATEGORIES_LISTING}{/if}
 {if isset($MODULE_new_products)}{$MODULE_new_products}{/if}

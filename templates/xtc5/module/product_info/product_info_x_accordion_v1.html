@@ -132,7 +132,7 @@
 {*BEGIN ACCORDION*}
 <div id="accordion_product_info">
   {if $PRODUCTS_DESCRIPTION != ''}<h3><a href="#">{#description#}</a></h3><div>{$PRODUCTS_DESCRIPTION}</div>{/if}
-  {if $MODULE_product_tags != ''}<h3><a href="#">{#products_tags#}</a></h3><div>{$MODULE_product_tags}</div>{/if}
+  {if trim($MODULE_product_tags) != ''}<h3><a href="#">{#products_tags#}</a></h3><div>{$MODULE_product_tags}</div>{/if}
   {if isset($more_images) && count($more_images) > 0}<h3><a href="#">{#more_images#}</a></h3>
     <div>
       <div id="accordion_more_images">
@@ -146,12 +146,12 @@
       </div>
     </div>
   {/if}
-  {if $MODULE_products_media != ''}<h3><a href="#">{#products_media#}</a></h3><div>{$MODULE_products_media}</div>{/if}
-  {if $MODULE_products_reviews != ''}<h3><a href="#">{#products_reviews#}</a></h3><div>{$MODULE_products_reviews}</div>{/if}
-  {if $MODULE_cross_selling != '' || $MODULE_reverse_cross_selling != ''}<h3><a href="#">{#cross_selling#}</a></h3><div>{$MODULE_cross_selling}
-  {if $MODULE_reverse_cross_selling != ''}{$MODULE_reverse_cross_selling}{/if}</div>{/if}
-  {if $MODULE_also_purchased != ''}<h3><a href="#">{#also_purchased#}</a></h3><div>{$MODULE_also_purchased}</div>{/if}
-  {if $MODULE_products_category != ''}<h3><a href="#">{#products_category#}</a></h3><div>{$MODULE_products_category}</div>{/if}
+  {if trim($MODULE_products_media) != ''}<h3><a href="#">{#products_media#}</a></h3><div>{$MODULE_products_media}</div>{/if}
+  {if trim($MODULE_products_reviews) != ''}<h3><a href="#">{#products_reviews#}</a></h3><div>{$MODULE_products_reviews}</div>{/if}
+  {if trim($MODULE_cross_selling) != '' || trim($MODULE_reverse_cross_selling) != ''}<h3><a href="#">{#cross_selling#}</a></h3><div>{$MODULE_cross_selling}
+  {if trim($MODULE_reverse_cross_selling) != ''}{$MODULE_reverse_cross_selling}{/if}</div>{/if}
+  {if trim($MODULE_also_purchased) != ''}<h3><a href="#">{#also_purchased#}</a></h3><div>{$MODULE_also_purchased}</div>{/if}
+  {if trim($MODULE_products_category) != ''}<h3><a href="#">{#products_category#}</a></h3><div>{$MODULE_products_category}</div>{/if}
 </div>
 {*END ACCORDION*}
 

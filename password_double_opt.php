@@ -88,7 +88,7 @@ if (isset($_GET['action'])
       $smarty->assign('VALID_REQUEST_TIME', (VALID_REQUEST_TIME / 60));
   
       // dont allow cache
-      $smarty->caching = false;
+      $smarty->caching = 0;
       $smarty->assign('language', $_SESSION['language']);
 
       // create mails
@@ -181,11 +181,12 @@ if (isset ($_GET['action']) && $_GET['action'] == 'verified' && isset($_GET['key
       }
 
       if ($error === false) {
-        $sql_data_array = array('customers_password' => xtc_encrypt_password($password_new),
-                                'password_request_key' => '',
-                                'password_request_time' => '',
-                                'customers_last_modified' => 'now()',
-                                );
+        $sql_data_array = array(
+          'customers_password' => xtc_encrypt_password($password_new),
+          'password_request_key' => '',
+          'password_request_time' => '',
+          'customers_last_modified' => 'now()',
+        );
         xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '".(int) $check_customer['customers_id']."'");
         
         // redirect to login
@@ -259,4 +260,3 @@ if (!defined('RM'))
   $smarty->load_filter('output', 'note');
 $smarty->display(CURRENT_TEMPLATE.'/index.html');
 include ('includes/application_bottom.php');
-?>

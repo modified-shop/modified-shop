@@ -25,6 +25,8 @@ if (ENABLE_SSL == true && $request_type == 'NONSSL' && !isset($_GET['action']) &
 
 // create smarty elements
 $smarty = new Smarty;
+$smarty->assign('language', $_SESSION['language']);
+$smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 
 // include boxes
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
@@ -42,22 +44,22 @@ if ($language_not_found === true) {
     xtc_redirect(xtc_href_link(FILENAME_DEFAULT));
   }
   
-  $shop_content_query = xtc_db_query("SELECT ". ADD_SELECT_CONTENT . "
-                                             content_id, 
-                                             content_title, 
-                                             content_heading, 
-                                             content_text, 
-                                             content_file,
-                                             parent_id
-                                        FROM ".TABLE_CONTENT_MANAGER."
-                                       WHERE content_group='".(int) $_GET['coID']."'
-                                             ".CONTENT_CONDITIONS."
-                                         AND content_active = '1'
-                                         AND trim(content_title) != ''
-                                         AND languages_id=".(int)$_SESSION['languages_id']);
+  $shop_content_query = xtDBquery("SELECT ".ADD_SELECT_CONTENT."
+                                          content_id, 
+                                          content_title, 
+                                          content_heading, 
+                                          content_text, 
+                                          content_file,
+                                          parent_id
+                                     FROM ".TABLE_CONTENT_MANAGER."
+                                    WHERE content_group='".(int) $_GET['coID']."'
+                                      AND content_active = '1'
+                                      AND trim(content_title) != ''
+                                      AND languages_id = '".(int)$_SESSION['languages_id']."'
+                                          ".CONTENT_CONDITIONS);
   
-  $content_exists = xtc_db_num_rows($shop_content_query);
-  if ($shop_content_data = xtc_db_fetch_array($shop_content_query)) {
+  $content_exists = xtc_db_num_rows($shop_content_query, true);
+  if ($shop_content_data = xtc_db_fetch_array($shop_content_query, true)) {
     // sub content
     include (DIR_WS_MODULES.'sub_content_listing.php');
 
@@ -76,7 +78,6 @@ if ($language_not_found === true) {
   } 
   $smarty->assign('BUTTON_CONTINUE', '<a href="'.$link.'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
   $smarty->assign('CONTENT_HEADING', (($shop_content_data['content_heading'] != '') ? $shop_content_data['content_heading'] : $shop_content_data['content_title']));
-  $smarty->assign('language', $_SESSION['language']);
 
   $content_body = '';
   if ($content_exists == 1) {
@@ -97,28 +98,17 @@ if ($language_not_found === true) {
   include (DIR_WS_MODULES.'content_manager_media.php');
   
   $content_template = 'content.html';
-  
   foreach(auto_include(DIR_FS_CATALOG.'includes/extra/shop_content_end/','php') as $file) require_once ($file);
 
-  // set cache ID
-  if (!CacheCheck()) {
-    $smarty->caching = 0;
-    $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/'.$content_template);
-  } else {
-    $smarty->caching = 1;
-    $smarty->cache_lifetime = CACHE_LIFETIME;
-    $smarty->cache_modified_check = CACHE_CHECK;
-    $cache_id = md5('lID:'.$_SESSION['language'].'|csID'.$_SESSION['customers_status']['customers_status_id'].'|cID:'.$shop_content_data['content_id'].((isset($_REQUEST['error'])) ? '|error:'.$_REQUEST['error'] : ''));
-    $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/'.$content_template, $cache_id);
-  }
+  $smarty->caching = 0;
+  $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/'.$content_template);
 
   require (DIR_WS_INCLUDES.'header.php');
 }
-$smarty->assign('language', $_SESSION['language']);
+
 $smarty->assign('main_content', $main_content);
 $smarty->caching = 0;
 if (!defined('RM'))
   $smarty->load_filter('output', 'note');
 $smarty->display(CURRENT_TEMPLATE.'/index.html');
 include ('includes/application_bottom.php');
-?>

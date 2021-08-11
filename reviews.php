@@ -18,9 +18,6 @@
 
 include ('includes/application_top.php');
 
-// create smarty
-$smarty = new Smarty;
-
 // include needed functions
 require_once (DIR_FS_INC.'xtc_word_count.inc.php');
 require_once (DIR_FS_INC.'xtc_date_long.inc.php');
@@ -30,8 +27,10 @@ if ($_SESSION['customers_status']['customers_status_read_reviews'] == '0') {
   xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
 }
 
-// include boxes
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
+// create smarty
+$smarty = new Smarty;
+$smarty->assign('language', $_SESSION['language']);
+$smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 
 $reviews_query_raw = "SELECT r.reviews_id,
                         left(rd.reviews_text, 250) as reviews_text,
@@ -80,25 +79,26 @@ if ($reviews_split->number_of_rows > 0) {
   $reviews_query = xtc_db_query($reviews_split->sql_query);
   while ($reviews = xtc_db_fetch_array($reviews_query)) {
     $module_data[] = array (
-        'PRODUCTS_IMAGE' => $product->productImage($reviews['products_image'], 'thumbnail'),
-        'PRODUCTS_LINK' => xtc_href_link(FILENAME_PRODUCT_REVIEWS_INFO, 'products_id='.$reviews['products_id'].'&reviews_id='.$reviews['reviews_id']),
-        'PRODUCTS_NAME' => $reviews['products_name'],
-        'PRODUCTS_HEADING_TITLE' => $reviews['products_heading_title'],
-        'AUTHOR' => $reviews['customers_name'],
-        'DATE' => xtc_date_short($reviews['date_added']),
-        'TEXT' => '('.sprintf(TEXT_REVIEW_WORD_COUNT, xtc_word_count($reviews['reviews_text'], ' ')).') <br />'.nl2br(encode_htmlspecialchars($reviews['reviews_text'])).'...',
-        'TEXT_PLAIN' => nl2br(encode_htmlspecialchars($reviews['reviews_text'])).'...',
-        'RATING' => xtc_image('templates/'.CURRENT_TEMPLATE.'/img/stars_'.$reviews['reviews_rating'].'.gif', sprintf(TEXT_OF_5_STARS, $reviews['reviews_rating']),'','','itemprop="rating"'),
-        'RATING_VOTE' => $reviews['reviews_rating']
-      );
+      'PRODUCTS_IMAGE' => $product->productImage($reviews['products_image'], 'thumbnail'),
+      'PRODUCTS_LINK' => xtc_href_link(FILENAME_PRODUCT_REVIEWS_INFO, 'products_id='.$reviews['products_id'].'&reviews_id='.$reviews['reviews_id']),
+      'PRODUCTS_NAME' => $reviews['products_name'],
+      'PRODUCTS_HEADING_TITLE' => $reviews['products_heading_title'],
+      'AUTHOR' => $reviews['customers_name'],
+      'DATE' => xtc_date_short($reviews['date_added']),
+      'TEXT' => '('.sprintf(TEXT_REVIEW_WORD_COUNT, xtc_word_count($reviews['reviews_text'], ' ')).') <br />'.nl2br(encode_htmlspecialchars($reviews['reviews_text'])).'...',
+      'TEXT_PLAIN' => nl2br(encode_htmlspecialchars($reviews['reviews_text'])).'...',
+      'RATING' => xtc_image('templates/'.CURRENT_TEMPLATE.'/img/stars_'.$reviews['reviews_rating'].'.gif', sprintf(TEXT_OF_5_STARS, $reviews['reviews_rating']),'','','itemprop="rating"'),
+      'RATING_VOTE' => $reviews['reviews_rating']
+    );
   }
   $smarty->assign('module_content', $module_data);
 }
 
+// include boxes
+require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
+
 $breadcrumb->add(NAVBAR_TITLE_REVIEWS, xtc_href_link(FILENAME_REVIEWS));
 require (DIR_WS_INCLUDES.'header.php');
-
-$smarty->assign('language', $_SESSION['language']);
 
 if ($messageStack->size('product_reviews') > 0) {
   $smarty->assign('error', $messageStack->output('product_reviews'));
@@ -107,23 +107,12 @@ if ($messageStack->size('product_reviews', 'success') > 0) {
   $smarty->assign('success_message', $messageStack->output('product_reviews', 'success'));
 }
 
-// set cache ID
-if (!CacheCheck()) {
-  $smarty->caching = 0;
-  $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/reviews.html');
-} else {
-  $smarty->caching = 1;
-  $smarty->cache_lifetime = CACHE_LIFETIME;
-  $smarty->cache_modified_check = CACHE_CHECK;
-  $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|count:'.$reviews_split->number_of_rows.'|page:'.(isset($_GET['page']) ? (int)$_GET['page'] : 1));
-  $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/reviews.html', $cache_id);
-}
+$smarty->caching = 0;
+$main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/reviews.html');
 
-$smarty->assign('language', $_SESSION['language']);
 $smarty->assign('main_content', $main_content);
 $smarty->caching = 0;
 if (!defined('RM'))
   $smarty->load_filter('output', 'note');
 $smarty->display(CURRENT_TEMPLATE.'/index.html');
 include ('includes/application_bottom.php');
-?>

@@ -63,7 +63,7 @@
 
         // assign language to template for caching
         $smarty->assign('language', $_SESSION['language']);
-        $smarty->caching = false;
+        $smarty->caching = 0;
 
         // set dirs manual
         $smarty->template_dir = DIR_FS_CATALOG.'templates';

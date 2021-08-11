@@ -2441,10 +2441,10 @@ function OrderUpdate ()
           $smarty = new Smarty;
 
           $smarty->assign('language', $check_status['language']);
-          $smarty->caching = false;
-          $smarty->template_dir=DIR_FS_CATALOG.'templates';
-          $smarty->compile_dir=DIR_FS_CATALOG.'templates_c';
-          $smarty->config_dir=DIR_FS_CATALOG.'lang';
+          $smarty->caching = 0;
+          $smarty->template_dir = DIR_FS_CATALOG.'templates';
+          $smarty->compile_dir = DIR_FS_CATALOG.'templates_c';
+          $smarty->config_dir = DIR_FS_CATALOG.'lang';
           $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
           $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
           $smarty->assign('NAME',$check_status['customers_name']);
@@ -2640,10 +2640,10 @@ function CustomersUpdate ()
     //$smarty->assign('language', $check_status['language']);
     $smarty->assign('language', $Lang_folder);
 
-    $smarty->caching = false;
-    $smarty->template_dir=DIR_FS_CATALOG.'templates';
-    $smarty->compile_dir=DIR_FS_CATALOG.'templates_c';
-    $smarty->config_dir=DIR_FS_CATALOG.'lang';
+    $smarty->caching = 0;
+    $smarty->template_dir = DIR_FS_CATALOG.'templates';
+    $smarty->compile_dir = DIR_FS_CATALOG.'templates_c';
+    $smarty->config_dir = DIR_FS_CATALOG.'lang';
 
     $smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
     $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
@@ -2652,7 +2652,6 @@ function CustomersUpdate ()
     $smarty->assign('PASSWORD',$pw);
     //$smarty->assign('language', $Lang_folder);
     $smarty->assign('content', $module_content);
-    $smarty->caching = false;
 
     $html_mail=$smarty->fetch(CURRENT_TEMPLATE . '/admin/mail/'.$Lang_folder.'/create_account_mail.html');
     $txt_mail=$smarty->fetch(CURRENT_TEMPLATE . '/admin/mail/'.$Lang_folder.'/create_account_mail.txt');

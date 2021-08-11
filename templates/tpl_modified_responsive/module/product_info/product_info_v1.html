@@ -1,7 +1,7 @@
 {config_load file="$language/lang_$language.conf" section="product_info"}
 {config_load file="lang_`$language`.custom"}
 {config_load file="lang_`$language`.section" section="product_info"}
-<div itemscope itemtype="http://schema.org/Product">
+<div id="product_info" itemscope itemtype="http://schema.org/Product">
   {$FORM_ACTION}
   <div class="product_headline cf">
     {if isset($MANUFACTURER_IMAGE) && $MANUFACTURER_IMAGE != ''}
@@ -168,13 +168,13 @@
   {$FORM_END}
 
   {if $PRODUCTS_DESCRIPTION != ''}<h4 class="detailbox">{#products_desc#}</h4><div class="pd_description" itemprop="description">{$PRODUCTS_DESCRIPTION}</div><br />{/if}
-  {if isset($MODULE_product_tags) && $MODULE_product_tags != ''}{$MODULE_product_tags}{/if}
-  {if isset($MODULE_products_media) && $MODULE_products_media != ''}{$MODULE_products_media}{/if}
-  {if isset($MODULE_products_reviews) && $MODULE_products_reviews != ''}{$MODULE_products_reviews}{/if}
-  {if isset($MODULE_cross_selling) && $MODULE_cross_selling != ''}{$MODULE_cross_selling}{/if}
-  {if isset($MODULE_reverse_cross_selling) && $MODULE_reverse_cross_selling != ''}{$MODULE_reverse_cross_selling}{/if}
-  {if isset($MODULE_also_purchased) && $MODULE_also_purchased != ''}{$MODULE_also_purchased}{/if}
-  {if isset($MODULE_products_category) && $MODULE_products_category != ''}{$MODULE_products_category}{/if}
+  {if isset($MODULE_product_tags) && trim($MODULE_product_tags) != ''}{$MODULE_product_tags}{/if}
+  {if isset($MODULE_products_media) && trim($MODULE_products_media) != ''}{$MODULE_products_media}{/if}
+  {if isset($MODULE_products_reviews) && trim($MODULE_products_reviews) != ''}{$MODULE_products_reviews}{/if}
+  {if isset($MODULE_cross_selling) && trim($MODULE_cross_selling) != ''}{$MODULE_cross_selling}{/if}
+  {if isset($MODULE_reverse_cross_selling) && trim($MODULE_reverse_cross_selling) != ''}{$MODULE_reverse_cross_selling}{/if}
+  {if isset($MODULE_also_purchased) && trim($MODULE_also_purchased) != ''}{$MODULE_also_purchased}{/if}
+  {if isset($MODULE_products_category) && trim($MODULE_products_category) != ''}{$MODULE_products_category}{/if}
 
   {if $PRODUCTS_ADDED != ''}<p class="dateadded_border">{$PRODUCTS_ADDED}</p>{/if}
   {$PRODUCT_NAVIGATOR}

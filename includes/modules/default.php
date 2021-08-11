@@ -27,13 +27,6 @@
 defined('CATEGORIES_IMAGE_SHOW_NO_IMAGE') OR define('CATEGORIES_IMAGE_SHOW_NO_IMAGE', 'true');
 defined('CATEGORIES_SHOW_PRODUCTS_SUBCATS') OR define('CATEGORIES_SHOW_PRODUCTS_SUBCATS', 'false');
 
-$default_smarty = new smarty;
-$default_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
-$default_smarty->assign('session', xtc_session_id());
-
-// define defaults
-$main_content = '';
-
 // include needed functions
 require_once (DIR_FS_INC.'xtc_get_path.inc.php');
 require_once (DIR_FS_INC.'xtc_check_categories_status.inc.php');
@@ -41,6 +34,14 @@ require_once (DIR_FS_INC.'xtc_get_subcategories.inc.php');
 require_once (DIR_FS_INC.'xtc_parse_search_string.inc.php');
 require_once (DIR_FS_INC.'xtc_get_currencies_values.inc.php');
 require_once (DIR_FS_INC.'check_whatsnew.inc.php');
+
+$default_smarty = new Smarty;
+$default_smarty->assign('language', $_SESSION['language']);
+$default_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+$default_smarty->assign('session', xtc_session_id());
+
+// define defaults
+$main_content = '';
 
 $category_depth = 'top';
 if (isset ($cPath) && xtc_not_null($cPath)) {
@@ -134,51 +135,8 @@ switch ($category_depth) {
     $category_query = xtDBquery($category_query);
     $category = xtc_db_fetch_array($category_query, true);
 
-    if (MAX_DISPLAY_CATEGORIES_PER_ROW > 0) {
-      // check to see if there are deeper categories within the current category
-      $categories_query = "SELECT ".ADD_SELECT_CATEGORIES."
-                                  c.categories_id,
-                                  c.categories_image,
-                                  c.categories_image_list,
-                                  c.categories_image_mobile,
-                                  c.parent_id,
-                                  cd.categories_name,
-                                  cd.categories_description,
-                                  cd.categories_heading_title
-                             FROM ".TABLE_CATEGORIES." c
-                             JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd 
-                                  ON cd.categories_id = c.categories_id
-                                     AND cd.language_id = '".(int) $_SESSION['languages_id']."'
-                                     AND trim(cd.categories_name) != ''
-                            WHERE c.categories_status = '1'
-                              AND c.parent_id = '".(int)$current_category_id."'
-                                  ".CATEGORIES_CONDITIONS_C."
-                         ORDER BY c.sort_order, cd.categories_name";
-      $categories_query = xtDBquery($categories_query);
-      $categories_content = array();
-      $cindex = 0;
-      while ($categories = xtc_db_fetch_array($categories_query, true)) {
-        $cPath_new = xtc_category_link($categories['categories_id'],$categories['categories_name']);
-      
-        $image = $main->getImage($categories['categories_image']);
-        $image_list = $main->getImage($categories['categories_image_list'] != '' ? $categories['categories_image_list'] : $categories['categories_image']);
-        $image_mobile = $main->getImage($categories['categories_image_mobile']);
-
-        $categories_content[$cindex] = array (
-          'CATEGORIES_NAME' => $categories['categories_name'],
-          'CATEGORIES_HEADING_TITLE' => $categories['categories_heading_title'],
-          'CATEGORIES_IMAGE' => (($image != '') ? DIR_WS_BASE . $image : ''),
-          'CATEGORIES_IMAGE_LIST' => (($image_list != '') ? DIR_WS_BASE . $image_list : ''),
-          'CATEGORIES_IMAGE_MOBILE' => (($image_mobile != '') ? DIR_WS_BASE . $image_mobile : ''),
-          'CATEGORIES_LINK' => xtc_href_link(FILENAME_DEFAULT, $cPath_new),
-          'CATEGORIES_DESCRIPTION' => $categories['categories_description']
-        );
-                                     
-        foreach(auto_include(DIR_FS_CATALOG.'includes/extra/default/categories_content/','php') as $file) require ($file);
-      
-        $cindex++;
-      }
-    }
+    //include Categorie Listing
+    include (DIR_WS_MODULES. 'categories_listing.php');
 
     $new_products_category_id = $current_category_id;
     include (DIR_WS_MODULES.FILENAME_NEW_PRODUCTS);
@@ -199,17 +157,12 @@ switch ($category_depth) {
       $category['categories_template'] = basename($files[0]);
     }
 
-    $max_per_row = MAX_DISPLAY_CATEGORIES_PER_ROW;
-    $width = $max_per_row ? intval(100 / $max_per_row).'%' : '';
-    $default_smarty->assign('TR_COLS', $max_per_row);
-    $default_smarty->assign('TD_WIDTH', $width);
     $default_smarty->assign('CATEGORIES_NAME', $category['categories_name']);
     $default_smarty->assign('CATEGORIES_HEADING_TITLE', $category['categories_heading_title']);
     $default_smarty->assign('CATEGORIES_IMAGE', (($image != '') ? DIR_WS_BASE . $image : ''));
     $default_smarty->assign('CATEGORIES_IMAGE_LIST', (($image_list != '') ? DIR_WS_BASE . $image_list : ''));
     $default_smarty->assign('CATEGORIES_IMAGE_MOBILE', (($image_mobile != '') ? DIR_WS_BASE . $image_mobile : ''));
     $default_smarty->assign('CATEGORIES_DESCRIPTION', $category['categories_description']);
-    $default_smarty->assign('language', $_SESSION['language']);
     $default_smarty->assign('module_content', $categories_content);
     $default_smarty->caching = 0;
   
@@ -371,28 +324,14 @@ switch ($category_depth) {
     break;
     
   case 'top':
-    $shop_content_data = $main->getContentData(5, '', '', false, ADD_SELECT_CONTENT);
-  
     $content_main_template = 'main_content.html';
-
+    $shop_content_data = $main->getContentData(5, '', '', false, ADD_SELECT_CONTENT);
     $default_smarty->assign('title', $shop_content_data['content_heading']);
 
     foreach(auto_include(DIR_FS_CATALOG.'includes/extra/default/center_modules/','php') as $file) require_once ($file);
-
-    $default_smarty->assign('language', $_SESSION['language']);
-
-    // set cache ID
-    if (!CacheCheck()) {
-      $default_smarty->caching = 0;
-      $main_content = $default_smarty->fetch(CURRENT_TEMPLATE.'/module/'.$content_main_template);
-    } else {
-      $default_smarty->caching = 1;
-      $default_smarty->cache_lifetime = CACHE_LIFETIME;
-      $default_smarty->cache_modified_check = CACHE_CHECK;
-      $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|curr:'.$_SESSION['currency'].((isset($_SESSION['customer_id'])) ? '|cID:'.$_SESSION['customer_id'] : '').'|country:'.((isset($_SESSION['country'])) ? $_SESSION['country'] : ((isset($_SESSION['customer_country_id'])) ? $_SESSION['customer_country_id'] : STORE_COUNTRY)));
-      $main_content = $default_smarty->fetch(CURRENT_TEMPLATE.'/module/'.$content_main_template, $cache_id);
-    }
+    
+    $default_smarty->caching = 0;
+    $main_content = $default_smarty->fetch(CURRENT_TEMPLATE.'/module/'.$content_main_template);
     $smarty->assign('main_content', $main_content);
     break;
 }
-?>

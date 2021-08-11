@@ -2,9 +2,9 @@
 {if isset($MODULE_error)}{$MODULE_error}{/if}
 {if isset($title) && $title != ''}<h1>{$title}</h1>{/if}
 {if isset($text) && $text != ''}<div>{$text}</div>{/if}
-{if isset($MODULE_new_products)}
-<div>{$MODULE_new_products}</div>
+{if isset($MODULE_new_products) && trim($MODULE_new_products) != ''}
+  <div>{$MODULE_new_products}</div>
 {/if}
-{if isset($MODULE_upcoming_products)}
-<div>{$MODULE_upcoming_products}</div>
+{if isset($MODULE_upcoming_products) && trim($MODULE_upcoming_products) != ''}
+  <div>{$MODULE_upcoming_products}</div>
 {/if}

@@ -45,6 +45,7 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
 } else {
 
   $info_smarty = new Smarty;
+  $info_smarty->assign('language', $_SESSION['language']);
   $info_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 
   // defaults
@@ -143,9 +144,7 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
     }
   }
 
-  // FSK18
-  $info_smarty->assign('PRODUCTS_FSK18', $product->data['products_fsk18'] == '1' ? 'true' : '');
-  
+  $info_smarty->assign('PRODUCTS_FSK18', $product->data['products_fsk18'] == '1' ? 'true' : '');  
   $info_smarty->assign('PRODUCTS_PRINT', xtc_image_button('print.gif', PRINTVIEW_INFO, 'onclick="javascript:window.open(\''.xtc_href_link(FILENAME_PRINT_PRODUCT_INFO, 'products_id='.$product->data['products_id'], $request_type).'\', \'popup\', \'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, '.POPUP_PRODUCT_PRINT_SIZE.'\')"'));
   $info_smarty->assign('PRODUCTS_PRINT_LAYER', '<a class="iframe" target="_blank" rel="nofollow" href="'.xtc_href_link(FILENAME_PRINT_PRODUCT_INFO, 'products_id='.$product->data['products_id'], $request_type). '" title="'.PRINTVIEW_INFO.'">'.PRINTVIEW_INFO.'</a>');
   $info_smarty->assign('PRODUCTS_WRITE_REVIEW', '<a rel="nofollow" href="'.xtc_href_link(FILENAME_PRODUCT_REVIEWS_WRITE, 'products_id='.$product->data['products_id']). '" title="'.PRODUCTS_REVIEW_LINK.'">'.PRODUCTS_REVIEW_LINK.'</a>');
@@ -233,26 +232,9 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
     array_shift($_SESSION['tracking']['products_history']); 
   }
   $_SESSION['tracking']['products_history'] = array_values($_SESSION['tracking']['products_history']);
-
-  $info_smarty->assign('language', $_SESSION['language']);
-
-  // set cache ID
-  if (!CacheCheck()) {
-    $info_smarty->caching = 0;
-    $product_info = $info_smarty->fetch(CURRENT_TEMPLATE.'/module/product_info/'.$product->data['product_template']);
-  } else {
-    $info_smarty->caching = 1;
-    $info_smarty->cache_lifetime = CACHE_LIFETIME;
-    $info_smarty->cache_modified_check = CACHE_CHECK;
-
-    //setting/clearing params
-    $get_params = '|params:'.xtc_get_all_get_params();
-    $get_params .= '|count:'.$products_reviews_count;
-    $get_params .= '|country:'.((isset($_SESSION['country'])) ? $_SESSION['country'] : ((isset($_SESSION['customer_country_id'])) ? $_SESSION['customer_country_id'] : STORE_COUNTRY));
-    
-    $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|curr:'.$_SESSION['currency'].'|pID:'.(int)$_GET['products_id'].$get_params);
-    $product_info = $info_smarty->fetch(CURRENT_TEMPLATE.'/module/product_info/'.$product->data['product_template'], $cache_id);
-  }
+  
+  $info_smarty->caching = 0;
+  $product_info = $info_smarty->fetch(CURRENT_TEMPLATE.'/module/product_info/'.$product->data['product_template']);
+  
   $smarty->assign('main_content', $product_info);
 }
-?>

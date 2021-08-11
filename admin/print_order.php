@@ -107,9 +107,9 @@
   foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/orders/orders_print/','php') as $file) require ($file);
 
   // dont allow cache
-  $smarty->caching = false;
-  $smarty->template_dir=DIR_FS_CATALOG.'templates';
-  $smarty->compile_dir=DIR_FS_CATALOG.'templates_c';
-  $smarty->config_dir=DIR_FS_CATALOG.'lang';
+  $smarty->caching = 0;
+  $smarty->template_dir = DIR_FS_CATALOG.'templates';
+  $smarty->compile_dir = DIR_FS_CATALOG.'templates_c';
+  $smarty->config_dir = DIR_FS_CATALOG.'lang';
   $smarty->display(CURRENT_TEMPLATE . '/admin/print_order.html');
 ?>

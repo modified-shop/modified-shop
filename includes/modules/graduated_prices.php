@@ -1,7 +1,6 @@
 <?php
-
 /* -----------------------------------------------------------------------------------------
-   $Id: graduated_prices.php 1243 2005-09-25 09:33:02Z mz $
+   $Id$
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -17,19 +16,29 @@
    ---------------------------------------------------------------------------------------*/
 
 $module_smarty = new Smarty;
+$module_smarty->assign('language', $_SESSION['language']);
 $module_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
-$module_content = array ();
 
-$staffel_data = $product->getGraduated();
-
-if (sizeof($staffel_data) > 1) {
-	$module_smarty->assign('language', $_SESSION['language']);
-	$module_smarty->assign('module_content', $staffel_data);
-	// set cache ID
-
-	$module_smarty->caching = 0;
-	$module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/graduated_price.html');
-
-	$info_smarty->assign('MODULE_graduated_price', $module);
+// set cache ID
+if (!CacheCheck()) {
+  $cache = false;
+  $module_smarty->caching = 0;
+  $cache_id = null;
+} else {
+  $cache = true;
+  $module_smarty->caching = 1;
+  $module_smarty->cache_lifetime = CACHE_LIFETIME;
+  $module_smarty->cache_modified_check = CACHE_CHECK == 'true';
+  $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|pID:'.$product->data['products_id'].'|curr:'.$_SESSION['currency'].'|country:'.((isset($_SESSION['country'])) ? $_SESSION['country'] : ((isset($_SESSION['customer_country_id'])) ? $_SESSION['customer_country_id'] : STORE_COUNTRY)));
 }
-?>
+
+if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/graduated_price.html', $cache_id) || !$cache) {
+  $staffel_data = $product->getGraduated();
+
+  if (count($staffel_data) > 1) {
+    $module_smarty->assign('module_content', $staffel_data);
+  }
+}
+
+$module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/graduated_price.html', $cache_id);
+$info_smarty->assign('MODULE_graduated_price', $module);

@@ -3,7 +3,7 @@
 {config_load file="lang_`$language`.section" section="reviews"}
 {if isset($MODULE_TS_PRODUCT_STICKER)}
   {$MODULE_TS_PRODUCT_STICKER}
-{else}
+{elseif isset($module_content)}
   <h4 class="detailbox">{#heading_reviews#}</h4>
   {if $reviews_count > 0}
     {foreach name=aussen item=module_data from=$module_content}

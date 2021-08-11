@@ -13,13 +13,6 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-defined('FILENAME_CHECKOUT_PAYMENT_IFRAME') OR define('FILENAME_CHECKOUT_PAYMENT_IFRAME', 'checkout_payment_iframe.php');
-
-// css buttons
-if (file_exists(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/inc/css_button.inc.php')) {
-  require_once ('templates/'.CURRENT_TEMPLATE.'/source/inc/css_button.inc.php');
-}
-
 // define full content sites
 $fullcontent = array(FILENAME_CHECKOUT_SHIPPING,
                      FILENAME_CHECKOUT_PAYMENT,
@@ -160,4 +153,3 @@ if (in_array(basename($PHP_SELF), $bestsellers) && !isset($_GET['cPath']) && !is
 // -----------------------------------------------------------------------------------------
 
 $smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
-?>

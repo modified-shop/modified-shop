@@ -64,7 +64,7 @@
       $smarty->assign('language', $order->info['language']);
     
       // set dirs manual
-      $smarty->caching = false;
+      $smarty->caching = 0;
       $smarty->template_dir = DIR_FS_CATALOG.'templates';
       $smarty->compile_dir = DIR_FS_CATALOG.'templates_c';
       $smarty->config_dir = DIR_FS_CATALOG.'lang';
@@ -114,13 +114,14 @@
       $customer_notified = 1;
     }
     
-    $sql_data_array = array('orders_id' => $oID,
-                            'orders_status_id' => $status,
-                            'date_added' => 'now()',
-                            'customer_notified' => $customer_notified,
-                            'comments' => $comments,
-                            'comments_sent' => ($_POST['notify_comments'] == 'on' ? 1 : 0)
-                            );
+    $sql_data_array = array(
+      'orders_id' => $oID,
+      'orders_status_id' => $status,
+      'date_added' => 'now()',
+      'customer_notified' => $customer_notified,
+      'comments' => $comments,
+      'comments_sent' => ($_POST['notify_comments'] == 'on' ? 1 : 0)
+    );
     xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY,$sql_data_array);
     $order_updated = true;
   }

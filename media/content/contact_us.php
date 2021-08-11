@@ -127,7 +127,7 @@
         $smarty->assign('MESSAGE', nl2br($message_body));
      
         // dont allow cache
-        $smarty->caching = false;
+        $smarty->caching = 0;
      
         $html_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/contact_us.html');
         $txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/contact_us.txt');
@@ -247,4 +247,3 @@
   
   // disable cache
   $disable_smarty_cache = true;
-?>

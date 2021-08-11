@@ -75,7 +75,7 @@
     
     // assign language to template for caching
     $smarty->assign('language', $_SESSION['language']);
-    $smarty->caching = false;
+    $smarty->caching = 0;
 
     $html_mail = $smarty->fetch(CURRENT_TEMPLATE . '/admin/mail/'.$_SESSION['language'].'/'.$template.'.html');
     $txt_mail = $smarty->fetch(CURRENT_TEMPLATE . '/admin/mail/'.$_SESSION['language'].'/'.$template.'.txt');

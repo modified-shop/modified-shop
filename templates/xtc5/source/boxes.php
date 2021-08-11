@@ -106,4 +106,3 @@ $smarty->assign('home', strpos($PHP_SELF, 'index')!==false && !isset($_GET['cPat
 // -----------------------------------------------------------------------------------------
 
 $smarty->assign('tpl_path',DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
-?>

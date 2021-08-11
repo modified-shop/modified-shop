@@ -28,12 +28,6 @@
 
 require ('includes/application_top.php');
 
-// smarty
-$smarty = new Smarty;
-
-// include needed functions
-require_once (DIR_FS_INC.'xtc_validate_email.inc.php');
-
 if (ACTIVATE_GIFT_SYSTEM != 'true') {
   xtc_redirect(FILENAME_DEFAULT);
 }
@@ -42,6 +36,12 @@ if (ACTIVATE_GIFT_SYSTEM != 'true') {
 if (!isset ($_SESSION['customer_id'])) {
   xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
 }
+
+// include needed functions
+require_once (DIR_FS_INC.'xtc_validate_email.inc.php');
+
+// smarty
+$smarty = new Smarty;
 
 if (isset($_POST['back_x']) || isset($_POST['back_y'])) {
   $_GET['action'] = '';
@@ -91,21 +91,23 @@ if (isset($_GET['action']) && $_GET['action'] == 'process') {
                                 FROM ".TABLE_CUSTOMERS." 
                                WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
     $gv_customer = xtc_db_fetch_array($gv_query);
-    $sql_data_array = array('coupon_type' => 'G',
-                            'coupon_code' => $id1,
-                            'date_created' => 'now()',
-                            'coupon_amount' => $gv_amount
-                            );
+    $sql_data_array = array(
+      'coupon_type' => 'G',
+      'coupon_code' => $id1,
+      'date_created' => 'now()',
+      'coupon_amount' => $gv_amount
+    );
     xtc_db_perform(TABLE_COUPONS, $sql_data_array);
     $insert_id = xtc_db_insert_id();
 
-    $sql_data_array = array('coupon_id' => $insert_id,
-                            'customer_id_sent' => $_SESSION['customer_id'],
-                            'sent_firstname' => $gv_customer['customers_firstname'],
-                            'sent_lastname' => $gv_customer['customers_lastname'],
-                            'emailed_to' => $_POST['email'],
-                            'date_sent' => 'now()'
-                            );
+    $sql_data_array = array(
+      'coupon_id' => $insert_id,
+      'customer_id_sent' => $_SESSION['customer_id'],
+      'sent_firstname' => $gv_customer['customers_firstname'],
+      'sent_lastname' => $gv_customer['customers_lastname'],
+      'emailed_to' => $_POST['email'],
+      'date_sent' => 'now()'
+    );
     xtc_db_perform(TABLE_COUPON_EMAIL_TRACK, $sql_data_array);
     
     $gv_email_subject = sprintf(EMAIL_GV_TEXT_SUBJECT, stripslashes($_POST['send_name']));
@@ -121,7 +123,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'process') {
     $smarty->assign('FROM_NAME', $_POST['send_name']);
 
     // dont allow cache
-    $smarty->caching = false;
+    $smarty->caching = 0;
 
     $html_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/send_gift_to_friend.html');
     $txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/send_gift_to_friend.txt');
@@ -201,4 +203,3 @@ if (!defined('RM'))
   $smarty->load_filter('output', 'note');
 $smarty->display(CURRENT_TEMPLATE.'/index.html');
 include ('includes/application_bottom.php');
-?>

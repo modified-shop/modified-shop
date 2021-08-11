@@ -22,7 +22,7 @@
       )
   {
     $banner_smarty = new Smarty;
-    $banner_smarty->caching = false;
+    $banner_smarty->caching = 0;
     $banner_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
     $banner_smarty->assign('language', $_SESSION['language']);
 
@@ -62,4 +62,3 @@
       $smarty->assign('SLIDER', xtc_display_banner('slider', $banner));
     }
   }
-?>

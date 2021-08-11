@@ -16,30 +16,40 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+// include needed function
+require_once(DIR_FS_INC . 'xtc_get_category_tree.inc.php');
+require_once(DIR_FS_INC . 'xtc_count_products_in_category.inc.php');
+
+$error = array(
+  '400' => SITEMAP_ERROR_400,
+  '401' => SITEMAP_ERROR_401,
+  '403' => SITEMAP_ERROR_403,
+  '404' => SITEMAP_ERROR_404,
+  '500' => SITEMAP_ERROR_500,
+);    
+
+if ($_REQUEST['error'] == '404') {
+  header('HTTP/1.1 404 Not Found');
+}
+
 $module_smarty = new smarty;
 $module_smarty->assign('language', $_SESSION['language']);
 $module_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 
 // set cache ID
 if (!CacheCheck()) {
-  $cache=false;
+  $cache = false;
   $module_smarty->caching = 0;
   $cache_id = null;
 } else {
-  $cache=true;
+  $cache = true;
   $module_smarty->caching = 1;
   $module_smarty->cache_lifetime = CACHE_LIFETIME;
-  $module_smarty->cache_modified_check = CACHE_CHECK;
+  $module_smarty->cache_modified_check = CACHE_CHECK == 'true';
+  $cache_id = md5('lID:'.$_SESSION['language'].'|csID'.$_SESSION['customers_status']['customers_status_id'].((isset($_REQUEST['error'])) ? '|error:'.$_REQUEST['error'] : ''));
 }
 
-// include needed function
-require_once(DIR_FS_INC . 'xtc_get_category_tree.inc.php');
-require_once(DIR_FS_INC . 'xtc_count_products_in_category.inc.php');
-
-$cache_id = md5('lID:'.$_SESSION['language'].'|csID'.$_SESSION['customers_status']['customers_status_id'].((isset($_REQUEST['error'])) ? '|error:'.$_REQUEST['error'] : ''));
-
-if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/sitemap.html', $cache_id) || !$cache) {
-  
+if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/sitemap.html', $cache_id) || !$cache) {  
   $module_content = array();
 
   if (function_exists('xtc_get_category_tree_array')) {
@@ -70,36 +80,19 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/sitemap.html', $cache_i
     }
   }
     
-  if (count($module_content) >= 1) {
-
+  if (count($module_content) > 0) {
     if (defined('SITEMAP_CASE')) {
       $categories_string = '';
       xtc_show_category(0, '', $module_content);
       $module_content = $categories_string; 
     }
 
-    $module_smarty->assign('module_content', $module_content);
-    
-    $error = array(
-      '400' => SITEMAP_ERROR_400,
-      '401' => SITEMAP_ERROR_401,
-      '403' => SITEMAP_ERROR_403,
-      '404' => SITEMAP_ERROR_404,
-      '500' => SITEMAP_ERROR_500,
-    );    
-    
-    if (isset($_REQUEST['error']) && isset($error[$_REQUEST['error']])) {
-      $module_smarty->assign('herror', $error[$_REQUEST['error']]);
-      if ($_REQUEST['error'] == '404') {
-        header('HTTP/1.1 404 Not Found');
-      }
-    }
+    $module_smarty->assign('module_content', $module_content);    
+  }
+  
+  if (isset($_REQUEST['error']) && isset($error[$_REQUEST['error']])) {
+    $module_smarty->assign('herror', $error[$_REQUEST['error']]);
   }
 }
 
-if (!$cache) {
-  $module_smarty->display(CURRENT_TEMPLATE.'/module/sitemap.html');
-} else {
-  $module_smarty->display(CURRENT_TEMPLATE.'/module/sitemap.html', $cache_id);
-}
-?>
+$module_smarty->display(CURRENT_TEMPLATE.'/module/sitemap.html', $cache_id);
