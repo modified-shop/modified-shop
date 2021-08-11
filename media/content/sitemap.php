@@ -28,7 +28,7 @@ $error = array(
   '500' => SITEMAP_ERROR_500,
 );    
 
-if ($_REQUEST['error'] == '404') {
+if (isset($_REQUEST['error']) && $_REQUEST['error'] == '404') {
   header('HTTP/1.1 404 Not Found');
 }
 
