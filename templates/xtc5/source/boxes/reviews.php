@@ -16,9 +16,6 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-// include needed functions
-require_once(DIR_FS_INC . 'xtc_break_string.inc.php');
-
 // include smarty
 include(DIR_FS_BOXES_INC . 'smarty_default.php');
 
