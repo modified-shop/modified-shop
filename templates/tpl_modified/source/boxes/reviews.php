@@ -40,13 +40,10 @@ if ($product->isProduct() === true && $_SESSION['customers_status']['customers_s
     $product_select = "AND p.products_id = '" . $product->data['products_id'] . "'";
   }
 
-  $reviews_query = "SELECT r.reviews_id,
+  $reviews_query = "SELECT ".$product->default_select.",
+                           r.reviews_id,
                            r.reviews_rating,
-                           substring(rd.reviews_text, 1, 60) as reviews_text,
-                           p.products_id,
-                           p.products_image,
-                           pd.products_name,
-                           pd.products_heading_title
+                           substring(rd.reviews_text, 1, 60) as reviews_text
                       FROM ".TABLE_REVIEWS." r
                       JOIN ".TABLE_REVIEWS_DESCRIPTION." rd
                            ON r.reviews_id = rd.reviews_id
@@ -78,19 +75,20 @@ if ($product->isProduct() === true && $_SESSION['customers_status']['customers_s
     $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|pID:'.($product->isProduct() === true ? $product->data['products_id'] : 0).'|rID:'.$reviews['reviews_id']);
     
     if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_reviews.html', $cache_id) || !$cache) {
-    
-      $products_image = $product->productImage($reviews['products_image'], 'thumbnail');
+      
+      // include needed functions
+      require_once(DIR_FS_INC . 'xtc_break_string.inc.php');
+
+      $productDataArray = $product->buildDataArray($reviews, 'thumbnail');
+      foreach ($productDataArray as $key => $value) {
+        $info_smarty->assign($key, $value);
+      }
       
       $review_image = xtc_image('templates/' . CURRENT_TEMPLATE . '/img/stars_' . $reviews['reviews_rating'] . '.png' , sprintf(BOX_REVIEWS_TEXT_OF_5_STARS, $reviews['reviews_rating']));
       $review_image_microtag = xtc_image('templates/' . CURRENT_TEMPLATE . '/img/stars_' . $reviews['reviews_rating'] . '.png' , sprintf(BOX_REVIEWS_TEXT_OF_5_STARS, $reviews['reviews_rating']),'','','itemprop="rating"');
-
-      // include needed functions
-      require_once(DIR_FS_INC . 'xtc_break_string.inc.php');
+            
       $box_smarty->assign('REVIEWS_VOTE', $reviews['reviews_rating']);
       $box_smarty->assign('REVIEWS_LINK', xtc_href_link(FILENAME_REVIEWS));
-      $box_smarty->assign('PRODUCTS_IMAGE', $products_image);
-      $box_smarty->assign('PRODUCTS_NAME', $reviews['products_name']);
-      $box_smarty->assign('PRODUCTS_HEADING_TITLE', $reviews['products_heading_title']);
       $box_smarty->assign('PRODUCTS_LINK', xtc_href_link(FILENAME_PRODUCT_REVIEWS_INFO, 'products_id=' . $reviews['products_id'] . '&reviews_id=' . $reviews['reviews_id']));
       $box_smarty->assign('REVIEWS', xtc_break_string(encode_htmlspecialchars($reviews['reviews_text']), 15, '-<br />'));
       $box_smarty->assign('REVIEWS_IMAGE', $review_image);
