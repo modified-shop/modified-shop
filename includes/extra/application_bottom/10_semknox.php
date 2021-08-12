@@ -17,24 +17,21 @@
       )
   {
     $module_smarty = new Smarty();
-
     $module_smarty->assign('language', $_SESSION['language']);
     $module_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 
     // set cache ID
     if (!CacheCheck()) {
-      $cache=false;
+      $cache = false;
       $module_smarty->caching = 0;
       $cache_id = null;
     } else {
-      $cache=true;
+      $cache = true;
       $module_smarty->caching = 1;
       $module_smarty->cache_lifetime = CACHE_LIFETIME;
-      $module_smarty->cache_modified_check = CACHE_CHECK;
+      $module_smarty->cache_modified_check = CACHE_CHECK == 'true';
+      $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|curr:'.$_SESSION['currency']);
     }
-
-    // set cache id
-    $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|curr:'.$_SESSION['currency']);
 
     if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/semknox_suggest.html')) {
       $template_suggest_file = CURRENT_TEMPLATE.'/module/semknox_suggest.html';
@@ -65,13 +62,8 @@
       $module_smarty->caching = 0;
     }
 
-    if (!$cache) {
-      $template_suggest = $module_smarty->fetch($template_suggest_file);
-      $template_result = $module_smarty->fetch($template_result_file);
-    } else {
-      $template_suggest = $module_smarty->fetch($template_suggest_file, $cache_id);
-      $template_result = $module_smarty->fetch($template_result_file, $cache_id);
-    }
+    $template_suggest = $module_smarty->fetch($template_suggest_file, $cache_id);
+    $template_result = $module_smarty->fetch($template_result_file, $cache_id);
 
     require_once(DIR_FS_EXTERNAL.'compactor/compactor.php');
     $compactor = new Compactor(array('compress_css' => true));

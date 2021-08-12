@@ -279,12 +279,6 @@
         'userGroups' => $this->customers_status_all_array,
       );
 
-      $products_array['attributes'][] = array(
-        'key' => 'purchased',
-        'value' => $this->getText($products['products_ordered']),
-        'userGroups' => $this->customers_status_all_array,
-      );
-
       if ($products['products_description'] != '') {
         $products_array['attributes'][] = array(
           'key' => 'description',
@@ -524,7 +518,7 @@
   
     private function getText($string) {
       $string = strip_tags($string);
-      $string = preg_replace ("/\s++/u", ' ', $string);
+      $string = preg_replace("/\s++/", ' ', $string);
       $string = trim($string);
 
       return $string;
