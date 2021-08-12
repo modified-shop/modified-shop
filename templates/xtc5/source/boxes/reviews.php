@@ -84,7 +84,7 @@ if ($product->isProduct() === true && $_SESSION['customers_status']['customers_s
 
       $productDataArray = $product->buildDataArray($reviews, 'thumbnail');
       foreach ($productDataArray as $key => $value) {
-        $info_smarty->assign($key, $value);
+        $box_smarty->assign($key, $value);
       }
       
       $review_image = xtc_image('templates/' . CURRENT_TEMPLATE . '/img/stars_' . $reviews['reviews_rating'] . '.gif' , sprintf(BOX_REVIEWS_TEXT_OF_5_STARS, $reviews['reviews_rating']));
