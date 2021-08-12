@@ -13,7 +13,7 @@
   // include needed functions
   require_once(DIR_FS_INC.'get_wishlist_content.inc.php');
 
-  $box_smarty = new smarty;
+  $box_smarty = new Smarty;
   $box_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 
   // define defaults
