@@ -46,7 +46,7 @@ define('ERROR_STATUS_USED_IN_HISTORY', 'Fehler: Diese Kundengruppe wird zur Zeit
 define('TABLE_HEADING_ACTION','Aktion');
 define('TABLE_HEADING_CUSTOMERS_GRADUATED','Staffelpreis');
 define('TABLE_HEADING_CUSTOMERS_STATUS','Kundengruppe');
-define('TABLE_HEADING_CUSTOMERS_UNALLOW','nicht erlaubte Zahlungweisen');
+define('TABLE_HEADING_CUSTOMERS_UNALLOW','nicht erlaubte Zahlungsweisen');
 define('TABLE_HEADING_CUSTOMERS_UNALLOW_SHIPPING','nicht erlaubte Versandarten');
 define('TABLE_HEADING_DISCOUNT','Rabatt');
 define('TABLE_HEADING_TAX_PRICE','Preis / MwSt.');
