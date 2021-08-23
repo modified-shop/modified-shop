@@ -29,7 +29,7 @@
   define('MODULE_DHL_STATUS_UPDATE_TITLE', 'Notification &amp; Update status');
   define('MODULE_DHL_STATUS_UPDATE_DESC', 'The customer will be notified by mail including tracking information and the order will be set to this status.');
   define('MODULE_DHL_CODING_TITLE', 'Coding');
-  define('MODULE_DHL_CODING_DESC', 'Set Coding as default');
+  define('MODULE_DHL_CODING_DESC', 'Set Coding preselected as default');
   define('MODULE_DHL_PRODUCT_TITLE', 'Product');
   define('MODULE_DHL_PRODUCT_DESC', 'Which product should be preselected as default?');
   define('MODULE_DHL_DISPLAY_LABEL_TITLE', 'Display Label');
@@ -37,9 +37,9 @@
   define('MODULE_DHL_RETOURE_TITLE', 'Returns Label');
   define('MODULE_DHL_RETOURE_DESC', 'Should a Return Label also be generated?');
   define('MODULE_DHL_PERSONAL_TITLE', 'Personally');
-  define('MODULE_DHL_PERSONAL_DESC', 'Set Personally as default');
+  define('MODULE_DHL_PERSONAL_DESC', 'Set Personally preselected as default');
   define('MODULE_DHL_BULKY_TITLE', 'Bulky goods');
-  define('MODULE_DHL_BULKY_DESC', 'Set Bulky goods as default');
+  define('MODULE_DHL_BULKY_DESC', 'Set Bulky goods preselected as default');
 
   define('MODULE_DHL_COMPANY_TITLE', '<hr noshade>Customer details<br/>');
   define('MODULE_DHL_COMPANY_DESC', 'Company:');

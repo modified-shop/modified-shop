@@ -29,7 +29,7 @@
   define('MODULE_DHL_STATUS_UPDATE_TITLE', 'Benachrichtigung &amp; Status aktualisieren');
   define('MODULE_DHL_STATUS_UPDATE_DESC', 'Der Kunde wird per Mail inkl. Trackinginformation benachrichtigt und die Bestellung auf diesen Status gesetzt.');
   define('MODULE_DHL_CODING_TITLE', 'Leitcodierung');
-  define('MODULE_DHL_CODING_DESC', 'Soll als Standard die Leitcodierung vorausgesetzt werden?');
+  define('MODULE_DHL_CODING_DESC', 'Soll als Standard die Leitcodierung vorausgew&auml;hlt werden?');
   define('MODULE_DHL_PRODUCT_TITLE', 'Produkt');
   define('MODULE_DHL_PRODUCT_DESC', 'Welches Produkt soll als Standard vorausgew&auml;hlt sein?');
   define('MODULE_DHL_DISPLAY_LABEL_TITLE', 'Label anzeigen');
@@ -37,9 +37,9 @@
   define('MODULE_DHL_RETOURE_TITLE', 'Retouren Label');
   define('MODULE_DHL_RETOURE_DESC', 'Soll zus&auml;tzlich noch ein Retourenlabel erzeugt werden?');
   define('MODULE_DHL_PERSONAL_TITLE', 'Eigenh&auml;ndig');
-  define('MODULE_DHL_PERSONAL_DESC', 'Soll als Standard Eigenh&auml;ndig vorausgesetzt werden?');
+  define('MODULE_DHL_PERSONAL_DESC', 'Soll als Standard Eigenh&auml;ndig vorausgew&auml;hlt werden?');
   define('MODULE_DHL_BULKY_TITLE', 'Sperrgut');
-  define('MODULE_DHL_BULKY_DESC', 'Soll als Standard Sperrgut vorausgesetzt werden?');
+  define('MODULE_DHL_BULKY_DESC', 'Soll als Standard Sperrgut vorausgew&auml;hlt werden?');
 
   define('MODULE_DHL_COMPANY_TITLE', '<hr noshade>Kundendetails<br/>');
   define('MODULE_DHL_COMPANY_DESC', 'Firma:');
