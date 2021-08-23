@@ -16,9 +16,9 @@
   define('MODULE_DHL_STATUS_TITLE', 'Status');
   define('MODULE_DHL_STATUS_DESC', 'Modul aktivieren');
   define('MODULE_DHL_USER_TITLE', '<hr noshade>Benutzer');
-  define('MODULE_DHL_USER_DESC', 'Benutzername vom DHL Gesch&auml;ftskundenprotal');
+  define('MODULE_DHL_USER_DESC', 'Benutzername vom DHL Gesch&auml;ftskundenportal');
   define('MODULE_DHL_SIGNATURE_TITLE', 'Passwort');
-  define('MODULE_DHL_SIGNATURE_DESC', 'Passwort vom DHL Gesch&auml;ftskundenprotal');
+  define('MODULE_DHL_SIGNATURE_DESC', 'Passwort vom DHL Gesch&auml;ftskundenportal');
   define('MODULE_DHL_EKP_TITLE', 'EKP');
   define('MODULE_DHL_EKP_DESC', 'DHL Kundennummer');
   define('MODULE_DHL_ACCOUNT_TITLE', 'Account');
