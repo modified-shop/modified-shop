@@ -91,8 +91,8 @@
         siteId: projectId,
         showErrors: false,
         allowCookies: true,
-        baseUrl: 'https://api-v3.semknox.com/search?userGroup=' + userGroup + '&projectId=' + projectId,
-        suggestBaseUrl: 'https://api-v3.semknox.com/search/suggestions?userGroup=' + userGroup + '&projectId=' + projectId,
+        baseUrl: 'https://ecom.sitesearch360.com/search?userGroup=' + userGroup + '&projectId=' + projectId,
+        suggestBaseUrl: 'https://ecom.sitesearch360.com/search/suggestions?userGroup=' + userGroup + '&projectId=' + projectId,
         language: "<?php echo $_SESSION['language_code']; ?>",
         searchBox: {
           selector: "#inputString",
