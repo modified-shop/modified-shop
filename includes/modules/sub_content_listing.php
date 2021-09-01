@@ -98,6 +98,7 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/sub_content_listing.htm
     while ($shop_sub_content = xtc_db_fetch_array($shop_content_sub_query, true)) {
       $sub_content[] = array(
         'CONTENT_TITLE' => $shop_sub_content['title'],
+        'CONTENT_GROUP' => $shop_sub_content['group_id'],
         'CONTENT_LINK' => xtc_href_link(FILENAME_CONTENT, 'coID='.$shop_sub_content['group_id'], 'NONSSL')
       );
       if (count($parent_content) == 0) {
