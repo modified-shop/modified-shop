@@ -24,6 +24,10 @@
   define('TEXT_DHL_BULKY', 'Sperrgut:');
   define('TEXT_DHL_PERSONAL', 'Eigenh&auml;ndig:');
   define('TEXT_DHL_CODEABLE', 'Leitcodierung:');
+  define('TEXT_DHL_IDENT', 'Identcheck:');
+  define('TEXT_DHL_DOB', 'Geburtsdatum:');
+  define('TEXT_DHL_SHOW_MORE', '[mehr anzeigen]');
+  define('TEXT_DHL_SHOW_LESS', '[weniger anzeigen]');
   define('TEXT_DHL_STATUS_UPDATE', 'Benachrichtigung:');
   define('TEXT_DHL_BUTTON_CREATE', 'DHL Label erstellen');
   define('TEXT_DHL_CREATE_SUCCESS', 'DHL Paketschein wurde erstellt');
