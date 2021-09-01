@@ -107,7 +107,7 @@
                 <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_IDENT; ?></td>
                 <td style="padding:5px;border-width: 0 1px 1px 0;"><?php echo xtc_draw_pull_down_menu('ident', $avs_array, '', 'style="width:120px;"'); ?></td>
                 <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_DOB; ?></td>
-                <td style="padding:5px;border-width: 0 1px 1px 0;"><?php echo xtc_draw_input_field('dob', date('d.m.Y', strtotime($order->customer['dob'])), 'style="width: 120px; padding:5px;" placeholder="dd.mm.YYYY"'); ?></td>
+                <td style="padding:5px;border-width: 0 1px 1px 0;"><?php echo xtc_draw_input_field('dob', ((strtotime($order->customer['dob']) > 0 && strtotime($order->customer['dob']) != false) ? date('d.m.Y', strtotime($order->customer['dob'])) : ''), 'style="width: 120px; padding:5px;" placeholder="dd.mm.YYYY"'); ?></td>
                 <td style="padding:5px;border-width: 0 0 1px 0;"></td>
                 <td style="padding:5px;border-width: 0 0 1px 0;"></td>
               </tr>
