@@ -117,9 +117,10 @@
   function getMatomoCartDetails() {
     global $piwik_language_id;
   
+    $return_string = '';
+
     $products = $_SESSION['cart']->get_products();
     if ($_SESSION['cart']->count_contents() > 0) {
-      $return_string = '';
       for ($i=0, $n=sizeof($products); $i<$n; $i++) {
         $cPath = xtc_get_product_path($products[$i]['id']);
         $cPath_array = explode('_', $cPath);

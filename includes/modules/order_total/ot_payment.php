@@ -32,6 +32,8 @@ class ot_payment {
   var $title, $output;
 
   function __construct() {
+    global $order;
+    
     $this->code = 'ot_payment';
     $this->num_payment = defined('MODULE_ORDER_TOTAL_PAYMENT_NUMBER')?MODULE_ORDER_TOTAL_PAYMENT_NUMBER:'';
     $this->title = defined('MODULE_ORDER_TOTAL_PAYMENT_TITLE')?MODULE_ORDER_TOTAL_PAYMENT_TITLE:'';
@@ -71,6 +73,20 @@ class ot_payment {
         }
       }
     }
+    
+    $this->billing_zone = '';
+    if (isset($order) 
+        && is_object($order) 
+        && isset($order->billing['country']) 
+        && is_array($order->billing['country']) 
+        && isset($order->billing['country']['iso_code_2'])
+        )
+    {
+      $this->billing_zone = $order->billing['country']['iso_code_2'];
+    }
+    if (isset($_SESSION['billing_zone'])) {
+      $this->billing_zone = $_SESSION['billing_zone'];
+    }
   }
 
   function process() {
@@ -78,7 +94,7 @@ class ot_payment {
 
     $allowed_zones = explode(',', MODULE_ORDER_TOTAL_PAYMENT_ALLOWED);
 
-    if ($this->enabled && (in_array($_SESSION['billing_zone'], $allowed_zones) == true || MODULE_ORDER_TOTAL_PAYMENT_ALLOWED == '')) {
+    if ($this->enabled && (in_array($this->billing_zone, $allowed_zones) == true || MODULE_ORDER_TOTAL_PAYMENT_ALLOWED == '')) {
       $this->xtc_order_total();
       $this->calculate_credit();
       if (basename($PHP_SELF) != FILENAME_CHECKOUT_PAYMENT && isset($this->discount['sum']) && $this->discount['sum']!=0) {
@@ -137,7 +153,7 @@ class ot_payment {
       if (strpos($this->percentage[$j], "|") !== false) {
         $strings = explode('|', $this->percentage[$j]);
         $allowed_zones = explode(',', $strings[0]);
-        if (!in_array($_SESSION['billing_zone'], $allowed_zones) == true && $strings[0] != '00') {
+        if (!in_array($this->billing_zone, $allowed_zones) == true && $strings[0] != '00') {
           continue;
         }
         $string = $strings[1];
@@ -243,7 +259,7 @@ class ot_payment {
     $string = '';
     $allowed_zones = explode(',', MODULE_ORDER_TOTAL_PAYMENT_ALLOWED);
 
-    if ($this->enabled && (in_array($_SESSION['billing_zone'], $allowed_zones) == true || MODULE_ORDER_TOTAL_PAYMENT_ALLOWED == '')) {
+    if ($this->enabled && (in_array($this->billing_zone, $allowed_zones) == true || MODULE_ORDER_TOTAL_PAYMENT_ALLOWED == '')) {
       $this->calculate_credit($payment);
       if ($this->discount['sum']!=0) {
         for ($i=1; $i<=$this->num_payment; $i++) {
