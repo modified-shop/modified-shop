@@ -156,6 +156,8 @@ class payone_elv extends PayonePayment {
 		  }
 		}
 
+    $this->pg_config = $this->config[$this->_getActiveGenreIdentifier()];
+
     $_SESSION[$this->code]['elv_type'] = 'lastschrift';
     if ($this->pg_config['types']['payolution_debit']['active'] == 'true') {
       $_SESSION[$this->code]['elv_type'] = 'payolution_debit';
