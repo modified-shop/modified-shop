@@ -61,7 +61,15 @@
 
         // update changed configurations
         if (isset($_POST) && count($_POST) > 0) {
-          $configuration_query = xtc_db_query("select configuration_key,configuration_id, configuration_value, use_function,set_function from " . TABLE_CONFIGURATION . " where configuration_group_id = '" . (int)$_GET['gID'] . "' order by sort_order");
+          $configuration_query = xtc_db_query("SELECT configuration_key,
+                                                      configuration_id, 
+                                                      configuration_value, 
+                                                      use_function,
+                                                      set_function 
+                                                 FROM " . TABLE_CONFIGURATION . " 
+                                                WHERE configuration_group_id = '" . (int)$_GET['gID'] . "'
+                                                  AND sort_order >= 0
+                                             ORDER BY sort_order, configuration_id");
           while ($configuration = xtc_db_fetch_array($configuration_query)) {
             $configuration['configuration_value'] = stripslashes($configuration['configuration_value']);
             if (is_array($_POST[$configuration['configuration_key']])) {
@@ -112,18 +120,6 @@
             }
           }
         }
-        
-        /*
-        // DB Cache System [If Cache deactivated.. clean all cachefiles]
-        if (isset($_POST['DB_CACHE']) && $_POST['DB_CACHE'] == 'false') {
-          $handle = opendir(SQL_CACHEDIR);
-          while (($file = readdir($handle)) !== false) {
-            // Jump over files that are no sql-cache
-            if (strpos(basename($file), 'sql_') !== false || basename($file) == 'index.html' || (substr(basename($file), 0, 1) == '.')) continue;
-            @unlink(SQL_CACHEDIR.$file);
-          }
-        }
-        */
         xtc_redirect(xtc_href_link(FILENAME_CONFIGURATION, 'gID=' . (int)$_GET['gID']));
         break;
 
@@ -244,8 +240,7 @@
                                                              FROM " . TABLE_CONFIGURATION . " 
                                                             WHERE configuration_group_id = '" . (int)$_GET['gID'] . "'
                                                               AND sort_order >= 0
-                                                         ORDER BY sort_order, configuration_id"
-                                                         );
+                                                         ORDER BY sort_order, configuration_id");
                       while ($configuration = xtc_db_fetch_array($configuration_query)) {
                         $configuration['configuration_value'] = stripslashes($configuration['configuration_value']); //Web28 - 2012-08-09 - fix slashes
                         if ($_GET['gID'] == 6) {
