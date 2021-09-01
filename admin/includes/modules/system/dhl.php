@@ -22,6 +22,7 @@
        $this->title = MODULE_DHL_TEXT_TITLE;
        $this->description = MODULE_DHL_TEXT_DESCRIPTION;
        $this->enabled = ((defined('MODULE_DHL_STATUS') && MODULE_DHL_STATUS == 'True') ? true : false);
+       $this->sort_order = '';
      }
 
     function process($file) {

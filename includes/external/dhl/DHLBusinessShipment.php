@@ -492,6 +492,7 @@
             $weight += ($this->order->products[$i]['qty'] * $this->order->products[$i]['attributes'][$j]['options_values_weight']);
           }
         }
+        $ExportDocument->ExportDocPosition[$i] = new stdClass();
         $ExportDocument->ExportDocPosition[$i]->description = ((isset($this->order->products[$i]['tariff_title']) && $this->order->products[$i]['tariff_title'] != '') ? $this->order->products[$i]['tariff_title'] : $this->order->products[$i]['name']);
         $ExportDocument->ExportDocPosition[$i]->countryCodeOrigin = ((isset($this->order->products[$i]['origin']) && $this->order->products[$i]['origin'] != '') ? $this->order->products[$i]['origin'] : $this->info['country_iso_2']);
         $ExportDocument->ExportDocPosition[$i]->customsTariffNumber = ((isset($this->order->products[$i]['tariff']) && $this->order->products[$i]['tariff'] != '') ? $this->order->products[$i]['tariff'] : '');
