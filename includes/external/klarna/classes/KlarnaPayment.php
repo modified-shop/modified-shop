@@ -19,6 +19,8 @@ define('TABLE_KLARNA_PAYMENTS', 'klarna_payments');
 require_once(DIR_FS_EXTERNAL.'GuzzleHttp/functions_include.php');
 require_once(DIR_FS_EXTERNAL.'GuzzleHttp/Promise/functions_include.php');
 require_once(DIR_FS_EXTERNAL.'GuzzleHttp/Psr7/functions_include.php');
+
+require_once(DIR_FS_INC.'xtc_get_countries.inc.php');
 require_once(DIR_FS_INC.'xtc_get_products_image.inc.php');
 
 // include needed classes
