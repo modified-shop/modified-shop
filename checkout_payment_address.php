@@ -24,12 +24,16 @@ $smarty = new Smarty;
 // include needed functions
 require_once (DIR_FS_INC.'xtc_count_customer_address_book_entries.inc.php');
 require_once (DIR_FS_INC.'xtc_address_label.inc.php');
+require_once (DIR_FS_INC.'xtc_get_address_format_id.inc.php');
+require_once (DIR_FS_INC.'xtc_address_format.inc.php');
+require_once (DIR_FS_INC.'xtc_get_country_name.inc.php');
+require_once (DIR_FS_INC.'xtc_get_zone_code.inc.php');
 require_once (DIR_FS_INC.'secure_form.inc.php');
 
 $params = '';
 $link_checkout_payment = FILENAME_CHECKOUT_PAYMENT;
 if (isset($_SESSION['paypal']['PayerID'])) {
-  $params = xtc_get_all_get_params();
+  $params = xtc_get_all_get_params(array('action', 'id'));
   $link_checkout_payment = FILENAME_CHECKOUT_CONFIRMATION;
 }
 
@@ -47,9 +51,10 @@ $error = false;
 $process = false;
 if (isset ($_POST['action']) && ($_POST['action'] == 'submit')) {
   // process a new billing address
-  if (xtc_not_null($_POST['firstname']) 
-      && xtc_not_null($_POST['lastname']) 
-      && xtc_not_null($_POST['street_address'])
+  if ((xtc_not_null($_POST['firstname']) 
+       && xtc_not_null($_POST['lastname']) 
+       && xtc_not_null($_POST['street_address'])
+       ) || isset($_POST['store_address'])
       ) 
   {
     $checkout_page = 'payment';
@@ -108,7 +113,13 @@ $breadcrumb->add(NAVBAR_TITLE_2_PAYMENT_ADDRESS, xtc_href_link(FILENAME_CHECKOUT
 $addresses_count = xtc_count_customer_address_book_entries();
 require (DIR_WS_INCLUDES.'header.php');
 
-$smarty->assign('FORM_ACTION', xtc_draw_form('checkout_address', xtc_href_link(FILENAME_CHECKOUT_PAYMENT_ADDRESS, $params, 'SSL'), 'post', 'onsubmit="return check_form_optional(checkout_address);"').secure_form());
+$smarty->assign('FORM_ACTION', xtc_draw_form('checkout_address', xtc_href_link(FILENAME_CHECKOUT_PAYMENT_ADDRESS, $params.'action=new', 'SSL'), 'post', 'onsubmit="return check_form_optional(checkout_address);"').secure_form());
+$smarty->assign('BUTTON_CONTINUE', xtc_draw_hidden_field('action', 'submit').xtc_image_submit('button_continue.gif', IMAGE_BUTTON_CONTINUE));
+if ($process == true) {
+  $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(FILENAME_CHECKOUT_PAYMENT_ADDRESS, $params, 'SSL').'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
+} else {
+  $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link($link_checkout_payment, $params, 'SSL').'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
+}
 
 if ($messageStack->size('checkout_address') > 0) {
   $smarty->assign('error', $messageStack->output('checkout_address'));
@@ -121,13 +132,41 @@ if ($process == false) {
 }
 
 if ($addresses_count < MAX_ADDRESS_BOOK_ENTRIES) {
+  if (isset($_GET['action']) 
+      && $_GET['action'] == 'new'
+      )
+  {
+    $smarty->assign('NEW_ADDRESS', true);
+    $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(FILENAME_CHECKOUT_PAYMENT_ADDRESS, $params, 'SSL').'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
+  }
   require (DIR_WS_MODULES.'checkout_new_address.php');
+	$smarty->assign('BUTTON_NEW', '<a href="'.xtc_href_link(FILENAME_CHECKOUT_PAYMENT_ADDRESS, $params.'action=new', 'SSL').'">'.xtc_image_button('button_add_address.gif', IMAGE_BUTTON_ADD_ADDRESS).'</a>');
 }
-$smarty->assign('BUTTON_CONTINUE', xtc_draw_hidden_field('action', 'submit').xtc_image_submit('button_continue.gif', IMAGE_BUTTON_CONTINUE));
 
-if ($process == true) {
+if (isset($_GET['action']) 
+    && $_GET['action'] == 'edit'
+    && isset($_GET['id'])
+    )
+{
+  $address_query = xtc_db_query("SELECT *,
+                                        entry_country_id as country
+                                   FROM ".TABLE_ADDRESS_BOOK."
+                                  WHERE address_book_id = '".(int)$_GET['id']."'");
+  if (xtc_db_num_rows($address_query) > 0) {
+    $address = xtc_db_fetch_array($address_query);
+    foreach ($address as $key => $value) {
+      $key = str_replace('entry_', '', $key);
+      ${$key} = $value;
+    }
+
+    $edit_address_book = true;
+    require (DIR_WS_MODULES.'checkout_new_address.php');
+  }
+  $smarty->assign('NEW_ADDRESS', true);
+  $smarty->assign('BUTTON_CONTINUE', xtc_draw_hidden_field('action', 'submit').xtc_image_submit('button_update.gif', IMAGE_BUTTON_UPDATE));
   $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(FILENAME_CHECKOUT_PAYMENT_ADDRESS, $params, 'SSL').'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
 }
+
 $smarty->assign('FORM_END', '</form>');
 if (isset($_SESSION['NO_SHIPPING']) && $_SESSION['NO_SHIPPING'] === true) {
   $smarty->assign('NO_SHIPPING', $_SESSION['NO_SHIPPING']);

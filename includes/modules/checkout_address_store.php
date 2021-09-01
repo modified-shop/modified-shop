@@ -26,6 +26,7 @@
     'company',
     'suburb',
     'state',
+    'address_book_id',
   );
 
   // prepare variables
@@ -149,10 +150,15 @@
       $sql_data_array['entry_zone_id'] = (isset($zone_id) ? (int)$zone_id : 0);
       $sql_data_array['entry_state'] = ((isset($state) && !empty($state)) ? $state : '');
     }
-
-    xtc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array);      
-    $new_address_book_id = xtc_db_insert_id();
-  
+    
+    if (isset($address_book_id)) {
+      xtc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array, 'update', "address_book_id = '".(int)$address_book_id."'");
+      $new_address_book_id = $address_book_id;    
+    } else {
+      xtc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array);      
+      $new_address_book_id = xtc_db_insert_id();
+    }
+    
     if (isset($_POST['primary']) && ($_POST['primary'] == 'on')) {
       xtc_db_query("UPDATE ".TABLE_CUSTOMERS."
                        SET customers_default_address_id = '".(int)$new_address_book_id."'

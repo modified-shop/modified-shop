@@ -10,7 +10,7 @@
      Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  if ($addresses_count > 1) {
+  if ($addresses_count > 0) {
     require_once(DIR_FS_INC . 'xtc_get_zone_name.inc.php'); 
     require_once(DIR_FS_INC . 'xtc_get_country_name.inc.php'); 
 
@@ -42,7 +42,12 @@
       $address_content_array[$i]['RADIO_FIELD'] = xtc_draw_radio_field('address', $addresses['address_book_id'], ($addresses['address_book_id'] == $address_book_id), 'id="field_addresses_'.$addresses['address_book_id'].'"');
       $address_content_array[$i]['COUNTRY'] = xtc_get_country_name($addresses['country_id']);
       $address_content_array[$i]['STATE'] = xtc_get_zone_name($addresses['country_id'], $addresses['zone_id'], $addresses['state']);
-
+      $address_content_array[$i]['SELECTED'] = (($addresses['address_book_id'] == $address_book_id) ? 1 : 0);
+      $address_content_array[$i]['FORM_ACTION'] = xtc_draw_form('checkout_address', xtc_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, $params, 'SSL'), 'post', 'onsubmit="return check_form_optional(checkout_address);"').secure_form().xtc_draw_hidden_field('address', $addresses['address_book_id']);
+      $address_content_array[$i]['BUTTON_CONTINUE'] = xtc_draw_hidden_field('action', 'submit').xtc_image_submit('small_continue.gif', IMAGE_BUTTON_CONTINUE);
+      $address_content_array[$i]['FORM_END'] = '</form>';
+      $address_content_array[$i]['BUTTON_EDIT'] = '<a href="'.xtc_href_link(basename($PHP_SELF), $params.'action=edit&id='.$addresses['address_book_id'], 'SSL').'">'.xtc_image_button('small_edit.gif', SMALL_IMAGE_BUTTON_EDIT).'</a>';
+      
       $address_content .= sprintf('<li>%s<label for="field_addresses_%s"> %s %s</label><br /><span class="address">%s</span></li>', xtc_draw_radio_field('address',$addresses['address_book_id'], ($addresses['address_book_id'] == $address_book_id), 'id="field_addresses_'.$addresses['address_book_id'].'"'), $addresses['address_book_id'], $addresses['firstname'], $addresses['lastname'], xtc_address_format($format_id, $addresses, true, ' ', ', ')); // Tomcraft - 2011-01-04 - make checkout process valid
       
       $i ++;

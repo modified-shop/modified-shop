@@ -96,6 +96,17 @@ if (ACCOUNT_STATE == 'true') {
 $module_smarty->assign('SELECT_COUNTRY', xtc_get_country_list('country', $selected).'&nbsp;'. (xtc_not_null(ENTRY_COUNTRY_TEXT) ? '<span class="inputRequirement">'.ENTRY_COUNTRY_TEXT.'</span>' : ''));
 
 $module_smarty->assign('new','1');
+
+if (isset($_GET['action']) 
+    && $_GET['action'] == 'new'
+    && $addresses_count < MAX_ADDRESS_BOOK_ENTRIES
+    )
+{
+  $module_smarty->assign('PARAMS', xtc_draw_hidden_field('store_address', 1));
+} elseif (isset($edit_address_book) && $edit_address_book === true) {
+  $module_smarty->assign('PARAMS', xtc_draw_hidden_field('address_book_id', (int)$_GET['id']));
+}
+
 $module_smarty->assign('CHECKBOX_PRIMARY', xtc_draw_checkbox_field('primary', 'on', false, 'id="primary"'));
 
 $module_smarty->assign('language', $_SESSION['language']);
