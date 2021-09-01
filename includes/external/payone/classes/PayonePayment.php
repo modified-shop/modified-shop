@@ -524,7 +524,7 @@ class PayonePayment {
 		$this->delivery_data->setShippingLastname($order->delivery['lastname']);
 		$this->delivery_data->setShippingCompany($order->delivery['company']);
 		$this->delivery_data->setShippingStreet($order->delivery['street_address']);
-    $this->delivery_data->setShippingAddressaddition($order->billing['suburb']);
+    $this->delivery_data->setShippingAddressaddition($order->delivery['suburb']);
 		$this->delivery_data->setShippingZip($order->delivery['postcode']);
 		$this->delivery_data->setShippingCity($order->delivery['city']);
     if (isset($order->delivery['country_iso_2'])) {

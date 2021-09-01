@@ -501,7 +501,7 @@ class PayoneModified {
 		$config_identifiers = array_keys($configuration);
 		$paymentgenre_identifiers = array();
 		foreach($config_identifiers as $ci) {
-			if (strpos($ci, 'paymentgenre_') === false) {
+			if (strpos($ci, 'paymentgenre_') === 0) {
 				$paymentgenre_identifiers[] = $ci;
 			}
 		}
