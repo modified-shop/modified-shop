@@ -24,6 +24,10 @@
   define('TEXT_DHL_BULKY', 'Bulky goods:');
   define('TEXT_DHL_PERSONAL', 'Personally:');
   define('TEXT_DHL_CODEABLE', 'Codeable:');
+  define('TEXT_DHL_IDENT', 'Identcheck:');
+  define('TEXT_DHL_DOB', 'Date of Birth:');
+  define('TEXT_DHL_SHOW_MORE', '[show more]');
+  define('TEXT_DHL_SHOW_LESS', '[show less]');
   define('TEXT_DHL_STATUS_UPDATE', 'Notification:');
   define('TEXT_DHL_BUTTON_CREATE', 'Create DHL Label');
   define('TEXT_DHL_CREATE_SUCCESS', 'DHL Label was created');

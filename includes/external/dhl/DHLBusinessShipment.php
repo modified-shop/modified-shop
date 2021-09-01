@@ -291,6 +291,18 @@
         $Service->BulkyGoods['active'] = '1';
       }
       
+      if ($this->ident > 0) {        
+        $Ident = new stdClass();
+        $Ident->surname = $this->order->delivery['lastname'];
+        $Ident->givenName = $this->order->delivery['firstname'];
+        $Ident->dateOfBirth = date('Y-m-d', strtotime($this->dob));
+        $Ident->minimumAge = 'A'.$this->ident;
+        
+        $Service->IdentCheck = new stdClass();
+        $Service->IdentCheck->active = '1';
+        $Service->IdentCheck->Ident = $Ident;
+      }
+      
       // ShipmentDetails
       $ShipmentDetails = new stdClass();
       $ShipmentDetails->product = $this->data['product'];
@@ -375,6 +387,7 @@
         'country_iso_2' => $this->order->delivery['country_iso_2'],
         'email_address' => $this->order->customer['email_address'],
         'packstation' => ((stripos($street_address['street_name'], 'packstation') !== false) ? true : false),
+        'postfiliale' => ((stripos($street_address['street_name'], 'postfiliale') !== false) ? true : false),
         'telephone' => $this->order->customer['telephone'],
       );
       $customers_data = $this->encode_request($customers_data);
@@ -447,6 +460,15 @@
         $Packstation->city = $data['city'];
         $Packstation->Origin = $Origin;
       }
+
+      if (isset($data['postfiliale']) && $data['postfiliale'] === true) {
+        $Postfiliale = new stdClass();
+        $Postfiliale->postfilialNumber = preg_replace('/[^0-9]/', '', (($data['street_number'] != '') ? $data['street_number'] : $data['street_name']));
+        $Postfiliale->postNumber = preg_replace('/[^0-9]/', '', $data['company']);
+        $Postfiliale->zip = $data['postcode'];
+        $Postfiliale->city = $data['city'];
+        $Postfiliale->Origin = $Origin;
+      }
       
       switch ($type) {
         case 'sender':
@@ -461,6 +483,9 @@
           if (isset($Packstation) && is_object($Packstation)) {
             $shipping_details->name1 = (($Name->name2 != '') ? $Name->name2 : $Name->name1);
             $shipping_details->Packstation = $Packstation;
+          } elseif (isset($Postfiliale) && is_object($Postfiliale)) {
+            $shipping_details->name1 = (($Name->name2 != '') ? $Name->name2 : $Name->name1);
+            $shipping_details->Postfiliale = $Postfiliale;
           } else {
             $shipping_details->name1 = $Name->name1;
             $shipping_details->Address = $Address;
