@@ -250,7 +250,7 @@ function ipl_core_load_xml($xmlDataString)
             break;
 
         case 'xmlParser':
-            $parser = new XMLParser($xmlDataString);
+            $parser = new XMLParserIPL($xmlDataString);
 
             if ($parser->Parse() == false) {
                 $xmlError = $parser->getError();
@@ -1881,7 +1881,7 @@ function ipl_core_generic_send_request($requestUrlBase, $requestUrlSuffix, $attr
  *
  * @version 1.3.0
  */
-class XMLParser
+class XMLParserIPL
 {
     /**
      * The XML parser
@@ -2022,7 +2022,7 @@ class XMLParser
         //Check to see if tag is root-level
         if (count($this->stack) == 0) {
             //If so, set the document as the current tag
-            $this->document = new XMLTag($name, $attrs);
+            $this->document = new XMLTagIPL($name, $attrs);
 
             //And start out the stack with the document tag
             $this->stack = array('document');
@@ -2090,7 +2090,7 @@ class XMLParser
  *
  * @version 1.3.0
  */
-class XMLTag
+class XMLTagIPL
 {
     /**
      * Array with the attributes of this XML tag
@@ -2173,7 +2173,7 @@ class XMLTag
         }
 
         //Create the child object itself
-        $child = new XMLTag($name, $attrs, $parents);
+        $child = new XMLTagIPL($name, $attrs, $parents);
 
         //If the cleanTagName feature is on, replace colons and dashes with underscores
         if ($cleanTagName)
