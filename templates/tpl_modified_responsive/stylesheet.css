@@ -58,6 +58,8 @@
     46. Miscellaneous
     47. CSS Buttons
     48. CSS Write reviews
+    49. Custom checkbox & radio 
+    50. New address book handling
 
    ---------------------------------------------------------------------------------------*/
 
@@ -5469,6 +5471,16 @@ ul.address_block li .address {
 }
 /* END autocomplete */
 
+.external_links a:after {
+  font-family: 'Font Awesome 5 Free';
+  content: '\f35d';
+  font-weight: 900;
+  font-size: 9px;
+  line-height:9px;
+  margin: 0 0 0 5px;
+  vertical-align:2px;
+}
+
 /* END miscellaneous */
 
 
@@ -5992,19 +6004,8 @@ ol#address_block {
 }
 /* END Custom checkbox & radio */
 
-.external_links a:after {
-  font-family: 'Font Awesome 5 Free';
-  content: '\f35d';
-  font-weight: 900;
-  font-size: 9px;
-  line-height:9px;
-  margin: 0 0 0 5px;
-  vertical-align:2px;
-}
 
-
-
-/* START new address book handling */
+/* 50. START New address book handling */
 #address_block_new {
   display: -webkit-box;
   display: -moz-box;
@@ -6065,6 +6066,6 @@ ol#address_block_new li label .address {
   position:relative;
   padding: 0px 120px 0px 0px; 
 }
-/* END new address book handling */
+/* END New address book handling */
 
 

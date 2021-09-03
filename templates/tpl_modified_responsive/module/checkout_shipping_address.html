@@ -26,8 +26,7 @@
               <span class="address">{$module_data.ADDRESS_LABEL|replace:"<br />":", "}</span>
             </label> 
             <span class="address_actions cf">
-              {if isset($module_data.BUTTON_CONTINUE)}<span class="cssButtonPos5">{$module_data.BUTTON_CONTINUE}</span>{/if}
-              {if isset($module_data.BUTTON_EDIT)}<span class="cssButtonPos5">{$module_data.BUTTON_EDIT}</span>{/if}
+              {if isset($module_data.BUTTON_EDIT)}<span class="cssButtonPos5">{$module_data.BUTTON_EDIT}</span>{/if}{if isset($module_data.BUTTON_CONTINUE)}<span class="cssButtonPos5">{$module_data.BUTTON_CONTINUE}</span>{/if}
             </span>
             {$module_data.FORM_END}         
           </div>
