@@ -1,14 +1,35 @@
 {config_load file="$language/lang_$language.conf" section="checkout_payment_address"}
 <h1>{#heading_address#}</h1>
-{$FORM_ACTION}
+
 {if $error != ''}<div class="errormessage">{$error}</div>{/if}
-<p>{#text_current_address#}</p>
-<p><strong>{#title_current_address#}:</strong><br />{$ADDRESS_LABEL}</p>
-{if $BLOCK_ADDRESS}
-<h1>{#title_old_addresses#}</h1>
-<p>{#text_old_addresses#}</p>
-<p>{$BLOCK_ADDRESS}</p>
+{if !isset($NEW_ADDRESS)}
+  <div class="highlightbox">
+    <h2 class="addressbook">{#title_old_addresses#}</h2>
+    <p>{#text_old_addresses#}</p>
+    <ol id="address_block_new">
+      {foreach item=module_data from=$BLOCK_ADDRESS_ARRAY}
+        <li{if $module_data.SELECTED == 1} class="selected"{/if}>
+          <div class="address_inner">
+            {$module_data.FORM_ACTION}
+            <label for="field_addresses_{$module_data.ADDRESS_BOOK_ID}">
+              {$module_data.FIRSTNAME} {$module_data.LASTNAME}, {$module_data.CITY}
+              <span class="address">{$module_data.ADDRESS_LABEL|replace:"<br />":", "}</span>
+            </label> 
+            <span class="address_actions cf">
+              {if isset($module_data.BUTTON_EDIT)}{$module_data.BUTTON_EDIT}{/if}{if isset($module_data.BUTTON_CONTINUE)}{$module_data.BUTTON_CONTINUE}{/if}
+            </span>
+            {$module_data.FORM_END}         
+          </div>
+        </li>
+      {/foreach}
+    </ol>
+  </div> 
+  <p>{$BUTTON_BACK}&nbsp;{$BUTTON_NEW}</p>
+{else}
+  {$FORM_ACTION}
+    {if $MODULE_new_address}
+      {$MODULE_new_address}
+    {/if}
+    <p>{$BUTTON_BACK}&nbsp;{$BUTTON_CONTINUE}</p>
+  {$FORM_END}
 {/if}
-{if $MODULE_new_address}{$MODULE_new_address}{/if}
-<p>{$BUTTON_BACK}&nbsp;{$BUTTON_CONTINUE}</p>
-{$FORM_END}

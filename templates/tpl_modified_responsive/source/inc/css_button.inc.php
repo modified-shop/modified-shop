@@ -25,8 +25,6 @@ function css_button($image, $alt, $parameters = '', $submit = false) {
     'button_login_small' => array(),
     'button_search' => array(),
     'button_quick_find' => array(),
-    'small_edit' => array(),
-    'small_delete' => array(),
     'small_view' => array(),
     'button_view' => array(),
     'button_update_cart' => array(),
@@ -106,6 +104,17 @@ function css_button($image, $alt, $parameters = '', $submit = false) {
     'button_login_newsletter' => array(
       'class' => 'cssButtonColor3',
     ),
+    'small_continue' => array(
+      'class' => 'cssButtonColor3',
+    ),
+    'small_edit' => array(
+      'class' => 'cssButtonColor3',
+    ),
+    'small_delete' => array(
+      'class' => 'cssButtonColor3',
+    ),
+    
+    
     
     
     // color 4

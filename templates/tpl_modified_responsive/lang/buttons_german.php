@@ -239,16 +239,16 @@ define('CSS_IMAGE_BUTTON_CONTINUE_SHOPPING_ICON_RIGHT', '<i class="fas fa-caret-
 define('CSS_IMAGE_BUTTON_CONTINUE_SHOPPING_ICON_LEFT', '');
 
 
-//define('CSS_IMAGE_SMALL_EDIT_TEXT', '');
+define('CSS_IMAGE_SMALL_EDIT_TEXT', '');
 //define('CSS_IMAGE_SMALL_EDIT_TITLE', '');
 define('CSS_IMAGE_SMALL_EDIT_ICON_RIGHT', '');
-define('CSS_IMAGE_SMALL_EDIT_ICON_LEFT', '');
+define('CSS_IMAGE_SMALL_EDIT_ICON_LEFT', '<i class="far fa-edit"></i>');
 
 
-//define('CSS_IMAGE_SMALL_DELETE_TEXT', '');
+define('CSS_IMAGE_SMALL_DELETE_TEXT', '');
 //define('CSS_IMAGE_SMALL_DELETE_TITLE', '');
 define('CSS_IMAGE_SMALL_DELETE_ICON_RIGHT', '');
-define('CSS_IMAGE_SMALL_DELETE_ICON_LEFT', '');
+define('CSS_IMAGE_SMALL_DELETE_ICON_LEFT', '<i class="far fa-trash-alt"></i>');
 
 
 //define('CSS_IMAGE_SMALL_VIEW_TEXT', '');
@@ -381,5 +381,11 @@ define('CSS_IMAGE_EPAYPAL_DE_TEXT', '<span class="color-paypal0">Direkt zu</span
 //define('CSS_IMAGE_EPAYPAL_DE_TITLE', '');
 define('CSS_IMAGE_EPAYPAL_DE_ICON_RIGHT', '');
 define('CSS_IMAGE_EPAYPAL_DE_ICON_LEFT', '');
+
+
+define('CSS_IMAGE_SMALL_CONTINUE_TEXT', '');
+//define('CSS_IMAGE_SMALL_CONTINUE_TITLE', '');
+define('CSS_IMAGE_SMALL_CONTINUE_ICON_RIGHT', '');
+define('CSS_IMAGE_SMALL_CONTINUE_ICON_LEFT', '<i class="far fa-check-square"></i>');
 
 ?>

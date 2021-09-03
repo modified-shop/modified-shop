@@ -2,33 +2,33 @@
 {config_load file="lang_`$language`.custom"}
 {config_load file="lang_`$language`.section" section="address_book"}
 <h1>{#heading_address#}</h1>
-{$FORM_ACTION}
+
 {if $error != ''}<div class="errormessage">{$error}</div>{/if}
 {if $success_message}<div class="infomessage">{$success_message}</div>{/if}
-<div class="twoColums">
-  <div class="highlightbox">
-    <h4>{#title_standard#}</h4>
-    <p>{#text_standard#}</p>
-    <div class="hr_15"></div>
-    <p>{$ADDRESS_DEFAULT}</p>
-  </div>
+
+<div class="highlightbox">
+  <h4>{#title_addresses#}</h4>
+  <p>{#text_standard#}</p>
+  <p>{$ADDRESS_COUNT}</p>
+  <ol id="address_block_new">
+    {foreach name=aussen item=addresses from=$addresses_data}
+      <li{if $addresses.PRIMARY == '1'} class="selected"{/if}>
+        <div class="address_inner">
+          <div class="address_inner_block">
+            <label>
+              {$addresses.NAME} {if $addresses.PRIMARY == '1'} ({#title_standard#}) {/if}
+              <span class="address">{$addresses.ADDRESS|replace:"<br />":", "}</span>
+            </label> 
+            <span class="address_actions">
+              {$addresses.BUTTON_DELETE}{$addresses.BUTTON_EDIT}
+            </span>
+          </div>
+        </div>
+      </li>
+    {/foreach}
+  </ol>
 </div>
 
-<div class="twoColums last">
-  <div class="highlightbox plainright">
-    <h4>{#title_addresses#}</h4>
-    <p>{$ADDRESS_COUNT}</p>
-    <br />
-    {foreach name=aussen item=addresses from=$addresses_data}
-    <p><span style="float:right">{$addresses.BUTTON_EDIT}<br />{$addresses.BUTTON_DELETE}</span>
-      <strong>{$addresses.NAME} {if $addresses.PRIMARY == '1'} ({#title_standard#}) {/if}</strong><br />
-      {$addresses.ADDRESS}
-    </p>
-    <div class="hr_1"></div>
-    {/foreach}
-  </div>
-</div>  
-<br class="clearfix" />
 <div class="button_left">{$BUTTON_BACK}</div>
 <div class="button_right">{$BUTTON_NEW}</div>
   

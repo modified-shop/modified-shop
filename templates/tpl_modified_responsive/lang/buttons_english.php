@@ -74,7 +74,7 @@ define('CSS_IMAGE_BUTTON_ADD_ADDRESS_ICON_LEFT', '<i class="far fa-plus-square">
 //define('CSS_SMALL_IMAGE_BUTTON_EDIT_TEXT', '');
 //define('CSS_SMALL_IMAGE_BUTTON_EDIT_TITLE', '');
 define('CSS_SMALL_IMAGE_BUTTON_EDIT_ICON_RIGHT', '');
-define('CSS_SMALL_IMAGE_BUTTON_EDIT_ICON_LEFT', '<i class="fas fa-edit"></i>');
+define('CSS_SMALL_IMAGE_BUTTON_EDIT_ICON_LEFT', '<i class="far fa-edit"></i>');
 
 
 //define('CSS_SMALL_IMAGE_BUTTON_DELETE_TEXT', '');
@@ -239,16 +239,16 @@ define('CSS_IMAGE_BUTTON_CONTINUE_SHOPPING_ICON_RIGHT', '<i class="fas fa-caret-
 define('CSS_IMAGE_BUTTON_CONTINUE_SHOPPING_ICON_LEFT', '');
 
 
-//define('CSS_IMAGE_SMALL_EDIT_TEXT', '');
+define('CSS_IMAGE_SMALL_EDIT_TEXT', '');
 //define('CSS_IMAGE_SMALL_EDIT_TITLE', '');
 define('CSS_IMAGE_SMALL_EDIT_ICON_RIGHT', '');
-define('CSS_IMAGE_SMALL_EDIT_ICON_LEFT', '');
+define('CSS_IMAGE_SMALL_EDIT_ICON_LEFT', '<i class="far fa-edit"></i>');
 
 
-//define('CSS_IMAGE_SMALL_DELETE_TEXT', '');
+define('CSS_IMAGE_SMALL_DELETE_TEXT', '');
 //define('CSS_IMAGE_SMALL_DELETE_TITLE', '');
 define('CSS_IMAGE_SMALL_DELETE_ICON_RIGHT', '');
-define('CSS_IMAGE_SMALL_DELETE_ICON_LEFT', '');
+define('CSS_IMAGE_SMALL_DELETE_ICON_LEFT', '<i class="far fa-trash-alt"></i>');
 
 
 //define('CSS_IMAGE_SMALL_VIEW_TEXT', '');
@@ -381,5 +381,11 @@ define('CSS_IMAGE_EPAYPAL_EN_TEXT', '<span class="color-paypal0">Check out with<
 //define('CSS_IMAGE_EPAYPAL_EN_TITLE', '');
 define('CSS_IMAGE_EPAYPAL_EN_ICON_RIGHT', '');
 define('CSS_IMAGE_EPAYPAL_EN_ICON_LEFT', '');
+
+
+define('CSS_IMAGE_SMALL_CONTINUE_TEXT', '');
+//define('CSS_IMAGE_SMALL_CONTINUE_TITLE', '');
+define('CSS_IMAGE_SMALL_CONTINUE_ICON_RIGHT', '');
+define('CSS_IMAGE_SMALL_CONTINUE_ICON_LEFT', '<i class="far fa-check-square"></i>');
 
 ?>

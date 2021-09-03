@@ -276,6 +276,7 @@ a.black:hover {
 .button_left_cart {
   max-width:130px;
 }
+
 @media only screen and (min-width: 759px) {
   .button_left_cart { max-width: 48%; }
 }
@@ -313,7 +314,7 @@ a.black:hover {
   float:right;
   text-align:right;
   display:inline-block;
-  margin: 5px 0px 0px 0px;
+  margin: 10px 0px 0px 0px;
   min-width:200px;
 }
 .button_right_checkout_small {
@@ -5056,8 +5057,8 @@ ul.address_block li .address {
   float:right;
   width:100px;
   margin: 10px 0px 10px 10px;
+  text-align:right;
 }
-
 .accountbutton_row {
   margin: 5px 0px 5px 0px;
 }
@@ -5671,8 +5672,14 @@ ul.address_block li .address {
 
 /* Edit Buttons adress_book */
 .cssButtonPos5 {
-  display:block;
-  margin: 0 0 5px 0;
+  display:inline-block;
+  margin: 0 0 0 10px;
+  width:35px;
+}
+.cssButtonPos5 .fas,
+.cssButtonPos5 .far {
+  font-size:16px;
+  vertical-align:middle;
 }
 
 /* Small Cart Buttons account, account_history, account_history_info */
@@ -5682,7 +5689,8 @@ ul.address_block li .address {
   display:block;
   margin: 0 0 5px 5px;
 }
-.cssButtonPos6 .fas {
+.cssButtonPos6 .fas,
+.cssButtonPos6 .far {
   font-size:16px;
   vertical-align:bottom;
 }
@@ -5993,3 +6001,70 @@ ol#address_block {
   margin: 0 0 0 5px;
   vertical-align:2px;
 }
+
+
+
+/* START new address book handling */
+#address_block_new {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+  list-style-type:none;
+  margin: 15px -10px 0 -10px;
+  padding: 0px;
+}
+#address_block_new > li {
+  order:2;
+  float:left;
+  width:100%;  
+  box-sizing:border-box;
+  padding: 0px 10px;
+  margin: 0px;  
+}
+@media only screen and (min-width: 759px) {
+  #address_block_new > li { width:50%; } 
+}
+#address_block_new > li.selected {
+  order:1;
+}
+#address_block_new > li.selected .address_inner {
+  background:#eee;
+  padding: 15px 10px;
+}
+#address_block_new > li .address_inner {
+  border-top: 1px solid #ddd;
+  padding: 15px 10px;
+  box-sizing:border-box;
+  height:100%;
+}
+ol#address_block_new li label {
+  font-weight: 700;
+}
+ol#address_block_new li label .address {
+  display: block !important;
+  padding: 5px 0px 0px 0px !important;
+  font-weight: 400 !important;
+}
+#address_block_new form {
+  position:relative;
+  padding: 0px 120px 0px 0px; 
+}
+#address_block_new .address_actions {
+  overflow:hidden;
+  position:absolute;
+  top:0px;
+  right:0px;
+  width:100px;
+  text-align:right;
+}
+#address_block_new .address_inner_block {
+  position:relative;
+  padding: 0px 120px 0px 0px; 
+}
+/* END new address book handling */
+
+
