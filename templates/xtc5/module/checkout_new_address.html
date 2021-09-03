@@ -1,7 +1,8 @@
 {config_load file="$language/lang_$language.conf" section="address_book_process"}
 {config_load file="$language/lang_$language.conf" section="checkout_new_address"}
-<h2>{#title_new_address#} ({#text_must#})</h2>
-<p>{#text_new_address#}</p>
+<h2>{if isset($smarty.get.action) && $smarty.get.action == 'edit'}{#title_edit_address#}{else}{#title_new_address#}{/if} ({#text_must#})</h2>
+{if !isset($smarty.get.action) || $smarty.get.action == 'new'}<p>{#text_new_address#}</p>{/if}
+
 <div class="highlightbox">
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
   {if $gender == '1'}

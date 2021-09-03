@@ -2194,3 +2194,75 @@ a.autocomplete:hover {
   -webkit-text-fill-color: transparent;
 }
 /* END CSS Write reviews */
+
+/* START new address book handling */
+h2.addressbook {
+  margin-top: 0px;
+}
+#address_block_new {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+  list-style-type:none;
+  margin: 15px -10px 0 -10px !important;
+  padding: 0px;
+}
+#address_block_new > li {
+  order:2;
+  float:left;
+  width:50%;  
+  box-sizing:border-box;
+  padding: 0px 10px;
+  margin: 0px;  
+}
+#address_block_new.address_book > li {
+  width:100%;  
+}
+
+
+
+#address_block_new > li.selected {
+  order:1;
+}
+#address_block_new > li.selected .address_inner {
+  background:#ddd;
+}
+#address_block_new > li .address_inner {
+  position:relative;
+  border-top: 1px solid #ccc;
+  padding: 20px 150px 20px 10px;
+  box-sizing:border-box;
+  width:100%;
+}
+ol#address_block_new li label {
+  font-weight: 700;
+}
+ol#address_block_new li label .address {
+  display: block !important;
+  padding: 5px 0px 0px 0px !important;
+  font-weight: 400 !important;
+}
+#address_block_new .address_actions {
+  overflow:hidden;
+  position:absolute;
+  top:15px;
+  right:10px;
+  width:140px;
+  text-align:right;
+}
+#address_block_new .address_actions img {
+  margin: 0 0 5px 0px;
+}
+#address_block_new .address_actions input[type=image] {
+  margin: 0 0 5px 0px;
+}
+#address_block_new .address_inner_block {
+  padding: 0px 0px 0px 0px; 
+  width:100%;
+  box-sizing:border-box;
+}
+/* END new address book handling */

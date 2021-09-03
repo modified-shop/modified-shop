@@ -2,30 +2,33 @@
 {config_load file="lang_`$language`.custom"}
 {config_load file="lang_`$language`.section" section="address_book"}
 <h1>{#heading_address#}</h1>
-{$FORM_ACTION}
+
 {if $error != ''}<div class="errormessage">{$error}</div>{/if}
 {if $success_message}<div class="infomessage">{$success_message}</div>{/if}
-<div class="highlightbox cf">
-  <div class="twoColumsInner">
-    <h4>{#title_standard#}</h4>
-    <p>{#text_standard#}</p>
-    <div class="hr_15"></div>
-    <p>{$ADDRESS_DEFAULT}</p>
-  </div>
 
-  <div class="twoColumsInner last">
-    <h4>{#title_addresses#}</h4>
-    <p>{$ADDRESS_COUNT}</p>
-    <br />
+<div class="highlightbox">
+  <h4>{#title_addresses#}</h4>
+  <p>{#text_standard#}</p>
+  <p>{$ADDRESS_COUNT}</p>
+  <ol id="address_block_new">
     {foreach name=aussen item=addresses from=$addresses_data}
-    <p><span class="account_edit_buttons cf"><span class="cssButtonPos5">{$addresses.BUTTON_EDIT}</span><span class="cssButtonPos5">{$addresses.BUTTON_DELETE}</span></span>
-      <strong>{$addresses.NAME} {if $addresses.PRIMARY == '1'} ({#title_standard#}) {/if}</strong><br />
-      {$addresses.ADDRESS}
-    </p>
-    <div class="hr_1"></div>
+      <li{if $addresses.PRIMARY == '1'} class="selected"{/if}>
+        <div class="address_inner">
+          <div class="address_inner_block">
+            <label>
+              {$addresses.NAME} {if $addresses.PRIMARY == '1'} ({#title_standard#}) {/if}
+              <span class="address">{$addresses.ADDRESS|replace:"<br />":", "}</span>
+            </label> 
+            <span class="address_actions">
+              <span class="cssButtonPos5">{$addresses.BUTTON_EDIT}</span><span class="cssButtonPos5">{$addresses.BUTTON_DELETE}</span>
+            </span>
+          </div>
+        </div>
+      </li>
     {/foreach}
-  </div>
-</div>  
+  </ol>
+</div>
+
 <div class="button_left cf"><div class="cssButtonPos4">{$BUTTON_BACK}</div></div>
 <div class="button_right cf"><div class="cssButtonPos4">{$BUTTON_NEW}</div></div>
   

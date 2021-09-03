@@ -3,8 +3,11 @@
 {config_load file="lang_`$language`.custom"}
 {config_load file="lang_`$language`.section" section="address_book_process"}
 {config_load file="lang_`$language`.section" section="checkout_new_address"}
-    <h4>{#title_new_address#} <span class="pflicht">({#text_must#})</span></h4>
-    <p>{#text_new_address#}</p>
+<div class="highlightbox cf">
+  <h4>{if isset($smarty.get.action) && $smarty.get.action == 'edit'}{#title_edit_address#}{else}{#title_new_address#}{/if} <span class="pflicht">({#text_must#})</span></h4>
+  {if !isset($smarty.get.action) || $smarty.get.action == 'new'}<p>{#text_new_address#}</p>{/if}
+
+  <div class="twoColumsInner">
     <table>
       {if $gender == '1'}
       <tr>
@@ -22,6 +25,11 @@
         <td><span class="fieldtext">{#text_company#}</span><span class="stern">{$INPUT_COMPANY}</span></td>
       </tr>
       {/if}
+    </table>
+  </div>
+
+  <div class="twoColumsInner last">
+    <table>
       <tr>
         <td><span class="fieldtext">{#text_street#}</span><span class="stern">{$INPUT_STREET}</span></td>
       </tr>
@@ -52,3 +60,7 @@
       <label for="primary">{#text_standard#}</label>
     </div>
     {/if}
+  </div>
+  {if isset($PARAMS)}{$PARAMS}{/if}
+</div>    
+        

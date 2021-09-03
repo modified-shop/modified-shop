@@ -19,48 +19,38 @@
 
 <h1 class="checkout">{#heading_address#}</h1>
 {if $error != ''}<div class="errormessage">{$error}</div>{/if}
-{$FORM_ACTION}
-<div class="twoColums">
-  <div class="highlightbox">
-    <h4>{#text_current_address_short#}<span class="mini">&nbsp;</span></h4>
-    <p>{$ADDRESS_LABEL}</p>
-  </div>
-  <br />
-  {if isset($BLOCK_ADDRESS_ARRAY)}
-    <div class="highlightbox">
-      <h4>{#title_old_addresses#}</h4>
-      <p>{#text_old_addresses#}</p>
-      <ol id="address_block">
-        {foreach item=module_data from=$BLOCK_ADDRESS_ARRAY}
-          <li>
-            <div class="cus_radio cus_my_5">
-              {$module_data.RADIO_FIELD}
-              <label for="field_addresses_{$module_data.ADDRESS_BOOK_ID}">
-                {$module_data.FIRSTNAME} {$module_data.LASTNAME}, {$module_data.CITY}
-                <span class="address">{$module_data.ADDRESS_LABEL|replace:"<br />":", "}</span>
-              </label>              
-            </div>
-          </li>
-        {/foreach}
-      </ol>
-    </div> 
-  {elseif isset($BLOCK_ADDRESS)}
-    <div class="highlightbox">
-      <h4>{#title_old_addresses#}</h4>
-      <p>{#text_old_addresses#}</p>
-      {$BLOCK_ADDRESS}
-    </div>      
-  {/if}  
-</div>
 
-<div class="twoColums last">
+{if !isset($NEW_ADDRESS)}
   <div class="highlightbox">
+    <h4>{#title_old_addresses#}</h4>
+    <p>{#text_old_addresses#}</p>
+    <ol id="address_block_new">
+      {foreach item=module_data from=$BLOCK_ADDRESS_ARRAY}
+        <li{if $module_data.SELECTED == 1} class="selected"{/if}>
+          <div class="address_inner">
+            {$module_data.FORM_ACTION}
+            <label for="field_addresses_{$module_data.ADDRESS_BOOK_ID}">
+              {$module_data.FIRSTNAME} {$module_data.LASTNAME}, {$module_data.CITY}
+              <span class="address">{$module_data.ADDRESS_LABEL|replace:"<br />":", "}</span>
+            </label> 
+            <span class="address_actions">
+              {if isset($module_data.BUTTON_EDIT)}<span class="cssButtonPos5">{$module_data.BUTTON_EDIT}</span>{/if}{if isset($module_data.BUTTON_CONTINUE)}<span class="cssButtonPos5">{$module_data.BUTTON_CONTINUE}</span>{/if}
+            </span>
+            {$module_data.FORM_END}         
+          </div>
+        </li>
+      {/foreach}
+    </ol>
+  </div> 
+ 
+  <div class="button_right cf"><div class="cssButtonPos4">{$BUTTON_NEW}</div></div>
+  <div class="button_left cf"><div class="cssButtonPos4">{$BUTTON_BACK}</div></div>
+{else}
+  {$FORM_ACTION}
     {if $MODULE_new_address}
-    {$MODULE_new_address}
+      {$MODULE_new_address}
     {/if}
-  </div>
-</div>
-<br class="clearfix" />
-<div class="button_left cf"><div class="cssButtonPos4">{$BUTTON_BACK}</div></div>
-<div class="button_right cf"><div class="cssButtonPos4">{$BUTTON_CONTINUE}</div></div>
-{$FORM_END}
+    <div class="button_right cf"><div class="cssButtonPos4">{$BUTTON_CONTINUE}</div></div>
+    <div class="button_left cf"><div class="cssButtonPos4">{$BUTTON_BACK}</div></div>
+  {$FORM_END}
+{/if}
