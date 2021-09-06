@@ -596,6 +596,7 @@ HEREDOC;
          * @return array|false
          */
         public function selection() {
+            unset($_SESSION['billpay']);
             unset($_SESSION['gm_error_message']); // Gambio specific
             // STEP 1: Check if customer has been denied previously
             if (isset($_SESSION['billpay_hide_payment_method']) && $_SESSION['billpay_hide_payment_method']) {
@@ -1179,6 +1180,18 @@ JAVASCRIPT;
             if (empty($vars))
             {
                 $vars = $_POST;
+                if ($_SERVER['REQUEST_METHOD'] == 'POST' 
+                    && isset($_POST['billpay'])
+                    )
+                {
+                  $_SESSION['billpay'] = $_POST['billpay'];
+                } elseif ($_SERVER['REQUEST_METHOD'] == 'GET'
+                          && isset($_SESSION['billpay'])
+                          )
+                {
+                  $_POST['billpay'] = $_SESSION['billpay'];
+                  $vars = $_POST;
+                }
             }
             $success = $this->onMethodInput($vars);
             if (!$success) {
@@ -1294,6 +1307,7 @@ JAVASCRIPT;
             unset($_SESSION['billpay_preselect']);
             unset($_SESSION['bp_rate_result']);
             unset($_SESSION['rr_data']);
+            unset($_SESSION['billpay']);
 
             return true;
         }
