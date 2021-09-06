@@ -219,11 +219,11 @@ if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weigh
 unset($_SESSION['delivery_zone']);
 $module_smarty->assign('shipping_content', $shipping_content);
 $module_smarty->assign('COUNTRY', $order->delivery['country']['title']);
-$module_smarty->assign('TOTAL_WEIGHT', $_SESSION['cart']->weight + SHIPPING_BOX_WEIGHT);
+$module_smarty->assign('TOTAL_WEIGHT', $_SESSION['cart']->weight + (double)SHIPPING_BOX_WEIGHT);
 
 $smarty->assign('shipping_content', $shipping_content);
 $smarty->assign('COUNTRY', $order->delivery['country']['title']);
-$smarty->assign('TOTAL_WEIGHT', $_SESSION['cart']->weight + SHIPPING_BOX_WEIGHT);
+$smarty->assign('TOTAL_WEIGHT', $_SESSION['cart']->weight + (double)SHIPPING_BOX_WEIGHT);
 
 if ($order->content_type == 'virtual' 
     || $order->content_type == 'virtual_weight'
