@@ -337,7 +337,8 @@ CREATE TABLE content_manager (
   date_added DATETIME NOT NULL,
   last_modified DATETIME NULL,
   PRIMARY KEY (content_id),
-  KEY idx_content_group (content_group, languages_id)
+  KEY idx_content_group (content_group, languages_id),
+  KEY idx_content_status (content_status)
 );
 
 DROP TABLE IF EXISTS content_manager_content;
@@ -458,7 +459,8 @@ CREATE TABLE currencies (
   last_updated DATETIME NULL,
   status INT(1) DEFAULT 1 NOT NULL,
   PRIMARY KEY (currencies_id),
-  UNIQUE KEY idx_code (code)
+  UNIQUE KEY idx_code (code),
+  KEY idx_status (status)
 );
 
 DROP TABLE IF EXISTS customers;
@@ -653,7 +655,8 @@ CREATE TABLE languages (
   status_admin INT(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (languages_id),
   UNIQUE idx_code (code),
-  KEY idx_status (status)
+  KEY idx_status (status),
+  KEY idx_status_admin (status_admin)
 );
 
 DROP TABLE IF EXISTS manufacturers;
@@ -712,6 +715,7 @@ CREATE TABLE module_newsletter (
   status INT(1) NOT NULL DEFAULT 0,
   body TEXT NOT NULL,
   PRIMARY KEY (newsletter_id)
+  KEY idx_status (status)
 );
 
 DROP TABLE IF EXISTS newsletter_recipients;
@@ -730,6 +734,7 @@ CREATE TABLE newsletter_recipients (
   ip_date_confirmed varchar(50) DEFAULT NULL,
   PRIMARY KEY (mail_id),
   KEY idx_mail_key (mail_key),
+  KEY idx_mail_status (mail_status),
   UNIQUE idx_customers_email_address (customers_email_address)
 );
 
@@ -754,7 +759,8 @@ CREATE TABLE newsletters (
   date_sent DATETIME,
   status INT(1),
   locked INT(1) DEFAULT 0,
-  PRIMARY KEY (newsletters_id)
+  PRIMARY KEY (newsletters_id),
+  KEY idx_status (status)
 );
 
 DROP TABLE IF EXISTS newsletters_history;
@@ -1171,7 +1177,8 @@ CREATE TABLE products_tags_options (
   PRIMARY KEY (options_id,languages_id),
   KEY idx_products_options_id (products_options_id),
   KEY idx_filter_multi (languages_id, filter, options_id, sort_order),
-  KEY idx_filter (filter)
+  KEY idx_filter (filter),
+  KEY idx_status (status)
 );
 
 DROP TABLE IF EXISTS products_tags_values;
@@ -1193,7 +1200,8 @@ CREATE TABLE products_tags_values (
   KEY idx_options_id (options_id),
   KEY idx_products_options_values_id (products_options_values_id),
   KEY idx_filter_multi (languages_id, filter, options_id, sort_order),
-  KEY idx_filter (filter)
+  KEY idx_filter (filter),
+  KEY idx_status (status)
 );
 
 DROP TABLE IF EXISTS products_to_categories;
@@ -1246,7 +1254,8 @@ CREATE TABLE reviews (
   reviews_read INT(5) NOT NULL DEFAULT 0,
   reviews_status INT(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (reviews_id),
-  KEY idx_products_id (products_id)
+  KEY idx_products_id (products_id),
+  KEY idx_reviews_status (reviews_status)
 );
 
 DROP TABLE IF EXISTS reviews_description;

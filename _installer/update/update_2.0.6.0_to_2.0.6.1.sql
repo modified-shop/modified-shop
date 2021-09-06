@@ -39,4 +39,19 @@ ALTER TABLE `tax_class` ADD `sort_order` INT(11) DEFAULT 0 NOT NULL AFTER `tax_c
 #GTB - 2021-07-30 - add index for startpage
 ALTER TABLE `products` ADD KEY `idx_products_startpage` (`products_startpage`); 
 
+#GTB - 2021-09-06 - add index for status
+ALTER TABLE `languages` ADD KEY `idx_status_admin` (`status_admin`);
+ALTER TABLE `currencies` ADD KEY `idx_status` (`status`);
+ALTER TABLE `content_manager` ADD KEY `idx_content_status` (`content_status`);
+ALTER TABLE `module_newsletter` ADD KEY `idx_status` (`status`);
+ALTER TABLE `newsletter_recipients` ADD KEY `idx_mail_status` (`mail_status`);
+ALTER TABLE `newsletters` ADD KEY `idx_status` (`status`);
+ALTER TABLE `products_tags_options` ADD KEY `idx_status` (`status`);
+ALTER TABLE `products_tags_values` ADD KEY `idx_status` (`status`);
+ALTER TABLE `reviews` ADD KEY `idx_reviews_status` (`reviews_status`);
+
+#GTB - 2021-09-06 - add index for newsfeed date
+ALTER TABLE `newsfeed` ADD KEY `idx_news_date` (`news_date`);
+
+
 # Keep an empty line at the end of this file for the db_updater to work properly
