@@ -714,7 +714,7 @@ CREATE TABLE module_newsletter (
   date DATETIME DEFAULT NULL,
   status INT(1) NOT NULL DEFAULT 0,
   body TEXT NOT NULL,
-  PRIMARY KEY (newsletter_id)
+  PRIMARY KEY (newsletter_id),
   KEY idx_status (status)
 );
 
