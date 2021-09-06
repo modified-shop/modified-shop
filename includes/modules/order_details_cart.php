@@ -169,7 +169,7 @@ include (DIR_WS_INCLUDES.'shipping_estimate.php');
 $module_smarty->assign('TOTAL_CONTENT', $total_content);
 $module_smarty->assign('language', $_SESSION['language']);
 $module_smarty->assign('module_content', $module_content);
-$module_smarty->assign('TOTAL_WEIGHT', $_SESSION['cart']->weight + SHIPPING_BOX_WEIGHT);
+$module_smarty->assign('TOTAL_WEIGHT', $_SESSION['cart']->weight + (double)SHIPPING_BOX_WEIGHT);
 
 $module_smarty->caching = 0;
 $module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/order_details.html');

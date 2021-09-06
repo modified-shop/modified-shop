@@ -39,3 +39,5 @@ $value_limits['MAX_DISPLAY_BESTSELLERS_DAYS'] = array('min' => 0);
 
 $value_limits['SEARCH_MIN_LENGTH'] = array('min' => 1);
 $value_limits['SEARCH_AC_MIN_LENGTH'] = array('min' => 1);
+
+$value_limits['SHIPPING_BOX_WEIGHT'] = array('min' => 0);
