@@ -702,6 +702,7 @@ CREATE TABLE newsfeed (
   news_link VARCHAR( 128 ) NULL,
   news_date INT( 11 ) NULL,
   PRIMARY KEY (news_id),
+  KEY idx_news_date (news_date),
   UNIQUE idx_news_link (news_link)
 );
 
