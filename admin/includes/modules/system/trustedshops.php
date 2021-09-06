@@ -65,7 +65,8 @@ class trustedshops {
                   `widget` int(1) NOT NULL DEFAULT '0',
                   `date_added` datetime NOT NULL,
                   `last_modified` datetime NOT NULL,
-                  PRIMARY KEY (`id`)
+                  PRIMARY KEY (`id`),
+                  KEY `idx_status` (`status`)
                 )");
   }
 
