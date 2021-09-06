@@ -58,8 +58,11 @@ $error = false;
 $process = false;
 if (isset ($_POST['action']) && ($_POST['action'] == 'submit')) {
   // process a new shipping address
-  if ((xtc_not_null($_POST['firstname']) 
+  if ((isset($_POST['firstname'])
+       && xtc_not_null($_POST['firstname']) 
+       && isset($_POST['lastname']) 
        && xtc_not_null($_POST['lastname']) 
+       && isset($_POST['street_address'])
        && xtc_not_null($_POST['street_address'])
        ) || isset($_POST['store_address'])
       ) 
