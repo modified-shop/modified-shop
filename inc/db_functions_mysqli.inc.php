@@ -210,30 +210,6 @@
       $queryEndTime = array_sum(explode(" ",microtime())); 
       $processTime = number_format(round($queryEndTime - $queryStartTime, 5), 5, '.', '');
 
-      if (isset($_GET['query_analyzer']) && $_GET['query_analyzer'] == 'on') {
-        $_SESSION['query_analyzer'] = true;
-      }
-      if (isset($_GET['query_analyzer']) && $_GET['query_analyzer'] == 'off') {
-        $_SESSION['query_analyzer'] = false;
-      }
-      if (isset($_SESSION['query_analyzer'])
-          && $_SESSION['query_analyzer'] === true 
-          && function_exists('mod_sql_explain') 
-          && function_exists('mod_output_sql_explain')) 
-      {
-        $explain_query_raw = preg_replace("'[\r\n\s]+'", ' ', $query);
-      
-        if (substr(strtolower($explain_query_raw), 0, 6) == 'select') {
-          $explain_log_array = array();
-          $explain_query = mysqli_query(${$link}, 'EXPLAIN ' . $explain_query_raw) or xtc_db_error($explain_query_raw, mysqli_errno(${$link}), mysqli_error(${$link}));
-          while ($explain = xtc_db_fetch_array($explain_query)) {
-            $explain_array = mod_sql_explain($explain);
-            $explain_log_array = array_merge($explain_log_array, $explain_array);
-          }
-          mod_output_sql_explain($explain_log_array, $query, $processTime);
-        }
-      }
-
       if (defined('STORE_DB_SLOW_QUERY') && ((STORE_DB_SLOW_QUERY == 'true' && $processTime >= STORE_DB_SLOW_QUERY_TIME) || STORE_DB_SLOW_QUERY == 'false')) {
         xtc_db_slow_query_log($processTime, $query, 'QUERY');
       }
@@ -241,6 +217,9 @@
       if ($result_error) {
         xtc_db_slow_query_log($processTime, $result_error, 'ERROR');
       }
+      
+      require_once(DIR_FS_INC.'auto_include.inc.php');
+      foreach(auto_include(DIR_FS_CATALOG.'includes/extra/db_query/','php') as $file) require ($file);
     }
 
     return $result;
