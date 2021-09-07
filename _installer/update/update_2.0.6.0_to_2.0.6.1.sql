@@ -74,6 +74,7 @@ ALTER TABLE `products_tags_values` ADD KEY `idx_sort_order` (`sort_order`);
 ALTER TABLE `products_xsell` ADD KEY `idx_sort_order` (`sort_order`);
 ALTER TABLE `products_xsell_grp_name` ADD KEY `idx_xsell_sort_order` (`xsell_sort_order`);
 ALTER TABLE `shipping_status` ADD KEY `idx_sort_order` (`sort_order`);
+ALTER TABLE `tax_class` ADD KEY `idx_sort_order` (`sort_order`);
 
 #GTB - 2021-09-07 - add index for options_name
 ALTER TABLE `products_tags_options` ADD KEY `idx_options_name` (`options_name`);
