@@ -22,7 +22,7 @@
   define('MODULE_DHL_EKP_TITLE', 'EKP');
   define('MODULE_DHL_EKP_DESC', 'DHL Kundennummer');
   define('MODULE_DHL_ACCOUNT_TITLE', 'Account');
-  define('MODULE_DHL_ACCOUNT_DESC', 'Account ID im Format ISO2:ID getrennt durch Komma (standard WORLD:01)');
+  define('MODULE_DHL_ACCOUNT_DESC', 'Account ID im Format ISO2:ID getrennt durch Komma (standard WORLD:01). Sollte die Warenpost eine abweichende ID haben, dann als Zusatz PK (Paket) oder WP (Warenpost). Beispiel: WORLD:01PK,WORLD:02WP');
   
   define('MODULE_DHL_NOTIFICATION_TITLE', '<hr noshade>Benachrichtigung');
   define('MODULE_DHL_NOTIFICATION_DESC', 'Soll der Kunde von DHL per eMail &uuml;ber den Versand benachrichtigt werden ?<br><b>Hinweis:</b> daf&uuml;r muss eine Einverst&auml;ndniserkl&auml;rung zur Weitergabe der E-Mail Adresse vom Kunden vorhanden sein.');
