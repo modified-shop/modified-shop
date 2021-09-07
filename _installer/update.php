@@ -85,13 +85,13 @@
         
         // exclude payments
         if (defined('MODULE_EXCLUDE_PAYMENT_NUMBER')) {
-          for ($i = 1; $i < MODULE_EXCLUDE_PAYMENT_NUMBER; $i ++) {
+          for ($i = 1; $i <= MODULE_EXCLUDE_PAYMENT_NUMBER; $i ++) {
             xtc_db_query("UPDATE " . TABLE_CONFIGURATION . "
                              SET set_function = 'xtc_cfg_checkbox_unallowed_module(\'shipping\', \'configuration[MODULE_EXCLUDE_PAYMENT_SHIPPING_".$i."]\','
                            WHERE configuration_key = 'MODULE_EXCLUDE_PAYMENT_SHIPPING_".$i."'");
 
             xtc_db_query("UPDATE " . TABLE_CONFIGURATION . "
-                             SET set_function = 'xtc_cfg_checkbox_unallowed_module(\'shipping\', \'configuration[MODULE_EXCLUDE_PAYMENT_PAYMENT_".$i."]\','
+                             SET set_function = 'xtc_cfg_checkbox_unallowed_module(\'payment\', \'configuration[MODULE_EXCLUDE_PAYMENT_PAYMENT_".$i."]\','
                            WHERE configuration_key = 'MODULE_EXCLUDE_PAYMENT_PAYMENT_".$i."'");
           }
         }
