@@ -47,9 +47,19 @@
         'api_password'  => 'tHv3UHNBc9FE6VXZz2mgWXK9oEFO5i',
       );
       
-      $account = preg_split("/[:,]/", MODULE_DHL_ACCOUNT); 
-      for ($i=0, $n=count($account); $i<$n; $i+=2) {
-        $this->data['account'][$account[$i]] = $account[$i+1];
+      $account_data = preg_split("/[:,]/", MODULE_DHL_ACCOUNT); 
+      for ($i=0, $n=count($account_data); $i<$n; $i+=2) {
+        if (!isset($this->data['account'][$account_data[$i]])) {
+          $this->data['account'][$account_data[$i]] = array();
+        }
+        if (strpos($account_data[$i+1], 'PK') !== false) {
+          $this->data['account'][$account_data[$i]]['PK'] = preg_replace('/[^\d]/', '', $account_data[$i+1]);
+        } elseif (strpos($account_data[$i+1], 'WP') !== false) {
+          $this->data['account'][$account_data[$i]]['WP'] = preg_replace('/[^\d]/', '', $account_data[$i+1]);
+        } else {
+          $this->data['account'][$account_data[$i]]['PK'] = preg_replace('/[^\d]/', '', $account_data[$i+1]);
+          $this->data['account'][$account_data[$i]]['WP'] = preg_replace('/[^\d]/', '', $account_data[$i+1]);
+        }
       }
       
       $country = xtc_get_countries_with_iso_codes(STORE_COUNTRY);
@@ -97,7 +107,7 @@
         $response = $this->client->createShipmentOrder($request);
       } catch (Exception $ex) {
         $this->LoggingManager->log('DEBUG', 'CreateLabel', array('exception' => $ex));
-        return array('message' => 'ERROR - <b>Code:</b> '.$ex->faultcode.' <b>Message:</b> '.utf8_decode($ex->faultstring));
+        return array('message' => 'ERROR - <b>Code:</b> '.$ex->faultcode.' <b>Message:</b> '.utf8_encode($ex->faultstring));
       }
       
       if ($response->Status->statusCode == '0') {
@@ -306,12 +316,12 @@
       // ShipmentDetails
       $ShipmentDetails = new stdClass();
       $ShipmentDetails->product = $this->data['product'];
-      $ShipmentDetails->accountNumber = $this->data['ekp'].$this->data['product_code'].((isset($this->data['account'][$customers_data['country_iso_2']])) ? $this->data['account'][$customers_data['country_iso_2']] : $this->data['account']['WORLD']);
+      $ShipmentDetails->accountNumber = $this->data['ekp'].$this->data['product_code'].((isset($this->data['account'][$customers_data['country_iso_2']])) ? $this->data['account'][$customers_data['country_iso_2']][$this->data['product_type']] : $this->data['account']['WORLD'][$this->data['product_type']]);
       $ShipmentDetails->shipmentDate = date('Y-m-d');
       $ShipmentDetails->customerReference = $this->data['reference'];
       
       if ($this->retoure > 0) {
-        $ShipmentDetails->returnShipmentAccountNumber = $this->data['ekp'].'07'.((isset($this->data['account'][$customers_data['country_iso_2']])) ? $this->data['account'][$customers_data['country_iso_2']] : $this->data['account']['WORLD']);
+        $ShipmentDetails->returnShipmentAccountNumber = $this->data['ekp'].'07'.((isset($this->data['account'][$customers_data['country_iso_2']])) ? $this->data['account'][$customers_data['country_iso_2']][$this->data['product_type']] : $this->data['account']['WORLD'][$this->data['product_type']]);
         $ShipmentDetails->returnShipmentReference = $this->data['reference'];
       }
       
@@ -402,6 +412,7 @@
       $this->data['name'] = $this->order->delivery['name'];
       $this->data['email_address'] = $this->order->customer['email_address'];
       $this->data['weight'] = ($this->weight > 0) ? $this->weight : $this->calculate_weight($this->order->info['order_id']);
+      $this->data['product_type'] = 'PK';
       
       // create product code
       switch ($this->order->delivery['country_iso_2']) {
@@ -411,6 +422,7 @@
           if ($this->type == 1 && $this->data['weight'] <= 1) {
             $this->data['product'] = 'V62WP';
             $this->data['product_code'] = '62';
+            $this->data['product_type'] = 'WP';
           }
           break;
         default:
