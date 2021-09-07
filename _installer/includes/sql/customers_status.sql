@@ -26,7 +26,8 @@ CREATE TABLE `personal_offers_by_customers_status_0` (
   `quantity` int(11) DEFAULT NULL,
   `personal_offer` decimal(15,4) DEFAULT NULL,
   PRIMARY KEY (`price_id`),
-  KEY idx_products_id (products_id)
+  KEY idx_products_id (`products_id`),
+  KEY idx_quantity (`quantity`)
 );
 
 -- 
@@ -40,7 +41,8 @@ CREATE TABLE `personal_offers_by_customers_status_1` (
   `quantity` int(11) DEFAULT NULL,
   `personal_offer` decimal(15,4) DEFAULT NULL,
   PRIMARY KEY (`price_id`),
-  KEY idx_products_id (products_id)
+  KEY idx_products_id (`products_id`),
+  KEY idx_quantity (`quantity`)
 );
 
 -- 
@@ -54,7 +56,8 @@ CREATE TABLE `personal_offers_by_customers_status_2` (
   `quantity` int(11) DEFAULT NULL,
   `personal_offer` decimal(15,4) DEFAULT NULL,
   PRIMARY KEY (`price_id`),
-  KEY idx_products_id (products_id)
+  KEY idx_products_id (`products_id`),
+  KEY idx_quantity (`quantity`)
 );
 
 -- 
@@ -68,7 +71,8 @@ CREATE TABLE `personal_offers_by_customers_status_3` (
   `quantity` int(11) DEFAULT NULL,
   `personal_offer` decimal(15,4) DEFAULT NULL,
   PRIMARY KEY (`price_id`),
-  KEY idx_products_id (products_id)
+  KEY idx_products_id (`products_id`),
+  KEY idx_quantity (`quantity`)
 );
 
 -- 
@@ -82,7 +86,8 @@ CREATE TABLE `personal_offers_by_customers_status_4` (
   `quantity` int(11) DEFAULT NULL,
   `personal_offer` decimal(15,4) DEFAULT NULL,
   PRIMARY KEY (`price_id`),
-  KEY idx_products_id (products_id)
+  KEY idx_products_id (`products_id`),
+  KEY idx_quantity (`quantity`)
 );
 
 # Keep an empty line at the end of this file for the installer to work properly

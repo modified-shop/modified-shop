@@ -53,5 +53,39 @@ ALTER TABLE `reviews` ADD KEY `idx_reviews_status` (`reviews_status`);
 #GTB - 2021-09-06 - add index for newsfeed date
 ALTER TABLE `newsfeed` ADD KEY `idx_news_date` (`news_date`);
 
+#GTB - 2021-09-07 - add index for sorting
+ALTER TABLE `banners` ADD KEY `idx_banners_sort` (`banners_sort`);
+ALTER TABLE `carriers` ADD KEY `idx_carrier_sort_order` (`carrier_sort_order`);
+ALTER TABLE `categories` ADD KEY `idx_sort_order` (`sort_order`);
+ALTER TABLE `configuration` ADD KEY `idx_sort_order` (`sort_order`);
+ALTER TABLE `configuration_group` ADD KEY `idx_sort_order` (`sort_order`);
+ALTER TABLE `content_manager` ADD KEY `idx_sort_order` (`sort_order`);
+ALTER TABLE `languages` ADD KEY `idx_sort_order` (`sort_order`);
+ALTER TABLE `orders_status` ADD KEY `idx_sort_order` (`sort_order`);
+ALTER TABLE `orders_total` ADD KEY `idx_sort_order` (`sort_order`);
+ALTER TABLE `products` ADD KEY `idx_products_sort` (`products_sort`);
+ALTER TABLE `products` ADD KEY `idx_products_startpage_sort` (`products_startpage_sort`);
+ALTER TABLE `products_attributes` ADD KEY `idx_sortorder` (`sortorder`);
+ALTER TABLE `products_options` ADD KEY `idx_products_options_sortorder` (`products_options_sortorder`);
+ALTER TABLE `products_options_values` ADD KEY `idx_products_options_values_sortorder` (`products_options_values_sortorder`);
+ALTER TABLE `products_tags` ADD KEY `idx_sort_order` (`sort_order`);
+ALTER TABLE `products_tags_options` ADD KEY `idx_sort_order` (`sort_order`);
+ALTER TABLE `products_tags_values` ADD KEY `idx_sort_order` (`sort_order`);
+ALTER TABLE `products_xsell` ADD KEY `idx_sort_order` (`sort_order`);
+ALTER TABLE `products_xsell_grp_name` ADD KEY `idx_xsell_sort_order` (`xsell_sort_order`);
+ALTER TABLE `shipping_status` ADD KEY `idx_sort_order` (`sort_order`);
+
+#GTB - 2021-09-07 - add index for options_name
+ALTER TABLE `products_tags_options` ADD KEY `idx_options_name` (`options_name`);
+
+#GTB - 2021-09-07 - add index for values_name
+ALTER TABLE `products_tags_values` ADD KEY `idx_values_name` (`values_name`);
+
+#GTB - 2021-09-07 - add index for tax_priority
+ALTER TABLE `tax_rates` ADD KEY `idx_tax_priority` (`tax_priority`);
+
+#GTB - 2021-09-07 - add index for image_nr
+ALTER TABLE `products_images` ADD KEY `idx_image_nr` (`image_nr`);
+
 
 # Keep an empty line at the end of this file for the db_updater to work properly
