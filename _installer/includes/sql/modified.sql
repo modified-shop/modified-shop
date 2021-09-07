@@ -191,7 +191,8 @@ CREATE TABLE banners (
   date_added DATETIME NOT NULL,
   date_status_change DATETIME DEFAULT NULL,
   status INT(1) DEFAULT 1 NOT NULL,
-  PRIMARY KEY (banners_id)
+  PRIMARY KEY (banners_id),
+  KEY idx_banners_sort (banners_sort)
 );
 
 DROP TABLE IF EXISTS banners_history;
@@ -237,6 +238,7 @@ CREATE TABLE carriers (
   carrier_date_added DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
   carrier_last_modified DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (carrier_id),
+  KEY idx_carrier_sort_order (carrier_sort_order),
   UNIQUE idx_carrier_name (carrier_name)
 );
 
@@ -262,7 +264,8 @@ CREATE TABLE categories (
   last_modified DATETIME,
   PRIMARY KEY (categories_id),
   KEY idx_categories_parent_id (parent_id),
-  KEY idx_categories_status (categories_status)
+  KEY idx_categories_status (categories_status),
+  KEY idx_sort_order (sort_order)
 );
 
 DROP TABLE IF EXISTS categories_description;
@@ -299,6 +302,7 @@ CREATE TABLE configuration (
   set_function VARCHAR(255) NULL,
   PRIMARY KEY (configuration_id),
   KEY idx_configuration_group_id (configuration_group_id),
+  KEY idx_sort_order (sort_order),
   UNIQUE idx_configuration_key (configuration_key)
 );
 
@@ -309,7 +313,8 @@ CREATE TABLE configuration_group (
   configuration_group_description VARCHAR(255) NOT NULL,
   sort_order INT(5) NULL,
   visible INT(1) DEFAULT 1 NULL,
-  PRIMARY KEY (configuration_group_id)
+  PRIMARY KEY (configuration_group_id),
+  KEY idx_sort_order (sort_order)
 );
 
 DROP TABLE IF EXISTS content_manager;
@@ -338,7 +343,8 @@ CREATE TABLE content_manager (
   last_modified DATETIME NULL,
   PRIMARY KEY (content_id),
   KEY idx_content_group (content_group, languages_id),
-  KEY idx_content_status (content_status)
+  KEY idx_content_status (content_status),
+  KEY idx_sort_order (sort_order)
 );
 
 DROP TABLE IF EXISTS content_manager_content;
@@ -656,7 +662,8 @@ CREATE TABLE languages (
   PRIMARY KEY (languages_id),
   UNIQUE idx_code (code),
   KEY idx_status (status),
-  KEY idx_status_admin (status_admin)
+  KEY idx_status_admin (status_admin),
+  KEY idx_sort_order (sort_order)
 );
 
 DROP TABLE IF EXISTS manufacturers;
@@ -926,7 +933,8 @@ CREATE TABLE orders_status (
   orders_status_name VARCHAR(64) NOT NULL,
   sort_order INT(11) DEFAULT 0 NOT NULL,
   PRIMARY KEY (orders_status_id, language_id),
-  KEY idx_orders_status_name (orders_status_name)
+  KEY idx_orders_status_name (orders_status_name),
+  KEY idx_sort_order (sort_order)
 );
 
 DROP TABLE IF EXISTS orders_status_history;
@@ -952,7 +960,8 @@ CREATE TABLE orders_total (
   class VARCHAR(32) NOT NULL,
   sort_order INT(11) NOT NULL,
   PRIMARY KEY (orders_total_id),
-  KEY idx_orders_id (orders_id)
+  KEY idx_orders_id (orders_id),
+  KEY idx_sort_order (sort_order)
 );
 
 DROP TABLE IF EXISTS orders_tracking;
@@ -1017,6 +1026,8 @@ CREATE TABLE products (
   KEY idx_products_status (products_status),
   KEY idx_products_startpage (products_startpage),
   KEY idx_manufacturers_id (manufacturers_id)
+  KEY idx_products_sort (products_sort),
+  KEY idx_products_startpage_sort (products_startpage_sort)
 );
 
 DROP TABLE IF EXISTS products_attributes;
@@ -1037,7 +1048,8 @@ CREATE TABLE products_attributes (
   attributes_vpe_value decimal(15,4) NOT NULL,
   PRIMARY KEY (products_attributes_id),
   KEY idx_products_id (products_id),
-  KEY idx_options (options_id, options_values_id)
+  KEY idx_options (options_id, options_values_id),
+  KEY idx_sortorder (sortorder)
 );
 
 DROP TABLE IF EXISTS products_attributes_download;
@@ -1108,7 +1120,8 @@ CREATE TABLE products_images (
   image_nr SMALLINT(11) NOT NULL,
   image_name VARCHAR(255) NOT NULL,
   PRIMARY KEY (image_id),
-  KEY idx_products_id (products_id)
+  KEY idx_products_id (products_id),
+  KEY idx_image_nr (image_nr)
 );
 
 DROP TABLE IF EXISTS products_notifications;
@@ -1125,7 +1138,8 @@ CREATE TABLE products_options (
   language_id INT(11) NOT NULL,
   products_options_name VARCHAR(255) NOT NULL DEFAULT '',
   products_options_sortorder INT(11) NOT NULL,
-  PRIMARY KEY (products_options_id, language_id)
+  PRIMARY KEY (products_options_id, language_id),
+  KEY idx_products_options_sortorder (products_options_sortorder)
 );
 
 DROP TABLE IF EXISTS products_options_values;
@@ -1134,7 +1148,8 @@ CREATE TABLE products_options_values (
   language_id INT(11) NOT NULL,
   products_options_values_name VARCHAR(255) NOT NULL DEFAULT '',
   products_options_values_sortorder INT(11) NOT NULL,
-  PRIMARY KEY (products_options_values_id, language_id)
+  PRIMARY KEY (products_options_values_id, language_id),
+  KEY idx_products_options_values_sortorder (products_options_values_sortorder)
 );
 
 DROP TABLE IF EXISTS products_options_values_to_products_options;
@@ -1159,7 +1174,8 @@ CREATE TABLE products_tags (
   KEY idx_products_options_values (products_id,options_id,values_id),
   KEY idx_products_options_id (products_options_id),
   KEY idx_options_id (options_id),
-  KEY idx_values_id (values_id)
+  KEY idx_values_id (values_id),
+  KEY idx_sort_order (sort_order)
 );
 
 DROP TABLE IF EXISTS products_tags_options;
@@ -1179,7 +1195,9 @@ CREATE TABLE products_tags_options (
   KEY idx_products_options_id (products_options_id),
   KEY idx_filter_multi (languages_id, filter, options_id, sort_order),
   KEY idx_filter (filter),
-  KEY idx_status (status)
+  KEY idx_options_name (options_name),
+  KEY idx_status (status),
+  KEY idx_sort_order (sort_order)
 );
 
 DROP TABLE IF EXISTS products_tags_values;
@@ -1202,7 +1220,9 @@ CREATE TABLE products_tags_values (
   KEY idx_products_options_values_id (products_options_values_id),
   KEY idx_filter_multi (languages_id, filter, options_id, sort_order),
   KEY idx_filter (filter),
-  KEY idx_status (status)
+  KEY idx_values_name (values_name),
+  KEY idx_status (status),
+  KEY idx_sort_order (sort_order)
 );
 
 DROP TABLE IF EXISTS products_to_categories;
@@ -1231,7 +1251,8 @@ CREATE TABLE products_xsell (
   PRIMARY KEY (ID),
   KEY idx_xsell_id (xsell_id),
   KEY idx_products_id (products_id),
-  KEY idx_products_xsell_grp_name_id (products_xsell_grp_name_id)
+  KEY idx_products_xsell_grp_name_id (products_xsell_grp_name_id),
+  KEY idx_sort_order (sort_order)
 );
 
 DROP TABLE IF EXISTS products_xsell_grp_name;
@@ -1240,7 +1261,8 @@ CREATE TABLE products_xsell_grp_name (
   xsell_sort_order INT(10) NOT NULL DEFAULT 0,
   language_id INT(11) NOT NULL,
   groupname VARCHAR(255) NOT NULL DEFAULT '',
-  PRIMARY KEY (products_xsell_grp_name_id, language_id)
+  PRIMARY KEY (products_xsell_grp_name_id, language_id),
+  KEY idx_xsell_sort_order (xsell_sort_order)
 );
 
 DROP TABLE IF EXISTS reviews;
@@ -1285,7 +1307,8 @@ CREATE TABLE shipping_status (
   shipping_status_image VARCHAR(64) NOT NULL,
   sort_order INT(11) DEFAULT 0 NOT NULL,
   PRIMARY KEY (shipping_status_id, language_id),
-  KEY idx_shipping_status_name (shipping_status_name)
+  KEY idx_shipping_status_name (shipping_status_name),
+  KEY idx_sort_order (sort_order)
 );
 
 DROP TABLE IF EXISTS shop_configuration;
@@ -1324,7 +1347,8 @@ CREATE TABLE tax_class (
   sort_order INT(11) DEFAULT 0 NOT NULL,
   last_modified DATETIME NULL,
   date_added DATETIME NOT NULL,
-  PRIMARY KEY (tax_class_id)
+  PRIMARY KEY (tax_class_id),
+  KEY idx_sort_order (sort_order)
 );
 
 DROP TABLE IF EXISTS tax_rates;
@@ -1339,7 +1363,8 @@ CREATE TABLE tax_rates (
   date_added DATETIME NOT NULL,
   PRIMARY KEY (tax_rates_id),
   KEY idx_tax_zone_id (tax_zone_id),
-  KEY idx_tax_class_id (tax_class_id)
+  KEY idx_tax_class_id (tax_class_id),
+  KEY idx_tax_priority (tax_priority)
 );
 
 DROP TABLE IF EXISTS whos_online;

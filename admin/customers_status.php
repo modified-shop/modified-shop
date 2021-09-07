@@ -111,7 +111,8 @@
                             quantity int, 
                             personal_offer decimal(15,4),
                             PRIMARY KEY (price_id),
-                            KEY idx_products_id (products_id)
+                            KEY idx_products_id (products_id),
+                            KEY idx_quantity (quantity)
                           )");
 
             // get lat group

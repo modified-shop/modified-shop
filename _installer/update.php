@@ -96,6 +96,19 @@
           }
         }
         
+        // personal offer
+        $customers_status_query = xtc_db_query("SELECT *
+                                                  FROM ".TABLE_CUSTOMERS_STATUS."
+                                              GROUP BY customers_status_id");
+        while ($customers_status = xtc_db_fetch_array($customers_status_query)) {
+          $check_query = xtc_db_query("SHOW KEYS 
+                                            FROM ".TABLE_PERSONAL_OFFERS_BY.$customers_status['customers_status_id']." 
+                                           WHERE Key_name = 'idx_quantity'");
+          if (xtc_db_num_rows($check_query) < 1) {
+            xtc_db_query("ALTER TABLE ".TABLE_PERSONAL_OFFERS_BY.$customers_status['customers_status_id']."  ADD KEY `idx_quantity` (`quantity`)");
+          }
+        }
+        
         $messageStack->add_session('update', TEXT_UPDATE_SYSTEM_SUCCESS, 'success');
         xtc_redirect(xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), '', $request_type));
         break;
