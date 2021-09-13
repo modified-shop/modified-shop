@@ -27,7 +27,7 @@ if (!CacheCheck()) {
   $module_smarty->caching = 1;
   $module_smarty->cache_lifetime = CACHE_LIFETIME;
   $module_smarty->cache_modified_check = CACHE_CHECK == 'true';
-  $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|pID:'.$product->data['products_id'].'|cID:'.$current_category_id.'|curr:'.$_SESSION['currency'].'|country:'.((isset($_SESSION['country'])) ? $_SESSION['country'] : ((isset($_SESSION['customer_country_id'])) ? $_SESSION['customer_country_id'] : STORE_COUNTRY))););
+  $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|pID:'.$product->data['products_id'].'|cID:'.$current_category_id.'|curr:'.$_SESSION['currency'].'|country:'.((isset($_SESSION['country'])) ? $_SESSION['country'] : ((isset($_SESSION['customer_country_id'])) ? $_SESSION['customer_country_id'] : STORE_COUNTRY)));
 }
 
 if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/products_category.html', $cache_id) || !$cache) {
