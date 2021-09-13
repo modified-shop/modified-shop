@@ -188,6 +188,8 @@ if (xtc_not_null($action) && basename($PHP_SELF) != FILENAME_COOKIE_USAGE) {
     case 'shipping_country':
       if (isset($_POST['country'])) {
         $_SESSION['country'] = (int)$_POST['country'];
+        unset($_SESSION['sendto']);
+        unset($_SESSION['billto']);
       }
       xtc_redirect(xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action'))));
       break;
