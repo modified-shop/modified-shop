@@ -520,6 +520,8 @@
       {
         $tax_address['country_id'] = isset($_SESSION['country']) ?  $_SESSION['country'] : STORE_COUNTRY;
         $tax_address['zone_id'] = -1;
+      } elseif (isset($tax_address['country_id'])) {
+        $_SESSION['country'] = $tax_address['country_id'];
       }
 
       $this->info = array(
