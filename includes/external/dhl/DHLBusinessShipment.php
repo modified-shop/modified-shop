@@ -296,6 +296,16 @@
         $Service->NamedPersonOnly['active'] = '1';
       }
       
+      // no neighbour
+      if ($this->no_neighbour > 0) {
+        $Service->NoNeighbourDelivery['active'] = '1';
+      }
+
+      // parcel outlet
+      if ($this->parcel_outlet > 0) {
+        $Service->ParcelOutletRouting['active'] = '1';
+      }
+
       // bulky
       if ($this->bulky > 0) {
         $Service->BulkyGoods['active'] = '1';

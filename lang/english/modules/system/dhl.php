@@ -40,6 +40,10 @@
   define('MODULE_DHL_PERSONAL_DESC', 'Set Personally preselected as default');
   define('MODULE_DHL_BULKY_TITLE', 'Bulky goods');
   define('MODULE_DHL_BULKY_DESC', 'Set Bulky goods preselected as default');
+  define('MODULE_DHL_NO_NEIGHBOUR_TITLE', 'No Neighbour Delivery');
+  define('MODULE_DHL_NO_NEIGHBOUR_DESC', 'Set No Neighbour Delivery preselected as default');
+  define('MODULE_DHL_PARCEL_OUTLET_TITLE', 'Parcel Outlet Routing');
+  define('MODULE_DHL_PARCEL_OUTLET_DESC', 'Set Parcel Outlet Routing preselected as default');
 
   define('MODULE_DHL_COMPANY_TITLE', '<hr noshade>Customer details<br/>');
   define('MODULE_DHL_COMPANY_DESC', 'Company:');

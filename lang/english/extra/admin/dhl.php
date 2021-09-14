@@ -29,7 +29,9 @@
   define('TEXT_DHL_SHOW_MORE', '[show more]');
   define('TEXT_DHL_SHOW_LESS', '[show less]');
   define('TEXT_DHL_STATUS_UPDATE', 'Notification:');
+  define('TEXT_DHL_NO_NEIGHBOUR', 'No Neighbour Delivery');
+  define('TEXT_DHL_PARCEL_OUTLET', 'Parcel Outlet Routing');
+
   define('TEXT_DHL_BUTTON_CREATE', 'Create DHL Label');
   define('TEXT_DHL_CREATE_SUCCESS', 'DHL Label was created');
   define('TEXT_DHL_DELETE_SUCCESS', 'DHL Label was deleted');
-  
