@@ -40,6 +40,10 @@
   define('MODULE_DHL_PERSONAL_DESC', 'Soll als Standard Eigenh&auml;ndig vorausgew&auml;hlt werden?');
   define('MODULE_DHL_BULKY_TITLE', 'Sperrgut');
   define('MODULE_DHL_BULKY_DESC', 'Soll als Standard Sperrgut vorausgew&auml;hlt werden?');
+  define('MODULE_DHL_NO_NEIGHBOUR_TITLE', 'Keine Nachbarschaftszustellung');
+  define('MODULE_DHL_NO_NEIGHBOUR_DESC', 'Soll als Standard keine Nachbarschaftszustellung vorausgew&auml;hlt werden?');
+  define('MODULE_DHL_PARCEL_OUTLET_TITLE', 'Filialrouting');
+  define('MODULE_DHL_PARCEL_OUTLET_DESC', 'Soll als Standard Filialrouting vorausgew&auml;hlt werden?');
 
   define('MODULE_DHL_COMPANY_TITLE', '<hr noshade>Kundendetails<br/>');
   define('MODULE_DHL_COMPANY_DESC', 'Firma:');
