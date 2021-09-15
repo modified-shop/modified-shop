@@ -14,7 +14,7 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-function product_redirect_link($products_id = false, $current_link, $categories_id = 0) {
+function product_redirect_link($products_id = false, $current_link = '', $categories_id = 0) {
   global $products_link_cat_id;  
 
   $return_arr = array('redirect' => true,
