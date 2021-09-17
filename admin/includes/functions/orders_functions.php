@@ -421,6 +421,7 @@
     $product_query = xtc_db_query("SELECT op.allow_tax,
                                           op.products_tax,
                                           p.products_tax_class_id,
+                                          p.products_weight,
                                           pd.products_name,
                                           pd.products_short_description,
                                           pd.products_order_description
@@ -471,7 +472,7 @@
     if ($status['customers_status_show_price_tax'] == 1 && $status['customers_status_add_tax_ot'] == 0 && $product['allow_tax'] == 0) {
       $group_addtax = true;
     }
-
+        
     $products_a_query = xtc_db_query("SELECT orders_products_attributes_id,
                                              options_values_price
                                         FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES."
@@ -511,7 +512,8 @@
       'products_tax' => xtc_db_prepare_input($tax_rate),
       'products_quantity' => xtc_db_prepare_input($data_array['products_quantity']),
       'allow_tax' => (int)$status['customers_status_show_price_tax'],
-      'products_model' => xtc_db_prepare_input($data_array['products_model'])
+      'products_model' => xtc_db_prepare_input($data_array['products_model']),
+      'products_weight' => xtc_db_prepare_input($data_array['products_weight']),
     );
 
     xtc_db_perform(TABLE_ORDERS_PRODUCTS, $sql_data_array, 'update', "orders_products_id = '".(int)($data_array['opID'])."'");
@@ -567,6 +569,7 @@
 
     $product_query = xtc_db_query("SELECT p.products_model,
                                           p.products_tax_class_id,
+                                          p.products_weight,
                                           pd.products_name,
                                           pd.products_short_description,
                                           pd.products_order_description
@@ -619,6 +622,7 @@
       'products_quantity' => xtc_db_prepare_input($data_array['products_quantity']),
       'allow_tax' => (int)$status['customers_status_show_price_tax'],
       'products_model' => xtc_db_prepare_input($product['products_model']),
+      'products_weight' => $product['products_weight']
     );
     xtc_db_perform(TABLE_ORDERS_PRODUCTS, $sql_data_array);
 
@@ -674,6 +678,118 @@
   }
 
 
+  function orders_product_update($oID, $data_array, $status) {
+    global $order, $xtPrice, $lang;
+
+    $products_query = xtc_db_query("SELECT op.products_id, 
+                                           op.products_quantity,
+                                           op.products_discount_made, 
+                                           op.products_tax, 
+                                           op.allow_tax,
+                                           p.products_weight
+                                      FROM ".TABLE_ORDERS_PRODUCTS." op
+                                 LEFT JOIN ".TABLE_PRODUCTS." p
+                                           ON p.products_id = op.products_id
+                                     WHERE op.orders_products_id = '".(int)$data_array['opID']."'");
+    $products = xtc_db_fetch_array($products_query);
+
+    $products_a_query = xtc_db_query("SELECT options_values_price, 
+                                             price_prefix
+                                        FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES." 
+                                       WHERE orders_products_id = '".(int)$data_array['opID']."'
+                                         AND options_values_price > 0");
+    $ov_price = 0;
+    $price_prefix = false;
+    while ($products_a = xtc_db_fetch_array($products_a_query)) {    
+      switch ($products_a['price_prefix']) {
+        case '+':
+          $ov_price += $products_a['options_values_price'];
+          break;
+        case '-':
+          $ov_price += $products_a['options_values_price'] * (-1);
+          break;
+        case '=':
+          if (xtc_db_num_rows($products_a_query) == 1) {
+            $price_prefix = true;
+            $ov_price = $products_a['options_values_price'];
+          }
+          break;
+      }    
+    }
+
+    $products_a_query = xtc_db_query("SELECT options_values_weight,
+                                             weight_prefix
+                                        FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES." 
+                                       WHERE orders_products_id = '".(int)$data_array['opID']."'
+                                         AND options_values_weight > 0");
+    $ov_weight = 0;
+    $weight_prefix = false;
+    while ($products_a = xtc_db_fetch_array($products_a_query)) {    
+      switch ($products_a['weight_prefix']) {
+        case '+':
+          $ov_weight += $products_a['options_values_weight'];
+          break;
+        case '-':
+          $ov_weight += $products_a['options_values_weight'] * (-1);
+          break;
+        case '=':
+          if (xtc_db_num_rows($products_a_query) == 1) {
+            $weight_prefix = true;
+            $ov_weight = $products_a['options_values_weight'];
+          }
+          break;
+      }    
+    }
+
+    $discount = 0;
+    if ($status['customers_status_discount_attributes'] == 1 && $status['customers_status_discount'] != 0.00 && $ov_price > 0.00) {
+      $discount = $status['customers_status_discount'];
+      if ($products['products_discount_made'] < $status['customers_status_discount']) {
+        $discount = $products['products_discount_made'];
+      }
+      $ov_price -= $ov_price / 100 * $discount;
+    }
+
+    $products_price = $ov_price;
+    if ($price_prefix === false) {
+      $products_old_price = $xtPrice->xtcGetPrice($products['products_id'], $format = false, $products['products_quantity'], '', '', '', $order->customer['ID']);
+      $products_price = ($products_old_price + $ov_price);
+    }
+
+    $products_weight = $ov_weight;
+    if ($weight_prefix === false) {
+      $products_weight = $products['products_weight'] + $ov_weight;
+    }
+
+    $tax_rate = $products['products_tax'];
+    if (($status['customers_status_show_price_tax'] == 0 
+         && $status['customers_status_add_tax_ot'] == 0
+         ) || $products['allow_tax'] != '1'
+        ) 
+    {
+      $tax_rate = 0;
+    }
+
+    $price = $xtPrice->xtcAddTax($products_price, $tax_rate); //tax by products
+    if ($status['customers_status_show_price_tax'] != 1) {
+      $price = round($price, $xtPrice->currencies[$xtPrice->actualCurr]['decimal_places']);
+    }
+
+    $final_price = $price * (int)$products['products_quantity'];
+
+    $sql_data_array = array(
+      'products_weight' => xtc_db_prepare_input($products_weight),
+      'products_price' => xtc_db_prepare_input($price),
+      'final_price' => xtc_db_prepare_input($final_price),
+    );
+    xtc_db_perform(TABLE_ORDERS_PRODUCTS, $sql_data_array, 'update', "orders_products_id = '".(int)($data_array['opID'])."'");
+
+    xtc_db_perform(TABLE_ORDERS, array('last_modified' => 'now()'), 'update', "orders_id = '".(int)$oID."'");
+
+    return $products['products_id'];
+  }
+
+
   function orders_product_option_edit($oID, $data_array) {
     global $order, $xtPrice, $lang;
   
@@ -692,79 +808,9 @@
     );
     xtc_db_perform(TABLE_ORDERS_PRODUCTS_ATTRIBUTES, $sql_data_array, 'update', "orders_products_attributes_id = '".xtc_db_input($data_array['opAID'])."'");
 
-    $products_query = xtc_db_query("SELECT op.products_id,
-                                           op.products_quantity,
-                                           op.products_discount_made,
-                                           op.products_tax,
-                                           op.allow_tax
-                                      FROM ".TABLE_ORDERS_PRODUCTS." op
-                                     WHERE op.orders_products_id = '".(int)$data_array['opID']."'");
-    $products = xtc_db_fetch_array($products_query);
+    $products_id = orders_product_update($oID, $data_array, $status);
 
-    $products_a_query = xtc_db_query("SELECT options_values_price, 
-                                             price_prefix 
-                                        FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES." 
-                                       WHERE orders_products_id = '".(int)$data_array['opID']."'
-                                         AND options_values_price > 0");
-    $ov_price = 0;
-    $prefix = false;
-    while ($products_a = xtc_db_fetch_array($products_a_query)) {
-      switch ($products_a['price_prefix']) {
-        case '+':
-          $ov_price += $products_a['options_values_price'];
-          break;
-        case '-':
-          $ov_price += $products_a['options_values_price'] * (-1);
-          break;
-        case '=':
-          if (xtc_db_num_rows($products_a_query) == 1) {
-            $prefix = true;
-            $ov_price = $products_a['options_values_price'];
-          }
-          break;
-      }
-    }
-
-    $discount = 0;
-    if ($status['customers_status_discount_attributes'] == 1 && $status['customers_status_discount'] != 0.00 && $ov_price > 0.00) {
-      $discount = $status['customers_status_discount'];
-      if ($products['products_discount_made'] < $status['customers_status_discount']) {
-        $discount = $products['products_discount_made'];
-      }
-      $ov_price -= $ov_price / 100 * $discount;
-    }
-    
-    $products_price = $ov_price;
-    if ($prefix === false) {
-      $products_old_price = $xtPrice->xtcGetPrice($products['products_id'], $format = false, $products['products_quantity'], '', '', '', $order->customer['ID']);
-      $products_price = ($products_old_price + $ov_price);
-    }
-    
-    $tax_rate = $products['products_tax'];
-    if (($status['customers_status_show_price_tax'] == 0 
-         && $status['customers_status_add_tax_ot'] == 0
-         ) || $products['allow_tax'] != '1'
-        ) 
-    {
-      $tax_rate = 0;
-    }
-    
-    $price = $xtPrice->xtcAddTax($products_price, $tax_rate);
-    if ($status['customers_status_show_price_tax'] != 1) {
-      $price = round($price, $xtPrice->currencies[$xtPrice->actualCurr]['decimal_places']);
-    }
-
-    $final_price = $price * (int)$products['products_quantity'];
-
-    $sql_data_array = array(
-      'products_price' => xtc_db_prepare_input($price),
-      'final_price' => xtc_db_prepare_input($final_price),
-    );
-    xtc_db_perform(TABLE_ORDERS_PRODUCTS, $sql_data_array, 'update', "orders_products_id = '".(int)($data_array['opID'])."'");
-
-    xtc_db_perform(TABLE_ORDERS, array('last_modified' => 'now()'), 'update', "orders_id = '".(int)$oID."'");
-
-    return $products['products_id'];
+    return $products_id;
   }
 
 
@@ -781,7 +827,9 @@
     $products_attributes_query = xtc_db_query("SELECT options_id,
                                                       options_values_id,
                                                       options_values_price,
+                                                      options_values_weight,
                                                       price_prefix,
+                                                      weight_prefix,
                                                       attributes_model,
                                                       attributes_ean
                                                  FROM ".TABLE_PRODUCTS_ATTRIBUTES."
@@ -806,20 +854,21 @@
       'products_options' => xtc_db_prepare_input($products_options['products_options_name']),
       'products_options_values' => xtc_db_prepare_input($products_options_values['products_options_values_name']),
       'options_values_price' => xtc_db_prepare_input($products_attributes['options_values_price']),
+      'options_values_weight' => xtc_db_prepare_input($products_attributes['options_values_weight']),
       'orders_products_options_id' => xtc_db_prepare_input($products_attributes['options_id']),
       'orders_products_options_values_id' => xtc_db_prepare_input($products_attributes['options_values_id']),
       'price_prefix' => xtc_db_prepare_input($products_attributes['price_prefix']),
+      'weight_prefix' => xtc_db_prepare_input($products_attributes['weight_prefix']),
       'attributes_model' => xtc_db_prepare_input($products_attributes['attributes_model']),
       'attributes_ean' => xtc_db_prepare_input($products_attributes['attributes_ean']),
     );
     xtc_db_perform(TABLE_ORDERS_PRODUCTS_ATTRIBUTES, $sql_data_array);
 
     $products_query = xtc_db_query("SELECT op.products_id, 
-                                           op.products_quantity,
-                                           op.products_discount_made, 
-                                           op.products_tax, 
-                                           op.allow_tax
+                                           op.products_quantity
                                       FROM ".TABLE_ORDERS_PRODUCTS." op
+                                 LEFT JOIN ".TABLE_PRODUCTS." p
+                                           ON p.products_id = op.products_id
                                      WHERE op.orders_products_id = '".(int)$data_array['opID']."'");
     $products = xtc_db_fetch_array($products_query);
 
@@ -830,30 +879,6 @@
                      WHERE products_id = '".(int)$products['products_id']."' 
                        AND options_id = '".(int)$products_attributes['options_id']."'
                        AND options_values_id = '".(int)$products_attributes['options_values_id']."'");
-    }
-
-    $products_a_query = xtc_db_query("SELECT options_values_price, 
-                                             price_prefix 
-                                        FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES." 
-                                       WHERE orders_products_id = '".(int)$data_array['opID']."'
-                                         AND options_values_price > 0");
-    $ov_price = 0;
-    $prefix = false;
-    while ($products_a = xtc_db_fetch_array($products_a_query)) {
-      switch ($products_a['price_prefix']) {
-        case '+':
-          $ov_price += $products_a['options_values_price'];
-          break;
-        case '-':
-          $ov_price += $products_a['options_values_price'] * (-1);
-          break;
-        case '=':
-          if (xtc_db_num_rows($products_a_query) == 1) {
-            $prefix = true;
-            $ov_price = $products_a['options_values_price'];
-          }
-          break;
-      }    
     }
 
     if (DOWNLOAD_ENABLED == 'true') {
@@ -893,52 +918,15 @@
       }
     }
 
-    $discount = 0;
-    if ($status['customers_status_discount_attributes'] == 1 && $status['customers_status_discount'] != 0.00 && $ov_price > 0.00) {
-      $discount = $status['customers_status_discount'];
-      if ($products['products_discount_made'] < $status['customers_status_discount']) {
-        $discount = $products['products_discount_made'];
-      }
-      $ov_price -= $ov_price / 100 * $discount;
-    }
+    $products_id = orders_product_update($oID, $data_array, $status);
 
-    $products_price = $ov_price;
-    if ($prefix === false) {
-      $products_old_price = $xtPrice->xtcGetPrice($products['products_id'], $format = false, $products['products_quantity'], '', '', '', $order->customer['ID']);
-      $products_price = ($products_old_price + $ov_price);
-    }
-    
-    $tax_rate = $products['products_tax'];
-    if (($status['customers_status_show_price_tax'] == 0 
-         && $status['customers_status_add_tax_ot'] == 0
-         ) || $products['allow_tax'] != '1'
-        ) 
-    {
-      $tax_rate = 0;
-    }
-    
-    $price = $xtPrice->xtcAddTax($products_price, $tax_rate); //tax by products
-    if ($status['customers_status_show_price_tax'] != 1) {
-      $price = round($price, $xtPrice->currencies[$xtPrice->actualCurr]['decimal_places']);
-    }
-
-    $final_price = $price * (int)$products['products_quantity'];
-
-    $sql_data_array = array(
-      'products_price' => xtc_db_prepare_input($price),
-      'final_price' => xtc_db_prepare_input($final_price),
-    );
-    xtc_db_perform(TABLE_ORDERS_PRODUCTS, $sql_data_array, 'update', "orders_products_id = '".(int)($data_array['opID'])."'");
-
-    xtc_db_perform(TABLE_ORDERS, array('last_modified' => 'now()'), 'update', "orders_id = '".(int)$oID."'");
-
-    return $products['products_id'];
+    return $products_id;
   }
 
 
   function orders_product_option_delete($oID, $data_array) {
     global $order, $xtPrice, $lang;
-  
+
     $lang_query = xtc_db_query("SELECT languages_id 
                                   FROM ".TABLE_LANGUAGES." 
                                  WHERE directory = '".xtc_db_input($order->info['language'])."'");
@@ -960,55 +948,12 @@
                        AND options_id = '".(int)$delete_products_attributes['orders_products_options_id']."'
                        AND options_values_id = '".(int)$delete_products_attributes['orders_products_options_values_id']."'");
     }
-                 
+               
     xtc_db_query("DELETE FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES." WHERE orders_products_attributes_id = '".(int)($data_array['opAID'])."'");
+  
+    $products_id = orders_product_update($oID, $data_array, $status);
 
-    $products_query = xtc_db_query("SELECT op.products_id, 
-                                           op.products_quantity,
-                                           op.products_discount_made, 
-                                           op.products_tax, 
-                                           op.allow_tax
-                                      FROM ".TABLE_ORDERS_PRODUCTS." op
-                                     WHERE op.orders_products_id = '".(int)$data_array['opID']."'");
-    $products = xtc_db_fetch_array($products_query);
-    
-    $options_values_price = 0;
-    $products_a_query = xtc_db_query("SELECT options_values_price, 
-                                             price_prefix 
-                                        FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES." 
-                                       WHERE orders_products_id = '".(int)$data_array['opID']."'");
-    while ($products_a = xtc_db_fetch_array($products_a_query)) {
-      $options_values_price += $products_a['price_prefix'].$products_a['options_values_price'];
-    }
-
-    $products_old_price = $xtPrice->xtcGetPrice($products['products_id'], $format = false, $products['products_quantity'], '', '', '', $order->customer['ID']);
-    $products_price = ($products_old_price + $options_values_price);
-
-    $tax_rate = $products['products_tax'];
-    if (($status['customers_status_show_price_tax'] == 0 
-         && $status['customers_status_add_tax_ot'] == 0
-         ) || $products['allow_tax'] != '1'
-        ) 
-    {
-      $tax_rate = 0;
-    }
-    
-    $price = $xtPrice->xtcAddTax($products_price, $tax_rate); //tax by products
-    if ($status['customers_status_show_price_tax'] != 1) {
-      $price = round($price, $xtPrice->currencies[$xtPrice->actualCurr]['decimal_places']);
-    }
-
-    $final_price = $price * (int)$products['products_quantity'];
-
-    $sql_data_array = array(
-      'products_price' => xtc_db_prepare_input($price),
-      'final_price' => xtc_db_prepare_input($final_price),
-    );
-    xtc_db_perform(TABLE_ORDERS_PRODUCTS, $sql_data_array, 'update', "orders_products_id = '".(int)($data_array['opID'])."'");
-
-    xtc_db_perform(TABLE_ORDERS, array('last_modified' => 'now()'), 'update', "orders_id = '".(int)$oID."'");
-
-    return $products['products_id'];
+    return $products_id;
   }
 
 
