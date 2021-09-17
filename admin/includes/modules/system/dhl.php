@@ -17,13 +17,14 @@
 
     function __construct() {
       global $order;
-
-       $this->code = 'dhl';
-       $this->title = MODULE_DHL_TEXT_TITLE;
-       $this->description = MODULE_DHL_TEXT_DESCRIPTION;
-       $this->enabled = ((defined('MODULE_DHL_STATUS') && MODULE_DHL_STATUS == 'True') ? true : false);
-       $this->sort_order = '';
-     }
+      
+      $this->version = '1.02';
+      $this->code = 'dhl';
+      $this->title = MODULE_DHL_TEXT_TITLE;
+      $this->description = MODULE_DHL_TEXT_DESCRIPTION.'<br><br><br><b>Version</b><br>'.$this->version;
+      $this->enabled = ((defined('MODULE_DHL_STATUS') && MODULE_DHL_STATUS == 'True') ? true : false);
+      $this->sort_order = '';
+    }
 
     function process($file) {
     }

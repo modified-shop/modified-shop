@@ -304,6 +304,7 @@
       // parcel outlet
       if ($this->parcel_outlet > 0) {
         $Service->ParcelOutletRouting['active'] = '1';
+        $Service->ParcelOutletRouting['details'] = $customers_data['email_address'];
       }
 
       // bulky
@@ -531,14 +532,7 @@
       $ExportDocument->ExportDocPosition = array();
       for ($i=0, $n=count($this->order->products); $i<$n; $i++) {
         $weight = ($this->order->products[$i]['qty'] * $this->order->products[$i]['weight']);
-        if (isset($this->order->products[$i]['attributes']) && count($this->order->products[$i]['attributes']) > 0) {
-          for ($j = 0, $k = count($this->order->products[$i]['attributes']); $j < $k; $j ++) {
-            if ($this->order->products[$i]['attributes'][$j]['weight_prefix'] == '-' && $this->order->products[$i]['attributes'][$j]['options_values_weight'] > 0) {
-              $this->order->products[$i]['attributes'][$j]['options_values_weight'] = $this->order->products[$i]['attributes'][$j]['options_values_weight'] * (-1);
-            }
-            $weight += ($this->order->products[$i]['qty'] * $this->order->products[$i]['attributes'][$j]['options_values_weight']);
-          }
-        }
+        
         $ExportDocument->ExportDocPosition[$i] = new stdClass();
         $ExportDocument->ExportDocPosition[$i]->description = ((isset($this->order->products[$i]['tariff_title']) && $this->order->products[$i]['tariff_title'] != '') ? $this->order->products[$i]['tariff_title'] : $this->order->products[$i]['name']);
         $ExportDocument->ExportDocPosition[$i]->countryCodeOrigin = ((isset($this->order->products[$i]['origin']) && $this->order->products[$i]['origin'] != '') ? $this->order->products[$i]['origin'] : $this->info['country_iso_2']);
@@ -577,14 +571,6 @@
       $weight = (double)SHIPPING_BOX_WEIGHT;
       for ($i = 0, $n = count($this->order->products); $i < $n; $i++) {
         $weight += ($this->order->products[$i]['qty'] * $this->order->products[$i]['weight']);
-        if (isset($this->order->products[$i]['attributes']) && count($this->order->products[$i]['attributes']) > 0) {
-          for ($j = 0, $k = count($this->order->products[$i]['attributes']); $j < $k; $j ++) {
-            if ($this->order->products[$i]['attributes'][$j]['weight_prefix'] == '-' && $this->order->products[$i]['attributes'][$j]['options_values_weight'] > 0) {
-              $this->order->products[$i]['attributes'][$j]['options_values_weight'] = $this->order->products[$i]['attributes'][$j]['options_values_weight'] * (-1);
-            }
-            $weight += ($this->order->products[$i]['qty'] * $this->order->products[$i]['attributes'][$j]['options_values_weight']);
-          }
-        }
       }
     
       if ($weight == '0') {
