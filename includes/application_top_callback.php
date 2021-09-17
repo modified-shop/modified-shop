@@ -43,6 +43,9 @@ if (version_compare(PHP_VERSION, '5.6', '<')) {
 // default time zone
 date_default_timezone_set('Europe/Berlin');
 
+// set request uri
+$_SERVER['REQUEST_URI'] = ((isset($_SERVER['REQUEST_URI'])) ? $_SERVER['REQUEST_URI'] : '');
+
 // new error handling
 if (is_file(DIR_WS_INCLUDES.'error_reporting.php')) {
   require_once (DIR_WS_INCLUDES.'error_reporting.php');
@@ -121,8 +124,7 @@ require_once (DIR_FS_INC.'xtc_expire_banners.inc.php');
 require_once (DIR_FS_INC.'xtc_expire_specials.inc.php');
 require_once (DIR_FS_INC.'xtc_parse_category_path.inc.php');
 require_once (DIR_FS_INC.'xtc_get_product_path.inc.php');
-
-//require_once (DIR_FS_INC.'xtc_get_category_path.inc.php');
+require_once (DIR_FS_INC.'xtc_get_top_level_domain.inc.php');
 
 require_once (DIR_FS_INC.'xtc_get_parent_categories.inc.php');
 require_once (DIR_FS_INC.'xtc_redirect.inc.php');
@@ -158,11 +160,41 @@ while ($configuration = xtc_db_fetch_array($configuration_query)) {
 
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/application_top_callback/application_top_callback_begin/','php') as $file) require ($file);
 
+// set the top level domains
+$http_domain_arr = xtc_get_top_level_domain(HTTP_SERVER);
+$https_domain_arr = xtc_get_top_level_domain(HTTPS_SERVER);
+$http_domain = $http_domain_arr['domain'];
+$https_domain = $https_domain_arr['domain'];
+$current_domain = (($request_type == 'NONSSL') ? $http_domain : $https_domain);
+
+// set the top level domains to delete
+$current_domain_delete = (($request_type == 'NONSSL') ? $http_domain_arr['delete'] : $https_domain_arr['delete']);
+
 // include shopping cart class
 require_once (DIR_WS_CLASSES.'shopping_cart.php');
 
 // Paypal API Modul
 require (DIR_WS_FUNCTIONS.'sessions.php');
+
+// set the session name and save path
+// set the session cookie parameters
+// set the session ID if it exists
+// start the session
+// Redirect search engines with session id to the same url without session id to prevent indexing session id urls
+// check for Cookie usage
+// check the Agent
+include_once (DIR_WS_MODULES.'set_session_and_cookie_parameters.php');
+
+// user tracking
+include_once (DIR_WS_INCLUDES.'tracking.php');
+
+// verify the ssl_session_id if the feature is enabled
+// verify the browser user agent if the feature is enabled
+// verify the IP address if the feature is enabled
+include_once (DIR_WS_MODULES.'verify_session.php');
+
+// set the language
+include_once (DIR_WS_MODULES.'set_language_sessions.php');
 
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/application_top_callback/application_top_callback_end/','php') as $file) require ($file);
 
