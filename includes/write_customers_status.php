@@ -21,7 +21,7 @@
    ---------------------------------------------------------------------------------------*/
 
   // include needed function
-  require_once(DIR_FS_INC.'set_customers_status_by_id.inc.php');
+  require_once(DIR_FS_INC.'get_customers_status_by_id.inc.php');
   
   // write customers status in session
   if (isset($_SESSION['customer_id'])) {
@@ -42,13 +42,13 @@
       }
       
       if ($customer_status['customers_status'] == '0' && !defined('RUN_MODE_ADMIN')) {
-        set_customers_status_by_id(DEFAULT_CUSTOMERS_STATUS_ID_ADMIN);
+        $_SESSION['customers_status'] = get_customers_status_by_id(DEFAULT_CUSTOMERS_STATUS_ID_ADMIN);
         
         // additional 
         $_SESSION['customers_status']['customers_status_id'] = DEFAULT_CUSTOMERS_STATUS_ID_ADMIN;
         $_SESSION['customers_status']['customers_status'] = $customer_status['customers_status'];
       } else {
-        set_customers_status_by_id($customer_status['customers_status']);
+        $_SESSION['customers_status'] = get_customers_status_by_id($customer_status['customers_status']);
         
         // additional 
         $_SESSION['customers_status']['customers_status_id'] = $customer_status['customers_status'];
@@ -62,7 +62,7 @@
       xtc_redirect(xtc_href_link(FILENAME_LOGOFF, '', 'SSL'));
     }
   } else {
-    set_customers_status_by_id(DEFAULT_CUSTOMERS_STATUS_ID_GUEST);
+    $_SESSION['customers_status'] = get_customers_status_by_id(DEFAULT_CUSTOMERS_STATUS_ID_GUEST);
     
     // additional 
     $_SESSION['customers_status']['customers_status_id'] = DEFAULT_CUSTOMERS_STATUS_ID_GUEST;

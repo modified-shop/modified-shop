@@ -26,7 +26,7 @@ if (isset($_GET['oID'])
 {
 
   // include needed function
-  require_once(DIR_FS_INC.'set_customers_status_by_id.inc.php');
+  require_once(DIR_FS_INC.'get_customers_status_by_id.inc.php');
 
   // include needed classes
   require_once (DIR_WS_CLASSES . 'order.php');
@@ -37,7 +37,7 @@ if (isset($_GET['oID'])
   if ($_GET['key'] == $hash) {
 
     if (!isset($_SESSION['customer_id'])) {
-      set_customers_status_by_id($order->info['status']);
+      $_SESSION['customers_status'] = get_customers_status_by_id($order->info['status']);
     }
 
     $paypal = new PayPalPayment('paypallink');
