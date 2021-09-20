@@ -954,49 +954,55 @@ class xtcPrice {
    * @return unknown
    */
   function get_content_type_product($products_id) {
-    $this->content_type_product = array(); 
-
-    if (DOWNLOAD_ENABLED == 'true') {
-      if (defined('DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED') && DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED == 'true') {
-        // new routine for multiple attributes for downloads
-        $virtual_check_query = xtc_db_query("SELECT pa.products_attributes_id
-                                               FROM ".TABLE_PRODUCTS_ATTRIBUTES." pa
-                                               JOIN ".TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD." pad
-                                                    ON pa.products_attributes_id = pad.products_attributes_id
-                                              WHERE pa.products_id = '".(int)$products_id."'");
-        if (xtc_db_num_rows($virtual_check_query) > 0) {
-          $this->content_type_product[$products_id] = 'virtual';
-        } else {
-          $this->content_type_product[$products_id] = 'physical';
-        }
-      } else {
-        // old routine as standard
-        $virtual_check_query1 = xtc_db_query("SELECT products_attributes_id
-                                               FROM ".TABLE_PRODUCTS_ATTRIBUTES."
-                                              WHERE products_id = '".(int)$products_id."'");
-        $total_attributes = xtc_db_num_rows($virtual_check_query1);
-
-        $virtual_check_query = xtc_db_query("SELECT pa.products_attributes_id
-                                               FROM ".TABLE_PRODUCTS_ATTRIBUTES." pa
-                                               JOIN ".TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD." pad
-                                                    ON pa.products_attributes_id = pad.products_attributes_id
-                                              WHERE pa.products_id = '".(int)$products_id."'
-                                           GROUP BY pa.options_values_id");
-        $total_virtual = xtc_db_num_rows($virtual_check_query);
-        
-        if ($total_virtual == 0) {
-          $this->content_type_product[$products_id] = 'physical';
-        } elseif ($total_attributes == $total_virtual) {
-          $this->content_type_product[$products_id] = 'virtual';
-        } elseif ($total_attributes > $total_virtual) {
-          $this->content_type_product[$products_id] = 'mixed';
-        }          
-      }
-    } else {
-      $this->content_type_product[$products_id] = 'physical';
+    static $content_type_product;
+    
+    if (!isset($content_type_product)) {
+      $content_type_product = array(); 
     }
     
-    return $this->content_type_product[$products_id];
+    if (!isset($content_type_product[$products_id])) {
+      if (DOWNLOAD_ENABLED == 'true') {
+        if (defined('DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED') && DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED == 'true') {
+          // new routine for multiple attributes for downloads
+          $virtual_check_query = xtDBquery("SELECT pa.products_attributes_id
+                                              FROM ".TABLE_PRODUCTS_ATTRIBUTES." pa
+                                              JOIN ".TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD." pad
+                                                   ON pa.products_attributes_id = pad.products_attributes_id
+                                             WHERE pa.products_id = '".(int)$products_id."'");
+          if (xtc_db_num_rows($virtual_check_query, true) > 0) {
+            $content_type_product[$products_id] = 'virtual';
+          } else {
+            $content_type_product[$products_id] = 'physical';
+          }
+        } else {
+          // old routine as standard
+          $total_check_query = xtDBquery("SELECT products_attributes_id
+                                            FROM ".TABLE_PRODUCTS_ATTRIBUTES."
+                                           WHERE products_id = '".(int)$products_id."'");
+          $total_attributes = xtc_db_num_rows($total_check_query, true);
+
+          $virtual_check_query = xtDBquery("SELECT pa.products_attributes_id
+                                              FROM ".TABLE_PRODUCTS_ATTRIBUTES." pa
+                                              JOIN ".TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD." pad
+                                                   ON pa.products_attributes_id = pad.products_attributes_id
+                                             WHERE pa.products_id = '".(int)$products_id."'
+                                          GROUP BY pa.options_values_id");
+          $total_virtual = xtc_db_num_rows($virtual_check_query, true);
+        
+          if ($total_virtual == 0) {
+            $content_type_product[$products_id] = 'physical';
+          } elseif ($total_attributes == $total_virtual) {
+            $content_type_product[$products_id] = 'virtual';
+          } elseif ($total_attributes > $total_virtual) {
+            $content_type_product[$products_id] = 'mixed';
+          }
+        }
+      } else {
+        $content_type_product[$products_id] = 'physical';
+      }
+    }
+    
+    return $content_type_product[$products_id];
   }
   
   /**
