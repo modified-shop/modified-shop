@@ -80,11 +80,7 @@ class xtcPrice {
     }
 
     // select Customers Status data
-    $customers_status_query = xtDBquery("SELECT *
-                                           FROM " . TABLE_CUSTOMERS_STATUS . "
-                                          WHERE customers_status_id = '" . $this->actualGroup . "'
-                                            AND language_id = '" . (int) $_SESSION['languages_id'] . "'");
-    $this->cStatus = xtc_db_fetch_array($customers_status_query, true);    
+    $this->cStatus = get_customers_status_by_id($this->actualGroup);
     
     // prefetch tax rates for standard zone
     $zones_query = xtDBquery("SELECT tax_class_id as class FROM " . TABLE_TAX_CLASS);
