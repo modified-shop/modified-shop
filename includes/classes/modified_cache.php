@@ -156,6 +156,24 @@
 
 
     /**
+     * decrement
+     */
+    public function decrement($step = 1) {
+      self::$itemCache->decrement($step);
+      self::$objCache->save(self::$itemCache);
+    }
+
+
+    /**
+     * increment
+     */
+    public function increment($step = 1) {
+      self::$itemCache->increment($step);
+      self::$objCache->save(self::$itemCache);
+    }
+
+
+    /**
      * get
      *
      * @return cache
