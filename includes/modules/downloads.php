@@ -26,17 +26,18 @@ $module_smarty = new Smarty;
 $customer_id = (int)$_SESSION['customer_id'];
 $language = $_SESSION['language'];
 
-if (isset($send_by_admin)) {
-  $last_order = $insert_id;
-  $orders_query = xtc_db_query("SELECT orders_status,
-                                       customers_id,
-                                       language
-                                  FROM ".TABLE_ORDERS." 
-                                 WHERE orders_id = '".$last_order."'");
-  $orders = xtc_db_fetch_array($orders_query);
-  $customer_id = $orders['customers_id'];
-  $language = $orders['language'];
-  $order_status = $orders['orders_status'];
+if (isset($send_order)) {
+  if (isset($send_by_admin)) {
+    $last_order = $insert_id;
+    $orders_query = xtc_db_query("SELECT orders_status,
+                                         customers_id
+                                    FROM ".TABLE_ORDERS." 
+                                   WHERE orders_id = '".$last_order."'");
+    $orders = xtc_db_fetch_array($orders_query);
+    $customer_id = $orders['customers_id'];
+    $order_status = $orders['orders_status'];
+  }
+  $language = $order->info['language'];
 } elseif (basename($PHP_SELF) != FILENAME_ACCOUNT_HISTORY_INFO) {
   // Get last order id for checkout_success
   $orders_query = xtc_db_query("SELECT orders_id, 
