@@ -13,6 +13,7 @@
 $current_page = basename($PHP_SELF);
 $checkout_position = array(
   'paypalplus_redirect.php'     => 0, 
+  'paypalplus_comment.php'      => 0, 
   'checkout_shipping.php'       => 1,
   'checkout_payment.php'        => 2,
   'checkout_confirmation.php'   => 3,

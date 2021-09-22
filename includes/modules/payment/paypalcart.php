@@ -383,7 +383,7 @@ class paypalcart extends PayPalPayment {
         {
           $error_mess[] = '4';
         }
-        if (defined('DISPLAY_PRIVACY_ON_CHECKOUT') && DISPLAY_PRIVACY_ON_CHECKOUT == 'true' && $_POST['privacy'] != 'privacy') {
+        if (defined('DISPLAY_PRIVACY_ON_CHECKOUT') && DISPLAY_PRIVACY_ON_CHECKOUT == 'true' && (!isset($_POST['privacy']) || $_POST['privacy'] != 'privacy')) {
           $error_mess[] = '5';
         }
         
