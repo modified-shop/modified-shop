@@ -23,6 +23,10 @@
     _tsConfig = { 
       'yOffset': '%s', /* offset from page bottom */
       'variant': '%s', /* text, default, small, reviews, custom, custom_reviews */
+      'customElementId': '', /* required for variants custom and custom_reviews */
+      'trustcardDirection': '', /* for custom variants: topRight, topLeft, bottomRight, bottomLeft */
+      'customBadgeWidth': '', /* for custom variants: 40 - 90 (in pixels) */
+      'customBadgeHeight': '', /* for custom variants: 40 - 90 (in pixels) */
       'disableResponsive': 'false', /* deactivate responsive behaviour */
       'disableTrustbadge': 'false', /* deactivate trustbadge */
       'trustCardTrigger': 'mouseenter' /* set to 'click' if you want the trustcard to be opened on click instead */
