@@ -582,6 +582,11 @@
 
           $tax_address['country_id'] = $this->delivery['country_id'];
           $tax_address['zone_id'] = $this->delivery['zone_id'];
+
+          $zones_query = xtDBquery("SELECT tax_class_id as class FROM " . TABLE_TAX_CLASS);
+          while ($zones_data = xtc_db_fetch_array($zones_query, true)) {
+            $xtPrice->TAX[$zones_data['class']] = xtc_get_tax_rate($zones_data['class'], $tax_address['country_id'], $tax_address['zone_id']);
+          }
         }
       }
       
