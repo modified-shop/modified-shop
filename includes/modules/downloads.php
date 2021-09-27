@@ -27,8 +27,11 @@ $customer_id = (int)$_SESSION['customer_id'];
 $language = $_SESSION['language'];
 
 if (isset($send_order)) {
+  $last_order = $insert_id;
+  $language = $order->info['language'];
+  $order_status = $order->info['orders_status'];
+
   if (isset($send_by_admin)) {
-    $last_order = $insert_id;
     $orders_query = xtc_db_query("SELECT orders_status,
                                          customers_id
                                     FROM ".TABLE_ORDERS." 
@@ -37,7 +40,6 @@ if (isset($send_order)) {
     $customer_id = $orders['customers_id'];
     $order_status = $orders['orders_status'];
   }
-  $language = $order->info['language'];
 } elseif (basename($PHP_SELF) != FILENAME_ACCOUNT_HISTORY_INFO) {
   // Get last order id for checkout_success
   $orders_query = xtc_db_query("SELECT orders_id, 
