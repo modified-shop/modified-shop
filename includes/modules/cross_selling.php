@@ -54,7 +54,7 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/cross_selling.html', $c
 $module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/cross_selling.html', $cache_id);
 $info_smarty->assign('MODULE_cross_selling', $module);
 
-
+$module_smarty->clear_assign("module_content");
 if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/reverse_cross_selling.html', $cache_id) || !$cache) {
   if (ACTIVATE_REVERSE_CROSS_SELLING == 'true') {
     $data = $product->getReverseCrossSells();	
