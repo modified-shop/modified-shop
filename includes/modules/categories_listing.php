@@ -53,7 +53,7 @@ if (!$categorie_smarty->is_cached(CURRENT_TEMPLATE.'/module/'.$categorie_templat
                               " . CATEGORIES_CONDITIONS_C . "
                          ORDER BY sort_order, cd.categories_name";
     } else {
-      $categories_query = "select ".ADD_SELECT_CATEGORIES."
+      $categories_query = "SELECT ".ADD_SELECT_CATEGORIES."
                                   c.categories_id,
                                   c.categories_image,
                                   c.categories_image_list,

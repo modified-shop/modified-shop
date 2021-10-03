@@ -248,24 +248,19 @@
 
     case FILENAME_DEFAULT :
       if (isset($current_category_id) && (int)$current_category_id > 0) {
-        $categories_meta_query = xtDBquery("SELECT *
-                                              FROM ".TABLE_CATEGORIES_DESCRIPTION."
-                                             WHERE categories_id='".(int)$current_category_id."'
-                                               AND language_id='".(int)$_SESSION['languages_id']."'");
-        if (xtc_db_num_rows($categories_meta_query, true) > 0) {
-          $categories_meta = xtc_db_fetch_array($categories_meta_query, true);
-      
+        $category = xtc_get_category_data($current_category_id);
+        if (count($category) > 0) {
           $metadata_array = array(
-            'title' => (($categories_meta['categories_meta_title'] != '') ? $categories_meta['categories_meta_title'] : $categories_meta['categories_name']),
-            'description' => (($categories_meta['categories_meta_description'] != '') ? $categories_meta['categories_meta_description'] : $categories_meta['categories_name'].(($categories_meta['categories_description'] != '') ? ': '.$categories_meta['categories_description'] : '')),
-            'keywords' => (($categories_meta['categories_meta_keywords'] != '') ? $categories_meta['categories_meta_keywords'] : metaKeyWords($categories_meta['categories_name'].' '.$categories_meta['categories_description'])),
+            'title' => (($category['categories_meta_title'] != '') ? $category['categories_meta_title'] : $category['categories_name']),
+            'description' => (($category['categories_meta_description'] != '') ? $category['categories_meta_description'] : $category['categories_name'].(($category['categories_description'] != '') ? ': '.$category['categories_description'] : '')),
+            'keywords' => (($category['categories_meta_keywords'] != '') ? $category['categories_meta_keywords'] : metaKeyWords($category['categories_name'].' '.$category['categories_description'])),
             'link' => xtc_href_link(FILENAME_DEFAULT, 'cPath='.$cPath.$page_param, 'NONSSL', false),
           );
 
           if ($Page != '') $metadata_array['title'] .= ' - ' . $Page;
           if ($addCatShopTitle === true) $metadata_array['title'] .= ' - ' . ML_META_TITLE;
         
-          $metaGoWords .= ','.$categories_meta['categories_name'];
+          $metaGoWords .= ','.$category['categories_name'];
         }
       } elseif ((isset($_GET['manufacturers_id']) && (int)$_GET['manufacturers_id'] > 0)
                 || (isset($_GET['filter_id']) && !is_array($_GET['filter_id']) && (int)$_GET['filter_id'] > 0)
