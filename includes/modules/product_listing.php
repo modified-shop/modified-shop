@@ -74,27 +74,12 @@ if ($listing_split->number_of_rows == 0
   $module_smarty->assign('PAGINATION', $pagination);
   
   if ($current_category_id != '0') {
-    $category_query = xtDBquery("SELECT ".ADD_SELECT_CATEGORIES."
-                                        c.categories_id,
-                                        c.categories_image,
-                                        c.categories_image_list,
-                                        c.categories_image_mobile,
-                                        c.listing_template,
-                                        cd.categories_name,
-                                        cd.categories_description,
-                                        cd.categories_heading_title
-                                   FROM ".TABLE_CATEGORIES." c
-                                   JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd
-                                        ON c.categories_id = cd.categories_id 
-                                           AND cd.language_id = '".(int)$_SESSION['languages_id']."'
-                                  WHERE c.categories_id = '".(int)$current_category_id."'
-                                        ".CATEGORIES_CONDITIONS_C."
-                                  LIMIT 1");
-    $category = xtc_db_fetch_array($category_query, true);
-    
-    $image = $main->getImage($category['categories_image']);
-    $image_list = $main->getImage($category['categories_image_list'] != '' ? $category['categories_image_list'] : $category['categories_image']);
-    $image_mobile = $main->getImage($category['categories_image_mobile']);
+    $category = xtc_get_category_data($current_category_id);
+    if (count($category) > 0) {
+      $image = $main->getImage($category['categories_image']);
+      $image_list = $main->getImage($category['categories_image_list'] != '' ? $category['categories_image_list'] : $category['categories_image']);
+      $image_mobile = $main->getImage($category['categories_image_mobile']);
+    }
   }
 
   if (isset($_GET['manufacturers_id']) && $_GET['manufacturers_id'] > 0) {
@@ -198,23 +183,8 @@ if ($result != false) {
 
   $smarty->assign('main_content', $module);
 } elseif (isset($current_category_id) && $current_category_id > 0) {
-  $category_query = xtDBquery("SELECT ".ADD_SELECT_CATEGORIES."
-                                      c.categories_image,
-                                      c.categories_template,
-                                      cd.categories_name,
-                                      cd.categories_heading_title,
-                                      cd.categories_description
-                                 FROM ".TABLE_CATEGORIES." c
-                                 JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd 
-                                      ON cd.categories_id = c.categories_id
-                                         AND cd.language_id = '".(int) $_SESSION['languages_id']."'
-                                         AND trim(cd.categories_name) != ''
-                                         AND trim(cd.categories_description) != ''
-                                WHERE c.categories_status = '1'
-                                  AND c.categories_id = '".(int)$current_category_id."'
-                                      ".CATEGORIES_CONDITIONS_C);
-  if (xtc_db_num_rows($category_query, true) > 0) {
-    $category = xtc_db_fetch_array($category_query, true);
+  $category = xtc_get_category_data($current_category_id);  
+  if (count($category) > 0) {
     
     //include Categorie Listing
     include (DIR_WS_MODULES. 'categories_listing.php');

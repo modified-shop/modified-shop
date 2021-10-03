@@ -114,26 +114,7 @@ foreach(auto_include(DIR_FS_CATALOG.'includes/extra/default/category_depth/','ph
 
 switch ($category_depth) {
   case 'nested':
-    $category_query = "SELECT ".ADD_SELECT_CATEGORIES."
-                              c.categories_id,
-                              c.categories_image,
-                              c.categories_image_list,
-                              c.categories_image_mobile,
-                              c.categories_template,
-                              c.parent_id,
-                              cd.categories_name,
-                              cd.categories_description,
-                              cd.categories_heading_title
-                         FROM ".TABLE_CATEGORIES." c
-                         JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd 
-                              ON cd.categories_id = c.categories_id
-                                 AND cd.language_id = '".(int) $_SESSION['languages_id']."'
-                                 AND trim(cd.categories_name) != ''
-                        WHERE c.categories_status = '1'
-                          AND c.categories_id = '".(int)$current_category_id."'
-                              ".CATEGORIES_CONDITIONS_C;
-    $category_query = xtDBquery($category_query);
-    $category = xtc_db_fetch_array($category_query, true);
+    $category = xtc_get_category_data($current_category_id);
 
     //include Categorie Listing
     include (DIR_WS_MODULES. 'categories_listing.php');
