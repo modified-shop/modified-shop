@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_parse_input_field_data.inc.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -15,8 +15,15 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
    
-// Parse the data used in the html tags to ensure the tags will not break
+  // Parse the data used in the html tags to ensure the tags will not break
   function xtc_parse_input_field_data($data, $parse) {
-    return strtr(trim($data), $parse);
+    if (is_array($data)) {
+      foreach ($data as $k => $v) {
+        unset($data[$k]);
+        $data[xtc_parse_input_field_data($k, $parse)] = xtc_parse_input_field_data($v, $parse);
+      }
+      return $data;
+    } else {
+      return strtr(trim($data), $parse);
+    }
   }
- ?>
