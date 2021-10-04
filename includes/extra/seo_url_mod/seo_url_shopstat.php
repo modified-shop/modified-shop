@@ -129,13 +129,25 @@ class seo_url_shopstat extends modified_seo_url {
             && strpos($this->params_array['products_id'], '{') === false
             )
         {
-          $this->params_array['cPath'] = xtc_get_product_path($this->params_array['products_id']);
+          if (defined('ADD_CAT_NAMES_TO_PRODUCT_LINK') 
+              && ADD_CAT_NAMES_TO_PRODUCT_LINK == 'true'
+              )
+          {
+            $this->params_array['cPath'] = xtc_get_product_path($this->params_array['products_id']);
           
-          if (!isset(self::$links_array['products'][$this->language_id][$this->params_array['products_id']][$this->params_array['cPath']])) {
-            self::$links_array['products'][$this->language_id][$this->params_array['products_id']][$this->params_array['cPath']] = self::create_products_link();
-          }
+            if (!isset(self::$links_array['products'][$this->language_id][$this->params_array['products_id']][$this->params_array['cPath']])) {
+              self::$links_array['products'][$this->language_id][$this->params_array['products_id']][$this->params_array['cPath']] = self::create_products_link();
+            }
         
-          $link = self::$links_array['products'][$this->language_id][$this->params_array['products_id']][$this->params_array['cPath']];
+            $link = self::$links_array['products'][$this->language_id][$this->params_array['products_id']][$this->params_array['cPath']];
+          } else {
+            if (!isset(self::$links_array['products'][$this->language_id][$this->params_array['products_id']])) {
+              self::$links_array['products'][$this->language_id][$this->params_array['products_id']] = self::create_products_link();
+            }
+        
+            $link = self::$links_array['products'][$this->language_id][$this->params_array['products_id']];
+          }
+          
           if ($link !== false) {
             $link .= self::get_link_params();
           }
