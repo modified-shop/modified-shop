@@ -88,5 +88,8 @@ ALTER TABLE `tax_rates` ADD KEY `idx_tax_priority` (`tax_priority`);
 #GTB - 2021-09-07 - add index for image_nr
 ALTER TABLE `products_images` ADD KEY `idx_image_nr` (`image_nr`);
 
+#Tomcraft - 2021-10-04 - fix #1711 - revised Shopvote, including multi language support
+DELETE FROM configuration WHERE configuration_key = 'MODULE_SHIPPING_EASYREVIEWS';
+DELETE FROM configuration WHERE configuration_key = 'MODULE_SHIPPING_RATINGSTARS';
 
 # Keep an empty line at the end of this file for the db_updater to work properly
