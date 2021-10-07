@@ -11,7 +11,7 @@
    ---------------------------------------------------------------------------------------*/
 
   define('MODULE_PRODUCTS_TARIFF_TEXT_TITLE', 'Zoll');
-  define('MODULE_PRODUCTS_TARIFF_TEXT_DESCRIPTION', 'Erweiterung für Herstellungsland, Zolltarifnummer und Zollbeschreibung.');
+  define('MODULE_PRODUCTS_TARIFF_TEXT_DESCRIPTION', 'Erweiterung f&uuml;r Herstellungsland, Zolltarifnummer und Zollbeschreibung.');
 
   define('MODULE_PRODUCTS_TARIFF_STATUS_TITLE', 'Status');
   define('MODULE_PRODUCTS_TARIFF_STATUS_DESC', 'Modul aktivieren');
