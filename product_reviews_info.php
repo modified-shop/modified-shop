@@ -89,11 +89,11 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
     $smarty->assign('RATING_VOTE', $product_reviews['reviews_rating']);
     $smarty->assign('PRODUCTS_NAME', $product_reviews['products_name']);
     $smarty->assign('PRODUCTS_HEADING_TITLE', $product_reviews['products_heading_title']);
-    $smarty->assign('PRODUCTS_LINK', xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$product_reviews['products_id']));
+    $smarty->assign('PRODUCTS_LINK', xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($product_reviews['products_id'], $product_reviews['products_name'])));
     $smarty->assign('PRODUCTS_IMAGE', $product->productImage($product_reviews['products_image'], 'info'));
     $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(FILENAME_PRODUCT_REVIEWS, 'products_id='.$product_reviews['products_id']).'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
     $smarty->assign('BUTTON_BUY_NOW', '<a href="'.xtc_href_link(FILENAME_DEFAULT, 'action=buy_now&BUYproducts_id='.$product_reviews['products_id']).'">'.xtc_image_button('button_in_cart.gif', IMAGE_BUTTON_IN_CART).'</a>');
-    $smarty->assign('PRODUCTS_BUTTON_DETAILS', '<a href="'.xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$product_reviews['products_id']).'">'.xtc_image_button('button_product_more.gif', TEXT_INFO_DETAILS).'</a>');
+    $smarty->assign('PRODUCTS_BUTTON_DETAILS', '<a href="'.xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($product_reviews['products_id'], $product_reviews['products_name'])).'">'.xtc_image_button('button_product_more.gif', TEXT_INFO_DETAILS).'</a>');
   }
 
   $breadcrumb->add(NAVBAR_TITLE_PRODUCT_REVIEWS, xtc_href_link(FILENAME_PRODUCT_REVIEWS, xtc_get_all_get_params(array('reviews_id'))));

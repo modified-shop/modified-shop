@@ -44,7 +44,7 @@
       while ($item = xtc_db_fetch_array($item_query)) {
         $data .= '
         <span class="SVCheckoutProductItem">
-          <span class="sv-i-product-url">'.xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$item['products_id']).'</span>
+          <span class="sv-i-product-url">'.xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($item['products_id'], $item['products_name'])).'</span>
           <span class="sv-i-product-image-url">'.$product->productImage($item['products_image'], 'info').'</span>
           <span class="sv-i-product-name">'.$item['products_name'].'</span>
           <span class="sv-i-product-gtin">'.$item['products_ean'].'</span>

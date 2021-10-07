@@ -234,7 +234,7 @@
         'identifier' => $products['products_id'],
         'groupIdentifier' => $products['products_id'],
         'name' => $products['products_name'],
-        'productUrl' => $xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$products['products_id'], 'NONSSL', false),
+        'productUrl' => $xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($products['products_id'], $products['products_name']), 'NONSSL', false),
         'categories' => $this->getCategories($products['products_id']),
         'images' => array(),
         'attributes' => $this->getTags($products['products_id']),

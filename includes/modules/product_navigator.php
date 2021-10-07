@@ -72,7 +72,6 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/product_navigator.html'
     );
     if ($products_data['products_id'] == $product->data['products_id']) {
       $actual_key = $i;
-      //$p_data[$i]['LINK'] = xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$products_data['products_id']);
     }
     $i ++;
   }
@@ -87,22 +86,22 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/product_navigator.html'
   );
   if ($actual_key != 0 && ($actual_key - 1) != 0) {
     $navigator_array['first'] = $p_data[0];
-    $navigator_array['first']['LINK'] = xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$navigator_array['first']['ID']);
+    $navigator_array['first']['LINK'] = xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($navigator_array['first']['ID'], $navigator_array['first']['NAME']));
     $navigator_array['first']['IMAGE'] = $product->productImage($navigator_array['first']['IMAGE'], 'thumbnail');
   }
   if (isset($p_data[$actual_key - 1])) {
     $navigator_array['prev'] = $p_data[$actual_key - 1];
-    $navigator_array['prev']['LINK'] = xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$navigator_array['prev']['ID']);
+    $navigator_array['prev']['LINK'] = xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($navigator_array['prev']['ID'], $navigator_array['prev']['NAME']));
     $navigator_array['prev']['IMAGE'] = $product->productImage($navigator_array['prev']['IMAGE'], 'thumbnail');
   }
   if (isset($p_data[$actual_key + 1])) {
     $navigator_array['next'] = $p_data[$actual_key + 1];
-    $navigator_array['next']['LINK'] = xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$navigator_array['next']['ID']);
+    $navigator_array['next']['LINK'] = xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($navigator_array['next']['ID'], $navigator_array['next']['NAME']));
     $navigator_array['next']['IMAGE'] = $product->productImage($navigator_array['next']['IMAGE'], 'thumbnail');
   }
   if ($actual_key != (count($p_data) - 1) && $actual_key != (count($p_data) - 2)) {
     $navigator_array['last'] = $p_data[count($p_data) - 1];
-    $navigator_array['last']['LINK'] = xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$navigator_array['last']['ID']);
+    $navigator_array['last']['LINK'] = xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($navigator_array['last']['ID'], $navigator_array['last']['NAME']));
     $navigator_array['last']['IMAGE'] = $product->productImage($navigator_array['last']['IMAGE'], 'thumbnail');
   }
 

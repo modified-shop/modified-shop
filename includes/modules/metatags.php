@@ -231,7 +231,7 @@
           'title' => (($product->data['products_meta_title'] != '') ? $product->data['products_meta_title'] : metaTitle($product->data['products_name'], ((isset($product->data['manufacturers_name'])) ? $product->data['manufacturers_name'] : ''))),
           'description' => (($product->data['products_meta_description'] != '') ? $product->data['products_meta_description'] : $product->data['products_name'].': '.$product->data['products_description']),
           'keywords' => (($product->data['products_meta_keywords'] != '') ? $product->data['products_meta_keywords'] : metaKeyWords($product->data['products_name'].' '.$product->data['products_description'])),
-          'link' => xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$product->data['products_id'], 'NONSSL', false),
+          'link' => xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($product->data['products_id'], $product->data['products_name']), 'NONSSL', false),
         );
         $canonical_flag = false;
       
@@ -254,7 +254,7 @@
             'title' => (($category['categories_meta_title'] != '') ? $category['categories_meta_title'] : $category['categories_name']),
             'description' => (($category['categories_meta_description'] != '') ? $category['categories_meta_description'] : $category['categories_name'].(($category['categories_description'] != '') ? ': '.$category['categories_description'] : '')),
             'keywords' => (($category['categories_meta_keywords'] != '') ? $category['categories_meta_keywords'] : metaKeyWords($category['categories_name'].' '.$category['categories_description'])),
-            'link' => xtc_href_link(FILENAME_DEFAULT, 'cPath='.$cPath.$page_param, 'NONSSL', false),
+            'link' => xtc_href_link(FILENAME_DEFAULT, xtc_category_link($category['categories_id'], $category['categories_name']).$page_param, 'NONSSL', false),
           );
 
           if ($Page != '') $metadata_array['title'] .= ' - ' . $Page;
@@ -276,7 +276,7 @@
             'title' => (($manufacturer['manufacturers_meta_title'] != '') ? $manufacturer['manufacturers_meta_title'] : $manufacturer['manufacturers_name']),
             'description' => (($manufacturer['manufacturers_meta_description'] != '') ? $manufacturer['manufacturers_meta_description'] : $manufacturer['manufacturers_name'].(($manufacturer['manufacturers_description'] != '') ? ': '.$manufacturer['manufacturers_description'] : '')),
             'keywords' => (($manufacturer['manufacturers_meta_keywords'] != '') ? $manufacturer['manufacturers_meta_keywords'] : metaKeyWords($manufacturer['manufacturers_name'].' '.$manufacturer['manufacturers_description'])),
-            'link' => xtc_href_link(FILENAME_DEFAULT, 'manufacturers_id='.(int)$manu_id.$page_param, 'NONSSL', false),
+            'link' => xtc_href_link(FILENAME_DEFAULT, xtc_manufacturer_link($manufacturer['manufacturers_id'], $manufacturer['manufacturers_name']).$page_param, 'NONSSL', false),
           );
 
           if ($Page != '') $metadata_array['title'] .= ' - ' . $Page;
@@ -318,7 +318,7 @@
           'title' => (($contents_meta['content_meta_title'] != '') ? $contents_meta['content_meta_title'] : metaTitle($contents_meta['content_title'], $contents_meta['content_heading'])),
           'description' => (($contents_meta['content_meta_description'] != '') ? $contents_meta['content_meta_description'] : (($contents_meta['content_heading'] != '') ? $contents_meta['content_heading'].': ' : '').$contents_meta['content_text']),
           'keywords' => (($contents_meta['content_meta_keywords'] != '') ? $contents_meta['content_meta_keywords'] : metaKeyWords($contents_meta['content_title'].' '.$contents_meta['content_heading'].' '.$contents_meta['content_text'])),
-          'link' => xtc_href_link(FILENAME_CONTENT, 'coID='.(int)$_GET['coID'], 'NONSSL', false),
+          'link' => xtc_href_link(FILENAME_CONTENT, xtc_content_link($contents_meta['content_group'], $contents_meta['content_title']), 'NONSSL', false),
         );
 
         if ($addContentShopTitle === true) $metadata_array['title'] .= ' - ' . ML_META_TITLE;

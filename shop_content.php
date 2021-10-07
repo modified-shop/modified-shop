@@ -20,7 +20,7 @@ require_once ('includes/application_top.php');
 
 // redirect contact form to SSL if available
 if (ENABLE_SSL == true && $request_type == 'NONSSL' && !isset($_GET['action']) && $_GET['coID'] == '7') {
-  xtc_redirect(xtc_href_link(FILENAME_CONTENT, 'coID='.(int) $_GET['coID'], 'SSL'));
+  xtc_redirect(xtc_href_link(FILENAME_CONTENT, xtc_content_link((int)$_GET['coID']), 'SSL'));
 }
 
 // create smarty elements
@@ -50,6 +50,7 @@ if ($language_not_found === true) {
                                           content_heading, 
                                           content_text, 
                                           content_file,
+                                          content_group,
                                           parent_id
                                      FROM ".TABLE_CONTENT_MANAGER."
                                     WHERE content_group='".(int) $_GET['coID']."'
@@ -63,7 +64,7 @@ if ($language_not_found === true) {
     // sub content
     include (DIR_WS_MODULES.'sub_content_listing.php');
 
-    $breadcrumb->add($shop_content_data['content_title'], xtc_href_link(FILENAME_CONTENT,'coID='.(int) $_GET['coID']));
+    $breadcrumb->add($shop_content_data['content_title'], xtc_href_link(FILENAME_CONTENT, xtc_content_link($shop_content_data['content_group'], $shop_content_data['content_title'])));
   } else {
     $site_error = TEXT_CONTENT_NOT_FOUND;
     $shop_content_data['content_heading'] = TEXT_CONTENT_NOT_FOUND;
