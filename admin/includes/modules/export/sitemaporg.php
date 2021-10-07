@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: sitemaporg.php 12078 2019-08-16 11:00:49Z GTB $   
+   $Id$   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -100,7 +100,7 @@ class sitemaporg {
 
     $content_query = xtc_db_query($content_query);
     while ($content_data=xtc_db_fetch_array($content_query)) {
-      $link = encode_htmlspecialchars(xtc_href_link_from_admin('shop_content.php', $this->url_param.'coID='.$content_data['content_group'], 'NONSSL', false));
+      $link = encode_htmlspecialchars(xtc_href_link_from_admin('shop_content.php', $this->url_param . xtc_content_link($content_data['content_group'], $content_data['content_title']), 'NONSSL', false));
       $date = (($this->check_date($content_data['last_modified']) === true) ? $content_data['last_modified'] : $content_data['date_added']);
       $this->xml_sitemap_entry($link, $date);     
     }
@@ -118,7 +118,7 @@ class sitemaporg {
 
     $manufacturers_query = xtc_db_query($manufacturers_query);
     while ($manufacturers_data=xtc_db_fetch_array($manufacturers_query)) {
-      $link = encode_htmlspecialchars(xtc_href_link_from_admin('index.php', $this->url_param.'manufacturers_id='.$manufacturers_data['manufacturers_id'], 'NONSSL', false));
+      $link = encode_htmlspecialchars(xtc_href_link_from_admin('index.php', $this->url_param . xtc_manufacturerlink($manufacturers_data['manufacturers_id'], $manufacturers_data['manufacturers_name']), 'NONSSL', false));
       $this->xml_sitemap_entry($link);     
     }
   }
@@ -143,8 +143,7 @@ class sitemaporg {
 
     $categories_query = xtc_db_query($categories_query);
     while ($categories = xtc_db_fetch_array($categories_query)) {
-      $cPath = xtc_get_category_path($categories['categories_id']);
-      $link = encode_htmlspecialchars(xtc_href_link_from_admin('index.php', $this->url_param.'cPath='.$cPath, 'NONSSL', false));
+      $link = encode_htmlspecialchars(xtc_href_link_from_admin('index.php', $this->url_param . xtc_category_link($categories['categories_id'], $categories['categories_name']), 'NONSSL', false));
       $date = (($this->check_date($categories['last_modified']) === true) ? $categories['last_modified'] : $categories['date_added']);
       $this->xml_sitemap_entry($link, $date);     
     }
@@ -169,7 +168,7 @@ class sitemaporg {
                                  ORDER BY p.products_id");
 
     while ($products = xtc_db_fetch_array($products_query)) {
-      $link = encode_htmlspecialchars(xtc_href_link_from_admin('product_info.php', $this->url_param.'products_id='.$products['products_id'], 'NONSSL', false));
+      $link = encode_htmlspecialchars(xtc_href_link_from_admin('product_info.php', $this->url_param . xtc_product_link($products['products_id'], $products['products_name']), 'NONSSL', false));
       $date = (($this->check_date($products['products_last_modified']) === true) ? $products['products_last_modified'] : $products['products_date_added']);
       $this->xml_sitemap_entry($link, $date, $products);     
     }
