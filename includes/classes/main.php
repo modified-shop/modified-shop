@@ -170,7 +170,7 @@ class main {
   function getShippingNotice() {
     $shippingNotice = '';
     if (SHOW_SHIPPING == 'true') {
-      $shippingNotice = ' '.SHIPPING_EXCL.'<a href="'.xtc_href_link(FILENAME_CONTENT, 'coID='.SHIPPING_INFOS).'">'.SHIPPING_COSTS.'</a>';
+      $shippingNotice = ' '.SHIPPING_EXCL.'<a href="'.xtc_href_link(FILENAME_CONTENT, xtc_content_link(SHIPPING_INFOS)).'">'.SHIPPING_COSTS.'</a>';
     }
     //new module support
     $shippingNotice = $this->mainModules->getShippingNotice($shippingNotice);

@@ -43,7 +43,7 @@
       
         $qty += $products[$i]['quantity'];
         $products_in_cart[] = array ('QTY' => $products[$i]['quantity'],
-                                     'LINK' => xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$products[$i]['id']),
+                                     'LINK' => xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($products[$i]['id'], $products[$i]['name'])),
                                      'NAME' => $products[$i]['name'],
                                      'BUTTON_DELETE' => $del_button,
                                      'LINK_DELETE' => $del_link);

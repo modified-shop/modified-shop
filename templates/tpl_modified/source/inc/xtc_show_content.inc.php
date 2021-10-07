@@ -55,7 +55,7 @@
     $content_string .= $ul; //UL LI Versschachtelung
     $content_string .= $tab; //Tabulator Codedarstellung
     $content_string .= '<li class="level'.$level.$content_active.$content_active_parent.'">';
-    $content_string .= '<a href="'.xtc_href_link(FILENAME_CONTENT, 'coID='.$content_array[$counter]['coID']).'" title="'. $content_array[$counter]['name'] . '">';
+    $content_string .= '<a href="'.xtc_href_link(FILENAME_CONTENT, xtc_content_link($content_array[$counter]['coID'], $content_array[$counter]['name'])).'" title="'. $content_array[$counter]['name'] . '">';
     $content_string .= $content_array[$counter]['name'];
     $content_string .= '</a></li>';
     $content_string .= "\n"; //Zeilenschaltung Codedarstellung  

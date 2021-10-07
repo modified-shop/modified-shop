@@ -146,7 +146,7 @@ if ($product->isProduct() === false) {
       || strpos($_SERVER['HTTP_REFERER'], HTTP_SERVER) === false
       )
   {
-    $link = xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$product->data['products_id'], 'NONSSL');    
+    $link = xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($product->data['products_id'], $product->data['products_name']), 'NONSSL');    
   } 
     
   // load all definitions from product class

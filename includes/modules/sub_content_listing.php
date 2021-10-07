@@ -99,17 +99,17 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/sub_content_listing.htm
       $sub_content[] = array(
         'CONTENT_TITLE' => $shop_sub_content['title'],
         'CONTENT_GROUP' => $shop_sub_content['group_id'],
-        'CONTENT_LINK' => xtc_href_link(FILENAME_CONTENT, 'coID='.$shop_sub_content['group_id'], 'NONSSL')
+        'CONTENT_LINK' => xtc_href_link(FILENAME_CONTENT, xtc_content_link($shop_sub_content['group_id'], $shop_sub_content['title']), 'NONSSL')
       );
       if (count($parent_content) == 0) {
         if ($add_breadcrumb === true) {
-          $breadcrumb->add($shop_sub_content['content_title'], xtc_href_link(FILENAME_CONTENT,'coID='.$shop_sub_content['content_group']));
+          $breadcrumb->add($shop_sub_content['content_title'], xtc_href_link(FILENAME_CONTENT, xtc_content_link($shop_sub_content['content_group'], $shop_sub_content['content_title'])));
         }
         $parent_content = array(
           'CONTENT_TITLE' => $shop_sub_content['content_title'],
           'CONTENT_TEXT' => $shop_sub_content['content_text'],
           'CONTENT_GROUP' => $shop_sub_content['content_group'],
-          'CONTENT_LINK' => xtc_href_link(FILENAME_CONTENT, 'coID='.$shop_sub_content['content_group'], 'NONSSL')
+          'CONTENT_LINK' => xtc_href_link(FILENAME_CONTENT, xtc_content_link($shop_sub_content['content_group'], $shop_sub_content['content_title']), 'NONSSL')
         );
       }
     }

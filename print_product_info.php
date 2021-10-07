@@ -174,7 +174,7 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
     $info_smarty->assign('module_content', $module_content);
   }
   
-  $canonical_link = xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$product->data['products_id'], $request_type, false);
+  $canonical_link = xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($product->data['products_id'], $product->data['products_name']), $request_type, false);
   $info_smarty->assign('CanonicalLink', $canonical_link);
  
   $info_smarty->caching = 0;

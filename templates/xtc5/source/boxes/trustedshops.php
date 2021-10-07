@@ -28,10 +28,6 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_trustedshops.html', $ca
     'IT' => 'https://www.trustedshops.it/valutazione-del-negozio/info_',
     'NL' => 'https://www.trustedshops.nl/verkopersbeoordeling/info_'
   );
-  if (MODULE_TS_WIDGET == '1' && is_file(DIR_FS_CATALOG.'cache/'.MODULE_TS_TRUSTEDSHOPS_ID.'.gif')) {
-    $box_smarty->assign('IMAGE_EXISTS', true);
-    $box_smarty->assign('IMAGE', DIR_WS_CATALOG.'cache/'.MODULE_TS_TRUSTEDSHOPS_ID.'.gif?t='.filemtime(DIR_FS_CATALOG.'cache/'.MODULE_TS_TRUSTEDSHOPS_ID.'.gif'));
-  }
   if (MODULE_TS_REVIEW_STICKER != '' && MODULE_TS_REVIEW_STICKER_STATUS == '1') {
     $box_smarty->assign('STICKER_EXISTS', true);
     $box_smarty->assign('STICKER_CODE', sprintf(MODULE_TS_REVIEW_STICKER, MODULE_TS_TRUSTEDSHOPS_ID));

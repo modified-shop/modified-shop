@@ -89,6 +89,7 @@ function xtc_check_agent($name = false) {
       "diibot",
       "directhit",
       "discordbot",
+      "dmbot",
       "dnabot",
       "domainstatsbot",
       "download_express",
