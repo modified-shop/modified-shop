@@ -118,7 +118,7 @@ class sitemaporg {
 
     $manufacturers_query = xtc_db_query($manufacturers_query);
     while ($manufacturers_data=xtc_db_fetch_array($manufacturers_query)) {
-      $link = encode_htmlspecialchars(xtc_href_link_from_admin('index.php', $this->url_param . xtc_manufacturerlink($manufacturers_data['manufacturers_id'], $manufacturers_data['manufacturers_name']), 'NONSSL', false));
+      $link = encode_htmlspecialchars(xtc_href_link_from_admin('index.php', $this->url_param . xtc_manufacturer_link($manufacturers_data['manufacturers_id'], $manufacturers_data['manufacturers_name']), 'NONSSL', false));
       $this->xml_sitemap_entry($link);     
     }
   }
