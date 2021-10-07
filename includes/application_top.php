@@ -121,6 +121,7 @@ require_once (DIR_FS_INC.'xtc_php_mail.inc.php');
 require_once (DIR_FS_INC.'xtc_product_link.inc.php');
 require_once (DIR_FS_INC.'xtc_category_link.inc.php');
 require_once (DIR_FS_INC.'xtc_manufacturer_link.inc.php');
+require_once (DIR_FS_INC.'xtc_content_link.inc.php');
 
 // html functions
 require_once (DIR_FS_INC.'xtc_draw_checkbox_field.inc.php');
