@@ -11,5 +11,10 @@
    --------------------------------------------------------------*/
 
   function xtc_content_link($coID, $name = '') {
-    return 'coID='.$coID;
+    $params = 'coID='.$coID;
+    if (SEARCH_ENGINE_FRIENDLY_URLS == 'true' && $name != '') {
+      $params .= '&name='.$name;
+    }
+
+    return $params;
   }

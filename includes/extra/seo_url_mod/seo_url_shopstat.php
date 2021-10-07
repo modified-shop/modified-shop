@@ -188,13 +188,17 @@ class seo_url_shopstat extends modified_seo_url {
     $products_link_array = array();    
     
     if (!isset(self::$names_array['products'][$this->language_id][$this->params_array['products_id']])) {
-      $products_name_query = xtDBquery("SELECT products_name
-                                         FROM ".TABLE_PRODUCTS_DESCRIPTION."
-                                        WHERE products_id = '".(int)$this->params_array['products_id']."'
-                                          AND language_id = '".(int)$this->language_id."'");
-      if (xtc_db_num_rows($products_name_query, true) > 0) {
-        $products_name = xtc_db_fetch_array($products_name_query, true);
-        self::$names_array['products'][$this->language_id][$this->params_array['products_id']] = self::seo_url_href_mask($products_name['products_name']);
+      if (!isset($this->params_array['name']) || empty($this->params_array['name'])) {
+        $products_name_query = xtDBquery("SELECT products_name
+                                           FROM ".TABLE_PRODUCTS_DESCRIPTION."
+                                          WHERE products_id = '".(int)$this->params_array['products_id']."'
+                                            AND language_id = '".(int)$this->language_id."'");
+        if (xtc_db_num_rows($products_name_query, true) > 0) {
+          $products_name = xtc_db_fetch_array($products_name_query, true);
+          self::$names_array['products'][$this->language_id][$this->params_array['products_id']] = self::seo_url_href_mask($products_name['products_name']);
+        }
+      } else {
+        self::$names_array['products'][$this->language_id][$this->params_array['products_id']] = self::seo_url_href_mask($this->params_array['name']);
       }
     }
     
@@ -247,13 +251,17 @@ class seo_url_shopstat extends modified_seo_url {
     $content_link_array = array();    
     
     if (!isset(self::$names_array['content'][$this->language_id][$this->params_array['coID']])) {
-      $content_name_query = xtDBquery("SELECT content_title
-                                         FROM ".TABLE_CONTENT_MANAGER."
-                                        WHERE content_group = '".(int)$this->params_array['coID']."'
-                                          AND languages_id = '".(int)$this->language_id."'");
-      if (xtc_db_num_rows($content_name_query, true) > 0) {
-        $content_name = xtc_db_fetch_array($content_name_query, true);
-        self::$names_array['content'][$this->language_id][$this->params_array['coID']] = self::seo_url_href_mask($content_name['content_title']);
+      if (!isset($this->params_array['name']) || empty($this->params_array['name'])) {
+        $content_name_query = xtDBquery("SELECT content_title
+                                           FROM ".TABLE_CONTENT_MANAGER."
+                                          WHERE content_group = '".(int)$this->params_array['coID']."'
+                                            AND languages_id = '".(int)$this->language_id."'");
+        if (xtc_db_num_rows($content_name_query, true) > 0) {
+          $content_name = xtc_db_fetch_array($content_name_query, true);
+          self::$names_array['content'][$this->language_id][$this->params_array['coID']] = self::seo_url_href_mask($content_name['content_title']);
+        }
+      } else {
+        self::$names_array['content'][$this->language_id][$this->params_array['coID']] = self::seo_url_href_mask($this->params_array['name']);
       }
     }
     
@@ -279,12 +287,16 @@ class seo_url_shopstat extends modified_seo_url {
     $manufacturers_link_array = array();    
     
     if (!isset(self::$names_array['manufacturers'][$this->language_id][$this->params_array['manufacturers_id']])) {
-      $manufacturers_name_query = xtDBquery("SELECT manufacturers_name
-                                               FROM ".TABLE_MANUFACTURERS."
-                                              WHERE manufacturers_id = '".(int)$this->params_array['manufacturers_id']."'");
-      if (xtc_db_num_rows($manufacturers_name_query, true) > 0) {
-        $manufacturers_name = xtc_db_fetch_array($manufacturers_name_query, true);
-        self::$names_array['manufacturers'][$this->language_id][$this->params_array['manufacturers_id']] = self::seo_url_href_mask($manufacturers_name['manufacturers_name']);
+      if (!isset($this->params_array['name']) || empty($this->params_array['name'])) {
+        $manufacturers_name_query = xtDBquery("SELECT manufacturers_name
+                                                 FROM ".TABLE_MANUFACTURERS."
+                                                WHERE manufacturers_id = '".(int)$this->params_array['manufacturers_id']."'");
+        if (xtc_db_num_rows($manufacturers_name_query, true) > 0) {
+          $manufacturers_name = xtc_db_fetch_array($manufacturers_name_query, true);
+          self::$names_array['manufacturers'][$this->language_id][$this->params_array['manufacturers_id']] = self::seo_url_href_mask($manufacturers_name['manufacturers_name']);
+        } 
+      } else {
+        self::$names_array['manufacturers'][$this->language_id][$this->params_array['manufacturers_id']] = self::seo_url_href_mask($this->params_array['name']);
       }
     }
     
@@ -312,13 +324,17 @@ class seo_url_shopstat extends modified_seo_url {
     
     foreach ($cat_path_array as $categories_id) {
       if (!isset(self::$names_array['categories'][$this->language_id][$categories_id])) {
-        $categories_name_query = xtDBquery("SELECT categories_name
-                                              FROM ".TABLE_CATEGORIES_DESCRIPTION."
-                                             WHERE categories_id = '".(int)$categories_id."'
-                                               AND language_id = '".(int)$this->language_id."'");
-        if (xtc_db_num_rows($categories_name_query, true) > 0) {
-          $categories_name = xtc_db_fetch_array($categories_name_query, true);
-          self::$names_array['categories'][$this->language_id][$categories_id] = self::seo_url_href_mask($categories_name['categories_name']);
+        if (!isset($this->params_array['name']) || empty($this->params_array['name'])) {
+          $categories_name_query = xtDBquery("SELECT categories_name
+                                                FROM ".TABLE_CATEGORIES_DESCRIPTION."
+                                               WHERE categories_id = '".(int)$categories_id."'
+                                                 AND language_id = '".(int)$this->language_id."'");
+          if (xtc_db_num_rows($categories_name_query, true) > 0) {
+            $categories_name = xtc_db_fetch_array($categories_name_query, true);
+            self::$names_array['categories'][$this->language_id][$categories_id] = self::seo_url_href_mask($categories_name['categories_name']);
+          }
+        } else {
+          self::$names_array['categories'][$this->language_id][$categories_id] = self::seo_url_href_mask($this->params_array['name']);
         }
       }
       
@@ -384,6 +400,7 @@ class seo_url_shopstat extends modified_seo_url {
     unset($this->params_array['page']);
     unset($this->params_array['content']);
     unset($this->params_array['product']);
+    unset($this->params_array['name']);
 
     if (count($this->params_array) > 0) {
       $link .= $separator.http_build_query($this->params_array, '', '&');

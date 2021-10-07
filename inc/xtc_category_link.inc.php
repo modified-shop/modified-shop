@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_category_link.inc.php 899 2005-04-29 02:40:57Z hhgag $
+   $Id$
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -11,8 +11,13 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  function xtc_category_link($cID, $cName='') {
-    require_once(DIR_FS_INC . 'xtc_get_category_path.inc.php');
-    return 'cPath='.xtc_get_category_path($cID);
+  require_once(DIR_FS_INC . 'xtc_get_category_path.inc.php');
+
+  function xtc_category_link($cID, $name = '') {
+    $params = 'cPath='.xtc_get_category_path($cID);
+    if (SEARCH_ENGINE_FRIENDLY_URLS == 'true' && $name != '') {
+      $params .= '&name='.$name;
+    }
+
+    return $params;
   }
-?>

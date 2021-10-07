@@ -1,7 +1,6 @@
 <?php
-
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_product_link.inc.php 779 2005-02-19 17:19:28Z novalis $
+   $Id$
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -12,7 +11,11 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-function xtc_product_link($pID, $name='') {
-	return 'products_id='.$pID;
-}
-?>
+  function xtc_product_link($pID, $name = '') {
+    $params = 'products_id='.$pID;
+    if (SEARCH_ENGINE_FRIENDLY_URLS == 'true' && $name != '') {
+      $params .= '&name='.$name;
+    }
+
+    return $params;
+  }
