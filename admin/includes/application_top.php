@@ -113,6 +113,10 @@ require_once(DIR_FS_INC . 'xtc_check_agent.inc.php');
 require_once(DIR_FS_INC . 'xtc_parse_category_path.inc.php');
 require_once(DIR_FS_INC . 'xtc_input_validation.inc.php');
 require_once(DIR_FS_INC . 'xtc_get_category_path.inc.php');
+require_once(DIR_FS_INC . 'xtc_product_link.inc.php');
+require_once(DIR_FS_INC . 'xtc_category_link.inc.php');
+require_once(DIR_FS_INC . 'xtc_manufacturer_link.inc.php');
+require_once(DIR_FS_INC . 'xtc_content_link.inc.php');
 
 foreach(auto_include(DIR_FS_ADMIN.'includes/extra/functions/','php') as $file) require ($file);
 
