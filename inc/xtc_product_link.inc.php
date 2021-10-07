@@ -14,7 +14,7 @@
   function xtc_product_link($pID, $name = '') {
     $params = 'products_id='.$pID;
     if (SEARCH_ENGINE_FRIENDLY_URLS == 'true' && $name != '') {
-      $params .= '&name='.$name;
+      $params .= '&name='.base64_encode($name);
     }
 
     return $params;

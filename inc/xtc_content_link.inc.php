@@ -13,7 +13,7 @@
   function xtc_content_link($coID, $name = '') {
     $params = 'coID='.$coID;
     if (SEARCH_ENGINE_FRIENDLY_URLS == 'true' && $name != '') {
-      $params .= '&name='.$name;
+      $params .= '&name='.base64_encode($name);
     }
 
     return $params;

@@ -198,7 +198,7 @@ class seo_url_shopstat extends modified_seo_url {
           self::$names_array['products'][$this->language_id][$this->params_array['products_id']] = self::seo_url_href_mask($products_name['products_name']);
         }
       } else {
-        self::$names_array['products'][$this->language_id][$this->params_array['products_id']] = self::seo_url_href_mask($this->params_array['name']);
+        self::$names_array['products'][$this->language_id][$this->params_array['products_id']] = self::seo_url_href_mask(base64_decode($this->params_array['name']));
       }
     }
     
@@ -261,7 +261,7 @@ class seo_url_shopstat extends modified_seo_url {
           self::$names_array['content'][$this->language_id][$this->params_array['coID']] = self::seo_url_href_mask($content_name['content_title']);
         }
       } else {
-        self::$names_array['content'][$this->language_id][$this->params_array['coID']] = self::seo_url_href_mask($this->params_array['name']);
+        self::$names_array['content'][$this->language_id][$this->params_array['coID']] = self::seo_url_href_mask(base64_decode($this->params_array['name']));
       }
     }
     
@@ -296,7 +296,7 @@ class seo_url_shopstat extends modified_seo_url {
           self::$names_array['manufacturers'][$this->language_id][$this->params_array['manufacturers_id']] = self::seo_url_href_mask($manufacturers_name['manufacturers_name']);
         } 
       } else {
-        self::$names_array['manufacturers'][$this->language_id][$this->params_array['manufacturers_id']] = self::seo_url_href_mask($this->params_array['name']);
+        self::$names_array['manufacturers'][$this->language_id][$this->params_array['manufacturers_id']] = self::seo_url_href_mask(base64_decode($this->params_array['name']));
       }
     }
     
@@ -334,7 +334,7 @@ class seo_url_shopstat extends modified_seo_url {
             self::$names_array['categories'][$this->language_id][$categories_id] = self::seo_url_href_mask($categories_name['categories_name']);
           }
         } else {
-          self::$names_array['categories'][$this->language_id][$categories_id] = self::seo_url_href_mask($this->params_array['name']);
+          self::$names_array['categories'][$this->language_id][$categories_id] = self::seo_url_href_mask(base64_decode($this->params_array['name']));
         }
       }
       

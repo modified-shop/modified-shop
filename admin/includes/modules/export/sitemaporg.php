@@ -99,7 +99,7 @@ class sitemaporg {
                     ORDER BY sort_order";
 
     $content_query = xtc_db_query($content_query);
-    while ($content_data=xtc_db_fetch_array($content_query)) {
+    while ($content_data = xtc_db_fetch_array($content_query)) {
       $link = encode_htmlspecialchars(xtc_href_link_from_admin('shop_content.php', $this->url_param . xtc_content_link($content_data['content_group'], $content_data['content_title']), 'NONSSL', false));
       $date = (($this->check_date($content_data['last_modified']) === true) ? $content_data['last_modified'] : $content_data['date_added']);
       $this->xml_sitemap_entry($link, $date);     
@@ -117,7 +117,7 @@ class sitemaporg {
                                    ORDER BY m.manufacturers_name";
 
     $manufacturers_query = xtc_db_query($manufacturers_query);
-    while ($manufacturers_data=xtc_db_fetch_array($manufacturers_query)) {
+    while ($manufacturers_data = xtc_db_fetch_array($manufacturers_query)) {
       $link = encode_htmlspecialchars(xtc_href_link_from_admin('index.php', $this->url_param . xtc_manufacturer_link($manufacturers_data['manufacturers_id'], $manufacturers_data['manufacturers_name']), 'NONSSL', false));
       $this->xml_sitemap_entry($link);     
     }
@@ -153,19 +153,19 @@ class sitemaporg {
 
     $p_group_check = GROUP_CHECK == 'true' ? ' AND p.group_permission_'.$this->group_id.' = 1 ' : '';
     
-    $products_query =xtc_db_query("SELECT p.products_id,
-                                          p.products_last_modified,
-                                          p.products_date_added,
-                                          p.products_image,
-                                          pd.products_name
-                                     FROM " . TABLE_PRODUCTS . " p, 
-                                     JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd
-                                          ON p.products_id = pd.products_id
-                                             AND pd.language_id = ".(int)$this->languages_id."
-                                             AND trim(pd.products_name) != ''
-                                    WHERE p.products_status = 1
-                                          ".$p_group_check."
-                                 ORDER BY p.products_id");
+    $products_query = xtc_db_query("SELECT p.products_id,
+                                           p.products_last_modified,
+                                           p.products_date_added,
+                                           p.products_image,
+                                           pd.products_name
+                                      FROM " . TABLE_PRODUCTS . " p
+                                      JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd
+                                           ON p.products_id = pd.products_id
+                                              AND pd.language_id = ".(int)$this->languages_id."
+                                              AND trim(pd.products_name) != ''
+                                     WHERE p.products_status = 1
+                                           ".$p_group_check."
+                                  ORDER BY p.products_id");
 
     while ($products = xtc_db_fetch_array($products_query)) {
       $link = encode_htmlspecialchars(xtc_href_link_from_admin('product_info.php', $this->url_param . xtc_product_link($products['products_id'], $products['products_name']), 'NONSSL', false));
