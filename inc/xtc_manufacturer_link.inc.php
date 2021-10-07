@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_manufacturer_link.inc.php 899 2005-04-29 02:40:57Z hhgag $
+   $Id$
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -11,7 +11,11 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-function xtc_manufacturer_link($mID,$mName='') {
-  return 'manufacturers_id='.$mID;
-}
-?>
+  function xtc_manufacturer_link($mID, $name = '') {
+    $params = 'manufacturers_id='.$mID;
+    if (SEARCH_ENGINE_FRIENDLY_URLS == 'true' && $name != '') {
+      $params .= '&name='.$name;
+    }
+  
+    return $params;
+  }
