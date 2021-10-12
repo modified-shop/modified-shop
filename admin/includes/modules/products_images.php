@@ -20,7 +20,7 @@ clearstatcache();
 // show images
 if ($_GET['action'] == 'new_product') {
 
-  echo '<div class="main div_header"><?php echo HEADING_PRODUCT_IMAGES; ?></div>';
+  echo '<div class="main div_header">'.HEADING_PRODUCT_IMAGES.'</div>';
   echo '<div class="div_box">';
   // display images fields:  
   $rowspan = ' rowspan="'. 3 .'"';
