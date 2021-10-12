@@ -149,7 +149,7 @@ if ($_SESSION['customers_status']['customers_status_show_price'] == '1') {
   if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0) $total-=$discount;
   if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1) $total-=$discount;
   if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1) $total-=$discount;
-  $total_content .= SUB_TITLE_SUB_TOTAL.$xtPrice->xtcFormat($total, true).'<br />';
+  $total_content .= SUB_TITLE_SUB_TOTAL.' '.$xtPrice->xtcFormat($total, true).'<br />';
 } else {
   $total_content .= NOT_ALLOWED_TO_SEE_PRICES.'<br />';
 }
