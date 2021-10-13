@@ -317,9 +317,9 @@
               if (!xtc_not_null($search) && count($cPath_array) > 0 && $_GET['cPath'] != '0') {
                 ?>
                  <tr class="dataTableRow" onmouseover="this.className='dataTableRowOver';this.style.cursor='pointer'" onmouseout="this.className='dataTableRow'">
-                   <td class="categories_view_data">--</td>
-                   <td class="categories_view_data">--</td>
-                   <td class="categories_view_data">--</td>
+                   <td class="categories_view_data txta-c">--</td>
+                   <td class="categories_view_data txta-c">--</td>
+                   <td class="categories_view_data txta-c">--</td>
                    <?php
                    if ( USE_ADMIN_THUMBS_IN_LIST=='true' ) {
                    ?>
@@ -335,15 +335,15 @@
                    <?php                 
                    if (STOCK_CHECK == 'true') {
                    ?>
-                     <td class="categories_view_data">--</td>
+                     <td class="categories_view_data txta-c">--</td>
                    <?php
                    }
                    ?>
-                   <td class="categories_view_data">--</td>
-                   <td class="categories_view_data">--</td>
-                   <td class="categories_view_data">--</td>
-                   <td class="categories_view_data">--</td>
-                   <td class="categories_view_data">--</td>
+                   <td class="categories_view_data txta-c">--</td>
+                   <td class="categories_view_data txta-c">--</td>
+                   <td class="categories_view_data txta-c">--</td>
+                   <td class="categories_view_data txta-c">--</td>
+                   <td class="categories_view_data txta-c">--</td>
                  </tr>
                  <?php
               }
@@ -368,13 +368,13 @@
                  }
                  $checked = isset($_POST['multi_categories']) && is_array($_POST['multi_categories']) && in_array($categories['categories_id'], $_POST['multi_categories']) ? true : false; 
                  ?>
-                   <td class="categories_view_data"><?php echo xtc_draw_checkbox_field('multi_categories[]', $categories['categories_id'], $checked); ?></td>
-                   <td class="categories_view_data">--</td>
-                   <td class="categories_view_data"><?php echo $categories['sort_order']; ?></td>
+                   <td class="categories_view_data txta-c"><?php echo xtc_draw_checkbox_field('multi_categories[]', $categories['categories_id'], $checked); ?></td>
+                   <td class="categories_view_data txta-c">--</td>
+                   <td class="categories_view_data txta-c"><?php echo $categories['sort_order']; ?></td>
                    <?php
                    if ( USE_ADMIN_THUMBS_IN_LIST=='true' ) {
                      ?>
-                     <td class="categories_view_data">
+                     <td class="categories_view_data txta-c">
                        <?php
                        echo xtc_info_image_c($categories['categories_image'], $categories['categories_image'], '','',$admin_thumbs_size);
                        ?>
@@ -392,10 +392,10 @@
                    <?php
                    // check product and attributes stock
                    if (STOCK_CHECK == 'true') {
-                     echo '<td class="categories_view_data">--</td>';
+                     echo '<td class="categories_view_data txta-c">--</td>';
                    }
                    ?>
-                   <td class="categories_view_data">
+                   <td class="categories_view_data txta-c">
                      <?php
                      //show status icons (green & red circle) with links
                      if ($categories['categories_status'] == '1') {
@@ -405,10 +405,10 @@
                      }
                      ?>
                    </td>
-                   <td class="categories_view_data">--</td>
-                   <td class="categories_view_data">--</td>
-                   <td class="categories_view_data">--</td>
-                   <td class="categories_view_data">
+                   <td class="categories_view_data txta-c">--</td>
+                   <td class="categories_view_data txta-c">--</td>
+                   <td class="categories_view_data txta-c">--</td>
+                   <td class="categories_view_data txta-c">
                      <?php
                      //if active category, show arrow, else show symbol with link (action col)
                      if (isset($cInfo) && (is_object($cInfo)) && ($categories['categories_id'] == $cInfo->categories_id) ) {
@@ -614,23 +614,23 @@
                    }
                  }
                  ?>
-                 <td class="categories_view_data">
+                 <td class="categories_view_data txta-c">
                    <?php echo xtc_draw_checkbox_field('multi_products[]', $products['products_id'], $is_checked); ?>
                  </td>
                  <?php
                  if ($products['products_model'] !='' ){
                    ?>
-                   <td class="categories_view_data">
+                   <td class="categories_view_data txta-c">
                      <?php echo $products['products_model']; ?>
                    </td>
                    <?php
                  } else {
                    ?>
-                    <td class="categories_view_data">--</td>
+                    <td class="categories_view_data txta-c">--</td>
                    <?php
                  }
                  ?>
-                 <td class="categories_view_data">
+                 <td class="categories_view_data txta-c">
                    <?php
                    if ($current_category_id == 0){
                        echo $products['products_startpage_sort'];
@@ -668,7 +668,7 @@
                  <?php
                  // check product and attributes stock
                  if (STOCK_CHECK == 'true') { ?>
-                   <td class="categories_view_data">
+                   <td class="categories_view_data txta-c">
                      <?php echo check_stock($products['products_id']);
                      echo '&nbsp;'.$products['products_quantity'];
                      ?>
@@ -676,7 +676,7 @@
                    <?php
                  }
                  ?>
-                 <td class="categories_view_data">
+                 <td class="categories_view_data txta-c">
                    <?php
                    if ($products['products_status'] == '1') {
                      echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 10, 10) . '<a href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'action=setpflag&flag=0&pID=' . $products['products_id'] . '&cPath=' . $cPath) . '">&nbsp;&nbsp;' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 10, 10) . '</a>';
@@ -685,7 +685,7 @@
                    }
                    ?>
                  </td>
-                 <td class="categories_view_data">
+                 <td class="categories_view_data txta-c">
                    <?php
                    if ($products['products_startpage'] == '1') {
                      echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 10, 10) . '<a href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'action=setsflag&flag=0&pID=' . $products['products_id'] . '&cPath=' . $cPath) . '">&nbsp;&nbsp;' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 10, 10) . '</a>';
@@ -694,7 +694,7 @@
                    }
                    ?>
                  </td>
-                 <td class="categories_view_data">
+                 <td class="categories_view_data txta-c">
                    <?php
                    $price = $products['products_price'];
                    if (PRICE_IS_BRUTTO == 'true') {
@@ -713,13 +713,13 @@
                    }
                    ?>
                  </td>
-                 <td class="categories_view_data">
+                 <td class="categories_view_data txta-c">
                    <?php
                    // Show Max Allowed discount
                    echo $products['products_discount_allowed'] . ' %';
                    ?>
                  </td>
-                 <td class="categories_view_data">
+                 <td class="categories_view_data txta-c">
                    <?php
                    if (isset($pInfo) && (is_object($pInfo)) && ($products['products_id'] == $pInfo->products_id) ) {
                      echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', '');

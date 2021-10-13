@@ -351,7 +351,6 @@ font-size: 10px;
 color: #000000;
 vertical-align: middle!important;
 border-bottom: 1px dashed #cccccc;
-text-align: center;
 }
 
 .dataTableContent_products {
@@ -885,7 +884,7 @@ text-align: center;
 margin: 10px 0;
 }
 .txta-l{
-text-align: left!important;
+text-align: left;
 }
 .txta-r{
 text-align: right;
