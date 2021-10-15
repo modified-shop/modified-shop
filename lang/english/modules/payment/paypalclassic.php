@@ -13,7 +13,7 @@
 
 $lang_array = array(
   'MODULE_PAYMENT_PAYPALCLASSIC_TEXT_TITLE' => 'PayPal',
-  'MODULE_PAYMENT_PAYPALCLASSIC_TEXT_ADMIN_TITLE' => 'PayPal Classic on checkout page',
+  'MODULE_PAYMENT_PAYPALCLASSIC_TEXT_ADMIN_TITLE' => 'PayPal',
   'MODULE_PAYMENT_PAYPALCLASSIC_TEXT_INFO' => ((!defined('RUN_MODE_ADMIN') && function_exists('xtc_href_link')) ? '<img src="'.xtc_href_link(DIR_WS_ICONS.'paypal.png', '', 'SSL', false).'" />' : ''),
   'MODULE_PAYMENT_PAYPALCLASSIC_TEXT_DESCRIPTION' => 'After "confirm" your will be routet to PayPal to pay your order.<br />Back in shop you will get your order-mail.<br />PayPal is the safer way to pay online. We keep your details safe from others and can help you get your money back if something ever goes wrong.',
   'MODULE_PAYMENT_PAYPALCLASSIC_ALLOWED_TITLE' => 'Allowed zones',

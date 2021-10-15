@@ -13,9 +13,9 @@
 
 $lang_array = array(
   'MODULE_PAYMENT_PAYPALCART_TEXT_TITLE' => 'PayPal',
-  'MODULE_PAYMENT_PAYPALCART_TEXT_ADMIN_TITLE' => 'PayPal Classic on shopping cart page',
+  'MODULE_PAYMENT_PAYPALCART_TEXT_ADMIN_TITLE' => 'PayPal Express-Button on shopping cart &amp; product page',
   'MODULE_PAYMENT_PAYPALCART_TEXT_INFO' => ((!defined('RUN_MODE_ADMIN') && function_exists('xtc_href_link')) ? '<img src="'.xtc_href_link(DIR_WS_ICONS.'paypal.png', '', 'SSL', false).'" />' : ''),
-  'MODULE_PAYMENT_PAYPALCART_TEXT_DESCRIPTION' => 'PayPal Express Checkout - the PayPal button in the shopping cart and on the article page for maximum conversion.<br/>You can find more information about PayPal Express Shortcut <a target="_blank" href="https://www.paypal.com/de/webapps/mpp/express-checkout">here</a>.',
+  'MODULE_PAYMENT_PAYPALCART_TEXT_DESCRIPTION' => 'PayPal Express Checkout - the PayPal button in the shopping cart and on the product page for maximum conversion.<br/>You can find more information about PayPal Express Shortcut <a target="_blank" href="https://www.paypal.com/de/webapps/mpp/express-checkout">here</a>.',
   'MODULE_PAYMENT_PAYPALCART_ALLOWED_TITLE' => 'Allowed zones',
   'MODULE_PAYMENT_PAYPALCART_ALLOWED_DESC' => 'Please enter the zones <b>separately</b> which should be allowed to use this module (e.g. AT,DE (leave empty if you want to allow all zones))',
   'MODULE_PAYMENT_PAYPALCART_STATUS_TITLE' => 'Enable PayPal Express',
