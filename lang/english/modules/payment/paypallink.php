@@ -13,7 +13,7 @@
 
 $lang_array = array(
   'MODULE_PAYMENT_PAYPALLINK_TEXT_TITLE' => 'PayPal',
-  'MODULE_PAYMENT_PAYPALLINK_TEXT_ADMIN_TITLE' => 'PayPal Classic payment link',
+  'MODULE_PAYMENT_PAYPALLINK_TEXT_ADMIN_TITLE' => 'PayPal payment link',
   'MODULE_PAYMENT_PAYPALLINK_TEXT_INFO' => ((!defined('RUN_MODE_ADMIN') && function_exists('xtc_href_link')) ? '<img src="'.xtc_href_link(DIR_WS_ICONS.'paypal.png', '', 'SSL', false).'" />' : ''),
   'MODULE_PAYMENT_PAYPALLINK_TEXT_DESCRIPTION' => 'PayPal as a payment link for the customer after the order has been completed. Decide yourself where the customer receives the request for payment.',
   'MODULE_PAYMENT_PAYPALLINK_ALLOWED_TITLE' => 'Allowed zones',

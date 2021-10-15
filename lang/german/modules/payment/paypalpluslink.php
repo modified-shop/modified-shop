@@ -12,14 +12,14 @@
 
 
 $lang_array = array(
-  'MODULE_PAYMENT_PAYPALPLUSLINK_TEXT_TITLE' => 'PayPal Plus',
-  'MODULE_PAYMENT_PAYPALPLUSLINK_TEXT_ADMIN_TITLE' => 'PayPal Plus Zahlungslink (nur Deutschland)',
+  'MODULE_PAYMENT_PAYPALPLUSLINK_TEXT_TITLE' => 'PayPal PLUS',
+  'MODULE_PAYMENT_PAYPALPLUSLINK_TEXT_ADMIN_TITLE' => 'PayPal PLUS Zahlungslink (nur mit Firmensitz in DE)',
   'MODULE_PAYMENT_PAYPALPLUSLINK_TEXT_INFO' => ((!defined('RUN_MODE_ADMIN') && function_exists('xtc_href_link')) ? '<img src="'.xtc_href_link(DIR_WS_ICONS.'paypal.png', '', 'SSL', false).'" />' : ''),
-  'MODULE_PAYMENT_PAYPALPLUSLINK_TEXT_DESCRIPTION' => 'PayPal Plus als Zahlungslink der den Kunden erst nach Bestellabschluss zur Verf&uuml;gung steht. Entscheiden Sie selber, wo der Kunde die Aufforderung zur Zahlung erh&auml;lt.<br/>PayPal Plus - die vier beliebtesten Bezahlmethoden deutscher K&auml;ufer: PayPal, Lastschrift, Kreditkarte und Rechnung.<br/>Mehr Infos zu PayPal Plus finden Sie <a target="_blank" href="https://www.paypal.com/de/webapps/mpp/paypal-plus">hier</a>.',
+  'MODULE_PAYMENT_PAYPALPLUSLINK_TEXT_DESCRIPTION' => 'PayPal PLUS als Zahlungslink der den Kunden erst nach Bestellabschluss zur Verf&uuml;gung steht. Entscheiden Sie selber, wo der Kunde die Aufforderung zur Zahlung erh&auml;lt.<br/>PayPal PLUS - die vier beliebtesten Bezahlmethoden deutscher K&auml;ufer: PayPal, Lastschrift, Kreditkarte und Rechnung.<br/>Mehr Infos zu PayPal PLUS finden Sie <a target="_blank" href="https://www.paypal.com/de/webapps/mpp/paypal-plus">hier</a>.',
   'MODULE_PAYMENT_PAYPALPLUSLINK_ALLOWED_TITLE' => 'Erlaubte Zonen',
   'MODULE_PAYMENT_PAYPALPLUSLINK_ALLOWED_DESC' => 'Geben Sie <b>einzeln</b> die Zonen an, welche f&uuml;r dieses Modul erlaubt sein sollen. (z.B. AT,DE (wenn leer, werden alle Zonen erlaubt))',
-  'MODULE_PAYMENT_PAYPALPLUSLINK_STATUS_TITLE' => 'PayPal Plus Link aktivieren',
-  'MODULE_PAYMENT_PAYPALPLUSLINK_STATUS_DESC' => 'M&ouml;chten Sie Zahlungen per PayPal Plus Link akzeptieren?',
+  'MODULE_PAYMENT_PAYPALPLUSLINK_STATUS_TITLE' => 'PayPal PLUS Link aktivieren',
+  'MODULE_PAYMENT_PAYPALPLUSLINK_STATUS_DESC' => 'M&ouml;chten Sie Zahlungen per PayPal PLUS Link akzeptieren?',
   'MODULE_PAYMENT_PAYPALPLUSLINK_SORT_ORDER_TITLE' => 'Anzeigereihenfolge',
   'MODULE_PAYMENT_PAYPALPLUSLINK_SORT_ORDER_DESC' => 'Reihenfolge der Anzeige. Kleinste Ziffer wird zuerst angezeigt',
   'MODULE_PAYMENT_PAYPALPLUSLINK_ZONE_TITLE' => 'Zahlungszone',

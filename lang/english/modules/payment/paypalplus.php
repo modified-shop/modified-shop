@@ -12,13 +12,13 @@
 
 
 $lang_array = array(
-  'MODULE_PAYMENT_PAYPALPLUS_TEXT_TITLE' => 'PayPal Plus',
-  'MODULE_PAYMENT_PAYPALPLUS_TEXT_ADMIN_TITLE' => 'PayPal Plus (only Germany)',
+  'MODULE_PAYMENT_PAYPALPLUS_TEXT_TITLE' => 'PayPal PLUS',
+  'MODULE_PAYMENT_PAYPALPLUS_TEXT_ADMIN_TITLE' => 'PayPal PLUS (only with company headquarters in DE)',
   'MODULE_PAYMENT_PAYPALPLUS_TEXT_INFO' => 'Please select one of the payment methods listed here by clicking.',
-  'MODULE_PAYMENT_PAYPALPLUS_TEXT_DESCRIPTION' => 'PayPal Plus - the four most popular payment methods of German buyers: PayPal, direct debit, credit card and invoice.<br/>You can find more information about PayPal Plus <a target="_blank" href="https://www.paypal.com/de/webapps/mpp/paypal-plus">here</a>.',
+  'MODULE_PAYMENT_PAYPALPLUS_TEXT_DESCRIPTION' => 'PayPal PLUS - the four most popular payment methods of German buyers: PayPal, direct debit, credit card and invoice.<br/>You can find more information about PayPal PLUS <a target="_blank" href="https://www.paypal.com/de/webapps/mpp/paypal-plus">here</a>.',
   'MODULE_PAYMENT_PAYPALPLUS_ALLOWED_TITLE' => 'Allowed zones',
   'MODULE_PAYMENT_PAYPALPLUS_ALLOWED_DESC' => 'Please enter the zones <b>separately</b> which should be allowed to use this module (e.g. AT,DE (leave empty if you want to allow all zones))',
-  'MODULE_PAYMENT_PAYPALPLUS_STATUS_TITLE' => 'Enable PayPal Plus',
+  'MODULE_PAYMENT_PAYPALPLUS_STATUS_TITLE' => 'Enable PayPal PLUS',
   'MODULE_PAYMENT_PAYPALPLUS_STATUS_DESC' => 'Do you want to accept PayPal, Creditcard, Direct debit an Pay upon invoice payments?',
   'MODULE_PAYMENT_PAYPALPLUS_SORT_ORDER_TITLE' => 'Sort order',
   'MODULE_PAYMENT_PAYPALPLUS_SORT_ORDER_DESC' => 'Sort order of the view. Lowest numeral will be displayed first',
