@@ -194,7 +194,7 @@
                   <td class="dataTableContent txta-l"><?php echo $newsletter['customers_firstname']; ?></td>
                   <td class="dataTableContent txta-l"><?php echo $newsletter['customers_lastname']; ?></td>
                   <td class="dataTableContent txta-l"><?php echo $newsletter['customers_status_name']; ?></td>
-                  <td class="dataTableContent txta-c"><?php echo xtc_image(DIR_WS_ICONS.(($newsletter['mail_status'] == '1') ? 'tick.gif' : 'cross.gif')); ?></td>
+                  <td class="dataTableContent txta-c"><?php echo xtc_image(DIR_WS_ICONS.(($newsletter['mail_status'] == '1') ? 'tick.gif' : (($newsletter['mail_status'] == '2') ? 'cross.gif' : 'time_delete.png'))); ?></td>
                   <td class="dataTableContent txta-r"><?php if (isset($oInfo) && is_object($oInfo) && ($newsletter['customers_email_address'] == $oInfo->customers_email_address) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_NEWSLETTER_RECIPIENTS, 'page=' . $page . '&mail=' . md5($newsletter['customers_email_address'])) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
                 </tr>
                 <?php
