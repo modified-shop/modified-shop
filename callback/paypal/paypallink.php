@@ -38,6 +38,7 @@ if (isset($_GET['oID'])
 
     if (!isset($_SESSION['customer_id'])) {
       $_SESSION['customers_status'] = get_customers_status_by_id($order->info['status']);
+      $_SESSION['customers_status']['customers_status'] = $order->info['status'];
     }
 
     $paypal = new PayPalPayment('paypallink');

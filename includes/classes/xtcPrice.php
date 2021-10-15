@@ -81,6 +81,7 @@ class xtcPrice {
 
     // select Customers Status data
     $this->cStatus = get_customers_status_by_id($this->actualGroup);
+    $this->cStatus['customers_status'] = $this->actualGroup;
     
     // prefetch tax rates for standard zone
     $zones_query = xtDBquery("SELECT tax_class_id as class FROM " . TABLE_TAX_CLASS);
@@ -161,8 +162,8 @@ class xtcPrice {
       }
       $products_tax = xtc_get_tax_rate($this->tax_class, $cinfo['country_id'], $cinfo['zone_id']);
     } else {
-      if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1
-          && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0
+      if ($this->cStatus['customers_status_show_price_tax'] == 1
+          && $this->cStatus['customers_status_add_tax_ot'] == 0
           && $this->get_content_type_product($pID) == 'virtual'
           ) 
       {
