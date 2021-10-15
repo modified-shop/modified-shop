@@ -107,13 +107,16 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
       }
       $payment_modul = substr($payments[$i], 0, strrpos($payments[$i], '.'));
       $payment_text = constant('MODULE_PAYMENT_'.strtoupper($payment_modul).'_TEXT_TITLE');
-      $payment_array[] = array('id' => $payment_modul,
-                               'text' => $payment_text);
+      $payment_array[] = array(
+        'id' => $payment_modul,
+        'text' => $payment_text.' ('.$payment_modul.')'
+      );
     }
   }
+  $order_payment_text = $order->info['payment_class'];
   if (file_exists(DIR_FS_LANGUAGES . $order->info['language'] . '/modules/payment/' . $order->info['payment_class'] .'.php')) {
     require_once(DIR_FS_LANGUAGES . $order->info['language'] . '/modules/payment/' . $order->info['payment_class'] .'.php');
-    $order_payment_text = constant('MODULE_PAYMENT_'.strtoupper($order->info['payment_class']).'_TEXT_TITLE');
+    $order_payment_text = constant('MODULE_PAYMENT_'.strtoupper($order->info['payment_class']).'_TEXT_TITLE').' ('.$order->info['payment_class'].')';
   }
   ?>
   <table class="tableBoxCenter collapse">
@@ -145,14 +148,16 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
     }
     $shipping_modul = substr($shippings[$i], 0, strrpos($shippings[$i], '.'));
     $shipping_text = constant('MODULE_SHIPPING_'.strtoupper($shipping_modul).'_TEXT_TITLE');
-    $shipping_array[] = array('id' => $shipping_modul,
-                              'text' => $shipping_text);
+    $shipping_array[] = array(
+      'id' => $shipping_modul,
+      'text' => $shipping_text.' ('.$shipping_modul.')'
+    );
   }
   $order_shipping = explode('_', $order->info['shipping_class']);
-  $order_shipping = $order_shipping[0];
+  $order_shipping_text = $order_shipping = $order_shipping[0];
   if (file_exists(DIR_FS_LANGUAGES . $order->info['language'] . '/modules/shipping/' . $order_shipping .'.php')) {
     require_once(DIR_FS_LANGUAGES . $order->info['language'] . '/modules/shipping/' . $order_shipping .'.php');
-    $order_shipping_text = constant('MODULE_SHIPPING_'.strtoupper($order_shipping).'_TEXT_TITLE');
+    $order_shipping_text = constant('MODULE_SHIPPING_'.strtoupper($order_shipping).'_TEXT_TITLE').' ('.$order_shipping.')';
   }
   ?>
   <table class="tableBoxCenter collapse">
