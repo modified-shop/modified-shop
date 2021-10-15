@@ -1477,8 +1477,10 @@ class categories {
 
 
   function saveSpecialsData($products_data) {
-    // insert or update specials
-    if (isset($products_data['specials_price']) && !empty($products_data['specials_price'])) {
+    if(isset($products_data['specials_delete'])) {
+      xtc_db_query("DELETE FROM " . TABLE_SPECIALS . " 
+                          WHERE specials_id = '" . xtc_db_input($products_data['specials_id']) . "'");
+    } elseif (isset($products_data['specials_price']) && !empty($products_data['specials_price'])) {
       if (!isset($products_data['specials_quantity']) || empty($products_data['specials_quantity'])) {
         $products_data['specials_quantity'] = 0;
       }
@@ -1530,14 +1532,9 @@ class categories {
         unset($sql_data_array['specials_date_added']);
         xtc_db_perform(TABLE_SPECIALS, $sql_data_array, 'update', "specials_id = '" . (int)$products_data['specials_id']  . "'" );    
       }
-    } 
-  
-    // delete specials
-    if(isset($products_data['specials_delete'])) {
-      xtc_db_query("DELETE FROM " . TABLE_SPECIALS . " WHERE specials_id = '" . xtc_db_input($products_data['specials_id']) . "'");
+
+      return $products_data['specials_id'];
     }
-    
-    return $products_data['specials_id'];
   }
   
   function save_products_tags($products_data,$products_id)
