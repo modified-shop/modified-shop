@@ -10,10 +10,11 @@
    based on: (c) 2003 - 2006 XT-Commerce (general.js.php)
   -----------------------------------------------------------
    Released under the GNU General Public License
-   -----------------------------------------------------------
-*/
-// this javascriptfile get includes at the BOTTOM of every template page in shop
-// you can add your template specific js scripts here
+  -----------------------------------------------------------*/
+
+  // this javascriptfile get includes at the BOTTOM of every template page in shop
+  // you can add your template specific js scripts here
+  defined('DIR_TMPL_JS') OR define('DIR_TMPL_JS', DIR_TMPL.'javascript/');
 ?>
 <script src="<?php echo DIR_WS_BASE.DIR_TMPL_JS; ?>jquery.min.js" type="text/javascript"></script>
 <script src="<?php echo DIR_WS_BASE.DIR_TMPL_JS; ?>jquery-migrate-1.4.1.min.js" type="text/javascript"></script>

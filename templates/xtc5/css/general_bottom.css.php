@@ -15,6 +15,8 @@
 
    // This CSS file get includes at the BOTTOM of every template page in shop
    // you can add your template specific css scripts here
+  defined('DIR_TMPL') OR define('DIR_TMPL', 'templates/'.CURRENT_TEMPLATE.'/');
+  defined('DIR_TMPL_CSS') OR define('DIR_TMPL_CSS', DIR_TMPL.'css/');
 
   $css_array = array(
     DIR_TMPL_CSS.'thickbox.css',
