@@ -555,7 +555,7 @@
                         }
                         $banners_shown = ($info['banners_shown'] != '') ? $info['banners_shown'] : '0';
                         $banners_clicked = ($info['banners_clicked'] != '') ? $info['banners_clicked'] : '0';
-                        if (isset($bInfo) && is_object($bInfo) && ($banners['banners_id'] == $bInfo->banners_id) ) {
+                        if (isset($bInfo) && is_object($bInfo) && ($banners['banners_group_id'] == $bInfo->banners_group_id) ) {
                           $tr_attributes = 'class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_BANNER_MANAGER, 'page=' . $page . '&action=new&bID=' . $bInfo->banners_group_id) . '\'"';
                         } else {
                           $tr_attributes = 'class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_BANNER_MANAGER, 'page=' . $page . '&bID=' . $banners['banners_group_id']) . '\'"';
