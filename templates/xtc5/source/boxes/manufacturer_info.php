@@ -26,7 +26,7 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_manufacturers_info.html
   $manufacturers_array = xtc_get_manufacturers();
   if (isset($manufacturers_array[$product->data['manufacturers_id']])) {
     $manufacturer = $manufacturers_array[$product->data['manufacturers_id']];
-    $image = $main->getImage($manufacturer['manufacturers_image'], '', MANUFACTURER_IMAGE_SHOW_NO_IMAGE, 'manufacturers/noimage.gif');
+    $image = $main->getImage($manufacturer['manufacturers_image'], 'manufacturers/', MANUFACTURER_IMAGE_SHOW_NO_IMAGE);
 
     $box_smarty->assign('IMAGE', (($image != '') ? DIR_WS_BASE . $image : ''));
     $box_smarty->assign('NAME', $manufacturer['manufacturers_name']);
