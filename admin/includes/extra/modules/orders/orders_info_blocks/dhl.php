@@ -97,7 +97,7 @@
               </tr>
               <tr class="dhl_expand dhl_toggle">
                 <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_AVS; ?></td>
-                <td style="padding:5px;border-width: 0 1px 1px 0;"><?php echo xtc_draw_pull_down_menu('avs', $avs_array, '', 'style="width:120px;"'); ?></td>
+                <td style="padding:5px;border-width: 0 1px 1px 0;"><?php echo xtc_draw_pull_down_menu('avs', $avs_array, MODULE_DHL_AVS, 'style="width:120px;"'); ?></td>
                 <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_PERSONAL; ?></td>
                 <td style="padding:5px;border-width: 0 1px 1px 0;"><?php echo xtc_draw_pull_down_menu('personal', 'checkbox', ((MODULE_DHL_PERSONAL == 'True') ? true : false), 'style="width:120px;"'); ?></td>
                 <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_NO_NEIGHBOUR; ?></td>
@@ -105,7 +105,7 @@
               </tr>
               <tr class="dhl_expand dhl_toggle">
                 <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_IDENT; ?></td>
-                <td style="padding:5px;border-width: 0 1px 1px 0;"><?php echo xtc_draw_pull_down_menu('ident', $avs_array, '', 'style="width:120px;"'); ?></td>
+                <td style="padding:5px;border-width: 0 1px 1px 0;"><?php echo xtc_draw_pull_down_menu('ident', $avs_array, MODULE_DHL_IDENT, 'style="width:120px;"'); ?></td>
                 <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_DOB; ?></td>
                 <td style="padding:5px;border-width: 0 1px 1px 0;"><?php echo xtc_draw_input_field('dob', ((strtotime($order->customer['dob']) > 0 && strtotime($order->customer['dob']) != false) ? date('d.m.Y', strtotime($order->customer['dob'])) : ''), 'style="width: 120px; padding:5px;" placeholder="dd.mm.YYYY"'); ?></td>
                 <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_BULKY; ?></td>
