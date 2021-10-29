@@ -44,6 +44,10 @@
   define('MODULE_DHL_NO_NEIGHBOUR_DESC', 'Set No Neighbour Delivery preselected as default');
   define('MODULE_DHL_PARCEL_OUTLET_TITLE', 'Parcel Outlet Routing');
   define('MODULE_DHL_PARCEL_OUTLET_DESC', 'Set Parcel Outlet Routing preselected as default');
+  define('MODULE_DHL_AVS_TITLE', 'Visual Age Check');
+  define('MODULE_DHL_AVS_DESC', 'Set Visual Age Check preselected as default (0 is disabled)');
+  define('MODULE_DHL_IDENT_TITLE', 'Ident Check');
+  define('MODULE_DHL_IDENT_DESC', 'Set Ident Check preselected as default (0 is disabled)');
 
   define('MODULE_DHL_COMPANY_TITLE', '<hr noshade>Customer details<br/>');
   define('MODULE_DHL_COMPANY_DESC', 'Company:');

@@ -44,6 +44,10 @@
   define('MODULE_DHL_NO_NEIGHBOUR_DESC', 'Soll als Standard keine Nachbarschaftszustellung vorausgew&auml;hlt werden?');
   define('MODULE_DHL_PARCEL_OUTLET_TITLE', 'Filialrouting');
   define('MODULE_DHL_PARCEL_OUTLET_DESC', 'Soll als Standard Filialrouting vorausgew&auml;hlt werden?');
+  define('MODULE_DHL_AVS_TITLE', 'Alterssichtpr&uuml;fung');
+  define('MODULE_DHL_AVS_DESC', 'Was soll als Standard f&uuml;r die Alterssichtpr&uuml;fung vorausgew&auml;hlt werden (0 ist deaktiviert)?');
+  define('MODULE_DHL_IDENT_TITLE', 'Alterspr&uuml;fung');
+  define('MODULE_DHL_IDENT_DESC', 'Was soll als Standard f&uuml;r die Alterspr&uuml;fung vorausgew&auml;hlt werden (0 ist deaktiviert)?');
 
   define('MODULE_DHL_COMPANY_TITLE', '<hr noshade>Kundendetails<br/>');
   define('MODULE_DHL_COMPANY_DESC', 'Firma:');
