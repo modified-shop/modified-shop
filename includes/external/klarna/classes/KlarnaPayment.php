@@ -376,7 +376,11 @@ class KlarnaPayment extends KlarnaPaymentBase {
     
     if (isset($_SESSION['shipping']) && $_SESSION['shipping'] !== false) {
       $shipping_method = substr($_SESSION['shipping']['id'], 0, strpos($_SESSION['shipping']['id'], '_'));
-      $tax_class_id = constant('MODULE_SHIPPING_'.strtoupper($shipping_method).'_TAX_CLASS');
+      if ($shipping_method == 'free') {
+        $tax_class_id == MODULE_ORDER_TOTAL_SHIPPING_TAX_CLASS;
+      } else {
+        $tax_class_id = constant('MODULE_SHIPPING_'.strtoupper($shipping_method).'_TAX_CLASS');
+      }
       $tax = $xtPrice->TAX[$tax_class_id];
       $shipping_cost = ((isset($order->info['pp_shipping'])) ? $order->info['pp_shipping'] : $order->info['shipping_cost']);
       if ($add_tax === true) {
