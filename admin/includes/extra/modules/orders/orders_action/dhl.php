@@ -82,6 +82,37 @@
         }
       } else {
         $messageStack->add_session(TEXT_DHL_DELETE_SUCCESS, 'success');
+      
+        $check_query = xtc_db_query("SELECT *
+                                       FROM ".TABLE_ORDERS_STATUS_HISTORY."
+                                      WHERE orders_id = '".(int)$oID."'
+                                        AND comments LIKE ('".xtc_db_input(sprintf(TEXT_DHL_ORDER_COMMENT, $tracking_links['parcel_id']))."')
+                                        AND customer_notified = 1
+                                   ORDER BY orders_status_history_id DESC
+                                      LIMIT 1");
+        if (xtc_db_num_rows($check_query) > 0) {
+          $check = xtc_db_fetch_array($check_query);
+          
+          $orders_status_query = xtc_db_query("SELECT *
+                                                 FROM ".TABLE_ORDERS_STATUS_HISTORY."
+                                                WHERE orders_id = '".(int)$oID."'
+                                                  AND orders_status_history_id < '".$check['orders_status_history_id']."'
+                                             ORDER BY orders_status_history_id DESC
+                                                LIMIT 1");
+          $orders_status = xtc_db_fetch_array($orders_status_query);
+
+          $status = $orders_status['orders_status_id'];
+          $comments = sprintf(TEXT_DHL_ORDER_COMMENT_DELETED, $tracking_links['parcel_id']);
+          $order_updated = false;
+          $_POST['notify'] = 'on';
+          $_POST['notify_comments'] = 'off';
+    
+          include (DIR_WS_MODULES.'orders_update.php');
+      
+          if ($order_updated) {
+            $messageStack->add_session(SUCCESS_ORDER_UPDATED, 'success');
+          }
+        }
       }
       xtc_db_query("DELETE FROM ".TABLE_ORDERS_TRACKING." WHERE tracking_id = '".(int)$tracking_id."'");
     
