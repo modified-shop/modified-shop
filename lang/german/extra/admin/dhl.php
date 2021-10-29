@@ -15,6 +15,7 @@
   define('TEXT_DHL_NO', 'Nein');
   define('TEXT_DHL_NO_STATUS_CHANGE', 'keine Status&auml;nderung');
   define('TEXT_DHL_ORDER_COMMENT', 'DHL Tracking Information %s');
+  define('TEXT_DHL_ORDER_COMMENT_DELETED', 'DHL Sendung storniert %s');
   define('TEXT_DHL_AVS_YEAR', '%s Jahre');  
 
   define('TEXT_DHL_WEIGHT', 'Paketgewicht (kg):');
