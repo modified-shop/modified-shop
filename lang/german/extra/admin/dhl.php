@@ -15,10 +15,11 @@
   define('TEXT_DHL_NO', 'Nein');
   define('TEXT_DHL_NO_STATUS_CHANGE', 'keine Status&auml;nderung');
   define('TEXT_DHL_ORDER_COMMENT', 'DHL Tracking Information %s');
+  define('TEXT_DHL_AVS_YEAR', '%s Jahre');  
+
   define('TEXT_DHL_WEIGHT', 'Paketgewicht (kg):');
   define('TEXT_DHL_INSURANCE', 'Versicherung:');
   define('TEXT_DHL_AVS', 'Alterssichtpr&uuml;fung:');
-  define('TEXT_DHL_AVS_YEAR', '%s Jahre');  
   define('TEXT_DHL_TYPE', 'Produkt:');
   define('TEXT_DHL_RETOURE', 'Retourenlabel:');
   define('TEXT_DHL_BULKY', 'Sperrgut:');
@@ -26,11 +27,12 @@
   define('TEXT_DHL_CODEABLE', 'Leitcodierung:');
   define('TEXT_DHL_IDENT', 'Identcheck:');
   define('TEXT_DHL_DOB', 'Geburtsdatum:');
+  define('TEXT_DHL_STATUS_UPDATE', 'Benachrichtigung:');
+  define('TEXT_DHL_NO_NEIGHBOUR', 'Keine Nachbarschaftszustellung:');
+  define('TEXT_DHL_PARCEL_OUTLET', 'Filialrouting:');
+
   define('TEXT_DHL_SHOW_MORE', '[mehr anzeigen]');
   define('TEXT_DHL_SHOW_LESS', '[weniger anzeigen]');
-  define('TEXT_DHL_STATUS_UPDATE', 'Benachrichtigung:');
-  define('TEXT_DHL_NO_NEIGHBOUR', 'Keine Nachbarschaftszustellung');
-  define('TEXT_DHL_PARCEL_OUTLET', 'Filialrouting');
 
   define('TEXT_DHL_BUTTON_CREATE', 'DHL Label erstellen');
   define('TEXT_DHL_CREATE_SUCCESS', 'DHL Paketschein wurde erstellt');
