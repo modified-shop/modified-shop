@@ -93,6 +93,10 @@
         if (xtc_db_num_rows($check_query) > 0) {
           $check = xtc_db_fetch_array($check_query);
           
+          $order = new order($oID);
+          require_once(DIR_FS_CATALOG.DIR_WS_CLASSES.'xtcPrice.php');
+          $xtPrice = new xtcPrice($order->info['currency'], $order->info['status']);
+
           $orders_status_query = xtc_db_query("SELECT *
                                                  FROM ".TABLE_ORDERS_STATUS_HISTORY."
                                                 WHERE orders_id = '".(int)$oID."'
