@@ -109,7 +109,7 @@
           $comments = sprintf(TEXT_DHL_ORDER_COMMENT_DELETED, $tracking_links['parcel_id']);
           $order_updated = false;
           $_POST['notify'] = 'on';
-          $_POST['notify_comments'] = 'off';
+          $_POST['notify_comments'] = 'on';
     
           include (DIR_WS_MODULES.'orders_update.php');
       
