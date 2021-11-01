@@ -61,8 +61,10 @@ $action = (isset($_GET['action']) ? xtc_db_prepare_input($_GET['action']) : '');
 $oID = isset($_GET['oID']) ? (int) $_GET['oID'] : '';
 $customer = (isset($_GET['customer']) ? xtc_db_prepare_input($_GET['customer']) : '');
 
-// EMAIL PREVIEW
-include('includes/modules/email_preview/email_preview_tabs.php');
+$email_preview = isset($_POST['email_preview']) && $_POST['email_preview'] == 1 ? true : false;
+if ($email_preview) {
+  $action = 'update_order';
+}
 
 if (($action == 'edit' || $action == 'update_order') && $oID) {
   $orders_query = xtc_db_query("SELECT orders_id
@@ -256,16 +258,14 @@ switch ($action) {
 }
 
   require (DIR_WS_INCLUDES.'head.php');
-?>
-<style type="text/css">
-.table{width: 100%; border: 1px solid #a3a3a3; margin-bottom:20px; background: #f3f3f3; padding:2px;}
-.heading{font-family: Verdana, Arial, sans-serif; font-size: 12px; font-weight: bold; padding:2px; }
-.last_row{background-color: #fff0cf;}
-textarea#comments{width:99%;}
-</style>
-
-<script type="text/javascript" src="includes/modules/email_preview/email_preview.js"></script>
-
+  ?>
+  <style type="text/css">
+    .table{width: 100%; border: 1px solid #a3a3a3; margin-bottom:20px; background: #f3f3f3; padding:2px;}
+    .heading{font-family: Verdana, Arial, sans-serif; font-size: 12px; font-weight: bold; padding:2px; }
+    .last_row{background-color: #fff0cf;}
+    textarea#comments{width:99%;}
+  </style>
+  <script type="text/javascript" src="includes/javascript/email_preview.js"></script>
 </head>
 <body>
   <!-- header //-->

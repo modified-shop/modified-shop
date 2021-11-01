@@ -424,11 +424,8 @@
                 </tr>
               </table>
               <div style="float:right; margin: 10px 0 0;"><input type="submit" class="button" name="update" value="<?php echo BUTTON_UPDATE; ?>"></div>
-              <?php
-              //BOF EMAIL PREVIEW
-              include('includes/modules/email_preview/email_preview_btn.php');
-              //EOF EMAIL PREVIEW
-              ?>
+              <div style="float:right; margin: 10px 0 0;"><a class="button" href="Javascript:void(0)" onclick="email_popup()"><?php echo 'E-Mail '.BUTTON_PREVIEW; ?></a></div>
+              <input type="hidden" name="email_preview" value="">
             </td>
           </tr>
         </table>
@@ -456,8 +453,8 @@
                 // invoice number and date
                 echo add_btn_ibillnr($order,$oID);
                 ?>
-                <a class="button" href="Javascript:void()" onclick="window.open('<?php echo xtc_href_link(FILENAME_PRINT_ORDER,'oID='.$oID); ?>', 'popup', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, width=800, height=750')"><?php echo BUTTON_INVOICE; ?></a>
-                <a class="button" href="Javascript:void()" onclick="window.open('<?php echo xtc_href_link(FILENAME_PRINT_PACKINGSLIP,'oID='.$oID); ?>', 'popup', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, width=800, height=750')"><?php echo BUTTON_PACKINGSLIP; ?></a>
+                <a class="button" href="Javascript:void(0)" onclick="window.open('<?php echo xtc_href_link(FILENAME_PRINT_ORDER,'oID='.$oID); ?>', 'popup', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, width=800, height=750')"><?php echo BUTTON_INVOICE; ?></a>
+                <a class="button" href="Javascript:void(0)" onclick="window.open('<?php echo xtc_href_link(FILENAME_PRINT_PACKINGSLIP,'oID='.$oID); ?>', 'popup', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, width=800, height=750')"><?php echo BUTTON_PACKINGSLIP; ?></a>
               </div>
             </td>
           </tr>

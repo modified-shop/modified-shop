@@ -78,7 +78,7 @@
       foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/orders/orders_update/','php') as $file) require ($file);
 
       //EMAIL PREVIEW
-      include ('includes/modules/email_preview/email_preview.php');
+      include(DIR_FS_ADMIN.'includes/modules/email_preview.php');
     
       xtc_php_mail(EMAIL_BILLING_ADDRESS,
                    EMAIL_BILLING_NAME,
