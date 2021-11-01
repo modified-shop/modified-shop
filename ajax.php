@@ -14,7 +14,19 @@
 @ini_set('display_errors', false);
 error_reporting(0);
 
-include 'includes/' . (isset($_REQUEST['speed']) ? (file_exists('includes/local/configure.php') ? 'local/configure.php' : 'configure.php') : 'application_top.php');
+if (isset($_REQUEST['speed'])) {
+  // Start the clock for the page parse time log
+  define('PAGE_PARSE_START_TIME', microtime(true));
+
+  // configuration parameters
+  if (file_exists('includes/local/configure.php')) {
+    include_once('includes/local/configure.php');
+  } else {
+    include_once('includes/configure.php');
+  }
+} else {
+  include_once('includes/application_top.php');
+}
 
 // extension
 $ajax_ext = preg_replace("/[^a-z0-9\\.\\_]/i", "", $_REQUEST['ext']);
