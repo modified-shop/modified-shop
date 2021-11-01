@@ -45,5 +45,5 @@ if(
             xtc_db_query(sprintf('DELETE FROM micropayment_log WHERE order_id = "%s"',$data['order_id']));
         }
     }
-    echo 'Incomplete orders which are ' . $age . ' days old have been removed.<a href="javascript:void();" onclick="self.close();return false;">Click here to return to your shop backend.</a>';
+    echo 'Incomplete orders which are ' . $age . ' days old have been removed.<a href="javascript:void(0);" onclick="self.close();return false;">Click here to return to your shop backend.</a>';
 }

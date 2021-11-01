@@ -33,8 +33,8 @@
                 echo '  <td class="smallText" align="center">'.xtc_date_short($tracking['date_added']).'</td>'.PHP_EOL;
                 echo '  <td class="smallText" align="center">
                           <a href="'.xtc_href_link(FILENAME_ORDERS, 'oID='.$oID.'&tID='.$tracking['tracking_id'].'&action=custom&saction=deletetracking').'">'.xtc_image(DIR_WS_ICONS.'cross.gif', ICON_DELETE).'</a>'.
-                          (($tracking['dhl_label_url'] != '') ? " <a href=\"Javascript:void()\" onclick=\"window.open('".$tracking['dhl_label_url']."', 'DHL Label', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, width=600, height=1000')\">".xtc_image(DIR_WS_ICONS.'icon_pdf.gif', 'DHL Label')."</a>" : '').
-                          (($tracking['dhl_export_url'] != '') ? " <a href=\"Javascript:void()\" onclick=\"window.open('".$tracking['dhl_export_url']."', 'DHL Export', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, width=1000, height=1000')\">".xtc_image(DIR_WS_ICONS.'icon_pdf.gif', 'DHL Export')."</a>" : '').'
+                          (($tracking['dhl_label_url'] != '') ? " <a href=\"Javascript:void(0)\" onclick=\"window.open('".$tracking['dhl_label_url']."', 'DHL Label', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, width=600, height=1000')\">".xtc_image(DIR_WS_ICONS.'icon_pdf.gif', 'DHL Label')."</a>" : '').
+                          (($tracking['dhl_export_url'] != '') ? " <a href=\"Javascript:void(0)\" onclick=\"window.open('".$tracking['dhl_export_url']."', 'DHL Export', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, width=1000, height=1000')\">".xtc_image(DIR_WS_ICONS.'icon_pdf.gif', 'DHL Export')."</a>" : '').'
                         </td>'.PHP_EOL;
                 echo '<tr>'.PHP_EOL;
               }
