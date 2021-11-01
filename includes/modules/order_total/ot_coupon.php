@@ -217,13 +217,12 @@ class ot_coupon {
 
         $c_deduct = $xtPrice->xtcCalculateCurr($coupon_array['coupon_amount']);
 
+        $flag_s = false;
         if ($coupon_array['coupon_type'] == 'S') {
           $c_deduct = $this->get_shipping_cost();
-        }
-
-        $flag_s = false;
-        if ($coupon_array['coupon_type']=='S' && $coupon_array['coupon_amount'] > 0 ) {
-          $c_deduct = $c_deduct + $xtPrice->xtcCalculateCurr($coupon_array['coupon_amount']);
+          if ($coupon_array['coupon_amount'] > 0) {
+            $c_deduct += $xtPrice->xtcCalculateCurr($coupon_array['coupon_amount']);
+          }
           $flag_s = true;
         }
 
