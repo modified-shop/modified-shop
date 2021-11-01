@@ -23,6 +23,7 @@
     DIR_ADMIN.'includes/local',
     DIR_ADMIN.'includes/haendlerbund/images/_notes',
     DIR_ADMIN.'includes/modules/carp',
+    DIR_ADMIN.'includes/modules/email_preview',
     DIR_ADMIN.'includes/modules/export/idealo_lib',
     DIR_ADMIN.'includes/modules/fckeditor',
     DIR_ADMIN.'includes/modules/filemanager/js/cors',
