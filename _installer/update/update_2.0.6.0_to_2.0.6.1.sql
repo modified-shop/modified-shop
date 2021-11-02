@@ -92,4 +92,7 @@ ALTER TABLE `products_images` ADD KEY `idx_image_nr` (`image_nr`);
 DELETE FROM configuration WHERE configuration_key = 'MODULE_SHIPPING_EASYREVIEWS';
 DELETE FROM configuration WHERE configuration_key = 'MODULE_SHIPPING_RATINGSTARS';
 
+#GTB - 2021-09-07 - add index for products_image
+ALTER TABLE `products` ADD KEY `idx_products_image` (`products_image`);
+
 # Keep an empty line at the end of this file for the db_updater to work properly

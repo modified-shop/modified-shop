@@ -1027,7 +1027,8 @@ CREATE TABLE products (
   KEY idx_products_startpage (products_startpage),
   KEY idx_manufacturers_id (manufacturers_id),
   KEY idx_products_sort (products_sort),
-  KEY idx_products_startpage_sort (products_startpage_sort)
+  KEY idx_products_startpage_sort (products_startpage_sort),
+  KEY idx_products_image (products_image)
 );
 
 DROP TABLE IF EXISTS products_attributes;
