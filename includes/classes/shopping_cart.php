@@ -751,6 +751,16 @@ class shoppingCart {
   }
 
   /**
+   * show_total_net
+   *
+   * @return unknown
+   */
+  function show_total_net() {
+    $this->calculate();
+    return $this->total_netto;
+  }
+
+  /**
    * show_weight
    *
    * @return unknown
