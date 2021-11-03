@@ -248,7 +248,7 @@
                       
                       $contents[] = array('text' => '<br />' . TEXT_TABLES_BACKUP_TYPE . '<br />' . xtc_draw_pull_down_menu('backup_type', $type_array, 'all', 'id="backup_type"'));
                       
-                      $tables_data = '';
+                      $tables_data = xtc_draw_checkbox_field('backup_all_tables', false) . ' ' . TEXT_CHECK_ALL_TABLES . '<br />';
                       $tables_query = xtc_db_query("SHOW TABLES FROM `".DB_DATABASE."`");
                       while ($tables = xtc_db_fetch_array($tables_query)) {
                         $tables_data .= xtc_draw_checkbox_field('backup_tables[]', $tables['Tables_in_'.DB_DATABASE]) . ' ' . $tables['Tables_in_'.DB_DATABASE] . '<br />';
@@ -321,6 +321,9 @@
     <!-- footer_eof //-->
     <br />
     <script>
+      $('input[name="backup_all_tables"]').click(function () {    
+        $('input[name*="backup_tables"]').prop('checked', this.checked);
+      });
       $('#backup_type').on('change', function() {
         if ($(this).val() == 'custom') {
           $('#tables_backup').show();

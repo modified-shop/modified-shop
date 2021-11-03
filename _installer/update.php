@@ -268,11 +268,17 @@
         $smarty->assign('INPUT_BACKUP_TYPE', xtc_draw_pull_down_menu('backup_type', $type_array, 'all', 'id="backup_type"'));
                               
         $tables_data = array();
+        $tables_data[] = array(
+          'CHECKBOX' => xtc_draw_checkbox_field('backup_all_tables', 'on', false, 'id="backup_all_tables"'),
+          'TABLE' => TEXT_DB_SELECT_ALL,
+          'ID' => 'backup_all_tables'
+        );
         $tables_query = xtc_db_query("SHOW TABLES FROM `".DB_DATABASE."`");
         while ($tables = xtc_db_fetch_array($tables_query)) {
           $tables_data[] = array(
             'CHECKBOX' => xtc_draw_checkbox_field('backup_tables[]', $tables['Tables_in_'.DB_DATABASE], false, 'id="'.$tables['Tables_in_'.DB_DATABASE].'"'),
             'TABLE' => $tables['Tables_in_'.DB_DATABASE],
+            'ID' => $tables['Tables_in_'.DB_DATABASE],
           );
         }
         $smarty->assign('BACKUP_TABLES_ARRAY', $tables_data);

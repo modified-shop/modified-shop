@@ -75,4 +75,5 @@ define('TEXT_TABLES_BACKUP_TYPE', '<b>Backup</b><br> - Which tables should be sa
 define('TEXT_BACKUP_ALL', 'All tables');
 define('TEXT_BACKUP_CUSTOM', 'Selected tables');
 define('TEXT_TABLES_TO_BACKUP', '<b>The following tables should be saved:</b>');
+define('TEXT_CHECK_ALL_TABLES', 'Select all tables');
 ?>

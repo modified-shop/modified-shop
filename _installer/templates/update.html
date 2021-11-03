@@ -154,7 +154,7 @@
               {foreach name=inner item=backup_tables from=$BACKUP_TABLES_ARRAY}
                 <li>
                   {$backup_tables.CHECKBOX}
-                  <label for="{$backup_tables.TABLE}">{$backup_tables.TABLE}</label>
+                  <label for="{$backup_tables.ID}">{$backup_tables.TABLE}</label>
                 </li>
               {/foreach}
               </ul>
@@ -162,6 +162,9 @@
           </li>
         </ul>
         <script>
+          $('input[name="backup_all_tables"]').click(function () {    
+            $('input[name*="backup_tables"]').prop('checked', this.checked);
+          });
           $('#backup_type').on('change', function() {          
             if ($(this).val() == 'custom') {
               $('#backup_tables').show();

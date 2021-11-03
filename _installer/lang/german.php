@@ -72,6 +72,7 @@
   define('TEXT_DB_DATE', 'Datum');
   define('TEXT_DB_BACKUP_ALL', 'Alle Tabellen sichern');
   define('TEXT_DB_BACKUP_CUSTOM', 'Ausgew&auml;hlte Tabellen sichern');
+  define('TEXT_DB_SELECT_ALL', 'Alle Tabellen ausw&auml;hlen');
   
   define('TEXT_INFO_DO_UPDATE_OK', 'Die Datenbank wurde erfolgreich aktualisiert!');
   define('TEXT_INFO_DO_UPDATE', 'Die Datenbank wird aktualisiert!');
