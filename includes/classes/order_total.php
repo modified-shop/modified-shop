@@ -183,8 +183,10 @@ class order_total {
             && method_exists($GLOBALS[$class], 'pre_confirmation_check')
             )
         {
-          $total_deductions = $total_deductions + $GLOBALS[$class]->pre_confirmation_check($order_total);
-          $order_total = $order_total - $GLOBALS[$class]->pre_confirmation_check($order_total);
+          $deduction = $GLOBALS[$class]->pre_confirmation_check($order_total);
+          
+          $total_deductions += $deduction;
+          $order_total -= $deduction;
         }
       }
       if ($this->order_total - $total_deductions <= 0) {

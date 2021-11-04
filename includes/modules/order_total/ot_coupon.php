@@ -59,7 +59,8 @@ class ot_coupon {
       $this->calculate_tax = MODULE_ORDER_TOTAL_COUPON_CALC_TAX;
       $this->tax_class = MODULE_ORDER_TOTAL_COUPON_TAX_CLASS;
     }
-
+    
+    $this->netto = false;
     $this->deduction = 0;
     $this->credit_class = true;
     $this->output = array ();
@@ -76,7 +77,8 @@ class ot_coupon {
 
   function process() {
     global $order, $xtPrice;
-
+    
+    $this->netto = false;
     $order_total = $this->get_order_total();
     $od_amount = $this->calculate_credit($order_total);
     
@@ -118,6 +120,7 @@ class ot_coupon {
 
 
   function pre_confirmation_check($order_total) {
+    $this->netto = true;
     $order_total = $this->get_order_total();
     return $this->calculate_credit($order_total);
   }
@@ -402,7 +405,7 @@ class ot_coupon {
       $shipping_tax_rate_description = xtc_get_tax_description($shipping_tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
       $tax_index = $this->set_tax_group_index($shipping_tax_rate_description);
 
-      if ($_SESSION['customers_status']['customers_status_show_price_tax'] == '1') {
+      if ($_SESSION['customers_status']['customers_status_show_price_tax'] == '1' && $this->netto === false) {
         $shipping_tax_rate = xtc_get_tax_rate($shipping_tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
         $shipping_tax = $order->info['shipping_cost'] * ($shipping_tax_rate / 100 +1) - $order->info['shipping_cost'];
         $shipping_cost = $order->info['shipping_cost'] + $shipping_tax;
