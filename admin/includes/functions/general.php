@@ -728,18 +728,30 @@
    * @return
    */
   function xtc_get_shipping_status_name($shipping_status_id, $language_id = '') {
+    static $shipping_status_array;
+    
+    if (!isset($shipping_status_array)) {
+      $shipping_status_array = array();
+    }
+    
     if (!$language_id) {
       $language_id = (int)$_SESSION['languages_id'];
     }
-    $shipping_status_query = xtc_db_query("SELECT shipping_status_name
-                                             FROM ".TABLE_SHIPPING_STATUS."
-                                            WHERE shipping_status_id = '".(int)$shipping_status_id."'
-                                              AND language_id = '".(int)$language_id."'
-                                         ORDER BY sort_order");
-    if (xtc_db_num_rows($shipping_status_query) > 0) {
-      $shipping_status = xtc_db_fetch_array($shipping_status_query);
-      return $shipping_status['shipping_status_name'];
+    
+    if (!isset($shipping_status_array[$language_id][$shipping_status_id])) {
+      $shipping_status_array[$language_id][$shipping_status_id] = '';
+      $shipping_status_query = xtc_db_query("SELECT shipping_status_name
+                                               FROM ".TABLE_SHIPPING_STATUS."
+                                              WHERE shipping_status_id = '".(int)$shipping_status_id."'
+                                                AND language_id = '".(int)$language_id."'
+                                           ORDER BY sort_order");
+      if (xtc_db_num_rows($shipping_status_query) > 0) {
+        $shipping_status = xtc_db_fetch_array($shipping_status_query);
+        $shipping_status_array[$language_id][$shipping_status_id] = $shipping_status['shipping_status_name'];
+      }
     }
+    
+    return $shipping_status_array[$language_id][$shipping_status_id];
   }
 
   /**
