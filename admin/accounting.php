@@ -158,7 +158,9 @@ require (DIR_WS_INCLUDES.'head.php');
     <!-- body_text //-->
     <td class="boxCenter" width="100%" valign="top">
       <div class="div_box mrg5">
-        <div class="pageHeading pdg2"><?php echo TEXT_ACCOUNTING.' '.$allow_edit['customers_lastname'].' '.$allow_edit['customers_firstname'] . ' ['. (int)$_GET['cID'] .']'; ?></div>
+        <div class="pageHeading pdg2"><?php echo TEXT_ACCOUNTING.' '.$allow_edit['customers_lastname'].' '.$allow_edit['customers_firstname'] . ' ['. (int)$_GET['cID'] .']'; ?>
+          <div class="main flt-r"><?php echo xtc_draw_checkbox_field('complete', false) . ' ' . BUTTON_SET; ?></div>
+        </div>
         <?php if ($_GET['cID'] == '1') { ?>
         <div class="main important_info" style="margin-top: 5px;">
           <?php  echo TEXT_ACCOUNTING_INFO ?> 
@@ -237,7 +239,7 @@ require (DIR_WS_INCLUDES.'head.php');
                   <table class="tableBoxCenter collapse">
                     <tr class="dataTableHeadingRow">
                       <td class="dataTableHeadingContent" colspan="2" style="vertical-align:middle;"><?php echo $naming_array[$field]['name']; ?></td>
-                      <td class="dataTableHeadingContent" style="vertical-align:middle;"><?php echo TEXT_ALLOWED.xtc_draw_checkbox_field('checkall'.$field, '', '', '', 'class="checkall'.$field.'" onclick="set_checkbox('.$field.', '.$_GET['cID'].')"'); ?></td>
+                      <td class="dataTableHeadingContent" style="vertical-align:middle;"><?php echo TEXT_ALLOWED.' '.xtc_draw_checkbox_field('checkall'.$field, '', '', '', 'class="checkall'.$field.'" onclick="set_checkbox('.$field.', '.$_GET['cID'].')"'); ?></td>
                     </tr>
                     <?php
                     foreach ($accounting as $array) {
@@ -272,6 +274,12 @@ require (DIR_WS_INCLUDES.'head.php');
 <!-- footer //-->
 <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
 <!-- footer_eof //-->
+<script>
+  $('input[name="complete"]').click(function () {    
+    $('input[name*="checkall"]').prop('checked', this.checked);
+    $('input[name*="access"]').prop('checked', this.checked);
+  });
+</script>
 </body>
 </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
