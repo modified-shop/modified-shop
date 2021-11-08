@@ -144,7 +144,7 @@
                       break;
                   }
                 } else {
-                  $sort = 'ORDER BY c.customers_date_added DESC';
+                  $sort = 'ORDER BY c.customers_id DESC';
                 }
 
                 $customers_query_raw = "SELECT c.customers_id,
