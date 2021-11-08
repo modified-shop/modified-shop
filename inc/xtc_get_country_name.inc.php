@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_get_country_name.inc.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -15,6 +15,7 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
   
+  require_once(DIR_FS_INC . 'xtc_get_countries.inc.php'); 
   
   function xtc_get_country_name($country_id) {
     static $countries_name_cache;
@@ -25,11 +26,10 @@
     
     if (!isset($countries_name_cache[$country_id])) {
       $countries_name_cache[$country_id] = $country_id;
-      
       $country_query = xtDBquery("SELECT countries_name
                                     FROM ".TABLE_COUNTRIES."
                                    WHERE countries_id = '".(int)$country_id."'");
-      if (xtc_db_num_rows($country_query, true)) {
+      if (xtc_db_num_rows($country_query, true) > 0) {
         $country = xtc_db_fetch_array($country_query, true);
         $countries_name_cache[$country_id] = $country['countries_name'];
       }
@@ -37,4 +37,3 @@
     
     return $countries_name_cache[$country_id];
   }
-?>
