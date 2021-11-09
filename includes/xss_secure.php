@@ -26,6 +26,7 @@ define('XSS_SEND_LOG', false); //default: false
 define('XSS_WRITE_LOG', true); //default: true
 define('XSS_BLACKLIST', true); //default: true
 define('XSS_BLACKLIST_TIME', 3600); // time to block IP in seconds. default: 3600
+define('SAVE_IP_LOG', 'xxx');
 //############  KONFIGURATION ##############//
 
 
@@ -344,10 +345,11 @@ define('XSS_BASE', $ssl_proxy . preg_replace('/\\' . DIRECTORY_SEPARATOR . '\/|\
 $ip = '';
 if (defined('XSS_BLACKLIST') && XSS_BLACKLIST) {
   require_once (XSS_PATH.'inc/xtc_get_ip_address.inc.php');
+  require_once (XSS_PATH.'inc/ip_clearing.inc.php');
   $ip = xtc_get_ip_address();
 
   $blacklist_arr = xss_read_blacklist();
-  if (isset($blacklist_arr[$ip])) {
+  if (isset($blacklist_arr[$ip]) || isset($blacklist_arr[ip_clearing($ip)])) {
     //Redirect
     header("Location: ".XSS_BASE."error.html");
     exit();
