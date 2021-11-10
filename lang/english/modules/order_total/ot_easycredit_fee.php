@@ -17,5 +17,5 @@
   define('MODULE_ORDER_TOTAL_EASYCREDIT_FEE_STATUS_TITLE', 'Finanzierungskosten');
   define('MODULE_ORDER_TOTAL_EASYCREDIT_FEE_STATUS_DESC', 'Anzeige der Finanzierungskosten?');
   define('MODULE_ORDER_TOTAL_EASYCREDIT_FEE_SORT_ORDER_TITLE', 'Sortierreihenfolge');
-  define('MODULE_ORDER_TOTAL_EASYCREDIT_FEE_SORT_ORDER_DESC','Anzeigereihenfolge.');
+  define('MODULE_ORDER_TOTAL_EASYCREDIT_FEE_SORT_ORDER_DESC','Anzeigereihenfolge');
 ?>

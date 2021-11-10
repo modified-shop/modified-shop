@@ -46,7 +46,7 @@
   define('MODULE_ORDER_TOTAL_COUPON_STATUS_TITLE', 'Display Total');
   define('MODULE_ORDER_TOTAL_COUPON_STATUS_DESC', 'Do you want to display the Discount Coupon value?');
   define('MODULE_ORDER_TOTAL_COUPON_SORT_ORDER_TITLE', 'Sort Order');
-  define('MODULE_ORDER_TOTAL_COUPON_SORT_ORDER_DESC', 'Display Order.');
+  define('MODULE_ORDER_TOTAL_COUPON_SORT_ORDER_DESC', 'Display Order');
   define('MODULE_ORDER_TOTAL_COUPON_INC_SHIPPING_TITLE', 'Include Shipping');
   define('MODULE_ORDER_TOTAL_COUPON_INC_SHIPPING_DESC', 'Include Shipping in calculation');
   define('MODULE_ORDER_TOTAL_COUPON_INC_TAX_TITLE', 'Include Tax');

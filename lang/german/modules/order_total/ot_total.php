@@ -24,5 +24,5 @@
   define('MODULE_ORDER_TOTAL_TOTAL_STATUS_DESC','M&ouml;chten Sie die Gesamtbestellsumme anzeigen?');
   
   define('MODULE_ORDER_TOTAL_TOTAL_SORT_ORDER_TITLE','Sortierreihenfolge');
-  define('MODULE_ORDER_TOTAL_TOTAL_SORT_ORDER_DESC','Anzeigereihenfolge.');
+  define('MODULE_ORDER_TOTAL_TOTAL_SORT_ORDER_DESC','Anzeigereihenfolge');
 ?>

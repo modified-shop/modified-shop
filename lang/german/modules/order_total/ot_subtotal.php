@@ -23,5 +23,5 @@
   define('MODULE_ORDER_TOTAL_SUBTOTAL_STATUS_DESC','Anzeige der Zwischensumme?');
   
   define('MODULE_ORDER_TOTAL_SUBTOTAL_SORT_ORDER_TITLE','Sortierreihenfolge');
-  define('MODULE_ORDER_TOTAL_SUBTOTAL_SORT_ORDER_DESC','Anzeigereihenfolge.');
+  define('MODULE_ORDER_TOTAL_SUBTOTAL_SORT_ORDER_DESC','Anzeigereihenfolge');
 ?>
