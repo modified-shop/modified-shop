@@ -133,6 +133,7 @@
     DIR_ADMIN.'includes/functions/compatibility.php',
     DIR_ADMIN.'includes/functions/database.php',
     DIR_ADMIN.'includes/functions/db_restore.php',
+    DIR_ADMIN.'includes/functions/export_functions.php',
     DIR_ADMIN.'includes/functions/languages.php',
     DIR_ADMIN.'includes/functions/validations.php',
     DIR_ADMIN.'includes/haendlerbund/css/ui_custom.css',
