@@ -13,9 +13,10 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
    
-function xtc_add_tax($price, $tax) 
-	{ 
+  die('Deprecated File: '.basename(__FILE__).'. Use $xtPrice->xtcAddTax instead.');
+/*   
+  function xtc_add_tax($price, $tax) { 
 	  $price=$price+$price/100*$tax;
 	  return $price;
-	  }
- ?>
+	}
+*/
