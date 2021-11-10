@@ -134,7 +134,7 @@ class cod {
         $cod_tax_description = xtc_get_tax_description(MODULE_ORDER_TOTAL_COD_FEE_TAX_CLASS, $order->delivery['country']['id'], $order->delivery['zone_id']);
       
         if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1) {
-          $cod_cost_value = xtc_add_tax($cod_cost, $cod_tax);
+          $cod_cost_value = $xtPrice->xtcAddTax($cod_cost, $cod_tax);
           $cod_cost = $xtPrice->xtcFormat($cod_cost_value,true);
         }
         if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1) {

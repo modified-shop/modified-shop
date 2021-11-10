@@ -24,7 +24,6 @@
   require('includes/application_top.php');
 
   // include needed functions
-  require_once(DIR_WS_FUNCTIONS.'export_functions.php');
   require_once(DIR_FS_INC.'update_module_configuration.inc.php');
 
   if (!is_writeable(DIR_FS_CATALOG . 'export/')) {

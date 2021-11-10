@@ -33,11 +33,7 @@
     function process() {
       global $order, $xtPrice;
       
-      //include needed functions
-      //require_once(DIR_FS_INC . 'xtc_calculate_tax.inc.php'); //fix #1309
-      
       if (MODULE_ORDER_TOTAL_LOWORDERFEE_LOW_ORDER_FEE == 'true') {
-
         switch (MODULE_ORDER_TOTAL_LOWORDERFEE_DESTINATION) {
           case 'national':
             if ($order->delivery['country_id'] == STORE_COUNTRY) $pass = true; 
@@ -78,10 +74,10 @@
               )
           {
             if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1) {
-              $order->info['tax'] += xtc_calculate_tax($low_order_fee_value, $tax);
-              $order->info['tax_groups'][TAX_ADD_TAX . "$tax_description"] += xtc_calculate_tax($low_order_fee_value, $tax);
-              $order->info['total'] += $low_order_fee_value + xtc_calculate_tax($low_order_fee_value, $tax);
-              $low_order_fee = xtc_add_tax($low_order_fee_value, $tax);
+              $order->info['tax'] += $xtPrice->calcTax($low_order_fee_value, $tax);
+              $order->info['tax_groups'][TAX_ADD_TAX . "$tax_description"] += $xtPrice->calcTax($low_order_fee_value, $tax);
+              $order->info['total'] += $low_order_fee_value + $xtPrice->calcTax($low_order_fee_value, $tax);
+              $low_order_fee = $xtPrice->xtcAddTax($low_order_fee_value, $tax);
               $order->info['subtotal'] += $low_order_fee;
             }
         
@@ -95,8 +91,8 @@
         
             {
               $low_order_fee = $low_order_fee_value;
-              $order->info['tax'] += xtc_calculate_tax($low_order_fee_value, $tax);
-              $order->info['tax_groups'][TAX_NO_TAX . "$tax_description"] += xtc_calculate_tax($low_order_fee_value, $tax);
+              $order->info['tax'] += $xtPrice->calcTax($low_order_fee_value, $tax);
+              $order->info['tax_groups'][TAX_NO_TAX . "$tax_description"] += $xtPrice->calcTax($low_order_fee_value, $tax);
               $order->info['subtotal'] += $low_order_fee;
               $order->info['total'] += $low_order_fee;
             }
@@ -108,9 +104,11 @@
             $order->info['total'] += $low_order_fee;
           }
           
-          $this->output[] = array('title' => $this->title . ':',
-                                  'text' => $xtPrice->xtcFormat($low_order_fee, true),
-                                  'value' => $low_order_fee);
+          $this->output[] = array(
+            'title' => $this->title . ':',
+            'text' => $xtPrice->xtcFormat($low_order_fee, true),
+            'value' => $low_order_fee
+          );
         }
       }
     }

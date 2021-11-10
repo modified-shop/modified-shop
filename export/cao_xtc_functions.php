@@ -2431,7 +2431,6 @@ function OrderUpdate ()
           }
 
           // require functionblock for mails
-          require_once(DIR_FS_INC . 'xtc_add_tax.inc.php');
           require_once(DIR_FS_INC . 'xtc_not_null.inc.php');
           require_once(DIR_FS_INC . 'xtc_href_link.inc.php');
           require_once(DIR_FS_INC . 'xtc_date_long.inc.php');
@@ -2625,7 +2624,6 @@ function CustomersUpdate ()
   if (SEND_ACCOUNT_MAIL==true && $mode=='APPEND' && $sql_customers_data_array['customers_email_address']!='')
   {
     // generate mail for customer if customer=new
-    require_once(DIR_FS_INC . 'xtc_add_tax.inc.php');
     require_once(DIR_FS_INC . 'xtc_not_null.inc.php');
     require_once(DIR_FS_INC . 'xtc_href_link.inc.php');
     require_once(DIR_FS_INC . 'xtc_date_long.inc.php');

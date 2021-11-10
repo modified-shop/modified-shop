@@ -345,7 +345,7 @@
     }
 
     function before_process() {
-      global $order, $order_totals, $payment, $currencies;
+      global $order, $xtPrice, $order_totals, $payment, $currencies;
       global ${$payment};
 
       $order_id = substr($_SESSION['cart_Worldpay_Junior_ID'], strpos($_SESSION['cart_Worldpay_Junior_ID'], '-')+1);
@@ -485,7 +485,7 @@
         }
         //------insert customer choosen option eof ----
         $total_weight += ($order->products[$i]['qty'] * $order->products[$i]['weight']);
-        $total_tax += xtc_calculate_tax($total_products_price, $products_tax) * $order->products[$i]['qty'];
+        $total_tax += $xtPrice->calcTax($total_products_price, $products_tax) * $order->products[$i]['qty'];
         $total_cost += $total_products_price;
 
         $products_ordered .= $order->products[$i]['qty'] . ' x ' . $order->products[$i]['name'] . ' (' . $order->products[$i]['model'] . ') = ' . $currencies->display_price($order->products[$i]['final_price'], $order->products[$i]['tax'], $order->products[$i]['qty']) . $products_ordered_attributes . "\n";

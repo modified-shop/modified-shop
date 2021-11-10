@@ -101,7 +101,6 @@ require_once(DIR_FS_INC . 'xtc_get_ip_address.inc.php');
 require_once(DIR_FS_INC . 'xtc_setcookie.inc.php');
 require_once(DIR_FS_INC . 'xtc_validate_email.inc.php');
 require_once(DIR_FS_INC . 'xtc_not_null.inc.php');
-require_once(DIR_FS_INC . 'xtc_add_tax.inc.php');
 require_once(DIR_FS_INC . 'xtc_get_tax_rate.inc.php');
 require_once(DIR_FS_INC . 'xtc_get_qty.inc.php');
 require_once(DIR_FS_INC . 'xtc_product_link.inc.php');

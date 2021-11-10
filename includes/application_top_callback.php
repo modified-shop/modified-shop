@@ -145,9 +145,7 @@ require_once (DIR_FS_INC.'create_coupon_code.inc.php');
 require_once (DIR_FS_INC.'xtc_gv_account_update.inc.php');
 require_once (DIR_FS_INC.'xtc_get_tax_rate_from_desc.inc.php');
 require_once (DIR_FS_INC.'xtc_get_tax_rate.inc.php');
-require_once (DIR_FS_INC.'xtc_add_tax.inc.php');
 require_once (DIR_FS_INC.'xtc_cleanName.inc.php');
-require_once (DIR_FS_INC.'xtc_calculate_tax.inc.php');
 require_once (DIR_FS_INC.'xtc_input_validation.inc.php');
 
 // make a connection to the database... now

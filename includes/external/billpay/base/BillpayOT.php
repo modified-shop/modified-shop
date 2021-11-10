@@ -197,14 +197,10 @@ class BillpayOT
     }
 
     protected function calculateTax($total = NULL) {
-        global $order;
+        global $order, $xtPrice;
 
-        /** @noinspection PhpIncludeInspection */
-        if (!function_exists('xtc_calculate_tax')) { //fix #1309
-          require_once(DIR_FS_INC . 'xtc_calculate_tax.inc.php');
-        }
         $billpay_tax = xtc_get_tax_rate(constant($this->_configPrefix.'TAX_CLASS'), $order->delivery['country']['id'], $order->delivery['zone_id']);
-        $value = xtc_calculate_tax($this->calculateFee($total), $billpay_tax);
+        $value = $xtPrice->calcTax($this->calculateFee($total), $billpay_tax);
         $value = round($value, 2);
         return $value;
     }

@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: currencies.php 950 2005-05-14 16:45:21Z mz $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -16,7 +16,7 @@
    --------------------------------------------------------------*/
    
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
-
+  
   class currencies {
     var $currencies;
 
@@ -57,7 +57,7 @@
     }
 
     function display_price($products_price, $products_tax, $quantity = 1) {
-      return $this->format(xtc_add_tax($products_price, $products_tax) * $quantity);
+      $products_price = $products_price + $products_price / 100 * $products_tax;
+      return $this->format($products_price * $quantity);
     }
   }
-?>

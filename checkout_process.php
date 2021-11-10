@@ -38,7 +38,6 @@ include ('includes/application_top.php');
 defined('STOCK_LIMITED_DOWNLOADS') or define('STOCK_LIMITED_DOWNLOADS', 'false');
 
 // include needed functions
-require_once (DIR_FS_INC.'xtc_calculate_tax.inc.php');
 require_once (DIR_FS_INC.'xtc_address_label.inc.php');
 require_once (DIR_FS_INC.'ip_clearing.inc.php');
 

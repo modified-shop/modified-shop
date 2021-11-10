@@ -26,7 +26,6 @@
 
 require ('includes/application_top.php');
 
-require_once (DIR_FS_INC.'xtc_add_tax.inc.php');
 require_once (DIR_FS_INC.'xtc_validate_vatid_status.inc.php');
 require_once (DIR_FS_INC.'xtc_get_attributes_model.inc.php');
 require_once (DIR_FS_INC.'xtc_php_mail.inc.php');

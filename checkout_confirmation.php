@@ -40,7 +40,6 @@ $smarty = new Smarty;
 
 // include needed functions
 require_once (DIR_FS_INC . 'xtc_collect_posts.inc.php');
-require_once (DIR_FS_INC . 'xtc_calculate_tax.inc.php');
 require_once (DIR_FS_INC . 'xtc_display_tax_value.inc.php');
 
 require (DIR_WS_INCLUDES.'checkout_requirements.php');

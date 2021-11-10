@@ -1829,10 +1829,7 @@
    * @param mixed $tax
    * @return
    */
-  function xtc_calculate_tax($price, $tax) {
-    global $currencies;
-    return xtc_round((double)$price * (double)$tax / 100, $currencies->currencies[DEFAULT_CURRENCY]['decimal_places']);
-  }
+  require_once(DIR_FS_INC . 'xtc_calculate_tax.inc.php'); // Use existing function from "/inc/" folder
 
   /**
    * xtc_get_lang_definition()
