@@ -227,22 +227,7 @@ class xtcPrice {
     $pData = $this->priceModules->getPprice($pData, $pID);
     return $pData['products_price'];
   }
-  
-  /**
-   * Adding a tax percentage to a price
-   * This function also converts the price with currency factor,
-   * so take care to avoid double conversions!
-   *
-   * @param Double $price net price
-   * @param Double $tax tax value(%)
-   * @return Double gross price
-   */
-  function xtcAddTax($price, $tax) {
-    $price += $price / 100 * $tax;
-    $price = $this->xtcCalculateCurr($price);
-    return $this->show_price_tax ? round($price, $this->currencies[$this->actualCurr]['decimal_places']) : $price;
-  }
-  
+    
   /**
    * Returns the product sepcific discount
    *
@@ -477,18 +462,7 @@ class xtcPrice {
   function xtcCalculateCurr($price) {
     return $this->currencies[$this->actualCurr]['value'] * $price;
   }
-  
-  /**
-   * Returns the tax part of a net price
-   *
-   * @param Double $price price
-   * @param Double $tax tax value
-   * @return Double tax part
-   */
-  function calcTax($price, $tax) {
-    return $price * $tax / 100;
-  }
-  
+    
   /**
    * Removes the currency factor of a price
    *
@@ -505,6 +479,21 @@ class xtcPrice {
     }
   }
   
+  /**
+   * Adding a tax percentage to a price
+   * This function also converts the price with currency factor,
+   * so take care to avoid double conversions!
+   *
+   * @param Double $price net price
+   * @param Double $tax tax value(%)
+   * @return Double gross price
+   */
+  function xtcAddTax($price, $tax) {
+    $price += $price / 100 * $tax;
+    $price = $this->xtcCalculateCurr($price);
+    return $this->show_price_tax ? round($price, $this->currencies[$this->actualCurr]['decimal_places']) : $price;
+  }
+
   /**
    * Removes the tax from a price, e.g. to calculate a net price from gross price
    *
@@ -527,6 +516,17 @@ class xtcPrice {
   function xtcGetTax($price, $tax) {
     $tax = $price - $this->xtcRemoveTax($price, $tax);
     return $tax;
+  }
+
+  /**
+   * Returns the tax part of a net price
+   *
+   * @param Double $price price
+   * @param Double $tax tax value
+   * @return Double tax part
+   */
+  function calcTax($price, $tax) {
+    return $price * $tax / 100;
   }
   
   /**
