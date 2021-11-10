@@ -22,7 +22,7 @@
   define('MODULE_ORDER_TOTAL_LOWORDERFEE_STATUS_DESC','M&ouml;chten Sie sich den Mindermengenzuschlag ansehen?');
   
   define('MODULE_ORDER_TOTAL_LOWORDERFEE_SORT_ORDER_TITLE','Sortierreihenfolge');
-  define('MODULE_ORDER_TOTAL_LOWORDERFEE_SORT_ORDER_DESC','Anzeigereihenfolge.');
+  define('MODULE_ORDER_TOTAL_LOWORDERFEE_SORT_ORDER_DESC','Anzeigereihenfolge');
   
   define('MODULE_ORDER_TOTAL_LOWORDERFEE_LOW_ORDER_FEE_TITLE','Mindermengenzuschlag erlauben');
   define('MODULE_ORDER_TOTAL_LOWORDERFEE_LOW_ORDER_FEE_DESC','M&ouml;chten Sie Mindermengenzuschl&auml;ge erlauben?');
