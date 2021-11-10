@@ -1823,15 +1823,6 @@
   }
 
   /**
-   * xtc_calculate_tax()
-   *
-   * @param mixed $price
-   * @param mixed $tax
-   * @return
-   */
-  require_once(DIR_FS_INC . 'xtc_calculate_tax.inc.php'); // Use existing function from "/inc/" folder
-
-  /**
    * xtc_get_lang_definition()
    *
    * @param mixed $search_lang
