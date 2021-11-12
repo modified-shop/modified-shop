@@ -1222,10 +1222,13 @@
     $db = xtc_db_fetch_array($db_query);
 
     //get server uptime on Windows & Unix/Linux systems
-    if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-      $uptime = @exec("net statistics srv | find /i \"Stat\"");
-    } else {
-      $uptime = @exec('uptime');
+    $uptime = 'n/a';
+    if (function_exists('exec')) {
+      if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+        $uptime = @exec("net statistics srv | find /i \"Stat\"");
+      } else {
+        $uptime = @exec('uptime');
+      }
     }
 
     return array (
