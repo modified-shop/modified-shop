@@ -541,6 +541,9 @@ class categories {
         $messageStack->add_session(TEXT_STOCK_UPDATE_ERROR, 'error');
       }
     }
+
+    //new module support
+    $this->catModules->update_product($products_data);
     
     return array('error' => true,
                  'products_id' => $products_id
