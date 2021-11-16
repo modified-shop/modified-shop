@@ -25,10 +25,6 @@
   $discount = $qty = 0;
   $total = 0.0;
 
-  // include needed files
-  require_once (DIR_FS_INC.'xtc_recalculate_price.inc.php');
-
-
   if ($_SESSION['cart']->count_contents() > 0) {
 
     $total = $_SESSION['cart']->show_total();
