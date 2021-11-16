@@ -39,7 +39,6 @@ $smarty = new Smarty;
 
 // include needed functions
 require_once (DIR_FS_INC.'xtc_validate_password.inc.php');
-require_once (DIR_FS_INC.'xtc_array_to_string.inc.php');
 require_once (DIR_FS_INC.'xtc_write_user_info.inc.php');
 require_once (DIR_FS_INC.'write_customers_session.inc.php');
 

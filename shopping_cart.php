@@ -33,9 +33,6 @@ $smarty = new Smarty;
 // include boxes
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
-// include needed functions
-require_once (DIR_FS_INC.'xtc_array_to_string.inc.php');
-
 $breadcrumb->add(NAVBAR_TITLE_SHOPPING_CART, xtc_href_link(FILENAME_SHOPPING_CART, '', $request_type));
 
 if (ACTIVATE_GIFT_SYSTEM == 'true') {

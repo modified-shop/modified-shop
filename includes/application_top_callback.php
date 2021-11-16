@@ -133,19 +133,16 @@ require_once (DIR_FS_INC.'xtc_get_uprid.inc.php');
 require_once (DIR_FS_INC.'xtc_get_all_get_params.inc.php');
 require_once (DIR_FS_INC.'xtc_has_product_attributes.inc.php');
 require_once (DIR_FS_INC.'xtc_image.inc.php');
-require_once (DIR_FS_INC.'xtc_check_stock_attributes.inc.php');
 require_once (DIR_FS_INC.'xtc_currency_exists.inc.php');
 require_once (DIR_FS_INC.'xtc_remove_non_numeric.inc.php');
 require_once (DIR_FS_INC.'xtc_get_ip_address.inc.php');
 require_once (DIR_FS_INC.'xtc_setcookie.inc.php');
 require_once (DIR_FS_INC.'xtc_check_agent.inc.php');
-require_once (DIR_FS_INC.'xtc_count_cart.inc.php');
 require_once (DIR_FS_INC.'xtc_get_qty.inc.php');
 require_once (DIR_FS_INC.'create_coupon_code.inc.php');
 require_once (DIR_FS_INC.'xtc_gv_account_update.inc.php');
 require_once (DIR_FS_INC.'xtc_get_tax_rate_from_desc.inc.php');
 require_once (DIR_FS_INC.'xtc_get_tax_rate.inc.php');
-require_once (DIR_FS_INC.'xtc_cleanName.inc.php');
 require_once (DIR_FS_INC.'xtc_input_validation.inc.php');
 
 // make a connection to the database... now
