@@ -159,6 +159,12 @@ class categoriesModules {
         $this->secure_call_module_method($product_id);
     }
 
+    function update_product($products_data)
+    {
+        $this->function_call = 'update_product';
+        $this->secure_call_module_method($products_data);
+    }
+
     function remove_product($products_id)
     {
         $this->function_call = 'remove_product';
