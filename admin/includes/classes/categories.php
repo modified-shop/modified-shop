@@ -543,7 +543,7 @@ class categories {
     }
 
     //new module support
-    $this->catModules->update_product($products_data);
+    $this->catModules->update_product($products_data, $products_id);
     
     return array('error' => true,
                  'products_id' => $products_id

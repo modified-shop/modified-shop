@@ -74,34 +74,34 @@ class categoriesModules {
     }
 
     //----- CATEGORIES FUNCTIONS -----//
-    function insert_category_before($sql_data_array,$categories_data)
+    function insert_category_before($sql_data_array, $categories_data)
     {
         $this->function_call = 'insert_category_before';
-        return $this->call_module_method($sql_data_array,$categories_data); //Return parameter must be in first place
+        return $this->call_module_method($sql_data_array, $categories_data);
     }
 
-    function insert_category_after($categories_data,$categories_id)
+    function insert_category_after($categories_data, $categories_id)
     {
         $this->function_call = 'insert_category_after';
-        $this->secure_call_module_method($categories_data,$categories_id);
+        $this->secure_call_module_method($categories_data, $categories_id);
     }
 
-    function insert_category_desc($sql_data_array,$categories_data,$categories_id,$language_id)
+    function insert_category_desc($sql_data_array, $categories_data, $categories_id, $language_id)
     {
         $this->function_call = 'insert_category_desc';
-        return $this->call_module_method($sql_data_array,$categories_data,$categories_id,$language_id); //Return parameter must be in first place
+        return $this->call_module_method($sql_data_array, $categories_data, $categories_id, $language_id);
     }
 
-    function copy_category($sql_data_array,$src_category_id,$dest_category_id,$ctype)
+    function copy_category($sql_data_array, $src_category_id, $dest_category_id, $ctype)
     {
         $this->function_call = 'copy_category';
-        return $this->call_module_method($sql_data_array,$src_category_id,$dest_category_id,$ctype); //Return parameter must be in first place
+        return $this->call_module_method($sql_data_array, $src_category_id, $dest_category_id, $ctype);
     }
 
-    function copy_category_desc($sql_data_array,$src_category_id,$dest_category_id,$ctype,$new_cat_id)
+    function copy_category_desc($sql_data_array, $src_category_id, $dest_category_id, $ctype, $new_cat_id)
     {
         $this->function_call = 'copy_category_desc';
-        return $this->call_module_method($sql_data_array,$src_category_id,$dest_category_id,$ctype,$new_cat_id); //Return parameter must be in first place
+        return $this->call_module_method($sql_data_array, $src_category_id, $dest_category_id, $ctype, $new_cat_id);
     }
 
     function move_category($src_category_id, $dest_category_id)
@@ -135,22 +135,22 @@ class categoriesModules {
     }
 
     //----- PRODUCTS FUNCTIONS -----//
-    function insert_product_before($sql_data_array,$products_data)
+    function insert_product_before($sql_data_array, $products_data)
     {
         $this->function_call = 'insert_product_before';
-        return $this->call_module_method($sql_data_array,$products_data); //Return parameter must be in first place
+        return $this->call_module_method($sql_data_array, $products_data);
     }
 
-    function insert_product_after($products_data,$products_id)
+    function insert_product_after($products_data, $products_id)
     {
         $this->function_call = 'insert_product_after';
-        $this->secure_call_module_method($products_data,$products_id);
+        $this->secure_call_module_method($products_data, $products_id);
     }
 
-    function insert_product_desc($sql_data_array,$products_data,$products_id,$language_id)
+    function insert_product_desc($sql_data_array, $products_data, $products_id, $language_id)
     {
         $this->function_call = 'insert_product_desc';
-        return $this->call_module_method($sql_data_array,$products_data,$products_id,$language_id); //Return parameter must be in first place
+        return $this->call_module_method($sql_data_array, $products_data, $products_id, $language_id);
     }
 
     function insert_product_end($product_id)
@@ -159,10 +159,10 @@ class categoriesModules {
         $this->secure_call_module_method($product_id);
     }
 
-    function update_product($products_data)
+    function update_product($products_data, $products_id)
     {
         $this->function_call = 'update_product';
-        $this->secure_call_module_method($products_data);
+        $this->secure_call_module_method($products_data, $products_id);
     }
 
     function remove_product($products_id)
@@ -171,28 +171,28 @@ class categoriesModules {
         $this->secure_call_module_method($products_id);
     }
 
-    function delete_product($product_id,$product_categories)
+    function delete_product($product_id, $product_categories)
     {
         $this->function_call = 'delete_product';
-        $this->secure_call_module_method($product_id,$product_categories);
+        $this->secure_call_module_method($product_id, $product_categories);
     }
 
-    function duplicate_product_before($sql_data_array,$src_products_id,$dest_categories_id)
+    function duplicate_product_before($sql_data_array, $src_products_id, $dest_categories_id)
     {
         $this->function_call = 'duplicate_product_before';
-        return $this->call_module_method($sql_data_array,$src_products_id,$dest_categories_id); //Return parameter must be in first place
+        return $this->call_module_method($sql_data_array, $src_products_id, $dest_categories_id);
     }
 
-    function duplicate_product_after($sql_data_array,$src_products_id,$dest_categories_id,$dup_products_id)
+    function duplicate_product_after($sql_data_array, $src_products_id, $dest_categories_id, $dup_products_id)
     {
         $this->function_call = 'duplicate_product_after';
-        return $this->call_module_method($sql_data_array,$src_products_id,$dest_categories_id,$dup_products_id); //Return parameter must be in first place
+        return $this->call_module_method($sql_data_array, $src_products_id, $dest_categories_id, $dup_products_id);
     }
 
-    function duplicate_product_desc($sql_data_array,$src_products_id,$dest_categories_id,$dup_products_id)
+    function duplicate_product_desc($sql_data_array, $src_products_id, $dest_categories_id, $dup_products_id)
     {
         $this->function_call = 'duplicate_product_desc';
-        return $this->call_module_method($sql_data_array,$src_products_id,$dest_categories_id,$dup_products_id); //Return parameter must be in first place
+        return $this->call_module_method($sql_data_array, $src_products_id, $dest_categories_id, $dup_products_id);
     }
     
     function duplicate_product_end($product_id) 
@@ -204,18 +204,18 @@ class categoriesModules {
     function image_name($image_name, $id, $counter, $suffix, $name_arr, $srcID, $data_arr)
     {
         $this->function_call = 'image_name';
-        return $this->call_module_method($image_name, $id, $counter, $suffix, $name_arr, $srcID, $data_arr); //Return parameter must be in first place
+        return $this->call_module_method($image_name, $id, $counter, $suffix, $name_arr, $srcID, $data_arr);
     }
     
-    function saveSpecialsData($sql_data_array,$products_data)
+    function saveSpecialsData($sql_data_array, $products_data)
     {
         $this->function_call = 'saveSpecialsData';
-        return $this->call_module_method($sql_data_array,$products_data);  //Return parameter must be in first place
+        return $this->call_module_method($sql_data_array, $products_data); 
     }
     
-    function insert_mo_images_after($products_data,$iImg,$products_id)
+    function insert_mo_images_after($products_data, $iImg, $products_id)
     {
         $this->function_call = 'insert_mo_images_after';
-        $this->secure_call_module_method($products_data,$iImg,$products_id);  //Return parameter must be in first place
+        $this->secure_call_module_method($products_data, $iImg, $products_id); 
     }   
 }
