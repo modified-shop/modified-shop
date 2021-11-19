@@ -555,10 +555,10 @@
         preg_match_all("![0-9]{1,5}[/ \- 0-9 a-z A-Z]*!m", $street_address, $matches, PREG_SET_ORDER);
       }
       $addr = end($matches);
-    
+      
       return array(
-        'street_name' => trim(str_replace(trim($addr[0]), '', $street_address), ', '),
-        'street_number' => trim($addr[0]),
+        'street_name' => ((isset($addr[0])) ? trim(str_replace(trim($addr[0]), '', $street_address), ', ') : $street_address),
+        'street_number' => ((isset($addr[0])) ? trim($addr[0]) : ''),
       );
     }
 
