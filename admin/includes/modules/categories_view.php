@@ -147,11 +147,7 @@
   $catsort .= ', c.categories_id ASC';
   $prodsort .= ', p.products_id ASC';
   
-  $category_query_name = xtc_db_query("SELECT categories_name
-                                         FROM " . TABLE_CATEGORIES_DESCRIPTION . "
-                                        WHERE categories_id = '" . $current_category_id . "'
-                                          AND language_id = " . (int)$_SESSION['languages_id']);
-  $category_name = xtc_db_fetch_array($category_query_name);
+  $category_name = xtc_get_category_data($current_category_id);
   ?>
   <!-- categories_view HTML part begin -->
       <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_categories.png'); ?></div>
@@ -751,20 +747,7 @@
                 $heading[]  = array('text' => '<b>' . TEXT_INFO_HEADING_MOVE_ELEMENTS . '</b>');
                 if (isset($_POST['multi_categories']) && is_array($_POST['multi_categories'])) {
                   foreach ($_POST['multi_categories'] AS $multi_category) {
-                    $category_query = xtc_db_query("SELECT c.categories_id,
-                                                           cd.categories_name,
-                                                           c.categories_image,
-                                                           c.parent_id,
-                                                           c.sort_order,
-                                                           c.date_added,
-                                                           c.last_modified,
-                                                           c.categories_status
-                                                      FROM " . TABLE_CATEGORIES . " AS c,
-                                                           " . TABLE_CATEGORIES_DESCRIPTION . " AS cd
-                                                     WHERE c.categories_id = '" . (int)$multi_category . "'
-                                                       AND c.categories_id = cd.categories_id
-                                                       AND cd.language_id = '" . (int)$_SESSION['languages_id'] . "'");
-                    $category = xtc_db_fetch_array($category_query);
+                    $category = xtc_get_category_data($multi_category);
                     $category_childs   = array('childs_count'   => $catfunc->count_category_childs($multi_category));
                     $category_products = array('products_count' => $catfunc->count_category_products($multi_category, true));
                     $cInfo_array = array_merge($category, $category_childs, $category_products);
@@ -815,20 +798,7 @@
 
                 if (isset($_POST['multi_categories']) && is_array($_POST['multi_categories'])) {
                   foreach ($_POST['multi_categories'] AS $multi_category) {
-                    $category_query = xtc_db_query("SELECT c.categories_id,
-                                                           cd.categories_name,
-                                                           c.categories_image,
-                                                           c.parent_id,
-                                                           c.sort_order,
-                                                           c.date_added,
-                                                           c.last_modified,
-                                                           c.categories_status
-                                                      FROM " . TABLE_CATEGORIES . " AS c,
-                                                           " . TABLE_CATEGORIES_DESCRIPTION . " AS cd
-                                                     WHERE c.categories_id = '" . (int)$multi_category . "'
-                                                       AND c.categories_id = cd.categories_id
-                                                       AND cd.language_id = '" . (int)$_SESSION['languages_id'] . "'");
-                    $category = xtc_db_fetch_array($category_query);
+                    $category = xtc_get_category_data($multi_category);
                     $category_childs   = array('childs_count'   => $catfunc->count_category_childs($multi_category));
                     $category_products = array('products_count' => $catfunc->count_category_products($multi_category, true));
                     $cInfo_array = array_merge($category, $category_childs, $category_products);
@@ -875,20 +845,7 @@
                 $contents[] = array('text' => '<hr noshade>');
                 if (isset($_POST['multi_categories']) && is_array($_POST['multi_categories'])) {
                   foreach ($_POST['multi_categories'] AS $multi_category) {
-                    $category_query = xtc_db_query("SELECT c.categories_id,
-                                                           cd.categories_name,
-                                                           c.categories_image,
-                                                           c.parent_id,
-                                                           c.sort_order,
-                                                           c.date_added,
-                                                           c.last_modified,
-                                                           c.categories_status
-                                                      FROM " . TABLE_CATEGORIES . " AS c,
-                                                           " . TABLE_CATEGORIES_DESCRIPTION . " AS cd
-                                                     WHERE c.categories_id = '" . (int)$multi_category . "'
-                                                       AND c.categories_id = cd.categories_id
-                                                       AND cd.language_id = '" . (int)$_SESSION['languages_id'] . "'");
-                    $category = xtc_db_fetch_array($category_query);
+                    $category = xtc_get_category_data($multi_category);
                     $category_childs   = array('childs_count'   => $catfunc->count_category_childs($multi_category));
                     $category_products = array('products_count' => $catfunc->count_category_products($multi_category, true));
                     $cInfo_array = array_merge($category, $category_childs, $category_products);
