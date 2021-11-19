@@ -98,7 +98,7 @@
   }
 
   /* get products name */
-  function getProductsName() {
+  function getMatomoProductsName() {
     global $piwik_language_id;
 
     $products_id = xtc_get_prid($_GET['products_id']);
