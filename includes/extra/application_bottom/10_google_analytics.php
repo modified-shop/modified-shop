@@ -128,9 +128,9 @@
       $_SESSION['tracking']['order'][] = 'GA-'.$last_order;
     
       if (TRACKING_GOOGLEANALYTICS_UNIVERSAL == 'false') {
-        $orderCode = getOrderDetailsAnalytics();
+        $orderCode = getAnalyticsOrder();
       } else {
-        $orderCode = getOrderDetailsAnalyticsUniversal();
+        $orderCode = getAnalyticsUniversalOrder();
       }
     }
 
@@ -144,7 +144,7 @@
    * @global <type> $last_order
    * @return string Code for the eCommerce tracking
    */
-  function getOrderDetailsAnalytics() {
+  function getAnalyticsOrder() {
     global $last_order;
   
     $total = get_order_total($last_order);
@@ -250,7 +250,7 @@
    * @global <type> $last_order
    * @return string Code for the eCommerce tracking
    */
-  function getOrderDetailsAnalyticsUniversal() {
+  function getAnalyticsUniversalOrder() {
     global $last_order; // from checkout_success.php
 
     $total = get_order_total($last_order);
