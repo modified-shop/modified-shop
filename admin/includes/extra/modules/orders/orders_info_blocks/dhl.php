@@ -114,8 +114,8 @@
               <tr class="dhl_expand dhl_toggle">
                 <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_PARCEL_OUTLET; ?></td>
                 <td style="padding:5px;border-width: 0 1px 1px 0;"><?php echo xtc_draw_pull_down_menu('parcel_outlet', 'checkbox', ((MODULE_DHL_PARCEL_OUTLET == 'True') ? true : false), 'style="width:120px;"'); ?></td>
-                <td style="padding:5px;border-width: 0 0 1px 0;"></td>
-                <td style="padding:5px;border-width: 0 1px 1px 0;"></td>
+                <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_PREMIUM; ?></td>
+                <td style="padding:5px;border-width: 0 1px 1px 0;"><?php echo xtc_draw_pull_down_menu('premium', 'checkbox', ((MODULE_DHL_PREMIUM == 'True') ? true : false), 'style="width:120px;"'); ?></td>
                 <td style="padding:5px;border-width: 0 0 1px 0;"></td>
                 <td style="padding:5px;border-width: 0 0 1px 0;"></td>
               </tr>
