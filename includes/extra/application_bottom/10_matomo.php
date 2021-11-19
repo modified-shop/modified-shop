@@ -92,9 +92,9 @@
     $cPath_array = explode('_', $_GET['cPath']);
   
     $categories_id = array_pop($cPath_array);
-    $categories_name = get_categories_name($categories_id, $piwik_language_id);
+    $category_data = xtc_get_category_data($categories_id, $piwik_language_id);
 
-    return "        "."_paq.push(['setEcommerceView', productSku = false, productName = false, category = '".encode_htmlspecialchars($categories_name)."']);\n";
+    return "        "."_paq.push(['setEcommerceView', productSku = false, productName = false, category = '".encode_htmlspecialchars(isset($category_data['categories_name']) ? $category_data['categories_name'] : '')."']);\n";
   }
 
   /* get products name */
@@ -108,9 +108,9 @@
     $cPath_array = explode('_', $cPath);
   
     $categories_id = array_pop($cPath_array);
-    $categories_name = get_categories_name($categories_id, $piwik_language_id);
+    $category_data = xtc_get_category_data($categories_id, $piwik_language_id);
   
-    return "        "."_paq.push(['setEcommerceView', '".$products_id."', '".encode_htmlspecialchars($products_name)."', '".encode_htmlspecialchars($categories_name)."']);\n";
+    return "        "."_paq.push(['setEcommerceView', '".$products_id."', '".encode_htmlspecialchars($products_name)."', '".encode_htmlspecialchars(isset($category_data['categories_name']) ? $category_data['categories_name'] : '')."']);\n";
   }
 
   /* get shopping cart contents */
@@ -126,9 +126,9 @@
         $cPath_array = explode('_', $cPath);
       
         $categories_id = array_pop($cPath_array);
-        $categories_name = get_categories_name($categories_id, $piwik_language_id);
+        $category_data = xtc_get_category_data($categories_id, $piwik_language_id);
 
-        $return_string .= "        "."_paq.push(['addEcommerceItem', '".(int)$products[$i]['id']."', '".encode_htmlspecialchars($products[$i]['name'])."', '".encode_htmlspecialchars($categories_name)."', '".formatMatomoPrice($products[$i]['final_price'])."', '". (int)$products[$i]['quantity']."']);\n";
+        $return_string .= "        "."_paq.push(['addEcommerceItem', '".(int)$products[$i]['id']."', '".encode_htmlspecialchars($products[$i]['name'])."', '".encode_htmlspecialchars(isset($category_data['categories_name']) ? $category_data['categories_name'] : '')."', '".formatMatomoPrice($products[$i]['final_price'])."', '". (int)$products[$i]['quantity']."']);\n";
       }
       $return_string .= "        "."_paq.push(['trackEcommerceCartUpdate', '".formatMatomoPrice($_SESSION['cart']->show_total())."']);\n";
     }
@@ -173,9 +173,9 @@
         $cPath_array = explode('_', $cPath);
       
         $categories_id = array_pop($cPath_array);
-        $categories_name = get_categories_name($categories_id, $piwik_language_id);
-
-        $return_string .= "        "."_paq.push(['addEcommerceItem', '".(int)$order_products['products_id']."', '".encode_htmlspecialchars($order_products['products_name'])."', '".encode_htmlspecialchars($categories_name)."', '".formatMatomoPrice($order_products['final_price'])."', '".(int)$order_products['products_quantity']."']);\n";
+        $category_data = xtc_get_category_data($categories_id, $piwik_language_id);
+        
+        $return_string .= "        "."_paq.push(['addEcommerceItem', '".(int)$order_products['products_id']."', '".encode_htmlspecialchars($order_products['products_name'])."', '".encode_htmlspecialchars(isset($category_data['categories_name']) ? $category_data['categories_name'] : '')."', '".formatMatomoPrice($order_products['final_price'])."', '".(int)$order_products['products_quantity']."']);\n";
       }
       $return_string .= "        "."_paq.push(['trackEcommerceOrder', '".(int)$order['orders_id']."', '".(isset($total['ot_total']) ? formatMatomoPrice($total['ot_total']) : 0)."', '".(isset($total['ot_subtotal']) ? formatMatomoPrice($total['ot_subtotal']) : 0)."', '".(isset($total['ot_tax']) ? formatMatomoPrice($total['ot_tax']) : 0)."', '".(isset($total['ot_shipping']) ? formatMatomoPrice($total['ot_shipping']) : 0)."', '".(isset($total['ot_payment']) ? formatMatomoPrice($total['ot_payment']) : 0)."']);\n";
     }
@@ -195,15 +195,3 @@
   function formatMatomoPrice($price) {      
     return number_format($price, 2, '.', '');
   }
-
-  /* get categories_name */
-  function get_categories_name($categories_id, $language_id) {
-    $category_query = xtc_db_query("SELECT categories_name
-                                      FROM " . TABLE_CATEGORIES_DESCRIPTION . "
-                                     WHERE categories_id = '".(int)$categories_id."'
-                                       AND language_id = '".(int)$language_id."'");
-    $category = xtc_db_fetch_array($category_query);
-  
-    return $category['categories_name'];
-  }
-?>

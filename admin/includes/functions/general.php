@@ -583,6 +583,15 @@
   }
 
   /**
+   * xtc_get_category_data()
+   *
+   * @param mixed $category_id
+   * @param mixed $language_id
+   * @return
+   */
+  require_once(DIR_FS_INC . 'xtc_get_category_data.inc.php'); // Use existing function from "/inc/" folder
+
+  /**
    * xtc_get_categories_name()
    *
    * @param mixed $category_id
@@ -590,13 +599,9 @@
    * @return
    */
   function xtc_get_categories_name($category_id, $language_id) {
-    $category_query = xtc_db_query("SELECT categories_name
-                                      FROM ".TABLE_CATEGORIES_DESCRIPTION."
-                                     WHERE categories_id = '".(int)$category_id."'
-                                       AND language_id = '".(int)$language_id."'");
-    if (xtc_db_num_rows($category_query) > 0) {
-      $category = xtc_db_fetch_array($category_query);
-      return $category['categories_name'];
+    $category_data = xtc_get_category_data($category_id, $language_id);
+    if (isset($category_data['categories_name'])) {
+      return $category_data['categories_name'];
     }
   }
 
@@ -608,13 +613,9 @@
    * @return
    */
   function xtc_get_categories_heading_title($category_id, $language_id) {
-    $category_query = xtc_db_query("SELECT categories_heading_title
-                                      FROM ".TABLE_CATEGORIES_DESCRIPTION."
-                                     WHERE categories_id = '".(int)$category_id."'
-                                       AND language_id = '".(int)$language_id."'");
-    if (xtc_db_num_rows($category_query) > 0) {
-      $category = xtc_db_fetch_array($category_query);
-      return $category['categories_heading_title'];
+    $category_data = xtc_get_category_data($category_id, $language_id);
+    if (isset($category_data['categories_heading_title'])) {
+      return $category_data['categories_heading_title'];
     }
   }
 
@@ -626,13 +627,9 @@
    * @return
    */
   function xtc_get_categories_description($category_id, $language_id) {
-    $category_query = xtc_db_query("SELECT categories_description
-                                      FROM ".TABLE_CATEGORIES_DESCRIPTION."
-                                     WHERE categories_id = '".(int)$category_id."'
-                                       AND language_id = '".(int)$language_id."'");
-    if (xtc_db_num_rows($category_query) > 0) {
-      $category = xtc_db_fetch_array($category_query);
-      return $category['categories_description'];
+    $category_data = xtc_get_category_data($category_id, $language_id);
+    if (isset($category_data['categories_description'])) {
+      return $category_data['categories_description'];
     }
   }
 
@@ -644,13 +641,9 @@
    * @return
    */
   function xtc_get_categories_meta_title($category_id, $language_id) {
-    $category_query = xtc_db_query("SELECT categories_meta_title
-                                      FROM ".TABLE_CATEGORIES_DESCRIPTION."
-                                     WHERE categories_id = '".(int)$category_id."'
-                                       AND language_id = '".(int)$language_id."'");
-    if (xtc_db_num_rows($category_query) > 0) {
-      $category = xtc_db_fetch_array($category_query);
-      return $category['categories_meta_title'];
+    $category_data = xtc_get_category_data($category_id, $language_id);
+    if (isset($category_data['categories_meta_title'])) {
+      return $category_data['categories_meta_title'];
     }
   }
 
@@ -662,13 +655,9 @@
    * @return
    */
   function xtc_get_categories_meta_description($category_id, $language_id) {
-    $category_query = xtc_db_query("SELECT categories_meta_description
-                                      FROM ".TABLE_CATEGORIES_DESCRIPTION."
-                                     WHERE categories_id = '".(int)$category_id."'
-                                       AND language_id = '".(int)$language_id."'");
-    if (xtc_db_num_rows($category_query) > 0) {
-      $category = xtc_db_fetch_array($category_query);
-      return $category['categories_meta_description'];
+    $category_data = xtc_get_category_data($category_id, $language_id);
+    if (isset($category_data['categories_meta_description'])) {
+      return $category_data['categories_meta_description'];
     }
   }
 
@@ -680,13 +669,9 @@
    * @return
    */
   function xtc_get_categories_meta_keywords($category_id, $language_id) {
-    $category_query = xtc_db_query("SELECT categories_meta_keywords
-                                      FROM ".TABLE_CATEGORIES_DESCRIPTION."
-                                     WHERE categories_id = '".(int)$category_id."'
-                                       AND language_id = '".(int)$language_id."'");
-    if (xtc_db_num_rows($category_query) > 0) {
-      $category = xtc_db_fetch_array($category_query);
-      return $category['categories_meta_keywords'];
+    $category_data = xtc_get_category_data($category_id, $language_id);
+    if (isset($category_data['categories_meta_keywords'])) {
+      return $category_data['categories_meta_keywords'];
     }
   }
 
@@ -1296,14 +1281,7 @@
         if ($categories['categories_id'] == '0') {
           $categories_array[$index][] = array ('id' => '0', 'text' => TEXT_TOP);
         } else {
-          $category_query = xtc_db_query("select cd.categories_name,
-                                                 c.parent_id
-                                            FROM ".TABLE_CATEGORIES." c
-                                            JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd
-                                                 ON c.categories_id = cd.categories_id
-                                                    AND cd.language_id = '".(int)$_SESSION['languages_id']."'
-                                           WHERE c.categories_id = '".$categories['categories_id']."'");
-          $category = xtc_db_fetch_array($category_query);
+          $category = xtc_get_category_data($categories['categories_id']);          
           $categories_array[$index][] = array ('id' => $categories['categories_id'], 'text' => $category['categories_name']);
           if ((xtc_not_null($category['parent_id'])) && ($category['parent_id'] != '0')){
             $categories_array = xtc_generate_category_path($category['parent_id'], 'category', $categories_array, $index);
@@ -1313,14 +1291,7 @@
         $index ++;
       }
     } elseif ($from == 'category') {
-      $category_query = xtc_db_query("SELECT cd.categories_name,
-                                             c.parent_id
-                                        FROM ".TABLE_CATEGORIES." c
-                                        JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd
-                                             ON c.categories_id = cd.categories_id
-                                                AND cd.language_id = '".(int)$_SESSION['languages_id']."'
-                                       WHERE c.categories_id = '".(int)$id."'");
-      $category = xtc_db_fetch_array($category_query);
+      $category = xtc_get_category_data($id);  
       $categories_array[$index][] = array ('id' => $id, 'text' => $category['categories_name']);
       if ((xtc_not_null($category['parent_id'])) && ($category['parent_id'] != '0')) {
         $categories_array = xtc_generate_category_path($category['parent_id'], 'category', $categories_array, $index);
