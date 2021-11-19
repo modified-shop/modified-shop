@@ -89,37 +89,30 @@
                 <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
               <?php
-              $gv_query_raw = "SELECT c.coupon_amount, 
-                                      c.coupon_code, 
-                                      c.coupon_id, 
-                                      et.sent_firstname, 
-                                      et.sent_lastname, 
-                                      et.customer_id_sent, 
-                                      et.emailed_to, 
-                                      et.date_sent
+              $gv_query_raw = "SELECT *
                                  FROM " . TABLE_COUPONS . " c
                                  JOIN " . TABLE_COUPON_EMAIL_TRACK . " et 
                                       ON c.coupon_id = et.coupon_id
-                             ORDER BY c.coupon_id DESC";
+                             ORDER BY et.date_sent DESC";
                              
               $gv_split = new splitPageResults($page, $page_max_display_results, $gv_query_raw, $gv_query_numrows);
               $gv_query = xtc_db_query($gv_query_raw);
               while ($gv_list = xtc_db_fetch_array($gv_query)) {
-                if ((!isset($_GET['gid']) || ($_GET['gid'] == $gv_list['coupon_id'])) && !isset($gInfo)) {
-                $gInfo = new objectInfo($gv_list);
+                if ((!isset($_GET['gid']) || ($_GET['gid'] == $gv_list['unique_id'])) && !isset($gInfo)) {
+                  $gInfo = new objectInfo($gv_list);
                 }
-                if (isset($gInfo) && is_object($gInfo) && $gv_list['coupon_id'] == $gInfo->coupon_id) {
-                  $tr_attributes = 'class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_GV_SENT, xtc_get_all_get_params(array('gid', 'action')) . 'gid=' . $gInfo->coupon_id . '&action=edit') .'\'"';
+                if (isset($gInfo) && is_object($gInfo) && $gv_list['unique_id'] == $gInfo->unique_id) {
+                  $tr_attributes = 'class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_GV_SENT, xtc_get_all_get_params(array('gid', 'action')) . 'gid=' . $gInfo->unique_id . '&action=edit') .'\'"';
                 } else {
-                  $tr_attributes = 'class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_GV_SENT, xtc_get_all_get_params(array('gid', 'action')) . 'gid=' . $gv_list['coupon_id']) .'\'"';
+                  $tr_attributes = 'class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_GV_SENT, xtc_get_all_get_params(array('gid', 'action')) . 'gid=' . $gv_list['unique_id']) .'\'"';
                 }
               ?>
               <tr <?php echo $tr_attributes;?>>
                 <td class="dataTableContent"><?php echo $gv_list['sent_firstname'] . ' ' . $gv_list['sent_lastname']; ?></td>
-                <td class="dataTableContent txta-c"><?php echo $currencies->format($gv_list['coupon_amount']); ?></td>
+                <td class="dataTableContent txta-c"><?php echo (($gv_list['coupon_type'] == 'P') ? (int)$gv_list['coupon_amount'].'%' : $currencies->format($gv_list['coupon_amount'])); ?></td>
                 <td class="dataTableContent txta-c"><?php echo $gv_list['coupon_code']; ?></td>
                 <td class="dataTableContent txta-r"><?php echo xtc_date_short($gv_list['date_sent']); ?></td>
-                <td class="dataTableContent txta-r"><?php if (isset($gInfo) && is_object($gInfo) && $gv_list['coupon_id'] == $gInfo->coupon_id) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_GV_SENT, 'page=' . $page . '&gid=' . $gv_list['coupon_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent txta-r"><?php if (isset($gInfo) && is_object($gInfo) && $gv_list['coupon_id'] == $gInfo->coupon_id) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_GV_SENT, 'page=' . $page . '&gid=' . $gv_list['unique_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
             <?php
               }
@@ -144,15 +137,16 @@
                 
                 default:
                   $heading[] = array('text' => '<b>[' . $gInfo->coupon_id . '] ' . ' ' . $currencies->format($gInfo->coupon_amount).'</b>');
-                  $redeem_query = xtc_db_query("select * from " . TABLE_COUPON_REDEEM_TRACK . " where coupon_id = '" . $gInfo->coupon_id . "'");
-                  $redeemed = 'No';
-                  if (xtc_db_num_rows($redeem_query) > 0) $redeemed = 'Yes';
+                  $redeem_query = xtc_db_query("SELECT * 
+                                                  FROM " . TABLE_COUPON_REDEEM_TRACK . " 
+                                                 WHERE coupon_id = '" . $gInfo->coupon_id . "'");
+                  $redeemed = xtc_db_num_rows($redeem_query);
                   $contents[] = array('text' => TEXT_INFO_SENDERS_ID . ' ' . $gInfo->customer_id_sent);
-                  $contents[] = array('text' => TEXT_INFO_AMOUNT_SENT . ' ' . $currencies->format($gInfo->coupon_amount));
+                  $contents[] = array('text' => TEXT_INFO_AMOUNT_SENT . ' ' . (($gInfo->coupon_type == 'P') ? (int)$gInfo->coupon_amount.'%' : $currencies->format($gInfo->coupon_amount)));
                   $contents[] = array('text' => TEXT_INFO_DATE_SENT . ' ' . xtc_date_short($gInfo->date_sent));
                   $contents[] = array('text' => TEXT_INFO_VOUCHER_CODE . ' ' . $gInfo->coupon_code);
                   $contents[] = array('text' => TEXT_INFO_EMAIL_ADDRESS . ' ' . $gInfo->emailed_to);
-                  if ($redeemed=='Yes') {
+                  if ($redeemed > 0) {
                     $redeem = xtc_db_fetch_array($redeem_query);
                     $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_REDEEMED . ' ' . xtc_date_short($redeem['redeem_date']));
                     $contents[] = array('text' => TEXT_INFO_IP_ADDRESS . ' ' . $redeem['redeem_ip']);
