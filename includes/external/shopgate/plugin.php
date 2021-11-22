@@ -3820,7 +3820,6 @@ class ShopgateModifiedPlugin extends ShopgatePlugin
         }
 
         $_SESSION['customer_id'] = $userId;
-        require_once(DIR_FS_INC . 'xtc_get_order_data.inc.php');
         require_once(DIR_FS_INC . 'xtc_get_attributes_model.inc.php');
         require_once(DIR_WS_INCLUDES . "classes/order.php");
 
