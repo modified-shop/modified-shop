@@ -30,6 +30,7 @@ if (defined('RUN_MODE_ADMIN')) {
   $exclusions = array(
     'bill', 
     'haendlerbund', 
+    'logs',
     'magnalister', 
     'popup', 
     'popup_memo',
