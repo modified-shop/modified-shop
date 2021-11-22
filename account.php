@@ -101,11 +101,11 @@ if (xtc_count_customer_orders() > 0) {
                                        o.billing_name,
                                        o.billing_country,
                                        o.currency,
-                                       s.orders_status_name
+                                       os.orders_status_name
 	                                FROM ".TABLE_ORDERS." o
-	                                JOIN ".TABLE_ORDERS_STATUS." s
-	                                     ON o.orders_status = s.orders_status_id
-	                                        AND s.language_id = '".(int) $_SESSION['languages_id']."'
+	                                JOIN ".TABLE_ORDERS_STATUS." os
+	                                     ON o.orders_status = os.orders_status_id
+	                                        AND os.language_id = '".(int) $_SESSION['languages_id']."'
 	                               WHERE o.customers_id = '".(int) $_SESSION['customer_id']."'
 	                            ORDER BY o.orders_id DESC
 	                               LIMIT 3");
@@ -118,15 +118,16 @@ if (xtc_count_customer_orders() > 0) {
 			$order_name = $orders['billing_name'];
 			$order_country = $orders['billing_country'];
 		}
-		$order_content[$row] = array ('ORDER_ID' => $orders['orders_id'], 
-                                  'ORDER_DATE' => xtc_date_short($orders['date_purchased']), 
-                                  'ORDER_STATUS' => $orders['orders_status_name'], 
-                                  'ORDER_TOTAL' => xtc_format_price_order(get_order_total($orders['orders_id']), 1, $orders['currency'], 1), 
-                                  'ORDER_LINK' => xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id='.$orders['orders_id'], 'SSL'), 
-                                  'ORDER_BUTTON' => '<a href="'.xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id='.$orders['orders_id'], 'SSL').'">'.xtc_image_button('small_view.gif', SMALL_IMAGE_BUTTON_VIEW).'</a>',
-                                  'TRACKING' => get_tracking_link($orders['orders_id'], $_SESSION['language_code']),
-                                  'BUTTON_CART' => '<a href="'.xtc_href_link(FILENAME_ACCOUNT, 'action=add_order&order_id='.$orders['orders_id'], 'SSL').'">'.xtc_image_button('small_cart.gif', IMAGE_BUTTON_IN_CART).'</a>',
-                                  );
+		$order_content[$row] = array (
+		  'ORDER_ID' => $orders['orders_id'], 
+      'ORDER_DATE' => xtc_date_short($orders['date_purchased']), 
+      'ORDER_STATUS' => $orders['orders_status_name'], 
+      'ORDER_TOTAL' => xtc_format_price_order(get_order_total($orders['orders_id']), 1, $orders['currency'], 1), 
+      'ORDER_LINK' => xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id='.$orders['orders_id'], 'SSL'), 
+      'ORDER_BUTTON' => '<a href="'.xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id='.$orders['orders_id'], 'SSL').'">'.xtc_image_button('small_view.gif', SMALL_IMAGE_BUTTON_VIEW).'</a>',
+      'TRACKING' => get_tracking_link($orders['orders_id'], $_SESSION['language_code']),
+      'BUTTON_CART' => '<a href="'.xtc_href_link(FILENAME_ACCOUNT, 'action=add_order&order_id='.$orders['orders_id'], 'SSL').'">'.xtc_image_button('small_cart.gif', IMAGE_BUTTON_IN_CART).'</a>',
+    );
 
 	  if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS == 'true') {
 	    $order_content[$row]['BUTTON_CART_EXPRESS'] = '<a href="'.xtc_href_link(FILENAME_ACCOUNT, 'action=add_order&express=on&order_id='.$orders['orders_id'], 'SSL').'">'.xtc_image_button('small_express.gif', IMAGE_BUTTON_IN_CART).'</a>';
