@@ -275,15 +275,6 @@
   }
 
   /**
-   * xtc_in_array()
-   *
-   * @param mixed $value
-   * @param array $array
-   * @return boolean
-   */
-  require_once(DIR_FS_INC . 'xtc_in_array.inc.php'); // Use existing function from "/inc/" folder
-
-  /**
    * xtc_cfg_get_category_tree()
    *
    * @param string $category_id
@@ -1898,22 +1889,7 @@
    * @param mixed $gv_id
    * @return
    */
-  function xtc_gv_account_update($customer_id, $gv_id) {
-    $customer_gv_query = xtc_db_query("SELECT amount
-                                         FROM ".TABLE_COUPON_GV_CUSTOMER."
-                                        WHERE customer_id = '".(int)$customer_id."'");
-    $coupon_gv_query = xtc_db_query("SELECT coupon_amount
-                                       FROM ".TABLE_COUPONS."
-                                      WHERE coupon_id = '".(int)$gv_id."'");
-    $coupon_gv = xtc_db_fetch_array($coupon_gv_query);
-    if (xtc_db_num_rows($customer_gv_query) > 0) {
-      $customer_gv = xtc_db_fetch_array($customer_gv_query);
-      $new_gv_amount = $customer_gv['amount'] + $coupon_gv['coupon_amount'];
-      $gv_query = xtc_db_query("UPDATE ".TABLE_COUPON_GV_CUSTOMER." SET amount = '".$new_gv_amount."' WHERE customer_id = '".(int)$customer_id."'");
-    } else {
-      $gv_query = xtc_db_query("INSERT INTO ".TABLE_COUPON_GV_CUSTOMER." (customer_id, amount) VALUES ('".(int)$customer_id."', '".$coupon_gv['coupon_amount']."')");
-    }
-  }
+  require_once(DIR_FS_INC . 'xtc_gv_account_update.inc.php'); // Use existing function from "/inc/" folder
 
   /**
    * xtc_getDownloads()
