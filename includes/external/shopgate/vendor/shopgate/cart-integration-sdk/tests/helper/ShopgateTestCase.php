@@ -20,43 +20,23 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
  */
 
-namespace shopgate\cart_integration_sdk\tests\stubs;
+namespace shopgate\cart_integration_sdk\tests\helper;
 
-class ShopgateTestClass
+class ShopgateTestCase extends \PHPUnit_Framework_TestCase
 {
-    /** @noinspection PhpUnusedPrivateMethodInspection */
     /**
-     * @param string $one
+     * @param mixed  $object
+     * @param string $methodName
+     * @param array  $parameters
+     *
+     * @return mixed
      */
-    private function methodPrivate($one)
+    public function invokeNonPublicMethod($object, $methodName, array $parameters = array())
     {
-    }
+        $reflection = new \ReflectionClass(get_class($object));
+        $method     = $reflection->getMethod($methodName);
+        $method->setAccessible(true);
 
-    protected function methodProtected($one)
-    {
-    }
-
-    public function methodWithNoParameters()
-    {
-    }
-
-    public function methodWithOneParameter($one)
-    {
-    }
-
-    public function methodWithTwoParameters($one, $two = 'optional')
-    {
-    }
-
-    public function methodWithDefaultBooleanParameters($one = true, $two = false)
-    {
-    }
-
-    public function methodWithDefaultArrayParameter($one = array())
-    {
-    }
-
-    public function methodWithDefaultNullParameter($one = null)
-    {
+        return $method->invokeArgs($object, $parameters);
     }
 }

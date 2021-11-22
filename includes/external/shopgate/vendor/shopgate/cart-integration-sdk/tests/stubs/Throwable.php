@@ -20,6 +20,8 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
  */
 
+namespace shopgate\cart_integration_sdk\tests\stubs;
+
 /**
  * A copy of the Throwable interface available since PHP 7.
  *
@@ -62,7 +64,7 @@ interface ThrowableStub
     public function getTraceAsString();
 
     /**
-     * @return Throwable
+     * @return \Throwable
      */
     public function getPrevious();
 

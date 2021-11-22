@@ -19,12 +19,15 @@
  * @copyright Shopgate Inc
  * @license   http://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
  */
-class Shopgate_Helper_Error_Handling_ExceptionHandlerTest extends PHPUnit_Framework_TestCase
+
+namespace shopgate\cart_integration_sdk\tests\unit\error_handling;
+
+class ExceptionHandlerTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var PHPUnit_Framework_MockObject_MockObject|Shopgate_Helper_Logging_Stack_Trace_GeneratorInterface */
+    /** @var \PHPUnit_Framework_MockObject_MockObject|\Shopgate_Helper_Logging_Stack_Trace_GeneratorInterface */
     protected $stackTraceGenerator;
 
-    /** @var PHPUnit_Framework_MockObject_MockObject|Shopgate_Helper_Logging_Strategy_LoggingInterface */
+    /** @var \PHPUnit_Framework_MockObject_MockObject|\Shopgate_Helper_Logging_Strategy_LoggingInterface */
     protected $logging;
 
     public function setUp()
@@ -40,6 +43,7 @@ class Shopgate_Helper_Error_Handling_ExceptionHandlerTest extends PHPUnit_Framew
 
     public function testStackTraceGeneratorAndLoggerCalledOnShopgateLibraryException()
     {
+        /** @var \ShopgateLibraryException $exception */
         $exception = $this
             ->getMockBuilder('ShopgateLibraryException')
             ->disableOriginalConstructor()
@@ -57,13 +61,13 @@ class Shopgate_Helper_Error_Handling_ExceptionHandlerTest extends PHPUnit_Framew
             ->expects($this->once())
             ->method('log')
             ->with(
-                new PHPUnit_Framework_Constraint_IsAnything(), // message
-                Shopgate_Helper_Logging_Strategy_LoggingInterface::LOGTYPE_ERROR,
+                new \PHPUnit_Framework_Constraint_IsAnything(), // message
+                \Shopgate_Helper_Logging_Strategy_LoggingInterface::LOGTYPE_ERROR,
                 $stackTrace
             )
             ->willReturn(true);
 
-        $SUT = new Shopgate_Helper_Error_Handling_ExceptionHandler($this->stackTraceGenerator, $this->logging);
+        $SUT = new \Shopgate_Helper_Error_Handling_ExceptionHandler($this->stackTraceGenerator, $this->logging);
         $SUT->handle($exception);
     }
 
@@ -72,7 +76,7 @@ class Shopgate_Helper_Error_Handling_ExceptionHandlerTest extends PHPUnit_Framew
         $this->stackTraceGenerator->expects($this->never())->method('generate');
         $this->logging->expects($this->never())->method('log');
 
-        $SUT = new Shopgate_Helper_Error_Handling_ExceptionHandler($this->stackTraceGenerator, $this->logging);
-        $SUT->handle(new Exception());
+        $SUT = new \Shopgate_Helper_Error_Handling_ExceptionHandler($this->stackTraceGenerator, $this->logging);
+        $SUT->handle(new \Exception());
     }
 }

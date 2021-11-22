@@ -114,17 +114,17 @@
     },
     {
         "name": "shopgate/cart-integration-sdk",
-        "version": "2.9.69",
-        "version_normalized": "2.9.69.0",
+        "version": "2.9.70",
+        "version_normalized": "2.9.70.0",
         "source": {
             "type": "git",
             "url": "https://github.com/shopgate/cart-integration-sdk.git",
-            "reference": "4d0401ded1121a2d3e0bed47c509fb9cd34078a2"
+            "reference": "4b82a99aac1d373585a115fd79bb333af7a37285"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/shopgate/cart-integration-sdk/zipball/4d0401ded1121a2d3e0bed47c509fb9cd34078a2",
-            "reference": "4d0401ded1121a2d3e0bed47c509fb9cd34078a2",
+            "url": "https://api.github.com/repos/shopgate/cart-integration-sdk/zipball/4b82a99aac1d373585a115fd79bb333af7a37285",
+            "reference": "4b82a99aac1d373585a115fd79bb333af7a37285",
             "shasum": ""
         },
         "require": {

@@ -19,9 +19,12 @@
  * @copyright Shopgate Inc
  * @license   http://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
  */
-class Shopgate_Helper_Redirect_KeywordsManagerTest extends PHPUnit_Framework_TestCase
+
+namespace shopgate\cart_integration_sdk\tests\unit\redirect;
+
+class KeywordsManagerTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var ShopgateMerchantApiInterface|PHPUnit_Framework_MockObject_MockObject $merchantApi */
+    /** @var \ShopgateMerchantApiInterface|\PHPUnit_Framework_MockObject_MockObject $merchantApi */
     protected $merchantApi;
 
     /** @var string[] */
@@ -32,7 +35,7 @@ class Shopgate_Helper_Redirect_KeywordsManagerTest extends PHPUnit_Framework_Tes
 
     public function setUp()
     {
-        /** @var ShopgateMerchantApiInterface|PHPUnit_Framework_MockObject_MockObject $merchantApi */
+        /** @var \ShopgateMerchantApiInterface|\PHPUnit_Framework_MockObject_MockObject $merchantApi */
         $this->merchantApi = $this->getMockForAbstractClass('ShopgateMerchantApiInterface');
 
         $this->merchantApi->method('getMobileRedirectUserAgents')->will(
@@ -92,7 +95,7 @@ class Shopgate_Helper_Redirect_KeywordsManagerTest extends PHPUnit_Framework_Tes
 
     public function testRegexMatchesWhitelistedUserAgents()
     {
-        $keywordsManager = new Shopgate_Helper_Redirect_KeywordsManager(
+        $keywordsManager = new \Shopgate_Helper_Redirect_KeywordsManager(
             $this->merchantApi,
             '/dev/null',
             '/dev/null'
@@ -110,7 +113,7 @@ class Shopgate_Helper_Redirect_KeywordsManagerTest extends PHPUnit_Framework_Tes
 
     public function testRegexDoesNotMatchBlacklistedUserAgents()
     {
-        $keywordsManager = new Shopgate_Helper_Redirect_KeywordsManager(
+        $keywordsManager = new \Shopgate_Helper_Redirect_KeywordsManager(
             $this->merchantApi,
             '/dev/null',
             '/dev/null'

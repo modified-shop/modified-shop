@@ -20,14 +20,16 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
  */
 
+namespace shopgate\cart_integration_sdk\tests\unit;
+
 /**
  * @group              Shopgate_Library
  *
  * @coversDefaultClass ShopgateObject
  */
-class ShopgateObjectTest extends PHPUnit_Framework_TestCase
+class ShopgateObjectTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var ShopgateObject $subjectUnderTest */
+    /** @var \ShopgateObject $subjectUnderTest */
     protected $subjectUnderTest;
 
     public function setUp()
@@ -64,7 +66,7 @@ class ShopgateObjectTest extends PHPUnit_Framework_TestCase
                 null,
                 'abcd',
             ),
-            'quoted string'            => array(
+            'quoted string'     => array(
                 'abcd',
                 '"abcd"',
             ),

@@ -21,24 +21,20 @@
  */
 class ShopgatePluginApi extends ShopgateObject implements ShopgatePluginApiInterface
 {
-    /**
-     * @var ShopgatePlugin
-     */
+    const JOB_SET_SHIPPING_COMPLETED = 'set_shipping_completed';
+    const JOB_CANCEL_ORDERS          = 'cancel_orders';
+    const JOB_CLEAN_ORDERS           = 'clean_orders';
+
+    /** @var ShopgatePlugin */
     protected $plugin;
 
-    /**
-     * @var ShopgateConfigInterface
-     */
+    /** @var ShopgateConfigInterface */
     protected $config;
 
-    /**
-     * @var ShopgateMerchantApiInterface
-     */
+    /** @var ShopgateMerchantApiInterface */
     protected $merchantApi;
 
-    /**
-     * @var ShopgateAuthenticationServiceInterface
-     */
+    /** @var ShopgateAuthenticationServiceInterface */
     protected $authService;
 
     /**
@@ -48,19 +44,16 @@ class ShopgatePluginApi extends ShopgateObject implements ShopgatePluginApiInter
      */
     protected $params;
 
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     protected $actionWhitelist;
 
-    /**
-     * @var mixed
-     */
+    /** @var string[] */
+    protected $cronJobWhiteList;
+
+    /** @var mixed */
     protected $responseData;
 
-    /**
-     * @var ShopgatePluginApiResponse
-     */
+    /** @var ShopgatePluginApiResponse */
     protected $response;
 
     /** @var bool */
@@ -73,24 +66,16 @@ class ShopgatePluginApi extends ShopgateObject implements ShopgatePluginApiInter
      */
     protected $exportActionList;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     protected $authlessActionWhitelist;
 
-    /**
-     * @var string The trace ID of the incoming request.
-     */
+    /** @var string The trace ID of the incoming request. */
     protected $trace_id;
 
-    /**
-     * @var Shopgate_Helper_Logging_Stack_Trace_GeneratorInterface
-     */
+    /** @var Shopgate_Helper_Logging_Stack_Trace_GeneratorInterface */
     protected $stackTraceGenerator;
 
-    /**
-     * @var Shopgate_Helper_Logging_Strategy_LoggingInterface
-     */
+    /** @var Shopgate_Helper_Logging_Strategy_LoggingInterface */
     protected $logging;
 
     public function __construct(
@@ -111,6 +96,8 @@ class ShopgatePluginApi extends ShopgateObject implements ShopgatePluginApiInter
         $this->logging               = $logging;
         $this->responseData          = array();
         $this->preventResponseOutput = false;
+
+        $this->cronJobWhiteList = $config->getCronJobWhiteList();
 
         // list of action that do not require authentication
         $this->authlessActionWhitelist = array(
@@ -356,7 +343,7 @@ class ShopgatePluginApi extends ShopgateObject implements ShopgatePluginApiInter
     }
 
     /**
-     * Represents the "add_order" action.
+     * Represents the "cron" action.
      *
      * @throws ShopgateLibraryException
      */
@@ -364,6 +351,15 @@ class ShopgatePluginApi extends ShopgateObject implements ShopgatePluginApiInter
     {
         if (empty($this->params['jobs']) || !is_array($this->params['jobs'])) {
             throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_API_CRON_NO_JOBS);
+        }
+
+        $unknownJobs = $this->getUnknownCronJobs($this->params['jobs']);
+        if (!empty($unknownJobs)) {
+            throw new ShopgateLibraryException(
+                ShopgateLibraryException::PLUGIN_CRON_UNSUPPORTED_JOB,
+                implode(', ', $unknownJobs),
+                true
+            );
         }
 
         // time tracking
@@ -375,10 +371,6 @@ class ShopgatePluginApi extends ShopgateObject implements ShopgatePluginApiInter
 
         // execute the jobs
         foreach ($this->params['jobs'] as $job) {
-            if (empty($job['job_name'])) {
-                throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_API_CRON_NO_JOB_NAME);
-            }
-
             if (empty($job['job_params'])) {
                 $job['job_params'] = array();
             }
@@ -415,6 +407,30 @@ class ShopgatePluginApi extends ShopgateObject implements ShopgatePluginApiInter
             $this->response = new ShopgatePluginApiResponseAppJson($this->trace_id);
         }
         $this->responseData = $responses;
+    }
+
+    /**
+     * @param array $cronJobs
+     *
+     * @return array
+     *
+     * @throws ShopgateLibraryException
+     */
+    protected function getUnknownCronJobs(array $cronJobs)
+    {
+        $unknownCronJobs = array();
+
+        foreach ($cronJobs as $cronJob) {
+            if (empty($cronJob['job_name'])) {
+                throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_API_CRON_NO_JOB_NAME);
+            }
+
+            if (!in_array($cronJob['job_name'], $this->cronJobWhiteList, true)) {
+                $unknownCronJobs[] = $cronJob['job_name'];
+            }
+        }
+
+        return $unknownCronJobs;
     }
 
     /**

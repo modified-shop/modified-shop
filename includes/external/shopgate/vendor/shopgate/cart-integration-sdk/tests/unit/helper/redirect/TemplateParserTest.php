@@ -20,20 +20,22 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
  */
 
+namespace shopgate\cart_integration_sdk\tests\unit\redirect;
+
 /**
  * @group              Shopgate_Library
  * @group              Shopgate_Library_Helpers
  *
  * @coversDefaultClass Shopgate_Helper_Redirect_TemplateParser
  */
-class Shopgate_Helper_Redirect_TemplateParserTest extends PHPUnit_Framework_TestCase
+class TemplateParserTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var Shopgate_Helper_Redirect_TemplateParser $class */
+    /** @var \Shopgate_Helper_Redirect_TemplateParser $class */
     protected $class;
 
     public function setUp()
     {
-        $this->class = new Shopgate_Helper_Redirect_TemplateParser();
+        $this->class = new \Shopgate_Helper_Redirect_TemplateParser();
     }
 
     /**
@@ -137,11 +139,11 @@ class Shopgate_Helper_Redirect_TemplateParserTest extends PHPUnit_Framework_Test
      * @param string $name     - name to set
      * @param string $function - function name to set
      *
-     * @return Shopgate_Model_Redirect_HtmlTagVariable
+     * @return \Shopgate_Model_Redirect_HtmlTagVariable
      */
     private function initVariable($name, $function = '')
     {
-        $expected = new Shopgate_Model_Redirect_HtmlTagVariable();
+        $expected = new \Shopgate_Model_Redirect_HtmlTagVariable();
         $expected->setName($name);
 
         if ($function) {

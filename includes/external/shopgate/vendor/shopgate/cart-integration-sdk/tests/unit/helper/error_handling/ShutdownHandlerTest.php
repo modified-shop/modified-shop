@@ -19,12 +19,15 @@
  * @copyright Shopgate Inc
  * @license   http://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
  */
-class Shopgate_Helper_Error_Handling_ShutdownHandlerTest extends PHPUnit_Framework_TestCase
+
+namespace shopgate\cart_integration_sdk\tests\unit\error_handling;
+
+class ShutdownHandlerTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var PHPUnit_Framework_MockObject_MockObject|Shopgate_Helper_Logging_Strategy_LoggingInterface */
+    /** @var \PHPUnit_Framework_MockObject_MockObject|\Shopgate_Helper_Logging_Strategy_LoggingInterface */
     protected $logging;
 
-    /** @var PHPUnit_Framework_MockObject_MockObject|Shopgate_Helper_Error_Handling_Shutdown_Handler_LastErrorProvider */
+    /** @var \PHPUnit_Framework_MockObject_MockObject|\Shopgate_Helper_Error_Handling_Shutdown_Handler_LastErrorProvider */
     protected $lastErrorProvider;
 
     public function setUp()
@@ -45,8 +48,8 @@ class Shopgate_Helper_Error_Handling_ShutdownHandlerTest extends PHPUnit_Framewo
             ->expects($this->exactly(2))
             ->method('log')
             ->with(
-                new PHPUnit_Framework_Constraint_IsAnything(), // message
-                Shopgate_Helper_Logging_Strategy_LoggingInterface::LOGTYPE_ERROR,
+                new \PHPUnit_Framework_Constraint_IsAnything(), // message
+                \Shopgate_Helper_Logging_Strategy_LoggingInterface::LOGTYPE_ERROR,
                 ''
             )
             ->willReturnOnConsecutiveCalls(true);
@@ -70,7 +73,7 @@ class Shopgate_Helper_Error_Handling_ShutdownHandlerTest extends PHPUnit_Framewo
                 )
             );
 
-        $SUT = new Shopgate_Helper_Error_Handling_ShutdownHandler($this->logging, $this->lastErrorProvider);
+        $SUT = new \Shopgate_Helper_Error_Handling_ShutdownHandler($this->logging, $this->lastErrorProvider);
         $SUT->handle(); // E_ERROR
         $SUT->handle(); // E_USER_ERROR
     }
@@ -91,7 +94,7 @@ class Shopgate_Helper_Error_Handling_ShutdownHandlerTest extends PHPUnit_Framewo
                 )
             );
 
-        $SUT = new Shopgate_Helper_Error_Handling_ShutdownHandler($this->logging, $this->lastErrorProvider);
+        $SUT = new \Shopgate_Helper_Error_Handling_ShutdownHandler($this->logging, $this->lastErrorProvider);
         $SUT->handle();
     }
 
@@ -104,7 +107,7 @@ class Shopgate_Helper_Error_Handling_ShutdownHandlerTest extends PHPUnit_Framewo
             ->method('get')
             ->willReturn(null);
 
-        $SUT = new Shopgate_Helper_Error_Handling_ShutdownHandler($this->logging, $this->lastErrorProvider);
+        $SUT = new \Shopgate_Helper_Error_Handling_ShutdownHandler($this->logging, $this->lastErrorProvider);
         $SUT->handle();
     }
 }

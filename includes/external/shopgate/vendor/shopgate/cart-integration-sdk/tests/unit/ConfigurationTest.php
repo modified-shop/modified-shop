@@ -20,19 +20,21 @@
  * @license   http://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
  */
 
+namespace shopgate\cart_integration_sdk\tests\unit;
+
 /**
  * @group              Shopgate_Library
  *
  * @coversDefaultClass ShopgateConfig
  */
-class Shopgate_ConfigurationTest extends PHPUnit_Framework_TestCase
+class ConfigurationTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var ShopgateConfig $class */
+    /** @var \ShopgateConfig $class */
     protected $class;
 
     public function setUp()
     {
-        $this->class = new ShopgateConfig(array());
+        $this->class = new \ShopgateConfig(array());
     }
 
     /**

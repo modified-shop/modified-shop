@@ -518,6 +518,9 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
      */
     protected $facebook_pixel_id = null;
 
+    /** @var array */
+    protected $cronJobWhiteList;
+
     ###################################################
     ### Initialization, loading, saving, validating ###
     ###################################################
@@ -631,6 +634,12 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
             'utm_content',
         );
         $this->html_tags               = '';
+
+        $this->cronJobWhiteList = array(
+            ShopgatePluginApi::JOB_SET_SHIPPING_COMPLETED,
+            ShopgatePluginApi::JOB_CLEAN_ORDERS,
+            ShopgatePluginApi::JOB_CANCEL_ORDERS,
+        );
 
         $this->default_memory_limit   = ShopgateConfigInterface::DEFAULT_MEMORY_LIMIT;
         $this->default_execution_time = ShopgateConfigInterface::DEFAULT_EXECUTION_TIME;
@@ -1591,6 +1600,11 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
         return $this->facebook_pixel_id;
     }
 
+    public function getCronJobWhiteList()
+    {
+        return $this->cronJobWhiteList;
+    }
+
     ###############
     ### Setters ###
     ###############
@@ -2192,6 +2206,11 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
     public function setFacebookPixelId($facebook_pixel_id)
     {
         $this->facebook_pixel_id = $facebook_pixel_id;
+    }
+
+    public function setCronJobWhiteList($cron_job_white_List)
+    {
+        $this->cronJobWhiteList = $cron_job_white_List;
     }
 
     ###############
@@ -3387,6 +3406,11 @@ interface ShopgateConfigInterface
     public function getFacebookPixelId();
 
     /**
+     * @return array white list for method cron jobs
+     */
+    public function getCronJobWhiteList();
+
+    /**
      * @param string $value The name of the plugin / shop system the plugin is for.
      */
     public function setPluginName($value);
@@ -3884,6 +3908,11 @@ interface ShopgateConfigInterface
      * @param int $facebook_pixel_id
      */
     public function setFacebookPixelId($facebook_pixel_id);
+
+    /**
+     * @param array $cron_job_white_list
+     */
+    public function setCronJobWhiteList($cron_job_white_list);
 
     /**
      * Returns an additional setting.

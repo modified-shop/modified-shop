@@ -22,6 +22,7 @@
     "phpunit/phpunit": "4.8.*"
   },
   "autoload": {
+    "psr-4": { "shopgate\\cart_integration_sdk\\tests\\": "tests/" },
     "files": [
       "src/core.php",
       "src/apis.php",

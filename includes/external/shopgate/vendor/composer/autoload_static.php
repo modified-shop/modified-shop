@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInite18be12a341c2ab9c64d1c88edea38e0
+class ComposerStaticInit84182b681e63f82dfb552a918b589496
 {
     public static $files = array (
         '94a88545308b798ac4bdf1c5287c9d0b' => __DIR__ . '/..' . '/shopgate/cart-integration-sdk/src/core.php',
@@ -106,8 +106,8 @@ class ComposerStaticInite18be12a341c2ab9c64d1c88edea38e0
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInite18be12a341c2ab9c64d1c88edea38e0::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInite18be12a341c2ab9c64d1c88edea38e0::$prefixDirsPsr4;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit84182b681e63f82dfb552a918b589496::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit84182b681e63f82dfb552a918b589496::$prefixDirsPsr4;
 
         }, null, ClassLoader::class);
     }

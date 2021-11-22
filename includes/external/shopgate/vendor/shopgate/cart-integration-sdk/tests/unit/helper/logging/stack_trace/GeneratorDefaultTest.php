@@ -19,18 +19,23 @@
  * @copyright Shopgate Inc
  * @license   http://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
  */
-class Shopgate_Helper_Logging_Stack_Trace_GeneratorDefaultTest extends PHPUnit_Framework_TestCase
+
+namespace shopgate\cart_integration_sdk\tests\unit\logging\stack_trace;
+
+use shopgate\cart_integration_sdk\tests\fixtures\helper\logging\stack_trace\Shopgate_Helper_Logging_Stack_Trace_GeneratorDefaultTestFixtureBuilder;
+
+class GeneratorDefaultTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var PHPUnit_Framework_MockObject_MockObject|Shopgate_Helper_Logging_Obfuscator */
+    /** @var \PHPUnit_Framework_MockObject_MockObject|\Shopgate_Helper_Logging_Obfuscator */
     protected $obfuscator;
 
-    /** @var PHPUnit_Framework_MockObject_MockObject|Shopgate_Helper_Logging_Stack_Trace_NamedParameterProviderInterface */
+    /** @var \PHPUnit_Framework_MockObject_MockObject|\Shopgate_Helper_Logging_Stack_Trace_NamedParameterProviderInterface */
     protected $namedParameterProvider;
 
     /** @var Shopgate_Helper_Logging_Stack_Trace_GeneratorDefaultTestFixtureBuilder */
     protected $fixtureProvider;
 
-    /** @var Shopgate_Helper_Logging_Stack_Trace_GeneratorDefault */
+    /** @var \Shopgate_Helper_Logging_Stack_Trace_GeneratorDefault */
     protected $subjectUnderTest;
 
     public function setUp()
@@ -46,7 +51,7 @@ class Shopgate_Helper_Logging_Stack_Trace_GeneratorDefaultTest extends PHPUnit_F
             ->getMockBuilder('Shopgate_Helper_Logging_Stack_Trace_NamedParameterProviderInterface')
             ->getMockForAbstractClass();
 
-        $this->subjectUnderTest = new Shopgate_Helper_Logging_Stack_Trace_GeneratorDefault(
+        $this->subjectUnderTest = new \Shopgate_Helper_Logging_Stack_Trace_GeneratorDefault(
             $this->obfuscator,
             $this->namedParameterProvider
         );
@@ -226,8 +231,8 @@ class Shopgate_Helper_Logging_Stack_Trace_GeneratorDefaultTest extends PHPUnit_F
             );
 
         // use the real obfuscator as this is an integration test
-        $SUT = new Shopgate_Helper_Logging_Stack_Trace_GeneratorDefault(
-            new Shopgate_Helper_Logging_Obfuscator(),
+        $SUT = new \Shopgate_Helper_Logging_Stack_Trace_GeneratorDefault(
+            new \Shopgate_Helper_Logging_Obfuscator(),
             $this->namedParameterProvider
         );
 

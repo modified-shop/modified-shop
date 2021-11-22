@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+## [2.9.70] - 2017-10-24
+### Added
+- ShopgateCartBase::BRAINTR_PP
+- white list for jobs in method cron
+
+### Changed
+- modified _.htaccess_ file to support Apache 2.4 module _mod_authz_core_
+- introduced namespaces in folder tests
+
 ## [2.9.69] - 2017-09-13
 ### Added
 - ShopgateConfigInterface::buildConfigFilePath()
@@ -622,7 +631,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - fixed error in use of old configuration
 - added changelog.txt
 
-[Unreleased]: https://github.com/shopgate/cart-integration-sdk/compare/2.9.69...HEAD
+[Unreleased]: https://github.com/shopgate/cart-integration-sdk/compare/2.9.70...HEAD
+[2.9.70]: https://github.com/shopgate/cart-integration-sdk/compare/2.9.69...2.9.70
 [2.9.69]: https://github.com/shopgate/cart-integration-sdk/compare/2.9.68...2.9.69
 [2.9.68]: https://github.com/shopgate/cart-integration-sdk/compare/2.9.67...2.9.68
 [2.9.67]: https://github.com/shopgate/cart-integration-sdk/compare/2.9.66...2.9.67

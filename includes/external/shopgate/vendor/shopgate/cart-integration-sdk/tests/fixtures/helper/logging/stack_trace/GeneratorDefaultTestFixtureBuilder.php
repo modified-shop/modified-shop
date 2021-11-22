@@ -19,21 +19,26 @@
  * @copyright Shopgate Inc
  * @license   http://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
  */
+
+namespace shopgate\cart_integration_sdk\tests\fixtures\helper\logging\stack_trace;
+
+use shopgate\cart_integration_sdk\tests\stubs\ThrowableStub;
+
 class Shopgate_Helper_Logging_Stack_Trace_GeneratorDefaultTestFixtureBuilder
 {
-    /** @var PHPUnit_Framework_TestCase */
+    /** @var \PHPUnit_Framework_TestCase */
     private $testCase;
 
     /**
-     * @param PHPUnit_Framework_TestCase $testCase The calling test case; mock objects might be built using this.
+     * @param \PHPUnit_Framework_TestCase $testCase The calling test case; mock objects might be built using this.
      */
-    public function __construct(PHPUnit_Framework_TestCase $testCase)
+    public function __construct(\PHPUnit_Framework_TestCase $testCase)
     {
         $this->testCase = $testCase;
     }
 
     /**
-     * @return PHPUnit_Framework_MockObject_MockObject|ThrowableStub|Throwable
+     * @return \PHPUnit_Framework_MockObject_MockObject|ThrowableStub|\Throwable
      */
     public function getSimpleException()
     {
@@ -51,7 +56,7 @@ class Shopgate_Helper_Logging_Stack_Trace_GeneratorDefaultTestFixtureBuilder
     }
 
     /**
-     * @return PHPUnit_Framework_MockObject_MockObject|ThrowableStub|Throwable
+     * @return \PHPUnit_Framework_MockObject_MockObject|ThrowableStub|\Throwable
      */
     public function getExceptionWithPreviousExceptions()
     {
@@ -85,7 +90,7 @@ class Shopgate_Helper_Logging_Stack_Trace_GeneratorDefaultTestFixtureBuilder
     }
 
     /**
-     * @return PHPUnit_Framework_MockObject_MockObject|ThrowableStub|Throwable
+     * @return \PHPUnit_Framework_MockObject_MockObject|ThrowableStub|\Throwable
      */
     public function getExceptionExampleForFailedGetCustomer()
     {
@@ -111,7 +116,7 @@ class Shopgate_Helper_Logging_Stack_Trace_GeneratorDefaultTestFixtureBuilder
     }
 
     /**
-     * @return PHPUnit_Framework_MockObject_MockObject|ThrowableStub|Throwable
+     * @return \PHPUnit_Framework_MockObject_MockObject|ThrowableStub|\Throwable
      */
     public function getExceptionWithMissingFileAndLineFixture()
     {
@@ -135,7 +140,7 @@ class Shopgate_Helper_Logging_Stack_Trace_GeneratorDefaultTestFixtureBuilder
     }
 
     /**
-     * @return PHPUnit_Framework_MockObject_MockObject|ThrowableStub|Throwable
+     * @return \PHPUnit_Framework_MockObject_MockObject|ThrowableStub|\Throwable
      */
     public function getExceptionWithMissingClassAndTypeFixture()
     {
@@ -159,7 +164,7 @@ class Shopgate_Helper_Logging_Stack_Trace_GeneratorDefaultTestFixtureBuilder
     }
 
     /**
-     * @return PHPUnit_Framework_MockObject_MockObject|ThrowableStub|Throwable
+     * @return \PHPUnit_Framework_MockObject_MockObject|ThrowableStub|\Throwable
      */
     public function getExceptionWithMissingFunctionFixture()
     {
@@ -180,7 +185,7 @@ class Shopgate_Helper_Logging_Stack_Trace_GeneratorDefaultTestFixtureBuilder
     }
 
     /**
-     * @return PHPUnit_Framework_MockObject_MockObject|ThrowableStub|Throwable
+     * @return \PHPUnit_Framework_MockObject_MockObject|ThrowableStub|\Throwable
      */
     public function getExceptionWithMissingArgsFixture()
     {
@@ -579,14 +584,14 @@ STACK_TRACE;
     /**
      * @param array $values
      *
-     * @return PHPUnit_Framework_MockObject_MockObject|ThrowableStub
+     * @return \PHPUnit_Framework_MockObject_MockObject|ThrowableStub
      */
     private function buildMockFromFixture(array $values)
     {
         $exceptions = array();
 
         do {
-            $exception = $this->testCase->getMockBuilder('ThrowableStub')
+            $exception = $this->testCase->getMockBuilder('\shopgate\cart_integration_sdk\tests\stubs\ThrowableStub')
                 ->setMockClassName($values['exception_class'])
                 ->getMock();
 
@@ -607,7 +612,7 @@ STACK_TRACE;
 
         $previous = null;
         foreach (array_reverse($exceptions) as $exception) {
-            /** @var ThrowableStub|PHPUnit_Framework_MockObject_MockObject $exception */
+            /** @var ThrowableStub|\PHPUnit_Framework_MockObject_MockObject $exception */
             $exception->expects($this->testCase->any())->method('getPrevious')->willReturn($previous);
             $previous = $exception;
         }

@@ -51,6 +51,7 @@ abstract class ShopgateCartBase extends ShopgateContainer
     // Paypal
     const PAYPAL     = 'PAYPAL';
     const PPAL_PLUS  = 'PPAL_PLUS';
+    const BRAINTR_PP = 'BRAINTR_PP';
     const CMPTOP_PP  = 'CMPTOP_PP';
     const MASTPAY_PP = 'MASTPAY_PP';
     const PAYONE_PP  = 'PAYONE_PP';
