@@ -21,8 +21,7 @@
  *
  */
 
-include_once DIR_FS_CATALOG
-    . 'includes/external/shopgate/shopgate_library/shopgate.php';
+include_once DIR_FS_CATALOG . 'includes/external/shopgate/vendor/autoload.php';
 
 define('SHOPGATE_SETTING_EXPORT_DESCRIPTION', 0);
 define('SHOPGATE_SETTING_EXPORT_SHORTDESCRIPTION', 1);

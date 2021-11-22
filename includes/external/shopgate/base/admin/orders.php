@@ -20,8 +20,7 @@
  * @license   https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt GNU General Public License, Version 2
  *
  */
-include_once DIR_FS_CATALOG
-    . 'includes/external/shopgate/shopgate_library/shopgate.php';
+include_once DIR_FS_CATALOG . 'includes/external/shopgate/vendor/autoload.php';
 include_once DIR_FS_CATALOG . 'includes/external/shopgate/plugin.php';
 
 /**
