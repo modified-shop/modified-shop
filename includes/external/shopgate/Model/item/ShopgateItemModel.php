@@ -1,25 +1,25 @@
 <?php
 
 /**
- * Shopgate GmbH
  *
- * URHEBERRECHTSHINWEIS
+ * Copyright Shopgate Inc.
  *
- * Dieses Plugin ist urheberrechtlich geschützt. Es darf ausschließlich von Kunden der Shopgate GmbH
- * zum Zwecke der eigenen Kommunikation zwischen dem IT-System des Kunden mit dem IT-System der
- * Shopgate GmbH über www.shopgate.com verwendet werden. Eine darüber hinausgehende Vervielfältigung, Verbreitung,
- * öffentliche Zugänglichmachung, Bearbeitung oder Weitergabe an Dritte ist nur mit unserer vorherigen
- * schriftlichen Zustimmung zulässig. Die Regelungen der §§ 69 d Abs. 2, 3 und 69 e UrhG bleiben hiervon unberührt.
+ * Licensed under the GNU General Public License, Version 2 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * COPYRIGHT NOTICE
+ * https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
  *
- * This plugin is the subject of copyright protection. It is only for the use of Shopgate GmbH customers,
- * for the purpose of facilitating communication between the IT system of the customer and the IT system
- * of Shopgate GmbH via www.shopgate.com. Any reproduction, dissemination, public propagation, processing or
- * transfer to third parties is only permitted where we previously consented thereto in writing. The provisions
- * of paragraph 69 d, sub-paragraphs 2, 3 and paragraph 69, sub-paragraph e of the German Copyright Act shall remain unaffected.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ * limitations under the License.
  *
- * @author Shopgate GmbH <interfaces@shopgate.com>
+ * @author    Shopgate Inc, 804 Congress Ave, Austin, Texas 78701 <interfaces@shopgate.com>
+ * @copyright Shopgate Inc
+ * @license   https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt GNU General Public License, Version 2
+ *
  */
 class ShopgateItemModel extends Shopgate_Model_Catalog_Product
 {
@@ -206,13 +206,18 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
      */
     public function getProductQuery($uids)
     {
-        $this->log("generate SQL get products ...", ShopgateLogger::LOGTYPE_DEBUG);
+        $this->log(
+            "generate SQL get products ...", ShopgateLogger::LOGTYPE_DEBUG
+        );
 
-        $manufacturerColumn = ShopgateItemHelper::manufacturerColumnAvailable($this->modifiedVersion)
+        $manufacturerColumn = ShopgateItemHelper::manufacturerColumnAvailable(
+            $this->modifiedVersion
+        )
             ? "p.products_manufacturers_model,"
             : "";
 
-        $qry = "
+        $qry
+            = "
             SELECT DISTINCT
                 p.products_id,
                 p.products_model,
@@ -245,9 +250,11 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
                 p.products_date_available
             FROM " . TABLE_PRODUCTS . " p
             LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION
-            . " pdsc ON (p.products_id = pdsc.products_id AND pdsc.language_id = '" . $this->languageId . "')
+            . " pdsc ON (p.products_id = pdsc.products_id AND pdsc.language_id = '"
+            . $this->languageId . "')
             LEFT JOIN " . TABLE_SHIPPING_STATUS
-            . " shst ON (p.products_shippingtime = shst.shipping_status_id AND shst.language_id = '" . $this->languageId
+            . " shst ON (p.products_shippingtime = shst.shipping_status_id AND shst.language_id = '"
+            . $this->languageId
             . "')
             LEFT JOIN " . TABLE_MANUFACTURERS . " mf ON (mf.manufacturers_id = p.manufacturers_id)
             LEFT JOIN " . TABLE_SPECIALS . " sp ON (sp.products_id = p.products_id AND sp.status = 1 AND (sp.expires_date > now() OR sp.expires_date = '0000-00-00 00:00:00' OR sp.expires_date IS NULL))
@@ -277,9 +284,14 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
      */
     public function getMaxProductSortPosition()
     {
-        $this->log('execute SQL get max sort position ...', ShopgateLogger::LOGTYPE_DEBUG);
+        $this->log(
+            'execute SQL get max sort position ...',
+            ShopgateLogger::LOGTYPE_DEBUG
+        );
         /** @noinspection SqlDialectInspection */
-        $result = xtc_db_query("SELECT MAX(products_sort) max_sort FROM " . TABLE_PRODUCTS);
+        $result = xtc_db_query(
+            "SELECT MAX(products_sort) max_sort FROM " . TABLE_PRODUCTS
+        );
         $maxId  = xtc_db_fetch_array($result);
 
         return (int)isset($maxId['max_sort']) ? $maxId['max_sort'] : 0;
@@ -292,12 +304,18 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
      * @param $minOrder int minimum order index
      * @param $addToOrderIndex
      */
-    public function getProductOrderValues(&$maxOrder, &$minOrder, &$addToOrderIndex)
-    {
-        $this->log("execute SQL min_order, max_order ...", ShopgateLogger::LOGTYPE_DEBUG);
+    public function getProductOrderValues(
+        &$maxOrder, &$minOrder,
+        &$addToOrderIndex
+    ) {
+        $this->log(
+            "execute SQL min_order, max_order ...",
+            ShopgateLogger::LOGTYPE_DEBUG
+        );
         // order_index for the products
         $result          = xtc_db_query(
-            "SELECT MIN(products_sort) AS 'min_order', MAX(products_sort) AS 'max_order' FROM " . TABLE_PRODUCTS
+            "SELECT MIN(products_sort) AS 'min_order', MAX(products_sort) AS 'max_order' FROM "
+            . TABLE_PRODUCTS
         );
         $orderIndices    = xtc_db_fetch_array($result);
         $maxOrder        = $orderIndices["max_order"] + 1;
@@ -319,7 +337,8 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
      */
     public function getProductById($productId)
     {
-        $productQuery    = "select p.products_tax_class_id,
+        $productQuery
+                         = "select p.products_tax_class_id,
                                           p.products_id,
                                           pd.products_name,
                                           p.products_price,
@@ -336,10 +355,9 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
         return $dbProduct;
     }
 
-
     /**
-     * if the current order item (product) is an child product the item number is
-     * generated in the schema <productId>_<attributeId>
+     * if the current order item (product) is an child product the item number
+     * is generated in the schema <productId>_<attributeId>
      *
      * @param ShopgateOrderItem $sgOrderItem
      *
@@ -363,8 +381,8 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
     }
 
     /**
-     * get the attribute data to an product from the database and fill the ShopgateOrderItemAttribute with
-     * the data as it is
+     * get the attribute data to an product from the database and fill the
+     * ShopgateOrderItemAttribute with the data as it is
      *
      * @param ShopgateOrderItem $item
      *
@@ -375,8 +393,8 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
         $attributes   = $item->getAttributes();
         $dbAttributes = array();
         foreach ($attributes as $attribute) {
-
-            $query = "SELECT
+            $query
+                = "SELECT
                             po.products_options_name AS `name`,
                             pov.products_options_values_name AS `value`
                         FROM products AS p
@@ -390,7 +408,9 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
 
             $result = ShopgateWrapper::db_query($query);
 
-            while ($dbProductAttributes = ShopgateWrapper::db_fetch_array($result)) {
+            while ($dbProductAttributes = ShopgateWrapper::db_fetch_array(
+                $result
+            )) {
                 $sgAttribute = new ShopgateOrderItemAttribute();
                 $sgAttribute->setName($dbProductAttributes["option_name"]);
                 $sgAttribute->setValue($dbProductAttributes["value"]);
@@ -413,10 +433,13 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
     public function getOptionsToProduct($productId, $sgOrderInfo, $taxRate)
     {
         $resultAttributes = array();
-        $attributeIds     = ShopgateItemHelper::filterOptionsFromOrderInfo($sgOrderInfo);
+        $attributeIds     = ShopgateItemHelper::filterOptionsFromOrderInfo(
+            $sgOrderInfo
+        );
 
         foreach ($attributeIds as $attributeId) {
-            $query = "SELECT
+            $query
+                = "SELECT
                         o.products_options_id AS `options_id`,
                         ov.products_options_values_id AS `values_id`,
                         ov.products_options_values_name AS `values_name`,
@@ -443,8 +466,8 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
             $sgOption->setValueNumber($optionResult["values_id"]);
 
             if (!empty($optionResult["prefix"])) {
-                $price =
-                    ($optionResult["prefix"] == "-") ? ($optionResult["price"]
+                $price = ($optionResult["prefix"] == "-")
+                    ? ($optionResult["price"]
                         * (-1)) : $optionResult["price"];
             } else {
                 $price = $optionResult["price"];
@@ -472,7 +495,8 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
             . " status.customers_status_discount,"
             . " status.customers_status_discount_attributes"
             . " FROM " . TABLE_CUSTOMERS_STATUS . " AS status"
-            . " WHERE status.customers_status_id = " . $this->defaultCustomerPriceGroup
+            . " WHERE status.customers_status_id = "
+            . $this->defaultCustomerPriceGroup
             . " AND status.language_id = " . $this->languageId
             . ";";
 
@@ -486,23 +510,32 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
      * @param string $customerGroupMaxPriceDiscount
      * @param string $customerGroupDiscountAttributes
      */
-    public function getDiscountToCustomerGroups(&$customerGroupMaxPriceDiscount, &$customerGroupDiscountAttributes)
-    {
+    public function getDiscountToCustomerGroups(
+        &$customerGroupMaxPriceDiscount,
+        &$customerGroupDiscountAttributes
+    ) {
         if ($queryResult = $this->getCustomerGroups()) {
             $customerGroupResult = xtc_db_fetch_array($queryResult);
-            if (!empty($customerGroupResult) && isset($customerGroupResult['customers_status_discount'])) {
-                $customerGroupMaxPriceDiscount = $customerGroupResult['customers_status_discount'];
+            if (!empty($customerGroupResult)
+                && isset($customerGroupResult['customers_status_discount'])
+            ) {
+                $customerGroupMaxPriceDiscount
+                    = $customerGroupResult['customers_status_discount'];
             }
-            if (!empty($customerGroupResult) && isset($customerGroupResult['customers_status_discount'])) {
-                $customerGroupDiscountAttributes =
-                    $customerGroupResult['customers_status_discount_attributes'] ? true : false;
+            if (!empty($customerGroupResult)
+                && isset($customerGroupResult['customers_status_discount'])
+            ) {
+                $customerGroupDiscountAttributes
+                    = $customerGroupResult['customers_status_discount_attributes']
+                    ? true : false;
             }
         }
     }
 
     /**
-     * returns all sub categories including the given parent as a list that is a mapping
-     * from one category to a higher category if a given depth is exceeded
+     * returns all sub categories including the given parent as a list that is
+     * a mapping from one category to a higher category if a given depth is
+     * exceeded
      *
      * @param int $maxDepth
      * @param int $parentId
@@ -512,18 +545,27 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
      * @throws ShopgateLibraryException
      * @return array
      */
-    public function getCategoryReducementMap($maxDepth = null, $parentId = null, $copyId = null, $depth = null)
-    {
-        $this->log("execute _getCategoryReducementMap() ...", ShopgateLogger::LOGTYPE_DEBUG);
+    public function getCategoryReducementMap(
+        $maxDepth = null, $parentId = null,
+        $copyId = null, $depth = null
+    ) {
+        $this->log(
+            "execute _getCategoryReducementMap() ...",
+            ShopgateLogger::LOGTYPE_DEBUG
+        );
 
         $circularDepthStop = 50;
         if (empty($depth)) {
             $depth = 1;
-        } elseif ($depth > $circularDepthStop) {// disallow circular category connections (detect by a maximum depth)
+        } elseif ($depth
+            > $circularDepthStop
+        ) {// disallow circular category connections (detect by a maximum depth)
             throw new ShopgateLibraryException(
                 ShopgateLibraryException::PLUGIN_DATABASE_ERROR,
-                'error on loading sub-categories: Categories-Depth exceedes a value of ' . $circularDepthStop .
-                '. Check if there is a circular connection (referenced categories ids: ' . $parentId . '=>', true
+                'error on loading sub-categories: Categories-Depth exceedes a value of '
+                . $circularDepthStop .
+                '. Check if there is a circular connection (referenced categories ids: '
+                . $parentId . '=>', true
             );
         }
 
@@ -535,7 +577,8 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
         $qryResult = xtc_db_query($qry);
         if (!$qryResult) {
             throw new ShopgateLibraryException(
-                ShopgateLibraryException::PLUGIN_DATABASE_ERROR, 'error on selecting categories', true
+                ShopgateLibraryException::PLUGIN_DATABASE_ERROR,
+                'error on selecting categories', true
             );
         }
 
@@ -556,7 +599,9 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
                 $categoryMap[$row['categories_id']] = $row['categories_id'];
             }
 
-            $subCategories = $this->getCategoryReducementMap($maxDepth, $row['categories_id'], $copyId, $depth + 1);
+            $subCategories = $this->getCategoryReducementMap(
+                $maxDepth, $row['categories_id'], $copyId, $depth + 1
+            );
             if (!empty($subCategories)) {
                 $categoryMap = $categoryMap + $subCategories;
             }
@@ -568,8 +613,8 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
     /**
      * get all products to new categories
      *
-     * the shop systems constant "MAX_DISPLAY_NEW_PRODUCTS_DAYS" contains the data how much days the product
-     * needs to be displayed
+     * the shop systems constant "MAX_DISPLAY_NEW_PRODUCTS_DAYS" contains the
+     * data how much days the product needs to be displayed
      *
      * @return string
      */
@@ -579,9 +624,14 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
         $fsk_lock                 = '';
         $_SESSION['languages_id'] = $this->languageId;
         //logic taken from file products_new.php in dir /
-        $date_new_products =
-            date("Y-m-d", mktime(1, 1, 1, date("m"), date("d") - MAX_DISPLAY_NEW_PRODUCTS_DAYS, date("Y")));
-        $days              = " and p.products_date_added > '" . $date_new_products . "' ";
+        $date_new_products = date(
+            "Y-m-d", mktime(
+                       1, 1, 1, date("m"), date("d") - MAX_DISPLAY_NEW_PRODUCTS_DAYS,
+                       date("Y")
+                   )
+        );
+        $days              = " and p.products_date_added > '"
+            . $date_new_products . "' ";
 
         return "SELECT DISTINCT
                                     p.products_id,
@@ -604,7 +654,8 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
                                     ON p.products_id = pd.products_id,
                                     " . TABLE_CATEGORIES . " c,
                                     " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c
-                            WHERE pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
+                            WHERE pd.language_id = '"
+            . (int)$_SESSION['languages_id'] . "'
                             AND c.categories_status=1
                             AND p.products_id = p2c.products_id
                             AND c.categories_id = p2c.categories_id
@@ -646,14 +697,16 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
                 WHERE 
                     p.products_status='1'
                 AND s.products_id=p.products_id
-                AND p.products_id=pd.products_id " . $group_check . "  " . $fsk_lock . " 
+                AND p.products_id=pd.products_id " . $group_check . "  "
+            . $fsk_lock . " 
                 AND pd.language_id='" . (int)$_SESSION['languages_id'] . "'
                 AND s.status='1'
                 ORDER BY s.specials_date_added DESC";
     }
 
     /**
-     * generates a query to get different type of html elements represented by attributes
+     * generates a query to get different type of html elements represented by
+     * attributes
      *
      * there are two different types:
      *
@@ -664,12 +717,16 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
      *
      * @param int    $productId
      * @param string $type
-     * @param string $optionsAsInputFields Comma-separated list of option IDs that should be exported as input fields
+     * @param string $optionsAsInputFields Comma-separated list of option IDs
+     *                                     that should be exported as input
+     *                                     fields
      *
      * @return string|void
      */
-    private function getAttributeQuery($productId, $type, $optionsAsInputFields = '')
-    {
+    private function getAttributeQuery(
+        $productId, $type,
+        $optionsAsInputFields = ''
+    ) {
         $optionsAsInputFields = trim($optionsAsInputFields, ',');
         $optionsAsInputFields = (!empty($optionsAsInputFields))
             ? 'AND ({$condition} (' . $optionsAsInputFields . '))'
@@ -684,7 +741,8 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
                         'pov.products_options_values_name = \'TEXTFELD\' OR pa.options_id IN',
                         $optionsAsInputFields
                     );
-                $query                = $optionsAsInputFields . " ORDER BY po.products_options_id, pa.sortorder";
+                $query                = $optionsAsInputFields
+                    . " ORDER BY po.products_options_id, pa.sortorder";
                 break;
 
             case self::SHOPGATE_PRODUCT_ATTRIBUTE_TYPE_OTHER:
@@ -695,12 +753,16 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
                         'pov.products_options_values_name != \'TEXTFELD\' OR pa.options_id NOT IN',
                         $optionsAsInputFields
                     );
-                $query                = $optionsAsInputFields . " ORDER BY po.products_options_id, pa.sortorder";
+                $query                = $optionsAsInputFields
+                    . " ORDER BY po.products_options_id, pa.sortorder";
                 break;
 
             case self::SHOPGATE_PRODUCT_ATTRIBUTE_TYPE_ALL:
-                $optionsAsInputFields = str_replace('{$condition}', '', $optionsAsInputFields);
-                $query                = $optionsAsInputFields . " ORDER BY po.products_options_id, pa.sortorder ASC";
+                $optionsAsInputFields = str_replace(
+                    '{$condition}', '', $optionsAsInputFields
+                );
+                $query                = $optionsAsInputFields
+                    . " ORDER BY po.products_options_id, pa.sortorder ASC";
                 break;
 
             default:
@@ -734,13 +796,20 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
      * product of the type SHOPGATE_PRODUCT_ATTRIBUTE_TYPE_OTHER
      *
      * @param int    $productId
-     * @param string $optionsAsInputFields Comma-separated list of option IDs that should be exported as input fields
+     * @param string $optionsAsInputFields Comma-separated list of option IDs
+     *                                     that should be exported as input
+     *                                     fields
      *
      * @return string|void
      */
-    public function getAttributesToProductQuery($productId, $optionsAsInputFields = '')
-    {
-        return $this->getAttributeQuery($productId, self::SHOPGATE_PRODUCT_ATTRIBUTE_TYPE_OTHER, $optionsAsInputFields);
+    public function getAttributesToProductQuery(
+        $productId,
+        $optionsAsInputFields = ''
+    ) {
+        return $this->getAttributeQuery(
+            $productId, self::SHOPGATE_PRODUCT_ATTRIBUTE_TYPE_OTHER,
+            $optionsAsInputFields
+        );
     }
 
     /**
@@ -748,14 +817,19 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
      * product of the type SHOPGATE_PRODUCT_ATTRIBUTE_TYPE_TEXT_FIELD
      *
      * @param int    $productId
-     * @param string $optionsAsInputFields Comma-separated list of option IDs that should be exported as input fields
+     * @param string $optionsAsInputFields Comma-separated list of option IDs
+     *                                     that should be exported as input
+     *                                     fields
      *
      * @return string|void
      */
-    public function getAttributesInputFieldsToProductsQuery($productId, $optionsAsInputFields = '')
-    {
+    public function getAttributesInputFieldsToProductsQuery(
+        $productId,
+        $optionsAsInputFields = ''
+    ) {
         return $this->getAttributeQuery(
-            $productId, self::SHOPGATE_PRODUCT_ATTRIBUTE_TYPE_TEXT_FIELD, $optionsAsInputFields
+            $productId, self::SHOPGATE_PRODUCT_ATTRIBUTE_TYPE_TEXT_FIELD,
+            $optionsAsInputFields
         );
     }
 
@@ -768,7 +842,9 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
      */
     public function getAllAttributesToProductsQuery($productId)
     {
-        return $this->getAttributeQuery($productId, self::SHOPGATE_PRODUCT_ATTRIBUTE_TYPE_ALL);
+        return $this->getAttributeQuery(
+            $productId, self::SHOPGATE_PRODUCT_ATTRIBUTE_TYPE_ALL
+        );
     }
 
     /**
@@ -797,7 +873,8 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
     }
 
     /**
-     * using the shop systems constants to generate the url where the image is reachable
+     * using the shop systems constants to generate the url where the image is
+     * reachable
      *
      * @return string
      */
@@ -837,18 +914,30 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
     {
         $images = array();
         if (!empty($product['products_image'])) {
-            if (file_exists($this->getLocalMainImagePath() . $product['products_image'])) {
-                $images[] = $this->getMainImageUrl() . $product['products_image'];
-            } elseif (file_exists($this->getLocalThumbImagePath() . $product['products_image'])) {
-                $images[] = $this->getThumbImageUrl() . $product['products_image'];
+            if (file_exists(
+                $this->getLocalMainImagePath() . $product['products_image']
+            )) {
+                $images[] = $this->getMainImageUrl()
+                    . $product['products_image'];
+            } elseif (file_exists(
+                $this->getLocalThumbImagePath() . $product['products_image']
+            )) {
+                $images[] = $this->getThumbImageUrl()
+                    . $product['products_image'];
             }
         }
 
-        $query = xtc_db_query($this->getImagesToProductQuery($product["products_id"]));
+        $query = xtc_db_query(
+            $this->getImagesToProductQuery($product["products_id"])
+        );
         while ($image = xtc_db_fetch_array($query)) {
-            if (file_exists($this->getLocalMainImagePath() . $image['image_name'])) {
+            if (file_exists(
+                $this->getLocalMainImagePath() . $image['image_name']
+            )) {
                 $images[] = $this->getMainImageUrl() . $image['image_name'];
-            } elseif (file_exists($this->getLocalThumbImagePath() . $image['image_name'])) {
+            } elseif (file_exists(
+                $this->getLocalThumbImagePath() . $image['image_name']
+            )) {
                 $images[] = $this->getThumbImageUrl() . $image['image_name'];
             }
         }
@@ -866,7 +955,10 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
      */
     public function generateDeepLinkToProduct($productId, $productName)
     {
-        return xtc_href_link('product_info.php', 'products_id='.$productId, 'NONSSL', false);
+        return xtc_href_link(
+            'product_info.php', xtc_product_link($productId, $productName),
+            'NONSSL', false
+        );
     }
 
     /**
@@ -896,9 +988,9 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
             if (STOCK_CHECK == 'true' && STOCK_ALLOW_CHECKOUT == 'false') {
                 if ($item["specials_quantity"] > 0) {
                     // Nur wenn die quantity > 0 ist dann specialprice setzen, ansonsten normalen Preis mit normalem Stock
-                    $item["products_quantity"] =
-                        $item["specials_quantity"] > $item["products_quantity"] ? $item["products_quantity"]
-                            : $item["specials_quantity"];
+                    $item["products_quantity"] = $item["specials_quantity"]
+                    > $item["products_quantity"] ? $item["products_quantity"]
+                        : $item["specials_quantity"];
                 }
             }
             // setting specialprice
@@ -906,8 +998,10 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
             $price    = $item["specials_new_products_price"];
 
             $orderInfos['is_special_price'] = 1;
-
-        } elseif (!empty($customerGroupMaxPriceDiscount) && round($customerGroupMaxPriceDiscount, 2) > 0
+        } elseif (!empty($customerGroupMaxPriceDiscount)
+            && round(
+                $customerGroupMaxPriceDiscount, 2
+            ) > 0
             && !empty($item['products_discount_allowed'])
             && round($item['products_discount_allowed'], 2) > 0
         ) {
@@ -929,7 +1023,8 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
     }
 
     /**
-     * Takes a price value and a discount percent value and returns the new discounted price
+     * Takes a price value and a discount percent value and returns the new
+     * discounted price
      *
      * @param string $price
      * @param string $discountPercent
@@ -953,7 +1048,10 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
      */
     private function getPersonalOffersPrice($product, $tax)
     {
-        $this->log("execute _getPersonalOffersPrice() ...", ShopgateLogger::LOGTYPE_DEBUG);
+        $this->log(
+            "execute _getPersonalOffersPrice() ...",
+            ShopgateLogger::LOGTYPE_DEBUG
+        );
 
         $customerStatusId = $this->defaultCustomerPriceGroup;
         if (empty($customerStatusId)) {
@@ -974,9 +1072,9 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
         return floatval($specialOffer["personal_offer"]);
     }
 
-
     /**
-     * generate the description regarding the description settings from the shop system
+     * generate the description regarding the description settings from the
+     * shop system
      *
      * @param array  $item
      * @param string $descriptionType
@@ -986,8 +1084,12 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
     public function getDescriptionToProduct($item, $descriptionType)
     {
         // create the description, based on the settings
-        $desc        = $this->stringHelper->removeTagsFromString($item["products_description"]);
-        $shortDesc   = $this->stringHelper->removeTagsFromString($item["products_short_description"]);
+        $desc        = $this->stringHelper->removeTagsFromString(
+            $item["products_description"]
+        );
+        $shortDesc   = $this->stringHelper->removeTagsFromString(
+            $item["products_short_description"]
+        );
         $description = '';
         switch ($descriptionType) {
             case SHOPGATE_SETTING_EXPORT_DESCRIPTION:
@@ -1008,7 +1110,8 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
     }
 
     /**
-     * generate properties to an product as sting, concatenated with the delimiter ||
+     * generate properties to an product as sting, concatenated with the
+     * delimiter ||
      * (properties can be used as filter e.g. on the mobile page)
      *
      * @param array      $product
@@ -1020,8 +1123,13 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
     {
         $properties = array();
 
-        if (!empty($product["products_fsk18"]) && $product["products_fsk18"] == 1) {
-            $properties[] = $asArray ? array("label" => "Altersbeschränkung", "value" => "18 Jahre")
+        if (!empty($product["products_fsk18"])
+            && $product["products_fsk18"] == 1
+        ) {
+            $properties[] = $asArray ? array(
+                "label" => "Altersbeschränkung",
+                "value" => "18 Jahre"
+            )
                 : "Altersbeschränkung=>18 Jahre";
         }
 
@@ -1037,11 +1145,15 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
      */
     public function getProductCategoryNumbers($item)
     {
-        $this->log('execute _getProductCategoryNumbers() ...', ShopgateLogger::LOGTYPE_DEBUG);
+        $this->log(
+            'execute _getProductCategoryNumbers() ...',
+            ShopgateLogger::LOGTYPE_DEBUG
+        );
         $this->getProductOrderValues($maxOrder, $minOrder, $addToOrderIndex);
         $categories = array();
         /** @noinspection SqlDialectInspection */
-        $catsQry   = "
+        $catsQry
+                   = "
             SELECT DISTINCT
                 ptc.categories_id,
                 c.products_sorting2
@@ -1060,7 +1172,8 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
             $catNumber = '';
             if ($category['products_sorting2'] != 'ASC') {
                 if ($this->reverseItemSortOrder) {
-                    $sort = $this->getMaxProductSortPosition() - $item['products_sort'];
+                    $sort = $this->getMaxProductSortPosition()
+                        - $item['products_sort'];
                 } else {
                     $sort = $item['products_sort'];
                 }
@@ -1068,12 +1181,13 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
                 if ($this->reverseItemSortOrder) {
                     $sort = $item['products_sort'];
                 } else {
-                    $sort = $this->getMaxProductSortPosition() - $item['products_sort'];
+                    $sort = $this->getMaxProductSortPosition()
+                        - $item['products_sort'];
                 }
             }
 
             if (!empty($sort) || ((string)$sort === '0')) {
-                $sort += $addToOrderIndex;
+                $sort      += $addToOrderIndex;
                 $catNumber = '=>' . $sort;
             }
             $catNumber    = $category['categories_id'] . $catNumber;
@@ -1084,7 +1198,8 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
     }
 
     /**
-     * generates a string containing the xseller id to products, separated by the delimiter ||
+     * generates a string containing the xseller id to products, separated by
+     * the delimiter ||
      *
      * @param int        $products_id
      * @param bool|false $asArray
@@ -1093,8 +1208,11 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
      */
     public function getRelatedShopItems($products_id, $asArray = false)
     {
-        $this->log("execute _getRelatedShopItems() ...", ShopgateLogger::LOGTYPE_DEBUG);
-        $qry = "
+        $this->log(
+            "execute _getRelatedShopItems() ...", ShopgateLogger::LOGTYPE_DEBUG
+        );
+        $qry
+            = "
             SELECT px.xsell_id
             FROM " . TABLE_PRODUCTS_XSELL . " px
             INNER JOIN " . TABLE_PRODUCTS . " p ON (px.products_id = p.products_id)
@@ -1113,7 +1231,6 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
         return $asArray ? $xSellIds : implode("||", $xSellIds);
     }
 
-
     /**
      * read the title to an tax class from the database by uid
      *
@@ -1125,13 +1242,15 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
      */
     protected function getTaxClassTitleById($uid)
     {
-        $sqlQuery    = "SELECT tax_class_title AS title FROM `" . TABLE_TAX_CLASS . "` WHERE tax_class_id={$uid}";
+        $sqlQuery    = "SELECT tax_class_title AS title FROM `"
+            . TABLE_TAX_CLASS . "` WHERE tax_class_id={$uid}";
         $queryResult = xtc_db_query($sqlQuery);
 
         if (!$queryResult) {
             throw new ShopgateLibraryException(
                 ShopgateLibraryException::PLUGIN_DATABASE_ERROR,
-                "Shopgate Plugin - Error while executing the query: " . $sqlQuery, true
+                "Shopgate Plugin - Error while executing the query: "
+                . $sqlQuery, true
             );
         }
 
@@ -1166,19 +1285,19 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
         $vpe         = "";
         $priceHelper = $this->getHelper(ShopgateObject::HELPER_PRICING);
 
-        if (!empty($product["products_vpe_value"]) && !empty($product["products_vpe_name"])
+        if (!empty($product["products_vpe_value"])
+            && !empty($product["products_vpe_name"])
             && $product["products_vpe_value"] != 0.0000
         ) {
-
             if ($product["products_vpe_status"] == 1) {
-
                 $factor = 1;
                 switch (strtolower($product["products_vpe_name"])) {
                     case "ml":
                     case "mg":
                         // don't know why this logic was create
                         // it's used and there was no failure with it in the past
-                        $factor = $product["products_vpe_value"] < 250 ? 100 : 1000;
+                        $factor = $product["products_vpe_value"] < 250 ? 100
+                            : 1000;
                         break;
                 }
 
@@ -1224,7 +1343,10 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
      */
     public function getAvailableText($item = array(), $defaultStatusName = '')
     {
-        if (empty($item) || empty($item['shipping_status_name']) && empty($defaultStatusName)) {
+        if (empty($item)
+            || empty($item['shipping_status_name'])
+            && empty($defaultStatusName)
+        ) {
             return '';
         }
 
@@ -1241,18 +1363,25 @@ class ShopgateItemModel extends Shopgate_Model_Catalog_Product
                 substr($item['products_date_available'], 0, 10) . ' 00:00:00'
             ); // Take the date beginning at 00:00:00 o' clock
             // Set the "available on" text only if it is at least one day in the future
-            if ($availableOnTimestamp - time() > 60 * 60 * 24) { // 60sec * 60min * 24h == count seconds in 1 day
+            if ($availableOnTimestamp - time() > 60 * 60
+                * 24
+            ) { // 60sec * 60min * 24h == count seconds in 1 day
                 switch (strtolower($this->config->getLanguage())) {
                     case 'de':
-                        $dateAvailableFormatted = date('d.m.Y', $availableOnTimestamp);
+                        $dateAvailableFormatted = date(
+                            'd.m.Y', $availableOnTimestamp
+                        );
                         break;
                     case 'en':
                     default:
-                        $dateAvailableFormatted = date('m/d/Y', $availableOnTimestamp);
+                        $dateAvailableFormatted = date(
+                            'm/d/Y', $availableOnTimestamp
+                        );
                         break;
                 }
                 $availableText = str_replace(
-                    '#DATE#', $dateAvailableFormatted, SHOPGATE_PLUGIN_FIELD_AVAILABLE_TEXT_AVAILABLE_ON_DATE
+                    '#DATE#', $dateAvailableFormatted,
+                    SHOPGATE_PLUGIN_FIELD_AVAILABLE_TEXT_AVAILABLE_ON_DATE
                 );
             }
         }

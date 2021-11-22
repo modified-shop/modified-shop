@@ -1,25 +1,25 @@
 <?php
 
 /**
- * Shopgate GmbH
  *
- * URHEBERRECHTSHINWEIS
+ * Copyright Shopgate Inc.
  *
- * Dieses Plugin ist urheberrechtlich geschützt. Es darf ausschließlich von Kunden der Shopgate GmbH
- * zum Zwecke der eigenen Kommunikation zwischen dem IT-System des Kunden mit dem IT-System der
- * Shopgate GmbH über www.shopgate.com verwendet werden. Eine darüber hinausgehende Vervielfältigung, Verbreitung,
- * öffentliche Zugänglichmachung, Bearbeitung oder Weitergabe an Dritte ist nur mit unserer vorherigen
- * schriftlichen Zustimmung zulässig. Die Regelungen der §§ 69 d Abs. 2, 3 und 69 e UrhG bleiben hiervon unberührt.
+ * Licensed under the GNU General Public License, Version 2 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * COPYRIGHT NOTICE
+ * https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
  *
- * This plugin is the subject of copyright protection. It is only for the use of Shopgate GmbH customers,
- * for the purpose of facilitating communication between the IT system of the customer and the IT system
- * of Shopgate GmbH via www.shopgate.com. Any reproduction, dissemination, public propagation, processing or
- * transfer to third parties is only permitted where we previously consented thereto in writing. The provisions
- * of paragraph 69 d, sub-paragraphs 2, 3 and paragraph 69, sub-paragraph e of the German Copyright Act shall remain unaffected.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ * limitations under the License.
  *
- * @author Shopgate GmbH <interfaces@shopgate.com>
+ * @author    Shopgate Inc, 804 Congress Ave, Austin, Texas 78701 <interfaces@shopgate.com>
+ * @copyright Shopgate Inc
+ * @license   https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt GNU General Public License, Version 2
+ *
  */
 class ShopgateReviewModel extends Shopgate_Model_Catalog_Review
 {
@@ -27,7 +27,7 @@ class ShopgateReviewModel extends Shopgate_Model_Catalog_Review
      * @var int $languageId
      */
     private $languageId;
-    
+
     /**
      * @param mixed $languageId
      */
@@ -35,17 +35,18 @@ class ShopgateReviewModel extends Shopgate_Model_Catalog_Review
     {
         $this->languageId = $languageId;
     }
-    
+
     /**
-     * generates the database query to get the review data for export 
-     * 
+     * generates the database query to get the review data for export
+     *
      * @param null $limit
      * @param null $offset
      *
      * @return string
      */
-    public function getReviewQuery($limit = null, $offset = null, $uids = array())
-    {
+    public function getReviewQuery($limit = null, $offset = null,
+        $uids = array()
+    ) {
         return
             "SELECT
                 r.reviews_id,
@@ -59,10 +60,12 @@ class ShopgateReviewModel extends Shopgate_Model_Catalog_Review
             INNER JOIN
             " . TABLE_REVIEWS_DESCRIPTION . " as rd ON r.reviews_id = rd.reviews_id
             WHERE rd.languages_id = '" . $this->languageId . "'" .
-            ((count($uids) > 0) ? " AND r.reviews_id IN (" . implode(',', $uids) . ")" : "")
-            . " ORDER BY r.products_id ASC" . (!empty($limit) && !empty($offset) ? " LIMIT $offset,$limit" : "");
+            ((count($uids) > 0) ? " AND r.reviews_id IN (" . implode(',', $uids)
+                . ")" : "")
+            . " ORDER BY r.products_id ASC" . (!empty($limit) && !empty($offset)
+                ? " LIMIT $offset,$limit" : "");
     }
-    
+
     /**
      * calculates shopgate score from shop score
      *
@@ -74,7 +77,7 @@ class ShopgateReviewModel extends Shopgate_Model_Catalog_Review
     {
         return intval($shopScore * 2);
     }
-    
+
     /**
      * returns a Shopgate review title from review text
      *
@@ -86,7 +89,7 @@ class ShopgateReviewModel extends Shopgate_Model_Catalog_Review
     {
         return substr($text, 0, 20) . "";
     }
-    
+
     /**
      * returns a Shopgate time string
      *

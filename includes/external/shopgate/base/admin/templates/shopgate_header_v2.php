@@ -18,19 +18,25 @@
         ?>
         <!-- body_text //-->
         <td class="boxCenter">
-            <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS . 'heading/icon_modules.png'); ?></div>
+            <div class="pageHeadingImage"><?php echo xtc_image(
+                    DIR_WS_ICONS . 'heading/icon_modules.png'
+                ); ?></div>
             <div class="pageHeading pdg2">Shopgate</div>
             <div class="main">Modules</div>
             <table class="tableCenter">
                 <tr>
-                    <td valign="middle" class="dataTableHeadingContent" style="width:250px;">
+                    <td valign="middle" class="dataTableHeadingContent"
+                        style="width:250px;">
                         <?php echo SHOPGATE_CONFIG_TITLE; ?>
                     </td>
                     <td valign="middle" class="dataTableHeadingContent">
-                        <a href="<?php echo xtc_href_link('modules.php', 'set=payment&module=shopgate'); ?>"><u>Einstellungen</u></a>
+                        <a href="<?php echo xtc_href_link(
+                            'modules.php', 'set=payment&module=shopgate'
+                        ); ?>"><u>Einstellungen</u></a>
                     </td>
                 </tr>
                 <tr style="height: 100%;">
-                    <td class="main" style="height: 100%; vertical-align: top;" colspan="2">
+                    <td class="main" style="height: 100%; vertical-align: top;"
+                        colspan="2">
 
 

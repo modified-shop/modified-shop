@@ -1,24 +1,24 @@
 <?php
 /**
- * Shopgate GmbH
  *
- * URHEBERRECHTSHINWEIS
+ * Copyright Shopgate Inc.
  *
- * Dieses Plugin ist urheberrechtlich geschützt. Es darf ausschließlich von Kunden der Shopgate GmbH
- * zum Zwecke der eigenen Kommunikation zwischen dem IT-System des Kunden mit dem IT-System der
- * Shopgate GmbH über www.shopgate.com verwendet werden. Eine darüber hinausgehende Vervielfältigung, Verbreitung,
- * öffentliche Zugänglichmachung, Bearbeitung oder Weitergabe an Dritte ist nur mit unserer vorherigen
- * schriftlichen Zustimmung zulässig. Die Regelungen der §§ 69 d Abs. 2, 3 und 69 e UrhG bleiben hiervon unberührt.
+ * Licensed under the GNU General Public License, Version 2 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * COPYRIGHT NOTICE
+ * https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
  *
- * This plugin is the subject of copyright protection. It is only for the use of Shopgate GmbH customers,
- * for the purpose of facilitating communication between the IT system of the customer and the IT system
- * of Shopgate GmbH via www.shopgate.com. Any reproduction, dissemination, public propagation, processing or
- * transfer to third parties is only permitted where we previously consented thereto in writing. The provisions
- * of paragraph 69 d, sub-paragraphs 2, 3 and paragraph 69, sub-paragraph e of the German Copyright Act shall remain unaffected.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ * limitations under the License.
  *
- * @author Shopgate GmbH <interfaces@shopgate.com>
+ * @author    Shopgate Inc, 804 Congress Ave, Austin, Texas 78701 <interfaces@shopgate.com>
+ * @copyright Shopgate Inc
+ * @license   https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt GNU General Public License, Version 2
+ *
  */
 
 /**
@@ -26,7 +26,6 @@
  */
 class ShopgateCustomerOrderModel
 {
-    
     const TOTAL_CLASS_BILLSAFE              = 'ot_billsafe';
     const TOTAL_CLASS_COD_FEE               = 'ot_cod_fee';
     const TOTAL_CLASS_COUPON                = 'ot_coupon';
@@ -42,32 +41,32 @@ class ShopgateCustomerOrderModel
     const TOTAL_CLASS_SUBTOTAL_NO_TAX       = 'ot_subtotal_no_tax';
     const TOTAL_CLASS_TAX                   = 'ot_tax';
     const TOTAL_CLASS_TOTAL                 = 'ot_total';
-    
+
     /** @var ShopgateConfigModified */
     private $config;
-    
+
     /** @var array */
     private $order;
-    
+
     /** @var string */
     private $language;
-    
+
     /** @var int|string */
     private $languageId;
-    
+
     /**
      * @param ShopgateConfigModified $config
      * @param int|string             $languageId
      */
     public function __construct(ShopgateConfigModified $config, $languageId)
     {
-        $this->config = $config;
+        $this->config     = $config;
         $this->languageId = $languageId;
     }
-    
+
     /**
      * get all orders to an customer from the database
-     * 
+     *
      * @param string $customerToken
      * @param string $customerLanguage
      * @param int    $limit
@@ -77,8 +76,9 @@ class ShopgateCustomerOrderModel
      *
      * @return array
      */
-    public function getOrders($customerToken, $customerLanguage, $limit, $offset, $orderDateFrom, $sortOrder)
-    {
+    public function getOrders($customerToken, $customerLanguage, $limit,
+        $offset, $orderDateFrom, $sortOrder
+    ) {
         $this->language = $customerLanguage;
         switch ($sortOrder) {
             case 'created_asc':
@@ -89,14 +89,16 @@ class ShopgateCustomerOrderModel
                 $orderBy = 'date_purchased DESC';
                 break;
         }
-        
-        $customerModel = new ShopgateCustomerModel($this->config, $this->languageId);
+
+        $customerModel = new ShopgateCustomerModel(
+            $this->config, $this->languageId
+        );
         $customerId    = $customerModel->getCustomerIdByToken($customerToken);
-        
+
         if (empty($customerId)) {
             return array();
         }
-        
+
         $ordersQuery = ShopgateWrapper::db_query(
             "
 			SELECT o.*, s.`shopgate_order_number`
@@ -110,18 +112,19 @@ class ShopgateCustomerOrderModel
 			OFFSET $offset
 		"
         );
-        
+
         $result = array();
         while ($order = ShopgateWrapper::db_fetch_array($ordersQuery)) {
             $result[] = $this->buildExternalOrder($order);
         }
-        
+
         return $result;
     }
-    
+
     /**
-     * fill the ShopgateExternalOrder object with the order information from the shop system 
-     * 
+     * fill the ShopgateExternalOrder object with the order information from
+     * the shop system
+     *
      * @param array $modifiedOrder
      *
      * @return ShopgateExternalOrder
@@ -132,14 +135,14 @@ class ShopgateCustomerOrderModel
         foreach ($this->order as &$value) {
             $value = utf8_encode($value);
         }
-        
+
         $this->loadData('totals', TABLE_ORDERS_TOTAL);
         $this->loadData('products', TABLE_ORDERS_PRODUCTS);
         $this->loadData('attributes', TABLE_ORDERS_PRODUCTS_ATTRIBUTES);
         $this->loadData('status_history', TABLE_ORDERS_STATUS_HISTORY);
-        
+
         $result = new ShopgateExternalOrder();
-        
+
         $result->setOrderNumber($this->getOrderNumber());
         $result->setExternalOrderNumber($this->getExternalOrderNumber());
         $result->setExternalOrderId($this->getExternalOrderId());
@@ -156,7 +159,9 @@ class ShopgateCustomerOrderModel
         $result->setIsPaid($this->getIsPaid());
         $result->setPaymentMethod($this->getPaymentMethod());
         $result->setPaymentTime($this->getPaymentTime());
-        $result->setPaymentTransactionNumber($this->getPaymentTransactionNumber());
+        $result->setPaymentTransactionNumber(
+            $this->getPaymentTransactionNumber()
+        );
         $result->setIsShippingCompleted($this->getIsShippingCompleted());
         $result->setShippingCompletedTime($this->getShippingCompletedTime());
         $result->setDeliveryNotes($this->getDeliveryNotes());
@@ -164,20 +169,20 @@ class ShopgateCustomerOrderModel
         $result->setExtraCosts($this->getExtraCosts());
         $result->setExternalCoupons($this->getExternalCoupons());
         $result->setItems($this->getItems());
-        
+
         return $result;
     }
-    
+
     /**
      * load order data from database regarding the order id
-     * 
+     *
      * @param string $key
      * @param string $table
      */
     private function loadData($key, $table)
     {
         $this->order[$key] = array();
-        
+
         $totalsQuery = xtc_db_query(
             "
             SELECT *
@@ -189,15 +194,17 @@ class ShopgateCustomerOrderModel
             $this->order[$key][] = $entry;
         }
     }
-    
+
     /**
      * load order status data from the database
-     * 
+     *
      * @return string
      */
     private function getStatusName()
     {
-        $languageId = ShopgatePluginInitHelper::getLanguageIdByIsoCode($this->language);
+        $languageId = ShopgatePluginInitHelper::getLanguageIdByIsoCode(
+            $this->language
+        );
         $query      = ShopgateWrapper::db_query(
             "
 			SELECT `orders_status_name`
@@ -207,10 +214,11 @@ class ShopgateCustomerOrderModel
 		"
         );
         $result     = ShopgateWrapper::db_fetch_array($query);
-        
-        return !empty($result['orders_status_name']) ? $result['orders_status_name'] : null;
+
+        return !empty($result['orders_status_name'])
+            ? $result['orders_status_name'] : null;
     }
-    
+
     /**
      * @return string
      */
@@ -218,7 +226,7 @@ class ShopgateCustomerOrderModel
     {
         return $this->order['shopgate_order_number'];
     }
-    
+
     /**
      * @return string
      */
@@ -226,7 +234,7 @@ class ShopgateCustomerOrderModel
     {
         return $this->order['orders_id'];
     }
-    
+
     /**
      * @return string
      */
@@ -234,7 +242,7 @@ class ShopgateCustomerOrderModel
     {
         return $this->order['orders_id'];
     }
-    
+
     /**
      * @return string timestamp
      */
@@ -242,7 +250,7 @@ class ShopgateCustomerOrderModel
     {
         return $this->order['date_purchased'];
     }
-    
+
     /**
      * @return string
      */
@@ -250,7 +258,7 @@ class ShopgateCustomerOrderModel
     {
         return $this->order['customers_email_address'];
     }
-    
+
     /**
      * @return string
      */
@@ -258,7 +266,7 @@ class ShopgateCustomerOrderModel
     {
         return $this->order['customers_telephone'];
     }
-    
+
     /**
      * @return string
      */
@@ -266,7 +274,7 @@ class ShopgateCustomerOrderModel
     {
         return null;
     }
-    
+
     /**
      * @return ShopgateOrderCustomField[]
      */
@@ -274,14 +282,14 @@ class ShopgateCustomerOrderModel
     {
         return array();
     }
-    
+
     /**
      * @return ShopgateAddress
      */
     private function getInvoiceAddress()
     {
         $result = new ShopgateAddress();
-        
+
         $result->setAddressType(ShopgateAddress::INVOICE);
         $result->setCity($this->order['delivery_city']);
         $result->setCompany($this->order['delivery_company']);
@@ -292,17 +300,17 @@ class ShopgateCustomerOrderModel
         $result->setStreet1($this->order['delivery_street_address']);
         $result->setStreet2($this->order['delivery_suburb']);
         $result->setZipcode($this->order['delivery_postcode']);
-        
+
         return $result;
     }
-    
+
     /**
      * @return ShopgateAddress
      */
     private function getDeliveryAddress()
     {
         $result = new ShopgateAddress();
-        
+
         $result->setAddressType(ShopgateAddress::DELIVERY);
         $result->setCity($this->order['billing_city']);
         $result->setCompany($this->order['billing_company']);
@@ -313,10 +321,10 @@ class ShopgateCustomerOrderModel
         $result->setStreet1($this->order['billing_street_address']);
         $result->setStreet2($this->order['billing_suburb']);
         $result->setZipcode($this->order['billing_postcode']);
-        
+
         return $result;
     }
-    
+
     /**
      * @return string
      */
@@ -324,7 +332,7 @@ class ShopgateCustomerOrderModel
     {
         return $this->order['currency'];
     }
-    
+
     /**
      * @return string
      */
@@ -335,10 +343,10 @@ class ShopgateCustomerOrderModel
                 return $total['value'];
             }
         }
-        
+
         return "0.0";
     }
-    
+
     /**
      * @return int (0|1)
      */
@@ -346,29 +354,36 @@ class ShopgateCustomerOrderModel
     {
         return null;
     }
-    
+
     /**
      * @return string
      */
     private function getPaymentMethod()
     {
-        $languageDir            = ShopgatePluginInitHelper::getLanguageDirectoryByIsoCode($this->language);
+        $languageDir            = ShopgatePluginInitHelper::getLanguageDirectoryByIsoCode(
+            $this->language
+        );
         $code                   = $this->order['payment_method'];
         $paymentClassFile       = DIR_WS_MODULES . "payment/$code.php";
-        $paymentTranslationFile = DIR_FS_CATALOG . "lang/$languageDir/modules/payment/$code.php";
-        
-        if (file_exists($paymentClassFile) && file_exists($paymentTranslationFile)) {
+        $paymentTranslationFile = DIR_FS_CATALOG
+            . "lang/$languageDir/modules/payment/$code.php";
+
+        if (file_exists($paymentClassFile)
+            && file_exists(
+                $paymentTranslationFile
+            )
+        ) {
             require_once($paymentClassFile);
             require_once($paymentTranslationFile);
-            
+
             $class = new $code();
-            
+
             return $class->title;
         }
-        
+
         return $code;
     }
-    
+
     /**
      * @return string
      */
@@ -376,7 +391,7 @@ class ShopgateCustomerOrderModel
     {
         return null;
     }
-    
+
     /**
      * @return string
      */
@@ -384,35 +399,39 @@ class ShopgateCustomerOrderModel
     {
         return null;
     }
-    
+
     /**
      * @return bool
      */
     private function getIsShippingCompleted()
     {
         foreach ($this->order['status_history'] as $status) {
-            if ($status['orders_status_id'] == $this->config->getOrderStatusShipped()) {
+            if ($status['orders_status_id']
+                == $this->config->getOrderStatusShipped()
+            ) {
                 return true;
             }
         }
-        
+
         return false;
     }
-    
+
     /**
      * @return string
      */
     private function getShippingCompletedTime()
     {
         foreach ($this->order['status_history'] as $status) {
-            if ($status['orders_status_id'] == $this->config->getOrderStatusShipped()) {
+            if ($status['orders_status_id']
+                == $this->config->getOrderStatusShipped()
+            ) {
                 return $status['date_added'];
             }
         }
-        
+
         return null;
     }
-    
+
     /**
      * @return ShopgateDeliveryNote[]
      */
@@ -420,62 +439,64 @@ class ShopgateCustomerOrderModel
     {
         return array();
     }
-    
+
     /**
      * generate tax data to the current order
-     * 
+     *
      * @return ShopgateExternalOrderTax[]
      */
     private function getOrderTaxes()
     {
         $result = array();
-        
+
         foreach ($this->order['totals'] as $total) {
             $total['value'] = (float)$total['value'];
-            if ($total['class'] != self::TOTAL_CLASS_TAX || empty($total['value'])) {
+            if ($total['class'] != self::TOTAL_CLASS_TAX
+                || empty($total['value'])
+            ) {
                 continue;
             }
-            
+
             $taxPercent = null;
             $matches    = array();
             if (preg_match('/(?P<tax>[0-9]+) ?%/', $total['title'], $matches)) {
                 $taxPercent = $matches['tax'];
             }
-            
+
             $tax = new ShopgateExternalOrderTax();
             $tax->setAmount($total['value']);
             $tax->setLabel(trim($total['title'], ':'));
             $tax->setTaxPercent($taxPercent);
-            
+
             $result[] = $tax;
         }
-        
+
         return $result;
     }
-    
+
     /**
      * gather the extra costs to the current order
-     * 
+     *
      * @return ShopgateExternalOrderExtraCost[]
      */
     private function getExtraCosts()
     {
         $mapping = array(
-            self::TOTAL_CLASS_BILLSAFE              => ShopgateExternalOrderExtraCost::TYPE_PAYMENT,
-            self::TOTAL_CLASS_COD_FEE               => ShopgateExternalOrderExtraCost::TYPE_PAYMENT,
-            self::TOTAL_CLASS_KLARNA_FEE            => ShopgateExternalOrderExtraCost::TYPE_PAYMENT,
-            self::TOTAL_CLASS_PAYMENT               => ShopgateExternalOrderExtraCost::TYPE_PAYMENT,
-            self::TOTAL_CLASS_SOFORT                => ShopgateExternalOrderExtraCost::TYPE_PAYMENT,
-            
+            self::TOTAL_CLASS_BILLSAFE   => ShopgateExternalOrderExtraCost::TYPE_PAYMENT,
+            self::TOTAL_CLASS_COD_FEE    => ShopgateExternalOrderExtraCost::TYPE_PAYMENT,
+            self::TOTAL_CLASS_KLARNA_FEE => ShopgateExternalOrderExtraCost::TYPE_PAYMENT,
+            self::TOTAL_CLASS_PAYMENT    => ShopgateExternalOrderExtraCost::TYPE_PAYMENT,
+            self::TOTAL_CLASS_SOFORT     => ShopgateExternalOrderExtraCost::TYPE_PAYMENT,
+
             self::TOTAL_CLASS_PERSONAL_SHIPPING_FEE => ShopgateExternalOrderExtraCost::TYPE_SHIPPING,
             self::TOTAL_CLASS_SHIPPING              => ShopgateExternalOrderExtraCost::TYPE_SHIPPING,
-            
-            self::TOTAL_CLASS_DISCOUNT              => ShopgateExternalOrderExtraCost::TYPE_MISC,
-            self::TOTAL_CLASS_LOW_ORDER_FEE         => ShopgateExternalOrderExtraCost::TYPE_MISC,
+
+            self::TOTAL_CLASS_DISCOUNT      => ShopgateExternalOrderExtraCost::TYPE_MISC,
+            self::TOTAL_CLASS_LOW_ORDER_FEE => ShopgateExternalOrderExtraCost::TYPE_MISC,
         );
-        
+
         $result = array();
-        
+
         foreach ($this->order['totals'] as $total) {
             if (!isset($mapping[$total['class']])) {
                 continue;
@@ -486,19 +507,19 @@ class ShopgateCustomerOrderModel
             $cost->setLabel(trim($total['title'], ':'));
             $result[] = $cost;
         }
-        
+
         return $result;
     }
-    
+
     /**
      * gather coupon data to the current order
-     * 
+     *
      * @return ShopgateExternalCoupon[]
      */
     private function getExternalCoupons()
     {
         $result = array();
-        
+
         foreach ($this->order['totals'] as $total) {
             if ($total['class'] != self::TOTAL_CLASS_COUPON) {
                 continue;
@@ -509,30 +530,34 @@ class ShopgateCustomerOrderModel
             $coupon->setCurrency($this->order['currency']);
             $result[] = $coupon;
         }
-        
+
         return $result;
     }
-    
+
     /**
      * gather product data to the current order
-     * 
+     *
      * @return ShopgateExternalOrderItem[]
      */
     private function getItems()
     {
         $result = array();
-        
+
         $attributesByProduct = array();
         foreach ($this->order['attributes'] as $attribute) {
-            $attributesByProduct[$attribute['orders_products_id']][] = $attribute;
+            $attributesByProduct[$attribute['orders_products_id']][]
+                = $attribute;
         }
-        
+
         foreach ($this->order['products'] as $product) {
             $name = $product['products_name'];
-            foreach ($attributesByProduct[$product['orders_products_id']] as $attribute) {
+            foreach (
+                $attributesByProduct[$product['orders_products_id']] as
+                $attribute
+            ) {
                 $name .= ", {$attribute['products_options']}: {$attribute['products_options_values']}";
             }
-            
+
             $item = new ShopgateExternalOrderItem();
             $item->setItemNumber($product['products_id']);
             $item->setItemNumberPublic($product['products_model']);
@@ -541,10 +566,10 @@ class ShopgateCustomerOrderModel
             $item->setTaxPercent($product['products_tax']);
             $item->setUnitAmountWithTax($product['products_price']);
             $item->setCurrency($this->order['currency']);
-            
+
             $result[] = $item;
         }
-        
+
         return $result;
     }
 }

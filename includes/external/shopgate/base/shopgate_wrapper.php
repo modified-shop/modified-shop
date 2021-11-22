@@ -1,29 +1,29 @@
 <?php
 
 /**
- * Shopgate GmbH
  *
- * URHEBERRECHTSHINWEIS
+ * Copyright Shopgate Inc.
  *
- * Dieses Plugin ist urheberrechtlich geschützt. Es darf ausschließlich von Kunden der Shopgate GmbH
- * zum Zwecke der eigenen Kommunikation zwischen dem IT-System des Kunden mit dem IT-System der
- * Shopgate GmbH über www.shopgate.com verwendet werden. Eine darüber hinausgehende Vervielfältigung, Verbreitung,
- * öffentliche Zugänglichmachung, Bearbeitung oder Weitergabe an Dritte ist nur mit unserer vorherigen
- * schriftlichen Zustimmung zulässig. Die Regelungen der §§ 69 d Abs. 2, 3 und 69 e UrhG bleiben hiervon unberührt.
+ * Licensed under the GNU General Public License, Version 2 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * COPYRIGHT NOTICE
+ * https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
  *
- * This plugin is the subject of copyright protection. It is only for the use of Shopgate GmbH customers,
- * for the purpose of facilitating communication between the IT system of the customer and the IT system
- * of Shopgate GmbH via www.shopgate.com. Any reproduction, dissemination, public propagation, processing or
- * transfer to third parties is only permitted where we previously consented thereto in writing. The provisions
- * of paragraph 69 d, sub-paragraphs 2, 3 and paragraph 69, sub-paragraph e of the German Copyright Act shall remain unaffected.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ * limitations under the License.
  *
- * @author Shopgate GmbH <interfaces@shopgate.com>
+ * @author    Shopgate Inc, 804 Congress Ave, Austin, Texas 78701 <interfaces@shopgate.com>
+ * @copyright Shopgate Inc
+ * @license   https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt GNU General Public License, Version 2
+ *
  */
 class ShopgateWrapper
 {
-    
+
     /**
      * Wraps for example: xtc_db_prepare_input
      *
@@ -39,7 +39,7 @@ class ShopgateWrapper
             return xtc_db_prepare_input($input);
         }
     }
-    
+
     /**
      * @param string $db_query
      *
@@ -48,9 +48,8 @@ class ShopgateWrapper
     public static function db_fetch_array($db_query)
     {
         return xtc_db_fetch_array($db_query);
-        
     }
-    
+
     /**
      * @param        $query
      * @param string $link
@@ -61,7 +60,7 @@ class ShopgateWrapper
     {
         return xtc_db_query($query, $link);
     }
-    
+
     /**
      * Checks if the column exists within the table
      *
@@ -74,7 +73,7 @@ class ShopgateWrapper
     {
         $query  = "SHOW COLUMNS FROM {$table} LIKE '{$column}';";
         $result = xtc_db_query($query);
-        
+
         return (bool)xtc_db_num_rows($result);
     }
 }

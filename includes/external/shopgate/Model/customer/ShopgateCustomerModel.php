@@ -1,39 +1,39 @@
 <?php
 
 /**
- * Shopgate GmbH
  *
- * URHEBERRECHTSHINWEIS
+ * Copyright Shopgate Inc.
  *
- * Dieses Plugin ist urheberrechtlich geschützt. Es darf ausschließlich von Kunden der Shopgate GmbH
- * zum Zwecke der eigenen Kommunikation zwischen dem IT-System des Kunden mit dem IT-System der
- * Shopgate GmbH über www.shopgate.com verwendet werden. Eine darüber hinausgehende Vervielfältigung, Verbreitung,
- * öffentliche Zugänglichmachung, Bearbeitung oder Weitergabe an Dritte ist nur mit unserer vorherigen
- * schriftlichen Zustimmung zulässig. Die Regelungen der §§ 69 d Abs. 2, 3 und 69 e UrhG bleiben hiervon unberührt.
+ * Licensed under the GNU General Public License, Version 2 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * COPYRIGHT NOTICE
+ * https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
  *
- * This plugin is the subject of copyright protection. It is only for the use of Shopgate GmbH customers,
- * for the purpose of facilitating communication between the IT system of the customer and the IT system
- * of Shopgate GmbH via www.shopgate.com. Any reproduction, dissemination, public propagation, processing or
- * transfer to third parties is only permitted where we previously consented thereto in writing. The provisions
- * of paragraph 69 d, sub-paragraphs 2, 3 and paragraph 69, sub-paragraph e of the German Copyright Act shall remain unaffected.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ * limitations under the License.
  *
- * @author Shopgate GmbH <interfaces@shopgate.com>
+ * @author    Shopgate Inc, 804 Congress Ave, Austin, Texas 78701 <interfaces@shopgate.com>
+ * @copyright Shopgate Inc
+ * @license   https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt GNU General Public License, Version 2
+ *
  */
 class ShopgateCustomerModel extends ShopgateObject
 {
-    
+
     /**
      * @var ShopgateConfigModified $config
      */
     private $config;
-    
+
     /**
      * @var int
      */
     private $languageId;
-    
+
     /**
      * @param ShopgateConfigModified $config
      * @param int                    $languageId
@@ -43,7 +43,7 @@ class ShopgateCustomerModel extends ShopgateObject
         $this->languageId = $languageId;
         $this->config     = $config;
     }
-    
+
     /**
      * return an array with all customer groups
      *
@@ -52,8 +52,9 @@ class ShopgateCustomerModel extends ShopgateObject
     public function getCustomerGroups()
     {
         $customerGroups = array();
-        
-        $query  = "SELECT 
+
+        $query
+                = "SELECT 
                         cs.customers_status_name AS name,
                         cs.customers_status_id AS id,
                         0 AS 'is_default'
@@ -61,19 +62,19 @@ class ShopgateCustomerModel extends ShopgateObject
                     WHERE cs.language_id = {$this->languageId}";
         $result = xtc_db_query($query);
         while ($customerGroup = xtc_db_fetch_array($result)) {
-            foreach ($customerGroup AS &$cgrp) {
+            foreach ($customerGroup as &$cgrp) {
                 $this->stringToUtf8($cgrp, $this->config->getEncoding());
             }
             if ($customerGroup['id'] == DEFAULT_CUSTOMERS_STATUS_ID_GUEST) {
                 $customerGroup['is_default'] = 1;
             }
             $customerGroup['customer_tax_class_key'] = 'default';
-            $customerGroups[] = $customerGroup;
+            $customerGroups[]                        = $customerGroup;
         }
-        
+
         return $customerGroups;
     }
-    
+
     /**
      * get the customer's token from the database
      *
@@ -92,10 +93,10 @@ class ShopgateCustomerModel extends ShopgateObject
 		"
             )
         );
-        
+
         return is_array($result) ? $result['customer_token'] : false;
     }
-    
+
     /**
      * check if a customer already has a token
      *
@@ -107,7 +108,7 @@ class ShopgateCustomerModel extends ShopgateObject
     {
         return $this->getCustomerToken($internalCustomerId) ? true : false;
     }
-    
+
     /**
      * store a token to a customer in the database
      *
@@ -119,16 +120,18 @@ class ShopgateCustomerModel extends ShopgateObject
     public function insertToken($internalCustomerId, $eMailAddress)
     {
         $token = md5($internalCustomerId . $eMailAddress . microtime());
-        
+
         ShopgateWrapper::db_query(
             "INSERT INTO `" . TABLE_CUSTOMERS_SHOPGATE_CUSTOMER . "` " .
             "(`customer_id`, `customer_token`) VALUES " .
-            "(" . xtc_db_input($internalCustomerId) . ", '" . xtc_db_input($token) . "')"
+            "(" . xtc_db_input($internalCustomerId) . ", '" . xtc_db_input(
+                $token
+            ) . "')"
         );
-        
+
         return $token;
     }
-    
+
     /**
      * get customer id by the customer's token
      *
@@ -147,10 +150,10 @@ class ShopgateCustomerModel extends ShopgateObject
 		"
             )
         );
-        
+
         return isset($result['customer_id']) ? $result['customer_id'] : false;
     }
-    
+
     /**
      * Determines whether the two addresses in array
      * are equal to each other
@@ -162,18 +165,20 @@ class ShopgateCustomerModel extends ShopgateObject
     public function areAddressesEqual(array $shopgateAddresses)
     {
         if (count($shopgateAddresses) == 2) {
-            $whiteList =
-                array(
-                    'gender', 'first_name', 'last_name', 'street_1', 'street_2', 'zipcode', 'city', 'country',
-                    'custom_fields'
-                );
-            
-            return $shopgateAddresses[0]->compare($shopgateAddresses[0], $shopgateAddresses[1], $whiteList);
+            $whiteList = array(
+                'gender', 'first_name', 'last_name', 'street_1', 'street_2',
+                'zipcode', 'city', 'country',
+                'custom_fields'
+            );
+
+            return $shopgateAddresses[0]->compare(
+                $shopgateAddresses[0], $shopgateAddresses[1], $whiteList
+            );
         }
-        
+
         return false;
     }
-    
+
     /**
      * read information to an customer from the database by uid
      *
@@ -186,8 +191,9 @@ class ShopgateCustomerModel extends ShopgateObject
         if (empty($customerId)) {
             return "";
         }
-        $query = "SELECT * FROM `" . TABLE_CUSTOMERS . "` WHERE customers_id={$customerId}";
-        
+        $query = "SELECT * FROM `" . TABLE_CUSTOMERS
+            . "` WHERE customers_id={$customerId}";
+
         return xtc_db_fetch_array(xtc_db_query($query));
     }
 }

@@ -1,0 +1,233 @@
+[
+    {
+        "name": "zendframework/zend-stdlib",
+        "version": "2.2.10",
+        "version_normalized": "2.2.10.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/zendframework/zend-stdlib.git",
+            "reference": "b42d784bd142e916058a9d68eeafcc10ff63c12e"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/zendframework/zend-stdlib/zipball/b42d784bd142e916058a9d68eeafcc10ff63c12e",
+            "reference": "b42d784bd142e916058a9d68eeafcc10ff63c12e",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.3"
+        },
+        "require-dev": {
+            "fabpot/php-cs-fixer": "1.7.*",
+            "phpunit/phpunit": "~4.0",
+            "satooshi/php-coveralls": "dev-master",
+            "zendframework/zend-eventmanager": "self.version",
+            "zendframework/zend-filter": "self.version",
+            "zendframework/zend-serializer": "self.version",
+            "zendframework/zend-servicemanager": "self.version"
+        },
+        "suggest": {
+            "zendframework/zend-eventmanager": "To support aggregate hydrator usage",
+            "zendframework/zend-filter": "To support naming strategy hydrator usage",
+            "zendframework/zend-serializer": "Zend\\Serializer component",
+            "zendframework/zend-servicemanager": "To support hydrator plugin manager usage"
+        },
+        "time": "2014-03-05T17:29:35+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.2-dev",
+                "dev-develop": "2.3-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Zend\\Stdlib\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "homepage": "https://github.com/zendframework/zend-stdlib",
+        "keywords": [
+            "stdlib",
+            "zf2"
+        ]
+    },
+    {
+        "name": "zendframework/zend-json",
+        "version": "2.2.10",
+        "version_normalized": "2.2.10.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/zendframework/zend-json.git",
+            "reference": "e0a2e72459b029c3d3785fe8a0b41312670bfd24"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/zendframework/zend-json/zipball/e0a2e72459b029c3d3785fe8a0b41312670bfd24",
+            "reference": "e0a2e72459b029c3d3785fe8a0b41312670bfd24",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.3",
+            "zendframework/zend-stdlib": "self.version"
+        },
+        "require-dev": {
+            "fabpot/php-cs-fixer": "1.7.*",
+            "phpunit/phpunit": "~4.0",
+            "satooshi/php-coveralls": "dev-master",
+            "zendframework/zend-http": "self.version",
+            "zendframework/zend-server": "self.version"
+        },
+        "suggest": {
+            "zendframework/zend-http": "Zend\\Http component",
+            "zendframework/zend-server": "Zend\\Server component",
+            "zendframework/zendxml": "To support Zend\\Json\\Json::fromXml() usage"
+        },
+        "time": "2014-03-06T17:27:03+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.2-dev",
+                "dev-develop": "2.3-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Zend\\Json\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "description": "provides convenience methods for serializing native PHP to JSON and decoding JSON to native PHP",
+        "homepage": "https://github.com/zendframework/zend-json",
+        "keywords": [
+            "json",
+            "zf2"
+        ]
+    },
+    {
+        "name": "shopgate/cart-integration-sdk",
+        "version": "2.9.69",
+        "version_normalized": "2.9.69.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/shopgate/cart-integration-sdk.git",
+            "reference": "4d0401ded1121a2d3e0bed47c509fb9cd34078a2"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/shopgate/cart-integration-sdk/zipball/4d0401ded1121a2d3e0bed47c509fb9cd34078a2",
+            "reference": "4d0401ded1121a2d3e0bed47c509fb9cd34078a2",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3",
+            "zendframework/zend-json": "2.2.*"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "4.8.*"
+        },
+        "time": "2017-09-13T11:32:57+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "files": [
+                "src/core.php",
+                "src/apis.php",
+                "src/client.php",
+                "src/configuration.php",
+                "src/customers.php",
+                "src/orders.php",
+                "src/external_orders.php",
+                "src/items.php",
+                "src/redirect.php",
+                "src/models/Abstract.php",
+                "src/models/AbstractExport.php",
+                "src/models/XmlEmptyObject.php",
+                "src/models/XmlResultObject.php",
+                "src/models/catalog/Review.php",
+                "src/models/catalog/Product.php",
+                "src/models/catalog/Price.php",
+                "src/models/catalog/TierPrice.php",
+                "src/models/catalog/Category.php",
+                "src/models/catalog/CategoryPath.php",
+                "src/models/catalog/Shipping.php",
+                "src/models/catalog/Manufacturer.php",
+                "src/models/catalog/Visibility.php",
+                "src/models/catalog/Property.php",
+                "src/models/catalog/Stock.php",
+                "src/models/catalog/Identifier.php",
+                "src/models/catalog/Tag.php",
+                "src/models/catalog/Relation.php",
+                "src/models/catalog/Attribute.php",
+                "src/models/catalog/Input.php",
+                "src/models/catalog/Validation.php",
+                "src/models/catalog/Option.php",
+                "src/models/catalog/AttributeGroup.php",
+                "src/models/catalog/Attribute.php",
+                "src/models/media/Image.php",
+                "src/models/redirect/DeeplinkSuffix.php",
+                "src/models/redirect/DeeplinkSuffixValue.php",
+                "src/models/redirect/DeeplinkSuffixValueUnset.php",
+                "src/models/redirect/DeeplinkSuffixValueDisabled.php",
+                "src/models/redirect/HtmlTag.php",
+                "src/models/redirect/HtmlTagAttribute.php",
+                "src/models/redirect/HtmlTagVariable.php",
+                "src/helper/DataStructure.php",
+                "src/helper/Pricing.php",
+                "src/helper/String.php",
+                "src/helper/redirect/KeywordsManagerInterface.php",
+                "src/helper/redirect/KeywordsManager.php",
+                "src/helper/redirect/LinkBuilderInterface.php",
+                "src/helper/redirect/LinkBuilder.php",
+                "src/helper/redirect/MobileRedirectInterface.php",
+                "src/helper/redirect/MobileRedirect.php",
+                "src/helper/redirect/RedirectorInterface.php",
+                "src/helper/redirect/Redirector.php",
+                "src/helper/redirect/SettingsManagerInterface.php",
+                "src/helper/redirect/SettingsManager.php",
+                "src/helper/redirect/TagsGeneratorInterface.php",
+                "src/helper/redirect/TagsGenerator.php",
+                "src/helper/redirect/TemplateParserInterface.php",
+                "src/helper/redirect/TemplateParser.php",
+                "src/helper/redirect/JsScriptBuilderInterface.php",
+                "src/helper/redirect/JsScriptBuilder.php",
+                "src/helper/redirect/type/TypeInterface.php",
+                "src/helper/redirect/type/Js.php",
+                "src/helper/redirect/type/Http.php",
+                "src/helper/logging/strategy/LoggingInterface.php",
+                "src/legacy/ShopgateLogger.php",
+                "src/helper/logging/Obfuscator.php",
+                "src/helper/logging/strategy/DefaultLogging.php",
+                "src/helper/logging/stack_trace/GeneratorInterface.php",
+                "src/helper/logging/stack_trace/GeneratorDefault.php",
+                "src/helper/logging/stack_trace/NamedParameterProviderInterface.php",
+                "src/helper/logging/stack_trace/NamedParameterProviderReflection.php",
+                "src/helper/error_handling/ExceptionHandler.php",
+                "src/helper/error_handling/ErrorHandler.php",
+                "src/helper/error_handling/ShutdownHandler.php",
+                "src/helper/error_handling/shutdown_handler/LastErrorProvider.php",
+                "shopgate.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "Apache-2.0"
+        ],
+        "authors": [
+            {
+                "name": "Shopgate",
+                "email": "interfaces@shopgate.com"
+            }
+        ],
+        "description": "A PHP framework supporting the implementation of the Shopgate Plugin API and abstracting access to the Shopgate Merchant API.",
+        "homepage": "https://github.com/shopgate/cart-integration-sdk"
+    }
+]

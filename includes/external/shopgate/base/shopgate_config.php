@@ -1,26 +1,25 @@
 <?php
 /**
- * Shopgate GmbH
  *
- * URHEBERRECHTSHINWEIS
+ * Copyright Shopgate Inc.
  *
- * Dieses Plugin ist urheberrechtlich geschützt. Es darf ausschließlich von Kunden der Shopgate GmbH
- * zum Zwecke der eigenen Kommunikation zwischen dem IT-System des Kunden mit dem IT-System der
- * Shopgate GmbH über www.shopgate.com verwendet werden. Eine darüber hinausgehende Vervielfältigung, Verbreitung,
- * öffentliche Zugänglichmachung, Bearbeitung oder Weitergabe an Dritte ist nur mit unserer vorherigen
- * schriftlichen Zustimmung zulässig. Die Regelungen der §§ 69 d Abs. 2, 3 und 69 e UrhG bleiben hiervon unberührt.
+ * Licensed under the GNU General Public License, Version 2 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * COPYRIGHT NOTICE
+ * https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
  *
- * This plugin is the subject of copyright protection. It is only for the use of Shopgate GmbH customers,
- * for the purpose of facilitating communication between the IT system of the customer and the IT system
- * of Shopgate GmbH via www.shopgate.com. Any reproduction, dissemination, public propagation, processing or
- * transfer to third parties is only permitted where we previously consented thereto in writing. The provisions
- * of paragraph 69 d, sub-paragraphs 2, 3 and paragraph 69, sub-paragraph e of the German Copyright Act shall remain unaffected.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ * limitations under the License.
  *
- * @author Shopgate GmbH <interfaces@shopgate.com>
+ * @author    Shopgate Inc, 804 Congress Ave, Austin, Texas 78701 <interfaces@shopgate.com>
+ * @copyright Shopgate Inc
+ * @license   https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt GNU General Public License, Version 2
+ *
  */
-
 
 include_once DIR_FS_CATALOG
     . 'includes/external/shopgate/shopgate_library/shopgate.php';
@@ -35,27 +34,26 @@ define('TABLE_CUSTOMERS_SHOPGATE_CUSTOMER', 'customers_shopgate_customer');
 
 class ShopgateConfigModified extends ShopgateConfig
 {
-    
     protected $redirect_languages;
-    
+
     protected $shipping;
-    
+
     protected $tax_zone_id;
-    
+
     protected $customer_price_group;
-    
+
     protected $order_status_open;
     protected $order_status_shipped;
     protected $order_status_shipping_blocked;
     protected $order_status_canceled;
     protected $payment_name_mapping;
-    
+
     protected $reverse_categories_sort_order;
     protected $reverse_items_sort_order;
     protected $export_description_type;
-    
+
     protected $shopgate_table_version;
-    
+
     protected $maximum_category_export_depth;
     protected $send_order_confirmation_mail;
     protected $export_new_products_category;
@@ -63,7 +61,7 @@ class ShopgateConfigModified extends ShopgateConfig
     protected $export_special_products_category;
     protected $export_special_products_category_id;
     protected $export_option_as_input_field;
-    
+
     public function startup()
     {
         // overwrite some library defaults
@@ -92,45 +90,45 @@ class ShopgateConfigModified extends ShopgateConfig
         $this->enable_register_customer       = 1;
         $this->shop_is_active                 = 1;
         $this->encoding                       = 'ISO-8859-15';
-        
+
         // default filenames if no language was selected
         $this->items_csv_filename      = 'items-undefined.csv';
         $this->categories_csv_filename = 'categories-undefined.csv';
         $this->reviews_csv_filename    = 'reviews-undefined.csv';
         $this->pages_csv_filename      = 'pages-undefined.csv';
-        
+
         $this->access_log_filename  = 'access-undefined.log';
         $this->request_log_filename = 'request-undefined.log';
         $this->error_log_filename   = 'error-undefined.log';
         $this->debug_log_filename   = 'debug-undefined.log';
-        
+
         $this->redirect_keyword_cache_filename
             = 'redirect_keywords-undefined.txt';
         $this->redirect_skip_keyword_cache_filename
             = 'skip_redirect_keywords-undefined.txt';
-        
+
         // initialize plugin specific stuff
         $this->redirect_languages = array();
-        
+
         $this->shipping = '';
-        
+
         $this->tax_zone_id = 5;
-        
+
         $this->customer_price_group = 0;
-        
+
         $this->order_status_open             = 1;
         $this->order_status_shipped          = 3;
         $this->order_status_shipping_blocked = 1;
-        
+
         $this->order_status_canceled = 0;
-        
+
         $this->reverse_categories_sort_order = false;
         $this->reverse_items_sort_order      = false;
         $this->export_description_type
                                              = SHOPGATE_SETTING_EXPORT_DESCRIPTION;
-        
+
         $this->shopgate_table_version = '';
-        
+
         $this->maximum_category_export_depth       = '';
         $this->send_order_confirmation_mail        = false;
         $this->export_new_products_category        = 0;
@@ -143,11 +141,11 @@ class ShopgateConfigModified extends ShopgateConfig
             'customer', 'external_coupons', 'items', 'shipping_methods'
         );
     }
-    
+
     protected function validateCustom(array $fieldList = array())
     {
         $failedFields = array();
-        
+
         foreach ($fieldList as $field) {
             switch ($field) {
                 case 'redirect_languages':
@@ -158,11 +156,10 @@ class ShopgateConfigModified extends ShopgateConfig
                     break;
             }
         }
-        
+
         return $failedFields;
     }
-    
-    
+
     /**
      * @return mixed
      */
@@ -170,7 +167,7 @@ class ShopgateConfigModified extends ShopgateConfig
     {
         return $this->redirect_languages;
     }
-    
+
     /**
      * @return mixed
      */
@@ -178,7 +175,7 @@ class ShopgateConfigModified extends ShopgateConfig
     {
         return $this->shipping;
     }
-    
+
     /**
      * @return mixed
      */
@@ -186,7 +183,7 @@ class ShopgateConfigModified extends ShopgateConfig
     {
         return $this->tax_zone_id;
     }
-    
+
     /**
      * @return mixed
      */
@@ -194,7 +191,7 @@ class ShopgateConfigModified extends ShopgateConfig
     {
         return $this->customer_price_group;
     }
-    
+
     /**
      * @return mixed
      */
@@ -202,7 +199,7 @@ class ShopgateConfigModified extends ShopgateConfig
     {
         return $this->order_status_open;
     }
-    
+
     /**
      * @return mixed
      */
@@ -210,7 +207,7 @@ class ShopgateConfigModified extends ShopgateConfig
     {
         return $this->order_status_shipped;
     }
-    
+
     /**
      * @return mixed
      */
@@ -218,7 +215,7 @@ class ShopgateConfigModified extends ShopgateConfig
     {
         return $this->order_status_shipping_blocked;
     }
-    
+
     /**
      * @return mixed
      */
@@ -226,8 +223,7 @@ class ShopgateConfigModified extends ShopgateConfig
     {
         return $this->order_status_canceled;
     }
-    
-    
+
     /**
      * @return mixed
      */
@@ -235,7 +231,7 @@ class ShopgateConfigModified extends ShopgateConfig
     {
         return $this->reverse_categories_sort_order;
     }
-    
+
     /**
      * @return mixed
      */
@@ -243,7 +239,7 @@ class ShopgateConfigModified extends ShopgateConfig
     {
         return $this->reverse_items_sort_order;
     }
-    
+
     /**
      * @return mixed
      */
@@ -251,7 +247,7 @@ class ShopgateConfigModified extends ShopgateConfig
     {
         return $this->export_description_type;
     }
-    
+
     /**
      * @return mixed
      */
@@ -259,7 +255,7 @@ class ShopgateConfigModified extends ShopgateConfig
     {
         return $this->shopgate_table_version;
     }
-    
+
     /**
      * @return mixed
      */
@@ -267,7 +263,7 @@ class ShopgateConfigModified extends ShopgateConfig
     {
         return $this->maximum_category_export_depth;
     }
-    
+
     /**
      * @return mixed
      */
@@ -275,7 +271,7 @@ class ShopgateConfigModified extends ShopgateConfig
     {
         return $this->send_order_confirmation_mail;
     }
-    
+
     /**
      * @return mixed
      */
@@ -283,7 +279,7 @@ class ShopgateConfigModified extends ShopgateConfig
     {
         return $this->export_new_products_category;
     }
-    
+
     /**
      * @return mixed
      */
@@ -291,7 +287,7 @@ class ShopgateConfigModified extends ShopgateConfig
     {
         return $this->export_new_products_category_id;
     }
-    
+
     /**
      * @return mixed
      */
@@ -299,7 +295,7 @@ class ShopgateConfigModified extends ShopgateConfig
     {
         return $this->export_special_products_category;
     }
-    
+
     /**
      * @return mixed
      */
@@ -323,7 +319,7 @@ class ShopgateConfigModified extends ShopgateConfig
     {
         return $this->payment_name_mapping;
     }
-    
+
     /**
      * @param $value
      */
@@ -331,8 +327,7 @@ class ShopgateConfigModified extends ShopgateConfig
     {
         $this->redirect_languages = $value;
     }
-    
-    
+
     /**
      * @param $value
      */
@@ -340,7 +335,7 @@ class ShopgateConfigModified extends ShopgateConfig
     {
         $this->shipping = $value;
     }
-    
+
     /**
      * @param $value
      */
@@ -348,7 +343,7 @@ class ShopgateConfigModified extends ShopgateConfig
     {
         $this->tax_zone_id = $value;
     }
-    
+
     /**
      * @param $value
      */
@@ -356,8 +351,7 @@ class ShopgateConfigModified extends ShopgateConfig
     {
         $this->customer_price_group = $value;
     }
-    
-    
+
     /**
      * @param $value
      */
@@ -365,7 +359,7 @@ class ShopgateConfigModified extends ShopgateConfig
     {
         $this->order_status_open = $value;
     }
-    
+
     /**
      * @param $value
      */
@@ -373,7 +367,7 @@ class ShopgateConfigModified extends ShopgateConfig
     {
         $this->order_status_shipped = $value;
     }
-    
+
     /**
      * @param $value
      */
@@ -381,7 +375,7 @@ class ShopgateConfigModified extends ShopgateConfig
     {
         $this->order_status_shipping_blocked = $value;
     }
-    
+
     /**
      * @param $value
      */
@@ -389,7 +383,7 @@ class ShopgateConfigModified extends ShopgateConfig
     {
         $this->order_status_canceled = $value;
     }
-    
+
     /**
      * @param $value
      */
@@ -397,7 +391,7 @@ class ShopgateConfigModified extends ShopgateConfig
     {
         $this->reverse_categories_sort_order = $value;
     }
-    
+
     /**
      * @param $value
      */
@@ -405,7 +399,7 @@ class ShopgateConfigModified extends ShopgateConfig
     {
         $this->reverse_items_sort_order = $value;
     }
-    
+
     /**
      * @param $value
      */
@@ -413,7 +407,7 @@ class ShopgateConfigModified extends ShopgateConfig
     {
         $this->export_description_type = $value;
     }
-    
+
     /**
      * @param $value
      */
@@ -421,7 +415,7 @@ class ShopgateConfigModified extends ShopgateConfig
     {
         $this->shopgate_table_version = $value;
     }
-    
+
     /**
      * @param $value
      */
@@ -429,7 +423,7 @@ class ShopgateConfigModified extends ShopgateConfig
     {
         $this->maximum_category_export_depth = $value;
     }
-    
+
     /**
      * @param $value
      */
@@ -437,7 +431,7 @@ class ShopgateConfigModified extends ShopgateConfig
     {
         $this->send_order_confirmation_mail = $value;
     }
-    
+
     /**
      * @param $value
      */
@@ -445,7 +439,7 @@ class ShopgateConfigModified extends ShopgateConfig
     {
         $this->export_new_products_category = $value;
     }
-    
+
     /**
      * @param $value
      */
@@ -453,7 +447,7 @@ class ShopgateConfigModified extends ShopgateConfig
     {
         $this->export_new_products_category_id = $value;
     }
-    
+
     /**
      * @param $value
      */
@@ -461,7 +455,7 @@ class ShopgateConfigModified extends ShopgateConfig
     {
         $this->export_special_products_category = $value;
     }
-    
+
     /**
      * @param $value
      */
@@ -469,7 +463,7 @@ class ShopgateConfigModified extends ShopgateConfig
     {
         $this->export_special_products_category_id = $value;
     }
-    
+
     /**
      * @param string $value
      */
