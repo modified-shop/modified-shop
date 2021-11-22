@@ -26,7 +26,7 @@ $shopgateJsHeader     = '';
 
 if (MODULE_PAYMENT_SHOPGATE_STATUS == 'True') {
     include_once DIR_FS_CATALOG
-        . 'includes/external/shopgate/shopgate_library/shopgate.php';
+        . 'includes/external/shopgate/vendor/autoload.php';
     include_once DIR_FS_CATALOG
         . 'includes/external/shopgate/base/shopgate_config.php';
 

@@ -21,8 +21,7 @@
  *
  */
 require_once 'includes/application_top.php';
-require(DIR_FS_CATALOG
-    . 'includes/external/shopgate/shopgate_library/shopgate.php');
+require(DIR_FS_CATALOG . 'includes/external/shopgate/vendor/autoload.php');
 require(DIR_FS_CATALOG . 'includes/external/shopgate/base/shopgate_config.php');
 
 $encodings = array('UTF-8', 'ISO-8859-1', 'ISO-8859-15');
