@@ -166,7 +166,7 @@ CREATE TABLE banktransfer (
 
 DROP TABLE IF EXISTS banktransfer_blz;
 CREATE TABLE banktransfer_blz (
-  blz int(10) NOT NULL DEFAULT 0,
+  blz INT(10) NOT NULL DEFAULT 0,
   bankname varchar(255) NOT NULL DEFAULT '',
   prz char(2) NOT NULL DEFAULT '',
   PRIMARY KEY (blz)
@@ -192,6 +192,7 @@ CREATE TABLE banners (
   date_status_change DATETIME DEFAULT NULL,
   status INT(1) DEFAULT 1 NOT NULL,
   PRIMARY KEY (banners_id),
+  KEY idx_banners_group_id (banners_group_id),
   KEY idx_banners_sort (banners_sort)
 );
 
@@ -338,7 +339,7 @@ CREATE TABLE content_manager (
   content_meta_keywords text NOT NULL,
   content_meta_robots VARCHAR(32) NOT NULL,
   content_active INT(1) NOT NULL DEFAULT '1',
-  content_group_index int(4) NOT NULL DEFAULT '0',
+  content_group_index INT(4) NOT NULL DEFAULT '0',
   date_added DATETIME NOT NULL,
   last_modified DATETIME NULL,
   PRIMARY KEY (content_id),
@@ -500,6 +501,7 @@ CREATE TABLE customers (
   customers_last_modified DATETIME DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (customers_id),
   KEY idx_customers_email_address (customers_email_address),
+  KEY idx_customers_status (customers_status),
   KEY idx_customers_default_address_id (customers_default_address_id)
 );
 
@@ -555,7 +557,7 @@ CREATE TABLE customers_login (
   customers_login_id INT(11) NOT NULL AUTO_INCREMENT,
   customers_ip varchar(50) DEFAULT NULL,
   customers_email_address varchar(255) DEFAULT NULL,
-  customers_login_tries int(11) NOT NULL,
+  customers_login_tries INT(11) NOT NULL,
   PRIMARY KEY (customers_login_id),
   KEY idx_customers_ip (customers_ip),
   KEY idx_customers_email_address (customers_email_address)
@@ -587,7 +589,7 @@ CREATE TABLE customers_status (
   customers_status_graduated_prices VARCHAR(1) NOT NULL DEFAULT '0',
   customers_status_show_price INT(1) NOT NULL DEFAULT 1,
   customers_status_show_price_tax INT(1) NOT NULL DEFAULT 1,
-  customers_status_show_tax_total int(7) DEFAULT '150',
+  customers_status_show_tax_total INT(7) DEFAULT '150',
   customers_status_add_tax_ot INT(1) NOT NULL DEFAULT 0,
   customers_status_payment_unallowed VARCHAR(255) NOT NULL,
   customers_status_shipping_unallowed VARCHAR(255) NOT NULL,
@@ -610,7 +612,8 @@ CREATE TABLE customers_status_history (
   old_value INT(5) DEFAULT NULL,
   date_added DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
   customer_notified INT(1) DEFAULT 0,
-  PRIMARY KEY (customers_status_history_id)
+  PRIMARY KEY (customers_status_history_id),
+  KEY idx_customers_id (customers_id)
 );
 
 DROP TABLE IF EXISTS database_version;
@@ -693,7 +696,7 @@ CREATE TABLE manufacturers_info (
 
 DROP TABLE IF EXISTS module_backup;
 CREATE TABLE module_backup (
-  configuration_id int(11) NOT NULL AUTO_INCREMENT,
+  configuration_id INT(11) NOT NULL AUTO_INCREMENT,
   configuration_key varchar(128) NOT NULL,
   configuration_value text NOT NULL,
   last_modified datetime DEFAULT NULL,
@@ -844,7 +847,7 @@ CREATE TABLE orders (
   shipping_class VARCHAR(64) NOT NULL,
   customers_ip VARCHAR(50) NOT NULL,
   language VARCHAR(32) NOT NULL,
-  languages_id int(11) NOT NULL,
+  languages_id INT(11) NOT NULL,
   afterbuy_success INT(1) DEFAULT 0 NOT NULL,
   afterbuy_id INT(32) DEFAULT 0 NOT NULL,
   campaign VARCHAR(32) NOT NULL,
@@ -854,6 +857,7 @@ CREATE TABLE orders (
   KEY idx_customers_id (customers_id),
   KEY idx_orders_status (orders_status),
   KEY idx_date_purchased (date_purchased),
+  KEY idx_customers_status (customers_status),
   KEY idx_payment_class (payment_class)
 );
 
@@ -947,7 +951,8 @@ CREATE TABLE orders_status_history (
   comments text,
   comments_sent INT(1) DEFAULT 0,
   PRIMARY KEY (orders_status_history_id),
-  KEY idx_orders_id (orders_id)
+  KEY idx_orders_id (orders_id),
+  KEY idx_orders_status_id (orders_status_id)
 );
 
 DROP TABLE IF EXISTS orders_total;
@@ -972,7 +977,8 @@ CREATE TABLE orders_tracking (
   parcel_id VARCHAR(80) NOT NULL,
   date_added DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (tracking_id),
-  KEY idx_orders_id (orders_id)
+  KEY idx_orders_id (orders_id),
+  KEY idx_carrier_id (carrier_id)
 );
 
 DROP TABLE IF EXISTS payment_moneybookers;
@@ -1045,7 +1051,7 @@ CREATE TABLE products_attributes (
   weight_prefix CHAR(1) NOT NULL,
   sortorder INT(11) NULL,
   attributes_ean VARCHAR(64) NULL DEFAULT NULL,
-  attributes_vpe_id int(11) NOT NULL,
+  attributes_vpe_id INT(11) NOT NULL,
   attributes_vpe_value decimal(15,4) NOT NULL,
   PRIMARY KEY (products_attributes_id),
   KEY idx_products_id (products_id),
@@ -1122,7 +1128,8 @@ CREATE TABLE products_images (
   image_name VARCHAR(255) NOT NULL,
   PRIMARY KEY (image_id),
   KEY idx_products_id (products_id),
-  KEY idx_image_nr (image_nr)
+  KEY idx_image_nr (image_nr),
+  KEY idx_image_name (image_name)
 );
 
 DROP TABLE IF EXISTS products_notifications;
@@ -1165,12 +1172,12 @@ CREATE TABLE products_options_values_to_products_options (
 DROP TABLE IF EXISTS products_tags;
 CREATE TABLE products_tags (
   products_tags_id INT(11) NOT NULL AUTO_INCREMENT,
-  products_id int(11) NOT NULL,
-  options_id int(11) NOT NULL,
-  values_id int(11) NOT NULL,
-  sort_order int(11) NOT NULL DEFAULT '0',
-  products_options_id int(11) NOT NULL DEFAULT '0',
-  products_options_values_id int(11) NOT NULL DEFAULT '0',
+  products_id INT(11) NOT NULL,
+  options_id INT(11) NOT NULL,
+  values_id INT(11) NOT NULL,
+  sort_order INT(11) NOT NULL DEFAULT '0',
+  products_options_id INT(11) NOT NULL DEFAULT '0',
+  products_options_values_id INT(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (products_tags_id),
   KEY idx_products_options_values (products_id,options_id,values_id),
   KEY idx_products_options_id (products_options_id),
@@ -1181,17 +1188,17 @@ CREATE TABLE products_tags (
 
 DROP TABLE IF EXISTS products_tags_options;
 CREATE TABLE products_tags_options (
-  options_id int(11) NOT NULL,
+  options_id INT(11) NOT NULL,
   options_name varchar(128) NOT NULL,
   options_description text NOT NULL,
-  options_content_group int(11) DEFAULT NULL,
-  sort_order int(11) NOT NULL DEFAULT '0',
+  options_content_group INT(11) DEFAULT NULL,
+  sort_order INT(11) NOT NULL DEFAULT '0',
   languages_id INT(11) NOT NULL,
-  status int(1) NOT NULL DEFAULT '1',
-  filter int(1) NOT NULL DEFAULT '1',
+  status INT(1) NOT NULL DEFAULT '1',
+  filter INT(1) NOT NULL DEFAULT '1',
   last_modified datetime DEFAULT NULL,
   date_added datetime NOT NULL,
-  products_options_id int(11) NOT NULL DEFAULT '0',
+  products_options_id INT(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (options_id,languages_id),
   KEY idx_products_options_id (products_options_id),
   KEY idx_filter_multi (languages_id, filter, options_id, sort_order),
@@ -1203,19 +1210,19 @@ CREATE TABLE products_tags_options (
 
 DROP TABLE IF EXISTS products_tags_values;
 CREATE TABLE products_tags_values (
-  values_id int(11) NOT NULL,
-  options_id int(11) NOT NULL,
+  values_id INT(11) NOT NULL,
+  options_id INT(11) NOT NULL,
   values_name varchar(128) NOT NULL,
   values_description text NOT NULL,
   values_image varchar(255) NOT NULL,
-  values_content_group int(11) DEFAULT NULL,
-  sort_order int(11) NOT NULL DEFAULT '0',
-  languages_id int(11) NOT NULL,
-  status int(1) NOT NULL DEFAULT '1',
-  filter int(1) NOT NULL DEFAULT '1',
+  values_content_group INT(11) DEFAULT NULL,
+  sort_order INT(11) NOT NULL DEFAULT '0',
+  languages_id INT(11) NOT NULL,
+  status INT(1) NOT NULL DEFAULT '1',
+  filter INT(1) NOT NULL DEFAULT '1',
   last_modified datetime DEFAULT NULL,
   date_added datetime NOT NULL,
-  products_options_values_id int(11) NOT NULL DEFAULT '0',
+  products_options_values_id INT(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (values_id,languages_id),
   KEY idx_options_id (options_id),
   KEY idx_products_options_values_id (products_options_values_id),
@@ -1244,7 +1251,7 @@ CREATE TABLE products_vpe (
 
 DROP TABLE IF EXISTS products_xsell;
 CREATE TABLE products_xsell (
-  ID int(10) NOT NULL AUTO_INCREMENT,
+  ID INT(10) NOT NULL AUTO_INCREMENT,
   products_id INT(10) UNSIGNED NOT NULL DEFAULT 1,
   products_xsell_grp_name_id INT(10) UNSIGNED NOT NULL DEFAULT 1,
   xsell_id INT(10) UNSIGNED NOT NULL DEFAULT 1,
@@ -1270,7 +1277,7 @@ DROP TABLE IF EXISTS reviews;
 CREATE TABLE reviews (
   reviews_id INT(11) NOT NULL AUTO_INCREMENT,
   products_id INT(11) NOT NULL,
-  customers_id int,
+  customers_id INT(11),
   customers_name VARCHAR(64) NOT NULL,
   reviews_rating INT(1),
   date_added DATETIME,
@@ -1402,7 +1409,8 @@ CREATE TABLE zones_to_geo_zones (
  last_modified DATETIME NULL,
  date_added DATETIME NOT NULL,
  PRIMARY KEY (association_id),
- KEY idx_geo_zone_id (geo_zone_id)
+ KEY idx_geo_zone_id (geo_zone_id),
+ KEY idx_zone_country_id (zone_country_id)
 );
 
 DROP TABLE IF EXISTS personal_offers_by_customers_status_0;
