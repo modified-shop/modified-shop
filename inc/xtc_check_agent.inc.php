@@ -84,6 +84,7 @@ function xtc_check_agent($name = false) {
       "daviesbot",
       "deweb",
       "dienstspider",
+      "diffbot",
       "digger",
       "digout4u",
       "diibot",
