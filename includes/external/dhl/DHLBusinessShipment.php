@@ -36,7 +36,6 @@
 
     function __construct($data) {
       $this->sandbox = false;    
-      $this->notification = MODULE_DHL_NOTIFICATION == 'True';
       $this->LoggingManager = new LoggingManager(DIR_FS_LOG.'mod_dhl_%s_%s.log', 'dhl', 'debug');
       
       $this->data = array(

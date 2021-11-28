@@ -32,6 +32,7 @@
   define('TEXT_DHL_NO_NEIGHBOUR', 'Keine Nachbarschaftszustellung:');
   define('TEXT_DHL_PARCEL_OUTLET', 'Filialrouting:');
   define('TEXT_DHL_PREMIUM', 'Premium:');
+  define('TEXT_DHL_NOTIFICATION', 'Benachrichtigung via DHL:');
 
   define('TEXT_DHL_SHOW_MORE', '[mehr anzeigen]');
   define('TEXT_DHL_SHOW_LESS', '[weniger anzeigen]');

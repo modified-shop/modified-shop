@@ -25,7 +25,7 @@
   define('MODULE_DHL_ACCOUNT_DESC', 'Account ID im Format ISO2:ID getrennt durch Komma (standard WORLD:01).<br>Sollte die Warenpost eine abweichende ID haben, dann mit Zusatz PK (Paket) oder WP (Warenpost). Beispiel: WORLD:01PK,WORLD:02WP');
   
   define('MODULE_DHL_NOTIFICATION_TITLE', '<hr noshade>Benachrichtigung');
-  define('MODULE_DHL_NOTIFICATION_DESC', 'Soll der Kunde von DHL per eMail &uuml;ber den Versand benachrichtigt werden ?<br><b>Hinweis:</b> daf&uuml;r muss eine Einverst&auml;ndniserkl&auml;rung zur Weitergabe der E-Mail Adresse vom Kunden vorhanden sein.');
+  define('MODULE_DHL_NOTIFICATION_DESC', 'Soll als Standard Benachrichtigung via DHL vorausgew&auml;hlt werden?<br>Der Kunde wird von DHL per eMail &uuml;ber den Versand benachrichtigt.<br><b>Hinweis:</b> daf&uuml;r muss eine Einverst&auml;ndniserkl&auml;rung zur Weitergabe der E-Mail Adresse vom Kunden vorhanden sein.');
   define('MODULE_DHL_STATUS_UPDATE_TITLE', 'Benachrichtigung &amp; Status aktualisieren');
   define('MODULE_DHL_STATUS_UPDATE_DESC', 'Der Kunde wird per Mail inkl. Trackinginformation benachrichtigt und die Bestellung auf diesen Status gesetzt.');
   define('MODULE_DHL_CODING_TITLE', 'Leitcodierung');

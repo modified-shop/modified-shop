@@ -25,7 +25,7 @@
   define('MODULE_DHL_ACCOUNT_DESC', 'Account ID, Format ISO2:ID separated by comma (standard WORLD:01).<br>If "Warenpost" has a different ID, add PK (parcel) or WP (Warenpost). Example: WORLD:01PK,WORLD:02WP');
   
   define('MODULE_DHL_NOTIFICATION_TITLE', '<hr noshade>Notification');
-  define('MODULE_DHL_NOTIFICATION_DESC', 'Should the customer be notified by DHL via email about the shipment?<br><b>Note:</b> for this purpose, a declaration of consent to the disclosure of the e-mail address must be available from the customer.');
+  define('MODULE_DHL_NOTIFICATION_DESC', 'Set Notification via DHL preselected as default<br>The customer will be notified by DHL via email about the shipment.<br><b>Note:</b> for this purpose, a declaration of consent to the disclosure of the e-mail address must be available from the customer.');
   define('MODULE_DHL_STATUS_UPDATE_TITLE', 'Notification &amp; Update status');
   define('MODULE_DHL_STATUS_UPDATE_DESC', 'The customer will be notified by mail including tracking information and the order will be set to this status.');
   define('MODULE_DHL_CODING_TITLE', 'Coding');
