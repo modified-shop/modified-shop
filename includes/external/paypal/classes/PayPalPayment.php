@@ -35,7 +35,7 @@ require_once(DIR_FS_CATALOG.'includes/classes/class.logger.php');
 
 
 // language
-if (is_file(DIR_FS_EXTERNAL.'paypal/lang/'.$_SESSION['language'].'.php')) {
+if (isset($_SESSION) && is_file(DIR_FS_EXTERNAL.'paypal/lang/'.$_SESSION['language'].'.php')) {
   require_once(DIR_FS_EXTERNAL.'paypal/lang/'.$_SESSION['language'].'.php');
 } else {
   require_once(DIR_FS_EXTERNAL.'paypal/lang/english.php');
