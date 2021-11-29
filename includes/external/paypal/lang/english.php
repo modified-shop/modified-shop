@@ -121,7 +121,7 @@ $lang_array = array(
   'TEXT_PAYPAL_ERROR_SUBSCRIPTION_PRODUCTS' => 'You have a subscription product in your shopping cart which can only be bought alone.',  
   
   // diverse
-  'MODULE_PAYMENT_PAYPAL_TEXT_ORDER' => 'Your order at '.STORE_NAME,
+  'MODULE_PAYMENT_PAYPAL_TEXT_ORDER' => 'Your order at '.(defined('STORE_NAME') ? STORE_NAME : ''),
 
   // status
   'TEXT_PAYPAL_NO_STATUS_CHANGE' => 'no status change',
