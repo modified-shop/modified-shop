@@ -377,7 +377,7 @@
       $ShipmentOrder = new stdClass();
       $ShipmentOrder->labelResponseType = 'URL';
       $ShipmentOrder->PrintOnlyIfCodeable['active'] = $this->codeable;
-      $ShipmentOrder->sequenceNumber = $this->data['orders_id'];
+      $ShipmentOrder->sequenceNumber = MODULE_DHL_PREFIX.$this->data['orders_id'];
       $ShipmentOrder->Shipment = $Shipment;
     
       // request
