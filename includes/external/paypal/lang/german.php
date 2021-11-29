@@ -121,7 +121,7 @@ $lang_array = array(
   'TEXT_PAYPAL_ERROR_SUBSCRIPTION_PRODUCTS' => 'Sie haben einen Abo Artikel im Warenkorb welcher nur alleine gekauft werden kann.',
   
   // diverse
-  'MODULE_PAYMENT_PAYPAL_TEXT_ORDER' => 'Ihre Bestellung bei '.STORE_NAME,
+  'MODULE_PAYMENT_PAYPAL_TEXT_ORDER' => 'Ihre Bestellung bei '.(defined('STORE_NAME') ? STORE_NAME : ''),
 
   // status
   'TEXT_PAYPAL_NO_STATUS_CHANGE' => 'keine Status&auml;nderung',
