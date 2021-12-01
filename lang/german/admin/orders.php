@@ -178,4 +178,7 @@ define('COMMENT_SEND_ORDER_MAIL_STEP' , 'Bestellbest&auml;tigung gesendet');
 define('SUCCESS_ORDER_MAIL_STEP_SEND', 'Bestellbest&auml;tigung erfolgreich gesendet');
 
 define('BILLPAY_ORDER_UPDATE_HIGH', 'Fehler: Bei einer BillPay Bestellung darf der neue Bestellwert nicht h&ouml;her sein als der alte Bestellwert');
+
+define('BUTTON_BILL', 'Rechnungsnummer erstellen');
+define('NOT_ASSIGNED', 'noch nicht vergeben!');
 ?>

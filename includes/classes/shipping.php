@@ -247,5 +247,25 @@
       }
       return $js;
     }
+
+    public static function shipping_title($shipping_class, $shipping_method) {
+      static $static_shipping_array;
+
+      if (!is_array($static_shipping_array)) {
+        $static_shipping_array = array();
+      }
+
+      $shipping_class_array = explode('_', $shipping_class);
+      $shipping_class = $shipping_class_array[0];
+      
+      if (!isset($static_shipping_array[$shipping_class])) {
+        $static_shipping_array[$shipping_class] = $shipping_method;
+        if (file_exists(DIR_FS_CATALOG.'lang/'.$_SESSION['language'].'/modules/shipping/'.$shipping_class.'.php')){
+          include_once(DIR_FS_CATALOG.'lang/'.$_SESSION['language'].'/modules/shipping/'.$shipping_class.'.php');
+          $static_shipping_array[$shipping_class] = constant(strtoupper('MODULE_SHIPPING_'.$shipping_class.'_TEXT_TITLE'));
+        }
+      }
+      
+      return $static_shipping_array[$shipping_class];  
+    }
   }
-?>

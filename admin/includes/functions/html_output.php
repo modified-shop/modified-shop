@@ -261,6 +261,12 @@
     return $field;
   }
 
+  function xtc_draw_hidden_filter_field($name, $value = '') {
+    if ($value != '') {
+      return xtc_draw_hidden_field($name, $value);
+    }
+  }
+
   // Output a form pull down menu
   function xtc_draw_pull_down_menu($name, $values, $default = '', $params = '', $required = false, $addwrap = true) {
     $field = '<select name="' . $name . '"';
