@@ -123,7 +123,7 @@ define('TEXT_ORDER', 'Order:');
 define('TEXT_ORDER_HISTORY', 'Order History:');
 define('TEXT_ORDER_STATUS', 'Order Status:');
 
-define('TABLE_HEADING_ORDERS_ID', 'Ord-ID');
+define('TABLE_HEADING_ORDERS_ID', 'Order ID');
 define('TEXT_SHIPPING_TO', 'Shipping to');
 
 define('TABLE_HEADING_COMMENTS_SENT', 'Comment is sent');
@@ -179,7 +179,7 @@ define('SUCCESS_ORDER_MAIL_STEP_SEND', 'Order mail sent successfully');
 
 define('BILLPAY_ORDER_UPDATE_HIGH', 'Error: The new total value can not be higher then the old total value in billpay payments');
 
-define('TABLE_HEADING_INVOICE_NUMBER', 'Invoice Nr.');
+define('TABLE_HEADING_INVOICE_NUMBER', 'Invoice No.');
 define('BUTTON_BILL', 'Create Invoice Number');
 define('NOT_ASSIGNED', 'not yet assigned!');
 ?>
