@@ -453,7 +453,7 @@
                 && $order->info['ibn_billnr'] == ''
                 )
             {
-              echo '<a class="button ibillnr-btn" href="'.xtc_href_link(FILENAME_ORDERS, tc_get_all_get_params(array ('oID', 'action')).'oID='.$oID.'&action=custom&subaction=set_ibillnr').'">'.BUTTON_BILL.'</a>';
+              echo '<a class="button ibillnr-btn" href="'.xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action')).'oID='.$oID.'&action=custom&subaction=set_ibillnr').'">'.BUTTON_BILL.'</a>';
             }
             ?>
             <a class="button" href="Javascript:void(0)" onclick="window.open('<?php echo xtc_href_link(FILENAME_PRINT_ORDER,'oID='.$oID); ?>', 'popup', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, width=800, height=750')"><?php echo BUTTON_INVOICE; ?></a>
