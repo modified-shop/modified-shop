@@ -178,4 +178,7 @@ define('COMMENT_SEND_ORDER_MAIL_STEP' , 'Order mail is sent');
 define('SUCCESS_ORDER_MAIL_STEP_SEND', 'Order mail sent successfully');
 
 define('BILLPAY_ORDER_UPDATE_HIGH', 'Error: The new total value can not be higher then the old total value in billpay payments');
+
+define('BUTTON_BILL', 'Create Invoice Number');
+define('NOT_ASSIGNED', 'not yet assigned!');
 ?>
