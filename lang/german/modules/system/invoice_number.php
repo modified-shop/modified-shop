@@ -12,7 +12,7 @@
 
 define('MODULE_INVOICE_NUMBER_STATUS_TITLE','Status');
 define('MODULE_INVOICE_NUMBER_STATUS_DESC','Modulstatus');
-define('MODULE_INVOICE_NUMBER_STATUS_INFO','Aktiv');
+define('MODULE_INVOICE_NUMBER_STATUS_INFO','');
 define('MODULE_INVOICE_NUMBER_TEXT_TITLE', 'Rechnungsnummern');
 define('MODULE_INVOICE_NUMBER_TEXT_BTN', 'Bearbeiten');
 define('MODULE_INVOICE_NUMBER_TEXT_DESCRIPTION', 'Fortlaufende Rechnungsnummern erstellen');    
