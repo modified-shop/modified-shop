@@ -14,7 +14,8 @@
 
   if (defined('MODULE_INVOICE_NUMBER_STATUS') 
       && MODULE_INVOICE_NUMBER_STATUS == 'True'
-      && $order_exists
+      && isset($_GET['subaction'])
+      && $_GET['subaction'] == 'set_ibillnr'
       )
   {
     $order = new order($oID);
