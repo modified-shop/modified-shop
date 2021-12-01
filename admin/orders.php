@@ -83,17 +83,17 @@ if ($action == 'search' && $search && $customer == '') {
       && MODULE_MAGNALISTER_STATUS == 'True'
       )
   {
-    $join = " LEFT JOIN magnalister_orders mo
+    $join .= " LEFT JOIN magnalister_orders mo
                         ON o.orders_id = mo.orders_id ";
-    $where = " OR mo.special LIKE '%".xtc_db_input($search)."%' ";
+    $where .= " OR mo.special LIKE '%".xtc_db_input($search)."%' ";
   }
   if (defined('MODULE_INVOICE_NUMBER_STATUS') 
       && MODULE_INVOICE_NUMBER_STATUS == 'True'
       )
   {
-     $where = " OR o.ibn_billnr LIKE '%".xtc_db_input($search)."%' ";
+     $where .= " OR o.ibn_billnr LIKE '%".xtc_db_input($search)."%' ";
   }
-  $orders_search_query_raw = "SELECT o.*,
+  $orders_query_raw = "SELECT o.*,
                                      s.orders_status_name
                                 FROM ".TABLE_ORDERS." o
                                      ".$join."
@@ -103,7 +103,7 @@ if ($action == 'search' && $search && $customer == '') {
                                WHERE (o.orders_id LIKE '%".(int)$search."%'
                                       ".$where.")
                             ORDER BY o.orders_id DESC";
-  $orders_search_query = xtc_db_query($orders_search_query_raw);
+  $orders_search_query = xtc_db_query($orders_query_raw);
   if (xtc_db_num_rows($orders_search_query) == 1) {
     $orders_search = xtc_db_fetch_array($orders_search_query);
     $_GET['oID'] = $oID = $orders_search['orders_id'];
