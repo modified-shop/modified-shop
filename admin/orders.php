@@ -87,6 +87,12 @@ if ($action == 'search' && $search && $customer == '') {
                         ON o.orders_id = mo.orders_id ";
     $where = " OR mo.special LIKE '%".xtc_db_input($search)."%' ";
   }
+  if (defined('MODULE_INVOICE_NUMBER_STATUS') 
+      && MODULE_INVOICE_NUMBER_STATUS == 'True'
+      )
+  {
+     $where = " OR o.ibn_billnr LIKE '%".xtc_db_input($search)."%' ";
+  }
   $orders_search_query_raw = "SELECT o.*,
                                      s.orders_status_name
                                 FROM ".TABLE_ORDERS." o
