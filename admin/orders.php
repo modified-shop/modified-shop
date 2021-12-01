@@ -85,7 +85,7 @@ if ($action == 'search' && $search && $customer == '') {
   {
     $join = " LEFT JOIN magnalister_orders mo
                         ON o.orders_id = mo.orders_id ";
-    $where = " OR mo.special LIKE '%".xtc_db_input($_GET['search'])."%' ";
+    $where = " OR mo.special LIKE '%".xtc_db_input($search)."%' ";
   }
   $orders_search_query_raw = "SELECT o.*,
                                      s.orders_status_name
@@ -94,7 +94,7 @@ if ($action == 'search' && $search && $customer == '') {
                            LEFT JOIN ".TABLE_ORDERS_STATUS." s
                                      ON o.orders_status = s.orders_status_id 
                                         AND s.language_id = '".(int)$_SESSION['languages_id']."'
-                               WHERE (o.orders_id LIKE '%".$oID."%'
+                               WHERE (o.orders_id LIKE '%".(int)$search."%'
                                       ".$where.")
                             ORDER BY o.orders_id DESC";
   $orders_search_query = xtc_db_query($orders_search_query_raw);
