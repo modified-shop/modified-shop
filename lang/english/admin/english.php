@@ -482,6 +482,7 @@ define('ASB_QUICK_SEARCH_ORDER_ID','Search orders ID...');
 define('ASB_QUICK_SEARCH_ARTICLE','Search products/categories...');
 define('ASB_QUICK_SEARCH_EMAIL', 'Search E-Mail Addresses...');
 define('ASB_QUICK_SEARCH_ARTICLE_ID','Search products/categories ID...');
+define('ASB_QUICK_SEARCH_ORDER_OR_INVOICE','Search orders ID/invoice No....');
 //EOF - web28 - 2010-04-10 - ADMIN SEARCH BAR
 
 //BOF - web28 - 2010.05.30 - accounting - set all checkboxes , countries - set all flags

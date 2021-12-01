@@ -31,7 +31,13 @@
     $search_cat = htmlentities(isset($_GET['search']) ? $_GET['search'] : '',ENT_COMPAT,strtoupper($_SESSION['language_charset'])); 
     $search_id = htmlentities(isset($_GET['search_id']) ? $_GET['search_id'] : '',ENT_COMPAT,strtoupper($_SESSION['language_charset'])); 
   }
-  
+  $placeholder_order = ASB_QUICK_SEARCH_ORDER_ID;
+  if (defined('MODULE_INVOICE_NUMBER_STATUS') 
+      && MODULE_INVOICE_NUMBER_STATUS == 'True'
+      )
+  {
+    $placeholder_order = ASB_QUICK_SEARCH_ORDER_OR_INVOICE;
+  }  
   if (!defined('NEW_ADMIN_STYLE')) {   
   ?>
   <link href="includes/searchbar_menu/searchbar_menu.css" rel="stylesheet" type="text/css" />
@@ -54,7 +60,7 @@
     </div>
     <div class="col25">
       <?php echo xtc_draw_form('search_order_id', FILENAME_ORDERS, '', 'get'); ?>
-        <input name="search" type="text" value="<?php echo $search_oid;?>" size="7" placeholder="<?php echo ASB_QUICK_SEARCH_ORDER_ID; ?>" />
+        <input name="search" type="text" value="<?php echo $search_oid;?>" size="7" placeholder="<?php echo $placeholder_order; ?>" />
         <input type="hidden" name="action" value="search" />
       </form>
     </div>

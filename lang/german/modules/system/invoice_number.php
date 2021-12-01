@@ -13,9 +13,9 @@
 define('MODULE_INVOICE_NUMBER_STATUS_TITLE','Status');
 define('MODULE_INVOICE_NUMBER_STATUS_DESC','Modulstatus');
 define('MODULE_INVOICE_NUMBER_STATUS_INFO','Aktiv');
-define('MODULE_INVOICE_NUMBER_TEXT_TITLE', 'Modul Neue Rechnungsnummer');
+define('MODULE_INVOICE_NUMBER_TEXT_TITLE', 'Rechnungsnummern');
 define('MODULE_INVOICE_NUMBER_TEXT_BTN', 'Bearbeiten');
-define('MODULE_INVOICE_NUMBER_TEXT_DESCRIPTION', ' Modul Neue Rechnungsnummer');    
+define('MODULE_INVOICE_NUMBER_TEXT_DESCRIPTION', 'Fortlaufende Rechnungsnummern erstellen');    
 define('MODULE_INVOICE_NUMBER_IBN_BILLNR_TITLE', 'N&auml;chste Rechnungsnummer');
 define('MODULE_INVOICE_NUMBER_IBN_BILLNR_DESC', 'Bei Zuweisung einer Bestellung wird diese Nummer als n&auml;chstes vergeben.');
 define('MODULE_INVOICE_NUMBER_IBN_BILLNR_FORMAT_TITLE', 'Rechnungsnummer Format');

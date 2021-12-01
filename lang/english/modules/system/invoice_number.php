@@ -13,9 +13,9 @@
 define('MODULE_INVOICE_NUMBER_STATUS_TITLE','Status');
 define('MODULE_INVOICE_NUMBER_STATUS_DESC','Module status');
 define('MODULE_INVOICE_NUMBER_STATUS_INFO','Active');
-define('MODULE_INVOICE_NUMBER_TEXT_TITLE', 'Module Invoicenumber');
+define('MODULE_INVOICE_NUMBER_TEXT_TITLE', 'Invoicenumbers');
 define('MODULE_INVOICE_NUMBER_TEXT_BTN', 'Edit');
-define('MODULE_INVOICE_NUMBER_TEXT_DESCRIPTION', ' Module Invoicenumber');    
+define('MODULE_INVOICE_NUMBER_TEXT_DESCRIPTION', 'Create ongoing Invoicenumbers');    
 define('MODULE_INVOICE_NUMBER_IBN_BILLNR_TITLE', 'Next Invoicenumber');
 define('MODULE_INVOICE_NUMBER_IBN_BILLNR_DESC', 'When assigning one order, this number is assigned next.');
 define('MODULE_INVOICE_NUMBER_IBN_BILLNR_FORMAT_TITLE', 'Format');
