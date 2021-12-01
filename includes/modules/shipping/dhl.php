@@ -24,9 +24,9 @@
   class dhl {
     var $code, $title, $description, $icon, $enabled, $num_dhl, $types;
 
-/**
- * class constructor
- */
+    /**
+     * class constructor
+     */
     function __construct() {
       global $order;
 
@@ -62,15 +62,15 @@
                            'MDX' => 'Mid Day Express Service',
                            'WPX' => 'Waren Express Service');
 
-/**
- * CUSTOMIZE THIS SETTING FOR THE NUMBER OF ZONES NEEDED
- */
+      /**
+       * CUSTOMIZE THIS SETTING FOR THE NUMBER OF ZONES NEEDED
+       */
       $this->num_dhl = 10;
     }
 
-/**
- * class methods
- */
+    /**
+     * class methods
+     */
     function quote($method = '') {
       global $order, $shipping_weight, $shipping_num_boxes;
 
@@ -80,7 +80,7 @@
 
       for ($j=1; $j<=$this->num_dhl; $j++) {
         $countries_table = constant('MODULE_SHIPPING_DHL_COUNTRIES_' . $j);
-        $country_zones = explode(",", $countries_table); // Hetfield - 2009-08-18 - replaced deprecated function split with explode to be ready for PHP >= 5.3
+        $country_zones = explode(",", $countries_table); 
         if (in_array($dest_country, $country_zones)) {
           $dest_zone = $j;
           break;
@@ -106,15 +106,15 @@
         $n == 0;
 
         if ($dhl_cost_ecx != '') {
-          $dhl_table_ecx = preg_split("/[:,]/" , $dhl_cost_ecx); // Hetfield - 2009-08-18 - replaced deprecated function split with explode to be ready for PHP >= 5.3
+          $dhl_table_ecx = preg_split("/[:,]/" , $dhl_cost_ecx); 
           if ( ($shipping_weight > 10) and ($shipping_weight <= 20) ) {
-            $shipping_ecx = number_format((($shipping_weight - 10)* 2 + 0.5), 0) * constant('MODULE_SHIPPING_DHL_STEP_ECX_20_' .$j) + $dhl_table_ecx[count ($dhl_table_ecx)-1];
+            $shipping_ecx = number_format((($shipping_weight - 10)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_DHL_STEP_ECX_20_' .$j) + $dhl_table_ecx[count ($dhl_table_ecx)-1];
           } elseif ( ($shipping_weight > 20) and ($shipping_weight <= 30) ) {
-            $shipping_ecx = number_format((($shipping_weight - 20)* 2 + 0.5), 0) * constant('MODULE_SHIPPING_DHL_STEP_ECX_30_' .$j) + 20 * constant('MODULE_SHIPPING_DHL_STEP_ECX_20_' .$j) + $dhl_table_ecx[count ($dhl_table_ecx)-1];
+            $shipping_ecx = number_format((($shipping_weight - 20)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_DHL_STEP_ECX_30_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_ECX_20_' .$j) + $dhl_table_ecx[count ($dhl_table_ecx)-1];
           } elseif ( ($shipping_weight > 30) and ($shipping_weight <= 50) ) {
-            $shipping_ecx = number_format((($shipping_weight - 30)* 2 + 0.5), 0) * constant('MODULE_SHIPPING_DHL_STEP_ECX_50_' .$j) + 20 * constant('MODULE_SHIPPING_DHL_STEP_ECX_20_' .$j) + 20 * constant('MODULE_SHIPPING_DHL_STEP_ECX_30_' .$j) + $dhl_table_ecx[count ($dhl_table_ecx)-1];
+            $shipping_ecx = number_format((($shipping_weight - 30)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_DHL_STEP_ECX_50_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_ECX_20_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_ECX_30_' .$j) + $dhl_table_ecx[count ($dhl_table_ecx)-1];
           } elseif ($shipping_weight > 50) {
-            $shipping_ecx = number_format((($shipping_weight - 50)* 2 + 0.5), 0) * constant('MODULE_SHIPPING_DHL_STEP_ECX_51_' .$j) + 20 * constant('MODULE_SHIPPING_DHL_STEP_ECX_20_' .$j) + 20 * constant('MODULE_SHIPPING_DHL_STEP_ECX_30_' .$j) + 40 * constant('MODULE_SHIPPING_DHL_STEP_ECX_50_' .$j) + $dhl_table_ecx[count ($dhl_table_ecx)-1];
+            $shipping_ecx = number_format((($shipping_weight - 50)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_DHL_STEP_ECX_51_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_ECX_20_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_ECX_30_' .$j) + 40 * (double)constant('MODULE_SHIPPING_DHL_STEP_ECX_50_' .$j) + $dhl_table_ecx[count ($dhl_table_ecx)-1];
           } else {
 
             for ($i=0; $i<sizeof($dhl_table_ecx); $i+=2) {
@@ -130,7 +130,7 @@
             $shipping_cost = 0;
             $shipping_method = MODULE_SHIPPING_DHL_UNDEFINED_RATE;
           } else {
-            $shipping_cost_1 = ($shipping_ecx * $shipping_num_boxes) + MODULE_SHIPPING_DHL_HANDLING;
+            $shipping_cost_1 = ($shipping_ecx * $shipping_num_boxes) + (double)MODULE_SHIPPING_DHL_HANDLING;
           }
 
           $methods[] = array('id' => 'ECX',
@@ -140,15 +140,15 @@
         }
 
         if ($dhl_cost_dox != '') {
-          $dhl_table_dox = preg_split("/[:,]/" , $dhl_cost_dox);  // Hetfield - 2009-11-19 - replaced deprecated function split with preg_split to be ready for PHP >= 5.3
+          $dhl_table_dox = preg_split("/[:,]/" , $dhl_cost_dox);  
           if ( ($shipping_weight > 10) and ($shipping_weight <= 20) ) {
-            $shipping_dox = number_format((($shipping_weight - 10)* 2 + 0.5), 0) * constant('MODULE_SHIPPING_DHL_STEP_DOX_20_' .$j) + $dhl_table_dox[count ($dhl_table_dox)-1];
+            $shipping_dox = number_format((($shipping_weight - 10)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_DHL_STEP_DOX_20_' .$j) + $dhl_table_dox[count ($dhl_table_dox)-1];
           } elseif ( ($shipping_weight > 20) and ($shipping_weight <= 30) ) {
-            $shipping_dox = number_format((($shipping_weight - 20)* 2 + 0.5), 0) * constant('MODULE_SHIPPING_DHL_STEP_DOX_30_' .$j) + 20 * constant('MODULE_SHIPPING_DHL_STEP_DOX_20_' .$j) + $dhl_table_dox[count ($dhl_table_dox)-1];
+            $shipping_dox = number_format((($shipping_weight - 20)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_DHL_STEP_DOX_30_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_DOX_20_' .$j) + $dhl_table_dox[count ($dhl_table_dox)-1];
           } elseif ( ($shipping_weight > 30) and ($shipping_weight <= 50) ) {
-            $shipping_dox = number_format((($shipping_weight - 30)* 2 + 0.5), 0) * constant('MODULE_SHIPPING_DHL_STEP_DOX_50_' .$j) + 20 * constant('MODULE_SHIPPING_DHL_STEP_DOX_20_' .$j) + 20 * constant('MODULE_SHIPPING_DHL_STEP_DOX_30_' .$j) + $dhl_table_dox[count ($dhl_table_dox)-1];
+            $shipping_dox = number_format((($shipping_weight - 30)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_DHL_STEP_DOX_50_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_DOX_20_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_DOX_30_' .$j) + $dhl_table_dox[count ($dhl_table_dox)-1];
           } elseif ($shipping_weight > 50) {
-            $shipping_dox = number_format((($shipping_weight - 50)* 2 + 0.5), 0) * constant('MODULE_SHIPPING_DHL_STEP_DOX_51_' .$j) + 20 * constant('MODULE_SHIPPING_DHL_STEP_DOX_20_' .$j) + 20 * constant('MODULE_SHIPPING_DHL_STEP_DOX_30_' .$j) + 40 * constant('MODULE_SHIPPING_DHL_STEP_DOX_50_' .$j) + $dhl_table_dox[count ($dhl_table_dox)-1];
+            $shipping_dox = number_format((($shipping_weight - 50)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_DHL_STEP_DOX_51_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_DOX_20_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_DOX_30_' .$j) + 40 * (double)constant('MODULE_SHIPPING_DHL_STEP_DOX_50_' .$j) + $dhl_table_dox[count ($dhl_table_dox)-1];
           } else {
 
             for ($i=0; $i<sizeof($dhl_table_dox); $i+=2) {
@@ -164,7 +164,7 @@
             $shipping_cost = 0;
             $shipping_method = MODULE_SHIPPING_DHL_UNDEFINED_RATE;
           } else {
-            $shipping_cost_2 = ($shipping_dox * $shipping_num_boxes) + MODULE_SHIPPING_DHL_HANDLING;
+            $shipping_cost_2 = ($shipping_dox * $shipping_num_boxes) + (double)MODULE_SHIPPING_DHL_HANDLING;
           }
 
           $methods[] = array('id' => 'DOX',
@@ -174,15 +174,15 @@
         }
 
         if ($dhl_cost_wpx != '') {
-          $dhl_table_wpx = preg_split("/[:,]/" , $dhl_cost_wpx); // Hetfield - 2009-08-18 - replaced deprecated function split with preg_split to be ready for PHP >= 5.3
+          $dhl_table_wpx = preg_split("/[:,]/" , $dhl_cost_wpx); 
           if ( ($shipping_weight > 10) and ($shipping_weight <= 20) ) {
-            $shipping_wpx = number_format((($shipping_weight - 10)* 2 + 0.5), 0) * constant('MODULE_SHIPPING_DHL_STEP_WPX_20_' .$j) + $dhl_table_wpx[count ($dhl_table_wpx)-1];
+            $shipping_wpx = number_format((($shipping_weight - 10)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_DHL_STEP_WPX_20_' .$j) + $dhl_table_wpx[count ($dhl_table_wpx)-1];
           } elseif ( ($shipping_weight > 20) and ($shipping_weight <= 30) ) {
-            $shipping_wpx = number_format((($shipping_weight - 20)* 2 + 0.5), 0) * constant('MODULE_SHIPPING_DHL_STEP_WPX_30_' .$j) + 20 * constant('MODULE_SHIPPING_DHL_STEP_WPX_20_' .$j) + $dhl_table_wpx[count ($dhl_table_wpx)-1];
+            $shipping_wpx = number_format((($shipping_weight - 20)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_DHL_STEP_WPX_30_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_WPX_20_' .$j) + $dhl_table_wpx[count ($dhl_table_wpx)-1];
           } elseif ( ($shipping_weight > 30) and ($shipping_weight <= 50) ) {
-            $shipping_wpx = number_format((($shipping_weight - 30)* 2 + 0.5), 0) * constant('MODULE_SHIPPING_DHL_STEP_WPX_50_' .$j) + 20 * constant('MODULE_SHIPPING_DHL_STEP_WPX_20_' .$j) + 20 * constant('MODULE_SHIPPING_DHL_STEP_WPX_30_' .$j) + $dhl_table_wpx[count ($dhl_table_wpx)-1];
+            $shipping_wpx = number_format((($shipping_weight - 30)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_DHL_STEP_WPX_50_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_WPX_20_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_WPX_30_' .$j) + $dhl_table_wpx[count ($dhl_table_wpx)-1];
           } elseif ($shipping_weight > 50) {
-            $shipping_wpx = number_format((($shipping_weight - 50)* 2 + 0.5), 0) * constant('MODULE_SHIPPING_DHL_STEP_WPX_51_' .$j) + 20 * constant('MODULE_SHIPPING_DHL_STEP_WPX_20_' .$j) + 20 * constant('MODULE_SHIPPING_DHL_STEP_WPX_30_' .$j) + 40 * constant('MODULE_SHIPPING_DHL_STEP_WPX_50_' .$j) + $dhl_table_wpx[count ($dhl_table_wpx)-1];
+            $shipping_wpx = number_format((($shipping_weight - 50)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_DHL_STEP_WPX_51_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_WPX_20_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_WPX_30_' .$j) + 40 * (double)constant('MODULE_SHIPPING_DHL_STEP_WPX_50_' .$j) + $dhl_table_wpx[count ($dhl_table_wpx)-1];
           } else {
 
             for ($i=0; $i<sizeof($dhl_table_wpx); $i+=2) {
@@ -197,7 +197,7 @@
             $shipping_cost = 0;
             $shipping_method = MODULE_SHIPPING_DHL_UNDEFINED_RATE;
           } else {
-            $shipping_cost_3 = ($shipping_wpx * $shipping_num_boxes) + MODULE_SHIPPING_DHL_HANDLING;
+            $shipping_cost_3 = ($shipping_wpx * $shipping_num_boxes) + (double)MODULE_SHIPPING_DHL_HANDLING;
           }
 
           $methods[] = array('id' => 'WPX',
@@ -207,15 +207,15 @@
         }
 
         if ($dhl_cost_mdx != '') {
-          $dhl_table_mdx = preg_split("/[:,]/" , $dhl_cost_mdx);  // Hetfield - 2009-11-19 - replaced deprecated function split with preg_split to be ready for PHP >= 5.3
+          $dhl_table_mdx = preg_split("/[:,]/" , $dhl_cost_mdx);  
           if ( ($shipping_weight > 10) and ($shipping_weight <= 20) ) {
-            $shipping_mdx = number_format((($shipping_weight - 10)* 2 + 0.5), 0) * constant('MODULE_SHIPPING_DHL_STEP_MDX_20_' .$j) + $dhl_table_mdx[count ($dhl_table_mdx)-1];
+            $shipping_mdx = number_format((($shipping_weight - 10)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_DHL_STEP_MDX_20_' .$j) + $dhl_table_mdx[count ($dhl_table_mdx)-1];
           } elseif ( ($shipping_weight > 20) and ($shipping_weight <= 30) ) {
-            $shipping_mdx = number_format((($shipping_weight - 20)* 2 + 0.5), 0) * constant('MODULE_SHIPPING_DHL_STEP_MDX_30_' .$j) + 20 * constant('MODULE_SHIPPING_DHL_STEP_MDX_20_' .$j) + $dhl_table_mdx[count ($dhl_table_mdx)-1];
+            $shipping_mdx = number_format((($shipping_weight - 20)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_DHL_STEP_MDX_30_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_MDX_20_' .$j) + $dhl_table_mdx[count ($dhl_table_mdx)-1];
           } elseif ( ($shipping_weight > 30) and ($shipping_weight <= 50) ) {
-            $shipping_mdx = number_format((($shipping_weight - 30)* 2 + 0.5), 0) * constant('MODULE_SHIPPING_DHL_STEP_MDX_50_' .$j) + 20 * constant('MODULE_SHIPPING_DHL_STEP_MDX_20_' .$j) + 20 * constant('MODULE_SHIPPING_DHL_STEP_MDX_30_' .$j) + $dhl_table_mdx[count ($dhl_table_mdx)-1];
+            $shipping_mdx = number_format((($shipping_weight - 30)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_DHL_STEP_MDX_50_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_MDX_20_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_MDX_30_' .$j) + $dhl_table_mdx[count ($dhl_table_mdx)-1];
           } elseif ($shipping_weight > 50) {
-            $shipping_mdx = number_format((($shipping_weight - 50)* 2 + 0.5), 0) * constant('MODULE_SHIPPING_DHL_STEP_MDX_51_' .$j) + 20 * constant('MODULE_SHIPPING_DHL_STEP_MDX_20_' .$j) + 20 * constant('MODULE_SHIPPING_DHL_STEP_MDX_30_' .$j) + 40 * constant('MODULE_SHIPPING_DHL_STEP_MDX_50_' .$j) + $dhl_table_mdx[count ($dhl_table_mdx)-1];
+            $shipping_mdx = number_format((($shipping_weight - 50)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_DHL_STEP_MDX_51_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_MDX_20_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_MDX_30_' .$j) + 40 * (double)constant('MODULE_SHIPPING_DHL_STEP_MDX_50_' .$j) + $dhl_table_mdx[count ($dhl_table_mdx)-1];
           } else {
 
             for ($i=0; $i<sizeof($dhl_table_mdx); $i+=2) {
@@ -230,7 +230,7 @@
             $shipping_cost = 0;
             $shipping_method = MODULE_SHIPPING_DHL_UNDEFINED_RATE;
           } else {
-            $shipping_cost_4 = ($shipping_mdx * $shipping_num_boxes) + MODULE_SHIPPING_DHL_HANDLING;
+            $shipping_cost_4 = ($shipping_mdx * $shipping_num_boxes) + (double)MODULE_SHIPPING_DHL_HANDLING;
           }
 
           $methods[] = array('id' => 'MDX',
@@ -240,15 +240,15 @@
         }
 
         if ($dhl_cost_sdx != '') {
-          $dhl_table_sdx = preg_split("/[:,]/" , $dhl_cost_sdx); // Hetfield - 2009-08-18 - replaced deprecated function split with explode to be ready for PHP >= 5.3
+          $dhl_table_sdx = preg_split("/[:,]/" , $dhl_cost_sdx); 
           if ( ($shipping_weight > 10) and ($shipping_weight <= 20) ) {
-            $shipping_sdx = number_format((($shipping_weight - 10)* 2 + 0.5), 0) * constant('MODULE_SHIPPING_DHL_STEP_SDX_20_' .$j) + $dhl_table_sdx[count ($dhl_table_sdx)-1];
+            $shipping_sdx = number_format((($shipping_weight - 10)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_DHL_STEP_SDX_20_' .$j) + $dhl_table_sdx[count ($dhl_table_sdx)-1];
           } elseif ( ($shipping_weight > 20) and ($shipping_weight <= 30) ) {
-            $shipping_sdx = number_format((($shipping_weight - 20)* 2 + 0.5), 0) * constant('MODULE_SHIPPING_DHL_STEP_SDX_30_' .$j) + 20 * constant('MODULE_SHIPPING_DHL_STEP_SDX_20_' .$j) + $dhl_table_sdx[count ($dhl_table_sdx)-1];
+            $shipping_sdx = number_format((($shipping_weight - 20)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_DHL_STEP_SDX_30_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_SDX_20_' .$j) + $dhl_table_sdx[count ($dhl_table_sdx)-1];
           } elseif ( ($shipping_weight > 30) and ($shipping_weight <= 50) ) {
-            $shipping_sdx = number_format((($shipping_weight - 30)* 2 + 0.5), 0) * constant('MODULE_SHIPPING_DHL_STEP_SDX_50_' .$j) + 20 * constant('MODULE_SHIPPING_DHL_STEP_SDX_20_' .$j) + 20 * constant('MODULE_SHIPPING_DHL_STEP_SDX_30_' .$j) + $dhl_table_sdx[count ($dhl_table_sdx)-1];
+            $shipping_sdx = number_format((($shipping_weight - 30)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_DHL_STEP_SDX_50_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_SDX_20_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_SDX_30_' .$j) + $dhl_table_sdx[count ($dhl_table_sdx)-1];
           } elseif ($shipping_weight > 50) {
-            $shipping_sdx = number_format((($shipping_weight - 50)* 2 + 0.5), 0) * constant('MODULE_SHIPPING_DHL_STEP_SDX_51_' .$j) + 20 * constant('MODULE_SHIPPING_DHL_STEP_SDX_20_' .$j) + 20 * constant('MODULE_SHIPPING_DHL_STEP_SDX_30_' .$j) + 40 * constant('MODULE_SHIPPING_DHL_STEP_SDX_50_' .$j) + $dhl_table_sdx[count ($dhl_table_sdx)-1];
+            $shipping_sdx = number_format((($shipping_weight - 50)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_DHL_STEP_SDX_51_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_SDX_20_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_SDX_30_' .$j) + 40 * (double)constant('MODULE_SHIPPING_DHL_STEP_SDX_50_' .$j) + $dhl_table_sdx[count ($dhl_table_sdx)-1];
           } else {
 
             for ($i=0; $i<sizeof($dhl_table_sdx); $i+=2) {
@@ -263,7 +263,7 @@
             $shipping_cost = 0;
             $shipping_method = MODULE_SHIPPING_DHL_UNDEFINED_RATE;
           } else {
-            $shipping_cost_5 = ($shipping_sdx * $shipping_num_boxes) + MODULE_SHIPPING_DHL_HANDLING;
+            $shipping_cost_5 = ($shipping_sdx * $shipping_num_boxes) + (double)MODULE_SHIPPING_DHL_HANDLING;
           }
 
           $methods[] = array('id' => 'SDX',
@@ -501,12 +501,14 @@
     }
 
     function keys() {
-      $keys = array('MODULE_SHIPPING_DHL_STATUS',
-                    'MODULE_SHIPPING_DHL_HANDLING',
-                    'MODULE_SHIPPING_DHL_ALLOWED',
-                    'MODULE_SHIPPING_DHL_TAX_CLASS',
-                    'MODULE_SHIPPING_DHL_ZONE',
-                    'MODULE_SHIPPING_DHL_SORT_ORDER');
+      $keys = array(
+        'MODULE_SHIPPING_DHL_STATUS',
+        'MODULE_SHIPPING_DHL_HANDLING',
+        'MODULE_SHIPPING_DHL_ALLOWED',
+        'MODULE_SHIPPING_DHL_TAX_CLASS',
+        'MODULE_SHIPPING_DHL_ZONE',
+        'MODULE_SHIPPING_DHL_SORT_ORDER'
+      );
 
       for ($i = 1; $i <= $this->num_dhl; $i ++) {
         $keys[] = 'MODULE_SHIPPING_DHL_COUNTRIES_' . $i;
@@ -537,91 +539,93 @@
         $keys[] = 'MODULE_SHIPPING_DHL_STEP_SDX_51_' . $i;
       }
       
-      $exclude_array = array('MODULE_SHIPPING_DHL_COST_DOX_1',
-                             'MODULE_SHIPPING_DHL_COST_WPX_1',
-                             'MODULE_SHIPPING_DHL_STEP_DOX_20_1',
-                             'MODULE_SHIPPING_DHL_STEP_DOX_30_1',
-                             'MODULE_SHIPPING_DHL_STEP_DOX_50_1',
-                             'MODULE_SHIPPING_DHL_STEP_DOX_51_1',
-                             'MODULE_SHIPPING_DHL_STEP_WPX_20_1',
-                             'MODULE_SHIPPING_DHL_STEP_WPX_30_1',
-                             'MODULE_SHIPPING_DHL_STEP_WPX_50_1',
-                             'MODULE_SHIPPING_DHL_STEP_WPX_51_1',
-                             'MODULE_SHIPPING_DHL_COST_DOX_2',
-                             'MODULE_SHIPPING_DHL_COST_WPX_2',
-                             'MODULE_SHIPPING_DHL_STEP_DOX_20_2',
-                             'MODULE_SHIPPING_DHL_STEP_DOX_30_2',
-                             'MODULE_SHIPPING_DHL_STEP_DOX_50_2',
-                             'MODULE_SHIPPING_DHL_STEP_DOX_51_2',
-                             'MODULE_SHIPPING_DHL_STEP_WPX_20_2',
-                             'MODULE_SHIPPING_DHL_STEP_WPX_30_2',
-                             'MODULE_SHIPPING_DHL_STEP_WPX_50_2',
-                             'MODULE_SHIPPING_DHL_STEP_WPX_51_2',
-                             'MODULE_SHIPPING_DHL_COST_DOX_3',
-                             'MODULE_SHIPPING_DHL_COST_WPX_3',
-                             'MODULE_SHIPPING_DHL_STEP_DOX_20_3',
-                             'MODULE_SHIPPING_DHL_STEP_DOX_30_3',
-                             'MODULE_SHIPPING_DHL_STEP_DOX_50_3',
-                             'MODULE_SHIPPING_DHL_STEP_DOX_51_3',
-                             'MODULE_SHIPPING_DHL_STEP_WPX_20_3',
-                             'MODULE_SHIPPING_DHL_STEP_WPX_30_3',
-                             'MODULE_SHIPPING_DHL_STEP_WPX_50_3',
-                             'MODULE_SHIPPING_DHL_STEP_WPX_51_3',
-                             'MODULE_SHIPPING_DHL_COST_ECX_4',
-                             'MODULE_SHIPPING_DHL_STEP_ECX_20_4',
-                             'MODULE_SHIPPING_DHL_STEP_ECX_30_4',
-                             'MODULE_SHIPPING_DHL_STEP_ECX_50_4',
-                             'MODULE_SHIPPING_DHL_STEP_ECX_51_4',
-                             'MODULE_SHIPPING_DHL_COST_ECX_5',
-                             'MODULE_SHIPPING_DHL_STEP_ECX_20_5',
-                             'MODULE_SHIPPING_DHL_STEP_ECX_30_5',
-                             'MODULE_SHIPPING_DHL_STEP_ECX_50_5',
-                             'MODULE_SHIPPING_DHL_STEP_ECX_51_5',
-                             'MODULE_SHIPPING_DHL_COST_ECX_6',
-                             'MODULE_SHIPPING_DHL_COST_MDX_6',
-                             'MODULE_SHIPPING_DHL_COST_SDX_6',
-                             'MODULE_SHIPPING_DHL_STEP_ECX_20_6',
-                             'MODULE_SHIPPING_DHL_STEP_ECX_30_6',
-                             'MODULE_SHIPPING_DHL_STEP_ECX_50_6',
-                             'MODULE_SHIPPING_DHL_STEP_ECX_51_6',
-                             'MODULE_SHIPPING_DHL_STEP_MDX_20_6',
-                             'MODULE_SHIPPING_DHL_STEP_MDX_30_6',
-                             'MODULE_SHIPPING_DHL_STEP_MDX_50_6',
-                             'MODULE_SHIPPING_DHL_STEP_MDX_51_6',
-                             'MODULE_SHIPPING_DHL_STEP_SDX_20_6',
-                             'MODULE_SHIPPING_DHL_STEP_SDX_30_6',
-                             'MODULE_SHIPPING_DHL_STEP_SDX_50_6',
-                             'MODULE_SHIPPING_DHL_STEP_SDX_51_6',
-                             'MODULE_SHIPPING_DHL_COST_ECX_7',
-                             'MODULE_SHIPPING_DHL_COST_MDX_7',
-                             'MODULE_SHIPPING_DHL_COST_SDX_7',
-                             'MODULE_SHIPPING_DHL_STEP_ECX_20_7',
-                             'MODULE_SHIPPING_DHL_STEP_ECX_30_7',
-                             'MODULE_SHIPPING_DHL_STEP_ECX_50_7',
-                             'MODULE_SHIPPING_DHL_STEP_ECX_51_7',
-                             'MODULE_SHIPPING_DHL_STEP_MDX_20_7',
-                             'MODULE_SHIPPING_DHL_STEP_MDX_30_7',
-                             'MODULE_SHIPPING_DHL_STEP_MDX_50_7',
-                             'MODULE_SHIPPING_DHL_STEP_MDX_51_7',
-                             'MODULE_SHIPPING_DHL_STEP_SDX_20_7',
-                             'MODULE_SHIPPING_DHL_STEP_SDX_30_7',
-                             'MODULE_SHIPPING_DHL_STEP_SDX_50_7',
-                             'MODULE_SHIPPING_DHL_STEP_SDX_51_7',
-                             'MODULE_SHIPPING_DHL_COST_ECX_8',
-                             'MODULE_SHIPPING_DHL_STEP_ECX_20_8',
-                             'MODULE_SHIPPING_DHL_STEP_ECX_30_8',
-                             'MODULE_SHIPPING_DHL_STEP_ECX_50_8',
-                             'MODULE_SHIPPING_DHL_STEP_ECX_51_8',
-                             'MODULE_SHIPPING_DHL_COST_ECX_9',
-                             'MODULE_SHIPPING_DHL_STEP_ECX_20_9',
-                             'MODULE_SHIPPING_DHL_STEP_ECX_30_9',
-                             'MODULE_SHIPPING_DHL_STEP_ECX_50_9',
-                             'MODULE_SHIPPING_DHL_STEP_ECX_51_9',
-                             'MODULE_SHIPPING_DHL_COST_ECX_10',
-                             'MODULE_SHIPPING_DHL_STEP_ECX_20_10',
-                             'MODULE_SHIPPING_DHL_STEP_ECX_30_10',
-                             'MODULE_SHIPPING_DHL_STEP_ECX_50_10',
-                             'MODULE_SHIPPING_DHL_STEP_ECX_51_10');
+      $exclude_array = array(
+        'MODULE_SHIPPING_DHL_COST_DOX_1',
+        'MODULE_SHIPPING_DHL_COST_WPX_1',
+        'MODULE_SHIPPING_DHL_STEP_DOX_20_1',
+        'MODULE_SHIPPING_DHL_STEP_DOX_30_1',
+        'MODULE_SHIPPING_DHL_STEP_DOX_50_1',
+        'MODULE_SHIPPING_DHL_STEP_DOX_51_1',
+        'MODULE_SHIPPING_DHL_STEP_WPX_20_1',
+        'MODULE_SHIPPING_DHL_STEP_WPX_30_1',
+        'MODULE_SHIPPING_DHL_STEP_WPX_50_1',
+        'MODULE_SHIPPING_DHL_STEP_WPX_51_1',
+        'MODULE_SHIPPING_DHL_COST_DOX_2',
+        'MODULE_SHIPPING_DHL_COST_WPX_2',
+        'MODULE_SHIPPING_DHL_STEP_DOX_20_2',
+        'MODULE_SHIPPING_DHL_STEP_DOX_30_2',
+        'MODULE_SHIPPING_DHL_STEP_DOX_50_2',
+        'MODULE_SHIPPING_DHL_STEP_DOX_51_2',
+        'MODULE_SHIPPING_DHL_STEP_WPX_20_2',
+        'MODULE_SHIPPING_DHL_STEP_WPX_30_2',
+        'MODULE_SHIPPING_DHL_STEP_WPX_50_2',
+        'MODULE_SHIPPING_DHL_STEP_WPX_51_2',
+        'MODULE_SHIPPING_DHL_COST_DOX_3',
+        'MODULE_SHIPPING_DHL_COST_WPX_3',
+        'MODULE_SHIPPING_DHL_STEP_DOX_20_3',
+        'MODULE_SHIPPING_DHL_STEP_DOX_30_3',
+        'MODULE_SHIPPING_DHL_STEP_DOX_50_3',
+        'MODULE_SHIPPING_DHL_STEP_DOX_51_3',
+        'MODULE_SHIPPING_DHL_STEP_WPX_20_3',
+        'MODULE_SHIPPING_DHL_STEP_WPX_30_3',
+        'MODULE_SHIPPING_DHL_STEP_WPX_50_3',
+        'MODULE_SHIPPING_DHL_STEP_WPX_51_3',
+        'MODULE_SHIPPING_DHL_COST_ECX_4',
+        'MODULE_SHIPPING_DHL_STEP_ECX_20_4',
+        'MODULE_SHIPPING_DHL_STEP_ECX_30_4',
+        'MODULE_SHIPPING_DHL_STEP_ECX_50_4',
+        'MODULE_SHIPPING_DHL_STEP_ECX_51_4',
+        'MODULE_SHIPPING_DHL_COST_ECX_5',
+        'MODULE_SHIPPING_DHL_STEP_ECX_20_5',
+        'MODULE_SHIPPING_DHL_STEP_ECX_30_5',
+        'MODULE_SHIPPING_DHL_STEP_ECX_50_5',
+        'MODULE_SHIPPING_DHL_STEP_ECX_51_5',
+        'MODULE_SHIPPING_DHL_COST_ECX_6',
+        'MODULE_SHIPPING_DHL_COST_MDX_6',
+        'MODULE_SHIPPING_DHL_COST_SDX_6',
+        'MODULE_SHIPPING_DHL_STEP_ECX_20_6',
+        'MODULE_SHIPPING_DHL_STEP_ECX_30_6',
+        'MODULE_SHIPPING_DHL_STEP_ECX_50_6',
+        'MODULE_SHIPPING_DHL_STEP_ECX_51_6',
+        'MODULE_SHIPPING_DHL_STEP_MDX_20_6',
+        'MODULE_SHIPPING_DHL_STEP_MDX_30_6',
+        'MODULE_SHIPPING_DHL_STEP_MDX_50_6',
+        'MODULE_SHIPPING_DHL_STEP_MDX_51_6',
+        'MODULE_SHIPPING_DHL_STEP_SDX_20_6',
+        'MODULE_SHIPPING_DHL_STEP_SDX_30_6',
+        'MODULE_SHIPPING_DHL_STEP_SDX_50_6',
+        'MODULE_SHIPPING_DHL_STEP_SDX_51_6',
+        'MODULE_SHIPPING_DHL_COST_ECX_7',
+        'MODULE_SHIPPING_DHL_COST_MDX_7',
+        'MODULE_SHIPPING_DHL_COST_SDX_7',
+        'MODULE_SHIPPING_DHL_STEP_ECX_20_7',
+        'MODULE_SHIPPING_DHL_STEP_ECX_30_7',
+        'MODULE_SHIPPING_DHL_STEP_ECX_50_7',
+        'MODULE_SHIPPING_DHL_STEP_ECX_51_7',
+        'MODULE_SHIPPING_DHL_STEP_MDX_20_7',
+        'MODULE_SHIPPING_DHL_STEP_MDX_30_7',
+        'MODULE_SHIPPING_DHL_STEP_MDX_50_7',
+        'MODULE_SHIPPING_DHL_STEP_MDX_51_7',
+        'MODULE_SHIPPING_DHL_STEP_SDX_20_7',
+        'MODULE_SHIPPING_DHL_STEP_SDX_30_7',
+        'MODULE_SHIPPING_DHL_STEP_SDX_50_7',
+        'MODULE_SHIPPING_DHL_STEP_SDX_51_7',
+        'MODULE_SHIPPING_DHL_COST_ECX_8',
+        'MODULE_SHIPPING_DHL_STEP_ECX_20_8',
+        'MODULE_SHIPPING_DHL_STEP_ECX_30_8',
+        'MODULE_SHIPPING_DHL_STEP_ECX_50_8',
+        'MODULE_SHIPPING_DHL_STEP_ECX_51_8',
+        'MODULE_SHIPPING_DHL_COST_ECX_9',
+        'MODULE_SHIPPING_DHL_STEP_ECX_20_9',
+        'MODULE_SHIPPING_DHL_STEP_ECX_30_9',
+        'MODULE_SHIPPING_DHL_STEP_ECX_50_9',
+        'MODULE_SHIPPING_DHL_STEP_ECX_51_9',
+        'MODULE_SHIPPING_DHL_COST_ECX_10',
+        'MODULE_SHIPPING_DHL_STEP_ECX_20_10',
+        'MODULE_SHIPPING_DHL_STEP_ECX_30_10',
+        'MODULE_SHIPPING_DHL_STEP_ECX_50_10',
+        'MODULE_SHIPPING_DHL_STEP_ECX_51_10'
+      );
       
       for ($x=0, $n=sizeof($keys); $x<$n; $x++) {
         if (in_array($keys[$x], $exclude_array)) {
@@ -633,4 +637,3 @@
       return $keys;
     }
   }
-?>

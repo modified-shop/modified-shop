@@ -132,7 +132,7 @@
         //Check if there is free shipping in the database.
         if($dpd_cost['dpd_free_shipping_over'] == -1.0000){
           //do normal processing of shipping
-          $shipping_dpd_cost = ($shipping_num_boxes * $shipping) + MODULE_SHIPPING_DPD_HANDLING;
+          $shipping_dpd_cost = ($shipping_num_boxes * $shipping) + (double)MODULE_SHIPPING_DPD_HANDLING;
         } else if(($dpd_cost['dpd_free_shipping_over'] != -1.0000) && ($dpd_cost['dpd_shipping_subsidized'] == -1.0000)){
           //free shipping if over amount
           if($order->info['subtotal'] >= $dpd_cost['dpd_free_shipping_over']){
@@ -141,17 +141,17 @@
             $shipping_dpd_method = MODULE_SHIPPING_DPD_FREE_SHIPPING;
           } else {
             //charge for shipping
-            $shipping_dpd_cost = ($shipping_num_boxes * $shipping) + MODULE_SHIPPING_DPD_HANDLING;
+            $shipping_dpd_cost = ($shipping_num_boxes * $shipping) + (double)MODULE_SHIPPING_DPD_HANDLING;
           }
         //subsidized shipping over amount
         } else {
           if($order->info['subtotal'] >= $dpd_cost['dpd_free_shipping_over']){
             //shipping is subsidized
-            $shipping_dpd_cost = ($shipping_num_boxes * $shipping) + MODULE_SHIPPING_DPD_HANDLING - $dpd_cost['dpd_shipping_subsidized'];
+            $shipping_dpd_cost = ($shipping_num_boxes * $shipping) + (double)MODULE_SHIPPING_DPD_HANDLING - $dpd_cost['dpd_shipping_subsidized'];
             $shipping_dpd_method = MODULE_SHIPPING_DPD_SUBSIDIZED_SHIPPING . ' ' . MODULE_SHIPPING_DPD_TEXT_WAY . ' ' . $dest_country . ' (' . ($shipping_num_boxes > 1 ? $shipping_num_boxes . ' x ' : '') . round($shipping_weight, 2) . ' ' . MODULE_SHIPPING_DPD_TEXT_UNITS . ') :';
           } else {
             //charge for shipping
-            $shipping_dpd_cost = ($shipping_num_boxes * $shipping) + MODULE_SHIPPING_DPD_HANDLING;
+            $shipping_dpd_cost = ($shipping_num_boxes * $shipping) + (double)MODULE_SHIPPING_DPD_HANDLING;
 
           }
         }
@@ -666,14 +666,15 @@
 
     //disabled the next one because of some problems: If module is installed and this set to 0, checkout doesn't work.
     function keys() {
-      $keys = array('MODULE_SHIPPING_DPD_STATUS', 
-                    'MODULE_SHIPPING_DPD_HANDLING',
-                    'MODULE_SHIPPING_DPD_ALLOWED', 
-                    'MODULE_SHIPPING_DPD_SORT_ORDER', 
-                    'MODULE_SHIPPING_DPD_TAX_CLASS', 
-                    'MODULE_SHIPPING_DPD_ZONE');
+      $keys = array(
+        'MODULE_SHIPPING_DPD_STATUS', 
+        'MODULE_SHIPPING_DPD_HANDLING',
+        'MODULE_SHIPPING_DPD_ALLOWED', 
+        'MODULE_SHIPPING_DPD_SORT_ORDER', 
+        'MODULE_SHIPPING_DPD_TAX_CLASS', 
+        'MODULE_SHIPPING_DPD_ZONE'
+      );
 
       return $keys;
     }
   }
-?>

@@ -21,15 +21,13 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
    
-   
-
 
   class chp {
     var $code, $title, $description, $icon, $enabled, $num_chp, $types;
 
-/**
- * class constructor
- */
+    /**
+     * class constructor
+     */
     function __construct() {
       global $order;
 
@@ -63,15 +61,15 @@
                            'PRI' => 'Priority',
                            'URG' => 'Urgent');
 
-/**
- * CUSTOMIZE THIS SETTING FOR THE NUMBER OF ZONES NEEDED
- */
+      /**
+       * CUSTOMIZE THIS SETTING FOR THE NUMBER OF ZONES NEEDED
+       */
       $this->num_chp = 7;
     }
 
-/**
- * class methods
- */
+    /**
+     * class methods
+     */
     function quote($method = '') {
       global $order, $shipping_weight, $shipping_num_boxes;
 
@@ -81,7 +79,7 @@
 
       for ($j=1; $j<=$this->num_chp; $j++) {
         $countries_table = constant('MODULE_SHIPPING_CHP_COUNTRIES_' . $j);
-        $country_zones = explode(",", $countries_table); // Hetfield - 2009-08-18 - replaced deprecated function split with explode to be ready for PHP >= 5.3
+        $country_zones = explode(",", $countries_table);
         if (in_array($dest_country, $country_zones)) {
           $dest_zone = $j;
           break;
@@ -104,7 +102,7 @@
         $methods = array();
 
         if ($chp_cost_eco != '') {
-          $chp_table_eco = preg_split("/[:,]/" , $chp_cost_eco); // Hetfield - 2009-08-18 - replaced deprecated function split with explode to be ready for PHP >= 5.3
+          $chp_table_eco = preg_split("/[:,]/" , $chp_cost_eco); 
 
           for ($i=0; $i<sizeof($chp_table_eco); $i+=2) {
             if ($shipping_weight <= $chp_table_eco[$i]) {
@@ -117,7 +115,7 @@
             $shipping_cost = 0;
             $shipping_method = MODULE_SHIPPING_CHP_UNDEFINED_RATE;
           } else {
-            $shipping_cost_1 = ($shipping_eco + MODULE_SHIPPING_CHP_HANDLING);
+            $shipping_cost_1 = ($shipping_eco + (double)MODULE_SHIPPING_CHP_HANDLING);
           }
 
           if ($shipping_eco != 0) {
@@ -128,7 +126,7 @@
         }
 
         if ($chp_cost_pri != '') {
-          $chp_table_pri = preg_split("/[:,]/" , $chp_cost_pri); // Hetfield - 2009-08-18 - replaced deprecated function split with preg_split to be ready for PHP >= 5.3
+          $chp_table_pri = preg_split("/[:,]/" , $chp_cost_pri); 
 
           for ($i=0; $i<sizeof($chp_table_pri); $i+=2) {
             if ($shipping_weight <= $chp_table_pri[$i]) {
@@ -141,7 +139,7 @@
             $shipping_cost = 0;
             $shipping_method = MODULE_SHIPPING_CHP_UNDEFINED_RATE;
           } else {
-            $shipping_cost_2 = ($shipping_pri + MODULE_SHIPPING_CHP_HANDLING);
+            $shipping_cost_2 = ($shipping_pri + (double)MODULE_SHIPPING_CHP_HANDLING);
           }
 
           if ($shipping_pri != 0) {
@@ -152,7 +150,7 @@
         }  
 
         if ($chp_cost_urg != '') {
-          $chp_table_urg = preg_split("/[:,]/" , $chp_cost_urg); // Hetfield - 2009-08-18 - replaced deprecated function split with preg_split to be ready for PHP >= 5.3
+          $chp_table_urg = preg_split("/[:,]/" , $chp_cost_urg); 
 
           for ($i=0; $i<sizeof($chp_table_urg); $i+=2) {
             if ($shipping_weight <= $chp_table_urg[$i]) {
@@ -165,7 +163,7 @@
             $shipping_cost = 0;
             $shipping_method = MODULE_SHIPPING_CHP_UNDEFINED_RATE;
           } else {
-            $shipping_cost_3 = ($shipping_urg + MODULE_SHIPPING_CHP_HANDLING);
+            $shipping_cost_3 = ($shipping_urg + (double)MODULE_SHIPPING_CHP_HANDLING);
           }
 
           if ($shipping_urg != 0) {
@@ -255,12 +253,14 @@
     }
 
     function keys() {
-      $keys = array('MODULE_SHIPPING_CHP_STATUS', 
-                    'MODULE_SHIPPING_CHP_HANDLING',
-                    'MODULE_SHIPPING_CHP_ALLOWED', 
-                    'MODULE_SHIPPING_CHP_TAX_CLASS', 
-                    'MODULE_SHIPPING_CHP_ZONE', 
-                    'MODULE_SHIPPING_CHP_SORT_ORDER');
+      $keys = array(
+        'MODULE_SHIPPING_CHP_STATUS', 
+        'MODULE_SHIPPING_CHP_HANDLING',
+        'MODULE_SHIPPING_CHP_ALLOWED', 
+        'MODULE_SHIPPING_CHP_TAX_CLASS', 
+        'MODULE_SHIPPING_CHP_ZONE', 
+        'MODULE_SHIPPING_CHP_SORT_ORDER'
+      );
 
       for ($i=1; $i <= $this->num_chp; $i++) {
         $keys[] = 'MODULE_SHIPPING_CHP_COUNTRIES_' . $i;
@@ -281,4 +281,3 @@
       return $keys;
     }
   }
-?>

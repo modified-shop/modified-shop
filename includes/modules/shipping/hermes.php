@@ -125,4 +125,3 @@
                    'MODULE_SHIPPING_HERMES_ALLOWED');
     }
   }
-?>

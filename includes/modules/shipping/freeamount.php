@@ -109,7 +109,7 @@
           $this->enabled = false;
         }
       } else {
-        $freeamount_zone = constant('MODULE_SHIPPING_FREEAMOUNT_AMOUNT_' . $dest_zone);
+        $freeamount_zone = (double)constant('MODULE_SHIPPING_FREEAMOUNT_AMOUNT_' . $dest_zone);
 
         if (( $xtPrice->xtcRemoveCurr($_SESSION['cart']->show_total()) < $freeamount_zone) && MODULE_SHIPPING_FREEAMOUNT_DISPLAY == 'False') {
           $this->enabled = false;
@@ -222,16 +222,16 @@
     }
 
     function keys() {
-      $keys = array('MODULE_SHIPPING_FREEAMOUNT_STATUS',
-                    'MODULE_SHIPPING_FREEAMOUNT_ALLOWED',
-                    'MODULE_SHIPPING_FREEAMOUNT_ZONE',
-                    'MODULE_SHIPPING_FREEAMOUNT_SORT_ORDER',
-                    'MODULE_SHIPPING_FREEAMOUNT_NUMBER_ZONES',
-                    'MODULE_SHIPPING_FREEAMOUNT_DISPLAY',
-                    );
+      $keys = array(
+        'MODULE_SHIPPING_FREEAMOUNT_STATUS',
+        'MODULE_SHIPPING_FREEAMOUNT_ALLOWED',
+        'MODULE_SHIPPING_FREEAMOUNT_ZONE',
+        'MODULE_SHIPPING_FREEAMOUNT_SORT_ORDER',
+        'MODULE_SHIPPING_FREEAMOUNT_NUMBER_ZONES',
+        'MODULE_SHIPPING_FREEAMOUNT_DISPLAY',
+      );
       $keys = array_merge($keys, $this->keys_zones($this->num_zones));
 
       return $keys;
     }
   }
-?>

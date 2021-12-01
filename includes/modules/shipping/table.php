@@ -142,7 +142,7 @@
             $shipping = $shipping * $shipping_num_boxes;
           }
 
-          $shipping_cost = ($shipping + constant('MODULE_SHIPPING_TABLE_HANDLING_' . $dest_zone));
+          $shipping_cost = ($shipping + (double)constant('MODULE_SHIPPING_TABLE_HANDLING_' . $dest_zone));
 
           $this->quotes['methods'] = array(array('id' => $this->code,
                                                  'title' => $shipping_method . ' (' . ($shipping_num_boxes > 1 ? $shipping_num_boxes . ' x ' : '') . round($shipping_weight, 2) . ' ' . MODULE_SHIPPING_TABLE_TEXT_UNITS .')',
@@ -261,18 +261,18 @@
     }
 
     function keys() {
-      $keys = array('MODULE_SHIPPING_TABLE_STATUS',
-                    'MODULE_SHIPPING_TABLE_MODE',
-                    'MODULE_SHIPPING_TABLE_ALLOWED',
-                    'MODULE_SHIPPING_TABLE_TAX_CLASS',
-                    'MODULE_SHIPPING_TABLE_ZONE',
-                    'MODULE_SHIPPING_TABLE_SORT_ORDER',
-                    'MODULE_SHIPPING_TABLE_NUMBER_ZONES',
-                    'MODULE_SHIPPING_TABLE_DISPLAY'
-                   );
+      $keys = array(
+        'MODULE_SHIPPING_TABLE_STATUS',
+        'MODULE_SHIPPING_TABLE_MODE',
+        'MODULE_SHIPPING_TABLE_ALLOWED',
+        'MODULE_SHIPPING_TABLE_TAX_CLASS',
+        'MODULE_SHIPPING_TABLE_ZONE',
+        'MODULE_SHIPPING_TABLE_SORT_ORDER',
+        'MODULE_SHIPPING_TABLE_NUMBER_ZONES',
+        'MODULE_SHIPPING_TABLE_DISPLAY'
+      );
       $keys = array_merge($keys, $this->keys_zones($this->num_zones));
 
       return $keys;
     }
   }
-?>

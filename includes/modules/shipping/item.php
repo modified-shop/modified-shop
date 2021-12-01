@@ -114,8 +114,8 @@
           $this->enabled = false;
         }
       } else {
-        $item_cost = constant('MODULE_SHIPPING_ITEM_COST_' . $dest_zone);
-        $item_handling = constant('MODULE_SHIPPING_ITEM_HANDLING_' . $dest_zone);
+        $item_cost = (double)constant('MODULE_SHIPPING_ITEM_COST_' . $dest_zone);
+        $item_handling = (double)constant('MODULE_SHIPPING_ITEM_HANDLING_' . $dest_zone);
 
         $this->quotes['methods'] = array(array('id' => $this->code,
                                                'title' => MODULE_SHIPPING_ITEM_TEXT_WAY . ' ' . $dest_country . ': ',
@@ -245,4 +245,3 @@
       return $keys;
     }
   }
-?>

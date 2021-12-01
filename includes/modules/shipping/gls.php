@@ -57,15 +57,15 @@
         }
       }
 
-/**
- * CUSTOMIZE THIS SETTING FOR THE NUMBER OF ZONES NEEDED
- */
+      /**
+       * CUSTOMIZE THIS SETTING FOR THE NUMBER OF ZONES NEEDED
+       */
       $this->num_gls = 6;
     }
 
-/**
- * class methods
- */
+    /**
+     * class methods
+     */
     function quote($method = '') {
       global $order, $shipping_weight, $shipping_num_boxes;
       require_once(DIR_FS_INC .'xtc_format_price.inc.php');
@@ -77,7 +77,7 @@
 
       for ($i=1; $i<=$this->num_gls; $i++) {
         $countries_table = constant('MODULE_SHIPPING_GLS_COUNTRIES_' . $i);
-        $country_zones = preg_split("/[,]/", $countries_table); // DokuMan - 2010-11-20 - replaced deprecated function split with preg_split to be ready for PHP >= 5.3
+        $country_zones = preg_split("/[,]/", $countries_table); 
         if (in_array($dest_country, $country_zones)) {
           $dest_zone = $i;
           break;
@@ -90,11 +90,11 @@
       }
 
       $plz_table = constant('MODULE_SHIPPING_GLS_POSTCODE');
-      $plz_zones = preg_split("/[,]/",$plz_table); // DokuMan - 2010-11-20 - replaced deprecated function split with preg_split to be ready for PHP >= 5.3
+      $plz_zones = preg_split("/[,]/",$plz_table); 
       if (in_array($dest_plz, $plz_zones)) {
         $dest_plz_in = $dest_plz;
       } else {
-        $dest_plz_in = ''; //DokuMan - 2011-09-06 - set Undefined variable
+        $dest_plz_in = '';
       }
 
       if ($dest_zone == 0) {
@@ -102,7 +102,7 @@
       } else {
         $shipping = -1;
         $gls_cost = constant('MODULE_SHIPPING_GLS_COST_' . $dest_zone);
-        $gls_table = preg_split("/[:,]/" , $gls_cost); // DokuMan - 2010-11-20 - replaced deprecated function split with preg_split to be ready for PHP >= 5.3
+        $gls_table = preg_split("/[:,]/" , $gls_cost); 
         for ($i=0; $i<sizeof($gls_table); $i+=2) {
           if ($shipping_weight <= $gls_table[$i]) {
             $shipping = $gls_table[$i+1];
@@ -120,18 +120,18 @@
           $shipping_method = MODULE_SHIPPING_GLS_UNDEFINED_RATE;
         } else {
           if ($dest_plz_in) {
-            $shipping_cost_normal = ($shipping + MODULE_SHIPPING_GLS_HANDLING);
-            $shipping_cost_extra = MODULE_SHIPPING_GLS_POSTCODE_EXTRA_COST;
-            $shipping_cost = ($shipping + MODULE_SHIPPING_GLS_HANDLING + $shipping_cost_extra);
+            $shipping_cost_normal = ($shipping + (double)MODULE_SHIPPING_GLS_HANDLING);
+            $shipping_cost_extra = (double)MODULE_SHIPPING_GLS_POSTCODE_EXTRA_COST;
+            $shipping_cost = ($shipping + (double)MODULE_SHIPPING_GLS_HANDLING + $shipping_cost_extra);
           } else {
-            $shipping_cost_normal = ($shipping + MODULE_SHIPPING_GLS_HANDLING);
-            $shipping_cost = ($shipping + MODULE_SHIPPING_GLS_HANDLING);
+            $shipping_cost_normal = ($shipping + (double)MODULE_SHIPPING_GLS_HANDLING);
+            $shipping_cost = ($shipping + (double)MODULE_SHIPPING_GLS_HANDLING);
           }
         }
       }
 
       $tax_text = "";
-      if ($this->tax_class > 0) { // Tax or not
+      if ($this->tax_class > 0) {
          $tax_percent = xtc_get_tax_rate($this->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id'])/100;
          $shipping_cost_normal = $shipping_cost_normal + (round(($shipping_cost_normal * $tax_percent),2));
          $shipping_cost_normal_formatted = xtc_format_price($shipping_cost_normal,1,$_SESSION['currency'],1);
@@ -174,7 +174,7 @@
       return $this->_check;
     }
 
-        function install() {
+    function install() {
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SHIPPING_GLS_STATUS', 'True', '6', '0', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_GLS_HANDLING', '0', '6', '0', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, use_function, set_function, date_added) values ('MODULE_SHIPPING_GLS_TAX_CLASS', '0', '6', '0', 'xtc_get_tax_class_title', 'xtc_cfg_pull_down_tax_classes(', now())");
@@ -209,7 +209,16 @@
     }
 
     function keys() {
-      $keys = array('MODULE_SHIPPING_GLS_STATUS', 'MODULE_SHIPPING_GLS_HANDLING','MODULE_SHIPPING_GLS_ALLOWED', 'MODULE_SHIPPING_GLS_TAX_CLASS', 'MODULE_SHIPPING_GLS_ZONE', 'MODULE_SHIPPING_GLS_SORT_ORDER', 'MODULE_SHIPPING_GLS_POSTCODE', 'MODULE_SHIPPING_GLS_POSTCODE_EXTRA_COST');
+      $keys = array(
+        'MODULE_SHIPPING_GLS_STATUS', 
+        'MODULE_SHIPPING_GLS_HANDLING',
+        'MODULE_SHIPPING_GLS_ALLOWED', 
+        'MODULE_SHIPPING_GLS_TAX_CLASS', 
+        'MODULE_SHIPPING_GLS_ZONE', 
+        'MODULE_SHIPPING_GLS_SORT_ORDER', 
+        'MODULE_SHIPPING_GLS_POSTCODE', 
+        'MODULE_SHIPPING_GLS_POSTCODE_EXTRA_COST'
+      );
 
       for ($i = 1; $i <= $this->num_gls; $i ++) {
         $keys[count($keys)] = 'MODULE_SHIPPING_GLS_COUNTRIES_' . $i;
@@ -219,4 +228,3 @@
       return $keys;
     }
   }
-?>

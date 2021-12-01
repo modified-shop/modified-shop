@@ -125,7 +125,7 @@
             $this->enabled = false;
           }
         } else {
-          $shipping_cost = (($shipping * $shipping_num_boxes) + constant('MODULE_SHIPPING_AP_HANDLING_' . $dest_zone));
+          $shipping_cost = (($shipping * $shipping_num_boxes) + (double)constant('MODULE_SHIPPING_AP_HANDLING_' . $dest_zone));
           $this->quotes['methods'] = array(array('id' => $this->code,
                                                  'title' => $shipping_method . ' (' . ($shipping_num_boxes > 1 ? $shipping_num_boxes . ' x ' : '') . round($shipping_weight, 2) . ' ' . MODULE_SHIPPING_AP_TEXT_UNITS .')',
                                                  'cost'  => $shipping_cost));
@@ -257,18 +257,18 @@
     }
 
     function keys() {
-      $keys = array('MODULE_SHIPPING_AP_STATUS', 
-                    'MODULE_SHIPPING_AP_ALLOWED', 
-                    'MODULE_SHIPPING_AP_TAX_CLASS', 
-                    'MODULE_SHIPPING_AP_ZONE', 
-                    'MODULE_SHIPPING_AP_SORT_ORDER',
-                    'MODULE_SHIPPING_AP_NUMBER_ZONES',
-                    'MODULE_SHIPPING_AP_DISPLAY'                    
-                    );
+      $keys = array(
+        'MODULE_SHIPPING_AP_STATUS', 
+        'MODULE_SHIPPING_AP_ALLOWED', 
+        'MODULE_SHIPPING_AP_TAX_CLASS', 
+        'MODULE_SHIPPING_AP_ZONE', 
+        'MODULE_SHIPPING_AP_SORT_ORDER',
+        'MODULE_SHIPPING_AP_NUMBER_ZONES',
+        'MODULE_SHIPPING_AP_DISPLAY'                    
+      );
 
       $keys = array_merge($keys, $this->keys_zones($this->num_zones));
 
       return $keys;
     }
   }
-?>

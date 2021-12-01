@@ -58,7 +58,7 @@
                             'module' => MODULE_SHIPPING_FLAT_TEXT_TITLE,
                             'methods' => array(array('id' => $this->code,
                                                      'title' => MODULE_SHIPPING_FLAT_TEXT_WAY,
-                                                     'cost' => MODULE_SHIPPING_FLAT_COST)));
+                                                     'cost' => (double)MODULE_SHIPPING_FLAT_COST)));
 
       if ($this->tax_class > 0) {
         $this->quotes['tax'] = xtc_get_tax_rate($this->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
@@ -91,12 +91,13 @@
     }
 
     function keys() {
-      return array('MODULE_SHIPPING_FLAT_STATUS', 
-                   'MODULE_SHIPPING_FLAT_COST',
-                   'MODULE_SHIPPING_FLAT_ALLOWED', 
-                   'MODULE_SHIPPING_FLAT_TAX_CLASS', 
-                   'MODULE_SHIPPING_FLAT_ZONE', 
-                   'MODULE_SHIPPING_FLAT_SORT_ORDER');
+      return array(
+        'MODULE_SHIPPING_FLAT_STATUS', 
+        'MODULE_SHIPPING_FLAT_COST',
+        'MODULE_SHIPPING_FLAT_ALLOWED', 
+        'MODULE_SHIPPING_FLAT_TAX_CLASS', 
+        'MODULE_SHIPPING_FLAT_ZONE', 
+        'MODULE_SHIPPING_FLAT_SORT_ORDER'
+      );
     }
   }
-?>

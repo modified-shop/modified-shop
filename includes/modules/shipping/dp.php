@@ -128,7 +128,7 @@
             $this->enabled = false;
           }
         } else {
-          $shipping_cost = ($shipping * $shipping_num_boxes) + MODULE_SHIPPING_DP_HANDLING;
+          $shipping_cost = ($shipping * $shipping_num_boxes) + (double)MODULE_SHIPPING_DP_HANDLING;
           $this->quotes['methods'] = array(array('id' => $this->code,
                                                  'title' => $shipping_method . ' (' . ($shipping_num_boxes > 1 ? $shipping_num_boxes . ' x ' : '') . round($shipping_weight, 2) . ' ' . MODULE_SHIPPING_DP_TEXT_UNITS .')',
                                                  'cost'  => $shipping_cost));
@@ -243,18 +243,18 @@
     }
     
     function keys() {
-      $keys = array('MODULE_SHIPPING_DP_STATUS', 
-                    'MODULE_SHIPPING_DP_HANDLING',
-                    'MODULE_SHIPPING_DP_ALLOWED', 
-                    'MODULE_SHIPPING_DP_TAX_CLASS', 
-                    'MODULE_SHIPPING_DP_ZONE', 
-                    'MODULE_SHIPPING_DP_SORT_ORDER',
-                    'MODULE_SHIPPING_DP_NUMBER_ZONES',
-                    'MODULE_SHIPPING_DP_DISPLAY'
-                   );
+      $keys = array(
+        'MODULE_SHIPPING_DP_STATUS', 
+        'MODULE_SHIPPING_DP_HANDLING',
+        'MODULE_SHIPPING_DP_ALLOWED', 
+        'MODULE_SHIPPING_DP_TAX_CLASS', 
+        'MODULE_SHIPPING_DP_ZONE', 
+        'MODULE_SHIPPING_DP_SORT_ORDER',
+        'MODULE_SHIPPING_DP_NUMBER_ZONES',
+        'MODULE_SHIPPING_DP_DISPLAY'
+      );
       $keys = array_merge($keys, $this->keys_zones($this->num_zones));
 
       return $keys;
     }
   }
-?>

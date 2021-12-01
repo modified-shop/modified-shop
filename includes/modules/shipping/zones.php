@@ -122,7 +122,7 @@
             $this->enabled = false;
           }
         } else {
-          $shipping_cost = (($shipping * $shipping_num_boxes) + constant('MODULE_SHIPPING_ZONES_HANDLING_' . $dest_zone));
+          $shipping_cost = (($shipping * $shipping_num_boxes) + (double)constant('MODULE_SHIPPING_ZONES_HANDLING_' . $dest_zone));
           $this->quotes['methods'] = array(array('id' => $this->code,
                                                  'title' => $shipping_method . ' (' . ($shipping_num_boxes > 1 ? $shipping_num_boxes . ' x ' : '') . round($shipping_weight, 2) . ' ' . MODULE_SHIPPING_ZONES_TEXT_UNITS .')',
                                                  'cost'  => $shipping_cost));
@@ -252,4 +252,3 @@
       return $keys;
     }
   }
-?>

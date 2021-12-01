@@ -77,7 +77,7 @@
 
       for ($j=1; $j<=$this->num_fedexeu; $j++) {
         $countries_table = constant('MODULE_SHIPPING_FEDEXEU_COUNTRIES_' . $j);
-        $country_zones = explode(",", $countries_table); // Hetfield - 2009-08-18 - replaced deprecated function split with explode to be ready for PHP >= 5.3
+        $country_zones = explode(",", $countries_table);
         if (in_array($dest_country, $country_zones)) {
           $dest_zone = $j;
           break;
@@ -93,14 +93,14 @@
         $error = true;
       } else {
         $shipping = -1;
-        $fedexeu_cost_env = @constant('MODULE_SHIPPING_FEDEXEU_COST_ENV_' . $dest_zone);
-        $fedexeu_cost_pak = @constant('MODULE_SHIPPING_FEDEXEU_COST_PAK_' . $dest_zone);
-        $fedexeu_cost_box = @constant('MODULE_SHIPPING_FEDEXEU_COST_BOX_' . $dest_zone);
+        $fedexeu_cost_env = constant('MODULE_SHIPPING_FEDEXEU_COST_ENV_' . $dest_zone);
+        $fedexeu_cost_pak = constant('MODULE_SHIPPING_FEDEXEU_COST_PAK_' . $dest_zone);
+        $fedexeu_cost_box = constant('MODULE_SHIPPING_FEDEXEU_COST_BOX_' . $dest_zone);
 
         $methods = array();
 
         if ($fedexeu_cost_pak != '') {
-          $fedexeu_table_pak = preg_split("/[:,]/" , $fedexeu_cost_pak); // Hetfield - 2009-08-18 - replaced deprecated function split with preg_split to be ready for PHP >= 5.3
+          $fedexeu_table_pak = preg_split("/[:,]/" , $fedexeu_cost_pak);
 
           for ($i=0; $i<sizeof($fedexeu_table_pak); $i+=2) {
             if ($shipping_weight <= $fedexeu_table_pak[$i]) {
@@ -113,7 +113,7 @@
               $shipping_cost = 0;
               $shipping_method = MODULE_SHIPPING_FEDEXEU_UNDEFINED_RATE;
             } else {
-              $shipping_cost_1 = ($shipping_pak + MODULE_SHIPPING_FEDEXEU_HANDLING);
+              $shipping_cost_1 = ($shipping_pak + (double)MODULE_SHIPPING_FEDEXEU_HANDLING);
             }
 
             if ($shipping_pak != 0) {
@@ -125,7 +125,7 @@
         }
 
         if ($fedexeu_cost_env != '') {
-          $fedexeu_table_env = preg_split("/[:,]/" , $fedexeu_cost_env); // Hetfield - 2009-08-18 - replaced deprecated function split with preg_split to be ready for PHP >= 5.3
+          $fedexeu_table_env = preg_split("/[:,]/" , $fedexeu_cost_env); 
 
           for ($i=0; $i<sizeof($fedexeu_table_env); $i+=2) {
             if ($shipping_weight <= $fedexeu_table_env[$i]) {
@@ -139,13 +139,13 @@
               $shipping_cost = 0;
               $shipping_method = MODULE_SHIPPING_FEDEXEU_UNDEFINED_RATE;
             } else {
-              $shipping_cost_1 = ($shipping_env + MODULE_SHIPPING_FEDEXEU_HANDLING);
+              $shipping_cost_1 = ($shipping_env + (double)MODULE_SHIPPING_FEDEXEU_HANDLING);
             }
 
             if ($shipping_env != 0) {
               $methods[] = array('id' => 'ENV',
                                  'title' => 'FedEx Envelope',
-                                 'cost' => (MODULE_SHIPPING_FEDEXEU_HANDLING + $shipping_cost_1) * $shipping_num_boxes);
+                                 'cost' => ((double)MODULE_SHIPPING_FEDEXEU_HANDLING + $shipping_cost_1) * $shipping_num_boxes);
             }
           }
         }
@@ -153,11 +153,11 @@
         if ($fedexeu_cost_box != '') {
           $fedexeu_table_box = preg_split("/[:,]/" , $fedexeu_cost_box); // Hetfield - 2009-08-18 - replaced deprecated function split with preg_split to be ready for PHP >= 5.3
           if ( ($shipping_weight > 10) and ($shipping_weight <= 20) ) {
-            $shipping_box = number_format((($shipping_weight - 10)* 2 + 0.5), 0) * constant('MODULE_SHIPPING_FEDEXEU_STEP_BOX_20_' .$j) + $fedexeu_table_box[count ($fedexeu_table_box)-1];
+            $shipping_box = number_format((($shipping_weight - 10)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_FEDEXEU_STEP_BOX_20_' .$j) + $fedexeu_table_box[count ($fedexeu_table_box)-1];
           } elseif ( ($shipping_weight > 20) and ($shipping_weight <= 40) ) {
-            $shipping_box = number_format((($shipping_weight - 20)* 2 + 0.5), 0) * constant('MODULE_SHIPPING_FEDEXEU_STEP_BOX_40_' .$j) + 20 * constant('MODULE_SHIPPING_FEDEXEU_STEP_BOX_20_' .$j) + $fedexeu_table_box[count ($fedexeu_table_box)-1];
+            $shipping_box = number_format((($shipping_weight - 20)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_FEDEXEU_STEP_BOX_40_' .$j) + 20 * (double)constant('MODULE_SHIPPING_FEDEXEU_STEP_BOX_20_' .$j) + $fedexeu_table_box[count ($fedexeu_table_box)-1];
           } elseif ( ($shipping_weight > 40) and ($shipping_weight <= 70) ) {
-            $shipping_box = number_format((($shipping_weight - 40)* 2 + 0.5), 0) * constant('MODULE_SHIPPING_FEDEXEU_STEP_BOX_70_' .$j) + 20 * constant('MODULE_SHIPPING_FEDEXEU_STEP_BOX_20_' .$j) + 40 * constant('MODULE_SHIPPING_FEDEXEU_STEP_BOX_40_' .$j) + $fedexeu_table_box[count ($fedexeu_table_box)-1];
+            $shipping_box = number_format((($shipping_weight - 40)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_FEDEXEU_STEP_BOX_70_' .$j) + 20 * (double)constant('MODULE_SHIPPING_FEDEXEU_STEP_BOX_20_' .$j) + 40 * (double)constant('MODULE_SHIPPING_FEDEXEU_STEP_BOX_40_' .$j) + $fedexeu_table_box[count ($fedexeu_table_box)-1];
           } else {
 
             for ($i=0; $i<sizeof($fedexeu_table_box); $i+=2) {
@@ -173,13 +173,13 @@
               $shipping_cost = 0;
               $shipping_method = MODULE_SHIPPING_FEDEXEU_UNDEFINED_RATE;
             } else {
-              $shipping_cost_2 = ($shipping_box + MODULE_SHIPPING_FEDEXEU_HANDLING);
+              $shipping_cost_2 = ($shipping_box + (double)MODULE_SHIPPING_FEDEXEU_HANDLING);
             }
 
             if ($shipping_box != 0) {
               $methods[] = array('id' => 'BOX',
                                  'title' => 'FedEx Box',
-                                 'cost' => (MODULE_SHIPPING_FEDEXEU_HANDLING + $shipping_cost_2) * $shipping_num_boxes);
+                                 'cost' => ((double)MODULE_SHIPPING_FEDEXEU_HANDLING + $shipping_cost_2) * $shipping_num_boxes);
             }
           }
         }  
@@ -295,7 +295,14 @@
     }
 
     function keys() {
-      $keys = array('MODULE_SHIPPING_FEDEXEU_STATUS', 'MODULE_SHIPPING_FEDEXEU_HANDLING','MODULE_SHIPPING_FEDEXEU_ALLOWED', 'MODULE_SHIPPING_FEDEXEU_TAX_CLASS', 'MODULE_SHIPPING_FEDEXEU_ZONE', 'MODULE_SHIPPING_FEDEXEU_SORT_ORDER');
+      $keys = array(
+        'MODULE_SHIPPING_FEDEXEU_STATUS', 
+        'MODULE_SHIPPING_FEDEXEU_HANDLING',
+        'MODULE_SHIPPING_FEDEXEU_ALLOWED', 
+        'MODULE_SHIPPING_FEDEXEU_TAX_CLASS', 
+        'MODULE_SHIPPING_FEDEXEU_ZONE', 
+        'MODULE_SHIPPING_FEDEXEU_SORT_ORDER'
+      );
 
       for ($i = 1; $i <= $this->num_fedexeu; $i ++) {
         $keys[count($keys)] = 'MODULE_SHIPPING_FEDEXEU_COUNTRIES_' . $i;
@@ -310,4 +317,3 @@
       return $keys;
     }
   }
-?>
