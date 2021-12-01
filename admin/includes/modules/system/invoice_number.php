@@ -26,9 +26,6 @@ if (!class_exists('invoice_number')) {
             $this->description = MODULE_INVOICE_NUMBER_TEXT_DESCRIPTION;
             $this->sort_order = ((defined('MODULE_INVOICE_NUMBER_SORT_ORDER')) ? MODULE_INVOICE_NUMBER_SORT_ORDER : '');
             $this->enabled = ((defined('MODULE_INVOICE_NUMBER_STATUS') && MODULE_INVOICE_NUMBER_STATUS == 'True') ? true : false);
-            if ($this->enabled) {
-                $this->description .= '<p>'.MODULE_INVOICE_NUMBER_STATUS_DESC .': '.MODULE_INVOICE_NUMBER_STATUS_INFO.'</p>';
-            }
         }
 
         function process($file) 
@@ -55,7 +52,7 @@ if (!class_exists('invoice_number')) {
 
         function install() 
         {
-            xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_INVOICE_NUMBER_STATUS', 'False',  '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
+            xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_INVOICE_NUMBER_STATUS', 'True',  '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
             xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_INVOICE_NUMBER_IBN_BILLNR', '1',  '6', '1', now())");
             xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_INVOICE_NUMBER_IBN_BILLNR_FORMAT', '100{n}-{d}-{m}-{y}',  '6', '1', now())");
             $this->install_db();
