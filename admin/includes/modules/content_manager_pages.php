@@ -27,8 +27,24 @@ if (!$action) {
     <div class="main clear"><?php echo CONTENT_NOTE; ?></div>
     <?php
       $total_space_media_content = xtc_spaceUsed(DIR_FS_CATALOG.'media/content/');
-      echo '<div class="main">'.USED_SPACE.xtc_format_filesize($total_space_media_content).'</div>';
+      echo '<div class="main flt-l">'.USED_SPACE.xtc_format_filesize($total_space_media_content).'</div>';
+      
+      $file_flag_array = array();
+      $file_flag_select_array = array();
+      $file_flag_query = xtc_db_query("SELECT * 
+                                         FROM ".TABLE_CM_FILE_FLAGS);
+      while ($file_flag_result = xtc_db_fetch_array($file_flag_query)) {
+        $file_flag_array[$file_flag_result['file_flag']] = $file_flag_result['file_flag_name'];
+        $file_flag_select_array[] = array('id' => $file_flag_result['file_flag'], 'text' => $file_flag_result['file_flag_name']);
+      }
     ?>
+    <div class="main flt-r pdg2 mrg5" style="margin-left:20px;">
+      <?php echo xtc_draw_form('file_flag', FILENAME_CONTENT_MANAGER, '', 'get').xtc_draw_hidden_field('special', 'file_flag'); ?>
+      <?php echo TEXT_FILE_FLAG . ' ' . xtc_draw_pull_down_menu('file_flag', array_merge(array (array ('id' => '', 'text' => TXT_ALL)), $file_flag_select_array), isset($_SESSION['file_flag']) ? $_SESSION['file_flag'] : '', 'onChange="this.form.submit();"'); ?>
+      </form>
+    </div>
+    <div class="clear"></div>     
+        
     <br />
     <table class="tableCenter">
       <tr class="dataTableHeadingRow">
@@ -44,16 +60,17 @@ if (!$action) {
         <td class="dataTableHeadingContent txta-c nobr" style="width:10%"><?php echo TABLE_HEADING_CONTENT_ACTION; ?>&nbsp;</td>
       </tr>
       <?php
+      $where = '';
+      if (isset($_SESSION['file_flag']) && $_SESSION['file_flag'] != '') {
+        $where = " AND file_flag = '".(int)$_SESSION['file_flag']."'";
+      }
       $content_query = xtc_db_query("SELECT *
                                        FROM ".TABLE_CONTENT_MANAGER."
                                       WHERE languages_id='".(int)$_SESSION['languages_id']."'
                                         AND parent_id = '0'
+                                            ".$where."
                                    ORDER BY content_group, sort_order, content_id");
       while ($content_data = xtc_db_fetch_array($content_query)) {
-        $file_flag_query = xtc_db_query("SELECT file_flag_name 
-                                         FROM ".TABLE_CM_FILE_FLAGS." 
-                                        WHERE file_flag = '".xtc_db_input($content_data['file_flag'])."'");
-        $file_flag_result = xtc_db_fetch_array($file_flag_query);
         ?>
         <tr class="dataTableRow" onmouseover="this.className='dataTableRowOver'" onmouseout="this.className='dataTableRow'">
           <td class="dataTableContent txta-c"><?php echo $content_data['content_id']; ?></td>
@@ -68,7 +85,7 @@ if (!$action) {
           <td class="dataTableContent txta-c"><?php echo $content_data['sort_order']; ?>&nbsp;</td>
           <td class="dataTableContent"><?php echo (($content_data['content_file'] != '') ? $content_data['content_file'] : 'database'); ?></td>
           <td class="dataTableContent txta-c"><?php echo (($content_data['content_status'] == 0) ? TEXT_NO : TEXT_YES); ?></td>
-          <td class="dataTableContent txta-c"><?php echo $file_flag_result['file_flag_name']; ?></td>
+          <td class="dataTableContent txta-c"><?php echo $file_flag_array[$content_data['file_flag']]; ?></td>
           <td class="dataTableContent txta-c"><?php echo $content_data['content_meta_robots']; ?>&nbsp;</td>
           <td class="dataTableContent txta-c"><?php echo (($content_data['content_active'] == '1') ? $icon_status_on : $icon_status_off); ?>&nbsp;</td>
           <td class="dataTableContent txta-r nobr">
@@ -88,10 +105,6 @@ if (!$action) {
                                               AND parent_id = '".$content_data['content_id']."'
                                          ORDER BY content_group, sort_order, content_id");
         while ($sub_content_data = xtc_db_fetch_array($sub_content_query)) {
-          $file_flag_query = xtc_db_query("SELECT file_flag_name 
-                                           FROM ".TABLE_CM_FILE_FLAGS." 
-                                          WHERE file_flag = '".xtc_db_input($sub_content_data['file_flag'])."'");
-          $file_flag_result = xtc_db_fetch_array($file_flag_query);
           ?>
           <tr class="dataTableRow" onmouseover="this.className='dataTableRowOver'" onmouseout="this.className='dataTableRow'">
             <td class="dataTableContent txta-c"><?php echo $sub_content_data['content_id']; ?></td>
@@ -106,7 +119,7 @@ if (!$action) {
             <td class="dataTableContent txta-c"><?php echo $sub_content_data['sort_order']; ?>&nbsp;</td>
             <td class="dataTableContent"><?php echo (($sub_content_data['content_file'] != '') ? $sub_content_data['content_file'] : 'database'); ?></td>
             <td class="dataTableContent txta-c"><?php echo (($sub_content_data['content_status'] == 0) ? TEXT_NO : TEXT_YES); ?></td>
-            <td class="dataTableContent txta-c"><?php echo $file_flag_result['file_flag_name']; ?></td>
+            <td class="dataTableContent txta-c"><?php echo $file_flag_array[$sub_content_data['file_flag']]; ?></td>
             <td class="dataTableContent txta-c"><?php echo $sub_content_data['content_meta_robots']; ?>&nbsp;</td>
             <td class="dataTableContent txta-c"><?php echo (($sub_content_data['content_active'] == '1') ? $icon_status_on : $icon_status_off); ?>&nbsp;</td>
             <td class="dataTableContent txta-r nobr">
@@ -252,7 +265,7 @@ if (!$action) {
         ?>
         <tr>
           <td class="dataTableConfig col-left"><?php echo TEXT_FILE_FLAG; ?></td>
-          <td class="dataTableConfig col-single-right"><?php echo xtc_draw_pull_down_menu('file_flag', $file_flag_array, $default_content['file_flag'], 'id="file_flag"'); ?></td>
+          <td class="dataTableConfig col-single-right"><?php echo xtc_draw_pull_down_menu('file_flag', $file_flag_array, isset($_SESSION['file_flag']) ? $_SESSION['file_flag'] : $default_content['file_flag'], 'id="file_flag"'); ?></td>
         </tr>
         <?php if (CONTENT_CHILDS_ACTIV == 'true' 
                   && count($content_data_array) > 1 
