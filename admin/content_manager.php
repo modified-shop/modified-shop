@@ -38,23 +38,28 @@
   if ($special != '') {
     switch ($special) {
       case 'delete':
-        $paramas = '';
+        $params = '';
         xtc_db_query("DELETE FROM ".TABLE_CONTENT_MANAGER." WHERE content_group='".$g_coID."' AND content_group_index='".$coIndex."'");
         break;
     
       case 'delete_product':
-        $paramas = 'pID='.(int)$_GET['pID'];
+        $params = 'pID='.(int)$_GET['pID'];
         xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_CONTENT." where content_id='".$g_coID."'");
         break;
 
       case 'delete_content':
-        $paramas = 'cID='.(int)$_GET['cID'];
+        $params = 'cID='.(int)$_GET['cID'];
         xtc_db_query("DELETE FROM ".TABLE_CONTENT_MANAGER_CONTENT." where content_id='".$g_coID."'");
         break;
 
       case 'delete_email':
-        $paramas = 'eID='.$_GET['eID'];
+        $params = 'eID='.$_GET['eID'];
         xtc_db_query("DELETE FROM ".TABLE_EMAIL_CONTENT." where content_id='".$g_coID."'");
+        break;
+
+      case 'file_flag':
+        $params = '';
+        $_SESSION['file_flag'] = $_GET['file_flag'];
         break;
     }
     
@@ -63,7 +68,7 @@
     if (isset($_GET['cPath'])) {
       xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('special', 'last_action', 'action', 'coID', 'coIndex')) . 'action='.$_GET['last_action']));
     } else {
-      xtc_redirect(xtc_href_link(FILENAME_CONTENT_MANAGER, $paramas.$setparam));
+      xtc_redirect(xtc_href_link(FILENAME_CONTENT_MANAGER, $params.$setparam));
     }
   }
   
