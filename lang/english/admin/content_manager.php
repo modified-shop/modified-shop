@@ -46,6 +46,13 @@
  define('CONFIRM_DELETE','Delete Content?');
  define('CONTENT_NOTE','Content marked with <span class="col-red">*</span> is a part of the system and cannot be deleted!');
 
+ define('TEXT_DATE_ADDED','date added:');
+ define('TEXT_LAST_MODIFIED','last modified:');
+ define('HEADING_TITLE_GOTO','Go to:');
+ define('TEXT_DISPLAY_NUMBER_OF_CONTENT_MANAGER','Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> Content)');
+ define('TEXT_INFO_HEADING_DELETE_CONTENT_MANAGER','Delete Content');
+ define('TEXT_INFO_DELETE_INTRO','Are you sure you want to delete this content?');
+ define('TEXT_SEARCH', 'Search:');
 
  // edit
  define('TEXT_LANGUAGE','Language:');

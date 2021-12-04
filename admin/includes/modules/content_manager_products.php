@@ -12,150 +12,165 @@
 
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
-if (!$action) {
-  // products content
-  // load products_ids into array
-  $products_id_query = xtc_db_query("SELECT DISTINCT pc.products_id,
-                                                     pd.products_name
-                                                FROM ".TABLE_PRODUCTS_CONTENT." pc
-                                                JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
-                                                     ON pd.products_id = pc.products_id
-                                                        AND pd.language_id = '".(int)$_SESSION['languages_id']."'
-                                            ORDER BY pd.products_name ASC");
-  $products_ids = array();
-  while ($products_id_data = xtc_db_fetch_array($products_id_query)) {
-    $products_ids[] = array(
-      'id' => $products_id_data['products_id'],
-      'name' => $products_id_data['products_name'],
-    );
-  }
+if (!$action || $action == 'delete') {
   ?>
-  <div class="pageHeadingTaba pdg2 flt-l"><a onclick="this.blur();" href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER); ?>"><?php echo HEADING_CONTENT; ?></a></div>
-  <div class="pageHeadingTab pdg2 flt-l"><?php echo HEADING_PRODUCTS_CONTENT; ?></div>
-  <div class="pageHeadingTaba pdg2 flt-l"><a onclick="this.blur();" href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER, 'set=content'); ?>"><?php echo HEADING_CONTENT_MANAGER_CONTENT; ?></a></div>
-  <div class="pageHeadingTaba pdg2 flt-l"><a onclick="this.blur();" href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER, 'set=email'); ?>"><?php echo HEADING_EMAIL_CONTENT; ?></a></div>
-  <div class="borderTab">
-  <?php
-    $total_space_media_products = xtc_spaceUsed(DIR_FS_CATALOG.'media/products/');
-    echo '<div class="main clear">'.USED_SPACE.xtc_format_filesize($total_space_media_products).'</div><br />';
-  ?>
-  <table class="tableCenter">
-    <tr class="dataTableHeadingRow">
-      <td class="dataTableHeadingContent nobr txta-c"><?php echo TABLE_HEADING_PRODUCTS_ID; ?></td>
-      <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS; ?></td>
-    </tr>
-    <?php
-      for ($i=0,$n=sizeof($products_ids); $i<$n; $i++) {
-        echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\'" onmouseout="this.className=\'dataTableRow\'">' . "\n";
-          ?>
-          <td class="dataTableContent_products txta-c" style="width:5%"><?php echo $products_ids[$i]['id']; ?></td>
-          <td class="dataTableContent_products"><b>
-            <?php echo xtc_image(DIR_WS_CATALOG.'images/icons/arrow.gif'); ?>
-            <a href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER,'pID='.$products_ids[$i]['id'].$setparam);?>"><?php echo $products_ids[$i]['name']; ?></a></b>
-          </td>
+  <div class="main flt-r pdg2 mrg5">
+    <?php echo xtc_draw_form('pages', FILENAME_CONTENT_MANAGER, '', 'get'); ?>
+    <?php echo HEADING_TITLE_GOTO . ' ' . xtc_draw_pull_down_menu('set', $content_pages_array, isset($_GET['set']) ? $_GET['set'] : '', 'onChange="this.form.submit();"'); ?>
+    </form>
+  </div>
+  <div class="clear"></div>     
+  <table class="tableCenter">      
+    <tr>
+      <td class="boxCenterLeft">
+        <table class="tableBoxCenter collapse">
+          <?php
+          if (isset($_GET['pID']) && $_GET['pID'] != '') {
+            ?>
+            <tr class="dataTableHeadingRow">
+              <td class="dataTableHeadingContent txta-c" style="width:10%" ><?php echo TABLE_HEADING_PRODUCTS_CONTENT_ID; ?></td>
+              <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_CONTENT_NAME; ?></td>
+              <td class="dataTableHeadingContent txta-c" style="width:5%"><?php echo TABLE_HEADING_LANGUAGE; ?></td>
+              <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_CONTENT_FILE; ?></td>
+              <td class="dataTableHeadingContent txta-c" style="width:1%"><?php echo TABLE_HEADING_CONTENT_FILESIZE; ?></td>
+              <td class="dataTableHeadingContent txta-c" style="width:20%"><?php echo TABLE_HEADING_CONTENT_LINK; ?></td>
+              <td class="dataTableHeadingContent txta-c" style="width:5%"><?php echo TABLE_HEADING_CONTENT_HITS; ?></td>
+              <td class="dataTableHeadingContent txta-c" style="width:10%"><?php echo TABLE_HEADING_CONTENT_ACTION; ?></td>
+            </tr>
+            <tr class="dataTableRow" onmouseover="this.className='dataTableRowOver'" onmouseout="this.className='dataTableRow\">
+              <td class="dataTableContent txta-c">--</td>
+              <td class="dataTableContent"><?php echo '<a href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('coID', 'pID'))). '">'.xtc_image(DIR_WS_ICONS . 'folder_parent.gif', ICON_FOLDER) . ' ..</a>'; ?></td>
+              <td class="dataTableContent txta-c">--</td>
+              <td class="dataTableContent txta-c">--</td>
+              <td class="dataTableContent txta-c">--</td>
+              <td class="dataTableContent txta-c">--</td>
+              <td class="dataTableContent txta-c">--</td>
+              <td class="dataTableContent txta-c">--</td>
+            </tr>
+            <?php
+              $content_query = xtc_db_query("SELECT *
+                                               FROM ".TABLE_PRODUCTS_CONTENT." pc
+                                               JOIN ".TABLE_LANGUAGES." l
+                                                    ON pc.languages_id = l.languages_id
+                                              WHERE products_id = '".(int)$_GET['pID']."'
+                                           ORDER BY content_id");
+              while ($content_data = xtc_db_fetch_array($content_query)) {
+                if ((!isset($_GET['coID']) || $_GET['coID'] == $content_data['content_id']) && !isset($oInfo)) {
+                  $oInfo = new objectInfo($content_data);
+                }
+
+                if (isset($oInfo) && is_object($oInfo) && $content_data['content_id'] == $oInfo->content_id) {
+                  echo '<tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action', 'coID')) . 'coID=' . $oInfo->content_id . '&action=edit_products_content') . '\'">' . "\n";
+                } else {
+                  echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action','coID')) . 'coID=' . $content_data['content_id']) . '\'">' . "\n";
+                }
+                ?>
+                  <td class="dataTableContent txta-c"><?php echo $content_data['content_id']; ?> </td>
+                  <td class="dataTableContent"><?php echo $content_data['content_name']; ?></td>
+                  <td class="dataTableContent txta-c"><?php echo xtc_image(DIR_WS_CATALOG.'lang/'.$content_data['directory'].'/admin/images/icon.gif'); ?></td>
+                  <td class="dataTableContent"><?php echo $content_data['content_file']; ?></td>
+                  <td class="dataTableContent txta-c"><?php echo xtc_filesize($content_data['content_file']); ?></td>
+                  <td class="dataTableContent txta-c">
+                    <?php
+                      if ($content_data['content_link'] != '') {
+                        echo '<a href="'.$content_data['content_link'].'" target="_blank">'.$content_data['content_link'].'</a>';
+                      } else {
+                        echo '--';
+                      }
+                    ?>
+                  </td>
+                  <td class="dataTableContent txta-c"><?php echo $content_data['content_read']; ?></td>
+                  <td class="dataTableContent txta-r"><?php if (isset($oInfo) && is_object($oInfo) && $content_data['content_id'] == $oInfo->content_id) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('coID')) . 'coID=' . $content_data['content_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                </tr>
+                <?php
+              }
+              ?>
+        </table>
+      </td>
+      <?php
+        $heading = array();
+        $contents = array();
+        switch ($action) {
+          case 'delete':
+            $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_DELETE_CONTENT_MANAGER . '</b>');
+
+            $contents = array('form' => xtc_draw_form('status', FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action', 'special')) . 'special=delete_product'));
+            $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
+            $contents[] = array('text' => '<br /><b>' . $oInfo->content_name . '</b>');
+            $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action', 'coID')) . 'coID=' . $oInfo->content_id) . '">' . BUTTON_CANCEL . '</a>');
+            break;
+
+          default:
+            if (isset($oInfo) && is_object($oInfo)) {
+              $heading[] = array('text' => '<b>' . $oInfo->content_name . '</b>');
+
+              $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action', 'coID')) . 'coID=' . $oInfo->content_id . '&action=edit_products_content') . '">' . BUTTON_EDIT . '</a> 
+                                                                  <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action', 'coID')) . 'coID=' . $oInfo->content_id . '&action=delete') . '">' . BUTTON_DELETE . '</a>');
+            }
+            break;
+        }
+
+        if ( (xtc_not_null($heading)) && (xtc_not_null($contents)) ) {
+          echo '            <td class="boxRight">' . "\n";
+          $box = new box;
+          echo $box->infoBox($heading, $contents);
+          echo '            </td>' . "\n";
+        }        
+      } else {
+        ?>
+        <tr class="dataTableHeadingRow">
+          <td class="dataTableHeadingContent txta-c" style="width:10%"><?php echo TABLE_HEADING_PRODUCTS_ID; ?></td>
+          <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS; ?></td>
         </tr>
         <?php
-        if (isset($_GET['pID']) && $_GET['pID'] != '') {
-          // display content elements
-          $content_query=xtc_db_query("SELECT *
-                                         FROM ".TABLE_PRODUCTS_CONTENT."
-                                        WHERE products_id = '".(int)$_GET['pID']."'
-                                     ORDER BY content_name");
-          $content_array = array();
-          while ($content_data = xtc_db_fetch_array($content_query)) {
-            $content_array[] = array(
-              'id' => $content_data['content_id'],
-              'name' => $content_data['content_name'],
-              'file' => $content_data['content_file'],
-              'link' => $content_data['content_link'],
-              'comment' => $content_data['file_comment'],
-              'languages_id' => $content_data['languages_id'],
-              'read' => $content_data['content_read'],
-            );
-          }
-
-          if ((int)$_GET['pID'] == $products_ids[$i]['id']) {
+          $content_query_raw = "SELECT DISTINCT p.products_id,
+                                                p.products_model,
+                                                pd.products_name
+                                           FROM ".TABLE_PRODUCTS_CONTENT." pc
+                                           JOIN ".TABLE_PRODUCTS." p
+                                                ON pc.products_id = p.products_id
+                                           JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
+                                                ON pd.products_id = pc.products_id
+                                                   AND pd.language_id = '".(int)$_SESSION['languages_id']."'
+                                       ORDER BY p.products_id ASC";
+          $content_query_split = new splitPageResults($page, $page_max_display_results, $content_query_raw, $content_query_numrows, 'p.products_id');          
+          $content_query = xtc_db_query($content_query_raw);
+          while ($content = xtc_db_fetch_array($content_query)) {
             ?>
-            <tr>
-              <td class="dataTableContent"></td>
-              <td class="dataTableContent">
-                <table class="tableCenter">
-                  <tr class="dataTableHeadingRow">
-                    <td class="dataTableHeadingContent nobr txta-c" style="width:2%" ><?php echo TABLE_HEADING_PRODUCTS_CONTENT_ID; ?></td>
-                    <td class="dataTableHeadingContent nobr" style="width:2%" >&nbsp;</td>
-                    <td class="dataTableHeadingContent nobr" style="width:5%" ><?php echo TABLE_HEADING_LANGUAGE; ?></td>
-                    <td class="dataTableHeadingContent nobr" style="width:15%" ><?php echo TABLE_HEADING_CONTENT_NAME; ?></td>
-                    <td class="dataTableHeadingContent nobr" style="width:30%" ><?php echo TABLE_HEADING_CONTENT_FILE; ?></td>
-                    <td class="dataTableHeadingContent nobr" style="width:1%" ><?php echo TABLE_HEADING_CONTENT_FILESIZE; ?></td>
-                    <td class="dataTableHeadingContent nobr txta-c" style="width:20%" ><?php echo TABLE_HEADING_CONTENT_LINK; ?></td>
-                    <td class="dataTableHeadingContent nobr" style="width:5%" ><?php echo TABLE_HEADING_CONTENT_HITS; ?></td>
-                    <td class="dataTableHeadingContent nobr" style="width:20%" ><?php echo TABLE_HEADING_CONTENT_ACTION; ?></td>
-                  </tr>
-                  <?php
-                  for ($ii=0,$nn=sizeof($content_array); $ii<$nn; $ii++) {
-                    echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\'" onmouseout="this.className=\'dataTableRow\'">' . "\n";
-                    ?>
-                      <td class="dataTableContent txta-c"><?php echo  $content_array[$ii]['id']; ?> </td>
-                      <td class="dataTableContent txta-c">
-                        <?php
-                          if ($content_array[$ii]['file'] != '') {
-                            $filename = DIR_FS_CATALOG . 'media/products/' . $content_array[$ii]['file'];
-                            $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
-                            echo xtc_image('../' . DIR_WS_IMAGES . 'icons/filetype/icon_' . $ext . '.gif');
-                          } else {
-                            echo xtc_image('../' . DIR_WS_IMAGES . 'icons/filetype/icon_link.gif');
-                          }
-                          for ($xx=0,$zz=sizeof($languages); $xx<$zz;$xx++){
-                            if ($languages[$xx]['id'] == $content_array[$ii]['languages_id']) {
-                              $lang_dir = $languages[$xx]['directory'];
-                              break;
-                            }
-                          }
-                        ?>
-                      </td>
-                      <td class="dataTableContent txta-c"><?php echo xtc_image(DIR_WS_CATALOG.'lang/'.$lang_dir.'/admin/images/icon.gif'); ?></td>
-                      <td class="dataTableContent"><?php echo $content_array[$ii]['name']; ?></td>
-                      <td class="dataTableContent"><?php echo $content_array[$ii]['file']; ?></td>
-                      <td class="dataTableContent txta-c"><?php echo xtc_filesize($content_array[$ii]['file']); ?></td>
-                      <td class="dataTableContent txta-c">
-                        <?php
-                          if ($content_array[$ii]['link']!='') {
-                            echo '<a href="'.$content_array[$ii]['link'].'" target="new">'.$content_array[$ii]['link'].'</a>';
-                          }
-                        ?>
-                        &nbsp;
-                      </td>
-                      <td class="dataTableContent txta-c"><?php echo $content_array[$ii]['read']; ?></td>
-                      <td class="dataTableContent">
-                        <a href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER,'special=delete_product&coID='.$content_array[$ii]['id'].'&pID='.$products_ids[$i]['id'].'&set='.$set); ?>" onclick="return confirmLink('<?php echo DELETE_ENTRY; ?>', '', this)">
-                        <?php
-                          echo xtc_image(DIR_WS_ICONS.'delete.gif', ICON_DELETE,'','','style="cursor:pointer" onclick="return confirmLink(\''. DELETE_ENTRY .'\', \'\' ,this)"').'  '.TEXT_DELETE.'</a>&nbsp;&nbsp;';
-                        ?>
-                        <a href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER,'action=edit_products_content&coID='.$content_array[$ii]['id'].$setparam); ?>">
-                          <?php
-                          echo xtc_image(DIR_WS_ICONS.'icon_edit.gif', ICON_EDIT,'','','style="cursor:pointer"').'  '.TEXT_EDIT.'</a>';
-                        // display preview button if filetype in array
-                        $allowed_filetypes = array('.gif','.jpg','.png','.html','.htm','.txt','.bmp'); 
-                        if (in_array(substr($content_array[$ii]['file'], 0, strrpos($content_array[$ii]['file'], '.') - 1), $allowed_filetypes)) {
-                          ?>
-                          <a style="cursor:pointer" onclick="javascript:window.open('<?php echo xtc_href_link(FILENAME_CONTENT_PREVIEW,'pID=media&coID='.$content_array[$ii]['id']); ?>', 'popup', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, width=640, height=600')">
-                            <?php
-                            echo xtc_image(DIR_WS_ICONS.'preview.gif', ICON_PREVIEW,'','',' style="cursor:pointer"').'&nbsp;&nbsp;'.TEXT_PREVIEW.'</a>';
-                        }
-                        ?>
-                      </td>
-                    </tr>
-                    <?php
-                  }
-                echo '    </table>';
-              echo '  </td>';
-            echo '</tr>';
+            <tr class="dataTableRow" onmouseover="this.className='dataTableRowOver'" onmouseout="this.className='dataTableRow'">
+              <td class="dataTableContent txta-c"><?php echo $content['products_id']; ?></td>
+              <td class="dataTableContent"><?php echo '<a href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('pID')).'pID='.$content['products_id']). '">'.xtc_image(DIR_WS_ICONS . 'folder.gif', ICON_FOLDER, '', '', $icon_padding) . '</a>' . '<span style="vertical-align: 3px;">' . $content['products_name'] .'</span>'; ?></td>
+            </tr>
+            <?php
           }
+          ?>
+        </table>
+        <div class="smallText pdg2 flt-l"><?php echo $content_query_split->display_count($content_query_numrows, $page_max_display_results, $page, TEXT_DISPLAY_NUMBER_OF_CONTENT_MANAGER); ?></div>
+        <div class="smallText pdg2 flt-r"><?php echo $content_query_split->display_links($content_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $page); ?></div>
+        <?php echo draw_input_per_page($PHP_SELF, $cfg_max_display_results_key, $page_max_display_results); ?>
+      </td>
+      <?php
+        $heading = array();
+        $contents = array();
+        switch ($action) {
+          default:
+            $heading[] = array('text' => '<b>' . USED_SPACE . '</b>');
+
+            $total_space_media_products = xtc_spaceUsed(DIR_FS_CATALOG.'media/products/');
+            $contents[] = array('align' => 'center', 'text' => '<div style="font-weight:bold; margin-bottom:10px;">'.xtc_format_filesize($total_space_media_products).'</div>');
+            break;
         }
+
+        if ( (xtc_not_null($heading)) && (xtc_not_null($contents)) ) {
+          echo '            <td class="boxRight">' . "\n";
+          $box = new box;
+          echo $box->infoBox($heading, $contents);
+          echo '            </td>' . "\n";
+        }        
       }
-    ?>
+      ?>
+    </tr>
   </table>
-  </div>
   <?php
 } else {
   switch ($action) {
@@ -253,6 +268,7 @@ if (!$action) {
       $content_files = array_merge($default_array,$content_files);
       // mask for product content      
       ?>
+      <div class="clear"></div>
       <div style="width:99%; margin:5px;">
       <div class="pageHeading"><br /><?php echo HEADING_PRODUCTS_CONTENT; ?><br /></div>
       <div class="main"><?php echo TEXT_CONTENT_DESCRIPTION; ?></div>

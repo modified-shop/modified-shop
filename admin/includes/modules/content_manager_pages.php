@@ -12,134 +12,267 @@
 
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
-if (!$action) {
-  $icon_edit = xtc_image(DIR_WS_ICONS.'icon_edit.gif', ICON_EDIT,'','','style="cursor:pointer"');
-  $icon_delete = xtc_image(DIR_WS_ICONS.'delete.gif', ICON_DELETE,'','','style="cursor:pointer"');
-  $icon_preview = xtc_image(DIR_WS_ICONS.'preview.gif', ICON_PREVIEW,'','','style="cursor:pointer"');
-  $icon_status_on = xtc_image(DIR_WS_IMAGES.'icon_lager_green.gif', BUTTON_STATUS_ON);
-  $icon_status_off = xtc_image(DIR_WS_IMAGES.'icon_lager_red.gif', BUTTON_STATUS_OFF);
+if (!$action || $action == 'delete') {
+  $file_flag_array = array();
+  $file_flag_select_array = array();
+  $file_flag_query = xtc_db_query("SELECT * 
+                                     FROM ".TABLE_CM_FILE_FLAGS);
+  while ($file_flag_result = xtc_db_fetch_array($file_flag_query)) {
+    $file_flag_array[$file_flag_result['file_flag']] = $file_flag_result['file_flag_name'];
+    $file_flag_select_array[] = array('id' => $file_flag_result['file_flag'], 'text' => $file_flag_result['file_flag_name']);
+  }
+
+  $sorting = (isset($_GET['sorting']) ? $_GET['sorting'] : '');
+  if (xtc_not_null($sorting)) {
+    switch ($sorting) {
+      case 'name':
+        $sort = 'content_title ASC';
+        break;
+      case 'name-desc':
+        $sort = 'content_title DESC';
+        break;
+      case 'group':
+        $sort = 'content_group ASC';
+        break;
+      case 'group-desc':
+        $sort = 'content_group DESC';
+        break;
+      case 'sort':
+        $sort = 'sort_order ASC';
+        break;
+      case 'sort-desc':
+        $sort = 'sort_order DESC';
+        break;
+      case 'active':
+        $sort = 'content_active ASC';
+        break;
+      case 'active-desc':
+        $sort = 'content_active DESC';
+        break;
+      case 'file':
+        $sort = 'content_file ASC';
+        break;
+      case 'file-desc':
+        $sort = 'content_file DESC';
+        break;
+      case 'box':
+        $sort = 'file_flag ASC';
+        break;
+      case 'box-desc':
+        $sort = 'file_flag DESC';
+        break;
+      case 'status':
+        $sort = 'content_status ASC';
+        break;
+      case 'status-desc':
+        $sort = 'content_status DESC';
+        break;
+      default:
+        $sort = 'content_group ASC';
+        break;
+    }
+  } else {
+    $sort = 'content_group ASC';
+  }
+  $sort .= ', sort_order ASC, content_id ASC';
   ?>
-  <div class="pageHeadingTab flt-l pdg2"><?php echo HEADING_CONTENT; ?></div>
-  <div class="pageHeadingTaba flt-l pdg2"><a onclick="this.blur();" href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER, 'set=product'); ?>"><?php echo HEADING_PRODUCTS_CONTENT; ?></a></div>
-  <div class="pageHeadingTaba flt-l pdg2"><a onclick="this.blur();" href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER, 'set=content'); ?>"><?php echo HEADING_CONTENT_MANAGER_CONTENT; ?></a></div>
-  <div class="pageHeadingTaba flt-l pdg2"><a onclick="this.blur();" href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER, 'set=email'); ?>"><?php echo HEADING_EMAIL_CONTENT; ?></a></div>
-  <div class="borderTab">
-    <div class="main clear"><?php echo CONTENT_NOTE; ?></div>
-    <?php
-      $total_space_media_content = xtc_spaceUsed(DIR_FS_CATALOG.'media/content/');
-      echo '<div class="main flt-l">'.USED_SPACE.xtc_format_filesize($total_space_media_content).'</div>';
-      
-      $file_flag_array = array();
-      $file_flag_select_array = array();
-      $file_flag_query = xtc_db_query("SELECT * 
-                                         FROM ".TABLE_CM_FILE_FLAGS);
-      while ($file_flag_result = xtc_db_fetch_array($file_flag_query)) {
-        $file_flag_array[$file_flag_result['file_flag']] = $file_flag_result['file_flag_name'];
-        $file_flag_select_array[] = array('id' => $file_flag_result['file_flag'], 'text' => $file_flag_result['file_flag_name']);
-      }
-    ?>
-    <div class="main flt-r pdg2 mrg5" style="margin-left:20px;">
-      <?php echo xtc_draw_form('file_flag', FILENAME_CONTENT_MANAGER, '', 'get').xtc_draw_hidden_field('special', 'file_flag'); ?>
-      <?php echo TEXT_FILE_FLAG . ' ' . xtc_draw_pull_down_menu('file_flag', array_merge(array (array ('id' => '', 'text' => TXT_ALL)), $file_flag_select_array), isset($_SESSION['file_flag']) ? $_SESSION['file_flag'] : '', 'onChange="this.form.submit();"'); ?>
-      </form>
-    </div>
-    <div class="clear"></div>     
-        
-    <br />
-    <table class="tableCenter">
-      <tr class="dataTableHeadingRow">
-        <td class="dataTableHeadingContent txta-c" style="width:10px" ><?php echo TABLE_HEADING_CONTENT_ID; ?></td>
-        <td class="dataTableHeadingContent" style="width:30%"><?php echo TABLE_HEADING_CONTENT_TITLE; ?></td>
-        <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_CONTENT_GROUP; ?></td>
-        <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_CONTENT_SORT; ?></td>
-        <td class="dataTableHeadingContent" style="width:10%"><?php echo TABLE_HEADING_CONTENT_FILE; ?></td>
-        <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_CONTENT_STATUS; ?></td>
-        <td class="dataTableHeadingContent txta-c nobr"><?php echo TABLE_HEADING_CONTENT_BOX; ?></td>
-        <td class="dataTableHeadingContent txta-c nobr"><?php echo TEXT_CONTENT_META_ROBOTS ?></td>
-        <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_STATUS_ACTIVE ?></td>
-        <td class="dataTableHeadingContent txta-c nobr" style="width:10%"><?php echo TABLE_HEADING_CONTENT_ACTION; ?>&nbsp;</td>
-      </tr>
-      <?php
-      $where = '';
-      if (isset($_SESSION['file_flag']) && $_SESSION['file_flag'] != '') {
-        $where = " AND file_flag = '".(int)$_SESSION['file_flag']."'";
-      }
-      $content_query = xtc_db_query("SELECT *
-                                       FROM ".TABLE_CONTENT_MANAGER."
-                                      WHERE languages_id='".(int)$_SESSION['languages_id']."'
-                                        AND parent_id = '0'
-                                            ".$where."
-                                   ORDER BY content_group, sort_order, content_id");
-      while ($content_data = xtc_db_fetch_array($content_query)) {
-        ?>
-        <tr class="dataTableRow" onmouseover="this.className='dataTableRowOver'" onmouseout="this.className='dataTableRow'">
-          <td class="dataTableContent txta-c"><?php echo $content_data['content_id']; ?></td>
-          <td class="dataTableContent">
-          <?php
-            echo '<a href="'.xtc_href_link(FILENAME_CONTENT_MANAGER,'action=edit&coID='.$content_data['content_group']).'&coIndex='.$content_data['content_group_index'].'">' . $icon_edit . '</a>';
-            echo '&nbsp;'.$content_data['content_title'];
-            echo (($content_data['content_delete'] == '0') ? ' <span class="col-red">*</span>' : '');
-          ?>
-          </td>
-          <td class="dataTableContent txta-c"><?php echo $content_data['content_group']; ?></td>
-          <td class="dataTableContent txta-c"><?php echo $content_data['sort_order']; ?>&nbsp;</td>
-          <td class="dataTableContent"><?php echo (($content_data['content_file'] != '') ? $content_data['content_file'] : 'database'); ?></td>
-          <td class="dataTableContent txta-c"><?php echo (($content_data['content_status'] == 0) ? TEXT_NO : TEXT_YES); ?></td>
-          <td class="dataTableContent txta-c"><?php echo $file_flag_array[$content_data['file_flag']]; ?></td>
-          <td class="dataTableContent txta-c"><?php echo $content_data['content_meta_robots']; ?>&nbsp;</td>
-          <td class="dataTableContent txta-c"><?php echo (($content_data['content_active'] == '1') ? $icon_status_on : $icon_status_off); ?>&nbsp;</td>
-          <td class="dataTableContent txta-r nobr">
-          <?php
-            if ($content_data['content_delete'] == '1') {
-              echo '<a href="'.xtc_href_link(FILENAME_CONTENT_MANAGER,'special=delete&coID='.$content_data['content_group']).'&coIndex='.$content_data['content_group_index'].'" onclick="return confirmLink(\''. DELETE_ENTRY .'\', \'\' ,this)">'.$icon_delete.'  '.TEXT_DELETE.'</a>&nbsp;&nbsp;';
-            }
-            echo '<a href="'.xtc_href_link(FILENAME_CONTENT_MANAGER,'action=edit&coID='.$content_data['content_group']).'&coIndex='.$content_data['content_group_index'].'">'.$icon_edit.'  '.TEXT_EDIT.'</a>&nbsp;&nbsp;';
-            echo '<a style="cursor:pointer" onclick="javascript:window.open(\''.xtc_href_link_from_admin('popup_content.php','coID='.$content_data['content_group']).'&preview=true&coIndex='.$content_data['content_group_index'].'\', \'popup\', \'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=640,height=600\')">'.$icon_preview.'&nbsp;&nbsp;'.TEXT_PREVIEW.'</a>';
-          ?>
-          </td>
-        </tr> 
-        <?php
-        $sub_content_query = xtc_db_query("SELECT *
-                                             FROM ".TABLE_CONTENT_MANAGER."
-                                            WHERE languages_id='".(int)$_SESSION['languages_id']."'
-                                              AND parent_id = '".$content_data['content_id']."'
-                                         ORDER BY content_group, sort_order, content_id");
-        while ($sub_content_data = xtc_db_fetch_array($sub_content_query)) {
-          ?>
-          <tr class="dataTableRow" onmouseover="this.className='dataTableRowOver'" onmouseout="this.className='dataTableRow'">
-            <td class="dataTableContent txta-c"><?php echo $sub_content_data['content_id']; ?></td>
-            <td class="dataTableContent">&nbsp;&nbsp;--
-            <?php
-              echo '<a href="'.xtc_href_link(FILENAME_CONTENT_MANAGER,'action=edit&coID='.$sub_content_data['content_group']).'&coIndex='.$sub_content_data['content_group_index'].'">' . $icon_edit . '</a>';
-              echo '&nbsp;'.$sub_content_data['content_title'];
-              echo (($sub_content_data['content_delete'] == '0') ? ' <span class="col-red">*</span>' : '');
-            ?>
-            </td>
-            <td class="dataTableContent txta-c"><?php echo $sub_content_data['content_group']; ?></td>
-            <td class="dataTableContent txta-c"><?php echo $sub_content_data['sort_order']; ?>&nbsp;</td>
-            <td class="dataTableContent"><?php echo (($sub_content_data['content_file'] != '') ? $sub_content_data['content_file'] : 'database'); ?></td>
-            <td class="dataTableContent txta-c"><?php echo (($sub_content_data['content_status'] == 0) ? TEXT_NO : TEXT_YES); ?></td>
-            <td class="dataTableContent txta-c"><?php echo $file_flag_array[$sub_content_data['file_flag']]; ?></td>
-            <td class="dataTableContent txta-c"><?php echo $sub_content_data['content_meta_robots']; ?>&nbsp;</td>
-            <td class="dataTableContent txta-c"><?php echo (($sub_content_data['content_active'] == '1') ? $icon_status_on : $icon_status_off); ?>&nbsp;</td>
-            <td class="dataTableContent txta-r nobr">
-            <?php
-              if ($sub_content_data['content_delete'] == '1') {
-                echo '<a href="'.xtc_href_link(FILENAME_CONTENT_MANAGER,'special=delete&coID='.$sub_content_data['content_group']).'&coIndex='.$sub_content_data['content_group_index'].'" onclick="return confirmLink(\''. DELETE_ENTRY .'\', \'\' ,this)">'.$icon_delete.'  '.TEXT_DELETE.'</a>&nbsp;&nbsp;';
-              }
-              echo '<a href="'.xtc_href_link(FILENAME_CONTENT_MANAGER,'action=edit&coID='.$sub_content_data['content_group']).'&coIndex='.$sub_content_data['content_group_index'].'">'.$icon_edit.'  '.TEXT_EDIT.'</a>&nbsp;&nbsp;';
-              echo '<a style="cursor:pointer" onclick="javascript:window.open(\''.xtc_href_link_from_admin('popup_content.php','coID='.$sub_content_data['content_group']).'&preview=true&coIndex='.$sub_content_data['content_group_index'].'\', \'popup\', \'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, width=640, height=600\')">'.$icon_preview.'&nbsp;&nbsp;'.TEXT_PREVIEW.'</a>';
-            ?>
-            </td>
+  <div class="main flt-l pdg2 mrg5" style="margin-left:50px;">
+    <?php echo xtc_draw_form('file_flag', FILENAME_CONTENT_MANAGER, '', 'get').xtc_draw_hidden_field('special', 'file_flag'); ?>
+    <?php echo TEXT_FILE_FLAG . ' ' . xtc_draw_pull_down_menu('file_flag', array_merge(array (array ('id' => '', 'text' => TXT_ALL)), $file_flag_select_array), isset($_SESSION['file_flag']) ? $_SESSION['file_flag'] : '', 'onChange="this.form.submit();"'); ?>
+    </form>
+  </div>
+  <div class="main flt-l pdg2 mrg5" style="margin-left:50px;">
+    <?php echo xtc_draw_form('keywords', FILENAME_CONTENT_MANAGER, '', 'get'); ?>
+    <?php echo TEXT_SEARCH . ' ' . xtc_draw_input_field('keywords', ((isset($_GET['keywords'])) ? $_GET['keywords'] : ''), 'style="width:200px; margin-top:-2px;"'); ?>
+    <?php echo '<input class="button" style="vertical-align:top;margin-top: -2px !important;" type="submit" value="'.BUTTON_SEARCH.'"/>'; ?>
+    </form>
+  </div>
+  <div class="main flt-r pdg2 mrg5">
+    <?php echo xtc_draw_form('pages', FILENAME_CONTENT_MANAGER, '', 'get'); ?>
+    <?php echo HEADING_TITLE_GOTO . ' ' . xtc_draw_pull_down_menu('set', $content_pages_array, isset($_GET['set']) ? $_GET['set'] : '', 'onChange="this.form.submit();"'); ?>
+    </form>
+  </div>
+  <div class="clear"></div>
+  <table class="tableCenter">      
+    <tr>
+      <td class="boxCenterLeft">
+        <table class="tableBoxCenter collapse">
+          <tr class="dataTableHeadingRow">
+            <td class="dataTableHeadingContent txta-c" style="width:8%"><?php echo TABLE_HEADING_CONTENT_GROUP.xtc_sorting(FILENAME_CONTENT_MANAGER, 'group'); ?></td>
+            <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_CONTENT_TITLE.xtc_sorting(FILENAME_CONTENT_MANAGER, 'name'); ?></td>
+            <td class="dataTableHeadingContent txta-c" style="width:8%"><?php echo TABLE_HEADING_CONTENT_SORT.xtc_sorting(FILENAME_CONTENT_MANAGER, 'sort'); ?></td>
+            <td class="dataTableHeadingContent txta-c" style="width:8%"><?php echo TABLE_HEADING_STATUS_ACTIVE.xtc_sorting(FILENAME_CONTENT_MANAGER, 'active') ?></td>
+            <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_CONTENT_FILE.xtc_sorting(FILENAME_CONTENT_MANAGER, 'file'); ?></td>
+            <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_CONTENT_BOX.xtc_sorting(FILENAME_CONTENT_MANAGER, 'box'); ?></td>
+            <td class="dataTableHeadingContent txta-c" style="width:8%"><?php echo TABLE_HEADING_CONTENT_STATUS.xtc_sorting(FILENAME_CONTENT_MANAGER, 'status'); ?></td>
+            <td class="dataTableHeadingContent txta-c"><?php echo TEXT_CONTENT_META_ROBOTS ?></td>
+            <td class="dataTableHeadingContent txta-c" style="width:5%"><?php echo TABLE_HEADING_CONTENT_ACTION; ?>&nbsp;</td>
           </tr>
           <?php
-        }
-      }
-      ?>
-    </table>          
-  </div>
+          $where = '';
+          if (isset($_SESSION['file_flag']) && $_SESSION['file_flag'] != '') {
+            $where .= " AND file_flag = '".(int)$_SESSION['file_flag']."'";
+          }
+          if (isset($_GET['pID']) && (int)$_GET['pID'] > 0) {
+            ?>
+            <tr class="dataTableRow" onmouseover="this.className='dataTableRowOver'" onmouseout="this.className='dataTableRow\">
+              <td class="dataTableContent txta-c">--</td>
+              <td class="dataTableContent"><?php echo '<a href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('pID', 'coID', 'coIndex'))). '">'.xtc_image(DIR_WS_ICONS . 'folder_parent.gif', ICON_FOLDER) . ' ..</a>'; ?></td>
+              <td class="dataTableContent txta-c">--</td>
+              <td class="dataTableContent txta-c">--</td>
+              <td class="dataTableContent txta-c">--</td>
+              <td class="dataTableContent txta-c">--</td>
+              <td class="dataTableContent txta-c">--</td>
+              <td class="dataTableContent txta-c">--</td>
+              <td class="dataTableContent txta-c">--</td>
+            </tr>
+            <?php
+            $where .= " AND parent_id = '".$_GET['pID']."'";
+          } elseif (isset($_GET['keywords']) && $_GET['keywords'] != '') {
+            $keywords = $_GET['keywords'] = !empty($_GET['keywords']) ? stripslashes(trim(urldecode($_GET['keywords']))) : false;
+            if ($keywords) {
+              require_once (DIR_FS_INC.'xtc_parse_search_string.inc.php');
+              $keywordcheck = xtc_parse_search_string($_GET['keywords'], $search_keywords);
 
-<?php
+              if ($keywordcheck) {             
+                $where .= " AND ( ";
+                for ($i = 0, $n = sizeof($search_keywords); $i < $n; $i ++) {
+                  switch ($search_keywords[$i]) {
+                    case '(' :
+                    case ')' :
+                    case 'and' :
+                    case 'or' :
+                      $where .= " ".$search_keywords[$i]." ";
+                      break;
+                    default :
+                    $ent_keyword = encode_htmlentities($search_keywords[$i]); // umlauts
+                    $ent_keyword = $ent_keyword != $search_keywords[$i] ? xtc_db_input($ent_keyword) : false;
+                    $keyword = xtc_db_input($search_keywords[$i]);
+                    $where .= " ( ";
+                    $where .= "content_title LIKE ('%".$keyword."%') ";
+                    $where .= $ent_keyword ? "OR content_title LIKE ('%".$ent_keyword."%') " : '';
+                    $where .= "OR content_heading LIKE ('%".$keyword."%') ";
+                    $where .= $ent_keyword ? "OR content_heading LIKE ('%".$ent_keyword."%') " : '';
+                    $where .= "OR content_text LIKE ('%".$keyword."%') ";
+                    $where .= $ent_keyword ? "OR content_text LIKE ('%".$ent_keyword."%') " : '';
+                    $where .= " ) ";
+                    break;
+                  }
+                }
+                $where .= " )";
+              }
+            }
+          } else {
+            $where .= " AND parent_id = '0'";
+          }
+          $content_query_raw = "SELECT *
+                                  FROM ".TABLE_CONTENT_MANAGER."
+                                 WHERE languages_id = '".(int)$_SESSION['languages_id']."'
+                                       ".$where."
+                              ORDER BY ".$sort;
+          $content_query_split = new splitPageResults($page, $page_max_display_results, $content_query_raw, $content_query_numrows);
+          $content_query = xtc_db_query($content_query_raw);
+          while ($content_data = xtc_db_fetch_array($content_query)) {
+
+            if ((!isset($_GET['coID']) || $_GET['coID'] == $content_data['content_group']) && !isset($oInfo)) {
+              $oInfo = new objectInfo($content_data);
+            }
+            
+            $content_data['content_count'] = 0;
+            if (!isset($_GET['pID']) || (int)$_GET['pID'] == 0) {
+              $check_query = xtc_db_query("SELECT *
+                                             FROM ".TABLE_CONTENT_MANAGER."
+                                            WHERE languages_id = '".(int)$_SESSION['languages_id']."'
+                                              AND parent_id = '".(int)$content_data['content_id']."'");
+              $content_data['content_count'] = xtc_db_num_rows($check_query);
+            }
+            
+            if (isset($oInfo) && is_object($oInfo) && $content_data['content_group'] == $oInfo->content_group) {
+              echo '<tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action', 'coID', 'coIndex')) . 'coID=' . $oInfo->content_group . '&coIndex=' . $oInfo->content_group_index . '&action=edit') . '\'">' . "\n";
+            } else {
+              echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action', 'coID', 'coIndex')) . 'coID=' . $content_data['content_group'] . '&coIndex=' . $content_data['content_group_index']) . '\'">' . "\n";
+            }
+            ?>
+              <td class="dataTableContent txta-c"><?php echo $content_data['content_group']; ?></td>
+              <td class="dataTableContent">
+              <?php 
+                if (isset($_GET['pID']) && (int)$_GET['pID'] > 0) {
+                  echo $content_data['content_title'] . (($content_data['content_delete'] == '0') ? ' <span class="col-red">*</span>' : '');
+                } else {
+                  echo '<a href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('coID', 'coIndex', 'pID')) . 'pID=' . $content_data['content_id']). '">'.xtc_image(DIR_WS_ICONS . (($content_data['content_count'] > 0) ? 'folder_page.gif' : 'folder.gif'), ICON_FOLDER, '', '', $icon_padding) . '</a>' . '<span style="vertical-align: 3px;">' . $content_data['content_title'] . (($content_data['content_delete'] == '0') ? ' <span class="col-red">*</span>' : '').'</span>'; 
+                }
+              ?>
+              </td>
+              <td class="dataTableContent txta-c"><?php echo $content_data['sort_order']; ?></td>
+              <td  class="dataTableContent txta-c">
+                <?php
+                if ($content_data['content_active'] == '1') {
+                  echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 12, 12, 'style="margin-right:5px;"') . '<a href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('special', 'coID', 'flag', 'coIndex')).'special=setaflag&flag=0&coID=' . $content_data['content_group'] . '&coIndex=' . $content_data['content_group_index'], 'NONSSL') . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 12, 12) . '</a>';
+                } else {
+                  echo '<a href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('special', 'coID', 'flag', 'coIndex')).'special=setaflag&flag=1&coID=' . $content_data['content_group'] . '&coIndex=' . $content_data['content_group_index'], 'NONSSL') . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 12, 12, 'style="margin-right:5px;"') . '</a>' . xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 12, 12);
+                }
+                ?>
+              </td>
+              <td class="dataTableContent"><?php echo (($content_data['content_file'] != '') ? $content_data['content_file'] : '--'); ?></td>
+              <td class="dataTableContent txta-c"><?php echo $file_flag_array[$content_data['file_flag']]; ?></td>
+              <td  class="dataTableContent txta-c">
+                <?php
+                if ($content_data['content_status'] == '1') {
+                  echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 12, 12, 'style="margin-right:5px;"') . '<a href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('special', 'coID', 'flag', 'coIndex')).'special=setsflag&flag=0&coID=' . $content_data['content_group'] . '&coIndex=' . $content_data['content_group_index'], 'NONSSL') . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 12, 12) . '</a>';
+                } else {
+                  echo '<a href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('special', 'coID', 'flag', 'coIndex')).'special=setsflag&flag=1&coID=' . $content_data['content_group'] . '&coIndex=' . $content_data['content_group_index'], 'NONSSL') . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 12, 12, 'style="margin-right:5px;"') . '</a>' . xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 12, 12);
+                }
+                ?>
+              </td>
+              <td class="dataTableContent txta-c"><?php echo $content_data['content_meta_robots']; ?>&nbsp;</td>
+              <td class="dataTableContent txta-r"><?php if (isset($oInfo) && is_object($oInfo) && $content_data['content_group'] == $oInfo->content_group) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action', 'coID', 'coIndex')) . '&coID=' . $content_data['content_group'] . '&coIndex=' . $content_data['content_group_index']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+            </tr> 
+            <?php
+          }
+          ?>
+        </table>
+
+        <div class="smallText pdg2 flt-l"><?php echo $content_query_split->display_count($content_query_numrows, $page_max_display_results, $page, TEXT_DISPLAY_NUMBER_OF_CONTENT_MANAGER); ?></div>
+        <div class="smallText pdg2 flt-r"><?php echo $content_query_split->display_links($content_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $page, ((isset($_GET['pID']) && (int)$_GET['pID'] > 0) ? '&pID='.(int)$_GET['pID'] : '')); ?></div>
+        <?php echo draw_input_per_page($PHP_SELF, $cfg_max_display_results_key, $page_max_display_results); ?>
+      </td>
+      <?php
+        $heading = array();
+        $contents = array();
+        switch ($action) {
+          case 'delete':
+            $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_DELETE_CONTENT_MANAGER . '</b>');
+
+            $contents = array('form' => xtc_draw_form('status', FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action', 'flag')) . 'special=delete'));
+            $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
+            $contents[] = array('text' => '<br /><b>' . $oInfo->content_title . '</b>');
+            $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action', 'flag'))) . '">' . BUTTON_CANCEL . '</a>');
+            break;
+
+          default:
+            if (isset($oInfo) && is_object($oInfo)) {
+              $heading[] = array('text' => '<b>' . $oInfo->content_title . '</b>');
+
+              $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('coID', 'coIndex')) . 'coID=' . $oInfo->content_group . '&coIndex=' . $oInfo->content_group_index . '&action=edit') . '">' . BUTTON_EDIT . '</a> 
+                                                                  <a class="button" onclick="javascript:window.open(\''.xtc_href_link_from_admin('popup_content.php','coID='.$oInfo->content_group).'&preview=true&coIndex='.$oInfo->content_group_index.'\', \'popup\', \'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=640,height=600\')">'.TEXT_PREVIEW.'</a>'
+                                                                  .(($oInfo->content_delete == '1') ? '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('coID', 'coIndex')) . 'coID=' . $oInfo->content_group . '&coIndex=' . $oInfo->content_group_index . '&action=delete') . '">' . BUTTON_DELETE . '</a>' : ''));
+
+              $contents[] = array ('text' => '<br />'.TEXT_DATE_ADDED.' '.xtc_datetime_short($oInfo->date_added));
+              $contents[] = array ('text' => TEXT_LAST_MODIFIED.' '.xtc_datetime_short($oInfo->last_modified));
+            }
+            break;
+        }
+
+        if ( (xtc_not_null($heading)) && (xtc_not_null($contents)) ) {
+          echo '            <td class="boxRight">' . "\n";
+          $box = new box;
+          echo $box->infoBox($heading, $contents);
+          echo '            </td>' . "\n";
+        }
+      ?>
+    </tr>
+  </table>
+  <?php 
 } else {
 
   $content_status_array = array(
@@ -170,7 +303,7 @@ if (!$action) {
       $z++;
     }
   }
-  
+    
   // some defaults
   $default_content = $content[0][$_SESSION['languages_id']];
   $content_count = count($content);
@@ -230,18 +363,18 @@ if (!$action) {
   array_multisort(array_column($content_files, 'text'), SORT_ASC, $content_files);
 
   ?>
+  <div class="clear"></div>
   <div style="width:100%;padding:5px;">
     <div class="pageHeading"><?php echo HEADING_CONTENT; ?><br /></div>
     <?php
     if ($action != 'new') {
-      echo xtc_draw_form('edit_content', FILENAME_CONTENT_MANAGER, 'action=edit&id=update&coID='.$g_coID, 'post', 'enctype="multipart/form-data"'). PHP_EOL;
+      echo xtc_draw_form('edit_content', FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('id')) . 'id=update', 'post', 'enctype="multipart/form-data"'). PHP_EOL;
       echo xtc_draw_hidden_field('coID',$g_coID). PHP_EOL;
       echo xtc_draw_hidden_field('content_group_index', $coIndex). PHP_EOL;
     } else {
       echo xtc_draw_form('edit_content', FILENAME_CONTENT_MANAGER, 'action=edit&id=insert', 'post', 'enctype="multipart/form-data"'). PHP_EOL;
     }
     echo xtc_draw_hidden_field('content_count', $content_count). PHP_EOL;
-
     ?>
     <div style="padding:5px;clear:both;">
       <table class="tableConfig borderall" style="width:99%">
@@ -265,20 +398,24 @@ if (!$action) {
         ?>
         <tr>
           <td class="dataTableConfig col-left"><?php echo TEXT_FILE_FLAG; ?></td>
-          <td class="dataTableConfig col-single-right"><?php echo xtc_draw_pull_down_menu('file_flag', $file_flag_array, isset($_SESSION['file_flag']) ? $_SESSION['file_flag'] : $default_content['file_flag'], 'id="file_flag"'); ?></td>
+          <td class="dataTableConfig col-single-right"><?php echo xtc_draw_pull_down_menu('file_flag', $file_flag_array, ((isset($_SESSION['file_flag']) && $_SESSION['file_flag'] != '' && $action == 'new') ? $_SESSION['file_flag'] : ((isset($_GET['pID']) && (int)$_GET['pID'] > 0 && $action == 'new') ? get_file_flag($_GET['pID']) : $default_content['file_flag'])), 'id="file_flag"'); ?></td>
         </tr>
-        <?php if (CONTENT_CHILDS_ACTIV == 'true' 
-                  && count($content_data_array) > 1 
-                  && (check_content_childs($default_content['content_id'], $_SESSION['languages_id']) === false
-                      || $action == 'new'
-                      )
-                  )
-        { ?>
+        <?php 
+        if (CONTENT_CHILDS_ACTIV == 'true' 
+            && count($content_data_array) > 1 
+            && (check_content_childs($default_content['content_id'], $_SESSION['languages_id']) === false
+                || $action == 'new'
+                )
+            )
+        { 
+          ?>
           <tr>
             <td class="dataTableConfig col-left"><?php echo TEXT_PARENT; ?></td>
-            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_pull_down_menu('parent_id', $content_data_array, $default_content['parent_id'], 'id="parent_id"'); ?><span style="display:inline-block;vertical-align:top;padding:5px 0 0 5px;line-height:24px;"><?php echo xtc_draw_checkbox_field('parent_check', 'yes', (($default_content['parent_id'] > 0) ? true : false)).' '.TEXT_PARENT_DESCRIPTION; ?></span></td>
+            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_pull_down_menu('parent_id', $content_data_array, ((isset($_GET['pID']) && (int)$_GET['pID'] > 0 && $action == 'new') ? (int)$_GET['pID'] : $default_content['parent_id']), 'id="parent_id"'); ?><span style="display:inline-block;vertical-align:top;padding:5px 0 0 5px;line-height:24px;"><?php echo xtc_draw_checkbox_field('parent_check', 'yes', (((isset($_GET['pID']) && (int)$_GET['pID'] > 0 && $action == 'new') || $default_content['parent_id'] > 0) ? true : false)).' '.TEXT_PARENT_DESCRIPTION; ?></span></td>
           </tr>
-        <?php } ?>
+          <?php 
+        }
+        ?>
         <tr>
           <td class="dataTableConfig col-left"><?php echo TEXT_SORT_ORDER; ?></td>
           <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('sort_order', ((isset($default_content['sort_order'])) ? $default_content['sort_order'] : ''), 'size="5"'); ?></td>
@@ -314,7 +451,7 @@ if (!$action) {
         <input class="button" type="submit" onclick="this.blur();" value="<?php echo BUTTON_UPDATE; ?>" name="page_update"/>
       </div>
       <div class="flt-r mrg5 pdg2">
-        <a class="button" onclick="this.blur();" href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER); ?>"><?php echo BUTTON_BACK; ?></a>
+        <a class="button" onclick="this.blur();" href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action'))); ?>"><?php echo BUTTON_BACK; ?></a>
       </div>
     </div>
 
@@ -485,7 +622,7 @@ if (!$action) {
         <input class="button" type="submit" onclick="this.blur();" value="<?php echo BUTTON_UPDATE; ?>" name="page_update"/>
       </div>
       <div class="flt-r mrg5 pdg2">
-        <a class="button" onclick="this.blur();" href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER); ?>"><?php echo BUTTON_BACK; ?></a>
+        <a class="button" onclick="this.blur();" href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action'))); ?>"><?php echo BUTTON_BACK; ?></a>
       </div>
     </div>
     

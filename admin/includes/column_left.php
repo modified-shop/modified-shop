@@ -154,7 +154,15 @@ echo mainMenue(BOX_HEADING_TOOLS);
       if ($admin_access['newsletter_recipients'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_NEWSLETTER_RECIPIENTS) . '" class="menuBoxContentLink"> -' . BOX_NEWSLETTER_RECIPIENTS . '</a></li>';
       if ($admin_access['module_newsletter'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_MODULE_NEWSLETTER) . '" class="menuBoxContentLink"> -' . BOX_MODULE_NEWSLETTER . '</a></li>';
     }
-    if ($admin_access['content_manager'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_CONTENT_MANAGER) . '" class="menuBoxContentLink"> -' . BOX_CONTENT . '</a></li>';
+    if ($admin_access['content_manager'] == '1') {
+      echo '<li><a href="javascript:void(0)" class="menuBoxContentLinkSub"> -' . BOX_CONTENT . '</a><ul>';
+        echo '<li><a href="' . xtc_href_link(FILENAME_CONTENT_MANAGER) . '" class="menuBoxContentLink"> -' . BOX_PAGES_CONTENT . '</a></li>';
+        echo '<li><a href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, 'set=product') . '" class="menuBoxContentLink"> -' . BOX_PRODUCTS_CONTENT . '</a></li>';
+        echo '<li><a href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, 'set=content') . '" class="menuBoxContentLink"> -' . BOX_CONTENT_CONTENT . '</a></li>';
+        echo '<li><a href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, 'set=email') . '" class="menuBoxContentLink"> -' . BOX_EMAIL_CONTENT . '</a></li>';
+      echo '  </ul></li>';
+    }
+    
     if ($admin_access['removeoldpics'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_REMOVEOLDPICS, '', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_REMOVEOLDPICS . '</a></li>';
     if ($admin_access['backup'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_BACKUP) . '" class="menuBoxContentLink"> -' . BOX_BACKUP . '</a></li>';
     if (defined('MODULE_BANNER_MANAGER_STATUS') && MODULE_BANNER_MANAGER_STATUS == 'true') {

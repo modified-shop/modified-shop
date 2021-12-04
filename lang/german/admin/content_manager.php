@@ -46,6 +46,13 @@
  define('CONFIRM_DELETE','Wollen Sie den Content wirklich l&ouml;schen?');
  define('CONTENT_NOTE','Content markiert mit <span class="col-red">*</span> geh&ouml;rt zum System und kann nicht gel&ouml;scht werden!');
 
+ define('TEXT_DATE_ADDED','Hinzugefügt am');
+ define('TEXT_LAST_MODIFIED','Bearbeitet am');
+ define('HEADING_TITLE_GOTO','Gehe zu:');
+ define('TEXT_DISPLAY_NUMBER_OF_CONTENT_MANAGER','Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> Content)');
+ define('TEXT_INFO_HEADING_DELETE_CONTENT_MANAGER','Content l&ouml;schen');
+ define('TEXT_INFO_DELETE_INTRO','Sind Sie sicher, dass Sie diesen Content l&ouml;schen m&ouml;chten?');
+ define('TEXT_SEARCH', 'Suche:');
  
  // edit
  define('TEXT_LANGUAGE','Sprache:');

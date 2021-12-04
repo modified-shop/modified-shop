@@ -191,6 +191,10 @@ define('BOX_SUPPORT', 'Support');
 define('BOX_CACHING', 'Caching');
 define('BOX_COOKIE_CONSENT', 'Cookie Consent');
 define('BOX_SEMKNOX', 'Site Search 360 Produktsuche');
+define('BOX_PAGES_CONTENT', 'Seiten');
+define('BOX_PRODUCTS_CONTENT', 'Artikel Content');
+define('BOX_CONTENT_CONTENT', 'Seiten Content');
+define('BOX_EMAIL_CONTENT', 'E-Mail Content');
 
 define('TXT_GROUPS','<b>Gruppen</b>:');
 define('TXT_SYSTEM','System');

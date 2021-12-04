@@ -26,6 +26,11 @@
     define('CONTENT_CHILDS_ACTIV','true');
   }
   
+  //display per page
+  $cfg_max_display_results_key = 'MAX_DISPLAY_CONTENT_MANAGER';
+  $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
+
+  $page = (isset($_GET['page']) ? (int)$_GET['page'] : 1);
   $set = (isset($_GET['set']) ? $_GET['set'] : '');
   $setparam = !empty($set) ? '&set='.$set : '';
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
@@ -34,7 +39,8 @@
   $g_coID = (isset($_GET['coID']) ? (int)$_GET['coID'] : '');
   $coIndex = (isset($_GET['coIndex']) ? (int)$_GET['coIndex'] : '');
   $languages = xtc_get_languages();
-
+  $icon_padding = 'style="padding-right:8px;"';  
+  
   if ($special != '') {
     switch ($special) {
       case 'delete':
@@ -61,6 +67,21 @@
         $params = '';
         $_SESSION['file_flag'] = $_GET['file_flag'];
         break;
+      case 'setsflag':
+        $params = xtc_get_all_get_params(array('special', 'flag'));
+        xtc_db_query("UPDATE ".TABLE_CONTENT_MANAGER." 
+                         SET content_status = '".(int)$_GET['flag']."'
+                       WHERE content_group = '".$g_coID."' 
+                         AND content_group_index = '".$coIndex."'");
+        break;
+        
+      case 'setaflag':
+        $params = xtc_get_all_get_params(array('special', 'flag'));
+        xtc_db_query("UPDATE ".TABLE_CONTENT_MANAGER." 
+                         SET content_active = '".(int)$_GET['flag']."'
+                       WHERE content_group = '".$g_coID."' 
+                         AND content_group_index = '".$coIndex."'");
+        break;
     }
     
     foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/content_manager/action/','php') as $file) require ($file);
@@ -75,7 +96,7 @@
   if (empty($action) && isset($_GET['cPath'])) {
     xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('special', 'last_action', 'action', 'coID', 'coIndex', 'search')) . 'action='.$_GET['last_action']));
   }
-
+  
   if ($id == 'update' || $id == 'insert') {    
     foreach ($_POST as $key => $value) {
       if (!isset(${$key}) || !is_object(${$key})) {
@@ -99,9 +120,24 @@
       $parent_id = array();
       while ($parent = xtc_db_fetch_array($parent_query)) {
         $parent_id[$parent['languages_id']] = $parent['content_id'];
+        
+        if ($parent['languages_id'] == $_SESSION['languages_id']) {
+          $_GET['pID'] = $parent['content_id'];
+        }
       }
     }
-
+    
+    if (isset($_GET['pID']) 
+        && (!isset($parent_id) || !is_array($parent_id))
+        || (isset($parent_id) 
+            && is_array($parent_id) 
+            && !array_key_exists($_SESSION['languages_id'], $parent_id)
+            )
+        )
+    {
+      unset($_GET['pID']);
+    }
+    
     if ($content_group == '0' || $content_group == '') {
       $content_query = xtc_db_query("SELECT MAX(content_group) AS content_group FROM ".TABLE_CONTENT_MANAGER);
       $content_data = xtc_db_fetch_row($content_query);
@@ -155,7 +191,7 @@
             'content_status' => (int)$content_status[$i][$languages[$l]['id']],
             'content_active' => (int)$content_active[$i][$languages[$l]['id']],
             'languages_id' => $languages[$l]['id'],
-            'parent_id' => ((isset($parent_id) && is_array($parent_id) && array_key_exists($languages[$l]['id'], $parent_id)) ? $parent_id[$languages[$l]['id']] : ''),
+            'parent_id' => ((isset($parent_id) && is_array($parent_id) && array_key_exists($languages[$l]['id'], $parent_id)) ? $parent_id[$languages[$l]['id']] : 0),
             'group_ids' => $group_ids,
             'content_title' => $content_title[$i][$languages[$l]['id']],
             'content_heading' => $content_heading[$i][$languages[$l]['id']],
@@ -206,14 +242,18 @@
     }
 
     foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/content_manager/action/','php') as $file) require ($file);
-
+    
     if (isset($page_update)) {
-      $setparam = 'action=edit&coID='.$content_group.'&coIndex='.$sql_data_array['content_group_index'];
+      $_GET['coID'] = $content_group;
+      $_GET['coIndex'] = $sql_data_array['content_group_index'];
+      $setparam = 'action=edit';
     }
     if ($error === true) {
-      $setparam = 'action=edit&coID='.(($g_coID != '') ? $g_coID : $content_group);
+      $_GET['coID'] = (($g_coID != '') ? $g_coID : $content_group);
+      $setparam = 'action=edit';
     }
-    xtc_redirect(xtc_href_link(FILENAME_CONTENT_MANAGER, $setparam));
+
+    xtc_redirect(xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action', 'id')).$setparam));
   }
 
   
@@ -316,7 +356,7 @@
       if (isset($_GET['cPath'])) {
         xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('last_action', 'action', 'id', 'coID')) . 'action='.$_GET['last_action']));
       } else {
-        xtc_redirect(xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action', 'id', 'coID'))));
+        xtc_redirect(xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action', 'id'))));
       }
     }
   }
@@ -332,6 +372,14 @@
     return false;
   }
 
+  function get_file_flag($content_id) {
+    $contents_query = xtc_db_query("SELECT file_flag                              
+                                      FROM " . TABLE_CONTENT_MANAGER . "
+                                     WHERE content_id = '" . (int)$content_id . "'");
+    $contents = xtc_db_fetch_array($contents_query);
+    return $contents['file_flag'];
+  }
+  
   require (DIR_WS_INCLUDES.'head.php');
 
   if (USE_WYSIWYG=='true') {
@@ -343,6 +391,13 @@
       }
     }
   }
+ 
+  $content_pages_array = array(
+    array('id' => '', 'text' => BOX_PAGES_CONTENT),
+    array('id' => 'product', 'text' => BOX_PRODUCTS_CONTENT),
+    array('id' => 'content', 'text' => BOX_CONTENT_CONTENT),
+    array('id' => 'email', 'text' => BOX_EMAIL_CONTENT),
+  );
 ?>
 </head>
 <body>
@@ -363,38 +418,39 @@
         ?>
         <!-- body_text //--> 
         <td class="boxCenter"> 
+
           <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_content.png'); ?></div>
-          <div class="pageHeading"><?php echo HEADING_TITLE;?><br /></div>          
-          <div class="main pdg2 flt-l">Tools</div>
-          <div class="clear"></div>
-          <div class="content-manager-width mrg5">             
-              <?php
-                if ($set == '') {
-                  //content
-                  include(DIR_WS_MODULES.'content_manager_pages.php');
-                  $newaction = 'new';
-                } elseif ($set == 'product') {
-                  //products content
-                  include(DIR_WS_MODULES.'content_manager_products.php');
-                  $newaction = 'new_products_content';
-                } elseif ($set == 'content') {
-                  //products content
-                  include(DIR_WS_MODULES.'content_manager_content.php');
-                  $newaction = 'new_content_manager_content';
-                } elseif ($set == 'email') {
-                  //products content
-                  include(DIR_WS_MODULES.'content_manager_email.php');
-                  $newaction = 'new_email_content';
-                }
-              ?>
-              <?php                        
-              if (!$action) {
-                ?>                
-                <div class="mrg5"><a class="button" onclick="this.blur();" href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER,'action='.$newaction.$setparam); ?>"><?php echo BUTTON_NEW_CONTENT; ?></a></div>
-                <?php
-              }
-              ?>
+          <div class="pageHeading flt-l"><?php echo HEADING_TITLE; ?>
+            <div class="main pdg2">Tools</div>
           </div>
+          <?php
+            if ($set == '') {
+              //content
+              include(DIR_WS_MODULES.'content_manager_pages.php');
+              $newaction = 'new';
+            } elseif ($set == 'product') {
+              //products content
+              include(DIR_WS_MODULES.'content_manager_products.php');
+              $newaction = 'new_products_content';
+            } elseif ($set == 'content') {
+              //products content
+              include(DIR_WS_MODULES.'content_manager_content.php');
+              $newaction = 'new_content_manager_content';
+            } elseif ($set == 'email') {
+              //products content
+              include(DIR_WS_MODULES.'content_manager_email.php');
+              $newaction = 'new_email_content';
+            }
+
+            if (!$action) {
+              if (isset($_GET['pID']) && (int)$_GET['pID'] > 0) {
+                $setparam .= '&pID='.(int)$_GET['pID'];
+              }
+              ?>                
+              <div class="mrg5"><a class="button" onclick="this.blur();" href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER,'action='.$newaction.$setparam); ?>"><?php echo BUTTON_NEW_CONTENT; ?></a></div>
+              <?php
+            }
+          ?>
         </td>
         <!-- body_text_eof //-->
       </tr>
