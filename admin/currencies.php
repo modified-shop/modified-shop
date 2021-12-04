@@ -191,9 +191,9 @@
                     <td class="dataTableContent txta-r">
                       <?php
                       if ($currency['status'] == '1') {
-                        echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 10, 10, 'style="margin-left: 5px;"') . '<a href="' . xtc_href_link(FILENAME_CURRENCIES, xtc_get_all_get_params(array('page', 'action', 'cID')) . 'action=setcflag&flag=0&cID=' . $currency['currencies_id'] . '&page='.$page) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 10, 10, 'style="margin-left: 5px;"') . '</a>';
+                        echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 12, 12, 'style="margin-left: 5px;"') . '<a href="' . xtc_href_link(FILENAME_CURRENCIES, xtc_get_all_get_params(array('page', 'action', 'cID')) . 'action=setcflag&flag=0&cID=' . $currency['currencies_id'] . '&page='.$page) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 12, 12, 'style="margin-left: 5px;"') . '</a>';
                       } else {
-                        echo '<a href="' . xtc_href_link(FILENAME_CURRENCIES, xtc_get_all_get_params(array('page', 'action', 'cID')) . 'action=setcflag&flag=1&cID=' . $currency['currencies_id'].'&page='.$page) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 10, 10, 'style="margin-left: 5px;"') . '</a>' . xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 10, 10, 'style="margin-left: 5px;"');
+                        echo '<a href="' . xtc_href_link(FILENAME_CURRENCIES, xtc_get_all_get_params(array('page', 'action', 'cID')) . 'action=setcflag&flag=1&cID=' . $currency['currencies_id'].'&page='.$page) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 12, 12, 'style="margin-left: 5px;"') . '</a>' . xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 12, 12, 'style="margin-left: 5px;"');
                       }
                       ?>
                     </td>

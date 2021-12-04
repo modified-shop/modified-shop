@@ -417,9 +417,9 @@ require (DIR_WS_INCLUDES.'head.php');
                     <td class="dataTableContent">
                       <?php
                       if ($trustedshops['status'] == 1) {
-                        echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 10, 10, 'style="margin-left: 5px;"') . '<a href="' . xtc_href_link(FILENAME_TRUSTEDSHOPS, xtc_get_all_get_params(array('action', 'tID')) . 'action=setflag&flag=0&tID='.$trustedshops['id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 10, 10, 'style="margin-left: 5px;"') . '</a>';
+                        echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 12, 12, 'style="margin-left: 5px;"') . '<a href="' . xtc_href_link(FILENAME_TRUSTEDSHOPS, xtc_get_all_get_params(array('action', 'tID')) . 'action=setflag&flag=0&tID='.$trustedshops['id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 12, 12, 'style="margin-left: 5px;"') . '</a>';
                       } else {
-                        echo '<a href="' . xtc_href_link(FILENAME_TRUSTEDSHOPS, xtc_get_all_get_params(array('action', 'tID')) . 'action=setflag&flag=1&tID='.$trustedshops['id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 10, 10, 'style="margin-left: 5px;"') . '</a>' . xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 10, 10, 'style="margin-left: 5px;"');
+                        echo '<a href="' . xtc_href_link(FILENAME_TRUSTEDSHOPS, xtc_get_all_get_params(array('action', 'tID')) . 'action=setflag&flag=1&tID='.$trustedshops['id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 12, 12, 'style="margin-left: 5px;"') . '</a>' . xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 12, 12, 'style="margin-left: 5px;"');
                       }
                       ?>
                     </td>

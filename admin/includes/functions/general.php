@@ -79,7 +79,6 @@
    * @return
    */
   function check_stock($products_id) {
-    unset ($stock_flag);
     $stock_query = xtc_db_query("SELECT products_quantity
                                    FROM ".TABLE_PRODUCTS."
                                   WHERE products_id = '".(int)$products_id."'");
@@ -105,10 +104,9 @@
         }
       }
     }
+    
     if (isset($stock_flag) && $stock_flag == 'true' && $products_id != '') {
       return '<div class="stock_warn"><ul>'.TEXT_WARN.$stock_warn.'</ul></div>';
-    } else {
-      return xtc_image(DIR_WS_IMAGES.'icon_status_green.gif', $stock_values['products_quantity'].' '.IMAGE_ICON_STATUS_GREEN_STOCK, 10, 10);
     }
   }
 
