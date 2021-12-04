@@ -235,9 +235,9 @@ if (isset($_GET['action']) && $_GET['action'] =='product_search') {
         <?php
         
           if ($products['products_status'] == '1') {
-            $products_status =  xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 10, 10);
+            $products_status =  xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 12, 12);
           } else {
-            $products_status =  xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 10, 10);
+            $products_status =  xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 12, 12);
           }
           
           $products_special_price_qty = '';
