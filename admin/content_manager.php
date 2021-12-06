@@ -447,7 +447,7 @@
                 $setparam .= '&pID='.(int)$_GET['pID'];
               }
               ?>                
-              <div class="mrg5"><a class="button" onclick="this.blur();" href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER,'action='.$newaction.$setparam); ?>"><?php echo BUTTON_NEW_CONTENT; ?></a></div>
+              <div class="mrg5"><a class="button" onclick="this.blur();" href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER,'action='.$newaction.$setparam); ?>"><?php echo (($set == '') ? BUTTON_NEW_CONTENT : BUTTON_NEW_ATTACHMENT); ?></a></div>
               <?php
             }
           ?>

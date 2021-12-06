@@ -950,7 +950,7 @@
                                                  );
                   $contents[] = array('align' => 'center', 
                                       'text' =>  '<a class="button" href="'.xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('action', 'current_product_id', 'cPath', 'pID')).'action=edit_crossselling&last_action=list&current_product_id='.$pInfo->products_id.'&cpath='.$pInfo->cPath).'">' . BUTTON_EDIT_CROSS_SELLING . '</a>
-                                                  <a class="button" href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action', 'pID')).'pID='.$pInfo->products_id.'&cPath='.$pInfo->cPath.'&action=new_products_content&set=product&last_action=list') . '">' . BUTTON_NEW_CONTENT . '</a>'
+                                                  <a class="button" href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action', 'pID')).'pID='.$pInfo->products_id.'&cPath='.$pInfo->cPath.'&action=new_products_content&set=product&last_action=list') . '">' . BUTTON_NEW_ATTACHMENT . '</a>'
                                                  );                  
                   //Insert new Element Actions
                   if (!xtc_not_null($search)) {
