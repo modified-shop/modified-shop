@@ -130,11 +130,101 @@ if ( !class_exists( "image_processing_step" ) ) {
           $rData['count'] = $count;
           return $rData; // step is done
         }
-        $image_name = $files[$i]['text'];
-        $image_name_process = (isset($_GET['lower_file_ext']) && $_GET['lower_file_ext'] == 1) ? str_replace($ext_search, $ext_replace , $image_name) : $image_name;
+        $image_name = $image_name_process = $files[$i]['text'];
 
-        $rData['imgname'] = encode_htmlentities($image_name_process);
+        if (isset($_POST['lower_file_ext']) && $_POST['lower_file_ext'] == 1) {
+          $new_image_name = str_replace($ext_search, $ext_replace , $image_name);
+          
+          if ($image_name != $new_image_name) {
+            switch ($_POST['process_type']) {
+              case 'products':
+                if (is_file(DIR_FS_CATALOG_IMAGES.'product_images/original_images/'.$image_name)) {
+                  rename(DIR_FS_CATALOG_IMAGES.'product_images/original_images/'.$image_name, DIR_FS_CATALOG_IMAGES.'product_images/original_images/'.$new_image_name);
+                  
+                  if (is_file(DIR_FS_CATALOG_IMAGES.'product_images/mini_images/'.$image_name)) {
+                    rename(DIR_FS_CATALOG_IMAGES.'product_images/mini_images/'.$image_name, DIR_FS_CATALOG_IMAGES.'product_images/mini_images/'.$new_image_name);
+                  }
+                  if (is_file(DIR_FS_CATALOG_IMAGES.'product_images/thumbnail_images/'.$image_name)) {
+                    rename(DIR_FS_CATALOG_IMAGES.'product_images/thumbnail_images/'.$image_name, DIR_FS_CATALOG_IMAGES.'product_images/thumbnail_images/'.$new_image_name);
+                  }
+                  if (is_file(DIR_FS_CATALOG_IMAGES.'product_images/midi_images/'.$image_name)) {
+                    rename(DIR_FS_CATALOG_IMAGES.'product_images/midi_images/'.$image_name, DIR_FS_CATALOG_IMAGES.'product_images/midi_images/'.$new_image_name);
+                  }
+                  if (is_file(DIR_FS_CATALOG_IMAGES.'product_images/info_images/'.$image_name)) {
+                    rename(DIR_FS_CATALOG_IMAGES.'product_images/info_images/'.$image_name, DIR_FS_CATALOG_IMAGES.'product_images/info_images/'.$new_image_name);
+                  }
+                  if (is_file(DIR_FS_CATALOG_IMAGES.'product_images/popup_images/'.$image_name)) {
+                    rename(DIR_FS_CATALOG_IMAGES.'product_images/popup_images/'.$image_name, DIR_FS_CATALOG_IMAGES.'product_images/popup_images/'.$new_image_name);
+                  }
+                
+                  xtc_db_query("UPDATE ".TABLE_PRODUCTS."
+                                   SET products_image = '".xtc_db_input($new_image_name)."'
+                                 WHERE products_image = '".xtc_db_input($image_name)."'");
 
+                  xtc_db_query("UPDATE ".TABLE_PRODUCTS_IMAGES."
+                                   SET image_name = '".xtc_db_input($new_image_name)."'
+                                 WHERE image_name = '".xtc_db_input($image_name)."'");
+                }
+                break;
+              
+              case 'categories':
+                if (is_file(DIR_FS_CATALOG_IMAGES.'categories/original_images/'.$image_name)) {
+                  rename(DIR_FS_CATALOG_IMAGES.'categories/original_images/'.$image_name, DIR_FS_CATALOG_IMAGES.'categories/original_images/'.$new_image_name);
+
+                  if (is_file(DIR_FS_CATALOG_IMAGES.'categories/'.$image_name)) {
+                    rename(DIR_FS_CATALOG_IMAGES.'categories/'.$image_name, DIR_FS_CATALOG_IMAGES.'categories/'.$new_image_name);
+                  }
+
+                  xtc_db_query("UPDATE ".TABLE_CATEGORIES."
+                                   SET categories_image = '".xtc_db_input($new_image_name)."'
+                                 WHERE categories_image = '".xtc_db_input($image_name)."'");
+
+                  xtc_db_query("UPDATE ".TABLE_CATEGORIES."
+                                   SET categories_image_mobile = '".xtc_db_input($new_image_name)."'
+                                 WHERE categories_image_mobile = '".xtc_db_input($image_name)."'");
+
+                  xtc_db_query("UPDATE ".TABLE_CATEGORIES."
+                                   SET categories_image_list = '".xtc_db_input($new_image_name)."'
+                                 WHERE categories_image_list = '".xtc_db_input($image_name)."'");                  
+                }
+                break;
+              
+              case 'manufacturers':
+                if (is_file(DIR_FS_CATALOG_IMAGES.'manufacturers/original_images/'.$image_name)) {
+                  rename(DIR_FS_CATALOG_IMAGES.'manufacturers/original_images/'.$image_name, DIR_FS_CATALOG_IMAGES.'manufacturers/original_images/'.$new_image_name);
+
+                  if (is_file(DIR_FS_CATALOG_IMAGES.'manufacturers/'.$image_name)) {
+                    rename(DIR_FS_CATALOG_IMAGES.'manufacturers/'.$image_name, DIR_FS_CATALOG_IMAGES.'manufacturers/'.$new_image_name);
+                  }
+
+                  xtc_db_query("UPDATE ".TABLE_MANUFACTURERS."
+                                   SET manufacturers_image = '".xtc_db_input($new_image_name)."'
+                                 WHERE manufacturers_image = '".xtc_db_input($image_name)."'");
+                }                
+                break;
+              
+              case 'banners':
+                if (is_file(DIR_FS_CATALOG_IMAGES.'banner/original_images/'.$image_name)) {
+                  rename(DIR_FS_CATALOG_IMAGES.'banner/original_images/'.$image_name, DIR_FS_CATALOG_IMAGES.'banner/original_images/'.$new_image_name);
+
+                  if (is_file(DIR_FS_CATALOG_IMAGES.'banner/'.$image_name)) {
+                    rename(DIR_FS_CATALOG_IMAGES.'banner/'.$image_name, DIR_FS_CATALOG_IMAGES.'banner/'.$new_image_name);
+                  }
+
+                  xtc_db_query("UPDATE ".TABLE_BANNERS."
+                                   SET banners_image = '".xtc_db_input($new_image_name)."'
+                                 WHERE banners_image = '".xtc_db_input($image_name)."'");
+
+                  xtc_db_query("UPDATE ".TABLE_BANNERS."
+                                   SET banners_image_mobile = '".xtc_db_input($new_image_name)."'
+                                 WHERE banners_image_mobile = '".xtc_db_input($image_name)."'");
+                }                
+                break;
+            }
+            $image_name = $image_name_process = $new_image_name;
+          }
+        }
+        
         if (isset($_POST['logging']) && $_POST['logging'] == 1) {
           $handle = fopen($this->logfile, "a"); fwrite($handle, $image_name. '|read'."\n"); fclose($handle);
         }
