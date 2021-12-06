@@ -191,10 +191,10 @@ define('BOX_SUPPORT', 'Support');
 define('BOX_CACHING', 'Caching');
 define('BOX_COOKIE_CONSENT', 'Cookie Consent');
 define('BOX_SEMKNOX', 'Site Search 360 Produktsuche');
-define('BOX_PAGES_CONTENT', 'Seiten');
-define('BOX_PRODUCTS_CONTENT', 'Artikel Content');
-define('BOX_CONTENT_CONTENT', 'Seiten Content');
-define('BOX_EMAIL_CONTENT', 'E-Mail Content');
+define('BOX_PAGES_CONTENT', 'Content Seiten');
+define('BOX_PRODUCTS_CONTENT', 'Artikel Anh&auml;nge');
+define('BOX_CONTENT_CONTENT', 'Content Anh&auml;nge');
+define('BOX_EMAIL_CONTENT', 'E-Mail Anh&auml;nge');
 
 define('TXT_GROUPS','<b>Gruppen</b>:');
 define('TXT_SYSTEM','System');

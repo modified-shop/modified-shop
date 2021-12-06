@@ -14,10 +14,10 @@
    --------------------------------------------------------------*/
    
  defined('HEADING_TITLE') OR define('HEADING_TITLE','Content Manager');
- define('HEADING_CONTENT','Site');
- define('HEADING_PRODUCTS_CONTENT','Products content');
- define('HEADING_CONTENT_MANAGER_CONTENT','Site content');
- define('HEADING_EMAIL_CONTENT','E-Mail Content');
+ define('HEADING_CONTENT','Content sites');
+ define('HEADING_PRODUCTS_CONTENT','Product attachments');
+ define('HEADING_CONTENT_MANAGER_CONTENT','Content attachments');
+ define('HEADING_EMAIL_CONTENT','E-Mail attachments');
  define('TABLE_HEADING_CONTENT_ID','ID');
  define('TABLE_HEADING_CONTENT_TITLE','Title');
  define('TABLE_HEADING_CONTENT_FILE','File');
