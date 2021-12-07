@@ -117,9 +117,11 @@
     $id = 'db_'.md5(strtolower(preg_replace("'[\r\n\s]+'", '', $query)));
     $modified_cache->setID($id);
     
+    $hit = false;
     $records = '';
     if ($modified_cache->isHit() === true) {
       $records = $modified_cache->get();
+      $hit = true;
     }
     
     if (!is_array($records) || !isset($records['query'])) {
@@ -134,7 +136,7 @@
       $modified_cache->set($records);
     }
     
-    if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS == 'true') {
+    if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS == 'true' && $hit === true) {
       $queryEndTime = array_sum(explode(" ",microtime())); 
       $processTime = number_format(round($queryEndTime - $queryStartTime, 3), 3, '.', '');
       if (defined('STORE_DB_SLOW_QUERY') && ((STORE_DB_SLOW_QUERY == 'true' && $processTime >= STORE_DB_SLOW_QUERY_TIME) || STORE_DB_SLOW_QUERY == 'false')) {
