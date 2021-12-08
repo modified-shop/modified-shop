@@ -44,7 +44,9 @@
         {/foreach}
         {if isset($shipping_content) && count($shipping_content) > 0}
           {if $SELECT_COUNTRY}
-          <td class="ord_table_right" colspan="2">{$SELECT_COUNTRY}
+          <tr>
+            <td class="ord_table_right" colspan="2">{$SELECT_COUNTRY}</td>
+          </tr>
           {/if}
           {foreach name=aussen item=shipping_data from=$shipping_content}
           <tr>
