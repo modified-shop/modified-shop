@@ -2132,7 +2132,7 @@ INSERT INTO countries VALUES (122,'Liechtenstein','LI','LIE',1,1,0);
 INSERT INTO countries VALUES (123,'Lithuania','LT','LTU',1,1,0);
 INSERT INTO countries VALUES (124,'Luxembourg','LU','LUX',5,1,0);
 INSERT INTO countries VALUES (125,'Macau','MO','MAC',1,1,0);
-INSERT INTO countries VALUES (126,'Macedonia, The Former Yugoslav Republic of','MK','MKD',1,1,0);
+INSERT INTO countries VALUES (126,'North Macedonia','MK','MKD',1,1,0);
 INSERT INTO countries VALUES (127,'Madagascar','MG','MDG',1,1,0);
 INSERT INTO countries VALUES (128,'Malawi','MW','MWI',1,1,0);
 INSERT INTO countries VALUES (129,'Malaysia','MY','MYS',1,1,0);
