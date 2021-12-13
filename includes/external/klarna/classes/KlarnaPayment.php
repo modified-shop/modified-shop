@@ -528,14 +528,14 @@ class KlarnaPayment extends KlarnaPaymentBase {
     $shipping_address = new stdclass();    
     if ($minimal === false) {
       $shipping_address->title = $this->parse_gender($_SESSION['language_code'], $order->delivery['gender']);
-      $shipping_address->given_name = $order->delivery['firstname'];
-      $shipping_address->family_name = $order->delivery['lastname'];
-      $shipping_address->organization_name = $order->delivery['company'];
-      $shipping_address->street_address = $order->delivery['street_address'];
-      $shipping_address->street_address2 = (($order->delivery['suburb'] != '') ? $order->delivery['suburb'] : NULL);
+      $shipping_address->given_name = encode_utf8($order->delivery['firstname'], $_SESSION['language_charset'], true);
+      $shipping_address->family_name = encode_utf8($order->delivery['lastname'], $_SESSION['language_charset'], true);
+      $shipping_address->organization_name = encode_utf8($order->delivery['company'], $_SESSION['language_charset'], true);
+      $shipping_address->street_address = encode_utf8($order->delivery['street_address'], $_SESSION['language_charset'], true);
+      $shipping_address->street_address2 = encode_utf8((($order->delivery['suburb'] != '') ? $order->delivery['suburb'] : NULL), $_SESSION['language_charset'], true);
       $shipping_address->postal_code = $order->delivery['postcode'];
-      $shipping_address->city = $order->delivery['city'];
-      $shipping_address->region = ((isset($order->delivery['state']) && $order->delivery['state'] != '') ? $order->delivery['state'] : NULL);
+      $shipping_address->city = encode_utf8($order->delivery['city'], $_SESSION['language_charset'], true);
+      $shipping_address->region = encode_utf8(((isset($order->delivery['state']) && $order->delivery['state'] != '') ? $order->delivery['state'] : NULL), $_SESSION['language_charset'], true);
       $shipping_address->email = $order->customer['email_address'];
       $shipping_address->phone = $order->customer['telephone'];
     }
@@ -545,14 +545,14 @@ class KlarnaPayment extends KlarnaPaymentBase {
     $billing_address = new stdclass();
     if ($minimal === false) {
       $billing_address->title = $this->parse_gender($_SESSION['language_code'], $order->billing['gender']);
-      $billing_address->given_name = $order->billing['firstname'];
-      $billing_address->family_name = $order->billing['lastname'];
-      $billing_address->organization_name = $order->billing['company'];
-      $billing_address->street_address = $order->billing['street_address'];
-      $billing_address->street_address2 = (($order->billing['suburb'] != '') ? $order->billing['suburb'] : NULL);
+      $billing_address->given_name = encode_utf8($order->billing['firstname'], $_SESSION['language_charset'], true);
+      $billing_address->family_name = encode_utf8($order->billing['lastname'], $_SESSION['language_charset'], true);
+      $billing_address->organization_name = encode_utf8($order->billing['company'], $_SESSION['language_charset'], true);
+      $billing_address->street_address = encode_utf8($order->billing['street_address'], $_SESSION['language_charset'], true);
+      $billing_address->street_address2 = encode_utf8((($order->billing['suburb'] != '') ? $order->billing['suburb'] : NULL), $_SESSION['language_charset'], true);
       $billing_address->postal_code = $order->billing['postcode'];
-      $billing_address->city = $order->billing['city'];
-      $billing_address->region = ((isset($order->billing['state']) && $order->billing['state'] != '') ? $order->billing['state'] : NULL);
+      $billing_address->city = encode_utf8($order->billing['city'], $_SESSION['language_charset'], true);
+      $billing_address->region = encode_utf8(((isset($order->billing['state']) && $order->billing['state'] != '') ? $order->billing['state'] : NULL), $_SESSION['language_charset'], true);
       $billing_address->email = $order->customer['email_address'];
       $billing_address->phone = $order->customer['telephone'];
     }
