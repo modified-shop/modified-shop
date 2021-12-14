@@ -17,9 +17,9 @@
 
   define('TEXT_COOKIE_CONSENT_LABEL_BUTTON_YES','Speichern');
   define('TEXT_COOKIE_CONSENT_LABEL_BUTTON_BACK','Zur&uuml;ck');
-  define('TEXT_COOKIE_CONSENT_LABEL_BUTTON_YES_ALL','Alle Akzeptieren');
+  define('TEXT_COOKIE_CONSENT_LABEL_BUTTON_YES_ALL','Alle akzeptieren');
   define('TEXT_COOKIE_CONSENT_LABEL_BUTTON_ESSENTIALS_ONLY','Nur Notwendige');
-  define('TEXT_COOKIE_CONSENT_LABEL_BUTTON_ADVANCED_SETTINGS','Weitere Informationen');
+  define('TEXT_COOKIE_CONSENT_LABEL_BUTTON_ADVANCED_SETTINGS','<i class=\"fas fa-cogs\"></i> Einstellungen anpassen');
   define('TEXT_COOKIE_CONSENT_LABEL_CPC_HEADING','Cookie Einstellungen');
   define('TEXT_COOKIE_CONSENT_LABEL_CPC_ACTIVATE_ALL','Alle aktivieren');
   define('TEXT_COOKIE_CONSENT_LABEL_CPC_DEACTIVATE_ALL','Alle deaktivieren');
