@@ -513,6 +513,17 @@ a img {
   border:none;
   outline:none;
 }
+.lazyload,
+.lazyloading {
+  opacity: 0;
+}
+.lazyloaded {
+  opacity: 1;
+  -webkit-transition: opacity 1s ease;
+  -moz-transition: opacity 1s ease;
+  -o-transition: opacity 1s ease;
+  transition: opacity 1s ease;
+}
 /* END Links global */
 
 
@@ -1611,9 +1622,6 @@ a.color_more:hover {
 
 
 /* 18. START Listing globals */
-.unveil {
-  display: none;
-}
 .listingcontainer, .listingcontainer_details {
   margin: 0px -10px 0px -10px;
 }
