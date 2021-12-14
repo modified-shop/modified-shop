@@ -16,9 +16,10 @@
 .as-oil__intro-txt{display:inline-block;min-width:75%;max-width:75%;font-size:14px;font-weight:400;line-height:1.5}
 .small .as-oil__intro-txt{margin:0 0 0 1rem}
 .as-oil__intro-txt--link{padding:4px 1px 0;margin:0 1px;text-decoration:underline}
-.as-oil__btn-optin{text-transform:uppercase;min-width:160px;min-height:42px;margin:0;padding:.5rem 1rem;font-size:0.9rem;font-weight:700;border:none;border-radius:3px;outline:none;cursor:pointer;color:#fff;background-color:#444;transition:opacity .8s ease 0s}
+.as-oil__btn-optin, .as-oil__btn-only-essentials{text-transform:uppercase;min-width:175px;min-height:42px;margin:0;padding:.5rem 1rem;font-size:0.9rem;font-weight:700;border:none;border-radius:3px;outline:none;cursor:pointer;color:#fff;background-color:#444;transition:opacity .8s ease 0s}
+.as-oil__btn-only-essentials{margin:10px 0 0 0;}
 .small .as-oil__btn-optin{min-width:120px;min-height:32px}
-.as-oil__btn-optin:hover{color:#f2f2f2;background-color:#222}
+.as-oil__btn-optin:hover, .as-oil__btn-only-essentials:hover{color:#f2f2f2;background-color:#222}
 .as-oil__btn-optin.as-oil__btn-optin-clicked{opacity:.3}
 .as-oil__btn-blue{text-transform:uppercase;min-width:160px;min-height:42px;margin:0;padding:.5rem 1rem;font-size:0.9rem;font-weight:700;border:none;border-radius:3px;outline:none;cursor:pointer;color:#fff;background-color:#444}
 .small .as-oil__btn-blue{min-width:120px;min-height:32px}
@@ -29,7 +30,7 @@
 .as-oil-back-button{border:none;background-color:transparent;position:absolute;top:32px;right:30px}
 .as-oil-back-button__text{margin-right:6px;display:none;}
 .as-oil-back-button__icon {background:#737373;width:30px;height:30px;border-radius:3px;}
-.as-oil__btn-cpc{color:#999;float:right;min-height:auto;min-width:135px;margin:.75rem 0;padding:4px;font-size:14px;font-weight:400;text-decoration:none;background-color:transparent;border:none;border-bottom:1px solid;border-radius:0;cursor:pointer}
+.as-oil__btn-cpc{color:#999;float:right;min-height:auto;min-width:175px;margin:.75rem 0;padding:4px;font-size:14px;font-weight:400;text-decoration:none;background-color:transparent;border:none;border-bottom:1px solid;border-radius:0;cursor:pointer}
 .as-oil-l-row{display:inline-block;margin:1rem 0;min-width:20%}
 .as-oil-l-row:last-of-type{margin:0}
 .small .as-oil-l-row{margin:0 0 .5rem;min-width:0}
@@ -161,7 +162,7 @@
   .as-oil__heading{margin:.5rem 0;font-size:20px;line-height:1.5}
   .as-oil-cpc-wrapper .as-oil__heading{text-align:left}
   .as-oil__intro-txt{min-width:100%;max-width:100%}
-  .as-oil__btn-optin{width:100%;min-width:auto;padding:0}
+  .as-oil__btn-optin, .as-oil__btn-only-essentials{width:100%;min-width:auto;padding:0;margin:0}
   .as-oil-cpc__row-btn-all .as-oil__btn-optin{min-height:auto}
   .as-oil__btn-blue{width:100%;min-width:auto;padding:0}
   .as-oil-cpc__row-btn-all .as-oil__btn-blue{min-height:auto}

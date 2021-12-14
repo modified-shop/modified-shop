@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: cookie_consent.js.php $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -18,6 +18,7 @@
   define('TEXT_COOKIE_CONSENT_LABEL_BUTTON_YES','Save');
   define('TEXT_COOKIE_CONSENT_LABEL_BUTTON_BACK','Back');
   define('TEXT_COOKIE_CONSENT_LABEL_BUTTON_YES_ALL','Accept all');
+  define('TEXT_COOKIE_CONSENT_LABEL_BUTTON_ESSENTIALS_ONLY','Only essential');
   define('TEXT_COOKIE_CONSENT_LABEL_BUTTON_ADVANCED_SETTINGS','More Information');
   define('TEXT_COOKIE_CONSENT_LABEL_CPC_HEADING','Cookie Settings');
   define('TEXT_COOKIE_CONSENT_LABEL_CPC_ACTIVATE_ALL','Activate all');
