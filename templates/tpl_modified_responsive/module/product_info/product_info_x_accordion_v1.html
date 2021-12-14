@@ -19,7 +19,7 @@
     {if $PRODUCTS_IMAGE != ''}
     <div class="pd_imagebox">
       <div class="pd_big_image">
-        <a class="cbimages" title="{$PRODUCTS_NAME|onlytext}" href="{$PRODUCTS_IMAGE|replace:"info_images":"popup_images"}"><img itemprop="image" src="{$PRODUCTS_IMAGE}" alt="{$PRODUCTS_NAME|onlytext}" title="{$PRODUCTS_NAME|onlytext}" /></a>
+        <a class="cbimages" title="{$PRODUCTS_NAME|onlytext}" href="{$PRODUCTS_IMAGE|replace:"info_images":"popup_images"}" data-cbox-img-attrs='{ldelim}"alt":"{$PRODUCTS_NAME|onlytext}"{rdelim}'><img itemprop="image" src="{$PRODUCTS_IMAGE}" alt="{$PRODUCTS_NAME|onlytext}" title="{$PRODUCTS_NAME|onlytext}" /></a>
       </div>
       <div class="zoomtext">{#zoomtext#}</div>
     </div>
@@ -167,7 +167,7 @@
         <div class="pd_small_image_tab_row cf">
           {foreach item=more_images_data from=$more_images}
             <div class="pd_small_image_tab"><div class="pd_small_image_tab_inner cf">
-              <a class="cbimages" title="{$PRODUCTS_NAME|onlytext}" href="{$more_images_data.PRODUCTS_IMAGE|replace:"info_":"popup_"}">
+              <a class="cbimages" title="{$PRODUCTS_NAME|onlytext}" href="{$more_images_data.PRODUCTS_IMAGE|replace:"info_":"popup_"}" data-cbox-img-attrs='{ldelim}"alt":"{$PRODUCTS_NAME|onlytext}"{rdelim}'>
                 {if $smarty.const.PICTURESET_ACTIVE === true}
                   <img class="lazyload" data-src="{$more_images_data.PRODUCTS_IMAGE|replace:"info_":"midi_"}" alt="{$PRODUCTS_NAME|onlytext}" title="{$PRODUCTS_NAME|onlytext}" />
                 {else}
