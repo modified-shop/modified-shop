@@ -33,8 +33,8 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_shipping_country.html',
 
   // dont show box if there's only 1 currency
   if (count($countries_array) > 1 ) {
-    $box_content = xtc_draw_form('countries', xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action')).'action=shipping_country', $request_type, false), 'post', 'class="box-currencies"')
-                   . xtc_get_country_list(array('name' => 'country'), (int)$selected, 'onchange="this.form.submit()"')
+    $box_content = xtc_draw_form('countries', xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action')).'action=shipping_country', $request_type, false), 'post', 'class="box-shipping_country"')
+                   . xtc_get_country_list(array('name' => 'country'), (int)$selected, 'onchange="this.form.submit()" style="max-width:100%;"')
                    . xtc_hide_session_id();
     
     parse_str(xtc_get_all_get_params(array('currency', 'language')), $params_array);
