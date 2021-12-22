@@ -65,6 +65,12 @@ $lang_array = array(
   'TEXT_PAYPAL_CAPTURE_SUBMIT' => 'Zahlung einziehen',
   'TEXT_PAYPAL_CAPTURED' => 'Zahlung eingezogen',
 
+
+  // tracking
+  'TEXT_PAYPAL_TRACKING' => 'Tracking:',
+  'TEXT_PAYPAL_ADDTRACKING' => 'Tracking',
+  'TEXT_PAYPAL_TRACKING_SUBMIT' => 'Sendungsnummer hinzuf&uuml;gen',
+
   
   // products
   'TEXT_PAYPAL_PRODUCTS_TYPE' => 'Produktart',

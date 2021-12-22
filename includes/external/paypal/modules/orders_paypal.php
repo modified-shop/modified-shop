@@ -50,6 +50,8 @@ if (isset($order) && is_object($order)) {
           #refund_comment { width: 340px; resize: none; }
           div#pp { display:none; min-height: 44px; background: url(../includes/external/paypal/css/processing.gif) no-repeat; background-position: center center; background-color: #E2E2E2; border-left: 2px solid #bbb; border-right: 2px solid #bbb; border-bottom: 2px solid #bbb;}
           div#pp_error { background: #bbb;padding: 3px; }
+          div.pp_tracking .tracking_row { display:flex; align-items:center; border-bottom:1px dotted #999; padding: 3px 0px; }
+          div.pp_tracking .tracking_row input { margin-right:5px; margin-top:1px; }
         </style>
         <table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>

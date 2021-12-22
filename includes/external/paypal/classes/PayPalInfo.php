@@ -33,6 +33,9 @@ use PayPal\Api\BaseAddress;
 use PayPal\Api\ShippingAddress;
 use PayPal\Api\PotentialPayerInfo;
 use PayPal\Api\Refund;
+use PayPal\Api\Tracker;
+use PayPal\Api\Shipping;
+use PayPal\Api\TrackerIdentifier;
 
 
 class PayPalInfo extends PayPalPayment {
@@ -280,5 +283,56 @@ class PayPalInfo extends PayPalPayment {
   }
   
   
+  function addTracking($order_id, $tracking_id) {                                   
+    $tracking_query = xtc_db_query("SELECT pp.*,
+                                           ot.*,
+                                           c.carrier_name
+                                      FROM ".TABLE_PAYPAL_PAYMENT." pp
+                                      JOIN ".TABLE_ORDERS_TRACKING." ot
+                                           ON ot.orders_id = pp.orders_id
+                                              AND ot.tracking_id = '".xtc_db_input($tracking_id)."'
+                                      JOIN ".TABLE_CARRIERS." c
+                                           ON c.carrier_id = ot.carrier_id
+                                     WHERE pp.orders_id = '".(int)$order_id."'");
+    if (xtc_db_num_rows($tracking_query) > 0) {
+      $tracking = xtc_db_fetch_array($tracking_query);
+
+      // auth
+      $apiContext = $this->apiContext();
+
+      // set shipping
+      $shipping = new Shipping();
+
+      // set tracker
+      $tracker = new Tracker();
+      $tracker->setTransactionId($tracking['transaction_id'])
+              ->setTrackingNumber($tracking['parcel_id'])
+              ->setStatus('SHIPPED')
+              ->setCarrier(strtoupper($tracking['carrier_name']));
+    
+      $shipping->addTracker($tracker);
+
+      try {
+        $shipping->create($apiContext);
+        
+        xtc_db_query("DELETE FROM ".TABLE_PAYPAL_TRACKING."
+                            WHERE orders_id = '".(int)$tracking['orders_id']."'");
+        
+        $sql_data_array = array(
+          'tracking_id' => $tracking['tracking_id'],
+          'orders_id' => $tracking['orders_id'],
+          'transaction_id' => $tracking['transaction_id'],
+          'tracking_number' => $tracking['parcel_id'],
+          'carrier' => strtoupper($tracking['carrier_name']),
+          'date_added' => 'now()',
+        );
+        xtc_db_perform(TABLE_PAYPAL_TRACKING, $sql_data_array);
+
+      } catch (Exception $ex) { 
+        $this->LoggingManager->log('DEBUG', 'addTracking', array('exception' => $ex));
+      }
+    }
+  }
+
 }
 ?>

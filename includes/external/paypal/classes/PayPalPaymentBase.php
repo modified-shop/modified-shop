@@ -459,6 +459,17 @@ class PayPalPaymentBase extends PayPalCommon {
                     PRIMARY KEY (paypal_instructions_id),
                     KEY idx_orders_id (orders_id)
                   );");
+
+    xtc_db_query("CREATE TABLE IF NOT EXISTS ".TABLE_PAYPAL_TRACKING." (
+                   tracking_id int(11) NOT NULL AUTO_INCREMENT,
+                   orders_id int(11) NOT NULL,
+                   transaction_id varchar(64) NOT NULL,
+                   tracking_number varchar(64) NOT NULL,
+                   carrier varchar(16) NOT NULL,
+                   date_added datetime NOT NULL,
+                   PRIMARY KEY (tracking_id),
+                   KEY idx_orders_id (orders_id)
+                 );");
   
     $admin_query = xtc_db_query("SELECT * 
                                    FROM ".TABLE_ADMIN_ACCESS."
@@ -632,6 +643,17 @@ class PayPalPaymentBase extends PayPalCommon {
                     KEY idx_orders_id (orders_id)
                   );");
     
+    xtc_db_query("CREATE TABLE IF NOT EXISTS ".TABLE_PAYPAL_TRACKING." (
+                   tracking_id int(11) NOT NULL AUTO_INCREMENT,
+                   orders_id int(11) NOT NULL,
+                   transaction_id varchar(64) NOT NULL,
+                   tracking_number varchar(64) NOT NULL,
+                   carrier varchar(16) NOT NULL,
+                   date_added datetime NOT NULL,
+                   PRIMARY KEY (tracking_id),
+                   KEY idx_orders_id (orders_id)
+                 );");
+
     $table_array = array(
       array('column' => 'method', 'default' => "varchar(64) NOT NULL AFTER orders_id"),
     );

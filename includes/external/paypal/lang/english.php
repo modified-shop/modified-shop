@@ -66,6 +66,12 @@ $lang_array = array(
   'TEXT_PAYPAL_CAPTURED' => 'Payment captured',
   
   
+  // tracking
+  'TEXT_PAYPAL_TRACKING' => 'Tracking:',
+  'TEXT_PAYPAL_ADDTRACKING' => 'Tracking',
+  'TEXT_PAYPAL_TRACKING_SUBMIT' => 'Add Tracking number',
+
+
   // products
   'TEXT_PAYPAL_PRODUCTS_TYPE' => 'Products type',
   'TEXT_PAYPAL_CREATE_PRODUCT' => 'Create Product',

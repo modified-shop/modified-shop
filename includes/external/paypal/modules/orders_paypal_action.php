@@ -46,6 +46,9 @@ if (isset($oID) && $oID != '') {
           $_SESSION['pp_error'] = TEXT_PAYPAL_ERROR_CANCEL;
         }
       }
+      if ($_POST['cmd'] == 'addtracking') {
+        $paypal->addTracking($order->info['order_id'], $_POST['tracking']);
+      }
     }
   }
 }
