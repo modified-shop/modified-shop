@@ -108,4 +108,27 @@ class ErrorDetails extends PayPalModel
         return $this->code;
     }
 
+    /**
+     * Reason for the error.
+     *
+     * @param string $description
+     * 
+     * @return $this
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+        return $this;
+    }
+
+    /**
+     * Reason for the error.
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
 }

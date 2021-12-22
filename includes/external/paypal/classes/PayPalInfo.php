@@ -315,6 +315,19 @@ class PayPalInfo extends PayPalPayment {
       try {
         $shipping->create($apiContext);
         
+        if (count($shipping->getErrors()) > 0) {
+          $message = array();
+          foreach ($shipping->getErrors() as $error) {
+            $message[] = $error->getMessage();
+            if (count($error->getDetails()) > 0) {
+              foreach ($error->getDetails() as $detail) {
+                $message[] = $detail->getDescription();
+              }
+            }
+          }
+          return $message;
+        }
+                
         xtc_db_query("DELETE FROM ".TABLE_PAYPAL_TRACKING."
                             WHERE orders_id = '".(int)$tracking['orders_id']."'");
         

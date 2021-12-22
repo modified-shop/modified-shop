@@ -29,6 +29,8 @@ use PayPal\Core\PayPalConstants;
  * @property string tracking_number_validated
  * @property string last_updated_time
  * @property \PayPal\Api\Trackers[] trackers
+ * @property \PayPal\Api\TrackerIdentifier[] $tracker_identifiers
+ * @property \PayPal\Api\Error[] $errors
  */
 class Shipping extends PayPalResourceModel
 {
@@ -378,6 +380,7 @@ class Shipping extends PayPalResourceModel
      * Append Identifier to the list.
      *
      * @param \PayPal\Api\TrackerIdentifier $tracker_identifiers
+     * 
      * @return $this
      */
     public function addTrackerIdentifiers($tracker_identifiers)
@@ -389,6 +392,29 @@ class Shipping extends PayPalResourceModel
                 array_merge($this->getTrackerIdentifiers(), array($tracker_identifiers))
             );
         }
+    }
+
+    /**
+     * An array of errors.
+     *
+     * @param string $errors
+     * 
+     * @return $this
+     */
+    public function setErrors($errors)
+    {
+        $this->errors = $errors;
+        return $this;
+    }
+
+    /**
+     * An array of errors.
+     *
+     * @return \PayPal\Api\Error[]
+     */
+    public function getErrors()
+    {
+        return $this->errors;
     }
 
     /**
