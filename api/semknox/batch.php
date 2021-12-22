@@ -60,10 +60,14 @@
       if (count($products_array) > 0) {
         foreach ($semknox_array as $semknox) {
           $response = $semknox->initBatch();
-          $response = $semknox->uploadBatch($products_array);
-          $response = $semknox->startBatch();
+          if ($response->status == 'success') {          
+            $response = $semknox->uploadBatch($products_array);
+            
+            if ($response->status == 'success') {  
+              $semknox->startBatch();
+            }
+          }
         }
       }
     }
   }
-?>

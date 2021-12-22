@@ -81,7 +81,7 @@
       // client
       $this->client = new Client(
         array(
-          'base_uri' => 'https://api-v3.semknox.com/',
+          'base_uri' => 'https://api-modified.sitesearch360.com/',
           'timeout' => $timeout,
           'headers' => array(
             'SHOPSYS' => 'MODIFIED',
@@ -114,14 +114,14 @@
       foreach ($products_id_array as $products_id) {
         $products_array['products'][] = $this->getProduct($products_id);
       }
-      
+
       try {
         $response = $this->client->post(
           sprintf('products/batch/upload?apiKey=%s&projectId=%s', $this->api_key, $this->project_id),
           array(GuzzleHttp\RequestOptions::JSON => $this->convertToString($products_array))
         );
         $json = $response->getBody();
-        $response = json_decode($json, true);
+        $response = json_decode($json);
         $this->logger->log('semknox', __FUNCTION__.': '.date('Y-m-d H:i:s'));
       } catch (Exception $e) {
         $this->logger->log('semknox', __FUNCTION__.': '.$e->getMessage());
