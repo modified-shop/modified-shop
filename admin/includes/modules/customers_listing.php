@@ -442,8 +442,10 @@
                         }
                         $payment_modul = substr($payments[$i], 0, strrpos($payments[$i], '.'));
                         $payment_text = constant('MODULE_PAYMENT_'.strtoupper($payment_modul).'_TEXT_TITLE');
-                        $payment_array[] = array('id' => $payment_modul,
-                                                 'text' => $payment_text);
+                        $payment_array[] = array(
+                          'id' => $payment_modul,
+                          'text' => $payment_text.' ('.$payment_modul.')'
+                        );
                       }
                     }
                     $shippings = explode(';', MODULE_SHIPPING_INSTALLED);
@@ -453,8 +455,10 @@
                       }
                       $shipping_modul = substr($shippings[$i], 0, strrpos($shippings[$i], '.'));
                       $shipping_text = constant('MODULE_SHIPPING_'.strtoupper($shipping_modul).'_TEXT_TITLE');
-                      $shipping_array[] = array('id' => $shipping_modul,
-                                                'text' => $shipping_text);
+                      $shipping_array[] = array(
+                        'id' => $shipping_modul,
+                        'text' => $shipping_text.' ('.$shipping_modul.')'
+                      );
                     }
                     $heading[] = array ('text' => '<b>'.TEXT_INFO_HEADING_STATUS_NEW_ORDER.'</b>');
                     $contents = array ('form' => xtc_draw_form('customers', FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action')).'cID='.$cInfo->customers_id.'&action=new_order_confirm'));
