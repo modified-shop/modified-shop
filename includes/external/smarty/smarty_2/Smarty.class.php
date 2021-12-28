@@ -32,6 +32,14 @@
 /* $Id$ */
 
 /**
+ * define smarty plugindir in template
+ */
+define('MY_TEMPLATE', DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE); //modified shop
+define('MY_TEMPLATE_PLUGINS', DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/smarty'); //modified shop
+define('MY_TEMPLATE_LANG', DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/lang'); //modified shop
+define('MY_SHOP_PLUGINS', DIR_FS_EXTERNAL.'smarty/plugins');//modified shop
+
+/**
  * DIR_SEP isn't used anymore, but third party apps might
  */
 if(!defined('DIR_SEP')) {
@@ -71,7 +79,7 @@ class Smarty
      *
      * @var string
      */
-    var $template_dir    =  'templates';
+    var $template_dir    =  array('templates', MY_TEMPLATE); //modified shop
 
     /**
      * The directory where compiled templates are located.
@@ -85,14 +93,14 @@ class Smarty
      *
      * @var string
      */
-    var $config_dir      =  'configs';
+    var $config_dir      =  array('lang', MY_TEMPLATE_LANG); //modified shop
 
     /**
      * An array of directories searched for plugins.
      *
      * @var array
      */
-    var $plugins_dir     =  array('plugins');
+    var $plugins_dir     =  array('plugins', MY_TEMPLATE_PLUGINS, MY_SHOP_PLUGINS); //modified shop
 
     /**
      * If debugging is enabled, a debug console window will display
@@ -573,6 +581,12 @@ class Smarty
      */
     public function __construct()
     {
+      $this->compile_dir     = DIR_FS_CATALOG . $this->compile_dir; //modified shop
+      $this->config_dir[0]   = DIR_FS_CATALOG . $this->config_dir[0]; //modified shop
+      $this->template_dir[0] = DIR_FS_CATALOG . $this->template_dir[0]; //modified shop
+      $this->cache_dir       = DIR_FS_CATALOG . $this->cache_dir; //modified shop
+      $this->plugins_dir[0]  = dirname(__FILE__) . '/' . $this->plugins_dir[0]; //modified shop
+
       $this->assign('SCRIPT_NAME', isset($_SERVER['SCRIPT_NAME']) ? $_SERVER['SCRIPT_NAME']
                     : @$GLOBALS['HTTP_SERVER_VARS']['SCRIPT_NAME']);
     }
@@ -1095,7 +1109,7 @@ class Smarty
      */
     function trigger_error($error_msg, $error_type = E_USER_WARNING)
     {
-        $msg = htmlentities($error_msg);
+        $msg = encode_htmlentities($error_msg); //modified shop
         trigger_error("Smarty error: $msg", $error_type);
     }
 
@@ -1641,6 +1655,7 @@ class Smarty
 
         if ($params['resource_type'] == 'file') {
             if (!preg_match('/^([\/\\\\]|[a-zA-Z]:[\/\\\\])/', $params['resource_name'])) {
+                //BOC modified shop
                 // relative pathname to $params['resource_base_path']
                 // use the first directory where the file is found
                 foreach ((array)$params['resource_base_path'] as $_curr_path) {
@@ -1649,6 +1664,9 @@ class Smarty
                         $params['resource_name'] = $_fullpath;
                         return true;
                     }
+                }
+                foreach ((array)$params['resource_base_path'] as $_curr_path) {
+                    $_fullpath = $_curr_path . DIRECTORY_SEPARATOR . $params['resource_name'];
                     // didn't find the file, try include_path
                     $_params = array('file_path' => $_fullpath);
                     require_once(SMARTY_CORE_DIR . 'core.get_include_path.php');
@@ -1657,6 +1675,7 @@ class Smarty
                         return true;
                     }
                 }
+                //EOC modified shop
                 return false;
             } else {
                 /* absolute path */
@@ -1724,6 +1743,9 @@ class Smarty
                 $contents .= fread($fd, 8192);
             }
             fclose($fd);
+            if (strpos($filename, '.txt') !== false) {
+              $contents = encode_utf8($contents); //modified shop
+            }
             return $contents;
         } else {
             return false;
