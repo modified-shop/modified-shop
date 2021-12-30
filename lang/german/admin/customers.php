@@ -21,6 +21,7 @@ define('HEADING_TITLE_SEARCH', 'Suche:');
 define('TABLE_HEADING_CUSTOMERSCID','Kundennummer');
 define('TABLE_HEADING_FIRSTNAME', 'Vorname');
 define('TABLE_HEADING_LASTNAME', 'Nachname');
+define('TABLE_HEADING_COUNTRY_NAME', 'Land');
 define('TABLE_HEADING_ACCOUNT_CREATED', 'erstellt am');
 define('TABLE_HEADING_ACTION', 'Aktion');
 define('TABLE_HEADING_EDIT','Edit');

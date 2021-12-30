@@ -63,7 +63,7 @@
                   <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_LASTNAME.xtc_sorting(FILENAME_CUSTOMERS,'customers_lastname'); ?></td>
                   <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_FIRSTNAME.xtc_sorting(FILENAME_CUSTOMERS,'customers_firstname'); ?></td>
                   <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_EMAIL.xtc_sorting(FILENAME_CUSTOMERS,'customers_email_address'); ?></td>
-                  <td class="dataTableHeadingContent"><?php echo TEXT_INFO_COUNTRY.xtc_sorting(FILENAME_CUSTOMERS,'customers_country'); ?></td>
+                  <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_COUNTRY_NAME.xtc_sorting(FILENAME_CUSTOMERS,'customers_country'); ?></td>
                    <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_UMSATZ; ?></td>
                   <td class="dataTableHeadingContent"><?php echo HEADING_TITLE_STATUS; ?></td>
                   <?php
