@@ -10,9 +10,9 @@
    based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(backup.php,v 1.57 2003/03/22); www.oscommerce.com
-   (c) 2003  nextcommerce (backup.php,v 1.11 2003/08/2); www.nextcommerce.org
-   (c) 2006  xt-commerce (backup.php 1023 2005-07-14); www.xt-commerce.com
-   (c) 2011 (c) by  web28 - www.rpa-com.de
+   (c) 2003 nextcommerce (backup.php,v 1.11 2003/08/2); www.nextcommerce.org
+   (c) 2006 xt-commerce (backup.php 1023 2005-07-14); www.xt-commerce.com
+   (c) 2011 web28 - www.rpa-com.de
 
    Released under the GNU General Public License
    --------------------------------------------------------------*/
@@ -261,7 +261,7 @@
                       $heading[] = array('text' => $info_heading);
                       $contents = array('form' => xtc_draw_form('restore', RS_FILENAME, 'action=restorenow&file=' . $buInfo->file));
                       //$heading[] = array('text' => '<b>' . $buInfo->date . '</b>');
-                      $contents[] = array('text' => xtc_break_string(sprintf(TEXT_INFO_RESTORE, DIR_FS_BACKUP . (($buInfo->compression != TEXT_NO_EXTENSION) ? substr($buInfo->file, 0, strrpos($buInfo->file, '.')) : $buInfo->file), ($buInfo->compression != TEXT_NO_EXTENSION) ? TEXT_INFO_UNPACK : ''), 35, ' '));
+                      $contents[] = array('text' => sprintf(TEXT_INFO_RESTORE, DIR_FS_BACKUP . (($buInfo->compression != TEXT_NO_EXTENSION) ? substr($buInfo->file, 0, strrpos($buInfo->file, '.')) : $buInfo->file), ($buInfo->compression != TEXT_NO_EXTENSION) ? TEXT_INFO_UNPACK : ''));
                       if (!$check_utf8 && $buInfo->charset == 'utf8') {
                         $contents[] = array('text' => '<div class="messageStackError">' . TEXT_IMPORT_UTF8_NOTICE . '</div>' . xtc_draw_hidden_field('utf8-convert', 'yes'));
                       }

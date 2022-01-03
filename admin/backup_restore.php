@@ -8,7 +8,7 @@
    Copyright (c) 2009 - 2013 [www.modified-shop.org]
    --------------------------------------------------------------
    based on:
-   (c) 2011 (c) by  web28 - www.rpa-com.de
+   (c) 2011 web28 - www.rpa-com.de
 
    Released under the GNU General Public License
    --------------------------------------------------------------*/

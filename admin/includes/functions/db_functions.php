@@ -1,19 +1,18 @@
 <?php
-/**************************************************************
-$Id$
+  /* --------------------------------------------------------------
+   $Id$
 
-*Script von MySQLDumper 1.24 
-* Pfad und Dateiname MySQLDumper 1.24: inc/functions_restore.php
-* Angepasst für XTC Datenbank Manager von web28
-* Version 1.0.4
-* 2014-10-07 add  compatility functions
-* Version 1.0.3
-* 2012-01-11 encode_htmlspecialchars
-* Version 1.0.2
-* 2010-09-09 - - add set_admin_access                          
-***************************************************************/
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-define('VERSION', 'Database Backup Ver. 2.20 UTF-8');
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   --------------------------------------------------------------
+   based on:
+   (c) MySQLDumper 1.24 
+   (c) 2011 web28 - www.rpa-com.de
+
+   Released under the GNU General Public License
+   --------------------------------------------------------------*/
 
 defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
@@ -80,6 +79,7 @@ function get_sqlbefehl()
       elseif ($sub9=='DROP TABL') $sqlparser_status=1;
       elseif ($sub9=='DROP VIEW') $sqlparser_status=1;
       elseif ($sub9=='TRUNCATE ') $sqlparser_status=1;
+      elseif ($sub7=='UPDATE ') $sqlparser_status=1;
       
       // Befehle, die nicht ausgeführt werden sollen
       elseif ($sub9=='CREATE DA ') $sqlparser_status=7;
