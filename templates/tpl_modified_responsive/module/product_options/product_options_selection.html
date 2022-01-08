@@ -1,4 +1,7 @@
 {if $options != ''}
+{config_load file="$language/lang_$language.conf" section="product_info"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="product_info"}
 <div class="productoptions">
   {foreach name=outer item=options_data from=$options}
   <div class="options_row_selection">
