@@ -51,10 +51,11 @@ class paypalcart extends PayPalPayment {
     }
     
     $free_shipping = false;
-    require_once (DIR_WS_MODULES.'order_total/ot_shipping.php');
-    include_once (DIR_WS_LANGUAGES.$_SESSION['language'].'/modules/order_total/ot_shipping.php');
-    $this->ot_shipping = new ot_shipping;
-    $this->ot_shipping->process();
+    if (MODULE_ORDER_TOTAL_INSTALLED) {
+      require_once (DIR_WS_CLASSES . 'order_total.php');
+      $order_total_modules = new order_total();
+      $order_total_modules->process();
+    }
     $this->free_shipping = $free_shipping;
     
     if (isset($shipping)) {
@@ -82,9 +83,7 @@ class paypalcart extends PayPalPayment {
       // load all enabled shipping modules
       require_once (DIR_WS_CLASSES.'shipping.php');
       $shipping_modules = new shipping;
-      
-      $ot_shipping = $this->ot_shipping;
-      
+            
       $redirect_link = xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, xtc_get_all_get_params(array('conditions_message')), 'SSL');
       require(DIR_WS_INCLUDES.'shipping_action.php');
     }
@@ -157,7 +156,6 @@ class paypalcart extends PayPalPayment {
     }
     
     $free_shipping = $this->free_shipping;
-    $ot_shipping = $this->ot_shipping;
     
     // get all available shipping quotes
     $quotes = $shipping_modules->quote();
@@ -184,7 +182,8 @@ class paypalcart extends PayPalPayment {
     if (defined('SHOW_SELFPICKUP_FREE') && SHOW_SELFPICKUP_FREE == 'true') {
       if ($free_shipping == true) {
         $free_shipping = false;
-    
+        
+        $ot_shipping = new ot_shipping();
         $quotes_array = $ot_shipping->quote();
         for ($i = 0, $n = sizeof($quotes); $i < $n; $i ++) {
           if (isset($GLOBALS[$quotes[$i]['id']])

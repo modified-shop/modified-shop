@@ -64,10 +64,11 @@ if (isset($klarna_data['selected_shipping_option'])
   $shipping_modules = new shipping;
 
   $free_shipping = false;
-  require_once (DIR_WS_MODULES.'order_total/ot_shipping.php');
-  include_once (DIR_WS_LANGUAGES.$_SESSION['language'].'/modules/order_total/ot_shipping.php');
-  $ot_shipping = new ot_shipping;
-  $ot_shipping->process();
+  if (MODULE_ORDER_TOTAL_INSTALLED) {
+    require_once (DIR_WS_CLASSES . 'order_total.php');
+    $order_total_modules = new order_total();
+    $order_total_modules->process();
+  }
 
   $smarty = new Smarty();
   $_POST['shipping'] = $klarna_data['selected_shipping_option']['id'];

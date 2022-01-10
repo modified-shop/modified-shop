@@ -64,6 +64,7 @@ if (isset($_SESSION['credit_covers'])) {
 
 $_SESSION['delivery_zone'] = $order->delivery['country']['iso_code_2'];
 
+$free_shipping = false;
 if (MODULE_ORDER_TOTAL_INSTALLED) {
   $order_total_array = $order_total_modules->process();
   if (count($order_total_array)) {
@@ -127,18 +128,14 @@ if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weigh
   require_once (DIR_WS_CLASSES.'shipping.php');
   $shipping = new shipping;
 
-  $free_shipping = false;
-  include_once (DIR_WS_LANGUAGES.$_SESSION['language'].'/modules/order_total/ot_shipping.php');
-  $ot_shipping = new ot_shipping;
-  $ot_shipping->process();
-
   // load all enabled shipping modules
   $quotes = $shipping->quote();
 
   if (SHOW_SELFPICKUP_FREE == 'true') {
     if ($free_shipping == true) {
       $free_shipping = false;
-    
+      
+      $ot_shipping = new ot_shipping();
       $quotes_array = $ot_shipping->quote();
       for ($i = 0, $n = sizeof($quotes); $i < $n; $i ++) {
         if (isset($GLOBALS[$quotes[$i]['id']])

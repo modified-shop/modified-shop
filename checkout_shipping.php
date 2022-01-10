@@ -119,10 +119,11 @@ require_once (DIR_WS_CLASSES.'shipping.php');
 $shipping_modules = new shipping;
 
 $free_shipping = false;
-require_once (DIR_WS_MODULES.'order_total/ot_shipping.php');
-include_once (DIR_WS_LANGUAGES.$_SESSION['language'].'/modules/order_total/ot_shipping.php');
-$ot_shipping = new ot_shipping;
-$ot_shipping->process();
+if (MODULE_ORDER_TOTAL_INSTALLED) {
+  require_once (DIR_WS_CLASSES . 'order_total.php');
+  $order_total_modules = new order_total();
+  $order_total_modules->process();
+}
 
 //express checkout
 if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS == 'true') {
@@ -183,6 +184,7 @@ if (SHOW_SELFPICKUP_FREE == 'true') {
   if ($free_shipping == true) {
     $free_shipping = false;
     
+    $ot_shipping = new ot_shipping();
     $quotes_array = $ot_shipping->quote();
     for ($i = 0, $n = sizeof($quotes); $i < $n; $i ++) {
       if (isset($GLOBALS[$quotes[$i]['id']])
