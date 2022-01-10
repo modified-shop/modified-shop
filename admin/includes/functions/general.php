@@ -278,8 +278,9 @@
    * @param string $category_id
    * @return
    */
-  function xtc_cfg_get_category_tree($category_id) {
-    return xtc_draw_pull_down_menu('configuration_value', xtc_get_category_tree(), $category_id);
+  function xtc_cfg_get_category_tree($category_id, $key = '') {
+    $name = (($key) ? 'configuration['.$key.']' : 'configuration_value');
+    return xtc_draw_pull_down_menu($name, xtc_get_category_tree(), $category_id);
   }
 
   /**
@@ -1031,8 +1032,9 @@
    * @param mixed $country_id
    * @return
    */
-  function xtc_cfg_pull_down_country_list($country_id) {
-    return xtc_draw_pull_down_menu('configuration_value', xtc_get_countries(), $country_id);
+  function xtc_cfg_pull_down_country_list($country_id, $key = '') {
+    $name = (($key) ? 'configuration['.$key.']' : 'configuration_value');
+    return xtc_draw_pull_down_menu($name, xtc_get_countries(), $country_id);
   }
 
   /**
@@ -1041,8 +1043,9 @@
    * @param mixed $zone_id
    * @return
    */
-  function xtc_cfg_pull_down_zone_list($zone_id) {
-    return xtc_draw_pull_down_menu('configuration_value', xtc_get_country_zones(STORE_COUNTRY), $zone_id);
+  function xtc_cfg_pull_down_zone_list($zone_id, $key = '') {
+    $name = (($key) ? 'configuration['.$key.']' : 'configuration_value');
+    return xtc_draw_pull_down_menu($name, xtc_get_country_zones(STORE_COUNTRY), $zone_id);
   }
 
   /**
