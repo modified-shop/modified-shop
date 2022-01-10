@@ -178,10 +178,8 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/product_options/'.$prod
             unset ($products_options_data[$row]['DATA'][$col]['PRICE']);
             unset ($products_options_data[$row]['DATA'][$col]['PREFIX']);
           }
-        
-          foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/products_attributes_data/','php') as $file) require ($file);
-
         }
+        foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/products_attributes_data/','php') as $file) require ($file);
         $col ++;
       }
       $row ++;
