@@ -532,7 +532,6 @@ class KlarnaPayment extends KlarnaPaymentBase {
       $shipping_address->family_name = encode_utf8($order->delivery['lastname'], $_SESSION['language_charset'], true);
       $shipping_address->organization_name = encode_utf8($order->delivery['company'], $_SESSION['language_charset'], true);
       $shipping_address->street_address = encode_utf8($order->delivery['street_address'], $_SESSION['language_charset'], true);
-      $shipping_address->street_address2 = encode_utf8((($order->delivery['suburb'] != '') ? $order->delivery['suburb'] : NULL), $_SESSION['language_charset'], true);
       $shipping_address->street_address2 = (($order->delivery['suburb'] != '') ? encode_utf8($order->delivery['suburb'], $_SESSION['language_charset'], true) : NULL);
       $shipping_address->postal_code = $order->delivery['postcode'];
       $shipping_address->city = encode_utf8($order->delivery['city'], $_SESSION['language_charset'], true);
