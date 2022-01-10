@@ -461,12 +461,15 @@
       $Address = new stdClass();
       $Address->streetName = $data['street_name'];
       $Address->streetNumber = $data['street_number'];
-      $Address->addressAddition = $data['suburb'];
+      if (isset($data['suburb']) && $data['suburb'] != '') {
+        $Address->addressAddition = $data['suburb'];
+      }
       $Address->zip = $data['postcode'];
       $Address->city = $data['city'];
       $Address->Origin = $Origin;
   
-      if ($data['suburb'] != '' 
+      if (isset($data['suburb'])
+          && $data['suburb'] != '' 
           && $data['country_iso_2'] == 'DE'
           && $Name->name2 == ''
           ) 
