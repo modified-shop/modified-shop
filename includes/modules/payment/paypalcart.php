@@ -50,13 +50,7 @@ class paypalcart extends PayPalPayment {
       unset($_SESSION['shipping']);
     }
     
-    $free_shipping = false;
-    if (MODULE_ORDER_TOTAL_INSTALLED) {
-      require_once (DIR_WS_CLASSES . 'order_total.php');
-      $order_total_modules = new order_total();
-      $order_total_modules->process();
-    }
-    $this->free_shipping = $free_shipping;
+    $this->free_shipping = $this->calculate_total(3);
     
     if (isset($shipping)) {
       $_SESSION['shipping'] = $shipping;

@@ -283,7 +283,7 @@ class PayPalPayment extends PayPalPaymentBase {
       
       // set totals
       if ($order_exists === false) {
-        $order_totals = $this->calculate_total(false);
+        $order_totals = $this->calculate_total(2);
         $this->get_totals($order_totals, true, $subtotal);
       } else {
         $this->get_totals($order->totals);
@@ -1533,7 +1533,7 @@ class PayPalPayment extends PayPalPaymentBase {
                ->setShippingAddress($shipping_address);
     
     $shipping_cost = 0;
-    $order_totals = $this->calculate_total(false);
+    $order_totals = $this->calculate_total(2);
     foreach ($order_totals as $totals) {
       if ($totals['code'] == 'ot_shipping') {
         $shipping_cost = round($totals['value'], 2);

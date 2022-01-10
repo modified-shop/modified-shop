@@ -266,8 +266,8 @@ class PayPalCommon extends PayPalAuth {
   }
 
 
-  function calculate_total($plain = true) {
-    global $order;
+  function calculate_total($mode = 1) {
+    global $order, $free_shipping;
     
     $order_backup = $order;
     
@@ -286,6 +286,7 @@ class PayPalCommon extends PayPalAuth {
     if (!class_exists('order_total')) {
       require_once (DIR_WS_CLASSES . 'order_total.php');
     }
+    $free_shipping = false;
     $order_total_modules = new order_total();
     $order_total = $order_total_modules->process();
     
@@ -293,11 +294,9 @@ class PayPalCommon extends PayPalAuth {
 
     $order = $order_backup;
     
-    if ($plain === false) {
-      return $order_total;
-    }
-    
-    return $total;
+    if ($mode == 1) return $total;
+    if ($mode == 2) return $order_total;
+    if ($mode == 3) return $free_shipping;
   }
 
   
