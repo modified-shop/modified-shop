@@ -2051,7 +2051,7 @@
         $unallowed_module .= '</label><br>';
       }
     } else {
-      $unallowed_module = constant('TEXT_'.strtoupper($module_type).'_ERROR');
+      $unallowed_module = sprintf(constant('TEXT_'.strtoupper($module_type).'_ERROR'), xtc_href_link(FILENAME_MODULES, 'set='.$module_type));
     }
     return $unallowed_module;
   }
