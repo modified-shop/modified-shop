@@ -196,7 +196,7 @@ if (isset($_GET['action']) && $_GET['action'] =='product_search') {
       if ($keywordcheck) {
         include(DIR_FS_CATALOG.DIR_WS_INCLUDES.'build_search_query.php');
         $where_str = ' WHERE '.substr($where_str, 4);
-        $where_str .= " ) GROUP BY p.products_id";
+        $where_str .= " )";
       }
     }
     
@@ -224,8 +224,9 @@ if (isset($_GET['action']) && $_GET['action'] =='product_search') {
                                      AND (now() >= s.start_date OR s.start_date IS NULL)                      
                                   ".$from_str."
                                   ".$where_str."
+                         GROUP BY p.products_id
                          ORDER BY pd.products_name";
-                              
+
     $products_split = new splitPageResults($_GET['page'], MAX_DISPLAY_PRODUCTS_SEARCH_RESULTS, $products_query_raw, $products_query_numrows, 'p.products_id');
     $products_query = xtc_db_query($products_query_raw);
     while($products = xtc_db_fetch_array($products_query)) {
