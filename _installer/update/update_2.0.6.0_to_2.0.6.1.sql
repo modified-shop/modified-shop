@@ -121,4 +121,8 @@ ALTER TABLE `zones_to_geo_zones` ADD KEY `idx_zone_country_id` (`zone_country_id
 #Tomcraft - 2021-12-11 - Change country name to North Macedonia
 UPDATE `countries` SET `countries_name` = 'North Macedonia' WHERE countries_id = 126;
 
+#Tomcraft - 2022-01-11 - Replace "Imprint" with "Legal Notice"
+UPDATE `content_manager` SET `content_title` = 'Legal Notice' WHERE `content_id` = 4 AND `content_title` = 'Imprint';
+UPDATE `content_manager` SET `content_heading` = 'Legal Notice' WHERE `content_id` = 4 AND `content_heading` = 'Imprint';
+
 # Keep an empty line at the end of this file for the db_updater to work properly

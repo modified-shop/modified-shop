@@ -47,7 +47,7 @@ define('MODULE_JANOLAW_PDF_TERMS_DESC', 'Save document and add a link to the doc
 define('MODULE_JANOLAW_MAIL_TERMS_TITLE', 'E-Mail Attachment');
 define('MODULE_JANOLAW_MAIL_TERMS_DESC', 'Send PDF as attachment with order confirmation?');
 
-define('MODULE_JANOLAW_TYPE_LEGALDETAILS_TITLE', 'Legal text Imprint');
+define('MODULE_JANOLAW_TYPE_LEGALDETAILS_TITLE', 'Legal text Legal Notice');
 define('MODULE_JANOLAW_TYPE_LEGALDETAILS_DESC', 'Please specify content of this legal text to be inserted');
 define('MODULE_JANOLAW_PDF_LEGALDETAILS_TITLE', 'PDF as Download');
 define('MODULE_JANOLAW_PDF_LEGALDETAILS_DESC', 'Save document and add a link to the document?<br/><b>Important:</b> This only works with HTML version!');

@@ -13,7 +13,7 @@
   define('TEXT_COOKIE_CONSENT_LABEL_INTRO_HEADING', 'This website uses cookies and other technologies');
   define('TEXT_COOKIE_CONSENT_LABEL_INTRO', 'We use cookies and similar technologies, also from third parties, to ensure the proper functioning of the website, to analyze the use of our offer and to be able to offer you the best possible shopping experience. You can find more information in our privacy policy.');
   define('TEXT_COOKIE_CONSENT_LABEL_INTRO_TEXT_PRIVACY', 'Privacy Notice');
-  define('TEXT_COOKIE_CONSENT_LABEL_INTRO_TEXT_IMPRINT', 'Imprint');
+  define('TEXT_COOKIE_CONSENT_LABEL_INTRO_TEXT_IMPRINT', 'Legal Notice');
 
   define('TEXT_COOKIE_CONSENT_LABEL_BUTTON_YES','Save');
   define('TEXT_COOKIE_CONSENT_LABEL_BUTTON_BACK','Back');
