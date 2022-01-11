@@ -25,6 +25,8 @@
   define('MODULE_DHL_ACCOUNT_DESC', 'Account ID, Format ISO2:ID separated by comma (standard WORLD:01).<br>If "Warenpost" has a different ID, add PK (parcel) or WP (Warenpost). Example: WORLD:01PK,WORLD:02WP');
   define('MODULE_DHL_PREFIX_TITLE', 'Sender reference prefix');
   define('MODULE_DHL_PREFIX_DESC', 'Enter a prefix for the sender reference. The order number will be added automatically.');
+  define('MODULE_DHL_WEIGHT_CN23_TITLE', 'Weight CN23');
+  define('MODULE_DHL_WEIGHT_CN23_DESC', 'Enter the product weight for the customs declaration if none is stored with the product.');
   
   define('MODULE_DHL_NOTIFICATION_TITLE', '<hr noshade>Notification');
   define('MODULE_DHL_NOTIFICATION_DESC', 'Set Notification via DHL preselected as default<br>The customer will be notified by DHL via email about the shipment.<br><b>Note:</b> for this purpose, a declaration of consent to the disclosure of the e-mail address must be available from the customer.');
