@@ -63,6 +63,11 @@ class password_policy
             'value' => ((POLICY_MIN_SPECIAL_CHARS > 0) ? POLICY_MIN_SPECIAL_CHARS : false),
             'test'  => 'return preg_match_all("/[\W_]/", $p, $x) >= $v;',
             'error' => ENTRY_PASSWORD_ERROR_MIN_CHAR);
+
+        $this->rules['invalid_chars'] = array(
+            'value' => 0,
+            'test'  => 'return preg_match_all("/[\\\\]/", $p, $x) > $v;',
+            'error' => ENTRY_PASSWORD_ERROR_INVALID_CHAR);
     }
     
     /*
