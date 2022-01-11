@@ -65,8 +65,8 @@ class password_policy
             'error' => ENTRY_PASSWORD_ERROR_MIN_CHAR);
 
         $this->rules['invalid_chars'] = array(
-            'value' => 0,
-            'test'  => 'return preg_match_all("/[\\\\]/", $p, $x) > $v;',
+            'value' => false,
+            'test'  => '',
             'error' => ENTRY_PASSWORD_ERROR_INVALID_CHAR);
     }
     
@@ -91,6 +91,11 @@ class password_policy
                 $this->errors[$k] = $this->get_rule_error($k);
             }
         }
+        
+        if (preg_match("/[\\\\]/", $password) > 0) {
+            $this->errors['invalid_chars'] = $this->get_rule_error('invalid_chars');
+        }
+        
         return sizeof($this->errors) == 0;
     }
     
