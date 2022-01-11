@@ -27,7 +27,7 @@ define('MODULE_API_IT_RECHT_KANZLEI_TYPE_DSE_TITLE', 'Legal Text Privacy');
 define('MODULE_API_IT_RECHT_KANZLEI_TYPE_DSE_DESC', 'Please specify in which page this legal text is to be inserted automatically.');
 define('MODULE_API_IT_RECHT_KANZLEI_TYPE_WRB_TITLE', 'Legal text Revocation');
 define('MODULE_API_IT_RECHT_KANZLEI_TYPE_WRB_DESC', 'Please specify in which page this legal text is to be inserted automatically.');
-define('MODULE_API_IT_RECHT_KANZLEI_TYPE_IMP_TITLE', 'Legal text Imprint');
+define('MODULE_API_IT_RECHT_KANZLEI_TYPE_IMP_TITLE', 'Legal text Legal Notice');
 define('MODULE_API_IT_RECHT_KANZLEI_TYPE_IMP_DESC', 'Please specify in which page this legal text is to be inserted automatically.');
 define('MODULE_API_IT_RECHT_KANZLEI_PDF_AGB_TITLE', '<hr noshade>Terms selection PDF');
 define('MODULE_API_IT_RECHT_KANZLEI_PDF_AGB_DESC', 'Instruction whether Conditions legal text will be available in PDF format.');

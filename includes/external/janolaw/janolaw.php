@@ -36,7 +36,7 @@ class janolaw_content {
                     'datasecurity' => 'Datenschutzerklaerung',
                     'withdrawal' => 'Muster-Widerrufsformular',
                     ),
-      'GB' => array('legaldetails' => 'Imprint',
+      'GB' => array('legaldetails' => 'Legal-Notice',
                     'terms' => 'General-Terms-and-Conditions',
                     'revocation' => 'Instructions-on-withdrawal',
                     'datasecurity' => 'Data-privacy-policy',
