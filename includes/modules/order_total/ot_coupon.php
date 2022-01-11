@@ -360,7 +360,7 @@ class ot_coupon {
     global $order;
 
     // restrictions
-    $restriction = isset($this->tax_groups) && count($this->tax_groups) ? true : false;
+    $restriction = isset($this->tax_groups) && count($this->tax_groups) == 1 ? true : false;
 
     // reduction in percent
     $od_amount_pro = $od_amount/$order_total * 100;
@@ -369,15 +369,17 @@ class ot_coupon {
       if (isset($this->tax_groups[$key])) {
         // restriction
         $od_amount_pro = $restriction ? ($od_amount / $this->price_total_by_tax_groups[$key] * 100) : $od_amount_pro;
-
-        if ($_SESSION['customers_status']['customers_status_show_price_tax'] != '1') {
-          // netto
-          $god_amount = $order->info['tax_groups'][$key] - ($order->info['tax_groups'][$key] * $od_amount_pro / 100);
-          $order->info['tax_groups'][$key] = $god_amount;
-        } else {
-          // brutto
-          $god_amount = $order->info['tax_groups'][$key] * $od_amount_pro / 100;
-          $order->info['tax_groups'][$key] -= $god_amount;
+        
+        if ($od_amount_pro > 0) {
+          if ($_SESSION['customers_status']['customers_status_show_price_tax'] != '1') {
+            // netto
+            $god_amount = $order->info['tax_groups'][$key] - ($order->info['tax_groups'][$key] * $od_amount_pro / 100);
+            $order->info['tax_groups'][$key] = $god_amount;
+          } else {
+            // brutto
+            $god_amount = $order->info['tax_groups'][$key] * $od_amount_pro / 100;
+            $order->info['tax_groups'][$key] -= $god_amount;
+          }
         }
       }
     }
