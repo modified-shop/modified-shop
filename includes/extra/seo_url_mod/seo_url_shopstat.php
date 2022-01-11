@@ -324,7 +324,7 @@ class seo_url_shopstat extends modified_seo_url {
     
     foreach ($cat_path_array as $categories_id) {
       if (!isset(self::$names_array['categories'][$this->language_id][$categories_id])) {
-        if (!isset($this->params_array['name']) || empty($this->params_array['name'])) {
+        if (!isset($this->params_array['name']) || empty($this->params_array['name']) || $plain !== false) {
           $categories_name_query = xtDBquery("SELECT categories_name
                                                 FROM ".TABLE_CATEGORIES_DESCRIPTION."
                                                WHERE categories_id = '".(int)$categories_id."'
