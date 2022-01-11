@@ -441,9 +441,9 @@
       );
 
       $default_select =
-        "ab.entry_company as company,
+        "IFNULL(ab.entry_company,'') as company,
          ab.entry_street_address as street_address,
-         ab.entry_suburb as suburb,
+         IFNULL(ab.entry_suburb,'') as suburb,
          ab.entry_gender as gender,
          ab.entry_postcode as postcode,
          ab.entry_city as city,
@@ -467,7 +467,7 @@
         $customer_address_query = xtc_db_query("SELECT c.payment_unallowed,
                                                        c.shipping_unallowed,
                                                        c.customers_firstname as firstname,
-                                                       c.customers_cid as csID,
+                                                       IFNULL(c.customers_cid,'') as csID
                                                        c.customers_gender as gender,
                                                        c.customers_lastname as lastname,
                                                        c.customers_telephone as telephone,
