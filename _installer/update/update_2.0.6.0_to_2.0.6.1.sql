@@ -125,4 +125,13 @@ UPDATE `countries` SET `countries_name` = 'North Macedonia' WHERE countries_id =
 UPDATE `content_manager` SET `content_title` = 'Legal Notice' WHERE `content_id` = 4 AND `content_title` = 'Imprint';
 UPDATE `content_manager` SET `content_heading` = 'Legal Notice' WHERE `content_id` = 4 AND `content_heading` = 'Imprint';
 
+#GTB - 2022-01-11 - fix #1954 - fix NULL customer details
+ALTER TABLE `address_book` MODIFY `entry_company` VARCHAR(64) NOT NULL;
+ALTER TABLE `address_book` MODIFY `entry_suburb` VARCHAR(32) NOT NULL;
+ALTER TABLE `address_book` MODIFY `entry_state` VARCHAR(64) NOT NULL;
+ALTER TABLE `customers` MODIFY `customers_cid` VARCHAR(32) NOT NULL;
+ALTER TABLE `customers` MODIFY `customers_vat_id` VARCHAR(20) NOT NULL;
+ALTER TABLE `customers` MODIFY `customers_warning` VARCHAR(32) NOT NULL;
+ALTER TABLE `customers` MODIFY `customers_fax` VARCHAR(32) NOT NULL;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
