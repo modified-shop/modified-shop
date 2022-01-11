@@ -49,6 +49,7 @@
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_DHL_EKP', '',  '6', '1', '', now())");
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_DHL_ACCOUNT', 'WORLD:01',  '6', '1', '', now())");
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_DHL_PREFIX', '',  '6', '1', '', now())");
+      xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_DHL_WEIGHT_CN23', '0.1',  '6', '1', '', now())");
 
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_DHL_NOTIFICATION', 'False',  '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_DHL_STATUS_UPDATE', '-1',  '6', '1', 'xtc_cfg_get_dhl_orders_status(', 'xtc_get_order_status_name', now())");
@@ -106,6 +107,7 @@
         'MODULE_DHL_EKP',
         'MODULE_DHL_ACCOUNT',
         'MODULE_DHL_PREFIX',
+        'MODULE_DHL_WEIGHT_CN23',
         
         'MODULE_DHL_NOTIFICATION',
         'MODULE_DHL_STATUS_UPDATE',
