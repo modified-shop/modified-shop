@@ -188,7 +188,6 @@
           $paymenttype = 'FINANCING';
           break;
         case 'payone_otrans':
-        case 'shopgate':
         case 'sofort_ideal':
         case 'worldpay_junior':
         case 'payone_paydirekt':

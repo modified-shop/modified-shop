@@ -174,12 +174,6 @@ switch ($action) {
     $order_updated = false;
     include (DIR_WS_MODULES.'orders_update.php');
     if ($order_updated) {
-      if (defined('MODULE_PAYMENT_SHOPGATE_STATUS') && MODULE_PAYMENT_SHOPGATE_STATUS=='True') {
-        /******* SHOPGATE **********/
-        include_once DIR_FS_CATALOG.'includes/external/shopgate/base/admin/orders.php';
-        setShopgateOrderStatus($oID, $status);
-        /******* SHOPGATE **********/
-      }
       $messageStack->add_session(SUCCESS_ORDER_UPDATED, 'success');
     } else {
       $messageStack->add_session(WARNING_ORDER_NOT_UPDATED, 'warning');

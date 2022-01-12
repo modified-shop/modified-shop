@@ -134,4 +134,7 @@ ALTER TABLE `customers` MODIFY `customers_vat_id` VARCHAR(20) NOT NULL;
 ALTER TABLE `customers` MODIFY `customers_warning` VARCHAR(32) NOT NULL;
 ALTER TABLE `customers` MODIFY `customers_fax` VARCHAR(32) NOT NULL;
 
+#GTB - 2022-01-12 - fix #1432 - removed shopgate
+ALTER TABLE `admin_access` DROP `shopgate`;
+
 # Keep an empty line at the end of this file for the db_updater to work properly

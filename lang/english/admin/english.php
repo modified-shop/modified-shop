@@ -204,12 +204,6 @@ define('TXT_STATISTICS','Statistics');
 define('TXT_TOOLS','Tools');
 define('TEXT_ACCOUNTING','Admin-access for:');
 
-/******* SHOPGATE **********/
-if (is_file(DIR_FS_CATALOG.'includes/external/shopgate/base/lang/english/admin/english.php')) {
-  include_once (DIR_FS_CATALOG.'includes/external/shopgate/base/lang/english/admin/english.php');
-}
-/******* SHOPGATE **********/
-
 // javascript messages
 define('JS_ERROR', 'Error have occured during the process of your form!\nPlease make the following corrections:\n\n');
 

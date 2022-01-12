@@ -58,6 +58,7 @@
     'includes/external/phpfastcache/3.0.0', 
     'includes/external/phpfastcache/_extensions', 
     'includes/external/phpmailer/language',
+    'includes/external/shopgate',
     'includes/external/shopgate/shopgate_library',
     'includes/external/sofort/core',
     'includes/external/sofort/unittests',

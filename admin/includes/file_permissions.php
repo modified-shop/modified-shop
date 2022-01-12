@@ -41,7 +41,6 @@ $writeableDirs = array(
   DIR_FS_CATALOG.'cache',
   DIR_FS_CATALOG.'export',
   DIR_FS_EXTERNAL.'magnalister',
-  DIR_FS_EXTERNAL.'shopgate/shopgate_library/config',
   DIR_FS_CATALOG.'images',
   DIR_FS_CATALOG.'images/banner',
   DIR_FS_CATALOG.'images/categories',

@@ -74,7 +74,6 @@ $filename_array = array(
   'FILENAME_CAMPAIGNS_REPORT' => 'stats_campaigns.php',
   'FILENAME_XSELL_GROUPS' => 'cross_sell_groups.php',
   'FILENAME_REMOVEOLDPICS' => 'removeoldpics.php',
-  'FILENAME_SHOPGATE' => 'shopgate.php',
   'FILENAME_JANOLAW' => 'janolaw.php',
   'FILENAME_HAENDLERBUND' => 'haendlerbund.php',
   'FILENAME_GV_CUSTOMERS' => 'gv_customers.php',
