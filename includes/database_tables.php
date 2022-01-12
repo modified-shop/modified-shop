@@ -99,9 +99,6 @@
   
   ## External Modules
   
-	// shopgate
-	define('TABLE_SHOPGATE_ORDERS', 'orders_shopgate_order');
-
   // track & trace
   define('TABLE_CARRIERS', 'carriers');
   define('TABLE_ORDERS_TRACKING', 'orders_tracking');

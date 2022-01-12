@@ -53,7 +53,6 @@
     ),
     'adirs' => array(
         'includes/external/magnalister',
-        'includes/external/shopgate/shopgate_library/config',
         'templates/tpl_modified',
         'templates/xtc5'
     ),

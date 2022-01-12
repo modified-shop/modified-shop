@@ -128,13 +128,6 @@ echo mainMenue(BOX_HEADING_PARTNER_MODULES);
     ## Payone
     include(DIR_FS_EXTERNAL.'payone/modules/column_left.php');
     
-    ## Shopgate
-    if(defined('MODULE_PAYMENT_SHOPGATE_STATUS') && MODULE_PAYMENT_SHOPGATE_STATUS=='True') {
-      include_once (DIR_FS_CATALOG.'includes/external/shopgate/base/admin/includes/column_left.php');
-    } else {
-      if ($admin_access['shopgate'] == '1') echo '<li><a href="' . xtc_href_link('shopgate.php', 'sg_option=info', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_SHOPGATE . '</a></li>';
-    }
-    
     ## SEMKNOX
     if (isset($admin_access['semknox']) && $admin_access['semknox'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_SEMKNOX, '') . '" class="menuBoxContentLink"> -' . BOX_SEMKNOX . '</a></li>';
 echo endMenue(BOX_HEADING_PARTNER_MODULES);
