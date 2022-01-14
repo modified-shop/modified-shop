@@ -532,15 +532,13 @@
       $ExportDocument->customsCurrency = $this->order->info['currency'];
       
       $ExportDocument->ExportDocPosition = array();
-      for ($i=0, $n=count($this->order->products); $i<$n; $i++) {
-        $weight = ($this->order->products[$i]['qty'] * $this->order->products[$i]['weight']);
-        
+      for ($i=0, $n=count($this->order->products); $i<$n; $i++) {        
         $ExportDocument->ExportDocPosition[$i] = new stdClass();
         $ExportDocument->ExportDocPosition[$i]->description = ((isset($this->order->products[$i]['tariff_title']) && $this->order->products[$i]['tariff_title'] != '') ? $this->order->products[$i]['tariff_title'] : $this->order->products[$i]['name']);
         $ExportDocument->ExportDocPosition[$i]->countryCodeOrigin = ((isset($this->order->products[$i]['origin']) && $this->order->products[$i]['origin'] != '') ? $this->order->products[$i]['origin'] : $this->info['country_iso_2']);
         $ExportDocument->ExportDocPosition[$i]->customsTariffNumber = ((isset($this->order->products[$i]['tariff']) && $this->order->products[$i]['tariff'] != '') ? $this->order->products[$i]['tariff'] : '');
         $ExportDocument->ExportDocPosition[$i]->amount = $this->order->products[$i]['quantity'];
-        $ExportDocument->ExportDocPosition[$i]->netWeightInKG = $weight + (($weight == 0) ? (double)MODULE_DHL_WEIGHT_CN23 : 0);
+        $ExportDocument->ExportDocPosition[$i]->netWeightInKG = $this->order->products[$i]['weight'] + (($this->order->products[$i]['weight'] == 0) ? (double)MODULE_DHL_WEIGHT_CN23 : 0);
         $ExportDocument->ExportDocPosition[$i]->customsValue = $this->order->products[$i]['price'];
       }
       
