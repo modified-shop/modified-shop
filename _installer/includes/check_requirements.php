@@ -86,7 +86,21 @@
     'status' => $status_tls
   );
 
-  
+  if (class_exists('finfo')) {
+    $status = true;
+  } else {
+    $status = false;
+    $error = true;
+  }
+
+  $requirement_array[] = array(
+    'name' => 'FLEINFO',
+    'version' => '',
+    'version_min' => '',
+    'version_max' => '',
+    'status' => $status
+  );
+
   if (function_exists('fsockopen')) {
     $status = true;
   } else {
