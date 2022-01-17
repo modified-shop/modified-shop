@@ -586,7 +586,7 @@
         if (is_array($value)) {
           $array[$key] = $this->encode_request($value);
         } else {
-          $array[$key] = encode_utf8(decode_htmlentities($value), $_SESSION['language_charset'], true);
+          $array[$key] = ((!is_bool($value)) ? encode_utf8(decode_htmlentities($value), $_SESSION['language_charset'], true) : $value);
         }
       }
     
