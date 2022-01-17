@@ -17,6 +17,10 @@
   define('MODULE_PRODUCTS_EXPORT_STATUS_TITLE','Status');
   define('MODULE_PRODUCTS_EXPORT_FILE_TITLE' , 'Dateiname');
   define('MODULE_PRODUCTS_EXPORT_FILE_DESC' , 'Geben Sie einen Dateinamen ein.<br />(Verzeichnis export/)');
+  define('MODULE_PRODUCTS_EXPORT_SEPARATOR_TITLE', 'Trennzeichen');
+  define('MODULE_PRODUCTS_EXPORT_SEPARATOR_DESC', 'Geben Sie das Zeichen an um die Spalten zu trennen.');
+  define('MODULE_PRODUCTS_EXPORT_ENCLOSURE_TITLE', 'Feldtrenner');
+  define('MODULE_PRODUCTS_EXPORT_ENCLOSURE_DESC', 'Geben Sie das Zeichen an um die Inhalte zu kennzeichnen.');
 
   define('MODULE_PRODUCTS_EXPORT_CUSTOMERS_STATUS_TITLE','<br><strong>Kundengruppe:</strong>');
   define('MODULE_PRODUCTS_EXPORT_CUSTOMERS_STATUS_DESC','Bitte w&auml;hlen Sie die Kundengruppe, die Basis f&uuml;r den Exportierten Preis bildet. (Falls Sie keine Kundengruppenpreise haben, w&auml;hlen Sie <i>Gast</i>):');
