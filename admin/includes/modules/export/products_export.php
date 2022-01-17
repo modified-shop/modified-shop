@@ -35,6 +35,9 @@
       require_once (DIR_WS_CLASSES.'language.php');
       $lng = new language($_POST['language']);
       
+      $separator = $_POST['configuration']['MODULE_PRODUCTS_EXPORT_SEPARATOR'];
+      $enclosure = $_POST['configuration']['MODULE_PRODUCTS_EXPORT_ENCLOSURE'];
+      
       $export_query = xtc_db_query("SELECT p.*,
                                            pd.products_name,
                                            pd.products_description,
@@ -60,6 +63,7 @@
                                   GROUP BY p.products_id");
       
       $i = 0;
+      $fp = fopen(DIR_FS_DOCUMENT_ROOT.'export/'.$file, 'w');
       while ($export = xtc_db_fetch_array($export_query)) {
         $products_price = $xtPrice->xtcGetPrice($export['products_id'], false, 1, $export['products_tax_class_id']);
 
@@ -78,18 +82,20 @@
           'tax' => $xtPrice->TAX[$export['products_tax_class_id']],
           'currency' => $_POST['currencies'],
         );
-          
+        $export_data_array = $this->encode_request($export_data_array, $lng->language['language_charset']);
+        
         if ($i == 0) {
           $header = array();
           foreach ($export_data_array as $k => $v) {
             $header[] = $k;
           }
-          file_put_contents(DIR_FS_CATALOG.'export/'.$file, implode(';', $header));
+          fputcsv($fp, $header, $separator, $enclosure);
         }
-        file_put_contents(DIR_FS_CATALOG.'export/'.$file, "\n".implode(';', $export_data_array), FILE_APPEND);
+        fputcsv($fp, $export_data_array, $separator, $enclosure);
         $i ++;
       }
-
+      fclose($fp);
+      
       switch ($_POST['export']) {
         case 'yes':
           $extension = substr($file, -3);
@@ -146,6 +152,19 @@
       $string = trim($string);
 
       return $string;
+    }
+
+
+    function encode_request($array, $language_charset) {
+      foreach ($array as $key => $value) {
+        if (is_array($value)) {
+          $array[$key] = $this->encode_request($value, $language_charset);
+        } else {
+          $array[$key] = ((!is_bool($value)) ? encode_utf8(decode_htmlentities($value, ENT_COMPAT, $language_charset), $language_charset, true) : $value);
+        }
+      }
+    
+      return $array;
     }
 
 
@@ -224,6 +243,8 @@
     function install() {
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_PRODUCTS_EXPORT_STATUS', 'True',  '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_PRODUCTS_EXPORT_FILE', 'products_export.csv',  '6', '1', '', now())");
+      xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_PRODUCTS_EXPORT_SEPARATOR', ';',  '6', '1', '', now())");
+      xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_PRODUCTS_EXPORT_ENCLOSURE', '\"',  '6', '1', '', now())");
     }
 
 
@@ -235,7 +256,9 @@
     function keys() {
       return array(
         'MODULE_PRODUCTS_EXPORT_STATUS',
-        'MODULE_PRODUCTS_EXPORT_FILE'
+        'MODULE_PRODUCTS_EXPORT_FILE',
+        'MODULE_PRODUCTS_EXPORT_SEPARATOR',
+        'MODULE_PRODUCTS_EXPORT_ENCLOSURE',
       );
     }
 
