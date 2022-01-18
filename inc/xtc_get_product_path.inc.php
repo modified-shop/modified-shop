@@ -99,8 +99,7 @@ function xtc_get_product_path($products_id) {
         break;
       }
     }
-    $category['categories_id'] = $cat_id;
-    $cPath = xtc_get_category_path($category['categories_id']);
+    $cPath = xtc_get_category_path($cat_id);
   }
   
   return $cPath;
