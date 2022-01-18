@@ -24,14 +24,14 @@ class paypalcart extends PayPalPayment {
 
   function __construct() {
     global $order;
-    
+  
     PayPalPayment::__construct('paypalcart');
 
-		$this->tmpOrders = true;
-		
-		if (isset($_POST['comments'])) {
-		  $_SESSION['comments'] = xtc_db_prepare_input($_POST['comments']);
-		}
+    $this->tmpOrders = true;
+  
+    if (isset($_POST['comments'])) {
+      $_SESSION['comments'] = xtc_db_prepare_input($_POST['comments']);
+    }
   }
 
 
@@ -39,22 +39,22 @@ class paypalcart extends PayPalPayment {
     unset($_SESSION['paypal']);
     xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'payment_error='.$this->code, 'NONSSL'));
   }
-  
-  
+
+
   function pre_confirmation_check() {
     global $order, $smarty, $total_weight, $total_count, $free_shipping;
-    
+  
     if (isset($_SESSION['shipping'])) {
       $shipping = $_SESSION['shipping'];
       unset($_SESSION['shipping']);
     }
-    
+  
     $this->free_shipping = $this->calculate_total(3);
-    
+  
     if (isset($shipping)) {
       $_SESSION['shipping'] = $shipping;
     }
-    
+  
     // process the selected shipping method
     if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
       if ((isset($_POST['shipping'])) && (strpos($_POST['shipping'], '_'))) {
@@ -76,18 +76,18 @@ class paypalcart extends PayPalPayment {
       // load all enabled shipping modules
       require_once (DIR_WS_CLASSES.'shipping.php');
       $shipping_modules = new shipping;
-            
+          
       $redirect_link = xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, xtc_get_all_get_params(array('conditions_message')), 'SSL');
       require(DIR_WS_INCLUDES.'shipping_action.php');
     }
-    
+  
     $this->confirmation();
   }
 
 
   function confirmation() {
     global $order, $smarty, $xtPrice, $main, $messageStack, $total_weight, $total_count, $free_shipping;
-    
+  
     if ($order->delivery['country']['iso_code_2'] != '') {
       $_SESSION['delivery_zone'] = $order->delivery['country']['iso_code_2'];
     }
@@ -112,22 +112,22 @@ class paypalcart extends PayPalPayment {
     if (defined('MODULE_EXCLUDE_PAYMENT_STATUS') && MODULE_EXCLUDE_PAYMENT_STATUS == 'True') {
       for ($i=1; $i<=MODULE_EXCLUDE_PAYMENT_NUMBER; $i++) {
         $payment_exclude = explode(',', constant('MODULE_EXCLUDE_PAYMENT_PAYMENT_'.$i));
-        
+      
         if (in_array($this->code, $payment_exclude)) {
           $shipping_exclude = explode(',', constant('MODULE_EXCLUDE_PAYMENT_SHIPPING_'.$i));
-        
+      
           for ($i=0, $n=count($shipping_modules->modules); $i<$n; $i++) {
             if (in_array(substr($shipping_modules->modules[$i], 0, -4), $shipping_exclude)) {
               unset($shipping_modules->modules[$i]);
             }
           }
-        
+      
         }
       }
     }
-    
+  
     $free_shipping = $this->free_shipping;
-    
+  
     // get all available shipping quotes
     $quotes = $shipping_modules->quote();
 
@@ -153,7 +153,7 @@ class paypalcart extends PayPalPayment {
     if (defined('SHOW_SELFPICKUP_FREE') && SHOW_SELFPICKUP_FREE == 'true') {
       if ($free_shipping == true) {
         $free_shipping = false;
-        
+      
         $ot_shipping = new ot_shipping();
         $quotes_array = $ot_shipping->quote();
         for ($i = 0, $n = sizeof($quotes); $i < $n; $i ++) {
@@ -175,10 +175,10 @@ class paypalcart extends PayPalPayment {
 
     // build shipping block
     require(DIR_WS_INCLUDES.'shipping_block.php');
-    
+  
     if ($no_shipping === false) {
       $module_smarty->assign('FORM_SHIPPING_ACTION', xtc_draw_form('checkout_shipping', xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, xtc_get_all_get_params(), 'SSL')).xtc_draw_hidden_field('action', 'process'));
-    
+  
       $shipping_found = false;
       for ($i = 0, $n = sizeof($quotes); $i < $n; $i ++) {
         if (isset($quotes[$i]['methods'])
@@ -210,15 +210,15 @@ class paypalcart extends PayPalPayment {
         $module_smarty->assign('BUTTON_CONTINUE', xtc_image_submit('button_confirm.gif', IMAGE_BUTTON_CONFIRM));
       }
       $module_smarty->assign('FORM_END', '</form>');
-    
+  
       if ($no_shipping === false) {
         $module_smarty->assign('SHIPPING_BLOCK', $shipping_block);
       }
-      
+    
       if (xtc_count_shipping_modules() == 0) {
         $_SESSION['shipping'] = '';
       }
-      
+    
       $module_smarty->assign('language', $_SESSION['language']);
       $module_smarty->caching = 0;
 
@@ -227,7 +227,7 @@ class paypalcart extends PayPalPayment {
         $tpl_file = DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/paypal/shipping_block.html';
       }
       $shipping_method = $module_smarty->fetch($tpl_file);
-    
+  
       $smarty->assign('SHIPPING_METHOD', $shipping_method);
     }
     $smarty->assign('SHIPPING_ADDRESS_EDIT', xtc_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, xtc_get_all_get_params(), 'SSL'));
@@ -241,9 +241,9 @@ class paypalcart extends PayPalPayment {
 
   function process_button() {
     global $smarty, $main, $messageStack;
-    
+  
     $module_smarty = new Smarty;
-    
+  
     //check if display conditions on checkout page is true
     if (DISPLAY_REVOCATION_ON_CHECKOUT == 'true') {
       //revocation  
@@ -307,7 +307,7 @@ class paypalcart extends PayPalPayment {
 
     $module_smarty->assign('language', $_SESSION['language']);
     $module_smarty->caching = 0;
-    
+  
     $tpl_file = DIR_FS_EXTERNAL.'paypal/templates/comments_block.html';
     if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/paypal/comments_block.html')) {
       $tpl_file = DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/paypal/comments_block.html';
@@ -316,11 +316,11 @@ class paypalcart extends PayPalPayment {
 
     return $process_button;
   }
-  
+
 
   function before_process() {
     global $messageStack;
-    
+  
     if (isset($_SESSION['payment']) 
         && $_SESSION['payment'] == $this->code
         && !isset($_SESSION['paypal']['process'])
@@ -365,7 +365,7 @@ class paypalcart extends PayPalPayment {
           $error = true;
           $messageStack->add_session('checkout_confirmation', str_replace('\n', '', ERROR_PRIVACY_NOTICE_NOT_ACCEPTED));
         }
-        
+      
         if ($error === true) {
           xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, xtc_get_all_get_params(array('conditions_message')).'conditions=true', 'SSL', true, false));
         }
@@ -373,7 +373,7 @@ class paypalcart extends PayPalPayment {
     } elseif (isset($_SESSION['paypal']['process'])) {
       xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
     }
-    
+  
     $_SESSION['paypal']['process'] = true;
   }
 
@@ -384,13 +384,13 @@ class paypalcart extends PayPalPayment {
 
 
   function after_process() {
-		unset($_SESSION['paypal']);
+    unset($_SESSION['paypal']);
   }
 
 
   function keys() {
-		return array(
-		  'MODULE_PAYMENT_PAYPALCART_STATUS', 
+    return array(
+      'MODULE_PAYMENT_PAYPALCART_STATUS', 
       'MODULE_PAYMENT_PAYPALCART_ALLOWED', 
       'MODULE_PAYMENT_PAYPALCART_ZONE',
       'MODULE_PAYMENT_PAYPALCART_SORT_ORDER'
