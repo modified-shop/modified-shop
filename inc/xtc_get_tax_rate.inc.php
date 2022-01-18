@@ -52,7 +52,7 @@
         while ($tax = xtc_db_fetch_array($tax_query,true)) {
           $tax_multiplier *= 1.0 + ($tax['tax_rate'] / 100);
         }
-        $tax_rate_array[$country_id][$zone_id][$class_id] = ($tax_multiplier - 1.0) * 100;
+        $tax_rate_array[$country_id][$zone_id][$class_id] = round((($tax_multiplier - 1.0) * 100), 2);
       } else {
         $tax_rate_array[$country_id][$zone_id][$class_id] = 0;
       }

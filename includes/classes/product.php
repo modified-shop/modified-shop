@@ -180,7 +180,7 @@ class product {
                                           WHERE products_id='".(int)$pID."'
                                             AND reviews_status = '1'");
       $avg_reviews = xtc_db_fetch_array($avg_reviews_query);
-      $reviews_avg_array[$pID] = $avg_reviews['avg_rating'];
+      $reviews_avg_array[$pID] = (float)$avg_reviews['avg_rating'];
     }
     
     return round($reviews_avg_array[$pID], $precision);
@@ -660,8 +660,8 @@ class product {
 
     if ($_SESSION['customers_status']['customers_status_show_price'] != '0') {
       if ($tax_rate >= 0) {
-        if (!isset($this->getTaxInfo[$tax_rate])) {
-          $this->getTaxInfo[$tax_rate] = $main->getTaxInfo($tax_rate);
+        if (!isset($this->getTaxInfo[(string)$tax_rate])) {
+          $this->getTaxInfo[(string)$tax_rate] = $main->getTaxInfo($tax_rate);
         }
       }
       if ($this->ShippingLink == '' && SHOW_SHIPPING == 'true') {
@@ -698,7 +698,7 @@ class product {
       'PRODUCTS_IMAGE_TITLE' => str_replace(array('"', "'"), array('&quot;', '&apos;'), $array['products_name']), // Currently not in use
       'PRODUCTS_IMAGE_ALT' => str_replace(array('"', "'"), array('&quot;', '&apos;'), $array['products_name']), // Currently not in use
       'PRODUCTS_LINK' => $products_link,
-      'PRODUCTS_TAX_INFO' => isset($this->getTaxInfo[$tax_rate]) ? $this->getTaxInfo[$tax_rate] : '',
+      'PRODUCTS_TAX_INFO' => isset($this->getTaxInfo[(string)$tax_rate]) ? $this->getTaxInfo[(string)$tax_rate] : '',
       'PRODUCTS_SHIPPING_LINK' => $this->ShippingLink,
       'PRODUCTS_BUTTON_BUY_NOW' => $buy_now,
       'PRODUCTS_SHIPPING_NAME' => $shipping_status_name,
