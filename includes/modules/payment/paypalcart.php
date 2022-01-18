@@ -28,7 +28,6 @@ class paypalcart extends PayPalPayment {
     PayPalPayment::__construct('paypalcart');
 
 		$this->tmpOrders = true;
-		$this->messageStack = false;
 		
 		if (isset($_POST['comments'])) {
 		  $_SESSION['comments'] = xtc_db_prepare_input($_POST['comments']);
@@ -43,7 +42,7 @@ class paypalcart extends PayPalPayment {
   
   
   function pre_confirmation_check() {
-    global $order, $smarty, $total_weight, $total_count, $free_shipping, $messageStack;
+    global $order, $smarty, $total_weight, $total_count, $free_shipping;
     
     if (isset($_SESSION['shipping'])) {
       $shipping = $_SESSION['shipping'];
@@ -88,29 +87,7 @@ class paypalcart extends PayPalPayment {
 
   function confirmation() {
     global $order, $smarty, $xtPrice, $main, $messageStack, $total_weight, $total_count, $free_shipping;
-        
-    if (isset($_GET['conditions_message']) && $this->messageStack === false) {
-      $error_mess = explode(',', $_GET['conditions_message']);
-      
-      if (in_array('1', $error_mess)) {
-        $messageStack->add('checkout_confirmation', str_replace('\n', '', ERROR_CONDITIONS_NOT_ACCEPTED));
-      }
-      if (in_array('2', $error_mess)) {
-        $messageStack->add('checkout_confirmation', str_replace('\n', '', ERROR_ADDRESS_NOT_ACCEPTED));
-      }
-      if (in_array('3', $error_mess)) {
-        $messageStack->add('checkout_confirmation', ERROR_CHECKOUT_SHIPPING_NO_METHOD);
-      }
-      if (in_array('4', $error_mess)) {
-        $messageStack->add('checkout_confirmation', str_replace('\n', '', ERROR_REVOCATION_NOT_ACCEPTED));
-      }
-      if (in_array('5', $error_mess)) {
-        $messageStack->add('checkout_confirmation', str_replace('\n', '', ERROR_PRIVACY_NOTICE_NOT_ACCEPTED));
-      }
-      
-      $this->messageStack = true;
-    }
-
+    
     if ($order->delivery['country']['iso_code_2'] != '') {
       $_SESSION['delivery_zone'] = $order->delivery['country']['iso_code_2'];
     }
@@ -342,46 +319,55 @@ class paypalcart extends PayPalPayment {
   
 
   function before_process() {
+    global $messageStack;
+    
     if (isset($_SESSION['payment']) 
         && $_SESSION['payment'] == $this->code
         && !isset($_SESSION['paypal']['process'])
         )
     {
       if (isset($_SESSION['paypal']['paymentId'])) {
+        $error = false;
         if ($_POST['comments_added'] != '') {
           $_SESSION['comments'] = xtc_db_prepare_input($_POST['comments']);
         }
-        $error_mess  = array();
         if (((defined('SIGN_CONDITIONS_ON_CHECKOUT') && SIGN_CONDITIONS_ON_CHECKOUT == 'true')
-            || (!defined('SIGN_CONDITIONS_ON_CHECKOUT') && DISPLAY_CONDITIONS_ON_CHECKOUT == 'true')
-            ) && $_POST['conditions'] != 'conditions') {
-          $error_mess[] = '1';
+             || (!defined('SIGN_CONDITIONS_ON_CHECKOUT') && DISPLAY_CONDITIONS_ON_CHECKOUT == 'true')
+             ) && (!isset($_POST['conditions']) || $_POST['conditions'] != 'conditions')
+            )
+        {
+          $error = true;
+          $messageStack->add_session('checkout_confirmation', str_replace('\n', '', ERROR_CONDITIONS_NOT_ACCEPTED));
         }
-        if ($_POST['check_address'] != 'address') {
-          $error_mess[] = '2';
+        if (!isset($_POST['check_address']) || $_POST['check_address'] != 'address') {
+          $error = true;
+          $messageStack->add_session('checkout_confirmation', str_replace('\n', '', ERROR_ADDRESS_NOT_ACCEPTED));
         }
         if (!isset($_SESSION['shipping']) 
             || ($_SESSION['shipping'] !== false && !is_array($_SESSION['shipping']))
             ) 
         {
-          $error_mess[] = '3';
+          $error = true;
+          $messageStack->add_session('checkout_confirmation', ERROR_CHECKOUT_SHIPPING_NO_METHOD);
         }
         if (defined('DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT')
             && DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT == 'true'
             && ($_SESSION['cart']->content_type == 'virtual'
                 || $_SESSION['cart']->content_type == 'mixed'
                 )
-            && $_POST['revocation'] != 'revocation'
+            && (!isset($_POST['revocation']) || $_POST['revocation'] != 'revocation')
             )
         {
-          $error_mess[] = '4';
+          $error = true;
+          $messageStack->add_session('checkout_confirmation', str_replace('\n', '', ERROR_REVOCATION_NOT_ACCEPTED));
         }
         if (defined('DISPLAY_PRIVACY_ON_CHECKOUT') && DISPLAY_PRIVACY_ON_CHECKOUT == 'true' && (!isset($_POST['privacy']) || $_POST['privacy'] != 'privacy')) {
-          $error_mess[] = '5';
+          $error = true;
+          $messageStack->add_session('checkout_confirmation', str_replace('\n', '', ERROR_PRIVACY_NOTICE_NOT_ACCEPTED));
         }
         
-        if (count($error_mess) > 0) {
-          xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, xtc_get_all_get_params(array('conditions_message')).'conditions=true&conditions_message='.implode(',', $error_mess), 'SSL', true, false));
+        if ($error === true) {
+          xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, xtc_get_all_get_params(array('conditions_message')).'conditions=true', 'SSL', true, false));
         }
       }
     } elseif (isset($_SESSION['paypal']['process'])) {
@@ -403,10 +389,11 @@ class paypalcart extends PayPalPayment {
 
 
   function keys() {
-		return array('MODULE_PAYMENT_PAYPALCART_STATUS', 
-		             'MODULE_PAYMENT_PAYPALCART_ALLOWED', 
-		             'MODULE_PAYMENT_PAYPALCART_ZONE',
-		             'MODULE_PAYMENT_PAYPALCART_SORT_ORDER'
+		return array(
+		  'MODULE_PAYMENT_PAYPALCART_STATUS', 
+      'MODULE_PAYMENT_PAYPALCART_ALLOWED', 
+      'MODULE_PAYMENT_PAYPALCART_ZONE',
+      'MODULE_PAYMENT_PAYPALCART_SORT_ORDER'
     );
   }
 

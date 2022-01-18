@@ -35,6 +35,8 @@ if ($order->content_type == 'virtual'
     || ($_SESSION['cart']->count_contents_virtual() == 0)) {
 	$_SESSION['shipping'] = false;
 	$_SESSION['sendto'] = false;
+} elseif ($order->delivery['country']['iso_code_2'] != '') {
+  $_SESSION['delivery_zone'] = $order->delivery['country']['iso_code_2'];
 }
 
 // payment
@@ -42,6 +44,10 @@ $_SESSION['payment'] = 'paypalcart';
 
 // billto
 $_SESSION['billto'] = $_SESSION['customer_default_address_id'];
+
+if ($order->billing['country']['iso_code_2'] != '') {
+	$_SESSION['billing_zone'] = $order->billing['country']['iso_code_2'];
+}
 
 
 xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'conditions=true', 'NONSSL'));
