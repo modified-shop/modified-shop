@@ -20,7 +20,7 @@
 include(DIR_FS_BOXES_INC . 'smarty_default.php');
 
 // set cache id
-$cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|coP:'.(isset($coPath) ? $coPath : '0'));
+$cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|coP:'.$coPath);
 
 if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_content.html', $cache_id) || !$cache) {
 
@@ -72,7 +72,7 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_content.html', $cache_i
 	  }
 
 
-    if (isset($coPath)) {
+    if ($coPath) {
       $new_path = '';
       $coid = explode('_', $coPath);
       reset($coid);

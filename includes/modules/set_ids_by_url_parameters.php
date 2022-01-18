@@ -79,6 +79,7 @@ if (!isset($product) || !is_object($product)) {
 }
 
 // content URLS
+$coPath = '';
 if (isset ($_GET['coID']) && function_exists('xtc_get_content_path')) {
   require_once (DIR_FS_INC.'content_redirect.inc.php');
   $_GET['coID'] = (int) $_GET['coID'];
