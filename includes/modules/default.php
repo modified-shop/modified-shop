@@ -176,7 +176,9 @@ switch ($category_depth) {
                                          products_sorting2
                                     FROM ".TABLE_CATEGORIES."
                                    WHERE categories_id IN ('".$categories_id."')");
-      $sorting_data = xtc_db_fetch_array($sorting_query,true);
+      if (xtc_db_num_rows($sorting_query, true) > 0) {
+        $sorting_data = xtc_db_fetch_array($sorting_query, true);
+      }
     }
   
     //Fallback for products_sorting to products_name
