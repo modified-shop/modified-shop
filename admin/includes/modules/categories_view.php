@@ -908,7 +908,7 @@
                   $heading[]  = array('text' => '<b>' . $cInfo->categories_name . '</b>');
                   //Multi Element Actions
                   $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%;">' . TEXT_MARKED_ELEMENTS . '</div>');
-                  $contents[] = array('align' => 'center', 'text' => '<input type="submit" class="button" name="multi_delete" value="'. BUTTON_DELETE . '">&nbsp;<input type="submit" class="button" name="multi_move" value="' . BUTTON_MOVE . '">&nbsp;<input type="submit" class="button" name="multi_copy" value="' . BUTTON_COPY . '">');
+                  $contents[] = array('align' => 'center', 'text' => '<input type="submit" class="button" name="multi_delete" value="'. BUTTON_DELETE . '">'.((!xtc_not_null($search) && $current_category_id != 0) ? '&nbsp;<input type="submit" class="button" name="multi_move" value="' . BUTTON_MOVE . '">' : '').'&nbsp;<input type="submit" class="button" name="multi_copy" value="' . BUTTON_COPY . '">');
                   $contents[] = array('align' => 'center', 'text' => '<input type="submit" class="button" name="multi_status_on" value="'. BUTTON_STATUS_ON . '">&nbsp;<input type="submit" class="button" name="multi_status_off" value="' . BUTTON_STATUS_OFF . '">');
                   //Single Element Actions
                   $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%; border-top: 1px solid #aaa; margin-top: 5px;">' . TEXT_ACTIVE_ELEMENT . '</div>');
