@@ -27,7 +27,7 @@ class PayPalPaymentBase extends PayPalCommon {
     global $order;
 
     $this->code = $class;
-    $this->paypal_version = '1.68';
+    $this->paypal_version = '1.69';
 
     $this->admin_access_array = array(
       'paypal_info',
