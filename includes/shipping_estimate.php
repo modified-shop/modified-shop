@@ -163,6 +163,7 @@ if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weigh
         && MODULE_ORDER_TOTAL_SHIPPING_STATUS == 'true'
         && MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING == 'true'
         && $pass === true
+        && $free_shipping === false
         )
     {
       $module_smarty->assign('FREE_SHIPPING_INFO', sprintf(FREE_SHIPPING_DESCRIPTION, $xtPrice->xtcFormat($free_shipping_value_over, true, 0, true)));
