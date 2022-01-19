@@ -12,8 +12,27 @@
 
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
+$icon_padding = 'style="padding-right:8px;"';
+if( defined('USE_ADMIN_THUMBS_IN_LIST_STYLE')) {
+  $admin_thumbs_size = 'style="'.USE_ADMIN_THUMBS_IN_LIST_STYLE.'"';
+} else {
+  $admin_thumbs_size = 'style="max-width: 40px; max-height: 40px;"';
+}
+
 if (!$action || $action == 'delete') {
   ?>
+  <div class="main flt-l pdg2 mrg5" style="margin-left:50px;">
+    <?php
+    echo xtc_draw_form('product_keywords', FILENAME_CONTENT_MANAGER, '', 'GET').PHP_EOL;
+    echo xtc_draw_hidden_field('set', $_GET['set']).PHP_EOL;
+    echo TEXT_SEARCH.'&nbsp;'.xtc_draw_input_field('keywords', ((isset($_GET['keywords'])) ? $_GET['keywords'] : ''), 'size="30"');
+    echo '&nbsp;<input type="submit" class="button no_top_margin"  style="vertical-align:top;" onclick="this.blur();" value="' . BUTTON_SEARCH . '"/>';
+    if (isset($_GET['keywords']) && $_GET['keywords'] != '') {
+      echo '<a class="button no_top_margin" style="vertical-align:top;" href="'.xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('keywords', 'page'))).'">'.BUTTON_RESET.'</a>';
+    }
+    ?>
+    </form>
+  </div>
   <div class="main flt-r pdg2 mrg5">
     <?php echo xtc_draw_form('pages', FILENAME_CONTENT_MANAGER, '', 'get'); ?>
     <?php echo HEADING_TITLE_GOTO . ' ' . xtc_draw_pull_down_menu('set', $content_pages_array, isset($_GET['set']) ? $_GET['set'] : '', 'onChange="this.form.submit();"'); ?>
@@ -120,33 +139,92 @@ if (!$action || $action == 'delete') {
         ?>
         <tr class="dataTableHeadingRow">
           <td class="dataTableHeadingContent txta-c" style="width:10%"><?php echo TABLE_HEADING_PRODUCTS_ID; ?></td>
+          <td class="dataTableHeadingContent txta-c" style="width:10%"><?php echo TABLE_HEADING_MODEL; ?></td>
+          <?php
+          if( USE_ADMIN_THUMBS_IN_LIST=='true' ) { ?>
+            <td class="dataTableHeadingContent txta-c" style="width:10%"><?php echo TABLE_HEADING_IMAGE; ?></td>
+            <?php
+          }
+          ?>
           <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS; ?></td>
         </tr>
         <?php
-          $content_query_raw = "SELECT DISTINCT p.products_id,
-                                                p.products_model,
-                                                pd.products_name
-                                           FROM ".TABLE_PRODUCTS_CONTENT." pc
-                                           JOIN ".TABLE_PRODUCTS." p
-                                                ON pc.products_id = p.products_id
-                                           JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
-                                                ON pd.products_id = pc.products_id
-                                                   AND pd.language_id = '".(int)$_SESSION['languages_id']."'
-                                       ORDER BY p.products_id ASC";
+          $from_str = " JOIN ".TABLE_PRODUCTS_CONTENT." pc
+                             ON pc.products_id = p.products_id";
+          $where_str = '';
+          if ($_GET['keywords']) {
+            $keywords = $_GET['keywords'] = !empty($_GET['keywords']) ? stripslashes(trim(urldecode($_GET['keywords']))) : false;
+            
+            $from_str = '';
+            if (SEARCH_IN_MANU == 'true') {
+              $from_str .= " LEFT OUTER JOIN ".TABLE_MANUFACTURERS." AS m ON (p.manufacturers_id = m.manufacturers_id) ";
+            }
+
+            if (SEARCH_IN_FILTER == 'true') {
+              $from_str .= " LEFT JOIN ".TABLE_PRODUCTS_TAGS." pt ON (pt.products_id = p.products_id)
+                             LEFT JOIN ".TABLE_PRODUCTS_TAGS_VALUES." ptv ON (ptv.options_id = pt.options_id AND ptv.values_id = pt.values_id AND ptv.status = '1' AND ptv.languages_id = '".(int)$_SESSION['languages_id']."') ";
+            }
+
+            if (SEARCH_IN_ATTR == 'true') {
+              $from_str .= " LEFT JOIN ".TABLE_PRODUCTS_ATTRIBUTES." AS pa ON (p.products_id = pa.products_id) 
+                             LEFT JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." AS pov ON (pa.options_values_id = pov.products_options_values_id) ";
+            }
+            
+            $where_str .= "WHERE p.products_id != 0";
+            if ($keywords) {
+              require_once (DIR_FS_INC.'xtc_parse_search_string.inc.php');
+              $keywordcheck = xtc_parse_search_string($_GET['keywords'], $search_keywords);
+
+              if ($keywordcheck) {
+                include(DIR_FS_CATALOG.DIR_WS_INCLUDES.'build_search_query.php');
+                $where_str .= " )";
+              }
+            }
+          }
+          
+          $content_query_raw = "SELECT p.products_id,
+                                       p.products_model,
+                                       p.products_image,
+                                       pd.products_name
+                                  FROM ".TABLE_PRODUCTS." p
+                                  JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
+                                       ON pd.products_id = p.products_id
+                                          AND pd.language_id = '".(int)$_SESSION['languages_id']."'
+                                       ".$from_str."
+                                       ".$where_str."
+                              GROUP BY p.products_id
+                              ORDER BY pd.products_name, p.products_id ASC";
+                    
           $content_query_split = new splitPageResults($page, $page_max_display_results, $content_query_raw, $content_query_numrows, 'p.products_id');          
           $content_query = xtc_db_query($content_query_raw);
           while ($content = xtc_db_fetch_array($content_query)) {
             ?>
             <tr class="dataTableRow" onmouseover="this.className='dataTableRowOver'" onmouseout="this.className='dataTableRow'">
               <td class="dataTableContent txta-c"><?php echo $content['products_id']; ?></td>
-              <td class="dataTableContent"><?php echo '<a href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('pID')).'pID='.$content['products_id']). '">'.xtc_image(DIR_WS_ICONS . 'folder.gif', ICON_FOLDER, '', '', $icon_padding) . '</a>' . '<span style="vertical-align: 3px;">' . $content['products_name'] .'</span>'; ?></td>
+              <td class="dataTableContent txta-c"><?php echo $content['products_model']; ?></td>
+                <?php
+                if( USE_ADMIN_THUMBS_IN_LIST=='true' ) { ?>
+                 <td class="dataTableContent txta-c">
+                   <?php
+                   echo xtc_product_thumb_image($content['products_image'], $content['products_name'], '','',$admin_thumbs_size);
+                   ?>
+                 </td>
+                 <?php
+                }
+                ?>
+                <td class="dataTableContent txta-l" style="padding-left: 5px;">
+                  <?php 
+                  echo '<a href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('pID')).'pID='.$content['products_id']) . '">' . xtc_image(DIR_WS_ICONS . 'folder.gif', ICON_FOLDER, '', '', $icon_padding) . '</a>';
+                  echo '<span style="vertical-align: 3px;">'.$content['products_name'].'</span>';
+                  ?>
+                </td>
             </tr>
             <?php
           }
           ?>
         </table>
         <div class="smallText pdg2 flt-l"><?php echo $content_query_split->display_count($content_query_numrows, $page_max_display_results, $page, TEXT_DISPLAY_NUMBER_OF_CONTENT_MANAGER); ?></div>
-        <div class="smallText pdg2 flt-r"><?php echo $content_query_split->display_links($content_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $page); ?></div>
+        <div class="smallText pdg2 flt-r"><?php echo $content_query_split->display_links($content_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $page, xtc_get_all_get_params(array('page'))); ?></div>
         <?php echo draw_input_per_page($PHP_SELF, $cfg_max_display_results_key, $page_max_display_results); ?>
       </td>
       <?php
