@@ -131,6 +131,17 @@ if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weigh
   // load all enabled shipping modules
   $quotes = $shipping->quote();
 
+  if (defined('MODULE_ORDER_TOTAL_SHIPPING_STATUS')
+      && MODULE_ORDER_TOTAL_SHIPPING_STATUS == 'true'
+      && MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING == 'true'
+      && $pass === true
+      && $free_shipping === false
+      )
+  {
+    $module_smarty->assign('FREE_SHIPPING_INFO', sprintf(FREE_SHIPPING_DESCRIPTION, $xtPrice->xtcFormat($free_shipping_value_over, true, 0, true)));
+    $smarty->assign('FREE_SHIPPING_INFO', sprintf(FREE_SHIPPING_DESCRIPTION, $xtPrice->xtcFormat($free_shipping_value_over, true, 0, true)));
+  }
+
   if (SHOW_SELFPICKUP_FREE == 'true') {
     if ($free_shipping == true) {
       $free_shipping = false;
@@ -158,19 +169,7 @@ if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weigh
       'NAME' => FREE_SHIPPING_TITLE,
       'VALUE' => $xtPrice->xtcFormat(0, true, 0, true)
     );
-  } else {
-    if (defined('MODULE_ORDER_TOTAL_SHIPPING_STATUS')
-        && MODULE_ORDER_TOTAL_SHIPPING_STATUS == 'true'
-        && MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING == 'true'
-        && $pass === true
-        && $free_shipping === false
-        )
-    {
-      $module_smarty->assign('FREE_SHIPPING_INFO', sprintf(FREE_SHIPPING_DESCRIPTION, $xtPrice->xtcFormat($free_shipping_value_over, true, 0, true)));
-      $smarty->assign('FREE_SHIPPING_INFO', sprintf(FREE_SHIPPING_DESCRIPTION, $xtPrice->xtcFormat($free_shipping_value_over, true, 0, true)));
-    }
-  
-    $i = 0;
+  } else {  
     foreach ($quotes as $quote) {
       if (!isset($quote['error']) || (isset($quote['error']) && trim($quote['error']) == '')) {
         if (($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] != 1) || !isset($quote['tax'])) { 
@@ -189,19 +188,18 @@ if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weigh
         if (!defined('SHOW_SHIPPING_MODULE_TITLE') || SHOW_SHIPPING_MODULE_TITLE == 'shipping_default') {
           $title .= ' - ' . $quote['methods'][0]['title'];
         }
-        $shipping_content[$i] = array(
+        $shipping_content[] = array(
           'NAME' => $title,
           'VALUE' => $xtPrice->xtcFormat($value, true),
           'QUOTE' => $quote
         );
       } else {
-        $shipping_content[$i] = array(
+        $shipping_content[] = array(
           'NAME' => $quote['module'] . ' - ' . $quote['error'],
           'VALUE' => '',
           'QUOTE' => $quote
         );
       }
-      $i++;
     }
   }
 
