@@ -424,6 +424,7 @@
             <div class="main pdg2">Tools</div>
           </div>
           <?php
+            $show = true;
             if ($set == '') {
               //content
               include(DIR_WS_MODULES.'content_manager_pages.php');
@@ -432,6 +433,7 @@
               //products content
               include(DIR_WS_MODULES.'content_manager_products.php');
               $newaction = 'new_products_content';
+              $show = false;
             } elseif ($set == 'content') {
               //products content
               include(DIR_WS_MODULES.'content_manager_content.php');
@@ -445,10 +447,13 @@
             if (!$action) {
               if (isset($_GET['pID']) && (int)$_GET['pID'] > 0) {
                 $setparam .= '&pID='.(int)$_GET['pID'];
+                $show = true;
               }
+              if ($show === true) {
               ?>                
-              <div class="mrg5"><a class="button" onclick="this.blur();" href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER,'action='.$newaction.$setparam); ?>"><?php echo (($set == '') ? BUTTON_NEW_CONTENT : BUTTON_NEW_ATTACHMENT); ?></a></div>
+                <div class="mrg5"><a class="button" onclick="this.blur();" href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER,'action='.$newaction.$setparam); ?>"><?php echo (($set == '') ? BUTTON_NEW_CONTENT : BUTTON_NEW_ATTACHMENT); ?></a></div>
               <?php
+              }
             }
           ?>
         </td>
