@@ -374,7 +374,7 @@ define('SMTP_PASSWORD_DESC' , 'Please enter the password of your SMTP Account.')
 define('SMTP_AUTH_TITLE' , 'SMTP-Auth');
 define('SMTP_AUTH_DESC' , 'Enable secure authentication for your SMTP Server');
 define('SMTP_PORT_TITLE' , 'SMTP Port');
-define('SMTP_PORT_DESC' , 'Please enter the SMTP port of your SMTP server(default: 25)?');
+define('SMTP_PORT_DESC' , 'Please enter the SMTP port of your SMTP server (default: 25)?');
 define('SMTP_AUTO_TLS_TITLE' , 'SMTP-Automatic TLS connection');
 define('SMTP_AUTO_TLS_DESC' , 'Connection automatically with STARTTLS if SMTP-SECURE is deactivated? <br> In case of transmission problems deactivate the automatic TLS connection!');
 define('SMTP_DEBUG_TITLE' , 'SMTP-Debug Log-Level');
@@ -514,7 +514,7 @@ define('PRICE_IS_BRUTTO_TITLE','Gross Admin');
 define('PRICE_IS_BRUTTO_DESC','Usage of prices with tax in admin');
 
 define('PRICE_PRECISION_TITLE','Gross/Net Precision');
-define('PRICE_PRECISION_DESC','Gross/Net precision (Has no inluence on the display in the shop, which always displays 2 decimal places.)');
+define('PRICE_PRECISION_DESC','Gross/Net precision (Does not affect the display in the shop, which always displays 2 decimal places.)');
 
 define('CHECK_CLIENT_AGENT_TITLE','Prevent Spider Sessions');
 define('CHECK_CLIENT_AGENT_DESC','Prevent known spiders from starting a session.');
@@ -748,7 +748,7 @@ define('WHOS_ONLINE_IP_WHOIS_SERVICE_TITLE', 'Who\'s Online - Whois Lookup URL')
 define('WHOS_ONLINE_IP_WHOIS_SERVICE_DESC', 'http://www.utrace.de/?query= or http://whois.domaintools.com/');
 
 define('STOCK_CHECKOUT_UPDATE_PRODUCTS_STATUS_TITLE', 'Completion of order - disable Sold out?');
-define('STOCK_CHECKOUT_UPDATE_PRODUCTS_STATUS_DESC', 'If a sold-out items (stocks 0) be disabled at the end of the order automatically? The article is no longer visible in the shop! <br /> On Products are available again shortly, the option should be set to "false"');
+define('STOCK_CHECKOUT_UPDATE_PRODUCTS_STATUS_DESC', 'If a sold-out items (stock 0) be disabled at the end of the order automatically? The article is no longer visible in the shop! <br /> On Products are available again shortly, the option should be set to "false"');
 
 define('SEND_EMAILS_DOUBLE_OPT_IN_TITLE','Double-Opt-In for Newsletter registration.');
 define('SEND_EMAILS_DOUBLE_OPT_IN_DESC','If "true" an eMail will be send where the Registration have to be confirmed. This  only works if send eMails is activated.');

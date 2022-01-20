@@ -231,28 +231,28 @@ define('SMALL_IMAGE_WIDTH_DESC' , 'Maximale Breite der Artikel Bilder in Pixeln.
 define('SMALL_IMAGE_HEIGHT_TITLE' , 'H&ouml;he der Artikel Bilder');
 define('SMALL_IMAGE_HEIGHT_DESC' , 'Maximale H&ouml;he der Artikel Bilderin Pixeln.');
 
-define('SUBCATEGORY_IMAGE_WIDTH_TITLE' , 'Breite der Subkategorie-(Warengruppen-) Bilder');
-define('SUBCATEGORY_IMAGE_WIDTH_DESC' , 'Maximale Breite der Subkategorie-(Warengruppen-) Bilder in Pixeln.');
-define('SUBCATEGORY_IMAGE_HEIGHT_TITLE' , 'H&ouml;he der Subkategorie-(Warengruppen-) Bilder');
-define('SUBCATEGORY_IMAGE_HEIGHT_DESC' , 'Maximale H&ouml;he der Subkategorie-(Warengruppen-) Bilder in Pixeln.');
+define('SUBCATEGORY_IMAGE_WIDTH_TITLE' , 'Breite der Subkategorie- (Warengruppen-) Bilder');
+define('SUBCATEGORY_IMAGE_WIDTH_DESC' , 'Maximale Breite der Subkategorie- (Warengruppen-) Bilder in Pixeln.');
+define('SUBCATEGORY_IMAGE_HEIGHT_TITLE' , 'H&ouml;he der Subkategorie- (Warengruppen-) Bilder');
+define('SUBCATEGORY_IMAGE_HEIGHT_DESC' , 'Maximale H&ouml;he der Subkategorie- (Warengruppen-) Bilder in Pixeln.');
 
 define('MO_PICS_TITLE', 'Anzahl zus&auml;tzlicher Produktbilder');
 define('MO_PICS_DESC', 'Anzahl der Produktbilder die zus&auml;tzlich zum Haupt-Produktbild zur Verf&uuml;gung stehen sollen.');
 
 define('PRODUCT_IMAGE_MINI_MERGE_TITLE' , 'Artikel-Mini Bilder:Merge<br /><img src="images/config_merge.gif">');
-define('PRODUCT_IMAGE_MINI_MERGE_DESC' , 'Artikel-Mini Bilder:Merge<br /><br />Default Wert: (overlay.gif,10,-50,60,FF0000)<br /><br />overlay merge image<br />Verwendung:<br />(merge image,x start [neg = from right],y start [neg = from base],opacity, transparent colour on merge image)');
+define('PRODUCT_IMAGE_MINI_MERGE_DESC' , 'Artikel-Mini Bilder:Merge<br /><br />Standard Wert: (overlay.gif,10,-50,60,FF0000)<br /><br />overlay merge image<br />Verwendung:<br />(merge image,x start [neg = from right],y start [neg = from base],opacity, transparent colour on merge image)');
 
 define('PRODUCT_IMAGE_THUMBNAIL_MERGE_TITLE' , 'Artikel-Thumbnails:Merge');
-define('PRODUCT_IMAGE_THUMBNAIL_MERGE_DESC' , 'Artikel-Thumbnails:Merge<br /><br />Default Wert: (overlay.gif,10,-50,60,FF0000)<br /><br />overlay merge image<br />Verwendung:<br />(merge image,x start [neg = from right],y start [neg = from base],opacity, transparent colour on merge image)');
+define('PRODUCT_IMAGE_THUMBNAIL_MERGE_DESC' , 'Artikel-Thumbnails:Merge<br /><br />Standard Wert: (overlay.gif,10,-50,60,FF0000)<br /><br />overlay merge image<br />Verwendung:<br />(merge image,x start [neg = from right],y start [neg = from base],opacity, transparent colour on merge image)');
 
 define('PRODUCT_IMAGE_MIDI_MERGE_TITLE' , 'Artikel-Midi Bilder:Merge');
-define('PRODUCT_IMAGE_MIDI_MERGE_DESC' , 'Artikel-Midi Bilder:Merge<br /><br />Default Wert: (overlay.gif,10,-50,60,FF0000)<br /><br />overlay merge image<br />Verwendung:<br />(merge image,x start [neg = from right],y start [neg = from base],opacity, transparent colour on merge image)');
+define('PRODUCT_IMAGE_MIDI_MERGE_DESC' , 'Artikel-Midi Bilder:Merge<br /><br />Standard Wert: (overlay.gif,10,-50,60,FF0000)<br /><br />overlay merge image<br />Verwendung:<br />(merge image,x start [neg = from right],y start [neg = from base],opacity, transparent colour on merge image)');
 
 define('PRODUCT_IMAGE_INFO_MERGE_TITLE' , 'Artikel-Info Bilder:Merge');
-define('PRODUCT_IMAGE_INFO_MERGE_DESC' , 'Artikel-Info Bilder:Merge<br /><br />Default Wert: (overlay.gif,10,-50,60,FF0000)<br /><br />overlay merge image<br />Verwendung:<br />(merge image,x start [neg = from right],y start [neg = from base],opacity,transparent colour on merge image)');
+define('PRODUCT_IMAGE_INFO_MERGE_DESC' , 'Artikel-Info Bilder:Merge<br /><br />Standard Wert: (overlay.gif,10,-50,60,FF0000)<br /><br />overlay merge image<br />Verwendung:<br />(merge image,x start [neg = from right],y start [neg = from base],opacity,transparent colour on merge image)');
 
 define('PRODUCT_IMAGE_POPUP_MERGE_TITLE' , 'Artikel-Popup Bilder:Merge');
-define('PRODUCT_IMAGE_POPUP_MERGE_DESC' , 'Artikel-Popup Bilder:Merge<br /><br />Default Wert: (overlay.gif,10,-50,60,FF0000)<br /><br />overlay merge image<br />Verwendung:<br />(merge image,x start [neg = from right],y start [neg = from base],opacity,transparent colour on merge image)');
+define('PRODUCT_IMAGE_POPUP_MERGE_DESC' , 'Artikel-Popup Bilder:Merge<br /><br />Standard Wert: (overlay.gif,10,-50,60,FF0000)<br /><br />overlay merge image<br />Verwendung:<br />(merge image,x start [neg = from right],y start [neg = from base],opacity,transparent colour on merge image)');
 
 define('IMAGE_MANIPULATOR_TITLE','GDlib processing');
 define('IMAGE_MANIPULATOR_DESC','Image Manipulator f&uuml;r GD2 oder GD1<br /><br /><b>HINWEIS:</b> image_manipulator_GD2_advanced.php unterst&uuml;tzt transparente PNG\'s');
@@ -373,7 +373,7 @@ define('SMTP_PASSWORD_DESC' , 'Bitte geben Sie hier das Passwort Ihres SMTP-Kont
 define('SMTP_AUTH_TITLE' , 'SMTP-Auth');
 define('SMTP_AUTH_DESC' , 'Erfordert der SMTP-Server eine sichere Authentifizierung?');
 define('SMTP_PORT_TITLE' , 'SMTP-Port');
-define('SMTP_PORT_DESC' , 'Geben Sie den SMTP-Port Ihres SMTP-Servers ein (default: 25)?');
+define('SMTP_PORT_DESC' , 'Geben Sie den SMTP-Port Ihres SMTP-Servers ein (Standard: 25)?');
 define('SMTP_AUTO_TLS_TITLE' , 'SMTP-Automatische TLS Verbindung');
 define('SMTP_AUTO_TLS_DESC' , 'Verbindung automatisch mit STARTTLS wenn SMTP-SECURE deaktiviert ist?<br>Bei Sendeproblemen die automatische TLS-Verbindung deaktivieren!');
 define('SMTP_DEBUG_TITLE' , 'SMTP-Debug Log-Level');
@@ -433,7 +433,7 @@ define('DOWNLOAD_ENABLED_TITLE' , 'Download von Artikeln erlauben');
 define('DOWNLOAD_ENABLED_DESC' , 'Die Artikel Download Funktionen einschalten (Software etc.).');
 define('DOWNLOAD_BY_REDIRECT_TITLE' , 'Download durch Redirection');
 define('DOWNLOAD_BY_REDIRECT_DESC' , 'Browser-Umleitung f&uuml;r Artikeldownloads benutzen. Auf nicht Linux/Unix Systemen ausschalten.');
-define('DOWNLOAD_MAX_DAYS_TITLE' , 'Verfallsdatum der Download Links(Tage)');
+define('DOWNLOAD_MAX_DAYS_TITLE' , 'Verfallsdatum der Download Links (Tage)');
 define('DOWNLOAD_MAX_DAYS_DESC' , 'Anzahl an Tagen, die ein Download Link f&uuml;r den Kunden aktiv bleibt. 0 bedeutet ohne Limit.');
 define('DOWNLOAD_MAX_COUNT_TITLE' , 'Maximale Anzahl der Downloads eines gekauften Medienproduktes');
 define('DOWNLOAD_MAX_COUNT_DESC' , 'Stellen Sie die maximale Anzahl an Downloads ein, die Sie dem Kunden erlauben, der einen Artikel dieser Art erworben hat. 0 bedeutet kein Download.');
@@ -560,7 +560,7 @@ define('DOWNLOAD_MIN_ORDERS_STATUS_DESC', 'Bestellstatus, mit dem bestellte Down
 define('STORE_OWNER_VAT_ID_TITLE' , 'USt-IdNr. des Shopbetreibers');
 define('STORE_OWNER_VAT_ID_DESC' , 'Die USt-IdNr. Ihres Unternehmens');
 define('DEFAULT_CUSTOMERS_VAT_STATUS_ID_TITLE' , 'Kundenstatus f&uuml;r USt-IdNr. gepr&uuml;fte Kunden (Ausland)');
-define('DEFAULT_CUSTOMERS_VAT_STATUS_ID_DESC' , 'W&auml;hlen Sie den Kundenstatus(Gruppe) f&uuml;r USt-IdNr. gepr&uuml;fte Kunden aus!');
+define('DEFAULT_CUSTOMERS_VAT_STATUS_ID_DESC' , 'W&auml;hlen Sie den Kundenstatus (Gruppe) f&uuml;r USt-IdNr. gepr&uuml;fte Kunden aus!');
 define('ACCOUNT_COMPANY_VAT_CHECK_TITLE' , 'USt-IdNr. abfragen');
 define('ACCOUNT_COMPANY_VAT_CHECK_DESC' , 'Die USt-IdNr. soll durch Kunden eingegeben werden k&ouml;nnen. Bei false wird das Eingabefeld nicht mehr angezeigt.');
 define('ACCOUNT_COMPANY_VAT_LIVE_CHECK_TITLE' , 'USt-IdNr. online auf Plausibilit&auml;t &uuml;berpr&uuml;fen');
@@ -570,7 +570,7 @@ define('ACCOUNT_COMPANY_VAT_GROUP_DESC' , 'Durch Einschalten dieser Option wird 
 define('ACCOUNT_VAT_BLOCK_ERROR_TITLE' , 'Eintragung falscher oder ungepr&uuml;fter USt-IdNr. Nummern sperren?');
 define('ACCOUNT_VAT_BLOCK_ERROR_DESC' , 'Durch Einschalten dieser Option werden nur gepr&uuml;fte und richtige USt-IdNr. eingetragen');
 define('DEFAULT_CUSTOMERS_VAT_STATUS_ID_LOCAL_TITLE','Kundenstatus f&uuml;r USt-IdNr. gepr&uuml;fte Kunden (Inland)');
-define('DEFAULT_CUSTOMERS_VAT_STATUS_ID_LOCAL_DESC','W&auml;hlen Sie den Kundenstatus(Gruppe) f&uuml;r USt-IdNr. gepr&uuml;fte Kunden aus!');
+define('DEFAULT_CUSTOMERS_VAT_STATUS_ID_LOCAL_DESC','W&auml;hlen Sie den Kundenstatus (Gruppe) f&uuml;r USt-IdNr. gepr&uuml;fte Kunden aus!');
 
 // Google Conversion
 define('GOOGLE_CONVERSION_TITLE','Google Conversion-Tracking');
