@@ -34,8 +34,8 @@ if (isset($_GET['coID']) && (int)$_GET['coID'] > 0) {
                                WHERE ".$type."_id = '".(int) $_GET['coID']."'
                                      ".CONTENT_CONDITIONS);
 
-  if (xtc_db_num_rows($content_query) == 1) {
-    $content_data = xtc_db_fetch_array($content_query);
+  if (xtc_db_num_rows($content_query, true) == 1) {
+    $content_data = xtc_db_fetch_array($content_query, true);
 
     xtc_db_query("UPDATE ".$table."
                      SET content_read = content_read + 1
