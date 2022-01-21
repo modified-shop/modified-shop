@@ -29,8 +29,8 @@
     require_once(DIR_FS_BOXES . 'newsletter.php');
   }
   if (defined('MODULE_TS_TRUSTEDSHOPS_ID') 
-      && (MODULE_TS_WIDGET == '1'
-          || (MODULE_TS_REVIEW_STICKER != '' && MODULE_TS_REVIEW_STICKER_STATUS == '1'))
+      && MODULE_TS_REVIEW_STICKER != '' 
+      && MODULE_TS_REVIEW_STICKER_STATUS == '1'
       ) 
   {
     require_once(DIR_FS_BOXES . 'trustedshops.php');

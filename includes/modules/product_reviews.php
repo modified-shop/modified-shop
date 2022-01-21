@@ -39,18 +39,13 @@ if (!CacheCheck()) {
 }
 
 if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/products_reviews.html', $cache_id) || !$cache) {
-  $reviews_count = 0;
-  if (defined('MODULE_TS_TRUSTEDSHOPS_ID') && MODULE_TS_PRODUCT_STICKER_STATUS == '1') {
-    $module_smarty->assign('MODULE_TS_PRODUCT_STICKER', sprintf(MODULE_TS_PRODUCT_STICKER, MODULE_TS_TRUSTEDSHOPS_ID, $product->data['products_model']));
-  } else {
-    $button_preview = '';
-    if ($_SESSION['customers_status']['customers_status_write_reviews'] == 1) {
-      $button_preview = '<a href="'.xtc_href_link(FILENAME_PRODUCT_REVIEWS_WRITE, 'products_id='.$product->data['products_id']).'">'.xtc_image_button('button_write_review.gif', IMAGE_BUTTON_WRITE_REVIEW).'</a>';
-    }
-  
-    $module_smarty->assign('BUTTON_WRITE', $button_preview);  
-    $reviews_count = $product->getReviewsCount();
+  $button_preview = '';
+  if ($_SESSION['customers_status']['customers_status_write_reviews'] == 1) {
+    $button_preview = '<a href="'.xtc_href_link(FILENAME_PRODUCT_REVIEWS_WRITE, 'products_id='.$product->data['products_id']).'">'.xtc_image_button('button_write_review.gif', IMAGE_BUTTON_WRITE_REVIEW).'</a>';
   }
+
+  $module_smarty->assign('BUTTON_WRITE', $button_preview);  
+  $reviews_count = $product->getReviewsCount();
 
   if (($_SESSION['customers_status']['customers_status_read_reviews'] == '1' && $reviews_count > 0) 
       || $_SESSION['customers_status']['customers_status_write_reviews'] == 1
