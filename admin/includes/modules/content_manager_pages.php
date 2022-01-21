@@ -6,11 +6,17 @@
    http://www.modified-shop.org
 
    Copyright (c) 2009 - 2013 [www.modified-shop.org]
- 
+
    Released under the GNU General Public License
    --------------------------------------------------------------*/
 
-defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
+  defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
+?>
+<div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_content.png'); ?></div>
+<div class="pageHeading flt-l"><?php echo HEADING_CONTENT; ?>
+  <div class="main pdg2">Tools</div>
+</div>
+<?php
 
 if (!$action || $action == 'delete') {
   $file_flag_array = array();
@@ -82,14 +88,14 @@ if (!$action || $action == 'delete') {
     </form>
   </div>
   <div class="main flt-l pdg2 mrg5" style="margin-left:50px;">
-    <?php echo xtc_draw_form('keywords', FILENAME_CONTENT_MANAGER, '', 'get'); ?>
-    <?php echo TEXT_SEARCH . ' ' . xtc_draw_input_field('keywords', ((isset($_GET['keywords'])) ? $_GET['keywords'] : ''), 'style="width:200px; margin-top:-2px;"'); ?>
-    <?php echo '<input class="button" style="vertical-align:top;margin-top: -2px !important;" type="submit" value="'.BUTTON_SEARCH.'"/>'; ?>
-    </form>
-  </div>
-  <div class="main flt-r pdg2 mrg5">
-    <?php echo xtc_draw_form('pages', FILENAME_CONTENT_MANAGER, '', 'get'); ?>
-    <?php echo HEADING_TITLE_GOTO . ' ' . xtc_draw_pull_down_menu('set', $content_pages_array, isset($_GET['set']) ? $_GET['set'] : '', 'onChange="this.form.submit();"'); ?>
+    <?php
+    echo xtc_draw_form('product_keywords', FILENAME_CONTENT_MANAGER, '', 'GET').PHP_EOL;
+    echo TEXT_SEARCH.'&nbsp;'.xtc_draw_input_field('keywords', ((isset($_GET['keywords'])) ? $_GET['keywords'] : ''), 'size="30"');
+    echo '&nbsp;<input type="submit" class="button no_top_margin"  style="vertical-align:top;" onclick="this.blur();" value="' . BUTTON_SEARCH . '"/>';
+    if (isset($_GET['keywords']) && $_GET['keywords'] != '') {
+      echo '<a class="button no_top_margin" style="vertical-align:top;" href="'.xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('keywords', 'page'))).'">'.BUTTON_RESET.'</a>';
+    }
+    ?>
     </form>
   </div>
   <div class="clear"></div>
@@ -145,18 +151,18 @@ if (!$action || $action == 'delete') {
                       $where .= " ".$search_keywords[$i]." ";
                       break;
                     default :
-                    $ent_keyword = encode_htmlentities($search_keywords[$i]); // umlauts
-                    $ent_keyword = $ent_keyword != $search_keywords[$i] ? xtc_db_input($ent_keyword) : false;
-                    $keyword = xtc_db_input($search_keywords[$i]);
-                    $where .= " ( ";
-                    $where .= "content_title LIKE ('%".$keyword."%') ";
-                    $where .= $ent_keyword ? "OR content_title LIKE ('%".$ent_keyword."%') " : '';
-                    $where .= "OR content_heading LIKE ('%".$keyword."%') ";
-                    $where .= $ent_keyword ? "OR content_heading LIKE ('%".$ent_keyword."%') " : '';
-                    $where .= "OR content_text LIKE ('%".$keyword."%') ";
-                    $where .= $ent_keyword ? "OR content_text LIKE ('%".$ent_keyword."%') " : '';
-                    $where .= " ) ";
-                    break;
+                      $ent_keyword = encode_htmlentities($search_keywords[$i]); // umlauts
+                      $ent_keyword = $ent_keyword != $search_keywords[$i] ? xtc_db_input($ent_keyword) : false;
+                      $keyword = xtc_db_input($search_keywords[$i]);
+                      $where .= " ( ";
+                      $where .= "content_title LIKE ('%".$keyword."%') ";
+                      $where .= $ent_keyword ? "OR content_title LIKE ('%".$ent_keyword."%') " : '';
+                      $where .= "OR content_heading LIKE ('%".$keyword."%') ";
+                      $where .= $ent_keyword ? "OR content_heading LIKE ('%".$ent_keyword."%') " : '';
+                      $where .= "OR content_text LIKE ('%".$keyword."%') ";
+                      $where .= $ent_keyword ? "OR content_text LIKE ('%".$ent_keyword."%') " : '';
+                      $where .= " ) ";
+                      break;
                   }
                 }
                 $where .= " )";
@@ -177,7 +183,7 @@ if (!$action || $action == 'delete') {
             if ((!isset($_GET['coID']) || $_GET['coID'] == $content_data['content_group']) && !isset($oInfo)) {
               $oInfo = new objectInfo($content_data);
             }
-            
+          
             $content_data['content_count'] = 0;
             if (!isset($_GET['pID']) || (int)$_GET['pID'] == 0) {
               $check_query = xtc_db_query("SELECT *
@@ -186,7 +192,7 @@ if (!$action || $action == 'delete') {
                                               AND parent_id = '".(int)$content_data['content_id']."'");
               $content_data['content_count'] = xtc_db_num_rows($check_query);
             }
-            
+          
             if (isset($oInfo) && is_object($oInfo) && $content_data['content_group'] == $oInfo->content_group) {
               echo '<tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action', 'coID', 'coIndex')) . 'coID=' . $oInfo->content_group . '&coIndex=' . $oInfo->content_group_index . '&action=edit') . '\'">' . "\n";
             } else {
@@ -235,6 +241,7 @@ if (!$action || $action == 'delete') {
         <div class="smallText pdg2 flt-l"><?php echo $content_query_split->display_count($content_query_numrows, $page_max_display_results, $page, TEXT_DISPLAY_NUMBER_OF_CONTENT_MANAGER); ?></div>
         <div class="smallText pdg2 flt-r"><?php echo $content_query_split->display_links($content_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $page, ((isset($_GET['pID']) && (int)$_GET['pID'] > 0) ? '&pID='.(int)$_GET['pID'] : '')); ?></div>
         <?php echo draw_input_per_page($PHP_SELF, $cfg_max_display_results_key, $page_max_display_results); ?>
+        <div class="smallText pdg2 flt-r"><?php echo ((isset($_GET['pID']) && (int)$_GET['pID'] > 0) ? '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action', 'coID', 'pID'))) . '">' . BUTTON_BACK . '</a>' : '') . '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action')).'action=new') . '">' . BUTTON_NEW_CONTENT . '</a>'; ?></div>
       </td>
       <?php
         $heading = array();
@@ -253,7 +260,8 @@ if (!$action || $action == 'delete') {
             if (isset($oInfo) && is_object($oInfo)) {
               $heading[] = array('text' => '<b>' . $oInfo->content_title . '</b>');
 
-              $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('coID', 'coIndex')) . 'coID=' . $oInfo->content_group . '&coIndex=' . $oInfo->content_group_index . '&action=edit') . '">' . BUTTON_EDIT . '</a> 
+              $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('coID', 'coIndex')) . 'coID=' . $oInfo->content_group . '&coIndex=' . $oInfo->content_group_index . '&action=edit') . '">' . BUTTON_EDIT . '</a>'
+                                                                  .((!isset($_GET['pID']) || (int)$_GET['pID'] < 1) ? '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('coID', 'coIndex', 'pID')) . 'pID=' . $oInfo->content_id) . '">' . BUTTON_DETAILS . '</a>' : '').'
                                                                   <a class="button" onclick="javascript:window.open(\''.xtc_href_link_from_admin('popup_content.php','coID='.$oInfo->content_group).'&preview=true&coIndex='.$oInfo->content_group_index.'\', \'popup\', \'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=640,height=600\')">'.TEXT_PREVIEW.'</a>'
                                                                   .(($oInfo->content_delete == '1') ? '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('coID', 'coIndex')) . 'coID=' . $oInfo->content_group . '&coIndex=' . $oInfo->content_group_index . '&action=delete') . '">' . BUTTON_DELETE . '</a>' : ''));
 
@@ -279,7 +287,7 @@ if (!$action || $action == 'delete') {
     array('id'=>1,'text'=>CFG_TXT_YES),
     array('id'=>0,'text'=>CFG_TXT_NO),
   );
-  
+
   // content array
   $content = array();
   for ($i=0, $n=count($languages); $i<$n; $i++) {
@@ -303,13 +311,13 @@ if (!$action || $action == 'delete') {
       $z++;
     }
   }
-    
+  
   // some defaults
   $default_content = $content[0][$_SESSION['languages_id']];
   $content_count = count($content);
   $languages_count = count($languages);
   $counter = $languages_count * $content_count;    
-  
+
   // check content array
   for ($i=0; $i<$content_count; $i++) {
     for ($l=0; $l<$languages_count; $l++) {
@@ -318,7 +326,7 @@ if (!$action || $action == 'delete') {
       }
     }
   }
-  
+
   // sub content
   $query_string = (($action != 'new') ? " AND file_flag = '".(int)$default_content['file_flag']."'" : '');
   $content_data_query = xtc_db_query("SELECT content_id,
@@ -335,7 +343,7 @@ if (!$action || $action == 'delete') {
     $content_data_array[] = array('id' => $content_data['content_id'],
                                   'text' => $content_data['content_title']);
   }
-  
+
   // file flag
   $file_flag_array = array();    
   $file_flag_sql = xtc_db_query("SELECT file_flag as id, 
@@ -345,7 +353,7 @@ if (!$action || $action == 'delete') {
     $file_flag_array[] = array('id' => $file_flag['id'], 
                                'text' => $file_flag['text']);
   }
-  
+
   // content file
   $content_files = array();
   $files = new DirectoryIterator(DIR_FS_CATALOG.'media/content/');
@@ -364,291 +372,294 @@ if (!$action || $action == 'delete') {
 
   ?>
   <div class="clear"></div>
-  <div style="width:100%;padding:5px;">
-    <div class="pageHeading"><?php echo HEADING_CONTENT; ?><br /></div>
-    <?php
-    if ($action != 'new') {
-      echo xtc_draw_form('edit_content', FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('id')) . 'id=update', 'post', 'enctype="multipart/form-data"'). PHP_EOL;
-      echo xtc_draw_hidden_field('coID',$g_coID). PHP_EOL;
-      echo xtc_draw_hidden_field('content_group_index', $coIndex). PHP_EOL;
-    } else {
-      echo xtc_draw_form('edit_content', FILENAME_CONTENT_MANAGER, 'action=edit&id=insert', 'post', 'enctype="multipart/form-data"'). PHP_EOL;
-    }
-    echo xtc_draw_hidden_field('content_count', $content_count). PHP_EOL;
-    ?>
-    <div style="padding:5px;clear:both;">
-      <table class="tableConfig borderall" style="width:99%">
+  <table class="tableCenter">      
+    <tr>
+      <td class="boxCenterLeft">
         <?php
-          if ($default_content['content_delete'] != '0' || $action == 'new') {
-            ?>
-            <tr>
-              <td class="dataTableConfig col-left" style="min-width:205px;"><?php echo TEXT_GROUP; ?></td>
-              <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('content_group',((isset($default_content['content_group'])) ? $default_content['content_group'] : ''),'size="5"') . ' '. TEXT_GROUP_DESC; ?></td>
-            </tr>
-            <?php
-          } elseif ($action == 'edit') {
-            echo xtc_draw_hidden_field('content_group', $default_content['content_group']);
-            ?>
-            <tr>
-              <td class="dataTableConfig col-left" style="min-width:205px;"><?php echo TEXT_GROUP; ?></td>
-              <td class="dataTableConfig col-single-right"><?php echo $default_content['content_group']; ?></td>
-            </tr>
-            <?php
-          }
+        if ($action != 'new') {
+          echo xtc_draw_form('edit_content', FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('id')) . 'id=update', 'post', 'enctype="multipart/form-data"'). PHP_EOL;
+          echo xtc_draw_hidden_field('coID',$g_coID). PHP_EOL;
+          echo xtc_draw_hidden_field('content_group_index', $coIndex). PHP_EOL;
+        } else {
+          echo xtc_draw_form('edit_content', FILENAME_CONTENT_MANAGER, 'action=edit&id=insert', 'post', 'enctype="multipart/form-data"'). PHP_EOL;
+        }
+        echo xtc_draw_hidden_field('content_count', $content_count). PHP_EOL;
         ?>
-        <tr>
-          <td class="dataTableConfig col-left"><?php echo TEXT_FILE_FLAG; ?></td>
-          <td class="dataTableConfig col-single-right"><?php echo xtc_draw_pull_down_menu('file_flag', $file_flag_array, ((isset($_SESSION['file_flag']) && $_SESSION['file_flag'] != '' && $action == 'new') ? $_SESSION['file_flag'] : ((isset($_GET['pID']) && (int)$_GET['pID'] > 0 && $action == 'new') ? get_file_flag($_GET['pID']) : $default_content['file_flag'])), 'id="file_flag"'); ?></td>
-        </tr>
-        <?php 
-        if (CONTENT_CHILDS_ACTIV == 'true' 
-            && count($content_data_array) > 1 
-            && (check_content_childs($default_content['content_id'], $_SESSION['languages_id']) === false
-                || $action == 'new'
+        <div style="padding:5px;clear:both;">
+          <table class="tableConfig borderall" style="width:99%">
+            <?php
+              if ($default_content['content_delete'] != '0' || $action == 'new') {
+                ?>
+                <tr>
+                  <td class="dataTableConfig col-left" style="min-width:205px;"><?php echo TEXT_GROUP; ?></td>
+                  <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('content_group',((isset($default_content['content_group'])) ? $default_content['content_group'] : ''),'size="5"') . ' '. TEXT_GROUP_DESC; ?></td>
+                </tr>
+                <?php
+              } elseif ($action == 'edit') {
+                echo xtc_draw_hidden_field('content_group', $default_content['content_group']);
+                ?>
+                <tr>
+                  <td class="dataTableConfig col-left" style="min-width:205px;"><?php echo TEXT_GROUP; ?></td>
+                  <td class="dataTableConfig col-single-right"><?php echo $default_content['content_group']; ?></td>
+                </tr>
+                <?php
+              }
+            ?>
+            <tr>
+              <td class="dataTableConfig col-left"><?php echo TEXT_FILE_FLAG; ?></td>
+              <td class="dataTableConfig col-single-right"><?php echo xtc_draw_pull_down_menu('file_flag', $file_flag_array, ((isset($_SESSION['file_flag']) && $_SESSION['file_flag'] != '' && $action == 'new') ? $_SESSION['file_flag'] : ((isset($_GET['pID']) && (int)$_GET['pID'] > 0 && $action == 'new') ? get_file_flag($_GET['pID']) : $default_content['file_flag'])), 'id="file_flag"'); ?></td>
+            </tr>
+            <?php 
+            if (CONTENT_CHILDS_ACTIV == 'true' 
+                && count($content_data_array) > 1 
+                && (check_content_childs($default_content['content_id'], $_SESSION['languages_id']) === false
+                    || $action == 'new'
+                    )
                 )
-            )
-        { 
-          ?>
-          <tr>
-            <td class="dataTableConfig col-left"><?php echo TEXT_PARENT; ?></td>
-            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_pull_down_menu('parent_id', $content_data_array, ((isset($_GET['pID']) && (int)$_GET['pID'] > 0 && $action == 'new') ? (int)$_GET['pID'] : $default_content['parent_id']), 'id="parent_id"'); ?><span style="display:inline-block;vertical-align:top;padding:5px 0 0 5px;line-height:24px;"><?php echo xtc_draw_checkbox_field('parent_check', 'yes', (((isset($_GET['pID']) && (int)$_GET['pID'] > 0 && $action == 'new') || $default_content['parent_id'] > 0) ? true : false)).' '.TEXT_PARENT_DESCRIPTION; ?></span></td>
-          </tr>
-          <?php 
-        }
-        ?>
-        <tr>
-          <td class="dataTableConfig col-left"><?php echo TEXT_SORT_ORDER; ?></td>
-          <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('sort_order', ((isset($default_content['sort_order'])) ? $default_content['sort_order'] : ''), 'size="5"'); ?></td>
-        </tr>                                  
-        <?php
-          $meta_robots = explode(', ', $default_content['content_meta_robots']);
-          $content_meta = array();
-          foreach ($meta_robots as $key => $value) {
-            $content_meta[0]['meta_robots'][$value] = $value;
-          }
-        ?>
-        <tr>
-          <td class="dataTableConfig col-left"><?php echo TEXT_CONTENT_META_ROBOTS; ?>: </td>
-          <td class="dataTableConfig col-single-right">
-            <?php echo xtc_draw_checkbox_field('content_meta_robots[]','noindex', ((isset($content_meta[0]['meta_robots']['noindex'])) ? $content_meta[0]['meta_robots']['noindex'] : false)).TEXT_CONTENT_NOINDEX.'<br/>'.
-                       xtc_draw_checkbox_field('content_meta_robots[]','nofollow', ((isset($content_meta[0]['meta_robots']['nofollow'])) ? $content_meta[0]['meta_robots']['nofollow'] : false)).TEXT_CONTENT_NOFOLLOW.'<br/>'.
-                       xtc_draw_checkbox_field('content_meta_robots[]','noodp', ((isset($content_meta[0]['meta_robots']['noodp'])) ? $content_meta[0]['meta_robots']['noodp'] : false)).TEXT_CONTENT_NOODP;
-            ?>
-          </td>
-        </tr>
-      </table>
-    </div>
-
-    <?php 
-      foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/content_manager/pages/','php') as $file) require ($file);
-    ?>    
-
-    <div style="padding:5px;clear:both;">
-      <div class="flt-r mrg5 pdg2">
-        <input type="submit" class="button" onclick="this.blur();" value="<?php echo BUTTON_SAVE; ?>"/>
-      </div>
-      <div class="flt-r mrg5 pdg2">
-        <input class="button" type="submit" onclick="this.blur();" value="<?php echo BUTTON_UPDATE; ?>" name="page_update"/>
-      </div>
-      <div class="flt-r mrg5 pdg2">
-        <a class="button" onclick="this.blur();" href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action'))); ?>"><?php echo BUTTON_BACK; ?></a>
-      </div>
-    </div>
-
-    <div style="padding:5px;clear:both;">
-    <script type="text/javascript" src="includes/lang_tabs_menu/lang_tabs_menu.js"></script>
-    <?php
-    if (USE_WYSIWYG=='true') {
-      $query = xtc_db_query("SELECT code FROM ". TABLE_LANGUAGES ." WHERE languages_id='".(int)$_SESSION['languages_id']."'");
-      $data = xtc_db_fetch_array($query);
-      for ($i=0; $i<$content_count; $i++) {
-        for ($l=0; $l<$languages_count; $l++) {
-          echo xtc_wysiwyg('content_manager', $data['code'], $content[$i][$languages[$l]['id']]['languages_id'], $i);
-        }
-      }
-    }
-    $langtabs = '<div class="tablangmenu"><ul>';
-    $csstabstyle = 'border: 1px solid #aaaaaa; padding: 4px; width: 99%; margin-top: -1px; margin-bottom: 10px; float: left;background: #F3F3F3;';
-    $csstab = '<style type="text/css">' .  '#tab_lang_0' . '{display: block;' . $csstabstyle . '}';
-    $csstab_nojs = '<style type="text/css">';    
-    $cnt = 0;
-    $hidden_coIndex = '';
-    
-    for ($i=0; $i<$content_count; $i++) {
-      for ($l=0; $l<$languages_count; $l++) {
-        $tabtmp = "\'tab_lang_$cnt\'," ;
-        $coIndex = '';
-        //FIX wenn es bei gleicher languages_id mehrere gleiche content_group gibt
-        if ($counter > $languages_count && $i > 0) {
-           $coIndex = ' ('. $i .')';
-           $hidden_coIndex .= xtc_draw_hidden_field('content_new_group_index['.$i.']['.$languages[$l]['id'].']', $i). PHP_EOL;
-        }
-        $langtabs.= '<li onclick="showTab('. $tabtmp. $counter.')" style="cursor: pointer;" id="tabselect_' . $cnt .'">' .xtc_image(DIR_WS_LANGUAGES . $languages[$l]['directory'] .'/admin/images/'. $languages[$l]['image'], $languages[$l]['name']) . ' ' . $languages[$l]['name'].$coIndex.'</li>';
-        if($cnt > 0) $csstab .= '#tab_lang_' . $cnt .'{display: none;' . $csstabstyle . '}';
-        $csstab_nojs .= '#tab_lang_' . $cnt .'{display: block;' . $csstabstyle . '}';
-        $cnt ++;
-      }
-    }
-    $csstab .= '</style>';
-    $csstab_nojs .= '</style>';
-    $langtabs.= '</ul></div>';
-    if ($hidden_coIndex) {
-      echo $hidden_coIndex;
-      echo '<div class="main important_info">'.TEXT_CONTENT_DOUBLE_GROUP_INDEX.'</div>'. PHP_EOL;
-    }
-    ?>
-    <?php if (USE_ADMIN_LANG_TABS != 'false') { ?>
-    <script type="text/javascript">
-      $.get("includes/lang_tabs_menu/lang_tabs_menu.css", function(css) {
-        $("head").append("<style type='text/css'>"+css+"<\/style>");
-      });
-      document.write('<?php echo ($csstab);?>');
-      document.write('<?php echo ($langtabs);?>');
-    </script>
-    <?php 
-    } else { 
-      echo ($csstab_nojs);
-    }
-    ?>
-    <noscript>
-      <?php echo ($csstab_nojs);?>
-    </noscript>
-
-    <?php
-    $cnt=0;
-    for ($i=0; $i<$content_count; $i++) {
-      for ($l=0; $l < $languages_count; $l++) {
-        echo ('<div id="tab_lang_' . $cnt . '" style="padding:0px;">');
-        $content_lang = array();
-        if (isset($content[$i][$languages[$l]['id']]['content_id'])) {
-          //$content_lang = get_content_details($content[$i][$languages[$l]['id']]['content_id']);
-          $content_lang = $content[$i][$languages[$l]['id']];
-          echo xtc_draw_hidden_field('content_id['.$i.']['.$languages[$l]['id'].']', $content_lang['content_id']);
-        }
-        $lang_img = '<div style="float:left;margin-right:5px;">'.xtc_image(DIR_WS_LANGUAGES . $languages[$l]['directory'] .'/admin/images/'. $languages[$l]['image'], $languages[$l]['name']).'</div>';   
-        ?>
-        <table class="tableConfig" style="margin-top:0;">
-        <tr>
-          <td class="dataTableConfig col-left" style="min-width:205px;border-top:0;border-right:1px solid #a3a3a3;"><?php echo $lang_img.TEXT_STATUS_ACTIVE; ?></td>
-          <td class="dataTableConfig col-single-right" style="border-top:0;"><?php echo draw_on_off_selection('content_active['.$i.']['.$languages[$l]['id'].']', $content_status_array, ((isset($content_lang['content_active']) && $content_lang['content_active'] != '') ? $content_lang['content_active'] : 0)).'<span style="display:inline-block;vertical-align:top;padding:5px 0 0 5px;line-height:24px;">'.TEXT_STATUS_ACTIVE_DESCRIPTION.'</span>' ;?></td>
-        </tr>
-        <tr>
-          <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo $lang_img.TEXT_STATUS; ?></td>
-          <td class="dataTableConfig col-single-right"><?php echo draw_on_off_selection('content_status['.$i.']['.$languages[$l]['id'].']', $content_status_array, ((isset($content_lang['content_status']) && $content_lang['content_status'] != '') ? $content_lang['content_status'] : 0)).'<span style="display:inline-block;vertical-align:top;padding:5px 0 0 5px;line-height:24px;">'.TEXT_STATUS_DESCRIPTION.'</span>' ;?></td>
-        </tr>
-          <tr>
-            <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo $lang_img.TEXT_TITLE; ?></td>
-            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('content_title['.$i.']['.$languages[$l]['id'].']', ((isset($content_lang['content_title'])) ? $content_lang['content_title'] : ''), 'style="width:100%"'); ?></td>
-          </tr>
-          <tr>
-            <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo $lang_img.TEXT_HEADING; ?></td>
-            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('content_heading['.$i.']['.$languages[$l]['id'].']', ((isset($content_lang['content_heading'])) ? $content_lang['content_heading'] : ''), 'style="width:100%"'); ?></td>
-          </tr>
-          <?php
-          if (GROUP_CHECK=='true') {
-            $customers_statuses_array = xtc_get_customers_statuses();
-            $customers_statuses_array = array_merge(array(array('id'=>'all', 'text'=>TXT_ALL)), $customers_statuses_array);
+            { 
+              ?>
+              <tr>
+                <td class="dataTableConfig col-left"><?php echo TEXT_PARENT; ?></td>
+                <td class="dataTableConfig col-single-right"><?php echo xtc_draw_pull_down_menu('parent_id', $content_data_array, ((isset($_GET['pID']) && (int)$_GET['pID'] > 0 && $action == 'new') ? (int)$_GET['pID'] : $default_content['parent_id']), 'id="parent_id"'); ?><span style="display:inline-block;vertical-align:top;padding:5px 0 0 5px;line-height:24px;"><?php echo xtc_draw_checkbox_field('parent_check', 'yes', (((isset($_GET['pID']) && (int)$_GET['pID'] > 0 && $action == 'new') || $default_content['parent_id'] > 0) ? true : false)).' '.TEXT_PARENT_DESCRIPTION; ?></span></td>
+              </tr>
+              <?php 
+            }
             ?>
             <tr>
-              <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo $lang_img.ENTRY_CUSTOMERS_STATUS; ?></td>
+              <td class="dataTableConfig col-left"><?php echo TEXT_SORT_ORDER; ?></td>
+              <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('sort_order', ((isset($default_content['sort_order'])) ? $default_content['sort_order'] : ''), 'size="5"'); ?></td>
+            </tr>                                  
+            <?php
+              $meta_robots = explode(', ', $default_content['content_meta_robots']);
+              $content_meta = array();
+              foreach ($meta_robots as $key => $value) {
+                $content_meta[0]['meta_robots'][$value] = $value;
+              }
+            ?>
+            <tr>
+              <td class="dataTableConfig col-left"><?php echo TEXT_CONTENT_META_ROBOTS; ?>: </td>
               <td class="dataTableConfig col-single-right">
-                <div class="customers-groups">
-                  <?php
-                  for ($g=0, $z=sizeof($customers_statuses_array); $g<$z; $g++) {
-                    $checked = false;
-                    if (strpos($content_lang['group_ids'], 'c_'.$customers_statuses_array[$g]['id'].'_group') !== false) {
-                      $checked = true;
-                    }
-                    echo xtc_draw_checkbox_field('groups['.$i.']['.$languages[$l]['id'].'][]', $customers_statuses_array[$g]['id'], $checked).' ' .$customers_statuses_array[$g]['text'].'<br />';
-                  }
-                  ?>
-                </div>
+                <?php echo xtc_draw_checkbox_field('content_meta_robots[]','noindex', ((isset($content_meta[0]['meta_robots']['noindex'])) ? $content_meta[0]['meta_robots']['noindex'] : false)).TEXT_CONTENT_NOINDEX.'<br/>'.
+                           xtc_draw_checkbox_field('content_meta_robots[]','nofollow', ((isset($content_meta[0]['meta_robots']['nofollow'])) ? $content_meta[0]['meta_robots']['nofollow'] : false)).TEXT_CONTENT_NOFOLLOW.'<br/>'.
+                           xtc_draw_checkbox_field('content_meta_robots[]','noodp', ((isset($content_meta[0]['meta_robots']['noodp'])) ? $content_meta[0]['meta_robots']['noodp'] : false)).TEXT_CONTENT_NOODP;
+                ?>
               </td>
             </tr>
-            <?php
-          }
-          ?>
-          <tr>
-            <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo $lang_img.'Meta Title:<br/>(max. ' . META_TITLE_LENGTH . ' ' . TEXT_CHARACTERS .')'; ?></td>
-            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('content_meta_title['.$i.']['.$languages[$l]['id'].']', ((isset($content_lang['content_meta_title'])) ? $content_lang['content_meta_title'] : ''), 'style="width:100%" maxlength="' . META_TITLE_LENGTH . '"'); ?></td>
-          </tr>
-          <tr>
-            <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo $lang_img.'Meta Description:<br/>(max. ' . META_DESCRIPTION_LENGTH . ' ' . TEXT_CHARACTERS .')'; ?></td>
-            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('content_meta_description['.$i.']['.$languages[$l]['id'].']', ((isset($content_lang['content_meta_description'])) ? $content_lang['content_meta_description'] : ''), 'style="width:100%" maxlength="' . META_DESCRIPTION_LENGTH . '"'); ?></td>
-          </tr>
-          <tr>
-            <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo $lang_img.'Meta Keywords:<br/>(max. ' . META_KEYWORDS_LENGTH . ' ' . TEXT_CHARACTERS .')'; ?></td>
-            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('content_meta_keywords['.$i.']['.$languages[$l]['id'].']', ((isset($content_lang['content_meta_keywords'])) ? $content_lang['content_meta_keywords'] : ''), 'style="width:100%" maxlength="' . META_KEYWORDS_LENGTH . '"'); ?></td>
-          </tr>
-          <tr>
-            <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo $lang_img.TEXT_UPLOAD_FILE; ?></td>
-            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_file_field('file_upload_'.$i.'_'.$languages[$l]['id']).'<span style="display:inline-block;vertical-align:top;padding:5px 0 0 5px;line-height:24px;">'.TEXT_UPLOAD_FILE_LOCAL.'</span>'; ?></td>
-          </tr>
-          <tr>
-            <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo $lang_img.TEXT_CHOOSE_FILE; ?></td>
-            <td class="dataTableConfig col-single-right">
-              <?php
-                echo TEXT_CHOOSE_FILE_SERVER.'<br /><br />';
-                echo xtc_draw_pull_down_menu('select_file['.$i.']['.$languages[$l]['id'].']', array_merge(array(array('id' => 'default','text' => (($content_lang['content_file'] != '') ? TEXT_NO_FILE : TEXT_SELECT))), $content_files), $content_lang['content_file']);
-                if ($content_lang['content_file'] != '') {
-                  echo ' '.TEXT_CURRENT_FILE.' <b>'.$content_lang['content_file'].'</b><br />';
-                }
-              ?>
-            </td>
-          </tr>
-          <tr>
-            <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"></td>
-            <td class="dataTableConfig col-single-right"><?php echo TEXT_FILE_DESCRIPTION; ?></td>
-          </tr>
-          <tr>
-            <td class="dataTableConfig col-left" style="border-bottom:0;border-right:1px solid #a3a3a3;vertical-align:top;"><?php echo $lang_img.TEXT_CONTENT; ?></td>
-            <td class="dataTableConfig col-single-right" style="border-bottom:0;"><?php  echo xtc_draw_textarea_field('content_text['.$i.']['.$languages[$l]['id'].']', $languages[$l]['id'], '100%', '35', ((isset($content_lang['content_text'])) ? $content_lang['content_text'] : ''), '', true, true); ?>
-            </td>
-          </tr>          
-        </table>          
-        <?php
-        echo ('</div>');
-        $cnt++;
-      }
-    }
-    ?>
-    </div>
+          </table>
+        </div>
 
-    <div style="padding:5px;clear:both;">
-      <div class="flt-r mrg5 pdg2">
-        <input type="submit" class="button" onclick="this.blur();" value="<?php echo BUTTON_SAVE; ?>"/>
-      </div>
-      <div class="flt-r mrg5 pdg2">
-        <input class="button" type="submit" onclick="this.blur();" value="<?php echo BUTTON_UPDATE; ?>" name="page_update"/>
-      </div>
-      <div class="flt-r mrg5 pdg2">
-        <a class="button" onclick="this.blur();" href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action'))); ?>"><?php echo BUTTON_BACK; ?></a>
-      </div>
-    </div>
-    
-    </form>
-  </div>
+        <?php 
+          foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/content_manager/pages/','php') as $file) require ($file);
+        ?>    
+
+        <div style="padding:5px;clear:both;">
+          <div class="flt-r mrg5 pdg2">
+            <input type="submit" class="button" onclick="this.blur();" value="<?php echo BUTTON_SAVE; ?>"/>
+          </div>
+          <div class="flt-r mrg5 pdg2">
+            <input class="button" type="submit" onclick="this.blur();" value="<?php echo BUTTON_UPDATE; ?>" name="page_update"/>
+          </div>
+          <div class="flt-r mrg5 pdg2">
+            <a class="button" onclick="this.blur();" href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action'))); ?>"><?php echo BUTTON_BACK; ?></a>
+          </div>
+        </div>
+
+        <div style="padding:5px;clear:both;">
+        <script type="text/javascript" src="includes/lang_tabs_menu/lang_tabs_menu.js"></script>
+        <?php
+        if (USE_WYSIWYG=='true') {
+          $query = xtc_db_query("SELECT code FROM ". TABLE_LANGUAGES ." WHERE languages_id='".(int)$_SESSION['languages_id']."'");
+          $data = xtc_db_fetch_array($query);
+          for ($i=0; $i<$content_count; $i++) {
+            for ($l=0; $l<$languages_count; $l++) {
+              echo xtc_wysiwyg('content_manager', $data['code'], $content[$i][$languages[$l]['id']]['languages_id'], $i);
+            }
+          }
+        }
+        $langtabs = '<div class="tablangmenu"><ul>';
+        $csstabstyle = 'border: 1px solid #aaaaaa; padding: 4px; width: 99%; margin-top: -1px; margin-bottom: 10px; float: left;background: #F3F3F3;';
+        $csstab = '<style type="text/css">' .  '#tab_lang_0' . '{display: block;' . $csstabstyle . '}';
+        $csstab_nojs = '<style type="text/css">';    
+        $cnt = 0;
+        $hidden_coIndex = '';
+  
+        for ($i=0; $i<$content_count; $i++) {
+          for ($l=0; $l<$languages_count; $l++) {
+            $tabtmp = "\'tab_lang_$cnt\'," ;
+            $coIndex = '';
+            //FIX wenn es bei gleicher languages_id mehrere gleiche content_group gibt
+            if ($counter > $languages_count && $i > 0) {
+               $coIndex = ' ('. $i .')';
+               $hidden_coIndex .= xtc_draw_hidden_field('content_new_group_index['.$i.']['.$languages[$l]['id'].']', $i). PHP_EOL;
+            }
+            $langtabs.= '<li onclick="showTab('. $tabtmp. $counter.')" style="cursor: pointer;" id="tabselect_' . $cnt .'">' .xtc_image(DIR_WS_LANGUAGES . $languages[$l]['directory'] .'/admin/images/'. $languages[$l]['image'], $languages[$l]['name']) . ' ' . $languages[$l]['name'].$coIndex.'</li>';
+            if($cnt > 0) $csstab .= '#tab_lang_' . $cnt .'{display: none;' . $csstabstyle . '}';
+            $csstab_nojs .= '#tab_lang_' . $cnt .'{display: block;' . $csstabstyle . '}';
+            $cnt ++;
+          }
+        }
+        $csstab .= '</style>';
+        $csstab_nojs .= '</style>';
+        $langtabs.= '</ul></div>';
+        if ($hidden_coIndex) {
+          echo $hidden_coIndex;
+          echo '<div class="main important_info">'.TEXT_CONTENT_DOUBLE_GROUP_INDEX.'</div>'. PHP_EOL;
+        }
+        ?>
+        <?php if (USE_ADMIN_LANG_TABS != 'false') { ?>
+        <script type="text/javascript">
+          $.get("includes/lang_tabs_menu/lang_tabs_menu.css", function(css) {
+            $("head").append("<style type='text/css'>"+css+"<\/style>");
+          });
+          document.write('<?php echo ($csstab);?>');
+          document.write('<?php echo ($langtabs);?>');
+        </script>
+        <?php 
+        } else { 
+          echo ($csstab_nojs);
+        }
+        ?>
+        <noscript>
+          <?php echo ($csstab_nojs);?>
+        </noscript>
+
+        <?php
+        $cnt=0;
+        for ($i=0; $i<$content_count; $i++) {
+          for ($l=0; $l < $languages_count; $l++) {
+            echo ('<div id="tab_lang_' . $cnt . '" style="padding:0px;">');
+            $content_lang = array();
+            if (isset($content[$i][$languages[$l]['id']]['content_id'])) {
+              //$content_lang = get_content_details($content[$i][$languages[$l]['id']]['content_id']);
+              $content_lang = $content[$i][$languages[$l]['id']];
+              echo xtc_draw_hidden_field('content_id['.$i.']['.$languages[$l]['id'].']', $content_lang['content_id']);
+            }
+            $lang_img = '<div style="float:left;margin-right:5px;">'.xtc_image(DIR_WS_LANGUAGES . $languages[$l]['directory'] .'/admin/images/'. $languages[$l]['image'], $languages[$l]['name']).'</div>';   
+            ?>
+            <table class="tableConfig" style="margin-top:0;">
+            <tr>
+              <td class="dataTableConfig col-left" style="min-width:205px;border-top:0;border-right:1px solid #a3a3a3;"><?php echo $lang_img.TEXT_STATUS_ACTIVE; ?></td>
+              <td class="dataTableConfig col-single-right" style="border-top:0;"><?php echo draw_on_off_selection('content_active['.$i.']['.$languages[$l]['id'].']', $content_status_array, ((isset($content_lang['content_active']) && $content_lang['content_active'] != '') ? $content_lang['content_active'] : 0)).'<span style="display:inline-block;vertical-align:top;padding:5px 0 0 5px;line-height:24px;">'.TEXT_STATUS_ACTIVE_DESCRIPTION.'</span>' ;?></td>
+            </tr>
+            <tr>
+              <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo $lang_img.TEXT_STATUS; ?></td>
+              <td class="dataTableConfig col-single-right"><?php echo draw_on_off_selection('content_status['.$i.']['.$languages[$l]['id'].']', $content_status_array, ((isset($content_lang['content_status']) && $content_lang['content_status'] != '') ? $content_lang['content_status'] : 0)).'<span style="display:inline-block;vertical-align:top;padding:5px 0 0 5px;line-height:24px;">'.TEXT_STATUS_DESCRIPTION.'</span>' ;?></td>
+            </tr>
+              <tr>
+                <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo $lang_img.TEXT_TITLE; ?></td>
+                <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('content_title['.$i.']['.$languages[$l]['id'].']', ((isset($content_lang['content_title'])) ? $content_lang['content_title'] : ''), 'style="width:100%"'); ?></td>
+              </tr>
+              <tr>
+                <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo $lang_img.TEXT_HEADING; ?></td>
+                <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('content_heading['.$i.']['.$languages[$l]['id'].']', ((isset($content_lang['content_heading'])) ? $content_lang['content_heading'] : ''), 'style="width:100%"'); ?></td>
+              </tr>
+              <?php
+              if (GROUP_CHECK=='true') {
+                $customers_statuses_array = xtc_get_customers_statuses();
+                $customers_statuses_array = array_merge(array(array('id'=>'all', 'text'=>TXT_ALL)), $customers_statuses_array);
+                ?>
+                <tr>
+                  <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo $lang_img.ENTRY_CUSTOMERS_STATUS; ?></td>
+                  <td class="dataTableConfig col-single-right">
+                    <div class="customers-groups">
+                      <?php
+                      for ($g=0, $z=sizeof($customers_statuses_array); $g<$z; $g++) {
+                        $checked = false;
+                        if (strpos($content_lang['group_ids'], 'c_'.$customers_statuses_array[$g]['id'].'_group') !== false) {
+                          $checked = true;
+                        }
+                        echo xtc_draw_checkbox_field('groups['.$i.']['.$languages[$l]['id'].'][]', $customers_statuses_array[$g]['id'], $checked).' ' .$customers_statuses_array[$g]['text'].'<br />';
+                      }
+                      ?>
+                    </div>
+                  </td>
+                </tr>
+                <?php
+              }
+              ?>
+              <tr>
+                <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo $lang_img.'Meta Title:<br/>(max. ' . META_TITLE_LENGTH . ' ' . TEXT_CHARACTERS .')'; ?></td>
+                <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('content_meta_title['.$i.']['.$languages[$l]['id'].']', ((isset($content_lang['content_meta_title'])) ? $content_lang['content_meta_title'] : ''), 'style="width:100%" maxlength="' . META_TITLE_LENGTH . '"'); ?></td>
+              </tr>
+              <tr>
+                <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo $lang_img.'Meta Description:<br/>(max. ' . META_DESCRIPTION_LENGTH . ' ' . TEXT_CHARACTERS .')'; ?></td>
+                <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('content_meta_description['.$i.']['.$languages[$l]['id'].']', ((isset($content_lang['content_meta_description'])) ? $content_lang['content_meta_description'] : ''), 'style="width:100%" maxlength="' . META_DESCRIPTION_LENGTH . '"'); ?></td>
+              </tr>
+              <tr>
+                <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo $lang_img.'Meta Keywords:<br/>(max. ' . META_KEYWORDS_LENGTH . ' ' . TEXT_CHARACTERS .')'; ?></td>
+                <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('content_meta_keywords['.$i.']['.$languages[$l]['id'].']', ((isset($content_lang['content_meta_keywords'])) ? $content_lang['content_meta_keywords'] : ''), 'style="width:100%" maxlength="' . META_KEYWORDS_LENGTH . '"'); ?></td>
+              </tr>
+              <tr>
+                <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo $lang_img.TEXT_UPLOAD_FILE; ?></td>
+                <td class="dataTableConfig col-single-right"><?php echo xtc_draw_file_field('file_upload_'.$i.'_'.$languages[$l]['id']).'<span style="display:inline-block;vertical-align:top;padding:5px 0 0 5px;line-height:24px;">'.TEXT_UPLOAD_FILE_LOCAL.'</span>'; ?></td>
+              </tr>
+              <tr>
+                <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo $lang_img.TEXT_CHOOSE_FILE; ?></td>
+                <td class="dataTableConfig col-single-right">
+                  <?php
+                    echo TEXT_CHOOSE_FILE_SERVER.'<br /><br />';
+                    echo xtc_draw_pull_down_menu('select_file['.$i.']['.$languages[$l]['id'].']', array_merge(array(array('id' => 'default','text' => (($content_lang['content_file'] != '') ? TEXT_NO_FILE : TEXT_SELECT))), $content_files), $content_lang['content_file']);
+                    if ($content_lang['content_file'] != '') {
+                      echo ' '.TEXT_CURRENT_FILE.' <b>'.$content_lang['content_file'].'</b><br />';
+                    }
+                  ?>
+                </td>
+              </tr>
+              <tr>
+                <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"></td>
+                <td class="dataTableConfig col-single-right"><?php echo TEXT_FILE_DESCRIPTION; ?></td>
+              </tr>
+              <tr>
+                <td class="dataTableConfig col-left" style="border-bottom:0;border-right:1px solid #a3a3a3;vertical-align:top;"><?php echo $lang_img.TEXT_CONTENT; ?></td>
+                <td class="dataTableConfig col-single-right" style="border-bottom:0;"><?php  echo xtc_draw_textarea_field('content_text['.$i.']['.$languages[$l]['id'].']', $languages[$l]['id'], '100%', '35', ((isset($content_lang['content_text'])) ? $content_lang['content_text'] : ''), '', true, true); ?>
+                </td>
+              </tr>          
+0            </table>          
+            <?php
+            echo ('</div>');
+            $cnt++;
+          }
+        }
+        ?>
+        </div>
+
+        <div style="padding:5px;clear:both;">
+          <div class="flt-r mrg5 pdg2">
+            <input type="submit" class="button" onclick="this.blur();" value="<?php echo BUTTON_SAVE; ?>"/>
+          </div>
+          <div class="flt-r mrg5 pdg2">
+            <input class="button" type="submit" onclick="this.blur();" value="<?php echo BUTTON_UPDATE; ?>" name="page_update"/>
+          </div>
+          <div class="flt-r mrg5 pdg2">
+            <a class="button" onclick="this.blur();" href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action'))); ?>"><?php echo BUTTON_BACK; ?></a>
+          </div>
+        </div>
+  
+        </form>
+      </td>
+    </tr>
+  </table>
 
   <script type="text/javascript">
     var parentid = $('#parent_id').val();  
     var stateparent = $('[name="parent_check"]').is(":checked") ? true : false; 
     var checkparent = false;
-  
+
     $('#file_flag').on('change', function() {
       get_content_pages();
     });
-  
+
     $(document).ready(function(){
       get_content_pages();
     });
-  
+
     function get_content_pages() {
       var flag = $('#file_flag').val();
       var lang = <?php echo $_SESSION['languages_id']; ?>;
       var contentgroup = <?php echo (isset($default_content['content_group']) && $default_content['content_group'] != '') ? $default_content['content_group'] : "''"; ?>;
       $.get('../ajax.php', {ext: 'get_content_flag', file_flag: flag, language: lang, content_group: contentgroup, speed: 1}, function(data) {
         if (data != '' && data != undefined) { 
-        
+      
           <?php if (NEW_SELECT_CHECKBOX == 'true') { ?>
             $('#parent_id').replaceWith('<select id="parent_id" name="parent_id" class="SlectBox" style="visibility: hidden;"></select>');
             $('#parent_id').nextAll('.optWrapper').replaceWith('<div class="optWrapper"><ul class="options" id="options"></ul></div>');
@@ -656,9 +667,9 @@ if (!$action || $action == 'delete') {
           <?php } else { ?>
             $('#parent_id').replaceWith('<select id="parent_id" name="parent_id" class="SlectBox"></select>');
           <?php } ?>
-          
+        
           $('<option value="">---</option>').appendTo('#parent_id');
-          
+        
           $.each(data, function(id, arr) {
             if (arr.id == parentid) {
               checkparent = true;
@@ -668,11 +679,11 @@ if (!$action || $action == 'delete') {
               $('<li data-val="'+arr.id+'"'+((arr.id == parentid) ? 'class="selected"' : '')+'><label>'+arr.name+'</label></li>').appendTo('#options');        
             <?php } ?>
           });
-          
+        
           <?php if (NEW_SELECT_CHECKBOX == 'true') { ?>
             $('.SlectBox').not('.noStyling').SumoSelect({ createElems: 'mod', placeholder: '-'});
           <?php } ?>
-          
+        
           if (checkparent === true) {
             $('[name="parent_check"]').prop("checked", stateparent);
           } else {

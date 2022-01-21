@@ -83,6 +83,7 @@ echo endMenue(BOX_HEADING_CUSTOMERS);
 echo mainMenue(BOX_HEADING_PRODUCTS);
     if ($admin_access['categories'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_CATEGORIES, '', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_CATEGORIES . '</a></li>';
     if ($admin_access['products_attributes'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, '', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_PRODUCTS_ATTRIBUTES . '</a></li>';
+    if ($admin_access['content_manager'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, 'set=product') . '" class="menuBoxContentLink"> -' . BOX_PRODUCTS_CONTENT . '</a></li>';
     if ($admin_access['products_tags'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_PRODUCTS_TAGS, '', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_PRODUCTS_TAGS . '</a></li>';
     if ($admin_access['manufacturers'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_MANUFACTURERS, '', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_MANUFACTURERS . '</a></li>';
     if ($admin_access['reviews'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_REVIEWS, '', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_REVIEWS . '</a></li>';
@@ -150,12 +151,9 @@ echo mainMenue(BOX_HEADING_TOOLS);
     if ($admin_access['content_manager'] == '1') {
       echo '<li><a href="javascript:void(0)" class="menuBoxContentLinkSub"> -' . BOX_CONTENT . '</a><ul>';
         echo '<li><a href="' . xtc_href_link(FILENAME_CONTENT_MANAGER) . '" class="menuBoxContentLink"> -' . BOX_PAGES_CONTENT . '</a></li>';
-        echo '<li><a href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, 'set=product') . '" class="menuBoxContentLink"> -' . BOX_PRODUCTS_CONTENT . '</a></li>';
         echo '<li><a href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, 'set=content') . '" class="menuBoxContentLink"> -' . BOX_CONTENT_CONTENT . '</a></li>';
-        echo '<li><a href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, 'set=email') . '" class="menuBoxContentLink"> -' . BOX_EMAIL_CONTENT . '</a></li>';
       echo '  </ul></li>';
     }
-    
     if ($admin_access['removeoldpics'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_REMOVEOLDPICS, '', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_REMOVEOLDPICS . '</a></li>';
     if ($admin_access['backup'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_BACKUP) . '" class="menuBoxContentLink"> -' . BOX_BACKUP . '</a></li>';
     if (defined('MODULE_BANNER_MANAGER_STATUS') && MODULE_BANNER_MANAGER_STATUS == 'true') {
@@ -203,7 +201,10 @@ echo mainMenue(BOX_HEADING_CONFIGURATION);
       echo '<li><a href="' . xtc_href_link(FILENAME_CONFIGURATION, 'gID=7', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_CONFIGURATION_7 . '</a></li>';
       echo '<li><a href="' . xtc_href_link(FILENAME_CONFIGURATION, 'gID=8', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_CONFIGURATION_8 . '</a></li>';
       echo '<li><a href="' . xtc_href_link(FILENAME_CONFIGURATION, 'gID=9', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_CONFIGURATION_9 . '</a></li>';
-      echo '<li><a href="' . xtc_href_link(FILENAME_CONFIGURATION, 'gID=12', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_CONFIGURATION_12 . '</a></li>';
+      echo '<li><a href="javascript:void(0)" class="menuBoxContentLinkSub"> -' . BOX_CONFIGURATION_12 . '</a><ul>';
+        echo '<li><a href="' . xtc_href_link(FILENAME_CONFIGURATION, 'gID=12', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_CONFIGURATION_12 . '</a></li>';
+        echo '<li><a href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, 'set=email') . '" class="menuBoxContentLink"> -' . BOX_EMAIL_CONTENT . '</a></li>';
+      echo '  </ul></li>';
       echo '<li><a href="' . xtc_href_link(FILENAME_CONFIGURATION, 'gID=13', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_CONFIGURATION_13 . '</a></li>';
     }
     if ($admin_access['orders_status'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_ORDERS_STATUS, '', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_ORDERS_STATUS . '</a></li>';
