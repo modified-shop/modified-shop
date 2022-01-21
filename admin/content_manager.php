@@ -349,6 +349,7 @@
       } else {
         xtc_db_perform($table, $sql_data_array);
         $_GET[$type[0].'ID'] = $product;
+        $_GET['coID'] = xtc_db_insert_id();
       }
 
       foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/content_manager/action/','php') as $file) require ($file);
@@ -356,7 +357,7 @@
       if (isset($_GET['cPath'])) {
         xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('last_action', 'action', 'id', 'coID')) . 'action='.$_GET['last_action']));
       } else {
-        xtc_redirect(xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action', 'id'))));
+        xtc_redirect(xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action', 'id', 'last_action')).((isset($_GET['last_action'])) ? 'action='.$_GET['last_action'] : '')));
       }
     }
   }
@@ -418,13 +419,7 @@
         ?>
         <!-- body_text //--> 
         <td class="boxCenter"> 
-
-          <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_content.png'); ?></div>
-          <div class="pageHeading flt-l"><?php echo HEADING_TITLE; ?>
-            <div class="main pdg2">Tools</div>
-          </div>
           <?php
-            $show = true;
             if ($set == '') {
               //content
               include(DIR_WS_MODULES.'content_manager_pages.php');
@@ -433,7 +428,6 @@
               //products content
               include(DIR_WS_MODULES.'content_manager_products.php');
               $newaction = 'new_products_content';
-              $show = false;
             } elseif ($set == 'content') {
               //products content
               include(DIR_WS_MODULES.'content_manager_content.php');
@@ -442,18 +436,6 @@
               //products content
               include(DIR_WS_MODULES.'content_manager_email.php');
               $newaction = 'new_email_content';
-            }
-
-            if (!$action) {
-              if (isset($_GET['pID']) && (int)$_GET['pID'] > 0) {
-                $setparam .= '&pID='.(int)$_GET['pID'];
-                $show = true;
-              }
-              if ($show === true) {
-              ?>                
-                <div class="mrg5"><a class="button" onclick="this.blur();" href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER,'action='.$newaction.$setparam); ?>"><?php echo (($set == '') ? BUTTON_NEW_CONTENT : BUTTON_NEW_ATTACHMENT); ?></a></div>
-              <?php
-              }
             }
           ?>
         </td>
