@@ -26,7 +26,7 @@
   define('TABLE_HEADING_PRODUCTS_ID','ID');
   define('TABLE_HEADING_PRODUCTS','Artikel');
   define('TABLE_HEADING_MODEL','Artikelnummer');
-  define('TABLE_HEADING_IMAGE','Bild');
+  defined('TABLE_HEADING_IMAGE') OR define('TABLE_HEADING_IMAGE','Bild');
   define('TABLE_HEADING_PRODUCTS_CONTENT_ID','ID');
   define('TABLE_HEADING_CONTENT_MANAGER_ID','ID');
   define('TABLE_HEADING_CONTENT_MANAGER','Seiten');
@@ -48,12 +48,12 @@
   define('CONFIRM_DELETE','Wollen Sie den Content wirklich l&ouml;schen?');
   define('CONTENT_NOTE','Content markiert mit <span class="col-red">*</span> geh&ouml;rt zum System und kann nicht gel&ouml;scht werden!');
 
-  define('TEXT_DATE_ADDED','Hinzugefügt am');
-  define('TEXT_LAST_MODIFIED','Bearbeitet am');
-  define('HEADING_TITLE_GOTO','Gehe zu:');
+  defined('TEXT_DATE_ADDED') OR define('TEXT_DATE_ADDED','Hinzugefügt am');
+  defined('TEXT_LAST_MODIFIED') OR define('TEXT_LAST_MODIFIED','Bearbeitet am');
+  defined('HEADING_TITLE_GOTO') OR define('HEADING_TITLE_GOTO','Gehe zu:');
   define('TEXT_DISPLAY_NUMBER_OF_CONTENT_MANAGER','Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> Content)');
   define('TEXT_INFO_HEADING_DELETE_CONTENT_MANAGER','Content l&ouml;schen');
-  define('TEXT_INFO_DELETE_INTRO','Sind Sie sicher, dass Sie diesen Content l&ouml;schen m&ouml;chten?');
+  defined('TEXT_INFO_DELETE_INTRO') OR define('TEXT_INFO_DELETE_INTRO','Sind Sie sicher, dass Sie diesen Content l&ouml;schen m&ouml;chten?');
   define('TEXT_SEARCH', 'Suche:');
 
   // edit
@@ -106,5 +106,5 @@
   define('TEXT_CONTENT_DOUBLE_GROUP_INDEX', 'Doppelter Content Gruppen Index! Bitte neu speichern. Das Problem wird damit automatisch behoben!');
   defined('TEXT_CHARACTERS') OR define('TEXT_CHARACTERS','Zeichen');
   define('TEXT_KEEP_FILENAME', 'Dateiname beibehalten:');
-  define('TEXT_IMAGE_NONEXISTENT','Kein Bild verf&uuml;gbar!');
+  defined('TEXT_IMAGE_NONEXISTENT') OR define('TEXT_IMAGE_NONEXISTENT','Kein Bild verf&uuml;gbar!');
 ?>
