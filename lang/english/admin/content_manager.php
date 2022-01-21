@@ -26,7 +26,7 @@
   define('TABLE_HEADING_PRODUCTS_ID','ID');
   define('TABLE_HEADING_PRODUCTS','Product');
   define('TABLE_HEADING_MODEL','Model');
-  define('TABLE_HEADING_IMAGE','Image');
+  defined('TABLE_HEADING_IMAGE') OR define('TABLE_HEADING_IMAGE','Image');
   define('TABLE_HEADING_PRODUCTS_CONTENT_ID','ID');
   define('TABLE_HEADING_CONTENT_MANAGER_ID','ID');
   define('TABLE_HEADING_CONTENT_MANAGER','Seiten');
@@ -48,12 +48,12 @@
   define('CONFIRM_DELETE','Delete Content?');
   define('CONTENT_NOTE','Content marked with <span class="col-red">*</span> is a part of the system and cannot be deleted!');
 
-  define('TEXT_DATE_ADDED','date added:');
-  define('TEXT_LAST_MODIFIED','last modified:');
-  define('HEADING_TITLE_GOTO','Go to:');
+  defined('TEXT_DATE_ADDED') OR define('TEXT_DATE_ADDED','date added:');
+  defined('TEXT_LAST_MODIFIED') OR define('TEXT_LAST_MODIFIED','last modified:');
+  defined('HEADING_TITLE_GOTO') OR define('HEADING_TITLE_GOTO','Go to:');
   define('TEXT_DISPLAY_NUMBER_OF_CONTENT_MANAGER','Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> Content)');
   define('TEXT_INFO_HEADING_DELETE_CONTENT_MANAGER','Delete Content');
-  define('TEXT_INFO_DELETE_INTRO','Are you sure you want to delete this content?');
+  defined('TEXT_INFO_DELETE_INTRO') OR define('TEXT_INFO_DELETE_INTRO','Are you sure you want to delete this content?');
   define('TEXT_SEARCH', 'Search:');
 
   // edit
@@ -106,5 +106,5 @@
   define('TEXT_CONTENT_DOUBLE_GROUP_INDEX', 'Duplicate Content Group Index! Please save again. The problem is thus automatically corrected!');
   defined('TEXT_CHARACTERS') OR define('TEXT_CHARACTERS','Signs');
   define('TEXT_KEEP_FILENAME', 'Keep filename:');
-  define('TEXT_IMAGE_NONEXISTENT','No image available!'); 
+  defined('TEXT_IMAGE_NONEXISTENT') OR define('TEXT_IMAGE_NONEXISTENT','No image available!'); 
 ?>
