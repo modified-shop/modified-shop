@@ -67,7 +67,9 @@ if ($language_not_found === true) {
     $breadcrumb->add($shop_content_data['content_title'], xtc_href_link(FILENAME_CONTENT, xtc_content_link($shop_content_data['content_group'], $shop_content_data['content_title'])));
   } else {
     $site_error = TEXT_CONTENT_NOT_FOUND;
-    $shop_content_data['content_heading'] = TEXT_CONTENT_NOT_FOUND;
+    $shop_content_data = array(
+      'content_heading' => TEXT_CONTENT_NOT_FOUND
+    );
   }
 
   $link = 'javascript:history.back(1)';
