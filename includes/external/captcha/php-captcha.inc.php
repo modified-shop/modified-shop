@@ -372,14 +372,14 @@
             $iY = $this->iHeight / 2 + $iCharHeight / 4; 
             
             // write text to image
-            $this->WriteToImage($iFontSize, $iAngle, $iX, $iY, $iTextColour, $sCurrentFont, $this->sCode[$i]);
+            $this->WriteToImage($iFontSize, $iAngle, (int)$iX, (int)$iY, (int)$iTextColour, $sCurrentFont, $this->sCode[$i]);
             
             if ($this->bCharShadow) {
                $iOffsetAngle = xtc_rand(-30, 30);
                $iRandOffsetX = xtc_rand(-5, 5);
                $iRandOffsetY = xtc_rand(-5, 5);
                
-               $this->WriteToImage($iFontSize, $iOffsetAngle, $iX + $iRandOffsetX, $iY + $iRandOffsetY, $iShadowColour, $sCurrentFont, $this->sCode[$i]);
+               $this->WriteToImage($iFontSize, $iOffsetAngle, (int)($iX + $iRandOffsetX), (int)($iY + $iRandOffsetY), (int)$iShadowColour, $sCurrentFont, $this->sCode[$i]);
             }
          }
       }
