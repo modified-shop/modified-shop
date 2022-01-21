@@ -55,18 +55,19 @@ class trustedshops {
                   `trustbadge_variant` varchar(32) NOT NULL,
                   `trustbadge_offset` int(11) NOT NULL DEFAULT '0',
                   `trustbadge_position` varchar(32) NOT NULL,
+                  `trustbadge_offset_mobile` int(11) NOT NULL DEFAULT '0',
+                  `trustbadge_position_mobile` varchar(32) NOT NULL,
                   `trustbadge_code` text NOT NULL,
-                  `product_sticker_api` int(1) NOT NULL DEFAULT '0',
                   `product_sticker` text NOT NULL,
                   `product_sticker_status` int(1) NOT NULL DEFAULT '0',
+                  `product_sticker_api` int(1) NOT NULL DEFAULT '0',
+                  `product_sticker_api_client` varchar(128) NOT NULL,
+                  `product_sticker_api_secret` varchar(128) NOT NULL,
                   `review_sticker` text NOT NULL,
                   `review_sticker_status` int(1) NOT NULL DEFAULT '0',
-                  `snippets` varchar(32) NOT NULL,
-                  `widget` int(1) NOT NULL DEFAULT '0',
                   `date_added` datetime NOT NULL,
                   `last_modified` datetime NOT NULL,
-                  PRIMARY KEY (`id`),
-                  KEY `idx_status` (`status`)
+                  PRIMARY KEY (`id`)
                 )");
   }
 

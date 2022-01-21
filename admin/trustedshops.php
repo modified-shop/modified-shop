@@ -31,6 +31,19 @@
     while ($installed = xtc_db_fetch_array($installed_query)) {
       $installed_array[] = $installed['languages_id'];
     }
+
+    $table_array = array(
+      array('column' => 'trustbadge_offset_mobile', 'default' => "int(11) NOT NULL DEFAULT '0' AFTER trustbadge_position"),
+      array('column' => 'trustbadge_position_mobile', 'default' => "varchar(32) NOT NULL AFTER trustbadge_offset_mobile"),
+      array('column' => 'product_sticker_api_client', 'default' => "varchar(128) NOT NULL AFTER product_sticker_api"),
+      array('column' => 'product_sticker_api_secret', 'default' => "varchar(128) NOT NULL AFTER product_sticker_api_client"),
+    );
+    foreach ($table_array as $table) {
+      $check_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_TRUSTEDSHOPS." LIKE '".xtc_db_input($table['column'])."'");
+      if (xtc_db_num_rows($check_query) < 1) {
+        xtc_db_query("ALTER TABLE ".TABLE_TRUSTEDSHOPS." ADD ".$table['column']." ".$table['default']."");
+      }
+    }
   }
 
   $languages_id_array = array();
@@ -42,13 +55,17 @@
     array('id' => '1', 'text' => TEXT_ENABLED),
     array('id' => '0', 'text' => TEXT_DISABLED),
   );
-
+  
+  $position_array = array(
+    array('id' => 'left', 'text' => TEXT_LEFT),
+    array('id' => 'right', 'text' => TEXT_RIGHT),
+    array('id' => 'center', 'text' => TEXT_CENTER),
+  );
+  
   $trustbadge_array = array(
     array('id' => 'default', 'text' => TEXT_BADGE_DEFAULT),
-    //array('id' => 'small', 'text' => TEXT_BADGE_SMALL),
     array('id' => 'reviews', 'text' => TEXT_BADGE_REVIEWS),
     array('id' => 'custom', 'text' => TEXT_BADGE_CUSTOM),
-    //array('id' => 'custom_reviews', 'text' => TEXT_BADGE_CUSTOM_REVIEWS),
   );
 
   switch ($_GET['action']) {
@@ -78,45 +95,51 @@
       if (isset($_POST['trustbadge_offset'])) {
         $trustbadge_offset = (int)$_POST['trustbadge_offset'];
       }
+      if (isset($_POST['trustbadge_offset_mobile'])) {
+        $trustbadge_offset_mobile = (int)$_POST['trustbadge_offset_mobile'];
+      }
       $trustbadge_position = xtc_db_prepare_input($_POST['trustbadge_position']);
+      $trustbadge_position_mobile = xtc_db_prepare_input($_POST['trustbadge_position_mobile']);
       if (isset($_POST['trustbadge_code'])) {
         $trustbadge_code = xtc_db_prepare_input($_POST['trustbadge_code']);
       }
       $product_sticker = xtc_db_prepare_input($_POST['product_sticker']);
-      $product_sticker_api = xtc_db_prepare_input($_POST['product_sticker_api']);
       $product_sticker_status = xtc_db_prepare_input($_POST['product_sticker_status']);
-      $widget = xtc_db_prepare_input($_POST['widget']);
-      $snippets = implode(', ', ((isset($_POST['snippets']) && is_array($_POST['snippets'])) ? $_POST['snippets'] : array()));    
+
+      $product_sticker_api = xtc_db_prepare_input($_POST['product_sticker_api']);
+      $product_sticker_api_client = xtc_db_prepare_input($_POST['product_sticker_api_client']);
+      $product_sticker_api_secret = xtc_db_prepare_input($_POST['product_sticker_api_secret']);
 
       $review_sticker = xtc_db_prepare_input($_POST['review_sticker']);
       $review_sticker_status = xtc_db_prepare_input($_POST['review_sticker_status']);
       
       $status = xtc_db_prepare_input($_POST['status']);
       
-      if ((int)$trustbadge_offset > '250') {
-        $trustbadge_offset = '250';
-      }
-
-      $sql_data_array = array('trustedshops_id' => $trustedshops_id,
-                              'languages_id' => $languages_id,
-                              'trustbadge_variant' => $trustbadge_variant,
-                              'product_sticker' => $product_sticker,
-                              'product_sticker_api' => $product_sticker_api,
-                              'product_sticker_status' => $product_sticker_status,
-                              'widget' => $widget,
-                              'snippets' => $snippets,
-
-                              'review_sticker' => $review_sticker,
-                              'review_sticker_status' => $review_sticker_status,
-
-                              'status' => $status,
-                              );
+      $sql_data_array = array(
+        'trustedshops_id' => $trustedshops_id,
+        'languages_id' => $languages_id,
+        'trustbadge_variant' => $trustbadge_variant,
+        'trustbadge_position' => $trustbadge_position,
+        'trustbadge_position_mobile' => $trustbadge_position_mobile,
+        'trustbadge_code' => '',
+        'product_sticker' => $product_sticker,
+        'product_sticker_api' => $product_sticker_api,
+        'product_sticker_status' => $product_sticker_status,
+        'product_sticker_api_client' => $product_sticker_api_client,
+        'product_sticker_api_secret' => $product_sticker_api_secret,
+        'review_sticker' => $review_sticker,
+        'review_sticker_status' => $review_sticker_status,
+        'status' => $status,
+      );
       
-      if (isset($trustbadge_code)) {
+      if ($trustbadge_variant == 'custom' && isset($trustbadge_code)) {
         $sql_data_array['trustbadge_code'] = $trustbadge_code;
       }
       if (isset($trustbadge_offset)) {
         $sql_data_array['trustbadge_offset'] = $trustbadge_offset;
+      }
+      if (isset($trustbadge_offset)) {
+        $sql_data_array['trustbadge_offset_mobile'] = $trustbadge_offset_mobile;
       }
       
       if ($_GET['action'] == 'insert') {
@@ -154,11 +177,58 @@
 require (DIR_WS_INCLUDES.'head.php');
 ?>
   <style type="text/css">
-    .ts_main, .ts_badge, .ts_products {
+    .ts_main, .ts_features {
       float:left; 
       padding:30px 0 0;
       margin: 0 30px;
       cursor: pointer;
+    }
+    .btnSmall, header.mainNavigation nav.signLogin .container .btnWhite {
+      font-size: 13px;
+      margin-top: 15px;
+    }
+    .btnSmall.fitting {
+      padding-left: 13px;
+      padding-right: 13px;
+    }
+    .btnSmall.btnCuracao {
+      padding: 10px 15px;
+        padding-right: 15px;
+        padding-left: 15px;
+    }
+    .btnBig.fitting, .btnSmall.fitting {
+      display: inline-block;
+      padding-left: 20px;
+      padding-right: 20px;
+      width: auto;
+    }
+    .btnSmall {
+      padding: 10px 13px;
+    }
+    .btnCuracao {
+      background: #0DBEDC;
+      color: #FFFFFF !important;
+      font-weight: bold !important;
+      transition: all .2s;
+      border: 2px solid #0DBEDC;
+    }
+    .btnSmall {
+      border-radius: 3px;
+      font-size: 13px;
+      box-sizing: border-box;
+      display: block;
+      padding: 3px 10px;
+      text-align: center;
+      width: 100%;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btnCuracao:hover, .btnCuracao:active, .btnCuracao:focus {
+      background: #FFFFFF;
+      transition: all .2s;
+      outline: none;
+      color: #000000 !important;
+      text-decoration: none;
     }
   </style>
   <script type="text/javascript" src="includes/general.js"></script>
@@ -167,10 +237,14 @@ require (DIR_WS_INCLUDES.'head.php');
       $('#trustbadge').on('change', function() {
         if (this.value == 'custom' || this.value == 'custom_reviews') {
           $('#offset').hide();
+          $('#position').hide();
+          $('#title').hide();
           $('#custom').show();
           $('#custom_note').show();
         } else {
           $('#offset').show();
+          $('#position').show();
+          $('#title').show();
           $('#custom').hide();
           $('#custom_note').hide();
         }
@@ -189,29 +263,17 @@ require (DIR_WS_INCLUDES.'head.php');
           the_block.slideUp(300);
         }
       });
-      $('.ts_badge').click(function(e) {
-        $('.ts_badge').css("font-weight", "bold");
-        $('.ts_main').css("font-weight", "normal");
-        $('.ts_products').css("font-weight", "normal");
-        $('#ts_badge').show();
-        $('#ts_main').hide();
-        $('#ts_products').hide();      
-      });
       $('.ts_main').click(function(e) {
-        $('.ts_badge').css("font-weight", "normal");
         $('.ts_main').css("font-weight", "bold");
-        $('.ts_products').css("font-weight", "normal");
+        $('.ts_features').css("font-weight", "normal");
         $('#ts_main').show();
-        $('#ts_badge').hide();
-        $('#ts_products').hide();      
+        $('#ts_features').hide(); 
       });
-      $('.ts_products').click(function(e) {
-        $('.ts_badge').css("font-weight", "normal");
+      $('.ts_features').click(function(e) {
         $('.ts_main').css("font-weight", "normal");
-        $('.ts_products').css("font-weight", "bold");
-        $('#ts_products').show();
+        $('.ts_features').css("font-weight", "bold");
         $('#ts_main').hide();
-        $('#ts_badge').hide();      
+        $('#ts_features').show();
       });
     });
   </script>
@@ -274,29 +336,9 @@ require (DIR_WS_INCLUDES.'head.php');
                     <td class="main" style="width:160px"><?php echo xtc_draw_pull_down_menu('languages_id', $languages_id_array, ((isset($trustedshops['languages_id'])) ? $trustedshops['languages_id'] : ''), 'style="width: 155px"'); ?></td>
                   </tr>
                   <tr>
-                    <td class="main"><b><?php echo TEXT_TRUSTEDSHOPS_WIDGET; ?></b></td>
-                    <td class="main"><?php echo draw_on_off_selection('widget', $trustedshops_status_array, ((isset($trustedshops['widget']) && $trustedshops['widget'] == '1') ? true : false), 'style="width: 155px"'); ?></td>
-                    <td class="main" colspan="2"><?php echo TEXT_WIDGET_INFO; ?></td>
-                  </tr>
-                  <tr>
-                    <td class="main" style="vertical-align:top;"><b><?php echo TEXT_TRUSTEDSHOPS_SNIPPETS; ?></b></td>
-                    <td class="main">
-                    <?php
-                      $ts_snippets = explode(', ', $trustedshops['snippets']);
-                      $ts_snippets_array = array();
-                      foreach ($ts_snippets as $key => $value) {
-                        $ts_snippets_array['snippets'][$value] = $value;
-                      }
-                      echo xtc_draw_checkbox_field('snippets[]', 'product_info', (((isset($ts_snippets_array['snippets']['product_info'])) ? $ts_snippets_array['snippets']['product_info'] : false))).TEXT_SNIPPETS_PRODUCTS.'<br/>';
-                      echo xtc_draw_checkbox_field('snippets[]', 'index', (((isset($ts_snippets_array['snippets']['index'])) ? $ts_snippets_array['snippets']['index'] : false))).TEXT_SNIPPETS_CATEGORY.'<br/>';
-                      echo xtc_draw_checkbox_field('snippets[]', 'home', (((isset($ts_snippets_array['snippets']['home'])) ? $ts_snippets_array['snippets']['home'] : false))).TEXT_SNIPPETS_INDEX;
-                    ?>
-                    </td>
-                    <td class="main" colspan="2"><span class="important_info"><?php echo TEXT_TRUSTEDSHOPS_SNIPPETS_INFO; ?></span></td>
-                  </tr>
-                  <tr>
                     <td class="main" colspan="4">
-                      <div class="blog_title active"><?php echo HEADING_TRUSTBADGE; ?></div>
+                    <div class="admin_contentbox blog_container">
+                      <div class="blog_title active"><div class="blog_header"><?php echo HEADING_TRUSTBADGE; ?></div></div>
                       <div class="blogentry" style="margin-bottom: 5px;">
                         <div class="blog_desc">
                           <table>
@@ -304,43 +346,63 @@ require (DIR_WS_INCLUDES.'head.php');
                               <td class="main" colspan="3" style="padding-bottom: 10px;"><?php echo TEXT_TRUSTBADGE_INFO; ?></td>
                             </tr>
                             <tr id="custom_note" <?php echo ((!isset($trustedshops['trustbadge_variant']) || $trustedshops['trustbadge_variant'] != 'custom') ? 'style="display:none;"' : ''); ?>>
-                              <td class="main important_info" colspan="2"><?php echo sprintf(TEXT_BADGE_INSTRUCTION, sprintf($ts_link, $trustedshops['trustedshops_id'], $_SESSION['language_code'])); ?></td>
+                              <td class="main important_info" colspan="2"><?php echo TEXT_BADGE_INSTRUCTION; ?></td>
                             </tr>
+                            <tr><td colspan="3" style="height:10px;"></td></tr>
                             <tr>
                               <td class="main" style="width:260px"><b><?php echo TEXT_TRUSTEDSHOPS_BADGE; ?></b></td>
-                              <td class="main">
+                              <td class="main" colspan="2">
                               <?php
                               echo xtc_draw_pull_down_menu('trustbadge_variant', $trustbadge_array, ((isset($trustedshops['trustbadge_variant'])) ? $trustedshops['trustbadge_variant'] : 'reviews'), 'style="min-width: 155px" id="trustbadge"');
+                              ?>
+                              </td>
+                            </tr>
+                            <tr id="title" <?php echo ((isset($trustedshops['trustbadge_variant']) && $trustedshops['trustbadge_variant'] == 'custom') ? 'style="display:none;"' : ''); ?>>
+                              <td class="main"></td>
+                              <td class="main" style="padding:20px 5px 10px 5px;"><b>Desktop</b></td>
+                              <td class="main" style="padding:20px 5px 10px 5px;"><b>Mobile</b></td>                              
+                            </tr>
+                            <tr id="position" <?php echo ((isset($trustedshops['trustbadge_variant']) && $trustedshops['trustbadge_variant'] == 'custom') ? 'style="display:none;"' : ''); ?>>
+                              <td class="main"><b><?php echo TEXT_TRUSTEDSHOPS_POSITION; ?></b></td>
+                              <td class="main">
+                              <?php
+                              echo xtc_draw_pull_down_menu('trustbadge_position', $position_array, ((isset($trustedshops['trustbadge_position'])) ? $trustedshops['trustbadge_position'] : 'right'), 'style="min-width: 155px"');
+                              ?>
+                              </td>
+                              <td class="main">
+                              <?php
+                              echo xtc_draw_pull_down_menu('trustbadge_position_mobile', $position_array, ((isset($trustedshops['trustbadge_position_mobile'])) ? $trustedshops['trustbadge_position_mobile'] : 'right'), 'style="min-width: 155px"');
                               ?>
                               </td>
                             </tr>
                             <tr id="offset" <?php echo ((isset($trustedshops['trustbadge_variant']) && $trustedshops['trustbadge_variant'] == 'custom') ? 'style="display:none;"' : ''); ?>>
                               <td class="main"><b><?php echo TEXT_BADGE_OFFSET; ?></b></td>
                               <td class="main"><?php echo xtc_draw_input_field('trustbadge_offset', ((isset($trustedshops['trustbadge_offset'])) ? $trustedshops['trustbadge_offset'] : 0), 'style="width:155px"'); ?> px</td>
+                              <td class="main"><?php echo xtc_draw_input_field('trustbadge_offset_mobile', ((isset($trustedshops['trustbadge_offset_mobile'])) ? $trustedshops['trustbadge_offset_mobile'] : 0), 'style="width:155px"'); ?> px</td>
                             </tr>
                             <tr id="custom" <?php echo ((!isset($trustedshops['trustbadge_variant']) || $trustedshops['trustbadge_variant'] != 'custom') ? 'style="display:none;"' : ''); ?>>
                               <td class="main" style="width:260px"><b><?php echo TEXT_BADGE_CUSTOM_CODE; ?></b></td>
                               <td class="main">
                               <?php
-                              echo xtc_draw_textarea_field('trustbadge_code', 'soft', '114', '10', ((isset($trustedshops['trustbadge_code']) && $trustedshops['trustbadge_code'] != '') ? $trustedshops['trustbadge_code'] : '')); 
+                              echo xtc_draw_textarea_field('trustbadge_code', 'soft', '114', '10', ((isset($trustedshops['trustbadge_code']) && $trustedshops['trustbadge_code'] != '') ? $trustedshops['trustbadge_code'] : $custom_trustbadge_code)); 
                               ?>
                               </td>
                             </tr>
                           </table>
                         </div>
                       </div>
-                      <div class="blog_title"><?php echo HEADING_ADVANCED; ?></div>
+                      <div class="blog_title"><div class="blog_header"><?php echo HEADING_ADVANCED; ?></div></div>
                       <div class="blogentry" style="display:none; margin-top:2px; margin-bottom: 5px;">
                         <div class="blog_desc">
                           <table>
                             <tr>
                               <td class="main" style="width:260px;"><b><?php echo TEXT_PRODUCT_STICKER_STATUS; ?></b></td>
-                              <td class="main" colspan="2"><?php echo draw_on_off_selection('product_sticker_status', $trustedshops_status_array, ((isset($trustedshops['product_sticker_status']) && $trustedshops['product_sticker_status'] == '1') ? true : false), 'style="width: 155px"'); ?></td>
-                              <td class="main"><?php echo sprintf(TEXT_PRODUCT_STICKER_INFO, $ts_link_product); ?></td>
+                              <td class="main" colspan="2" style="min-width: 110px;"><?php echo draw_on_off_selection('product_sticker_status', $trustedshops_status_array, ((isset($trustedshops['product_sticker_status']) && $trustedshops['product_sticker_status'] == '1') ? true : false), 'style="width: 155px"'); ?></td>
+                              <td class="main"><?php echo TEXT_PRODUCT_STICKER_INFO; ?></td>
                             </tr>
                             <tr>
                               <td class="main"><b><?php echo TEXT_PRODUCT_STICKER; ?></b></td>
-                              <td class="main" colspan="3"><?php echo xtc_draw_textarea_field('product_sticker', 'soft', '114', '10', ((isset($trustedshops['product_sticker']) && $trustedshops['product_sticker'] != '') ? $trustedshops['product_sticker'] : sprintf($product_sticker_default, '%s', '%s', TEXT_PRODUCT_STICKER_INTRO))); ?></td>
+                              <td class="main" colspan="3"><?php echo xtc_draw_textarea_field('product_sticker', 'soft', '114', '10', ((isset($trustedshops['product_sticker']) && $trustedshops['product_sticker'] != '') ? $trustedshops['product_sticker'] : '')); ?></td>
                             </tr>
                             <tr>
                               <td class="main" style="width:260px;"><b><?php echo TEXT_PRODUCT_STICKER_API; ?></b></td>
@@ -348,20 +410,29 @@ require (DIR_WS_INCLUDES.'head.php');
                               <td class="main"><?php echo TEXT_PRODUCT_STICKER_API_INFO; ?></td>
                             </tr>
                             <tr>
+                              <td class="main" style="width:260px;"><b><?php echo TEXT_PRODUCT_STICKER_API_CLIENT; ?></b></td>
+                              <td class="main" colspan="3"><?php echo xtc_draw_input_field('product_sticker_api_client', ((isset($trustedshops['product_sticker_api_client'])) ? $trustedshops['product_sticker_api_client'] : ''), 'style="width:100%"'); ?></td>
+                            </tr>
+                            <tr>
+                              <td class="main" style="width:260px;"><b><?php echo TEXT_PRODUCT_STICKER_API_SECRET; ?></b></td>
+                              <td class="main" colspan="3"><?php echo xtc_draw_input_field('product_sticker_api_secret', ((isset($trustedshops['product_sticker_api_secret'])) ? $trustedshops['product_sticker_api_secret'] : ''), 'style="width:100%"'); ?></td>
+                            </tr>
+                            <tr>
                               <td colspan="4"><div style="clear:both;width:100%;border-bottom:1px solid #ccc;padding-top:20px;margin-bottom:20px;"></div></td>
                             </tr>
                             <tr>
                               <td class="main" style="width:260px"><b><?php echo TEXT_REVIEW_STICKER_STATUS; ?></b></td>
                               <td class="main" colspan="2"><?php echo draw_on_off_selection('review_sticker_status', $trustedshops_status_array, ((isset($trustedshops['review_sticker_status']) && $trustedshops['review_sticker_status'] == '1') ? true : false), 'style="width: 155px"'); ?></td>
-                              <td class="main"><?php echo sprintf(TEXT_REVIEW_STICKER_INFO, $ts_link_review); ?></td>
+                              <td class="main"><?php echo TEXT_REVIEW_STICKER_INFO; ?></td>
                             </tr>
                             <tr>
                               <td class="main"><b><?php echo TEXT_REVIEW_STICKER; ?></b></td>
-                              <td class="main" colspan="3"><?php echo xtc_draw_textarea_field('review_sticker', 'soft', '114', '10', ((isset($trustedshops['review_sticker']) && $trustedshops['review_sticker'] != '') ? $trustedshops['review_sticker'] : sprintf($review_sticker_default, '%s', TEXT_REVIEW_STICKER_INTRO))); ?></td>
+                              <td class="main" colspan="3"><?php echo xtc_draw_textarea_field('review_sticker', 'soft', '114', '10', ((isset($trustedshops['review_sticker']) && $trustedshops['review_sticker'] != '') ? $trustedshops['review_sticker'] : '')); ?></td>
                             </tr>
                           </table>
                         </div>
                       </div>
+                    </div>
                     </td>
                   </tr>
                 </table>
@@ -383,7 +454,7 @@ require (DIR_WS_INCLUDES.'head.php');
                         <?php echo HEADING_TITLE; ?>
                       </td>
                       <td valign="middle" colspan="3" class="dataTableHeadingContent" style="width:250px;">
-                        <a href="<?php echo xtc_href_link('module_export.php', 'set=system&module=trustedshops'); ?>"><u>Einstellungen</u></a>
+                        <a href="<?php echo xtc_href_link('module_export.php', 'set=system&module=trustedshops'); ?>"><u><?php echo TEXT_SETTINGS; ?></u></a>
                       </td>
                     </tr>
                     <tr class="dataTableHeadingRow">
@@ -417,9 +488,9 @@ require (DIR_WS_INCLUDES.'head.php');
                     <td class="dataTableContent">
                       <?php
                       if ($trustedshops['status'] == 1) {
-                        echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 12, 12, 'style="margin-left: 5px;"') . '<a href="' . xtc_href_link(FILENAME_TRUSTEDSHOPS, xtc_get_all_get_params(array('action', 'tID')) . 'action=setflag&flag=0&tID='.$trustedshops['id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 12, 12, 'style="margin-left: 5px;"') . '</a>';
+                        echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 10, 10, 'style="margin-left: 5px;"') . '<a href="' . xtc_href_link(FILENAME_TRUSTEDSHOPS, xtc_get_all_get_params(array('action', 'tID')) . 'action=setflag&flag=0&tID='.$trustedshops['id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 10, 10, 'style="margin-left: 5px;"') . '</a>';
                       } else {
-                        echo '<a href="' . xtc_href_link(FILENAME_TRUSTEDSHOPS, xtc_get_all_get_params(array('action', 'tID')) . 'action=setflag&flag=1&tID='.$trustedshops['id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 12, 12, 'style="margin-left: 5px;"') . '</a>' . xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 12, 12, 'style="margin-left: 5px;"');
+                        echo '<a href="' . xtc_href_link(FILENAME_TRUSTEDSHOPS, xtc_get_all_get_params(array('action', 'tID')) . 'action=setflag&flag=1&tID='.$trustedshops['id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 10, 10, 'style="margin-left: 5px;"') . '</a>' . xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 10, 10, 'style="margin-left: 5px;"');
                       }
                       ?>
                     </td>
@@ -484,7 +555,7 @@ require (DIR_WS_INCLUDES.'head.php');
                 <?php echo HEADING_TITLE; ?>
               </td>
               <td valign="middle" class="dataTableHeadingContent">
-                <a href="<?php echo xtc_href_link('module_export.php', 'set=system&module=trustedshops'); ?>"><u>Einstellungen</u></a>
+                <a href="<?php echo xtc_href_link('module_export.php', 'set=system&module=trustedshops'); ?>"><u><?php echo TEXT_SETTINGS; ?></u></a>
               </td>
             </tr>
             <tr style="background-color: #FFFFFF;">
@@ -493,21 +564,17 @@ require (DIR_WS_INCLUDES.'head.php');
                   <tr>
                     <td style="vertical-align:top;">
                       <div>
-                        <img src="images/trustedshops/e_trusted_shops-rgb.png" style="width:100px;float:left;margin-top: 10px;padding-right: 30px;"/>
+                        <img src="images/trustedshops/Trusted-Shops_Logo_black100px.png" style="width:100px;float:left;margin-top: 10px;padding-right: 30px;"/>
                         <div class="ts_main" style="font-weight:bold;"><?php echo HEADING_TITLE; ?></div>
-                        <div class="ts_badge"><?php echo HEADING_TECHNOLOGIE; ?></div>
-                        <div class="ts_products"><?php echo HEADING_PRODUCTS; ?></div>
+                        <div class="ts_features"><?php echo HEADING_FEATURES; ?></div>
                       </div>
                       <div style="clear:both;width:100%;border-bottom:1px solid #0DBEDC;padding-top:10px;margin-bottom:20px;"></div>                      
                       <div id="ts_main">
                         <?php echo TEXT_TS_MAIN_INFO; ?>
                       </div>                      
-                      <div id="ts_badge" style="display:none;">
-                        <?php echo TEXT_TS_BADGE_INFO; ?>
+                      <div id="ts_features" style="display:none;">
+                        <?php echo TEXT_TS_FEATURES_INFO; ?>
                       </div>                     
-                      <div id="ts_products" style="display:none;">
-                        <?php echo TEXT_TS_PRODUCT_INFO; ?>
-                      </div>
                       <div style="margin-top:20px;clear:both;">
                         <?php echo TEXT_TS_SPECIAL_INFO; ?>
                       </div>
