@@ -12,17 +12,21 @@
 
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 ?>
+
+<?php
+if ($_SESSION['language'] == 'german') {
+?>
 <div id="banner" class="admin_contentbox blog_container" style="display:none;">
   <div class="blog_title">
-    <div class="blog_header">Bannergruppen f&uuml;r ihr Template</div>
+    <div class="blog_header">Banner-Gruppen f&uuml;r Ihr Template</div>
   </div>
   <div class="blogentry">
     <div class="blog_desc">
 
       <div class="banner_headline">Empfohlene Bannereinstellungen f&uuml;r tpl_modified_responsive</div>
       <div class="banner_config">
-        Konfiguration -> Bildeinstellungen<br />
-        Breite der Banner-Bilder: 985 Pixel<br /> 
+        Konfiguration -> Bild Optionen<br />
+        Breite der Banner Bilder: 985 Pixel<br /> 
         H&ouml;he der Banner Bilder: 400 Pixel<br /> 
         Breite der Banner Bilder Mobil: 600 Pixel<br />
         H&ouml;he der Banner Bilder Mobil: 400 Pixel 
@@ -31,7 +35,7 @@
       <div class="banner_headline">Slider</div>
       <table class="banner">
         <tr>              
-          <td style="width:100%">Bannergroup: <b>Slider</b><br />(Breite 100%)<br />Desktop: 985 x 400 Pixel<br />Mobil: 600 x 400 Pixel</td>
+          <td style="width:100%">Banner-Gruppe: <b>Slider</b><br />(Breite 100%)<br />Desktop: 985 x 400 Pixel<br />Mobil: 600 x 400 Pixel</td>
         </tr>
       </table>
 
@@ -39,6 +43,40 @@
     </div>
   </div>
 </div>
+<?php
+} else {
+?>
+<div id="banner" class="admin_contentbox blog_container" style="display:none;">
+  <div class="blog_title">
+    <div class="blog_header">Banner groups for your template</div>
+  </div>
+  <div class="blogentry">
+    <div class="blog_desc">
+
+      <div class="banner_headline">Recommended banner settings for tpl_modified_responsive</div>
+      <div class="banner_config">
+        Configuration -> Image Options<br />
+        Width of Banner Images: 985 Pixel<br /> 
+        Height of Banner Images: 400 Pixel<br /> 
+        Width of Banner Images Mobile: 600 Pixel<br />
+        Height of Banner Images Mobile: 400 Pixel 
+      </div>  
+
+      <div class="banner_headline">Slider</div>
+      <table class="banner">
+        <tr>              
+          <td style="width:100%">Banner group: <b>Slider</b><br />(Width 100%)<br />Desktop: 985 x 400 Pixel<br />Mobile: 600 x 400 Pixel</td>
+        </tr>
+      </table>
+
+
+    </div>
+  </div>
+</div>
+<?php
+}
+?>
+
 <style>   
   .banner_headline {
     font-weight:bold;
