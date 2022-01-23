@@ -37,7 +37,7 @@
 
         <div class="banner_headline">'.TEXT_SLIDER.'</div>
         <table class="banner">
-          <tr>              
+          <tr>
             <td style="width:100%">'.TEXT_BANNER_GROUP.' <b>'.TEXT_SLIDER.'</b><br />('.TEXT_WIDTH.' 100%)<br />'.TEXT_DESKTOP.' 985 x 400 Pixel<br />'.TEXT_MOBILE.' 600 x 400 Pixel</td>
           </tr>
         </table>
