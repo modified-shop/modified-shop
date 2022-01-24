@@ -680,10 +680,10 @@ define ('SESSION_LIFE_CUSTOMERS_TITLE', 'Session lifetime customer');
 define ('SESSION_LIFE_CUSTOMERS_DESC', 'Time in seconds before the session time for customers expires (logging out) - Default 1440<br />The entered value is only applied if the session handling is db based (configure.php => define(\'STORE_SESSIONS\', \'mysql\');)<br />Maximum value: 14400');
 
 //checkout confirmation options
-define ('CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION_TITLE', 'Order Confirmation page: Short Description');
-define ('CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION_DESC', 'Do you want to display the products short description on the order confirmation page? Note: The short description is displayed when there is NO products order description. Setting this to FALSE, the short description is generally not displayed!');
+define ('CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION_TITLE', 'Use short description in order confirmation/acknowledgement mails and on the checkout confirmation page?');
+define ('CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION_DESC', 'If "Yes" the short description will be used in the mentioned circumstances in case the order description is empty.<br />If also the short description is empty the long description will be used, shortened to the number of characters indicated below with "<i>Length of the description when short description is empty</i>".');
 define('CHECKOUT_USE_PRODUCTS_DESCRIPTION_FALLBACK_LENGTH_TITLE','Length of the description when short description is empty');
-define('CHECKOUT_USE_PRODUCTS_DESCRIPTION_FALLBACK_LENGTH_DESC','From which length shall the description be cropped when there is no short description?');
+define('CHECKOUT_USE_PRODUCTS_DESCRIPTION_FALLBACK_LENGTH_DESC','At which length the long description shall be cut off in case no short description is available? (text will be augmented with [...])<br />Only applies if "<i>Use short description in order confirmation/acknowledgement mails and on the checkout confirmation page</i>" above is set to "Yes".');
 define ('CHECKOUT_SHOW_PRODUCTS_IMAGES_TITLE', 'Order Confirmation page: Product images');
 define ('CHECKOUT_SHOW_PRODUCTS_IMAGES_DESC', 'If on the order confirmation page, the product images are displayed?');
 define ('CHECKOUT_SHOW_PRODUCTS_MODEL_TITLE', 'Order Confirmation Page: Item no.');
