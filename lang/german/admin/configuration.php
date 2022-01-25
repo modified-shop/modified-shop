@@ -680,9 +680,9 @@ define('SESSION_LIFE_CUSTOMERS_DESC', 'Zeitdauer in Sekunden, nach der die Sessi
 
 //checkout confirmation options
 define('CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION_TITLE','Kurzbeschreibung in Bestell-/Auftragsbest&auml;tigung und auf Bestellbest&auml;tigungsseite?');
-define('CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION_DESC','Wenn "Ja" wird an genannten Punkten die Kurzbeschreibung angezeigt wenn die Bestellbeschreibung leer ist.<br />Wenn auch die Kurzbeschreibung leer ist wird die Langbeschreibung verwendet, gek&uuml;rzt auf die unten bei "<i>L&auml;nge der Beschreibung, wenn Kurzbeschreibung leer</i>" angebene Zeichenanzahl.');
+define('CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION_DESC','Wenn "Ja" wird an genannten Punkten die Kurzbeschreibung angezeigt, falls die Bestellbeschreibung leer ist.<br />Sollte auch die Kurzbeschreibung leer sein wird die Langbeschreibung verwendet, gek&uuml;rzt auf die unten bei "L&auml;nge der Beschreibung, wenn Kurzbeschreibung leer" angebene Zeichenanzahl.');
 define('CHECKOUT_USE_PRODUCTS_DESCRIPTION_FALLBACK_LENGTH_TITLE','L&auml;nge der Beschreibung, wenn Kurzbeschreibung leer');
-define('CHECKOUT_USE_PRODUCTS_DESCRIPTION_FALLBACK_LENGTH_DESC','Bei welcher L&auml;nge soll die Beschreibung abgeschnitten werden, wenn keine Kurzbeschreibung verf&uuml;gbar ist? (Text wird mit [...] erg&auml;nzt)<br />Greift nur wenn oben "<i>Kurzbeschreibung in Bestell-/Auftragsbest&auml;tigung und auf Bestellbest&auml;tigungsseite</i>" auf "Ja" steht.');
+define('CHECKOUT_USE_PRODUCTS_DESCRIPTION_FALLBACK_LENGTH_DESC','Bei welcher L&auml;nge soll die Beschreibung abgeschnitten werden, wenn keine Kurzbeschreibung verf&uuml;gbar ist? (Text wird mit [...] erg&auml;nzt)<br />Greift nur, wenn oben "<i>Kurzbeschreibung in Bestell-/Auftragsbest&auml;tigung und auf Bestellbest&auml;tigungsseite</i>" auf "Ja" steht.');
 define('CHECKOUT_SHOW_PRODUCTS_IMAGES_TITLE','Bestellbest&auml;tigungsseite: Produktbilder');
 define('CHECKOUT_SHOW_PRODUCTS_IMAGES_DESC','Sollen auf der Bestellbest&auml;tigungsseite die Artikelbilder angezeigt werden?');
 define('CHECKOUT_SHOW_PRODUCTS_MODEL_TITLE','Bestellbest&auml;tigungsseite: Artikel-Nr.');
