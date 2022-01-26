@@ -34,8 +34,9 @@ define('TEXT_FROM', 'From:');
 define('TEXT_TO', 'E-Mail to:');
 define('TEXT_AMOUNT', 'Amount');
 define('TEXT_MESSAGE', 'Message:');
-define('TEXT_SINGLE_EMAIL', '<span class="smallText">Use this for sending single E-Mails, otherwise use dropdown above</span>');
+define('TEXT_SINGLE_EMAIL', '<span class="smallText">Use this for sending single E-Mails only, otherwise use Customers Group above.</span>');
 define('TEXT_SELECT_CUSTOMER_GROUP', 'Select Customers Group');
+define('TEXT_CUSTOMERS_GROUP_EMAIL', '<span class="smallText">Should a voucher be sent to all customers of the selected customer group? Otherwise, do not select anything and fill in the "E-Mail to:" field. Caution: If many E-Mails are sent repeatedly at the same time, the store E-Mail address may end up on so-called blacklists and be considered spam. It is recommended to handle this via a newsletter provider.</span>');
 define('TEXT_ALL_CUSTOMERS', 'All Customers');
 define('TEXT_NEWSLETTER_CUSTOMERS', 'To All Newsletter Subscribers');
 
