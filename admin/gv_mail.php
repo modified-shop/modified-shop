@@ -359,11 +359,11 @@
               <table class="tableConfig borderall">
                 <tr>
                   <td class="dataTableConfig col-left"><?php echo TEXT_CUSTOMER_GROUP; ?></td>
-                  <td class="dataTableConfig col-single-right"><?php echo xtc_draw_pull_down_menu('customers_email_address', $customers, $selected_customer);?><?php echo '&nbsp;&nbsp;' . TEXT_CUSTOMERS_GROUP_EMAIL; ?></td>
+                  <td class="dataTableConfig col-single-right"><?php echo xtc_draw_pull_down_menu('customers_email_address', $customers, $selected_customer);?><?php echo '<br />' . TEXT_CUSTOMERS_GROUP_EMAIL; ?></td>
                 </tr>
                  <tr>
                   <td class="dataTableConfig col-left"><?php echo TEXT_TO; ?></td>
-                  <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('email_to', ((isset($_POST['email_to'])) ? $_POST['email_to'] : '')); ?><?php echo '&nbsp;&nbsp;' . TEXT_SINGLE_EMAIL; ?></td>
+                  <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('email_to', ((isset($_POST['email_to'])) ? $_POST['email_to'] : '')); ?><?php echo '<br />' . TEXT_SINGLE_EMAIL; ?></td>
                 </tr>
                 <tr>
                   <td class="dataTableConfig col-left"><?php echo TEXT_SUBJECT; ?></td>
