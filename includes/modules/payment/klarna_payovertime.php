@@ -45,7 +45,7 @@ class klarna_payovertime extends KlarnaPayment {
     
     return array(
       'id' => $this->code, 
-      'module' => $data['name'], 
+      'module' => ((MODULE_PAYMENT_KLARNA_TEXT != '') ? MODULE_PAYMENT_KLARNA_TEXT.' ' : '').$data['name'], 
       'description' => $info,
     );
   }
