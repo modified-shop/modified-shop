@@ -23,7 +23,7 @@ define('LOAD','Datei an Browser senden');
 define('CSV_TEXTSIGN_TITLE','Texterkennungszeichen');
 define('CSV_TEXTSIGN_DESC','Z.B. " &nbsp; | &nbsp;<span style="color:#c00;">Bei Semikolon als Trennzeichen sollte das Texterkennungszeichen auf " gesetzt werden!</span>');
 define('CSV_SEPERATOR_TITLE','Trennzeichen');
-define('CSV_SEPERATOR_DESC','Z.B. ; &nbsp; | &nbsp;<span style="color:#c00;">wird das Eingabefeld leer gelassen wird beim Export/Import standardm&auml;&szlig;ig \\t (= Tab) benutzt !</span>');
+define('CSV_SEPERATOR_DESC','Z.B. ; &nbsp; | &nbsp;<span style="color:#c00;">Wird das Eingabefeld leer gelassen wird beim Export/Import standardm&auml;&szlig;ig \\t (= Tab) benutzt!</span>');
 define('COMPRESS_EXPORT_TITLE','Kompression');
 define('COMPRESS_EXPORT_DESC','Kompression der exportierten Daten');
 define('CSV_SETUP','Einstellungen');
