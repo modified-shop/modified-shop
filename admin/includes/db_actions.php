@@ -72,7 +72,6 @@
       }
       $schema = '-- Modified-Shop & compatible' . "\n" .
                 '--' . "\n" .
-                '-- ' . VERSION . ' (c) by web28 - www.rpa-com.de' . "\n" .
                 '-- ' . STORE_NAME . "\n" .
                 '-- ' . STORE_OWNER . "\n" .
                 '--' . "\n" .
