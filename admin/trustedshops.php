@@ -19,6 +19,8 @@
   $cfg_max_display_results_key = 'MAX_DISPLAY_TRUSTEDSHOPS_RESULTS';
   $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
 
+  $action = (isset($_GET['action']) ? $_GET['action'] : '');
+
   // languages
   $languages = xtc_get_languages(); 
 
@@ -68,7 +70,7 @@
     array('id' => 'custom', 'text' => TEXT_BADGE_CUSTOM),
   );
 
-  switch ($_GET['action']) {
+  switch ($action) {
     case 'setflag':
       $tID = (int)$_GET['tID'];
       $status = (int)$_GET['flag'];
@@ -142,12 +144,12 @@
         $sql_data_array['trustbadge_offset_mobile'] = $trustbadge_offset_mobile;
       }
       
-      if ($_GET['action'] == 'insert') {
+      if ($action == 'insert') {
         $insert_sql_data = array('date_added' => 'now()');
         $sql_data_array = array_merge($sql_data_array, $insert_sql_data);
         xtc_db_perform(TABLE_TRUSTEDSHOPS, $sql_data_array);
         $tID = xtc_db_insert_id();
-      } elseif ($_GET['action'] == 'save') {
+      } elseif ($action == 'save') {
         $update_sql_data = array('last_modified' => 'now()');
         $sql_data_array = array_merge($sql_data_array, $update_sql_data);
         xtc_db_perform(TABLE_TRUSTEDSHOPS, $sql_data_array, 'update', "id = '" . (int)$tID . "'");
@@ -301,8 +303,8 @@ require (DIR_WS_INCLUDES.'head.php');
         <div class="main">Modules</div>
         <?php
         if (defined('MODULE_TRUSTEDSHOPS_STATUS') && MODULE_TRUSTEDSHOPS_STATUS == 'true') {
-          if (isset($_GET['action']) && ($_GET['action']=='edit' || $_GET['action']=='new')) {
-            if ($_GET['action'] == 'new') {
+          if ($action=='edit' || $action=='new') {
+            if ($action == 'new') {
               unset($_GET['tID']);
             } else {
               $trustedshops_query = xtc_db_query("SELECT *
@@ -321,7 +323,7 @@ require (DIR_WS_INCLUDES.'head.php');
               }
             }
 
-            echo xtc_draw_form('trustedshops', FILENAME_TRUSTEDSHOPS, 'page=' . (int)$_GET['page'] . ((isset($_GET['tID'])) ? '&tID=' . (int)$_GET['tID'] : ''). '&action='.(($_GET['action']=='new') ? 'insert' : 'save'));
+            echo xtc_draw_form('trustedshops', FILENAME_TRUSTEDSHOPS, 'page=' . (int)$_GET['page'] . ((isset($_GET['tID'])) ? '&tID=' . (int)$_GET['tID'] : ''). '&action='.(($action=='new') ? 'insert' : 'save'));
             ?>
               <div class="div_box mrg5">
                 <table class="tableInput" border="0">
@@ -473,7 +475,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     $trustedshops_split = new splitPageResults($_GET['page'], $page_max_display_results, $trustedshops_query_raw, $trustedshops_query_numrows);
                     $trustedshops_query = xtc_db_query($trustedshops_query_raw);
                     while ($trustedshops = xtc_db_fetch_array($trustedshops_query)) {
-                      if (((!$_GET['tID']) || (@$_GET['tID'] == $trustedshops['id'])) && (!$tInfo) && (substr($_GET['action'], 0, 3) != 'new')) {
+                      if (((!$_GET['tID']) || (@$_GET['tID'] == $trustedshops['id'])) && (!$tInfo) && (substr($action, 0, 3) != 'new')) {
                         $tInfo = new objectInfo($trustedshops);
                       }
 
@@ -504,7 +506,7 @@ require (DIR_WS_INCLUDES.'head.php');
                   <div class="smallText pdg2 flt-r"><?php echo $trustedshops_split->display_links($trustedshops_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, (int)$_GET['page']); ?></div>
                   <?php echo draw_input_per_page($PHP_SELF,$cfg_max_display_results_key,$page_max_display_results); ?>
                   <?php
-                  if ($_GET['action'] != 'new') {
+                  if ($action != 'new') {
                   ?>
                     <div class="smallText pdg2 flt-r"><?php echo xtc_button_link(BUTTON_INSERT, xtc_href_link(FILENAME_TRUSTEDSHOPS, 'page=' . (int)$_GET['page'] . '&action=new')); ?></div>
                   <?php
@@ -514,7 +516,7 @@ require (DIR_WS_INCLUDES.'head.php');
                 <?php
                   $heading = array();
                   $contents = array();
-                  switch ($_GET['action']) {
+                  switch ($action) {
                               
                     case 'delete':
                       $heading[] = array('text' => '<b>' . TEXT_HEADING_DELETE_TRUSTEDSHOPS . '</b>');
