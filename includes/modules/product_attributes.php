@@ -58,7 +58,7 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/product_options/'.$prod
 
     $attrib_checked_array = array();
     if (strpos($_GET['products_id'], '{') !== false) {
-      $attrib_array = preg_split('/[{}]/', $_GET['products_id'], null, PREG_SPLIT_NO_EMPTY);
+      $attrib_array = preg_split('/[{}]/', $_GET['products_id'], 0, PREG_SPLIT_NO_EMPTY);
       array_shift($attrib_array);
       for ($i=0, $n=count($attrib_array); $i<$n; $i+=2) {
         $attrib_checked_array[$attrib_array[$i]] = $attrib_array[$i + 1];
