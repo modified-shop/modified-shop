@@ -24,6 +24,6 @@
       }
       return $data;
     } else {
-      return strtr(trim($data), $parse);
+      return ((!empty($data)) ? strtr(trim($data), $parse) : '');
     }
   }
