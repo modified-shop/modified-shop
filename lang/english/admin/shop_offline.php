@@ -21,6 +21,6 @@ define('BOX_SHOP_OFFLINE', 'Shop online/offline - all languages');
 define('SETTINGS_OFFLINE', 'Shop offline <br /><span class="col-red">(Only with Admin access data via the URL <a href="'. HTTP_SERVER.DIR_WS_CATALOG.'login_admin.php" target="_blank"><span class="col-red">'. HTTP_SERVER.DIR_WS_CATALOG.'login_admin.php</span></a>)</span>');
 define('SETTINGS_OFFLINE_MSG', 'Offline message');
 
-define ('SHOP_OFFLINE_ALLOWED_CUSTOMERS_GROUPS_TXT', '<b>Allowable customer groups: </ b> <br /> (for these groups of customers the shop is still visible)');
-define ('SHOP_OFFLINE_ALLOWED_CUSTOMERS_EMAILS_TXT', '<b>Allowable email addresses (comma separated): </ b> <br /> (for customers with these email addresses is the shop still visible)');
+define ('SHOP_OFFLINE_ALLOWED_CUSTOMERS_GROUPS_TXT', '<b>Allowable customer groups: </b> <br /> (for these groups of customers the shop is still visible)');
+define ('SHOP_OFFLINE_ALLOWED_CUSTOMERS_EMAILS_TXT', '<b>Allowable email addresses (comma separated): </b> <br /> (for customers with these email addresses is the shop still visible)');
 ?>
