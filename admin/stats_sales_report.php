@@ -47,7 +47,12 @@
    --------------------------------------------------------------*/
 
   require('includes/application_top.php');
-  require(DIR_WS_CLASSES . 'currencies.php');
+  
+  // include needed functions
+  require_once(DIR_FS_INC.'xtc_get_countries.inc.php');
+  
+  // include needed classes
+  require_once(DIR_WS_CLASSES . 'currencies.php');
   $currencies = new currencies();
   
   // default detail no detail
