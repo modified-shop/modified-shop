@@ -792,9 +792,9 @@ define('META_GO_WORDS_DESC', 'Please enter comma separated keywords that are all
 define('CSV_CATEGORY_DEFAULT_TITLE','Category for Import');
 define('CSV_CATEGORY_DEFAULT_DESC','All products in the csv-importfile that do <b>not</b> have a category defined will be imported into this category.<br/><b>Attention:</b> If you do not want to import products which have no category defined, then select category "Top" as it is not possible to import into this category.');
 define('CSV_TEXTSIGN_TITLE','Text qualifier');
-define('CSV_TEXTSIGN_DESC','eg. " &nbsp; | &nbsp; <span style="color:#c00;">With semicolon as delimiter the text qualifier should be set to "!</ span>');
+define('CSV_TEXTSIGN_DESC','eg. " &nbsp; | &nbsp; <span style="color:#c00;">With semicolon as delimiter the text qualifier should be set to "!</span>');
 define('CSV_SEPERATOR_TITLE','Delimiter');
-define('CSV_SEPERATOR_DESC','eg. ; &nbsp; | &nbsp;<span Style="color:#c00;">If the input field is left empty, \\t (= tab) is used by default during export/import!</ span> ');
+define('CSV_SEPERATOR_DESC','eg. ; &nbsp; | &nbsp;<span Style="color:#c00;">If the input field is left empty, \\t (= tab) is used by default during export/import!</span> ');
 define('COMPRESS_EXPORT_TITLE','Compression');
 define('COMPRESS_EXPORT_DESC','Compress export file');
 //BOC added constants for category depth, noRiddle
@@ -821,7 +821,7 @@ define('SHIPPING_STATUS_INFOS_TITLE', 'Shippingtime');
 define('SHIPPING_STATUS_INFOS_DESC', 'Select content to display Information for Shippingtime');
 
 define('USE_SHORT_DATE_FORMAT_TITLE', 'Show Date in short format');
-define('USE_SHORT_DATE_FORMAT_DESC', 'Always show date in short format: <b> 01/03/2014 </ b> instead <b> Saturday 01 March 2014 </ b> <br /> Recommended for display errors with the long date format as incorrect language or special signs!');
+define('USE_SHORT_DATE_FORMAT_DESC', 'Always show date in short format: <b> 01/03/2014 </b> instead <b> Saturday 01 March 2014 </b> <br /> Recommended for display errors with the long date format as incorrect language or special signs!');
 
 define('MAX_DISPLAY_PRODUCTS_CATEGORY_TITLE', 'Maximum Products');
 define('MAX_DISPLAY_PRODUCTS_CATEGORY_DESC', 'Maximum products of same category');
