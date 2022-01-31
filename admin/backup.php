@@ -145,9 +145,7 @@
     <!-- body_text //--> 
         <td class="boxCenter">
             <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_backup.png'); ?></div>
-            <div class="pageHeading"><?php echo HEADING_TITLE; ?>
-              <span class="smallText"> [<?php echo VERSION; ?>]</span>
-            <br /></div>
+            <div class="pageHeading"><?php echo HEADING_TITLE; ?></div>
             <div class="main pdg2 flt-l">Tools</div>
             <table class="tableCenter">
               <tr>
