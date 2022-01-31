@@ -72,6 +72,7 @@ function xtc_check_agent($name = false) {
       "combine",
       "conceptbot",
       "coolbot",
+      //"core", // GTB - 2022-01-31 - fix #2169 - remove problematic bot entries
       "cosmos",
       "crawl",
       "cruiser",
@@ -95,6 +96,7 @@ function xtc_check_agent($name = false) {
       "download_express",
       "dotbot",
       "dragonbot",
+      //"duckduckgo", // GTB - 2022-01-31 - fix #2169 - remove problematic bot entries
       "dwcp",
       "ebiness",
       "echo",
