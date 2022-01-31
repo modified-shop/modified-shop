@@ -50,15 +50,15 @@ Prod. No. {$order_values.PRODUCTS_MODEL}{$order_values.PRODUCTS_ATTRIBUTES_MODEL
 {$downloads_content_txt}
 
 {if $address_label_payment != $address_label_shipping}
-{if isset($SHIPPING_CLASS) && strpos($SHIPPING_CLASS, 'selfpickup')}Pickupaddress
-{else}Shippingaddress
+{if isset($SHIPPING_CLASS) && strpos($SHIPPING_CLASS, 'selfpickup')}Pickup address
+{else}Shipping address
 {/if}
 ----------------------------------------------------------------------
 {$address_label_shipping}{/if}
 
 {if $address_label_payment}
-{if $address_label_payment != $address_label_shipping}Paymentadress
-{else}Payment-/Shippingaddress
+{if $address_label_payment != $address_label_shipping}Payment address
+{else}Payment-/Shipping address
 {/if}
 ----------------------------------------------------------------------
 {$address_label_payment}
