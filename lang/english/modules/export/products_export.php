@@ -17,10 +17,10 @@
   define('MODULE_PRODUCTS_EXPORT_STATUS_TITLE','Status');
   define('MODULE_PRODUCTS_EXPORT_FILE_TITLE' , 'Filename');
   define('MODULE_PRODUCTS_EXPORT_FILE_DESC' , 'Enter a filename.<br />(Directory export/)');
-  define('MODULE_PRODUCTS_EXPORT_SEPARATOR_TITLE', 'Separator');
+  define('MODULE_PRODUCTS_EXPORT_SEPARATOR_TITLE', 'Delimiter');
   define('MODULE_PRODUCTS_EXPORT_SEPARATOR_DESC', 'Enter a sign to separate the columns.');
-  define('MODULE_PRODUCTS_EXPORT_ENCLOSURE_TITLE', 'Enclosure');
-  define('MODULE_PRODUCTS_EXPORT_ENCLOSURE_DESC', 'Enter a sign to enclosure the fields.');
+  define('MODULE_PRODUCTS_EXPORT_ENCLOSURE_TITLE', 'Text qualifier');
+  define('MODULE_PRODUCTS_EXPORT_ENCLOSURE_DESC', 'Enter a sign to mark the content.');
 
   define('MODULE_PRODUCTS_EXPORT_CUSTOMERS_STATUS_TITLE','<br><strong>Customers status:</strong>');
   define('MODULE_PRODUCTS_EXPORT_CUSTOMERS_STATUS_DESC','Please select the customer group for the exported price. (If you do not have any customer group prices, choose <i>Guest</i>):');
