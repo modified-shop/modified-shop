@@ -16,6 +16,9 @@
 
   require('includes/application_top.php');
 
+  // include needed functions
+  require_once(DIR_FS_INC.'xtc_get_countries.inc.php');
+
   $smarty = new Smarty;
 
   //get store name and store name_address
