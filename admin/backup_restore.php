@@ -146,7 +146,7 @@
       <tr>
         <!-- body_text //-->
          <td class="boxCenter"> 
-           <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?><span class="smallText"> [<?php echo VERSION; ?>]</span></div>
+           <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?></div>
            <div class="main txta-c">
              <div id="info_text" class="pageHeading txta-c mrg10"><?php echo $info_text; ?></div>
              <div id="info_wait" class="pageHeading txta-c mrg10" style="margin-top:20px;"><?php echo $info_wait; ?></div>
