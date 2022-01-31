@@ -127,6 +127,7 @@ class paypalcart extends PayPalPayment {
     }
     
     $free_shipping = $this->free_shipping;
+    $free_shipping_value_over = $this->free_shipping_value_over;
     
     // get all available shipping quotes
     $quotes = $shipping_modules->quote();

@@ -271,7 +271,7 @@ class PayPalCommon extends PayPalAuth {
 
 
   function calculate_total($mode = 1) {
-    global $order, $free_shipping;
+    global $order, $free_shipping, $free_shipping_value_over;
     
     $order_backup = $order;
     
@@ -293,6 +293,9 @@ class PayPalCommon extends PayPalAuth {
     $free_shipping = false;
     $order_total_modules = new order_total();
     $order_total = $order_total_modules->process();
+    
+    $this->free_shipping = $free_shipping;
+    $this->free_shipping_value_over = $free_shipping_value_over;
     
     $total = $order->info['total'];
 
