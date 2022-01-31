@@ -438,6 +438,11 @@
         default:
           $this->data['product'] = 'V53WPAK';
           $this->data['product_code'] = '53';
+          if ($this->type == 1 && $this->data['weight'] <= 1) {
+            $this->data['product'] = 'V66WPI';
+            $this->data['product_code'] = '66';
+            $this->data['product_type'] = 'WP';
+          }
           break;
       }
       $this->data = $this->encode_request($this->data);
