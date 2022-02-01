@@ -84,7 +84,7 @@ for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
     'PRODUCTS_IMAGE' => $image, 
     'IMAGE_ALT' => $products[$i]['name'],
     'BOX_DELETE' => xtc_draw_checkbox_field('cart_delete[]', $products[$i]['id']), 
-    'PRODUCTS_LINK' => xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($products[$i]['id'], $products[$i]['name'])), 
+    'PRODUCTS_LINK' => xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$products[$i]['id']), 
     'BUTTON_DELETE' => $del_button,
     'LINK_DELETE' => $del_link,                  
     'PRODUCTS_PRICE' => $xtPrice->xtcFormat($products[$i]['final_price'], true), // $products[$i]['final_price'] is quantity * plain price including attributes_price

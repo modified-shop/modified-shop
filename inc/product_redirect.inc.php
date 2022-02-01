@@ -51,7 +51,7 @@ function product_redirect_link($products_id = false, $current_link = '', $catego
       $link_array = array();
       while ($check_link = xtc_db_fetch_array($check_link_query, true)) {
         $products_link_cat_id = $check_link['categories_id'];
-        $redirection_link = xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($check_link['products_id'], $check_link['products_name']));
+        $redirection_link = xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$products_id);
         $link_array[] = $redirection_link;
     
         // Link without http/https, Session-ID and $_GET-Parameter
