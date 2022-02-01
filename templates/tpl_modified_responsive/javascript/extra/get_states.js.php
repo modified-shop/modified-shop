@@ -111,7 +111,7 @@ function load_state() {
       } else {
         $("[name='state']").prop('selectedIndex',0);
       }
-      $('select').SumoSelect();
+      $('select').SumoSelect({search: true, searchText: "<?php echo TEXT_SUMOSELECT_SEARCH; ?>", noMatch: "<?php echo TEXT_SUMOSELECT_NO_RESULT; ?>"});
       stateSelect.parent().parent().parent().parent().show();
     } else {
       if (tmpParent.attr("class").indexOf("SumoSelect") > -1) {

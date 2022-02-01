@@ -46,3 +46,8 @@
 
 .SumoSelect > .optWrapper > .options li.opt.disabled { background-color: inherit;pointer-events: none;}
 .SumoSelect > .optWrapper > .options li.opt.disabled * { -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)"; /* IE 5-7 */ filter: alpha(opacity=50); /* Netscape */ -moz-opacity: 0.5; /* Safari 1.x */ -khtml-opacity: 0.5; /* Good browsers */ opacity: 0.5; }
+
+.SumoSelect.open > .search > label, .SumoSelect.open > .search > span { visibility:hidden; }
+.SumoSelect .search-txt { display:none; outline:0; }
+.SumoSelect.open .search-txt { padding: 8px 8px 7px 8px; display: inline-block; position: absolute; top: 0; left: 0; width: 100%; margin: 0; border: 1px solid transparent; box-sizing: border-box; border-radius:2px;}
+.SumoSelect .no-match { display: none; padding: 8px 8px; font-size: 12px; line-height: 18px; }

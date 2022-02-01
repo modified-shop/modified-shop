@@ -12,7 +12,10 @@
 ?>
 <script>
   $(document).ready(function() {
-    $('select').SumoSelect();
+
+    $('select:not([name=country])').SumoSelect();
+    $('select[name=country]').SumoSelect({search: true, searchText: "<?php echo TEXT_SUMOSELECT_SEARCH; ?>", noMatch: "<?php echo TEXT_SUMOSELECT_NO_RESULT; ?>"});
+
     var selectWord = '';
     var selectTimer = null;
     $('body').on('keydown', function(e){
