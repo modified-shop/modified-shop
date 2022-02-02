@@ -963,6 +963,7 @@
     'templates/'.CURRENT_TEMPLATE.'/smarty/function.onlytext.php',
     'update.php',
     'update_1.0.5.0_to_1.0.6.0.sql',
+    'README_UPDATE.txt',
     'wpcallback.php',
     'wsdl_iclear_order.php',
     'xtbcallback.php',
