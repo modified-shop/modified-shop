@@ -836,6 +836,7 @@
     'templates/tpl_modified/img/toplinks_specials.gif',
     'templates/tpl_modified/img/toprowbg.gif',
     'templates/tpl_modified/javascript/extra/unveil.js.php',
+    'templates/tpl_modified/javascript/get_states.js.php',
     'templates/tpl_modified/javascript/jquery-1.8.3.min.js',
     'templates/tpl_modified/javascript/jquery.alerts.min.js',
     'templates/tpl_modified/javascript/jquery.cookieconsent.min.js',
