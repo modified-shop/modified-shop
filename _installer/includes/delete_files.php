@@ -685,6 +685,7 @@
     'templates/xtc5/img/toplinks_search.gif',
     'templates/xtc5/img/toplinks_specials.gif',
     'templates/xtc5/img/toprowbg.gif',
+    'templates/xtc5/javascript/get_states.js.php',
     'templates/xtc5/javascript/jquery.js',
     'templates/xtc5/javascript/jquery-1.8.3.min.js',
     'templates/xtc5/javascript/jquery.alerts.min.js',
