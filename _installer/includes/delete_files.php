@@ -260,6 +260,7 @@
     'images/icons/pp_logo_100x31.gif',
     'inc/search_replace_iso-8859-1.php',
     'inc/search_replace_iso-8859-15.php',
+    'inc/set_customers_status_by_id.inc.php',
     'inc/shopstat_functions.inc.php',
     'inc/tld.txt',
     'inc/xtc_convert_linefeeds.inc.php',
