@@ -62,6 +62,7 @@
     'includes/external/shopgate/shopgate_library',
     'includes/external/sofort/core',
     'includes/external/sofort/unittests',
+    'includes/extra/default/categories_content',
     'includes/econda',
     'includes/iclear',
     'includes/janolaw',
