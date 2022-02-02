@@ -786,14 +786,16 @@ class categories {
       {
         $quantity = xtc_db_prepare_input($products_data['products_quantity_staffel_'.$group_data[$col]['STATUS_ID']]);
         $staffelpreis = xtc_db_prepare_input($products_data['products_price_staffel_'.$group_data[$col]['STATUS_ID']]);
-        if (PRICE_IS_BRUTTO == 'true') {
-          $staffelpreis = ($staffelpreis / (xtc_get_tax_rate($products_data['products_tax_class_id']) + 100) * 100);
-        }
-        $staffelpreis = xtc_round($staffelpreis, PRICE_PRECISION);
-        if ($staffelpreis != '' && $quantity != '') {
+        if (empty($staffelpreis)) $staffelpreis = 0;
+        
+        if ($staffelpreis > 0 && (int)$quantity > 0) {
+          if (PRICE_IS_BRUTTO == 'true') {
+            $staffelpreis = ($staffelpreis / (xtc_get_tax_rate($products_data['products_tax_class_id']) + 100) * 100);
+          }
+          $staffelpreis = xtc_round($staffelpreis, PRICE_PRECISION);
+
           // ok, lets check entered data to get rid of user faults
-          if ($quantity <= 1)
-            $quantity = 2;
+          if ($quantity <= 1) $quantity = 2;
           $check_query = xtc_db_query("SELECT quantity
                                          FROM ".TABLE_PERSONAL_OFFERS_BY.$group_data[$col]['STATUS_ID']."
                                         WHERE products_id = '".$products_id."'
@@ -1470,8 +1472,10 @@ class categories {
   
   
   function priceCheck($price, $products_tax_rate) {
-    if (PRICE_IS_BRUTTO == 'true' && $price) {
-      $price = round(($price / ($products_tax_rate + 100) * 100), PRICE_PRECISION);
+    if (empty($price)) $price = 0;
+    
+    if (PRICE_IS_BRUTTO == 'true') {
+      $price = xtc_round(($price / ($products_tax_rate + 100) * 100), PRICE_PRECISION);
     } else {
       $price = xtc_round($price, PRICE_PRECISION);
     }
