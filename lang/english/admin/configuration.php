@@ -931,11 +931,6 @@ define('META_GOOGLE_VERIFICATION_KEY_DESC', '<meta name="google-site-verificatio
 define('META_BING_VERIFICATION_KEY_TITLE', 'Bing Verification Key');
 define('META_BING_VERIFICATION_KEY_DESC', '<meta name="msvalidate.01">');
 
-define('GOOGLE_CONVERSION_TITLE','Google Conversion Tracking');
-define('GOOGLE_CONVERSION_DESC','Track conversion keywords on orders');
-define('GOOGLE_CONVERSION_ID_TITLE','Conversion ID');
-define('GOOGLE_CONVERSION_ID_DESC','Your Google conversion ID');
-
 define('TRACKING_FACEBOOK_ACTIVE_TITLE', 'Activate Facebook Conversion-Tracking');
 define('TRACKING_FACEBOOK_ACTIVE_DESC', 'By activating this option, all purchases will be submitted to Facebook for later evaluation. Before using this option, you need to register at <a href="https://www.facebook.com" target="_blank"><b>Facebook</b></a> and create a new account.<br/><b>Attention:</b> This only works with a shop version 2.0.0.0 compatible template!');
 define('TRACKING_FACEBOOK_ID_TITLE', 'Facebook Conversion ID');
