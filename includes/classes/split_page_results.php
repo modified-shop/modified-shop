@@ -28,8 +28,8 @@
       $this->sql_query = $query;
 
       if (empty($page) || !is_numeric($page) || $page < 0) $page = 1;
+      
       $this->current_page_number = $page;
-
       $this->number_of_rows_per_page = $max_rows;
 
       $pos_to = strlen($this->sql_query);
@@ -50,16 +50,14 @@
         $count_string = xtc_db_input($count_key);
       }
 
-      $reviews_count_query = xtc_db_query("select count(" . $count_string . ") as total " . substr($query, $pos_from, ($pos_to - $pos_from)));
-      $reviews_count = xtc_db_fetch_array($reviews_count_query);
-      $count = $reviews_count['total'];
-
-      $this->number_of_rows = $count;
+      $count_query = xtDBquery("SELECT count(" . $count_string . ") as total " . substr($query, $pos_from, ($pos_to - $pos_from)));
+      $count = xtc_db_fetch_array($count_query, true);
+      $this->number_of_rows = $count['total'];
 
       if ($this->number_of_rows_per_page > 0) {
-      $this->number_of_pages = ceil($this->number_of_rows / $this->number_of_rows_per_page);
+        $this->number_of_pages = ceil($this->number_of_rows / $this->number_of_rows_per_page);
       } else {
-      $this->number_of_pages = 0;
+        $this->number_of_pages = 0;
       }
 
       if ($this->current_page_number > $this->number_of_pages) {

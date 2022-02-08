@@ -11,15 +11,7 @@
    ---------------------------------------------------------------------------------------*/
 
 
-  if (basename($PHP_SELF) == FILENAME_ADVANCED_SEARCH_RESULT) {
-    // default values
-    $subcat_join  = '';
-    $subcat_where = '';
-    $tax_where    = '';
-    $cats_list    = '';
-    $left_join    = '';
-    $p2c_condition = '';
-    
+  if (basename($PHP_SELF) == FILENAME_ADVANCED_SEARCH_RESULT) {    
     //set $_GET variables for function xtc_get_all_get_params()
     $keywords = $_GET['keywords'] = !empty($_GET['keywords']) ? stripslashes(trim(urldecode($_GET['keywords']))) : false;
     $pfrom = $_GET['pfrom'] = !empty($_GET['pfrom']) ? str_replace(',', '.', stripslashes(trim(urldecode($_GET['pfrom'])))) : false;
@@ -28,10 +20,18 @@
     $categories_id = $_GET['categories_id'] = !empty($_GET['categories_id']) ? (int)$_GET['categories_id'] : false;
     $_GET['inc_subcat'] = !empty($_GET['inc_subcat']) ? (int)$_GET['inc_subcat'] : null;
 
-    // manufacturers check
+    // manufacturers
     $manu_check = $manufacturers_id !== false ? " AND p.manufacturers_id = '".$manufacturers_id."' " : "";
+    
+    // filter
+    $filter_where = '';
+    $tags_array = get_filter_tags();
+    if (count($tags_array) > 0) {
+      $filter_where .= "AND p.products_id IN (".implode(', ', $tags_array).")";
+    }
 
     //include subcategories if needed
+    $p2c_condition = '';
     if ($categories_id !== false) {
       if (isset($_GET['inc_subcat']) && $_GET['inc_subcat'] == '1') {
         $subcategories_array = array ();
@@ -54,28 +54,28 @@
       if ($rate && $pto) {
         $pto = $pto / $rate;
       }
-      if($_SESSION['customers_status']['customers_status_show_price_tax']) {
+      if ($_SESSION['customers_status']['customers_status_show_price_tax']) {
         $NeedTax = true;
       }
     }
   
     //price filters
+    $pfrom_check = '';
     if (($pfrom != '') && (is_numeric($pfrom))) {
-      if($NeedTax)
+      if ($NeedTax) {
         $pfrom_check = " AND (IF(s.status = '1' AND p.products_id = s.products_id, s.specials_new_products_price, p.products_price) >= round((".$pfrom."/(1+tax_rate/100)),".PRICE_PRECISION.") ) ";
-      else
+      } else {
         $pfrom_check = " AND (IF(s.status = '1' AND p.products_id = s.products_id, s.specials_new_products_price, p.products_price) >= round(".$pfrom.",".PRICE_PRECISION.") ) ";
-    } else {
-      $pfrom_check = '';
+      }
     }
 
+    $pto_check = '';
     if (($pto != '') && (is_numeric($pto))) {
-      if($NeedTax)
+      if ($NeedTax) {
         $pto_check = " AND (IF(s.status = '1' AND p.products_id = s.products_id, s.specials_new_products_price, p.products_price) <= round((".$pto."/(1+tax_rate/100)),".PRICE_PRECISION.") ) ";
-      else
+      } else {
         $pto_check = " AND (IF(s.status = '1' AND p.products_id = s.products_id, s.specials_new_products_price, p.products_price) <= round(".$pto.",".PRICE_PRECISION.") ) ";
-    } else {
-      $pto_check = '';
+      }
     }
   
     //build query
@@ -116,33 +116,33 @@
                           AND c.categories_status = 1
                               ".CATEGORIES_CONDITIONS_C." ";
                            
-    $from_str .= $subcat_join;
-    $from_str .= SEARCH_IN_ATTR == 'true' ? " LEFT OUTER JOIN ".TABLE_PRODUCTS_ATTRIBUTES." AS pa ON (p.products_id = pa.products_id) 
-                                              LEFT OUTER JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." AS pov ON (pa.options_values_id = pov.products_options_values_id) " : "";
-    $from_str .= "LEFT OUTER JOIN ".TABLE_SPECIALS." AS s ON (p.products_id = s.products_id) ".SPECIALS_CONDITIONS_S." ";
-    $from_str .= SEARCH_IN_MANU == 'true' ? " LEFT OUTER JOIN ".TABLE_MANUFACTURERS." AS m ON (p.manufacturers_id = m.manufacturers_id) " : "";
+    $from_str .= SEARCH_IN_ATTR == 'true' ? " LEFT JOIN ".TABLE_PRODUCTS_ATTRIBUTES." AS pa ON p.products_id = pa.products_id
+                                              LEFT JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." AS pov ON pa.options_values_id = pov.products_options_values_id AND pov.language_id = '".(int) $_SESSION['languages_id']."' " : "";
+    $from_str .= "LEFT JOIN ".TABLE_SPECIALS." AS s ON p.products_id = s.products_id ".SPECIALS_CONDITIONS_S." ";
+    $from_str .= SEARCH_IN_MANU == 'true' ? " LEFT JOIN ".TABLE_MANUFACTURERS." AS m ON p.manufacturers_id = m.manufacturers_id " : "";
   
     if (SEARCH_IN_FILTER == 'true') {
-      $from_str .= "LEFT JOIN ".TABLE_PRODUCTS_TAGS." pt ON (pt.products_id = p.products_id)
-                    LEFT JOIN ".TABLE_PRODUCTS_TAGS_VALUES." ptv ON (ptv.options_id = pt.options_id AND ptv.values_id = pt.values_id AND ptv.status = '1' AND ptv.languages_id = '".(int)$_SESSION['languages_id']."') ";
+      $from_str .= "LEFT JOIN ".TABLE_PRODUCTS_TAGS." pt ON pt.products_id = p.products_id
+                    LEFT JOIN ".TABLE_PRODUCTS_TAGS_VALUES." ptv ON ptv.options_id = pt.options_id AND ptv.values_id = pt.values_id AND ptv.status = '1' AND ptv.languages_id = '".(int)$_SESSION['languages_id']."' ";
     }
-  
-    if($NeedTax) {
+    
+    $tax_where = '';
+    if ($NeedTax) {
       if (!isset ($_SESSION['customer_country_id'])) {
         $_SESSION['customer_country_id'] = STORE_COUNTRY;
         $_SESSION['customer_zone_id'] = STORE_ZONE;
       }
-      $from_str .= " LEFT OUTER JOIN ".TABLE_TAX_RATES." tr ON (p.products_tax_class_id = tr.tax_class_id) 
-                     LEFT OUTER JOIN ".TABLE_ZONES_TO_GEO_ZONES." gz ON (tr.tax_zone_id = gz.geo_zone_id) ";
+      $from_str .= " LEFT JOIN ".TABLE_TAX_RATES." tr ON p.products_tax_class_id = tr.tax_class_id 
+                     LEFT JOIN ".TABLE_ZONES_TO_GEO_ZONES." gz ON tr.tax_zone_id = gz.geo_zone_id ";
       $tax_where = " AND (gz.zone_country_id IS NULL OR gz.zone_country_id = '0' OR gz.zone_country_id = '".(int) $_SESSION['customer_country_id']."') 
                      AND (gz.zone_id is null OR gz.zone_id = '0' OR gz.zone_id = '".(int) $_SESSION['customer_zone_id']."')";
     }
 
     //where-string
     $where_str = " WHERE p.products_status = '1' "  
-    .$subcat_where
-    .$manu_check
     .PRODUCTS_CONDITIONS_P
+    .$filter_where
+    .$manu_check
     .$tax_where
     .$pfrom_check
     .$pto_check;
@@ -155,10 +155,8 @@
     
       include(DIR_WS_INCLUDES.'build_search_query.php');
     
-      if (PRODUCT_LIST_FILTER == 'true') { 
-        $where_str .= " ) GROUP BY p.products_id ORDER BY NULL";
-      } else {
-        $where_str .= " ) GROUP BY p.products_id ";
+      if (PRODUCT_LIST_FILTER != 'true') { 
+        $where_str .= " GROUP BY p.products_id ";
         $where_str .= ((isset($_SESSION['filter_sorting'])) ? $_SESSION['filter_sorting'] : 'ORDER BY p.products_id ASC');
       }
     }
@@ -170,7 +168,7 @@
       $products_search_array = array();
       $result_query = xtDBquery($listing_sql);
       while ($result = xtc_db_fetch_array($result_query, true)) {
-        $products_search_array[] = $result['products_id'];
+        $products_search_array[$result['products_id']] = $result['products_id'];
       }
       $listing_sql = "SELECT ".ADD_SELECT_SEARCH."
                              p.products_id,
@@ -195,14 +193,11 @@
                         JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
                              ON p.products_id = pd.products_id
                                 AND pd.language_id = '".(int)$_SESSION['languages_id']."'
-                                AND trim(pd.products_name) != ''
-                  LEFT JOIN ".TABLE_SPECIALS." s 
-                            ON p.products_id = s.products_id
-                               ".SPECIALS_CONDITIONS_S."
-                            ".$filter_join."
-                      WHERE p.products_id IN ('".implode("', '", $products_search_array)."')
-                   GROUP BY p.products_id
-                            ".((isset($_SESSION['filter_sorting'])) ? $_SESSION['filter_sorting'] : 'ORDER BY p.products_id ASC');
+                   LEFT JOIN ".TABLE_SPECIALS." s 
+                             ON p.products_id = s.products_id
+                                ".SPECIALS_CONDITIONS_S."
+                       WHERE p.products_id IN ('".implode("', '", $products_search_array)."')
+                             ".((isset($_SESSION['filter_sorting'])) ? $_SESSION['filter_sorting'] : 'ORDER BY p.products_id ASC');
     }
   
     $_GET['keywords'] = urlencode($keywords);

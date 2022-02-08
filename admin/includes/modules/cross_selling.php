@@ -246,7 +246,7 @@
 
               if ($keywordcheck) {
                 include(DIR_FS_CATALOG.DIR_WS_INCLUDES.'build_search_query.php');
-                $where_str .= " ) GROUP BY p.products_id";
+                $where_str .= " GROUP BY p.products_id";
               }
             }
     

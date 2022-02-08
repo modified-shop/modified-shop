@@ -10,6 +10,9 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+// include needed functions
+require_once (DIR_FS_INC.'get_filter_tags.inc.php');
+
 $filter_smarty = new Smarty;
 $filter_smarty->assign('language', $_SESSION['language']);
 $filter_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
@@ -87,18 +90,10 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/listing_filter.html', $
   if (PRODUCT_LIST_FILTER == 'true') {
 
     // filter
-    $filter_join = '';
-    if (isset($_GET['filter']) && is_array($_GET['filter'])) {
-      $fi = 1;
-      foreach ($_GET['filter'] as $options_id => $values_id) {
-        if ($values_id != '') {
-          $filter_join .= " JOIN ".TABLE_PRODUCTS_TAGS." pt".$fi." 
-                                 ON pt".$fi.".products_id = p.products_id
-                                    AND pt".$fi.".options_id = '".(int)$options_id."'
-                                    AND pt".$fi.".values_id = '".(int)$values_id."' ";
-          $fi ++;
-        }
-      }
+    $filter_where = '';
+    $tags_array = get_filter_tags();
+    if (count($tags_array) > 0) {
+      $filter_where .= "AND p.products_id IN (".implode(', ', $tags_array).")";
     }
   
     // manufacturers
@@ -121,7 +116,7 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/listing_filter.html', $
     } elseif (isset($current_category_id) && $current_category_id > 0) {
       $join = " JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
                      ON p2c.products_id = p.products_id
-                        AND p2c.categories_id IN ('".((isset($subcat_list)) ? $subcat_list : (int)$current_category_id)."') ";
+                        AND p2c.categories_id ".((isset($subcategories_array) && count($subcategories_array) > 1) ? "IN (".implode(', ', $subcategories_array).") " : "= '".(int)$current_category_id."' ");
     } elseif (basename($PHP_SELF) == FILENAME_SPECIALS) {
       $join = " JOIN ".TABLE_SPECIALS." s 
                      ON p.products_id = s.products_id
@@ -133,8 +128,6 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/listing_filter.html', $
       }
     } elseif (basename($PHP_SELF) == FILENAME_ADVANCED_SEARCH_RESULT) {
       $where = " AND p.products_id IN ('".implode("', '", $products_search_array)."') ";
-      $join = $subcat_join;
-      $where .= $subcat_where;
       if ($pfrom_check != '' || $pto_check != '') {
         $where .= $pfrom_check;
         $where .= $pto_check;
@@ -163,9 +156,9 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/listing_filter.html', $
                                   JOIN ".TABLE_MANUFACTURERS." m 
                                        ON m.manufacturers_id = p.manufacturers_id
                                        ".$join."
-                                       ".$filter_join."
                                  WHERE p.products_status = '1'
                                        ".$where."
+                                       ".$filter_where."
                                        ".PRODUCTS_CONDITIONS_P."
                               ORDER BY name";
     
@@ -242,7 +235,7 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/listing_filter.html', $
     if (isset($current_category_id) && $current_category_id > 0) {
       $join .= " JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
                       ON p2c.products_id = p.products_id
-                         AND p2c.categories_id IN ('".((isset($subcat_list)) ? $subcat_list : (int)$current_category_id)."') ";
+                         AND p2c.categories_id ".((isset($subcategories_array) && count($subcategories_array) > 1) ? "IN (".implode(', ', $subcategories_array).") " : "= '".(int)$current_category_id."' ");
     }
     if (basename($PHP_SELF) == FILENAME_SPECIALS) {
       $join .= " JOIN ".TABLE_SPECIALS." s 
@@ -255,8 +248,6 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/listing_filter.html', $
       }
     } elseif (basename($PHP_SELF) == FILENAME_ADVANCED_SEARCH_RESULT) {
       $where .= " AND p.products_id IN ('".implode("', '", $products_search_array)."') ";
-      $join = $subcat_join;
-      $where .= $subcat_where;
       if ($pfrom_check != '' || $pto_check != '') {
         $where .= $pfrom_check;
         $where .= $pto_check;
@@ -297,9 +288,9 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/listing_filter.html', $
                                           AND ptv.languages_id = '".(int)$_SESSION['languages_id']."'
                                           AND ptv.filter = '1'
                                        ".$join."
-                                       ".$filter_join."
                                  WHERE p.products_status = '1'
                                        ".$where."
+                                       ".$filter_where."
                                        ".PRODUCTS_CONDITIONS_P."
                               ORDER BY pto.sort_order, pto.options_name, ptv.sort_order, ptv.values_name";                           
 

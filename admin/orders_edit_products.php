@@ -196,7 +196,6 @@ if (isset($_GET['action']) && $_GET['action'] =='product_search') {
       if ($keywordcheck) {
         include(DIR_FS_CATALOG.DIR_WS_INCLUDES.'build_search_query.php');
         $where_str = ' WHERE '.substr($where_str, 4);
-        $where_str .= " )";
       }
     }
     

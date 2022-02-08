@@ -133,7 +133,7 @@ if ($listing_split->number_of_rows == 0
 
   $listing_query = xtDBquery($listing_split->sql_query);
   while ($listing = xtc_db_fetch_array($listing_query, true)) {
-    $module_content[] =  $product->buildDataArray($listing);
+    $module_content[$listing['products_id']] =  $product->buildDataArray($listing);
   }
 } else {
   // no product found

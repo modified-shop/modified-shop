@@ -55,9 +55,7 @@
       }
       
       include(DIR_WS_INCLUDES.'build_search_query.php');
-      
-      $where_str .= " ) ";
-                                                   
+                                                         
       $autocomplete_search_query = "SELECT ".$product->default_select."
                                       FROM ".TABLE_PRODUCTS." p 
                                       JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd 
