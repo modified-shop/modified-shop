@@ -193,7 +193,6 @@ if (!$action || in_array($action, array('delete', 'list'))) {
 
               if ($keywordcheck) {
                 include(DIR_FS_CATALOG.DIR_WS_INCLUDES.'build_search_query.php');
-                $where_str .= " )";
               }
             }
           }

@@ -34,6 +34,7 @@ require_once (DIR_FS_INC.'xtc_get_subcategories.inc.php');
 require_once (DIR_FS_INC.'xtc_parse_search_string.inc.php');
 require_once (DIR_FS_INC.'xtc_get_currencies_values.inc.php');
 require_once (DIR_FS_INC.'check_whatsnew.inc.php');
+require_once (DIR_FS_INC.'get_filter_tags.inc.php');
 
 $default_smarty = new Smarty;
 $default_smarty->assign('language', $_SESSION['language']);
@@ -53,21 +54,19 @@ if (isset ($cPath) && xtc_not_null($cPath)) {
     return;
   }
   
-  $subcat_list = (int)$current_category_id;
+  $subcategories_array = array((int)$current_category_id);
   if (CATEGORIES_SHOW_PRODUCTS_SUBCATS == 'true') {
-    $subcategories_array = array ();
-    xtc_get_subcategories($subcategories_array, $subcat_list);
-    $subcategories_array[] = $subcat_list;
-    $subcat_list = implode("', '", $subcategories_array);
+    xtc_get_subcategories($subcategories_array, $current_category_id);
   }
   
   $categories_products_query = "SELECT p2c.products_id
                                   FROM ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
-                             LEFT JOIN ".TABLE_PRODUCTS." p
+                                  JOIN ".TABLE_PRODUCTS." p
                                        ON p2c.products_id = p.products_id
-                                          AND p2c.categories_id IN ('".$subcat_list."')
-                                WHERE p.products_status = '1'
-                                      ".PRODUCTS_CONDITIONS_P;
+                                          AND p2c.categories_id ".((count($subcategories_array) == 1) ? "IN (".implode(', ', $subcategories_array).") " : "= '".(int)$current_category_id."' ")."
+                                 WHERE p.products_status = '1'
+                                       ".PRODUCTS_CONDITIONS_P."
+                                 LIMIT 1";
   $categories_products_result = xtDBquery($categories_products_query);
   if (xtc_db_num_rows($categories_products_result, true) > 0) {
     $category_depth = 'products'; // display products
@@ -155,7 +154,7 @@ switch ($category_depth) {
   case 'products':
     $select = '';
     $from = '';
-    $filter_join = '';
+    $filter_where = '';
     $where = '';
     $p2c_condition = '';
     
@@ -233,33 +232,28 @@ switch ($category_depth) {
         $p2c_condition = " AND p2c.categories_id = '".(int)$_GET['filter_id']."'  ";
       }
     } else {
-      if (basename($PHP_SELF) == FILENAME_DEFAULT && $subcat_list != '') {
+      if (basename($PHP_SELF) == FILENAME_DEFAULT && count($subcategories_array) > 0) {
         // show the products in a given categorie
-        $p2c_condition = " AND p2c.categories_id IN ('".$subcat_list."') ";
+        $p2c_condition = " AND p2c.categories_id IN (".implode(', ', $subcategories_array).") ";
+        if (count($subcategories_array) == 1) {
+          $p2c_condition = " AND p2c.categories_id = '".$subcategories_array[0]."' ";
+        }
       }
       // We are asked to show only specific manufacturer                    
       if (isset($_GET['filter_id']) && xtc_not_null($_GET['filter_id'])) {
         $select .= "m.manufacturers_name, ";
-        $filter_join .= "JOIN ".TABLE_MANUFACTURERS." m 
-                           ON p.manufacturers_id = m.manufacturers_id
-                              AND m.manufacturers_id = '".(int)$_GET['filter_id']."' ";
+        $from .= "JOIN ".TABLE_MANUFACTURERS." m 
+                       ON p.manufacturers_id = m.manufacturers_id
+                          AND m.manufacturers_id = '".(int)$_GET['filter_id']."' ";
       }
     }
   
     // filter
-    if (isset($_GET['filter']) && is_array($_GET['filter'])) {
-      $fi = 1;
-      foreach ($_GET['filter'] as $options_id => $values_id) {
-        if ($values_id != '') {
-          $filter_join .= "JOIN ".TABLE_PRODUCTS_TAGS." pt".$fi." 
-                             ON pt".$fi.".products_id = p.products_id
-                                AND pt".$fi.".options_id = '".(int)$options_id."'
-                                AND pt".$fi.".values_id = '".(int)$values_id."' ";
-          $fi ++;
-        }
-      }
+    $tags_array = get_filter_tags();
+    if (count($tags_array) > 0) {
+      $filter_where .= "AND p.products_id IN (".implode(', ', $tags_array).")";
     }
-     
+    
     $listing_sql = "SELECT ".$select."
                            ".ADD_SELECT_DEFAULT."
                            p.products_id,
@@ -294,13 +288,13 @@ switch ($category_depth) {
                               AND c.categories_status = 1
                                   ".CATEGORIES_CONDITIONS_C."
                            ".$from."
-                           ".$filter_join."
                      WHERE p.products_status = '1'
                            ".PRODUCTS_CONDITIONS_P."
                            ".$where."
-                  GROUP BY p.products_id
+                           ".$filter_where."
+                           ".((isset($subcategories_array) && count($subcategories_array) > 1) ? 'GROUP BY p.products_id' : '')."
                            ".((isset($_SESSION['filter_sorting'])) ? $_SESSION['filter_sorting'] : $sorting);
-  
+    
     foreach(auto_include(DIR_FS_CATALOG.'includes/extra/default/listing_sql/','php') as $file) require ($file);
 
     include (DIR_WS_MODULES.FILENAME_PRODUCT_LISTING);

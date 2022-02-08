@@ -69,11 +69,11 @@
         $where_str .= ($ent_keyword) ? "OR pa.attributes_model LIKE ('%".$ent_keyword."%') " : '';
         $where_str .= "OR pa.attributes_ean LIKE ('%".$keyword."%') ";
         $where_str .= ($ent_keyword) ? "OR pa.attributes_ean LIKE ('%".$ent_keyword."%') " : '';
-        $where_str .= "OR (pov.products_options_values_name LIKE ('%".$keyword."%') ";
+        $where_str .= "OR pov.products_options_values_name LIKE ('%".$keyword."%') ";
         $where_str .= ($ent_keyword) ? "OR pov.products_options_values_name LIKE ('%".$ent_keyword."%') " : '';
-        $where_str .= "AND pov.language_id = '".(int) $_SESSION['languages_id']."')";
       }
       $where_str .= " ) ";
       break;
     }
   }
+  $where_str .= " ) ";
