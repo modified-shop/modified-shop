@@ -459,6 +459,8 @@ define('SESSION_CHECK_IP_ADDRESS_TITLE' , 'Checken der IP-Adresse');
 define('SESSION_CHECK_IP_ADDRESS_DESC' , '&Uuml;berpr&uuml;fen der IP-Adresse des Benutzers bei jedem Seitenaufruf. (Standard &quot;false&quot;)'.SESSION_WARNING);
 define('SESSION_RECREATE_TITLE' , 'Session erneuern');
 define('SESSION_RECREATE_DESC' , 'Erneuern der Session und Zuweisung einer neuen Session-ID sobald sich ein Benutzer einloggt oder registriert (PHP >=4.1 needed). (Standard &quot;false&quot;)'.SESSION_WARNING);
+define('SESSION_DELETE_OLD_COOKIES_TITLE' , 'Session Cookie l&ouml;schen');
+define('SESSION_DELETE_OLD_COOKIES_DESC' , 'Sollen alte Session Cookies gel&ouml;scht werden? Nach einem Update von Shopversion 1.0x empfiehlt es sich diese Option zu aktivieren. (Standard &quot;false&quot;)'.SESSION_WARNING);
 
 define('DISPLAY_CONDITIONS_ON_CHECKOUT_TITLE' , 'Anzeigen der AGB');
 define('DISPLAY_CONDITIONS_ON_CHECKOUT_DESC' , 'Anzeigen der AGB beim Bestellvorgang.');
