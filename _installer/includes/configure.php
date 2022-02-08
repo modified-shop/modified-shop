@@ -28,7 +28,7 @@
   // session handling
   define('STORE_SESSIONS', '');
   define('SESSION_WRITE_DIRECTORY', sys_get_temp_dir());
-  define('SESSION_FORCE_COOKIE_USE', 'False');
+  define('SESSION_FORCE_COOKIE_USE', 'True');
   define('CHECK_CLIENT_AGENT', 'False');
   
   // cache

@@ -53,6 +53,8 @@ foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/set_session_and_cook
 // delete old cookie
 if (is_array($current_domain_delete) 
     && count($current_domain_delete) > 0
+    && defined('SESSION_DELETE_OLD_COOKIES')
+    && SESSION_DELETE_OLD_COOKIES == 'True'
     )
 {
   foreach ($current_domain_delete as $domain) {
@@ -79,16 +81,14 @@ if (SESSION_FORCE_COOKIE_USE != 'True') {
 // start the session
 $session_started = false;
 $truncate_session_id = false;
-if (SESSION_FORCE_COOKIE_USE == 'True') {
-  xtc_setcookie('MODtest', 'please_accept_for_session', time()+60*60*24*30, DIR_WS_CATALOG, (xtc_not_null($current_domain) ? $current_domain : ''), ((HTTP_SERVER == HTTPS_SERVER && $request_type == 'SSL') ? true : false), true, 'Lax');
-  if (isset($_COOKIE['MODtest'])) {
-    $session_started = xtc_session_start();
-  }
-} elseif (CHECK_CLIENT_AGENT == 'true' && xtc_check_agent() == 1) {
+if (CHECK_CLIENT_AGENT == 'true' && xtc_check_agent() == 1) {
   $truncate_session_id = true;
   $session_started = false;
   // Redirect search engines with session id to the same url without session id to prevent indexing session id urls
-  if (stripos($_SERVER['REQUEST_URI'], xtc_session_name()) !== false || preg_match('/XTCsid/i', $_SERVER['REQUEST_URI'])) {
+  if (stripos($_SERVER['REQUEST_URI'], xtc_session_name()) !== false 
+      || preg_match('/XTCsid/i', $_SERVER['REQUEST_URI'])
+      )
+  {
     redirect_invalid_session();
   }
 } else {

@@ -354,6 +354,7 @@ $values_group_update = array();
   $values[] = "(NULL, 'COMPRESS_JAVASCRIPT', 'true', 14, 5, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
 
 //configuration_group_id 15 --- "Sessions"
+  $values[] = "(NULL, 'SESSION_DELETE_OLD_COOKIES', 'False', 15, 4, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'True\', \'False\'),');";
   $values[] = "(NULL, 'SESSION_LIFE_CUSTOMERS', '1440', '15', '20', NULL, NOW(), NULL, NULL);";
   $values[] = "(NULL, 'SESSION_LIFE_ADMIN', '7200', '15', '21', NULL, NOW(), NULL, NULL);";
 
@@ -372,6 +373,10 @@ $values_group_update = array();
   $values_update[] = array (
                            'values' => "configuration_group_id = '6', configuration_value = 'False'",
                            'configuration_key' => 'SESSION_CHECK_IP_ADDRESS'
+                           );
+  $values_update[] = array (
+                           'values' => "configuration_group_id = '6'",
+                           'configuration_key' => 'SESSION_FORCE_COOKIE_USE'
                            );
 
 //configuration_group_id 16 --- "Metatags Suchmaschinen"
