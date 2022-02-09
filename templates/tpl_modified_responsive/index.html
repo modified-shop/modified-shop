@@ -55,9 +55,6 @@
             </ul>
           </div>
 
-          {if $global_error != ''}<div class="errormessage">{$global_error}</div>{/if}
-          {if $global_success != ''}<div class="infomessage">{$global_success}</div>{/if}
-
           {if isset($SLIDER)}
             <div class="content_slider cf">
               <div class="slider_home">
@@ -130,8 +127,6 @@
           </ul>
         </div>
         {if isset($navtrail)}<div id="breadcrumb"><span class="breadcrumb_info">{#text_here#}</span>{$navtrail|replace:" &raquo; ":"<i class=\"fas fa-angle-right\"></i>"}</div>{/if}
-        {if $global_error != ''}<div class="errormessage">{$global_error}</div>{/if}
-        {if $global_success != ''}<div class="infomessage">{$global_success}</div>{/if}
         {if isset($main_content)}{$main_content}{/if}
         {if $bestseller}
           {if isset($box_BESTSELLERS)}{$box_BESTSELLERS}{/if}
@@ -152,8 +147,6 @@
             </ul>
           </div>
           {if isset($navtrail)}<div id="breadcrumb"><span class="breadcrumb_info">{#text_here#}</span>{$navtrail|replace:" &raquo; ":"<i class=\"fas fa-angle-right\"></i>"}</div>{/if}
-          {if $global_error != ''}<div class="errormessage">{$global_error}</div>{/if}
-          {if $global_success != ''}<div class="infomessage">{$global_success}</div>{/if}
           {if isset($main_content)}{$main_content}{/if}
           {if $bestseller}{if isset($box_BESTSELLERS)}{$box_BESTSELLERS}{/if}{/if}
         </div>
