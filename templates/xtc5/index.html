@@ -39,6 +39,8 @@
       </div>
     {/if}
     <div id="content{if (strpos($smarty.server.PHP_SELF, 'checkout')) && (!strpos($smarty.server.PHP_SELF, 'checkout_express'))}full{/if}">
+      {if $global_error != ''}<div class="errormessage">{$global_error}</div>{/if}
+      {if $global_success != ''}<div class="infomessage">{$global_success}</div>{/if}
       {if $home}
         {if isset($BANNER) && $BANNER != ''}<div class="banner_item">{$BANNER}</div>{/if}
       {/if}

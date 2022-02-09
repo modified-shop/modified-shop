@@ -46,6 +46,9 @@ if (!isset($_SESSION['tracking']['refID']) && isset($_GET['refID'])) {
 
 // request 
 $req_url = strip_tags($_SERVER['REQUEST_URI']);
+if (in_array(basename($PHP_SELF), array(FILENAME_LOGIN, FILENAME_LOGOFF))) {
+  $req_url = basename($PHP_SELF);
+}
 
 // referrer
 if (!isset($_SESSION['tracking']['http_referer'])) {
@@ -73,7 +76,10 @@ if (!isset($_SESSION['tracking']['browser']) && isset($_SERVER['HTTP_USER_AGENT'
 if (!isset($_SESSION['tracking']['pageview_history'])) {
   $_SESSION['tracking']['pageview_history'] = array();
 }
-if (basename($PHP_SELF) != 'ajax.php' && end($_SESSION['tracking']['pageview_history']) != $req_url) {
+if (!in_array(basename($PHP_SELF), array('ajax.php', FILENAME_COOKIE_USAGE)) 
+    && end($_SESSION['tracking']['pageview_history']) != $req_url
+    )
+{
   array_push($_SESSION['tracking']['pageview_history'], $req_url);
 }
 if (count($_SESSION['tracking']['pageview_history']) > 6) {
