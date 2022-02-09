@@ -42,7 +42,7 @@ foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/product_reviews_writ
 
 if ($_SESSION['customers_status']['customers_status_write_reviews'] == 0) {
   if (is_object($product) && $product->isProduct() === true) {
-    xtc_redirect(xtc_href_link(FILENAME_LOGIN, 'review_prod_id=' .(int)$product->data['products_id'], 'SSL'));
+    xtc_redirect(xtc_href_link(FILENAME_LOGIN, 'products_id='.(int)$product->data['products_id'], 'SSL'));
   } else {
     xtc_redirect(xtc_href_link(FILENAME_DEFAULT));
   }

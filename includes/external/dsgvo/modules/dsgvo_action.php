@@ -1,4 +1,15 @@
 <?php
+/* -----------------------------------------------------------------------------------------
+   $Id$
+
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
+
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   -----------------------------------------------------------------------------------------
+   Released under the GNU General Public License
+   ---------------------------------------------------------------------------------------*/
+
   if (defined('MODULE_SYSTEM_DSGVO_STATUS')
       && MODULE_SYSTEM_DSGVO_STATUS == 'true'
       && MODULE_SYSTEM_DSGVO_CONTENT != ''
@@ -30,24 +41,28 @@
           if (strpos(basename($PHP_SELF), 'checkout') !== false) {
             xtc_redirect(xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action')), 'SSL')); 
           }
-          
-          // define pages allowed to redirect
-          $redirect_array = array(FILENAME_ACCOUNT_HISTORY_INFO, 
-                                  FILENAME_ACCOUNT, 
-                                  FILENAME_CHECKOUT_SHIPPING, 
-                                  FILENAME_PRODUCT_REVIEWS_WRITE
-                                  );
-          if (isset($_SESSION['REFERER']) && xtc_not_null($_SESSION['REFERER']) && in_array($_SESSION['REFERER'], $redirect_array) && $_SESSION['old_customers_basket_cart'] === false) {
-            xtc_redirect(xtc_href_link($_SESSION['REFERER'], xtc_get_all_get_params(array('review_prod_id', 'action')).(isset($_GET['review_prod_id']) ? 'products_id=' .$_GET['review_prod_id'] : ''))); 
-          } elseif ($_SESSION['cart']->count_contents() > 0) {
+                    
+          // redirect to last viewed page
+          $cnt_pageview_history = count($_SESSION['tracking']['pageview_history']);
+          if ($cnt_pageview_history > 1) {
+            $redirect = $_SESSION['tracking']['pageview_history'][$cnt_pageview_history - 2];
+            if ($_SESSION['old_customers_basket_cart'] === true) {
+              unset($_SESSION['old_customers_basket_cart']);
+              $messageStack->add_session('global', TEXT_SAVED_BASKET);
+            }
+            xtc_redirect(xtc_href_link(ltrim($redirect, '/'))); 
+          }
+      
+          // redirect fallback
+          if ($_SESSION['cart']->count_contents() > 0) {
             if ($_SESSION['old_customers_basket_cart'] === true) {
               unset($_SESSION['old_customers_basket_cart']);
               $messageStack->add_session('info_message_3', TEXT_SAVED_BASKET);
             }
-            xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART)); 
+            xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART),'NONSSL'); 
           } else {          
-            xtc_redirect(xtc_href_link(FILENAME_DEFAULT));           
-          }
+            xtc_redirect(xtc_href_link(FILENAME_DEFAULT),'NONSSL');           
+          }          
         }
       }
       
@@ -56,4 +71,3 @@
       }
     }
   }
-?>

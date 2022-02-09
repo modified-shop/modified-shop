@@ -27,7 +27,9 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-//SET SHOP OFFLINE 503 STATUS CODE
+// include needed functions
+require_once(DIR_FS_INC . 'xtc_output_warning.inc.php');
+require_once(DIR_FS_INC . 'xtc_parse_input_field_data.inc.php');
 require_once(DIR_FS_INC . 'xtc_get_shop_conf.inc.php'); 
 
 $shop_is_offline = get_shop_offline_status();
@@ -166,51 +168,15 @@ foreach(auto_include(DIR_FS_CATALOG.'includes/extra/header/header_head/','php') 
 </head>
 <body>
 <?php
-
-// include needed functions
-require_once('inc/xtc_output_warning.inc.php');
-require_once('inc/xtc_parse_input_field_data.inc.php');
-
-// check if the 'install' directory exists, and warn of its existence
-if (WARN_INSTALL_EXISTENCE == 'true') {
-  if (is_dir(DIR_FS_CATALOG . '/' . DIR_MODIFIED_INSTALLER)) {
-    xtc_output_warning(sprintf(WARNING_INSTALL_DIRECTORY_EXISTS, DIR_FS_CATALOG . DIR_MODIFIED_INSTALLER));
-  }
+if ($shop_is_offline) {
+  $smarty->assign('language', $_SESSION['language']);
+  $smarty->assign('shop_offline_msg', xtc_get_shop_conf('SHOP_OFFLINE_MSG'));	
+  $smarty->display(CURRENT_TEMPLATE.'/offline.html');	
+  include ('includes/application_bottom.php');
+  exit();
 }
 
-// check if the configure.php file is writeable
-if (WARN_CONFIG_WRITEABLE == 'true') {
-  if ((is_file(DIR_WS_INCLUDES . 'configure.php')) && (is_writeable(DIR_WS_INCLUDES . 'configure.php'))) {
-    xtc_output_warning(sprintf(WARNING_CONFIG_FILE_WRITEABLE, DIR_WS_INCLUDES . 'configure.php'));
-  }
-  if ((is_file(DIR_WS_INCLUDES . 'local/configure.php')) && (is_writeable(DIR_WS_INCLUDES . 'local/configure.php'))) {
-    xtc_output_warning(sprintf(WARNING_CONFIG_FILE_WRITEABLE, DIR_WS_INCLUDES . 'local/configure.php'));
-  }
-}
-
-// check if the session folder is writeable
-if (WARN_SESSION_DIRECTORY_NOT_WRITEABLE == 'true') {
-  if (STORE_SESSIONS == '') {
-    if (!is_dir(xtc_session_save_path())) {
-      xtc_output_warning(WARNING_SESSION_DIRECTORY_NON_EXISTENT);
-    } elseif (!is_writeable(xtc_session_save_path())) {
-      xtc_output_warning(WARNING_SESSION_DIRECTORY_NOT_WRITEABLE);
-    }
-  }
-}
-
-// check session.auto_start is disabled
-if ( (WARN_SESSION_AUTO_START == 'true') && (function_exists('ini_get')) ) {
-  if (ini_get('session.auto_start') == '1') {
-    xtc_output_warning(WARNING_SESSION_AUTO_START);
-  }
-}
-
-if ( (WARN_DOWNLOAD_DIRECTORY_NOT_READABLE == 'true') && (DOWNLOAD_ENABLED == 'true') ) {
-  if (!is_dir(DIR_FS_DOWNLOAD)) {
-    xtc_output_warning(WARNING_DOWNLOAD_DIRECTORY_NON_EXISTENT);
-  }
-}
+xtc_output_warning();
 
 $smarty->assign('navtrail', $breadcrumb->trail(' &raquo; '));
 if (isset($_SESSION['customer_id'])) {
@@ -231,6 +197,12 @@ $smarty->assign('cart',xtc_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'));
 $smarty->assign('checkout',xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
 $smarty->assign('store_name', encode_htmlspecialchars(TITLE));
 
+if ($messageStack->size('global') > 0) {
+  $smarty->assign('global_error', $messageStack->output('global'));
+}
+if ($messageStack->size('global', 'success') > 0) {
+  $smarty->assign('global_success', $messageStack->output('global', 'success'));
+}
 if (isset($_GET['error_message']) && xtc_not_null($_GET['error_message'])) {
   $smarty->assign('error', get_message('error_message'));
 }
@@ -238,17 +210,4 @@ if (isset($_GET['info_message']) && xtc_not_null($_GET['info_message'])) {
   $smarty->assign('error', get_message('info_message'));
 }
 
-## header_body_extra
-
-// SHOP OFFLINE INFO
-if ($shop_is_offline) {
-  $smarty->assign('language', $_SESSION['language']);
-  $smarty->assign('shop_offline_msg', xtc_get_shop_conf('SHOP_OFFLINE_MSG'));	
-  $smarty->display(CURRENT_TEMPLATE.'/offline.html');	
-  include ('includes/application_bottom.php');
-  exit();
-}
-
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/header/header_body/','php') as $file) require_once ($file);
-## header_body_extra
-?>

@@ -170,21 +170,19 @@ if (isset($_GET['action'])
 
       foreach(auto_include(DIR_FS_CATALOG.'includes/extra/login/','php') as $file) require_once ($file);
       
-      // define pages allowed to redirect
-      $redirect_array = array(FILENAME_ACCOUNT_HISTORY_INFO, 
-                              FILENAME_ACCOUNT, 
-                              FILENAME_CHECKOUT_SHIPPING, 
-                              FILENAME_PRODUCT_REVIEWS_WRITE
-                              );
+      // redirect to last viewed page
+      $cnt_pageview_history = count($_SESSION['tracking']['pageview_history']);
+      if ($cnt_pageview_history > 1) {
+        $redirect = $_SESSION['tracking']['pageview_history'][$cnt_pageview_history - 2];
+        if ($_SESSION['old_customers_basket_cart'] === true) {
+          unset($_SESSION['old_customers_basket_cart']);
+          $messageStack->add_session('global', TEXT_SAVED_BASKET);
+        }
+        xtc_redirect(xtc_href_link(ltrim($redirect, '/'))); 
+      }
       
-      if (isset($_SESSION['REFERER']) 
-          && xtc_not_null($_SESSION['REFERER']) 
-          && in_array($_SESSION['REFERER'], $redirect_array) 
-          && $_SESSION['old_customers_basket_cart'] === false
-          )
-      {
-        xtc_redirect(xtc_href_link($_SESSION['REFERER'], xtc_get_all_get_params(array('review_prod_id', 'action')).(isset($_GET['review_prod_id']) ? 'products_id=' .$_GET['review_prod_id'] : ''))); 
-      } elseif ($_SESSION['cart']->count_contents() > 0) {
+      // redirect fallback
+      if ($_SESSION['cart']->count_contents() > 0) {
         if ($_SESSION['old_customers_basket_cart'] === true) {
           unset($_SESSION['old_customers_basket_cart']);
           $messageStack->add_session('info_message_3', TEXT_SAVED_BASKET);
@@ -192,7 +190,7 @@ if (isset($_GET['action'])
         xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART),'NONSSL'); 
       } else {          
         xtc_redirect(xtc_href_link(FILENAME_DEFAULT),'NONSSL');           
-      } 
+      }
 		}
 	}
 }
