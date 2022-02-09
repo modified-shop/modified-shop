@@ -22,7 +22,7 @@
 
       // check if the 'install' directory exists, and warn of its existence
       if (WARN_INSTALL_EXISTENCE == 'true') {
-        if (is_dir(DIR_FS_CATALOG . '/' . DIR_MODIFIED_INSTALLER)) {
+        if (is_dir(DIR_FS_CATALOG . DIR_MODIFIED_INSTALLER)) {
           $messageStack->add('output_warning', sprintf(WARNING_INSTALL_DIRECTORY_EXISTS, DIR_FS_CATALOG . DIR_MODIFIED_INSTALLER));
         }
       }
