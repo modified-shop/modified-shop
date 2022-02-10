@@ -454,7 +454,7 @@
       if ($messageStack->size('banktransfer') > 0) {
         $error = array(
           'title' => MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_ERROR,
-          'error' => $messageStack->output('banktransfer'),
+          'error_message' => $messageStack->output('banktransfer'),
         );
         
         return $error;

@@ -162,7 +162,8 @@ if ($total > 0 || ($credit_amount && $total > 0) || (isset($_SESSION['credit_cov
       && ($error = ${$_GET['payment_error']}->get_error())
       ) 
   {
-    $smarty->assign('error_message',  encode_htmlspecialchars(encode_utf8($error['error'], 'ISO-8859-15')));
+    if (isset($error['error'])) $smarty->assign('error_message',  encode_htmlspecialchars(encode_utf8($error['error'], 'ISO-8859-15')));
+    if (isset($error['error_message'])) $smarty->assign('error_message',  $error['error_message']);
     $_SESSION['payment'] = $_GET['payment_error'];
     $error = true;
   }
