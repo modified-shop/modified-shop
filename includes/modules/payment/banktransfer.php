@@ -449,6 +449,8 @@
     }
     
     function get_error() {
+      global $messageStack;
+      
       if ($messageStack->size('banktransfer') > 0) {
         $error = array(
           'title' => MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_ERROR,
