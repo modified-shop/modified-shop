@@ -77,7 +77,6 @@ $cc_check = isset($_SESSION['cc_amount_min_order']) && $_SESSION['cc_amount_min_
 if (isset($_SESSION['cc_post']) && !$cc_check) {
   unset($_SESSION['cc_id']); 
   unset($_SESSION['cc_post']);   
-  unset($_GET['info_message']);
   $cc_amount_min_order_info = sprintf(ERROR_INVALID_MINIMUM_ORDER_COUPON,$xtPrice->xtcFormat($_SESSION['cc_amount_min_order'],true)).ERROR_INVALID_MINIMUM_ORDER_COUPON_ADD;
 }
 

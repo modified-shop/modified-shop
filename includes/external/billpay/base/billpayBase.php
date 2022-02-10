@@ -1158,6 +1158,8 @@ JAVASCRIPT;
          * @param string $err_msg
          */
         private function _error_redirect($err_msg) {
+            global $messageStack;
+            
             $err_msg = billpayBase::EnsureString($err_msg);
             $_SESSION['gm_error_message'] = $err_msg;
             $this->_logDebug($err_msg);
@@ -1168,7 +1170,8 @@ JAVASCRIPT;
                 /** ajax one page checkout  */
                 $_SESSION['checkout_payment_error'] = 'payment_error=' . $this->code . '&error=' . $err_msg;
             } else {
-                xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message='.urlencode($err_msg), 'SSL'));
+                $messageStack->add_session('global', $err_msg);
+                xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
             }
         }
 
@@ -1262,13 +1265,16 @@ JAVASCRIPT;
          * It executes after confirming an order.
          */
         public function before_process() {
+            global $messageStack;
+            
             $this->_logError('START beforeProcess');
             $data = array();
             $success = $this->reqPreauthorizeCapture($data);
             if (!$success) {
                 $error = billpayBase::EnsureString($this->error);
                 $_SESSION['gm_error_message'] = $error; // Gambio specific
-                xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message='.urlencode($error), 'SSL'));
+                $messageStack->add_session('global', $error);
+                xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
             }
         }
 
@@ -1277,7 +1283,7 @@ JAVASCRIPT;
          * It executes after before_process(). If BillPay denied, it won't be executed.
          */
         public function after_process() {
-            global $insert_id; # newOrderId
+            global $insert_id, $messageStack; # newOrderId
 
             $transaction_id = self::GetTransactionId();
             $this->saveOrderId($transaction_id, $insert_id);
@@ -1291,7 +1297,8 @@ JAVASCRIPT;
             if ($error) {
                 $this->setOrderBillpayState(billpayBase::STATE_ERROR, $insert_id);
                 $this->_logError('Transaction ID not found in session', 'ERROR in after_process');
-                xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message='.urlencode(MODULE_PAYMENT_BILLPAY_TEXT_ERROR_DEFAULT), 'SSL'));
+                $messageStack->add_session('global', MODULE_PAYMENT_BILLPAY_TEXT_ERROR_DEFAULT);
+                xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
                 return false; # xtc_redirect exits
             }
 

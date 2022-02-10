@@ -209,10 +209,6 @@ require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 $breadcrumb->add(NAVBAR_TITLE_LOGIN, xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
 require (DIR_WS_INCLUDES.'header.php');
 
-if (isset($_GET['info_message']) && xtc_not_null($_GET['info_message'])) {
-  $messageStack->add('login', get_message('info_message'));
-}
-
 if ($messageStack->size('login') > 0) {
 	$smarty->assign('error_message', $messageStack->output('login'));
 }

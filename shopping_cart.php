@@ -91,9 +91,6 @@ if ($_SESSION['cart']->count_contents() > 0) {
 }
 
 // info message cart
-if (isset($_GET['info_message']) && xtc_not_null($_GET['info_message'])) {
-  $messageStack->add('shopping_cart', get_message('info_message'));
-}
 if ($messageStack->size('info_message_3') > 0) {
   $smarty->assign('info_message_3', $messageStack->output('info_message_3'));
 }

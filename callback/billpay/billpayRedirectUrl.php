@@ -59,5 +59,6 @@ if ($success)
     {
         $error = constant('MODULE_PAYMENT_BILLPAY_GIROPAY_CANCELED');
     }
-    xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message='.urlencode($error), 'SSL'));
+    $messageStack->add_session('global', $error);
+    xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
 }
