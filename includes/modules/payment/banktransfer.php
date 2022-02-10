@@ -387,6 +387,43 @@
       unset($_SESSION['banktransfer_info']);
     }
     
+    function success() {
+      global $insert_id, $last_order, $xtPrice;
+             
+      $insert_id = $last_order;
+      $banktransfer_data = $this->info();
+
+      if (!empty($banktransfer_data['banktransfer_iban'])) {
+        require_once (DIR_FS_INC.'xtc_date_short.inc.php');
+        require_once (DIR_FS_INC.'get_order_total.inc.php');
+        
+        $smarty = new Smarty();
+        $smarty->caching = 0;
+        $smarty->assign('language', $_SESSION['language']);
+        $smarty->assign('PAYMENT_BANKTRANSFER_CREDITOR_ID', MODULE_PAYMENT_BANKTRANSFER_CI);
+        $smarty->assign('PAYMENT_BANKTRANSFER_DUE_DATE',  xtc_date_short(date('Y-m-d', strtotime(' + ' . MODULE_PAYMENT_BANKTRANSFER_DUE_DELAY . ' days'))));     
+        $smarty->assign('PAYMENT_BANKTRANSFER_TOTAL', $xtPrice->xtcFormat(get_order_total($insert_id), true));
+        $smarty->assign('PAYMENT_BANKTRANSFER_MANDATE_REFERENCE', MODULE_PAYMENT_BANKTRANSFER_REFERENCE_PREFIX . $insert_id);
+        $smarty->assign('PAYMENT_BANKTRANSFER_IBAN', substr($banktransfer_data['banktransfer_iban'], 0, 8) . str_repeat('*', (strlen($banktransfer_data['banktransfer_iban']) - 10)) . substr($banktransfer_data['banktransfer_iban'], -2));
+        $smarty->assign('PAYMENT_BANKTRANSFER_BANKNAME', $banktransfer_data['banktransfer_bankname']);
+      
+        $sepa_info = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/sepa_info.html');
+        
+        $success = array(
+          array(
+            'title' => $this->title,
+            'class' => $this->code,
+            'fields' => array(
+              array('title' => '',
+                    'field' => $sepa_info),
+            )
+          )
+        );
+
+        return $success;
+      }
+    }
+
     function info() {
       global $insert_id;
       
