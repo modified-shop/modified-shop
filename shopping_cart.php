@@ -81,7 +81,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
     if (isset($_GET['payment_error'])) {
       include_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/paypalcart.php');
       $error = $paypal_cart->get_error();
-      $smarty->assign('info_message',  $error['error']);
+      $smarty->assign('error_message',  $error['error']);
     }
   }
 } else {
@@ -110,7 +110,7 @@ if (isset($cc_amount_min_order_info)) {
 }
 
 if ($messageStack->size('shopping_cart') > 0) {
-  $smarty->assign('info_message', $messageStack->output('shopping_cart'));
+  $smarty->assign('error_message', $messageStack->output('shopping_cart'));
 }
 
 // unset

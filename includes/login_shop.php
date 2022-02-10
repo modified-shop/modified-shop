@@ -39,7 +39,7 @@ if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/offline/login_
   }
 
   if ($messageStack->size('login') > 0) {
-    $smarty->assign('info_message', $messageStack->output('login'));
+    $smarty->assign('error_message', $messageStack->output('login'));
   }
 
   $smarty->assign('FORM_ACTION', xtc_draw_form('login', xtc_href_link(FILENAME_LOGIN, xtc_get_all_get_params().'action=process', 'SSL')));

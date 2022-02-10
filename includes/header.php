@@ -198,16 +198,13 @@ $smarty->assign('checkout',xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'))
 $smarty->assign('store_name', encode_htmlspecialchars(TITLE));
 
 if ($messageStack->size('global') > 0) {
-  $smarty->assign('global_error', $messageStack->output('global'));
-}
-if ($messageStack->size('global', 'success') > 0) {
-  $smarty->assign('global_success', $messageStack->output('global', 'success'));
+  $smarty->assign('error_message', $messageStack->output('global'));
 }
 if (isset($_GET['error_message']) && xtc_not_null($_GET['error_message'])) {
-  $smarty->assign('error', get_message('error_message'));
+  $smarty->assign('error_message', get_message('error_message'));
 }
 if (isset($_GET['info_message']) && xtc_not_null($_GET['info_message'])) {
-  $smarty->assign('error', get_message('info_message'));
+  $smarty->assign('error_message', get_message('info_message'));
 }
 
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/header/header_body/','php') as $file) require_once ($file);

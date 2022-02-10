@@ -118,11 +118,11 @@ $breadcrumb->add(NAVBAR_TITLE_REVIEWS_WRITE, xtc_href_link(FILENAME_PRODUCT_REVI
 require (DIR_WS_INCLUDES.'header.php');
 
 if ($product->isProduct() === false) {
-  $smarty->assign('error', ERROR_INVALID_PRODUCT);
+  $smarty->assign('error_message', ERROR_INVALID_PRODUCT);
   $smarty->assign('no_product', true);
 } else {
   if ($messageStack->size('product_reviews_write') > 0) {
-    $smarty->assign('error', $messageStack->output('product_reviews_write'));
+    $smarty->assign('error_message', $messageStack->output('product_reviews_write'));
   }
   if (!isset($author)) {
     $author = '';

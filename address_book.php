@@ -48,7 +48,7 @@ unset($_SESSION['billing_zone']);
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 if ($messageStack->size('addressbook') > 0) {
-	$smarty->assign('error', $messageStack->output('addressbook'));
+	$smarty->assign('error_message', $messageStack->output('addressbook'));
 }
 
 if ($messageStack->size('addressbook', 'success') > 0) {

@@ -1,5 +1,5 @@
 <h1>{$smarty.const.TEXT_DSGVO_HEADING}</h1>
-{if $error!=''}<div class="errormessage">{$error}</div>{/if}
+{if $error_message!=''}<div class="errormessage">{$error_message}</div>{/if}
 <p>{$smarty.const.TEXT_DSGVO_DESCRIPTION}</p>
 {$FORM_ACTION}
   {foreach name=aussen item=module_data from=$module_content}

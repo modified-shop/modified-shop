@@ -542,7 +542,7 @@ $breadcrumb->add(NAVBAR_TITLE_CREATE_ACCOUNT, xtc_href_link(FILENAME_CREATE_ACCO
 require (DIR_WS_INCLUDES.'header.php');
 
 if ($messageStack->size('create_account') > 0) {
-  $smarty->assign('error', $messageStack->output('create_account'));
+  $smarty->assign('error_message', $messageStack->output('create_account'));
 }
 
 $smarty->assign('FORM_ACTION', xtc_draw_form('create_account', xtc_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL'), 'post').xtc_draw_hidden_field('action', 'process').secure_form());

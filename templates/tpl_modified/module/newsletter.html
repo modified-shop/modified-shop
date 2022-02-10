@@ -4,7 +4,7 @@
 {config_load file="lang_`$language`.section" section="create_account"}
 {config_load file="lang_`$language`.section" section="newsletter"}
 <h1>{#heading_title#}</h1>
-{if $info_message != ''}<div class="{if $message_class}{$message_class}{else}info{/if}message">{$info_message}</div>{/if}
+{if $error_message != ''}<div class="{if $message_class}{$message_class}{else}info{/if}message">{$error_message}</div>{/if}
 {if !isset($activated)}
   {$FORM_ACTION}
   <div class="twoColums">

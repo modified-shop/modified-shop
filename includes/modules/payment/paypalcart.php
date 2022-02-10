@@ -297,12 +297,12 @@ class paypalcart extends PayPalPayment {
     $module_smarty->assign('ADR_checkbox', '<input type="checkbox" value="address" name="check_address" id="address" />');
 
     if ($messageStack->size('checkout_confirmation') > 0) {
-      $smarty->assign('error', $messageStack->output('checkout_confirmation'));
+      $smarty->assign('error_message', $messageStack->output('checkout_confirmation'));
     } elseif (isset($_SESSION['paypal_express_new_customer'])
               && !isset($_SESSION['paypal_express_new_customer_note'])
               )
     {
-      $smarty->assign('error', TEXT_PAYPAL_CART_ACCOUNT_CREATED);
+      $smarty->assign('error_message', TEXT_PAYPAL_CART_ACCOUNT_CREATED);
       $_SESSION['paypal_express_new_customer_note'] = 'true';
     }
 

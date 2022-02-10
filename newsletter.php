@@ -48,7 +48,7 @@ require_once (DIR_WS_CLASSES.'modified_captcha.php');
 
 $mod_captcha = $_mod_captcha_class::getInstance();
 
-$info_message = '';
+$error_message = '';
 $newsletter = new newsletter();
 $privacy = isset($_POST['privacy']) && $_POST['privacy'] == 'privacy' ? true : false;
 
@@ -82,10 +82,10 @@ if (isset($_GET['action'])
       $newsletter->auto = true;
     }
     $newsletter->AddUser($_POST['check'], ((isset($_POST['vvcode'])) ? $_POST['vvcode'] : ''), $email);
-    $info_message = $newsletter->message;
+    $error_message = $newsletter->message;
   } else {
     if ($messageStack->size('newsletter') > 0) {
-      $info_message = $messageStack->output('newsletter');
+      $error_message = $messageStack->output('newsletter');
       $newsletter->message_class = 'error';
     }
   }
@@ -95,7 +95,7 @@ if (isset($_GET['action'])
 if (isset ($_GET['action']) && ($_GET['action'] == 'activate')) {
   $newsletter->ActivateAddress($_GET['key'], $_GET['email']);
   unset($_GET['email']);
-  $info_message = $newsletter->message;
+  $error_message = $newsletter->message;
   if ($newsletter->message_class == 'info') {
     $smarty->assign('activated', true);
   }
@@ -105,7 +105,7 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'activate')) {
 if (isset ($_GET['action']) && ($_GET['action'] == 'remove')) {
   $newsletter->RemoveFromList($_GET['key'], $_GET['email']);
   unset($_GET['email']);
-  $info_message = $newsletter->message;
+  $error_message = $newsletter->message;
 }
 
 // include boxes
@@ -121,7 +121,7 @@ if (in_array('newsletter', $use_captcha) && (!isset($_SESSION['customer_id']) ||
 }
 
 $smarty->assign('text_newsletter', TEXT_NEWSLETTER);
-$smarty->assign('info_message', $info_message);
+$smarty->assign('error_message', $error_message);
 if ($newsletter->message_class != '') {
   $smarty->assign('message_class', $newsletter->message_class);
 }

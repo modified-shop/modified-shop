@@ -121,7 +121,7 @@ $breadcrumb->add(NAVBAR_TITLE_2_ACCOUNT_PASSWORD, xtc_href_link(FILENAME_ACCOUNT
 require (DIR_WS_INCLUDES.'header.php');
 
 if ($messageStack->size('account_password') > 0) {
-	$smarty->assign('error', $messageStack->output('account_password'));
+	$smarty->assign('error_message', $messageStack->output('account_password'));
 }
 
 $smarty->assign('FORM_ACTION', xtc_draw_form('account_password', xtc_href_link(FILENAME_ACCOUNT_PASSWORD, '', 'SSL'), 'post', 'onsubmit="return check_form(account_password);"').xtc_draw_hidden_field('action', 'process').secure_form());

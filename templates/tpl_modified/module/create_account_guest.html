@@ -3,7 +3,7 @@
 {config_load file="lang_`$language`.section" section="create_account_guest"}
 <h1>{#heading_create_guest_account#}</h1>
 {$FORM_ACTION}
-{if $error != ''}<div class="errormessage">{$error}</div>{/if}
+{if $error_message != ''}<div class="errormessage">{$error_message}</div>{/if}
 <div class="twoColums">
   <div class="highlightbox">
     <h4>{#title_personal#} <span class="pflicht">({#text_must#})</span></h4>

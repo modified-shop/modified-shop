@@ -22,7 +22,7 @@
     if (xtc_db_num_rows($plan_query, true) > 0) {
       $module_smarty = new Smarty();
       if ($_SESSION['cart']->count_contents() > 0) {
-        $module_smarty->assign('error', TEXT_PAYPAL_ERROR_MAX_PRODUCTS);
+        $module_smarty->assign('error_message', TEXT_PAYPAL_ERROR_MAX_PRODUCTS);
         $info_smarty->clear_assign('ADD_QTY');
         $info_smarty->clear_assign('ADD_CART_BUTTON');
       } else {
@@ -67,7 +67,7 @@
         $module_smarty->assign('plan_content', $plan_content);
         
         if ($messageStack->size('paypalplan') > 0) {
-          $module_smarty->assign('error', $messageStack->output('paypalplan'));
+          $module_smarty->assign('error_message', $messageStack->output('paypalplan'));
         }    
       }
       $module_smarty->assign('language', $_SESSION['language']);
@@ -84,7 +84,7 @@
                                        AND plan_status = 1");
         if (xtc_db_num_rows($plan_query) > 0) {        
           $module_smarty = new Smarty();
-          $module_smarty->assign('error', TEXT_PAYPAL_ERROR_SUBSCRIPTION_PRODUCTS);
+          $module_smarty->assign('error_message', TEXT_PAYPAL_ERROR_SUBSCRIPTION_PRODUCTS);
 
           $module_smarty->assign('language', $_SESSION['language']);
           $plan_content = $module_smarty->fetch(DIR_FS_EXTERNAL . '/paypal/templates/plan.html');

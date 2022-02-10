@@ -33,7 +33,7 @@ include ('includes/application_top.php');
 $smarty = new Smarty;
 
 if ($messageStack->size('logoff') > 0) {
-  $smarty->assign('info_message', $messageStack->output('logoff'));
+  $smarty->assign('error_message', $messageStack->output('logoff'));
 }    
 if ($messageStack->size('logoff', 'success') > 0) {
   $smarty->assign('success_message', $messageStack->output('logoff', 'success'));

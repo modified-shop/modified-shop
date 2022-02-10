@@ -42,7 +42,7 @@ class payone_invoice extends PayonePayment {
 
 		$error = parent::get_error();
 		if ($error != '') {
-		  $payment_smarty->assign('error', $error['error']);
+		  $payment_smarty->assign('error_message', $error['error']);
 		}
     
     $genre_config = $this->config[$active_genre_identifier];

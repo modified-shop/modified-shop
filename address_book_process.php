@@ -324,7 +324,7 @@ if (!isset($_GET['delete'])) {
 
 $smarty->assign('FORM_ACTION', $action);
 if ($messageStack->size('addressbook') > 0) {
-  $smarty->assign('error', $messageStack->output('addressbook'));
+  $smarty->assign('error_message', $messageStack->output('addressbook'));
 }
 
 if (isset ($_GET['delete'])) {

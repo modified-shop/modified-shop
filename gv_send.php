@@ -189,7 +189,7 @@ elseif (!isset($_GET['action']) || $_GET['action'] == '' || $error) {
 }
 
 if ($messageStack->size('gv_send') > 0) {
-  $smarty->assign('error', $messageStack->output('gv_send'));
+  $smarty->assign('error_message', $messageStack->output('gv_send'));
 }
 
 $smarty->assign('GV_FAQ_LINK', $main->getContentLink(6, MORE_INFO,'NONSSL'));

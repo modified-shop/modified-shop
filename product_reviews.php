@@ -129,7 +129,7 @@ require (DIR_WS_INCLUDES.'header.php');
 $smarty->assign('PRODUCTS_NAME', xtc_get_products_name($_GET['products_id'], $_SESSION['languages_id']));
 
 if ($messageStack->size('product_reviews') > 0) {
-  $smarty->assign('error', $messageStack->output('product_reviews'));
+  $smarty->assign('error_message', $messageStack->output('product_reviews'));
 }
 if ($messageStack->size('product_reviews', 'success') > 0) {
   $smarty->assign('success_message', $messageStack->output('product_reviews', 'success'));

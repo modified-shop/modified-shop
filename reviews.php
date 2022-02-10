@@ -101,7 +101,7 @@ $breadcrumb->add(NAVBAR_TITLE_REVIEWS, xtc_href_link(FILENAME_REVIEWS));
 require (DIR_WS_INCLUDES.'header.php');
 
 if ($messageStack->size('product_reviews') > 0) {
-  $smarty->assign('error', $messageStack->output('product_reviews'));
+  $smarty->assign('error_message', $messageStack->output('product_reviews'));
 }
 if ($messageStack->size('product_reviews', 'success') > 0) {
   $smarty->assign('success_message', $messageStack->output('product_reviews', 'success'));

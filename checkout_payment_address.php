@@ -125,7 +125,7 @@ if ($process == true) {
 }
 
 if ($messageStack->size('checkout_address') > 0) {
-  $smarty->assign('error', $messageStack->output('checkout_address'));
+  $smarty->assign('error_message', $messageStack->output('checkout_address'));
 }
 
 if ($process == false) {

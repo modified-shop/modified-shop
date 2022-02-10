@@ -50,7 +50,7 @@
       require (DIR_WS_INCLUDES.'header.php');
 
       if ($messageStack->size('dsgvo') > 0) {
-        $smarty->assign('error', $messageStack->output('dsgvo'));
+        $smarty->assign('error_message', $messageStack->output('dsgvo'));
       }
 
       $smarty->assign('FORM_ACTION', xtc_draw_form('dsgvo', xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action')).'action=dsgvo', 'SSL')));

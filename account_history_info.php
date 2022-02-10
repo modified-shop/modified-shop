@@ -89,7 +89,7 @@ if ($order->info['payment_method'] == 'paypallink'
     }
     
     if ($messageStack->size($order->info['payment_method']) > 0) {
-      $smarty->assign('info_message', $messageStack->output($order->info['payment_method']));
+      $smarty->assign('error_message', $messageStack->output($order->info['payment_method']));
     }    
     if ($messageStack->size($order->info['payment_method'], 'success') > 0) {
       $smarty->assign('success_message', $messageStack->output($order->info['payment_method'], 'success'));

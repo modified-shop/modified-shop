@@ -96,12 +96,12 @@ if (isset($_GET['oID'])
 
         if (isset($_GET['payment_error'])) {
           $error = $paypal->get_error();
-          $smarty->assign('error',  $error['error']);
+          $smarty->assign('error_message',  $error['error']);
         }
 
         $smarty->assign('BUTTON_CONTINUE', '<a href="#" onclick="ppp.doCheckout(); return false;">'.xtc_image_button('button_continue.gif', IMAGE_BUTTON_CONTINUE).'</a>');
       } else {
-        $smarty->assign('error',  TEXT_PAYPAL_ERROR_ALREADY_PAID);
+        $smarty->assign('error_message',  TEXT_PAYPAL_ERROR_ALREADY_PAID);
       }
       
       $cancel_link = xtc_href_link(FILENAME_LOGOFF, '', 'SSL');

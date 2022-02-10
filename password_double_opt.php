@@ -207,7 +207,7 @@ require (DIR_WS_INCLUDES.'header.php');
 switch ($case) {
   case 'second_opt_in':
     if ($messageStack->size('password_double_opt_in') > 0) {
-      $smarty->assign('error', $messageStack->output('password_double_opt_in'));
+      $smarty->assign('error_message', $messageStack->output('password_double_opt_in'));
     }
     $smarty->assign('FORM_ACTION', xtc_draw_form('password_double_opt_in', xtc_href_link(FILENAME_PASSWORD_DOUBLE_OPT, xtc_get_all_get_params(), 'SSL'), 'post').xtc_draw_hidden_field('action', 'process'));
     $smarty->assign('INPUT_NEW', xtc_draw_password_fieldNote(array ('name' => 'password_new', 'text' => '&nbsp;'. (xtc_not_null(ENTRY_PASSWORD_NEW_TEXT) ? '<span class="inputRequirement">'.ENTRY_PASSWORD_NEW_TEXT.'</span>' : ''))));
@@ -232,7 +232,7 @@ switch ($case) {
       $smarty->assign('INPUT_CODE', $mod_captcha->get_input_code());
     }
     if ($messageStack->size('password_double_opt_in') > 0) {
-      $smarty->assign('info_message', $messageStack->output('password_double_opt_in'));
+      $smarty->assign('error_message', $messageStack->output('password_double_opt_in'));
     }
     if ($messageStack->size('password_double_opt_in', 'success') > 0) {
       $smarty->assign('success_message', $messageStack->output('password_double_opt_in', 'success'));

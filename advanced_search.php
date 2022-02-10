@@ -70,7 +70,7 @@ if (isset ($_GET['errorno'])) {
 }
 
 if ($messageStack->size('advanced_search') > 0) {
-  $smarty->assign('error', $messageStack->output('advanced_search'));
+  $smarty->assign('error_message', $messageStack->output('advanced_search'));
 }
 
 $breadcrumb->add(NAVBAR_TITLE_ADVANCED_SEARCH, xtc_href_link(FILENAME_ADVANCED_SEARCH));

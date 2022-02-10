@@ -89,7 +89,7 @@ $breadcrumb->add(NAVBAR_TITLE_2_ACCOUNT_DELETE, xtc_href_link(FILENAME_ACCOUNT_D
 require (DIR_WS_INCLUDES.'header.php');
 
 if ($messageStack->size('account_delete') > 0) {
-  $smarty->assign('error', $messageStack->output('account_delete'));
+  $smarty->assign('error_message', $messageStack->output('account_delete'));
 }
 $smarty->assign('FORM_ACTION', xtc_draw_form('account_delete', xtc_href_link(FILENAME_ACCOUNT_DELETE, '', 'SSL'), 'post').xtc_draw_hidden_field('action', 'process').secure_form());
 $smarty->assign('INPUT_PASSWORD', xtc_draw_password_field('password'));

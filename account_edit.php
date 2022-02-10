@@ -209,7 +209,7 @@ require (DIR_WS_INCLUDES.'header.php');
 $smarty->assign('FORM_ACTION', xtc_draw_form('account_edit', xtc_href_link(FILENAME_ACCOUNT_EDIT, '', 'SSL'), 'post', 'onsubmit="return check_form(account_edit);"').xtc_draw_hidden_field('action', 'process').secure_form());
 
 if ($messageStack->size('account_edit') > 0)
-  $smarty->assign('error', $messageStack->output('account_edit'));
+  $smarty->assign('error_message', $messageStack->output('account_edit'));
 
 if (ACCOUNT_GENDER == 'true') {
   $male = (isset($account['customers_gender']) && $account['customers_gender'] == 'm') ? true : false;

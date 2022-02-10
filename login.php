@@ -214,7 +214,7 @@ if (isset($_GET['info_message']) && xtc_not_null($_GET['info_message'])) {
 }
 
 if ($messageStack->size('login') > 0) {
-	$smarty->assign('info_message', $messageStack->output('login'));
+	$smarty->assign('error_message', $messageStack->output('login'));
 }
 if ($messageStack->size('login', 'success') > 0) {
 	$smarty->assign('success_message', $messageStack->output('login', 'success'));

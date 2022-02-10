@@ -191,7 +191,7 @@ if (isset ($_GET['order']) && is_numeric($_GET['order']) && isset ($_GET['id']) 
 }
 
 if ($messageStack->size('download') > 0)
-	$smarty->assign('error', $messageStack->output('download'));
+	$smarty->assign('error_message', $messageStack->output('download'));
 
 $smarty->assign('dl', (isset($dl) ? $dl : array()));
 $smarty->assign('language', $_SESSION['language']);

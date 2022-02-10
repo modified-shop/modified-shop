@@ -33,12 +33,12 @@
       
       if ($module_error === true) {
         unset ($_SESSION['shipping']);
-        $smarty->assign('error', ERROR_CHECKOUT_SHIPPING_NO_MODULE);
+        $smarty->assign('error_message', ERROR_CHECKOUT_SHIPPING_NO_MODULE);
       }
 
       if ($method_error === true) {
         unset ($_SESSION['shipping']);
-        $smarty->assign('error', ERROR_CHECKOUT_SHIPPING_NO_METHOD);
+        $smarty->assign('error_message', ERROR_CHECKOUT_SHIPPING_NO_METHOD);
       }
       
       if ($method_error === false && $module_error === false) {
@@ -81,10 +81,10 @@
         }
 			}
     } else {
-      $smarty->assign('error', ERROR_CHECKOUT_SHIPPING_NO_METHOD);
+      $smarty->assign('error_message', ERROR_CHECKOUT_SHIPPING_NO_METHOD);
 		}
 	} else {
 		$_SESSION['shipping'] = false;
-    $smarty->assign('error', ERROR_CHECKOUT_SHIPPING_NO_MODULE);
+    $smarty->assign('error_message', ERROR_CHECKOUT_SHIPPING_NO_MODULE);
 	}
 ?>

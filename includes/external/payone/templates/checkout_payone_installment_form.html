@@ -3,7 +3,7 @@
 <script src="https://cdn.klarna.com/public/kitt/toc/v1.1/js/klarna.terms.min.js"></script>
 
 <div class="payone_cc_container">
-  {if $error}<div class="errormessage">{$error}</div>{/if}
+  {if $error_message}<div class="errormessage">{$error_message}</div>{/if}
 
   <table width="100%" class="payone_cc_table">
     {if $required_fields}
