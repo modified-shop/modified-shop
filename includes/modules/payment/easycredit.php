@@ -214,7 +214,8 @@ class easycredit {
     
     if ((!isset($_POST['ec_conditions']) || $_POST['ec_conditions'] == false) && !isset($_GET['ec_conditions'])) {
       $error = str_replace('\n', '<br />', MODULE_PAYMENT_EASYCREDIT_TEXT_ERROR_CHECKBOX);
-      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode($error), 'SSL', true, false));
+      $messageStack->add_session('global', $error);
+      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
     }
 
     // load the selected shipping module
@@ -361,7 +362,7 @@ class easycredit {
   }
   
   function payment_redirect() {
-    global $order;
+    global $order, $messageStack;
     
     $this->total_amount = $this->calculate_total();
 
@@ -492,7 +493,10 @@ class easycredit {
       foreach ($processData->getMessages() as $key => $message) {
         $error[] = $message;
       }
-      $redirect = xtc_href_link(FILENAME_CHECKOUT_PAYMENT, ((count($error) > 0) ? 'error_message=' . urlencode(encode_htmlentities(decode_utf8(implode('<br/>', $error)))) : 'payment_error='.$this->code), 'SSL', true, false);
+      if (count($error) > 0) {
+        $messageStack->add_session('global', encode_htmlentities(decode_utf8(implode('<br/>', $error))));
+      }
+      $redirect = xtc_href_link(FILENAME_CHECKOUT_PAYMENT, ((count($error) > 0) ? '' : 'payment_error='.$this->code), 'SSL');
     }
     
     xtc_redirect($redirect);

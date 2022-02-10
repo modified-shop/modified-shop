@@ -8,8 +8,8 @@ $billpay->_logDebug('Giropay campaign: Start');
 
 if (empty($_SESSION['billpay_onAfterProcess']))
 {
-    $err_msg = constant('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_DEFAULT');
-    xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message='.urlencode($err_msg), 'SSL'));
+    $messageStack->add_session('global', MODULE_PAYMENT_BILLPAY_TEXT_ERROR_DEFAULT);
+    xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
     exit();
 }
 

@@ -34,10 +34,6 @@ if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/offline/login_
   // create smarty elements
   $smarty = new Smarty;
 
-  if (isset($_GET['info_message']) && xtc_not_null($_GET['info_message'])) {
-    $messageStack->add('login', get_message('info_message'));
-  }
-
   if ($messageStack->size('login') > 0) {
     $smarty->assign('error_message', $messageStack->output('login'));
   }

@@ -41,8 +41,11 @@ class sofort_ideal extends SofortLibPayment {
 
 
 	function pre_confirmation_check() {
+	  global $messageStack;
+	  
 	  if (!isset($_POST['ideal_bank_name']) || $_POST['ideal_bank_name'] == '0') {
-      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode(constant('MODULE_PAYMENT_'.strtoupper($this->code).'_SELECTBOX')), 'SSL', true, false));
+	    $messageStack->add_session('global', constant('MODULE_PAYMENT_'.strtoupper($this->code).'_SELECTBOX'));
+      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
 	  }
 	}
 
