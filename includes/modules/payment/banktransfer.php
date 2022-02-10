@@ -405,7 +405,7 @@
       
       return array(
         'banktransfer_owner' => $this->banktransfer_owner,
-        'banktransfer_owner_email' => $this->banktransfer_owner_email
+        'banktransfer_owner_email' => $this->banktransfer_owner_email,
         'banktransfer_bankname' => $this->banktransfer_bankname,
         'banktransfer_iban' => $this->banktransfer_iban, 
       );
