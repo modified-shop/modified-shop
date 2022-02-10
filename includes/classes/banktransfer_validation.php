@@ -2398,7 +2398,7 @@ class AccountCheck {
       $weights = '121212121';
       $sum = 0;
       for($i = 0; $i < 9; $i++) {
-        $sum += $this->CrossSum($AccountNo{$i} * $weights{$i});
+        $sum += $this->CrossSum($AccountNo[$i] * $weights[$i]);
       }
       $sum--;
       $prz = $sum % 11;
