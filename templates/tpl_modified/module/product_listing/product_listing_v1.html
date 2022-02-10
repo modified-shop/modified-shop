@@ -2,7 +2,7 @@
 {config_load file="lang_`$language`.custom"}
 {config_load file="lang_`$language`.section" section="index"}
 <h1>{$LIST_TITLE}</h1>
-
+{if $error_message}<div class="errormessage">{$error_message}</div>{/if}
 {if (isset($CATEGORIES_DESCRIPTION) && $CATEGORIES_DESCRIPTION != '')
      || (isset($CATEGORIES_IMAGE) && $CATEGORIES_IMAGE != '')}
 <div class="cat_description cf">

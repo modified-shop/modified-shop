@@ -14,7 +14,7 @@
     {/if}
     <h1 itemprop="name">{if $PRODUCTS_HEADING_TITLE != ''}{$PRODUCTS_HEADING_TITLE}{else}{$PRODUCTS_NAME}{/if}</h1>
   </div>
-
+  {if $error_message}<div class="errormessage">{$error_message}</div>{/if}
   <div id="product_details">
     {if $PRODUCTS_IMAGE != ''}
     <div class="pd_imagebox">
