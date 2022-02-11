@@ -44,10 +44,12 @@
 </div>
 {literal}
 <script type="text/javascript">
+document.addEventListener("DOMContentLoaded", function(event) {
   $('#ec_term').change(function() {
     var selected = $("#ec_term option:checked").val();
     $('[id^="presentment_"]').hide();
     $('#presentment_' + selected).show();
   });
+}
 </script>
 {/literal}
