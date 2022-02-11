@@ -1,5 +1,7 @@
-{if isset($CONTENT_HEADING)}<h1>{$CONTENT_HEADING}</h1>{/if}
-{if $error_message}<div class="errormessage">{$error_message}</div>{/if}
+{if isset($CONTENT_HEADING)}
+  <h1>{$CONTENT_HEADING}</h1>
+  {if $error_message && !isset($file)}<div class="errormessage">{$error_message}</div>{/if}
+{/if}
 <div class="cf">
   {if isset($file)}
     {$CONTENT_BODY}

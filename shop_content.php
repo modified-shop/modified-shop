@@ -82,6 +82,10 @@ if ($language_not_found === true) {
   $smarty->assign('BUTTON_CONTINUE', '<a href="'.$link.'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
   $smarty->assign('CONTENT_HEADING', (($shop_content_data['content_heading'] != '') ? $shop_content_data['content_heading'] : $shop_content_data['content_title']));
 
+  if ($messageStack->size('content') > 0) {
+    $smarty->assign('error_message', $messageStack->output('content'));
+  }
+
   $content_body = '';
   if ($content_exists == 1) {
     $content_body = $shop_content_data['content_text'];
@@ -98,10 +102,6 @@ if ($language_not_found === true) {
   }
   $smarty->assign('CONTENT_BODY', $content_body);
   
-  if ($messageStack->size('content') > 0) {
-    $smarty->assign('error_message', $messageStack->output('content'));
-  }
-
   include (DIR_WS_MODULES.'content_manager_media.php');
   
   $content_template = 'content.html';
