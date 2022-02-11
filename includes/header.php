@@ -197,8 +197,4 @@ $smarty->assign('cart',xtc_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'));
 $smarty->assign('checkout',xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
 $smarty->assign('store_name', encode_htmlspecialchars(TITLE));
 
-if ($messageStack->size('global') > 0) {
-  $smarty->assign('error_message', $messageStack->output('global'));
-}
-
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/header/header_body/','php') as $file) require_once ($file);
