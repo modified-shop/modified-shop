@@ -295,6 +295,10 @@ if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weigh
 $smarty->assign('BUTTON_BACK', '<a href="'.$backlink.'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
 $smarty->assign('BUTTON_BACK_LINK', $backlink);
 
+if ($messageStack->size('checkout_payment') > 0) {
+  $smarty->assign('error_message', $messageStack->output('checkout_payment'));
+}
+
 $smarty->assign('language', $_SESSION['language']);
 $smarty->assign('PAYMENT_BLOCK', $payment_block);
 $main_content = $smarty->fetch(CURRENT_TEMPLATE . '/module/checkout_payment.html');

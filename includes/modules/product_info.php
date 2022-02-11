@@ -226,6 +226,10 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
     array_shift($_SESSION['tracking']['products_history']); 
   }
   $_SESSION['tracking']['products_history'] = array_values($_SESSION['tracking']['products_history']);
+
+  if ($messageStack->size('product_info') > 0) {
+    $smarty->assign('error_message', $messageStack->output('product_info'));
+  }
   
   $info_smarty->caching = 0;
   $product_info = $info_smarty->fetch(CURRENT_TEMPLATE.'/module/product_info/'.$product->data['product_template']);

@@ -144,9 +144,14 @@ switch ($category_depth) {
     $default_smarty->assign('CATEGORIES_IMAGE_MOBILE', (($image_mobile != '') ? DIR_WS_BASE . $image_mobile : ''));
     $default_smarty->assign('CATEGORIES_DESCRIPTION', $category['categories_description']);
     $default_smarty->assign('module_content', $categories_content);
-    $default_smarty->caching = 0;
+
+    if ($messageStack->size('categorie_listing') > 0) {
+      $default_smarty->assign('error_message', $messageStack->output('categorie_listing'));
+    }
   
     foreach(auto_include(DIR_FS_CATALOG.'includes/extra/default/categories_smarty/','php') as $file) require_once ($file);
+
+    $default_smarty->caching = 0;
     $main_content = $default_smarty->fetch(CURRENT_TEMPLATE.'/module/categorie_listing/'.$category['categories_template']);
     $smarty->assign('main_content', $main_content);
     break;
@@ -306,6 +311,10 @@ switch ($category_depth) {
     $default_smarty->assign('title', $shop_content_data['content_heading']);
 
     foreach(auto_include(DIR_FS_CATALOG.'includes/extra/default/center_modules/','php') as $file) require_once ($file);
+
+    if ($messageStack->size('default') > 0) {
+      $default_smarty->assign('error_message', $messageStack->output('default'));
+    }
     
     $default_smarty->caching = 0;
     $main_content = $default_smarty->fetch(CURRENT_TEMPLATE.'/module/'.$content_main_template);

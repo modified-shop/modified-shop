@@ -98,6 +98,10 @@ if ($language_not_found === true) {
   }
   $smarty->assign('CONTENT_BODY', $content_body);
   
+  if ($messageStack->size('content') > 0) {
+    $smarty->assign('error_message', $messageStack->output('content'));
+  }
+
   include (DIR_WS_MODULES.'content_manager_media.php');
   
   $content_template = 'content.html';

@@ -21,7 +21,20 @@
    ---------------------------------------------------------------------------------------*/
 
   class messageStack {
-
+    var $global_array = array(
+      'account',
+      'categorie_listing',
+      'checkout_confirmation',
+      'checkout_payment',
+      'checkout_shipping',
+      'content',
+      'default',
+      'product_info', 
+      'product_listing',  
+      'product_reviews',
+      'shopping_cart',
+    );
+    
     function __construct() {
       $this->messages = array();
       if (isset($_SESSION['messageToStack']) && is_array($_SESSION['messageToStack'])) {
@@ -50,14 +63,31 @@
     function size($class, $type = 'error') {
       $count = 0;
       if (isset($this->messages[$class][$type])) {
-        $count = count($this->messages[$class][$type]);
+        $count += count($this->messages[$class][$type]);
       }
+            
+      if (in_array($class, $this->global_array) && isset($this->messages['global'][$type])) {
+        $count += count($this->messages['global'][$type]);
+      }
+      
       return $count;
     }
 
     function output($class, $type = 'error') {
       $output = '';
       if ($this->size($class, $type) > 0) {
+        if (in_array($class, $this->global_array)
+            && isset($this->messages['global'][$type])
+            )
+        {
+          if (!isset($this->messages[$class])) {
+            $this->messages[$class] = array(
+              $type => array()
+            );
+          }
+          $this->messages[$class][$type] = array_merge($this->messages[$class][$type], $this->messages['global'][$type]);
+        }
+
         if (defined('CURRENT_TEMPLATE')
             && is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/message_stack.html')
             )
@@ -76,5 +106,6 @@
       }
       return $output;
     }
+    
   }
 ?>

@@ -42,7 +42,7 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
 
 } else {
   // set cache ID
-  if (!CacheCheck()) {
+  if (!CacheCheck() || $messageStack->size('product_reviews') > 0) {
     $cache = false;
     $smarty->caching = 0;
     $cache_id = null;
@@ -94,6 +94,10 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
     $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(FILENAME_PRODUCT_REVIEWS, 'products_id='.$product_reviews['products_id']).'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
     $smarty->assign('BUTTON_BUY_NOW', '<a href="'.xtc_href_link(FILENAME_DEFAULT, 'action=buy_now&BUYproducts_id='.$product_reviews['products_id']).'">'.xtc_image_button('button_in_cart.gif', IMAGE_BUTTON_IN_CART).'</a>');
     $smarty->assign('PRODUCTS_BUTTON_DETAILS', '<a href="'.xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($product_reviews['products_id'], $product_reviews['products_name'])).'">'.xtc_image_button('button_product_more.gif', TEXT_INFO_DETAILS).'</a>');
+  }
+
+  if ($messageStack->size('product_reviews') > 0) {
+    $smarty->assign('error_message', $messageStack->output('product_reviews'));
   }
 
   $breadcrumb->add(NAVBAR_TITLE_PRODUCT_REVIEWS, xtc_href_link(FILENAME_PRODUCT_REVIEWS, xtc_get_all_get_params(array('reviews_id'))));

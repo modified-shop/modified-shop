@@ -4,6 +4,7 @@
 {else}
   <h1>{$CATEGORIES_NAME}</h1>
 {/if}
+{if $error_message}<div class="errormessage">{$error_message}</div>{/if}
 <div class="cf">
   {if $CATEGORIES_IMAGE}<img src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME|onlytext}" class="imgLeft" /><br />{/if}
   {if $CATEGORIES_DESCRIPTION}<div>{$CATEGORIES_DESCRIPTION}</div>{/if}

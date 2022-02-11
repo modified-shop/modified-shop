@@ -340,6 +340,10 @@ $backlink = xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL');
 $smarty->assign('BUTTON_BACK', '<a href="'.$backlink.'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
 $smarty->assign('BUTTON_BACK_LINK', $backlink);
 
+if ($messageStack->size('checkout_confirmation') > 0) {
+  $smarty->assign('error_message', $messageStack->output('checkout_confirmation'));
+}
+
 $smarty->assign('language', $_SESSION['language']);
 $main_content = $smarty->fetch(CURRENT_TEMPLATE . '/module/checkout_confirmation.html');
 $smarty->assign('main_content', $main_content);
