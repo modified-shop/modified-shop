@@ -130,7 +130,7 @@ if ($listing_split->number_of_rows == 0
   $module_smarty->assign('CATEGORIES_IMAGE_MOBILE', ((isset($image_mobile) && $image_mobile != '') ? DIR_WS_BASE . $image_mobile : ''));
 
   if ($messageStack->size('product_listing') > 0) {
-    $smarty->assign('error_message', $messageStack->output('product_listing'));
+    $module_smarty->assign('error_message', $messageStack->output('product_listing'));
   }
 
   foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/product_listing_begin/','php') as $file) require ($file);
