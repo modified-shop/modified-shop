@@ -19,11 +19,11 @@
     <p>{#text_empty#}</p>
     <div class="button_right cf"><div class="cssButtonPos4">{$BUTTON_CONTINUE}</div></div>
   {else}
-    {if $info_message_3 != ''}<div class="errormessage">{$info_message_3}</div>{/if}
+    {if $info_message_3}<div class="errormessage">{$info_message_3}</div>{/if}
     {$FORM_ACTION}
     {$HIDDEN_OPTIONS}
     <div class="highlightbox cf">{$MODULE_order_details}</div>
-    {if $info_message_1 != ''}<div class="errormessage">{$info_message_1}{$min_order}{$info_message_2}{$order_amount}</div>{/if}
+    {if $info_message_1}<div class="errormessage">{$info_message_1}{$min_order}{$info_message_2}{$order_amount}</div>{/if}
     <div class="button_left_cart cf">
       {if $CONTINUE_LINK}<div class="cssButtonPos9"><a href="{$CONTINUE_LINK}">{$BUTTON_CONTINUE_SHOPPING}</a></div>{/if}
       <div class="cssButtonPos9">{$BUTTON_RELOAD}</div>
