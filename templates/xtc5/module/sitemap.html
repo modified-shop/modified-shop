@@ -2,6 +2,7 @@
 {if isset($herror)}
   <div class="error">{$herror}</div><br />
 {/if}
+{if $error_message}<div class="errormessage">{$error_message}</div>{/if}
 {if isset($module_content)}
   <div class="sitemapwrap">
     {foreach name=aussen item=module_data from=$module_content}
