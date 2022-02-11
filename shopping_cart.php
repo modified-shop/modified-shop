@@ -71,19 +71,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
   // cart buttons
   $smarty->assign('BUTTON_RELOAD', xtc_image_submit('button_update_cart.gif', IMAGE_BUTTON_UPDATE_CART));
   //$smarty->assign('BUTTON_CHECKOUT', '<a href="'.xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL').'">'.xtc_image_button('button_checkout.gif', IMAGE_BUTTON_CHECKOUT).'</a>');
-  $smarty->assign('BUTTON_CHECKOUT', xtc_image_submit('button_checkout.gif', IMAGE_BUTTON_CHECKOUT, 'name="checkout_redirect"'));
-  
-  ## PayPal
-  require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPayment.php');
-  $paypal_cart = new PayPalPayment('paypalcart');
-  if ($paypal_cart->enabled === true) {
-    $smarty->assign('BUTTON_PAYPAL', $paypal_cart->checkout_button());
-    if (isset($_GET['payment_error'])) {
-      include_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/paypalcart.php');
-      $error = $paypal_cart->get_error();
-      $smarty->assign('error_message',  $error['error']);
-    }
-  }
+  $smarty->assign('BUTTON_CHECKOUT', xtc_image_submit('button_checkout.gif', IMAGE_BUTTON_CHECKOUT, 'name="checkout_redirect"'));  
 } else {
   // empty cart
   $smarty->assign('cart_empty', true);
