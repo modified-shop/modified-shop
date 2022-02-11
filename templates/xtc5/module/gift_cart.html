@@ -8,8 +8,8 @@
   <h1>{#title#}</h1>
   {/if}
   {if $D_FLAG == 'checkout'}
-    {if $coupon_message != ''}<div class="errormessage">{$coupon_message}</div>{/if}
-    {if $success_message != ''}<div class="infomessage">{$success_message}</div>{/if}
+    {if $coupon_message}<div class="errormessage">{$coupon_message}</div>{/if}
+    {if $success_message}<div class="infomessage">{$success_message}</div>{/if}
   {/if}
   {if isset($GV_AMOUNT) && $GV_AMOUNT > 0}
     <p>{#text_info#}</p>

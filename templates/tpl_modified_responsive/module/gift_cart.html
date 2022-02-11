@@ -9,8 +9,8 @@
 <h1>{#title#}</h1>
 {/if}
 
-{if $coupon_message != ''}<div class="errormessage">{$coupon_message}</div>{/if}
-{if $success_message != ''}<div class="infomessage">{$success_message}</div>{/if}
+{if $coupon_message}<div class="errormessage">{$coupon_message}</div>{/if}
+{if $success_message}<div class="infomessage">{$success_message}</div>{/if}
 
 {if $C_FLAG == 'true'}
   <div class="twoColumsInner cf">

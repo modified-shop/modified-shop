@@ -3,7 +3,7 @@
 {config_load file="lang_`$language`.section" section="logoff"}
 <h1>{#heading_logoff#}</h1>
 {if $error_message}<div class="errormessage">{$error_message}</div>{/if}
-{if $success_message != ''}<div class="infomessage">{$success_message}</div>{/if}
+{if $success_message}<div class="infomessage">{$success_message}</div>{/if}
 <div class="cf">
   <p>{#text_logoff#}</p>
   <div class="button_right cf"><div class="cssButtonPos4">{$BUTTON_CONTINUE}</div></div>
