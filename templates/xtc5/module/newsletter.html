@@ -3,7 +3,7 @@
 <h1>{#heading_title#}</h1>
 {#heading_text#}<br />
 <br />
-{if $error_message != ''}<div class="{if $message_class}{$message_class}{else}info{/if}message">{$error_message}</div>{/if}
+{if $error_message}<div class="{if $message_class}{$message_class}{else}info{/if}message">{$error_message}</div>{/if}
 {if !isset($activated)}
   {$FORM_ACTION}
   <div class="highlightbox">

@@ -3,7 +3,7 @@
 {config_load file="$language/lang_$language.conf" section="contact_us"}
 <h1>{$CONTACT_HEADING}</h1>
 {$CONTACT_CONTENT}<br /><br />
-{if $error_message != ''}<div class="errormessage">{$error_message}</div>{/if}
+{if $error_message}<div class="errormessage">{$error_message}</div>{/if}
 {if $success != '1'}
 {$FORM_ACTION}
 <div class="highlightbox">

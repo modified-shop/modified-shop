@@ -3,7 +3,7 @@
 {config_load file="lang_`$language`.section" section="address_book_process"}
 <h1>{#heading_address#}</h1>
 {$FORM_ACTION}
-{if $error_message != ''}<div class="errormessage">{$error_message}</div>{/if}
+{if $error_message}<div class="errormessage">{$error_message}</div>{/if}
 {if $delete != '1'}
   {$MODULE_address_book_details}
 {/if}

@@ -7,7 +7,7 @@
   <li class="inactive last"><span class="number">4.</span> <span class="title">{#title_success#}</span><br /><span class="description">{#desc_success#}</span></li>
 </ul>
 <div style="clear:both"></div>
-{if $error_message != ''}<div class="errormessage">{$error_message}</div>{/if}
+{if $error_message}<div class="errormessage">{$error_message}</div>{/if}
 {if $success_message}<div class="infomessage">{$success_message}</div>{/if}
 <h1>{#heading_shipping#}</h1>
 {$FORM_ACTION}

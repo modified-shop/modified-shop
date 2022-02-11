@@ -5,7 +5,7 @@
   {config_load file="lang_`$language`.section" section="downloads_module"}
   <h1>{#heading_download#}</h1>
   {if $FORM_ACTION}
-    {if $error_message != ''}<div class="errormessage">{$error_message}</div>{/if}
+    {if $error_message}<div class="errormessage">{$error_message}</div>{/if}
     {$FORM_ACTION}
     <div class="highlightbox cf">
       <div class="twoColumsInner">

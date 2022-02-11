@@ -1,7 +1,7 @@
 {config_load file="$language/lang_$language.conf" section="checkout_payment_address"}
 <h1>{#heading_address#}</h1>
 
-{if $error_message != ''}<div class="errormessage">{$error_message}</div>{/if}
+{if $error_message}<div class="errormessage">{$error_message}</div>{/if}
 {if !isset($NEW_ADDRESS)}
   <div class="highlightbox">
     <h2 class="addressbook">{#title_old_addresses#}</h2>

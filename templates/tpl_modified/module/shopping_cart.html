@@ -13,7 +13,7 @@
     </ul>
   </div>
   {/if}
-  {if $error_message != ''}<div class="errormessage">{$error_message}</div>{/if}
+  {if $error_message}<div class="errormessage">{$error_message}</div>{/if}
   {if $paypal_error != ''}<div class="errormessage">{$paypal_error}</div>{/if}
 
   {if $cart_empty == true}
