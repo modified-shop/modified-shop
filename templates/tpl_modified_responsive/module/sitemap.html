@@ -2,7 +2,6 @@
 {config_load file="lang_`$language`.custom"}
 {config_load file="lang_`$language`.section" section="sitemap"}
 {if isset($herror)}<div class="errormessage">{$herror}</div>{/if}
-{if $error_message}<div class="errormessage">{$error_message}</div>{/if}
 {if isset($module_content)}
   <div class="sitemap cf">
     {foreach name=aussen item=module_data from=$module_content}
