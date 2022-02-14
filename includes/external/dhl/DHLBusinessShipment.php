@@ -485,7 +485,7 @@
       if (isset($data['packstation']) && $data['packstation'] === true) {
         $Packstation = new stdClass();
         $Packstation->packstationNumber = preg_replace('/[^0-9]/', '', (($data['street_number'] != '') ? $data['street_number'] : $data['street_name']));
-        $Packstation->postNumber = preg_replace('/[^0-9]/', '', $data['company']);
+        $Packstation->postNumber = preg_replace('/[^0-9]/', '', (($data['company'] != '') ? $data['company'] : $data['suburb']));
         $Packstation->zip = $data['postcode'];
         $Packstation->city = $data['city'];
         $Packstation->Origin = $Origin;
@@ -494,7 +494,7 @@
       if (isset($data['postfiliale']) && $data['postfiliale'] === true) {
         $Postfiliale = new stdClass();
         $Postfiliale->postfilialNumber = preg_replace('/[^0-9]/', '', (($data['street_number'] != '') ? $data['street_number'] : $data['street_name']));
-        $Postfiliale->postNumber = preg_replace('/[^0-9]/', '', $data['company']);
+        $Postfiliale->postNumber = preg_replace('/[^0-9]/', '', (($data['company'] != '') ? $data['company'] : $data['suburb']));
         $Postfiliale->zip = $data['postcode'];
         $Postfiliale->city = $data['city'];
         $Postfiliale->Origin = $Origin;
