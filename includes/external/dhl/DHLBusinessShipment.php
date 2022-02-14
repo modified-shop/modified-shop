@@ -278,7 +278,7 @@
       }
       
       // international
-      if ($this->premium > 0 && $this->data['product_code'] == '53') {
+      if ($this->premium > 0 && in_array($this->data['product_code'], array('53', '66'))) {
         $Service->Premium = array(
           'active' => 1,
         );
