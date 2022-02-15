@@ -408,8 +408,21 @@
         'email_address' => $this->order->customer['email_address'],
         'packstation' => ((stripos($street_address['street_name'], 'packstation') !== false) ? true : false),
         'postfiliale' => ((stripos($street_address['street_name'], 'postfiliale') !== false) ? true : false),
+        'postnumber' => '',
         'telephone' => $this->order->customer['telephone'],
       );
+      
+      if ($customers_data['packstation'] === true || $customers_data['postfiliale'] === true) {        
+        if (preg_replace('/[^0-9]/', '', $customers_data['company']) != '') {
+          $customers_data['postnumber'] = preg_replace('/[^0-9]/', '', $customers_data['company']);
+          $customers_data['company'] = '';
+        }
+        if (preg_replace('/[^0-9]/', '', $customers_data['suburb']) != '') {
+          $customers_data['postnumber'] = preg_replace('/[^0-9]/', '', $customers_data['suburb']);
+          $customers_data['suburb'] = '';
+        }
+      }
+
       $customers_data = $this->encode_request($customers_data);
       
       // global data
@@ -485,7 +498,7 @@
       if (isset($data['packstation']) && $data['packstation'] === true) {
         $Packstation = new stdClass();
         $Packstation->packstationNumber = preg_replace('/[^0-9]/', '', (($data['street_number'] != '') ? $data['street_number'] : $data['street_name']));
-        $Packstation->postNumber = preg_replace('/[^0-9]/', '', (($data['company'] != '') ? $data['company'] : $data['suburb']));
+        $Packstation->postNumber = $data['postnumber'];
         $Packstation->zip = $data['postcode'];
         $Packstation->city = $data['city'];
         $Packstation->Origin = $Origin;
@@ -494,7 +507,7 @@
       if (isset($data['postfiliale']) && $data['postfiliale'] === true) {
         $Postfiliale = new stdClass();
         $Postfiliale->postfilialNumber = preg_replace('/[^0-9]/', '', (($data['street_number'] != '') ? $data['street_number'] : $data['street_name']));
-        $Postfiliale->postNumber = preg_replace('/[^0-9]/', '', (($data['company'] != '') ? $data['company'] : $data['suburb']));
+        $Postfiliale->postNumber = $data['postnumber'];
         $Postfiliale->zip = $data['postcode'];
         $Postfiliale->city = $data['city'];
         $Postfiliale->Origin = $Origin;
