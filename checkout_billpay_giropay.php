@@ -8,7 +8,7 @@ $billpay->_logDebug('Giropay campaign: Start');
 
 if (empty($_SESSION['billpay_onAfterProcess']))
 {
-    $messageStack->add_session('global', MODULE_PAYMENT_BILLPAY_TEXT_ERROR_DEFAULT);
+    $messageStack->add_session('checkout_payment', MODULE_PAYMENT_BILLPAY_TEXT_ERROR_DEFAULT);
     xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
     exit();
 }

@@ -44,7 +44,7 @@ class sofort_ideal extends SofortLibPayment {
 	  global $messageStack;
 	  
 	  if (!isset($_POST['ideal_bank_name']) || $_POST['ideal_bank_name'] == '0') {
-	    $messageStack->add_session('global', constant('MODULE_PAYMENT_'.strtoupper($this->code).'_SELECTBOX'));
+	    $messageStack->add_session('checkout_payment', constant('MODULE_PAYMENT_'.strtoupper($this->code).'_SELECTBOX'));
       xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
 	  }
 	}

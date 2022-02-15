@@ -214,7 +214,7 @@ class easycredit {
     
     if ((!isset($_POST['ec_conditions']) || $_POST['ec_conditions'] == false) && !isset($_GET['ec_conditions'])) {
       $error = str_replace('\n', '<br />', MODULE_PAYMENT_EASYCREDIT_TEXT_ERROR_CHECKBOX);
-      $messageStack->add_session('global', $error);
+      $messageStack->add_session('checkout_payment', $error);
       xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
     }
 
@@ -494,7 +494,7 @@ class easycredit {
         $error[] = $message;
       }
       if (count($error) > 0) {
-        $messageStack->add_session('global', encode_htmlentities(decode_utf8(implode('<br/>', $error))));
+        $messageStack->add_session('checkout_payment', encode_htmlentities(decode_utf8(implode('<br/>', $error))));
       }
       $redirect = xtc_href_link(FILENAME_CHECKOUT_PAYMENT, ((count($error) > 0) ? '' : 'payment_error='.$this->code), 'SSL');
     }
