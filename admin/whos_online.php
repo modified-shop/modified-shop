@@ -226,7 +226,7 @@
             if ($user_session == 'ENCRYPTED') {
               $contents[] = array('text' => TEXT_SESSION_IS_ENCRYPTED);
             }
-            $contents[] = array('align' => 'center', 'text' => '<a class="button" href="' . xtc_href_link(FILENAME_BLACKLIST_LOGS, 'action=edit&ip='.$info['ip']) . '">'.BUTTON_BLACKLIST.'</a><br/><br/>');
+            $contents[] = array('align' => 'center', 'text' => '<a class="button" href="' . xtc_href_link(FILENAME_BLACKLIST_LOGS, 'action=new&ip='.$info['ip']) . '">'.BUTTON_BLACKLIST.'</a><br/><br/>');
           }
           if ( (xtc_not_null($heading)) && (xtc_not_null($contents)) ) {
               echo '            <td class="boxRight" style="min-width:120px">' . "\n";

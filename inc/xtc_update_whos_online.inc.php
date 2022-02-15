@@ -16,6 +16,9 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+  // include needed functions
+  require_once (DIR_FS_INC.'ip_clearing.inc.php');
+
   function xtc_update_whos_online() {
     global $PHP_SELF;
     
@@ -47,8 +50,6 @@
       $wo_session_id = xtc_session_id();
     }
 
-    // include needed functions
-    require_once (DIR_FS_INC.'ip_clearing.inc.php');
     $wo_ip_address = xtc_db_prepare_input(ip_clearing($_SESSION['tracking']['ip']));
     $wo_last_page_url = xtc_db_prepare_input(end($_SESSION['tracking']['pageview_history']));
     $wo_referer = xtc_db_prepare_input($_SESSION['tracking']['http_referer']['url']);

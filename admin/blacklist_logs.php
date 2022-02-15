@@ -157,16 +157,16 @@
                   case 'new':
                     $heading[] = array('text' => '<b>' . TEXT_NEW_ENTRY . '</b>');
                     $contents = array('form' => xtc_draw_form('insert', FILENAME_BLACKLIST_LOGS, 'action=insert'));
-                    $contents[] = array('text' => '<br /><b>' . TEXT_ENTRY_IP . '</b><br />' . TEXT_ENTRY_IP_INFO . '<br />' . xtc_draw_input_field('blacklist_ip', ''));
-                    $contents[] = array('text' => '<br /><b>' . TEXT_ENTRY_TIME . '</b><br />' . TEXT_ENTRY_TIME_INFO . '<br />' . xtc_draw_input_field('blacklist_time', '', 'id="Datepicker1"'));
+                    $contents[] = array('text' => '<br /><b>' . TEXT_ENTRY_IP . '</b><br />' . TEXT_ENTRY_IP_INFO . '<br />' . xtc_draw_input_field('blacklist_ip', ((isset($_GET['ip'])) ? $_GET['ip'] : '')));
+                    $contents[] = array('text' => '<br /><b>' . TEXT_ENTRY_TIME . '</b><br />' . TEXT_ENTRY_TIME_INFO . '<br />' . xtc_draw_input_field('blacklist_time', ((isset($_GET['ip'])) ? date('Y-m-d H:i', time() + 3600) : ''), 'id="Datepicker1"'));
                     $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SAVE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BLACKLIST_LOGS) . '">' . BUTTON_CANCEL . '</a><br/><br/>');
                     break;
 
                   case 'edit':
                     $heading[] = array('text' => '<b>' . TEXT_EDIT_ENTRY . '</b>');
                     $contents = array('form' => xtc_draw_form('insert', FILENAME_BLACKLIST_LOGS, 'action=insert'));
-                    $contents[] = array('text' => '<br /><b>' . TEXT_ENTRY_IP . '</b><br />' . TEXT_ENTRY_IP_INFO . '<br />' . xtc_draw_input_field('blacklist_ip', preg_replace('/[^0-9a-zA-Z:\.]/', '', ((isset($buInfo->ip)) ? $buInfo->ip : $_GET['ip']))));
-                    $contents[] = array('text' => '<br /><b>' . TEXT_ENTRY_TIME . '</b><br />' . TEXT_ENTRY_TIME_INFO . '<br />' . xtc_draw_input_field('blacklist_time', date('Y-m-d H:i', ((isset($buInfo->time)) ? $buInfo->time : time())), 'id="Datepicker1"'));
+                    $contents[] = array('text' => '<br /><b>' . TEXT_ENTRY_IP . '</b><br />' . TEXT_ENTRY_IP_INFO . '<br />' . xtc_draw_input_field('blacklist_ip', preg_replace('/[^0-9a-zA-Z:\.]/', '', ((isset($buInfo->ip)) ? $buInfo->ip : ''))));
+                    $contents[] = array('text' => '<br /><b>' . TEXT_ENTRY_TIME . '</b><br />' . TEXT_ENTRY_TIME_INFO . '<br />' . xtc_draw_input_field('blacklist_time', date('Y-m-d H:i', ((isset($buInfo->time)) ? $buInfo->time : time() + 3600)), 'id="Datepicker1"'));
                     $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SAVE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BLACKLIST_LOGS) . '">' . BUTTON_CANCEL . '</a><br/><br/>');
                     break;
                   
