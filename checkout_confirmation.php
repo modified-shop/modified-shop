@@ -60,7 +60,7 @@ if (isset($_POST['cot_gv'])) {
 if (SIGN_CONDITIONS_ON_CHECKOUT == 'true') {
   if ((!isset($_POST['conditions']) || $_POST['conditions'] == false) && !isset($_GET['conditions'])) {
     $error = str_replace('\n', '<br />', ERROR_CONDITIONS_NOT_ACCEPTED);
-    $messageStack->add_session('global', $error);
+    $messageStack->add_session('checkout_payment', $error);
     xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
   }
 }
@@ -68,7 +68,7 @@ if (SIGN_CONDITIONS_ON_CHECKOUT == 'true') {
 if (DISPLAY_PRIVACY_ON_CHECKOUT == 'true' && DISPLAY_PRIVACY_CHECK == 'true') {
   if ((!isset($_POST['privacy']) || $_POST['privacy'] == false) && !isset($_GET['conditions'])) {
     $error = str_replace('\n', '<br />', ERROR_PRIVACY_NOTICE_NOT_ACCEPTED);
-    $messageStack->add_session('global', $error);
+    $messageStack->add_session('checkout_payment', $error);
     xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
   }
 }
@@ -81,7 +81,7 @@ if (DISPLAY_REVOCATION_VIRTUAL_ON_CHECKOUT == 'true'
 {
   if ((!isset($_POST['revocation']) || $_POST['revocation'] == false) && !isset($_GET['conditions'])) {
     $error = str_replace('\n', '<br />', ERROR_REVOCATION_NOT_ACCEPTED);
-    $messageStack->add_session('global', $error);
+    $messageStack->add_session('checkout_payment', $error);
     xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
   }
 }
@@ -110,7 +110,7 @@ if (isset($_SESSION['credit_covers'])
 }
 
 if (!isset($_SESSION['payment'])) {
-  $messageStack->add_session('global', ERROR_NO_PAYMENT_MODULE_SELECTED);
+  $messageStack->add_session('checkout_payment', ERROR_NO_PAYMENT_MODULE_SELECTED);
   xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
 }
 

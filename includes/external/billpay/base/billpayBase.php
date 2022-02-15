@@ -1170,7 +1170,7 @@ JAVASCRIPT;
                 /** ajax one page checkout  */
                 $_SESSION['checkout_payment_error'] = 'payment_error=' . $this->code . '&error=' . $err_msg;
             } else {
-                $messageStack->add_session('global', $err_msg);
+                $messageStack->add_session('checkout_payment', $err_msg);
                 xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
             }
         }
@@ -1273,7 +1273,7 @@ JAVASCRIPT;
             if (!$success) {
                 $error = billpayBase::EnsureString($this->error);
                 $_SESSION['gm_error_message'] = $error; // Gambio specific
-                $messageStack->add_session('global', $error);
+                $messageStack->add_session('checkout_payment', $error);
                 xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
             }
         }
@@ -1297,7 +1297,7 @@ JAVASCRIPT;
             if ($error) {
                 $this->setOrderBillpayState(billpayBase::STATE_ERROR, $insert_id);
                 $this->_logError('Transaction ID not found in session', 'ERROR in after_process');
-                $messageStack->add_session('global', MODULE_PAYMENT_BILLPAY_TEXT_ERROR_DEFAULT);
+                $messageStack->add_session('checkout_payment', MODULE_PAYMENT_BILLPAY_TEXT_ERROR_DEFAULT);
                 xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
                 return false; # xtc_redirect exits
             }
