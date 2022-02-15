@@ -596,12 +596,12 @@ $values_group_update = array();
 
 //configuration_group_id 25 --- "captcha"
   $values_group[] = "(25,'Captcha','Captcha Configuration',25,1);";
-  $values[] = "(NULL, 'MODULE_CAPTCHA_ACTIVE', 'newsletter,contact,password', 25, 1, NULL, NOW(), NULL, 'xtc_cfg_multi_checkbox(array(\'newsletter\' => \'Newsletter\', \'contact\' => \'Contact\', \'password\' => \'Password\', \'reviews\' => \'Reviews\', \'create_account\' => \'Registration\'), \', \',');";
+  $values[] = "(NULL, 'MODULE_CAPTCHA_ACTIVE', 'newsletter,contact,password', 25, 1, NULL, NOW(), NULL, 'xtc_cfg_multi_checkbox(array(\'newsletter\' => \'Newsletter\', \'contact\' => \'Contact\', \'password\' => \'Password\', \'reviews\' => \'Reviews\', \'create_account\' => \'Registration\'), \'chr(44)\',');";
   $values[] = "(NULL, 'MODULE_CAPTCHA_LOGGED_IN', 'False', 25, 2, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'True\', \'False\'),');";
   $values[] = "(NULL, 'CAPTCHA_MOD_CLASS', 'modified_captcha', '25', '3', NULL, NOW(), NULL, 'xtc_cfg_select_mod_captcha(');";
   $values[] = "(NULL, 'MODULE_CAPTCHA_LOGIN_NUM', '2', 25, 4, NULL, NOW(), NULL, NULL);";
   $values_update[] = array (
-                           'values' => "set_function = 'xtc_cfg_multi_checkbox(array(\'newsletter\' => \'Newsletter\', \'contact\' => \'Contact\', \'password\' => \'Password\', \'reviews\' => \'Reviews\', \'create_account\' => \'Registration\'), \', \','",
+                           'values' => "set_function = 'xtc_cfg_multi_checkbox(array(\'newsletter\' => \'Newsletter\', \'contact\' => \'Contact\', \'password\' => \'Password\', \'reviews\' => \'Reviews\', \'create_account\' => \'Registration\'), \'chr(44)\','",
                            'configuration_key' => 'MODULE_CAPTCHA_ACTIVE'
                            );
 
