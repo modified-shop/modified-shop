@@ -476,7 +476,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     $trustedshops_query = xtc_db_query($trustedshops_query_raw);
                     while ($trustedshops = xtc_db_fetch_array($trustedshops_query)) {
                       if ((!isset($_GET['tID']) || $_GET['tID'] == $trustedshops['id']) && !isset($tInfo) && (substr($action, 0, 3) != 'new')) {
-                       $tInfo = new objectInfo($trustedshops);
+                        $tInfo = new objectInfo($trustedshops);
                       }
 
                       if ( (is_object($tInfo)) && ($trustedshops['id'] == $tInfo->id) ) {
