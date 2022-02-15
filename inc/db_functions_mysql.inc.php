@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id:$
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -194,6 +194,7 @@
         return false;
       }
       $curr = current($db_query);
+      $curr = array_values($curr);
       next($db_query);
       return $curr;
     } else {

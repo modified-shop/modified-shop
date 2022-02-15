@@ -175,6 +175,7 @@
     if (defined('DB_CACHE') && DB_CACHE=='true' && $cq) {
       if (is_array($db_query)) {
         $curr = current($db_query);
+        $curr = array_values($curr);      
         next($db_query);
         return $curr;
       }
