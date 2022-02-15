@@ -596,12 +596,12 @@ $values_group_update = array();
 
 //configuration_group_id 25 --- "captcha"
   $values_group[] = "(25,'Captcha','Captcha Configuration',25,1);";
-  $values[] = "(NULL, 'MODULE_CAPTCHA_ACTIVE', 'newsletter,contact,password', 25, 1, NULL, NOW(), NULL, 'xtc_cfg_multi_checkbox(array(\'newsletter\' => \'Newsletter\', \'contact\' => \'Contact\', \'password\' => \'Password\', \'reviews\' => \'Reviews\', \'create_account\' => \'Registration\'), \',\',');";
+  $values[] = "(NULL, 'MODULE_CAPTCHA_ACTIVE', 'newsletter,contact,password', 25, 1, NULL, NOW(), NULL, 'xtc_cfg_multi_checkbox(array(\'newsletter\' => \'Newsletter\', \'contact\' => \'Contact\', \'password\' => \'Password\', \'reviews\' => \'Reviews\', \'create_account\' => \'Registration\'), \', \',');";
   $values[] = "(NULL, 'MODULE_CAPTCHA_LOGGED_IN', 'False', 25, 2, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'True\', \'False\'),');";
   $values[] = "(NULL, 'CAPTCHA_MOD_CLASS', 'modified_captcha', '25', '3', NULL, NOW(), NULL, 'xtc_cfg_select_mod_captcha(');";
   $values[] = "(NULL, 'MODULE_CAPTCHA_LOGIN_NUM', '2', 25, 4, NULL, NOW(), NULL, NULL);";
   $values_update[] = array (
-                           'values' => "set_function = 'xtc_cfg_multi_checkbox(array(\'newsletter\' => \'Newsletter\', \'contact\' => \'Contact\', \'password\' => \'Password\', \'reviews\' => \'Reviews\', \'create_account\' => \'Registration\'), \',\','",
+                           'values' => "set_function = 'xtc_cfg_multi_checkbox(array(\'newsletter\' => \'Newsletter\', \'contact\' => \'Contact\', \'password\' => \'Password\', \'reviews\' => \'Reviews\', \'create_account\' => \'Registration\'), \', \','",
                            'configuration_key' => 'MODULE_CAPTCHA_ACTIVE'
                            );
 
@@ -773,10 +773,11 @@ function update_config_table($values)
       $check = str_replace("\', \')", "\',')", $check); 
       $check = str_replace("\'|###|", "',", $check); 
       $check = str_replace("|###|", ",", $check); 
+      $check = str_replace("!=>", "=>", $check); 
       
       $result_cfg = xtc_db_query("SELECT * FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = '" . $cfg_key ."' ". trim($check)." LIMIT 1");
       if (xtc_db_num_rows($result_cfg) != 0) {
-        $update = "UPDATE ".TABLE_CONFIGURATION." SET ".$cfg_values." , last_modified = NOW() WHERE configuration_key = '" . $cfg_key . "'";
+        $update = "UPDATE ".TABLE_CONFIGURATION." SET ".$cfg_values.", last_modified = NOW() WHERE configuration_key = '" . $cfg_key . "'";
 
         if( xtc_db_query($update)){
           $messageStack->add_session('OK: '.encode_htmlentities($update), 'success');
