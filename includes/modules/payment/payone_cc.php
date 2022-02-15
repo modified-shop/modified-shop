@@ -68,13 +68,14 @@ class payone_cc extends PayonePayment {
           cardpan: {
             selector: "cardpan",
             type: "text"
-          },
+          },'.($genre_config['genre_specific']['check_cav'] == 'true'?'
           cardcvc2: {
             selector: "cardcvc2",
             type: "password",
             size: "4",
-            maxlength: "4"
-          },
+            maxlength: "4",
+            length: {"A": 4, "V": 3, "M": 3, "J": 0}
+          },':'').'
           cardexpiremonth: {
             selector: "cardexpiremonth", 
             type: "select",
