@@ -30,6 +30,7 @@
   data-mobile-disable-reviews="false" 
   data-mobile-enable-custom="false" 
   data-mobile-position="right" 
+  charset="utf-8" 
   src="//widgets.trustedshops.com/js/%s.js"> 
 </script>';
 
@@ -41,5 +42,6 @@
   data-mobile-disable-reviews="%s" 
   data-desktop-position="%s" 
   data-mobile-position="%s" 
+  charset="utf-8" 
   src="//widgets.trustedshops.com/js/%s.js"> 
 </script>';
