@@ -323,6 +323,7 @@ if (USE_WYSIWYG == 'true') {
             </div>
             <!-- EOF Save block //-->
           </div>
+          </form>
         <?php } else { ?>
           <table class="tableCenter">
             <tr>
