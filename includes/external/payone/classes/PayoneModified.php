@@ -25,7 +25,7 @@ class PayoneModified {
 	protected $_frontend_url;
 	protected $_server_api_url;
   
-  public $integrator_version = '1.11';
+  public $integrator_version = '1.10';
   public $api_version = '3.10';
   public $logging = false;
   
