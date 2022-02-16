@@ -9,7 +9,6 @@ if(!class_exists('micropayment_method',false)) {
     $method_class_file = dirname(__FILE__).'/../../external/micropayment/class.micropayment_method.php';
     require_once($method_class_file);
 }
-
 class mcp_creditcard extends micropayment_method
 {
     var $code = 'mcp_creditcard';
@@ -18,12 +17,13 @@ class mcp_creditcard extends micropayment_method
     function __construct()
     {
         global $order, $language;
+        $this->code         = 'mcp_creditcard';
         $this->title        = MODULE_PAYMENT_MCP_CREDITCARD_TEXT_TITLE;
         $this->title_extern = MODULE_PAYMENT_MCP_CREDITCARD_TEXT_TITLE_EXTERN;
-        $this->description = MODULE_PAYMENT_MCP_CREDITCARD_TEXT_DESCRIPTION;
-        $this->sort_order  = ((defined('MODULE_PAYMENT_MCP_CREDITCARD_SORT_ORDER')) ? MODULE_PAYMENT_MCP_CREDITCARD_SORT_ORDER : '');
-        $this->info        = MODULE_PAYMENT_MCP_CREDITCARD_TEXT_INFO;
-        $this->url         = '/creditcard/event/';
+        $this->description  = MODULE_PAYMENT_MCP_CREDITCARD_TEXT_DESCRIPTION;
+        $this->sort_order   = ((defined('MODULE_PAYMENT_MCP_CREDITCARD_SORT_ORDER')) ? MODULE_PAYMENT_MCP_CREDITCARD_SORT_ORDER : '');
+        $this->info         = MODULE_PAYMENT_MCP_CREDITCARD_TEXT_INFO;
+        $this->url          = '/creditcard/event/';
         parent::__construct();
     }
 

@@ -17,11 +17,12 @@ class mcp_ebank2pay extends micropayment_method
     function __construct()
     {
         global $order, $language;
-        $this->title       = MODULE_PAYMENT_MCP_EBANK2PAY_TEXT_TITLE;
+        $this->code         = 'mcp_ebank2pay';
+        $this->title        = MODULE_PAYMENT_MCP_EBANK2PAY_TEXT_TITLE;
         $this->title_extern = MODULE_PAYMENT_MCP_EBANK2PAY_TEXT_TITLE_EXTERN;
-        $this->description = MODULE_PAYMENT_MCP_EBANK2PAY_TEXT_DESCRIPTION;
-        $this->sort_order  = ((defined('MODULE_PAYMENT_MCP_EBANK2PAY_SORT_ORDER')) ? MODULE_PAYMENT_MCP_EBANK2PAY_SORT_ORDER : '');
-        $this->info        = MODULE_PAYMENT_MCP_EBANK2PAY_TEXT_INFO;
+        $this->description  = MODULE_PAYMENT_MCP_EBANK2PAY_TEXT_DESCRIPTION;
+        $this->sort_order   = ((defined('MODULE_PAYMENT_MCP_EBANK2PAY_SORT_ORDER')) ? MODULE_PAYMENT_MCP_EBANK2PAY_SORT_ORDER : '');
+        $this->info         = MODULE_PAYMENT_MCP_EBANK2PAY_TEXT_INFO;
         parent::__construct();
     }
 
