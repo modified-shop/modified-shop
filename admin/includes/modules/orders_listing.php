@@ -16,6 +16,8 @@
   $cfg_max_display_results_key = 'MAX_DISPLAY_ORDER_RESULTS';
   $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
   
+  $sorting = (isset($_GET['sorting']) ? $_GET['sorting'] : '');
+  
   $customers_statuses_array = xtc_get_customers_statuses();
   
   $payment_array = array();
@@ -77,23 +79,74 @@
         <!-- BOC ORDERS LISTING -->
         <table class="tableBoxCenter collapse">
           <tr class="dataTableHeadingRow">
-            <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_CUSTOMERS; ?></td>
-            <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ORDERS_ID; ?></td>
+            <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_CUSTOMERS.xtc_sorting(FILENAME_ORDERS, 'name'); ?></td>
+            <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ORDERS_ID.xtc_sorting(FILENAME_ORDERS, 'id'); ?></td>
             <?php if (defined('MODULE_INVOICE_NUMBER_STATUS') && MODULE_INVOICE_NUMBER_STATUS == 'True') { ?>
-            <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_INVOICE_NUMBER; ?></td>
+            <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_INVOICE_NUMBER.xtc_sorting(FILENAME_ORDERS, 'invoice'); ?></td>
             <?php } ?>
-            <td class="dataTableHeadingContent" align="right" style="width:120px"><?php echo TEXT_SHIPPING_TO; ?></td>
+            <td class="dataTableHeadingContent" align="right" style="width:120px"><?php echo TEXT_SHIPPING_TO.xtc_sorting(FILENAME_ORDERS, 'country'); ?></td>
             <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ORDER_TOTAL; ?></td>
-            <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_DATE_PURCHASED; ?></td>
-            <td class="dataTableHeadingContent" align="center"><?php echo str_replace(':','',TEXT_INFO_PAYMENT_METHOD); ?></td>
-            <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_STATUS; ?></td>
+            <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_DATE_PURCHASED.xtc_sorting(FILENAME_ORDERS, 'date'); ?></td>
+            <td class="dataTableHeadingContent" align="center"><?php echo str_replace(':','',TEXT_INFO_PAYMENT_METHOD).xtc_sorting(FILENAME_ORDERS, 'payment'); ?></td>
+            <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_STATUS.xtc_sorting(FILENAME_ORDERS, 'status'); ?></td>
             <?php if (AFTERBUY_ACTIVATED=='true') { ?>
             <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_AFTERBUY; ?></td>
             <?php } ?>
             <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
           </tr>
           <?php
-          $sort = " ORDER BY o.date_purchased DESC";
+          if (xtc_not_null($sorting)) {
+            switch ($sorting) {
+              case 'name':
+                $osort = 'o.customers_name ASC';
+                break;
+              case 'name-desc':
+                $osort = 'o.customers_name DESC';
+                break;
+              case 'id':
+                $osort = 'o.orders_id ASC';
+                break;
+              case 'id-desc':
+                $osort = 'o.orders_id DESC';
+                break;
+              case 'invoice':
+                $osort = 'o.ibn_billnr ASC';
+                break;
+              case 'invoice-desc':
+                $osort = 'o.ibn_billnr DESC';
+                break;
+              case 'country':
+                $osort = 'o.shipping_method ASC';
+                break;
+              case 'country-desc':
+                $osort = 'o.shipping_method DESC';
+                break;
+              case 'date':
+                $osort = 'o.date_purchased ASC';
+                break;
+              case 'date-desc':
+                $osort = 'o.date_purchased DESC';
+                break;
+              case 'payment':
+                $osort = 'o.payment_method ASC';
+                break;
+              case 'payment-desc':
+                $osort = 'o.payment_method DESC';
+                break;
+              case 'status':
+                $osort = 'o.orders_status ASC';
+                break;
+              case 'status-desc':
+                $osort = 'o.orders_status DESC';
+                break;
+              default:
+                $osort = 'o.date_purchased DESC';
+                break;
+            }
+            $sort = " ORDER BY ".$osort.", o.orders_id DESC ";
+          } else {
+            $sort = " ORDER BY o.date_purchased DESC ";
+          }
           $filter = isset($_GET['cgroup']) && $_GET['cgroup'] != '' ? " AND o.customers_status = '" . (int)$_GET['cgroup'] ."'": '';
           $filter .=  isset($_GET['payment']) && $_GET['payment'] != '' ? " AND o.payment_class = '" . xtc_db_input($_GET['payment']) ."'": '';               
           if (isset($_GET['cID'])) {
