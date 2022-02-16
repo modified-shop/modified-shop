@@ -162,10 +162,10 @@
                         $csort = 'required_zones DESC';
                         break;
                       case 'code':
-                        $csort = 'o.countries_iso_code_2 ASC';
+                        $csort = 'countries_iso_code_2 ASC';
                         break;
                       case 'code-desc':
-                        $csort = 'o.countries_iso_code_2 DESC';
+                        $csort = 'countries_iso_code_2 DESC';
                         break;
                       case 'status':
                         $csort = 'status ASC';
