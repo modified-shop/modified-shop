@@ -614,7 +614,7 @@ if (!$action || $action == 'delete') {
                 <td class="dataTableConfig col-single-right" style="border-bottom:0;"><?php  echo xtc_draw_textarea_field('content_text['.$i.']['.$languages[$l]['id'].']', $languages[$l]['id'], '100%', '35', ((isset($content_lang['content_text'])) ? $content_lang['content_text'] : ''), '', true, true); ?>
                 </td>
               </tr>          
-0            </table>          
+            </table>          
             <?php
             echo ('</div>');
             $cnt++;
