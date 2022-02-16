@@ -146,7 +146,7 @@
       $this->info['orders_status'] = $order_status;
       $this->info['orders_status_id'] = $order['orders_status'];
       $this->info['total'] = strip_tags($order_total['ot_total_text']);
-      $this->info['shipping_method'] = ((substr($order_total['ot_shipping_title'], -1) == ':') ? substr(strip_tags($order_total['ot_shipping_title']), 0, -1) : strip_tags($order_total['ot_shipping_title']));
+      $this->info['shipping_method'] = ((isset($order_total['ot_shipping_title']) && $order_total['ot_shipping_title'] != '') ? rtrim(strip_tags($order_total['ot_shipping_title'], ':')) : '');
 
       ## PayPal
       $this->info['pp_total'] = $order_total['ot_total_value'];
