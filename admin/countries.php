@@ -149,6 +149,12 @@
                 <?php
                   if (xtc_not_null($sorting)) {
                     switch ($sorting) {
+                      case 'sort':
+                        $csort = 'sort_order ASC';
+                        break;
+                      case 'sort-desc':
+                        $csort = 'sort_order DESC';
+                        break;
                       case 'name':
                         $csort = 'countries_name ASC';
                         break;
