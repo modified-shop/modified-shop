@@ -3,15 +3,7 @@
 {config_load file="lang_`$language`.section" section="shopping_cart"}
 
   <h1>{#heading_cart#}</h1>
-  {if $error_max_prod}
-  <div class="errormessage">
-    <ul>
-      {foreach item=err_max_data from=$error_max_prod}
-      <li>{$err_max_data.E_MSG}</li>
-      {/foreach}
-    </ul>
-  </div>
-  {/if}
+
   {if $error_message}<div class="errormessage">{$error_message}</div>{/if}
 
   {if $cart_empty == true}

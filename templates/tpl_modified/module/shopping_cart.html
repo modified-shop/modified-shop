@@ -4,15 +4,7 @@
 
 {if $MODULE_gift_cart != ''}<div id="col_right">{/if}
   <h1>{#heading_cart#}</h1>
-  {if $error_max_prod}
-  <div class="errormessage">
-    <ul>
-      {foreach item=err_max_data from=$error_max_prod}
-      <li>{$err_max_data.E_MSG}</li>
-      {/foreach}
-    </ul>
-  </div>
-  {/if}
+
   {if $error_message}<div class="errormessage">{$error_message}</div>{/if}
 
   {if $cart_empty == true}

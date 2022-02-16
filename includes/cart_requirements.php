@@ -44,22 +44,6 @@
       $smarty->assign('min_order', $max_order);
     }
   }
-  
-  // error message for exceeded product quantity, noRiddle
-  if (isset($_SESSION['err_max_prod'])) {
-    $error_msg = array();
-    for ($i = 0, $n = sizeof($products); $i < $n; $i++) {
-      if (isset($_SESSION['err_max_prod'][$i]) && !isset($_GET['products_id'])) {
-        $emsg = sprintf(MAX_PROD_QTY_EXCEEDED, $products[$i]['name']);
-        $error_msg[] = array('E_MSG' => $emsg);
-      } else if (isset($_SESSION['err_max_prod']) && (int)$_GET['max_prod_id'] == $products[$i]['id']) {
-        $emsg = sprintf(MAX_PROD_QTY_EXCEEDED, $products[$i]['name']);
-        $error_msg[] = array('E_MSG' => $emsg);
-      }
-    }
-    $smarty->assign('error_max_prod', $error_msg);
-    unset($_SESSION['err_max_prod']);
-  }
-  
+    
   foreach(auto_include(DIR_FS_CATALOG.'includes/extra/shopping_cart/cart_requirements/','php') as $file) require_once ($file);
 ?>

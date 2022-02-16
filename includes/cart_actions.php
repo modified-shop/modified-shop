@@ -110,10 +110,9 @@ if (xtc_not_null($action) && basename($PHP_SELF) != FILENAME_COOKIE_USAGE) {
       xtc_redirect(xtc_href_link($goto, xtc_get_all_get_params($parameters), 'NONSSL'));
       break;
 
-    // customer wants to update the product quantity in their shopping cart
     case 'update_product':
       foreach(auto_include(DIR_FS_CATALOG.'includes/extra/cart_actions/update_product_prepare_post/','php') as $file) require ($file);
-      // VERSANDKOSTEN IM WARENKORB
+
       if (isset($_POST['country'])) {
         $_SESSION['country'] = xtc_remove_non_numeric($_POST['country']);
         unset($_SESSION['sendto']);
@@ -131,7 +130,7 @@ if (xtc_not_null($action) && basename($PHP_SELF) != FILENAME_COOKIE_USAGE) {
         } else {
           if ((int)$_POST['cart_quantity'][$i] > MAX_PRODUCTS_QTY) {
             $cart_quantity = MAX_PRODUCTS_QTY;
-            $_SESSION['err_max_prod'][$i] = true;  // error message for exceeded product quantity, noRiddle
+            $messageStack->add_session('global', sprintf(MAX_PROD_QTY_EXCEEDED, xtc_get_products_name($_POST['products_id'][$i])));
           }
           $attributes = isset($_POST['id'][$_POST['products_id'][$i]]) ? $_POST['id'][$_POST['products_id'][$i]] : '';
 
@@ -151,7 +150,6 @@ if (xtc_not_null($action) && basename($PHP_SELF) != FILENAME_COOKIE_USAGE) {
       xtc_redirect(xtc_href_link($goto, xtc_get_all_get_params($parameters) . $info_message, 'NONSSL'));
       break;
 
-    // customer adds a product from the products page
     case 'add_product':
       foreach(auto_include(DIR_FS_CATALOG.'includes/extra/cart_actions/add_product_prepare_post/','php') as $file) require ($file);
       if (isset($_POST['products_id']) 
@@ -163,9 +161,7 @@ if (xtc_not_null($action) && basename($PHP_SELF) != FILENAME_COOKIE_USAGE) {
         $cart_quantity = (xtc_remove_non_numeric($_POST['products_qty']) + $cart_object->get_quantity(xtc_get_uprid($_POST['products_id'], isset($_POST['id'])?$_POST['id']:'')));
         if ($cart_quantity > MAX_PRODUCTS_QTY) {            
           $cart_quantity = MAX_PRODUCTS_QTY;
-          $_SESSION['err_max_prod'] = true;   // error message for exceeded product quantity, noRiddle
-          $_GET['max_prod_id'] = (int)$_POST['products_id'];
-          $goto = FILENAME_SHOPPING_CART;
+          $messageStack->add_session('global', sprintf(MAX_PROD_QTY_EXCEEDED, xtc_get_products_name($_POST['products_id'])));
         }
         $cart_object->add_cart((int)$_POST['products_id'], $cart_quantity, isset($_POST['id'])?$_POST['id']:'');
       }
@@ -194,7 +190,6 @@ if (xtc_not_null($action) && basename($PHP_SELF) != FILENAME_COOKIE_USAGE) {
       xtc_redirect(xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action'))));
       break;
 
-    // customer wants to add a quickie to the cart (called from a box)
     case 'add_a_quickie' :
         foreach(auto_include(DIR_FS_CATALOG.'includes/extra/cart_actions/add_a_quickie_prepare_post/','php') as $file) require ($file);
        if (isset($_POST['quickie']) && $_POST['quickie'] != '') {
@@ -234,9 +229,7 @@ if (xtc_not_null($action) && basename($PHP_SELF) != FILENAME_COOKIE_USAGE) {
             $cart_quantity = ($cart_object->get_quantity(xtc_get_uprid($quickie['products_id'],''))+1);
             if ($cart_quantity > MAX_PRODUCTS_QTY) {
               $cart_quantity = MAX_PRODUCTS_QTY;
-              $_SESSION['err_max_prod'] = true;   // error message for exceeded product quantity, noRiddle
-              $_GET['max_prod_id'] = $quickie['products_id'];
-              $goto = FILENAME_SHOPPING_CART;
+              $messageStack->add_session('global', sprintf(MAX_PROD_QTY_EXCEEDED, xtc_get_products_name($quickie['products_id'])));
             }
             $cart_object->add_cart($quickie['products_id'], $cart_quantity);
             xtc_redirect(xtc_href_link($goto, xtc_get_all_get_params($parameters) . $info_message, 'NONSSL'));
@@ -249,7 +242,6 @@ if (xtc_not_null($action) && basename($PHP_SELF) != FILENAME_COOKIE_USAGE) {
       }
       break;
 
-    // performed by the 'buy now' button in product listings and review page
     case 'buy_now':
       foreach(auto_include(DIR_FS_CATALOG.'includes/extra/cart_actions/buy_now_prepare_get/','php') as $file) require ($file);
       if (isset($_GET['BUYproducts_id'])) {
@@ -281,9 +273,7 @@ if (xtc_not_null($action) && basename($PHP_SELF) != FILENAME_COOKIE_USAGE) {
             $cart_quantity = ($cart_object->get_quantity(xtc_get_uprid($_GET['BUYproducts_id'],''))+1);
             if ($cart_quantity > MAX_PRODUCTS_QTY) {
               $cart_quantity = MAX_PRODUCTS_QTY;
-              $_SESSION['err_max_prod'] = true;   // error message for exceeded product quantity, noRiddle
-              $_GET['max_prod_id'] = $_GET['BUYproducts_id'];
-              $goto = FILENAME_SHOPPING_CART;
+              $messageStack->add_session('global', sprintf(MAX_PROD_QTY_EXCEEDED, xtc_get_products_name($_GET['BUYproducts_id'])));
             }
             $cart_object->add_cart($_GET['BUYproducts_id'], $cart_quantity);
           } else {
@@ -326,9 +316,7 @@ if (xtc_not_null($action) && basename($PHP_SELF) != FILENAME_COOKIE_USAGE) {
           $products_id = xtc_get_prid($_GET['BUYproducts_id']);
           if ($cart_quantity > MAX_PRODUCTS_QTY) {            
             $cart_quantity = MAX_PRODUCTS_QTY;
-            $_SESSION['err_max_prod'] = true;
-            $_GET['max_prod_id'] = (int)$products_id;
-            $goto = FILENAME_SHOPPING_CART;
+            $messageStack->add_session('global', sprintf(MAX_PROD_QTY_EXCEEDED, xtc_get_products_name($products_id)));
           }
           $_SESSION['cart']->add_cart($products_id, $cart_quantity, $attributes_array);
 
@@ -348,9 +336,7 @@ if (xtc_not_null($action) && basename($PHP_SELF) != FILENAME_COOKIE_USAGE) {
           $products_id = xtc_get_prid($_GET['BUYproducts_id']);
           if ($cart_quantity > MAX_PRODUCTS_QTY) {            
             $cart_quantity = MAX_PRODUCTS_QTY;
-            $_SESSION['err_max_prod'] = true;
-            $_GET['max_prod_id'] = (int)$products_id;
-            $goto = FILENAME_SHOPPING_CART;
+            $messageStack->add_session('global', sprintf(MAX_PROD_QTY_EXCEEDED, xtc_get_products_name($products_id)));
           }
           $_SESSION['wishlist']->add_cart($products_id, $cart_quantity, $attributes_array);
 
@@ -400,9 +386,7 @@ if (xtc_not_null($action) && basename($PHP_SELF) != FILENAME_COOKIE_USAGE) {
               $cart_quantity = (xtc_remove_non_numeric($order_data['PRODUCTS_QTY']) + $cart_object->get_quantity(xtc_get_uprid($products_id, ((count($attributes_array) > 0) ? $attributes_array : ''))));
               if ($cart_quantity > MAX_PRODUCTS_QTY) {            
                 $cart_quantity = MAX_PRODUCTS_QTY;
-                $_SESSION['err_max_prod'] = true;
-                $_GET['max_prod_id'] = (int)$products_id;
-                $goto = FILENAME_SHOPPING_CART;
+                $messageStack->add_session('global', sprintf(MAX_PROD_QTY_EXCEEDED, xtc_get_products_name($products_id)));
               }
               $cart_object->add_cart((int)$products_id, $cart_quantity, ((count($attributes_array) > 0) ? $attributes_array : ''));
 
@@ -468,9 +452,7 @@ if (xtc_not_null($action) && basename($PHP_SELF) != FILENAME_COOKIE_USAGE) {
             $cart_quantity = (xtc_remove_non_numeric($products_quantity) + $cart_object->get_quantity(xtc_get_uprid($products_id, ((count($attributes_array) > 0) ? $attributes_array : ''))));
             if ($cart_quantity > MAX_PRODUCTS_QTY) {            
               $cart_quantity = MAX_PRODUCTS_QTY;
-              $_SESSION['err_max_prod'] = true;
-              $_GET['max_prod_id'] = (int)$products_id;
-              $goto = FILENAME_SHOPPING_CART;
+              $messageStack->add_session('global', sprintf(MAX_PROD_QTY_EXCEEDED, xtc_get_products_name($products_id)));
             }
             $cart_object->add_cart((int)$products_id, $cart_quantity, ((count($attributes_array) > 0) ? $attributes_array : ''));
 
