@@ -31,8 +31,13 @@
 
 {if (isset($MANUFACTURER_DESCRIPTION) && $MANUFACTURER_DESCRIPTION != '')
     || (isset($MANUFACTURER_IMAGE) && $MANUFACTURER_IMAGE != '')
-    || (isset($MANUFACTURER_NAME) && $MANUFACTURER_NAME != '')}
-<h4>{$MANUFACTURER_NAME}</h4>
+    || (isset($MANUFACTURER_NAME) && $MANUFACTURER_NAME != '')
+    || (isset($MANUFACTURER_TITLE) && $MANUFACTURER_TITLE != '')}
+{if isset($MANUFACTURER_TITLE) && $MANUFACTURER_TITLE != ''}
+  <h4>{$MANUFACTURER_TITLE}</h4>
+{else}
+  <h4>{$MANUFACTURER_NAME}</h4>
+{/if}
 <div class="manu_description cf">
   {if $MANUFACTURER_IMAGE}
     <img class="lazyload manu_image{if !$MANUFACTURER_DESCRIPTION} mi_nomargin{/if}" data-src="{$MANUFACTURER_IMAGE}" alt="{$MANUFACTURER_NAME|onlytext}" />

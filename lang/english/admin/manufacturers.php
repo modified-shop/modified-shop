@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: manufacturers.php 5850 2013-09-30 09:37:43Z Tomcraft $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -35,6 +35,7 @@ define('TEXT_NEW_INTRO', 'Please fill out the following information for the new 
 define('TEXT_EDIT_INTRO', 'Please make any necessary changes');
 
 define('TEXT_MANUFACTURERS_NAME', 'Manufacturers Name:');
+define('TEXT_MANUFACTURERS_TITLE', 'Manufacturers Heading:');
 define('TEXT_MANUFACTURERS_IMAGE', 'Manufacturers Image:');
 define('TEXT_MANUFACTURERS_URL', 'Manufacturers URL:');
 
