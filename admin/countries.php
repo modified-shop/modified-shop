@@ -139,7 +139,7 @@
             <td class="boxCenterLeft">
               <table class="tableBoxCenter collapse">
                 <tr class="dataTableHeadingRow">
-                  <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_COUNTRY_SORT_ORDER.xtc_sorting(FILENAME_COUNTRIES, 'sort'); ?></td>
+                  <td class="dataTableHeadingContent txta-c" style="width:100px"><?php echo TABLE_HEADING_COUNTRY_SORT_ORDER.xtc_sorting(FILENAME_COUNTRIES, 'sort'); ?></td>
                   <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_COUNTRY_NAME.xtc_sorting(FILENAME_COUNTRIES, 'name'); ?></td>
                   <td class="dataTableHeadingContent txta-c" style="width:100px"><?php echo TABLE_HEADING_REQUIRED_ZONES.xtc_sorting(FILENAME_COUNTRIES, 'zone'); ?></td>
                   <td class="dataTableHeadingContent txta-c" style="width:50px" colspan="2"><?php echo TABLE_HEADING_COUNTRY_CODES.xtc_sorting(FILENAME_COUNTRIES, 'code'); ?></td>
