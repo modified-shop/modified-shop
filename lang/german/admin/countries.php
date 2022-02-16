@@ -20,6 +20,7 @@
 
   define('TABLE_HEADING_COUNTRY_NAME', 'Land');
   define('TABLE_HEADING_COUNTRY_CODES', 'ISO Codes');
+  define('TABLE_HEADING_COUNTRY_SORT_ORDER', 'Sortierung');
   define('TABLE_HEADING_ACTION', 'Aktion');
   define('TABLE_HEADING_STATUS', 'Status');
 
@@ -27,6 +28,7 @@
   define('TEXT_INFO_COUNTRY_NAME', 'Name:');
   define('TEXT_INFO_COUNTRY_CODE_2', 'ISO Code (2):');
   define('TEXT_INFO_COUNTRY_CODE_3', 'ISO Code (3):');
+  define('TEXT_INFO_COUNTRY_SORT_ORDER', 'Sortierung:');
   define('TEXT_INFO_ADDRESS_FORMAT', 'Adressformat:');
   define('TEXT_INFO_INSERT_INTRO', 'Bitte geben Sie das neue Land mit allen relevanten Daten ein');
   define('TEXT_INFO_DELETE_INTRO', 'Sind Sie sicher, dass Sie das Land l&ouml;schen m&ouml;chten?');

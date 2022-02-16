@@ -137,4 +137,9 @@ ALTER TABLE `customers` MODIFY `customers_fax` VARCHAR(32) NOT NULL;
 #GTB - 2022-01-12 - fix #1432 - removed shopgate
 ALTER TABLE `admin_access` DROP `shopgate`;
 
+#GTB - 2022-01-12 - fix #2165 - add sort_order for countries
+ALTER TABLE `countries` ADD `sort_order` INT(4) NOT NULL DEFAULT 0;
+ALTER TABLE `countries` ADD KEY `idx_sort_order` (`sort_order`);
+UPDATE `countries` SET `sort_order` = 100;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
