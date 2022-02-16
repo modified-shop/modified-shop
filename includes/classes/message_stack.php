@@ -77,10 +77,8 @@
             && isset($_SESSION['messageToStack']['global'][$type])
             )
         {
-          if (!isset($_SESSION['messageToStack'][$class])) {
-            $_SESSION['messageToStack'][$class] = array(
-              $type => array()
-            );
+          if (!isset($_SESSION['messageToStack'][$class][$type])) {
+            $_SESSION['messageToStack'][$class][$type] = array();
           }
           $_SESSION['messageToStack'][$class][$type] = array_merge($_SESSION['messageToStack'][$class][$type], $_SESSION['messageToStack']['global'][$type]);
           unset($_SESSION['messageToStack']['global'][$type]);
