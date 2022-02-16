@@ -28,6 +28,7 @@
   $status_param = $_GET['status'] !== '' ? '&status='.$_GET['status'] : '';
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
   $page = (isset($_GET['page']) ? (int)$_GET['page'] : 1);
+  $sorting = (isset($_GET['sorting']) ? $_GET['sorting'] : '');
   
   switch ($action) {
     case 'insert':
@@ -35,7 +36,8 @@
         'countries_name' => xtc_db_prepare_input($_POST['countries_name']), 
         'countries_iso_code_2' => xtc_db_prepare_input($_POST['countries_iso_code_2']), 
         'countries_iso_code_3' => xtc_db_prepare_input($_POST['countries_iso_code_3']), 
-        'address_format_id' => xtc_db_prepare_input($_POST['address_format_id'])
+        'address_format_id' => xtc_db_prepare_input($_POST['address_format_id']), 
+        'sort_order' => (int)$_POST['sort_order']
       );
       xtc_db_perform(TABLE_COUNTRIES,$sql_data_array);
       $cID = xtc_db_insert_id();
@@ -47,7 +49,8 @@
         'countries_name' => xtc_db_prepare_input($_POST['countries_name']), 
         'countries_iso_code_2' => xtc_db_prepare_input($_POST['countries_iso_code_2']), 
         'countries_iso_code_3' => xtc_db_prepare_input($_POST['countries_iso_code_3']), 
-        'address_format_id' => xtc_db_prepare_input($_POST['address_format_id'])
+        'address_format_id' => xtc_db_prepare_input($_POST['address_format_id']), 
+        'sort_order' => (int)$_POST['sort_order']
       );
       xtc_db_perform(TABLE_COUNTRIES, $sql_data_array, 'update', "countries_id = '".$cID."'");
       xtc_redirect(xtc_href_link(FILENAME_COUNTRIES, 'page=' . $page . '&cID=' . $cID . $status_param));
@@ -136,15 +139,53 @@
             <td class="boxCenterLeft">
               <table class="tableBoxCenter collapse">
                 <tr class="dataTableHeadingRow">
-                  <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_COUNTRY_NAME; ?></td>
-                  <td class="dataTableHeadingContent txta-c" style="width:100px"><?php echo TABLE_HEADING_REQUIRED_ZONES; ?></td>
-                  <td class="dataTableHeadingContent txta-c" style="width:50px" colspan="2"><?php echo TABLE_HEADING_COUNTRY_CODES; ?></td>
+                  <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_COUNTRY_SORT_ORDER.xtc_sorting(FILENAME_COUNTRIES, 'sort'); ?></td>
+                  <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_COUNTRY_NAME.xtc_sorting(FILENAME_COUNTRIES, 'name'); ?></td>
+                  <td class="dataTableHeadingContent txta-c" style="width:100px"><?php echo TABLE_HEADING_REQUIRED_ZONES.xtc_sorting(FILENAME_COUNTRIES, 'zone'); ?></td>
+                  <td class="dataTableHeadingContent txta-c" style="width:50px" colspan="2"><?php echo TABLE_HEADING_COUNTRY_CODES.xtc_sorting(FILENAME_COUNTRIES, 'code'); ?></td>
                   <td class="dataTableHeadingContent txta-c" style="width:100px"><?php echo TABLE_HEADING_STATUS; ?></td>                
                   <td class="dataTableHeadingContent txta-r" style="width:100px"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
                 </tr>
                 <?php
+                  if (xtc_not_null($sorting)) {
+                    switch ($sorting) {
+                      case 'name':
+                        $csort = 'countries_name ASC';
+                        break;
+                      case 'name-desc':
+                        $csort = 'countries_name DESC';
+                        break;
+                      case 'zone':
+                        $csort = 'required_zones ASC';
+                        break;
+                      case 'zone-desc':
+                        $csort = 'required_zones DESC';
+                        break;
+                      case 'code':
+                        $csort = 'o.countries_iso_code_2 ASC';
+                        break;
+                      case 'code-desc':
+                        $csort = 'o.countries_iso_code_2 DESC';
+                        break;
+                      case 'status':
+                        $csort = 'status ASC';
+                        break;
+                      case 'status-desc':
+                        $csort = 'status DESC';
+                        break;
+                      default:
+                        $csort = 'countries_name ASC';
+                        break;
+                    }
+                    $sort = " ORDER BY ".$csort.", countries_id ASC ";
+                  } else {
+                    $sort = " ORDER BY sort_order ASC, countries_name ";
+                  }
                   $where = isset($_GET['status']) && $_GET['status'] !== '' ? " WHERE status = ". (int)$_GET['status'] : '';
-                  $countries_query_raw = "SELECT * FROM " . TABLE_COUNTRIES . $where . " ORDER BY countries_name";
+                  $countries_query_raw = "SELECT * 
+                                            FROM ".TABLE_COUNTRIES."
+                                                 ".$where." 
+                                                 ".$sort;
                   $countries_split = new splitPageResults($page, $page_max_display_results, $countries_query_raw, $countries_query_numrows);
                   $countries_query = xtc_db_query($countries_query_raw);
                   while ($countries = xtc_db_fetch_array($countries_query)) {
@@ -212,6 +253,7 @@
                 $contents[] = array('text' => '<br />' . TEXT_INFO_COUNTRY_NAME . '<br />' . xtc_draw_input_field('countries_name'));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_COUNTRY_CODE_2 . '<br />' . xtc_draw_input_field('countries_iso_code_2'));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_COUNTRY_CODE_3 . '<br />' . xtc_draw_input_field('countries_iso_code_3'));
+                $contents[] = array('text' => '<br />' . TEXT_INFO_COUNTRY_SORT_ORDER . '<br />' . xtc_draw_input_field('sort_order'));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_ADDRESS_FORMAT . '<br />' . xtc_draw_pull_down_menu('address_format_id', xtc_get_address_formats()));
                 $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_INSERT . '"/>&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_COUNTRIES, 'page=' . $page) . '">' . BUTTON_CANCEL . '</a>');
                 break;
@@ -223,6 +265,7 @@
                 $contents[] = array('text' => '<br />' . TEXT_INFO_COUNTRY_NAME . '<br />' . xtc_draw_input_field('countries_name', $cInfo->countries_name));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_COUNTRY_CODE_2 . '<br />' . xtc_draw_input_field('countries_iso_code_2', $cInfo->countries_iso_code_2));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_COUNTRY_CODE_3 . '<br />' . xtc_draw_input_field('countries_iso_code_3', $cInfo->countries_iso_code_3));
+                $contents[] = array('text' => '<br />' . TEXT_INFO_COUNTRY_SORT_ORDER . '<br />' . xtc_draw_input_field('sort_order', $cInfo->sort_order));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_ADDRESS_FORMAT . '<br />' . xtc_draw_pull_down_menu('address_format_id', xtc_get_address_formats(), $cInfo->address_format_id));
                 $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/>&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_COUNTRIES, xtc_get_all_get_params(array('page', 'action', 'cID')).'page=' . $page . '&cID=' . $cInfo->countries_id) . '">' . BUTTON_CANCEL . '</a>');
                 break;
@@ -242,6 +285,7 @@
                   $contents[] = array('text' => '<br />' . TEXT_INFO_COUNTRY_NAME . '<br />' . $cInfo->countries_name);
                   $contents[] = array('text' => '<br />' . TEXT_INFO_COUNTRY_CODE_2 . ' ' . $cInfo->countries_iso_code_2);
                   $contents[] = array('text' => '<br />' . TEXT_INFO_COUNTRY_CODE_3 . ' ' . $cInfo->countries_iso_code_3);
+                  $contents[] = array('text' => '<br />' . TEXT_INFO_COUNTRY_SORT_ORDER . ' ' . $cInfo->sort_order);
                   $contents[] = array('text' => '<br />' . TEXT_INFO_ADDRESS_FORMAT . ' ' . $cInfo->address_format_id);
                 }
                 break;
