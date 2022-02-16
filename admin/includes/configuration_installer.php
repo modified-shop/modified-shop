@@ -640,14 +640,14 @@ $values_group_update = array();
   $values[] = "(NULL, 'CONFIRM_SAVE_ENTRY', 'true', '1000', '70', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
   $values[] = "(NULL, 'MAX_DISPLAY_COUPON_RESULTS', '30', '1000', '-1', NULL , NOW(), NULL , NULL);";
   $values[] = "(NULL, 'MIN_GROUP_PRICE_STAFFEL', '2', '1000', '34', NULL , NOW(), NULL , NULL);";
-  $values[] = "(NULL, 'ORDER_STATUSES_FOR_SALES_STATISTICS', '3', 1000, 100, NULL, NOW(), NULL, 'xtc_cfg_multi_checkbox(\'order_statuses\', \',\',');";
+  $values[] = "(NULL, 'ORDER_STATUSES_FOR_SALES_STATISTICS', '3', 1000, 100, NULL, NOW(), NULL, 'xtc_cfg_multi_checkbox(\'order_statuses\', \'chr(44)\',');";
   $values[] = "(NULL, 'USE_ATTRIBUTES_IFRAME', 'true', '1000', '110', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
   $values[] = "(NULL, 'NEW_ATTRIBUTES_STYLING', 'true', '1000', '112', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
   $values[] = "(NULL, 'NEW_SELECT_CHECKBOX', 'true', '1000', '113', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
   $values[] = "(NULL, 'CSRF_TOKEN_SYSTEM', 'true', '1000', '114', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
   $values[] = "(NULL, 'ADMIN_HEADER_X_FRAME_OPTIONS', 'true', '1000', '115', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
   $values[] = "(NULL, 'ATTRIBUTE_MODEL_DELIMITER', '<br />', '1000', '116', NULL, NOW(), NULL, NULL);";
-  $values[] = "(NULL, 'ORDER_STATUSES_DISPLAY_DEFAULT', '', 1000, 90, NULL, NOW(), NULL, 'xtc_cfg_multi_checkbox(\'order_statuses\', \',\',');";
+  $values[] = "(NULL, 'ORDER_STATUSES_DISPLAY_DEFAULT', '', 1000, 90, NULL, NOW(), NULL, 'xtc_cfg_multi_checkbox(\'order_statuses\', \'chr(44)\',');";
   $values_update[] = array (
                            'values' => "configuration_group_id = '1000', sort_order = '-1'",
                            'configuration_key' => 'MAX_DISPLAY_ORDER_RESULTS'
