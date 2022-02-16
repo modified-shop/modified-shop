@@ -36,38 +36,35 @@
     );
     
     function __construct() {
-      $this->messages = array();
-      if (isset($_SESSION['messageToStack']) && is_array($_SESSION['messageToStack'])) {
-        for ($i=0, $n=count($_SESSION['messageToStack']); $i<$n; $i++) {
-          $this->add($_SESSION['messageToStack'][$i]['class'], $_SESSION['messageToStack'][$i]['text'], $_SESSION['messageToStack'][$i]['type']);
-        }
-        unset($_SESSION['messageToStack']);
+      if (!isset($_SESSION['messageToStack'])) {
+        $_SESSION['messageToStack'] = array();
       }
     }
 
     function add($class, $message, $type = 'error') {
-      $this->messages[$class][$type][] = $message;
+      $this->addStack($class, $message, $type);
     }
 
     function add_session($class, $message, $type = 'error') {
-      if (!isset($_SESSION['messageToStack'])) {
-        $_SESSION['messageToStack'] = array();
-      }
-      $_SESSION['messageToStack'][] = array('class' => $class, 'text' => $message, 'type' => $type);
+      $this->addStack($class, $message, $type);
     }
 
+    function addStack($class, $message, $type) {
+      $_SESSION['messageToStack'][$class][$type][md5($message)] = $message;
+    }
+    
     function reset() {
-      $this->messages = array();
+      $_SESSION['messageToStack'] = array();
     }
 
     function size($class, $type = 'error') {
       $count = 0;
-      if (isset($this->messages[$class][$type])) {
-        $count += count($this->messages[$class][$type]);
+      if (isset($_SESSION['messageToStack'][$class][$type])) {
+        $count += count($_SESSION['messageToStack'][$class][$type]);
       }
             
-      if (in_array($class, $this->global_array) && isset($this->messages['global'][$type])) {
-        $count += count($this->messages['global'][$type]);
+      if (in_array($class, $this->global_array) && isset($_SESSION['messageToStack']['global'][$type])) {
+        $count += count($_SESSION['messageToStack']['global'][$type]);
       }
       
       return $count;
@@ -77,15 +74,16 @@
       $output = '';
       if ($this->size($class, $type) > 0) {
         if (in_array($class, $this->global_array)
-            && isset($this->messages['global'][$type])
+            && isset($_SESSION['messageToStack']['global'][$type])
             )
         {
-          if (!isset($this->messages[$class])) {
-            $this->messages[$class] = array(
+          if (!isset($_SESSION['messageToStack'][$class])) {
+            $_SESSION['messageToStack'][$class] = array(
               $type => array()
             );
           }
-          $this->messages[$class][$type] = array_merge($this->messages[$class][$type], $this->messages['global'][$type]);
+          $_SESSION['messageToStack'][$class][$type] = array_merge($_SESSION['messageToStack'][$class][$type], $_SESSION['messageToStack']['global'][$type]);
+          unset($_SESSION['messageToStack']['global'][$type]);
         }
 
         if (defined('CURRENT_TEMPLATE')
@@ -96,14 +94,17 @@
           $smarty->caching = 0;
           $smarty->assign('type', $type);
           $smarty->assign('language', $_SESSION['language']);
-          $smarty->assign('messages', $this->messages[$class][$type]);
+          $smarty->assign('messages', $_SESSION['messageToStack'][$class][$type]);
           $output = $smarty->fetch(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/message_stack.html');
         } else {
-          foreach ($this->messages[$class][$type] as $message) {
+          foreach ($_SESSION['messageToStack'][$class][$type] as $message) {
             $output .= '<p>'.$message.'</p>';
           }
         }
+        
+        unset($_SESSION['messageToStack'][$class][$type]);
       }
+      
       return $output;
     }
     

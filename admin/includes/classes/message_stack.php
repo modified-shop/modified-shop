@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: message_stack.php 950 2005-05-14 16:45:21Z mz $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -30,33 +30,26 @@
 
     function __construct() {
       $this->errors = array();
-      if (isset($_SESSION['messageToStack'])) {
-        for ($i = 0, $n = sizeof($_SESSION['messageToStack']); $i < $n; $i++) {
-          $this->add($_SESSION['messageToStack'][$i]['text'], $_SESSION['messageToStack'][$i]['type']);
+      if (isset($_SESSION['messageToAdminStack']) && count($_SESSION['messageToAdminStack']) > 0) {
+        foreach ($_SESSION['messageToAdminStack'] as $type => $message_stack) {
+          foreach ($message_stack as $message) {
+            $this->add($message, $type);
+          }
         }
-        unset($_SESSION['messageToStack']);
+        unset($_SESSION['messageToAdminStack']);
       }
     }
 
     function add($message, $type = 'error') {
-      if ($type == 'error') {
-        $this->errors['error'][] = $message;
-      } elseif ($type == 'warning') {
-        $this->errors['warning'][] = $message;
-      } elseif ($type == 'success') {
-        $this->errors['success'][] = $message;
-      } else {
-        $this->errors['error'][] = $message;
-      }
-      
+      $this->errors[$type][md5($message)] = $message;
       $this->size++;
     }
 
     function add_session($message, $type = 'error') {
-      if (!isset($_SESSION['messageToStack'])) {
-        $_SESSION['messageToStack'] = array();
+      if (!isset($_SESSION['messageToAdminStack'])) {
+        $_SESSION['messageToAdminStack'] = array();
       }
-      $_SESSION['messageToStack'][] = array('text' => $message, 'type' => $type);
+      $_SESSION['messageToAdminStack'][$type][md5($message)] = $message;
     }
 
     function reset() {
@@ -67,12 +60,17 @@
     function output() {
       $output = '';
       if ($this->size > 0) {
-        foreach ($this->errors as $key => $message) {
-          $output .= '<div class="'.$key.'_message">';
-          $output .= implode('<br/>', $message);
+        foreach ($this->errors as $type => $message_stack) {
+          $output .= '<div class="'.$type.'_message">';
+          $output .= implode('<br/>', $message_stack);
           $output .= '</div>';   
+          
+          foreach ($message_stack as $message) {
+            unset($_SESSION['messageToAdminStack'][$type][md5($message)]);
+          }
         }
       }
+      
       return $output;
     }
   }
