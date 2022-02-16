@@ -1000,7 +1000,7 @@
                                         );
                   }
                   
-                  $contents[] = array('text' => '<div style="padding-left: 10px; padding-bottom: 10px;">' . TEXT_PRODUCTS_AVERAGE_RATING . ' ' . number_format($pInfo->average_rating, 2) . '</div>');
+                  $contents[] = array('text' => '<div style="padding-left: 10px; padding-bottom: 10px;">' . TEXT_PRODUCTS_AVERAGE_RATING . ' ' . (($pInfo->average_rating != '') ? number_format($pInfo->average_rating, 2) : 0) . '</div>');
                   $contents[] = array('text' => '<div style="padding-left: 10px; padding-bottom: 10px;">' . TEXT_PRODUCT_LINKED_TO . '<br />' . xtc_output_generated_category_path($pInfo->products_id, 'product') . '</div>');
                   $contents[] = array('align' => 'center', 'text' => '<div style="padding: 10px;">' . xtc_product_thumb_image($pInfo->products_image, $pInfo->products_name)  . '</div><div style="padding-bottom: 10px;">' . $pInfo->products_image.'</div>');
                 }
