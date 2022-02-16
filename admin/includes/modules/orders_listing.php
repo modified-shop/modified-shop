@@ -116,10 +116,10 @@
                 $osort = 'o.ibn_billnr DESC';
                 break;
               case 'country':
-                $osort = 'o.shipping_method ASC';
+                $osort = 'o.delivery_country ASC';
                 break;
               case 'country-desc':
-                $osort = 'o.shipping_method DESC';
+                $osort = 'o.delivery_country DESC';
                 break;
               case 'date':
                 $osort = 'o.date_purchased ASC';
