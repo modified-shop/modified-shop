@@ -217,6 +217,7 @@
                     }
                 ?>
                 <tr <?php echo $tr_attributes;?>>
+                  <td class="dataTableContent txta-c"><?php echo $countries['sort_order']; ?></td>
                   <td class="dataTableContent"><?php echo $countries['countries_name']; ?></td>
                   <td class="dataTableContent txta-c">&nbsp;<?php echo $required_zones; ?></td>
                   <td class="dataTableContent txta-c"><?php echo $countries['countries_iso_code_2']; ?></td>
