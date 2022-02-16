@@ -974,7 +974,7 @@
                                             countries_name
                                        FROM ".TABLE_COUNTRIES."
                                             ".$status."
-                                   ORDER BY countries_name");
+                                   ORDER BY sort_order ASC, countries_name");
     while ($countries = xtc_db_fetch_array($countries_query)) {
       $countries_array[] = array ('id' => $countries['countries_id'], 'text' => $countries['countries_name']);
     }
