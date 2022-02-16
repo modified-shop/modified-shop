@@ -97,10 +97,12 @@ if ($listing_split->number_of_rows == 0
       if ($current_category_id != '0') {
         $module_smarty->assign('MANUFACTURER_IMAGE', ((isset($manufacturer_image) && $manufacturer_image != '') ? DIR_WS_BASE . $manufacturer_image : ''));
         $module_smarty->assign('MANUFACTURER_NAME', $manufacturer['manufacturers_name']);
+        $module_smarty->assign('MANUFACTURER_TITLE', $manufacturer['manufacturers_title']);
         $module_smarty->assign('MANUFACTURER_DESCRIPTION', $manufacturer['manufacturers_description']);
         $module_smarty->assign('MANUFACTURER_LINK', xtc_href_link(FILENAME_DEFAULT, xtc_manufacturer_link($manufacturer['manufacturers_id'], $manufacturer['manufacturers_name']))); 
       } else {
         $category['categories_name'] = $manufacturer['manufacturers_name'];
+        $category['categories_heading_title'] = $manufacturer['manufacturers_title'];
         $category['categories_description'] = $manufacturer['manufacturers_description'];
         $image = ((isset($manufacturer_image) && $manufacturer_image != '') ? $manufacturer_image : '');
       }
@@ -236,8 +238,8 @@ if ($result != false) {
     $manufacturer_image = $main->getImage($manufacturer['manufacturers_image'], '', MANUFACTURER_IMAGE_SHOW_NO_IMAGE, 'manufacturers/noimage.gif');
 
     $module_smarty->assign('language', $_SESSION['language']);
-    $module_smarty->assign('LIST_TITLE', $manufacturer['manufacturers_name']);
     $module_smarty->assign('CATEGORIES_NAME', $manufacturer['manufacturers_name']);
+    $module_smarty->assign('CATEGORIES_HEADING_TITLE', $manufacturer['manufacturers_title']);
     $module_smarty->assign('CATEGORIES_DESCRIPTION', $manufacturer['manufacturers_description']);
     $module_smarty->assign('CATEGORIES_IMAGE', ((isset($manufacturer_image) && $manufacturer_image != '') ? DIR_WS_BASE . $manufacturer_image : ''));
 
