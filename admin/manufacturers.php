@@ -89,6 +89,7 @@
       $languages = xtc_get_languages();
       for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
         $manufacturers_url_array = $_POST['manufacturers_url'];
+        $manufacturers_title_array = $_POST['manufacturers_title'];
         $manufacturers_description_array = $_POST['manufacturers_description'];
         $manufacturers_meta_title_array = $_POST['manufacturers_meta_title'];
         $manufacturers_meta_description_array = $_POST['manufacturers_meta_description'];
@@ -97,6 +98,7 @@
 
         $sql_data_array = array(
           'manufacturers_url' => xtc_db_prepare_input($manufacturers_url_array[$language_id]),
+          'manufacturers_title' => xtc_db_prepare_input($manufacturers_title_array[$language_id]),
           'manufacturers_description' => xtc_db_prepare_input($manufacturers_description_array[$language_id]),
           'manufacturers_meta_title' => xtc_db_prepare_input($manufacturers_meta_title_array[$language_id]),
           'manufacturers_meta_description' => xtc_db_prepare_input($manufacturers_meta_description_array[$language_id]),
@@ -259,7 +261,11 @@ if (USE_WYSIWYG == 'true') {
                 ?>
                 <table class="tableInput border0">
                   <tr>
-                    <td class="main" style="width:190px;"><b><?php echo $lng_image.TEXT_MANUFACTURERS_URL; ?></b></td>
+                    <td class="main" style="width:190px;"><b><?php echo $lng_image.TEXT_MANUFACTURERS_TITLE; ?></b></td>
+                    <td class="main"><?php echo xtc_draw_input_field('manufacturers_title[' . $languages[$i]['id'] . ']', ((isset($manufacturer['manufacturers_title'])) ? stripslashes($manufacturer['manufacturers_title']) : ''), 'style="width:99%" maxlength="255"'); ?></td>
+                  </tr>
+                  <tr>
+                    <td class="main"><b><?php echo $lng_image.TEXT_MANUFACTURERS_URL; ?></b></td>
                     <td class="main"><?php echo xtc_draw_input_field('manufacturers_url[' . $languages[$i]['id'] . ']', xtc_get_manufacturer_url($manufacturer['manufacturers_id'], $languages[$i]['id']), 'style="width:99%" maxlength="255"'); ?></td>
                   </tr>
                   <tr>
