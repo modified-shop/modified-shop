@@ -143,7 +143,7 @@
                   <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_COUNTRY_NAME.xtc_sorting(FILENAME_COUNTRIES, 'name'); ?></td>
                   <td class="dataTableHeadingContent txta-c" style="width:100px"><?php echo TABLE_HEADING_REQUIRED_ZONES.xtc_sorting(FILENAME_COUNTRIES, 'zone'); ?></td>
                   <td class="dataTableHeadingContent txta-c" style="width:50px" colspan="2"><?php echo TABLE_HEADING_COUNTRY_CODES.xtc_sorting(FILENAME_COUNTRIES, 'code'); ?></td>
-                  <td class="dataTableHeadingContent txta-c" style="width:100px"><?php echo TABLE_HEADING_STATUS; ?></td>                
+                  <td class="dataTableHeadingContent txta-c" style="width:100px"><?php echo TABLE_HEADING_STATUS.xtc_sorting(FILENAME_COUNTRIES, 'status'); ?></td>                
                   <td class="dataTableHeadingContent txta-r" style="width:100px"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
                 </tr>
                 <?php
