@@ -309,7 +309,7 @@ class SofortLibPayment {
                                                 ),
                                           array($insert_id,
                                                 $_SESSION['customer_id'],
-                                                strftime(DATE_FORMAT_SHORT),
+                                                date(DATE_FORMAT),
                                                 $order->customer['firstname'] . ' ' . $order->customer['lastname'],
                                                 $order->customer['company'],
                                                 $order->customer['email_address']
