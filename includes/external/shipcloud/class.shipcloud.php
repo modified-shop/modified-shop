@@ -17,6 +17,7 @@ require_once(DIR_FS_INC.'get_external_content.inc.php');
 
 // include needed classes
 require_once(DIR_WS_CLASSES.'order.php');
+require_once(DIR_FS_CATALOG.'includes/classes/class.logger.php');
 
 class shipcloud {
   
