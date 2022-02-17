@@ -496,7 +496,7 @@
                      EMAIL_SEPARATOR . "\n" .
                      EMAIL_TEXT_ORDER_NUMBER . ' ' . $order_id . "\n" .
                      EMAIL_TEXT_INVOICE_URL . ' ' . xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $order_id, 'SSL', false) . "\n" .
-                     EMAIL_TEXT_DATE_ORDERED . ' ' . strftime(DATE_FORMAT_LONG) . "\n\n";
+                     EMAIL_TEXT_DATE_ORDERED . ' ' . date(DATE_FORMAT) . "\n\n";
       if ($order->info['comments']) {
         $email_order .= xtc_db_output($order->info['comments']) . "\n\n";
       }
