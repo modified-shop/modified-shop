@@ -30,8 +30,7 @@ class shipcloud {
     if ($oID != '') {
       $this->order = new order($oID);
     }
-    $this->log = ((defined('MODULE_SHIPCLOUD_LOG') && MODULE_SHIPCLOUD_LOG == 'True') ? true : false);
-    $this->debug = false;
+    $this->LoggingManager = new LoggingManager(DIR_FS_LOG.'mod_shipcloud_%s_%s.log', 'shipcloud', 'info');
   }
   
   
@@ -131,13 +130,12 @@ class shipcloud {
       }
       
       $request_array = $this->encode_request($request_array);
-      $this->logger($request_array);
-      
+      $this->LoggingManager->log('DEBUG', 'create_label', array('exception' => $request_array));
+            
       if (!isset($params['quote'])) {
         $request = $this->do_request(json_encode($request_array));
         if (is_array($request) && count($request) > 0) {
           $messageStack->add_session(TEXT_LABEL_CREATED, 'success');
-          $this->logger($request);
           $this->save_label($request);
         }
       } else {
@@ -162,12 +160,10 @@ class shipcloud {
         $request = $this->do_request(json_encode($request_array), self::SC_URL_QUOTES);
         if (is_array($request) && isset($request['shipment_quote'])) {
           $messageStack->add_session(CFG_TXT_PRICE.': &euro; '.number_format($request['shipment_quote']['price'], 2, ',', '.'), 'success');
-          $this->logger($request);
         }
       }
     } else {
       $messageStack->add_session(TEXT_CARRIER_ERROR, 'warning');
-      $this->logger(TEXT_CARRIER_ERROR);
     }
   }
 
@@ -386,7 +382,7 @@ class shipcloud {
     }
       
     $request_array = $this->encode_request($request_array);
-    $this->logger($request_array);
+    $this->LoggingManager->log('DEBUG', 'pickup', array('exception' => $request_array));
         
     $request = $this->do_request(json_encode($request_array), self::SC_URL_PICKUP);
         
@@ -473,7 +469,7 @@ class shipcloud {
     $response = curl_exec($ch);
         
     if (curl_errno($ch)) {
-      $this->logger(curl_errno($ch), curl_error($ch));
+      $this->LoggingManager->log('INFO', curl_errno($ch), array('exception' => curl_error($ch)));
     } elseif (curl_getinfo($ch, CURLINFO_HTTP_CODE) == '204' && $request == 'DELETE') {
       $messageStack->add_session(TEXT_DELETE_SHIPMENT_SUCCESS, 'success');
     } elseif (curl_getinfo($ch, CURLINFO_HTTP_CODE) != '200') {
@@ -483,31 +479,9 @@ class shipcloud {
           $messageStack->add_session($error, 'warning');
         }
       }
-      $this->logger($response);
+      $this->LoggingManager->log('INFO', 'do_request', array('exception' => $response));
     } else {
       return json_decode($response, true);
-    }
-  }
-  
-  
-	private function logger($message) {
-		if ($this->log === true) {
-		  if ($this->debug === true) {
-        $this->output($message);
-      }
-      error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' ' . print_r($message, true) . "\n", 3, DIR_FS_LOG.'mod_shipcloud_' .date('Y-m-d') .'.log');
-		}
-	}
-
-
-  public function output($array, $exit = false) {
-    echo '<pre>';
-    print_r($array);
-    echo '</pre>';
-    
-    if ($exit === true) {
-      echo 'exit';
-      exit();
     }
   }
 

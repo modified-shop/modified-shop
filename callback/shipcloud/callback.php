@@ -15,13 +15,14 @@ require_once('includes/application_top_callback.php');
 
 // include needed classes
 require_once(DIR_WS_CLASSES.'order.php');
+require_once(DIR_FS_EXTERNAL.'shipcloud/class.shipcloud.php');
 
 // parse callback
 $request = json_decode(file_get_contents("php://input"), true);
 
-if (MODULE_SHIPCLOUD_LOG == 'True') {
-  error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' ' . print_r($request, true) . "\n", 3, DIR_FS_LOG.'mod_shipcloud_notification_' .date('Y-m-d') .'.log');
-}
+$shipcloud = new shipcloud();
+$shipcloud->LoggingManager->log('INFO', 'callback', array('exception' => $request));
+
 
 if (is_array($request) && count($request) > 0) {
   $orders_query = xtc_db_query("SELECT *
