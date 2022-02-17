@@ -122,7 +122,7 @@ for ($i = 1; $i < 32; $i++) {
 
 $month_array = array();
 for ($i = 1; $i < 13; $i++) {
-  $month_array[] = array('id' => $i, 'text' => decode_utf8(strftime("%B", mktime(0, 0, 0, $i, 1))));
+  $month_array[] = array('id' => $i, 'text' => decode_utf8(date("F", mktime(0, 0, 0, $i, 1))));
 }
 
 $year_array = array();

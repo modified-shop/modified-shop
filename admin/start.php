@@ -287,7 +287,7 @@ require (DIR_WS_INCLUDES.'head.php');
                          <td align="right"><?php echo $currencies->format($turnover['this_month']); ?></td>
                       </tr>
                       <tr class="content_row">
-                         <td><strong><?php echo TURNOVER_THIS_MONTH. '&nbsp;' . (strftime("%Y")-1); ?>:</strong></td>
+                         <td><strong><?php echo TURNOVER_THIS_MONTH. '&nbsp;' . (date("Y")-1); ?>:</strong></td>
                          <td align="right"><?php echo $currencies->format($turnover['this_month_last_year']); ?></td>
                       </tr>
                       <tr class="content_row">
@@ -299,15 +299,15 @@ require (DIR_WS_INCLUDES.'head.php');
                          <td align="right"><?php echo $currencies->format($turnover['last_month']); ?></td>
                       </tr>
                       <tr class="content_row">
-                         <td><strong><?php echo TURNOVER_LAST_MONTH. '&nbsp;' . (strftime("%Y")-1); ?>:</strong></td>
+                         <td><strong><?php echo TURNOVER_LAST_MONTH. '&nbsp;' . (date("Y")-1); ?>:</strong></td>
                          <td align="right"><?php echo $currencies->format($turnover['last_month_last_year']); ?></td>
                       </tr>
                       <tr class="content_row">
-                         <td><strong><?php echo TOTAL_TURNOVER. '&nbsp;' . (strftime("%Y")-1); ?>:</strong></td>
+                         <td><strong><?php echo TOTAL_TURNOVER. '&nbsp;' . (date("Y")-1); ?>:</strong></td>
                          <td align="right"><?php echo $currencies->format($turnover['last_year']); ?></td>
                       </tr>
                       <tr class="content_row">
-                         <td><strong><?php echo TOTAL_TURNOVER. '&nbsp;' . strftime("%Y"); ?>:</strong></td>
+                         <td><strong><?php echo TOTAL_TURNOVER. '&nbsp;' . date("Y"); ?>:</strong></td>
                          <td align="right"><?php echo $currencies->format($turnover['this_year']); ?></td>
                       </tr>
                       <tr class="content_row">
