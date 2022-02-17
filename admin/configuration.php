@@ -72,7 +72,10 @@
                                              ORDER BY sort_order, configuration_id");
           while ($configuration = xtc_db_fetch_array($configuration_query)) {
             $configuration['configuration_value'] = stripslashes($configuration['configuration_value']);
-            if (is_array($_POST[$configuration['configuration_key']])) {
+            if (isset($_POST[$configuration['configuration_key']]) 
+                && is_array($_POST[$configuration['configuration_key']])
+                )
+            {
               // multi language config
               $keys = array_keys($_POST[$configuration['configuration_key']]);
               if (gettype(array_shift($keys)) == 'string') {
@@ -87,7 +90,11 @@
                 $_POST[$configuration['configuration_key']] = implode(',', $_POST[$configuration['configuration_key']]);
               }
             }
-            if ($_POST[$configuration['configuration_key']] != $configuration['configuration_value']) {
+            
+            if (isset($_POST[$configuration['configuration_key']]) 
+                && $_POST[$configuration['configuration_key']] != $configuration['configuration_value']
+                )
+            {
               //value_limits min
               if (isset($value_limits[$configuration['configuration_key']]['min']) && preg_match ("/^([0-9\.]+)$/", $_POST[$configuration['configuration_key']]) &&  (int)$_POST[$configuration['configuration_key']] < $value_limits[$configuration['configuration_key']]['min']) {
                 $configuration_key_title = constant(strtoupper($configuration['configuration_key'].'_TITLE'));
