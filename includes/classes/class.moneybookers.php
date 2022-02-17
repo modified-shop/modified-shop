@@ -144,7 +144,7 @@ class fcnt_moneybookers {
 		'hide_login'=>'1',
 
 		'detail2_description'=>  'Datum:',
-		'detail2_text'=>  strftime(DATE_FORMAT_LONG),
+		'detail2_text'=>  date(DATE_FORMAT),
 
 		'amount2_description'=>  'Summe:',
 		'amount2'=>  round($amount,2),

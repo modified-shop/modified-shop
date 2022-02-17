@@ -250,7 +250,7 @@ class amoneybookers {
 		'detail1_text'=>  STORE_NAME.' Order:'.$insert_id,
 
 		'detail2_description'=>  'Datum:',
-		'detail2_text'=>  strftime(DATE_FORMAT_LONG),
+		'detail2_text'=>  date(DATE_FORMAT),
 
 		'amount2_description'=>  'Summe:',
 		'amount2'=>  $amount,
