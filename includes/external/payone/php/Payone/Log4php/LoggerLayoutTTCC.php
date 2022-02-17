@@ -59,7 +59,7 @@ class Payone_Log4php_LoggerLayoutTTCC extends Payone_Log4php_LoggerLayout {
 	/**
 	 * @var string date format. See {@link PHP_MANUAL#strftime} for details
 	 */
-	protected $dateFormat = '%c';
+	protected $dateFormat = 'c';
 
 	/**
 	 * Constructor
@@ -158,7 +158,7 @@ class Payone_Log4php_LoggerLayoutTTCC extends Payone_Log4php_LoggerLayout {
 	 */
 	public function format(Payone_Log4php_LoggerLoggingEvent $event) {
 		$timeStamp = (float)$event->getTimeStamp();
-		$format = strftime($this->dateFormat, (int)$timeStamp);
+		$format = date($this->dateFormat, (int)$timeStamp);
 		
 		if ($this->microSecondsPrinting) {
 			$usecs = floor(($timeStamp - (int)$timeStamp) * 1000);
