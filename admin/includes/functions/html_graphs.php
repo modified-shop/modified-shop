@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: html_graphs.php 950 2005-05-14 16:45:21Z mz $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -464,14 +464,14 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
     $year = (($_GET['year']) ? $_GET['year'] : date('Y'));
 
     for ($i=1; $i<13; $i++) {
-      $names[] = decode_utf8(strftime('%b', mktime(0,0,0,$i)));
+      $names[] = decode_utf8(date('M', mktime(0,0,0,$i)));
       $values[] = '0';
       $dvalues[] = '0';
     }
 
     $banner_stats_query = xtc_db_query("select month(banners_history_date) as banner_month, sum(banners_shown) as value, sum(banners_clicked) as dvalue from " . TABLE_BANNERS_HISTORY . " where banners_id = '" . $banner_id . "' and year(banners_history_date) = '" . $year . "' group by month(banners_history_date)");
     while ($banner_stats = xtc_db_fetch_array($banner_stats_query)) {
-      $names[($banner_stats['banner_month']-1)] = decode_utf8(strftime('%b', mktime(0,0,0,$banner_stats['banner_month'])));
+      $names[($banner_stats['banner_month']-1)] = decode_utf8(date('M', mktime(0,0,0,$banner_stats['banner_month'])));
       $values[($banner_stats['banner_month']-1)] = (($banner_stats['value']) ? $banner_stats['value'] : '0');
       $dvalues[($banner_stats['banner_month']-1)] = (($banner_stats['dvalue']) ? $banner_stats['dvalue'] : '0');
     }
@@ -543,7 +543,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
     }
 
     $graph_vals = @array('vlabel'=>TEXT_BANNERS_DATA,
-                        'hlabel'=>sprintf(TEXT_BANNERS_DAILY_STATISTICS, $banner['banners_title'], decode_utf8(strftime('%B', mktime(0,0,0,$month))), $year),
+                        'hlabel'=>sprintf(TEXT_BANNERS_DAILY_STATISTICS, $banner['banners_title'], decode_utf8(date('F', mktime(0,0,0,$month))), $year),
                         'type'=>'3',
                         'cellpadding'=>'',
                         'cellspacing'=>'1',

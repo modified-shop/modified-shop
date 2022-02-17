@@ -1,5 +1,5 @@
 <?php
-/* $Id: phplot.php 1632 2013-05-11 00:05:54Z lbayuk $ */
+/* $Id$ */
 /*
  * PHPLOT Version 6.1.0
  *
@@ -2088,7 +2088,7 @@ class PHPlot
      *       [2] = $prefix (optional) - prefix string for labels.
      *       [3] = $suffix (optional) - suffix string for labels. This replaces data_units_text.
      *     For type 'time':
-     *       [1] = $format for strftime (optional). Can also be set by Set[XY]TimeFormat().
+     *       [1] = $format for date (optional). Can also be set by Set[XY]TimeFormat().
      *     For type 'printf':
      *       [1] = $format (optional) for sprintf.
      *     For type 'custom':
@@ -2116,7 +2116,7 @@ class PHPlot
             if (isset($args[1]))
                 $format['time_format'] = $args[1];
             elseif (!isset($format['time_format']))
-                $format['time_format'] = '%H:%M:%S';
+                $format['time_format'] = 'H:i:s';
             break;
 
         case 'printf':
@@ -4512,7 +4512,7 @@ class PHPlot
                            . $format['suffix'];
                 break;
             case 'time':
-                $which_lab = strftime($format['time_format'], $which_lab);
+                $which_lab = date($format['time_format'], $which_lab);
                 break;
             case 'printf':
                 $which_lab = sprintf($format['printf_format'], $which_lab);
