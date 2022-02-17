@@ -143,7 +143,7 @@ function xss_log_hack_attempt($detecting_file = "(no filename available)",
                                
     $url = $_SERVER['HTTP_HOST'].preg_replace("/([^\?]*)(\?.*)/","$1",$_SERVER['REQUEST_URI']);
     $output         =        "#####################################\n";
-    $output        .=        @strftime('%Y-%m-%d %H:%M:%S')."\n";
+    $output        .=        @date('Y-m-d H:i:s')."\n";
     $output        .=        "URL: ".$url."\n";
     $output        .=        "#####################################\n";
     $output        .=        "The modified Shopsoftware has detected that somebody tried to"
