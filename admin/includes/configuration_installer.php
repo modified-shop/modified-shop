@@ -229,6 +229,10 @@ $values_group_update = array();
                            'values' => "configuration_group_id = '10', set_function = 'xtc_cfg_select_option(array(\'none\', \'admin\', \'all\'),'",
                            'configuration_key' => 'DISPLAY_PAGE_PARSE_TIME'
                            );
+  $values_update[] = array (
+                           'values' => "configuration_group_id = '10', configuration_value = 'Y-m-d H:i:s'",
+                           'configuration_key' => 'STORE_PARSE_DATE_TIME_FORMAT'
+                           );
 
 //configuration_group_id 11 --- "Cache Optionen"
   $values[] = "(NULL, 'DB_CACHE_TYPE', 'files', '11', '7', NULL, NOW(), NULL, 'xtc_cfg_pull_down_cache_type(\'DB_CACHE_TYPE\',');";
