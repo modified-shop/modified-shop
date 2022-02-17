@@ -27,11 +27,12 @@
 // this may not work under win32 environments..
 
 @setlocale(LC_TIME, 'en_GB.UTF-8', 'en_GB@euro', 'en_GB', 'en-GB', 'en', 'en_GB.ISO_8859-1', 'English','en_GB.ISO_8859-15');
-define('DATE_FORMAT_SHORT', '%d/%m/%Y');  // this is used for strftime()
-define('DATE_FORMAT_LONG', '%A %d %B, %Y'); // this is used for strftime()
-define('DATE_FORMAT', 'd/m/Y');  // this is used for strftime()
-define('PHP_DATE_TIME_FORMAT', 'd/m/Y H:i:s'); // this is used for date()
-define('DATE_TIME_FORMAT', DATE_FORMAT_SHORT . ' %H:%M:%S');
+
+define('DATE_FORMAT_SHORT', 'd/m/Y');
+define('DATE_FORMAT_LONG', 'l d F, Y');
+define('DATE_FORMAT', DATE_FORMAT_SHORT);
+define('PHP_DATE_TIME_FORMAT',  DATE_FORMAT_SHORT . ' H:i:s');
+define('DATE_TIME_FORMAT', DATE_FORMAT_SHORT . ' H:i:s');
 
 // Return date in raw format
 // $date should be in format mm/dd/yyyy
