@@ -43,7 +43,7 @@ class PayoneModified {
 
 	public function log($message) {
 	  if ($this->logging === true) {
-      error_log(strftime('%d/%m/%Y %H:%M:%S').' | '.$message."\n", 3, DIR_FS_LOG.'mod_payone_'.date('Y-m-d').'.log');
+      error_log(date('d/m/Y H:i:s').' | '.$message."\n", 3, DIR_FS_LOG.'mod_payone_'.date('Y-m-d').'.log');
     }
 	}
 

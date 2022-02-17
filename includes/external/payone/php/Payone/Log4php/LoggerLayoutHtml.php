@@ -184,7 +184,7 @@ class Payone_Log4php_LoggerLayoutHtml extends Payone_Log4php_LoggerLayout {
 		$sbuf .= "</head>" . PHP_EOL;
 		$sbuf .= "<body bgcolor=\"#FFFFFF\" topmargin=\"6\" leftmargin=\"6\">" . PHP_EOL;
 		$sbuf .= "<hr size=\"1\" noshade>" . PHP_EOL;
-		$sbuf .= "Log session start time " . strftime('%c', time()) . "<br>" . PHP_EOL;
+		$sbuf .= "Log session start time " . date('c', time()) . "<br>" . PHP_EOL;
 		$sbuf .= "<br>" . PHP_EOL;
 		$sbuf .= "<table cellspacing=\"0\" cellpadding=\"4\" border=\"1\" bordercolor=\"#224466\" width=\"100%\">" . PHP_EOL;
 		$sbuf .= "<tr>" . PHP_EOL;
