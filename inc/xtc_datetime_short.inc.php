@@ -22,5 +22,5 @@
     $minute = (int) substr($raw_datetime, 14, 2);
     $second = (int) substr($raw_datetime, 17, 2);
 
-    return strftime(DATE_TIME_FORMAT, mktime($hour, $minute, $second, $month, $day, $year));
+    return date(DATE_TIME_FORMAT, mktime($hour, $minute, $second, $month, $day, $year));
   }
