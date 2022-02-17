@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id:$
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -105,8 +105,8 @@ function xtc_mail_hack_attempt($detecting_file = "(no filename available)",
                                $message = "(no message given)" ) {
 
     $output         =        "Attention site admin of ".STORE_NAME.",\n";
-    $output        .=        "On ".@strftime(DATE_FORMAT_LONG);
-    $output        .=        " at ". @strftime(DATE_TIME_FORMAT_SHORT);
+    $output        .=        "On ".@date(DATE_FORMAT_LONG);
+    $output        .=        " at ". @date(DATE_TIME_FORMAT_SHORT);
     $output        .=        " the modified Shopsoftware has detected that somebody tried to"
                             ." send information to your site that may have been intended"
                             ." as a hack. Do not panic, it may be harmless: maybe this"
