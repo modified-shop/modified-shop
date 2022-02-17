@@ -442,7 +442,7 @@
 
     $c_info = get_c_infos($order->customer['ID'], trim($order->delivery['country_iso_2']));
 
-    $product['products_tax_class_id'] = $xtPrice->xtc_get_tax_class($product['products_id'], $product['products_tax_class_id']);
+    $product['products_tax_class_id'] = $xtPrice->xtc_get_tax_class($data_array['products_id'], $product['products_tax_class_id']);
 
     if ($status['customers_status_show_price_tax'] == 1
         && $status['customers_status_add_tax_ot'] == 0
@@ -583,7 +583,7 @@
 
     $c_info = get_c_infos($order->customer['ID'], trim($order->delivery['country_iso_2']));
 
-    $product['products_tax_class_id'] = $xtPrice->xtc_get_tax_class($product['products_id'], $product['products_tax_class_id']);
+    $product['products_tax_class_id'] = $xtPrice->xtc_get_tax_class($data_array['products_id'], $product['products_tax_class_id']);
     
     if ($status['customers_status_show_price_tax'] == 1
         && $status['customers_status_add_tax_ot'] == 0
