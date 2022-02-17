@@ -34,7 +34,7 @@
     $minute = (int)substr($raw_date, 14, 2);
     $second = (int)substr($raw_date, 17, 2);
 
-    $date = strftime(DATE_FORMAT_LONG, mktime($hour,$minute,$second,$month,$day,$year));
+    $date = date(DATE_FORMAT_LONG, mktime($hour,$minute,$second,$month,$day,$year));
     
     return decode_utf8($date);
   }
