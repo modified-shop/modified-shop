@@ -387,7 +387,7 @@ class xtcImport {
     **
     *****************************************************************************/
 
-    function insertProduct(& $dataArray, $mode = 'insert',$touchCat = false) {
+    function insertProduct(& $dataArray, $mode = 'insert', $touchCat = false) {
 
         //BOC strip potential slashes and type cast inputs
         $products_array = array ('products_model' => xtc_db_prepare_input($dataArray['p_model']));
@@ -500,7 +500,7 @@ class xtcImport {
             }
         }
 
-        if ($touchCat) $this->insertCategory($dataArray, $mode, $products_id);
+        if ($touchCat) $this->insertCategory($dataArray, $products_id, $mode);
 
         for ($i_insert = 0; $i_insert < $this->sizeof_languages; $i_insert ++) {
             $prod_desc_array = array (
@@ -555,7 +555,7 @@ class xtcImport {
     ** @param int $pID  products ID
     *****************************************************************************/
 
-    function insertCategory(& $dataArray, $mode = 'insert', $pID) {
+    function insertCategory(& $dataArray, $pID, $mode = 'insert') {
         if ($this->debug) {
             echo '<pre>';
             print_r($this->CatTree);
@@ -934,10 +934,14 @@ class xtcExport {
             $line .= $this->encode('p_keywords.'.$this->languages[$i]['code']);
             $line .= $this->encode('p_url.'.$this->languages[$i]['code']);
         }
-    // add categorie fields
+
+        // add categorie fields
         for ($i = 0; $i < $this->catDepth; $i ++) {
             $line .= $this->encode('p_cat.'.$i);
         }
+
+        foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/export/file_layout/','php') as $file) require ($file);
+
         fputs($fp, $line."\n");
 
         // content
@@ -1062,6 +1066,8 @@ class xtcExport {
 
             $cat_data = xtc_db_fetch_array($cat_query);
             $line .= $this->buildCAT($cat_data['categories_id']);
+
+            foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/export/export_end/','php') as $file) require ($file);
 
             fputs($fp, $line."\n");
         }
@@ -1210,12 +1216,13 @@ class xtcExport {
         } else {
             $parent_query = xtc_db_query("SELECT parent_id
                                             FROM ".TABLE_CATEGORIES."
-                                           WHERE categories_id = '".$catID."'
-                                        ");
+                                           WHERE categories_id = '".$catID."'");
 
-            $parent_data = xtc_db_fetch_array($parent_query);
-            $this->PARENT[$catID] = $parent_data['parent_id'];
-            return $parent_data['parent_id'];
+            if (xtc_db_num_rows($parent_query) > 0) {
+                $parent_data = xtc_db_fetch_array($parent_query);
+                $this->PARENT[$catID] = $parent_data['parent_id'];
+                return $parent_data['parent_id'];
+            }
         }
     }
 }
