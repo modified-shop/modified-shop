@@ -181,7 +181,7 @@ require (DIR_WS_INCLUDES.'head.php');
               echo '</div>';
             }
 
-            if (isset($import[1]) && $import[1][0] != ''){
+            if (isset($import[1][0]) && $import[1][0] != ''){
               echo '<div class="error_message">';
               for ($i=0;$i<count($import[1]);$i++) {
                 echo $import[1][$i].'<br />';
