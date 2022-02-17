@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: logger.php 950 2005-05-14 16:45:21Z mz $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -55,7 +55,7 @@
     }
 
     function write($message, $processTime) {
-      error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' [' . $processTime . '] ' . $message . "\n", 3, DIR_FS_LOG.'mod_parsetime_'. date('Y-m-d') .'.log');
+      error_log(date(STORE_PARSE_DATE_TIME_FORMAT) . ' [' . $processTime . '] ' . $message . "\n", 3, DIR_FS_LOG.'mod_parsetime_'. date('Y-m-d') .'.log');
     }
   }
 ?>
