@@ -10,6 +10,9 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+// include needed functions
+require_once(DIR_FS_INC.'xtc_datetime_short.inc.php');
+
 if (isset($_REQUEST['speed'])) {
   // auto include
   require_once (DIR_FS_INC.'auto_include.inc.php');
@@ -53,19 +56,3 @@ function get_klarna_data() {
 
   return $output;
 }
-
-
-function xtc_datetime_short($raw_datetime) {
-  if (($raw_datetime == '0000-00-00 00:00:00') || empty($raw_datetime)) {
-    return false;
-  }
-  $year = (int) substr($raw_datetime, 0, 4);
-  $month = (int) substr($raw_datetime, 5, 2);
-  $day = (int) substr($raw_datetime, 8, 2);
-  $hour = (int) substr($raw_datetime, 11, 2);
-  $minute = (int) substr($raw_datetime, 14, 2);
-  $second = (int) substr($raw_datetime, 17, 2);
-
-  return strftime(DATE_TIME_FORMAT, mktime($hour, $minute, $second, $month, $day, $year));
-}
-?>
