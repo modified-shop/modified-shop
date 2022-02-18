@@ -31,7 +31,7 @@ class shipcloud {
     if ($oID != '') {
       $this->order = new order($oID);
     }
-    $this->LoggingManager = new LoggingManager(DIR_FS_LOG.'mod_shipcloud_%s_%s.log', 'shipcloud', 'info');
+    $this->LoggingManager = new LoggingManager(DIR_FS_LOG.'mod_shipcloud_%s_%s.log', 'shipcloud', ((defined('MODULE_SHIPCLOUD_LOG') && MODULE_SHIPCLOUD_LOG == 'True') ? 'debug' : 'info'));
   }
   
   
