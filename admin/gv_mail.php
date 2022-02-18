@@ -203,15 +203,18 @@
         }
 
         if (isset($_POST['email_to']) && $_POST['email_to'] != '') {
-          $mail['subject'] = $subject; 
-          $mail['message'] = $message;
-          $mail['coupon_code'] = $coupon_code;
-          $mail['coupon_amount'] = $coupon_amount;
-          $mail['customers_email_address'] = $_POST['email_to'];
-          $mail['customers_firstname'] = $_POST['email_to'];
-          $mail['customers_lastname'] = '';
+          $email_to_array = explode(',', $_POST['email_to']);
+          foreach ($email_to_array as $email_to) {
+            $mail['subject'] = $subject; 
+            $mail['message'] = $message;
+            $mail['coupon_code'] = $coupon_code;
+            $mail['coupon_amount'] = $coupon_amount;
+            $mail['customers_email_address'] = trim($email_to);
+            $mail['customers_firstname'] = trim($email_to);
+            $mail['customers_lastname'] = '';
 
-          send_gv_mail($mail);
+            send_gv_mail($mail);
+          }
         }
 
         $messageStack->add_session(sprintf(NOTICE_EMAIL_SENT_TO, $mail_sent_to), 'success');
