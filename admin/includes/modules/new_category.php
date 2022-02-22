@@ -200,8 +200,14 @@
           <?php echo $lng_image . '&nbsp;' . TEXT_META_KEYWORDS .' (max. ' . META_KEYWORDS_LENGTH . ' ' . TEXT_CHARACTERS .')'; ?> <br/>
           <?php echo xtc_draw_input_field('categories_meta_keywords[' . $languages[$i]['id'] . ']',(isset($categories_meta_keywords[$languages[$i]['id']]) ? stripslashes($categories_meta_keywords[$languages[$i]['id']]) : $categories_desc_fields['categories_meta_keywords']),'style="width:100%" maxlength="' . META_KEYWORDS_LENGTH . '"'); ?>
         </div>
-      </div>
-      <?php } ?>
+        <?php
+        
+        //autoload new product addons 
+        require_once(DIR_FS_INC.'auto_include.inc.php');
+        foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/new_category_description/','php') as $file) require ($file);
+        
+        echo ('</div>');
+      } ?>
     </div>
 
     <div style="clear:both;"></div>

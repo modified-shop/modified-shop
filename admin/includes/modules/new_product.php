@@ -330,6 +330,10 @@
           include("includes/modules/new_products_content.php");
         }
 
+        //autoload new product addons 
+        require_once(DIR_FS_INC.'auto_include.inc.php');
+        foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/new_product_description/','php') as $file) require ($file);
+        
         echo ('</div>');
       } ?>
     </div>
