@@ -155,7 +155,7 @@ if (!$action || in_array($action, array('delete', 'list'))) {
           $from_str = " JOIN ".TABLE_CONTENT_MANAGER_CONTENT." cmc
                              ON cm.content_group = cmc.content_manager_id";
           $where_str = '';
-          if ($_GET['keywords']) {
+          if (isset($_GET['keywords']) && $_GET['keywords'] != '') {
             $keywords = $_GET['keywords'] = !empty($_GET['keywords']) ? stripslashes(trim(urldecode($_GET['keywords']))) : false;
                     
             if ($keywords) {
