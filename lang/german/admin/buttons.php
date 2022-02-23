@@ -81,6 +81,7 @@ define('BUTTON_DELETE_TEMP_CACHE', 'Templatecache leeren');
 define('BUTTON_DELETE_LOGS', 'Logfiles l&ouml;schen');
 define('BUTTON_VIEW_PRODUCT', 'Artikel ansehen');
 define('BUTTON_VIEW_CATEGORY', 'Kategorie ansehen');
+define('BUTTON_VIEW_MANUFACTURER', 'Hersteller ansehen');
 define('BUTTON_VALUES', 'Werte');
 define('BUTTON_DELETE_BANKTRANSFER', 'Bankdaten l&ouml;schen');
 define('BUTTON_BLACKLIST', 'Blacklist');

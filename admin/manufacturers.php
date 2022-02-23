@@ -123,7 +123,10 @@
       }
 
       foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/manufacturers/action/','php') as $file) require ($file);
-
+      
+      if (isset($_POST['man_update'])) {
+        xtc_redirect(xtc_href_link(FILENAME_MANUFACTURERS, 'action=edit&page=' . $page . '&mID=' . $manufacturers_id));
+      }
       xtc_redirect(xtc_href_link(FILENAME_MANUFACTURERS, 'page=' . $page . '&mID=' . $manufacturers_id));
       break;
 
@@ -325,7 +328,14 @@ if (USE_WYSIWYG == 'true') {
             <!-- BOF Save block //-->
             <div style="clear:both;"></div>
             <div class="txta-r">
-              <?php echo xtc_button_link(BUTTON_CANCEL, xtc_href_link(FILENAME_MANUFACTURERS, 'page=' . $page . ((isset($_GET['mID'])) ? '&mID=' . (int)$_GET['mID'] : ''))) . '&nbsp;' . xtc_button(BUTTON_SAVE); ?>
+              <?php 
+              echo xtc_button(BUTTON_SAVE) . '&nbsp;&nbsp;';
+              if (isset($_GET['mID']) && $_GET['mID'] > 0) {
+                echo '<input type="submit" class="button" name="man_update" value="'.BUTTON_UPDATE.'" style="cursor:pointer" />&nbsp;&nbsp;';
+                echo '<a class="button" href="' . xtc_catalog_href_link('index.php', 'manufacturers_id=' . (int)$_GET['mID']) . '" target="_blank">' . BUTTON_VIEW_MANUFACTURER . '</a>&nbsp;&nbsp;';
+              }
+              echo xtc_button_link(BUTTON_CANCEL, xtc_href_link(FILENAME_MANUFACTURERS, 'page=' . $page . ((isset($_GET['mID'])) ? '&mID=' . (int)$_GET['mID'] : '')));
+              ?>
             </div>
             <!-- EOF Save block //-->
           </div>
