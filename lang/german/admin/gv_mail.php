@@ -34,7 +34,7 @@ define('TEXT_FROM', 'Absender:');
 define('TEXT_TO', 'E-Mail an:');
 define('TEXT_AMOUNT', 'Wert:');
 define('TEXT_MESSAGE', 'Nachricht:');
-define('TEXT_SINGLE_EMAIL', '<span class="smallText">Benutzen Sie dieses Feld nur f&uuml;r einzelne E-Mails, ansonsten bitte das Feld Kundengruppe benutzen.</span>');
+define('TEXT_SINGLE_EMAIL', '<span class="smallText">Benutzen Sie dieses Feld nur f&uuml;r einzelne oder mehrere, durch Komma getrennte E-Mailadressen. Ansonsten bitte das Feld Kundengruppe benutzen.</span>');
 define('TEXT_SELECT_CUSTOMER_GROUP', 'Kundengruppe ausw&auml;hlen');
 define('TEXT_CUSTOMERS_GROUP_EMAIL', '<span class="smallText">Soll ein Gutschein an alle Kunden der gew&auml;hlten Kundengruppe gesendet werden? Ansonsten nichts ausw&auml;hlen und das Feld "E-Mail an:" f&uuml;llen. Vorsicht: Beim wiederholten, gleichzeitigen Versand vieler E-Mails kann die Shop E-Mailadresse auf sogenannten Blacklists landen und als Spam gewertet werden. Es empfiehlt sich dies &uuml;ber einen Newsletteranbieter abzuwickeln.</span>');
 define('TEXT_ALL_CUSTOMERS', 'Alle Kunden');
