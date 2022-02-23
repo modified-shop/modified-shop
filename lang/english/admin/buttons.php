@@ -81,6 +81,7 @@ define('BUTTON_DELETE_TEMP_CACHE', 'Delete Templatecache');
 define('BUTTON_DELETE_LOGS', 'Delete Logfiles');
 define('BUTTON_VIEW_PRODUCT', 'View Product');
 define('BUTTON_VIEW_CATEGORY', 'View Category');
+define('BUTTON_VIEW_MANUFACTURER', 'View Manufacturer');
 define('BUTTON_VALUES', 'Values');
 define('BUTTON_DELETE_BANKTRANSFER', 'Delete Banktransfer data');
 define('BUTTON_BLACKLIST', 'Blacklist');
