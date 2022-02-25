@@ -46,7 +46,7 @@
           $this->description .= '
             <div style="margin: 15px 0 0 0; text-align:center;">
               <div style="background:#fff;border:1px solid #ccc;margin: 0px auto;width:100px;height:100px;border-radius:100px;overflow:hidden;">'.(($account['profileImageUrl'] != '') ? '<img style="width:100%;height:auto; vertical-align-top; object-fit:cover;" src="'.str_replace('[size]', 'm', $account['profileImageUrl']).'">' : '').'</div>          
-              <div style="margin:10px 0px;">'.$account['receiptName'].'</div>
+              <div style="margin:10px 0px;">'.decode_utf8($account['receiptName']).'</div>
             </div>
           ';
           $this->description .= '<div style="margin: 15px 0 0 0; text-align:center;"><a class="button btnbox" href="'.xtc_href_link(FILENAME_MODULES, xtc_get_all_get_params(array('action', 'module')).'action=custom&module='.$this->code).'">'.BUTTON_UPDATE.'</a></div>';
