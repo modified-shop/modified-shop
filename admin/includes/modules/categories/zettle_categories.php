@@ -248,10 +248,15 @@
           $this->PayPalZettle->deleteInventory($products_uuid);
         }
       }
-
-      if (count($this->PayPalZettle->error) > 0) {
-        foreach ($this->PayPalZettle->error as $error) {
-          $messageStack->add_session($error['error_description'], 'error');
+      
+      if (isset($this->PayPalZettle->error) 
+          && isset($this->PayPalZettle->error[0])
+          && isset($this->PayPalZettle->error[0]['errors'])
+          && count($this->PayPalZettle->error[0]['errors']) > 0
+          )
+      {
+        foreach ($this->PayPalZettle->error[0]['errors'] as $error) {
+          $messageStack->add_session($error, 'error');
         }
       }
     }
