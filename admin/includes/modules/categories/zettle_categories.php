@@ -136,8 +136,17 @@
                       `products_uuid` varchar(64) NOT NULL,
                       `products_id` int(11) NOT NULL,
                       `stock` int(1) NOT NULL,
+                      `status` int(1) NOT NULL,
+                      `bulk` int(1) NOT NULL,
                       PRIMARY KEY (`products_uuid`),
                       KEY `idx_products_id` (`products_id`)
+                    )");
+
+      xtc_db_query("CREATE TABLE IF NOT EXISTS `paypal_zettle_import` (
+                      `zettle_id` int(11) NOT NULL,
+                      `import_uuid` varchar(64) NOT NULL,
+                      PRIMARY KEY (`zettle_id`),
+                      KEY `idx_import_uuid` (`import_uuid`)
                     )");
     }
   
