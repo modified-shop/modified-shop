@@ -6039,7 +6039,7 @@ class PHPlot
      *   $shade_side : Shade the right side? (Suppressed for leftward stack segments except first.)
      *      Only one of $shade_top or $shade_side can be FALSE. Both default to TRUE.
      */
-    protected function DrawBar($row, $column, (int)$x1, (int)$y1, (int)$x2, (int)$y2, (int)$data_color, (int)$shade_color, (int)$border_color,
+    protected function DrawBar($row, $column, $x1, $y1, $x2, $y2, $data_color, $shade_color, $border_color,
             $shade_top = TRUE, $shade_side = TRUE)
     {
         // Sort the points so x1,y1 is upper left and x2,y2 is lower right. This
@@ -6052,7 +6052,7 @@ class PHPlot
         }
 
         // Draw the bar
-        ImageFilledRectangle($this->img, $x1, $y1, $x2, $y2, $data_color);
+        ImageFilledRectangle($this->img, (int)$x1, (int)$y1, (int)$x2, (int)$y2, (int)$data_color);
 
         // Draw a shade, if shading is on.
         if (isset($shade_color)) {
@@ -6065,16 +6065,16 @@ class PHPlot
             } else { // Suppress top shading (Note shade_top==FALSE && shade_side==FALSE is not allowed)
                 $pts = array($x2, $y2, $x2, $y1, $x2 + $shade, $y1 - $shade, $x2 + $shade, $y2 - $shade);
             }
-            ImageFilledPolygon($this->img, $pts, (int)(count($pts) / 2), $shade_color);
+            ImageFilledPolygon($this->img, $pts, (int)(count($pts) / 2), (int)$shade_color);
         }
 
         // Draw a border around the bar, if enabled.
         if (isset($border_color)) {
             // Avoid a PHP/GD bug with zero-height ImageRectangle resulting in "T"-shaped ends.
             if ($y1 == $y2)
-                imageline($this->img, $x1, $y1, $x2, $y2, $border_color);
+                imageline($this->img, (int)$x1, (int)$y1, (int)$x2, (int)$y2, (int)$border_color);
             else
-                imagerectangle($this->img, $x1, $y1, $x2, $y2, $border_color);
+                imagerectangle($this->img, (int)$x1, (int)$y1, (int)$x2, (int)$y2, (int)$border_color);
         }
         $this->DoCallback('data_points', 'rect', $row, $column, $x1, $y1, $x2, $y2);
         return TRUE;
