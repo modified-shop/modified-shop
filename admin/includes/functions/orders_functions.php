@@ -1120,7 +1120,7 @@
                                          class
                                     FROM ".TABLE_ORDERS_TOTAL."
                                    WHERE orders_id = '".(int)$oID."'
-                                     AND class != 'ot_total'
+                                     AND sort_order < '".(int)MODULE_ORDER_TOTAL_TOTAL_SORT_ORDER."'
                                      AND class != 'ot_subtotal_no_tax'
                                      AND class != 'ot_tax'
                                      AND class != 'ot_subtotal'");
