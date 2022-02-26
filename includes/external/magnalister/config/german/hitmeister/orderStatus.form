@@ -16,7 +16,7 @@
             },
             "shippedstatus": {
                 "label": "Versand best&auml;tigen mit",
-                "desc": "Setzen Sie hier den Shop-Status, der auf real.de automatisch den Status \"Versand best&auml;tigen\" setzen soll.",
+                "desc": "Setzen Sie hier den Shop-Status, der auf Kaufland.de automatisch den Status \"Versand best&auml;tigen\" setzen soll.",
                 "key": "_#_platform_#_.orderstatus.shipped",
                 "type": "selection",
                 "values": null
@@ -64,7 +64,7 @@
             },
             "cancelstatus": {
                 "label": "Bestellung stornieren mit",
-                "desc": "Setzen Sie hier den Shop-Status, der auf real.de automatisch den Status \"Bestellung stornieren\" setzen soll. <br\/><br\/>\n\t\t\t\t           Hinweis: Teilstorno ist hier&uuml;ber nicht m&ouml;glich. Die gesamte Bestellung wird &uuml;ber diese Funktion storniert\n\t\t\t\t           und dem K&auml;ufer gutgeschrieben.",
+                "desc": "Setzen Sie hier den Shop-Status, der auf Kaufland.de automatisch den Status \"Bestellung stornieren\" setzen soll. <br\/><br\/>\n\t\t\t\t           Hinweis: Teilstorno ist hier&uuml;ber nicht m&ouml;glich. Die gesamte Bestellung wird &uuml;ber diese Funktion storniert\n\t\t\t\t           und dem K&auml;ufer gutgeschrieben.",
                 "key": "_#_platform_#_.orderstatus.cancelled",
                 "type": "selection",
                 "values": null

@@ -422,7 +422,7 @@ class InventoryView {
                 }
 			}
             // ePIDs
-            if ('artNr' == getDBConfigValue('general.keytype', '0')) {
+            /*if ('artNr' == getDBConfigValue('general.keytype', '0')) {
               $ePIDsForSimpleItems = MagnaDB::gi()->fetchArray('
                    SELECT products_model AS SKU, ePID FROM '.TABLE_MAGNA_EBAY_PROPERTIES.'
                     WHERE products_model IN ('.$SKUlist.')');
@@ -446,6 +446,7 @@ class InventoryView {
               if (!empty($evRow['ePID'])) $ePIDsForVariationItemsBySKU[$evRow['SKU']] = $evRow['ePID'];
             }
             $ePIDsBySKU = array_merge($ePIDsForSimpleItemsBySKU, $ePIDsForVariationItemsBySKU);
+            */
             
 			
             $ShopDataForItemsBySKU = array();
@@ -470,16 +471,19 @@ class InventoryView {
         #echo print_m($this->renderableData, '$this->renderableData');
         #echo print_m($ShopDataForItemsBySKU, '$ShopDataForItemsBySKU');
         
+        $ShopDataForItemsByLowerCaseSKU = array_change_key_case($ShopDataForItemsBySKU, CASE_LOWER);
         foreach ($this->renderableData as &$item) {
-            if (isset($ShopDataForItemsBySKU[$item['SKU']])) {
-                $item['ProductsID']   = $ShopDataForItemsBySKU[$item['SKU']]['products_id'];
-                $item['ShopQuantity'] = $ShopDataForItemsBySKU[$item['SKU']]['ShopQuantity'];
-                $item['ShopPrice']    = $ShopDataForItemsBySKU[$item['SKU']]['ShopPrice'];
-                $item['ShopTitle']    = $ShopDataForItemsBySKU[$item['SKU']]['ShopTitle'];
-                $item['ShopVarText']  = isset($ShopDataForItemsBySKU[$item['SKU']]['ShopVarText'])
-				                        ? $ShopDataForItemsBySKU[$item['SKU']]['ShopVarText']
+            if (isset($ShopDataForItemsByLowerCaseSKU[strtolower($item['SKU'])])) {
+                $sLowerSKU = strtolower($item['SKU']);
+                $item['ProductsID']   = $ShopDataForItemsByLowerCaseSKU[$sLowerSKU]['products_id'];
+                $item['ShopQuantity'] = $ShopDataForItemsByLowerCaseSKU[$sLowerSKU]['ShopQuantity'];
+                $item['ShopPrice']    = $ShopDataForItemsByLowerCaseSKU[$sLowerSKU]['ShopPrice'];
+                $item['ShopTitle']    = $ShopDataForItemsByLowerCaseSKU[$sLowerSKU]['ShopTitle'];
+                $item['ShopVarText']  = isset($ShopDataForItemsByLowerCaseSKU[$sLowerSKU]['ShopVarText'])
+				                        ? $ShopDataForItemsByLowerCaseSKU[$sLowerSKU]['ShopVarText']
 				                        : '&nbsp;';
-                if (    isset($ePIDsBySKU[$item['SKU']])
+                unset($sLowerSKU);
+                /*if (    isset($ePIDsBySKU[$item['SKU']])
 		     || isset($item['ePID'])) {
                      if (!isset($item['ePID'])) $item['ePID'] = $ePIDsBySKU[$item['SKU']];
                      if ('variations' == $item['ePID']) {
@@ -496,13 +500,13 @@ class InventoryView {
                      }
                 } else {
                      $item['PrepareKind'] = ML_EBAY_LABEL_PREPARED_NO_CATALOG;
-                }
+                }*/
             } else {
                 $item['ShopQuantity'] = $item['ShopPrice'] = $item['ShopTitle'] = '&mdash;';
                 $item['ShopVarText']  = '&nbsp;';
                 $item['ProductsID']   = 0;
             }
-            if (isset ($item['Prepared'])) {
+            /*if (isset ($item['Prepared'])) {
             //got data from the API
                switch ($item['Prepared']) {
                  case('matched'): 
@@ -521,7 +525,7 @@ class InventoryView {
                    $item['PrepareKind'] = '&mdash;';
                    break; 
                } 
-            }
+            }*/
         }
 /*
 $item['PrepareKind']
@@ -553,8 +557,6 @@ Eigene Daten
 					<td>'.ML_LABEL_SHOP_TITLE.'</td>
 					<td>'.ML_LABEL_EBAY_TITLE.' '.$this->sortByType('itemtitle').'</td>
 					<td>'.ML_LABEL_EBAY_ITEM_ID.'</td>
-					<td>'.ML_LABEL_EBAY_EPID.'</td>
-					<td>'.ML_EBAY_LABEL_PREPARE_KIND.'</td>
 					<td>'.($priceBrutto
 						? ML_LABEL_SHOP_PRICE_BRUTTO
 						: ML_LABEL_SHOP_PRICE_NETTO
@@ -565,6 +567,8 @@ Eigene Daten
 				</tr></thead>
 				<tbody>
 		';
+					//<td>'.ML_LABEL_EBAY_EPID.'</td>
+					//<td>'.ML_EBAY_LABEL_PREPARE_KIND.'</td>
 
 		$oddEven = false;
         #$this->getShopDataForItems();
@@ -583,6 +587,17 @@ Eigene Daten
 			}
 
             $renderedShopPrice = (0 != $item['ShopPrice']) ? $this->simplePrice->format() : '&mdash;';
+            if (array_key_exists('OldPrice', $item)) {
+                $item['StrikePrice'] = $item['OldPrice'];
+            } else if (array_key_exists('ManufacturersPrice', $item)) {
+                $item['StrikePrice'] = $item['ManufacturersPrice'];
+            }
+            if (array_key_exists('StrikePrice', $item)) {
+                $renderedStrikePrice = '&nbsp;<span style="font-size:80%;color:red">(<span style="text-decoration:line-through">'.$this->simplePrice->setPriceAndCurrency($item['StrikePrice'], $item['Currency'])->format().'</span>)</span>';
+            } else {
+                $renderedStrikePrice = '';
+            }
+
             $addStyle = ('&mdash;' == $item['ShopTitle'])?'style="color:#900;"':'';
             $icon = (('ml' == $item['listedBy'])?'&nbsp;<img src="'.DIR_MAGNALISTER_WS_IMAGES.'/magnalister_11px_icon_color.png" width=11 height=11 />':'');
 			$html .= '
@@ -593,7 +608,8 @@ Eigene Daten
 					<td>'.fixHTMLUTF8Entities($item['SKU'], ENT_COMPAT).'</td>
 					<td title="'.fixHTMLUTF8Entities($item['ShopTitle'], ENT_COMPAT).'">'.$item['ShopTitle'].'<br /><span class="small">'.$item['ShopVarText'].'</span></td>
 					<td title="'.fixHTMLUTF8Entities($item['ItemTitle'], ENT_COMPAT).'">'.$item['ItemTitleShort'].'<br /><span class="small">'.$item['VariationAttributesText'].'</span></td>
-					<td>'.(!empty($item['ItemID']) ? '<a href="'.$item['SiteUrl'].'?ViewItem&item='.$item['ItemID'].'" target="_blank">'.$item['ItemID'].'</a>' : '&mdash;').'</td>
+					<td>'.(!empty($item['ItemID']) ? '<a href="'.$item['SiteUrl'].'?ViewItem&item='.$item['ItemID'].'" target="_blank">'.$item['ItemID'].'</a>' : '&mdash;').'</td>';
+/*
 					<td>';
 					if (!empty($item['ePID']) && !empty($item['productWebUrl']))  {
                                             $html .= '<a href="'.$item['productWebUrl'].'" target="_blank">'.$item['ePID'].'</a>' ;
@@ -604,7 +620,9 @@ Eigene Daten
                                         }
 					$html .= '</td>
 					<td>'.$item['PrepareKind'].'</td>
-					<td>'.$renderedShopPrice.' / '.$this->simplePrice->setPriceAndCurrency($item['Price'], $item['Currency'])->format().'</td>
+*/
+					$html .= '
+					<td>'.$renderedShopPrice.' / '.$this->simplePrice->setPriceAndCurrency($item['Price'], $item['Currency'])->format().$renderedStrikePrice.'</td>
 					<td>'.$item['ShopQuantity'].' / '.$item['Quantity'].'<br />'.('&mdash;' == $item['LastSync']? '&mdash;' : date("d.m.Y", $item['LastSync']).' &nbsp;&nbsp;<span class="small">'.date("H:i", $item['LastSync'])).'</span></td>
 					<td>'.date("d.m.Y", $item['DateAdded']).' &nbsp;&nbsp;<span class="small">'.date("H:i", $item['DateAdded']).'</span><br />'.('&mdash;' == $item['DateEnd']? '&mdash;' : date("d.m.Y", $item['DateEnd']).' &nbsp;&nbsp;<span class="small">'.date("H:i", $item['DateEnd']).'</span>').'</td>
 					<td>';

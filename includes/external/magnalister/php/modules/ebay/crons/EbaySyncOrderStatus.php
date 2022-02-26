@@ -175,11 +175,36 @@ class EbaySyncOrderStatus extends MagnaCompatibleSyncOrderStatus {
 
     protected function isProcessable() {
         if ($this->blIsPaymentProgramAvailable && $this->config['OrderRefundStatus'] !== '--' && $this->oOrder['orders_status_shop'] === $this->config['OrderRefundStatus']) {
+            /* {Hook} "EbaySyncOrderStatus_beforeDoRefund": called before a refund to eBay is triggered.
+                    Variables that can be used:
+                     <ul><li>$order: The order that is going to be imported. The order is an 
+                             associative array representing the structures of the order and customer related shop tables.</li>
+                         <li>$sOrderRefundReason - the reason of the refund, for eBay, one of:
+                             <ul><li>BUYER_CANCEL</li>
+                                 <li>SELLER_CANCEL</li>
+                                 <li>ITEM_NOT_RECEIVED</li>
+                                 <li>BUYER_RETURN</li>
+                                 <li>ITEM_NOT_AS_DESCRIBED</li>
+                                 <li>OTHER_ADJUSTMENT</li>
+                         </ul></li>
+                         <li>$sOrderRefundComment - a comment for the refund (defined in the configuration, but can be changed here)</li>
+                         <li>$mpID: The ID of the marketplace.</li>
+                     </ul>
+			Please use MagnaDB methods to access the database.
+             */
+            $sOrderRefundReason  = $this->config['OrderRefundReason'];
+            $sOrderRefundComment = $this->config['OrderRefundComment'];
+            if (($hp = magnaContribVerify('EbaySyncOrderStatus_beforeDoRefund', 1)) !== false) {
+                 $order   = $this->oOrder;
+                 $mpID    = $this->mpID;
+                 require($hp);
+                 $this->oOrder = $order;
+            }
             $aRequest = array(
                 'ACTION' => 'DoRefund',
                 'MagnalisterOrderId' => $this->oOrder['special'],
-                'ReasonOfRefund' => $this->config['OrderRefundReason'],
-                'Comment' => $this->config['OrderRefundComment'],
+                'ReasonOfRefund' => $sOrderRefundReason,
+                'Comment' => $sOrderRefundComment
             );
 
             try {
@@ -223,4 +248,25 @@ class EbaySyncOrderStatus extends MagnaCompatibleSyncOrderStatus {
         }
         return parent::isProcessable();
     }
+
+	protected function updateUnprocessed() {
+		parent::updateUnprocessed();
+		if ($this->_debugDryRun) {
+			return;
+		}
+		// Orders older than 3 months cannot be updated, set as done
+		$iMinOrderId = MagnaDB::gi()->fetchOne('SELECT min(orders_id)
+			 FROM `'.TABLE_ORDERS.'`
+			WHERE UNIX_TIMESTAMP(date_purchased) > (UNIX_TIMESTAMP() - 92 * 86400)');
+		if ($iMinOrderId !== false) {
+			MagnaDB::gi()->query('
+			    UPDATE '.TABLE_MAGNA_ORDERS.' mo,
+			           '.TABLE_ORDERS.' o 
+			       SET mo.orders_status = o.orders_status
+			     WHERE mo.orders_id = o.orders_id
+			           AND mo.mpID = "'.$this->mpID.'"
+			           AND mo.orders_id < '.$iMinOrderId
+			);
+		}
+	}
 }

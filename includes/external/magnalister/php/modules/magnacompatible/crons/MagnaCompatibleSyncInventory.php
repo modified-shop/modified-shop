@@ -38,6 +38,10 @@ abstract class MagnaCompatibleSyncInventory extends MagnaCompatibleCronBase {
 	protected $stockBatch = array();
 	
 	protected $helperClass = '';
+
+	protected $blMultiDimVariations = false;
+
+	protected $aPidVariationsCalculated = array();
 	
 	protected $timeouts = array (
 		'GetInventory' => 60,
@@ -228,10 +232,24 @@ abstract class MagnaCompatibleSyncInventory extends MagnaCompatibleCronBase {
 			case('old'):
 			default: {
 				if (($this->cItem['aID'] > 0) && $this->hasDbColumn['pa.attributes_stock']) {
-					$curQty = MagnaDB::gi()->fetchOne('
-						SELECT attributes_stock FROM '.TABLE_PRODUCTS_ATTRIBUTES.' 
-				 		WHERE products_attributes_id = \''.$this->cItem['aID'].'\'
-					');
+					if ($this->blMultiDimVariations) {
+						if (!in_array($this->cItem['pID'], $this->aPidVariationsCalculated)) {
+							setProductVariations($this->cItem['pID'], getDBConfigValue($this->marketplace.'.lang', $this->mpID));
+							$this->aPidVariationsCalculated[] = $this->cItem['pID'];
+						}
+						$curQty = MagnaDB::gi()->fetchOne('
+							SELECT variation_quantity FROM '.TABLE_MAGNA_VARIATIONS.'
+							WHERE products_id = \''.$this->cItem['pID'].'\'
+							'.(($this->config['KeyType'] == 'artNr')
+							? 'AND marketplace_sku = \''.$this->cItem['SKU'].'\''
+							: 'AND marketplace_id = \''.$this->cItem['SKU'].'\'')
+						);
+					} else {
+						$curQty = MagnaDB::gi()->fetchOne('
+							SELECT attributes_stock FROM '.TABLE_PRODUCTS_ATTRIBUTES.' 
+				 			WHERE products_attributes_id = \''.$this->cItem['aID'].'\'
+						');
+					}
 				}
 				break;
 			}
@@ -286,6 +304,17 @@ abstract class MagnaCompatibleSyncInventory extends MagnaCompatibleCronBase {
 	protected function identifySKU() {
 		$this->cItem['pID'] = (int)magnaSKU2pID($this->cItem['SKU']);
 		$this->cItem['aID'] = (int)magnaSKU2aID($this->cItem['SKU']);
+		if (    !$this->cItem['pID']
+		     && $this->config['VarType'] == 'old'
+                     && $this->blMultiDimVariations) {
+			$this->cItem['pID'] = (int)MagnaDB::gi()->fetchOne('
+				SELECT products_id
+				  FROM '.TABLE_MAGNA_VARIATIONS.'
+				'.(($this->config['KeyType'] == 'artNr')
+				? 'WHERE marketplace_sku = \''.$this->cItem['SKU'].'\''
+				: 'WHERE marketplace_id = \''.$this->cItem['SKU'].'\'').'
+				LIMIT 1');
+		}
 	}
 	
 	protected function fixIdentification() {
@@ -331,11 +360,35 @@ abstract class MagnaCompatibleSyncInventory extends MagnaCompatibleCronBase {
 		
 		$data = false;
 		
-		$price = $this->simplePrice
-			->setPriceFromDB($this->cItem['pID'], $this->mpID)
-			->addAttributeSurcharge($this->cItem['aID'])
-			->finalizePrice($this->cItem['pID'], $this->mpID)
-			->getPrice();
+		if (    $this->blMultiDimVariations
+		     && $this->config['VarType'] == 'old') {
+			if ($this->cItem['aID'] > 0) {
+				if (!in_array($this->cItem['pID'], $this->aPidVariationsCalculated)) {
+					setProductVariations($this->cItem['pID'], getDBConfigValue($this->marketplace.'.lang', $this->mpID));
+					$this->aPidVariationsCalculated[] = $this->cItem['pID'];
+				}
+				$varPriceAdd = MagnaDB::gi()->fetchOne('
+					SELECT variation_price FROM '.TABLE_MAGNA_VARIATIONS.'
+					WHERE products_id = \''.$this->cItem['pID'].'\'
+					'.(($this->config['KeyType'] == 'artNr')
+					? 'AND marketplace_sku = \''.$this->cItem['SKU'].'\''
+					: 'AND marketplace_id = \''.$this->cItem['SKU'].'\'')
+				);
+			} else {
+				$varPriceAdd = 0;
+			}
+			$price = $this->simplePrice
+				->setPriceFromDB($this->cItem['pID'], $this->mpID)
+				->addLump($varPriceAdd)
+				->finalizePrice($this->cItem['pID'], $this->mpID)
+				->getPrice();
+		} else {
+			$price = $this->simplePrice
+				->setPriceFromDB($this->cItem['pID'], $this->mpID)
+				->addAttributeSurcharge($this->cItem['aID'])
+				->finalizePrice($this->cItem['pID'], $this->mpID)
+				->getPrice();
+		}
 
 		if (($price > 0) && ((float)$this->cItem['Price'] != $price)) {
 			$this->log("\n\t".
@@ -389,17 +442,26 @@ if (($this->marketplace == 'amazon') && ($this->cItem['SKU'] == 'blabla123')) {
 			$this->stockBatch[] = $data;
 		}
 	}
+
+    /**
+     * Returns the marketplace Product title
+     *
+     * @return mixed|string
+     */
+    protected function getProductTitle() {
+        return isset($this->cItem['Title'])
+            ? $this->cItem['Title']
+            : (isset($this->cItem['ItemTitle'])
+                ? $this->cItem['ItemTitle']
+                : 'unknown'
+            );
+    }
 	
 	protected function updateItem() {
 		$this->identifySKU();
 		$this->fixIdentification();
 		
-		$title = isset($this->cItem['Title'])
-			? $this->cItem['Title']
-			: (isset($this->cItem['ItemTitle'])
-				? $this->cItem['ItemTitle']
-				: 'unknown'
-			);
+		$title = $this->getProductTitle();
 		
 		/* {Hook} "SyncInventory_PreUpdateItem": Runs at the beginning of an item synchronization. Here you can try to fix the identification of
 			   the item to make sure it gets processed in case the SKU can not be found in the first try.<br>
@@ -420,14 +482,14 @@ if (($this->marketplace == 'amazon') && ($this->cItem['SKU'] == 'blabla123')) {
 		
 		if ((int)$this->cItem['pID'] <= 0) {
 			$this->log("\n".
-				'SKU: '.$this->cItem['SKU'].' ('.$title.') not found'
+				'SKU: '.$this->cItem['SKU'].' ('.$title.') not found (Marketplace: '.$this->marketplaceTitle.')'
 			);
 			return;
 		} else {
 			$this->log("\n".
 				'SKU: '.$this->cItem['SKU'].' ('.$title.') found ('.
-				'pID: '.$this->cItem['pID'].'; aID: '.$this->cItem['aID'].
-			')');
+				'pID: '.$this->cItem['pID'].'; aID: '.$this->cItem['aID'].'; Marketplace: '.$this->marketplaceTitle.')'
+			);
 		}
 		
 		$data = array();

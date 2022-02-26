@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * 888888ba                 dP  .88888.                    dP
  * 88    `8b                88 d8'   `88                   88
  * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b.
@@ -11,9 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id$
- *
- * (c) 2010 - 2013 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2021 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -91,3 +89,7 @@ define('TABLE_MAGNA_METRO_PROPERTIES', 'magnalister_metro_properties');
 define('TABLE_MAGNA_METRO_CATEGORIES', 'magnalister_metro_categories');
 define('TABLE_MAGNA_METRO_PREPARE', 'magnalister_metro_prepare');
 define('TABLE_MAGNA_METRO_VARIANTMATCHING', 'magnalister_metro_variantmatching');
+define('TABLE_MAGNA_OTTO_PROPERTIES', 'magnalister_otto_properties');
+define('TABLE_MAGNA_OTTO_CATEGORIES_MARKETPLACE', 'magnalister_otto_categories_marketplace');
+define('TABLE_MAGNA_OTTO_PREPARE', 'magnalister_otto_prepare');
+define('TABLE_MAGNA_OTTO_VARIANTMATCHING', 'magnalister_otto_variantmatching');

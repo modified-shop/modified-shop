@@ -62,7 +62,10 @@ class LaaryImportOrders extends MagnaCompatibleImportOrders {
 		return $this->o['orderInfo']['PaymentCompleted'] ? $this->config['OrderStatusOpen'] : $this->config['OrderStatusUnpaid'];
 	}
 	
-	protected function generateOrderComment() {
+	protected function generateOrderComment($blForce = false) {
+		if (!$blForce && !getDBConfigValue(array('general.order.information', 'val'), 0, true)) {
+			return ''; 
+		}
 		return trim(
 			sprintf(ML_GENERIC_AUTOMATIC_ORDER_MP_SHORT, $this->marketplaceTitle)."\n".
 			ML_LABEL_MARKETPLACE_ORDER_ID.': '.$this->getMarketplaceOrderID()."\n\n".
@@ -71,7 +74,7 @@ class LaaryImportOrders extends MagnaCompatibleImportOrders {
 	}
 	
 	protected function generateOrdersStatusComment() {
-		return $this->generateOrderComment();
+		return $this->generateOrderComment(true);
 	}
 	
 	protected function doBeforeInsertMagnaOrder() {

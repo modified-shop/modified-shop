@@ -29,7 +29,12 @@ class_exists('MLProductList') or die();
 				<td><?php echo fixHTMLUTF8Entities($aRow['products_name']); ?></td>
 			</tr>
 			<tr>
-				<td class="artNr"><?php echo ML_LABEL_ART_NR_SHORT; ?>: <?php echo fixHTMLUTF8Entities($aRow['products_model']); ?></td>
+				<td class="artNr">
+                    <?php echo ML_LABEL_ART_NR_SHORT; ?>: <?php echo fixHTMLUTF8Entities($aRow['products_model']); ?><br />
+                    <?php if(getDBConfigValue('general.keytype', '0') === 'pID'){ ?>
+				        <?php echo ML_LABEL_PRODUCT_ID; ?>: <?php echo fixHTMLUTF8Entities($aRow['products_id']); ?>
+                    <?php } ?>
+                </td>
 			</tr>
 		</tbody>
 	</table>

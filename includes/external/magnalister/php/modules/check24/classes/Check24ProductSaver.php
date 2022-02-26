@@ -63,6 +63,27 @@ class Check24ProductSaver {
 		
 		$aRow['Verified'] = 'OK';
 		$aRow['ShippingTime'] = $aItemDetails['ShippingTime'];
+		$aItemHandlingDataKeys = array (
+			'DeliveryMode',
+			'DeliveryModeText',
+			'2MenHandling',
+			'InstallationService',
+			'RemovalOldItem',
+			'RemovalPackaging',
+			'AvailableServiceProductIds',
+			'LogisticsProvider',
+			'CustomTariffsNumber',
+			'ReturnShippingCosts'
+		);
+		$aItemHandlingData = array();
+		foreach ($aItemHandlingDataKeys as $sItemHandlingDataKey) {
+		# TODO: CustomTariffsNumber anders, ggf. auch DeliveryModeText
+			if (!empty($aItemDetails[$sItemHandlingDataKey])) {
+				$aItemHandlingData[$sItemHandlingDataKey] = $aItemDetails[$sItemHandlingDataKey];
+				unset($aItemDetails[$sItemHandlingDataKey]);
+			}
+		}
+		$aRow['ItemHandlingData'] = json_encode($aItemHandlingData);
 
 		if ($aItemDetails['ShippingCost'] === '') {
 			$aRow['Verified'] = 'ERROR';

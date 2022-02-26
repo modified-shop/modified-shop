@@ -1,0 +1,31 @@
+{
+    "template": {
+        "headline": "Produkt-Template",
+        "desc": "Template f&uuml;r die Produktbeschreibung auf Ricardo. (Sie k&ouml;nnen den Editor unter \"Globale Konfiguration\" > \"Experteneinstellungen\" umschalten.)",
+        "fields": {
+            "productname": {
+                "label": "Template Produktname",
+                "key": "_#_platform_#_.template.name",
+                "type": "text",
+                "default": "#TITLE#",
+                "verify": "notempty",
+                "cssClasses": ["autoWidth"],
+                "rightlabel": "Platzhalter: #TITLE# - Produktname; #BASEPRICE# - Grundpreis",
+                "desc": "<dl><dt>Name des Produkts auf Ricardo</dt> <dd>Einstellung, wie das Produkt auf Ricardo hei&szlig;en soll. Der Platzhalter <b>#TITLE#</b> wird automatisch durch den Produktnamen aus dem Shop ersetzt, <b>#BASEPRICE#</b> durch Preis pro Einheit, soweit f&uuml;r das betreffende Produkt im Shop hinterlegt.</dd><dt>Bitte beachten Sie:</dt> <dd><b>#BASEPRICE#</b> wird erst beim Hochladen zu Ricardo ersetzt, denn bei der Vorbereitung kann der Preis noch ge&auml;ndert werden.</dd> <dd>Da der Grundpreis  ein fester Wert in dem Titel ist und nicht aktualisiert werden kann, sollte der Preis nicht ge&auml;ndert werden, denn dies w&uuml;rde zu falschen Preisangaben f&uuml;hren.<br /> Sie k&ouml;nnen den Platzhalter auf eigenen Gefahr verwenden, wir empfehlen aber in dem Fall, <b>die Preissynchronisation auszuschalten</b> (Einstellung in der magnalister Ricardo Konfiguration).</dd> <dt>Wichtig:</dt><dd>Bitte beachten Sie, dass seitens ricardo die Titel-L&auml;nge auf maximal 40 Zeichen beschr&auml;nkt ist.<br>magnalister schneidet den Titel mit mehr als 40 Zeichen w&auml;hrend des Produkt-Uploads entsprechend ab.</dd></dl>"
+            },
+            "content": {
+                "label": "Template Produktbeschreibung",
+                "key": "_#_platform_#_.template.content",
+                "type": "textarea",
+                "default": "<p>#TITLE#<br>#VARIATIONDETAILS#</p><p>#ARTNR#</p><p>#SHORTDESCRIPTION#</p><p>#PICTURE1#</p><p>#PICTURE2#</p><p>#PICTURE3#</p><p>#DESCRIPTION#</p>",
+                "verify": "notempty",
+                "cssClasses": ["fullwidth", "tinymce"],
+                "parameters": {
+                    "rows": "40"
+                },
+                "externalDesc": "Liste verf&uuml;gbarer Platzhalter f&uuml;r die Produktbeschreibung:<dl><dt>#TITLE#</dt><dd>Produktname (Titel)</dd><dt>#VARIATIONDETAILS#</dt><dd>Da ricardo.ch keine Varianten unterst&uuml;tzt, &uuml;bermittelt magnalister Varianten als einzelne Artikel zu ricardo.ch. Nutzen Sie diesen Platzhalter, um die Varianten-Details in Ihrer Artikelbeschreibung anzuzeigen</dd><dt>#ARTNR#</dt><dd>Artikelnummer im Shop</dd><dt>#PID#</dt><dd>Products ID im Shop</dd><!--<dt>#PRICE#</dt><dd>Preis</dd><dt>#VPE#</dt><dd>Preis pro Verpackungseinheit</dd>--><dt>#SHORTDESCRIPTION#</dt><dd>Kurzbeschreibung aus dem Shop</dd><dt>#DESCRIPTION#</dt><dd>Beschreibung aus dem Shop</dd><dt>#PICTURE1#</dt><dd>erstes Produktbild</dd><dt>#PICTURE2# usw.</dt><dd>zweites Produktbild; mit #PICTURE3#, #PICTURE4# usw. k&ouml;nnen weitere Bilder &uuml;bermittelt werden, so viele wie im Shop vorhanden.</dd></dl>",
+                "buttons": ["#restoreDefault#"]
+            }
+        }
+    }
+}

@@ -108,6 +108,9 @@ function populateGenericData($pID, $edit = false) {
 			'amazon.prepare.manufacturerfallback', $mpId, ''
 		);
 	}
+    if (isset($product['brand_name']) && !empty($product['brand_name'])) {
+        $genericDataStructure['Brand'] = $product['brand_name'];
+    }
 	$mfrmd = getDBConfigValue('amazon.prepare.manufacturerpartnumber.table', $mpId, false);
 	if (is_array($mfrmd) && !empty($mfrmd['column']) && !empty($mfrmd['table'])) {
 		$pIDAlias = getDBConfigValue('amazon.prepare.manufacturerpartnumber.alias', $mpId);

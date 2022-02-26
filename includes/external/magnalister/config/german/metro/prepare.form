@@ -21,9 +21,16 @@
                 "values": null
             },
             "processingtime": {
-                "label": "Lieferzeit in Werktagen",
-                "desc": "Tragen Sie hier ein, wie viele Werktage vom Zeitpunkt der Bestellung durch den Kunden es bis zum Erhalt des Pakets dauert",
+                "label": "Min. Lieferzeit in Werktagen",
+                "desc": "Tragen Sie hier ein, wie viele Werktage mindestens vom Zeitpunkt der Bestellung durch den Kunden es bis zum Erhalt des Pakets dauert",
                 "key": "_#_platform_#_.processingtime",
+                "type": "selection",
+                "values": {}
+            },
+            "maxprocessingtime": {
+                "label": "Max. Lieferzeit in Werktagen",
+                "desc": "Tragen Sie hier ein, wie viele Werktage maximal vom Zeitpunkt der Bestellung durch den Kunden es bis zum Erhalt des Pakets dauert",
+                "key": "_#_platform_#_.maxprocessingtime",
                 "type": "selection",
                 "values": {}
             },

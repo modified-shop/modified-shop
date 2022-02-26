@@ -38,6 +38,15 @@
                 },
                 "submit" : "Orders.AutoAcceptance"
             },
+            "shippingfromcountry": {
+                 "label": "Order is shipped from",
+                 "desc": "",
+                 "key": "_#_platform_#_.orderimport.shippingfromcountry",
+                 "type": "selection",
+                 "values" : null,
+                 "default" : "249",
+                 "submit" : "Orders.ShippingFromCountry"
+            },
             "shop": {
                 "label": "Client-Store",
                 "desc": "Assigns the order to a client store.",

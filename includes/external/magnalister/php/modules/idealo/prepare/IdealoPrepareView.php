@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * 888888ba                 dP  .88888.                    dP
  * 88    `8b                88 d8'   `88                   88
  * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b.
@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * (c) 2010 - 2019 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2021 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -90,8 +90,12 @@ class IdealoPrepareView extends MagnaCompatibleBase {
             is_array($dbNewSelection) ? $dbNewSelection : array()
         );
         foreach ($dbSelection as &$dbSelectionRow) {
-            $aPaymentMethods = json_decode($dbSelectionRow['PaymentMethod'], true);
-            $dbSelectionRow['PaymentMethod'] = is_array($aPaymentMethods) ? $aPaymentMethods : (array)$dbSelectionRow['PaymentMethod'];
+            if(isset($dbSelectionRow['PaymentMethod'])) {
+                $aPaymentMethods = json_decode($dbSelectionRow['PaymentMethod'], true);
+                $dbSelectionRow['PaymentMethod'] = is_array($aPaymentMethods) ? $aPaymentMethods : (array)$dbSelectionRow['PaymentMethod'];
+            } else {
+                $dbSelectionRow['PaymentMethod'] = array();
+            }
         }
         unset($dbSelectionRow);
         if (false) { # DEBUG
@@ -185,12 +189,12 @@ class IdealoPrepareView extends MagnaCompatibleBase {
 
         if (empty($pictureUrls) || !is_array($pictureUrls)) {
             $pictureUrls = array();
-            $i = 0;
             foreach ($aProduct['Images'] as $img) {
                 $pictureUrls[$img] = 'true';
             }
         }
 
+        $data['Images'] = array();
         foreach ($aProduct['Images'] as $img) {
             $img = fixHTMLUTF8Entities($img, ENT_COMPAT);
             $data['Images'][$img] = (isset($pictureUrls[$img]) && ($pictureUrls[$img] === 'true')) ? 'true' : 'false';
@@ -265,11 +269,12 @@ class IdealoPrepareView extends MagnaCompatibleBase {
             'TwoManHandlingFee' => null,
             'DisposalFee' => null,
             'DeliveryTime' => null,
+            'DeliveryTimeSource' => null,
         );
 
         $defaults = array (
             'PictureUrl' => null,
-            'Checkout' => getDBConfigValue($this->marketplace . '.checkout.status', $this->mpID),
+            'Checkout' => getDBConfigValue($this->marketplace . '.directbuy.active', $this->mpID),
             'PaymentMethod' => getDBConfigValue($this->marketplace . '.payment.methods', $this->mpID),
             'ShippingMethod' => getDBConfigValue($this->marketplace . '.shipping.methods', $this->mpID),
             'ShippingCountry' => getDBConfigValue($this->marketplace . '.shipping.country', $this->mpID),
@@ -316,12 +321,12 @@ class IdealoPrepareView extends MagnaCompatibleBase {
 	protected function getDeliveryTimeFromShop($data) {
 		$productsId = $data['products_id'];
 		$shippingStatusName = MagnaDB::gi()->fetchRow('
-            SELECT shipping_status_name FROM 
-            '. TABLE_SHIPPING_STATUS .' sd
-            LEFT JOIN '.TABLE_PRODUCTS.' pr ON sd.shipping_status_id = pr.products_shippingtime
-            
-            LEFT JOIN '.TABLE_LANGUAGES.' tl ON  sd.language_id = tl.languages_id
-            WHERE pr.products_id = '.$productsId.' AND tl.languages_id = ' . getDBConfigValue($this->marketplace . '.lang', $this->mpID) . '
+            SELECT shipping_status_name 
+              FROM '.TABLE_SHIPPING_STATUS.' sd
+         LEFT JOIN '.TABLE_PRODUCTS.' pr ON sd.shipping_status_id = pr.products_shippingtime
+         LEFT JOIN '.TABLE_LANGUAGES.' tl ON  sd.language_id = tl.languages_id
+             WHERE pr.products_id = '.$productsId.' 
+                   AND tl.languages_id = '.getDBConfigValue($this->marketplace.'.lang', $this->mpID).'
         ');
 		if (!$shippingStatusName || empty($shippingStatusName['shipping_status_name'])) {
 			return false;
@@ -357,11 +362,13 @@ class IdealoPrepareView extends MagnaCompatibleBase {
         $tmpURL['where'] = 'prepareView';
         $oddEven = false;
 
-        if (!is_array($preSelected['Checkout'])) {
+        // if data is loaded from config then its just string "true" / "false" if loaded from prepare its json "{"val":true}"
+        if ($preSelected['Checkout'] !== 'true' && !is_array($preSelected['Checkout'])) {
             $preSelected['Checkout'] = json_decode($preSelected['Checkout'], true);
+            $preSelected['Checkout'] = isset($preSelected['Checkout']['val']) && $preSelected['Checkout']['val'] ? 'true' : 'false';
         }
 
-        $checkoutChecked = $preSelected['Checkout']['val'] ? 'checked' : '';
+        $checkoutChecked = $preSelected['Checkout'] === 'true' ? 'checked' : '';
 
         ob_start();
         ?>
@@ -469,9 +476,30 @@ class IdealoPrepareView extends MagnaCompatibleBase {
                     </div>
                 </th>
                 <td class="input">
+                    <script type="text/javascript">
+                        /*<![CDATA[*/
+                        $(document).ready(function() {
+                            function switchDeliveryTimeSource() {
+                                var $input = $('input[name="DeliveryTime"]');
+                                if ($('select[id="DeliveryTimeSource"]').val() === 'shop') {
+                                    $input.hide();
+                                    $input.parent().children('label').hide();
+                                } else {
+                                    $input.show();
+                                    $input.parent().children('label').hide();
+                                }
+                            }
+
+                            $('select[id="DeliveryTimeSource"]').on('change', function() {
+                                switchDeliveryTimeSource();
+                            });
+                            switchDeliveryTimeSource();
+                        });
+                        /*]]>*/
+                    </script>
                     <select id="DeliveryTimeSource" name="DeliveryTimeSource">
-                        <option value="shop"><?php echo ML_IDEALO_LABEL_DELIVERY_TIME_FROM_SHOP ?></option>
-                        <option value="manual"><?php echo ML_IDEALO_LABEL_DELIVERY_TIME_MANUAL ?></option>
+                        <option value="shop"<?php echo (isset($preSelected['DeliveryTimeSource']) && $preSelected['DeliveryTimeSource'] == 'shop') ? ' selected="selected"': '' ?>><?php echo ML_IDEALO_LABEL_DELIVERY_TIME_FROM_SHOP ?></option>
+                        <option value="manual"<?php echo (isset($preSelected['DeliveryTimeSource']) && $preSelected['DeliveryTimeSource'] == 'manual') ? ' selected="selected"': '' ?>><?php echo ML_IDEALO_LABEL_DELIVERY_TIME_MANUAL ?></option>
                     </select>
                     <label><?php echo ML_IDEALO_LABEL_DELIVERY_TIME ?>:</label>
                     <input type="text" name="DeliveryTime" id="DeliveryTime"

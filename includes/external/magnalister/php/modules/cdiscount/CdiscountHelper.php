@@ -1,19 +1,17 @@
 <?php
-/**
- * 888888ba                 dP  .88888.                    dP                
- * 88    `8b                88 d8'   `88                   88                
- * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b. 
- * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88 
- * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88 
- * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P' 
+/*
+ * 888888ba                 dP  .88888.                    dP
+ * 88    `8b                88 d8'   `88                   88
+ * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b.
+ * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88
+ * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88
+ * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P'
  *
  *                          m a g n a l i s t e r
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id$
- *
- * (c) 2010 - 2016 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2022 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -27,14 +25,18 @@ class CdiscountHelper extends AttributesMatchingHelper {
 
 	private static $instance;
 
-	public static function gi()
-	{
-		if (self::$instance === null) {
-			self::$instance = new CdiscountHelper();
-		}
+    /**
+     * Create an Instance of CdiscountHelper and return it
+     *
+     * @return CdiscountHelper
+     */
+    public static function gi() {
+        if (self::$instance === null) {
+            self::$instance = new CdiscountHelper();
+        }
 
-		return self::$instance;
-	}
+        return self::$instance;
+    }
 
 	public static function processCheckinErrors($result, $mpID)
 	{
@@ -531,4 +533,234 @@ class CdiscountHelper extends AttributesMatchingHelper {
 		<?php
 		return ob_get_clean();
 	}
+
+    public function renderDuplicateField($item, $idKey, $blAjax = false)
+    {
+        // run js to filter our already selected dropdown values in duplicate
+        $this->selectFieldOptionRemoverScript();
+        global $magnaConfig;
+        $config = &$magnaConfig['db'][$this->mpID];
+        $idKey = str_replace('.', '_', $idKey);
+
+        $html = '';
+        ob_start();
+        if ($blAjax) {
+            $aValue = array('defaults' => array(''));
+        } elseif (!isset($config[$item['key']]['defaults'])) {
+            $aValue = array('defaults' => array('1'));
+        } else {
+            if (!is_array($item['params']['subfields']['method']['selectedValues'])) {
+                $aValue = array('defaults' => json_decode($item['params']['subfields']['method']['selectedValues']));
+            } else {
+                $aValue = $config[$item['key']];
+            }
+        }
+
+        $cssClasses = !empty($item['cssClasses']) ? implode(' ', $item['cssClasses']) : '';
+        ?>
+    <div id="<?php echo $idKey ?>">
+        <table class="<?php echo $idKey ?> nostyle nowrap valigntop <?php echo $cssClasses ?>" width="100%">
+            <tbody>
+            <?php
+            if (isset($aValue['defaults'])) {
+                for ($i = 0; $i < count($aValue['defaults']); $i++) { ?>
+                    <tr class="row1 bottomDashed">
+                        <td>
+                            <?php
+                            $field = $item;
+                            $field['type'] = $item['subtype'];
+                            if (isset($field['params'])) {
+                                $field['params']['currentIndex'] = $i;
+                            }
+
+                            unset($field['subtype']);
+                            $field['key'] = $item['key'].'][values][';
+                            $value = null;
+                            if (isset($aValue['values']) && isset($aValue['values'][$i])) {
+                                $value = $aValue['values'][$i];
+                            }
+
+                            echo $this->renderInput($field, $value);
+                            ?>
+                        </td>
+                        <td>
+                            <input value="<?php echo $aValue['defaults'][$i]; ?>"
+                                   name="<?php echo $item['key'].'[defaults][]' ?>" type="hidden"
+                                   class="<?php echo $idKey ?>"/>
+                            <input type="button" value="+" class="ml-button plus">
+                            <input type="button" value="&#8211;" class="ml-button minus">
+                        </td>
+                    </tr>
+                <?php }
+            } ?>
+            </tbody>
+        </table>
+        <?php if (!$blAjax) { ?>
+        <script type="text/javascript">/*<![CDATA[*/
+            $(document).ready(function () {
+                $('#<?php echo $idKey; ?>').on('click', 'input.ml-button.plus', function () {
+                    var $tableBox = $('#<?php echo $idKey; ?>');
+                    if ($tableBox.parent('td').find('table').length == 1) {
+                        $tableBox.find('input.ml-button.minus').fadeIn(0);
+                    }
+                    myConsole.log();
+                    jQuery.blockUI(blockUILoading);
+                    jQuery.ajax({
+                        type: 'POST',
+                        url: '<?php echo toURL($this->url, array('kind' => 'ajax'), true); ?>',
+                        data: <?php echo json_encode(array_merge(
+                            $item,
+                            array(
+                                'action' => 'duplicate',
+                                'kind' => 'ajax',
+                            )
+                        )); ?>,
+                        success: function (data) {
+                            jQuery.unblockUI();
+                            $tableBox.append(data);
+                        },
+                        error: function () {
+                            jQuery.unblockUI();
+                        },
+                        dataType: 'html'
+                    });
+                });
+                $('#<?php echo $idKey; ?>').on('click', 'input.ml-button.minus', function () {
+                    $(this).closest('tr').remove();
+                });
+            });
+            /*]]>*/</script></div><?php
+    }
+
+        $html .= ob_get_clean();
+
+        return $html;
+    }
+
+    private function renderInput($item, $value = null) {
+        # echo print_m($item);
+        global $magnaConfig;
+        $config = &$magnaConfig['db'][$this->mpID];
+
+        if (!isset($item['key'])) {
+            $item['key'] = '';
+        }
+        if($value === null){
+            $value = '';
+            if (array_key_exists($item['key'], $config)) {
+                $value = $config[$item['key']];
+                if (is_array($value) && isset($item['default']) && is_array($item['default'])) {
+                    //echo print_m($item['default'], 'default'); echo print_m($value, 'config');
+                    //var_dump(isNumericArray($item['default']), isNumericArray($value));
+                    if (isNumericArray($item['default']) && isNumericArray($value)) {
+                        foreach ($item['default'] as $k => $v) {
+                            if (array_key_exists($k, $value)) continue;
+                            $value[$k] = $item['default'][$k];
+                        }
+                    } else {
+                        $value = array_merge($item['default'], $value);
+                    }
+                }
+            } else if (isset($item['default'])) {
+                $value = $item['default'];
+            }
+        }
+
+        $item['__value'] = $value;
+
+        $idkey = str_replace('.', '_', $item['key']);
+
+        $parameters = '';
+        if (isset($item['parameters'])) {
+            foreach ($item['parameters'] as $key => $val) {
+                $parameters .= ' '.$key.'="'.$val.'"';
+            }
+        }
+        if (array_key_exists('ajaxlinkto', $item)) {
+            $item['ajaxlinkto']['from'] = $item['key'];
+            $item['ajaxlinkto']['fromid'] = 'config_'.$idkey;
+            if (array_key_exists('key', $item['ajaxlinkto'])) {
+                $item['ajaxlinkto']['toid'] = 'config_'.str_replace('.', '_', $item['ajaxlinkto']['key']);
+                $ajaxUpdateFuncs[] = $item['ajaxlinkto'];
+            } else { # mehrere ajaxlinkto eintraege
+                foreach ($item['ajaxlinkto'] as $aLiTo) {
+                    if (!is_array($aLiTo) || !array_key_exists('key', $aLiTo)) continue;
+                    $aLiTo['toid'] = 'config_'.str_replace('.', '_', $aLiTo['key']);
+                    $ajaxUpdateFuncs[] = $aLiTo;
+                }
+            }
+        }
+
+        if (!isset($item['cssClasses'])) {
+            $item['cssClasses'] = array();
+        }
+
+        if (isset($item['cssStyles']) && is_array($item['cssStyles'])) {
+            $style = ' style="'.implode(';', $item['cssStyles']).'" ';
+        } else {
+            $style = '';
+        }
+
+        $html = '';
+        if(!isset($item['type'])){
+            return $html;
+        }
+        switch ($item['type']) {
+            case 'extern': {
+                if (!is_callable($item['procFunc'])) {
+                    if (is_array($item['procFunc'])) {
+                        $item['procFunc'] = get_class($item['procFunc'][0]).'->'.$item['procFunc'][1];
+                    }
+                    $html .= 'Function <span class="tt">\''.$item['procFunc'].'\'</span> does not exists.';
+                    break;
+                }
+                $html .= call_user_func($item['procFunc'], array_merge($item['params'], array('key' => $item['key'])));
+                break;
+            }
+        }
+        return $html;
+    }
+
+    public function selectFieldOptionRemoverScript() {
+        ?>
+        <script>
+            $(document).ready(function() {
+                const hideUsedDeliveryModes = function () {
+                    let allSelectedOptions = $("*#config_cdiscount_shippingprofile_name\\]\\[").find('option:selected').toArray();
+                    let selectedDeliveryModes = $.map(allSelectedOptions, function (option, i) {
+                        return $(option).val();
+                    });
+
+                    // iterate over dropdowns
+                    $("*#config_cdiscount_shippingprofile_name\\]\\[").each(function () {
+                        // selected option from dropdown
+                        let selectedOption = $(this).find('option:selected')[0];
+
+                        // iterate over options of each dropdown
+                        $(this).find('option').each(function(i, option) {
+                            if (option === selectedOption) {
+                                return true;
+                            }
+                            if (in_array($(option).val(), selectedDeliveryModes)){
+                                $(option).hide();
+                            } else {
+                                $(option).show();
+                            }
+                        });
+                    });
+                };
+
+                hideUsedDeliveryModes();
+                $(document).on('click', '.ml-button.minus, .ml-button.plus', function(){
+                    hideUsedDeliveryModes();
+                });
+
+                $('select[id="config_cdiscount_shippingprofile_name\\]\\["]').on('change', function () {
+                    hideUsedDeliveryModes();
+                });
+
+            })
+        </script>
+        <?php
+    }
 }

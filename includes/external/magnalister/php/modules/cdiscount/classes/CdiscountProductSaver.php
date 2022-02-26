@@ -172,6 +172,10 @@ class CdiscountProductSaver {
 		$aRow['ShippingFeeRegistered'] = $this->toFloat($aItemDetails['ShippingFeeRegistered']);
 		$aRow['ShippingFeeExtraRegistered'] = $this->toFloat($aItemDetails['ShippingFeeExtraRegistered']);
 
+		$aRow['ShippingProfileName'] = json_encode(array_reverse(array_values($aItemDetails['conf']['cdiscount.shippingprofile.name'])));
+		$aRow['ShippingFee'] = json_encode($aItemDetails['conf']['cdiscount.shippingprofile.fee']);
+		$aRow['ShippingFeeAdditional'] = json_encode($aItemDetails['conf']['cdiscount.shippingprofile.feeadditional']);
+
 		$aRow['ConditionType'] = $aItemDetails['condition_id'];
 		$aRow['Comment'] = $aItemDetails['comment'];
 

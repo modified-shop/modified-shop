@@ -87,6 +87,20 @@ abstract class MLProductListEbayAbstract extends MLProductList {
 			} else {
 				$priceTooltip = ML_EBAY_PRICE_CALCULATED_TOOLTIP;
 			}
+
+			$jStrikePriceConf = $this->getPrepareData($aRow, 'StrikePriceConf');
+			if (!empty($jStrikePriceConf)) {
+				$aStrikePriceConf = json_decode($jStrikePriceConf, true);
+			} else {
+				$aStrikePriceConf = array();
+			}
+			if (    !empty($aStrikePriceConf)
+			     && $aStrikePriceConf['ebay.strike.price.kind'] != 'DontUse') {
+				$fStrikePrice = makePrice($aRow['products_id'], 'StrikePrice');
+				if ($fStrikePrice > $fPrice) {
+					$textEBayPrice .= '<br /><span style="text-decoration:line-through; color:red">'.$this->getPrice()->setPrice($fStrikePrice)->format().'</span';
+				}
+			}
 			return array(
 				'tooltip' => $priceTooltip,
 				'frozen' => $priceFrozen,
@@ -98,6 +112,11 @@ abstract class MLProductListEbayAbstract extends MLProductList {
 	protected function getPreparedStatusIndicator($aRow) {
 	}
 
+	/**
+	 * @deprecated
+	 * Functionality for eBay Product Based Shopping Experience,
+	 * no longer in use
+	 */
 	protected function getPrepareType($aRow) {
 		$sEPID = $this->getPrepareData($aRow, 'ePID');
 		$sProductRequired = $this->getPrepareData($aRow, 'productRequired');

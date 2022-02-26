@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * 888888ba                 dP  .88888.                    dP
  * 88    `8b                88 d8'   `88                   88
  * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b.
@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * (c) 2010 - 2019 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2021 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -47,11 +47,16 @@ class MetroProductSaver {
         $aRow['Title'] = $aItemDetails['Title'];
         $aRow['Description'] = strip_tags($aItemDetails['Description'], '<p><ul><ol><li><span><br><b>');
         $aRow['ShortDescription'] = MetroHelper::sanitizeDescription($aItemDetails['ShortDescription']);
+
+        // Check for selected Images
         if (empty($aItemDetails['GalleryPictures'])
             || !isset($aItemDetails['GalleryPictures']['Images'])
-            || empty($aItemDetails['GalleryPictures']['Images'])) {
+            || empty($aItemDetails['GalleryPictures']['Images'])
+        ) {
             $aRow['Images'] = '';
             $this->aErrors['ML_RICARDO_ERROR_IMAGES'] = ML_RICARDO_ERROR_IMAGES;
+            // Without images product preparation is not successfull
+            $aRow['Verified'] = 'ERROR';
         } else {
             $aRow['Images'] = array();
             foreach ($aItemDetails['GalleryPictures']['Images'] as $name => $checked) {
@@ -60,6 +65,8 @@ class MetroProductSaver {
         }
         if (empty($aRow['Images'])) {
             $this->aErrors['ML_RICARDO_ERROR_IMAGES'] = ML_RICARDO_ERROR_IMAGES;
+            // Without images product preparation is not successfull
+            $aRow['Verified'] = 'ERROR';
         }
         $aRow['Images'] = json_encode($aRow['Images']);
         $aRow['Manufacturer'] = $aItemDetails['Manufacturer'];
@@ -68,6 +75,7 @@ class MetroProductSaver {
         $aRow['Brand'] = $aItemDetails['Brand'];
         $aRow['Feature'] = serialize($aItemDetails['Feature']);
         $aRow['ProcessingTime'] = $aItemDetails['ProcessingTime'];
+        $aRow['MaxProcessingTime'] = $aItemDetails['MaxProcessingTime'];
         $aRow['BusinessModel'] = $aItemDetails['BusinessModel'];
         $aRow['FreightForwarding'] = $aItemDetails['FreightForwarding'];
         $msrp = (float)number_format(MetroHelper::str2float($aItemDetails['MSRP']), 2, '.', '');
@@ -100,7 +108,7 @@ class MetroProductSaver {
         } else {
             $aRow['PrimaryCategory'] = $aItemDetails['PrimaryCategory'];
             $m = new MetroCategoryMatching();
-            $aRow['PrimaryCategoryName'] = $m->getMetroCategoryPath($aItemDetails['PrimaryCategory'], true);
+            $aRow['PrimaryCategoryName'] = $m->getMetroCategoryPath($aItemDetails['PrimaryCategory']);
         }
 
         if (!isset($aItemDetails['Title']) || $aItemDetails['Title'] === '') {

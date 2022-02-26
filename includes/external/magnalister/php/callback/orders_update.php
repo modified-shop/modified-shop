@@ -230,7 +230,16 @@ function magnaUpdateAllOrders() {
 	$_MagnaShopSession['magnaCallbackLastCall'] = time();
 	magnaFixOrders();
 
-	if (defined('GM_SET_OUT_OF_STOCK_PRODUCTS') && (GM_SET_OUT_OF_STOCK_PRODUCTS == 'true')) {
+	if (    (defined('GM_SET_OUT_OF_STOCK_PRODUCTS') && (GM_SET_OUT_OF_STOCK_PRODUCTS == 'true'))
+	     || (defined('STOCK_CHECKOUT_UPDATE_PRODUCTS_STATUS') && (STOCK_CHECKOUT_UPDATE_PRODUCTS_STATUS == 'true'))
+	     || (defined('STOCK_ALLOW_CHECKOUT_DEACTIVATE') && (STOCK_ALLOW_CHECKOUT_DEACTIVATE == 'true'))
+	     || (    !defined('GM_SET_OUT_OF_STOCK_PRODUCTS')
+	          && !defined('STOCK_CHECKOUT_UPDATE_PRODUCTS_STATUS')
+	          && !defined('STOCK_ALLOW_CHECKOUT_DEACTIVATE')
+	          && defined('STOCK_ALLOW_CHECKOUT')
+	          && (STOCK_ALLOW_CHECKOUT == false)
+	        )
+	) {
 		/* Set sold out products to inavtive. */
 		MagnaDB::gi()->query('UPDATE '.TABLE_PRODUCTS.' SET products_status=0 WHERE products_quantity <= 0');
 	}

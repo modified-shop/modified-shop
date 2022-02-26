@@ -474,7 +474,7 @@ function delete_double_ot_lines() {
 	$aMLorders = MagnaDB::gi()->fetchArray ('SELECT orders_id FROM '.TABLE_MAGNA_ORDERS.'
 		WHERE orders_id >= '.$iStartFrom.' 
 		ORDER BY orders_id DESC LIMIT 50', true);
-	if (count($aMLorders) == 0) return;
+	if (empty($aMLorders)) return;
 	$doubleOTLines = MagnaDB::gi()->fetchArray ('
 		SELECT ot.orders_id, MAX(ot.orders_total_id) max_orders_total_id, COUNT(*) as cnt
 		 FROM '.TABLE_ORDERS_TOTAL.' ot
@@ -800,14 +800,25 @@ function magnaSKU2pID($sku, $mainOnly = false) {
 				SELECT products_id FROM '.TABLE_PRODUCTS.'
 				 WHERE products_model = \''.$sku.'\' LIMIT 1
 			');
+			# ensure that a description is also set
+			$pID = (int)MagnaDB::gi()->fetchOne('
+				SELECT products_id FROM '.TABLE_PRODUCTS_DESCRIPTION.'
+				 WHERE products_id = '.$pID.'
+				LIMIT 1
+			');
 			break;
 		}
 		case 'pID': {
 			if (strpos($sku, 'ML') === 0) {
-				// Check ob pID auch in DB existiert.
+				// Check if pID exists in table products
 				$pID = (int)MagnaDB::gi()->fetchOne('
 					SELECT products_id FROM '.TABLE_PRODUCTS.'
 					 WHERE products_id = \''.((int)str_replace('ML', '', $sku)).'\' LIMIT 1
+				');
+				// and in products_description
+				$pID = (int)MagnaDB::gi()->fetchOne('
+					SELECT products_id FROM '.TABLE_PRODUCTS_DESCRIPTION.'
+					 WHERE products_id = '.$pID.' LIMIT 1
 				');
 			}
 			break;
@@ -1077,7 +1088,7 @@ function magnaSKU2GambioProp($sSku) {
 				 WHERE     products_id = '".$sPId."'
 				       AND properties_id = '".$sPropSet[0]."'
 				       AND properties_values_id = '".$sPropSet[1]."'
-				       ".(($mProductPropertiesCombisId !== false)
+				       ".((!empty($mProductPropertiesCombisId))
 				           ? 'AND products_properties_combis_id IN ('.implode(', ', $mProductPropertiesCombisId).')'
 				           : ''
 				       )."
@@ -1453,28 +1464,30 @@ function renderCategoryPath($id, $from = 'category', $appendedText = '&nbsp;<spa
 }
 
 function loadConfigForm($lang, $files, $replace = array()) {
-	$form = array();
-	foreach ($files as $file => $options) {
-                	$fC = file_get_contents(DIR_MAGNALISTER_FS.'config/'.$lang.'/'.$file);
-//			if(json_decode($fC, true) === null) {
-//				$pageURL = (@$_SERVER["HTTPS"] == "on") ? "https://" : "http://";
-//				$baseurlpart = explode('magnalister.php', $_SERVER["REQUEST_URI"]);
-//				$pageURL .= $_SERVER["SERVER_NAME"] . ($_SERVER["SERVER_PORT"] != "80"?":" . $_SERVER["SERVER_PORT"]:'') . $baseurlpart[0];
-//				$pageURL .= DIR_MAGNALISTER_WS . 'config/' . $lang . '/' . $file;
-//				$fC = file_get_contents($pageURL);
-//			}
-		if (!empty($replace)) {
-			$fC = str_replace(array_keys($replace), array_values($replace), $fC);
-		}
-		$fC = json_decode($fC, true);
-		if (array_key_exists('unset', $options)) {
-			foreach ($options['unset'] as $key) {
-				unset($fC[$key]);
-			}
-		}
-		$form = array_merge($form, $fC);
-	}
-	return $form;
+    $form = array();
+    foreach ($files as $file => $options) {
+        $fC = file_get_contents(DIR_MAGNALISTER_FS.'config/'.$lang.'/'.$file);
+//        if (json_decode($fC, true) === null) {
+//            $pageURL = (@$_SERVER["HTTPS"] == "on") ? "https://" : "http://";
+//            $baseurlpart = explode('magnalister.php', $_SERVER["REQUEST_URI"]);
+//            $sPHPFileName = str_replace('.form', '.php', $file);
+//            file_put_contents(DIR_MAGNALISTER_FS.'config/'.$lang.'/'.$sPHPFileName, $fC);
+//            $pageURL .= $_SERVER["SERVER_NAME"].($_SERVER["SERVER_PORT"] != "80" ? ":".$_SERVER["SERVER_PORT"] : '').$baseurlpart[0];
+//            $pageURL .= DIR_MAGNALISTER_WS.'config/'.$lang.'/'.$sPHPFileName;
+//            $fC = file_get_contents($pageURL);
+//        }
+        if (!empty($replace)) {
+            $fC = str_replace(array_keys($replace), array_values($replace), $fC);
+        }
+        $fC = json_decode($fC, true);
+        if (array_key_exists('unset', $options)) {
+            foreach ($options['unset'] as $key) {
+                unset($fC[$key]);
+            }
+        }
+        $form = array_merge($form, $fC);
+    }
+    return $form;
 }
 
 function getTinyMCEDefaultConfigObject() {
@@ -2092,6 +2105,84 @@ function cleanPrepareData() {
 	}
 }
 
+/*
+ * case: product_model has changed, items were prepared with others,
+ * we have multiple entries for one product.
+ *
+ * @param string $prepareTable
+ * @param int $mpID
+ *
+ * still ToDo: Case when the product has been deleted from shop
+ * (does no harm, but then the prepare record is trash)
+ */
+function removeDoublePrepareEntries($prepareTable, $mpID) {
+    $sIdent = (getDBConfigValue('general.keytype', '0') == 'artNr')
+        ? 'products_model'
+        : 'products_id';
+
+    $sInactiveIdent = ($sIdent == 'products_model') 
+        ? 'products_id'
+        : 'products_model';
+    
+    $aDoubleEntries = MagnaDB::gi()->fetchArray('SELECT '.$sIdent.', COUNT(*) cnt
+         FROM '.$prepareTable.'
+        WHERE mpID='.$mpID.' 
+        GROUP BY '.$sIdent.'
+        HAVING cnt>1');
+    if (empty($aDoubleEntries)) return;
+
+    $aDoubleEntriesList = '';
+    if ('products_id' == $sIdent) {
+        foreach ($aDoubleEntries as $aDoubleEntry) {
+            $aDoubleEntriesList .= ', '.$aDoubleEntry[$sIdent];
+        }
+    } else {
+        foreach ($aDoubleEntries as $aDoubleEntry) {
+            $aDoubleEntriesList .= ", '".MagnaDB::gi()->escape($aDoubleEntry[$sIdent])."'";
+        }
+    }
+    $aDoubleEntriesList = ltrim($aDoubleEntriesList, ', ');
+
+    $aProductsIdents = MagnaDB::gi()->fetchArray('SELECT products_id,products_model
+         FROM '.TABLE_PRODUCTS.'
+        WHERE '.$sIdent.' IN ('.$aDoubleEntriesList.')');
+
+    foreach ($aProductsIdents as $aProductsIdent) {
+        // if we have a record with the right idents, delete the other(s)
+        if (MagnaDB::gi()->recordExists($prepareTable, array (
+                'mpID' => $mpID,
+                'products_id' => $aProductsIdent['products_id'],
+                'products_model' => $aProductsIdent['products_model'],
+            ))) {
+             MagnaDB::gi()->query('DELETE FROM '.$prepareTable.'
+                 WHERE '.$sIdent.' = \''.MagnaDB::gi()->escape($aProductsIdent[$sIdent]).'\'
+                 AND '.$sInactiveIdent.' <> \''.MagnaDB::gi()->escape($aProductsIdent[$sInactiveIdent]).'\'
+                 AND mpID ='.$mpID);
+        } else {
+        // if we don't have a record with the right idents, delete all but one,
+        // and update one to the right idents
+             // count?
+             $entries = 2;
+             foreach ($aDoubleEntries as $aDoubleEntry) {
+                 if ($aDoubleEntry[$sIdent] == $aProductsIdent[$sIdent]) {
+                      $entries = $aDoubleEntry['cnt'];
+                      break;
+                 }
+             }
+             $iSurplusEntries = (int)($entries - 1);
+             MagnaDB::gi()->query('DELETE FROM '.$prepareTable.'
+                 WHERE '.$sIdent.' = \''.MagnaDB::gi()->escape($aProductsIdent[$sIdent]).'\'
+                 AND '.$sInactiveIdent.' <> \''.MagnaDB::gi()->escape($aProductsIdent[$sInactiveIdent]).'\'
+                 AND mpID ='.$mpID.'
+                 LIMIT '.$iSurplusEntries );
+             MagnaDB::gi()->query('UPDATE '.$prepareTable.'
+                 SET '.$sInactiveIdent.' = \''.MagnaDB::gi()->escape($aProductsIdent[$sInactiveIdent]).'\'
+                 WHERE '.$sIdent.' = \''.MagnaDB::gi()->escape($aProductsIdent[$sIdent]).'\'
+                 AND mpID ='.$mpID);
+        }
+    }
+}
+
 function magnaGetDefaultLanguageID() {
     if (defined('DEFAULT_LANGUAGE')) {
         $lID = MagnaDB::gi()->fetchOne("
@@ -2147,6 +2238,25 @@ function magnaGetLanguageIdByCountryIso($sCountryIso) {
 	}
 
 	return $iLangId;
+}
+
+/**
+ * @return array(int id => string groupname)
+ */
+function magnaGetCustomerGroups() {
+	if (!isset($_SESSION['languages_id'])) {
+		$_SESSION['languages_id'] = magnaGetDefaultLanguageID();
+	}
+	$customers_status_array = MagnaDB::gi()->fetchArray(
+		'SELECT customers_status_id, customers_status_name '.
+		'FROM '.TABLE_CUSTOMERS_STATUS.' '.
+		'WHERE language_id = \''.$_SESSION['languages_id'].'\''
+	);
+	$aRet = array();
+	foreach ($customers_status_array as $item) {
+		$aRet[$item['customers_status_id']] = fixHTMLUTF8Entities($item['customers_status_name']);
+	}
+	return $aRet;
 }
 
 /**

@@ -22,12 +22,10 @@ $(document).ready(function() {
             mainSelectElement: '#PrimaryCategory',
             matchingHeadline: '#tbodyDynamicMatchingHeadline',
             matchingOptionalHeadline: '#tbodyDynamicMatchingOptionalHeadline',
-            matchingCustomHeadline: '#tbodyDynamicMatchingCustomHeadline',
-            matchingOptionalHeadline: '#tbodyDynamicMatchingOptionalHeadline',
+            matchingCustomHeadline: '',
             matchingInput: '#tbodyDynamicMatchingInput',
             matchingOptionalInput: '#tbodyDynamicMatchingOptionalInput',
-            matchingCustomInput: '#tbodyDynamicMatchingCustomInput',
-            matchingOptionalInput: '#tbodyDynamicMatchingOptionalInput',
+            matchingCustomInput: '',
             categoryInfo: '#categoryInfo'
         },
         shopVariations: ml_vm_config.shopVariations

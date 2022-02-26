@@ -44,6 +44,10 @@ body.magna table td.boxCenter {
 	font-size: 12px;
 }
 
+optgroup {
+    font-style: normal;
+}
+
 div.magnamain {
 	font-family: sans-serif;
 	font-size: 12px;
@@ -3424,4 +3428,12 @@ body.jqueryui .ui-dialog .ui-dialog-buttonpane button.ml-btnreset {
 body.jqueryui .ui-dialog .ui-dialog-buttonpane button.ml-btnreset:hover,
 body.jqueryui .ui-dialog .ui-dialog-buttonpane button.ml-btnreset:active {
 	color: #f7f6f5;
+}
+
+.ottoGreyBackground {
+	background: rgba(170, 170, 170, 0.47) !important;
+}
+
+.ottoDarkGreyBackground {
+	background: rgb(170, 170, 170) !important;
 }

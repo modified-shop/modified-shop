@@ -116,20 +116,48 @@ class SimplePrice {
 	}
 
 	public function tryGetSpecialOffer($iProductId) {
+		if (MagnaDB::gi()->columnExistsInTable('begins_date', TABLE_SPECIALS)) {
+			$sAndBeginsDate = '
+		     AND (begins_date IS NULL OR UNIX_TIMESTAMP(begins_date) IS NULL OR UNIX_TIMESTAMP(begins_date) <= UNIX_TIMESTAMP())';
+		} else if (MagnaDB::gi()->columnExistsInTable('start_date', TABLE_SPECIALS)) {
+			$sAndBeginsDate = '
+		     AND (start_date IS NULL OR UNIX_TIMESTAMP(start_date) IS NULL OR UNIX_TIMESTAMP(start_date) <= UNIX_TIMESTAMP())';
+		} else {
+			$sAndBeginsDate = '';
+		}
         return MagnaDB::gi()->fetchOne('
             SELECT specials_new_products_price 
               FROM '.TABLE_SPECIALS.'
-             WHERE     products_id = "'.$iProductId.'"
-                   AND status = 1
+             WHERE     products_id = "'.$iProductId.'"'.$sAndBeginsDate.'
+             AND (expires_date IS NULL OR UNIX_TIMESTAMP(expires_date) IS NULL OR UNIX_TIMESTAMP(expires_date) = 0 OR UNIX_TIMESTAMP(expires_date) >= UNIX_TIMESTAMP())
+             AND status = 1
+             LIMIT 1
         ');
     }
 
-	public function getSpecialOffer($pID) {
+    /**
+     * Get Special Price from Shop
+     *
+     * @param $pID
+     * @return float
+     */
+    public function getSpecialOffer($pID) {
+		if (MagnaDB::gi()->columnExistsInTable('begins_date', TABLE_SPECIALS)) { // Gambio Column "begins_date"
+			$sAndBeginsDate = '
+		     AND (begins_date IS NULL OR UNIX_TIMESTAMP(begins_date) IS NULL OR UNIX_TIMESTAMP(begins_date) <= UNIX_TIMESTAMP())';
+		} else if (MagnaDB::gi()->columnExistsInTable('start_date', TABLE_SPECIALS)) { // modified Column "start_date"
+			$sAndBeginsDate = '
+		     AND (start_date IS NULL OR UNIX_TIMESTAMP(start_date) IS NULL OR UNIX_TIMESTAMP(start_date) <= UNIX_TIMESTAMP())';
+		} else {
+			$sAndBeginsDate = '';
+		}
 		return (float)MagnaDB::gi()->fetchOne('
 		    SELECT specials_new_products_price 
 		      FROM '.TABLE_SPECIALS.'
-		     WHERE products_id="'.$pID.'"
-		           AND status=1
+		     WHERE products_id = "'.$pID.'"'.$sAndBeginsDate.'
+		     AND (expires_date IS NULL OR UNIX_TIMESTAMP(expires_date) IS NULL OR UNIX_TIMESTAMP(expires_date) = 0 OR UNIX_TIMESTAMP(expires_date) >= UNIX_TIMESTAMP())
+		     AND status=1
+		     LIMIT 1
 		');
 	}
 
@@ -312,7 +340,7 @@ class SimplePrice {
 		return self::$cache[$sMd5];
 	}
 	
-	public static function getTaxByClassID($taxClassID, $countryID = -1) {
+	public static function getTaxByClassID($taxClassID, $countryID = -1, $sFallback = 0.00) {
 		if ($countryID == -1) {
             if (defined('STORE_COUNTRY') && (int)(STORE_COUNTRY) > 0) {
                 $countryID = (int)STORE_COUNTRY;
@@ -338,15 +366,31 @@ class SimplePrice {
 			       AND zgz.zone_country_id="'.$countryID.'"
 			 LIMIT 1
 		', false));
+
 		//echo var_dump_pre($taxRate);
+		// special case: Tax rate "none" in product data
+		if (    (($taxRate === false) || ($taxRate === null))
+		     && ('0' == $taxClassID) && (self::queryCache('SELECT COUNT(*)
+			 FROM '.TABLE_TAX_RATES.'
+			WHERE tax_class_id = 0') == 0)) {
+			return (float)$sFallback;
+		}
+
 		if (($taxRate === false) || ($taxRate === null)) {
 			// Fallback for shops with broken zgz <--> tr tables
+			// Try tax_class_id = 1
+			// If not filled, return 0
 			$taxRate = self::queryCache(eecho('
 				SELECT MAX(tax_rate)
-				  FROM '.TABLE_TAX_RATES.' tr
-				 WHERE tr.tax_class_id="'.$taxClassID.'"
+				  FROM '.TABLE_TAX_RATES.' tr, '.TABLE_ZONES_TO_GEO_ZONES.' zgz 
+				 WHERE tr.tax_class_id=1
+				       AND tr.tax_zone_id=zgz.geo_zone_id
+				       AND zgz.zone_country_id="'.$countryID.'"
 				 LIMIT 1
 			', false));
+		}
+		if (($taxRate === false) || ($taxRate === null)) {
+			$taxRate = $sFallback;
 		}
 		return (float)$taxRate;
 	}
@@ -371,6 +415,7 @@ class SimplePrice {
 			 LIMIT 1
 		');
 		if (($taxClassID === false) || ($taxClassID === null)) {
+
 			return 0;
 		}
 		return self::getTaxByClassID($taxClassID);
@@ -524,7 +569,7 @@ class SimplePrice {
 	
 
 	public function roundPrice() {
-		$this->price = round($this->price, $this->currencies[$this->actualCurr]['decimal_places']);
+		$this->price = number_format($this->price, $this->currencies[$this->actualCurr]['decimal_places'], '.', '');
 		return $this;
 	}
 

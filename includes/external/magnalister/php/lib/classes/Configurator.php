@@ -1,19 +1,17 @@
 <?php
-/**
- * 888888ba                 dP  .88888.                    dP                
- * 88    `8b                88 d8'   `88                   88                
- * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b. 
- * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88 
- * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88 
- * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P' 
+/*
+ * 888888ba                 dP  .88888.                    dP
+ * 88    `8b                88 d8'   `88                   88
+ * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b.
+ * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88
+ * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88
+ * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P'
  *
  *                          m a g n a l i s t e r
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: Configurator.php 6148 2015-10-23 13:00:34Z tim.neumann $
- *
- * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2021 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -31,11 +29,11 @@ class MLConfigurator {
 
 	private $mpID = 0;
 
-	private $requiredConfigKeys = array();	
-	private $missingConfigKeys = array();	
+	private $requiredConfigKeys = array();
+	private $missingConfigKeys = array();
 	private $testingMethods = array();
 	private $notCorrect = array();
-	
+
 	private $renderResetJS = false;
 	private $renderTabIdent = false;
 	
@@ -108,7 +106,15 @@ class MLConfigurator {
 		}
 
 	}
-	
+
+    public function setMissingConfigKeys($configKey) {
+        $this->missingConfigKeys = $configKey;
+    }
+
+    public function setNotCorrect($message) {
+        $this->notCorrect = $message;
+    }
+
 	public function setRenderTabIdent($b) {
 		$this->renderTabIdent = $b;
 	}
@@ -164,25 +170,34 @@ class MLConfigurator {
 	
 	private function verify($verify, $key, $value, $from = false, $to = false) {
 		$correct = false;
+		$blAllowEmpty = false;
 
 		if ($verify === false) {
 			return true;
 		}
+		if (strpos($verify, ',empty')) {
+			$blAllowEmpty = true;
+			$verify = trim(substr($verify, 0, strpos($verify, ',empty')));
+		}
 		if (array_key_exists($verify, $this->testingMethods)) {
-			switch ($verify) {
-				case 'int': {
-					$correct = preg_match('/^-?[0-9]*$/', $value);
-					break;
-				}
-				case 'float': {
-					$value = str_replace(',', '.', $value);
-					$correct = is_numeric($value);
-					$value = (float)$value;
-					break;
-				}
-				case 'notempty': {
-					$correct = !empty($value);
-					break;
+			if ($blAllowEmpty && empty($value)) {
+				$correct = true;
+			} else {
+				switch ($verify) {
+					case 'int': {
+						$correct = preg_match('/^-?[0-9]*$/', $value);
+						break;
+					}
+					case 'float': {
+						$value = str_replace(',', '.', $value);
+						$correct = is_numeric($value);
+						$value = (float)$value;
+						break;
+					}
+					case 'notempty': {
+						$correct = !empty($value);
+						break;
+					}
 				}
 			}
 			if (!$correct) {
@@ -309,13 +324,14 @@ class MLConfigurator {
 			if ($settings['trim']) {
 				$value = trim($value);
 			}
-			if (!$settings['save'] && (!empty($value) || ($this->config[$key] == '__saved__'))) {
+			if (!$settings['save'] && (!empty($value) || (isset($this->config[$key]) && $this->config[$key] == '__saved__'))) {
 				$value = '__saved__';
 			}
 
 			$correct = $this->verify($verify, $key, $value, $verifyFrom, $verifyTo);
 			if (!empty($foundItem) && ($foundItem['type'] == 'extern') && is_callable($foundItem['procFunc'])) {
 				#echo print_m($value, basename(__FILE__).'{L'.__LINE__.'}');
+                // https://www.php.net/manual/de/migration80.incompatible.php ->call_user_func_array() array keys will now be interpreted as parameter names, instead of being silently ignored.
 				$correct = call_user_func_array($foundItem['procFunc'], array (
 					'args' => array_merge(
 						$foundItem['params'],
@@ -471,6 +487,12 @@ class MLConfigurator {
 				return $this->renderDuplicateField($args, $args['key'], true);
  				
 			}
+            case 'fileBrowser': {
+                $args = $_REQUEST;
+                unset($args['action']);
+                return $this->renderFileBrowserField($args, $args['key']);
+
+            }
 		}
 		return '';
 	}
@@ -620,7 +642,13 @@ class MLConfigurator {
 				
 				$html .= '<select id="config_'.$idkey.'" name="conf['.$item['key'].']"'.$parameters.''.$class.$style.'>'."\n";
 				foreach ($item['values'] as $k => $v) {
-					if ($k === '__calc__') {
+					if (is_array($v)) {
+						$html .= '<optgroup label="'.$k.'">';
+						foreach ($v as $gk => $gv) {
+							$html .= '<option value="'.$gk.'"'.(in_array($gk, (array) $value) ? ' selected="selected"' : '').'>'.$gv.'</option>'."\n";
+						}
+						$html .= '</optgroup>';
+					} else if ($k === '__calc__') {
 						if (preg_match('/^range\(([0-9]*),([0-9]*)\)$/', $v, $matches)) {
 							$a = range($matches[1], $matches[2]);
 							foreach ($a as $nV) {
@@ -843,6 +871,10 @@ class MLConfigurator {
  					 $html .= '<div id="'.$idkey.'">'. $this->renderDuplicateField($item, $idkey).'</div>';
  					break;
 			}
+            case 'fileBrowser': {
+                $html .= $this->getFileBrowserHTMLOutput($item, $idkey, $value);
+                break;
+            }
 		}
 		return $html;
 	}
@@ -915,7 +947,10 @@ class MLConfigurator {
 					var $tableBox = $('#<?php echo $idKey; ?>');
 					if ($tableBox.parent('td').find('table').length == 1) {
 						$tableBox.find('input.ml-button.minus').fadeIn(0);
+                        $tableBox.find('input.ml-button.minus').prop('disabled', true);
 					}
+
+                    $tableBox.find('input.ml-button.minus').prop('disabled', false);
 					myConsole.log();
 					jQuery.blockUI(blockUILoading);
 					jQuery.ajax({
@@ -940,6 +975,13 @@ class MLConfigurator {
 				});
 				$('#<?php echo $idKey; ?>').on('click', 'input.ml-button.minus', function () {
 					$(this).closest('tr').remove();
+                    var hiddenInput = $(this).parent().find('input:hidden:first').attr('class');
+                    var length = $('input.'+hiddenInput).length
+                    if (length <= 1) {
+                        $('input.'+hiddenInput).parent().find('input.ml-button.minus').prop('disabled', true)
+                    } else {
+                        $('input.'+hiddenInput).parent().find('input.ml-button.minus').prop('disabled', false)
+                    }
 				});
 			});
 			/*]]>*/</script><?php
@@ -978,7 +1020,12 @@ class MLConfigurator {
 			array_key_exists('configtool', $_POST) && ($_POST['configtool'] == 'MagnaConfigurator') /* Nur um gaaaanz sicher zu gehen :D */
 		) {
 			if (empty($this->notCorrect)) {
-				$html .= '<p class="successBox">'.ML_TEXT_CONFIG_SAVED_SUCCESSFULLY.'</p>';
+                // if its global config show different message
+                if (array_key_exists('module', $_GET) && $_GET['module'] == 'configuration') {
+                    $html .= '<p class="successBox">'.ML_TEXT_GLOBALCONFIG_SAVED_SUCCESSFULLY.'</p>';
+                } else {
+                    $html .= '<p class="successBox">'.ML_TEXT_CONFIG_SAVED_SUCCESSFULLY.'</p>';
+                }
 			} else {
 				$html .= '<p class="noticeBox">'.ML_TEXT_CONFIG_SAVED_SEMI_SUCCESSFULLY.'</p>';
 			}
@@ -1046,21 +1093,23 @@ class MLConfigurator {
 			if (empty($section['fields'])) {
 				continue;
 			}
+			$headLineClasses = (isset($section['cssClasses']) && is_array($section['cssClasses'])) ? implode(' ', $section['cssClasses']) : '';
 			if (isset($section['headline']) && !empty($section['headline'])) {
 				$html .= '
-					<tr class="text"><td colspan="5">
+					<tr class="text '.$headLineClasses.'"><td colspan="5">
 						<h3>'.$section['headline'].'</h3>
 					</td></tr>';
 			}
 			if (isset($section['desc']) && !empty($section['desc'])) {
 				$class = 'text'.((isset($section['headline']) && !empty($section['headline'])) ? '' : ' noheadline');
 				$html .= '
-					<tr class="'.$class.'"><td colspan="5">
+					<tr class="'.$class.' '.$headLineClasses.'"><td colspan="5">
 						<p>'.$section['desc'].'</p>
 					</td></tr>';
 			}
 			
 			foreach ($section['fields'] as $item) {
+                $rowCssClasses = isset($item['rowCssClasses']) && is_array($item['rowCssClasses']) ? implode(' ', $item['rowCssClasses']) : '';
 				$isExpert = array_key_exists('expertsetting', $item) && $item['expertsetting'];
 				if (!isset($item['key'])) {
 					$item['key'] = '';
@@ -1103,7 +1152,7 @@ class MLConfigurator {
 						$labelClasses .= 'missing ';
 					}
 					$html .= '
-						<tr class="conf">
+						<tr class="conf '.$rowCssClasses.'">
 							'.(!empty($item['label'])
 								? (
 									'<th class="ml-label">'.
@@ -1114,7 +1163,7 @@ class MLConfigurator {
 							);
 					$cfgRow = '
 							<th class="desc">';
-					if (isset($item['desc'])) {
+					if (isset($item['desc']) && !empty($item['desc'])) {
 						$cfgRow .= '<div class="desc" id="desc_'.($this->descCount++).'" title="'.ML_LABEL_INFOS.'"><span>'.$item['desc'].'</span></div>';
 					} else {
 						$cfgRow .= '&nbsp;';
@@ -1163,14 +1212,14 @@ class MLConfigurator {
 							$html .= '
 							<tr>
 								<td colspan="5" class="subconf"><table class="subtable"><tbody><tr>
-									<td class="noborder editor">'.$input.'</td>
+									<td class="noborder editor '.$rowCssClasses.'">'.$input.'</td>
 									<td class="noborder externalDesc">'.$item['externalDesc'].'</td>
 								</tr></tbody></table></td>
 							</tr>';							
 						} else {
 							$html .= '
 							<tr>
-								<td colspan="5" class="editor">'.$input.'</td>
+								<td colspan="5" class="editor '.$rowCssClasses.'">'.$input.'</td>
 							</tr>';
 						}
 					}
@@ -1519,5 +1568,21 @@ class MLConfigurator {
 		ob_end_clean();
 		return $html;
 	}
-	
+
+    private function getFileBrowserHTMLOutput($item, $idkey, $value) {
+        require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/FileBrowserHelper.php');
+        return MLFileBrowserHelper::gi()->getView($item, $idkey, $this->realUrl, $value);
+    }
+
+    private function renderFileBrowserField($args, $sKey) {
+        require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/FileBrowserHelper.php');
+        if(isset($args['method']) && in_array($args['method'], array('GetConfiguredBasePath', 'GetDirectories'), true)) {
+            $sMethod = lcfirst($args['method']);
+            ob_start();
+            MLFileBrowserHelper::gi()->{$sMethod}();
+            return ob_get_clean();
+        }
+        return '';
+    }
+
 }

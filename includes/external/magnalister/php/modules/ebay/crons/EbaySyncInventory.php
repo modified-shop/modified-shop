@@ -41,6 +41,10 @@ class EbaySyncInventory extends MagnaCompatibleSyncInventory {
 
 	# wenn true, verwende alten Code
 	private $mlProductsUseLegacy = false;
+
+	# Synchro zw. einfachen Artikeln im Shop u. Varianten auf ebay
+	private $blSimpleShop2VarEBay = false;
+	private $aEBayVariations = array();
 	
 	public function __construct($mpID, $marketplace, $limit = 100) {
 		global $_MagnaSession;
@@ -221,11 +225,44 @@ class EbaySyncInventory extends MagnaCompatibleSyncInventory {
 	}
 
 	protected function identifySKU() {
+
+		// case: Variation on eBay, simple in the shop
+		if (!empty($this->aEBayVariations)) {
+			$this->cItem = array_shift($this->aEBayVariations);
+			return;
+		}
+
+		// regular
 		if (!empty($this->cItem['MasterSKU'])) {
 			$this->cItem['pID'] = (int)magnaSKU2pID($this->cItem['MasterSKU'], true);
 		} else {
 			$this->cItem['pID'] = (int)magnaSKU2pID($this->cItem['SKU']);
 		}
+
+		// case: Variation on eBay, simple in the shop
+		if (    empty($this->cItem['pID'])
+		     && isset($this->cItem['Variations'])
+		     && is_array($this->cItem['Variations'])) {
+			// make an own cItem for each variation,
+			// so that the plugin can process them as single items
+			foreach ($this->cItem['Variations'] as $no => $aVariation) {
+				$iCurrPid = (int)magnaSKU2pID($aVariation['SKU'], true);
+				if (!empty($iCurrPid)) {
+					$this->aEBayVariations[$no] = $this->cItem;
+					$this->aEBayVariations[$no]['pID'] = $iCurrPid;
+					$this->aEBayVariations[$no]['MasterSKU'] = $aVariation['SKU'];
+					$this->aEBayVariations[$no]['Price'] = $aVariation['Price'];
+					$this->aEBayVariations[$no]['Quantity'] = $aVariation['Quantity'];
+					unset($this->aEBayVariations[$no]['Variations']);
+				}
+			}
+			if (!empty($this->aEBayVariations)) {
+				$this->blSimpleShop2VarEBay = true;
+				$this->cItem = array_shift($this->aEBayVariations);
+				return;
+			}
+		}
+		$this->blSimpleShop2VarEBay = false;
 	}
 
 	protected function updateInternalVariations() {
@@ -269,6 +306,27 @@ class EbaySyncInventory extends MagnaCompatibleSyncInventory {
 		}
 	}
 
+        # Strike price (master item only, variation STPs come with the product data)
+	protected function calcStrikePrice() {
+		$jPreparedStrikePriceConfig = MagnaDB::gi()->fetchOne('
+			SELECT StrikePriceConf FROM '.TABLE_MAGNA_EBAY_PROPERTIES.'
+			 WHERE mpID = '.$this->mpID.'
+				   AND '.(('artNr' == $this->config['SKUType'])
+						? 'products_model = "'.MagnaDB::gi()->escape(magnaPID2SKU($this->cItem['pID'], true)).'"'
+						: 'products_id = '.$this->cItem['pID']
+			).'
+		');
+		if (!empty($jPreparedStrikePriceConfig)) {
+			$aPreparedStrikePriceConfig = json_decode($jPreparedStrikePriceConfig, true);
+			$blUseStrikePrice = ($aPreparedStrikePriceConfig['ebay.strike.price.kind'] != 'DontUse');
+		} else {
+			$blUseStrikePrice = (getDBConfigValue('ebay.strike.price.kind', $this->mpID, 'DontUse') != 'DontUse');
+		}
+		if (!$blUseStrikePrice) return false;
+		$ret = makePrice($this->cItem['pID'], 'StrikePrice');
+		return $ret;
+	}
+
 	protected function calcVariationMatrix($cleanVariations, $currPrice) {
 		if (('Chinese' != $this->cItem['ListingType']) && $cleanVariations) {
 			# getVariations mit set == false, schon neu gesetzt
@@ -287,7 +345,8 @@ class EbaySyncInventory extends MagnaCompatibleSyncInventory {
 			$this->updateItemOld();
 			return;
 		}
-		if (in_array($this->cItem['ItemID'], $this->itemsProcessed)) {
+		if (   in_array($this->cItem['ItemID'], $this->itemsProcessed)
+		    && !$this->blSimpleShop2VarEBay) {
 			$this->log("\nItemID ".$this->cItem['ItemID'].' already processed.');
 			return;
 		}
@@ -351,6 +410,23 @@ class EbaySyncInventory extends MagnaCompatibleSyncInventory {
 			if (isset($product['PriceReduced'][$listingMasterType])) {
 				$data['Price'] = $product['PriceReduced'][$listingMasterType];
 			}
+			if ($this->blSimpleShop2VarEBay) {
+				// API expects it so in this case
+				$data['StartPrice'] = $data['Price'];
+				unset($data['Price']);
+			}
+
+			// Strikethrough Prices
+			$currStrikePrice = $this->calcStrikePrice();
+			if (   isset($this->cItem['OldPrice'])
+			    || isset($this->cItem['ManufacturersPrice'])
+			    || (($currStrikePrice = $this->calcStrikePrice()) != false)
+			) {
+				$sStrikePrice = (getDBConfigValue(array('ebay.strike.price.isUVP', 'val'), $this->mpID, true) == true ? 'ManufacturersPrice' : 'OldPrice');
+				if ($currStrikePrice > $data['Price']) {
+					$data[$sStrikePrice] = $currStrikePrice;
+				}
+			}
 
 			// if listing type is chinese check for prepared price
 			if ($listingMasterType == 'chinese') {
@@ -361,6 +437,27 @@ class EbaySyncInventory extends MagnaCompatibleSyncInventory {
 			}
 			// master price is empty for variation items, therefore check if isset
 			$process = $process || (isset($data['Price']) && (float)$this->cItem['Price'] != (float)$data['Price']);
+			// consider strike prices
+			// STP on eBay, not in the Shop
+			if (   (   (   isset($this->cItem['OldPrice'])
+			            || isset($this->cItem['ManufacturersPrice']))
+			        && (   !isset($sStrikePrice)
+			            || !isset($data[$sStrikePrice]))
+			       ) 
+			// STP in the Shop, on eBay none or not the same kind
+			    || (   isset($sStrikePrice)
+			        && isset($data[$sStrikePrice])
+			        && !isset($this->cItem[$sStrikePrice])
+			       )
+			// STP on eBay and in the Shop, values differ
+			    || (   isset($sStrikePrice)
+			        && isset($data[$sStrikePrice])
+			        && isset($this->cItem[$sStrikePrice])
+				&& (float)$data[$sStrikePrice] != (float)$this->cItem[$sStrikePrice]
+			       )
+			) {
+				$process = $process || true;
+			}
 		}
 		$aMatching = getDBConfigValue($_MagnaSession['currentPlatform'] . '.listingdetails.'.strtolower('EAN').'.dbmatching.table', $_MagnaSession['mpID'], false);
 		if (   array_key_exists('EAN', $product)
@@ -374,6 +471,7 @@ class EbaySyncInventory extends MagnaCompatibleSyncInventory {
 
 		if (isset($this->cItem['Variations']) && isset($product['Variations'])) {
 			$data['Variations'] = array();
+			$sStrikePrice = (getDBConfigValue(array('ebay.strike.price.isUVP', 'val'), $this->mpID, true) == true ? 'ManufacturersPrice' : 'OldPrice');
 			foreach ($product['Variations'] as $variantData) {
 				$variant = array();
 				$variationSpecifics = array();
@@ -410,6 +508,15 @@ class EbaySyncInventory extends MagnaCompatibleSyncInventory {
 						$variant['StartPrice'] = $variantData['PriceReduced'][$listingMasterType];
 					}
 
+					// check strike prices
+					if (    array_key_exists('Price', $variantData)
+					     && array_key_exists('fixed', $variantData['Price'])
+					     && array_key_exists('strike', $variantData['Price'])
+					     && $variantData['Price']['strike'] > $variantData['Price']['fixed']
+					) {
+						$variant[$sStrikePrice] = $variantData['Price']['strike'];
+					}
+
 					// if listing type is chinese check for prepared price
 					if ($listingMasterType == 'chinese') {
 						$fPrice = magnalisterEbayGetPriceByType($variantData['VariationId']);
@@ -418,16 +525,49 @@ class EbaySyncInventory extends MagnaCompatibleSyncInventory {
 						}
 					}
 					$process = ($process || (count($currentCVariation) > 0 && (float)$currentCVariation['Price'] != (float)$variant['StartPrice']));
+					// consider strike prices
+					// STP on eBay, not in the Shop
+					if (   (   (   isset($currentCVariation['OldPrice'])
+				            || isset($currentCVariation['ManufacturersPrice']))
+				        && (   !isset($sStrikePrice)
+				            || !isset($variant[$sStrikePrice]))
+				       ) 
+					// STP in the Shop, on eBay none or not the same kind
+					    || (   isset($sStrikePrice)
+					        && isset($variant[$sStrikePrice])
+					        && !isset($currentCVariation[$sStrikePrice])
+					       )
+					// STP on eBay and in the Shop, values differ
+					    || (   isset($sStrikePrice)
+					        && isset($variant[$sStrikePrice])
+					        && isset($currentCVariation[$sStrikePrice])
+						&& (float)$variant[$sStrikePrice] != (float)$currentCVariation[$sStrikePrice]
+					       )
+					) {
+						$process = $process || true;
+					}
 				}
 				$variant['Variation'] = $variationSpecifics;
 				$data['Variations'][] = $variant;
 			}
 		}
+		if (array_key_exists('OldPrice', $this->cItem)) {
+			$sAddEbayStrikePrice = "\n\teBay OldPrice: ".$this->cItem['OldPrice'];
+		} else if (array_key_exists('ManufacturersPrice', $this->cItem)) {
+			$sAddEbayStrikePrice = "\n\teBay ManufacturersPrice: ".$this->cItem['ManufacturersPrice'];
+		} else {
+			$sAddEbayStrikePrice = '';
+		}
+		if (isset($sStrikePrice) && array_key_exists($sStrikePrice, $data)) {
+			$sAddShopStrikePrice = "\n\tShop ".$sStrikePrice.": ".$data[$sStrikePrice];
+		} else {
+			$sAddShopStrikePrice = '';
+		}
 		$this->log(
 		"\n\teBay Quantity: ".$this->cItem['Quantity'].
 		"\n\tShop Main Quantity: ". $data['NewQuantity'].
-		"\n\teBay Price: ".$this->cItem['Price'].
-		"\n\tShop Price: ".((isset($product['PriceReduced'][$listingMasterType])) ? $product['PriceReduced'][$listingMasterType] : $product['Price'][$listingMasterType])
+		"\n\teBay Price: ".$this->cItem['Price']. $sAddEbayStrikePrice .
+		"\n\tShop Price: ".$product['Price'][$listingMasterType]. $sAddShopStrikePrice
 		);
 
 		if ($this->config['StatusMode'] == 'true') {
@@ -459,6 +599,13 @@ class EbaySyncInventory extends MagnaCompatibleSyncInventory {
 			}
 		}
 
+		// catch the case when there's no quantity and price (product data broken)
+		if (    ($data['NewQuantity'] === null)
+		     && ($product['Price'][$listingMasterType] === null)
+		     && !isset($product['Variations'])) {
+			$process = false;
+		}
+
 		// log Variations
 		if(isset($this->cItem['Variations']) && isset($product['Variations'])){
 			$this->log(
@@ -467,14 +614,26 @@ class EbaySyncInventory extends MagnaCompatibleSyncInventory {
 			foreach ($this->cItem['Variations'] as $aEBayVariation) {
 				foreach ($product['Variations'] as $aShopVariantData) {
 					if ($aEBayVariation['SKU'] == $aShopVariantData[(($this->config['SKUType'] == 'artNr') ? 'MarketplaceSku' : 'MarketplaceId')]) {
+						if (array_key_exists('OldPrice', $aEBayVariation)) {
+							$sAddEbayStrikePrice = "\n\t\teBay OldPrice: ".$aEBayVariation['OldPrice'];
+						} else if (array_key_exists('ManufacturersPrice', $aEBayVariation)) {
+							$sAddEbayStrikePrice = "\n\t\teBay ManufacturersPrice: ".$aEBayVariation['ManufacturersPrice'];
+						} else {
+							$sAddEbayStrikePrice = '';
+						}
+						if (array_key_exists('strike', $aShopVariantData['Price'])) {
+							$sAddShopStrikePrice = "\n\t\tShop ".$sStrikePrice.": ".$aShopVariantData['Price']['strike'];
+						} else {
+							$sAddShopStrikePrice = '';
+						}
 						$this->log(
 							"\n\t\tVariation SKU: ".$aEBayVariation['SKU'].
 							"\n\t\teBay Quantity: ".$aEBayVariation['Quantity'].
 							"\n\t\tShop Main Quantity: ". $aShopVariantData['Quantity'].
-							"\n\t\teBay Price: ".$aEBayVariation['Price'].
+							"\n\t\teBay Price: ".$aEBayVariation['Price']. $sAddEbayStrikePrice .
 							"\n\t\tShop Price: ".(isset($aShopVariantData['PriceReduced'][$listingMasterType])
 								? $aShopVariantData['PriceReduced'][$listingMasterType]
-								: $aShopVariantData['Price'][$listingMasterType]).
+								: $aShopVariantData['Price'][$listingMasterType]). $sAddShopStrikePrice .
 							"\n"
 						);
 						break;
@@ -513,12 +672,23 @@ class EbaySyncInventory extends MagnaCompatibleSyncInventory {
 			require($hp);
 			
 			// submit the contrib for debugging purposes.
-			$data['DEBUG']['contrib'] = file_get_contents($hp);
+			if (    isset($data)
+			     && is_array($data)) {
+				$data['DEBUG']['contrib'] = file_get_contents($hp);
+			} else {
+				$process = false; // $data unsetted by contrib
+			}
 		}
 
 		if ($process) {
 			$this->updateItems($data);
 			$this->itemsProcessed[] = $this->cItem['ItemID'];
+		}
+
+		if (!empty($this->aEBayVariations)) {
+		// case: Variation on eBay, simple in the shop
+		// $this->identifySKU gets the next variation
+			$this->updateItem();
 		}
 	}
 

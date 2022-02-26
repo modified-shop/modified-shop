@@ -152,13 +152,15 @@ class AmazonImportOrders extends MagnaCompatibleImportOrders {
 		}
 	}
 	
-	protected function generateOrderComment() {
+	protected function generateOrderComment($blForce = false) {
 		$comment = str_replace('GiftMessageText', ML_AMAZON_LABEL_GIFT_MESSAGE, $this->o['order']['comments']);
-		$comment = trim(
-			sprintf(ML_GENERIC_AUTOMATIC_ORDER_MP_SHORT, $this->getMarketplaceTitle())."\n".
-			'AmazonOrderID: '.$this->getMarketplaceOrderID()."\n\n".
-			$comment
-		);
+		if ($blForce || getDBConfigValue(array('general.order.information', 'val'), 0, true)) {
+			$comment = trim(
+				sprintf(ML_GENERIC_AUTOMATIC_ORDER_MP_SHORT, $this->getMarketplaceTitle())."\n".
+				'AmazonOrderID: '.$this->getMarketplaceOrderID()."\n\n".
+				$comment
+			);
+		}
 		return $comment;
 	}
 	
@@ -185,6 +187,18 @@ class AmazonImportOrders extends MagnaCompatibleImportOrders {
 	
 	protected function insertProduct() {
 		$this->p['products_name'] = str_replace('GiftWrapType', ML_AMAZON_LABEL_GIFT_PAPER, $this->p['products_name']);
+
+        /**
+         * Amazon Discount and Shipping Discount - moved from old function -> doBeforeInsertOrdersProducts() to here insertProduct()
+         * so when we import the product is uses correct vat and also reduces stock from shop
+         */
+        if ($this->p['products_model'] == '__AMAZON_DISCOUNT__') {
+            $this->p['products_model'] = $this->config['AmazonPromotionsDiscountProductSKU'];
+        }
+        if ($this->p['products_model'] == '__AMAZON_SHIPPING_DISCOUNT__') {
+            $this->p['products_model'] = $this->config['AmazonPromotionsDiscountShippingSKU'];
+        }
+
 		parent::insertProduct();
 	}
 
@@ -245,13 +259,4 @@ class AmazonImportOrders extends MagnaCompatibleImportOrders {
 		}
 	}
 
-    protected function doBeforeInsertOrdersProducts() {
-        if ($this->p['products_model'] == '__AMAZON_DISCOUNT__') {
-            $this->p['products_model'] = $this->config['AmazonPromotionsDiscountProductSKU'];
-        }
-        if ($this->p['products_model'] == '__AMAZON_SHIPPING_DISCOUNT__') {
-            $this->p['products_model'] = $this->config['AmazonPromotionsDiscountShippingSKU'];
-        }
-    }
-	
 }

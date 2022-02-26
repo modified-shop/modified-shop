@@ -22,6 +22,7 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
 require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/Configurator.php');
 include_once(DIR_MAGNALISTER_INCLUDES.'lib/configFunctions.php');
+require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/FileBrowserHelper.php');
 
 function renderAuthError($authError) {
     if (!is_array($authError)) {
@@ -42,7 +43,7 @@ function renderAuthError($authError) {
         ).'</p>';
 }
 
-function amazonTopTenConfig($aArgs = array(), &$sValue = '') {
+function amazonTopTenConfig($args = array(), &$value = '') {
     global $_MagnaSession;
     require_once DIR_MAGNALISTER_FS.DIRECTORY_SEPARATOR.'php'.DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.'amazon'.DIRECTORY_SEPARATOR.'classes'.DIRECTORY_SEPARATOR.'amazonTopTen.php';
     $oTopTen = new amazonTopTen();
@@ -61,10 +62,10 @@ function amazonTopTenConfig($aArgs = array(), &$sValue = '') {
         }
     } else {
         return $oTopTen->renderMain(
-            $aArgs['key'],
-            isset($_POST['conf'][$aArgs['key']])
-                ? (int)$_POST['conf'][$aArgs['key']]
-                : (int)getDBConfigValue($aArgs['key'], $_MagnaSession['mpID'], 10)
+            $args['key'],
+            isset($_POST['conf'][$args['key']])
+                ? (int)$_POST['conf'][$args['key']]
+                : (int)getDBConfigValue($args['key'], $_MagnaSession['mpID'], 10)
         );
     }
 }
@@ -96,6 +97,51 @@ function AmazonShippingLabelAddressCountryConfig($args) {
     $sHtml = '<select name="conf['.$args['key'].']">';
     foreach (amazonMfsGetConfigurationValues(current($args)) as $iso => $name) {
         $sHtml .= '<option '.($args['value'] == $iso ? 'selected=selected' : '').' value="'.$iso.'">'.fixHTMLUTF8Entities($name).'</option>';
+    }
+    $sHtml .= '</select>';
+    return $sHtml;
+}
+
+function AmazonCarrierAmazonToShopMatchConfig($args) {
+    global $_MagnaSession;
+    $sHtml = '<table><tr>';
+    $form = array();
+
+    $cG = new MLConfigurator($form, $_MagnaSession['mpID'], 'conf_amazon');
+    foreach ($args['subfields'] as $item) {
+        $idkey = str_replace('.', '_', $item['key']);
+        $configValue = getDBConfigValue($item['key'], $_MagnaSession['mpID'], '');
+        $value = '';
+        if (isset($configValue[$args['currentIndex']])) {
+            $value = $configValue[$args['currentIndex']];
+        }
+        $item['key'] .= '][';
+        if (isset($item['params'])) {
+            $item['params']['value'] = $value;
+        }
+        $sHtml .= '<td>'.$cG->renderInput($item, $value).'</td>';
+    }
+    $sHtml .= '</tr></table>';
+    return $sHtml;
+}
+
+function AmazonAmazonCarriersConfig($args) {
+    global $_MagnaSession;
+    $sHtml = '<select name="conf['.$args['key'].']">';
+    foreach (amazonGetPossibleOptions(current($args), $_MagnaSession['mpID']) as $iso => $name) {
+        $sHtml .= '<option '.($args['value'] == $name ? 'selected=selected' : '').' value="'.$name.'">'.fixHTMLUTF8Entities($name).'</option>';
+    }
+    $sHtml .= '</select>';
+    return $sHtml;
+}
+
+function AmazonShopCarriersConfig($args) {
+    $aShopCarriers = array('values' => null);
+    mlGetShippingModules($aShopCarriers); $aShopCarriers = $aShopCarriers['values'];
+    if (empty($aShopCarriers)) $aShopCarriers = array('&mdash;');
+    $sHtml = '<select name="conf['.$args['key'].']">';
+    foreach ($aShopCarriers as $ckey => $name) {
+        $sHtml .= '<option '.($args['value'] == $ckey ? 'selected=selected' : '').' value="'.$ckey.'">'.fixHTMLUTF8Entities($name).'</option>';
     }
     $sHtml .= '</select>';
     return $sHtml;
@@ -133,21 +179,38 @@ function AmazonShippingDimensionConfig($args) {
     return $sHtml;
 }
 
+function AmazonOrderstatus($args) {
+	$aStats = array ();
+	mlGetOrderStatus($aStats);
+	$sHtml = '<select name="conf['.$args['key'].']">';
+	foreach ($aStats['values'] as $no => $name){
+		$sHtml .='<option '.($args['value'] == $no? 'selected=selected' : '' ).' value="'.$no.'">'.fixHTMLUTF8Entities($name).'</option>';
+	}
+	$sHtml .= '</select>';
+	return $sHtml;
+}
 
 function magnaUpdateCarrierCodes($args) {
     global $_MagnaSession;
 
     setDBConfigValue('amazon.orderstatus.carrier.additional', $_MagnaSession['mpID'], $args['value']);
 
-    $carrierCodes = loadCarrierCodes();
+    $carrierCodes = loadCarrierCodesExtended();
     $setting = getDBConfigValue(
         'amazon.orderstatus.carrier.default',
         $_MagnaSession['mpID']
     );
 
     $ret = '';
-    foreach ($carrierCodes as $val) {
-        $ret .= '<option '.(($val == $setting) ? 'selected="selected"' : '').' value="'.$val.'">'.$val.'</option>'."\n";
+    foreach ($carrierCodes as $k => $val) {
+        if (is_array($val)) {
+            $ret .= '<optgroup label="'.$k.'">';
+            foreach ($val as $gk => $gv) {
+               $ret .= '<option value="'.$gk.'"'.(in_array($gk, (array) $setting) ? ' selected="selected"' : '').'>'.$gv.'</option>'."\n";
+            }
+        } else {
+            $ret .= '<option '.(($val == $setting) ? 'selected="selected"' : '').' value="'.$val.'">'.$val.'</option>'."\n";
+        }
     }
     return $ret;
 }
@@ -177,6 +240,12 @@ if (isset($_GET['what'])) {
 $form = loadConfigForm($_lang,
     array(
         'amazon.form' => array(),
+        'modules/invoices.form' => array(
+                'unset' => array(
+                        'invoice',
+                        'magnalisterinvoice'
+                )
+        ),
     ), array(
         '_#_platform_#_'     => $_MagnaSession['currentPlatform'],
         '_#_platformName_#_' => $_modules[$_Marketplace]['title']
@@ -256,7 +325,7 @@ function getTaxes(&$form) {
     }
 }
 
-function renderB2BTaxMatching($args) {
+function renderB2BTaxMatching($args, $value = false) {
     global $_MagnaSession;
 
     return renderTaxMatching($_MagnaSession['mpID'], $args['key']);
@@ -358,7 +427,7 @@ function renderTaxMatchingCategorySelect($key, $options, $selectedKey = '') {
 
 $aMarketplaces = amazonGetMarketplaces();
 
-function renderAmazonSite($args) {
+function renderAmazonSite($args, $value = false) {
     global $_MagnaSession;
     $aMarketplaces = amazonGetMarketplaces();
     $values = $aMarketplaces['Sites'];
@@ -556,9 +625,11 @@ if (!$auth['state']) {
 } else {
     $auth['expire'] = time() + 60 * 15;
     setDBConfigValue('amazon.authed', $_MagnaSession['mpID'], $auth, true);
+    upgradeOrderSyncSettings();
     $form['matchingvalues']['fields']['itemcondition']['values'] = amazonGetPossibleOptions('ConditionTypes');
     $form['matchingvalues']['fields']['shipping']['values'] = amazonGetPossibleOptions('ShippingLocations');
-    $form['orderSyncState']['fields']['carrier']['values'] = loadCarrierCodes();
+    $form['orderSyncState']['fields']['carrier']['values'] = loadCarrierCodesExtended();
+    $form['orderSyncState']['fields']['shipmethod']['values'] = loadShipMethods();
 
     mlGetManufacturers($form['prepare']['fields']['manufacturerfilter']);
     mlGetLanguages($form['prepare']['fields']['lang']);
@@ -572,7 +643,9 @@ if (!$auth['state']) {
 
     addCustomerGroups($form['price']['fields'], 'whichprice');
     addCustomerGroups($form['b2b']['fields'], 'whichprice');
-
+    foreach($form['erpinvoice']['fields'] as &$aField){
+        $aField['default'] = MLFileBrowserHelper::gi()->getAndGenerateErpDirectoryPath(DIR_MAGNALISTER_FS.$aField['default']);
+    }
     $form['apply']['fields']['imagepath']['default'] = SHOP_URL_POPUP_IMAGES;
     if ('gambioProperties' != getDBConfigValue('general.options', 0, 'old')) {
         unset($form['apply']['fields']['imagepathvariations']);
@@ -615,7 +688,6 @@ if (!$auth['state']) {
     $form['shippinglabel']['fields']['sizeunit']['values'] = amazonMfsGetConfigurationValues('SizeUnits');
     $form['shippinglabel']['fields']['weightunit']['values'] = amazonMfsGetConfigurationValues('WeightUnits');
 }
-
 $cG = new MLConfigurator($form, $_MagnaSession['mpID'], 'conf_amazon');
 $cG->setRenderTabIdent(true);
 $allCorrect = $cG->processPOST();
@@ -638,7 +710,12 @@ if (isset($_GET['kind']) && ($_GET['kind'] == 'ajax')) {
         }
     }
 
-    echo $cG->renderConfigForm();
+    $sConfigForm = $cG->renderConfigForm();
+    // only extend if auth state is success
+    if ($auth['state']) {
+        extendCarrierConfig($sConfigForm);
+    }
+    echo $sConfigForm;
     echo $cG->exchangeRateAlert();
     include_once(DIR_MAGNALISTER_INCLUDES.'admin_view_bottom.php');
 }
@@ -771,7 +848,137 @@ if (isset($_GET['kind']) && ($_GET['kind'] == 'ajax')) {
                 });
             });
 
+            $(document).ready(function () {
+                let invoiceMagnalisterGenerator = $(".ml-magnalisterInvoiceGenerator");
+                let invoiceERPGenerator = $(".ml-erpInvoice");
+                let invoiceOption = $('.ml-uploadInvoiceOption');
+                invoiceOption.on('change', function () {
+                    console.log(this.value);
+                    invoiceERPGenerator.hide();
+                    invoiceMagnalisterGenerator.hide();
+                    if (this.value === 'magna') {
+                        invoiceMagnalisterGenerator.show();
+                    } else if (this.value === 'erp') {
+                        invoiceERPGenerator.show();
+                    }
+                });
+                invoiceOption.change();
+
+            });
 
         })(jQuery);
     }
+    // switch on/off carrier + shipping method extra fields
+    $(document).ready(function() {
+       if($('select[id="config_amazon_orderstatus_carrier_default"]').val() != 'textfield') {
+           $('#config_amazon_orderstatus_carrier_textfield').css('visibility', 'collapse');
+       }
+       if($('select[id="config_amazon_orderstatus_carrier_default"]').val() != 'dbmatch') {
+           $('#config_amazon_orderstatus_carrier_carrierDBMatching_table').css('visibility', 'collapse');
+       }
+       if($('select[id="config_amazon_orderstatus_carrier_default"]').val() != 'shipmodulematch') {
+           $('#config_amazon_orderstatus_carrier_carrierAmazonToShopMatching').css('visibility', 'collapse');
+       }
+       if($('select[id="config_amazon_orderstatus_shipmethod_default"]').val() != 'textfield') {
+           $('#config_amazon_orderstatus_shipmethod_textfield').css('visibility', 'collapse');
+       }
+       if($('select[id="config_amazon_orderstatus_shipmethod_default"]').val() != 'dbmatch') {
+           $('#config_amazon_orderstatus_shipmethod_shipmethodDBMatching_table').css('visibility', 'collapse');
+       }
+       if($('select[id="config_amazon_orderstatus_shipmethod_default"]').val() != 'shipmodulematch') {
+           $('#config_amazon_orderstatus_shipmethod_shipmethodAmazonToShopMatching').css('visibility', 'collapse');
+       }
+    // carrier matching: If carrier used, don't offer it in the next field
+    // (later)
+//      var selectedCarriers = new Array(0);
+//      $('select[name="conf[amazon.orderstatus.carrier.carrierAmazonToShopMatching.amazon][]"]').each(function() {
+//         selectedCarriers.forEach(function(item) {
+//           this[value=item].remove();
+//         });
+//         selectedCarriers.push(this.val());
+//      });
+//      selectedCarriers = new Array(0); 
+    });
+    // switch on/off carrier + shipping method extra fields
+    $('select[id="config_amazon_orderstatus_carrier_default"]').change(function() {
+       if($('select[id="config_amazon_orderstatus_carrier_default"]').val() == 'textfield') {
+           $('#config_amazon_orderstatus_carrier_textfield').css('visibility', 'visible');
+           $('#config_amazon_orderstatus_carrier_carrierDBMatching_table').css('visibility', 'collapse');
+           $('#config_amazon_orderstatus_carrier_carrierAmazonToShopMatching').css('visibility', 'collapse');
+       } else if($('select[id="config_amazon_orderstatus_carrier_default"]').val() == 'dbmatch') {
+           $('#config_amazon_orderstatus_carrier_textfield').css('visibility', 'collapse');
+           $('#config_amazon_orderstatus_carrier_carrierDBMatching_table').css('visibility', 'visible');
+           $('#config_amazon_orderstatus_carrier_carrierAmazonToShopMatching').css('visibility', 'collapse');
+       } else if($('select[id="config_amazon_orderstatus_carrier_default"]').val() == 'shipmodulematch'){
+           $('#config_amazon_orderstatus_carrier_textfield').css('visibility', 'collapse');
+           $('#config_amazon_orderstatus_carrier_carrierDBMatching_table').css('visibility', 'collapse');
+           $('#config_amazon_orderstatus_carrier_carrierAmazonToShopMatching').css('visibility', 'visible');
+       } else {
+           $('#config_amazon_orderstatus_carrier_textfield').css('visibility', 'collapse');
+           $('#config_amazon_orderstatus_carrier_carrierDBMatching_table').css('visibility', 'collapse');
+           $('#config_amazon_orderstatus_carrier_carrierAmazonToShopMatching').css('visibility', 'collapse');
+       }
+    });
+    $('select[id="config_amazon_orderstatus_shipmethod_default"]').change(function() {
+       if($('select[id="config_amazon_orderstatus_shipmethod_default"]').val() == 'textfield') {
+           $('#config_amazon_orderstatus_shipmethod_textfield').css('visibility', 'visible');
+           $('#config_amazon_orderstatus_shipmethod_shipmethodDBMatching_table').css('visibility', 'collapse');
+           $('#config_amazon_orderstatus_shipmethod_shipmethodAmazonToShopMatching').css('visibility', 'collapse');
+       } else if($('select[id="config_amazon_orderstatus_shipmethod_default"]').val() == 'dbmatch') {
+           $('#config_amazon_orderstatus_shipmethod_textfield').css('visibility', 'collapse');
+           $('#config_amazon_orderstatus_shipmethod_shipmethodDBMatching_table').css('visibility', 'visible');
+           $('#config_amazon_orderstatus_shipmethod_shipmethodAmazonToShopMatching').css('visibility', 'collapse');
+       } else if($('select[id="config_amazon_orderstatus_shipmethod_default"]').val() == 'shipmodulematch'){
+           $('#config_amazon_orderstatus_shipmethod_textfield').css('visibility', 'collapse');
+           $('#config_amazon_orderstatus_shipmethod_shipmethodDBMatching_table').css('visibility', 'collapse');
+           $('#config_amazon_orderstatus_shipmethod_shipmethodAmazonToShopMatching').css('visibility', 'visible');
+       } else {
+           $('#config_amazon_orderstatus_shipmethod_textfield').css('visibility', 'collapse');
+           $('#config_amazon_orderstatus_shipmethod_shipmethodDBMatching_table').css('visibility', 'collapse');
+           $('#config_amazon_orderstatus_shipmethod_shipmethodAmazonToShopMatching').css('visibility', 'collapse');
+       }
+    });
+
+    $(document).ready(function() {
+        function changeFbaOptionsStatus (status) {
+            let color = 'grey'
+            if (!status) {
+                color = 'black'
+            }
+            $("#config_amazon_orderstatus_fba").prop( "disabled", status ).css('color', color)
+            $("#config_amazon_orderimport_fbashippingmethod").prop( "disabled", status ).css('color', color)
+            $("#config_amazon_orderimport_fbashippingmethod_name").prop( "disabled", status ).css('color', color)
+            $("#config_amazon_orderimport_fbapaymentmethod").prop( "disabled", status ).css('color', color)
+            $("#config_amazon_orderimport_fbapaymentmethod_name").prop( "disabled", status ).css('color', color)
+        }
+        var dontImportFbaOrders = jQuery("#conf_amazon\\.orderimport\\.fbablockimport_val");
+        if (typeof dontImportFbaOrders[0] !== 'undefined') {
+            if (dontImportFbaOrders[0].checked) {
+                changeFbaOptionsStatus(true)
+            } else {
+                changeFbaOptionsStatus(false)
+            }
+        }
+
+        $("#conf_amazon\\.orderimport\\.fbablockimport_val").change(function () {
+            if(this.checked) {
+                changeFbaOptionsStatus(true)
+            } else {
+                changeFbaOptionsStatus(false)
+            }
+        })
+    })
+    // carrier matching: If carrier used, don't offer it in the next field
+    // (later)
+//    $('.ml-button plus').click(function () {
+//alert('.ml-button plus');
+//      var selectedCarriers = new Array(0);
+//      $('select[name="conf[amazon.orderstatus.carrier.carrierAmazonToShopMatching.amazon][]"]').each(function() {
+//         selectedCarriers.forEach(function(item) {
+//           this[value=item].remove();
+//         });
+//         selectedCarriers.push(this.val());
+//      });
+//      selectedCarriers = new Array(0); 
+//    });
 </script>

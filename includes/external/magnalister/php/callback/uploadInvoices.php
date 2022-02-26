@@ -34,7 +34,9 @@ function magnaUploadInvoices() {
 		;
 	 	echo "\n##\n".'#######################################'."\n";
 		$_timer = microtime(true);
-	}
+	} else{
+	    echo '<pre>';
+    }
 	
 	MagnaDB::gi()->logQueryTimes(false);
 	MagnaConnector::gi()->setTimeOutInSeconds(600);
@@ -42,42 +44,39 @@ function magnaUploadInvoices() {
 	$modules = magnaGetInvolvedMarketplaces();
 	foreach ($modules as $marketplace) {
 		$mpIDs = magnaGetInvolvedMPIDs($marketplace);
-		if (!empty($mpIDs) && $marketplace === 'amazon') {
-            foreach ($mpIDs as $mpID) {
-                @set_time_limit(60 * 10); // 10 minutes per module
-                $className = false;
-                $classFile = DIR_MAGNALISTER_MODULES.strtolower($marketplace).'/crons/AmazonUploadInvoices.php';
-
-                if (file_exists($classFile)) {
-                    require_once($classFile);
-                    $className = 'AmazonUploadInvoices';
-                    if (!class_exists($className)) {
-                        if ($verbose) {
-                            echo 'Class '.$className.' not found.'."\n";
-                        }
-                        continue;
-                    }
-                } else {
+        foreach ($mpIDs as $mpID) {
+            @set_time_limit(60 * 10); // 10 minutes per module
+            $cronPath = DIR_MAGNALISTER_MODULES.strtolower($marketplace).'/crons/';
+            $className = ucfirst($marketplace).'UploadInvoices';
+            $classFile = $cronPath.$className.'.php';
+            if (file_exists($classFile)) {
+                require_once($classFile);
+                if (!class_exists($className)) {
                     if ($verbose) {
-                        echo 'No upload invoice functions are available for '.$marketplace.' ('.$mpID.').'."\n";
+                        echo 'Class '.$className.' not found.'."\n";
                     }
                     continue;
                 }
-
-                if (!array_key_exists('db', $magnaConfig) ||
-                    !array_key_exists($mpID, $magnaConfig['db'])
-                ) {
-                    loadDBConfig($mpID);
+            } else {
+                if ($verbose) {
+                    echo 'No upload invoice functions are available for '.$marketplace.' ('.$mpID.').'."\n";
                 }
-                #echo print_m("MP: $marketplace  MPID: $mpID");
+                continue;
+            }
 
-                if ($className !== false) {
-                    if (function_exists('ml_debug_out'))
-                        ml_debug_out("\n\n\n#####\n## Uploading invoice of $marketplace ($mpID) with class $className\n##\n");
+            if (!array_key_exists('db', $magnaConfig) ||
+                !array_key_exists($mpID, $magnaConfig['db'])
+            ) {
+                loadDBConfig($mpID);
+            }
+            #echo print_m("MP: $marketplace  MPID: $mpID");
 
-                    $ic = new $className($mpID, $marketplace);
-                    $ic->process();
-                }
+            if ($className !== false) {
+                if (function_exists('ml_debug_out'))
+                    ml_debug_out("\n\n\n#####\n## Uploading invoice of $marketplace ($mpID) with class $className\n##\n");
+
+                $ic = new $className($mpID, $marketplace);
+                $ic->process();
             }
         }
 		#echo print_m($mpIDs, $marketplace);
@@ -89,5 +88,7 @@ function magnaUploadInvoices() {
 	if ($verbose) {
 		echo "\n\nComplete (".microtime2human(microtime(true) - $_timer).").\n";
 		die();
-	}
+	} else{
+        echo '</pre>';
+    }
 }

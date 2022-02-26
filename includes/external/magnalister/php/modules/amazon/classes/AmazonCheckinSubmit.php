@@ -353,6 +353,9 @@ class AmazonCheckinSubmit extends CheckinSubmit {
                 }
 
                 // Support for Multiple Variation Images - see Fallback above if shop supports only one variation image
+                if (!isset($vItem['Images']) || !is_array($vItem['Images'])) {
+                    $vItem['Images'] = array();
+                }
                 if (!empty($product['VariationPictures'][$vNo]['Images'])) {
                     foreach ($product['VariationPictures'][$vNo]['Images'] as $varImage) {
                         if (!empty($varImage)
@@ -545,6 +548,17 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 				$data['submit'] = array();
 				$this->markAsFailed(magnaPID2SKU($pID));
 				return;
+			}
+		}
+		if (!isset($data['submit']['Price'])) {
+			if (    array_key_exists('Variations', $data['submit'])
+			     && is_array($data['submit']['Variations'])        ) {
+				foreach ($data['submit']['Variations'] as $aVariation) {
+					if (isset($aVariation['Price'])) {
+						$data['submit']['Price'] = $aVariation['Price'];
+						break;
+					}
+				}
 			}
 		}
 	}

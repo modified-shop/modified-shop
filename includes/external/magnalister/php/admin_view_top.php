@@ -110,6 +110,8 @@ if (!isset($_GET['module']) || ($_GET['module'] != 'nojs')) {
 ?>
 		<link rel="stylesheet" type="text/css" href="<?php echo DIR_MAGNALISTER_WS; ?>css/jqueryui/jquery-ui-1.9.1.custom.css" />
 		<link rel="stylesheet" type="text/css" href="<?php echo DIR_MAGNALISTER_WS; ?>css/magnalister.css?<?php echo CLIENT_BUILD_VERSION?>" />
+        <link rel="stylesheet" type="text/css" href="<?php echo DIR_MAGNALISTER_WS; ?>css/select2/select2.min.css?<?php echo CLIENT_BUILD_VERSION?>" />
+        <link rel="stylesheet" type="text/css" href="<?php echo DIR_MAGNALISTER_WS; ?>css/select2/fix-select2.css?<?php echo CLIENT_BUILD_VERSION?>" />
 <?php
     if (SHOPSYSTEM == 'commerceseo') {
         echo '<link rel="stylesheet" type="text/css" href="'.DIR_MAGNALISTER_WS.'css/commerceSEOV3.css?'.CLIENT_BUILD_VERSION.'" />';
@@ -250,10 +252,10 @@ if (!isset($_GET['module']) || ($_GET['module'] != 'nojs')) {
 		<script type="text/javascript" src="<?php echo DIR_MAGNALISTER_WS; ?>js/jquery-ui-i18n.js"></script>
 		<script type="text/javascript" src="<?php echo DIR_MAGNALISTER_WS; ?>js/jquery.ba-throttle-debounce.js"></script>
 		<script type="text/javascript" src="<?php echo DIR_MAGNALISTER_WS; ?>js/jquery.cookie.js"></script>
-
+        <script type="text/javascript" src="<?php echo DIR_MAGNALISTER_WS; ?>js/select2/select2.min.js?<?php echo CLIENT_BUILD_VERSION ?>"></script>
+        <script type="text/javascript" src="<?php echo DIR_MAGNALISTER_WS; ?>js/select2/i18n/<?php echo $_SESSION['language_code'] ?>.js?<?php echo CLIENT_BUILD_VERSION ?>"></script>
 		<script type="text/javascript" src="<?php echo DIR_MAGNALISTER_WS; ?>js/magnalister_general.js?<?php echo CLIENT_BUILD_VERSION?>"></script>
 		<script type="text/javascript" src="<?php echo DIR_MAGNALISTER_WS; ?>js/classes/JSClass.js?<?php echo CLIENT_BUILD_VERSION?>"></script>
-		
 		<script type="text/javascript" src="<?php echo DIR_MAGNALISTER_WS; ?>js/loading-timer.js"></script>
 
 <?php if (defined('MERCARI_INSTALLED')) { 
@@ -274,7 +276,6 @@ echo '		<script type="text/javascript" src="'.$js.'"></script>'."\n";
 		}
 ?>
 		<script type="text/javascript">/*<![CDATA[*/
-			
 			(function(jQuery) {
 				jQuery.fn.jDialog = function(parameters, okFunction) {
 					if (okFunction == undefined) {
@@ -524,7 +525,7 @@ $globalButtons = array (
 	),
     array (
         'title' => ML_LABEL_UPDATE,
-        'icon' => 'update'.((defined('SHOPSYSTEM_GAMBIO_CLOUD') && SHOPSYSTEM_GAMBIO_CLOUD === true) ? 'inactive' : ' '),
+        'icon' => 'update'.((defined('SHOPSYSTEM_GAMBIO_CLOUD') && SHOPSYSTEM_GAMBIO_CLOUD === true) ? ' inactive' : ''), // hier war ' '
         'link' => array('update' => 'true'),
         'disabled' => (defined('SHOPSYSTEM_GAMBIO_CLOUD') && SHOPSYSTEM_GAMBIO_CLOUD === true) ? 'yes' : 'no',
     ),
@@ -538,6 +539,14 @@ if ($_MagnaSession['currentPlatform'] == 'ebay') {
 		'link' => array('do' => 'SyncEbayListingDetails', 'MLDEBUG' => 'true'),
 		'disabled' => ($bSyncEnabled) ? 'no' : 'yes',
 	)), $globalButtons);
+}
+
+if (getDBConfigValue(array('general.maintenance', 'val'), 0, 'false') == 'true') {
+        foreach ($globalButtons as $bNo => &$button) {
+            if ('update' == $button['icon']) continue;
+            $globalButtons[$bNo]['icon'] .= ' inactive';
+            $globalButtons[$bNo]['disabled'] = 'yes';
+        }
 }
 
 ?>

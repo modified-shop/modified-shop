@@ -35,10 +35,6 @@ class MetroImportOrders extends MagnaCompatibleImportOrders {
         return $keys;
     }
 
-    protected function getPastTimeOffset() {
-        return 60 * 60 * 24 * 30;
-    }
-
     protected function getOrdersStatus() {
         return $this->config['OrderStatusOpen'];
     }
@@ -51,7 +47,10 @@ class MetroImportOrders extends MagnaCompatibleImportOrders {
      * @return String
      *    The comment for the order.
      */
-    protected function generateOrderComment() {
+    protected function generateOrderComment($blForce = false) {
+        if (!$blForce && !getDBConfigValue(array('general.order.information', 'val'), 0, true)) {
+        return ''; 
+        }
         return trim(
             sprintf(ML_GENERIC_AUTOMATIC_ORDER_MP_SHORT, $this->marketplaceTitle)."\n".
             'METRO '.ML_LABEL_ORDER_ID.': '.$this->o['orderInfo']['MetroOrderNumber']."\n\n".

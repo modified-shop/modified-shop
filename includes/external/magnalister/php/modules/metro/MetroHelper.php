@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * 888888ba                 dP  .88888.                    dP
  * 88    `8b                88 d8'   `88                   88
  * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b.
@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * (c) 2010 - 2019 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2021 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -23,8 +23,6 @@ class MetroHelper extends AttributesMatchingHelper {
 
     private static $instance;
     protected $marketplaceTitle = 'Metro';
-
-    protected $numberOfMaxAdditionalAttributes = self::UNLIMITED_ADDITIONAL_ATTRIBUTES;
 
     public static function gi() {
         if (self::$instance === null) {
@@ -44,6 +42,7 @@ class MetroHelper extends AttributesMatchingHelper {
                 'Signal' => getDBConfigValue($mp.'.price.signal', $mpId, ''),
                 'Group' => getDBConfigValue($mp.'.price.group', $mpId, ''),
                 'UseSpecialOffer' => getDBConfigValue(array($mp.'.price.usespecialoffer', 'val'), $mpId, false),
+                'IncludeTax' => false,
             ),
         );
         return $config;
@@ -126,12 +125,20 @@ class MetroHelper extends AttributesMatchingHelper {
         return floatval($val);
     }
 
-    public function getShippingProfiles() {
+    public function getShippingProfiles($iSelectedProfile=999) {
 
         $aDefaultProfile = getDBConfigValue('metro.shippingprofile', $this->mpId);
         $aProfileName = getDBConfigValue('metro.shippingprofile.name', $this->mpId);
         $aProfileCost = getDBConfigValue('metro.shippingprofile.cost', $this->mpId);
         $html = '';
+
+        if ($iSelectedProfile < 999) {
+            foreach ($aDefaultProfile['defaults'] as $iKey => $sValue) {
+                $aDefaultProfile['defaults'][$iKey] = '';
+            }
+            unset($iKey); unset($sValue);
+            $aDefaultProfile['defaults'][$iSelectedProfile] = '1';
+        }
 
         foreach ($aDefaultProfile['defaults'] as $iKey => $sValue) {
             $html .= '<option value="'.$iKey.'" '.(($sValue) ? 'selected="selected"' : '').'>'.$aProfileName[$iKey].' ('.number_format((float)$aProfileCost[$iKey], 2, '.', '').' Euro) </option>';
@@ -281,10 +288,7 @@ class MetroHelper extends AttributesMatchingHelper {
     }
 
     public function getAttributesFromMP($category, $additionalData = null, $customIdentifier = '') {
-#echo print_m(func_get_args(), __METHOD__);
-
-        $data = MetroApiConfigValues::gi()->getVariantConfigurationDefinition($category, null);
-#echo print_m($data, __LINE__.' '.__METHOD__);
+        $data = MetroApiConfigValues::gi()->getVariantConfigurationDefinition($category);
 
         if (!is_array($data) || !isset($data['attributes'])) {
             $data = array();

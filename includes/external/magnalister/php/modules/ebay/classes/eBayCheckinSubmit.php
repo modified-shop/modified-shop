@@ -239,7 +239,9 @@ class eBayCheckinSubmit extends CheckinSubmit {
 			array('var' => 'property',	'varKey' => 'SellerProfiles',		'submitKey' => 'SellerProfiles',		'default' => $defaultSellerProfiles, 'empty' => false, 'sanitize' => 'json'),
 			array('var' => 'property',	'varKey' => 'Subtitle',			'submitKey' => 'ItemSubTitle',		'empty' => false),
 			array('var' => 'property',	'varKey' => 'ConditionID',		'submitKey' => 'ConditionID',		'empty' => false),
+			array('var' => 'property',	'varKey' => 'ConditionDescription',		'submitKey' => 'ConditionDescription',		'empty' => true),
 			array('var' => 'property',	'varKey' => 'SecondaryCategory',	'submitKey' => 'SecondaryCategory',		'empty' => false),
+			array('var' => 'property',	'varKey' => 'StrikePriceConf',		'submitKey' => 'StrikePriceConf',		'empty' => false, 'sanitize' => 'json'), 
 			# Der Preis wurde mit der in der Config festgelegten Currency berechnet. Nicht die Currency aus der Vorbereitung nehmen, sondern aus der Config.
 			array('var' => 'settings',	'varKey' => 'currency',			'submitKey' => 'currencyID',	                     'empty' => true),
 			array('var' => 'property',	'varKey' => 'StoreCategory',		'submitKey' => 'StoreCategory',		   'empty' => false),
@@ -471,12 +473,22 @@ class eBayCheckinSubmit extends CheckinSubmit {
 			}
 		}
 
-		// StrikePrice: nur nach Konfig
-		if (    getDBConfigValue(array('ebay.strike.price.active', 'val'), $this->_magnasession['mpID'], false)
-		     && (($sStrikePriceKind = getDBConfigValue('ebay.strike.price.kind', $this->_magnasession['mpID'], 'DontUse')) != 'DontUse')) {
-			$data['submit']["$sStrikePriceKind"] = makePrice($pID, 'StrikePrice');
-
-		// strike prices for Variations (MLProducts only sets Price['strike']
+		// Strike Through Price
+		// use 'while' so that we can 'break'
+		while (    array_key_exists('StrikePriceConf', $data['submit'])
+		     && !empty($data['submit']['StrikePriceConf'])
+		     && isset($data['submit']['StrikePriceConf']['ebay.strike.price.kind'])) {
+			if ($data['submit']['StrikePriceConf']['ebay.strike.price.kind'] == 'DontUse') break;
+			if ((!empty($data['submit']['StrikePriceConf']['ebay.strike.price.isUVP'])) && ($data['submit']['StrikePriceConf']['ebay.strike.price.isUVP']['val'])) {
+				$sStrikePrice = 'ManufacturersPrice';
+			} else {
+				$sStrikePrice = 'OldPrice';
+			}
+			$aStrikePrice = makePriceByStrikePriceSettings($pID, $data['submit']['StrikePriceConf']['ebay.strike.price.kind'], $data['submit']['StrikePriceConf']['ebay.strike.price.group']);
+			$data['submit']['Price'] = $aStrikePrice['price'];
+			if ($aStrikePrice['strikePrice'] > 0) {
+				$data['submit'][$sStrikePrice] = $aStrikePrice['strikePrice'];
+			}
 			if (array_key_exists('Variations', $product)
 			     && is_array($product['Variations'])) {
 				foreach ($product['Variations'] as &$v) {
@@ -485,10 +497,14 @@ class eBayCheckinSubmit extends CheckinSubmit {
 					     && array_key_exists('strike', $v['Price'])
 					     && $v['Price']['strike'] > $v['Price']['fixed']
 					   ) {
-						$v["$sStrikePriceKind"] = $v['Price']['strike'];
+						$v[$sStrikePrice] = $v['Price']['strike'];
 					}
 				}
 			}
+			break;
+		}
+		if (array_key_exists('StrikePriceConf', $data['submit'])) {
+			unset($data['submit']['StrikePriceConf']);
 		}
 
 		// ePIDs for Variations (if stored)
@@ -1076,6 +1092,9 @@ class eBayCheckinSubmit extends CheckinSubmit {
 
 		if ($propertiesRow['ConditionID']) {
 			$data['submit']['ConditionID'] = $propertiesRow['ConditionID'];
+		}
+		if (!empty($propertiesRow['ConditionDescription'])) {
+			$data['submit']['ConditionDescription'] = $propertiesRow['ConditionDescription'];
 		}
 		if (!empty($propertiesRow['BuyItNowPrice']) && 'Chinese' == $propertiesRow['ListingType']) {
 			$data['submit']['BuyItNowPrice'] = $propertiesRow['BuyItNowPrice'];

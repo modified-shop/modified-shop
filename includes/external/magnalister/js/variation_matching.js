@@ -319,15 +319,9 @@
         _getShopVariationsDropDownElement: function(dropDownProperty) {
             var self = this,
                 counter = 1,
-                numberOfOptGroups = 2,
+                numberOfOptGroups = 3,
                 // Breaking the reference between the two variables. Setting groupedShopVariations to shopVariations by value.
                 shopVariations = JSON.parse(JSON.stringify(self.options.groupedShopVariations));
-
-            if (dropDownProperty === 'shopVariationsCustomDropDown') {
-                delete shopVariations['no_opt_group']['attribute_value'];
-                delete shopVariations['no_opt_group']['database_value'];
-                delete shopVariations['no_opt_group']['separator_line3'];
-            }
 
             if (self.html[dropDownProperty] === '') {
                 self.html[dropDownProperty] = '<select class="shopAttrSelector">' +
@@ -381,7 +375,7 @@
                     success.apply(this, arguments);
                 },
                 error: function() {
-                    alert(self.options.i18n.ajaxError);
+                    window.alert(self.options.i18n.ajaxError);
                     $.unblockUI();
                     self._resetMPVariation();
                 }
@@ -507,8 +501,13 @@
 
                 var out = '<select' + style + ' name="'+name+'" '+ multiple +'>'
                 + self._renderOptions(selector.AllowedValues, attr_value, firstOption, false)
-                + '</select>'
+                + '</select>';
 
+                out += '<script type="text/javascript">'
+                    + '     $(document).ready(function() {'
+                    + '         $(\'select[name="'+ name +'"]\').select2({});'
+                    + '     });'
+                    + '</script>';
 
                 if (typeof selector.Limit !== 'undefined' && multiple === 'multiple') {
                     out += '<script type="text/javascript">'
@@ -874,6 +873,10 @@
 
             self._changeTriggerVariationMarketplace(selector.AttributeCode);
             self._orderSelectOptions(selector, removeFreeTextOption);
+
+            var baseName = 'ml[match]' + this.attributesNamePrefix + '[' + selector.AttributeCode + '][Values]';
+            $('select[name="' + baseName + '[0][Shop][Key]"]').select2({});
+            $('select[name="' + baseName + '[0][Marketplace][Key]"]').select2({});
 
             return matchDiv;
         },
@@ -1261,11 +1264,14 @@
 
             setTimeout(function() {
                 var selectElement = document.getElementById('sel_' + data.id);
-                selectElement.addEventListener('mousedown', function() {
-                    if (this.options.length === 1) {
-                        self._addShopOptions(self, this, data, attributes, mpDataType);
-                    }
-                });
+
+                if (selectElement !== null) {
+                    selectElement.addEventListener('mousedown', function() {
+                        if (this.options.length === 1) {
+                            self._addShopOptions(self, this, data, attributes, mpDataType);
+                        }
+                    });
+                }
             }, 0);
 
             return data;
@@ -1274,7 +1280,7 @@
         _addShopOptions: function(self, select, data, attributes, mpDataType) {
             var renderOptions = '',
                 counter = 1,
-                numberOfOptGroups = 2,
+                numberOfOptGroups = 3,
                 shopVariations = JSON.parse(JSON.stringify(self.options.groupedShopVariations));
 
             for (var property in  shopVariations) {
@@ -1300,7 +1306,7 @@
                 $(select).find("option[value='database_value']").attr('disabled', 'disabled');
             }
 
-            if ('text' == mpDataType) {
+            if ('text' == mpDataType || 'freetext' == mpDataType) {
                 $(select).find('option[value=attribute_value]').attr('disabled', 'disabled');
             }
 
@@ -1506,6 +1512,41 @@
             }
             self._prefix_option();
             self._attachAttributeSelector(attributesSelectorOptions, addShopVariationSelectorChangeListener);
+
+            for (i in attributes) {
+                $('[id="sel_'+ attributes[i].id +'"]').select2({});
+                $('[id="sel_'+ attributes[i].id +'_custom_name').select2({});
+                $('[id="sel_'+ attributes[i].id +'"]').on('select2:open', function (e) {
+                    if (this.options.length === 1) {
+                        var name = $(this).attr('name'),
+                            mpDataType = $('input[name="' + $(this).attr('name').replace('[Code]', '[Kind]') + '"]').val(),
+                            span = $(this).closest("span"),
+                            select = $('select[name="' + name + '"]');
+
+                        span.css("width", "81%");
+
+                        self._addShopOptions(self, this, false, false, mpDataType);
+
+                        $(this).trigger('input');
+
+                        if (mpDataType) {
+                            mpDataType = mpDataType.toLowerCase();
+                            isSelectAndText = mpDataType === 'selectandtext';
+                        }
+
+                        select.find('option[value^=separator]').attr('disabled', 'disabled');
+
+                        if (['select', 'multiselect'].indexOf(mpDataType) != -1) {
+                            select.find("option[data-type='text']").attr('disabled', 'disabled');
+                            select.find('option[value=freetext]').attr('disabled', 'disabled');
+                        }
+
+                        if ('text' == mpDataType || 'freetext' == mpDataType) {
+                            select.find('option[value=attribute_value]').attr('disabled', 'disabled');
+                        }
+                    }
+                });
+            }
         },
 
         _setVariationThemeField: function(variationDetails, self, data) {
@@ -1611,6 +1652,10 @@
             }
 
             function changeCurrentAttribute(attributeIdToShow) {
+                if ($('#sel_' + attributeIdToShow).hasClass("select2-hidden-accessible")) {
+                    $('#sel_' + attributeIdToShow).select2('destroy');
+                }
+
                 self.elements.matchingOptionalInput.find('#selRow_' + currentlySelectedAttribute).hide();
                 currentlySelectedAttribute = attributeIdToShow;
                 var attributeRowEl = self.elements.matchingOptionalInput.find('#selRow_' + currentlySelectedAttribute),
@@ -1625,7 +1670,45 @@
                 attributeRowEl.remove().show().insertBefore(self.elements.matchingOptionalInput.find('.spacer').last());
                 attributeRowEl.find(selectId).each(addShopVariationSelectorChangeListener).change();
                 self._prefix_option(selectId);
+
                 attributesSelectorEl.change(attributeSelectorOnChange);
+
+                $('select[name="optional_selector"]').each(function (index, link) {
+                    $(this).select2({});
+                });
+
+                $(selectId).select2({});
+
+                $(selectId).on('select2:open', function (e) {
+                    if (this.options.length === 1) {
+
+                        var name = $(this).attr('name'),
+                            mpDataType = $('input[name="' + $(this).attr('name').replace('[Code]', '[Kind]') + '"]').val(),
+                            span = $(this).closest("span"),
+                            select = $('select[name="' + name + '"]');
+
+                        span.css("width", "81%");
+
+                        self._addShopOptions(self, this, false, false, mpDataType);
+                        $(this).trigger('input');
+
+                        if (mpDataType) {
+                            mpDataType = mpDataType.toLowerCase();
+                            isSelectAndText = mpDataType === 'selectandtext';
+                        }
+
+                        select.find('option[value^=separator]').attr('disabled', 'disabled');
+
+                        if (['select', 'multiselect'].indexOf(mpDataType) != -1) {
+                            select.find("option[data-type='text']").attr('disabled', 'disabled');
+                            select.find('option[value=freetext]').attr('disabled', 'disabled');
+                        }
+
+                        if ('text' == mpDataType || 'freetext' == mpDataType) {
+                            select.find('option[value=attribute_value]').attr('disabled', 'disabled');
+                        }
+                    }
+                });
             }
 
             function attributeSelectorOnChange() {

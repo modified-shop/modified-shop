@@ -75,6 +75,22 @@ abstract class DeletedInMarketplaceFilter extends AbstractProductIdFilter {
 		;
 	}
 	
+	/*
+	 * Helper function for getHtml
+	 * (child classes can define it differently)
+	 */
+	protected function getFilterValues() {
+		return array(
+			'' => ML_OPTION_FILTER_ARTICLES_ALL,
+			'notActive' => ML_OPTION_FILTER_ARTICLES_NOTACTIVE,
+			'notTransferred' => ML_OPTION_FILTER_ARTICLES_NOTTRANSFERRED,
+			'active' => ML_OPTION_FILTER_ARTICLES_ACTIVE,
+			'sync' => ML_OPTION_FILTER_ARTICLES_DELETEDBY_SYNC,
+			'button' => ML_OPTION_FILTER_ARTICLES_DELETEDBY_BUTTON,
+			'expired' => ML_OPTION_FILTER_ARTICLES_DELETEDBY_EXPIRED,
+		);
+	}
+
 	public function getHtml() {
 		global $_MagnaSession;
 		global $_url;
@@ -86,15 +102,7 @@ abstract class DeletedInMarketplaceFilter extends AbstractProductIdFilter {
 			<input type="hidden" name="filter" value="<?php echo get_class($this); ?>" />
 			<select name="<?php echo get_class($this); ?>">
 				<?php
-				foreach (array(
-					'' => ML_OPTION_FILTER_ARTICLES_ALL,
-					'notActive' => ML_OPTION_FILTER_ARTICLES_NOTACTIVE,
-					'notTransferred' => ML_OPTION_FILTER_ARTICLES_NOTTRANSFERRED,
-					'active' => ML_OPTION_FILTER_ARTICLES_ACTIVE,
-					'sync' => ML_OPTION_FILTER_ARTICLES_DELETEDBY_SYNC,
-					'button' => ML_OPTION_FILTER_ARTICLES_DELETEDBY_BUTTON,
-					'expired' => ML_OPTION_FILTER_ARTICLES_DELETEDBY_EXPIRED,
-				) as $sKey => $sI18n) {
+				foreach ($this->getFilterValues() as $sKey => $sI18n) {
 					?>
 					<option value="<?php echo $sKey; ?>"<?php echo($this->sFilter != null && ($this->sFilter == $sKey) ? ' selected="selected"' : '') ?>>
 						<?php echo sprintf($sI18n, constant('ML_MODULE_' . strtoupper($_MagnaSession['currentPlatform']))); ?>

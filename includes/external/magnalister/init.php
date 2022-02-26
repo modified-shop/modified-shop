@@ -890,6 +890,10 @@ if (isset($_GET['module']) && in_array($_GET['module'], array(
 		include_once(DIR_MAGNALISTER_MODULES.$_GET['module'].'.php');
 	}
 }
+/* If Rookie limit exceeded and tab not global configuration $magnaConfig['maranon']*/
+if ($magnaConfig['maranon']['IsRookieLimitExceeded'] === 'yes' && $_GET['module'] !== 'configuration') {
+    $_GET['module'] = 'rookie';
+}
 
 /* No modules are available (usually the case when the PassPhrase is wrong) or global config is requested.
    Let's go to the global config page */

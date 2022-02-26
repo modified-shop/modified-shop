@@ -43,7 +43,7 @@ class EbayHelper extends AttributesMatchingHelper
 		return self::$instance;
 	}
 
-	protected static function getMartketplaceById($mpId) {
+	protected static function getMarketplaceById($mpId) {
 		if (!array_key_exists($mpId, self::$marketplaces)) {
 			self::$marketplaces[$mpId] = magnaGetMarketplaceByID($mpId);
 		}
@@ -55,8 +55,7 @@ class EbayHelper extends AttributesMatchingHelper
 			$priceTypes = array('chinese.buyitnow', 'chinese');
 		} else { //StoresFixedPrice, FixedPriceItem
 			$priceTypes = array('fixed');
-			if (    getDBConfigValue(array('ebay.strike.price.active','val'), $mpId, false)
-			     && (($sStrikePriceKind = getDBConfigValue('ebay.strike.price.kind', $mpId, 'DontUse')) != 'DontUse')) {
+			if ($sStrikePriceKind = getDBConfigValue('ebay.strike.price.kind', $mpId, 'DontUse') != 'DontUse') {
 				$priceTypes[] = 'strike';
 			}
 
@@ -92,7 +91,7 @@ class EbayHelper extends AttributesMatchingHelper
 	}
 
 	public static function getPriceSettingsByPriceType($mpId, $priceType) {
-		$marketplace = self::getMartketplaceById($mpId);
+		$marketplace = self::getMarketplaceById($mpId);
 		if (
 			!array_key_exists($mpId, self::$priceConfigs)
 			|| !array_key_exists($priceType, self::$priceConfigs[$mpId])
@@ -126,7 +125,20 @@ class EbayHelper extends AttributesMatchingHelper
 						$mpId,
 						$config['default']
 					);
+			}
+			// for strike prices, the rules are slightly different:
+			// 'SpecialPrice' means, configure like main price, except special price
+			if ('strike' == $priceType) {
+				if ('SpecialPrice' == getDBConfigValue('ebay.strike.price.kind', $mpId, 'DontUse')) {
+					self::$priceConfigs[$mpId]['strike']['AddKind'] = getDBConfigValue('ebay.fixed.price.addkind', $mpId, '0');
+					self::$priceConfigs[$mpId]['strike']['Factor'] = getDBConfigValue('ebay.fixed.price.factor', $mpId, '0');
+					self::$priceConfigs[$mpId]['strike']['Signal'] = getDBConfigValue('ebay.fixed.price.signal', $mpId, '0');
+					self::$priceConfigs[$mpId]['strike']['Group'] = getDBConfigValue('ebay.fixed.price.group', $mpId, '0');
+					if (is_array(self::$priceConfigs[$mpId]['fixed'])) {
+						self::$priceConfigs[$mpId]['fixed']['UseSpecialOffer'] = 1;
+					}
 				}
+			}
 		}
 		return self::$priceConfigs[$mpId][$priceType]['active'] ? self::$priceConfigs[$mpId][$priceType] : array();
 	}

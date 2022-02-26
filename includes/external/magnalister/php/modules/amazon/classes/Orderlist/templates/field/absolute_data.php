@@ -23,5 +23,60 @@
 class_exists('MLOrderlistAmazonAbstract') or die();
 ?>
 <td>
-    <?php echo fixHTMLUTF8Entities($aRow[$aField['head']['fieldname']]); ?>
+    <?php
+        if ($aField['head']['fieldname'] == 'AmazonOrderID') {
+            global $_MagnaSession;
+            $sCancelledStatus = getDBConfigValue('amazon.orderstatus.cancelled', $_MagnaSession['mpID']);
+            $sShippedStatus = getDBConfigValue('amazon.orderstatus.shipped.shipped', $_MagnaSession['mpID']);
+            
+            $fulfillment = $aRow['FulfillmentChannel'];
+            if ($fulfillment !== 'MFN-Prime' && $fulfillment !== 'MFN' && $fulfillment !== 'Business') {
+                $sLogo = 'amazon_fba';
+
+                if (isset($aRow['IsBusinessOrder']) && $aRow['IsBusinessOrder'] == 'true') {
+                    $sLogo .= '_business';
+                }
+
+                $sLogo .= '_orderview';
+            } else {
+                // business, prime and regular orders could also be cancelled or shipped
+                $suffix = '';
+                if ($fulfillment === 'MFN-Prime') {
+                    $suffix = '_prime';
+                    if (isset($aRow['ShipServiceLevel'])) {
+                        $sShipServiceLevel = $aRow['ShipServiceLevel'];
+                        if ($sShipServiceLevel === 'NextDay') {
+                            $suffix .= '_nextday';
+                        } else if ($sShipServiceLevel === 'SameDay') {
+                            $suffix .= '_sameday';
+                        } else if ($sShipServiceLevel === 'SecondDay') {
+                            $suffix .= '_secondday';
+                        }
+                    }
+                } elseif ($fulfillment === 'Business') {
+                    $suffix = '_business';
+                }
+
+                $sStatus = MagnaDB::gi()->fetchOne("
+                    SELECT shipping_class
+                      FROM ".TABLE_ORDERS."
+                     WHERE orders_id='".MagnaDB::gi()->escape($aRow['ShopOrderID'])."'");
+
+                if (false) {//todo
+                    $sLogo = 'amazon_orderview_error';
+                } elseif ($sCancelledStatus == $sStatus) {
+                    $sLogo = 'amazon_orderview_cancelled'.$suffix;
+                } elseif (in_array($sStatus, $sShippedStatus)) {
+                    $sLogo = 'amazon_orderview_shipped'.$suffix;
+                } else {
+                    $sLogo = 'amazon_orderview'.$suffix;
+                }
+            }
+
+            $sLogo = $sLogo . '.png';
+            echo '<img src="'.DIR_MAGNALISTER_WS_IMAGES.'logos/'.$sLogo.'" /> ' . fixHTMLUTF8Entities($aRow[$aField['head']['fieldname']]);
+        } else {
+            echo fixHTMLUTF8Entities($aRow[$aField['head']['fieldname']]);
+        }
+     ?>
 </td>

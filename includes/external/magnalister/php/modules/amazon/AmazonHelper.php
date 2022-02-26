@@ -151,13 +151,14 @@ class AmazonHelper extends AttributesMatchingHelper {
      * @param string $customIdentifier
      * @return array|null
      */
-    protected function getPreparedProductsData($category, $customIdentifier = '')
-    {
+    protected function getPreparedProductsData($category, $customIdentifier = '') {
+	// LIMIT 4096 to prevent unprocessable long data
         $dataFromDB = MagnaDB::gi()->fetchArray(eecho('
 				SELECT `data`, `topProductType`
-				FROM ' . TABLE_MAGNA_AMAZON_APPLY . '
-				WHERE mpID = ' . $this->mpId . '
-					AND topMainCategory = "' . $category . '"
+				 FROM ' . TABLE_MAGNA_AMAZON_APPLY . '
+				 WHERE mpID = ' . $this->mpId . '
+				 AND topMainCategory = "' . $category . '"
+				 ORDER BY products_id DESC LIMIT 4096
 			', false), true);
 
         if ($dataFromDB) {

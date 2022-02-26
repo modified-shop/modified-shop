@@ -240,7 +240,7 @@ function renderMultiApplication($data) {
 			$data['ProductType'] = false;
 		}
 
-		$mNewResponse = false;
+		$mNewResponse = 'ALL';
 		if (isset($data['BrowseNodes'][0]) && !empty($data['BrowseNodes'][0])) {
 			preg_match("/([0-9]*)__([0-9]*)__([0-9]*)/", $data['BrowseNodes'][0], $aOutput);
 			if (!empty($aOutput)) {
@@ -249,6 +249,8 @@ function renderMultiApplication($data) {
                 preg_match("/([0-9]*)__([0-9]*)/", $data['BrowseNodes'][0], $aOutput);
                 if (!empty($aOutput)) {
                     $mNewResponse = true;
+                } else {
+                    $mNewResponse = false;
                 }
             }
 		}
@@ -300,7 +302,7 @@ function renderMultiApplication($data) {
 			<tr class="odd">
 				<th>' . ML_AMAZON_LABEL_APPLY_BROWSENODES . ' <span>&bull;</span></th>
 				<td class="input" id="browsenodes">
-					<select name="BrowseNodes[]" id="browsenode" class="fullWidth">
+					<select name="BrowseNodes[]" id="browsenode" style="width: 100%">
 						' . $browseNodes[0] . '
 					</select>
 				</td>
@@ -338,6 +340,7 @@ function renderMultiApplication($data) {
 		}
 
 		$(document).ready(function () {
+            $('#browsenode').select2({});
 			$('#maincat').change(function () {
 				if ($(this).val() == 'null') {
 					$('#subcat').html('<option value="null"><?php echo ML_AMAZON_LABEL_APPLY_SELECT_MAIN_CAT_FIRST; ?></option>').css({'display': 'block'});
@@ -796,8 +799,8 @@ if (isset($_GET['kind']) && ($_GET['kind'] == 'ajax')) {
 		die(json_encode(AmazonHelper::gi()->getCustomIdentifiers($_POST['SelectValue'])));
 	}
 	if (isset($_POST['type']) && ($_POST['type'] == 'browsenodes') && isset($_POST['category']) && isset($_POST['subcategory'])) {
-        $mNewResponse = false;
-		if (isset($_POST['selected']) && !empty($_POST['selected'])) {
+        $mNewResponse = 'ALL';
+		if (isset($_POST['selected']) && !empty($_POST['selected']) && $_POST['selected'] != 'null') {
             preg_match("/([0-9]*)__([0-9]*)__([0-9]*)/", $_POST['selected'], $aOutput);
             if (!empty($aOutput)) {
                 $mNewResponse = 'ALL';
@@ -805,6 +808,8 @@ if (isset($_GET['kind']) && ($_GET['kind'] == 'ajax')) {
                 preg_match("/([0-9]*)__([0-9]*)/", $_POST['selected'], $aOutput);
                 if (!empty($aOutput)) {
                     $mNewResponse = true;
+                } else {
+                    $mNewResponse = false;
                 }
             }
 		}

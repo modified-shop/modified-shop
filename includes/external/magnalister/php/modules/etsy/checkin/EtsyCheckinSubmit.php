@@ -214,6 +214,10 @@ class EtsyCheckinSubmit extends MagnaCompatibleCheckinSubmit {
                 $aVariationNamesByCode[$aVarNamesRow['products_options_id']] = $aVarNamesRow['products_options_name'];
             }
         }
+	// must be utf8 for json_encode to work
+	// here, not earlier, would break the comparision with DB entries
+	arrayEntitiesToUTF8($aVariations);
+	arrayEntitiesToUTF8($aVariationNamesByCode);
 
         // determine the variation name and value matching shop -> etsy
         $aVarValuesShop2Etsy = array();

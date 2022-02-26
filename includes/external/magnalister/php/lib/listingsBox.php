@@ -1,19 +1,17 @@
 <?php
-/**
- * 888888ba                 dP  .88888.                    dP                
- * 88    `8b                88 d8'   `88                   88                
- * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b. 
- * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88 
- * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88 
- * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P' 
+/*
+ * 888888ba                 dP  .88888.                    dP
+ * 88    `8b                88 d8'   `88                   88
+ * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b.
+ * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88
+ * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88
+ * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P'
  *
  *                          m a g n a l i s t e r
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id$
- *
- * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2021 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -55,34 +53,37 @@ function generateListingsBox() {
 		$contractends = 0;
 	}
 
-	
-        if(
-                isset($magnaConfig['maranon']['TestEnds']) 
-                && new DateTime() > new DateTime($magnaConfig['maranon']['TestEnds'])
-            ){// last tariff was test he is countinuing with another tariff
-                $tarif = sprintf(ML_RATE_SWITCH_TRIAL, $magnaConfig['maranon']['TestEnds'], constant('ML_RATE_'.strtoupper($magnaConfig['maranon']['WishTariff'])));
-        } elseif ( 
-                ! isset($magnaConfig['maranon']['TestEnds']) 
-                &&
-                (
-                    $magnaConfig['maranon']['Tariff'] == $magnaConfig['maranon']['WishTariff'] 
-                    || ($magnaConfig['maranon']['TariffChangeDate'] == '0000-00-00')
-                )
-                && ($magnaConfig['maranon']['CancellationDate'] == '0000-00-00')
-            ) {//he has psecific tariff(not test)
-                $tarif = sprintf(ML_RATE_CONTINUE, $currentRate, $contractends);
-        } else if (
-                ($magnaConfig['maranon']['WishTariff'] != $magnaConfig['maranon']['Tariff'])
-                && ($magnaConfig['maranon']['CancellationDate'] == '0000-00-00')
-                && ($magnaConfig['maranon']['TariffChangeDate'] != '0000-00-00') || new DateTime() < new DateTime($magnaConfig['maranon']['TestEnds'])
-            ){//it is still in test priod
-                $tarif = sprintf(ML_RATE_SWITCH, $currentRate, 
-                                ($contractends === 0)
-                                ? date('d.m.Y', strtotime($magnaConfig['maranon']['TariffChangeDate']))
-                                : $contractends, constant('ML_RATE_'.strtoupper($magnaConfig['maranon']['WishTariff'])));
-        } else {//he cancled contract
-            $tarif = sprintf(ML_RATE_END, $currentRate, $contractends);
-        }
+    if (
+            isset($magnaConfig['maranon']['TestEnds'])
+            && new DateTime() > new DateTime($magnaConfig['maranon']['TestEnds'])
+    ) {// last tariff was test he is continuing with another tariff
+            $tarif = sprintf(ML_RATE_SWITCH_TRIAL, $magnaConfig['maranon']['TestEnds'], constant('ML_RATE_'.strtoupper($magnaConfig['maranon']['WishTariff'])));
+    } elseif (
+            ! isset($magnaConfig['maranon']['TestEnds'])
+            &&
+            (
+                $magnaConfig['maranon']['Tariff'] == $magnaConfig['maranon']['WishTariff']
+                || ($magnaConfig['maranon']['TariffChangeDate'] == '0000-00-00')
+            )
+            && ($magnaConfig['maranon']['CancellationDate'] == '0000-00-00')
+        ) {//he has specific tariff(not test)
+            $tarif = sprintf(ML_RATE_CONTINUE, $currentRate, $contractends);
+    } else if (
+            ($magnaConfig['maranon']['WishTariff'] != $magnaConfig['maranon']['Tariff'])
+            && ($magnaConfig['maranon']['CancellationDate'] == '0000-00-00')
+            && ($magnaConfig['maranon']['TariffChangeDate'] != '0000-00-00')
+            || (
+                isset($magnaConfig['maranon']['TestEnds'])
+                && new DateTime() < new DateTime($magnaConfig['maranon']['TestEnds'])
+            )
+    ) {//it is still in test period
+            $tarif = sprintf(ML_RATE_SWITCH, $currentRate,
+                ($contractends === 0)
+                ? date('d.m.Y', strtotime($magnaConfig['maranon']['TariffChangeDate']))
+                : $contractends, constant('ML_RATE_'.strtoupper($magnaConfig['maranon']['WishTariff'])));
+    } else {//he canceled contract
+        $tarif = sprintf(ML_RATE_END, $currentRate, $contractends);
+    }
 
     $isGambioCloudFreePlan = false;
     if (defined('SHOPSYSTEM_GAMBIO_CLOUD') && SHOPSYSTEM_GAMBIO_CLOUD === true) {

@@ -32,13 +32,13 @@ class EbayCheckinProductList extends MLProductListEbayAbstract{
 			),
 			'field' => array('ebayprice'),
 		);
-		$this->aListConfig[] = array(
+		/*$this->aListConfig[] = array(
 			'head' => array(
 				'attributes'	=> 'class="lowestprice"',
 				'content'		=> 'ML_EBAY_LABEL_PREPARE_KIND',
 			),
 			'field' => array('ebaypreparetype'),
-		);
+		);*/
 		$this->aListConfig[] = array(
 			'head' => array(
 				'attributes'	=> 'class="lowestprice"',
@@ -56,7 +56,7 @@ class EbayCheckinProductList extends MLProductListEbayAbstract{
 		parent::__construct();
 		$this
 			->addDependency('MLProductListDependencyCheckinToSummaryAction')
-			->addDependency('MLProductListDependencyMarketplaceSync', array('propertiestablename' => $this->isAjax() ? TABLE_MAGNA_EBAY_PROPERTIES :'ep.')) //table will be joined in $this->buildQuery()
+			->addDependency('MLProductListDependencyEbayMarketplaceSync', array('propertiestablename' => $this->isAjax() ? TABLE_MAGNA_EBAY_PROPERTIES :'ep.')) //table will be joined in $this->buildQuery()
 			->addDependency('MLProductListDependencyTemplateSelectionAction')
 			->addDependency('MLProductListDependencyLastPreparedFilter', array(
 				'propertiestablename' => TABLE_MAGNA_EBAY_PROPERTIES, 

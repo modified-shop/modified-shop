@@ -118,13 +118,24 @@ class HoodCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 		if ($pVID === false) {
 			return false;
 		}
+		else if (MagnaDB::gi()->columnExistsInTable('gm_vpe_value', TABLE_PRODUCTS_ATTRIBUTES)) {
+			// gambio
+			$selectVpeValue = ',
+		           pa.gm_vpe_value AS VarVpeValue';
+		} else if (MagnaDB::gi()->columnExistsInTable('attributes_vpe_value', TABLE_PRODUCTS_ATTRIBUTES)) {
+			// modified
+			$selectVpeValue = ',
+		           pa.attributes_vpe_value AS VarVpeValue';
+		} else {
+			$selectVpeValue = '';
+		}
 		$variationTheme = MagnaDB::gi()->fetchArray(eecho('
 		    SELECT po.products_options_name AS VariationTitle,
 		           pov.products_options_values_name AS VariationValue,
 		           pa.products_attributes_id AS aID,
 		           pa.options_values_price AS VPrice,
 		           pa.price_prefix AS VPricePrefix,
-		           pa.attributes_stock AS Quantity
+		           pa.attributes_stock AS Quantity'.$selectVpeValue.'
 		           '.($this->hasAttributesSortOrder ? ', pa.sortorder' : '').'
 		      FROM '.TABLE_PRODUCTS_ATTRIBUTES.' pa,
 		           '.TABLE_PRODUCTS_OPTIONS.' po, 
@@ -177,6 +188,15 @@ class HoodCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 			} else {
 				$vi['SortOrder'] = $i++;
 			}
+			if (    isset($data['submit']['BasePrice'])
+			     && !empty($selectVpeValue)
+			     && !empty($v['VarVpeValue'])
+			) {
+				$vi['BasePrice'] = array (
+					'Unit' => $data['submit']['BasePrice']['Unit'],
+					'Value' => $v['VarVpeValue']
+				);
+			}
 			$variations[] = $vi;
 		}
 		$data['submit']['Quantity'] = $quantity;
@@ -192,7 +212,9 @@ class HoodCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 		$mainQuantity = 0;
 		foreach ($p['Variations'] as $i => $v) {
 			$vars[$i] = array (
-			'SKU' => $v['MarketplaceSku'],
+			'SKU' => ((getDBConfigValue('general.keytype', '0') == 'artNr')
+				? $v['MarketplaceSku']
+				: $v['MarketplaceId']),
 			'Price' => $v['Price'],
 			'Quantity' => $v['Quantity'],
 			'Variation' => array(),
@@ -202,6 +224,10 @@ class HoodCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 				'Name' => $vv['Name'],
 				'Value' => $vv['Value']
 				);
+			}
+			if (    array_key_exists('BasePrice', $v)
+			     && !empty($v['BasePrice'])) {
+				$vars[$i]['BasePrice'] = $v['BasePrice'];
 			}
 			$mainQuantity += $v['Quantity'];
 		}
@@ -425,21 +451,50 @@ class HoodCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 		if ($maxImages === true) $maxImages = 9999; // not constrained
 		while (    $maxImages > 0
 		        && (getDBConfigValue('general.options', '0', 'old') == 'gambioProperties')) {
-			$aPropertiesPics = MagnaDB::gi()->fetchArray('SELECT combi_image
-				FROM products_properties_combis
-				WHERE products_id = '.$pID.'
-				AND LENGTH(combi_image) > 1
-				ORDER BY products_properties_combis_id
-				LIMIT '.$maxImages);
-			if (empty($aPropertiesPics)) break;
-			if (    !array_key_exists('Images', $data['submit'])
-			     || !is_array($data['submit']['Images'])) {
-				$data['submit']['Images'] = array();
+			if (MagnaDB::gi()->columnExistsInTable('combi_image', 'products_properties_combis')) {
+				$aPropertiesPics = MagnaDB::gi()->fetchArray('SELECT combi_image
+					FROM products_properties_combis
+					WHERE products_id = '.$pID.'
+					AND LENGTH(combi_image) > 1
+					ORDER BY products_properties_combis_id
+					LIMIT '.$maxImages);
+				if (empty($aPropertiesPics)) break;
+				if (    !array_key_exists('Images', $data['submit'])
+				     || !is_array($data['submit']['Images'])) {
+					$data['submit']['Images'] = array();
+				}
+				foreach($aPropertiesPics as $no => $aPic) {
+					$data['submit']['Images'][] = array ('URL' => HTTP_CATALOG_SERVER.DIR_WS_CATALOG.DIR_WS_IMAGES.'product_images/properties_combis_images/'.$aPic['combi_image']);
+					if ($no >= $maxImages) break;
+				}
+				break;
+			} else if(MagnaDB::gi()->tableExists('product_image_list_combi')) {
+			// Gambio >= 4.1
+				$aCombiIds = MagnaDB::gi()->fetchArray("
+					SELECT products_properties_combis_id
+					  FROM products_properties_combis
+					 WHERE products_id = $pID
+					ORDER BY products_properties_combis_id", true);
+				if (empty($aCombiIds)) break;
+				$sCombiIds = implode(',',$aCombiIds);
+				$aImageListIds = MagnaDB::gi()->fetchArray("
+					SELECT product_image_list_id
+					  FROM product_image_list_combi
+					 WHERE products_properties_combis_id IN ($sCombiIds)
+					ORDER BY products_properties_combis_id, product_image_list_id", true);
+				if (empty($aImageListIds)) break;
+				$sImageListIds = implode(',',$aImageListIds);
+				$aVariationImages = MagnaDB::gi()->fetchArray("
+					SELECT product_image_list_image_local_path
+					  FROM product_image_list_image
+					 WHERE product_image_list_id IN ($sImageListIds)
+					ORDER BY product_image_list_id, product_image_list_image_sort_order", true);
+				foreach($aVariationImages as $no => $sImage) {
+					$data['submit']['Images'][] = array ('URL' => HTTP_CATALOG_SERVER.DIR_WS_CATALOG.$sImage);
+					if ($no >= $maxImages) break;
+				}
+				break;
 			}
-			foreach($aPropertiesPics as $aPic) {
-				$data['submit']['Images'][] = array ('URL' => HTTP_CATALOG_SERVER.DIR_WS_CATALOG.DIR_WS_IMAGES.'product_images/properties_combis_images/'.$aPic['combi_image']);
-			}
-			break;
 		}
 		
 		# The BasePrice string(!) for the title depends on the price. So this has to be created once the price is

@@ -98,6 +98,7 @@ class MLOrderlistAmazonShippinglabelUploadOrderlist extends MLOrderlistAmazonAbs
 			->addDependency('MLOrderlistDependencySearchFilter', array())
 			->addDependency('MLOrderlistDependencySelectionAction', array('selectionname' => $this->getSelectionName(), 'selectiontablename' => $this->getSelectionTableName()))
 			->addDependency('MLOrderlistDependencyStatusFilter', array('selectionname' => $this->getSelectionName()))
+            ->addDependency('MLOrderlistDependencyShippingFilter', array('selectionname' => $this->getSelectionName()))
 			->addDependency('MLOrderlistDependencyOrderlistToFormAction', array())
 		;
 	}

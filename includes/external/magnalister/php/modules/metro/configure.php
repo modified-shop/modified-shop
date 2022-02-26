@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * 888888ba                 dP  .88888.                    dP
  * 88    `8b                88 d8'   `88                   88
  * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b.
@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * (c) 2010 - 2019 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2021 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -19,8 +19,36 @@
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
 require_once(DIR_MAGNALISTER_MODULES.'magnacompatible/configure.php');
-
 class MetroConfigure extends MagnaCompatibleConfigure {
+
+    /**
+     * Extended to add some javascript
+     */
+    public function process() {
+        parent::process();
+        $this->configurationJavascript();
+        echo $this->invoiceOptionJS();
+    }
+
+    /**
+     * Currently used to block cross border trading
+     */
+    protected function configurationJavascript() {
+        ob_start();
+        ?>
+        <script type="text/javascript">/*<!CDATA[*/
+            $(document).ready(function() {
+                $('#config_metro_shippingdestination').on('change', function () {
+                    $('#config_metro_shippingorigin').val($(this).val());
+                });
+
+                $('#config_metro_shippingorigin').on('change', function () {
+                    $('#config_metro_shippingdestination').val($(this).val());
+                });
+            });
+            /*]]>*/</script>
+        <?php
+    }
 
     public static function shippingProfile($args, &$value = '') {
         global $_MagnaSession;
@@ -58,7 +86,7 @@ class MetroConfigure extends MagnaCompatibleConfigure {
             return false;
         }
         return array(
-            'ClientId' => $nUser,
+            'ClientId'  => $nUser,
             'SecretKey' => $nPass,
         );
     }
@@ -66,7 +94,7 @@ class MetroConfigure extends MagnaCompatibleConfigure {
     protected function getFormFiles() {
         return array(
             'login', 'prepare', 'checkin', 'price',
-            'inventorysync', 'orders', 'orderStatus'
+            'inventorysync', 'orders', 'orderStatus', 'invoices'
         );
     }
 
@@ -76,9 +104,11 @@ class MetroConfigure extends MagnaCompatibleConfigure {
             $this->getCancellationReason();
 
             $this->form['prepare']['fields']['processingtime']['values'] = $this->renderProcessingTimeValues();
+            $this->form['prepare']['fields']['maxprocessingtime']['values'] = $this->renderProcessingTimeValues();
             mlGetOrderStatus($this->form['orderSyncState']['fields']['shippedstatus']);
             mlGetOrderStatus($this->form['orderSyncState']['fields']['cancelstatus']);
         }
+
     }
 
     private function getCancellationReason() {
@@ -104,6 +134,7 @@ class MetroConfigure extends MagnaCompatibleConfigure {
     }
 
     protected function finalizeForm() {
+        global $_MagnaSession;
         parent::finalizeForm();
         if (!$this->isAuthed) {
             $this->form = array(
@@ -111,5 +142,36 @@ class MetroConfigure extends MagnaCompatibleConfigure {
             );
             return;
         }
+    }
+
+    public static function invoicePreview($args, &$value = '') {
+        global $_MagnaSession, $_url;
+        return '<input class="ml-button" type="button" value="Vorschau" id="ml-amazon-invoice-preview"/>
+	
+<script type="text/javascript">/*<![CDATA[*/
+$(document).ready(function() {
+	$(\'#ml-amazon-invoice-preview\').click(function() {
+		jQuery.blockUI(blockUILoading);
+		jQuery.ajax({
+			\'method\': \'get\',
+			\'url\': \''.toURL($_url, array('what' => 'TestInvoiceGeneration', 'kind' => 'ajax'), true).'\',
+			\'success\': function (data) {
+				if (data.indexOf(\'<style\') > 0) {
+					data=data.substring(0, data.indexOf(\'<style\'));
+				}
+				jQuery.unblockUI();
+				myConsole.log(\'ajax.success\', data);
+				if (data === \'error\') {
+				} else {
+                    var hwin = window.open(data, "popup", "resizable=yes,scrollbars=yes");
+                    if (hwin.focus) {
+                        hwin.focus();
+                    }
+				}
+			}
+		});
+	});
+});
+/*]]>*/</script>';
     }
 }

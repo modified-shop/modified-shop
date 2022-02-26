@@ -29,13 +29,13 @@ class EbayPrepareProductList extends MLProductListEbayAbstract {
 			),
 			'field' => array('ebayprice'),
 		);
-		$this->aListConfig[] = array(
+		/*$this->aListConfig[] = array(
 			'head' => array(
 				'attributes'	=> 'class="lowestprice"',
 				'content'		=> 'ML_EBAY_LABEL_PREPARE_KIND',
 			),
 			'field' => array('ebaypreparetype'),
-		);
+		);*/
 		$this->aListConfig[] = array(
 			'head' => array(
 				'attributes'	=> 'class="matched"',
@@ -46,7 +46,7 @@ class EbayPrepareProductList extends MLProductListEbayAbstract {
 		parent::__construct();
 		$this
 			->addDependency('MLProductListDependencyEbayPrepareFormAction', array('selectionname' => $this->getSelectionName()))
-			->addDependency('MLProductListDependencyMarketplaceSync', array('propertiestablename' => TABLE_MAGNA_EBAY_PROPERTIES))
+			->addDependency('MLProductListDependencyEbayMarketplaceSync', array('propertiestablename' => TABLE_MAGNA_EBAY_PROPERTIES))
 			->addDependency('MLProductListDependencyEbayPrepareStatusFilter')
 			->addDependency('MLProductListDependencyProductStatusFilter')
 		;

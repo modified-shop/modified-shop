@@ -1,19 +1,17 @@
 <?php
-/**
- * 888888ba                 dP  .88888.                    dP                
- * 88    `8b                88 d8'   `88                   88                
- * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b. 
- * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88 
- * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88 
- * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P' 
+/*
+ * 888888ba                 dP  .88888.                    dP
+ * 88    `8b                88 d8'   `88                   88
+ * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b.
+ * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88
+ * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88
+ * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P'
  *
  *                          m a g n a l i s t e r
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id$
- *
- * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2021 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -73,7 +71,13 @@ function magnaGetOrderPlatformIcon($order) {
 		$fulfillment = $order['internaldata']['FulfillmentChannel'];
 
 		if ($fulfillment !== 'MFN-Prime' && $fulfillment != 'MFN' && $fulfillment != 'Business') {
-			$filename = 'amazon_fba_orderview';
+            $filename = 'amazon_fba';
+
+            if (isset($order['internaldata']['IsBusinessOrder']) && $order['internaldata']['IsBusinessOrder'] == 'true') {
+                $filename .= '_business';
+            }
+
+            $filename .= '_orderview';
 		} else {
 			$suffix = '';
 			if ($fulfillment === 'MFN-Prime') {
@@ -93,7 +97,8 @@ function magnaGetOrderPlatformIcon($order) {
 			}
 
 			$filename = 'amazon_orderview'.$suffix;
-			if (isset($order['data']['ML_AMAZON_LABEL_BATCHID']) && !empty($order['data']['ML_AMAZON_LABEL_BATCHID'])) {
+			if (    (isset($order['data']['ML_AMAZON_LABEL_BATCHID']) && !empty($order['data']['ML_AMAZON_LABEL_BATCHID']))
+			     || (isset($order['data']['BatchID']) && !empty($order['data']['BatchID']))) {
 				if (isset($order['data']['ML_ERROR_LABEL'])) {
 					$filename = 'amazon_orderview_error';
 				} else if (isset($order['data']['ML_LABEL_ORDER_CANCELLED'])) {
@@ -157,13 +162,22 @@ div.magnaOrderHeadline img {
 	vertical-align: middle;
 }
 table.magnaOrderDetails {
-	width: 100%;
-	font: 11px sans-serif;
-	border: 1px solid #999;
-	margin: 0.5em 0 2em 0;
-	border-collapse: separate;
-	border-spacing: 1px;
+    width: 100%;
+    font: 11px sans-serif;
+    border: 1px solid #999;
+    margin: 0.5em 0 2em 0;
+    border-collapse: separate;
+    border-spacing: 1px;
 }
+table.magnaOrderDetails.onlyForGambio {
+    width: 100%;
+    font: 11px sans-serif;
+    border: 0px;
+    margin: 0;
+    border-collapse: unset;
+    border-spacing: 0px;
+}
+
 table.magnaOrderDetails tbody tr td {
 	padding: 4px 6px;
 }
@@ -180,13 +194,26 @@ table.magnaOrderDetails tbody tr.even td {
 table.magnaOrderDetails tbody tr td.key {
 	white-space: nowrap;
 	width: 15em;
+} 
+div.removePadding {
+    padding: 0px !important;
 }
-		</style>
-		<div class="magnaOrderHeadline">
+</style>
+		<script>
+		$( "div:has(table.onlyForGambio)" ).addClass( "removePadding" );
+		</script> 
+';
+    if (isset($args['separate']) && $args['separate'] === true) {
+        $html .= '<table class="magnaOrderDetails onlyForGambio"><tbody>';
+
+    } else {
+        $html .= '<table class="magnaOrderDetails"><tbody>';
+    }
+
+	$hedaline = '		<div class="magnaOrderHeadline">
 			<span>m</span>agnalister Details
 			<img src="'.DIR_MAGNALISTER_WS.'images/logos/'.$filename.'.png" alt="'.$filename.'">
-		</div>
-		<table class="magnaOrderDetails"><tbody>';
+		</div>';
 	$isOdd = true;
 	foreach ($details['data'] as $key => $value) {
 		if (defined($key)) {
@@ -235,8 +262,19 @@ table.magnaOrderDetails tbody tr td.key {
 	
 	$html .= '
 		</tbody></table>';
+
+	if (isset($args['separate']) && $args['separate'] === true) {
+        $html .= '';
+	    $result = array (
+	        'headline' => $hedaline,
+            'body' => $html
+        );
+    } else {
+	    $result = $hedaline . $html;
+    }
+
 	
-	return $html;
+	return $result;
 }
 
 function magnaInsertOrderDetails($args) {

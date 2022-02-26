@@ -124,7 +124,10 @@ class YategoImportOrders extends MagnaCompatibleImportOrders {
 		return $this->config['OrderStatusOpen'];
 	}
 	
-	protected function generateOrderComment() {
+	protected function generateOrderComment($blForce = true) {
+		if (!$blForce && !getDBConfigValue(array('general.order.information', 'val'), 0, true)) {
+			return ''; 
+		}
 		return trim(
 			sprintf(ML_GENERIC_AUTOMATIC_ORDER_MP_SHORT, $this->marketplaceTitle)."\n".
 			ML_LABEL_MARKETPLACE_ORDER_ID.': '.$this->o['orderInfo']['MShopOrderID'].' ('.$this->o['orderInfo']['MOrderID'].")\n\n".
@@ -133,7 +136,7 @@ class YategoImportOrders extends MagnaCompatibleImportOrders {
 	}
 	
 	protected function generateOrdersStatusComment() {
-		return $this->generateOrderComment();
+		return $this->generateOrderComment(true);
 	}
 
 	protected function doBeforeInsertOrder() {
@@ -158,6 +161,7 @@ class YategoImportOrders extends MagnaCompatibleImportOrders {
 			'MOrderID' => $this->o['orderInfo']['MOrderID'],
 			'ShopOrderID' => $this->cur['OrderID'],
 		);
+		$this->out($this->marketplace.' ('.$this->mpID.') order '.$this->o['orderInfo']['MOrderID'].' imported with No. '.$this->cur['OrderID']."\n");
 	}
 
 }

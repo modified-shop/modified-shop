@@ -40,7 +40,7 @@ function eBayTimeToTs($eBayTime) {
  * @return string
  */
 function ebayEncodeImageUrl($sUrlPart) {
-    foreach (str_split(' &äöüß') as $sSearch) {
+    foreach (str_split(' &ÄäÖöÜüß') as $sSearch) {
         $sUrlPart = str_replace($sSearch, rawurlencode($sSearch), $sUrlPart);
     }
     return $sUrlPart;
@@ -448,6 +448,16 @@ function geteBayBusinessPolicies($forceRefresh = false) {
 
     # aufbereiten
     if (array_key_exists('Profiles', $storedProfileData)) {
+        # drop defaults, if outdated
+        if (!array_key_exists(getDBConfigValue('ebay.default.paymentsellerprofile', $mpID, 0), $storedProfileData['Profiles'])) {
+            setDBConfigValue('ebay.default.paymentsellerprofile', $mpID, 0, true);
+        }
+        if (!array_key_exists(getDBConfigValue('ebay.default.shippingsellerprofile', $mpID, 0), $storedProfileData['Profiles'])) {
+            setDBConfigValue('ebay.default.shippingsellerprofile', $mpID, 0, true);
+        } 
+        if (!array_key_exists(getDBConfigValue('ebay.default.returnsellerprofile', $mpID, 0), $storedProfileData['Profiles'])) {
+            setDBConfigValue('ebay.default.returnsellerprofile', $mpID, 0, true);
+        }
         foreach ($storedProfileData['Profiles'] as $key => $profile) {
             switch ($profile['ProfileType']) {
                 case ('PAYMENT'):
@@ -568,24 +578,27 @@ function renderReadonlyShippingDetails($aDetails, $blInt = false) {
     } else {
         $aServiceList = geteBayLocalShippingServicesList();
     }
-    foreach ($aDetails as $i => $aDetail) {
-        $html .= '  <tr class="row1">
-<td class="paddingRight"><input type="text" name="conf[ebay.default.shipping.'.$sLocalOrInt.']['.$i.'][service]" value="'.$aServiceList[$aDetail['service']].'" disabled="disabled" style="background-color:#dfdfdf" />
-<input type="hidden" name="conf[ebay.default.shipping.'.$sLocalOrInt.']['.$i.'][service]" value="'.$aDetail['service'].'" /></td>';
-        $html .= '
-<td class="textright">'.ML_GENERIC_SHIPPING_COST.':&nbsp;</td>
-<td class="paddingRight"><input type="text" name="conf[ebay.default.shipping.'.$sLocalOrInt.']['.$i.'][cost]" value="'.$sp->setPrice($aDetail['cost'])->formatWOCurrency().'" disabled="disabled" style="background-color:#dfdfdf" />
-<input type="hidden" name="conf[ebay.default.shipping.'.$sLocalOrInt.']['.$i.'][cost]" value="'.$aDetail['cost'].'" /></td>
-</tr>';
-        if (array_key_exists('location', $aDetail)) {
+    // can be empty for international shipping
+    if (!empty($aDetails)) {
+        foreach ($aDetails as $i => $aDetail) {
             $html .= '  <tr class="row1">
-<td class="paddingRight" colspan="3"><table><tr><td>';
-            foreach ($aDetail['location'] as $sLoc) {
-                $html .= '
-<nobr><input type="checkbox" name="conf[ebay.default.shipping.international]['.$i.'][location][]" value="'.$sLoc.'" checked="checked" disabled="disabled" style="background-color:#dfdfdf" />&nbsp;'.$aLocationList[$sLoc].'&nbsp;</nobr>
-<input type="hidden" name="conf[ebay.default.shipping.international]['.$i.'][location][]" value="'.$sLoc.'" /><br />';
+    <td class="paddingRight"><input type="text" name="conf[ebay.default.shipping.'.$sLocalOrInt.']['.$i.'][service]" value="'.$aServiceList[$aDetail['service']].'" disabled="disabled" style="background-color:#dfdfdf" />
+    <input type="hidden" name="conf[ebay.default.shipping.'.$sLocalOrInt.']['.$i.'][service]" value="'.$aDetail['service'].'" /></td>';
+            $html .= '
+    <td class="textright">'.ML_GENERIC_SHIPPING_COST.':&nbsp;</td>
+    <td class="paddingRight"><input type="text" name="conf[ebay.default.shipping.'.$sLocalOrInt.']['.$i.'][cost]" value="'.$sp->setPrice($aDetail['cost'])->formatWOCurrency().'" disabled="disabled" style="background-color:#dfdfdf" />
+    <input type="hidden" name="conf[ebay.default.shipping.'.$sLocalOrInt.']['.$i.'][cost]" value="'.$aDetail['cost'].'" /></td>
+    </tr>';
+            if (array_key_exists('location', $aDetail)) {
+                $html .= '  <tr class="row1">
+    <td class="paddingRight" colspan="3"><table><tr><td>';
+                foreach ($aDetail['location'] as $sLoc) {
+                    $html .= '
+    <nobr><input type="checkbox" name="conf[ebay.default.shipping.international]['.$i.'][location][]" value="'.$sLoc.'" checked="checked" disabled="disabled" style="background-color:#dfdfdf" />&nbsp;'.$aLocationList[$sLoc].'&nbsp;</nobr>
+    <input type="hidden" name="conf[ebay.default.shipping.international]['.$i.'][location][]" value="'.$sLoc.'" /><br />';
+                }
+                $html .= '  </td></tr></table></tr>';
             }
-            $html .= '  </td></tr></table></tr>';
         }
     }
     return $html;
@@ -1015,7 +1028,7 @@ function substitutePictures($tmplStr, $pID, $imagePath) {
 
 # Hilfsfunktion: Preis bestimmen
 # priceType: == ListingType oder BuyItNowPrice
-function makePrice($pID, $priceType, $takePrepared = false, $variationPrice = 0.0) {
+function makePrice($pID, $priceType, $takePrepared = false, $variationPrice = 0.0, $format = false) {
     global $_MagnaSession;
     if ($takePrepared) {
         $iBuyItNowPrice = magnalisterEbayGetPriceByType($pID, $priceType);
@@ -1035,6 +1048,7 @@ function makePrice($pID, $priceType, $takePrepared = false, $variationPrice = 0.
                 $which = 'chinese.buyitnow';
                 break;
             }
+        case 'strike':
         case 'StrikePrice':
             {
                 $which = 'strike';
@@ -1053,7 +1067,11 @@ function makePrice($pID, $priceType, $takePrepared = false, $variationPrice = 0.
         $myPrice->setFinalPriceFromDB($pID, $_MagnaSession['mpID'], $which);
     }
 
-    return $myPrice->getPrice();
+    if ($format) {
+        return $myPrice->format();
+    } else {
+        return $myPrice->getPrice();
+    }
 }
 
 # Hilfsfunktion: Variation-Preis zu einem Grundpreis berechnen
@@ -1081,6 +1099,81 @@ function makeVariationPrice($pID, $variation_products_model, $otherMainPrice = f
         return makePrice($pID, 'fixed', false, (float)$dbVarPrice);
     else
         return addVarPriceToPrice($pID, $otherMainPrice, (float)$dbVarPrice);
+}
+
+/*
+ * Helper function for prepare view:
+ * Determine main + strike price
+ * depending on STP settings
+ * @param int $pID
+ * @param string $StrikePriceKind
+ * @param int $StrikePriceGroup
+ * @return array (string price, string strikePrice)
+ */
+function makePriceByStrikePriceSettings($pID, $StrikePriceKind, $StrikePriceGroup, $variationPrice = 0.0, $format = false) {
+    global $_MagnaSession;
+    switch($StrikePriceKind) {
+        case('SpecialPrice'):
+            $fixExtra = array (
+                'AddKind'    => getDBConfigValue($mp.$extra.'.price.addkind', $_MagnaSession['mpID'], 'percent'),
+                'Factor'     => (float)getDBConfigValue($mp.$extra.'.price.factor', $_MagnaSession['mpID'], 0),
+                'Signal'     => getDBConfigValue($mp.$extra.'.price.signal', $_MagnaSession['mpID'], ''),
+                'Group'      => getDBConfigValue('ebay.fixed.price.group', $_MagnaSession['mpID'], ''),
+                'UseSpecialOffer' => true,
+                'IncludeTax' => true
+            );
+            $stpExtra = array_merge($fixExtra, array (
+                'UseSpecialOffer' => false,
+            ));
+            $myFixPrice = new SimplePrice(null, getCurrencyFromMarketplace($_MagnaSession['mpID']));
+            if ($variationPrice) {
+                $myFixPrice->setPriceFromDB($pID, $_MagnaSession['mpID'], $fixExtra)->addLump($variationPrice)->finalizePrice($pID, $_MagnaSession['mpID'], $fixExtra);
+            } else {
+                $myFixPrice->setFinalPriceFromDB($pID, $_MagnaSession['mpID'], $fixExtra);
+            }
+            $myStrikePrice = new SimplePrice(null, getCurrencyFromMarketplace($_MagnaSession['mpID']));
+            if ($variationPrice) {
+                $myStrikePrice->setPriceFromDB($pID, $_MagnaSession['mpID'], $stpExtra)->addLump($variationPrice)->finalizePrice($pID, $_MagnaSession['mpID'], $stpExtra);
+            } else {
+                $myStrikePrice->setFinalPriceFromDB($pID, $_MagnaSession['mpID'], $stpExtra);
+            }
+            $retVal = array (
+                'price'       => $format ? $myFixPrice->format()    : $myFixPrice->getPrice(),
+                'strikePrice' => $format ? $myStrikePrice->format() : $myStrikePrice->getPrice()
+            );
+            break;
+        case('CustomerGroup'):
+            $extra = array (
+                'AddKind'    => 'percent',
+                'Factor'     => '0',
+                'Signal'     => '',
+                'Group'      => $StrikePriceGroup,
+                'UseSpecialOffer' => false,
+                'IncludeTax' => true
+            );
+            $myStrikePrice = new SimplePrice(null, getCurrencyFromMarketplace($_MagnaSession['mpID']));
+            if ($variationPrice) {
+                $myStrikePrice->setPriceFromDB($pID, $_MagnaSession['mpID'], $extra)->addLump($variationPrice)->finalizePrice($pID, $_MagnaSession['mpID'], $extra);
+            } else {
+                $myStrikePrice->setFinalPriceFromDB($pID, $_MagnaSession['mpID'], $extra);
+            }
+            $retVal = array (
+                'price'       => makePrice($pID, 'fixed', false, $variationPrice, $format),
+                'strikePrice' => $format ? $myStrikePrice->format() : $myStrikePrice->getPrice()
+            );
+            break;
+        case('DontUse'):
+        default:
+            $retVal = array (
+                'price'       => makePrice($pID, 'fixed', false, $variationPrice, $format),
+                'strikePrice' => 0
+            );
+            break;
+    }
+    if ($retVal['strikePrice'] <= $retVal['price']) {
+        $retVal['strikePrice'] = 0;
+    }
+    return $retVal;
 }
 
 # Hilfsfunktion: Anzahl bestimmen
@@ -1409,11 +1502,50 @@ function importeBayCategoryPath($CategoryID) {
     return true;
 }
 
+# Streichpreis Felder für die Properties Table aufbereiten
+function convertStrikePriceFields(&$itemDetails) {
+    global $_MagnaSession;
+    if (    !isset($itemDetails['UseStrikePrice']) 
+         || ($itemDetails['UseStrikePrice'] !== 'true')) {
+        $itemDetails['StrikePriceKind'] = 'DontUse';
+    }
+    $aRes = array();
+    $aRes['ebay.strike.price.kind'] = $itemDetails['StrikePriceKind'];
+    switch($itemDetails['StrikePriceKind']) {
+        case ('SpecialPrice'): {
+            $aRes['ebay.strike.price.addkind'] = getDBConfigValue('ebay.fixed.price.addkind', $_MagnaSession['mpID']);
+            $aRes['ebay.strike.price.factor']  = getDBConfigValue('ebay.fixed.price.factor', $_MagnaSession['mpID']);
+            $aRes['ebay.strike.price.signal']  = getDBConfigValue('ebay.fixed.price.signal', $_MagnaSession['mpID']);
+            $aRes['ebay.strike.price.group']   = getDBConfigValue('ebay.fixed.price.group', $_MagnaSession['mpID']);
+            break;
+        }
+        case ('DontUse'): {
+            $aRes['ebay.strike.price.addkind']    = 'percent';
+            $aRes['ebay.strike.price.factor']     = '0';
+            $aRes['ebay.strike.price.group']      = -1;
+            $aRes['ebay.strike.price.isUVP'] = '{"val":false}';
+            $aRes['ebay.strike.price.signal']     = '';
+            break;
+        }    
+        default: {
+            $aRes['ebay.strike.price.addkind']    = 'percent';
+            $aRes['ebay.strike.price.factor']     = '0';
+            $aRes['ebay.strike.price.group']      = $itemDetails['StrikePriceGroup'];
+            $aRes['ebay.strike.price.isUVP']      = getDBConfigValue('ebay.strike.price.isUVP', $_MagnaSession['mpID'], '');
+            $aRes['ebay.strike.price.signal']     = '';
+            break;
+        }
+    }
+    $jRes = json_encode($aRes);
+    $itemDetails['StrikePriceConf'] = $jRes;
+}
+
 # Hilfsfunktion fuer SaveEBaySingleProductProperties und SaveEBayMultipleProductProperties
 # bereite die DB-Zeile vor mit allen Daten die sowohl fuer Single als auch Multiple inserts gelten
 function prepareEBayPropertiesRow($pID, $itemDetails) {
     global $_MagnaSession;
 
+    convertStrikePriceFields($itemDetails);
     $row = array();
     $row['mpID'] = $_MagnaSession['mpID'];
     $row['products_id'] = $pID;
@@ -1435,6 +1567,7 @@ function prepareEBayPropertiesRow($pID, $itemDetails) {
     }
     $row['ListingType'] = $itemDetails['ListingType'];
     $row['ListingDuration'] = $itemDetails['ListingDuration'];
+    $row['StrikePriceConf'] = isset($itemDetails['StrikePriceConf']) ? $itemDetails['StrikePriceConf']:'';
     $row['PaymentMethods'] = json_encode($itemDetails['PaymentMethods']);
 
     if (!empty($itemDetails['VariationDimensionForPictures'])) {
@@ -1480,6 +1613,7 @@ function prepareEBayPropertiesRow($pID, $itemDetails) {
     $row['VariationThemeBlacklist'] = !empty($itemDetails['VariationThemeBlacklist']) ? $itemDetails['VariationThemeBlacklist'] : null;
 
     $row['ConditionID'] = $itemDetails['ConditionID'];
+    $row['ConditionDescription'] = $itemDetails['ConditionDescription'];
 
     // BusinessPolicies
     if (array_key_exists('shippingsellerprofile', $itemDetails)) {
@@ -1964,8 +2098,8 @@ function getPaymentClassForEbayPaymentMethod($paymentMethod) {
 
     } else if ('Moneybookers' == $paymentMethod) {
         # Moneybookers
-        if (in_array('monebookers.php', $PaymentModules))
-            $class = 'monebookers';
+        if (in_array('moneybookers.php', $PaymentModules))
+            $class = 'moneybookers';
 
     } else if ('COD' == $paymentMethod) {
         # Nachnahme
@@ -2037,6 +2171,33 @@ function getPaymentClassForEbayPaymentMethod($paymentMethod) {
     }
 
     return $class;
+}
+
+/*
+  Bestellimport-Zahlungsarten-Selection schöner (für die Konfig)
+*/
+function extendOrderimportPaymentmethodSelection(&$sRenderedForm) {
+    if (($iPosSelectOrderimportPaymentmethod = strpos($sRenderedForm, '<select id="config_ebay_orderimport_paymentmethod"')) == false) {
+        return;
+    }
+    $mySelect = substr($sRenderedForm, $iPosSelectOrderimportPaymentmethod, strpos($sRenderedForm, '</select>', $iPosSelectOrderimportPaymentmethod) - $iPosSelectOrderimportPaymentmethod + 9);
+    $mySelectLength = strlen($mySelect);
+    $pos1 = strpos($mySelect, '</option>', strpos($mySelect,'<option value="matching"')) + 9;
+    $pos2 = strpos($mySelect,'</select>');
+    if ($_POST['conf']['ebay.orderimport.paymentmethod'] == 'textfield') {
+        $textfieldSelected = 'selected';
+    } else {
+        $textfieldSelected = '';
+    }
+    $mySelect2 = substr($mySelect, 0, $pos1)
+    . "\n<optgroup label=\"".ML_LABEL_SHOP_PAYMENT_METHODS.":\">\n"
+    . substr($mySelect, $pos1 + 1, $pos2 - $pos1 - 1)
+    . "</optgroup>\n".'<option '.$textfieldSelected.' value="textfield">'.ML_LABEL_BLANKET_FROM_RIGHT_FIELD.'</option>'."\n"
+    . substr($mySelect, $pos2);
+    $mySelect2Length = strlen($mySelect2);
+    $sRenderedForm = substr($sRenderedForm, 0, $iPosSelectOrderimportPaymentmethod)
+    . $mySelect2
+    . substr($sRenderedForm, $iPosSelectOrderimportPaymentmethod + $mySelectLength);
 }
 
 /*
@@ -2166,4 +2327,49 @@ function updateMainAddressFromOrder($iOrdersId) {
 		    address_last_modified = NOW()'
         ).'
 		WHERE customers_id = '.$aOrder['customers_id']);
+}
+
+/*
+ * If we find a record in the preparation table where the other identifier
+ * (products_id when we use products_model as SKU, otherwise products_model)
+ * doesn't match the one in the product table, and there's an other record where it does,
+ * remove the unmatching one
+ */
+function removeDoublePrepareEntries() {
+    global $_MagnaSession;
+    if ('artNr' == getDBConfigValue('general.keytype', '0')) {
+        $aPidChangedEntries = MagnaDB::gi()->fetchArray('
+            SELECT p.products_id, ep.products_id as ep_products_id, p.products_model
+              FROM '.TABLE_MAGNA_EBAY_PROPERTIES.' ep, '.TABLE_PRODUCTS.' p
+             WHERE ep.products_model=p.products_model
+               AND ep.products_id<>p.products_id AND ep.mpID='.$_MagnaSession['mpID']);
+        foreach ($aPidChangedEntries as $prow) {
+            if (MagnaDB::gi()->recordExists(TABLE_MAGNA_EBAY_PROPERTIES, array (
+                'products_id' => $prow['products_id'],
+                'products_model' => $prow['products_model'],
+                'mpID' => $_MagnaSession['mpID']))) {
+                MagnaDB::gi()->delete(TABLE_MAGNA_EBAY_PROPERTIES, array (
+                'products_id' => $prow['ep_products_id'],
+                'products_model' => $prow['products_model'],
+                'mpID' => $_MagnaSession['mpID']));
+            }
+        }
+    } else {
+        $aArtNrChangedEntries = MagnaDB::gi()->fetchArray('
+            SELECT p.products_id, p.products_model, ep.products_model as ep_products_model
+              FROM '.TABLE_MAGNA_EBAY_PROPERTIES.' ep, '.TABLE_PRODUCTS.' p
+             WHERE ep.products_id=p.products_id
+               AND ep.products_model<>p.products_model AND ep.mpID='.$_MagnaSession['mpID']);
+        foreach ($aArtNrChangedEntries as $prow) {
+            if (MagnaDB::gi()->recordExists(TABLE_MAGNA_EBAY_PROPERTIES, array (
+                'products_id' => $prow['products_id'],
+                'products_model' => $prow['products_model'],
+                'mpID' => $_MagnaSession['mpID']))) {
+                MagnaDB::gi()->delete(TABLE_MAGNA_EBAY_PROPERTIES, array (
+                'products_id' => $prow['products_id'],
+                'products_model' => $prow['ep_products_model'],
+                'mpID' => $_MagnaSession['mpID']));
+            }
+        }
+    }
 }

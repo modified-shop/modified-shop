@@ -297,3 +297,37 @@ function mlPresetTrackingCodeMatching($sMarketplaceId, $sConfigKeyCarrier, $sCon
 		));
 	}
 }
+
+/**
+ * Preset the tracking and return tracking key if Gambio has "orders_parcel_tracking_codes" table
+ * @param $sMarketplaceId
+ * @param $sConfigKeyTrackingCode
+ */
+function mlPresetTrackingAndReturnTrackingCodeMatching($sMarketplaceId, $sConfigKeyTrackingCode) {
+    // Column "is_return_delivery" exists since gambio 4.5+ check if table and column exists
+    if (strpos($sConfigKeyTrackingCode, 'return')
+        || !MagnaDB::gi()->tableExists('orders_parcel_tracking_codes')
+        || !MagnaDB::gi()->columnExistsInTable('is_return_delivery','orders_parcel_tracking_codes')
+    ) {
+        return false;
+    }
+
+    if (   MagnaDB::gi()->tableExists('orders_parcel_tracking_codes')
+        && !MagnaDB::gi()->recordExists(TABLE_MAGNA_CONFIG, array('mpID' => $sMarketplaceId, 'mkey' => $sConfigKeyTrackingCode.'.table'))
+        && !MagnaDB::gi()->recordExists(TABLE_MAGNA_CONFIG, array('mpID' => $sMarketplaceId, 'mkey' => $sConfigKeyTrackingCode.'.alias'))
+    ) {
+        MagnaDB::gi()->insert(TABLE_MAGNA_CONFIG, array(
+            'mpID' => $sMarketplaceId,
+            'mkey' => $sConfigKeyTrackingCode.'.table',
+            'value' => json_encode(array(
+                'table' => 'orders_parcel_tracking_codes',
+                'column' => 'tracking_code',
+            )),
+        ));
+        MagnaDB::gi()->insert(TABLE_MAGNA_CONFIG, array(
+            'mpID' => $sMarketplaceId,
+            'mkey' => $sConfigKeyTrackingCode.'.alias',
+            'value' => 'order_id',
+        ));
+    }
+}

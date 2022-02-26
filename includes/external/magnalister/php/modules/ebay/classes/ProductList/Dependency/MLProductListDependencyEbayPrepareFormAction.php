@@ -91,6 +91,8 @@ class MLProductListDependencyEbayPrepareFormAction extends MLProductListDependen
 				if ('PictureURL' == $sPart) {
 					$aUpdateCols[$sPart] = NULL;
 					$aUpdateCols['eBayPicturePackPurge'] = '1';
+				} else if ('StrikePriceConf' == $sPart) {
+					$aUpdateCols[$sPart] = '{"ebay.strike.price.kind":"DontUse","ebay.strike.price.addkind":"percent","ebay.strike.price.factor":"0","ebay.strike.price.group":-1,"ebay.strike.price.kind.isUVP":"{\"val\":false}","ebay.strike.price.signal":""}';
 				}
 			}
 		}
@@ -143,6 +145,9 @@ class MLProductListDependencyEbayPrepareFormAction extends MLProductListDependen
 			}
 			if (isset($aRequest['resetPictures'])) {
 				$aPartsToReset[] = 'PictureURL';
+			}
+			if (isset($aRequest['resetStrikePrices'])) {
+				$aPartsToReset[] = 'StrikePriceConf';
 			}
 			if (!empty($aPartsToReset)) {
 				$this->resetPartly($aPartsToReset);

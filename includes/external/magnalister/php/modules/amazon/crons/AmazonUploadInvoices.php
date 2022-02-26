@@ -18,152 +18,132 @@
 
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
-require_once(DIR_MAGNALISTER_MODULES.'magnacompatible/crons/MagnaCompatibleCronBase.php');
+require_once(DIR_MAGNALISTER_MODULES.'magnacompatible/crons/MagnaCompatibleUploadInvoices.php');
 
-class AmazonUploadInvoices extends MagnaCompatibleCronBase {
+class AmazonUploadInvoices extends MagnaCompatibleUploadInvoices {
 
+    protected $sInvoiceOptionConfigKey = 'VCSInvoice';
     protected function getConfigKeys() {
+        global $magnaConfig;
+        if ($magnaConfig['db'][$this->mpID]['amazon.amazonvcs.invoice'] == 'erp') { 
+            try {
+                MLReceiptUpload::gi()->setConfig(array(
+                     'SHIPMENT'             => getDBConfigValue($this->marketplace.'.invoice.erpinvoicesource', $this->mpID),
+                     'SHIPMENT_DESTINATION' => getDBConfigValue($this->marketplace.'.invoice.erpinvoicedestination', $this->mpID),
+                     'RETURN'               => getDBConfigValue($this->marketplace.'.invoice.erpreversalinvoicesource', $this->mpID),
+                     'RETURN_DESTINATION'   => getDBConfigValue($this->marketplace.'.invoice.erpreversalinvoicedestination', $this->mpID),
+                     'REFUND'               => getDBConfigValue($this->marketplace.'.invoice.erpreversalinvoicesource', $this->mpID),
+                     'REFUND_DESTINATION'   => getDBConfigValue($this->marketplace.'.invoice.erpreversalinvoicedestination', $this->mpID),
+                ));
+            } catch (MagnaException $e) {
+                if (MLReceiptUpload::$ReceiptUploadError == $e->getCode()) {
+                    $this->out($e->getMessage());
+                } else {
+                    throw $e;
+                }
+            } catch (Exception $e) {
+                $this->out($e->getMessage());
+            }
+        } else if (    $magnaConfig['db'][$this->mpID]['amazon.amazonvcs.invoice'] == 'off'
+                    || empty($magnaConfig['db'][$this->mpID]['amazon.amazonvcs.invoice'])) {
+                $this->out(str_replace(array('{#marketplace#}','{#mpID#}'), array($this->marketplace, $this->mpID), ML_NO_INVOICE_UPLOAD_FROM_SHOP));
+        }
         $keys['VCSOption'] = array(
             'key'     => 'amazonvcs.option',
-            'default' => 'textfield',
+            'default' => 'off',
         );
-        $keys['VCSInvoice'] = array(
+        $keys[$this->sInvoiceOptionConfigKey] = array(
             'key'     => 'amazonvcs.invoice',
-            'default' => 'amazon',
+            'default' => 'off',
         );
 
         return $keys;
     }
 
-    protected function getShopOrderData($sOrderMarketplaceId) {
-        $mReturn = MagnaDB::gi()->fetchRow(eecho('
-		    SELECT *
-		      FROM `'.TABLE_MAGNA_ORDERS.'` mo
-		     WHERE mpID = "'.$this->mpID.'"
-		           AND mo.special =\''.$sOrderMarketplaceId.'\'
-		  ORDER BY mo.orders_id DESC
-		', $this->_debugLevel >= self::DBGLV_HIGH));
-
-        return is_array($mReturn) ? $mReturn : array();
-    }
-
     public function process() {
         if (in_array($this->config['VCSOption'], array('vcs-lite', 'off'), true)
-            && in_array($this->config['VCSInvoice'], array('webshop', 'magna'), true)
+            && in_array($this->config[$this->sInvoiceOptionConfigKey], array('webshop', 'erp', 'magna'), true)
         ) {
-            try {
-                $aResults = MagnaConnector::gi()->submitRequest(array(
-                    'SUBSYSTEM'     => $this->marketplace,
-                    'MARKETPLACEID' => $this->mpID,
-                    'ACTION'        => 'GetOrdersToUploadInvoices',
-                    'OFFSET'        => array(
-                        'COUNT' => 25,
-                        'START' => 0
-                    ),
-                    'RequestVersion' => 2,
-                ));
-                $aOrders = $aResults['DATA'];
+            $requestCount = 10;
+            $offset = 0;
 
-                $aDataToSubmit = array();
-                $this->out("\nProcessing orders to upload invoices {\n");
-                foreach ($aOrders as $aOrder) {
-                    $this->out('    '.$aOrder['AmazonOrderId'].' : '.$aOrder['TransactionType']."\n");
-                    $aMagnalisterOrder = $this->getShopOrderData($aOrder['AmazonOrderId']);
-                    $sPDFBase64 = $this->getInvoice($aMagnalisterOrder, $aOrder['TransactionType']);
-                    if (!empty($sPDFBase64) || $this->config['VCSInvoice'] === 'magna') {
-                        $aDataToSubmit[] = array(
-                            'TotalAmount'   => $this->getTotalAmount($aMagnalisterOrder),
-                            'TotalVAT'      => $this->getTotalVat($aMagnalisterOrder),
-                            'File'          => $sPDFBase64,
-                            'InvoiceNumber' => $this->getInvoiceNumber($aMagnalisterOrder, $aOrder['TransactionType']),
-                            'TransactionId' => $aOrder['TransactionId'],
-                            'AmazonOrderId' => $aOrder['AmazonOrderId'],
-                        );
-                    } else if ($sPDFBase64 == '' && $this->config['VCSInvoice'] === 'webshop') {
-                        $this->out('    '.'No pdf is available for '.$aOrder['special']." \n");
+            do {
+                try {
+                    $aResults = MagnaConnector::gi()->submitRequest(array(
+                        'SUBSYSTEM' => $this->marketplace,
+                        'MARKETPLACEID' => $this->mpID,
+                        'ACTION' => 'GetOrdersToUploadInvoices',
+                        'OFFSET' => array(
+                            'COUNT' => $requestCount,
+                            'START' => $offset
+                        ),
+                        'RequestVersion' => 2,
+                    ));
+                    $aOrders = $aResults['DATA'];
+
+                    $aDataToSubmit = array();
+                    $this->out("\nProcessing orders to upload invoices {\n");
+                    foreach ($aOrders as $aOrder) {
+                        $this->out('    '.$aOrder['AmazonOrderId'].' : '.$aOrder['TransactionType']."\n");
+                        $aMagnalisterOrder = $this->getMagnalisterOrderData($aOrder['AmazonOrderId']);
+                        if (empty($aMagnalisterOrder['orders_id'])) {
+                            $this->out('    '.'cannot find the order in magnalister_orders table, or the a sql error occurs '.$aOrder['AmazonOrderId']." \n");
+                            continue;
+                        }
+                        $sPDFBase64 = $this->getInvoice($aMagnalisterOrder, $aOrder['TransactionType']);
+                        if (!empty($sPDFBase64) || $this->config[$this->sInvoiceOptionConfigKey] === 'magna') {
+                            $aDataToSubmit[] = array(
+                                'TotalAmount' => $this->getTotalAmount($aMagnalisterOrder),
+                                'TotalVAT' => $this->getTotalVat($aMagnalisterOrder),
+                                'File' => $sPDFBase64,
+                                'InvoiceNumber' => $this->getInvoiceNumber($aMagnalisterOrder, $aOrder['TransactionType']),
+                                'TransactionId' => $aOrder['TransactionId'],
+                                'AmazonOrderId' => $aOrder['AmazonOrderId'],
+                            );
+                        }
+
+                        if (empty($sPDFBase64) && in_array($this->config[$this->sInvoiceOptionConfigKey], array('webshop', 'erp'), true)) {
+                            $this->out('    '.'No pdf is available for '.$aOrder['special']." \n");
+                        }
                     }
+                    $this->out("}\n");
+                    $this->out("\nConfirmation result {\n");
+
+                    $aResponse = MagnaConnector::gi()->submitRequest(array(
+                        'ACTION' => 'UploadInvoices',
+                        'SUBSYSTEM' => $this->marketplace,
+                        'MARKETPLACEID' => $this->mpID,
+                        'Invoices' => $aDataToSubmit,
+                        'RequestVersion' => 2,
+                    ));
+
+                    if (count($aResponse['CONFIRMATIONS']) > 0) {
+                        $this->setOrderAsProcessed($aResponse['CONFIRMATIONS']);
+                    }
+
+                } catch (\Exception $ex) {
+                    echo print_m($ex->getMessage());
+                    //                echo print_m(MagnaConnector::gi()->getLastRequest());
                 }
+
+                $offset += $requestCount - count($aResponse['CONFIRMATIONS']);
                 $this->out("}\n");
-                $this->out("\nConfirmed orders {\n");
-
-                $aResponse = MagnaConnector::gi()->submitRequest(array(
-                    'ACTION'        => 'UploadInvoices',
-                    'SUBSYSTEM'     => $this->marketplace,
-                    'MARKETPLACEID' => $this->mpID,
-                    'Invoices'      => $aDataToSubmit,
-                    'RequestVersion' => 2,
-                ));
-
-                if (count($aResponse['CONFIRMATIONS']) > 0) {
-                    foreach ($aResponse['CONFIRMATIONS'] as $sAmazonOrderId) {
-                        $aOrder = $this->getShopOrderData($sAmazonOrderId);
-                        $aOrderData = unserialize($aOrder['data']);
-                        $aOrderData['Invoice'] = 'sent';
-                        $sOrderData = serialize($aOrderData);
-                        MagnaDB::gi()->update(TABLE_MAGNA_ORDERS,
-                            $sOrderData,
-                            array('special' => $sAmazonOrderId)
-                        );
-                        $this->out('    '.$sAmazonOrderId."\n");
-                    }
-                }
-
-            } catch (\Exception $ex) {
-                echo print_m($ex->getMessage());
-                //                echo print_m(MagnaConnector::gi()->getLastRequest());
-            }
-
-            $this->out("}\n");
+            } while (count($aOrders) == $requestCount);
         }
     }
 
-    protected function getInvoiceNumber($aOrder, $sType) {
-        $sInvoiceNumber = '';
-        if (MagnaDB::gi()->tableExists('invoices')) {
-            if ($sType === 'SHIPMENT') {
-                return MagnaDB::gi()->fetchOne(eecho('SELECT `invoice_number` FROM `invoices` WHERE `order_id` =\''.$aOrder['orders_id'].'\' AND `invoice_number` NOT LIKE "%_STORNO%" LIMIT 1', $this->_debugLevel >= self::DBGLV_HIGH));
-            } elseif (in_array($sType, array('RETURN', 'REFUND'), true)) {
-                return MagnaDB::gi()->fetchOne(eecho('SELECT `invoice_number` FROM `invoices` WHERE `order_id` =\''.$aOrder['orders_id'].'\' AND `invoice_number` LIKE "%_STORNO%" LIMIT 1', $this->_debugLevel >= self::DBGLV_HIGH));
-            }
+    protected function addErrorToErrorLog($sErrorMessage, $aAdditionalData, $sErrorCode = '') {
+        $data = array (
+            'mpID' => $this->mpID,
+            'batchid' => '',
+            'errorcode' => $sErrorCode,
+            'errormessage' => $sErrorMessage,
+            'additionaldata' => serialize($aAdditionalData),
+        );
+        if(!MagnaDB::gi()->recordExists(TABLE_MAGNA_AMAZON_ERRORLOG, $data)) {
+            $data['dateadded'] = gmdate('Y-m-d H:i:s');
+            MagnaDB::gi()->insert(TABLE_MAGNA_AMAZON_ERRORLOG, $data);
         }
-
-        return $sInvoiceNumber;
     }
 
-    protected function getInvoice($aOrder, $sType) {
-        $sPdfBase64 = '';
-        if (MagnaDB::gi()->tableExists('invoices')) {
-            if ($sType === 'SHIPMENT') {
-                $sPdfPath = MagnaDB::gi()->fetchOne(eecho('SELECT `invoice_file` FROM `invoices` WHERE `order_id` =\''.$aOrder['orders_id'].'\' AND `invoice_number` NOT LIKE "%_STORNO%" LIMIT 1', $this->_debugLevel >= self::DBGLV_HIGH));
-
-                if (!empty($sPdfPath)) {
-                    $basePath = DIR_FS_CATALOG.'export/invoice/'.$sPdfPath;
-                    $sPdfBase64 = base64_encode(file_get_contents($basePath));
-                }
-            } elseif (in_array($sType, array('RETURN', 'REFUND'), true)) {
-                $sPdfPath = MagnaDB::gi()->fetchOne(eecho('SELECT `invoice_file` FROM `invoices` WHERE `order_id` =\''.$aOrder['orders_id'].'\' AND `invoice_number` LIKE "%_STORNO%"', $this->_debugLevel >= self::DBGLV_HIGH));
-                if (!empty($sPdfPath)) {
-                    $basePath = DIR_FS_CATALOG.'export/invoice/'.$sPdfPath;
-                    $sPdfBase64 = base64_encode(file_get_contents($basePath));
-                }
-            }
-        }
-
-        return $sPdfBase64;
-    }
-
-    /**
-     * Total amount of invoice in Gambio could be get from "total_sum" field "invoices" table
-     * here to have similar code in Gambio and other os-Commerce shop, we used orders_total
-     * @param $aOrder
-     * @return array|bool|mixed
-     */
-    protected function getTotalAmount($aOrder) {
-        return MagnaDB::gi()->fetchOne(eecho('SELECT sum(value) FROM `'.TABLE_ORDERS_TOTAL.'` WHERE `orders_id` =\''.$aOrder['orders_id'].'\' AND `class` = \'ot_total\' LIMIT 1', $this->_debugLevel >= self::DBGLV_HIGH));
-    }
-
-
-    protected function getTotalVat($aOrder) {
-        return MagnaDB::gi()->fetchOne(eecho('SELECT sum(value) FROM `'.TABLE_ORDERS_TOTAL.'` WHERE `orders_id` =\''.$aOrder['orders_id'].'\' AND `class` = \'ot_tax\' LIMIT 1', $this->_debugLevel >= self::DBGLV_HIGH));
-    }
 }

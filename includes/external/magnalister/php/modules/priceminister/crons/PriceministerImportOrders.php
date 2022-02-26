@@ -35,7 +35,10 @@ class PriceministerImportOrders extends MagnaCompatibleImportOrders {
 		return $this->config['OrderStatusOpen'];
 	}
 
-	protected function generateOrderComment() {
+	protected function generateOrderComment($blForce = false) {
+		if (!$blForce && !getDBConfigValue(array('general.order.information', 'val'), 0, true)) {
+			return ''; 
+		}
 		return trim(
 			sprintf(ML_GENERIC_AUTOMATIC_ORDER_MP_SHORT, $this->marketplaceTitle)."\n".
 			ML_LABEL_MARKETPLACE_ORDER_ID.': '.$this->getMarketplaceOrderID()."\n\n".
@@ -89,7 +92,7 @@ class PriceministerImportOrders extends MagnaCompatibleImportOrders {
 	}
 
 	protected function generateOrdersStatusComment() {
-		return $this->generateOrderComment();
+		return $this->generateOrderComment(true);
 	}
 
 	protected function acknowledgeImportedOrders() {

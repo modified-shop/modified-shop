@@ -17,6 +17,7 @@
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
+/* @deprecated */
 /* @var $this MLProductList */
 /* @var $aRow array */
 /* @var $aFieldConfig array */

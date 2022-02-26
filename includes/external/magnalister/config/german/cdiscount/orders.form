@@ -26,12 +26,12 @@
                 }
             },
             "autoacceptance": {
-                 "label": "Auto acceptance of orders",
-                 "desc": "If auto acceptance remain unchecked You will have to go to your Cdiscount seller profile (Link: <a target=\"_blank\" href = \"https://seller.cdiscount.com/Orders.html\">https://seller.cdiscount.com/Orders.html</a>) and to manually accept orders. After that step, you can update order status to 'cancel shipment' or 'confirm shipment' via magnalister plugin. If this field remain checked, orders will be accepted automatically(Besides that seller will be able to reject them in any moment).",
+                 "label": "Automatische Annahme von Bestellungen",
+                 "desc": "Wenn die automatische Annahme nicht aktiviert ist, m\u00fcssen Sie zu Ihrem Cdiscount-Verk\u00e4uferprofil gehen und Bestellungen manuell annehmen.<br>\r\n                (Link: <a href = \"https:\/\/seller.cdiscount.com\/Orders.html\">https:\/\/seller.cdiscount.com\/Orders.html<\/a>)<br><br>\r\n            Nach diesem Schritt k\u00f6nnen Sie den Bestellstatus \u00fcber das magnalister-Plugin auf \"Versand stornieren\" oder \"Versand best\u00e4tigen\" aktualisieren.<br>\r\n            Wenn dieses Einstellung aktiviert ist, werden die Bestellungen automatisch angenommen (au\u00dfer dass der Verk\u00e4ufer sie jederzeit ablehnen kann).",
                  "key": "_#_platform_#_.orderstatus.autoacceptance",
                  "type": "checkbox",
                  "values" : {
-                      "val" : "(Recommended) Regardless you accept this field you will be able to reject order at any moment.Click help icon for more info."
+                      "val" : "(Empfohlen) Unabh\u00e4ngig davon, ob Sie dieses Einstellung aktivieren, k\u00f6nnen Sie die Bestellung jederzeit ablehnen. Klicken Sie auf das Hilfesymbol f\u00fcr weitere Informationen."
                  },
                  "default" : {
                       "val" : true

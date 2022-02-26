@@ -1,0 +1,648 @@
+{
+    "account": {
+        "headline": "idealo Account",
+        "fields": {
+            "csvpath": []
+        }
+    },
+    "directbuyactivation": {
+        "headline": "idealo Direktkauf",
+        "fields": {
+            "directbuyactive": {
+                "key": "idealo.directbuy.active",
+                "label": "idealo Direktkauf verwenden",
+                "desc": "W\u00E4hlen Sie hier, ob Sie den idealo Direktkauf verwenden.\r\n<br><br>\r\nSofern Sie auf \u201CJa\u201D klicken, f\u00FChren Sie folgende Schritte aus um Zugangsdaten zur idealo Direktkauf Merchant Order API v2 zu erhalten:\r\n<ul>\r\n<li>\r\nLoggen Sie sich in Ihrem <a target=\"_blank\" href=\"https:\/\/business.idealo.com\/\">idealo Business Account<\/a> ein.\r\n<\/li><li>\r\nNavigieren Sie zu \u201CDirektkauf\u201D -> \u201CIntegration\u201D -> \u201CNeuen API Client erstellen\u201D\r\n<\/li><li>\r\nW\u00E4hlen Sie die Option \u201CNeuen Produktiv-Client erstellen\u201D\r\n<\/li><li>\r\nKopieren und speichern Sie die die generierte \u201CClient-ID\u201D und das \u201CClient-Passwort\u201D ab\r\n<\/li>\r\n<\/ul>\r\nNun k\u00F6nnen Sie die Werte in magnalister in die Felder \u201Cidealo Direktkauf Client-ID\u201D und \u201Cidealo Direktkauf Passwort\u201D eintragen und auf \u201CDaten speichern\u201D klicken. \r\n",
+                "type": "radio",
+                "values": {
+                    "true": "Ja",
+                    "false": "Nein"
+                },
+                "default": "false"
+            },
+            "directbuyclientid": {
+                "label": "idealo Direktkauf \u201CClient ID\u201D",
+                "key": "idealo.directbuy.clientid",
+                "desc": "Tragen Sie hier die \u201CClient ID\u201D ein, die Sie \u00FCber Ihren idealo Business Account unter \u201CDirektkauf\u201D -> \u201CIntegration\u201D -> \u201CNeuen API Client erstellen\u201D generiert haben.\r\n<br><br>\r\nN\u00E4here Informationen dazu finden Sie im Info-Icon neben \u201Cidealo Direktkauf verwenden\u201D.",
+                "type": "text",
+                "parameters": {
+                    "data-direct": "true"
+                }
+            },
+            "idealodirectbuypassword": {
+                "label": "idealo Direktkauf \u201CClient-Passwort\u201D",
+                "key": "idealo.directbuy.password",
+                "desc": "Tragen Sie hier das \u201CClient-Passwort\u201D ein, das Sie \u00FCber Ihren idealo Business Account unter \u201CDirektkauf\u201D -> \u201CIntegration\u201D -> \u201CNeuen API Client erstellen\u201D generiert haben.\r\n<br><br>\r\nN\u00E4here Informationen dazu finden Sie im Info-Icon neben \u201Cidealo Direktkauf verwenden",
+                "type": "password",
+                "settings": {
+                    "save": false
+                },
+                "parameters": {
+                    "data-direct": "true"
+                }
+            }
+        }
+    },
+    "lang": {
+        "headline": "Spracheinstellungen",
+        "fields": {
+            "lang": {
+                "label": "Artikelbeschreibung",
+                "key": "idealo.lang",
+                "type": "selection",
+                "values": null
+            }
+        }
+    },
+    "prepare": {
+        "headline": "Artikelvorbereitung",
+        "fields": {
+            "filter": {
+                "label": "Statusfilter",
+                "key": "_#_platform_#_.prepare.status",
+                "type": "checkbox",
+                "values": {
+                    "val": "nur aktive Artikel &uuml;bernehmen"
+                },
+                "default": {
+                    "val": false
+                }
+            }
+        }
+    },
+    "shop": {
+        "headline": "Artikel hochladen: Voreinstellungen",
+        "desc": "<b>Preissuchmaschine und Direktkauf<\/b>",
+        "fields": {
+            "statusfilter": {
+                "label": "Statusfilter",
+                "key": "idealo.checkin.status",
+                "desc": "Im Web-Shop k&ouml;nnen Sie Artikel aktiv oder inaktiv setzen. Je nach Einstellung hier werden nur aktive Artikel in der Vorbereitung und beim Produkte hochladen angezeigt.",
+                "type": "checkbox",
+                "values": {
+                    "val": "nur aktive Artikel &uuml;bernehmen"
+                },
+                "default": {
+                    "val": false
+                }
+            },
+            "paymentmethods": {
+                "label": "Zahlungsart",
+                "desc": "Geben Sie hier die gew&uuml;nschten Standard-Zahlungsarten f&uuml;r das Preisvergleichs-Portal und Direktkauf an (Mehrfachauswahl m&ouml;glich).<br \/>Sie k&ouml;nnen die Zahlungsarten unter \"Produkte vorbereiten\" jederzeit individuell f&uuml;r die vorzubereitenden Produkte anpassen.<br \/><br \/><strong>Hinweis:<\/strong> idealo bietet f&uuml;r Direktkauf nur die Zahlarten PayPal, Sofort&uuml;berweisung und Kreditkarte an.<br \/>Die f&uuml;r Direktkauf gew&auml;hlten Zahlarten werden automatisch auch im Preisvergleichsportal angegeben.",
+                "key": "idealo.payment.methods",
+                "type": "multiselection",
+                "parameters": {
+                    "size": "12"
+                },
+                "values": {
+                    "Direktkauf & Suchmaschine:": {
+                        "PAYPAL": "Sofort&uuml;berweisung",
+                        "CREDITCARD": "PayPal",
+                        "SOFORT": "Kreditkarte"
+                    },
+                    "Nur Suchmaschine:": {
+                        "PRE": "Vorkasse",
+                        "COD": "Nachnahme",
+                        "BANKENTER": "Bankeinzug",
+                        "BILL": "Rechnung",
+                        "GIROPAY": "Giropay",
+                        "CLICKBUY": "Click&Buy",
+                        "SKRILL": "Skrill"
+                    }
+                }
+            },
+            "quantity": {
+                "label": "Lagerbestand",
+                "desc": "idealo kennt nur Lagermenge \"Verf&uuml;gbar\" oder \"Nicht verf&uuml;gbar\". Geben Sie hier&uuml;ber an, ob Lagermenge entsprechend Ihres Shop-Lagerbestandes auf dem Marktplatz verf&uuml;gbar sein soll.<br \/><br \/>Um &Uuml;berverk&auml;ufe zu vermeiden, k&ouml;nnen Sie den Wert \"Shop-Lagerbestand &uuml;bernehmen und abzgl. \"Wert aus rechtem Feld\" aktivieren.<br \/><br \/><b>Beispiel:<\/b> Wert auf \"2\" setzen. Ergibt \u2192 Shoplager: 2 \u2192 idealo.de-Lager: Artikel nicht verf&uuml;gbar (0).<br \/><br \/> <b>Hinweis:<\/b> Wenn Sie Artikel, die im Shop inaktiv gesetzt werden, unabh&auml;ngig der verwendeten Lagermengen auch auf dem Marktplatz als Lager \"0\" behandeln wollen, gehen Sie bitte wie folgt vor:<br \/><ul><li>\"Synchronisation des Inventars\" > \"Lagerver&auml;nderung Shop\" auf \"automatische Synchronisation per CronJob\" einstellen<\/li><li>\"Globale Konfiguration\" > \"Produktstatus\" > \"Wenn Produktstatus inaktiv ist, wird der Lagerbestand wie 0 behandelt\" aktivieren<\/li><\/ul>",
+                "key": "idealo.quantity.type",
+                "type": "selection",
+                "values": {
+                    "stock": "Shop-Lagerbestand &uuml;bernehmen",
+                    "stocksub": "Shop-Lagerbestand &uuml;bernehmen abzgl. Wert aus rechtem Feld",
+                    "lump": "Pauschal (aus rechtem Feld)"
+                },
+                "default": "stock",
+                "morefields": {
+                    "quantity": {
+                        "key": "idealo.quantity.value",
+                        "type": "text",
+                        "default": 0,
+                        "verify": "int",
+                        "cssClasses": [
+                            "autoWidth"
+                        ]
+                    }
+                }
+            },
+            "mfnpartno": {
+                "label": "Hersteller-Modellnummer",
+                "desc": "Falls Sie ein Contrib zur Verwaltung von Hersteller-Modellnummern verwenden, k&ouml;nnen Sie hier die Tabelle und die Spalte ausw&auml;hlen in der die\n\t\t\t\t           Hersteller-Modellnummer gespeichert wird. Dadurch wird das Feld f&uuml;r die Hersteller-Modellnummern bei Vorbereitung vorausgef&uuml;llt. <br\/>\n\t\t\t\t           Sollte in der Tabelle die Spalte \"products_id\" anders benannt sein, geben Sie bitte bei Alias die alternative Bezeichnung f&uuml;r die Spalte mit der gleichen \n\t\t\t\t           Bedeutung an.<br\/><br\/>\n\t\t\t\t           <b>Hinweis:<\/b> Diese Daten werden nicht &uuml;berpr&uuml;ft. Sollten Sie fehlerhaft sein, wird es zu Datenbankfehlern kommen!",
+                "key": "comparisonshopping.checkin.manufacturerpartnumber.table",
+                "type": "dbfieldselector",
+                "expertsetting": true,
+                "morefields": {
+                    "alias": {
+                        "label": "<span class=\"tt\">`products_id`<\/span> Alias",
+                        "key": "comparisonshopping.checkin.manufacturerpartnumber.alias",
+                        "type": "text",
+                        "cssClasses": [
+                            "autoWidth"
+                        ]
+                    }
+                }
+            },
+            "imagepath": {
+                "label": "Bilder-Verzeichnis",
+                "key": "idealo.imagepath",
+                "type": "text",
+                "expertsetting": true,
+                "desc": "Verzeichnis, aus dem die Produktbilder genommen werden sollen."
+            }
+        }
+    },
+    "preparedirect": {
+        "headline": "",
+        "desc": "<b>Direktkauf<\/b>",
+        "fields": {
+            "maxquantity": {
+                "label": "Bestelllimit pro Kalendertag",
+                "desc": "Bestelllimit pro Kalendertag f&uuml;r den Direktkauf:<br \/><br \/>Sie k&ouml;nnen hier angeben, wie viele Artikel am Kalendertag &uuml;ber den Direktkauf verkauft werden d&uuml;rfen. Ohne diese Angabe bleibt der Artikel im Direktkauf verf&uuml;gbar bis das Angebot entweder gel&ouml;scht, oder Einstellungen ge&auml;ndert werden.<br \/><br \/>Bitte beachten Sie: Dieses Feld sollte nicht mit Ihrem Lagerbestand verwechselt werden. Hier geht es um ein Tageslimit, welches f&uuml;r den idealo Direktkauf bestimmt wird.<br \/><br \/><p style=\"color:red;\"><b>Hinweis:<\/b><br \/>Einstellungen unter \"St&uuml;ckzahl Lagerbestand\" werden bis zum hier eingestellten Bestelllimit ber&uuml;cksichtigt.<br \/><br \/>Wenn die \"St&uuml;ckzahl\"-Einstellung \"Pauschal (aus rechtem Feld)\" aktiviert ist, hat das Limit keine Wirkung.<\/p>",
+                "key": "idealo.quantity.maxquantity",
+                "type": "text",
+                "default": "",
+                "cssClasses": [
+                    "autoWidth"
+                ],
+                "parameters": {
+                    "data-direct": "true"
+                }
+            }
+        }
+    },
+    "shipping": {
+        "headline": "Versanddetails",
+        "desc": "Legt fest, mit welchen Versandeinstellungen die Produkte bei diesem Marketplace eingestellt werden sollen.<p><b>Preissuchmaschine und Direktkauf<\/b><\/p>",
+        "fields": {
+            "country": {
+                "label": "Versand nach",
+                "key": "idealo.shipping.country",
+                "type": "selection",
+                "values": null
+            },
+            "method": {
+                "label": "Versandkosten",
+                "desc": "Tragen Sie hier die pauschalen Versandkosten f&uuml;r Ihre Artikel ein. In der Produktvorbereitung k&ouml;nnen Sie die Werte f&uuml;r die ausgew&auml;hlten Artikel individuell speichern.",
+                "key": "idealo.shipping.method",
+                "type": "selection",
+                "values": null,
+                "hint": "Beispiel: 6.70 (Ohne Angabe einer W&auml;hrung)",
+                "morefields": {
+                    "cost": {
+                        "label": "Versandkosten",
+                        "key": "idealo.shipping.cost",
+                        "type": "text",
+                        "default": "6.70",
+                        "verify": "float",
+                        "cssClasses": [
+                            "autoWidth"
+                        ],
+                        "rightlabel": "const(DEFAULT_CURRENCY)",
+                        "formatstr": "%.2f"
+                    }
+                }
+            },
+            "deliverytime": {
+                "label": "Lieferzeit",
+                "desc": "Bitte geben Sie Lieferzeiten so genau wie möglich an. Onlinehändler sind gesetzlich\ndazu verpflichtet, dem Verbraucher anhand der Lieferzeitangabe mitzuteilen, wann\ndie Ware bei ihm eintrifft. Daraus resultiert, dass die immer noch weitverbreiteten\nAngaben wie „versandfertig“ oder „lieferbar“ nicht mehr zulässig sind. Ebenso\ndürfen keine relativierenden Zusätze wie „voraussichtlich“ oder „in der Regel“\nverwendet werden. Bitte geben Sie daher möglichst Lieferzeiten in Werktagen an, z.\nB. “Lieferung in 1-3 Werktagen”.",
+                "key": "_#_platform_#_.deliverytime",
+                "type": "text",
+                "cssClasses": [
+                    "autoWidth"
+                ],
+                "values": null
+            }
+        }
+    },
+    "shippingdirect": {
+        "desc": "<b>Direktkauf<\/b>",
+        "fields": {
+            "shippingmethods": {
+                "label": "Versandart",
+                "desc": "Geben Sie hier an, welche Versandart f&uuml;r Ihre Direktkauf-Angebote gelten sollen.",
+                "key": "_#_platform_#_.shipping.methods",
+                "type": "selection",
+                "parameters": {
+                    "data-direct": "true"
+                },
+                "values": {
+                    "Paketdienst": "Paketdienst",
+                    "Spedition": "Spedition",
+                    "Download": "Download"
+                }
+            },
+            "twomanhandlingfee": {
+                "label": "Direkkauf Spedition - Lieferkosten bis zum Aufstellort",
+                "key": "_#_platform_#_.shipping.methods.twomanhandlingfee",
+                "type": "text",
+                "rightlabel": "const(DEFAULT_CURRENCY)",
+                "cssClasses": [
+                    "autoWidth"
+                ],
+                "parameters": {
+                    "data-direct": "true",
+                    "data-fulfillment": "Spedition"
+                },
+                "formatstr": ""
+            },
+            "disposalfee": {
+                "label": "Direkkauf Spedition - Kosten Altgerätemitnahme",
+                "key": "_#_platform_#_.shipping.methods.disposalfee",
+                "type": "text",
+                "rightlabel": "const(DEFAULT_CURRENCY)",
+                "cssClasses": [
+                    "autoWidth"
+                ],
+                "parameters": {
+                    "data-direct": "true",
+                    "data-fulfillment": "Spedition"
+                },
+                "formatstr": ""
+            }
+        }
+    },
+    "price": {
+        "headline": "Preisberechnung",
+        "fields": {
+            "whichprice": {
+                "label": "Preisoptionen",
+                "leftlabel": "Preis aus Kundengruppe",
+                "desc": "Mit dieser Funktion k&ouml;nnen Sie abweichende Preise zu idealo &uuml;bergeben und automatisch synchronisieren lassen. Hinterlegen Sie hierzu in Ihrem Web-Shop entsprechende Kundengruppen. Wenn Sie keinen Preis in der neuen Kundengruppe eintragen, wird automatisch der Standard-Preis aus dem Web-Shop verwendet. Somit ist es sehr einfach, auch f&uuml;r nur wenige Artikel einen abweichenden Preis zu hinterlegen.<br \/>Die &uuml;brigen Konfigurationen zum Preis finden ebenfalls Anwendung.<br \/><br \/>Beispiel:<ul><li>Hinterlegen Sie in Ihrem Web-Shop eine Kundengruppe \"idealo-Kunden\"<\/li><li>F&uuml;gen Sie in Ihrem Web-Shop an den Artikeln in der neuen Kundengruppe die gew&uuml;nschten Preise ein.<\/li><\/ul>",
+                "key": "idealo.price.group",
+                "type": "selection",
+                "values": null,
+                "cssClasses": [
+                    "rightSpacer"
+                ],
+                "morefields": {
+                    "cost": {
+                        "key": "idealo.price.usespecialoffer",
+                        "type": "checkbox",
+                        "values": {
+                            "val": "auch Sonderpreise verwenden"
+                        },
+                        "default": {
+                            "val": false
+                        }
+                    }
+                }
+            },
+            "specialprices": {
+                "label": "Sonderpreise",
+                "key": "idealo.price.usespecialoffer",
+                "type": "checkbox",
+                "values": {
+                    "val": "auch Sonderpreise verwenden"
+                },
+                "default": {
+                    "val": false
+                }
+            },
+            "exchangerate": {
+                "label": "Wechselkurs",
+                "desc": "<b>Grunds&auml;tzlich:<\/b><br \/> <br \/> Wenn die Web-Shop Standard-W&auml;hrung von der Marktplatz-W&auml;hrung abweicht, berechnet magnalister beim Bestellimport und beim Artikelupload anhand des W&auml;hrungskurses, der im Web-Shop hinterlegt ist.<br \/> Beim Bestellimport verh&auml;lt sich magnalister beim Speichern der W&auml;hrungen und Betr&auml;ge 1:1 so, wie der Web-Shop sie bei Bestelleingang auch anlegt.<br \/> <br \/> <b>Achtung:<\/b><br \/> <br \/> Durch Aktivieren dieser Funktion hier wird der <span style='color:red'>im Web-Shop hinterlegte Wechselkurs mit dem aktuellen Kurs aus Yahoo-Finance aktualisiert<\/span>.  Dadurch werden <span style='color:red'>auch die Preise in Ihrem Web-Shop<\/span> mit dem aktualisierten Wechselkurs zum Verkauf angezeigt.<br \/> <br \/> Folgende Funktionen l&ouml;sen die Aktualisierung aus:<ul> <li>Bestellimport<\/li> <li>Artikel-Vorbereitung<\/li> <li>Artikel-Upload<\/li> <li>Lager-\/Preis-Synchronisation<\/li> <\/ul><br \/> Sollte der W&auml;hrungskurs eines Marktplatzes in der W&auml;hrungskonfiguration des Web-Shops nicht angelegt sein, gibt magnalister eine Fehlermeldung aus.<br \/> <br \/> <b>Haftungshinweis:<\/b><br \/> RedGecko GmbH &uuml;bernimmt keine Haftung f&uuml;r die Richtigkeit des Wechselkurses. Bitte pr&uuml;fen Sie die &uuml;bermittelten Werte in Ihrem idealo.de-Konto.",
+                "key": "idealo.exchangerate",
+                "type": "checkbox",
+                "values": {
+                    "update": "Wechselkurs automatisch aktualisieren"
+                },
+                "default": {
+                    "update": false
+                }
+            }
+        }
+    },
+    "orders": {
+        "headline": "Bestellimport Direktkauf",
+        "fields": {
+            "doimport": {
+                "label": "Import aktivieren",
+                "desc": "Sollen Bestellungen aus idealo.de importiert werden? <br\/><br\/>Wenn die Funktion aktiviert ist, werden\n\t\t\t\t           Bestellungen voreingestellt st&uuml;ndlich importiert.<br><br>\n\t\t\t\t\t\t   Sie k&ouml;nnen die Zeiten der automatischen Bestellimporte selbst unter<br> \n\t\t\t\t\t\t   \"magnalister Admin\" \u2192 \"Globale Konfiguration\" \u2192 \"Bestellabrufe\" bestimmen.<br><br>\n\t\t\t\t\t\t   Einen manuellen Import k&ouml;nnen Sie ansto\u00dfen, indem Sie den entsprechenden Funktionsbutton in der \n\t\t\t\t\t\t   Kopfzeile vom magnalister anklicken (links von der Ameise).<br><br>\n\t\t\t\t\t\t   Zus&auml;tzlich k&ouml;nnen Sie den Bestellimport (ab Tarif Flat - maximal viertelst&uuml;ndlich) auch durch \n\t\t\t\t\t\t   einen eigenen CronJob ansto\u00dfen, indem Sie folgenden Link zu Ihrem Shop aufrufen: <br>\n    \t\t\t           <i>http:\/\/www.IhrShop.de\/magnaCallback.php?do=ImportOrders<\/i><br><br>\n    \t\t\t           Eigene CronJob-Aufrufe durch Kunden, die nicht im Tarif Flat sind, oder die h&auml;ufiger als viertelst&uuml;ndlich\n    \t\t\t           laufen, werden geblockt.\t\t\t\t\t\t   \n\t\t\t\t\t\t   ",
+                "key": "idealo.import",
+                "type": "radio",
+                "values": {
+                    "true": "Ja",
+                    "false": "Nein"
+                },
+                "default": "true",
+                "submit": "Orders.Import",
+                "morefields": {
+                    "preimportsince": {
+                        "label": "erstmalig ab Zeitpunkt",
+                        "desc": "Startzeitpunkt, ab dem die Bestellungen erstmalig importiert werden sollen. Bitte beachten Sie, dass dies\n\t\t\t\t\t\t           nicht beliebig weit in die Vergangenheit m&ouml;glich ist, da die Daten bei idealo.de \n\t\t\t\t\t\t           h&ouml;chstens einige Wochen lang vorliegen.",
+                        "key": "idealo.preimport.start",
+                        "type": "date",
+                        "default": "now",
+                        "submit": "Orders.Import.Start",
+                        "cssClasses": [
+                            "autoWidth",
+                            "rightSpacer"
+                        ],
+                        "parameters": {
+                            "data-direct": "true"
+                        }
+                    }
+                },
+                "parameters": {
+                    "data-direct": "true"
+                }
+            },
+            "onlycomplete": false,
+            "customersgroup": {
+                "label": "Kundengruppe",
+                "desc": "Kundengruppe, zu der Kunden bei neuen Bestellungen zugeordnet werden sollen.<br><br>\n                                <b>Hinweis:<\/b> Wenn Sie die Kundengruppe &quot;Gast&quot; w&auml;hlen, wird das Kundenkonto sofort na Anlegen der Bestellung gel&ouml;scht.",
+                "key": "idealo.CustomerGroup",
+                "type": "selection",
+                "values": null,
+                "default": "2",
+                "parameters": {
+                    "data-direct": "true"
+                }
+            },
+            "unpaidsatus": false,
+            "openstatus": {
+                "label": "Bestellstatus im Shop",
+                "desc": "Der Status, den eine von idealo.de neu eingegangene Bestellung im Shop automatisch bekommen soll. <br\/>\n\t\t\t\t           Sollten Sie ein angeschlossenes Mahnwesen verwenden, ist es empfehlenswert, den Bestellstatus auf \"Bezahlt\"\n\t\t\t\t           zu setzen (Konfiguration \u2192 Bestellstatus).",
+                "key": "idealo.orderstatus.open",
+                "type": "selection",
+                "values": null,
+                "default": "2",
+                "parameters": {
+                    "data-direct": "true"
+                }
+            },
+            "defaultshipping": {
+                "label": "Versandart der Bestellungen",
+                "desc": "Versandart, die allen idealo.de-Bestellungen zugeordnet wird. Standard: \"marketplace\".<br><br>\n\t\t\t\t           Diese Einstellung ist wichtig f&uuml;r den Rechnungs- und Lieferscheindruck und f&uuml;r die nachtr&auml;gliche\n\t\t\t\t           Bearbeitung der Bestellung im Shop sowie einige Warenwirtschaften.",
+                "key": "idealo.orderimport.shippingmethod",
+                "type": "selection",
+                "values": {
+                    "textfield": "Aus Textfeld"
+                },
+                "default": "textfield",
+                "expertsetting": true,
+                "morefields": {
+                    "quantity": {
+                        "key": "idealo.orderimport.shippingmethod.name",
+                        "type": "text",
+                        "default": "marketplace",
+                        "cssClasses": [
+                            "autoWidth"
+                        ],
+                        "parameters": {
+                            "data-direct": "true"
+                        }
+                    }
+                },
+                "parameters": {
+                    "data-direct": "true"
+                }
+            },
+            "defaultpayment": {
+                "label": "Zahlart der Bestellungen",
+                "desc": "Zahlart, die allen _#_platformName_#_-Bestellungen zugeordnet wird. Standard: \"marketplace\".<br><br>\\n\\t\\t\\t\\t           Diese Einstellung ist wichtig f&uuml;r den Rechnungs- und Lieferscheindruck und f&uuml;r die nachtr&auml;gliche\\n\\t\\t\\t\\t           Bearbeitung der Bestellung im Shop sowie einige Warenwirtschaften.",
+                "key": "_#_platform_#_.orderimport.paymentmethod",
+                "type": "selection",
+                "values": {
+                    "textfield": "Aus Textfeld"
+                },
+                "default": "textfield",
+                "expertsetting": true,
+                "morefields": {
+                    "quantity": {
+                        "key": "_#_platform_#_.orderimport.paymentmethod.name",
+                        "type": "text",
+                        "default": "marketplace",
+                        "cssClasses": [
+                            "autoWidth"
+                        ],
+                        "parameters": {
+                            "data-direct": "true"
+                        }
+                    }
+                },
+                "parameters": {
+                    "data-direct": "true"
+                }
+            },
+            "vat_unknown": {
+                "label": "MwSt. Shop-fremder Artikel",
+                "desc": "Wenn beim Bestellimport die Artikelnummer eines Kaufs im Web-Shop nicht erkannt wird, kann die Mehrwertsteuer nicht berechnet werden.<br \/>Als L&ouml;sung wird der hier angegebene Wert in Prozent bei allen Produkten hinterlegt, deren Mehrwertsteuersatz beim Bestellimport aus idealo nicht bekannt ist.",
+                "hint": "Steuersatz, der f&uuml;r Shop-fremde Artikel bei Bestellimport verwendet wird in %.",
+                "key": "idealo.mwst.fallback",
+                "type": "text",
+                "default": "19",
+                "verify": "float",
+                "parameters": {
+                    "data-direct": "true"
+                }
+            }
+        }
+    },
+    "orderSyncState": {
+        "headline": "Bestellstatus Direktkauf",
+        "fields": {
+            "syncstatus": {
+                "label": "Status Synchronisierung",
+                "desc": "<dl>\n\t\t\t\t\t\t\t\t<dt>Automatische Synchronisierung per CronJob (empfohlen)<\/dt>\n\t\t\t\t\t\t\t\t\t<dd>Die Funktion \"Automatische Synchronisierung per CronJob\" &uuml;bermittelt alle 2 Stunden den aktuellen Versendet-Status zu idealo.de.<br\/>\n\t\t\t\t\t\t\t\t\t\tDabei werden die Status-Werte aus der Datenbank gepr&uuml;ft und &uuml;bernommen, auch wenn die \u00c4nderungen durch z.B. eine Warenwirtschaft nur in der Datenbank erfolgten.<br\/><br\/>\n\t\t\t\t\t\t\t\t\t\tEinen manuellen Abgleich k&ouml;nnen Sie ansto\u00dfen, indem Sie die Bestellung direkt im Web-Shop bearbeiten, dort  den gew&uuml;nschten Status setzen, und dann auf \"Aktualisieren\" klicken.<br\/>\n\t\t\t\t\t\t\t\t\t\tSie k&ouml;nnen auch den entsprechenden Funktionsbutton in der Kopfzeile vom magnalister anklicken (links von der Ameise), um den Status sofort zu &uuml;bergeben.<br\/><br\/>\n\t\t\t\t\t\t\t\t\t\tZus&auml;tzlich k&ouml;nnen Sie den Bestellstatus-Abgleich (ab Tarif Premium - maximal viertelst&uuml;ndlich) auch durch einen eigenen CronJob ansto\u00dfen, indem Sie folgenden Link zu Ihrem Shop aufrufen: <br\/><br\/>\n\t\t\t\t\t\t\t\t\t\t<i>http:\/\/www.IhrShop.de\/plugins\/magnalister\/magnaCallback.php?do=SyncOrderStatus<\/i><br\/><br\/>\n\t\t\t\t\t\t\t\t\t\tEigene CronJob-Aufrufe durch Kunden, die nicht im Tarif Premium sind, oder die h&auml;ufiger als viertelst&uuml;ndlich laufen, werden geblockt.\n\t\t\t\t\t\t\t\t\t<\/dd>\n\t\t\t\t\t\t\t\t<!--<dt>Syncronisierung &uuml;ber Web-Shop<\/dt>\n\t\t\t\t\t\t\t\t\t<dd>Mit dieser Funktion wird der Bestellstatus direkt und ausschlie\u00dflich &uuml;ber das Bearbeiten der Bestellung im Web-Shop\n\t\t\t\t\t\t\t\t\t(nicht &uuml;ber eine angebundene Warenwirtschaft) &uuml;bermittelt, sobald Sie den entsprechenden Status ausw&auml;hlen, und \"Aktualisieren\" klicken.<\/dd>-->\n\t\t\t\t\t\t\t<\/dl>\n\t\t\t\t",
+                "key": "idealo.orderstatus.sync",
+                "type": "selection",
+                "values": {
+                    "auto": "Automatische Synchronisierung per CronJob (empfohlen)",
+                    "no": "Keine Synchronisierung"
+                },
+                "default": "auto",
+                "parameters": {
+                    "data-direct": "true"
+                }
+            },
+            "shippedstatus": {
+                "label": "Versand best&auml;tigen mit",
+                "desc": "Setzen Sie hier den Shop-Status, der auf idealo automatisch den Status \"Versendet\" setzen soll.",
+                "key": "idealo.orderstatus.shipped",
+                "type": "selection",
+                "values": null,
+                "parameters": {
+                    "data-direct": "true"
+                }
+            },
+            "carrier": {
+                "label": "Spediteur",
+                "desc": "Vorausgew&auml;hlter Spediteur beim Best&auml;tigen des Versandes nach idealo (kann &uuml;ber Experteneinstellungen unter Spediteur-Matching erweitert werden).",
+                "key": "idealo.orderstatus.carrier.default",
+                "type": "text",
+                "values": null,
+                "parameters": {
+                    "data-direct": "true"
+                }
+            },
+            "carrierMatch": {
+                "label": "Spediteur-Matching",
+                "desc": "Beim &Uuml;bermitteln des Versendet-Status wird automatisch der unter \"Bestellstatus Direktkauf\" hinterlegte Spediteur an den Marktplatz &uuml;bermittelt. &Uuml;ber diese Einstellung hier k&ouml;nnen Sie den Spediteur abweichend dazu auf ein Datenbankfeld matchen, in dem Sie die den Spediteur f&uuml;r jede Bestellung individuell hinterlegt haben (Order-ID muss in der Tabelle ebenfalls angegeben werden).<br \/><br \/>Wenn in dem gew&auml;hlten Datenbankfeld kein Spediteur gefunden wird, wird automatisch der unter \"Bestellstatus Direktkauf\" angegebene Spediteur beim &Uuml;bermitteln des Versendet-Status verwendet.",
+                "key": "idealo.orderstatus.carrier.dbmatching.table",
+                "type": "dbfieldselector",
+                "expertsetting": true,
+                "morefields": {
+                    "alias": {
+                        "label": "<span class='tt'>`orders_id`<\/span> Alias",
+                        "key": "idealo.orderstatus.carrier.dbmatching.alias",
+                        "type": "text",
+                        "cssClasses": [
+                            "autoWidth"
+                        ]
+                    }
+                }
+            },
+            "trackingmatch": {
+                "label": "Trackingcode Matching",
+                "desc": "Hier&uuml;ber k&ouml;nnen Sie auf jedes beliebige Datenbankfeld matchen, dass den Tracking-Code enth&auml;lt. Voraussetzung ist, dass die orders_id ebenfalls in der Tabelle hinterlegt ist. Sollte die order-id anders bezeichnet sein, k&ouml;nnen Sie in dem rechten Feld \"orders_id` Alias\" den entsprechend Wert hinterlegen.",
+                "key": "idealo.orderstatus.trackingcode.dbmatching.table",
+                "type": "dbfieldselector",
+                "expertsetting": true,
+                "morefields": {
+                    "alias": {
+                        "label": "<span class='tt'>`orders_id`<\/span> Alias",
+                        "key": "idealo.orderstatus.trackingcode.dbmatching.alias",
+                        "type": "text",
+                        "cssClasses": [
+                            "autoWidth"
+                        ],
+                        "parameters": {
+                            "data-direct": "true"
+                        }
+                    }
+                },
+                "parameters": {
+                    "data-direct": "true"
+                }
+            },
+            "cancelstatus": {
+                "label": "Bestellung stornieren mit",
+                "desc": "W&auml;hlen Sie hier den Shop-Status, der zu idealo automatisch den Status \"Bestellung storniert\" &uuml;bermitteln soll.<br \/><br \/><strong>Hinweis:<\/strong> Teilstorno ist hier&uuml;ber nicht m&ouml;glich. Die gesamte Bestellung wird &uuml;ber diese Funktion storniert.",
+                "key": "idealo.orderstatus.cancelled",
+                "type": "selection",
+                "values": null,
+                "parameters": {
+                    "data-direct": "true"
+                }
+            },
+            "cancelreaason": {
+                "label": "Bestellung stornieren-Grund",
+                "desc": "W&auml;hlen Sie hier den Standard-Storno Grund:<ul><li>\"Kunden-Widerruf\"<\/li><li>\"H&auml;ndler kann nicht liefern\"<\/li><li>\"Retoure\"<\/li><\/ul>",
+                "key": "idealo.orderstatus.cancelreason",
+                "type": "selection",
+                "values": null,
+                "parameters": {
+                    "data-direct": "true"
+                }
+            },
+            "cancelcomment": {
+                "label": "Bestellung stornieren-Kommentar",
+                "key": "idealo.orderstatus.cancelcomment",
+                "type": "text",
+                "parameters": {
+                    "data-direct": "true",
+                    "maxlength": 250
+                }
+            },
+            "refundstatus": {
+                "label": "Rückerstattungen anfordern mit:",
+                "desc": "Mit dem hier ausgew\u00E4hlten Shop-Bestellstatus kann ein H\u00E4ndler eine R\u00FCckerstattung f\u00FCr eine Bestellung veranlassen, die mit \u201CIdealo Direktkauf Payments\u201D gemacht wurde. \r\n<br><br>\r\nBestellungen, die mit anderen Zahlarten durchgef\u00FChrt wurden (bspw. Paypal) m\u00FCssen weiterhin manuell verwaltet werden und werden nicht \u00FCber idealo r\u00FCckerstattet.",
+                "key": "idealo.orderstatus.refund",
+                "type": "selection",
+				"default": "--",
+                "parameters": {
+                    "data-direct": "true"
+                }
+            }
+        }
+    },
+    "inventoryupdate": {
+        "headline": "Synchronisation des Inventars",
+        "desc": "Legt fest, welche Produkteigenschaften des Produktes in diesem Shop ebenfalls bei idealo.de automatisch aktualisiert werden sollen.<p><b>Preissuchmaschine und Direktkauf<\/b><\/p>",
+        "fields": [
+            {
+                "label": "Lagerver&auml;nderung vom Shop",
+                "desc": "<b>Hinweis:<\/b> Da idealo nur \"verf&uuml;gbar\" oder \"nicht verf&uuml;gbar\" f&uuml;r Ihre Angebote kennt, wird hierbei ber&uuml;cksichtigt:<br \/><br \/><ul><li>Lagermenge Shop > 0 = verf&uuml;gbar auf idealo<\/li><li>Lagermenge Shop < 1 = nicht auf idealo verf&uuml;gbar<\/li><\/ul><br \/>Funktion:<br \/>Automatische Synchronisierung per CronJob (empfohlen)<br \/><br \/><br \/>Die Funktion \"Automatische Synchronisierung\" gleicht alle 4 Stunden den aktuellen idealo-Lagerbestand an den Shop-Lagerbestand an*<br \/><br \/><br \/>Dabei werden die Werte aus der Datenbank gepr&uuml;ft und &uuml;bernommen, auch wenn die \u00c4nderungen durch z.B. eine Warenwirtschaft nur in der Datenbank erfolgten.<br \/> <br \/>Einen manuellen Abgleich k&ouml;nnen Sie ansto\u00dfen, indem Sie den entsprechenden Funktionsbutton in der Kopfzeile vom magnalister anklicken (links von der Ameise).<br \/> <br \/>Zus&auml;tzlich k&ouml;nnen Sie den Lagerabgleich (ab Tarif Flat - maximal viertelst&uuml;ndlich) auch durch einen eigenen CronJob ansto\u00dfen, indem Sie folgenden Link zu Ihrem Shop aufrufen:<br \/><i>http:\/\/www.IhrShop.de\/magnaCallback.php?do=SyncInventory<\/i><br \/><br \/>Eigene CronJob-Aufrufe durch Kunden, die nicht im Tarif Flat sind, oder die h&auml;ufiger als viertelst&uuml;ndlich laufen, werden geblockt.<br \/><br \/><br \/><br \/><b>Hinweis:<\/b> Die Einstellungen unter \"Konfiguration\" \u2192 \"Einstellvorgang\" ...<br \/><br \/>\u2192 \"Bestelllimit pro Kalendertag\" und<br \/>\u2192 \"St&uuml;ckzahl Lagerbestand\" f&uuml;r die ersten beiden Optionen.<br \/><br \/>\u2026 werden ber&uuml;cksichtigt.<br \/>",
+                "key": "idealo.stocksync.tomarketplace",
+                "type": "selection",
+                "values": {
+                    "auto": "Automatische Synchronisierung per CronJob (empfohlen)",
+                    "no": "keine Synchronisierung"
+                },
+                "default": "auto"
+            },
+            {
+                "label": "Bestellimport von _#_platformName_#_",
+                "desc": "Wenn z. B. bei _#_platformName_#_ ein Artikel 3 mal gekauft wurde, wird der Lagerbestand im Shop um 3 reduziert.<br \/><br \/>\n              <strong>Wichtig:<\/strong> Diese Funktion l&auml;uft nur, wenn Sie den Bestellimport aktiviert haben!",
+                "key": "_#_platform_#_.stocksync.frommarketplace",
+                "type": "selection",
+                "values": {
+                    "rel": "Bestellung reduziert Shop-Lagerbestand (empfohlen)",
+                    "no": "keine Synchronisierung"
+                },
+                "default": "rel",
+                "parameters": {
+                    "data-direct": "true"
+                }
+            },
+            {
+                "label": "Artikelpreis",
+                "desc": "<dl>\n\t\t\t\t\t\t\t\t<dt>Automatische Synchronisierung per CronJob (empfohlen)<\/dt>\n\t\t\t\t\t\t\t\t    <dd>Die Funktion \"Automatische Synchronisierung\" gleicht alle 4 Stunden (beginnt um 0:00 Uhr nachts)\n\t\t\t\t\t\t\t\t        den aktuellen _#_platformName_#_-Preis an Ihren Shop-Preis an.<br>\n    \t\t\t                        Dabei werden die Werte aus der Datenbank gepr&uuml;ft und &uuml;bernommen, auch wenn die \u00c4nderungen durch z.B. \n    \t\t\t                        eine Warenwirtschaft nur in der Datenbank erfolgten.<br><br>\t\t                        \n    \t\t\t                        Einen manuellen Abgleich k&ouml;nnen Sie ansto\u00dfen, indem Sie den entsprechenden Funktionsbutton in der Kopfzeile vom magnalister anklicken (links von der Ameise).<br><br>\n    \t\t\t                        Zus&auml;tzlich k&ouml;nnen Sie den Preisabgleich (ab Tarif Flat - maximal viertelst&uuml;ndlich) auch durch einen eigenen CronJob ansto\u00dfen, \n    \t\t\t                        indem Sie folgenden Link zu Ihrem Shop aufrufen: <br>\n    \t\t\t                        <i>http:\/\/www.IhrShop.de\/magnaCallback.php?do=SyncInventory<\/i><br>\n    \t\t\t                        Eigene CronJob-Aufrufe durch Kunden, die nicht im Tarif Flat sind, oder die h&auml;ufiger als viertelst&uuml;ndlich laufen, werden geblockt.   \t\t\t                        \n    \t\t\t                        <\/dd>\n\t\t\t\t\t\t\t<\/dl><br>\n\t\t\t\t\t\t\t<b>Hinweis:<\/b> Die Einstellungen unter \"Konfiguration\" \u2192 \"Preisberechnung\" werden ber&uuml;cksichtigt.\n\t\t\t\t",
+                "key": "idealo.inventorysync.price",
+                "type": "selection",
+                "values": {
+                    "auto": "Automatische Synchronisierung per CronJob (empfohlen)",
+                    "no": "keine Synchronisierung"
+                },
+                "default": "auto"
+            }
+        ]
+    },
+    "stats": {
+        "headline": "Statistikeinstellungen (optional)",
+        "fields": {
+            "mtlcost": {
+                "label": "Monatliche Grundgeb&uuml;hr",
+                "desc": "Sollten keine monatlichen Geb&uuml;hren f&auml;llig werden, geben Sie in das Feld \"0.0\" ein.",
+                "key": "idealo.cost.montly",
+                "type": "text",
+                "default": "0.0",
+                "verify": "float",
+                "cssClasses": [
+                    "autoWidth"
+                ],
+                "rightlabel": "const(DEFAULT_CURRENCY)",
+                "formatstr": "%.2f"
+            },
+            "clickcost": {
+                "label": "Kosten pro Klick",
+                "desc": "Sollten keine Kosten pro Klick entstehen, geben Sie in das Feld \"0.0\" ein.",
+                "key": "idealo.cost.click",
+                "type": "text",
+                "default": "0.0",
+                "verify": "float",
+                "cssClasses": [
+                    "autoWidth"
+                ],
+                "rightlabel": "const(DEFAULT_CURRENCY)",
+                "formatstr": "%.2f"
+            },
+            "campaign": {
+                "label": "Kampagnenlink",
+                "desc": "Um ein Kampagnenlink anzulegen, der sich speziell nachverfolgen l&auml;sst, geben Sie bitte eine Zeichenkette ohne\n\t\t\t\t           Sonderzeichen (z. B. Umlaute, Interpunktionszeichen und Leerzeichen) ein, wie zum Beispiel \"allesmussraus\".",
+                "key": "idealo.campaignlink",
+                "verify": "regex(\"[A-Za-z0-9]*\")",
+                "type": "text"
+            }
+        }
+    }
+}

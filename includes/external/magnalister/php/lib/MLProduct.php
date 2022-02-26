@@ -1327,7 +1327,44 @@ class MLProduct {
 	 * @return void
 	 */
 	protected function getManufacturerPartNumber(&$product) {
+	    // if data is prefilled return
+	    if (!empty($product['ManufacturerPartNumber'])) {
+	        return;
+        }
+
+	    // if matching fills the data return
 		$this->getDataByMatching($product, 'ManufacturerPartNumber');
+        if (!empty($product['ManufacturerPartNumber'])) {
+            return;
+        }
+
+        // modified 2.0 try to get manufacturer from database
+        if (MagnaDB::gi()->columnExistsInTable('products_manufacturers_model', TABLE_PRODUCTS)) {
+            $product['ManufacturerPartNumber'] = MagnaDB::gi()->fetchOne("
+                SELECT `products_manufacturers_model`
+                  FROM `".TABLE_PRODUCTS."`
+                 WHERE `products_id` = '".$product['ProductId']."'
+                LIMIT 1 
+            ");
+
+        // modified 1.0 try to get manufacturer from database
+        } elseif (MagnaDB::gi()->columnExistsInTable('products_manufacturers_sku', TABLE_PRODUCTS)) {
+            $product['ManufacturerPartNumber'] = MagnaDB::gi()->fetchOne("
+                SELECT `products_manufacturers_sku`
+                  FROM `".TABLE_PRODUCTS."`
+                 WHERE `products_id` = '".$product['ProductId']."'
+                LIMIT 1 
+            ");
+
+        // Gambio 3+ try to get manufacturer from database
+        } elseif (MagnaDB::gi()->tableExists('products_item_codes') && MagnaDB::gi()->columnExistsInTable('code_mpn', 'products_item_codes')) {
+            $product['ManufacturerPartNumber'] = MagnaDB::gi()->fetchOne("
+                SELECT `code_mpn`
+                  FROM `products_item_codes`
+                 WHERE `products_id` = '".$product['ProductId']."'
+                LIMIT 1 
+            ");
+        }
 	}
 	
 	/**
@@ -1952,12 +1989,16 @@ $images = array (
 		
 		$product['ShippingTime'] = $this->getShippingTimeStringById($product['ShippingTimeId']);
 		$product['Manufacturer'] = $this->getManufacturerNameById($product['ManufacturerId']);
-		
+
+		// Loads Manufacturer Part Number to Product 'ManufacturerPartNumber' field
+		$this->getManufacturerPartNumber($product);
+
 		$this->completeTax($product);
 		$this->getAllDataByMatching($product);
 		$this->completeBasePrice($product);
 		$this->completeImages($product);
-		
+		$this->completeAdditionalConfiguration($product);
+
 		if (empty($product['DateAvailable'])) {
 			$product['DateAvailable'] = '0000-00-00 00:00:00';
 		}
@@ -2079,9 +2120,19 @@ $images = array (
 			$where = 'p.products_id = "'.(int) $pID.'"';
 		}
 
+        $sqlCoalesce = 'COALESCE(p.products_id, pd.products_id) as products_id,';
+		$sJoin = '';
+        if( MagnaDB::gi()->tableExists('products_item_codes')){
+            $sJoin = 'LEFT JOIN `products_item_codes` ic ON p.products_id = ic.products_id';
+            $sqlCoalesce = 'COALESCE(p.products_id, pd.products_id, ic.products_id) as products_id,';
+        }
+
+        // COALESCE because it could be that in left join no entry will be found
 		$products = MagnaDB::gi()->fetchArray(eecho('
-			SELECT *, date_format(p.products_date_available, "%Y-%m-%d") AS products_date_available 
-			  FROM '.TABLE_PRODUCTS.' p, '.TABLE_PRODUCTS_DESCRIPTION.' pd
+            SELECT *, '.$sqlCoalesce.' date_format(p.products_date_available, "%Y-%m-%d") AS products_date_available 
+			  FROM '.TABLE_PRODUCTS.' p
+              LEFT JOIN `'.TABLE_PRODUCTS_DESCRIPTION.'` pd ON pd.products_id = p.products_id
+			  '.$sJoin.'
 			 WHERE '.$where.'
 			       AND p.products_id = pd.products_id
 			       AND pd.language_id = "'.$languages_id.'"
@@ -2385,5 +2436,28 @@ $images = array (
 		}
 		return $aAttributes;
 	}
-	
+
+    /**
+     * These data will be displayed on Gambio product detail under "Erweiterte Konfiguration"
+     * @param $product
+     */
+    private function completeAdditionalConfiguration(&$product) {
+        if (MagnaDB::gi()->tableExists('products_item_codes')) {
+            $aData = MagnaDb::gi()->fetchRow('
+                SELECT *
+                  FROM `products_item_codes` ic 
+                 WHERE ic.`products_id` = '.$product['ProductId'].'
+            ');
+
+            // skip setting data if result is not an array
+            if (!is_array($aData)) {
+                return;
+            }
+
+            foreach ($aData as $sColumn => $sValue) {
+                $product[$sColumn] = isset($product[$sColumn]) ? $product[$sColumn] : $sValue;
+            }
+        }
+    }
+
 }

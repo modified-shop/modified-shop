@@ -29,6 +29,7 @@ function magnaGetClientVersion($args) {
 
 function magnaCollectStats() {
 	global $magnaConfig, $_modules;
+	session_status() == PHP_SESSION_ACTIVE or @ini_set('session.referer_check', 'TRUE');
 	
 	$referers = array();
 	$refererToModule = array();

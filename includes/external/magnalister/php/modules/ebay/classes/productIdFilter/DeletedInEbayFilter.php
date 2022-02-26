@@ -26,4 +26,16 @@ class DeletedInEbayFilter extends DeletedInMarketplaceFilter {
 		return TABLE_MAGNA_EBAY_PROPERTIES;
 	}
 
+	protected function getFilterValues() {
+		return array(
+			'' => ML_OPTION_FILTER_ARTICLES_ALL,
+			'notActive' => ML_OPTION_FILTER_ARTICLES_NOTACTIVE,
+			'notTransferred' => ML_OPTION_FILTER_ARTICLES_NOTTRANSFERRED_1YEAR,
+			'active' => ML_OPTION_FILTER_ARTICLES_ACTIVE,
+			'sync' => ML_OPTION_FILTER_ARTICLES_DELETEDBY_SYNC,
+			'button' => ML_OPTION_FILTER_ARTICLES_DELETEDBY_BUTTON,
+			'expired' => ML_OPTION_FILTER_ARTICLES_DELETEDBY_EXPIRED,
+		);
+	}
+
 }

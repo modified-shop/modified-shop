@@ -31,6 +31,11 @@ class EtsySyncInventory extends MagnaCompatibleSyncInventory {
     #    return false; // erschtmal ned
     #}
 
+    public function __construct($mpID, $marketplace, $limit = 100) {
+         parent::__construct($mpID, $marketplace, $limit);
+         $this->blMultiDimVariations = true;
+    }
+
     protected function initMLProduct() {
         global $_MagnaSession;
         parent::initMLProduct();

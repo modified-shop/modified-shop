@@ -596,37 +596,124 @@ function htmlEncodeUmlauts($str) {
 	$str =  magnalisterIsUTF8($str) ? $str : utf8_encode($str);
 // unicode table can be found here:
 // http://www.utf8-chartable.de/unicode-utf8-table.pl?unicodeinhtml=dec&htmlent=1
+// There is more on the page (see "go to other block")
 	$aChars = array (
-		"\xc2\xa4" => '&euro;', // --> '&curren;'
-		"\xc3\xa4" => '&auml;',
-		"\xc3\x84" => '&Auml;',
-		"\xc3\xb6" => '&ouml;',
-		"\xc3\x96" => '&Ouml;',
-		"\xc3\xbc" => '&uuml;',
-		"\xc3\x9c" => '&Uuml;',
-		"\xc3\x9f" => '&szlig;',
-		"\xc3\xa0" => '&agrave;', 
-		"\xc3\x80" => '&Agrave;', 
-		"\xc3\xb2" => '&ograve;', 
-		"\xc3\x92" => '&Ograve;', 
-		"\xc3\xb9" => '&ugrave;', 
-		"\xc3\x99" => '&Ugrave;', 
-		"\xc3\x82" => '&Acirc;', // Â
-		"\xc3\x83" => '&Atilde;',// Ã
-		#"\x7e"     => '&#126;',  // ~ don't encode, can be used in CSS
-		"\xb7"     => '&#183;',  // ·
-		"\xc2\xab" => '&laquo;', // « 
-		"\xc2\xbb" => '&raquo;', // »
-		"\xc2\xb0" => '&deg;',   // °
-		"\xc2\xb1" => '&plusmn;',//
-		"\xc2\xb2" => '&sup2;',  //
-		"\xc2\xb3" => '&sup3;',  //
-		"\xa0"     => '&nbsp;', 
-		"\xc2\xae" => '&reg;', 
-		"\xc2\xa9" => '&copy;', 
-		"\x20\x19" => '&rsquo;', // ’ 
-		"\x00"     => '', 
+		"\xc2\xa1" => '&iexcl;',  //    ¡
+		"\xc2\xa2" => '&cent;',   //    ¢
+		"\xc2\xa3" => '&pound;',  //    £
+		"\xc2\xa4" => '&euro;',   //    acc to table &curren; ¤ but is €
+		"\xc2\xa5" => '&yen;',    //    ¥
+		"\xc2\xa6" => '&brvbar;', //    ¦
+		"\xc2\xa7" => '&sect;',   //    §
+		"\xc2\xa8" => '&uml;',    //    ¨
+		"\xc2\xa9" => '&copy;',   //    ©
+		"\xc2\xaa" => '&ordf;',   //    ª
+		"\xc2\xab" => '&laquo;',  //    «
+		"\xc2\xac" => '&not;',    //    ¬
+		"\xc2\xad" => '&shy;',    //    ­
+		"\xc2\xae" => '&reg;',    //    ®
+		"\xc2\xaf" => '&macr;',   //    ¯
+		"\xc2\xb0" => '&deg;',    //    °
+		"\xc2\xb1" => '&plusmn;', //    ±
+		"\xc2\xb2" => '&sup2;',   //    ²
+		"\xc2\xb3" => '&sup3;',   //    ³
+		"\xc2\xb4" => '&acute;',  //    ´
+		"\xc2\xb5" => '&micro;',  //    µ
+		"\xc2\xb6" => '&para;',   //    ¶
+		"\xc2\xb7" => '&middot;', //    ·
+		"\xc2\xb8" => '&cedil;',  //    ¸
+		"\xc2\xb9" => '&sup1;',   //    ¹
+		"\xc2\xba" => '&ordm;',   //    º
+		"\xc2\xbb" => '&raquo;',  //    »
+		"\xc2\xbc" => '&frac14;', //    ¼
+		"\xc2\xbd" => '&frac12;', //    ½
+		"\xc2\xbe" => '&frac34;', //    ¾
+		"\xc2\xbf" => '&iquest;', //    ¿
+		"\xc3\x80" => '&Agrave;', //    À
+		"\xc3\x81" => '&Aacute;', //    Á
+		"\xc3\x82" => '&Acirc;',  //    Â
+		"\xc3\x83" => '&Atilde;', //    Ã
+		"\xc3\x84" => '&Auml;',   //    Ä
+		"\xc3\x85" => '&Aring;',  //    Å
+		"\xc3\x86" => '&AElig;',  //    Æ
+		"\xc4\x84" => '&#260;',   //    Ą
+		"\xc3\x87" => '&Ccedil;', //    Ç
+		"\xc4\x86" => '&#262;',   //    Ć
+		"\xc3\x88" => '&Egrave;', //    È
+		"\xc3\x89" => '&Eacute;', //    É
+		"\xc3\x8a" => '&Ecirc;',  //    Ê
+		"\xc3\x8b" => '&Euml;',   //    Ë
+		"\xc4\x98" => '&#280;',   //    Ę
+		"\xc3\x8c" => '&Igrave;', //    Ì
+		"\xc3\x8d" => '&Iacute;', //    Í
+		"\xc3\x8e" => '&Icirc;',  //    Î
+		"\xc3\x8f" => '&Iuml;',   //    Ï
+		"\xc3\x90" => '&ETH;',    //    Ð
+		"\xc5\x81" => '&#321;',   //    Ł
+		"\xc5\x83" => '&#323;',   //    Ń
+		"\xc3\x91" => '&Ntilde;', //    Ñ
+		"\xc3\x92" => '&Ograve;', //    Ò
+		"\xc3\x93" => '&Oacute;', //    Ó
+		"\xc3\x94" => '&Ocirc;',  //    Ô
+		"\xc3\x95" => '&Otilde;', //    Õ
+		"\xc3\x96" => '&Ouml;',   //    Ö
+		"\xc3\x97" => '&times;',  //    ×
+		"\xc3\x98" => '&Oslash;', //    Ø
+		"\xc5\x9a" => '&#346;',   //    Ś
+		"\xc3\x99" => '&Ugrave;', //    Ù
+		"\xc3\x9a" => '&Uacute;', //    Ú
+		"\xc3\x9b" => '&Ucirc;',  //    Û
+		"\xc3\x9c" => '&Uuml;',   //    Ü
+		"\xc3\x9d" => '&Yacute;', //    Ý
+		"\xc3\x9e" => '&THORN;',  //    Þ
+		"\xc5\xb9" => '&#377;',   //    Ź
+		"\xc5\xbb" => '&#379;',   //    Ż
+		"\xc3\x9f" => '&szlig;',  //    ß
+		"\xc3\xa0" => '&agrave;', //    à
+		"\xc3\xa1" => '&aacute;', //    á
+		"\xc3\xa2" => '&acirc;',  //    â
+		"\xc3\xa3" => '&atilde;', //    ã
+		"\xc3\xa4" => '&auml;',   //    ä
+		"\xc3\xa5" => '&aring;',  //    å
+		"\xc3\xa6" => '&aelig;',  //    æ
+		"\xc4\x85" => '&#261;',   //    ą
+		"\xc3\xa7" => '&ccedil;', //    ç
+		"\xc3\xa8" => '&egrave;', //    è
+		"\xc3\xa9" => '&eacute;', //    é
+		"\xc3\xaa" => '&ecirc;',  //    ê
+		"\xc3\xab" => '&euml;',   //    ë
+		"\xc4\x99" => '&#281;',   //    ę
+		"\xc3\xac" => '&igrave;', //    ì
+		"\xc3\xad" => '&iacute;', //    í
+		"\xc3\xae" => '&icirc;',  //    î
+		"\xc3\xaf" => '&iuml;',   //    ï
+		"\xc3\xb0" => '&eth;',    //    ð
+		"\xc5\x2"  => '&#322;',   //    ł
+		"\xc5\x4"  => '&#324;',   //    ń
+		"\xc3\xb1" => '&ntilde;', //    ñ
+		"\xc3\xb2" => '&ograve;', //    ò
+		"\xc3\xb3" => '&oacute;', //    ó
+		"\xc3\xb4" => '&ocirc;',  //    ô
+		"\xc3\xb5" => '&otilde;', //    õ
+		"\xc3\xb6" => '&ouml;',   //    ö
+		"\xc3\xb7" => '&divide;', //    ÷
+		"\xc3\xb8" => '&oslash;', //    ø
+		"\xc5\x9b" => '&#347;',   //    Ś
+		"\xc3\xb9" => '&ugrave;', //    ù
+		"\xc3\xba" => '&uacute;', //    ú
+		"\xc3\xbb" => '&ucirc;',  //    û
+		"\xc3\xbc" => '&uuml;',   //    ü
+		"\xc3\xbd" => '&yacute;', //    ý
+		"\xc3\xbe" => '&thorn;',  //    þ
+		"\xc3\xbf" => '&yuml;',   //    ÿ
+		"\xc5\xba" => '&#378;',   //    ź
+		"\xc5\xbc" => '&#380;',   //    ż
+		"\x20\x19" => '&rsquo;',  //    ’
+		"\xb7"     => '&#183;',   //    ·
+		"\xa0"     => '&nbsp;',
+		"\x00"     => '',
 		"\xc2"     => '', // Â created from nothing by utf8_encode
+		#"\x7e"     => '&#126;',  // ~ don't encode, can be used in CSS
 	);
 	$str = str_replace(array_keys($aChars), array_values($aChars), $str);
 	// fix double encoded entities
@@ -1071,22 +1158,27 @@ function decodeData(&$array, $fieldName) {
 	}
 }
 
-if (!function_exists('is_date')) {
-	function is_date($date) {
+function ml_is_date($date) {
+	if (function_exists('is_date')) {
+		return is_date($date);
+	} else {
 		return (bool)preg_match('/^([1-2][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/', $date);
 	}
 }
 
-if (!function_exists('is_time')) {
-	function is_time($time) {
+function ml_is_time($time) {
+	if (function_exists('is_time')) {
+		return is_time($time);
+	} else {
 		return (bool)preg_match('/^([0-1][0-9]|2[0-4]):([0-5][0-9]):([0-5][0-9])$/', $time);
 	}
 }
 
-if (!function_exists('is_datetime')) {
-	function is_datetime($dt) {
-		return (bool)preg_match('/^([1-2][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])\s'.
-								'([0-1][0-9]|2[0-4]):([0-5][0-9]):([0-5][0-9])$/', $dt);
+function ml_is_datetime($dt) {
+	if (function_exists('is_datetime')) {
+		return is_datetime($dt);
+	} else {
+		return (bool)preg_match('/^([1-2][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])\s'.  '([0-1][0-9]|2[0-4]):([0-5][0-9]):([0-5][0-9])$/', $dt);
 	}
 }
 
@@ -1142,7 +1234,7 @@ if (!function_exists('array_replace')) {
 
 function unix_timestamp($datetime = null) {
 	if (null == $datetime) return time();
-	else if(!is_datetime($datetime)) return 0;
+	else if(!ml_is_datetime($datetime)) return 0;
 	return mktime(substr($datetime,11,2), substr($datetime,14,2), substr($datetime,17,2),
 			substr($datetime,5,2), substr($datetime,8,2), substr($datetime,0,4));
 }

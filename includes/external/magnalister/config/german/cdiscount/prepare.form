@@ -1,1 +1,76 @@
-{"prepare":{"headline":"Artikelvorbereitung","fields":{"filter":{"label":"Statusfilter","key":"_#_platform_#_.apply.status","type":"checkbox","values":{"val":"nur aktive Artikel &uuml;bernehmen"},"default":{"val":false}},"manufacturerfilter":{"label":"Herstellerfilter","key":"_#_platform_#_.filter.manufacturer","type":"multicheckbox","desc":"Alle hier markierten Hersteller werden bei der Produkt-Vorbereitung nicht mit angezeigt.","default":[],"expertsetting":true},"lang":{"label":"Artikelbeschreibung","key":"_#_platform_#_.lang","type":"selection","values":null}}}}
+{
+    "prepare": {
+        "headline": "Artikelvorbereitung",
+        "fields": {
+            "filter": {
+                "label": "Statusfilter",
+                "key": "_#_platform_#_.apply.status",
+                "type": "checkbox",
+                "values": {
+                    "val": "nur aktive Artikel &uuml;bernehmen"
+                },
+                "default": {
+                    "val": false
+                }
+            },
+            "manufacturerfilter": {
+                "label": "Herstellerfilter",
+                "key": "_#_platform_#_.filter.manufacturer",
+                "type": "multicheckbox",
+                "desc": "Alle hier markierten Hersteller werden bei der Produkt-Vorbereitung nicht mit angezeigt.",
+                "default": [],
+                "expertsetting": true
+            },
+            "lang": {
+                "label": "Artikelbeschreibung",
+                "key": "_#_platform_#_.lang",
+                "type": "selection",
+                "values": null
+            }
+        }
+    },
+    "shippinglabel": {
+        "headline": "Versand",
+        "desc": "",
+        "fields": {
+            "shippingprofile": {
+                "label": "Versandkosten-Profile",
+                "key": "cdiscount.shippingprofile",
+                "desc": "Legen Sie hier ihre Versandkosten-Profile an. Sie k&ouml;nnen f&uuml;r jedes Profil unterschiedliche Versandkosten angeben (Beispiel: 4.95) und ein Standard-Profil bestimmen. Die angegebenen Versandkosten werden beim Produkt-Upload zum Artikelpreis hinzugerechnet, da Waren auf dem METRO Marktplatz ausschließlich versandkostenfrei eingestellt werden k&ouml;nnen. ",
+                "type": "duplicate",
+                "subtype": "extern",
+                "skipRadio": true,
+                "procFunc": "CdiscountConfigure::shippingProfile",
+                "params": {
+                    "subfields": {
+                        "name": {
+                            "label": "Name des Versandprofils",
+                            "key": "cdiscount.shippingprofile.name",
+                            "type": "selection",
+                            "cssClasses": [
+                                "fullWidth"
+                            ],
+                            "values": {}
+                        },
+                        "fee": {
+                            "label": "Versandgebühr (€)",
+                            "key": "cdiscount.shippingprofile.fee",
+                            "type": "text",
+                            "cssClasses": [
+                                "autoWidth"
+                            ]
+                        },
+                        "feeadditional": {
+                            "label": "Zusätzliche Versandgebühren (€)",
+                            "key": "cdiscount.shippingprofile.feeadditional",
+                            "type": "text",
+                            "cssClasses": [
+                                "autoWidth"
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

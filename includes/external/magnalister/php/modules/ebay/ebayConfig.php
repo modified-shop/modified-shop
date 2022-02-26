@@ -123,7 +123,7 @@ $(document).ready(function() {
 /*]]>*/</script>';
 }
 
-function eBayTopTenConfig($aArgs = array(), &$sValue = '') {
+function eBayTopTenConfig($args = array(), &$value = '') {
 	global $_MagnaSession;
 	require_once DIR_MAGNALISTER_FS.DIRECTORY_SEPARATOR.'php'.DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.'ebay'.DIRECTORY_SEPARATOR.'classes'.DIRECTORY_SEPARATOR.'ebayTopTen.php';
 	$oTopTen = new ebayTopTen();
@@ -142,10 +142,10 @@ function eBayTopTenConfig($aArgs = array(), &$sValue = '') {
 		}
 	} else {
 		return $oTopTen->renderMain(
-			$aArgs['key'],
-			isset($_POST['conf'][$aArgs['key']])
-			? (int)$_POST['conf'][$aArgs['key']]
-			: (int)getDBConfigValue($aArgs['key'], $_MagnaSession['mpID'], 10)
+			$args['key'],
+			isset($_POST['conf'][$args['key']])
+			? (int)$_POST['conf'][$args['key']]
+			: (int)getDBConfigValue($args['key'], $_MagnaSession['mpID'], 10)
 		);
 	}
 }
@@ -384,10 +384,10 @@ $magnaConfig['ebay']['currencies'] = isset($magnaConfig['ebay']['currencies'])? 
 if ($nSite !== null) {
 	$curVal = array();
 	if(isset($magnaConfig['ebay']['currencies'][$nSite])) {
-        foreach ($magnaConfig['ebay']['currencies'][$nSite] as $cur) {
-            $curVal[$cur] = $cur;
-        }
-    }
+	foreach ($magnaConfig['ebay']['currencies'][$nSite] as $cur) {
+		$curVal[$cur] = $cur;
+		}
+	}
 	$form['ebayaccount']['fields']['currency']['values'] = $curVal;
 	$form['ebayaccount']['fields']['site']['ajaxlinkto']['initload'] = false;
 }
@@ -401,7 +401,12 @@ if ($auth['state']) {
 		setDBConfigValue('ebay.authed', $_MagnaSession['mpID'], $auth, true);
 		
 	} else {
-		$form['payment']['fields']['paymentmethod']['values'] = $payment;
+		if (count($payment) > 1) {
+			$form['payment']['fields']['paymentmethod']['values'] = $payment;
+		} else {
+			$form['payment']['fields']['paymentmethod']['type'] = 'html';
+			$form['payment']['fields']['paymentmethod']['value'] = current($payment);
+		}
 	
 		$shippingprofiles = geteBayShippingDiscountProfiles();
 		$form['shipping']['fields']['shippingprofilelocal']['values'] = $shippingprofiles;
@@ -429,15 +434,37 @@ if ($auth['state']) {
 		if (array_key_exists('DispatchTimeMax', $sellerProfileContents['Shipping'][$defaultShippingSellerProfile])) setDBConfigValue('ebay.DispatchTimeMax', $_MagnaSession['mpID'], $sellerProfileContents['Shipping'][$defaultShippingSellerProfile]['DispatchTimeMax'], true);
 		setDBConfigValue('ebay.default.shipping.local', $_MagnaSession['mpID'], $sellerProfileContents['Shipping'][$defaultShippingSellerProfile]['shipping.local'], true);
 		setDBConfigValue('ebay.default.shipping.international', $_MagnaSession['mpID'], $sellerProfileContents['Shipping'][$defaultShippingSellerProfile]['shipping.international'], true);
-		setDBConfigValue('ebay.default.shippingprofile.local', $_MagnaSession['mpID'], $sellerProfileContents['Shipping'][$defaultShippingSellerProfile]['shippingprofile.local'], true);
-		setDBConfigValue('ebay.default.shippingprofile.international', $_MagnaSession['mpID'], $sellerProfileContents['Shipping'][$defaultShippingSellerProfile]['shippingprofile.international'], true);
-		setDBConfigValue('ebay.shippingdiscount.local', $_MagnaSession['mpID'], (isset($sellerProfileContents['Shipping'][$defaultShippingSellerProfile]['shippingdiscount.local']) ? $sellerProfileContents['Shipping'][$defaultShippingSellerProfile]['shippingdiscount.local'] : '{"val":false}'), true);
-		setDBConfigValue('default.shippingdiscount.international', $_MagnaSession['mpID'], (isset($sellerProfileContents['Shipping'][$defaultShippingSellerProfile]['shippingdiscount.international']) ? $sellerProfileContents['Shipping'][$defaultShippingSellerProfile]['shippingdiscount.international'] : '{"val":false}'), true);
+		if (array_key_exists('shippingprofile.local', $sellerProfileContents['Shipping'][$defaultShippingSellerProfile])) {
+			setDBConfigValue('ebay.default.shippingprofile.local', $_MagnaSession['mpID'], $sellerProfileContents['Shipping'][$defaultShippingSellerProfile]['shippingprofile.local'], true);
+			$blShippingProfileLocalSet = true;
+		} else {
+			$blShippingProfileLocalSet = false;
+		}
+		if (array_key_exists('shippingprofile.international', $sellerProfileContents['Shipping'][$defaultShippingSellerProfile])) {
+			setDBConfigValue('ebay.default.shippingprofile.international', $_MagnaSession['mpID'], $sellerProfileContents['Shipping'][$defaultShippingSellerProfile]['shippingprofile.international'], true);
+			$blShippingProfileInternationalSet = true;
+		} else {
+			$blShippingProfileInternationalSet = false;
+		}
+		if (array_key_exists('shippingdiscount.local', $sellerProfileContents['Shipping'][$defaultShippingSellerProfile])) {
+			setDBConfigValue('ebay.shippingdiscount.local', $_MagnaSession['mpID'], $sellerProfileContents['Shipping'][$defaultShippingSellerProfile]['shippingdiscount.local'], true);
+			$blShippingDiscountLocalSet = true;
+		} else {
+			setDBConfigValue('ebay.shippingdiscount.local', $_MagnaSession['mpID'], '{"val":false}', true);
+			$blShippingDiscountLocalSet = false;
+		}
+		if (array_key_exists('shippingdiscount.international', $sellerProfileContents['Shipping'][$defaultShippingSellerProfile])) {
+			setDBConfigValue('default.shippingdiscount.international', $_MagnaSession['mpID'], $sellerProfileContents['Shipping'][$defaultShippingSellerProfile]['shippingdiscount.international'] , true);
+			$blShippingDiscountInternationalSet = true;
+		} else {
+			setDBConfigValue('ebay.shippingdiscount.international', $_MagnaSession['mpID'], '{"val":false}', true);
+			$blShippingDiscountInternationalSet = false;
+		}
 		setDBConfigValue('ebay.returnpolicy.returnsaccepted', $_MagnaSession['mpID'], $sellerProfileContents['Return'][$defaultReturnSellerProfile]['returnsaccepted'], true);
 		setDBConfigValue('ebay.returnpolicy.returnswithin', $_MagnaSession['mpID'], $sellerProfileContents['Return'][$defaultReturnSellerProfile]['returnswithin'], true);
 		setDBConfigValue('ebay.returnpolicy.shippingcostpaidby', $_MagnaSession['mpID'], $sellerProfileContents['Return'][$defaultReturnSellerProfile]['shippingcostpaidby'], true);
 		setDBConfigValue('ebay.returnpolicy.description', $_MagnaSession['mpID'], fixHTMLUTF8Entities($sellerProfileContents['Return'][$defaultReturnSellerProfile]['description']), true);
-		/* disable fields which now depend from seller profiles */
+		/* disable fields which now depend on seller profiles */
 ?><script>/*<!CDATA[*/
 	$(document).ready(function() {
 		$('select[id="config_ebay_DispatchTimeMax"]').prop('disabled', true);
@@ -448,6 +475,13 @@ if ($auth['state']) {
 		$('input[id="conf_ebay.shippingdiscount.local_val"]').prop('disabled', true);
 		$('select[id="config_ebay_default_shippingprofile_international"]').prop('disabled', true);
 		$('input[id="conf_ebay.shippingdiscount.international_val"]').prop('disabled', true);
+		/* if the API doesn't give the info (new AccountAPI), hide fields */
+	<?php if (!($blShippingProfileLocalSet || $blShippingDiscountLocalSet)): ?>
+		$('#config_ebay_default_shippingprofile_local').parent().parent().hide();
+	<?php endif; ?>
+	<?php if (!($blShippingProfileInternationalSet || $blShippingDiscountInternationalSet)): ?>
+		$('#config_ebay_default_shippingprofile_international').parent().parent().hide();
+	<?php endif; ?>
 		$('select[id="config_ebay_returnpolicy_returnsaccepted"]').prop('disabled', true);
 		$('select[id="config_ebay_returnpolicy_returnswithin"]').prop('disabled', true);
 		$('select[id="config_ebay_returnpolicy_shippingcostpaidby"]').prop('disabled', true);
@@ -496,7 +530,7 @@ if (!$auth['state']) {
 	$form = array('ebayaccount' => $form['ebayaccount']);
 	if (tokenAvailable()) {
 		$expires = getDBConfigValue('ebay.token.expires', $_MagnaSession['mpID'], '');
-		if (is_datetime($expires) && ($expires < date('Y-m-d H:i:s'))) {
+		if (ml_is_datetime($expires) && ($expires < date('Y-m-d H:i:s'))) {
 			$form = array ('ebayaccount' => $form['ebayaccount']);
 			unset($form['ebayaccount']['fields']['currency']);
 			$boxes .= '<p class="noticeBox">'.ML_EBAY_TEXT_TOKEN_INVALID.'</p>';
@@ -519,6 +553,10 @@ if (!$auth['state']) {
 	if (  (!$blBusinessPoliciesSet) 
 	    &&(!is_array($form['payment']['fields']['paymentmethod']['values']))) {
 		$form['payment']['fields']['paymentmethod']['values'] = geteBayPaymentOptions();
+		if (count($form['payment']['fields']['paymentmethod']['values']) == 1) {
+			$form['payment']['fields']['paymentmethod']['type'] = 'html';
+			$form['payment']['fields']['paymentmethod']['value'] = current($form['payment']['fields']['paymentmethod']['values']);
+		}
 	}
 	
 	mlGetLanguages($form['listingdefaults']['fields']['language']);
@@ -535,14 +573,16 @@ if (!$auth['state']) {
 	} else {
 		unset($form['fixedsettings']['fields']['whichprice']);
 	}	
-	if (array_key_exists('whichstrikeprice', $form['fixedsettings']['fields'])) {
-	// vorerst auskommentiert aus config
+	// Strike Through Prices: Only on certain Sites
+	if (!in_array($nSite, array('UK', 'Germany'))) {
+		unset($form['fixedsettings']['fields']['strikepricekind']);
+		unset($form['fixedsettings']['fields']['whichstrikeprice']);
+	} else {
 		mlGetCustomersStatus($form['fixedsettings']['fields']['whichstrikeprice'], true);
 		if (!empty($form['fixedsettings']['fields']['whichstrikeprice'])) {
+			$form['fixedsettings']['fields']['whichstrikeprice']['values']['-1'] = ML_LABEL_DONT_USE;
 			$form['fixedsettings']['fields']['whichstrikeprice']['values']['0'] = ML_LABEL_SHOP_PRICE;
 			ksort($form['fixedsettings']['fields']['whichstrikeprice']['values']);
-			// add "don't use" at the beginning of the strikepricekind array
-			$form['fixedsettings']['fields']['whichstrikeprice']['morefields']['strikepricekind']['values'] = array_merge(array('DontUse' => ML_LABEL_DONT_USE), $form['fixedsettings']['fields']['whichstrikeprice']['morefields']['strikepricekind']['values']);
 		} else {
 			unset($form['fixedsettings']['fields']['whichstrikeprice']);
 		}
@@ -687,7 +727,8 @@ if (!$auth['state']) {
 	$form['mail']['fields']['subject']['default'] = str_replace('#SHOPURL#', '', $form['mail']['fields']['subject']['default']);
 	$form['mail']['fields']['mail']['default'] = str_replace(' unter <strong>#SHOPURL#</strong>', '', $form['mail']['fields']['mail']['default']);
 	$form['mail']['fields']['mail']['externalDesc'] = str_replace('<dt>#SHOPURL#</dt>', '', str_replace('<dd>URL zu Ihrem Shop</dd>', '',  str_replace('<dd>URL to your shop</dd>', '', $form['mail']['fields']['mail']['externalDesc'])));
-
+	# Extra f. eBay: Extended Order ID
+	$form['mail']['fields']['mail']['externalDesc'] = str_replace('<dt>#ORDERSUMMARY#</dt>', "<dt>#EORDERID#</dt>\n\t\t\t\t\t\t<dd>eBay Extended Order ID</dd>\n\t\t\t\t\t<dt>#ORDERSUMMARY#</dt>", $form['mail']['fields']['mail']['externalDesc']);
 	# Carriers
 	$form['orderSyncState']['fields']['carrier']['values'] = array('' => ML_LABEL_NO_SELECTION);
 	$carriers = EbayApiConfigValues::gi()->getCarriers();
@@ -791,6 +832,29 @@ if (isset($_GET['kind']) && ($_GET['kind'] == 'ajax')) {
 			$_POST['conf']['ebay.returnpolicy.description'] = fixHTMLUTF8Entities($sellerProfileContents['Return'][$_POST['conf']['ebay.default.returnsellerprofile']]['description']);
 		}
 	}
+
+	// adjust strike prices
+	switch($_POST['conf']['ebay.strike.price.kind']) {
+		case ('SpecialPrice'): {
+			$_POST['conf']['ebay.strike.price.addkind'] = $_POST['conf']['ebay.fixed.price.addkind'];
+			$_POST['conf']['ebay.strike.price.factor'] = $_POST['conf']['ebay.fixed.price.factor'];
+			$_POST['conf']['ebay.strike.price.signal'] = $_POST['conf']['ebay.fixed.price.signal'];
+			$_POST['conf']['ebay.strike.price.group'] = $_POST['conf']['ebay.fixed.price.group'];
+			$_POST['conf']['ebay.fixed.price.usespecialoffer'] = array ('val' => true);
+			break;
+		}
+		case ('DontUse'): {
+			$_POST['conf']['ebay.strike.price.group'] = '-1';
+			// no break here, the following stuff regards also this case:
+			// we take all the configuration from main price only in 'SpecialPrice' case, otherwise is must be unset
+		}
+		default: {
+			setDBConfigValue('ebay.strike.price.addkind', $_MagnaSession['mpID'], 'percent', true);
+			setDBConfigValue('ebay.strike.price.factor', $_MagnaSession['mpID'], '0', true);
+			setDBConfigValue('ebay.strike.price.signal', $_MagnaSession['mpID'], '', true);
+		}
+	}
+
 	$allCorrect = $cG->processPOST();
 
 	echo $boxes;
@@ -809,7 +873,9 @@ if (isset($_GET['kind']) && ($_GET['kind'] == 'ajax')) {
 	    array_key_exists('configtool', $_POST) && ($_POST['configtool'] == 'MagnaConfigurator')) {
 		geteBayBusinessPolicies(true); // refresh BusinessPolicies when form submitted
 	}
-	echo $cG->renderConfigForm();
+	$sRenderedForm = $cG->renderConfigForm();
+	extendOrderimportPaymentmethodSelection($sRenderedForm);
+	echo $sRenderedForm;
 	$curSite = getDBConfigValue('ebay.site', $_MagnaSession['mpID'], false);
 	if (($curSite != false) || !$auth['state']) {
 ?><script>/*<!CDATA[*/
@@ -878,58 +944,56 @@ $('input[id="conf_ebay.usePrefilledInfo_val"]').change(function() {
 });
 /*]]>*/</script><?php
 ?><script>/*<!CDATA[*/
-/*
-if ($('input[id="conf_ebay.strike.price.active_val"]').attr('checked') != 'checked') {
-    	$('select[id="config_ebay_strike_price_addkind"]').prop('disabled', true);
-    	$('input[id="config_ebay_strike_price_factor"]').prop('disabled', true);
-    	$('input[id="config_ebay_strike_price_signal"]').prop('disabled', true);
-    	$('select[id="config_ebay_strike_price_group"]').prop('disabled', true);
-    	$('select[id="config_ebay_strike_price_kind"]').prop('disabled', true);
-    	$('select[id="config_ebay_strike_price_kind"]').val('<?php echo ML_LABEL_DONT_USE;?>');
 
-	$('select[id="config_ebay_strike_price_addkind"]').css('background-color','#dfdfdf');
-    	$('input[id="config_ebay_strike_price_factor"]').css('background-color','#dfdfdf');
-    	$('input[id="config_ebay_strike_price_signal"]').css('background-color','#dfdfdf');
-    	$('select[id="config_ebay_strike_price_group"]').css('color','#dfdfdf');
-    	$('select[id="config_ebay_strike_price_group"]').css('background-color','#dfdfdf');
-    	$('select[id="config_ebay_strike_price_kind"]').css('background-color','#dfdfdf');
-}
-$('input[id="conf_ebay.strike.price.active_val"]').change(function() {
-    	var chbx = $(this);
-    	if (chbx.attr('checked') == 'checked') {
-	    	$('select[id="config_ebay_strike_price_addkind"]').prop('disabled', false);
-	    	$('input[id="config_ebay_strike_price_factor"]').prop('disabled', false);
-	    	$('input[id="config_ebay_strike_price_signal"]').prop('disabled', false);
-	    	$('select[id="config_ebay_strike_price_group"]').prop('disabled', false);
-	    	$('select[id="config_ebay_strike_price_kind"]').prop('disabled', false);
-		if (typeof strike_price_kind_oldval != "undefined") {
-    			$('select[id="config_ebay_strike_price_kind"]').val(strike_price_kind_oldval);
-		}
-
-		$('select[id="config_ebay_strike_price_addkind"]').css('background-color','#fff');
-    		$('input[id="config_ebay_strike_price_factor"]').css('background-color','#fff');
-    		$('input[id="config_ebay_strike_price_signal"]').css('background-color','#fff');
-    		$('select[id="config_ebay_strike_price_group"]').css('color','#000');
-    		$('select[id="config_ebay_strike_price_group"]').css('background-color','#fff');
-    		$('select[id="config_ebay_strike_price_kind"]').css('background-color','#fff');
-	} else {
-		strike_price_kind_oldval=$('select[id="config_ebay_strike_price_kind"]').val();
-	    	$('select[id="config_ebay_strike_price_addkind"]').prop('disabled', true);
-	    	$('input[id="config_ebay_strike_price_factor"]').prop('disabled', true);
-	    	$('input[id="config_ebay_strike_price_signal"]').prop('disabled', true);
-	    	$('select[id="config_ebay_strike_price_group"]').prop('disabled', true);
-	    	$('select[id="config_ebay_strike_price_kind"]').prop('disabled', true);
-    		$('select[id="config_ebay_strike_price_kind"]').val('<?php echo ML_LABEL_DONT_USE;?>');
-
-		$('select[id="config_ebay_strike_price_addkind"]').css('background-color','#dfdfdf');
-    		$('input[id="config_ebay_strike_price_factor"]').css('background-color','#dfdfdf');
-    		$('input[id="config_ebay_strike_price_signal"]').css('background-color','#dfdfdf');
-    		$('select[id="config_ebay_strike_price_group"]').css('color','#dfdfdf');
-    		$('select[id="config_ebay_strike_price_group"]').css('background-color','#dfdfdf');
-    		$('select[id="config_ebay_strike_price_kind"]').css('background-color','#dfdfdf');
-	}
+// strike through prices
+$(document).ready(function() {
+    $('select[id="config_ebay_strike_price_group"]').data('ml-oldvalue', $('select[id="config_ebay_strike_price_group"]').val());
+    $('input[id="conf_ebay.strike.price.isUVP_val"]').data('ml-oldvalue', $('input[id="conf_ebay.strike.price.isUVP_val"]').prop('checked'));
+    if ($('select[id="config_ebay_strike_price_kind"]').val() != 'CustomerGroup') {
+        $('select[id="config_ebay_strike_price_group"]').val('<?php echo ML_LABEL_DONT_USE;?>');
+        $('input[id="conf_ebay.strike.price.isUVP_val"]').prop('checked', false);
+        $('select[id="config_ebay_strike_price_group"]').prop('disabled', true);
+        $('select[id="config_ebay_strike_price_group"]').css('background-color','#dfdfdf');
+        $('input[id="conf_ebay.strike.price.isUVP_val"]').prop('disabled', true);
+        $('input[id="conf_ebay.strike.price.isUVP_val"]').css('background-color','#dfdfdf');
+    }
 });
-*/
+
+$('select[id="config_ebay_strike_price_group"]').change(function() {
+    $('select[id="config_ebay_strike_price_group"]').data('ml-oldvalue', $('select[id="config_ebay_strike_price_group"]').val());
+});
+
+$('input[id="conf_ebay.strike.price.isUVP_val"]').change(function() {
+    $('input[id="conf_ebay.strike.price.isUVP_val"]').data('ml-oldvalue', $('input[id="conf_ebay.strike.price.isUVP_val"]').prop('checked'));
+});
+
+
+$('select[id="config_ebay_strike_price_kind"]').change(function() {
+    var sel=$(this);
+    if(sel.val() == 'CustomerGroup') {
+        $('select[id="config_ebay_strike_price_group"]').val($('select[id="config_ebay_strike_price_group"]').data('ml-oldvalue'));
+        $('input[id="conf_ebay.strike.price.isUVP_val"]').prop('checked', $('input[id="conf_ebay.strike.price.isUVP_val"]').data('ml-oldvalue')); 
+        $('select[id="config_ebay_strike_price_group"]').prop('disabled', false);
+        $('select[id="config_ebay_strike_price_group"]').css('background-color','#fff');
+        $('input[id="conf_ebay.strike.price.isUVP_val"]').prop('disabled', false);
+        $('input[id="conf_ebay.strike.price.isUVP_val"]').css('background-color','#fff');
+    } else {
+        $('select[id="config_ebay_strike_price_group"]').val('<?php echo ML_LABEL_DONT_USE;?>');
+        $('input[id="conf_ebay.strike.price.isUVP_val"]').prop('checked', false);
+        $('select[id="config_ebay_strike_price_group"]').prop('disabled', true);
+        $('select[id="config_ebay_strike_price_group"]').css('background-color','#dfdfdf');
+        $('input[id="conf_ebay.strike.price.isUVP_val"]').prop('disabled', true);
+        $('input[id="conf_ebay.strike.price.isUVP_val"]').css('background-color','#dfdfdf');
+    }
+    if (sel.val() == 'ManufacturersPrice') {
+        // don't change ml-oldvalue here
+        var ov=$('input[id="conf_ebay.strike.price.isUVP_val"]').data('ml-oldvalue');
+        $('input[id="conf_ebay.strike.price.isUVP_val"]').prop('checked', true);
+        $('input[id="conf_ebay.strike.price.isUVP_val"]').data('ml-oldvalue', ov);
+    }
+});
+
+// import only paid
 if ($('input[id="conf_ebay.order.importonlypaid_true"]').attr('checked') == 'checked') {
     	$('select[id="config_ebay_orderstatus_closed"]').prop('disabled', true);
     	$('select[id="config_ebay_orderstatus_paid"]').prop('disabled', true);
@@ -937,10 +1001,10 @@ if ($('input[id="conf_ebay.order.importonlypaid_true"]').attr('checked') == 'che
     	$('input[id="conf_ebay.update.orderstatus_val"]').prop('checked', false);
     	$('input[id="conf_ebay.update.orderstatus_val"]').prop('disabled', true);
 
-    	$('select[id="config_ebay_orderstatus_closed"]').css('color', '#d3d3d3');
+        $('select[id="config_ebay_orderstatus_closed"]').css('color', '#d3d3d3');
     	$('select[id="config_ebay_orderstatus_paid"]').css('color', '#d3d3d3');
     	$('select[id="config_ebay_updateable_orderstatus"]').css('color', '#d3d3d3');
-    	$('input[id="conf_ebay.update.orderstatus_val"]').css('color', '#d3d3d3');
+        $('input[id="conf_ebay.update.orderstatus_val"]').css('color', '#d3d3d3');
 }
 $('input[id="conf_ebay.order.importonlypaid_true"]').change(function() {
     		var rdio = $(this);
@@ -992,6 +1056,7 @@ $('input[id="conf_ebay.order.importonlypaid_false"]').change(function() {
 });
 /*]]>*/</script><?php
 ?><script>/*<!CDATA[*/
+// gallery plus warn popup
 	$(document).ready(function() {
       $('select[id="config_ebay_gallery_type"]').data('ml-oldvalue', $('select[id="config_ebay_gallery_type"]').val());
     });
@@ -1016,6 +1081,35 @@ $('input[id="conf_ebay.order.importonlypaid_false"]').change(function() {
 			}
 		})
     });
+
+// Streichpreise warn popup
+	$(document).ready(function() {
+      $('select[id="config_ebay_strike_price_kind"]').data('ml-oldvalue', $('select[id="config_ebay_strike_price_kind"]').val());
+    });
+    $('select[id="config_ebay_strike_price_kind"]').change(function() {
+      var sel=$(this);
+      var newValue=sel.val();
+      if (newValue == 'DontUse' || sel.data('ml-oldvalue') != 'DontUse') {
+        sel.data('ml-oldvalue', newValue);
+        return true;
+      }
+      sel.val(sel.data('ml-oldvalue'));
+		$('<div></div>').html('<?php echo ML_TEXT_EBAY_WARNING_STRIKE_PRICE_REQUIREMENTS ?>').jDialog({
+			title: '<?php echo ML_TITLE_EBAY_WARNING_STRIKE_PRICE_REQUIREMENTS ?>',
+			buttons: {
+				'<?php echo ML_BUTTON_LABEL_ABORT; ?>': function() {
+					jQuery(this).dialog('close');
+				},
+				'<?php echo ML_BUTTON_LABEL_OK; ?>': function() {
+					sel.data('ml-oldvalue', newValue);
+					sel.val(newValue);
+					jQuery(this).dialog('close');
+				}
+			}
+		})
+    });
+
+// seller profiles
 	$('select[id="config_ebay_default_paymentsellerprofile"]').change(function() {
 	 var sel=$(this);
 	 jQuery.ajax({
@@ -1056,10 +1150,20 @@ $('input[id="conf_ebay.order.importonlypaid_false"]').change(function() {
 			$('select[id="config_ebay_DispatchTimeMax"]').val(data['DispatchTimeMax']);
 			$('#ebay_default_shipping_local').html(data['ebay_default_shipping_local']);
 			$('#ebay_default_shipping_international').html(data['ebay_default_shipping_international']);
-			$('select[id="config_ebay_default_shippingprofile_local"]').val(data['shippingprofile.local']);
-			$('select[id="config_ebay_default_shippingprofile_international"]').val(data['shippingprofile.international']);
-			$('input[id="conf_ebay\.shippingdiscount\.local_val"]').prop('checked', ('{"val":true}' == data['shippingdiscount.local']));
-			$('input[id="conf_ebay\.shippingdiscount\.international_val"]').prop('checked', ('{"val":true}' == data['shippingdiscount.international']));
+                        if ((typeof data['shippingprofile.local'] == "undefined") && (typeof data['shippingdiscount.local'] == "undefined")) {
+				$('#config_ebay_default_shippingprofile_local').parent().parent().hide();
+                        } else {
+				$('#config_ebay_default_shippingprofile_local').parent().parent().show();
+				$('select[id="config_ebay_default_shippingprofile_local"]').val(data['shippingprofile.local']);
+				$('input[id="conf_ebay\.shippingdiscount\.local_val"]').prop('checked', ('{"val":true}' == data['shippingdiscount.local']));
+                        }
+			if ((typeof data['shippingprofile.international'] == "undefined") && (typeof data['shippingdiscount.international'] == "undefined")) {
+				$('#config_ebay_default_shippingprofile_international').parent().parent().hide();
+			} else {
+				$('#config_ebay_default_shippingprofile_international').parent().parent().show();
+				$('select[id="config_ebay_default_shippingprofile_international"]').val(data['shippingprofile.international']);
+				$('input[id="conf_ebay\.shippingdiscount\.international_val"]').prop('checked', ('{"val":true}' == data['shippingdiscount.international']));
+			}
 		}
 	 });
 	});

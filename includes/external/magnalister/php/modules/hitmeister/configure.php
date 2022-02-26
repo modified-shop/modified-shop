@@ -49,11 +49,12 @@ class HitmeisterConfigure extends MagnaCompatibleConfigure {
 		#echo print_m($data);
 		return $data;
 	}
-	
+
 	protected function getFormFiles() {
 		$forms = parent::getFormFiles();
 		$forms[] = 'prepareadd';
 		$forms[] = 'orderStatus';
+		$forms[] = 'invoices';
 
 		return $forms;
 	}
@@ -135,6 +136,8 @@ class HitmeisterConfigure extends MagnaCompatibleConfigure {
 			$this->form['orderSyncState']['fields']['cancelreason']['values'] = $orderStatusConditions['DATA']['Reasons'];
 
 			unset($this->form['checkin']['fields']['leadtimetoship']);
+			unset($this->form['erpinvoice']['fields']['invoice.erpReversalInvoiceSource']);
+			unset($this->form['erpinvoice']['fields']['invoice.erpReversalInvoiceDestination']);
 		}
 	}
 	
@@ -158,6 +161,7 @@ class HitmeisterConfigure extends MagnaCompatibleConfigure {
 	
 	public function process() {
 		parent::process();
+        echo $this->invoiceOptionJS();
 		if (!$this->isAjax) {
 			$cG = new MLConfigurator($this->form, $this->mpID, 'conf_magnacompat');
 			echo $cG->checkboxAlert('conf_hitmeister.multipleeans_val',
@@ -167,4 +171,5 @@ class HitmeisterConfigure extends MagnaCompatibleConfigure {
 				ML_BUTTON_LABEL_NO);
 		}
 	}
+
 }

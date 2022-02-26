@@ -56,6 +56,8 @@ class MagnaCompatibleErrorView {
 				MagnaDB::gi()->delete(TABLE_MAGNA_COMPAT_ERRORLOG, array(
 					'mpID' => $this->mpID
 				));
+				// set lastdate to now to prevent downloading everything anew
+				setDBConfigValue($this->marketplace.'.errorlog.lastdate', $this->mpID, date('Y-m-d H:i:s'), true);
 			} else if (($_POST['action'] == 'delete') && isset($_POST['errIDs'])) {
 				foreach ($_POST['errIDs'] as $errID) {
 					if (ctype_digit($errID)) {
@@ -295,6 +297,7 @@ $(document).ready(function() {
 					'target="_blank" href="categories.php?pID='.$pID.'&action=new_product">'.
 					$title.'</a>';
 			}
+			$fData = array_merge($data, $fData);
 		} else {
 			$fData = $data;
 		}

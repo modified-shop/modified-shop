@@ -32,20 +32,56 @@ MagnaConnector::gi()->setAddRequestsProps(array(
     'MARKETPLACEID' => $_MagnaSession['mpID']
 ));
 
-// Check if checkout token is working otherwise he can not leave config if checkout is enabled
-$checkoutEnabled = getDBConfigValue('idealo.checkout.status', $_MagnaSession['mpID'], array('val' => false));
-if ($checkoutEnabled['val'] === true) {
-    try {
-        $aResponse = MagnaConnector::gi()->submitRequest(array(
-            'SUBSYSTEM' => 'ComparisonShopping',
-            'ACTION' => 'IsAuthed',
-        ));
-    } catch (MagnaException $ex) {
-        $aResponse = array();
-    }
-    $blDirectBuy = array_key_exists('STATUS', $aResponse) && $aResponse['STATUS'] === 'SUCCESS';
-    if (!$blDirectBuy) {
-        $_modules[$_MagnaSession['currentPlatform']]['requiredConfigKeys'][] = 'idealo.checkout.test';
+// Check if checkout token is working otherwise he can not leave config if direct buy is enabled
+$checkoutEnabled = getDBConfigValue('idealo.directbuy.active', $_MagnaSession['mpID'], 'false');
+$aOldCheckoutEnabled = getDBConfigValue('idealo.checkout.status', $_MagnaSession['mpID'], array('val' => false));
+$blOldCheckoutEnabled = isset($aOldCheckoutEnabled['val']) && $aOldCheckoutEnabled['val'] === true;
+
+if (($checkoutEnabled === 'true' || $blOldCheckoutEnabled ) && !isset($_POST['conf']['idealo.directbuy.clientid'])) {
+    $_modules[$_MagnaSession['currentPlatform']]['requiredConfigKeys'][] = 'idealo.directbuy.clientid';
+    $_modules[$_MagnaSession['currentPlatform']]['requiredConfigKeys'][] = 'idealo.directbuy.password';
+
+    $mDirectBuyClientId = getDBConfigValue('idealo.directbuy.clientid', $_MagnaSession['mpID'], empty($_POST['conf']['idealo.directbuy.clientid']) ? : $_POST['conf']['idealo.directbuy.clientid']);
+    $mDirectBuyClientPassword = getDBConfigValue('idealo.directbuy.password', $_MagnaSession['mpID'], empty($_POST['conf']['idealo.directbuy.clientid'])? :$_POST['conf']['idealo.directbuy.clientid']);
+
+    if (!empty($mDirectBuyClientId) && !empty($mDirectBuyClientPassword)) {
+        try {
+            $aResponse = MagnaConnector::gi()->submitRequest(array(
+                'SUBSYSTEM' => 'ComparisonShopping',
+                'ACTION'    => 'IsAuthed',
+            ));
+        } catch (MagnaException $e) {
+            $e->setCriticalStatus(false);
+            $_GET['mode'] = $_magnaQuery['mode'] = 'conf';
+            $authError = $e->getErrorArray();
+            $mpTimeOut = false;
+            $errors = array();
+            if (is_array($authError) && !empty($authError)
+                && isset($authError['ERRORS']) && !empty($authError['ERRORS'])
+            ) {
+                foreach ($authError['ERRORS'] as $err) {
+                    if(isset($err['ERRORMESSAGE'])) {
+                        $errors[] = fixHTMLUTF8Entities($err['ERRORMESSAGE']);
+                    }
+                    if (isset($err['ERRORCODE']) && ($err['ERRORCODE'] == 'MARKETPLACE_TIMEOUT')) {
+                        $mpTimeOut = true;
+                    }
+                }
+            }
+            if ($mpTimeOut) {
+                return '<p class="errorBox">
+            <span class="error bold larger">'.ML_ERROR_LABEL.':</span>
+            '.ML_ERROR_MARKETPLACE_TIMEOUT.'
+        </p>';
+            }
+            $errorMessage = '<p class="errorBox">
+        <span class="error bold larger">'.ML_ERROR_LABEL.':</span>
+        '.sprintf(ML_MAGNACOMPAT_ERROR_ACCESS_DENIED, 'idealo').(
+                (!empty($errors))
+                    ? '<br /><br />'.implode('<br />', $errors)
+                    : ''
+                ).'</p>';
+        }
     }
 }
 

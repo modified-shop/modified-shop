@@ -1,0 +1,186 @@
+{
+    "invoice": {
+        "headline": "Rechnungs&uuml;bermittlung",
+        "desc": "",
+        "fields": {
+            "invoice.option": {
+                "label": "Optionen zur Rechnungs&uuml;bermittlung",
+                "desc": "<p>Hier k&ouml;nnen Sie w&auml;hlen, ob und wie Sie Ihre Rechnungen zu _#_platformName_#_ &uuml;bermitteln m&ouml;chten.\n    Zur Auswahl stehen folgende Optionen:<\/p>\n\n<ul>\n    <li><p>Rechnungen nicht zu _#_platformName_#_ &uuml;bermitteln<\/p>\n        <p>W&auml;hlen Sie diese Option, werden Ihre Rechnungen nicht zu _#_platformName_#_ &uuml;bermittelt. Hei&szlig;t:\n            Sie organisieren die Bereitstellung von Rechnungen selbst.<\/p>\n    <\/li>\n    <li>\n        <p> Im Webshop erstellte Rechnungen werden zu _#_platformName_#_ &uuml;bermittelt <\/p>\n        <p> Sofern Ihr Shopsystem &uuml;ber die M&ouml;glichkeit verf&uuml;gt Rechnungen zu erstellen, werden diese\n            automatisch alle 60 Minuten zu _#_platformName_#_ hochgeladen. <\/p>\n    <\/li>\n    <li><p>Von Drittanbieter-Systemen (z. B. ERP-System) erstellte Rechnungen werden zu _#_platformName_#_ &uuml;bermittelt<\/p>\n        <p>Rechnungen, die Sie mit Ihrem Drittanbieter-System (z. B. ERP) erstellen, k&ouml;nnen Sie auf Ihren\n            Webshop-Server hochladen, von magnalister abrufen und zu _#_platformName_#_ hochladen lassen. N&auml;here\n            Infos erscheinen nach Auswahl dieser Option im Info-Icon unter &ldquo;Einstellungen f&uuml;r die &Uuml;bermittlung\n            von Rechnungen, die aus einem Drittanbieter-System [...]&rdquo;.<\/p>\n    <\/li>\n    <li>\n        <p>magnalister soll die Rechnungserstellung &uuml;bernehmen und zu _#_platformName_#_ &uuml;bermitteln<\/p>\n        <p>W&auml;hlen Sie diese Option, wenn magnalister die Erstellung und &Uuml;bermittlung von Rechnung f&uuml;r Sie\n            &uuml;bernehmen soll. F&uuml;llen Sie dazu die Felder unter &ldquo;Daten f&uuml;r die Rechnungserzeugung\n            durch\n            magnalister&rdquo; aus. Die &Uuml;bertragung erfolgt alle #xx# Min.<\/p>\n    <\/li>\n<\/ul>",
+                "key": "_#_platform_#_.invoice.option",
+                "type": "selection",
+                "values": {
+                    "off": "Rechnungen nicht zu _#_platformName_#_ &uuml;bermitteln",
+                    "webshop": "Im Webshop erstellte Rechnungen werden zu _#_platformName_#_ &uuml;bermittelt",
+                    "erp": "Durch ERP erstellte Rechnungen werden zu _#_platformName_#_ &uuml;bermittelt",
+                    "magna": "Rechnungserstellung und -&uuml;bermittlung erfolgt durch magnalister"
+                },
+                "cssClasses": [
+                    "ml-uploadInvoiceOption"
+                ],
+                "submit": "Invoice.Option"
+            }
+        }
+    },
+    "magnalisterinvoice": {
+        "headline": "Daten f&uuml;r die Rechnungserzeugung durch magnalister",
+        "desc": "",
+        "cssClasses": [
+            "ml-magnalisterInvoiceGenerator"
+        ],
+        "fields": {
+            "invoice.invoicedir": {
+                "label": "&Uuml;bermittelte Rechnungen",
+                "buttontext": "Anzeigen",
+                "key": "_#_platform_#_.invoice.invoicedir",
+                "rowCssClasses": ["ml-magnalisterInvoiceGenerator"],
+                "type": "html",
+                "settings": {
+                    "save": false
+                }
+            },
+            "invoice.mailcopy": {
+                "label": "Rechnungskopie an",
+                "hint": "Tragen Sie hier Ihre E-Mail-Adresse ein, um eine Kopie der hochgeladenen Rechnung per Mail zu erhalten.",
+                "key": "_#_platform_#_.invoice.mailcopy",
+                "rowCssClasses": ["ml-magnalisterInvoiceGenerator"],
+                "type": "text",
+                "submit": "Invoice.MailCopy"
+            },
+            "invoice.invoiceprefix": {
+                "label": "Pr&auml;fix Rechnungsnummer",
+                "hint": "Wenn Sie hier ein Pr&auml;fix eintragen, wird es vor die Rechnungsnummer gesetzt. Beispiel: R10000. Von magnalister generierte Rechnungen beginnen mit der Nummer 10000.",
+                "key": "_#_platform_#_.invoice.invoiceprefix",
+                "rowCssClasses": ["ml-magnalisterInvoiceGenerator"],
+                "type": "text",
+                "default": "R",
+                "submit": "Invoice.InvoicePrefix"
+            },
+            "invoice.reversalinvoiceprefix": {
+                "label": "Pr&auml;fix Stornorechnung",
+                "hint": "Wenn Sie hier ein Pr&auml;fix eintragen, wird es vor die Stornorechnungsnummer gesetzt. Beispiel: S20000. Von magnalister generierte Stornorechnungen beginnen mit der Nummer 20000.",
+                "key": "_#_platform_#_.invoice.reversalinvoiceprefix",
+                "rowCssClasses": ["ml-magnalisterInvoiceGenerator"],
+                "type": "text",
+                "default": "S",
+                "submit": "Invoice.ReversalInvoicePrefix"
+            },
+            "invoice.companyadressleft": {
+                "label": "Firmenadresse Anschriftfeld (links)",
+                "key": "_#_platform_#_.invoice.companyadressleft",
+                "rowCssClasses": ["ml-magnalisterInvoiceGenerator"],
+                "type": "text",
+                "submit": "Invoice.CompanyAddressLeft"
+            },
+            "invoice.companyadressright": {
+                "label": "Adresse Informationsblock rechts",
+                "key": "_#_platform_#_.invoice.companyadressright",
+                "rowCssClasses": ["ml-magnalisterInvoiceGenerator"],
+                "type": "textarea",
+                "submit": "Invoice.CompanyAddressRight"
+            },
+            "invoice.headline": {
+                "label": "&Uuml;berschrift Rechnung",
+                "key": "_#_platform_#_.invoice.headline",
+                "rowCssClasses": ["ml-magnalisterInvoiceGenerator"],
+                "type": "text",
+                "submit": "Invoice.Headline"
+            },
+            "invoice.invoicehintheadline": {
+                "label": "&Uuml;berschrift Rechnungshinweise",
+                "key": "_#_platform_#_.invoice.invoicehintheadline",
+                "rowCssClasses": ["ml-magnalisterInvoiceGenerator"],
+                "type": "text",
+                "submit": "Invoice.InvoiceHintHeadline"
+            },
+            "invoice.invoicehinttext": {
+                "label": "Hinweistext",
+                "key": "_#_platform_#_.invoice.invoicehinttext",
+                "rowCssClasses": ["ml-magnalisterInvoiceGenerator"],
+                "type": "textarea",
+                "submit": "Invoice.InvoiceHintText"
+            },
+            "invoice.footercell1": {
+                "label": "Fu&szlig;zeile Spalte 1",
+                "key": "_#_platform_#_.invoice.footercell1",
+                "rowCssClasses": ["ml-magnalisterInvoiceGenerator"],
+                "type": "textarea",
+                "submit": "Invoice.FooterCell1"
+            },
+            "invoice.footercell2": {
+                "label": "Fu&szlig;zeile Spalte 2",
+                "key": "_#_platform_#_.invoice.footercell2",
+                "rowCssClasses": ["ml-magnalisterInvoiceGenerator"],
+                "type": "textarea",
+                "submit": "Invoice.FooterCell2"
+            },
+            "invoice.footercell3": {
+                "label": "Fu&szlig;zeile Spalte 3",
+                "key": "_#_platform_#_.invoice.footercell3",
+                "rowCssClasses": ["ml-magnalisterInvoiceGenerator"],
+                "type": "textarea",
+                "submit": "Invoice.FooterCell3"
+            },
+            "invoice.footercell4": {
+                "label": "Fu&szlig;zeile Spalte 4",
+                "key": "_#_platform_#_.invoice.footercell4",
+                "rowCssClasses": ["ml-magnalisterInvoiceGenerator"],
+                "type": "textarea",
+                "submit": "Invoice.FooterCell4"
+            },
+            "invoice.preview": {
+                "label": "Rechnungsvorschau",
+                "key": "_#_platform_#_.invoice.preview",
+                "rowCssClasses": ["ml-magnalisterInvoiceGenerator"],
+                "hint": "Hier k&ouml;nnen Sie sich eine Vorschau Ihrer Rechnung mit den von Ihnen hinterlegten Daten anzeigen lassen.",
+                "type": "extern",
+                "params": [],
+                "procFunc": "MagnaCompatibleConfigure::invoicePreview"
+            }
+        }
+    },
+    "erpinvoice": {
+        "headline": "Rechnungs&uuml;bermittlung von ERP",
+        "desc": "",
+        "cssClasses": [
+            "ml-erpInvoice"
+        ],
+        "fields": {
+            "invoice.erpInvoiceSource": {
+                "label": "Quell-Ordner f&uuml;r Rechnungen (Server-Pfad)",
+                "desc": "<p>W&auml;hlen Sie hier den Server-Pfad zum Ordner aus, in den Sie die Rechnungen aus Ihrem Drittanbieter-System (z. B. ERP) als PDF hochladen.  <\/p><p> <b>Wichtiger Hinweis</b>: Damit magnalister eine PDF-Rechnung einer Shop-Bestellung zuordnen kann, m&uuml;ssen die PDF-Dateien nach einem der beiden folgenden Muster benannt werden:<\/p><ol><li>Benennung nach der Shop-Bestellung<\/p><p>Muster: #nummer-der-shop-bestellung#.pdf<\/p><p>Beispiel:<br\/>Nummer der Shop-Bestellung: 12345678<br\/>Rechnungs-PDF sollte lauten: 12345678.pdf<\/p><\/li><li>Benennung nach der Shop-Bestellung + Rechnungsnummer aus ERP-System<\/p><p>Muster:  #nummer-der-shop-bestellung#_#rechnungsnummer#.pdf<\/p><p>Beispiel:<br>Nummer der Shop-Bestellung: 12345678<br>Rechnungsnummer aus ERP: 9876543<br>Rechnungs-PDF sollte lauten: 12345678_9876543.pdf <\/p> <\/li> <\/ol>",
+                "hint": "",
+                "key": "_#_platform_#_.invoice.erpinvoicesource",
+                "rowCssClasses": ["ml-erpInvoice"],
+                "default" : "Receipts/_#_platformName_#_/ToBeProcessed/Invoices",
+                "type": "fileBrowser"
+            },
+            "invoice.erpInvoiceDestination": {
+                "label": "Ziel-Ordner f&uuml;r an _#_platformName_#_ &uuml;bermittelte Rechnungen (Server-Pfad)",
+                "desc":"<p>Nachdem magnalister eine Rechnung aus dem Quell-Ordner an _#_platformName_#_ hochgeladen hat, wird diese in den Ziel-Ordner verschoben. So k&ouml;nnen Sie nachvollziehen, welche Rechnungen bereits an _#_platformName_#_ &uuml;bermittelt wurden.<\/p><p>W&auml;hlen Sie hier den Server-Pfad zum Ziel-Ordner aus, in den die an _#_platformName_#_ hochgeladenen Rechnungen verschobenen werden sollen.<\/p><p><b>Wichtiger Hinweis:<\/b> Wenn Sie keinen abweichenden Ziel-Ordner f&uuml;r an _#_platformName_#_ hochgeladene Rechnungen ausw&auml;hlen, k&ouml;nnen Sie nicht erkennen, welche Rechnungen bereits zu _#_platformName_#_ hochgeladen wurden<\/p>",
+                "hint": "",
+                "key": "_#_platform_#_.invoice.erpinvoicedestination",
+                "rowCssClasses": ["ml-erpInvoice"],
+                "default" : "Receipts/_#_platformName_#_/Processed/Invoices",
+                "type": "fileBrowser"
+            },
+            "invoice.erpReversalInvoiceSource": {
+                "label": "Quell-Ordner f&uuml;r Gutschriften (Server-Pfad)",
+                "desc":"<p>W&auml;hlen Sie hier den Server-Pfad zum Ordner aus, in den Sie die Gutschriften aus Ihrem Drittanbieter-System (z. B. ERP) als PDF hochladen.  <\/p><p> <b>Wichtiger Hinweis</b>: Damit magnalister eine PDF-Gutschrift einer Shop-Bestellung zuordnen kann, m&uuml;ssen die PDF-Dateien nach einem der beiden folgenden Muster benannt werden:<\/p><ol><li>Benennung nach der Shop-Bestellung<\/p><p>Muster: #nummer-der-shop-bestellung#.pdf<\/p><p>Beispiel:<br\/>Nummer der Shop-Bestellung: 12345678<br\/>Gutschrifts-PDF sollte lauten: 12345678.pdf<\/p><\/li><li>Benennung nach der Shop-Bestellung + Nummer der Gutschrift aus ERP-System<\/p><p>Muster:  #nummer-der-shop-bestellung#_#nummer-der-gutschrift#.pdf<\/p><p>Beispiel:<br>Nummer der Shop-Bestellung: 12345678<br>Nummer der Gutschrift aus ERP: 9876543<br>Gutschrifts-PDF sollte lauten: 12345678_9876543.pdf  <\/li> <\/ol>",
+                "hint": "",
+                "key": "_#_platform_#_.invoice.erpreversalinvoicesource",
+                "rowCssClasses": ["ml-erpInvoice"],
+                "default" : "Receipts/_#_platformName_#_/ToBeProcessed/CreditNote",
+                "type": "fileBrowser"
+            },
+            "invoice.erpReversalInvoiceDestination": {
+                "label": "Ziel-Ordner f&uuml;r an _#_platformName_#_ &uuml;bermittelte Gutschriften (Server-Pfad)",
+                "desc": "<p>Nachdem magnalister eine Gutschrift aus dem Quell-Ordner an _#_platformName_#_ hochgeladen hat, wird diese in den Ziel-Ordner verschoben. So k&ouml;nnen Sie nachvollziehen, welche Gutschriften bereits an _#_platformName_#_ &uuml;bermittelt wurden.<\/p><p>W&auml;hlen Sie hier den Server-Pfad zum Ziel-Ordner aus, in den die an _#_platformName_#_ hochgeladenen Gutschriften verschobenen werden sollen.<\/p><p><b>Wichtiger Hinweis:<\/b> Wenn Sie keinen abweichenden Ziel-Ordner f&uuml;r an _#_platformName_#_ hochgeladene Gutschriften ausw&auml;hlen, k&ouml;nnen Sie nicht erkennen, welche Gutschriften bereits zu _#_platformName_#_ hochgeladen wurden<\/p>",
+                "hint": "",
+                "key": "_#_platform_#_.invoice.erpreversalinvoicedestination",
+                "rowCssClasses": ["ml-erpInvoice"],
+                "default" : "Receipts/_#_platformName_#_/Processed/CreditNote",
+                "type": "fileBrowser"
+            }
+        }
+    }
+}

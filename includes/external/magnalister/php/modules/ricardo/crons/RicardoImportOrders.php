@@ -43,7 +43,7 @@ class RicardoImportOrders extends MagnaCompatibleImportOrders {
 
 	protected function getPaymentMethod() {
 		if ($this->config['PaymentMethod'] == 'matching') {
-			return $this->getPaymentClassForRicardoPaymentMethod($this->o['order']['payment_code']);
+			return $this->getPaymentClassForRicardoPaymentMethod($this->o['order']['payment_method']);
 		}
 
 		return $this->config['PaymentMethod'];
@@ -66,9 +66,9 @@ class RicardoImportOrders extends MagnaCompatibleImportOrders {
 
 	private function getPaymentClassForRicardoPaymentMethod($paymentMethod) {
 		$PaymentModules = explode(';', MODULE_PAYMENT_INSTALLED);
-		$class = 'ricardo';
+		$class = 'marketplace';
 
-		if (('Kreditkarte' == $paymentMethod) || ('KreditkarteViaSeller' == $paymentMethod) || ('KreditkarteViaRicardo' == $paymentMethod)
+		if ((strpos($paymentMethod, 'Kreditkarte') === 0)
 			|| ('Visa' == $paymentMethod) || ('AmericanExpress' == $paymentMethod)) {
 			# Kreditkarte
 			if (in_array('cc.php', $PaymentModules)){
@@ -79,13 +79,24 @@ class RicardoImportOrders extends MagnaCompatibleImportOrders {
 				$class = 'moneybookers_cc';
 			} else if (in_array('uos_kreditkarte_modul.php', $PaymentModules)) {
 				$class = 'uos_kreditkarte_modul';
+			} else if (in_array('SI_cc.php', $PaymentModules)) {
+				$class = 'SI_cc';
+			} else if (in_array('sinternetkasse_ccfs.php', $PaymentModules)) {
+				$class = 'sinternetkasse_ccfs';
+			}
+		} else if (    (strpos($paymentMethod, 'Voraus') !== false) 
+		            || (strpos($paymentMethod, 'Vorkasse') !== false)) {
+			# Vorkasse
+			if (in_array('moneyorder.php', $PaymentModules)) {
+				$class = 'moneyorder';
 			}
 		} else if ('Moneybookers' == $paymentMethod) {
 			# Moneybookers
-			if (in_array('monebookers.php', $PaymentModules)) {
-				$class = 'monebookers';
+			if (in_array('moneybookers.php', $PaymentModules)) {
+				$class = 'moneybookers';
 			}
-		} else if ('Bankzahlung' == $paymentMethod) {
+		} else if (    (strpos($paymentMethod, 'Barzahlung') !== false)
+		            || (strpos($paymentMethod, 'bei Abholung') !== false)) {
 			# Barzahlung
 			if (in_array('cash.php', $PaymentModules)) {
 				$class = 'cash';

@@ -60,6 +60,7 @@ class PriceministerConfigure extends MagnaCompatibleConfigure {
 		if ($this->isAuthed) {
 		    PriceministerHelper::GetConditionTypesConfig($this->form['prepare']['fields']['condition']);
             PriceministerHelper::GetCarriersConfig($this->form['orderSyncState']['fields']['carrier']);
+            PriceministerHelper::GetCountriesConfig($this->form['orders']['fields']['shippingfromcountry']);
 
             $orderStatuses = array();
 			mlGetOrderStatus($orderStatuses);

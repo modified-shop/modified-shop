@@ -39,7 +39,7 @@ class MLBrowserDetect {
 		'Platform'  => false,
 	);
 	
-	final private function __construct() {
+	private function __construct() {
 		$this->ua = $_SERVER['HTTP_USER_AGENT'];
 		
 		foreach ($this->oses as $os) {
@@ -93,7 +93,7 @@ class MLBrowserDetect {
 		return self::$instance;
 	}
 	
-	final private function bVersionFixes() {
+	private function bVersionFixes() {
 		if ($this->browser['BVersion'] !== false) {
 			return;
 		}
@@ -103,7 +103,7 @@ class MLBrowserDetect {
 		}
 	}
 	
-	final private function operaFixes() {
+	private function operaFixes() {
 		if ($this->browser['Browser'] === 'opera') {
 			$m = array();
 			if (preg_match('/version\/([^\s;]*)/i', $this->ua, $m)) {
@@ -115,7 +115,7 @@ class MLBrowserDetect {
 		}
 	}
 	
-	final private function msieFixes() {
+	private function msieFixes() {
 		if ($this->browser['Browser'] !== 'msie') {
 			return;
 		}
@@ -124,7 +124,7 @@ class MLBrowserDetect {
 		}
 	}
 	
-	final private function mozillaFixes() {
+	private function mozillaFixes() {
 		if ($this->browser['Browser'] !== 'mozilla') {
 			return;
 		}
@@ -134,7 +134,7 @@ class MLBrowserDetect {
 		}
 	}
 	
-	final private function getMobileVersion() {
+	private function getMobileVersion() {
 		$m = array();
 		if (preg_match('/version\/([^\s;]*)/i', $this->ua, $m)) {
 			$this->browser['MBVersion'] = $m[1];

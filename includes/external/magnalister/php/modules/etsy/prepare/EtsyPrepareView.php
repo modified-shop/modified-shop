@@ -388,9 +388,10 @@ class EtsyPrepareView extends MagnaCompatibleBase {
 		);
 		$aWhenMadeValues = array(
 			'made_to_order' => ML_ETSY_WHEN_MADE_MADE_TO_ORDER,
+            '2020_2021'     => '2020-2021',
 			'2010_2019'     => ML_ETSY_WHEN_MADE_2010_2019,
-			'2000_2009'     => ML_ETSY_WHEN_MADE_2000_2009,
-			'before_2000'   => ML_ETSY_WHEN_MADE_BEFORE_2000,
+			'2002_2009'     => ML_ETSY_WHEN_MADE_2002_2009,
+			'before_2002'   => ML_ETSY_WHEN_MADE_BEFORE_2002,
 			'1990s'         => ML_ETSY_WHEN_MADE_1990S,
 			'1980s'         => ML_ETSY_WHEN_MADE_1980S,
 			'1970s'         => ML_ETSY_WHEN_MADE_1970S,

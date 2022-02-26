@@ -59,6 +59,20 @@ class IdealoImportOrders extends MagnaCompatibleImportOrders {
 		);
 	}
 
+	/**
+	 * Add PayPal Transaction ID (if exists) to the order comment.
+	 * @return String
+	 */
+	protected function generateOrderComment($blForce = false) {
+		if (    isset($this->o['orderInfo']['ExternalTransactionID'])
+		     && !empty($this->o['orderInfo']['ExternalTransactionID'])) {
+			$addTransactionID = "\nPayPal Transaction ID: ".$this->o['orderInfo']['ExternalTransactionID'];
+		} else {
+			$addTransactionID = '';
+		}
+		return parent::generateOrderComment($blForce).$addTransactionID;
+	}
+
 	protected function acknowledgeImportedOrders() {
 		if (empty($this->processedOrders)) return;
 		/* Acknowledge imported orders */

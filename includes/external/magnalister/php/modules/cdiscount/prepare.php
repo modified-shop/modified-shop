@@ -19,6 +19,7 @@
  */
 
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
+require_once(DIR_MAGNALISTER_MODULES . 'cdiscount/configure.php');
 
 class CdiscountPrepare extends MagnaCompatibleBase
 {
@@ -251,6 +252,14 @@ class CdiscountPrepare extends MagnaCompatibleBase
 
 	public function process()
 	{
+
+        if ((isset($_POST['action']) && $_POST['action'] == 'duplicate')) {
+            die(CdiscountHelper::gi()->renderDuplicateField($_POST['item'], $_POST['item']['key'], true));
+        }
+
+        // run js to filter our already selected dropdown values in duplicate
+        $this->selectFieldOptionRemoverScript();
+
 		if (   isset($_POST['request'])
 			&& ($_POST['request'] === 'ItemSearchByTitle' || $_POST['request'] === 'ItemSearchByEAN')
 		) {
@@ -469,5 +478,42 @@ class CdiscountPrepare extends MagnaCompatibleBase
 
 		return $autoMatchingStats;
 	}
-	
+
+    public function selectFieldOptionRemoverScript() {
+        ?>
+        <script>
+            $(document).ready(function() {
+                const hideUsedDeliveryModes = function () {
+                    let allSelectedOptions = $("*#config_cdiscount_shippingprofile_name\\]\\[").find('option:selected').toArray()
+                    let selectedDeliveryModes = $.map(allSelectedOptions, function (option, i) {
+                        return $(option).val()
+                    });
+
+                    // iterate over dropdowns
+                    $("*#config_cdiscount_shippingprofile_name\\]\\[").each(function () {
+                        // selected option from dropdown
+                        let selectedOption = $(this).find('option:selected')[0]
+
+                        // iterate over options of each dropdown
+                        $(this).find('option').each(function(i, option) {
+                            if (option === selectedOption) {
+                                return true
+                            }
+                            if (in_array($(option).val(), selectedDeliveryModes)){
+                                $(option).hide()
+                            } else {
+                                $(option).show()
+                            }
+                        });
+                    });
+                };
+
+                hideUsedDeliveryModes()
+                $(document).on('click', '.ml-button.minus', function(){hideUsedDeliveryModes()})
+
+            })
+        </script>
+        <?php
+    }
+
 }

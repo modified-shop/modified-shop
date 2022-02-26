@@ -38,6 +38,15 @@
                  },
                  "submit" : "Orders.AutoAcceptance"
             },
+            "shippingfromcountry": {
+                 "label": "Bestellung wird verschickt aus",
+                 "desc": "",
+                 "key": "_#_platform_#_.orderimport.shippingfromcountry",
+                 "type": "selection",
+                 "values" : null,
+                 "default" : "249",
+                 "submit" : "Orders.ShippingFromCountry"
+            },
             "onlycomplete": false,
             "customersgroup": {
                 "label": "Kundengruppe",

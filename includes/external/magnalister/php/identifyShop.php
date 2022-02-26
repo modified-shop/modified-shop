@@ -27,7 +27,7 @@ function identShopSystem() {
 		define('SHOPSYSTEM', 'gambio');
 
         // try to detect the gambio cloud
-        if (function_exists('gm_get_conf') && gm_get_conf('IS_CLOUD', true) === 'true') {
+        if (function_exists('gm_get_conf') && gm_get_conf('is_cloud', 'ASSOC', true) === 'true') {
             define('SHOPSYSTEM_GAMBIO_CLOUD', true);
         }
 	} else if (defined('PROJECT_VERSION')

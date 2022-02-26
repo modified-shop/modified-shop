@@ -170,8 +170,9 @@ class MetroInventoryView extends MagnaCompatibleInventoryView {
                 if (('utf8' == $character_set_system) && ('utf8' != $character_set_client)) {
                     $ShopDataForVariationItem['SKU'] = utf8_encode($ShopDataForVariationItem['SKU']);
                 }
+                $ShopDataForItemsBySKU[$ShopDataForVariationItem['MasterSKU']] = magnaPID2SKU($ShopDataForItemsBySKU['products_id']);
                 $ShopDataForItemsBySKU[$ShopDataForVariationItem['SKU']] = $ShopDataForVariationItem;
-                unset ($ShopDataForItemsBySKU[$ShopDataForVariationItem['SKU']]['SKU']);
+                unset($ShopDataForItemsBySKU[$ShopDataForVariationItem['SKU']]['SKU']);
                 $ShopDataForItemsBySKU[$ShopDataForVariationItem['SKUDeprecated']] = &$ShopDataForItemsBySKU[$ShopDataForVariationItem['SKU']];
             }
         } else {
@@ -180,6 +181,7 @@ class MetroInventoryView extends MagnaCompatibleInventoryView {
 
         #echo print_m($this->renderableData, '$this->renderableData');
         #echo print_m($ShopDataForItemsBySKU, '$ShopDataForItemsBySKU');
+        #echo print_m($ShopDataForVariationItems, '$ShopDataForVariationItems');
 
         foreach ($this->renderableData as &$item) {
             $itemProductData = json_decode($item['ProductData'], true);
@@ -187,10 +189,44 @@ class MetroInventoryView extends MagnaCompatibleInventoryView {
             $item['MarketplaceTitleShort'] = (mb_strlen($item['MarketplaceTitle'], 'UTF-8') > $this->settings['maxTitleChars'] + 2)
                 ? (fixHTMLUTF8Entities(mb_substr($item['MarketplaceTitle'], 0, $this->settings['maxTitleChars'], 'UTF-8')).'&hellip;')
                 : fixHTMLUTF8Entities($item['MarketplaceTitle']);
+
             if (isset($ShopDataForItemsBySKU[$item['SKU']])) {
+                // Pull Prepare Data
+                if (getDBConfigValue('general.keytype', '0') == 'artNr') {
+                    $checkSKU = $item['SKU'];
+                    if (array_key_exists('MasterSKU', $item)) {
+                        $checkSKU = $item['MasterSKU'];
+                    }
+                    $sPropertiesWhere = "products_model = '".MagnaDB::gi()->escape($checkSKU)."'";
+                } else {
+                    $sPropertiesWhere = "products_id = '".$ShopDataForItemsBySKU[$item['SKU']]['products_id']."'";
+                }
+                $prepareData = MagnaDB::gi()->fetchRow(eecho("
+                    SELECT *
+                      FROM ".TABLE_MAGNA_METRO_PREPARE."
+                     WHERE     ".$sPropertiesWhere."
+                           AND mpID = '".$this->mpID."'
+                ", false));
+
                 $item['ProductsID'] = $ShopDataForItemsBySKU[$item['SKU']]['products_id'];
                 $item['ShopQuantity'] = $ShopDataForItemsBySKU[$item['SKU']]['ShopQuantity'];
                 $item['ShopPrice'] = $ShopDataForItemsBySKU[$item['SKU']]['ShopPrice'];
+
+                // Set SimplePrice to current Product
+                $this->simplePrice->setFinalPriceFromDB($item['ProductsID'], $this->mpID);
+                $item['ShopNetPrice'] = $this->simplePrice->removeTaxByPID($item['ProductsID'])->getPrice();
+                $item['Tax'] = SimplePrice::getTaxByPID($item['ProductsID']);
+
+                //Shipping costs (Gross + Net)
+                $shippingPriceConfigValue = getDBConfigValue('metro.shippingprofile.cost', $this->mpID);
+                if (!empty($prepareData['ShippingProfile']) && array_key_exists($prepareData['ShippingProfile'], $shippingPriceConfigValue)) {
+                    $shippingProfilePrice = $shippingPriceConfigValue[$prepareData['ShippingProfile']];
+                    $item['ShippingCost'] = (float)$shippingProfilePrice;
+                    $item['NetShippingCost'] = round(($item['ShippingCost'] / ((100 + (float)$item['Tax']) / 100)), 2);
+                } else {
+                    $item['ShippingCost'] = $item['NetShippingCost'] = null;
+                }
+
                 $item['Title'] = $ShopDataForItemsBySKU[$item['SKU']]['ShopTitle'];
                 $item['TitleShort'] = (mb_strlen($item['Title'], 'UTF-8') > $this->settings['maxTitleChars'] + 2)
                     ? (fixHTMLUTF8Entities(mb_substr($item['Title'], 0, $this->settings['maxTitleChars'], 'UTF-8')).'&hellip;')
@@ -235,7 +271,7 @@ class MetroInventoryView extends MagnaCompatibleInventoryView {
             ),
             'Price' => array(
                 'Label' => ML_METRO_PRICE_SHOP_METRO,
-                'Sorter' => 'price',
+                'Sorter' => 'NetPrice',
                 'Getter' => 'getItemPrice', /** @uses getItemPrice */
                 'Field' => null
             ),
@@ -297,8 +333,29 @@ class MetroInventoryView extends MagnaCompatibleInventoryView {
             $sShopPrice = '&mdash;';
         }
         $item['Currency'] = isset($item['Currency']) ? $item['Currency'] : $this->mpCurrency;
-        $sMetroPrice = $this->simplePrice->setPriceAndCurrency($item['Price'], $item['Currency'])->format();
-        return '<td>'.$sShopPrice.' / '.$sMetroPrice/*.'<br />'.print_m($item, '$item')*/.'</td>';
+
+        $shippingCost = '';
+        $shippingNetCost = '';
+        if ($item['ShippingCost'] !== null && $item['NetShippingCost'] !== null) {
+            $shippingCost = $this->simplePrice->setPriceAndCurrency($item['ShippingCost'], $item['Currency'])->format();
+            $shippingNetCost = $this->simplePrice->setPriceAndCurrency($item['NetShippingCost'], $item['Currency'])->format();
+        }
+
+        $sMetroPrice = (isset($item['Price']) && 0 != $item['Price'])
+            ? $this->simplePrice->setPriceAndCurrency($item['Price'], $item['Currency'])->format()
+                .'<span class="small">('.ML_LABEL_INCL.' '.$shippingCost.' '.ML_GENERIC_SHIPPING.')</span>'
+            : '&mdash';
+
+        $renderedShopNetPrice = (isset($item['ShopNetPrice']) && 0 != $item['ShopNetPrice'])
+            ? $this->simplePrice->setPriceAndCurrency($item['ShopNetPrice'], $item['Currency'])->format()
+            : '&mdash;';
+        $renderedMpNetPrice = ((isset($item['NetPrice']) && 0 != $item['NetPrice'])
+            ? $this->simplePrice->setPriceAndCurrency($item['NetPrice'], $item['Currency'])->format()
+                .'<span class="small">('.ML_LABEL_INCL.' '.$shippingNetCost.' '.ML_GENERIC_SHIPPING.')</span>'
+            : '&mdash;'
+        );
+
+        return '<td>'.$sShopPrice.' / '.$sMetroPrice.'<br>'.$renderedShopNetPrice.' / '.$renderedMpNetPrice.'</td>';
     }
 
     protected function getItemQuantity($item) {
@@ -306,8 +363,12 @@ class MetroInventoryView extends MagnaCompatibleInventoryView {
     }
 
     protected function getItemLastSync($item) {
-        $item['LastSync'] = ((isset($item['DateUpdated'])) ? strtotime($item['DateUpdated']) : '');
-        return '<td>'.date("d.m.Y", $item['LastSync']).' &nbsp;&nbsp;<span class="small">'.date("H:i", $item['LastSync']).'</span>'.'</td>';
+        if (isset($item['DateUpdated']) && $item['DateUpdated'] != '0000-00-00 00:00:00') {
+            $time = strtotime($item['DateUpdated']);
+            return '<td>'.date("d.m.Y", $time).' &nbsp;&nbsp;<span class="small">'.date("H:i", $time).'</span>'.'</td>';
+        }
+
+        return '<td>&mdash;</td>';
     }
 
     protected function getItemStatus($item) {

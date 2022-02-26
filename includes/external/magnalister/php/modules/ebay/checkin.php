@@ -30,6 +30,7 @@ if (defined('MAGNA_DEV_PRODUCTLIST') && MAGNA_DEV_PRODUCTLIST === true ) {
 }
 require_once(DIR_MAGNALISTER_MODULES.'ebay/classes/eBaySummaryView.php');
 require_once(DIR_MAGNALISTER_MODULES.'ebay/classes/eBayCheckinSubmit.php');
+require_once(DIR_MAGNALISTER_MODULES.'ebay/ebayFunctions.php');
 
 
 $cm = new CheckinManager(array(
@@ -40,4 +41,5 @@ $cm = new CheckinManager(array(
 	'marketplace' => 'ebay')
 );
 
+removeDoublePrepareEntries();
 echo $cm->mainRoutine();

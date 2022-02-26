@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * 888888ba                 dP  .88888.                    dP
  * 88    `8b                88 d8'   `88                   88
  * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b.
@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * (c) 2010 - 2019 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2021 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -282,8 +282,8 @@ $_modules = array(
 	),
 	'hitmeister' => array(
 		'title' => ML_MODULE_HITMEISTER,
-		'logo' => 'real_de',
-		'displayAlways' => false,
+		'logo' => 'kaufland',
+		'displayAlways' => true,
 		'requiredConfigKeys' => array (
 			'hitmeister.firstactivation',
 			'hitmeister.clientkey',
@@ -376,7 +376,8 @@ $_modules = array(
             'priceminister.itemcondition',
             'priceminister.import',
             'priceminister.multimatching.itemsperpage',
-            'priceminister.orderstatus.cancelreason'
+            'priceminister.orderstatus.cancelreason',
+            'priceminister.orderimport.shippingfromcountry',
         ),
         'pages' => array (
             'prepare' => array (
@@ -704,7 +705,7 @@ $_modules = array(
 	'tradoria' => array (
 		'title' => 'Rakuten',
 		'logo' => 'rakuten',
-		'displayAlways' => true,
+		'displayAlways' => false,
 		'requiredConfigKeys' => array (
 			'tradoria.apikey',
 			'tradoria.mpusername',
@@ -1090,6 +1091,8 @@ $_modules = array(
         'requiredConfigKeys' => array (
             'metro.clientkey',
             'metro.secretkey',
+            'metro.shippingdestination',
+            'metro.shippingorigin',
             'metro.lang',
             'metro.mwst.fallback',
             'metro.price.addkind',
@@ -1123,6 +1126,53 @@ $_modules = array(
         ),
         'type' => 'marketplace',
     ),
+    'otto' => array(
+        'title' => 'OTTO',
+        'logo' => 'otto',
+        'displayAlways' => false,
+        'requiredConfigKeys' => array (
+            'otto.username',
+            'otto.password',
+            'otto.lang',
+            'otto.product.vat',
+            'otto.price.addkind',
+            'otto.stocksync.tomarketplace',
+            'otto.shipping.status',
+            'otto.orders.shipping.address.city',
+            'otto.orders.shipping.address.countrycode',
+            'otto.orders.shipping.address.zip',
+            'otto.send.carrier',
+            'otto.return.carrier',
+            'otto.forwarding.carrier',
+            'otto.orders.return.tracking.key.DBMatching.table'
+        ),
+        'pages' => array (
+            'prepare' => array (
+                'title' => ML_GENERIC_PREPARE,
+                'views' => array (
+                    'apply' => ML_AMAZON_NEW_ITMES,
+                    'varmatch' => ML_GENERIC_VARIANTEN_MATCHING,
+                )
+            ),
+            'checkin' => ML_GENERIC_CHECKIN,
+            'listings' => array (
+                'title' => ML_GENERIC_LISTINGS,
+                'views' => array (
+                    'inventory' => ML_GENERIC_INVENTORY,
+                    'deleted' => ML_GENERIC_DELETED,
+                )
+            ),
+            'errorlog' => ML_GENERIC_ERRORLOG,
+            'conf' => ML_GENERIC_CONFIGURATION,
+        ),
+        'settings' => array (
+            'defaultpage' => 'prepare',
+            'subsystem' => 'OTTO',
+            'currency' => 'EUR',
+            'hasOrderImport' => true,
+        ),
+        'type' => 'marketplace',
+    ),
 	'more' => array (
 		'title' => '&hellip;',
 		'displayAlways' => true,
@@ -1146,4 +1196,9 @@ $_modules = array(
 		'displayAlways' => true,
 		'type' => 'system',
 	),
+    'rookie' => array (
+        'title' => ML_MODULE_ROOKIE,
+        'displayAlways' => false,
+        'type' => 'system',
+    ),
 );

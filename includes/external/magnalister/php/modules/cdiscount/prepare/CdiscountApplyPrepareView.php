@@ -23,6 +23,7 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 require_once(DIR_MAGNALISTER_MODULES . 'cdiscount/prepare/CdiscountCategoryMatching.php');
 require_once(DIR_MAGNALISTER_MODULES . 'cdiscount/classes/CdiscountTopTenCategories.php');
 require_once(DIR_MAGNALISTER_MODULES . 'cdiscount/CdiscountHelper.php');
+require_once(DIR_MAGNALISTER_MODULES . 'cdiscount/configure.php');
 
 class CdiscountApplyPrepareView extends MagnaCompatibleBase {
     const MARKETING_DESC_MAX_LENGTH = 5000;
@@ -51,6 +52,11 @@ class CdiscountApplyPrepareView extends MagnaCompatibleBase {
         $defaultShippingFeeExtraTracked = $preSelected['ShippingFeeExtraTracked'];
         $defaultShippingFeeRegistered = $preSelected['ShippingFeeRegistered'];
         $defaultShippingFeeExtraRegistered = $preSelected['ShippingFeeExtraRegistered'];
+        $defaultShippingProfileName = $preSelected['ShippingProfileName'];
+        $defaultShippingFee = $preSelected['ShippingFee'];
+        $defaultShippingFeeAdditional = $preSelected['ShippingFeeAdditional'];
+
+
 
         $defaultMpCategory = isset($preSelected['PrimaryCategory']) ? $preSelected['PrimaryCategory'] : '0';
         $defaultComment = $preSelected['Comment'];
@@ -221,73 +227,15 @@ class CdiscountApplyPrepareView extends MagnaCompatibleBase {
 						<td class="info"></td>
 					</tr>';
 
-        // Shipping standard
         $html .= '
-					<tr class="odd">
-						<th>' . ML_CDISCOUNT_LABEL_SHIPPING_STANDARD . '
-
-						<div style="float: right; width: 16px; height: 16px; background: transparent url(\'' .
-            DIR_MAGNALISTER_WS . 'images/information.png\') no-repeat 0 0;
-							cursor: pointer; display: inline-block; vertical-align: top;" class="desc " id="desc_4" title="Infos">
-							<span style="display: none">' . ML_CDISCOUNT_HELP_SHIPPING_STANDARD . '</span>
-						</div>
-
-						</th>
-						<td class="input">
-							<lable>' . ML_CDISCOUNT_LABEL_SHIPPING_FEE . '</lable>
-							<input type="text" name="ShippingFeeStandard" id="ShippingFeeStandard" value="' .
-            $defaultShippingFeeStandard . '"/>
-							<lable>' . ML_CDISCOUNT_LABEL_SHIPPING_ADDITIONAL_FEE . '</lable>
-							<input type="text" name="ShippingFeeExtraStandard" id="ShippingFeeExtraStandard" value="' .
-            $defaultShippingFeeExtraStandard . '"/>
-						</td>
-						<td class="info"></td>
-					</tr>';
-
-        // Shipping tracked
-        $html .= '
-					<tr class="even">
-						<th>' . ML_CDISCOUNT_LABEL_SHIPPING_TRACKED . '
-						<div style="float: right; width: 16px; height: 16px; background: transparent url(\'' .
-            DIR_MAGNALISTER_WS . 'images/information.png\') no-repeat 0 0;
-							cursor: pointer; display: inline-block; vertical-align: top;" class="desc " id="desc_5" title="Infos">
-							<span style="display: none">' . ML_CDISCOUNT_HELP_SHIPPING_TRACKED . '</span>
-						</div>
-
-						<div id="infodiag" class="dialog2" title="' . ML_LABEL_INFORMATION . '"></div>
-
-						</th>
-						<td class="input">
-							<lable>' . ML_CDISCOUNT_LABEL_SHIPPING_FEE . '</lable>
-							<input type="text" name="ShippingFeeTracked" id="ShippingFeeTracked" value="' .
-            $defaultShippingFeeTracked . '"/>
-							<lable>' . ML_CDISCOUNT_LABEL_SHIPPING_ADDITIONAL_FEE . '</lable>
-							<input type="text" name="ShippingFeeExtraTracked" id="ShippingFeeExtraTracked" value="' .
-            $defaultShippingFeeExtraTracked . '"/>
-						</td>
-						<td class="info"></td>
-					</tr>';
-
-        // Shipping registered
-        $html .= '
-					<tr class="odd">
-						<th>' . ML_CDISCOUNT_LABEL_SHIPPING_REGISTERED . '
-						<div style="float: right; width: 16px; height: 16px; background: transparent url(\'' .
-            DIR_MAGNALISTER_WS . 'images/information.png\') no-repeat 0 0;
-							cursor: pointer; display: inline-block; vertical-align: top;" class="desc " id="desc_6" title="Infos">
-							<span style="display: none">' . ML_CDISCOUNT_HELP_SHIPPING_REGISTERED . '</span>
-						</div>
-						</th>
-						<td class="input">
-							<lable>' . ML_CDISCOUNT_LABEL_SHIPPING_FEE . '</lable>
-							<input type="text" name="ShippingFeeRegistered" id="ShippingFeeRegistered" value="' .
-            $defaultShippingFeeRegistered . '"/>
-							<lable>' . ML_CDISCOUNT_LABEL_SHIPPING_ADDITIONAL_FEE . '</lable>
-							<input type="text" name="ShippingFeeExtraRegistered" id="ShippingFeeExtraRegistered" value="' .
-            $defaultShippingFeeExtraRegistered . '"/>
-						</td>
-						<td class="info"></td>
-					</tr>';
+            <tr class="">
+                <th>Versandkosten</th>
+                <td class="input">
+                    '.$this->renderShippingCosts($defaultShippingProfileName, $defaultShippingFee, $defaultShippingFeeAdditional).'
+                </td>
+                <td class="info"></td>
+            </tr>
+        ';
 
         $html .= '
 				<tr class="even">
@@ -467,6 +415,9 @@ class CdiscountApplyPrepareView extends MagnaCompatibleBase {
             'ShippingFeeExtraTracked' => null,
             'ShippingFeeRegistered' => null,
             'ShippingFeeExtraRegistered' => null,
+            'ShippingProfileName' => null,
+            'ShippingFee' => null,
+            'ShippingFeeAdditional' => null,
         );
 
         $defaults = array(
@@ -481,6 +432,9 @@ class CdiscountApplyPrepareView extends MagnaCompatibleBase {
             'ShippingFeeExtraTracked' => getDBConfigValue($this->marketplace . '.shippingfeeextratracked', $this->mpID),
             'ShippingFeeRegistered' => getDBConfigValue($this->marketplace . '.shippingfeeregistered', $this->mpID),
             'ShippingFeeExtraRegistered' => getDBConfigValue($this->marketplace . '.shippingfeeextraregistered', $this->mpID),
+            'ShippingProfileName' => getDBConfigValue($this->marketplace . '.shippingprofile.name', $this->mpID),
+            'ShippingFee' => getDBConfigValue($this->marketplace . '.shippingprofile.fee', $this->mpID),
+            'ShippingFeeAdditional' => getDBConfigValue($this->marketplace . '.shippingprofile.feeadditional', $this->mpID),
 
         );
 
@@ -721,6 +675,257 @@ class CdiscountApplyPrepareView extends MagnaCompatibleBase {
 
             echo json_encode($editedColumns, JSON_FORCE_OBJECT);
         }
+    }
+
+    public function renderShippingCosts($var1, $var2, $var3) {
+        $deliveryModes = CdiscountConfigure::getDeliveryModes();
+        $array = [
+            'label' => 'Versandkosten',
+            'key' => 'cdiscount.shippingprofile',
+            'type' => 'duplicate',
+            'skipRadio' => 'true',
+            'subtype' => 'extern',
+            'procFunc' => 'CdiscountConfigure::shippingProfile',
+            'params' =>
+                ['subfields' => [
+                    'method' => [
+                        'label' => 'Name des Versandprofils',
+                        'key' => 'cdiscount.shippingprofile.name',
+                        'name' => 'Name',
+                        'type' => 'selection',
+                        'values' => $deliveryModes,
+                        'selectedValues' => $var1,
+                        'cssClasses' => ['autoWidth']
+                    ],
+                    'fee' => [
+                        'label' => 'Versandgebühr (€)',
+                        'key' => 'cdiscount.shippingprofile.fee',
+                        'name' => 'Fee',
+                        'type' => 'text',
+                        'selectedValues' => $var2,
+                        'cssClasses' => ['autoWidth']
+                    ],
+                    'feeadditional' => [
+                        'label' => 'Zusätzliche Versandgebühren (€)',
+                        'key' => 'cdiscount.shippingprofile.feeadditional',
+                        'name' => 'Fee2',
+                        'type' => 'text',
+                        'selectedValues' => $var3,
+                        'cssClasses' => ['autoWidth']
+                    ],
+                ],
+            ],
+            'cssClasses' => ['orderConfig']
+        ];
+
+        return $this->renderDuplicateField($array, 'cdiscount_shippingprofile', false);
+    }
+
+    protected function renderDuplicateField($item, $idKey, $blAjax = false) {
+        global $magnaConfig;
+
+        $config = &$magnaConfig['db'][$this->mpID];
+        $idKey = str_replace('.', '_', $idKey);
+
+        $html = '';
+        ob_start();
+        if ($blAjax) {
+            $aValue = array('defaults' => array(''));
+        } elseif (!isset($config[$item['key']]['defaults'])) {
+            $aValue = array('defaults' => array('1'));
+            if (isset($item['params']['subfields']['method']['selectedValues'])) {
+                $aValue = array('defaults' => json_decode($item['params']['subfields']['method']['selectedValues']));
+            }
+        } else {
+            if (!is_array($item['params']['subfields']['method']['selectedValues'])) {
+                $aValue = array('defaults' => json_decode($item['params']['subfields']['method']['selectedValues']));
+            } else {
+                $aValue = $config[$item['key']];
+            }
+        }
+
+        if (isset($item['params']['subfields']['method']['selectedValues']) && is_string($item['params']['subfields']['method']['selectedValues'])) {
+            $item['params']['subfields']['method']['selectedValues'] = json_decode($item['params']['subfields']['method']['selectedValues']);
+            $item['params']['subfields']['fee']['selectedValues'] = json_decode($item['params']['subfields']['fee']['selectedValues']);
+            $item['params']['subfields']['feeadditional']['selectedValues'] = json_decode($item['params']['subfields']['feeadditional']['selectedValues']);
+        }
+
+        $cssClasses = !empty($item['cssClasses']) ? implode(' ', $item['cssClasses']) : '';
+        ?>
+    <div id="<?php echo $idKey ?>">
+        <table class="<?php echo $idKey ?> nostyle nowrap valigntop <?php echo $cssClasses ?>" width="100%">
+            <tbody>
+            <?php
+            if (isset($aValue['defaults'])) {
+                for ($i = 0; $i < count($aValue['defaults']); $i++) { ?>
+                    <tr class="row1 bottomDashed">
+                        <td>
+                            <?php
+                            $field = $item;
+                            $field['type'] = $item['subtype'];
+                            if (isset($field['params'])) {
+                                $field['params']['currentIndex'] = $i;
+                            }
+
+                            unset($field['subtype']);
+                            $field['key'] = $item['key'].'][values][';
+                            $value = null;
+                            if (isset($aValue['values']) && isset($aValue['values'][$i])) {
+                                $value = $aValue['values'][$i];
+                            }
+
+                            echo $this->renderInput($field, $value);
+                            ?>
+                        </td>
+                        <td>
+                            <input value="<?php echo $aValue['defaults'][$i]; ?>"
+                                   name="<?php echo $item['key'].'[defaults][]' ?>" type="hidden"
+                                   class="<?php echo $idKey ?>"/>
+                            <input type="button" value="+" class="ml-button plus">
+                            <input type="button" value="&#8211;" class="ml-button minus " <?php echo count($aValue['defaults']) == 1 ? 'disabled' : ''?>>
+                        </td>
+                    </tr>
+                <?php }
+            } ?>
+            </tbody>
+        </table>
+        <?php if (!$blAjax) { ?>
+        <script type="text/javascript">/*<![CDATA[*/
+            $(document).ready(function () {
+                $('#<?php echo $idKey; ?>').on('click', 'input.ml-button.plus', function () {
+                    var $tableBox = $('#<?php echo $idKey; ?>');
+                    if ($tableBox.parent('td').find('table').length == 1) {
+                        $tableBox.find('input.ml-button.minus').fadeIn(0);
+                        $tableBox.find('input.ml-button.minus').prop('disabled', true);
+                    }
+
+                    $tableBox.find('input.ml-button.minus').prop('disabled', false);
+
+                    myConsole.log();
+                    jQuery.blockUI(blockUILoading);
+                    jQuery.ajax({
+                        //mp=60868&mode=conf
+                        type: 'POST',
+                        url: '<?php echo toURL($this->url, array('mp' => $this->mpID,'mode' => 'prepare','kind' => 'ajax'), true); ?>',
+                        data: <?php echo json_encode(array_merge(
+                            array(
+                                'item' => $item,
+                                'action' => 'duplicate',
+                                'kind' => 'ajax',
+                            )
+                        )); ?>,
+                        success: function (data) {
+                            jQuery.unblockUI();
+                            $tableBox.append(data);
+                        },
+                        error: function () {
+                            jQuery.unblockUI();
+                        },
+                        dataType: 'html'
+                    });
+                });
+                $('#<?php echo $idKey; ?>').on('click', 'input.ml-button.minus', function () {
+                    $(this).closest('tr').remove();
+                    var hiddenInput = $(this).parent().find('input:hidden:first').attr('class');
+                    var length = $('input.'+hiddenInput).length
+                    if (length <= 1) {
+                        $('input.'+hiddenInput).parent().find('input.ml-button.minus').prop('disabled', true).fadeIn(0)
+                    } else {
+                        $('input.'+hiddenInput).parent().find('input.ml-button.minus').prop('disabled', false).fadeIn(1)
+                    }
+
+                });
+            });
+            /*]]>*/</script></div><?php
+        }
+
+        $html .= ob_get_clean();
+
+        return $html;
+    }
+
+    private function renderInput($item, $value = null) {
+        # echo print_m($item);
+        global $magnaConfig;
+        $config = &$magnaConfig['db'][$this->mpID];
+
+        if (!isset($item['key'])) {
+            $item['key'] = '';
+        }
+        if($value === null){
+            $value = '';
+            if (array_key_exists($item['key'], $config)) {
+                $value = $config[$item['key']];
+                if (is_array($value) && isset($item['default']) && is_array($item['default'])) {
+                    //echo print_m($item['default'], 'default'); echo print_m($value, 'config');
+                    //var_dump(isNumericArray($item['default']), isNumericArray($value));
+                    if (isNumericArray($item['default']) && isNumericArray($value)) {
+                        foreach ($item['default'] as $k => $v) {
+                            if (array_key_exists($k, $value)) continue;
+                            $value[$k] = $item['default'][$k];
+                        }
+                    } else {
+                        $value = array_merge($item['default'], $value);
+                    }
+                }
+            } else if (isset($item['default'])) {
+                $value = $item['default'];
+            }
+        }
+
+        $item['__value'] = $value;
+
+        $idkey = str_replace('.', '_', $item['key']);
+
+        $parameters = '';
+        if (isset($item['parameters'])) {
+            foreach ($item['parameters'] as $key => $val) {
+                $parameters .= ' '.$key.'="'.$val.'"';
+            }
+        }
+        if (array_key_exists('ajaxlinkto', $item)) {
+            $item['ajaxlinkto']['from'] = $item['key'];
+            $item['ajaxlinkto']['fromid'] = 'config_'.$idkey;
+            if (array_key_exists('key', $item['ajaxlinkto'])) {
+                $item['ajaxlinkto']['toid'] = 'config_'.str_replace('.', '_', $item['ajaxlinkto']['key']);
+                $ajaxUpdateFuncs[] = $item['ajaxlinkto'];
+            } else { # mehrere ajaxlinkto eintraege
+                foreach ($item['ajaxlinkto'] as $aLiTo) {
+                    if (!is_array($aLiTo) || !array_key_exists('key', $aLiTo)) continue;
+                    $aLiTo['toid'] = 'config_'.str_replace('.', '_', $aLiTo['key']);
+                    $ajaxUpdateFuncs[] = $aLiTo;
+                }
+            }
+        }
+
+        if (!isset($item['cssClasses'])) {
+            $item['cssClasses'] = array();
+        }
+
+        if (isset($item['cssStyles']) && is_array($item['cssStyles'])) {
+            $style = ' style="'.implode(';', $item['cssStyles']).'" ';
+        } else {
+            $style = '';
+        }
+
+        $html = '';
+        if(!isset($item['type'])){
+            return $html;
+        }
+        switch ($item['type']) {
+            case 'extern': {
+                if (!is_callable($item['procFunc'])) {
+                    if (is_array($item['procFunc'])) {
+                        $item['procFunc'] = get_class($item['procFunc'][0]).'->'.$item['procFunc'][1];
+                    }
+                    $html .= 'Function <span class="tt">\''.$item['procFunc'].'\'</span> does not exists.';
+                    break;
+                }
+                $html .= call_user_func($item['procFunc'], array_merge($item['params'], array('key' => $item['key'])));
+                break;
+            }
+        }
+        return $html;
     }
 
 }

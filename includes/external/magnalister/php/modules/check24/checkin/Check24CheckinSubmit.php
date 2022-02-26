@@ -128,7 +128,32 @@ class Check24CheckinSubmit extends MagnaCompatibleCheckinSubmit {
 		$aData['submit']['BasePrice'] = $aProduct['BasePrice'];
 		$aData['submit']['ShippingTime'] = $aPropertiesRow['ShippingTime'];
 		$aData['submit']['ShippingCost'] = $aPropertiesRow['ShippingCost'];
-		
+		if (!empty($aPropertiesRow['ItemHandlingData'])) {
+			$aItemHandlingData = json_decode($aPropertiesRow['ItemHandlingData'], true);
+			foreach ($aItemHandlingData as $sIHKey => $sIHValue) {
+				$aData['submit'][$sIHKey] = $sIHValue;
+			}
+			if (    array_key_exists('DeliveryMode', $aData['submit'])
+			     && ($aData['submit']['DeliveryMode'] == 'EigeneAngaben')) {
+				if (array_key_exists('DeliveryModeText', $aData['submit'])
+			             && !empty($aData['submit']['DeliveryModeText'])) {
+					$aData['submit']['DeliveryMode'] = $aData['submit']['DeliveryModeText'];
+					unset($aData['submit']['DeliveryModeText']);
+				}
+			}
+			if (!array_key_exists('CustomTariffsNumber', $aData['submit'])) {
+			// use config value
+				$aCustomTariffsNumberDBMatching = getDBConfigValue($this->marketplace.'.custom_tariffs_number.dbmatching.table', $this->mpID, '');
+				if (    !empty($aCustomTariffsNumberDBMatching)
+				     && isset($aCustomTariffsNumberDBMatching['column'])
+				     && isset($aCustomTariffsNumberDBMatching['table'])) {
+					$aData['submit']['CustomTariffsNumber'] = (string)MagnaDB::gi()->fetchOne('SELECT '.$aCustomTariffsNumberDBMatching['column'].' FROM '.$aCustomTariffsNumberDBMatching['table'].' WHERE products_id = '.$iPID.' LIMIT 1');
+					if (empty($aData['submit']['CustomTariffsNumber'])) {
+						unset($aData['submit']['CustomTariffsNumber']);
+					}
+				}
+			}
+		}
 
 		if (empty($aProduct['Variations']) === false) {
 			$aData['submit']['Variations'] = $aProduct['Variations'];

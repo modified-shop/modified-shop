@@ -750,10 +750,6 @@ $(document).ready(function() {
 		$left = '<input type="button" class="ml-button" value="'.ML_BUTTON_LABEL_DELETE.'" id="listingDelete" name="listing[delete]"/>';
 		$right = '<table class="right"><tbody>
 			<tr><td><input type="submit" class="ml-button fullWidth smallmargin" name="reload" value="'.ML_BUTTON_RELOAD_INVENTORY.'"/></td></tr>
-			'.(in_array(getDBConfigValue('amazon.stocksync.tomarketplace', $this->magnaSession['mpID']), array('abs', 'auto'))
-				? '<tr><td><input type="submit" class="ml-button fullWidth smallmargin" name="refreshStock" value="'.ML_BUTTON_REFRESH_STOCK.'"/></td></tr>'
-				: ''
-			).'
 		</tbody></table>';
 			
 		ob_start();?>

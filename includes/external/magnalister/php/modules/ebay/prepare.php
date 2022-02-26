@@ -23,6 +23,7 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 # return product details for each item in selection
 function eBayGetSelection() {
     global $_MagnaSession;
+    removeDoublePrepareEntries();
     # Daten aus magnalister_ebay_properties (bereits frueher vorbereitet)
     $keytypeIsArtNr = (getDBConfigValue('general.keytype', '0') == 'artNr');
     $shortDescColumnExists =  MagnaDB::gi()->columnExistsInTable('products_short_description', TABLE_PRODUCTS_DESCRIPTION);
@@ -31,12 +32,12 @@ function eBayGetSelection() {
     if ($keytypeIsArtNr) {
         $dbOldSelectionQuery = 'SELECT '
             .' ep.products_id products_id, ep.products_model products_model, '
-            .' Price, IF(0.0=Price, 0, 1) as priceFrozen, '
+            .' Price, IF(0.0=Price, 0, 1) as priceFrozen, StrikePriceConf, '
             .' ms.mpID mpID, Title, Subtitle, Description, MobileDescription, '
             .' p.products_weight AS products_weight, '
             .' pd.products_name products_name, pd.products_description description, '
             .($shortDescColumnExists?' pd.products_short_description ':'\'\'').' AS shortdescription, '
-            .'PictureURL, GalleryURL, ConditionID,  '
+            .'PictureURL, GalleryURL, ConditionID, ConditionDescription, '
             .' PrimaryCategory, SecondaryCategory, StoreCategory, StoreCategory2, '
             .' Attributes, ItemSpecifics, eBayPicturePackPurge, VariationDimensionForPictures, GalleryType, '
             .' ListingType, ListingDuration, PaymentMethods, ShippingDetails, SellerProfiles, DispatchTimeMax, ePID '
@@ -54,11 +55,11 @@ function eBayGetSelection() {
     } else {
         $dbOldSelectionQuery = 'SELECT '
             .' ep.products_id products_id, ep.products_model products_model, '
-            .' Price, IF(0.0=Price, 0, 1) as priceFrozen, '
+            .' Price, IF(0.0=Price, 0, 1) as priceFrozen, StrikePriceConf, '
             .' ms.mpID mpID, Title, Subtitle, Description, MobileDescription, '
             .' pd.products_name products_name, pd.products_description description, '
             .($shortDescColumnExists?' pd.products_short_description ':'\'\'').' AS shortdescription, '
-            .' PictureURL, GalleryURL, ConditionID,  '
+            .' PictureURL, GalleryURL, ConditionID, ConditionDescription, '
             .' p.products_weight AS products_weight, '
             .' PrimaryCategory, SecondaryCategory, StoreCategory, StoreCategory2, '
             .' Attributes, ItemSpecifics, eBayPicturePackPurge, VariationDimensionForPictures, GalleryType, '
@@ -139,7 +140,7 @@ function eBayGetSelection() {
             ||
 			    (!$keytypeIsArtNr && $mrow['products_id'] == $dbrow['products_id'])
             ) {
-				$dbrow['ePID'] = $mrow['ePID'];
+                $dbrow['ePID'] = $mrow['ePID'];
                 $dbrow['mwst'] = (int)$mrow['mwst'];
 			}
 		}
@@ -193,7 +194,6 @@ function eBayGetSelection() {
         if(empty($current_row['GalleryType'])){
             $current_row['GalleryType'] = getDBConfigValue('ebay.gallery.type', $_MagnaSession['mpID'], 'Gallery');
         }
-
         if(empty($current_row['mwst'])){
             $current_row['mwst'] = getDBConfigValue('ebay.mwst', $_MagnaSession['mpID'], 0);
         }
@@ -265,7 +265,7 @@ function jsProcessPrepareButton() {
      * deactivate all other checkboxes if "unprepare" checked
      * (must be done in 1 line and apostrophes + slashes escaped, otherwise it doesn't work in jDialog)
      */
-    ob_start();?> <script type="text\/javascript">/*<![CDATA[*/ $(\'input[id="unprepare"]\').change(function() { if ($(this).attr(\'checked\') == \'checked\') { $(\'input[id="resetTitle"]\').prop(\'disabled\', true); $(\'input[id="resetSubtitle"]\').prop(\'disabled\', true); $(\'input[id="resetDescription"]\').prop(\'disabled\', true); $(\'input[id="resetPictures"]\').prop(\'disabled\', true); } else { $(\'input[id="resetTitle"]\').prop(\'disabled\', false); $(\'input[id="resetSubtitle"]\').prop(\'disabled\', false); $(\'input[id="resetDescription"]\').prop(\'disabled\', false); $(\'input[id="resetPictures"]\').prop(\'disabled\', false); } }); /*]]>*/<\/script> <?php
+    ob_start();?> <script type="text\/javascript">/*<![CDATA[*/ $(\'input[id="unprepare"]\').change(function() { if ($(this).attr(\'checked\') == \'checked\') { $(\'input[id="resetTitle"]\').prop(\'disabled\', true); $(\'input[id="resetSubtitle"]\').prop(\'disabled\', true); $(\'input[id="resetDescription"]\').prop(\'disabled\', true); $(\'input[id="resetPictures"]\').prop(\'disabled\', true); $(\'input[id="resetStrikePrices"]\').prop(\'disabled\', true); } else { $(\'input[id="resetTitle"]\').prop(\'disabled\', false); $(\'input[id="resetSubtitle"]\').prop(\'disabled\', false); $(\'input[id="resetDescription"]\').prop(\'disabled\', false); $(\'input[id="resetPictures"]\').prop(\'disabled\', false); $(\'input[id="resetStrikePrices"]\').prop(\'disabled\', false); } }); /*]]>*/<\/script> <?php
         $popupJs = ob_get_contents();
         ob_end_clean();
         /* checkboxes */
@@ -275,6 +275,7 @@ function jsProcessPrepareButton() {
             .'<input type="checkbox" value="resetSubtitle" name="action[ebayprepareformaction][resetSubtitle]" id="resetSubtitle" />'.ML_EBAY_LABEL_RESET_PREPARE_SUBTITLE.'<br />'
             .'<input type="checkbox" value="resetDescription" name="action[ebayprepareformaction][resetDescription]" id="resetDescription" />'.ML_EBAY_LABEL_RESET_PREPARE_DESCRIPTION.'<br />'
             .'<input type="checkbox" value="resetPictures" name="action[ebayprepareformaction][resetPictures]" id="resetPictures" />'.ML_EBAY_LABEL_RESET_PREPARE_PICTURES.'<br />'
+            .'<input type="checkbox" value="resetStrikePrices" name="action[ebayprepareformaction][resetStrikePrices]" id="resetStrikePrices" />'.ML_EBAY_LABEL_RESET_PREPARE_STRIKEPRICES.'<br />'
             .'<br /><input type="checkbox" value="unprepare" name="action[ebayprepareformaction][unprepare]" id="unprepare" />'.ML_EBAY_LABEL_UNPREPARE.'<br />'
             .'</form>';
         $popupContent .= $popupJs;
@@ -306,6 +307,17 @@ $('#reset_partly').click(function() {
     $js = ob_get_contents();
     ob_end_clean();
     return ($div.$js);
+}
+
+function getStrikePriceConfigForPrepareTable() {
+ global $_MagnaSession;
+ $aStrikePriceConfigFromDB = MagnaDB::gi()->fetchArray('SELECT * FROM '.TABLE_MAGNA_CONFIG.' WHERE mkey LIKE \'ebay.strike.price.%\' AND mpID='.$_MagnaSession['mpID']);
+ if (empty($aStrikePriceConfigFromDB)) return('{"ebay.strike.price.kind":"DontUse"}');
+ $aConfig = array();
+ foreach ($aStrikePriceConfigFromDB as $row) {
+    $aConfig[$row['mkey']] = $row['value'];
+ }
+ return json_encode($aConfig);
 }
 
 #echo print_m($_POST, __LINE__.' $_POST');
@@ -635,6 +647,17 @@ if (isset($prepareAction)
             case 'makePrice': {
                 require_once(DIR_MAGNALISTER_MODULES.'ebay/ebayFunctions.php');
                 echo makePrice($_POST['pID'], $_POST['ListingType']);
+                break;
+            }
+            case 'makePriceByStrikePriceSettings': {
+                require_once(DIR_MAGNALISTER_MODULES.'ebay/ebayFunctions.php');
+                if ($_POST['UseStrikePrice'] === 'checked') {
+                    echo json_encode(makePriceByStrikePriceSettings($_POST['pID'], $_POST['StrikePriceKind'], $_POST['StrikePriceGroup'], 0, true));
+                } else {
+                    $aPriceByStrikePriceSettings = makePriceByStrikePriceSettings($_POST['pID'], $_POST['StrikePriceKind'], $_POST['StrikePriceGroup'], 0, true);
+                    $aPriceByStrikePriceSettings['strikePrice'] = '0';
+                    echo json_encode($aPriceByStrikePriceSettings);
+                }
                 break;
             }
             case 'GetSellerProfileData': {

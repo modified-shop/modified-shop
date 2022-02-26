@@ -155,7 +155,7 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 		if (empty($tableSettings['Alias'])) {
 			$tableSettings['Alias'] = $defaultAlias;
 		}
-		
+        
 		return (string)MagnaDB::gi()->fetchOne('
 			SELECT `'.$tableSettings['Table']['column'].'` 
 			  FROM `'.$tableSettings['Table']['table'].'` 
@@ -171,17 +171,31 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 	 *   The tracking code
 	 */
 	protected function getTrackingCode($orderId) {
-		$mTrackingCode = $this->runDbMatching(array (
-			'Table' => $this->config['TrackingCodeMatchingTable'],
-			'Alias' => $this->config['TrackingCodeMatchingAlias']
-		), 'orders_id', $orderId);
+        // if shop has column is_return_delivery (Gambio 4.5+) and matched to default tracking codes database table
+        // skip usage of runDbMatching() - see below
+        if ($this->config['TrackingCodeMatchingTable']['table'] == 'orders_parcel_tracking_codes'
+            && $this->config['TrackingCodeMatchingTable']['column'] == 'tracking_code'
+            && MagnaDB::gi()->columnExistsInTable('is_return_delivery','orders_parcel_tracking_codes')
+        ) {
+            $mTrackingCode = false;
+        } else {
+            $mTrackingCode = $this->runDbMatching(array(
+                'Table' => $this->config['TrackingCodeMatchingTable'],
+                'Alias' => $this->config['TrackingCodeMatchingAlias']
+            ), 'orders_id', $orderId);
+        }
 
 		// for Gambio 2.3 > if table "orders_parcel_tracking_codes" exists
 		if (false == $mTrackingCode && MagnaDB::gi()->tableExists('orders_parcel_tracking_codes')) {
+            $isReturnFlag = '';
+            if (MagnaDB::gi()->columnExistsInTable('is_return_delivery','orders_parcel_tracking_codes')) {
+                $isReturnFlag = ' AND is_return_delivery = 0';
+            }
+
 			$mTrackingCode = MagnaDB::gi()->fetchOne("
 				SELECT tracking_code
 				  FROM orders_parcel_tracking_codes
-				 WHERE order_id = '".MagnaDB::gi()->escape($orderId)."'
+				 WHERE order_id = '".MagnaDB::gi()->escape($orderId)."' $isReturnFlag
 				 LIMIT 1
 			");
 		}
@@ -211,6 +225,16 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 			'Alias' => $this->config['CarrierMatchingAlias']
 		), 'orders_id', $orderId);
 
+		// matching set to "don't use", but default carrier set
+		if (    false == $mCarrier
+		     && !empty($this->config['CarrierDefault'])
+		     && (MagnaDB::gi()->fetchOne('SELECT `value`
+			     FROM '.TABLE_MAGNA_CONFIG.'
+			    WHERE mpID = '.$this->mpID.'
+			      AND mkey = \''.$this->marketplace.'.orderstatus.carrier.dbmatching.table'.'\'') == '{"table":"","column":""}')) {
+			$mCarrier = $this->config['CarrierDefault'];
+		}
+
 		// for Gambio 2.3 > if table "orders_parcel_tracking_codes" exists
 		if (false == $mCarrier && MagnaDB::gi()->tableExists('orders_parcel_tracking_codes')) {
 			$mCarrier = MagnaDB::gi()->fetchOne("
@@ -238,7 +262,6 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
                 ");
             }
         }
-
 		// carrier should not be empty
 		if (false == $mCarrier && !empty($this->config['CarrierDefault'])) {
 			$mCarrier = $this->config['CarrierDefault'];
@@ -532,6 +555,21 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 	 * @return array
 	 */
 	protected function getOrdersToSync() {
+		/*
+		 * For Amazon and eBay, no more than 92 days backwards
+		 * (they don't accept order updates older than 3 months)
+		 */
+		$sTimeConstraint = "";
+		if (   ($this->marketplace == 'amazon')
+		    || ($this->marketplace == 'ebay')) {
+			$iMinOrderId = MagnaDB::gi()->fetchOne('SELECT min(orders_id)
+				 FROM `'.TABLE_ORDERS.'`
+				WHERE UNIX_TIMESTAMP(date_purchased) > (UNIX_TIMESTAMP() - 92 * 86400)');
+			if ($iMinOrderId !== false) {
+				$sTimeConstraint = "
+		           AND o.orders_id >= $iMinOrderId";
+			}
+		}
 		if ($this->_debugDryRun && ($this->_debugLevel >= self::DBGLV_HIGH)
 			&& isset($_GET['Test']) && ($_GET['Test'] == 'ConfirmShipment')
 		) {
@@ -557,8 +595,9 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 		           `'.TABLE_ORDERS.'` o
 		     WHERE mo.orders_id=o.orders_id
 		           AND mo.mpID = "'.$this->mpID.'"
-		           AND mo.orders_status <> o.orders_status
+		           AND mo.orders_status <> o.orders_status'.$sTimeConstraint.'
 		  ORDER BY mo.orders_id DESC
+		     LIMIT 500
 		', $this->_debugLevel >= self::DBGLV_HIGH));
 	}
 	
@@ -607,6 +646,7 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 			return false;
 		}
 		$this->aOrders = $this->getOrdersToSync();
+
 		$this->log(print_m($this->aOrders, "\n".'$this->aOrders'));
 		
 		if (empty($this->aOrders)) return true;

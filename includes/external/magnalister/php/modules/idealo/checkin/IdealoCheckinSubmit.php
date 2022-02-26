@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * 888888ba                 dP  .88888.                    dP
  * 88    `8b                88 d8'   `88                   88
  * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b.
@@ -11,9 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: IdealoCheckinSubmit.php 2179 2013-01-29 11:48:23Z michael.garbs $
- *
- * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2021 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -166,7 +164,12 @@ class IdealoCheckinSubmit extends ComparisonShoppingCheckinSubmit {
 				$data['submit']['ShippingCost'] = $data['submit']['ItemWeight'];
 			}
 		}
-		$data['submit']['ShippingTime'] = $aPropertiesRow['DeliveryTime'];
+
+        $data['submit']['ShippingTime'] = $aPropertiesRow['DeliveryTimeSource'] === 'shop' ? $data['submit']['ShippingTime'] : $aPropertiesRow['DeliveryTime'];
+        if (empty($data['submit']['ShippingTime'])) {
+            $data['submit']['ShippingTime'] = getDBConfigValue($this->marketplace.'.deliverytime', $this->_magnasession['mpID'], '');
+        }
+
 		$data['submit']['Quantity'] = $product['Quantity'];
 		$catname = $this->getcategoriesname($product['ProductId']);
 		if (!empty($catname)) {

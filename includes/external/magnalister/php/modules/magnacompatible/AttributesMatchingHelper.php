@@ -56,10 +56,16 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
                 foreach ($groupsOptions as $k => &$g) {
                     if (empty($g['Name'])) {
                         foreach ($defaultGroupsOptions as $dg) {
-                            if ($dg['Code'] === $g['Code']) {
+                            if ($dg['Code'] === $g['Code'] && !empty($dg['Name'])) {
                                 $g['Name'] = $dg['Name'];
                                 break;
                             }
+                        }
+
+                        // we cant support empty names on groups - so if still empty remove it
+                        if (empty($g['Name'])) {
+                            unset($groupsOptions[$k]);
+                            continue;
                         }
                     }
 
@@ -122,6 +128,12 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
                                 break;
                             }
                         }
+
+                        // we cant support empty names on properties - so if still empty remove it
+                        if (empty($g['Name'])) {
+                            unset($groupsProperties[$k]);
+                            continue;
+                        }
                     }
 
                     $defaultValues = $this->getVariationGroupsPropertyValues($g['Code'], $this->defaultLanguage);
@@ -165,6 +177,16 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
         }
         $groups = array(ML_VARIATION => $groups);
         $this->addAdditionalAttributesShop($groups, $languageId);
+        /* {Hook} "AttributesMatchingHelper_addCustomAdditionalAttributesShop": Runs after addAdditionalAttributesShop and allows to add own attributes. You can define a method addCustomAdditionalAttributesShop which extends $groups (as obtained from addAdditionalAttributesShop), and then call it.
+                          Variables that can be used: 
+                           <ul><li>$this->mpId: The ID of the marketplace.</li>
+                               <li>$this->marketplace: The name of the marketplace.</li>
+                               <li>$groups - the attribute groups, see addAdditionalAttributesShop()</li>
+                           </ul>
+         */
+        if (($hp = magnaContribVerify('AttributesMatchingHelper_addCustomAdditionalAttributesShop', 1)) !== false) {
+            require($hp);
+        }
 
         arrayEntitiesToUTF8($groups);
         $aOut = array();
@@ -213,6 +235,7 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
             INNER JOIN ' . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . ' ov2po ON
                     ov2po.products_options_values_id = pov.products_options_values_id
                 AND ov2po.products_options_id = "' . $optionCode . '"
+                    AND pov.products_options_values_name != \'\'
             WHERE pov.language_id = "' . $languageId . '"
             ORDER BY pov.products_options_values_name ASC
         ');
@@ -241,16 +264,21 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
      * @return array|bool
      */
     private function getVariationGroupsPropertyValues($propertyCode, $languageId) {
-        $aPVValues = MagnaDB::gi()->fetchArray('SELECT properties_values_id
-            FROM '. TABLE_MAGNA_PROPERTIES_VALUES .' 
-            WHERE properties_id = '.$propertyCode.'
-            ORDER BY properties_values_id', true);
+        $aPVValues = MagnaDB::gi()->fetchArray("
+            SELECT properties_values_id
+              FROM ".TABLE_MAGNA_PROPERTIES_VALUES." 
+             WHERE properties_id = '".$propertyCode."'
+          ORDER BY properties_values_id
+        ", true);
+
         if (empty($aPVValues)) return $aPVValues;
+
         return MagnaDB::gi()->fetchArray('
             SELECT properties_values_id AS Id, values_name AS Value
             FROM ' . TABLE_MAGNA_PROPERTIES_DESCRIPTION_VALUES . '
             WHERE properties_values_id IN ('.implode(',', $aPVValues).')
             AND language_id = "' . $languageId . '"
+                   AND values_name != \'\'
             ORDER BY values_name ASC
         '); 
     }
@@ -404,6 +432,20 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
                     'Type' => 'text',
                 ),
                 array(
+                    'Code' => 'content_volume_unit',
+                    'Name' => ML_COMPARISON_SHOPPING_FIELD_VPE_UNIT,
+                    'Values' => array(),
+                    'Custom' => true,
+                    'Type' => 'text',
+                ),
+                array(
+                    'Code' => 'content_volume_value',
+                    'Name' => ML_COMPARISON_SHOPPING_FIELD_VPE_VALUE,
+                    'Values' => array(),
+                    'Custom' => true,
+                    'Type' => 'text',
+                ),
+                array(
                     'Code' => 'manufacturer',
                     'Name' => ML_COMPARISON_SHOPPING_FIELD_MANUFACTURER_NAME,
                     'Values' => $resultManufacturerList,
@@ -446,13 +488,7 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
                     'Type' => 'text',
                 ),
             ),
-            'no_opt_group' => array(
-                array(
-                    'Code' => 'separator_line2',
-                    'Name' => ML_GENERAL_VARMATCH_SEPARATOR_LINE,
-                    'Values' => array(),
-                    'Disabled' => 'disabled',
-                ),
+            ML_GENERAL_VARMATCH_ADDITIONAL_OPTIONS => array(
                 array(
                     'Code' => 'freetext',
                     'Name' => ML_GENERAL_VARMATCH_FREE_TEXT_LABEL,
@@ -466,12 +502,6 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
                     'Type' => 'select',
                 ),
                 array(
-                    'Code' => 'separator_line3',
-                    'Name' => ML_GENERAL_VARMATCH_SEPARATOR_LINE,
-                    'Values' => array(),
-                    'Disabled' => 'disabled',
-                ),
-                array(
                     'Code' => 'database_value',
                     'Name' => ML_GENERAL_VARMATCH_CHOOSE_DB_VALUE,
                     'Values' => $editedTables,
@@ -479,6 +509,31 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
                 ),
             ),
         ));
+        // Additional Fields check by Database columns
+        if( MagnaDB::gi()->tableExists('products_item_codes')
+            && MagnaDB::gi()->columnExistsInTable('brand_name', 'products_item_codes')
+        ) {
+            $groups[ML_PRODUCT_DEFAULT_FIELDS][] = array(
+                'Code' => 'brand_name',
+                'Name' => ML_COMPARISON_SHOPPING_FIELD_BRAND,
+                'Custom' => true,
+                'Values' => array(),
+                'Type' => 'text',
+            );
+        }
+        // Additional Fields check by Database columns
+        if (MagnaDB::gi()->columnExistsInTable('products_manufacturers_model', TABLE_PRODUCTS)
+            || MagnaDB::gi()->columnExistsInTable('products_manufacturers_sku', TABLE_PRODUCTS)
+            || (MagnaDB::gi()->tableExists('products_item_codes') && MagnaDB::gi()->columnExistsInTable('code_mpn', 'products_item_codes'))
+        ) {
+            $groups[ML_PRODUCT_DEFAULT_FIELDS][] = array(
+                'Code' => 'manufacturerpartnumber',
+                'Name' => 'Herstellerartikelnummer (MPN)',
+                'Values' => array(),
+                'Custom' => true,
+                'Type' => 'text',
+            );
+        }
     }
 
     protected function getVariationMatchingTableName() {
@@ -1019,6 +1074,12 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
             }
         }
 
+        // don't overwrite already matched values
+        $aAlreadyMatchedValues = array();
+        foreach($aAttributes['Values'] as $aValue) {
+            $aAlreadyMatchedValues[] = $aValue['Shop']['Value'];
+        }
+
         $sInfo = ML_GENERAL_VARMATCH_AUTO_MATCHED;
         $blFound = false;
         $allValuesAreMatched = true;
@@ -1027,6 +1088,7 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
             $i = 0;
             foreach ($sAttributeValues as $keyAttribute => $valueAttribute) {
                 foreach ($aMPAttributeValues as $key => $value) {
+                    if (in_array($valueAttribute, $aAlreadyMatchedValues)) continue;
                     if (strcasecmp($valueAttribute, $value) == 0) {
                         $newValue[$i]['Shop']['Key'] = $keyAttribute;
                         $newValue[$i]['Shop']['Value'] = $valueAttribute;
@@ -1043,7 +1105,27 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
                 }
             }
 
-            $aAttributes['Values'] = $newValue;
+            if (empty($newValue)) {
+            // matching did not succeed. Try to match only the numeric parts
+                foreach ($sAttributeValues as $keyAttribute => $valueAttribute) {
+                    foreach ($aMPAttributeValues as $key => $value) {
+                        if (in_array($valueAttribute, $aAlreadyMatchedValues)) continue;
+                        if (filter_var($valueAttribute, FILTER_SANITIZE_NUMBER_INT) == filter_var($value, FILTER_SANITIZE_NUMBER_INT)) {
+                            $newValue[$i]['Shop']['Key'] = $keyAttribute;
+                            $newValue[$i]['Shop']['Value'] = $valueAttribute;
+                            $newValue[$i]['Marketplace']['Key'] = $key;
+                            $newValue[$i]['Marketplace']['Value'] = $value;
+                            $newValue[$i]['Marketplace']['Info'] = (is_array($value) ? implode(', ', $value) : $value) . $sInfo;
+                            $blFound = true;
+                            $i++;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            unset($aAttributes['Values']['0']);
+            $aAttributes['Values'] = array_merge($aAttributes['Values'], $newValue);
             if (count($sAttributeValues) !== count($newValue)) {
                 $allValuesAreMatched = false;
             }
@@ -1062,12 +1144,12 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
             }
 
             if (!$blFound) {
+                // single automatching, not found: Set as free text entry
+                $aAttributes['Values']['0']['Marketplace']['Key'] = $aAttributes['Values']['0']['Shop']['Value'];
+                $aAttributes['Values']['0']['Marketplace']['Value'] = $aAttributes['Values']['0']['Shop']['Value'];
+                $aAttributes['Values']['0']['Marketplace']['Info'] = $aAttributes['Values']['0']['Shop']['Value'] . ML_GENERAL_VARMATCH_FREE_TEXT;
                 $allValuesAreMatched = false;
             }
-        }
-
-        if (!$blFound) {
-            unset($aAttributes['Values']['0']);
         }
 
         $this->checkNewMatchedCombination($aAttributes['Values']);
@@ -1423,14 +1505,34 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
                             $attributeValue = $productData['BasePrice']['Value'] . $productData['BasePrice']['Unit'];
                         }
                         break;
+                    case 'content_volume_unit':
+                        if (!empty($productData['BasePrice'])) {
+                            $attributeValue = $productData['BasePrice']['Unit'];
+                        }
+                        break;
+                    case 'content_volume_value':
+                        if (!empty($productData['BasePrice'])) {
+                            $attributeValue = $productData['BasePrice']['Value'];
+                        }
+                        break;
                     case 'manufacturer':
                         if (!empty($productData['ManufacturerId'])) {
                             $attributeValue = $this->getMatchedValue($attribute, $productData['ManufacturerId']);
                         }
                         break;
+                    case 'manufacturerpartnumber':
+                        if (!empty($productData['ManufacturerPartNumber'])) {
+                            $attributeValue = $productData['ManufacturerPartNumber'];
+                        }
+                        break;
                     case 'fsk_18':
                         if (isset($productData['IsFSK18'])) {
                             $attributeValue = $this->getMatchedValue($attribute, $productData['IsFSK18']);
+                        }
+                        break;
+                    case 'brand_name':
+                        if (!empty($productData['brand_name'])) {
+                            $attributeValue = $productData['brand_name'];
                         }
                         break;
                     case 'shipping_cost':
@@ -1608,10 +1710,6 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
      * according to the products chosen
      */
     protected function checkNumberOfVariationValues(&$ShopVariation) {
-        if (getDBConfigValue('general.options', '0', 'old') != 'gambioProperties') {
-            // for now, only for Gambio properties
-            return;
-        } 
         $aProducts = array();
         foreach ($ShopVariation as &$aAttr) {
             if (    !array_key_exists('CustomAttributeValue', $aAttr)
@@ -1634,12 +1732,22 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
                       AND selectionname = \'prepare\'', true);
             } 
             $aUsedValues = array();
-            foreach ($aProducts as $pID) {
-                $aUsedValues = array_merge($aUsedValues, 
-                    MagnaDB::gi()->fetchArray('SELECT DISTINCT properties_values_id
-                     FROM products_properties_index
-                    WHERE products_id = '.$pID.'
-                      AND properties_id = '.$iNameKey, true));
+            if (getDBConfigValue('general.options', '0', 'old') == 'gambioProperties') {
+                foreach ($aProducts as $pID) {
+                    $aUsedValues = array_merge($aUsedValues, 
+                        MagnaDB::gi()->fetchArray('SELECT DISTINCT properties_values_id
+                         FROM products_properties_index
+                        WHERE products_id = '.$pID.'
+                          AND properties_id = '.$iNameKey, true));
+                }
+            } else {
+                foreach ($aProducts as $pID) {
+                    $aUsedValues = array_merge($aUsedValues, 
+                        MagnaDB::gi()->fetchArray('SELECT DISTINCT options_values_id
+                         FROM '.TABLE_PRODUCTS_ATTRIBUTES.'
+                        WHERE products_id = '.$pID.'
+                          AND options_id = '.$iNameKey, true));
+                }
             }
             foreach ($aAttr['Values'] as $vKey => $vVal) {
                 if (!in_array($vVal['Shop']['Key'], $aUsedValues)) {

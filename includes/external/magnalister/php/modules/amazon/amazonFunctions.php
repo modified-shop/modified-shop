@@ -166,8 +166,22 @@ function amazonGetMarketplaces() {
 
 function amazonGetLeadtimeToShip($mpID, $pID) {
 	$w = (getDBConfigValue('general.keytype', '0') == 'artNr')
-		? 'products_model=p.products_model'
-		: 'products_id=p.products_id';
+		? 'products_model = p.products_model'
+		: 'products_id = p.products_id';
+
+    // If you checked to prefer matching
+    if (getDBConfigValue(array('amazon.leadtimetoshipmatching.prefer', 'val'), $mpID, false)) {
+        $products_shippingtime = MagnaDB::gi()->fetchOne("
+            SELECT products_shippingtime
+              FROM ".TABLE_PRODUCTS." p
+             WHERE p.products_id = '".$pID."'
+        ");
+        return getDBConfigValue(
+            array('amazon.leadtimetoshipmatching.values', $products_shippingtime),
+            $mpID,
+            getDBConfigValue('amazon.leadtimetoship', $mpID, 0)
+        );
+    }
 	
 	$leadtime = MagnaDB::gi()->fetchOne(eecho('
 	    SELECT IF(ap.leadtimeToShip IS NULL, aa.leadtimeToShip, ap.leadtimeToShip)
@@ -254,9 +268,37 @@ function loadCarrierCodes($mpID = false) {
 	return $carrierValues;
 }
 
+/* returns a list with extra options (show as optgroups) */
+function loadCarrierCodesExtended($mpID = false) {
+	$carrierCodes = loadCarrierCodes($mpID);
+	array_shift($carrierCodes); // remove the 'none' entry)
+	$carrierSelection = array (
+		ML_LABEL_CHOOSE,
+		ML_SELECT_AMAZON_SUGGESTED_CARRIER => $carrierCodes,
+		ML_ADDITIONAL_OPTIONS => array (
+			'shipmodulematch' => ML_MATCH_AMAZON_CARRIER_TO_SHIPPING_MODULE,
+			'dbmatch' => ML_MATCH_CARRIER_TO_DB,
+			'textfield' => ML_CARRIER_TEXTFIELD
+		),
+	);
+	return $carrierSelection;
+}
+
+/* returns a list with extra options (show as optgroups) */
+function loadShipMethods($mpID = false) {
+	$carrierSelection = array (
+		ML_LABEL_CHOOSE,
+		'shipmodulematch' => ML_MATCH_TEXT_TO_SHIPPING_MODULE,
+		ML_ADDITIONAL_OPTIONS => array (
+			'dbmatch' => ML_MATCH_CARRIER_TO_DB,
+			'textfield' => ML_SHIPMETHOD_TEXTFIELD
+		),
+	);
+	return $carrierSelection;
+}
+
 function amazonDoOrderStatusSyncByTigger($mpID) {
-	$mp = 'amazon';
-	return getDBConfigValue($mp.'.orderstatus.sync', $mpID, 'no') != 'no';
+	return false;
 }
 
 function amazonRenderOrderStatusSync($args) {
@@ -985,4 +1027,64 @@ function amazonMfsGetConfigurationValues($sType = null) {
 		$return = $sType;
 	}
 	return $return;
+}
+
+/*
+ Helper function: Add id to carrier db matching + mp to shop matching
+ so that its visibility can be controlled via js
+ and the same for shipping method
+*/
+function extendCarrierConfig(&$sConfigForm) {
+	// add id to carrier db matching
+	$sCarrierDBMatching_table_label_pos = strpos($sConfigForm, 'config_amazon_orderstatus_carrier_carrierDBMatching_table');
+	$iTrPos = strrpos(substr($sConfigForm, 0, $sCarrierDBMatching_table_label_pos), '<tr');
+	$sConfigForm = substr($sConfigForm, 0, $iTrPos + 3)
+		.' id="config_amazon_orderstatus_carrier_carrierDBMatching_table" '
+		.substr($sConfigForm,$iTrPos + 4);
+	// add id to mp carrier to shop shippingmodule matching
+	$sCarrierAmazonToShopMatching_table_label_pos = strpos($sConfigForm, 'config_amazon_orderstatus_carrier_carrierAmazonToShopMatching');
+	$iTrPos = strrpos(substr($sConfigForm, 0, $sCarrierAmazonToShopMatching_table_label_pos), '<tr');
+	$sConfigForm = substr($sConfigForm, 0, $iTrPos + 3)
+		.' id="config_amazon_orderstatus_carrier_carrierAmazonToShopMatching" '
+		.substr($sConfigForm,$iTrPos + 4);
+
+	// add id to shipping method db matching
+	$sCarrierDBMatching_table_label_pos = strpos($sConfigForm, 'config_amazon_orderstatus_shipmethod_shipmethodDBMatching_table');
+	$iTrPos = strrpos(substr($sConfigForm, 0, $sCarrierDBMatching_table_label_pos), '<tr');
+	$sConfigForm = substr($sConfigForm, 0, $iTrPos + 3)
+		.' id="config_amazon_orderstatus_shipmethod_shipmethodDBMatching_table" '
+		.substr($sConfigForm,$iTrPos + 4);
+	// add id to textfield to shop shippingmodule matching
+	$sCarrierAmazonToShopMatching_table_label_pos = strpos($sConfigForm, 'config_amazon_orderstatus_shipmethod_shipmethodAmazonToShopMatching');
+	$iTrPos = strrpos(substr($sConfigForm, 0, $sCarrierAmazonToShopMatching_table_label_pos), '<tr');
+	$sConfigForm = substr($sConfigForm, 0, $iTrPos + 3)
+		.' id="config_amazon_orderstatus_shipmethod_shipmethodAmazonToShopMatching" '
+		.substr($sConfigForm,$iTrPos + 4);
+
+	return;
+}
+
+/*
+ Helper function: upgrade order sync setting
+*/
+function upgradeOrderSyncSettings() {
+	global $_MagnaSession;
+	if (getDBConfigValue('amazon.orderstatus.shipped.shipped', $_MagnaSession['mpID'], false) !== false) {
+		return;
+	}
+	setDBConfigValue('amazon.orderstatus.shipped.shipped', $_MagnaSession['mpID'], array (
+		getDBConfigValue('amazon.orderstatus.shipped', $_MagnaSession['mpID'], false)
+	), true);
+	setDBConfigValue('amazon.orderstatus.shipped', $_MagnaSession['mpID'], array (
+		'defaults' => array ('1')
+	), true);
+	if (getDBConfigValue('amazon.orderstatus.carrier.default', $_MagnaSession['mpID'], '') != '') {
+		setDBConfigValue('amazon.orderstatus.carrier.textfield', $_MagnaSession['mpID'], getDBConfigValue('amazon.orderstatus.carrier.default', $_MagnaSession['mpID'], ''), true);
+		setDBConfigValue('amazon.orderstatus.carrier.default', $_MagnaSession['mpID'], 'textfield', true);
+	} else {
+		$aCarrierDBMatchingTable = getDBConfigValue('amazon.orderstatus.carrier.carrierDBMatching.table', $_MagnaSession['mpID'], false);
+		if (!empty($aCarrierDBMatchingTable['table'])) {
+			setDBConfigValue('amazon.orderstatus.carrier.default', $_MagnaSession['mpID'], 'dbmatch', true);
+		}
+        }
 }

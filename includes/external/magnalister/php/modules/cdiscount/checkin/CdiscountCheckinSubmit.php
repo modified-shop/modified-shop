@@ -174,16 +174,34 @@ class CdiscountCheckinSubmit extends MagnaCompatibleCheckinSubmit {
         $data['submit']['Tax'] = !empty($product['TaxPercent']) ? $product['TaxPercent'] : 0;
 		$data['submit']['Quantity'] = $data['quantity'] < 0 ? 0 : $data['quantity'];
 
-		$data['submit']['ShippingInfo'] =
-			array(
-				'PreparationTime'           => $prepare['PreparationTime'],
-				'ShippingFeeStandard'       => $prepare['ShippingFeeStandard'],
-				'ShippingFeeExtraStandard'  => $prepare['ShippingFeeExtraStandard'],
-				'ShippingFeeTracked'        => $prepare['ShippingFeeTracked'],
-				'ShippingFeeExtraTracked'   => $prepare['ShippingFeeExtraTracked'],
-				'ShippingFeeRegistered'     => $prepare['ShippingFeeRegistered'],
-				'ShippingFeeExtraRegistered'=> $prepare['ShippingFeeExtraRegistered'],
-			);
+        // ensure backwards compatibility with old shipping profiles (MR !576)
+        $shippingProfiles = json_decode($prepare['ShippingProfileName']);
+        $shippingFees = json_decode($prepare['ShippingFee']);
+        $shippingFeesAdditional = json_decode($prepare['ShippingFeeAdditional']);
+
+        $data['submit']['ShippingInfo']['PreparationTime'] = $prepare['PreparationTime'];
+
+        if (isset($shippingProfiles) && $shippingProfiles !== '') {
+            foreach ($shippingProfiles as $key => $shippingProfile) {
+                $data['submit']['ShippingInfo'][] = array(
+                    'DeliveryMode' => $shippingProfile,
+                    'ShippingFee' => $shippingFees[$key],
+                    'ShippingFeeAdditional' => $shippingFeesAdditional[$key],
+                );
+            }
+
+        } else {
+            $data['submit']['ShippingInfo'] =
+                array(
+                    'PreparationTime'           => $prepare['PreparationTime'],
+                    'ShippingFeeStandard'       => $prepare['ShippingFeeStandard'],
+                    'ShippingFeeExtraStandard'  => $prepare['ShippingFeeExtraStandard'],
+                    'ShippingFeeTracked'        => $prepare['ShippingFeeTracked'],
+                    'ShippingFeeExtraTracked'   => $prepare['ShippingFeeExtraTracked'],
+                    'ShippingFeeRegistered'     => $prepare['ShippingFeeRegistered'],
+                    'ShippingFeeExtraRegistered'=> $prepare['ShippingProfileName'],
+                );
+        }
 
 		$data['submit']['Brand'] = !empty($product['Manufacturer']) ? $product['Manufacturer'] : '';
 

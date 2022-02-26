@@ -67,6 +67,7 @@ class EtsyCheckinProductList extends MLProductListEtsyAbstract{
 				'preparedtimestampfield' => 'PreparedTS',
 			))
 		;
+		removeDoublePrepareEntries(TABLE_MAGNA_ETSY_PREPARE, $this->aMagnaSession['mpID']);
 	}
 	
 	/**

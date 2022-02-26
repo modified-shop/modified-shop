@@ -28,7 +28,7 @@ class Check24Configure extends MagnaCompatibleConfigure {
 		$forms = parent::getFormFiles();
 
 		#$forms[] = 'ordersExtend';
-		$forms[] = 'orderStatus';
+		//$forms[] = 'orderStatus';
 		$forms[] = 'promotionmail';
 
 		#echo print_m($forms);
@@ -143,6 +143,30 @@ class Check24Configure extends MagnaCompatibleConfigure {
 	#	$html .= print_m($taxes, '$taxes');
 	#	$html .= print_m(func_get_args(), 'func_get_args');
 		return $html;
+	}
+
+	public function process() {
+		parent::process();
+		ob_start(); ?>
+<script type="text/javascript">/*<![CDATA[*/
+	$(document).ready(function() {
+        /**
+         * hide all related inputs of select option === lump
+         */
+        $('td.input > select option[value="EigeneAngaben"], td.input > select option[value="EigeneAngaben"]').closest("select").on("change", function() {
+                var self = $(this);
+                if (self.val() == "EigeneAngaben") {
+                        self.closest("td").find(" > * ").not(self).show();
+                } else {
+                        self.closest("td").find(" > * ").not(self).hide();
+                }
+        }).trigger("change");
+});
+/*]]>*/</script>
+		<?php
+		$jsDeliveryModeHideMorefields = ob_get_contents();
+		ob_end_clean();
+		echo $jsDeliveryModeHideMorefields;
 	}
 
 }

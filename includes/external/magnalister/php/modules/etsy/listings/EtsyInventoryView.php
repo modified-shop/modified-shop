@@ -319,6 +319,14 @@ class EtsyInventoryView extends MagnaCompatibleInventoryView {
 				$sStatus = ML_GENERIC_INVENTORY_STATUS_PENDING_UPDATE;
 				break;
 			}
+			case 'inactive': {
+				$sStatus = ML_GENERIC_INVENTORY_STATUS_INACTIVE;
+				break;
+			}
+			case 'expired': {
+				$sStatus = ML_GENERIC_INVENTORY_STATUS_EXPIRED;
+				break;
+			}
 			case 'active':
 			default: {
 				$sStatus = ML_GENERIC_INVENTORY_STATUS_ACTIVE;

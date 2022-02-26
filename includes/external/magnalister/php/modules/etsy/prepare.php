@@ -38,6 +38,7 @@ class EtsyPrepare extends MagnaCompatibleBase {
         $this->resources['url']['mode'] = 'prepare';
         $this->resources['url']['view'] = $this->prepareSettings['selectionName'];
         if ('apply' == $this->prepareSettings['selectionName']) $this->prepareSettings['selectionName'] = 'prepare';
+        removeDoublePrepareEntries(TABLE_MAGNA_ETSY_PREPARE, $this->mpID);
     }
 
     public function process() {

@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * 888888ba                 dP  .88888.                    dP
  * 88    `8b                88 d8'   `88                   88
  * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b.
@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * (c) 2010 - 2019 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2021 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -93,6 +93,7 @@ class MetroCheckinSubmit extends MagnaCompatibleCheckinSubmit {
             'PreparedTS' => $properties['PreparedTS'],
             'MarketplaceAttributes' => $properties['ShopVariation'],
             'ProcessingTime' => $properties['ProcessingTime'],
+            'MaxProcessingTime' => $properties['MaxProcessingTime'],
             'ManufacturersSuggestedRetailPrice' => $this->stringToFloat($properties['MSRP']),
             'BusinessModel' => $properties['BusinessModel'],
             'FreightForwarding' => ($properties['FreightForwarding'] === 'true'),
@@ -107,11 +108,21 @@ class MetroCheckinSubmit extends MagnaCompatibleCheckinSubmit {
             $data['submit']['MasterSKU'] = 'ML'.$properties['products_id'];
         }
 
-        $shippingPriceConfigValue = (float) getDBConfigValue('metro.shippingprofile.cost', $this->mpID);
+        $shippingPriceConfigValue = getDBConfigValue('metro.shippingprofile.cost', $this->mpID);
         $shippingProfilePrice = $shippingPriceConfigValue[$properties['ShippingProfile']];
+        // Shipping Cost is stored as gross price
         $data['submit']['ShippingCost'] = (float)$shippingProfilePrice;
-        $data['submit']['Price'] = $product['Price']['Fixed'] + $shippingProfilePrice;
-        $data['submit']['Vat'] = getDBConfigValue('metro.mwst.fallback', $this->mpID);
+
+        // Product Gross Price
+        $productGrossPrice = round(($product['Price']['Fixed'] * ((100 + (float)$product['TaxPercent']) / 100)), 2);
+        $data['submit']['Price'] = (float)$productGrossPrice + (float)$shippingProfilePrice;
+
+        // NetPrice + NetShippingCost
+        $netShippingCost = round(((float)$shippingProfilePrice / ((100 + (float)$product['TaxPercent']) / 100)), 2);
+        $data['submit']['NetShippingCost'] = $netShippingCost;
+        $data['submit']['NetPrice'] = $product['Price']['Fixed'] + $netShippingCost;
+
+        $data['submit']['Vat'] = $product['TaxPercent'];
         $images = json_decode($properties['Images'], true);
         if (!empty($images)) {
             $imagePath = getDBConfigValue('metro.imagepath', $this->mpID, '');
@@ -132,30 +143,23 @@ class MetroCheckinSubmit extends MagnaCompatibleCheckinSubmit {
         $data['submit']['Features'] = !empty($features) ? $features : array();
 
         if (!array_key_exists('Variations', $product)
-            || empty($product['Variations'])) {
-            $data['submit']['MarketplaceAttributes'] = $this->translateCategoryAttributes($properties['ShopVariation']);
+            || empty($product['Variations'])
+        ) {
+            $data['submit']['MarketplaceAttributes'] = MetroHelper::gi()->convertMatchingToNameValue(
+                json_decode($properties['ShopVariation'], true),
+                $product
+            );
         } else {
             $this->getVariations($pID, $product, $data);
         }
     }
 
-    function stringToFloat($str) {
+    private function stringToFloat($str) {
         $str = preg_replace('/[^0-9,.\/]/','',$str);
         $str = str_replace(",",".",$str);
         $str = preg_replace('/\.(?=.*\.)/', '', $str);
 
         return (float) $str;
-    }
-
-    function translateCategoryAttributes($jProperties) {
-        $aProperties = json_decode($jProperties, true);
-        $converted = array();
-        foreach ($aProperties as $key => $property) {
-            if (is_array($property['Values'])) continue;
-            $converted[$key] = $property['Values'];
-        }
-
-        return $converted;
     }
 
     protected function getVariations($pID, $product, &$data) {
@@ -175,14 +179,17 @@ class MetroCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 
         $CategoryAttributesBySKU = $this->translateCategoryAttributesForVariations($masterData['MarketplaceAttributes'], $product['Variations'], $sSkuKey);
         $varNameAdditionyBySKU = $this->varNameAdditions($product['Variations'], $sSkuKey);
-        $varImagesByVarId = $this->varImages($product);
+        $varImagesByVarId = $this->getVariationImages($product);
         $i = 0;
         foreach ($product['Variations'] as $aVariation) {
+            // Product Gross Price
+            $productGrossPrice = round(($aVariation['Price']['Fixed'] * ((100 + (float)$masterData['Vat']) / 100)), 2);
+
             $data['submit'][$i] = array(
                 'SKU' => $aVariation[$sSkuKey],
                 'MasterSKU' => $masterData['MasterSKU'],
                 'Quantity' => $aVariation['Quantity'],
-                'GTIN' => $masterData['GTIN'],
+                'GTIN' => (!empty($aVariation['EAN']) ? $aVariation['EAN'] : $masterData['GTIN']),
                 'ShortDescription' => $masterData['ShortDescription'],
                 'CategoryID' => $masterData['CategoryID'],
                 'ProductPrice' => $aVariation['Price']['Fixed'],
@@ -197,6 +204,7 @@ class MetroCheckinSubmit extends MagnaCompatibleCheckinSubmit {
                 'MarketplaceAttributes' => $CategoryAttributesBySKU[$aVariation[$sSkuKey]],
                 'ManufacturersSuggestedRetailPrice' => (float)$masterData['ManufacturersSuggestedRetailPrice'],
                 'ProcessingTime' => $masterData['ProcessingTime'],
+                'MaxProcessingTime' => $masterData['MaxProcessingTime'],
                 'BusinessModel' => $masterData['BusinessModel'],
                 'FreightForwarding' => $masterData['FreightForwarding'],
                 'Title' => $masterData['Title'].(isset($varNameAdditionyBySKU[$aVariation[$sSkuKey]]) ? '('.$varNameAdditionyBySKU[$aVariation[$sSkuKey]].')' : ''),
@@ -205,13 +213,14 @@ class MetroCheckinSubmit extends MagnaCompatibleCheckinSubmit {
                 'Features' => $masterData['Features'],
                 'Vat' => $masterData['Vat'],
                 'ShippingCost' => $masterData['ShippingCost'],
-                'Price' => $aVariation['Price']['Fixed'] + $masterData['ShippingCost'],
+                'NetShippingCost' => $masterData['NetShippingCost'],
+                'Price' => $productGrossPrice + $masterData['ShippingCost'],
+                'NetPrice' => $aVariation['Price']['Fixed'] + $masterData['NetShippingCost'],
             );
             if (array_key_exists($aVariation['VariationId'], $varImagesByVarId)) {
-                array_unshift($data['submit'][$i]['Images'], array(
-                        'URL' => $varImagesByVarId[$aVariation['VariationId']]
-                    )
-                );
+                foreach ($varImagesByVarId[$aVariation['VariationId']] as $variationImage) {
+                    array_unshift($data['submit'][$i]['Images'], $variationImage);
+                }
             }
             $i++;
         }
@@ -234,8 +243,8 @@ class MetroCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 
         $res = $freetext = array();
         foreach ($aCategoryAttributes as $key => $matched) {
-            if ($matched['Code'] === 'freetext') {
-                $freetext[$matched['AttributeName']] = $matched['Values'];
+            if ($matched['Code'] === 'freetext' || $matched['Code'] === 'attribute_value') {
+                $freetext[$key] = $matched['Values'];
                 unset($aCategoryAttributes[$key]);
             }
         }
@@ -285,23 +294,50 @@ class MetroCheckinSubmit extends MagnaCompatibleCheckinSubmit {
         return $aRes;
     }
 
-    private function varImages($product) {
-        if (getDBConfigValue('general.options', '0', 'old') != 'gambioProperties')
+    /**
+     * Return the variation images in as an array
+     *
+     * @param $product
+     * @return array
+     */
+    private function getVariationImages($product) {
+        // in case of attributes or no variation images exists just return
+        if (   getDBConfigValue('general.options', '0', 'old') != 'gambioProperties'
+            || !array_key_exists('VariationPictures', $product)
+            || empty($product['VariationPictures'])
+        ){
             return array();
-        if (!array_key_exists('VariationPictures', $product))
-            return array();
-        if (empty($product['VariationPictures']))
-            return array();
-        $VarImagePath = HTTP_CATALOG_SERVER.DIR_WS_CATALOG.DIR_WS_IMAGES.'product_images/properties_combis_images/';
-        $res = array();
+        }
+
+        // We only use path before Gambio 4.1 (since in Gambio 4.1 the image path is included in the Database)
+        if (version_compare(ML_GAMBIO_VERSION, '4.1', '>=')) {
+            $imagePathVariations = HTTP_CATALOG_SERVER.DIR_WS_CATALOG;
+        } else {
+            $imagePathVariations = getDBConfigValue($this->_magnasession['currentPlatform'].'.imagepath.variations', $this->_magnasession['mpID'], HTTP_CATALOG_SERVER.DIR_WS_CATALOG.DIR_WS_IMAGES.'product_images/properties_combis_images/');
+        }
+
+        $return = array();
+
         // VariationPictures don't have keys but only IDs
         foreach ($product['VariationPictures'] as $aPictureData) {
-            if (empty($aPictureData['Images']))
-                continue;
-            $res[$aPictureData['VariationId']] = $VarImagePath.$aPictureData['Images'];
+            // Support for one Variation Image (if shop not support multiple variation images)
+            if (empty($aPictureData['Images'])) {
+                $return[$aPictureData['VariationId']] = $imagePathVariations.$aPictureData['Image'];;
+            }
+
+            // Support for Multiple Variation Images - see Fallback above if shop supports only one variation image
+            if (!empty($aPictureData['Images'])) {
+                foreach ($aPictureData['Images'] as $varImage) {
+                    if (!empty($varImage)
+                        && !in_array($imagePathVariations.$varImage, $return[$aPictureData['VariationId']])
+                    ) {
+                        $return[$aPictureData['VariationId']][] = (preg_match('/http(s{0,1}):\/\//', $varImage) ? '' : $imagePathVariations ).$varImage;
+                    }
+                }
+            }
         }
         unset($aPictureData);
-        return $res;
+        return $return;
     }
 
     /* change the data format so that every Variation is an Item */

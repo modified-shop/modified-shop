@@ -19,6 +19,7 @@
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/Configurator.php');
 include_once(DIR_MAGNALISTER_INCLUDES.'lib/configFunctions.php');
+require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/FileBrowserHelper.php');
 
 class MagnaCompatibleConfigure extends MagnaCompatibleBase {
 	protected $marketplace = '';
@@ -103,6 +104,15 @@ class MagnaCompatibleConfigure extends MagnaCompatibleBase {
 				$replace,
 				array_key_exists('unset', $options) ? $options['unset'] : array()
 			);
+            //if (!is_array($fC)) {
+            //    $pageURL = (@$_SERVER["HTTPS"] == "on") ? "https://" : "http://";
+            //    $baseurlpart = explode('magnalister.php', $_SERVER["REQUEST_URI"]);
+            //    $sPHPFileName = str_replace('.form', '.php', $file);
+            //    file_put_contents(DIR_MAGNALISTER_FS.'config/'.$this->lang.'/'.$sPHPFileName, file_get_contents(DIR_MAGNALISTER_FS.'config/'.$this->lang.'/'.$file));
+            //    $pageURL .= $_SERVER["SERVER_NAME"].($_SERVER["SERVER_PORT"] != "80" ? ":".$_SERVER["SERVER_PORT"] : '').$baseurlpart[0];
+            //    $pageURL .= DIR_MAGNALISTER_WS.'config/'.$this->lang.'/'.$sPHPFileName;
+            //    $fC = json_decode(file_get_contents($pageURL), true);
+            //}
 			if (!is_array($fC)) {
 				$this->boxes .= '<p class="errorBox">'.$file.' could not be loaded.</p>';
 				continue;
@@ -146,6 +156,18 @@ class MagnaCompatibleConfigure extends MagnaCompatibleBase {
 					? HTTP_CATALOG_SERVER.DIR_WS_CATALOG_POPUP_IMAGES
 					: HTTP_CATALOG_SERVER.DIR_WS_CATALOG_IMAGES;
 		}
+        if (isset( $this->form['magnalisterinvoice'])) {
+            try {
+                $result = MagnaConnector::gi()->submitRequest(array(
+                    'ACTION'    => 'GetLink2PublicInvoicesDirectory',
+                    'SUBSYSTEM' => $this->marketplace,
+                ));
+                $invoiceDirButtonText = $this->form['magnalisterinvoice']['fields']['invoice.invoicedir']['buttontext'];
+                $this->form['magnalisterinvoice']['fields']['invoice.invoicedir']['value'] =
+                    '<a class="ml-button" target="_blank" title="'.$invoiceDirButtonText.'" href="'.$result['DATA'].'">'.$invoiceDirButtonText.'</a>';
+            } catch (MagnaException $ex) {
+            }
+        }
 	}
 
 	protected function renderAuthError() {
@@ -294,6 +316,13 @@ class MagnaCompatibleConfigure extends MagnaCompatibleBase {
 		) {
 			$this->boxes .= '<p class="errorBox">'.ML_GENERIC_ERROR_TRACKING_CODE_MATCHING.'</p>';
 		}
+
+        if (isset($this->form['erpinvoice']['fields'])) {
+            foreach ($this->form['erpinvoice']['fields'] as &$aField) {
+                $aField['default'] = MLFileBrowserHelper::gi()->getAndGenerateErpDirectoryPath(DIR_MAGNALISTER_FS.$aField['default']);
+
+            }
+        }
 	}
 
 	protected function loadChoiseValuesAfterProcessPOST() { }
@@ -337,4 +366,84 @@ class MagnaCompatibleConfigure extends MagnaCompatibleBase {
 			//ML_ShopAddOns::generateConfigPopupOnCombobox('FastSyncInventory', "config_{$this->marketplaceTitle}_stocksync_tomarketplace", "#config_{$this->marketplaceTitle}", "$(this).val() == 'auto_fast'");
 		}
 	}
+
+    public static function invoicePreview($args, &$value = '') {
+        global $_MagnaSession, $_url;
+        return '<input class="ml-button" type="button" value="Vorschau" id="ml-amazon-invoice-preview"/>
+	
+<script type="text/javascript">/*<![CDATA[*/
+$(document).ready(function() {
+	$(\'#ml-amazon-invoice-preview\').click(function() {
+		jQuery.blockUI(blockUILoading);
+		jQuery.ajax({
+			\'method\': \'get\',
+			\'url\': \''.toURL($_url, array('what' => 'TestInvoiceGeneration', 'kind' => 'ajax'), true).'\',
+			\'success\': function (data) {
+				if (data.indexOf(\'<style\') > 0) {
+					data=data.substring(0, data.indexOf(\'<style\'));
+				}
+				jQuery.unblockUI();
+				myConsole.log(\'ajax.success\', data);
+				if (data === \'error\') {
+				} else {
+                    var hwin = window.open(data, "popup", "resizable=yes,scrollbars=yes");
+                    if (hwin.focus) {
+                        hwin.focus();
+                    }
+				}
+			}
+		});
+	});
+});
+/*]]>*/</script>';
+    }
+
+
+    protected function invoiceOptionJS() {
+        ob_start();
+        ?>
+        <script type="text/javascript">/*<![CDATA[*/
+            $(document).ready(function () {
+                var invoiceMagnalisterGenerator = $(".ml-magnalisterInvoiceGenerator");
+                var invoiceERPGenerator = $(".ml-erpInvoice");
+                var invoiceOption = $('.ml-uploadInvoiceOption');
+                invoiceOption.on('change', function () {
+                    invoiceERPGenerator.hide();
+                    invoiceERPGenerator.find('*').prop( "disabled", true );
+                    invoiceMagnalisterGenerator.hide();
+                    invoiceMagnalisterGenerator.find('*').prop( "disabled", true );
+                    if (this.value === 'magna') {
+                        invoiceMagnalisterGenerator.show();
+                        invoiceMagnalisterGenerator.find('*').prop( "disabled", false );
+                    } else if (this.value === 'erp') {
+                        invoiceERPGenerator.show();
+                        invoiceERPGenerator.find('*').prop( "disabled", false );
+                    }
+                });
+                invoiceOption.change();
+
+            });
+            /*]]>*/</script>
+        <?php
+        $sJSOutPut = ob_get_clean();
+        return $sJSOutPut;
+    }
+}
+
+
+if (isset($_GET['what'])) {
+    if ($_GET['what'] === 'TestInvoiceGeneration') {
+        $iframeURL = 'error';
+        try {
+            //*
+            $result = MagnaConnector::gi()->submitRequest(array(
+                'ACTION' => 'TestInvoiceGeneration'
+            ));
+            $iframeURL = $result['DATA']['URL'];
+            //*/
+        } catch (MagnaException $e) {
+        }
+        echo $iframeURL;
+        exit();
+    }
 }

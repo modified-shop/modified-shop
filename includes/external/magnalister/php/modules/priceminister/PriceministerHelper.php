@@ -126,6 +126,10 @@ class PriceministerHelper extends AttributesMatchingHelper
         $types['values'] = self::GetCarriers();
     }
 
+    public static function GetCountriesConfig(&$types) {
+        $types['values'] = self::GetCountries();
+    }
+
     public static function GetConditionTypes()
     {
         return self::submitSessionCachedRequest('GetItemConditions');
@@ -134,6 +138,10 @@ class PriceministerHelper extends AttributesMatchingHelper
     public static function GetCarriers()
     {
         return self::submitSessionCachedRequest('GetCarriers');
+    }
+
+    public static function GetCountries() {
+        return self::submitSessionCachedRequest('GetCountries');
     }
 
     public static function SearchOnPriceminister($search = '', $searchBy = 'EAN')

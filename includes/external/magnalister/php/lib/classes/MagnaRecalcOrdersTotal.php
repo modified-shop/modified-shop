@@ -427,18 +427,22 @@ class MagnaRecalcOrdersTotal {
 		} else {
 			$magnaOrders = '(SELECT * FROM '.TABLE_MAGNA_ORDERS.' ORDER BY orders_id DESC LIMIT '.$limit.')';
 		}
-		$data = MagnaDB::gi()->fetchArray(eecho('
-		    SELECT o.orders_id, ot.count, mo.special, mo.platform, mo.mpID
-		      FROM '.TABLE_ORDERS.' o
-		INNER JOIN '.$magnaOrders.' mo ON o.orders_id=mo.orders_id AND mo.platform="'.$platform.'"
-		 LEFT JOIN (
-		        SELECT COUNT(orders_total_id) AS count, orders_id
-		          FROM '.TABLE_ORDERS_TOTAL.' 
-		      GROUP BY orders_id
-		           ) ot ON ot.orders_id=o.orders_id
-		     WHERE count <= 2 OR count IS NULL
-		  ORDER BY mo.mpID ASC, o.orders_id ASC
-		', false));
+		// orders with none or <=2 orders_total entries
+		$data0 = MagnaDB::gi()->fetchArray('
+		  SELECT mo.orders_id, NULL as cnt, mo.special, mo.platform, mo.mpID
+		    FROM '.$magnaOrders.' AS mo, '.TABLE_ORDERS.' AS o
+		   WHERE o.orders_id=mo.orders_id AND mo.platform="'.$platform.'"
+		     AND mo.orders_id NOT IN (SELECT orders_id FROM '.TABLE_ORDERS_TOTAL.')
+		   ORDER BY mo.mpID ASC, o.orders_id ASC
+		');
+		$data1 = MagnaDB::gi()->fetchArray('
+		  SELECT ot.orders_id, count(*) AS cnt, mo.special, mo.platform, mo.mpID
+		    FROM '.TABLE_ORDERS.' AS o, '.TABLE_ORDERS_TOTAL.' AS ot, '.$magnaOrders.' AS mo
+		   WHERE mo.orders_id = ot.orders_id AND ot.orders_id = o.orders_id AND mo.platform="'.$platform.'"
+		   GROUP BY ot.orders_id HAVING cnt <= 2
+		   ORDER BY mo.mpID ASC, o.orders_id ASC
+		');
+		$data = array_merge($data0, $data1);
 
 		//echo print_m($data, 'Orders to fix');
 		

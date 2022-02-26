@@ -13,7 +13,7 @@
  * -----------------------------------------------------------------------------
  * $Id$
  *
- * (c) 2010 - 2014 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2021 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -64,7 +64,15 @@ class Check24PrepareView extends MagnaCompatibleBase {
 		$dbOldSelection = MagnaDB::gi()->fetchArray($dbOldSelectionQuery);
 		$oldProducts = array();
 		if (is_array($dbOldSelection)) {
-			foreach ($dbOldSelection as $row) {
+			foreach ($dbOldSelection as &$row) {
+				if (!empty($row['ItemHandlingData'])) {
+					$aItemHandlingData = json_decode($row['ItemHandlingData'], true);
+					if (is_array($aItemHandlingData) && !empty($aItemHandlingData)) {
+						foreach ($aItemHandlingData as $sIHKey => $sIHValue) {
+							$row[$sIHKey] = $sIHValue;
+						}
+					}
+				}
 				$oldProducts[] = MagnaDB::gi()->escape($keytypeIsArtNr ? $row['products_model'] : $row['products_id']);
 			}
 		}
@@ -166,13 +174,51 @@ class Check24PrepareView extends MagnaCompatibleBase {
 		$preSelected = array (
 			'ShippingTime' => array(),
 			'ShippingCost' => array(),
+			'DeliveryMode' => array(),
+			'DeliveryModeText' => array(),
+			'2MenHandling' => array(),
+			'InstallationService' => array(),
+			'RemovalOldItem' => array(),
+			'RemovalPackaging' => array(),
+			'AvailableServiceProductIds' => array(),
+			'LogisticsProvider' => array(),
+			'CustomTariffsNumber' => array(),
+			'ReturnShippingCosts' => array(),
 		);
 		
 		$defaults = array (
 			'ShippingTime' => getDBConfigValue($this->marketplace.'.shippingtime', $this->mpID, 1),
 			'ShippingCost' => getDBConfigValue($this->marketplace.'.shippingcost', $this->mpID, 0),
+			'DeliveryMode' => getDBConfigValue($this->marketplace.'.delivery_mode', $this->mpID, '-'),
+			'DeliveryModeText' => getDBConfigValue($this->marketplace.'.delivery_mode.text', $this->mpID, ''),
+			'2MenHandling' => getDBConfigValue($this->marketplace.'.2men_handling', $this->mpID, ''),
+			'InstallationService' => getDBConfigValue($this->marketplace.'.installation_service', $this->mpID, ''),
+			'RemovalOldItem' => getDBConfigValue($this->marketplace.'.removal_old_item', $this->mpID, ''),
+			'RemovalPackaging' => getDBConfigValue($this->marketplace.'.removal_packaging', $this->mpID, ''),
+			'AvailableServiceProductIds' => getDBConfigValue($this->marketplace.'.available_service_product_ids', $this->mpID, ''),
+			'LogisticsProvider' => getDBConfigValue($this->marketplace.'.logistics_provider', $this->mpID, ''),
+			'CustomTariffsNumber' => getDBConfigValue($this->marketplace.'.custom_tariffs_number.dbmatching.table', $this->mpID, ''),
+			'ReturnShippingCosts' => getDBConfigValue($this->marketplace.'.return_shipping_costs', $this->mpID, ''),
 		);
 		
+		// CustomTariffsNumber comes from the DB: Show only if single preparation
+		if (count($data) == 1) {
+			$sCurrKey = key($data);
+			if (    !array_key_exists('CustomTariffsNumber', $data[$sCurrKey])
+			     || empty($data[$sCurrKey]['CustomTariffsNumber'])) {
+				if (is_array($defaults['CustomTariffsNumber'])
+				     && !empty($defaults['CustomTariffsNumber']['table'])
+				     && !empty($defaults['CustomTariffsNumber']['column'])) {
+				$data[$sCurrKey]['CustomTariffsNumber'] = MagnaDB::gi()->fetchOne('SELECT '.$defaults['CustomTariffsNumber']['column'].' FROM '.$defaults['CustomTariffsNumber']['table'].' WHERE products_id = '.$data[$sCurrKey]['products_id'].' LIMIT 1');
+				} else {
+					$data[$sCurrKey]['CustomTariffsNumber'] = '';
+				}
+			}
+			$blMulti = false;
+		} else {
+			$blMulti = true;
+		}
+
 		$loadedPIds = array();
 		foreach ($data as $row) {
 			$loadedPIds[] = $row['products_id'];
@@ -228,6 +274,125 @@ class Check24PrepareView extends MagnaCompatibleBase {
 				<tr class="spacer">
 					<td colspan="3">&nbsp;</td>
 				</tr>
+				<tr class="headline">
+					<th colspan="3">' . ML_CHECK24_OPTIONAL_SHIPPING_DATA . '</th>
+				</tr>
+				<tr class="' . (($oddEven = !$oddEven) ? 'odd' : 'even') . '">
+					<th>' . ML_CHECK24_DELIVERY_MODE . '</th>
+					<td class="input">
+						<select name="DeliveryMode">';
+			foreach (array('-' => '-',
+					'Spedition' => 'Spedition',
+					'Paket' => 'Paket',
+					'Warensendung' => 'Warensendung',
+					'EigeneAngaben' => 'Eigene Angaben') as $sKey => $sVal) {
+				$html .= '
+							<option value="' . $sKey . '" ' . (
+					($preSelected['DeliveryMode'] == $sKey)
+						? 'selected="selected"'
+						: ''
+					) . '>' . $sVal . '</option>';
+			}
+			$html .= '
+						</select>
+					<input style="padding-left: 2px;" type="text" name="DeliveryModeText" value="' . $preSelected['DeliveryModeText'] . '" />
+					</td>
+					<td class="info"><span style="color:red;"></span></td>
+				</tr>
+				<script type="text/javascript">/*<![CDATA[*/
+				$(document).ready(function() {
+					$(\'td.input > select option[value="EigeneAngaben"], td.input > select option[value="EigeneAngaben"]\').closest("select").on("change", function() {
+					var self = $(this);
+					if (self.val() == "EigeneAngaben") {
+						self.closest("td").find(" > * ").not(self).show();
+					} else {
+						self.closest("td").find(" > * ").not(self).hide();
+					}
+					}).trigger("change");
+				});
+				/*]]>*/</script>
+				<tr class="' . (($oddEven = !$oddEven) ? 'odd' : 'even') . '">
+					<th>' . ML_CHECK24_2MEN_HANDLING . '</th>
+					<td class="input">
+						<input style="padding-left: 2px;" type="text" name="2MenHandling" value="' . $preSelected['2MenHandling'] . '" class="fullwidth" />
+					</td>
+					<td class="info"><span style="color:red;"></span></td>
+				</tr>
+				<tr class="' . (($oddEven = !$oddEven) ? 'odd' : 'even') . '">
+					<th>' . ML_CHECK24_INSTALLATION_SERVICE . '</th>
+					<td class="input">
+						<select name="InstallationService">
+							<option value="">-</option>
+							<option ';
+			if ($preSelected['InstallationService'] == 'ja') {
+				$html .= 'selected ';
+			}
+			$html .= 'value="ja">ja</option>
+					</td>
+					<td class="info"><span style="color:red;"></span></td>
+				</tr>
+				<tr class="' . (($oddEven = !$oddEven) ? 'odd' : 'even') . '">
+					<th>' . ML_CHECK24_REMOVAL_OLD_ITEM . '</th>
+					<td class="input">
+						<select name="RemovalOldItem">
+							<option value="">-</option>
+							<option ';
+			if ($preSelected['RemovalOldItem'] == 'ja') {
+				$html .= 'selected ';
+			}
+			$html .= 'value="ja">ja</option>
+					</td>
+					<td class="info"><span style="color:red;"></span></td>
+				</tr>
+				<tr class="' . (($oddEven = !$oddEven) ? 'odd' : 'even') . '">
+					<th>' . ML_CHECK24_REMOVAL_PACKAGING . '</th>
+					<td class="input">
+						<select name="removalPackaging">
+							<option value="">-</option>
+							<option ';
+			if ($preSelected['removalPackaging'] == 'ja') {
+				$html .= 'selected ';
+			}
+			$html .= 'value="ja">ja</option>
+					</td>
+					<td class="info"><span style="color:red;"></span></td>
+				</tr>
+				<tr class="' . (($oddEven = !$oddEven) ? 'odd' : 'even') . '">
+					<th>' . ML_CHECK24_AVAILABLE_SERVICE_PRODUCT_IDS . '</th>
+					<td class="input">
+						<input style="padding-left: 2px;" type="text" name="AvailableServiceProductIds" value="' . $preSelected['AvailableServiceProductIds'] . '" class="fullwidth" />
+					</td>
+					<td class="info"><span style="color:red;"></span></td>
+				</tr>
+				<tr class="' . (($oddEven = !$oddEven) ? 'odd' : 'even') . '">
+					<th>' . ML_CHECK24_LOGISTICS_PROVIDER . '</th>
+					<td class="input">
+						<input style="padding-left: 2px;" type="text" name="LogisticsProvider" value="' . $preSelected['LogisticsProvider'] . '" class="fullwidth" />
+					</td>
+					<td class="info"><span style="color:red;"></span></td>
+				</tr>';
+			if (!$blMulti) {
+				$html .= '
+				<tr class="' . (($oddEven = !$oddEven) ? 'odd' : 'even') . '">
+					<th>' . ML_CHECK24_CUSTOM_TARIFFS_NUMBER . '</th>
+					<td class="input">
+						<input style="padding-left: 2px;" type="text" name="CustomTariffsNumber" value="' . $preSelected['CustomTariffsNumber'] . '" class="fullwidth" />
+					</td>
+					<td class="info"><span style="color:red;"></span></td>
+				</tr>';
+			}
+			$html .= '
+				<tr class="' . (($oddEven = !$oddEven) ? 'odd' : 'even') . '">
+					<th>' . ML_CHECK24_RETURN_SHIPPING_COSTS . '</th>
+					<td class="input">
+						<input style="padding-left: 2px;" type="text" name="ReturnShippingCosts" value="' . $preSelected['ReturnShippingCosts'] . '" class="fullwidth" />
+					</td>
+					<td class="info"><span style="color:red;"></span></td>
+				</tr>
+				<tr class="spacer">
+					<td colspan="3">&nbsp;</td>
+				</tr>
+
 			</tbody>';
 
 		return $html;

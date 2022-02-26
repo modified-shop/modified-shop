@@ -541,6 +541,23 @@ function magnaActivated() {
 	} else {
 		$_magnaIsActivated = MagnaDB::gi()->tableExists(TABLE_MAGNA_CONFIG);
 	}
+	// gambio 3.9 and newer: Table admin_access can exist but is not used, check gx_configurations
+	if (    !$_magnaIsActivated
+	     && MagnaDB::gi()->tableExists('gx_configurations')) {
+		$_magnaActiveKeyCount = 0;
+		$magnalisterInstalledAndActiveGX = MagnaDB::gi()->fetchArray('SELECT `key`, `value`
+		     FROM gx_configurations
+		    WHERE `key` IN (\'gm_configuration/MODULE_CENTER_MAGNALISTER_INSTALLED\', \'configuration/MODULE_MAGNALISTER_STATUS\')');
+		foreach ($magnalisterInstalledAndActiveGX as $magnalisterInstalledAndActiveGXRow) {
+			if (    $magnalisterInstalledAndActiveGXRow['value'] = 'True'
+			     || $magnalisterInstalledAndActiveGXRow['value'] = '1') {
+				$_magnaActiveKeyCount += 1;
+			}
+		}
+		if ($_magnaActiveKeyCount >= 2) {
+			$_magnaIsActivated = true;
+		}
+	}
 	return $_magnaIsActivated;
 }
 
@@ -943,6 +960,11 @@ function magnaCallbackRun() {
 		#ob_end_clean();
 	}
 
+}
+
+# Damit application_top oder was inkludiertes nicht meckert
+if (!defined('_VALID_XTC')) {
+	define('_VALID_XTC', true);
 }
 
 # Modus festlegen

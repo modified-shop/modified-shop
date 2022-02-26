@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * 888888ba                 dP  .88888.                    dP
  * 88    `8b                88 d8'   `88                   88
  * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b.
@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * (c) 2010 - 2019 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2021 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -20,7 +20,6 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
 require_once(DIR_MAGNALISTER_MODULES.'metro/MetroHelper.php');
 require_once(DIR_MAGNALISTER_MODULES.'metro/classes/MetroApiConfigValues.php');
-require_once(DIR_MAGNALISTER_MODULES.'metro/classes/MetroShippingDetailsProcessor.php');
 require_once(DIR_MAGNALISTER_MODULES.'metro/classes/MetroTopTenCategories.php');
 require_once(DIR_MAGNALISTER_MODULES.'metro/prepare/MetroCategoryMatching.php');
 
@@ -164,7 +163,7 @@ class MetroPrepareView extends MagnaCompatibleBase {
 				<tr class="'.(($oddEven = !$oddEven) ? 'odd' : 'even').'">
 					<th>'.ML_METRO_PRODUCT_TITLE.'<span class="bull">&bull;</span></th>
 					<td class="input">
-						<input class="fullwidth" type="text" maxlength="100" value="'.fixHTMLUTF8Entities($data['Title'],
+						<input class="fullwidth" type="text" maxlength="150" value="'.fixHTMLUTF8Entities($data['Title'],
                 ENT_COMPAT).'" name="Title" id="Title"/>
 					</td>
 					<td class="info">'.ML_METRO_PREPARE_PRODUCT_TITLE_INFO.'</td>
@@ -342,7 +341,12 @@ class MetroPrepareView extends MagnaCompatibleBase {
 			</tbody>';
         $html .= $this->renderAttributesTable();
 
-        $aShippingProfiles = MetroHelper::gi()->getShippingProfiles();
+        if (   isset($data[0]['ShippingProfile'])
+            || '0' === $data[0]['ShippingProfile']) {
+            $aShippingProfiles = MetroHelper::gi()->getShippingProfiles($data[0]['ShippingProfile']);
+        } else {
+            $aShippingProfiles = MetroHelper::gi()->getShippingProfiles();
+        }
         $html .= '
 			<tbody>
 				<tr class="headline">
@@ -353,7 +357,14 @@ class MetroPrepareView extends MagnaCompatibleBase {
 					<td class="input">';
         $html .= $this->renderProcessingTime($data);
         $html .= '</td>
-				  <td class="info">Tragen Sie hier ein, wie viele Werktagen Sie zur Bearbeitung der Bestellung brauchen (vom Bestelleingang bis zum Versand der Ware).</td>
+				  <td class="info">'.ML_METRO_LABEL_PROCESSINGTIME_HELP.'</td>
+				</tr>
+				<tr class="'.(($oddEven = !$oddEven) ? 'odd' : 'even').'">
+					<th>'.ML_METRO_LABEL_MAXPROCESSINGTIME.'</th>
+					<td class="input">';
+        $html .= $this->renderProcessingTime($data, true);
+        $html .= '</td>
+				  <td class="info">'.ML_METRO_LABEL_MAXPROCESSINGTIME_HELP.'</td>
 				</tr>
 				
 				<tr class="'.(($oddEven = !$oddEven) ? 'odd' : 'even').'">
@@ -528,14 +539,15 @@ class MetroPrepareView extends MagnaCompatibleBase {
         return $html;
     }
 
-    protected function renderProcessingTime($data) {
-        $html = '<select name="ProcessingTime" style="width:100%">';
+    protected function renderProcessingTime($data, $isMaxProcessingTime = false) {
+        $key = (($isMaxProcessingTime) ? 'Max': '').'ProcessingTime';
+        $html = '<select name="'.$key.'" style="width:100%">';
         for ($i = 0; $i < 100; $i++) {
             $sel = '';
-            if (!isset($data[0]['ProcessingTime'])) {
-                $data[0]['ProcessingTime'] = getDBConfigValue('metro.processingtime', $this->mpID);
+            if (!isset($data[0][$key])) {
+                $data[0][$key] = getDBConfigValue('metro.'.(($isMaxProcessingTime) ? 'maxprocessingtime': 'processingtime'), $this->mpID);
             }
-            if ($i == $data[0]['ProcessingTime']) {
+            if ($i == $data[0][$key]) {
                 $sel = 'selected="selected"';
             }
             $html .= sprintf('<option value=%d %s>%d</option>', $i, $sel, $i);
@@ -570,11 +582,11 @@ class MetroPrepareView extends MagnaCompatibleBase {
 
         $keytypeIsArtNr = (getDBConfigValue('general.keytype', '0') == 'artNr');
 
-        # Daten aus magnalister_metro_properties (bereits frueher vorbereitet)
+        # Daten aus magnalister_metro_prepare (bereits frueher vorbereitet)
         $dbOldSelectionQuery = '
 		    SELECT ep.products_id, ep.products_model, ep.Manufacturer, ep.Feature, ep.MSRP, ep.ShortDescription,
-		           ep.GTIN, ep.ManufacturerPartNumber, ep.Brand, ep.BusinessModel,
-		           ep.Title, ep.Description, ep.MSRP, ep.ProcessingTime,
+		           ep.GTIN, ep.ManufacturerPartNumber, ep.Brand, ep.BusinessModel, ep.FreightForwarding, ep.ShippingProfile,
+		           ep.Title, ep.Description, ep.Images, ep.MSRP, ep.ProcessingTime, ep.MaxProcessingTime,
 		           ep.PrimaryCategory, ep.PrimaryCategoryName, ep.ShopVariation
 		      FROM '.TABLE_MAGNA_METRO_PREPARE.' ep
 		';
@@ -606,14 +618,26 @@ class MetroPrepareView extends MagnaCompatibleBase {
             }
         }
 
+        $moreData = '';
+        /* {Hook} "metroPrepareView_GetSelection_MoreData": Get more data from the shop tables TABLE_PRODUCTS and TABLE_PRODUCTS_DESCRIPTION, if you want to use other data source fields for METRO data
+            The file MUST look like that:
+            <?php
+                $moreData = 'p.product_type AS ptype, pd.products_keywords, pd.products_url,';
+
+             That means, it must only define a string variable '$moreData', containing field names from TABLE_PRODUCTS preceded with 'p.' and TABLE_PRODUCTS_DESCRIPTION preceded with 'pd.', optionally with an AS name, and must end with a comma.
+         */
+        if (($hp = magnaContribVerify($this->marketplace.'PrepareView_GetSelection_MoreData', 1)) !== false) {
+            require($hp);
+        }
+
         if (defined('BOX_HEADING_GAMBIO')) {
-            # Daten fuer magnalister_metro_properties
+            # Daten fuer magnalister_metro_prepare
             # die Namen schon fuer diese Tabelle
             $dbNewSelectionQuery = '
 		    SELECT p.products_id, p.products_model, mf.manufacturers_name Manufacturer,
 		           ms.mpID, p.products_ean GTIN, pic.code_mpn ManufacturerPartNumber, pic.brand_name Brand,
 		           pd.products_name Title, p.products_price, pd.products_meta_description,
-		           pd.products_description Description, pd.products_short_description ShortDescription
+		           '.$moreData.' pd.products_description Description, pd.products_short_description ShortDescription
 		      FROM '.TABLE_PRODUCTS.' p
 		INNER JOIN '.TABLE_MAGNA_SELECTION.' ms ON ms.pID = p.products_id 
 		 LEFT JOIN '.TABLE_PRODUCTS_DESCRIPTION.' pd ON pd.products_id = p.products_id
@@ -630,7 +654,7 @@ class MetroPrepareView extends MagnaCompatibleBase {
             $dbNewSelectionQuery = '
 		    SELECT p.products_id, p.products_model, mf.manufacturers_name Manufacturer,
 		           ms.mpID, pd.products_name Title, p.products_price,
-		           pd.products_description Description
+		           '.$moreData.' pd.products_description Description
 		           '.((MagnaDB::gi()->columnExistsInTable('products_ean', TABLE_PRODUCTS)) ? ', p.products_ean GTIN' : '').'
 		           '.((MagnaDB::gi()->columnExistsInTable('products_manufacturers_model', TABLE_PRODUCTS)) ? ', p.products_manufacturers_model ManufacturerPartNumber' : '').'
 		      FROM '.TABLE_PRODUCTS.' p
@@ -668,20 +692,16 @@ class MetroPrepareView extends MagnaCompatibleBase {
         foreach ($dbSelection as &$current_row) {
             ++$rowCount;
             // Prepare the gallery
-            $current_row['GalleryPictures'] = isset($current_row['GalleryPictures']) ? json_decode($current_row['GalleryPictures'],
-                true) : array();
-            if (!is_array($current_row['GalleryPictures'])
-                || !isset($current_row['GalleryPictures']['BaseUrl']) || !is_string($current_row['GalleryPictures']['BaseUrl']) || empty($current_row['GalleryPictures']['BaseUrl'])
-                || !isset($current_row['GalleryPictures']['Images']) || !is_array($current_row['GalleryPictures']['Images']) || empty($current_row['GalleryPictures']['Images'])
-            ) {
-                $images = MLProduct::gi()->getAllImagesByProductsId($current_row['products_id']);
-                $current_row['GalleryPictures'] = array(
-                    'BaseUrl' => $imagePath,
-                    'Images' => array(),
-                );
-                foreach ($images as $img) {
-                    $current_row['GalleryPictures']['Images'][$img] = true;
-                }
+            $images = MLProduct::gi()->getAllImagesByProductsId($current_row['products_id']);
+            $current_row['GalleryPictures'] = array(
+                'BaseUrl' => $imagePath,
+                'Images' => array(),
+            );
+            // if not prepared, preclick all images
+            $aImagesPrepared = isset($current_row['Images']) ? json_decode($current_row['Images'], true) : $images;
+            foreach ($images as $img) {
+            // in prepare table, imagePath is included, in getAllImagesByProductsId not, therefore check both cases
+                $current_row['GalleryPictures']['Images'][$img] = in_array($imagePath.$img, $aImagesPrepared) || in_array($img, $aImagesPrepared);
             }
         }
         $dbSelection = $this->fixOSCommerceMissingFields($dbSelection);
@@ -707,6 +727,22 @@ class MetroPrepareView extends MagnaCompatibleBase {
                 $dbSelection[0]['Feature'] = unserialize($dbSelection[0]['Feature']);
             }
 
+            // check for shipping profile
+            if (!isset($dbSelection[0]['ShippingProfile'])) {
+                $aDefaultProfile = getDBConfigValue('metro.shippingprofile', $this->mpID);
+                $dbSelection[0]['ShippingProfile'] = array_search('1', $aDefaultProfile['defaults']);
+            }
+
+        }
+        /* {Hook} "metroPrepareView_PostGetSelection": Called at the end of MetroPrepareView:getSelection().
+            Here you can modify the data needed in METRO preparation, e.g. using the additional data defined in MetroPrepareView_GetSelection_MoreData contrib.
+            Variables that can be used:
+            <ul>
+                <li>$dbSelection: The output data from getSelection(), including data defined in MetroPrepareView_GetSelection_MoreData (if used).
+            </ul>
+         */
+        if (($hp = magnaContribVerify($this->marketplace.'PrepareView_PostGetSelection', 1)) !== false) {
+            require($hp);
         }
         return $dbSelection;
     }
