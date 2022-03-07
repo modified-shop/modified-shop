@@ -2420,10 +2420,10 @@ function mlGetWeightRate($sUnit) {
 
 /**
  *
- * @param type $fWeight
- * @param type $sUnitFrom unit should be converted from
- * @param type $sUnitTo unit should be converted to
- * @return type
+ * @param float $fWeight
+ * @param string $sUnitFrom unit should be converted from
+ * @param string $sUnitTo unit should be converted to
+ * @return float
  */
 function mlConvertWeight($fWeight, $sUnitFrom, $sUnitTo) {
 	try {

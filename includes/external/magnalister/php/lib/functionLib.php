@@ -620,7 +620,7 @@ function htmlEncodeUmlauts($str) {
 		"\xc2\xb4" => '&acute;',  //    ´
 		"\xc2\xb5" => '&micro;',  //    µ
 		"\xc2\xb6" => '&para;',   //    ¶
-		"\xc2\xb7" => '&middot;', //    ·
+		#"\xc2\xb7" => '&middot;', //    · //don't encode, breaks Cyrillic texts
 		"\xc2\xb8" => '&cedil;',  //    ¸
 		"\xc2\xb9" => '&sup1;',   //    ¹
 		"\xc2\xba" => '&ordm;',   //    º
@@ -710,7 +710,7 @@ function htmlEncodeUmlauts($str) {
 		"\xc5\xbc" => '&#380;',   //    ż
 		"\x20\x19" => '&rsquo;',  //    ’
 		"\xb7"     => '&#183;',   //    ·
-		"\xa0"     => '&nbsp;',
+		#"\xa0"     => '&nbsp;',   //don't encode, breaks Cyrillic texts
 		"\x00"     => '',
 		"\xc2"     => '', // Â created from nothing by utf8_encode
 		#"\x7e"     => '&#126;',  // ~ don't encode, can be used in CSS

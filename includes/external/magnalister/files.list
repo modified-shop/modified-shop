@@ -797,10 +797,10 @@ php/callback/uploadInvoices.php	f7f6889b7504473a68601537e646af28
 php/config.php	8c3d4756bd00b04d93c1b5635a4015dc
 php/identifyShop.php	7abdc8cb82aa74e64eb100233e01a2a7
 php/lib/	0
-php/lib/MLProduct.php	8cd9b02b6e26f72d2a804143912cf602
+php/lib/MLProduct.php	ee74cd88770e2a4bdc3e06e7430b30da
 php/lib/MLTables.php	972799a1a552970a1eb891ba9261964c
 php/lib/MagnaConnector.php	5f0b4309e475cd29aea107d9387398d5
-php/lib/MagnaDB.php	c9fa76681284bce46cd41962e2babeca
+php/lib/MagnaDB.php	41b667d809e5d5d7678e1f1b03d487ae
 php/lib/MagnaError.php	5f94ce0cd3625b25a4ee2c8427b9978c
 php/lib/MagnaException.php	2c5e341ebb7bded1e13e6886ca836f61
 php/lib/MagnaTestDB.php	4718bca46518537194234da684fb7862
@@ -826,7 +826,7 @@ php/lib/classes/FileBrowserHelper.php	f5f4a6be42fc3b71aad55c717c01f486
 php/lib/classes/GenerateProductsDetailInput.php	54c4efe9ea9ce93725204fe503e748c6
 php/lib/classes/GenericListings.php	d1a3bb7224218499dbed594fc63184ab
 php/lib/classes/MLProductList.php	faf10fa98afd409d2fc29207d03299cc
-php/lib/classes/MLReceiptUpload.php	43b5c2a91908ff25fc1f54a075dd7a78
+php/lib/classes/MLReceiptUpload.php	a664d897e22fa3f2ba1dff429cf7b776
 php/lib/classes/MLShop.php	0a4a822e430991aab296311d0f1bd338
 php/lib/classes/MagnaRecalcOrdersTotal.php	189e66da2cc8b041eb501ed5822b5020
 php/lib/classes/MarketplaceCategoryMatching.php	1928828312ec83be4c85db51d26bcfb5
@@ -885,7 +885,7 @@ php/lib/classes/productIdFilter/EANMasterFilter.php	4a0d3152c021ec7068a3ba7f7b47
 php/lib/classes/productIdFilter/ManufacturerFilter.php	77f7e9ce9a0de07f202112fc395d6102
 php/lib/classes/productIdFilter/ProductStatusFilter.php	ec44ae08045a2c2889069bdb62e9957e
 php/lib/configFunctions.php	8380e737a4206e2c1e1af74fe961b30e
-php/lib/functionLib.php	6326b69d15a163f50c00509cc7cbe2aa
+php/lib/functionLib.php	ae10c511289677de4e73f35380c07637
 php/lib/json/	0
 php/lib/json/LICENSE	7fc2d268d5da1e548f7d6d769e4ab346
 php/lib/json/Test-JSON.php	3e5a22a9711fa242fc7c17275f664452
@@ -918,7 +918,7 @@ php/lib/json/doc/todolist.html	7b31aaff9be94e48a2dca01fc8910f54
 php/lib/json/json.php	be25dda499c4191cc6055fb400b7d50e
 php/lib/json_wrapper.php	b495da0b7840685d96baad3e23e7bbcd
 php/lib/listingsBox.php	5cfde631ee4ff68c799974de66f8994e
-php/lib/magnaFunctionLib.php	24d3995001994690e1b1acc23739c5d5
+php/lib/magnaFunctionLib.php	203767abd6a5abff766ba55702693afb
 php/lib/phplot/	0
 php/lib/phplot/COPYING	e093b2834f66453149ff85a29d701027
 php/lib/phplot/ChangeLog	7afbe991a85c4a6fed5f7147c816e90f
@@ -941,12 +941,12 @@ php/lib/v3/Codepool/90_System/	0
 php/lib/v3/Codepool/90_System/Database/	0
 php/lib/v3/Codepool/90_System/Database/Model/	0
 php/lib/v3/Codepool/90_System/Database/Model/Query/	0
-php/lib/v3/Codepool/90_System/Database/Model/Query/Select.php	7c98cdbb74a3ad1e3e45502c82a29f38
+php/lib/v3/Codepool/90_System/Database/Model/Query/Select.php	c7ad78628922887effe4f282306a6b44
 php/lib/v3/Codepool/90_System/Filesystem/	0
 php/lib/v3/Codepool/90_System/Filesystem/Filesystem.php	422f56f63848f1499e4876328fca9e25
 php/lib/v3/Codepool/90_System/Request/	0
 php/lib/v3/Codepool/90_System/Request/Model/	0
-php/lib/v3/Codepool/90_System/Request/Model/Request.php	569f1ba27ac9a0c3f894a6cc1cab604b
+php/lib/v3/Codepool/90_System/Request/Model/Request.php	b2832982849bc8abb90a4be6dea90133
 php/lib/v3fake/	0
 php/lib/v3fake/Alias/	0
 php/lib/v3fake/Alias/Database.php	a653a37e7a75c665132252963e991ca0
@@ -968,7 +968,7 @@ php/modules/amazon/classes/	0
 php/modules/amazon/classes/AmazonCategoryView.php	e8b60a1dfb83da39041cbdb41709d94a
 php/modules/amazon/classes/AmazonCheckinSubmit.php	1c6bf6e01576a0f39d893e1a8eade702
 php/modules/amazon/classes/AmazonSummaryView.php	df45253ca6c342fc16a4dc31d865c745
-php/modules/amazon/classes/ApplyCategoryView.php	666dab33bc0c3761f7ae9e3b77175c50
+php/modules/amazon/classes/ApplyCategoryView.php	ff306db91982155d3eaa64cdeeaf8602
 php/modules/amazon/classes/CheckinCategoryView.php	6b93ab2c5f5fd16ebc1d5497a5ba74f5
 php/modules/amazon/classes/DeletedView.php	4fd8710757d6dd25c5df8119af95b088
 php/modules/amazon/classes/ErrorView.php	f9ab65d63d9f3aa2381f7e05744c8eec
@@ -1061,7 +1061,7 @@ php/modules/amazon/crons/	0
 php/modules/amazon/crons/AmazonImportOrders.php	c5b010712fafd3d818dfc414253695bb
 php/modules/amazon/crons/AmazonSyncInventory.php	14b77a40731ad5591d237bbe65c9c15e
 php/modules/amazon/crons/AmazonSyncOrderStatus.php	3241a104dcc5117eda770a5e4cb98ab3
-php/modules/amazon/crons/AmazonUploadInvoices.php	1e5c0ca420b68fed8aa7c22228a5dfac
+php/modules/amazon/crons/AmazonUploadInvoices.php	4477a0baf139c92ff5528cabd1cee8e5
 php/modules/amazon/errorlog.php	903a9851ff64b004234ff48332bb77b1
 php/modules/amazon/listings.php	531b83b5a33b76b149f1ed6eb1acce24
 php/modules/amazon/matching/	0
@@ -1385,7 +1385,7 @@ php/modules/ebay/	0
 php/modules/ebay/EbayHelper.php	ddca114d12b8e6c10252cb732669f79a
 php/modules/ebay/checkin/	0
 php/modules/ebay/checkin/EbayCheckinProductList.php	71786cdd2da23c2277ba9a3d4f8b62ff
-php/modules/ebay/checkin.php	1f2f865bcd47ba64be371867e5e07c50
+php/modules/ebay/checkin.php	c06547469e21cd367c1822ed52dfd712
 php/modules/ebay/classes/	0
 php/modules/ebay/classes/CheckinCategoryView.php	1a3fa38441b13b7550e421c2875a8d87
 php/modules/ebay/classes/DeletedView.php	7277bf7fd6e663d16d00e9ec5abbc89d
@@ -1413,7 +1413,7 @@ php/modules/ebay/classes/ProductList/templates/field/ebaylistingtype.php	325e7ae
 php/modules/ebay/classes/ProductList/templates/field/ebaypreparetype.php	ae5bbfe2cb163b3070e9847b36c9d24a
 php/modules/ebay/classes/ProductList/templates/field/ebayprice.php	2613069a284f91bf4d17d402ec57317d
 php/modules/ebay/classes/eBayCategoryMatching.php	34740d329748ac7b0549c46f0d74f688
-php/modules/ebay/classes/eBayCheckinSubmit.php	a4f7abddd73fee670d0191e3da5fbd47
+php/modules/ebay/classes/eBayCheckinSubmit.php	d7094735da453623695d8a1708fe2e89
 php/modules/ebay/classes/eBayShippingDetailsProcessor.php	4094ca02ffb97a9ced4ec9e42100ae33
 php/modules/ebay/classes/eBaySummaryView.php	9315828d0479eb7ee159048bfca69a8e
 php/modules/ebay/classes/ebayTopTen.php	4685684aac97d37475da239421980bba
@@ -1427,7 +1427,7 @@ php/modules/ebay/crons/EbaySyncListingDetails.php	b6dc1a659fee94a3f5da132c35220d
 php/modules/ebay/crons/EbaySyncOrderStatus.php	86ad9d84d8e849de92a9abd2682855ca
 php/modules/ebay/crons/get_ebay_orders.php	8386af4762af5348843aabc4044cd853
 php/modules/ebay/ebayConfig.php	f3d34ce2f57fd9d96f2e030a9327feb1
-php/modules/ebay/ebayFunctions.php	1b4a6d295bf73fb909d2fd9863ad97c7
+php/modules/ebay/ebayFunctions.php	abc35d6a0ad297bad07b5d2198cf235d
 php/modules/ebay/ebayajax.php	87fd1ca9e28b810c46e28c89429fc77a
 php/modules/ebay/errorlog.php	cd2decca0165d9e5f795080e3bed24a9
 php/modules/ebay/listings.php	230805fef8f32b83eb583b8afb718d3c
@@ -1443,7 +1443,7 @@ php/modules/ebay/prepare/EbayMatchingProductList.php	64e4d72d07d50af95e589f32828
 php/modules/ebay/prepare/EbayPrepareProductList.php	563dabfa88da522e444f650beedbff7a
 php/modules/ebay/prepare/EbayVariationMatching.php	f94dd422658adaaf1770b93b238818b0
 php/modules/ebay/prepare/prepareView.php	4bbe7591070693c1132fa63f886e0bbc
-php/modules/ebay/prepare.php	14fa97d898b9a7cb36a61ce71c31383b
+php/modules/ebay/prepare.php	0d31f3678a71fdd94141b1527058c936
 php/modules/ebay.php	9a1b724ca98c336f00c3f61d4c3b543d
 php/modules/etsy/	0
 php/modules/etsy/EtsyHelper.php	b77b5febc6f44cd2dab0cba8b174be9f
@@ -1676,11 +1676,11 @@ php/modules/hood/HoodHelper.php	b7dfcbe7d216a9c1d0c7e852c7947746
 php/modules/hood/checkin/	0
 php/modules/hood/checkin/HoodCheckinCategoryView.php	6b10c7a32e7260d312376f1416426fb2
 php/modules/hood/checkin/HoodCheckinProductList.php	897ff7311597a32bfc60a372b99aed37
-php/modules/hood/checkin/HoodCheckinSubmit.php	b05ab894ef50af2b92c00ae1221441e9
+php/modules/hood/checkin/HoodCheckinSubmit.php	be24bfc3c798c01e83192be320e62ee3
 php/modules/hood/checkin/HoodSummaryView.php	bfbdf435efdb20ac74a2509d7436f5b7
 php/modules/hood/classes/	0
 php/modules/hood/classes/HoodApiConfigValues.php	d22f6ef0cac8df0db99c656553aa0866
-php/modules/hood/classes/HoodProductSaver.php	10bd5b2df2e513f61b3974f57a50cbab
+php/modules/hood/classes/HoodProductSaver.php	3c2ed3594244a9599557494f4fd940cf
 php/modules/hood/classes/HoodShippingDetailsProcessor.php	976fd0f4604a459aabf2cb9ee06044e2
 php/modules/hood/classes/HoodTopTenCategories.php	2f388a0ab1a1a9cfdbb142e38d42b0fc
 php/modules/hood/classes/MLProductListHoodAbstract.php	8627568610855ea198f978f09bb32c46
@@ -1744,7 +1744,7 @@ php/modules/idealo/idealoConfig.php	02f4fd373179b6d6e06e870d675a4fa8
 php/modules/idealo/idealoFunctions.php	3f33b3d4132317a5c7a406790e1e3a98
 php/modules/idealo/prepare/	0
 php/modules/idealo/prepare/IdealoPrepareProductList.php	840c223d605bcdf4dc22fc7d696197d8
-php/modules/idealo/prepare/IdealoPrepareView.php	3f87f39c5b41e9ad76aa5b2fae07c743
+php/modules/idealo/prepare/IdealoPrepareView.php	7a87251e8f865a072adb4702107147ef
 php/modules/idealo/prepare/IdealoProductPrepare.php	6f0a660d03a64063c8bf47154f9dc8ce
 php/modules/idealo/prepare/IdealoProductPrepareSaver.php	a995fb59843ff217ef728db61cb38a5e
 php/modules/idealo/prepare.php	1c6beb2934fb888c7032d85226d74192
@@ -1815,13 +1815,13 @@ php/modules/magnacompatible/crons/	0
 php/modules/magnacompatible/crons/MagnaCompatibleCronBase.php	82ce9bf3e7bd8e33a9ca52ea88b57597
 php/modules/magnacompatible/crons/MagnaCompatibleImportOrders.php	20fe0bf3222af9a9172f8f5ad9316f24
 php/modules/magnacompatible/crons/MagnaCompatibleSyncInventory.php	0f3ded0cf6fdc91b5735e7a2d6bb32ee
-php/modules/magnacompatible/crons/MagnaCompatibleSyncOrderStatus.php	22c3c484e9361294876e5c359c9b7f56
-php/modules/magnacompatible/crons/MagnaCompatibleUploadInvoices.php	d8c2fdadfd566ad68b9b3e62f622a465
+php/modules/magnacompatible/crons/MagnaCompatibleSyncOrderStatus.php	5f8c6af7d2466b1e730eb98a0e9a282c
+php/modules/magnacompatible/crons/MagnaCompatibleUploadInvoices.php	d018f11c6e6e3b2eb18fa4045883e584
 php/modules/magnacompatible/errorlog/	0
 php/modules/magnacompatible/errorlog/MagnaCompatibleErrorView.php	62d431d9baa60262ed0280680d3bc22c
 php/modules/magnacompatible/errorlog.php	12b0937203441f81129d1f710ffbd135
 php/modules/magnacompatible/listings/	0
-php/modules/magnacompatible/listings/MagnaCompatibleDeletedView.php	e2fb709f362bf001adc6b021e132fba0
+php/modules/magnacompatible/listings/MagnaCompatibleDeletedView.php	986c3c2ed58a836fb0b980030ce587cc
 php/modules/magnacompatible/listings/MagnaCompatibleInventoryView.php	5876795c2fae69db8d56389e92822df0
 php/modules/magnacompatible/listings.php	28139d899064a07462e14e7968f089b0
 php/modules/magnacompatible/prepare/	0
@@ -1837,7 +1837,7 @@ php/modules/meinpaket/catmatch/MeinpaketPrepareCategoryView.php	fee668c692aa886e
 php/modules/meinpaket/checkin/	0
 php/modules/meinpaket/checkin/CheckinCategoryView.php	ddf8a959d667fe6efa7366284f59dd90
 php/modules/meinpaket/checkin/MeinpaketCheckinProductList.php	3f22d0d2f57d3d6dd427c72d3299ec0e
-php/modules/meinpaket/checkin/MeinpaketCheckinSubmit.php	2346d46a986ed2026a8fcce3dbd8629b
+php/modules/meinpaket/checkin/MeinpaketCheckinSubmit.php	e9246569e3851d6d7c38111185f9ee0b
 php/modules/meinpaket/checkin/MeinpaketSummaryView.php	44b2c576bc1c074296ea1e9f6bdb543f
 php/modules/meinpaket/checkin.php	85efe59c73d03c9ee9fc0d78e1871ac8
 php/modules/meinpaket/classes/	0
@@ -1913,7 +1913,7 @@ php/modules/metro/listings/MetroInventoryView.php	e239e14dccaffd0b34566661865d46
 php/modules/metro/prepare/	0
 php/modules/metro/prepare/MetroCategoryMatching.php	18636adfdf079ea35f8318735f5c74af
 php/modules/metro/prepare/MetroPrepareProductList.php	0b617687c5809fb653e8b68274b2adbb
-php/modules/metro/prepare/MetroPrepareView.php	9d24097f5c6177ee970f003adb0920c2
+php/modules/metro/prepare/MetroPrepareView.php	931e749cd045dd52640442efc02fdd09
 php/modules/metro/prepare/MetroVariationMatching.php	2201e4275ff48f1a4c63da1c4b07d3cc
 php/modules/metro/prepare.php	67269e1a1d497d37a5cbb2f25d65f0c1
 php/modules/metro.php	58eede832f4d339b473b991f31f22524

@@ -93,9 +93,9 @@ class ML_Request_Model_Request {
 	}
 
 	/**
-	 * rturn count of selected row ocording to with limit included or excluded
+	 * return count of selected row ocording to with limit included or excluded
 	 * @param type $blTotal , if true exclude limit from select and otherwise it will be included
-	 * @return type
+	 * @return int
 	 */
 	public function getCount() {
 		return count($this->getAll());

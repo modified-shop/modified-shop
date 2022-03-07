@@ -23,7 +23,7 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 # return product details for each item in selection
 function eBayGetSelection() {
     global $_MagnaSession;
-    removeDoublePrepareEntries();
+    eBayRemoveDoublePrepareEntries();
     # Daten aus magnalister_ebay_properties (bereits frueher vorbereitet)
     $keytypeIsArtNr = (getDBConfigValue('general.keytype', '0') == 'artNr');
     $shortDescColumnExists =  MagnaDB::gi()->columnExistsInTable('products_short_description', TABLE_PRODUCTS_DESCRIPTION);

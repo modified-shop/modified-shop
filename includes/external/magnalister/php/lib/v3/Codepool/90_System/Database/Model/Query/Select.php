@@ -395,7 +395,7 @@ class ML_Database_Model_Query_Select {
     /**
      * rturn count of selected row ocording to with limit included or excluded
      * @param type $blTotal , if true exclude limit from select and otherwise it will be included
-     * @return type
+     * @return int
      */
     public function getCount($blTotal = true, $sField ='*' ) {
         if(!$blTotal){

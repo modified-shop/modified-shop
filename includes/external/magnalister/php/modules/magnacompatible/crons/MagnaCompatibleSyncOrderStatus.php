@@ -399,7 +399,10 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 		) {
 			return $this->aOrders[$this->aMOrderID2Order[$mOrderId]];
 		}
-		return null;
+
+        // Only variables can be returned by reference
+        $default = null;
+		return $default;
 	}
 	
 	/**

@@ -73,6 +73,7 @@ class MagnaCompatibleUploadInvoices extends MagnaCompatibleCronBase {
         if (in_array($this->config[$this->sInvoiceOptionConfigKey], array('webshop', 'erp', 'magna'), true)) {
             $requestCount = 10;
             $offset = 0;
+            $exitLoop = false;
 
             do {
                 try {
@@ -84,6 +85,7 @@ class MagnaCompatibleUploadInvoices extends MagnaCompatibleCronBase {
                             'COUNT' => $requestCount,
                             'START' => $offset
                         ),
+                        'NoShortCacheUsage' => microtime(),
                     ));
                     $aOrders = $aResults['DATA'];
 
@@ -128,12 +130,16 @@ class MagnaCompatibleUploadInvoices extends MagnaCompatibleCronBase {
 
                 } catch (\Exception $ex) {
                     echo print_m($ex->getMessage());
+                    // May wrong permissions on destination folder
+                    if ($ex->getCode() === MLReceiptUpload::$errorPermissionErpFolder) {
+                        $exitLoop = true;
+                    }
                     //                echo print_m(MagnaConnector::gi()->getLastRequest());
                 }
 
                 $offset += $requestCount - count($aResponse['CONFIRMATIONS']);
                 $this->out("}\n");
-            } while (count($aOrders) == $requestCount);
+            } while (count($aOrders) == $requestCount && !$exitLoop);
         }
     }
 

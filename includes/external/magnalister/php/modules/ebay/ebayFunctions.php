@@ -1900,7 +1900,7 @@ function SaveEBayMultipleProductProperties($pIDs, $itemDetails) {
 				FROM '.TABLE_PRODUCTS.' p, '.TABLE_PRODUCTS_DESCRIPTION.' pd
 				WHERE p.products_id = pd.products_id
 				AND pd.language_id = \''.getDBConfigValue('ebay.lang', $_MagnaSession['mpID'], $_SESSION['languages_id']).'\'
-				AND p.products_id IN ('.implode($pIDs, ', ').')';
+				AND p.products_id IN ('.implode(', ', $pIDs).')';
 
     $more_data = MagnaDB::gi()->fetchArray($more_data_select);
     #$prefilled_data_select = 'SELECT products_id, Title, Subtitle FROM '.TABLE_MAGNA_EBAY_PROPERTIES.' WHERE products_id IN ('.implode($pIDs, ', ').') AND mpID = '.$_MagnaSession['mpID'];
@@ -2335,7 +2335,7 @@ function updateMainAddressFromOrder($iOrdersId) {
  * doesn't match the one in the product table, and there's an other record where it does,
  * remove the unmatching one
  */
-function removeDoublePrepareEntries() {
+function eBayRemoveDoublePrepareEntries() {
     global $_MagnaSession;
     if ('artNr' == getDBConfigValue('general.keytype', '0')) {
         $aPidChangedEntries = MagnaDB::gi()->fetchArray('

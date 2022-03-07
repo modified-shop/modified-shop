@@ -54,7 +54,8 @@ class MagnaCompatibleDeletedView {
 
 		/* Delete Log */
 		if (isset($_POST['action'])) {
-			$action = array_pop(array_keys($_POST['action']));
+            $arrayKeys = array_keys($_POST['action']);
+			$action = array_pop($arrayKeys);
 			switch ($action) {
 				case 'delete': {
 					if (!isset($_POST['delIDs']) || empty($_POST['delIDs'])) {

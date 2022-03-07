@@ -1332,7 +1332,8 @@ class eBayCheckinSubmit extends CheckinSubmit {
 		), true);
 
 		if (!empty($fixCatAttributes)) {
-			$varAttribute['Name'] = array_pop(array_keys($fixCatAttributes));
+            $arrayKeys = array_keys($fixCatAttributes);
+			$varAttribute['Name'] = array_pop($arrayKeys);
 			$varAttribute['Value'] = array_pop($fixCatAttributes);
 		}
 

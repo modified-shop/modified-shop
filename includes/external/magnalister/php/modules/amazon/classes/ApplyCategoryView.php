@@ -92,8 +92,8 @@ class ApplyCategoryView extends QuickCategoryView {
 
 	/**
 	 * see parent, adding ean to filter
-	 * @param type $iId
-	 * @return type 
+	 * @param int $iId
+	 * @return array
 	 */
 	protected function getProductsCountOfCategoryInfo($iId) {
 		if (!isset($this->aCatInfo[$iId])) {

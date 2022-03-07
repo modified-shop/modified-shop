@@ -23,6 +23,8 @@ class MLReceiptUpload {
      */
     public static $ReceiptUploadError = 45678765;
 
+    public static $errorPermissionErpFolder = 1646220537;
+
     /**
      * @var MLReceiptUpload|null
      */
@@ -194,7 +196,7 @@ class MLReceiptUpload {
 
             if ($receipt[0] == $orderId) {
                 unset($receipt[0]);
-                $receiptNr = implode($receipt, '_');
+                $receiptNr = implode('_', $receipt);
             }
         }
 
@@ -217,7 +219,7 @@ class MLReceiptUpload {
 
                 if (!$success) {
                     $outputString = str_replace(array('{#ReceiptFileName#}', '{#ConfigDestinationPath#}'), array($this->processedOrders[$orderId]['fileName'], $this->config[$key]), ML_UPLOADINVOICE_ERROR_MOVETODESTINATIONDIRECTORY_FAILED);
-                    throw new Exception($outputString, self::$ReceiptUploadError);
+                    throw new Exception($outputString, self::$errorPermissionErpFolder);
                 }
             }
         }

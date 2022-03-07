@@ -1266,7 +1266,14 @@ class MLProduct {
 
                     $v['Images'] = array();
                     foreach ($variationImages as $variationImage) {
-                        $v['Images'][] = $variationImage['product_image_list_image_local_path'];
+                        $localPath = $variationImage['product_image_list_image_local_path'];
+                        // When using Gambio 4.5+ the local path has not "images/product_images/original_images/" in database anymore - If it's not there add
+                        if (version_compare(ML_GAMBIO_VERSION, '4.5', '>=')
+                            && strpos($localPath, 'images/product_images/original_images/') !== 0)
+                        {
+                            $localPath = 'images/product_images/original_images/'.$localPath;
+                        }
+                        $v['Images'][] = $localPath;
                     }
                 }
 
