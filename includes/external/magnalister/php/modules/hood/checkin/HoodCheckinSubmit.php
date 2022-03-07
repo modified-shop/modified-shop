@@ -488,8 +488,17 @@ class HoodCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 					SELECT product_image_list_image_local_path
 					  FROM product_image_list_image
 					 WHERE product_image_list_id IN ($sImageListIds)
-					ORDER BY product_image_list_id, product_image_list_image_sort_order", true);
-				foreach($aVariationImages as $no => $sImage) {
+					ORDER BY product_image_list_id, product_image_list_image_sort_order
+                ", true);
+
+                foreach($aVariationImages as $no => $sImage) {
+                    // When using Gambio 4.5+ the local path has not "images/product_images/original_images/" in database anymore - If it's not there add
+                    if (version_compare(ML_GAMBIO_VERSION, '4.5', '>=')
+                        && strpos($sImage, 'images/product_images/original_images/') !== 0)
+                    {
+                        $sImage = 'images/product_images/original_images/'.$sImage;
+                    }
+
 					$data['submit']['Images'][] = array ('URL' => HTTP_CATALOG_SERVER.DIR_WS_CATALOG.$sImage);
 					if ($no >= $maxImages) break;
 				}

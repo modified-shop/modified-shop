@@ -286,7 +286,7 @@ class HoodProductSaver {
 		     : 'ep.products_id = p.products_id'
 		 ).'
 		     WHERE pd.language_id = "' . $this->config['lang'] . '"
-		           AND p.products_id IN (' . implode($pIDs, ', ') . ')
+		           AND p.products_id IN (' . implode(', ', $pIDs) . ')
 		', false));
 		#echo print_m($data);
 		

@@ -41,5 +41,5 @@ $cm = new CheckinManager(array(
 	'marketplace' => 'ebay')
 );
 
-removeDoublePrepareEntries();
+eBayRemoveDoublePrepareEntries();
 echo $cm->mainRoutine();

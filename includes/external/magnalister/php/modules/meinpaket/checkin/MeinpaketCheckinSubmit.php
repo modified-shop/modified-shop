@@ -469,8 +469,9 @@ class MeinpaketCheckinSubmit extends MagnaCompatibleCheckinSubmit
 		), true);
 
 		if (!empty($fixCatAttributes)) {
+            $arrayKeys = array_keys($fixCatAttributes);
 			$fixCatAttributes = array(
-				'MPName' => array_pop(array_keys($fixCatAttributes)),
+				'MPName' => array_pop($arrayKeys),
 				'MPValue' => array_pop($fixCatAttributes)
 			);
 		}

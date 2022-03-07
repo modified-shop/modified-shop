@@ -543,6 +543,10 @@ class MetroPrepareView extends MagnaCompatibleBase {
         $key = (($isMaxProcessingTime) ? 'Max': '').'ProcessingTime';
         $html = '<select name="'.$key.'" style="width:100%">';
         for ($i = 0; $i < 100; $i++) {
+            // max processing time should be at least 1 - 0 is not allowed
+            if ($isMaxProcessingTime && $i === 0) {
+                continue;
+            }
             $sel = '';
             if (!isset($data[0][$key])) {
                 $data[0][$key] = getDBConfigValue('metro.'.(($isMaxProcessingTime) ? 'maxprocessingtime': 'processingtime'), $this->mpID);

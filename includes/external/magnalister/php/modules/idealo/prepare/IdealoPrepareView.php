@@ -502,8 +502,15 @@ class IdealoPrepareView extends MagnaCompatibleBase {
                         <option value="manual"<?php echo (isset($preSelected['DeliveryTimeSource']) && $preSelected['DeliveryTimeSource'] == 'manual') ? ' selected="selected"': '' ?>><?php echo ML_IDEALO_LABEL_DELIVERY_TIME_MANUAL ?></option>
                     </select>
                     <label><?php echo ML_IDEALO_LABEL_DELIVERY_TIME ?>:</label>
-                    <input type="text" name="DeliveryTime" id="DeliveryTime"
-                           value="<?php echo isset($data['DeliveryTime']) ? $data['DeliveryTime'] : isset($preSelected['DeliveryTime']) ? $preSelected['DeliveryTime'] : '' ?>"/>
+                    <?php
+                        $deliveryTime = '';
+                        if (isset($data['DeliveryTime'])) {
+                            $deliveryTime = $data['DeliveryTime'];
+                        } elseif (isset($preSelected['DeliveryTime'])) {
+                            $deliveryTime = $preSelected['DeliveryTime'];
+                        }
+                    ?>
+                    <input type="text" name="DeliveryTime" id="DeliveryTime" value="<?php echo $deliveryTime; ?>"/>
                 </td>
                 <td class="info"></td>
             </tr>

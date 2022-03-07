@@ -66,6 +66,7 @@ class AmazonUploadInvoices extends MagnaCompatibleUploadInvoices {
         ) {
             $requestCount = 10;
             $offset = 0;
+            $exitLoop = false;
 
             do {
                 try {
@@ -78,6 +79,7 @@ class AmazonUploadInvoices extends MagnaCompatibleUploadInvoices {
                             'START' => $offset
                         ),
                         'RequestVersion' => 2,
+                        'NoShortCacheUsage' => microtime(),
                     ));
                     $aOrders = $aResults['DATA'];
 
@@ -107,7 +109,7 @@ class AmazonUploadInvoices extends MagnaCompatibleUploadInvoices {
                         }
                     }
                     $this->out("}\n");
-                    $this->out("\nConfirmation result {\n");
+                    $this->out("\nConfirmation orders {\n");
 
                     $aResponse = MagnaConnector::gi()->submitRequest(array(
                         'ACTION' => 'UploadInvoices',
@@ -124,11 +126,15 @@ class AmazonUploadInvoices extends MagnaCompatibleUploadInvoices {
                 } catch (\Exception $ex) {
                     echo print_m($ex->getMessage());
                     //                echo print_m(MagnaConnector::gi()->getLastRequest());
+                    // May wrong permissions on destination folder
+                    if ($ex->getCode() === MLReceiptUpload::$errorPermissionErpFolder) {
+                        $exitLoop = true;
+                    }
                 }
 
                 $offset += $requestCount - count($aResponse['CONFIRMATIONS']);
                 $this->out("}\n");
-            } while (count($aOrders) == $requestCount);
+            } while (count($aOrders) == $requestCount && !$exitLoop);
         }
     }
 
@@ -140,7 +146,7 @@ class AmazonUploadInvoices extends MagnaCompatibleUploadInvoices {
             'errormessage' => $sErrorMessage,
             'additionaldata' => serialize($aAdditionalData),
         );
-        if(!MagnaDB::gi()->recordExists(TABLE_MAGNA_AMAZON_ERRORLOG, $data)) {
+        if (!MagnaDB::gi()->recordExists(TABLE_MAGNA_AMAZON_ERRORLOG, $data)) {
             $data['dateadded'] = gmdate('Y-m-d H:i:s');
             MagnaDB::gi()->insert(TABLE_MAGNA_AMAZON_ERRORLOG, $data);
         }

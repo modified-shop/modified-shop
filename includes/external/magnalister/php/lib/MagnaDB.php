@@ -64,6 +64,7 @@ abstract class MagnaDBDriver {
 }
 
 class MagnaDBDriverMysqli extends MagnaDBDriver {
+    /** @var mysqli */
 	protected $oInstance = null;
 	
 	protected $access = array(
@@ -79,6 +80,9 @@ class MagnaDBDriverMysqli extends MagnaDBDriver {
 	public function __construct($access) {
 		$this->access = array_merge($this->access, $access);
 		$this->detectConnectionType();
+
+        // Since PHP 8.1+ database errors throw exceptions - this will do everything like before
+        mysqli_report(MYSQLI_REPORT_OFF);
 	}
 	
 	protected function detectConnectionType() {
