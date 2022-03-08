@@ -54,16 +54,17 @@ if (isset ($cPath) && xtc_not_null($cPath)) {
     return;
   }
   
-  $subcategories_array = array((int)$current_category_id);
+  $subcategories_array = array();
   if (CATEGORIES_SHOW_PRODUCTS_SUBCATS == 'true') {
     xtc_get_subcategories($subcategories_array, $current_category_id);
   }
-  
+  $subcategories_array[] = (int)$current_category_id;
+    
   $categories_products_query = "SELECT p2c.products_id
                                   FROM ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
                                   JOIN ".TABLE_PRODUCTS." p
                                        ON p2c.products_id = p.products_id
-                                          AND p2c.categories_id ".((count($subcategories_array) == 1) ? "IN (".implode(', ', $subcategories_array).") " : "= '".(int)$current_category_id."' ")."
+                                          AND p2c.categories_id ".((count($subcategories_array) > 1) ? "IN (".implode(', ', $subcategories_array).") " : "= '".(int)$current_category_id."' ")."
                                  WHERE p.products_status = '1'
                                        ".PRODUCTS_CONDITIONS_P."
                                  LIMIT 1";
