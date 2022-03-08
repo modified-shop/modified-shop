@@ -189,9 +189,12 @@ if ($result != false) {
 
   $smarty->assign('main_content', $module);
 } elseif (isset($current_category_id) && $current_category_id > 0) {
-  $category = xtc_get_category_data($current_category_id);  
-  if (count($category) > 0) {
-    
+  $category = xtc_get_category_data($current_category_id);
+  if (count($category) > 0 
+      && $category['categories_name'] != ''
+      && $category['categories_description'] != ''
+      )
+  {  
     //include Categorie Listing
     include (DIR_WS_MODULES. 'categories_listing.php');
 
