@@ -20,4 +20,4 @@
 
 define('MODULE_SHIPPING_MARKETPLACE_TEXT_TITLE', 'Shipping specified through Marketplace');
 define('MODULE_SHIPPING_MARKETPLACE_TEXT_DESCRIPTION', 'Shipping specified through Marketplace');
-define('MODULE_SHIPPING_MARKETPLACE_TEXT_TITLE', 'Shipping specified through Marketplace');
+define('MODULE_SHIPPING_MARKETPLACE_TEXT_WAY', 'Shipping specified through Marketplace');
