@@ -1,5 +1,4 @@
 <?php
-
 /* -----------------------------------------------------------------------------------------
    $Id$   
 
@@ -16,24 +15,20 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-function xtc_currency_exists($code) {
-	$param ='/[^a-zA-Z]/';
-	$code = preg_replace($param,'',$code);
-	$currency_code = xtc_db_query("SELECT code, 
-	                                      currencies_id 
-	                                 FROM " . TABLE_CURRENCIES . " 
-	                                WHERE code = '" . xtc_db_input($code) . "' 
-	                                  AND status = '1'
-	                                LIMIT 1");
-	if (xtc_db_num_rows($currency_code)) {
-		$curr = xtc_db_fetch_array($currency_code);
-		if ($curr['code'] == $code) {
-			return $code;
-		} else {
-			return false;
-		}
-	} else {
-		return false;
-	}
-}
-?>
+  function xtc_currency_exists($code) {
+    $code = preg_replace('/[^a-zA-Z]/', '', $code);
+    $currency_query = xtDBquery("SELECT code, 
+                                        currencies_id 
+                                   FROM " . TABLE_CURRENCIES . " 
+                                  WHERE code = '" . xtc_db_input($code) . "' 
+                                    AND status = '1'
+                                  LIMIT 1");
+    if (xtc_db_num_rows($currency_query, true) > 0) {
+      $currency = xtc_db_fetch_array($currency_query, true);
+      if ($currency['code'] == $code) {
+        return $code;
+      }
+    }
+
+    return false;
+  }
