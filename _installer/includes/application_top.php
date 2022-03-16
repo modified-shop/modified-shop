@@ -33,7 +33,7 @@
 
   // new error handling
   if (!defined('STORE_PARSE_DATE_TIME_FORMAT')) {
-    define('STORE_PARSE_DATE_TIME_FORMAT', '%d/%m/%Y %H:%M:%S');
+    define('STORE_PARSE_DATE_TIME_FORMAT', 'Y-m-d H:i:s');
   }
   if (is_file(DIR_FS_CATALOG.'includes/error_reporting.php')) {
     require_once (DIR_FS_CATALOG.'includes/error_reporting.php');
