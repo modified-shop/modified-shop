@@ -55,6 +55,7 @@ if (MAX_DISPLAY_UPCOMING_PRODUCTS != '0') {
                                   WHERE p.products_status = 1
                                     AND to_days(products_date_available) >= to_days(now())
                                         ".PRODUCTS_CONDITIONS_P."
+                               GROUP BY p.products_id
                                ORDER BY ".EXPECTED_PRODUCTS_FIELD." ".EXPECTED_PRODUCTS_SORT."
                                   LIMIT ".MAX_DISPLAY_UPCOMING_PRODUCTS);
 
