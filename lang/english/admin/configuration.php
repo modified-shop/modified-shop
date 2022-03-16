@@ -322,7 +322,7 @@ define('STOCK_REORDER_LEVEL_DESC' , 'Define when stock needs to be re-ordered (p
 define('STORE_PAGE_PARSE_TIME_TITLE' , 'Store page parse time');
 define('STORE_PAGE_PARSE_TIME_DESC' , 'Store the time it takes to parse a page');
 define('STORE_PARSE_DATE_TIME_FORMAT_TITLE' , 'Log file date format');
-define('STORE_PARSE_DATE_TIME_FORMAT_DESC' , 'The date format (Default: %d/%m/%Y %H:%M:%S)');
+define('STORE_PARSE_DATE_TIME_FORMAT_DESC' , 'The date format (Default: Y-m-d H:i:s)');
 define('STORE_DB_SLOW_QUERY_TITLE' , 'Slow Query Log');
 define('STORE_DB_SLOW_QUERY_DESC' , 'Should only slow SQL Queries be saved?<br/><strong>Caution: Store Database Queries must be enabled!</strong>.<br/><strong>Caution: File can get very big in size in long logging sessions!</strong>.<br/><br/>The Logfile is saved in /log in the shoproot');
 define('STORE_DB_SLOW_QUERY_TIME_TITLE' , 'Slow Query Log - Time');

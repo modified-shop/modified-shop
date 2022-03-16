@@ -321,7 +321,7 @@ define('STOCK_REORDER_LEVEL_DESC' , 'Ab welcher St&uuml;ckzahl soll diese Meldun
 define('STORE_PAGE_PARSE_TIME_TITLE' , 'Speichern der Berechnungszeit des Shop-Seitenaufbaus');
 define('STORE_PAGE_PARSE_TIME_DESC' , 'Speichern der Zeit, die ben&ouml;tigt wird, um Skripte bis zum Output der Seite zu berechnen');
 define('STORE_PARSE_DATE_TIME_FORMAT_TITLE' , 'Datumsformat in der Log-Datei');
-define('STORE_PARSE_DATE_TIME_FORMAT_DESC' , 'Das Datumsformat f&uuml;r Logging (Standard: %d/%m/%Y %H:%M:%S)');
+define('STORE_PARSE_DATE_TIME_FORMAT_DESC' , 'Das Datumsformat f&uuml;r Logging (Standard: Y-m-d H:i:s)');
 define('STORE_DB_SLOW_QUERY_TITLE' , 'Slow Query Log');
 define('STORE_DB_SLOW_QUERY_DESC' , 'Sollen nur SQL Queries gespeichert werden die eine l&auml;ngere Zeit ben&ouml;tigen?<br/><strong>Achtung: Es muss das Speichern der Datenbank Abfragen aktiviert sein!</strong>.<br/><strong>Achtung: Datei kann bei l&auml;ngerer Laufzeit sehr gro&szlig; werden!</strong>.<br/><br/>Die Logdatei wird im Ordner /log im Hauptverzeichnis gespeichert.');
 define('STORE_DB_SLOW_QUERY_TIME_TITLE' , 'Slow Query Log - Zeit');
