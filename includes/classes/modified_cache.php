@@ -12,9 +12,10 @@
 
 
   // include needed class
-  require_once (DIR_FS_EXTERNAL . 'phpfastcache/src/autoload.php');
+  require_once (DIR_FS_EXTERNAL . 'Phpfastcache/autoload.php');
 
-  use phpFastCache\CacheManager;
+  use Phpfastcache\CacheManager;
+  use Phpfastcache\Config\ConfigurationOption;
 
   foreach(auto_include(DIR_FS_CATALOG.'includes/extra/cache/','php') as $file) require_once ($file);
 
@@ -22,6 +23,7 @@
   if (!class_exists($_mod_cache_class)) {
     $_mod_cache_class = 'modified_cache';
   }
+  
   $modified_cache = $_mod_cache_class::getInstance();
 
 
@@ -57,12 +59,11 @@
      * @return   Singleton
      */
     public static function getInstance($config = array()) {
-
       if (null === self::$_instance) {
         if (null === self::$objCache) {
-          self::setConfig([
+          self::setConfig(new ConfigurationOption([
             'path' => self::get_cache_dir(),
-          ]);
+          ]));
 
           // Get instance of files cache
           self::$objCache = CacheManager::getInstance('files');
@@ -105,7 +106,7 @@
 
 
     /**
-     * clone
+     * clear
      */
     public function clear() {
       self::$objCache->clear();
@@ -117,6 +118,20 @@
      */
     public function delete($key) {
       self::$objCache->deleteItem($key);
+    }
+
+
+    /**
+     * deleteByTag
+     */
+    public function deleteByTag($tag) {
+      $items = $this->getByTag($tag);
+
+      if (count($items) > 0) {
+        foreach ($items as $item) {
+          $this->delete($item->getKey());
+        }
+      }
     }
 
 
@@ -140,8 +155,10 @@
 
     /**
      * getId
+     *
+     * @return key
      */
-    public function getId($id) {
+    public function getId() {
       return self::$itemCache->getKey();
     }
   
@@ -152,6 +169,45 @@
     public function set($data, $expires = DB_CACHE_EXPIRE) {
       self::$itemCache->set($data)->expiresAfter((int)$expires);
       self::$objCache->save(self::$itemCache);
+    }
+
+
+    /**
+     * get
+     *
+     * @return cache
+     */
+    public function get() {
+      return self::$itemCache->get();
+    }
+
+
+    /**
+     * get
+     *
+     * @return cache
+     */
+    public function getByTag($tag) {
+      return self::$objCache->getItemsByTag($tag);
+    }
+
+
+    /**
+     * setTags
+     */
+    public function setTags($tags_array) {
+      self::$itemCache->setTags($tags_array);
+      self::$objCache->save(self::$itemCache);
+    }
+
+
+    /**
+     * getTags
+     *
+     * @return tags
+     */
+    public function getTags() {
+      return self::$itemCache->getTags();
     }
 
 
@@ -174,20 +230,10 @@
 
 
     /**
-     * get
-     *
-     * @return cache
-     */
-    public function get() {
-      return self::$itemCache->get();
-    }
-
-
-    /**
      * setConfig
      */
-    public static function setConfig($name, $value = null) {
-      CacheManager::setDefaultConfig($name, $value);
+    public static function setConfig($config) {
+      CacheManager::setDefaultConfig($config);
     }
 
 
@@ -201,4 +247,3 @@
     }
 
   }
-?>
