@@ -29,7 +29,7 @@
     $get_url = '';
     if (is_array($_GET) && (count($_GET) > 0)) {
       foreach ($_GET as $key => $value) {
-        if ((is_array($value) || (!is_array($value) && !empty($value) && strlen($value) > 0))
+        if ((is_array($value) || (!is_array($value) && trim($value) != ''))
             && (!in_array($key, $exclude_array)) 
             ) 
         {
@@ -49,7 +49,7 @@
     $get_url = '';
     if (is_array($_GET) && (sizeof($_GET) > 0)) {
       foreach ($_GET as $key => $value) {
-        if ((is_array($value) || (!is_array($value) && !empty($value) && strlen($value) > 0))
+        if ((is_array($value) || (!is_array($value) && trim($value) != ''))
             && (in_array($key, $include_array)) 
             ) 
         {
