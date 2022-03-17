@@ -76,7 +76,7 @@ if (!isset($_SESSION['tracking']['browser']) && isset($_SERVER['HTTP_USER_AGENT'
 if (!isset($_SESSION['tracking']['pageview_history'])) {
   $_SESSION['tracking']['pageview_history'] = array();
 }
-if (!in_array(basename($PHP_SELF), array('ajax.php', FILENAME_COOKIE_USAGE)) 
+if (!in_array(basename($PHP_SELF), array('ajax.php', FILENAME_COOKIE_USAGE, FILENAME_REDIRECT)) 
     && end($_SESSION['tracking']['pageview_history']) != $req_url
     )
 {
