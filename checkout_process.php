@@ -418,11 +418,9 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
 if (!$tmp) {
   // disable products
   if (count($_SESSION['disable_products']) > 0) {
-    foreach ($_SESSION['disable_products'] as $products_id) {
-      xtc_db_query("UPDATE ".TABLE_PRODUCTS."
-                       SET products_status = '0'
-                     WHERE products_id = '".$products_id."'");
-    }
+    xtc_db_query("UPDATE ".TABLE_PRODUCTS."
+                     SET products_status = '0'
+                   WHERE products_id IN (".implode(', ', $_SESSION['disable_products']).")");
   }
   
   // apply customers gv
@@ -441,20 +439,21 @@ if (!$tmp) {
   $_SESSION['cart']->reset(true);
 
   // unregister session variables used during checkout
-  unset ($_SESSION['sendto']);
-  unset ($_SESSION['billto']);
-  unset ($_SESSION['shipping']);
-  unset ($_SESSION['payment']);
-  unset ($_SESSION['comments']);
-  unset ($_SESSION['last_order']);
-  unset ($_SESSION['tmp_oID']);
-  unset ($_SESSION['cc']);
+  unset($_SESSION['sendto']);
+  unset($_SESSION['billto']);
+  unset($_SESSION['shipping']);
+  unset($_SESSION['payment']);
+  unset($_SESSION['comments']);
+  unset($_SESSION['last_order']);
+  unset($_SESSION['tmp_oID']);
+  unset($_SESSION['cc']);
+  unset($_SESSION['disable_products']);
   
   $last_order = $insert_id;
   
   //GV Code Start
   if (isset($_SESSION['credit_covers'])) {
-    unset ($_SESSION['credit_covers']);
+    unset($_SESSION['credit_covers']);
   }
   $order_total_modules->clear_posts();
 
