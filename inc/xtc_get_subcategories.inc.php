@@ -24,15 +24,7 @@
     }
   
     if (defined('DB_CACHE') && DB_CACHE == 'true') {
-      require_once(DIR_FS_CATALOG.'includes/classes/modified_cache.php');
-      
-      if (!is_object($modified_cache)) {
-        $_mod_cache_class = strtolower(DB_CACHE_TYPE).'_cache';
-        if (!class_exists($_mod_cache_class)) {
-          $_mod_cache_class = 'modified_cache';
-        }
-        $modified_cache = $_mod_cache_class::getInstance();
-      }
+      include(DIR_FS_CATALOG.'includes/modified_cache.php');
 
       $modified_cache->setId('sc_'.$parent_id);
       if ($modified_cache->isHit() !== false) {
@@ -49,6 +41,7 @@
     if (defined('DB_CACHE') && DB_CACHE == 'true') {
       $modified_cache->setId('sc_'.$parent_id);
       $modified_cache->set($subcategories_cache[$parent_id]);
+      $modified_cache->setTags(array('categories', 'subcategories'));
     }
     
     $subcategories_array = $subcategories_cache[$parent_id];

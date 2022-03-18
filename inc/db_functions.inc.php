@@ -77,19 +77,12 @@
   }
 
 
-  function xtDBquery($query, $link='db_link') {
+  function xtDBquery($query, $cache_data = '', $link = 'db_link') {
     global ${$link}, $modified_cache;
 
     if (defined('DB_CACHE') && DB_CACHE == 'true') {
-      require_once(DIR_FS_CATALOG.'includes/classes/modified_cache.php');
-      if (!is_object($modified_cache)) {
-        $_mod_cache_class = strtolower(DB_CACHE_TYPE).'_cache';
-        if (!class_exists($_mod_cache_class)) {
-          $_mod_cache_class = 'modified_cache';
-        }
-        $modified_cache = $_mod_cache_class::getInstance();
-      }
-      $result = xtc_db_queryCached($query, $link);
+      include(DIR_FS_CATALOG.'includes/modified_cache.php');
+      $result = xtc_db_queryCached($query, $cache_data, $link);
     } else {
       $result = xtc_db_query($query, $link);
     }
@@ -97,24 +90,26 @@
     return $result;
   }
 
-
-  function xtc_db_queryCached($query, $link='db_link') {
+  
+  function xtc_db_queryCached($query, $cache_data, $link) {
     global ${$link}, $modified_cache;
     
     if (!is_object($modified_cache)) {
-      require_once(DIR_FS_CATALOG.'includes/classes/modified_cache.php');
-      $_mod_cache_class = strtolower(DB_CACHE_TYPE).'_cache';
-      if (!class_exists($_mod_cache_class)) {
-        $_mod_cache_class = 'modified_cache';
-      }
-      $modified_cache = $_mod_cache_class::getInstance();
+      include(DIR_FS_CATALOG.'includes/modified_cache.php');
     }
 
+    if (!is_array($cache_data)) {
+      $cache_data = array('prefix' => 'db');
+    }
+    if (!isset($cache_data['prefix'])) {
+      $cache_data['prefix'] = 'db';
+    }
+    
     if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS == 'true') {    
       $queryStartTime = array_sum(explode(" ",microtime()));
     }
     
-    $id = 'db_'.md5(strtolower(preg_replace("'[\r\n\s]+'", '', $query)));
+    $id = $cache_data['prefix'].'_'.md5(strtolower(preg_replace("'[\r\n\s]+'", '', $query)));
     $modified_cache->setID($id);
     
     $hit = false;
@@ -134,6 +129,7 @@
       }
     
       $modified_cache->set($records);
+      $modified_cache->setTags(array_merge(array('database', $cache_data['prefix']), ((isset($cache_data['tags'])) ? $cache_data['tags'] : array())));
     }
     
     if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS == 'true' && $hit === true) {
@@ -162,5 +158,3 @@
       }
     }
   }
-
-?>

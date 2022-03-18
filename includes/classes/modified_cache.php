@@ -196,7 +196,7 @@
      * setTags
      */
     public function setTags($tags_array) {
-      self::$itemCache->setTags($tags_array);
+      self::$itemCache->setTags((array)$tags_array);
       self::$objCache->save(self::$itemCache);
     }
 
