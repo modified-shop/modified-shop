@@ -18,14 +18,8 @@ class Smarty_CacheResource_Phpfastcache extends Smarty_CacheResource_KeyValueSto
     {
         global $modified_cache;
 
-        if (!is_object($modified_cache)) {
-          $_mod_cache_class = strtolower(DB_CACHE_TYPE).'_cache';
-          if (!class_exists($_mod_cache_class)) {
-            $_mod_cache_class = 'modified_cache';
-          }
-          $modified_cache = $_mod_cache_class::getInstance();
-        }
-
+        include(DIR_FS_CATALOG.'includes/modified_cache.php');
+        
         $this->cache = $modified_cache;
         $this->prefix = 'tpl_';
     }
@@ -61,6 +55,7 @@ class Smarty_CacheResource_Phpfastcache extends Smarty_CacheResource_KeyValueSto
             $_k = $this->prefix.sha1($k);
             $this->cache->setID($_k);
             $this->cache->set($v, $expire);
+            $this->cache->setTags(array('template'));
         }
         return true;
     }
