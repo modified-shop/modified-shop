@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_get_zone_code.inc.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -16,16 +16,14 @@
    ---------------------------------------------------------------------------------------*/
    
   function xtc_get_zone_code($country_id, $zone_id, $default_zone) {
-    $state_prov_query = xtc_db_query("SELECT zone_code 
-                                        FROM ".TABLE_ZONES." 
-                                       WHERE zone_country_id = '".(int)$country_id."' 
-                                         AND zone_id = '".(int)$zone_id."'");
-    if (!xtc_db_num_rows($state_prov_query)) {
-      $state_prov_code = $default_zone;
-    } else {
-      $state_prov_values = xtc_db_fetch_array($state_prov_query);
-      $state_prov_code = $state_prov_values['zone_code'];
+    $zone_code_query = xtDBquery("SELECT zone_code 
+                                    FROM ".TABLE_ZONES." 
+                                   WHERE zone_country_id = '".(int)$country_id."' 
+                                     AND zone_id = '".(int)$zone_id."'");
+    if (xtc_db_num_rows($zone_code_query, true) > 0) {
+      $zone_code = xtc_db_fetch_array($zone_code_query, true);
+      return $zone_code['zone_code'];
     }
-    return $state_prov_code;
+    
+    return $default_zone;
   }
- ?>
