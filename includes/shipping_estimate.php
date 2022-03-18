@@ -40,13 +40,12 @@ if (!isset($_SESSION['customer_id']) || SHOW_ALWAYS_LANG_DROPDOWN) {
 }
 
 if (!isset($order->delivery['country']['iso_code_2']) || $order->delivery['country']['iso_code_2'] == ''  || SHOW_ALWAYS_LANG_DROPDOWN) {
-  $delivery_zone_query = xtc_db_query("SELECT countries_id,
-                                              countries_iso_code_2,
-                                              countries_name
-                                         FROM ".TABLE_COUNTRIES."
-                                        WHERE countries_id = '". (int)$selected."'
-                                     ");
-  $delivery_zone = xtc_db_fetch_array($delivery_zone_query);
+  $delivery_zone_query = xtDBquery("SELECT countries_id,
+                                           countries_iso_code_2,
+                                           countries_name
+                                      FROM ".TABLE_COUNTRIES."
+                                     WHERE countries_id = '". (int)$selected."'");
+  $delivery_zone = xtc_db_fetch_array($delivery_zone_query, true);
 
   $order->delivery['country']['iso_code_2'] = $delivery_zone['countries_iso_code_2'];
   $order->delivery['country']['title'] = $delivery_zone['countries_name'];
