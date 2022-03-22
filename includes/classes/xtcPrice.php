@@ -288,12 +288,20 @@ class xtcPrice {
       $graduated_price_query = xtDBquery("SELECT *
                                             FROM ".TABLE_PERSONAL_OFFERS_BY.$this->actualGroup."
                                            WHERE products_id = '".(int)$pID."'");
-      while ($graduated_price  = xtc_db_fetch_array($graduated_price_query, true)) {
-        if ($graduated_price['personal_offer'] > 0) {
-          $graduated_price_array[$this->actualGroup][$pID][$graduated_price['quantity']] = $graduated_price['personal_offer'];
+      if (xtc_db_num_rows($graduated_price_query, true) > 0) {
+        while ($graduated_price  = xtc_db_fetch_array($graduated_price_query, true)) {
+          if ($graduated_price['personal_offer'] > 0) {
+            $graduated_price_array[$this->actualGroup][$pID][$graduated_price['quantity']] = $graduated_price['personal_offer'];
+          }
         }
+        if (count($graduated_price_array) > 0
+            && !isset($graduated_price_array[$this->actualGroup][$pID][1])
+            )
+        {
+          $graduated_price_array[$this->actualGroup][$pID][1] = $this->getPprice($pID);
+        }
+        krsort($graduated_price_array[$this->actualGroup][$pID]);
       }
-      krsort($graduated_price_array[$this->actualGroup][$pID]);
     }
     
     if (count($graduated_price_array[$this->actualGroup][$pID]) > 0) {
