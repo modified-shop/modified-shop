@@ -141,8 +141,12 @@
 
     function check() {
       if (!isset($this->_check)) {
-        $check_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_SHIPPING_ZONES_STATUS'");
-        $this->_check = xtc_db_num_rows($check_query);
+        if (defined('MODULE_SHIPPING_ZONES_STATUS')) {
+          $this->_check = true;
+        } else {
+          $check_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_SHIPPING_ZONES_STATUS'");
+          $this->_check = xtc_db_num_rows($check_query);
+        }
       }
       return $this->_check;
     }
@@ -239,14 +243,15 @@
     }
 
     function keys() {
-      $keys = array('MODULE_SHIPPING_ZONES_STATUS',
-                    'MODULE_SHIPPING_ZONES_ALLOWED', 
-                    'MODULE_SHIPPING_ZONES_TAX_CLASS',
-                    'MODULE_SHIPPING_ZONES_ZONE',
-                    'MODULE_SHIPPING_ZONES_SORT_ORDER',
-                    'MODULE_SHIPPING_ZONES_NUMBER_ZONES',
-                    'MODULE_SHIPPING_ZONES_DISPLAY'
-                    );
+      $keys = array(
+        'MODULE_SHIPPING_ZONES_STATUS',
+        'MODULE_SHIPPING_ZONES_ALLOWED', 
+        'MODULE_SHIPPING_ZONES_TAX_CLASS',
+        'MODULE_SHIPPING_ZONES_ZONE',
+        'MODULE_SHIPPING_ZONES_SORT_ORDER',
+        'MODULE_SHIPPING_ZONES_NUMBER_ZONES',
+        'MODULE_SHIPPING_ZONES_DISPLAY'
+      );
       $keys = array_merge($keys, $this->keys_zones($this->num_zones));
 
       return $keys;
