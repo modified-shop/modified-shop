@@ -14,6 +14,9 @@
 @ini_set('display_errors', false);
 error_reporting(0);
 
+// prevent redirect to cart
+define('DISPLAY_CART', 'false');
+
 if (isset($_REQUEST['speed'])) {
   // Start the clock for the page parse time log
   define('PAGE_PARSE_START_TIME', microtime(true));
