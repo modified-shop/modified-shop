@@ -321,8 +321,8 @@ class LoggingManager implements \Psr\Log\LoggerInterface
             if ($context['exception'] instanceof \Throwable) {
                 $exception      = $context['exception'];
                 $exception_data = $this->buildExceptionData($exception);
+                unset($context['exception']);
             }
-            unset($context['exception']);
         }
         
         return [$exception_data, $context];
