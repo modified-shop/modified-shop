@@ -858,7 +858,7 @@ JAVASCRIPT;
          */
         public function check() {
             if (!isset($this->_check)) {
-              if (defined('MODULE_SHIPPING_AP_STATUS')) {
+              if (defined('MODULE_PAYMENT_' . $this->_paymentIdentifier . '_STATUS')) {
                 $this->_check = true;
               } else {
                 $table = TABLE_CONFIGURATION;
