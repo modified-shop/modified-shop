@@ -426,7 +426,7 @@ class KlarnaPayment extends KlarnaPaymentBase {
           break;
 
         default:              
-          $tax_class_id = constant('MODULE_ORDER_TOTAL_'.strtoupper(substr($total['code'], 3)).'_TAX_CLASS');
+          $tax_class_id = defined('MODULE_ORDER_TOTAL_'.strtoupper(substr($total['code'], 3)).'_TAX_CLASS') ? constant('MODULE_ORDER_TOTAL_'.strtoupper(substr($total['code'], 3)).'_TAX_CLASS') : 0;
           $tax = $xtPrice->TAX[$tax_class_id];
           $amount = $total['value'];
           if ($add_tax === true) {
