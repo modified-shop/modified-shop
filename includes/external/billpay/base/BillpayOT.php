@@ -267,12 +267,16 @@ class BillpayOT
     public function check()
     {
         if (!isset($this->_check)) {
+          if (defined($this->status_field)) {
+            $this->_check = true;
+          } else {
             $table = TABLE_CONFIGURATION;
             $config_key = $this->status_field;
             $query = "SELECT configuration_value from $table where configuration_key = '$config_key'";
             $this->_check = BillpayDB::DBCount($query);
+          }
         }
-        return $this->_check;
+        return $this->_check;            
     }
 
     /**
