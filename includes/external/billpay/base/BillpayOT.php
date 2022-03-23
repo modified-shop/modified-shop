@@ -276,7 +276,7 @@ class BillpayOT
             $this->_check = BillpayDB::DBCount($query);
           }
         }
-        return $this->_check;            
+        return $this->_check;
     }
 
     /**
