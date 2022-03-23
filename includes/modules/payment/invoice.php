@@ -116,7 +116,6 @@ class invoice {
       xtc_db_query("UPDATE ".TABLE_ORDERS." SET orders_status='".$this->order_status."' WHERE orders_id='".$insert_id."'");
       xtc_db_query("UPDATE ".TABLE_ORDERS_STATUS_HISTORY." SET orders_status_id='".$this->order_status."' WHERE orders_id='".$insert_id."'");
     }
-
   }
 
   function get_error() {
@@ -125,8 +124,12 @@ class invoice {
 
   function check() {
     if (!isset ($this->_check)) {
-      $check_query = xtc_db_query("select configuration_value from ".TABLE_CONFIGURATION." where configuration_key = 'MODULE_PAYMENT_INVOICE_STATUS'");
-      $this->_check = xtc_db_num_rows($check_query);
+      if (defined('MODULE_PAYMENT_INVOICE_STATUS')) {
+        $this->_check = true;
+      } else {
+        $check_query = xtc_db_query("select configuration_value from ".TABLE_CONFIGURATION." where configuration_key = 'MODULE_PAYMENT_INVOICE_STATUS'");
+        $this->_check = xtc_db_num_rows($check_query);
+      }
     }
     return $this->_check;
   }
@@ -147,15 +150,16 @@ class invoice {
   }
 
   function keys() {
-    return array ('MODULE_PAYMENT_INVOICE_STATUS', 
-                  'MODULE_PAYMENT_INVOICE_ALLOWED', 
-                  'MODULE_PAYMENT_INVOICE_ZONE', 
-                  'MODULE_PAYMENT_INVOICE_ORDER_STATUS_ID', 
-                  'MODULE_PAYMENT_INVOICE_MIN_ORDER', 
-                  'MODULE_PAYMENT_INVOICE_MIN_ORDER_STATUS_ID', 
-                  'MODULE_PAYMENT_INVOICE_SORT_ORDER',
-                  'MODULE_PAYMENT_INVOICE_MAX_AMOUNT');
-
+    return array (
+      'MODULE_PAYMENT_INVOICE_STATUS', 
+      'MODULE_PAYMENT_INVOICE_ALLOWED', 
+      'MODULE_PAYMENT_INVOICE_ZONE', 
+      'MODULE_PAYMENT_INVOICE_ORDER_STATUS_ID', 
+      'MODULE_PAYMENT_INVOICE_MIN_ORDER', 
+      'MODULE_PAYMENT_INVOICE_MIN_ORDER_STATUS_ID', 
+      'MODULE_PAYMENT_INVOICE_SORT_ORDER',
+      'MODULE_PAYMENT_INVOICE_MAX_AMOUNT'
+    );
   }
 }
 ?>

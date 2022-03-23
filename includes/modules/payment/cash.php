@@ -111,8 +111,12 @@ class cash {
 
   function check() {
     if (!isset ($this->_check)) {
-      $check_query = xtc_db_query("select configuration_value from ".TABLE_CONFIGURATION." where configuration_key = 'MODULE_PAYMENT_CASH_STATUS'");
-      $this->_check = xtc_db_num_rows($check_query);
+      if (defined('MODULE_PAYMENT_CASH_STATUS')) {
+        $this->_check = true;
+      } else {
+        $check_query = xtc_db_query("select configuration_value from ".TABLE_CONFIGURATION." where configuration_key = 'MODULE_PAYMENT_CASH_STATUS'");
+        $this->_check = xtc_db_num_rows($check_query);
+      }
     }
     return $this->_check;
   }
@@ -144,7 +148,13 @@ class cash {
   }
 
   function keys() {
-    return array ('MODULE_PAYMENT_CASH_STATUS', 'MODULE_PAYMENT_CASH_ALLOWED', 'MODULE_PAYMENT_CASH_ZONE', 'MODULE_PAYMENT_CASH_ORDER_STATUS_ID', 'MODULE_PAYMENT_CASH_SORT_ORDER');
+    return array (
+      'MODULE_PAYMENT_CASH_STATUS', 
+      'MODULE_PAYMENT_CASH_ALLOWED', 
+      'MODULE_PAYMENT_CASH_ZONE', 
+      'MODULE_PAYMENT_CASH_ORDER_STATUS_ID', 
+      'MODULE_PAYMENT_CASH_SORT_ORDER'
+    );
   }
 }
 ?>

@@ -191,8 +191,12 @@ class cod {
 
   function check() {
     if (!isset ($this->_check)) {
-      $check_query = xtc_db_query("select configuration_value from ".TABLE_CONFIGURATION." where configuration_key = 'MODULE_PAYMENT_COD_STATUS'");
-      $this->_check = xtc_db_num_rows($check_query);
+      if (defined('MODULE_PAYMENT_COD_STATUS')) {
+        $this->_check = true;
+      } else {
+        $check_query = xtc_db_query("select configuration_value from ".TABLE_CONFIGURATION." where configuration_key = 'MODULE_PAYMENT_COD_STATUS'");
+        $this->_check = xtc_db_num_rows($check_query);
+      }
     }
     return $this->_check;
   }
@@ -212,14 +216,15 @@ class cod {
   }
 
   function keys() {
-    return array ('MODULE_PAYMENT_COD_STATUS',
-                  'MODULE_PAYMENT_COD_ALLOWED',
-                  'MODULE_PAYMENT_COD_ZONE',
-                  'MODULE_PAYMENT_COD_ORDER_STATUS_ID',
-                  'MODULE_PAYMENT_COD_SORT_ORDER',
-                  'MODULE_PAYMENT_COD_LIMIT_ALLOWED',
-                  'MODULE_PAYMENT_COD_DISPLAY_INFO',
-                  );
+    return array (
+      'MODULE_PAYMENT_COD_STATUS',
+      'MODULE_PAYMENT_COD_ALLOWED',
+      'MODULE_PAYMENT_COD_ZONE',
+      'MODULE_PAYMENT_COD_ORDER_STATUS_ID',
+      'MODULE_PAYMENT_COD_SORT_ORDER',
+      'MODULE_PAYMENT_COD_LIMIT_ALLOWED',
+      'MODULE_PAYMENT_COD_DISPLAY_INFO',
+    );
   }
 }
 ?>

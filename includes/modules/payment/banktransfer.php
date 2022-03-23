@@ -463,8 +463,12 @@
 
     function check() {
       if (!isset($this->_check)) {
-        $check_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_PAYMENT_BANKTRANSFER_STATUS'");
-        $this->_check = xtc_db_num_rows($check_query);
+        if (defined('MODULE_PAYMENT_BANKTRANSFER_STATUS')) {
+          $this->_check = true;
+        } else {
+          $check_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_PAYMENT_BANKTRANSFER_STATUS'");
+          $this->_check = xtc_db_num_rows($check_query);
+        }
       }
       return $this->_check;
     }

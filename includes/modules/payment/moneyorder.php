@@ -119,7 +119,6 @@ class moneyorder {
       xtc_db_query("UPDATE ".TABLE_ORDERS." SET orders_status='".$this->order_status."' WHERE orders_id='".$insert_id."'");
       xtc_db_query("UPDATE ".TABLE_ORDERS_STATUS_HISTORY." SET orders_status_id='".$this->order_status."' WHERE orders_id='".$insert_id."'");
     }
-
   }
 
   function get_error() {
@@ -128,8 +127,12 @@ class moneyorder {
 
   function check() {
     if (!isset ($this->_check)) {
-      $check_query = xtc_db_query("select configuration_value from ".TABLE_CONFIGURATION." where configuration_key = 'MODULE_PAYMENT_MONEYORDER_STATUS'");
-      $this->_check = xtc_db_num_rows($check_query);
+      if (defined('MODULE_PAYMENT_MONEYORDER_STATUS')) {
+        $this->_check = true;
+      } else {
+        $check_query = xtc_db_query("select configuration_value from ".TABLE_CONFIGURATION." where configuration_key = 'MODULE_PAYMENT_MONEYORDER_STATUS'");
+        $this->_check = xtc_db_num_rows($check_query);
+      }
     }
     return $this->_check;
   }
@@ -149,14 +152,15 @@ class moneyorder {
   }
 
   function keys() {
-    return array ('MODULE_PAYMENT_MONEYORDER_STATUS', 
-                  'MODULE_PAYMENT_MONEYORDER_ALLOWED', 
-                  'MODULE_PAYMENT_MONEYORDER_ZONE', 
-                  'MODULE_PAYMENT_MONEYORDER_ORDER_STATUS_ID', 
-                  'MODULE_PAYMENT_MONEYORDER_SORT_ORDER', 
-                  'MODULE_PAYMENT_MONEYORDER_PAYTO',
-                  'MODULE_PAYMENT_MONEYORDER_SUCCESS',
-                  );
+    return array (
+      'MODULE_PAYMENT_MONEYORDER_STATUS', 
+      'MODULE_PAYMENT_MONEYORDER_ALLOWED', 
+      'MODULE_PAYMENT_MONEYORDER_ZONE', 
+      'MODULE_PAYMENT_MONEYORDER_ORDER_STATUS_ID', 
+      'MODULE_PAYMENT_MONEYORDER_SORT_ORDER', 
+      'MODULE_PAYMENT_MONEYORDER_PAYTO',
+      'MODULE_PAYMENT_MONEYORDER_SUCCESS',
+    );
   }
 }
 ?>

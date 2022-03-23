@@ -123,11 +123,15 @@ class eustandardtransfer {
   }
 
   function check() {
-    if (!isset ($this->check)) {
-      $check_query = xtc_db_query("select configuration_value from ".TABLE_CONFIGURATION." where configuration_key = 'MODULE_PAYMENT_EUSTANDARDTRANSFER_STATUS'");
-      $this->check = xtc_db_num_rows($check_query);
+    if (!isset ($this->_check)) {
+      if (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_STATUS')) {
+        $this->_check = true;
+      } else {
+        $check_query = xtc_db_query("select configuration_value from ".TABLE_CONFIGURATION." where configuration_key = 'MODULE_PAYMENT_EUSTANDARDTRANSFER_STATUS'");
+        $this->_check = xtc_db_num_rows($check_query);
+      }
     }
-    return $this->check;
+    return $this->_check;
   }
 
   function install() {
@@ -151,20 +155,20 @@ class eustandardtransfer {
   }
 
   function keys() {
-    $keys = array ('MODULE_PAYMENT_EUSTANDARDTRANSFER_STATUS', 
-                   'MODULE_PAYMENT_EUSTANDARDTRANSFER_ALLOWED', 
-                   'MODULE_PAYMENT_EUSTANDARDTRANSFER_ZONE',
-                   'MODULE_PAYMENT_EUSTANDARDTRANSFER_ORDER_STATUS_ID', 
-                   'MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKNAM', 
-                   'MODULE_PAYMENT_EUSTANDARDTRANSFER_BRANCH', 
-                   'MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNAM', 
-                   'MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNUM', 
-                   'MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCIBAN', 
-                   'MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKBIC',
-                   'MODULE_PAYMENT_EUSTANDARDTRANSFER_SORT_ORDER',
-                   'MODULE_PAYMENT_EUSTANDARDTRANSFER_SUCCESS');
-
-    return $keys;
+    return array (
+      'MODULE_PAYMENT_EUSTANDARDTRANSFER_STATUS', 
+      'MODULE_PAYMENT_EUSTANDARDTRANSFER_ALLOWED', 
+      'MODULE_PAYMENT_EUSTANDARDTRANSFER_ZONE',
+      'MODULE_PAYMENT_EUSTANDARDTRANSFER_ORDER_STATUS_ID', 
+      'MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKNAM', 
+      'MODULE_PAYMENT_EUSTANDARDTRANSFER_BRANCH', 
+      'MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNAM', 
+      'MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNUM', 
+      'MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCIBAN', 
+      'MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKBIC',
+      'MODULE_PAYMENT_EUSTANDARDTRANSFER_SORT_ORDER',
+      'MODULE_PAYMENT_EUSTANDARDTRANSFER_SUCCESS'
+    );
   }
 }
 ?>
