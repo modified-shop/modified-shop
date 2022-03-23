@@ -93,8 +93,12 @@
 
     function check() {
       if (!isset($this->_check)) {
-        $check_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_SHIPPING_HERMES_STATUS'");
-        $this->_check = xtc_db_num_rows($check_query);
+        if (defined('MODULE_SHIPPING_HERMES_STATUS')) {
+          $this->_check = true;
+        } else {
+          $check_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_SHIPPING_HERMES_STATUS'");
+          $this->_check = xtc_db_num_rows($check_query);
+        }
       }
       return $this->_check;
     }
@@ -115,13 +119,15 @@
     }
 
     function keys() {
-      return array('MODULE_SHIPPING_HERMES_STATUS', 
-                   'MODULE_SHIPPING_HERMES_TAX_CLASS', 
-                   'MODULE_SHIPPING_HERMES_NATIONAL',
-                   'MODULE_SHIPPING_HERMES_INTERNATIONAL', 
-                   'MODULE_SHIPPING_HERMES_GEWICHT', 
-                   'MODULE_SHIPPING_HERMES_MAXGEWICHT', 
-                   'MODULE_SHIPPING_HERMES_SORT_ORDER', 
-                   'MODULE_SHIPPING_HERMES_ALLOWED');
+      return array(
+        'MODULE_SHIPPING_HERMES_STATUS', 
+        'MODULE_SHIPPING_HERMES_TAX_CLASS', 
+        'MODULE_SHIPPING_HERMES_NATIONAL',
+        'MODULE_SHIPPING_HERMES_INTERNATIONAL', 
+        'MODULE_SHIPPING_HERMES_GEWICHT', 
+        'MODULE_SHIPPING_HERMES_MAXGEWICHT', 
+        'MODULE_SHIPPING_HERMES_SORT_ORDER', 
+        'MODULE_SHIPPING_HERMES_ALLOWED'
+      );
     }
   }

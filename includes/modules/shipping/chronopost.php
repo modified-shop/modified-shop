@@ -118,11 +118,15 @@
     }
 
     function check() {
-      if (!isset($this->check)) {
-        $check_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_SHIPPING_CHRONOPOST_STATUS'");
-        $this->check = xtc_db_num_rows($check_query);
+      if (!isset($this->_check)) {
+        if (defined('MODULE_SHIPPING_CHRONOPOST_STATUS')) {
+          $this->_check = true;
+        } else {
+          $check_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_SHIPPING_CHRONOPOST_STATUS'");
+          $this->_check = xtc_db_num_rows($check_query);
+        }
       }
-      return $this->check;
+      return $this->_check;
     }
 
     function install() {
@@ -161,13 +165,14 @@
     }
 
     function keys() {
-      $keys = array('MODULE_SHIPPING_CHRONOPOST_STATUS',
-                    'MODULE_SHIPPING_CHRONOPOST_HANDLING',
-                    'MODULE_SHIPPING_CHRONOPOST_ALLOWED',
-                    'MODULE_SHIPPING_CHRONOPOST_TAX_CLASS',
-                    'MODULE_SHIPPING_CHRONOPOST_ZONE',
-                    'MODULE_SHIPPING_CHRONOPOST_SORT_ORDER'
-                   );
+      $keys = array(
+        'MODULE_SHIPPING_CHRONOPOST_STATUS',
+        'MODULE_SHIPPING_CHRONOPOST_HANDLING',
+        'MODULE_SHIPPING_CHRONOPOST_ALLOWED',
+        'MODULE_SHIPPING_CHRONOPOST_TAX_CLASS',
+        'MODULE_SHIPPING_CHRONOPOST_ZONE',
+        'MODULE_SHIPPING_CHRONOPOST_SORT_ORDER'
+      );
       for ($i = 1; $i <= $this->num_chronopost; $i ++) {
         $keys[count($keys)] = 'MODULE_SHIPPING_CHRONOPOST_COUNTRIES_' . $i;
         $keys[count($keys)] = 'MODULE_SHIPPING_CHRONOPOST_COST_' . $i;

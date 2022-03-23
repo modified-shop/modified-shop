@@ -127,10 +127,15 @@ class selfpickup
     
     function check()
     {
-        $check = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_SHIPPING_SELFPICKUP_STATUS'");
-        $check = xtc_db_num_rows($check);
-
-        return $check;
+      if (!isset($this->_check)) {
+        if (defined('MODULE_SHIPPING_SELFPICKUP_STATUS')) {
+          $this->_check = true;
+        } else {
+          $check_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_SHIPPING_SELFPICKUP_STATUS'");
+          $this->_check = xtc_db_num_rows($check_query);
+        }
+      }
+      return $this->_check;
     }
 
     function install() 

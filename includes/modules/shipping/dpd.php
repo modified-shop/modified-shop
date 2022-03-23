@@ -177,9 +177,14 @@
 
 
     function check() {
-      $check_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_SHIPPING_DPD_STATUS'");
-      $this->_check = xtc_db_num_rows($check_query);
-
+      if (!isset($this->_check)) {
+        if (defined('MODULE_SHIPPING_DPD_STATUS')) {
+          $this->_check = true;
+        } else {
+          $check_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_SHIPPING_DPD_STATUS'");
+          $this->_check = xtc_db_num_rows($check_query);
+        }
+      }
       return $this->_check;
     }
 
@@ -666,7 +671,7 @@
 
     //disabled the next one because of some problems: If module is installed and this set to 0, checkout doesn't work.
     function keys() {
-      $keys = array(
+      return array(
         'MODULE_SHIPPING_DPD_STATUS', 
         'MODULE_SHIPPING_DPD_HANDLING',
         'MODULE_SHIPPING_DPD_ALLOWED', 
@@ -674,7 +679,5 @@
         'MODULE_SHIPPING_DPD_TAX_CLASS', 
         'MODULE_SHIPPING_DPD_ZONE'
       );
-
-      return $keys;
     }
   }
