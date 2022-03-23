@@ -857,10 +857,17 @@ JAVASCRIPT;
          * @return bool|int
          */
         public function check() {
-            $table = TABLE_CONFIGURATION;
-            $config_key = 'MODULE_PAYMENT_' . $this->_paymentIdentifier . '_STATUS';
-            $query = "SELECT configuration_value from $table where configuration_key = '$config_key'";
-            return BillpayDB::DBCount($query);
+            if (!isset($this->_check)) {
+              if (defined('MODULE_SHIPPING_AP_STATUS')) {
+                $this->_check = true;
+              } else {
+                $table = TABLE_CONFIGURATION;
+                $config_key = 'MODULE_PAYMENT_' . $this->_paymentIdentifier . '_STATUS';
+                $query = "SELECT configuration_value from $table where configuration_key = '$config_key'";
+                $this->_check = BillpayDB::DBCount($query);
+              }
+            }
+            return $this->_check;            
         }
 
         /**
