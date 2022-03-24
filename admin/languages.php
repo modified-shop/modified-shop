@@ -98,20 +98,28 @@
       case 'deleteconfirm':
         $lID = (int)$_GET['lID'];
         xtc_db_query("DELETE FROM " . TABLE_CATEGORIES_DESCRIPTION . " WHERE language_id = '" . $lID . "'");
+        xtc_db_query("DELETE FROM " . TABLE_COUPONS_DESCRIPTION . " WHERE language_id = '" . $lID . "'");
+        xtc_db_query("DELETE FROM " . TABLE_CUSTOMERS_STATUS . " WHERE language_id = '" . $lID . "'");
+        xtc_db_query("DELETE FROM " . TABLE_ORDERS_STATUS . " WHERE language_id = '" . $lID . "'");
         xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_DESCRIPTION . " WHERE language_id = '" . $lID . "'");
         xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_OPTIONS . " WHERE language_id = '" . $lID . "'");
         xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . " WHERE language_id = '" . $lID . "'");
-        xtc_db_query("DELETE FROM " . TABLE_MANUFACTURERS_INFO . " WHERE languages_id = '" . $lID . "'");
-        xtc_db_query("DELETE FROM " . TABLE_ORDERS_STATUS . " WHERE language_id = '" . $lID . "'");
-        xtc_db_query("DELETE FROM " . TABLE_SHIPPING_STATUS . " WHERE language_id = '" . $lID . "'");
+        xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_VPE . " WHERE language_id = '" . $lID . "'");
         xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_XSELL_GROUPS . " WHERE language_id = '" . $lID . "'");
-        xtc_db_query("DELETE FROM " . TABLE_LANGUAGES . " WHERE languages_id = '" . $lID . "'");
+        xtc_db_query("DELETE FROM " . TABLE_SHIPPING_STATUS . " WHERE language_id = '" . $lID . "'");
+
+        xtc_db_query("DELETE FROM " . TABLE_BANNERS . " WHERE languages_id = '" . $lID . "'");
         xtc_db_query("DELETE FROM " . TABLE_CONTENT_MANAGER . " WHERE languages_id = '" . $lID . "'");
+        xtc_db_query("DELETE FROM " . TABLE_CONTENT_MANAGER_CONTENT . " WHERE languages_id = '" . $lID . "'");
+        xtc_db_query("DELETE FROM " . TABLE_EMAIL_CONTENT . " WHERE languages_id = '" . $lID . "'");
+        xtc_db_query("DELETE FROM " . TABLE_LANGUAGES . " WHERE languages_id = '" . $lID . "'");
+        xtc_db_query("DELETE FROM " . TABLE_MANUFACTURERS_INFO . " WHERE languages_id = '" . $lID . "'");
         xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_CONTENT . " WHERE languages_id = '" . $lID . "'");
-        xtc_db_query("DELETE FROM " . TABLE_CUSTOMERS_STATUS . " WHERE language_id = '" . $lID . "'");
-        
+        xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_TAGS_OPTIONS . " WHERE languages_id = '" . $lID . "'");
+        xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_TAGS_VALUES . " WHERE languages_id = '" . $lID . "'");
+
         unset($_SESSION['language_charset']);
-        
+
         xtc_redirect(xtc_href_link(FILENAME_LANGUAGES, 'page=' . $page));
         break;
       case 'delete':
@@ -206,6 +214,18 @@
               $sql_data_array = $products_options_values;
               $sql_data_array['languages_id'] = $lngID_to;
               xtc_db_perform(TABLE_PRODUCTS_TAGS_VALUES,$sql_data_array);
+            }
+          }
+          // create additional products_vpe records
+          if (isset($_POST['p_vpe'])) {
+            xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_VPE . " WHERE language_id = '" . $lngID_to . "'");
+            $products_vpe_query = xtc_db_query("SELECT * 
+                                                  FROM " . TABLE_PRODUCTS_VPE . " 
+                                                 WHERE language_id = '" . $lngID_from . "'");
+            while ($products_vpe = xtc_db_fetch_array($products_vpe_query)) {
+              $sql_data_array = $products_vpe;
+              $sql_data_array['language_id'] = $lngID_to;
+              xtc_db_perform(TABLE_PRODUCTS_VPE,$sql_data_array);               
             }
           }
           // create additional manufacturers_info records
@@ -310,6 +330,33 @@
               xtc_db_perform(TABLE_EMAIL_CONTENT,$sql_data_array);               
             }
           }
+          // create additional banners records
+          if (isset($_POST['banners'])) {
+            xtc_db_query("DELETE FROM " . TABLE_BANNERS . " WHERE languages_id = '" . $lngID_to . "'");
+            $banners_query = xtc_db_query("SELECT * 
+                                             FROM " . TABLE_BANNERS . " 
+                                            WHERE languages_id = '" . $lngID_from . "'");
+            while ($banners = xtc_db_fetch_array($banners_query)) {
+              $sql_data_array = $banners;
+              $sql_data_array['languages_id'] = $lngID_to;
+              unset($sql_data_array['banners_id']);
+              xtc_db_perform(TABLE_BANNERS,$sql_data_array);               
+            }
+          }
+          // create additional coupons_description records
+          if (isset($_POST['co_desc'])) {
+            xtc_db_query("DELETE FROM " . TABLE_COUPONS_DESCRIPTION . " WHERE language_id = '" . $lngID_to . "'");
+            $coupons_query = xtc_db_query("SELECT cd.* 
+                                             FROM " . TABLE_COUPONS . " c 
+                                        LEFT JOIN " . TABLE_COUPONS_DESCRIPTION . " cd 
+                                                  ON c.coupon_id = cd.coupon_id 
+                                            WHERE cd.language_id = '" . $lngID_from . "'");
+            while ($coupons = xtc_db_fetch_array($coupons_query)) {
+              $sql_data_array = $coupons;
+              $sql_data_array['language_id'] = $lngID_to;
+              xtc_db_perform(TABLE_COUPONS_DESCRIPTION,$sql_data_array);
+            }
+          }
           $messageStack->add_session(TEXT_LANGUAGE_TRANSFER_OK, 'success');
         } else {
           $messageStack->add_session(TEXT_LANGUAGE_TRANSFER_ERR, 'error');
@@ -319,8 +366,7 @@
     }
   }
 
-
-require (DIR_WS_INCLUDES.'head.php');
+  require (DIR_WS_INCLUDES.'head.php');
 ?>
 <style>
 .fieldset{
@@ -438,6 +484,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     echo '<div class="mrg5">'. xtc_draw_checkbox_field('p_opt_val', '1', false) . ' ' . TABLE_PRODUCTS_OPTIONS_VALUES . '</div>'.PHP_EOL;
                     echo '<div class="mrg5">'. xtc_draw_checkbox_field('p_tags_opt', '1', false) . ' ' . TABLE_PRODUCTS_TAGS_OPTIONS . '</div>'.PHP_EOL;
                     echo '<div class="mrg5">'. xtc_draw_checkbox_field('p_tags_val', '1', false) . ' ' . TABLE_PRODUCTS_TAGS_VALUES . '</div>'.PHP_EOL;
+                    echo '<div class="mrg5">'. xtc_draw_checkbox_field('p_vpe', '1', false) . ' ' . TABLE_PRODUCTS_VPE . '</div>'.PHP_EOL;
                     echo '<div class="mrg5">'. xtc_draw_checkbox_field('m_info', '1', false) . ' ' . TABLE_MANUFACTURERS_INFO . '</div>'.PHP_EOL;
                     echo '<div class="mrg5">'. xtc_draw_checkbox_field('o_status', '1', false) . ' ' . TABLE_ORDERS_STATUS . '</div>'.PHP_EOL;
                     echo '<div class="mrg5">'. xtc_draw_checkbox_field('s_status', '1', false) . ' ' . TABLE_SHIPPING_STATUS . '</div>'.PHP_EOL;
@@ -446,6 +493,8 @@ require (DIR_WS_INCLUDES.'head.php');
                     echo '<div class="mrg5">'. xtc_draw_checkbox_field('p_content', '1', false) . ' ' . TABLE_PRODUCTS_CONTENT . '</div>'.PHP_EOL;
                     echo '<div class="mrg5">'. xtc_draw_checkbox_field('c_content', '1', false) . ' ' . TABLE_CONTENT_MANAGER_CONTENT . '</div>'.PHP_EOL;
                     echo '<div class="mrg5">'. xtc_draw_checkbox_field('e_content', '1', false) . ' ' . TABLE_EMAIL_CONTENT . '</div>'.PHP_EOL;
+                    echo '<div class="mrg5">'. xtc_draw_checkbox_field('banners', '1', false) . ' ' . TABLE_BANNERS . '</div>'.PHP_EOL;
+                    echo '<div class="mrg5">'. xtc_draw_checkbox_field('co_desc', '1', false) . ' ' . TABLE_COUPONS_DESCRIPTION . '</div>'.PHP_EOL;
                     echo '<br />'.PHP_EOL;
                     echo '<div class="main important_info mrg5">'.TEXT_LANGUAGE_TRANSFER_INFO2.'</div>';
                     echo '<br />'.PHP_EOL;
@@ -460,7 +509,6 @@ require (DIR_WS_INCLUDES.'head.php');
                 <?php
               }
               ?>
-                   
             </td>
             <?php
             $heading = array();
