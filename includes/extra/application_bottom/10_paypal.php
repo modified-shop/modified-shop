@@ -55,7 +55,11 @@
       $paypal = new PayPalPaymentV2('paypalexpress');
             
       if ($paypal->enabled == true) {
-        $url = str_replace('&amp;', '&', xtc_href_link('ajax.php', 'action=add_product&ext=create_paypal_order&payment_method='.$paypal->code));
+        $action = '';
+        if (basename($PHP_SELF) == FILENAME_PRODUCT_INFO) {
+          $action = 'action=add_product&';
+        }
+        $url = str_replace('&amp;', '&', xtc_href_link('ajax.php', $action.'ext=create_paypal_order&payment_method='.$paypal->code));
         
         if (basename($PHP_SELF) == FILENAME_SHOPPING_CART 
             || $paypal->get_config('MODULE_PAYMENT_'.strtoupper($paypal->code).'_SHOW_PRODUCT') == '1'
