@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: paypal.php 13437 2021-03-02 10:12:32Z GTB $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -21,25 +21,25 @@ require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPaymentV2.php');
 
 
 class paypalpui extends PayPalPaymentV2 {
-	var $code, $title, $description, $extended_description, $enabled;
+  var $code, $title, $description, $extended_description, $enabled;
 
 
-	function __construct() {
-		global $order;
-		
+  function __construct() {
+    global $order;
+  
     PayPalPaymentV2::__construct('paypalpui');
-    
+  
     if (is_object($order) && !defined('RUN_MODE_ADMIN')) {
       $this->tmpOrders = true;
       $this->tmpStatus = $this->get_config('PAYPAL_ORDER_STATUS_PENDING_ID');
       $this->form_action_url = '';
-		}
-	}
+    }
+  }
 
 
   function update_status() {
     global $order;
-    
+  
     $this->enabled = false;
     if (in_array($order->billing['country']['iso_code_2'], array('DE'))
         && in_array($order->info['currency'], array('EUR'))
@@ -51,14 +51,14 @@ class paypalpui extends PayPalPaymentV2 {
     {
       $this->enabled = true;
     }
-    
-	  parent::update_status();	  
+  
+    parent::update_status();	  
   }
 
 
   function selection() {
     global $order, $messageStack;
-        
+      
     if (!isset($_SESSION['customer_dob'])) {
       $dob_query = xtc_db_query("SELECT *
                                    FROM ".TABLE_CUSTOMERS."
@@ -66,7 +66,7 @@ class paypalpui extends PayPalPaymentV2 {
       $dob = xtc_db_fetch_array($dob_query);
       $_SESSION['customer_dob'] = ((strtotime($dob['customers_dob']) !== false) ? date('Y-m-d', strtotime($dob['customers_dob'])) : '');
     }
-    
+  
     $info = '';
     if ($messageStack->size('paypalpui') > 0) {
       $paypal_smarty = new Smarty();
@@ -80,7 +80,7 @@ class paypalpui extends PayPalPaymentV2 {
       $paypal_smarty->assign('error', $messageStack->output('paypalpui'));
       $info = $paypal_smarty->fetch($tpl_file);
     }
-    
+  
     $selection = array(
       'id' => $this->code,
       'module' => $this->title,
@@ -92,12 +92,12 @@ class paypalpui extends PayPalPaymentV2 {
       'title' => MODULE_PAYMENT_PAYPALPUI_TEXT_DOB,
       'field' => xtc_draw_input_field('dob', (($_SESSION['customer_dob'] != '') ? xtc_date_short($_SESSION['customer_dob']) : ''))
     );
-    
+  
     $selection['fields'][] = array(
       'title' => MODULE_PAYMENT_PAYPALPUI_TEXT_TELEPHONE,
       'field' => xtc_draw_input_field('telephone', ((isset($order->customer['telephone'])) ? $order->customer['telephone'] : ''))
     );
-    
+  
     return $selection;
   }
 
@@ -115,17 +115,17 @@ class paypalpui extends PayPalPaymentV2 {
           '    error = 1;' . "\n" .
           '  }' . "\n" .
           '}' . "\n";
-    
+  
     return $js;
   }
 
 
   function pre_confirmation_check() {
     global $messageStack;
-    
+  
     $dob = xtc_db_prepare_input($_POST['dob']);
     $telephone = xtc_db_prepare_input($_POST['telephone']);
-    
+  
     $error = false;
     if (is_numeric(xtc_date_raw($dob)) == false 
         || (@checkdate(substr(xtc_date_raw($dob), 4, 2), substr(xtc_date_raw($dob), 6, 2), substr(xtc_date_raw($dob), 0, 4)) == false)
@@ -134,12 +134,12 @@ class paypalpui extends PayPalPaymentV2 {
       $error = true;
       $messageStack->add_session('paypalpui', ENTRY_DATE_OF_BIRTH_ERROR);
     }
-  
+
     if (strlen($telephone) < ENTRY_TELEPHONE_MIN_LENGTH) {
       $error = true;
       $messageStack->add_session('paypalpui', ENTRY_TELEPHONE_NUMBER_ERROR);
     }
-  
+
     if ($error === false) {
       $sql_data_array = array(
         'customers_telephone' => $telephone,
@@ -157,10 +157,10 @@ class paypalpui extends PayPalPaymentV2 {
     return array ('title' => $this->description);
   }
 
-    
+  
   function process_button() {
     global $order;
-    
+  
     $_SESSION['paypal'] = array(
       'cartID' => $_SESSION['cart']->cartID,
       'OrderID' => '',
@@ -177,7 +177,7 @@ class paypalpui extends PayPalPaymentV2 {
       $tpl_file = DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/paypal/pui.html';
     }
     $process_button = $paypal_smarty->fetch($tpl_file);
-    
+  
     $process_button .= '
       <script type="application/json" fncls="fnparams-dede7cc5-15fd-4c75-a9f4-36c430ee3a99">
         {
@@ -197,12 +197,12 @@ class paypalpui extends PayPalPaymentV2 {
         window.location.href = "'.xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL').'";
       }
     ');
-        
+      
     return $process_button;
   }
 
 
-	function payment_action() {
+  function payment_action() {
     global $order, $messageStack;    
 
     $payment_source = array(
@@ -245,10 +245,10 @@ class paypalpui extends PayPalPaymentV2 {
     if ($order->customer['suburb'] != '') {
       $payment_source['payment_source']['pay_upon_invoice']['billing_address']['address_line_2'] = $this->encode_utf8($order->customer['street_address'].', '.$order->customer['suburb']);
     }      
-    
+  
     $result = $this->CreateOrder($payment_source, true);
     error_log('Order created for oID-'.$_SESSION['tmp_oID'].': '.date('d.m.Y H:i:s')."\n", 3, DIR_FS_LOG.'time.log');
-  
+
     if (is_array($result)) {
       if (isset($result['details']) 
           && is_array($result['details'])
@@ -265,7 +265,7 @@ class paypalpui extends PayPalPaymentV2 {
       xtc_remove_order($_SESSION['tmp_oID'], true);
       xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
     }
-  
+
     $wait = 0;
     for ($i = 0; $i <= 10; $i ++) {
       $wait += $i * 0.5;
@@ -275,42 +275,42 @@ class paypalpui extends PayPalPaymentV2 {
       error_log('call '.$i.' for oID-'.$_SESSION['tmp_oID'].': '.date('d.m.Y H:i:s')."\n", 3, DIR_FS_LOG.'time.log');
       if ($PayPalOrder->status == 'COMPLETED' || $PayPalOrder->status == 'PENDING_APPROVAL') {
         error_log('completed: '.date('d.m.Y H:i:s')."\n", 3, DIR_FS_LOG.'time.log');
-        
+      
         if ($PayPalOrder->status == 'COMPLETED') {
           $paypal->FinishOrderPui($_SESSION['tmp_oID'], $PayPalOrder);
         }
-        
+      
         xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL'));
       } elseif (in_array($PayPalOrder->status, array('DENIED', 'REVERSED'))) {
         break;
       }
     }
-    
+  
     // cancel pp order
     xtc_remove_order($_SESSION['tmp_oID'], true);
     xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
-	}
-  
+  }
+
 
   function after_process() {
     global $insert_id;
-    
+  
     $PayPalOrder = $this->GetOrder($_SESSION['paypal']['OrderID']);
-    
+  
     $status_id = $this->order_status_pending;
     if ($PayPalOrder->status == 'COMPLETED') {
       $status_id = $this->order_status_success;
     }
-    
+  
     $transaction_id = '';
     if (isset($PayPalOrder->purchase_units[0]->payments)) {
       $transaction_id = $PayPalOrder->purchase_units[0]->payments->captures[0]->id; 
     }
-    
+  
     if (isset($PayPalOrder->payer->payer_id)) {
       $_SESSION['paypal']['PayerID'] = $PayPalOrder->payer->payer_id;
     }
-    
+  
     $sql_data_array = array(
       'orders_id' => $insert_id,
       'payment_id' => $_SESSION['paypal']['OrderID'],
@@ -318,15 +318,15 @@ class paypalpui extends PayPalPaymentV2 {
       'transaction_id' => $transaction_id,
     );
     xtc_db_perform(TABLE_PAYPAL_PAYMENT, $sql_data_array);
-    
+  
     $this->update_order('Order ID: '.$_SESSION['paypal']['OrderID'], $status_id, $insert_id);
     unset($_SESSION['paypal']);
   }
-  
-  
+
+
   function success() {
     global $last_order;
-    
+  
     $payment_query = xtc_db_query("SELECT *
                                      FROM ".TABLE_PAYPAL_INSTRUCTIONS."
                                     WHERE orders_id = '".(int)$last_order."'");
@@ -334,7 +334,7 @@ class paypalpui extends PayPalPaymentV2 {
       $payment = xtc_db_fetch_array($payment_query);
       $payment['amount'] = sprintf("%01.2f", round($payment['amount'], 2));
       $payment['date'] = xtc_date_short($payment['date']);
-      
+    
       $fields = array(
         array(
           'title' => TEXT_PAYPAL_INSTRUCTIONS_AMOUNT,
@@ -365,9 +365,9 @@ class paypalpui extends PayPalPaymentV2 {
           'field' => $payment['bic'],
         ),
       );
-      
+    
       $title = sprintf(TEXT_PAYPAL_INSTRUCTIONS_CHECKOUT, $payment['amount'].' '.$payment['currency'], $payment['date']);
-      
+    
       $success = array(
         array (
           'title' => $title,
@@ -375,32 +375,32 @@ class paypalpui extends PayPalPaymentV2 {
           'fields' => $fields
         ),
       );
-  
+
       return $success;
     }
 
     return false;
   }
-  
+
 
   function get_error() {
     return false;
   }
-  
-  
-	function install() {	
-	  parent::install();	  
-	}
 
 
-	function keys() {
-		return array(
-		  'MODULE_PAYMENT_PAYPALPUI_STATUS', 
+  function install() {	
+    parent::install();	  
+  }
+
+
+  function keys() {
+    return array(
+      'MODULE_PAYMENT_PAYPALPUI_STATUS', 
       'MODULE_PAYMENT_PAYPALPUI_ALLOWED', 
       'MODULE_PAYMENT_PAYPALPUI_ZONE',
       'MODULE_PAYMENT_PAYPALPUI_SORT_ORDER'
     );
-	}
+  }
 
 }
 ?>

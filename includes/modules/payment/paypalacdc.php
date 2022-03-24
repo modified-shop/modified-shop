@@ -28,7 +28,7 @@ class paypalacdc extends PayPalPaymentV2 {
       $this->tmpOrders = true;
       $this->tmpStatus = $this->get_config('PAYPAL_ORDER_STATUS_PENDING_ID');
       $this->form_action_url = '';
-		}
+    }
   }
 
 
