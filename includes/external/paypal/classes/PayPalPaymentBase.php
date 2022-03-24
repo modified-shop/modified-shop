@@ -167,6 +167,10 @@ class PayPalPaymentBase extends PayPalCommon {
         $_SESSION['delivery_zone'] = $order->delivery['country']['iso_code_2'];
       }
 
+      if (isset($this->delivery['delivery_zone']) && $this->delivery['delivery_zone'] != '') {
+        $_SESSION['delivery_zone'] = $this->delivery['delivery_zone'];
+      }
+
       if ($order->billing['country']['iso_code_2'] != '') {
         $_SESSION['billing_zone'] = $order->billing['country']['iso_code_2'];
       }
@@ -192,6 +196,10 @@ class PayPalPaymentBase extends PayPalCommon {
 
     if ($order->delivery['country']['iso_code_2'] != '') {
       $_SESSION['delivery_zone'] = $order->delivery['country']['iso_code_2'];
+    }
+
+    if (isset($this->delivery['delivery_zone']) && $this->delivery['delivery_zone'] != '') {
+      $_SESSION['delivery_zone'] = $this->delivery['delivery_zone'];
     }
 
     if ($order->billing['country']['iso_code_2'] != '') {

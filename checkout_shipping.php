@@ -114,6 +114,10 @@ if ($order->delivery['country']['iso_code_2'] != '') {
 	$_SESSION['delivery_zone'] = $order->delivery['country']['iso_code_2'];
 }
 
+if (isset($this->delivery['delivery_zone']) && $this->delivery['delivery_zone'] != '') {
+	$_SESSION['delivery_zone'] = $this->delivery['delivery_zone'];
+}
+
 // load all enabled shipping modules
 require_once (DIR_WS_CLASSES.'shipping.php');
 $shipping_modules = new shipping;

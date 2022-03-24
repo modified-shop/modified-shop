@@ -579,6 +579,7 @@
             )
         {
           $this->delivery = $GLOBALS[$shipping_class]->address();
+          $this->delivery['delivery_zone'] = $shipping_address['iso_code_2'];
 
           $tax_address['country_id'] = $this->delivery['country_id'];
           $tax_address['zone_id'] = $this->delivery['zone_id'];
