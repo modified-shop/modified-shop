@@ -13,7 +13,7 @@
 
 $lang_array = array(
   'MODULE_PAYMENT_PAYPALPLUSLINK_TEXT_TITLE' => 'PayPal PLUS',
-  'MODULE_PAYMENT_PAYPALPLUSLINK_TEXT_ADMIN_TITLE' => 'PayPal PLUS Zahlungslink (nur mit Firmensitz in DE)',
+  'MODULE_PAYMENT_PAYPALPLUSLINK_TEXT_ADMIN_TITLE' => 'PayPal PLUS Zahlungslink (nur mit Firmensitz in DE)<span style="background:#dd2400;color: #fff;font-weight: bold;padding: 2px 5px;border-radius: 4px;margin: 0 0 0 5px;">ALT</span>',
   'MODULE_PAYMENT_PAYPALPLUSLINK_TEXT_INFO' => ((!defined('RUN_MODE_ADMIN') && function_exists('xtc_href_link')) ? '<img src="'.xtc_href_link(DIR_WS_ICONS.'paypal.png', '', 'SSL', false).'" />' : ''),
   'MODULE_PAYMENT_PAYPALPLUSLINK_TEXT_DESCRIPTION' => 'PayPal PLUS als Zahlungslink der den Kunden erst nach Bestellabschluss zur Verf&uuml;gung steht. Entscheiden Sie selber, wo der Kunde die Aufforderung zur Zahlung erh&auml;lt.<br/>PayPal PLUS - die vier beliebtesten Bezahlmethoden deutscher K&auml;ufer: PayPal, Lastschrift, Kreditkarte und Rechnung.<br/>Mehr Infos zu PayPal PLUS finden Sie <a target="_blank" href="https://www.paypal.com/de/webapps/mpp/paypal-plus">hier</a>.',
   'MODULE_PAYMENT_PAYPALPLUSLINK_ALLOWED_TITLE' => 'Erlaubte Zonen',

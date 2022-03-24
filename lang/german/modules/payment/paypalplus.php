@@ -13,7 +13,7 @@
 
 $lang_array = array(
   'MODULE_PAYMENT_PAYPALPLUS_TEXT_TITLE' => 'PayPal PLUS',
-  'MODULE_PAYMENT_PAYPALPLUS_TEXT_ADMIN_TITLE' => 'PayPal PLUS (nur mit Firmensitz in DE)',
+  'MODULE_PAYMENT_PAYPALPLUS_TEXT_ADMIN_TITLE' => 'PayPal PLUS (nur mit Firmensitz in DE)<span style="background:#dd2400;color: #fff;font-weight: bold;padding: 2px 5px;border-radius: 4px;margin: 0 0 0 5px;">ALT</span>',
   'MODULE_PAYMENT_PAYPALPLUS_TEXT_INFO' => 'Bitte w&auml;hlen Sie eine aus den hier aufgef&uuml;hrten Zahlarten durch Anklicken aus.',
   'MODULE_PAYMENT_PAYPALPLUS_TEXT_DESCRIPTION' => 'PayPal PLUS - die vier beliebtesten Bezahlmethoden deutscher K&auml;ufer: PayPal, Lastschrift, Kreditkarte und Rechnung.<br/>Mehr Infos zu PayPal PLUS finden Sie <a target="_blank" href="https://www.paypal.com/de/webapps/mpp/paypal-plus">hier</a>.',
   'MODULE_PAYMENT_PAYPALPLUS_ALLOWED_TITLE' => 'Erlaubte Zonen',

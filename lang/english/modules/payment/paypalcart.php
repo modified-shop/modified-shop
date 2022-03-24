@@ -13,7 +13,7 @@
 
 $lang_array = array(
   'MODULE_PAYMENT_PAYPALCART_TEXT_TITLE' => 'PayPal',
-  'MODULE_PAYMENT_PAYPALCART_TEXT_ADMIN_TITLE' => 'PayPal Express-Button on shopping cart &amp; product page',
+  'MODULE_PAYMENT_PAYPALCART_TEXT_ADMIN_TITLE' => 'PayPal Express-Button on shopping cart &amp; product page<span style="background:#dd2400;color: #fff;font-weight: bold;padding: 2px 5px;border-radius: 4px;margin: 0 0 0 5px;">OLD</span>',
   'MODULE_PAYMENT_PAYPALCART_TEXT_INFO' => ((!defined('RUN_MODE_ADMIN') && function_exists('xtc_href_link')) ? '<img src="'.xtc_href_link(DIR_WS_ICONS.'paypal.png', '', 'SSL', false).'" />' : ''),
   'MODULE_PAYMENT_PAYPALCART_TEXT_DESCRIPTION' => 'PayPal Express Checkout - the PayPal button in the shopping cart and on the product page for maximum conversion.<br/>You can find more information about PayPal Express Shortcut <a target="_blank" href="https://www.paypal.com/de/webapps/mpp/express-checkout">here</a>.',
   'MODULE_PAYMENT_PAYPALCART_ALLOWED_TITLE' => 'Allowed zones',
