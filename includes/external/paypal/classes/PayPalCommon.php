@@ -472,7 +472,10 @@ class PayPalCommon extends PayPalAuth {
 
 			// restore cart contents
 			$_SESSION['cart']->restore_contents();
-
+      
+      // set cartID
+      $_SESSION['paypal']['cartID'] = $_SESSION['cart']->cartID;
+      
 			// restore wishlist contents
 			if (isset($_SESSION['wishlist'])
 			    && is_object($_SESSION['wishlist'])
@@ -599,13 +602,13 @@ class PayPalCommon extends PayPalAuth {
   function get_shipping_address($customer_id, $data) {
     
     $where = '';
-    if (ACCOUNT_COMPANY == 'true') {
+    if (ACCOUNT_COMPANY == 'true' && isset($data['delivery_company'])) {
       $where .= " AND entry_company = '".xtc_db_input($data['delivery_company'])."'";
     }
-    if (ACCOUNT_SUBURB == 'true') {
+    if (ACCOUNT_SUBURB == 'true' && isset($data['delivery_suburb'])) {
       $where .= " AND entry_suburb = '".xtc_db_input($data['delivery_suburb'])."'";
     }
-    if (ACCOUNT_STATE == 'true') {
+    if (ACCOUNT_STATE == 'true' && isset($data['delivery_zone_id'])) {
       $where .= " AND entry_zone_id = '".xtc_db_input($data['delivery_zone_id'])."'";
       $where .= " AND entry_state = '".xtc_db_input($data['delivery_state'])."'";
     }

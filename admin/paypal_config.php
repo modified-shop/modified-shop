@@ -13,6 +13,7 @@
 
 require('includes/application_top.php');
 
+
 // include needed classes
 require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalAdmin.php');
 $paypal = new PayPalAdmin();
@@ -35,8 +36,65 @@ if (isset($_GET['action'])) {
       $paypal->status_install();
       xtc_redirect(xtc_href_link(basename($PHP_SELF)));
       break;
+
+    case 'callback':
+      
+      $sql_data_array = array(
+        array(
+          'config_key' => 'PAYPAL_MERCHANT_ID',
+          'config_value' => $_GET['merchantIdInPayPal']
+        ),
+        array(
+          'config_key' => 'PAYPAL_MERCHANT_EMAIL',
+          'config_value' => $_GET['merchantId']
+        ),
+      );
+      $paypal->save_config($sql_data_array);
+      xtc_redirect(xtc_href_link(basename($PHP_SELF)));
+      break;
   }
 }
+
+$partner = $paypal->getSellerStatus();
+
+$status_acdc = $status_pui = 'red';
+if (is_object($partner)) {
+  foreach ($partner->getProducts() as $product) {
+    if (is_object($product) 
+        && $product->getName() == 'PPCP_CUSTOM'
+        && $product->getVettingStatus() == 'SUBSCRIBED'
+        )
+    {
+      $p_capabilities = $product->getCapabilities();
+      if (is_array($p_capabilities)) {
+        if (in_array('CUSTOM_CARD_PROCESSING', $p_capabilities) || in_array('PAY_UPON_INVOICE', $p_capabilities)) {
+          $capabilities = $partner->getCapabilities();
+          
+          if (is_array($capabilities)) {
+            foreach ($capabilities as $capability) {
+              if ($capability->getName() == 'CUSTOM_CARD_PROCESSING'
+                  && $capability->getStatus() == 'ACTIVE'
+                  )
+              {
+                $status_acdc = 'green';
+                if (isset($capability->limits) && is_array($capability->limits) && count($capability->limits) > 0) $status_acdc = 'yellow';
+              }
+              if ($capability->getName() == 'PAY_UPON_INVOICE'
+                  && $capability->getStatus() == 'ACTIVE'
+                  )
+              {
+                $status_pui = 'green';
+              }
+            }
+          }
+
+        }
+      }
+      
+    }
+  }
+}
+
 
 $orders_statuses = array(array('id' => '-1', 'text' => TEXT_PAYPAL_NO_STATUS_CHANGE));
 $orders_status_query = xtc_db_query("SELECT orders_status_id,
@@ -98,16 +156,7 @@ require (DIR_WS_INCLUDES.'head.php');
   }
   
   function onboardedCallback(authCode, sharedId, mode) {
-    $.post( "../ajax.php", { 'ext': 'set_paypal_data', 'speed': 1, 'authCode': authCode, 'sharedId': sharedId, 'mode': mode, 'sec': '<?php echo MODULE_PAYMENT_PAYPAL_SECRET; ?>' }, function(data) {
-      if (data !== null 
-          && typeof data === 'object'
-          && data.success !== null 
-          && data.success !== undefined 
-          )
-      {
-        window.location.reload(false);  
-      }
-    });
+    $.post( "../ajax.php", { 'ext': 'set_paypal_data', 'speed': 1, 'authCode': authCode, 'sharedId': sharedId, 'mode': mode, 'sec': '<?php echo MODULE_PAYMENT_PAYPAL_SECRET; ?>' });
   }
 </script> 
 </head>
@@ -151,7 +200,6 @@ require (DIR_WS_INCLUDES.'head.php');
               <tr>
                 <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_SECRET_LIVE; ?></td>
                 <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('config[PAYPAL_SECRET_LIVE]', $paypal->get_config('PAYPAL_SECRET_LIVE'), 'style="width: 300px;"'); ?></td>
-                <?php /*<td class="dataTableConfig col-right"><?php /*echo TEXT_PAYPAL_CONFIG_SECRET_LIVE_INFO; ?></td>*/ ?>
               </tr>
               <tr>
                 <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_CLIENT_SANDBOX; ?></td>
@@ -161,12 +209,26 @@ require (DIR_WS_INCLUDES.'head.php');
               <tr>
                 <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_SECRET_SANDBOX; ?></td>
                 <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('config[PAYPAL_SECRET_SANDBOX]', $paypal->get_config('PAYPAL_SECRET_SANDBOX'), 'style="width: 300px;"'); ?></td>
-                <?php /*<td class="dataTableConfig col-right"><?php /*echo TEXT_PAYPAL_CONFIG_SECRET_SANDBOX_INFO; ?></td>*/ ?>
               </tr>
               <tr>
                 <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_MODE; ?></td>
                 <td class="dataTableConfig col-middle"><?php echo xtc_draw_pull_down_menu('config[PAYPAL_MODE]', $mode_array, $paypal->get_config('PAYPAL_MODE')); ?></td>
                 <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_CONFIG_MODE_INFO; ?></td>
+              </tr>
+              <tr>
+                <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_MERCHANT_ID; ?></td>
+                <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('config[PAYPAL_MERCHANT_ID]', $paypal->get_config('PAYPAL_MERCHANT_ID'), 'style="width: 300px;"'); ?></td>
+                <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_CONFIG_MERCHANT_ID_INFO; ?></td>
+              </tr>
+              <tr>
+                <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_STATUS_ACDC; ?></td>
+                <td class="dataTableConfig col-middle"><?php echo xtc_image(DIR_WS_IMAGES . 'icon_status_'.$status_acdc.'.gif', constant('IMAGE_ICON_STATUS_'.strtoupper($status_acdc)), 12, 12); ?></td>
+                <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_CONFIG_STATUS_ACDC_INFO; ?></td>
+              </tr>
+              <tr>
+                <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_STATUS_PUI; ?></td>
+                <td class="dataTableConfig col-middle"><?php echo xtc_image(DIR_WS_IMAGES . 'icon_status_'.$status_pui.'.gif', constant('IMAGE_ICON_STATUS_'.strtoupper($status_pui)), 12, 12); ?></td>
+                <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_CONFIG_STATUS_PUI_INFO; ?></td>
               </tr>
               <tr>
                 <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_INVOICE_PREFIX; ?></td>
@@ -180,7 +242,7 @@ require (DIR_WS_INCLUDES.'head.php');
               </tr>
               <tr>
                 <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_CAPTURE; ?></td>
-                <td class="dataTableConfig col-middle"><?php echo draw_on_off_selection('config[PAYPAL_CAPTURE_MANUELL]', $status_array, (($paypal->get_config('PAYPAL_CAPTURE_MANUELL') == 1) ? true : false)); ?></td>
+                <td class="dataTableConfig col-middle"><?php echo draw_on_off_selection('config[PAYPAL_CAPTURE_MANUELL]', $status_array, $paypal->get_config('PAYPAL_CAPTURE_MANUELL')); ?></td>
                 <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_CONFIG_CAPTURE_INFO; ?></td>
               </tr>
               <tr>

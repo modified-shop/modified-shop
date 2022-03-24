@@ -48,14 +48,35 @@ function get_module_info($module) {
 // languages
 $languages = xtc_get_languages(); 
 
-$payment_array = array(
-  'paypalplus',
+$orders_v1_array = array(
   'paypalclassic',
   'paypalcart',
+  'paypalplus',
   'paypallink',
   'paypalpluslink',
   'paypalsubscription',
 );
+
+$orders_v2_array = array(
+  'paypal',
+  'paypalacdc',
+  'paypalpui',
+  'paypalexpress',
+  'paypalcard',
+  'paypalsepa',
+  'paypalsofort',
+  'paypaltrustly',
+  'paypalprzelewy',
+  'paypalmybank',
+  'paypalideal',
+  'paypalgiropay',
+  'paypaleps',
+  'paypalblik',
+  'paypalbancontact',
+);
+
+
+$payment_array = array_merge($orders_v2_array, $orders_v1_array);
 
 $payment_disallowed_array = array(
   'banktransfer',
@@ -138,6 +159,26 @@ if (isset($_GET['action'])) {
         $installed_modules = explode(';', MODULE_PAYMENT_INSTALLED);
         if (!in_array($_GET['module'].'.php', $installed_modules)) {
           $installed_modules[] = $_GET['module'].'.php';
+          xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " 
+                           SET configuration_value = '" . implode(';', $installed_modules) . "', 
+                               last_modified = now() 
+                         WHERE configuration_key = 'MODULE_PAYMENT_INSTALLED'");
+        }
+      }
+      xtc_redirect(xtc_href_link(basename($PHP_SELF)));
+
+    case 'remove':
+      if (in_array($_GET['module'], $payment_array)) {                  
+        include_once(DIR_FS_LANGUAGES.$_SESSION['language'].'/modules/payment/'.$_GET['module'].'.php');
+        require_once(DIR_FS_CATALOG.'includes/modules/payment/'.$_GET['module'].'.php');
+        $module = new $_GET['module']();
+        $module->remove();
+        
+        $installed_modules = explode(';', MODULE_PAYMENT_INSTALLED);
+        if (in_array($_GET['module'].'.php', $installed_modules)) {
+          $key = array_search($_GET['module'].'.php', $installed_modules);        
+          unset($installed_modules[$key]);
+          
           xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " 
                            SET configuration_value = '" . implode(';', $installed_modules) . "', 
                                last_modified = now() 
@@ -232,32 +273,54 @@ require (DIR_WS_INCLUDES.'head.php');
                   if ($module->code == 'paypalcart') {
                     ?>
                     <tr>
-                      <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_MODULE_LINK_PRODUCT; ?></td>
+                      <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_MODULE_PRODUCT; ?></td>
                       <td class="dataTableConfig col-middle"><?php echo draw_on_off_selection('config[profile][MODULE_PAYMENT_'.strtoupper($module->code).'_SHOW_PRODUCT]', $status_array, (($paypal->get_config('MODULE_PAYMENT_'.strtoupper($module->code).'_SHOW_PRODUCT') == '1') ? true : false)); ?></td>
-                      <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_MODULE_LINK_PRODUCT_INFO; ?></td>
+                      <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_MODULE_PRODUCT_INFO; ?></td>
                     </tr>
                     <?php
                   }
 
-                  $list = $paypal->list_profile();
-                  $profile_array = array(array('id' => '', 'text' => TEXT_PAYPAL_NO_PROFILE));
+                  if ($module->code == 'paypalexpress') {
+                    ?>
+                    <tr>
+                      <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_MODULE_PRODUCT; ?></td>
+                      <td class="dataTableConfig col-middle"><?php echo draw_on_off_selection('config[profile][MODULE_PAYMENT_'.strtoupper($module->code).'_SHOW_PRODUCT]', $status_array, (($paypal->get_config('MODULE_PAYMENT_'.strtoupper($module->code).'_SHOW_PRODUCT') == '1') ? true : false)); ?></td>
+                      <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_MODULE_PRODUCT_INFO; ?></td>
+                    </tr>
+                    <tr>
+                      <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_MODULE_CART_BNPL; ?></td>
+                      <td class="dataTableConfig col-middle"><?php echo draw_on_off_selection('config[profile][MODULE_PAYMENT_'.strtoupper($module->code).'_SHOW_CART_BNPL]', $status_array, (($paypal->get_config('MODULE_PAYMENT_'.strtoupper($module->code).'_SHOW_CART_BNPL') == '1') ? true : false)); ?></td>
+                      <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_MODULE_CART_BNPL_INFO; ?></td>
+                    </tr>
+                    <tr>
+                      <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_MODULE_PRODUCT_BNPL; ?></td>
+                      <td class="dataTableConfig col-middle"><?php echo draw_on_off_selection('config[profile][MODULE_PAYMENT_'.strtoupper($module->code).'_SHOW_PRODUCT_BNPL]', $status_array, (($paypal->get_config('MODULE_PAYMENT_'.strtoupper($module->code).'_SHOW_PRODUCT_BNPL') == '1') ? true : false)); ?></td>
+                      <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_MODULE_PRODUCT_BNPL_INFO; ?></td>
+                    </tr>
+                    <?php
+                  }
                   
-                  if (count($list) > 0) {
-                    $profile_array = array(array('id' => '', 'text' => TEXT_PAYPAL_STANDARD_PROFILE));
-                    for ($i=0, $n=count($list); $i<$n; $i++) {
-                      $profile_array[] = array('id' => $list[$i]['id'], 'text' => $list[$i]['name']);
+                  if (in_array($module->code, $orders_v1_array)) {
+                    $list = $paypal->list_profile();
+                    $profile_array = array(array('id' => '', 'text' => TEXT_PAYPAL_NO_PROFILE));
+                  
+                    if (count($list) > 0) {
+                      $profile_array = array(array('id' => '', 'text' => TEXT_PAYPAL_STANDARD_PROFILE));
+                      for ($i=0, $n=count($list); $i<$n; $i++) {
+                        $profile_array[] = array('id' => $list[$i]['id'], 'text' => $list[$i]['name']);
+                      }
+                    }
+                    for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+                    ?>
+                    <tr>
+                      <td class="dataTableConfig col-left"><div style="float:left;margin-right:5px;"><?php echo xtc_image(DIR_WS_LANGUAGES.$languages[$i]['directory'].'/admin/images/'.$languages[$i]['image']); ?></div><?php echo TEXT_PAYPAL_MODULE_PROFILE; ?></td>
+                      <td class="dataTableConfig col-middle"><?php echo xtc_draw_pull_down_menu('config[profile][PAYPAL_'.strtoupper($module->code.'_'.$languages[$i]['code']).'_PROFILE]', $profile_array, $paypal->get_config('PAYPAL_'.strtoupper($module->code.'_'.$languages[$i]['code']).'_PROFILE')); ?></td>
+                      <td class="dataTableConfig col-right"></td>
+                    </tr>
+                    <?php
                     }
                   }
-                  for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-                  ?>
-                  <tr>
-                    <td class="dataTableConfig col-left"><div style="float:left;margin-right:5px;"><?php echo xtc_image(DIR_WS_LANGUAGES.$languages[$i]['directory'].'/admin/images/'.$languages[$i]['image']); ?></div><?php echo TEXT_PAYPAL_MODULE_PROFILE; ?></td>
-                    <td class="dataTableConfig col-middle"><?php echo xtc_draw_pull_down_menu('config[profile][PAYPAL_'.strtoupper($module->code.'_'.$languages[$i]['code']).'_PROFILE]', $profile_array, $paypal->get_config('PAYPAL_'.strtoupper($module->code.'_'.$languages[$i]['code']).'_PROFILE')); ?></td>
-                    <td class="dataTableConfig col-right"></td>
-                  </tr>
-                  <?php
-                  }
-                                               
+                                         
                   if ($module->code == 'paypalplus') {
                     ?>
                     <tr>
@@ -374,6 +437,7 @@ require (DIR_WS_INCLUDES.'head.php');
                             <?php
                               if ($module->_check == 1) {
                                 echo '<a class="button" href="'.xtc_href_link(basename($PHP_SELF), 'action=edit&module='.$module->code).'">'.BUTTON_EDIT.'</a>';
+                                echo '<a class="button" href="'.xtc_href_link(basename($PHP_SELF), 'action=remove&module='.$module->code).'">'.BUTTON_MODULE_REMOVE.'</a>';
                               } else {
                                 echo '<a class="button" href="'.xtc_href_link(basename($PHP_SELF), 'action=install&module='.$module->code).'">'.BUTTON_MODULE_INSTALL.'</a>';                            
                               }

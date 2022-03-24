@@ -33,8 +33,14 @@ $lang_array = array(
   'TEXT_PAYPAL_MODULE_LINK_ACCOUNT' => 'Link im Account',
   'TEXT_PAYPAL_MODULE_LINK_ACCOUNT_INFO' => 'Soll der Zahllink im Account angezeigt werden?',
 
-  'TEXT_PAYPAL_MODULE_LINK_PRODUCT' => 'Express Button beim Artikel',
-  'TEXT_PAYPAL_MODULE_LINK_PRODUCT_INFO' => 'Soll der PayPal Express Button in den Artikel Infos angezeigt werden?',
+  'TEXT_PAYPAL_MODULE_PRODUCT' => 'Express Button beim Artikel',
+  'TEXT_PAYPAL_MODULE_PRODUCT_INFO' => 'Soll der PayPal Express Button in den Artikel Infos angezeigt werden?',
+
+  'TEXT_PAYPAL_MODULE_CART_BNPL' => 'Später bezahlen Button im Warenkorb',
+  'TEXT_PAYPAL_MODULE_CART_BNPL_INFO' => 'Soll der PayPal Später bezahlen Button im Warenkorb angezeigt werden?',
+
+  'TEXT_PAYPAL_MODULE_PRODUCT_BNPL' => 'Später bezahlen Button beim Artikel',
+  'TEXT_PAYPAL_MODULE_PRODUCT_BNPL_INFO' => 'Soll der PayPal Später bezahlen Button in den Artikel Infos angezeigt werden?',
 
   'TEXT_PAYPAL_MODULE_USE_TABS' => 'Accordion / Tabs',
   'TEXT_PAYPAL_MODULE_USE_TABS_INFO' => 'Verwendet das Template Accordion oder Tabs im Checkout?',

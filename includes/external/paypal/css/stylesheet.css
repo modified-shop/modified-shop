@@ -223,3 +223,11 @@ margin-top: 0px !important;
 a[data-paypal-button="PPLtBlue"]:hover {
 opacity:0.7;
 }
+
+.pp_tracking .tracking_row {
+  background:yellow;
+  border-top:1px solid red;
+  padding: 3px 0px;
+}
+
+

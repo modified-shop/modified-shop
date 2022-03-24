@@ -1,0 +1,36 @@
+<link rel="stylesheet" property="stylesheet" href="{$smarty.const.DIR_WS_EXTERNAL}paypal/css/apms.css" type="text/css" media="screen" />
+
+<div class="apms_form">
+  <div class="apms_form_inner">
+    <div id="apms_error" class="errormessage"></div>
+    
+    <div class="apms_container">  
+      <div class="apms_container_row">
+        <div class="apms_container_full">
+          <label for="card-number">{$smarty.const.MODULE_PAYMENT_PAYPALACDC_TEXT_CARDNUMBER}</label>
+          <div id="card-number" class="apms_field"></div>
+        </div>
+      </div>
+    
+      <div class="apms_container_row">
+        <div class="apms_container_half">
+          <label for="expiration-date">{$smarty.const.MODULE_PAYMENT_PAYPALACDC_TEXT_EXPIRATION}</label>
+          <div id="expiration-date" class="apms_field"></div>
+        </div>
+        <div class="apms_container_half">
+          <label for="cvv">{$smarty.const.MODULE_PAYMENT_PAYPALACDC_TEXT_CVV}</label>
+          <div id="cvv" class="apms_field"></div>
+        </div>
+      </div>
+    
+      <div class="apms_container_row">
+        <div class="apms_container_full">
+          <label for="card-holder">{$smarty.const.MODULE_PAYMENT_PAYPALACDC_TEXT_CARDHOLDER}</label>
+          <div class="apms_field"><input type="text" id="card-holder" name="card-holder" autocomplete="off" /></div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="apms_overlay"></div>
+  </div>
+</div>

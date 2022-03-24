@@ -120,6 +120,105 @@ class Product extends PayPalResourceModel
     }
 
     /**
+     * The vetting status of the product, if applicable.
+     *
+     * @param string $vetting_status
+     * 
+     * @return $this
+     */
+    public function setVettingStatus($vetting_status)
+    {
+        $this->vetting_status = $vetting_status;
+        return $this;
+    }
+
+    /**
+     * The vetting status of the product, if applicable.
+     *
+     * @return string
+     */
+    public function getVettingStatus()
+    {
+        return $this->vetting_status;
+    }
+
+    /**
+     * An array of capabilities associated with the products integrated between seller and partner.
+     *
+     * @param \PayPal\Api\Capabilities[] $capabilities
+     * 
+     * @return $this
+     */
+    public function setCapabilities($capabilities)
+    {
+        $this->capabilities = $capabilities;
+        return $this;
+    }
+
+    /**
+     * An array of capabilities associated with the products integrated between seller and partner.
+     *
+     * @return \PayPal\Api\Capabilities[]
+     */
+    public function getCapabilities()
+    {
+        return $this->capabilities;
+    }
+
+    /**
+     * Append Capabilities to the list.
+     *
+     * @param \PayPal\Api\Capabilities $capabilities
+     * @return $this
+     */
+    public function addCapabilities($capabilities)
+    {
+        if (!$this->getCapabilities()) {
+            return $this->setCapabilities(array($capabilities));
+        } else {
+            return $this->setCapabilities(
+                array_merge($this->getCapabilities(), array($capabilities))
+            );
+        }
+    }
+
+    /**
+     * Remove Capabilities from the list.
+     *
+     * @param \PayPal\Api\Capabilities $capabilities
+     * @return $this
+     */
+    public function removeCapabilities($capabilities)
+    {
+        return $this->setCapabilities(
+            array_diff($this->getCapabilities(), array($capabilities))
+        );
+    }
+
+    /**
+     * Indicates whether the product is active.
+     *
+     * @param string $active
+     *
+     * @return $this
+     */
+    public function setActive($active)
+    {
+        $this->active = $active;
+        return $this;
+    }
+
+    /**
+     * Indicates whether the product is active.
+     *
+     * @return bool
+     */
+    public function getActive()
+    {
+        return $this->active;
+    }
+
+    /**
      * Category type of the item.
      * Valid Values: [see https://developer.paypal.com/docs/api/catalog-products/v1/#definition-product_category]
      * @param string $category
