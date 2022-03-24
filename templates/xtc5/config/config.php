@@ -38,4 +38,4 @@
   
   
   // set base
-  define('DIR_WS_BASE', xtc_href_link('', '', $request_type, false, false));
+  defined('DIR_WS_BASE') OR define('DIR_WS_BASE', xtc_href_link('', '', $request_type, false, false));
