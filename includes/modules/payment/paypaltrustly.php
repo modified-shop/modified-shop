@@ -61,18 +61,18 @@ class paypaltrustly extends PayPalPaymentV2 {
 
     $_SESSION['paypal'] = array(
       'cartID' => $_SESSION['cart']->cartID,
-      'orderID' => $this->CreateOrder($payment_source),
+      'OrderID' => $this->CreateOrder($payment_source),
       'PayerID' => ''
     );
 
-    if ($_SESSION['paypal']['orderID'] == '') {
+    if ($_SESSION['paypal']['OrderID'] == '') {
       xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
     }
   }
 
 
   function before_process() {	  
-    $PayPalOrder = $this->GetOrder($_SESSION['paypal']['orderID']);
+    $PayPalOrder = $this->GetOrder($_SESSION['paypal']['OrderID']);
 
     if ($PayPalOrder->status == 'PAYER_ACTION_REQUIRED') {
       foreach ($PayPalOrder->links as $links) {
