@@ -378,21 +378,25 @@ class categories {
       }
     
       //get descriptions
-      $cdcopy_query = xtc_db_query("SELECT * 
-                                      FROM ".TABLE_CATEGORIES_DESCRIPTION." 
-                                     WHERE categories_id = '".$src_category_id."'");
+      $languages = xtc_get_languages();
+      for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {        
+        $cdcopy_query = xtc_db_query("SELECT * 
+                                        FROM ".TABLE_CATEGORIES_DESCRIPTION." 
+                                       WHERE categories_id = '".$src_category_id."'
+                                         AND language_id = '".$languages[$i]['id']."'");
 
-      //copy descriptions
-      while ($cdcopy_values = xtc_db_fetch_array($cdcopy_query)) {
-        $sql_data_array = $cdcopy_values;
-        //new module support
-        $sql_data_array = $this->catModules->copy_category_desc($sql_data_array,$src_category_id,$dest_category_id,$ctype,$new_cat_id);
-        //set new descriptions (overrides)
-        $sql_data_array['categories_id'] = $new_cat_id;
-        //write descriptions to DB
-        xtc_db_perform(TABLE_CATEGORIES_DESCRIPTION, $sql_data_array);
+        //copy descriptions
+        while ($cdcopy_values = xtc_db_fetch_array($cdcopy_query)) {
+          $sql_data_array = $cdcopy_values;
+          //new module support
+          $sql_data_array = $this->catModules->copy_category_desc($sql_data_array,$src_category_id,$dest_category_id,$ctype,$new_cat_id);
+          //set new descriptions (overrides)
+          $sql_data_array['categories_id'] = $new_cat_id;
+          //write descriptions to DB
+          xtc_db_perform(TABLE_CATEGORIES_DESCRIPTION, $sql_data_array);
+        }
       }
-
+      
       //get child categories of current category
       $crcopy_query = xtc_db_query("SELECT categories_id 
                                       FROM ".TABLE_CATEGORIES." 
@@ -917,23 +921,28 @@ class categories {
 
     //new module support
     $sql_data_array = $this->catModules->duplicate_product_after($sql_data_array,$src_products_id,$dest_categories_id,$this->dup_products_id);
+
     //get description data
-    $description_query = xtc_db_query("SELECT * 
-                                         FROM ".TABLE_PRODUCTS_DESCRIPTION."
-                                        WHERE products_id = '".$src_products_id."'");
+    $languages = xtc_get_languages();
+    for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {        
+      $description_query = xtc_db_query("SELECT * 
+                                           FROM ".TABLE_PRODUCTS_DESCRIPTION."
+                                          WHERE products_id = '".$src_products_id."'
+                                            AND language_id = '".$languages[$i]['id']."'");
 
-    while ($description = xtc_db_fetch_array($description_query)) {
-      //copy description data
-      $sql_data_array = $description;
-      //new module support
-      $sql_data_array = $this->catModules->duplicate_product_desc($sql_data_array,$src_products_id,$dest_categories_id,$this->dup_products_id);
-      //set description data (overrides)
-      $sql_data_array['products_id'] = $this->dup_products_id;
-      $sql_data_array['products_viewed'] = 0;
-      //write description data to DB
-      xtc_db_perform(TABLE_PRODUCTS_DESCRIPTION, $sql_data_array);
+      while ($description = xtc_db_fetch_array($description_query)) {
+        //copy description data
+        $sql_data_array = $description;
+        //new module support
+        $sql_data_array = $this->catModules->duplicate_product_desc($sql_data_array,$src_products_id,$dest_categories_id,$this->dup_products_id);
+        //set description data (overrides)
+        $sql_data_array['products_id'] = $this->dup_products_id;
+        $sql_data_array['products_viewed'] = 0;
+        //write description data to DB
+        xtc_db_perform(TABLE_PRODUCTS_DESCRIPTION, $sql_data_array);
+      }
     }
-
+    
     $sql_data_array = array(
       'products_id' => $this->dup_products_id,
       'categories_id' => $dest_categories_id
