@@ -23,8 +23,8 @@
 
     $paypalscript = '';
     if (!isset($_SESSION['paypal_instruments']) 
-        && ((defined('MODULE_PAYMENT_PAYPALSEPA_STATUS') && MODULE_PAYMENT_PAYPALSEPA_STATUS == 'true')
-            || (defined('MODULE_PAYMENT_PAYPALCARD_STATUS') && MODULE_PAYMENT_PAYPALCARD_STATUS == 'true')
+        && ((defined('MODULE_PAYMENT_PAYPALSEPA_STATUS') && MODULE_PAYMENT_PAYPALSEPA_STATUS == 'True')
+            || (defined('MODULE_PAYMENT_PAYPALCARD_STATUS') && MODULE_PAYMENT_PAYPALCARD_STATUS == 'True')
             )
         && (isset($_SESSION['customer_id']) 
             || strpos(basename($PHP_SELF), 'account') !== false
