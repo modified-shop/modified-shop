@@ -29,7 +29,7 @@ class paypalpui extends PayPalPaymentV2 {
 
     PayPalPaymentV2::__construct('paypalpui');
 
-    if (is_object($order) && !defined('RUN_MODE_ADMIN')) {
+    if (PayPalPaymentBase::check_install() === true) {
       $this->tmpOrders = true;
       $this->tmpStatus = $this->get_config('PAYPAL_ORDER_STATUS_PENDING_ID');
       $this->form_action_url = '';
@@ -247,7 +247,6 @@ class paypalpui extends PayPalPaymentV2 {
     }
 
     $result = $this->CreateOrder($payment_source, true);
-    error_log('Order created for oID-'.$_SESSION['tmp_oID'].': '.date('d.m.Y H:i:s')."\n", 3, DIR_FS_LOG.'time.log');
 
     if (is_array($result)) {
       if (isset($result['details'])
