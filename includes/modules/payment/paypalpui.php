@@ -272,9 +272,7 @@ class paypalpui extends PayPalPaymentV2 {
       sleep($wait);
 
       $PayPalOrder = $this->GetOrder($_SESSION['paypal']['OrderID']);
-      error_log('call '.$i.' for oID-'.$_SESSION['tmp_oID'].': '.date('d.m.Y H:i:s')."\n", 3, DIR_FS_LOG.'time.log');
       if ($PayPalOrder->status == 'COMPLETED' || $PayPalOrder->status == 'PENDING_APPROVAL') {
-        error_log('completed: '.date('d.m.Y H:i:s')."\n", 3, DIR_FS_LOG.'time.log');
 
         if ($PayPalOrder->status == 'COMPLETED') {
           $paypal->FinishOrderPui($_SESSION['tmp_oID'], $PayPalOrder);
@@ -297,20 +295,23 @@ class paypalpui extends PayPalPaymentV2 {
 
     $PayPalOrder = $this->GetOrder($_SESSION['paypal']['OrderID']);
 
-    $status_id = $this->order_status_pending;
-    if ($PayPalOrder->status == 'COMPLETED') {
-      $status_id = $this->order_status_success;
-    }
-
     $transaction_id = '';
-    if (isset($PayPalOrder->purchase_units[0]->payments)) {
-      $transaction_id = $PayPalOrder->purchase_units[0]->payments->captures[0]->id;
-    }
+    $status_id = $this->order_status_pending;
+    
+    if (is_object($PayPalOrder)) {
+      if ($PayPalOrder->status == 'COMPLETED') {
+        $status_id = $this->order_status_success;
+      }
 
-    if (isset($PayPalOrder->payer->payer_id)) {
-      $_SESSION['paypal']['PayerID'] = $PayPalOrder->payer->payer_id;
-    }
+      if (isset($PayPalOrder->purchase_units[0]->payments)) {
+        $transaction_id = $PayPalOrder->purchase_units[0]->payments->captures[0]->id;
+      }
 
+      if (isset($PayPalOrder->payer->payer_id)) {
+        $_SESSION['paypal']['PayerID'] = $PayPalOrder->payer->payer_id;
+      }
+    }
+    
     $sql_data_array = array(
       'orders_id' => $insert_id,
       'payment_id' => $_SESSION['paypal']['OrderID'],
