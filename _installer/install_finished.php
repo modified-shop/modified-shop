@@ -62,11 +62,12 @@
          ->SetCaching(0);
   
   $payment_methods_array = array(
-    'paypalclassic',
-    'paypalplus',
-
-    'paypallink',
-    'paypalpluslink',
+    'paypal',
+    'paypalexpress',
+    'paypalpui',
+    'paypalsepa',
+    'paypalacdc',
+    'paypalcard',
   );
   
   $directory_array = array(
