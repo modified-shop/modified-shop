@@ -255,14 +255,7 @@
         }
         ?>
         <tr <?php echo $tr_attribute;?>>
-          <td class="dataTableContent">
-            <?php
-              echo $module->title;
-              if (isset($module->icons_available)) {
-                echo '<br />'.$module->icons_available;
-              }
-            ?>
-          </td>
+          <td class="dataTableContent"><?php echo $module->title; ?></td>
           <td class="dataTableContent"><?php echo str_replace('.php','',$file); ?></td>
           <td class="dataTableContent txta-r">
           <?php if (isset($module->sort_order) && is_numeric($module->sort_order)) echo $module->sort_order; ?>&nbsp;</td>

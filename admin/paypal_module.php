@@ -409,9 +409,6 @@ require (DIR_WS_INCLUDES.'head.php');
                           <td class="dataTableContent">
                             <?php
                               echo $module->title;
-                              if (isset($module->icons_available)) {
-                                echo '<br />'.$module->icons_available;
-                              }
                             ?>
                           </td>
                           <td class="dataTableContent">
