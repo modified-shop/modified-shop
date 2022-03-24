@@ -115,7 +115,7 @@ if ($order->delivery['country']['iso_code_2'] != '') {
 }
 
 if (isset($this->delivery['delivery_zone']) && $this->delivery['delivery_zone'] != '') {
-	$_SESSION['delivery_zone'] = $this->delivery['delivery_zone'];
+	$_SESSION['delivery_zone'] = $order->delivery['delivery_zone'];
 }
 
 // load all enabled shipping modules

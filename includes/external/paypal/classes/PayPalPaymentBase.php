@@ -168,7 +168,7 @@ class PayPalPaymentBase extends PayPalCommon {
       }
 
       if (isset($this->delivery['delivery_zone']) && $this->delivery['delivery_zone'] != '') {
-        $_SESSION['delivery_zone'] = $this->delivery['delivery_zone'];
+        $_SESSION['delivery_zone'] = $order->delivery['delivery_zone'];
       }
 
       if ($order->billing['country']['iso_code_2'] != '') {
@@ -199,7 +199,7 @@ class PayPalPaymentBase extends PayPalCommon {
     }
 
     if (isset($this->delivery['delivery_zone']) && $this->delivery['delivery_zone'] != '') {
-      $_SESSION['delivery_zone'] = $this->delivery['delivery_zone'];
+      $_SESSION['delivery_zone'] = $order->delivery['delivery_zone'];
     }
 
     if ($order->billing['country']['iso_code_2'] != '') {
