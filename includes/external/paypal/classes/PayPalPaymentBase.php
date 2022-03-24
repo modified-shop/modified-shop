@@ -648,11 +648,14 @@ class PayPalPaymentBase extends PayPalCommon {
 
   function check_install() {
     if (!isset($this->_check_install)) {
-      $check_query = xtc_db_query("SHOW TABLES LIKE '".TABLE_PAYPAL_CONFIG."'");
-      if (xtc_db_num_rows($check_query) > 0) {
+      if (defined('MODULE_PAYMENT_PAYPAL_SECRET')) {
         $this->_check_install = true;
       } else {
         $this->_check_install = false;
+        $check_query = xtc_db_query("SHOW TABLES LIKE '".TABLE_PAYPAL_CONFIG."'");
+        if (xtc_db_num_rows($check_query) > 0) {
+          $this->_check_install = true;
+        }
       }
     }
     return $this->_check_install;
