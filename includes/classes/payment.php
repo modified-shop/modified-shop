@@ -52,9 +52,16 @@
           $modules = explode(';', $_SESSION['paypal']['payment_modules']);
         } else {
           $modules = explode(';', MODULE_PAYMENT_INSTALLED);
-          $key = array_search('paypalcart.php', $modules);
-          if ($key !== false) {
-            unset($modules[$key]);
+          
+          $disable_modules = array(
+            'paypalcart.php',
+            'paypalexpress.php'
+          );
+          foreach ($disable_modules as $disable_module) {
+            $key = array_search($disable_module, $modules);
+            if ($key !== false) {
+              unset($modules[$key]);
+            }
           }
         }
         

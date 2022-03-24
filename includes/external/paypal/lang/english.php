@@ -24,6 +24,7 @@ $lang_array = array(
   'TEXT_PAYPAL_TRANSACTION_ACCOUNT_STATE' => 'Account Status:',
   'TEXT_PAYPAL_TRANSACTION_INTENT' => 'Intent:',
   'TEXT_PAYPAL_TRANSACTION_STATE' => 'Status:',
+  'TEXT_PAYPAL_TRANSACTION_ID' => 'ID:',
   
   
   // transactions
@@ -34,6 +35,7 @@ $lang_array = array(
   'TEXT_PAYPAL_TRANSACTIONS_TOTAL' => 'Amount:',
   'TEXT_PAYPAL_TRANSACTIONS_VALID' => 'valid to:',
   'TEXT_PAYPAL_TRANSACTIONS_ID' => 'ID:',
+  'TEXT_PAYPAL_TRANSACTIONS_FEE' => 'Fee:',
   
   
   // instruction
@@ -55,6 +57,7 @@ $lang_array = array(
   'TEXT_PAYPAL_REFUND_COMMENT' => 'Comment:<br />(max 127 characters)',
   'TEXT_PAYPAL_REFUND_AMOUNT' => 'Amount:',
   'TEXT_PAYPAL_REFUND_SUBMIT' => 'Refund',
+  'TEXT_PAYPAL_REFUND_CAPTURE' => 'Capture:',
   
   
   // capture
@@ -64,12 +67,13 @@ $lang_array = array(
   'TEXT_PAYPAL_CAPTURE_AMOUNT' => 'Amount:',
   'TEXT_PAYPAL_CAPTURE_SUBMIT' => 'Capture',
   'TEXT_PAYPAL_CAPTURED' => 'Payment captured',
-  
+  'TEXT_PAYPAL_CAPTURE_AUTHORIZE' => 'Authorize:',
+
   
   // tracking
   'TEXT_PAYPAL_TRACKING' => 'Tracking:',
   'TEXT_PAYPAL_ADDTRACKING' => 'Tracking',
-  'TEXT_PAYPAL_TRACKING_SUBMIT' => 'Add Tracking number',
+  'TEXT_PAYPAL_TRACKING_SUBMIT' => 'Sendungsnummer hinzuf&uuml;gen',
 
 
   // products

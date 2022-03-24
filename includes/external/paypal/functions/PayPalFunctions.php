@@ -50,6 +50,54 @@ function get_third_party_payments() {
 }
 
 
+function get_paypal_js_sdk($lient_id, $currency, $intent, $commit, $client_token, $custom) {
+  static $output;
+  
+  if (!isset($output)) {
+    $output = true;
+    
+    $js = xtc_href_link(DIR_WS_EXTERNAL.'paypal/js/paypal-js.min.js', '', 'SSL', false);
+    $script = '<script type="module">
+      import { loadScript } from "'.$js.'";
+    ';
+    
+    if ($custom === true) {
+      $script = '<script type="module">
+        import { loadCustomScript } from "'.$js.'";
+        %s
+      </script>';
+      
+      return $script;
+    }
+    
+    $script .= '
+      let paypal;
+
+      try {
+        paypal = await loadScript({
+          "client-id": "'.$lient_id.'",
+          "currency": "'.$currency.'",
+          "intent": "'.strtolower($intent).'",
+          "commit": "'.$commit.'",
+          "locale": "'.$_SESSION['language_code'].'_'.strtoupper($_SESSION['language_code']).'",
+          "enable-funding": "paylater",
+          '.(($client_token !== false) ? '"data-client-token": "'.$client_token.'",' : '').'
+          "components": "buttons,funding-eligibility,messages,hosted-fields"
+        });
+      } catch (error) {
+        console.error("failed to load the PayPal JS SDK script", error);
+      }
+
+      if (paypal) {
+        %s
+      }
+    </script>';
+    
+    return $script;
+  }
+}
+
+
 /*
  * compatibility functions
  */

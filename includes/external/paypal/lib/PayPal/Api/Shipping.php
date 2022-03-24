@@ -395,7 +395,7 @@ class Shipping extends PayPalResourceModel
     }
 
     /**
-     * An array of errors.
+     * A single ASCII error code from the following enum.
      *
      * @param string $errors
      * 
@@ -408,7 +408,7 @@ class Shipping extends PayPalResourceModel
     }
 
     /**
-     * An array of errors.
+     * A single ASCII error code from the following enum.
      *
      * @return \PayPal\Api\Error[]
      */

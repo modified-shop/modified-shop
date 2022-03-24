@@ -20,6 +20,9 @@ $bootstrap->init();
 // used classes
 use PayPal\Rest\ApiContext;
 use PayPal\Auth\OAuthTokenCredential;
+use PayPalCheckoutSdk\Core\PayPalHttpClient;
+use PayPalCheckoutSdk\Core\LiveEnvironment;
+use PayPalCheckoutSdk\Core\SandboxEnvironment;
 
 
 class PayPalAuth {
@@ -64,6 +67,27 @@ class PayPalAuth {
     }
     
     return $apiContext;
+  }
+  
+
+  protected function GetClient() {
+    return new PayPalHttpClient($this->GetEnvironment());
+  }
+
+
+  protected function GetEnvironment() {    
+    $client_id = $this->get_config('PAYPAL_CLIENT_ID_'.strtoupper($this->get_config('PAYPAL_MODE')));
+    $client_secret = $this->get_config('PAYPAL_SECRET_'.strtoupper($this->get_config('PAYPAL_MODE')));
+
+    switch ($this->get_config('PAYPAL_MODE')) {
+      case 'sandbox':
+        return new SandboxEnvironment($client_id, $client_secret);
+        break;
+
+      case 'live':
+        return new LiveEnvironment($client_id, $client_secret);
+        break;
+    }
   }
   
 }

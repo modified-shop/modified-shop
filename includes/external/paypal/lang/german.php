@@ -24,6 +24,7 @@ $lang_array = array(
   'TEXT_PAYPAL_TRANSACTION_ACCOUNT_STATE' => 'Account Status:',
   'TEXT_PAYPAL_TRANSACTION_INTENT' => 'Intent:',
   'TEXT_PAYPAL_TRANSACTION_STATE' => 'Status:',
+  'TEXT_PAYPAL_TRANSACTION_ID' => 'ID:',
   
   
   // transactions
@@ -34,6 +35,7 @@ $lang_array = array(
   'TEXT_PAYPAL_TRANSACTIONS_TOTAL' => 'Betrag:',
   'TEXT_PAYPAL_TRANSACTIONS_VALID' => 'G&uuml;ltig bis:',
   'TEXT_PAYPAL_TRANSACTIONS_ID' => 'ID:',
+  'TEXT_PAYPAL_TRANSACTIONS_FEE' => 'Geb&uuml;hr:',
   
   
   // instruction
@@ -55,6 +57,7 @@ $lang_array = array(
   'TEXT_PAYPAL_REFUND_COMMENT' => 'Kommentar:<br />(maximal 127 Zeichen)',
   'TEXT_PAYPAL_REFUND_AMOUNT' => 'Betrag:',
   'TEXT_PAYPAL_REFUND_SUBMIT' => 'R&uuml;ckzahlung',
+  'TEXT_PAYPAL_REFUND_CAPTURE' => 'Einziehung:',
   
   
   // capture
@@ -64,14 +67,15 @@ $lang_array = array(
   'TEXT_PAYPAL_CAPTURE_AMOUNT' => 'Betrag:',
   'TEXT_PAYPAL_CAPTURE_SUBMIT' => 'Zahlung einziehen',
   'TEXT_PAYPAL_CAPTURED' => 'Zahlung eingezogen',
-
-
+  'TEXT_PAYPAL_CAPTURE_AUTHORIZE' => 'Authorisierung:',
+  
+  
   // tracking
   'TEXT_PAYPAL_TRACKING' => 'Tracking:',
   'TEXT_PAYPAL_ADDTRACKING' => 'Tracking',
   'TEXT_PAYPAL_TRACKING_SUBMIT' => 'Sendungsnummer hinzuf&uuml;gen',
 
-  
+
   // products
   'TEXT_PAYPAL_PRODUCTS_TYPE' => 'Produktart',
   'TEXT_PAYPAL_CREATE_PRODUCT' => 'Artikel erstellen',
@@ -117,7 +121,7 @@ $lang_array = array(
   'TEXT_PAYPAL_BILLING_FAILED' => 'Fehlgeschlagen:',
   'TEXT_PAYPAL_CANCEL' => 'Zahlungen abbrechen',
   'TEXT_PAYPAL_CANCEL_SUBMIT' => 'Best&auml;tigen',
-  
+
   // error
   'TEXT_PAYPAL_ERROR_AMOUNT' => 'Bitte geben Sie einen Betrag ein.',
   'TEXT_PAYPAL_ERROR_ALREADY_PAID' => 'Wir haben Ihre Zahlung bereits erhalten. Vielen Dank!',

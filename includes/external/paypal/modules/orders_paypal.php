@@ -11,14 +11,31 @@
    ---------------------------------------------------------------------------------------*/
 
 if (isset($order) && is_object($order)) {
-  if ($order->info['payment_method'] == 'paypalclassic' 
-      || $order->info['payment_method'] == 'paypalcart'
-      || $order->info['payment_method'] == 'paypalplus'
-      || $order->info['payment_method'] == 'paypallink'
-      || $order->info['payment_method'] == 'paypalpluslink'
-      || $order->info['payment_method'] == 'paypalsubscription'
-      ) 
-  {
+  $orders_array = array(
+    'paypalclassic',
+    'paypalcart',
+    'paypalplus',
+    'paypallink',
+    'paypalpluslink',
+    'paypalsubscription',
+    'paypal',
+    'paypalacdc',
+    'paypalpui',
+    'paypalexpress',
+    'paypalcard',
+    'paypalsepa',
+    'paypalsofort',
+    'paypaltrustly',
+    'paypalprzelewy',
+    'paypalmybank',
+    'paypalideal',
+    'paypalgiropay',
+    'paypaleps',
+    'paypalblik',
+    'paypalbancontact',
+  );
+  
+  if (in_array($order->info['payment_method'], $orders_array)) {
     require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalInfo.php');
     $paypal = new PayPalInfo($order->info['payment_method']);        
     ?>

@@ -28,6 +28,15 @@ $lang_array = array(
   'TEXT_PAYPAL_CONFIG_MODE' => 'Mode:',
   'TEXT_PAYPAL_CONFIG_MODE_INFO' => '',
 
+  'TEXT_PAYPAL_CONFIG_MERCHANT_ID' => 'Merchant ID:',
+  'TEXT_PAYPAL_CONFIG_MERCHANT_ID_INFO' => 'Merchant ID of your merchant account. If you do not have it, request the data for Client ID and Secret again. This will automatically determine the Merchant ID.',
+
+  'TEXT_PAYPAL_CONFIG_STATUS_ACDC' => 'Status Kreditkarte:',
+  'TEXT_PAYPAL_CONFIG_STATUS_ACDC_INFO' => 'If the status is yellow, contact PayPal support. If the status is red, the service for your account is not available at the moment.',
+
+  'TEXT_PAYPAL_CONFIG_STATUS_PUI' => 'Status Pay upon invoice:',
+  'TEXT_PAYPAL_CONFIG_STATUS_PUI_INFO' => 'If the status is yellow, contact PayPal support. If the status is red, the service for your account is not available at the moment.',
+
   'TEXT_PAYPAL_CONFIG_INVOICE_PREFIX' => 'Prefix for order ID:',
   'TEXT_PAYPAL_CONFIG_INVOICE_PREFIX_INFO' => 'Arbitrary string of letters (prefix), which is placed in front of each order number and is used for generating the PayPal invoice number.<br />This allows multiple store operation with only one PayPal App. Conflicts regarding the order numbers are avoided. Each order has its own invoice numbers within the PayPal account.',
 
