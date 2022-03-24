@@ -45,8 +45,7 @@ class fcnt_moneybookers {
 		$this->transaction_id = '';
 	}
 	
-	function _setCode($code='CC',$payment_method='ACC') {
-		
+	function _setCode($code='CC',$payment_method='ACC') {		
 		$this->module = $code;
 		$this->method = $payment_method;
 		
@@ -63,16 +62,6 @@ class fcnt_moneybookers {
 			$this->enabled = ((constant('MODULE_PAYMENT_MONEYBOOKERS_'.strtoupper($code).'_STATUS') == 'True') ? true : false);
 			$this->tmpStatus = constant('_PAYMENT_MONEYBOOKERS_TMP_STATUS_ID');
 		}
-
-		if (defined('_VALID_XTC')) {
-			$icons = explode(',', $this->images);
-			$accepted='';
-			foreach ($icons as $key => $val)
-				$accepted .= xtc_image('../images/icons/moneybookers/'. $val) . ' ';
-			if ($this->allowed!='') $this->title.=' ('.$this->allowed.')';
-				$this->title .='<br />'.$accepted;
-		}
-		
 	}
 	
 	function javascript_validation() {
