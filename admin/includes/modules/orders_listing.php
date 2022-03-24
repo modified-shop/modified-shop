@@ -31,7 +31,10 @@
       include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $payments['payment_class'].'.php');
       $payment_text = constant('MODULE_PAYMENT_'.strtoupper($payments['payment_class']).'_TEXT_TITLE');
     } 
-    $payment_array[] = array('id' => $payments['payment_class'], 'text' => $payment_text);
+    $payment_array[] = array(
+      'id' => $payments['payment_class'],
+      'text' => $payment_text.' ('.$payments['payment_class'].')'
+    );
   }  
   ?>
   
