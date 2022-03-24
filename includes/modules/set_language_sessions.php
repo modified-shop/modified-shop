@@ -14,18 +14,17 @@ $language_not_found = false;
 
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/set_language_sessions/','php') as $file) require_once ($file); 
 
-if (!isset($_SESSION['language']) 
-    || isset($_GET['language']) 
-    || (isset($_SESSION['language']) && !isset($_SESSION['language_charset']))
+if (isset($_GET['language'])
+    || !isset($_SESSION['language'])
+    || !isset($_SESSION['languages_id'])
+    || !isset($_SESSION['language_charset'])
+    || !isset($_SESSION['language_code'])
     )
 {
   require_once (DIR_WS_CLASSES.'language.php');
   
   if (isset($_GET['language'])) {
-    $_GET['language'] = xtc_input_validation($_GET['language'], 'lang');
-    $lng = new language($_GET['language']);
-  } elseif (isset($_SESSION['language']) && isset($_SESSION['language_code'])) {
-    $lng = new language(xtc_input_validation($_SESSION['language_code'], 'lang'));
+    $lng = new language(xtc_input_validation($_GET['language'], 'lang'));
   } else {
     $lng = new language(xtc_input_validation(DEFAULT_LANGUAGE, 'lang'));
     if (USE_BROWSER_LANGUAGE == 'true') {
