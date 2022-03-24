@@ -1,9 +1,7 @@
-
   .button_right_checkout {
     float:none;
     display:block; 
   }
-
   .apms_form {
     margin: 0 0 15px 0;
     text-align:left;
@@ -69,16 +67,6 @@
     height:40px;
     background:#fff;    
   }  
-/*
-  .apms_container  .apms_field:before {
-    content:'huhu';
-    position:absolute;
-    top:40px;
-    right:20px;
-    font-size:12px;
-    font-weight:700px;
-  }
-*/
   .apms_container input {
     width: 100%;
     height:28px;
@@ -87,8 +75,7 @@
     box-sizing: border-box;
     border: none !important;
     background: transparent !important;
-  }  
-  
+  }    
   .apms_overlay {
     display:block;
     z-index:1;
@@ -105,10 +92,6 @@
     background-position:center center;
     background-size: 30% 30%;
   }  
-  
-  
-  
-
   .apms_form_button {
     margin: 0 0 0 0;
     text-align:left;
@@ -121,17 +104,18 @@
     min-height:35px;
     float:right;
   }
-  
   .apms_form_button.apms_nocheckout {
     width:100%;
   }  
- 
-  
   #checkout_confirmation .apms_form_button {  
     min-width:250px;
   }
-  
   .apms_form_button_inner {
+    position:relative;
+    width:100%;
+    min-height:35px;
+  }  
+  .apms_nocheckout .apms_form_button_inner {
     position:relative;
     width:100%;
     height:35px;
@@ -161,8 +145,6 @@
     background-size: 30% 30%;
     border-radius:4px;
   }  
-
-
   #apms_button1 {
     height:35px;
     margin-bottom:5px;
