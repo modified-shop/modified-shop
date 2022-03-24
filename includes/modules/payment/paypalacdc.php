@@ -24,7 +24,7 @@ class paypalacdc extends PayPalPaymentV2 {
 
     PayPalPaymentV2::__construct('paypalacdc');
 
-    if (is_object($order) && !defined('RUN_MODE_ADMIN')) {
+    if (PayPalPaymentBase::check_install() === true) {
       $this->tmpOrders = true;
       $this->tmpStatus = $this->get_config('PAYPAL_ORDER_STATUS_PENDING_ID');
       $this->form_action_url = '';
