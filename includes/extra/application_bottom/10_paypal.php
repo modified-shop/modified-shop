@@ -135,8 +135,7 @@
     {
       $paypal = new PayPalPayment('paypalinstallment');
       
-      if ($paypal->check_install() === true
-          && $paypal->get_config('PAYPAL_MODE') == 'live'
+      if ($paypal->get_config('PAYPAL_MODE') == 'live'
           && $paypal->get_config('PAYPAL_INSTALLMENT_BANNER_DISPLAY') == 1
           )
       {

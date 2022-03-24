@@ -10,15 +10,19 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
   
-  // include needed classes
-  require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPayment.php');
-  
-  $paypal = new PayPalPayment('paypalinstallment'); 
-  if ($paypal->check_install() === true
-      && $paypal->get_config('PAYPAL_MODE') == 'live'
-      && $paypal->get_config('PAYPAL_INSTALLMENT_BANNER_DISPLAY') == 1
-      && $paypal->get_config('PAYPAL_CLIENT_ID_'.strtoupper($paypal->get_config('PAYPAL_MODE'))) != ''
+  if (defined('MODULE_PAYMENT_PAYPAL_SECRET')
+      && MODULE_PAYMENT_PAYPAL_SECRET != ''
       )
   {
-    $module_smarty->assign('PAYPAL_INSTALLMENT', '<div class="pp-message"></div>');
+    // include needed classes
+    require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPayment.php');
+  
+    $paypal = new PayPalPayment('paypalinstallment'); 
+    if ($paypal->get_config('PAYPAL_MODE') == 'live'
+        && $paypal->get_config('PAYPAL_INSTALLMENT_BANNER_DISPLAY') == 1
+        && $paypal->get_config('PAYPAL_CLIENT_ID_'.strtoupper($paypal->get_config('PAYPAL_MODE'))) != ''
+        )
+    {
+      $module_smarty->assign('PAYPAL_INSTALLMENT', '<div class="pp-message"></div>');
+    }
   }
