@@ -53,7 +53,7 @@
           $sql_array[$columns] = 'null';
           break;
         default:
-          $sql_array[$columns] = "'" . xtc_db_input($values) . "'";
+          $sql_array[$columns] = "'" . (($values != '') ? xtc_db_input($values) : '') . "'";
           break;
       }
     }
