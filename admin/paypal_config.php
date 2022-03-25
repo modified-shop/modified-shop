@@ -242,7 +242,7 @@ require (DIR_WS_INCLUDES.'head.php');
               </tr>
               <tr>
                 <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_CAPTURE; ?></td>
-                <td class="dataTableConfig col-middle"><?php echo draw_on_off_selection('config[PAYPAL_CAPTURE_MANUELL]', $status_array, $paypal->get_config('PAYPAL_CAPTURE_MANUELL')); ?></td>
+                <td class="dataTableConfig col-middle"><?php echo draw_on_off_selection('config[PAYPAL_CAPTURE_MANUELL]', $status_array, (($paypal->get_config('PAYPAL_CAPTURE_MANUELL') == 1) ? true : false)); ?></td>
                 <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_CONFIG_CAPTURE_INFO; ?></td>
               </tr>
               <tr>
