@@ -333,8 +333,8 @@ define('DISPLAY_PAGE_PARSE_TIME_DESC' , 'Display the page parse time<br /><stron
 define('STORE_DB_TRANSACTIONS_TITLE' , 'Store Database Queries');
 define('STORE_DB_TRANSACTIONS_DESC' , 'Store the database queries in the page parse time log file<br/><strong>Caution: File can get very big in size in long logging sessions!</strong>.<br/><br/>The Logfile is saved in /log in the shoproot');
 
-define('USE_CACHE_TITLE' , 'Use Cache');
-define('USE_CACHE_DESC' , 'Use caching features');
+define('USE_CACHE_TITLE' , 'Use Template Cache');
+define('USE_CACHE_DESC' , 'Use Template caching features');
 
 define('DB_CACHE_TITLE','DB Cache');
 define('DB_CACHE_DESC','Cache database query results to gain more speed for slow databases.');
@@ -498,10 +498,10 @@ define('MODULE_ORDER_TOTAL_INSTALLED_DESC' , 'List of order_total module filenam
 define('MODULE_SHIPPING_INSTALLED_TITLE' , 'Installed Shipping Modules');
 define('MODULE_SHIPPING_INSTALLED_DESC' , 'List of shipping module filenames separated by a semi-colon. The list is updated automatically. No need to edit. (Example: ups.php;flat.php;item.php)');
 
-define('CACHE_LIFETIME_TITLE','Cache Lifetime');
+define('CACHE_LIFETIME_TITLE','Template Cache Lifetime');
 define('CACHE_LIFETIME_DESC','The number of seconds cached content will persist');
-define('CACHE_CHECK_TITLE','Check if Cache Modified');
-define('CACHE_CHECK_DESC','If true, then with cached content, If-Modified-Since headers are accounted for, and appropriate HTTP headers are sent. This way repeated hits to a cached page do not send the entire page to the client every time.');
+define('CACHE_CHECK_TITLE','Check Template Cache');
+define('CACHE_CHECK_DESC','If active, then with cached content, If-Modified-Since headers are accounted for, and appropriate HTTP headers are sent. This way repeated hits to a cached page do not send the entire page to the client every time.');
 
 define('PRODUCT_REVIEWS_VIEW_TITLE','Reviews in Product Details');
 define('PRODUCT_REVIEWS_VIEW_DESC','Number of reviews displayed on the product details page');
