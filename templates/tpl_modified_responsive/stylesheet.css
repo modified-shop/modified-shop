@@ -1141,7 +1141,7 @@ ul.contentnavigation {
   list-style-type:none;
   position:relative;
 }
-ul.contentnavigation li {
+ul.contentnavigation > li {
   float:left;
   padding: 0px 10px 0px 10px;
   line-height:45px;
