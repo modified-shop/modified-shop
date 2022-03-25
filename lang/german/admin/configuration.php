@@ -499,7 +499,7 @@ define('MODULE_SHIPPING_INSTALLED_DESC' , 'Liste der Versandmodul-Dateinamen (ge
 
 define('CACHE_LIFETIME_TITLE','Template Cache Lebenszeit');
 define('CACHE_LIFETIME_DESC','Zeit in Sekunden, bevor die Template Cache Dateien automatisch &uuml;berschrieben werden.');
-define('CACHE_CHECK_TITLE','Check Template Cache');
+define('CACHE_CHECK_TITLE','Pr&uuml;fe Template Cache');
 define('CACHE_CHECK_DESC','Wenn aktiv, werden If-Modified-Since headers bei gecachetem Content ber&uuml;cksichtigt und passende HTTP headers werden ausgegeben. Somit werden regelm&auml;ssig aufgerufene Seiten nicht jedesmal neu an den Client versandt.');
 
 define('PRODUCT_REVIEWS_VIEW_TITLE','Rezensionen in Artikeldetails');
