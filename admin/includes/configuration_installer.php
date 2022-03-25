@@ -236,6 +236,35 @@ $values_group_update = array();
 
 //configuration_group_id 11 --- "Cache Optionen"
   $values[] = "(NULL, 'DB_CACHE_TYPE', 'files', '11', '7', NULL, NOW(), NULL, 'xtc_cfg_pull_down_cache_type(\'DB_CACHE_TYPE\',');";
+  $values_update[] = array (
+                           'values' => "sort_order = '1'",
+                           'configuration_key' => 'DB_CACHE_TYPE'
+                           );
+  $values_update[] = array (
+                           'values' => "sort_order = '2'",
+                           'configuration_key' => 'DIR_FS_CACHE'
+                           );
+  $values_update[] = array (
+                           'values' => "sort_order = '3'",
+                           'configuration_key' => 'DB_CACHE'
+                           );
+  $values_update[] = array (
+                           'values' => "sort_order = '4'",
+                           'configuration_key' => 'DB_CACHE_EXPIRE'
+                           );
+
+  $values_update[] = array (
+                           'values' => "sort_order = '5'",
+                           'configuration_key' => 'USE_CACHE'
+                           );
+  $values_update[] = array (
+                           'values' => "sort_order = '6'",
+                           'configuration_key' => 'CACHE_LIFETIME'
+                           );
+  $values_update[] = array (
+                           'values' => "sort_order = '7'",
+                           'configuration_key' => 'CACHE_CHECK'
+                           );
 
 //configuration_group_id 12 --- "Email Optionen"
   $values[] = "(NULL, 'USE_SENDMAIL_OPTIONS', 'true', 12, 2, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";

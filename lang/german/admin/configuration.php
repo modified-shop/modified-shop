@@ -332,8 +332,8 @@ define('DISPLAY_PAGE_PARSE_TIME_DESC' , 'Wenn das Speichern der Berechnungszeite
 define('STORE_DB_TRANSACTIONS_TITLE' , 'Speichern der Datenbank Abfragen');
 define('STORE_DB_TRANSACTIONS_DESC' , 'Speichern der einzelnen Datenbank Abfragen im Logfile f&uuml;r Berechnungszeiten<br/><strong>Achtung: Datei kann bei l&auml;ngerer Laufzeit sehr gro&szlig; werden!</strong>.<br/><br/>Die Logdatei wird im Ordner /log im Hauptverzeichnis gespeichert.');
 
-define('USE_CACHE_TITLE' , 'Cache benutzen');
-define('USE_CACHE_DESC' , 'Die Cache Features verwenden.');
+define('USE_CACHE_TITLE' , 'Template Cache benutzen');
+define('USE_CACHE_DESC' , 'Die Template Cache Features verwenden.');
 
 define('DB_CACHE_TITLE','DB Cache');
 define('DB_CACHE_DESC','Datenbank-Abfragen k&ouml;nnen vom Shop gecached werden, um die Datenbank-Last zu verringern und die Geschwindigkeit zu erh&ouml;hen.');
@@ -497,10 +497,10 @@ define('MODULE_ORDER_TOTAL_INSTALLED_DESC' , 'Liste der Order-Total-Modul-Datein
 define('MODULE_SHIPPING_INSTALLED_TITLE' , 'Installierte Versand Module');
 define('MODULE_SHIPPING_INSTALLED_DESC' , 'Liste der Versandmodul-Dateinamen (getrennt durch einen Strichpunkt (;)). Diese wird automatisch aktualisiert, daher ist es nicht notwendig diese zu editieren. (Beispiel: ups.php;flat.php;item.php)');
 
-define('CACHE_LIFETIME_TITLE','Cache Lebenszeit');
-define('CACHE_LIFETIME_DESC','Zeit in Sekunden, bevor Cache Dateien automatisch &uuml;berschrieben werden.');
-define('CACHE_CHECK_TITLE','Pr&uuml;fe ob Cache modifiziert');
-define('CACHE_CHECK_DESC','Wenn "true", dann werden If-Modified-Since headers bei gecachetem Content ber&uuml;cksichtigt und passende HTTP headers werden ausgegeben. Somit werden regelm&auml;ssig aufgerufene Seiten nicht jedesmal neu an den Client versandt.');
+define('CACHE_LIFETIME_TITLE','Template Cache Lebenszeit');
+define('CACHE_LIFETIME_DESC','Zeit in Sekunden, bevor die Template Cache Dateien automatisch &uuml;berschrieben werden.');
+define('CACHE_CHECK_TITLE','Check Template Cache');
+define('CACHE_CHECK_DESC','Wenn aktiv, werden If-Modified-Since headers bei gecachetem Content ber&uuml;cksichtigt und passende HTTP headers werden ausgegeben. Somit werden regelm&auml;ssig aufgerufene Seiten nicht jedesmal neu an den Client versandt.');
 
 define('PRODUCT_REVIEWS_VIEW_TITLE','Rezensionen in Artikeldetails');
 define('PRODUCT_REVIEWS_VIEW_DESC','Anzahl der angezeigten Rezensionen in der Artikeldetailansicht');
