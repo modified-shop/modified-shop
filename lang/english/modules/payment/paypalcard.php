@@ -14,7 +14,7 @@
 $lang_array = array(
   'MODULE_PAYMENT_PAYPALCARD_TEXT_TITLE' => 'Kreditkarte via PayPal',
   'MODULE_PAYMENT_PAYPALCARD_TEXT_ADMIN_TITLE' => 'Kreditkarte via PayPal',
-  'MODULE_PAYMENT_PAYPALCARD_TEXT_INFO' => ((!defined('RUN_MODE_ADMIN') && function_exists('xtc_href_link')) ? '<img src="'.xtc_href_link(DIR_WS_ICONS.'paypal.png', '', 'SSL', false).'" />' : ''),
+  'MODULE_PAYMENT_PAYPALCARD_TEXT_INFO' => ((!defined('RUN_MODE_ADMIN') && function_exists('xtc_href_link')) ? '<img src="'.xtc_href_link(DIR_WS_ICONS.'paypal_creditcard.png', '', 'SSL', false).'" />' : ''),
   'MODULE_PAYMENT_PAYPALCARD_TEXT_DESCRIPTION' => 'After "confirm" your will be routet to PayPal to pay your order.<br />Back in shop you will get your order-mail.<br />PayPal is the safer way to pay online. We keep your details safe from others and can help you get your money back if something ever goes wrong.',
   'MODULE_PAYMENT_PAYPALCARD_ALLOWED_TITLE' => 'Allowed zones',
   'MODULE_PAYMENT_PAYPALCARD_ALLOWED_DESC' => 'Please enter the zones <b>separately</b> which should be allowed to use this module (e.g. AT,DE (leave empty if you want to allow all zones))',
