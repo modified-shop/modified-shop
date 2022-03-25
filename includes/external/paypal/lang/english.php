@@ -73,7 +73,7 @@ $lang_array = array(
   // tracking
   'TEXT_PAYPAL_TRACKING' => 'Tracking:',
   'TEXT_PAYPAL_ADDTRACKING' => 'Tracking',
-  'TEXT_PAYPAL_TRACKING_SUBMIT' => 'Sendungsnummer hinzuf&uuml;gen',
+  'TEXT_PAYPAL_TRACKING_SUBMIT' => 'Add Tracking number',
 
 
   // products
