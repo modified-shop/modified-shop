@@ -256,10 +256,10 @@
       require_once(DIR_FS_INC . 'xtc_get_products_image.inc.php');
       require_once(DIR_FS_INC . 'xtc_image_button.inc.php');
       
-      $order_lang_query = xtc_db_query("SELECT languages_id
-                                    FROM ".TABLE_LANGUAGES."
-                                   WHERE directory = '".$this->info['language']."'");
-      $order_lang_array = xtc_db_fetch_array($order_lang_query);
+      $order_lang_query = xtDBquery("SELECT languages_id
+                                       FROM ".TABLE_LANGUAGES."
+                                      WHERE directory = '".$this->info['language']."'");
+      $order_lang_array = xtc_db_fetch_array($order_lang_query, true);
       $order_lang_id = $order_lang_array['languages_id'];
 
       $order_query = "SELECT op.*,
