@@ -101,6 +101,7 @@ if ($action == 'search' && $search && $customer == '') {
                               ON o.orders_status = s.orders_status_id 
                                  AND s.language_id = '".(int)$_SESSION['languages_id']."'
                         WHERE (o.orders_id LIKE '%".xtc_db_input($search)."%'
+                               OR o.orders_ident_key LIKE '%".xtc_db_input($search)."%'
                                OR o.comments LIKE '%".xtc_db_input($search)."%'
                                ".$where.")
                      ORDER BY o.orders_id DESC";
