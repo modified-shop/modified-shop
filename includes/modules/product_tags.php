@@ -64,7 +64,7 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/product_tags.html', $ca
           'OPTIONS_ID' => $tags['options_id'],
           'OPTIONS_SORT_ORDER' => $tags['options_sort_order'],
           'OPTIONS_DESCRIPTION' => $tags['options_description'],
-          'OPTIONS_CONTENT_LINK' => (($tags['options_content_group'] != '') ? xtc_href_link(FILENAME_POPUP_CONTENT, 'coID='.$tags['options_content_group'], 'NONSSL') : ''),
+          'OPTIONS_CONTENT_LINK' => (((int)$tags['options_content_group'] > 0) ? xtc_href_link(FILENAME_POPUP_CONTENT, 'coID='.$tags['options_content_group'], 'NONSSL') : ''),
           'DATA' => array()
         );
       }
@@ -74,7 +74,7 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/product_tags.html', $ca
         'VALUES_SORT_ORDER' => $tags['values_sort_order'],
         'VALUES_DESCRIPTION' => $tags['values_description'],
         'VALUES_IMAGE' => (($tags['values_image'] != '' && is_file(DIR_FS_CATALOG.DIR_WS_IMAGES.$tags['values_image'])) ? DIR_WS_BASE.DIR_WS_IMAGES.$tags['values_image'] : ''),
-        'VALUES_CONTENT_LINK' => (($tags['values_content_group'] != '') ? xtc_href_link(FILENAME_POPUP_CONTENT, 'coID='.$tags['values_content_group'], 'NONSSL') : ''),
+        'VALUES_CONTENT_LINK' => (((int)$tags['values_content_group'] > 0) ? xtc_href_link(FILENAME_POPUP_CONTENT, 'coID='.$tags['values_content_group'], 'NONSSL') : ''),
       );
                                                            
       foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/products_tags_data/','php') as $file) require ($file);
