@@ -348,6 +348,7 @@
     'includes/external/payone/modules/send_order.php',
     'includes/external/paypal/lib/PayPal/Core/PayPalLoggingLevel.php',
     'includes/external/paypal/modules/cart_action.php',
+    'includes/external/paypal/modules/installment.php',
     'includes/external/paypal/modules/product_info.php',
     'includes/external/paypal/modules/send_order.php',
     'includes/external/paypal/templates/presentment.html',
