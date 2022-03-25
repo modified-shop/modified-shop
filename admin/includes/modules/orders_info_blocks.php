@@ -90,10 +90,12 @@
               <td class="main"><b><?php echo ENTRY_CUSTOMERS_VAT_ID; ?></b></td>
               <td class="main"><?php echo $order->customer['vat_id']; ?></td>
             </tr>
+            <?php if (SAVE_IP_LOG != 'false') { ?>
             <tr>
               <td class="main bg_notice" valign="top"><b><?php echo IP; ?></b></td>
               <td class="main bg_notice"><b><?php echo $order->customer['cIP']; ?></b></td>
             </tr>
+            <?php } ?>
           </table>
         </td>
           <?php
