@@ -62,11 +62,10 @@ function xtc_php_mail($from_email_address, $from_email_name,
   }
 
   if ($where) {
-    $lang_query = xtc_db_query("SELECT * 
-                                  FROM ".TABLE_LANGUAGES." 
-                                  ".$where."
-                               ");
-    $lang_data = xtc_db_fetch_array($lang_query);
+    $lang_query = xtDBquery("SELECT * 
+                               FROM ".TABLE_LANGUAGES." 
+                                  ".$where);
+    $lang_data = xtc_db_fetch_array($lang_query, true);
   }
   
   // set parameters
@@ -213,11 +212,11 @@ function xtc_php_mail($from_email_address, $from_email_name,
     if (defined('RUN_MODE_ADMIN') && GROUP_CHECK == 'true') {
       $conditions = " AND group_ids LIKE '%c_".((isset($customers_status)) ? $customers_status : DEFAULT_CUSTOMERS_STATUS_ID_GUEST)."_group%' ";
     }
-    $email_query = xtc_db_query("SELECT *
-                                   FROM ".TABLE_EMAIL_CONTENT."
-                                  WHERE languages_id = '".$lang_data['languages_id']."'
-                                        ".$conditions);
-    while ($email = xtc_db_fetch_array($email_query)) {
+    $email_query = xtDBquery("SELECT *
+                                FROM ".TABLE_EMAIL_CONTENT."
+                               WHERE languages_id = '".$lang_data['languages_id']."'
+                                     ".$conditions);
+    while ($email = xtc_db_fetch_array($email_query, true)) {
       foreach ($included_files as $files) {
         if (strpos($files, $email['email_id'].'.html') !== false) {
           if (is_file(DIR_FS_CATALOG.'media/content/'.$email['content_file'])) {
