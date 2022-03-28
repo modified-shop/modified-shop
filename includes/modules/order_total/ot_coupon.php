@@ -558,14 +558,15 @@ class ot_coupon {
 
 
   function check() {
-    if (!isset ($this->check)) {
-      $check_query = xtc_db_query("SELECT configuration_value 
-                                     FROM ".TABLE_CONFIGURATION." 
-                                    WHERE configuration_key = 'MODULE_ORDER_TOTAL_COUPON_STATUS'");
-      $this->check = xtc_db_num_rows($check_query);
+    if (!isset($this->_check)) {
+      if (defined('MODULE_ORDER_TOTAL_COUPON_STATUS')) {
+        $this->_check = true;
+      } else {
+        $check_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_ORDER_TOTAL_COUPON_STATUS'");
+        $this->_check = xtc_db_num_rows($check_query);
+      }
     }
-
-    return $this->check;
+    return $this->_check;
   }
 
 
