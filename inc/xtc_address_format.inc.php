@@ -21,10 +21,10 @@
   require_once(DIR_FS_INC . 'xtc_get_country_name.inc.php');
    
   function xtc_address_format($address_format_id, $address, $html, $boln, $eoln) {
-    $address_format_query = xtc_db_query("SELECT address_format as format 
-                                            FROM ".TABLE_ADDRESS_FORMAT." 
-                                           WHERE address_format_id = '".(int)$address_format_id."'");
-    $address_format = xtc_db_fetch_array($address_format_query);
+    $address_format_query = xtDBquery("SELECT address_format as format 
+                                         FROM ".TABLE_ADDRESS_FORMAT." 
+                                        WHERE address_format_id = '".(int)$address_format_id."'");
+    $address_format = xtc_db_fetch_array($address_format_query, true);
 
     $company = isset($address['company']) ? addslashes($address['company']) : '';
     $firstname = isset($address['firstname']) ? addslashes($address['firstname']) : '';
