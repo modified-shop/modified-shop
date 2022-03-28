@@ -10,15 +10,20 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
   
-  // include needed classes
-  require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPayment.php');
+  if (defined('MODULE_PAYMENT_PAYPAL_SECRET')
+      && MODULE_PAYMENT_PAYPAL_SECRET != ''
+      )
+  {
+    // include needed classes
+    require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPayment.php');
     
-  $paypal = new PayPalPayment('paypalcart');
-  if ($paypal->enabled === true) {
-    $smarty->assign('BUTTON_PAYPAL', $paypal->checkout_button());
-    if (isset($_GET['payment_error'])) {
-      include_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/paypalcart.php');
-      $error = $paypal->get_error();
-      $smarty->assign('error_message',  $error['error']);
+    $paypal = new PayPalPayment('paypalcart');
+    if ($paypal->enabled === true) {
+      $smarty->assign('BUTTON_PAYPAL', $paypal->checkout_button());
+      if (isset($_GET['payment_error'])) {
+        include_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/paypalcart.php');
+        $error = $paypal->get_error();
+        $smarty->assign('error_message',  $error['error']);
+      }
     }
   }
