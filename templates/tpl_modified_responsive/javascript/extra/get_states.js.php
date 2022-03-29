@@ -25,23 +25,22 @@ $state_pages = array(
 
 if (ACCOUNT_STATE == 'true' && in_array(basename($PHP_SELF), $state_pages)) {
   
-  //Länder mit required_zones = 1 -> Dropdown anzeigen
-  $query = xtc_db_query(
+  //countries with zones
+  $query = xtDBquery(
     "SELECT GROUP_CONCAT(countries_id) AS ids
         FROM ".TABLE_COUNTRIES."
        WHERE required_zones = 1
     ");
-  $countries = xtc_db_fetch_array($query);
+  $countries = xtc_db_fetch_array($query, true);
   
-  //Länder ohne Zonen -> Inputfeld anzeigen
-  $query = xtc_db_query(
-      "SELECT GROUP_CONCAT(c.countries_id) AS ids
-         FROM countries c 
-    LEFT JOIN zones z ON c.countries_id = z.zone_country_id
-        WHERE z.zone_country_id IS NULL;
-      ");
-
-  $countries_without_zones = xtc_db_fetch_array($query);
+  //countries without zones
+  $query = xtDBquery(
+    "SELECT GROUP_CONCAT(c.countries_id) AS ids
+       FROM countries c 
+  LEFT JOIN zones z ON c.countries_id = z.zone_country_id
+      WHERE z.zone_country_id IS NULL;
+    ");
+  $countries_without_zones = xtc_db_fetch_array($query, true);
 ?>
 <script type="text/javascript">
 /* <![CDATA[ */
