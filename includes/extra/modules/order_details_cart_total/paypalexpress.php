@@ -36,7 +36,7 @@
       if (isset($_GET['payment_error'])) {
         include_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/paypalexpress.php');
         $error = $paypal->get_error();
-        $smarty->assign('info_message',  $error['error']);
+        $smarty->assign('error_message',  $error['error']);
       }
     }  
   }
