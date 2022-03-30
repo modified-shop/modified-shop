@@ -10,9 +10,6 @@
    Released under the GNU General Public License
    --------------------------------------------------------------*/
 
-  // include needed functions
-  require_once(DIR_FS_INC.'xtc_get_products_image.inc.php');
-
   function get_wishlist_content() {
     global $main, $xtPrice, $product, $PHP_SELF;
     
@@ -41,7 +38,7 @@
       $module_content_add = array (
         'PRODUCTS_LINK' => xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$products[$i]['id']),
         'PRODUCTS_NAME' => $products[$i]['name'],
-        'PRODUCTS_IMAGE' => $product->productImage(xtc_get_products_image(xtc_get_prid($products[$i]['id'])), 'thumbnail'),
+        'PRODUCTS_IMAGE' => $product->productImage($products[$i]['image'], 'thumbnail'),
         'PRODUCTS_BUTTON_DELETE' => $del_button,
         'PRODUCTS_BUTTON_DELETE_CART' => $cart_del_button,
         'PRODUCTS_VPE' => $products[$i]['vpe'],
