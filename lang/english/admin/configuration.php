@@ -461,7 +461,7 @@ define('SESSION_CHECK_IP_ADDRESS_DESC' , 'Validate the client\'s IP address on e
 define('SESSION_RECREATE_TITLE' , 'Recreate Session');
 define('SESSION_RECREATE_DESC' , 'Recreate the session to generate a new session ID when a customer logs on or creates an account (PHP >=4.1 needed). (Default &quot;false&quot;)'.SESSION_WARNING);
 define('SESSION_DELETE_OLD_COOKIES_TITLE' , 'Delete Session Cookie');
-define('SESSION_DELETE_OLD_COOKIES_DESC' , 'Should old session cookies be deleted? After updating from shop version 1.0x it is recommended to enable this option. (Default &quot;false&quot;)'.SESSION_WARNING);
+define('SESSION_DELETE_OLD_COOKIES_DESC' , 'Should old session cookies be deleted? After updating from shop version <= 2.0.1.0 it is recommended to enable this option. (Default &quot;false&quot;)'.SESSION_WARNING);
 
 define('DISPLAY_CONDITIONS_ON_CHECKOUT_TITLE' , 'Display Conditions on Checkout');
 define('DISPLAY_CONDITIONS_ON_CHECKOUT_DESC' , 'Display terms and conditions on checkout.');
