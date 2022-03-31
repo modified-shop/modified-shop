@@ -59,7 +59,10 @@ if (is_array($current_domain_delete)
 {
   foreach ($current_domain_delete as $domain) {
     xtc_setcookie(xtc_session_name(), '', time()-3600, '/', '.'.$domain);
-    xtc_setcookie(xtc_session_name(), '', time()-3600, DIR_WS_CATALOG, '.'.$domain);
+    xtc_setcookie(xtc_session_name(), '', time()-3600, '/', '.'.$domain, ((HTTP_SERVER == HTTPS_SERVER && $request_type == 'SSL') ? true : false), true, '');
+
+    xtc_setcookie(xtc_session_name(), '', time()-3600, DIR_WS_CATALOG, '.'.$domain);    
+    xtc_setcookie(xtc_session_name(), '', time()-3600, DIR_WS_CATALOG, '.'.$domain, ((HTTP_SERVER == HTTPS_SERVER && $request_type == 'SSL') ? true : false), true, '');
   }
 }
 
