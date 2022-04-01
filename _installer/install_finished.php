@@ -99,7 +99,7 @@
   }
   
   if ($messageStack->size('install_finished') > 0) {
-    $smarty->assign('error', $messageStack->output('install_finished'));
+    $smarty->assign('error_message', $messageStack->output('install_finished'));
   }
     
   $smarty->assign('BUTTON_SHOP', '<a href="'.xtc_href_link('', '', $request_type).'">'.BUTTON_SHOP.'</a>');

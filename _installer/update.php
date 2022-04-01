@@ -416,10 +416,10 @@
   $smarty->assign('JAVASCRIPTCHECK', $javascriptcheck);
   
   if ($messageStack->size('update') > 0) {
-    $smarty->assign('error', $messageStack->output('update'));
+    $smarty->assign('error_message', $messageStack->output('update'));
   }
   if ($messageStack->size('update', 'success') > 0) {
-    $smarty->assign('success', $messageStack->output('update', 'success'));
+    $smarty->assign('success_message', $messageStack->output('update', 'success'));
   }
 
   $smarty->assign('language', $_SESSION['language']);

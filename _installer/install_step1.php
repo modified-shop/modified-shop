@@ -273,7 +273,7 @@
   }
   
   if ($messageStack->size('install_step1') > 0) {
-    $smarty->assign('error', $messageStack->output('install_step1'));
+    $smarty->assign('error_message', $messageStack->output('install_step1'));
   }
 
   // database 
