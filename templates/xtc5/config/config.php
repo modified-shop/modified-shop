@@ -31,7 +31,7 @@
   define('TPL_POPUP_PRINT_ORDER_SIZE', 'width=640, height=600');
 
   // template output
-  define('TEMPLATE_ENGINE', 'smarty_2'); // smarty_3 or smarty_2
+  define('TEMPLATE_ENGINE', 'smarty_4'); // smarty_3 or smarty_2
   define('TEMPLATE_HTML_ENGINE', 'xhtml'); // html5 or xhtml
   define('TEMPLATE_RESPONSIVE', 'false'); // 'true' oder 'false' -> Nicht ändern!
   defined('COMPRESS_JAVASCRIPT') or define('COMPRESS_JAVASCRIPT', true); // 'true' kombiniert & komprimiert die zusätzliche JS-Dateien / 'false' bindet alle JS-Dateien einzeln ein
