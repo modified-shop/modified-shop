@@ -345,7 +345,7 @@
   }
   
   if ($messageStack->size('install_step2') > 0) {
-    $smarty->assign('error', $messageStack->output('install_step2'));
+    $smarty->assign('error_message', $messageStack->output('install_step2'));
   }
   
   // account
