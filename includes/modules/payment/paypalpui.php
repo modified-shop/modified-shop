@@ -77,7 +77,7 @@ class paypalpui extends PayPalPaymentV2 {
       if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/paypal/pui_error.html')) {
         $tpl_file = DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/paypal/pui_error.html';
       }
-      $paypal_smarty->assign('error', $messageStack->output('paypalpui'));
+      $paypal_smarty->assign('error_message', $messageStack->output('paypalpui'));
       $info = $paypal_smarty->fetch($tpl_file);
     }
 
