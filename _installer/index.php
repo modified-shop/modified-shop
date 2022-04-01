@@ -80,7 +80,7 @@
     }
 
     if ($messageStack->size('ftp_message') > 0) {
-      $smarty->assign('error', $messageStack->output('ftp_message'));
+      $smarty->assign('error_message', $messageStack->output('ftp_message'));
     }
 
     $smarty->assign('language', $_SESSION['language']);
