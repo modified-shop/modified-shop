@@ -59,9 +59,13 @@ if (isset($_GET['action'])) {
         );
         $message_array = array_merge($_POST, $system_informations);
         
+        if (isset($_SESSION['CSRFName']) && isset($message_array[$_SESSION['CSRFName']])) {
+          unset($message_array[$_SESSION['CSRFName']]);
+        }
+        
         $message = '';
         foreach ($message_array as $k => $v) {
-          $message .= $k . ': ' . $v . "\n";
+          $message .= $k . ': ' . xtc_db_prepare_input($v). "\n";
         }
         
         xtc_php_mail(EMAIL_SUPPORT_ADDRESS, 
