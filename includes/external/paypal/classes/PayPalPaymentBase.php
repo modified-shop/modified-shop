@@ -896,14 +896,12 @@ class PayPalPaymentBase extends PayPalCommon {
     $check_query = xtc_db_query("SELECT configuration_key 
                                    FROM ".TABLE_CONFIGURATION." 
                                   WHERE configuration_key LIKE 'MODULE_PAYMENT_PAYPAL%_STATUS'");
-    if (xtc_db_num_rows($check_query) == 1) {			
+    if (xtc_db_num_rows($check_query) == 1) {
       xtc_db_query("DROP TABLE IF EXISTS ".TABLE_PAYPAL_PAYMENT);
       xtc_db_query("DROP TABLE IF EXISTS ".TABLE_PAYPAL_CONFIG);
       xtc_db_query("DROP TABLE IF EXISTS ".TABLE_PAYPAL_IPN);
       xtc_db_query("DROP TABLE IF EXISTS ".TABLE_PAYPAL_INSTRUCTIONS);
 
-
-  
       $admin_query = xtc_db_query("SELECT * 
                                      FROM ".TABLE_ADMIN_ACCESS."
                                     LIMIT 1");
@@ -917,6 +915,8 @@ class PayPalPaymentBase extends PayPalCommon {
           xtc_db_query("ALTER TABLE ".TABLE_ADMIN_ACCESS." DROP COLUMN `".$admin_access."`");
         }
       }
+      
+      xtc_db_query("DELETE FROM ".TABLE_CONFIGURATION." WHERE configuration_key LIKE 'MODULE_PAYMENT_PAYPAL_SECRET'");
     }
 
     xtc_db_query("DELETE FROM ".TABLE_CONFIGURATION." WHERE configuration_key LIKE 'MODULE_PAYMENT_".strtoupper($this->code)."\_%'");
