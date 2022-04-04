@@ -13,7 +13,7 @@
   defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
   if (defined('MODULE_DHL_STATUS') && MODULE_DHL_STATUS == 'True') {
-    if (isset($_GET['saction']) && $_GET['saction'] == 'createlabel') {
+    if (isset($_GET['subaction']) && $_GET['subaction'] == 'createlabel') {
       require_once(DIR_FS_EXTERNAL.'dhl/DHLBusinessShipment.php');
       $oID = (int)$_POST['oID'];
       $dhl = new DHLBusinessShipment($_POST);
@@ -58,10 +58,10 @@
           }
         }
       } 
-      xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action', 'saction')).'action=edit'));
+      xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action', 'subaction')).'action=edit'));
     }
 
-    if (isset($_GET['saction']) && $_GET['saction'] == 'deletetracking') {
+    if (isset($_GET['subaction']) && $_GET['subaction'] == 'deletetracking') {
       $tracking_id = (int)$_GET['tID'];
       $tracking_links_query = xtc_db_query("SELECT * 
                                               FROM ".TABLE_ORDERS_TRACKING."
@@ -120,6 +120,6 @@
       }
       xtc_db_query("DELETE FROM ".TABLE_ORDERS_TRACKING." WHERE tracking_id = '".(int)$tracking_id."'");
     
-      xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action', 'tID', 'saction')).'action=edit'));
+      xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action', 'tID', 'subaction')).'action=edit'));
     }
   }
