@@ -906,6 +906,7 @@ class PayPalPaymentBase extends PayPalCommon {
       xtc_db_query("DROP TABLE IF EXISTS ".TABLE_PAYPAL_CONFIG);
       xtc_db_query("DROP TABLE IF EXISTS ".TABLE_PAYPAL_IPN);
       xtc_db_query("DROP TABLE IF EXISTS ".TABLE_PAYPAL_INSTRUCTIONS);
+      xtc_db_query("DROP TABLE IF EXISTS ".TABLE_PAYPAL_TRACKING);
 
       $admin_query = xtc_db_query("SELECT * 
                                      FROM ".TABLE_ADMIN_ACCESS."
