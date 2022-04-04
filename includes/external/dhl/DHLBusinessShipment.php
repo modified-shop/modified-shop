@@ -106,7 +106,7 @@
         $response = $this->client->createShipmentOrder($request);
       } catch (Exception $ex) {
         $this->LoggingManager->log('DEBUG', 'CreateLabel', array('exception' => $ex));
-        return array('message' => 'ERROR - <b>Code:</b> '.$ex->faultcode.' <b>Message:</b> '.utf8_encode($ex->faultstring));
+        return array('message' => 'ERROR - <b>Code:</b> '.$ex->faultcode.' <b>Message:</b> '.decode_utf8(utf8_encode($ex->faultstring)));
       }
       
       if ($response->Status->statusCode == '0') {
@@ -118,11 +118,11 @@
       
         return $response->CreationState->shipmentNumber;
       } else {
-        $message = array('ERROR - <b>Code:</b> '.$response->Status->statusCode.' <b>Message:</b> '.utf8_encode($response->Status->statusText));
+        $message = array('ERROR - <b>Code:</b> '.$response->Status->statusCode.' <b>Message:</b> '.decode_utf8(utf8_encode($response->Status->statusText)));
         if (isset($response->CreationState->LabelData->Status->statusMessage)) {
           foreach ($response->CreationState->LabelData->Status->statusMessage as $status_message) {
             if (!isset($message[md5($status_message)])) {
-              $message[md5($status_message)] = utf8_encode($status_message);
+              $message[md5($status_message)] = decode_utf8(utf8_encode($status_message));
             }
           }
         }
@@ -161,7 +161,7 @@
         return $response->Status->statusCode;
       } catch (Exception $ex) {
         $this->LoggingManager->log('DEBUG', 'buildClient', array('exception' => $ex));
-        return array('message' => 'ERROR - <b>Code:</b> '.$ex->faultcode.' <b>Message:</b> '.utf8_encode($ex->faultstring));
+        return array('message' => 'ERROR - <b>Code:</b> '.$ex->faultcode.' <b>Message:</b> '.decode_utf8(utf8_encode($ex->faultstring)));
       }
     }
 
@@ -207,14 +207,14 @@
         $this->client = new SoapClient(API_URL, $auth_params);
       } catch (Exception $ex) {
         $this->LoggingManager->log('DEBUG', 'buildClient', array('exception' => $ex));
-        return array('message' => 'ERROR - <b>Code:</b> '.$ex->faultcode.' <b>Message:</b> '.$ex->faultstring);
+        return array('message' => 'ERROR - <b>Code:</b> '.$ex->faultcode.' <b>Message:</b> '.decode_utf8(utf8_encode($ex->faultstring)));
       }
       
       try {
         $this->client->__setSoapHeaders($header);
       } catch (Exception $ex) {
         $this->LoggingManager->log('DEBUG', 'buildClient', array('exception' => $ex));
-        return array('message' => 'ERROR - <b>Code:</b> '.$ex->faultcode.' <b>Message:</b> '.$ex->faultstring);
+        return array('message' => 'ERROR - <b>Code:</b> '.$ex->faultcode.' <b>Message:</b> '.decode_utf8(utf8_encode($ex->faultstring)));
       }
     }
 
