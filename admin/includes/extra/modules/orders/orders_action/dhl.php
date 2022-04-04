@@ -58,7 +58,7 @@
           }
         }
       } 
-      xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action', 'subaction')).'action=edit'));
+      xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action', 'saction')).'action=edit'));
     }
 
     if (isset($_GET['saction']) && $_GET['saction'] == 'deletetracking') {
@@ -120,6 +120,6 @@
       }
       xtc_db_query("DELETE FROM ".TABLE_ORDERS_TRACKING." WHERE tracking_id = '".(int)$tracking_id."'");
     
-      xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action', 'tID', 'subaction')).'action=edit'));
+      xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action', 'tID', 'saction')).'action=edit'));
     }
   }
