@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: paypalsubscription.php 11597 2019-03-21 15:04:31Z GTB $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -70,9 +70,11 @@ class paypalsubscription extends PayPalPayment {
 
   function remove() {
 	  parent::remove();
-
+    
     require_once(DIR_FS_INC.'update_module_configuration.inc.php');
  
+    xtc_db_query("DROP TABLE IF EXISTS paypal_subscription");
+
     require_once(DIR_FS_CATALOG.DIR_WS_MODULES.'shopping_cart/paypal_plan_cart.php');
     $paypal_plan_cart = new paypal_plan_cart();
     if ($paypal_plan_cart->check() > 0) {
@@ -107,6 +109,14 @@ class paypalsubscription extends PayPalPayment {
 	  parent::install();
 
     require_once(DIR_FS_INC.'update_module_configuration.inc.php');
+
+    xtc_db_query("CREATE TABLE IF NOT EXISTS paypal_subscription (
+                    orders_id int(11) NOT NULL,
+                    subscription_id varchar(64) NOT NULL,
+                    payer_id varchar(64) NOT NULL,
+                    plan_id varchar(64) NOT NULL,
+                    PRIMARY KEY (orders_id)
+                  );");
 
     require_once(DIR_FS_CATALOG.DIR_WS_MODULES.'shopping_cart/paypal_plan_cart.php');
     $paypal_plan_cart = new paypal_plan_cart();
