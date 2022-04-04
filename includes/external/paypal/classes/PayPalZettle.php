@@ -523,14 +523,6 @@
         $this->error[] = $response['error'];
         $this->LoggingManager->log('DEBUG', 'call', $response['error']);        
         
-        /*
-        echo $url;
-        echo '<pre>';
-        print_r($body);
-        print_r($response);
-        //exit();
-        */
-        
         return $response;
       }          
     }

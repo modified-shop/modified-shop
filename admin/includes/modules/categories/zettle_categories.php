@@ -155,6 +155,9 @@
   
     function remove() {  
       xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key LIKE '".$this->name."_%'");
+
+      xtc_db_query("DROP TABLE IF EXISTS paypal_zettle_to_products");
+      xtc_db_query("DROP TABLE IF EXISTS paypal_zettle_import");
     }
   
   
