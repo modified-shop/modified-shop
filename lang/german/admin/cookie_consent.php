@@ -34,7 +34,7 @@
   define('TEXT_INFO_VALUE_DESCRIPTION', 'Beschreibung:');
   define('TEXT_INFO_VALUE_COOKIES', 'Cookies:');
   define('TEXT_INFO_VALUE_SORT', 'Sortierung:');
-  define('TEXT_INFO_VALUE_COOKIES_DESC', 'Geben Sie den Namen des gesetzten Cookies an, der gel&ouml;scht werden soll. Meherere Namen k&ouml;nnen getrennt durch Komma angegeben werden. Sie k&ouml;nnen auch nur die ersten Zeichen der Namen eingeben, diese d&uuml;rfen sich aber nicht mit Namen anderen Cookies &uuml;berschneiden um nicht die falschen Cookeis zu l&ouml;schen.');
+  define('TEXT_INFO_VALUE_COOKIES_DESC', 'Geben Sie den Namen des gesetzten Cookies an, der gel&ouml;scht werden soll. Mehrere Namen k&ouml;nnen getrennt durch Komma angegeben werden. Sie k&ouml;nnen auch nur die ersten Zeichen der Namen eingeben, diese d&uuml;rfen sich aber nicht mit Namen anderen Cookies &uuml;berschneiden um nicht die falschen Cookeis zu l&ouml;schen.');
 
   define('TEXT_INFO_HEADING_NEW_VALUE', 'Neuer Cookie/Gruppe');
   define('TEXT_INFO_NEW_VALUE_INTRO', 'Bitte geben Sie den neuen Cookie/Cookie-Gruppe mit allen relevanten Daten ein');
