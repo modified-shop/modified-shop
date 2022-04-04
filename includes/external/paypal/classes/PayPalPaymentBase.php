@@ -786,7 +786,12 @@ class PayPalPaymentBase extends PayPalCommon {
     xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('MODULE_PAYMENT_".strtoupper($this->code)."_ZONE', '0', '6', '4', NULL, now(), 'xtc_get_zone_class_title', 'xtc_cfg_pull_down_zone_classes(')");
     
     if (!defined('MODULE_PAYMENT_PAYPAL_SECRET')) {
-      xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('MODULE_PAYMENT_PAYPAL_SECRET', '".md5(uniqid())."', '6', '3', NULL, now(), '', '')");
+      $check_query = xtc_db_query("SELECT * 
+                                     FROM ".TABLE_CONFIGURATION." 
+                                    WHERE configuration_key = 'MODULE_PAYMENT_PAYPAL_SECRET'");
+      if (xtc_db_num_rows($check_query) < 1) {
+        xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('MODULE_PAYMENT_PAYPAL_SECRET', '".md5(uniqid())."', '6', '3', NULL, now(), '', '')");
+      }
     }
     
     xtc_db_query("CREATE TABLE IF NOT EXISTS ".TABLE_PAYPAL_PAYMENT." ( 
@@ -1088,7 +1093,12 @@ class PayPalPaymentBase extends PayPalCommon {
     }
     
     if (!defined('MODULE_PAYMENT_PAYPAL_SECRET')) {
-      xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('MODULE_PAYMENT_PAYPAL_SECRET', '".md5(uniqid())."', '6', '3', NULL, now(), '', '')");
+      $check_query = xtc_db_query("SELECT * 
+                                     FROM ".TABLE_CONFIGURATION." 
+                                    WHERE configuration_key = 'MODULE_PAYMENT_PAYPAL_SECRET'");
+      if (xtc_db_num_rows($check_query) < 1) {
+        xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('MODULE_PAYMENT_PAYPAL_SECRET', '".md5(uniqid())."', '6', '3', NULL, now(), '', '')");
+      }
     }
     
     //check tables
