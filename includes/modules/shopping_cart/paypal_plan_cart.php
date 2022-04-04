@@ -84,14 +84,6 @@ class paypal_plan_cart {  //Important same name as filename
                         KEY idx_products_id (products_id)
                       );");
 
-        xtc_db_query("CREATE TABLE IF NOT EXISTS paypal_subscription (
-                        orders_id int(11) NOT NULL,
-                        subscription_id varchar(64) NOT NULL,
-                        payer_id varchar(64) NOT NULL,
-                        plan_id varchar(64) NOT NULL,
-                        PRIMARY KEY (orders_id)
-                      );");
-
   	    require_once(DIR_FS_INC.'update_module_configuration.inc.php');
   
         require_once(DIR_FS_CATALOG.DIR_WS_MODULES.'xtcPrice/paypal_plan_price.php');
@@ -127,6 +119,10 @@ class paypal_plan_cart {  //Important same name as filename
         xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key LIKE '".$this->name."_%'");
 
   	    require_once(DIR_FS_INC.'update_module_configuration.inc.php');
+
+        xtc_db_query("DROP TABLE IF EXISTS customers_basket_plans");
+        xtc_db_query("DROP TABLE IF EXISTS customers_wishlist_plans");
+        xtc_db_query("DROP TABLE IF EXISTS paypal_plan");
 
         require_once(DIR_FS_CATALOG.DIR_WS_MODULES.'xtcPrice/paypal_plan_price.php');
         $paypal_plan_price = new paypal_plan_price();
