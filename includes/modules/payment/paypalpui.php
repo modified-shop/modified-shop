@@ -216,7 +216,7 @@ class paypalpui extends PayPalPaymentV2 {
           'email' => $this->encode_utf8($order->customer['email_address']),
           'birth_date' => $_SESSION['customer_dob'],
           'phone' => array(
-            'national_number' => $this->encode_utf8(preg_replace('/^[0-9]{1,14}/', '', $order->customer['telephone'])),
+            'national_number' => $this->encode_utf8(substr(preg_replace('/[^0-9]/', '', $order->customer['telephone']), 0, 14)),
             'country_code' => '49',
           ),
           'billing_address' => array(
