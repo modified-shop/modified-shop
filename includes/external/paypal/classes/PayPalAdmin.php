@@ -39,7 +39,7 @@ class PayPalAdmin extends PayPalPayment {
   function getSellerStatus($mode) {
   
     // auth
-    $apiContext = $this->apiContext();
+    $apiContext = $this->apiContext($mode);
 
     // set WebProfile
     $partner = new Partner();
