@@ -33,26 +33,28 @@ class PayPalAuth {
   }
   
   
-  protected function apiContext() {
-
+  protected function apiContext($mode = '') {
+    if ($mode == '') {
+      $mode = $this->get_config('PAYPAL_MODE');
+    }
     $credential = new OAuthTokenCredential(
-      $this->get_config('PAYPAL_CLIENT_ID_'.strtoupper($this->get_config('PAYPAL_MODE'))),
-      $this->get_config('PAYPAL_SECRET_'.strtoupper($this->get_config('PAYPAL_MODE')))
+      $this->get_config('PAYPAL_CLIENT_ID_'.strtoupper($mode)),
+      $this->get_config('PAYPAL_SECRET_'.strtoupper($mode))
     );
     $credential::$expiryBufferTime = ((defined('SESSION_LIFE_CUSTOMERS')) ? SESSION_LIFE_CUSTOMERS : 1440);
     
     $apiContext = new ApiContext($credential);
     
-    $auth_cache_file = SQL_CACHEDIR.'pp_auth_'.$this->get_config('PAYPAL_MODE').'.cache';
+    $auth_cache_file = SQL_CACHEDIR.'pp_auth_'.$mode.'.cache';
     if (!is_file($auth_cache_file)) {
       file_put_contents($auth_cache_file, '');
     }
     
     $apiContext->setConfig(
       array(
-        'mode' => $this->get_config('PAYPAL_MODE'),
+        'mode' => $mode,
         'log.LogEnabled' => (($this->get_config('PAYPAL_LOG_ENALBLED') == '1') ? true : false),
-        'log.FileName' => DIR_FS_LOG.'mod_paypal_'.$this->get_config('PAYPAL_MODE').'_'.date('Y-m-d') .'.log',
+        'log.FileName' => DIR_FS_LOG.'mod_paypal_'.$mode.'_'.date('Y-m-d') .'.log',
         'log.LogLevel' => $this->loglevel,
         'validation.level' => 'log',
         'cache.enabled' => ((is_writeable(SQL_CACHEDIR)) ? true : false),

@@ -408,16 +408,6 @@ class Partner extends PayPalResourceModel
             $restCall
         );
         
-
-        /*
-        $json = json_decode($json, true);
-        echo '<pre>';
-        print_r($json);
-        exit();
-        unset($json['products']);
-        $json = json_encode($json);
-        */
-
         $ret = new Partner();
         $ret->fromJson($json);
         return $ret;
