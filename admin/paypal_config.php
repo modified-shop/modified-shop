@@ -213,12 +213,12 @@ require (DIR_WS_INCLUDES.'head.php');
               </tr>
               <tr>
                 <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_STATUS_ACDC_LIVE; ?></td>
-                <td class="dataTableConfig col-middle"><?php echo xtc_image(DIR_WS_IMAGES . 'icon_status_'.$sellerstatus[$mode]['status_acdc'].'.gif', constant('IMAGE_ICON_STATUS_'.strtoupper($sellerstatus[$mode]['status_acdc'])), 12, 12); ?></td>
+                <td class="dataTableConfig col-middle"><?php echo xtc_image(DIR_WS_IMAGES . 'icon_status_'.$sellerstatus['live']['status_acdc'].'.gif', constant('IMAGE_ICON_STATUS_'.strtoupper($sellerstatus['live']['status_acdc'])), 12, 12); ?></td>
                 <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_CONFIG_STATUS_ACDC_INFO; ?></td>
               </tr>
               <tr>
                 <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_STATUS_PUI_LIVE; ?></td>
-                <td class="dataTableConfig col-middle"><?php echo xtc_image(DIR_WS_IMAGES . 'icon_status_'.$sellerstatus[$mode]['status_pui'].'.gif', constant('IMAGE_ICON_STATUS_'.strtoupper($sellerstatus[$mode]['status_pui'])), 12, 12); ?></td>
+                <td class="dataTableConfig col-middle"><?php echo xtc_image(DIR_WS_IMAGES . 'icon_status_'.$sellerstatus['live']['status_pui'].'.gif', constant('IMAGE_ICON_STATUS_'.strtoupper($sellerstatus['live']['status_pui'])), 12, 12); ?></td>
                 <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_CONFIG_STATUS_PUI_INFO; ?></td>
               </tr>
               <tr>
@@ -231,18 +231,18 @@ require (DIR_WS_INCLUDES.'head.php');
                 <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('config[PAYPAL_SECRET_SANDBOX]', $paypal->get_config('PAYPAL_SECRET_SANDBOX'), 'style="width: 300px;"'); ?></td>
               </tr>
               <tr>
-                <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_MERCHANT_ID; ?></td>
+                <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_MERCHANT_ID_SANDBOX; ?></td>
                 <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('config[PAYPAL_MERCHANT_ID_SANDBOX]', $paypal->get_config('PAYPAL_MERCHANT_ID_SANDBOX'), 'style="width: 300px;"'); ?></td>
                 <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_CONFIG_MERCHANT_ID_INFO; ?></td>
               </tr>
               <tr>
                 <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_STATUS_ACDC; ?></td>
-                <td class="dataTableConfig col-middle"><?php echo xtc_image(DIR_WS_IMAGES . 'icon_status_'.$sellerstatus[$mode]['status_acdc'].'.gif', constant('IMAGE_ICON_STATUS_'.strtoupper($sellerstatus[$mode]['status_acdc'])), 12, 12); ?></td>
+                <td class="dataTableConfig col-middle"><?php echo xtc_image(DIR_WS_IMAGES . 'icon_status_'.$sellerstatus['sandbox']['status_acdc'].'.gif', constant('IMAGE_ICON_STATUS_'.strtoupper($sellerstatus['sandbox']['status_acdc'])), 12, 12); ?></td>
                 <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_CONFIG_STATUS_ACDC_INFO; ?></td>
               </tr>
               <tr>
                 <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_STATUS_PUI; ?></td>
-                <td class="dataTableConfig col-middle"><?php echo xtc_image(DIR_WS_IMAGES . 'icon_status_'.$sellerstatus[$mode]['status_pui'].'.gif', constant('IMAGE_ICON_STATUS_'.strtoupper($sellerstatus[$mode]['status_pui'])), 12, 12); ?></td>
+                <td class="dataTableConfig col-middle"><?php echo xtc_image(DIR_WS_IMAGES . 'icon_status_'.$sellerstatus['sandbox']['status_pui'].'.gif', constant('IMAGE_ICON_STATUS_'.strtoupper($sellerstatus['sandbox']['status_pui'])), 12, 12); ?></td>
                 <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_CONFIG_STATUS_PUI_INFO; ?></td>
               </tr>
               <tr>
