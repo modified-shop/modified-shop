@@ -13,7 +13,7 @@
 
 $lang_array = array(
   'MODULE_PAYMENT_PAYPALACDC_TEXT_TITLE' => 'Creditcard',
-  'MODULE_PAYMENT_PAYPALACDC_TEXT_ADMIN_TITLE' => 'Creditcard via PayPal',
+  'MODULE_PAYMENT_PAYPALACDC_TEXT_ADMIN_TITLE' => 'Creditcard (without note to PayPal)',
   'MODULE_PAYMENT_PAYPALACDC_TEXT_INFO' => ((!defined('RUN_MODE_ADMIN') && function_exists('xtc_href_link')) ? '<img src="'.xtc_href_link(DIR_WS_ICONS.'paypal_creditcard.png', '', 'SSL', false).'" />' : ''),
   'MODULE_PAYMENT_PAYPALACDC_TEXT_DESCRIPTION' => 'In the last step during the checkout, you will be asked to enter your credit card details to pay for your order.',
   'MODULE_PAYMENT_PAYPALACDC_ALLOWED_TITLE' => 'Allowed zones',
