@@ -12,14 +12,14 @@
 
 
 $lang_array = array(
-  'MODULE_PAYMENT_PAYPALSEPA_TEXT_TITLE' => 'Lastschrift via PayPal',
-  'MODULE_PAYMENT_PAYPALSEPA_TEXT_ADMIN_TITLE' => 'Lastschrift via PayPal',
+  'MODULE_PAYMENT_PAYPALSEPA_TEXT_TITLE' => 'Debit via PayPal',
+  'MODULE_PAYMENT_PAYPALSEPA_TEXT_ADMIN_TITLE' => 'Debit via PayPal',
   'MODULE_PAYMENT_PAYPALSEPA_TEXT_INFO' => ((!defined('RUN_MODE_ADMIN') && function_exists('xtc_href_link')) ? '<img src="'.xtc_href_link(DIR_WS_ICONS.'paypal_sepa.png', '', 'SSL', false).'" />' : ''),
   'MODULE_PAYMENT_PAYPALSEPA_TEXT_DESCRIPTION' => 'After "confirm" your will be routet to PayPal to pay your order.<br />Back in shop you will get your order-mail.<br />PayPal is the safer way to pay online. We keep your details safe from others and can help you get your money back if something ever goes wrong.',
   'MODULE_PAYMENT_PAYPALSEPA_ALLOWED_TITLE' => 'Allowed zones',
   'MODULE_PAYMENT_PAYPALSEPA_ALLOWED_DESC' => 'Please enter the zones <b>separately</b> which should be allowed to use this module (e.g. AT,DE (leave empty if you want to allow all zones))',
   'MODULE_PAYMENT_PAYPALSEPA_STATUS_TITLE' => 'Enable PayPal',
-  'MODULE_PAYMENT_PAYPALSEPA_STATUS_DESC' => 'Do you want to accept PayPal payments?',
+  'MODULE_PAYMENT_PAYPALSEPA_STATUS_DESC' => 'Do you want to accept PayPal Debit payments?',
   'MODULE_PAYMENT_PAYPALSEPA_SORT_ORDER_TITLE' => 'Sort order',
   'MODULE_PAYMENT_PAYPALSEPA_SORT_ORDER_DESC' => 'Sort order of the view. Lowest numeral will be displayed first',
   'MODULE_PAYMENT_PAYPALSEPA_ZONE_TITLE' => 'Payment zone',

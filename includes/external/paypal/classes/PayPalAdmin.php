@@ -36,7 +36,7 @@ class PayPalAdmin extends PayPalPayment {
 	}
 
   
-  function getSellerStatus() {
+  function getSellerStatus($mode) {
   
     // auth
     $apiContext = $this->apiContext();
@@ -44,10 +44,10 @@ class PayPalAdmin extends PayPalPayment {
     // set WebProfile
     $partner = new Partner();
     
-    $partner_details = $this->get_partner_details($this->get_config('PAYPAL_MODE'));
+    $partner_details = $this->get_partner_details($mode);
     
     $partner->setPartnerId($partner_details['partnerID'])
-            ->setMerchantId($this->get_config('PAYPAL_MERCHANT_ID'));
+            ->setMerchantId($this->get_config('PAYPAL_MERCHANT_ID_'.strtoupper($mode)));
     
     try {
       return $partner->get($apiContext);
@@ -524,7 +524,7 @@ class PayPalAdmin extends PayPalPayment {
   function getOnboardingLink($mode = 'live') {
     $partner = $this->get_partner_details($mode);
     if (is_array($partner)) {      
-      return sprintf($partner['requestURLv2'], $partner['partnerID'], $partner['clientID'], $this->get_seller_nonce(), urlencode(xtc_href_link('paypal_config.php', 'action=callback')));    
+      return sprintf($partner['requestURLv2'], $partner['partnerID'], $partner['clientID'], $this->get_seller_nonce(), urlencode(xtc_href_link('paypal_config.php', 'action=callback&mode='.$mode)));    
     }
   }
   

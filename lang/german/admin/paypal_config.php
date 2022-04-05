@@ -31,10 +31,12 @@ $lang_array = array(
   'TEXT_PAYPAL_CONFIG_MERCHANT_ID' => 'Merchant ID:',
   'TEXT_PAYPAL_CONFIG_MERCHANT_ID_INFO' => 'Merchant ID Ihres H&auml;ndleraccounts. Sollten sie diese nicht zur Hand haben, fordern Sie erneut die Daten f&uuml;r Client ID und Secret an. Dadurch wird die Merchant ID automatisch ermittelt.',
 
-  'TEXT_PAYPAL_CONFIG_STATUS_ACDC' => 'Status Kreditkarte:',
+  'TEXT_PAYPAL_CONFIG_STATUS_ACDC_LIVE' => 'Status Kreditkarte Live:',
+  'TEXT_PAYPAL_CONFIG_STATUS_ACDC_SANDBOX' => 'Status Kreditkarte Sandbox:',
   'TEXT_PAYPAL_CONFIG_STATUS_ACDC_INFO' => 'Bei einem gelben Status, wenden Sie sich an den Support von PayPal. Bei rot steht der Service f&uuml;r Ihren Account im Moment nicht zur Verf&uuml;gung.',
 
-  'TEXT_PAYPAL_CONFIG_STATUS_PUI' => 'Status Kauf auf Rechnung:',
+  'TEXT_PAYPAL_CONFIG_STATUS_PUI_LIVE' => 'Status Kauf auf Rechnung Live:',
+  'TEXT_PAYPAL_CONFIG_STATUS_PUI_SANDBOX' => 'Status Kauf auf Rechnung Sandbox:',
   'TEXT_PAYPAL_CONFIG_STATUS_PUI_INFO' => 'Bei einem gelben Status, wenden Sie sich an den Support von PayPal. Bei rot steht der Service f&uuml;r Ihren Account im Moment nicht zur Verf&uuml;gung.',
 
   'TEXT_PAYPAL_CONFIG_INVOICE_PREFIX' => 'Bestellnummer Pr&auml;fix:',

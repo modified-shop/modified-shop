@@ -37,15 +37,14 @@ if (isset($_GET['action'])) {
       xtc_redirect(xtc_href_link(basename($PHP_SELF)));
       break;
 
-    case 'callback':
-      
+    case 'callback':    
       $sql_data_array = array(
         array(
-          'config_key' => 'PAYPAL_MERCHANT_ID',
+          'config_key' => 'PAYPAL_MERCHANT_ID_'.strtoupper($_GET['mode']),
           'config_value' => $_GET['merchantIdInPayPal']
         ),
         array(
-          'config_key' => 'PAYPAL_MERCHANT_EMAIL',
+          'config_key' => 'PAYPAL_MERCHANT_EMAIL_'.strtoupper($_GET['mode']),
           'config_value' => $_GET['merchantId']
         ),
       );
@@ -55,46 +54,52 @@ if (isset($_GET['action'])) {
   }
 }
 
-$partner = $paypal->getSellerStatus();
+$sellerstatus = array();
+$mode_array = array('live', 'sandbox');
+foreach ($mode_array as $mode) {
+  $partner = $paypal->getSellerStatus($mode);
 
-$status_acdc = $status_pui = 'red';
-if (is_object($partner)) {
-  foreach ($partner->getProducts() as $product) {
-    if (is_object($product) 
-        && $product->getName() == 'PPCP_CUSTOM'
-        && $product->getVettingStatus() == 'SUBSCRIBED'
-        )
-    {
-      $p_capabilities = $product->getCapabilities();
-      if (is_array($p_capabilities)) {
-        if (in_array('CUSTOM_CARD_PROCESSING', $p_capabilities) || in_array('PAY_UPON_INVOICE', $p_capabilities)) {
-          $capabilities = $partner->getCapabilities();
+  $status_acdc = $status_pui = 'red';
+  if (is_object($partner)) {
+    foreach ($partner->getProducts() as $product) {
+      if (is_object($product) 
+          && $product->getName() == 'PPCP_CUSTOM'
+          && $product->getVettingStatus() == 'SUBSCRIBED'
+          )
+      {
+        $p_capabilities = $product->getCapabilities();
+        if (is_array($p_capabilities)) {
+          if (in_array('CUSTOM_CARD_PROCESSING', $p_capabilities) || in_array('PAY_UPON_INVOICE', $p_capabilities)) {
+            $capabilities = $partner->getCapabilities();
           
-          if (is_array($capabilities)) {
-            foreach ($capabilities as $capability) {
-              if ($capability->getName() == 'CUSTOM_CARD_PROCESSING'
-                  && $capability->getStatus() == 'ACTIVE'
-                  )
-              {
-                $status_acdc = 'green';
-                if (isset($capability->limits) && is_array($capability->limits) && count($capability->limits) > 0) $status_acdc = 'yellow';
-              }
-              if ($capability->getName() == 'PAY_UPON_INVOICE'
-                  && $capability->getStatus() == 'ACTIVE'
-                  )
-              {
-                $status_pui = 'green';
+            if (is_array($capabilities)) {
+              foreach ($capabilities as $capability) {
+                if ($capability->getName() == 'CUSTOM_CARD_PROCESSING'
+                    && $capability->getStatus() == 'ACTIVE'
+                    )
+                {
+                  $status_acdc = 'green';
+                  if (isset($capability->limits) && is_array($capability->limits) && count($capability->limits) > 0) $status_acdc = 'yellow';
+                }
+                if ($capability->getName() == 'PAY_UPON_INVOICE'
+                    && $capability->getStatus() == 'ACTIVE'
+                    )
+                {
+                  $status_pui = 'green';
+                }
               }
             }
           }
-
         }
       }
-      
     }
   }
+  
+  $sellerstatus[$mode] = array(
+    'status_acdc' => $status_acdc,
+    'status_pui' => $status_pui,
+  );
 }
-
 
 $orders_statuses = array(array('id' => '-1', 'text' => TEXT_PAYPAL_NO_STATUS_CHANGE));
 $orders_status_query = xtc_db_query("SELECT orders_status_id,
@@ -202,6 +207,21 @@ require (DIR_WS_INCLUDES.'head.php');
                 <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('config[PAYPAL_SECRET_LIVE]', $paypal->get_config('PAYPAL_SECRET_LIVE'), 'style="width: 300px;"'); ?></td>
               </tr>
               <tr>
+                <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_MERCHANT_ID_LIVE; ?></td>
+                <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('config[PAYPAL_MERCHANT_ID_LIVE]', $paypal->get_config('PAYPAL_MERCHANT_ID_LIVE'), 'style="width: 300px;"'); ?></td>
+                <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_CONFIG_MERCHANT_ID_INFO; ?></td>
+              </tr>
+              <tr>
+                <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_STATUS_ACDC_LIVE; ?></td>
+                <td class="dataTableConfig col-middle"><?php echo xtc_image(DIR_WS_IMAGES . 'icon_status_'.$sellerstatus[$mode]['status_acdc'].'.gif', constant('IMAGE_ICON_STATUS_'.strtoupper($sellerstatus[$mode]['status_acdc'])), 12, 12); ?></td>
+                <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_CONFIG_STATUS_ACDC_INFO; ?></td>
+              </tr>
+              <tr>
+                <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_STATUS_PUI_LIVE; ?></td>
+                <td class="dataTableConfig col-middle"><?php echo xtc_image(DIR_WS_IMAGES . 'icon_status_'.$sellerstatus[$mode]['status_pui'].'.gif', constant('IMAGE_ICON_STATUS_'.strtoupper($sellerstatus[$mode]['status_pui'])), 12, 12); ?></td>
+                <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_CONFIG_STATUS_PUI_INFO; ?></td>
+              </tr>
+              <tr>
                 <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_CLIENT_SANDBOX; ?></td>
                 <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('config[PAYPAL_CLIENT_ID_SANDBOX]', $paypal->get_config('PAYPAL_CLIENT_ID_SANDBOX'), 'style="width: 300px;"'); ?></td>
                 <td class="dataTableConfig col-right" rowspan="2"><?php echo (($paypal_sandbox != '') ? '<a target="_blank" data-paypal-popup-close="onboardedClose" data-paypal-onboard-complete="onboardedCallbackSandbox" data-paypal-button="PPLtBlue" href="' . $paypal_sandbox . '">' . TEXT_PAYPAL_APPINATOR_SANDBOX . '</a><br><br>' : '') . TEXT_PAYPAL_CONFIG_CLIENT_SANDBOX_INFO; ?></td>
@@ -211,24 +231,24 @@ require (DIR_WS_INCLUDES.'head.php');
                 <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('config[PAYPAL_SECRET_SANDBOX]', $paypal->get_config('PAYPAL_SECRET_SANDBOX'), 'style="width: 300px;"'); ?></td>
               </tr>
               <tr>
-                <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_MODE; ?></td>
-                <td class="dataTableConfig col-middle"><?php echo xtc_draw_pull_down_menu('config[PAYPAL_MODE]', $mode_array, $paypal->get_config('PAYPAL_MODE')); ?></td>
-                <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_CONFIG_MODE_INFO; ?></td>
-              </tr>
-              <tr>
                 <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_MERCHANT_ID; ?></td>
-                <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('config[PAYPAL_MERCHANT_ID]', $paypal->get_config('PAYPAL_MERCHANT_ID'), 'style="width: 300px;"'); ?></td>
+                <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('config[PAYPAL_MERCHANT_ID_SANDBOX]', $paypal->get_config('PAYPAL_MERCHANT_ID_SANDBOX'), 'style="width: 300px;"'); ?></td>
                 <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_CONFIG_MERCHANT_ID_INFO; ?></td>
               </tr>
               <tr>
                 <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_STATUS_ACDC; ?></td>
-                <td class="dataTableConfig col-middle"><?php echo xtc_image(DIR_WS_IMAGES . 'icon_status_'.$status_acdc.'.gif', constant('IMAGE_ICON_STATUS_'.strtoupper($status_acdc)), 12, 12); ?></td>
+                <td class="dataTableConfig col-middle"><?php echo xtc_image(DIR_WS_IMAGES . 'icon_status_'.$sellerstatus[$mode]['status_acdc'].'.gif', constant('IMAGE_ICON_STATUS_'.strtoupper($sellerstatus[$mode]['status_acdc'])), 12, 12); ?></td>
                 <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_CONFIG_STATUS_ACDC_INFO; ?></td>
               </tr>
               <tr>
                 <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_STATUS_PUI; ?></td>
-                <td class="dataTableConfig col-middle"><?php echo xtc_image(DIR_WS_IMAGES . 'icon_status_'.$status_pui.'.gif', constant('IMAGE_ICON_STATUS_'.strtoupper($status_pui)), 12, 12); ?></td>
+                <td class="dataTableConfig col-middle"><?php echo xtc_image(DIR_WS_IMAGES . 'icon_status_'.$sellerstatus[$mode]['status_pui'].'.gif', constant('IMAGE_ICON_STATUS_'.strtoupper($sellerstatus[$mode]['status_pui'])), 12, 12); ?></td>
                 <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_CONFIG_STATUS_PUI_INFO; ?></td>
+              </tr>
+              <tr>
+                <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_MODE; ?></td>
+                <td class="dataTableConfig col-middle"><?php echo xtc_draw_pull_down_menu('config[PAYPAL_MODE]', $mode_array, $paypal->get_config('PAYPAL_MODE')); ?></td>
+                <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_CONFIG_MODE_INFO; ?></td>
               </tr>
               <tr>
                 <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_CONFIG_INVOICE_PREFIX; ?></td>
