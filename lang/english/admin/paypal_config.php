@@ -28,15 +28,16 @@ $lang_array = array(
   'TEXT_PAYPAL_CONFIG_MODE' => 'Mode:',
   'TEXT_PAYPAL_CONFIG_MODE_INFO' => '',
 
-  'TEXT_PAYPAL_CONFIG_MERCHANT_ID' => 'Merchant ID:',
+  'TEXT_PAYPAL_CONFIG_MERCHANT_ID_LIVE' => 'Merchant ID Live:',
+  'TEXT_PAYPAL_CONFIG_MERCHANT_ID_SANDBOX' => 'Merchant ID Sandbox:',
   'TEXT_PAYPAL_CONFIG_MERCHANT_ID_INFO' => 'Merchant ID of your merchant account. If you do not have it, request the data for Client ID and Secret again. This will automatically determine the Merchant ID.',
 
-  'TEXT_PAYPAL_CONFIG_STATUS_ACDC_LIVE' => 'Status Credit card live:',
-  'TEXT_PAYPAL_CONFIG_STATUS_ACDC_SANDBOX' => 'Status Credit card sandbox:',
+  'TEXT_PAYPAL_CONFIG_STATUS_ACDC_LIVE' => 'Status Credit card Live:',
+  'TEXT_PAYPAL_CONFIG_STATUS_ACDC_SANDBOX' => 'Status Credit card Sandbox:',
   'TEXT_PAYPAL_CONFIG_STATUS_ACDC_INFO' => 'If the status is yellow, contact PayPal support. If the status is red, the service for your account is not available at the moment.',
 
-  'TEXT_PAYPAL_CONFIG_STATUS_PUI_LIVE' => 'Status Pay upon invoice live:',
-  'TEXT_PAYPAL_CONFIG_STATUS_PUI_SANDBOX' => 'Status Pay upon invoice sandbox:',
+  'TEXT_PAYPAL_CONFIG_STATUS_PUI_LIVE' => 'Status Pay upon invoice Live:',
+  'TEXT_PAYPAL_CONFIG_STATUS_PUI_SANDBOX' => 'Status Pay upon invoice Sandbox:',
   'TEXT_PAYPAL_CONFIG_STATUS_PUI_INFO' => 'If the status is yellow, contact PayPal support. If the status is red, the service for your account is not available at the moment.',
 
   'TEXT_PAYPAL_CONFIG_INVOICE_PREFIX' => 'Prefix for order ID:',
