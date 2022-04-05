@@ -235,7 +235,16 @@ require (DIR_WS_INCLUDES.'head.php');
                   $module = new $_GET['module'];                  
                   $module_info = get_module_info($module);
                   $mInfo = new objectInfo($module_info);
-
+                  
+                  ?>
+                  <tr>
+                    <td colspan="3" style="border-top:none;padding-top:0;padding-bottom:20px;">
+                    <h3><?php echo $mInfo->title; ?></h3>
+                    <?php echo $mInfo->description; ?>
+                    </td>
+                  </tr>
+                  <?php
+                  
                   reset($mInfo->keys);
                   foreach ($mInfo->keys as $key => $value) {
                     ?>
