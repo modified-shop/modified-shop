@@ -28,7 +28,8 @@ $lang_array = array(
   'TEXT_PAYPAL_CONFIG_MODE' => 'Modus:',
   'TEXT_PAYPAL_CONFIG_MODE_INFO' => '',
 
-  'TEXT_PAYPAL_CONFIG_MERCHANT_ID' => 'Merchant ID:',
+  'TEXT_PAYPAL_CONFIG_MERCHANT_ID_LIVE' => 'Merchant ID Live:',
+  'TEXT_PAYPAL_CONFIG_MERCHANT_ID_SANDBOX' => 'Merchant ID Sandbox:',
   'TEXT_PAYPAL_CONFIG_MERCHANT_ID_INFO' => 'Merchant ID Ihres H&auml;ndleraccounts. Sollten sie diese nicht zur Hand haben, fordern Sie erneut die Daten f&uuml;r Client ID und Secret an. Dadurch wird die Merchant ID automatisch ermittelt.',
 
   'TEXT_PAYPAL_CONFIG_STATUS_ACDC_LIVE' => 'Status Kreditkarte Live:',
