@@ -73,7 +73,7 @@ class paypalsubscription extends PayPalPayment {
     
     require_once(DIR_FS_INC.'update_module_configuration.inc.php');
  
-    xtc_db_query("DROP TABLE IF EXISTS paypal_subscription");
+    //xtc_db_query("DROP TABLE IF EXISTS paypal_subscription");
 
     require_once(DIR_FS_CATALOG.DIR_WS_MODULES.'shopping_cart/paypal_plan_cart.php');
     $paypal_plan_cart = new paypal_plan_cart();

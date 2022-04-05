@@ -902,11 +902,11 @@ class PayPalPaymentBase extends PayPalCommon {
                                    FROM ".TABLE_CONFIGURATION." 
                                   WHERE configuration_key LIKE 'MODULE_PAYMENT_PAYPAL%_STATUS'");
     if (xtc_db_num_rows($check_query) == 1) {
-      xtc_db_query("DROP TABLE IF EXISTS ".TABLE_PAYPAL_PAYMENT);
-      xtc_db_query("DROP TABLE IF EXISTS ".TABLE_PAYPAL_CONFIG);
-      xtc_db_query("DROP TABLE IF EXISTS ".TABLE_PAYPAL_IPN);
-      xtc_db_query("DROP TABLE IF EXISTS ".TABLE_PAYPAL_INSTRUCTIONS);
-      xtc_db_query("DROP TABLE IF EXISTS ".TABLE_PAYPAL_TRACKING);
+      //xtc_db_query("DROP TABLE IF EXISTS ".TABLE_PAYPAL_PAYMENT);
+      //xtc_db_query("DROP TABLE IF EXISTS ".TABLE_PAYPAL_CONFIG);
+      //xtc_db_query("DROP TABLE IF EXISTS ".TABLE_PAYPAL_IPN);
+      //xtc_db_query("DROP TABLE IF EXISTS ".TABLE_PAYPAL_INSTRUCTIONS);
+      //xtc_db_query("DROP TABLE IF EXISTS ".TABLE_PAYPAL_TRACKING);
 
       $admin_query = xtc_db_query("SELECT * 
                                      FROM ".TABLE_ADMIN_ACCESS."
