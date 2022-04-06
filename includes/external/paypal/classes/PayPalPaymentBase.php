@@ -925,7 +925,7 @@ class PayPalPaymentBase extends PayPalCommon {
       xtc_db_query("DELETE FROM ".TABLE_CONFIGURATION." WHERE configuration_key LIKE 'MODULE_PAYMENT_PAYPAL_SECRET'");
     }
 
-    xtc_db_query("DELETE FROM ".TABLE_CONFIGURATION." WHERE configuration_key LIKE 'MODULE_PAYMENT_".strtoupper($this->code)."\_%'");
+    xtc_db_query("DELETE FROM ".TABLE_CONFIGURATION." WHERE configuration_key LIKE 'MODULE_PAYMENT_".strtoupper($this->code)."\_%' AND configuration_key != 'MODULE_PAYMENT_PAYPAL_SECRET'");
   }
 
 
