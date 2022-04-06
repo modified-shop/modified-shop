@@ -32,15 +32,18 @@ if (!isset($_SESSION[$messages_ns])) {
 }
 
 // check new column
-$found = false;
-$check_query = xtc_db_query("SHOW COLUMNS FROM `payone_transactions`");
-while ($check = xtc_db_fetch_array($check_query)) {
-  if ($check['Field'] == 'type') {
-    $found = true;
+$check_query = xtc_db_query("SHOW TABLES LIKE 'payone_transactions'");
+if (xtc_db_num_rows($check_query) > 0) {
+  $found = false;
+  $check_query = xtc_db_query("SHOW COLUMNS FROM `payone_transactions`");
+  while ($check = xtc_db_fetch_array($check_query)) {
+    if ($check['Field'] == 'type') {
+      $found = true;
+    }
   }
-}
-if ($found === false) {
-  xtc_db_query("ALTER TABLE payone_transactions ADD type varchar(64) NOT NULL");
+  if ($found === false) {
+    xtc_db_query("ALTER TABLE payone_transactions ADD type varchar(64) NOT NULL");
+  }
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
