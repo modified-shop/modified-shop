@@ -91,7 +91,7 @@ $messages = $_SESSION[$messages_ns];
 $_SESSION[$messages_ns] = array();
 
 $entries_per_page = 50;
-$search = xtc_db_prepare_input($_GET['search']);
+$search = ((isset($_GET['search'])) ? xtc_db_prepare_input($_GET['search']) : '');
 $total_logs = $payone->getLogsCount($mode, $startDate, $endDate, $search);
 $total_pages = max(1, ceil($total_logs / $entries_per_page));
 $limit = $entries_per_page;
@@ -257,7 +257,7 @@ require (DIR_WS_INCLUDES.'head.php');
                         ?>
                       </td>
                       <td class="menuBoxHeading">
-                        <?php echo xtc_draw_pull_down_menu('mode', array(array('id' => 'api', 'text' => API), array('id' => 'transactions', 'text' => TRANSACTIONS)), $_GET['mode']); ?>
+                        <?php echo xtc_draw_pull_down_menu('mode', array(array('id' => 'api', 'text' => API), array('id' => 'transactions', 'text' => TRANSACTIONS)), ((isset($_GET['mode'])) ? $_GET['mode'] : '')); ?>
                       </td>
                       <td class="menuBoxHeading">
                       <?php
