@@ -1407,6 +1407,9 @@ class PayoneModified {
 	}
 
 	public function getLogsCount($mode, $date_start = null, $date_end = null, $search = null) {
+	  if ($this->checkConfig() === false) {
+	    return 0;
+	  }
 		$table = (($mode == 'api') ? 'payone_api_log' : 'payone_transactions_log');
 		$query = "SELECT COUNT(*) AS logs_count
 		            FROM ".$table." l
@@ -1439,6 +1442,9 @@ class PayoneModified {
 	}
 
 	public function getLogs($mode, $limit, $offset, $date_start = null, $date_end = null, $search = null) {
+	  if ($this->checkConfig() === false) {
+	    return array();
+	  }
 		$table = (($mode == 'api') ? 'payone_api_log' : 'payone_transactions_log');
 		$query = "SELECT l.event_id, 
 		                 l.date_created, 
