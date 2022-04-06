@@ -408,10 +408,12 @@ class PayonePayment {
 	function install() {
 		$config = $this->_configuration();
 		$sort_order = 0;
-		foreach($config as $key => $data) {
-			$install_query = "insert into ".TABLE_CONFIGURATION." ( configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, use_function, date_added) ".
-					"values ('MODULE_PAYMENT_".strtoupper($this->code)."_".$key."', '".$data['configuration_value']."', '6', '".$sort_order."', '".xtc_db_input($data['set_function'])."', '".xtc_db_input($data['use_function'])."', now())";
-			xtc_db_query($install_query);
+		foreach($config as $key => $sql_data_array) {
+		  $sql_data_array['configuration_key'] = 'MODULE_PAYMENT_'.strtoupper($this->code).'_'.$key;
+		  $sql_data_array['sort_order'] = $sort_order;
+		  $sql_data_array['date_added'] = 'now()';
+		  
+		  xtc_db_perform(TABLE_CONFIGURATION, $sql_data_array);
 			$sort_order++;
 		}
 	}
