@@ -65,7 +65,7 @@ class paypal extends PayPalPaymentV2 {
     }
     $process_button = $paypal_smarty->fetch($tpl_file);
     
-    $process_button .= sprintf($this->get_js_sdk(), '
+    $paypalscript .= '
       await paypal.Buttons({
         fundingSource: paypal.FUNDING.PAYPAL,
         style: {
@@ -86,7 +86,34 @@ class paypal extends PayPalPaymentV2 {
       }).render("#apms_button").then(() => {
         $(".apms_form_button_overlay").hide();
       });
-    ');
+    ';
+    
+    if ($paypal->get_config('MODULE_PAYMENT_'.strtoupper($paypal->code).'_SHOW_CHECKOUT_BNPL') == '1') {
+      $paypalscript .= '
+        await paypal.Buttons({
+          fundingSource: paypal.FUNDING.PAYLATER,
+          style: {
+            layout: "vertical",
+            shape: "rect",
+            label: "buynow",
+          },
+          createOrder: function(data, actions) {
+            return "'.$_SESSION['paypal']['OrderID'].'";
+          },
+          onApprove: function(data, actions) {
+            $("#checkout_confirmation").submit();
+            $("#checkout_confirmation").html("");
+          },
+          onError: function (err) {
+            window.location.href = "'.$error_url.'";
+          }
+        }).render("#apms_button2").then(() => {
+          $(".apms_form_button_overlay").hide();
+        });
+      ';
+    }
+
+    $process_button .= sprintf($this->get_js_sdk(), $paypalscript);
     
     return $process_button;
   }

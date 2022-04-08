@@ -289,6 +289,16 @@ require (DIR_WS_INCLUDES.'head.php');
                     <?php
                   }
 
+                  if ($module->code == 'paypal') {
+                    ?>
+                    <tr>
+                      <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_MODULE_CHECKOUT_BNPL; ?></td>
+                      <td class="dataTableConfig col-middle"><?php echo draw_on_off_selection('config[profile][MODULE_PAYMENT_'.strtoupper($module->code).'_SHOW_CHECKOUT_BNPL]', $status_array, (($paypal->get_config('MODULE_PAYMENT_'.strtoupper($module->code).'_SHOW_CHECKOUT_BNPL') == '1') ? true : false)); ?></td>
+                      <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_MODULE_CHECKOUT_BNPL_INFO; ?></td>
+                    </tr>
+                    <?php
+                  }
+
                   if ($module->code == 'paypalexpress') {
                     ?>
                     <tr>
