@@ -88,7 +88,7 @@ class paypal extends PayPalPaymentV2 {
       });
     ';
     
-    if ($paypal->get_config('MODULE_PAYMENT_'.strtoupper($paypal->code).'_SHOW_CHECKOUT_BNPL') == '1') {
+    if ($this->get_config('MODULE_PAYMENT_'.strtoupper($this->code).'_SHOW_CHECKOUT_BNPL') == '1') {
       $paypalscript .= '
         await paypal.Buttons({
           fundingSource: paypal.FUNDING.PAYLATER,
