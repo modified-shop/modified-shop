@@ -18,7 +18,7 @@ $lang_array = array(
   'MODULE_PAYMENT_PAYPALPUI_TEXT_DESCRIPTION' => '<strong><font color="red">ATTENTION:</font></strong> In order for Pay upon invoice to work correctly the following webhooks must be set in the PayPal configuration so that the status is switched correctly:<ul><li>PAYMENT.CAPTURE.COMPLETED</li><li>PAYMENT.CAPTURE.DENIED</li></ul>',
   'MODULE_PAYMENT_PAYPALPUI_ALLOWED_TITLE' => 'Allowed zones',
   'MODULE_PAYMENT_PAYPALPUI_ALLOWED_DESC' => 'Please enter the zones <b>separately</b> which should be allowed to use this module (e.g. AT,DE (leave empty if you want to allow all zones))',
-  'MODULE_PAYMENT_PAYPALPUI_STATUS_TITLE' => 'Enable PayPal',
+  'MODULE_PAYMENT_PAYPALPUI_STATUS_TITLE' => 'Enable Pay upon invoice via PayPal',
   'MODULE_PAYMENT_PAYPALPUI_STATUS_DESC' => 'Do you want to accept PayPal Pay upon invoice payments?',
   'MODULE_PAYMENT_PAYPALPUI_SORT_ORDER_TITLE' => 'Sort order',
   'MODULE_PAYMENT_PAYPALPUI_SORT_ORDER_DESC' => 'Sort order of the view. Lowest numeral will be displayed first',
