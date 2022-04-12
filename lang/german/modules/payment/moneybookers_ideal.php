@@ -14,7 +14,7 @@
    ---------------------------------------------------------------------------------------*/
 
 define('MODULE_PAYMENT_MONEYBOOKERS_IDEAL_TEXT_TITLE', 'iDEAL');
-$_var = 'iDeal &uuml;ber Skrill';
+$_var = 'iDEAL &uuml;ber Skrill';
 if (_PAYMENT_MONEYBOOKERS_EMAILID=='') {
   $_var.='<br /><br /><b><font color="red">Bitte nehmen Sie zuerst die Einstellungen unter<br /> Erw. Konfiguration -> Partner -> Skrill.com vor!</font></b>';
 }

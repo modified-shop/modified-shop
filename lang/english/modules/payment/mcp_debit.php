@@ -6,7 +6,7 @@
  * @author     micropayment GmbH <shop-plugins@micropayment.de>
  */
 require_once('mcp_service.php');
-define('MODULE_PAYMENT_MCP_DEBIT_TEXT_DESCRIPTION', 'micropayment&trade; debit module
+define('MODULE_PAYMENT_MCP_DEBIT_TEXT_DESCRIPTION', 'micropayment&trade; direct debit module
 <br /><br />
 links<br />
 <b>tools</b><br />
@@ -21,19 +21,19 @@ links<br />
 <a target="_new" href="https://r120.micropayment.de">
   <input type="button" value="Micropayment register">
 </a>');
-define('MODULE_PAYMENT_MCP_DEBIT_TEXT_TITLE', 'micropayment&trade; debit');
-define('MODULE_PAYMENT_MCP_DEBIT_TEXT_TITLE_EXTERN', 'Debit');
+define('MODULE_PAYMENT_MCP_DEBIT_TEXT_TITLE', 'micropayment&trade; direct debit');
+define('MODULE_PAYMENT_MCP_DEBIT_TEXT_TITLE_EXTERN', 'Direct Debit');
 define('MODULE_PAYMENT_MCP_DEBIT_TEXT_INFO', '
 <div style="margin:10px; height:140px;">
   <div style="float:right;"><img src="./images/micropayment/logo_small.png" width="150"/></div>
   <div style="float:left;">
-    <b>Please have your debit card details at hand.</b><br />
+    <b>Please have your direct debit details at hand.</b><br />
     To conclude your order, you will now be forwarded to our payment service provider, micropayment&trade;.<br /><br />
     &#10004; secure &nbsp; &#10004; simple &nbsp; &#10004; no registration needed
   </div>
 </div>');
-define('MODULE_PAYMENT_MCP_DEBIT_STATUS_TITLE','Debit');
-define('MODULE_PAYMENT_MCP_DEBIT_STATUS_DESC','Debitmodule by micropayment&trade;');
+define('MODULE_PAYMENT_MCP_DEBIT_STATUS_TITLE','Direct Debit');
+define('MODULE_PAYMENT_MCP_DEBIT_STATUS_DESC','Debit Debit module by micropayment&trade;');
 define('MODULE_PAYMENT_MCP_DEBIT_MINIMUM_AMOUNT_TITLE','Minimum amount');
 define('MODULE_PAYMENT_MCP_DEBIT_MINIMUM_AMOUNT_DESC','Minimum amount for this payment method');
 define('MODULE_PAYMENT_MCP_DEBIT_MAXIMUM_AMOUNT_TITLE','Maximum amount');

@@ -28,7 +28,7 @@ define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_DESCRIPTION_CHECKOUT_PAYMENT_IMAGE'
 	    <td class="main">{{text}}</td>
 	  </tr>
 	</table>');
-define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_DESCRIPTION_CHECKOUT_PAYMENT_IMAGEALT', 'iDeal');
+define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_DESCRIPTION_CHECKOUT_PAYMENT_IMAGEALT', 'iDEAL');
 define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_DESCRIPTION_CHECKOUT_PAYMENT_TEXT', '
   <ul>
     <li>online payments for e-commerce in the Netherlands</li>
@@ -40,8 +40,8 @@ define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_DESCRIPTION_CHECKOUT_PAYMENT_TEXT',
 define('MODULE_PAYMENT_'.$sofort_code.'_SELECTBOX', 'Please choose your Bank');
 
 // admin
-define('MODULE_PAYMENT_'.$sofort_code.'_STATUS_TITLE', 'activate iDeal Modul');
-define('MODULE_PAYMENT_'.$sofort_code.'_STATUS_DESC', 'Activates/deactivates iDeal');
+define('MODULE_PAYMENT_'.$sofort_code.'_STATUS_TITLE', 'activate iDEAL Modul');
+define('MODULE_PAYMENT_'.$sofort_code.'_STATUS_DESC', 'Activates/deactivates iDEAL');
 
 include(DIR_FS_CATALOG.'lang/english/modules/payment/sofort_payment.php');
 

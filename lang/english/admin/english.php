@@ -163,7 +163,7 @@ define('BOX_GV_ADMIN_QUEUE', 'Gift Voucher Queue');
 define('BOX_GV_ADMIN_MAIL', 'Mail Gift Voucher');
 define('BOX_GV_ADMIN_SENT', 'Gift Vouchers sent');
 define('BOX_COUPON_ADMIN','Coupon Admin');
-define('BOX_TOOLS_BLACKLIST','Creditcard-Blacklist');
+define('BOX_TOOLS_BLACKLIST','Credit Card-Blacklist');
 define('BOX_IMPORT','Import/Export'); 
 define('BOX_PRODUCTS_VPE','Packing unit');
 define('BOX_CAMPAIGNS_REPORT','Campaign report');
