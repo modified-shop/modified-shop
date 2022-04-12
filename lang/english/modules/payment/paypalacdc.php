@@ -12,14 +12,14 @@
 
 
 $lang_array = array(
-  'MODULE_PAYMENT_PAYPALACDC_TEXT_TITLE' => 'Creditcard',
-  'MODULE_PAYMENT_PAYPALACDC_TEXT_ADMIN_TITLE' => 'Creditcard (without note to PayPal)',
+  'MODULE_PAYMENT_PAYPALACDC_TEXT_TITLE' => 'Credit Card',
+  'MODULE_PAYMENT_PAYPALACDC_TEXT_ADMIN_TITLE' => 'Credit Card (without note to PayPal)',
   'MODULE_PAYMENT_PAYPALACDC_TEXT_INFO' => ((!defined('RUN_MODE_ADMIN') && function_exists('xtc_href_link')) ? '<img src="'.xtc_href_link(DIR_WS_ICONS.'paypal_creditcard.png', '', 'SSL', false).'" />' : ''),
   'MODULE_PAYMENT_PAYPALACDC_TEXT_DESCRIPTION' => 'In the last step during the checkout, you will be asked to enter your credit card details to pay for your order.',
   'MODULE_PAYMENT_PAYPALACDC_ALLOWED_TITLE' => 'Allowed zones',
   'MODULE_PAYMENT_PAYPALACDC_ALLOWED_DESC' => 'Please enter the zones <b>separately</b> which should be allowed to use this module (e.g. AT,DE (leave empty if you want to allow all zones))',
-  'MODULE_PAYMENT_PAYPALACDC_STATUS_TITLE' => 'Enable Creditcard',
-  'MODULE_PAYMENT_PAYPALACDC_STATUS_DESC' => 'Do you want to accept PayPal Creditcard payments?',
+  'MODULE_PAYMENT_PAYPALACDC_STATUS_TITLE' => 'Enable Credit Card',
+  'MODULE_PAYMENT_PAYPALACDC_STATUS_DESC' => 'Do you want to accept PayPal Credit Card payments?',
   'MODULE_PAYMENT_PAYPALACDC_SORT_ORDER_TITLE' => 'Sort order',
   'MODULE_PAYMENT_PAYPALACDC_SORT_ORDER_DESC' => 'Sort order of the view. Lowest numeral will be displayed first',
   'MODULE_PAYMENT_PAYPALACDC_ZONE_TITLE' => 'Payment zone',
