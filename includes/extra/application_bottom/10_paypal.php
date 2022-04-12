@@ -122,9 +122,7 @@
               onApprove: function(data, actions) {
                 window.location.href = "'.xtc_href_link('callback/paypal/paypalexpress.php').'";
               }
-            }).render("#apms_button2").then(() => {
-              $(".apms_form_button_overlay").hide();
-            });
+            }).render("#apms_button2");
           ';
         }
       }
@@ -174,9 +172,7 @@
               onRender: function() { 
                 '.((basename($PHP_SELF) == FILENAME_PRODUCT_INFO) ? '' : '$(".pp-message").css("margin-top", "20px");').'
               }
-            }).render(".pp-message").then(() => {
-              $(".apms_form_button_overlay").hide();
-            });
+            }).render(".pp-message");
           ';
         }
       }
