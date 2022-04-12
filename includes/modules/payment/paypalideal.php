@@ -93,10 +93,15 @@ class paypalideal extends PayPalPaymentV2 {
   }
 
 
-  function after_process() {
+  function before_send_order() {
     global $insert_id;
   
     $this->FinishOrder($insert_id);    
+  }
+
+
+  function after_process() {
+    return false;
   }
 
 

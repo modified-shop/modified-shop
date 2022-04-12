@@ -106,14 +106,18 @@
   }
   .apms_form_button.apms_nocheckout {
     width:100%;
+    margin-bottom: -5px;
+    flex-direction:column;
   }  
   #checkout_confirmation .apms_form_button {  
     min-width:250px;
+    display:block;
   }
   .apms_form_button_inner {
     position:relative;
     width:100%;
     min-height:35px;
+    margin-bottom:5px;
   }  
   .apms_nocheckout .apms_form_button_inner {
     position:relative;
@@ -152,4 +156,11 @@
   #apms_button2 {
     height:35px;
     margin-bottom:5px;
+  }
+  
+  @media only screen and (min-width: 759px) {
+    .apms_form_button.apms_nocheckout {
+      height:35px;
+      margin-bottom: 0;
+    }
   }

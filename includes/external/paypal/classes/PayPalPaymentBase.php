@@ -93,7 +93,7 @@ class PayPalPaymentBase extends PayPalCommon {
       $_SESSION['paypal_payment_forbidden'] = array();
     }
     
-    if (in_array($this->code, $_SESSION['paypal_payment_forbidden']) {
+    if (in_array($this->code, $_SESSION['paypal_payment_forbidden'])) {
       $this->enabled = false;
     }
     
@@ -632,12 +632,20 @@ class PayPalPaymentBase extends PayPalCommon {
 
   function get_error() {
     $error = false;
-    if (isset($_GET['payment_error']) && $_GET['payment_error'] != '') {
+    if (isset($_GET['payment_error']) && $_GET['payment_error'] == $this->code) {
+      $message = decode_htmlentities(constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_ERROR_MESSAGE'));
+      if (isset($_SESSION['paypal_payment_error'])) {
+        if (defined('TEXT_PAYPAL_'.$_SESSION['paypal_payment_error'].'_ERROR')) {
+          $message = decode_htmlentities(constant('TEXT_PAYPAL_'.$_SESSION['paypal_payment_error'].'_ERROR'));
+        }
+        unset($_SESSION['paypal_payment_error']);
+      }
       $error = array(
         'title' => constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_ERROR_HEADING'),
-        'error' => decode_htmlentities(constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_ERROR_MESSAGE'))
+        'error' => $message
       );
     }
+    
     return $error;
   }
 
@@ -782,6 +790,7 @@ class PayPalPaymentBase extends PayPalCommon {
       if ($_SESSION['customer_id'] == $check['customers_id']) {
         require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
         xtc_remove_order((int)$orders_id, ((STOCK_LIMITED == 'true') ? 'on' : false));
+        $this->LoggingManager->log('INFO', 'Remove Order ID: '.$orders_id);
       }
     }
   }

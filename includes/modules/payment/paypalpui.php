@@ -83,7 +83,7 @@ class paypalpui extends PayPalPaymentV2 {
     $selection = array(
       'id' => $this->code,
       'module' => $this->title,
-      'description' => $info.$this->info,
+      'description' => $info,
       'fields' => array()
     );
 

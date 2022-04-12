@@ -159,6 +159,7 @@ $lang_array = array(
   'TEXT_PAYPALINSTALLMENT_CREDITOR' => 'Darlehensgeber',
   'TEXT_PAYPALINSTALLMENT_INFO_LINK' => 'Informationen zu m&ouml;glichen Raten',
 
+  'TEXT_PAYPAL_INSTRUMENT_DECLINED_ERROR' => 'Das gew&auml;hlte Zahlungsmittel wurde entweder von PayPal oder von der Bank abgelehnt, oder es kann f&uuml;r diese Zahlung nicht verwendet werden.',
 );
 
 
