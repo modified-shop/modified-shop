@@ -28,7 +28,7 @@ define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_DESCRIPTION_CHECKOUT_PAYMENT_IMAGE'
 	    <td class="main">{{text}}</td>
 	  </tr>
 	</table>');
-define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_DESCRIPTION_CHECKOUT_PAYMENT_IMAGEALT', 'iDeal');
+define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_DESCRIPTION_CHECKOUT_PAYMENT_IMAGEALT', 'iDEAL');
 define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_DESCRIPTION_CHECKOUT_PAYMENT_TEXT', '
   <ul>
     <li>Online-&Uuml;berweisungen f&uuml;r den elektronischen Handel in den Niederlanden</li>
@@ -40,8 +40,8 @@ define('MODULE_PAYMENT_'.$sofort_code.'_TEXT_DESCRIPTION_CHECKOUT_PAYMENT_TEXT',
 define('MODULE_PAYMENT_'.$sofort_code.'_SELECTBOX', 'Bitte w&auml;hlen Sie Ihre Bank aus');
 
 // admin
-define('MODULE_PAYMENT_'.$sofort_code.'_STATUS_TITLE', 'iDeal Modul aktivieren');
-define('MODULE_PAYMENT_'.$sofort_code.'_STATUS_DESC', 'M&ouml;chten Sie Zahlungen per iDeal akzeptieren?');
+define('MODULE_PAYMENT_'.$sofort_code.'_STATUS_TITLE', 'iDEAL Modul aktivieren');
+define('MODULE_PAYMENT_'.$sofort_code.'_STATUS_DESC', 'M&ouml;chten Sie Zahlungen per iDEAL akzeptieren?');
 
 include(DIR_FS_CATALOG.'lang/german/modules/payment/sofort_payment.php');
 

@@ -13,8 +13,8 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-define('MODULE_PAYMENT_MONEYBOOKERS_IDEAL_TEXT_TITLE', 'iDeal');
-$_var = 'iDeal via Skrill';
+define('MODULE_PAYMENT_MONEYBOOKERS_IDEAL_TEXT_TITLE', 'iDEAL');
+$_var = 'iDEAL via Skrill';
 if (_PAYMENT_MONEYBOOKERS_EMAILID=='') {
   $_var.='<br /><br /><b><font color="red">Please setup skrill.com configuration first! (Adv. Configuration -> Partner -> Skrill.com)!</font></b>';
 }
