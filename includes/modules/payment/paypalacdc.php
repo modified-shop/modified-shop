@@ -194,7 +194,7 @@ class paypalacdc extends PayPalPaymentV2 {
     }
 
     // cancel pp order
-    xtc_remove_order($_SESSION['tmp_oID'], true);
+    $this->remove_order($_SESSION['tmp_oID']);
     xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
   }
 
