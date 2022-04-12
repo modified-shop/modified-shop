@@ -12,7 +12,6 @@
 
 
 // include needed functions
-require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
 require_once(DIR_FS_INC.'xtc_date_short.inc.php');
 
 
@@ -262,7 +261,7 @@ class paypalpui extends PayPalPaymentV2 {
 
     if ($_SESSION['paypal']['OrderID'] == '') {
       $_SESSION['paypal_payment_forbidden'][] = $this->code;
-      xtc_remove_order($_SESSION['tmp_oID'], true);
+      $this->remove_order($_SESSION['tmp_oID']);
       xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
     }
 
@@ -286,7 +285,7 @@ class paypalpui extends PayPalPaymentV2 {
 
     // cancel pp order
     $_SESSION['paypal_payment_forbidden'][] = $this->code;
-    xtc_remove_order($_SESSION['tmp_oID'], true);
+    $this->remove_order($_SESSION['tmp_oID']);
     xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
   }
 
