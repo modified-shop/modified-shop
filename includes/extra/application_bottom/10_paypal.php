@@ -106,7 +106,7 @@
               style: {
                 layout: "horizontal",
                 shape: "rect",
-                color: "gold",
+                color: "blue",
                 height: 35
               },
               createOrder: function(data, actions) {              

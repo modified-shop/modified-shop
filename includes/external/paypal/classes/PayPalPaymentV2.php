@@ -310,7 +310,8 @@
     
     
     function CaptureOrder($OrderID, $error = false) {
-
+      global $insert_id;
+      
       // auth
       $client = $this->GetClient();
 
@@ -332,7 +333,20 @@
           return json_decode($ex->getMessage(), true);
         }
       }
+      
+      if (isset($insert_id) && (int)$insert_id > 0) {
+        $this->remove_order($insert_id);
+      }
 
+      if (isset($ex->details)
+          && is_array($ex->details)
+          && isset($ex->details[0])
+          && isset($ex->details[0]->issue)
+          )
+      {
+        $_SESSION['paypal_payment_error'] = strtoupper($ex->details[0]->issue);
+      }
+      
       xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL')); 
     }
 
@@ -366,6 +380,19 @@
         if ($error === true) {
           return json_decode($ex->getMessage(), true);
         }      
+      }
+
+      if (isset($insert_id) && (int)$insert_id > 0) {
+        $this->remove_order($insert_id);
+      }
+
+      if (isset($ex->details)
+          && is_array($ex->details)
+          && isset($ex->details[0])
+          && isset($ex->details[0]->issue)
+          )
+      {
+        $_SESSION['paypal_payment_error'] = strtoupper($ex->details[0]->issue);
       }
        
       xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL')); 

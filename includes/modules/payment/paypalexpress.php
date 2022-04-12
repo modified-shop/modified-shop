@@ -66,6 +66,11 @@ class paypalexpress extends PayPalPaymentV2 {
   }
 
 
+  function after_process() {
+    return false;
+  }
+
+
   function success() {    
     return false;
   }

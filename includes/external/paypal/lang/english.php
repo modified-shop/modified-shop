@@ -159,6 +159,7 @@ $lang_array = array(
   'TEXT_PAYPALINSTALLMENT_CREDITOR' => 'Borrower',
   'TEXT_PAYPALINSTALLMENT_INFO_LINK' => 'Information on possible rates',
 
+  'TEXT_PAYPAL_INSTRUMENT_DECLINED_ERROR' => 'The instrument presented  was either declined by the processor or bank, or it can\'t be used for this payment.',
 );
 
 

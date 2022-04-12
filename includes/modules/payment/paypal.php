@@ -57,6 +57,9 @@ class paypal extends PayPalPaymentV2 {
     $paypal_smarty = new Smarty();
     $paypal_smarty->assign('language', $_SESSION['language']);
     $paypal_smarty->assign('checkout', true);
+    $paypal_smarty->assign('paypalbnpl', true);
+    $paypal_smarty->assign('paypalexpress', true);
+    
     $paypal_smarty->caching = 0;
 
     $tpl_file = DIR_FS_EXTERNAL.'paypal/templates/apms.html';
@@ -69,7 +72,7 @@ class paypal extends PayPalPaymentV2 {
       await paypal.Buttons({
         fundingSource: paypal.FUNDING.PAYPAL,
         style: {
-          layout: "vertical",
+          layout: "horizontal",
           shape: "rect",
           label: "buynow",
         },
@@ -83,7 +86,7 @@ class paypal extends PayPalPaymentV2 {
         onError: function (err) {
           window.location.href = "'.$error_url.'";
         }
-      }).render("#apms_button").then(() => {
+      }).render("#apms_button1").then(() => {
         $(".apms_form_button_overlay").hide();
       });
     ';
@@ -93,9 +96,9 @@ class paypal extends PayPalPaymentV2 {
         await paypal.Buttons({
           fundingSource: paypal.FUNDING.PAYLATER,
           style: {
-            layout: "vertical",
+            layout: "horizontal",
             shape: "rect",
-            label: "buynow",
+            color: "blue",
           },
           createOrder: function(data, actions) {
             return "'.$_SESSION['paypal']['OrderID'].'";
@@ -131,10 +134,15 @@ class paypal extends PayPalPaymentV2 {
 	}
 
 
-  function after_process() {
+  function before_send_order() {
     global $insert_id;
-    
+  
     $this->FinishOrder($insert_id);    
+  }
+
+
+  function after_process() {
+    return false;
   }
   
   
