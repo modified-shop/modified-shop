@@ -463,6 +463,34 @@ require (DIR_WS_INCLUDES.'head.php');
                       <?php                  
                     }
                   }
+
+                  // update installed modules
+                  if (xtc_not_null(MODULE_PAYMENT_INSTALLED)) {
+                    $installed_modules = array();
+                    $modules_array = explode(';', MODULE_PAYMENT_INSTALLED);        
+                    for ($i = 0, $n = sizeof($modules_array); $i < $n; $i++) {
+                      $file = $modules_array[$i];
+                      if (is_file(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $file)) {
+                        include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $file);
+                      }
+                      include_once(DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/' . $file);
+                      $class = substr($file, 0, strpos($file, '.'));
+                      if (class_exists($class)) {
+                        $module = new $class();
+                        if ($module->check() > 0) {
+                          $installed_modules[$module->sort_order][] = $file;
+                          sort($installed_modules[$module->sort_order]);
+                        }
+                      }
+                    }        
+
+                    ksort($installed_modules);
+                    $installed_modules = array_reduce($installed_modules, 'array_merge', array());
+                    xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " 
+                                     SET configuration_value = '" . implode(';', $installed_modules) . "', 
+                                         last_modified = now() 
+                                   WHERE configuration_key = 'MODULE_PAYMENT_INSTALLED'");
+                  }
               }
             ?>
             </table>
