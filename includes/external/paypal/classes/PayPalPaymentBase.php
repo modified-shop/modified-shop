@@ -89,6 +89,14 @@ class PayPalPaymentBase extends PayPalCommon {
   function update_status() {
     global $order;
 
+    if (!isset($_SESSION['paypal_payment_forbidden'])) {
+      $_SESSION['paypal_payment_forbidden'] = array();
+    }
+    
+    if (in_array($this->code, $_SESSION['paypal_payment_forbidden']) {
+      $this->enabled = false;
+    }
+    
     if ($this->enabled == true
         && defined('MODULE_PAYMENT_'.strtoupper($this->code).'_ZONE')
         && (int) constant('MODULE_PAYMENT_'.strtoupper($this->code).'_ZONE') > 0

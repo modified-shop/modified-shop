@@ -261,6 +261,7 @@ class paypalpui extends PayPalPaymentV2 {
     }
 
     if ($_SESSION['paypal']['OrderID'] == '') {
+      $_SESSION['paypal_payment_forbidden'][] = $this->code;
       xtc_remove_order($_SESSION['tmp_oID'], true);
       xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
     }
@@ -284,6 +285,7 @@ class paypalpui extends PayPalPaymentV2 {
     }
 
     // cancel pp order
+    $_SESSION['paypal_payment_forbidden'][] = $this->code;
     xtc_remove_order($_SESSION['tmp_oID'], true);
     xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
   }
@@ -321,6 +323,7 @@ class paypalpui extends PayPalPaymentV2 {
 
     $this->update_order('Order ID: '.$_SESSION['paypal']['OrderID'], $status_id, $insert_id);
     unset($_SESSION['paypal']);
+    unset($_SESSION['paypal_payment_forbidden']);
   }
 
 
