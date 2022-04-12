@@ -373,11 +373,8 @@ if (xtc_not_null($action) && !$box) {
                             if (class_exists($class)) {
                               $module = new $class();
                               if ($module->check() > 0) {
-                                if (($module->sort_order > 0) && !isset($installed_modules[$module->sort_order])) {
-                                  $installed_modules[$module->sort_order] = $file;
-                                } else {
-                                  $installed_modules[] = $file;
-                                }
+                                $installed_modules[$module->sort_order][] = $file;
+                                sort($installed_modules[$module->sort_order]);
                               }
                               if (($module_class == '' || (isset($module_class) && ($module_class == $class))) && !isset($mInfo)) {
                                 $module_info = get_module_info($module);
@@ -440,7 +437,9 @@ if (xtc_not_null($action) && !$box) {
                             }
                           }
                         }
+                        
                         ksort($installed_modules);
+                        $installed_modules = array_reduce($installed_modules, 'array_merge', array());
                         $check_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = '" . $module_key . "'");
                         if (xtc_db_num_rows($check_query)) {
                           $check = xtc_db_fetch_array($check_query);
