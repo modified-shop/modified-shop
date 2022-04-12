@@ -540,6 +540,45 @@ if (isset($order) && is_object($order)) {
               <?php
             }
             
+            if (isset($admin_info_data->payment_source)
+                && isset($admin_info_data->payment_source->pay_upon_invoice)
+                )
+            {
+              ?>
+              <div class="pp_transactions pp_box">
+                <div class="pp_boxheading"><?php echo TEXT_PAYPAL_INSTRUCTIONS; ?></div>
+                <dl class="pp_transaction">
+                  <dt><?php echo TEXT_PAYPAL_INSTRUCTIONS_AMOUNT; ?></dt>
+                  <dd><?php echo $admin_info_data->purchase_units[0]->amount->value.' '.$admin_info_data->purchase_units[0]->amount->currency_code; ?></dd>
+                </dl>
+                <dl class="pp_transaction">
+                  <dt><?php echo TEXT_PAYPAL_INSTRUCTIONS_REFERENCE; ?></dt>
+                  <dd><?php echo $admin_info_data->payment_source->pay_upon_invoice->payment_reference; ?></dd>
+                </dl>
+                <dl class="pp_transaction">
+                  <dt><?php echo TEXT_PAYPAL_INSTRUCTIONS_PAYDATE; ?></dt>
+                  <dd><?php echo date('d.m.Y', strtotime('+30 days', strtotime($admin_info_data->create_time))); ?></dd>
+                </dl>
+                <dl class="pp_transaction">
+                  <dt><?php echo TEXT_PAYPAL_INSTRUCTIONS_ACCOUNT; ?></dt>
+                  <dd><?php echo $admin_info_data->payment_source->pay_upon_invoice->deposit_bank_details->bank_name; ?></dd>
+                </dl>
+                <dl class="pp_transaction">
+                  <dt><?php echo TEXT_PAYPAL_INSTRUCTIONS_HOLDER; ?></dt>
+                  <dd><?php echo $admin_info_data->payment_source->pay_upon_invoice->deposit_bank_details->account_holder_name; ?></dd>
+                </dl>
+                <dl class="pp_transaction">
+                  <dt><?php echo TEXT_PAYPAL_INSTRUCTIONS_IBAN; ?></dt>
+                  <dd><?php echo $admin_info_data->payment_source->pay_upon_invoice->deposit_bank_details->iban; ?></dd>
+                </dl>
+                <dl class="pp_transaction">
+                  <dt><?php echo TEXT_PAYPAL_INSTRUCTIONS_BIC; ?></dt>
+                  <dd><?php echo $admin_info_data->payment_source->pay_upon_invoice->deposit_bank_details->bic; ?></dd>
+                </dl>
+              </div>
+              <?php
+            }
+
             $tracking_query = xtc_db_query("SELECT *
                                               FROM ".TABLE_ORDERS_TRACKING."
                                              WHERE orders_id = '".(int)$order->info['order_id']."'");
