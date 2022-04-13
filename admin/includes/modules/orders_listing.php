@@ -30,12 +30,14 @@
     if (is_file(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $payments['payment_class'].'.php')) {
       include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $payments['payment_class'].'.php');
       $payment_text = constant('MODULE_PAYMENT_'.strtoupper($payments['payment_class']).'_TEXT_TITLE');
-    } 
+    } elseif ($payments['payment_class'] == 'no_payment') {
+      $payment_text = TEXT_NO_PAYMENT;
+    }
     $payment_array[] = array(
       'id' => $payments['payment_class'],
       'text' => $payment_text.' ('.$payments['payment_class'].')'
     );
-  }  
+  }
   ?>
   
   <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_orders.png'); ?></div>
