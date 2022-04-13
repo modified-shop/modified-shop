@@ -29,7 +29,7 @@ $lang_array = array(
   'MODULE_PAYMENT_PAYPALSOFORT_TEXT_EXTENDED_DESCRIPTION' => '<strong><font color="red">ATTENTION:</font></strong> Please setup PayPal configuration under "Partner Modules" -> "PayPal" -> <a href="'.xtc_href_link('paypal_config.php').'"><strong>"PayPal Configuration"</strong></a>!',
 
   'MODULE_PAYMENT_PAYPALSOFORT_TEXT_ERROR_HEADING' => 'Note',
-  'MODULE_PAYMENT_PAYPALSOFORT_TEXT_ERROR_MESSAGE' => 'PayPal payment has been canceled',
+  'MODULE_PAYMENT_PAYPALSOFORT_TEXT_ERROR_MESSAGE' => 'The payment with Sofort via PayPal was cancelled',
 );
 
 

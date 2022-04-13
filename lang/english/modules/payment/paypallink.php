@@ -29,7 +29,7 @@ $lang_array = array(
   'MODULE_PAYMENT_PAYPALLINK_TEXT_EXTENDED_DESCRIPTION' => '<strong><font color="red">ATTENTION:</font></strong> Please setup PayPal configuration under "Partner Modules" -> "PayPal" -> <a href="'.xtc_href_link('paypal_config.php').'"><strong>"PayPal Configuration"</strong></a>!',
 
   'MODULE_PAYMENT_PAYPALLINK_TEXT_ERROR_HEADING' => 'Note',
-  'MODULE_PAYMENT_PAYPALLINK_TEXT_ERROR_MESSAGE' => 'PayPal payment has been canceled',
+  'MODULE_PAYMENT_PAYPALLINK_TEXT_ERROR_MESSAGE' => 'PayPal payment has been cancelled',
   
   'MODULE_PAYMENT_PAYPALLINK_TEXT_SUCCESS' => 'Pay now with PayPal. Please click on the following link:<br/> %s',
   'MODULE_PAYMENT_PAYPALLINK_TEXT_COMPLETED' => 'Thank you for paying with PayPal.',
