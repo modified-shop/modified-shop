@@ -56,6 +56,11 @@
                 array('id' => '18', 'text' => sprintf(TEXT_DHL_AVS_YEAR, 18)),
               );
 
+              $endorsement_array = array(
+                array('id' => 'IMMEDIATE', 'text' => CFG_TXT_IMMEDIATE),
+                array('id' => 'ABANDONMENT', 'text' => CFG_TXT_ABANDONMENT),
+              );
+
               $type_array = array(
                 array('id' => '0', 'text' => 'Paket'),
                 array('id' => '1', 'text' => 'Warenpost'),
@@ -118,6 +123,14 @@
                 <td style="padding:5px;border-width: 0 1px 1px 0;"><?php echo xtc_draw_pull_down_menu('premium', 'checkbox', ((MODULE_DHL_PREMIUM == 'True') ? true : false), 'style="width:120px;"'); ?></td>
                 <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_NOTIFICATION; ?></td>
                 <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo xtc_draw_pull_down_menu('notification', 'checkbox', ((MODULE_DHL_NOTIFICATION == 'True') ? true : false), 'style="width:120px;"'); ?></td>
+              </tr>
+              <tr class="dhl_expand dhl_toggle">
+                <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_ENDORSEMENT; ?></td>
+                <td style="padding:5px;border-width: 0 1px 1px 0;"><?php echo xtc_draw_pull_down_menu('endorsement', $endorsement_array, MODULE_DHL_ENDORSEMENT, 'style="width:120px;"'); ?></td>
+                <td style="padding:5px;border-width: 0 0 1px 0;"></td>
+                <td style="padding:5px;border-width: 0 1px 1px 0;"></td>
+                <td style="padding:5px;border-width: 0 0 1px 0;"></td>
+                <td style="padding:5px;border-width: 0 0 1px 0;"></td>
               </tr>
               <tr id="dhl_expand">
                 <td colspan="6" style="padding:5px;border-width: 0 0 0 0;">

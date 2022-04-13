@@ -54,6 +54,8 @@
   define('MODULE_DHL_IDENT_DESC', 'Set Ident Check preselected as default (0 is disabled)');
   define('MODULE_DHL_PREMIUM_TITLE', 'Premium');
   define('MODULE_DHL_PREMIUM_DESC', 'Set Premium preselected as default');
+  define('MODULE_DHL_ENDORSEMENT_TITLE', 'Endorsement');
+  define('MODULE_DHL_ENDORSEMENT_DESC', 'How should international parcels be handled if they cannot be delivered?');
 
   define('MODULE_DHL_COMPANY_TITLE', '<hr noshade>Customer details<br/>');
   define('MODULE_DHL_COMPANY_DESC', 'Company:');

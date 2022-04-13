@@ -54,6 +54,8 @@
   define('MODULE_DHL_IDENT_DESC', 'Was soll als Standard f&uuml;r die Alterspr&uuml;fung vorausgew&auml;hlt werden (0 ist deaktiviert)?');
   define('MODULE_DHL_PREMIUM_TITLE', 'Premium');
   define('MODULE_DHL_PREMIUM_DESC', 'Soll als Standard Premium vorausgew&auml;hlt werden?');
+  define('MODULE_DHL_ENDORSEMENT_TITLE', 'Vorausverf&uuml;gung');
+  define('MODULE_DHL_ENDORSEMENT_DESC', 'Wie sollen internationale Pakete behandelt werden, wenn sie nicht zugestellt werden k&ouml;nnen?');
 
   define('MODULE_DHL_COMPANY_TITLE', '<hr noshade>Kundendetails<br/>');
   define('MODULE_DHL_COMPANY_DESC', 'Firma:');

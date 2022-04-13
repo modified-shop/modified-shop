@@ -323,6 +323,12 @@
         $Service->IdentCheck->Ident = $Ident;
       }
       
+      // endorsement
+      if (in_array($this->data['product_code'], array('53', '66'))) {
+        $Service->Endorsement['active'] = '1';
+        $Service->Endorsement['type'] = $this->endorsement;
+      }
+      
       // ShipmentDetails
       $ShipmentDetails = new stdClass();
       $ShipmentDetails->product = $this->data['product'];
