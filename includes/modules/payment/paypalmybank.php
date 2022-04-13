@@ -48,7 +48,7 @@ class paypalmybank extends PayPalPaymentV2 {
   }
 
 
-  function pre_confirmation_check() {
+  function process_button() {
     global $order;
   
     $payment_source = array(

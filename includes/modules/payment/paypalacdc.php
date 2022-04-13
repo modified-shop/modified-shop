@@ -48,7 +48,12 @@ class paypalacdc extends PayPalPaymentV2 {
   }
 
 
-  function pre_confirmation_check() {
+  function confirmation() {
+    return array ('title' => $this->description);
+  }
+
+
+  function process_button() {
     global $order;
 
     $_SESSION['paypal'] = array(
@@ -61,16 +66,6 @@ class paypalacdc extends PayPalPaymentV2 {
     if ($_SESSION['paypal']['OrderID'] == '') {
       xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
     }
-  }
-
-
-  function confirmation() {
-    return array ('title' => $this->description);
-  }
-
-
-  function process_button() {
-    global $order;
 
     $paypal_smarty = new Smarty();
     $paypal_smarty->assign('language', $_SESSION['language']);
