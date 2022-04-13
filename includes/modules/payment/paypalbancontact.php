@@ -31,7 +31,8 @@ class paypalbancontact extends PayPalPaymentV2 {
     global $order;
 
     $this->enabled = false;
-    if (in_array($order->delivery['country']['iso_code_2'], array('BE'))
+    if (isset($order->billing['country']['iso_code_2'])
+        && in_array($order->delivery['country']['iso_code_2'], array('BE'))
         && in_array($order->info['currency'], array('EUR'))
         )
     {

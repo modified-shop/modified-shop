@@ -23,8 +23,7 @@ class paypalexpress extends PayPalPaymentV2 {
     global $order;
   
     $this->paypal_code = 'paypal';
-    PayPalPaymentV2::__construct('paypalexpress');
-  
+    PayPalPaymentV2::__construct('paypalexpress');  
     $this->tmpOrders = false;
   
     if (is_object($order)) {
