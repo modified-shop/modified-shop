@@ -625,4 +625,5 @@ define('FROM','from ');
 define('YOU_SAVE','you save ');
 define('INSTEAD','Our previous price ');
 define('TXT_PER',' per ');
+define('TEXT_NO_PAYMENT', 'Keine Zahlart');
 ?>

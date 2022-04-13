@@ -99,6 +99,12 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
   echo xtc_draw_form('payment_edit', FILENAME_ORDERS_EDIT, 'action=payment_edit', 'post');
   echo xtc_draw_hidden_field('oID', $_GET['oID']);
 
+  $payment_array = array();
+  $payment_array[] = array(
+    'id' => 'no_payment',
+    'text' => TEXT_NO_PAYMENT.' (no_payment)'
+  );
+  
   if (trim(MODULE_PAYMENT_INSTALLED) != '') {
     $payments = explode(';', MODULE_PAYMENT_INSTALLED);
     for ($i=0; $i<count($payments); $i++) {
@@ -141,17 +147,21 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
   echo xtc_draw_form('shipping_edit', FILENAME_ORDERS_EDIT, 'action=shipping_edit', 'post');
   echo xtc_draw_hidden_field('oID', $_GET['oID']);
   
-  $shippings = explode(';', MODULE_SHIPPING_INSTALLED);
-  for ($i=0; $i<count($shippings); $i++) {
-    if (file_exists(DIR_FS_LANGUAGES . $order->info['language'] . '/modules/shipping/' . $shippings[$i])) {
-      require_once(DIR_FS_LANGUAGES . $order->info['language'] . '/modules/shipping/' . $shippings[$i]);
+  $shipping_array = array();
+  
+  if (trim(MODULE_PAYMENT_INSTALLED) != '') {
+    $shippings = explode(';', MODULE_SHIPPING_INSTALLED);
+    for ($i=0; $i<count($shippings); $i++) {
+      if (file_exists(DIR_FS_LANGUAGES . $order->info['language'] . '/modules/shipping/' . $shippings[$i])) {
+        require_once(DIR_FS_LANGUAGES . $order->info['language'] . '/modules/shipping/' . $shippings[$i]);
+      }
+      $shipping_modul = substr($shippings[$i], 0, strrpos($shippings[$i], '.'));
+      $shipping_text = constant('MODULE_SHIPPING_'.strtoupper($shipping_modul).'_TEXT_TITLE');
+      $shipping_array[] = array(
+        'id' => $shipping_modul,
+        'text' => $shipping_text.' ('.$shipping_modul.')'
+      );
     }
-    $shipping_modul = substr($shippings[$i], 0, strrpos($shippings[$i], '.'));
-    $shipping_text = constant('MODULE_SHIPPING_'.strtoupper($shipping_modul).'_TEXT_TITLE');
-    $shipping_array[] = array(
-      'id' => $shipping_modul,
-      'text' => $shipping_text.' ('.$shipping_modul.')'
-    );
   }
   $order_shipping = explode('_', $order->info['shipping_class']);
   $order_shipping_text = $order_shipping = $order_shipping[0];

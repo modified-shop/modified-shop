@@ -206,9 +206,13 @@
                      );
   
   $payment_array = array(array('id' => 0, 'text' => REPORT_ALL));
+  $payment_array[] = array(
+    'id' => 'no_payment',
+    'text' => TEXT_NO_PAYMENT
+  );
   $payments = explode(';', MODULE_PAYMENT_INSTALLED);
   $payments = array_filter($payments); //fix for empty array
-  for ($i=0, $n=count($payments); $i<$n; $i++){
+  for ($i=0, $n=count($payments); $i<$n; $i++) {
     if (is_file(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $payments[$i])) {
       include(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $payments[$i]);
       $payment_id = substr($payments[$i], 0, strrpos($payments[$i], '.'));
@@ -225,7 +229,7 @@
     $status_array[] = array('id' => ORDER_STATUSES_FOR_SALES_STATISTICS, 'text' => REPORT_SALES_STATISTICS);
   }
   foreach ($sr->status as $value) {
-    $status_array[] = array('id' => $value["orders_status_id"], 'text' => $value["orders_status_name"]);
+    $status_array[] = array('id' => $value['orders_status_id'], 'text' => $value['orders_status_name']);
   }
 
   $max_array = array(array('id' => 0, 'text' => REPORT_ALL),
