@@ -971,15 +971,15 @@ class PayPalPaymentBase extends PayPalCommon {
         if (file_exists(DIR_FS_LANGUAGES.$languages['directory'].'/admin/paypal_config.php')) {
           include(DIR_FS_LANGUAGES.$languages['directory'].'/admin/paypal_config.php');
         }
-        if (${$statusname} != '') {
+        if (isset(${$statusname}) && ${$statusname} != '') {
           $check_query = xtc_db_query("SELECT orders_status_id 
                                          FROM " . TABLE_ORDERS_STATUS . " 
                                         WHERE orders_status_name = '" .xtc_db_input(${$statusname}). "' 
                                           AND language_id = '".(int)$languages['languages_id']."' 
                                         LIMIT 1");
           $status = xtc_db_fetch_array($check_query);
-          if (xtc_db_num_rows($check_query) < 1 || (${$statusid} && $status['orders_status_id'] != ${$statusid}) ) {
-            if (!${$statusid}) {
+          if (xtc_db_num_rows($check_query) < 1 || (isset(${$statusid}) && $status['orders_status_id'] != ${$statusid}) ) {
+            if (!isset(${$statusid})) {
               $status_query = xtc_db_query("SELECT max(orders_status_id) as status_id FROM " . TABLE_ORDERS_STATUS);
               $status = xtc_db_fetch_array($status_query);
               ${$statusid} = $status['status_id'] + 1;

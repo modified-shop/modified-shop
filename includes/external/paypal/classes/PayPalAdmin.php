@@ -46,14 +46,16 @@ class PayPalAdmin extends PayPalPayment {
     
     $partner_details = $this->get_partner_details($mode);
     
-    $partner->setPartnerId($partner_details['partnerID'])
-            ->setMerchantId($this->get_config('PAYPAL_MERCHANT_ID_'.strtoupper($mode)));
+    if ($this->get_config('PAYPAL_MERCHANT_ID_'.strtoupper($mode)) != '') {
+      $partner->setPartnerId($partner_details['partnerID'])
+              ->setMerchantId($this->get_config('PAYPAL_MERCHANT_ID_'.strtoupper($mode)));
     
-    try {
-      return $partner->get($apiContext);
+      try {
+        return $partner->get($apiContext);
       
-    } catch (Exception $ex) {
-      $this->LoggingManager->log('DEBUG', 'getSellerStatus', array('exception' => $ex));
+      } catch (Exception $ex) {
+        $this->LoggingManager->log('DEBUG', 'getSellerStatus', array('exception' => $ex));
+      }
     }
   }
   

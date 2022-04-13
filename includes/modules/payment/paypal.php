@@ -68,7 +68,7 @@ class paypal extends PayPalPaymentV2 {
     }
     $process_button = $paypal_smarty->fetch($tpl_file);
     
-    $paypalscript .= '
+    $paypalscript = '
       await paypal.Buttons({
         fundingSource: paypal.FUNDING.PAYPAL,
         style: {
