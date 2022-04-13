@@ -86,7 +86,7 @@ class PayPalAuth {
         return new SandboxEnvironment($client_id, $client_secret);
         break;
 
-      case 'live':
+      default:
         return new LiveEnvironment($client_id, $client_secret);
         break;
     }
