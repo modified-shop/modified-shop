@@ -67,13 +67,12 @@
      * class methods
      */
     function quote($method = '') {
-      global $order, $shipping_weight, $shipping_num_boxes;
+      global $order, $shipping_weight, $shipping_num_boxes, $xtPrice;
       require_once(DIR_FS_INC .'xtc_format_price.inc.php');
 
       $dest_country = $order->delivery['country']['iso_code_2'];
       $dest_plz = $order->delivery['postcode'];
       $dest_zone = 0;
-      $error = false;
 
       for ($i=1; $i<=$this->num_gls; $i++) {
         $countries_table = constant('MODULE_SHIPPING_GLS_COUNTRIES_' . $i);
@@ -89,6 +88,9 @@
         // rest of the world eof
       }
 
+      $this->quotes = array('id' => $this->code,
+                            'module' => $this->title);
+
       $plz_table = constant('MODULE_SHIPPING_GLS_POSTCODE');
       $plz_zones = preg_split("/[,]/",$plz_table); 
       if (in_array($dest_plz, $plz_zones)) {
@@ -98,26 +100,30 @@
       }
 
       if ($dest_zone == 0) {
-        $error = true;
+        if (MODULE_SHIPPING_GLS_DISPLAY == 'True') {
+          $this->quotes['error'] = MODULE_SHIPPING_GLS_INVALID_ZONE;
+        } else {
+          $this->enabled = false;
+        }
       } else {
         $shipping = -1;
         $gls_cost = constant('MODULE_SHIPPING_GLS_COST_' . $dest_zone);
         $gls_table = preg_split("/[:,]/" , $gls_cost); 
-        for ($i=0; $i<sizeof($gls_table); $i+=2) {
+        $size = sizeof($gls_table);
+        for ($i=0; $i<$size; $i+=2) {
           if ($shipping_weight <= $gls_table[$i]) {
             $shipping = $gls_table[$i+1];
-            if ($dest_plz_in) {
-              $shipping_method = MODULE_SHIPPING_GLS_TEXT_WAY . ' ' . $dest_country . ': ';
-            } else {
-              $shipping_method = MODULE_SHIPPING_GLS_TEXT_WAY . ' ' . $dest_country . ': ';
-            }
+            $shipping_method = MODULE_SHIPPING_GLS_TEXT_WAY . ' ' . $dest_country . ': ';
             break;
           }
         }
 
         if ($shipping == -1) {
-          $shipping_cost = 0;
-          $shipping_method = MODULE_SHIPPING_GLS_UNDEFINED_RATE;
+          if (MODULE_SHIPPING_GLS_DISPLAY == 'True') {
+            $this->quotes['error'] = MODULE_SHIPPING_GLS_UNDEFINED_RATE;
+          } else {
+            $this->enabled = false;
+          }
         } else {
           if ($dest_plz_in) {
             $shipping_cost_normal = ($shipping + (double)MODULE_SHIPPING_GLS_HANDLING);
@@ -125,35 +131,36 @@
             $shipping_cost = ($shipping + (double)MODULE_SHIPPING_GLS_HANDLING + $shipping_cost_extra);
           } else {
             $shipping_cost_normal = ($shipping + (double)MODULE_SHIPPING_GLS_HANDLING);
+            $shipping_cost_extra = 0;
             $shipping_cost = ($shipping + (double)MODULE_SHIPPING_GLS_HANDLING);
           }
+
+          $tax_text = '';          
+          if ($this->tax_class > 0 && $_SESSION['customers_status']['customers_status_show_price_tax'] == 1) {
+             $tax_rate = xtc_get_tax_rate($this->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
+             $shipping_cost_normal = $xtPrice->xtcAddTax($shipping_cost_normal, $tax_rate);
+             $shipping_cost_extra = $xtPrice->xtcAddTax($shipping_cost_extra, $tax_rate);
+             $tax_text = ' '.sprintf(TAX_INFO_INCL, $tax_rate.'%');
+          }
+          $shipping_cost_normal_formatted = trim($xtPrice->xtcFormat($shipping_cost_normal, true));
+          $shipping_cost_extra_formatted = trim($xtPrice->xtcFormat($shipping_cost_extra, true));
+          
+          if ($dest_plz_in) {
+            $this->quotes = array('id' => $this->code,
+                                  'module' => MODULE_SHIPPING_GLS_TEXT_TITLE,
+                                  'methods' => array(array('id' => $this->code,
+                                                           'title' => $shipping_method . ' (' . ($shipping_num_boxes > 1 ? $shipping_num_boxes . ' x ' : '') . round($shipping_weight, 2) . ' ' . MODULE_SHIPPING_GLS_TEXT_UNITS . ' = ' . $shipping_cost_normal_formatted . $tax_text . ')' . ' ' . MODULE_SHIPPING_GLS_POSTCODE_INFO_TEXT . ': (' . $shipping_cost_extra_formatted . $tax_text . ')',
+                                                           'cost' => $shipping_cost * $shipping_num_boxes)));
+          } else {
+            $this->quotes = array('id' => $this->code,
+                                  'module' => MODULE_SHIPPING_GLS_TEXT_TITLE,
+                                  'methods' => array(array('id' => $this->code,
+                                                           'title' => $shipping_method . ' (' . ($shipping_num_boxes > 1 ? $shipping_num_boxes . ' x ' : '') . round($shipping_weight, 2) . ' ' . MODULE_SHIPPING_GLS_TEXT_UNITS .')',
+                                                           'cost' => $shipping_cost * $shipping_num_boxes)));
+          }
+
         }
       }
-
-      $tax_text = "";
-      if ($this->tax_class > 0) {
-         $tax_percent = xtc_get_tax_rate($this->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id'])/100;
-         $shipping_cost_normal = $shipping_cost_normal + (round(($shipping_cost_normal * $tax_percent),2));
-         $shipping_cost_normal_formatted = xtc_format_price($shipping_cost_normal,1,$_SESSION['currency'],1);
-         $shipping_cost_extra = $shipping_cost_extra + (round(($shipping_cost_extra * $tax_percent),2));
-         $shipping_cost_extra_formatted = xtc_format_price($shipping_cost_extra,1,$_SESSION['currency'],1);
-         $tax_text = str_replace("%s", xtc_get_tax_rate($this->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']) . '%', TAX_INFO_INCL);
-      }
-
-      if ($dest_plz_in) {
-        $this->quotes = array('id' => $this->code,
-                              'module' => MODULE_SHIPPING_GLS_TEXT_TITLE,
-                              'methods' => array(array('id' => $this->code,
-                                                       'title' => $shipping_method . ' (' . ($shipping_num_boxes > 1 ? $shipping_num_boxes . ' x ' : '') . round($shipping_weight, 2) . ' ' . MODULE_SHIPPING_GLS_TEXT_UNITS . ' = ' . $shipping_cost_normal_formatted . ' ' . $tax_text . ')' . ' ' . MODULE_SHIPPING_GLS_POSTCODE_INFO_TEXT . ': (' . $shipping_cost_extra_formatted . ' ' . $tax_text . ')',
-                                                       'cost' => $shipping_cost * $shipping_num_boxes)));
-      } else {
-        $this->quotes = array('id' => $this->code,
-                              'module' => MODULE_SHIPPING_GLS_TEXT_TITLE,
-                              'methods' => array(array('id' => $this->code,
-                                                       'title' => $shipping_method . ' (' . ($shipping_num_boxes > 1 ? $shipping_num_boxes . ' x ' : '') . round($shipping_weight, 2) . ' ' . MODULE_SHIPPING_GLS_TEXT_UNITS .')',
-                                                       'cost' => $shipping_cost * $shipping_num_boxes)));
-      }
-
 
       if ($this->tax_class > 0) {
         $this->quotes['tax'] = xtc_get_tax_rate($this->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
@@ -161,9 +168,8 @@
 
       if (xtc_not_null($this->icon)) $this->quotes['icon'] = xtc_image($this->icon, $this->title);
 
-      if ($error == true) $this->quotes['error'] = MODULE_SHIPPING_GLS_INVALID_ZONE;
-
-      return $this->quotes;
+      if ($this->enabled)
+        return $this->quotes;
     }
 
     function check() {
@@ -183,6 +189,7 @@
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_GLS_HANDLING', '0', '6', '0', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, use_function, set_function, date_added) values ('MODULE_SHIPPING_GLS_TAX_CLASS', '0', '6', '0', 'xtc_get_tax_class_title', 'xtc_cfg_pull_down_tax_classes(', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, use_function, set_function, date_added) values ('MODULE_SHIPPING_GLS_ZONE', '0', '6', '0', 'xtc_get_zone_class_title', 'xtc_cfg_pull_down_zone_classes(', now())");
+      xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SHIPPING_GLS_DISPLAY', 'True', '6', '7', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_GLS_SORT_ORDER', '0', '6', '0', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_GLS_ALLOWED', '', '6', '0', now())");
 
@@ -218,7 +225,8 @@
         'MODULE_SHIPPING_GLS_HANDLING',
         'MODULE_SHIPPING_GLS_ALLOWED', 
         'MODULE_SHIPPING_GLS_TAX_CLASS', 
-        'MODULE_SHIPPING_GLS_ZONE', 
+        'MODULE_SHIPPING_GLS_ZONE',
+        'MODULE_SHIPPING_GLS_DISPLAY',
         'MODULE_SHIPPING_GLS_SORT_ORDER', 
         'MODULE_SHIPPING_GLS_POSTCODE', 
         'MODULE_SHIPPING_GLS_POSTCODE_EXTRA_COST'

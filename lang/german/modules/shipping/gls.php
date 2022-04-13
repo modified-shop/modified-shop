@@ -43,39 +43,18 @@ define('MODULE_SHIPPING_GLS_SORT_ORDER_TITLE' , 'Reihenfolge der Anzeige');
 define('MODULE_SHIPPING_GLS_SORT_ORDER_DESC' , 'Niedrigste wird zuerst angezeigt.');
 define('MODULE_SHIPPING_GLS_ALLOWED_TITLE' , 'Einzelne Versandzonen');
 define('MODULE_SHIPPING_GLS_ALLOWED_DESC' , 'Geben Sie <b>einzeln</b> die Zonen an, in welche ein Versand m&ouml;glich sein soll, z.B.: AT,DE');
-
-define('MODULE_SHIPPING_GLS_COUNTRIES_1_TITLE' , 'GLS Zone 1 L&auml;nder');
-define('MODULE_SHIPPING_GLS_COUNTRIES_1_DESC' , 'Kommagetrennte Liste zweistelliger ISO L&auml;nderk&uuml;rzel, die Teil der Zone 1 sind (WORLD eintragen f&uuml;r den Rest der Welt.).');
-define('MODULE_SHIPPING_GLS_COST_1_TITLE' , 'GLS Zone 1 Versandkostentabelle');
-define('MODULE_SHIPPING_GLS_COST_1_DESC' , 'Versandkosten f&uuml;r L&auml;nder in Zone 1 basierend auf einer Gewichtsangabe (von-bis) der Bestellung. Beispiel: 0-3:8.50,3-7:10.50,usw. Gewichte gr&ouml;&szlig;er als 0 und kleiner gleich 3 w&uuml;rden 8.50 f&uuml;r Zone 1 L&auml;nder betragen.');
-
-define('MODULE_SHIPPING_GLS_COUNTRIES_2_TITLE' , 'GLS Zone 2 L&auml;nder');
-define('MODULE_SHIPPING_GLS_COUNTRIES_2_DESC' , 'Kommagetrennte Liste zweistelliger ISO L&auml;nderk&uuml;rzel, die Teil der Zone 2 sind (WORLD eintragen f&uuml;r den Rest der Welt.).');
-define('MODULE_SHIPPING_GLS_COST_2_TITLE' , 'GLS Zone 2 Versandkostentabelle');
-define('MODULE_SHIPPING_GLS_COST_2_DESC' , 'Versandkosten f&uuml;r L&auml;nder in Zone 2 basierend auf einer Gewichtsangabe (von-bis) der Bestellung. Beispiel: 0-3:8.50,3-7:10.50,usw. Gewichte gr&ouml;&szlig;er als 0 und kleiner gleich 3 w&uuml;rden 8.50 f&uuml;r Zone 2 L&auml;nder betragen.');
-
-define('MODULE_SHIPPING_GLS_COUNTRIES_3_TITLE' , 'GLS Zone 3 L&auml;nder');
-define('MODULE_SHIPPING_GLS_COUNTRIES_3_DESC' , 'Kommagetrennte Liste zweistelliger ISO L&auml;nderk&uuml;rzel, die Teil der Zone 3 sind (WORLD eintragen f&uuml;r den Rest der Welt.).');
-define('MODULE_SHIPPING_GLS_COST_3_TITLE' , 'GLS Zone 3 Versandkostentabelle');
-define('MODULE_SHIPPING_GLS_COST_3_DESC' , 'Versandkosten f&uuml;r L&auml;nder in Zone 3 basierend auf einer Gewichtsangabe (von-bis) der Bestellung. Beispiel: 0-3:8.50,3-7:10.50,usw. Gewichte gr&ouml;&szlig;er als 0 und kleiner gleich 3 w&uuml;rden 8.50 f&uuml;r Zone 3 L&auml;nder betragen.');
-
-define('MODULE_SHIPPING_GLS_COUNTRIES_4_TITLE' , 'GLS Zone 4 L&auml;nder');
-define('MODULE_SHIPPING_GLS_COUNTRIES_4_DESC' , 'Kommagetrennte Liste zweistelliger ISO L&auml;nderk&uuml;rzel, die Teil der Zone 4 sind (WORLD eintragen f&uuml;r den Rest der Welt.).');
-define('MODULE_SHIPPING_GLS_COST_4_TITLE' , 'GLS Zone 4 Versandkostentabelle');
-define('MODULE_SHIPPING_GLS_COST_4_DESC' , 'Versandkosten f&uuml;r L&auml;nder in Zone 4 basierend auf einer Gewichtsangabe (von-bis) der Bestellung. Beispiel: 0-3:8.50,3-7:10.50,usw. Gewichte gr&ouml;&szlig;er als 0 und kleiner gleich 3 w&uuml;rden 8.50 f&uuml;r Zone 4 L&auml;nder betragen.');
-
-define('MODULE_SHIPPING_GLS_COUNTRIES_5_TITLE' , 'GLS Zone 5 L&auml;nder');
-define('MODULE_SHIPPING_GLS_COUNTRIES_5_DESC' , 'Kommagetrennte Liste zweistelliger ISO L&auml;nderk&uuml;rzel, die Teil der Zone 5 sind (WORLD eintragen f&uuml;r den Rest der Welt.).');
-define('MODULE_SHIPPING_GLS_COST_5_TITLE' , 'GLS Zone 5 Versandkostentabelle');
-define('MODULE_SHIPPING_GLS_COST_5_DESC' , 'Versandkosten f&uuml;r L&auml;nder in Zone 5 basierend auf einer Gewichtsangabe (von-bis) der Bestellung. Beispiel: 0-3:8.50,3-7:10.50,usw. Gewichte gr&ouml;&szlig;er als 0 und kleiner gleich 3 w&uuml;rden 8.50 f&uuml;r Zone 5 L&auml;nder betragen.');
-
-define('MODULE_SHIPPING_GLS_COUNTRIES_6_TITLE' , 'GLS Zone 6 L&auml;nder');
-define('MODULE_SHIPPING_GLS_COUNTRIES_6_DESC' , 'Kommagetrennte Liste zweistelliger ISO L&auml;nderk&uuml;rzel, die Teil der Zone 6 sind (WORLD eintragen f&uuml;r den Rest der Welt.).');
-define('MODULE_SHIPPING_GLS_COST_6_TITLE' , 'GLS Zone 6 Versandkostentabelle');
-define('MODULE_SHIPPING_GLS_COST_6_DESC' , 'Versandkosten f&uuml;r L&auml;nder in Zone 6 basierend auf einer Gewichtsangabe (von-bis) der Bestellung. Beispiel: 0-3:8.50,3-7:10.50,usw. Gewichte gr&ouml;&szlig;er als 0 und kleiner gleich 3 w&uuml;rden 8.50 f&uuml;r Zone 6 L&auml;nder betragen.');
+define('MODULE_SHIPPING_GLS_DISPLAY_TITLE' , 'Anzeige aktivieren');
+define('MODULE_SHIPPING_GLS_DISPLAY_DESC' , 'M&ouml;chten Sie anzeigen, wenn kein Versand in das Land m&ouml;glich ist bzw. keine Versandkosten berechnet werden konnten?');
 
 define('MODULE_SHIPPING_GLS_POSTCODE_TITLE' , 'GLS Inselzuschlag - Postleitzahlen');
 define('MODULE_SHIPPING_GLS_POSTCODE_DESC' , 'Postleitzahlengebiete');
 define('MODULE_SHIPPING_GLS_POSTCODE_EXTRA_COST_TITLE' , 'GLS Inselzuschlag - Kosten');
 define('MODULE_SHIPPING_GLS_POSTCODE_EXTRA_COST_DESC' , 'Inselzuschlag: Tragen Sie hier ein, wieviel auf die Versandkosten aufgeschlagen werden soll, wenn die Lieferadresse auf einer Deutschen Insel liegt');
+
+for ($module_shipping_gls_i = 1; $module_shipping_gls_i <= 6; $module_shipping_gls_i ++) {
+  define('MODULE_SHIPPING_GLS_COUNTRIES_'.$module_shipping_gls_i.'_TITLE' , '<hr/>Zone '.$module_shipping_gls_i.' L&auml;nder');
+  define('MODULE_SHIPPING_GLS_COUNTRIES_'.$module_shipping_gls_i.'_DESC' , 'Durch Komma getrennte Liste von ISO L&auml;ndercodes (2 Zeichen), welche Teil von Zone '.$module_shipping_gls_i.' sind (WORLD eintragen f&uuml;r den Rest der Welt.).');
+  define('MODULE_SHIPPING_GLS_COST_'.$module_shipping_gls_i.'_TITLE' , 'Zone '.$module_shipping_gls_i.' Versandkosten');
+  define('MODULE_SHIPPING_GLS_COST_'.$module_shipping_gls_i.'_DESC' , 'Versandkosten nach Zone '.$module_shipping_gls_i.' Bestimmungsorte, basierend auf einer Gruppe von max. Bestellgewichten. Beispiel: 3:8.50,7:10.50,... Gewicht von kleiner oder gleich 3 w&uuml;rde 8.50 f&uuml;r die Zone '.$module_shipping_gls_i.' Bestimmungsl&auml;nder kosten.');
+}
 ?>
