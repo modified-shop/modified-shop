@@ -126,7 +126,6 @@
     height:35px;
   }  
   .apms_form_button_inner #apms_button { 
-    z-index:1;
     position:relative;
   }
   .apms_form_button_inner #apms_button > div { 
@@ -135,7 +134,7 @@
 
   .apms_form_button_overlay {
     display:block;
-    z-index:2;
+    z-index:1;
     position:absolute;
     width:100%;
     height:100%;
