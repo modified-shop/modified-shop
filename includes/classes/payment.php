@@ -518,7 +518,7 @@
         $static_payment_array = array();
       }
     
-      if ($payment_method != '' && $payment_method != 'no_payment') {
+      if ($payment_method != '' && ($payment_method != 'no_payment' || defined('RUN_MODE_ADMIN'))) {
         if (!isset($static_payment_array[$payment_method][(int)$order_id])) { 
           if (is_file(DIR_FS_CATALOG . 'includes/modules/payment/' . $payment_method . '.php')) {
             include_once(DIR_FS_CATALOG . 'lang/' . $_SESSION['language'] . '/modules/payment/' . $payment_method . '.php');
@@ -532,6 +532,8 @@
                 $payment_name = $payment_name . ' - ' . MODULE_PAYMENT_PAYPALPLUS_INVOICE;
               }
             }
+          } elseif ($payment_method == 'no_payment') {
+            $payment_name = TEXT_NO_PAYMENT;
           } else {
             $payment_name = $payment_method;
           }
