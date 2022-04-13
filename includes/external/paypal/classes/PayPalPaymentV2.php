@@ -95,6 +95,13 @@
           'currency_code' => $this->encode_utf8($order->info['currency'])
         )
       );
+
+      if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
+          && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1
+          ) 
+      {
+        $purchase_unit['amount']['value'] = sprintf("%01.2f", round(($order->info['total'] + $order->info['tax']), 2));
+      }
       
       if ($this->code == 'paypalpui') {
         $order_total = $this->calculate_total(2);
