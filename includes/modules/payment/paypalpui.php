@@ -40,7 +40,8 @@ class paypalpui extends PayPalPaymentV2 {
     global $order;
 
     $this->enabled = false;
-    if (in_array($order->billing['country']['iso_code_2'], array('DE'))
+    if (isset($order->billing['country']['iso_code_2'])
+        && in_array($order->billing['country']['iso_code_2'], array('DE'))
         && in_array($order->info['currency'], array('EUR'))
         && $_SESSION['customers_status']['customers_status_show_price_tax'] == 1
         && $order->content_type == 'physical'

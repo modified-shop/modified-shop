@@ -31,7 +31,8 @@ class paypalmybank extends PayPalPaymentV2 {
     global $order;
   
     $this->enabled = false;
-    if (in_array($order->billing['country']['iso_code_2'], array('IT'))
+    if (isset($order->billing['country']['iso_code_2'])
+        && in_array($order->billing['country']['iso_code_2'], array('IT'))
         && in_array($order->info['currency'], array('EUR'))
         )
     {
