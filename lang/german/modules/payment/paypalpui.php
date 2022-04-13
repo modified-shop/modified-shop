@@ -29,7 +29,7 @@ $lang_array = array(
   'MODULE_PAYMENT_PAYPALPUI_TEXT_EXTENDED_DESCRIPTION' => '<strong><font color="red">ACHTUNG:</font></strong> Bitte nehmen Sie noch die Einstellungen unter "Partner Module" -> "PayPal" -> <a href="'.xtc_href_link('paypal_config.php').'"><strong>"PayPal Konfiguration"</strong></a> vor!',
 
   'MODULE_PAYMENT_PAYPALPUI_TEXT_ERROR_HEADING' => 'Hinweis',
-  'MODULE_PAYMENT_PAYPALPUI_TEXT_ERROR_MESSAGE' => 'PayPal Zahlung wurde abgebrochen',  
+  'MODULE_PAYMENT_PAYPALPUI_TEXT_ERROR_MESSAGE' => 'Die Zahlung mit Rechnung wurde abgebrochen',  
   
   'PAYMENT_SOURCE_INFO_CANNOT_BE_VERIFIED' => 'Die Kombination aus Ihrem Namen und Ihrer Adresse konnte nicht validiert werden. Bitte korrigieren Sie Ihre Daten und versuchen Sie es erneut. Weitere Informationen finden Sie in der <a target="_blank" href="https://www.ratepay.com/legal-payment-dataprivacy">Ratepay-Datenschutzerkl&auml;rung</a> oder Sie k&ouml;nnen Ratepay &uuml;ber dieses <a target="_blank" href="https://www.ratepay.com/kontakt">Kontaktformular</a> kontaktieren.',
   'PAYMENT_SOURCE_DECLINED_BY_PROCESSOR' => 'Die Kombination aus Ihrem Namen und Ihrer Adresse konnte nicht validiert werden. Bitte korrigieren Sie Ihre Daten und versuchen Sie es erneut. Weitere Informationen finden Sie in der <a target="_blank" href="https://www.ratepay.com/legal-payment-dataprivacy">Ratepay-Datenschutzerkl&auml;rung</a> oder Sie k&ouml;nnen Ratepay &uuml;ber dieses <a target="_blank" href="https://www.ratepay.com/kontakt">Kontaktformular</a> kontaktieren.',

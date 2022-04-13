@@ -29,7 +29,7 @@ $lang_array = array(
   'MODULE_PAYMENT_PAYPALPUI_TEXT_EXTENDED_DESCRIPTION' => '<strong><font color="red">ATTENTION:</font></strong> Please setup PayPal configuration under "Partner Modules" -> "PayPal" -> <a href="'.xtc_href_link('paypal_config.php').'"><strong>"PayPal Configuration"</strong></a>!',
 
   'MODULE_PAYMENT_PAYPALPUI_TEXT_ERROR_HEADING' => 'Note',
-  'MODULE_PAYMENT_PAYPALPUI_TEXT_ERROR_MESSAGE' => 'PayPal payment has been canceled',
+  'MODULE_PAYMENT_PAYPALPUI_TEXT_ERROR_MESSAGE' => 'The payment with Pay upon invoice was cancelled',
   
   'PAYMENT_SOURCE_INFO_CANNOT_BE_VERIFIED' => 'The combination of your name and address could not be validated. Please correct your data and try again. You can find further information in the <a target="_blank" href="https://www.ratepay.com/legal-payment-dataprivacy">Ratepay Data Privacy Statement</a> or you can contact Ratepay using this <a target="_blank" href="https://www.ratepay.com/kontakt">contact form</a>.',
   'PAYMENT_SOURCE_DECLINED_BY_PROCESSOR' => 'It is not possible to use the selected payment method. This decision is based on automated data processing. You can find further information in the <a target="_blank" href="https://www.ratepay.com/legal-payment-dataprivacy">Ratepay Data Privacy Statement</a> or you can contact Ratepay using this <a target="_blank" href="https://www.ratepay.com/kontakt">contact form</a>.',
