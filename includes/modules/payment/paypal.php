@@ -57,7 +57,6 @@ class paypal extends PayPalPaymentV2 {
     $paypal_smarty = new Smarty();
     $paypal_smarty->assign('language', $_SESSION['language']);
     $paypal_smarty->assign('checkout', true);
-    $paypal_smarty->assign('paypalbnpl', true);
     $paypal_smarty->assign('paypalexpress', true);
     
     $paypal_smarty->caching = 0;
@@ -92,6 +91,7 @@ class paypal extends PayPalPaymentV2 {
     ';
     
     if ($this->get_config('MODULE_PAYMENT_'.strtoupper($this->code).'_SHOW_CHECKOUT_BNPL') == '1') {
+      $paypal_smarty->assign('paypalbnpl', true);
       $paypalscript .= '
         await paypal.Buttons({
           fundingSource: paypal.FUNDING.PAYLATER,
