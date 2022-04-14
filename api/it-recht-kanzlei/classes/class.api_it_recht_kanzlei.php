@@ -36,10 +36,6 @@ class api_it_recht_kanzlei {
     // Catch errors - no data sent
     (string)$post_xml = $post_xml;
     
-    // read POST-XML and remove form slashes
-    if(get_magic_quotes_gpc()){
-      $post_xml = stripslashes($post_xml);
-    }
     // Post XML from other system
     if(trim($post_xml) == ''){
       $this->return_error('12');
