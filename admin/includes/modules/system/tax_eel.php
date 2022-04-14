@@ -27,7 +27,7 @@ class tax_eel {
     $this->enabled = ((defined('MODULE_TAX_EEL_STATUS') && MODULE_TAX_EEL_STATUS == 'true') ? true : false);
     $this->sort_order = '';
     
-    $this->properties['button_update'] = '<a class="button btnbox" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system&module=' . $this->code . '&action=update') . '">' . BUTTON_UPDATE. '</a>';
+    $this->properties['button_update'] = '<a class="button btnbox" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $_GET['set'] . '&module=' . $this->code . '&action=update') . '">' . BUTTON_UPDATE. '</a>';
   }
  
   function process() {
@@ -36,7 +36,7 @@ class tax_eel {
 
   // display
   function display() {
-    return array('text' => '<div align="center">' . MODULE_TAX_EEL_TEXT_DESCRIPTION_PROCESSED . xtc_button_link(BUTTON_CANCEL, xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $_GET['set'] . '&module=tax_eel')) . '</div>');
+    return array('text' => '<div align="center">' . MODULE_TAX_EEL_TEXT_DESCRIPTION_PROCESSED . xtc_button_link(BUTTON_CANCEL, xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $_GET['set'] . '&module=' . $this->code)) . '</div>');
   }
 
   // check
@@ -86,28 +86,28 @@ class tax_eel {
       }    
     }
     
-    foreach ($tax_array as $iso => $tax_rate) {
+    foreach ($tax_array as $iso_code_2 => $tax_rate) {
       $countries_query = xtc_db_query("SELECT countries_id 
                                          FROM ".TABLE_COUNTRIES." 
-                                        WHERE countries_iso_code_2 = '".$iso."'");
+                                        WHERE countries_iso_code_2 = '".$iso_code_2."'");
       if (xtc_db_num_rows($countries_query) == 1) {
         $countries = xtc_db_fetch_array($countries_query);
         
         $action = 'update';
-        if (!isset($geo_zones_array[$iso])) {
+        if (!isset($geo_zones_array[$iso_code_2])) {
           $sql_data_array = array(
-            'geo_zone_name' => sprintf('DE::Steuerzone VP - %s||EN::Tax zone VP - %s', $iso, $iso),
+            'geo_zone_name' => sprintf('DE::Steuerzone VP - %s||EN::Tax zone VP - %s', $iso_code_2, $iso_code_2),
             'date_added' => 'now()'
           );
           xtc_db_perform(TABLE_GEO_ZONES, $sql_data_array);
-          $geo_zones_array[$iso] = xtc_db_insert_id();
+          $geo_zones_array[$iso_code_2] = xtc_db_insert_id();
           $action = 'insert';
         }
         
         $sql_data_array = array(
           'zone_country_id' => $countries['countries_id'],
           'zone_id' => '0',
-          'geo_zone_id' => $geo_zones_array[$iso],
+          'geo_zone_id' => $geo_zones_array[$iso_code_2],
         );
         
         if ($action == 'insert') {
@@ -119,7 +119,7 @@ class tax_eel {
         xtc_db_perform(TABLE_ZONES_TO_GEO_ZONES, $sql_data_array, $action, "zone_country_id = '".$sql_data_array['zone_country_id']."' AND geo_zone_id = '".$sql_data_array['geo_zone_id']."'");
   
         $sql_data_array = array(
-          'tax_zone_id' => $geo_zones_array[$iso],
+          'tax_zone_id' => $geo_zones_array[$iso_code_2],
           'tax_class_id' => $tax_class_id,
           'tax_priority' => '99',
           'tax_rate' => $tax_rate,
