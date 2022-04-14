@@ -137,7 +137,7 @@
 
         // unallowed modules as array
         $unallowed_modules_string = preg_replace("'[\r\n\s]+'",'',$unallowed_modules_string);
-        $unallowed_modules = explode(',', $unallowed_modules_string);
+        $unallowed_modules = explode(',', strtoupper($unallowed_modules_string));
 
         //new module support
         $unallowed_modules = $this->checkoutModules->unallowed_payment_modules($unallowed_modules);

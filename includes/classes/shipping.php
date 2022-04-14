@@ -69,7 +69,7 @@
         
         // load unallowed modules into array - remove spaces and line breaks by web28
         $unallowed_modules = preg_replace("'[\r\n\s]+'",'',$_SESSION['customers_status']['customers_status_shipping_unallowed'].','. (isset($order->customer['shipping_unallowed']) ? $order->customer['shipping_unallowed']: ''));
-        $unallowed_modules = explode(',',$unallowed_modules);
+        $unallowed_modules = explode(',', strtoupper($unallowed_modules));
 
         //new module support
         $unallowed_modules = $this->checkoutModules->unallowed_shipping_modules($unallowed_modules);
