@@ -117,6 +117,9 @@
 
 </div>
 <br class="clearfix" />
-{if isset($BUTTON_BACK)}<div class="button_left"><div class="cssButtonPos12">{$BUTTON_BACK}</div></div>{/if}
-<div class="button_right_checkout"><div class="cssButtonPos12">{$BUTTON_CHECKOUT_STEP3}</div></div>
+
+<div class="button_row_checkout">
+  {if isset($BUTTON_BACK)}<div class="button_row_checkout_left"><div class="cssButtonPos14">{$BUTTON_BACK}</div></div>{/if}
+  <div class="button_row_checkout_right"><div class="cssButtonPos15">{$BUTTON_CHECKOUT_STEP3}</div></div>
+</div>
 {$FORM_END}
