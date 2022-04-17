@@ -318,6 +318,10 @@ a.black:hover {
   display:inline-block;
   margin: 10px 0px 0px 0px;
   min-width:200px;
+  width:100%;
+}
+@media only screen and (min-width: 500px) {
+  .button_right_checkout { width:auto; }
 }
 .button_right_checkout_small {
   float:right;
@@ -371,6 +375,39 @@ a.black:hover {
 
 .paypal_button img {
   height:32px;
+}
+
+.button_row_checkout {
+  box-sizing: border-box;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column-reverse; 
+  flex-direction: column-reverse;
+}
+@media only screen and (min-width: 500px) {
+  .button_row_checkout { -webkit-flex-direction: row; flex-direction: row; }
+}
+.button_row_checkout_left {
+  margin: 10px 0px 0px 0px;
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  box-sizing:border-box;
+}
+.button_row_checkout_right {
+  margin: 10px 0px 0px 0px;
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  box-sizing:border-box;
+  text-align:right;
 }
 
 .text_left {
@@ -5765,6 +5802,10 @@ ul.tc_list li .tc_delete .cssButton .fas {
 .cssButtonPos12 {
   min-width:200px;
   display:inline-block;
+  width:100%;
+}
+@media only screen and (min-width: 500px) {
+  .cssButtonPos12 { width:auto;}
 }
 .cssButtonPos12 .cssButton {
   font-size: 16px;
@@ -5785,6 +5826,25 @@ ul.tc_list li .tc_delete .cssButton .fas {
   font-size:15px;
   vertical-align:bottom;
 }
+
+/* Checkout Buttons Shipping & Payment */
+.cssButtonPos14,
+.cssButtonPos15 {
+  max-width:initial;
+  display:inline-block;
+  width:100%;
+}
+@media only screen and (min-width: 500px) {
+  .cssButtonPos14 { max-width:220px; }
+  .cssButtonPos15 { max-width:220px; }
+}
+.cssButtonPos14 .cssButton,
+.cssButtonPos15 .cssButton {
+  font-size: 16px;
+  line-height: 20px;
+  padding: 10px 5px;
+}
+
 
 /* END CSS Buttons */
 
