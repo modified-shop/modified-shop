@@ -98,7 +98,7 @@ class PayPalPayment extends PayPalPaymentBase {
    
   
   function payment_redirect($cart = false, $approval = false, $order_exists = false) {
-    global $order, $xtPrice, $free_shipping, $total_weight, $total_count;
+    global $order, $xtPrice;
     
     // auth
     $apiContext = $this->apiContext();
@@ -174,66 +174,21 @@ class PayPalPayment extends PayPalPaymentBase {
         } 
       }
       
-      // shipping cost
-      if ($_SESSION['cart']->get_content_type() != 'virtual') {
-        require_once(DIR_WS_CLASSES.'shipping.php');
-        require_once(DIR_WS_CLASSES.'product.php');
-        require_once(DIR_WS_CLASSES.'order.php');
-        require_once(DIR_FS_INC.'xtc_get_countries.inc.php');
-        
-        $order = new order();
-        
-        $countries_id = isset($_SESSION['customer_country_id']) ? $_SESSION['customer_country_id'] : STORE_COUNTRY;
-        if (isset($_SESSION['country'])) {
-          $countries_id = $_SESSION['country'];
-        }
-        
-        $country = xtc_get_countriesList($countries_id, true);
-        
-        $_SESSION['delivery_zone'] = $country['countries_iso_code_2'];        
-        $order->delivery['country']['iso_code_2'] = $country['countries_iso_code_2'];
-        $order->delivery['country']['title'] = $country['countries_name'];
-        $order->delivery['country']['id'] = $country['countries_id'];
-        $order->delivery['country_id'] = $country['countries_id'];
-        $order->delivery['zone_id'] = 0;
-        
-        $total_weight = $_SESSION['cart']->show_weight();
-        $total_count = $_SESSION['cart']->count_contents();
+      // shipping cost        
+      $shipping_data = $this->get_shipping_data();
+      if (is_array($shipping_data)) {
+        $shipping_cost = new Item(); 
+        $shipping_cost->setName($this->encode_utf8(PAYPAL_EXP_VORL))
+                      ->setCurrency($_SESSION['currency']) 
+                      ->setQuantity(1) 
+                      ->setPrice($shipping_data['total']); 
 
-        // load all enabled shipping modules
-        $shipping_modules = new shipping();
+        $i = count($item);
+        $item[$i] = $shipping_cost;
 
-        $free_shipping = false;
-        if (MODULE_ORDER_TOTAL_INSTALLED) {
-          require_once (DIR_WS_CLASSES . 'order_total.php');
-          $order_total_modules = new order_total();
-          $order_total_modules->process();
-        }
-
-        $shipping_modules->quote();
-        $shipping_data = $shipping_modules->cheapest();
-        unset($_SESSION['delivery_zone']);
-        
-        if ($free_shipping === true) {
-          $shipping_data = array(
-            'cost' => 0,
-            'total' => 0
-          );
-        }
-        
-        if (is_array($shipping_data)) {
-          $shipping_cost = new Item(); 
-          $shipping_cost->setName($this->encode_utf8(PAYPAL_EXP_VORL))
-                        ->setCurrency($_SESSION['currency']) 
-                        ->setQuantity(1) 
-                        ->setPrice($shipping_data['total']); 
-
-          $i = count($item);
-          $item[$i] = $shipping_cost;
-
-          $this->amount->setTotal($this->amount->getTotal() + (double)$shipping_data['total']);
-          $this->details->setSubtotal($this->amount->getTotal() - $this->details->getTax() + $this->details->getDiscount());
-        }
+        $this->amount->setTotal($this->amount->getTotal() + (double)$shipping_data['total'] + (double)$shipping_data['tax']);
+        $this->details->setTax($this->details->getTax() + (double)$shipping_data['tax']);
+        $this->details->setSubtotal($this->amount->getTotal() - $this->details->getTax() + $this->details->getDiscount());
       }
       
       // set amount 

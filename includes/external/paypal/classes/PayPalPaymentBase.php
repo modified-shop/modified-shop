@@ -823,6 +823,76 @@ class PayPalPaymentBase extends PayPalCommon {
   }
 
 
+  function get_shipping_data() {
+    global $order, $xtPrice, $free_shipping, $total_weight, $total_count;
+    
+    if ($_SESSION['cart']->count_contents() > 0
+        && $_SESSION['cart']->get_content_type() != 'virtual'
+        )
+    {
+      require_once(DIR_WS_CLASSES.'shipping.php');
+      require_once(DIR_WS_CLASSES.'product.php');
+      require_once(DIR_WS_CLASSES.'order.php');
+      require_once(DIR_FS_INC.'xtc_get_countries.inc.php');
+    
+      $order = new order();
+    
+      $countries_id = isset($_SESSION['customer_country_id']) ? $_SESSION['customer_country_id'] : STORE_COUNTRY;
+      if (isset($_SESSION['country'])) {
+        $countries_id = $_SESSION['country'];
+      }
+    
+      $country = xtc_get_countriesList($countries_id, true);
+    
+      $_SESSION['delivery_zone'] = $country['countries_iso_code_2'];        
+      $order->delivery['country']['iso_code_2'] = $country['countries_iso_code_2'];
+      $order->delivery['country']['title'] = $country['countries_name'];
+      $order->delivery['country']['id'] = $country['countries_id'];
+      $order->delivery['country_id'] = $country['countries_id'];
+      $order->delivery['zone_id'] = 0;
+    
+      $total_weight = $_SESSION['cart']->show_weight();
+      $total_count = $_SESSION['cart']->count_contents();
+
+      // load all enabled shipping modules
+      $shipping_modules = new shipping();
+
+      $free_shipping = false;
+      if (MODULE_ORDER_TOTAL_INSTALLED) {
+        require_once (DIR_WS_CLASSES . 'order_total.php');
+        $order_total_modules = new order_total();
+        $order_total_modules->process();
+      }
+
+      $shipping_modules->quote();
+      $shipping_data = $shipping_modules->cheapest();
+      unset($_SESSION['delivery_zone']);
+    
+      if ($free_shipping === true) {
+        $shipping_data = array(
+          'cost' => 0,
+          'total' => 0,
+          'tax' => 0,
+        );
+      } elseif (is_array($shipping_data)) {
+        $shipping_data['tax'] = 0;
+        if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
+            && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1
+            ) 
+        {
+          $module = substr($shipping_data['id'], 0, strpos($shipping_data['id'], '_'));
+          if (is_object($GLOBALS[$module]) && property_exists($GLOBALS[$module], 'tax_class')) {
+            $shipping_tax = xtc_get_tax_rate($GLOBALS[$module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
+            $shipping_data['tax'] = $xtPrice->xtcAddTax($shipping_data['cost'], $shipping_tax) - $shipping_data['cost'];
+          }
+        }      
+      }
+    
+      return $shipping_data;
+    }
+  }
+
+
   function install() {
     xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('MODULE_PAYMENT_".strtoupper($this->code)."_STATUS', 'True', '6', '1', NULL, now(), '', 'xtc_cfg_select_option(array(\'True\', \'False\'),' )");
     xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('MODULE_PAYMENT_".strtoupper($this->code)."_SORT_ORDER', '0', '6', '2', NULL, now(), '', '')");
