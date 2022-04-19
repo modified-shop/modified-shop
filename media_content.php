@@ -20,10 +20,8 @@ $content_heading = $content_text = '';
 
 if (isset($_GET['coID']) && (int)$_GET['coID'] > 0) {
   $table = TABLE_PRODUCTS_CONTENT;
-  $type = $path = 'content';
+  $type = 'content';
   if (isset($_GET['type'])) {
-    $path_array = explode('_', $_GET['type']);
-    $path = $path_array[0];
     $type = xtc_db_input($_GET['type']);
     $table = constant('TABLE_'.strtoupper($_GET['type']).'_CONTENT');
   }
@@ -44,7 +42,15 @@ if (isset($_GET['coID']) && (int)$_GET['coID'] > 0) {
     $content_heading = $content_data['content_name'];
     $content_text = $content_data['file_comment'];
 
-    if ($content_data['content_file'] != '' && is_file(DIR_FS_CATALOG.'media/'.$path.'/'.$content_data['content_file'])) {
+    if ($content_data['content_file'] != '' 
+        && (is_file(DIR_FS_CATALOG.'media/content/'.$content_data['content_file'])
+            || is_file(DIR_FS_CATALOG.'media/products/'.$content_data['content_file']))
+        )
+    {
+      $path = 'content';
+      if (is_file(DIR_FS_CATALOG.'media/products/'.$content_data['content_file'])) {
+        $path = 'products';
+      }
       $mime_type = mime_content_type(DIR_FS_CATALOG.'media/'.$path.'/'.$content_data['content_file']);
       ob_start();
       if (strpos($content_data['content_file'], '.txt') !== false)
