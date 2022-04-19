@@ -153,9 +153,11 @@
           } elseif ($action == 'update') {
             // update keys
             if (method_exists($module,'update')) {        
-              $module->update();
+              $message = $module->update();
+              if ($message !== false) {
+                $messageStack->add_session((($message != '') ? $message : MODULE_UPDATE_CONFIRM), 'success');
+              }
             }
-            //$messageStack->add_session(MODULE_UPDATE_CONFIRM, 'success');
           } elseif ($action == 'backupconfirm') {            
             // save values
             xtc_backup_configuration($module->keys());
