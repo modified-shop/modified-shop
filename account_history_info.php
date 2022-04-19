@@ -73,6 +73,7 @@ $smarty->assign('order_total', $order_total['data']);
 if ($order->info['payment_method'] != '' && $order->info['payment_method'] != 'no_payment') {    
   require_once (DIR_WS_CLASSES . 'payment.php');
   $payment_modules = new payment($order->info['payment_class']);
+  $smarty->assign('PAYMENT_INFO', $payment_modules->success());
   $smarty->assign('PAYMENT_METHOD', $payment_modules::payment_title($order->info['payment_method'], $order->info['order_id']));
 }
 
