@@ -38,6 +38,8 @@ class sitemaporg {
     $this->sort_order = ((defined('MODULE_SITEMAPORG_SORT_ORDER')) ? MODULE_SITEMAPORG_SORT_ORDER : '');
     $this->enabled = ((defined('MODULE_SITEMAPORG_STATUS') && MODULE_SITEMAPORG_STATUS == 'True') ? true : false);
     $this->schema = '';
+
+    $this->properties['button_update'] = '<a class="button btnbox" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=export&module=' . $this->code . '&action=update') . '">' . BUTTON_UPDATE. '</a>';
   }
   
   function xml_sitemap_top() {
@@ -181,16 +183,21 @@ class sitemaporg {
     return false;
   }
   
+  function update() {
+    $this->process(MODULE_SITEMAPORG_FILE);
+    return MODULE_SITEMAPORG_EXPORTED;
+  }
+  
   function process($file) {
     @xtc_set_time_limit(0);
     
     $this->url_param = '';
-    $this->group_id = $_POST['configuration']['MODULE_SITEMAPORG_CUSTOMERS_STATUS'];
+    $this->group_id = ((isset($_POST['configuration'])) ? $_POST['configuration']['MODULE_SITEMAPORG_CUSTOMERS_STATUS'] : MODULE_SITEMAPORG_CUSTOMERS_STATUS);
     $this->languages_code = $_SESSION['language_code'];
     $this->languages_id = $_SESSION['languages_id'];
     
     if (defined('MODULE_MULTILANG_STATUS') && MODULE_MULTILANG_STATUS == 'true') {
-      $this->languages_code = $_POST['configuration']['MODULE_SITEMAPORG_LANGUAGE'];
+      $this->languages_code = ((isset($_POST['configuration'])) ? $_POST['configuration']['MODULE_SITEMAPORG_LANGUAGE'] : MODULE_SITEMAPORG_LANGUAGE);
     
       $lang_query = xtc_db_query("SELECT languages_id
                                     FROM ".TABLE_LANGUAGES."
@@ -211,22 +218,28 @@ class sitemaporg {
     
     $this->xml_sitemap_bottom();
   
-    $file = $_POST['configuration']['MODULE_SITEMAPORG_FILE'];
+    $file = ((isset($_POST['configuration'])) ? $_POST['configuration']['MODULE_SITEMAPORG_FILE'] : MODULE_SITEMAPORG_FILE);
 
-    if ($_POST['configuration']['MODULE_SITEMAPORG_ROOT'] == 'yes' 
+    if (isset($_POST['configuration'])
+        && $_POST['configuration']['MODULE_SITEMAPORG_ROOT'] == 'yes' 
         && $_POST['configuration']['MODULE_SITEMAPORG_EXPORT'] == 'no'
         ) 
+    {
+      $filename = DIR_FS_DOCUMENT_ROOT.$file; 
+    } elseif (MODULE_SITEMAPORG_ROOT == 'yes'
+              && MODULE_SITEMAPORG_EXPORT == 'no'
+              )
     {
       $filename = DIR_FS_DOCUMENT_ROOT.$file; 
     } else {
       $filename = DIR_FS_DOCUMENT_ROOT.'export/'.$file;
     }
   
-    if ($_POST['configuration']['MODULE_SITEMAPORG_EXPORT'] == 'yes') { 
+    if ((isset($_POST['configuration']) && $_POST['configuration']['MODULE_SITEMAPORG_EXPORT'] == 'yes') || MODULE_SITEMAPORG_EXPORT == 'yes') { 
       $filename = $filename.'_tmp_'.time();
     }
   
-    if ($_POST['configuration']['MODULE_SITEMAPORG_GZIP'] == 'yes') {
+    if ((isset($_POST['configuration']) && $_POST['configuration']['MODULE_SITEMAPORG_GZIP'] == 'yes') || MODULE_SITEMAPORG_GZIP == 'yes') {
       $filename = $filename.'.gz';
       $gz = gzopen($filename,'w');
       gzwrite($gz, $this->schema);
@@ -238,7 +251,7 @@ class sitemaporg {
       fclose($fp);
     }
   
-    switch ($_POST['configuration']['MODULE_SITEMAPORG_EXPORT']) {
+    switch ((isset($_POST['configuration'])) ? $_POST['configuration']['MODULE_SITEMAPORG_EXPORT'] : MODULE_SITEMAPORG_EXPORT) {
       case 'yes':
         // send File to Browser
         header('Content-type: application/x-octet-stream');
@@ -248,7 +261,7 @@ class sitemaporg {
         exit;
         break;
       case 'no':
-        $sitemap = HTTP_SERVER.DIR_WS_CATALOG.(($_POST['configuration']['MODULE_SITEMAPORG_ROOT']=='no') ? 'export/':'').$file;
+        $sitemap = HTTP_SERVER.DIR_WS_CATALOG.(((isset($_POST['configuration']) && $_POST['configuration']['MODULE_SITEMAPORG_ROOT'] == 'no') || MODULE_SITEMAPORG_ROOT == 'no') ? 'export/':'').$file;
         break;
     }
   }
