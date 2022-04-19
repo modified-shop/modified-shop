@@ -18,7 +18,7 @@
     require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPaymentV2.php');
 
     $paypal = new PayPalPaymentV2('paypalexpress');
-    if ($paypal->enabled === true
+    if ($paypal->is_enabled()
         && ($paypal->get_config('MODULE_PAYMENT_'.strtoupper($paypal->code).'_SHOW_PRODUCT') == '1'
             || $paypal->get_config('MODULE_PAYMENT_'.strtoupper($paypal->code).'_SHOW_PRODUCT_BNPL') == '1'
             )

@@ -329,60 +329,8 @@ class paypalpui extends PayPalPaymentV2 {
 
   function success() {
     global $last_order;
-
-    $payment_query = xtc_db_query("SELECT *
-                                     FROM ".TABLE_PAYPAL_INSTRUCTIONS."
-                                    WHERE orders_id = '".(int)$last_order."'");
-    if (xtc_db_num_rows($payment_query) > 0) {
-      $payment = xtc_db_fetch_array($payment_query);
-      $payment['amount'] = sprintf("%01.2f", round($payment['amount'], 2));
-      $payment['date'] = xtc_date_short($payment['date']);
-
-      $fields = array(
-        array(
-          'title' => TEXT_PAYPAL_INSTRUCTIONS_AMOUNT,
-          'field' => $payment['amount'].' '.$payment['currency'],
-        ),
-        array(
-          'title' => TEXT_PAYPAL_INSTRUCTIONS_REFERENCE,
-          'field' => $payment['reference'],
-        ),
-        array(
-          'title' => TEXT_PAYPAL_INSTRUCTIONS_PAYDATE,
-          'field' => $payment['date'],
-        ),
-        array(
-          'title' => TEXT_PAYPAL_INSTRUCTIONS_ACCOUNT,
-          'field' => $payment['name'],
-        ),
-        array(
-          'title' => TEXT_PAYPAL_INSTRUCTIONS_HOLDER,
-          'field' => $payment['holder'],
-        ),
-        array(
-          'title' => TEXT_PAYPAL_INSTRUCTIONS_IBAN,
-          'field' => $payment['iban'],
-        ),
-        array(
-          'title' => TEXT_PAYPAL_INSTRUCTIONS_BIC,
-          'field' => $payment['bic'],
-        ),
-      );
-
-      $title = sprintf(TEXT_PAYPAL_INSTRUCTIONS_CHECKOUT, $payment['amount'].' '.$payment['currency'], $payment['date']);
-
-      $success = array(
-        array (
-          'title' => $title,
-          'class' => $this->code,
-          'fields' => $fields
-        ),
-      );
-
-      return $success;
-    }
-
-    return false;
+    
+    return $this->get_payment_instructions($last_order);
   }
 
 

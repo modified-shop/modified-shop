@@ -18,7 +18,7 @@
     require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPayment.php');
     
     $paypal = new PayPalPayment('paypalcart');
-    if ($paypal->enabled === true) {
+    if ($paypal->is_enabled()) {
       $smarty->assign('BUTTON_PAYPAL', $paypal->checkout_button());
       if (isset($_GET['payment_error'])) {
         include_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/paypalcart.php');

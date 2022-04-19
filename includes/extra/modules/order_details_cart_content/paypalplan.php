@@ -18,7 +18,7 @@
     require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPayment.php');
 
     $paypal_subscription = new PayPalPayment('paypalsubscription');
-    if ($paypal_subscription->enabled === true
+    if ($paypal_subscription->is_enabled()
         && isset($_SESSION['cart']->plans) 
         && is_array($_SESSION['cart']->plans)
         && count($_SESSION['cart']->plans) > 0

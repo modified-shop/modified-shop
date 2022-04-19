@@ -18,7 +18,7 @@
     require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPayment.php');
 
     $paypal_cart = new PayPalPayment('paypalcart');
-    if ($paypal_cart->enabled === true
+    if ($paypal_cart->is_enabled()
         && $paypal_cart->get_config('MODULE_PAYMENT_'.strtoupper($paypal_cart->code).'_SHOW_PRODUCT') == '1'
         ) 
     {

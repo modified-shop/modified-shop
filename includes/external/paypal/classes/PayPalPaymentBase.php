@@ -123,7 +123,22 @@ class PayPalPaymentBase extends PayPalCommon {
     }
   }
 
-
+  
+  function is_enabled() {
+    if ($this->enabled === true) {
+      $unallowed_modules_string = $_SESSION['customers_status']['customers_status_payment_unallowed'];
+      $unallowed_modules_string = preg_replace("'[\r\n\s]+'", '', $unallowed_modules_string);
+      $unallowed_modules = explode(',', strtoupper($unallowed_modules_string));
+      
+      if (!in_array($this->code, $unallowed_modules)) {
+        return true;
+      }
+    }
+    
+    return false;
+  }
+  
+  
   function javascript_validation() {
     return false;
   }
@@ -548,57 +563,69 @@ class PayPalPaymentBase extends PayPalCommon {
 
 
   function get_payment_instructions($orders_id) {
-    $payment = $this->get_order_details($orders_id);
-  
-    if (isset($payment['instruction'])) {
-       
+    // include needed functions
+    if (!function_exists('xtc_date_short')) {
+      require_once(DIR_FS_INC.'xtc_date_short.inc.php');
+    }
+
+    $payment_query = xtc_db_query("SELECT *
+                                     FROM ".TABLE_PAYPAL_INSTRUCTIONS."
+                                    WHERE orders_id = '".(int)$orders_id."'");
+    if (xtc_db_num_rows($payment_query) > 0) {
+      $payment = xtc_db_fetch_array($payment_query);
+      $payment['amount'] = sprintf("%01.2f", round($payment['amount'], 2));
+      $payment['date'] = xtc_date_short($payment['date']);
+
       $fields = array(
         array(
           'title' => TEXT_PAYPAL_INSTRUCTIONS_AMOUNT,
-          'field' => $payment['instruction']['amount']['total'].' '.$payment['instruction']['amount']['currency'],
+          'field' => $payment['amount'].' '.$payment['currency'],
         ),
         array(
           'title' => TEXT_PAYPAL_INSTRUCTIONS_REFERENCE,
-          'field' => $payment['instruction']['reference'],
+          'field' => $payment['reference'],
         ),
         array(
           'title' => TEXT_PAYPAL_INSTRUCTIONS_PAYDATE,
-          'field' => $payment['instruction']['date'],
+          'field' => $payment['date'],
         ),
         array(
           'title' => TEXT_PAYPAL_INSTRUCTIONS_ACCOUNT,
-          'field' => $payment['instruction']['bank']['name'],
+          'field' => $payment['name'],
         ),
         array(
           'title' => TEXT_PAYPAL_INSTRUCTIONS_HOLDER,
-          'field' => $payment['instruction']['bank']['holder'],
+          'field' => $payment['holder'],
         ),
         array(
           'title' => TEXT_PAYPAL_INSTRUCTIONS_IBAN,
-          'field' => $payment['instruction']['bank']['iban'],
+          'field' => $payment['iban'],
         ),
         array(
           'title' => TEXT_PAYPAL_INSTRUCTIONS_BIC,
-          'field' => $payment['instruction']['bank']['bic'],
+          'field' => $payment['bic'],
         ),
       );
-      
-      $title = sprintf(TEXT_PAYPAL_INSTRUCTIONS_CHECKOUT, $payment['instruction']['amount']['total'].' '.$payment['instruction']['amount']['currency'], $payment['instruction']['date']);
-      if ($fields[2]['field'] == '') {
+
+      $title = sprintf(TEXT_PAYPAL_INSTRUCTIONS_CHECKOUT, $payment['amount'].' '.$payment['currency'], $payment['date']);
+      if ($payment['date'] == '') {
         unset($fields[2]);
         $fields = array_values($fields);
-        $title = sprintf(TEXT_PAYPAL_INSTRUCTIONS_CHECKOUT_SHORT, $payment['instruction']['amount']['total'].' '.$payment['instruction']['amount']['currency']);
+        $title = sprintf(TEXT_PAYPAL_INSTRUCTIONS_CHECKOUT_SHORT, $payment['amount'].' '.$payment['currency']);
       }
-      
+
       $success = array(
-        array ('title' => $title,
-               'class' => $this->code,
-               'fields' => $fields
-               ),
-        );
-  
+        array (
+          'title' => $title,
+          'class' => $this->code,
+          'fields' => $fields
+        ),
+      );
+
       return $success;
     }
+
+    return false;
   }
 
 

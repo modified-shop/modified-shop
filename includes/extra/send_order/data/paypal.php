@@ -11,6 +11,7 @@
    ---------------------------------------------------------------------------------------*/
 
 $paypal_payment_method = array(
+  'paypalpui',
   'paypalplus',
   'paypalclassic',
   'paypalcart',

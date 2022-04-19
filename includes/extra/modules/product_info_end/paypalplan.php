@@ -18,7 +18,7 @@
     require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPayment.php');
 
     $paypal_subscription = new PayPalPayment('paypalsubscription');    
-    if ($paypal_subscription->enabled === true) {
+    if ($paypal_subscription->is_enabled()) {
       $module_content = array();
       $plan_query = xtDBquery("SELECT *
                                  FROM `paypal_plan`

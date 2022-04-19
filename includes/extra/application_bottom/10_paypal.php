@@ -54,7 +54,7 @@
     {         
       $paypal = new PayPalPaymentV2('paypalexpress');
             
-      if ($paypal->enabled == true) {
+      if ($paypal->is_enabled()) {
         $action = '';
         if (basename($PHP_SELF) == FILENAME_PRODUCT_INFO) {
           $action = 'action=add_product&';

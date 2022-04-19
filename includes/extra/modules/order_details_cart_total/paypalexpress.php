@@ -18,7 +18,7 @@
     require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPaymentV2.php');
   
     $paypal = new PayPalPayment('paypalexpress');
-    if ($paypal->enabled === true) {  
+    if ($paypal->is_enabled()) {  
       $paypal_smarty = new Smarty();
       $paypal_smarty->assign('language', $_SESSION['language']);
       $paypal_smarty->assign('paypalexpress', true);
