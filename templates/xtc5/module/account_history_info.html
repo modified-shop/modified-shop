@@ -40,10 +40,6 @@
       </table>
     {/foreach}
   {/if}
-  {if $PAYMENT_INFORMATION != ''}
-  <h2>{#text_payment_info#}</h2>
-  <p>{$PAYMENT_INFORMATION}</p>
-  {/if}
   <h2>{#title_history#}:</h2>
   <p>{$HISTORY_BLOCK}</p>
   {if count($ORDER_TRACKING) > 0}
