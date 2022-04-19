@@ -160,6 +160,7 @@ $lang_array = array(
   'TEXT_PAYPALINSTALLMENT_INFO_LINK' => 'Informationen zu m&ouml;glichen Raten',
 
   'TEXT_PAYPAL_INSTRUMENT_DECLINED_ERROR' => 'Das gew&auml;hlte Zahlungsmittel wurde entweder von PayPal oder von der Bank abgelehnt, oder es kann f&uuml;r diese Zahlung nicht verwendet werden.',
+  'IMAGE_ICON_STATUS_YELLOW' => 'vor&uuml;bergehend nicht verf&uuml;gbar',
 );
 
 
