@@ -243,37 +243,41 @@ if (isset($order) && is_object($order)) {
             <?php
             }
             
-            if (isset($admin_info_data['instruction'])) {
+            $instructions_query = xtc_db_query("SELECT *
+                                                  FROM ".TABLE_PAYPAL_INSTRUCTIONS."
+                                                 WHERE orders_id = '".(int)$order->info['order_id']."'");
+            if (xtc_db_num_rows($instructions_query)) {
+              $instructions = xtc_db_fetch_array($instructions_query);
               ?>
               <div class="pp_transactions pp_box">
                 <div class="pp_boxheading"><?php echo TEXT_PAYPAL_INSTRUCTIONS; ?></div>
                 <dl class="pp_transaction">
                   <dt><?php echo TEXT_PAYPAL_INSTRUCTIONS_AMOUNT; ?></dt>
-                  <dd><?php echo $admin_info_data['instruction']['amount']['total'].' '.$admin_info_data['instruction']['amount']['currency']; ?></dd>
+                  <dd><?php echo $instructions['amount'].' '.$instructions['currency']; ?></dd>
                 </dl>
                 <dl class="pp_transaction">
                   <dt><?php echo TEXT_PAYPAL_INSTRUCTIONS_REFERENCE; ?></dt>
-                  <dd><?php echo $admin_info_data['instruction']['reference']; ?></dd>
+                  <dd><?php echo $instructions['reference']; ?></dd>
                 </dl>
                 <dl class="pp_transaction">
                   <dt><?php echo TEXT_PAYPAL_INSTRUCTIONS_PAYDATE; ?></dt>
-                  <dd><?php echo $admin_info_data['instruction']['date']; ?></dd>
+                  <dd><?php echo xtc_date_short($instructions['date']); ?></dd>
                 </dl>
                 <dl class="pp_transaction">
                   <dt><?php echo TEXT_PAYPAL_INSTRUCTIONS_ACCOUNT; ?></dt>
-                  <dd><?php echo $admin_info_data['instruction']['bank']['name']; ?></dd>
+                  <dd><?php echo $instructions['name']; ?></dd>
                 </dl>
                 <dl class="pp_transaction">
                   <dt><?php echo TEXT_PAYPAL_INSTRUCTIONS_HOLDER; ?></dt>
-                  <dd><?php echo $admin_info_data['instruction']['bank']['holder']; ?></dd>
+                  <dd><?php echo $instructions['holder']; ?></dd>
                 </dl>
                 <dl class="pp_transaction">
                   <dt><?php echo TEXT_PAYPAL_INSTRUCTIONS_IBAN; ?></dt>
-                  <dd><?php echo $admin_info_data['instruction']['bank']['iban']; ?></dd>
+                  <dd><?php echo $instructions['iban']; ?></dd>
                 </dl>
                 <dl class="pp_transaction">
                   <dt><?php echo TEXT_PAYPAL_INSTRUCTIONS_BIC; ?></dt>
-                  <dd><?php echo $admin_info_data['instruction']['bank']['bic']; ?></dd>
+                  <dd><?php echo $instructions['bic']; ?></dd>
                 </dl>
               </div>
               <?php
