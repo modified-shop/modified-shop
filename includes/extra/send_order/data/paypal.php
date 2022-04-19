@@ -32,8 +32,12 @@ if (is_object($order) && in_array($order->info['payment_method'], $paypal_paymen
   }
 
   if (strpos($order->info['payment_method'], 'link') !== false) {
+    if (!isset($payment_modules) || !is_object($payment_modules)) {
+      require_once (DIR_FS_CATALOG.'includes/classes/payment.php');
+      $payment_modules = new payment($order->info['payment_class']);
+    }
     $paypal_payment_info = array(
-      array ('title' => $paypal->title.': ', 
+      array ('title' => $payment_modules::payment_title($order->info['payment_method'], $order->info['order_id']).': ', 
              'class' => $paypal->code,
              'fields' => array(array('title' => '',
                                      'field' => sprintf(constant('MODULE_PAYMENT_'.strtoupper($paypal->code).'_TEXT_SUCCESS'), $paypal->create_paypal_link($order->info['order_id'])),
