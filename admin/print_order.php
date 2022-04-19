@@ -81,12 +81,12 @@
     $payment_method = $payment_modules::payment_title($order->info['payment_method'],$order->info['order_id']);
 
     // mod: BILLPAY payment module
-    if(stripos($order->info['payment_method'], 'billpay') !== false) {
+    if (stripos($order->info['payment_method'], 'billpay') !== false) {
       require_once(DIR_FS_EXTERNAL . 'billpay/utils/billpay_display_bankdata.php');
       $payment_method .= display_billpay_bankdata();
     }
 
-    if(strpos($order->info['payment_method'], 'paypalplus') !== false) {
+    if (in_array($order->info['payment_method'], array('paypalplus', 'paypalpui'))) {
       require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalInfo.php');
       $paypal = new PayPalInfo($order->info['payment_method']);      
       $smarty->assign('PAYMENT_INFO', $paypal->get_payment_instructions($order->info['order_id']));
