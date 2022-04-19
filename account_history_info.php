@@ -71,6 +71,7 @@ $smarty->assign('order_total', $order_total['data']);
 
 // Payment Method
 if ($order->info['payment_method'] != '' && $order->info['payment_method'] != 'no_payment') {    
+  $last_order = $order->info['order_id'];
   require_once (DIR_WS_CLASSES . 'payment.php');
   $payment_modules = new payment($order->info['payment_class']);
   $smarty->assign('PAYMENT_INFO', $payment_modules->success());
