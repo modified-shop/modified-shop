@@ -27,8 +27,9 @@
   <p>{$ORDER_COMMENTS}</p>
   {/if}
   {if is_array($PAYMENT_INFO) && count($PAYMENT_INFO) > 0}
+    <h2>{#text_payment_info#}</h2>
     {foreach name=aussen item=data from=$PAYMENT_INFO}
-      <h2>{$data.title|stripslashes}</h2>
+      <p>{$data.title|stripslashes}</p>
       <table class="paymentinfotable {$data.class}">
         {foreach name=aussen item=info from=$data.fields}
           <tr>
@@ -38,6 +39,10 @@
         {/foreach}
       </table>
     {/foreach}
+  {/if}
+  {if $PAYMENT_INFORMATION != ''}
+  <h2>{#text_payment_info#}</h2>
+  <p>{$PAYMENT_INFORMATION}</p>
   {/if}
   <h2>{#title_history#}:</h2>
   <p>{$HISTORY_BLOCK}</p>

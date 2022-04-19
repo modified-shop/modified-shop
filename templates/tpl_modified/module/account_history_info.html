@@ -69,8 +69,9 @@
   <div class="twoColums last">
     {if is_array($PAYMENT_INFO) && count($PAYMENT_INFO) > 0}
     <div class="highlightbox plainleft">
+      <h4>{#text_payment_info#}</h4>
       {foreach name=aussen item=data from=$PAYMENT_INFO}
-        <h4>{$data.title|stripslashes}</h4>
+        <p>{$data.title|stripslashes}</p>
         <table class="paymentinfotable {$data.class}">
           {foreach name=aussen item=info from=$data.fields}
             <tr>
