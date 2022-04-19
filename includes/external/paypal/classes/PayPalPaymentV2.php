@@ -86,12 +86,22 @@
       
       // auth
       $client = $this->GetClient();
+            
+      // shipping cost
+      $order->info['shipping_cost'] = 0;
+      if ($this->code == 'paypalexpress') {
+        $shipping_data = $this->get_shipping_data();
+        if (is_array($shipping_data)) {
+          $order->info['shipping_cost'] = $shipping_data['total'];
+          $order->info['tax'] += $shipping_data['tax'];
+        }
+      }
       
       $purchase_unit = array(
         'description' => substr($this->encode_utf8(MODULE_PAYMENT_PAYPAL_TEXT_ORDER), 0, 127),
         'soft_descriptor' => substr($this->encode_utf8(STORE_NAME), 0, 22),
         'amount' => array(
-          'value' => sprintf("%01.2f", round($order->info['total'], 2)),
+          'value' => sprintf("%01.2f", round(($order->info['total'] + $order->info['shipping_cost']), 2)),
           'currency_code' => $this->encode_utf8($order->info['currency'])
         )
       );
@@ -100,7 +110,7 @@
           && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1
           ) 
       {
-        $purchase_unit['amount']['value'] = sprintf("%01.2f", round(($order->info['total'] + $order->info['tax']), 2));
+        $purchase_unit['amount']['value'] = sprintf("%01.2f", round(($order->info['total'] + $order->info['shipping_cost'] + $order->info['tax']), 2));
       }
       
       if ($this->code == 'paypalpui') {
