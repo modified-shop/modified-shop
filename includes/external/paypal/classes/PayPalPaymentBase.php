@@ -130,7 +130,7 @@ class PayPalPaymentBase extends PayPalCommon {
       $unallowed_modules_string = preg_replace("'[\r\n\s]+'", '', $unallowed_modules_string);
       $unallowed_modules = explode(',', strtoupper($unallowed_modules_string));
       
-      if (!in_array($this->code, $unallowed_modules)) {
+      if (!in_array(strtoupper($this->code), $unallowed_modules)) {
         return true;
       }
     }
