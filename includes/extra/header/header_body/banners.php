@@ -59,6 +59,7 @@
             }
           }
           $smarty->assign(strtoupper($groups['banners_group']), $banners);
+          $smarty->assign(strtoupper($groups['banners_group']).'_SORT', $banner['banners_sort']);
         }
       }
     }
