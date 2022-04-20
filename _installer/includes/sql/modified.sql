@@ -504,6 +504,7 @@ CREATE TABLE customers (
   PRIMARY KEY (customers_id),
   KEY idx_customers_email_address (customers_email_address),
   KEY idx_customers_status (customers_status),
+  KEY idx_account_type (account_type),
   KEY idx_customers_default_address_id (customers_default_address_id)
 );
 
