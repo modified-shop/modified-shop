@@ -78,29 +78,6 @@ if ($order->info['payment_method'] != '' && $order->info['payment_method'] != 'n
   $smarty->assign('PAYMENT_METHOD', $payment_modules::payment_title($order->info['payment_method'], $order->info['order_id']));
 }
 
-## PayPal
-if ($order->info['payment_method'] == 'paypallink'
-    || $order->info['payment_method'] == 'paypalpluslink'
-    ) 
-{
-  require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPayment.php');
-  $paypal = new PayPalPayment($order->info['payment_method']);
-  
-  if ($paypal->get_config('MODULE_PAYMENT_'.strtoupper($order->info['payment_method']).'_USE_ACCOUNT') == 1) {
-    $button = $paypal->create_paypal_link($order->info['order_id']);
-    if ($button != '') {
-      $smarty->assign('PAYPAL_LINK', sprintf(constant('MODULE_PAYMENT_'.strtoupper($order->info['payment_method']).'_TEXT_SUCCESS'), $button));
-    }
-    
-    if ($messageStack->size($order->info['payment_method']) > 0) {
-      $smarty->assign('error_message', $messageStack->output($order->info['payment_method']));
-    }    
-    if ($messageStack->size($order->info['payment_method'], 'success') > 0) {
-      $smarty->assign('success_message', $messageStack->output($order->info['payment_method'], 'success'));
-    }    
-  }
-}
-
 // Order History
 $history_block = '';
 $history_block_array = array();

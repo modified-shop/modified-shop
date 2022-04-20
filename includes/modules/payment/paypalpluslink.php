@@ -34,20 +34,33 @@ class paypalpluslink extends PayPalPayment {
 
 
   function success() {
-    global $last_order;
+    global $last_order, $PHP_SELF, $smarty, $messageStack;
     
-    if ($this->get_config('MODULE_PAYMENT_'.strtoupper($this->code).'_SUCCESS') == '1') {
-      $success = array(
-        array ('title' => $this->title.': ', 
-               'class' => $this->code,
-               'fields' => array(array('title' => '',
-                                       'field' => sprintf(constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_SUCCESS'), $this->create_paypal_link($last_order)),
-                                       )
-                                 )
-               )
-      );
+    if ((basename($PHP_SELF) == FILENAME_CHECKOUT_SUCCESS && $this->get_config('MODULE_PAYMENT_'.strtoupper($this->code).'_SUCCESS') == '1')
+         || (basename($PHP_SELF) == FILENAME_ACCOUNT_HISTORY_INFO && $this->get_config('MODULE_PAYMENT_'.strtoupper($this->code).'_USE_ACCOUNT') == '1')
+        )
+    {
+      if ($messageStack->size($this->code) > 0) {
+        $smarty->assign('error_message', $messageStack->output($this->code));
+      }    
+      if ($messageStack->size($this->code, 'success') > 0) {
+        $smarty->assign('success_message', $messageStack->output($this->code, 'success'));
+      }    
+
+      $button = $this->create_paypal_link($last_order);
+      if ($button != '') {
+        $success = array(
+          array ('title' => ((basename($PHP_SELF) == FILENAME_CHECKOUT_SUCCESS) ? $this->title.': ' : ''), 
+                 'class' => $this->code,
+                 'fields' => array(array('title' => '',
+                                         'field' => sprintf(constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_SUCCESS'), $button),
+                                         )
+                                   )
+                 )
+        );
     
-      return $success;
+        return $success;
+      }
     }
   }
   
