@@ -91,6 +91,7 @@ class shopvote
           'MODULE_SHOPVOTE_API_KEY',
           'MODULE_SHOPVOTE_API_SECRET',
           'MODULE_SHOPVOTE_BADGE',
+          'MODULE_SHOPVOTE_DEFAULT_LANG',
         );
     }    
 }
