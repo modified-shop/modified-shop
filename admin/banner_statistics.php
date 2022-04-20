@@ -89,18 +89,18 @@ require (DIR_WS_INCLUDES.'head.php');
           <div class="main flt-l" style="width:100%">
             <table class="tableCenter collapse">
               <tr class="dataTableHeadingRow">
-                <td class="dataTableHeadingContent" style="width:33%"><?php echo TITLE_TYPE . ' ' . xtc_draw_pull_down_menu('type', $type_array, (($_GET['type']) ? $_GET['type'] : 'daily'), 'onChange="this.form.submit();"'); ?><noscript><input type="submit" value="GO"></noscript></td>
+                <td class="dataTableHeadingContent" style="width:33%"><?php echo TITLE_TYPE . ' ' . xtc_draw_pull_down_menu('type', $type_array, ((isset($_GET['type'])) ? $_GET['type'] : 'daily'), 'onChange="this.form.submit();"'); ?><noscript><input type="submit" value="GO"></noscript></td>
                 <?php
-                  switch ($_GET['type']) {
+                  switch ((isset($_GET['type'])) ? $_GET['type'] : 'daily') {
                     case 'yearly': 
                       echo '<td class="dataTableHeadingContent" style="width:33%"></td><td class="dataTableHeadingContent"></td>';
                       break;
                     case 'monthly':
-                      echo '<td class="dataTableHeadingContent" style="width:33%">'.TITLE_YEAR . ' ' . xtc_draw_pull_down_menu('year', $years_array, (($_GET['year']) ? $_GET['year'] : date('Y')), 'onChange="this.form.submit();"') . '<noscript><input type="submit" value="GO"></noscript></td><td class="dataTableHeadingContent">&nbsp;</td>';
+                      echo '<td class="dataTableHeadingContent" style="width:33%">'.TITLE_YEAR . ' ' . xtc_draw_pull_down_menu('year', $years_array, ((isset($_GET['year'])) ? $_GET['year'] : date('Y')), 'onChange="this.form.submit();"') . '<noscript><input type="submit" value="GO"></noscript></td><td class="dataTableHeadingContent">&nbsp;</td>';
                       break;
                     default:
                     case 'daily':
-                      echo '<td class="dataTableHeadingContent" style="width:33%">'.TITLE_MONTH . ' ' . xtc_draw_pull_down_menu('month', $months_array, (($_GET['month']) ? $_GET['month'] : date('n')), 'onChange="this.form.submit();"') . '<noscript><input type="submit" value="GO"></noscript></td><td class="dataTableHeadingContent" style="width:33%">' . TITLE_YEAR . ' ' . xtc_draw_pull_down_menu('year', $years_array, (($_GET['year']) ? $_GET['year'] : date('Y')), 'onChange="this.form.submit();"') . '<noscript><input type="submit" value="GO"></noscript></td>';
+                      echo '<td class="dataTableHeadingContent" style="width:33%">'.TITLE_MONTH . ' ' . xtc_draw_pull_down_menu('month', $months_array, ((isset($_GET['month'])) ? $_GET['month'] : date('n')), 'onChange="this.form.submit();"') . '<noscript><input type="submit" value="GO"></noscript></td><td class="dataTableHeadingContent" style="width:33%">' . TITLE_YEAR . ' ' . xtc_draw_pull_down_menu('year', $years_array, ((isset($_GET['year'])) ? $_GET['year'] : date('Y')), 'onChange="this.form.submit();"') . '<noscript><input type="submit" value="GO"></noscript></td>';
                       break;
                   }
                 ?>
@@ -114,7 +114,7 @@ require (DIR_WS_INCLUDES.'head.php');
           <?php
             if ( (function_exists('imagecreate')) && ($dir_ok) && ($banner_extension) ) {
               $banner_id = $_GET['bID'];
-              switch ($_GET['type']) {
+              switch ((isset($_GET['type'])) ? $_GET['type'] : 'daily') {
                 case 'yearly':
                   include(DIR_WS_INCLUDES . 'graphs/banner_yearly.php');
                   echo xtc_image(DIR_WS_IMAGES . 'graphs/banner_yearly-' . $banner_id . '.' . $banner_extension);
