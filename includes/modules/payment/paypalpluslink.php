@@ -50,7 +50,7 @@ class paypalpluslink extends PayPalPayment {
       $button = $this->create_paypal_link($last_order);
       if ($button != '') {
         $success = array(
-          array ('title' => ((basename($PHP_SELF) == FILENAME_CHECKOUT_SUCCESS) ? $this->title.': ' : ''), 
+          array ('title' => ((basename($PHP_SELF) == FILENAME_CHECKOUT_SUCCESS) ? $this->title : ''), 
                  'class' => $this->code,
                  'fields' => array(array('title' => '',
                                          'field' => sprintf(constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_SUCCESS'), $button),
