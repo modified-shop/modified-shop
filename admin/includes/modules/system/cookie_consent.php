@@ -71,7 +71,7 @@ if (!class_exists('cookie_consent')) {
         $languages[$row['languages_id']] = $row;
       }
       
-      $check_query = xtc_db_query("SHOW TABLES LIKE `".TABLE_COOKIE_CONSENT_CATEGORIES."`");
+      $check_query = xtc_db_query("SHOW TABLES LIKE '".TABLE_COOKIE_CONSENT_CATEGORIES."'");
       if (xtc_db_num_rows($check_query) < 1) {
         xtc_db_query("CREATE TABLE `".TABLE_COOKIE_CONSENT_CATEGORIES."` (
                         `categories_id` int(11) NOT NULL,
@@ -163,7 +163,7 @@ if (!class_exists('cookie_consent')) {
       }
       
 
-      $check_query = xtc_db_query("SHOW TABLES LIKE `".TABLE_COOKIE_CONSENT_COOKIES."`");
+      $check_query = xtc_db_query("SHOW TABLES LIKE '".TABLE_COOKIE_CONSENT_COOKIES."'");
       if (xtc_db_num_rows($check_query) < 1) {
         xtc_db_query("CREATE TABLE `".TABLE_COOKIE_CONSENT_COOKIES."` (
                         `cookies_id` int(11) NOT NULL,
