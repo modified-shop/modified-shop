@@ -378,7 +378,10 @@ if (!class_exists('cookie_consent')) {
     }
 
     function keys() {
-      return array('MODULE_COOKIE_CONSENT_STATUS','MODULE_COOKIE_CONSENT_SET_READABLE_COOKIE');
+      return array(
+        'MODULE_COOKIE_CONSENT_STATUS',
+        'MODULE_COOKIE_CONSENT_SET_READABLE_COOKIE'
+      );
     }
   }
 }
