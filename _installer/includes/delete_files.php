@@ -263,6 +263,7 @@
     'inc/set_customers_status_by_id.inc.php',
     'inc/shopstat_functions.inc.php',
     'inc/tld.txt',
+    'inc/xtc_checkdate.inc.php',
     'inc/xtc_convert_linefeeds.inc.php',
     'inc/xtc_crawlers.inc.php',
     'inc/xtc_db_close.inc.php',
