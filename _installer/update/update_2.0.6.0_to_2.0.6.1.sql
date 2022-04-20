@@ -145,4 +145,8 @@ UPDATE `countries` SET `sort_order` = 100;
 #GTB - 2022-02-16 - fix #1700 - add manufacturers_title
 ALTER TABLE `manufacturers_info` ADD `manufacturers_title` VARCHAR(255) NOT NULL DEFAULT '' AFTER `languages_id`;
 
+#GTB - 2022-04-20 - fix #1157 - add index
+ALTER TABLE `customers` ADD KEY `idx_account_type` (`account_type`);
+ALTER TABLE `content_manager` ADD KEY `idx_content_active` (`content_active`);
+
 # Keep an empty line at the end of this file for the db_updater to work properly

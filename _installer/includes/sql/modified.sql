@@ -344,6 +344,7 @@ CREATE TABLE content_manager (
   PRIMARY KEY (content_id),
   KEY idx_content_group (content_group, languages_id),
   KEY idx_content_status (content_status),
+  KEY idx_content_active (content_active),
   KEY idx_sort_order (sort_order)
 );
 
