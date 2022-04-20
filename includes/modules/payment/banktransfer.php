@@ -388,7 +388,7 @@
     }
     
     function success() {
-      global $insert_id, $last_order, $xtPrice;
+      global $insert_id, $last_order, $xtPrice, $PHP_SELF;
              
       $insert_id = $last_order;
       $banktransfer_data = $this->info();
@@ -411,7 +411,7 @@
         
         $success = array(
           array(
-            'title' => $this->title,
+            'title' => ((basename($PHP_SELF) == FILENAME_CHECKOUT_SUCCESS) ? $this->title : ''),
             'class' => $this->code,
             'fields' => array(
               array('title' => '',
