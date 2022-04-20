@@ -381,7 +381,12 @@ class payone_installment extends PayonePayment {
 	  {
 		  //check
 		  if (isset($_SESSION[$this->code]['installment_customers_dob'])) {
-        if (is_numeric(xtc_date_raw($_SESSION[$this->code]['installment_customers_dob'])) == false || (@checkdate(substr(xtc_date_raw($_SESSION[$this->code]['installment_customers_dob']), 4, 2), substr(xtc_date_raw($_SESSION[$this->code]['installment_customers_dob']), 6, 2), substr(xtc_date_raw($_SESSION[$this->code]['installment_customers_dob']), 0, 4)) == false)) {
+        $date = xtc_date_raw($_SESSION[$this->code]['installment_customers_dob']);
+        if (is_numeric($date) == false
+            || strlen($date) != 8
+            || checkdate(substr($date, 4, 2), substr($date, 6, 2), substr($date, 0, 4)) == false
+            )
+        {
           $_SESSION['payone_error'] = ENTRY_DATE_OF_BIRTH_ERROR;
           xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'conditions=true&payment_error='.$this->code, 'SSL', true));		
         }

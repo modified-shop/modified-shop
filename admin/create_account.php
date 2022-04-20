@@ -116,7 +116,12 @@
 
     if (ACCOUNT_DOB == 'true') {
       $customers_dob = xtc_db_prepare_input($_POST['customers_dob']);
-      if (!checkdate(substr(xtc_date_raw($customers_dob), 4, 2), substr(xtc_date_raw($customers_dob), 6, 2), substr(xtc_date_raw($customers_dob), 0, 4))) {
+      $date = xtc_date_raw($customers_dob);
+      if (is_numeric($date) == false
+          || strlen($date) != 8
+          || checkdate(substr($date, 4, 2), substr($date, 6, 2), substr($date, 0, 4)) == false
+          )
+      {
         $error = $entry_date_of_birth_error = true;
       }
     }

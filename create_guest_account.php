@@ -116,10 +116,16 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     $messageStack->add('create_account', ENTRY_LAST_NAME_ERROR);
   }
 
-  if (ACCOUNT_DOB == 'true' && (is_numeric(xtc_date_raw($dob)) == false ||
-      (@checkdate(substr(xtc_date_raw($dob), 4, 2), substr(xtc_date_raw($dob), 6, 2), substr(xtc_date_raw($dob), 0, 4)) == false))) {
-    $error = true;
-    $messageStack->add('create_account', ENTRY_DATE_OF_BIRTH_ERROR);
+  if (ACCOUNT_DOB == 'true') {
+    $date = xtc_date_raw($dob);
+    if (is_numeric($date) == false
+        || strlen($date) != 8
+        || checkdate(substr($date, 4, 2), substr($date, 6, 2), substr($date, 0, 4)) == false
+        )
+    {
+      $error = true;
+      $messageStack->add('create_account', ENTRY_DATE_OF_BIRTH_ERROR);
+    }
   }
 
   // New VAT Check

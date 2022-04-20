@@ -88,7 +88,12 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
   }
 
   if (ACCOUNT_DOB == 'true') {
-    if (checkdate(substr(xtc_date_raw($dob), 4, 2), substr(xtc_date_raw($dob), 6, 2), substr(xtc_date_raw($dob), 0, 4)) == false) {
+    $date = xtc_date_raw($dob);
+    if (is_numeric($date) == false
+        || strlen($date) != 8
+        || checkdate(substr($date, 4, 2), substr($date, 6, 2), substr($date, 0, 4)) == false
+        )
+    {
       $error = true;
       $messageStack->add('account_edit', ENTRY_DATE_OF_BIRTH_ERROR);
     }
