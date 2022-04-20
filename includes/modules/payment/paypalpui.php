@@ -129,8 +129,10 @@ class paypalpui extends PayPalPaymentV2 {
     $telephone = xtc_db_prepare_input($_POST['telephone']);
 
     $error = false;
-    if (is_numeric(xtc_date_raw($dob)) == false
-        || (@checkdate(substr(xtc_date_raw($dob), 4, 2), substr(xtc_date_raw($dob), 6, 2), substr(xtc_date_raw($dob), 0, 4)) == false)
+    $date = xtc_date_raw($dob);
+    if (is_numeric($date) == false
+        || strlen($date) != 8
+        || checkdate(substr($date, 4, 2), substr($date, 6, 2), substr($date, 0, 4)) == false
         )
     {
       $error = true;
