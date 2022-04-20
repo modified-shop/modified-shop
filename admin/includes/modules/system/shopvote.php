@@ -65,6 +65,17 @@ class shopvote
         xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SHOPVOTE_API_KEY', '', '6', '0', '', now())");
         xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SHOPVOTE_API_SECRET', '', '6', '0', '', now())");
         xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SHOPVOTE_BADGE', '1',  '6', '1', 'xtc_cfg_select_option(array(\'1\', \'2\', \'3\', \'4\'), ', now())");
+        xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SHOPVOTE_DEFAULT_LANG', '".$_SESSION['language_code']."',  '6', '1', 'xtc_cfg_pull_down_language_code(', now())");
+
+        $table_array = array(
+          array('table' => TABLE_PRODUCTS, 'column' => 'shopvote_last_imported', 'default' => 'DATETIME'),
+        );
+        foreach ($table_array as $table) {
+          $check_query = xtc_db_query("SHOW COLUMNS FROM ".$table['table']." LIKE '".xtc_db_input($table['column'])."'");
+          if (xtc_db_num_rows($check_query) < 1) {
+            xtc_db_query("ALTER TABLE ".$table['table']." ADD ".$table['column']." ".$table['default']."");
+          }
+        }
     }
 
     function remove()

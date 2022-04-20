@@ -23,4 +23,6 @@
   define('MODULE_SHOPVOTE_API_SECRET_DESC', 'Tragen Sie das API-Secret ein.');
   define('MODULE_SHOPVOTE_BADGE_TITLE', 'Badge Typ');
   define('MODULE_SHOPVOTE_BADGE_DESC', 'W&auml;hlen Sie ein Badge aus.');
+  define('MODULE_SHOPVOTE_DEFAULT_LANG_TITLE', 'Fallback Sprache');
+  define('MODULE_SHOPVOTE_DEFAULT_LANG_DESC', 'W&auml;hlen Sie die Sprache f&uuml;r Bewertungen in einer Sprache die nicht im Shop angelegt ist.');
 ?>
