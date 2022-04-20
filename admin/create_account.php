@@ -463,7 +463,7 @@ require (DIR_WS_INCLUDES.'head.php');
                       <td class="dataTableConfig col-single-right">
                       <?php
                         echo xtc_draw_input_field('customers_vat_id', isset($customers_vat_id)?$customers_vat_id:'', 'maxlength="32"');
-                        if ($entry_vat_error_text) echo '&nbsp;' . $entry_vat_error_text;
+                        if ($error && $entry_vat_error_text) echo '&nbsp;' . $entry_vat_error_text;
                       ?>
                       </td>
                     </tr>
