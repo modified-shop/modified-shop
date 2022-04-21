@@ -20,7 +20,7 @@ function secure_form() {
       )
   {
     $_SESSION['SFName'] = xtc_RandomString(6);
-    $_SESSION['SFToken'] = xtc_RandomString(32);
+    $_SESSION['SFToken'] = time().'.'.xtc_RandomString(32);
   }
   
   return xtc_draw_hidden_field($_SESSION['SFName'], $_SESSION['SFToken']);
@@ -31,6 +31,7 @@ function check_secure_form($params) {
       || !isset($_SESSION['SFToken'])
       || !isset($params[$_SESSION['SFName']])
       || $params[$_SESSION['SFName']] != $_SESSION['SFToken']
+      || substr($_SESSION['SFToken'], 0, strpos($_SESSION['SFToken'], '.')) >= (time() - 2)
       )
   {
     unset($_SESSION['SFName']);
