@@ -24,7 +24,7 @@ require_once (DIR_FS_INC.'xtc_get_country_list.inc.php');
 require_once (DIR_FS_INC.'get_customers_gender.inc.php');
 require_once (DIR_FS_INC.'check_country_required_zones.inc.php');
 
-$selected = isset($_POST['country']) && $_POST['country'] ? (int)$_POST['country'] : STORE_COUNTRY;
+$selected = ((isset($_POST['country']) && $_POST['country']) ? (int)$_POST['country'] : ((isset($country)) ? $country : STORE_COUNTRY));
 $required_zones = check_country_required_zones($selected);
 
 if (!isset ($process))
