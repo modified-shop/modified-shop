@@ -104,7 +104,7 @@
 
           for ($i=0; $i<sizeof($fedexeu_table_pak); $i+=2) {
             if ($shipping_weight <= $fedexeu_table_pak[$i]) {
-              $shipping_pak = $fedexeu_table_pak[$i+1];
+              $shipping_pak = (double)$fedexeu_table_pak[$i+1];
               break;
             }
           }
@@ -129,7 +129,7 @@
 
           for ($i=0; $i<sizeof($fedexeu_table_env); $i+=2) {
             if ($shipping_weight <= $fedexeu_table_env[$i]) {
-              $shipping_env = $fedexeu_table_env[$i+1];
+              $shipping_env = (double)$fedexeu_table_env[$i+1];
               break;
             }
           }
@@ -162,7 +162,7 @@
 
             for ($i=0; $i<sizeof($fedexeu_table_box); $i+=2) {
               if ($shipping_weight <= $fedexeu_table_box[$i]) {
-                $shipping_box = $fedexeu_table_box[$i+1];
+                $shipping_box = (double)$fedexeu_table_box[$i+1];
                 break;
               }
             }

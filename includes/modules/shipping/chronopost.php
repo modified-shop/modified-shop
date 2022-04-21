@@ -100,7 +100,7 @@
       $cost = -1;
       for ($i = 0, $n = sizeof($table); $i < $n; $i+=2) {
         if ($shipping_weight <= $table[$i]) {
-          $cost = $table[$i+1] + (double)MODULE_SHIPPING_CHRONOPOST_HANDLING;
+          $cost = (double)$table[$i+1] + (double)MODULE_SHIPPING_CHRONOPOST_HANDLING;
           break;
         }
       }

@@ -116,7 +116,7 @@
       $y=2;
       for ($i = 0; $i < count($dpd_table); $i ++) {
         if ( ($shipping_weight > $dpd_table[$i]) && ($shipping_weight <= $dpd_table[$n]) ) {
-          $shipping = $dpd_table[$y];
+          $shipping = (double)$dpd_table[$y];
           $shipping_dpd_method = MODULE_SHIPPING_DPD_TEXT_WAY . ' ' . $dest_country . ' (' . ($shipping_num_boxes > 1 ? $shipping_num_boxes . ' x ' : '') . round($shipping_weight, 2) . ' ' . MODULE_SHIPPING_DPD_TEXT_UNITS . ') :';
           break;
         }

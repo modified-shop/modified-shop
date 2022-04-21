@@ -112,7 +112,7 @@
         $size = sizeof($gls_table);
         for ($i=0; $i<$size; $i+=2) {
           if ($shipping_weight <= $gls_table[$i]) {
-            $shipping = $gls_table[$i+1];
+            $shipping = (double)$gls_table[$i+1];
             $shipping_method = MODULE_SHIPPING_GLS_TEXT_WAY . ' ' . $dest_country . ': ';
             break;
           }

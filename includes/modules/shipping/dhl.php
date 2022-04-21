@@ -119,7 +119,7 @@
 
             for ($i=0; $i<sizeof($dhl_table_ecx); $i+=2) {
               if ($shipping_weight <= $dhl_table_ecx[$i]) {
-                $shipping_ecx = $dhl_table_ecx[$i+1];
+                $shipping_ecx = (double)$dhl_table_ecx[$i+1];
                 break;
               }
             }
@@ -153,7 +153,7 @@
 
             for ($i=0; $i<sizeof($dhl_table_dox); $i+=2) {
               if ($shipping_weight <= $dhl_table_dox[$i]) {
-                $shipping_dox = $dhl_table_dox[$i+1];
+                $shipping_dox = (double)$dhl_table_dox[$i+1];
                 break;
               }
             }
@@ -187,7 +187,7 @@
 
             for ($i=0; $i<sizeof($dhl_table_wpx); $i+=2) {
               if ($shipping_weight <= $dhl_table_wpx[$i]) {
-                $shipping_wpx = $dhl_table_wpx[$i+1];
+                $shipping_wpx = (double)$dhl_table_wpx[$i+1];
                 break;
               }
             }
@@ -220,7 +220,7 @@
 
             for ($i=0; $i<sizeof($dhl_table_mdx); $i+=2) {
               if ($shipping_weight <= $dhl_table_mdx[$i]) {
-                $shipping_mdx = $dhl_table_mdx[$i+1];
+                $shipping_mdx = (double)$dhl_table_mdx[$i+1];
                 break;
               }
             }
@@ -253,7 +253,7 @@
 
             for ($i=0; $i<sizeof($dhl_table_sdx); $i+=2) {
               if ($shipping_weight <= $dhl_table_sdx[$i]) {
-                $shipping_sdx = $dhl_table_sdx[$i+1];
+                $shipping_sdx = (double)$dhl_table_sdx[$i+1];
                 break;
               }
             }
