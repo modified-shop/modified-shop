@@ -106,7 +106,7 @@
 
           for ($i=0; $i<sizeof($chp_table_eco); $i+=2) {
             if ($shipping_weight <= $chp_table_eco[$i]) {
-              $shipping_eco = $chp_table_eco[$i+1];
+              $shipping_eco = (double)$chp_table_eco[$i+1];
               break;
             }
           }
@@ -130,7 +130,7 @@
 
           for ($i=0; $i<sizeof($chp_table_pri); $i+=2) {
             if ($shipping_weight <= $chp_table_pri[$i]) {
-              $shipping_pri = $chp_table_pri[$i+1];
+              $shipping_pri = (double)$chp_table_pri[$i+1];
               break;
             }
           }
@@ -154,7 +154,7 @@
 
           for ($i=0; $i<sizeof($chp_table_urg); $i+=2) {
             if ($shipping_weight <= $chp_table_urg[$i]) {
-              $shipping_urg = $chp_table_urg[$i+1];
+              $shipping_urg = (double)$chp_table_urg[$i+1];
               break;
             }
           }

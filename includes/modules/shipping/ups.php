@@ -104,7 +104,7 @@
           $ups_table = preg_split("/[:,]/" , $ups_cost); 
           for ($i=0; $i<sizeof($ups_table); $i+=2) {
             if ($shipping_weight <= $ups_table[$i]) {
-              $shipping = $ups_table[$i+1];
+              $shipping = (double)$ups_table[$i+1];
               $shipping_method = MODULE_SHIPPING_UPS_TEXT_WAY . ' ' . $dest_country . ': ';
               break;
             }
@@ -114,7 +114,7 @@
           $ups_table = preg_split("/[:,]/" , $ups_cost); 
           for ($i=0; $i<sizeof($ups_table); $i+=2) {
             if ($shipping_weight <= $ups_table[$i]) {
-              $diff = $ups_table[$i+1];
+              $diff = (double)$ups_table[$i+1];
               break;
             }
           }
@@ -125,7 +125,7 @@
           $ups_table = preg_split("/[:,]/" , $ups_cost); 
           for ($i=0; $i<sizeof($ups_table); $i+=2) {
             if ($shipping_weight <= $ups_table[$i]) {
-              $shipping = $ups_table[$i+1];
+              $shipping = (double)$ups_table[$i+1];
               $shipping_method = MODULE_SHIPPING_UPS_TEXT_WAY . ' ' . $dest_country . ': ';
               break;
             }

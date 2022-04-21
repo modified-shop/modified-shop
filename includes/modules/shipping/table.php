@@ -125,7 +125,7 @@
         $table_table = preg_split("/[:,]/" , $table_cost);
         for ($i=0; $i<sizeof($table_table); $i+=2) {
           if ($order_total <= $table_table[$i]) {
-            $shipping = $table_table[$i+1];
+            $shipping = (double)$table_table[$i+1];
             $shipping_method = MODULE_SHIPPING_TABLE_TEXT_WAY . ' ' . $dest_country . ': ';
             break;
           }
