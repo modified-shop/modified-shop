@@ -951,7 +951,10 @@ class xtcPrice {
    * @param unknown_type $code
    * @return unknown
    */
-  function get_decimal_places($code) {
+  function get_decimal_places($currency = '') {
+    if (isset($this->currencies[$currency])) {
+      return $this->currencies[$currency]['decimal_places'];
+    }
     return $this->currencies[$this->actualCurr]['decimal_places'];
   }
 
