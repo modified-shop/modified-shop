@@ -3106,7 +3106,11 @@ ul.orderlist li .orderlist_header {
   padding-top: 0px !important;
   margin-top: -4px;
 }
-
+ul.orderlist.account_history li .orderlist_header { 
+  border-top: 0px !important;
+  padding-top: 0px !important;
+  margin-top: -4px;
+}
 ul.orderlist li .orderlist_header span.ol_productsname {
   font-size:10px !important;
   line-height:18px;
