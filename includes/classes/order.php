@@ -619,8 +619,8 @@
         $this->products[$index]['image'] = !empty($products[$i]['image']) ? $main->getProductPopupLink($products[$i]['id'],$products[$i]['image'], 'image') : '&nbsp;';
         $this->products[$index]['link'] = $main->getProductPopupLink($products[$i]['id'],$products[$i]['name'], 'details');
         $this->products[$index]['link_more'] = $main->getProductPopupLink($products[$i]['id'], MORE_INFO, 'details');
-        $this->products[$index]['price_formated'] = $xtPrice->xtcFormat($products[$i]['price'],true); //$products[$i]['price'] is single plain price including attributes_price
-        $this->products[$index]['final_price_formated'] = $xtPrice->xtcFormat($products[$i]['final_price'],true); //$products[$i]['final_price'] is quantity * plain price including attributes_price
+        $this->products[$index]['price_formated'] = $xtPrice->xtcFormat($products[$i]['price'], true); //$products[$i]['price'] is single plain price including attributes_price
+        $this->products[$index]['final_price_formated'] = $xtPrice->xtcFormat($products[$i]['final_price'], true); //$products[$i]['final_price'] is quantity * plain price including attributes_price
 
         $this->products[$index]['tax'] = xtc_get_tax_rate($products[$i]['tax_class_id'], $tax_address['country_id'], $tax_address['zone_id']);
         if ($_SESSION['customers_status']['customers_status_show_price_tax'] == '0'
@@ -681,7 +681,7 @@
         $shown_price = $this->products[$index]['final_price'];
         $this->info['subtotal'] += $shown_price;
         if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == '1'){
-          $shown_price_tax = $shown_price-($shown_price/100 * $_SESSION['customers_status']['customers_status_ot_discount']);
+          $shown_price_tax = $shown_price - ($shown_price / 100 * $_SESSION['customers_status']['customers_status_ot_discount']);
         }
 
         $products_tax = $this->products[$index]['tax'];
@@ -693,10 +693,10 @@
           }
           if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == 1) {
             $this->info['tax'] += $shown_price_tax - ($shown_price_tax / (($products_tax < 10) ? "1.0" . str_replace('.', '', $products_tax) : "1." . str_replace('.', '', $products_tax)));
-            $this->info['tax_groups'][$tax_index] += (($shown_price_tax /(100+$products_tax)) * $products_tax);
+            $this->info['tax_groups'][$tax_index] += (($shown_price_tax / (100 + $products_tax)) * $products_tax);
           } else {
             $this->info['tax'] += $shown_price - ($shown_price / (($products_tax < 10) ? "1.0" . str_replace('.', '', $products_tax) : "1." . str_replace('.', '', $products_tax)));
-            $this->info['tax_groups'][$tax_index] += (($shown_price /(100+$products_tax)) * $products_tax);
+            $this->info['tax_groups'][$tax_index] += (($shown_price / (100 + $products_tax)) * $products_tax);
           }
         } elseif ($_SESSION['customers_status']['customers_status_add_tax_ot'] == 1
                   || ($_SESSION['customers_status']['customers_status_add_tax_ot'] == 0
@@ -710,18 +710,18 @@
             $this->info['tax_groups'][$tax_index] = 0;
           }
           if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == '1') {
-            $this->tax_discount[$products[$i]['tax_class_id']]+=($shown_price_tax/100) * $products_tax;
-            $this->info['tax_groups'][$tax_index] += ($shown_price_tax/100) * ($products_tax);
+            $this->tax_discount[$products[$i]['tax_class_id']] += ($shown_price_tax / 100) * $products_tax;
+            $this->info['tax_groups'][$tax_index] += ($shown_price_tax / 100) * ($products_tax);
           } else {
-            $this->info['tax'] += ($shown_price/100) * ($products_tax);
-            $this->info['tax_groups'][$tax_index] += ($shown_price/100) * ($products_tax);
+            $this->info['tax'] += ($shown_price / 100) * ($products_tax);
+            $this->info['tax_groups'][$tax_index] += ($shown_price / 100) * ($products_tax);
           }
         }
         $index++;
       }
 
       foreach ($this->tax_discount as $value) {
-        $this->info['tax'] += round($value, $xtPrice->get_decimal_places(''));
+        $this->info['tax'] += round($value, PRICE_PRECISION);
       }
 
       $this->info['total'] = $this->info['subtotal'];

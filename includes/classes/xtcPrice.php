@@ -499,7 +499,7 @@ class xtcPrice {
   function xtcAddTax($price, $tax) {
     $price += $price / 100 * $tax;
     $price = $this->xtcCalculateCurr($price);
-    return $this->show_price_tax ? round($price, $this->currencies[$this->actualCurr]['decimal_places']) : $price;
+    return $this->show_price_tax ? round($price, PRICE_PRECISION) : $price;
   }
 
   /**
@@ -700,7 +700,7 @@ class xtcPrice {
         );
       }
     } else {
-      return $this->show_price_tax ? round($price, $decimal_places) : $price;
+      return $this->show_price_tax ? round($price, PRICE_PRECISION) : $price;
     }
   }
   
@@ -756,7 +756,7 @@ class xtcPrice {
         );
       }
     } else {
-      return $this->show_price_tax ? round($sPrice, $this->currencies[$this->actualCurr]['decimal_places']) : $sPrice;
+      return $this->show_price_tax ? round($sPrice, PRICE_PRECISION) : $sPrice;
     }
   }
   
@@ -810,7 +810,7 @@ class xtcPrice {
         );
       }
     } else {
-      $return = $this->show_price_tax ? round($sPrice, $this->currencies[$this->actualCurr]['decimal_places']) : $sPrice;
+      $return = $this->show_price_tax ? round($sPrice, PRICE_PRECISION) : $sPrice;
     }
     
     $return = $this->priceModules->FormatSpecial($return, $pID, $sPrice, $pPrice, $format, $vpeStatus);
@@ -896,7 +896,7 @@ class xtcPrice {
         );
       }
     } else {
-      return $this->show_price_tax ? round($sPrice, $this->currencies[$this->actualCurr]['decimal_places']) : $sPrice;
+      return $this->show_price_tax ? round($sPrice, PRICE_PRECISION) : $sPrice;
     }
   }
   
@@ -937,7 +937,7 @@ class xtcPrice {
         );
       }
     } else {
-      $return = $this->show_price_tax ? round($ePrice, $this->currencies[$this->actualCurr]['decimal_places']) : $ePrice;
+      $return = $this->show_price_tax ? round($ePrice, PRICE_PRECISION) : $ePrice;
     }
     
     $return = $this->priceModules->FormatExtension($return, $pID, $ePrice, $pPrice, $format, $vpeStatus);
