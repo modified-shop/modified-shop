@@ -28,6 +28,7 @@ require_once (DIR_FS_INC.'xtc_image_button.inc.php');
 require_once (DIR_FS_INC.'xtc_format_price_order.inc.php');
 require_once (DIR_FS_INC.'get_tracking_link.inc.php');
 require_once (DIR_FS_INC.'get_order_total.inc.php');
+require_once (DIR_FS_INC.'clear_checkout_session.inc.php');
 
 if (!isset($_SESSION['customer_id'])) { 
   xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
@@ -38,6 +39,9 @@ if (!isset($_SESSION['customer_id'])) {
 { 
   xtc_redirect(xtc_href_link(FILENAME_DEFAULT, '', 'SSL'));
 }
+
+// clear session
+clear_checkout_session();
 
 // include boxes
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');

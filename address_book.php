@@ -25,6 +25,7 @@ $smarty = new Smarty;
 require_once (DIR_FS_INC.'xtc_address_label.inc.php');
 require_once (DIR_FS_INC.'xtc_get_country_name.inc.php');
 require_once (DIR_FS_INC.'xtc_count_customer_address_book_entries.inc.php');
+require_once (DIR_FS_INC.'clear_checkout_session.inc.php');
 
 if (!isset($_SESSION['customer_id'])) { 
   xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
@@ -37,12 +38,7 @@ if (!isset($_SESSION['customer_id'])) {
 }
 
 // clear session
-unset($_SESSION['sendto']);
-unset($_SESSION['billto']);
-unset($_SESSION['shipping']);
-unset($_SESSION['payment']);
-unset($_SESSION['delivery_zone']);
-unset($_SESSION['billing_zone']);
+clear_checkout_session();
 
 // include boxes
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');

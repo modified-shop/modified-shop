@@ -20,6 +20,7 @@ include ('includes/application_top.php');
 // include needed functions
 require_once (DIR_FS_INC.'xtc_validate_password.inc.php');
 require_once (DIR_FS_INC.'secure_form.inc.php');
+require_once (DIR_FS_INC.'clear_checkout_session.inc.php');
 
 // create smarty elements
 $smarty = new Smarty;
@@ -35,12 +36,7 @@ if (!isset($_SESSION['customer_id'])) {
 }
 
 // clear session
-unset($_SESSION['sendto']);
-unset($_SESSION['billto']);
-unset($_SESSION['shipping']);
-unset($_SESSION['payment']);
-unset($_SESSION['delivery_zone']);
-unset($_SESSION['billing_zone']);
+clear_checkout_session();
 
 if ($_SESSION['customer_id'] == 1) {
   xtc_redirect(xtc_href_link(FILENAME_DEFAULT),'NONSSL');

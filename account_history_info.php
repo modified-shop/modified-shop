@@ -27,6 +27,7 @@ require_once (DIR_FS_INC.'xtc_image_button.inc.php');
 require_once (DIR_FS_INC.'xtc_display_tax_value.inc.php');
 require_once (DIR_FS_INC.'xtc_format_price_order.inc.php');
 require_once (DIR_FS_INC.'get_tracking_link.inc.php');
+require_once (DIR_FS_INC.'clear_checkout_session.inc.php');
 
 if (!isset ($_GET['order_id']) || (isset ($_GET['order_id']) && !is_numeric($_GET['order_id']))) {
    xtc_redirect(xtc_href_link(FILENAME_ACCOUNT_HISTORY, '', 'SSL'));
@@ -49,6 +50,9 @@ $customer_info = xtc_db_fetch_array($customer_info_query);
 if ($customer_info['customers_id'] != $_SESSION['customer_id']) { 
   xtc_redirect(xtc_href_link(FILENAME_ACCOUNT_HISTORY, '', 'SSL')); 
 }
+
+// clear session
+clear_checkout_session();
 
 // include boxes
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
