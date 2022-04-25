@@ -29,6 +29,8 @@
   require_once (DIR_FS_INC.'xtc_js_lang.php');
   require_once (DIR_FS_INC.'ip_clearing.inc.php');
   require_once (DIR_FS_INC.'get_customers_gender.inc.php');
+  require_once (DIR_FS_INC.'xtc_get_address_format_id.inc.php');
+  require_once (DIR_FS_INC.'xtc_count_customer_address_book_entries.inc.php');
   
   require(DIR_WS_INCLUDES . 'get_states.php');
 
@@ -298,6 +300,7 @@
 
       case 'update' :
         $customers_cid = xtc_db_prepare_input($_POST['customers_cid']);
+        $customers_status = xtc_db_prepare_input($_POST['customers_status']);
         $customers_vat_id = xtc_db_prepare_input($_POST['customers_vat_id']);
         $customers_vat_id_status = (isset($_POST['customers_vat_id_status']) ? xtc_db_prepare_input($_POST['customers_vat_id_status']) : '');
         $customers_firstname = xtc_db_prepare_input($_POST['customers_firstname']);
@@ -539,17 +542,19 @@
         } else {
           $entry_password_error = false;
         }
-
-        $check_email = xtc_db_query("SELECT customers_email_address
-                                      FROM ".TABLE_CUSTOMERS."
-                                     WHERE customers_email_address = '".xtc_db_input($customers_email_address)."'
-                                       AND account_type = '0'
-                                       AND customers_id != '".$customers_id."'");
-        if (xtc_db_num_rows($check_email)) {
-          $error = true;
-          $entry_email_address_exists = true;
-        } else {
-          $entry_email_address_exists = false;
+        
+        if ($customers_status != DEFAULT_CUSTOMERS_STATUS_ID_GUEST) {
+          $check_email = xtc_db_query("SELECT customers_email_address
+                                        FROM ".TABLE_CUSTOMERS."
+                                       WHERE customers_email_address = '".xtc_db_input($customers_email_address)."'
+                                         AND account_type = '0'
+                                         AND customers_id != '".$customers_id."'");
+          if (xtc_db_num_rows($check_email)) {
+            $error = true;
+            $entry_email_address_exists = true;
+          } else {
+            $entry_email_address_exists = false;
+          }
         }
 
         if ($error == false) {
