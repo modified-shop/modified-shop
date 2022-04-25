@@ -19,29 +19,76 @@ function secure_form() {
       || !isset($_SESSION['SFToken'])
       )
   {
-    $_SESSION['SFName'] = xtc_RandomString(6);
-    $_SESSION['SFToken'] = time().'.'.xtc_RandomString(32);
+    if (!isset($_SESSION['SFUsed'])) {
+      $_SESSION['SFUsed'] = 0;
+    }
+    
+    $gap = 4;
+    if (isset($_SESSION['customer_id']) || $_SESSION['SFUsed'] > 0) {
+      $gap = 2;
+    }
+    
+    $data = array(
+      'n' => xtc_RandomString(6),
+      'k' => xtc_RandomString(32),
+      'f' => time() + $gap,
+      't' => time() + SESSION_LIFE_CUSTOMERS,
+    );
+    
+    $_SESSION['SFName'] = $data['n'];
+    $_SESSION['SFToken'] = base64_encode(json_encode($data));
+    $_SESSION['SFUsed'] ++;
   }
   
   return xtc_draw_hidden_field($_SESSION['SFName'], $_SESSION['SFToken']);
 }
 
 function check_secure_form($params) {
-  if (!isset($_SESSION['SFName'])
-      || !isset($_SESSION['SFToken'])
-      || !isset($params[$_SESSION['SFName']])
-      || $params[$_SESSION['SFName']] != $_SESSION['SFToken']
-      || substr($_SESSION['SFToken'], 0, strpos($_SESSION['SFToken'], '.')) >= (time() - 2)
-      )
-  {
-    unset($_SESSION['SFName']);
-    unset($_SESSION['SFToken']);
-    
-    return false;
+  $valid = true;
+  
+  if (!isset($_SESSION['SFName'])) {
+    $valid = false;
   }
+
+  if (!isset($_SESSION['SFToken'])) {
+    $valid = false;
+  }
+
+  if (!isset($_SESSION['SFUsed'])) {
+    $valid = false;
+  }
+  
+  if (!isset($params[$_SESSION['SFName']])) {
+    $valid = false;
+  }
+
+  if ($params[$_SESSION['SFName']] != $_SESSION['SFToken']) {
+    $valid = false;
+  }
+  
+  if (xtc_check_agent() == 1) {
+    $valid = false;
+  }
+  
+  if ($valid === true) {
+    $data = json_decode(base64_decode($_SESSION['SFToken']), true);
+    
+    if ($data['f'] > time()) {
+      $valid = false;
+    }
+
+    if ($data['t'] < time()) {
+      $valid = false;
+    }
+  }
+  
+  if ($valid === true) {
+    unset($_SESSION['SFUsed']);
+  }
+  
   unset($_SESSION['SFName']);
   unset($_SESSION['SFToken']);
 
-  return true;
+  return $valid;
 }
 ?>
