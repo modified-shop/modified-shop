@@ -19,6 +19,7 @@ $smarty = new Smarty;
 require_once (DIR_FS_INC.'xtc_address_format.inc.php');
 require_once (DIR_FS_INC.'xtc_get_address_format_id.inc.php');
 require_once (DIR_FS_INC.'xtc_image_button.inc.php');
+require_once (DIR_FS_INC.'clear_checkout_session.inc.php');
 
 function get_address_iso_code($address_id) {
   $address_query = xtc_db_query("SELECT co.countries_iso_code_2
@@ -83,12 +84,7 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
 $error = false;
 
 // clear session
-unset($_SESSION['sendto']);
-unset($_SESSION['billto']);
-unset($_SESSION['shipping']);
-unset($_SESSION['payment']);
-unset($_SESSION['delivery_zone']);
-unset($_SESSION['billing_zone']);
+clear_checkout_session();
 
 $account_query = xtc_db_query("SELECT *
                                  FROM ".TABLE_CUSTOMERS_CHECKOUT." 
@@ -260,12 +256,7 @@ $smarty->assign('module_payment_address', $address_content);
 
 
 // clear session
-unset($_SESSION['sendto']);
-unset($_SESSION['billto']);
-unset($_SESSION['shipping']);
-unset($_SESSION['payment']);
-unset($_SESSION['delivery_zone']);
-unset($_SESSION['billing_zone']);
+clear_checkout_session();
 
 if (isset($_POST['action']) && $_POST['action'] == 'process' && $error === false) {
   if (isset($_GET['products_id']) && (int)$_GET['products_id'] > '0') {

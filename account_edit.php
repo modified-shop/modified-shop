@@ -30,6 +30,7 @@ require_once (DIR_FS_INC.'xtc_get_customers_country.inc.php');
 require_once (DIR_FS_INC.'get_customers_gender.inc.php');
 require_once (DIR_FS_INC.'secure_form.inc.php');
 require_once (DIR_FS_INC.'write_customers_session.inc.php');
+require_once (DIR_FS_INC.'clear_checkout_session.inc.php');
 
 if (!isset($_SESSION['customer_id'])) { 
   xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
@@ -42,12 +43,7 @@ if (!isset($_SESSION['customer_id'])) {
 }
 
 // clear session
-unset($_SESSION['sendto']);
-unset($_SESSION['billto']);
-unset($_SESSION['shipping']);
-unset($_SESSION['payment']);
-unset($_SESSION['delivery_zone']);
-unset($_SESSION['billing_zone']);
+clear_checkout_session();
 
 if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
 
