@@ -83,7 +83,10 @@
     if (!function_exists('mysqli_connect')) {
       die ('Call to undefined function: mysqli_connect(). Please install the MySQL Connector for PHP');
     }
-
+    
+    // enable error reporting
+    mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+    
     $socket = explode(':', $server);
     if (USE_PCONNECT == 'true') {
       ${$link} = mysqli_connect('p:'.$socket[0], $username, $password, NULL, ((isset($socket[1]) && $socket[1] != '') ? $socket[1] : NULL), ((isset($socket[2]) && $socket[2] != '') ? $socket[2] : NULL));
@@ -205,8 +208,13 @@
       str_replace('insert into', 'REPLACE INTO', $query);
     }
     
-    $result = mysqli_query(${$link}, $query) or xtc_db_error($query, mysqli_errno(${$link}), mysqli_error(${$link}));
-
+    try {
+      $result = mysqli_query(${$link}, $query);
+    } catch (Exception $ex) {
+      xtc_db_error($query, mysqli_errno(${$link}), mysqli_error(${$link}));
+      return false;
+    }
+    
     if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS == 'true') {
       $queryEndTime = array_sum(explode(" ",microtime())); 
       $processTime = number_format(round($queryEndTime - $queryStartTime, 5), 5, '.', '');
