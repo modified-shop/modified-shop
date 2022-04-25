@@ -713,14 +713,21 @@ class shoppingCart {
             
             //new module support                                    
             $products_price = $this->shoppingCartModules->calculate_product_price($products_price, $products, $this->contents[$products_id],$products_id);
-        
-            $this->attributes_price($products_id,$this->contents[$products_id]['qty']);
+            $attributes_price = $this->attributes_price($products_id, $this->contents[$products_id]['qty']);
+
             $products_data = array();
             foreach ($products as $key => $value) {
               $products_data[str_replace('products_', '', $key)] = $value;
             }
+            
+            $products_data['price'] = $products_price + $attributes_price;
+            if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1
+                && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0
+                )
+            {
+              $products_data['price'] = round($products_data['price'], $xtPrice->currencies[$xtPrice->actualCurr]['decimal_places']);
+            }
             $products_data['id'] = $products_id;
-            $products_data['price'] = $products_price + $this->attr_price;
             $products_data['vpe'] = $main->getVPEtext($products, $products_price);
             $products_data['quantity'] = $products_data['qty'] = $this->contents[$products_id]['qty'];
             $products_data['shipping_time'] = (ACTIVATE_SHIPPING_STATUS == 'true') ? $main->getShippingStatusName($products['products_shippingtime']) : null;
