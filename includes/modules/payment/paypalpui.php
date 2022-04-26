@@ -253,19 +253,25 @@ class paypalpui extends PayPalPaymentV2 {
     $result = $this->CreateOrder($payment_source, true);
 
     if (is_array($result)) {
+      $disable = false;
       if (isset($result['details'])
           && is_array($result['details'])
           && isset($result['details'][0])
           )
       {
-        $messageStack->add_session('paypalpui', (defined($result['details'][0]['issue']) ? constant($result['details'][0]['issue']) : MODULE_PAYMENT_PAYPALPUI_TEXT_ERROR_MESSAGE));
+        if (!in_array($result['details'][0]['issue'], array('PAYMENT_SOURCE_INFO_CANNOT_BE_VERIFIED', 'BILLING_ADDRESS_INVALID', 'SHIPPING_ADDRESS_INVALID'))) {
+          $disable = true;
+        }
+        $messageStack->add_session('paypalpui', (defined('MODULE_PAYMENT_PAYPALPUI_'.$result['details'][0]['issue']) ? constant('MODULE_PAYMENT_PAYPALPUI_'.$result['details'][0]['issue']) : MODULE_PAYMENT_PAYPALPUI_TEXT_ERROR_MESSAGE));
       }
     } else {
       $_SESSION['paypal']['OrderID'] = $result;
     }
 
     if ($_SESSION['paypal']['OrderID'] == '') {
-      $_SESSION['paypal_payment_forbidden'][] = $this->code;
+      if ($disable === true) {
+        $_SESSION['paypal_payment_forbidden'][] = $this->code;
+      }
       $this->remove_order($_SESSION['tmp_oID']);
       xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
     }
@@ -339,7 +345,16 @@ class paypalpui extends PayPalPaymentV2 {
 
 
   function get_error() {
-    return false;
+    global $messageStack;
+    
+    $error = false;
+    if ($messageStack->size('paypalpui') > 0) {
+      $error = array(
+        'error_message' => $messageStack->output('paypalpui')
+      );
+    }
+    
+    return $error;
   }
 
 
