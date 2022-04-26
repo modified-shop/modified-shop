@@ -262,7 +262,7 @@ class paypalpui extends PayPalPaymentV2 {
         if (!in_array($result['details'][0]['issue'], array('PAYMENT_SOURCE_INFO_CANNOT_BE_VERIFIED', 'BILLING_ADDRESS_INVALID', 'SHIPPING_ADDRESS_INVALID'))) {
           $disable = true;
         }
-        $messageStack->add_session('paypalpui', (defined('MODULE_PAYMENT_PAYPALPUI_'.$result['details'][0]['issue']) ? constant('MODULE_PAYMENT_PAYPALPUI_'.$result['details'][0]['issue']) : MODULE_PAYMENT_PAYPALPUI_TEXT_ERROR_MESSAGE));
+        $messageStack->add_session('paypalerror', (defined('MODULE_PAYMENT_PAYPALPUI_'.$result['details'][0]['issue']) ? constant('MODULE_PAYMENT_PAYPALPUI_'.$result['details'][0]['issue']) : MODULE_PAYMENT_PAYPALPUI_TEXT_ERROR_MESSAGE));
       }
     } else {
       $_SESSION['paypal']['OrderID'] = $result;
@@ -348,9 +348,9 @@ class paypalpui extends PayPalPaymentV2 {
     global $messageStack;
     
     $error = false;
-    if ($messageStack->size('paypalpui') > 0) {
+    if ($messageStack->size('paypalerror') > 0) {
       $error = array(
-        'error_message' => $messageStack->output('paypalpui')
+        'error_message' => $messageStack->output('paypalerror')
       );
     }
     
