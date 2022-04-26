@@ -66,7 +66,7 @@ class paypalpui extends PayPalPaymentV2 {
                                    FROM ".TABLE_CUSTOMERS."
                                   WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
       $dob = xtc_db_fetch_array($dob_query);
-      $_SESSION['customer_dob'] = ((strtotime($dob['customers_dob']) !== false) ? date('Y-m-d', strtotime($dob['customers_dob'])) : '');
+      $_SESSION['customer_dob'] = ((strtotime($dob['customers_dob']) !== false && strtotime($dob['customers_dob']) > 0) ? date('Y-m-d', strtotime($dob['customers_dob'])) : '');
     }
 
     $info = '';
