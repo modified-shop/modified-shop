@@ -1401,6 +1401,11 @@ div.highlightbox ul {
   background-color:#F2DEDE ;
   margin-bottom:10px;
 }
+.errormessage a {
+  color:#e74c3c;
+  font-weight:700;
+  text-decoration:underline;
+}
 .errormessage.shopsystem {
   margin-top:36px;
   margin-bottom:-36px;

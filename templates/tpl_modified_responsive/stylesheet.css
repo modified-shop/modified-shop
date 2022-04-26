@@ -2014,6 +2014,11 @@ table.table_gift tr td.gift_button input {
   background-color:#fbe5e2 ;
   margin-bottom:10px;
 }
+.errormessage a {
+  color:#e74c3c;
+  font-weight:600;
+  text-decoration:underline;
+}
 .errormessage.shopsystem {
   margin-top:36px;
   margin-bottom:-36px;
