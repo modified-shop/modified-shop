@@ -1229,6 +1229,11 @@ ul#checkoutnavigation li.inactive .description {
   background-color:#FFD6D6;
   margin-bottom:10px;
 }
+.errormessage a {
+  color:#555;
+  text-decoration:underline;
+  font-weight:bold;
+}
 .errormessage.shopsystem {
   max-width: 968px;
   margin: 0px auto 20px;
