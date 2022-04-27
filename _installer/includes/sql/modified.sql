@@ -860,6 +860,7 @@ CREATE TABLE orders (
   PRIMARY KEY (orders_id),
   KEY idx_customers_id (customers_id),
   KEY idx_orders_status (orders_status),
+  KEY idx_orders_ident_key (orders_ident_key),
   KEY idx_date_purchased (date_purchased),
   KEY idx_customers_status (customers_status),
   KEY idx_payment_class (payment_class)
