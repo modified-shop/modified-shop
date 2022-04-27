@@ -182,6 +182,7 @@
   define('ENTRY_PASSWORD_ERROR_MIN_UPPER', 'Ihr Passwort muss mindestens %s Grossbuchstaben enthalten.');
   define('ENTRY_PASSWORD_ERROR_MIN_NUM', 'Ihr Passwort muss mindestens %s Zahl enthalten.');
   define('ENTRY_PASSWORD_ERROR_MIN_CHAR', 'Ihr Passwort muss mindestens %s Sonderzeichen enthalten.');
+  define('ENTRY_PASSWORD_ERROR_INVALID_CHAR', 'Ihr Passwort enht&auml;lt ung&uuml;ltige Zeichen. Bitte verwenden Sie ein anderes Passwort.');
   define('ENTRY_PASSWORD_ERROR_NOT_MATCHING', 'Ihre Passw&ouml;rter stimmen nicht &uuml;berein.');
   define('ENTRY_PASSWORD_CURRENT_ERROR', 'Ihr aktuelles Passwort darf nicht leer sein.');
   
