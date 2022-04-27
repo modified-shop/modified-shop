@@ -72,7 +72,7 @@ if (isset($order) && is_object($order)) {
               <div class="pp_boxheading"><?php echo TEXT_PAYPAL_TRANSACTION; ?></div>
               <dl class="pp_transaction">
                 <dt><?php echo TEXT_PAYPAL_TRANSACTION_ADDRESS; ?></dt>
-                <dd><?php echo xtc_address_format($order->customer['format_id'], $admin_info_data['address'], 1, '', '<br />'); ?></dd>
+                <dd><?php echo xtc_address_format($order->customer['format_id'], $paypal->decode_utf8($admin_info_data['address']), 1, '', '<br />'); ?></dd>
               </dl>
               <dl class="pp_transaction">
                 <dt><?php echo TEXT_PAYPAL_TRANSACTION_METHOD; ?></dt>
@@ -80,7 +80,7 @@ if (isset($order) && is_object($order)) {
               </dl>
               <dl class="pp_transaction">
                 <dt><?php echo TEXT_PAYPAL_TRANSACTION_ACCOUNT_OWNER; ?></dt>
-                <dd><?php echo $admin_info_data['address']['name']; ?></dd>
+                <dd><?php echo $paypal->decode_utf8($admin_info_data['address']['name']); ?></dd>
               </dl>
               <dl class="pp_transaction">
                 <dt><?php echo TEXT_PAYPAL_TRANSACTION_EMAIL; ?></dt>
@@ -416,12 +416,12 @@ if (isset($order) && is_object($order)) {
               <div class="pp_boxheading"><?php echo TEXT_PAYPAL_TRANSACTION; ?></div>
               <dl class="pp_transaction">
                 <dt><?php echo TEXT_PAYPAL_TRANSACTION_ADDRESS; ?></dt>
-                <dd><?php echo xtc_address_format($order->customer['format_id'], $admin_info_data->purchase_units[0]->shipping->address_array, 1, '', '<br />'); ?></dd>
+                <dd><?php echo xtc_address_format($order->customer['format_id'], $paypal->decode_utf8($admin_info_data->purchase_units[0]->shipping->address_array), 1, '', '<br />'); ?></dd>
               </dl>
               <?php if (isset($admin_info_data->payer)) { ?>
               <dl class="pp_transaction">
                 <dt><?php echo TEXT_PAYPAL_TRANSACTION_ACCOUNT_OWNER; ?></dt>
-                <dd><?php echo $admin_info_data->payer->name->given_name.' '.$admin_info_data->payer->name->surname; ?></dd>
+                <dd><?php echo $paypal->decode_utf8($admin_info_data->payer->name->given_name).' '.$paypal->decode_utf8($admin_info_data->payer->name->surname); ?></dd>
               </dl>
               <dl class="pp_transaction">
                 <dt><?php echo TEXT_PAYPAL_TRANSACTION_EMAIL; ?></dt>
