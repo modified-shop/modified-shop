@@ -149,4 +149,7 @@ ALTER TABLE `manufacturers_info` ADD `manufacturers_title` VARCHAR(255) NOT NULL
 ALTER TABLE `customers` ADD KEY `idx_account_type` (`account_type`);
 ALTER TABLE `content_manager` ADD KEY `idx_content_active` (`content_active`);
 
+#GTB - 2022-04-27 - add index orders_ident_key
+ALTER TABLE `orders` ADD KEY `idx_orders_ident_key` (`orders_ident_key`);
+
 # Keep an empty line at the end of this file for the db_updater to work properly
