@@ -525,7 +525,7 @@ class shoppingCart {
               $products_price_total = $products_price_tax + $attribute_price_tax;
             }
 
-            $products_tax = $xtPrice->TAX[$product['products_tax_class_id']];
+            $products_tax = isset($xtPrice->TAX[$product['products_tax_class_id']]) ? $xtPrice->TAX[$product['products_tax_class_id']] : 0;
             $products_tax_description = xtc_get_tax_description($product['products_tax_class_id']);
 
             if (!isset($this->tax[$product['products_tax_class_id']])) {

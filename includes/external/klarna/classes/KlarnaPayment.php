@@ -381,7 +381,7 @@ class KlarnaPayment extends KlarnaPaymentBase {
       } else {
         $tax_class_id = constant('MODULE_SHIPPING_'.strtoupper($shipping_method).'_TAX_CLASS');
       }
-      $tax = $xtPrice->TAX[$tax_class_id];
+      $tax = isset($xtPrice->TAX[$tax_class_id]) ? $xtPrice->TAX[$tax_class_id] : 0;
       $shipping_cost = ((isset($order->info['pp_shipping'])) ? $order->info['pp_shipping'] : $order->info['shipping_cost']);
       if ($add_tax === true) {
         $shipping_cost = $this->xtcAddTax($shipping_cost, $tax);
@@ -427,7 +427,7 @@ class KlarnaPayment extends KlarnaPaymentBase {
 
         default:              
           $tax_class_id = defined('MODULE_ORDER_TOTAL_'.strtoupper(substr($total['code'], 3)).'_TAX_CLASS') ? constant('MODULE_ORDER_TOTAL_'.strtoupper(substr($total['code'], 3)).'_TAX_CLASS') : 0;
-          $tax = $xtPrice->TAX[$tax_class_id];
+          $tax = isset($xtPrice->TAX[$tax_class_id]) ? $xtPrice->TAX[$tax_class_id] : 0;
           $amount = $total['value'];
           if ($add_tax === true) {
             $amount = $this->xtcAddTax($amount, $tax);
