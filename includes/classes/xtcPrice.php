@@ -644,7 +644,7 @@ class xtcPrice {
       $price = $this->xtcCalculateCurr($price);
     }
     if ($tax_class != 0) {
-      $products_tax = ($this->cStatus['customers_status_show_price_tax'] == '0') ? 0 : $this->TAX[$tax_class];
+      $products_tax = ($this->cStatus['customers_status_show_price_tax'] == '0' || !isset($this->TAX[$tax_class])) ? 0 : $this->TAX[$tax_class];
       $price = $this->xtcAddTax($price, $products_tax);
     }
     $decimal_places = ($decimal_places > 0) ? $decimal_places : $this->currencies[$this->actualCurr]['decimal_places'];
@@ -670,7 +670,7 @@ class xtcPrice {
               $price = $this->xtcCalculateCurr($price);
             }
             if ($sQuery['products_tax_class_id'] > 0) {
-              $products_tax = ($this->cStatus['customers_status_show_price_tax'] == '0') ? 0 : $this->TAX[$sQuery['products_tax_class_id']];
+              $products_tax = ($this->cStatus['customers_status_show_price_tax'] == '0' || !isset($this->TAX[$sQuery['products_tax_class_id']])) ? 0 : $this->TAX[$sQuery['products_tax_class_id']];
               $price = $this->xtcAddTax($price, $products_tax);
             }
           }
@@ -678,12 +678,13 @@ class xtcPrice {
       }
       $Pprice = $this->xtcFormatCurrency($price, $decimal_places);
       
+      $products_tax = (isset($this->tax_class) && isset($this->TAX[$this->tax_class])) ? $this->TAX[$this->tax_class] : 0;
       if ($this->cStatus['customers_status_show_price_tax'] == '0') {
-        $Bprice = $this->xtcFormatCurrency($this->xtcAddTax($price, ((isset($this->tax_class) && isset($this->TAX[$this->tax_class])) ? $this->TAX[$this->tax_class] : 0)), $decimal_places);
+        $Bprice = $this->xtcFormatCurrency($this->xtcAddTax($price, $products_tax ), $decimal_places);
         $Nprice = $Pprice;
       } else {
         $Bprice = $Pprice;
-        $Nprice = $this->xtcFormatCurrency($this->xtcRemoveTax($price, ((isset($this->tax_class) && isset($this->TAX[$this->tax_class])) ? $this->TAX[$this->tax_class] : 0)), $decimal_places);
+        $Nprice = $this->xtcFormatCurrency($this->xtcRemoveTax($price, $products_tax ), $decimal_places);
       }
       
       if ($vpeStatus == 0) {
@@ -728,13 +729,14 @@ class xtcPrice {
         $price .= '<br />' . BOX_LOGINBOX_DISCOUNT . ': ' . round($discount) . ' %';
       }
       $price .= '</small>';
-
+      
+      $products_tax = (isset($this->tax_class) && isset($this->TAX[$this->tax_class])) ? $this->TAX[$this->tax_class] : 0;
       if ($this->cStatus['customers_status_show_price_tax'] == '0') {
-        $Bprice = $this->xtcFormatCurrency($this->xtcAddTax($sPrice, ((isset($this->tax_class) && isset($this->TAX[$this->tax_class])) ? $this->TAX[$this->tax_class] : 0)));
+        $Bprice = $this->xtcFormatCurrency($this->xtcAddTax($sPrice, $products_tax));
         $Nprice = $special_price;
       } else {
         $Bprice = $special_price;
-        $Nprice = $this->xtcFormatCurrency($this->xtcRemoveTax($sPrice, ((isset($this->tax_class) && isset($this->TAX[$this->tax_class])) ? $this->TAX[$this->tax_class] : 0)));
+        $Nprice = $this->xtcFormatCurrency($this->xtcRemoveTax($sPrice, $products_tax));
       }
 
       if ($vpeStatus == 0) {
@@ -784,12 +786,13 @@ class xtcPrice {
       $from = $this->checkAttributes($pID);
       $price = '<span class="productOldPrice"><small>' . INSTEAD . '</small><del>' . $old_price . '</del></span><br /><span class="productNewPrice">' . ONLY . $from . $special_price . '</span><br /><small class="productSavePrice">' . YOU_SAVE . $save_percent . ' % /' . $save_diff . '</small>';
 
+      $products_tax = (isset($this->tax_class) && isset($this->TAX[$this->tax_class])) ? $this->TAX[$this->tax_class] : 0;
       if ($this->cStatus['customers_status_show_price_tax'] == '0') {
-        $Bprice = $this->xtcFormatCurrency($this->xtcAddTax($sPrice, ((isset($this->tax_class) && isset($this->TAX[$this->tax_class])) ? $this->TAX[$this->tax_class] : 0)));
+        $Bprice = $this->xtcFormatCurrency($this->xtcAddTax($sPrice, $products_tax));
         $Nprice = $special_price;
       } else {
         $Bprice = $special_price;
-        $Nprice = $this->xtcFormatCurrency($this->xtcRemoveTax($sPrice, ((isset($this->tax_class) && isset($this->TAX[$this->tax_class])) ? $this->TAX[$this->tax_class] : 0)));
+        $Nprice = $this->xtcFormatCurrency($this->xtcRemoveTax($sPrice, $products_tax));
       }
 
       if ($vpeStatus == 0) {
@@ -866,16 +869,17 @@ class xtcPrice {
         //$price = $this->xtcFormat($sPrice, $format);
       }
 
+      $products_tax = (isset($this->tax_class) && isset($this->TAX[$this->tax_class])) ? $this->TAX[$this->tax_class] : 0;
       if ($this->cStatus['customers_status_show_price_tax'] == '0') {
-        $Bprice = $this->xtcFormatCurrency($this->xtcAddTax($old_price_plain, ((isset($this->tax_class) && isset($this->TAX[$this->tax_class])) ? $this->TAX[$this->tax_class] : 0)));
+        $Bprice = $this->xtcFormatCurrency($this->xtcAddTax($old_price_plain, $products_tax));
         $Nprice = $this->xtcFormatCurrency($old_price_plain);
-        $Bspecial_price = $this->xtcFormatCurrency($this->xtcAddTax($sPrice, ((isset($this->tax_class) && isset($this->TAX[$this->tax_class])) ? $this->TAX[$this->tax_class] : 0)));
+        $Bspecial_price = $this->xtcFormatCurrency($this->xtcAddTax($sPrice, $products_tax));
         $Nspecial_price = $this->xtcFormatCurrency($sPrice);
       } else {
         $Bprice = $this->xtcFormatCurrency($old_price_plain);
-        $Nprice = $this->xtcFormatCurrency($this->xtcRemoveTax($old_price_plain, ((isset($this->tax_class) && isset($this->TAX[$this->tax_class])) ? $this->TAX[$this->tax_class] : 0)));
+        $Nprice = $this->xtcFormatCurrency($this->xtcRemoveTax($old_price_plain, $products_tax));
         $Bspecial_price = $this->xtcFormatCurrency($sPrice);
-        $Nspecial_price = $this->xtcFormatCurrency($this->xtcRemoveTax($sPrice, ((isset($this->tax_class) && isset($this->TAX[$this->tax_class])) ? $this->TAX[$this->tax_class] : 0)));
+        $Nspecial_price = $this->xtcFormatCurrency($this->xtcRemoveTax($sPrice, $products_tax));
       }
       
       if ($vpeStatus == 0) {
@@ -915,12 +919,13 @@ class xtcPrice {
       $from = $this->checkAttributes($pID);
       $price = $this->xtcFormat($ePrice, $format);
 
+      $products_tax = (isset($this->tax_class) && isset($this->TAX[$this->tax_class])) ? $this->TAX[$this->tax_class] : 0;
       if ($this->cStatus['customers_status_show_price_tax'] == '0') {
-        $Bprice = $this->xtcFormatCurrency($this->xtcAddTax($ePrice, ((isset($this->tax_class) && isset($this->TAX[$this->tax_class])) ? $this->TAX[$this->tax_class] : 0)));
+        $Bprice = $this->xtcFormatCurrency($this->xtcAddTax($ePrice, $products_tax));
         $Nprice = $ePrice;
       } else {
         $Bprice = $ePrice;
-        $Nprice = $this->xtcFormatCurrency($this->xtcRemoveTax($ePrice, ((isset($this->tax_class) && isset($this->TAX[$this->tax_class])) ? $this->TAX[$this->tax_class] : 0)));
+        $Nprice = $this->xtcFormatCurrency($this->xtcRemoveTax($ePrice, $products_tax));
       }
 
       if ($vpeStatus == 0) {

@@ -79,7 +79,7 @@
           'image' => (($export['products_image'] != '') ? xtc_catalog_href_link(ltrim(DIR_WS_CATALOG_POPUP_IMAGES, '/') . $export['products_image'], '', 'NONSSL', false) : ''),
           'shipping' => $export['shipping_status_name'],
           'price' => number_format($products_price, 2, '.', ''),
-          'tax' => $xtPrice->TAX[$export['products_tax_class_id']],
+          'tax' => isset($xtPrice->TAX[$export['products_tax_class_id']]) ? $xtPrice->TAX[$export['products_tax_class_id']] : 0,
           'currency' => $_POST['currencies'],
         );
         $export_data_array = $this->encode_request($export_data_array, $lng->language['language_charset']);

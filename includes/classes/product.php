@@ -536,13 +536,14 @@ class product {
             $vpe = $Pprice * (1 / $this->data['products_vpe_value']);
             $vpe = $xtPrice->xtcFormat($vpe, true).TXT_PER.xtc_get_vpe_name($this->data['products_vpe']);
           }
-
+          
+          $products_tax = isset($xtPrice->TAX[$this->data['products_tax_class_id']]) ? $xtPrice->TAX[$this->data['products_tax_class_id']] : 0;
           if ($_SESSION['customers_status']['customers_status_show_price_tax'] == '0') {
-            $Bprice = $xtPrice->xtcFormatCurrency($xtPrice->xtcAddTax($Pprice, $xtPrice->TAX[$this->data['products_tax_class_id']]));
+            $Bprice = $xtPrice->xtcFormatCurrency($xtPrice->xtcAddTax($Pprice, $products_tax));
             $Nprice = $xtPrice->xtcFormatCurrency($Pprice);
           } else {
             $Bprice = $xtPrice->xtcFormatCurrency($Pprice);
-            $Nprice = $xtPrice->xtcFormatCurrency($xtPrice->xtcRemoveTax($Pprice, $xtPrice->TAX[$this->data['products_tax_class_id']]));
+            $Nprice = $xtPrice->xtcFormatCurrency($xtPrice->xtcRemoveTax($Pprice, $products_tax));
           }
 
           $graduated_array[$pID][$i] = array(
