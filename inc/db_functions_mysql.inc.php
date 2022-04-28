@@ -10,7 +10,8 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-
+  die('Deprecated File: '.basename(__FILE__).'. Use MySQLi instead.'); 
+/*
   function xtc_db_select_db($database) {
     return mysql_select_db($database);
   }
@@ -274,4 +275,4 @@
       }
     }
   }
-?>
+*/
