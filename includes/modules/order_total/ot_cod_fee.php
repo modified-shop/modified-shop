@@ -97,12 +97,15 @@
               )
           {
             if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1) {
-                $order->info['tax'] += $xtPrice->xtcAddTax($cod_cost, $cod_tax)-$cod_cost;
-                $order->info['tax_groups'][TAX_ADD_TAX . "$cod_tax_description"] += $xtPrice->xtcAddTax($cod_cost, $cod_tax)-$cod_cost;
-                $order->info['total'] += $cod_cost + ($xtPrice->xtcAddTax($cod_cost, $cod_tax)-$cod_cost);
-                $cod_cost_value = $xtPrice->xtcAddTax($cod_cost, $cod_tax);
-                $cod_cost= $xtPrice->xtcFormat($cod_cost_value,true);
-                $order->info['subtotal'] += $cod_cost_value;
+              if (!isset($order->info['tax_groups'][TAX_ADD_TAX . "$cod_tax_description"])) {
+                $order->info['tax_groups'][TAX_ADD_TAX . "$cod_tax_description"] = 0;
+              }
+              $order->info['tax'] += $xtPrice->xtcAddTax($cod_cost, $cod_tax)-$cod_cost;
+              $order->info['tax_groups'][TAX_ADD_TAX . "$cod_tax_description"] += $xtPrice->xtcAddTax($cod_cost, $cod_tax)-$cod_cost;
+              $order->info['total'] += $cod_cost + ($xtPrice->xtcAddTax($cod_cost, $cod_tax)-$cod_cost);
+              $cod_cost_value = $xtPrice->xtcAddTax($cod_cost, $cod_tax);
+              $cod_cost= $xtPrice->xtcFormat($cod_cost_value,true);
+              $order->info['subtotal'] += $cod_cost_value;
             }
             
             if (($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
@@ -114,20 +117,23 @@
                 )
         
             {
-                $order->info['tax'] += $xtPrice->xtcAddTax($cod_cost, $cod_tax)-$cod_cost;
-                $order->info['tax_groups'][TAX_NO_TAX . "$cod_tax_description"] += $xtPrice->xtcAddTax($cod_cost, $cod_tax)-$cod_cost;
-                $cod_cost_value = $cod_cost;
-                $cod_cost = $xtPrice->xtcFormat($cod_cost,true);
-                $order->info['subtotal'] += $cod_cost_value;
-                $order->info['total'] += $cod_cost_value;
-            }
-          }
-          
-          if (!isset($cod_cost_value)) {
+              if (!isset($order->info['tax_groups'][TAX_NO_TAX . "$cod_tax_description"])) {
+                $order->info['tax_groups'][TAX_NO_TAX . "$cod_tax_description"] = 0;
+              }
+              $order->info['tax'] += $xtPrice->xtcAddTax($cod_cost, $cod_tax)-$cod_cost;
+              $order->info['tax_groups'][TAX_NO_TAX . "$cod_tax_description"] += $xtPrice->xtcAddTax($cod_cost, $cod_tax)-$cod_cost;
               $cod_cost_value = $cod_cost;
               $cod_cost = $xtPrice->xtcFormat($cod_cost,true);
               $order->info['subtotal'] += $cod_cost_value;
               $order->info['total'] += $cod_cost_value;
+            }
+          }
+          
+          if (!isset($cod_cost_value)) {
+            $cod_cost_value = $cod_cost;
+            $cod_cost = $xtPrice->xtcFormat($cod_cost,true);
+            $order->info['subtotal'] += $cod_cost_value;
+            $order->info['total'] += $cod_cost_value;
           }
           
           $this->output[] = array('title' => $this->title . ':',

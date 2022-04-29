@@ -153,6 +153,9 @@ class BillpayOT
         $tax_value = 0;
         if ($this->isTaxPayer())
         {
+            if (!isset($order->info['tax_groups'][TAX_ADD_TAX . "$tax_description"])) {
+                $order->info['tax_groups'][TAX_ADD_TAX . "$tax_description"] = 0;
+            }
             $tax_value = $this->calculateTax();
             $tax_description = xtc_get_tax_description(constant($this->_configPrefix.'TAX_CLASS'), $order->delivery['country']['id'], $order->delivery['zone_id']);
             $order->info['tax_groups'][TAX_ADD_TAX . "$tax_description"] += $this->calculateTax();
