@@ -294,7 +294,7 @@ if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS 
 }
 
 if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true') {
-  $shop_content_link = '';
+  $shop_content_link = $shop_revocation_link = '';
   if (DISPLAY_REVOCATION_ON_CHECKOUT == 'true') {
     $shop_revocation_data = $main->getContentData(REVOCATION_ID);
     $shop_revocation_link = $main->getContentLink(REVOCATION_ID, MORE_INFO,'SSL');
