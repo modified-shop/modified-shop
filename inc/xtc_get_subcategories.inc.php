@@ -49,15 +49,21 @@
   
   
   function xtc_get_subcategories_data(&$subcategories_cache_array, $parent_id = 0) {
+    $join = '';
+    $conditions = '';
+    if (!defined('RUN_MODE_ADMIN')) {
+      $join = " AND trim(cd.categories_name) != '' ";
+      $conditions .= " AND c.categories_status = 1 ";
+      $conditions .= CATEGORIES_CONDITIONS_C;
+    }
     $subcategories_query = xtDBquery("SELECT c.categories_id 
                                         FROM " . TABLE_CATEGORIES . " c
                                         JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd
                                              ON c.categories_id = cd.categories_id
                                                 AND cd.language_id = '" . (int)$_SESSION['languages_id'] . "'
-                                                AND trim(cd.categories_name) != ''
-                                       WHERE c.categories_status = 1
-                                         AND c.parent_id = '" . (int)$parent_id . "'
-                                             ".CATEGORIES_CONDITIONS_C);
+                                                " . $join . "
+                                       WHERE c.parent_id = '" . (int)$parent_id . "'
+                                             " . $conditions);
     
     if (xtc_db_num_rows($subcategories_query, true) > 0) {
       while ($subcategories = xtc_db_fetch_array($subcategories_query, true)) {
