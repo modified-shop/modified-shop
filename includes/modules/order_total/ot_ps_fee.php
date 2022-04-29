@@ -102,12 +102,15 @@
               )
           {
             if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1) {
-                $order->info['tax'] += $xtPrice->xtcAddTax($ps_cost, $ps_tax)-$ps_cost;
-                $order->info['tax_groups'][TAX_ADD_TAX . "$ps_tax_description"] += $xtPrice->xtcAddTax($ps_cost, $ps_tax)-$ps_cost;
-                $order->info['total'] += $ps_cost + ($xtPrice->xtcAddTax($ps_cost, $ps_tax)-$ps_cost);
-                $ps_cost_value = $xtPrice->xtcAddTax($ps_cost, $ps_tax);
-                $ps_cost= $xtPrice->xtcFormat($ps_cost_value, true);
-                $order->info['subtotal'] += $ps_cost_value;
+              if (!isset($order->info['tax_groups'][TAX_ADD_TAX . "$ps_tax_description"])) {
+                $order->info['tax_groups'][TAX_ADD_TAX . "$ps_tax_description"] = 0;
+              }
+              $order->info['tax'] += $xtPrice->xtcAddTax($ps_cost, $ps_tax)-$ps_cost;
+              $order->info['tax_groups'][TAX_ADD_TAX . "$ps_tax_description"] += $xtPrice->xtcAddTax($ps_cost, $ps_tax)-$ps_cost;
+              $order->info['total'] += $ps_cost + ($xtPrice->xtcAddTax($ps_cost, $ps_tax)-$ps_cost);
+              $ps_cost_value = $xtPrice->xtcAddTax($ps_cost, $ps_tax);
+              $ps_cost= $xtPrice->xtcFormat($ps_cost_value, true);
+              $order->info['subtotal'] += $ps_cost_value;
             }
             
             if (($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
@@ -119,12 +122,15 @@
                 )
         
             {
-                $order->info['tax'] += $xtPrice->xtcAddTax($ps_cost, $ps_tax)-$ps_cost;
-                $order->info['tax_groups'][TAX_NO_TAX . "$ps_tax_description"] += $xtPrice->xtcAddTax($ps_cost, $ps_tax)-$ps_cost;
-                $ps_cost_value = $ps_cost;
-                $ps_cost = $xtPrice->xtcFormat($ps_cost, true);
-                $order->info['subtotal'] += $ps_cost_value;
-                $order->info['total'] += $ps_cost_value;
+              if (!isset($order->info['tax_groups'][TAX_NO_TAX . "$ps_tax_description"])) {
+                $order->info['tax_groups'][TAX_NO_TAX . "$ps_tax_description"] = 0;
+              }
+              $order->info['tax'] += $xtPrice->xtcAddTax($ps_cost, $ps_tax)-$ps_cost;
+              $order->info['tax_groups'][TAX_NO_TAX . "$ps_tax_description"] += $xtPrice->xtcAddTax($ps_cost, $ps_tax)-$ps_cost;
+              $ps_cost_value = $ps_cost;
+              $ps_cost = $xtPrice->xtcFormat($ps_cost, true);
+              $order->info['subtotal'] += $ps_cost_value;
+              $order->info['total'] += $ps_cost_value;
             }
           }
           

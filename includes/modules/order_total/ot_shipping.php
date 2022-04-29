@@ -99,7 +99,9 @@ class ot_shipping {
           )
       {
         if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1) {
-          // price with tax
+          if (!isset($order->info['tax_groups'][TAX_ADD_TAX . "$shipping_tax_description"])) {
+            $order->info['tax_groups'][TAX_ADD_TAX . "$shipping_tax_description"] = 0;
+          }
           $order->info['shipping_cost'] = $xtPrice->xtcAddTax($order->info['shipping_cost'], $shipping_tax);
           $order->info['tax'] += $tax;
           $order->info['tax_groups'][TAX_ADD_TAX . "$shipping_tax_description"] += $tax;
@@ -114,8 +116,11 @@ class ot_shipping {
                    )
             )
         {
+          if (!isset($order->info['tax_groups'][TAX_NO_TAX . "$shipping_tax_description"])) {
+            $order->info['tax_groups'][TAX_NO_TAX . "$shipping_tax_description"] = 0;
+          }
           $order->info['tax'] = $order->info['tax'] += $tax;
-          $order->info['tax_groups'][TAX_NO_TAX . "$shipping_tax_description"] = $order->info['tax_groups'][TAX_NO_TAX . "$shipping_tax_description"] += $tax;
+          $order->info['tax_groups'][TAX_NO_TAX . "$shipping_tax_description"] += $tax;
         }
       }
       
