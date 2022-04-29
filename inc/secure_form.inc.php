@@ -13,7 +13,7 @@
 // include needed function
 require_once (DIR_FS_INC . 'xtc_create_password.inc.php');
 
-function secure_form() {
+function secure_form($case = '') {
   // create CSRF Token
   if (!isset($_SESSION['SFName'])
       || !isset($_SESSION['SFToken'])
@@ -26,6 +26,13 @@ function secure_form() {
     $gap = 4;
     if (isset($_SESSION['customer_id']) || $_SESSION['SFUsed'] > 0) {
       $gap = 2;
+    }
+    
+    switch ($case) {
+      case 'newsletter':
+      case 'password_double_opt':
+        $gap = 2;
+        break;
     }
     
     $data = array(

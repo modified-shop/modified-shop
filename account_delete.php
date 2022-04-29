@@ -87,7 +87,7 @@ require (DIR_WS_INCLUDES.'header.php');
 if ($messageStack->size('account_delete') > 0) {
   $smarty->assign('error_message', $messageStack->output('account_delete'));
 }
-$smarty->assign('FORM_ACTION', xtc_draw_form('account_delete', xtc_href_link(FILENAME_ACCOUNT_DELETE, '', 'SSL'), 'post').xtc_draw_hidden_field('action', 'process').secure_form());
+$smarty->assign('FORM_ACTION', xtc_draw_form('account_delete', xtc_href_link(FILENAME_ACCOUNT_DELETE, '', 'SSL'), 'post').xtc_draw_hidden_field('action', 'process').secure_form('account_delete'));
 $smarty->assign('INPUT_PASSWORD', xtc_draw_password_field('password'));
 $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(FILENAME_ACCOUNT, '', 'SSL').'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
 $smarty->assign('BUTTON_SUBMIT', xtc_image_submit('button_continue.gif', IMAGE_BUTTON_CONTINUE));

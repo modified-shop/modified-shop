@@ -385,7 +385,7 @@ if ($messageStack->size('create_account') > 0) {
   $smarty->assign('error_message', $messageStack->output('create_account'));
 }
 
-$smarty->assign('FORM_ACTION', xtc_draw_form('create_account', xtc_href_link(FILENAME_CREATE_GUEST_ACCOUNT, '', 'SSL'), 'post').xtc_draw_hidden_field('action', 'process').secure_form());
+$smarty->assign('FORM_ACTION', xtc_draw_form('create_account', xtc_href_link(FILENAME_CREATE_GUEST_ACCOUNT, '', 'SSL'), 'post').xtc_draw_hidden_field('action', 'process').secure_form('create_account'));
 
 if (ACCOUNT_GENDER == 'true') {
   $male = (isset($gender) && $gender == 'm') ? true : false;

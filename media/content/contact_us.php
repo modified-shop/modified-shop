@@ -214,7 +214,7 @@
     }
     
     $smarty->assign('CONTACT_CONTENT', $shop_content_data['content_text']);
-    $smarty->assign('FORM_ACTION', xtc_draw_form('contact_us', xtc_href_link(FILENAME_CONTENT, 'action=send&coID='.(int) $_GET['coID'], 'SSL')).secure_form());
+    $smarty->assign('FORM_ACTION', xtc_draw_form('contact_us', xtc_href_link(FILENAME_CONTENT, 'action=send&coID='.(int) $_GET['coID'], 'SSL')).secure_form('contact_us'));
     if (in_array('contact', $use_captcha) && (!isset($_SESSION['customer_id']) || MODULE_CAPTCHA_LOGGED_IN == 'True')) {
       $smarty->assign('VVIMG', $mod_captcha->get_image_code());
       $smarty->assign('INPUT_CODE', $mod_captcha->get_input_code());

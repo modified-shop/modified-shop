@@ -240,7 +240,7 @@ switch ($case) {
     $smarty->assign('text_heading', HEADING_PASSWORD_FORGOTTEN);
     $smarty->assign('message', TEXT_PASSWORD_FORGOTTEN);
     $smarty->assign('SHOP_NAME', STORE_NAME);
-    $smarty->assign('FORM_ACTION', xtc_draw_form('sign', xtc_href_link(FILENAME_PASSWORD_DOUBLE_OPT, 'action=first_opt_in', 'SSL')).secure_form());
+    $smarty->assign('FORM_ACTION', xtc_draw_form('sign', xtc_href_link(FILENAME_PASSWORD_DOUBLE_OPT, 'action=first_opt_in', 'SSL')).secure_form('password_double_opt'));
     $smarty->assign('INPUT_EMAIL', xtc_draw_input_field('email', xtc_db_input(isset($_POST['email']) ? $_POST['email'] : ''), '', 'text', false));
     $smarty->assign('BUTTON_SEND', xtc_image_submit('button_continue.gif', IMAGE_BUTTON_CONTINUE));
     $smarty->assign('FORM_END', '</form>');

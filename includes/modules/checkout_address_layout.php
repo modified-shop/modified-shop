@@ -43,7 +43,7 @@
       $address_content_array[$i]['COUNTRY'] = xtc_get_country_name($addresses['country_id']);
       $address_content_array[$i]['STATE'] = xtc_get_zone_name($addresses['country_id'], $addresses['zone_id'], $addresses['state']);
       $address_content_array[$i]['SELECTED'] = (($addresses['address_book_id'] == $address_book_id) ? 1 : 0);
-      $address_content_array[$i]['FORM_ACTION'] = xtc_draw_form('checkout_address', xtc_href_link(((isset($billto) && $billto) ? FILENAME_CHECKOUT_PAYMENT_ADDRESS : FILENAME_CHECKOUT_SHIPPING_ADDRESS), $params, 'SSL'), 'post', 'onsubmit="return check_form_optional(checkout_address);"').secure_form().xtc_draw_hidden_field('address', $addresses['address_book_id']);
+      $address_content_array[$i]['FORM_ACTION'] = xtc_draw_form('checkout_address', xtc_href_link(((isset($billto) && $billto) ? FILENAME_CHECKOUT_PAYMENT_ADDRESS : FILENAME_CHECKOUT_SHIPPING_ADDRESS), $params, 'SSL'), 'post', 'onsubmit="return check_form_optional(checkout_address);"').secure_form('checkout_address').xtc_draw_hidden_field('address', $addresses['address_book_id']);
       $address_content_array[$i]['BUTTON_CONTINUE'] = xtc_draw_hidden_field('action', 'submit').xtc_image_submit('small_continue.gif', IMAGE_BUTTON_CONTINUE);
       $address_content_array[$i]['FORM_END'] = '</form>';
       $address_content_array[$i]['BUTTON_EDIT'] = '<a href="'.xtc_href_link(basename($PHP_SELF), $params.'action=edit&id='.$addresses['address_book_id'], 'SSL').'">'.xtc_image_button('small_edit.gif', SMALL_IMAGE_BUTTON_EDIT).'</a>';

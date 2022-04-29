@@ -207,7 +207,7 @@ $breadcrumb->add(NAVBAR_TITLE_2_ACCOUNT_EDIT, xtc_href_link(FILENAME_ACCOUNT_EDI
 
 require (DIR_WS_INCLUDES.'header.php');
 
-$smarty->assign('FORM_ACTION', xtc_draw_form('account_edit', xtc_href_link(FILENAME_ACCOUNT_EDIT, '', 'SSL'), 'post', 'onsubmit="return check_form(account_edit);"').xtc_draw_hidden_field('action', 'process').secure_form());
+$smarty->assign('FORM_ACTION', xtc_draw_form('account_edit', xtc_href_link(FILENAME_ACCOUNT_EDIT, '', 'SSL'), 'post', 'onsubmit="return check_form(account_edit);"').xtc_draw_hidden_field('action', 'process').secure_form('account_edit'));
 
 if ($messageStack->size('account_edit') > 0)
   $smarty->assign('error_message', $messageStack->output('account_edit'));
