@@ -75,18 +75,8 @@
     }
     
     if (MODULE_SHOPVOTE_SHOPID != '') {
-      $cache_shopvote = DIR_FS_CATALOG.'cache/reputation-badge.min.js';
-      if (!is_file($cache_shopvote) || (time() - filemtime($cache_shopvote) > 86400)) {
-        require_once(DIR_FS_INC.'get_external_content.inc.php');
-        $source_gs = get_external_content('https://www.google-analytics.com/ga.js', 2, false);
-        if (file_put_contents($cache_shopvote, $source_gs, LOCK_EX) !== false) {
-          $sv = xtc_href_link('cache/reputation-badge.min.js', '', $request_type, false);
-        }
-      } elseif (is_file($cache_shopvote)) {
-        $sv = xtc_href_link('cache/reputation-badge.min.js', '', $request_type, false);
-      }
       echo '
-      <script src="'.((isset($sv)) ? $sv : 'https://widgets.shopvote.de/js/reputation-badge.min.js').'"></script>
+      <script src="https://widgets.shopvote.de/js/reputation-badge.min.js"></script> 
       <script>
         var myShopID = '.(int)MODULE_SHOPVOTE_SHOPID.';
         var myBadgetType = '.(int)MODULE_SHOPVOTE_BADGE.';
