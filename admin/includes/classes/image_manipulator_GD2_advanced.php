@@ -393,7 +393,8 @@
     }
 
     function correctImageOrientation($resource_file) {
-      if (function_exists('exif_read_data') && function_exists('exif_imagetype') && exif_imagetype($resource_file) == IMAGETYPE_JPEG) {
+      getimagesize($resource_file, $imageinfo);           
+      if (isset($imageinfo['APP1']) && stripos(substr($imageinfo['APP1'], 0, 4), 'exif') !== false && function_exists('exif_read_data') && function_exists('exif_imagetype') && exif_imagetype($resource_file) == IMAGETYPE_JPEG) {
         $exif = exif_read_data($resource_file);
         if($exif && isset($exif['Orientation'])) {
           $orientation = $exif['Orientation'];
