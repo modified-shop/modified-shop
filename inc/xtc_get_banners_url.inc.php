@@ -12,6 +12,8 @@
   
   
   function xtc_get_banners_url($banners_url) {
+    global $http_domain, $https_domain, $truncate_session_id, $cookie;
+    
     // remove session id
     if (strrpos($banners_url, session_name()) !== false) {
       $banners_url = substr($banners_url, 0, strrpos($banners_url, session_name()));
