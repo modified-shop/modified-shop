@@ -69,7 +69,7 @@
       $orderCode .= getMatomoCategoryName();
     }
     if (strpos($PHP_SELF, FILENAME_PRODUCT_INFO) != false && isset($_GET['products_id']) && $_GET['products_id'] != '') {
-      $orderCode .= getProductsName();
+      $orderCode .= getMatomoProductsName();
     }
     if (strpos($PHP_SELF, FILENAME_SHOPPING_CART) != false) {
       $orderCode .= getMatomoCartDetails();
