@@ -73,8 +73,8 @@
             && $count['count'] > 0
             )
         {
-          //process installed shipping modules
-          $shipping_code = strtoupper(array_shift(explode('_',$_SESSION['shipping']['id'])));
+          //process installed shipping modules          
+          $shipping_code = substr(strtoupper($_SESSION['shipping']['id']), 0, strpos($_SESSION['shipping']['id'], '_'));
           $shipping_code = ($shipping_code == 'FREEAMOUNT') ? 'FREEAMOUNT_FREE' : 'FEE_' . $shipping_code;
           $ps_zones = preg_split("/[:,]/", constant('MODULE_ORDER_TOTAL_PS_'. $shipping_code));
           for ($i = 0; $i < count($ps_zones); $i++) {
@@ -134,7 +134,7 @@
             }
           }
           
-          if (!$ps_cost_value) {
+          if (!isset($ps_cost_value)) {
              $ps_cost_value = $ps_cost;
              $ps_cost = $xtPrice->xtcFormat($ps_cost, true);
              $order->info['subtotal'] += $ps_cost_value;
