@@ -15,16 +15,16 @@
     if (!is_array($configuration)) {
       $configuration = array($configuration);
     }
-    for ($i=0, $x=sizeof($configuration); $i<$x; $i++) {
+    foreach ($configuration as $configuration_key) {
       $backup_query = xtc_db_query("SELECT configuration_value 
                                       FROM ".TABLE_CONFIGURATION." 
-                                     WHERE configuration_key = '".xtc_db_input($configuration[$i])."'"
+                                     WHERE configuration_key = '".xtc_db_input($configuration_key)."'"
                                    );
       if (xtc_db_num_rows($backup_query) > 0) {
         $backup = xtc_db_fetch_array($backup_query);
 
         xtc_db_query("INSERT INTO " . TABLE_MODULE_BACKUP . " (configuration_key, configuration_value, last_modified)
-                           VALUES ('". xtc_db_input($configuration[$i]) ."', '".xtc_db_input($backup['configuration_value'])."', now())
+                           VALUES ('". xtc_db_input($configuration_key) ."', '".xtc_db_input($backup['configuration_value'])."', now())
                            ON DUPLICATE KEY UPDATE configuration_value = '".xtc_db_input($backup['configuration_value'])."', last_modified = now()");
       }
     }
@@ -35,16 +35,16 @@
     if (!is_array($configuration)) {
       $configuration = array($configuration);
     }
-    for ($i=0, $x=sizeof($configuration); $i<$x; $i++) {
-      $check_query = xtc_db_query("SELECT * FROM ".TABLE_CONFIGURATION." WHERE configuration_key = '".$configuration[$i]."'");
+    foreach ($configuration as $configuration_key) {
+      $check_query = xtc_db_query("SELECT * FROM ".TABLE_CONFIGURATION." WHERE configuration_key = '".xtc_db_input($configuration_key)."'");
       if (xtc_db_num_rows($check_query) > 0) {
-        $restore_query = xtc_db_query("SELECT * FROM ".TABLE_MODULE_BACKUP." WHERE configuration_key = '".$configuration[$i]."'");
+        $restore_query = xtc_db_query("SELECT * FROM ".TABLE_MODULE_BACKUP." WHERE configuration_key = '".xtc_db_input($configuration_key)."'");
         if (xtc_db_num_rows($restore_query )> 0) {
           $restore = xtc_db_fetch_array($restore_query);
           xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " 
                            SET configuration_value = '" . xtc_db_input($restore['configuration_value']) . "', 
                                last_modified = now() 
-                         WHERE configuration_key = '" . $configuration[$i] . "'
+                         WHERE configuration_key = '" . xtc_db_input($configuration_key) . "'
                       ");
         }
       }
