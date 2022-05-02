@@ -351,9 +351,6 @@
                     $heading[] = array ('text' => '<b>'.TEXT_INFO_HEADING_ADRESS_BOOK.'</b>');
 
                     $contents = array ();
-                    require_once (DIR_FS_INC.'xtc_get_address_format_id.inc.php');
-                    require_once (DIR_FS_INC.'xtc_count_customer_address_book_entries.inc.php');
-
                     $addresses_query = xtc_db_query("SELECT address_book_id,
                                                             entry_firstname as firstname,
                                                             entry_lastname as lastname,
