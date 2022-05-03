@@ -19,7 +19,7 @@
    -----------------------------------------------------------------------------------------
    Released under the GNU General Public License
    -----------------------------------------------------------------------------------------*/
-   
+
 //TEST: newsletter.php?email=%3C/script%3E%3Cscript%3Ealert%281%29%3C/script%3E
 //############  KONFIGURATION ##############//
 define('XSS_SEND_LOG', false); //default: false
@@ -181,7 +181,7 @@ function xss_log_hack_attempt($detecting_file = "(no filename available)",
     $output        .=        "Information in the \$_REQUEST array\n";
     $output        .=        "=====================================\n";
 
-    while ( list ( $key, $value ) = @each ( $_REQUEST ) ) {
+    foreach ($_REQUEST as $key => $value) {
         $output    .=        "REQUEST * $key : $value\n";
     }
 
@@ -191,7 +191,7 @@ function xss_log_hack_attempt($detecting_file = "(no filename available)",
     $output        .=        "in the URL string or in a 'GET' type form.\n";
     $output        .=        "=====================================\n";
 
-    while ( list ( $key, $value ) = @each ( $_GET ) ) {
+    foreach ($_GET as $key => $value) {
        $output     .=        "GET * $key : $value\n";
     }
 
@@ -200,7 +200,7 @@ function xss_log_hack_attempt($detecting_file = "(no filename available)",
     $output        .=        "This is about visible and invisible form elements.\n";
     $output        .=        "=====================================\n";
 
-    while ( list ( $key, $value ) = @each ( $_POST ) ) {
+    foreach ($_POST as $key => $value) {
         $output    .=        "POST * $key : $value\n";
     }
 
@@ -210,8 +210,8 @@ function xss_log_hack_attempt($detecting_file = "(no filename available)",
 
     $output        .=        "HTTP_USER_AGENT: ".$_SERVER['HTTP_USER_AGENT'] ."\n";
 
-    $browser = (array) @get_browser();
-    while ( list ( $key, $value ) = @each ( $browser ) ) {
+    $browser = (array) get_browser();
+    foreach ($browser as $key => $value) {
         $output    .=        "BROWSER * $key : $value\n";
     }
 
@@ -219,7 +219,7 @@ function xss_log_hack_attempt($detecting_file = "(no filename available)",
     $output        .=        "Information in the \$_SERVER array\n";
     $output        .=        "=====================================\n";
 
-    while ( list ( $key, $value ) = @each ( $_SERVER ) ) {
+    foreach ($_SERVER as $key => $value) {
         $output    .=        "SERVER * $key : $value\n";
     }
 
@@ -227,7 +227,7 @@ function xss_log_hack_attempt($detecting_file = "(no filename available)",
     $output        .=        "Information in the \$_ENV array\n";
     $output        .=        "=====================================\n";
 
-    while ( list ( $key, $value ) = @each ( $_ENV ) ) {
+    foreach ($_ENV as $key => $value) {
         $output    .=        "ENV * $key : $value\n";
     }
 
@@ -235,7 +235,7 @@ function xss_log_hack_attempt($detecting_file = "(no filename available)",
     $output        .=        "Information in the \$_COOKIE array\n";
     $output        .=        "=====================================\n";
 
-    while ( list ( $key, $value ) = @each ( $_COOKIE ) )  {
+    foreach ($_COOKIE as $key => $value) {
         $output    .=        "COOKIE * $key : $value\n";
     }
 
@@ -243,7 +243,7 @@ function xss_log_hack_attempt($detecting_file = "(no filename available)",
     $output        .=        "Information in the \$_FILES array\n";
     $output        .=        "=====================================\n";
 
-    while ( list ( $key, $value ) = @each ( $_FILES ) ) {
+    foreach ($_FILES as $key => $value) {
         $output    .=        "FILES * $key : $value\n";
     }
 
@@ -252,7 +252,7 @@ function xss_log_hack_attempt($detecting_file = "(no filename available)",
     $output        .=        "This is session info.\n";
     $output        .=        "=====================================\n";
 
-    while ( list ( $key, $value ) = @each ( $_SESSION ) ) {
+    foreach ($_SESSION as $key => $value) {
         $output    .=        "SESSION * $key : $value\n";
     }
     
