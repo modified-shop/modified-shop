@@ -1740,7 +1740,7 @@
     $currencies = xtc_db_fetch_array($currencies_query);
 
     if ($allow_tax == 1) {
-      $price_string = $price_string / ((100 + $tax_rate) / 100);
+      $price_string = (double)$price_string / ((100 + (double)$tax_rate) / 100);
     }
 
     if ($price_format == '1') {
