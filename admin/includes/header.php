@@ -258,7 +258,7 @@
 </noscript>
 
 <?php
-  if ($messageStack->size > 0) {
+  if (isset($messageStack) && is_object($messageStack) && $messageStack->size > 0) {
     echo '<div class="fixed_messageStack">'.$messageStack->output().'</div>';
   }
 ?>

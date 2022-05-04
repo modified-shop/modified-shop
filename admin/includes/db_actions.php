@@ -175,6 +175,7 @@
       $dump['engines'] = array_keys($table_engines);
       
       $dump['ready'] = 0;
+      $dump['aufruf'] = 0;
       $dump['table_offset'] = 0;
 
       $_SESSION['dump'] = $dump;
