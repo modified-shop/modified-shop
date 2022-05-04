@@ -152,4 +152,7 @@ ALTER TABLE `content_manager` ADD KEY `idx_content_active` (`content_active`);
 #GTB - 2022-04-27 - add index orders_ident_key
 ALTER TABLE `orders` ADD KEY `idx_orders_ident_key` (`orders_ident_key`);
 
+#GTB - 2022-05-04 - change whois url
+UPDATE `configuration` SET `configuration_value` = 'https://utrace.me/?query=' WHERE `configuration_value` = 'http://www.utrace.de/?query=';
+
 # Keep an empty line at the end of this file for the db_updater to work properly
