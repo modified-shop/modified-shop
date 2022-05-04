@@ -294,7 +294,12 @@
       if (!is_file($restore['file'])) {
         die('Direct Access to this location is not allowed.');
       }
-            
+
+      $restore['aufruf'] = 0;
+      $restore['offset'] = 0;
+      $restore['minspeed'] = 1;
+      $restore['table_ready'] = 0;
+      
       $_SESSION['restore'] = isset($restore) ? $restore : '';
       break;
     
@@ -315,7 +320,7 @@
       $restore['fileEOF'] = false;
             
       // Disable Keys of actual table to speed up restoring
-      if (is_array($restore['tables_to_restore']) && sizeof($restore['tables_to_restore']) == 0 && ($restore['actual_table'] > '' && $restore['actual_table'] != 'unbekannt')) {
+      if (isset($restore['tables_to_restore']) && is_array($restore['tables_to_restore']) && sizeof($restore['tables_to_restore']) == 0 && ($restore['actual_table'] > '' && $restore['actual_table'] != 'unbekannt')) {
         xtc_db_query('/*!40000 ALTER TABLE `'.$restore['actual_table'].'` DISABLE KEYS */;');
       }
     

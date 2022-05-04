@@ -24,6 +24,8 @@ function get_sqlbefehl()
 {
   global $restore,$config,$databases,$lang;
   //Init
+  $config['minspeed']=0;
+  $config['ignore_enable_keys']=false;
   $restore['fileEOF']=false;
   $restore['EOB']=false;
   $complete_sql='';
@@ -104,7 +106,7 @@ function get_sqlbefehl()
       }
     
       // Fortsetzung von erweiterten Inserts
-      if ($restore['flag']==1) $sqlparser_status=3;
+      if (isset($restore['flag'])&&$restore['flag']==1) $sqlparser_status=3;
     
       if (($sqlparser_status==0)&&(trim($complete_sql)>'')&&($restore['flag']==-1))
       {
@@ -184,7 +186,7 @@ function get_sqlbefehl()
             if ($config['minspeed']>0) $restore['anzahl_zeilen']=$config['minspeed'];
             // Soll die Tabelle hergestellt werden?
             $do_it=true;
-            if (is_array($restore['tables_to_restore']))
+            if (isset($restore['tables_to_restore'])&&is_array($restore['tables_to_restore']))
             {
               $do_it=false;
               if (in_array($restore['actual_table'],$restore['tables_to_restore']))
@@ -269,7 +271,7 @@ function get_sqlbefehl()
   }
 
   // wenn bestimmte Tabellen wiederhergestellt werden sollen -> pruefen
-  if (is_array($restore['tables_to_restore'])&&!(in_array($restore['actual_table'],$restore['tables_to_restore'])))
+  if (isset($restore['tables_to_restore'])&&is_array($restore['tables_to_restore'])&&!(in_array($restore['actual_table'],$restore['tables_to_restore'])))
   {
     $complete_sql='';		
   }
