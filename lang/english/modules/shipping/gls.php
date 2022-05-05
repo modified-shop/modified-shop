@@ -51,7 +51,7 @@ define('MODULE_SHIPPING_GLS_POSTCODE_DESC' , 'Zip code areas');
 define('MODULE_SHIPPING_GLS_POSTCODE_EXTRA_COST_TITLE' , 'GLS island surchage - costs');
 define('MODULE_SHIPPING_GLS_POSTCODE_EXTRA_COST_DESC' , 'Island surchage: Enter the amount, how much should be added to the shipping costs, when the shipping address is located on one of the German islands.');
 
-for ($module_shipping_gls_i = 1; $module_shipping_gls_i <= MODULE_SHIPPING_GLS_NUMBER_ZONES; $module_shipping_gls_i ++) {
+for ($module_shipping_gls_i = 1; $module_shipping_gls_i <= 6; $module_shipping_gls_i ++) {
   define('MODULE_SHIPPING_GLS_COUNTRIES_'.$module_shipping_gls_i.'_TITLE' , '<hr/>Zone '.$module_shipping_gls_i.' Countries');
   define('MODULE_SHIPPING_GLS_COUNTRIES_'.$module_shipping_gls_i.'_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone '.$module_shipping_gls_i.' (Enter WORLD for the rest of the world.).');
   define('MODULE_SHIPPING_GLS_COST_'.$module_shipping_gls_i.'_TITLE' , 'Zone '.$module_shipping_gls_i.' Shipping Table');
