@@ -38,7 +38,7 @@ if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/offline/login_
     $smarty->assign('error_message', $messageStack->output('login'));
   }
 
-  $smarty->assign('FORM_ACTION', xtc_draw_form('login', xtc_href_link(FILENAME_LOGIN, xtc_get_all_get_params().'action=process', 'SSL')));
+  $smarty->assign('FORM_ACTION', xtc_draw_form('login', xtc_href_link(FILENAME_LOGIN, xtc_get_all_get_params().'action=process', 'SSL')).xtc_draw_hidden_field('login', 'admin'));
   $smarty->assign('INPUT_MAIL', xtc_draw_input_field('email_address'));
   $smarty->assign('INPUT_PASSWORD', xtc_draw_password_field('password'));
   $smarty->assign('LINK_LOST_PASSWORD', xtc_href_link(FILENAME_PASSWORD_DOUBLE_OPT, '', 'SSL'));
@@ -202,12 +202,26 @@ table td {
   background: -moz-linear-gradient(top,  #242424,  #494949);
   filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#242424', endColorstr='#494949');
 }
+.errormessage {
+  border:solid #fbe5e2 1px;
+  padding:10px;
+  font-size:12px !important;
+  line-height:16px;
+  font-weight:400;
+  color:#e74c3c;
+  background-color:#fbe5e2 ;
+  margin-bottom:10px;
+}
+.errormessage p { 
+  margin: 4px 0px;
+}
 -->
 </style>
 </head>
 <body>
   <div id="layout_login" class="cf">
     <form name="login" method="post" action="<?php echo xtc_href_link(FILENAME_LOGIN, xtc_get_all_get_params().'action=process', 'SSL'); ?>">
+      <input type="hidden" name="login" value="admin" />
       <h1>Shop-Login</h1>
       <table>
         <tr>
