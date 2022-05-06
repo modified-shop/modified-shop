@@ -111,32 +111,6 @@
   }
 
   /**
-   * xtc_set_groups()
-   *
-   * @param mixed $categories_id
-   * @param mixed $permission_array
-   * @return
-   */
-  function xtc_set_groups($categories_id, $permission_array) {
-    // get products in categorie
-    $products_query = xtc_db_query("SELECT products_id
-                                      FROM ".TABLE_PRODUCTS_TO_CATEGORIES."
-                                     WHERE categories_id='".(int)$categories_id."'");
-    while ($products = xtc_db_fetch_array($products_query)) {
-      xtc_db_perform(TABLE_PRODUCTS, $permission_array, 'update', "products_id = '".$products['products_id']."'");
-    }
-    // set status of categorie
-    xtc_db_perform(TABLE_CATEGORIES, $permission_array, 'update', "categories_id = '".(int)$categories_id."'");
-    // look for deeper categories and go rekursiv
-    $categories_query = xtc_db_query("SELECT categories_id
-                                        FROM ".TABLE_CATEGORIES."
-                                       WHERE parent_id='".(int)$categories_id."'");
-    while ($categories = xtc_db_fetch_array($categories_query)) {
-      xtc_set_groups($categories['categories_id'], $permission_array);
-    }
-  }
-
-  /**
    * xtc_check_permission()
    *
    * @param mixed $pagename
