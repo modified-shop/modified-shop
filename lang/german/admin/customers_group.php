@@ -9,9 +9,11 @@
 define('HEADING_TITLE', 'Kundengruppenberechtigungen setzen');
 
 define('TEXT_CATEGORIES', 'Kategorien');
-define('TEXT_PRODUCTS', 'Produkte');
-define('TEXT_CONTENT', 'Seiten Content (Content Manager)');
-define('TEXT_PRODUCTS_CONTENT', 'Artikel Content (Content Manager)');
+define('TEXT_PRODUCTS', 'Artikel');
+define('TEXT_CONTENT_MANAGER', 'Content Seiten');
+define('TEXT_CONTENT_MANAGER_CONTENT', 'Content Anh&auml;nge');
+define('TEXT_PRODUCTS_CONTENT', 'Artikel Anh&auml;nge');
+define('TEXT_EMAIL_CONTENT', 'E-Mail Anh&auml;nge');
 define('TEXT_PERMISSION', '<div class="error_message">ACHTUNG: Es werden alle gesetzten Berechtigungen &uuml;berschrieben!</div><br/>Berechtigung');
 define('TEXT_SET', 'geben');
 define('TEXT_UNSET', 'entziehen');
@@ -23,8 +25,12 @@ define('TEXT_CATEGORIES_SUCCESSFULLY_SET', 'Kategorie Berechtigungen erfolgreich
 define('TEXT_CATEGORIES_SUCCESSFULLY_UNSET', 'Kategorie Berechtigungen erfolgreich entfernt.');
 define('TEXT_PRODUCTS_SUCCESSFULLY_SET', 'Produkt Berechtigungen erfolgreich gesetzt.');
 define('TEXT_PRODUCTS_SUCCESSFULLY_UNSET', 'Produkt Berechtigungen erfolgreich entfernt.');
-define('TEXT_CONTENT_SUCCESSFULLY_SET', 'Seiten Content Berechtigungen erfolgreich gesetzt.');
-define('TEXT_CONTENT_SUCCESSFULLY_UNSET', 'Seiten Content Berechtigungen erfolgreich entfernt.');
+define('TEXT_CONTENT_MANAGER_SUCCESSFULLY_SET', 'Content Seiten Berechtigungen erfolgreich gesetzt.');
+define('TEXT_CONTENT_MANAGER_SUCCESSFULLY_UNSET', 'Content Seiten Berechtigungen erfolgreich entfernt.');
+define('TEXT_CONTENT_MANAGER_CONTENT_SUCCESSFULLY_SET', 'Content Anh&auml;nge Berechtigungen erfolgreich gesetzt.');
+define('TEXT_CONTENT_MANAGER_CONTENT_SUCCESSFULLY_UNSET', 'Content Anh&auml;nge Berechtigungen erfolgreich entfernt.');
 define('TEXT_PRODUCTS_CONTENT_SUCCESSFULLY_SET', 'Artikel Content Berechtigungen erfolgreich gesetzt.');
 define('TEXT_PRODUCTS_CONTENT_SUCCESSFULLY_UNSET', 'Artikel Content Berechtigungen erfolgreich entfernt.');
+define('TEXT_EMAIL_CONTENT_SUCCESSFULLY_SET', 'E-Mail Anh&auml;nge Berechtigungen erfolgreich gesetzt.');
+define('TEXT_EMAIL_CONTENT_SUCCESSFULLY_UNSET', 'E-Mail Anh&auml;nge Berechtigungen erfolgreich entfernt.');
 ?>

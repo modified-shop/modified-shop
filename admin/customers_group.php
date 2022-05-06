@@ -17,7 +17,7 @@ if (isset($_GET['action'])) {
     case 'send':
       //var_dump($_POST);
       if (isset($_POST['cg']) && is_array($_POST['cg'])) {
-        if (isset($_POST['categories']) || isset($_POST['products']) || isset($_POST['content']) || isset($_POST['products_content'])) {
+        if (isset($_POST['categories']) || isset($_POST['products']) || isset($_POST['content']) || isset($_POST['products_content']) || isset($_POST['content_manager_content']) || isset($_POST['email_content'])) {
           if (isset($_POST['categories'])) {
             foreach ($_POST['cg'] as $cgID=>$value) {
               xtc_db_query('UPDATE ' . TABLE_CATEGORIES . ' SET group_permission_' . (int)$cgID . '=' . ($_POST['permission'] == 'true'?'1':'0'));
@@ -32,7 +32,7 @@ if (isset($_GET['action'])) {
             $messageStack->add(constant('TEXT_PRODUCTS_SUCCESSFULLY_' . ($_POST['permission'] == 'true'?'SET':'UNSET')), 'success');
           }
         
-          if (isset($_POST['content'])) {
+          if (isset($_POST['content_manager'])) {
             $content_query = xtc_db_query('SELECT content_id, group_ids FROM ' . TABLE_CONTENT_MANAGER . ' ORDER BY content_id');
             while ($result = xtc_db_fetch_array($content_query)) {
               $values = explode(',', $result['group_ids']);
@@ -57,7 +57,35 @@ if (isset($_GET['action'])) {
                 xtc_db_query('UPDATE ' . TABLE_CONTENT_MANAGER . ' SET group_ids=\'' . $group_ids . '\' WHERE content_id=' . $result['content_id']);
               }
             }
-            $messageStack->add(constant('TEXT_CONTENT_SUCCESSFULLY_' . ($_POST['permission'] == 'true'?'SET':'UNSET')), 'success');
+            $messageStack->add(constant('TEXT_CONTENT_MANAGER_SUCCESSFULLY_' . ($_POST['permission'] == 'true'?'SET':'UNSET')), 'success');
+          }
+
+          if (isset($_POST['content_manager_content'])) {
+            $content_query = xtc_db_query('SELECT content_id, group_ids FROM ' . TABLE_CONTENT_MANAGER_CONTENT . ' ORDER BY content_id');
+            while ($result = xtc_db_fetch_array($content_query)) {
+              $values = explode(',', $result['group_ids']);
+              if (in_array('', $values)) {
+                unset($values[array_search('', $values)]);
+              }
+              if ($_POST['permission'] == 'true') {
+                foreach ($_POST['cg'] as $cgID=>$value) {
+                  if (!in_array('c_' . $cgID . '_group', $values)) {
+                    $values[] = 'c_' . $cgID . '_group';
+                  }
+                }
+                $group_ids = implode(',', $values);
+                xtc_db_query('UPDATE ' . TABLE_CONTENT_MANAGER_CONTENT . ' SET group_ids=\'' . $group_ids . '\' WHERE content_id=' . $result['content_id']);
+              } else {
+                foreach ($_POST['cg'] as $cgID=>$value) {
+                  if (in_array('c_' . $cgID . '_group', $values)) {
+                    unset($values[array_search('c_' . $cgID . '_group', $values)]);
+                  }
+                }
+                $group_ids = implode(',', $values);
+                xtc_db_query('UPDATE ' . TABLE_CONTENT_MANAGER_CONTENT . ' SET group_ids=\'' . $group_ids . '\' WHERE content_id=' . $result['content_id']);
+              }
+            }
+            $messageStack->add(constant('TEXT_CONTENT_MANAGER_CONTENT_SUCCESSFULLY_' . ($_POST['permission'] == 'true'?'SET':'UNSET')), 'success');
           }
         
           if (isset($_POST['products_content'])) {
@@ -86,6 +114,34 @@ if (isset($_GET['action'])) {
               }
             }
             $messageStack->add(constant('TEXT_PRODUCTS_CONTENT_SUCCESSFULLY_' . ($_POST['permission'] == 'true'?'SET':'UNSET')), 'success');
+          }
+          
+          if (isset($_POST['email_content'])) {
+            $content_query = xtc_db_query('SELECT content_id, group_ids FROM ' . TABLE_EMAIL_CONTENT . ' ORDER BY content_id');
+            while ($result = xtc_db_fetch_array($content_query)) {
+              $values = explode(',', $result['group_ids']);
+              if (in_array('', $values)) {
+                unset($values[array_search('', $values)]);
+              }
+              if ($_POST['permission'] == 'true') {
+                foreach ($_POST['cg'] as $cgID=>$value) {
+                  if (!in_array('c_' . $cgID . '_group', $values)) {
+                    $values[] = 'c_' . $cgID . '_group';
+                  }
+                }
+                $group_ids = implode(',', $values);
+                xtc_db_query('UPDATE ' . TABLE_EMAIL_CONTENT . ' SET group_ids=\'' . $group_ids . '\' WHERE content_id=' . $result['content_id']);
+              } else {
+                foreach ($_POST['cg'] as $cgID=>$value) {
+                  if (in_array('c_' . $cgID . '_group', $values)) {
+                    unset($values[array_search('c_' . $cgID . '_group', $values)]);
+                  }
+                }
+                $group_ids = implode(',', $values);
+                xtc_db_query('UPDATE ' . TABLE_EMAIL_CONTENT . ' SET group_ids=\'' . $group_ids . '\' WHERE content_id=' . $result['content_id']);
+              }
+            }
+            $messageStack->add(constant('TEXT_EMAIL_CONTENT_SUCCESSFULLY_' . ($_POST['permission'] == 'true'?'SET':'UNSET')), 'success');
           }
         } else {
           $messageStack->add(ERROR_PLEASE_SELECT_SHOP_AREA);
@@ -139,8 +195,10 @@ require (DIR_WS_INCLUDES.'head.php');
                   echo '<br /><br />';
                   echo xtc_draw_checkbox_field('categories', '1') . ' ' . TEXT_CATEGORIES . '<br />';
                   echo xtc_draw_checkbox_field('products', '1') . ' ' . TEXT_PRODUCTS . '<br />';
-                  echo xtc_draw_checkbox_field('content', '1') . ' ' . TEXT_CONTENT . '<br />';
                   echo xtc_draw_checkbox_field('products_content', '1') . ' ' . TEXT_PRODUCTS_CONTENT . '<br />';
+                  echo xtc_draw_checkbox_field('content_manager', '1') . ' ' . TEXT_CONTENT_MANAGER . '<br />';
+                  echo xtc_draw_checkbox_field('content_manager_content', '1') . ' ' . TEXT_CONTENT_MANAGER_CONTENT . '<br />';
+                  echo xtc_draw_checkbox_field('email_content', '1') . ' ' . TEXT_EMAIL_CONTENT . '<br />';
                   echo '<br /><br />';
                   echo '<strong>&nbsp;' . TEXT_PERMISSION . ':</strong> ' . TEXT_SET . ' ' . xtc_draw_radio_field('permission', 'true', true) . ' ' . TEXT_UNSET . ' ' . xtc_draw_radio_field('permission', 'false', false) . '<br />';
                   echo '<br /><br />&nbsp;<input class="button" type="submit" value="'.TEXT_SEND.'" name="'.TEXT_SEND.'">';
