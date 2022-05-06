@@ -33,11 +33,11 @@
   if (isset($_GET['pID']) && (!$_POST)) {
     $product_query = xtc_db_query("SELECT *,
                                           date_format(p.products_date_available, '%Y-%m-%d') as products_date_available
-                                     FROM ".TABLE_PRODUCTS." p,
-                                          ".TABLE_PRODUCTS_DESCRIPTION." pd
-                                    WHERE p.products_id = '".(int) $_GET['pID']."'
-                                      AND p.products_id = pd.products_id
-                                      AND pd.language_id = '".(int)$_SESSION['languages_id']."'");
+                                     FROM ".TABLE_PRODUCTS." p
+                                LEFT JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
+                                          ON p.products_id = pd.products_id
+                                             AND pd.language_id = '".(int)$_SESSION['languages_id']."'
+                                    WHERE p.products_id = '".(int) $_GET['pID']."'");
     $product = xtc_db_fetch_array($product_query);
     $pInfo = new objectInfo($product);
   } elseif ($_POST) {
@@ -235,7 +235,7 @@
           <div class="main flt-l" style="width:175px;"><?php echo ENTRY_CUSTOMERS_STATUS; ?></div>
           <div class="main customers-groups">
             <?php
-            echo $catfunc->create_permission_checkboxes($product);
+            echo $catfunc->create_permission_checkboxes($pInfo);
             ?>
           </div>
           <div style="clear:both;"></div>

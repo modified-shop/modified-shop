@@ -29,15 +29,13 @@
   $confirm_submit = defined('CONFIRM_SAVE_ENTRY') && CONFIRM_SAVE_ENTRY == 'true' ? ' onsubmit="return confirmSubmit(\'\',\''. SAVE_ENTRY .'\',this)"' : '';
 
   if (isset($_GET['cID']) && (!$_POST) ) {
-    $category_query = xtc_db_query("select * from " .
-                                    TABLE_CATEGORIES . " c, " .
-                                    TABLE_CATEGORIES_DESCRIPTION . " cd
-                                    where c.categories_id = cd.categories_id
-                                    and c.categories_id = '" . (int)$_GET['cID'] . "'
-                                    AND cd.language_id = '".(int)$_SESSION['languages_id']."'");
-
+    $category_query = xtc_db_query("SELECT * 
+                                      FROM " . TABLE_CATEGORIES . " c
+                                 LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd
+                                           ON c.categories_id = cd.categories_id
+                                              AND cd.language_id = '".(int)$_SESSION['languages_id']."'
+                                     WHERE c.categories_id = '" . (int)$_GET['cID'] . "'");
     $category = xtc_db_fetch_array($category_query);
-
     $cInfo = new objectInfo($category);
   } elseif (xtc_not_null($_POST)) {
     $cInfo = new objectInfo($_POST);
@@ -140,7 +138,7 @@
         <div class="main flt-l" style="width:265px"><?php echo ENTRY_CUSTOMERS_STATUS; ?></div>
         <div class="main customers-groups">
           <?php
-          echo $catfunc->create_permission_checkboxes($category);
+          echo $catfunc->create_permission_checkboxes($cInfo);
           ?>
         </div>
         <div style="clear:both;padding:5px;"></div>

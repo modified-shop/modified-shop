@@ -118,41 +118,30 @@ class categories {
   // listing_template, previous_image, array[name][lang_id], array[heading_title][lang_id], array[description][lang_id],
   // array[meta_title][lang_id], array[meta_description][lang_id], array[meta_keywords][lang_id]
   function insert_category($categories_data, $dest_category_id, $action = 'insert') {
-    $categories_id = xtc_db_prepare_input($categories_data['categories_id']);
-    $sort_order = xtc_db_prepare_input($categories_data['sort_order']);
-    $categories_status = xtc_db_prepare_input($categories_data['status']);
-    $customers_statuses_array = xtc_get_customers_statuses();
-    $permission = array();
-    for ($i = 0, $n = sizeof($customers_statuses_array); $i < $n; $i ++) {
-      if (isset($customers_statuses_array[$i]['id']))
-        $permission[$customers_statuses_array[$i]['id']] = 0;
-    }
-    if (isset ($categories_data['groups']))
-      foreach ($categories_data['groups'] AS $dummy => $b) {
-        $permission[$b] = 1;
-      }
-    // build array
-      if (isset($permission['all']) && $permission['all']==1) {
-      $permission = array();
-      end($customers_statuses_array);
-      for ($i = 0, $n = key($customers_statuses_array); $i < $n+1; $i ++) {
-        if (isset($customers_statuses_array[$i]['id']))
-          $permission[$customers_statuses_array[$i]['id']] = 1;
-      }
-    }
+    $categories_id = (int)((isset($categories_data['categories_id'])) ? $categories_data['categories_id'] : 0);
 
-    $permission_array = array();
-    // set pointer to last key
-    end($customers_statuses_array);
-    for ($i = 0, $n = key($customers_statuses_array); $i < $n+1; $i ++) {
-      if (isset($customers_statuses_array[$i]['id'])) {
-        $permission_array = array_merge($permission_array, array('group_permission_'.$customers_statuses_array[$i]['id'] => $permission[$customers_statuses_array[$i]['id']]));
+    $permission = array();
+    $customers_statuses_array = xtc_get_customers_statuses();
+    foreach ($customers_statuses_array as $customers_status) {
+      $permission[$customers_status['id']] = 0;
+    }
+    
+    if (isset ($categories_data['groups'])) {
+      foreach ($categories_data['groups'] as $index => $status_id) {
+        $permission[$status_id] = 1;
       }
+    }
+    
+    if (isset($permission['all']) && $permission['all'] == 1) {
+      foreach ($permission as $status_id => $status) {
+        $permission[$status_id] = 1;
+      }
+      unset($permission['all']);
     }
 
     $sql_data_array = array(
-      'sort_order' => $sort_order,
-      'categories_status' => $categories_status,
+      'sort_order' => xtc_db_prepare_input($categories_data['sort_order']),
+      'categories_status' => xtc_db_prepare_input($categories_data['status']),
       'products_sorting' => xtc_db_prepare_input($categories_data['products_sorting']),
       'products_sorting2' => xtc_db_prepare_input($categories_data['products_sorting2']),
       'categories_template' => xtc_db_prepare_input($categories_data['categories_template']),
@@ -162,8 +151,15 @@ class categories {
     if (trim(ADD_CATEGORIES_FIELDS) != '') {
       $sql_data_array = array_merge($sql_data_array, $this->add_data_fields(ADD_CATEGORIES_FIELDS,$categories_data));
     }
+    
+    $permission_array = array();
+    foreach ($customers_statuses_array as $customers_status) {
+      if (isset($permission[$customers_status['id']])) {
+        $sql_data_array['group_permission_'.$customers_status['id']] = $permission[$customers_status['id']];
+        $permission_array['group_permission_'.$customers_status['id']] = $permission[$customers_status['id']];
+      }
+    }
 
-    $sql_data_array = array_merge($sql_data_array,$permission_array);
     //new module support
     $sql_data_array = $this->catModules->insert_category_before($sql_data_array,$categories_data);//Return parameter must be in first place
     
@@ -182,7 +178,7 @@ class categories {
     }
 
     if (isset($categories_data['set_groups_permissions']) && $categories_data['set_groups_permissions'] != 0) {
-      xtc_set_groups($categories_id, $permission_array);
+      $this->xtc_set_groups($categories_id, $permission_array);
     }
     
     //new module support
@@ -285,6 +281,27 @@ class categories {
     }
   }
 
+
+  function xtc_set_groups($categories_id, $permission_array) {
+    // get products in categorie
+    $products_query = xtc_db_query("SELECT products_id
+                                      FROM ".TABLE_PRODUCTS_TO_CATEGORIES."
+                                     WHERE categories_id='".(int)$categories_id."'");
+    while ($products = xtc_db_fetch_array($products_query)) {
+      xtc_db_perform(TABLE_PRODUCTS, $permission_array, 'update', "products_id = '".$products['products_id']."'");
+    }
+    
+    // set status of categorie
+    xtc_db_perform(TABLE_CATEGORIES, $permission_array, 'update', "categories_id = '".(int)$categories_id."'");
+    
+    // look for deeper categories and go rekursiv
+    $categories_query = xtc_db_query("SELECT categories_id
+                                        FROM ".TABLE_CATEGORIES."
+                                       WHERE parent_id='".(int)$categories_id."'");
+    while ($categories = xtc_db_fetch_array($categories_query)) {
+      $this->xtc_set_groups($categories['categories_id'], $permission_array);
+    }
+  }
 
   // moves a category to new parent category
   function move_category($src_category_id, $dest_category_id) {
@@ -495,9 +512,8 @@ class categories {
     }
 
     $customers_statuses_array = xtc_get_customers_statuses();
-    for ($i = 0, $n = sizeof($customers_statuses_array); $i < $n; $i ++) {
-      if (isset($customers_statuses_array[$i]['id']))
-        xtc_db_query("DELETE FROM ".TABLE_PERSONAL_OFFERS_BY.$customers_statuses_array[$i]['id']." WHERE products_id = '".(int)$product_id."'");
+    foreach ($customers_statuses_array as $customers_status) {
+      xtc_db_query("DELETE FROM ".TABLE_PERSONAL_OFFERS_BY.$customers_status['id']." WHERE products_id = '".(int)$product_id."'");
     }
   }
 
@@ -518,6 +534,7 @@ class categories {
     if ($product_categories['total'] == '0') {
       $this->remove_product($product_id);
     }
+    
     //new module support
     $this->catModules->delete_product($product_id, $product_categories);
   }
@@ -549,9 +566,10 @@ class categories {
     //new module support
     $this->catModules->update_product($products_data, $products_id);
     
-    return array('error' => true,
-                 'products_id' => $products_id
-                 );
+    return array(
+      'error' => true,
+      'products_id' => $products_id
+    );
   }
 
 
@@ -559,64 +577,43 @@ class categories {
   function insert_product($products_data, $dest_category_id, $action = 'insert') {
     global $messageStack;
     
-    $products_id = xtc_db_prepare_input($products_data['products_id']);
+    $products_id = (int)((isset($products_data['products_id'])) ? $products_data['products_id'] : 0);
     $products_date_available = xtc_db_prepare_input($products_data['products_date_available']);
     $products_date_available = (date('Y-m-d') < $products_date_available) ? $products_date_available : 'null';
 
-    $products_status = xtc_db_prepare_input($products_data['products_status']);
-
-    if ($products_data['products_startpage'] == 1 ) {
-      $this->link_product($products_data['products_id'], 0);
-    } else {
-      $this->set_product_remove_startpage_sql($products_data['products_id'], 0);
-    }
-    
     $products_tax_rate = xtc_get_tax_rate($products_data['products_tax_class_id']);
+    $products_price = $this->priceCheck($products_data['products_price'], $products_tax_rate);
     
-    $products_data['products_price'] = $this->priceCheck($products_data['products_price'],$products_tax_rate);
-
-    $customers_statuses_array = xtc_get_customers_statuses();
     $permission = array();
-    for ($i = 0, $n = sizeof($customers_statuses_array); $i < $n; $i ++) {
-      if (isset($customers_statuses_array[$i]['id']))
-        $permission[$customers_statuses_array[$i]['id']] = 0;
+    $customers_statuses_array = xtc_get_customers_statuses();
+    foreach ($customers_statuses_array as $customers_status) {
+      $permission[$customers_status['id']] = 0;
     }
+    
     if (isset ($products_data['groups'])) {
-      foreach ($products_data['groups'] AS $dummy => $b) {
-        $permission[$b] = 1;
+      foreach ($products_data['groups'] as $index => $status_id) {
+        $permission[$status_id] = 1;
       }
     }
-    // build array
-    if (isset($permission['all']) && $permission['all']==1) {
-      $permission = array();
-      end($customers_statuses_array);
-      for ($i = 0, $n = key($customers_statuses_array); $i < $n+1; $i ++) {
-        if (isset($customers_statuses_array[$i]['id'])) {
-          $permission[$customers_statuses_array[$i]['id']] = 1;
-        }
+    
+    if (isset($permission['all']) && $permission['all'] == 1) {
+      foreach ($permission as $status_id => $status) {
+        $permission[$status_id] = 1;
       }
+      unset($permission['all']);
     }
-    $permission_array = array();
-
-    // set pointer to last key
-    end($customers_statuses_array);
-    for ($i = 0, $n = key($customers_statuses_array); $i < $n+1; $i ++) {
-      if (isset($customers_statuses_array[$i]['id'])) {
-        $permission_array = array_merge($permission_array, array('group_permission_'.$customers_statuses_array[$i]['id'] => $permission[$customers_statuses_array[$i]['id']]));
-      }
-    }
-
+        
     $sql_data_array = array(
       'products_quantity' => xtc_db_prepare_input($products_data['products_quantity']),
       'products_model' => xtc_db_prepare_input($products_data['products_model']),
       'products_ean' => xtc_db_prepare_input($products_data['products_ean']),
-      'products_price' => xtc_db_prepare_input($products_data['products_price']),
+      'products_price' => xtc_db_prepare_input($products_price),
       'products_sort' => xtc_db_prepare_input($products_data['products_sort']),
       'products_shippingtime' => xtc_db_prepare_input($products_data['shipping_status']),
       'products_discount_allowed' => xtc_db_prepare_input($products_data['products_discount_allowed']),
       'products_date_available' => $products_date_available,
       'products_weight' => xtc_db_prepare_input($products_data['products_weight']),
-      'products_status' => $products_status,
+      'products_status' => xtc_db_prepare_input($products_data['products_status']),
       'products_startpage' => xtc_db_prepare_input($products_data['products_startpage']),
       'products_startpage_sort' => xtc_db_prepare_input($products_data['products_startpage_sort']),
       'products_tax_class_id' => xtc_db_prepare_input($products_data['products_tax_class_id']),
@@ -634,15 +631,21 @@ class categories {
     }
 
     $error = false;
-    $prod_quantity_query = xtc_db_query("SELECT products_quantity FROM ".TABLE_PRODUCTS." WHERE products_id = '".$products_id."'");
+    $prod_quantity_query = xtc_db_query("SELECT products_quantity 
+                                           FROM ".TABLE_PRODUCTS." 
+                                          WHERE products_id = '".$products_id."'");
     $prod_quantity = xtc_db_fetch_array($prod_quantity_query);
     if ($prod_quantity['products_quantity'] != $products_data['products_quantity_before_edit']) {
       unset($sql_data_array['products_quantity']);
       $error = true;
       $messageStack->add_session(ERROR_QTY_SAVE_CHANGED, 'error');
     }
-
-    $sql_data_array = array_merge($sql_data_array, $permission_array);
+    
+    foreach ($customers_statuses_array as $customers_status) {
+      if (isset($permission[$customers_status['id']])) {
+        $sql_data_array['group_permission_'.$customers_status['id']] = $permission[$customers_status['id']];
+      }
+    }
 
     //new module support
     $sql_data_array = $this->catModules->insert_product_before($sql_data_array,$products_data);
@@ -664,6 +667,12 @@ class categories {
       xtc_db_perform(TABLE_PRODUCTS, $sql_data_array, 'update', "products_id = '".(int)$products_id."'");
     }
     
+    if ($products_data['products_startpage'] == 1) {
+      $this->link_product($products_id, 0);
+    } else {
+      $this->set_product_remove_startpage_sql($products_id, 0);
+    }
+
     if (isset($products_data['products_geo_to_tax'])
         && is_array($products_data['products_geo_to_tax'])
         )
@@ -714,110 +723,54 @@ class categories {
 
     //new module support 
     $this->catModules->insert_product_after($products_data,$products_id);
-    
-    $languages = xtc_get_languages();
-    // Here we go, lets write Group prices into db
-    // start
-    $i = 0;
-    $group_query = xtc_db_query("SELECT customers_status_id
-                                   FROM ".TABLE_CUSTOMERS_STATUS."
-                                  WHERE language_id = '".(int) $_SESSION['languages_id']."'
-                                    AND customers_status_id != '0'");
-    while ($group_values = xtc_db_fetch_array($group_query)) {
-      // load data into array
-      $i ++;
-      $group_data[$i] = array('STATUS_ID' => $group_values['customers_status_id']);
-    }
-    for ($col = 0, $n = sizeof($group_data); $col < $n +1; $col ++) {
-      if (array_key_exists($col, $group_data) && $group_data[$col]['STATUS_ID'] != '') {
-        $personal_price = xtc_db_prepare_input($products_data['products_price_'.$group_data[$col]['STATUS_ID']]);
+        
+    // group and graduated prices
+    foreach ($customers_statuses_array as $customers_status) {
+      xtc_db_query("DELETE FROM ".TABLE_PERSONAL_OFFERS_BY.$customers_status['id']." WHERE products_id = '".$products_id."'");
+
+      if (isset($products_data['products_price_'.$customers_status['id']])) {
+        $personal_price = xtc_db_prepare_input($products_data['products_price_'.$customers_status['id']]);
         if ($personal_price == '' || $personal_price == '0.0000') {
           $personal_price = '0.00';
-        } else {
-          $personal_price = $this->priceCheck($personal_price,$products_tax_rate);
         }
-        // first delete all 
-        xtc_db_query("DELETE FROM ".TABLE_PERSONAL_OFFERS_BY.$group_data[$col]['STATUS_ID']." WHERE products_id = '".$products_id."'");
+        $personal_price = $this->priceCheck($personal_price, $products_tax_rate);
         
-        // insert price for 1 piece
-        $insert_array = array(
-          'personal_offer' => $personal_price,
-          'quantity' => '1',
-          'products_id' => $products_id
-        );
-        xtc_db_perform(TABLE_PERSONAL_OFFERS_BY.$group_data[$col]['STATUS_ID'], $insert_array);
-
-        for ($is=0, $ns=sizeof($products_data['products_staffel'][$group_data[$col]['STATUS_ID']]); $is<$ns; $is++) {
-          if ($products_data['products_staffel'][$group_data[$col]['STATUS_ID']][$is]['quantity'] > 1) {
-            $staffelpreis = $products_data['products_staffel'][$group_data[$col]['STATUS_ID']][$is]['personal_offer'];
-            $staffelpreis = $this->priceCheck($staffelpreis,$products_tax_rate);
-            $insert_array = array(
-              'personal_offer' => $staffelpreis,
-              'quantity' => $products_data['products_staffel'][$group_data[$col]['STATUS_ID']][$is]['quantity'],
-              'price_id' => $products_data['products_staffel'][$group_data[$col]['STATUS_ID']][$is]['price_id'],
-              'products_id' => $products_id,
-            );
-            xtc_db_perform(TABLE_PERSONAL_OFFERS_BY.$group_data[$col]['STATUS_ID'], $insert_array);
-          }
-          
-          // delete if checked
-          if (isset($products_data['products_staffel'][$group_data[$col]['STATUS_ID']][$is]['delete'])) {
-            xtc_db_query("DELETE FROM ".TABLE_PERSONAL_OFFERS_BY.$group_data[$col]['STATUS_ID']." 
-                                WHERE products_id = '".$products_id."'
-                                  AND price_id = '".$products_data['products_staffel'][$group_data[$col]['STATUS_ID']][$is]['price_id']."'");
-          }
+        
+        if ($personal_price > 0) {
+          $sql_data_array = array(
+            'personal_offer' => $personal_price,
+            'quantity' => '1',
+            'products_id' => $products_id
+          );
+          xtc_db_perform(TABLE_PERSONAL_OFFERS_BY.$customers_status['id'], $sql_data_array);
         }
       }
-    }
-    // end
-    // ok, lets check write new staffelpreis into db (if there is one)
-    $i = 0;
-    $group_query = xtc_db_query("SELECT customers_status_id
-                                   FROM ".TABLE_CUSTOMERS_STATUS."
-                                  WHERE language_id = '".(int) $_SESSION['languages_id']."'
-                                    AND customers_status_id != '0'");
-    while ($group_values = xtc_db_fetch_array($group_query)) {
-      // load data into array
-      $i ++;
-      $group_data[$i] = array('STATUS_ID' => $group_values['customers_status_id']);
-    }
-    for ($col = 0, $n = sizeof($group_data); $col < $n +1; $col ++) {
-      if (array_key_exists($col, $group_data) 
-          && $group_data[$col]['STATUS_ID'] != ''
-          && isset($products_data['products_quantity_staffel_'.$group_data[$col]['STATUS_ID']])
-          && isset($products_data['products_price_staffel_'.$group_data[$col]['STATUS_ID']])
-          )
-      {
-        $quantity = xtc_db_prepare_input($products_data['products_quantity_staffel_'.$group_data[$col]['STATUS_ID']]);
-        $staffelpreis = xtc_db_prepare_input($products_data['products_price_staffel_'.$group_data[$col]['STATUS_ID']]);
-        if (empty($staffelpreis)) $staffelpreis = 0;
-        
-        if ($staffelpreis > 0 && (int)$quantity > 0) {
-          if (PRICE_IS_BRUTTO == 'true') {
-            $staffelpreis = ($staffelpreis / (xtc_get_tax_rate($products_data['products_tax_class_id']) + 100) * 100);
+      
+      if (isset($products_data['products_staffel'][$customers_status['id']])) {
+        foreach ($products_data['products_staffel'][$customers_status['id']] as $products_staffel) {
+          if ($products_staffel['quantity'] > 1) {
+            $staffelpreis = $products_staffel['personal_offer'];
+            $staffelpreis = $this->priceCheck($staffelpreis, $products_tax_rate);
+            
+            if ($staffelpreis > 0
+                && !isset($products_staffel['delete'])
+                )
+            {
+              $sql_data_array = array(
+                'personal_offer' => $staffelpreis,
+                'quantity' => $products_staffel['quantity'],
+                'products_id' => $products_id,
+              );
+              xtc_db_perform(TABLE_PERSONAL_OFFERS_BY.$customers_status['id'], $sql_data_array);            
+            }
           }
-          $staffelpreis = xtc_round($staffelpreis, PRICE_PRECISION);
-
-          // ok, lets check entered data to get rid of user faults
-          if ($quantity <= 1) $quantity = 2;
-          $check_query = xtc_db_query("SELECT quantity
-                                         FROM ".TABLE_PERSONAL_OFFERS_BY.$group_data[$col]['STATUS_ID']."
-                                        WHERE products_id = '".$products_id."'
-                                          AND quantity    = '".$quantity."'");
-          // dont insert if same qty!
-          if (xtc_db_num_rows($check_query) < 1) {
-            $insert_array = array(
-              'price_id' => '',
-              'products_id' => $products_id,
-              'quantity' => $quantity,
-              'personal_offer' => $staffelpreis
-            );
-            xtc_db_perform(TABLE_PERSONAL_OFFERS_BY.$group_data[$col]['STATUS_ID'], $insert_array);                 
-          }
-        }
+        }        
       }
     }
-    foreach ($languages AS $lang) {
+       
+    // description
+    $languages = xtc_get_languages();
+    foreach ($languages as $lang) {
       $language_id = $lang['id'];
       $sql_data_array = array(
         'products_name' => xtc_db_prepare_input($products_data['products_name'][$language_id]),
@@ -859,9 +812,10 @@ class categories {
     //new module support 
     $this->catModules->insert_product_end($products_id);
 
-    return array('error' => $error,
-                 'products_id' => $products_id
-                 );
+    return array(
+      'error' => $error,
+      'products_id' => $products_id
+    );
   }
 
 
@@ -886,10 +840,7 @@ class categories {
     //set new data (overrides)
     unset($sql_data_array['products_id']);
     $sql_data_array['products_date_added'] = 'now()';
-    $sql_data_array['products_ordered'] = ''; // reset products ordered - ticket #27
-
-    //get customers statuses and set group_permissions
-    //not needed, because group_permissions are in $sql_data_array   
+    $sql_data_array['products_ordered'] = 0;
 
     //write data to DB
     xtc_db_perform(TABLE_PRODUCTS, $sql_data_array);
@@ -915,8 +866,6 @@ class categories {
       copy(DIR_FS_CATALOG_THUMBNAIL_IMAGES.'/'.$product['products_image'], DIR_FS_CATALOG_THUMBNAIL_IMAGES.'/'.$dup_products_image_name);
       copy(DIR_FS_CATALOG_MINI_IMAGES.'/'.$product['products_image'], DIR_FS_CATALOG_MINI_IMAGES.'/'.$dup_products_image_name);
       $this->set_products_images_file_rights($dup_products_image_name);
-    } else {
-      unset ($dup_products_image_name);
     }
 
     //new module support
@@ -949,7 +898,7 @@ class categories {
     );
     xtc_db_perform(TABLE_PRODUCTS_TO_CATEGORIES, $sql_data_array);                   
 
-    //mo_images by Novalis@eXanto.de
+    //mo_images
     $mo_images = xtc_get_products_mo_images($src_products_id);
     if (is_array($mo_images)) {
       foreach ($mo_images AS $dummy => $mo_img) {
@@ -975,35 +924,24 @@ class categories {
         xtc_db_perform(TABLE_PRODUCTS_IMAGES, $sql_data_array);
       }
     }
-
-    $group_query = xtc_db_query("SELECT customers_status_id 
-                                   FROM ".TABLE_CUSTOMERS_STATUS."
-                                  WHERE language_id = '".(int) $_SESSION['languages_id']."'
-                                    AND customers_status_id != '0'");
-    $i = 0;
-    while ($group_values = xtc_db_fetch_array($group_query)) {
-      // load data into array
-      $i++;
-      $group_data[$i] = array('STATUS_ID' => $group_values['customers_status_id']);
-    }
-    for ($col = 0, $n = sizeof($group_data); $col < $n +1; $col ++) {
-      if (array_key_exists($col, $group_data) && $group_data[$col]['STATUS_ID'] != '') {
-        $copy_query = xtc_db_query("SELECT quantity,
-                                           personal_offer
-                                      FROM ".TABLE_PERSONAL_OFFERS_BY.$group_data[$col]['STATUS_ID']."
-                                     WHERE products_id = '".$src_products_id."'");
-        while ($copy_data = xtc_db_fetch_array($copy_query)) {
-          $insert_array = array(
-            'price_id' => '',
-            'products_id' => $this->dup_products_id,
-            'quantity' => $copy_data['quantity'],
-            'personal_offer' => $copy_data['personal_offer']
-          );
-          xtc_db_perform(TABLE_PERSONAL_OFFERS_BY.$group_data[$col]['STATUS_ID'], $insert_array);                 
-        }
+    
+    //dublicate group and graduated prices
+    $customers_statuses_array = xtc_get_customers_statuses();
+    foreach ($customers_statuses_array as $customers_statuses) {
+      $copy_query = xtc_db_query("SELECT quantity,
+                                         personal_offer
+                                    FROM ".TABLE_PERSONAL_OFFERS_BY.$customers_status['id']."
+                                   WHERE products_id = '".$src_products_id."'");
+      while ($copy_data = xtc_db_fetch_array($copy_query)) {
+        $sql_data_array = array(
+          'products_id' => $this->dup_products_id,
+          'quantity' => $copy_data['quantity'],
+          'personal_offer' => $copy_data['personal_offer']
+        );
+        xtc_db_perform(TABLE_PERSONAL_OFFERS_BY.$customers_status['id'], $sql_data_array);                 
       }
     }
-    
+        
     //dublicate products attributes
     if (isset($_POST['attr_copy']) && $_POST['attr_copy'] == 'attr_copy') {
       $attribute_copy_query = xtc_db_query("SELECT *
@@ -1305,18 +1243,15 @@ class categories {
   }
 
 
-  function create_permission_checkboxes($t_array) {
+  function create_permission_checkboxes($object) {
     $customers_statuses_array = xtc_get_customers_statuses();
-    $input = '<label>' . xtc_draw_checkbox_field('groups[]', 'all', '','', 'id="cgAll"').TXT_ALL.'</label><br />'. PHP_EOL;
-    for ($i = 0, $n = sizeof($customers_statuses_array); $i < $n; $i ++) {
-      $checked = ($t_array['group_permission_'.$customers_statuses_array[$i]['id']] == 1)? ' checked' : '';
-      $preselect = $i==0 ? true : false; //preselect all
-      //$preselect = $customers_statuses_array[$i]['id']=='0' ? true : false; //preselect admin
-      if( !isset($_GET['pID']) && !isset($_GET['cID']) && $preselect) {
-        $checked = ' checked';
-      }
-      $input .= '<label>'.  xtc_draw_checkbox_field('groups[]', $customers_statuses_array[$i]['id'], $checked,'', 'id="cg'.$customers_statuses_array[$i]['id'].'"') . $customers_statuses_array[$i]['text'].'</label><br />'. PHP_EOL;
+    
+    $input = '<label>' . xtc_draw_checkbox_field('groups[]', 'all', ((!isset($_GET['pID']) && !isset($_GET['cID'])) ? ' checked' : ''), '', 'id="cgAll"').TXT_ALL.'</label><br />'. PHP_EOL;    
+    foreach ($customers_statuses_array as $customers_statuses) {
+      $checked = ((is_object($object) && isset($object->{'group_permission_'.$customers_statuses['id']}) && $object->{'group_permission_'.$customers_statuses['id']} == 1) ? ' checked' : '');
+      $input .= '<label>'.  xtc_draw_checkbox_field('groups[]', $customers_statuses['id'], $checked,'', 'id="cg'.$customers_statuses['id'].'"') . $customers_statuses['text'].'</label><br />'. PHP_EOL;
     }
+
     return $input;
   }
 
