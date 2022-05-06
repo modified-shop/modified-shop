@@ -241,7 +241,7 @@ if (!$action || $action == 'delete') {
         <div class="smallText pdg2 flt-l"><?php echo $content_query_split->display_count($content_query_numrows, $page_max_display_results, $page, TEXT_DISPLAY_NUMBER_OF_CONTENT_MANAGER); ?></div>
         <div class="smallText pdg2 flt-r"><?php echo $content_query_split->display_links($content_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $page, ((isset($_GET['pID']) && (int)$_GET['pID'] > 0) ? '&pID='.(int)$_GET['pID'] : '')); ?></div>
         <?php echo draw_input_per_page($PHP_SELF, $cfg_max_display_results_key, $page_max_display_results); ?>
-        <div class="smallText pdg2 flt-r"><?php echo ((isset($_GET['pID']) && (int)$_GET['pID'] > 0) ? '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action', 'coID', 'pID'))) . '">' . BUTTON_BACK . '</a>' : '') . '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action')).'action=new') . '">' . BUTTON_NEW_CONTENT . '</a>'; ?></div>
+        <div class="smallText pdg2 flt-r"><?php echo ((isset($_GET['pID']) && (int)$_GET['pID'] > 0) ? '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action', 'coID', 'pID'))) . '">' . BUTTON_BACK . '</a>' : '') . '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action', 'coID')).'action=new') . '">' . BUTTON_NEW_CONTENT . '</a>'; ?></div>
       </td>
       <?php
         $heading = array();
@@ -563,13 +563,13 @@ if (!$action || $action == 'delete') {
                   <td class="dataTableConfig col-single-right">
                     <div class="customers-groups">
                       <?php
-                      for ($g=0, $z=sizeof($customers_statuses_array); $g<$z; $g++) {
-                        $checked = false;
-                        if (strpos($content_lang['group_ids'], 'c_'.$customers_statuses_array[$g]['id'].'_group') !== false) {
-                          $checked = true;
+                        foreach ($customers_statuses_array as $customers_statuses) {
+                          $checked = false;
+                          if (strpos($content_lang['group_ids'], 'c_'.$customers_statuses['id'].'_group') !== false || (!isset($_GET['coID']) && $customers_statuses['id'] == 'all')) {
+                            $checked = true;
+                          }
+                          echo xtc_draw_checkbox_field('groups['.$i.']['.$languages[$l]['id'].'][]', $customers_statuses['id'], $checked).' ' .$customers_statuses['text'].'<br />';
                         }
-                        echo xtc_draw_checkbox_field('groups['.$i.']['.$languages[$l]['id'].'][]', $customers_statuses_array[$g]['id'], $checked).' ' .$customers_statuses_array[$g]['text'].'<br />';
-                      }
                       ?>
                     </div>
                   </td>
