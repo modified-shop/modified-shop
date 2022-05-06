@@ -28,10 +28,10 @@ if (!isset($_SESSION['tracking']['ip'])) {
 
 // campaigns
 if (!isset($_SESSION['tracking']['refID']) && isset($_GET['refID'])) {
-  $campaign_check_query = xtc_db_query("SELECT * 
-                                          FROM ".TABLE_CAMPAIGNS." 
-                                         WHERE campaigns_refID = '".xtc_db_input($_GET['refID'])."'");
-  if (xtc_db_num_rows($campaign_check_query) > 0) {
+  $campaign_check_query = xtDBquery("SELECT * 
+                                       FROM ".TABLE_CAMPAIGNS." 
+                                      WHERE campaigns_refID = '".xtc_db_input($_GET['refID'])."'");
+  if (xtc_db_num_rows($campaign_check_query, true) > 0) {
     // include needed functions
     require_once (DIR_FS_INC.'ip_clearing.inc.php');
     $_SESSION['tracking']['refID'] = $_GET['refID'];
@@ -76,11 +76,22 @@ if (!isset($_SESSION['tracking']['browser']) && isset($_SERVER['HTTP_USER_AGENT'
 if (!isset($_SESSION['tracking']['pageview_history'])) {
   $_SESSION['tracking']['pageview_history'] = array();
 }
-if (!in_array(basename($PHP_SELF), array('ajax.php', FILENAME_COOKIE_USAGE, FILENAME_REDIRECT)) 
+if (!in_array(basename($PHP_SELF), array('ajax.php', 'login_admin.php', FILENAME_COOKIE_USAGE, FILENAME_REDIRECT)) 
     && end($_SESSION['tracking']['pageview_history']) != $req_url
     )
 {
-  array_push($_SESSION['tracking']['pageview_history'], $req_url);
+  $url = parse_url($req_url);
+  if (isset($url['path'])) {
+    $info = pathinfo($url['path']);
+    if (!isset($info['extension'])
+        || in_array($info['extension'], array('php', 'html', 'htm'))
+        )
+    {
+      array_push($_SESSION['tracking']['pageview_history'], $req_url);
+    }
+  } else {
+    array_push($_SESSION['tracking']['pageview_history'], $req_url);
+  }
 }
 if (count($_SESSION['tracking']['pageview_history']) > 6) {
   array_shift($_SESSION['tracking']['pageview_history']); 
@@ -99,13 +110,15 @@ if (isset($_COOKIE['MODOilTrack'])) {
 }
 
 // allowed tracking
-if (defined('MODULE_COOKIE_CONSENT_STATUS') && MODULE_COOKIE_CONSENT_STATUS == 'true') {
-  $qr = xtDBquery("SELECT DISTINCT `cookies_id` 
-                     FROM " . TABLE_COOKIE_CONSENT_COOKIES . " 
-                    WHERE `status` = 1");
+if (defined('MODULE_COOKIE_CONSENT_STATUS') 
+    && MODULE_COOKIE_CONSENT_STATUS == 'true'
+    )
+{
+  $consent_query = xtDBquery("SELECT DISTINCT cookies_id
+                                FROM ".TABLE_COOKIE_CONSENT_COOKIES." 
+                               WHERE status = 1");
   $_SESSION['tracking']['allowed'] = array();
-  while ($row = xtc_db_fetch_array($qr, true)) {
-    $_SESSION['tracking']['allowed'][] = $row['cookies_id'];
+  while ($consent = xtc_db_fetch_array($consent_query, true)) {
+    $_SESSION['tracking']['allowed'][] = $consent['cookies_id'];
   }
 }
-?>

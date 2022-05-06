@@ -111,12 +111,18 @@ if (isset($_GET['action'])
 
 	if (xtc_db_num_rows($check_customer_query) < 1) {
 		$messageStack->add('login', TEXT_LOGIN_ERROR);
+		if (isset($_POST['login']) && $_POST['login'] == 'admin') {
+		  xtc_redirect(xtc_href_link('login_admin.php', '', 'SSL'));
+		}
 	} else {
 		$check_customer = xtc_db_fetch_array($check_customer_query);
     		
 		// Check that password is good
 		if (xtc_validate_password($password, $check_customer['customers_password'], $check_customer['customers_id']) !== true) {
 			$messageStack->add('login', TEXT_LOGIN_ERROR);      
+      if (isset($_POST['login']) && $_POST['login'] == 'admin') {
+        xtc_redirect(xtc_href_link('login_admin.php', '', 'SSL'));
+      }
 		} elseif ($captcha_error === false) {		
 			if (SESSION_RECREATE == 'True') {
 				xtc_session_recreate();
