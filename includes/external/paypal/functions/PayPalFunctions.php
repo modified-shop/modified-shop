@@ -79,7 +79,7 @@ function get_paypal_js_sdk($lient_id, $currency, $intent, $commit, $client_token
           "currency": "'.$currency.'",
           "intent": "'.strtolower($intent).'",
           "commit": "'.$commit.'",
-          "locale": "'.$_SESSION['language_code'].'_'.strtoupper($_SESSION['language_code']).'",
+          "locale": "'.$_SESSION['language_code'].'_'.strtoupper(($_SESSION['language_code'] == 'en') ? 'GB' : $_SESSION['language_code']).'",
           "enable-funding": "paylater",
           '.(($client_token !== false) ? '"data-client-token": "'.$client_token.'",' : '').'
           "components": "buttons,funding-eligibility,messages,hosted-fields"
