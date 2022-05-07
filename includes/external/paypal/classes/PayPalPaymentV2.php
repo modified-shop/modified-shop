@@ -283,7 +283,7 @@
         'purchase_units' => array($purchase_unit),
         'application_context' => array(
           'brand_name' => $this->encode_utf8(STORE_NAME),
-          'locale' => $_SESSION['language_code'].'-'.strtoupper($_SESSION['language_code']),
+          'locale' => $_SESSION['language_code'].'-'.strtoupper(($_SESSION['language_code'] == 'en') ? 'GB' : $_SESSION['language_code']),
           'landing_page' => 'BILLING',
           'user_action' => 'CONTINUE',
           'cancel_url' => $this->link_encoding(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code.'&'.xtc_session_name().'='.xtc_session_id(), 'SSL', false)),

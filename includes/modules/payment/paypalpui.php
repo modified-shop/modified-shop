@@ -232,7 +232,7 @@ class paypalpui extends PayPalPaymentV2 {
             'country_code' => $this->encode_utf8($order->billing['country']['iso_code_2'])
           ),
           'experience_context' => array(
-            'locale' => $_SESSION['language_code'].'-'.strtoupper($_SESSION['language_code']),
+            'locale' => $_SESSION['language_code'].'-'.strtoupper(($_SESSION['language_code'] == 'en') ? 'GB' : $_SESSION['language_code']),
             'brand_name' => $this->encode_utf8(STORE_NAME),
             'customer_service_instructions' => array(
               sprintf(MODULE_PAYMENT_PAYPALPUI_TEXT_SERVICE, STORE_OWNER_EMAIL_ADDRESS)
