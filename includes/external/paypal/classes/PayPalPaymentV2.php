@@ -670,14 +670,15 @@
       
       $data = array(
         'name' => implode(' ', $name),
+        'company' => '',
         'firstname' => $name[0],
         'lastname' => $name[1],
-        'street_address' => $address->address->address_line_1,
+        'street_address' => ((isset($address->address->address_line_1)) ? $address->address->address_line_1 : ''),
         'suburb' => ((isset($address->address->address_line_2)) ? $address->address->address_line_2 : ''),
         'state' => ((isset($address->address->admin_area_1)) ? $address->address->admin_area_1 : ''),
-        'city' => $address->address->admin_area_2,
-        'postcode' => $address->address->postal_code,
-        'country_iso_code_2' => $address->address->country_code
+        'city' => ((isset($address->address->admin_area_2)) ? $address->address->admin_area_2 : ''),
+        'postcode' => ((isset($address->address->postal_code)) ? $address->address->postal_code : ''),
+        'country_iso_code_2' => ((isset($address->address->country_code)) ? $address->address->country_code : ''),
       );
 
       $country_iso_query = xtc_db_query("SELECT countries_id,
