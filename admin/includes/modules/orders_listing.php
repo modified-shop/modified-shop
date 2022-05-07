@@ -23,21 +23,37 @@
   $payment_array = array();
   $payments_query = xtc_db_query("SELECT payment_class 
                                     FROM ".TABLE_ORDERS." 
+                                   WHERE payment_class != ''
                                 GROUP BY payment_class
                                 ORDER BY payment_class");
   while ($payments = xtc_db_fetch_array($payments_query)) {
-    $payment_text = $payments['payment_class'];
-    if (is_file(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $payments['payment_class'].'.php')) {
-      include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $payments['payment_class'].'.php');
-      $payment_text = constant('MODULE_PAYMENT_'.strtoupper($payments['payment_class']).'_TEXT_TITLE');
+    $class = $payment_text = $payments['payment_class'];
+    if (is_file(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $class . '.php')) {
+      include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $class . '.php');
+      $payment_text = constant('MODULE_PAYMENT_'.strtoupper($class).'_TEXT_TITLE');
     } elseif ($payments['payment_class'] == 'no_payment') {
       $payment_text = TEXT_NO_PAYMENT;
     }
-    $payment_array[] = array(
-      'id' => $payments['payment_class'],
-      'text' => $payment_text.' ('.$payments['payment_class'].')'
-    );
+        
+    $sort = 99999;
+    if (is_file(DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/' . $class . '.php')) {
+      include_once(DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/' . $class . '.php');
+      if (class_exists($class)) {
+        $module = new $class();
+        if ($module->check() > 0) {
+          $sort = $module->sort_order;
+        }
+      }
+    }
+        
+    $payment_array[$sort][] = array(
+      'id' => $class,
+      'text' => $payment_text.' ('.$class.')'
+    );   
+    array_multisort(array_column($payment_array[$sort], 'text'), SORT_ASC, $payment_array[$sort]);
   }
+  ksort($payment_array);
+  $payment_array = array_reduce($payment_array, 'array_merge', array());
   ?>
   
   <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_orders.png'); ?></div>
