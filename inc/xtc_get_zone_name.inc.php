@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_get_zone_name.inc.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -22,7 +22,7 @@
                                      AND zone_id = '".(int)$zone_id."'");
     if (xtc_db_num_rows($zone_name_query, true) > 0) {
       $zone_name = xtc_db_fetch_array($zone_name_query, true);
-      return $zone_name['zone_code'];
+      return $zone_name['zone_name'];
     }
     
     return $default_zone;
