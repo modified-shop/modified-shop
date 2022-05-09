@@ -196,6 +196,7 @@ define('BOX_PAGES_CONTENT', 'Content Seiten');
 define('BOX_PRODUCTS_CONTENT', 'Artikel Anh&auml;nge');
 define('BOX_CONTENT_CONTENT', 'Content Anh&auml;nge');
 define('BOX_EMAIL_CONTENT', 'E-Mail Anh&auml;nge');
+define('BOX_DHL', 'DHL Versand &amp; Label-Erstellung');
 
 define('TXT_GROUPS','<b>Gruppen</b>:');
 define('TXT_SYSTEM','System');
