@@ -67,7 +67,7 @@ require (DIR_WS_INCLUDES.'head.php');
               <br />
               <strong>NACHHALTIG VERSENDEN</strong><br />
               <br />
-              Rund 15.000 StreetScooter mit Elektroantrieb sind in der Zustellung im Einsatz. Der Service GoGreen erm&ouml;glicht erm&ouml;glicht DHL Kunden einen klimaneutralen Versand durch Investitionen in Klimaschutzprojekte.<br />
+              Rund 15.000 StreetScooter mit Elektroantrieb sind in der Zustellung im Einsatz. Der Service GoGreen erm&ouml;glicht DHL Kunden einen klimaneutralen Versand durch Investitionen in Klimaschutzprojekte.<br />
               <br />
               <strong>FL&Auml;CHENDECKEND ERREICHBAR</strong><br />
               <br />
