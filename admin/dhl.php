@@ -65,7 +65,6 @@ require (DIR_WS_INCLUDES.'head.php');
               <br />
               &Uuml;ber 80 Prozent aller DHL Pakete werden am Folgetag zugestellt. F&uuml;r ein wachsendes E-Commerce-Business bauen wir unsere Kapazit&auml;ten kontinuierlich aus.<br />
               <br />
-              <br />
               <strong>NACHHALTIG VERSENDEN</strong><br />
               <br />
               Rund 15.000 StreetScooter mit Elektroantrieb sind in der Zustellung im Einsatz. Der Service GoGreen erm&ouml;glicht erm&ouml;glicht DHL Kunden einen klimaneutralen Versand durch Investitionen in Klimaschutzprojekte.<br />
