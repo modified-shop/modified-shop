@@ -54,25 +54,25 @@ require (DIR_WS_INCLUDES.'head.php');
           <tr style="background-color: #FFFFFF;">
             <td colspan="2" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px; padding: 0px 10px 11px 10px; text-align: justify">
               <br />
-              <strong>DHL ist der Partner für Ihren nationalen und internationalen Versand</strong><br />
+              <strong>DHL ist der Partner f&uuml;r Ihren nationalen und internationalen Versand</strong><br />
               <br />
               <img src="images/dhl/dhl_logo.png" />
               <br />
               <br />
-              Für Geschäftskunden und Gewerbetreibende jeder Größenordnung und Branche ist DHL der Partner für alle Versandaufgaben. Unsere 81.000 Zusteller liefern über 1,6 Mrd. Pakete pro Jahr an Kunden in ganz Deutschland aus.<br />
+              F&uuml;r Gesch&auml;ftskunden und Gewerbetreibende jeder Gr&ouml;&szlig;enordnung und Branche ist DHL der Partner f&uuml;r alle Versandaufgaben. Unsere 81.000 Zusteller liefern &uuml;ber 1,6 Mrd. Pakete pro Jahr an Kunden in ganz Deutschland aus.<br />
               <br />
-              <strong>ZUVERLÄSSIG LIEFERN</strong><br />
+              <strong>ZUVERL&Auml;SSIG LIEFERN</strong><br />
               <br />
-              Über 80 Prozent aller DHL Pakete werden am Folgetag zugestellt. Für ein wachsendes E-Commerce-Business bauen wir unsere Kapazitäten kontinuierlich aus.<br />
+              &Uuml;ber 80 Prozent aller DHL Pakete werden am Folgetag zugestellt. F&uuml;r ein wachsendes E-Commerce-Business bauen wir unsere Kapazit&auml;ten kontinuierlich aus.<br />
               <br />
               <br />
               <strong>NACHHALTIG VERSENDEN</strong><br />
               <br />
-              Rund 15.000 StreetScooter mit Elektroantrieb sind in der Zustellung im Einsatz. Der Service GoGreen ermöglicht ermöglicht DHL Kunden einen klimaneutralen Versand durch Investitionen in Klimaschutzprojekte.<br />
+              Rund 15.000 StreetScooter mit Elektroantrieb sind in der Zustellung im Einsatz. Der Service GoGreen erm&ouml;glicht erm&ouml;glicht DHL Kunden einen klimaneutralen Versand durch Investitionen in Klimaschutzprojekte.<br />
               <br />
-              <strong>FLÄCHENDECKEND ERREICHBAR/strong><br />
+              <strong>FL&Auml;CHENDECKEND ERREICHBAR/strong><br />
               <br />
-              Deutschlandweit betreibt DHL über 7.000 Packstationen. Hinzu kommen 30.000 Paketabgabe- und -annahmestellen in der Nähe Ihrer Kunden. Flexible Empfangsoptionen und Retourenlösungen stehen für maximale Kundenorientierung.<br />
+              Deutschlandweit betreibt DHL &uuml;ber 7.000 Packstationen. Hinzu kommen 30.000 Paketabgabe- und -annahmestellen in der N&auml;he Ihrer Kunden. Flexible Empfangsoptionen und Retourenl&ouml;sungen stehen f&uuml;r maximale Kundenorientierung.<br />
             </td>
           </tr>
         </table>       

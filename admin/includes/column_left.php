@@ -131,6 +131,9 @@ echo mainMenue(BOX_HEADING_PARTNER_MODULES);
     
     ## SEMKNOX
     if (isset($admin_access['semknox']) && $admin_access['semknox'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_SEMKNOX, '') . '" class="menuBoxContentLink"> -' . BOX_SEMKNOX . '</a></li>';
+
+    ## DHL
+    if (isset($admin_access['dhl']) && $admin_access['dhl'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_DHL, '') . '" class="menuBoxContentLink"> -' . BOX_DHL . '</a></li>';
 echo endMenue(BOX_HEADING_PARTNER_MODULES);
 
 //---------------------------STATISTIKEN

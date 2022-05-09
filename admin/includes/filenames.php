@@ -96,6 +96,7 @@ $filename_array = array(
   'FILENAME_COOKIE_CONSENT' => 'cookie_consent.php',
   'FILENAME_SEMKNOX' => 'semknox.php',
   'FILENAME_CHECKOUT_SUCCESS' => 'checkout_success.php',
+  'FILENAME_DHL' => 'dhl.php',
 );
 
 // define 
