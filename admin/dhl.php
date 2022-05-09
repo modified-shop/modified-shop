@@ -54,10 +54,10 @@ require (DIR_WS_INCLUDES.'head.php');
           <tr style="background-color: #FFFFFF;">
             <td colspan="2" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px; padding: 0px 10px 11px 10px; text-align: justify">
               <br />
-              <strong>DHL ist der Partner f&uuml;r Ihren nationalen und internationalen Versand</strong><br />
-              <br />
               <img src="images/dhl/dhl_logo.png" />
               <br />
+              <br />
+              <strong>DHL ist der Partner f&uuml;r Ihren nationalen und internationalen Versand</strong><br />
               <br />
               F&uuml;r Gesch&auml;ftskunden und Gewerbetreibende jeder Gr&ouml;&szlig;enordnung und Branche ist DHL der Partner f&uuml;r alle Versandaufgaben. Unsere 81.000 Zusteller liefern &uuml;ber 1,6 Mrd. Pakete pro Jahr an Kunden in ganz Deutschland aus.<br />
               <br />
