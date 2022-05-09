@@ -123,7 +123,7 @@ $lang_array = array(
   'TEXT_PAYPAL_CANCEL_SUBMIT' => 'Confirm',
 
   // error
-  'TEXT_PAYPAL_ERROR_AMOUNT' => 'Please enter an valid amount',
+  'TEXT_PAYPAL_ERROR_AMOUNT' => 'Please enter a valid amount',
   'TEXT_PAYPAL_ERROR_ALREADY_PAID' => 'We have already received your payment. Thanks a lot!',
   'TEXT_PAYPAL_ERROR_NO_PLAN' => 'Please choose a plan.',
   'TEXT_PAYPAL_ERROR_MAX_PRODUCTS' => 'This product can only be purchased on its own.',
