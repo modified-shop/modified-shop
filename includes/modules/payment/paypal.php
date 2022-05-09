@@ -112,7 +112,9 @@ class paypal extends PayPalPaymentV2 {
           onError: function (err) {
             window.location.href = "'.$error_url.'";
           }
-        }).render("#apms_button2");
+        }).render("#apms_button2").then(() => {
+          $("#apms_bnpl").show();
+        });
       ';
     }
 
