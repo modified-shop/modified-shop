@@ -70,7 +70,7 @@ require (DIR_WS_INCLUDES.'head.php');
               <br />
               Rund 15.000 StreetScooter mit Elektroantrieb sind in der Zustellung im Einsatz. Der Service GoGreen erm&ouml;glicht erm&ouml;glicht DHL Kunden einen klimaneutralen Versand durch Investitionen in Klimaschutzprojekte.<br />
               <br />
-              <strong>FL&Auml;CHENDECKEND ERREICHBAR/strong><br />
+              <strong>FL&Auml;CHENDECKEND ERREICHBAR</strong><br />
               <br />
               Deutschlandweit betreibt DHL &uuml;ber 7.000 Packstationen. Hinzu kommen 30.000 Paketabgabe- und -annahmestellen in der N&auml;he Ihrer Kunden. Flexible Empfangsoptionen und Retourenl&ouml;sungen stehen f&uuml;r maximale Kundenorientierung.<br />
             </td>
