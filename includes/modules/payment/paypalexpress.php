@@ -41,9 +41,10 @@ class paypalexpress extends PayPalPaymentV2 {
   
     parent::update_status();
   
-    if ($this->enabled == false 
-        || !isset($_SESSION['paypal']['cartID']) 
-        || $_SESSION['paypal']['cartID'] != $_SESSION['cart']->cartID
+    if (($this->enabled == false 
+         || !isset($_SESSION['paypal']['cartID']) 
+         || $_SESSION['paypal']['cartID'] != $_SESSION['cart']->cartID
+         ) && !defined('RUN_MODE_ADMIN')
         )
     {
       unset($_SESSION['paypal']);
