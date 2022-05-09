@@ -63,11 +63,17 @@ if (isset($order) && is_object($order)) {
       $admin_info_data = $paypal->order_info($order->info['order_id']);
     }
     
-    if (is_array($admin_info_data) && count($admin_info_data) > 0) {
-      ?>          
+    if (is_object($admin_info_data) 
+        || (is_array($admin_info_data) && count($admin_info_data) > 0)
+        )
+    {
+      ?>
       <table border="0" width="100%" cellspacing="0" cellpadding="2" class="dataTableRow paypal_data" style="display:none;">
         <tr>
           <td width="100%" valign="top">
+          <?php
+          if (is_array($admin_info_data) && count($admin_info_data) > 0) {
+            ?>          
             <div class="pp_transactions pp_box">
               <div class="pp_boxheading"><?php echo TEXT_PAYPAL_TRANSACTION; ?></div>
               <dl class="pp_transaction">
@@ -123,7 +129,7 @@ if (isset($order) && is_object($order)) {
                 }
               ?>
             </div>
-            
+      
             <?php
             if (isset($admin_info_data['billing'])
                 && count($admin_info_data['billing']) > 0
@@ -163,7 +169,7 @@ if (isset($order) && is_object($order)) {
               </div>
               <div style="clear:both;"></div>
             <?php } ?>
-            
+      
             <?php
             if (isset($admin_info_data['transactions'])
                 && count($admin_info_data['transactions']) > 0
@@ -176,12 +182,12 @@ if (isset($order) && is_object($order)) {
               $status_array = array();
               $type_array = array();
               $amount_array = array();
-              
+        
               for ($t=0, $z=count($admin_info_data['transactions']); $t<$z; $t++) {
                 for ($i=0, $n=count($admin_info_data['transactions'][$t]['relatedResource']); $i<$n; $i++) {
                   $status_array[] = $admin_info_data['transactions'][$t]['relatedResource'][$i]['state'];
                   $type_array[] = $admin_info_data['transactions'][$t]['relatedResource'][$i]['type'];
-                  
+            
                   if (!isset($amount_array[$admin_info_data['transactions'][$t]['relatedResource'][$i]['type']])) {
                     $amount_array[$admin_info_data['transactions'][$t]['relatedResource'][$i]['type']] = 0;
                   }
@@ -238,82 +244,11 @@ if (isset($order) && is_object($order)) {
                 }
               }
               ?>
-            </div>
-            <div style="clear:both;"></div>
+              </div>
+              <div style="clear:both;"></div>
             <?php
             }
-            
-            $instructions_query = xtc_db_query("SELECT *
-                                                  FROM ".TABLE_PAYPAL_INSTRUCTIONS."
-                                                 WHERE orders_id = '".(int)$order->info['order_id']."'");
-            if (xtc_db_num_rows($instructions_query)) {
-              $instructions = xtc_db_fetch_array($instructions_query);
-              ?>
-              <div class="pp_transactions pp_box">
-                <div class="pp_boxheading"><?php echo TEXT_PAYPAL_INSTRUCTIONS; ?></div>
-                <dl class="pp_transaction">
-                  <dt><?php echo TEXT_PAYPAL_INSTRUCTIONS_AMOUNT; ?></dt>
-                  <dd><?php echo $instructions['amount'].' '.$instructions['currency']; ?></dd>
-                </dl>
-                <dl class="pp_transaction">
-                  <dt><?php echo TEXT_PAYPAL_INSTRUCTIONS_REFERENCE; ?></dt>
-                  <dd><?php echo $instructions['reference']; ?></dd>
-                </dl>
-                <dl class="pp_transaction">
-                  <dt><?php echo TEXT_PAYPAL_INSTRUCTIONS_PAYDATE; ?></dt>
-                  <dd><?php echo xtc_date_short($instructions['date']); ?></dd>
-                </dl>
-                <dl class="pp_transaction">
-                  <dt><?php echo TEXT_PAYPAL_INSTRUCTIONS_ACCOUNT; ?></dt>
-                  <dd><?php echo $instructions['name']; ?></dd>
-                </dl>
-                <dl class="pp_transaction">
-                  <dt><?php echo TEXT_PAYPAL_INSTRUCTIONS_HOLDER; ?></dt>
-                  <dd><?php echo $instructions['holder']; ?></dd>
-                </dl>
-                <dl class="pp_transaction">
-                  <dt><?php echo TEXT_PAYPAL_INSTRUCTIONS_IBAN; ?></dt>
-                  <dd><?php echo $instructions['iban']; ?></dd>
-                </dl>
-                <dl class="pp_transaction">
-                  <dt><?php echo TEXT_PAYPAL_INSTRUCTIONS_BIC; ?></dt>
-                  <dd><?php echo $instructions['bic']; ?></dd>
-                </dl>
-              </div>
-              <?php
-            }
-            
-            $tracking_query = xtc_db_query("SELECT *
-                                              FROM ".TABLE_ORDERS_TRACKING."
-                                             WHERE orders_id = '".(int)$order->info['order_id']."'");
-            if (xtc_db_num_rows($tracking_query)) {
-              ?>
-              <div class="pp_tracking pp_box">
-                <div class="pp_boxheading"><?php echo TEXT_PAYPAL_ADDTRACKING; ?></div>
-                <?php 
-                  echo xtc_draw_form('tracking', xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action','subaction', 'ext', 'sec')).'action=custom&subaction=paypalaction', 'NONSSL'), 'post');
-                  if (CSRF_TOKEN_SYSTEM == 'true' && isset($_SESSION['CSRFToken']) && isset($_SESSION['CSRFName'])) {
-                    echo xtc_draw_hidden_field($_SESSION['CSRFName'], $_SESSION['CSRFToken']);
-                  }
-                  echo xtc_draw_hidden_field('cmd', 'addtracking');
                   
-                  $i = 0;
-                  while ($tracking = xtc_db_fetch_array($tracking_query)) {
-                    echo '<div class="tracking_row">';
-                    echo xtc_draw_radio_field('tracking', $tracking['tracking_id'], ($i == 0), 'id="track_'.$tracking['tracking_id'].'"');
-                    echo '<label for="track_'.$tracking['tracking_id'].'">'.$tracking['parcel_id'].'</label>';     
-                    echo '</div>';  
-                    
-                    $i++;             
-                  }
-                ?>
-                <br />
-                <input type="submit" class="button" name="capture_submit" value="<?php echo TEXT_PAYPAL_TRACKING_SUBMIT; ?>">
-                </form>
-              </div>
-              <?php 
-            }
-            
             if ($admin_info_data['state'] == 'ACTIVE') {
               ?>
               <div class="pp_capture pp_box">
@@ -335,7 +270,7 @@ if (isset($order) && is_object($order)) {
             $count = array_count_values($type_array);
             if (!isset($count['capture'])) $count['capture'] = 0;
             if (!isset($count['refund'])) $count['refund'] = 0;
-            
+      
             if ($admin_info_data['intent'] == 'authorize' 
                 && (!isset($amount_array['capture'])
                     || $admin_info_data['total'] > $amount_array['capture']
@@ -402,16 +337,8 @@ if (isset($order) && is_object($order)) {
               </div>
               <?php 
             } 
+          } elseif (is_object($admin_info_data)) {
             ?>
-          </td>
-        </tr>
-      </table>  
-    <?php
-    } elseif (is_object($admin_info_data)) {
-    ?>
-      <table border="0" width="100%" cellspacing="0" cellpadding="2" class="dataTableRow paypal_data" style="display:none;">
-        <tr>
-          <td width="100%" valign="top">
             <div class="pp_transactions pp_box">
               <div class="pp_boxheading"><?php echo TEXT_PAYPAL_TRANSACTION; ?></div>
               <dl class="pp_transaction">
@@ -471,13 +398,13 @@ if (isset($order) && is_object($order)) {
                 $status_array = array();
                 $amount_array = array();
                 $is_final_capture = false;
-                
+              
                 foreach ($admin_info_data->purchase_units[0]->payments as $type => $payment) {
                   for ($p=0, $n=count($payment); $p<$n; $p++) {
                     if (!isset($amount_array[$type])) $amount_array[$type] = 0;
                     $amount_array[$type] += $payment[$p]->amount->value;
                     $status_array[$type][] = $payment[$p]->status;
-                    
+                  
                     if ($type == 'captures') {
                       $capture_reason_array[] = array(
                         'id' => $payment[$p]->id,
@@ -548,78 +475,7 @@ if (isset($order) && is_object($order)) {
               <div style="clear:both;"></div>
               <?php
             }
-            
-            $instructions_query = xtc_db_query("SELECT *
-                                                  FROM ".TABLE_PAYPAL_INSTRUCTIONS."
-                                                 WHERE orders_id = '".(int)$order->info['order_id']."'");
-            if (xtc_db_num_rows($instructions_query)) {
-              $instructions = xtc_db_fetch_array($instructions_query);
-              ?>
-              <div class="pp_transactions pp_box">
-                <div class="pp_boxheading"><?php echo TEXT_PAYPAL_INSTRUCTIONS; ?></div>
-                <dl class="pp_transaction">
-                  <dt><?php echo TEXT_PAYPAL_INSTRUCTIONS_AMOUNT; ?></dt>
-                  <dd><?php echo $instructions['amount'].' '.$instructions['currency']; ?></dd>
-                </dl>
-                <dl class="pp_transaction">
-                  <dt><?php echo TEXT_PAYPAL_INSTRUCTIONS_REFERENCE; ?></dt>
-                  <dd><?php echo $instructions['reference']; ?></dd>
-                </dl>
-                <dl class="pp_transaction">
-                  <dt><?php echo TEXT_PAYPAL_INSTRUCTIONS_PAYDATE; ?></dt>
-                  <dd><?php echo xtc_date_short($instructions['date']); ?></dd>
-                </dl>
-                <dl class="pp_transaction">
-                  <dt><?php echo TEXT_PAYPAL_INSTRUCTIONS_ACCOUNT; ?></dt>
-                  <dd><?php echo $instructions['name']; ?></dd>
-                </dl>
-                <dl class="pp_transaction">
-                  <dt><?php echo TEXT_PAYPAL_INSTRUCTIONS_HOLDER; ?></dt>
-                  <dd><?php echo $instructions['holder']; ?></dd>
-                </dl>
-                <dl class="pp_transaction">
-                  <dt><?php echo TEXT_PAYPAL_INSTRUCTIONS_IBAN; ?></dt>
-                  <dd><?php echo $instructions['iban']; ?></dd>
-                </dl>
-                <dl class="pp_transaction">
-                  <dt><?php echo TEXT_PAYPAL_INSTRUCTIONS_BIC; ?></dt>
-                  <dd><?php echo $instructions['bic']; ?></dd>
-                </dl>
-              </div>
-              <?php
-            }
-
-            $tracking_query = xtc_db_query("SELECT *
-                                              FROM ".TABLE_ORDERS_TRACKING."
-                                             WHERE orders_id = '".(int)$order->info['order_id']."'");
-            if (xtc_db_num_rows($tracking_query)) {
-              ?>
-              <div class="pp_tracking pp_box">
-                <div class="pp_boxheading"><?php echo TEXT_PAYPAL_ADDTRACKING; ?></div>
-                <?php 
-                  echo xtc_draw_form('tracking', xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action','subaction', 'ext', 'sec')).'action=custom&subaction=paypalaction', 'NONSSL'), 'post');
-                  if (CSRF_TOKEN_SYSTEM == 'true' && isset($_SESSION['CSRFToken']) && isset($_SESSION['CSRFName'])) {
-                    echo xtc_draw_hidden_field($_SESSION['CSRFName'], $_SESSION['CSRFToken']);
-                  }
-                  echo xtc_draw_hidden_field('cmd', 'addtracking');
-                  
-                  $i = 0;
-                  while ($tracking = xtc_db_fetch_array($tracking_query)) {
-                    echo '<div class="tracking_row">';
-                    echo xtc_draw_radio_field('tracking', $tracking['tracking_id'], ($i == 0) , 'id="track_'.$tracking['tracking_id'].'"');
-                    echo '<label for="track_'.$tracking['tracking_id'].'">'.$tracking['parcel_id'].'</label>';     
-                    echo '</div>';               
-                    
-                    $i++;
-                  }
-                ?>
-                <br />
-                <input type="submit" class="button" name="capture_submit" value="<?php echo TEXT_PAYPAL_TRACKING_SUBMIT; ?>">
-                </form>
-              </div>
-              <?php 
-            }
-
+          
             $count = array();
             foreach ($status_array as $type => $data) {
               $count[$type] = count($data);
@@ -627,7 +483,7 @@ if (isset($order) && is_object($order)) {
             if (!isset($count['authorizations'])) $count['authorizations'] = 0;
             if (!isset($count['captures'])) $count['captures'] = 0;
             if (!isset($count['refunds'])) $count['refunds'] = 0;
-            
+          
             if ($admin_info_data->intent == 'AUTHORIZE' 
                 && $is_final_capture !== true
                 && (!isset($amount_array['captures'])
@@ -700,13 +556,85 @@ if (isset($order) && is_object($order)) {
               </div>
               <?php 
             } 
+          }
+
+          $instructions_query = xtc_db_query("SELECT *
+                                                FROM ".TABLE_PAYPAL_INSTRUCTIONS."
+                                               WHERE orders_id = '".(int)$order->info['order_id']."'");
+          if (xtc_db_num_rows($instructions_query)) {
+            $instructions = xtc_db_fetch_array($instructions_query);
             ?>
+            <div class="pp_transactions pp_box">
+              <div class="pp_boxheading"><?php echo TEXT_PAYPAL_INSTRUCTIONS; ?></div>
+              <dl class="pp_transaction">
+                <dt><?php echo TEXT_PAYPAL_INSTRUCTIONS_AMOUNT; ?></dt>
+                <dd><?php echo xtc_format_price_order($instructions['amount'], 1, $instructions['currency'], 1); ?></dd>
+              </dl>
+              <dl class="pp_transaction">
+                <dt><?php echo TEXT_PAYPAL_INSTRUCTIONS_REFERENCE; ?></dt>
+                <dd><?php echo $instructions['reference']; ?></dd>
+              </dl>
+              <dl class="pp_transaction">
+                <dt><?php echo TEXT_PAYPAL_INSTRUCTIONS_PAYDATE; ?></dt>
+                <dd><?php echo xtc_date_short($instructions['date']); ?></dd>
+              </dl>
+              <dl class="pp_transaction">
+                <dt><?php echo TEXT_PAYPAL_INSTRUCTIONS_ACCOUNT; ?></dt>
+                <dd><?php echo $instructions['name']; ?></dd>
+              </dl>
+              <dl class="pp_transaction">
+                <dt><?php echo TEXT_PAYPAL_INSTRUCTIONS_HOLDER; ?></dt>
+                <dd><?php echo $instructions['holder']; ?></dd>
+              </dl>
+              <dl class="pp_transaction">
+                <dt><?php echo TEXT_PAYPAL_INSTRUCTIONS_IBAN; ?></dt>
+                <dd><?php echo $instructions['iban']; ?></dd>
+              </dl>
+              <dl class="pp_transaction">
+                <dt><?php echo TEXT_PAYPAL_INSTRUCTIONS_BIC; ?></dt>
+                <dd><?php echo $instructions['bic']; ?></dd>
+              </dl>
+            </div>
+            <?php
+          }
+
+          $tracking_query = xtc_db_query("SELECT *
+                                            FROM ".TABLE_ORDERS_TRACKING."
+                                           WHERE orders_id = '".(int)$order->info['order_id']."'");
+          if (xtc_db_num_rows($tracking_query)) {
+            ?>
+            <div class="pp_tracking pp_box">
+              <div class="pp_boxheading"><?php echo TEXT_PAYPAL_ADDTRACKING; ?></div>
+              <?php 
+                echo xtc_draw_form('tracking', xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action','subaction', 'ext', 'sec')).'action=custom&subaction=paypalaction', 'NONSSL'), 'post');
+                if (CSRF_TOKEN_SYSTEM == 'true' && isset($_SESSION['CSRFToken']) && isset($_SESSION['CSRFName'])) {
+                  echo xtc_draw_hidden_field($_SESSION['CSRFName'], $_SESSION['CSRFToken']);
+                }
+                echo xtc_draw_hidden_field('cmd', 'addtracking');
+          
+                $i = 0;
+                while ($tracking = xtc_db_fetch_array($tracking_query)) {
+                  echo '<div class="tracking_row">';
+                  echo xtc_draw_radio_field('tracking', $tracking['tracking_id'], ($i == 0) , 'id="track_'.$tracking['tracking_id'].'"');
+                  echo '<label for="track_'.$tracking['tracking_id'].'">'.$tracking['parcel_id'].'</label>';     
+                  echo '</div>';               
+            
+                  $i++;
+                }
+              ?>
+              <br />
+              <input type="submit" class="button" name="capture_submit" value="<?php echo TEXT_PAYPAL_TRACKING_SUBMIT; ?>">
+              </form>
+            </div>
+            <?php 
+          }
+          ?>
           </td>
         </tr>
       </table>      
-    <?php
+      <?php
     } else {
-    ?>
+      ?>
       <table border="0" width="100%" cellspacing="0" cellpadding="2" class="dataTableRow paypal_data" style="display:none;">
         <tr>
           <td width="100%" valign="top">
@@ -714,7 +642,7 @@ if (isset($order) && is_object($order)) {
           </td>
         </tr>
       </table>
-    <?php
+      <?php
     }
   }
   ?>

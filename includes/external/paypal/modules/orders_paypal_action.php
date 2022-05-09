@@ -40,34 +40,42 @@ if (isset($oID) && $oID != '') {
     'paypalbancontact',
   );
   
-  if (in_array($order->info['payment_method'], $orders_v1_array)) {
+  if (in_array($order->info['payment_method'], $orders_v1_array)
+      || (isset($_POST['cmd']) && $_POST['cmd'] == 'addtracking')
+      )
+  {
     require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalInfo.php');
     $paypal = new PayPalInfo($order->info['payment_method']);
     
     // action
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-      if ($_POST['cmd'] == 'refund') {
-        if ($_POST['refund_price'] > 0) {
-          $paypal->refund_payment($order->info['order_id'], $_POST['refund_price'], $_POST['refund_comment']);
-        } else {
-          $_SESSION['pp_error'] = TEXT_PAYPAL_ERROR_AMOUNT;
-        }
-      }
-      if ($_POST['cmd'] == 'capture') {
-        if ($_POST['capture_price'] > 0) {
-          $paypal->capture_payment_admin($order->info['order_id'], $_POST['capture_price'], (isset($_POST['final_capture'])));
-        } else {
-          $_SESSION['pp_error'] = TEXT_PAYPAL_ERROR_AMOUNT;
-        }
-      }
-      if ($_POST['cmd'] == 'cancel') {
-        $response = $paypal->cancel_subscription($order->info['order_id']);
-        if ($response === false) {
-          $_SESSION['pp_error'] = TEXT_PAYPAL_ERROR_CANCEL;
-        }
-      }
-      if ($_POST['cmd'] == 'addtracking') {
-        $paypal->addTracking($order->info['order_id'], $_POST['tracking']);
+    if (isset($_POST['cmd'])) {
+      switch ($_POST['cmd']) {
+        case 'refund':
+          if ($_POST['refund_price'] > 0) {
+            $paypal->refund_payment($order->info['order_id'], $_POST['refund_price'], $_POST['refund_comment']);
+          } else {
+            $_SESSION['pp_error'] = TEXT_PAYPAL_ERROR_AMOUNT;
+          }
+          break;
+        case 'refund':
+          if ($_POST['capture_price'] > 0) {
+            $paypal->capture_payment_admin($order->info['order_id'], $_POST['capture_price'], (isset($_POST['final_capture'])));
+          } else {
+            $_SESSION['pp_error'] = TEXT_PAYPAL_ERROR_AMOUNT;
+          }
+          break;
+        case 'cancel':
+          $response = $paypal->cancel_subscription($order->info['order_id']);
+          if ($response === false) {
+            $_SESSION['pp_error'] = TEXT_PAYPAL_ERROR_CANCEL;
+          }
+          break;
+        case 'addtracking':
+          $response = $paypal->addTracking($order->info['order_id'], $_POST['tracking']);
+          if (is_array($response) && count($response) > 0) {
+            $_SESSION['pp_error'] = implode('<br/>', $response);
+          }
+          break;
       }
     }
   }
@@ -77,44 +85,39 @@ if (isset($oID) && $oID != '') {
     $paypal = new PayPalPaymentV2($order->info['payment_method']);
 
     // action
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {    
-      if ($_POST['cmd'] == 'refund') {
-        if ($_POST['refund_price'] > 0) {
-          $response = $paypal->refundOrder($_POST['refund_id'], $_POST['refund_price'], $order->info['currency'], $_POST['refund_comment']);
+    if (isset($_POST['cmd'])) {
+      switch ($_POST['cmd']) {
+        case 'refund':
+          if ($_POST['refund_price'] > 0) {
+            $response = $paypal->refundOrder($_POST['refund_id'], $_POST['refund_price'], $order->info['currency'], $_POST['refund_comment']);
                     
-          if (method_exists($response, 'getMessage')) {
-            $messages = $response->getMessage();
-            $messages = json_decode($messages, true);
-            if (isset($messages['details'])) {
-              $_SESSION['pp_error'] = $messages['details'][0]['description'];
+            if (method_exists($response, 'getMessage')) {
+              $messages = $response->getMessage();
+              $messages = json_decode($messages, true);
+              if (isset($messages['details'])) {
+                $_SESSION['pp_error'] = $messages['details'][0]['description'];
+              }
             }
+          } else {
+            $_SESSION['pp_error'] = TEXT_PAYPAL_ERROR_AMOUNT;
           }
-        } else {
-          $_SESSION['pp_error'] = TEXT_PAYPAL_ERROR_AMOUNT;
-        }
-      }
-      if ($_POST['cmd'] == 'capture') {
-        if ($_POST['capture_price'] > 0) {
-          $response = $paypal->CaptureAuthorizedOrder($_POST['authorize_id'], $_POST['capture_price'], $order->info['currency'], (isset($_POST['final_capture'])));
+          break;
+        case 'refund':
+          if ($_POST['capture_price'] > 0) {
+            $response = $paypal->CaptureAuthorizedOrder($_POST['authorize_id'], $_POST['capture_price'], $order->info['currency'], (isset($_POST['final_capture'])));
 
-          if (method_exists($response, 'getMessage')) {
-            $messages = $response->getMessage();
-            $messages = json_decode($messages, true);
-            if (isset($messages['details'])) {
-              $_SESSION['pp_error'] = $messages['details'][0]['description'];
+            if (method_exists($response, 'getMessage')) {
+              $messages = $response->getMessage();
+              $messages = json_decode($messages, true);
+              if (isset($messages['details'])) {
+                $_SESSION['pp_error'] = $messages['details'][0]['description'];
+              }
             }
+          } else {
+            $_SESSION['pp_error'] = TEXT_PAYPAL_ERROR_AMOUNT;
           }
-        } else {
-          $_SESSION['pp_error'] = TEXT_PAYPAL_ERROR_AMOUNT;
-        }
+          break;
       }
-      if ($_POST['cmd'] == 'addtracking') {
-        $response = $paypal->addTracking($order->info['order_id'], $_POST['tracking']);
-        if (is_array($response) && count($response) > 0) {
-          $_SESSION['pp_error'] = implode('<br/>', $response);
-        }
-      }
-    }
+    }    
   }
 }
-?>
