@@ -155,4 +155,9 @@ ALTER TABLE `orders` ADD KEY `idx_orders_ident_key` (`orders_ident_key`);
 #GTB - 2022-05-04 - change whois url
 UPDATE `configuration` SET `configuration_value` = 'https://utrace.me/?query=' WHERE `configuration_value` = 'http://www.utrace.de/?query=';
 
+#Tomcraft - 2022-05-06 - add dhl
+ALTER TABLE `admin_access` ADD `dhl` INT(1) NOT NULL DEFAULT '0' AFTER `semknox`;
+UPDATE `admin_access` SET `dhl` = 1 WHERE `customers_id` = 1 LIMIT 1;
+UPDATE `admin_access` SET `dhl` = 9 WHERE `customers_id` = 'groups' LIMIT 1;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
