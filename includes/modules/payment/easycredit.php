@@ -10,8 +10,9 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-
+// fallbacks
 defined('DIR_FS_EXTERNAL') OR define('DIR_FS_EXTERNAL', DIR_FS_CATALOG.'includes/external/');
+defined('DIR_WS_EXTERNAL') OR define('DIR_WS_EXTERNAL', 'includes/external/');
 defined('DIR_FS_LOG') OR define('DIR_FS_LOG', DIR_FS_CATALOG.'log/');
 defined('DIR_WS_BASE') OR define('DIR_WS_BASE', '');
 
