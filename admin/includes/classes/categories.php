@@ -582,7 +582,7 @@ class categories {
     $products_date_available = (date('Y-m-d') < $products_date_available) ? $products_date_available : 'null';
 
     $products_tax_rate = xtc_get_tax_rate($products_data['products_tax_class_id']);
-    $products_price = $this->priceCheck($products_data['products_price'], $products_tax_rate);
+    $products_data['products_price'] = $this->priceCheck($products_data['products_price'], $products_tax_rate);
     
     $permission = array();
     $customers_statuses_array = xtc_get_customers_statuses();
@@ -607,7 +607,7 @@ class categories {
       'products_quantity' => xtc_db_prepare_input($products_data['products_quantity']),
       'products_model' => xtc_db_prepare_input($products_data['products_model']),
       'products_ean' => xtc_db_prepare_input($products_data['products_ean']),
-      'products_price' => xtc_db_prepare_input($products_price),
+      'products_price' => xtc_db_prepare_input($products_data['products_price']),
       'products_sort' => xtc_db_prepare_input($products_data['products_sort']),
       'products_shippingtime' => xtc_db_prepare_input($products_data['shipping_status']),
       'products_discount_allowed' => xtc_db_prepare_input($products_data['products_discount_allowed']),
