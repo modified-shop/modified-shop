@@ -26,6 +26,7 @@
     {
       $paypal_smarty = new Smarty();
       $paypal_smarty->assign('language', $_SESSION['language']);
+      $paypal_smarty->assign('product', true);
       if ($paypal->get_config('MODULE_PAYMENT_'.strtoupper($paypal->code).'_SHOW_PRODUCT') == '1') {
         $paypal_smarty->assign('paypalexpress', true);
       }

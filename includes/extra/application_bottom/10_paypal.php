@@ -122,7 +122,9 @@
               onApprove: function(data, actions) {
                 window.location.href = "'.xtc_href_link('callback/paypal/paypalexpress.php').'";
               }
-            }).render("#apms_button2");
+            }).render("#apms_button2").then(() => {
+              $("#apms_bnpl").show();
+            });
           ';
         }
       }

@@ -110,6 +110,9 @@
     margin-bottom: -5px;
     flex-direction:column;
   }  
+  .apms_form_button.apms_nocheckout.apms_product {
+    margin-bottom: -5px;
+  }  
   #checkout_confirmation .apms_form_button {  
     min-width:250px;
     display:block;
@@ -157,10 +160,19 @@
     height:35px;
     margin-bottom:5px;
   }
+  #apms_bnpl {
+    display:none;
+  }
+  .apms_nocheckout.apms_product {
+    height: auto;
+  }
   
   @media only screen and (min-width: 759px) {
     .apms_form_button.apms_nocheckout {
       height:35px;
       margin-bottom: 0;
+    }
+    .apms_form_button.apms_nocheckout.apms_product {
+      height: auto;
     }
   }
