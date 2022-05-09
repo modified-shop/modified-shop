@@ -1,6 +1,6 @@
 <link rel="stylesheet" property="stylesheet" href="{$smarty.const.DIR_WS_BASE}{$smarty.const.DIR_WS_EXTERNAL}paypal/css/apms.css" type="text/css" media="screen" />
 
-<div class="apms_form_button{if !isset($checkout)} apms_nocheckout{/if}">
+<div class="apms_form_button{if !isset($checkout)} apms_nocheckout{if isset($product)} apms_product{/if}{/if}">
   <div class="apms_form_button_inner">
     {if isset($checkout)}
       <div id="apms_button"></div>
@@ -14,7 +14,7 @@
   </div>
   
   {if isset($paypalbnpl)}
-    <div class="apms_form_button_inner">
+    <div id="apms_bnpl" class="apms_form_button_inner">
       <div id="apms_button2"></div>
     </div>
   {/if}
