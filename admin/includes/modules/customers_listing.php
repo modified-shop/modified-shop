@@ -431,11 +431,10 @@
                     break;
 
                   case 'new_order' :
-                    $payment_array = array(
-                      array(
-                        'id' => 'no_payment',
-                        'text' => TEXT_NO_PAYMENT.' (no_payment)'
-                      )
+                    $payment_array = array();
+                    $payment_array[-1][] = array(
+                      'id' => 'no_payment',
+                      'text' => TEXT_NO_PAYMENT.' (no_payment)'
                     );
                     if (trim(MODULE_PAYMENT_INSTALLED) != '') {
                       $payments = explode(';', MODULE_PAYMENT_INSTALLED);
@@ -445,14 +444,31 @@
                         }
                         $payment_modul = substr($payments[$i], 0, strrpos($payments[$i], '.'));
                         $payment_text = constant('MODULE_PAYMENT_'.strtoupper($payment_modul).'_TEXT_TITLE');
-                        $payment_array[] = array(
+
+                        $sort = 99999;
+                        if (is_file(DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/' . $payments[$i])) {
+                          include_once(DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/' . $payments[$i]);
+                          if (class_exists($payment_modul)) {
+                            $module = new $payment_modul();
+                            if ($module->check() > 0) {
+                              $sort = $module->sort_order;
+                            }
+                          }
+                        }
+
+                        $payment_array[$sort][] = array(
                           'id' => $payment_modul,
                           'text' => $payment_text.' ('.$payment_modul.')'
                         );
+                        array_multisort(array_column($payment_array[$sort], 'text'), SORT_ASC, $payment_array[$sort]);
                       }
                     }
-                    $shipping_array = array();
-                    if (trim(MODULE_SHIPPING_INSTALLED) != '') {
+                    ksort($payment_array);
+                    $payment_array = array_reduce($payment_array, 'array_merge', array());
+
+                    
+                    $shipping_array = array();  
+                    if (trim(MODULE_PAYMENT_INSTALLED) != '') {
                       $shippings = explode(';', MODULE_SHIPPING_INSTALLED);
                       for ($i=0; $i<count($shippings); $i++) {
                         if (file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/' . $shippings[$i])) {
@@ -460,12 +476,28 @@
                         }
                         $shipping_modul = substr($shippings[$i], 0, strrpos($shippings[$i], '.'));
                         $shipping_text = constant('MODULE_SHIPPING_'.strtoupper($shipping_modul).'_TEXT_TITLE');
-                        $shipping_array[] = array(
+
+                        $sort = 99999;
+                        if (is_file(DIR_FS_CATALOG . DIR_WS_MODULES . 'shipping/' . $shippings[$i])) {
+                          include_once(DIR_FS_CATALOG . DIR_WS_MODULES . 'shipping/' . $shippings[$i]);
+                          if (class_exists($shipping_modul)) {
+                            $module = new $shipping_modul();
+                            if ($module->check() > 0) {
+                              $sort = $module->sort_order;
+                            }
+                          }
+                        }
+
+                        $shipping_array[$sort][] = array(
                           'id' => $shipping_modul,
                           'text' => $shipping_text.' ('.$shipping_modul.')'
                         );
+                        array_multisort(array_column($shipping_array[$sort], 'text'), SORT_ASC, $shipping_array[$sort]);
                       }
                     }
+                    ksort($shipping_array);
+                    $shipping_array = array_reduce($shipping_array, 'array_merge', array());
+
                     $heading[] = array ('text' => '<b>'.TEXT_INFO_HEADING_STATUS_NEW_ORDER.'</b>');
                     $contents = array ('form' => xtc_draw_form('customers', FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action')).'cID='.$cInfo->customers_id.'&action=new_order_confirm'));
                     $contents[] = array ('text' => TEXT_INFO_PAYMENT.'<br />'.xtc_draw_pull_down_menu('payment', $payment_array));

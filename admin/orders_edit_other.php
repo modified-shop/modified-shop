@@ -100,7 +100,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
   echo xtc_draw_hidden_field('oID', $_GET['oID']);
 
   $payment_array = array();
-  $payment_array[] = array(
+  $payment_array[-1][] = array(
     'id' => 'no_payment',
     'text' => TEXT_NO_PAYMENT.' (no_payment)'
   );
@@ -113,12 +113,28 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
       }
       $payment_modul = substr($payments[$i], 0, strrpos($payments[$i], '.'));
       $payment_text = constant('MODULE_PAYMENT_'.strtoupper($payment_modul).'_TEXT_TITLE');
-      $payment_array[] = array(
+
+      $sort = 99999;
+      if (is_file(DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/' . $payments[$i])) {
+        include_once(DIR_FS_CATALOG . DIR_WS_MODULES . 'payment/' . $payments[$i]);
+        if (class_exists($payment_modul)) {
+          $module = new $payment_modul();
+          if ($module->check() > 0) {
+            $sort = $module->sort_order;
+          }
+        }
+      }
+
+      $payment_array[$sort][] = array(
         'id' => $payment_modul,
         'text' => $payment_text.' ('.$payment_modul.')'
       );
+      array_multisort(array_column($payment_array[$sort], 'text'), SORT_ASC, $payment_array[$sort]);
     }
   }
+  ksort($payment_array);
+  $payment_array = array_reduce($payment_array, 'array_merge', array());
+
   $order_payment_text = $order->info['payment_class'];
   if (file_exists(DIR_FS_LANGUAGES . $order->info['language'] . '/modules/payment/' . $order->info['payment_class'] .'.php')) {
     require_once(DIR_FS_LANGUAGES . $order->info['language'] . '/modules/payment/' . $order->info['payment_class'] .'.php');
@@ -157,12 +173,28 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
       }
       $shipping_modul = substr($shippings[$i], 0, strrpos($shippings[$i], '.'));
       $shipping_text = constant('MODULE_SHIPPING_'.strtoupper($shipping_modul).'_TEXT_TITLE');
-      $shipping_array[] = array(
+
+      $sort = 99999;
+      if (is_file(DIR_FS_CATALOG . DIR_WS_MODULES . 'shipping/' . $shippings[$i])) {
+        include_once(DIR_FS_CATALOG . DIR_WS_MODULES . 'shipping/' . $shippings[$i]);
+        if (class_exists($shipping_modul)) {
+          $module = new $shipping_modul();
+          if ($module->check() > 0) {
+            $sort = $module->sort_order;
+          }
+        }
+      }
+
+      $shipping_array[$sort][] = array(
         'id' => $shipping_modul,
         'text' => $shipping_text.' ('.$shipping_modul.')'
       );
+      array_multisort(array_column($shipping_array[$sort], 'text'), SORT_ASC, $shipping_array[$sort]);
     }
   }
+  ksort($shipping_array);
+  $shipping_array = array_reduce($shipping_array, 'array_merge', array());
+
   $order_shipping = explode('_', $order->info['shipping_class']);
   $order_shipping_text = $order_shipping = $order_shipping[0];
   if (file_exists(DIR_FS_LANGUAGES . $order->info['language'] . '/modules/shipping/' . $order_shipping .'.php')) {
@@ -215,9 +247,9 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
     $total_text = constant('MODULE_ORDER_TOTAL_'.strtoupper($total_name).'_TITLE');
     
     $ot_total_query = xtc_db_query("SELECT * 
-                                    FROM " . TABLE_ORDERS_TOTAL . " 
-                                   WHERE orders_id = '" . (int)$_GET['oID'] . "' 
-                                     AND class = '" . xtc_db_input($total) . "' ");
+                                      FROM " . TABLE_ORDERS_TOTAL . " 
+                                     WHERE orders_id = '" . (int)$_GET['oID'] . "' 
+                                       AND class = '" . xtc_db_input($total) . "' ");
     if (xtc_db_num_rows($ot_total_query) > 0) {
       $ototal_array = array();
       while ($ot_total = xtc_db_fetch_array($ot_total_query)) {
