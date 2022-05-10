@@ -86,11 +86,13 @@ class paypal extends PayPalPaymentV2 {
           $("#checkout_confirmation").html("");
         },
         onError: function (err) {
+          console.error("failed to load PayPal buttons", err);
           window.location.href = "'.$error_url.'";
+        },
+        onRender: function() { 
+          $(".apms_form_button_overlay").hide();
         }
-      }).render("#apms_button1").then(() => {
-        $(".apms_form_button_overlay").hide();
-      });
+      }).render("#apms_button1");
     ';
     
     if ($this->get_config('MODULE_PAYMENT_'.strtoupper($this->code).'_SHOW_CHECKOUT_BNPL') == '1') {
@@ -110,11 +112,13 @@ class paypal extends PayPalPaymentV2 {
             $("#checkout_confirmation").html("");
           },
           onError: function (err) {
-            window.location.href = "'.$error_url.'";
+            console.error("failed to load PayPal buttons", err);
+            $("#apms_bnpl").hide();
+          },
+          onRender: function() { 
+            $("#apms_bnpl").show();
           }
-        }).render("#apms_button2").then(() => {
-          $("#apms_bnpl").show();
-        });
+        }).render("#apms_button2");
       ';
     }
 

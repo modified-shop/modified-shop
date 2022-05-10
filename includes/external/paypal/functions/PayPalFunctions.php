@@ -85,7 +85,9 @@ function get_paypal_js_sdk($lient_id, $currency, $intent, $commit, $client_token
           "components": "buttons,funding-eligibility,messages,hosted-fields"
         });
       } catch (error) {
-        console.error("failed to load the PayPal JS SDK script", error);
+        $(".apms_form").hide();
+        $(".apms_form_button").hide();
+        console.error("failed to load the PayPal SDK", error);
       }
 
       if (paypal) {

@@ -86,10 +86,15 @@
               },
               onApprove: function(data, actions) {
                 window.location.href = "'.xtc_href_link('callback/paypal/paypalexpress.php').'";
+              },
+              onError: function (err) {
+                $("#apms_buttons").hide();
+                console.error("failed to load PayPal buttons", err);
+              },
+              onRender: function() { 
+                $(".apms_form_button_overlay").hide();
               }
-            }).render("#apms_button1").then(() => {
-              $(".apms_form_button_overlay").hide();
-            });
+            }).render("#apms_button1");
           ';
         }
         
@@ -121,10 +126,11 @@
               },
               onApprove: function(data, actions) {
                 window.location.href = "'.xtc_href_link('callback/paypal/paypalexpress.php').'";
+              },
+              onRender: function() { 
+                $("#apms_bnpl").show();
               }
-            }).render("#apms_button2").then(() => {
-              $("#apms_bnpl").show();
-            });
+            }).render("#apms_button2");
           ';
         }
       }
@@ -139,10 +145,7 @@
     {
       $paypal = new PayPalPayment('paypalinstallment');
       
-      if ($paypal->get_config('PAYPAL_MODE') == 'live'
-          && $paypal->get_config('PAYPAL_INSTALLMENT_BANNER_DISPLAY') == 1
-          )
-      {
+      if ($paypal->get_config('PAYPAL_INSTALLMENT_BANNER_DISPLAY') == 1) {
         $total = 0;  
         if (basename($PHP_SELF) == FILENAME_PRODUCT_INFO 
             && is_object($product) 
@@ -170,6 +173,10 @@
                 layout: "'.((basename($PHP_SELF) == FILENAME_PRODUCT_INFO) ? 'text' : 'flex').'",
                 color: "'.$paypal->get_config('PAYPAL_INSTALLMENT_BANNER_COLOR').'",
                 ratio: "8x1"
+              },
+              onError: function (err) {
+                $(".pp-message").hide();
+                console.error("failed to load PayPal banner", err);
               },
               onRender: function() { 
                 '.((basename($PHP_SELF) == FILENAME_PRODUCT_INFO) ? '' : '$(".pp-message").css("margin-top", "20px");').'
