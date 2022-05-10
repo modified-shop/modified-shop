@@ -143,7 +143,7 @@
               } else {
                 if (!isset($purchase_unit['amount']['breakdown']['discount'])) {
                   $purchase_unit['amount']['breakdown']['discount'] = array(
-                    'value' => sprintf("%01.2f", round($total['value'], 2)),
+                    'value' => sprintf("%01.2f", round(abs($total['value']), 2)),
                     'currency_code' => $this->encode_utf8($order->info['currency'])
                   );
                 } else {
