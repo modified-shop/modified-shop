@@ -49,6 +49,7 @@ class xtcPrice {
     $this->actualCurr = $currency;
     $this->TAX = array();
     $this->showFrom_Attributes = true;
+    $this->showCheapestGraduated = false;
     $this->flagSpecial = false;
     $this->show_price_tax = 0;
     $this->country_id = STORE_COUNTRY;
@@ -650,8 +651,7 @@ class xtcPrice {
     $decimal_places = ($decimal_places > 0) ? $decimal_places : $this->currencies[$this->actualCurr]['decimal_places'];
     if ($format) {
       $from = $this->checkAttributes($pID);
-
-      if ((int)$pID > 0) {
+      if ($this->showCheapestGraduated === true && (int)$pID > 0) {
         $sQuery = xtDBquery("SELECT max(po.quantity) AS qty,
                                     p.products_tax_class_id
                                FROM " . TABLE_PERSONAL_OFFERS_BY . $this->actualGroup . " po
@@ -663,7 +663,7 @@ class xtcPrice {
           $sQuery = xtc_db_fetch_array($sQuery, true);
           $sQuery['products_tax_class_id'] = $this->xtc_get_tax_class($pID, $sQuery['products_tax_class_id']);
           
-          if (($this->cStatus['customers_status_graduated_prices'] == '1') && ($sQuery['qty'] > 1)) {
+          if ($this->cStatus['customers_status_graduated_prices'] == '1' && $sQuery['qty'] > 1) {
             $from = ' ' . FROM . ' ';
             $price = $this->xtcGetGraduatedPrice($pID, $sQuery['qty']);
             if ($curr) {
@@ -848,7 +848,11 @@ class xtcPrice {
       $special_price = '';
       $from = '';
       $uvp = '';
-      if (($this->cStatus['customers_status_graduated_prices'] == '1') && ($sQuery['qty'] > 1)) {
+      if ($this->showCheapestGraduated === true 
+          && $this->cStatus['customers_status_graduated_prices'] == '1'
+          && $sQuery['qty'] > 1
+          )
+      {
         $bestPrice = $this->xtcGetGraduatedPrice($pID, $sQuery['qty']);
         if ($discount) {
           $bestPrice -= $bestPrice / 100 * $discount;
@@ -866,7 +870,6 @@ class xtcPrice {
         $price = '<span class="productOldPrice">' . $uvp . ' ' . $old_price . '</span><br />' . YOUR_PRICE . $from . $special_price;
       } else {
         return $this->xtcFormat($sPrice, $format, 0, false, $vpeStatus, $pID);
-        //$price = $this->xtcFormat($sPrice, $format);
       }
 
       $products_tax = (isset($this->tax_class) && isset($this->TAX[$this->tax_class])) ? $this->TAX[$this->tax_class] : 0;
