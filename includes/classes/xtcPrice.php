@@ -452,6 +452,42 @@ class xtcPrice {
   }
 
   /**
+   * Returns the special products price of a product
+   *
+   * @param Integer $pID product id
+   * @param double $pPrice
+   * @param Boolean $add_tax
+   * @return Double products price
+   */
+  function xtcSpecialProductPrice($pID, $pPrice, $add_tax = false) {
+    if ($this->cStatus['customers_status_specials'] == '1') {
+      $products_price = $pPrice;
+      $product_query = xtc_db_query("SELECT *
+                                       FROM ".TABLE_SPECIALS."
+                                      WHERE products_id = '".(int)$pID."'
+                                            ".SPECIALS_CONDITIONS);
+      if (xtc_db_num_rows($product_query) > 0) {
+        $product = xtc_db_fetch_array($product_query);
+        
+        $product = $this->priceModules->CheckSpecial($product, $pID);
+        if ($product['specials_old_products_price'] > 0) {
+          $products_price = $product['specials_old_products_price'];
+        
+          if ($add_tax === true) {          
+            $products_tax = (isset($this->tax_class) && isset($this->TAX[$this->tax_class])) ? $this->TAX[$this->tax_class] : 0;
+            if ($this->cStatus['customers_status_show_price_tax'] == '1') {
+              $products_price = $this->xtcAddTax($products_price, $products_tax);
+            }
+          }
+        }
+      }
+      $products_price = $this->priceModules->CheckSpecialProductPrice($products_price, $pID, $add_tax);
+      
+      return $products_price;
+    }
+  }
+
+  /**
    * Returns the extension price of a product
    *
    * @param Integer $pID product id
@@ -773,6 +809,8 @@ class xtcPrice {
    * @return unknown
    */
   function xtcFormatSpecial($pID, $sPrice, $pPrice, $format, $vpeStatus) {
+    $pPrice = $this->xtcSpecialProductPrice($pID, $pPrice, true);
+    
     if ($format) {      
       if (!isset($pPrice) || $pPrice == 0) {
         $discount = 0;

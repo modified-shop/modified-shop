@@ -160,4 +160,7 @@ ALTER TABLE `admin_access` ADD `dhl` INT(1) NOT NULL DEFAULT '0' AFTER `semknox`
 UPDATE `admin_access` SET `dhl` = 1 WHERE `customers_id` = 1 LIMIT 1;
 UPDATE `admin_access` SET `dhl` = 9 WHERE `customers_id` = 'groups' LIMIT 1;
 
+#GTB - 2022-05-11 - add specials_old_products_price
+ALTER TABLE `specials` ADD `specials_old_products_price` DECIMAL(15,4) NOT NULL AFTER `specials_quantity`;
+
 # Keep an empty line at the end of this file for the db_updater to work properly

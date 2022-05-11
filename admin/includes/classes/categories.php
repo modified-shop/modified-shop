@@ -1436,6 +1436,8 @@ class categories {
         $products_data['specials_quantity'] = 0;
       }
       
+      $tax_rate = xtc_get_tax_rate($products_data['products_tax_class_id']);
+
       if (substr($products_data['specials_price'], -1) != '%') {
         if (!isset($products_data['products_tax_class_id']) || (int)$products_data['products_tax_class_id'] <= 0) {
           $price_query = xtc_db_query("SELECT products_tax_class_id
@@ -1444,8 +1446,6 @@ class categories {
           $price = xtc_db_fetch_array($price_query);
           $products_data['products_tax_class_id'] = $price['products_tax_class_id'];
         }
-        $tax_rate = xtc_get_tax_rate($products_data['products_tax_class_id']);
-
         $products_data['specials_price'] = $this->priceCheck($products_data['specials_price'], $tax_rate);
       } else {
         if (!isset($products_data['products_price']) || (double)$products_data['products_price'] <= 0.00) {
@@ -1458,12 +1458,14 @@ class categories {
         $products_data['specials_price'] = ($products_data['products_price'] - (($products_data['specials_price'] / 100) * $products_data['products_price']));
       }
 
+      $products_data['specials_old_products_price'] = $this->priceCheck($products_data['specials_old_products_price'], $tax_rate);
       $expires_date = isset($products_data['specials_expires']) && !empty($products_data['specials_expires']) ? date('Y-m-d H:i:s', strtotime($products_data['specials_expires'].' 23:59:59')) : '';
       $start_date = isset($products_data['specials_start']) && !empty($products_data['specials_start']) ? date('Y-m-d H:i:s', strtotime($products_data['specials_start'].' 00:00:00')) : '';
     
       $sql_data_array = array(
         'products_id' => $products_data['products_id'],
         'specials_quantity' => (int)$products_data['specials_quantity'],
+        'specials_old_products_price' => xtc_db_prepare_input($products_data['specials_old_products_price']),
         'specials_new_products_price' => xtc_db_prepare_input($products_data['specials_price']),
         'specials_date_added' => 'now()',
         'specials_last_modified' => 'now()',

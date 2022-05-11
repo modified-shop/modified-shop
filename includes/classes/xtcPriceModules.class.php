@@ -89,6 +89,12 @@ class priceModules {
         $this->function_call = 'CheckSpecialPrice';
         return $this->call_module_method($special_price, $pID); //Return parameter must be in first place
     }
+
+    function CheckSpecialProductPrice($products_price, $pID, $add_tax)
+    {
+        $this->function_call = 'CheckSpecialProductPrice';
+        return $this->call_module_method($products_price, $pID, $add_tax); //Return parameter must be in first place
+    }
     
     function GetOptionPrice($dataArr,$attribute_data,$pID, $option, $value, $qty)
     {
