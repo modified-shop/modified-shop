@@ -19,7 +19,7 @@ define('SPECIALS_TITLE', 'Special ');
 
 define('TEXT_SPECIALS_PRODUCT', 'Product:');
 define('TEXT_SPECIALS_SPECIAL_PRICE', 'Special price:');
-define('TEXT_SPECIALS_SPECIAL_PRICE', 'Product price:');
+define('TEXT_SPECIALS_SPECIAL_PRODUCTS_PRICE', 'Product price:');
 define('TEXT_SPECIALS_SPECIAL_QUANTITY', 'Quantity:');  
 define('TEXT_SPECIALS_START_DATE', 'Start Date: <small>(YYYY-MM-DD)</small>');
 define('TEXT_SPECIALS_EXPIRES_DATE', 'Expiry Date: <small>(YYYY-MM-DD)</small>');
