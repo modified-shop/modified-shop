@@ -1339,6 +1339,7 @@ CREATE TABLE specials (
   specials_id INT(11) NOT NULL AUTO_INCREMENT,
   products_id INT(11) NOT NULL,
   specials_quantity INT(4) NOT NULL,
+  specials_old_products_price DECIMAL(15,4) NOT NULL,
   specials_new_products_price DECIMAL(15,4) NOT NULL,
   specials_date_added DATETIME,
   specials_last_modified DATETIME,

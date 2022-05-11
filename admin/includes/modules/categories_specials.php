@@ -40,14 +40,7 @@ if (isset($_GET['pID'])) {
                                          p.products_id,
                                          p.products_price,
                                          pd.products_name,
-                                         s.specials_id,
-                                         s.specials_quantity,
-                                         s.specials_new_products_price,
-                                         s.specials_date_added,
-                                         s.specials_last_modified,
-                                         s.start_date,
-                                         s.expires_date,
-                                         s.status
+                                         s.*
                                     FROM " . TABLE_PRODUCTS . " p
                                     JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd
                                          ON p.products_id = pd.products_id
@@ -64,11 +57,13 @@ if (isset($_GET['pID'])) {
 
     $specials_quantity = $sInfo->specials_quantity;
 
-    $price = $sInfo->products_price;
+    $price = (($sInfo->specials_old_products_price > 0) ? $sInfo->specials_old_products_price : $sInfo->products_price);
     $new_price = $sInfo->specials_new_products_price;
     if (PRICE_IS_BRUTTO == 'true') {
-      $price_netto = xtc_round($price, PRICE_PRECISION);
       if ($price > 0) {
+        $price_netto = TEXT_NETTO.'<strong>'.xtc_round($price, PRICE_PRECISION).'</strong>';
+      }
+      if ($new_price > 0) {
         $new_price_netto = TEXT_NETTO.'<strong>'.xtc_round($new_price, PRICE_PRECISION).'</strong>';
       }
       $price = ($price * (xtc_get_tax_rate($sInfo->products_tax_class_id) + 100) / 100);
@@ -124,6 +119,10 @@ echo SPECIALS_TITLE;
     <tr>
       <td class="main" style="width:300px; vertical-align:top;"><?php echo TEXT_SPECIALS_SPECIAL_PRICE; ?></td>
       <td class="main" style="width:250px;"><?php echo xtc_draw_input_field('specials_price', $new_price, 'style="width: 135px"') . draw_tooltip(TEXT_CATSPECIALS_SPECIAL_PRICE_TT) . (($new_price_netto != '') ? '<br/>'.$new_price_netto : '');?></td>
+    </tr>
+    <tr>
+      <td class="main" style="width:300px; vertical-align:top;"><?php echo TEXT_SPECIALS_SPECIAL_PRODUCTS_PRICE; ?></td>
+      <td class="main" style="width:250px;"><?php echo xtc_draw_input_field('specials_old_products_price', $price, 'style="width: 135px"') . draw_tooltip(TEXT_CATSPECIALS_SPECIAL_PRODUCTS_PRICE_TT) . (($price_netto != '') ? '<br/>'.$price_netto : '');?></td>
     </tr>
     <tr>
       <td class="main"><?php echo TEXT_SPECIALS_SPECIAL_QUANTITY; ?></td>
