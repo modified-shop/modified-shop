@@ -97,7 +97,7 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
     
     if (defined('REVIEWS_PURCHASED_INFOS') && REVIEWS_PURCHASED_INFOS != '') {
       $shop_content_data = $main->getContentData(REVIEWS_PURCHASED_INFOS);
-      $smarty->assign('REVIEWS_NOTE', $main->getContentLink(REVIEWS_PURCHASED_INFOS, $shop_content_data['content_title']));
+      $smarty->assign('REVIEWS_NOTE', $main->getContentLink(REVIEWS_PURCHASED_INFOS, $shop_content_data['content_title'], 'NONSSL', false));
     }
   }
 
