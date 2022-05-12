@@ -18,7 +18,7 @@
 define('SPECIALS_TITLE', 'Sonderangebot ');
 
 define('TEXT_SPECIALS_PRODUCT', 'Artikel:');
-define('TEXT_SPECIALS_SPECIAL_PRODUCTS_PRICE', 'Artikelpreis:');
+define('TEXT_SPECIALS_SPECIAL_PRODUCTS_PRICE', 'G&uuml;nstigster Preis (letzte 30 Tage):');
 define('TEXT_SPECIALS_SPECIAL_PRICE', 'Angebotspreis:');
 define('TEXT_SPECIALS_SPECIAL_QUANTITY', 'Anzahl:');
 define('TEXT_SPECIALS_START_DATE', 'G&uuml;ltig ab: <small>(JJJJ-MM-TT)</small>');
