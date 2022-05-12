@@ -5,6 +5,7 @@
   {$MODULE_TS_PRODUCT_STICKER}
 {elseif isset($module_content)}
   <h4 class="detailbox">{#heading_reviews#}</h4>
+  {if isset($reviews_note)}<div class="reviews_note_detail">{$reviews_note}</div>{/if}
   {if $reviews_count > 0}
     {foreach name=aussen item=module_data from=$module_content}
     <div class="reviewrow" itemprop="review" itemscope itemtype="http://schema.org/Review">        

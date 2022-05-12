@@ -2275,3 +2275,24 @@ ol#address_block_new li label .address {
   box-sizing:border-box;
 }
 /* END new address book handling */
+
+
+/* START reviews_note */
+.box_reviews_note {
+  font-weight:400;
+  margin: 14px 0 0 0 !important;
+  text-align:center;
+}
+.box_reviews_note a {
+  font-size:9px;
+  line-height:11px;
+}
+.reviews_note {
+  display:block;
+  font-size:10px;
+  line-height:12px;
+  margin: 10px 0 20px 0;
+  font-weight:400;
+}
+/* END reviews_note */
+

@@ -3,6 +3,7 @@
   {$MODULE_TS_PRODUCT_STICKER}
 {elseif isset($reviews_count)}
   <h1>{#heading_reviews#}</h1>
+  {if isset($reviews_note)}<div class="reviews_note">{$reviews_note}</div>{/if}
   {if $module_content > 0}
     {foreach name=aussen item=module_data from=$module_content} 
       <p><strong>{#text_author#}</strong>&nbsp;{$module_data.AUTHOR}&nbsp;am&nbsp;{$module_data.DATE}<br /><strong>{#text_rating#}</strong>{$module_data.RATING}</p>

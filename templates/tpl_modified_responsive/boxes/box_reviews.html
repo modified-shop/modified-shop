@@ -24,6 +24,9 @@
         </div>
       {/if}
       <div class="box_line abstand"></div>
+      {if isset($REVIEWS_NOTE)}
+        <div class="box_reviews_note">{$REVIEWS_NOTE}</div>
+      {/if}
       <div class="box_text">{$REVIEWS|onlytext}</div>
       <div class="box_reviews_icons"><i class="fas fa-star{if $REVIEWS_VOTE >= 1} full{/if}"></i><i class="fas fa-star{if $REVIEWS_VOTE >= 2} full{/if}"></i><i class="fas fa-star{if $REVIEWS_VOTE >= 3} full{/if}"></i><i class="fas fa-star{if $REVIEWS_VOTE >= 4} full{/if}"></i><i class="fas fa-star{if $REVIEWS_VOTE >= 5} full{/if}"></i></div>
     {else}
