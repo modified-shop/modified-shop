@@ -2,6 +2,8 @@
 {config_load file="lang_`$language`.custom"}
 {config_load file="lang_`$language`.section" section="reviews"}
 <h1>{#heading_reviews#} {$PRODUCTS_NAME}</h1>
+{if isset($REVIEWS_NOTE)}<div class="reviews_note_full">{$REVIEWS_NOTE}</div>{/if}
+
 {if $error_message}<div class="errormessage">{$error_message}</div>{/if}
 {if $success_message}<div class="infomessage">{$success_message}</div>{/if}
 {foreach name=aussen item=module_data from=$module_content}

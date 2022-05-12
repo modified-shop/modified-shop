@@ -15,6 +15,9 @@
       </a><br />
       {$REVIEWS_IMAGE}
     </p>
+    {if isset($REVIEWS_NOTE)}
+      <p class="box_reviews_note">{$REVIEWS_NOTE}</p>
+    {/if}
   {else}
     <p>
       <a href="{$PRODUCTS_LINK}">

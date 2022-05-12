@@ -4201,3 +4201,35 @@ ol#address_block_new li label .address {
 /* END new address book handling */
 
 
+/* START reviews_note */
+.box_reviews_note {
+  font-size:10px;
+  line-height:14px;
+  font-weight:400;
+  margin: 0 0 10px 0;
+}
+.headline_reviews_note {
+  font-family: 'arimoregular', sans-serif;
+  float:right;
+  display:inline-block;
+  font-size:10px;
+  line-height:12px;
+  margin: 6px 0 0 0;
+  font-weight:400;
+}
+.reviews_note_full {
+  display:block;
+  font-size:10px;
+  line-height:12px;
+  margin: -5px 0 20px 0;
+  font-weight:400;
+}
+.reviews_note_detail {
+  display:block;
+  font-size:10px;
+  line-height:12px;
+  margin: 0px 0 10px 0;
+  font-weight:400;
+}
+/* END reviews_note */
+

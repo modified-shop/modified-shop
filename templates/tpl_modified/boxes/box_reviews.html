@@ -12,6 +12,9 @@
     <div class="box_title"><a href="{$PRODUCTS_LINK}"><strong>{$PRODUCTS_NAME}</strong></a></div>
     {if $PRODUCTS_IMAGE != ''}<div class="box_image"><a href="{$PRODUCTS_LINK}"><img src="{$PRODUCTS_IMAGE}" alt="{$PRODUCTS_NAME|onlytext}" title="{$PRODUCTS_NAME|onlytext}" /></a></div>{/if}
     <div class="box_line abstand"></div>
+    {if isset($REVIEWS_NOTE)}
+      <div class="box_reviews_note">{$REVIEWS_NOTE}</div>
+    {/if}
     <div class="box_text">{$REVIEWS|onlytext}</div>
     <div class="box_reviews_image">{$REVIEWS_IMAGE}</div>
   {else}
