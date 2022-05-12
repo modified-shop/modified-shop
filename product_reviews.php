@@ -118,6 +118,16 @@ require (DIR_WS_INCLUDES.'header.php');
 
 $smarty->assign('PRODUCTS_NAME', xtc_get_products_name($_GET['products_id'], $_SESSION['languages_id']));
 
+if (defined('REVIEWS_PURCHASED_NOTE') 
+    && REVIEWS_PURCHASED_NOTE == 'true' 
+    && defined('REVIEWS_PURCHASED_INFOS') 
+    && REVIEWS_PURCHASED_INFOS != ''
+    )
+{
+  $shop_content_data = $main->getContentData(REVIEWS_PURCHASED_INFOS);
+  $smarty->assign('REVIEWS_NOTE', $main->getContentLink(REVIEWS_PURCHASED_INFOS, $shop_content_data['content_title']));
+}
+
 if ($messageStack->size('product_reviews') > 0) {
   $smarty->assign('error_message', $messageStack->output('product_reviews'));
 }

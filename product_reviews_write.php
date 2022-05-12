@@ -40,10 +40,22 @@ $smarty = new Smarty;
 $review_error = false;
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/product_reviews_write/','php') as $file) require ($file);
 
+if (!is_object($product) || $product->isProduct() === false) {
+  xtc_redirect(xtc_href_link(FILENAME_DEFAULT));
+}
+
 if ($_SESSION['customers_status']['customers_status_write_reviews'] == 0) {
-  if (is_object($product) && $product->isProduct() === true) {
+  if (!isset($_SESSION['customer_id'])) {
     xtc_redirect(xtc_href_link(FILENAME_LOGIN, 'products_id='.(int)$product->data['products_id'], 'SSL'));
   } else {
+    xtc_redirect(xtc_href_link(FILENAME_DEFAULT));
+  }
+}
+
+if (defined('REVIEWS_PURCHASED_ONLY') && REVIEWS_PURCHASED_ONLY == 'true') {
+  if (!isset($_SESSION['customer_id'])) {
+    xtc_redirect(xtc_href_link(FILENAME_LOGIN, 'products_id='.(int)$product->data['products_id'], 'SSL'));
+  } elseif ($product->check_purchased() === false) {
     xtc_redirect(xtc_href_link(FILENAME_DEFAULT));
   }
 }
@@ -51,62 +63,59 @@ if ($_SESSION['customers_status']['customers_status_write_reviews'] == 0) {
 $review = '';
 $rating = '';
 if (isset ($_GET['action']) && $_GET['action'] == 'process' && $review_error === false) {
-  if (is_object($product) && $product->isProduct() === true) { // We got to the process but it is an illegal product, don't write
-    
-    $review = xtc_db_prepare_input($_POST['review']);
-    $rating = xtc_db_prepare_input($_POST['rating']);
-    $author = xtc_db_prepare_input($_POST['author']);
-    
-    $error = false;
-    if (strlen($review) < REVIEW_TEXT_MIN_LENGTH) {
-      $messageStack->add('product_reviews_write', ERROR_REVIEW_TEXT);
+  $review = xtc_db_prepare_input($_POST['review']);
+  $rating = xtc_db_prepare_input($_POST['rating']);
+  $author = xtc_db_prepare_input($_POST['author']);
+  
+  $error = false;
+  if (strlen($review) < REVIEW_TEXT_MIN_LENGTH) {
+    $messageStack->add('product_reviews_write', ERROR_REVIEW_TEXT);
+    $error = true;
+  }
+  if (!isset($_POST['rating'])) {
+    $messageStack->add('product_reviews_write', ERROR_REVIEW_RATING);
+    $error = true;
+  }
+  if (strlen($author) < ENTRY_FIRST_NAME_MIN_LENGTH) {
+    $messageStack->add('product_reviews_write', ERROR_REVIEW_AUTHOR);
+    $error = true;
+  }
+  if (in_array('reviews', $use_captcha) && (!isset($_SESSION['customer_id']) || MODULE_CAPTCHA_LOGGED_IN == 'True')) {
+    if ($mod_captcha->validate($_POST['vvcode']) !== true) 
+    {
+      $messageStack->add('product_reviews_write', strip_tags(ERROR_VVCODE, '<b><strong>'));
       $error = true;
     }
-    if (!isset($_POST['rating'])) {
-      $messageStack->add('product_reviews_write', ERROR_REVIEW_RATING);
-      $error = true;
-    }
-    if (strlen($author) < ENTRY_FIRST_NAME_MIN_LENGTH) {
-      $messageStack->add('product_reviews_write', ERROR_REVIEW_AUTHOR);
-      $error = true;
-    }
-    if (in_array('reviews', $use_captcha) && (!isset($_SESSION['customer_id']) || MODULE_CAPTCHA_LOGGED_IN == 'True')) {
-      if ($mod_captcha->validate($_POST['vvcode']) !== true) 
-      {
-        $messageStack->add('product_reviews_write', strip_tags(ERROR_VVCODE, '<b><strong>'));
-        $error = true;
-      }
-    }
-    if (check_secure_form($_POST) === false) {
-      $messageStack->add('product_reviews_write', ENTRY_TOKEN_ERROR);
-      $error = true;
-    }
-    
-    if ($error === false) {
-      $sql_data_array = array('products_id' => $product->data['products_id'],
-                              'customers_id' => ((isset($_SESSION['customer_id'])) ? (int)$_SESSION['customer_id'] : 0),
-                              'customers_name' => $author,
-                              'reviews_rating' => $rating,
-                              'reviews_status' => $_SESSION['customers_status']['customers_status_reviews_status'],
-                              'date_added' =>  'now()'
-                              );
-      xtc_db_perform(TABLE_REVIEWS,$sql_data_array);
-      $insert_id = xtc_db_insert_id();
+  }
+  if (check_secure_form($_POST) === false) {
+    $messageStack->add('product_reviews_write', ENTRY_TOKEN_ERROR);
+    $error = true;
+  }
+  
+  if ($error === false) {
+    $sql_data_array = array('products_id' => $product->data['products_id'],
+                            'customers_id' => ((isset($_SESSION['customer_id'])) ? (int)$_SESSION['customer_id'] : 0),
+                            'customers_name' => $author,
+                            'reviews_rating' => $rating,
+                            'reviews_status' => $_SESSION['customers_status']['customers_status_reviews_status'],
+                            'date_added' =>  'now()'
+                            );
+    xtc_db_perform(TABLE_REVIEWS,$sql_data_array);
+    $insert_id = xtc_db_insert_id();
 
-      $sql_data_array = array('reviews_id' => $insert_id,
-                              'languages_id' => (int) $_SESSION['languages_id'],
-                              'reviews_text' => $review
-                              );
-      xtc_db_perform(TABLE_REVIEWS_DESCRIPTION,$sql_data_array);
-      
-      if ($_SESSION['customers_status']['customers_status_reviews_status'] != '1') {
-        $messageStack->add_session('product_reviews', PRODUCT_REVIEWS_SUCCESS_WAITING, 'success');
-      } else {
-        $messageStack->add_session('product_reviews', PRODUCT_REVIEWS_SUCCESS, 'success');
-      }
-      
-      xtc_redirect(xtc_href_link(FILENAME_PRODUCT_REVIEWS, $_POST['get_params']));
+    $sql_data_array = array('reviews_id' => $insert_id,
+                            'languages_id' => (int) $_SESSION['languages_id'],
+                            'reviews_text' => $review
+                            );
+    xtc_db_perform(TABLE_REVIEWS_DESCRIPTION,$sql_data_array);
+    
+    if ($_SESSION['customers_status']['customers_status_reviews_status'] != '1') {
+      $messageStack->add_session('product_reviews', PRODUCT_REVIEWS_SUCCESS_WAITING, 'success');
+    } else {
+      $messageStack->add_session('product_reviews', PRODUCT_REVIEWS_SUCCESS, 'success');
     }
+    
+    xtc_redirect(xtc_href_link(FILENAME_PRODUCT_REVIEWS, $_POST['get_params']));
   }
 }
 

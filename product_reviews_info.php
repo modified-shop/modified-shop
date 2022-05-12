@@ -94,6 +94,16 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
     $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(FILENAME_PRODUCT_REVIEWS, 'products_id='.$product_reviews['products_id']).'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
     $smarty->assign('BUTTON_BUY_NOW', '<a href="'.xtc_href_link(FILENAME_DEFAULT, 'action=buy_now&BUYproducts_id='.$product_reviews['products_id']).'">'.xtc_image_button('button_in_cart.gif', IMAGE_BUTTON_IN_CART).'</a>');
     $smarty->assign('PRODUCTS_BUTTON_DETAILS', '<a href="'.xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($product_reviews['products_id'], $product_reviews['products_name'])).'">'.xtc_image_button('button_product_more.gif', TEXT_INFO_DETAILS).'</a>');
+    
+    if (defined('REVIEWS_PURCHASED_NOTE') 
+        && REVIEWS_PURCHASED_NOTE == 'true' 
+        && defined('REVIEWS_PURCHASED_INFOS') 
+        && REVIEWS_PURCHASED_INFOS != ''
+        )
+    {
+      $shop_content_data = $main->getContentData(REVIEWS_PURCHASED_INFOS);
+      $smarty->assign('REVIEWS_NOTE', $main->getContentLink(REVIEWS_PURCHASED_INFOS, $shop_content_data['content_title']));
+    }
   }
 
   if ($messageStack->size('product_reviews') > 0) {
