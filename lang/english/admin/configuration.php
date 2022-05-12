@@ -1030,8 +1030,6 @@ define('CACHE_LIFETIME_NOTE', '<b>Attention:</b> If the cache is activated, chan
 
 define('REVIEWS_PURCHASED_ONLY_TITLE', 'Check ratings');
 define('REVIEWS_PURCHASED_ONLY_DESC', 'Should reviews only be possible if a customer has also bought the item?');
-define('REVIEWS_PURCHASED_NOTE_TITLE', 'Note for reviews');
-define('REVIEWS_PURCHASED_NOTE_DESC', 'Should a note be displayed for the ratings?');
 define('REVIEWS_PURCHASED_INFOS_TITLE', 'Reviews Info');
 define('REVIEWS_PURCHASED_INFOS_DESC', 'Select the content to display as rating info on its authenticity.');
 ?>

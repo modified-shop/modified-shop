@@ -107,12 +107,7 @@ if ($messageStack->size('product_reviews', 'success') > 0) {
   $smarty->assign('success_message', $messageStack->output('product_reviews', 'success'));
 }
 
-if (defined('REVIEWS_PURCHASED_NOTE') 
-    && REVIEWS_PURCHASED_NOTE == 'true' 
-    && defined('REVIEWS_PURCHASED_INFOS') 
-    && REVIEWS_PURCHASED_INFOS != ''
-    )
-{
+if (defined('REVIEWS_PURCHASED_INFOS') && REVIEWS_PURCHASED_INFOS != '') {
   $shop_content_data = $main->getContentData(REVIEWS_PURCHASED_INFOS);
   $smarty->assign('REVIEWS_NOTE', $main->getContentLink(REVIEWS_PURCHASED_INFOS, $shop_content_data['content_title']));
 }

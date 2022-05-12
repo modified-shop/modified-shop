@@ -30,6 +30,7 @@ if (PRICE_IS_BRUTTO == 'true') {
 $existing = false;
 
 $price = 0;
+$price_netto = '';
 $new_price = 0;
 $new_price_netto = '';
 $specials_quantity = '';

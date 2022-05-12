@@ -1029,8 +1029,6 @@ define('CACHE_LIFETIME_NOTE', '<b>Achtung:</b> Bei aktiviertem Cache werden &Aum
 
 define('REVIEWS_PURCHASED_ONLY_TITLE', 'Bewertungen &uuml;berpr&uuml;fen');
 define('REVIEWS_PURCHASED_ONLY_DESC', 'Sollen nur Bewertungen m&ouml;glich sein, wenn ein Kunde den Artikel auch gekauft hat?');
-define('REVIEWS_PURCHASED_NOTE_TITLE', 'Hinweis zu Bewertungen');
-define('REVIEWS_PURCHASED_NOTE_DESC', 'Sollen ein Hinweis zu den Bewertungen angezeigt werden?');
 define('REVIEWS_PURCHASED_INFOS_TITLE', 'Bewertungen Info');
 define('REVIEWS_PURCHASED_INFOS_DESC', 'W&auml;hle den Content zur Anzeige als Bewertung Info zu deren Echtheit.');
 ?>

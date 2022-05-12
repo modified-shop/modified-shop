@@ -55,12 +55,7 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/products_reviews.html',
     $module_smarty->assign('reviews_avg', $product->getReviewsAverage());
     $module_smarty->assign('module_content', $product->getReviews());     
     
-    if (defined('REVIEWS_PURCHASED_NOTE') 
-        && REVIEWS_PURCHASED_NOTE == 'true' 
-        && defined('REVIEWS_PURCHASED_INFOS') 
-        && REVIEWS_PURCHASED_INFOS != ''
-        )
-    {
+    if (defined('REVIEWS_PURCHASED_INFOS') && REVIEWS_PURCHASED_INFOS != '') {
       $shop_content_data = $main->getContentData(REVIEWS_PURCHASED_INFOS);
       $module_smarty->assign('reviews_note', $main->getContentLink(REVIEWS_PURCHASED_INFOS, $shop_content_data['content_title']));
     }
