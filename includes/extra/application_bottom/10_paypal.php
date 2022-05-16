@@ -129,6 +129,7 @@
               },
               onRender: function() { 
                 $("#apms_bnpl").show();
+                $(".apms_form_button_overlay").hide();
               }
             }).render("#apms_button2");
           ';
