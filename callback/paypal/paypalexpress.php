@@ -58,6 +58,7 @@ if (!in_array($PayPalOrder->status, array('COMPLETED', 'APPROVED'))) {
     $customers_data['plain']['firstname'] = $PayPalOrder->payer->name->given_name;
     $customers_data['plain']['lastname'] = $PayPalOrder->payer->name->surname;
   }
+  $customers_data = $paypal->decode_utf8($customers_data);
   
   if (!isset($_SESSION['customer_id'])
       && isset($customers_data['info']['email_address']) 
