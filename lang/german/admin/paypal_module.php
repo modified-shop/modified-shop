@@ -36,14 +36,14 @@ $lang_array = array(
   'TEXT_PAYPAL_MODULE_PRODUCT' => 'Express Button beim Artikel',
   'TEXT_PAYPAL_MODULE_PRODUCT_INFO' => 'Soll der PayPal Express Button in den Artikel Infos angezeigt werden?',
 
-  'TEXT_PAYPAL_MODULE_CART_BNPL' => 'Später bezahlen Button im Warenkorb',
-  'TEXT_PAYPAL_MODULE_CART_BNPL_INFO' => 'Soll der PayPal Später bezahlen Button im Warenkorb angezeigt werden?',
+  'TEXT_PAYPAL_MODULE_CART_BNPL' => 'Sp&auml;ter bezahlen Button im Warenkorb',
+  'TEXT_PAYPAL_MODULE_CART_BNPL_INFO' => 'Soll der PayPal Sp&auml;ter bezahlen Button im Warenkorb angezeigt werden?',
 
-  'TEXT_PAYPAL_MODULE_PRODUCT_BNPL' => 'Später bezahlen Button beim Artikel',
-  'TEXT_PAYPAL_MODULE_PRODUCT_BNPL_INFO' => 'Soll der PayPal Später bezahlen Button in den Artikel Infos angezeigt werden?',
+  'TEXT_PAYPAL_MODULE_PRODUCT_BNPL' => 'Sp&auml;ter bezahlen Button beim Artikel',
+  'TEXT_PAYPAL_MODULE_PRODUCT_BNPL_INFO' => 'Soll der PayPal Sp&auml;ter bezahlen Button in den Artikel Infos angezeigt werden?',
 
-  'TEXT_PAYPAL_MODULE_CHECKOUT_BNPL' => 'Später bezahlen Button im Checkout',
-  'TEXT_PAYPAL_MODULE_CHECKOUT_BNPL_INFO' => 'Soll der PayPal Später bezahlen Button im Checkout angezeigt werden?',
+  'TEXT_PAYPAL_MODULE_CHECKOUT_BNPL' => 'Sp&auml;ter bezahlen Button im Checkout',
+  'TEXT_PAYPAL_MODULE_CHECKOUT_BNPL_INFO' => 'Soll der PayPal Sp&auml;ter bezahlen Button im Checkout angezeigt werden?',
 
   'TEXT_PAYPAL_MODULE_USE_TABS' => 'Accordion / Tabs',
   'TEXT_PAYPAL_MODULE_USE_TABS_INFO' => 'Verwendet das Template Accordion oder Tabs im Checkout?',
