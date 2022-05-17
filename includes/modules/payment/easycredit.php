@@ -520,10 +520,15 @@ class easycredit {
   }
 
   function calculate_total() {
-    global $order;
+    global $order, $PHP_SELF;
     
     $order_backup = $order;
+    $self_backup = $PHP_SELF;
+    if (isset($_SESSION['payment'])) {
+      $payment_backup = $_SESSION['payment'];
+    }
     
+    $PHP_SELF = FILENAME_CHECKOUT_CONFIRMATION;
     if (isset($_SESSION['shipping'])) {
       if (!class_exists('shipping')) {
         require_once (DIR_WS_CLASSES . 'shipping.php');
@@ -534,6 +539,7 @@ class easycredit {
     if (!class_exists('order')) {
       require_once (DIR_WS_CLASSES . 'order.php');
     }
+    $_SESSION['payment'] = $this->code;
     $order = new order();
     
     if (!class_exists('order_total')) {
@@ -545,6 +551,10 @@ class easycredit {
     $total = $order->info['total'];
 
     $order = $order_backup;
+    $PHP_SELF = $self_backup;
+    if (isset($payment_backup)) {
+      $_SESSION['payment'] = $payment_backup;
+    }
     
     return $total;
   }
