@@ -45,7 +45,7 @@ class klarna_paynow extends KlarnaPayment {
     
     return array(
       'id' => $this->code, 
-      'module' => ((MODULE_PAYMENT_KLARNA_TEXT != '') ? MODULE_PAYMENT_KLARNA_TEXT.' ' : '').$data['name'], 
+      'module' => ((MODULE_PAYMENT_KLARNA_TEXT != '') ? MODULE_PAYMENT_KLARNA_TEXT.' ' : '').decode_utf8($data['name']), 
       'description' => $info,
     );
   }
