@@ -28,19 +28,23 @@ if (!isset($_SESSION['tracking']['ip'])) {
 
 // campaigns
 if (!isset($_SESSION['tracking']['refID']) && isset($_GET['refID'])) {
-  $campaign_check_query = xtDBquery("SELECT * 
+  $campaign_query = xtDBquery("SELECT * 
                                        FROM ".TABLE_CAMPAIGNS." 
                                       WHERE campaigns_refID = '".xtc_db_input($_GET['refID'])."'");
-  if (xtc_db_num_rows($campaign_check_query, true) > 0) {
+  if (xtc_db_num_rows($campaign_query, true) > 0) {
+    $campaign = xtc_db_fetch_array($campaign_query, true);
+    
     // include needed functions
     require_once (DIR_FS_INC.'ip_clearing.inc.php');
-    $_SESSION['tracking']['refID'] = $_GET['refID'];
+    
     $sql_data_array = array(
       'user_ip' => ip_clearing($_SESSION['tracking']['ip']),
-      'campaign' => $_GET['refID'],
+      'campaign' => $campaign['campaigns_refID'],
       'time' => 'now()'
     );
     xtc_db_perform(TABLE_CAMPAIGNS_IP, $sql_data_array);
+
+    $_SESSION['tracking']['refID'] = $campaign['campaigns_refID'];
   }
 }
 
