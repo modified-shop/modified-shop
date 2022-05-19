@@ -186,7 +186,7 @@ class Smarty extends Smarty_Compatibility
     /**
      * The character set to adhere to (e.g. "UTF-8")
      */
-    public static $_CHARSET = SMARTY_MBSTRING ? 'UTF-8' : 'ISO-8859-1';
+    public static $_CHARSET = SMARTY_RESOURCE_CHAR_SET;
 
     /**
      * The date format to be used internally
