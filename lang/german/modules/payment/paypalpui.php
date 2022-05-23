@@ -44,7 +44,7 @@ $lang_array = array(
   'MODULE_PAYMENT_PAYPALPUI_TEXT_SERVICE' => 'Kundenservice: %s',
   
   'JS_DOB_ERROR' => 'Ihr Geburtsdatum muss im Format TT.MM.JJJJ (z.B. 21.05.1970) eingegeben werden.',
-  'JS_TELEPHONE_ERROR' => 'F&uuml;r dieese Zahlart ben&ouml;tige wir Ihre Telefonnummer.',
+  'JS_TELEPHONE_ERROR' => 'F&uuml;r diese Zahlart ben&ouml;tigen wir Ihre Telefonnummer.',
   
   'MODULE_PAYMENT_PAYPALPUI_TEXT_LEGAL' => 'Mit Klicken auf den Button akzeptieren Sie die <a target="_blank" href="https://www.ratepay.com/legal-payment-terms">Ratepay Zahlungsbedingungen</a> und erkl&auml;ren sich mit der Durchf&uuml;hrung einer <a target="_blank" href="https://www.ratepay.com/legal-payment-dataprivacy">Risikopr&uuml;fung durch Ratepay</a>, unseren Partner, einverstanden. Sie akzeptieren auch PayPal&rsquo;s <a target="_blank" href="https://www.paypal.com/de/webapps/mpp/ua/rechnungskauf-mit-ratepay?locale.x=en_DE&_ga=1.121064910.716429872.1643889674">Datenschutzerkl&auml;rung</a>. Falls Ihre Transaktion erfolgreich per Kauf auf Rechnung abgewickelt werden kann, wird der Kaufpreis an Ratepay abgetreten und Sie d&uuml;rfen nur an Ratepay &uuml;berweisen, nicht an den H&auml;ndler.',
 );
