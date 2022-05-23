@@ -927,7 +927,7 @@ class categories {
     
     //dublicate group and graduated prices
     $customers_statuses_array = xtc_get_customers_statuses();
-    foreach ($customers_statuses_array as $customers_statuses) {
+    foreach ($customers_statuses_array as $customers_status) {
       $copy_query = xtc_db_query("SELECT quantity,
                                          personal_offer
                                     FROM ".TABLE_PERSONAL_OFFERS_BY.$customers_status['id']."
@@ -1247,9 +1247,9 @@ class categories {
     $customers_statuses_array = xtc_get_customers_statuses();
     
     $input = '<label>' . xtc_draw_checkbox_field('groups[]', 'all', ((!isset($_GET['pID']) && !isset($_GET['cID'])) ? ' checked' : ''), '', 'id="cgAll"').TXT_ALL.'</label><br />'. PHP_EOL;    
-    foreach ($customers_statuses_array as $customers_statuses) {
-      $checked = ((is_object($object) && isset($object->{'group_permission_'.$customers_statuses['id']}) && $object->{'group_permission_'.$customers_statuses['id']} == 1) ? ' checked' : '');
-      $input .= '<label>'.  xtc_draw_checkbox_field('groups[]', $customers_statuses['id'], $checked,'', 'id="cg'.$customers_statuses['id'].'"') . $customers_statuses['text'].'</label><br />'. PHP_EOL;
+    foreach ($customers_statuses_array as $customers_status) {
+      $checked = ((is_object($object) && isset($object->{'group_permission_'.$customers_status['id']}) && $object->{'group_permission_'.$customers_status['id']} == 1) ? ' checked' : '');
+      $input .= '<label>'.  xtc_draw_checkbox_field('groups[]', $customers_status['id'], $checked,'', 'id="cg'.$customers_status['id'].'"') . $customers_status['text'].'</label><br />'. PHP_EOL;
     }
 
     return $input;
