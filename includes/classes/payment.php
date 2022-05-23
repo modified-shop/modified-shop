@@ -137,11 +137,12 @@
 
         // unallowed modules as array
         $unallowed_modules_string = preg_replace("'[\r\n\s]+'",'',$unallowed_modules_string);
-        $unallowed_modules = explode(',', strtoupper($unallowed_modules_string));
+        $unallowed_modules = explode(',', $unallowed_modules_string);
 
         //new module support
         $unallowed_modules = $this->checkoutModules->unallowed_payment_modules($unallowed_modules);
-
+        $unallowed_modules = array_filter($unallowed_modules);
+        
         for ($i = 0, $n = sizeof($include_modules); $i < $n; $i++) {
           if (!in_array($include_modules[$i]['class'], $unallowed_modules)) {
             // check if zone is allowed to see module
@@ -150,7 +151,8 @@
                 && constant('MODULE_PAYMENT_' . strtoupper($include_modules[$i]['class']) . '_ALLOWED') != ''
                 ) 
             {
-              $allowed_zones = explode(',', constant('MODULE_PAYMENT_' . strtoupper($include_modules[$i]['class']) . '_ALLOWED'));
+              $allowed_zones = explode(',', strtoupper(preg_replace("'[\r\n\s]+'",'',constant('MODULE_PAYMENT_' . strtoupper($include_modules[$i]['class']) . '_ALLOWED'))));
+              $allowed_zones = array_filter($allowed_zones);
             }
             if ((isset($_SESSION['billing_zone']) 
                  && in_array($_SESSION['billing_zone'], $allowed_zones) == true

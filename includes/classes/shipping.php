@@ -69,17 +69,19 @@
         
         // load unallowed modules into array - remove spaces and line breaks by web28
         $unallowed_modules = preg_replace("'[\r\n\s]+'",'',$_SESSION['customers_status']['customers_status_shipping_unallowed'].','. (isset($order->customer['shipping_unallowed']) ? $order->customer['shipping_unallowed']: ''));
-        $unallowed_modules = explode(',', strtoupper($unallowed_modules));
+        $unallowed_modules = explode(',', $unallowed_modules);
 
         //new module support
         $unallowed_modules = $this->checkoutModules->unallowed_shipping_modules($unallowed_modules);
-
+        $unallowed_modules = array_filter($unallowed_modules);
+        
         for ($i = 0, $n = sizeof($include_modules); $i < $n; $i++) {
           if (!in_array($include_modules[$i]['class'], $unallowed_modules)) {
             // check if zone is allowed to see module
             $allowed_zones = array();
             if (constant('MODULE_SHIPPING_' . strtoupper($include_modules[$i]['class']) . '_ALLOWED') != '') {
-              $allowed_zones = explode(',', constant('MODULE_SHIPPING_' . strtoupper($include_modules[$i]['class']) . '_ALLOWED'));
+              $allowed_zones = explode(',', strtoupper(preg_replace("'[\r\n\s]+'",'',constant('MODULE_SHIPPING_' . strtoupper($include_modules[$i]['class']) . '_ALLOWED'))));
+              $allowed_zones = array_filter($allowed_zones);
             }
             if ((isset($_SESSION['delivery_zone']) && in_array($_SESSION['delivery_zone'], $allowed_zones))
                 || count($allowed_zones) == 0
