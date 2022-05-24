@@ -27,7 +27,7 @@ if (!$action || in_array($action, array('delete', 'list'))) {
     <?php
     echo xtc_draw_form('product_keywords', FILENAME_CONTENT_MANAGER, '', 'GET').PHP_EOL;
     echo xtc_draw_hidden_field('set', $_GET['set']).PHP_EOL;
-    echo TEXT_SEARCH.'&nbsp;'.xtc_draw_input_field('keywords', ((isset($_GET['keywords'])) ? $_GET['keywords'] : ''), 'size="30"');
+    echo TEXT_SEARCH.draw_tooltip(TEXT_CONTENT_HELP).'&nbsp;'.xtc_draw_input_field('keywords', ((isset($_GET['keywords'])) ? $_GET['keywords'] : ''), 'size="30"');
     echo '&nbsp;<input type="submit" class="button no_top_margin"  style="vertical-align:top;" onclick="this.blur();" value="' . BUTTON_SEARCH . '"/>';
     if (isset($_GET['keywords']) && $_GET['keywords'] != '') {
       echo '<a class="button no_top_margin" style="vertical-align:top;" href="'.xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('keywords', 'page'))).'">'.BUTTON_RESET.'</a>';

@@ -107,4 +107,5 @@
   defined('TEXT_CHARACTERS') OR define('TEXT_CHARACTERS','Zeichen');
   define('TEXT_KEEP_FILENAME', 'Dateiname beibehalten:');
   defined('TEXT_IMAGE_NONEXISTENT') OR define('TEXT_IMAGE_NONEXISTENT','Kein Bild verf&uuml;gbar!');
+  define('TEXT_CONTENT_HELP', 'Um einen neuen Anhang zu erstellen, verwenden Sie die Suche');
 ?>
