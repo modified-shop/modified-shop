@@ -163,6 +163,7 @@ switch ($category_depth) {
     $filter_where = '';
     $where = '';
     $p2c_condition = '';
+    $use_group_by = (isset($subcategories_array) && count($subcategories_array) > 1);
     
     // sorting query
     if (isset($_GET['manufacturers_id']) && isset($_GET['filter_id'])) {
@@ -205,6 +206,7 @@ switch ($category_depth) {
                     ON p.products_id = s.products_id 
                        ".SPECIALS_CONDITIONS_S." ";
       $sorting = ' ORDER BY '.SPECIALS_FIELD.' '.SPECIALS_SORT.' ';
+      $use_group_by = true;
     } else {
       $select .= "IFNULL(s.specials_new_products_price, p.products_price) AS price, ";
       $from   .= "LEFT JOIN ".TABLE_SPECIALS." s
@@ -222,6 +224,7 @@ switch ($category_depth) {
         $daysfound = true;
       }
       $sorting = ' ORDER BY '.PRODUCTS_NEW_FIELD.' '.PRODUCTS_NEW_SORT.' ';
+      $use_group_by = true;
     }
 
     if (isset($_GET['manufacturers_id'])) {
@@ -298,7 +301,7 @@ switch ($category_depth) {
                            ".PRODUCTS_CONDITIONS_P."
                            ".$where."
                            ".$filter_where."
-                           ".((isset($subcategories_array) && count($subcategories_array) > 1) ? 'GROUP BY p.products_id' : '')."
+                           ".(($use_group_by === true) ? 'GROUP BY p.products_id' : '')."
                            ".((isset($_SESSION['filter_sorting'])) ? $_SESSION['filter_sorting'] : $sorting);
     
     foreach(auto_include(DIR_FS_CATALOG.'includes/extra/default/listing_sql/','php') as $file) require ($file);
