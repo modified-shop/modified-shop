@@ -103,7 +103,7 @@ if ($product->isProduct() === true && $_SESSION['customers_status']['customers_s
 
       if (defined('REVIEWS_PURCHASED_INFOS') && REVIEWS_PURCHASED_INFOS != '') {
         $shop_content_data = $main->getContentData(REVIEWS_PURCHASED_INFOS);
-        $box_smarty->assign('REVIEWS_NOTE', $main->getContentLink(REVIEWS_PURCHASED_INFOS, $shop_content_data['content_title'], 'NONSSL', false));
+        $box_smarty->assign('REVIEWS_NOTE', $main->getContentLink(REVIEWS_PURCHASED_INFOS, $shop_content_data['content_title'], $request_type, false));
       }
     }
   }

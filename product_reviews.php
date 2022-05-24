@@ -120,7 +120,7 @@ $smarty->assign('PRODUCTS_NAME', xtc_get_products_name($_GET['products_id'], $_S
 
 if (defined('REVIEWS_PURCHASED_INFOS') && REVIEWS_PURCHASED_INFOS != '') {
   $shop_content_data = $main->getContentData(REVIEWS_PURCHASED_INFOS);
-  $smarty->assign('REVIEWS_NOTE', $main->getContentLink(REVIEWS_PURCHASED_INFOS, $shop_content_data['content_title'], 'NONSSL', false));
+  $smarty->assign('REVIEWS_NOTE', $main->getContentLink(REVIEWS_PURCHASED_INFOS, $shop_content_data['content_title'], $request_type, false));
 }
 
 if ($messageStack->size('product_reviews') > 0) {

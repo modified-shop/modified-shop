@@ -91,7 +91,7 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
         }
       }
       if (MODULE_CHECKOUT_EXPRESS_CONTENT != '') {
-        $info_smarty->assign('EXPRESS_LINK', $main->getContentLink(MODULE_CHECKOUT_EXPRESS_CONTENT, TEXT_CHECKOUT_EXPRESS_INFO_LINK, 'NONSSL', false));
+        $info_smarty->assign('EXPRESS_LINK', $main->getContentLink(MODULE_CHECKOUT_EXPRESS_CONTENT, TEXT_CHECKOUT_EXPRESS_INFO_LINK, $request_type, false));
       }
     }
 
