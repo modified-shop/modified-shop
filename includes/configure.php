@@ -55,6 +55,6 @@
     require_once(DIR_FS_CATALOG.'inc/set_admin_directory.inc.php');
 
     // include standard settings
-    require(DIR_FS_CATALOG.(defined('RUN_MODE_ADMIN')? DIR_ADMIN : '').'includes/paths.php');
+    require_once(DIR_FS_CATALOG.(defined('RUN_MODE_ADMIN')? DIR_ADMIN : '').'includes/paths.php');
   }
 ?>
