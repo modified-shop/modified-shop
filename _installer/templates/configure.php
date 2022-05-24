@@ -57,7 +57,7 @@ $file_contents =
 '    require_once(DIR_FS_CATALOG.\'inc/set_admin_directory.inc.php\');' . PHP_EOL .
 '' . PHP_EOL .
 '    // include standard settings' . PHP_EOL .
-'    require(DIR_FS_CATALOG.(defined(\'RUN_MODE_ADMIN\')? DIR_ADMIN : \'\').\'includes/paths.php\');'. PHP_EOL .
+'    require_once(DIR_FS_CATALOG.(defined(\'RUN_MODE_ADMIN\')? DIR_ADMIN : \'\').\'includes/paths.php\');'. PHP_EOL .
 '  }'. PHP_EOL .
 '?>';
 ?>
