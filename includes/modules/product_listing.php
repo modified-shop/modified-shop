@@ -185,7 +185,7 @@ if ($result != false) {
   }
   
   $module_smarty->caching = 0;
-  $module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/product_listing/'.$category['listing_template'], $cache_id);
+  $module = $module_smarty->fetch($template, $cache_id);
 
   $smarty->assign('main_content', $module);
 } elseif (isset($current_category_id) && $current_category_id > 0) {
