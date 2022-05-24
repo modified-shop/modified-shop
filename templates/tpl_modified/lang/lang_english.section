@@ -1,4 +1,4 @@
-# Die lang_german.section wird nur eingebunden, wenn in der "../config/config.php" die "TEMPLATE_ENGINE" auf "smarty_3" gesetzt ist!
+# Die lang_german.section wird nur eingebunden, wenn in der "../config/config.php" die "TEMPLATE_ENGINE" auf "smarty_3" oder "smarty_4" gesetzt ist!
 
 [account_checkout_express]
 
