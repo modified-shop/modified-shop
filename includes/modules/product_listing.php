@@ -254,8 +254,14 @@ if ($result != false) {
     });
     $manufacturer_template = basename($files[0]);
 
+    // support for own manufacturers template
+    $template = CURRENT_TEMPLATE.'/module/categorie_listing/'.$manufacturer_template;
+    if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/manufacturers.html')) {
+      $template = CURRENT_TEMPLATE.'/module/manufacturers.html';
+    }
+  
     $module_smarty->caching = 0;
-    $main_content = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/categorie_listing/'.$manufacturer_template);
+    $main_content = $module_smarty->fetch($template);
     
     $smarty->assign('main_content', $main_content);
   } else {
