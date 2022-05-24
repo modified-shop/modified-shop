@@ -109,6 +109,12 @@
           }
         }
         
+        //install new configurations
+        if (file_exists(DIR_FS_CATALOG.DIR_ADMIN.'includes/configuration_installer.php')) {
+          define('_VALID_XTC', true);
+          include(DIR_FS_CATALOG.DIR_ADMIN.'includes/configuration_installer.php');
+        }
+
         $messageStack->add_session('update', TEXT_UPDATE_SYSTEM_SUCCESS, 'success');
         xtc_redirect(xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), '', $request_type));
         break;

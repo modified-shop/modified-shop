@@ -705,7 +705,7 @@ $values_group_update = array();
 
 //##############################//
 
-$cfg_installer_fileemtime = filemtime(DIR_WS_INCLUDES.'configuration_installer.php');
+$cfg_installer_fileemtime = filemtime(__FILE__);
 
 if (!defined('CFG_INTSTALLER_FILEEMTIME') || CFG_INTSTALLER_FILEEMTIME != $cfg_installer_fileemtime) {
     if (!defined('CFG_INTSTALLER_FILEEMTIME')) {
@@ -739,7 +739,7 @@ if (!defined('CFG_INTSTALLER_FILEEMTIME') || CFG_INTSTALLER_FILEEMTIME != $cfg_i
     $cfg_update = update_config_table($values_update);
 
     //redirect
-    if ($cfg_install || $cfg_group_install || $cfg_update || $cfg_group_update) {
+    if (isset($_GET['gID']) && ($cfg_install || $cfg_group_install || $cfg_update || $cfg_group_update)) {
       xtc_redirect(xtc_href_link(FILENAME_CONFIGURATION, 'gID=' . (int)$_GET['gID']));
     }
 }
