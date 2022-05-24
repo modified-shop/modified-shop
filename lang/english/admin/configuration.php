@@ -127,12 +127,12 @@ define('MIN_DISPLAY_ALSO_PURCHASED_DESC' , 'Minimum number of products to displa
 
 define('MAX_ADDRESS_BOOK_ENTRIES_TITLE' , 'Address Book Entries');
 define('MAX_ADDRESS_BOOK_ENTRIES_DESC' , 'Maximum address book entries a customer is allowed to have');
-define('MAX_DISPLAY_SEARCH_RESULTS_TITLE' , 'Amount Products');
-define('MAX_DISPLAY_SEARCH_RESULTS_DESC' , 'Amount of products in product listing');
+define('MAX_DISPLAY_SEARCH_RESULTS_TITLE' , 'Number of products');
+define('MAX_DISPLAY_SEARCH_RESULTS_DESC' , 'Maximum number of products to be displayed per page in the product listing (category pages).');
 define('MAX_DISPLAY_PAGE_LINKS_TITLE' , 'Page Links');
 define('MAX_DISPLAY_PAGE_LINKS_DESC' , 'Number of "number" links use for page-sets');
 define('MAX_DISPLAY_SPECIAL_PRODUCTS_TITLE' , 'Specials');
-define('MAX_DISPLAY_SPECIAL_PRODUCTS_DESC' , 'Maximum number of products to display on special offer');
+define('MAX_DISPLAY_SPECIAL_PRODUCTS_DESC' , 'Maximum number of specials (specials.php) to be displayed per page.');
 define('MAX_DISPLAY_NEW_PRODUCTS_TITLE' , 'New Products Module');
 define('MAX_DISPLAY_NEW_PRODUCTS_DESC' , 'Maximum number of new products to display in a category and as "TOP-products" on startpage');
 define('MAX_DISPLAY_UPCOMING_PRODUCTS_TITLE' , 'Upcoming Products');
@@ -154,7 +154,7 @@ define('MAX_RANDOM_SELECT_SPECIALS_DESC' , 'How many records to select from to c
 define('MAX_DISPLAY_CATEGORIES_PER_ROW_TITLE' , 'Categories To List Per Row');
 define('MAX_DISPLAY_CATEGORIES_PER_ROW_DESC' , 'How many categories to list per row');
 define('MAX_DISPLAY_PRODUCTS_NEW_TITLE' , 'New Products Listing');
-define('MAX_DISPLAY_PRODUCTS_NEW_DESC' , 'Maximum number of new products to display on "new products" (products_new.php) page');
+define('MAX_DISPLAY_PRODUCTS_NEW_DESC' , 'Maximum number of new products to be displayed per page of "New Products" (products_new.php).');
 define('MAX_DISPLAY_BESTSELLERS_TITLE' , 'Best Sellers');
 define('MAX_DISPLAY_BESTSELLERS_DESC' , 'Maximum number of best sellers to display');
 define('MAX_DISPLAY_BESTSELLERS_DAYS_TITLE' , 'Maximum Age (days) for Best Sellers');
@@ -825,8 +825,8 @@ define('USE_SHORT_DATE_FORMAT_DESC', 'Always show date in short format: <b> 01/0
 
 define('MAX_DISPLAY_PRODUCTS_CATEGORY_TITLE', 'Maximum Products');
 define('MAX_DISPLAY_PRODUCTS_CATEGORY_DESC', 'Maximum products of same category');
-define('MAX_DISPLAY_ADVANCED_SEARCH_RESULTS_TITLE', 'Search Search Results');
-define('MAX_DISPLAY_ADVANCED_SEARCH_RESULTS_DESC', 'Amount of products in search result');
+define('MAX_DISPLAY_ADVANCED_SEARCH_RESULTS_TITLE', 'Number of Search Results');
+define('MAX_DISPLAY_ADVANCED_SEARCH_RESULTS_DESC', 'Maximum number of products to be displayed per page in the search results (advanced_search_result.php).');
 define('MAX_DISPLAY_PRODUCTS_HISTORY_TITLE' , 'Maximum History');
 define('MAX_DISPLAY_PRODUCTS_HISTORY_DESC' , 'Maximum visited products in account history');
 

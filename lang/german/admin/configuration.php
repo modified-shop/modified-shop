@@ -127,11 +127,11 @@ define('MIN_DISPLAY_ALSO_PURCHASED_DESC' , 'Minimum Anzahl der ebenfalls gekauft
 define('MAX_ADDRESS_BOOK_ENTRIES_TITLE' , 'Adressbuch Eintr&auml;ge');
 define('MAX_ADDRESS_BOOK_ENTRIES_DESC' , 'Maximum Anzahl an Adressbucheintr&auml;gen pro Kunde');
 define('MAX_DISPLAY_SEARCH_RESULTS_TITLE' , 'Anzahl Artikel');
-define('MAX_DISPLAY_SEARCH_RESULTS_DESC' , 'Anzahl der Artikel im Produktlisting');
+define('MAX_DISPLAY_SEARCH_RESULTS_DESC' , 'Maximum Anzahl der Artikel die pro Seite im Produktlisting (Kategorieseiten) angezeigt werden sollen');
 define('MAX_DISPLAY_PAGE_LINKS_TITLE' , 'Seiten bl&auml;ttern');
 define('MAX_DISPLAY_PAGE_LINKS_DESC' , 'Anzahl der Einzelseiten, f&uuml;r die ein Link angezeigt werden soll im Seitennavigationsmen&uuml;');
 define('MAX_DISPLAY_SPECIAL_PRODUCTS_TITLE' , 'Sonderangebote');
-define('MAX_DISPLAY_SPECIAL_PRODUCTS_DESC' , 'Maximum Anzahl an Sonderangeboten, die angezeigt werden sollen.');
+define('MAX_DISPLAY_SPECIAL_PRODUCTS_DESC' , 'Maximum Anzahl an Sonderangeboten (specials.php), die pro Seite angezeigt werden sollen.');
 define('MAX_DISPLAY_NEW_PRODUCTS_TITLE' , 'Neue Artikel Anzeigemodul');
 define('MAX_DISPLAY_NEW_PRODUCTS_DESC' , 'Maximum Anzahl an neuen Artikeln, die bei den Warenkategorien und als "TOP-Artikel" auf der Startseite angezeigt werden sollen.');
 define('MAX_DISPLAY_UPCOMING_PRODUCTS_TITLE' , 'Erwartete Artikel Anzeigemodul');
@@ -153,7 +153,7 @@ define('MAX_RANDOM_SELECT_SPECIALS_DESC' , 'Aus wie vielen Sonderangeboten solle
 define('MAX_DISPLAY_CATEGORIES_PER_ROW_TITLE' , 'Anzahl Kategorien pro Zeile');
 define('MAX_DISPLAY_CATEGORIES_PER_ROW_DESC' , 'Anzahl an Kategorien, die pro Zeile in den &Uuml;bersichten angezeigt werden sollen.');
 define('MAX_DISPLAY_PRODUCTS_NEW_TITLE' , 'Neue Artikel Liste');
-define('MAX_DISPLAY_PRODUCTS_NEW_DESC' , 'Maximum Anzahl neuer Artikel die auf der Seite "Neue Artikel" (products_new.php) angezeigt werden sollen.');
+define('MAX_DISPLAY_PRODUCTS_NEW_DESC' , 'Maximum Anzahl neuer Artikel die pro Seite von "Neue Artikel" (products_new.php) angezeigt werden sollen."');
 define('MAX_DISPLAY_BESTSELLERS_TITLE' , 'Bestsellers');
 define('MAX_DISPLAY_BESTSELLERS_DESC' , 'Maximum Anzahl an Bestsellern die angezeigt werden sollen.');
 define('MAX_DISPLAY_BESTSELLERS_DAYS_TITLE' , 'Anzahl der Tage f&uuml;r Bestsellers');
@@ -825,7 +825,7 @@ define('USE_SHORT_DATE_FORMAT_DESC', 'Datum immer im Kurzformat anzeigen: <b>01.
 define('MAX_DISPLAY_PRODUCTS_CATEGORY_TITLE', 'Maximale Artikel');
 define('MAX_DISPLAY_PRODUCTS_CATEGORY_DESC', 'Maximale Anzahl an Artikeln aus der gleichen Kategorie.');
 define('MAX_DISPLAY_ADVANCED_SEARCH_RESULTS_TITLE', 'Anzahl Suchergebnisse');
-define('MAX_DISPLAY_ADVANCED_SEARCH_RESULTS_DESC', 'Anzahl der Artikel in den Suchergebnissen.');
+define('MAX_DISPLAY_ADVANCED_SEARCH_RESULTS_DESC', 'Anzahl Suchergebnisse ... Maximum Anzahl der Artikel die pro Seite in den Suchergebnissen (advanced_search_result.php) angezeigt werden sollen.');
 define('MAX_DISPLAY_PRODUCTS_HISTORY_TITLE' , 'Anzahl der History');
 define('MAX_DISPLAY_PRODUCTS_HISTORY_DESC' , 'Maximum Anzahl an Artikeln, die zuletzt besucht wurden, im Account anzeigen.');
 
