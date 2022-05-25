@@ -1630,6 +1630,9 @@ font-family:Arial, Helvetica, sans-serif;
 background:#fff;
 margin:0px;
 }
+.popup-cont ul {
+  margin: 10px 0px 10px 14px
+}
 
 /* styles for boxes */
 #currencies > select {

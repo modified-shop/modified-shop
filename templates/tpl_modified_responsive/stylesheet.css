@@ -4169,6 +4169,9 @@ body.popupcontent img {
   width:auto;
   height:auto;
 }
+body.popupcontent ul {
+  margin: 0 0 0 16px;
+}
 /* 32. END popup content */
 
 
