@@ -825,7 +825,7 @@ define('USE_SHORT_DATE_FORMAT_DESC', 'Datum immer im Kurzformat anzeigen: <b>01.
 define('MAX_DISPLAY_PRODUCTS_CATEGORY_TITLE', 'Maximale Artikel');
 define('MAX_DISPLAY_PRODUCTS_CATEGORY_DESC', 'Maximale Anzahl an Artikeln aus der gleichen Kategorie.');
 define('MAX_DISPLAY_ADVANCED_SEARCH_RESULTS_TITLE', 'Anzahl Suchergebnisse');
-define('MAX_DISPLAY_ADVANCED_SEARCH_RESULTS_DESC', 'Anzahl Suchergebnisse ... Maximum Anzahl der Artikel die pro Seite in den Suchergebnissen (advanced_search_result.php) angezeigt werden sollen.');
+define('MAX_DISPLAY_ADVANCED_SEARCH_RESULTS_DESC', 'Maximum Anzahl der Artikel die pro Seite in den Suchergebnissen (advanced_search_result.php) angezeigt werden sollen.');
 define('MAX_DISPLAY_PRODUCTS_HISTORY_TITLE' , 'Anzahl der History');
 define('MAX_DISPLAY_PRODUCTS_HISTORY_DESC' , 'Maximum Anzahl an Artikeln, die zuletzt besucht wurden, im Account anzeigen.');
 
