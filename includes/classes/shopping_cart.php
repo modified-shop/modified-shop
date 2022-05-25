@@ -652,7 +652,11 @@ class shoppingCart {
     }
     
     if (!isset($products_array)) {
-      $products_array = array ();
+      $products_array = array();
+    }
+    
+    if (!isset($products_array[$this->type])) {
+      $products_array[$this->type] = array();
       reset($this->contents);
       $index = 0;
       foreach ($this->contents as $products_id => $data) {
@@ -741,14 +745,14 @@ class shoppingCart {
 
               $products_data = $this->shoppingCartModules->get_products($products_data, $products, $this->contents[$products_id], $this->type);
 
-              $products_array[$index++] = $products_data;
+              $products_array[$this->type][$index++] = $products_data;
             }
           }
         }
       }
     }
     
-    return $products_array;
+    return $products_array[$this->type];
   }
 
   /**
