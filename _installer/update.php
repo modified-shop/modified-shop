@@ -150,7 +150,7 @@
         $smarty->assign('UPDATE_ACTION', 'configure');
         
         // form
-        $smarty->assign('FORM_ACTION', xtc_draw_form('sql_update', xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=configure_confirm', $request_type), 'post').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()));
+        $smarty->assign('FORM_ACTION', xtc_draw_form('configure', xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=configure_confirm', $request_type), 'post').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()));
         $smarty->assign('BUTTON_SUBMIT', '<button type="submit">'.BUTTON_SUBMIT.'</button>');
         $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), '', $request_type).'">'.BUTTON_BACK.'</a>');
         $smarty->assign('FORM_END', '</form>');
