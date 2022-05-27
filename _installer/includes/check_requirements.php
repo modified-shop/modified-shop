@@ -94,7 +94,7 @@
   }
 
   $requirement_array[] = array(
-    'name' => 'FLEINFO',
+    'name' => 'FILEINFO',
     'version' => '',
     'version_min' => '',
     'version_max' => '',
