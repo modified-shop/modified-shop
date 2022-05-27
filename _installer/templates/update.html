@@ -35,21 +35,37 @@
 
     {elseif $UPDATE_ACTION == 'sql_update'}
 
-      <p>{$smarty.const.TEXT_SQL_UPDATE_DESC}</p>
-      <br />
-      <br />
-      <h2>{$smarty.const.TEXT_SQL_UPDATE_HEADING}</h2>
-      {if isset($sql_data_array)}
-        <ul class="modulelist">
-          {foreach name=aussen item=sql_data from=$sql_data_array}
-            <li>
-              <div>
-                {$sql_data.CHECKBOX}
-                <label for="{$sql_data.NAME}">{$sql_data.NAME}</label>
-              </div>
-            </li>
-          {/foreach}
-        </ul>
+      {if isset($PROCESSING)}
+        <div id="info_text">{$smarty.const.TEXT_INFO_DO_UPDATE}</div>
+        <br />
+        <div class="processingmessage">
+          <div id="process_info_wait">{$smarty.const.TEXT_INFO_WAIT}</div>
+          <div class="process_wrapper">
+            <div class="process_inner_wrapper">
+              <div id="backup_process"></div>
+            </div>
+          </div>
+          <div id="backup_precents">0%</div>
+          <div id="data_ok"></div>
+          {$JAVASCRIPT}
+        </div>
+      {else}
+        <p>{$smarty.const.TEXT_SQL_UPDATE_DESC}</p>
+        <br />
+        <br />
+        <h2>{$smarty.const.TEXT_SQL_UPDATE_HEADING}</h2>
+        {if isset($sql_data_array)}
+          <ul class="modulelist">
+            {foreach name=aussen item=sql_data from=$sql_data_array}
+              <li>
+                <div>
+                  {$sql_data.CHECKBOX}
+                  <label for="{$sql_data.NAME}">{$sql_data.NAME}</label>
+                </div>
+              </li>
+            {/foreach}
+          </ul>
+        {/if}
       {/if}
 
     {elseif $UPDATE_ACTION == 'sql_manuell'}

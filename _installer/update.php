@@ -158,17 +158,105 @@
     
       case 'sql_update':
       case 'sql_update_confirm':
-        if ($_GET['action'] == 'sql_update_confirm') {
-          if (isset($_POST['sql_files']) && count($_POST['sql_files']) > 0) {
-            foreach ($_POST['sql_files'] as $sql_file) {
-              sql_update(DIR_FS_INSTALLER.'update/'.$sql_file);
-            }
-            xtc_db_query("TRUNCATE `sessions`");
-          } else {
-            $messageStack->add_session('update', ERROR_SQL_UPDATE_NO_FILE);
+      case 'sql_update_process':
+        // form
+        $smarty->assign('FORM_ACTION', xtc_draw_form('sql_update', xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=sql_update_confirm', $request_type), 'post').xtc_draw_hidden_field('action', 'processnow').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()));
+        $smarty->assign('BUTTON_SUBMIT', '<button type="submit">'.BUTTON_SUBMIT.'</button>');
+        $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), '', $request_type).'">'.BUTTON_BACK.'</a>');
+        $smarty->assign('FORM_END', '</form>');
+
+        if ((isset($_POST['action']) && $_POST['action'] == 'processnow') 
+            || (isset($_GET['action']) && $_GET['action'] == 'sql_update_process')
+            )
+        {
+          $action = (isset($_GET['action']) ? $_GET['action'] : '');
+          if (isset($_POST['action']) && $_POST['action'] == 'processnow') {
+            $action = 'processnow';
           }
-          xtc_redirect(xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=sql_update', $request_type));
+
+          if (isset($_POST['sql_files']) && count($_POST['sql_files']) > 0) {
+            $sql_data_array = array();
+            foreach ($_POST['sql_files'] as $sql_file) {
+              $sql_data = sql_update(DIR_FS_INSTALLER.'update/'.$sql_file);
+              $sql_data_array = array_merge($sql_data_array, $sql_data);
+            }
+          }
+
+          if (isset($_SESSION['db_update'])) {
+            $db_update = $_SESSION['db_update'];
+          }
+  
+          if ($action == 'processnow') {
+            $db_update = array();
+            unset($_SESSION['db_update']);
+    
+            $db_update['starttime'] = time();
+            $db_update['num_tables'] = count($sql_data_array);
+            $db_update['ready'] = 0;
+            $db_update['step'] = 1;
+            $db_update['start'] = -1;
+            $db_update['sql_files'] = $_POST['sql_files'];
+
+            $_SESSION['db_update'] = $db_update;
+          }
+
+          if ($action == 'sql_update_process'
+              && $db_update['num_tables'] > $db_update['start']
+              )
+          {
+            // update table
+            for ($j=$db_update['start']; $j<($db_update['start'] + $db_update['step']); $j++) {
+              if (isset($sql_data_array)
+                  && is_array($sql_data_array)
+                  )
+              {
+                $sql_array = array_slice($sql_data_array, $j, $db_update['step']);
+                            
+                foreach ($sql_array as $sql) {
+                  xtc_db_query($sql);
+                }
+              }
+            }
+
+            $db_update['start'] ++;
+            $_SESSION['db_update'] = $db_update;
+    
+            $sec = time() - $db_update['starttime']; 
+            $time = sprintf('%d:%02d Min.', floor($sec/60), $sec % 60);
+    
+            $json_output = array();
+            $json_output['aufruf'] = $db_update['start'];
+            $json_output['nr'] = $db_update['start'];
+            $json_output['num_tables'] = $db_update['num_tables'];
+            $json_output['time'] = $time;
+            $json_output['sql_files'] = $db_update['sql_files'];
+    
+            $json_output = json_encode($json_output);
+            echo $json_output;
+            exit();
+          }
+          
+          $javascript = '
+          <script type="text/javascript">
+            var debug = true;
+            var button_back = \'<a href="'.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), '', $request_type).'">'.BUTTON_BACK.'</a>\';
+            var ajax_url = \''.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=sql_update_process', $request_type).'\';
+            var maxReloads = '.UPDATE_MAX_RELOADS.';
+          </script>
+          ';
+
+          ob_start();
+          $process = 'update';
+          require(DIR_FS_INSTALLER.'templates/javascript/jquery.database.js.php');
+          $javascript .= ob_get_contents();
+          ob_end_clean();
+          $smarty->assign('JAVASCRIPT', $javascript);
+
+          $smarty->assign('PROCESSING', 'db_update');
+          $smarty->clear_assign('BUTTON_SUBMIT');
+          $smarty->clear_assign('BUTTON_BACK');
         }
+        
         $sql_data_array = array();
         $sql_files_array = array();
         $dir = opendir(DIR_FS_INSTALLER.'update/');
@@ -185,13 +273,7 @@
           );
         }
         $smarty->assign('UPDATE_ACTION', 'sql_update');
-        $smarty->assign('sql_data_array', $sql_data_array);
-        
-        // form
-        $smarty->assign('FORM_ACTION', xtc_draw_form('sql_update', xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=sql_update_confirm', $request_type), 'post').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()));
-        $smarty->assign('BUTTON_SUBMIT', '<button type="submit">'.BUTTON_SUBMIT.'</button>');
-        $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), '', $request_type).'">'.BUTTON_BACK.'</a>');
-        $smarty->assign('FORM_END', '</form>');
+        $smarty->assign('sql_data_array', $sql_data_array);        
         break;
         
       case 'sql_manuell':
