@@ -75,8 +75,8 @@
     $output = '';
 
     for ($i = 0; $i < $linecount; $i++)  {
-      if (($i != ($linecount - 1)) || (strlen($lines[$i]) > 0)) {
-        if ($lines[$i][0] != $remark) {
+      if (($i != ($linecount - 1)) || (strlen($lines[$i]) > 0)) {      
+        if (isset($lines[$i][0]) && $lines[$i][0] != $remark) {
           $output .= $lines[$i] . "\n";
         } else {
           $output .= "\n";
