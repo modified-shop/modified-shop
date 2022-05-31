@@ -1,7 +1,7 @@
-{config_load file="$language/lang_$language.conf" section="reviews"}
 {if isset($MODULE_TS_PRODUCT_STICKER)}
   {$MODULE_TS_PRODUCT_STICKER}
 {elseif isset($reviews_count)}
+  {config_load file="$language/lang_$language.conf" section="reviews"}
   <h1>{#heading_reviews#}</h1>
   {if isset($reviews_note)}<div class="reviews_note">{$reviews_note}</div>{/if}
   {if $module_content > 0}
