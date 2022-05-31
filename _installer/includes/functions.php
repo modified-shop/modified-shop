@@ -160,9 +160,7 @@
   }
   
   
-  function sql_update($file, $plain=false) {
-    global $messageStack;
-  
+  function sql_update($file, $plain=false) {  
     if ($plain === false) {
       $sql_file = file_get_contents($file);
     } else {
@@ -170,13 +168,14 @@
     }
     $sql_array = (split_sql_file($sql_file, ';'));
     
+    $sql_data_array = array();
     foreach ($sql_array as $sql) {
       $exists = false;
-      if (preg_match('/[\\\z\s]?(?:ALTER TABLE){1}[\\\Z\s]+([^ ]*)[\\\z\s]+(?:ADD){1}[\\\z\s]+([^ ]*)[\\\z\s]+([^ ]*)/', $sql, $matches)) {
+      if (preg_match('#[\\\z\s]?(?:ALTER TABLE){1}[\\\Z\s]+([^ ]*)[\\\z\s]+(?:ADD){1}[\\\z\s]+([^ ]*)[\\\z\s]+([^ ]*)#', $sql, $matches)) {
         if ($matches[2] == strtoupper('INDEX')) {
           $check_query = xtc_db_query("SHOW KEYS FROM ".$matches[1]." WHERE Key_name='".$matches[3]."'");
           if (xtc_db_num_rows($check_query)>0) {
-            xtc_db_query("ALTER TABLE ".$matches[1]." DROP INDEX ".$matches[3]);
+            $sql_data_array[] = trim("ALTER TABLE ".$matches[1]." DROP INDEX ".$matches[3]);
           }
         } else {
           $check_query = xtc_db_query("SHOW COLUMNS FROM " . $matches[1]);
@@ -191,21 +190,11 @@
         if (DB_SERVER_CHARSET == 'utf8') {
           $sql = encode_utf8($sql, '', true);
         }
-        $result = xtc_db_query($sql);
-
-        if ($result === true) {
-          if (get_messagestack_size('update', 'success') < 1) {
-            $messageStack->add_session('update', TEXT_EXECUTED_SUCCESS, 'success');
-          }
-          $messageStack->add_session('update', sprintf(TEXT_SQL_SUCCESS, encode_htmlspecialchars($sql)), 'success');
-        } else {
-          if (get_messagestack_size('update', 'error') < 1) {
-            $messageStack->add_session('update', TEXT_EXECUTED_ERROR, 'error');
-          }
-          $messageStack->add_session('update', sprintf(TEXT_SQL_SUCCESS, encode_htmlspecialchars($sql)), 'error');
-        }
+        $sql_data_array[] = trim($sql);
       }
     }
+    
+    return $sql_data_array;
   }
   
   
