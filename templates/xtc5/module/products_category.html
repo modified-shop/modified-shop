@@ -1,5 +1,5 @@
-{config_load file="$language/lang_$language.conf" section="products_category"}
 {if isset($module_content)}
+  {config_load file="$language/lang_$language.conf" section="products_category"}
   <h2>{#heading_text#}</h2>
   <table class="productPreview" width="100%" border="0" cellspacing="0" cellpadding="0">
   {foreach name=aussen item=module_data from=$module_content}
