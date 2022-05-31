@@ -1,10 +1,10 @@
-{config_load file="$language/lang_$language.conf" section="boxes"}
-{config_load file="lang_`$language`.custom"}
 {if $STICKER_CODE != ''}
-<div class="box1">
-  <div class="box_header">{#heading_trustedshops#}</div>
-  <div class="box_line"></div>
-  <br/>
-  {$STICKER_CODE}
-</div>
+  {config_load file="$language/lang_$language.conf" section="boxes"}
+  {config_load file="lang_`$language`.custom"}
+  <div class="box1">
+    <div class="box_header">{#heading_trustedshops#}</div>
+    <div class="box_line"></div>
+    <br/>
+    {$STICKER_CODE}
+  </div>
 {/if}

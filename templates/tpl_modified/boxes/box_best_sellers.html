@@ -1,21 +1,21 @@
-{config_load file="$language/lang_$language.conf" section="boxes"}
-{config_load file="lang_`$language`.custom"}
 {if isset($box_content) && count($box_content) > 0}
-<br class="clearfix" />
-<div class="headline_big">{#heading_best_sellers#}</div>
-<div class="bxcarousel_box_bestseller">
-  <ul class="bxcarousel_bestseller">
-  {foreach name=aussen item=box_data from=$box_content}
-  <li>
-    <div class="carousel_box">
-      <a href="{$box_data.PRODUCTS_LINK}" title="{$box_data.PRODUCTS_NAME|onlytext}">
-        <span class="cb_image">{if $box_data.PRODUCTS_IMAGE}<img src="{$box_data.PRODUCTS_IMAGE}" alt="{$box_data.PRODUCTS_NAME|onlytext}" title="{$box_data.PRODUCTS_NAME|onlytext}" />{/if}</span>
-        <span class="cb_title"><span class="cb_title_inner">{$box_data.PRODUCTS_NAME}</span></span>
-      </a>
-    </div>
-  </li>
-  {/foreach}
-</ul>
-<br class="clearfix" />
-</div>
+  {config_load file="$language/lang_$language.conf" section="boxes"}
+  {config_load file="lang_`$language`.custom"}
+  <br class="clearfix" />
+  <div class="headline_big">{#heading_best_sellers#}</div>
+  <div class="bxcarousel_box_bestseller">
+    <ul class="bxcarousel_bestseller">
+    {foreach name=aussen item=box_data from=$box_content}
+    <li>
+      <div class="carousel_box">
+        <a href="{$box_data.PRODUCTS_LINK}" title="{$box_data.PRODUCTS_NAME|onlytext}">
+          <span class="cb_image">{if $box_data.PRODUCTS_IMAGE}<img src="{$box_data.PRODUCTS_IMAGE}" alt="{$box_data.PRODUCTS_NAME|onlytext}" title="{$box_data.PRODUCTS_NAME|onlytext}" />{/if}</span>
+          <span class="cb_title"><span class="cb_title_inner">{$box_data.PRODUCTS_NAME}</span></span>
+        </a>
+      </div>
+    </li>
+    {/foreach}
+  </ul>
+  <br class="clearfix" />
+  </div>
 {/if}

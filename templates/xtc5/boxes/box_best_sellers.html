@@ -1,21 +1,21 @@
-{config_load file="$language/lang_$language.conf" section="boxes"}
 {if isset($box_content) && count($box_content) > 0}
-<h2 class="boxheader">{#heading_best_sellers#}</h2>
-<div class="boxbody">
-  {foreach name=aussen item=box_data from=$box_content}
-    <dl>
-      <dt><a href="{$box_data.PRODUCTS_LINK}" title="{$box_data.PRODUCTS_NAME}">{if $box_data.PRODUCTS_IMAGE}<img src="{$box_data.PRODUCTS_IMAGE}" alt="{$box_data.PRODUCTS_NAME|onlytext}" title="{$box_data.PRODUCTS_NAME|onlytext}" />{/if}</a></dt>
-      <dd>
-        <h3>{$box_data.COUNT}. <a href="{$box_data.PRODUCTS_LINK}">{$box_data.PRODUCTS_NAME}</a></h3>
-        <p>
-          {$box_data.PRODUCTS_PRICE}<br />
-          {if $box_data.PRODUCTS_VPE}{$box_data.PRODUCTS_VPE}<br />{/if}
-          {$box_data.PRODUCTS_TAX_INFO}{$box_data.PRODUCTS_SHIPPING_LINK}
-        </p>
-        <div class="hrlightgrey"></div>
-      </dd>
-    </dl>
-    <div style="clear:both"></div>
-  {/foreach}
-</div>
+  {config_load file="$language/lang_$language.conf" section="boxes"}
+  <h2 class="boxheader">{#heading_best_sellers#}</h2>
+  <div class="boxbody">
+    {foreach name=aussen item=box_data from=$box_content}
+      <dl>
+        <dt><a href="{$box_data.PRODUCTS_LINK}" title="{$box_data.PRODUCTS_NAME}">{if $box_data.PRODUCTS_IMAGE}<img src="{$box_data.PRODUCTS_IMAGE}" alt="{$box_data.PRODUCTS_NAME|onlytext}" title="{$box_data.PRODUCTS_NAME|onlytext}" />{/if}</a></dt>
+        <dd>
+          <h3>{$box_data.COUNT}. <a href="{$box_data.PRODUCTS_LINK}">{$box_data.PRODUCTS_NAME}</a></h3>
+          <p>
+            {$box_data.PRODUCTS_PRICE}<br />
+            {if $box_data.PRODUCTS_VPE}{$box_data.PRODUCTS_VPE}<br />{/if}
+            {$box_data.PRODUCTS_TAX_INFO}{$box_data.PRODUCTS_SHIPPING_LINK}
+          </p>
+          <div class="hrlightgrey"></div>
+        </dd>
+      </dl>
+      <div style="clear:both"></div>
+    {/foreach}
+  </div>
 {/if}

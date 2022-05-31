@@ -154,17 +154,17 @@
     <ul class="resp-tabs-list" role="tablist">
       {counter start=-1 print=0 assign="tablist_cnt"}
       {if $PRODUCTS_DESCRIPTION != ''}{counter}<li>{#description#}</li>{/if}
-      {if isset($MODULE_product_tags) && trim($MODULE_product_tags) != ''}{counter}<li>{#products_tags#}</li>{/if}
+      {if isset($MODULE_product_tags) && $MODULE_product_tags != ''}{counter}<li>{#products_tags#}</li>{/if}
       {if isset($more_images) && count($more_images) > 0}{counter}<li>{#more_images#}</li>{/if}
-      {if isset($MODULE_products_media) && trim($MODULE_products_media) != ''}{counter}<li>{#products_media#}</li>{/if}
-      {if isset($MODULE_products_reviews) && trim($MODULE_products_reviews) != ''}{counter}<li>{#products_reviews#}</li>{/if}
-      {if (isset($MODULE_cross_selling) && trim($MODULE_cross_selling) != '') || (isset($MODULE_reverse_cross_selling) && trim($MODULE_reverse_cross_selling) != '')}{counter}<li>{#cross_selling#}</li>{/if}
-      {if isset($MODULE_also_purchased) && trim($MODULE_also_purchased) != ''}{counter}<li>{#also_purchased#}</li>{/if}
-      {if isset($MODULE_products_category) && trim($MODULE_products_category) != ''}{counter}<li>{#products_category#}</li>{/if}
+      {if isset($MODULE_products_media) && $MODULE_products_media != ''}{counter}<li>{#products_media#}</li>{/if}
+      {if isset($MODULE_products_reviews) && $MODULE_products_reviews != ''}{counter}<li>{#products_reviews#}</li>{/if}
+      {if (isset($MODULE_cross_selling) && $MODULE_cross_selling != '') || (isset($MODULE_reverse_cross_selling) && $MODULE_reverse_cross_selling != '')}{counter}<li>{#cross_selling#}</li>{/if}
+      {if isset($MODULE_also_purchased) && $MODULE_also_purchased != ''}{counter}<li>{#also_purchased#}</li>{/if}
+      {if isset($MODULE_products_category) && $MODULE_products_category != ''}{counter}<li>{#products_category#}</li>{/if}
     </ul>
     <div class="resp-tabs-container" role="tablist" {if $tablist_cnt >= 0}aria-owns="{for $tablist_data=0 to $tablist_cnt}tab_item-{$tablist_data} {/for}"{/if}>
       {if $PRODUCTS_DESCRIPTION != ''}<div class="pd_description"><h4 class="detailbox">{#products_desc#}</h4><div itemprop="description">{$PRODUCTS_DESCRIPTION}</div></div>{/if}
-      {if isset($MODULE_product_tags) && trim($MODULE_product_tags) != ''}<div>{$MODULE_product_tags}</div>{/if}
+      {if isset($MODULE_product_tags) && $MODULE_product_tags != ''}<div>{$MODULE_product_tags}</div>{/if}
       {if isset($more_images) && count($more_images) > 0}
       <div class="cf">
         <div class="pd_small_image_tab_row cf">
@@ -183,11 +183,11 @@
         </div>
       </div>
       {/if}
-      {if isset($MODULE_products_media) && trim($MODULE_products_media) != ''}<div>{$MODULE_products_media}</div>{/if}
-      {if isset($MODULE_products_reviews) && trim($MODULE_products_reviews) != ''}<div>{$MODULE_products_reviews}</div>{/if}
-      {if isset($MODULE_cross_selling) && trim($MODULE_cross_selling) != '' || (isset($MODULE_reverse_cross_selling) && trim($MODULE_reverse_cross_selling) != '')}<div>{if isset($MODULE_cross_selling) && trim($MODULE_cross_selling) != ''}{$MODULE_cross_selling}{/if}{if isset($MODULE_reverse_cross_selling) && trim($MODULE_reverse_cross_selling) != ''}{$MODULE_reverse_cross_selling}{/if}</div>{/if}
-      {if isset($MODULE_also_purchased) && trim($MODULE_also_purchased) != ''}<div>{$MODULE_also_purchased}</div>{/if}
-      {if isset($MODULE_products_category) && trim($MODULE_products_category) != ''}<div>{$MODULE_products_category}</div>{/if}
+      {if isset($MODULE_products_media) && $MODULE_products_media != ''}<div>{$MODULE_products_media}</div>{/if}
+      {if isset($MODULE_products_reviews) && $MODULE_products_reviews != ''}<div>{$MODULE_products_reviews}</div>{/if}
+      {if isset($MODULE_cross_selling) && $MODULE_cross_selling != '' || (isset($MODULE_reverse_cross_selling) && $MODULE_reverse_cross_selling != '')}<div>{if isset($MODULE_cross_selling) && $MODULE_cross_selling != ''}{$MODULE_cross_selling}{/if}{if isset($MODULE_reverse_cross_selling) && $MODULE_reverse_cross_selling != ''}{$MODULE_reverse_cross_selling}{/if}</div>{/if}
+      {if isset($MODULE_also_purchased) && $MODULE_also_purchased != ''}<div>{$MODULE_also_purchased}</div>{/if}
+      {if isset($MODULE_products_category) && $MODULE_products_category != ''}<div>{$MODULE_products_category}</div>{/if}
     </div>
   </div>
   {if $PRODUCTS_ADDED != ''}<p class="dateadded">{$PRODUCTS_ADDED}</p>{/if}
