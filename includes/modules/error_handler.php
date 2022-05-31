@@ -52,5 +52,5 @@ $module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/error_message.html', $
 if (isset($smarty) && is_object($smarty)) {
   require_once(DIR_FS_BOXES . 'best_sellers.php');
   $smarty->assign('bestseller', true);
-  $smarty->assign('main_content', $module);
+  $smarty->assign('main_content', !empty($module) ? trim($module) : $module);
 }

@@ -115,5 +115,5 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/product_navigator.html'
   $module_smarty->assign('PRODUCTS_COUNT', count($p_data));
 }
 
-$product_navigator = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/product_navigator.html', $cache_id);
-$info_smarty->assign('PRODUCT_NAVIGATOR', $product_navigator);
+$module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/product_navigator.html', $cache_id);
+$info_smarty->assign('PRODUCT_NAVIGATOR', !empty($module) ? trim($module) : $module);

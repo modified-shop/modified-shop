@@ -125,11 +125,10 @@ if (isset($send_order)) {
   $module_smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
   $module_txt = $module_smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$language.'/downloads.txt');
   $module_html = $module_smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$language.'/downloads.html');
-  $smarty->assign('downloads_content_html', $module_html);
-  $smarty->assign('downloads_content_txt', $module_txt);
+  $smarty->assign('downloads_content_html', !empty($module_html) ? trim($module_html) : $module_html);
+  $smarty->assign('downloads_content_txt', !empty($module_txt) ? trim($module_txt) : $module_txt);
 } else {
   $module_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
   $module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/downloads.html');
-  $smarty->assign('downloads_content', $module);
+  $smarty->assign('downloads_content', !empty($module) ? trim($module) : $module);
 }
-?>

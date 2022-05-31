@@ -102,5 +102,6 @@ $gift_smarty->assign('language', $_SESSION['language']);
 $gift_smarty->assign('FORM_END', '</form>');
 $gift_smarty->caching = 0;
 
-$smarty->assign('MODULE_gift_cart', $gift_smarty->fetch(CURRENT_TEMPLATE.'/module/gift_cart.html'));
+$module = $gift_smarty->fetch(CURRENT_TEMPLATE.'/module/gift_cart.html');
+$smarty->assign('MODULE_gift_cart', !empty($module) ? trim($module) : $module);
 ?>

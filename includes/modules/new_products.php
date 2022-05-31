@@ -89,4 +89,4 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/new_products.html', $ca
 }
 
 $module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/new_products.html', $cache_id);
-$default_smarty->assign('MODULE_new_products', $module);
+$default_smarty->assign('MODULE_new_products', !empty($module) ? trim($module) : $module);

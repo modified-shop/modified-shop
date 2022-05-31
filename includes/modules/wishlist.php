@@ -31,5 +31,5 @@ $module_smarty->assign('language', $_SESSION['language']);
 $module_smarty->caching = 0;
 $module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/wishlist.html');
 
-$smarty->assign('MODULE_wishlist', $module);
+$smarty->assign('MODULE_wishlist', !empty($module) ? trim($module) : $module);
 ?>

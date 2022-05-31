@@ -53,4 +53,4 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/also_purchased.html', $
 }
 
 $module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/also_purchased.html', $cache_id);
-$info_smarty->assign('MODULE_also_purchased', $module);
+$info_smarty->assign('MODULE_also_purchased', !empty($module) ? trim($module) : $module);

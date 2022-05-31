@@ -112,12 +112,12 @@ if (!$categorie_smarty->is_cached(CURRENT_TEMPLATE.'/module/'.$categorie_templat
   }
 }
 
-$categories_listing = $categorie_smarty->fetch(CURRENT_TEMPLATE.'/module/'.$categorie_template, $cache_id);
+$module = $categorie_smarty->fetch(CURRENT_TEMPLATE.'/module/'.$categorie_template, $cache_id);
 
 if (isset($module_smarty) && is_object($module_smarty)) {
-  $module_smarty->assign('CATEGORIES_LISTING', $categories_listing);
+  $module_smarty->assign('CATEGORIES_LISTING', !empty($module) ? trim($module) : $module);
 }
 
 if (isset($default_smarty) && is_object($default_smarty)) {
-  $default_smarty->assign('CATEGORIES_LISTING', $categories_listing);
+  $default_smarty->assign('CATEGORIES_LISTING', !empty($module) ? trim($module) : $module);
 }

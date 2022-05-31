@@ -194,6 +194,6 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/product_options/'.$prod
 $module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/product_options/'.$product->data['options_template'], $cache_id);
 
 $info_smarty->assign('MODULE_product_options_template', $product->data['options_template']);
-$info_smarty->assign('MODULE_product_options', $module);
+$info_smarty->assign('MODULE_product_options', !empty($module) ? trim($module) : $module);
 
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/products_attributes_bottom/','php') as $file) require ($file);
