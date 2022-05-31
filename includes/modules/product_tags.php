@@ -89,6 +89,6 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/product_tags.html', $ca
 }
 
 $module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/product_tags.html', $cache_id);
-$info_smarty->assign('MODULE_product_tags', $module);
+$info_smarty->assign('MODULE_product_tags', !empty($module) ? trim($module) : $module);
 
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/products_tags_bottom/','php') as $file) require ($file);

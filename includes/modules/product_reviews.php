@@ -63,4 +63,4 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/products_reviews.html',
 }
 
 $module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/products_reviews.html', $cache_id);
-$info_smarty->assign('MODULE_products_reviews', $module);
+$info_smarty->assign('MODULE_products_reviews', !empty($module) ? trim($module) : $module);
