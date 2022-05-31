@@ -551,7 +551,8 @@ class easycredit {
     $total = $order->info['total'];
 
     $order = $order_backup;
-    $PHP_SELF = $self_backup;
+    $PHP_SELF = $self_backup;    
+    unset($_SESSION['payment']);
     if (isset($payment_backup)) {
       $_SESSION['payment'] = $payment_backup;
     }
