@@ -71,12 +71,11 @@
                                                   ".CATEGORIES_CONDITIONS_C."
                                            ".$from_str."
                                      WHERE p.products_status = '1'
-                                       AND p.products_price > 0 
-                                            ".$where_str."
-                                            ".PRODUCTS_CONDITIONS_P."
-                                   GROUP BY p.products_id 
-                                   ORDER BY p.products_id ASC
-                                      LIMIT ".MAX_DISPLAY_ADVANCED_SEARCH_RESULTS;
+                                           ".$where_str."
+                                           ".PRODUCTS_CONDITIONS_P."
+                                  GROUP BY p.products_id 
+                                  ORDER BY p.products_id ASC
+                                     LIMIT ".MAX_DISPLAY_ADVANCED_SEARCH_RESULTS;
       
       $autocomplete_search_query = xtc_db_query($autocomplete_search_query);                      
       if (xtc_db_num_rows($autocomplete_search_query) > 0) {
