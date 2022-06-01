@@ -209,16 +209,16 @@
                 case 'delete':
                   $heading[] = array('text' => '<b>[' . $gInfo->unique_id . '] ' . xtc_datetime_short($gInfo->date_created) . ' ' . $currencies->format($gInfo->amount).'</b>');
                   $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
-                  $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link('gv_queue.php','action=deleteconfirm&gid='.$gInfo->unique_id,'NONSSL').'">'. BUTTON_CONFIRM . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link('gv_queue.php','action=cancel&gid=' . $gInfo->unique_id,'NONSSL') . '">' . BUTTON_CANCEL . '</a>');
+                  $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link('gv_queue.php', xtc_get_all_get_params(array('action', 'gid')).'action=deleteconfirm&gid='.$gInfo->unique_id, 'NONSSL').'">'. BUTTON_CONFIRM . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link('gv_queue.php', xtc_get_all_get_params(array('action', 'gid')).'action=cancel&gid='.$gInfo->unique_id, 'NONSSL') . '">' . BUTTON_CANCEL . '</a>');
                   break;
                 case 'release':
                   $heading[] = array('text' => '<b>[' . $gInfo->unique_id . '] ' . xtc_datetime_short($gInfo->date_created) . ' ' . $currencies->format($gInfo->amount).'</b>');
                   $contents[] = array('text' => TEXT_INFO_REDEEM_INTRO);
-                  $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link('gv_queue.php','action=releaseconfirm&gid='.$gInfo->unique_id,'NONSSL').'">'. BUTTON_CONFIRM . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link('gv_queue.php','action=cancel&gid=' . $gInfo->unique_id,'NONSSL') . '">' . BUTTON_CANCEL . '</a>');
+                  $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link('gv_queue.php', xtc_get_all_get_params(array('action', 'gid')).'action=releaseconfirm&gid='.$gInfo->unique_id, 'NONSSL').'">'. BUTTON_CONFIRM . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link('gv_queue.php', xtc_get_all_get_params(array('action', 'gid')).'action=cancel&gid='.$gInfo->unique_id, 'NONSSL') . '">' . BUTTON_CANCEL . '</a>');
                   break;
                 default:
                   $heading[] = array('text' => '[' . $gInfo->unique_id . '] ' . xtc_datetime_short($gInfo->date_created) . ' ' . $currencies->format($gInfo->amount));
-                  $contents[] = array('align' => 'center','text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link('gv_queue.php','action=release&gid=' . $gInfo->unique_id,'NONSSL'). '">' . BUTTON_RELEASE . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link('gv_queue.php','action=delete&gid=' . $gInfo->unique_id,'NONSSL'). '">' . BUTTON_DELETE . '</a>');
+                  $contents[] = array('align' => 'center','text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link('gv_queue.php', xtc_get_all_get_params(array('action', 'gid')).'action=release&gid='.$gInfo->unique_id, 'NONSSL'). '">' . BUTTON_RELEASE . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link('gv_queue.php', xtc_get_all_get_params(array('action', 'gid')).'action=cancel&gid='.$gInfo->unique_id, 'NONSSL'). '">' . BUTTON_DELETE . '</a>');
                   break;
               }
             }
