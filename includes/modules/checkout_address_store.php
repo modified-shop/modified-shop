@@ -172,6 +172,9 @@
     switch ($checkout_page) {
       case 'shipping':
         unset ($_SESSION['shipping']);
+        if (isset($_SESSION['paypal']['PayerID'])) {
+          $_SESSION['shipping'] = '';
+        }
         $_SESSION['sendto'] = $new_address_book_id;
         if (isset($_POST['primary']) && ($_POST['primary'] == 'on')) {
           $_SESSION['billto'] = $new_address_book_id;
