@@ -164,7 +164,7 @@ if (is_array($payment_modules->modules)) {
 require_once (DIR_WS_CLASSES . 'shipping.php');
 $shipping_modules = new shipping($_SESSION['shipping']);
 
-if (MODULE_ORDER_TOTAL_INSTALLED) {
+if (xtc_not_null(MODULE_ORDER_TOTAL_INSTALLED)) {
   $order_total_modules->process();
   $total_block = $order_total_modules->output();
   $smarty->assign('TOTAL_BLOCK', $total_block);

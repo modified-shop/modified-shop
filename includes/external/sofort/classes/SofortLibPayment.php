@@ -278,7 +278,7 @@ class SofortLibPayment {
       $order_total_modules->collect_posts();
       $order_total_modules->pre_confirmation_check();
 
-      if (MODULE_ORDER_TOTAL_INSTALLED) {
+      if (xtc_not_null(MODULE_ORDER_TOTAL_INSTALLED)) {
         $order_total_array = $order_total_modules->process();
         if (count($order_total_array)) {
           foreach($order_total_array as $key => $entry) {

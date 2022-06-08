@@ -105,7 +105,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
     'text' => TEXT_NO_PAYMENT.' (no_payment)'
   );
   
-  if (trim(MODULE_PAYMENT_INSTALLED) != '') {
+  if (xtc_not_null(MODULE_PAYMENT_INSTALLED)) {
     $payments = explode(';', MODULE_PAYMENT_INSTALLED);
     for ($i=0; $i<count($payments); $i++) {
       if (file_exists(DIR_FS_LANGUAGES . $order->info['language'] . '/modules/payment/' . $payments[$i])) {
@@ -165,7 +165,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
   
   $shipping_array = array();
   
-  if (trim(MODULE_PAYMENT_INSTALLED) != '') {
+  if (xtc_not_null(MODULE_SHIPPING_INSTALLED)) {
     $shippings = explode(';', MODULE_SHIPPING_INSTALLED);
     for ($i=0; $i<count($shippings); $i++) {
       if (file_exists(DIR_FS_LANGUAGES . $order->info['language'] . '/modules/shipping/' . $shippings[$i])) {
@@ -237,63 +237,65 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
     <td class="dataTableHeadingContent">&nbsp;</td>
   </tr>
   <?php
-  $totals = explode(';', MODULE_ORDER_TOTAL_INSTALLED);
-  for ($i=0; $i<count($totals); $i++) {
-    if (file_exists(DIR_FS_LANGUAGES . $order->info['language'] . '/modules/order_total/' . $totals[$i])) {
-      require_once(DIR_FS_LANGUAGES . $order->info['language'] . '/modules/order_total/' . $totals[$i]);
-    }
-    $total = substr($totals[$i], 0, strrpos($totals[$i], '.'));
-    $total_name = str_replace('ot_','',$total);
-    $total_text = constant('MODULE_ORDER_TOTAL_'.strtoupper($total_name).'_TITLE');
-    
-    $ot_total_query = xtc_db_query("SELECT * 
-                                      FROM " . TABLE_ORDERS_TOTAL . " 
-                                     WHERE orders_id = '" . (int)$_GET['oID'] . "' 
-                                       AND class = '" . xtc_db_input($total) . "' ");
-    if (xtc_db_num_rows($ot_total_query) > 0) {
-      $ototal_array = array();
-      while ($ot_total = xtc_db_fetch_array($ot_total_query)) {
-        $ototal_array[] = $ot_total;
+  if (xtc_not_null(MODULE_ORDER_TOTAL_INSTALLED)) {
+    $totals = explode(';', MODULE_ORDER_TOTAL_INSTALLED);
+    for ($i=0; $i<count($totals); $i++) {
+      if (file_exists(DIR_FS_LANGUAGES . $order->info['language'] . '/modules/order_total/' . $totals[$i])) {
+        require_once(DIR_FS_LANGUAGES . $order->info['language'] . '/modules/order_total/' . $totals[$i]);
       }
-    } else {
-      $ototal_array = array(
-        array(
-          'title' => '',
-          'value' => '',
-          'orders_total_id' => '',
-        )
-      );
-    }
+      $total = substr($totals[$i], 0, strrpos($totals[$i], '.'));
+      $total_name = str_replace('ot_','',$total);
+      $total_text = constant('MODULE_ORDER_TOTAL_'.strtoupper($total_name).'_TITLE');
     
-    foreach ($ototal_array as $ototal) {
-    ?>
-    <tr class="dataTableRow">
-      <?php echo xtc_draw_form('ot_edit', FILENAME_ORDERS_EDIT, 'action=ot_edit', 'post'); ?>
-        <td class="dataTableContent"><?php echo $total_text; ?></td>
-        <td class="dataTableContent"><?php echo xtc_draw_input_field('ot_title', $ototal['title'], 'size=40'); ?></td>
-        <td class="dataTableContent"><?php echo xtc_draw_input_field('ot_value', $ototal['value'], 'class="txta-r"'); ?></td>
-        <td class="dataTableContent">
-        <?php
-          echo xtc_draw_hidden_field('ot_class', $total);
-          echo xtc_draw_hidden_field('ot_sort_order', constant('MODULE_ORDER_TOTAL_'.strtoupper($total_name).'_SORT_ORDER'));
-          echo xtc_draw_hidden_field('oID', (int)$_GET['oID']);
-          echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SAVE . '"/>';
-        ?>
-        </td>
-      </form>
-      <td class="dataTableContent">
-        <?php
-          echo xtc_draw_form('ot_delete', FILENAME_ORDERS_EDIT, 'action=ot_delete', 'post');
-          echo xtc_draw_hidden_field('oID', (int)$_GET['oID']);
-          echo xtc_draw_hidden_field('otID', $ototal['orders_total_id']);
-          if ($total != 'ot_total') {
-            echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE . '"/>';
-          }
-        ?>
+      $ot_total_query = xtc_db_query("SELECT * 
+                                        FROM " . TABLE_ORDERS_TOTAL . " 
+                                       WHERE orders_id = '" . (int)$_GET['oID'] . "' 
+                                         AND class = '" . xtc_db_input($total) . "' ");
+      if (xtc_db_num_rows($ot_total_query) > 0) {
+        $ototal_array = array();
+        while ($ot_total = xtc_db_fetch_array($ot_total_query)) {
+          $ototal_array[] = $ot_total;
+        }
+      } else {
+        $ototal_array = array(
+          array(
+            'title' => '',
+            'value' => '',
+            'orders_total_id' => '',
+          )
+        );
+      }
+    
+      foreach ($ototal_array as $ototal) {
+      ?>
+      <tr class="dataTableRow">
+        <?php echo xtc_draw_form('ot_edit', FILENAME_ORDERS_EDIT, 'action=ot_edit', 'post'); ?>
+          <td class="dataTableContent"><?php echo $total_text; ?></td>
+          <td class="dataTableContent"><?php echo xtc_draw_input_field('ot_title', $ototal['title'], 'size=40'); ?></td>
+          <td class="dataTableContent"><?php echo xtc_draw_input_field('ot_value', $ototal['value'], 'class="txta-r"'); ?></td>
+          <td class="dataTableContent">
+          <?php
+            echo xtc_draw_hidden_field('ot_class', $total);
+            echo xtc_draw_hidden_field('ot_sort_order', constant('MODULE_ORDER_TOTAL_'.strtoupper($total_name).'_SORT_ORDER'));
+            echo xtc_draw_hidden_field('oID', (int)$_GET['oID']);
+            echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SAVE . '"/>';
+          ?>
+          </td>
         </form>
-      </td>
-    </tr>
-    <?php
+        <td class="dataTableContent">
+          <?php
+            echo xtc_draw_form('ot_delete', FILENAME_ORDERS_EDIT, 'action=ot_delete', 'post');
+            echo xtc_draw_hidden_field('oID', (int)$_GET['oID']);
+            echo xtc_draw_hidden_field('otID', $ototal['orders_total_id']);
+            if ($total != 'ot_total') {
+              echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE . '"/>';
+            }
+          ?>
+          </form>
+        </td>
+      </tr>
+      <?php
+      }
     }
   }
   ?>

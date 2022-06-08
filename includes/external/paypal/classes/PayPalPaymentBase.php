@@ -858,7 +858,7 @@ class PayPalPaymentBase extends PayPalCommon {
       $shipping_modules = new shipping();
 
       $free_shipping = false;
-      if (MODULE_ORDER_TOTAL_INSTALLED) {
+      if (xtc_not_null(MODULE_ORDER_TOTAL_INSTALLED)) {
         require_once (DIR_WS_CLASSES . 'order_total.php');
         $order_total_modules = new order_total();
         $order_total_modules->process();

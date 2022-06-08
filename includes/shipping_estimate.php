@@ -64,7 +64,7 @@ if (isset($_SESSION['credit_covers'])) {
 $_SESSION['delivery_zone'] = $order->delivery['country']['iso_code_2'];
 
 $free_shipping = false;
-if (MODULE_ORDER_TOTAL_INSTALLED) {
+if (xtc_not_null(MODULE_ORDER_TOTAL_INSTALLED)) {
   $order_total_array = $order_total_modules->process();
   if (count($order_total_array)) {
     foreach($order_total_array as $key => $entry) {

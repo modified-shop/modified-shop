@@ -436,7 +436,7 @@
                       'id' => 'no_payment',
                       'text' => TEXT_NO_PAYMENT.' (no_payment)'
                     );
-                    if (trim(MODULE_PAYMENT_INSTALLED) != '') {
+                    if (xtc_not_null(MODULE_PAYMENT_INSTALLED)) { 
                       $payments = explode(';', MODULE_PAYMENT_INSTALLED);
                       for ($i=0; $i<count($payments); $i++) {
                         if (file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $payments[$i])) {
@@ -468,7 +468,7 @@
 
                     
                     $shipping_array = array();  
-                    if (trim(MODULE_PAYMENT_INSTALLED) != '') {
+                    if (xtc_not_null(MODULE_SHIPPING_INSTALLED)) {
                       $shippings = explode(';', MODULE_SHIPPING_INSTALLED);
                       for ($i=0; $i<count($shippings); $i++) {
                         if (file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/' . $shippings[$i])) {

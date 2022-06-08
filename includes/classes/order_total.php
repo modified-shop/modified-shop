@@ -77,7 +77,7 @@ class order_total {
     //$close_string = '';
     //$credit_class_string = '';
     $output_array = array();
-    if (MODULE_ORDER_TOTAL_INSTALLED) {
+    if (xtc_not_null(MODULE_ORDER_TOTAL_INSTALLED)) {
       reset($this->modules);
       $output_string = '';
       foreach ($this->modules as $value) {
@@ -118,7 +118,7 @@ class order_total {
   // Another use would be to check if the product would give reward points and add these to the points/reward account.
   //
   function update_credit_account($i) {
-    if (MODULE_ORDER_TOTAL_INSTALLED) {
+    if (xtc_not_null(MODULE_ORDER_TOTAL_INSTALLED)) {
       reset($this->modules);
       foreach ($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
@@ -140,7 +140,7 @@ class order_total {
   // with an error
   //
   function collect_posts() {
-    if (MODULE_ORDER_TOTAL_INSTALLED) {
+    if (xtc_not_null(MODULE_ORDER_TOTAL_INSTALLED)) {
       reset($this->modules);
       foreach ($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
@@ -171,7 +171,7 @@ class order_total {
     // fisrt unset session
     unset ($_SESSION['credit_covers']);
     
-    if (MODULE_ORDER_TOTAL_INSTALLED) {
+    if (xtc_not_null(MODULE_ORDER_TOTAL_INSTALLED)) {
       $total_deductions = 0;
       reset($this->modules);
       foreach ($this->modules as $value) {
@@ -202,7 +202,7 @@ class order_total {
   // is reduced the order total amount.
   //
   function apply_credit() {
-    if (MODULE_ORDER_TOTAL_INSTALLED) {
+    if (xtc_not_null(MODULE_ORDER_TOTAL_INSTALLED)) {
       reset($this->modules);
       foreach ($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
@@ -221,7 +221,7 @@ class order_total {
   // Called in checkout process to clear session variables created by each credit class module.
   //
   function clear_posts() {
-    if (MODULE_ORDER_TOTAL_INSTALLED) {
+    if (xtc_not_null(MODULE_ORDER_TOTAL_INSTALLED)) {
       reset($this->modules);
       foreach ($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
