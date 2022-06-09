@@ -39,4 +39,5 @@
   define('ENTRY_PASSWORD_MIN_LENGTH', 8);
   
   define('RM', true);
+  define('RUN_MODE_INSTALLER', true);
 ?>
