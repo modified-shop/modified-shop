@@ -50,7 +50,7 @@ function get_third_party_payments() {
 }
 
 
-function get_paypal_js_sdk($lient_id, $currency, $intent, $commit, $client_token, $custom) {
+function get_paypal_js_sdk($client_id, $currency, $intent, $commit, $client_token, $custom) {
   static $output;
   
   if (!isset($output)) {
@@ -75,7 +75,7 @@ function get_paypal_js_sdk($lient_id, $currency, $intent, $commit, $client_token
 
       try {
         paypal = await loadScript({
-          "client-id": "'.$lient_id.'",
+          "client-id": "'.$client_id.'",
           "currency": "'.$currency.'",
           "intent": "'.strtolower($intent).'",
           "commit": "'.$commit.'",
