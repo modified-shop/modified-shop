@@ -114,7 +114,12 @@
           define('_VALID_XTC', true);
           include(DIR_FS_CATALOG.DIR_ADMIN.'includes/configuration_installer.php');
         }
-
+        
+        // check phpfastcache
+        if (is_dir(DIR_FS_EXTERNAL.'phpfastcache') && !is_dir(DIR_FS_EXTERNAL.'Phpfastcache')) {
+          rename(DIR_FS_EXTERNAL.'phpfastcache', DIR_FS_EXTERNAL.'Phpfastcache');
+        }
+        
         $messageStack->add_session('update', TEXT_UPDATE_SYSTEM_SUCCESS, 'success');
         xtc_redirect(xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), '', $request_type));
         break;
