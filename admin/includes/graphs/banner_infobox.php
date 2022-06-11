@@ -39,6 +39,7 @@
   $graph->SetPlotBorderType('left');
   $graph->SetTitleFontSize('4');
   $graph->SetTitle('3 Day Statistics');
+  $graph->SetTitle(decode_utf8(decode_htmlentities(sprintf(TEXT_BANNERS_LATEST_STATISTICS, $days), ENT_COMPAT, 'ISO-8859-15')));
 
   $graph->SetBackgroundColor('white');
 
