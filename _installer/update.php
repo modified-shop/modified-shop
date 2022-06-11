@@ -109,6 +109,36 @@
           }
         }
         
+        // update tax rates
+        $tax_class_id_array = array(
+          '1' => 'DE::Standardsatz||EN::Standard rate',
+          '2' => 'DE::ermäßigter Satz 1||EN::reduced rate 1',
+          '3' => 'DE::ermäßigter Satz 2||EN::reduced rate 2',
+          '4' => 'DE::stark ermäßigter Satz||EN::highly reduced rate',
+          '5' => 'DE::Zwischensatz||EN::Intermediate rate',
+        );
+    
+        foreach ($tax_class_id_array as $tax_class_id => $tax_class_title) {                                        
+          $check_query = xtc_db_query("SELECT *
+                                         FROM ".TABLE_TAX_CLASS."
+                                        WHERE tax_class_id = ".$tax_class_id);
+          if (xtc_db_num_rows($check_query) == 0) {
+            $sql_data_array = array(
+              'tax_class_id' => $tax_class_id,
+              'tax_class_title' => encode_utf8($tax_class_title),
+              'date_added' => 'now()'
+            );
+            xtc_db_perform(TABLE_TAX_CLASS, $sql_data_array);
+          } else {
+            $check = xtc_db_fetch_array($check_query);
+            if ($check['tax_class_title'] != $tax_class_title) {
+              xtc_db_query("UPDATE ".TABLE_TAX_CLASS."
+                               SET tax_class_title = '".xtc_db_input($tax_class_title)."'
+                             WHERE tax_class_id = ".$tax_class_id);
+            }
+          }
+        }
+
         //install new configurations
         if (file_exists(DIR_FS_CATALOG.DIR_ADMIN.'includes/configuration_installer.php')) {
           define('_VALID_XTC', true);
