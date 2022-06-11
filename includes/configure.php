@@ -50,6 +50,9 @@
   // session handling
   defined('STORE_SESSIONS') or define('STORE_SESSIONS', 'mysql'); // leave empty '' for default handler or set to 'mysql'
 
+  // timezone
+  defined('DEFAULT_TIMEZONE') or define('DEFAULT_TIMEZONE', 'Europe/Berlin');
+
   if (DB_DATABASE != '') {
     // set admin directory DIR_ADMIN
     require_once(DIR_FS_CATALOG.'inc/set_admin_directory.inc.php');

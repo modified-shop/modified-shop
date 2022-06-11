@@ -52,6 +52,9 @@ $file_contents =
 '  // session handling' . PHP_EOL .
 '  defined(\'STORE_SESSIONS\') or define(\'STORE_SESSIONS\', \'' . (($session == 'files') ? '' : 'mysql') . '\'); // leave empty \'\' for default handler or set to \'mysql\'' . PHP_EOL .                     
 '' . PHP_EOL .
+'  // timezone' . PHP_EOL .
+'  defined(\'DEFAULT_TIMEZONE\') or define(\'DEFAULT_TIMEZONE\', \'Europe/Berlin\');' . PHP_EOL .                     
+'' . PHP_EOL .
 '  if (DB_DATABASE != \'\') {' . PHP_EOL . 
 '    // set admin directory DIR_ADMIN' . PHP_EOL . 
 '    require_once(DIR_FS_CATALOG.\'inc/set_admin_directory.inc.php\');' . PHP_EOL .

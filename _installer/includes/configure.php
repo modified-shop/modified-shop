@@ -35,6 +35,9 @@
   defined('DB_CACHE_TYPE') OR define('DB_CACHE_TYPE', 'files');
   defined('DIR_FS_CACHE') OR define('DIR_FS_CACHE', 'cache/');
 
+  // timezone
+  define('DEFAULT_TIMEZONE', 'Europe/Berlin');
+
   // set admin directory DIR_ADMIN
   require_once(DIR_FS_CATALOG.'inc/set_admin_directory.inc.php');
 

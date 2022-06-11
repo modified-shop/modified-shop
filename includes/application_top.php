@@ -59,7 +59,8 @@ if (version_compare(PHP_VERSION, '7.4', '<')) {
 }
 
 // default time zone
-date_default_timezone_set('Europe/Berlin');
+defined('DEFAULT_TIMEZONE') OR define('DEFAULT_TIMEZONE', 'Europe/Berlin');
+date_default_timezone_set(DEFAULT_TIMEZONE);
 
 // new error handling
 if (is_file(DIR_WS_INCLUDES.'error_reporting.php')) {
