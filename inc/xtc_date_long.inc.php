@@ -26,16 +26,21 @@
       return xtc_date_short($raw_date);
     }
     if ( ($raw_date == '0000-00-00 00:00:00') || ($raw_date == '') ) return false;
+    
+    if (function_exists('datefmt_create')) {
+      $dateTime = date_create($raw_date, timezone_open(DEFAULT_TIMEZONE));
+      $formatter = datefmt_create(DATE_LOCALE, IntlDateFormatter::LONG, IntlDateFormatter::SHORT);
+      $date = datefmt_format($formatter, $dateTime);
+    } else {
+      $year = (int)substr($raw_date, 0, 4);
+      $month = (int)substr($raw_date, 5, 2);
+      $day = (int)substr($raw_date, 8, 2);
+      $hour = (int)substr($raw_date, 11, 2);
+      $minute = (int)substr($raw_date, 14, 2);
+      $second = (int)substr($raw_date, 17, 2);
 
-    $year = (int)substr($raw_date, 0, 4);
-    $month = (int)substr($raw_date, 5, 2);
-    $day = (int)substr($raw_date, 8, 2);
-    $hour = (int)substr($raw_date, 11, 2);
-    $minute = (int)substr($raw_date, 14, 2);
-    $second = (int)substr($raw_date, 17, 2);
-
-    $date = date(DATE_FORMAT_LONG, mktime($hour,$minute,$second,$month,$day,$year));
+      $date = date(DATE_FORMAT_LONG, mktime($hour,$minute,$second,$month,$day,$year));
+    }
     
     return decode_utf8($date);
   }
- ?>

@@ -17,6 +17,9 @@
 
   require('includes/application_top.php');
 
+  // include needed functions
+  require_once(DIR_FS_INC . 'formatter_date.inc.php');
+
   $banner_extension = xtc_banner_image_extension();
 
   // check if the graphs directory exists
@@ -46,7 +49,7 @@
   $months_array = array();
   for ($i=1; $i<13; $i++) {
     $months_array[] = array('id' => $i,
-                            'text' => decode_utf8(date('F', mktime(0,0,0,$i))));
+                            'text' => formatter_date('MMMM', 'M', mktime(0,0,0,$i)));
   }
 
   $type_array = array(array('id' => 'daily',

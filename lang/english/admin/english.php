@@ -28,6 +28,7 @@
 
 @setlocale(LC_TIME, 'en_GB.UTF-8', 'en_GB@euro', 'en_GB', 'en-GB', 'en', 'en_GB.ISO_8859-1', 'English','en_GB.ISO_8859-15');
 
+define('DATE_LOCALE', 'en_GB');
 define('DATE_FORMAT_SHORT', 'd/m/Y');
 define('DATE_FORMAT_LONG', 'l d F, Y');
 define('DATE_FORMAT', DATE_FORMAT_SHORT);

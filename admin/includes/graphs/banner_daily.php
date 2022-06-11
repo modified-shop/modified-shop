@@ -18,6 +18,9 @@
 
   require_once(DIR_WS_CLASSES . 'phplot.php');
 
+  // include needed functions
+  require_once(DIR_FS_INC . 'formatter_date.inc.php');
+
   $year = isset($_GET['year']) ? $_GET['year'] : date('Y');
   $month = isset($_GET['month']) ? $_GET['month'] : date('n');
 
@@ -45,7 +48,7 @@
 
   $graph->SetPlotBorderType('left');
   $graph->SetTitleFontSize('4');
-  $graph->SetTitle(html_entity_decode(sprintf(TEXT_BANNERS_DAILY_STATISTICS, $banner['banners_title'], htmlentities(date('F', mktime(0,0,0,$month))), $year), ENT_COMPAT, 'ISO-8859-15'));
+  $graph->SetTitle(html_entity_decode(sprintf(TEXT_BANNERS_DAILY_STATISTICS, $banner['banners_title'], htmlentities(formatter_date('MMMM', 'M', mktime(0,0,0,$month))), $year), ENT_COMPAT, 'ISO-8859-15'));
 
   $graph->SetBackgroundColor('white');
 

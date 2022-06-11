@@ -16,17 +16,20 @@
    --------------------------------------------------------------*/
 
   require_once(DIR_WS_CLASSES . 'phplot.php');
-
+  
+  // include needed functions
+  require_once(DIR_FS_INC . 'formatter_date.inc.php');
+  
   $year = (($_GET['year']) ? $_GET['year'] : date('Y'));
 
   $stats = array();
   for ($i=1; $i<13; $i++) {
-    $stats[] = array(decode_utf8(date('M', mktime(0,0,0,$i))), '0', '0');
+    $stats[] = array(formatter_date('MMMM', 'M', mktime(0,0,0,$i)), '0', '0');
   }
 
   $banner_stats_query = xtc_db_query("select month(banners_history_date) as banner_month, sum(banners_shown) as value, sum(banners_clicked) as dvalue from " . TABLE_BANNERS_HISTORY . " where banners_id = '" . $banner_id . "' and year(banners_history_date) = '" . $year . "' group by banner_month");
   while ($banner_stats = xtc_db_fetch_array($banner_stats_query)) {
-    $stats[($banner_stats['banner_month']-1)] = array(decode_utf8(date('M', mktime(0,0,0,$banner_stats['banner_month']))), (($banner_stats['value']) ? $banner_stats['value'] : '0'), (($banner_stats['dvalue']) ? $banner_stats['dvalue'] : '0'));
+    $stats[($banner_stats['banner_month']-1)] = array(formatter_date('MMMM', 'M', mktime(0,0,0,$banner_stats['banner_month'])), (($banner_stats['value']) ? $banner_stats['value'] : '0'), (($banner_stats['dvalue']) ? $banner_stats['dvalue'] : '0'));
   }
 
   $graph = new PHPlot(600, 350, 'images/graphs/banner_monthly-' . $banner_id . '.' . $banner_extension);
@@ -53,4 +56,3 @@
   $graph->DrawGraph();
 
   $graph->PrintImage();
-?>

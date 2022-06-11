@@ -50,6 +50,7 @@
   
   // include needed functions
   require_once(DIR_FS_INC.'xtc_get_countries.inc.php');
+  require_once(DIR_FS_INC.'formatter_date.inc.php');
   
   // include needed classes
   require_once(DIR_WS_CLASSES . 'currencies.php');
@@ -187,7 +188,7 @@
 
   $month_array = array();
   for ($i = 1; $i < 13; $i++) {
-    $month_array[] = array('id' => $i, 'text' => decode_utf8(date("F", mktime(0, 0, 0, $i, 1))));
+    $month_array[] = array('id' => $i, 'text' => formatter_date('MMMM', 'M', mktime(0, 0, 0, $i, 1)));  
   }
 
   $year_array = array();
