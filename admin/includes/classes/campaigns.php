@@ -303,7 +303,7 @@ class campaigns {
 
 	}
 
-	function getLeads($date_start, $date_end = '', $type) {
+	function getLeads($date_start, $date_end, $type) {
 
 		switch ($type) {
 
@@ -344,7 +344,7 @@ class campaigns {
 		}
 	}
 	
-	function getHits($date_start, $date_end = '', $type) {
+	function getHits($date_start, $date_end, $type) {
 
 		switch ($type) {
 
