@@ -37,7 +37,7 @@
 
       $paypalscript .= '
         var paypal_instruments_arr = [];
-        await paypal.getFundingSources().forEach(function(fundingSource) {        
+        paypal.getFundingSources().forEach(function(fundingSource) {        
           var button = paypal.Buttons({fundingSource: fundingSource});
           if (button.isEligible()) {
             paypal_instruments_arr.push(fundingSource);
@@ -66,7 +66,7 @@
             )
         {
           $paypalscript .= '
-            await paypal.Buttons({
+            paypal.Buttons({
               fundingSource: paypal.FUNDING.PAYPAL,
               style: {
                 layout: "horizontal",
@@ -106,7 +106,7 @@
             )
         {
           $paypalscript .= '
-            await paypal.Buttons({
+            paypal.Buttons({
               fundingSource: paypal.FUNDING.PAYLATER,
               style: {
                 layout: "horizontal",
@@ -167,7 +167,7 @@
         
         if ($total > 0) {
           $paypalscript .= '
-            await paypal.Messages({
+            paypal.Messages({
               amount: '.$total.',
               countryCode: "'.$countries_iso_code_2.'",
               style: {

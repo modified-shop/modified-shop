@@ -71,7 +71,7 @@ class paypal extends PayPalPaymentV2 {
     $process_button = $paypal_smarty->fetch($tpl_file);
     
     $paypalscript = '
-      await paypal.Buttons({
+      paypal.Buttons({
         fundingSource: paypal.FUNDING.PAYPAL,
         style: {
           layout: "horizontal",
@@ -97,7 +97,7 @@ class paypal extends PayPalPaymentV2 {
     
     if ($this->get_config('MODULE_PAYMENT_'.strtoupper($this->code).'_SHOW_CHECKOUT_BNPL') == '1') {
       $paypalscript .= '
-        await paypal.Buttons({
+        paypal.Buttons({
           fundingSource: paypal.FUNDING.PAYLATER,
           style: {
             layout: "horizontal",

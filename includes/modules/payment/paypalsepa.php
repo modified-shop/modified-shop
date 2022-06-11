@@ -82,7 +82,7 @@ class paypalsepa extends PayPalPaymentV2 {
     $process_button = $paypal_smarty->fetch($tpl_file);
 
     $process_button .= sprintf($this->get_js_sdk(), '
-      await paypal.Buttons({
+      paypal.Buttons({
         fundingSource: paypal.FUNDING.SEPA,
         style: {
           layout: "vertical",

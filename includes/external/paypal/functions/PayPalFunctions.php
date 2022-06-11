@@ -71,28 +71,22 @@ function get_paypal_js_sdk($client_id, $currency, $intent, $commit, $client_toke
     }
     
     $script .= '
-      let paypal;
-
-      try {
-        paypal = await loadScript({
-          "client-id": "'.$client_id.'",
-          "currency": "'.$currency.'",
-          "intent": "'.strtolower($intent).'",
-          "commit": "'.$commit.'",
-          "locale": "'.$_SESSION['language_code'].'_'.strtoupper(($_SESSION['language_code'] == 'en') ? 'GB' : $_SESSION['language_code']).'",
-          "enable-funding": "paylater",
-          '.(($client_token !== false) ? '"data-client-token": "'.$client_token.'",' : '').'
-          "components": "buttons,funding-eligibility,messages,hosted-fields"
-        });
-      } catch (error) {
+      loadScript({
+        "client-id": "'.$client_id.'",
+        "currency": "'.$currency.'",
+        "intent": "'.strtolower($intent).'",
+        "commit": "'.$commit.'",
+        "locale": "'.$_SESSION['language_code'].'_'.strtoupper(($_SESSION['language_code'] == 'en') ? 'GB' : $_SESSION['language_code']).'",
+        "enable-funding": "paylater",
+        '.(($client_token !== false) ? '"data-client-token": "'.$client_token.'",' : '').'
+        "components": "buttons,funding-eligibility,messages,hosted-fields"
+      }).then((paypal) => {
+        %s
+      }).catch((error) => {
         $(".apms_form").hide();
         $(".apms_form_button").hide();
         console.error("failed to load the PayPal SDK", error);
-      }
-
-      if (paypal) {
-        %s
-      }
+      });
     </script>';
     
     return $script;

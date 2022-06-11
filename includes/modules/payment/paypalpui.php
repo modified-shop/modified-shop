@@ -12,8 +12,9 @@
 
 
 // include needed functions
-require_once(DIR_FS_INC.'xtc_date_short.inc.php');
-
+if (!function_exists('xtc_date_short')) {
+  require_once(DIR_FS_INC.'xtc_date_short.inc.php');
+}
 
 // include needed classes
 require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPaymentV2.php');
@@ -194,7 +195,7 @@ class paypalpui extends PayPalPaymentV2 {
 
     $process_button .= sprintf($this->get_js_sdk('true', false, true), '
       try {
-        await loadCustomScript({
+        loadCustomScript({
           url: "https://c.paypal.com/da/r/fb.js"
         });
       } catch (error) {
