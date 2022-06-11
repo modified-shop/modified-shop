@@ -19,7 +19,7 @@ mb_http_output('UTF-8');
 mb_language('uni');
 mb_regex_encoding('UTF-8');
 ob_start('mb_output_handler');
-date_default_timezone_set('Europe/Berlin');
+date_default_timezone_set(DEFAULT_TIMEZONE);
 setlocale(LC_CTYPE, 'en_US'); //correct transliteration
 
 /*
