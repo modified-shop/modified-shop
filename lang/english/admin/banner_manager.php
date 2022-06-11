@@ -90,4 +90,5 @@ define('TEXT_BANNERS_DATE_FORMAT', 'YYYY-MM-DD');
 define('TEXT_BANNERS_LANGUAGE', 'Language:');
 define('TEXT_BANNERS_LANGUAGE_NOTE', 'Select the language where the banner should be displayed?');
 define('TEXT_NO_FILE', '-- no file --');
+define('TEXT_BANNERS_LATEST_STATISTICS', '%s days statistic');
 ?>

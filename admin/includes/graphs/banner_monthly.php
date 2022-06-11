@@ -20,7 +20,7 @@
   // include needed functions
   require_once(DIR_FS_INC . 'formatter_date.inc.php');
   
-  $year = (($_GET['year']) ? $_GET['year'] : date('Y'));
+  $year = ((isset($_GET['year'])) ? $_GET['year'] : date('Y'));
 
   $stats = array();
   for ($i=1; $i<13; $i++) {
@@ -45,7 +45,7 @@
 
   $graph->SetPlotBorderType('left');
   $graph->SetTitleFontSize('4');
-  $graph->SetTitle(html_entity_decode(sprintf(TEXT_BANNERS_MONTHLY_STATISTICS, $banner['banners_title'], $year)));
+  $graph->SetTitle(decode_utf8(decode_htmlentities(sprintf(TEXT_BANNERS_MONTHLY_STATISTICS, $banner['banners_title'], $year), ENT_COMPAT, 'ISO-8859-15')));
 
   $graph->SetBackgroundColor('white');
 
