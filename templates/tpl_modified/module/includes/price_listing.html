@@ -1,11 +1,11 @@
             {if $price_data.PRODUCTS_PRICE_FLAG == 'Special' || $price_data.PRODUCTS_PRICE_FLAG == 'SpecialDiscount'}
               {* START Produkt Sonderpreis Langform mit Ausgabe Alter Preis, Neuer Preis, Sie sparen *}
               <span class="old_price">
-                <span class="small_price">{$smarty.const.INSTEAD}</span>
+                <span class="small_price">{$smarty.const.INSTEAD}{$price_data.PRODUCTS_PRICE_FROM}</span>
                 {$price_data.PRODUCTS_PRICE_OLD_PRICE}
               </span>
               <span class="new_price">
-                <span class="small_price">{$smarty.const.ONLY}</span> {$price_data.PRODUCTS_PRICE_SPECIAL_PRICE}
+                <span class="small_price">{$smarty.const.ONLY}{$price_data.PRODUCTS_PRICE_FROM}</span> {$price_data.PRODUCTS_PRICE_SPECIAL_PRICE}
               </span>
               <span class="save_price">
                 {$smarty.const.YOU_SAVE} {$price_data.PRODUCTS_PRICE_SAVE_PERCENT}% / {$price_data.PRODUCTS_PRICE_SAVE_DIFF}

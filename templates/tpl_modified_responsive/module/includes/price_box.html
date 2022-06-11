@@ -1,7 +1,7 @@
             {if $price_data.PRODUCTS_PRICE_FLAG == 'Special' || $price_data.PRODUCTS_PRICE_FLAG == 'SpecialDiscount'}
               {* START Produkt Sonderpreis Kurzform mit Ausgabe #Sonderpreis# *}
               <span class="special_price">
-                <span class="small_price">{#special_price#}</span> <span class="value_price">{$price_data.PRODUCTS_PRICE_SPECIAL_PRICE}</span>
+                <span class="small_price">{#special_price#}{$price_data.PRODUCTS_PRICE_FROM}</span> <span class="value_price">{$price_data.PRODUCTS_PRICE_SPECIAL_PRICE}</span>
               </span>              
               {* ENDE Produkt Sonderpreis Kurzform mit Ausgabe #Sonderpreis# *}
             {elseif $price_data.PRODUCTS_PRICE_FLAG == 'SpecialGraduated'}

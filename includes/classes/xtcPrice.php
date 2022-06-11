@@ -822,7 +822,7 @@ class xtcPrice {
       $save_percent = round($discount);
       $save_diff = $this->xtcFormat($pPrice - $sPrice, $format);
       $from = $this->checkAttributes($pID);
-      $price = '<span class="productOldPrice"><small>' . INSTEAD . '</small><del>' . $old_price . '</del></span><br /><span class="productNewPrice">' . ONLY . $from . $special_price . '</span><br /><small class="productSavePrice">' . YOU_SAVE . $save_percent . ' % /' . $save_diff . '</small>';
+      $price = '<span class="productOldPrice"><small>' . INSTEAD . $from . '</small><del>' . $old_price . '</del></span><br /><span class="productNewPrice">' . ONLY . $from . $special_price . '</span><br /><small class="productSavePrice">' . YOU_SAVE . $save_percent . ' % /' . $save_diff . '</small>';
 
       $products_tax = (isset($this->tax_class) && isset($this->TAX[$this->tax_class])) ? $this->TAX[$this->tax_class] : 0;
       if ($this->cStatus['customers_status_show_price_tax'] == '0') {
