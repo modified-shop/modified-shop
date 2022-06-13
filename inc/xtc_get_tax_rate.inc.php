@@ -33,10 +33,12 @@
     }
     
     if (!isset($tax_rate_array[$country_id][$zone_id][$class_id])) {
-      $where = '';
+      $where = "AND (z2gz.zone_id = 0 ";
       if ($zone_id >= 0) {
-        $where = "AND z2gz.zone_id = '" . (int)$zone_id . "'";
+        $where .= "OR z2gz.zone_id = '" . (int)$zone_id . "'";
       }
+      $where .= ")";
+
       $tax_query = xtDBquery("SELECT sum(tax_rate) as tax_rate,
                                      tr.tax_description
                                 FROM " . TABLE_TAX_RATES . " tr 
@@ -85,10 +87,12 @@
     }
     
     if (!isset($tax_class_array[$country_id][$zone_id][$class_id])) {
-      $where = '';
+      $where = "AND (z2gz.zone_id = 0 ";
       if ($zone_id >= 0) {
-        $where = "AND z2gz.zone_id = '" . (int)$zone_id . "'";
+        $where .= "OR z2gz.zone_id = '" . (int)$zone_id . "'";
       }
+      $where .= ")";
+
       $tax_query = xtDBquery("SELECT tr.tax_class_id
                                 FROM " . TABLE_TAX_RATES . " tr 
                                 JOIN " . TABLE_GEO_ZONES . " tz 
