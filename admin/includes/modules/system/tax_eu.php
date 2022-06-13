@@ -24,6 +24,12 @@ class tax_eu
     $this->enabled = ((defined('MODULE_TAX_EU_STATUS') && MODULE_TAX_EU_STATUS == 'true') ? true : false);
 
     $this->properties['button_update'] = '<a class="button btnbox" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system&module=' . $this->code . '&action=update') . '">' . BUTTON_UPDATE. '</a>';
+    
+    $this->additional_countries = array(
+      'FR' => array(
+        'MC', // Monaco
+      ),
+    );
   }
 
   function process($file) {
@@ -93,7 +99,16 @@ class tax_eu
                          SET geo_zone_id = ".$geo_zones_array[$iso_code_2].",
                              last_modified = now()
                        WHERE zone_country_id = ".$countries_array[$iso_code_2]);
-                                                      
+        
+        if (isset($this->additional_countries[$iso_code_2])) {
+          foreach ($this->additional_countries[$iso_code_2] as $iso_code_2_additional) {
+            xtc_db_query("UPDATE ".TABLE_ZONES_TO_GEO_ZONES."
+                             SET geo_zone_id = ".$geo_zones_array[$iso_code_2].",
+                                 last_modified = now()
+                           WHERE zone_country_id = ".$countries_array[$iso_code_2_additional]);
+          }
+        }
+                                                
         foreach ($tax_rates_info as $tax_class_id => $tax_rate) {
           if ($tax_rate != '') {
             $check_query = xtc_db_query("SELECT *
