@@ -25,8 +25,7 @@
     if (!is_array($tax_description_array)) {
       $tax_description_array = array();
     }
-    
-    // VERSANDKOSTEN IM WARENKORB
+        
     if (isset($_SESSION['country']) && strpos(basename($PHP_SELF), 'checkout') === false) {
       $country_id = $_SESSION['country'];
     }
@@ -42,20 +41,21 @@
     }
   	
   	if (!isset($tax_description_array[$country_id][$zone_id][$class_id])) {
-      $tax_query = xtDBquery("SELECT tax_description 
+      $where = '';
+      if ($zone_id >= 0) {
+        $where = "AND z2gz.zone_id = '" . (int)$zone_id . "'";
+      }
+      $tax_query = xtDBquery("SELECT sum(tax_rate) as tax_rate,
+                                     tr.tax_description
                                 FROM " . TABLE_TAX_RATES . " tr 
-                           LEFT JOIN " . TABLE_ZONES_TO_GEO_ZONES . " za 
-                                     ON (tr.tax_zone_id = za.geo_zone_id) 
-                           LEFT JOIN " . TABLE_GEO_ZONES . " tz 
-                                     ON (tz.geo_zone_id = tr.tax_zone_id) 
-                               WHERE (za.zone_country_id is null 
-                                      OR za.zone_country_id = '0' 
-                                      OR za.zone_country_id = '" . (int)$country_id . "') 
-                                 AND (za.zone_id is null 
-                                      OR za.zone_id = '0' 
-                                      OR za.zone_id = '" . (int)$zone_id . "') 
-                                 AND tr.tax_class_id = '" . (int)$class_id . "' 
-                            ORDER BY tr.tax_priority");
+                                JOIN " . TABLE_GEO_ZONES . " tz 
+                                     ON tz.geo_zone_id = tr.tax_zone_id
+                                JOIN " . TABLE_ZONES_TO_GEO_ZONES . " z2gz 
+                                     ON tr.tax_zone_id = z2gz.geo_zone_id
+                                        AND z2gz.zone_country_id = '" . (int)$country_id . "'
+                                        ".$where."
+                               WHERE tr.tax_class_id = '" . (int)$class_id . "' 
+                            GROUP BY tr.tax_priority");
       if (xtc_db_num_rows($tax_query,true)) {
         $tax_description = '';
         while ($tax = xtc_db_fetch_array($tax_query,true)) {
