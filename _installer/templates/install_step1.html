@@ -4,78 +4,97 @@
     <br />
     <br />
   {/if}
-  {if isset($error_message)}<div class="errormessage cf">{$error_message}</div>{/if}
+  {if isset($error_message)}<div class="errormessage">{$error_message}</div>{/if}
   
-  {if isset($PROCESSING)}
-    {if $UPDATE_ACTION == 'convert'}
-      <div id="info_text">{$smarty.const.TEXT_INFO_DO_UPDATE}</div>
-      <br />
-      <div class="processingmessage">
-        <div id="process_info_wait">{$smarty.const.TEXT_INFO_WAIT}</div>
-        <div class="process_wrapper">
-          <div class="process_inner_wrapper">
-            <div id="backup_process"></div>
-          </div>
-        </div>
-        <div id="backup_precents">0%</div>
-        <div id="data_ok"></div>
-        {$JAVASCRIPT}
-      </div>
-    {else}
-      <div id="info_text">{$smarty.const.TEXT_INFO_DO_INSTALL}</div>
-      <br />
-      <div class="processingmessage">
-        <div id="process_info_wait">{$smarty.const.TEXT_INFO_WAIT}</div>
-        <div class="processing_bar"><img src="images/processing.gif" alt="" /></div>
-        <div class="process_wrapper" style="display:none;">
-          <div class="process_inner_wrapper">
-            <div id="backup_process" style="width:100%"></div>
-          </div>
-        </div>
-        <div id="backup_precents" style="display:none;">100%</div>
-        <div id="data_ok"></div>
-        {$JAVASCRIPT}
+  {if isset($ERROR)}
+    {$ERROR}
+    {if isset($BUTTON_BACK)}
+      <div class="cssButtonRow">
+        <div class="cssButton cssColor_2">{$BUTTON_BACK}</div>
       </div>
     {/if}
-  {elseif !isset($INPUT_DB_INSTALL)}
-    <h2>{$smarty.const.TEXT_DB_HEADING}</h2>
-    <div class="field_row cf">
-      <div class="field_item cf"><div class="field_heading">{$smarty.const.TEXT_DB_SERVER}</div>{$INPUT_DB_SERVER}</div>
-      <div class="field_item cf"><div class="field_heading">{$smarty.const.TEXT_DB_DATABASE}</div>{$INPUT_DB_DATABSE}</div>
-      <div class="field_item cf"><div class="field_heading">{$smarty.const.TEXT_DB_USERNAME}</div>{$INPUT_DB_USERNAME}</div>
-      <div class="field_item cf"><div class="field_heading">{$smarty.const.TEXT_DB_PASSWORD}</div>{$INPUT_DB_PASSWORD}</div>
-      <div class="field_item cf"><div class="field_heading">{$smarty.const.TEXT_DB_MYSQL_TYPE}</div>{$INPUT_DB_MYSQL_TYPE}</div>
-      <div class="field_item cf"><div class="field_heading">{$smarty.const.TEXT_DB_CHARSET}</div>{$INPUT_DB_CHARSET}</div>
-      <div class="field_item cf"><div class="field_heading">{$smarty.const.TEXT_DB_PCONNECT}</div>{$INPUT_DB_PCONNECT}</div>
-    </div>
-    <br />
-    <h2>{$smarty.const.TEXT_SERVER_HEADING}</h2>
-    <div class="field_row cf">
-      <div class="field_item cf"><div class="field_heading">{$smarty.const.TEXT_SERVER_HTTP_SERVER}</div>{$INPUT_HTTP_SERVER}</div>
-      <div class="field_item cf"><div class="field_heading">{$smarty.const.TEXT_SERVER_HTTPS_SERVER}</div>{$INPUT_HTTPS_SERVER}</div>
-      <div class="field_item cf"><div class="field_heading">{$smarty.const.TEXT_SERVER_USE_SSL}</div>{$INPUT_USE_SSL}</div>
-      <div class="field_item cf"><div class="field_heading">{$smarty.const.TEXT_SERVER_SESSION}</div>{$INPUT_SESSION}</div>
-    </div>
-    <br />
-    <h2>{$smarty.const.TEXT_ADMIN_DIRECTORY_HEADING}</h2>
-    <div class="field_row cf">
-      <div class="field_item cf"><div class="field_heading errormessage">{$smarty.const.TEXT_ADMIN_DIRECTORY_DESCRIPTION}</div></div>
-      <div class="field_item cf"><div class="field_heading">{$smarty.const.TEXT_ADMIN_DIRECTORY}&nbsp;&nbsp;{$ADMIN_DIRECTORY_SUGGEST}</div>{$INPUT_ADMIN_DIRECTORY}</div>
-    </div>
   {else}
-    <h2>{$smarty.const.TEXT_DB_EXISTS}</h2>
-    {*<p>{$smarty.const.TEXT_DB_EXISTS_DESC}</p>*}
-    <p>{$INPUT_WRITE_CONFIGURE}<label for="write_configure">{$smarty.const.TEXT_CONFIGURE}</label></p>
-    <p>{$INPUT_DB_INSTALL}<label for="db_install">{$smarty.const.TEXT_DB_INSTALL}</label></p>
-    {$INPUT_HIDDEN}
-  {/if}
+    {if isset($PROCESSING)}
+      {if $UPDATE_ACTION == 'convert'}
+        <div id="info_text">{$smarty.const.TEXT_INFO_DO_UPDATE}</div>
+        <br />
+        <div class="processingmessage">
+          <div id="process_info_wait">{$smarty.const.TEXT_INFO_WAIT}</div>
+          <div class="process_wrapper">
+            <div class="process_inner_wrapper">
+              <div id="backup_process"></div>
+            </div>
+          </div>
+          <div id="backup_precents">0%</div>
+          <div id="data_ok"></div>
+          {$JAVASCRIPT}
+        </div>
+      {else}
+        <div id="info_text">{$smarty.const.TEXT_INFO_DO_INSTALL}</div>
+        <br />
+        <div class="processingmessage">
+          <div id="process_info_wait">{$smarty.const.TEXT_INFO_WAIT}</div>
+          <div class="processing_bar"><img src="images/processing.gif" alt="" /></div>
+          <div class="process_wrapper" style="display:none;">
+            <div class="process_inner_wrapper">
+              <div id="backup_process" style="width:100%"></div>
+            </div>
+          </div>
+          <div id="backup_precents" style="display:none;">100%</div>
+          <div id="data_ok"></div>
+          {$JAVASCRIPT}
+        </div>
+      {/if}
+    {elseif !isset($INPUT_DB_INSTALL)}
+      <h2>{$smarty.const.TEXT_DB_HEADING}</h2>
+      <div class="field_row">
+        <div class="field_item"><div class="field_heading">{$smarty.const.TEXT_DB_SERVER}</div>{$INPUT_DB_SERVER}</div>
+        <div class="field_item"><div class="field_heading">{$smarty.const.TEXT_DB_DATABASE}</div>{$INPUT_DB_DATABSE}</div>
+        <div class="field_item"><div class="field_heading">{$smarty.const.TEXT_DB_USERNAME}</div>{$INPUT_DB_USERNAME}</div>
+        <div class="field_item"><div class="field_heading">{$smarty.const.TEXT_DB_PASSWORD}</div>{$INPUT_DB_PASSWORD}<span class="field_eye"><i class="fas fa-eye" data-name="db_password"></i></span></div>
+        <div class="field_item"><div class="field_heading">{$smarty.const.TEXT_DB_CHARSET}</div>{$INPUT_DB_CHARSET}</div>
+        <div class="field_item"><div class="field_heading">{$smarty.const.TEXT_DB_PCONNECT}</div>{$INPUT_DB_PCONNECT}</div>
+      </div>
+      <br />
+      <h2>{$smarty.const.TEXT_SERVER_HEADING}</h2>
+      <div class="field_row">
+        <div class="field_item"><div class="field_heading">{$smarty.const.TEXT_SERVER_HTTP_SERVER}</div>{$INPUT_HTTP_SERVER}</div>
+        <div class="field_item"><div class="field_heading">{$smarty.const.TEXT_SERVER_HTTPS_SERVER}</div>{$INPUT_HTTPS_SERVER}</div>
+        <div class="field_item"><div class="field_heading">{$smarty.const.TEXT_SERVER_USE_SSL}</div>{$INPUT_USE_SSL}</div>
+        <div class="field_item"><div class="field_heading">{$smarty.const.TEXT_SERVER_SESSION}</div>{$INPUT_SESSION}</div>
+      </div>
+      <br />
+      <h2>{$smarty.const.TEXT_ADMIN_DIRECTORY_HEADING}</h2>
+      <div class="field_row">
+        <div class="field_item"><div class="warningmessage">{$smarty.const.TEXT_ADMIN_DIRECTORY_DESCRIPTION}</div></div>
+        <div class="field_item"><div class="field_heading">{$smarty.const.TEXT_ADMIN_DIRECTORY}&nbsp;&nbsp;<span class="field_directory_suggest">{$ADMIN_DIRECTORY_SUGGEST}</span></div>{$INPUT_ADMIN_DIRECTORY}</div>
+      </div>
+      <script>
+        $('body').on('click', '.field_directory_suggest', function() {
+          $("input[name='admin_directory']").val($('.field_directory_suggest').html());
+        });
+        $('body').on('click', '.fa-eye, .fa-eye-slash', function() {
+          var pass_name = $(this).data('name');
+          var pass_state = $("input[name='"+pass_name+"']").attr('type');
+          $("input[name='"+pass_name+"']").attr('type', (pass_state == 'text') ? 'password' : 'text');
+          $(this).toggleClass("fa-eye fa-eye-slash");    
+        });
+      </script>
+    {else}
+      <h2>{$smarty.const.TEXT_DB_EXISTS}</h2>
+      {* <p>{$smarty.const.TEXT_DB_EXISTS_DESC}</p> *}
+      <p class="main">{$INPUT_WRITE_CONFIGURE}<label for="write_configure">{$smarty.const.TEXT_CONFIGURE}</label></p>
+      <p class="main">{$INPUT_DB_INSTALL}<label for="db_install">{$smarty.const.TEXT_DB_INSTALL}</label></p>
+      {$INPUT_HIDDEN}
+    {/if}
   
-  {if !isset($PROCESSING)}
-    {$JAVASCRIPTCHECK}
-    <noscript><div class="errormessage cf"><strong>{$smarty.const.TEXT_ERROR_JAVASCRIPT}</strong></div></noscript>
-    <div class="cssButtonRow cf" style="display:none">
-      {if isset($BUTTON_BACK)}<div class="cssButton cssColor_2">{$BUTTON_BACK}</div>{/if}
-      <div class="cssButton cssColor_3">{$BUTTON_SUBMIT}</div>
-    </div>
-  {/if}
+    {if !isset($PROCESSING)}
+      {$JAVASCRIPTCHECK}
+      <noscript><div class="errormessage"><strong>{$smarty.const.TEXT_ERROR_JAVASCRIPT}</strong></div></noscript>
+      <div class="cssButtonRow" style="display:none">
+        {if isset($BUTTON_BACK)}<div class="cssButton cssColor_2">{$BUTTON_BACK}</div>{/if}
+        <div class="cssButton cssColor_3">{$BUTTON_SUBMIT}</div>
+      </div>
+    {/if}
+  {/if}  
 {$FORM_END}

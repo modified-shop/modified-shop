@@ -3,14 +3,23 @@
     <div class="installer_logo">
       <img src="{$logo}" alt="" />
       {if isset($language_array)}
-        <div class="installer_languages cf">
+        <div class="installer_languages">
           {foreach name=aussen item=language from=$language_array}
-            <a href="{$language.link}"><img src="images/icons/{$language.code}.gif" style="width:20px;" /></a>
+            <a href="{$language.link}"><img src="images/icons/flag_{$language.code}.png" alt="flag_{$language.code}" /></a>
           {/foreach}
         </div>
       {/if}
     </div>
-    <div class="installer_content cf">
+
+    {if strpos($smarty.server.PHP_SELF, 'autoupdate') !== false}
+      <div class="installer_mode autoupdate">{$smarty.const.TEXT_MODE_AUTOUPDATE}</div>
+    {elseif strpos($smarty.server.PHP_SELF, 'update') !== false}
+      <div class="installer_mode update">{$smarty.const.TEXT_MODE_UPDATE}</div>
+    {elseif strpos($smarty.server.PHP_SELF, 'install_') !== false}
+      <div class="installer_mode install">{$smarty.const.TEXT_MODE_INSTALL}</div>
+    {/if}
+
+    <div class="installer_content">
       {$module_content}
     </div>
   </div>

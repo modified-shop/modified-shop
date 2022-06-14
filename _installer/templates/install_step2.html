@@ -1,27 +1,36 @@
 {$FORM_ACTION}
-  {if isset($error_message)}<div class="errormessage cf">{$error_message}</div>{/if}
+  {if isset($error_message)}<div class="errormessage">{$error_message}</div>{/if}
   
   <p>{$smarty.const.TEXT_ACCOUNT}</p>
   <br />
   <br />
   <h2>{$smarty.const.TEXT_ACCOUNT_HEADING}</h2>
-  <div class="field_row cf">
-    <div class="field_item cf"><div class="field_heading">{$smarty.const.TEXT_ACCOUNT_FIRSTNAME}</div>{$INPUT_FIRSTNAME}</div>
-    <div class="field_item cf"><div class="field_heading">{$smarty.const.TEXT_ACCOUNT_LASTNAME}</div>{$INPUT_LASTNAME}</div>
-    <div class="field_item cf"><div class="field_heading">{$smarty.const.TEXT_ACCOUNT_COMPANY}</div>{$INPUT_COMPANY}</div>
-    <div class="field_item cf"><div class="field_heading">{$smarty.const.TEXT_ACCOUNT_STREET}</div>{$INPUT_STREET}</div>
-    <div class="field_item cf"><div class="field_heading">{$smarty.const.TEXT_ACCOUNT_CODE}</div>{$INPUT_CODE}</div>
-    <div class="field_item cf"><div class="field_heading">{$smarty.const.TEXT_ACCOUNT_CITY}</div>{$INPUT_CITY}</div>
-    <div class="field_item cf"><div class="field_heading">{$smarty.const.TEXT_ACCOUNT_COUNTRY}</div>{$INPUT_COUNTRY}</div>
+  <div class="field_row">
+    <div class="field_item"><div class="field_heading">{$smarty.const.TEXT_ACCOUNT_FIRSTNAME}</div>{$INPUT_FIRSTNAME}</div>
+    <div class="field_item"><div class="field_heading">{$smarty.const.TEXT_ACCOUNT_LASTNAME}</div>{$INPUT_LASTNAME}</div>
+    <div class="field_item"><div class="field_heading">{$smarty.const.TEXT_ACCOUNT_COMPANY}</div>{$INPUT_COMPANY}</div>
+    <div class="field_item"><div class="field_heading">{$smarty.const.TEXT_ACCOUNT_STREET}</div>{$INPUT_STREET}</div>
+    <div class="field_item"><div class="field_heading">{$smarty.const.TEXT_ACCOUNT_CODE}</div>{$INPUT_CODE}</div>
+    <div class="field_item"><div class="field_heading">{$smarty.const.TEXT_ACCOUNT_CITY}</div>{$INPUT_CITY}</div>
+    <div class="field_item"><div class="field_heading">{$smarty.const.TEXT_ACCOUNT_COUNTRY}</div>{$INPUT_COUNTRY}</div>
   </div>
-  <div class="field_row cf">
-    <div class="field_item cf"><div class="field_heading">{$smarty.const.TEXT_ACCOUNT_EMAIL}</div>{$INPUT_EMAIL}</div>
-    <div class="field_item cf"><div class="field_heading">{$smarty.const.TEXT_ACCOUNT_CONFIRM_EMAIL}</div>{$INPUT_CONFIRM_EMAIL}</div>
-    <div class="field_item cf"><div class="field_heading">{$smarty.const.TEXT_ACCOUNT_PASSWORD}</div>{$INPUT_PASSWORD}</div>
-    <div class="field_item cf"><div class="field_heading">{$smarty.const.TEXT_ACCOUNT_CONFIRMATION}</div>{$INPUT_CONFIRM_PASSWORD}</div>
+  <div class="field_row">
+    <div class="field_item"><div class="field_heading">{$smarty.const.TEXT_ACCOUNT_EMAIL}</div>{$INPUT_EMAIL}</div>
+    <div class="field_item"><div class="field_heading">{$smarty.const.TEXT_ACCOUNT_CONFIRM_EMAIL}</div>{$INPUT_CONFIRM_EMAIL}</div>
+    <div class="field_item"><div class="field_heading">{$smarty.const.TEXT_ACCOUNT_PASSWORD}</div>{$INPUT_PASSWORD}<span class="field_eye"><i class="fas fa-eye" data-name="password"></i></span></div>
+    <div class="field_item"><div class="field_heading">{$smarty.const.TEXT_ACCOUNT_CONFIRMATION}</div>{$INPUT_CONFIRM_PASSWORD}<span class="field_eye"><i class="fas fa-eye" data-name="confirm_password"></i></span></div>
   </div>
 
-  <div class="cssButtonRow cf">
+  <script>
+    $('body').on('click', '.fa-eye, .fa-eye-slash', function() {
+      var pass_name = $(this).data('name');
+      var pass_state = $("input[name='"+pass_name+"']").attr('type');
+      $("input[name='"+pass_name+"']").attr('type', (pass_state == 'text') ? 'password' : 'text');
+      $(this).toggleClass("fa-eye fa-eye-slash");    
+    });
+  </script>
+  
+  <div class="cssButtonRow">
     <div class="cssButton cssColor_3">{$BUTTON_SUBMIT}</div>
   </div>
 

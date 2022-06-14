@@ -29,7 +29,7 @@
   include(__DIR__.'/config.php');
 
   // default time zone
-  date_default_timezone_set(DEFAULT_TIMEZONE);
+  date_default_timezone_set('Europe/Berlin');
 
   // new error handling
   if (!defined('STORE_PARSE_DATE_TIME_FORMAT')) {

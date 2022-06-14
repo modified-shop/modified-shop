@@ -13,6 +13,23 @@
 
   require_once ('includes/application_top.php');
 
+  if ($upgrade === true) {  
+    // Database
+    $db_type = get_mysql_type();
+    require_once (DIR_FS_INC.'db_functions_'.$db_type.'.inc.php');
+    require_once (DIR_FS_INC.'db_functions.inc.php');
+
+    // make a connection to the database... now
+    xtc_db_connect() or die('Unable to connect to database server!');
+
+    // load configuration
+    $configuration_query = xtc_db_query('SELECT configuration_key, configuration_value FROM '.TABLE_CONFIGURATION);
+    while ($configuration = xtc_db_fetch_array($configuration_query)) {
+      defined($configuration['configuration_key']) OR define($configuration['configuration_key'], stripslashes($configuration['configuration_value']));
+    }
+  }
+  defined('CURRENT_TEMPLATE') OR define('CURRENT_TEMPLATE', DEFAULT_TEMPLATE);
+  
   // language
   require_once(DIR_FS_INSTALLER.'lang/'.$_SESSION['language'].'.php');
 
@@ -28,7 +45,7 @@
   $db_database = ((defined('DB_DATABASE')) ? DB_DATABASE : '');
   $db_username = ((defined('DB_SERVER_USERNAME')) ? DB_SERVER_USERNAME : '');
   $db_password = ((defined('DB_SERVER_PASSWORD')) ? DB_SERVER_PASSWORD : '');
-  
+
   $db_type = ((defined('DB_MYSQL_TYPE')) ? DB_MYSQL_TYPE : '');
   $db_charset = (($upgrade === true && defined('DB_SERVER_CHARSET')) ? DB_SERVER_CHARSET : 'utf8');
   $db_pconnect = ((defined('USE_PCONNECT')) ? USE_PCONNECT : 'false');
@@ -42,7 +59,7 @@
     'modified.sql',
     'banktransfer_blz.sql',
     'customers_status.sql',            
-  );
+    );
 
   if (isset($_POST['action']) && $_POST['action'] == 'process') {
     $valid_params = array(
@@ -54,7 +71,7 @@
       'db_charset',
       'db_pconnect',
       'db_install',
-      
+    
       'http_server',
       'https_server',
       'session',
@@ -84,13 +101,13 @@
       $messageStack->add('install_step1', WARNING_INVALID_DOMAIN);
       $messageStack->add_session('install_step2', WARNING_INVALID_DOMAIN);
     }
-    
+  
     // Database
     require_once (DIR_FS_INC.'db_functions_'.$db_type.'.inc.php');
     require_once (DIR_FS_INC.'db_functions.inc.php');
 
     $_SESSION['language_charset'] = (($db_charset == 'utf8') ? 'utf-8' : 'ISO-8859-15');
-    
+  
     $connection = xtc_db_connect($db_server, $db_username, $db_password, $db_database, 'db_link');
     if (is_object($connection) || is_resource($connection)) {
       $error = false;
@@ -101,7 +118,7 @@
           $error = true;
         }
       }
-            
+          
       if ($error === false || isset($db_install) || isset($write_configure)) {
         if ($error === false || isset($db_install)) {     
           $collation = 'latin1_german1_ci';
@@ -110,12 +127,12 @@
           }
           xtc_db_query('ALTER DATABASE `'.$db_database.'` DEFAULT CHARACTER SET '.$db_charset.' COLLATE '.$collation);
           xtc_db_query('SET NAMES '.$db_charset.' COLLATE '.$collation);
-        
+      
           $engine = '';
           xtc_db_query("CREATE TABLE IF NOT EXISTS `engine` (`type` VARCHAR( 16 ) NOT NULL)");
           $check_query = xtc_db_query("SHOW CREATE TABLE `engine`");
           $check = xtc_db_fetch_array($check_query);
-                
+              
           $pos = stripos($check['Create Table'], 'engine=');
           if ($pos !== false) {
             $engine = trim(substr($check['Create Table'], ($pos + 7), (strpos($check['Create Table'], ' ', $pos) - $pos - 7)));
@@ -129,7 +146,7 @@
           xtc_db_query("TRUNCATE `engine`");
           xtc_db_query("INSERT INTO `engine` VALUES ('".xtc_db_input($engine)."')");
         }
-        
+      
         if ($error === false || isset($write_configure)) {  
           if (strpos($http_server, 'https:') !== false) {
             $use_ssl = 'true';
@@ -145,12 +162,12 @@
           fputs($fp, $file_contents);
           fclose($fp);
         }
-            
+          
         if (isset($write_configure) && $error === true) {
           xtc_redirect(xtc_href_link(DIR_WS_INSTALLER.'install_finished.php', '', $request_type));
         }
       }
-      
+    
       if ($error === false || isset($db_install)) {
         xtc_redirect(xtc_href_link(DIR_WS_INSTALLER.'install_step1.php', 'action=restorenow&sql=0', $request_type));
       }
@@ -165,7 +182,7 @@
     // make a connection to the database... now
     xtc_db_connect() or die('Unable to connect to database server!');
     xtc_db_query("SET default_storage_engine = MYISAM");
-    
+  
     if ($_GET['action'] == 'restorenow' || $_GET['action'] == 'restoredb') {
       define('_VALID_XTC', true);
       $action = (isset($_GET['action']) ? $_GET['action'] : '');
@@ -174,7 +191,7 @@
       }
       $_GET['file'] = $sql_file_array[$_GET['sql']];
       $_GET['convert'] = $_SESSION['language_charset'];
-      
+    
       include (DIR_FS_CATALOG.DIR_ADMIN.'includes/functions/db_functions.php');
       include (DIR_FS_CATALOG.DIR_ADMIN.'includes/db_actions.php');
 
@@ -193,13 +210,13 @@
       $javascript .= ob_get_contents();
       ob_end_clean();
       $smarty->assign('JAVASCRIPT', $javascript);
-      
+    
       $smarty->assign('PROCESSING', 'db_restore');
       $smarty->clear_assign('BUTTON_SUBMIT');
       $smarty->clear_assign('BUTTON_BACK');
-      
+    
     } elseif ($_GET['action'] == 'convertnow' || $_GET['action'] == 'convertdb') {
-      
+    
       $engine_query = xtc_db_query("SELECT * FROM `engine`");
       $engine = xtc_db_fetch_array($engine_query);
       if ($engine['type'] != '') {
@@ -210,10 +227,10 @@
           }
           $convert['aufruf']++;
           $_SESSION['convert'] = $convert;
-          
+        
           $sec = time() - $convert['starttime']; 
           $time = sprintf('%d:%02d Min.', floor($sec/60), $sec % 60);
-    
+  
           $json_output = array();
           $json_output['aufruf'] = $convert['aufruf'];
           $json_output['table_ready'] = $convert['aufruf'];
@@ -228,7 +245,7 @@
               unset($_SESSION['convert']);
             }
           }
-          
+        
           $json_output = json_encode($json_output);
           echo $json_output;
           exit();
@@ -244,7 +261,7 @@
           }
           $convert['num_tables'] = count($convert['tables']);
           $_SESSION['convert'] = $convert;
-          
+        
           $javascript = '
           <script type="text/javascript">
             var debug = true;
@@ -260,7 +277,7 @@
           $javascript .= ob_get_contents();
           ob_end_clean();
           $smarty->assign('JAVASCRIPT', $javascript);
-      
+    
           $smarty->assign('UPDATE_ACTION', 'convert');
           $smarty->assign('PROCESSING', 'db_restore');
           $smarty->clear_assign('BUTTON_SUBMIT');
@@ -277,14 +294,6 @@
   }
 
   // database 
-  $db_type_array = array();
-  if (function_exists('mysqli_connect')) {
-    $db_type_array[] = array('id' => 'mysqli', 'text' => 'MySQLi');
-  }
-  if (function_exists('mysql_connect') && count($db_type_array) > 1) {
-    $db_type_array[] = array('id' => 'mysql', 'text' => 'MySQL');
-  }
-
   $db_charset_array = array(
     array('id' => 'latin1', 'text' => 'ISO-8859-15'),
     array('id' => 'utf8', 'text' => 'UTF-8'),
@@ -301,7 +310,6 @@
   $smarty->assign('INPUT_DB_USERNAME', xtc_draw_input_fieldNote(array('name' => 'db_username')));
   $smarty->assign('INPUT_DB_PASSWORD', xtc_draw_password_fieldNote(array('name' => 'db_password')));
   $smarty->assign('INPUT_DB_DATABSE', xtc_draw_input_fieldNote(array('name' => 'db_database')));    
-  $smarty->assign('INPUT_DB_MYSQL_TYPE', xtc_draw_pull_down_menuNote(array ('name' => 'db_type'), $db_type_array, $db_type));
   $smarty->assign('INPUT_DB_CHARSET', xtc_draw_pull_down_menuNote(array ('name' => 'db_charset'), $db_charset_array, $db_charset));
   $smarty->assign('INPUT_DB_PCONNECT', xtc_draw_pull_down_menuNote(array ('name' => 'db_pconnect'), $boolean_array, $db_pconnect));
   
@@ -329,22 +337,25 @@
   }
   
   $javascriptcheck = '
-          <script type="text/javascript">
-		  	$(document).ready(function(){	
-  				$(".cssButtonRow").show();	
-			});
-		  </script>
+  <script type="text/javascript">
+    $(document).ready(function(){	
+      $(".cssButtonRow").show();	
+    });
+  </script>
   ';
   $smarty->assign('JAVASCRIPTCHECK', $javascriptcheck);
   
+  // checks  
+  require_once('includes/checks.php');
+
   // form
-  $smarty->assign('FORM_ACTION', xtc_draw_form('db_connection', xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), '', $request_type), 'post').xtc_draw_hidden_field('action', 'process').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()));
+  $smarty->assign('FORM_ACTION', xtc_draw_form('db_connection', xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), '', $request_type), 'post').xtc_draw_hidden_field('db_type', 'mysqli').xtc_draw_hidden_field('action', 'process').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()));
   $smarty->assign('BUTTON_SUBMIT', '<button type="submit">'.BUTTON_SUBMIT.'</button>');
   $smarty->assign('FORM_END', '</form>');
 
   $smarty->assign('language', $_SESSION['language']);
   $module_content = $smarty->fetch('install_step1.html');
-  
+
   require ('includes/header.php');
   $smarty->assign('module_content', $module_content);
   $smarty->assign('logo', xtc_href_link(DIR_WS_INSTALLER.'images/logo_head.png', '', $request_type));

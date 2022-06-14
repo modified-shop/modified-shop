@@ -1,4 +1,4 @@
-{if isset($error_message)}<div class="errormessage cf">{$error_message}</div>{/if}
+{if isset($error_message)}<div class="errormessage">{$error_message}</div>{/if}
 
 <p>{$smarty.const.TEXT_FINISHED}</p>
 <br />
@@ -8,7 +8,12 @@
   <h2>{$smarty.const.TEXT_MODULES_INSTALLED}</h2>
   <ul class="modulelist">
   {foreach name=aussen item=payment from=$payment_methods.installed}
-    <li class="installed">{$payment.NAME}</li>
+    <li class="installed">
+      <span class="ml_row">
+        <span class="ml_title">{$payment.NAME}</span>
+        <span class="ml_action"><i class="fas fa-check"></i></span>
+      </span>
+    </li>
   {/foreach}
   <br />
   <br />
@@ -18,16 +23,21 @@
   <h2>{$smarty.const.TEXT_MODULES_UNINSTALLED}</h2>
   <ul class="modulelist">
   {foreach name=aussen item=payment from=$payment_methods.uninstalled}
-    <li>{$payment.NAME} {$payment.BUTTON_INSTALL}</li>
+    <li>
+      <a href="{$payment.LINK_INSTALL}">
+        <span class="ml_row">
+          <span class="ml_title">{$payment.NAME}</span> 
+          <span class="ml_action">{$smarty.const.BUTTON_PAYMENT_INSTALL}</span>
+        </span>
+      </a>
+    </li>
   {/foreach}
   </ul>
 {/if}
 
 <br />
-<div class="cssButtonRow cf">
+<div class="cssButtonRow">
   <div class="cssButton cssColor_2">{$BUTTON_SHOP}</div>
 </div>
-
-<br />
 {* Tracking Image *}
 {$modified}

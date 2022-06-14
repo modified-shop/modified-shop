@@ -152,6 +152,7 @@
         'customers_lastname' => $lastname,
         'customers_email_address' => $email_address,
         'customers_password' => xtc_encrypt_password($password),
+        'customers_password_time' => time(),
         'customers_date_added' => 'now()',
         'customers_last_modified' => 'now()',
       );
