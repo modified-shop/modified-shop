@@ -234,6 +234,7 @@ switch ($category_depth) {
         $from   .= "JOIN ".TABLE_MANUFACTURERS." m 
                          ON p.manufacturers_id = m.manufacturers_id
                             AND m.manufacturers_id = '".(int) $_GET['manufacturers_id']."' ";
+        $use_group_by = true;
       }
       
       // We are asked to show only a specific category
@@ -244,10 +245,13 @@ switch ($category_depth) {
       if (basename($PHP_SELF) == FILENAME_DEFAULT && count($subcategories_array) > 0) {
         // show the products in a given categorie
         $p2c_condition = " AND p2c.categories_id IN (".implode(', ', $subcategories_array).") ";
+        $use_group_by = true;
         if (count($subcategories_array) == 1) {
           $p2c_condition = " AND p2c.categories_id = '".$subcategories_array[0]."' ";
+          $use_group_by = false;
         }
       }
+      
       // We are asked to show only specific manufacturer                    
       if (isset($_GET['filter_id']) && xtc_not_null($_GET['filter_id'])) {
         $select .= "m.manufacturers_name, ";
