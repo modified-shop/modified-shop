@@ -134,7 +134,7 @@
       } else {
         foreach ($files_to_check['rdirs'] as $dir) {
           if (is_dir(DIR_FS_CATALOG.$dir)) {
-            $rfiles_to_check[$dir] = scanDirectories(DIR_FS_CATALOG.$dir, array());
+            $rfiles_to_check[$dir] = scanDirectories(DIR_FS_CATALOG.$dir, false);
           }
         }
         if (is_array($rfiles_to_check)) {

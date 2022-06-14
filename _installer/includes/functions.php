@@ -11,7 +11,7 @@
    ---------------------------------------------------------------------------------------*/
 
 
-  function scanDirectories($dir, $data_array = false) {
+  function scanDirectories($dir, $data_array) {
     if (!is_array($data_array)) {
       $data_array = array(
         'dirs' => array(),
