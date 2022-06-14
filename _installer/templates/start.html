@@ -1,9 +1,44 @@
+
+<h2>{$smarty.const.TEXT_START_TITLE}</h2>
 <p>{$smarty.const.TEXT_START}</p>
+
 <br />
 <br />
+
+<h2>{$smarty.const.TEXT_UPDATER_HEADING}</h2>
+
 {$JAVASCRIPTCHECK}
-<noscript><div class="errormessage cf"><strong>{$smarty.const.TEXT_ERROR_JAVASCRIPT}</strong></div></noscript>
-<div class="cssButtonRow cf" style="display:none">
-  <div class="cssButton cssColor_1">{$BUTTON_UPDATE}</div>
-  <div class="cssButton cssColor_3">{$BUTTON_INSTALL}</div>
+<noscript><div class="errormessage"><strong>{$smarty.const.TEXT_ERROR_JAVASCRIPT}</strong></div></noscript>
+
+<div class="start_row" style="display:none">
+  <div class="start_item si_bg_1">
+    <a href="{$LINK_SHOP}">
+      <span class="start_item_inner">
+        <span class="start_item_icon"><i class="fas fa-shopping-bag"></i></span>
+        <span class="start_item_headline">{$smarty.const.TEXT_START_SHOP_HEADING}</span>
+        <span class="start_item_text">{$smarty.const.TEXT_START_SHOP_TEXT}</span>
+        <span class="start_item_action"><span><i class="fas fa-long-arrow-alt-left"></i></span></span>
+      </span>
+    </a>
+  </div>    
+  <div class="start_item si_bg_2">
+    <a href="{$LINK_UPDATE}">
+      <span class="start_item_inner">
+        <span class="start_item_icon"><i class="fas fa-file-import"></i></span>
+        <span class="start_item_headline">{$smarty.const.TEXT_START_UPDATE_HEADING}</span>
+        <span class="start_item_text">{$smarty.const.TEXT_START_UPDATE_TEXT}</span>
+        <span class="start_item_action"><span><i class="fas fa-long-arrow-alt-right"></i></span></span>
+      </span>
+    </a>
+  </div>    
+  <div class="start_item si_bg_3">
+    <a href="{$LINK_INSTALL}">
+      <span class="start_item_inner">
+        <span class="start_item_icon"><i class="fas fa-database"></i></span>
+        <span class="start_item_headline">{$smarty.const.TEXT_START_INSTALL_HEADING}</span>
+        <span class="start_item_text">{$smarty.const.TEXT_START_INSTALL_TEXT}</span>
+        <span class="start_item_action"><span><i class="fas fa-long-arrow-alt-right"></i></span></span>
+      </span>
+    </a>
+  </div>    
 </div>

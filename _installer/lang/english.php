@@ -19,34 +19,58 @@
   define('BUTTON_INSTALL', 'New installation');
   define('BUTTON_UPDATE', 'Update');
   define('BUTTON_SHOP', 'Go to Shop');
+  define('BUTTON_UPDATE_CONTINUE', 'Continue Update');
+  define('BUTTON_DOWNLOAD_DIFF', 'Download');
 
-  define('BUTTON_CONFIGURE', 'execute <i class="fa fa-caret-right"></i>');
-  define('BUTTON_SYSTEM_UPDATES', 'execute <i class="fa fa-caret-right"></i>');
-  define('BUTTON_DB_UPDATE', 'execute <i class="fa fa-caret-right"></i>');
-  define('BUTTON_SQL_UPDATE', 'execute <i class="fa fa-caret-right"></i>');
-  define('BUTTON_SQL_MANUELL', 'execute <i class="fa fa-caret-right"></i>');
-  define('BUTTON_DB_BACKUP', 'execute <i class="fa fa-caret-right"></i>');
-  define('BUTTON_DB_RESTORE', 'execute <i class="fa fa-caret-right"></i>');
-  define('BUTTON_PAYMENT_INSTALL', 'install <i class="fa fa-caret-right"></i>');
-  
+  define('BUTTON_CONFIGURE', 'Execute <i class="fas fa-arrow-alt-circle-right"></i>');
+  define('BUTTON_SYSTEM_UPDATES', 'Execute <i class="fas fa-arrow-alt-circle-right"></i>');
+  define('BUTTON_DB_UPDATE', 'Execute <i class="fas fa-arrow-alt-circle-right"></i>');
+  define('BUTTON_SQL_UPDATE', 'Selection <i class="fas fa-list"></i>');
+  define('BUTTON_SQL_MANUELL', 'Manual input <i class="fas fa-code"></i>');
+  define('BUTTON_DB_BACKUP', 'Settings <i class="fas fa-database"></i>');
+  define('BUTTON_DB_RESTORE', 'Settings <i class="fas fa-database"></i>');
+  define('BUTTON_DELETE_FILES', 'Execute <i class="fas fa-arrow-alt-circle-right"></i>');
+  define('BUTTON_PAYMENT_INSTALL', 'Install <i class="fas fa-arrow-alt-circle-right"></i>');
+
   // text
+  define('TEXT_MODE_UPDATE', 'Update');
+  define('TEXT_MODE_INSTALL', 'New installation');
+  define('TEXT_MODE_AUTOUPDATE', 'Autoupdate');
+
+  define('TEXT_START_SHOP_HEADING', 'Zur&uuml;ck zum Shop');
+  define('TEXT_START_SHOP_TEXT', 'Das Installationsverzeichnis wird aus Sicherheitsgr&uuml;nden automatisch gel&ouml;scht.');
+  define('TEXT_START_UPDATE_HEADING', 'Update');
+  define('TEXT_START_UPDATE_TEXT', 'Update eines bestehenden modified Shop auf die aktuelle Version.');
+  define('TEXT_START_INSTALL_HEADING', 'Neu installieren');
+  define('TEXT_START_INSTALL_TEXT', 'Komplette Neuinstallation des modified Shops. Eine bestehende Datenbank wird &uuml;berschrieben.');
+
   define('TEXT_SQL_SUCCESS', '%s');
   define('TEXT_INFO_DONATIONS_IMG_ALT', 'Please support this project with your donation.');
-  define('BUTTON_DONATE','<a href="https://www.modified-shop.org/spenden" target="_blank"><img src="https://www.paypal.com/en_US/i/btn/btn_donateCC_LG.gif" alt="' . TEXT_INFO_DONATIONS_IMG_ALT . '" border="0" /></a>');
-  define('TEXT_START', '<b>Welcome to the modified eCommerce Shopsoftware installation process</b><br /><br />The modified eCommerce Shopsoftware is an open source e-commerce solution under on going development by the modified eCommerce Shopsoftware Team and its community.<br /> Its feature packed out-of-the-box installation allows store owners to setup, run, and maintain their online stores with minimum effort and with no costs involved.<br />The modified eCommerce Shopsoftware combines open source solutions to provide a free and open development platform, which includes the powerful PHP web scripting language, the stable Apache web server, and the fast MySQL database server.<br /><br />With no restrictions or special requirements, the modified eCommerce Shopsoftware can be installed on on any environment that supports PHP '.PHP_VERSION_MIN.' and MySQL 5.0.0, which includes Linux, Solaris, BSD, and Microsoft Windows environments.<br /><br />The modified eCommerce Shopsoftware is an open source project, yet a lot of work and spare time go into this project. Therefore we would be grateful if you show your appreciation by <b>donating</b> to the project.<br /><br />' . BUTTON_DONATE);
+  define('BUTTON_DONATE','<a href="https://www.modified-shop.org/spenden" target="_blank"><img src="https://www.modified-shop.org/images/content/btn_donateCC_LS.png" alt="' . TEXT_INFO_DONATIONS_IMG_ALT . '" border="0" /></a>');
+  define('TEXT_START_TITLE', 'Welcome to the modified eCommerce Shopsoftware installation process');
+  define('TEXT_START', 'The modified eCommerce Shopsoftware is an open source e-commerce solution under on going development by the modified eCommerce Shopsoftware Team and its community.<br /> Its feature packed out-of-the-box installation allows store owners to setup, run, and maintain their online stores with minimum effort and with no costs involved.<br />The modified eCommerce Shopsoftware combines open source solutions to provide a free and open development platform, which includes the powerful PHP web scripting language, the stable Apache web server, and the fast MySQL database server.<br /><br />With no restrictions or special requirements, the modified eCommerce Shopsoftware can be installed on on any environment that supports PHP '.PHP_VERSION_MIN.' and MySQL 5.0.0, which includes Linux, Solaris, BSD, and Microsoft Windows environments.<br /><br />The modified eCommerce Shopsoftware is an open source project, yet a lot of work and spare time go into this project. Therefore we would be grateful if you show your appreciation by <b>donating</b> to the project.<br /><br />' . BUTTON_DONATE);
   define('TEXT_UPDATER_HEADING', 'Please Choose');
+  define('TEXT_AUTOUPDATER_HEADING', 'Updating');
   define('TEXT_UPDATER', 'Welcome to the Updater of the modified eCommerce Shopsoftware');
-  define('TEXT_UPDATE_CONFIG', 'Update configuration file (configure.php)');
+  define('TEXT_UPDATE_CONFIG', 'Update configuration');
   define('TEXT_UPDATE_SYSTEM', 'System updates');
-  define('TEXT_UPDATE_SYSTEM_SUCCESS', 'System updates executed successful.');
+  define('TEXT_UPDATE_SYSTEM_SUCCESS', 'System updates executed successful');
+  define('TEXT_CHECK_UPDATE', 'Check Update');
+  define('TEXT_DO_UPDATE', 'Update process');
+  define('TEXT_DELETE_FILES', 'Delete obsolete files');
+  define('TEXT_SQL_NO_UPDATE_FILES', 'No SQL update files available');
+  define('TEXT_DELETE_FILES_SUCCESS', 'Obsolete files deleted successfully');
+  define('TEXT_DELETE_FILES_ERROR', 'The following files could not be deleted:');
+  define('TEXT_DELETE_DIR_ERROR', 'The following directories could not be deleted:');
   
   define('TEXT_CONFIGURE', 'Recreate configuration file (configure.php)');
   define('TEXT_CONFIGURE_DESC', 'Here you can update the configure.php file to make sure it is up to date.');
-  define('TEXT_CONFIGURE_SUCCESS', 'configure.php written!');
+  define('TEXT_CONFIGURE_SUCCESS', 'Die Konfigurations-Datei wurde neu geschrieben');
+  define('TEXT_CONFIGURE_ERROR', 'Die Konfigurations-Datei konnte nicht geschrieben werden');
   
   define('TEXT_SQL_UPDATE', 'Database Update');
-  define('TEXT_SQL_UPDATE_HEADING', 'Choose SQL Update');
-  define('TEXT_SQL_UPDATE_DESC', 'Please select only the update files, which are necessary for your current Shopversion.');
+  define('TEXT_SQL_UPDATE_HEADING', 'Database Update');
+  define('TEXT_SQL_UPDATE_DESC', 'All the necessary update files for your shop version are listed here.');
   define('TEXT_EXECUTED_SUCCESS', '<b>Executed successful:</b>');
   define('TEXT_EXECUTED_ERROR', '<b>Executed with errors:</b>');
 
@@ -59,6 +83,10 @@
   define('TEXT_INFO_DO_RESTORE', 'The database is being restored!');
   define('TEXT_INFO_DO_RESTORE_OK', 'The database was restored successfully!');
   
+  define('TEXT_UPDATER_ORDER', 'Update steps');
+  define('TEXT_DB_BACKUP_OPTIONS', 'Backup options');
+  define('TEXT_DB_BACKUP_TABLES', 'Database tables');
+
   define('TEXT_DB_BACKUP', 'Database backup');
   define('TEXT_DB_BACKUP_DESC', 'You can backup your database here.');
   define('TEXT_DB_COMPRESS', 'Compress backup');
@@ -98,6 +126,10 @@
   define('TEXT_FROM', ' of ');
   //define('TEXT_DB_UPDATE_BEFORE', 'Text before'); // Not used yet
   //define('TEXT_DB_UPDATE_AFTER', 'Text after'); // Not used yet
+
+  define('TEXT_BACKUP_DIFF', 'Backup Diff');
+  define('TEXT_BACKUP_SIZE', 'Size');
+  define('TEXT_BACKUP_DATE', 'Date');
 
   define('TEXT_DB_HEADING', 'Information about the database:');
   define('TEXT_DB_SERVER', 'Server:');
@@ -157,6 +189,7 @@
   define('TEXT_ERROR_FTP_PASS', 'FTP Password:');
   define('TEXT_ERROR_UNLINK_FILES', 'The following files have to be deleted:');
   define('TEXT_ERROR_UNLINK_FOLDER', 'The following folders have to be deleted:');
+  define('ERROR_AUTOUPDATE', 'An autoupdate is not possible due to the necessary requirements.');
   
   // errors
   define('ERROR_DATABASE_CONNECTION', 'Please check DB data');
@@ -165,6 +198,9 @@
   define('ERROR_SQL_UPDATE_NO_FILE', 'Unfortunately we could not find any SQL update file...');
   define('ERROR_FTP_LOGIN_NOT_POSSIBLE', 'FTP access data incorrect, host not available');
   define('ERROR_FTP_CHMOD_WAS_NOT_SUCCESSFUL', 'Changing the directory permissions was unsuccessful');
+  define('ERROR_FILE_INTEGRITY', 'Files have been changed compared to the original installation. You can download these files as a backup and continue the update.<br><br><b>ATTENTION:</b> During the update ALL changed files will be overwritten!');
+  define('ERROR_CREATE_TMP_DIR', 'Could not create tmp directory');
+  define('ERROR_INVALID_UPDATE_DOWNLOAD', 'Update package could not be downloaded');
 
   // warning
   define('WARNING_INVALID_DOMAIN', 'Your shop domain could not be validated (Possible reasons: Invalid format or internationalized domain name (IDN)');

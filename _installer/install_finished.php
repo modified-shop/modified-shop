@@ -53,7 +53,7 @@
     }
     xtc_redirect(xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), '', $request_type));
   }
-  
+    
   // smarty
   $smarty = new Smarty();
   $smarty->setTemplateDir(__DIR__.'/templates')
@@ -87,6 +87,7 @@
         'NAME' => $module->title,
         'DESCRIPTION' => $module->description,
         'BUTTON_INSTALL' => '<a href="'.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=install&code='.$payment_method, $request_type).'">'.BUTTON_PAYMENT_INSTALL.'</a>',
+        'LINK_INSTALL' => xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=install&code='.$payment_method, $request_type),
       );
       if (method_exists($module,'check')) {
         if ($module instanceof $payment_method && $module->check() > 0) {
@@ -102,7 +103,7 @@
     $smarty->assign('error_message', $messageStack->output('install_finished'));
   }
     
-  $smarty->assign('BUTTON_SHOP', '<a href="'.xtc_href_link('', '', $request_type).'">'.BUTTON_SHOP.'</a>');
+  $smarty->assign('BUTTON_SHOP', '<a href="'.xtc_href_link(DIR_WS_INSTALLER, 'action=shop', $request_type).'">'.BUTTON_SHOP.'</a>');
   $smarty->assign('payment_methods', $directory_array);  
   $smarty->assign('language', $_SESSION['language']);
   $module_content = $smarty->fetch('install_finished.html');

@@ -18,6 +18,9 @@
   require_once (DIR_FS_INC.'db_functions_'.$db_type.'.inc.php');
   require_once (DIR_FS_INC.'db_functions.inc.php');
 
+  // include needed classes
+  require_once (DIR_WS_CLASSES.'modified_api.php');
+
   // make a connection to the database... now
   xtc_db_connect() or die('Unable to connect to database server!');
 
@@ -30,165 +33,106 @@
   // language
   require_once(DIR_FS_INSTALLER.'lang/'.$_SESSION['language'].'.php');
  
- // smarty
+  if (!isset($_SESSION['visited'])) $_SESSION['visited'] = array();
+  
+  // smarty
   $smarty = new Smarty();
   $smarty->setTemplateDir(__DIR__.'/templates')
          ->registerResource('file', new EvaledFileResource())
          ->setConfigDir(__DIR__.'/lang')
          ->SetCaching(0);
 
-  $smarty->assign('BUTTON_SYSTEM_UPDATES', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=system_updates', $request_type).'" class="ActionLink" style="display:none">'.BUTTON_SYSTEM_UPDATES.'</a>');
-  $smarty->assign('BUTTON_CONFIGURE', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=configure', $request_type).'" class="ActionLink" style="display:none">'.BUTTON_CONFIGURE.'</a>');
-  $smarty->assign('BUTTON_DB_UPDATE', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=db_update', $request_type).'" class="ActionLink" style="display:none">'.BUTTON_DB_UPDATE.'</a>');
-  $smarty->assign('BUTTON_SQL_UPDATE', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=sql_update', $request_type).'" class="ActionLink" style="display:none">'.BUTTON_SQL_UPDATE.'</a>');
-  $smarty->assign('BUTTON_SQL_MANUELL', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=sql_manuell', $request_type).'" class="ActionLink" style="display:none">'.BUTTON_SQL_MANUELL.'</a>');
-  $smarty->assign('BUTTON_DB_BACKUP', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=db_backup', $request_type).'" class="ActionLink" style="display:none">'.BUTTON_DB_BACKUP.'</a>');
-  $smarty->assign('BUTTON_DB_RESTORE', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=db_restore', $request_type).'" class="ActionLink" style="display:none">'.BUTTON_DB_RESTORE.'</a>');
+  $smarty->assign('LINK_DB_BACKUP', xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=db_backup', $request_type));
+  $smarty->assign('LINK_DB_RESTORE', xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=db_restore', $request_type));
+  $smarty->assign('LINK_SQL_MANUELL', xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=sql_manuell', $request_type));
   $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.'index.php', '', $request_type).'">'.BUTTON_BACK.'</a>');
-
+  
+  $modulelist = array(
+    array(
+      'NAME' => TEXT_DELETE_FILES,
+      'LINK' => xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=delete_files', $request_type),
+      'BUTTON' => BUTTON_DELETE_FILES,
+      'VISITED' => in_array('delete_files', $_SESSION['visited']),
+    ),
+    array(
+      'NAME' => TEXT_UPDATE_CONFIG,
+      'LINK' => xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=configure', $request_type),
+      'BUTTON' => BUTTON_CONFIGURE,
+      'VISITED' => in_array('configure', $_SESSION['visited']),
+    ),
+    array(
+      'NAME' => TEXT_UPDATE_SYSTEM,
+      'LINK' => xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=system_updates', $request_type),
+      'BUTTON' => BUTTON_SYSTEM_UPDATES,
+      'VISITED' => in_array('system_updates', $_SESSION['visited']),
+    ),
+    array(
+      'NAME' => TEXT_SQL_UPDATE,
+      'LINK' => xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=sql_update', $request_type),
+      'BUTTON' => BUTTON_SQL_UPDATE,
+      'VISITED' => in_array('sql_update', $_SESSION['visited']),
+    ),
+    array(
+      'NAME' => TEXT_DB_UPDATE,
+      'LINK' => xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=updatenow', $request_type),
+      'BUTTON' => BUTTON_DB_UPDATE,
+      'VISITED' => in_array('updatenow', $_SESSION['visited']),
+    ),
+  );
+  $smarty->assign('modulelist', $modulelist);
+    
   if (isset($_GET['action'])) {
     switch ($_GET['action']) {
       case 'system_updates':
-        // downloads
-        $downloads_query = xtc_db_query("SELECT opd.orders_id,
-                                                opd.orders_products_id, 
-                                                opd.orders_products_filename,
-                                                opd.orders_products_download_id,
-                                                o.customers_id, 
-                                                o.customers_email_address
-                                           FROM ".TABLE_ORDERS_PRODUCTS_DOWNLOAD." opd 
-                                           JOIN ".TABLE_ORDERS." o 
-                                                ON o.orders_id = opd.orders_id
-                                          WHERE download_key = ''");
-        if (xtc_db_num_rows($downloads_query) > 0) {
-          while ($downloads = xtc_db_fetch_array($downloads_query)) {
-            $download_key = md5($downloads['orders_id'].$downloads['orders_products_id'].$downloads['customers_id'].$downloads['customers_email_address'].$downloads['orders_products_filename']);
-            xtc_db_query("UPDATE ".TABLE_ORDERS_PRODUCTS_DOWNLOAD."
-                             SET download_key = '".xtc_db_input($download_key)."'
-                           WHERE orders_products_download_id = '".(int)$downloads['orders_products_download_id']."'");
-          }
-        }
-        
-        // whos online
-        $primary = false;
-        $whosonline_query = xtc_db_query("SHOW INDEX FROM ".TABLE_WHOS_ONLINE);
-        while ($whosonline = xtc_db_fetch_array($whosonline_query)) {
-          if ($whosonline['Key_name'] == 'PRIMARY' && $whosonline['Column_name'] == 'session_id') {
-            $primary = true;
-          }
-        }
-        
-        if ($primary === false) {
-          xtc_db_query("TRUNCATE ".TABLE_WHOS_ONLINE);
-          xtc_db_query("ALTER TABLE ".TABLE_WHOS_ONLINE." ADD PRIMARY KEY (session_id)");
-        }
-        
-        // exclude payments
-        if (defined('MODULE_EXCLUDE_PAYMENT_NUMBER')) {
-          for ($i = 1; $i <= MODULE_EXCLUDE_PAYMENT_NUMBER; $i ++) {
-            xtc_db_query("UPDATE " . TABLE_CONFIGURATION . "
-                             SET set_function = 'xtc_cfg_checkbox_unallowed_module(\'shipping\', \'configuration[MODULE_EXCLUDE_PAYMENT_SHIPPING_".$i."]\','
-                           WHERE configuration_key = 'MODULE_EXCLUDE_PAYMENT_SHIPPING_".$i."'");
-
-            xtc_db_query("UPDATE " . TABLE_CONFIGURATION . "
-                             SET set_function = 'xtc_cfg_checkbox_unallowed_module(\'payment\', \'configuration[MODULE_EXCLUDE_PAYMENT_PAYMENT_".$i."]\','
-                           WHERE configuration_key = 'MODULE_EXCLUDE_PAYMENT_PAYMENT_".$i."'");
-          }
-        }
-        
-        // personal offer
-        $customers_status_query = xtc_db_query("SELECT *
-                                                  FROM ".TABLE_CUSTOMERS_STATUS."
-                                              GROUP BY customers_status_id");
-        while ($customers_status = xtc_db_fetch_array($customers_status_query)) {
-          $check_query = xtc_db_query("SHOW KEYS 
-                                            FROM ".TABLE_PERSONAL_OFFERS_BY.$customers_status['customers_status_id']." 
-                                           WHERE Key_name = 'idx_quantity'");
-          if (xtc_db_num_rows($check_query) < 1) {
-            xtc_db_query("ALTER TABLE ".TABLE_PERSONAL_OFFERS_BY.$customers_status['customers_status_id']."  ADD KEY `idx_quantity` (`quantity`)");
-          }
-        }
-        
-        // update tax rates
-        $tax_class_id_array = array(
-          '1' => 'DE::Standardsatz||EN::Standard rate',
-          '2' => 'DE::ermäßigter Satz 1||EN::reduced rate 1',
-          '3' => 'DE::ermäßigter Satz 2||EN::reduced rate 2',
-          '4' => 'DE::stark ermäßigter Satz||EN::highly reduced rate',
-          '5' => 'DE::Zwischensatz||EN::Intermediate rate',
-        );
-    
-        foreach ($tax_class_id_array as $tax_class_id => $tax_class_title) {                                        
-          $check_query = xtc_db_query("SELECT *
-                                         FROM ".TABLE_TAX_CLASS."
-                                        WHERE tax_class_id = ".$tax_class_id);
-          if (xtc_db_num_rows($check_query) == 0) {
-            $sql_data_array = array(
-              'tax_class_id' => $tax_class_id,
-              'tax_class_title' => encode_utf8($tax_class_title),
-              'date_added' => 'now()'
-            );
-            xtc_db_perform(TABLE_TAX_CLASS, $sql_data_array);
-          } else {
-            $check = xtc_db_fetch_array($check_query);
-            if ($check['tax_class_title'] != $tax_class_title) {
-              xtc_db_query("UPDATE ".TABLE_TAX_CLASS."
-                               SET tax_class_title = '".xtc_db_input($tax_class_title)."'
-                             WHERE tax_class_id = ".$tax_class_id);
-            }
-          }
-        }
-
-        //install new configurations
-        if (file_exists(DIR_FS_CATALOG.DIR_ADMIN.'includes/configuration_installer.php')) {
-          define('_VALID_XTC', true);
-          include(DIR_FS_CATALOG.DIR_ADMIN.'includes/configuration_installer.php');
-        }
-        
-        // check phpfastcache
-        if (is_dir(DIR_FS_EXTERNAL.'phpfastcache') && !is_dir(DIR_FS_EXTERNAL.'Phpfastcache')) {
-          rename(DIR_FS_EXTERNAL.'phpfastcache', DIR_FS_EXTERNAL.'Phpfastcache');
-        }
-        
+        $_SESSION['visited']['system_updates'] = 'system_updates';
+        include(DIR_FS_INSTALLER.'includes/update_system.php');
         $messageStack->add_session('update', TEXT_UPDATE_SYSTEM_SUCCESS, 'success');
         xtc_redirect(xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), '', $request_type));
         break;
         
       case 'configure':
-      case 'configure_confirm':
-        if ($_GET['action'] == 'configure_confirm') {
-          $db_server = DB_SERVER;
-          $db_username = DB_SERVER_USERNAME;
-          $db_password = DB_SERVER_PASSWORD;
-          $db_database = DB_DATABASE;
-    
-          $db_type = get_mysql_type();
-          $db_charset = DB_SERVER_CHARSET;
-          $db_pconnect = USE_PCONNECT;
-
-          $http_server = HTTP_SERVER;
-          $https_server = HTTPS_SERVER;
-          $use_ssl = ((ENABLE_SSL == true) ? 'true' : 'false');
-
-          //create  includes/configure.php
-          include (DIR_FS_INSTALLER.'templates/configure.php');
-          if (file_exists(DIR_FS_CATALOG.'/includes/local/configure.php')) {
-            $fp = fopen(DIR_FS_CATALOG . 'includes/local/configure.php', 'w');
-          } else {
-            $fp = fopen(DIR_FS_CATALOG . 'includes/configure.php', 'w');
-          }
-          fputs($fp, $file_contents);
-          fclose($fp);
+        include(DIR_FS_INSTALLER.'includes/update_configure.php');
+        if ($error === true) {
+          $messageStack->add_session('update', TEXT_CONFIGURE_ERROR, 'error');
+        } else {
+          $_SESSION['visited']['configure'] = 'configure';
           $messageStack->add_session('update', TEXT_CONFIGURE_SUCCESS, 'success');
-          xtc_redirect(xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=configure', $request_type));
         }
-        $smarty->assign('UPDATE_ACTION', 'configure');
-        
-        // form
-        $smarty->assign('FORM_ACTION', xtc_draw_form('configure', xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=configure_confirm', $request_type), 'post').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()));
-        $smarty->assign('BUTTON_SUBMIT', '<button type="submit">'.BUTTON_SUBMIT.'</button>');
-        $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), '', $request_type).'">'.BUTTON_BACK.'</a>');
-        $smarty->assign('FORM_END', '</form>');
+        xtc_redirect(xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), '', $request_type));
+        break;
+
+      case 'delete_files':
+        // check for errors
+        $error = false;
+  
+        // set all files to be deleted
+        require_once('includes/delete_files.php');
+
+        // set all directories to be deleted
+        require_once('includes/delete_dirs.php');
+  
+        if ($error === true) {
+          if (count($unlinked_files['error']['files']) > 0) {
+            $output = '<ul>';
+            foreach ($unlinked_files['error']['files'] as $files) {
+              $output .= '<li>'.$files.'</li>';
+            }
+            $output .= '</ul>';
+            $messageStack->add_session('update', TEXT_DELETE_FILES_ERROR.$output, 'error');
+          }
+          if (count($unlinked_files['error']['dir']) > 0) {
+            $output = '<ul>';
+            foreach ($unlinked_files['error']['dir'] as $dir) {
+              $output .= '<li>'.$dir.'</li>';
+            }
+            $output .= '</ul>';
+            $messageStack->add_session('update', TEXT_DELETE_DIR_ERROR.$output, 'error');
+          }
+        } else {
+          $_SESSION['visited']['delete_files'] = 'delete_files';
+          $messageStack->add_session('update', TEXT_DELETE_FILES_SUCCESS, 'success');
+        }
+        xtc_redirect(xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), '', $request_type));
         break;
     
       case 'sql_update':
@@ -217,59 +161,7 @@
             }
           }
 
-          if (isset($_SESSION['db_update'])) {
-            $db_update = $_SESSION['db_update'];
-          }
-  
-          if ($action == 'processnow') {
-            $db_update = array();
-            unset($_SESSION['db_update']);
-    
-            $db_update['starttime'] = time();
-            $db_update['num_tables'] = count($sql_data_array);
-            $db_update['ready'] = 0;
-            $db_update['step'] = 1;
-            $db_update['start'] = -1;
-            $db_update['sql_files'] = $_POST['sql_files'];
-
-            $_SESSION['db_update'] = $db_update;
-          }
-
-          if ($action == 'sql_update_process'
-              && $db_update['num_tables'] > $db_update['start']
-              )
-          {
-            // update table
-            for ($j=$db_update['start']; $j<($db_update['start'] + $db_update['step']); $j++) {
-              if (isset($sql_data_array)
-                  && is_array($sql_data_array)
-                  )
-              {
-                $sql_array = array_slice($sql_data_array, $j, $db_update['step']);
-                            
-                foreach ($sql_array as $sql) {
-                  xtc_db_query($sql);
-                }
-              }
-            }
-
-            $db_update['start'] ++;
-            $_SESSION['db_update'] = $db_update;
-    
-            $sec = time() - $db_update['starttime']; 
-            $time = sprintf('%d:%02d Min.', floor($sec/60), $sec % 60);
-    
-            $json_output = array();
-            $json_output['aufruf'] = $db_update['start'];
-            $json_output['nr'] = $db_update['start'];
-            $json_output['num_tables'] = $db_update['num_tables'];
-            $json_output['time'] = $time;
-            $json_output['sql_files'] = $db_update['sql_files'];
-    
-            $json_output = json_encode($json_output);
-            echo $json_output;
-            exit();
-          }
+          include(DIR_FS_INSTALLER.'includes/update_sql.php');
           
           $javascript = '
           <script type="text/javascript">
@@ -290,25 +182,47 @@
           $smarty->assign('PROCESSING', 'db_update');
           $smarty->clear_assign('BUTTON_SUBMIT');
           $smarty->clear_assign('BUTTON_BACK');
+          $_SESSION['visited']['sql_update'] = 'sql_update';
         }
         
+        // DB version
+        $dbversion = get_database_version();
+        
+        modified_api::reset();
+        $sql_files = modified_api::request('modified/version/update/'.$dbversion['plain']);
+
         $sql_data_array = array();
         $sql_files_array = array();
-        $dir = opendir(DIR_FS_INSTALLER.'update/');
-        while($file = readdir($dir)) {
-          if (strpos($file, '.sql') !== false && strpos($file, 'update') !== false) {
-            $sql_files_array[] = $file;
+        if (is_array($sql_files)) {
+          $dir = opendir(DIR_FS_INSTALLER.'update/');
+          while($file = readdir($dir)) {
+            if (strpos($file, '.sql') !== false 
+                && strpos($file, 'update') !== false
+                && in_array($file, $sql_files)
+                )
+            {
+              $sql_files_array[] = $file;
+            }
           }
+          sort($sql_files_array);
         }
-        sort($sql_files_array);
-        foreach ($sql_files_array as $file) {
-          $sql_data_array[] = array(
-            'NAME' => $file,
-            'CHECKBOX' => xtc_draw_checkbox_field('sql_files[]', $file, false, 'id="'.$file.'"'),
-          );
+        
+        // hack
+        $sql_files_array[] = 'update_2.0.6.0_to_2.0.7.0.sql';
+        $sql_files_array = array_unique($sql_files_array);
+        
+        if (count($sql_files_array) > 0) {
+          foreach ($sql_files_array as $file) {
+            $sql_data_array[] = array(
+              'NAME' => $file,
+              'CHECKBOX' => xtc_draw_hidden_field('sql_files[]', $file),
+            );
+          }
+          $smarty->assign('sql_data_array', $sql_data_array);
+        } else {
+          $smarty->clear_assign('BUTTON_SUBMIT');   
         }
         $smarty->assign('UPDATE_ACTION', 'sql_update');
-        $smarty->assign('sql_data_array', $sql_data_array);        
         break;
         
       case 'sql_manuell':
@@ -331,21 +245,16 @@
       
       case 'db_update':
       case 'doupdate':
+      case 'updatenow':
         // form
-        $smarty->assign('FORM_ACTION', xtc_draw_form('db_update', xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=db_update', $request_type), 'post', 'name="db_update"').xtc_draw_hidden_field('action', 'updatenow').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()));
-        $smarty->assign('BUTTON_SUBMIT', '<button type="submit">'.BUTTON_SUBMIT.'</button>');
         $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), '', $request_type).'">'.BUTTON_BACK.'</a>');
-        $smarty->assign('FORM_END', '</form>');
 
         $smarty->assign('UPDATE_ACTION', 'db_update');
-        if ((isset($_POST['action']) && $_POST['action'] == 'updatenow') 
+        if ((isset($_GET['action']) && $_GET['action'] == 'updatenow') 
             || (isset($_GET['action']) && $_GET['action'] == 'doupdate')
             )
         {
           $action = (isset($_GET['action']) ? $_GET['action'] : '');
-          if (isset($_POST['action']) && $_POST['action'] == 'updatenow') {
-            $action = 'updatenow';
-          }
 
           include(DIR_FS_INSTALLER.'includes/update_action.php');
           
@@ -366,8 +275,8 @@
           $smarty->assign('JAVASCRIPT', $javascript);
 
           $smarty->assign('PROCESSING', 'db_update');
-          $smarty->clear_assign('BUTTON_SUBMIT');
           $smarty->clear_assign('BUTTON_BACK');
+          $_SESSION['visited']['updatenow'] = 'updatenow';
         }
         break;
         
@@ -530,14 +439,17 @@
   }
   
   $javascriptcheck = '
-    <script type="text/javascript">
-	  $(document).ready(function(){	
-  		$(".ActionLink").show();	
-	  });
-    </script>
+  <script type="text/javascript">
+    $(document).ready(function(){	
+      $(".ActionLink").show();	
+    });
+  </script>
   ';
   $smarty->assign('JAVASCRIPTCHECK', $javascriptcheck);
   
+  // checks  
+  require_once('includes/checks.php');
+
   if ($messageStack->size('update') > 0) {
     $smarty->assign('error_message', $messageStack->output('update'));
   }

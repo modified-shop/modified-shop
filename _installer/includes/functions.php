@@ -11,16 +11,28 @@
    ---------------------------------------------------------------------------------------*/
 
 
-  function scanDirectories($dir, $allData=array()) {
-    foreach (glob($dir.'/*') as $file) {
-      if (is_dir($file)) {
-        $allData['dirs'][] = str_replace(DIR_FS_CATALOG, '', $file);
-        $allData = scanDirectories($file, $allData);
+  function scanDirectories($dir, $data_array = false) {
+    if (!is_array($data_array)) {
+      $data_array = array(
+        'dirs' => array(),
+        'files' => array(),
+      );
+    }
+
+    foreach ((new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir))) as $file) {
+      $filename = str_replace(DIR_FS_CATALOG, '', $file->getPathname());
+      $filename = rtrim($filename, '.');
+         
+      if (is_file($file->getPathname()) !== false) {
+        $data_array['files'][] = $filename;
       } else {
-        $allData['files'][] = str_replace(DIR_FS_CATALOG, '', $file);
+        if (!in_array($filename, $data_array['dirs'])) {
+          $data_array['dirs'][] = $filename;
+        }
       }
     }
-    return $allData;
+    
+    return $data_array;
   }
   
   
@@ -325,4 +337,185 @@
     
     return 'mysql';
   }
-?>
+
+
+  function get_shop_version() {  
+    require_once(DIR_FS_CATALOG.DIR_ADMIN.'includes/version.php');
+    defined('PROJECT_VERSION_NO') OR define('PROJECT_VERSION_NO', PROJECT_MAJOR_VERSION . '.' . PROJECT_MINOR_VERSION);
+    
+    return PROJECT_VERSION_NO;
+  }
+
+
+  function get_checksum_install() {
+    global $whitelist_array, $blacklist_array;
+    
+    $files_array = array();
+  
+    foreach ((new DirectoryIterator(DIR_FS_CATALOG)) as $file) {  
+      if (is_file($file->getPathname()) !== false) {
+        $relativePath = substr($file->getPathname(), strlen(DIR_FS_CATALOG)-strlen(DIR_WS_CATALOG));
+        
+        $index = str_replace(DIR_ADMIN, 'admin/', $relativePath);
+        $index = str_replace(DIR_WS_CATALOG, DIRECTORY_SEPARATOR, $index);
+      
+        $files_array[$index] = array(
+          'absolutePath' => $file->getPath(),
+          'relativePath' => dirname($relativePath),
+          'filename' => $file->getFilename(),
+          'checkSum' => hash_file('MD5', $file->getPathname()),
+        );
+      }
+    }
+
+    foreach ($whitelist_array as $directory) {
+      foreach ((new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory, RecursiveDirectoryIterator::SKIP_DOTS))) as $file) {
+        $path_name = $file->getPathname();
+        foreach ($blacklist_array as $blacklist) {
+          if (strpos($path_name, $blacklist) !== false) continue 2;
+        }
+      
+        $relativePath = substr($file->getPathname(), strlen(DIR_FS_CATALOG)-strlen(DIR_WS_CATALOG));
+      
+        $index = str_replace(DIR_ADMIN, 'admin/', $relativePath);
+        $index = str_replace(DIR_WS_CATALOG, DIRECTORY_SEPARATOR, $index);
+
+        $files_array[$index] = array(
+          'absolutePath' => $file->getPath(),
+          'relativePath' => dirname($relativePath),
+          'filename' => $file->getFilename(),
+          'checkSum' => hash_file('MD5', $file->getPathname()),
+        );
+      }
+    }
+    ksort($files_array);
+    
+    return $files_array;
+  }
+
+
+  function get_checksum_version($version = '') {
+    if ($version == '') {
+      $version = get_shop_version();
+    }
+    modified_api::reset();
+    $files_array = modified_api::request('modified/version/check/'.$version);
+    
+    return $files_array;
+  }
+
+
+  function get_integrity() {
+    $version_array = get_checksum_version();
+    $installed_array = get_checksum_install();
+    
+    $checksum_array = array();
+    foreach ($installed_array as $index => $data) {
+      if (isset($version_array[$index])
+          && $version_array[$index]['checkSum'] != $data['checkSum']
+          )
+      {
+        $data['checkSumOrig'] = $version_array[$index]['checkSum'];      
+        $checksum_array[] = $data;      
+      }
+    }
+    
+    return $checksum_array;
+  }
+
+
+  function create_backup($checksum_array) {
+    global $PHP_SELF;
+    
+    $backup_file = 'backup_'.date('Y-m-d_H:i').'.zip';
+    
+    if (count($checksum_array) > 0) {
+      $zip = new ZipArchive();
+      if ($zip->open(DIR_FS_CATALOG.DIR_ADMIN.'backups/'.$backup_file, ZipArchive::CREATE) === true) {
+        foreach ($checksum_array as $data) {      
+          $zip->addFile($data['absolutePath'].DIRECTORY_SEPARATOR.$data['filename'], rtrim($data['relativePath'], DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$data['filename']);      
+        }
+      }
+      $zip->close();
+      
+      $backup = array(array(
+        'LINK' => xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'action=download&file='.$backup_file),
+        'NAME' => $backup_file,
+        'SIZE' => number_format(filesize(DIR_FS_CATALOG.DIR_ADMIN.'backups/'.$backup_file)).' bytes',
+        'DATE' => date(PHP_DATE_TIME_FORMAT, filemtime(DIR_FS_CATALOG.DIR_ADMIN.'backups/'.$backup_file))
+      ));
+
+      return $backup;
+    }   
+    
+    return false; 
+  }
+
+
+  function update_shop() {
+    global $messageStack;
+    
+    modified_api::reset();
+    $response = modified_api::request('modified/version/install/');
+
+    if (is_dir(DIR_FS_INSTALLER.'tmp')) {
+      rrmdir(DIR_WS_INSTALLER.'tmp');
+    }
+    
+    if (mkdir(DIR_FS_INSTALLER.'tmp', 0755)) {
+      // save install
+      set_time_limit(0);
+      $fp = fopen (DIR_FS_INSTALLER.'tmp/'.$response['filename'], 'w+');
+      $ch = curl_init($response['download']);
+      curl_setopt($ch, CURLOPT_TIMEOUT, 600);
+      curl_setopt($ch, CURLOPT_FILE, $fp); 
+      curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+      curl_exec($ch); 
+      curl_close($ch);
+      fclose($fp);
+      
+      if (mkdir(DIR_FS_INSTALLER.'tmp/update', 0755, true)) {
+        // extract install
+        $zip = new ZipArchive();
+        if ($zip->open(DIR_FS_INSTALLER.'tmp/'.$response['filename']) === true) {    
+          $zip->extractTo(DIR_FS_INSTALLER.'tmp/update');
+          $zip->close();
+        } else {
+          $messageStack->add('update', ERROR_INVALID_UPDATE_DOWNLOAD);
+          return false;
+        }
+    
+        // process
+        $shoproot = DIR_FS_INSTALLER.'tmp/update/'.substr($response['filename'], 0, -4).'/shoproot';
+        if (is_dir($shoproot)) {
+          foreach ((new RecursiveIteratorIterator(new RecursiveDirectoryIterator($shoproot, RecursiveDirectoryIterator::SKIP_DOTS))) as $file) {
+            $install_path = str_replace($shoproot, DIR_FS_CATALOG, $file->getPath());
+            $install_path = rtrim($install_path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+            $install_path = str_replace(DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $install_path);
+            $install_path = str_replace('/admin/', DIRECTORY_SEPARATOR.DIR_ADMIN, $install_path);
+            
+            if (strpos($install_path.$file->getFilename(), DIR_FS_CATALOG.'includes/configure.php') !== false
+                || strpos($install_path.$file->getFilename(), DIR_FS_CATALOG.'includes/local/configure.php') !== false
+                || strpos($install_path.$file->getFilename(), DIR_FS_INSTALLER) !== false
+                ) 
+            {
+              continue;
+            }
+            
+            if (!is_dir($install_path)) {
+              mkdir($install_path, 0755, true);
+            }
+            rename($file->getPathname(), $install_path.$file->getFilename());
+          }
+        }
+      } else {
+        $messageStack->add('update', ERROR_CREATE_TMP_DIR);
+        return false;
+      }
+    } else {
+      $messageStack->add('update', ERROR_CREATE_TMP_DIR);
+      return false;
+    }
+    
+    return true;
+  }
