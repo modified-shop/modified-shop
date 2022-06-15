@@ -67,10 +67,10 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
                                 WHERE customers_id = '".(int) $_SESSION['customer_id']."'");  
   $sql_data_array = array(
     'customers_id' => (int)$_SESSION['customer_id'],
-    'checkout_payment' => $payment,
-    'checkout_payment_address' => $payment_address,
-    'checkout_shipping' => $shipping,
-    'checkout_shipping_address' => $shipping_address
+    'checkout_payment' => (isset($payment) ? $payment : ''),
+    'checkout_payment_address' => (isset($payment_address) ? $payment_address : ''),
+    'checkout_shipping' => (isset($shipping) ? $shipping : ''),
+    'checkout_shipping_address' => (isset($shipping_address) ? $shipping_address : ''),
   );
   if (xtc_db_num_rows($check_query) < 1) {
     xtc_db_perform(TABLE_CUSTOMERS_CHECKOUT, $sql_data_array);  
@@ -79,7 +79,7 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
     xtc_db_perform(TABLE_CUSTOMERS_CHECKOUT, $sql_data_array, 'update', "customers_id = '".(int)$_SESSION['customer_id']."'");
   }                        
 }
-
+ 
 // reset error
 $error = false;
 
