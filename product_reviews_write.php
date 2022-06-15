@@ -56,7 +56,8 @@ if (defined('REVIEWS_PURCHASED_ONLY') && REVIEWS_PURCHASED_ONLY == 'true') {
   if (!isset($_SESSION['customer_id'])) {
     xtc_redirect(xtc_href_link(FILENAME_LOGIN, 'products_id='.(int)$product->data['products_id'], 'SSL'));
   } elseif ($product->check_purchased() === false) {
-    xtc_redirect(xtc_href_link(FILENAME_DEFAULT));
+    $messageStack->add_session('product_info', ERROR_REVIEW_PRODUCT_PURCHASED);
+    xtc_redirect(xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.(int)$product->data['products_id']));
   }
 }
 

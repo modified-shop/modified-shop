@@ -537,6 +537,7 @@ define('TEXT_SAVED_BASKET', 'Please check your shopping cart. There are products
 define('ERROR_REVIEW_TEXT', 'The text must consist of at least ' . REVIEW_TEXT_MIN_LENGTH . ' characters.');
 define('ERROR_REVIEW_RATING', 'Enter your review.');
 define('ERROR_REVIEW_AUTHOR', 'Enter your name.');
+define('ERROR_REVIEW_PRODUCT_PURCHASED', 'Only products that have also been purchased from us can be reviewed.');
 
 define('GV_NO_PAYMENT_INFO', '<div class="infomessage">You can pay the order with your credit completely. If you do not want to redeem your balance, clear the credit selection and select a payment method!</div>');
 define('GV_ADD_PAYMENT_INFO', '<div class="errormessage">Your credit is not sufficient or may not be used for all accounting-positions to pay the order completely. Please select a payment method in addition!</div>');

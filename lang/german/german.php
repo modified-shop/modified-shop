@@ -537,6 +537,7 @@ define('TEXT_SAVED_BASKET', 'Bitte &uuml;berpr&uuml;fen Sie Ihren Warenkorb. Die
 define('ERROR_REVIEW_TEXT', 'Der Rezensions-Text muss aus mindestens ' . REVIEW_TEXT_MIN_LENGTH . ' Zeichen bestehen.');
 define('ERROR_REVIEW_RATING', 'Bitte geben Sie Ihre Bewertung ab.');
 define('ERROR_REVIEW_AUTHOR', 'Bitte geben Sie Ihren Namen ein.');
+define('ERROR_REVIEW_PRODUCT_PURCHASED', 'Es k&ouml;nnen nur Artikel bewertet werden, die auch bei uns gekauft wurden.');
 
 define('GV_NO_PAYMENT_INFO', '<div class="infomessage">Sie k&ouml;nnen mit Ihrem Guthaben die Bestellung komplett bezahlen. Wenn Sie Ihr Guthaben nicht einl&ouml;sen m&ouml;chten, deaktivieren Sie die Guthabenauswahl und w&auml;hlen eine Zahlungsweise!</div>');
 define('GV_ADD_PAYMENT_INFO', '<div class="errormessage">Ihr Guthaben reicht nicht aus bzw. kann nicht auf alle Positionen angewendet werden um die Bestellung komplett zu bezahlen. Bitte w&auml;hlen Sie zus&auml;tzlich eine Zahlungsweise!</div>');
