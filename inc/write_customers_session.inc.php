@@ -20,6 +20,7 @@
                                       WHERE c.customers_id = '".(int)$customer_id."'");
     $customers = xtc_db_fetch_array($customers_query);
 
+    $_SESSION['customer_cid'] = $customers['customers_cid'];
     $_SESSION['customer_gender'] = $customers['customers_gender'];
     $_SESSION['customer_first_name'] = $customers['customers_firstname'];
     $_SESSION['customer_last_name'] = $customers['customers_lastname'];
