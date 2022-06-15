@@ -174,7 +174,7 @@ class vat_validation {
     $search_array = array('gr');
     $replace_array = array('el');
     $country = str_replace($search_array, $replace_array, $country);
-    $country_check['countries_iso_code_2'] = str_replace($search_array, $replace_array, $country);
+    $country_check['countries_iso_code_2'] = str_replace($search_array, $replace_array, strtolower($country_check['countries_iso_code_2']));
 
     if (strtoupper($country_check['countries_iso_code_2']) != strtoupper($country)) {
       return $results[0];
