@@ -214,6 +214,8 @@ class main {
     $customers_status = $customers_status != '' ? $customers_status : $_SESSION['customers_status']['customers_status_id'];
     $group_check = (GROUP_CHECK == 'true') ? "AND group_ids LIKE '%c_" . (int)$customers_status . "_group%'" : '';
     $where = (($get_inactive === true) ? '' : " AND content_active = '1'");
+    
+    $content_data_array = array();
     $content_data_query = xtDBquery("SELECT ".$add_select."
                                             content_id,
                                             content_title,
@@ -227,23 +229,25 @@ class main {
                                         AND trim(content_title) != ''
                                         AND languages_id='" . (int)$lang_id . "'
                                       LIMIT 1");
-    $content_data_array = xtc_db_fetch_array($content_data_query,true);
+    if (xtc_db_num_rows($content_data_query, true) > 0) {
+      $content_data_array = xtc_db_fetch_array($content_data_query,true);
     
-    // check if content data is a file
-    if ($content_data_array['content_file'] != '') {
-      unset($content_data_array['content_text']);
-      ob_start();      
-      include (DIR_FS_DOCUMENT_ROOT.'media/content/'.$content_data_array['content_file']);      
-      $content_data_array['content_text'] = @ob_get_contents();
-      ob_end_clean();
-      //check for txt file and format output
-      if (strpos($content_data_array['content_file'], '.txt') !== false) {
-        $content_data_array['content_text'] = '<pre>' . $content_data_array['content_text'] . '</pre>';
+      // check if content data is a file
+      if ($content_data_array['content_file'] != '') {
+        unset($content_data_array['content_text']);
+        ob_start();      
+        include (DIR_FS_DOCUMENT_ROOT.'media/content/'.$content_data_array['content_file']);      
+        $content_data_array['content_text'] = @ob_get_contents();
+        ob_end_clean();
+        //check for txt file and format output
+        if (strpos($content_data_array['content_file'], '.txt') !== false) {
+          $content_data_array['content_text'] = '<pre>' . $content_data_array['content_text'] . '</pre>';
+        }
       }
-    }
     
-    //new module support
-    $content_data_array = $this->mainModules->getContentData($content_data_array, $coID, $lang_id, $customers_status, $get_inactive, $add_select);
+      //new module support
+      $content_data_array = $this->mainModules->getContentData($content_data_array, $coID, $lang_id, $customers_status, $get_inactive, $add_select);
+    }
     
     return $content_data_array;    
   }
