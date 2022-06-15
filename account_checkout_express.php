@@ -48,7 +48,6 @@ if (!defined('MODULE_CHECKOUT_EXPRESS_STATUS') || MODULE_CHECKOUT_EXPRESS_STATUS
 }
 
 if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
-
   $valid_params = array(
     'payment',
     'payment_address',
@@ -65,13 +64,14 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
 
   $check_query = xtc_db_query("SELECT *
                                  FROM ".TABLE_CUSTOMERS_CHECKOUT." 
-                                WHERE customers_id = '".(int) $_SESSION['customer_id']."'");
-  
-  $sql_data_array = array('customers_id' => (int)$_SESSION['customer_id'],
-                          'checkout_payment' => $payment,
-                          'checkout_payment_address' => $payment_address,
-                          'checkout_shipping' => $shipping,
-                          'checkout_shipping_address' => $shipping_address);
+                                WHERE customers_id = '".(int) $_SESSION['customer_id']."'");  
+  $sql_data_array = array(
+    'customers_id' => (int)$_SESSION['customer_id'],
+    'checkout_payment' => $payment,
+    'checkout_payment_address' => $payment_address,
+    'checkout_shipping' => $shipping,
+    'checkout_shipping_address' => $shipping_address
+  );
   if (xtc_db_num_rows($check_query) < 1) {
     xtc_db_perform(TABLE_CUSTOMERS_CHECKOUT, $sql_data_array);  
   } else {
@@ -112,11 +112,13 @@ if ($account['checkout_shipping'] == 'cheapest_cheapest') {
   $check_shipping = true;
 }
 $module_name = 'cheapest_cheapest';
-$module_shipping = array(array('FIELD' => xtc_draw_radio_field('shipping', $module_name, (($account['checkout_shipping'] == 'cheapest_cheapest') ? true : false), 'id="shipping_'.strtok($module_name,'_').'"'),
-                               'NAME' => TEXT_CHECKOUT_EXPRESS_CHECK_CHEAPEST,
-                               'ID' => strtok($module_name,'_')
-                               )
-                         );
+$module_shipping = array(
+  array(
+    'FIELD' => xtc_draw_radio_field('shipping', $module_name, (($account['checkout_shipping'] == 'cheapest_cheapest') ? true : false), 'id="shipping_'.strtok($module_name,'_').'"'),
+    'NAME' => TEXT_CHECKOUT_EXPRESS_CHECK_CHEAPEST,
+    'ID' => strtok($module_name,'_')
+  )
+);
 
 foreach ($quotes as $shipping) {
   if (isset($shipping['methods'])) {
@@ -124,10 +126,11 @@ foreach ($quotes as $shipping) {
     if ($account['checkout_shipping'] == $module_name) {
       $check_shipping = true;
     }
-    $module_shipping[] = array('FIELD' => xtc_draw_radio_field('shipping', $module_name, (($account['checkout_shipping'] == $module_name) ? true : false), 'id="shipping_'.strtok($module_name,'_').'"'),
-                               'NAME' => strip_tags($shipping['module']),
-                               'ID' => strtok($module_name,'_')
-                               );
+    $module_shipping[] = array(
+      'FIELD' => xtc_draw_radio_field('shipping', $module_name, (($account['checkout_shipping'] == $module_name) ? true : false), 'id="shipping_'.strtok($module_name,'_').'"'),
+      'NAME' => strip_tags($shipping['module']),
+      'ID' => strtok($module_name,'_')
+    );
   }
 }
 if ($check_shipping === false) {
@@ -156,11 +159,12 @@ while ($addresses = xtc_db_fetch_array($addresses_query)) {
   if ($addresses['address_book_id'] == $account['checkout_shipping_address']) {
     $check_shipping_address = true;
   }
-  $address_content[] = array('NAME' => $addresses['firstname'] . ' ' . $addresses['lastname'],
-                             'FIELD' => xtc_draw_radio_field('shipping_address', $addresses['address_book_id'], ($addresses['address_book_id'] == $account['checkout_shipping_address']), 'id="shipping_address_'.$addresses['address_book_id'].'"'),
-                             'ADDRESS' => xtc_address_format($format_id, $addresses, true, ' ', ', '),
-                             'ID' => $addresses['address_book_id']
-                             );
+  $address_content[] = array(
+    'NAME' => $addresses['firstname'] . ' ' . $addresses['lastname'],
+    'FIELD' => xtc_draw_radio_field('shipping_address', $addresses['address_book_id'], ($addresses['address_book_id'] == $account['checkout_shipping_address']), 'id="shipping_address_'.$addresses['address_book_id'].'"'),
+    'ADDRESS' => xtc_address_format($format_id, $addresses, true, ' ', ', '),
+    'ID' => $addresses['address_book_id']
+  );
 }
 if ($check_shipping_address === false) {
   $error = true;
@@ -168,12 +172,13 @@ if ($check_shipping_address === false) {
 }
 $smarty->assign('module_shipping_address', $address_content);
 
-
 // payment
 if ($account['checkout_shipping'] != 'cheapest_cheapest') {
   $_SESSION['shipping'] = array('id' => $account['checkout_shipping']);
 }
 $_SESSION['billto'] = $account['checkout_payment_address'];
+$_SESSION['billing_zone'] = get_address_iso_code($account['checkout_payment_address']);
+
 if ((int)$account['checkout_payment_address'] != '0' && (int)$account['checkout_shipping_address'] == '0') {
   $_SESSION['delivery_zone'] = get_address_iso_code($account['checkout_payment_address']);
 }
@@ -210,11 +215,11 @@ foreach ($selection as $payment) {
   if ($account['checkout_payment'] == $payment['id']) {
     $check_payment = true;
   }
-  $module_payment[] = array('FIELD' => xtc_draw_radio_field('payment', $payment['id'], (($account['checkout_payment'] == $payment['id']) ? true : false), 'id="payment_'.$payment['id'].'"'),
-                            'NAME' => strip_tags($payment['module']),
-                            'ID' => $payment['id']
-                            );
-
+  $module_payment[] = array(
+    'FIELD' => xtc_draw_radio_field('payment', $payment['id'], (($account['checkout_payment'] == $payment['id']) ? true : false), 'id="payment_'.$payment['id'].'"'),
+    'NAME' => strip_tags($payment['module']),
+    'ID' => $payment['id']
+  );
 }
 if ($check_payment === false) {
   $error = true;
@@ -242,18 +247,19 @@ while ($addresses = xtc_db_fetch_array($addresses_query)) {
   if ($addresses['address_book_id'] == $account['checkout_payment_address']) {
     $check_payment_address = true;
   }
-  $address_content[] = array('NAME' => $addresses['firstname'] . ' ' . $addresses['lastname'],
-                             'FIELD' => xtc_draw_radio_field('payment_address', $addresses['address_book_id'], ($addresses['address_book_id'] == $account['checkout_payment_address']), 'id="payment_address_'.$addresses['address_book_id'].'"'),
-                             'ADDRESS' => xtc_address_format($format_id, $addresses, true, ' ', ', '),
-                             'ID' => $addresses['address_book_id']
-                             );
+  $address_content[] = array(
+    'NAME' => $addresses['firstname'] . ' ' . $addresses['lastname'],
+    'FIELD' => xtc_draw_radio_field('payment_address', $addresses['address_book_id'], ($addresses['address_book_id'] == $account['checkout_payment_address']), 'id="payment_address_'.$addresses['address_book_id'].'"'),
+    'ADDRESS' => xtc_address_format($format_id, $addresses, true, ' ', ', '),
+    'ID' => $addresses['address_book_id']
+  );
 }
+
 if ($check_payment_address === false) {
   $error = true;
   $smarty->assign('module_payment_address_error', TEXT_ERROR_CHECKOUT_EXPRESS_PAYMENT_ADDRESS);
 }
 $smarty->assign('module_payment_address', $address_content);
-
 
 // clear session
 clear_checkout_session();
