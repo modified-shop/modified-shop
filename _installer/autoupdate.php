@@ -273,7 +273,6 @@
         if (!isset($_SESSION['sql_files'])) {
           modified_api::reset();
           $_SESSION['sql_files'] = modified_api::request('modified/version/update/'.$_SESSION['dbversion']);
-          $_SESSION['sql_files'][] = 'update_2.0.6.0_to_2.0.7.0.sql';
         }
         
         if ((isset($_GET['action']) && $_GET['action'] == 'processnow') 

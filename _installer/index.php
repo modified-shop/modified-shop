@@ -33,8 +33,14 @@
           ),
         );
       }
+      
+      // remove installer
       rrmdir(DIR_WS_INSTALLER);
-      unset($_SESSION['auth']);
+      
+      // reset session
+      xtc_session_destroy();
+      xtc_session_reset();
+
       xtc_redirect(xtc_href_link('', '', $request_type));
     }
   }
