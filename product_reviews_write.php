@@ -82,7 +82,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'process' && $review_error ===
     $messageStack->add('product_reviews_write', ERROR_REVIEW_TEXT);
     $error = true;
   }
-  if (!isset($rating)) {
+  if (empty($rating)) {
     $messageStack->add('product_reviews_write', ERROR_REVIEW_RATING);
     $error = true;
   }
