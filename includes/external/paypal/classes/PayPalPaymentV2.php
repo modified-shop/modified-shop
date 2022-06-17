@@ -98,8 +98,8 @@
       }
       
       $purchase_unit = array(
-        'description' => substr($this->encode_utf8(MODULE_PAYMENT_PAYPAL_TEXT_ORDER), 0, 127),
-        'soft_descriptor' => substr($this->encode_utf8(STORE_NAME), 0, 22),
+        'description' => $this->encode_utf8(mb_substr(MODULE_PAYMENT_PAYPAL_TEXT_ORDER, 0, 127)),
+        'soft_descriptor' => $this->encode_utf8(mb_substr(STORE_NAME, 0, 22)),
         'amount' => array(
           'value' => sprintf("%01.2f", round(($order->info['total'] + $order->info['shipping_cost']), 2)),
           'currency_code' => $this->encode_utf8($order->info['currency'])
