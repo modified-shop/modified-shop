@@ -121,46 +121,26 @@ require('templates/'.CURRENT_TEMPLATE.'/javascript/general.js.php');
 
 // require additional javascript
 switch(basename($PHP_SELF)) {
-
   case FILENAME_CHECKOUT_PAYMENT:
-      require('includes/form_check.js.php');
-      if (isset($payment_modules)
-          && is_object($payment_modules)
-          && method_exists($payment_modules, 'javascript_validation')
-          )
-      {
-        echo $payment_modules->javascript_validation();
-      }
+    require('includes/form_check.js.php');
+    if (isset($payment_modules)
+        && is_object($payment_modules)
+        && method_exists($payment_modules, 'javascript_validation')
+        )
+    {
+      echo $payment_modules->javascript_validation();
+    }
     break;
 
   case FILENAME_CHECKOUT_SHIPPING:
-      require('includes/form_check.js.php');
-      if (isset($shipping_modules) 
-          && is_object($shipping_modules)
-          && method_exists($shipping_modules, 'javascript_validation')
-          )
-      {
-        echo $shipping_modules->javascript_validation();
-      }
+    if (isset($shipping_modules) 
+        && is_object($shipping_modules)
+        && method_exists($shipping_modules, 'javascript_validation')
+        )
+    {
+      echo $shipping_modules->javascript_validation();
+    }
     break;
-
-  case FILENAME_CREATE_ACCOUNT:
-  case FILENAME_CREATE_GUEST_ACCOUNT:
-  case FILENAME_ACCOUNT_PASSWORD:
-  case FILENAME_ACCOUNT_EDIT:
-  case FILENAME_CHECKOUT_SHIPPING_ADDRESS:
-  case FILENAME_CHECKOUT_PAYMENT_ADDRESS:
-  case FILENAME_ADVANCED_SEARCH:
-  case FILENAME_PRODUCT_REVIEWS_WRITE: 
-      require('includes/form_check.js.php');
-    break;
-
-  case FILENAME_ADDRESS_BOOK_PROCESS:
-      if (isset($_GET['delete']) === false) {
-        include('includes/form_check.js.php');
-      }
-    break;
-
 }
 
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/header/header_head/','php') as $file) require_once ($file);
