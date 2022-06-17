@@ -64,16 +64,25 @@ if (defined('REVIEWS_PURCHASED_ONLY') && REVIEWS_PURCHASED_ONLY == 'true') {
 $review = '';
 $rating = '';
 if (isset ($_GET['action']) && $_GET['action'] == 'process' && $review_error === false) {
-  $review = xtc_db_prepare_input($_POST['review']);
-  $rating = xtc_db_prepare_input($_POST['rating']);
-  $author = xtc_db_prepare_input($_POST['author']);
+  $valid_params = array(
+    'review',
+    'rating',
+    'author',
+  );
+
+  // prepare variables
+  foreach ($_POST as $key => $value) {
+    if ((!isset(${$key}) || !is_object(${$key})) && in_array($key , $valid_params)) {
+      ${$key} = xtc_db_prepare_input($value);
+    }
+  }
   
   $error = false;
   if (strlen($review) < REVIEW_TEXT_MIN_LENGTH) {
     $messageStack->add('product_reviews_write', ERROR_REVIEW_TEXT);
     $error = true;
   }
-  if (!isset($_POST['rating'])) {
+  if (!isset($rating)) {
     $messageStack->add('product_reviews_write', ERROR_REVIEW_RATING);
     $error = true;
   }
