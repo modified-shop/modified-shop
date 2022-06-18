@@ -12,6 +12,10 @@
 
   require('includes/application_top.php');
   
+  //display per page
+  $cfg_max_display_results_key = 'MAX_DISPLAY_PARCEL_CARRIER';
+  $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
+
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
   $page_parcel = (isset($_GET['page']) ? $_GET['page'] : '');
   if (xtc_not_null($action)) {
@@ -93,7 +97,7 @@ require (DIR_WS_INCLUDES.'head.php');
                   $carriers_query_raw = "SELECT *
                                            FROM " . TABLE_CARRIERS . "
                                        ORDER BY carrier_sort_order";
-                  $carriers_split = new splitPageResults($page_parcel, '20', $carriers_query_raw, $carriers_query_numrows);
+                  $carriers_split = new splitPageResults($page_parcel, $page_max_display_results, $carriers_query_raw, $carriers_query_numrows);
                   $carriers_query = xtc_db_query($carriers_query_raw);
                   while ($carriers = xtc_db_fetch_array($carriers_query)) {
                     if ((!isset($_GET['cID']) || (isset($_GET['cID']) && ($_GET['cID'] == $carriers['carrier_id']))) && !isset($cInfo) && (substr($action, 0, 3) != 'new')) {
@@ -115,8 +119,9 @@ require (DIR_WS_INCLUDES.'head.php');
                   ?>
               </table>
               
-              <div class="smallText pdg2 flt-l"><?php echo $carriers_split->display_count($carriers_query_numrows, '20', $page_parcel, TEXT_DISPLAY_NUMBER_OF_CARRIERS); ?></div>
-              <div class="smallText pdg2 flt-r"><?php echo $carriers_split->display_links($carriers_query_numrows, '20', MAX_DISPLAY_PAGE_LINKS, $page_parcel); ?></div>
+              <div class="smallText pdg2 flt-l"><?php echo $carriers_split->display_count($carriers_query_numrows, $page_max_display_results, $page_parcel, TEXT_DISPLAY_NUMBER_OF_CARRIERS); ?></div>
+              <div class="smallText pdg2 flt-r"><?php echo $carriers_split->display_links($carriers_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $page_parcel); ?></div>
+              <?php echo draw_input_per_page($PHP_SELF,$cfg_max_display_results_key,$page_max_display_results); ?>
 
               <?php
               if (empty($action)) {
