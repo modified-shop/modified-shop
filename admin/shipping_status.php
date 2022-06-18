@@ -17,6 +17,10 @@
 
   require('includes/application_top.php');
 
+  //display per page
+  $cfg_max_display_results_key = 'MAX_DISPLAY_SHIPPING_STATUS';
+  $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
+
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
   $page = (isset($_GET['page']) ? (int)$_GET['page'] : 1);
   
@@ -162,7 +166,7 @@
                                                 FROM " . TABLE_SHIPPING_STATUS . " 
                                                WHERE language_id = '" . (int)$_SESSION['languages_id'] . "' 
                                             ORDER BY sort_order, shipping_status_id";
-                $shipping_status_split = new splitPageResults($page, '20', $shipping_status_query_raw, $shipping_status_query_numrows);
+                $shipping_status_split = new splitPageResults($page, $page_max_display_results, $shipping_status_query_raw, $shipping_status_query_numrows);
                 $shipping_status_query = xtc_db_query($shipping_status_query_raw);
                 while ($shipping_status = xtc_db_fetch_array($shipping_status_query)) {
                   if ((!isset($_GET['oID']) || $_GET['oID'] == $shipping_status['shipping_status_id']) && !isset($oInfo) && (substr($action, 0, 3) != 'new')) {
@@ -199,8 +203,9 @@
               ?>
               </table>
               
-              <div class="smallText pdg2 flt-l"><?php echo $shipping_status_split->display_count($shipping_status_query_numrows, '20', $page, TEXT_DISPLAY_NUMBER_OF_SHIPPING_STATUS); ?></div>
-              <div class="smallText pdg2 flt-r"><?php echo $shipping_status_split->display_links($shipping_status_query_numrows, '20', MAX_DISPLAY_PAGE_LINKS, $page); ?></div>
+              <div class="smallText pdg2 flt-l"><?php echo $shipping_status_split->display_count($shipping_status_query_numrows, $page_max_display_results, $page, TEXT_DISPLAY_NUMBER_OF_SHIPPING_STATUS); ?></div>
+              <div class="smallText pdg2 flt-r"><?php echo $shipping_status_split->display_links($shipping_status_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $page); ?></div>
+              <?php echo draw_input_per_page($PHP_SELF,$cfg_max_display_results_key,$page_max_display_results); ?>
 
               <?php
               if (substr($action, 0, 3) != 'new') {
