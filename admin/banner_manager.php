@@ -199,8 +199,7 @@
       
       case 'deleteconfirm':
         $banners_group_id = xtc_db_prepare_input($_GET['bID']);
-        $banner_query = xtc_db_query("SELECT banners_image, 
-                                             banners_id 
+        $banner_query = xtc_db_query("SELECT *
                                         FROM " . TABLE_BANNERS . " 
                                        WHERE banners_group_id = '" . (int)$banners_group_id . "'");
         while ($banner = xtc_db_fetch_array($banner_query)) {
