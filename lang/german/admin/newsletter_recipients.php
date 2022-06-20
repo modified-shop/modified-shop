@@ -18,7 +18,8 @@
   define('TABLE_HEADING_CUSTOMERS_STATUS', 'Kundengruppe');
   define('TABLE_HEADING_STATUS', 'Status');
   define('TABLE_HEADING_ACTION', 'Aktion');
-
+  define('TABLE_HEADING_DATE_ADDED', 'Hinzugef&uuml;gt');
+  
   define('ENTRY_MAIL_STATUS', 'Status:');
   define('ENTRY_SEARCH_CUSTOMER', 'Suche:');
 

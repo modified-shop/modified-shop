@@ -21,6 +21,7 @@
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
   $page = (isset($_GET['page']) ? (int)$_GET['page'] : 1);
+  $sorting = (isset($_GET['sorting']) ? $_GET['sorting'] : '');
 
   $customers_statuses_array = xtc_get_customers_statuses();
   $mail_statuses_array = array(
@@ -29,6 +30,53 @@
     array('id' => '0', 'text' => TXT_UNCONFIRMED), 
     array('id' => '2', 'text' => TXT_UNSUBSCRIBED), 
   );  
+
+  if (xtc_not_null($sorting)) {
+    switch ($sorting) {
+      case 'email':
+        $csort = 'customers_email_address ASC';
+        break;
+      case 'email-desc':
+        $csort = 'customers_email_address DESC';
+        break;
+      case 'firstname':
+        $csort = 'customers_firstname ASC';
+        break;
+      case 'firstname-desc':
+        $csort = 'customers_firstname DESC';
+        break;
+      case 'lastname':
+        $csort = 'customers_lastname ASC';
+        break;
+      case 'lastname-desc':
+        $csort = 'customers_lastname DESC';
+        break;
+      case 'cstatus':
+        $csort = 'customers_status_name ASC';
+        break;
+      case 'cstatus-desc':
+        $csort = 'customers_status_name DESC';
+        break;
+      case 'status':
+        $csort = 'mail_status ASC';
+        break;
+      case 'status-desc':
+        $csort = 'mail_status DESC';
+        break;
+      case 'date_added':
+        $csort = 'date_added ASC';
+        break;
+      case 'date_added-desc':
+        $csort = 'date_added DESC';
+        break;
+      default:
+        $csort = 'customers_email_address ASC';
+        break;
+    }
+    $sort = " ORDER BY ".$csort.", mail_id ASC ";
+  } else {
+    $sort = " ORDER BY customers_email_address ASC, mail_id ";
+  }
 
   $where = '';
   if (isset($_GET['cgroup']) && $_GET['cgroup'] != '') {
@@ -46,12 +94,12 @@
 
   $newsletter_query_raw = "SELECT nr.*,
                                   cs.customers_status_name
-                             FROM " . TABLE_NEWSLETTER_RECIPIENTS . " nr
+                             FROM ".TABLE_NEWSLETTER_RECIPIENTS." nr
                         LEFT JOIN ".TABLE_CUSTOMERS_STATUS." cs
                                   ON cs.customers_status_id = nr.customers_status
                                      AND cs.language_id = '".(int)$_SESSION['languages_id']."'
                                   ".$where."
-                         ORDER BY customers_email_address";
+                                  ".$sort;
 
   if (xtc_not_null($action)) {
     switch ($action) {
@@ -169,11 +217,12 @@
             <td class="boxCenterLeft">
               <table class="tableBoxCenter collapse">
               <tr class="dataTableHeadingRow">
-                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_NEWSLETTER ?></td>
-                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_FIRSTNAME ?></td>
-                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_LASTNAME ?></td>
-                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_CUSTOMERS_STATUS ?></td>
-                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_STATUS ?></td>
+                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_NEWSLETTER.xtc_sorting(FILENAME_NEWSLETTER_RECIPIENTS, 'email'); ?></td>
+                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_FIRSTNAME.xtc_sorting(FILENAME_NEWSLETTER_RECIPIENTS, 'firstname'); ?></td>
+                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_LASTNAME.xtc_sorting(FILENAME_NEWSLETTER_RECIPIENTS, 'lastname'); ?></td>
+                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_CUSTOMERS_STATUS.xtc_sorting(FILENAME_NEWSLETTER_RECIPIENTS, 'cstatus'); ?></td>
+                <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_STATUS.xtc_sorting(FILENAME_NEWSLETTER_RECIPIENTS, 'status'); ?></td>
+                <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_DATE_ADDED.xtc_sorting(FILENAME_NEWSLETTER_RECIPIENTS, 'date_added'); ?></td>
                 <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
               <?php
@@ -190,11 +239,12 @@
                     echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_NEWSLETTER_RECIPIENTS, xtc_get_all_get_params(array('action','mail')).'mail=' . md5($newsletter['customers_email_address'])) . '\'">' . "\n";
                   }
                   ?>
-                  <td class="dataTableContent txta-l"><?php echo $newsletter['customers_email_address']; ?></td>
-                  <td class="dataTableContent txta-l"><?php echo $newsletter['customers_firstname']; ?></td>
-                  <td class="dataTableContent txta-l"><?php echo $newsletter['customers_lastname']; ?></td>
-                  <td class="dataTableContent txta-l"><?php echo $newsletter['customers_status_name']; ?></td>
+                  <td class="dataTableContent"><?php echo $newsletter['customers_email_address']; ?></td>
+                  <td class="dataTableContent"><?php echo $newsletter['customers_firstname']; ?></td>
+                  <td class="dataTableContent"><?php echo $newsletter['customers_lastname']; ?></td>
+                  <td class="dataTableContent"><?php echo $newsletter['customers_status_name']; ?></td>
                   <td class="dataTableContent txta-c"><?php echo xtc_image(DIR_WS_ICONS.(($newsletter['mail_status'] == '1') ? 'tick.gif' : (($newsletter['mail_status'] == '2') ? 'cross.gif' : 'time_delete.png'))); ?></td>
+                  <td class="dataTableContent txta-c"><?php echo xtc_date_short($newsletter['date_added']); ?></td>
                   <td class="dataTableContent txta-r"><?php if (isset($oInfo) && is_object($oInfo) && ($newsletter['customers_email_address'] == $oInfo->customers_email_address) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_NEWSLETTER_RECIPIENTS, 'page=' . $page . '&mail=' . md5($newsletter['customers_email_address'])) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
                 </tr>
                 <?php
@@ -226,7 +276,7 @@
                   $contents[] = array('text' => '<b>' . TEXT_INFO_HISTORY_NEWSLETTER . '</b>');
                   $newsletter_history_string = '';
                   $newsletter_history_query = xtc_db_query("SELECT *
-                                                              FROM " . TABLE_NEWSLETTER_RECIPIENTS_HISTORY . " 
+                                                              FROM ".TABLE_NEWSLETTER_RECIPIENTS_HISTORY." 
                                                              WHERE customers_email_address = '".xtc_db_input($oInfo->customers_email_address)."'
                                                           ORDER BY date_added ASC");
                   if (xtc_db_num_rows($newsletter_history_query) > 0) {
