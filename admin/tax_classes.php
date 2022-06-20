@@ -23,6 +23,10 @@
   // set languages
   $languages = xtc_get_languages();
   
+  //display per page
+  $cfg_max_display_results_key = 'MAX_DISPLAY_TAX_CLASSES';
+  $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
+
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
   $page = (isset($_GET['page']) ? (int)$_GET['page'] : 1);
   
@@ -139,7 +143,7 @@
                 $tax_classes_query_raw = "SELECT *
                                             FROM ".TABLE_TAX_CLASS." 
                                         ORDER BY sort_order, tax_class_id";
-                $tax_classes_split = new splitPageResults($page, '20', $tax_classes_query_raw, $tax_classes_query_numrows);
+                $tax_classes_split = new splitPageResults($page, $page_max_display_results, $tax_classes_query_raw, $tax_classes_query_numrows);
                 $tax_classes_query = xtc_db_query($tax_classes_query_raw);
                 while ($tax_classes = xtc_db_fetch_array($tax_classes_query)) {
                   if ((!isset($_GET['tID']) || $_GET['tID'] == $tax_classes['tax_class_id']) && !isset($tcInfo) && (substr($action, 0, 3) != 'new')) {
@@ -161,8 +165,9 @@
                 ?>
               </table>
    
-              <div class="smallText pdg2 flt-l"><?php echo $tax_classes_split->display_count($tax_classes_query_numrows, '20', $page, TEXT_DISPLAY_NUMBER_OF_TAX_CLASSES); ?></div>  
-              <div class="smallText pdg2 flt-r"><?php echo $tax_classes_split->display_links($tax_classes_query_numrows, '20', MAX_DISPLAY_PAGE_LINKS, $page); ?></div>  
+              <div class="smallText pdg2 flt-l"><?php echo $tax_classes_split->display_count($tax_classes_query_numrows, $page_max_display_results, $page, TEXT_DISPLAY_NUMBER_OF_TAX_CLASSES); ?></div>  
+              <div class="smallText pdg2 flt-r"><?php echo $tax_classes_split->display_links($tax_classes_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $page); ?></div>  
+              <?php echo draw_input_per_page($PHP_SELF,$cfg_max_display_results_key,$page_max_display_results); ?>
 
               <?php
               if (!xtc_not_null($action)) {
