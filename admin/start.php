@@ -182,10 +182,11 @@ require (DIR_WS_INCLUDES.'head.php');
                       <td><?php echo TABLE_HEADING_USERS_ONLINE_INFO; ?></td>
                     </tr>
                     <?php
+                      $page_max_display_results = xtc_cfg_save_max_display_results('MAX_DISPLAY_WHOS_ONLINE_RESULTS');
                       $whos_online_query = xtc_db_query("SELECT *
                                                            FROM " . TABLE_WHOS_ONLINE ." 
                                                        ORDER BY time_last_click DESC 
-                                                          LIMIT ".MAX_DISPLAY_SEARCH_RESULTS);
+                                                          LIMIT ".$page_max_display_results);
                       while ($whos_online = xtc_db_fetch_array($whos_online_query)) { 
                         $time_online = (time() - $whos_online['time_entry']); 
                         ?>

@@ -18,6 +18,10 @@
 
   require('includes/application_top.php');
 
+  //display per page
+  $cfg_max_display_results_key = 'MAX_DISPLAY_LANGUAGES';
+  $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
+
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
   $page = (isset($_GET['page']) ? (int)$_GET['page'] : 1);
 
@@ -414,7 +418,7 @@
                 $languages_query_raw = "SELECT *
                                           FROM " . TABLE_LANGUAGES . " 
                                       ORDER BY sort_order";
-                $languages_split = new splitPageResults($page, MAX_DISPLAY_SEARCH_RESULTS, $languages_query_raw, $languages_query_numrows);
+                $languages_split = new splitPageResults($page, $page_max_display_results, $languages_query_raw, $languages_query_numrows);
                 $languages_query = xtc_db_query($languages_query_raw);
 
                 while ($languages = xtc_db_fetch_array($languages_query)) {
@@ -459,8 +463,9 @@
                 ?>                                                
               </table>
                           
-              <div class="smallText pdg2 flt-l"><?php echo $languages_split->display_count($languages_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $page, TEXT_DISPLAY_NUMBER_OF_LANGUAGES); ?></div>
-              <div class="smallText pdg2 flt-r"><?php echo $languages_split->display_links($languages_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $page); ?></div>
+              <div class="smallText pdg2 flt-l"><?php echo $languages_split->display_count($languages_query_numrows, $page_max_display_results, $page, TEXT_DISPLAY_NUMBER_OF_LANGUAGES); ?></div>
+              <div class="smallText pdg2 flt-r"><?php echo $languages_split->display_links($languages_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $page); ?></div>
+              <?php echo draw_input_per_page($PHP_SELF,$cfg_max_display_results_key,$page_max_display_results); ?>
              
               <?php
               if (empty($action)) {
