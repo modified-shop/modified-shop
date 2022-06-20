@@ -18,7 +18,7 @@
   require('includes/application_top.php');
 
   //display per page
-  $cfg_max_display_results_key = 'MAX_DISPLAY_WHOS_ONLINE_RESULTS';
+  $cfg_max_display_results_key = 'MAX_DISPLAY_CROSS_SELL_GROUPS';
   $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
