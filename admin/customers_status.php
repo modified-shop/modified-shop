@@ -46,6 +46,10 @@
     }
   }
 
+  //display per page
+  $cfg_max_display_results_key = 'MAX_DISPLAY_SHIPPING_STATUS';
+  $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
+
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
   $page = (isset($_GET['page']) ? (int)$_GET['page'] : 1);
 
@@ -303,7 +307,7 @@ if (xtc_not_null($action) && $action != 'delete') {
                   </tr>
                   <?php
 
-                  $customers_status_split = new splitPageResults($page, MAX_DISPLAY_SEARCH_RESULTS, $customers_status_query_raw, $customers_status_query_numrows);
+                  $customers_status_split = new splitPageResults($page, $page_max_display_results, $customers_status_query_raw, $customers_status_query_numrows);
                   $customers_status_query = xtc_db_query($customers_status_query_raw);
                   while ($customers_status = xtc_db_fetch_array($customers_status_query)) {
                     if ((!isset($_GET['cID']) || (isset($_GET['cID']) && ($_GET['cID'] == $customers_status['customers_status_id']))) && !isset($cInfo) && (substr($action, 0, 3) != 'new')) {
@@ -335,8 +339,10 @@ if (xtc_not_null($action) && $action != 'delete') {
                   ?>
                   <tr>                          
                 </table>
-                <div class="smallText pdg2 flt-l"><?php echo $customers_status_split->display_count($customers_status_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $page, TEXT_DISPLAY_NUMBER_OF_CUSTOMERS_STATUS); ?></div>
-                <div class="smallText pdg2 flt-r"><?php echo $customers_status_split->display_links($customers_status_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $page); ?></div>
+                <div class="smallText pdg2 flt-l"><?php echo $customers_status_split->display_count($customers_status_query_numrows, $page_max_display_results, $page, TEXT_DISPLAY_NUMBER_OF_CUSTOMERS_STATUS); ?></div>
+                <div class="smallText pdg2 flt-r"><?php echo $customers_status_split->display_links($customers_status_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $page); ?></div>
+                <?php echo draw_input_per_page($PHP_SELF,$cfg_max_display_results_key,$page_max_display_results); ?>
+
                 <?php
                 if (empty($action)) {
                   ?>

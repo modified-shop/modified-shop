@@ -22,6 +22,10 @@
     define('DEFAULT_PRODUCTS_VPE_ID','1');
   }
 
+  //display per page
+  $cfg_max_display_results_key = 'MAX_DISPLAY_PRODUCTS_VPE';
+  $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
+
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
   $page = (isset($_GET['page']) ? (int)$_GET['page'] : 1);
   
@@ -132,7 +136,7 @@ require (DIR_WS_INCLUDES.'head.php');
                                              FROM " . TABLE_PRODUCTS_VPE . " 
                                             WHERE language_id = '" . (int)$_SESSION['languages_id'] . "' 
                                          ORDER BY products_vpe_id";
-                $products_vpe_split = new splitPageResults($page, MAX_DISPLAY_SEARCH_RESULTS, $products_vpe_query_raw, $products_vpe_query_numrows);
+                $products_vpe_split = new splitPageResults($page, $page_max_display_results, $products_vpe_query_raw, $products_vpe_query_numrows);
                 $products_vpe_query = xtc_db_query($products_vpe_query_raw);
                 while ($products_vpe = xtc_db_fetch_array($products_vpe_query)) {
                   if ((!isset($_GET['oID']) || (isset($_GET['oID']) && $_GET['oID'] == $products_vpe['products_vpe_id'])) && !isset($oInfo) && substr($action, 0, 3) != 'new') {
@@ -156,8 +160,9 @@ require (DIR_WS_INCLUDES.'head.php');
                 ?>
                 </table>
 
-                <div class="smallText pdg2 flt-l"><?php echo $products_vpe_split->display_count($products_vpe_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $page, TEXT_DISPLAY_NUMBER_OF_PRODUCTS_VPE); ?></div>
-                <div class="smallText pdg2 flt-r"><?php echo $products_vpe_split->display_links($products_vpe_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $page); ?></div>
+                <div class="smallText pdg2 flt-l"><?php echo $products_vpe_split->display_count($products_vpe_query_numrows, $page_max_display_results, $page, TEXT_DISPLAY_NUMBER_OF_PRODUCTS_VPE); ?></div>
+                <div class="smallText pdg2 flt-r"><?php echo $products_vpe_split->display_links($products_vpe_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $page); ?></div>
+                <?php echo draw_input_per_page($PHP_SELF,$cfg_max_display_results_key,$page_max_display_results); ?>
 
                 <?php
                 if (empty($action)) {
