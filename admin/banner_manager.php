@@ -205,17 +205,18 @@
                                        WHERE banners_group_id = '" . (int)$banners_group_id . "'");
         while ($banner = xtc_db_fetch_array($banner_query)) {
           if (isset($_POST['delete_image']) && ($_POST['delete_image'] == 'on')) {
-            if (is_file(DIR_FS_CATALOG_IMAGES . 'banner/' . $banners_image_target . $banner['banners_image'])) {
-              if (is_writeable(DIR_FS_CATALOG_IMAGES . 'banner/' . $banners_image_target . $banner['banners_image'])) {
-                unlink(DIR_FS_CATALOG_IMAGES .'banner/'. $banners_image_target . $banner['banners_image']);
-              } else {
-                $messageStack->add_session(ERROR_IMAGE_IS_NOT_WRITEABLE, 'error');
+            foreach ($images_type_array as $images_type) {
+              $image_location = DIR_FS_CATALOG_IMAGES . 'banner/' . $banner['banners_image'.$images_type];
+              if (is_file($image_location)) {
+                unlink($image_location);
               }
-            } else {
-              $messageStack->add_session(ERROR_IMAGE_DOES_NOT_EXIST, 'error');
+              $image_location = DIR_FS_CATALOG_IMAGES . 'banner/original_images/' . $banner['banners_image'.$images_type];
+              if (is_file($image_location)) {
+                unlink($image_location);
+              }            
             }
           }
-          if (function_exists('imagecreate') && xtc_not_null($banner_extension)) {
+          if (xtc_not_null($banner_extension)) {
             if (is_file(DIR_WS_IMAGES . 'graphs/banner_infobox-' . $banner['banners_id'] . '.' . $banner_extension)) {
               if (is_writeable(DIR_WS_IMAGES . 'graphs/banner_infobox-' . $banner['banners_id'] . '.' . $banner_extension)) {
                 unlink(DIR_WS_IMAGES . 'graphs/banner_infobox-' . $banner['banners_id'] . '.' . $banner_extension);
@@ -237,7 +238,6 @@
               }
             }
           }
-
           xtc_db_query("DELETE FROM " . TABLE_BANNERS_HISTORY . " WHERE banners_id = '" . $banner['banners_id'] . "'");
         }
         xtc_db_query("DELETE FROM " . TABLE_BANNERS . " WHERE banners_group_id = '" . (int)$banners_group_id . "'");
