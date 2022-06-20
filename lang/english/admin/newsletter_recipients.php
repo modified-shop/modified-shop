@@ -18,6 +18,7 @@
   define('TABLE_HEADING_CUSTOMERS_STATUS', 'Customers status');
   define('TABLE_HEADING_STATUS', 'Status');
   define('TABLE_HEADING_ACTION', 'Action');
+  define('TABLE_HEADING_DATE_ADDED', 'Added');
 
   define('ENTRY_MAIL_STATUS', 'Status:');
   define('ENTRY_SEARCH_CUSTOMER', 'Search:');
