@@ -30,11 +30,13 @@ class micropayment_method extends micropayment_helper
         $this->form_action_url = 'not_used';
         $this->tmpOrders = true;
         $this->tmpStatus = ((defined('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PENDING_PAYMENT_ID')) ? MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PENDING_PAYMENT_ID : '');
-        $this->check_enabled();
-        $this->check();
+        if (isset($this->code) && $this->code != '') {
+          $this->check_enabled();
+          $this->check();
         
-        if (defined('RUN_MODE_ADMIN') && isset($this->code) && $this->code != '') {
-          $this->refreshShopModule();
+          if (defined('RUN_MODE_ADMIN')) {
+            $this->refreshShopModule();
+          }
         }
     }
 
