@@ -4,12 +4,13 @@ class haendlerbund_importer
 {
 
     #Klassenvariablen
+    var $version = '1.03';
     var $api = false;
     var $api_config = false;
     var $data = array();
 
     #Konstruktor
-    function haendlerbund_importer()
+    function __construct()
     {
     }
 
