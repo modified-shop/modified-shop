@@ -16,7 +16,7 @@
 require_once (DIR_FS_INC.'get_external_content.inc.php');
 
 class janolaw_content {
-  var $version = '3.00'; // version 3
+  var $version = '3.17'; // version 3
   var $enabled = false;
   var $user_id;
   var $shop_id;

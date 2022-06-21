@@ -23,7 +23,7 @@ class janolaw {
   var $code, $title, $description, $enabled;
 
   function __construct() {
-    $this->version = '3.00';
+    $this->version = '3.17';
     $this->code = 'janolaw';
     $this->title = MODULE_JANOLAW_TEXT_TITLE;
     $this->description = MODULE_JANOLAW_TEXT_DESCRIPTION;
