@@ -12,7 +12,7 @@
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
   //display per page
-  $cfg_max_display_results_key = 'MAX_DISPLAY_LIST_CUSTOMERS';
+  $cfg_max_display_results_key = 'MAX_DISPLAY_CUSTOMERS_RESULTS';
   $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
   
   $form_action = 'action=multi_action';

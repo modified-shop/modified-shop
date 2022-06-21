@@ -110,3 +110,21 @@
   if (is_dir(DIR_FS_EXTERNAL.'phpfastcache') && !is_dir(DIR_FS_EXTERNAL.'Phpfastcache')) {
     rename(DIR_FS_EXTERNAL.'phpfastcache', DIR_FS_EXTERNAL.'Phpfastcache');
   }
+  
+  // rename config key
+  $config_array = array(
+    'MAX_DISPLAY_CONTENT_MANAGER' => 'MAX_DISPLAY_CONTENT_MANAGER_RESULTS',
+    'MAX_DISPLAY_STATS_STATS_PRODUCTS_PURCHASED_RESULTS' => 'MAX_DISPLAY_STATS_PRODUCTS_PURCHASED_RESULTS',
+    'MAX_DISPLAY_LIST_CUSTOMERS' => 'MAX_DISPLAY_CUSTOMERS_RESULTS',
+    'MAX_DISPLAY_CONTENT_MANAGER' => 'MAX_DISPLAY_CONTENT_MANAGER_RESULTS',
+    'MAX_DISPLAY_NEWSLETTER_RECIPIENTS' => 'MAX_DISPLAY_NEWSLETTER_RECIPIENTS_RESULTS',
+    'MAX_DISPLAY_ORDERS_STATUS' => 'MAX_DISPLAY_ORDERS_STATUS_RESULTS',
+  );
+  foreach ($config_array as $old_config => $new_config) {
+    if (!defined($new_config)) {
+      xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                       SET configuration_key = '".$new_config."'
+                     WHERE configuration_key = '".$old_config."'");
+    }
+    xtc_db_query("DELETE FROM ".TABLE_CONFIGURATION." WHERE configuration_key = '".$old_config."'");
+  }

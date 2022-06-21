@@ -16,7 +16,7 @@
   require_once(DIR_FS_INC.'xtc_href_link_from_admin.inc.php');
   
   //display per page
-  $cfg_max_display_results_key = 'MAX_DISPLAY_NEWSLETTER_RECIPIENTS';
+  $cfg_max_display_results_key = 'MAX_DISPLAY_NEWSLETTER_RECIPIENTS_RESULTS';
   $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');

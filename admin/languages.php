@@ -19,7 +19,7 @@
   require('includes/application_top.php');
 
   //display per page
-  $cfg_max_display_results_key = 'MAX_DISPLAY_LANGUAGES';
+  $cfg_max_display_results_key = 'MAX_DISPLAY_LANGUAGES_RESULTS';
   $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');

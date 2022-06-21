@@ -27,7 +27,7 @@
   }
   
   //display per page
-  $cfg_max_display_results_key = 'MAX_DISPLAY_CONTENT_MANAGER';
+  $cfg_max_display_results_key = 'MAX_DISPLAY_CONTENT_MANAGER_RESULTS';
   $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
 
   $page = (isset($_GET['page']) ? (int)$_GET['page'] : 1);
