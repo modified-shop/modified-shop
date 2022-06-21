@@ -28,7 +28,9 @@
       $partner_info = new \Internetmarke\PartnerInformation('AMAMO', 1, '13RJboRMCxUxMWltIRruVsNmu9oCBtzr');
       $this->service = new \Internetmarke\Service($partner_info);
       
-      if (MODULE_INTERNETMARKE_PORTO_USER != ''
+      if (defined('MODULE_INTERNETMARKE_PORTO_USER')
+          && MODULE_INTERNETMARKE_PORTO_USER != ''
+          && defined('MODULE_INTERNETMARKE_PORTO_PASS')
           && MODULE_INTERNETMARKE_PORTO_PASS != ''
           )
       {

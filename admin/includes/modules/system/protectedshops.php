@@ -25,6 +25,7 @@ class protectedshops {
   var $content;
 
   function __construct() {
+    $this->version = '1.03';
     $this->code = 'protectedshops';
     $this->title = MODULE_PROTECTEDSHOPS_TEXT_TITLE;
     $this->description = MODULE_PROTECTEDSHOPS_TEXT_DESCRIPTION;

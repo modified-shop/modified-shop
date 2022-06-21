@@ -34,7 +34,7 @@
   
     protected $project_id;
     protected $api_key;
-    protected $version = '1.0';
+    public $version = '1.0';
   
     function __construct($language_id, $timeout = 3) {
       // logger
@@ -47,8 +47,8 @@
       $this->language_id = $languages['languages_id'];
       $this->language_charset = $languages['language_charset'];
 
-      $this->api_key = constant('MODULE_SEMKNOX_SYSTEM_API_'.$this->language_id);
-      $this->project_id = constant('MODULE_SEMKNOX_SYSTEM_PROJECT_'.$this->language_id);
+      $this->api_key = defined('MODULE_SEMKNOX_SYSTEM_API_'.$this->language_id) ? constant('MODULE_SEMKNOX_SYSTEM_API_'.$this->language_id) : '';
+      $this->project_id = defined('MODULE_SEMKNOX_SYSTEM_PROJECT_'.$this->language_id) ? constant('MODULE_SEMKNOX_SYSTEM_PROJECT_'.$this->language_id) : '';
       
       $this->main = new main($this->language_id);
       
