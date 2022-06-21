@@ -37,6 +37,7 @@ ALTER TABLE `customers` ADD `customers_password_time` INT(11) DEFAULT 0 NOT NULL
 #GTB - 2020-12-15 - fix #1047 - update banner manager
 ALTER TABLE `banners` ADD `banners_group_id` INT(11) NOT NULL AFTER `banners_id`;
 ALTER TABLE `banners` ADD `banners_sort` INT(11) NOT NULL AFTER `banners_html_text`;
+UPDATE `banners` SET `banners_group_id` = `banners_id`;
 
 #GTB - 2021-01-16 - multilanguage for tax rates and tax classes
 ALTER TABLE `geo_zones` MODIFY `geo_zone_name` VARCHAR(255) NOT NULL;
