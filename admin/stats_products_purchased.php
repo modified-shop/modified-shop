@@ -22,7 +22,7 @@ require_once (DIR_FS_INC.'xtc_get_category_path.inc.php');
 require_once (DIR_FS_INC.'xtc_get_parent_categories.inc.php');
 
 //display per page
-$cfg_max_display_results_key = 'MAX_DISPLAY_STATS_STATS_PRODUCTS_PURCHASED_RESULTS';
+$cfg_max_display_results_key = 'MAX_DISPLAY_STATS_PRODUCTS_PURCHASED_RESULTS';
 $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
  
 require (DIR_WS_INCLUDES.'head.php');
