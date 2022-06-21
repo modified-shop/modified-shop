@@ -88,7 +88,7 @@
         $k++;
 
         // Keep reading until the end of the string as long as the $flag is on
-        while (($flag == 'on') && ($k < count($pieces))) {
+        while (($flag == 'on') && ($k < $p)) {
           while (substr($pieces[$k], -1) == ')') {
             $post_objects[] = ')';
             if (strlen($pieces[$k]) > 1) {
