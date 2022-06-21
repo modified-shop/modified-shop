@@ -33,7 +33,7 @@ class micropayment_method extends micropayment_helper
         $this->check_enabled();
         $this->check();
         
-        if (defined('RUN_MODE_ADMIN') && isset($this->code)) {
+        if (defined('RUN_MODE_ADMIN') && isset($this->code) && $this->code != '') {
           $this->refreshShopModule();
         }
     }
