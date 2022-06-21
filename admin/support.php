@@ -23,6 +23,10 @@ $response = modified_api::request('modified/support/'.$_SESSION['language_code']
 $error = false;
 $error_field = array();
 
+if (isset($_GET['module']) && $_GET['module'] != '') {
+  $_POST['subject'] = 'Update '.strtoupper($_GET['module']);
+}
+
 if (isset($_GET['action'])) {
   switch ($_GET['action']) {
     case 'send':

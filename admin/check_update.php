@@ -18,52 +18,115 @@
 
 require ('includes/application_top.php');
 
-// check update
+// include needed functions
 require_once(DIR_FS_INC.'check_version_update.inc.php');
-$update_array = check_version_update(false);
+
+// include needed classes
+require_once(DIR_FS_CATALOG.'includes/classes/modified_api.php');
+
+$action = (isset($_GET['action']) ? $_GET['action'] : '');
+
+function rrmdir($dir) {    
+  $dir = rtrim($dir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+  if (is_dir(DIR_FS_CATALOG.$dir)) {
+    $files = new DirectoryIterator(DIR_FS_CATALOG.$dir);
+  
+    foreach ($files as $file) {
+      $filename = $file->getFilename();
+
+      if ($file->isDot() === false) {
+        if(is_dir(DIR_FS_CATALOG.$dir.$filename)) {
+          rrmdir($dir.$filename);
+        } else {
+          unlink(DIR_FS_CATALOG.$dir.$filename);
+        }
+      }
+    }
+    rmdir(DIR_FS_CATALOG.$dir);
+  }
+}
+
+if (isset($_GET['action'])
+    && $_GET['action'] == 'autoupdate'
+    )
+{
+  if (class_exists('ZipArchive')) {
+    modified_api::reset();
+    $response = modified_api::request('modified/version/install/installer');
+
+    // cleanup
+    rrmdir('download/tmp');
+    rrmdir('_installer');
+
+    // download
+    if (mkdir(DIR_FS_CATALOG.'download/tmp', 0755)) {
+      // save install
+      $fp = fopen (DIR_FS_CATALOG.'download/tmp/'.$response['filename'], 'w+');
+      $ch = curl_init($response['download']);
+      curl_setopt($ch, CURLOPT_FILE, $fp); 
+      curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+      curl_setopt($ch, CURLOPT_HEADER, false);
+      curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+      curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+      curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+      curl_exec($ch);
+      curl_close($ch);
+      fclose($fp);
+
+      // extract install
+      $zip = new ZipArchive();
+      if ($zip->open(DIR_FS_CATALOG.'download/tmp/'.$response['filename']) === true) {
+        if (is_dir(DIR_FS_CATALOG.'download/tmp/install')) {
+          rrmdir('download/tmp/install');
+        }
+        mkdir(DIR_FS_CATALOG.'download/tmp/install', 0755, true);
+    
+        $zip->extractTo(DIR_FS_CATALOG.'download/tmp/install');
+        $zip->close();
+      } else {
+        $messageStack->add_session('Corrupted download file');
+        xtc_redirect(xtc_href_link(basename($PHP_SELF)));
+      }
+    
+      // delete install
+      unlink(DIR_FS_CATALOG.'download/tmp/'.$response['filename']);
+
+      // process
+      $shoproot = DIR_FS_CATALOG.'download/tmp/install/_installer';
+      if (is_dir($shoproot)) {
+        foreach ((new RecursiveIteratorIterator(new RecursiveDirectoryIterator($shoproot, RecursiveDirectoryIterator::SKIP_DOTS))) as $file) {
+          $install_path = str_replace($shoproot, DIR_FS_CATALOG.'_installer', $file->getPath());
+          $install_path = rtrim($install_path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+          $install_path = str_replace(DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $install_path);
+                    
+          if (!is_dir($install_path)) {
+            mkdir($install_path, 0755, true);
+          }    
+          rename($file->getPathname(), $install_path.$file->getFilename());
+        }
+      }
+
+      // cleanup
+      rrmdir('download/tmp');
+  
+      // redirect
+      $_SESSION['auth'] = true;
+      xtc_redirect(xtc_href_link('../_installer/autoupdate.php'));
+    } else {
+      $messageStack->add_session('Could not create needed directory');
+      xtc_redirect(xtc_href_link(basename($PHP_SELF)));
+    }
+  } else {
+    $messageStack->add_session('Automatisches Update nicht möglich.');
+    xtc_redirect(xtc_href_link(basename($PHP_SELF)));
+  }
+}
+
+$content = check_version_update(false);
 
 require (DIR_WS_INCLUDES.'head.php');
 ?>
-  <style type="text/css">
-    #check_update {
-      margin: 5px;
-      padding: 0px 20px;
-      background-color: #F7F7F7;
-      font-family: Verdana, Arial, sans-serif;
-      font-size: 12px;
-      width: 980px;
-    }
-    dl dd {
-      margin-left: 10px;
-    }
-    #contentHead dt {
-      float: right;
-    }
-    #contentHead dd {
-      margin-left: 80px;
-    }
-    #check_update dl dt {
-      color: #D68000;
-      font-size: 12px;
-      font-weight: bold;
-      margin: 10px 0;
-    }
-    dl#person dt, dl#donate dt {
-      color: black;
-      font-weight: bold;
-      float: left;
-      font-size: 12px;
-      margin:0;
-    }
-    dl#person dd {
-      margin-left: 125px;
-      font-size: 12px;
-    }
-    dl#donate dd {
-      margin-left: 80px;
-      font-size: 12px;
-    }
-  </style>
 </head>
 <body>
     <!-- header //-->
@@ -84,96 +147,99 @@ require (DIR_WS_INCLUDES.'head.php');
         ?>
         <!-- body_text //-->
         <td class="boxCenter">         
-          <div id="check_update">
-            <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_news.png'); ?></div>
-            <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?></div>
-            <span class="main"><?php echo HEADING_SUBTITLE; ?></span>
-            <div class="clear"></div>
-            <dl>
-              <dt><?php echo PROJECT_VERSION; ?></dt>
-              <dt><?php echo TEXT_DB_VERSION.' "'.DB_VERSION.'"'; ?></dt>
-            </dl>
-            <?php
-            if ($update_array['update'] === true) {
-              echo TEXT_INFO_UPDATE_RECOMENDED;
-            } else {
-              if ($update_array['version'] == '') {
-                echo TEXT_INFO_UPDATE_NOT_POSSIBLE;            
-              } else {              
-                echo TEXT_INFO_UPDATE; 
-              }           
-            }
-            ?>
-            <br />
-            <br />
-            <p><?php echo TEXT_INFO_THANKS; ?></p>
-            <p><?php echo TEXT_INFO_DISCLAIMER; ?></p>
-            <hr />
-            <table style="border:0; padding:8px; width:100%;">
-              <tr>
-                <td style="width:50%; vertical-align:top">
-                  <dl>
-                    <dt><?php echo TEXT_HEADING_DEVELOPERS; ?></dt>
-                    <dd>
-                      <dl id="person"> <!-- sorted by board user-id -->
-                        <dt>Tomcraft</dt><dd>&lt;tomcraft@modified-shop.org&gt;</dd> <!-- 88 -->
-                        <dt>GTB</dt><dd>&lt;gtb@modified-shop.org&gt;</dd> <!-- 595 -->
-                        <dt>Hetfield</dt><dd>&lt;hetfield@modified-shop.org&gt;</dd> <!-- 1027 -->
-                        <dt>Markus</dt><dd>&lt;markus@modified-shop.org&gt;</dd> <!-- 1255 -->
-                        <dt>vr</dt><dd>&lt;vr@modified-shop.org&gt;</dd> <!-- 1641 -->
-                        <dt>h-h-h</dt><dd>&lt;h-h-h@modified-shop.org&gt;</dd> <!-- 3386 -->
-                        <dt>cYbercOsmOnauT</dt><dd>&lt;cybercosmonaut@modified-shop.org&gt;</dd> <!-- 6446 -->
-                        <dt>hellwanger</dt><dd>&lt;hellwanger@modified-shop.org&gt;</dd> <!-- 21189 -->
-                        <dt>webald</dt><dd>&lt;webald@modified-shop.org&gt;</dd> <!-- 18826 -->
-                        <dt>timopaul</dt><dd>&lt;timopaul@modified-shop.org&gt;</dd> <!-- 10390 -->
-                        <dt>AGI</dt><dd>&lt;agi@modified-shop.org&gt;</dd> <!-- 10246 -->
-                      </dl>
-                    </dd>
-                  </dl>
-                  <dl>
-                    <dt><?php echo TEXT_HEADING_FORMER_DEVELOPERS; ?></dt>
-                    <dd>
-                      <dl id="person"> <!-- sorted by board user-id -->
-                        <dt>DokuMan</dt><dd>&lt;dokuman@modified-shop.org&gt;</dd> <!-- 190 -->
-                        <dt><s>web28</s></dt><dd><s>&lt;web28@modified-shop.org&gt;</s> &dagger; 26.01.2018</dd> <!-- 308 -->
-                        <dt>hendrik</dt><dd>&lt;hendrik@modified-shop.org&gt;</dd> <!-- 1281 -->
-                        <dt>franky_n</dt><dd>&lt;franky_n@modified-shop.org&gt;</dd> <!-- 4516 -->
-                      </dl>
-                    </dd>
-                  </dl>
-                </td>
-                <td style="width:50%; vertical-align:top">
-                  <dl>
-                    <dt><?php echo TEXT_HEADING_SUPPORT; ?></dt>
-                    <dd>
-                      <dl id="donate">
-                        <dt><?php echo TEXT_HEADING_DONATIONS; ?></dt>
-                        <dd><?php echo TEXT_INFO_DONATIONS; ?></dd>
-                        <dt>&nbsp;</dt><dd>&nbsp;</dd>
-                        <dt>&nbsp;</dt>
-                        <dd>
-                          <?php echo BUTTON_DONATE; ?>
-                        </dd>
-                      </dl>
-                    </dd>
-                  </dl>
-                </td>
-              </tr>
-            </table>
-            <hr />
-            <dl>
-              <dt style="color: #d68000; font-weight: bold;"><?php echo TEXT_HEADING_BASED_ON; ?></dt>
-              <dd>
-                <ul style="list-style: none; padding-left: 0px;">
-                  <li><?php echo '&copy;2009-'.date('Y').'&nbsp;'; echo PROJECT_VERSION; ?> | http://www.modified-shop.org/</li>
-                  <li>&copy;2006 xt:Commerce V3.0.4 SP2.1 | http://www.xtcommerce.de/</li>
-                  <li>&copy;2003 neXTCommerce</li>
-                  <li>&copy;2002-2003 osCommerce (Milestone2) by Harald Ponce de Leon | http://www.oscommerce.com/</li>
-                  <li>&copy;2000-2001 The Exchange Project by Harald Ponce de Leon | http://www.oscommerce.com/</li>
-                </ul>
-              </dd>
-            </dl>
-          </div>
+          <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_news.png'); ?></div>
+          <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?></div>
+          <span class="main"><?php echo HEADING_SUBTITLE; ?></span>
+          <div class="clear"></div>
+            
+          <table class="tableCenter">      
+            <tr>
+              <td class="boxCenterLeft">
+                <table class="tableBoxCenter collapse">
+                  <?php            
+                  foreach ($content['details'] as $heading => $modules) {
+                    ?>
+                    <tr class="dataTableHeadingRow">
+                      <td class="dataTableHeadingContent"><?php echo $heading; ?></td>
+                      <td class="dataTableHeadingContent txta-c" style="width:10%;"><?php echo TEXT_HEADING_STATUS; ?></td>
+                      <td class="dataTableHeadingContent txta-r" style="width:15%;"><?php echo TEXT_HEADING_INSTALLED; ?></td>
+                      <td class="dataTableHeadingContent txta-r" style="width:15%;"><?php echo TEXT_HEADING_AVAILABLE; ?></td>
+                      <td class="dataTableHeadingContent txta-r" style="width:10%;"><?php echo TEXT_HEADING_ACTION; ?></td>
+                    </tr>
+                    <?php
+                    foreach ($modules as $module => $data) {
+                      $data['module'] = $module;
+              
+                      if ((!isset($_GET['module']) || (isset($_GET['module']) && ($_GET['module'] == $data['module']))) && !isset($mInfo)) {
+                        $mInfo = new objectInfo($data);
+                      }
+
+                      if (isset($mInfo) && is_object($mInfo) && ($data['module'] == $mInfo->module) ) {
+                        echo '<tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(basename($PHP_SELF), 'module=' . $mInfo->module . '&action=edit') . '\'">' . "\n";
+                      } else {
+                        echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(basename($PHP_SELF), 'module=' . $data['module']) . '\'">' . "\n";
+                      }
+                      ?>
+                        <td class="dataTableContent"><?php echo $data['title']; ?></td>
+                        <td class="dataTableContent txta-c">
+                          <?php 
+                          if ($data['shop'] == 'undefined') {
+                            echo xtc_image(DIR_WS_IMAGES . 'icon_status_yellow.gif', IMAGE_ICON_STATUS_UPDATE, 12, 12, 'style="margin-left: 5px;"');
+                          } elseif ($data['update']) {
+                            echo xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_UPDATE, 12, 12, 'style="margin-left: 5px;"');
+                          } else {
+                            echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_OK, 12, 12, 'style="margin-left: 5px;"');
+                          }
+                          ?>
+                        </td>
+                        <td class="dataTableContent txta-r"><?php echo $data['shop']; ?></td>
+                        <td class="dataTableContent txta-r"><?php echo $data['version']; ?></td> 
+                        <td class="dataTableContent txta-r"><?php if (isset($mInfo) && is_object($mInfo) && ($data['module'] == $mInfo->module) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(basename($PHP_SELF), 'module=' . $data['module']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                      </tr>
+                      <?php
+                    }
+                    echo '<tr><td colspan="5" style="height:35px;">&nbsp;</td></tr>';
+                  }
+                  ?>
+                </table>
+              </td>
+              <?php
+                $heading = array();
+                $contents = array();
+                switch ($action) {
+                  default:
+                    if (isset($mInfo) && is_object($mInfo)) {
+                      $heading[] = array('text' => '<b>' . $mInfo->title . '</b>');
+                      if ($mInfo->update) {
+                        $contents[] = array('align' => 'center', 'text' => TEXT_INFO_UPDATE_NEEDED);
+                        if ($mInfo->link != '') {
+                          if ($mInfo->module == 'shop') {
+                            $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . $mInfo->link . '">' . BUTTON_AUTOUPDATER . '</a>');
+                          } else {
+                            $contents[] = array('align' => 'center', 'text' => '<a class="button" target="_blank" onclick="this.blur();" href="' . $mInfo->link . '">' . BUTTON_MODULE_DOWNLOAD . '</a>');
+                          }
+                        }
+                        $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link('support.php', 'module='.$mInfo->module) . '">' . BUTTON_OFFER . '</a>');
+                      } else {
+                        $contents[] = array('align' => 'center', 'text' => TEXT_INFO_UPDATE_OK);
+                        if ($mInfo->link != '') {
+                          $contents[] = array('align' => 'center', 'text' => '<a class="button" target="_blank" onclick="this.blur();" href="' . $mInfo->link . '">' . BUTTON_MODULE_DOWNLOAD . '</a>');
+                        }
+                      }
+                    }
+                    break;
+                }
+
+                if ( (xtc_not_null($heading)) && (xtc_not_null($contents)) ) {
+                  echo '            <td class="boxRight">' . "\n";
+                  $box = new box;
+                  echo $box->infoBox($heading, $contents);
+                  echo '            </td>' . "\n";
+                }
+              ?>
+            </tr>
+          </table>
+            
         </td>
         <!-- body_text_eof //-->
       </tr>
