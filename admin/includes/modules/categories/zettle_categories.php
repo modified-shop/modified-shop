@@ -135,21 +135,38 @@
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) VALUES ('".$this->name."_CUSTOMERS_STATUS', '".DEFAULT_CUSTOMERS_STATUS_ID."','6', '1','xtc_get_customers_status_name', 'xtc_cfg_pull_down_customers_status_list(', now())");
     
       xtc_db_query("CREATE TABLE IF NOT EXISTS `paypal_zettle_to_products` (
+                      `zettle_id` int(11) NOT NULL AUTO_INCREMENT,
                       `products_uuid` varchar(64) NOT NULL,
                       `products_id` int(11) NOT NULL,
                       `stock` int(1) NOT NULL,
                       `status` int(1) NOT NULL,
                       `bulk` int(1) NOT NULL,
-                      PRIMARY KEY (`products_uuid`),
+                      PRIMARY KEY (`zettle_id`),
                       KEY `idx_products_id` (`products_id`)
                     )");
 
       xtc_db_query("CREATE TABLE IF NOT EXISTS `paypal_zettle_import` (
-                      `zettle_id` int(11) NOT NULL,
+                      `zettle_id` int(11) NOT NULL AUTO_INCREMENT,
                       `import_uuid` varchar(64) NOT NULL,
                       PRIMARY KEY (`zettle_id`),
                       KEY `idx_import_uuid` (`import_uuid`)
                     )");
+      
+      $check_query = xtc_db_query("SHOW COLUMNS FROM `paypal_zettle_to_products` LIKE 'zettle_id'");
+      if (xtc_db_num_rows($check_query) < 1) {
+        xtc_db_query("ALTER TABLE `paypal_zettle_to_products` DROP PRIMARY KEY");
+        xtc_db_query("ALTER TABLE `paypal_zettle_to_products` ADD `zettle_id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST");
+      }
+
+      $check_query = xtc_db_query("DESCRIBE `paypal_zettle_import`");
+      while ($check = xtc_db_fetch_array($check_query)) {
+        if ($check['Field'] == 'zettle_id') {
+          if (strtoupper($check['Extra']) != 'AUTO_INCREMENT') {
+            xtc_db_query("ALTER TABLE `paypal_zettle_import` DROP PRIMARY KEY");
+            xtc_db_query("ALTER TABLE `paypal_zettle_import` MODIFY `zettle_id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY");
+          }
+        }
+      }      
     }
   
   
@@ -284,13 +301,13 @@
         }
         $products_query = xtc_db_query("SELECT pz2p.*,
                                                p.products_id
-                                                     FROM ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
-                                                     JOIN ".TABLE_PRODUCTS." p
-                                                          ON p2c.products_id = p.products_id
-                                                             AND p2c.categories_id IN ('".implode("', '", $subcategories_array)."')
-                                                LEFT JOIN ".TABLE_PAYPAL_ZETTLE_TO_PRODUCTS." pz2p
-                                                          ON pz2p.products_id = p.products_id
-                                                          ".$where);                                                          
+                                          FROM ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
+                                          JOIN ".TABLE_PRODUCTS." p
+                                               ON p2c.products_id = p.products_id
+                                                  AND p2c.categories_id IN ('".implode("', '", $subcategories_array)."')
+                                     LEFT JOIN ".TABLE_PAYPAL_ZETTLE_TO_PRODUCTS." pz2p
+                                               ON pz2p.products_id = p.products_id
+                                               ".$where);                                                          
         while ($products = xtc_db_fetch_array($products_query)) {
           if ($products['products_uuid'] == ''
               || $products['stock'] != $categories_data['categories_zettle_stock']
