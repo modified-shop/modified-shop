@@ -19,7 +19,7 @@
 define('HEADING_TITLE', 'Software Aktualisierung');
 define('HEADING_SUBTITLE', 'Update Check');
 
-define('TEXT_HEADING_STATUS', 'Status');
+define('TEXT_HEADING_STATUS', 'Update Status');
 define('TEXT_HEADING_INSTALLED', 'Installiert');
 define('TEXT_HEADING_VERSION_INTEGRATED', 'Version integriert');
 define('TEXT_HEADING_VERSION_AVAILABLE', 'Version verf&uuml;gbar');
