@@ -71,20 +71,22 @@
           $details[$heading][$module] = $data;
           $data['path'] = str_replace('DIR_ADMIN/', DIR_ADMIN, $data['path']);
           $data['lang'] = str_replace('DIR_LANG', $_SESSION['language'], $data['lang']);
+          
+          if (is_file(DIR_FS_CATALOG.$data['path'])) {
+            if ($data['lang'] != '' && is_file(DIR_FS_CATALOG.$data['lang'])) {
+              require_once(DIR_FS_CATALOG.$data['lang']);
+            }
   
-          if ($data['lang'] != '' && is_file(DIR_FS_CATALOG.$data['lang'])) {
-            require_once(DIR_FS_CATALOG.$data['lang']);
-          }
+            require_once(DIR_FS_CATALOG.$data['path']);
+            ${$module} = new $data['class']($data['module']);
   
-          require_once(DIR_FS_CATALOG.$data['path']);
-          ${$module} = new $data['class']($data['module']);
+            if (array_key_exists($data['variable'], get_object_vars(${$module}))) {
+              $details[$heading][$module]['shop'] = ${$module}->{$data['variable']};
+            }
   
-          if (array_key_exists($data['variable'], get_object_vars(${$module}))) {
-            $details[$heading][$module]['shop'] = ${$module}->{$data['variable']};
-          }
-  
-          if ($data['regex'] != '') {
-            $details[$heading][$module]['shop'] = preg_replace($data['regex'], '', $details[$heading][$module]['shop']);
+            if ($data['regex'] != '') {
+              $details[$heading][$module]['shop'] = preg_replace($data['regex'], '', $details[$heading][$module]['shop']);
+            }
           }
     
           $details[$heading][$module]['update'] = version_compare($data['version'], $details[$heading][$module]['shop'], '>');
