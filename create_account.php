@@ -386,15 +386,17 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
       $name = $firstname.' '.$lastname;
 
       // load data into array
-      $module_content = array('MAIL_NAME' => $name,
-                              'MAIL_REPLY_ADDRESS' => parse_multi_language_value(EMAIL_SUPPORT_REPLY_ADDRESS, $_SESSION['language_code']),
-                              'MAIL_GENDER' => get_customers_gender($gender));
+      $module_content = array(
+        'MAIL_NAME' => $name,
+        'MAIL_REPLY_ADDRESS' => parse_multi_language_value(EMAIL_SUPPORT_REPLY_ADDRESS, $_SESSION['language_code']),
+        'MAIL_GENDER' => ((ACCOUNT_GENDER == 'true') ? get_customers_gender($gender) : '')
+      );
 
       // assign data to smarty
       $smarty->assign('language', $_SESSION['language']);
       $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
       $smarty->assign('content', $module_content);
-      $smarty->assign('GENDER', $gender);
+      $smarty->assign('GENDER', ((ACCOUNT_GENDER == 'true') ? $gender : ''));
       $smarty->assign('FIRSTNAME', $firstname);
       $smarty->assign('LASTNAME', $lastname);
       $smarty->assign('NAME', $name);
@@ -518,7 +520,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
                      $txt_mail);
       }
    
-      if ($newsletter == '1') {
+      if (isset($newsletter) && $newsletter == '1') {
         require_once (DIR_WS_CLASSES.'class.newsletter.php');
         $newsletter = new newsletter;
         $newsletter->AddUserAuto($email_address);
