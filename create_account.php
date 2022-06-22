@@ -145,7 +145,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
   }
 
   // New VAT Check
-  if (ACCOUNT_COMPANY_VAT_CHECK == 'true'){
+  if (ACCOUNT_COMPANY_VAT_CHECK == 'true') {
     require_once(DIR_WS_CLASSES.'vat_validation.php');
     $vatID = new vat_validation($vat, '', '', (int)$country);
     $customers_status = $vatID->vat_info['status'];
@@ -278,36 +278,26 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     $error = true;
   }
   
-  if(isset($customers_status)) {
-    $customers_status = (int)$customers_status;
-  }
-
-  if (!isset($customers_status) || $customers_status == 0) {
-    if (DEFAULT_CUSTOMERS_STATUS_ID != 0) {
-        $customers_status = DEFAULT_CUSTOMERS_STATUS_ID;
-    } else {
-        $customers_status = 2;
-    }
-  }
-
-  if (!isset($newsletter)) {
-    $newsletter = '';
-  }
-
   if ($error == false) {
     $customers_password_time = time();
     
+    if (!isset($customers_status) || (int)$customers_status == 0) {
+      if (DEFAULT_CUSTOMERS_STATUS_ID != 0) {
+        $customers_status = DEFAULT_CUSTOMERS_STATUS_ID;
+      } else {
+        $customers_status = 2;
+      }
+    }
+
     $sql_data_array = array(
       'customers_cid' => generate_customers_cid(true),
-      'customers_vat_id' => $vat,
-      'customers_vat_id_status' => $customers_vat_id_status,
-      'customers_status' => $customers_status,
+      'customers_status' => (int)$customers_status,
       'customers_firstname' => $firstname,
       'customers_lastname' => $lastname,
       'customers_email_address' => $email_address,
-      'customers_telephone' => $telephone,
-      'customers_fax' => $fax,
-      'customers_newsletter' => (int)$newsletter,
+      'customers_telephone' => ((isset($telephone)) ? $telephone : ''),
+      'customers_fax' => ((isset($fax)) ? $fax : ''),
+      'customers_newsletter' => ((isset($newsletter)) ? (int)$newsletter : 0),
       'customers_password' => xtc_encrypt_password($password),
       'customers_password_time' => $customers_password_time,
       'customers_date_added' => 'now()',
@@ -319,6 +309,10 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     }
     if (ACCOUNT_DOB == 'true') {
       $sql_data_array['customers_dob'] = xtc_date_raw($dob);
+    }
+    if (ACCOUNT_COMPANY_VAT_CHECK == 'true') {
+      $sql_data_array['customers_vat_id'] = $vat;
+      $sql_data_array['customers_vat_id_status'] = $customers_vat_id_status;
     }
     
     // check email again

@@ -129,7 +129,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
   }
 
   // New VAT Check
-  if (ACCOUNT_COMPANY_VAT_CHECK == 'true'){
+  if (ACCOUNT_COMPANY_VAT_CHECK == 'true') {
     require_once (DIR_WS_CLASSES . 'vat_validation.php');
     $vatID = new vat_validation($vat, '', '', (int)$country, true);
     $customers_status = $vatID->vat_info['status'];
@@ -240,39 +240,27 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     $error = true;
   }
 
-  if(isset($customers_status)) {
-    $customers_status = (int)$customers_status;
-  }
-
-  if (!isset($customers_status) || $customers_status == 0) {
-    if (DEFAULT_CUSTOMERS_STATUS_ID_GUEST != 0) {
-      $customers_status = DEFAULT_CUSTOMERS_STATUS_ID_GUEST;
-    } else {
-      $customers_status = 1;
-    }
-  }
-
-  if (!isset($newsletter)) {
-    $newsletter = '';
-  }
-
-  $password = xtc_create_password(8);
-
   if ($error == false) {
     $customers_password_time = time();
     
+    if (!isset($customers_status) || (int)$customers_status == 0) {
+      if (DEFAULT_CUSTOMERS_STATUS_ID_GUEST != 0) {
+        $customers_status = DEFAULT_CUSTOMERS_STATUS_ID_GUEST;
+      } else {
+        $customers_status = 1;
+      }
+    }
+    
     $sql_data_array = array(
-      'customers_vat_id' => $vat,
-      'customers_vat_id_status' => $customers_vat_id_status,
-      'customers_status' => $customers_status,
+      'customers_status' => (int)$customers_status,
       'customers_firstname' => $firstname,
       'customers_lastname' => $lastname,
       'customers_email_address' => $email_address,
-      'customers_telephone' => $telephone,
-      'customers_fax' => $fax,
-      'customers_newsletter' => (int)$newsletter,
+      'customers_telephone' => ((isset($telephone)) ? $telephone : ''),
+      'customers_fax' => ((isset($fax)) ? $fax : ''),
+      'customers_newsletter' => ((isset($newsletter)) ? (int)$newsletter : 0),
       'account_type' => '1',
-      'customers_password' => $password,
+      'customers_password' => xtc_create_password(8),
       'customers_password_time' => $customers_password_time,
       'customers_date_added' => 'now()',
       'customers_last_modified' => 'now()',
@@ -284,21 +272,27 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     if (ACCOUNT_DOB == 'true') {
       $sql_data_array['customers_dob'] = xtc_date_raw($dob);
     }
+    if (ACCOUNT_COMPANY_VAT_CHECK == 'true') {
+      $sql_data_array['customers_vat_id'] = $vat;
+      $sql_data_array['customers_vat_id_status'] = $customers_vat_id_status;
+    }
+
     xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array);
 
     $_SESSION['customer_id'] = xtc_db_insert_id();
     $_SESSION['customer_time'] = $customers_password_time;
     
-    $sql_data_array = array('customers_id' => $_SESSION['customer_id'],
-                            'entry_firstname' => $firstname,
-                            'entry_lastname' => $lastname,
-                            'entry_street_address' => $street_address,
-                            'entry_postcode' => $postcode,
-                            'entry_city' => $city,
-                            'entry_country_id' => (int)$country,
-                            'address_date_added' => 'now()',
-                            'address_last_modified' => 'now()'
-                            );
+    $sql_data_array = array(
+      'customers_id' => $_SESSION['customer_id'],
+      'entry_firstname' => $firstname,
+      'entry_lastname' => $lastname,
+      'entry_street_address' => $street_address,
+      'entry_postcode' => $postcode,
+      'entry_city' => $city,
+      'entry_country_id' => (int)$country,
+      'address_date_added' => 'now()',
+      'address_last_modified' => 'now()'
+    );
 
     if (ACCOUNT_GENDER == 'true') {
       $sql_data_array['entry_gender'] = $gender;
@@ -322,11 +316,12 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
                      SET customers_default_address_id = '" . (int)$address_id . "' 
                    WHERE customers_id = '" . (int)$_SESSION['customer_id'] . "'");
     
-    $sql_data_array = array('customers_info_id' => (int)$_SESSION['customer_id'],
-                            'customers_info_number_of_logons' => '1',
-                            'customers_info_date_account_created' => 'now()',
-                            'customers_info_date_of_last_logon' => 'now()'
-                            );
+    $sql_data_array = array(
+      'customers_info_id' => (int)$_SESSION['customer_id'],
+      'customers_info_number_of_logons' => '1',
+      'customers_info_date_account_created' => 'now()',
+      'customers_info_date_of_last_logon' => 'now()'
+    );
     xtc_db_perform(TABLE_CUSTOMERS_INFO, $sql_data_array);
 
     if (SESSION_RECREATE == 'True') {
