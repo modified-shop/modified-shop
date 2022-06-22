@@ -185,7 +185,7 @@ class paypalacdc extends PayPalPaymentV2 {
     global $insert_id;
 
     $result = $this->FinishOrder($insert_id);
-    if ($result->status == 'COMPLETED') {
+    if ($result->status == 'COMPLETED' && $result->transaction_status == 'COMPLETED') {
       xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL'));
     }
 

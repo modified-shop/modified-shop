@@ -384,6 +384,7 @@
         if ($this->get_config('PAYPAL_CAPTURE_MANUELL') == '0' && $error === false) {
           $order = new order($insert_id);
           $this->CaptureAuthorizedOrder($response->result->purchase_units[0]->payments->authorizations[0]->id, $order->info['pp_total'], $order->info['currency'], true);
+          return $this->GetOrder($_SESSION['paypal']['OrderID']);
         }
         return $response->result;
         
@@ -420,8 +421,6 @@
       
       // auth
       $client = $this->GetClient();
-
-      $OrderID = $this->getOrderID($order_id);
             
       $request = new AuthorizationsCaptureRequest($authorize_id);
       $request->body = array(
@@ -583,13 +582,18 @@
       $this->PatchOrder($_SESSION['paypal']['OrderID']);
       
       if ($this->intent == 'CAPTURE') {
-        $status = $this->order_status_success;
         $result = $this->CaptureOrder($_SESSION['paypal']['OrderID']);
-        $transaction_id = $result->purchase_units[0]->payments->captures[0]->id;
+        $result->transaction_id = $result->purchase_units[0]->payments->captures[0]->id;
+        $result->transaction_status = $result->purchase_units[0]->payments->captures[0]->status;
       } else {
-        $status = $this->order_status_capture;
         $result = $this->AuthorizeOrder($_SESSION['paypal']['OrderID']);
-        $transaction_id = $result->purchase_units[0]->payments->authorizations[0]->id;
+        if (isset($result->purchase_units[0]->payments->captures)) {
+          $result->transaction_id = $result->purchase_units[0]->payments->captures[0]->id;
+          $result->transaction_status = $result->purchase_units[0]->payments->captures[0]->status;
+        } else {
+          $result->transaction_id = $result->purchase_units[0]->payments->authorizations[0]->id;
+          $result->transaction_status = $result->purchase_units[0]->payments->authorizations[0]->status;
+        }
       }
       
       if (isset($result->payer->payer_id)) {
@@ -600,13 +604,15 @@
         'orders_id' => $order_id,
         'payment_id' => $_SESSION['paypal']['OrderID'],
         'payer_id' => $_SESSION['paypal']['PayerID'],
-        'transaction_id' => $transaction_id,
+        'transaction_id' => $result->transaction_id,
       );
       xtc_db_perform(TABLE_PAYPAL_PAYMENT, $sql_data_array);
       
       $status_id = $this->order_status_pending;
       if ($result->status == 'COMPLETED') {
-        $status_id = $status; 
+        if ($result->transaction_status == 'COMPLETED') {
+          $status_id = $this->order_status_success;
+        }
       }
       $this->update_order('Order ID: '.$_SESSION['paypal']['OrderID'], $status_id, $order_id);
       unset($_SESSION['paypal']);

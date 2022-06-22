@@ -62,6 +62,17 @@ class PayPalPaymentBase extends PayPalCommon {
       $this->loglevel = $this->get_config('PAYPAL_LOG_LEVEL');
   
       $payment_sale = array(
+        'paypalacdc',
+        'paypalpui',
+        'paypalsofort',
+        'paypaltrustly',
+        'paypalprzelewy',
+        'paypalmybank',
+        'paypalideal',
+        'paypalgiropay',
+        'paypaleps',
+        'paypalblik',
+        'paypalbancontact',
         'paypalplus',
         'paypalpluslink',
       );
@@ -71,7 +82,7 @@ class PayPalPaymentBase extends PayPalCommon {
       }
 
       $this->intent = 'CAPTURE';
-      if ($this->get_config('PAYPAL_TRANSACTION_TYPE') == 'authorize') {
+      if ($this->transaction_type == 'authorize') {
         $this->intent = 'AUTHORIZE';
       }
     }
