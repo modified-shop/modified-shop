@@ -432,7 +432,7 @@
   function create_backup($checksum_array) {
     global $PHP_SELF;
     
-    $backup_file = 'backup_'.date('Y-m-d_H:i').'.zip';
+    $backup_file = 'backup_'.date('Y-m-d-H-i').'.zip';
     
     if (count($checksum_array) > 0) {
       $zip = new ZipArchive();
