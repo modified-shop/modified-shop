@@ -161,9 +161,10 @@ require (DIR_WS_INCLUDES.'head.php');
                     ?>
                     <tr class="dataTableHeadingRow">
                       <td class="dataTableHeadingContent"><?php echo $heading; ?></td>
+                      <td class="dataTableHeadingContent txta-c" style="width:10%;"><?php echo TEXT_HEADING_INSTALLED; ?></td>
                       <td class="dataTableHeadingContent txta-c" style="width:10%;"><?php echo TEXT_HEADING_STATUS; ?></td>
-                      <td class="dataTableHeadingContent txta-r" style="width:15%;"><?php echo TEXT_HEADING_INSTALLED; ?></td>
-                      <td class="dataTableHeadingContent txta-r" style="width:15%;"><?php echo TEXT_HEADING_AVAILABLE; ?></td>
+                      <td class="dataTableHeadingContent txta-r" style="width:15%;"><?php echo TEXT_HEADING_VERSION_INTEGRATED; ?></td>
+                      <td class="dataTableHeadingContent txta-r" style="width:15%;"><?php echo TEXT_HEADING_VERSION_AVAILABLE; ?></td>
                       <td class="dataTableHeadingContent txta-r" style="width:10%;"><?php echo TEXT_HEADING_ACTION; ?></td>
                     </tr>
                     <?php
@@ -181,6 +182,17 @@ require (DIR_WS_INCLUDES.'head.php');
                       }
                       ?>
                         <td class="dataTableContent"><?php echo $data['title']; ?></td>
+                        <td class="dataTableContent txta-c">
+                          <?php 
+                          if ($data['installed'] == '1') {
+                            echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_INSTALLED, 12, 12, 'style="margin-left: 5px;"');
+                          } elseif ($data['installed'] == '2') {
+                            echo xtc_image(DIR_WS_IMAGES . 'icon_status_yellow.gif', IMAGE_ICON_STATUS_INACTIVE, 12, 12, 'style="margin-left: 5px;"');
+                          } else {
+                            echo xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_NOT_INSTALLED, 12, 12, 'style="margin-left: 5px;"');
+                          }
+                          ?>
+                        </td>
                         <td class="dataTableContent txta-c">
                           <?php 
                           if ($data['shop'] == 'undefined') {

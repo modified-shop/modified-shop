@@ -21,11 +21,15 @@ define('HEADING_SUBTITLE', 'Update Check');
 
 define('TEXT_HEADING_STATUS', 'Status');
 define('TEXT_HEADING_INSTALLED', 'Installiert');
-define('TEXT_HEADING_AVAILABLE', 'Verf&uuml;gbar');
+define('TEXT_HEADING_VERSION_INTEGRATED', 'Version integriert');
+define('TEXT_HEADING_VERSION_AVAILABLE', 'Version verf&uuml;gbar');
 define('TEXT_HEADING_ACTION', 'Aktion');
 
 define('IMAGE_ICON_STATUS_OK','aktuell');
 define('IMAGE_ICON_STATUS_UPDATE','update notwendig');
+define('IMAGE_ICON_STATUS_INSTALLED','installiert');
+define('IMAGE_ICON_STATUS_INACTIVE','inaktiv');
+define('IMAGE_ICON_STATUS_NOT_INSTALLED','nicht installiert');
 
 define('BUTTON_MODULE_DOWNLOAD','Modul Download');
 define('BUTTON_OFFER','Update Angebot anfordern');

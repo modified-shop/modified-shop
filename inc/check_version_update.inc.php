@@ -49,6 +49,7 @@
             'version' => $response['version'],
             'shop' => PROJECT_VERSION_NO,
             'link' => version_compare($response['version'], PROJECT_VERSION_NO, '>') ? xtc_href_link(basename($PHP_SELF), 'action=autoupdate') : '',
+            'installed' => 1,
             'update' => version_compare($response['version'], PROJECT_VERSION_NO, '>')
           ),
           'db' => array(
@@ -56,6 +57,7 @@
             'version' => $response['version'],
             'shop' => $dbversion['plain'],
             'link' => '',
+            'installed' => 1,
             'update' => version_compare($response['version'], $dbversion['plain'], '>')
           ),
         ),
@@ -87,6 +89,19 @@
             if ($data['regex'] != '') {
               $details[$heading][$module]['shop'] = preg_replace($data['regex'], '', $details[$heading][$module]['shop']);
             }
+            
+            $check_query = xtc_db_query("SELECT *
+                                           FROM ".TABLE_CONFIGURATION."
+                                          WHERE configuration_key LIKE '".xtc_db_input($data['key'])."'");
+            if (xtc_db_num_rows($check_query) > 0) {
+              $details[$heading][$module]['installed'] = 2;
+              while ($check = xtc_db_fetch_array($check_query)) {
+                if (strtolower($check['configuration_value']) == 'true') {
+                  $details[$heading][$module]['installed'] = 1;
+                  break;
+                }
+              }
+            }
           }
     
           $details[$heading][$module]['update'] = version_compare($data['version'], $details[$heading][$module]['shop'], '>');
@@ -95,7 +110,7 @@
 
       foreach ($details as $heading => $modules) {
         foreach ($modules as $module => $data) {
-          if ($data['update'] == true) {
+          if ($data['update'] == true && (int)$data['installed'] > 0) {
             $contents['total'] ++;
           }
         }
