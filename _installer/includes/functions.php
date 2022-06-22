@@ -363,7 +363,7 @@
           'absolutePath' => $file->getPath(),
           'relativePath' => dirname($relativePath),
           'filename' => $file->getFilename(),
-          'checkSum' => hash_file('MD5', $file->getPathname()),
+          'checkSum' => get_hash_from_file($file->getPathname()),
         );
       }
     }
@@ -384,7 +384,7 @@
           'absolutePath' => $file->getPath(),
           'relativePath' => dirname($relativePath),
           'filename' => $file->getFilename(),
-          'checkSum' => hash_file('MD5', $file->getPathname()),
+          'checkSum' => get_hash_from_file($file->getPathname()),
         );
       }
     }
@@ -393,7 +393,12 @@
     return $files_array;
   }
 
-
+  
+  function get_hash_from_file($file) {
+    return md5(preg_replace("'[\r\n\s]+'", '', file_get_contents($file)));
+  }
+  
+  
   function get_checksum_version($version = '') {
     if ($version == '') {
       $version = get_shop_version();
