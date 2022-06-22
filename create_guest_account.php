@@ -356,7 +356,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
       }
     }
 
-    if ($newsletter == '1') {
+    if (isset($newsletter) && $newsletter == '1') {
       require_once (DIR_WS_CLASSES.'class.newsletter.php');
       $newsletter = new newsletter;
       $newsletter->AddUserAuto($email_address);
