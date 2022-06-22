@@ -13,8 +13,10 @@
 require('includes/application_top.php');
 
 // include needed functions
-require_once (DIR_FS_INC.'xtc_php_mail.inc.php');
+require_once(DIR_FS_INC.'xtc_php_mail.inc.php');
+require_once(DIR_FS_INC.'check_version_update.inc.php');
 
+// include needed classes
 require_once(DIR_FS_CATALOG.DIR_WS_CLASSES.'modified_api.php');
 
 modified_api::reset();
@@ -70,6 +72,13 @@ if (isset($_GET['action'])) {
         $message = '';
         foreach ($message_array as $k => $v) {
           $message .= $k . ': ' . xtc_db_prepare_input($v). "\n";
+        }
+        
+        $content = check_version_update(false);
+        foreach ($content['details'] as $heading => $modules) {
+          foreach ($modules as $module => $data) {
+            $message .= $data['title'] . ': ' . xtc_db_prepare_input($data['shop'].' / '.$data['version']). "\n";
+          }
         }
         
         xtc_php_mail(EMAIL_SUPPORT_ADDRESS, 
