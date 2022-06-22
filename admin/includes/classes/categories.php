@@ -1448,6 +1448,7 @@ class categories {
         }
         $products_data['specials_price'] = $this->priceCheck($products_data['specials_price'], $tax_rate);
       } else {
+        $products_data['specials_price'] = trim(str_replace('%', '', $products_data['specials_price']));
         if (!isset($products_data['products_price']) || (double)$products_data['products_price'] <= 0.00) {
           $price_query = xtc_db_query("SELECT products_price
                                          FROM ".TABLE_PRODUCTS."
