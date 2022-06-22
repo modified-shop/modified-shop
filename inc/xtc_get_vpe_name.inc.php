@@ -28,8 +28,10 @@
                                      FROM " . TABLE_PRODUCTS_VPE . " 
                                     WHERE language_id = '".(int)$languages_id."' 
                                       AND products_vpe_id = '".(int)$products_vpe_id."'");
-      $vpe_name = xtc_db_fetch_array($vpe_name_query, true);
-      $vpe_name_array[$languages_id][$products_vpe_id] = $vpe_name['products_vpe_name'];
+      if (xtc_db_num_rows($vpe_name_query)) {
+        $vpe_name = xtc_db_fetch_array($vpe_name_query, true);
+        $vpe_name_array[$languages_id][$products_vpe_id] = $vpe_name['products_vpe_name'];
+      }
     }
     
     return $vpe_name_array[$languages_id][$products_vpe_id];
