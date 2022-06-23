@@ -61,17 +61,18 @@
 
         // update changed configurations
         if (isset($_POST) && count($_POST) > 0) {
-          $configuration_query = xtc_db_query("SELECT configuration_key,
-                                                      configuration_id, 
-                                                      configuration_value, 
-                                                      use_function,
-                                                      set_function 
+          $configuration_query = xtc_db_query("SELECT *
                                                  FROM " . TABLE_CONFIGURATION . " 
                                                 WHERE configuration_group_id = '" . (int)$_GET['gID'] . "'
                                                   AND sort_order >= 0
                                              ORDER BY sort_order, configuration_id");
           while ($configuration = xtc_db_fetch_array($configuration_query)) {
             $configuration['configuration_value'] = stripslashes($configuration['configuration_value']);
+            
+            if (!isset($_POST[$configuration['configuration_key']])) {
+              $_POST[$configuration['configuration_key']] = '';
+            }
+            
             if (isset($_POST[$configuration['configuration_key']]) 
                 && is_array($_POST[$configuration['configuration_key']])
                 )
@@ -96,24 +97,44 @@
                 )
             {
               //value_limits min
-              if (isset($value_limits[$configuration['configuration_key']]['min']) && preg_match ("/^([0-9\.]+)$/", $_POST[$configuration['configuration_key']]) &&  (int)$_POST[$configuration['configuration_key']] < $value_limits[$configuration['configuration_key']]['min']) {
+              if (isset($value_limits[$configuration['configuration_key']]['min']) 
+                  && preg_match("/^([0-9\.]+)$/", $_POST[$configuration['configuration_key']]) 
+                  && (int)$_POST[$configuration['configuration_key']] < $value_limits[$configuration['configuration_key']]['min']
+                  )
+              {
+                $_POST[$configuration['configuration_key']] = (int)$configuration['configuration_value'];
                 $configuration_key_title = constant(strtoupper($configuration['configuration_key'].'_TITLE'));
                 $messageStack->add_session(sprintf(CONFIG_MIN_VALUE_WARNING,$configuration_key_title,$_POST[$configuration['configuration_key']],$value_limits[$configuration['configuration_key']]['min'] ), 'warning');
-                $_POST[$configuration['configuration_key']] = (int)$configuration['configuration_value'];
               }
+              
               //value_limits max
-              if (isset($value_limits[$configuration['configuration_key']]['max']) && preg_match ("/^([0-9\.]+)$/", $_POST[$configuration['configuration_key']]) &&  (int)$_POST[$configuration['configuration_key']] > $value_limits[$configuration['configuration_key']]['max']) {
+              if (isset($value_limits[$configuration['configuration_key']]['max']) 
+                  && preg_match("/^([0-9\.]+)$/", $_POST[$configuration['configuration_key']]) 
+                  && (int)$_POST[$configuration['configuration_key']] > $value_limits[$configuration['configuration_key']]['max']
+                  )
+              {
+                $_POST[$configuration['configuration_key']] = (int)$configuration['configuration_value'];
                 $configuration_key_title = constant(strtoupper($configuration['configuration_key'].'_TITLE'));
                 $messageStack->add_session(sprintf(CONFIG_MAX_VALUE_WARNING,$configuration_key_title,$_POST[$configuration['configuration_key']],$value_limits[$configuration['configuration_key']]['max'] ), 'warning');
-                $_POST[$configuration['configuration_key']] = (int)$configuration['configuration_value'];
               }
+              
               //check numeric input
-              if (!preg_match ("/^([0-9\.]+)$/", $_POST[$configuration['configuration_key']]) && (isset($value_limits[$configuration['configuration_key']]['min']) || isset($value_limits[$configuration['configuration_key']]['max']))) {
+              if (!preg_match("/^([0-9\.]+)$/", $_POST[$configuration['configuration_key']]) 
+                  && (isset($value_limits[$configuration['configuration_key']]['min']) 
+                      || isset($value_limits[$configuration['configuration_key']]['max'])
+                      )
+                  )
+              {
                 $_POST[$configuration['configuration_key']] = (int)$configuration['configuration_value'];
                 $configuration_key_title = constant(strtoupper($configuration['configuration_key'].'_TITLE'));
                 $messageStack->add_session(sprintf(CONFIG_INT_VALUE_ERROR,$configuration_key_title,$_POST[$configuration['configuration_key']],''), 'error');
               }
-              xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value='" . xtc_db_input($_POST[$configuration['configuration_key']]) . "', last_modified = NOW() where configuration_key='" . $configuration['configuration_key'] . "'");
+             
+              xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " 
+                               SET configuration_value = '" . xtc_db_input($_POST[$configuration['configuration_key']]) . "', 
+                                   last_modified = NOW() 
+                             WHERE configuration_key = '" . $configuration['configuration_key'] . "'");
+             
               // load template config install/uninstall if exist
               if ($configuration['configuration_key'] == 'CURRENT_TEMPLATE') {
                 $template_dir = DIR_FS_CATALOG.'templates/';
@@ -212,142 +233,144 @@
           </div>
           <div class="clear"></div> 
        
-            <?php
-              $tabs = false;
-              switch ($_GET['gID']) {
-                case '21': //Afterbuy                 
-                case '19': // Google Conversion-Tracking
-                case '31': // moneybookers payment module version 2.4        
-                  echo '<div class="configPartner cf">
-                          <a class="configtab'.(($_GET['gID'] == '21') ? ' activ' : '').'" href="'.xtc_href_link(FILENAME_CONFIGURATION, 'gID=21', 'NONSSL').'">Afterbuy</a>
-                          <a class="configtab'.(($_GET['gID'] == '19') ? ' activ' : '').'" href="'.xtc_href_link(FILENAME_CONFIGURATION, 'gID=19', 'NONSSL').'">Google Conversion</a>
-                          <a class="configtab'.(($_GET['gID'] == '31') ? ' activ' : '').'" href="'.xtc_href_link(FILENAME_CONFIGURATION, 'gID=31', 'NONSSL').'">Skrill.com</a>
-                        </div>';
+          <?php
+            $tabs = false;
+            switch ($_GET['gID']) {
+              case '21': //Afterbuy                 
+              case '19': // Google Conversion-Tracking
+              case '31': // moneybookers payment module version 2.4        
+                echo '<div class="configPartner cf">
+                        <a class="configtab'.(($_GET['gID'] == '21') ? ' activ' : '').'" href="'.xtc_href_link(FILENAME_CONFIGURATION, 'gID=21', 'NONSSL').'">Afterbuy</a>
+                        <a class="configtab'.(($_GET['gID'] == '19') ? ' activ' : '').'" href="'.xtc_href_link(FILENAME_CONFIGURATION, 'gID=19', 'NONSSL').'">Google Conversion</a>
+                        <a class="configtab'.(($_GET['gID'] == '31') ? ' activ' : '').'" href="'.xtc_href_link(FILENAME_CONFIGURATION, 'gID=31', 'NONSSL').'">Skrill.com</a>
+                      </div>';
 
-                  $tabs = true;
-                  echo '<div class="configPartner content">';
+                $tabs = true;
+                echo '<div class="configPartner content">';
 
-                  if ($_GET['gID'] == '21') {
-                    echo '<div class="clear bg_notice pdg2">'.AFTERBUY_URL.'</div>';
-                  }
-                  if ($_GET['gID'] == '31') {
-                    echo '<div class="clear div_box pdg2" style="max-width:100%">'. MB_INFO.'</div>';
-                  }
-                  break;
-              }
-            ?>
+                if ($_GET['gID'] == '21') {
+                  echo '<div class="clear bg_notice pdg2">'.AFTERBUY_URL.'</div>';
+                }
+                if ($_GET['gID'] == '31') {
+                  echo '<div class="clear div_box pdg2" style="max-width:100%">'. MB_INFO.'</div>';
+                }
+                break;
+            }
             
-                <?php echo xtc_draw_form('configuration', FILENAME_CONFIGURATION, 'gID=' . (int)$_GET['gID'] . '&action=save'); ?>
-                  <table class="clear tableConfig">
-                    <?php
-                      //Display only for sort_order >= 0
-                      $configuration_query = xtc_db_query("SELECT configuration_key,
-                                                                  configuration_id, 
-                                                                  configuration_value, 
-                                                                  use_function,
-                                                                  set_function 
-                                                             FROM " . TABLE_CONFIGURATION . " 
-                                                            WHERE configuration_group_id = '" . (int)$_GET['gID'] . "'
-                                                              AND sort_order >= 0
-                                                         ORDER BY sort_order, configuration_id");
-                      while ($configuration = xtc_db_fetch_array($configuration_query)) {
-                        $configuration['configuration_value'] = stripslashes($configuration['configuration_value']); //Web28 - 2012-08-09 - fix slashes
-                        if ($_GET['gID'] == 6) {
-                          switch ($configuration['configuration_key']) {
-                            case 'MODULE_PAYMENT_INSTALLED':
-                              if ($configuration['configuration_value'] != '') {
-                                $payment_installed = explode(';', $configuration['configuration_value']);
-                                for ($i = 0, $n = sizeof($payment_installed); $i < $n; $i++) {
-                                  include(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $payment_installed[$i]); 
-                                }
-                              }
-                              break;
-                            case 'MODULE_SHIPPING_INSTALLED':
-                              if ($configuration['configuration_value'] != '') {
-                                $shipping_installed = explode(';', $configuration['configuration_value']);
-                                for ($i = 0, $n = sizeof($shipping_installed); $i < $n; $i++) {
-                                  include(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/' . $shipping_installed[$i]); 
-                                }
-                              }
-                              break;
-                            case 'MODULE_ORDER_TOTAL_INSTALLED':
-                              if ($configuration['configuration_value'] != '') {
-                                $ot_installed = explode(';', $configuration['configuration_value']);
-                                for ($i = 0, $n = sizeof($ot_installed); $i < $n; $i++) {
-                                  include(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/order_total/' . $ot_installed[$i]); 
-                                }
-                              }
-                              break;
-                          }
-                        }
-                        if (xtc_not_null($configuration['use_function'])) {
-                          $use_function = $configuration['use_function'];
-                          if (preg_match('/->/', $use_function)) { 
-                            $class_method = explode('->', $use_function);
-                            if (!is_object(${$class_method[0]})) {
-                              include(DIR_WS_CLASSES . $class_method[0] . '.php');
-                              ${$class_method[0]} = new $class_method[0]();
+            echo xtc_draw_form('configuration', FILENAME_CONFIGURATION, 'gID=' . (int)$_GET['gID'] . '&action=save');
+            ?>
+              <table class="clear tableConfig">
+                <?php
+                  $configuration_query = xtc_db_query("SELECT configuration_key,
+                                                              configuration_id, 
+                                                              configuration_value, 
+                                                              use_function,
+                                                              set_function 
+                                                         FROM " . TABLE_CONFIGURATION . " 
+                                                        WHERE configuration_group_id = '" . (int)$_GET['gID'] . "'
+                                                          AND sort_order >= 0
+                                                     ORDER BY sort_order, configuration_id");
+                  while ($configuration = xtc_db_fetch_array($configuration_query)) {
+                    $configuration['configuration_value'] = stripslashes($configuration['configuration_value']);
+                    
+                    if ($_GET['gID'] == 6) {
+                      switch ($configuration['configuration_key']) {
+                        case 'MODULE_PAYMENT_INSTALLED':
+                          if ($configuration['configuration_value'] != '') {
+                            $payment_installed = explode(';', $configuration['configuration_value']);
+                            for ($i = 0, $n = sizeof($payment_installed); $i < $n; $i++) {
+                              include(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $payment_installed[$i]); 
                             }
-                            $cfgValue = xtc_call_function($class_method[1], $configuration['configuration_value'], ${$class_method[0]});
-                          } else {
-                            $cfgValue = xtc_call_function($use_function, $configuration['configuration_value']);
                           }
-                        } else {
-                          $cfgValue = encode_htmlspecialchars($configuration['configuration_value']);
-                        }
-                        if ($configuration['set_function']) {
-                          if (strpos($configuration['set_function'], '(') !== false) {
-                            eval('$value_field = ' . $configuration['set_function'] . ' "' . encode_htmlspecialchars($configuration['configuration_value']) . '");');
-                          } else {
-                            $parameters = explode(';', $configuration['set_function']);
-                            $function = trim($parameters[0]);
-                            $parameters[0] = $configuration['configuration_value'];
-                            $value_field = xtc_call_function($function, $parameters);
+                          break;
+                        case 'MODULE_SHIPPING_INSTALLED':
+                          if ($configuration['configuration_value'] != '') {
+                            $shipping_installed = explode(';', $configuration['configuration_value']);
+                            for ($i = 0, $n = sizeof($shipping_installed); $i < $n; $i++) {
+                              include(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/' . $shipping_installed[$i]); 
+                            }
                           }
-                        } else {
-                          $value_field = xtc_draw_input_field($configuration['configuration_key'], $configuration['configuration_value'], 'style="width:100%;"');
-                        }
-                        if (strpos($value_field,'cfg_so_k') !== false) {
-                          $value_field=str_replace('cfg_so_k',strtolower($configuration['configuration_key']),$value_field);
-                        }
-                        if (strpos($value_field,'configuration_value') !== false) {
-                          $value_field=str_replace('configuration_value',$configuration['configuration_key'],$value_field);
-                        }
-
-                        // catch up warnings if no language-text defined for configuration-key
-                        $configuration_key_title = strtoupper($configuration['configuration_key'].'_TITLE');
-                        $configuration_key_desc  = strtoupper($configuration['configuration_key'].'_DESC');
-                        if (defined($configuration_key_title) ) {                                         // if language definition
-                          $configuration_key_title = constant($configuration_key_title);
-                          $configuration_key_desc  = constant($configuration_key_desc);
-                        } else {                                                                          // if no language
-                          $configuration_key_title = $configuration['configuration_key'];                 // name = key
-                          $configuration_key_desc  = '&nbsp;';                                            // description = empty
-                        }
-                        if ($configuration_key_desc!=str_replace("<meta ","",$configuration_key_desc)) {
-                          $configuration_key_desc = encode_htmlentities($configuration_key_desc);
-                        }
-                        $class_mark = strpos(strtoupper($configuration['configuration_key']), 'SMTP') !== false || 
-                                      strpos(strtoupper($configuration['configuration_key']), 'CONTACT_US') !== false || 
-                                      strpos(strtoupper($configuration['configuration_key']), 'EMAIL_BILLING') !== false ||
-                                      strpos(strtoupper($configuration['configuration_key']), 'PRODUCT_IMAGE_') !== false ||
-                                      strpos(strtoupper($configuration['configuration_key']), 'MANUFACTURER_IMAGE_') !== false  
-                                      ? ' mark' 
-                                      : '';
-                        echo '
-                              <tr>
-                                <td class="dataTableConfig col-left">'.$configuration_key_title.'</td>
-                                <td class="dataTableConfig col-middle'.$class_mark.'">'.$value_field.'</td>
-                                <td class="dataTableConfig col-right">'.$configuration_key_desc.'</td>
-                              </tr>
-                             ';
-
+                          break;
+                        case 'MODULE_ORDER_TOTAL_INSTALLED':
+                          if ($configuration['configuration_value'] != '') {
+                            $ot_installed = explode(';', $configuration['configuration_value']);
+                            for ($i = 0, $n = sizeof($ot_installed); $i < $n; $i++) {
+                              include(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/order_total/' . $ot_installed[$i]); 
+                            }
+                          }
+                          break;
                       }
-                    ?>
-                  </table>
-                  <div class="main pdg2 txta-r mrg5"><input type="submit" class="button" onclick="this.blur();" value="<?php echo BUTTON_SAVE; ?>"/></div>
-                </form>
-            <?php echo (($tabs === true) ? '</div>' : ''); ?>
+                    }
+                    
+                    if (xtc_not_null($configuration['use_function'])) {
+                      $use_function = $configuration['use_function'];
+                      if (preg_match('/->/', $use_function)) { 
+                        $class_method = explode('->', $use_function);
+                        if (!is_object(${$class_method[0]})) {
+                          include(DIR_WS_CLASSES . $class_method[0] . '.php');
+                          ${$class_method[0]} = new $class_method[0]();
+                        }
+                        $cfgValue = xtc_call_function($class_method[1], $configuration['configuration_value'], ${$class_method[0]});
+                      } else {
+                        $cfgValue = xtc_call_function($use_function, $configuration['configuration_value']);
+                      }
+                    } else {
+                      $cfgValue = encode_htmlspecialchars($configuration['configuration_value']);
+                    }
+                    
+                    if ($configuration['set_function']) {
+                      if (strpos($configuration['set_function'], '(') !== false) {
+                        eval('$value_field = ' . $configuration['set_function'] . ' "' . encode_htmlspecialchars($configuration['configuration_value']) . '");');
+                      } else {
+                        $parameters = explode(';', $configuration['set_function']);
+                        $function = trim($parameters[0]);
+                        $parameters[0] = $configuration['configuration_value'];
+                        $value_field = xtc_call_function($function, $parameters);
+                      }
+                    } else {
+                      $value_field = xtc_draw_input_field($configuration['configuration_key'], $configuration['configuration_value'], 'style="width:100%;"');
+                    }
+                    
+                    if (strpos($value_field,'cfg_so_k') !== false) {
+                      $value_field=str_replace('cfg_so_k',strtolower($configuration['configuration_key']),$value_field);
+                    }
+                    
+                    if (strpos($value_field,'configuration_value') !== false) {
+                      $value_field=str_replace('configuration_value',$configuration['configuration_key'],$value_field);
+                    }
+
+                    // catch up warnings if no language-text defined for configuration-key
+                    $configuration_key_title = strtoupper($configuration['configuration_key'].'_TITLE');
+                    $configuration_key_desc  = strtoupper($configuration['configuration_key'].'_DESC');
+                    if (defined($configuration_key_title) ) {                                         // if language definition
+                      $configuration_key_title = constant($configuration_key_title);
+                      $configuration_key_desc  = constant($configuration_key_desc);
+                    } else {                                                                          // if no language
+                      $configuration_key_title = $configuration['configuration_key'];                 // name = key
+                      $configuration_key_desc  = '&nbsp;';                                            // description = empty
+                    }
+                    if ($configuration_key_desc!=str_replace("<meta ","",$configuration_key_desc)) {
+                      $configuration_key_desc = encode_htmlentities($configuration_key_desc);
+                    }
+                    $class_mark = strpos(strtoupper($configuration['configuration_key']), 'SMTP') !== false || 
+                                  strpos(strtoupper($configuration['configuration_key']), 'CONTACT_US') !== false || 
+                                  strpos(strtoupper($configuration['configuration_key']), 'EMAIL_BILLING') !== false ||
+                                  strpos(strtoupper($configuration['configuration_key']), 'PRODUCT_IMAGE_') !== false ||
+                                  strpos(strtoupper($configuration['configuration_key']), 'MANUFACTURER_IMAGE_') !== false  
+                                  ? ' mark' 
+                                  : '';
+                    echo '<tr>
+                            <td class="dataTableConfig col-left">'.$configuration_key_title.'</td>
+                            <td class="dataTableConfig col-middle'.$class_mark.'">'.$value_field.'</td>
+                            <td class="dataTableConfig col-right">'.$configuration_key_desc.'</td>
+                          </tr>
+                          ';
+                  }
+                ?>
+              </table>
+              <div class="main pdg2 txta-r mrg5"><input type="submit" class="button" onclick="this.blur();" value="<?php echo BUTTON_SAVE; ?>"/></div>
+            </form>
+          <?php echo (($tabs === true) ? '</div>' : ''); ?>
         </td>
         <!-- body_text_eof //-->
       </tr>
