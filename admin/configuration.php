@@ -137,12 +137,11 @@
              
               // load template config install/uninstall if exist
               if ($configuration['configuration_key'] == 'CURRENT_TEMPLATE') {
-                $template_dir = DIR_FS_CATALOG.'templates/';
-                if (file_exists($template_dir.$_POST[$configuration['configuration_key']].'/source/tmpl_config_install.php')) {
-                  include($template_dir.$_POST[$configuration['configuration_key']].'/source/tmpl_config_install.php');
+                if (is_file(DIR_FS_CATALOG.'templates/'.$configuration['configuration_value'].'/source/tmpl_config_uninstall.php')) {
+                  include(DIR_FS_CATALOG.'templates/'.$configuration['configuration_value'].'/source/tmpl_config_uninstall.php');
                 }
-                if (file_exists($template_dir.$configuration['configuration_value'].'/source/tmpl_config_uninstall.php')) {
-                  include($template_dir.$configuration['configuration_value'].'/source/tmpl_config_uninstall.php');
+                if (is_file(DIR_FS_CATALOG.'templates/'.$_POST[$configuration['configuration_key']].'/source/tmpl_config_install.php')) {
+                  include(DIR_FS_CATALOG.'templates/'.$_POST[$configuration['configuration_key']].'/source/tmpl_config_install.php');
                 }
               }
             }
