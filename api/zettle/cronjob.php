@@ -19,7 +19,6 @@
   require_once (DIR_WS_INCLUDES.'define_add_select.php');
 
   // include needed functions
-  require_once(DIR_FS_INC.'get_customers_status_by_id.inc.php');
   require_once(DIR_FS_INC.'get_external_content.inc.php');
 
   // include needed classes
