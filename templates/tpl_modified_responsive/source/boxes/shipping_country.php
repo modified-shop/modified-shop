@@ -28,32 +28,13 @@ if (isset($_SESSION['country'])) {
 $cache_id = md5('lID:'.$_SESSION['language'].'|sel:'.$selected.'|site:'.basename($PHP_SELF).'|params:'.xtc_get_all_get_params(array('currency', 'language')));
 
 if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_shipping_country.html', $cache_id) || !$cache) {  
-  $countries_array = array();
-  $countries_query = xtDBquery("SELECT c.* 
-                                  FROM " . TABLE_COUNTRIES . " c
-                                  JOIN " . TABLE_ZONES_TO_GEO_ZONES . " ztgz 
-                                       ON c.countries_id = ztgz.zone_country_id
-                                  JOIN " . TABLE_TAX_RATES . " tr 
-                                       ON tr.tax_zone_id = ztgz.geo_zone_id
-                                          AND tr.tax_rate > 0 
-                                 WHERE c.status = 1
-                              GROUP BY ztgz.zone_country_id");
-  while ($countries = xtc_db_fetch_array($countries_query, true)) {
-    $countries_array[] = array(
-      'id' => $countries['countries_id'],
-      'text' => $countries['countries_name'],
-    );
-  }
+  require_once (DIR_FS_INC.'xtc_get_country_list.inc.php');
+  $countries_array = xtc_get_countriesList();
 
-  // dont show box if there's only 1 country
+  // dont show box if there's only 1 currency
   if (count($countries_array) > 1 ) {
-    array_unshift($countries_array,  array(
-      'id' => 1,
-      'text' => 'Anderes Land',
-    ));
-        
-    $box_content = xtc_draw_form('countries', xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action')).'action=shipping_country', $request_type, false), 'post', 'class="box-currencies"')
-                   . xtc_draw_pull_down_menu('country', $countries_array, (int)$selected, 'onchange="this.form.submit()"')
+    $box_content = xtc_draw_form('countries', xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action')).'action=shipping_country', $request_type, false), 'post', 'class="box-shipping_country"')
+                   . xtc_get_country_list(array('name' => 'country'), (int)$selected, 'onchange="this.form.submit()"')
                    . xtc_hide_session_id();
     
     parse_str(xtc_get_all_get_params(array('currency', 'language')), $params_array);
