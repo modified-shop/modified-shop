@@ -45,7 +45,7 @@
     public $account = array();
     public $error = array();
     public $client_id;
-    public $zettle_version = '1.05';
+    public $zettle_version = '1.06';
     
     function __construct() {    
       $this->LoggingManager = new LoggingManager(DIR_FS_LOG.'mod_zettle_%s_'.((defined('RUN_MODE_ADMIN')) ? 'admin_' : '').'%s.log', 'zettle', 'debug');
