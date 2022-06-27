@@ -70,9 +70,5 @@
         xtc_db_query("DELETE FROM ".TABLE_PAYPAL_ZETTLE_TO_PRODUCTS."
                             WHERE products_uuid = '".$data['uuid']."'");
         break;
-    }
-  
-    error_log(print_r($data, true), 3, DIR_FS_LOG.'zettle.log');
+    }  
   }
-
-  error_log(print_r($request, true), 3, DIR_FS_LOG.'zettle.log');
