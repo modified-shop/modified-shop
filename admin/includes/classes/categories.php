@@ -548,23 +548,25 @@ class categories {
     $prod_quantity_query = xtc_db_query("SELECT products_quantity 
                                            FROM ".TABLE_PRODUCTS." 
                                           WHERE products_id = '".$products_id."'");
-    $prod_quantity = xtc_db_fetch_array($prod_quantity_query);
-    if ($prod_quantity['products_quantity'] != $products_data['products_quantity_before_edit']) {
-      $messageStack->add_session(ERROR_QTY_SAVE_CHANGED, 'error');
-    } else {
-      xtc_db_query("UPDATE ".TABLE_PRODUCTS." 
-                       SET products_quantity = '".xtc_db_input($products_data['products_quantity'])."' 
-                     WHERE products_id = '".(int)$products_id."'");  
-    
-      if (xtc_db_affected_rows() > 0) {
-        $messageStack->add_session(TEXT_STOCK_UPDATE_SUCCESS, 'success');
+    if (xtc_db_num_rows($prod_quantity_query) > 0) {
+      $prod_quantity = xtc_db_fetch_array($prod_quantity_query);
+      if ($prod_quantity['products_quantity'] != $products_data['products_quantity_before_edit']) {
+        $messageStack->add_session(ERROR_QTY_SAVE_CHANGED, 'error');
       } else {
-        $messageStack->add_session(TEXT_STOCK_UPDATE_ERROR, 'error');
+        xtc_db_query("UPDATE ".TABLE_PRODUCTS." 
+                         SET products_quantity = '".xtc_db_input($products_data['products_quantity'])."' 
+                       WHERE products_id = '".(int)$products_id."'");  
+    
+        if (xtc_db_affected_rows() > 0) {
+          $messageStack->add_session(TEXT_STOCK_UPDATE_SUCCESS, 'success');
+        } else {
+          $messageStack->add_session(TEXT_STOCK_UPDATE_ERROR, 'error');
+        }
       }
-    }
 
-    //new module support
-    $this->catModules->update_product($products_data, $products_id);
+      //new module support
+      $this->catModules->update_product($products_data, $products_id);
+    }
     
     return array(
       'error' => true,
@@ -634,11 +636,13 @@ class categories {
     $prod_quantity_query = xtc_db_query("SELECT products_quantity 
                                            FROM ".TABLE_PRODUCTS." 
                                           WHERE products_id = '".$products_id."'");
-    $prod_quantity = xtc_db_fetch_array($prod_quantity_query);
-    if ($prod_quantity['products_quantity'] != $products_data['products_quantity_before_edit']) {
-      unset($sql_data_array['products_quantity']);
-      $error = true;
-      $messageStack->add_session(ERROR_QTY_SAVE_CHANGED, 'error');
+    if (xtc_db_num_rows($prod_quantity_query) > 0) {
+      $prod_quantity = xtc_db_fetch_array($prod_quantity_query);
+      if ($prod_quantity['products_quantity'] != $products_data['products_quantity_before_edit']) {
+        unset($sql_data_array['products_quantity']);
+        $error = true;
+        $messageStack->add_session(ERROR_QTY_SAVE_CHANGED, 'error');
+      }
     }
     
     foreach ($customers_statuses_array as $customers_status) {
