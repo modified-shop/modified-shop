@@ -142,7 +142,9 @@
                       `status` int(1) NOT NULL,
                       `bulk` int(1) NOT NULL,
                       PRIMARY KEY (`zettle_id`),
-                      KEY `idx_products_id` (`products_id`)
+                      KEY `idx_products_id` (`products_id`),
+                      KEY `idx_products_uuid` (`products_uuid`),
+                      KEY `idx_bulk` (`bulk`)
                     )");
 
       xtc_db_query("CREATE TABLE IF NOT EXISTS `paypal_zettle_import` (
@@ -158,13 +160,24 @@
         xtc_db_query("ALTER TABLE `paypal_zettle_to_products` ADD `zettle_id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST");
       }
 
+      $check_query = xtc_db_query("DESCRIBE `paypal_zettle_to_products`");
+      while ($check = xtc_db_fetch_array($check_query)) {
+        if (in_array($check['Field'], array('products_uuid', 'bulk'))
+            && $check['Key'] == ''
+            )
+        {
+          xtc_db_query("ALTER TABLE `paypal_zettle_to_products` ADD INDEX `idx_".$check['Field']."` (`".$check['Field']."`)");
+        }
+      }      
+
       $check_query = xtc_db_query("DESCRIBE `paypal_zettle_import`");
       while ($check = xtc_db_fetch_array($check_query)) {
-        if ($check['Field'] == 'zettle_id') {
-          if (strtoupper($check['Extra']) != 'AUTO_INCREMENT') {
-            xtc_db_query("ALTER TABLE `paypal_zettle_import` DROP PRIMARY KEY");
-            xtc_db_query("ALTER TABLE `paypal_zettle_import` MODIFY `zettle_id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY");
-          }
+        if ($check['Field'] == 'zettle_id'
+            && strtoupper($check['Extra']) != 'AUTO_INCREMENT'
+            )
+        {
+          xtc_db_query("ALTER TABLE `paypal_zettle_import` DROP PRIMARY KEY");
+          xtc_db_query("ALTER TABLE `paypal_zettle_import` MODIFY `zettle_id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY");
         }
       }      
     }

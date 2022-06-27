@@ -315,9 +315,6 @@
     function insertProduct($products) {
       $data = $this->get_product_scheme($products, true);      
       
-      //$data['uuid'] = '5aaf99a4-47b4-11ec-bfc2-dfdd56f76d84';
-      //$data['variants'][0]['uuid'] = '5aaf9a4e-47b4-11ec-a7af-898d3ba95def';
-      
       $headers = array(
         'Authorization' => 'Bearer '.$this->access_token,
       );
@@ -396,8 +393,12 @@
 
 
     function uploadImage($products_image) {
+      $image_path_absolute = defined('DIR_FS_CATALOG_THUMBNAIL_IMAGES') ? DIR_FS_CATALOG_THUMBNAIL_IMAGES : DIR_FS_CATALOG.DIR_WS_THUMBNAIL_IMAGES;
+      $image_path_relative = defined('DIR_WS_CATALOG_THUMBNAIL_IMAGES') ? DIR_WS_CATALOG_THUMBNAIL_IMAGES : DIR_WS_THUMBNAIL_IMAGES;
+      $xtc_href_link = (defined('RUN_MODE_ADMIN') && function_exists('xtc_href_link_from_admin')) ? 'xtc_href_link_from_admin' : 'xtc_href_link';
+      
       if ($products_image != ''
-          && is_file(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$products_image)
+          && is_file($image_path_absolute.$products_image)
           )
       {
         $image = pathinfo($products_image);
@@ -408,7 +409,7 @@
         $body = array(
           'json' =>  array(
             'imageFormat' => str_replace('JPG', 'JPEG', strtoupper($image['extension'])),
-            'imageUrl' => xtc_href_link_from_admin(ltrim(DIR_WS_CATALOG_THUMBNAIL_IMAGES, '/').$products_image, '', 'SSL', false),
+            'imageUrl' => $xtc_href_link(ltrim($image_path_relative, '/').$products_image, '', 'SSL', false),
           )
         );
       
