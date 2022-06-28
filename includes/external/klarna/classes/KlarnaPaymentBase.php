@@ -83,7 +83,7 @@ class KlarnaPaymentBase extends KlarnaAutoload {
       }
     }
     
-    if (!isset($_SESSION['klarna'])) {
+    if (!defined('RUN_MODE_ADMIN') && !isset($_SESSION['klarna'])) {
       $this->getKlarnaSession();
     }
         
