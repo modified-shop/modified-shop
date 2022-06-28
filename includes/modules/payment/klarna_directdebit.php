@@ -25,7 +25,7 @@ class klarna_directdebit extends KlarnaPayment {
 
     KlarnaPayment::__construct($this->code);
 
-    if (is_object($order)) {
+    if (!defined('RUN_MODE_ADMIN') && is_object($order)) {
       $this->update_status();
     }
   }
