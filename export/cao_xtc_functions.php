@@ -168,6 +168,8 @@ function SendCategories ()
                             " from " . TABLE_CATEGORIES . " order by parent_id, categories_id");
   while ($cat = xtc_db_fetch_array($cat_query))
   {
+    $cat = encode_request($cat);
+    
     $schema  = '<CATEGORIES_DATA>' . "\n" .
                '<ID>' . $cat['categories_id'] . '</ID>' . "\n" .
                '<PARENT_ID>' . $cat['parent_id'] . '</PARENT_ID>' . "\n" .
@@ -187,6 +189,8 @@ function SendCategories ()
 
     while ($details = xtc_db_fetch_array($detail_query))
     {
+      $details = encode_request($details);
+      
       $schema .= "<CATEGORIES_DESCRIPTION ID='" . $details["language_id"] ."' CODE='" . $details["lang_code"] . "' NAME='" . $details["lang_name"] . "'>\n";
       $schema .= "<NAME>" . encode_htmlspecialchars($details["categories_name"]) . "</NAME>" . "\n";
       $schema .= "<HEADING_TITLE>" . encode_htmlspecialchars($details["categories_heading_title"]) . "</HEADING_TITLE>" . "\n";
@@ -227,6 +231,8 @@ function  SendManufacturers ()
 
   while ($cat = xtc_db_fetch_array($cat_query))
   {
+    $cat = encode_request($cat);
+    
     $schema  = '<MANUFACTURERS_DATA>' . "\n" .
                '<ID>' . $cat['manufacturers_id'] . '</ID>' . "\n" .
                '<NAME>' . encode_htmlspecialchars($cat['manufacturers_name']) . '</NAME>' . "\n" .
@@ -253,6 +259,8 @@ function  SendManufacturers ()
 
     while ($details = xtc_db_fetch_array($detail_query))
     {
+      $details = encode_request($details);
+      
       $schema .= "<MANUFACTURERS_DESCRIPTION ID='" . $details["languages_id"] ."' CODE='" . $details["lang_code"] . "' NAME='" . $details["lang_name"] . "'>\n";
       $schema .= "<URL>" . encode_htmlspecialchars($details["manufacturers_url"]) . "</URL>" . "\n" ;
       $schema .= "<URL_CLICK>" . $details["url_clicked"] . "</URL_CLICK>" . "\n" ;
@@ -308,6 +316,8 @@ function SendOrders ()
 
   while ($orders = xtc_db_fetch_array($orders_query))
   {
+    $orders = encode_request($orders);
+    
     // Geburtsdatum laden
     $cust_sql = "select * from " . TABLE_CUSTOMERS . " where customers_id=" . $orders['customers_id'];
     $cust_query = xtc_db_query ($cust_sql);
@@ -430,6 +440,8 @@ function SendOrders ()
     $products_query = xtc_db_query($sql);
     while ($products = xtc_db_fetch_array($products_query))
     {
+      $products = encode_request($products);
+      
       if ($products['allow_tax']==1) $products['final_price']=$products['final_price']/(1+$products['products_tax']*0.01);
       $schema .= '<PRODUCT>' . "\n" .
                  '<PRODUCTS_ID>' . $products['products_id'] . '</PRODUCTS_ID>' . "\n" .
@@ -461,6 +473,8 @@ function SendOrders ()
     $totals_query = xtc_db_query("select title, value, class, sort_order from " . TABLE_ORDERS_TOTAL . " where orders_id = '" . $orders['orders_id'] . "' order by sort_order");
     while ($totals = xtc_db_fetch_array($totals_query))
     {
+      $totals = encode_request($totals);
+      
       $total_prefix = "";
       $total_tax  = "";
       $total_prefix = "";
@@ -473,7 +487,7 @@ function SendOrders ()
       }    
 
       $schema .= '<TOTAL>' . "\n" .
-                 '<TOTAL_TITLE>' . encode_htmlspecialchars($totals['title']) . '</TOTAL_TITLE>' . "\n" .
+                 '<TOTAL_TITLE>' . encode_htmlspecialchars(strip_tags($totals['title'])) . '</TOTAL_TITLE>' . "\n" .
                  '<TOTAL_VALUE>' . encode_htmlspecialchars($totals['value']) . '</TOTAL_VALUE>' . "\n" .
                  '<TOTAL_CLASS>' . encode_htmlspecialchars($totals['class']) . '</TOTAL_CLASS>' . "\n" .
                  '<TOTAL_SORT_ORDER>' . encode_htmlspecialchars($totals['sort_order']) . '</TOTAL_SORT_ORDER>' . "\n" .
@@ -508,6 +522,8 @@ function SendOrders ()
     $oc='';
     while ($comments = xtc_db_fetch_array($comments_result))
     {
+      $comments = encode_request($comments);
+      
       if (strlen($oc)>0)
       {$oc .="\r\n"; }
      $oc .= encode_htmlspecialchars($comments['comments']);
@@ -572,6 +588,8 @@ function SendProducts ()
   $orders_query = xtc_db_query($sql);
   while ($products = xtc_db_fetch_array($orders_query))
   {
+    $products = encode_request($products);
+    
     $schema  = '<PRODUCT_INFO>' . "\n" .
                '<PRODUCT_DATA>' . "\n" .
                '<PRODUCT_ID>'.$products['products_id'].'</PRODUCT_ID>' . "\n" .
@@ -796,6 +814,8 @@ function SendProducts ()
 
     while ($details = xtc_db_fetch_array($detail_query))
     {
+      $details = encode_request($details);
+      
       $schema .= "<PRODUCT_DESCRIPTION ID='" . $details["language_id"] ."' CODE='" . $details["language_code"] . "' NAME='" . $details["language_name"] . "'>\n";
 
       if ($details["products_name"] !='Array')
@@ -902,6 +922,8 @@ function SendCustomers ()
 
   while ($address = xtc_db_fetch_array($address_result))
   {
+    $address = encode_request($address);
+    
     $schema = '<CUSTOMERS_DATA>' . "\n" .
               '<CUSTOMERS_ID>' . encode_htmlspecialchars($address['customers_id']) . '</CUSTOMERS_ID>' . "\n" .
               '<CUSTOMERS_CID>' . encode_htmlspecialchars($address['customers_cid']) . '</CUSTOMERS_CID>' . "\n" .
@@ -957,6 +979,8 @@ function SendCustomersNewsletter ()
   $address_result = xtc_db_query($address_query);
   while ($address = xtc_db_fetch_array($address_result))
   {
+    $address = encode_request($address);
+    
     $schema .= '<CUSTOMERS_DATA>' . "\n";
     $schema .= '<CUSTOMERS_ID>' . $address['customers_id'] . '</CUSTOMERS_ID>' . "\n";
     $schema .= '<CUSTOMERS_CID>' . $address['customers_cid'] . '</CUSTOMERS_CID>' . "\n";
@@ -984,6 +1008,8 @@ function SendShopConfig ()
 
   while ($config = xtc_db_fetch_array($config_res))
   {
+    $config = encode_request($config);
+    
     $schema = '<ENTRY ID="' . $config['configuration_id'] . '">' .  "\n" .
              '<PARAM>' . encode_htmlspecialchars($config['configuration_key']) . '</PARAM>' . "\n" .
              '<VALUE>' . encode_htmlspecialchars($config['configuration_value']) . '</VALUE>' . "\n" .
@@ -1008,6 +1034,8 @@ function SendShopConfig ()
 
   while ($tax_class = xtc_db_fetch_array($tax_class_res))
   {
+    $tax_class = encode_request($tax_class);
+    
     $schema = '<CLASS ID="' . $tax_class['tax_class_id'] . '">' . "\n" .
              '<TITLE>' .         encode_htmlspecialchars($tax_class['tax_class_title']) .       '</TITLE>' . "\n" .
              '<DESCRIPTION>' .   encode_htmlspecialchars($tax_class['tax_class_description']) . '</DESCRIPTION>' . "\n" .
@@ -1027,6 +1055,8 @@ function SendShopConfig ()
 
   while ($tax_rates = xtc_db_fetch_array($tax_rates_res))
   {
+    $tax_rates = encode_request($tax_rates);
+    
     $schema = '<RATES ID="' . $tax_rates['tax_rates_id'] . '">' . "\n" .
               '<ZONE_ID>' .       encode_htmlspecialchars($tax_rates['tax_zone_id']) .     '</ZONE_ID>' . "\n" .
               '<CLASS_ID>' .      encode_htmlspecialchars($tax_rates['tax_class_id']) .    '</CLASS_ID>' . "\n" .
@@ -2803,6 +2833,21 @@ function SendLog ()
   echo '<br><br></body></html>';
 
 }
+
+
+//--------------------------------------------------------------
+
+  function encode_request($array) {
+    foreach ($array as $key => $value) {
+      if (is_array($value)) {
+        $array[$key] = encode_request($value);
+      } else {
+        $array[$key] = ((!is_bool($value)) ? encode_utf8($value, '', true) : $value);
+      }
+    }
+  
+    return $array;
+  }
 
 //--------------------------------------------------------------
 //                     Ende Funktionen
