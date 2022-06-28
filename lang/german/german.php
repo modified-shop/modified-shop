@@ -652,4 +652,6 @@ define('SITEMAP_ERROR_401', 'Fehler 401: Authentifizierungsfehler.');
 define('SITEMAP_ERROR_403', 'Fehler 403: Der Server verweigert die Ausf&uuml;hrung.');
 define('SITEMAP_ERROR_404', 'Fehler 404: Die gesuchte Seite wurde nicht gefunden!');
 define('SITEMAP_ERROR_500', 'Fehler 500: Beim Server gab es einen internen Fehler.');
+
+define('ERROR_PRODUCTS_MISSING_KONFIGURATION_NOT_ADDED', 'Einige Artikel aus Ihrer Bestellung sind nicht mehr in der gew&uuml;nschten Konfiguration erh&auml;ltlich und wurden nicht in den Warenkorb gelegt.');
 ?>

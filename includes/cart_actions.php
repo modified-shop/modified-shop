@@ -361,6 +361,7 @@ if (xtc_not_null($action) && basename($PHP_SELF) != FILENAME_COOKIE_USAGE) {
           $order_data_array = $order->getOrderData((int)$_GET['order_id']);
           
           if (is_array($order_data_array) && count($order_data_array) > 0) {
+            $count_products_missing_attributes = 0;
             foreach ($order_data_array as $order_data) {
               $attributes_array = array();
               if (is_array($order_data['PRODUCTS_ATTRIBUTES_ARRAY'])) {
@@ -381,6 +382,12 @@ if (xtc_not_null($action) && basename($PHP_SELF) != FILENAME_COOKIE_USAGE) {
                   }
                 }
               }
+              $check_query = xtc_db_query("SELECT COUNT(*) AS cnt, SUM(IF(ISNULL(po.products_options_values_id), 0, 1)) AS checksum FROM `orders_products_attributes` oa LEFT JOIN `products_options_values` as po ON (oa.orders_products_options_values_id=po.products_options_values_id AND po.language_id=".(int)$_SESSION['languages_id']." AND po.products_options_values_id>0) WHERE `orders_products_id`=".(int)$order_data['ORDERS_PRODUCTS_ID']);
+              $check_result = xtc_db_fetch_array($check_query);
+              if ($check_result['cnt'] != $check_result['checksum']) {
+                $count_products_missing_attributes++;
+                continue;
+              }
 
               $products_id = $order_data['PRODUCTS_ID'];
               $cart_quantity = (xtc_remove_non_numeric($order_data['PRODUCTS_QTY']) + $cart_object->get_quantity(xtc_get_uprid($products_id, ((count($attributes_array) > 0) ? $attributes_array : ''))));
@@ -390,6 +397,9 @@ if (xtc_not_null($action) && basename($PHP_SELF) != FILENAME_COOKIE_USAGE) {
               }
               $cart_object->add_cart((int)$products_id, $cart_quantity, ((count($attributes_array) > 0) ? $attributes_array : ''));
 
+            }
+            if ($count_products_missing_attributes) {
+              $messageStack->add_session(pathinfo($goto, PATHINFO_FILENAME), ERROR_PRODUCTS_MISSING_KONFIGURATION_NOT_ADDED);
             }
  
             if ($co_express === true) {
@@ -449,6 +459,12 @@ if (xtc_not_null($action) && basename($PHP_SELF) != FILENAME_COOKIE_USAGE) {
           }      
 
           if (isset($products_id)) {
+            $check_query = xtc_db_query("SELECT COUNT(*) AS cnt, SUM(IF(ISNULL(po.products_options_values_id), 0, 1)) AS checksum FROM `orders_products_attributes` oa LEFT JOIN `products_options_values` as po ON (oa.orders_products_options_values_id=po.products_options_values_id AND po.language_id=".(int)$_SESSION['languages_id']." AND po.products_options_values_id>0) WHERE `orders_products_id`=".(int)$_GET['id']);
+            $check_result = xtc_db_fetch_array($check_query);
+            if ($check_result['cnt'] != $check_result['checksum']) {
+              xtc_redirect(xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$products_id, 'SSL'));
+            }
+            
             $cart_quantity = (xtc_remove_non_numeric($products_quantity) + $cart_object->get_quantity(xtc_get_uprid($products_id, ((count($attributes_array) > 0) ? $attributes_array : ''))));
             if ($cart_quantity > MAX_PRODUCTS_QTY) {            
               $cart_quantity = MAX_PRODUCTS_QTY;

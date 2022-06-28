@@ -652,4 +652,6 @@ define('SITEMAP_ERROR_401', 'Error 401: Unauthorized.');
 define('SITEMAP_ERROR_403', 'Error 403: Forbidden.');
 define('SITEMAP_ERROR_404', 'Error 404: Not Found!');
 define('SITEMAP_ERROR_500', 'Error 500: Internal Server Error.');
+
+define('ERROR_PRODUCTS_MISSING_KONFIGURATION_NOT_ADDED', 'Some items from your order are no longer available in the desired configuration and have not been placed in the shopping cart.');
 ?>
