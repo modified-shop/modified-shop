@@ -406,7 +406,7 @@ if (xtc_not_null($action) && basename($PHP_SELF) != FILENAME_COOKIE_USAGE) {
 
             }
             if ($count_products_missing_attributes > 0) {
-              $messageStack->add_session(pathinfo($goto, PATHINFO_FILENAME), ERROR_PRODUCTS_MISSING_KONFIGURATION_NOT_ADDED);
+              $messageStack->add_session(pathinfo($goto, PATHINFO_FILENAME), ERROR_PRODUCTS_MISSING_CONFIGURATION_NOT_ADDED);
             }
  
             if ($co_express === true) {
