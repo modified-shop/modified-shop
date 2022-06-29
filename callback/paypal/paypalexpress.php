@@ -42,7 +42,7 @@ if (!in_array($PayPalOrder->status, array('COMPLETED', 'APPROVED'))) {
   }
   $customers_data['info']['email_address'] = $PayPalOrder->payer->email_address;
   $customers_data['info']['gender'] = '';
-  $customers_data['info']['telephone'] = ((isset($PayPalOrder->payer->phone)) ? $PayPalOrder->payer->phone->phone_number : '');
+  $customers_data['info']['telephone'] = ((isset($PayPalOrder->payer->phone) && isset($PayPalOrder->payer->phone->phone_number) && isset($PayPalOrder->payer->phone->phone_number->national_number)) ? $PayPalOrder->payer->phone->phone_number->national_number : '');
   $customers_data['info']['dob'] = ((isset($PayPalOrder->payer->birth_date)) ? $PayPalOrder->payer->birth_date : '');    
  
   if (isset($PayPalOrder->payer->name)) {
