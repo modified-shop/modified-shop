@@ -103,7 +103,7 @@
 
 
 define('SET_TIME_LIMIT',1);   // use set_time_limit(0);
-define('CHARSET','iso-8859-1');
+define('CHARSET','utf-8'); // iso-8859-1 or utf-8
 
 $version_nr    = '1.56';
 $version_datum = '2009.08.26';
