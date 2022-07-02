@@ -207,8 +207,6 @@
           sort($sql_files_array);
         }
         
-        // hack
-        $sql_files_array[] = 'update_2.0.6.0_to_2.0.7.0.sql';
         $sql_files_array = array_unique($sql_files_array);
         
         if (count($sql_files_array) > 0) {
