@@ -33,9 +33,9 @@ class cash {
         $this->order_status = MODULE_PAYMENT_CASH_ORDER_STATUS_ID;
       }
     }
-    if (is_object($order)) {
-      $this->update_status();
-    }
+		if (!defined('RUN_MODE_ADMIN') && is_object($order)) {
+			$this->update_status();
+		}
     $this->email_footer = MODULE_PAYMENT_CASH_TEXT_EMAIL_FOOTER;
   }
 

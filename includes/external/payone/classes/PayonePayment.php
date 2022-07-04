@@ -50,7 +50,7 @@ class PayonePayment {
 		$this->enabled = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_STATUS') && constant('MODULE_PAYMENT_'.strtoupper($this->code).'_STATUS') == 'True') ? true : false);
 		$this->info = ((defined('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_INFO')) ? constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_INFO') : ''); 
 
-		if (is_object($order)) {
+		if (!defined('RUN_MODE_ADMIN') && is_object($order)) {
 			$this->update_status();
 		}
 	}

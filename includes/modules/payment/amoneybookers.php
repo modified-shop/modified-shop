@@ -91,9 +91,9 @@ class amoneybookers {
 			}
 		}
 
-		//
-		if (is_object($order))
+		if (!defined('RUN_MODE_ADMIN') && is_object($order)) {
 			$this->update_status();
+		}
 
 		$this->form_action_url = 'https://www.moneybookers.com/app/payment.pl';
 	}
