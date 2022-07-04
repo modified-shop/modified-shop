@@ -32,7 +32,12 @@
       $this->enabled = ((defined('MODULE_SHIPPING_TABLE_STATUS') && MODULE_SHIPPING_TABLE_STATUS == 'True') ? true : false);
       $this->num_zones = defined('MODULE_SHIPPING_TABLE_NUMBER_ZONES') ? MODULE_SHIPPING_TABLE_NUMBER_ZONES : '1';
 
-      if ( ($this->enabled == true) && ((int)MODULE_SHIPPING_TABLE_ZONE > 0) && is_object($order) ) {
+      if ($this->enabled == true 
+          && !defined('RUN_MODE_ADMIN')
+          && (int)MODULE_SHIPPING_TABLE_ZONE > 0 
+          && is_object($order)
+          )
+      {
         $check_flag = false;
         $check_query = xtc_db_query("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_SHIPPING_TABLE_ZONE . "' and zone_country_id = '" . $order->delivery['country']['id'] . "' order by zone_id");
         while ($check = xtc_db_fetch_array($check_query)) {
