@@ -122,14 +122,11 @@ if (isset($_GET['action'])
         $messageStack->add_session(ERROR_CREATE_DIRECTORY);
         xtc_redirect(xtc_href_link(basename($PHP_SELF)));
       }
-    } else {
-      $messageStack->add_session(ERROR_UPDATE_NOT_POSSIBLE);
-      xtc_redirect(xtc_href_link(basename($PHP_SELF)));
     }
-  } else {
-    $messageStack->add_session(ERROR_UPDATE_NOT_POSSIBLE);
-    xtc_redirect(xtc_href_link(basename($PHP_SELF)));
   }
+
+  $messageStack->add_session(ERROR_UPDATE_NOT_POSSIBLE);
+  xtc_redirect(xtc_href_link(basename($PHP_SELF)));
 }
 
 $content = check_version_update(false);
