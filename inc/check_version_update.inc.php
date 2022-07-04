@@ -17,6 +17,8 @@
   require_once (DIR_FS_CATALOG.'includes/classes/modified_api.php');
 
   function check_version_update($cache = true) {
+    global $PHP_SELF;
+    
     $filename = SQL_CACHEDIR.'version.cache';
   
     $version = PROJECT_VERSION;
