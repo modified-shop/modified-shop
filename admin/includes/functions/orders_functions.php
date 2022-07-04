@@ -420,8 +420,8 @@
 
     $product_query = xtc_db_query("SELECT op.allow_tax,
                                           op.products_tax,
+                                          op.products_weight,
                                           p.products_tax_class_id,
-                                          p.products_weight,
                                           pd.products_name,
                                           pd.products_short_description,
                                           pd.products_order_description
@@ -686,7 +686,7 @@
                                            op.products_discount_made, 
                                            op.products_tax, 
                                            op.allow_tax,
-                                           p.products_weight
+                                           op.products_weight
                                       FROM ".TABLE_ORDERS_PRODUCTS." op
                                  LEFT JOIN ".TABLE_PRODUCTS." p
                                            ON p.products_id = op.products_id
