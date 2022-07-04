@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: moneybookers_sft.php 39 2009-01-22 15:44:52Z mzanier $
+   $Id$
 
    xt:Commerce - community made shopping
    http://www.xt-commerce.com
@@ -46,9 +46,9 @@ class moneybookers_sft extends fcnt_moneybookers {
 		$this->_setCode('sft','SFT');
 		
 
-		if (is_object($order))
+		if (!defined('RUN_MODE_ADMIN') && is_object($order)) {
 			$this->update_status();
-
+		}
 	}
 
 

@@ -35,7 +35,9 @@
         $this->order_status = MODULE_PAYMENT_WORLDPAY_JUNIOR_PREPARE_ORDER_STATUS_ID;
       }
 
-      if (is_object($order)) $this->update_status();
+      if (!defined('RUN_MODE_ADMIN') && is_object($order)) {
+        $this->update_status();
+      }
 
       $this->form_action_url = 'https://secure.wp3.rbsworldpay.com/wcc/purchase';
     }

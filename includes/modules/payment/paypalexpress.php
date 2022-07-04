@@ -26,9 +26,9 @@ class paypalexpress extends PayPalPaymentV2 {
     PayPalPaymentV2::__construct('paypalexpress');  
     $this->tmpOrders = false;
   
-    if (is_object($order)) {
-      $this->update_status();
-    }
+		if (!defined('RUN_MODE_ADMIN') && is_object($order)) {
+			$this->update_status();
+		}
 
     if (isset($_POST['comments'])) {
       $_SESSION['comments'] = xtc_db_prepare_input($_POST['comments']);

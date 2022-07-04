@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: moneybookers_cc.php 39 2009-01-22 15:44:52Z mzanier $
+   $Id$
 
    xt:Commerce - community made shopping
    http://www.xt-commerce.com
@@ -44,9 +44,9 @@ class moneybookers_cc extends fcnt_moneybookers {
 
 		$this->_setCode('cc','ACC');
 
-		if (is_object($order))
+		if (!defined('RUN_MODE_ADMIN') && is_object($order)) {
 			$this->update_status();
-
+		}
 	}
 
 
