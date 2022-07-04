@@ -53,72 +53,81 @@ if (isset($_GET['action'])
   if (class_exists('ZipArchive')) {
     modified_api::reset();
     $response = modified_api::request('modified/version/install/installer');
-
-    // cleanup
-    rrmdir('download/tmp');
-    rrmdir('_installer');
-
-    // download
-    if (mkdir(DIR_FS_CATALOG.'download/tmp', 0755)) {
-      // save install
-      $fp = fopen (DIR_FS_CATALOG.'download/tmp/'.$response['filename'], 'w+');
-      $ch = curl_init($response['download']);
-      curl_setopt($ch, CURLOPT_FILE, $fp); 
-      curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-      curl_setopt($ch, CURLOPT_HEADER, false);
-      curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-      curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
-      curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-      curl_exec($ch);
-      curl_close($ch);
-      fclose($fp);
-
-      // extract install
-      $zip = new ZipArchive();
-      if ($zip->open(DIR_FS_CATALOG.'download/tmp/'.$response['filename']) === true) {
-        if (is_dir(DIR_FS_CATALOG.'download/tmp/install')) {
-          rrmdir('download/tmp/install');
-        }
-        mkdir(DIR_FS_CATALOG.'download/tmp/install', 0755, true);
     
-        $zip->extractTo(DIR_FS_CATALOG.'download/tmp/install');
-        $zip->close();
-      } else {
-        $messageStack->add_session('Corrupted download file');
-        xtc_redirect(xtc_href_link(basename($PHP_SELF)));
-      }
-    
-      // delete install
-      unlink(DIR_FS_CATALOG.'download/tmp/'.$response['filename']);
-
-      // process
-      $shoproot = DIR_FS_CATALOG.'download/tmp/install/_installer';
-      if (is_dir($shoproot)) {
-        foreach ((new RecursiveIteratorIterator(new RecursiveDirectoryIterator($shoproot, RecursiveDirectoryIterator::SKIP_DOTS))) as $file) {
-          $install_path = str_replace($shoproot, DIR_FS_CATALOG.'_installer', $file->getPath());
-          $install_path = rtrim($install_path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
-          $install_path = str_replace(DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $install_path);
-                    
-          if (!is_dir($install_path)) {
-            mkdir($install_path, 0755, true);
-          }    
-          rename($file->getPathname(), $install_path.$file->getFilename());
-        }
-      }
-
+    if (is_array($response)
+        && isset($response['download'])
+        && isset($response['filename'])
+        )
+    {        
       // cleanup
       rrmdir('download/tmp');
+      rrmdir('_installer');
+
+      // download
+      if (mkdir(DIR_FS_CATALOG.'download/tmp', 0755)) {
+        // save install
+        $fp = fopen (DIR_FS_CATALOG.'download/tmp/'.$response['filename'], 'w+');
+        $ch = curl_init($response['download']);
+        curl_setopt($ch, CURLOPT_FILE, $fp); 
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_HEADER, false);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_exec($ch);
+        curl_close($ch);
+        fclose($fp);
+
+        // extract install
+        $zip = new ZipArchive();
+        if ($zip->open(DIR_FS_CATALOG.'download/tmp/'.$response['filename']) === true) {
+          if (is_dir(DIR_FS_CATALOG.'download/tmp/install')) {
+            rrmdir('download/tmp/install');
+          }
+          mkdir(DIR_FS_CATALOG.'download/tmp/install', 0755, true);
+    
+          $zip->extractTo(DIR_FS_CATALOG.'download/tmp/install');
+          $zip->close();
+        } else {
+          $messageStack->add_session(ERROR_CORRUPTED_FILE);
+          xtc_redirect(xtc_href_link(basename($PHP_SELF)));
+        }
+    
+        // delete install
+        unlink(DIR_FS_CATALOG.'download/tmp/'.$response['filename']);
+
+        // process
+        $shoproot = DIR_FS_CATALOG.'download/tmp/install/_installer';
+        if (is_dir($shoproot)) {
+          foreach ((new RecursiveIteratorIterator(new RecursiveDirectoryIterator($shoproot, RecursiveDirectoryIterator::SKIP_DOTS))) as $file) {
+            $install_path = str_replace($shoproot, DIR_FS_CATALOG.'_installer', $file->getPath());
+            $install_path = rtrim($install_path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+            $install_path = str_replace(DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $install_path);
+                    
+            if (!is_dir($install_path)) {
+              mkdir($install_path, 0755, true);
+            }    
+            rename($file->getPathname(), $install_path.$file->getFilename());
+          }
+        }
+
+        // cleanup
+        rrmdir('download/tmp');
   
-      // redirect
-      $_SESSION['auth'] = true;
-      xtc_redirect(xtc_href_link('../_installer/autoupdate.php'));
+        // redirect
+        $_SESSION['auth'] = true;
+        xtc_redirect(xtc_href_link('../_installer/autoupdate.php'));
+      } else {
+        $messageStack->add_session(ERROR_CREATE_DIRECTORY);
+        xtc_redirect(xtc_href_link(basename($PHP_SELF)));
+      }
     } else {
-      $messageStack->add_session('Could not create needed directory');
+      $messageStack->add_session(ERROR_UPDATE_NOT_POSSIBLE);
       xtc_redirect(xtc_href_link(basename($PHP_SELF)));
     }
   } else {
-    $messageStack->add_session('Automatisches Update nicht möglich.');
+    $messageStack->add_session(ERROR_UPDATE_NOT_POSSIBLE);
     xtc_redirect(xtc_href_link(basename($PHP_SELF)));
   }
 }

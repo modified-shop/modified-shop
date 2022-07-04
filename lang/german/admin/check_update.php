@@ -37,3 +37,7 @@ define('BUTTON_AUTOUPDATER','Autoupdater &ouml;ffnen');
 
 define('TEXT_INFO_UPDATE_OK','<div class="success_message">Ihre Version ist aktuell, es ist kein Update erforderlich.</div>');
 define('TEXT_INFO_UPDATE_NEEDED','<div class="error_message">Ihre Version ist nicht mehr aktuell, es ist ein Update erforderlich.</div>');
+
+define('ERROR_CORRUPTED_FILE', 'Datei konnte nicht entpackt werden');
+define('ERROR_CREATE_DIRECTORY', 'Verzeichnis konnte nicht erstellt werden');
+define('ERROR_UPDATE_NOT_POSSIBLE', 'Automatisches Update nicht m&ouml;glich');

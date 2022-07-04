@@ -37,3 +37,7 @@ define('BUTTON_AUTOUPDATER','Autoupdater');
 
 define('TEXT_INFO_UPDATE_OK','<div class="success_message">Your version is up to date, no update is required.</div>');
 define('TEXT_INFO_UPDATE_NEEDED','<div class="error_message">Your version is no longer up to date, an update is required.</div>');
+
+define('ERROR_CORRUPTED_FILE', 'Corrupted download file');
+define('ERROR_CREATE_DIRECTORY', 'Could not create needed directory');
+define('ERROR_UPDATE_NOT_POSSIBLE', 'Automatic update not possible');
