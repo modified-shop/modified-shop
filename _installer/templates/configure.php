@@ -22,25 +22,28 @@ $file_contents =
 '  // * DIR_WS_* = Webserver directories (virtual/URL)' . PHP_EOL .
 '' . PHP_EOL .
 '  // global defines' . PHP_EOL .
-'  define(\'DIR_FS_DOCUMENT_ROOT\', \'' . DIR_FS_DOCUMENT_ROOT . '\'); // absolut path required' . PHP_EOL .
-'  define(\'DIR_WS_CATALOG\', \'' . DIR_WS_CATALOG . '\'); // relative path required' . PHP_EOL .
-'  define(\'DIR_FS_CATALOG\', DIR_FS_DOCUMENT_ROOT);' . PHP_EOL .
+'  defined(\'DIR_FS_DOCUMENT_ROOT\') or define(\'DIR_FS_DOCUMENT_ROOT\', \'' . DIR_FS_DOCUMENT_ROOT . '\'); // absolut path' . PHP_EOL .
+'  defined(\'DIR_FS_CATALOG\') or define(\'DIR_FS_CATALOG\', DIR_FS_DOCUMENT_ROOT); // absolut path' . PHP_EOL .
+'  defined(\'DIR_WS_CATALOG\') or define(\'DIR_WS_CATALOG\', \'' . DIR_WS_CATALOG . '\'); // relative path' . PHP_EOL .
 '' . PHP_EOL .
-'  // define our database connection' . PHP_EOL .
-'  define(\'DB_MYSQL_TYPE\', \'' . $db_type . '\'); // define mysql type set to \'mysql\' or \'mysqli\'' . PHP_EOL .
-'  define(\'DB_SERVER\', \'' . $db_server . '\'); // eg, localhost - should not be empty for productive servers' . PHP_EOL .
-'  define(\'DB_SERVER_USERNAME\', \'' . $db_username . '\');' . PHP_EOL .
-'  define(\'DB_SERVER_PASSWORD\', \'' . $db_password. '\');' . PHP_EOL .
-'  define(\'DB_DATABASE\', \'' . $db_database. '\');' . PHP_EOL .
-'  define(\'DB_SERVER_CHARSET\', \'' . $db_charset . '\'); // set db charset \'utf8\' or \'latin1\'' . PHP_EOL .
-'  define(\'USE_PCONNECT\', \'' . $db_pconnect . '\'); // use persistent connections?' . PHP_EOL .
-'' . PHP_EOL .
-'  if (DB_DATABASE != \'\') {' . PHP_EOL . 
+'  if (is_file(DIR_FS_CATALOG.\'inc/auto_include.inc.php\')' . PHP_EOL . 
+'      && is_dir(DIR_FS_CATALOG.\'includes/extra/configure/\')' . PHP_EOL . 
+'      )' . PHP_EOL . 
+'  {' . PHP_EOL . 
 '    // auto include' . PHP_EOL .
 '    require_once (DIR_FS_CATALOG.\'inc/auto_include.inc.php\');' . PHP_EOL .
 '' . PHP_EOL .
 '    foreach(auto_include(DIR_FS_CATALOG.\'includes/extra/configure/\',\'php\') as $file) require_once ($file);' . PHP_EOL .
 '  }'. PHP_EOL .
+'' . PHP_EOL .
+'  // define our database connection' . PHP_EOL .
+'  defined(\'DB_MYSQL_TYPE\') or define(\'DB_MYSQL_TYPE\', \'' . $db_type . '\'); // define mysql type set to \'mysql\' or \'mysqli\'' . PHP_EOL .
+'  defined(\'DB_SERVER\') or define(\'DB_SERVER\', \'' . $db_server . '\'); // eg, localhost - should not be empty for productive servers' . PHP_EOL .
+'  defined(\'DB_SERVER_USERNAME\') or define(\'DB_SERVER_USERNAME\', \'' . $db_username . '\');' . PHP_EOL .
+'  defined(\'DB_SERVER_PASSWORD\') or define(\'DB_SERVER_PASSWORD\', \'' . $db_password. '\');' . PHP_EOL .
+'  defined(\'DB_DATABASE\') or define(\'DB_DATABASE\', \'' . $db_database. '\');' . PHP_EOL .
+'  defined(\'DB_SERVER_CHARSET\') or define(\'DB_SERVER_CHARSET\', \'' . $db_charset . '\'); // set db charset \'utf8\' or \'latin1\'' . PHP_EOL .
+'  defined(\'USE_PCONNECT\') or define(\'USE_PCONNECT\', \'' . $db_pconnect . '\'); // use persistent connections?' . PHP_EOL .
 '' . PHP_EOL .
 '  // server' . PHP_EOL .
 '  defined(\'HTTP_SERVER\') or define(\'HTTP_SERVER\', \'' . $http_server . '\'); // eg, http://localhost - should not be empty for productive servers' . PHP_EOL .
