@@ -41,6 +41,8 @@
       $contents['version'] = $response['stable'];
       $contents['update'] = version_compare($contents['version'], $contents['version'], '>');
 
+      $installer = modified_api::request('modified/version/install/installer');
+
       $dbversion = get_database_version();
       $response = modified_api::request('modified/version/install/');
 
@@ -50,7 +52,7 @@
             'title' => 'Shopversion',
             'version' => $response['version'],
             'shop' => PROJECT_VERSION_NO,
-            'link' => version_compare($response['version'], PROJECT_VERSION_NO, '>') ? xtc_href_link(basename($PHP_SELF), 'action=autoupdate') : '',
+            'link' => (version_compare($response['version'], PROJECT_VERSION_NO, '>') && is_array($installer) && isset($installer['download'])) ? xtc_href_link(basename($PHP_SELF), 'action=autoupdate') : '',
             'installed' => 1,
             'update' => version_compare($response['version'], PROJECT_VERSION_NO, '>')
           ),
