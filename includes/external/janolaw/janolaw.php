@@ -109,7 +109,6 @@ class janolaw_content {
     }
 
     if (count($lng->catalog_languages) > 0) {
-      reset($lng->catalog_languages);
       foreach ($lng->catalog_languages as $key => $value) {
         
         $language = $this->get_language($key);

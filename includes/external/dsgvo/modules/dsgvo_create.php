@@ -11,9 +11,7 @@
                                               FROM ".TABLE_CUSTOMERS_STATUS."
                                           GROUP BY customers_status_id");
     while ($customers_status = xtc_db_fetch_array($customers_status_query)) {
-      $content_array = array();
-      reset($lng->catalog_languages);
-      
+      $content_array = array();      
       $content_group_array = explode(',', MODULE_SYSTEM_DSGVO_CONTENT);
       foreach ($content_group_array as $content_group) {
         foreach ($lng->catalog_languages as $language) {

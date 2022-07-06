@@ -111,7 +111,6 @@
     }
     switch ($action) {
       case 'save':
-        reset($_POST['configuration']); //DokuMan - 2011-09-29 - reset $_POST array
         foreach ($_POST['configuration'] as $key => $value) {
           if (is_array($_POST['configuration'][$key])) {
             // multi language config
@@ -533,7 +532,6 @@ if (xtc_not_null($action) && !$box) {
                   }
                 } 
                 $keys = '';
-                reset($mInfo->keys);
                 foreach ($mInfo->keys as $key => $value) {
                   $keys .= '<b>' . $value['title'] . '</b><br />' .  $value['description'].'<br />';
                   if ($value['set_function']) {
@@ -566,7 +564,6 @@ if (xtc_not_null($action) && !$box) {
                   $heading[] = array('text' => '<b>' . $mInfo->title . ($mInfo->status > 1 ? ' '.sprintf(MULTIPLE_INSTALLATION,$mInfo->status) : '') . '</b>');
                   if ($mInfo->status != '0') {
                     $keys = '';
-                    reset($mInfo->keys);
                     foreach ($mInfo->keys as $value) {
                       $keys .= '<b>' . (isset($value['title'])?$value['title']:'') . '</b><br />';
                       if ($value['use_function']) {

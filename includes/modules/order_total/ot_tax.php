@@ -33,7 +33,6 @@
     function process() {
       global $order, $xtPrice;
 
-      reset($order->info['tax_groups']);
       foreach ($order->info['tax_groups'] as $key => $value) {
         if ($value > 0) {
           if ($_SESSION['customers_status']['customers_status_show_price_tax'] != 0) {

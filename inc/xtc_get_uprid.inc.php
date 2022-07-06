@@ -26,7 +26,6 @@
         $attributes_check = true;
         $attributes_ids = '';
 
-        reset($params);
         foreach ($params as $option => $value) {
           //new module support 
           list($option, $value) = (class_exists('shoppingCartModules') ? $scModules->get_uprid(array($option, $value), $prid) : array($option, $value));

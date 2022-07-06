@@ -57,7 +57,6 @@ class categories {
         $products[$product_ids['products_id']]['categories'][] = $categories[$i]['id'];
       }
     }
-    reset($products);
     foreach ($products as $key => $value) {
       $check_query = xtc_db_query("SELECT COUNT(*) AS total
                                      FROM ".TABLE_PRODUCTS_TO_CATEGORIES."
@@ -73,7 +72,6 @@ class categories {
     for ($i = 0, $n = sizeof($categories); $i < $n; $i ++) {
       $this->remove_category($categories[$i]['id']);
     }
-    reset($products_delete);
     foreach ($products_delete as $key) {
       $this->remove_product($key);
     }

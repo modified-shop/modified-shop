@@ -245,7 +245,6 @@ require (DIR_WS_INCLUDES.'head.php');
                   </tr>
                   <?php
                   
-                  reset($mInfo->keys);
                   foreach ($mInfo->keys as $key => $value) {
                     ?>
                     <tr>

@@ -145,7 +145,6 @@
       if ($insert_order == true) {
         $order_totals = array();
         if (is_array($order_total_modules->modules)) {
-          reset($order_total_modules->modules);
           foreach ($order_total_modules->modules as $value) {
             $class = substr($value, 0, strrpos($value, '.'));
             if ($GLOBALS[$class]->enabled) {

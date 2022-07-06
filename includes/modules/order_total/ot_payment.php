@@ -190,7 +190,6 @@ class ot_payment {
             //Reduzierung/Aufschlag Faktor berechnen
             $discount = ($this->amount - $values[$j]['discount']) / $this->amount;
             // Calculate tax group deductions
-            reset($order->info['tax_groups']);
             foreach ($order->info['tax_groups'] as $key => $value) {
               //Steuerantei der Versandkosten wenn notwendig entfernen 
               $value -= ((isset($shipping_tax) && strpos($key, $shipping_tax . '%')) ? $tod_shipping : 0 );

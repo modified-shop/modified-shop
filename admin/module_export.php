@@ -119,7 +119,6 @@
           $get_params = isset($module->get_params) ? $module->get_params : array();
           //add post params to get params
           $post_params = isset($module->post_params) ? $module->post_params : array();
-          reset($post_params);
           foreach ($post_params as $key => $pparam) {
             $get_params[$pparam] = $_POST[$pparam];
           }
@@ -267,11 +266,9 @@
 
   function convert_params_array_to_string($params_array)
   {
-    reset($params_array);
     $params = array();
     foreach ($params_array as $key => $value) {
       if (is_array($value)) {
-        reset($value);
         foreach ($value as $key2 => $value2) {
           $params[] = $key.'_'.strtolower($key2) .'='. $value2;
         }
@@ -482,12 +479,10 @@ if (xtc_not_null($action) && !$box) {
                     }
                     $keys = '';
                     
-                    reset($mInfo->keys_dispnone);
                     foreach ($mInfo->keys_dispnone as $key => $value) {
                       unset($mInfo->keys[$value]);
                     }
                     
-                    reset($mInfo->keys);
                     foreach ($mInfo->keys as $key => $value) {
                       $keys .= '<b>' . $value['title'] . '</b><br />' .  $value['description'].'<br />';
                       if ($value['set_function']) {
@@ -553,7 +548,6 @@ if (xtc_not_null($action) && !$box) {
                       $heading[] = array('text' => '<b>' . $mInfo->title . ($mInfo->status > 1 ? ' '.sprintf(MULTIPLE_INSTALLATION,$mInfo->status) : '') . '</b>');
                       if ($mInfo->status != '0') {
                         $keys = '';
-                        reset($mInfo->keys);
                         foreach ($mInfo->keys as $value) {
                           $keys .= '<b>' . $value['title'] . '</b><br />';
                           if ($value['use_function']) {

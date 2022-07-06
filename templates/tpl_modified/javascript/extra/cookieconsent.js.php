@@ -19,7 +19,6 @@ if (defined('MODULE_COOKIE_CONSENT_STATUS') && strtolower(MODULE_COOKIE_CONSENT_
 
   if (count($lng->catalog_languages) > 1) {
     $lang_content = array();
-    reset($lng->catalog_languages);
     foreach ($lng->catalog_languages as $key => $value) {
       $lng_link_url = xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('language', 'currency')) . 'language=' . $key, $request_type);
       if ($lng_link_url != '#') {

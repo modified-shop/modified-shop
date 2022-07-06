@@ -26,7 +26,6 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_currencies.html', $cach
 
   $currencies_array = array();
   if (isset($xtPrice) && is_object($xtPrice)) {
-    reset($xtPrice->currencies);
     foreach ($xtPrice->currencies as $key => $value) {
       $currencies_array[] = array('id' => $key, 'text' => $value['title']);
     }

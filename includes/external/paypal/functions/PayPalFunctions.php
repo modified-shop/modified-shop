@@ -30,7 +30,6 @@ function get_third_party_payments() {
         if (isset($GLOBALS['ot_payment']) && is_object($GLOBALS['ot_payment'])) {
           $GLOBALS['ot_payment']->xtc_order_total();
         }
-        reset($payment_modules->modules);
         foreach ($payment_modules->modules as $value) {
           $class = substr($value, 0, strrpos($value, '.'));
           if (isset($GLOBALS[$class]) && $GLOBALS[$class]->enabled && in_array($class, $payment_allowed)) {

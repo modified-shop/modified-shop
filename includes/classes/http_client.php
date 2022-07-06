@@ -105,7 +105,6 @@
  **/
     function setHeaders($headers) {
       if (is_array($headers)) {
-        reset($headers);
         foreach ($headers as $name => $value) {
           $this->requestHeaders[$name] = $value;
         }
@@ -207,7 +206,6 @@
 
       if (is_array($query_params)) {
         $postArray = array();
-        reset($query_params);
         foreach ($query_params as $k => $v) {
           $postArray[] = urlencode($k) . '=' . urlencode($v);
         }
@@ -350,7 +348,6 @@
         $this->request = $command;
         $cmd = $command . "\r\n";
         if (is_array($this->requestHeaders)) {
-          reset($this->requestHeaders);
           foreach ($this->requestHeaders as $k => $v) {
             $cmd .= $k . ': ' . $v . "\r\n";
           }

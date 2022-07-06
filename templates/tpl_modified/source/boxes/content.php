@@ -75,7 +75,6 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_content.html', $cache_i
     if ($coPath) {
       $new_path = '';
       $coid = explode('_', $coPath);
-      reset($coid);
       foreach ($coid as $key => $value) {
         unset($prev_cid);
         unset($first_cid);

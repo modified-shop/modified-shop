@@ -87,7 +87,6 @@
             'file' => $module.'.php'
           );
         } else {
-          reset($this->modules);
           foreach ($this->modules as $value) {
             $class = substr($value, 0, strrpos($value, '.'));
             $include_modules[] = array(
@@ -235,7 +234,6 @@
               '    }' . "\n" .
               '  }' . "\n\n";
 
-        reset($this->modules);
         foreach ($this->modules as $value) {
           $class = substr($value, 0, strrpos($value, '.'));
           if (isset($GLOBALS[$class]) 
@@ -315,7 +313,6 @@
     function selection() {
       $selection_array = array();
       if (is_array($this->modules)) {
-        reset($this->modules);
         foreach ($this->modules as $value) {
           $class = substr($value, 0, strrpos($value, '.'));
           if (isset($GLOBALS[$class]) 

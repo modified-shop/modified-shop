@@ -19,7 +19,6 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
 
     // class constructor
     function __construct($object_array) {
-      reset($object_array);
       foreach ($object_array as $key => $value) {
         $this->$key = xtc_db_prepare_input($value);
       }

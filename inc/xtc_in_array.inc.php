@@ -28,7 +28,6 @@
         return in_array($value, $array);
       }
     } else {
-      reset($array);
       foreach ($array as $key_value) {
         if (is_array($value)) {
           for ($i=0; $i<sizeof($value); $i++) {

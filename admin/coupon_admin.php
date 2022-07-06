@@ -367,7 +367,6 @@ if (USE_WYSIWYG == 'true' && $_GET['action'] == 'email') {
           </tr>
         </table>
         <?php
-        reset($_POST);
         foreach ($_POST as $key => $value) {
           if (!is_array($_POST[$key])) {
             echo xtc_draw_hidden_field($key, encode_htmlspecialchars(stripslashes($value)));

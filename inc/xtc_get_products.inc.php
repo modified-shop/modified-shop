@@ -21,7 +21,6 @@ require_once(DIR_FS_CATALOG.'includes/classes/xtcPrice.php');
 function xtc_get_products($session) {
   if (!is_array($session)) return false;
   $products_array = array();
-  reset($session);
   if (is_array($session['cart']->contents)) {     
       foreach ($session['cart']->contents as $products_id) {
         $products_query = xtc_db_query("SELECT p.products_id, 
@@ -70,7 +69,6 @@ function attributes_price($products_id,$session) {
 
   $xtPrice = new xtcPrice($session['currency'],$session['customers_status']['customers_status_id']);
   if (isset($session['contents'][$products_id]['attributes'])) {
-    reset($session['contents'][$products_id]['attributes']);
     foreach ($session['contents'][$products_id]['attributes'] as $option => $value) {
       $attribute_price_query = xtc_db_query("SELECT pd.products_tax_class_id, 
                                                     p.options_values_price, 

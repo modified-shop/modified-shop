@@ -537,7 +537,6 @@
     } else {
       $x_default_flag = false;
     }
-    reset($lng->catalog_languages);
     foreach ($lng->catalog_languages as $key => $value) {
       $alternate_link = xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params_include(array('products_id', 'cPath', 'manufacturers_id', 'coID')).'language='.$key.$page_param, 'NONSSL', false);
       if ($alternate_link != '#') {

@@ -24,7 +24,6 @@
     if (is_string($string)) {
       $string = trim(stripslashes($string));
     } elseif (is_array($string)) {
-      reset($string);
       foreach ($string as $key => $value) {
         $string[$key] = xtc_db_prepare_input($value);
       }
@@ -40,9 +39,7 @@
     if (!is_array($data) || count($data) < 1) {
       return false;
     }
-    
-    reset($data);
-    
+        
     $sql_array = array();
     foreach ($data as $columns => $values) {
       switch ((string)$values) {

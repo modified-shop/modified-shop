@@ -105,7 +105,6 @@
       function get_browser_language() {
         $this->browser_languages = explode(',', (!empty($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? $_SERVER['HTTP_ACCEPT_LANGUAGE'] : ''));
         for ($i=0, $n=sizeof($this->browser_languages); $i<$n; $i++) {
-          reset($this->languages);
           foreach ($this->languages as $key => $value) {
             if (preg_match('/^(' . $value[0] . ')(;q=[0-9]\\.[0-9])?$/i', $this->browser_languages[$i]) && isset($this->catalog_languages[$key])) {
               $this->language = $this->catalog_languages[$key];

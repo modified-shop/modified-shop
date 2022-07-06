@@ -57,7 +57,6 @@
             'file' => $class.'.php'
           );
         } else {
-          reset($this->modules);
           foreach ($this->modules as $value) {
             $class = substr($value, 0, strrpos($value, '.'));
             $include_modules[] = array(
@@ -122,7 +121,6 @@
 
         $include_quotes = array();
 
-        reset($this->modules);
         foreach ($this->modules as $value) {
           $class = substr($value, 0, strrpos($value, '.'));
           if (xtc_not_null($module) && isset($GLOBALS[$class])) {
@@ -149,7 +147,6 @@
       if (is_array($this->modules)) {
         $rates = array();
 
-        reset($this->modules);
         foreach ($this->modules as $value) {
           $class = substr($value, 0, strrpos($value, '.'));
           if (isset($GLOBALS[$class])
@@ -223,7 +220,6 @@
               '    shipping_value = document.getElementById("checkout_address").shipping.value;' . "\n" .
               '  }' . "\n\n";
 
-        reset($this->modules);
         foreach ($this->modules as $value) {
           $class = substr($value, 0, strrpos($value, '.'));
           if (isset($GLOBALS[$class]) 

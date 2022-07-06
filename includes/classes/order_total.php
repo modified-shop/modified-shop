@@ -78,7 +78,6 @@ class order_total {
     //$credit_class_string = '';
     $output_array = array();
     if (xtc_not_null(MODULE_ORDER_TOTAL_INSTALLED)) {
-      reset($this->modules);
       $output_string = '';
       foreach ($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
@@ -119,7 +118,6 @@ class order_total {
   //
   function update_credit_account($i) {
     if (xtc_not_null(MODULE_ORDER_TOTAL_INSTALLED)) {
-      reset($this->modules);
       foreach ($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
         if ($GLOBALS[$class]->enabled 
@@ -141,7 +139,6 @@ class order_total {
   //
   function collect_posts() {
     if (xtc_not_null(MODULE_ORDER_TOTAL_INSTALLED)) {
-      reset($this->modules);
       foreach ($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
         if ($GLOBALS[$class]->enabled 
@@ -173,7 +170,6 @@ class order_total {
     
     if (xtc_not_null(MODULE_ORDER_TOTAL_INSTALLED)) {
       $total_deductions = 0;
-      reset($this->modules);
       foreach ($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
         $order_total = $this->get_order_total_main($class, $this->order_total);
@@ -203,7 +199,6 @@ class order_total {
   //
   function apply_credit() {
     if (xtc_not_null(MODULE_ORDER_TOTAL_INSTALLED)) {
-      reset($this->modules);
       foreach ($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
         if ($GLOBALS[$class]->enabled 
@@ -222,7 +217,6 @@ class order_total {
   //
   function clear_posts() {
     if (xtc_not_null(MODULE_ORDER_TOTAL_INSTALLED)) {
-      reset($this->modules);
       foreach ($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
         if ($GLOBALS[$class]->enabled 
@@ -253,7 +247,6 @@ class order_total {
         
     $order_total_array = array ();
     if (is_array($this->modules)) {
-      reset($this->modules);
       foreach ($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
         if ($GLOBALS[$class]->enabled) {
@@ -282,7 +275,6 @@ class order_total {
   function output() {
     $output_string = '';
     if (is_array($this->modules)) {
-      reset($this->modules);
       foreach ($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
         if ($GLOBALS[$class]->enabled) {
@@ -300,7 +292,6 @@ class order_total {
   function output_array() {
     $arr_output = array();
     if (is_array($this->modules)) {
-      reset($this->modules);
       foreach ($this->modules as $value) {
         $class = substr($value, 0, strrpos($value, '.'));
         if ($GLOBALS[$class]->enabled) {

@@ -77,7 +77,6 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_categories.html', $cach
     if ($cPath) {
       $new_path = '';
       $id = explode('_', $cPath);
-      reset($id);
       foreach ($id as $key => $value) {
         unset ($prev_id);
         unset ($first_id);
