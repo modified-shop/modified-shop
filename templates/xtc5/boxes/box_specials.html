@@ -9,7 +9,7 @@
       <strong>{$box_content.PRODUCTS_PRICE}</strong><br />
       {if $box_content.PRODUCTS_VPE}{$box_content.PRODUCTS_VPE}<br />{/if}
       {$box_content.PRODUCTS_TAX_INFO}{$box_content.PRODUCTS_SHIPPING_LINK}<br />
-      {if $box_content.PRODUCTS_EXPIRES != 0}{#text_expires_date#} {$box_content.PRODUCTS_EXPIRES}{/if}
+      {if $box_content.PRODUCTS_EXPIRES != 0}<span class="expires_date">{#text_expires_date#} {$box_content.PRODUCTS_EXPIRES}</span>{/if}
     </p>
   </div>
 {/if}

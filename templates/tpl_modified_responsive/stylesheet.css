@@ -1703,7 +1703,13 @@ a.show_all .arrow {
   color:#666;
   text-decoration:underline;
 }
-
+.box_expires_date {
+  text-align: right;
+  padding: 4px 10px 0 0;
+  font-size: 9px;
+  line-height: 11px;
+  color: #e74c3c;
+}
 .box_text {
   font-size:12px;
   line-height:16px;

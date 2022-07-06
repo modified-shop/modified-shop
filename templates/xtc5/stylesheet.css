@@ -524,6 +524,11 @@ h2.boxheader a:link, h2.boxheader a:hover, h2.boxheader a:active, h2.boxheader a
   font-size:11px;
   color:red;
 }
+.boxbody .expires_date {
+  display:block;
+  text-align:center;
+  color:red;
+}
 .boxbody div.hr {
   margin:5px 0;
 }
