@@ -53,7 +53,9 @@ if (xtc_db_num_rows($specials_query) > 0) {
   $cache_id = md5($_SESSION['currency'].$_SESSION['language'].$specials['products_id']);
 
   if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_specials.html', $cache_id) || !$cache) {
-    $box_smarty->assign('box_content', $product->buildDataArray($specials));
+    $box_content = $product->buildDataArray($specials);
+    $box_content['EXPIRES_DATE'] = $box_content['PRODUCTS_EXPIRES'] = ($specials['expires_date'] != '0000-00-00 00:00:00') ? xtc_date_short($specials['expires_date']) : '0';    
+    $box_smarty->assign('box_content', $box_content);
     $box_smarty->assign('SPECIALS_LINK', xtc_href_link(FILENAME_SPECIALS));
   }
 }
