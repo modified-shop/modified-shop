@@ -427,10 +427,12 @@ if (!$tmp) {
   $order_total_modules->apply_credit();
 
   // load the before_send_order function from the payment modules
-  $payment_modules->before_send_order();
+  $disable_send_order = $payment_modules->before_send_order();
   
   // send order mail
-  include ('send_order.php');
+  if ($disable_send_order !== true) {
+    include(DIR_FS_CATALOG.'send_order.php');
+  }
   
   // load the after_process function from the payment modules
   $payment_modules->after_process();
