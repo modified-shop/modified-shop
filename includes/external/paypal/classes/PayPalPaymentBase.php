@@ -925,6 +925,7 @@ class PayPalPaymentBase extends PayPalCommon {
                     payment_id varchar(64) NOT NULL default '', 
                     payer_id varchar(64) NOT NULL default '', 
                     transaction_id varchar(64) NOT NULL default '', 
+                    send_order int(1) NOT NULL default '0', 
                     PRIMARY KEY (paypal_id), 
                     KEY idx_orders_id (orders_id),
                     KEY idx_payment_id (payment_id)
@@ -1123,6 +1124,7 @@ class PayPalPaymentBase extends PayPalCommon {
   function paypal_update() {
     $table_array = array(
       array('column' => 'transaction_id', 'default' => "varchar(64) NOT NULL DEFAULT ''"),
+      array('column' => 'send_order', 'default' => "int(1) NOT NULL default '0'"),
     );
     foreach ($table_array as $table) {
       $check_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_PAYPAL_PAYMENT." LIKE '".xtc_db_input($table['column'])."'");

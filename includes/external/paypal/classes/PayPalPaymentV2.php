@@ -659,6 +659,8 @@
             );          
             xtc_db_perform(TABLE_PAYPAL_PAYMENT, $sql_data_array, 'update', "orders_id = '".(int)$order_id."'");
           }
+          
+          return $PayPalOrder;
         }
       }
     }

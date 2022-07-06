@@ -20,6 +20,7 @@ require_once(DIR_FS_INC.'get_external_content.inc.php');
 // include needed classes
 require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPayment.php');
 require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPaymentV2.php');
+require_once(DIR_WS_CLASSES.'order.php');
 
 $request_json = get_external_content('php://input', 3, false);
 $request = json_decode($request_json, true);
@@ -40,7 +41,8 @@ if (is_array($request)
 
   $check_query = xtc_db_query("SELECT p.*,
                                       o.orders_status,
-                                      o.payment_class
+                                      o.payment_class,
+                                      o.customers_id
                                  FROM ".TABLE_PAYPAL_PAYMENT." p
                                  JOIN ".TABLE_ORDERS." o
                                       ON o.orders_id = p.orders_id
@@ -54,7 +56,23 @@ if (is_array($request)
     } else {
       $paypal = new PayPalPaymentV2($check['payment_class']);
       if ($check['payment_class'] == 'paypalpui') {
-        $paypal->FinishOrderPui($check['orders_id']);
+        $PayPalOrder = $paypal->FinishOrderPui($check['orders_id']);
+        
+        if (is_object($PayPalOrder)
+            && $PayPalOrder->status == 'COMPLETED'
+            && $check['send_order'] == 1
+            )
+        {
+          $smarty = new Smarty();
+          $insert_id = $check['orders_id'];
+          $_SESSION['customer_id'] = $check['customers_id'];
+          include(DIR_FS_CATALOG.'send_order.php');
+          unset($_SESSION['customer_id']);
+          
+          xtc_db_query("UPDATE ".TABLE_PAYPAL_PAYMENT."
+                           SET send_order = 0
+                         WHERE paypal_id = '".(int)$check['paypal_id']."'");
+        }
       }
     }
     

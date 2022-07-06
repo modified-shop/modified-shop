@@ -302,6 +302,23 @@ class paypalpui extends PayPalPaymentV2 {
   }
 
 
+  function before_send_order() {
+    global $insert_id;
+    
+    $_SESSION['paypal']['send'] = 0;
+    $PayPalOrder = $this->GetOrder($_SESSION['paypal']['OrderID']);
+    if (is_object($PayPalOrder)
+        && $PayPalOrder->status == 'COMPLETED'
+        )
+    {
+      return false;
+    }
+    
+    $_SESSION['paypal']['send'] = 1;
+    return true;
+  }
+
+
   function after_process() {
     global $insert_id;
 
@@ -329,6 +346,7 @@ class paypalpui extends PayPalPaymentV2 {
       'payment_id' => $_SESSION['paypal']['OrderID'],
       'payer_id' => $_SESSION['paypal']['PayerID'],
       'transaction_id' => $transaction_id,
+      'send_order' => $_SESSION['paypal']['send'],
     );
     xtc_db_perform(TABLE_PAYPAL_PAYMENT, $sql_data_array);
 
