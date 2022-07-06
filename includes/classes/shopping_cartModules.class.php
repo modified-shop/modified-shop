@@ -79,10 +79,16 @@ class shoppingCartModules {
     }
     
     //----- SHOPPING CART METHODS -----//
+    public static function restore_contents_customer_id($customer_id, $type)
+    {
+        self::$function_call = 'restore_contents_customer_id';
+        return self::call_module_method($customer_id, $type);
+    }
+    
     public static function restore_contents_products_db($sql_data_array,$products_id,$table_basket,$qty,$type)
     {
         self::$function_call = 'restore_contents_products_db';
-        return self::call_module_method($sql_data_array,$products_id,$table_basket,$qty,$type); //Return parameter must be in first place
+        return self::call_module_method($sql_data_array,$products_id,$table_basket,$qty,$type);
     }
 
     public static function restore_contents_attributes_db($sql_data_array,$products_id,$value,$type)
@@ -203,6 +209,24 @@ class shoppingCartModules {
     {
         self::$function_call = 'get_continue_shopping_link';
         return self::call_module_method($url, $referer);
+    }
+
+    public static function reset($reset_database, $type)
+    {
+        self::$function_call = 'reset';
+        return self::call_module_method($reset_database, $type);
+    }
+
+    public static function cleanup_before()
+    {
+        self::$function_call = 'cleanup_before';
+        return self::call_module_method();
+    }
+
+    public static function cleanup_after()
+    {
+        self::$function_call = 'cleanup_after';
+        return self::call_module_method();
     }
 
 }
