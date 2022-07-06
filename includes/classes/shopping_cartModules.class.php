@@ -217,16 +217,16 @@ class shoppingCartModules {
         return self::call_module_method($reset_database, $type);
     }
 
-    public static function cleanup_before()
+    public static function cleanup_before($type)
     {
         self::$function_call = 'cleanup_before';
-        return self::call_module_method();
+        return self::call_module_method($type);
     }
 
-    public static function cleanup_after()
+    public static function cleanup_after($type)
     {
         self::$function_call = 'cleanup_after';
-        return self::call_module_method();
+        return self::call_module_method($type);
     }
 
 }

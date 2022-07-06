@@ -356,7 +356,7 @@ class shoppingCart {
    */
   function cleanup() {
     //new module support           
-    $this->shoppingCartModules->cleanup_before();
+    $this->shoppingCartModules->cleanup_before($this->type);
 
     foreach ($this->contents as $products_id => $data) {
       if (isset($this->contents[$products_id]['qty']) && $this->contents[$products_id]['qty'] < 1) {
@@ -375,7 +375,7 @@ class shoppingCart {
     }
 
     //new module support           
-    $this->shoppingCartModules->cleanup_after();
+    $this->shoppingCartModules->cleanup_after($this->type);
   }
 
   /**
