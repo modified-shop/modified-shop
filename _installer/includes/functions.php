@@ -347,47 +347,25 @@
   }
 
 
-  function get_checksum_install() {
-    global $whitelist_array, $blacklist_array;
-    
+  function get_checksum_install() {        
     $files_array = array();
-  
-    foreach ((new DirectoryIterator(DIR_FS_CATALOG)) as $file) {  
-      if (is_file($file->getPathname()) !== false) {
-        $relativePath = substr($file->getPathname(), strlen(DIR_FS_CATALOG)-strlen(DIR_WS_CATALOG));
-        
-        $index = str_replace(DIR_ADMIN, 'admin/', $relativePath);
-        $index = str_replace(DIR_WS_CATALOG, DIRECTORY_SEPARATOR, $index);
-      
-        $files_array[$index] = array(
-          'absolutePath' => $file->getPath(),
-          'relativePath' => dirname($relativePath),
-          'filename' => $file->getFilename(),
-          'checkSum' => get_hash_from_file($file->getPathname()),
-        );
-      }
-    }
 
-    foreach ($whitelist_array as $directory) {
-      foreach ((new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory, RecursiveDirectoryIterator::SKIP_DOTS))) as $file) {
-        $path_name = $file->getPathname();
-        foreach ($blacklist_array as $blacklist) {
-          if (strpos($path_name, $blacklist) !== false) continue 2;
+    $version_array = get_checksum_version();
+    if (is_array($version_array)) {
+      foreach ($version_array as $file => $data) {
+        $filename = ltrim($file, '/');
+        $filename = str_replace('admin/', DIR_ADMIN, $filename);
+      
+        if (is_file(DIR_FS_CATALOG.$filename)) {
+          $files_array[$file] = array(
+            'relativePath' => DIR_WS_CATALOG.$filename,
+            'absolutePath' => DIR_FS_CATALOG.$filename,
+            'filename' => basename($filename),
+            'checkSum' => get_hash_from_file(DIR_FS_CATALOG.$filename),
+          );
         }
-      
-        $relativePath = substr($file->getPathname(), strlen(DIR_FS_CATALOG)-strlen(DIR_WS_CATALOG));
-      
-        $index = str_replace(DIR_ADMIN, 'admin/', $relativePath);
-        $index = str_replace(DIR_WS_CATALOG, DIRECTORY_SEPARATOR, $index);
-
-        $files_array[$index] = array(
-          'absolutePath' => $file->getPath(),
-          'relativePath' => dirname($relativePath),
-          'filename' => $file->getFilename(),
-          'checkSum' => get_hash_from_file($file->getPathname()),
-        );
       }
-    }
+    }   
     ksort($files_array);
     
     return $files_array;
@@ -438,7 +416,7 @@
       $zip = new ZipArchive();
       if ($zip->open(DIR_FS_CATALOG.DIR_ADMIN.'backups/'.$backup_file, ZipArchive::CREATE) === true) {
         foreach ($checksum_array as $data) {      
-          $zip->addFile($data['absolutePath'].DIRECTORY_SEPARATOR.$data['filename'], rtrim($data['relativePath'], DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$data['filename']);      
+          $zip->addFile($data['absolutePath'], $data['relativePath']);      
         }
       }
       $zip->close();
