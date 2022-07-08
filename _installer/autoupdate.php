@@ -25,6 +25,7 @@
   require_once (DIR_FS_INC.'xtc_random_name.inc.php');
   require_once (DIR_FS_INC.'xtc_unlink_temp_dir.inc.php');
   require_once (DIR_FS_INC.'readfile_chunked.inc.php');
+  require_once (DIR_FS_INC.'xtc_get_shop_conf.inc.php'); 
 
   // make a connection to the database... now
   xtc_db_connect() or die('Unable to connect to database server!');
@@ -120,6 +121,17 @@
     $smarty->clear_assign('LINK_SQL_MANUELL');
     $smarty->clear_assign('BUTTON_SUBMIT');
     $smarty->clear_assign('BUTTON_BACK');
+    
+    if (!isset($_SESSION['offline'])) {
+      $_SESSION['offline'] = 1;
+      $shop_is_offline = get_shop_offline_status();
+      if (!$shop_is_offline) {
+        $_SESSION['offline'] = 2;
+        xtc_db_query("UPDATE shop_configuration
+                         SET configuration_value = 'checked' 
+                       WHERE configuration_key = 'SHOP_OFFLINE'");
+      }
+    }
     
     switch ($step) {
       case '1':
@@ -358,6 +370,14 @@
 
       case 'finish':
         $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(DIR_WS_INSTALLER, 'action=shop', $request_type).'">'.BUTTON_SHOP.'</a>');
+        if (isset($_SESSION['offline'])
+            && $_SESSION['offline'] == 2
+            )
+        {
+          xtc_db_query("UPDATE shop_configuration
+                           SET configuration_value = '' 
+                         WHERE configuration_key = 'SHOP_OFFLINE'");
+        }
         break;
     }
     
