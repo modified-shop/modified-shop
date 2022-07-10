@@ -1411,7 +1411,7 @@ DROP TABLE IF EXISTS zones_to_geo_zones;
 CREATE TABLE zones_to_geo_zones (
  association_id INT(11) NOT NULL AUTO_INCREMENT,
  zone_country_id INT(11) NOT NULL,
- zone_id INT NULL,
+ zone_id INT(11) NOT NULL,
  geo_zone_id INT NULL,
  last_modified DATETIME NULL,
  date_added DATETIME NOT NULL,
