@@ -118,7 +118,7 @@
         $dp_cost = constant('MODULE_SHIPPING_DP_COST_' . $dest_zone);
 
         $dp_table = preg_split("/[:,]/" , $dp_cost);
-        for ($i=0; $i<sizeof($dp_table); $i+=2) {
+        for ($i=0, $n=count($dp_table); $i<$n; $i+=2) {
           if ($shipping_weight <= $dp_table[$i]) {
             $shipping = (double)$dp_table[$i+1];
             $shipping_method = MODULE_SHIPPING_DP_TEXT_WAY . ' ' . $dest_country . ': ';

@@ -119,7 +119,7 @@
       $dpd_table = preg_split("/[-:,]/" , $dpd_cost['dpd_weight_price_string']); // Hetfield - 2009-11-19 - replaced deprecated function split with preg_split to be ready for PHP >= 5.3
       $n=1;
       $y=2;
-      for ($i = 0; $i < count($dpd_table); $i ++) {
+      for ($i=0, $n=count($dpd_table); $i<$n; $i++) {
         if ( ($shipping_weight > $dpd_table[$i]) && ($shipping_weight <= $dpd_table[$n]) ) {
           $shipping = (double)$dpd_table[$y];
           $shipping_dpd_method = MODULE_SHIPPING_DPD_TEXT_WAY . ' ' . $dest_country . ' (' . ($shipping_num_boxes > 1 ? $shipping_num_boxes . ' x ' : '') . round($shipping_weight, 2) . ' ' . MODULE_SHIPPING_DPD_TEXT_UNITS . ') :';

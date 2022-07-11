@@ -114,8 +114,7 @@
         $shipping = -1;
         $gls_cost = constant('MODULE_SHIPPING_GLS_COST_' . $dest_zone);
         $gls_table = preg_split("/[:,]/" , $gls_cost); 
-        $size = sizeof($gls_table);
-        for ($i=0; $i<$size; $i+=2) {
+        for ($i=0, $n=count($gls_table); $i<$n; $i+=2) {
           if ($shipping_weight <= $gls_table[$i]) {
             $shipping = (double)$gls_table[$i+1];
             $shipping_method = MODULE_SHIPPING_GLS_TEXT_WAY . ' ' . $dest_country . ': ';

@@ -109,7 +109,7 @@
         if ($chp_cost_eco != '') {
           $chp_table_eco = preg_split("/[:,]/" , $chp_cost_eco); 
 
-          for ($i=0; $i<sizeof($chp_table_eco); $i+=2) {
+          for ($i=0, $n=count($chp_table_eco); $i<$n; $i+=2) {
             if ($shipping_weight <= $chp_table_eco[$i]) {
               $shipping_eco = (double)$chp_table_eco[$i+1];
               break;
@@ -133,7 +133,7 @@
         if ($chp_cost_pri != '') {
           $chp_table_pri = preg_split("/[:,]/" , $chp_cost_pri); 
 
-          for ($i=0; $i<sizeof($chp_table_pri); $i+=2) {
+          for ($i=0, $n=count($chp_table_pri); $i<$n; $i+=2) {
             if ($shipping_weight <= $chp_table_pri[$i]) {
               $shipping_pri = (double)$chp_table_pri[$i+1];
               break;
@@ -157,7 +157,7 @@
         if ($chp_cost_urg != '') {
           $chp_table_urg = preg_split("/[:,]/" , $chp_cost_urg); 
 
-          for ($i=0; $i<sizeof($chp_table_urg); $i+=2) {
+          for ($i=0, $n=count($chp_table_urg); $i<$n; $i+=2) {
             if ($shipping_weight <= $chp_table_urg[$i]) {
               $shipping_urg = (double)$chp_table_urg[$i+1];
               break;
@@ -193,7 +193,7 @@
 
       if ( (xtc_not_null($method)) && (isset($this->types[$method])) ) {
 
-        for ($i=0; $i<sizeof($methods); $i++) {
+        for ($i=0, $n=count($methods); $i<$n; $i++) {
           if ($method == $methods[$i]['id']) {
             $methodsc = array();
             $methodsc[] = array('id' => $methods[$i]['id'],

@@ -95,7 +95,7 @@
         $upse_cost = constant('MODULE_SHIPPING_UPSE_COST_' . $dest_zone);
 
         $upse_table = preg_split("/[:,]/" , $upse_cost);
-        for ($i=0; $i<sizeof($upse_table); $i+=2) {
+        for ($i=0, $n=count($upse_table); $i<$n; $i+=2) {
           if ($shipping_weight <= $upse_table[$i]) {
             $shipping = (double)$upse_table[$i+1];
             $shipping_method = MODULE_SHIPPING_UPSE_TEXT_WAY . ' ' . $dest_country . ': ';

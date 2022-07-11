@@ -107,7 +107,7 @@
           $shipping = -1;
           $ups_cost = constant('MODULE_SHIPPING_UPS_COST_' . $dest_zone);
           $ups_table = preg_split("/[:,]/" , $ups_cost); 
-          for ($i=0; $i<sizeof($ups_table); $i+=2) {
+          for ($i=0, $n=count($ups_table); $i<$n; $i+=2) {
             if ($shipping_weight <= $ups_table[$i]) {
               $shipping = (double)$ups_table[$i+1];
               $shipping_method = MODULE_SHIPPING_UPS_TEXT_WAY . ' ' . $dest_country . ': ';
@@ -117,7 +117,7 @@
           $i = 1;
           $ups_cost = constant('MODULE_SHIPPING_UPS_COST_' . $dest_zone);
           $ups_table = preg_split("/[:,]/" , $ups_cost); 
-          for ($i=0; $i<sizeof($ups_table); $i+=2) {
+          for ($i=0, $n=count($ups_table); $i<$n; $i+=2) {
             if ($shipping_weight <= $ups_table[$i]) {
               $diff = (double)$ups_table[$i+1];
               break;
@@ -128,7 +128,7 @@
           $shipping = -1;
           $ups_cost = constant('MODULE_SHIPPING_UPS_COST_' . $dest_zone);
           $ups_table = preg_split("/[:,]/" , $ups_cost); 
-          for ($i=0; $i<sizeof($ups_table); $i+=2) {
+          for ($i=0, $n=count($ups_table); $i<$n; $i+=2) {
             if ($shipping_weight <= $ups_table[$i]) {
               $shipping = (double)$ups_table[$i+1];
               $shipping_method = MODULE_SHIPPING_UPS_TEXT_WAY . ' ' . $dest_country . ': ';

@@ -107,7 +107,7 @@
         if ($fedexeu_cost_pak != '') {
           $fedexeu_table_pak = preg_split("/[:,]/" , $fedexeu_cost_pak);
 
-          for ($i=0; $i<sizeof($fedexeu_table_pak); $i+=2) {
+          for ($i=0, $n=count($fedexeu_table_pak); $i<$n; $i+=2) {
             if ($shipping_weight <= $fedexeu_table_pak[$i]) {
               $shipping_pak = (double)$fedexeu_table_pak[$i+1];
               break;
@@ -132,7 +132,7 @@
         if ($fedexeu_cost_env != '') {
           $fedexeu_table_env = preg_split("/[:,]/" , $fedexeu_cost_env); 
 
-          for ($i=0; $i<sizeof($fedexeu_table_env); $i+=2) {
+          for ($i=0, $n=count($fedexeu_table_env); $i<$n; $i+=2) {
             if ($shipping_weight <= $fedexeu_table_env[$i]) {
               $shipping_env = (double)$fedexeu_table_env[$i+1];
               break;
@@ -165,7 +165,7 @@
             $shipping_box = number_format((($shipping_weight - 40)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_FEDEXEU_STEP_BOX_70_' .$j) + 20 * (double)constant('MODULE_SHIPPING_FEDEXEU_STEP_BOX_20_' .$j) + 40 * (double)constant('MODULE_SHIPPING_FEDEXEU_STEP_BOX_40_' .$j) + $fedexeu_table_box[count ($fedexeu_table_box)-1];
           } else {
 
-            for ($i=0; $i<sizeof($fedexeu_table_box); $i+=2) {
+            for ($i=0, $n=count($fedexeu_table_box); $i<$n; $i+=2) {
               if ($shipping_weight <= $fedexeu_table_box[$i]) {
                 $shipping_box = (double)$fedexeu_table_box[$i+1];
                 break;
@@ -205,7 +205,7 @@
 
       if ( (xtc_not_null($method)) && (isset($this->types[$method])) ) {
 
-        for ($i=0; $i<sizeof($methods); $i++) {
+        for ($i=0, $n=count($methods); $i<$n; $i++) {
           if ($method == $methods[$i]['id']) {
             $methodsc = array();
             $methodsc[] = array('id' => $methods[$i]['id'],
