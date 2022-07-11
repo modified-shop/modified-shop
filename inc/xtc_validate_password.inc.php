@@ -58,7 +58,9 @@
         $validpass = new validpass();
         $valid = $validpass->validate_password($plain, $encrypted);
         if ($valid === true) {
-          xtc_password_rehash($plain, $customers_id);
+          if (password_needs_rehash($encrypted, PASSWORD_DEFAULT)) {
+            xtc_password_rehash($plain, $customers_id);
+          }
           return true;
         }
         
