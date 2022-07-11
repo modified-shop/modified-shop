@@ -111,8 +111,7 @@
         $zones_cost = constant('MODULE_SHIPPING_ZONES_COST_' . $dest_zone);
 
         $zones_table = preg_split("/[:,]/" , $zones_cost); 
-        $size = sizeof($zones_table);
-        for ($i=0; $i<$size; $i+=2) {
+        for ($i=0, $n=count($zones_table); $i<$n; $i+=2) {
           if ($shipping_weight <= $zones_table[$i]) {
             $shipping = (double)$zones_table[$i+1];
             $shipping_method = MODULE_SHIPPING_ZONES_TEXT_WAY . ' ' . $dest_country . ': ';

@@ -128,7 +128,7 @@
 
         $table_cost = constant('MODULE_SHIPPING_TABLE_COST_' . $dest_zone);
         $table_table = preg_split("/[:,]/" , $table_cost);
-        for ($i=0; $i<sizeof($table_table); $i+=2) {
+        for ($i=0, $n=count($table_table); $i<$n; $i+=2) {
           if ($order_total <= $table_table[$i]) {
             $shipping = (double)$table_table[$i+1];
             $shipping_method = MODULE_SHIPPING_TABLE_TEXT_WAY . ' ' . $dest_country . ': ';

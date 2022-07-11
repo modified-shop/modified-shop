@@ -156,7 +156,7 @@
             $shipping_dox = number_format((($shipping_weight - 50)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_DHL_STEP_DOX_51_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_DOX_20_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_DOX_30_' .$j) + 40 * (double)constant('MODULE_SHIPPING_DHL_STEP_DOX_50_' .$j) + $dhl_table_dox[count ($dhl_table_dox)-1];
           } else {
 
-            for ($i=0; $i<sizeof($dhl_table_dox); $i+=2) {
+            for ($i=0, $n=count($dhl_table_dox); $i<$n; $i+=2) {
               if ($shipping_weight <= $dhl_table_dox[$i]) {
                 $shipping_dox = (double)$dhl_table_dox[$i+1];
                 break;
@@ -190,7 +190,7 @@
             $shipping_wpx = number_format((($shipping_weight - 50)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_DHL_STEP_WPX_51_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_WPX_20_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_WPX_30_' .$j) + 40 * (double)constant('MODULE_SHIPPING_DHL_STEP_WPX_50_' .$j) + $dhl_table_wpx[count ($dhl_table_wpx)-1];
           } else {
 
-            for ($i=0; $i<sizeof($dhl_table_wpx); $i+=2) {
+            for ($i=0, $n=count($dhl_table_wpx); $i<$n; $i+=2) {
               if ($shipping_weight <= $dhl_table_wpx[$i]) {
                 $shipping_wpx = (double)$dhl_table_wpx[$i+1];
                 break;
@@ -223,7 +223,7 @@
             $shipping_mdx = number_format((($shipping_weight - 50)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_DHL_STEP_MDX_51_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_MDX_20_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_MDX_30_' .$j) + 40 * (double)constant('MODULE_SHIPPING_DHL_STEP_MDX_50_' .$j) + $dhl_table_mdx[count ($dhl_table_mdx)-1];
           } else {
 
-            for ($i=0; $i<sizeof($dhl_table_mdx); $i+=2) {
+            for ($i=0, $n=count($dhl_table_mdx); $i<$n; $i+=2) {
               if ($shipping_weight <= $dhl_table_mdx[$i]) {
                 $shipping_mdx = (double)$dhl_table_mdx[$i+1];
                 break;
@@ -256,7 +256,7 @@
             $shipping_sdx = number_format((($shipping_weight - 50)* 2 + 0.5), 0) * (double)constant('MODULE_SHIPPING_DHL_STEP_SDX_51_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_SDX_20_' .$j) + 20 * (double)constant('MODULE_SHIPPING_DHL_STEP_SDX_30_' .$j) + 40 * (double)constant('MODULE_SHIPPING_DHL_STEP_SDX_50_' .$j) + $dhl_table_sdx[count ($dhl_table_sdx)-1];
           } else {
 
-            for ($i=0; $i<sizeof($dhl_table_sdx); $i+=2) {
+            for ($i=0, $n=count($dhl_table_sdx); $i<$n; $i+=2) {
               if ($shipping_weight <= $dhl_table_sdx[$i]) {
                 $shipping_sdx = (double)$dhl_table_sdx[$i+1];
                 break;
@@ -293,7 +293,7 @@
 
       if ( (xtc_not_null($method)) && (isset($this->types[$method])) ) {
 
-        for ($i=0; $i<sizeof($methods); $i++) {
+        for ($i=0, $n=count($methods); $i<$n; $i++) {
           if ($method == $methods[$i]['id']) {
             $methodsc = array();
             $methodsc[] = array('id' => $methods[$i]['id'],
