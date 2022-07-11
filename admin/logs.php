@@ -12,7 +12,7 @@
   
   require('includes/application_top.php');
   
-  $exts = array("log","log\.zip","log\.gz", "log\.[0-9]");
+  $exts = array("log","log\.zip","log\.gz", "log\.[0-9]+");
   
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
   if (xtc_not_null($action)) {
