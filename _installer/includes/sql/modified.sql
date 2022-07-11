@@ -489,7 +489,7 @@ CREATE TABLE customers (
   customers_default_address_id INT(11) NOT NULL,
   customers_telephone VARCHAR(32) NOT NULL,
   customers_fax VARCHAR(32) NOT NULL,
-  customers_password VARCHAR(60) NOT NULL,
+  customers_password VARCHAR(255) NOT NULL,
   customers_password_time INT(11) DEFAULT 0 NOT NULL,
   customers_newsletter CHAR(1),
   member_flag CHAR(1) DEFAULT '0' NOT NULL,

@@ -16,17 +16,12 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
  
-  // include needed class
-  require_once (DIR_FS_CATALOG.'includes/classes/validpass.php');
-
   // This function makes a new password from a plaintext password. 
   function xtc_encrypt_password($plain) {
-
-    // init class
-    $validpass = new validpass();
-    // encrypt password
-    $encrypted = $validpass->encrypt_password($plain);
+    if (defined('PASSWORD_HMAC') && PASSWORD_HMAC != '') {
+      $plain = hash_hmac("sha256", $plain, PASSWORD_HMAC);
+    }
+    $encrypted = password_hash($plain, PASSWORD_DEFAULT);
 
     return $encrypted;
   }
-?>

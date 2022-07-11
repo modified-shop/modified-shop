@@ -16,6 +16,9 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
+  // include needed functions
+  require_once (DIR_FS_INC.'xtc_encrypt_password.inc.php');
+
   // include needed class
   require_once (DIR_FS_CATALOG.'includes/classes/validpass.php');
   
@@ -47,19 +50,48 @@
         if ($encrypted != md5($plain)) {
           return false;
         } elseif ($customers_id) {
-          // auth is correct, so update to new password hash 
-          require_once (DIR_FS_INC . 'xtc_encrypt_password.inc.php');
-          xtc_db_query("UPDATE " . TABLE_CUSTOMERS . "
-                           SET customers_password = '" . xtc_encrypt_password($plain) . "'
-                         WHERE customers_id = '" . (int)$customers_id . "'");
+          xtc_password_rehash($plain, $customers_id);
         }
         return true;
       } else {
-        // init class
+        // check for old passwords
         $validpass = new validpass();
-        // validate password
-        return $validpass->validate_password($plain, $encrypted);
+        $valid = $validpass->validate_password($plain, $encrypted);
+        if ($valid === true) {
+          xtc_password_rehash($plain, $customers_id);
+          return true;
+        }
+        
+        if (password_verify($plain, $encrypted)) {
+          if (password_needs_rehash($encrypted, PASSWORD_DEFAULT) || (defined('PASSWORD_HMAC') && PASSWORD_HMAC != '')) {
+            xtc_password_rehash($plain, $customers_id);
+          }
+          return true;
+        }
+        
+        if (defined('PASSWORD_HMAC') && PASSWORD_HMAC != '') {
+          $sha256 = hash_hmac("sha256", $plain, PASSWORD_HMAC);
+          if (password_verify($sha256, $encrypted)) {
+            if (password_needs_rehash($encrypted, PASSWORD_DEFAULT)) {
+              xtc_password_rehash($plain, $customers_id);
+            }
+            return true;
+          }        
+        }
       }
     }
+    return false;
   }
-?>
+  
+  function xtc_password_rehash($plain, $customers_id) {
+    $check_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_CUSTOMERS." WHERE Field = 'customers_password'");
+    $check = xtc_db_fetch_array($check_query);
+    
+    if ((int)preg_replace('/[^\d]/', '', $check['Type']) < 255) {
+      xtc_db_query("ALTER TABLE ".TABLE_CUSTOMERS." MODIFY `customers_password` VARCHAR(255) NOT NULL");
+    }
+    
+    xtc_db_query("UPDATE ".TABLE_CUSTOMERS."
+                     SET customers_password = '".xtc_encrypt_password($plain)."'
+                   WHERE customers_id = '".(int)$customers_id."'");
+  }

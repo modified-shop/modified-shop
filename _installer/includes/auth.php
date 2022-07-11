@@ -41,7 +41,7 @@
 
         if (xtc_db_num_rows($check_customer_query) > 0) {
           // change password field
-          xtc_db_query("ALTER TABLE ".TABLE_CUSTOMERS." MODIFY customers_password varchar(60) NOT NULL");
+          xtc_db_query("ALTER TABLE ".TABLE_CUSTOMERS." MODIFY customers_password VARCHAR(255) NOT NULL");
 
           // Check that password is good
           $check_customer = xtc_db_fetch_array($check_customer_query);      

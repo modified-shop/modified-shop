@@ -56,6 +56,9 @@
   // timezone
   defined('DEFAULT_TIMEZONE') or define('DEFAULT_TIMEZONE', 'Europe/Berlin');
 
+  // password
+  defined('PASSWORD_HMAC') or define('PASSWORD_HMAC', '');
+
   if (DB_DATABASE != '') {
     // set admin directory DIR_ADMIN
     require_once(DIR_FS_CATALOG.'inc/set_admin_directory.inc.php');
