@@ -11,24 +11,28 @@
    --------------------------------------------------------------*/
   
   require('includes/application_top.php');
-    
+  
+  $exts = array("log","log\.zip","log\.gz", "log\.[0-9]");
+  
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
   if (xtc_not_null($action)) {
     switch ($action) {
       case 'download':
-        $extension = substr($_GET['file'], -3);
-        if ( ($extension == 'zip') || ($extension == '.gz') || ($extension == 'log') ) {
-          if ($fp = fopen(DIR_FS_LOG . $_GET['file'], 'rb')) {
-            $buffer = fread($fp, filesize(DIR_FS_LOG . $_GET['file']));
-            fclose($fp);
-            header('Content-type: application/x-octet-stream');
-            header('Content-disposition: attachment; filename=' . $_GET['file']);
-            echo $buffer;
-            exit;
+        if (is_file(DIR_FS_LOG . $_GET['file'])) {
+          foreach ($exts as $value) {
+            if (xtc_CheckExt($_GET['file'], $value)) {
+              if ($fp = fopen(DIR_FS_LOG . $_GET['file'], 'rb')) {
+                $buffer = fread($fp, filesize(DIR_FS_LOG . $_GET['file']));
+                fclose($fp);
+                header('Content-type: application/x-octet-stream');
+                header('Content-disposition: attachment; filename=' . $_GET['file']);
+                echo $buffer;
+                exit;              
+              }
+            }
           }
-        } else {
-          $messageStack->add(ERROR_DOWNLOAD_LINK_NOT_ACCEPTABLE, 'error');
         }
+        $messageStack->add(ERROR_DOWNLOAD_LINK_NOT_ACCEPTABLE, 'error');
         break;
         
       case 'deleteconfirm':
@@ -104,7 +108,6 @@
                     if ($dir_ok) {
                       $dir = dir(DIR_FS_LOG);
                       $contents_array = array();
-                      $exts = array("log","log.zip","log.gz");
                       while ($file = $dir->read()) {
                         if (!is_dir(DIR_FS_LOG . $file)) {
                           foreach ($exts as $value) {
