@@ -526,7 +526,7 @@ class PayPalAdmin extends PayPalPayment {
   function getOnboardingLink($mode = 'live') {
     $partner = $this->get_partner_details($mode);
     if (is_array($partner)) {      
-      return sprintf($partner['requestURLv2'], $partner['partnerID'], $partner['clientID'], $this->get_seller_nonce(), urlencode(xtc_href_link('paypal_config.php', 'action=callback&mode='.$mode)));    
+      return sprintf($partner['requestURLv3'], $partner['partnerID'], $partner['clientID'], $this->get_seller_nonce(), urlencode(xtc_href_link('paypal_config.php', 'action=callback&mode='.$mode)));    
     }
   }
   

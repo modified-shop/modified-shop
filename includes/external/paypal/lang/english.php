@@ -71,9 +71,14 @@ $lang_array = array(
 
   
   // tracking
-  'TEXT_PAYPAL_TRACKING' => 'Tracking:',
-  'TEXT_PAYPAL_ADDTRACKING' => 'Tracking',
-  'TEXT_PAYPAL_TRACKING_SUBMIT' => 'Add Tracking number',
+  'TEXT_PAYPAL_TRACKING' => 'Tracking',
+  'TEXT_PAYPAL_TRACKING_ID' => 'ID:',
+  'TEXT_PAYPAL_TRACKING_STATE' => 'Status:',
+  'TEXT_PAYPAL_TRACKING_CARRIER' => 'Shipping:',
+  'TEXT_PAYPAL_TRACKING_ACTION' => 'Action',
+  'TEXT_PAYPAL_TRACKING_TRACE' => 'Track &amp; Trace',
+  'TEXT_PAYPAL_TRACKING_SUBMIT' => 'Transfer Tracking number',
+  'TEXT_PAYPAL_TRACKING_CANCEL' => 'delete',
 
 
   // products

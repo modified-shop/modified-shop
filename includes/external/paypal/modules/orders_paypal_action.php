@@ -41,7 +41,7 @@ if (isset($oID) && $oID != '') {
   );
   
   if (in_array($order->info['payment_method'], $orders_v1_array)
-      || (isset($_POST['cmd']) && $_POST['cmd'] == 'addtracking')
+      || (isset($_POST['cmd']) && strpos($_POST['cmd'] , 'tracking') !== false)
       )
   {
     require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalInfo.php');
@@ -72,6 +72,12 @@ if (isset($oID) && $oID != '') {
           break;
         case 'addtracking':
           $response = $paypal->addTracking($order->info['order_id'], $_POST['tracking']);
+          if (is_array($response) && count($response) > 0) {
+            $_SESSION['pp_error'] = implode('<br/>', $response);
+          }
+          break;
+        case 'canceltracking':
+          $response = $paypal->cancelTracking($order->info['order_id'], $_POST['tracking_id']);
           if (is_array($response) && count($response) > 0) {
             $_SESSION['pp_error'] = implode('<br/>', $response);
           }

@@ -56,8 +56,8 @@ if (isset($order) && is_object($order)) {
       $admin_info_data = $paypal->subscription_info($order->info['order_id']);
     } elseif (in_array($order->info['payment_method'], $orders_v2_array)) {
       require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPaymentV2.php');
-      $paypal = new PayPalPaymentV2($order->info['payment_method']);
-      $admin_info_data = $paypal->GetOrderDetails($order->info['order_id']);
+      $paypalv2 = new PayPalPaymentV2($order->info['payment_method']);
+      $admin_info_data = $paypalv2->GetOrderDetails($order->info['order_id']);
     } else {
       // payment
       $admin_info_data = $paypal->order_info($order->info['order_id']);
@@ -114,20 +114,6 @@ if (isset($order) && is_object($order)) {
                 <dt><?php echo TEXT_PAYPAL_TRANSACTION_STATE; ?></dt>
                 <dd><?php echo $admin_info_data['state']; ?></dd>
               </dl>
-              <?php
-                $tracking_query = xtc_db_query("SELECT *
-                                                  FROM ".TABLE_PAYPAL_TRACKING."
-                                                 WHERE orders_id = '".$order->info['order_id']."'");
-                if (xtc_db_num_rows($tracking_query) > 0) {
-                  $tracking = xtc_db_fetch_array($tracking_query);
-                  ?>
-                    <dl class="pp_transaction">
-                      <dt><?php echo TEXT_PAYPAL_TRACKING; ?></dt>
-                      <dd><?php echo $tracking['tracking_number']; ?></dd>
-                    </dl>
-                  <?php
-                }
-              ?>
             </div>
       
             <?php
@@ -371,20 +357,6 @@ if (isset($order) && is_object($order)) {
                 <dt><?php echo TEXT_PAYPAL_TRANSACTION_ID; ?></dt>
                 <dd><?php echo $admin_info_data->id; ?></dd>
               </dl>
-              <?php
-                $tracking_query = xtc_db_query("SELECT *
-                                                  FROM ".TABLE_PAYPAL_TRACKING."
-                                                 WHERE orders_id = '".$order->info['order_id']."'");
-                if (xtc_db_num_rows($tracking_query) > 0) {
-                  $tracking = xtc_db_fetch_array($tracking_query);
-                  ?>
-                    <dl class="pp_transaction">
-                      <dt><?php echo TEXT_PAYPAL_TRACKING; ?></dt>
-                      <dd><?php echo $tracking['tracking_number']; ?></dd>
-                    </dl>
-                  <?php
-                }
-              ?>
             </div>
 
             <?php
@@ -597,34 +569,100 @@ if (isset($order) && is_object($order)) {
             </div>
             <?php
           }
-
+          
+          $tracker_array = array();
+          $tracker_query = xtc_db_query("SELECT *
+                                            FROM ".TABLE_PAYPAL_TRACKING."
+                                           WHERE orders_id = '".(int)$order->info['order_id']."'");
+          if (xtc_db_num_rows($tracker_query)) {
+            while ($tracker = xtc_db_fetch_array($tracker_query)) {
+              $tracker['status'] = $paypal->getTrackingStatus($tracker['transaction_id'], $tracker['tracking_number']);
+              $tracker_array[$tracker['tracking_number']] = $tracker;
+            }
+          }
+          
+          $tracking_array = array();
           $tracking_query = xtc_db_query("SELECT *
                                             FROM ".TABLE_ORDERS_TRACKING."
                                            WHERE orders_id = '".(int)$order->info['order_id']."'");
           if (xtc_db_num_rows($tracking_query)) {
+            while ($tracking = xtc_db_fetch_array($tracking_query)) {
+              if (!isset($tracker_array[$tracking['parcel_id']])) {
+                $tracking_array[$tracking['parcel_id']] = $tracking;
+              }
+            }
+          }
+          
+          if (count($tracker_array) > 0 || count($tracking_array) > 0) {
             ?>
             <div class="pp_tracking pp_box">
-              <div class="pp_boxheading"><?php echo TEXT_PAYPAL_ADDTRACKING; ?></div>
-              <?php 
-                echo xtc_draw_form('tracking', xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action','subaction', 'ext', 'sec')).'action=custom&subaction=paypalaction', 'NONSSL'), 'post');
-                if (CSRF_TOKEN_SYSTEM == 'true' && isset($_SESSION['CSRFToken']) && isset($_SESSION['CSRFName'])) {
-                  echo xtc_draw_hidden_field($_SESSION['CSRFName'], $_SESSION['CSRFToken']);
+              <?php                
+                if (count($tracker_array) > 0) {
+                  echo '<div class="pp_boxheading">'.TEXT_PAYPAL_TRACKING.'</div>';
+                  foreach ($tracker_array as $tracker) {
+                    echo xtc_draw_form('tracking', xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action','subaction', 'ext', 'sec')).'action=custom&subaction=paypalaction', 'NONSSL'), 'post');
+                    if (CSRF_TOKEN_SYSTEM == 'true' && isset($_SESSION['CSRFToken']) && isset($_SESSION['CSRFName'])) {
+                      echo xtc_draw_hidden_field($_SESSION['CSRFName'], $_SESSION['CSRFToken']);
+                    }
+                    echo xtc_draw_hidden_field('cmd', 'canceltracking');
+                    echo xtc_draw_hidden_field('tracking_id', $tracker['tracking_id']);
+                    ?>
+                    <div class="pp_txstatus">
+                      <div class="pp_txstatus_received pp_received_icon">
+                        <?php echo xtc_datetime_short($tracker['date_added']) . ' ' . $tracker['tracking_number']; ?>
+                      </div>
+                      <div class="pp_txstatus_data">
+                        <dl class="pp_txstatus_data_list">
+                          <dt><?php echo TEXT_PAYPAL_TRACKING_STATE; ?></dt>
+                          <dd><?php echo $tracker['status']; ?></dd>
+                        </dl>
+                        <dl class="pp_txstatus_data_list">
+                          <dt><?php echo TEXT_PAYPAL_TRACKING_CARRIER; ?></dt>
+                          <dd><?php echo $tracker['carrier']; ?></dd>
+                        </dl>
+                        <dl class="pp_txstatus_data_list">
+                          <dt><?php echo TEXT_PAYPAL_TRACKING_ID; ?></dt>
+                          <dd><?php echo $tracker['transaction_id']; ?></dd>
+                        </dl>
+                        <dl class="pp_txstatus_data_list">
+                          <dt><?php echo TEXT_PAYPAL_TRACKING_ACTION; ?></dt>
+                          <dd><input type="submit" name="tracking_cancel" value="<?php echo TEXT_PAYPAL_TRACKING_CANCEL; ?>"></dd>
+                        </dl>
+                      </div>
+                    </div>
+                    </form>
+                    <?php
+                  }
                 }
-                echo xtc_draw_hidden_field('cmd', 'addtracking');
+                
+                if (count($tracking_array) > 0) {
+                  if (count($tracker_array) > 0) {
+                    echo '<br><br>';
+                  }
+                  echo '<div class="pp_boxheading">'.TEXT_PAYPAL_TRACKING_TRACE.'</div>';
+                  echo xtc_draw_form('tracking', xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action','subaction', 'ext', 'sec')).'action=custom&subaction=paypalaction', 'NONSSL'), 'post');
+                  if (CSRF_TOKEN_SYSTEM == 'true' && isset($_SESSION['CSRFToken']) && isset($_SESSION['CSRFName'])) {
+                    echo xtc_draw_hidden_field($_SESSION['CSRFName'], $_SESSION['CSRFToken']);
+                  }
+                  echo xtc_draw_hidden_field('cmd', 'addtracking');
           
-                $i = 0;
-                while ($tracking = xtc_db_fetch_array($tracking_query)) {
-                  echo '<div class="tracking_row">';
-                  echo xtc_draw_radio_field('tracking', $tracking['tracking_id'], ($i == 0) , 'id="track_'.$tracking['tracking_id'].'"');
-                  echo '<label for="track_'.$tracking['tracking_id'].'">'.$tracking['parcel_id'].'</label>';     
-                  echo '</div>';               
+                  $i = 0;
+                 foreach ($tracking_array as $tracking) {
+                    echo '<div class="tracking_row">';
+                    echo '<label for="track_'.$tracking['tracking_id'].'" style="width:100%">';
+                    echo xtc_datetime_short($tracking['date_added']) . ' ' . $tracking['parcel_id'] . xtc_draw_radio_field('tracking', $tracking['tracking_id'], ($i == 0) , 'style="float:right;" id="track_'.$tracking['tracking_id'].'"');
+                    echo '</label>';     
+                    echo '</div>';               
             
-                  $i++;
-                }
-              ?>
-              <br />
-              <input type="submit" class="button" name="capture_submit" value="<?php echo TEXT_PAYPAL_TRACKING_SUBMIT; ?>">
-              </form>
+                    $i++;
+                  }
+                ?>
+                <br />
+                <input type="submit" class="button" name="tracking_submit" value="<?php echo TEXT_PAYPAL_TRACKING_SUBMIT; ?>">
+                </form>
+                <?php
+              }
+            ?>
             </div>
             <?php 
           }

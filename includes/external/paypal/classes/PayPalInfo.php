@@ -283,7 +283,24 @@ class PayPalInfo extends PayPalPayment {
   }
   
   
-  function addTracking($order_id, $tracking_id) {                                   
+  function getTrackingStatus($transaction_id, $tracking_number) {
+
+    // auth
+    $apiContext = $this->apiContext();
+
+    // set shipping
+    $shipping = new Shipping();
+
+    try {
+      $tracking = $shipping->get($transaction_id, $tracking_number, $apiContext);
+      return $tracking->getStatus();
+    } catch (Exception $ex) {
+      $this->LoggingManager->log('DEBUG', 'getTracking', array('exception' => $ex));
+    }
+  }
+  
+  
+  function addTracking($order_id, $tracking_id) {
     $tracking_query = xtc_db_query("SELECT pp.*,
                                            ot.*,
                                            c.carrier_name
@@ -309,7 +326,7 @@ class PayPalInfo extends PayPalPayment {
               ->setTrackingNumber($tracking['parcel_id'])
               ->setStatus('SHIPPED')
               ->setCarrier(strtoupper($tracking['carrier_name']));
-    
+
       $shipping->addTracker($tracker);
 
       try {
@@ -327,10 +344,7 @@ class PayPalInfo extends PayPalPayment {
           }
           return $message;
         }
-                
-        xtc_db_query("DELETE FROM ".TABLE_PAYPAL_TRACKING."
-                            WHERE orders_id = '".(int)$tracking['orders_id']."'");
-        
+
         $sql_data_array = array(
           'tracking_id' => $tracking['tracking_id'],
           'orders_id' => $tracking['orders_id'],
@@ -341,8 +355,37 @@ class PayPalInfo extends PayPalPayment {
         );
         xtc_db_perform(TABLE_PAYPAL_TRACKING, $sql_data_array);
 
-      } catch (Exception $ex) { 
+      } catch (Exception $ex) {
         $this->LoggingManager->log('DEBUG', 'addTracking', array('exception' => $ex));
+      }
+    }
+  }
+
+
+  function cancelTracking($order_id, $tracking_id) {
+    $tracking_query = xtc_db_query("SELECT *
+                                      FROM ".TABLE_PAYPAL_TRACKING."
+                                     WHERE orders_id = '".(int)$order_id."'
+                                       AND tracking_id = '".(int)$tracking_id."'");
+    if (xtc_db_num_rows($tracking_query) > 0) {
+      $tracking = xtc_db_fetch_array($tracking_query);
+
+      // auth
+      $apiContext = $this->apiContext();
+
+      // set shipping
+      $shipping = new Shipping();
+      $shipping->setTransactionId($tracking['transaction_id'])
+               ->setTrackingNumber($tracking['tracking_number'])
+               ->setStatus('CANCELLED');
+
+      try {
+        $shipping->replace($tracking['transaction_id'], $tracking['tracking_number'], $apiContext);
+
+        xtc_db_query("DELETE FROM ".TABLE_PAYPAL_TRACKING."
+                            WHERE tracking_id = '".(int)$tracking_id."'");
+      } catch (Exception $ex) {
+        $this->LoggingManager->log('DEBUG', 'cancelTracking', array('exception' => $ex));
       }
     }
   }
