@@ -41,6 +41,7 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_manufacturers.html', $c
                                  ON c.categories_id = p2c.categories_id
                                     AND c.categories_status = 1
                                         ".CATEGORIES_CONDITIONS_C."
+                           WHERE m.manufacturers_status = 1
                         GROUP BY m.manufacturers_id 
                         ORDER BY m.manufacturers_name ASC";
   $manufacturers_query = xtDBquery($manufacturers_query);

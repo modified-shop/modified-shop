@@ -186,6 +186,16 @@ switch ($category_depth) {
         $sorting_data = xtc_db_fetch_array($sorting_query, true);
       }
     }
+
+    if (isset($_GET['manufacturers_id'])) {
+      $sorting_query = xtDBquery("SELECT products_sorting,
+                                         products_sorting2
+                                    FROM ".TABLE_MANUFACTURERS."
+                                   WHERE manufacturers_id = '".(int)$_GET['manufacturers_id']."'");
+      if (xtc_db_num_rows($sorting_query, true) > 0) {
+        $sorting_data = xtc_db_fetch_array($sorting_query, true);
+      }
+    }
   
     //Fallback for products_sorting to products_name
     if (empty($sorting_data['products_sorting'])) { 
