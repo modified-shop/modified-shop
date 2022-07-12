@@ -553,7 +553,7 @@ class product {
             'TO_QUANTITY' => $to_quantity,
             'VPE' => $vpe,
             'PRICE' => $xtPrice->xtcFormat($Pprice, true),
-            'PLAIN_PRICE' => $Pprice,
+            'PLAIN_PRICE' => round((double)$Pprice, $xtPrice->currencies[$xtPrice->actualCurr]['decimal_places']),
             'PRICE_NETTO' => $Nprice,
             'PRICE_BRUTTO' => $Bprice,
           );
@@ -716,7 +716,8 @@ class product {
     );
     $productData = array_merge($productData,$productDataAdds);                     
 
-    foreach((array)$products_price as $key => $entry) {                  
+    foreach((array)$products_price as $key => $entry) {
+      if (strtoupper($key) == 'PLAIN') $entry = round((double)$entry, $xtPrice->currencies[$xtPrice->actualCurr]['decimal_places']);      
       $productData['PRODUCTS_PRICE_'.strtoupper($key)] = $entry;
       $productData['PRODUCTS_PRICE_ARRAY'][0]['PRODUCTS_PRICE_'.strtoupper($key)] = $entry;
     }
