@@ -104,6 +104,7 @@ if ($listing_split->number_of_rows == 0
         $category['categories_name'] = $manufacturer['manufacturers_name'];
         $category['categories_heading_title'] = $manufacturer['manufacturers_title'];
         $category['categories_description'] = $manufacturer['manufacturers_description'];
+        $category['listing_template'] = $manufacturer['listing_template'];
         $image = ((isset($manufacturer_image) && $manufacturer_image != '') ? $manufacturer_image : '');
       }
     }
@@ -176,16 +177,8 @@ if ($result != false) {
     $module_smarty->assign('pictureset_row', get_pictureset_data(PICTURESET_ROW));
   }
 
-  // support for own manufacturers template
-  $template = CURRENT_TEMPLATE.'/module/product_listing/'.$category['listing_template'];
-  if (isset ($_GET['manufacturers_id']) && $_GET['manufacturers_id'] > 0 && strpos($PHP_SELF, FILENAME_ADVANCED_SEARCH_RESULT) === false) {
-    if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/manufacturers_listing.html')) {
-      $template = CURRENT_TEMPLATE.'/module/manufacturers_listing.html';
-    }
-  }
-  
   $module_smarty->caching = 0;
-  $module = $module_smarty->fetch($template, $cache_id);
+  $module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/product_listing/'.$category['listing_template']);
 
   $smarty->assign('main_content', $module);
 } elseif (isset($current_category_id) && $current_category_id > 0) {
@@ -249,19 +242,19 @@ if ($result != false) {
     foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/product_listing_end/','php') as $file) require ($file);
 
     // get default template
-    $files = array_filter(auto_include(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/categorie_listing/','html'), function($file) {
-      return false === strpos($file, 'index.html');
-    });
-    $manufacturer_template = basename($files[0]);
-
-    // support for own manufacturers template
-    $template = CURRENT_TEMPLATE.'/module/categorie_listing/'.$manufacturer_template;
-    if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/manufacturers.html')) {
-      $template = CURRENT_TEMPLATE.'/module/manufacturers.html';
+    if ($manufacturer['categories_template'] == '' 
+        || $manufacturer['categories_template'] == 'default'
+        || !is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/categorie_listing/'.$manufacturer['categories_template'])
+        )
+    {
+      $files = array_filter(auto_include(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/categorie_listing/','html'), function($file) {
+        return false === strpos($file, 'index.html');
+      });
+      $manufacturer['categories_template'] = basename($files[0]);
     }
   
     $module_smarty->caching = 0;
-    $main_content = $module_smarty->fetch($template);
+    $main_content = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/categorie_listing/'.$manufacturer['categories_template']);
     
     $smarty->assign('main_content', $main_content);
   } else {

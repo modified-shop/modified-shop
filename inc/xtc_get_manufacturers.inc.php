@@ -27,6 +27,7 @@
                                         JOIN " . TABLE_MANUFACTURERS_INFO . " mi
                                              ON m.manufacturers_id = mi.manufacturers_id
                                                 AND mi.languages_id = '" . (int)$_SESSION['languages_id'] . "'
+                                       WHERE m.manufacturers_status = 1
                                     ORDER BY m.manufacturers_name");
     while ($manufacturers = xtc_db_fetch_array($manufacturers_query, true)) {
       $manufacturers['manufacturers_image'] = str_replace('manufacturers/', '', $manufacturers['manufacturers_image']);

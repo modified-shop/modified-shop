@@ -19,6 +19,8 @@
 define('HEADING_TITLE', 'Manufacturers');
 
 define('TABLE_HEADING_MANUFACTURERS', 'Manufacturers');
+define('TABLE_HEADING_SORTING', 'Sorting');
+define('TABLE_HEADING_STATUS', 'Status');
 define('TABLE_HEADING_ACTION', 'Action');
 
 define('TEXT_HEADING_NEW_MANUFACTURER', 'New Manufacturer');
@@ -30,6 +32,12 @@ define('TEXT_DATE_ADDED', 'Date Added:');
 define('TEXT_LAST_MODIFIED', 'Last Modified:');
 define('TEXT_PRODUCTS', 'Products:');
 define('TEXT_IMAGE_NONEXISTENT', 'IMAGE DOES NOT EXIST');
+define('TEXT_MANUFACTURER_STATUS', 'Manufacturer status:');
+define('TEXT_MANUFACTURERS_SORT_ORDER', 'Sort order:');
+define('TEXT_MANUFACTURERS_PRODUCT_SORT_ORDER', 'Product Sorting:');
+
+define('TEXT_MANUFACTURER_AVAILABLE', 'Active');
+define('TEXT_MANUFACTURER_NOT_AVAILABLE', 'Deactivated');
 
 define('TEXT_NEW_INTRO', 'Please fill out the following information for the new manufacturer');
 define('TEXT_EDIT_INTRO', 'Please make any necessary changes');
@@ -53,4 +61,16 @@ define('TEXT_META_DESCRIPTION', 'Meta Description:');
 define('TEXT_META_KEYWORDS', 'Meta Keywords:');
 define('TEXT_MANUFACTURERS_DESCRIPTION', 'Manufacturer description:');
 define('TEXT_DELETE', 'Delete');
+
+define('TXT_PRICES','Price');
+define('TXT_NAME','Product name');
+define('TXT_ORDERED','Products ordered');
+define('TXT_SORT','Sort order');
+define('TXT_WEIGHT','Weight');
+define('TXT_QTY','On Stock');
+define('TXT_DATE','Release date');
+define('TXT_MODEL','Products Model');
+
+define('TEXT_CHOOSE_INFO_TEMPLATE_CATEGORIE','Template for Manufacturer Listing');
+define('TEXT_CHOOSE_INFO_TEMPLATE_LISTING','Template for Product Listing');
 ?>

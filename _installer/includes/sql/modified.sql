@@ -678,10 +678,18 @@ CREATE TABLE manufacturers (
   manufacturers_id INT(11) NOT NULL AUTO_INCREMENT,
   manufacturers_name VARCHAR(64) NOT NULL,
   manufacturers_image VARCHAR(255) NOT NULL,
+  manufacturers_status INT(1) NOT NULL,
+  sort_order INT(3) DEFAULT 0 NOT NULL,
+  products_sorting VARCHAR(64),
+  products_sorting2 VARCHAR(64),
+  listing_template VARCHAR(64) NOT NULL DEFAULT '',
+  categories_template VARCHAR(64),
   date_added DATETIME NULL,
   last_modified DATETIME NULL,
   PRIMARY KEY (manufacturers_id),
-  KEY idx_manufacturers_name (manufacturers_name)
+  KEY idx_manufacturers_name (manufacturers_name),
+  KEY idx_manufacturers_status (manufacturers_status),
+  KEY idx_sort_order (sort_order)
 );
 
 DROP TABLE IF EXISTS manufacturers_info;
