@@ -109,7 +109,7 @@
       xtc_db_perform(TABLE_PRODUCTS_ATTRIBUTES, $sql_data_array);
       $products_attributes_id = xtc_db_insert_id();
 
-      if ($_POST[$cv_id . '_download_file'] != '') {
+      if (isset($_POST[$cv_id . '_download_file']) && $_POST[$cv_id . '_download_file'] != '') {
         $value_download_file = $_POST[$cv_id . '_download_file'];
         $value_download_expire = $_POST[$cv_id . '_download_expire'];
         $value_download_count = (int)$_POST[$cv_id . '_download_count'];
