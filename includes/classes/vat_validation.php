@@ -30,11 +30,11 @@ class vat_validation {
     $vat_id = str_replace(' ', '', $vat_id);
     $this->vat_info = array ();
     $this->vat_errors = array(
-      'INVALID_INPUT'       => '94',
+      'INVALID_INPUT' => '94',
       'SERVICE_UNAVAILABLE' => '95',
-      'MS_UNAVAILABLE'      => '96',
-      'TIMEOUT'             => '97',
-      'SERVER_BUSY'         => '98',
+      'MS_UNAVAILABLE' => '96',
+      'TIMEOUT' => '97',
+      'SERVER_BUSY' => '98',
       );
     $this->live_check = ACCOUNT_COMPANY_VAT_LIVE_CHECK;
     if (xtc_not_null($vat_id)) {
@@ -59,6 +59,7 @@ class vat_validation {
       $customers_status_id = DEFAULT_CUSTOMERS_STATUS_ID_GUEST;
     }
     
+    $error = false;
     if ($vat_id != '') {
       $validate_vatid = $this->validate_vatid($vat_id, $country_id);
       switch ($validate_vatid) {
@@ -83,7 +84,6 @@ class vat_validation {
               $status = $customers_status_id;
             }
           }
-          $error = false;
           $vat_id_status = $validate_vatid;
           break;
         case '8' :
@@ -129,10 +129,12 @@ class vat_validation {
       }
     }
 
-    $this->vat_info = array ('status' => $status, 
-                             'vat_id_status' => $vat_id_status, 
-                             'error' => $error, 
-                             'validate' => $validate_vatid);
+    $this->vat_info = array(
+      'status' => $status, 
+      'vat_id_status' => $vat_id_status, 
+      'error' => $error, 
+      'validate' => $validate_vatid,
+    );
   }
 
 
@@ -156,16 +158,18 @@ class vat_validation {
     //97 = 'TIMEOUT'             => 'The Member State service could not be reached in time, try again later or with another Member State',
     //98 = 'SERVER_BUSY'         => 'The service cannot process your request. Try again later.'
     //99 = 'no PHP5 SOAP support'
-    $results = array (0 => '0',
-                      1 => '1',
-                      8 => '8',
-                      9 => '9',
-                      94 => '94',
-                      95 => '95',
-                      96 => '96',
-                      97 => '97',
-                      98 => '98',
-                      99 => '99');
+    $results = array(
+      0 => '0',
+      1 => '1',
+      8 => '8',
+      9 => '9',
+      94 => '94',
+      95 => '95',
+      96 => '96',
+      97 => '97',
+      98 => '98',
+      99 => '99',
+    );
     
     // check country 
     $country_check = xtc_get_countriesList($country_id, true);
@@ -249,8 +253,10 @@ class vat_validation {
   
   function checkVatID_EU($vatNumber, $country_iso_code) {
 
-    $params = array('countryCode' => $country_iso_code, 
-                    'vatNumber' => $vatNumber);
+    $params = array(
+      'countryCode' => $country_iso_code, 
+      'vatNumber' => $vatNumber,
+    );
 
     $soap_client = new nusoap_client(VAT_LIVE_CHECK_URL, true);
     $soap_proxy = $soap_client->getProxy();
@@ -279,11 +285,13 @@ class vat_validation {
                     'vatNumber' => $vatNumber);
 
     try {
-      $options = array('soap_version' => SOAP_1_1,
-                       'exceptions' => true,
-                       'trace' => 1,
-                       'cache_wsdl' => WSDL_CACHE_NONE,
-                       'user_agent' => 'Mozilla');
+      $options = array(
+        'soap_version' => SOAP_1_1,
+        'exceptions' => true,
+        'trace' => 1,
+        'cache_wsdl' => WSDL_CACHE_NONE,
+        'user_agent' => 'Mozilla',
+      );
       $client = new SoapClient(VAT_LIVE_CHECK_URL, $options);
     } catch (Exception $e) {
       trigger_error('SOAP-Fehler: (Fehlernummer: '. $e->faultcode .', Fehlermeldung: '. $e->faultstring .')', E_USER_ERROR);
