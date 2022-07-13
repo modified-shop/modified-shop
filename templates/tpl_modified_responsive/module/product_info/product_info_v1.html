@@ -27,13 +27,13 @@
         {foreach item=more_images_data from=$more_images} 
           <div class="pd_small_image">
             <div class="pd_small_image_inner cf">
-              <a class="cbimages" title="{$PRODUCTS_NAME|onlytext}" href="{$more_images_data.PRODUCTS_IMAGE|replace:"info_":"popup_"}" data-cbox-img-attrs='{ldelim}"alt":"{$PRODUCTS_NAME|onlytext}"{rdelim}'>
+              <a class="cbimages" title="{if $more_images_data.IMAGE_TITLE != ''}{$more_images_data.IMAGE_TITLE|onlytext}{else}{$PRODUCTS_NAME|onlytext}{/if}" href="{$more_images_data.PRODUCTS_IMAGE|replace:"info_":"popup_"}" data-cbox-img-attrs='{ldelim}"alt":"{$PRODUCTS_NAME|onlytext}"{rdelim}'>
                 {if $smarty.const.PICTURESET_ACTIVE === true}
-                  <img class="lazyload" data-src="{$more_images_data.PRODUCTS_IMAGE|replace:"info_":"mini_"}" alt="{$PRODUCTS_NAME|onlytext}" title="{$PRODUCTS_NAME|onlytext}" />
+                  <img class="lazyload" data-src="{$more_images_data.PRODUCTS_IMAGE|replace:"info_":"mini_"}" alt="{if $more_images_data.IMAGE_ALT != ''}{$more_images_data.IMAGE_ALT|onlytext}{else}{$PRODUCTS_NAME|onlytext}{/if}" title="{if $more_images_data.IMAGE_TITLE != ''}{$more_images_data.IMAGE_TITLE|onlytext}{else}{$PRODUCTS_NAME|onlytext}{/if}" />
                 {else}
-                  <img class="lazyload" data-src="{$more_images_data.PRODUCTS_IMAGE|replace:"info_":"thumbnail_"}" alt="{$PRODUCTS_NAME|onlytext}" title="{$PRODUCTS_NAME|onlytext}" />
+                  <img class="lazyload" data-src="{$more_images_data.PRODUCTS_IMAGE|replace:"info_":"thumbnail_"}" alt="{if $more_images_data.IMAGE_ALT != ''}{$more_images_data.IMAGE_ALT|onlytext}{else}{$PRODUCTS_NAME|onlytext}{/if}" title="{if $more_images_data.IMAGE_TITLE != ''}{$more_images_data.IMAGE_TITLE|onlytext}{else}{$PRODUCTS_NAME|onlytext}{/if}" />
                 {/if}
-                <noscript><img src="{$more_images_data.PRODUCTS_IMAGE|replace:"info_":"thumbnail_"}" alt="{$PRODUCTS_NAME|onlytext}" title="{$PRODUCTS_NAME|onlytext}" /></noscript>
+                <noscript><img src="{$more_images_data.PRODUCTS_IMAGE|replace:"info_":"thumbnail_"}" alt="{if $more_images_data.IMAGE_ALT != ''}{$more_images_data.IMAGE_ALT|onlytext}{else}{$PRODUCTS_NAME|onlytext}{/if}" title="{if $more_images_data.IMAGE_TITLE != ''}{$more_images_data.IMAGE_TITLE|onlytext}{else}{$PRODUCTS_NAME|onlytext}{/if}" /></noscript>
               </a>
             </div>
           </div>

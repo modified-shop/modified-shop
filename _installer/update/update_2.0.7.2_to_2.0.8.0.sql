@@ -29,4 +29,15 @@ ALTER TABLE `manufacturers` ADD `categories_template` VARCHAR(64) AFTER `listing
 ALTER TABLE `manufacturers` ADD KEY `idx_manufacturers_status` (`manufacturers_status`);
 ALTER TABLE `manufacturers` ADD KEY `idx_sort_order` (`sort_order`);
 
+#GTB - 2022-07-13 - add image description
+CREATE TABLE IF NOT EXISTS `products_images_description` (
+  `image_id` INT(11) NOT NULL,
+  `products_id` INT(11) NOT NULL,
+  `image_title` VARCHAR(255) NOT NULL,
+  `image_alt` VARCHAR(255) NOT NULL,
+  `language_id` INT(11) NOT NULL,
+  PRIMARY KEY (`image_id`, `language_id`),
+  KEY idx_products_id (`products_id`)
+);
+
 # Keep an empty line at the end of this file for the db_updater to work properly

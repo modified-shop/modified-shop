@@ -77,6 +77,7 @@
   define('TABLE_PRODUCTS_GEO_ZONES_TO_TAX_CLASS', 'products_geo_zones_to_tax_class');
   define('TABLE_PRODUCTS_GRADUATED_PRICES', 'products_graduated_prices');
   define('TABLE_PRODUCTS_IMAGES', 'products_images');
+  define('TABLE_PRODUCTS_IMAGES_DESCRIPTION', 'products_images_description');
   define('TABLE_PRODUCTS_NOTIFICATIONS', 'products_notifications');
   define('TABLE_PRODUCTS_OPTIONS', 'products_options');
   define('TABLE_PRODUCTS_OPTIONS_VALUES', 'products_options_values');

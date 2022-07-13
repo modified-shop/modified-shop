@@ -60,13 +60,13 @@ class sitemaporg {
     }
     if (is_array($products)) {      
       if (is_file(DIR_FS_CATALOG_POPUP_IMAGES.$products['products_image'])) {
-        $this->xml_image_entry(HTTP_SERVER.DIR_WS_CATALOG_POPUP_IMAGES.urlencode($products['products_image']), $products['products_name']);
+        $this->xml_image_entry(HTTP_SERVER.DIR_WS_CATALOG_POPUP_IMAGES.urlencode($products['products_image']), $products['products_name'], $products['products_name']);
       }
       $mo_images = xtc_get_products_mo_images($products['products_id']);
       if ($mo_images != false) {
         foreach ($mo_images as $img) {
           if (is_file(DIR_FS_CATALOG_POPUP_IMAGES.$img['image_name'])) {
-            $this->xml_image_entry(HTTP_SERVER.DIR_WS_CATALOG_POPUP_IMAGES.urlencode($img['image_name']), $products['products_name']);
+            $this->xml_image_entry(HTTP_SERVER.DIR_WS_CATALOG_POPUP_IMAGES.urlencode($img['image_name']), (($img['image_title'] != '') ? $img['image_title'] : $products['products_name']), (($img['image_alt'] != '') ? $img['image_alt'] : $products['products_name']));
           }
         }
       }
@@ -74,11 +74,11 @@ class sitemaporg {
     $this->schema .= "\t</url>\n";
   }
   
-  function xml_image_entry($link, $title) {
+  function xml_image_entry($link, $title, $caption) {
 		$this->schema .= "\t\t<image:image>\n";
 		$this->schema .= "\t\t\t<image:loc>".encode_utf8(decode_htmlentities($link), $_SESSION['language_charset'], true)."</image:loc>\n";
 		$this->schema .= "\t\t\t<image:title><![CDATA[".encode_utf8(decode_htmlentities($title), $_SESSION['language_charset'], true)."]]></image:title>\n";
-		$this->schema .= "\t\t\t<image:caption><![CDATA[".encode_utf8(decode_htmlentities($title), $_SESSION['language_charset'], true)."]]></image:caption>\n";
+		$this->schema .= "\t\t\t<image:caption><![CDATA[".encode_utf8(decode_htmlentities($caption), $_SESSION['language_charset'], true)."]]></image:caption>\n";
 		$this->schema .= "\t\t</image:image>\n";
   }
   

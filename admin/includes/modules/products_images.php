@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: products_images.php 3568 2012-08-30 08:45:43Z dokuman $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -46,15 +46,21 @@ if ($_GET['action'] == 'new_product') {
   
   // display MO PICS
   if (MO_PICS > 0) {
-    $mo_images = xtc_get_products_mo_images($pInfo->products_id);
+    $languages = xtc_get_languages();
+    
+    $mo_images = array();
+    for ($l = 0, $n = sizeof($languages); $l < $n; $l++) {
+      $mo_images[$languages[$l]['id']] = xtc_get_products_mo_images($pInfo->products_id, $languages[$l]['id']);
+    }
+        
     for ($i = 0; $i < MO_PICS; $i ++) {
       ?>
       <div class="clear">&nbsp;</div>
       <table class="tableConfig borderall">
         <tr>
           <td class="dataTableConfig col-left"><?php echo TEXT_PRODUCTS_IMAGE.' '. ($i +1); ?></td>
-          <td class="dataTableConfig col-middle"><?php echo (isset($mo_images[$i]['image_name']) ? $mo_images[$i]['image_name'] : ''); ?></td>
-          <td class="dataTableConfig col-right"<?php echo $rowspan;?>><?php echo (isset($mo_images[$i]['image_name']) ? xtc_image(DIR_WS_CATALOG_THUMBNAIL_IMAGES.$mo_images[$i]['image_name'], 'Image '. ($i +1),'','','class="thumbnail-productsimage"') : xtc_draw_separator('pixel_trans.gif', PRODUCT_IMAGE_THUMBNAIL_WIDTH, 10)); ?></td>
+          <td class="dataTableConfig col-middle"><?php echo (isset($mo_images[$_SESSION['languages_id']][$i]['image_name']) ? $mo_images[$_SESSION['languages_id']][$i]['image_name'] : ''); ?></td>
+          <td class="dataTableConfig col-right"<?php echo $rowspan;?>><?php echo (isset($mo_images[$_SESSION['languages_id']][$i]['image_name']) ? xtc_image(DIR_WS_CATALOG_THUMBNAIL_IMAGES.$mo_images[$_SESSION['languages_id']][$i]['image_name'], 'Image '. ($i +1),'','','class="thumbnail-productsimage"') : xtc_draw_separator('pixel_trans.gif', PRODUCT_IMAGE_THUMBNAIL_WIDTH, 10)); ?></td>
         </tr>
         <tr>
           <td class="dataTableConfig col-left"><?php echo TEXT_PRODUCTS_IMAGE.' '. ($i +1); ?></td>
@@ -62,8 +68,22 @@ if ($_GET['action'] == 'new_product') {
         </tr>        
         <tr>
           <td class="dataTableConfig col-left"><?php echo TEXT_DELETE; ?></td>
-          <td class="dataTableConfig col-middle"><?php echo xtc_draw_checkbox_field('del_mo_pic[]', (isset($mo_images[$i]['image_name']) ? $mo_images[$i]['image_name'] : '')); ?></td>      
+          <td class="dataTableConfig col-middle"><?php echo xtc_draw_checkbox_field('del_mo_pic[]', (isset($mo_images[$_SESSION['languages_id']][$i]['image_name']) ? $mo_images[$_SESSION['languages_id']][$i]['image_name'] : '')); ?></td>      
         </tr>
+        <?php                
+          for ($l = 0, $n = sizeof($languages); $l < $n; $l++) {
+            ?>
+            <tr>
+              <td class="dataTableConfig col-left"><?php echo xtc_image(DIR_WS_LANGUAGES.$languages[$l]['directory'].'/admin/images/'.$languages[$l]['image']) . '&nbsp;' . TEXT_PRODUCTS_IMAGE_TITLE.' '. ($i +1); ?></td>
+              <td class="dataTableConfig col-right" colspan="2"><?php echo xtc_draw_input_field('image_title[' . ($i +1) . '][' . $languages[$l]['id'] . ']', $mo_images[$languages[$l]['id']][$i]['image_title']); ?></td>
+            </tr>
+            <tr>
+              <td class="dataTableConfig col-left"><?php echo xtc_image(DIR_WS_LANGUAGES.$languages[$l]['directory'].'/admin/images/'.$languages[$l]['image']) . '&nbsp;' . TEXT_PRODUCTS_IMAGE_ALT.' '. ($i +1); ?></td>
+              <td class="dataTableConfig col-right" colspan="2"><?php echo xtc_draw_input_field('image_alt[' . ($i +1) . '][' . $languages[$l]['id'] . ']', $mo_images[$languages[$l]['id']][$i]['image_alt']); ?></td>
+            </tr>
+            <?php
+          }          
+        ?>
       </table>
       <?php
       echo xtc_draw_hidden_field('products_previous_image_'. ($i +1), (isset($mo_images[$i]['image_name']) ? $mo_images[$i]['image_name'] : ''));

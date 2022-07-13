@@ -112,7 +112,11 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
         $mo_img = $product->productImage($img['image_name'], 'info');
         $mo_img_nr = $img['image_nr'];
         if ($mo_img != '') {
-          $more_images_data[$mo_img_nr] = array ('PRODUCTS_IMAGE' => $mo_img);
+          $more_images_data[$mo_img_nr] = array();
+          foreach ($img as $key => $value) {
+            $more_images_data[$mo_img_nr][strtoupper($key)] = $value;
+          }
+          $more_images_data[$mo_img_nr]['PRODUCTS_IMAGE'] = $mo_img;
         }
         foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/product_info_mo_images/','php') as $file) require ($file);
       }

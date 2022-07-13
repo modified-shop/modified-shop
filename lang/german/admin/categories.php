@@ -138,6 +138,8 @@ define('TEXT_PRODUCTS_DESCRIPTION', 'Artikelbeschreibung:');
 define('TEXT_PRODUCTS_QUANTITY', 'Lagerbestand:');
 define('TEXT_PRODUCTS_MODEL', 'Artikel-Nr.:');
 define('TEXT_PRODUCTS_IMAGE', 'Artikelbild:');
+define('TEXT_PRODUCTS_IMAGE_TITLE', 'Titel:');
+define('TEXT_PRODUCTS_IMAGE_ALT', 'Beschreibung:');
 define('TEXT_PRODUCTS_URL', 'Herstellerlink:');
 define('TEXT_PRODUCTS_URL_WITHOUT_HTTP', '<small>(ohne f&uuml;hrendes http://)</small>');
 define('TEXT_PRODUCTS_PRICE', 'Artikelpreis:');

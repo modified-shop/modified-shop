@@ -70,7 +70,7 @@
   <br />
   {foreach item=more_images_data from=$more_images}
   <div class="moimages cf">
-    <img src="{$more_images_data.PRODUCTS_IMAGE}" alt="{$PRODUCTS_NAME|onlytext}" title="{$PRODUCTS_NAME|onlytext}" border="0" />
+    <img src="{$more_images_data.PRODUCTS_IMAGE}" alt="{if $more_images_data.IMAGE_ALT != ''}{$more_images_data.IMAGE_ALT|onlytext}{else}{$PRODUCTS_NAME|onlytext}{/if}" title="{if $more_images_data.IMAGE_TITLE != ''}{$more_images_data.IMAGE_TITLE|onlytext}{else}{$PRODUCTS_NAME|onlytext}{/if}" border="0" />
   </div>
   {/foreach}
 

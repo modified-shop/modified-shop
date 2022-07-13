@@ -1393,6 +1393,34 @@ class categories {
         //set file rights
         $this->set_products_images_file_rights($products_image_name);
       }
+      
+      $mo_images_array = array();
+      $mo_images_query = xtc_db_query("SELECT *
+                                         FROM ".TABLE_PRODUCTS_IMAGES."
+                                        WHERE products_id = '".(int)$products_id."'");
+      while ($mo_images = xtc_db_fetch_array($mo_images_query)) {
+        $mo_images_array[$mo_images['image_nr']] = $mo_images;
+      }
+      
+      if (count($mo_images_array) > 0) {
+        xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_IMAGES_DESCRIPTION." WHERE products_id = '".(int)$products_id."'");
+
+        $languages = xtc_get_languages();
+        foreach ($mo_images_array as $mo_images) {        
+          foreach ($languages as $language) {
+            $sql_data_array = array(
+              'image_id' => $mo_images['image_id'],
+              'products_id' => $products_id,
+              'image_title' => (isset($products_data['image_title'][$mo_images['image_nr']]) ? $products_data['image_title'][$mo_images['image_nr']][$language['id']] : ''),
+              'image_alt' => (isset($products_data['image_alt'][$mo_images['image_nr']]) ? $products_data['image_alt'][$mo_images['image_nr']][$language['id']] : ''),
+              'language_id' => $language['id'],
+            );
+            
+            xtc_db_perform(TABLE_PRODUCTS_IMAGES_DESCRIPTION, $sql_data_array);
+          }
+        }
+      }
+
       //new module support
       $this->catModules->insert_mo_images_after($products_data,$img+1,$products_id);
     } 
