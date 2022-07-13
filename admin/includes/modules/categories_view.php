@@ -36,9 +36,9 @@
 
   define('CAT_VIEW_DROPDOWN', true); //remove dropdown field due to performance issues on many categories
   
-  if (!defined('MAX_DISPLAY_LIST_PRODUCTS')) {
-    define('MAX_DISPLAY_LIST_PRODUCTS', 50);     // display products per page
-  }
+  //display per page
+  $cfg_max_display_results_key = 'MAX_DISPLAY_LIST_PRODUCTS';
+  $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
 
   define('BOX_CAT_IMAGE_SIZE', '150px');
   $box_cat_image_size = 'style="max-width: '. BOX_CAT_IMAGE_SIZE .'; max-height: '.BOX_CAT_IMAGE_SIZE.';"';
@@ -55,8 +55,8 @@
   $search = (isset($_GET['search']) ? $_GET['search'] : '');
   $search_id = (isset($_GET['search_id']) ? $_GET['search_id'] : '');
 
-  $search_inactive = (isset($_GET['search_inactive']) && $_GET['search_inactive'] == 1 ? true : false);
-  $display_categories = !$search_inactive;
+  $display_cat = (isset($_GET['display_cat']) && $_GET['display_cat'] == 1 ? true : false);
+  $display_categories = (!isset($_GET['display_cat']) || $_GET['display_cat'] == 1 ? true : false);
 
   // get sorting option and switch accordingly
   $sorting = (isset($_GET['sorting']) ? $_GET['sorting'] : '');
@@ -154,29 +154,64 @@
       <div class="flt-l">
         <div class="pageHeading pdg2"><?php echo ((isset($category_name['categories_name'])) ? $category_name['categories_name'] : TEXT_TOP); ?></div>
         <div class="main pdg2"><?php echo HEADING_TITLE .sprintf(HEADING_TITLE_CAT_BREADCRUMB,$breadcrumb_html); ?></div>
-
       </div>
       <?php
       if (CAT_VIEW_DROPDOWN) {
       ?>
         <div class="smallText pdg2 flt-r">
          <?php
-            echo xtc_draw_form('goto', FILENAME_CATEGORIES, '', 'get');
-            echo '<span style="display:inline-block;line-height:30px;vertical-align:top;">' . HEADING_TITLE_GOTO . '</span> ' . xtc_draw_pull_down_menu('cPath', xtc_get_category_tree(), $current_category_id, 'onchange="this.form.submit();"');
+            echo xtc_draw_form('cPath', FILENAME_CATEGORIES, '', 'get');
+            echo '<span style="display:inline-block;line-height:30px;vertical-align:top;">' . HEADING_TITLE_GOTO . '</span> ' . xtc_draw_pull_down_menu('cPath', xtc_get_category_tree(), $current_category_id, 'style="margin-top: 3px;" onchange="this.form.submit();"');
+            echo xtc_draw_hidden_filter_field('mID', ((isset($_GET['mID'])) ? $_GET['mID'] : ''));
+            echo xtc_draw_hidden_filter_field('display_cat', ((isset($_GET['display_cat'])) ? $_GET['display_cat'] : ''));
+            echo xtc_draw_hidden_filter_field('status', ((isset($_GET['status'])) ? $_GET['status'] : ''));
+            echo xtc_draw_hidden_filter_field('search', ((isset($_GET['search'])) ? $_GET['search'] : ''));
+          ?>
+          </form>
+        </div>
+        <div class="smallText pdg2 flt-r" style="margin-right:20px;">
+         <?php
+            echo xtc_draw_form('mID', FILENAME_CATEGORIES, '', 'get');
+            echo '<span style="display:inline-block;line-height:30px;vertical-align:top;">' . HEADING_TITLE_MANUFACTURERS . '</span> ' . xtc_draw_pull_down_menu('mID', array_merge(array(array('id' => '', 'text' => ((isset($_GET['mID']) && $_GET['mID'] != '') ? TEXT_SHOW_ALL_MANUFACTURERS : TEXT_SELECT)), array('id' => 0, 'text' => TEXT_SHOW_NO_MANUFACTURERS)), xtc_get_manufacturers()), ((isset($_GET['mID']) && $_GET['mID'] != '') ? (int)$_GET['mID'] : ''), 'style="margin-top: 3px;" onchange="this.form.submit();"');
+            echo xtc_draw_hidden_filter_field('cPath', ((isset($_GET['cPath'])) ? $_GET['cPath'] : ''));
+            echo xtc_draw_hidden_filter_field('display_cat', ((isset($_GET['display_cat'])) ? $_GET['display_cat'] : ''));
+            echo xtc_draw_hidden_filter_field('status', ((isset($_GET['status'])) ? $_GET['status'] : ''));
+            echo xtc_draw_hidden_filter_field('search', ((isset($_GET['search'])) ? $_GET['search'] : ''));
           ?>
           </form>
         </div>
       <?php
       }
       ?> 
-      <div class="smallText pdg2 flt-r" style="margin-left:80px;">
+      <div class="smallText pdg2 flt-r" style="margin-right:20px;">
+       <?php
+          $select_data = array(
+            array('id' => '', 'text' => ((!isset($_GET['status']) || $_GET['status'] == '') ? TEXT_SELECT : TEXT_SHOW_ALL_PRODUCTS)), 
+          );
+          $select_data[] = array('id' => '1', 'text' => TEXT_SHOW_ALL_ACTIVE);
+          $select_data[] = array('id' => '0', 'text' => TEXT_SHOW_ALL_INACTIVE);
+          echo xtc_draw_form('status', FILENAME_CATEGORIES, '', 'get');
+          echo '<span style="display:inline-block;line-height:30px;vertical-align:top;">' . TEXT_PRODUCTS_STATUS . '</span> ' . xtc_draw_pull_down_menu('status', $select_data, ((isset($_GET['status']) && $_GET['status'] != '') ? (int)$_GET['status'] : ''), 'style="margin-top: 3px;" onchange="this.form.submit();"');
+          echo xtc_draw_hidden_filter_field('cPath', ((isset($_GET['cPath'])) ? $_GET['cPath'] : ''));
+          echo xtc_draw_hidden_filter_field('mID', ((isset($_GET['mID'])) ? $_GET['mID'] : ''));
+          echo xtc_draw_hidden_filter_field('display_cat', ((isset($_GET['display_cat'])) ? $_GET['display_cat'] : ''));
+          echo xtc_draw_hidden_filter_field('search', ((isset($_GET['search'])) ? $_GET['search'] : ''));
+        ?>
+        </form>
+      </div>
+
+      <div class="smallText pdg2 flt-r" style="margin-right:10px;">
         <?php
         echo xtc_draw_form('forminactive', FILENAME_CATEGORIES, '', 'get');
         if (isset($_GET['cPath'])) {
           echo '<input type="hidden" id="cPath" name="cPath" value="' . $cPath . '">';
         }
-        echo '<span style="display:inline-block;line-height:30px;vertical-align:top;">'. HEADING_TITLE_ONLY_INACTIVE_PRODUCTS .'</span>';
-        echo '<div style="display:inline;margin:0px 10px 0px 5px;">' . draw_on_off_selection('search_inactive', 'checkbox', $search_inactive, 'style="vertical-align:middle;" onclick="this.form.submit();"') . '</div>';
+        echo '<span style="display:inline-block;line-height:30px;vertical-align:top;">'. HEADING_TITLE_SHOW_CATEGORIES .'</span>';
+        echo '<div style="display:inline;margin:0px 10px 0px 5px;">' . draw_on_off_selection('display_cat', 'checkbox', $display_categories, 'style="vertical-align:middle;" onclick="this.form.submit();"') . '</div>';
+        echo xtc_draw_hidden_filter_field('cPath', ((isset($_GET['cPath'])) ? $_GET['cPath'] : ''));
+        echo xtc_draw_hidden_filter_field('mID', ((isset($_GET['mID'])) ? $_GET['mID'] : ''));
+        echo xtc_draw_hidden_filter_field('status', ((isset($_GET['status'])) ? $_GET['status'] : ''));
+        echo xtc_draw_hidden_filter_field('search', ((isset($_GET['search'])) ? $_GET['search'] : ''));
         ?>
         </form>
       </div>
@@ -464,6 +499,13 @@
                //where-string
                $where_str = " WHERE pd.language_id = '".(int) $_SESSION['languages_id']."'";
                $where_str .= ((int)$current_category_id > 0) ? " AND p2c.categories_id = '" . (int)$current_category_id ."'" : '';
+
+               if (isset($_GET['mID']) && $_GET['mID'] != '') {
+                 $where_str .= " AND p.manufacturers_id = '".(int)$_GET['mID']."'";
+               }
+               if (isset($_GET['status']) && $_GET['status'] != '') {
+                 $where_str .= " AND p.products_status = '".(int)$_GET['status']."'";
+               }
                
                //go for keywords... this is the main search process
                if (xtc_not_null($search)) {
@@ -528,23 +570,35 @@
 
                //glue together
                $listing_sql = $select_str.$from_str.$where_str;
-               $products_split = new splitPageResults($_GET['page'], MAX_DISPLAY_LIST_PRODUCTS, $listing_sql, $products_query_numrows, 'p.products_id');
+               $products_split = new splitPageResults($_GET['page'], $page_max_display_results, $listing_sql, $products_query_numrows, 'p.products_id');
                $products_query = xtc_db_query($listing_sql);
              } else {
+                $add_where = '';
+                $add_join = '';
+                //display products from a manufacturer
+                if (isset($_GET['mID']) && $_GET['mID'] != '') {
+                  $add_where = "WHERE p.manufacturers_id = '".(int)$_GET['mID']."'";
+                  if ($current_category_id == 0 && $display_categories) {
+                    $add_where .= " AND p.products_startpage = 1";
+                  } else {
+                    if ($display_categories) {
+                      $add_join = "JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c ON p.products_id = p2c.products_id AND p2c.categories_id = '" . $current_category_id . "'";
+                    }
+                  }
                 //display "products on startpage", no entry in table produtcs_to_categories used
-                if ($current_category_id == 0) {
+                } elseif ($current_category_id == 0 && $display_categories) {
                   $add_where = 'WHERE p.products_startpage = 1';
-                  $add_join = '';
                 //display products in categories
                 } else {
-                  $add_where = '';
-                  $add_join = "JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c ON p.products_id = p2c.products_id AND p2c.categories_id = '" . $current_category_id . "'";
+                  if ($display_categories) {
+                    $add_join = "JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c ON p.products_id = p2c.products_id AND p2c.categories_id = '" . $current_category_id . "'";
+                  }
                 }
-                //display only inactive products
-                if ($search_inactive) {
-                  $add_where = ' WHERE p.products_status = 0 ';
-                  $add_join = '';
-                } 
+                
+                if (isset($_GET['status']) && $_GET['status'] != '') {
+                  $add_where .= (($add_where != '') ? " AND" : " WHERE")." p.products_status = '".(int)$_GET['status']."'";
+                }
+                
                 $add_join .= "LEFT OUTER JOIN ".TABLE_SPECIALS." AS s ON (p.products_id = s.products_id) AND s.status = '1' AND (now() >= s.start_date OR s.start_date IS NULL) ";
                 $add_select = 's.specials_new_products_price,specials_quantity,expires_date,s.status as specials_status,';
                 
@@ -574,7 +628,8 @@
                             LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON p.products_id = pd.products_id AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
                                       " . $add_join . $add_where ."
                              ORDER BY " . $prodsort;
-                $products_split = new splitPageResults($_GET['page'], MAX_DISPLAY_LIST_PRODUCTS, $select_str, $products_query_numrows);
+                
+                $products_split = new splitPageResults($_GET['page'], $page_max_display_results, $select_str, $products_query_numrows);
                 $products_query = xtc_db_query($select_str);
              }
 
@@ -1038,8 +1093,9 @@
         <tr>
           <td>
             <!-- PAGINATION-->
-            <div class="smallText pdg2 flt-l"><?php echo $products_split->display_count($products_query_numrows, MAX_DISPLAY_LIST_PRODUCTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS); ?></div>
-            <div class="smallText pdg2 flt-r"><?php echo $products_split->display_links($products_query_numrows, MAX_DISPLAY_LIST_PRODUCTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], xtc_get_all_get_params(array('page', 'action', 'pID', 'cID')) ); ?></div>
+            <div class="smallText pdg2 flt-l"><?php echo $products_split->display_count($products_query_numrows, $page_max_display_results, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS); ?></div>
+            <div class="smallText pdg2 flt-r"><?php echo $products_split->display_links($products_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], xtc_get_all_get_params(array('page', 'action', 'pID', 'cID')) ); ?></div>
+            <?php echo draw_input_per_page($PHP_SELF,$cfg_max_display_results_key,$page_max_display_results); ?>
           </td>
           <td>&nbsp;</td>
         </tr>

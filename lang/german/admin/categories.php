@@ -22,6 +22,8 @@ define('TEXT_EDIT_STATUS', 'Status aktiv');
 define('HEADING_TITLE', 'Kategorien');
 define('HEADING_TITLE_SEARCH', 'Suche: ');
 define('HEADING_TITLE_GOTO', 'Gehe zu:');
+define('HEADING_TITLE_MANUFACTURERS', 'Hersteller:');
+define('HEADING_TITLE_SHOW_CATEGORIES', 'Kategorien anzeigen:');
 
 define('TABLE_HEADING_ID', 'ID');
 define('TABLE_HEADING_CATEGORIES_PRODUCTS', 'Kategorien / Artikel');
@@ -43,6 +45,11 @@ define('TEXT_ACTIVE_ELEMENT','Aktives Element');
 define('TEXT_MARKED_ELEMENTS','Markierte Elemente');
 define('TEXT_INFORMATIONS','Informationen');
 define('TEXT_INSERT_ELEMENT','Neues Element');
+define('TEXT_SHOW_NO_MANUFACTURERS', 'Ohne Hersteller');
+define('TEXT_SHOW_ALL_MANUFACTURERS', 'Alle Hersteller');
+define('TEXT_SHOW_ALL_PRODUCTS', 'Alle Artikel');
+define('TEXT_SHOW_ALL_ACTIVE', 'aktive');
+define('TEXT_SHOW_ALL_INACTIVE', 'inaktive');
 
 define('TEXT_WARN','Bestandswarnung:');
 define('TEXT_WARN_MAIN','Hauptartikel');

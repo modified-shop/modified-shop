@@ -671,7 +671,7 @@ $values_group_update = array();
   $values[] = "(NULL, 'USE_ADMIN_THUMBS_IN_LIST', 'true', '1000', '32', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
   $values[] = "(NULL, 'USE_ADMIN_THUMBS_IN_LIST_STYLE', 'max-width:40px;max-height:40px;', '1000', '33', NULL, NOW(), NULL, NULL);";
   $values[] = "(NULL, 'MAX_DISPLAY_ORDER_RESULTS', '30', '1000', '-1', NULL , NOW(), NULL , NULL);";
-  $values[] = "(NULL, 'MAX_DISPLAY_LIST_PRODUCTS', '50', '1000', '51', NULL , NOW(), NULL , NULL);";
+  //$values[] = "(NULL, 'MAX_DISPLAY_LIST_PRODUCTS', '50', '1000', '51', NULL , NOW(), NULL , NULL);";
   $values[] = "(NULL, 'MAX_DISPLAY_LIST_CUSTOMERS', '100', '1000', '-1', NULL , NOW(), NULL , NULL);";
   $values[] = "(NULL, 'WHOS_ONLINE_TIME_LAST_CLICK', '900', '1000', '60', NULL, NOW(), NULL, NULL);";
   $values[] = "(NULL, 'WHOS_ONLINE_IP_WHOIS_SERVICE', 'http://www.utrace.de/?query=', '1000', '62', NULL, NOW(), NULL, NULL);"; 
@@ -705,6 +705,10 @@ $values_group_update = array();
   $values_update[] = array (
                            'values' => "configuration_group_id = '1000', sort_order = '-1'",
                            'configuration_key' => 'MAX_DISPLAY_ORDER_RESULTS'
+                           );
+  $values_update[] = array (
+                           'values' => "configuration_group_id = '1000', sort_order = '-1'",
+                           'configuration_key' => 'MAX_DISPLAY_LIST_PRODUCTS'
                            );
 
 //##############################//

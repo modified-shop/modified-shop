@@ -22,13 +22,18 @@
     
     if (!is_array($manufacturers_array)) $manufacturers_array = array();
 
+    $conditions = '';
+    if (!defined('RUN_MODE_ADMIN')) {
+      $conditions .= " WHERE m.manufacturers_status = 1 ";
+    }
+
     $manufacturers_query = xtDBquery("SELECT *
                                         FROM " . TABLE_MANUFACTURERS . " m
                                         JOIN " . TABLE_MANUFACTURERS_INFO . " mi
                                              ON m.manufacturers_id = mi.manufacturers_id
                                                 AND mi.languages_id = '" . (int)$_SESSION['languages_id'] . "'
-                                       WHERE m.manufacturers_status = 1
-                                    ORDER BY m.manufacturers_name");
+                                             ".$conditions."
+                                    ORDER BY m.sort_order, m.manufacturers_name");
     while ($manufacturers = xtc_db_fetch_array($manufacturers_query, true)) {
       $manufacturers['manufacturers_image'] = str_replace('manufacturers/', '', $manufacturers['manufacturers_image']);
       $manufacturers_array[$manufacturers['manufacturers_id']] = $manufacturers;

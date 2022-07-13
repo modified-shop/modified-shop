@@ -35,6 +35,7 @@ require_once (DIR_FS_INC.'xtc_wysiwyg.inc.php');
 require_once (DIR_FS_INC.'xtc_get_order_description.inc.php');
 require_once (DIR_FS_INC.'xtc_parse_category_path.inc.php');
 require_once (DIR_FS_INC.'parse_multi_language_value.inc.php');
+require_once (DIR_FS_INC.'xtc_get_manufacturers.inc.php');
 
 // include needed classes
 require_once (DIR_WS_CLASSES.FILENAME_IMAGEMANIPULATOR);
@@ -56,7 +57,7 @@ if (xtc_not_null($function)) {
                                  AND quantity    = '".(int) $_GET['quantity']."'");
       break;
   }
-  xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, 'cPath='.$_GET['cPath'].'&action=new_product&pID='.(int) $_GET['pID'].$catfunc->page_parameter));
+  xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('action', 'page')).'action=new_product'.$catfunc->page_parameter));
 }
 
 // Multi-Status Change, separated from $_GET['action'] //$action
@@ -74,7 +75,7 @@ if (isset ($_POST['multi_status_on'])) {
       $catfunc->set_product_status((int)$product_id, '1');
     }
   }
-  xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array ('cPath', 'action', 'pID', 'cID')).'cPath='.$_GET['cPath']));
+  xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('action', 'pID', 'cID'))));
 }
 
 if (isset ($_POST['multi_status_off'])) {
@@ -90,12 +91,12 @@ if (isset ($_POST['multi_status_off'])) {
       $catfunc->set_product_status((int)$product_id, "0");
     }
   }
-  xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array ('cPath', 'action', 'pID', 'cID')).'cPath='.$_GET['cPath']));
+  xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('action', 'pID', 'cID'))));
 }
 // --- MULTI STATUS ENDS ---
 
 //regular actions
-$redirect_parameters = array ('action', 'flag', 'page');
+$redirect_parameters = array('action', 'flag', 'page');
 if (isset($_GET['search']) && $_GET['search'] != '') {
   array_push($redirect_parameters, 'cPath');
 }
@@ -128,7 +129,7 @@ if (xtc_not_null($action)) {
           $catfunc->set_product_remove_startpage_sql($_GET['pID'], $_GET['flag']);
         }
       }
-      xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params($redirect_parameters).$catfunc->page_parameter_plain));
+      xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('action', 'pID', 'cID', 'flag'))));
       break;
       //EOB setsflag
     case 'update_category' :
@@ -148,7 +149,7 @@ if (xtc_not_null($action)) {
       break;
     case 'insert_category' :
       $categories_id = $catfunc->insert_category($_POST, $current_category_id);
-      xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_path($categories_id).'&cID='.$categories_id)); 
+      xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')).xtc_get_path($categories_id).'&cID='.$categories_id)); 
       break;
     case 'update_product' :
       if (isset($_POST['action']) && $_POST['action'] == 'update_stock') {
@@ -163,11 +164,11 @@ if (xtc_not_null($action)) {
       if (isset($_GET['origin']) && $_GET['origin'] != '') {
         xtc_redirect(xtc_href_link(basename($_GET['origin']), 'pID='.$result['products_id'].$catfunc->page_parameter));
       }
-      xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_path($current_category_id).'&pID='.$result['products_id'].$catfunc->page_parameter));
+      xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID', 'page')).xtc_get_path($current_category_id).'&pID='.$result['products_id'].$catfunc->page_parameter));
       break;
     case 'insert_product' :
       $result = $catfunc->insert_product($_POST, $current_category_id);
-      xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_path($current_category_id).'&pID='.$result['products_id'].$catfunc->page_parameter));
+      xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID', 'page')).xtc_get_path($current_category_id).'&pID='.$result['products_id'].$catfunc->page_parameter));
       break;
     case 'edit_crossselling' :
       $catfunc->edit_cross_sell($_REQUEST);
@@ -227,7 +228,7 @@ if (xtc_not_null($action)) {
             $catfunc->move_product($product_id, $src_category_id, $dest_category_id);
           }
         }
-        xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array ('cPath', 'action', 'pID', 'cID')).'cPath='.$dest_category_id));
+        xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')).'cPath='.$dest_category_id));
       }
       // --- MULTI MOVE ENDS ---
 
@@ -244,7 +245,7 @@ if (xtc_not_null($action)) {
           if (!isset($_POST['dest_cat_ids']) && isset($_POST['dest_category_id'])) {
             $_POST['dest_cat_ids'] = array($_POST['dest_category_id']);
           }
-          $_SESSION['copied'] = array ();
+          $_SESSION['copied'] = array();
           foreach ($_POST['multi_categories'] AS $category_id) {
             if (isset($_POST['dest_cat_ids']) && is_array($_POST['dest_cat_ids'])) {
               foreach ($_POST['dest_cat_ids'] AS $dest_category_id) {
@@ -309,10 +310,10 @@ if (xtc_not_null($action)) {
 
         $action = isset($_POST['multi_products']) && is_array($_POST['multi_products']) && isset($_POST['link_to_product']) ? '&action=new_product' : '';
         $pID = isset($pID) && $pID > 0 ? '&pID='. $pID : '';
-        xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array ('cPath', 'action', 'pID', 'cID')).'cPath='.$dest_category_id.$pID.$action));
+        xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')).'cPath='.$dest_category_id.$pID.$action));
       }
       // --- MULTI COPY ENDS ---
-      xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array ('cPath', 'action', 'pID', 'cID')).'cPath='.$_GET['cPath']));
+      xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('action', 'pID', 'cID'))));
       break;
       #EOB multi_action_confirm
   }

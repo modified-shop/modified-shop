@@ -86,7 +86,7 @@
   );
 
   $form_action = isset($_GET['cID']) ? 'update_category' : 'insert_category';    
-  echo xtc_draw_form('new_category', FILENAME_CATEGORIES, 'cPath=' . $cPath . ((isset($_GET['cID'])) ? '&cID=' . (int)$_GET['cID'] : '') . '&action='.$form_action, 'post', 'enctype="multipart/form-data"' . $confirm_submit);
+  echo xtc_draw_form('new_category', FILENAME_CATEGORIES, xtc_get_all_get_params(array('action', 'cPath')).'cPath=' . $cPath . '&action='.$form_action, 'post', 'enctype="multipart/form-data"' . $confirm_submit);
 ?>
 <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_news.png'); ?></div>
 <div class="pageHeading"><?php echo $cInfo->categories_name; ?><br /></div>

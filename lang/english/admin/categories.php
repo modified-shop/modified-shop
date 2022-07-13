@@ -22,6 +22,8 @@ define('TEXT_EDIT_STATUS', 'Status active');
 define('HEADING_TITLE', 'Categories');
 define('HEADING_TITLE_SEARCH', 'Search: ');
 define('HEADING_TITLE_GOTO', 'Go To:');
+define('HEADING_TITLE_MANUFACTURERS', 'Manufacturer:');
+define('HEADING_TITLE_SHOW_CATEGORIES', 'display Categories:');
 
 define('TABLE_HEADING_ID', 'ID');
 define('TABLE_HEADING_CATEGORIES_PRODUCTS', 'Categories / Products');
@@ -43,6 +45,11 @@ define('TEXT_ACTIVE_ELEMENT','Active Element');
 define('TEXT_INFORMATIONS','Informations');
 define('TEXT_MARKED_ELEMENTS','Marked Elements');
 define('TEXT_INSERT_ELEMENT','New Element');
+define('TEXT_SHOW_NO_MANUFACTURERS', 'without Manufacturers');
+define('TEXT_SHOW_ALL_MANUFACTURERS', 'all Manufacturers');
+define('TEXT_SHOW_ALL_PRODUCTS', 'all Products');
+define('TEXT_SHOW_ALL_ACTIVE', 'active');
+define('TEXT_SHOW_ALL_INACTIVE', 'inactive');
 
 define('TEXT_WARN','Stock Warning:');
 define('TEXT_WARN_MAIN','Main product');
