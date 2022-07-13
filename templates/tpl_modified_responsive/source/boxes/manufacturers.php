@@ -43,7 +43,7 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_manufacturers.html', $c
                                         ".CATEGORIES_CONDITIONS_C."
                            WHERE m.manufacturers_status = 1
                         GROUP BY m.manufacturers_id 
-                        ORDER BY m.manufacturers_name ASC";
+                        ORDER BY m.sort_order, m.manufacturers_name ASC";
   $manufacturers_query = xtDBquery($manufacturers_query);
   $manufacturers_count = xtc_db_num_rows($manufacturers_query, true);
   if ($manufacturers_count > 0) {
