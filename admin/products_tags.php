@@ -54,7 +54,9 @@
   $dir_values = DIR_FS_CATALOG_IMAGES . 'tags/';
   $accepted_values_image_files_extensions = array("jpg","jpeg","jpe","gif","png","bmp","tiff","tif","bmp");
   $accepted_values_image_files_mime_types = array("image/jpeg","image/gif","image/png","image/bmp");
-
+  
+  $icon_padding = 'style="padding-right:8px;"';
+  
   $languages = xtc_get_languages();
 
   function xtc_get_values_detail($values_id, $languages_id, $db_field) {
@@ -565,7 +567,7 @@ require (DIR_WS_INCLUDES.'head.php');
                   }
                   ?>
                   <td class="dataTableContent" style="width:50px;"><?php echo $options['sort_order']; ?></td>
-                  <td class="dataTableContent"><?php echo '<a href="' . xtc_href_link(FILENAME_PRODUCTS_TAGS, 'page=' . $page . '&oID=' . $options['options_id'] . '&action=list') . '">' . xtc_image(DIR_WS_ICONS . 'folder.gif', ICON_FOLDER) . '</a>&nbsp;' . $options['options_name']; ?></td>
+                  <td class="dataTableContent"><?php echo '<a href="' . xtc_href_link(FILENAME_PRODUCTS_TAGS, 'page=' . $page . '&oID=' . $options['options_id'] . '&action=list') . '">' . xtc_image(DIR_WS_ICONS . 'folder.gif', ICON_FOLDER, '', '', $icon_padding) . '</a>&nbsp;<span style="vertical-align: 3px;">' . $options['options_name'] . '</span>'; ?></td>
                   <td class="dataTableContent"><?php echo $options['options_description']; ?></td>
                   <td class="dataTableContent"><?php echo (($options['options_content_group'] > 0) ? xtc_cfg_display_content($options['options_content_group']) : '&nbsp;'); ?></td>
                   <td class="dataTableContent">
