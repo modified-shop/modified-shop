@@ -24,8 +24,8 @@
     }
 
     $customer_notified = 0;
-    if ($_POST['notify'] == 'on' || $email_preview) {
-      $notify_comments = ($_POST['notify_comments'] == 'on') ? $comments : '';        
+    if ((isset($_POST['notify']) && $_POST['notify'] == 'on') || $email_preview) {
+      $notify_comments = (isset($_POST['notify_comments']) && $_POST['notify_comments'] == 'on') ? $comments : '';        
       //fallback gender modified < 2.00
       if (!isset($order->customer['gender']) || empty($order->customer['gender'])) {
         $gender_query = xtc_db_query("SELECT customers_gender
@@ -120,7 +120,7 @@
       'date_added' => 'now()',
       'customer_notified' => $customer_notified,
       'comments' => $comments,
-      'comments_sent' => ($_POST['notify_comments'] == 'on' ? 1 : 0)
+      'comments_sent' => ((isset($_POST['notify_comments']) && $_POST['notify_comments'] == 'on') ? 1 : 0)
     );
     xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY,$sql_data_array);
     $order_updated = true;
