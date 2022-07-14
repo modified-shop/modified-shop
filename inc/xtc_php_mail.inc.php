@@ -82,14 +82,15 @@ function xtc_php_mail($from_email_address, $from_email_name,
   // load the signatures only, if the appropriate file(s) exists
   $html_signatur = '';
   $txt_signatur = '';
-  if (file_exists(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$lang_data['directory'].'/signatur.html')) {
+  if (EMAIL_SIGNATURE_ID != '') {
     $shop_content_data = $main->getContentData(EMAIL_SIGNATURE_ID, $lang_data['languages_id'], ((isset($customers_status)) ? $customers_status : DEFAULT_CUSTOMERS_STATUS_ID_GUEST));    
     $mailsmarty->assign('SIGNATURE_HTML', $shop_content_data['content_text']);
+    $mailsmarty->assign('SIGNATURE_TXT', $shop_content_data['content_text']);
+  }
+  if (file_exists(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$lang_data['directory'].'/signatur.html')) {
     $html_signatur = $mailsmarty->fetch(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$lang_data['directory'].'/signatur.html'); 
   }
   if (file_exists(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$lang_data['directory'].'/signatur.txt')) {
-    $shop_content_data = $main->getContentData(EMAIL_SIGNATURE_ID, $lang_data['languages_id'], ((isset($customers_status)) ? $customers_status : DEFAULT_CUSTOMERS_STATUS_ID_GUEST));
-    $mailsmarty->assign('SIGNATURE_TXT', $shop_content_data['content_text']);
     $txt_signatur = $mailsmarty->fetch(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$lang_data['directory'].'/signatur.txt'); 
   }
 
