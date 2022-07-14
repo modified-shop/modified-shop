@@ -462,7 +462,7 @@ class categories {
     }
 
     //delete more images
-    $mo_images_query = xtc_db_query("SELECT image_name 
+    $mo_images_query = xtc_db_query("SELECT * 
                                        FROM ".TABLE_PRODUCTS_IMAGES." 
                                       WHERE products_id = '".(int)$product_id."'");
     while ($mo_images_values = xtc_db_fetch_array($mo_images_query)) {
@@ -472,6 +472,7 @@ class categories {
       $duplicate_more_image = xtc_db_fetch_array($duplicate_more_image_query);
       if ($duplicate_more_image['total'] < 2) {
         xtc_del_image_file($mo_images_values['image_name']);
+        xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_IMAGES_DESCRIPTION." WHERE image_id = '".(int)$mo_images_values['image_id']."'");
       }
     }
 
@@ -901,29 +902,41 @@ class categories {
     xtc_db_perform(TABLE_PRODUCTS_TO_CATEGORIES, $sql_data_array);                   
 
     //mo_images
-    $mo_images = xtc_get_products_mo_images($src_products_id);
-    if (is_array($mo_images)) {
-      foreach ($mo_images AS $dummy => $mo_img) {
-        //build new image_name for duplicate
-        $pname_arr = explode('.', $mo_img['image_name']);
-        $nsuffix = array_pop($pname_arr);
-        $dup_products_image_name = $this->image_name($this->dup_products_id, $mo_img['image_nr'], $nsuffix, $pname_arr, $src_products_id, $product);
-        //copy org images to duplicate
-        copy(DIR_FS_CATALOG_ORIGINAL_IMAGES.'/'.$mo_img['image_name'], DIR_FS_CATALOG_ORIGINAL_IMAGES.'/'.$dup_products_image_name);
-        copy(DIR_FS_CATALOG_POPUP_IMAGES.'/'.$mo_img['image_name'], DIR_FS_CATALOG_POPUP_IMAGES.'/'.$dup_products_image_name);
-        copy(DIR_FS_CATALOG_INFO_IMAGES.'/'.$mo_img['image_name'], DIR_FS_CATALOG_INFO_IMAGES.'/'.$dup_products_image_name);
-        copy(DIR_FS_CATALOG_MIDI_IMAGES.'/'.$mo_img['image_name'], DIR_FS_CATALOG_MIDI_IMAGES.'/'.$dup_products_image_name);
-        copy(DIR_FS_CATALOG_THUMBNAIL_IMAGES.'/'.$mo_img['image_name'], DIR_FS_CATALOG_THUMBNAIL_IMAGES.'/'.$dup_products_image_name);
-        copy(DIR_FS_CATALOG_MINI_IMAGES.'/'.$mo_img['image_name'], DIR_FS_CATALOG_MINI_IMAGES.'/'.$dup_products_image_name);
-        $this->set_products_images_file_rights($dup_products_image_name);
+    $mo_images_query = xtc_db_query("SELECT *
+                                       FROM ".TABLE_PRODUCTS_IMAGES."
+                                      WHERE products_id = '".(int)$src_products_id."'");
+    while ($mo_images = xtc_db_fetch_array($mo_images_query)) {     
+      //build new image_name for duplicate
+      $pname_arr = explode('.', $mo_images['image_name']);
+      $nsuffix = array_pop($pname_arr);
+      $dup_products_image_name = $this->image_name($this->dup_products_id, $mo_images['image_nr'], $nsuffix, $pname_arr, $src_products_id, $product);
+      //copy org images to duplicate
+      copy(DIR_FS_CATALOG_ORIGINAL_IMAGES.'/'.$mo_images['image_name'], DIR_FS_CATALOG_ORIGINAL_IMAGES.'/'.$dup_products_image_name);
+      copy(DIR_FS_CATALOG_POPUP_IMAGES.'/'.$mo_images['image_name'], DIR_FS_CATALOG_POPUP_IMAGES.'/'.$dup_products_image_name);
+      copy(DIR_FS_CATALOG_INFO_IMAGES.'/'.$mo_images['image_name'], DIR_FS_CATALOG_INFO_IMAGES.'/'.$dup_products_image_name);
+      copy(DIR_FS_CATALOG_MIDI_IMAGES.'/'.$mo_images['image_name'], DIR_FS_CATALOG_MIDI_IMAGES.'/'.$dup_products_image_name);
+      copy(DIR_FS_CATALOG_THUMBNAIL_IMAGES.'/'.$mo_images['image_name'], DIR_FS_CATALOG_THUMBNAIL_IMAGES.'/'.$dup_products_image_name);
+      copy(DIR_FS_CATALOG_MINI_IMAGES.'/'.$mo_images['image_name'], DIR_FS_CATALOG_MINI_IMAGES.'/'.$dup_products_image_name);
+      $this->set_products_images_file_rights($dup_products_image_name);
+    
+      //write to DB
+      $sql_data_array = $mo_images;
+      unset($sql_data_array['image_id']);
+      $sql_data_array['products_id'] = $this->dup_products_id;
+      $sql_data_array['image_name'] = $dup_products_image_name;
 
-        //write to DB
-        $sql_data_array = $mo_img;
-        unset($sql_data_array['image_id']);
+      xtc_db_perform(TABLE_PRODUCTS_IMAGES, $sql_data_array);
+      $image_id = xtc_db_insert_id();
+
+      $mo_images_desc_query = xtc_db_query("SELECT *
+                                              FROM ".TABLE_PRODUCTS_IMAGES_DESCRIPTION."
+                                             WHERE image_id = '".(int)$mo_images['image_id']."'");
+      while ($mo_images_desc = xtc_db_fetch_array($mo_images_desc_query)) {
+        $sql_data_array = $mo_images_desc;
+        $sql_data_array['image_id'] = $image_id;
         $sql_data_array['products_id'] = $this->dup_products_id;
-        $sql_data_array['image_name'] = $dup_products_image_name;
-
-        xtc_db_perform(TABLE_PRODUCTS_IMAGES, $sql_data_array);
+        
+        xtc_db_perform(TABLE_PRODUCTS_IMAGES_DESCRIPTION, $sql_data_array);
       }
     }
     
