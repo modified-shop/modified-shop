@@ -52,7 +52,7 @@ if ($_GET['action'] == 'new_product') {
     for ($l = 0, $n = sizeof($languages); $l < $n; $l++) {
       $mo_images[$languages[$l]['id']] = xtc_get_products_mo_images($pInfo->products_id, $languages[$l]['id']);
     }
-        
+       
     for ($i = 0; $i < MO_PICS; $i ++) {
       ?>
       <div class="clear">&nbsp;</div>
@@ -75,11 +75,11 @@ if ($_GET['action'] == 'new_product') {
             ?>
             <tr>
               <td class="dataTableConfig col-left"><?php echo xtc_image(DIR_WS_LANGUAGES.$languages[$l]['directory'].'/admin/images/'.$languages[$l]['image']) . '&nbsp;' . TEXT_PRODUCTS_IMAGE_TITLE.' '. ($i +1); ?></td>
-              <td class="dataTableConfig col-right" colspan="2"><?php echo xtc_draw_input_field('image_title[' . ($i +1) . '][' . $languages[$l]['id'] . ']', $mo_images[$languages[$l]['id']][$i]['image_title']); ?></td>
+              <td class="dataTableConfig col-right" colspan="2"><?php echo xtc_draw_input_field('image_title[' . ($i +1) . '][' . $languages[$l]['id'] . ']', isset($mo_images[$languages[$l]['id']][$i]) ? $mo_images[$languages[$l]['id']][$i]['image_title'] : ''); ?></td>
             </tr>
             <tr>
               <td class="dataTableConfig col-left"><?php echo xtc_image(DIR_WS_LANGUAGES.$languages[$l]['directory'].'/admin/images/'.$languages[$l]['image']) . '&nbsp;' . TEXT_PRODUCTS_IMAGE_ALT.' '. ($i +1); ?></td>
-              <td class="dataTableConfig col-right" colspan="2"><?php echo xtc_draw_input_field('image_alt[' . ($i +1) . '][' . $languages[$l]['id'] . ']', $mo_images[$languages[$l]['id']][$i]['image_alt']); ?></td>
+              <td class="dataTableConfig col-right" colspan="2"><?php echo xtc_draw_input_field('image_alt[' . ($i +1) . '][' . $languages[$l]['id'] . ']', isset($mo_images[$languages[$l]['id']][$i]) ? $mo_images[$languages[$l]['id']][$i]['image_alt'] : ''); ?></td>
             </tr>
             <?php
           }          

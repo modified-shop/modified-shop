@@ -45,7 +45,7 @@
   
   $icon_padding = 'style="padding-right:8px;"';
   
-  if( defined('USE_ADMIN_THUMBS_IN_LIST_STYLE')) {
+  if (defined('USE_ADMIN_THUMBS_IN_LIST_STYLE')) {
     $admin_thumbs_size = 'style="'.USE_ADMIN_THUMBS_IN_LIST_STYLE.'"';
   } else {
     $admin_thumbs_size = 'style="max-width: 40px; max-height: 40px;"';
@@ -249,7 +249,7 @@
                   <?php echo TABLE_HEADING_SORT.xtc_sorting(FILENAME_CATEGORIES,'sort'); ?>
                 </td>
                 <?php
-                if( USE_ADMIN_THUMBS_IN_LIST=='true' ) {
+                if (USE_ADMIN_THUMBS_IN_LIST=='true') {
                   ?>
                   <td class="dataTableHeadingContent txta-c" style="width:10%">
                     <?php echo TABLE_HEADING_IMAGE.xtc_sorting(FILENAME_CATEGORIES,'image'); ?>
@@ -284,12 +284,13 @@
              </tr>
              <?php
 
-            if($display_categories){
+            $categories_count = 0;
+            $rows = 0;
+            
+            if ($display_categories) {
                // ----------------------------------------------------------------------------------------------------- //
                // WHILE loop to display categories STARTS
                // ----------------------------------------------------------------------------------------------------- //
-               $categories_count = 0;
-               $rows = 0;
                if (xtc_not_null($search) || xtc_not_null($search_id)) { 
                  $where_search = " AND cd.categories_name like '%" . xtc_db_input($search) . "%' ";
                  if (xtc_not_null($search_id)) {
@@ -669,7 +670,7 @@
                    <?php echo xtc_draw_checkbox_field('multi_products[]', $products['products_id'], $is_checked); ?>
                  </td>
                  <?php
-                 if ($products['products_model'] !='' ){
+                 if ($products['products_model'] !='' ) {
                    ?>
                    <td class="categories_view_data txta-c">
                      <?php echo $products['products_model']; ?>
@@ -683,7 +684,7 @@
                  ?>
                  <td class="categories_view_data txta-c">
                    <?php
-                   if ($current_category_id == 0){
+                   if ($current_category_id == 0) {
                        echo $products['products_startpage_sort'];
                    } else {
                        echo $products['products_sort'];
@@ -691,7 +692,7 @@
                    ?>
                  </td>
                  <?php
-                 if( USE_ADMIN_THUMBS_IN_LIST=='true' ) { ?>
+                 if (USE_ADMIN_THUMBS_IN_LIST=='true') { ?>
                    <td class="categories_view_data txta-c">
                      <?php
                      echo xtc_product_thumb_image($products['products_image'], $products['products_name'], '','',$admin_thumbs_size);
@@ -1039,7 +1040,7 @@
                   $price = $pInfo->products_price;
                   $price = xtc_round($price,PRICE_PRECISION);
                   $price_string = '' . TEXT_PRODUCTS_PRICE_INFO . '&nbsp;' . $currencies->format($price);
-                  if (PRICE_IS_BRUTTO == 'true' && ((isset($_GET['read']) && $_GET['read'] == 'only') || $action != 'new_product_preview') ){
+                  if (PRICE_IS_BRUTTO == 'true' && ((isset($_GET['read']) && $_GET['read'] == 'only') || $action != 'new_product_preview')) {
                     $price_netto = xtc_round($price,PRICE_PRECISION);
                     $price = ($price*(xtc_get_tax_rate($pInfo->products_tax_class_id)+100)/100);
                     $price_string = '' . TEXT_PRODUCTS_PRICE_INFO . '&nbsp;' . $currencies->format($price) . '<br/>' . TXT_NETTO . $currencies->format($price_netto);
@@ -1051,7 +1052,7 @@
                     $special_price = $pInfo->specials_new_products_price;
                     $special_price = xtc_round($special_price,PRICE_PRECISION);
                     $specials_price_string = '' . TEXT_SPECIALS_SPECIAL_PRICE . '&nbsp;' . $currencies->format($special_price);
-                    if (PRICE_IS_BRUTTO == 'true' && ((isset($_GET['read']) && $_GET['read'] == 'only') || $action != 'new_product_preview') ){
+                    if (PRICE_IS_BRUTTO == 'true' && ((isset($_GET['read']) && $_GET['read'] == 'only') || $action != 'new_product_preview')) {
                       $special_price_netto = xtc_round($special_price,PRICE_PRECISION);
                       $special_price = ($special_price*(xtc_get_tax_rate($pInfo->products_tax_class_id)+100)/100);
                       $specials_price_string = '' . TEXT_SPECIALS_SPECIAL_PRICE . '&nbsp;' . $currencies->format($special_price) . '<br/>' . TXT_NETTO . $currencies->format($special_price_netto);
