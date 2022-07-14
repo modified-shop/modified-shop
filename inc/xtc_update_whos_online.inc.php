@@ -26,7 +26,11 @@
       return;
     }
 
-    if (in_array(basename($PHP_SELF), array('ajax.php', 'display_vvcodes.php'))) {
+    if (in_array(basename($PHP_SELF), array('ajax.php', 'display_vvcodes.php'))
+        || strpos($PHP_SELF, 'callback/') !== false
+        || strpos($PHP_SELF, 'api/') !== false
+        )
+    {
       return;
     }
     
