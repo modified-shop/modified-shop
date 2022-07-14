@@ -71,9 +71,9 @@
         if ( ($this->enabled == true) && ((int)MODULE_PAYMENT_BANKTRANSFER_ZONE > 0) ) {
           $check_flag = false;
           $check_query = xtc_db_query("SELECT zone_id 
-                                         FROM " . TABLE_ZONES_TO_GEO_ZONES . " 
-                                        WHERE geo_zone_id = '" . MODULE_PAYMENT_BANKTRANSFER_ZONE . "' 
-                                          AND zone_country_id = '" . $order->billing['country']['id'] . "' 
+                                         FROM ".TABLE_ZONES_TO_GEO_ZONES." 
+                                        WHERE geo_zone_id = '".(int)MODULE_PAYMENT_BANKTRANSFER_ZONE."' 
+                                          AND zone_country_id = '".(int)$order->billing['country']['id']."' 
                                      ORDER BY zone_id");
           while ($check = xtc_db_fetch_array($check_query)) {
             if ($check['zone_id'] < 1) {
@@ -191,10 +191,11 @@
           // iban country allowed in payment zone?
           if ($banktransfer_result == 0 && ((int)MODULE_PAYMENT_BANKTRANSFER_ZONE > 0)) {
             $check_query = xtc_db_query("SELECT DISTINCT z.geo_zone_id 
-                                                    FROM " . TABLE_ZONES_TO_GEO_ZONES . " z
-                                                    JOIN " . TABLE_COUNTRIES . " c on c.countries_id = z.zone_country_id
-                                                   WHERE z.geo_zone_id = " . MODULE_PAYMENT_BANKTRANSFER_ZONE . "
-                                                     AND c.countries_iso_code_2 = '" . $banktransfer_validation->IBAN_country . "'");
+                                                    FROM ".TABLE_ZONES_TO_GEO_ZONES." z
+                                                    JOIN ".TABLE_COUNTRIES." c 
+                                                         ON c.countries_id = z.zone_country_id
+                                                            AND c.countries_iso_code_2 = '".xtc_db_input($banktransfer_validation->IBAN_country)."'
+                                                   WHERE z.geo_zone_id = '".(int)MODULE_PAYMENT_BANKTRANSFER_ZONE."'");
             if (xtc_db_num_rows($check_query) == 0)
               $banktransfer_result = 14;
           }
