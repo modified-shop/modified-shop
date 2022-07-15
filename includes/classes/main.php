@@ -291,7 +291,9 @@ class main {
       $products = $product->data;
     }
     
+    $vpeText = '';
     $this->vpe_name = '';
+    
     if (isset($products['products_vpe_status']) 
         && $products['products_vpe_status'] == 1 
         && $products['products_vpe_value'] != 0.0 
