@@ -61,15 +61,8 @@ if (isset ($_SESSION['gv_id'])) {
 
 $cc_check = isset($_SESSION['cc_amount_min_order']) && $_SESSION['cc_amount_min_order'] <= $_SESSION['cart']->show_total() ? true : false;
 if (isset ($_SESSION['cc_id']) && $cc_check) {
-  if (!defined('POPUP_COUPON_HELP_LINK_PARAMETERS')) {
-    define('POPUP_COUPON_HELP_LINK_PARAMETERS', '&KeepThis=true&TB_iframe=true&height=400&width=600');
-  }
-  if (!defined('POPUP_SHIPPING_LINK_CLASS')) {
-    define('POPUP_SHIPPING_LINK_CLASS', 'thickbox');
-  }
-  $clink_parameters = defined('TPL_POPUP_CONTENT_LINK_PARAMETERS') ? TPL_POPUP_COUPON_HELP_LINK_PARAMETERS : POPUP_COUPON_HELP_LINK_PARAMETERS;
-  $clink_class = defined('TPL_POPUP_CONTENT_LINK_CLASS') ? TPL_POPUP_SHIPPING_LINK_CLASS : POPUP_SHIPPING_LINK_CLASS;
-	$gift_smarty->assign('COUPON_HELP_LINK', '<a title="'.TEXT_LINK_TITLE_INFORMATION.'" target="_blank" class="'.$clink_class.'" href="'.xtc_href_link(FILENAME_POPUP_COUPON_HELP, 'cID='.$_SESSION['cc_id'].$clink_parameters, $request_type).'">');
+  $popup_params = $main->getPopupParams();  
+	$gift_smarty->assign('COUPON_HELP_LINK', '<a title="'.$popup_params['link_title'].'" target="_blank" class="'.$popup_params['link_class'].'" href="'.xtc_href_link(FILENAME_POPUP_COUPON_HELP, 'cID='.$_SESSION['cc_id'].$popup_params['link_parameters'], $request_type).'">');
 }
 
 //check coupon minimum order

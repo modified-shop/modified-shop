@@ -99,15 +99,11 @@ class easycredit {
       if (!defined('RUN_MODE_ADMIN') && is_object($order)) {
         $this->update_status();
       }
-
-      if (!defined('POPUP_CONTENT_LINK_PARAMETERS')) {
-        define('POPUP_CONTENT_LINK_PARAMETERS', '&KeepThis=true&TB_iframe=true&height=400&width=600');
-      }
-      if (!defined('POPUP_CONTENT_LINK_CLASS')) {
-        define('POPUP_CONTENT_LINK_CLASS', 'thickbox');
-      }
-      $this->link_parameters = ltrim(defined('TPL_POPUP_CONTENT_LINK_PARAMETERS') ? TPL_POPUP_CONTENT_LINK_PARAMETERS : POPUP_CONTENT_LINK_PARAMETERS, '&');
-      $this->link_class = defined('TPL_POPUP_CONTENT_LINK_CLASS') ? TPL_POPUP_CONTENT_LINK_CLASS : POPUP_CONTENT_LINK_CLASS;
+      
+      $popup_params = $main->getPopupParams();
+      $this->link_parameters = ltrim($popup_params['link_parameters'], '&');
+      $this->link_class = $popup_params['link_class'];
+      $this->link_title = $popup_params['link_title'];
     }
   }
 
@@ -350,6 +346,7 @@ class easycredit {
 
       $presentment_array = array(
         'link_class' => $this->link_class,
+        'link_title' => $this->link_title,
         'monthly_payment' => $xtPrice->xtcFormat($monthlyCosts->getAmountOfRate(), true),
         'calculator_link' => $calculator_link,
       );
@@ -615,10 +612,11 @@ class easycredit {
       $ec_smarty->assign('module_content', $module_content);
       $ec_smarty->assign('contract_info_url', $ContractInfoURL);
       $ec_smarty->assign('link_class', $this->link_class);
+      $ec_smarty->assign('link_title', $this->link_title);
       $ec_smarty->assign('language', $_SESSION['language']);
       $string = $ec_smarty->fetch(DIR_FS_EXTERNAL.'easycredit/templates/payment_info.html');
     } else {
-      $string .= '<br><br><a class="'.$this->link_class.'" href="'.$ContractInfoURL.'">'.MODULE_PAYMENT_EASYCREDIT_TEXT_LEGAL.'</a>';
+      $string .= '<br><br><a title="'.$this->link_title.'" class="'.$this->link_class.'" href="'.$ContractInfoURL.'">'.MODULE_PAYMENT_EASYCREDIT_TEXT_LEGAL.'</a>';
     }
     
     return $string;
