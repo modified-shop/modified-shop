@@ -66,11 +66,11 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/products_media.html', $
         }
         $icon = xtc_image(DIR_WS_ICONS.'filetype/icon_'.$content_file_type.'.gif');
         if (in_array($content_file_type,$allowed_content_types)) {
-          $btnlink_parameters = defined('TPL_POPUP_CONTENT_LINK_PARAMETERS') ? TPL_POPUP_CONTENT_LINK_PARAMETERS : POPUP_CONTENT_LINK_PARAMETERS;
-          $btnlink_class = defined('TPL_POPUP_CONTENT_LINK_CLASS') ? TPL_POPUP_CONTENT_LINK_CLASS : POPUP_CONTENT_LINK_CLASS;
+          $popup_params = $main->getPopupParams();
+          
           $button = '<a target="_blank"'.
-                    ' href="'.xtc_href_link(FILENAME_MEDIA_CONTENT, 'type=content_manager&coID='.$content_data['content_id'].$btnlink_parameters).'"'.
-                    ' class="'.$btnlink_class.'">'.
+                    ' href="'.xtc_href_link(FILENAME_MEDIA_CONTENT, 'type=content_manager&coID='.$content_data['content_id'].$popup_params['link_parameters']).'"'.
+                    ' class="'.$popup_params['link_class'].'">'.
                     xtc_image_button('button_view.gif', TEXT_VIEW).
                     '</a>';
           $filesize = xtc_filesize($content_data['content_file'], 'content');

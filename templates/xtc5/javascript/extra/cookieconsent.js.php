@@ -11,7 +11,8 @@
    --------------------------------------------------------------*/
 
 if (defined('MODULE_COOKIE_CONSENT_STATUS') && strtolower(MODULE_COOKIE_CONSENT_STATUS) == 'true') {
-  $link_parameters = defined('TPL_POPUP_CONTENT_LINK_PARAMETERS') ? TPL_POPUP_CONTENT_LINK_PARAMETERS : POPUP_CONTENT_LINK_PARAMETERS;
+  $popup_params = $main->getPopupParams(); 
+
   $lang_links = '';
   if (!isset($lng) || (isset($lng) && !is_object($lng))) {
     require_once(DIR_WS_CLASSES . 'language.php');
@@ -52,7 +53,7 @@ if (defined('MODULE_COOKIE_CONSENT_STATUS') && strtolower(MODULE_COOKIE_CONSENT_
       "label_nocookie_head": "<?php echo TEXT_COOKIE_CONSENT_LABEL_NOCOOKIE_HEAD; ?>",
       "label_nocookie_text": "<?php echo TEXT_COOKIE_CONSENT_LABEL_NOCOOKIE_TEXT; ?>",
       "label_third_party": " ",
-      "label_imprint_links": "<?php echo $lang_links; ?><a href='<?php echo xtc_href_link(FILENAME_POPUP_CONTENT, "coID=2".$link_parameters); ?>' onclick='return cc_popup_content(this)'><?php echo TEXT_COOKIE_CONSENT_LABEL_INTRO_TEXT_PRIVACY; ?></a> <a href='<?php echo xtc_href_link(FILENAME_POPUP_CONTENT, "coID=4".$link_parameters); ?>' onclick='return cc_popup_content(this)'><?php echo TEXT_COOKIE_CONSENT_LABEL_INTRO_TEXT_IMPRINT; ?></a>"
+      "label_imprint_links": "<?php echo $lang_links; ?><a href='<?php echo xtc_href_link(FILENAME_POPUP_CONTENT, "coID=2".$popup_params['link_parameters']); ?>' onclick='return cc_popup_content(this)'><?php echo TEXT_COOKIE_CONSENT_LABEL_INTRO_TEXT_PRIVACY; ?></a> <a href='<?php echo xtc_href_link(FILENAME_POPUP_CONTENT, "coID=4".$popup_params['link_parameters']); ?>' onclick='return cc_popup_content(this)'><?php echo TEXT_COOKIE_CONSENT_LABEL_INTRO_TEXT_IMPRINT; ?></a>"
     }
   }
 }
