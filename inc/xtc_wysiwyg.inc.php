@@ -24,7 +24,6 @@ function xtc_wysiwyg($type, $lang, $langID = '',$addonType='')
     $js_src = DIR_WS_MODULES .'ckeditor/ckeditor.js';
     $file_path = '&type=2';
     $image_path = '&type=1';
-    $media_path = '&type=3';
 
     $default_editor_width = '\'100%\''; //kama 850, moono 870;
     $default_editor_height = '400';
@@ -102,7 +101,6 @@ function xtc_wysiwyg($type, $lang, $langID = '',$addonType='')
                 $codetab.'
                 filebrowserBrowseUrl : "'.$filemanagerurl.$editor.$file_path.$language.$sid.'",
                 filebrowserImageBrowseUrl : "'.$filemanagerurl.$editor.$image_path.$language.$sid.'",
-                filebrowserFlashBrowseUrl : "'.$filemanagerurl.$editor.$media_path.$language.$sid.'",
                 filebrowserUploadUrl : "'.$filemanagerurl.$editor.$file_path.$language.$sid.'",
                 filebrowserWindowWidth : "980",
                 filebrowserWindowHeight : "640",';
