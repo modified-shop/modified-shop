@@ -54,12 +54,14 @@ class main {
    */
   function getShippingStatusName($id, $link = false) {
     global $request_type;
+    
     if (!defined('SHIPPING_STATUS_INFOS') || $link === false) {
       return (isset($this->SHIPPING[$id]['name']) ? $this->SHIPPING[$id]['name'] : '');
     }
-    $link_parameters = defined('TPL_POPUP_SHIPPING_LINK_PARAMETERS') ? TPL_POPUP_SHIPPING_LINK_PARAMETERS : POPUP_SHIPPING_LINK_PARAMETERS;
-    $link_class = defined('TPL_POPUP_SHIPPING_LINK_CLASS') ? TPL_POPUP_SHIPPING_LINK_CLASS : POPUP_SHIPPING_LINK_CLASS;
-    return '<a rel="nofollow" target="_blank" href="'.xtc_href_link(FILENAME_POPUP_CONTENT, 'coID='.SHIPPING_STATUS_INFOS.$link_parameters, $request_type).'" title="'.TEXT_LINK_TITLE_INFORMATION.'" class="'.$link_class.'">'.(isset($this->SHIPPING[$id]['name']) ? $this->SHIPPING[$id]['name'] : '').'</a>';
+    
+    $popup_params = $this->getPopupParams();
+    
+    return '<a rel="nofollow" target="_blank" href="'.xtc_href_link(FILENAME_POPUP_CONTENT, 'coID='.SHIPPING_STATUS_INFOS.$popup_params['link_parameters'], $request_type).'" title="'.$popup_params['link_title'].'" class="'.$popup_params['link_class'].'">'.(isset($this->SHIPPING[$id]['name']) ? $this->SHIPPING[$id]['name'] : '').'</a>';
   }
 
   /**
@@ -69,10 +71,12 @@ class main {
    * @return  string
    */
   function getShippingStatusImage($id) {
-    if (isset($this->SHIPPING[$id]['image']) && $this->SHIPPING[$id]['image'] != '') {
+    if (isset($this->SHIPPING[$id]['image']) 
+        && $this->SHIPPING[$id]['image'] != ''
+        && is_file(DIR_FS_CATALOG.DIR_WS_IMAGES.$this->SHIPPING[$id]['image'])
+        )
+    {
       return DIR_WS_CATALOG.DIR_WS_IMAGES.$this->SHIPPING[$id]['image'];
-    } else {
-      return;
     }
   }
 
@@ -83,17 +87,10 @@ class main {
    */
   function getShippingLink() {
     global $request_type;
-    if (!defined('POPUP_SHIPPING_LINK_PARAMETERS')) {
-      define('POPUP_SHIPPING_LINK_PARAMETERS', '&KeepThis=true&TB_iframe=true&height=400&width=600');
-    }
-    if (!defined('POPUP_SHIPPING_LINK_CLASS')) {
-      define('POPUP_SHIPPING_LINK_CLASS', 'thickbox');
-    }
-    $link_parameters = defined('TPL_POPUP_SHIPPING_LINK_PARAMETERS') ? TPL_POPUP_SHIPPING_LINK_PARAMETERS : POPUP_SHIPPING_LINK_PARAMETERS;
-    $link_class = defined('TPL_POPUP_SHIPPING_LINK_CLASS') ? TPL_POPUP_SHIPPING_LINK_CLASS : POPUP_SHIPPING_LINK_CLASS;
-    
+        
     if (SHOW_SHIPPING == 'true') {
-      return ' '.((SHOW_SHIPPING_EXCL == 'false') ? SHIPPING_INCL : SHIPPING_EXCL).' <a rel="nofollow" target="_blank" href="'.xtc_href_link(FILENAME_POPUP_CONTENT, 'coID='.SHIPPING_INFOS.$link_parameters, $request_type).'" title="'.TEXT_LINK_TITLE_INFORMATION.'" class="'.$link_class.'">'.SHIPPING_COSTS.'</a>';
+      $popup_params = $this->getPopupParams();
+      return ' '.((SHOW_SHIPPING_EXCL == 'false') ? SHIPPING_INCL : SHIPPING_EXCL).' <a rel="nofollow" target="_blank" href="'.xtc_href_link(FILENAME_POPUP_CONTENT, 'coID='.SHIPPING_INFOS.$popup_params['link_parameters'], $request_type).'" title="'.$popup_params['link_title'].'" class="'.$popup_params['link_class'].'">'.SHIPPING_COSTS.'</a>';
     }
   }
 
@@ -111,14 +108,19 @@ class main {
       return TAX_INFO_INCL_GLOBAL;
     }
     // excl tax + tax at checkout
-    if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1) {
+    if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
+        && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1
+        )
+    {
       return TAX_INFO_ADD_GLOBAL;
     }
     // excl tax
-    if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0) {
+    if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
+        && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0
+        )
+    {
       return TAX_INFO_EXCL_GLOBAL;
     }
-    return;
   }
 
   /**
@@ -139,11 +141,19 @@ class main {
         $tax_info = sprintf(TAX_INFO_INCL, $tax_rate.' %');
       }
       // excl tax + tax at checkout
-      if ($tax_rate > 0 && $_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1) {
+      if ($tax_rate > 0 
+          && $_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
+          && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1
+          )
+      {
         $tax_info = sprintf(TAX_INFO_ADD, $tax_rate.' %');
       }
       // excl tax
-      if ($tax_rate > 0 && $_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0) {
+      if ($tax_rate > 0 
+          && $_SESSION['customers_status']['customers_status_show_price_tax'] == 0 
+          && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0
+          )
+      {
         $tax_info = sprintf(TAX_INFO_EXCL, $tax_rate.' %');
       }
       // no tax
@@ -172,12 +182,34 @@ class main {
     if (SHOW_SHIPPING == 'true') {
       $shippingNotice = ' '.SHIPPING_EXCL.'<a href="'.xtc_href_link(FILENAME_CONTENT, xtc_content_link(SHIPPING_INFOS)).'">'.SHIPPING_COSTS.'</a>';
     }
+    
     //new module support
     $shippingNotice = $this->mainModules->getShippingNotice($shippingNotice);
     
     return $shippingNotice;
   }
-
+  
+  /**
+   * getPopupParams
+   *
+   * @return array
+   */
+  function getPopupParams() {
+    if (!defined('POPUP_CONTENT_LINK_PARAMETERS')) {
+      define('POPUP_CONTENT_LINK_PARAMETERS', '&KeepThis=true&TB_iframe=true&height=400&width=600');
+    }
+    if (!defined('POPUP_CONTENT_LINK_CLASS')) {
+      define('POPUP_CONTENT_LINK_CLASS', 'thickbox');
+    }
+    $popup_params = array(
+      'link_parameters' => defined('TPL_POPUP_CONTENT_LINK_PARAMETERS') ? TPL_POPUP_CONTENT_LINK_PARAMETERS : POPUP_CONTENT_LINK_PARAMETERS,
+      'link_class' => defined('TPL_POPUP_CONTENT_LINK_CLASS') ? TPL_POPUP_CONTENT_LINK_CLASS : POPUP_CONTENT_LINK_CLASS,
+      'link_title' => TEXT_LINK_TITLE_INFORMATION,
+    );
+    
+    return $popup_params;
+  }
+  
   /**
    * getContentLink
    *
@@ -186,16 +218,9 @@ class main {
    * @return string
    */
   function getContentLink($coID, $text, $ssl = 'NONSSL', $class_more = true) {
-    if (!defined('POPUP_CONTENT_LINK_PARAMETERS')) {
-      define('POPUP_CONTENT_LINK_PARAMETERS', '&KeepThis=true&TB_iframe=true&height=400&width=600');
-    }
-    if (!defined('POPUP_CONTENT_LINK_CLASS')) {
-      define('POPUP_CONTENT_LINK_CLASS', 'thickbox');
-    }
-    $link_parameters = defined('TPL_POPUP_CONTENT_LINK_PARAMETERS') ? TPL_POPUP_CONTENT_LINK_PARAMETERS : POPUP_CONTENT_LINK_PARAMETERS;
-    $link_class = defined('TPL_POPUP_CONTENT_LINK_CLASS') ? TPL_POPUP_CONTENT_LINK_CLASS : POPUP_CONTENT_LINK_CLASS;
-    
-    $contentLink = '<a target="_blank" href="'.xtc_href_link(FILENAME_POPUP_CONTENT, 'coID='.$coID.$link_parameters, $ssl).'" title="'.TEXT_LINK_TITLE_INFORMATION.'" class="'.(($class_more === true) ? 'color_more ' : '').$link_class.'">'.$text.'</a>';
+    $popup_params = $this->getPopupParams();
+
+    $contentLink = '<a target="_blank" href="'.xtc_href_link(FILENAME_POPUP_CONTENT, 'coID='.$coID.$popup_params['link_parameters'], $ssl).'" title="'.$popup_params['link_title'].'" class="'.(($class_more === true) ? 'color_more ' : '').$popup_params['link_class'].'">'.$text.'</a>';
     
     //new module support
     $contentLink = $this->mainModules->getShippingNotice($contentLink, $coID, $text, $ssl, $class_more);
@@ -261,20 +286,27 @@ class main {
    */
   function getVPEtext($products, $price) {
     global $xtPrice, $product;
-    $vpeText = '';
-    require_once (DIR_FS_INC.'xtc_get_vpe_name.inc.php');
+    
     if (!is_array($products)) {
       $products = $product->data;
     }
-    $this->vpe_name = '';
-    if (isset($products['products_vpe_status']) && $products['products_vpe_status'] == 1 && $products['products_vpe_value'] != 0.0 && $price > 0) {
-      $this->vpe_name = xtc_get_vpe_name($products['products_vpe']);
-      //echo $this->vpe_name; //only for debugging
-      $vpeText = $xtPrice->xtcFormatCurrency(($price * (1 / $products['products_vpe_value'])), 0, true).TXT_PER.$this->vpe_name;
+    
+    $vpe_name = '';
+    if (isset($products['products_vpe_status']) 
+        && $products['products_vpe_status'] == 1 
+        && $products['products_vpe_value'] != 0.0 
+        && $price > 0
+        )
+    {
+      // include needed function
+      require_once (DIR_FS_INC.'xtc_get_vpe_name.inc.php');
+      
+      $vpe_name = xtc_get_vpe_name($products['products_vpe']);
+      $vpeText = $xtPrice->xtcFormatCurrency(($price * (1 / $products['products_vpe_value'])), 0, true).TXT_PER.$vpe_name;
     }
     
     //new module support
-    $vpeText = $this->mainModules->getVPEtext($vpeText, $products, $price, $this->vpe_name);
+    $vpeText = $this->mainModules->getVPEtext($vpeText, $products, $price, $vpe_name);
     
     return $vpeText;
   }
@@ -288,23 +320,17 @@ class main {
    */
   function getProductPopupLink($pID, $text, $class = '', $add_params = '') {
     global $request_type;
-    $productPopupLink = '';
-    if (!defined('POPUP_PRODUCT_LINK_PARAMETERS')) {
-      define('POPUP_PRODUCT_LINK_PARAMETERS', '&KeepThis=true&TB_iframe=true&height=450&width=750');
-    }
-    if (!defined('POPUP_PRODUCT_LINK_CLASS')) {
-      define('POPUP_PRODUCT_LINK_CLASS', 'thickbox');
-    }
-    $link_parameters = defined('TPL_POPUP_PRODUCT_LINK_PARAMETERS') ? TPL_POPUP_PRODUCT_LINK_PARAMETERS : POPUP_PRODUCT_LINK_PARAMETERS;
-    $link_class = defined('TPL_POPUP_PRODUCT_LINK_CLASS') ? TPL_POPUP_PRODUCT_LINK_CLASS : POPUP_PRODUCT_LINK_CLASS;
+    
+    $popup_params = $this->getPopupParams();    
+    
     if ($class == 'image') {
       require_once (DIR_FS_INC . 'xtc_get_products_image.inc.php');
       $products_image = xtc_get_products_image($pID);
       $product = new product($pID);
       $products_image = $product->productImage($products_image, 'thumbnail');      
-      $productPopupLink = '<a target="_blank" title="'.TEXT_LINK_TITLE_INFORMATION.'" href="'.xtc_href_link('print_product_info.php', 'pID='.$pID.$link_parameters, $request_type).'" class="'.$link_class.'">'.'<img class="'.$class.'" alt="" src="'.$products_image.'" />'.'</a>';
+      $productPopupLink = '<a target="_blank" title="'.$popup_params['link_title'].'" href="'.xtc_href_link('print_product_info.php', 'pID='.$pID.$popup_params['link_parameters'], $request_type).'" class="'.$popup_params['link_class'].'"><img class="'.$class.'" alt="" src="'.$products_image.'" /></a>';
     } else {
-      $productPopupLink = '<a target="_blank" title="'.TEXT_LINK_TITLE_INFORMATION.'" href="'.xtc_href_link('print_product_info.php', 'pID='.$pID.$link_parameters.$add_params, $request_type).'" class="'.$link_class.' '.$class.'">'.$text.'</a>';
+      $productPopupLink = '<a target="_blank" title="'.$popup_params['link_title'].'" href="'.xtc_href_link('print_product_info.php', 'pID='.$pID.$popup_params['link_parameters'].$add_params, $request_type).'" class="'.$popup_params['link_class'].' '.$class.'">'.$text.'</a>';
     }
     
     //new module support
