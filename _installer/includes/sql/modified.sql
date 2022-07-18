@@ -1113,7 +1113,9 @@ CREATE TABLE products_description (
   products_viewed INT(5) DEFAULT 0,
   products_order_description text,
   PRIMARY KEY (products_id, language_id),
-  KEY idx_products_name (products_name)
+  KEY idx_products_name (products_name),
+  KEY idx_products_heading_title (products_heading_title),
+  KEY idx_products_keywords (products_keywords)
 );
 
 DROP TABLE IF EXISTS products_geo_zones_to_tax_class;

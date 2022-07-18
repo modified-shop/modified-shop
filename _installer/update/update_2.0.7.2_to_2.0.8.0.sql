@@ -40,4 +40,8 @@ CREATE TABLE IF NOT EXISTS `products_images_description` (
   KEY idx_products_id (`products_id`)
 );
 
+#GTB - 2022-07-018 - add index for products_description
+ALTER TABLE `products_description` ADD KEY `idx_products_heading_title` (`products_heading_title`);
+ALTER TABLE `products_description` ADD KEY `idx_products_keywords` (`products_keywords`);
+
 # Keep an empty line at the end of this file for the db_updater to work properly
