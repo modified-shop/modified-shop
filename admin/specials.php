@@ -179,51 +179,55 @@
         if ($action == 'new' || $action == 'edit') {
 
           $price = 0;
-          $new_price = 0;
           $price_netto = '';
+          $new_price = 0;
           $new_price_netto = '';
+          $specials_quantity = '';
           $form_action = 'insert';
           
           if ($action == 'edit' && isset($sID)) {
-            $product_query = xtc_db_query("SELECT p.products_id,
-                                                  p.products_model,
-                                                  p.products_price,
-                                                  p.products_tax_class_id,
-                                                  s.specials_quantity,
-                                                  s.specials_new_products_price,
-                                                  s.start_date,
-                                                  s.expires_date,
-                                                  pd.products_name
-                                             FROM " . TABLE_PRODUCTS . " p
-                                             JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd
-                                                  ON p.products_id = pd.products_id
-                                                     AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
-                                             JOIN " . TABLE_SPECIALS . " s
-                                                  ON p.products_id = s.products_id
-                                                     AND s.specials_id = '" . $sID ."'");
-            if (xtc_db_num_rows($product_query) > 0) {
+            $specials_query = xtc_db_query("SELECT p.products_id,
+                                                   p.products_model,
+                                                   p.products_price,
+                                                   p.products_tax_class_id,
+                                                   pd.products_name,
+                                                   s.*
+                                              FROM " . TABLE_PRODUCTS . " p
+                                              JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd
+                                                   ON p.products_id = pd.products_id
+                                                      AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
+                                              JOIN " . TABLE_SPECIALS . " s
+                                                   ON p.products_id = s.products_id
+                                                      AND s.specials_id = '" . $sID ."'");
+            if (xtc_db_num_rows($specials_query) > 0) {
               $form_action = 'update';
-              $product = xtc_db_fetch_array($product_query);
-              $sInfo = new objectInfo($product);
+              $special = xtc_db_fetch_array($specials_query);
+              $sInfo = new objectInfo($special);
 
-              $price_netto = '';
-              $new_price_netto = '';
-              $price = $sInfo->products_price;
+              $specials_quantity = $sInfo->specials_quantity;
+
+              $price = (($sInfo->specials_old_products_price > 0) ? $sInfo->specials_old_products_price : $sInfo->products_price);
               $new_price = $sInfo->specials_new_products_price;
               if (PRICE_IS_BRUTTO == 'true') {
-                $price_netto = ' ' . TEXT_NETTO.'<strong>'.xtc_round($price,PRICE_PRECISION).'</strong>  ';
                 if ($price > 0) {
-                  $new_price_netto = TEXT_NETTO.'<strong>'.xtc_round($new_price,PRICE_PRECISION).'</strong>';
-                }            
-                $price = ($price*(xtc_get_tax_rate($sInfo->products_tax_class_id)+100)/100);
-                $new_price = ($new_price*(xtc_get_tax_rate($sInfo->products_tax_class_id)+100)/100);
+                  $price_netto = TEXT_NETTO.'<strong>'.xtc_round($price, PRICE_PRECISION).'</strong>';
+                }
+                if ($new_price > 0) {
+                  $new_price_netto = TEXT_NETTO.'<strong>'.xtc_round($new_price, PRICE_PRECISION).'</strong>';
+                }
+                $price = ($price * (xtc_get_tax_rate($sInfo->products_tax_class_id) + 100) / 100);
+                $new_price = ($new_price * (xtc_get_tax_rate($sInfo->products_tax_class_id) + 100) / 100);
               }
             }
           } 
           
+          $price = xtc_round($price,PRICE_PRECISION);
+          $new_price = xtc_round($new_price,PRICE_PRECISION);           
+
           if ($form_action == 'insert') {
             $product_array = xtc_get_default_table_data(TABLE_SPECIALS);
             $sInfo = new objectInfo($product_array);
+            $sInfo->products_price = 0;
             // create an array of products on special, which will be excluded from the pull down menu of products
             // (when creating a new product on special)
             $specials_array = array();
@@ -235,9 +239,6 @@
               $specials_array[] = $specials['products_id'];
             }
           }
-
-          $price = xtc_round($price,PRICE_PRECISION);
-          $new_price = xtc_round($new_price,PRICE_PRECISION);           
 
           // build the expires date in the format YYYY-MM-DD
           if (strtotime($sInfo->expires_date) !== false && strtotime($sInfo->expires_date) > 0) {
@@ -257,9 +258,9 @@
           if ($form_action == 'update') { 
             echo xtc_draw_hidden_field('specials_id', $sID);                
             echo xtc_draw_hidden_field('products_tax_class_id', $sInfo->products_tax_class_id);
-            echo xtc_draw_hidden_field('products_price', $sInfo->products_price);
           }
           echo xtc_draw_hidden_field('specials_action', $form_action);
+          echo xtc_draw_hidden_field('products_price_hidden', $sInfo->products_price);
           ?>
           
           <table class="tableConfig">
@@ -285,8 +286,13 @@
               <td class="dataTableConfig col-right"><?php echo TEXT_SPECIALS_PRICE_TIP; ?></td>
             </tr>
             <tr>
+              <td class="dataTableConfig col-left"><?php echo TEXT_SPECIALS_SPECIAL_PRODUCTS_PRICE; ?></td>
+              <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('specials_old_products_price', $price).'<br/>' .$price_netto;?></td>
+              <td class="dataTableConfig col-right"><?php echo TEXT_SPECIALS_PRODUCTS_PRICE_TIP; ?></td>
+            </tr>
+            <tr>
               <td class="dataTableConfig col-left"><?php echo TEXT_SPECIALS_SPECIAL_QUANTITY; ?></td>
-              <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('specials_quantity', $sInfo->specials_quantity);?> </td>
+              <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('specials_quantity', $specials_quantity);?> </td>
               <td class="dataTableConfig col-right"><?php echo TEXT_SPECIALS_QUANTITY_TIP; ?></td>
             </tr>
             <tr>
