@@ -280,7 +280,8 @@ CREATE TABLE categories_description (
   categories_meta_description text NOT NULL,
   categories_meta_keywords text NOT NULL,
   PRIMARY KEY (categories_id, language_id),
-  KEY idx_categories_name (categories_name)
+  KEY idx_categories_name (categories_name),
+  KEY idx_categories_heading_title (categories_heading_title)
 );
 
 DROP TABLE IF EXISTS cm_file_flags;
@@ -689,6 +690,7 @@ CREATE TABLE manufacturers (
   PRIMARY KEY (manufacturers_id),
   KEY idx_manufacturers_name (manufacturers_name),
   KEY idx_manufacturers_status (manufacturers_status),
+  KEY idx_manufacturers_image (manufacturers_image),
   KEY idx_sort_order (sort_order)
 );
 
@@ -704,7 +706,8 @@ CREATE TABLE manufacturers_info (
   manufacturers_url VARCHAR(255) NOT NULL,
   url_clicked INT(5) NOT NULL DEFAULT 0,
   date_last_click DATETIME NULL,
-  PRIMARY KEY (manufacturers_id, languages_id)
+  PRIMARY KEY (manufacturers_id, languages_id),
+  KEY idx_manufacturers_title (manufacturers_title)
 );
 
 DROP TABLE IF EXISTS module_backup;

@@ -44,4 +44,11 @@ CREATE TABLE IF NOT EXISTS `products_images_description` (
 ALTER TABLE `products_description` ADD KEY `idx_products_heading_title` (`products_heading_title`);
 ALTER TABLE `products_description` ADD KEY `idx_products_keywords` (`products_keywords`);
 
+#GTB - 2022-07-018 - add index for categories_description
+ALTER TABLE `categories_description` ADD KEY `idx_categories_heading_title` (`categories_heading_title`);
+
+#GTB - 2022-07-018 - add index for manufacturers
+ALTER TABLE `manufacturers` ADD KEY `idx_manufacturers_image` (`manufacturers_image`);
+ALTER TABLE `manufacturers_info` ADD KEY `idx_manufacturers_title` (`manufacturers_title`);
+
 # Keep an empty line at the end of this file for the db_updater to work properly
