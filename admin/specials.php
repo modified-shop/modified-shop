@@ -47,7 +47,11 @@
       case 'insert':
       case 'update':
         $specials_id = $catfunc->saveSpecialsData($_POST);
-        xtc_redirect(xtc_href_link(FILENAME_SPECIALS, xtc_get_all_get_params(array('action', 'sID')) . '&sID=' . $specials_id));
+        if ((int)$specials_id > 0) {
+          xtc_redirect(xtc_href_link(FILENAME_SPECIALS, xtc_get_all_get_params(array('action', 'sID')) . '&sID=' . (int)$specials_id));
+        } else {
+        
+        }
         break;
 
       case 'deleteconfirm':
@@ -221,8 +225,8 @@
             }
           } 
           
-          $price = xtc_round($price,PRICE_PRECISION);
-          $new_price = xtc_round($new_price,PRICE_PRECISION);           
+          $price = xtc_round($price, PRICE_PRECISION);
+          $new_price = xtc_round($new_price ,PRICE_PRECISION);           
 
           if ($form_action == 'insert') {
             $product_array = xtc_get_default_table_data(TABLE_SPECIALS);
@@ -354,16 +358,8 @@
                                                 p.products_price,
                                                 p.products_tax_class_id,
                                                 p.products_image,
-                                                s.specials_id,
-                                                s.specials_quantity,
-                                                s.specials_new_products_price,
-                                                s.specials_date_added,
-                                                s.specials_last_modified,
-                                                s.expires_date,
-                                                s.start_date,
-                                                s.date_status_change,
-                                                s.status,
-                                                pd.products_name
+                                                pd.products_name,
+                                                s.*
                                            FROM " . TABLE_PRODUCTS . " p
                                            JOIN " . TABLE_SPECIALS . " s
                                                 ON p.products_id = s.products_id
@@ -376,16 +372,14 @@
                   $specials_query = xtc_db_query($specials_query_raw);
                   while ($specials = xtc_db_fetch_array($specials_query)) {
                     
-                    $price = $specials['products_price'];
+                    $price = (($specials['specials_old_products_price'] > 0) ? $specials['specials_old_products_price'] : $specials['products_price']);
                     $new_price = $specials['specials_new_products_price'];
-                    if (PRICE_IS_BRUTTO=='true'){
-                      $price_netto = xtc_round($price,PRICE_PRECISION);
-                      $new_price_netto = xtc_round($new_price,PRICE_PRECISION);
-                      $price = ($price*(xtc_get_tax_rate($specials['products_tax_class_id'])+100)/100);
-                      $new_price = ($new_price*(xtc_get_tax_rate($specials['products_tax_class_id'])+100)/100);
+                    if (PRICE_IS_BRUTTO=='true') {
+                      $price = ($price * (xtc_get_tax_rate($specials['products_tax_class_id']) + 100) / 100);
+                      $new_price = ($new_price * (xtc_get_tax_rate($specials['products_tax_class_id']) + 100) / 100);
                     }
-                    $specials['products_price'] = xtc_round($price,PRICE_PRECISION);
-                    $specials['specials_new_products_price'] = xtc_round($new_price,PRICE_PRECISION);
+                    $specials['products_price'] = xtc_round($price, PRICE_PRECISION);
+                    $specials['specials_new_products_price'] = xtc_round($new_price, PRICE_PRECISION);
                     
                     if ((!isset($sID) || (isset($sID) && ($sID == $specials['specials_id']))) && !isset($sInfo) ) {
                       $sInfo = new objectInfo($specials);
