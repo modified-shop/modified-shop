@@ -234,47 +234,55 @@ class main {
    * @param integer $coID
    * @return array
    */
-  function getContentData($coID, $lang_id = '', $customers_status = '', $get_inactive = true, $add_select= '') {
-    $lang_id = !empty($lang_id) ? $lang_id : $_SESSION['languages_id'];
+  function getContentData($coID, $language_id = '', $customers_status = '', $get_inactive = true, $add_select= '') {
+    static $content_data_array;
+    
+    if (!isset($content_data_array)) $content_data_array = array();
+    
+    $language_id = !empty($language_id) ? $language_id : $_SESSION['languages_id'];
+    $status = (($get_inactive === true) ? '1' : '0');
     $customers_status = $customers_status != '' ? $customers_status : $_SESSION['customers_status']['customers_status_id'];
     $group_check = (GROUP_CHECK == 'true') ? "AND group_ids LIKE '%c_" . (int)$customers_status . "_group%'" : '';
     $where = (($get_inactive === true) ? '' : " AND content_active = '1'");
     
-    $content_data_array = array();
-    $content_data_query = xtDBquery("SELECT ".$add_select."
-                                            content_id,
-                                            content_title,
-                                            content_heading,
-                                            content_text,
-                                            content_file
-                                       FROM " . TABLE_CONTENT_MANAGER . "
-                                      WHERE content_group='". (int)$coID ."'
-                                            " . $group_check . "
-                                            " . $where . "
-                                        AND trim(content_title) != ''
-                                        AND languages_id='" . (int)$lang_id . "'
-                                      LIMIT 1");
-    if (xtc_db_num_rows($content_data_query, true) > 0) {
-      $content_data_array = xtc_db_fetch_array($content_data_query,true);
+    if (!isset($content_data_array[$language_id][$customers_status][$status])) {
+      $content_data_array[$language_id][$customers_status][$status] = array();
+
+      $content_data_query = xtDBquery("SELECT ".$add_select."
+                                              content_id,
+                                              content_title,
+                                              content_heading,
+                                              content_text,
+                                              content_file
+                                         FROM " . TABLE_CONTENT_MANAGER . "
+                                        WHERE content_group='". (int)$coID ."'
+                                              " . $group_check . "
+                                              " . $where . "
+                                          AND trim(content_title) != ''
+                                          AND languages_id='" . (int)$language_id . "'
+                                        LIMIT 1");
+      if (xtc_db_num_rows($content_data_query, true) > 0) {
+        $content_data = xtc_db_fetch_array($content_data_query,true);
     
-      // check if content data is a file
-      if ($content_data_array['content_file'] != '') {
-        unset($content_data_array['content_text']);
-        ob_start();      
-        include (DIR_FS_DOCUMENT_ROOT.'media/content/'.$content_data_array['content_file']);      
-        $content_data_array['content_text'] = @ob_get_contents();
-        ob_end_clean();
-        //check for txt file and format output
-        if (strpos($content_data_array['content_file'], '.txt') !== false) {
-          $content_data_array['content_text'] = '<pre>' . $content_data_array['content_text'] . '</pre>';
+        // check if content data is a file
+        if ($content_data['content_file'] != '') {
+          unset($content_data['content_text']);
+          ob_start();      
+          include (DIR_FS_DOCUMENT_ROOT.'media/content/'.$content_data['content_file']);      
+          $content_data['content_text'] = @ob_get_contents();
+          ob_end_clean();
+          //check for txt file and format output
+          if (strpos($content_data['content_file'], '.txt') !== false) {
+            $content_data['content_text'] = '<pre>' . $content_data['content_text'] . '</pre>';
+          }
         }
-      }
     
-      //new module support
-      $content_data_array = $this->mainModules->getContentData($content_data_array, $coID, $lang_id, $customers_status, $get_inactive, $add_select);
+        //new module support
+        $content_data_array[$language_id][$customers_status][$status] = $this->mainModules->getContentData($content_data, $coID, $language_id, $customers_status, $get_inactive, $add_select);
+      }
     }
     
-    return $content_data_array;    
+    return $content_data_array[$language_id][$customers_status][$status];    
   }
 
   /**
