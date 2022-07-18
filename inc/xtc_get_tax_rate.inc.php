@@ -18,7 +18,7 @@
   function xtc_get_tax_rate($class_id, $country_id = -1, $zone_id = -1) {
     static $tax_rate_array;
     
-    if (!is_array($tax_rate_array)) {
+    if (!isset($tax_rate_array)) {
       $tax_rate_array = array();
     }
 
@@ -68,7 +68,7 @@
   function xtc_get_tax_class($class_id, $country_id = -1, $zone_id = -1) {
     static $tax_class_array;
     
-    if (!is_array($tax_class_array)) {
+    if (!isset($tax_class_array)) {
       $tax_class_array = array();
     }
         
@@ -114,4 +114,3 @@
     
     return $tax_class_array[$country_id][$zone_id][$class_id];
   }
-?>

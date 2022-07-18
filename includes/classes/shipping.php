@@ -249,7 +249,7 @@
     public static function shipping_title($shipping_class, $shipping_method) {
       static $static_shipping_array;
 
-      if (!is_array($static_shipping_array)) {
+      if (!isset($static_shipping_array)) {
         $static_shipping_array = array();
       }
 

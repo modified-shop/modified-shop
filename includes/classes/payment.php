@@ -513,7 +513,7 @@
     public static function payment_title($payment_method, $order_id = '') {
       static $static_payment_array;
 
-      if (!is_array($static_payment_array)) {
+      if (!isset($static_payment_array)) {
         $static_payment_array = array();
       }
     
@@ -545,4 +545,3 @@
     }
     
   }
-?>

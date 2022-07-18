@@ -13,7 +13,7 @@
   function xtc_get_category_data($categories_id, $languages_id = '') {
     static $categories_array_cache;
   
-    if (!is_array($categories_array_cache)) {
+    if (!isset($categories_array_cache)) {
       $categories_array_cache = array();
     }
     

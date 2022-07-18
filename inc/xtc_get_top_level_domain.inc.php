@@ -16,57 +16,56 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-function xtc_get_top_level_domain($url) {  
-  if (strpos($url, '://') !== false) {
-    $url = parse_url($url);
-    $url = $url['host'];
+  function xtc_get_top_level_domain($url) {  
+    if (strpos($url, '://') !== false) {
+      $url = parse_url($url);
+      $url = $url['host'];
+    }
+  
+    $cookie_domain = $url;
+    $domains = get_cookie_domains($url);
+    if (count($domains) > 0) {
+      $cookie_domain = array_shift($domains);
+    }
+  
+    // set array
+    $return_array = array(
+      'delete' => $domains, 
+      'domain' => $cookie_domain,
+    );  
+  
+    return $return_array;
   }
-  
-  $cookie_domain = $url;
-  $domains = get_cookie_domains($url);
-  if (count($domains) > 0) {
-    $cookie_domain = array_shift($domains);
-  }
-  
-  // set array
-  $return_array = array(
-    'delete' => $domains, 
-    'domain' => $cookie_domain,
-  );  
-  
-  return $return_array;
-}
 
 
-function get_cookie_domains($domain, &$domain_array = array()) {
-  static $tld_domain_array;
+  function get_cookie_domains($domain, &$domain_array = array()) {
+    static $tld_domain_array;
     
-  if (!is_array($tld_domain_array)) {
-    $tld_domain_array = array();
-  }
+    if (!isset($tld_domain_array)) {
+      $tld_domain_array = array();
+    }
   
-  if (is_file(DIR_FS_CATALOG.'includes/data/public_suffix_list.dat')
-      && count($tld_domain_array) < 1
-      )
-  {
-    $public_suffix_list = explode("\n", file_get_contents(DIR_FS_CATALOG.'includes/data/public_suffix_list.dat'));
+    if (is_file(DIR_FS_CATALOG.'includes/data/public_suffix_list.dat')
+        && count($tld_domain_array) < 1
+        )
+    {
+      $public_suffix_list = explode("\n", file_get_contents(DIR_FS_CATALOG.'includes/data/public_suffix_list.dat'));
 
-    foreach ($public_suffix_list as $data) {
-      if ($data != '' && strpos($data, '/') === false) {
-        $tld_domain_array[] = $data;
+      foreach ($public_suffix_list as $data) {
+        if ($data != '' && strpos($data, '/') === false) {
+          $tld_domain_array[] = $data;
+        }
       }
     }
-  }
   
-  if (count($tld_domain_array) > 0
-      && strpos($domain, '.') !== false
-      && !in_array($domain, $tld_domain_array)
-      )
-  {  
-    $domain_array[] = $domain;
-    return get_cookie_domains(substr($domain, strpos($domain, '.') + 1), $domain_array);
-  }
+    if (count($tld_domain_array) > 0
+        && strpos($domain, '.') !== false
+        && !in_array($domain, $tld_domain_array)
+        )
+    {  
+      $domain_array[] = $domain;
+      return get_cookie_domains(substr($domain, strpos($domain, '.') + 1), $domain_array);
+    }
   
-  return $domain_array;
-}
-?>
+    return $domain_array;
+  }

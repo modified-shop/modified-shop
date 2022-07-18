@@ -21,11 +21,11 @@
     
     $active = (($include_inactive === false) ? 0 : 1);
 
-    if (!is_array($products_count_array)) {
+    if (!isset($products_count_array)) {
       $products_count_array = array();
     }
 
-    if (!is_array($products_in_category_array)) {
+    if (!isset($products_in_category_array)) {
       $products_in_category_array = array();
     }
 
@@ -71,4 +71,3 @@
     
     return $products_count_array[$active][$category_id];
   }
-?>

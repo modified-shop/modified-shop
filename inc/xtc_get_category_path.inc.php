@@ -23,7 +23,7 @@
     global $modified_cache;
     static $cPath_cache;
   
-    if (!is_array($cPath_cache)) {
+    if (!isset($cPath_cache)) {
       $cPath_cache = array();
     }
   
@@ -54,4 +54,3 @@
     
     return $cPath_cache[$cID];
   }
-?>

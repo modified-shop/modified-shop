@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_get_products_name.inc.php 1009 2005-07-11 16:19:29Z mz $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -18,7 +18,7 @@
   function xtc_get_products_name($product_id, $language_id = '') {
     static $products_name_cache;
     
-    if (!is_array($products_name_cache)) {
+    if (!isset($products_name_cache)) {
       $products_name_cache = array();
     }
     
@@ -37,4 +37,3 @@
     
     return $products_name_cache[$product_id][$language_id];
   }
- ?>

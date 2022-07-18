@@ -22,7 +22,7 @@
     global $PHP_SELF;
     static $tax_description_array;
     
-    if (!is_array($tax_description_array)) {
+    if (!isset($tax_description_array)) {
       $tax_description_array = array();
     }
         
@@ -73,4 +73,3 @@
     
     return $tax_description_array[$country_id][$zone_id][$class_id];
   }
-?>
