@@ -105,6 +105,17 @@ $shipping_modules = new shipping($_SESSION['shipping']);
 require_once (DIR_WS_CLASSES . 'order.php');
 $order = new order();
 
+if ($order->content_type != 'virtual' 
+    && $order->content_type != 'virtual_weight'
+    && $_SESSION['cart']->count_contents_virtual() != 0
+    )
+{
+  if ($_SESSION['shipping'] == false || $_SESSION['shipping'] == '') {
+    $messageStack->add_session('global', ERROR_NO_PAYMENT_MODULE_SELECTED);
+    xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
+  }
+}
+
 require_once (DIR_WS_CLASSES . 'order_total.php'); // GV Code ICW ADDED FOR CREDIT CLASS SYSTEM
 $order_total_modules = new order_total(); // GV Code ICW ADDED FOR CREDIT CLASS SYSTEM
 
