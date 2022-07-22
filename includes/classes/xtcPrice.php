@@ -505,7 +505,7 @@ class xtcPrice {
    * @return Double converted price
    */
   function xtcCalculateCurr($price) {
-    return $this->currencies[$this->actualCurr]['value'] * $price;
+    return $this->currencies[$this->actualCurr]['value'] * (double)$price;
   }
     
   /**
