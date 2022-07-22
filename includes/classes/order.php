@@ -139,6 +139,7 @@
       }
 
       // additional info
+      $this->content_type = $this->info['content_type'];
       $this->info['status'] = $order['customers_status'];
       $this->info['status_name'] = $order['customers_status_name'];
       $this->info['status_image'] = $order['customers_status_image'];
