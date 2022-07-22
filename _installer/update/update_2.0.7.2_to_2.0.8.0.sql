@@ -40,15 +40,18 @@ CREATE TABLE IF NOT EXISTS `products_images_description` (
   KEY idx_products_id (`products_id`)
 );
 
-#GTB - 2022-07-018 - add index for products_description
+#GTB - 2022-07-18 - add index for products_description
 ALTER TABLE `products_description` ADD KEY `idx_products_heading_title` (`products_heading_title`);
 ALTER TABLE `products_description` ADD KEY `idx_products_keywords` (`products_keywords`);
 
-#GTB - 2022-07-018 - add index for categories_description
+#GTB - 2022-07-18 - add index for categories_description
 ALTER TABLE `categories_description` ADD KEY `idx_categories_heading_title` (`categories_heading_title`);
 
-#GTB - 2022-07-018 - add index for manufacturers
+#GTB - 2022-07-18 - add index for manufacturers
 ALTER TABLE `manufacturers` ADD KEY `idx_manufacturers_image` (`manufacturers_image`);
 ALTER TABLE `manufacturers_info` ADD KEY `idx_manufacturers_title` (`manufacturers_title`);
+
+#GTB - 2022-07-22 - add content_type for orders
+ALTER TABLE `orders` ADD `content_type` VARCHAR(32) NOT NULL; 
 
 # Keep an empty line at the end of this file for the db_updater to work properly
