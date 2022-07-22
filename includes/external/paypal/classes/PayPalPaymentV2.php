@@ -172,7 +172,7 @@
           $sum_tax[$product['tax']] += $product['tax_value'];
           
           $item = array(
-            'name' => $product['name'],
+            'name' => $this->encode_utf8($product['name']),
             'category' => 'PHYSICAL_GOODS',
             'unit_amount' => array(
               'value' => sprintf("%01.2f", $product['price_net']),
