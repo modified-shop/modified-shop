@@ -869,6 +869,7 @@ CREATE TABLE orders (
   campaign VARCHAR(32) NOT NULL,
   conversion_type INT(1) DEFAULT 0 NOT NULL,
   orders_ident_key VARCHAR(128),
+  content_type VARCHAR(32) NOT NULL,
   PRIMARY KEY (orders_id),
   KEY idx_customers_id (customers_id),
   KEY idx_orders_status (orders_status),

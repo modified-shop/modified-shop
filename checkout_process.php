@@ -158,6 +158,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
     'language' => $_SESSION['language'],
     'languages_id' => (int)$_SESSION['languages_id'],
     'comments' => $order->info['comments'],
+    'content_type' => $order->content_type,
   );
 
   // refID
