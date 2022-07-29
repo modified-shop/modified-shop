@@ -270,7 +270,7 @@
           <table class="tableConfig">
             <tr>
               <td class="dataTableConfig col-left"><?php echo TEXT_SPECIALS_PRODUCT; ?></td>
-              <td class="dataTableConfig col-middle"><?php echo ((isset($sInfo->products_name)) ? $sInfo->products_name . '<br/><small>(' . $xtPrice->xtcFormat($price,true). ' )' . $price_netto .'</small>'.xtc_draw_hidden_field('products_id', $sInfo->products_id) : xtc_draw_products_pull_down('products_id', 'style="font-size:10px"', $specials_array)); ?></td>
+              <td class="dataTableConfig col-middle"><?php echo ((isset($sInfo->products_name)) ? $sInfo->products_name . '<br/><small>(' . $xtPrice->xtcFormat($price,true). ') ' . $price_netto .'</small>'.xtc_draw_hidden_field('products_id', $sInfo->products_id) : xtc_draw_products_pull_down('products_id', 'style="font-size:10px"', $specials_array)); ?></td>
               <td class="dataTableConfig col-right">&nbsp;</td>
             </tr>
             <?php
