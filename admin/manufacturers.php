@@ -283,11 +283,11 @@ if (USE_WYSIWYG == 'true') {
           <div class="clear div_box mrg5">       
             <table class="tableInput border0">
               <tr>
-                <td class="main" style="width:260px"><?php echo TEXT_MANUFACTURER_STATUS; ?>:</td>
+                <td class="main" style="width:260px"><?php echo TEXT_MANUFACTURER_STATUS; ?></td>
                 <td class="main"><?php echo draw_on_off_selection('manufacturers_status', $manufacturers_status_array, ($manufact['manufacturers_status'] == '0' ? false : true), 'style="width: 155px"'); ?></td>
               </tr>
               <tr>
-                <td class="main"><?php echo TEXT_MANUFACTURERS_PRODUCT_SORT_ORDER; ?>:</td>
+                <td class="main"><?php echo TEXT_MANUFACTURERS_PRODUCT_SORT_ORDER; ?></td>
                 <td class="main"><?php echo xtc_draw_pull_down_menu('products_sorting', $order_array, ((isset($manufact['products_sorting'])) ? $manufact['products_sorting'] : $default_value), 'style="width: 155px"'); ?>
                                  <?php echo xtc_draw_pull_down_menu('products_sorting2', $order_array_desc, ((isset($manufact['products_sorting2'])) ? $manufact['products_sorting2'] : ''), 'style="width: 155px; margin-left: 5px;"'); ?></td>
               </tr>
