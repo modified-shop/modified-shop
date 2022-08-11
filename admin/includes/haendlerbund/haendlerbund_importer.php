@@ -4,7 +4,7 @@ class haendlerbund_importer
 {
 
     #Klassenvariablen
-    var $version = '1.03';
+    var $version = '1.04';
     var $api = false;
     var $api_config = false;
     var $data = array();
@@ -25,11 +25,11 @@ class haendlerbund_importer
             "haendlerbund_datenschutz|Datenschutzerkl&auml;rung" => "160DEDA9674",
             "haendlerbund_batteriegesetz|Hinweise zur Batterieentsorgung" => "134CBB4D101"
         );
-        if ($_POST["config_save"] == 1) {
+        if (isset($_POST["config_save"]) && $_POST["config_save"] == 1) {
             $this->saveConfiguration($data);
         }
 
-        if ($_POST['agb_import'] == 1 || $api_config == 1) {
+        if (isset($_POST["agb_import"]) && ($_POST['agb_import'] == 1 || $api_config == 1)) {
             if ($api_config == 1) {
                 $apikey = $_GET["api_key"];
             } else {
@@ -202,7 +202,7 @@ class haendlerbund_importer
         }
 
         $return = "";
-        if ($this->getConfigurationValue("haendlerbund_key") == "" || $_GET["start_konfig"] == 1) {
+        if (isset($_GET["start_konfig"]) && ($this->getConfigurationValue("haendlerbund_key") == "" || $_GET["start_konfig"] == 1)) {
             $return .= '<div class="content" id="container">
             <div class="title_hb">
             <h5 class="title_hb">H&auml;ndlerbund Mitgliedschaft</h5>
@@ -268,7 +268,7 @@ class haendlerbund_importer
                             <div style="line-height:200%; width:260px; float:left; padding-top:110px; font-size:10px">' . $this->rt_gen() . '</div>
                     <div style="float:left; width:216px;">
                         <div style="line-height:125%;">' .
-                (($_SESSION["import_message"] != "") ?
+                ((isset($_SESSION["import_message"]) && $_SESSION["import_message"] != "") ?
                     '<img src="includes/haendlerbund/images/import_ok_btn.png" width="217" height="52">' . ($_SESSION["import_message"] = "")
                     :
                     '<img src="includes/haendlerbund/images/pfleil_blue.png" width="217" height="52">

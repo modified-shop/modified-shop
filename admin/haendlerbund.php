@@ -19,7 +19,7 @@ $modulVersion = "1.0";
 require('includes/application_top.php');
 require('includes/haendlerbund/haendlerbund_importer.php');
 
-if($_GET["api_konfiguration"] == 1) {
+if(isset($_GET['api_konfiguration']) && $_GET["api_konfiguration"] == 1) {
   $contentimporter = new haendlerbund_importer();
   echo $contentimporter->process(1);
 } else {
