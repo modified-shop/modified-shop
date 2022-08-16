@@ -321,10 +321,11 @@ class seo_url_shopstat extends modified_seo_url {
 
     $category_link_array = array();    
     $cat_path_array = explode('_', $this->params_array['cPath']);
+    $cat_path_cnt = count($cat_path_array);
     
-    foreach ($cat_path_array as $categories_id) {
+    foreach ($cat_path_array as $cnt => $categories_id) {
       if (!isset(self::$names_array['categories'][$this->language_id][$categories_id])) {
-        if (!isset($this->params_array['name']) || empty($this->params_array['name']) || $plain !== false) {
+        if (!isset($this->params_array['name']) || empty($this->params_array['name']) || $plain !== false || $cat_path_cnt != $cnt) {
           $categories_name_query = xtDBquery("SELECT categories_name
                                                 FROM ".TABLE_CATEGORIES_DESCRIPTION."
                                                WHERE categories_id = '".(int)$categories_id."'
