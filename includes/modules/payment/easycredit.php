@@ -45,10 +45,10 @@ use EasyCredit\Transfer\TechnicalShopParams;
 
 
 class easycredit {
-  var $code, $title, $description, $enabled;
+  var $code, $title, $description, $enabled, $link_parameters, $link_class, $link_title;
 
   function __construct() {
-    global $order;
+    global $order, $main;
 
     $this->version = '1.20';
     $this->code = 'easycredit';
@@ -57,6 +57,7 @@ class easycredit {
     $this->info = MODULE_PAYMENT_EASYCREDIT_TEXT_INFO;
     $this->sort_order = defined('MODULE_PAYMENT_EASYCREDIT_SORT_ORDER') ? MODULE_PAYMENT_EASYCREDIT_SORT_ORDER : '';
     $this->enabled = ((defined('MODULE_PAYMENT_EASYCREDIT_STATUS') && MODULE_PAYMENT_EASYCREDIT_STATUS == 'True') ? true : false);
+
     if ($this->enabled === true) {
       if ((int) MODULE_PAYMENT_EASYCREDIT_ORDER_STATUS_ID > 0) {
         $this->order_status = MODULE_PAYMENT_EASYCREDIT_ORDER_STATUS_ID;
@@ -99,11 +100,13 @@ class easycredit {
       if (!defined('RUN_MODE_ADMIN') && is_object($order)) {
         $this->update_status();
       }
-      
-      $popup_params = $main->getPopupParams();
-      $this->link_parameters = ltrim($popup_params['link_parameters'], '&');
-      $this->link_class = $popup_params['link_class'];
-      $this->link_title = $popup_params['link_title'];
+
+      if (isset($main) && is_object($main)) {
+        $popup_params = $main->getPopupParams();
+        $this->link_parameters = ltrim($popup_params['link_parameters'], '&');
+        $this->link_class = $popup_params['link_class'];
+        $this->link_title = $popup_params['link_title'];
+      }
     }
   }
 
