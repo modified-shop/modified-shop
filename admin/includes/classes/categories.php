@@ -1049,7 +1049,6 @@ class categories {
         xtc_db_perform(TABLE_PRODUCTS_TO_CATEGORIES, $sql_data_array);                   
       }
       if ($dest_categories_id == 0) {
-        $this->set_product_status($src_products_id, 1);
         $this->set_product_startpage($src_products_id, 1);
       }
     } elseif ($dest_categories_id != 0) {
@@ -1078,7 +1077,6 @@ class categories {
         xtc_db_perform(TABLE_PRODUCTS_TO_CATEGORIES, $sql_data_array, 'update', "products_id = '".$src_products_id."' AND categories_id = '".$src_category_id."'");                   
       }
       if ($dest_category_id == 0) {
-        $this->set_product_status($src_products_id, 1);
         $this->set_product_startpage($src_products_id, 1);
       }
     }
