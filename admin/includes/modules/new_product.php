@@ -111,7 +111,7 @@
   $form_action = isset($_GET['pID']) ? 'update_product' : 'insert_product';
   $form_action .= ((isset($_GET['origin']) && $_GET['origin'] != '') ? '&origin='.$_GET['origin'] : '');
   
-  echo xtc_draw_form('new_product', FILENAME_CATEGORIES, xtc_get_all_get_params(array('action', 'cPath', 'origin')) . '&action='.$form_action, 'post', 'id="new_product" enctype="multipart/form-data"' . $confirm_submit); 
+  echo xtc_draw_form('new_product', FILENAME_CATEGORIES, xtc_get_all_get_params(array('action', 'cPath', 'origin')).'cpath='.$cPath.'&action='.$form_action, 'post', 'id="new_product" enctype="multipart/form-data"' . $confirm_submit); 
   echo xtc_draw_hidden_field('products_quantity_before_edit', isset($prod_quantity['products_quantity']) ? $prod_quantity['products_quantity'] : 0);
   echo '<input type="submit" style="display:none;" value="'.BUTTON_SAVE.'"/>';
   ?>
@@ -260,17 +260,17 @@
         if (function_exists('tags_iframe_link')) {
           echo '&nbsp;'.tags_iframe_link($_GET['pID']);
         } else {
-          echo '&nbsp;<a class="button" href="' . xtc_href_link(FILENAME_PRODUCTS_TAGS,'cpath='. $cPath . $catfunc->page_parameter.'&current_product_id='.$_GET['pID'].'&action=edit&oldaction=new_product').'" onclick="this.blur()">'.TEXT_PRODUCTS_TAGS.'</a>';
+          echo '&nbsp;<a class="button" href="' . xtc_href_link(FILENAME_PRODUCTS_TAGS, 'cpath='. $cPath . $catfunc->page_parameter.'&current_product_id='.$_GET['pID'].'&action=edit&oldaction=new_product').'" onclick="this.blur()">'.TEXT_PRODUCTS_TAGS.'</a>';
         }
         
         if (function_exists('attributes_iframe_link')) {
           echo '&nbsp;'.attributes_iframe_link($_GET['pID']);
         } else {
-          echo '&nbsp;<a class="button" href="' . xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES,'cpath='. $cPath . $catfunc->page_parameter.'&current_product_id='.$_GET['pID'].'&action=edit&oldaction=new_product').'" onclick="this.blur()">'.BUTTON_EDIT_ATTRIBUTES.'</a>';
+          echo '&nbsp;<a class="button" href="' . xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'cpath='. $cPath . $catfunc->page_parameter.'&current_product_id='.$_GET['pID'].'&action=edit&oldaction=new_product').'" onclick="this.blur()">'.BUTTON_EDIT_ATTRIBUTES.'</a>';
         }
         
-        echo '&nbsp;<a onclick="return confirmLink(\''. CONTINUE_WITHOUT_SAVE .'\', \'\' ,this)" class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('action','last_action', 'set', 'id', 'pID', 'cPath')) . 'last_action='.$_GET['action'].'&action=edit_crossselling&current_product_id='.(int)$_GET['pID'].'&cpath='.$cPath) . '">' . BUTTON_EDIT_CROSS_SELLING . '</a>';
-        echo '&nbsp;<a onclick="return confirmLink(\''. CONTINUE_WITHOUT_SAVE .'\', \'\' ,this)" class="button" href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action','last_action', 'set', 'id')) . 'last_action='.$_GET['action'].'&action=new_products_content&set=product') . '">' . BUTTON_NEW_ATTACHMENT . '</a>';
+        echo '&nbsp;<a onclick="return confirmLink(\''. CONTINUE_WITHOUT_SAVE .'\', \'\' ,this)" class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('action','last_action', 'set', 'id', 'pID', 'cPath')).'last_action='.$_GET['action'].'&action=edit_crossselling&current_product_id='.(int)$_GET['pID'].'&cpath='.$cPath) . '">' . BUTTON_EDIT_CROSS_SELLING . '</a>';
+        echo '&nbsp;<a onclick="return confirmLink(\''. CONTINUE_WITHOUT_SAVE .'\', \'\' ,this)" class="button" href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action','last_action', 'set', 'id')).'last_action='.$_GET['action'].'&action=new_products_content&set=product') . '">' . BUTTON_NEW_ATTACHMENT . '</a>';
         echo '&nbsp;<a class="button" href="' . xtc_catalog_href_link('product_info.php', 'products_id=' . $_GET['pID']) . '" target="_blank">' . BUTTON_VIEW_PRODUCT . '</a>';
       }
       echo '&nbsp;<a class="button" href="' . ((isset($_GET['origin']) && $_GET['origin'] != '') ? xtc_href_link(basename($_GET['origin']), 'pID=' . (int)$_GET['pID'].$catfunc->page_parameter) : xtc_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . $catfunc->page_parameter . ((isset($_GET['pID']) && $_GET['pID']!='') ? '&pID=' . (int)$_GET['pID'] : ''))) . '">' . BUTTON_CANCEL . '</a>';
@@ -362,7 +362,7 @@
           echo '&nbsp;<input type="submit" class="button" name="prod_update" value="'.BUTTON_UPDATE.'" '.$confirm_save_entry.'/>';
           echo '&nbsp;<a class="button" href="' . xtc_catalog_href_link('product_info.php', 'products_id=' . $_GET['pID']) . '" target="_blank">' . BUTTON_VIEW_PRODUCT . '</a>';
         }
-        echo '&nbsp;<a class="button" href="' . ((isset($_GET['origin']) && $_GET['origin'] != '') ? xtc_href_link(basename($_GET['origin']), 'pID=' . (int)$_GET['pID'].$catfunc->page_parameter) : xtc_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . $catfunc->page_parameter . ((isset($_GET['pID']) && $_GET['pID']!='') ? '&pID=' . (int)$_GET['pID'] : ''))) . '">' . BUTTON_CANCEL . '</a>';
+        echo '&nbsp;<a class="button" href="' . ((isset($_GET['origin']) && $_GET['origin'] != '') ? xtc_href_link(basename($_GET['origin']), 'pID='.(int)$_GET['pID'].$catfunc->page_parameter) : xtc_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . $catfunc->page_parameter . ((isset($_GET['pID']) && $_GET['pID']!='') ? '&pID=' . (int)$_GET['pID'] : ''))) . '">' . BUTTON_CANCEL . '</a>';
         ?>
       </div>
       <!-- EOF Save //-->
