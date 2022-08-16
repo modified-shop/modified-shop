@@ -245,8 +245,8 @@ class main {
     $group_check = (GROUP_CHECK == 'true') ? "AND group_ids LIKE '%c_" . (int)$customers_status . "_group%'" : '';
     $where = (($get_inactive === true) ? '' : " AND content_active = '1'");
     
-    if (!isset($content_data_array[$language_id][$customers_status][$status])) {
-      $content_data_array[$language_id][$customers_status][$status] = array();
+    if (!isset($content_data_array[$language_id][$customers_status][$status][(int)$coID])) {
+      $content_data_array[$language_id][$customers_status][$status][(int)$coID] = array();
 
       $content_data_query = xtDBquery("SELECT ".$add_select."
                                               content_id,
@@ -262,7 +262,7 @@ class main {
                                           AND languages_id='" . (int)$language_id . "'
                                         LIMIT 1");
       if (xtc_db_num_rows($content_data_query, true) > 0) {
-        $content_data = xtc_db_fetch_array($content_data_query,true);
+        $content_data = xtc_db_fetch_array($content_data_query, true);
     
         // check if content data is a file
         if ($content_data['content_file'] != '') {
@@ -278,11 +278,11 @@ class main {
         }
     
         //new module support
-        $content_data_array[$language_id][$customers_status][$status] = $this->mainModules->getContentData($content_data, $coID, $language_id, $customers_status, $get_inactive, $add_select);
+        $content_data_array[$language_id][$customers_status][$status][(int)$coID] = $this->mainModules->getContentData($content_data, $coID, $language_id, $customers_status, $get_inactive, $add_select);
       }
     }
     
-    return $content_data_array[$language_id][$customers_status][$status];    
+    return $content_data_array[$language_id][$customers_status][$status][(int)$coID];    
   }
 
   /**
