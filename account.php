@@ -76,9 +76,9 @@ for ($i=0; $i<$max; $i++) {
                                              ON cd.categories_id = p2c.categories_id
                                                 AND cd.language_id = '".(int) $_SESSION['languages_id']."'
                                        WHERE p.products_status = '1'
+                                             ".PRODUCTS_CONDITIONS_P."
                                          AND p.products_id = '".(int) $_SESSION['tracking']['products_history'][$i]."'
-                                    GROUP BY p.products_id
-                                             ".PRODUCTS_CONDITIONS_P);
+                                    GROUP BY p.products_id");
   if (xtc_db_num_rows($product_history_query, true) > 0) {
     $history_product = xtc_db_fetch_array($product_history_query, true);
     $history_product['cat_url'] = xtc_href_link(FILENAME_DEFAULT, 'cPath='.xtc_get_product_path($history_product['products_id']));
