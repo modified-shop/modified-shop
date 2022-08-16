@@ -24,7 +24,7 @@ if (!CacheCheck()) {
   $module_smarty->caching = 1;
   $module_smarty->cache_lifetime = CACHE_LIFETIME;
   $module_smarty->cache_modified_check = CACHE_CHECK == 'true';
-  $cache_id = md5('lID:'.$_SESSION['language'].'|error:'.$site_error);
+  $cache_id = md5('lID:'.$_SESSION['language'].'|error:'.$site_error.'|keyword:'.((isset($_GET['keywords'])) ? $_GET['keywords'] : ''));
 }
 
 if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/error_message.html', $cache_id) || !$cache) {
