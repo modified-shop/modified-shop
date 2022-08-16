@@ -113,9 +113,11 @@ if (!isset($order->info['total'])) {
 }
 $total = $ot_total_value;
 
+$shipping_content = array();
+
 //suppot downloads and gifts
 if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weight') || ($_SESSION['cart']->count_contents_virtual() == 0)) {
-  $shipping_content = array(array('NAME' => _SHIPPING_FREE));
+  $shipping_content[] = array('NAME' => _SHIPPING_FREE);
   if (DOWNLOAD_SHOW_LANG_DROPDOWN == 'false') {
     $module_smarty->clear_assign('SELECT_COUNTRY');
     $smarty->clear_assign('SELECT_COUNTRY');
@@ -162,7 +164,6 @@ if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weigh
     }
   }
   
-  $shipping_content = array ();
   if ($free_shipping == true) {
     $shipping_content[] = array(
       'NAME' => FREE_SHIPPING_TITLE,
