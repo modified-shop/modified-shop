@@ -448,7 +448,7 @@
         $customer_address = get_customers_address($_SESSION['customer_default_address_id'], true, true);
         $shipping_address = get_customers_address($shipping_address_id, false, true);
         $billing_address = get_customers_address($billing_address_id, false, true);
-        $tax_address = get_customers_address((($this->content_type == 'virtual') ? $billing_address_id : $shipping_address_id), false, false);
+        $tax_address = get_customers_address(($this->content_type == 'virtual') ? $billing_address_id : $shipping_address_id);
       }
 
       // set tax country id for using order total in shopping cart
