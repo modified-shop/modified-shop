@@ -29,7 +29,6 @@ require_once (DIR_FS_INC.'xtc_address_format.inc.php');
 require_once (DIR_FS_INC.'xtc_get_country_name.inc.php');
 require_once (DIR_FS_INC.'xtc_get_zone_code.inc.php');
 require_once (DIR_FS_INC.'secure_form.inc.php');
-require_once (DIR_FS_INC.'get_customers_address.inc.php');
 
 $params = '';
 $link_checkout_payment = FILENAME_CHECKOUT_PAYMENT;
@@ -78,8 +77,6 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'submit')) {
     
     if ($_SESSION['shipping'] === false) {
       $_SESSION['sendto'] = $_SESSION['billto'];
-      $address = get_customers_address($_SESSION['sendto'], false, true);
-      $_SESSION['delivery_zone'] = $address['iso_code_2'];
     }
     
     $check_address_query = xtc_db_query("SELECT count(*) AS total 
@@ -92,22 +89,15 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'submit')) {
       if ($reset_payment == true && !isset($_SESSION['paypal']['PayerID'])) {
         unset($_SESSION['payment']);
       }
-      $address = get_customers_address($_SESSION['billto'], false, true);
-      $_SESSION['billing_zone'] = $address['iso_code_2'];
-
       xtc_redirect(xtc_href_link($link_checkout_payment, $params, 'SSL'));
     } else {
       unset($_SESSION['billto']);
     }
   } else {
     $_SESSION['billto'] = $_SESSION['customer_default_address_id'];
-    $address = get_customers_address($_SESSION['billto'], false, true);
-    $_SESSION['billing_zone'] = $address['iso_code_2'];
 
     if ($_SESSION['shipping'] === false) {
       $_SESSION['sendto'] = $_SESSION['billto'];
-      $address = get_customers_address($_SESSION['sendto'], false, true);
-      $_SESSION['delivery_zone'] = $address['iso_code_2'];
     }
     xtc_redirect(xtc_href_link($link_checkout_payment, $params, 'SSL'));
   }
@@ -115,8 +105,6 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'submit')) {
 
 if (!isset ($_SESSION['billto'])) {
   $_SESSION['billto'] = $_SESSION['customer_default_address_id'];
-  $address = get_customers_address($_SESSION['billto'], false, true);
-  $_SESSION['billing_zone'] = $address['iso_code_2'];
 }
 
 // include boxes
