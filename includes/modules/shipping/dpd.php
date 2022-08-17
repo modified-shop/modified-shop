@@ -90,7 +90,7 @@
       $country_length = xtc_db_query($string_check_length);
       $country_length_result = xtc_db_fetch_array($country_length);
 
-      if(strlen($country_length_result['dpd_weight_ref']) == 3){
+      if (!empty($country_length_result['dpd_weight_ref']) && strlen($country_length_result['dpd_weight_ref']) == 3) {
         $query_string ="SELECT w.dpd_weight_price_string, w.dpd_free_shipping_over, w.dpd_shipping_subsidized FROM dpd_weight w, dpd_postal_to_weight pw, dpd_country_to_postal cp WHERE cp.dpd_postal_reference = pw.dpd_postal_reference AND pw.dpd_weight_ref = w.dpd_weight_ref AND cp.dpd_postal_reference = pw.dpd_postal_reference AND cp.dpd_country = '" . $dest_country . "' AND '" . $dest_postal_code . "' BETWEEN pw.dpd_from_postal AND pw.dpd_to_postal";
       } else {
         $query_string ="SELECT w.dpd_weight_price_string, w.dpd_free_shipping_over, w.dpd_shipping_subsidized FROM dpd_weight w, dpd_postal_to_weight pw, dpd_country_to_postal cp WHERE cp.dpd_postal_reference = pw.dpd_postal_reference AND pw.dpd_weight_ref = w.dpd_weight_ref AND cp.dpd_postal_reference = pw.dpd_postal_reference AND cp.dpd_country = '" . $dest_country . "'";
