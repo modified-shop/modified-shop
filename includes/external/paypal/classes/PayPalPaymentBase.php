@@ -240,6 +240,18 @@ class PayPalPaymentBase extends PayPalCommon {
       $_SESSION['billing_zone'] = $order->billing['country']['iso_code_2'];
     }
 
+    $allowed_zones = explode(',', strtoupper(preg_replace("'[\r\n\s]+'",'',constant('MODULE_PAYMENT_' . strtoupper($this->code) . '_ALLOWED'))));
+    $allowed_zones = array_filter($allowed_zones);
+
+    if (isset($_SESSION['billing_zone']) 
+        && count($allowed_zones) > 0
+        && in_array($_SESSION['billing_zone'], $allowed_zones) != true
+        )
+    {
+      $messageStack->add_session('global', ERROR_NO_PAYMENT_MODULE_SELECTED);
+      xtc_redirect(xtc_href_link((($this->code == 'paypalcart') ? FILENAME_CHECKOUT_SHIPPING : FILENAME_CHECKOUT_PAYMENT), '', 'SSL'));
+    }
+    
     $no_shipping = false;
     if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weight') || ($_SESSION['cart']->count_contents_virtual() == 0)) {
       $no_shipping = true;
