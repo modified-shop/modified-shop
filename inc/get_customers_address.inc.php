@@ -52,14 +52,14 @@
                                                    " . $default_select . "
                                               FROM " . TABLE_CUSTOMERS . " c
                                          LEFT JOIN " . TABLE_ADDRESS_BOOK . " ab
-                                                   ON ab.customers_id = '" . $_SESSION['customer_id'] . "'
+                                                   ON ab.customers_id = '" . (int)$_SESSION['customer_id'] . "'
                                                       AND ab.address_book_id = '".(int)$address_book_id."'
                                                    " . $default_join . "
                                          LEFT JOIN " . TABLE_ZONES . " z 
                                                    ON ab.entry_zone_id = z.zone_id
                                          LEFT JOIN " . TABLE_COUNTRIES . " co 
                                                    ON ab.entry_country_id = co.countries_id
-                                             WHERE c.customers_id = '" . $_SESSION['customer_id'] . "'");
+                                             WHERE c.customers_id = '" . (int)$_SESSION['customer_id'] . "'");
     $customer_address = xtc_db_fetch_array($customer_address_query);
     
     return $customer_address;
