@@ -222,7 +222,7 @@
         );
         
         if (isset($_SESSION['tmp_oID'])) {
-          $purchase_unit['invoice_id'] = $_SESSION['tmp_oID'];
+          $purchase_unit['invoice_id'] = $this->get_config('PAYPAL_CONFIG_INVOICE_PREFIX').$_SESSION['tmp_oID'];
         }
       }
       
