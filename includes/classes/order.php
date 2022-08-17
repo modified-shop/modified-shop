@@ -34,13 +34,14 @@
     define('CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION', 'true'); // 'true' 'false'  --- default: true
   }
 
-  if(!defined('RUN_MODE_ADMIN')) {
+  if (!defined('RUN_MODE_ADMIN')) {
     // include needed functions
     require_once(DIR_FS_INC . 'xtc_date_long.inc.php');
     require_once(DIR_FS_INC . 'xtc_address_format.inc.php');
     require_once(DIR_FS_INC . 'xtc_get_country_name.inc.php');
     require_once(DIR_FS_INC . 'xtc_get_zone_code.inc.php');
     require_once(DIR_FS_INC . 'xtc_get_tax_description.inc.php');
+    require_once(DIR_FS_INC . 'get_customers_address.inc.php');
   }
 
   class order {
@@ -402,7 +403,60 @@
       return $customer;
     }
 
+    
+    function get_customers_address($address_book_id, $customer_details = false, $address_details = false) {
+      $customer_select = ",
+         c.payment_unallowed,
+         c.shipping_unallowed,
+         c.customers_firstname as firstname,
+         c.customers_cid as csID,
+         c.customers_gender as gender,
+         c.customers_lastname as lastname,
+         c.customers_telephone as telephone,
+         c.customers_email_address as email_address
+        ";
 
+      $address_select = ",
+         ab.entry_company as company,
+         ab.entry_street_address as street_address,
+         ab.entry_suburb as suburb,
+         ab.entry_gender as gender,
+         ab.entry_postcode as postcode,
+         ab.entry_city as city,
+         ab.entry_zone_id as zone_id,
+         ab.entry_country_id as country_id,
+         ab.entry_state as state,
+         co.countries_name as title,
+         co.countries_id as id,
+         co.countries_iso_code_2 as iso_code_2,
+         co.countries_iso_code_3 as iso_code_3,
+         co.address_format_id as format_id,
+         z.zone_name
+        ";
+
+      $default_select = '';
+      if ($customer_details === true) $default_select .= $customer_select;
+      if ($address_details === true) $default_select .= $address_select;      
+      
+      $customer_address_query = xtc_db_query("SELECT ab.entry_country_id as country_id,
+                                                     ab.entry_zone_id as zone_id
+                                                     " . $default_select . "
+                                                FROM " . TABLE_CUSTOMERS . " c
+                                           LEFT JOIN " . TABLE_ADDRESS_BOOK . " ab
+                                                     ON ab.customers_id = '" . $_SESSION['customer_id'] . "'
+                                                        AND ab.address_book_id = '".(int)$address_book_id."'
+                                                     " . $default_join . "
+                                           LEFT JOIN " . TABLE_ZONES . " z 
+                                                     ON ab.entry_zone_id = z.zone_id
+                                           LEFT JOIN " . TABLE_COUNTRIES . " co 
+                                                     ON ab.entry_country_id = co.countries_id
+                                               WHERE c.customers_id = '" . $_SESSION['customer_id'] . "'");
+      $customer_address = xtc_db_fetch_array($customer_address_query);
+      
+      return $customer_address;
+    }
+    
+    
     function cart() {
       global $currencies, $xtPrice, $main, $PHP_SELF;
 
@@ -441,77 +495,14 @@
         'email_address' => ''
       );
 
-      $default_select =
-        "ab.entry_company as company,
-         ab.entry_street_address as street_address,
-         ab.entry_suburb as suburb,
-         ab.entry_gender as gender,
-         ab.entry_postcode as postcode,
-         ab.entry_city as city,
-         ab.entry_zone_id as zone_id,
-         ab.entry_country_id as country_id,
-         ab.entry_state as state,
-         co.countries_name as title,
-         co.countries_id as id,
-         co.countries_iso_code_2 as iso_code_2,
-         co.countries_iso_code_3 as iso_code_3,
-         co.address_format_id as format_id,
-         z.zone_name
-        ";
+      if (isset($_SESSION['customer_id'])) {        
+        $shipping_address_id = ((isset($_SESSION['sendto']) && $_SESSION['sendto'] != false) ? $_SESSION['sendto'] : $_SESSION['customer_default_address_id']);
+        $billing_address_id = ((isset($_SESSION['billto'])) ? $_SESSION['billto'] : $shipping_address_id);
 
-      $default_join =
-        "LEFT JOIN " . TABLE_ZONES . " z ON (ab.entry_zone_id = z.zone_id)
-         LEFT JOIN " . TABLE_COUNTRIES . " co ON (ab.entry_country_id = co.countries_id)
-        ";
-
-      if (isset($_SESSION['customer_id'])) {
-        $customer_address_query = xtc_db_query("SELECT c.payment_unallowed,
-                                                       c.shipping_unallowed,
-                                                       c.customers_firstname as firstname,
-                                                       c.customers_cid as csID,
-                                                       c.customers_gender as gender,
-                                                       c.customers_lastname as lastname,
-                                                       c.customers_telephone as telephone,
-                                                       c.customers_email_address as email_address,
-                                                       " . $default_select . "
-                                                  FROM " . TABLE_CUSTOMERS . " c
-                                             LEFT JOIN " . TABLE_ADDRESS_BOOK . " ab
-                                                       ON (ab.customers_id = '" . $_SESSION['customer_id'] . "'
-                                                           AND c.customers_default_address_id = ab.address_book_id)
-                                                       " . $default_join . "
-                                                 WHERE c.customers_id = '" . $_SESSION['customer_id'] . "'
-                                              ");
-        $customer_address = xtc_db_fetch_array($customer_address_query);
-
-        $shipping_address_query = xtc_db_query("SELECT ab.entry_firstname as firstname,
-                                                       ab.entry_lastname as lastname,
-                                                       " . $default_select . "
-                                                  FROM " . TABLE_ADDRESS_BOOK . " ab
-                                                       " . $default_join . "
-                                                 WHERE ab.customers_id = '" . $_SESSION['customer_id'] . "'
-                                                   AND ab.address_book_id = '" . ((isset($_SESSION['sendto']) && $_SESSION['sendto'] != false) ? $_SESSION['sendto'] : $_SESSION['customer_default_address_id']) . "'
-                                              ");
-        $shipping_address = xtc_db_fetch_array($shipping_address_query);
-
-        $billing_address_query = xtc_db_query("SELECT ab.entry_firstname as firstname,
-                                                      ab.entry_lastname as lastname,
-                                                      " . $default_select . "
-                                                 FROM " . TABLE_ADDRESS_BOOK . " ab
-                                                      " . $default_join . "
-                                                WHERE ab.customers_id = '" . $_SESSION['customer_id'] . "'
-                                                  AND ab.address_book_id = '" . ((isset($_SESSION['billto'])) ? $_SESSION['billto'] : ((isset($_SESSION['sendto'])) ? $_SESSION['sendto'] : $_SESSION['customer_default_address_id'])) . "'
-                                             ");
-
-        $billing_address = xtc_db_fetch_array($billing_address_query);
-
-        $tax_address_query = xtc_db_query("SELECT ab.entry_country_id as country_id,
-                                                  ab.entry_zone_id as zone_id
-                                             FROM " . TABLE_ADDRESS_BOOK . " ab
-                                        LEFT JOIN " . TABLE_ZONES . " z ON (ab.entry_zone_id = z.zone_id)
-                                            WHERE ab.customers_id = '" . $_SESSION['customer_id'] . "'
-                                              AND ab.address_book_id = '" . (($this->content_type == 'virtual') ? ((isset($_SESSION['billto'])) ? $_SESSION['billto'] : ((isset($_SESSION['sendto']) && $_SESSION['sendto'] != false) ? $_SESSION['sendto'] : $_SESSION['customer_default_address_id'])) : ((isset($_SESSION['sendto']) && $_SESSION['sendto'] != false) ? $_SESSION['sendto'] : $_SESSION['customer_default_address_id'])) . "'
-                                         ");
-        $tax_address = xtc_db_fetch_array($tax_address_query);
+        $customer_address = $this->get_customers_address($_SESSION['customer_default_address_id'], true, true);
+        $shipping_address = $this->get_customers_address($shipping_address_id, false, true);
+        $billing_address = $this->get_customers_address($billing_address_id, false, true);
+        $tax_address = $this->get_customers_address((($this->content_type == 'virtual') ? $billing_address_id : $shipping_address_id), false, false);
       }
 
       // set tax country id for using order total in shopping cart
@@ -529,12 +520,12 @@
         'order_status' => DEFAULT_ORDERS_STATUS_ID,
         'currency' => $_SESSION['currency'],
         'currency_value' => $xtPrice->currencies[$_SESSION['currency']]['value'],
-        'payment_method' => ((isset($_SESSION['payment']) && $_SESSION['payment'] != '') ? $_SESSION['payment'] : 'no_payment'),
-        'shipping_method' => isset($_SESSION['shipping']) && is_array($_SESSION['shipping']) ? $_SESSION['shipping']['title'] : '',
         'shipping_cost' => isset($_SESSION['shipping']) && is_array($_SESSION['shipping']) ? $xtPrice->xtcCalculateCurr($_SESSION['shipping']['cost']) : 0,
-        'comments' => isset($_SESSION['comments']) ? $_SESSION['comments'] : '',
+        'shipping_method' => isset($_SESSION['shipping']) && is_array($_SESSION['shipping']) ? $_SESSION['shipping']['title'] : '',
         'shipping_class' => isset($_SESSION['shipping']) && is_array($_SESSION['shipping']) && array_key_exists('id', $_SESSION['shipping']) ? $_SESSION['shipping']['id'] : '',
+        'payment_method' => ((isset($_SESSION['payment']) && $_SESSION['payment'] != '') ? $_SESSION['payment'] : 'no_payment'),
         'payment_class' => ((isset($_SESSION['payment']) && $_SESSION['payment'] != '') ? $_SESSION['payment'] : 'no_payment'),
+        'comments' => isset($_SESSION['comments']) ? $_SESSION['comments'] : '',
         'subtotal' => 0,
         'tax' => 0,
         'tax_groups' => array(),
@@ -692,10 +683,10 @@
             $this->info['tax_groups'][$tax_index] = 0;
           }
           if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == 1) {
-            $this->info['tax'] += $shown_price_tax - ($shown_price_tax / (($products_tax < 10) ? "1.0" . str_replace('.', '', $products_tax) : "1." . str_replace('.', '', $products_tax)));
+            $this->info['tax'] += $shown_price_tax - ($shown_price_tax / (1 + $products_tax / 100));
             $this->info['tax_groups'][$tax_index] += (($shown_price_tax / (100 + $products_tax)) * $products_tax);
           } else {
-            $this->info['tax'] += $shown_price - ($shown_price / (($products_tax < 10) ? "1.0" . str_replace('.', '', $products_tax) : "1." . str_replace('.', '', $products_tax)));
+            $this->info['tax'] += $shown_price - ($shown_price / (1 + $products_tax / 100));
             $this->info['tax_groups'][$tax_index] += (($shown_price / (100 + $products_tax)) * $products_tax);
           }
         } elseif ($_SESSION['customers_status']['customers_status_add_tax_ot'] == 1
