@@ -29,6 +29,7 @@ require_once (DIR_FS_INC.'xtc_address_format.inc.php');
 require_once (DIR_FS_INC.'xtc_get_country_name.inc.php');
 require_once (DIR_FS_INC.'xtc_get_zone_code.inc.php');
 require_once (DIR_FS_INC.'secure_form.inc.php');
+require_once (DIR_FS_INC.'get_customers_address.inc.php');
 
 $params = '';
 $link_checkout_shipping = FILENAME_CHECKOUT_SHIPPING;
@@ -90,17 +91,23 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'submit')) {
 
     if ($check_address['total'] == '1') {
       if ($reset_shipping == true) {
-        unset ($_SESSION['shipping']);
+        unset($_SESSION['shipping']);
         if (isset($_SESSION['paypal']['PayerID'])) {
           $_SESSION['shipping'] = '';
         }
       }
+      $address = get_customers_address($_SESSION['sendto'], false, true);
+      $_SESSION['delivery_zone'] = $address['iso_code_2'];
+      
       xtc_redirect(xtc_href_link($link_checkout_shipping, $params, 'SSL'));
     } else {
-      unset ($_SESSION['sendto']);
+      unset($_SESSION['sendto']);
     }
   } else {
     $_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
+    $address = get_customers_address($_SESSION['sendto'], false, true);
+    $_SESSION['delivery_zone'] = $address['iso_code_2'];
+
     xtc_redirect(xtc_href_link($link_checkout_shipping, $params, 'SSL'));
   }
 }
@@ -108,6 +115,8 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'submit')) {
 // if no shipping destination address was selected, use their own address as default
 if (!isset ($_SESSION['sendto'])) {
   $_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
+  $address = get_customers_address($_SESSION['sendto'], false, true);
+  $_SESSION['delivery_zone'] = $address['iso_code_2'];
 }
 
 // include boxes
