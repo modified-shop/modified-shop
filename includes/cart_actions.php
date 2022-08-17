@@ -391,7 +391,7 @@ if (xtc_not_null($action) && basename($PHP_SELF) != FILENAME_COOKIE_USAGE) {
                                                      AND pov.products_options_values_id > 0 
                                             WHERE opa.orders_products_id = ".(int)$order_data['ORDERS_PRODUCTS_ID']);
               $check_result = xtc_db_fetch_array($check_query);
-              if ($check_result['cnt'] != $check_result['checksum']) {
+              if ($check_result['cnt'] != (int)$check_result['checksum']) {
                 $count_products_missing_attributes++;
                 continue;
               }
@@ -475,7 +475,7 @@ if (xtc_not_null($action) && basename($PHP_SELF) != FILENAME_COOKIE_USAGE) {
                                                    AND pov.products_options_values_id > 0 
                                           WHERE opa.orders_products_id = ".(int)$_GET['id']);
             $check_result = xtc_db_fetch_array($check_query);
-            if ($check_result['cnt'] != $check_result['checksum']) {
+            if ($check_result['cnt'] != (int)$check_result['checksum']) {
               xtc_redirect(xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$products_id, 'SSL'));
             }
             
