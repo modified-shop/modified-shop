@@ -14,7 +14,6 @@
   // include needed functions
   require_once (DIR_FS_INC.'check_country_required_zones.inc.php');
   require_once (DIR_FS_INC.'write_customers_session.inc.php');
-  require_once (DIR_FS_INC.'get_customers_address.inc.php');
 
   $valid_params = array(
     'gender',
@@ -177,26 +176,18 @@
           $_SESSION['shipping'] = '';
         }
         $_SESSION['sendto'] = $new_address_book_id;
-        $address = get_customers_address($_SESSION['sendto'], false, true);
-        $_SESSION['delivery_zone'] = $address['iso_code_2'];
         
         if (isset($_POST['primary']) && $_POST['primary'] == 'on') {
           $_SESSION['billto'] = $new_address_book_id;
-          $address = get_customers_address($_SESSION['billto'], false, true);
-          $_SESSION['billing_zone'] = $address['iso_code_2'];
         }
         xtc_redirect(xtc_href_link($link_checkout_shipping, $params, 'SSL'));
         break;
 
       case 'payment':
         $_SESSION['billto'] = $new_address_book_id;
-        $address = get_customers_address($_SESSION['billto'], false, true);
-        $_SESSION['billing_zone'] = $address['iso_code_2'];
 
         if ($_SESSION['shipping'] === false) {
           $_SESSION['sendto'] = $_SESSION['billto'];
-          $address = get_customers_address($_SESSION['sendto'], false, true);
-          $_SESSION['delivery_zone'] = $address['iso_code_2'];
         }
         if (isset ($_SESSION['payment']) && !isset($_SESSION['paypal']['PayerID'])) {
           unset($_SESSION['payment']);

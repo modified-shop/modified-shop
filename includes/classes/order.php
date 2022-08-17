@@ -41,7 +41,6 @@
     require_once(DIR_FS_INC . 'xtc_get_country_name.inc.php');
     require_once(DIR_FS_INC . 'xtc_get_zone_code.inc.php');
     require_once(DIR_FS_INC . 'xtc_get_tax_description.inc.php');
-    require_once(DIR_FS_INC . 'get_customers_address.inc.php');
   }
 
   class order {
@@ -402,7 +401,60 @@
       }
       return $customer;
     }    
+
+    function get_customers_address($address_book_id, $customer_details = false, $address_details = false) {
+      $customer_select = ",
+         c.payment_unallowed,
+         c.shipping_unallowed,
+         c.customers_firstname as firstname,
+         c.customers_cid as csID,
+         c.customers_gender as gender,
+         c.customers_lastname as lastname,
+         c.customers_telephone as telephone,
+         c.customers_email_address as email_address
+        ";
+
+      $address_select = ",
+         ab.entry_company as company,
+         ab.entry_street_address as street_address,
+         ab.entry_suburb as suburb,
+         ab.entry_gender as gender,
+         ab.entry_postcode as postcode,
+         ab.entry_city as city,
+         ab.entry_zone_id as zone_id,
+         ab.entry_country_id as country_id,
+         ab.entry_state as state,
+         co.countries_name as title,
+         co.countries_id as id,
+         co.countries_iso_code_2 as iso_code_2,
+         co.countries_iso_code_3 as iso_code_3,
+         co.address_format_id as format_id,
+         z.zone_name
+        ";
+
+      $default_select = '';
+      if ($customer_details === true) $default_select .= $customer_select;
+      if ($address_details === true) $default_select .= $address_select;      
     
+      $customer_address_query = xtc_db_query("SELECT ab.entry_country_id as country_id,
+                                                     ab.entry_zone_id as zone_id,
+                                                     ab.entry_firstname as firstname,
+                                                     ab.entry_lastname as lastname
+                                                     " . $default_select . "
+                                                FROM " . TABLE_CUSTOMERS . " c
+                                           LEFT JOIN " . TABLE_ADDRESS_BOOK . " ab
+                                                     ON ab.customers_id = '" . (int)$_SESSION['customer_id'] . "'
+                                                        AND ab.address_book_id = '".(int)$address_book_id."'
+                                           LEFT JOIN " . TABLE_ZONES . " z 
+                                                     ON ab.entry_zone_id = z.zone_id
+                                           LEFT JOIN " . TABLE_COUNTRIES . " co 
+                                                     ON ab.entry_country_id = co.countries_id
+                                               WHERE c.customers_id = '" . (int)$_SESSION['customer_id'] . "'");
+      $customer_address = xtc_db_fetch_array($customer_address_query);
+    
+      return $customer_address;
+    }
+
     function cart() {
       global $currencies, $xtPrice, $main, $PHP_SELF;
 
@@ -445,10 +497,10 @@
         $shipping_address_id = ((isset($_SESSION['sendto']) && $_SESSION['sendto'] != false) ? $_SESSION['sendto'] : $_SESSION['customer_default_address_id']);
         $billing_address_id = ((isset($_SESSION['billto'])) ? $_SESSION['billto'] : $shipping_address_id);
 
-        $customer_address = get_customers_address($_SESSION['customer_default_address_id'], true, true);
-        $shipping_address = get_customers_address($shipping_address_id, false, true);
-        $billing_address = get_customers_address($billing_address_id, false, true);
-        $tax_address = get_customers_address(($this->content_type == 'virtual') ? $billing_address_id : $shipping_address_id);
+        $customer_address = $this->get_customers_address($_SESSION['customer_default_address_id'], true, true);
+        $shipping_address = $this->get_customers_address($shipping_address_id, false, true);
+        $billing_address = $this->get_customers_address($billing_address_id, false, true);
+        $tax_address = $this->get_customers_address(($this->content_type == 'virtual') ? $billing_address_id : $shipping_address_id);
       }
 
       // set tax country id for using order total in shopping cart
