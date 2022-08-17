@@ -48,7 +48,9 @@
     if ($address_details === true) $default_select .= $address_select;      
     
     $customer_address_query = xtc_db_query("SELECT ab.entry_country_id as country_id,
-                                                   ab.entry_zone_id as zone_id
+                                                   ab.entry_zone_id as zone_id,
+                                                   ab.entry_firstname as firstname,
+                                                   ab.entry_lastname as lastname
                                                    " . $default_select . "
                                               FROM " . TABLE_CUSTOMERS . " c
                                          LEFT JOIN " . TABLE_ADDRESS_BOOK . " ab
