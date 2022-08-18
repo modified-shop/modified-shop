@@ -441,7 +441,7 @@ require (DIR_WS_INCLUDES.'head.php');
                   ?>
                   <td class="dataTableContent" style="width:50px;"><?php echo $options['products_options_id']; ?></td>
                   <td class="dataTableContent" style="width:50px;"><?php echo $options['products_options_sortorder']; ?></td>
-                  <td class="dataTableContent"><?php echo '<a href="' . xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action', 'oID', 'list')) . 'oID=' . $options['products_options_id'] . '&list=detail') . '">' . xtc_image(DIR_WS_ICONS . 'folder.gif', ICON_FOLDER, '', '', $icon_padding) . '</a>&nbsp;<span style="vertical-align: 3px;">' . $options['products_options_name'] . '</span>'; ?></td>
+                  <td class="dataTableContent"><?php echo '<a href="' . xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action', 'oID', 'list')) . 'oID=' . $options['products_options_id'] . '&list=detail') . '">' . xtc_image(DIR_WS_ICONS . 'folder.gif', ICON_FOLDER, '', '', $icon_padding) . '</a><span style="vertical-align: 3px;">' . $options['products_options_name'] . '</span>'; ?></td>
                   <td class="dataTableContent txta-r"><?php if (isset($oInfo) && is_object($oInfo) && $options['products_options_id'] == $oInfo->products_options_id) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action', 'oID')) . 'oID=' . $options['products_options_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
                 </tr>
                 <?php
