@@ -56,7 +56,7 @@ class ErrorMessage
             Error::ERROR_BANKCODE_INVALID => 'Bitte geben Sie Ihre Bankleitzahl an.',
             Error::ERROR_ACCOUNTNUMBER_INVALID => 'Bitte geben Sie Ihre Kontonummer an.',
             Error::ERROR_IBAN_INVALID => 'Bitte korrigieren Sie Ihre IBAN-Bankverbindung.',
-            Error::ERROR_CONSENT_INVALID => 'Bitte lesen und stimmen Sie der Einverständniserklärung für die Zahlungsart Ratenkauf by easyCredit zu.',
+            Error::ERROR_CONSENT_INVALID => 'Bitte lesen und stimmen Sie der Einverständniserklärung für die Zahlungsart easyCredit-Ratenkauf zu.',
             Error::ERROR_SEPA_AGREEMENT_INVALID => 'SEPA Zustimmung fehlt',
             Error::ERROR_MOBILEPHONE_INVALID => 'Bitte geben Sie Ihre Mobiltelefonnummer an.',
         );
