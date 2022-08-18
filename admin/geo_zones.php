@@ -312,7 +312,7 @@ if (isset($_GET['zID']) && ($saction == 'edit' || $saction == 'new')) {
                     echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $zpage . '&zID=' . $zones['geo_zone_id']) . '\'">' . "\n";
                   }
                 ?>
-                <td class="dataTableContent"><?php echo '<a href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $zpage . '&zID=' . $zones['geo_zone_id'] . '&action=list') . '">' . xtc_image(DIR_WS_ICONS . 'folder.gif', ICON_FOLDER, '', '', $icon_padding) . '</a>&nbsp;<span style="vertical-align: 3px;">' . parse_multi_language_value($zones['geo_zone_name'], $_SESSION['language_code']) . '</span>'; ?></td>
+                <td class="dataTableContent"><?php echo '<a href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $zpage . '&zID=' . $zones['geo_zone_id'] . '&action=list') . '">' . xtc_image(DIR_WS_ICONS . 'folder.gif', ICON_FOLDER, '', '', $icon_padding) . '</a><span style="vertical-align: 3px;">' . parse_multi_language_value($zones['geo_zone_name'], $_SESSION['language_code']) . '</span>'; ?></td>
                 <td class="dataTableContent txta-r"><?php if (isset($zInfo) && is_object($zInfo) && $zones['geo_zone_id'] == $zInfo->geo_zone_id) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $zpage . '&zID=' . $zones['geo_zone_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
                 <?php
