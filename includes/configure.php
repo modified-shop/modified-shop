@@ -56,8 +56,8 @@
   // timezone
   defined('DEFAULT_TIMEZONE') or define('DEFAULT_TIMEZONE', 'Europe/Berlin');
 
-  // password
-  defined('PASSWORD_HMAC') or define('PASSWORD_HMAC', '');
+  // password pepper (store additionally in a safe place!)
+  defined('PASSWORD_HMAC') or define('PASSWORD_HMAC', ''); // to be used to encrypt customer passwords hashes - ATTENTION: The loss of this password pepper leads to the fact that no customer can log in the store with his password any more, so store this password in a safe place if used!
 
   if (DB_DATABASE != '') {
     // set admin directory DIR_ADMIN
