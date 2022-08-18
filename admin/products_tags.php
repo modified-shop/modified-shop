@@ -567,7 +567,7 @@ require (DIR_WS_INCLUDES.'head.php');
                   }
                   ?>
                   <td class="dataTableContent" style="width:50px;"><?php echo $options['sort_order']; ?></td>
-                  <td class="dataTableContent"><?php echo '<a href="' . xtc_href_link(FILENAME_PRODUCTS_TAGS, 'page=' . $page . '&oID=' . $options['options_id'] . '&action=list') . '">' . xtc_image(DIR_WS_ICONS . 'folder.gif', ICON_FOLDER, '', '', $icon_padding) . '</a>&nbsp;<span style="vertical-align: 3px;">' . $options['options_name'] . '</span>'; ?></td>
+                  <td class="dataTableContent"><?php echo '<a href="' . xtc_href_link(FILENAME_PRODUCTS_TAGS, 'page=' . $page . '&oID=' . $options['options_id'] . '&action=list') . '">' . xtc_image(DIR_WS_ICONS . 'folder.gif', ICON_FOLDER, '', '', $icon_padding) . '</a><span style="vertical-align: 3px;">' . $options['options_name'] . '</span>'; ?></td>
                   <td class="dataTableContent"><?php echo $options['options_description']; ?></td>
                   <td class="dataTableContent"><?php echo (($options['options_content_group'] > 0) ? xtc_cfg_display_content($options['options_content_group']) : '&nbsp;'); ?></td>
                   <td class="dataTableContent">
