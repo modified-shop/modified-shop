@@ -352,7 +352,7 @@
             }
             echo '            <td class="smallText'. $class.'">';
             if($orders_history['orders_status_id']!='0') {
-              echo $orders_status_array[$orders_history['orders_status_id']];
+              echo array_key_exists($orders_history['orders_status_id'], $orders_status_array) ? $orders_status_array[$orders_history['orders_status_id']] : '';
             }else{
               echo '<span class="col-red">'.TEXT_VALIDATING.'</span>';
             }
