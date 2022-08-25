@@ -256,7 +256,7 @@
             <td class="dataTableContent" align="right"><?php echo format_price(get_order_total($orders['orders_id']), 1, $orders['currency'], 0, 0); ?></td>
             <td class="dataTableContent" align="center"><?php echo xtc_datetime_short($orders['date_purchased']); ?></td>
             <td class="dataTableContent" align="center"><?php echo payment::payment_title($orders['payment_method']); ?></td>
-            <td class="dataTableContent" align="right"><?php if($orders['orders_status']!='0') { echo $orders_status_array[$orders['orders_status']]; }else{ echo '<span class="col-red">'.TEXT_VALIDATING.'</span>';}?></td>
+            <td class="dataTableContent" align="right"><?php if($orders['orders_status']!='0') { echo array_key_exists($orders['orders_status'], $orders_status_array) ? $orders_status_array[$orders['orders_status']] : ''; }else{ echo '<span class="col-red">'.TEXT_VALIDATING.'</span>';}?></td>
             <?php if (AFTERBUY_ACTIVATED=='true') { ?>
             <td class="dataTableContent" align="right"><?php  echo ($orders['afterbuy_success'] == 1) ? $orders['afterbuy_id'] : 'TRANSMISSION_ERROR'; ?></td>
             <?php } ?>
