@@ -554,7 +554,7 @@ if (xtc_not_null($action) && !$box) {
                             $use_function = $value['use_function'];
                             if (strpos($use_function, '->') !== false) {
                               $class_method = explode('->', $use_function);
-                              if (!is_object(${$class_method[0]})) {
+                              if (!isset(${$class_method[0]}) || !is_object(${$class_method[0]})) {
                                 include(DIR_WS_CLASSES . $class_method[0] . '.php');
                                 ${$class_method[0]} = new $class_method[0]();
                               }
