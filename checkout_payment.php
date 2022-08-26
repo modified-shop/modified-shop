@@ -111,7 +111,7 @@ if ($order->content_type != 'virtual'
     )
 {
   if ($_SESSION['shipping'] == false || $_SESSION['shipping'] == '') {
-    $messageStack->add_session('global', ERROR_NO_PAYMENT_MODULE_SELECTED);
+    $messageStack->add_session('global', ERROR_NO_SHIPPING_MODULE_SELECTED);
     xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
   }
 }
