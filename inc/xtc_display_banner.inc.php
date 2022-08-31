@@ -72,6 +72,9 @@
       
       return false;
     }
+    if (empty($banner)) {
+      return false;
+    }
     
     $banner_url = xtc_get_top_level_domain($banner['banners_url']);
     $banner_title = xtc_parse_input_field_data($banner['banners_title'], array('"' => '&quot;'));
