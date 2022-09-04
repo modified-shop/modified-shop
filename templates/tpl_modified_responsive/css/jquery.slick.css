@@ -1,4 +1,6 @@
 /* Slider */
+
+/* change touch-action from pan-y to auto to enable pinch to zoom */
 .slick-slider {
   position: relative;
   display: block;
@@ -9,8 +11,8 @@
           user-select: none;
   -webkit-touch-callout: none;
   -khtml-user-select: none;
-  -ms-touch-action: pan-y;
-      touch-action: pan-y;
+  -ms-touch-action: auto;
+      touch-action: auto;
   -webkit-tap-highlight-color: transparent;
 }
 .slick-list {
