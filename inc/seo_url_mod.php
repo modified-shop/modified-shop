@@ -16,11 +16,14 @@ defined('SEO_URL_MOD_CLASS') OR define('SEO_URL_MOD_CLASS', 'seo_url_shopstat');
 require_once(DIR_FS_CATALOG.'includes/classes/modified_seo_url.php');
 
 function seo_url_mod($link, $page, $parameters, $connection, $separator) {
+  static $modified_seo;
+  
+  if (!isset($modified_seo)) {
+    foreach(auto_include(DIR_FS_CATALOG.'includes/extra/seo_url_mod/','php') as $file) require_once ($file);
 
-  foreach(auto_include(DIR_FS_CATALOG.'includes/extra/seo_url_mod/','php') as $file) require_once ($file);
-
-  $seo_url_mod = SEO_URL_MOD_CLASS;
-  $modified_seo = $seo_url_mod::getInstance();
+    $seo_url_mod = SEO_URL_MOD_CLASS;
+    $modified_seo = $seo_url_mod::getInstance();
+  }
   
   if ($seolink = $modified_seo->create_link($page, $parameters, $connection)) {
     $link = $seolink;
