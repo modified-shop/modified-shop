@@ -1007,9 +1007,11 @@
                   $contents[] = array('align' => 'center', 
                                       'text' => '<a class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $pInfo->cPath . '&pID=' . $pInfo->products_id . '&action=new_product') . '">' . BUTTON_EDIT . '</a>'
                                                  .(function_exists('attributes_iframe_link') ? attributes_iframe_link($pInfo->products_id) :
-                                                 '<a href="'.xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=edit&current_product_id='.$pInfo->products_id.'&cpath='.$pInfo->cPath.'&page='.(int)$_GET['page']).'" class="button">' . BUTTON_EDIT_ATTRIBUTES . '</a>'                                                 
+                                                 '<a href="'.xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=edit&current_product_id='.$pInfo->products_id.'&cpath='.$pInfo->cPath.'&page='.(int)$_GET['page']).'" class="button">' . BUTTON_EDIT_ATTRIBUTES . '</a>'
                                                  )
-                                                 .(function_exists('tags_iframe_link') ? tags_iframe_link($pInfo->products_id) : '')
+                                                 .(function_exists('tags_iframe_link') ? tags_iframe_link($pInfo->products_id) :
+                                                 '<a href="'.xtc_href_link(FILENAME_PRODUCTS_TAGS, 'action=edit&current_product_id='.$pInfo->products_id.'&cpath='.$pInfo->cPath.'&page='.(int)$_GET['page']).'" class="button">' . TEXT_PRODUCTS_TAGS . '</a>'
+                                                 )
                                                  );
                   $contents[] = array('align' => 'center', 
                                       'text' =>  '<a class="button" href="'.xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('action', 'current_product_id', 'cPath', 'pID')).'action=edit_crossselling&last_action=list&current_product_id='.$pInfo->products_id.'&cpath='.$pInfo->cPath).'">' . BUTTON_EDIT_CROSS_SELLING . '</a>
