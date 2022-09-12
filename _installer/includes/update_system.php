@@ -79,14 +79,18 @@
     '5' => 'DE::Zwischensatz||EN::Intermediate rate',
   );
 
+  xtc_db_query("ALTER TABLE ".TABLE_TAX_CLASS." MODIFY tax_class_title VARCHAR(255) NOT NULL");
+
   foreach ($tax_class_id_array as $tax_class_id => $tax_class_title) {                                        
+    $tax_class_title = decode_utf8($tax_class_title);
+
     $check_query = xtc_db_query("SELECT *
                                    FROM ".TABLE_TAX_CLASS."
                                   WHERE tax_class_id = ".$tax_class_id);
     if (xtc_db_num_rows($check_query) == 0) {
       $sql_data_array = array(
         'tax_class_id' => $tax_class_id,
-        'tax_class_title' => decode_utf8($tax_class_title),
+        'tax_class_title' => $tax_class_title,
         'date_added' => 'now()'
       );
       xtc_db_perform(TABLE_TAX_CLASS, $sql_data_array);
