@@ -11,13 +11,18 @@
    --------------------------------------------------------------*/
 ?>
 <script>
-  $(window).on('load',function() {
+  $(window).on('load',function () {
     $('.show_rating input').change(function () {
       var $radio = $(this);
       $('.show_rating .selected').removeClass('selected');
       $radio.closest('label').addClass('selected');
     });
-  });     
+    $('.show_rating :radio').each(function() {
+      if($(this).attr("checked")){
+        $(this).closest('label').addClass('selected');
+      }
+    });
+  });
 
   function alert(message, title) {
     title = title || "<?php echo TEXT_LINK_TITLE_INFORMATION; ?>";
