@@ -60,11 +60,11 @@
           if ($total == 0) {
             $total = 0;
           }
-          $this->output[] = array('title' => MODULE_ORDER_TOTAL_TOTAL_TITLE_NO_TAX_BRUTTO . ':',                          
+          $this->output[] = array('title' => ((MODULE_SMALL_BUSINESS == 'true') ? $this->title : MODULE_ORDER_TOTAL_TOTAL_TITLE_NO_TAX_BRUTTO) . ':',                          
                                   'text' => '<b>' . $xtPrice->xtcFormat($total, true) . '</b>',
                                   'value' => $xtPrice->xtcFormat($total, false));
         } else {
-          $this->output[] = array('title' => MODULE_ORDER_TOTAL_TOTAL_TITLE_NO_TAX . ':',
+          $this->output[] = array('title' => ((MODULE_SMALL_BUSINESS == 'true') ? $this->title : MODULE_ORDER_TOTAL_TOTAL_TITLE_NO_TAX) . ':',
                                   'text' => '<b>' . $xtPrice->xtcFormat($order->info['total'], true) . '</b>',
                                   'value' => $xtPrice->xtcFormat($order->info['total'], false));
         }
