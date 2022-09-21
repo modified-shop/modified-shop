@@ -53,16 +53,16 @@ if (!class_exists('cookie_consent')) {
     function install() {
       
       if (!defined('MODULE_COOKIE_CONSENT_STATUS')) {
-        xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_COOKIE_CONSENT_STATUS', 'true',  '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
+        xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_COOKIE_CONSENT_STATUS', 'true', '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
       }
       if (!defined('MODULE_COOKIE_CONSENT_VERSION')) {
-        xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) VALUES ('MODULE_COOKIE_CONSENT_VERSION', '0',  '6', '2', now())");
+        xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_COOKIE_CONSENT_VERSION', '0', '6', '2', now())");
       }
       if (!defined('MODULE_COOKIE_CONSENT_LAST_UPDATE')) {
-        xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) VALUES ('MODULE_COOKIE_CONSENT_LAST_UPDATE', 'now()',  '6', '3', now())");
+        xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_COOKIE_CONSENT_LAST_UPDATE', 'now()', '6', '3', now())");
       }
       if (!defined('MODULE_COOKIE_CONSENT_SET_READABLE_COOKIE')) {
-        xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_COOKIE_CONSENT_SET_READABLE_COOKIE', 'false',  '6', '4', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
+        xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_COOKIE_CONSENT_SET_READABLE_COOKIE', 'false', '6', '4', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
       }
       
       // load language-data
@@ -97,7 +97,7 @@ if (!class_exists('cookie_consent')) {
           ),
           'desc'      => array(
             1 => 'Technically essential Cookies contribute to ensuring the basic functionalities of the website.',
-            2 => 'Technisch notwendige Cookies tragen dazu bei, grundlegende Funktionalitäten der Website zu gewährleisten.'
+            2 => 'Technisch notwendige Cookies tragen dazu bei, grundlegende Funktionalitäten der Webseite zu gewährleisten.'
           ),
           'sort_order'=> 1,
           'fixed'     => 1
@@ -227,8 +227,8 @@ if (!class_exists('cookie_consent')) {
             2 => 'Google Analytics'
           ),
           'desc'      => array(
-            1 => "_ga,_gid: Contains a randomly generated user ID. Using this ID, Google Analytics can recognize returning users on this website and combine the data from previous visits.  _gat: Certain data is only sent to Google Analytics once a minute. The cookie has a lifespan of one minute. As long as it is set, certain data transfers are prevented.  _gali: This cookie is used by Google Analytics. It is used to anonymously record the clicked elements within a page.",
-            2 => "_ga,_gid: Enthält eine zufallsgenerierte User-ID. Anhand dieser ID kann Google Analytics wiederkehrende User auf dieser Website wiedererkennen und die Daten von früheren Besuchen zusammenführen.  _gat: Bestimmte Daten werden nur maximal einmal pro Minute an Google Analytics gesendet. Das Cookie hat eine Lebensdauer von einer Minute. Solange es gesetzt ist, werden bestimmte Datenübertragungen unterbunden.  _gali: Dieses Cookie wird von Google Analytics eingesetzt. Es dient zur anonymen Erfassung der angeklickten Elemente innerhalb einer Seite."
+            1 => "_ga,_gid: Contains a randomly generated user ID. Using this ID, Google Analytics can recognize returning users on this website and combine the data from previous visits. _gat: Certain data is only sent to Google Analytics once a minute. The cookie has a lifespan of one minute. As long as it is set, certain data transfers are prevented. _gali: This cookie is used by Google Analytics. It is used to anonymously record the clicked elements within a page.",
+            2 => "_ga,_gid: Enthält eine zufallsgenerierte User-ID. Anhand dieser ID kann Google Analytics wiederkehrende User auf dieser Website wiedererkennen und die Daten von früheren Besuchen zusammenführen. _gat: Bestimmte Daten werden nur maximal einmal pro Minute an Google Analytics gesendet. Das Cookie hat eine Lebensdauer von einer Minute. Solange es gesetzt ist, werden bestimmte Datenübertragungen unterbunden. _gali: Dieses Cookie wird von Google Analytics eingesetzt. Es dient zur anonymen Erfassung der angeklickten Elemente innerhalb einer Seite."
           ),
           'cookies'   => '_ga,_gid,_gat,_gali',
           'sort_order'=> 1,
@@ -291,7 +291,7 @@ if (!class_exists('cookie_consent')) {
           'id'        => 7,
           'category'  => 3,
           'name'      => array(
-            1 => 'Matomo (ehem. Piwik)',
+            1 => 'Matomo (formerly Piwik)',
             2 => 'Matomo (ehem. Piwik)'
           ),
           'desc'      => array(
@@ -330,7 +330,7 @@ if (!class_exists('cookie_consent')) {
           ),
           'desc'      => array(
             1 => 'Necessary for external services like Google Tag Manager to get your cookie-decision',
-            2 => 'Benögtigt um externen Diensten wie dem Google-Tag-Manger Ihre Cookie-Entscheidung mitteilen zu können.'
+            2 => 'Benötigt um externen Diensten wie dem Google-Tag-Manager Ihre Cookie-Entscheidung mitteilen zu können.'
           ),
           'cookies'   => 'MODOilTrack',
           'sort_order'=> 4,
