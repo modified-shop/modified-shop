@@ -143,7 +143,14 @@
                                                    WHERE languages_id = '".$languages[$i]['id']."' 
                                                      AND cookies_id = '".$vID."'");
         if (xtc_db_num_rows($values_description_query) == 0) {
+          $check_query = xtc_db_query("SELECT *
+                                         FROM ".TABLE_COOKIE_CONSENT_COOKIES."
+                                        WHERE cookies_id = '".$vID."'");
+          $check = xtc_db_fetch_array($check_query);
+          
           $sql_data_array['date_added'] = 'now()';
+          $sql_data_array['status'] = $check['status'];
+          $sql_data_array['fixed'] = $check['fixed'];
           xtc_db_perform(TABLE_COOKIE_CONSENT_COOKIES, $sql_data_array);
         } else {
           $sql_data_array['last_modified'] = 'now()';
@@ -184,13 +191,14 @@
       $categories_id = $next_id['categories_id'] + 1;
       
       for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {     
-        $sql_data_array = array('categories_id' => $categories_id,
-                                'categories_name' => xtc_db_prepare_input($_POST['categories_name'][$languages[$i]['id']]),
-                                'categories_description' => xtc_db_prepare_input($_POST['categories_description'][$languages[$i]['id']]),
-                                'languages_id' => $languages[$i]['id'],
-                                'sort_order' => (int)$_POST['sort_order'],
-                                'date_added' => 'now()'
-                                );
+        $sql_data_array = array(
+          'categories_id' => $categories_id,
+          'categories_name' => xtc_db_prepare_input($_POST['categories_name'][$languages[$i]['id']]),
+          'categories_description' => xtc_db_prepare_input($_POST['categories_description'][$languages[$i]['id']]),
+          'languages_id' => $languages[$i]['id'],
+          'sort_order' => (int)$_POST['sort_order'],
+          'date_added' => 'now()'
+        );
         xtc_db_perform(TABLE_COOKIE_CONSENT_CATEGORIES, $sql_data_array);
       }                  
 
@@ -201,18 +209,25 @@
     case 'save_options':
       $oID = (int)$_GET['oID'];
       for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {     
-        $sql_data_array = array('categories_id' => $oID,
-                                'categories_name' => xtc_db_prepare_input($_POST['categories_name'][$languages[$i]['id']]),
-                                'categories_description' => xtc_db_prepare_input($_POST['categories_description'][$languages[$i]['id']]),
-                                'languages_id' => $languages[$i]['id'],
-                                'sort_order' => (int)$_POST['sort_order'],
-                                );
+        $sql_data_array = array(
+          'categories_id' => $oID,
+          'categories_name' => xtc_db_prepare_input($_POST['categories_name'][$languages[$i]['id']]),
+          'categories_description' => xtc_db_prepare_input($_POST['categories_description'][$languages[$i]['id']]),
+          'languages_id' => $languages[$i]['id'],
+          'sort_order' => (int)$_POST['sort_order'],
+        );
         $options_name_query = xtc_db_query("SELECT * 
                                               FROM ".TABLE_COOKIE_CONSENT_CATEGORIES." 
                                              WHERE languages_id = '".$languages[$i]['id']."' 
                                                AND categories_id = '".$oID."'");
         if (xtc_db_num_rows($options_name_query) == 0) {
+          $check_query = xtc_db_query("SELECT *
+                                         FROM ".TABLE_COOKIE_CONSENT_CATEGORIES."
+                                        WHERE categories_id = '".$oID."'");
+          $check = xtc_db_fetch_array($check_query);
+          
           $sql_data_array['date_added'] = 'now()';
+          $sql_data_array['fixed'] = $check['fixed'];
           xtc_db_perform(TABLE_COOKIE_CONSENT_CATEGORIES, $sql_data_array);
         } else {
           $sql_data_array['last_modified'] = 'now()';
