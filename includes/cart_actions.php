@@ -469,7 +469,7 @@ if (xtc_not_null($action) && basename($PHP_SELF) != FILENAME_COOKIE_USAGE) {
             $check_query = xtc_db_query("SELECT COUNT(*) AS cnt, 
                                                 SUM(IF(ISNULL(pov.products_options_values_id), 0, 1)) AS checksum 
                                            FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES." opa 
-                                      LEFT JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." as pov
+                                      LEFT JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." pov
                                                 ON opa.orders_products_options_values_id = pov.products_options_values_id 
                                                    AND pov.language_id = ".(int)$_SESSION['languages_id']." 
                                                    AND pov.products_options_values_id > 0 
