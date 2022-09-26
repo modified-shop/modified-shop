@@ -554,7 +554,8 @@ define('TEXT_SITE_NOT_FOUND', 'Page not found!');
 define('MAX_PROD_QTY_EXCEEDED', 'The maximum allowed number of ' .MAX_PRODUCTS_QTY. ' for <span style="font-style:italic;">"%s"</span> has been exceeded. The number was automatically reduced to the permitted quantity.');
 
 define('IMAGE_BUTTON_CONTENT_EDIT', 'Edit content');
-define('PRINTVIEW_INFO', 'Print datasheet');
+define('PRINTVIEW_INFO_TITLE', 'Print datasheet');
+define('PRINTVIEW_INFO_TEXT', 'Print datasheet');
 define('PRODUCTS_REVIEW_LINK', 'Write review');
 
 define('TAX_INFO_SMALL_BUSINESS', 'Finalprice &sect; 19 UStG.');
