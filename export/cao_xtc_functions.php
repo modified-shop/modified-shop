@@ -1587,6 +1587,8 @@ function ManufacturersUpdate ()
                            'manufacturers_name' => $manufacturers_name,
                            'manufacturers_image' => $manufacturers_image);
 
+    $sql_data_array = encode_request($sql_data_array);
+    
     if ($exists==0) // Neuanlage (ID wird von CAO virgegeben !!!)
     {
       $mode='APPEND';
@@ -1979,6 +1981,8 @@ function ProductsUpdate ()
                             'products_meta_keywords' => $products_meta_keywords,
                             'products_url' => $products_url);
 
+    $sql_data_array = encode_request($sql_data_array);
+    
     if ($exists==0) // Insert
     {
       $insert_sql_data = array('products_id' => $products_id,
@@ -2057,7 +2061,7 @@ function ProductsUpdate ()
          $delete = xtc_db_query("delete from personal_offers_by_customers_status_" . $vk_array[$i]['GRP'] . " where products_id='" . $products_id . "'");
          $insert_sql_data = array('products_id' => $products_id);
          $sql_data_array = array_merge($sql_data_array, $insert_sql_data);
-         xtc_db_perform(personal_offers_by_customers_status_ . $vk_array[$i]['GRP'], $sql_data_array);
+         xtc_db_perform('personal_offers_by_customers_status_' . $vk_array[$i]['GRP'], $sql_data_array);
    }
 
 //Burn Ende
@@ -2302,17 +2306,19 @@ function CategoriesUpdate ()
       if (isset($_POST['descr']))                       $categories_description = xtc_db_prepare_input(UrlDecode($_POST['descr']));
       if (isset($_POST['categories_heading_title']))    $categories_heading_title    = xtc_db_prepare_input(UrlDecode($_POST['categories_heading_title']));
       if (isset($_POST['categories_meta_title']))       $categories_meta_title       = xtc_db_prepare_input(UrlDecode($_POST['categories_meta_title']));
-     if (isset($_POST['categories_meta_description'])) $categories_meta_description = xtc_db_prepare_input(UrlDecode($_POST['categories_meta_description']));
-     if (isset($_POST['categories_meta_keywords']))    $categories_meta_keywords    = xtc_db_prepare_input(UrlDecode($_POST['categories_meta_keywords']));
+      if (isset($_POST['categories_meta_description'])) $categories_meta_description = xtc_db_prepare_input(UrlDecode($_POST['categories_meta_description']));
+      if (isset($_POST['categories_meta_keywords']))    $categories_meta_keywords    = xtc_db_prepare_input(UrlDecode($_POST['categories_meta_keywords']));
 
-     $sql_data_array = array('categories_name'             => $categories_name,
+      $sql_data_array = array('categories_name'             => $categories_name,
                               'categories_description'      => $categories_description,
-                             'categories_heading_title'    => $categories_heading_title,
-                             'categories_meta_title'       => $categories_meta_title,
-                             'categories_meta_description' => $categories_meta_description,
-                             'categories_meta_keywords'    => $categories_meta_keywords);
+                              'categories_heading_title'    => $categories_heading_title,
+                              'categories_meta_title'       => $categories_meta_title,
+                              'categories_meta_description' => $categories_meta_description,
+                              'categories_meta_keywords'    => $categories_meta_keywords);
 
-    if ($exists==0) // Insert
+      $sql_data_array = encode_request($sql_data_array);
+
+      if ($exists==0) // Insert
       {
         $insert_sql_data = array('categories_id' => $CatID,
                                  'language_id' => $language_id);
@@ -2615,6 +2621,8 @@ function CustomersUpdate ()
 
   $count_query = xtc_db_query("SELECT count(*) as count FROM " . TABLE_CUSTOMERS . " WHERE customers_id='" . (int)$customers_id . "' LIMIT 1");
   $check = xtc_db_fetch_array($count_query);
+
+  $sql_address_data_array = encode_request($sql_address_data_array);
 
   if ($check['count'] > 0)
   {
