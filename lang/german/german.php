@@ -554,7 +554,8 @@ define('TEXT_SITE_NOT_FOUND', 'Diese Seite wurde nicht gefunden!');
 define('MAX_PROD_QTY_EXCEEDED', 'Die maximal erlaubte St&uuml;ckzahl i.H.v. ' .MAX_PRODUCTS_QTY. ' f&uuml;r <span style="font-style:italic;">"%s"</span> wurde &uuml;berschritten.<br />Die St&uuml;ckzahl wurde automatisch auf die erlaubte St&uuml;ckzahl reduziert.');
 
 define('IMAGE_BUTTON_CONTENT_EDIT', 'Content bearbeiten');
-define('PRINTVIEW_INFO', 'Artikeldatenblatt drucken');
+define('PRINTVIEW_INFO_TITLE', 'Artikeldatenblatt drucken');
+define('PRINTVIEW_INFO_TEXT', 'Artikeldatenblatt drucken');
 define('PRODUCTS_REVIEW_LINK', 'Rezension schreiben');
 
 define('TAX_INFO_SMALL_BUSINESS', 'Endpreis nach &sect; 19 UStG.');
