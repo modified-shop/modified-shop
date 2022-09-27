@@ -556,7 +556,8 @@ define('MAX_PROD_QTY_EXCEEDED', 'Die maximal erlaubte St&uuml;ckzahl i.H.v. ' .M
 define('IMAGE_BUTTON_CONTENT_EDIT', 'Content bearbeiten');
 define('PRINTVIEW_INFO_TITLE', 'Artikeldatenblatt drucken');
 define('PRINTVIEW_INFO_TEXT', 'Artikeldatenblatt drucken');
-define('PRODUCTS_REVIEW_LINK', 'Rezension schreiben');
+define('PRODUCTS_REVIEW_LINK_TITLE', 'Rezension schreiben');
+define('PRODUCTS_REVIEW_LINK_TEXT', 'Rezension schreiben');
 
 define('TAX_INFO_SMALL_BUSINESS', 'Endpreis nach &sect; 19 UStG.');
 define('TAX_INFO_SMALL_BUSINESS_FOOTER', 'Aufgrund des Kleinunternehmerstatus gem. &sect; 19 UStG erheben wir keine Umsatzsteuer und weisen diese daher auch nicht aus.');
