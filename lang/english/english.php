@@ -556,7 +556,8 @@ define('MAX_PROD_QTY_EXCEEDED', 'The maximum allowed number of ' .MAX_PRODUCTS_Q
 define('IMAGE_BUTTON_CONTENT_EDIT', 'Edit content');
 define('PRINTVIEW_INFO_TITLE', 'Print datasheet');
 define('PRINTVIEW_INFO_TEXT', 'Print datasheet');
-define('PRODUCTS_REVIEW_LINK', 'Write review');
+define('PRODUCTS_REVIEW_LINK_TITLE', 'Write review');
+define('PRODUCTS_REVIEW_LINK_TEXT', 'Write review');
 
 define('TAX_INFO_SMALL_BUSINESS', 'Finalprice &sect; 19 UStG.');
 define('TAX_INFO_SMALL_BUSINESS_FOOTER', 'Due to the small business status according to &sect; 19 UStG., we charge no sales tax');
