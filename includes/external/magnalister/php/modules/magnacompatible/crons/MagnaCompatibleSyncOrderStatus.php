@@ -542,6 +542,13 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 		if ($this->_debugDryRun) {
 			return;
 		}
+		// log the status of unprocessed orders
+		$aUnprocessedWithStatus = MagnaDB::gi()->fetchArray('
+		    SELECT orders_id, orders_status
+		      FROM '.TABLE_ORDERS.'
+		     WHERE orders_id IN ("'.implode('", "', $this->unprocessed).'")
+		');
+		$this->storeLogging('UnprocessedWithStatus', $aUnprocessedWithStatus);
 		MagnaDB::gi()->query('
 		    UPDATE '.TABLE_MAGNA_ORDERS.' mo,
 		           '.TABLE_ORDERS.' o 
@@ -626,6 +633,7 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 			if ($this->_debugLevel >= self::DBGLV_HIGH) {
 				echo print_m($oOrder, 'update');
 			}
+			$this->storeLogging('saveDirtyOrders', $oOrder);
 			if ($this->_debugDryRun) {
 				continue;
 			}

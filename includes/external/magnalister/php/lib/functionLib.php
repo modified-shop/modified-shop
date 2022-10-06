@@ -714,11 +714,14 @@ function htmlEncodeUmlauts($str) {
 		"\x00"     => '',
 		"\xc2"     => '', // Â created from nothing by utf8_encode
 		#"\x7e"     => '&#126;',  // ~ don't encode, can be used in CSS
+		html_entity_decode('&nbsp;', ENT_HTML401, 'ISO-8859-1') => '&nbsp;', // for some reason, utf8_encode doesn't fix it
 	);
 	$str = str_replace(array_keys($aChars), array_values($aChars), $str);
 	// fix double encoded entities
 	$str = preg_replace('/&amp;(([A-Z]{0,1}[a-z]{1,10}|#[0-9]{3,6});)/', '&$1', $str);
-
+	// for the case sth still doesn't work: remove non-printable charachers, if anything left
+	// can possibly strip too much
+	// $str = filter_var($str, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_HIGH);
 	return $str;
 }
 

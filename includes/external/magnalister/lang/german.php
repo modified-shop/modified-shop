@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * (c) 2010 - 2021 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2022 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -145,6 +145,7 @@ define('ML_ADDITIONAL_OPTIONS', 'Zus&auml;tzliche Optionen');
 define('ML_SELECT_MARKETPLACE_SUGGESTED_CARRIER', 'Vom Marktplatz unterstützte Versanddienstleister:');
 define('ML_CARRIER_TEXTFIELD', 'Manuelle Eingabe eines Transportunternehmens in rechtes Textfeld');
 define('ML_SHIPMETHOD_TEXTFIELD', 'Manuelle Eingabe eines Lieferservice in rechtes Textfeld');
+define('ML_PLACEHOLDER_MERCHANT_ID', 'wird automatisch gefüllt');
 define('ML_LABEL_ORDER_ID', 'Bestellnummer');
 define('ML_LABEL_SHIPPING_DATE', 'Versanddatum');
 define('ML_LABEL_ESTIMATED_ARRIVAL_DATE', 'Gesch&auml;tztes Ankunftsdatum');
@@ -772,6 +773,22 @@ define('ML_AMAZON_PRODUCT_MATCHED_OK', 'Erfolgreich vorbereitet');
 define('ML_AMAZON_TEXT_REMATCH', 'Die ausgew&auml;hlten Produkte wurden bereits gematcht. Um diese per Multimatching neu
 	zu matchen m&uuml;ssen Sie zuvor die Option &quot;'.ML_LABEL_ALL.'&quot; neben der Schaltfl&auml;che
 	&quot;'.ML_AMAZON_LABEL_MANUAL_MATCHING.'&quot; anw&auml;hlen.');
+define('ML_AMAZON_TEXT_GET_TOKEN', 'Um magnalister in Verbindung mit Amazon zu nutzen ist Ihre Zustimmung von N&ouml;ten.<br />
+                <br />
+                Mit der Autorisierung von magnalister in Ihrem Seller Central Portal, erlauben Sie uns mit Ihrem Amazon Shop zu interagieren. 
+                Das hei&szlig;t konkret: Bestellungen abzufragen, Produkte hochzuladen, Best&auml;nde zu synchronisieren und vieles mehr.
+                <br />
+                <br />
+                Um magnalister zu autorisieren f&uuml;hren Sie bitte folgende Schritte durch:<br />
+                <ol>
+                    <li>Nachdem Sie die Amazon Site ausgew&auml;hlt und auf Token beantragen geklickt haben, &ouml;ffnet sich nach diesem Hinweisfenster gleich ein Fenster zu Amazon. Loggen Sie sich dort bitte ein.</li>
+                    <li>Folgen Sie den Anweisungen auf Amazon selbst und schlie&szlig;en Sie Autorisierung ab.</li>
+                    <li>Klicken Sie im Anschluss auf "Weiter zur Artikelvorbereitung"</li>
+                </ol>
+                <br />
+                <strong>Wichtig:</strong> Nachdem Sie Ihren Token beantragt haben, d&uuml;rfen Sie ihre Amazon Site nicht mehr &auml;ndern. Sollten Sie f&auml;lschlicher Weise eine 
+                falsche Amazon Site gew&auml;hlt und Ihren Token bereits beantragt haben, w&auml;hlen Sie die korrekte Site aus und beantragen Sie bitte einen neuen Token.
+                ');
 define('ML_AMAZON_TEXT_CHECKIN_DELAY', 'Bitte beachten Sie, dass es bis zu zwei Stunden dauern kann bis Einstell- und L&ouml;schvorg&auml;nge
 	vollst&auml;ndig von Amazon verarbeitet werden.');
 define('ML_AMAZON_TEXT_REFRESH_REQUEST_SEND', 'Ihre Aktualisierungsanfrage wurde gesendet. Bitte beachten Sie, dass es bis zu einer Stunden dauern kann
@@ -954,6 +971,7 @@ define('ML_AMAZON_SHIPPINGLABEL_FILTER_ORDERTYPE_FBA', 'Versand durch Amazon (FB
 define('ML_AMAZON_SHIPPINGLABEL_FILTER_ORDERTYPE_PRIME_SAMEDAY', 'Prime Same Day');
 define('ML_AMAZON_SHIPPINGLABEL_FILTER_ORDERTYPE_PRIME_NEXTDAY', 'Prime Next Day');
 define('ML_AMAZON_SHIPPINGLABEL_FILTER_ORDERTYPE_PRIME_SECONDDAY', 'Prime Second Day');
+define('ML_AMAZON_PRODUCT_MATCHING_POPUP_INFO_MAX_ALLOWED_PRODUCTS', 'Aus technischen Gründen ist es nicht möglich mehr als 10 Produkte gleichzeitig manuell zu matchen!');
 /*
  * comparison shopping
  */
@@ -1032,6 +1050,8 @@ define('ML_IDEALO_ITEM_NAME_TITLE', 'Titel');
 define('ML_IDEALO_DESCRIPTION', 'Beschreibung');
 define('ML_IDEALO_LABEL_CHECKOUT_ACTIVE', 'Idealo Direktkauf');
 define('ML_IDEALO_INFO_CHECKOUT_ACTIVE', 'Activate Idealo Checkout in order to receive orders from Idealo and synchronize order status in your shop.');
+define('ML_IDEALO_INFO_TWOMANHANDLINGFEE', 'F&uuml;r Artikel mit der Lieferart &#8222;Spedition&ldquo; kann im idealo Direktkauf vom User die zus&auml;tzliche Dienstleistung &#8222;Lieferung bis zum Aufstellort&ldquo; bestellt werden. Die Ware wird nicht, wie bei der &uuml;blichen Spedition, bis zur Bordsteinkante, sondern bis zum gew&uuml;nschten Aufstellort geliefert. Die angegebene Kosten werden mit dem Gesamtpreis verrechnet. Bitte geben Sie die Kosten inkl. MwSt. an.<br /><br />Bei Aussparung dieses Feldes wird diese Option nicht bei idealo Direktkauf angeboten.');
+define('ML_IDEALO_INFO_DISPOSALFEE', 'F&uuml;r Artikel mit der Lieferart &#8222;Spedition&ldquo; und der Auswahl &#8222;Lieferung bis zum Aufstellort&ldquo; kann im idealo Direktkauf vom User die zus&auml;tzliche Dienstleistung &#8222;Altger&auml;temitnahme&ldquo; bestellt werden. Das Altger&auml;t wird vom Spediteur mitgenommen und entsorgt. Die angegebenen Kosten werden mit dem Gesamtpreis verrechnet. Bitte geben Sie die Kosten inkl. MwSt. an. <br /><br />Bei Aussparung dieses Feldes wird diese Option nicht bei idealo Direktkauf angeboten.');
 define('ML_IDEALO_LABEL_CHECKOUT_ACTIVE_2', 'idealo Direktkauf f&uuml;r gew&auml;hlten Produkte anwenden');
 define('ML_IDEALO_LABEL_PAYMENT_METHOD', 'Zahlart');
 define('ML_IDEALO_INFO_PAYMENT_METHOD', 'Payment method is only applied if you activate Idealo Checkout. You will be able to specify which payment method you want to be used for specific product.');
@@ -1043,7 +1063,7 @@ define('ML_IDEALO_INFO_SHIPPING_COST', 'Es wird zun&auml;chst versucht die Versa
 Bei Versandkostenmodul "Pauschal" wird ebenfalls der hier angegebene Wert verwendet.');
 define('ML_IDEALO_LABEL_DELIVERY_TIME', 'Lieferzeit');
 define('ML_IDEALO_LABEL_DELIVERY_TIME_FROM_SHOP', 'Immer aus Web-Shop &uuml;bernehmen');
-define('ML_IDEALO_LABEL_SPEDITION_INFO', 'Wenn Sie 0.00 hinterlegen, wird die Funktion nicht auf dem Markplatz aktiviert');
+define('ML_IDEALO_LABEL_FORWARDING_CARRIER_INFO', 'Gilt nur f&uuml;r die Versandart "Spedition"');
 define('ML_IDEALO_LABEL_DIRECT_CHECKOUT', 'Direktkauf');
 define('ML_IDEALO_LABEL_DIRECT_FULFILLMENT_TYPE', 'Versandart');
 define('ML_IDEALO_LABEL_DIRECT_TWO_MAN_HANDLING_FEE', 'Direktkauf Spedition - Lieferkosten bis zum Aufstellort');
@@ -1347,11 +1367,6 @@ define('ML_EBAY_PLUS_ORDER', 'Dies ist eine <span style="color:green;">eBay Plus
 define('ML_EBAY_PLUS_ORDER_WRONG_SHIPPING', 'Die gew&auml;hlte Versandart ist f&uuml;r eBay Plus nicht zul&auml;ssig.');
 define('ML_EBAY_START_TIME_SHORT', 'Startzeit<br />(falls vorbelegt)');
 define('ML_EBAY_START_TIME', 'Im Normalfall ist ein eBay-Artikel sofort nach dem Hochladen aktiv. Aber wenn Sie dieses Feld f&uuml;llen, erst ab Startzeit (kostenpflichtig).');
-define('ML_HITCOUNTER_SHORT', 'Besucherz&auml;hler');
-define('ML_EBAY_NO_HITCOUNTER', 'keiner');
-define('ML_EBAY_BASIC_HITCOUNTER', 'Einfach');
-define('ML_EBAY_RETRO_HITCOUNTER', 'Retro-Style');
-define('ML_EBAY_HIDDEN_HITCOUNTER', 'versteckt');
 define('ML_EBAY_ONLY_B2B_CATS', '<b>Hinweis</b>: Sie haben in der Konfiguration ausgew&auml;hlt, dass Sie nur an Gesch&auml;ftskunden verkaufen wollen. Daher werden nur Kategorien angezeigt, die das erlauben.');
 define('ML_EBAY_NOTE_VARIATIONS_ENABLED', '<div class="successBox"><b>Hinweis</b>: F&uuml;r diese Kategorie werden Varianten hochgeladen, soweit erw&uuml;nscht (Konfig-Einstellung) und vorhanden.</div>');
 define('ML_EBAY_NOTE_VARIATIONS_DISABLED', '<div class="errorBox"><b class="error">Hinweis</b>: F&uuml;r diese Kategorie sieht eBay keine Varianten vor, es wird nur der Stammartikel hochgeladen.</div>');
@@ -1413,11 +1428,11 @@ define('ML_EBAY_BUTTON_TOKEN_NEW', 'Token beantragen / &auml;ndern');
 define('ML_EBAY_SUBMIT_ADD_TEXT_ZERO_STOCK_ITEMS_REMOVED','Artikel ohne Lagerbestand wurden ausgelassen.');
 define('ML_EBAY_SUBMIT_ADD_TEXT_ZERO_STOCK_ITEMS_ONLY_UPDATED','Artikel ohne Lagerbestand werden nicht neu hochgeladen (nur aktualisiert, falls schon da).');
 // #PBSE# suspended
-#define('ML_EBAY_SUBMIT_ADD_TEXT_ASYNC_EXPLANATION','<b>Hinweis zur Verarbeitungszeit und Aktivierung:</b><br /><br />Die Verarbeitung kann wenige Sekunden bis zu 6 Stunden dauern:<br /><br />Artikel ohne eBay-Katalogpflicht: eBay ben&ouml;tigt f&uuml;r die Verarbeitung pro Artikel 5-10 Sekunden (inkl. Bilderpaket). <br /><br />eBay-Katalog-Artikel (ePID-Pflicht): Die Verarbeitung und Pr&uuml;fung kann seitens eBay 4-6 Stunden dauern, insbesondere wenn ein neues Produkt dem eBay Katalog vorgeschlagen wird (erfolgt automatisch).<br /><br />Sie k&ouml;nnen den Verarbeitungs-Status jederzeit im Reiter &quot;Inventar&quot; einsehen. Etwaige Fehlermeldungen nach der Verarbeitung werden im Reiter &quot;Fehlerlog&quot; angezeigt.');
+#define('ML_EBAY_SUBMIT_ADD_TEXT_ASYNC_EXPLANATION','<b>Hinweis zur Verarbeitungszeit und Aktivierung:</b><br /><br />Die Verarbeitung kann wenige Sekunden bis zu 6 Stunden dauern:<br /><br />Artikel ohne eBay-Katalogpflicht: eBay ben&ouml;tigt f&uuml;r die Verarbeitung pro Artikel 5-10 Sekunden (inkl. Bilderpaket).<br /><br />eBay-Katalog-Artikel (ePID-Pflicht): Die Verarbeitung und Pr&uuml;fung kann seitens eBay 4-6 Stunden dauern, insbesondere wenn ein neues Produkt dem eBay Katalog vorgeschlagen wird (erfolgt automatisch).<br /><br />Sie k&ouml;nnen den Verarbeitungs-Status jederzeit im Reiter &quot;Inventar&quot; einsehen. Etwaige Fehlermeldungen nach der Verarbeitung werden im Reiter &quot;Fehlerlog&quot; angezeigt.');
 # english:
 #define('ML_EBAY_SUBMIT_ADD_TEXT_ASYNC_EXPLANATION','<b>Note about processing time and activation:</b><br /><br />Processing can just take a few seconds or up to 6 hours.<br /><br />Articles not requiring eBay catalog matching: eBay needs 5-10 seconds to process each article (incl. image package).<br /><br />eBay catalog articles (requiring ePID): Processing time and testing can take eBay 4-6 hours, especially when a new product is suggested for eBay&apos;s catalog (happens automatically).<br /><br />You can always check the processing status via the inventory tab. Possible error reports after processing will be shown in the &quot;error log&quot; tab.');
 // #PBSE# suspended END
-define('ML_EBAY_SUBMIT_ADD_TEXT_ASYNC_EXPLANATION','<b>Hinweis zur Verarbeitungszeit und Aktivierung:</b><br /><br />eBay braucht f&uuml;r die Verarbeitung pro Artikel 5-10 Sekunden. Bei Nutzung des Bilderpakets wird zus&auml;tzlich ist die gleiche Zeit pro Bild ben&ouml;tigt.<br /><br />Die Daten werden zun&auml;chst auf unsere Server hochgeladen, und anschlie&szlig;end von dort aus zu eBay.<br /><br />Sie k&ouml;nnen den Verarbeitungs-Status jederzeit im Reiter &quot;Inventar&quot; einsehen. Etwaige Fehlermeldungen nach der Verarbeitung werden im Reiter &quot;Fehlerlog&quot; angezeigt.');
+define('ML_EBAY_SUBMIT_ADD_TEXT_ASYNC_EXPLANATION','<b>Hinweis zur Verarbeitungszeit und Aktivierung:</b><br /><br />eBay braucht f&uuml;r die Verarbeitung pro Artikel 5-10 Sekunden.Bei Nutzung des Bilderpakets wird zus&auml;tzlich ist die gleiche Zeit pro Bild ben&ouml;tigt.<br /><br />Die Daten werden zun&auml;chst auf unsere Server hochgeladen, und anschlie&szlig;end von dort aus zu eBay.<br /><br />Sie k&ouml;nnen den Verarbeitungs-Status jederzeit im Reiter &quot;Inventar&quot; einsehen. Etwaige Fehlermeldungen nach der Verarbeitung werden im Reiter &quot;Fehlerlog&quot; angezeigt.');
 
 define('ML_EBAY_ERROR_VARMATCH_FAILED', 'Keine der Varianten konnte korrekt zugeordnet werden. Bitte pr&uuml;fen Sie die Eintr&auml;ge f&uuml;r eBay Attribute (Varianten)');
 
@@ -1750,7 +1765,7 @@ define('ML_CDISCOUNT_TEXT_AUTOMATIC_MATCHING_SUMMARY', '%d Artikel wurden erfolg
 	Davon %d mit mehrfachen Ergebnissen.');
 define('ML_CDISCOUNT_ERROR_EAN', 'Bitte geben Sie eine EAN an.');
 define('ML_CDISCOUNT_ERROR_TITLE', 'Bitte geben Sie einen Titel an.');
-define('ML_CDISCOUNT_ERROR_SUBTITLE', 'Bitte geben Sie einen Untertitel an.');
+define('ML_CDISCOUNT_ERROR_SUBTITLE', 'Bitte geben Sie einen Warenkorb/Rechnungs-Titel an.');
 define('ML_CDISCOUNT_ERROR_DESCRIPTION', 'Bitte geben Sie eine Artikelbeschreibung an.');
 define('ML_CDISCOUNT_ERROR_SHIPPING', 'Error in shipping configuration');
 define('ML_CDISCOUNT_ERROR_CATEGORY', 'Bitte geben Sie eine Kategorie an.');
@@ -1930,7 +1945,7 @@ define('ML_RATE_XTCM_LIGHT6', 'xt:MultiConnect Light');
 define('ML_RATE_XTCM_PREMIUM6', 'xt:MultiConnect Premium');
 
 define('ML_RATE_SWITCH', '%s &ndash; g&uuml;ltig bis %s. Danach beantragte Umstellung auf Tarif %s.');
-define('ML_RATE_SWITCH_TRIAL', 'Testzeitraum bis zum %s. Tarif nach Testzeitraum: %s ');
+define('ML_RATE_SWITCH_TRIAL', 'Testzeitraum bis zum %s. Tarif nach Testzeitraum: %s');
 define('ML_RATE_END', '%s. Vertrag zum %s gek&uuml;ndigt.');
 define('ML_RATE_CONTINUE', '%s');
 
@@ -2106,6 +2121,8 @@ define('ML_HOOD_SUBMIT_ADD_TEXT_ZERO_STOCK_ITEMS_REMOVED','Artikel ohne Lagerbes
 define('ML_HOOD_IMPORTONLYPAID_LABEL', 'Nur bezahlt-markierte<br />Bestellungen importieren');
 define('ML_HOOD_IMPORTONLYPAID_DESC', ' <p>Durch Aktivieren der Funktion werden Bestellungen erst dann importiert, wenn Sie auf Hood als „bezahlt“ markiert wurden. F&uuml;r Zahlarten wie PayPal, Amazon Pay oder Sofort&uuml;berweisung erfolgt das automatisch, sonst muss die Zahlung auf Hood entsprechend markiert werden.  </p> <p> <strong>Vorteil:</strong> Die importierte Bestellung kann sofort versendet werden.</p>');
 define('ML_HOOD_IMPORTONLYPAID_RIGHTLABEL', 'Import nur wenn Bestellung komplett bezahlt');
+define('ML_HOOD_IMPORTONLYPAID_HOODPAY_POPUP_TITLE', 'HoodPay aktiviert');
+define('ML_HOOD_IMPORTONLYPAID_HOODPAY_POPUP', 'Sie haben HoodPay aktiviert. Dadurch sind alle Bestellungen, die bei magnalister ankommen, bezahlt.');
 
 /* Status-Aenderung bei Bestellungen */
 define('ML_HOOD_ORDER_PAID', "magnalister-Verarbeitung:\nZahlung bei Hood eingegangen.");
@@ -2130,7 +2147,7 @@ define('ML_DAWANDA_LABEL_PRODUCTTYPE', 'Art des Produktes');
 define('ML_DAWANDA_UPLOAD_EXPLANATION', '<b>Hinweis</b>:<br /><br />
 Der Marktplatz verarbeitet nun ihre Daten und pr&uuml;ft auf inhaltliche Fehler.
 <br /><br />
- Die Verarbeitung der Artikel kann bis zu 24 Stunden dauern.');
+Die Verarbeitung der Artikel kann bis zu 24 Stunden dauern.');
 
 /* Bepado */
 define('ML_BEPADO_LABEL', 'Bepado');
@@ -2364,9 +2381,9 @@ define('ML_METRO_PREPARE_PRODUCT_TITLE_INFO', 'Maximal 150 Zeichen');
 define('ML_METRO_PREPARE_PRODUCT_SHORTDESCRIPTION_INFO', 'Kurze Beschreibung des Produkts mit einer Zusammenfassung der wichtigsten Produkteigenschaften.<br/>Maximal 150 Zeichen');
 define('ML_METRO_PREPARE_PRODUCT_DESCRIPTION_INFO', 'Detaillierte und informative Beschreibung des Produkts mit seinen Spezifikationen und Eigenschaften. Angebotsdetails, Versand- oder Shopinformationen wie Preise, Lieferbedingungen, etc. sind nicht erlaubt. Bitte beachten Sie, dass es nur eine Produktdetailseite pro Produkt gibt, die von allen Verk&auml;ufern, die dieses Produkt anbieten, geteilt wird. F&uuml;gen Sie keine Hyperlinks, Bilder oder Videos hinzu.<br><br>Folgende HTML-Tags sind erlaubt: P, B, BR, A, UL, OL, LI, SPAN<br><br>Maximal 4000 Zeichen');
 define('ML_METRO_PREPARE_PRODUCT_IMAGES_INFO', 'Maximal 10 Produktbilder');
-define('ML_METRO_PREPARE_PRODUCT_GTIN_INFO', 'Zum Beispiel: EAN, ISBN, ...<br/>Maximal 14 Zeichen');
-define('ML_METRO_PREPARE_PRODUCT_MANUFACTURER_INFO', 'Maximal 100 Zeichen');
-define('ML_METRO_PREPARE_PRODUCT_MPN_INFO', 'Maximal 100 Zeichen');
+define('ML_METRO_PREPARE_PRODUCT_GTIN_INFO', 'Zum Beispiel: EAN, ISBN, ...<br/>Maximal 14 Zeichen<br/>Sie müssen hier eine GTIN hinterlegen, wenn Sie bei “Hersteller” und “Herstellerartikelnummer” keinen Wert eintragen.');
+define('ML_METRO_PREPARE_PRODUCT_MANUFACTURER_INFO', 'Maximal 100 Zeichen<br/>Wenn Sie unter “GTIN” nichts eintragen, müssen Sie hier einen Hersteller hinterlegen.');
+define('ML_METRO_PREPARE_PRODUCT_MPN_INFO', 'Maximal 100 Zeichen<br/>Wenn Sie unter “GTIN” nichts eintragen, müssen Sie hier eine Herstellerartikelnummer (MPN) hinterlegen.');
 define('ML_METRO_PREPARE_PRODUCT_BRAND_INFO', 'Maximal 100 Zeichen');
 define('ML_METRO_PREPARE_PRODUCT_MSRP_INFO', 'Maximal 100 Zeichen');
 define('ML_METRO_PREPARE_PRODUCT_KEY_FEATURE_INFO', 'Maximal 200 Zeichen je Merkmal');
@@ -2385,7 +2402,7 @@ define('ML_METRO_LABEL_TITLE', 'METRO Titel');
 define('ML_METRO_LISTING_ID', 'METRO ListingId');
 define('ML_METRO_PRICE_SHOP_METRO', 'Shop-Preis / METRO Preis<br>Shop-Preis (Netto) / METRO Netto-Preis');
 define('ML_METRO_STOCK_SHOP_METRO', 'Bestand Shop / METRO');
-define('ML_METRO_ERROR_GTIN', 'Bitte geben Sie eine GTIN Kode oder pr&uuml;fen Sie, ob der GTIN-Code g&uuml;ltig ist.');
+define('ML_METRO_ERROR_GTIN', 'METRO verlangt entweder eine GTIN oder den Hersteller + Herstellerartikelnummer. Da Sie die Felder “Hersteller” und “Herstellerartikelnummer” leer gelassen haben, m&uuml;ssen Sie in das GTIN-Feld einen Wert eintragen, um die Produktvorbereitung abzuschlie&#xDF;en.');
 define('ML_METRO_STATUS_PRODUCT_IS_PENDING_DELETE', 'Angebot wird gel&ouml;scht');
 define('ML_METRO_DELETED_OFFER_PURGE_INFO', 'Gel&ouml;schte Artikel werden nach 30 Tagen final aus der Datenbank und &Uuml;bersicht gel&ouml;scht.');
 
@@ -2455,3 +2472,7 @@ define('ML_OTTO_STATUS_PRODUCT_IS_PENDING_CREATION', 'Warten auf Übertragung an
 define('ML_OTTO_STATUS_PRODUCT_IS_PENDING_UPDATE', 'Produkt wird auf OTTO aktualisiert');
 define('ML_MATCH_OTTO_CARRIER_TO_SHIPPING_MODULE', 'Von Otto vorgeschlagene Transportunternehmen mit Versanddienstleistern aus Webshop  Versandkosten-Modul matchen');
 
+define('ML_DUPLCIATE_HOVERTEXTS', 'Bitte speichern Sie die Konfiguration / Vorbereitung bevor Sie Zeilen hinzufügen oder entfernen');
+define('ML_ATTRIBUTES_MATCHING_FIELD_WEIGHT_AND_UNIT', 'Artikelgewicht (Wert und Einheit als Text)');
+define('ML_ATTRIBUTES_MATCHING_FIELD_WEIGHT_VALUE', 'Artikelgewicht (Nur den Wert)');
+define('ML_ATTRIBUTES_MATCHING_FIELD_WEIGHT_UNIT', 'Artikelgewicht (Nur die Einheit)');

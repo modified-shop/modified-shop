@@ -106,7 +106,6 @@ class HoodConfigure extends MagnaCompatibleConfigure {
 		# same with price
 		unset($this->form['price']);
 
-		# BAUSTELLE
 		$this->form['orders']['fields']['onlycomplete'] = array (
 				'label' => ML_HOOD_IMPORTONLYPAID_LABEL,
 				'desc' => ML_HOOD_IMPORTONLYPAID_DESC,
@@ -151,6 +150,30 @@ class HoodConfigure extends MagnaCompatibleConfigure {
 	public function process() {
 		parent::process();
 		$cG = new MLConfigurator($this->form, $this->mpID, 'conf_hood');
+		# case "HoodPay": Activate "Only Paid" setting
+		if (1 == count($this->form['payment']['fields']['paymentmethod']['values'])) {
+			?><script>/*<!CDATA[*/
+				$('input[id="conf_hood.order.importonlypaid_true"]').val('true');
+				$('input[id="conf_hood.order.importonlypaid_true"]').prop('checked', true);
+				$('input[id="conf_hood.order.importonlypaid_false"]').val('false');
+				$('input[id="conf_hood.order.importonlypaid_false"]').prop('checked', false);
+				$('input[id="conf_hood.order.importonlypaid_false"]').change(function() {
+					var rdio = $(this);
+					if (rdio.attr('checked') != 'checked') return true;
+					$('<div></div>').html('<?php echo ML_HOOD_IMPORTONLYPAID_HOODPAY_POPUP ?>').jDialog({
+						title: '<?php echo ML_HOOD_IMPORTONLYPAID_HOODPAY_POPUP_TITLE ?>',
+						buttons: {
+							'<?php echo ML_BUTTON_LABEL_OK; ?>': function() {
+							$('input[id="<?php echo 'conf_hood.order.importonlypaid_true';?>"]').attr('checked', 'checked');
+							rdio.removeAttr('checked');
+							jQuery(this).dialog('close');
+							}
+						}
+					});
+				});
+			/*]]>*/</script><?php
+		} else {
 		echo $cG->radioAlert('conf_hood.order.importonlypaid', ML_HOOD_IMPORTONLYPAID_LABEL, ML_HOOD_IMPORTONLYPAID_DESC);
+		}
 	}
 }

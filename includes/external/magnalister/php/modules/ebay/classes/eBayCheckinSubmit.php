@@ -233,7 +233,6 @@ class eBayCheckinSubmit extends CheckinSubmit {
 			array('var' => 'property',	'varKey' => 'PictureURL',		'submitKey' => 'PictureURL',		'empty' => true, 'sanitize' => 'arraypicture'),
 			array('var' => 'property',	'varKey' => 'StartTime',		'submitKey' => 'StartTime',		'empty' => false),
 			array('var' => 'db',		'varKey' => 'ebay.paypal.address',	                  'submitKey' => 'PayPalEmailAddress',	'empty' => false),
-			array('var' => 'property',	'varKey' => 'HitCounter',		'submitKey' => 'HitCounter',		'empty' => false),
 			# ShippingDetails will be manipulated later
 			array('var' => 'property',	'varKey' => 'ShippingDetails',		'submitKey' => 'ShippingDetails',		'empty' => true, 'sanitize' => 'json'),
 			array('var' => 'property',	'varKey' => 'SellerProfiles',		'submitKey' => 'SellerProfiles',		'default' => $defaultSellerProfiles, 'empty' => false, 'sanitize' => 'json'),
@@ -342,17 +341,36 @@ class eBayCheckinSubmit extends CheckinSubmit {
 
 			// Support for Variation Images for Gambio Properties
             if (MAGNA_GAMBIO_VARIATIONS && getDBConfigValue('general.gambio.useproperties', '0', 'true') == 'true') {
-                // We only use path before Gambio 4.1 (since in Gambio 4.1 the image path is included in the Database)
-                if (version_compare(ML_GAMBIO_VERSION, '4.1', '>=')) {
-                    $VarImagePath = HTTP_CATALOG_SERVER.DIR_WS_CATALOG;
-                } else {
-                    $VarImagePath = getDBConfigValue('ebay.imagepath.variations', $this->_magnasession['mpID'], HTTP_CATALOG_SERVER.DIR_WS_CATALOG.DIR_WS_IMAGES.'product_images/properties_combis_images/');
-                }
+                // In Gambio 4.1 - 4.5 have the path included in the DB entry. Just check if it is.
+                $VarImagePath = $fullVarImagePath = getDBConfigValue('ebay.imagepath.variations', $this->_magnasession['mpID'], HTTP_CATALOG_SERVER.DIR_WS_CATALOG.DIR_WS_IMAGES.'product_images/original_images/');
+                $shortVarImagePath = HTTP_CATALOG_SERVER.DIR_WS_CATALOG;
 
-                // iterate through the variation images
                 if (!empty($data['submit']['VariationDimensionForPictures'])) {
+                    // find value matching for the dimension
+                    $currVariationValueMatching = array();
                     foreach ($product['VariationPictures'] as $aVariation) {
                         foreach ($aVariation['Variation'] as $aVar) {
+                            if ($aVar['NameId'] == $data['submit']['VariationDimensionForPictures']) {
+                                $VariationDimensionForPicturesName = $aVar['Name'];
+                                break;
+                            }
+                        }
+                        break; // the 1st is enough
+                    }
+                    if (    isset($VariationDimensionForPicturesName)
+                         && is_array($data['submit']['ItemSpecifics']['ShopVariation'][$VariationDimensionForPicturesName])
+                         && is_array($data['submit']['ItemSpecifics']['ShopVariation'][$VariationDimensionForPicturesName]['Values'])) {
+                        foreach ($data['submit']['ItemSpecifics']['ShopVariation'][$VariationDimensionForPicturesName]['Values'] as $v) {
+                            $currVariationValueMatching[$v['Shop']['Value']] = $v['Marketplace']['Value'];
+                        }
+                    }
+                    // iterate through the variation images
+                    foreach ($product['VariationPictures'] as $aVariation) {
+                        foreach ($aVariation['Variation'] as $aVar) {
+                            // fallback for the case the value is not matched
+                            if (!array_key_exists($aVar['Value'], $currVariationValueMatching)) {
+                                $currVariationValueMatching[$aVar['Value']] = $aVar['Value'];
+                            }
                             // if variation name matches the configured / prepared variation level name
                             if ($aVar['NameId'] == $data['submit']['VariationDimensionForPictures']) {
                                 // Support for one Variation Image (if shop not support multiple variation images)
@@ -363,30 +381,45 @@ class eBayCheckinSubmit extends CheckinSubmit {
                                 // Support for Multiple Variation Images - see Fallback above if shop supports only one variation image
                                 if (!empty($aVariation['Images'])) {
                                     foreach($aVariation['Images'] as $varImage) {
+                                        if (strpos($varImage, '/') === false) {
+                                            $VarImagePath = $fullVarImagePath;
+                                        } else {
+                                            $VarImagePath = $shortVarImagePath;
+                                        }
                                         if (!empty($varImage)
                                             && (!is_array($data['submit']['VariationPictures'])
-                                                || !array_key_exists($aVar['Value'], $data['submit']['VariationPictures'])
-                                                || !in_array($VarImagePath.$varImage, $data['submit']['VariationPictures'][$aVar['Value']])
+                                                || !array_key_exists($currVariationValueMatching[$aVar['Value']], $data['submit']['VariationPictures'])
+                                                || !in_array($VarImagePath.$varImage, $data['submit']['VariationPictures'][$currVariationValueMatching[$aVar['Value']]])
                                             )
                                         ) {
-                                            $data['submit']['VariationPictures'][$aVar['Value']][] = $VarImagePath.$varImage;
+                                            $data['submit']['VariationPictures'][$currVariationValueMatching[$aVar['Value']]][] = $VarImagePath.$varImage;
                                         }
                                     }
                                     $sVariationDimensionForPicturesName = $aVar['Name'];
                                 }
                             }
 
-
+                            if (!empty($aVariation['Image'])) {
+                                if (strpos($aVariation['Image'], '/') === false) {
+                                    $VarImagePath = $fullVarImagePath;
+                                } else {
+                                    $VarImagePath = $shortVarImagePath;
+                                }
+                            }
                             if (   $aVar['NameId'] == $data['submit']['VariationDimensionForPictures']
                                 && !empty($aVariation['Image'])
                                 && (!is_array($data['submit']['VariationPictures'])
-                                    || !array_key_exists($aVar['Value'], $data['submit']['VariationPictures'])
-                                    || !in_array($VarImagePath.$aVariation['Image'], $data['submit']['VariationPictures'][$aVar['Value']])
+                                    || !array_key_exists($currVariationValueMatching[$aVar['Value']], $data['submit']['VariationPictures'])
+                                    || !in_array($VarImagePath.$aVariation['Image'], $data['submit']['VariationPictures'][$currVariationValueMatching[$aVar['Value']]])
                                 )
                             ) {
-                                $data['submit']['VariationPictures'][$aVar['Value']][] = $VarImagePath.$aVariation['Image'];
+                                $data['submit']['VariationPictures'][$currVariationValueMatching[$aVar['Value']]][] = $VarImagePath.$aVariation['Image'];
                                 $sVariationDimensionForPicturesName = $aVar['Name'];
                             }
+                        }
+                        if (    is_array($data['submit']['VariationPictures'][$currVariationValueMatching[$aVar['Value']]])
+                             && !empty($data['submit']['VariationPictures'][$currVariationValueMatching[$aVar['Value']]])) {
+                            $data['submit']['VariationPictures'][$currVariationValueMatching[$aVar['Value']]] = array_unique($data['submit']['VariationPictures'][$currVariationValueMatching[$aVar['Value']]]);
                         }
                     }
                 }
@@ -1046,9 +1079,6 @@ class eBayCheckinSubmit extends CheckinSubmit {
 		if (!empty($propertiesRow['StartTime'])) {
 			$data['submit']['StartTime'] = $propertiesRow['StartTime'];
 		}
-		if (!empty($propertiesRow['HitCounter'])) {
-			$data['submit']['HitCounter'] = $propertiesRow['HitCounter'];
-		}
 		# RestrictedToBusiness, wenn in der Config aktiviert (default false)
 		if (getDBConfigValue(array($this->_magnasession['currentPlatform'].'.restrictToBusiness', 'val'), $this->_magnasession['mpID'], false)) {
 			$data['submit']['RestrictedToBusiness'] = 'true';
@@ -1482,9 +1512,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
 			$ex->setCriticalStatus(false);
 
 			foreach ($errors['RESPONSEDATA'] as $ebayItemErrors) {
-				#$html .= print_m($ebayItemErrors);
 				foreach ($ebayItemErrors['ERRORS'] as $ebayError) {
-					#$html .= print_m($ebayError);
 					if (($ebayError['ERRORCLASS'] != 'RequestError') || ($ebayError['ERRORLEVEL'] != 'Error')) continue;
 					if (    array_key_exists('ORIGIN',$ebayError)
 					     && !empty($ebayError['ORIGIN'])         ) {
@@ -1572,8 +1600,6 @@ class eBayCheckinSubmit extends CheckinSubmit {
 			$setproductRequired = ',
 				       productRequired="true"';
 		}
-#$myProperties = MagnaDB::gi()->fetchArray('SELECT * FROM '.TABLE_MAGNA_EBAY_PROPERTIES.' WHERE mpID = '.$this->_magnasession['mpID'].' AND products_id IN ('.$selectedPidsList.')');
-#echo print_m($myProperties, __LINE__.' '.__FUNCTION__.' $myProperties');
 		if (   ('SUCCESS' == $result['STATUS'])
 			&& ('SUCCESS' == $result[0]['STATUS'])
 		) {
@@ -1584,7 +1610,6 @@ class eBayCheckinSubmit extends CheckinSubmit {
 				       AND products_id IN ('.$selectedPidsList.')
 			');
 		} else if ('ERROR' == $result['STATUS']) {
-//echo print_m($result, __LINE__.' '.__FUNCTION__.' $result');
 			// store also ErrorCode
 			$Verified = 'ERROR';
 			$ErrorCode = '';

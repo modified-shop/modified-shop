@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * 888888ba                 dP  .88888.                    dP
  * 88    `8b                88 d8'   `88                   88
  * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b.
@@ -11,9 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: amazonConfig.php 6288 2015-12-04 15:08:12Z tim.neumann $
- *
- * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2022 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -233,9 +231,23 @@ if (isset($_GET['what'])) {
         }
         echo $iframeURL;
         exit();
+    } else if ($_GET['what'] == 'GetTokenCreationLink') {
+        $iframeURL = 'error';
+        try {
+            //*
+            $result = MagnaConnector::gi()->submitRequest(array(
+                'ACTION' => 'GetTokenCreationLink',
+                'DATA' => array('Site' => $_GET['site'])
+            ));
+            $iframeURL = $result['DATA']['tokenCreationLink'];
+            //*/
+        } catch (MagnaException $e) {
+            echo print_m($e, '$e');
+        }
+        echo $iframeURL;
+        exit();
     }
 }
-
 
 $form = loadConfigForm($_lang,
     array(
@@ -431,6 +443,7 @@ function renderAmazonSite($args, $value = false) {
     global $_MagnaSession;
     $aMarketplaces = amazonGetMarketplaces();
     $values = $aMarketplaces['Sites'];
+    array_unshift($values, ML_AMAZON_LABEL_APPLY_PLEASE_SELECT);
 
     $amazonSite = getDBConfigValue($args['key'], $_MagnaSession['mpID'], array());
     $html = '<select id="config_amazon_site" name="conf['.$args['key'].']">';
@@ -444,6 +457,79 @@ function renderAmazonSite($args, $value = false) {
     $html .= '</select>';
     return $html;
 }
+function mlAmazonMerchantIdPlaceholder() {
+    global $_MagnaSession;
+    $merchantId = getDBConfigValue('amazon.merchantid', $_MagnaSession['mpID'], '');
+    return '<input readonly value="'.$merchantId.'" placeholder="'.ML_PLACEHOLDER_MERCHANT_ID.'" class="fullwidth" type="text" />';
+}
+function amazonGetToken($args, &$value = '') {
+        global $_MagnaSession, $_url;
+        $expires = getDBConfigValue('amazon.token.expires', $_MagnaSession['mpID'], '');
+        $buttonId = 'requestToken';
+        $firstToken = ' mlbtn-action';
+        return '<input class="ml-button'.$firstToken.' mlbtn-action" type="button" value="'.ML_EBAY_BUTTON_TOKEN_NEW.'" id="'.$buttonId.'"/>
+        '.$expires.'
+        <div id="desc_get_token" title="<?php echo ML_LABEL_INFO ?>">
+            <span style="display: none">' . ML_AMAZON_TEXT_GET_TOKEN . '</span>
+        </div>
+<script type="text/javascript">/*<![CDATA[*/
+$(document).ready(function() {
+        $(\'#'.$buttonId.'\').click(function() {
+                  var d = $("#desc_get_token span").html();
+                  console.log(d)
+                  $("#infodiag").html(d).jDialog({
+                        width: (d.length > 1000) ? "700px" : "500px",
+                        buttons: {
+                            Cancel: {
+                                "text": "cancel",
+                                click: function() {
+                                    $(this).dialog("close");
+                                }
+                            },
+                            Ok: {
+                                "text": "ok",
+                                click: function() {
+                                    $(this).dialog("close");
+                                    openIframe();
+                                }
+                            }
+                        }
+                    });
+                function openIframe() {
+                    jQuery.blockUI(blockUILoading);
+                    var site = $("#config_amazon_site").val()
+                    jQuery.ajax({
+                            \'method\': \'get\',
+                            \'data\': {
+                                        \'site\': site,
+                                    },
+                            \'url\': \''.toURL($_url, array('what' => 'GetTokenCreationLink', 'kind' => 'ajax'), true).'\',
+                            \'success\': function (data) {
+                                    // some shop systems attach error messages, warnings or even notices
+                                    // to the output, which would be fatal here, so we strip it away
+                                    if (data.indexOf(\'<style\') > 0) {
+                                            data=data.substring(0, data.indexOf(\'<style\'));
+                                    }
+                                    jQuery.unblockUI();
+                                    myConsole.log(\'ajax.success\', data);
+                                    if (data == \'error\') {
+                                            $(\'<div></div>\')
+                                                    .attr(\'title\', '.json_encode(ML_EBAY_ERROR_CREATE_TOKEN_LINK_HEADLINE).')
+                                                    .html('.json_encode(ML_EBAY_ERROR_CREATE_TOKEN_LINK_TEXT).')
+                                                    .jDialog();
+                                    } else {
+                                            var hwin = window.open(data, "popup", "resizable=yes,scrollbars=yes");
+                                            if (hwin.focus) {
+                                                    hwin.focus();
+                                            }
+                                    }
+                            }
+                    });
+                }
+        });
+});
+/*]]>*/</script>';
+    }
 
 function AmazonInvoicePreview($args, &$value = '') {
     global $_MagnaSession, $_url;
@@ -535,67 +621,64 @@ $aMarketplaces = amazonGetMarketplaces();
 $form['amazonaccount']['fields']['site']['values'] = $aMarketplaces['Sites'];
 
 if (array_key_exists('conf', $_POST)) {
-    /*$nUser = trim($_POST['conf']['amazon.username']);
-    $nPass = trim($_POST['conf']['amazon.password']);*/
-    $nMerchant = trim($_POST['conf']['amazon.merchantid']);
-    $nMarketplace = trim($_POST['conf']['amazon.marketplaceid']);
-    $nSite = $_POST['conf']['amazon.site'];
-    $sToken = trim($_POST['conf']['amazon.mwstoken']);
-
-    /*if (!empty($nUser) && (getDBConfigValue('amazon.password', $_MagnaSession['mpID']) == '__saved__') && empty($nPass)) {
-        $nPass = '__saved__';
-    }*/
-    if (/*!empty($nUser) &&*/
-        (getDBConfigValue('amazon.mwstoken', $_MagnaSession['mpID']) == '__saved__') && empty($sToken)) {
-        $sToken = '__saved__';
-    }
-
-    if (/*!empty($nUser) && !empty($nPass) &&*/
-    !empty($sToken)) {
-        if ((strpos($nPass, '&#9679;') === false) && (strpos($nPass, '&#8226;') === false)) {
-            /*               Windows                                  Mac                */
-            setDBConfigValue('amazon.authed', $_MagnaSession['mpID'], array(
-                'state'  => false,
-                'expire' => time()
-            ), true);
-            try {
-                $result = MagnaConnector::gi()->submitRequest(array(
-                    'ACTION'      => 'SetCredentials',
-                    /*'USERNAME' => $nUser,
-                    'PASSWORD' => $nPass,*/
-                    'MERCHANTID'  => $nMerchant,
-                    'MARKETPLACE' => $nMarketplace,
-                    'MWSToken'    => $sToken,
-                    'SITE'        => $nSite
-                ));
-                $boxes .= '
+    try {
+        $merchantDetails = MagnaConnector::gi()->submitRequest(array(
+            'ACTION'      => 'GetMerchantDetails',
+        ));
+        if (
+               isset($merchantDetails['DATA']['MWSMerchantID'])
+            && isset($merchantDetails['DATA']['MWSMarketplaceID'])
+            && isset($merchantDetails['DATA']['MWSSite'])
+            && isset($merchantDetails['DATA']['AccessToken'])
+        ) {
+            setDBConfigValue('amazon.site', $_MagnaSession['mpID'], $merchantDetails['DATA']['MWSSite'],true);
+            setDBConfigValue('amazon.merchantid', $_MagnaSession['mpID'], $merchantDetails['DATA']['MWSMerchantID'],true);
+            setDBConfigValue('amazon.marketplaceid', $_MagnaSession['mpID'], $merchantDetails['DATA']['MWSMarketplaceID'],true);
+            setDBConfigValue('amazon.spapitoken', $_MagnaSession['mpID'], '__saved__',true);
+        } else {
+            throw new Exception('Credentials incomplete');
+        }
+        $boxes .= '
 					<p class="successBox">'.ML_GENERIC_STATUS_LOGIN_SAVED.'</p>
 				';
-            } catch (MagnaException $e) {
-                $boxes .= '
+    } catch (Exception $e) {
+        echo print_m($e);
+        $boxes .= '
 					<p class="errorBox">'.ML_GENERIC_STATUS_LOGIN_SAVEERROR.'</p>
 				';
-            }
-
-            try {
-                MagnaConnector::gi()->submitRequest(array(
-                    'ACTION' => 'IsAuthed',
-                ));
-                $auth = array(
-                    'state' => true,
-                );
-            } catch (MagnaException $e) {
-                $e->setCriticalStatus(false);
-                $boxes .= renderAuthError($e->getErrorArray());
-                $auth = array(
-                    'state' => false
-                );
-            }
-
-        } else {
+    }
+    $sToken = getDBConfigValue('amazon.spapitoken', $_MagnaSession['mpID']);
+    $nSite = isset($_POST['conf']['amazon.site']) ? $_POST['conf']['amazon.site'] : getDBConfigValue('amazon.site', $_MagnaSession['mpID']);
+    if (!empty($sToken)) {
+        /*               Windows                        Mac                */
+        setDBConfigValue('amazon.authed', $_MagnaSession['mpID'], array(
+            'state'  => false,
+            'expire' => time()
+        ), true);
+        try {
+            $result = MagnaConnector::gi()->submitRequest(array(
+                'ACTION'      => 'SetCredentials',
+                'SITE'        => $nSite
+            ));
+        } catch (Exception $e) {
+            echo print_m($e);
             $boxes .= '
-				<p class="errorBox">'.ML_ERROR_INVALID_PASSWORD.'</p>
-			';
+					<p class="errorBox">'.ML_GENERIC_STATUS_LOGIN_SAVEERROR.'</p>
+				';
+        }
+        try {
+            MagnaConnector::gi()->submitRequest(array(
+                'ACTION' => 'IsAuthed',
+            ));
+            $auth = array(
+                'state' => true,
+            );
+        } catch (MagnaException $e) {
+            $e->setCriticalStatus(false);
+            $boxes .= renderAuthError($e->getErrorArray());
+            $auth = array(
+                'state' => false
+            );
         }
     }
 
@@ -653,7 +736,8 @@ if (!$auth['state']) {
         $form['apply']['fields']['imagepathvariations']['default'] = HTTP_CATALOG_SERVER.DIR_WS_CATALOG.DIR_WS_IMAGES.'product_images/properties_combis_images/';
     }
 
-    if (!MagnaDB::gi()->tableExists('invoices')) {
+    if (    (!MagnaDB::gi()->tableExists('invoices'))
+         || ('commerceseo' == SHOPSYSTEM)) { // commerceseo has the table, but doesn't use it
         unset($form['amazonvcs']['fields']['amazon.amazonvcs.invoice']['values']['webshop']);
     }
     try {
@@ -937,6 +1021,32 @@ if (isset($_GET['kind']) && ($_GET['kind'] == 'ajax')) {
            $('#config_amazon_orderstatus_shipmethod_shipmethodDBMatching_table').css('visibility', 'collapse');
            $('#config_amazon_orderstatus_shipmethod_shipmethodAmazonToShopMatching').css('visibility', 'collapse');
        }
+    });
+
+    function disableGetTokenButton (status) {
+        $("#requestToken").prop("disabled", status).css(
+            {
+                "background-color": status === false ?"#e31a1c":"#666666",
+                "border-color": status === false ?"#e31a1c":"#666666",
+                "cursor": status === false ?"pointer":"auto",
+            }
+        )
+    }
+
+    $(document).ready(function() {
+        var siteField = $("#config_amazon_site");
+
+        if (siteField.val() === "0") {
+            disableGetTokenButton(true)
+        }
+
+        siteField.change(function () {
+            if ($("#config_amazon_site").val() === "0") {
+                disableGetTokenButton(true)
+            } else {
+                disableGetTokenButton(false)
+            }
+        });
     });
 
     $(document).ready(function() {

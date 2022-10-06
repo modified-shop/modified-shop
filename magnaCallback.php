@@ -488,6 +488,7 @@ function magnaInstalled($woDBCheck = false) {
 		MagnaDB::gi()->setCharset(DB_SERVER_CHARSET);
 	}
 	if (SHOPSYSTEM == 'gambio' && (($sVersion = mlGetGambioShopSystemVersion()) !== false)) {
+		define('ML_GAMBIO_VERSION', $sVersion);
 		if (version_compare($sVersion, '2.1', '>=')) {
 			MagnaDB::gi()->setCharset('utf8');
 		}
@@ -779,6 +780,7 @@ function magnaCallbackRun() {
     }
 
 	if (SHOPSYSTEM == 'gambio' && (($sVersion = mlGetGambioShopSystemVersion()) !== false)) {
+		define('ML_GAMBIO_VERSION', $sVersion);
 		if (version_compare($sVersion, '2.1', '>=')) {
 			MagnaDB::gi()->setCharset('utf8');
 		}

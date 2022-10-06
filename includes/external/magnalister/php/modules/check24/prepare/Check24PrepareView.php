@@ -282,9 +282,10 @@ class Check24PrepareView extends MagnaCompatibleBase {
 					<td class="input">
 						<select name="DeliveryMode">';
 			foreach (array('-' => '-',
-					'Spedition' => 'Spedition',
 					'Paket' => 'Paket',
 					'Warensendung' => 'Warensendung',
+					'Spedition' => 'Spedition',
+					'Sperrgut' => 'Sperrgut',
 					'EigeneAngaben' => 'Eigene Angaben') as $sKey => $sVal) {
 				$html .= '
 							<option value="' . $sKey . '" ' . (

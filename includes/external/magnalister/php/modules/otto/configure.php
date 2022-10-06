@@ -312,19 +312,19 @@ class OttoConfigure extends MagnaCompatibleConfigure {
 
         $addCarrier = explode(',', getDBConfigValue('otto.orders.send.carrier.additional', $mpID, ''));
         if (!empty($addCarrier)) {
-            foreach ($addCarrier as $val) {
+            foreach ($addCarrier as $code => $val) {
                 $val = trim($val);
                 if (empty($val))
                     continue;
-                $carrier[$val] = $val;
+                $carrier[$code] = $val;
             }
         }
         $carrierValues = array('null' => ML_LABEL_CARRIER_NONE);
         if (!empty($carrier)) {
-            foreach ($carrier as $val) {
+            foreach ($carrier as $code => $val) {
                 if ($val == 'Other')
                     continue;
-                $carrierValues[$val] = $val;
+                $carrierValues[$code] = $val;
             }
         }
 

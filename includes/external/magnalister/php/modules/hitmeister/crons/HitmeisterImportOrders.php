@@ -24,9 +24,14 @@ require_once(DIR_MAGNALISTER_MODULES.'magnacompatible/crons/MagnaCompatibleImpor
 
 class HitmeisterImportOrders extends MagnaCompatibleImportOrders {
 	
-	public function __construct($mpID, $marketplace) {
-		parent::__construct($mpID, $marketplace);
-	}
+    public function __construct($mpID, $marketplace) {
+        parent::__construct($mpID, $marketplace);
+        if (getDBConfigValue('general.options', '0', 'old') != 'gambioProperties') {
+            $this->multivariationsEnabled = true;
+        } else {
+            $this->gambioPropertiesEnabled = true;
+        }
+    }
 	
 	protected function getConfigKeys() {
 		$keys = parent::getConfigKeys();

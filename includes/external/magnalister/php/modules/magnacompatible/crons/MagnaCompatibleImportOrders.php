@@ -58,7 +58,7 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 	protected $multivariationsEnabled = false;
 
 	/* gambio properties, set to true if enabled, for modules which support it */
-	/* (currently Amazon, eBay, Hood) */
+	/* (currently Amazon, eBay, Hood, Hitmeister) */
 	protected $gambioPropertiesEnabled = false;
 
 	/* set to true if we find the needed classes and libraries for gambio order confirmation */
@@ -978,6 +978,17 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 		//if ($this->verbose) {
 		//	echo print_m($this->o['order'], 'InsertOrder');
 		//}
+		// for modified: gender (set to 'm', we don't get the info from MPs), customers_country_iso_code_2, customers_ip, languages_id, campaign, ibn_billdate
+		$this->o['order']['customers_gender'] = 'm';
+		$this->o['order']['customers_country_iso_code_2'] = $this->o['order']['billing_country_iso_code_2'];
+		$this->o['order']['billing_gender'] = 'm';
+		$this->o['order']['delivery_gender'] = 'm';
+		$this->o['order']['customers_ip'] = '0.0.0.0';
+		$this->o['order']['languages_id'] = MagnaDB::gi()->fetchOne("
+			SELECT languages_id FROM ".TABLE_LANGUAGES." WHERE directory = '".$this->language."'
+                ");
+		$this->o['order']['campaign'] = '';
+		$this->o['order']['ibn_billdate'] = '0000-00-00';
 		$this->insert(TABLE_ORDERS, array_filter_keys($this->o['order'], MagnaDB::gi()->getTableColumns(TABLE_ORDERS)));
 
 		# OrderId merken
@@ -1115,6 +1126,11 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 		// set the products_tax
 		$this->setProductsTax();
 
+		// additional columns for modified (after tax, need the tax value)
+		if ('xtcmodified' == SHOPSYSTEM) {
+			$this->setAdditionalOrdersProductsColumnsForModified();
+		}
+
 		$this->doBeforeInsertOrdersProducts();
 		$this->o['_processingData']['ProductsCount'] += (int)$this->p['products_quantity'];
 
@@ -1194,6 +1210,30 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 		");
 		if ($sProductsModel !== false) {
 			$this->p['products_model'] = $sProductsModel;
+		}
+	}
+
+	/*
+	 * sets additional columns for modified (from master product)
+	 */
+	protected function setAdditionalOrdersProductsColumnsForModified() {
+		$aOrdersProductsColumns = MagnaDB::gi()->getTableColumns(TABLE_ORDERS_PRODUCTS);
+		/*
+		products_price_origin is price without tax
+		products_weight is taken from products table
+		*/
+		if (in_array('products_price_origin', $aOrdersProductsColumns)) {
+			$this->p['products_price_origin'] = (100.00 * $this->p['products_price']) / (100.00 + $this->p['products_tax']);
+		}
+		if (in_array('products_weight', $aOrdersProductsColumns)) {
+			if ((int)$this->p['products_id'] != 0) {
+				$this->p['products_weight'] = MagnaDB::gi()->fetchOne('
+					SELECT products_weight
+					  FROM '.TABLE_PRODUCTS.'
+					WHERE products_id = '.(int)$this->p['products_id']);
+			} else {
+				$this->p['products_weight'] = 0.00;
+			}
 		}
 	}
 
@@ -1332,6 +1372,14 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 	 * 	special for oscommerce we update products_price and final_price
 	 */
 	protected function setProductsTax() {
+		/* {Hook} "MagnaCompatibleImportOrders_setProductsTax": Is called before the product tax is determined.
+			You can e.g. replace / calculate an own value for $this->config['MwStFallback'] (fallback for not known products)
+			or replace the whole setProductsTaxc functionality
+			(to do that, read the code of setProductsTax(), and write an own version with return)
+		*/
+		if (($hp = magnaContribVerify('MagnaCompatibleImportOrders_setProductsTax', 1)) !== false) {
+			require($hp);
+		}
 		$fTax = false;
 		if (isset($this->p['products_tax'])) {
 			$fTax = $this->getTaxValue($this->p['products_tax']);
@@ -1368,7 +1416,7 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 		$fPriceWithoutTax = $this->simplePrice->setPrice($this->p['products_price'])->removeTax($fTax)->getPrice();
 
 		if (!isset($this->taxValues[$fTax])) {
-			$this->taxValues[$fTax] = 0.0;
+			$this->taxValues[$fTax] = 0.00;
 		}
 		$this->taxValues[$fTax] += $fPriceWithoutTax * (int)$this->p['products_quantity'];
 
@@ -1959,8 +2007,24 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 					$this->o[$sArrayKey][$sStateKey] = '';
 				}
 			}*/
+			if (    (!MagnaDB::gi()->columnExistsInTable('entry_house_number', TABLE_ADDRESS_BOOK)) 
+			     || (!defined('ACCOUNT_SPLIT_STREET_INFORMATION'))
+			     || (ACCOUNT_SPLIT_STREET_INFORMATION !== 'true')) {
+				if (!empty($this->o['adress']['entry_house_number'])) {
+					$this->o['adress']['entry_street_address'] .= ' '.$this->o['adress']['entry_house_number'];
+					unset($this->o['adress']['entry_house_number']);
+				}
+				foreach(array('customers','billing','delivery') as $addrPurpose) {
+					if (!empty($this->o['order'][$addrPurpose.'_house_number'])) {
+						$this->o['order'][$addrPurpose.'_street_address'] .= ' '.$this->o['order'][$addrPurpose.'_house_number'];
+						unset($this->o['order'][$addrPurpose.'_house_number']);
+					}
+				}
+			}
+
 			if (    (!MagnaDB::gi()->columnExistsInTable('entry_additional_info', TABLE_ADDRESS_BOOK)) 
-			     || (@constant('ACCOUNT_ADDITIONAL_INFO') !== 'true')) {
+			     || (!defined('ACCOUNT_ADDITIONAL_INFO'))
+			     || (ACCOUNT_ADDITIONAL_INFO !== 'true')) {
 				if (!empty($this->o['adress']['entry_additional_info'])) {
 					$this->o['adress']['entry_street_address'] .= ' '.$this->o['adress']['entry_additional_info'];
 					unset($this->o['adress']['entry_additional_info']);

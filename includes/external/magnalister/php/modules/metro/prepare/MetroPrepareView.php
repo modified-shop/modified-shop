@@ -196,7 +196,7 @@ class MetroPrepareView extends MagnaCompatibleBase {
 				</tr>
 				
 				<tr class="'.(($oddEven = !$oddEven) ? 'odd' : 'even').'">
-					<th>'.ML_METRO_PRODUCT_GTIN.'<span class="bull">&bull;</span></th>
+					<th>'.ML_METRO_PRODUCT_GTIN.'</th>
 					<td class="input">
 						<input class="fullwidth" type="text" maxlength="14" value="'.fixHTMLUTF8Entities($data['GTIN'],
                 ENT_COMPAT).'" name="GTIN" id="GTIN"/>

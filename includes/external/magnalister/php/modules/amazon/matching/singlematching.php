@@ -56,14 +56,13 @@ if (!empty($amazonProperties) && !empty($amazonProperties['asin'])) {
 	$productDetails['asin'] = '';
 	$productDetails['asin_type'] = '';
 	$productDetails['item_condition'] = getDBConfigValue('amazon.itemCondition', $_MagnaSession['mpID']);
-	$productDetails['will_ship_internationally'] = getDBConfigValue('amazon.internationalShipping', $_MagnaSession['mpID']);
 	$productDetails['item_note'] = '';
-	
 	if (defined('DEVELOPMENT_TEST')) {
 		$productDetails['item_note'] = DEVELOPMENT_TEST;
 	}
 
 }
+$shippingTemplates = getDBConfigValue('amazon.shipping.template', $_MagnaSession['mpID']);
 
 $searchResults = performItemSearch(
 	trim($productDetails['asin']),
@@ -122,7 +121,6 @@ $products = array(array(
 ));
 $matchingConfig = array (
 	'itemConditions' => amazonGetPossibleOptions('ConditionTypes'),
-	'internationalShipping' => amazonGetPossibleOptions('ShippingLocations'),
 );
 
 echo '
@@ -162,17 +160,23 @@ echo '
 			</td>
 		</tr>
 		<tr class="last">
-			<td class="label">'.ML_GENERIC_SHIPPING.'</td>
+			<td class="label">'.ML_AMAZON_SHIPPING_TEMPLATE.'</td>
 			<td class="options">
-				<select name="amazonProperties[will_ship_internationally]" id="amazon_shipping">';
-					foreach ($matchingConfig['internationalShipping'] as $type => $name) {
-						if ($productDetails['will_ship_internationally'] == $type) {
-							$sel = ' selected="selected"';
-						} else{ 
+				<select name="amazonProperties[ShippingTemplate]" id="amazon_shipping">';
+					foreach ($shippingTemplates['values'] as $index => $name) {
+						if (isset($productDetails['ShippingTemplate'])) {
+                            if($index === (int)$productDetails['ShippingTemplate']) {
+							    $sel = ' selected="selected"';
+                            } else {
+                                $sel = '';
+                            }
+						} elseif ($shippingTemplates['defaults'][$index] == '1') {
+                            $sel = ' selected="selected"';
+                        } else{
 							$sel = '';
 						}
 						echo'
-						<option'.$sel.' value="'.$type.'">'.$name.'</option>';
+						<option'.$sel.' value="'.$index.'">'.$name.'</option>';
 					}
 					echo '
 				</select>

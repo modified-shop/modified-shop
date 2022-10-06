@@ -235,33 +235,6 @@ class CdiscountProductSaver {
 
 			MagnaDB::gi()->insert(TABLE_MAGNA_CDISCOUNT_PREPARE, $matchedProduct, true);
 
-			if (MLProduct::gi()->hasMasterItems()) {
-				// fetch master and insert dummy
-				if ($sKeyType == 'products_model') {
-					$sData = $productModel;
-				} else {
-					$sData = $pId;
-				}
-				$aMaster = MagnaDb::gi()->fetchRow(eecho("
-						SELECT m.products_id, m.products_model
-						  FROM ".TABLE_PRODUCTS." p
-					INNER JOIN ".TABLE_PRODUCTS." m ON p.products_master_model = m.products_model
-						 WHERE p.".$sKeyType." = '".$sData."'
-				", false));
-
-				if ($aMaster !== false) {
-					MagnaDB::gi()->insert(TABLE_MAGNA_CDISCOUNT_PREPARE, array(
-						'mpID'				=> $this->mpId,
-						'products_id'		=> $aMaster['products_id'],
-						'products_model'	=> $aMaster['products_model'],
-						'EAN'				=> 'dummyMasterProduct',
-						'PrepareType'		=> 'Match',
-						'Verified'			=> 'OK',
-						'PreparedTs'		=> date('Y-m-d H:i:s'),
-					), true);
-				}
-			}
-
 		}
 	}
 

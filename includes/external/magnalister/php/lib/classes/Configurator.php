@@ -859,7 +859,7 @@ class MLConfigurator {
 					$html .= 'Function <span class="tt">\''.$item['procFunc'].'\'</span> does not exists.';
 					break;
 				}				
-				$html .= call_user_func($item['procFunc'], array_merge($item['params'], array('key' => $item['key'])));
+				$html .= call_user_func($item['procFunc'], array_merge((isset($item['params']) ? $item['params'] : array()), array('key' => $item['key'])));
 				break;
 			}
 			case 'html': {
@@ -893,6 +893,39 @@ class MLConfigurator {
 
 		$cssClasses = !empty($item['cssClasses']) ? implode(' ', $item['cssClasses']) : '';
 		?>
+        <style>
+            .hovertext {
+                position: relative;
+            }
+
+            .hovertext:before {
+                content: attr(data-hover);
+                text-transform: none;
+                white-space: initial;
+                visibility: hidden;
+                opacity: 0;
+                width: 150px;
+                background-color: grey;
+                color: #fff;
+                text-align: center;
+                border-radius: 5px;
+                padding: 5px 5px;
+                transition: opacity 10ms ease-in-out;
+                font-size: 11px;
+                position: absolute;
+                z-index: 1;
+                left: 0;
+                top: 110%;
+                font-weight: normal;
+            }
+
+            .hovertext:hover:before {
+                opacity: 1;
+                visibility: visible;
+            }
+
+
+        </style>
 		<table class="<?php echo $idKey ?> nostyle nowrap valigntop <?php echo $cssClasses ?>" width="100%">
 			<tbody>
 			<?php
@@ -917,19 +950,24 @@ class MLConfigurator {
 							echo $this->renderInput($field, $value);
 							?>
 						</td>
-						<td>
-							<?php if (!isset($item['skipRadio'])) {
-								echo ML_LABEL_CONFIG_TYPE_DUPLICATE_STANDARD.' ';
-								?><input name="<?php echo $item['key'] ?>" class="duplicated-default-radio" type="radio" value="1"
-										 class="" <?php echo $aValue['defaults'][$i] == "1" ? ' checked=checked ' : ''; ?>>
-							<?php } ?>
-							<input value="<?php echo $aValue['defaults'][$i]; ?>"
-								   name="<?php echo 'conf['.$item['key'].'][defaults][]' ?>" type="hidden"
-								   class="<?php echo $idKey ?>"/>
-							<input type="button" value="+" class="ml-button plus">
-							<input type="button" value="&#8211;" class="ml-button minus">
-						</td>
-					</tr>
+                        <td style="display: flex; align-items: center;">
+                            <div>
+                                <?php if (!isset($item['skipRadio'])) {
+                                    echo ML_LABEL_CONFIG_TYPE_DUPLICATE_STANDARD.' ';
+                                    ?>
+                                    <input name="<?php echo $item['key'] ?>" class="duplicated-default-radio" type="radio" value="1"
+                                           class="" <?php echo $aValue['defaults'][$i] == "1" ? ' checked=checked ' : ''; ?>>
+                                <?php } ?>
+                                <input value="<?php echo $aValue['defaults'][$i]; ?>"
+                                       name="<?php echo 'conf['.$item['key'].'][defaults][]' ?>" type="hidden"
+                                       class="<?php echo $idKey ?>"/>
+                            </div>
+                            <div data-hover="<?php echo ML_DUPLCIATE_HOVERTEXTS; ?>" class="hovertext" style="margin-left: 5px">
+                                <input type="button" value="+" class="ml-button plus">
+                                <input type="button" value="&#8211;" class="ml-button minus">
+                            </div>
+                        </td>
+                    </tr>
 				<?php }
 			} ?>
 			</tbody>

@@ -766,7 +766,7 @@ function renderGenericApplication($data) {
 			</tr>';
 	//.print_m($data);
 	
-	if(getDBConfigValue(array('amazon.shipping.template.active', 'val'), $_MagnaSession['mpID'], false) && isset($data['ShippingTemplate'])){
+	if(isset($data['ShippingTemplate'])){
 		$aTemplates = getDBConfigValue(array($_MagnaSession['currentPlatform'] . '.shipping.template', 'values'), $_MagnaSession['mpID']);
 		$html .= '
 			<tr class="even">

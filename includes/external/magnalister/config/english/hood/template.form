@@ -1,0 +1,38 @@
+{
+    "template": {
+        "headline": "Produkt-Template",
+        "desc": "Template f&uuml;r die Produktbeschreibung auf hood. (Sie k&ouml;nnen den Editor unter \"Globale Konfiguration\" > \"Experteneinstellungen\" umschalten.)",
+        "fields": {
+            "productname": {
+                "label": "Template Produktname",
+                "key": "_#_platform_#_.template.name",
+                "type": "text",
+                "default": "#TITLE#",
+                "verify": "notempty",
+                "cssClasses": [
+                    "autoWidth"
+                ],
+                "rightlabel": "Platzhalter: #TITLE# - Produktname; #BASEPRICE# - Grundpreis",
+                "desc": "<dl>\r\n\t\t\t\t\t\t\t<dt>Name des Produkts auf hood<\/dt>\r\n\t\t\t\t\t\t\t <dd>Einstellung, wie das Produkt auf hood hei&szlig;en soll.\r\n\t\t\t\t\t\t\t     Der Platzhalter <b>#TITLE#<\/b> wird automatisch durch den Produktnamen aus dem Shop ersetzt,\r\n\t\t\t\t\t\t  \t\t <b>#BASEPRICE#<\/b> durch Preis pro Einheit, soweit f&uuml;r das betreffende Produkt im Shop hinterlegt.<\/dd>\r\n\t\t\t\t\t\t\t<dt>Bitte beachten Sie:<\/dt>\r\n\t\t\t\t\t\t\t <dd><b>#BASEPRICE#<\/b> wird erst beim Hochladen zu hood ersetzt, denn bei der Vorbereitung kann der Preis noch ge&auml;ndert werden.<\/dd>\r\n\t\t\t\t\t\t\t <dd>Da der Grundpreis  ein fester Wert in dem Titel ist und nicht aktualisiert werden kann, sollte der Preis nicht ge&auml;ndert werden, denn dies w&uuml;rde zu falschen Preisangaben f&uuml;hren.<br \/> \r\n\t\t\t\t\t\t\t\tSie k&ouml;nnen den Platzhalter auf eigenen Gefahr verwenden, wir empfehlen aber in dem Fall, <b>die Preissynchronisation auszuschalten<\/b> (Einstellung in der magnalister hood Konfiguration).<\/dd>\r\n\t\t\t\t\t\t\t<\/dl>"
+            },
+            "content": {
+                "label": "Template Produktbeschreibung",
+                "key": "_#_platform_#_.template.content",
+                "type": "textarea",
+                "default": "<p>#TITLE#<\/p>\r\n<p>#ARTNR#<\/p>\r\n<p>#SHORTDESCRIPTION#<\/p>\r\n<p>#PICTURE1#<\/p>\r\n<p>#PICTURE2#<\/p>\r\n<p>#PICTURE3#<\/p>\r\n<p>#DESCRIPTION#<\/p>",
+                "verify": "notempty",
+                "cssClasses": [
+                    "fullwidth",
+                    "tinymce"
+                ],
+                "parameters": {
+                    "rows": "40"
+                },
+                "externalDesc": "\r\n\t\t\t\t\tListe verf&uuml;gbarer Platzhalter f&uuml;r die Produktbeschreibung:\r\n\t\t\t\t\t<dl>\r\n\t\t\t\t\t\t<dt>#TITLE#<\/dt>\r\n\t\t\t\t\t\t\t<dd>Produktname (Titel)<\/dd>\r\n\t\t\t\t\t\t<dt>#ARTNR#<\/dt>\r\n\t\t\t\t\t\t\t<dd>Artikelnummer im Shop<\/dd>\r\n\t\t\t\t\t\t<dt>#PID#<\/dt>\r\n\t\t\t\t\t\t\t<dd>Products ID im Shop<\/dd>\r\n\t\t\t\t\t\t<!--<dt>#PRICE#<\/dt>\r\n\t\t\t\t\t\t\t<dd>Preis<\/dd>\r\n\t\t\t\t\t\t<dt>#VPE#<\/dt>\r\n\t\t\t\t\t\t\t<dd>Preis pro Verpackungseinheit<\/dd>-->\r\n\t\t\t\t\t\t<dt>#SHORTDESCRIPTION#<\/dt>\r\n\t\t\t\t\t\t\t<dd>Kurzbeschreibung aus dem Shop<\/dd>\r\n\t\t\t\t\t\t<dt>#DESCRIPTION#<\/dt>\r\n\t\t\t\t\t\t\t<dd>Beschreibung aus dem Shop<\/dd>\r\n\t\t\t\t\t\t<dt>#PICTURE1#<\/dt>\r\n\t\t\t\t\t\t\t<dd>erstes Produktbild<\/dd>\r\n\t\t\t\t\t\t<dt>#PICTURE2# usw.<\/dt>\r\n\t\t\t\t\t\t\t<dd>zweites Produktbild; mit #PICTURE3#, #PICTURE4# usw. k&ouml;nnen weitere Bilder &uuml;bermittelt werden, so viele wie im Shop vorhanden.<\/dd>\r\n\t\t\t\t\t<\/dl>\r\n\t\t\t\t",
+                "buttons": [
+                    "#restoreDefault#"
+                ]
+            }
+        }
+    }
+}

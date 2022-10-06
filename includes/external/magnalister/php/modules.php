@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * (c) 2010 - 2021 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2022 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -24,13 +24,7 @@ $_modules = array(
 		'displayAlways' => true,
 		'requiredConfigKeys' => array (
 			'amazon.firstactivation',
-			/*'amazon.username',
-			'amazon.password',*/
-			'amazon.merchantid',
-			'amazon.marketplaceid',
-			'amazon.mwstoken',
 			'amazon.lang',
-			'amazon.internationalShipping',
 			'amazon.mwstfallback',
 			/*//
 			{search: 1427198983}'amazon.mwst.shipping',

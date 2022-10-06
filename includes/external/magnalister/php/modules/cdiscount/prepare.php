@@ -258,7 +258,9 @@ class CdiscountPrepare extends MagnaCompatibleBase
         }
 
         // run js to filter our already selected dropdown values in duplicate
-        $this->selectFieldOptionRemoverScript();
+        if (!isset($_GET['kind']) || $_GET['kind'] !== 'ajax') {
+            $this->selectFieldOptionRemoverScript();
+        }
 
 		if (   isset($_POST['request'])
 			&& ($_POST['request'] === 'ItemSearchByTitle' || $_POST['request'] === 'ItemSearchByEAN')
@@ -431,40 +433,6 @@ class CdiscountPrepare extends MagnaCompatibleBase
 			);
 
 			MagnaDB::gi()->insert(TABLE_MAGNA_CDISCOUNT_PREPARE, $matchedProduct, true);
-
-			if (MLProduct::gi()->hasMasterItems()) {
-				// fetch master and insert dummy
-				if ($sKeyType == 'products_model') {
-					$sData = $product['Model'];
-				} else {
-					$sData = $product['Id'];
-				}
-				$aMaster = MagnaDb::gi()->fetchRow(eecho("
-						SELECT m.products_id, m.products_model
-						  FROM ".TABLE_PRODUCTS." p
-					INNER JOIN ".TABLE_PRODUCTS." m ON p.products_master_model = m.products_model
-						 WHERE p.".$sKeyType." = '".$sData."'
-				", false));
-
-				if ($aMaster !== false) {
-					MagnaDB::gi()->insert(TABLE_MAGNA_CDISCOUNT_PREPARE, array(
-						'mpID'				=> $this->mpID,
-						'products_id'		=> $aMaster['products_id'],
-						'products_model'	=> $aMaster['products_model'],
-						'EAN'				=> 'dummyMasterProduct',
-						'PreparationTime'				=> $aMaster['PreparationTime'],
-						'ShippingFeeStandard'			=> $aMaster['ShippingFeeStandard'],
-						'ShippingFeeTracked'			=> $aMaster['ShippingFeeTracked'],
-						'ShippingFeeRegistered'			=> $aMaster['ShippingFeeRegistered'],
-						'ShippingFeeExtraStandard'		=> $aMaster['ShippingFeeExtraStandard'],
-						'ShippingFeeExtraTracked'		=> $aMaster['ShippingFeeExtraTracked'],
-						'ShippingFeeExtraRegistered'	=> $aMaster['ShippingFeeExtraRegistered'],
-						'PrepareType'		=> 'Match',
-						'Verified'			=> 'OK',
-						'PreparedTs'		=> date('Y-m-d H:i:s'),
-					), true);
-				}
-			}
 
 			MagnaDB::gi()->delete(TABLE_MAGNA_SELECTION, array(
 				'pID' => $product['Id'],
