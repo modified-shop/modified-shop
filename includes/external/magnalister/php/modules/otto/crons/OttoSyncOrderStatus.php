@@ -11,13 +11,12 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * (c) 2010 - 2021 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2022 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
 
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
-
 
 require_once(DIR_MAGNALISTER_MODULES.'magnacompatible/crons/MagnaCompatibleSyncOrderStatus.php');
 
@@ -144,10 +143,8 @@ class OttoSyncOrderStatus extends MagnaCompatibleSyncOrderStatus {
     }
 
     protected function confirmShipment($date) {
-
         //get the key for the correct shipping from address
         $key = array_search($this->oOrder['orders_status_shop'], $this->config['StatusShipped']);
-
 
         $cfirm = array (
             'OttoOrderId' => $this->oOrder['special'],
@@ -262,6 +259,14 @@ class OttoSyncOrderStatus extends MagnaCompatibleSyncOrderStatus {
         );
         $parent['ReturnCarrier'] = array(
             'key' => 'return.carrier',
+            'default' => '',
+        );
+        $parent['TrackingCodeMatchingTable'] = array(
+            'key' => 'orders.tracking.key.DBMatching.table',
+            'default' => '',
+        );
+        $parent['TrackingCodeMatchingAlias'] = array(
+            'key' => 'orders.tracking.key.DBMatching.alias',
             'default' => '',
         );
         $parent['ReturnCarrierMatchingMarketplace'] = array(

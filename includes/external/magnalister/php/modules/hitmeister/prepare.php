@@ -377,6 +377,36 @@ class HitmeisterPrepare extends MagnaCompatibleBase
 		$products = $v->getSelection(true);
 
 		foreach ($products as $product) {
+			// Hack: If no EAN, check if variation product and take the first variation EAN (if any).
+			// For a real solution, we should match all variations and store the values somewhere. This here works as long as all EANs are correct and available on the marketplace (the upload functionality just uses the EAN's).
+			if (empty($product['EAN'])) {
+				if ('gambioProperties' == getDBConfigValue('general.options', 0, 'old')) {
+					$product['EAN'] = MagnaDB::gi()->fetchOne('SELECT combi_ean
+					 FROM products_properties_combis
+					WHERE products_id = '.$product['Id'].'
+					  AND LENGTH(combi_ean)>7
+					ORDER BY products_properties_combis_id
+					LIMIT 1');
+				} else {
+					if (MagnaDB::gi()->columnExistsInTable('attributes_ean', TABLE_PRODUCTS_ATTRIBUTES)) {
+						$attributes_ean_column = 'attributes_ean';
+					} else if (MagnaDB::gi()->columnExistsInTable('gm_ean', TABLE_PRODUCTS_ATTRIBUTES)) {
+						$attributes_ean_column = 'gm_ean';
+					} else {
+						$attributes_ean_column = '';
+					}
+					if (!empty($attributes_ean_column)) {
+						$product['EAN'] = MagnaDB::gi()->fetchOne('SELECT '.$attributes_ean_column.'
+						 FROM '.TABLE_PRODUCTS_ATTRIBUTES.'
+						WHERE products_id = '.$product['Id'].'
+						  AND LENGTH('.$attributes_ean_column.')>7
+						ORDER BY products_attributes_id
+						LIMIT 1');
+					}
+				}
+			}
+			// END Hack
+
 			$searchResults = HitmeisterHelper::SearchOnHitmeister($product['EAN'], 'EAN');
 
 			if (   $searchResults === false

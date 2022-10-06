@@ -242,6 +242,7 @@
             },
             "twomanhandlingfee": {
                 "label": "Direkkauf Spedition - Lieferkosten bis zum Aufstellort",
+                "desc": "The cost for this service are only submited to Idealo if the shipping method is "Spedition". In case you submit the value of 0.00 it means that the service is free of charge.",
                 "key": "_#_platform_#_.shipping.methods.twomanhandlingfee",
                 "type": "text",
                 "rightlabel": "const(DEFAULT_CURRENCY)",
@@ -256,6 +257,7 @@
             },
             "disposalfee": {
                 "label": "Direkkauf Spedition - Kosten Altgerätemitnahme",
+                "desc": "The cost for this service are only submited to Idealo if the shipping method is "Spedition". In case you submit the value of 0.00 it means that the service is free of charge.",
                 "key": "_#_platform_#_.shipping.methods.disposalfee",
                 "type": "text",
                 "rightlabel": "const(DEFAULT_CURRENCY)",

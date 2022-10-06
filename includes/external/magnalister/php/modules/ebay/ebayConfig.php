@@ -834,24 +834,28 @@ if (isset($_GET['kind']) && ($_GET['kind'] == 'ajax')) {
 	}
 
 	// adjust strike prices
-	switch($_POST['conf']['ebay.strike.price.kind']) {
-		case ('SpecialPrice'): {
-			$_POST['conf']['ebay.strike.price.addkind'] = $_POST['conf']['ebay.fixed.price.addkind'];
-			$_POST['conf']['ebay.strike.price.factor'] = $_POST['conf']['ebay.fixed.price.factor'];
-			$_POST['conf']['ebay.strike.price.signal'] = $_POST['conf']['ebay.fixed.price.signal'];
-			$_POST['conf']['ebay.strike.price.group'] = $_POST['conf']['ebay.fixed.price.group'];
-			$_POST['conf']['ebay.fixed.price.usespecialoffer'] = array ('val' => true);
-			break;
-		}
-		case ('DontUse'): {
-			$_POST['conf']['ebay.strike.price.group'] = '-1';
-			// no break here, the following stuff regards also this case:
-			// we take all the configuration from main price only in 'SpecialPrice' case, otherwise is must be unset
-		}
-		default: {
-			setDBConfigValue('ebay.strike.price.addkind', $_MagnaSession['mpID'], 'percent', true);
-			setDBConfigValue('ebay.strike.price.factor', $_MagnaSession['mpID'], '0', true);
-			setDBConfigValue('ebay.strike.price.signal', $_MagnaSession['mpID'], '', true);
+	if (    array_key_exists('conf', $_POST)
+	     && is_array($_POST['conf'])
+	     && array_key_exists('ebay.strike.price.kind', $_POST['conf'])) {
+		switch($_POST['conf']['ebay.strike.price.kind']) {
+			case ('SpecialPrice'): {
+				$_POST['conf']['ebay.strike.price.addkind'] = $_POST['conf']['ebay.fixed.price.addkind'];
+				$_POST['conf']['ebay.strike.price.factor'] = $_POST['conf']['ebay.fixed.price.factor'];
+				$_POST['conf']['ebay.strike.price.signal'] = $_POST['conf']['ebay.fixed.price.signal'];
+				$_POST['conf']['ebay.strike.price.group'] = $_POST['conf']['ebay.fixed.price.group'];
+				$_POST['conf']['ebay.fixed.price.usespecialoffer'] = array ('val' => true);
+				break;
+			}
+			case ('DontUse'): {
+				$_POST['conf']['ebay.strike.price.group'] = '-1';
+				// no break here, the following stuff regards also this case:
+				// we take all the configuration from main price only in 'SpecialPrice' case, otherwise is must be unset
+			}
+			default: {
+				setDBConfigValue('ebay.strike.price.addkind', $_MagnaSession['mpID'], 'percent', true);
+				setDBConfigValue('ebay.strike.price.factor', $_MagnaSession['mpID'], '0', true);
+				setDBConfigValue('ebay.strike.price.signal', $_MagnaSession['mpID'], '', true);
+			}
 		}
 	}
 

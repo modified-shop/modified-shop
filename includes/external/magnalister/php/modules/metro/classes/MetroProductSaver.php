@@ -74,14 +74,6 @@ class MetroProductSaver {
         $aRow['GTIN'] = $aItemDetails['GTIN'];
         $aRow['Brand'] = $aItemDetails['Brand'];
         $aRow['Feature'] = serialize($aItemDetails['Feature']);
-        $aRow['ProcessingTime'] = $aItemDetails['ProcessingTime'];
-        $aRow['MaxProcessingTime'] = $aItemDetails['MaxProcessingTime'];
-        $aRow['BusinessModel'] = $aItemDetails['BusinessModel'];
-        $aRow['FreightForwarding'] = $aItemDetails['FreightForwarding'];
-        $msrp = (float)number_format(MetroHelper::str2float($aItemDetails['MSRP']), 2, '.', '');
-        if ($msrp !== 0.0) {
-            $aRow['MSRP'] = is_float($msrp) ? $msrp : null;
-        }
         $this->insertPrepareData($aRow);
     }
 
@@ -116,11 +108,15 @@ class MetroProductSaver {
         } else {
             $aRow['Title'] = $aItemDetails['Title'];
         }
-
-        if (!isset($aItemDetails['GTIN'])
-            || $aItemDetails['GTIN'] === ''
-            || !preg_match('/^\d+$/',$aItemDetails['GTIN'])
-            || strlen($aItemDetails['GTIN']) > 14) {
+        if (
+            (
+                !isset($aItemDetails['GTIN'])
+                || $aItemDetails['GTIN'] === ''
+                || !preg_match('/^\d+$/', $aItemDetails['GTIN'])
+                || strlen($aItemDetails['GTIN']) > 14
+            )
+            && (empty($aItemDetails['Manufacturer']) || empty($aItemDetails['ManufacturerPartNumber']))
+        ) {
             $this->aErrors['ML_METRO_ERROR_GTIN'] = ML_METRO_ERROR_GTIN;
         } else {
             $aRow['GTIN'] = $aItemDetails['GTIN'];
@@ -132,6 +128,15 @@ class MetroProductSaver {
         $aRow['ShopVariation'] = $aItemDetails['ShopVariation'];
         $aRow['ShippingProfile'] = $aItemDetails['ShippingProfile'];
         // Image -> depends if Single or Multi
+
+        $aRow['ProcessingTime'] = $aItemDetails['ProcessingTime'];
+        $aRow['MaxProcessingTime'] = $aItemDetails['MaxProcessingTime'];
+        $aRow['BusinessModel'] = $aItemDetails['BusinessModel'];
+        $aRow['FreightForwarding'] = $aItemDetails['FreightForwarding'];
+        $msrp = (float)number_format(MetroHelper::str2float($aItemDetails['MSRP']), 2, '.', '');
+        if ($msrp !== 0.0) {
+            $aRow['MSRP'] = is_float($msrp) ? $msrp : null;
+        }
 
         if (!empty($this->aErrors)) {
             $aRow['Verified'] = 'ERROR';

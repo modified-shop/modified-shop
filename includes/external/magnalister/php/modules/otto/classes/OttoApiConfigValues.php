@@ -33,6 +33,9 @@ class OttoApiConfigValues extends MagnaCompatibleApiConfigValues {
     }
 
     public function getVariantConfigurationDefinition($category, $secondaryCategory = null) {
+        $apiCall = 'GetCategoryDetails';
+        if ($category == 'category_independent_attributes') $apiCall = 'GetCategoryIndependentAttributes';
+
         $requestParams = array(
             'DATA' => array(
                 'CategoryID' => $category,
@@ -40,7 +43,7 @@ class OttoApiConfigValues extends MagnaCompatibleApiConfigValues {
             )
         );
 
-        return $this->fetchDataFromApi('GetCategoryDetails', $requestParams);
+        return $this->fetchDataFromApi($apiCall, $requestParams);
     }
 
     public function getOttoShippingSettings($type) {

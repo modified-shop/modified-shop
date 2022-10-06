@@ -131,7 +131,7 @@ ob_start();
                 activateFulFillmentInput.change(function () {
                     var disable = ($(this).val() !== 'Spedition');
                     activateFulFillmentSubElements.each(function (index, item) {
-                        item.value = disable ? '0.00' : item.value;
+                        item.value = disable ? '' : item.value === '' ? '' : item.value;
                     });
                 });
                 if(directBuyActive.is(':checked')) {
@@ -150,7 +150,31 @@ ob_start();
                     disableElement(false);
                     activateFulFillmentInput.trigger("change");
                 });
+
+              //  Based on the shipping methods disable or enable the the twoManHandlingFee and disposalFee
+                var fieldStr = '#config_idealo_shipping_methods'
+                var shippingMethod = $(fieldStr).val();
+                setDirectBuyCostsStatus(shippingMethod, fieldStr)
+
+                $(fieldStr).on('change', function () {
+                    shippingMethod = this.value;
+                    setDirectBuyCostsStatus(shippingMethod, fieldStr)
+                });
+
             });
+            function setDirectBuyCostsStatus(shippingMethod, fieldStr) {
+                var twoManHandlingFee = $(fieldStr + '_twomanhandlingfee');
+                var disposalFee = $(fieldStr + '_disposalfee');
+                if (shippingMethod != 'Spedition') {
+                    debugger
+                    twoManHandlingFee.attr("disabled", true).nextAll('.ml-disable-panel').css('display', "inherit");
+                    disposalFee.attr("disabled", true).nextAll('.ml-disable-panel').css('display', "inherit");
+                } else {
+                    twoManHandlingFee.attr("disabled", false).nextAll('.ml-disable-panel').css('display', "none");
+                    disposalFee.attr("disabled", false).nextAll('.ml-disable-panel').css('display', "none");
+                }
+            }
+
         })(jQuery);
         /*]]>*/
     </script>

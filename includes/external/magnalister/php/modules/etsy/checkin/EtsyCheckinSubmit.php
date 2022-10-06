@@ -85,7 +85,9 @@ class EtsyCheckinSubmit extends MagnaCompatibleCheckinSubmit {
                 'MasterSKU' => $masterData['MasterSKU'],
                 'Images' => $masterData['Images'], // handled below, if any more
                 'Quantity' => $aVariation['Quantity'],
-                'Price' => $aVariation['Price']['Fixed'],
+                'Price' => (isset($aVariation['PriceReduced'])
+                            ? $aVariation['PriceReduced']['Fixed']
+                            : $aVariation['Price']['Fixed']),
                 'Whomade' => $masterData['Whomade'],
                 'Whenmade' => $masterData['Whenmade'],
                 'IsSupply' => $masterData['IsSupply'],
@@ -133,7 +135,9 @@ class EtsyCheckinSubmit extends MagnaCompatibleCheckinSubmit {
             'MasterSKU' => '', // handled below
             'Images' => '', // handled below
             'Quantity' => $product['Quantity'],
-            'Price' => $product['Price']['Fixed'],
+            'Price' => (isset($product['PriceReduced']['Fixed'])
+                        ? $product['PriceReduced']['Fixed']
+                        : $product['Price']['Fixed']),
             'Whomade' => $properties['Whomade'],
             'Whenmade' => $properties['Whenmade'],
             'IsSupply' => $properties['IsSupply'],

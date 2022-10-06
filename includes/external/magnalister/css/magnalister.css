@@ -1,4 +1,4 @@
-/**
+/*
  * 888888ba                 dP  .88888.                    dP
  * 88    `8b                88 d8'   `88                   88
  * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b.
@@ -10,9 +10,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: magnalister.css 6832 2016-07-27 11:36:55Z tim.neumann $
- *
- * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2022 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -1926,6 +1924,9 @@ table.attributesTable table.attrTable td.info {
 table.attributesTable table.attrTable td select,
 table.attributesTable table.attrTable td input[type="text"] {
 	width: 100%;
+}
+table.attributesTable table.attrTable td[id^="freetext"] input[type="text"] {
+	min-width: 100px;
 }
 table.attributesTable table.attrTable td select.multiSelect{
 	margin-top: 6px;

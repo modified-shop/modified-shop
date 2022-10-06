@@ -52,7 +52,7 @@ class MagnaUpdater {
 	private $logFile = '';
 	
 	private $dirsToIgnore = array (
-		'contribs', 'logs'
+		'contribs', 'Receipts', 'logs'
 	);
 	private $filesToIgnore = array (
 		'.', '..', '.svn', '.htaccess', 'php.ini', 'magnabundle.dat', 'magnadevconf.php'

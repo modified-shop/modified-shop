@@ -1,0 +1,79 @@
+{
+    "auction.stocksync": {
+        "headline": "Synchronisation des Inventars",
+        "desc": "Legt fest, welche Produkteigenschaften des Produktes in diesem Shop ebenfalls bei _#_platformName_#_ automatisch aktualisiert werden sollen.<br \/><br \/><b>Einstellungen f&uuml;r Steigerungsauktionen<\/b>",
+        "fields": [
+            {
+                "label": "Lagerver&auml;nderung Shop",
+                "desc": "<dl>\r\n\t\t\t\t\t<dt>Automatische Synchronisation per CronJob (empfohlen)<\/dt>\r\n\t\t\t\t\t\t<dd>Die Funktion \"Automatische Synchronisierung\" gleicht alle 4 Stunden (beginnt um 0:00 Uhr nachts)\r\n\t\t\t\t\t\t    den aktuellen _#_platformName_#_-Lagerbestand an der Shop-Lagerbestand an (je nach Konfiguration ggf. mit Abzug).<br>\r\n    \t\t\t            Dabei werden die Werte aus der Datenbank gepr&uuml;ft und &uuml;bernommen, auch wenn die &Auml;nderungen durch z.B. \r\n    \t\t\t            eine Warenwirtschaft nur in der Datenbank erfolgten.<br><br>\r\n    \t\t\t            Einen manuellen Abgleich k&ouml;nnen Sie ansto&szlig;en, indem Sie den entsprechenden Funktionsbutton in der Kopfzeile vom magnalister anklicken (links von der Ameise).<br><br>\r\n    \t\t\t            Zus&auml;tzlich k&ouml;nnen Sie den Lagerabgleich (ab Tarif Flat - maximal viertelst&uuml;ndlich) auch durch einen eigenen CronJob ansto&szlig;en, \r\n    \t\t\t            indem Sie folgenden Link zu Ihrem Shop aufrufen: <br>\r\n    \t\t\t            <i>http:\/\/www.IhrShop.de\/magnaCallback.php?do=SyncInventory<\/i><br>\r\n    \t\t\t            Eigene CronJob-Aufrufe durch Kunden, die nicht im Tarif Flat sind, oder die h&auml;ufiger als viertelst&uuml;ndlich laufen, werden geblockt.\r\n    \t\t\t        <\/dd>\r\n\t\t\t\t\t<\/dl>\r\n\t\t\t\t    <b>Hinweis:<\/b> Die Einstellungen unter \"Konfiguration\" &rarr; \"Artikel hochladen: Voreinstellungen\" &rarr; \"St&uuml;ckzahl Lagerbestand\" werden f&uuml;r die \r\n\t\t\t\t\t\t\tersten beiden Optionen ber&uuml;cksichtigt.<\/dd>\r\n\t\t\t\t<\/dl>",
+                "key": "_#_platform_#_.auction.stocksync.tomarketplace",
+                "type": "selection",
+                "values": {
+                    "auto": "Automatische Synchronisation per CronJob (empfohlen)",
+                    "no": "keine Synchronisierung"
+                },
+                "default": "auto",
+                "submit": "SyncInventory.Auction.Quantity"
+            },
+            {
+                "label": "Artikelpreis",
+                "desc": "<dl>\r\n\t\t\t\t\t\t\t\t<dt>Automatische Synchronisierung per CronJob (empfohlen)<\/dt>\r\n\t\t\t\t\t\t\t\t    <dd>Die Funktion \"Automatische Synchronisierung\" gleicht alle 4 Stunden (beginnt um 0:00 Uhr nachts)\r\n\t\t\t\t\t\t\t\t        den _#_platformName_#_-Preis an den Shop-Preis an (mit ggf. Auf- oder Absch&auml;gen, je nach Konfiguration).<br>\r\n    \t\t\t                        Dabei werden die Werte aus der Datenbank gepr&uuml;ft und &uuml;bernommen, auch wenn die &Auml;nderungen durch z.B. \r\n    \t\t\t                        eine Warenwirtschaft nur in der Datenbank erfolgten.<br><br>\r\n    \t\t\t                        Einen manuellen Abgleich k&ouml;nnen Sie ansto&szlig;en, indem Sie den entsprechenden Funktionsbutton in der Kopfzeile vom magnalister anklicken (links von der Ameise).<br><br>\r\n    \t\t\t                        Zus&auml;tzlich k&ouml;nnen Sie den Lagerabgleich (ab Tarif Flat - maximal viertelst&uuml;ndlich) auch durch einen eigenen CronJob ansto&szlig;en, \r\n    \t\t\t                        indem Sie folgenden Link zu Ihrem Shop aufrufen: <br>\r\n    \t\t\t                        <i>http:\/\/www.IhrShop.de\/magnaCallback.php?do=SyncInventory<\/i><br>\r\n    \t\t\t                        Eigene CronJob-Aufrufe durch Kunden, die nicht im Tarif Flat sind, oder die h&auml;ufiger als viertelst&uuml;ndlich laufen, werden geblockt.\t\t\t                        \r\n    \t\t\t                        <\/dd>\r\n\t\t\t\t\t\t\t<\/dl><br>\r\n\t\t\t\t\t\t\t<b>Hinweise:<\/b><ul><li>Beim Abgleich werden die Einstellungen unter \"Konfiguration\" &rarr; \"Preisberechnung\" ber&uuml;cksichtigt.<\/li>\r\n                                <li>Preise, die in der Vorbereitung eingefroren wurden, sind von der Synchronisierung ausgenommen.<\/li><\/ul>\r\n\t\t\t\t",
+                "key": "_#_platform_#_.auction.inventorysync.price",
+                "type": "selection",
+                "values": {
+                    "auto": "Automatische Synchronisierung per CronJob",
+                    "no": "keine Synchronisierung"
+                },
+                "default": "no",
+                "submit": "SyncInventory.Auction.Price"
+            }
+        ]
+    },
+    "fixed.stocksync": {
+        "headline": "",
+        "desc": "<b>Einstellungen f&uuml;r Festpreis-Listings<\/b>",
+        "fields": [
+            {
+                "label": "Lagerver&auml;nderung Shop",
+                "desc": "<dl>\r\n\t\t\t\t\t<dt>Automatische Synchronisierung per CronJob (empfohlen)<\/dt>\r\n\t\t\t\t\t\t<dd>Die Funktion \"Automatische Synchronisierung\" gleicht alle 4 Stunden (beginnt um 0:00 Uhr nachts)\r\n\t\t\t\t\t\t    den aktuellen _#_platformName_#_-Lagerbestand an der Shop-Lagerbestand an (je nach Konfiguration ggf. mit Abzug).<br>\r\n    \t\t\t            Dabei werden die Werte aus der Datenbank gepr&uuml;ft und &uuml;bernommen, auch wenn die &Auml;nderungen durch z.B. \r\n    \t\t\t            eine Warenwirtschaft nur in der Datenbank erfolgten.<br><br>\r\n    \t\t\t            Einen manuellen Abgleich k&ouml;nnen Sie ansto&szlig;en, indem Sie den entsprechenden Funktionsbutton in der Kopfzeile vom magnalister anklicken (links von der Ameise).<br><br>\r\n    \t\t\t            Zus&auml;tzlich k&ouml;nnen Sie den Lagerabgleich (ab Tarif Flat - maximal viertelst&uuml;ndlich) auch durch einen eigenen CronJob ansto&szlig;en, \r\n    \t\t\t            indem Sie folgenden Link zu Ihrem Shop aufrufen: <br>\r\n    \t\t\t            <i>http:\/\/www.IhrShop.de\/magnaCallback.php?do=SyncInventory<\/i><br>\r\n    \t\t\t            Eigene CronJob-Aufrufe durch Kunden, die nicht im Tarif Flat sind, oder die h&auml;ufiger als viertelst&uuml;ndlich laufen, werden geblockt.\r\n    \t\t\t        <\/dd>\r\n\t\t\t\t            <\/dl>\r\n\t\t\t\t    <b>Hinweis:<\/b> Die Einstellungen unter \"Konfiguration\" &rarr; \"Artikel hochladen: Voreinstellungen\" &rarr; \"St&uuml;ckzahl Lagerbestand\" werden f&uuml;r die \r\n\t\t\t\t\t\t\tersten beiden Optionen ber&uuml;cksichtigt.<\/dd>\r\n\t\t\t\t<\/dl>",
+                "key": "_#_platform_#_.fixed.stocksync.tomarketplace",
+                "type": "selection",
+                "values": {
+                    "auto": "Automatische Synchronisierung per CronJob (empfohlen)",
+                    "no": "keine Synchronisierung"
+                },
+                "default": "auto",
+                "submit": "SyncInventory.Fixed.Quantity"
+            },
+            {
+                "label": "Artikelpreis",
+                "desc": "<dl>\r\n\t\t\t\t\t\t\t\t<dt>Automatische Synchronisierung per CronJob (empfohlen)<\/dt>\r\n\t\t\t\t\t\t\t\t    <dd>Die Funktion \"Automatische Synchronisierung\" gleicht alle 4 Stunden (beginnt um 0:00 Uhr nachts)\r\n\t\t\t\t\t\t\t\t        den _#_platformName_#_-Preis an den Shop-Preis an (mit ggf. Auf- oder Absch&auml;gen, je nach Konfiguration).<br>\r\n    \t\t\t                        Dabei werden die Werte aus der Datenbank gepr&uuml;ft und &uuml;bernommen, auch wenn die &Auml;nderungen durch z.B. \r\n    \t\t\t                        eine Warenwirtschaft nur in der Datenbank erfolgten.<br><br>\r\n    \t\t\t                        Einen manuellen Abgleich k&ouml;nnen Sie ansto&szlig;en, indem Sie den entsprechenden Funktionsbutton in der Kopfzeile vom magnalister anklicken (links von der Ameise).<br><br>\r\n    \t\t\t                        Zus&auml;tzlich k&ouml;nnen Sie den Lagerabgleich (ab Tarif Flat - maximal viertelst&uuml;ndlich) auch durch einen eigenen CronJob ansto&szlig;en, \r\n    \t\t\t                        indem Sie folgenden Link zu Ihrem Shop aufrufen: <br>\r\n    \t\t\t                        <i>http:\/\/www.IhrShop.de\/magnaCallback.php?do=SyncInventory<\/i><br>\r\n    \t\t\t                        Eigene CronJob-Aufrufe durch Kunden, die nicht im Tarif Flat sind, oder die h&auml;ufiger als viertelst&uuml;ndlich laufen, werden geblockt.\t\t\t                        \r\n    \t\t\t                        <\/dd>\r\n\t\t\t\t\t\t\t<\/dl><br \/>\r\n\t\t\t\t\t\t\t<b>Hinweise:<\/b><ul><li>Beim Abgleich werden die Einstellungen unter \"Konfiguration\" &rarr; \"Preisberechnung\" ber&uuml;cksichtigt.<\/li>\r\n                                <li>Preise, die in der Vorbereitung eingefroren wurden, sind von der Synchronisierung ausgenommen.<\/li><\/ul>\r\n\t\t\t\t",
+                "key": "_#_platform_#_.fixed.inventorysync.price",
+                "type": "selection",
+                "values": {
+                    "auto": "Automatische Synchronisierung per CronJob",
+                    "no": "keine Synchronisierung"
+                },
+                "default": "no",
+                "submit": "SyncInventory.Fixed.Price"
+            }
+        ]
+    },
+    "hood.stocksync": {
+        "headline": "",
+        "desc": "<b>Hood zu Shop Synchronisation<\/b>",
+        "fields": [
+            {
+                "label": "Lagerver&auml;nderung _#_platformName_#_",
+                "desc": "Wenn z. B. bei _#_platformName_#_ ein Artikel 3 mal gekauft wurde, wird der Lagerbestand im Shop um 3 reduziert.",
+                "key": "_#_platform_#_.stocksync.frommarketplace",
+                "type": "selection",
+                "values": {
+                    "rel": "Bestellung reduziert Shop-Lagerbestand  (empfohlen)",
+                    "no": "keine Synchronisierung"
+                },
+                "default": "rel"
+            }
+        ]
+    }
+}

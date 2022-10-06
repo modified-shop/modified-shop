@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * 888888ba                 dP  .88888.                    dP
  * 88    `8b                88 d8'   `88                   88
  * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b.
@@ -11,15 +11,12 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id$
- *
- * (c) 2011 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2022 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
 
 require_once(DIR_MAGNALISTER_MODULES . 'magnacompatible/AttributesMatchingHelper.php');
-require_once(DIR_MAGNALISTER_MODULES.'hood/classes/HoodApiConfigValues.php');
 
 class EbayHelper extends AttributesMatchingHelper
 {
@@ -599,7 +596,7 @@ class EbayHelper extends AttributesMatchingHelper
 				'AttributeName' => $value['title'],
 				'AllowedValues' => isset($value['values']) ? $value['values'] : array(),
 				'CategoryId' => $value['categoryId'],
-				'AttributeDescription' => isset($value['desc']) ? $value['desc'] : '',
+				'AttributeDescription' => isset($value['desc']) ? htmlspecialchars_decode($value['desc'], ENT_NOQUOTES) : '',
 				'CurrentValues' => isset($dbData[$utf8Code]) ? $dbData[$utf8Code] : array('Values' => array()),
 				'ChangeDate' => isset($value['changed']) ? $value['changed'] : false,
 				'Required' => isset($value['mandatory']) ? $value['mandatory'] : false,

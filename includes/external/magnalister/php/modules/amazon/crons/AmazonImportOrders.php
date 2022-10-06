@@ -202,6 +202,48 @@ class AmazonImportOrders extends MagnaCompatibleImportOrders {
 		parent::insertProduct();
 	}
 
+	/**
+	 * Amazon Discount and Shipping Discount: VAT rate follows the highest product's tax rate
+	 */
+	protected function setProductsTax() {
+		if (    $this->p['products_model'] != $this->config['AmazonPromotionsDiscountProductSKU']
+		     && $this->p['products_model'] != $this->config['AmazonPromotionsDiscountShippingSKU']) {
+			parent::setProductsTax();
+			return;
+		}
+		// lookup the highest tax rate
+		$fTaxMax = 0.00;
+		foreach ($this->o['products'] as $pr) {
+			$iTaxID = MagnaDB::gi()->fetchOne('SELECT products_tax_class_id
+			     FROM '.TABLE_PRODUCTS.'
+			    WHERE products_id = '.(int)magnaSKU2pID(html_entity_decode($pr['products_model'], ENT_NOQUOTES)));
+			if ($iTaxID !== false) {
+				$fTax = SimplePrice::getTaxByClassID((int)$iTaxID, (int)$this->cur['ShippingCountry']['ID'],  0.00);
+			} else if (    $pr['products_model'] != $this->config['AmazonPromotionsDiscountProductSKU']
+			            && $pr['products_model'] != $this->config['AmazonPromotionsDiscountShippingSKU']) { // item not found (and it's not the Discount), use fallback
+				$fTax = (float)$this->config['MwStFallback'];
+			} 
+			$fTaxMax = max($fTaxMax, $fTax);
+		}
+		// same functionality as in parent function, but with the highest tax rate
+		$this->p['products_tax'] = $fTax = (string)round($fTaxMax, 2);
+		$fPriceWithoutTax = $this->simplePrice->setPrice($this->p['products_price'])->removeTax($fTax)->getPrice();
+		if (!isset($this->taxValues[$fTax])) {
+			$this->taxValues[$fTax] = 0.00;
+		}
+		$this->taxValues[$fTax] += $fPriceWithoutTax * (int)$this->p['products_quantity'];
+
+		if (SHOPSYSTEM != 'oscommerce') {
+			$this->p['allow_tax'] = 1;
+		} else {
+			$this->p['products_price'] = $fPriceWithoutTax;
+			$this->p['final_price'] = $this->p['products_price'];
+			if (MagnaDB::gi()->columnExistsInTable('allow_tax', TABLE_ORDERS_PRODUCTS)) {
+				$this->p['allow_tax'] = 1;
+			}
+		}
+	}
+
 	/*
 	 * remove 'blacklisted-' from customer's e-mail address
 	 * if configured so (not recommended)
@@ -211,7 +253,16 @@ class AmazonImportOrders extends MagnaCompatibleImportOrders {
 			if ($this->verbose) echo __FUNCTION__.": amazon.mailaddress.blacklist == false\n";
 			$this->o['customer']['customers_email_address'] = str_replace('blacklisted-', '', $this->o['customer']['customers_email_address']);
 		}
-		return parent::insertCustomer();
+		$customer = parent::insertCustomer();
+		// Gambio: For Business orders, set b2b flag in address_book table
+		if (    MagnaDB::gi()->columnExistsInTable('customer_b2b_status', TABLE_ADDRESS_BOOK)
+		     && 'Business' == ($this->o['orderInfo']['FulfillmentChannel'])) {
+			MagnaDB::gi()->update(TABLE_ADDRESS_BOOK,
+				array ('customer_b2b_status' => 1),
+				array ('customers_id' => $customer['ID'])
+			);
+		}
+		return $customer;
 	}
 	
 	/**

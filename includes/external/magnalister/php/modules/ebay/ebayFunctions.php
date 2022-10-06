@@ -1810,9 +1810,6 @@ function SaveEBaySingleProductProperties($pID, $itemDetails) {
     if (!empty($itemDetails['startTime'])) {
         $row['StartTime'] = $itemDetails['startTime'];
     }
-    if (!empty($itemDetails['hitcounter'])) {
-        $row['HitCounter'] = $itemDetails['hitcounter'];
-    }
 
     // only set price if a chinese auction otherwise set it to zero
     if (('true' == $itemDetails['isPriceFrozen']) && ('Chinese' == $itemDetails['ListingType'])) {
@@ -1942,9 +1939,6 @@ function SaveEBayMultipleProductProperties($pIDs, $itemDetails) {
         }
         if (!empty($itemDetails['startTime'])) {
             $row['StartTime'] = $itemDetails['startTime'];
-        }
-        if (!empty($itemDetails['hitcounter'])) {
-            $row['HitCounter'] = $itemDetails['hitcounter'];
         }
         $row['Price'] = (float)0; # Preis nicht einfrieren
         if (('Chinese' == $itemDetails['ListingType']) && getDBConfigValue(array('ebay.chinese.buyitnow.price.active', 'val'), $_MagnaSession['mpID'])) {

@@ -889,38 +889,6 @@ function renderMultiPrepareView($data) {
 				<td class="info">'.ML_EBAY_PLUS.'</td>
 			</tr>';
 	$html .= '<tr class="'.(($oddEven = !$oddEven) ? 'odd' : 'even').'">
-				<th>'.ML_HITCOUNTER_SHORT.'</th>
-				<td class="input">
-					<select name="hitcounter" id="hitcounter">';
-    $counterValues = array(
-    	'NoHitCounter' => ML_EBAY_NO_HITCOUNTER,
-	    'BasicStyle'   => ML_EBAY_BASIC_HITCOUNTER,
-	    'RetroStyle'   => ML_EBAY_RETRO_HITCOUNTER,
-	    'HiddenStyle'  => ML_EBAY_HIDDEN_HITCOUNTER,
-	);
-    $hitcounterSet = MagnaDB::gi()->fetchArray('
-    	SELECT SQL_CALC_FOUND_ROWS DISTINCT HitCounter
-          FROM '.TABLE_MAGNA_EBAY_PROPERTIES.'
-         WHERE products_id IN ('.$products_id_list.')
-		   AND mpID = '.$_MagnaSession['mpID'].'
-    ');
-    if (1 == (int)MagnaDB::gi()->foundRows()) {
-        $defaultHitCounter = $hitcounterSet[0]['HitCounter'];
-    } else {
-        $defaultHitCounter =  getDBConfigValue('ebay.hitcounter',$_MagnaSession['mpID']);
-    }
-    foreach ($counterValues as $counter => $name) {
-				$isSelected = ($counter == $defaultHitCounter? 'selected' : '');
-				$html .= '
-								<option '.$isSelected.' value="'.$counter.'">'.$name."</option>\n";
-			}
-
-			$html .= '
-							</select>
-						</td>
-						<td class="info">&nbsp;</td>
-					</tr>
-					<tr class="'.(($oddEven = !$oddEven) ? 'odd' : 'even').'">
 						<th>'.ML_EBAY_START_TIME_SHORT.'</th>
 						<td class="input">
 							'.renderDateTimePicker('startTime', $StartTime, true).'

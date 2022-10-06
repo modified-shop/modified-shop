@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * 888888ba                 dP  .88888.                    dP
  * 88    `8b                88 d8'   `88                   88
  * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b.
@@ -11,12 +11,11 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id$
- *
- * (c) 2010 - 2014 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2022 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
+
 require_once(DIR_MAGNALISTER_MODULES . 'magnacompatible/MagnaCompatibleHelper.php');
 
 class AttributesMatchingHelper extends MagnaCompatibleHelper {
@@ -40,7 +39,7 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
 
     public function getShopVariations() {
         $languageId = getDBConfigValue($this->marketplace . '.lang', $this->mpId, $this->defaultLanguage);
-        $languageId = is_int($languageId) ? $languageId : $this->defaultLanguage;
+        $languageId = is_numeric($languageId) ? $languageId : $this->defaultLanguage;
 
         if (    defined('TABLE_PRODUCTS_OPTIONS')
              && MagnaDB::gi()->tableExists(TABLE_PRODUCTS_OPTIONS)
@@ -419,7 +418,21 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
                 ),
                 array(
                     'Code' => 'weight',
-                    'Name' => ML_COMPARISON_SHOPPING_FIELD_WEIGHT,
+                    'Name' => ML_ATTRIBUTES_MATCHING_FIELD_WEIGHT_AND_UNIT,
+                    'Values' => array(),
+                    'Custom' => true,
+                    'Type' => 'text',
+                ),
+                array(
+                    'Code' => 'weight_value',
+                    'Name' => ML_ATTRIBUTES_MATCHING_FIELD_WEIGHT_VALUE,
+                    'Values' => array(),
+                    'Custom' => true,
+                    'Type' => 'text',
+                ),
+                array(
+                    'Code' => 'weight_unit',
+                    'Name' => ML_ATTRIBUTES_MATCHING_FIELD_WEIGHT_UNIT,
                     'Values' => array(),
                     'Custom' => true,
                     'Type' => 'text',
@@ -1064,6 +1077,10 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
     protected function autoMatch($categoryId, $sMPAttributeCode, &$aAttributes, $customIdentifier = '') {
         $mpVariations = $this->getMPVariations($categoryId, false, false, null, $customIdentifier);
         $aMPAttributeValues = $mpVariations[$sMPAttributeCode]['AllowedValues'];
+        $blAllowFreetext = (    $mpVariations[$sMPAttributeCode]['DataType'] == 'multiSelectAndText'
+                             || $mpVariations[$sMPAttributeCode]['DataType'] == 'selectAndText'
+                             || $mpVariations[$sMPAttributeCode]['DataType'] == 'text');
+
 
         $sVariations = $this->flatShopVariations();
         $sAttributeValues = $sVariations[$aAttributes['Code']]['Values'];
@@ -1087,8 +1104,12 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
             $newValue = array();
             $i = 0;
             foreach ($sAttributeValues as $keyAttribute => $valueAttribute) {
+                $blCurrValueFound = false;
                 foreach ($aMPAttributeValues as $key => $value) {
-                    if (in_array($valueAttribute, $aAlreadyMatchedValues)) continue;
+                    if (in_array($valueAttribute, $aAlreadyMatchedValues)) {
+                        $blCurrValueFound = true;
+                        continue;
+                    }
                     if (strcasecmp($valueAttribute, $value) == 0) {
                         $newValue[$i]['Shop']['Key'] = $keyAttribute;
                         $newValue[$i]['Shop']['Value'] = $valueAttribute;
@@ -1099,9 +1120,21 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
                         // table.
                         $newValue[$i]['Marketplace']['Info'] = (is_array($value) ? implode(', ', $value) : $value) . $sInfo;
                         $blFound = true;
+                        $blCurrValueFound = true;
                         $i++;
                         break;
                     }
+                }
+                if (!$blCurrValueFound && $blAllowFreetext) {
+                    // not found? Use shop value.
+                    $newValue[$i]['Shop']['Key'] = $keyAttribute;
+                    $newValue[$i]['Shop']['Value'] = $valueAttribute;
+                    $newValue[$i]['Marketplace']['Key'] = 'manual';
+                    $newValue[$i]['Marketplace']['Value'] = $valueAttribute;
+                    $newValue[$i]['Marketplace']['Info'] =  $valueAttribute . ML_GENERAL_VARMATCH_FREE_TEXT;
+                    $blFound = true;
+                    $blCurrValueFound = true;
+                    $i++;
                 }
             }
 
@@ -1457,7 +1490,9 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
                 switch ($shopCode) {
                     case 'freetext':
                     case 'attribute_value':
-                        if (!empty($attribute['Values']) && !$limitResultSetToProductData) {
+                        if ((!empty($attribute['Values']) && !$limitResultSetToProductData)
+                            || ($attribute['Values'] === '0' && !$limitResultSetToProductData) // allow string to be '0'
+                        ) {
                             $attributeValue = $attribute['Values'];
                         }
                         break;
@@ -1497,6 +1532,16 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
                     case 'weight':
                         if (!empty($productData['Weight'])) {
                             $attributeValue = $productData['Weight']['Value'] . $productData['Weight']['Unit'];
+                        }
+                        break;
+                    case 'weight_value':
+                        if (!empty($productData['Weight'])) {
+                            $attributeValue = $productData['Weight']['Value'];
+                        }
+                        break;
+                    case 'weight_unit':
+                        if (!empty($productData['Weight'])) {
+                            $attributeValue = $productData['Weight']['Unit'];
                         }
                         break;
                     case 'contentvolume':
@@ -1565,7 +1610,7 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
                         break;
                 }
 
-                if (!empty($attributeValue)) {
+                if (!empty($attributeValue) || $attributeValue === '0') {
                     $attributes[$attributeName] = $attributeValue;
                 }
             }

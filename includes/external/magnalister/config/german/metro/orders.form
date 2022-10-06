@@ -73,9 +73,10 @@
                 "key": "_#_platform_#_.orderimport.paymentmethod",
                 "type": "selection",
                 "values": {
-                    "textfield": "Aus Textfeld"
+                    "textfield": "Aus Textfeld",
+                    "matching": "Automatische Zuordnung"
                 },
-                "default": "textfield",
+                "default": "matching",
                 "expertsetting": true,
                 "morefields": {
                     "quantity": {

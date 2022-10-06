@@ -855,12 +855,17 @@
 
             matchDiv.css('margin-top', '10px');
 
-            if (selector.AllowedValues.length === 0) {
+            if (selector.AllowedValues.length === 0 || removeFreeTextOption === false) {
                 // if AllowedValues is empty, it indicates there are no required attribute values from marketplace
                 // for this, we use shop's values but do not use keys for attributes because we send to marketplace
                 // keys, which in case of shop should be values because marketplace cannot recognize those keys
+                // Add shop's values also if we have marketplace values, but free text is allowed as well.
+                var AllowedValuesLower = Object.values(selector.AllowedValues).map(v => v.toLowerCase());
                 for (var k in values.Values) {
                     if (values.Values.hasOwnProperty(k)) {
+                        if (AllowedValuesLower.includes(values.Values[k].toLowerCase())) {
+                            continue;
+                        }
                         mpValues[values.Values[k]] = values.Values[k];
                     }
                 }

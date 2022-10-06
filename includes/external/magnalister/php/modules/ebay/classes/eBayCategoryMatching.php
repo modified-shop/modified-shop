@@ -66,7 +66,7 @@ class eBayCategoryMatching {
 			AND SiteID = '.$categories['DATA'][0]['SiteID'].'
 			AND ParentID = ';
 		# ganz oben ist CategoryID == ParentID
-		if (0 == $ParentID)	{
+		if (0 == (int)$ParentID)	{ // (int), cause for PHP >= 8.1, '' != 0
 			$delete_query .= 'CategoryID';
 		} else {
 			$delete_query .= $ParentID.' AND ParentID <> CategoryID';
@@ -114,7 +114,7 @@ class eBayCategoryMatching {
 				'SiteID' => $this->SiteID
 			));
 		}
-		if (0 == $ParentID) {
+		if (0 == (int)$ParentID) { // (int), cause for PHP >= 8.1, '' != 0
 			$whereCondition = 'CategoryID = ParentID';
 		} else {
 			$whereCondition = "CategoryID != ParentID AND ParentID = $ParentID";
@@ -165,7 +165,7 @@ class eBayCategoryMatching {
 				'StoreCategory' => '1',
 			));
 		}
-		if (0 == $ParentID) {
+		if (0 == (int)$ParentID) { // (int), cause for PHP >= 8.1, '' != 0
 			$whereCondition = 'CategoryID = ParentID';
 		} else {
 			$whereCondition = 'CategoryID != ParentID AND ParentID = '.$ParentID;

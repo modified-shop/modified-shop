@@ -138,6 +138,10 @@ class HitmeisterConfigure extends MagnaCompatibleConfigure {
 			unset($this->form['checkin']['fields']['leadtimetoship']);
 			unset($this->form['erpinvoice']['fields']['invoice.erpReversalInvoiceSource']);
 			unset($this->form['erpinvoice']['fields']['invoice.erpReversalInvoiceDestination']);
+			if (    (!MagnaDB::gi()->tableExists('invoices'))
+			     || ('commerceseo' == SHOPSYSTEM)) { // commerceseo has the table, but doesn't use it
+				unset($this->form['invoice']['fields']['invoice.option']['values']['webshop']);
+			}
 		}
 	}
 	

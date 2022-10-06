@@ -80,10 +80,12 @@ function populateGenericData($pID, $edit = false) {
 		'QuantityPrice5' => getDBConfigValue('amazon.b2b.discount_tier5.discount', $mpId, '0'),
 		'ShopVariation' => array(),
 	);
-	if(getDBConfigValue(array('amazon.shipping.template.active', 'val'), $mpId, false)){
-		$aDefaultTemplate = getDBConfigValue(array($_MagnaSession['currentPlatform'] . '.shipping.template', 'defaults'), $mpId);
-		$genericDataStructure['ShippingTemplate'] = array_search('1', $aDefaultTemplate);
-	}
+
+    $aDefaultTemplate = getDBConfigValue(array($_MagnaSession['currentPlatform'] . '.shipping.template', 'defaults'), $mpId);
+    if(is_array($aDefaultTemplate)) {
+        $genericDataStructure['ShippingTemplate'] = array_search('1', $aDefaultTemplate);
+    }
+
 	if ($pID === 0) {
 		if ($edit) {
 			$genericDataStructure['LeadtimeToShip'] = 'X';

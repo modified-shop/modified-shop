@@ -283,6 +283,13 @@ class OttoCategoryMatching {
 
         $results = MagnaDB::gi()->fetchArray($sql);
 
+        if (empty($results)) {
+            require_once(DIR_MAGNALISTER_MODULES.'otto/crons/OttoImportCategories.php');
+            $oOIC = new OttoImportCategories($this->mpID, 'otto');
+            $oOIC->process();
+            $results = MagnaDB::gi()->fetchArray($sql);
+        }
+
         foreach ($results as $aCategory) {
             // display only leaf categories (otto has only one leaf)
             if ($aCategory['LeafCategory'] == 1) {
@@ -387,7 +394,7 @@ class OttoCategoryMatching {
 
         $aFinalBrands = [
             ['text' => ML_OTTO_LABEL_MATCHING_OPTIONS, 'children' => [
-                ['id' => 'auto', 'text' => 'All']
+                ['id' => 'all', 'text' => 'All']
             ]],
             ['text' => ML_OTTO_LABEL_SHOP_VALUES, 'children' => $sBrands],
         ];

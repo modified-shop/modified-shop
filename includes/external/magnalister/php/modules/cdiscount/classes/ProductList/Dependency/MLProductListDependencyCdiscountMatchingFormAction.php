@@ -74,38 +74,6 @@ class MLProductListDependencyCdiscountMatchingFormAction extends MLProductListDe
 					'session_id' => session_id()
 				));
 			}
-			if ( MLProduct::gi()->hasMasterItems()) {
-				// delete dummy master, if it don't have matched variant
-				$sKeyType = 'products_'.((getDBConfigValue('general.keytype', '0') == 'artNr') ? 'model' : 'id');
-				foreach (MagnaDB::gi()->fetchArray(eecho("
-					    SELECT DISTINCT m.products_id
-					      FROM ".TABLE_PRODUCTS." p
-					INNER JOIN ".TABLE_PRODUCTS." m ON p.products_master_model = m.products_model
-					     WHERE p.products_id IN('".implode("', '",$pIDs)."')
-				", false), true) as $iMaster) {
-					$aMaster = MLProduct::gi()->setLanguage(getDBConfigValue('cdiscount.lang', $this->getMagnaSession('mpID'), $_SESSION['magna']['selected_language']))->getProductById($iMaster);
-					$aVariants = array();
-					foreach ($aMaster['Variations'] as $aVariant) {
-						$aVariants[] = $aVariant[(($sKeyType == 'products_model') ? 'MarketplaceSku' : 'VariationId')];
-					}
-					if (   empty($aVariants)
-						|| 0 == MagnaDb::gi()->fetchOne("
-									SELECT COUNT(".$sKeyType.")
-									  FROM ".TABLE_MAGNA_CDISCOUNT_PREPARE."
-									 WHERE     mpID = '".$this->getMagnaSession('mpID')."'
-									       AND ".$sKeyType." IN('".implode("', '", $aVariants)."')
-									       AND PrepareType = 'Match'
-								")
-					) {
-						MagnaDB::gi()->delete(TABLE_MAGNA_CDISCOUNT_PREPARE, array(
-							'mpID' => $this->getMagnaSession('mpID'),
-							$sKeyType => $aMaster['Products'.(($sKeyType == 'products_model') ? 'Model' : 'Id' )],
-							'PrepareType' => 'Match'
-						));
-					}
-				}
-			}
 		}
 	}
-	
 }

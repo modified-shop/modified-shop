@@ -1774,7 +1774,7 @@ $images = array (
 		
 		$productSelectFields = array();
 		foreach ($descriptionFields as $ml => $db) {
-			$productSelectFields[] = (empty($db) ? '""' : 'pd.'.$db).' AS '.$ml;
+			$productSelectFields[] = (empty($db) ? '""' : 'pd.'.(is_array($db)? current($db) : $db)).' AS '.$ml;
 		}
 		$this->productDescriptionSelectFields = implode(', ', $productSelectFields);
 		

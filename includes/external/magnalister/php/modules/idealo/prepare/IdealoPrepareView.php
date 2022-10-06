@@ -556,6 +556,10 @@ class IdealoPrepareView extends MagnaCompatibleBase {
             <tr class="<?php (($oddEven = !$oddEven) ? 'odd' : 'even') ?>">
                 <th>
                     <div style="float: left;"><?php echo ML_IDEALO_LABEL_DIRECT_TWO_MAN_HANDLING_FEE ?></div>
+                    <div style="float: right; width: 16px; height: 16px; background: transparent url('<?php echo DIR_MAGNALISTER_WS?>images/information.png') no-repeat 0 0;
+                            cursor: pointer; display: inline-block; vertical-align: top;" class="desc" id="desc_6" title="Infos">
+                        <span style="display: none"><?php echo ML_IDEALO_INFO_TWOMANHANDLINGFEE ?></span>
+                    </div>
                 </th>
                 <td class="input">
                     <div style="display:inline-block; position:relative;">
@@ -565,11 +569,15 @@ class IdealoPrepareView extends MagnaCompatibleBase {
                         <label><?php echo DEFAULT_CURRENCY ?></label>
                     </div>
                 </td>
-                <td class="info"><?php echo ML_IDEALO_LABEL_SPEDITION_INFO ?></td>
+                <td class="info"><?php echo ML_IDEALO_LABEL_FORWARDING_CARRIER_INFO; ?></td>
             </tr>
             <tr class="<?php (($oddEven = !$oddEven) ? 'odd' : 'even') ?>">
                 <th>
                     <div style="float: left;"><?php echo ML_IDEALO_LABEL_DIRECT_DISPOSAL_FEE ?></div>
+                    <div style="float: right; width: 16px; height: 16px; background: transparent url('<?php echo DIR_MAGNALISTER_WS?>images/information.png') no-repeat 0 0;
+                            cursor: pointer; display: inline-block; vertical-align: top;" class="desc" id="desc_7" title="Infos">
+                        <span style="display: none"><?php echo ML_IDEALO_INFO_DISPOSALFEE ?></span>
+                    </div>
                 </th>
                 <td class="input">
                     <div style="display:inline-block; position:relative;">
@@ -579,7 +587,7 @@ class IdealoPrepareView extends MagnaCompatibleBase {
                         <label><?php echo DEFAULT_CURRENCY ?></label>
                     </div>
                 </td>
-                <td class="info"><?php echo ML_IDEALO_LABEL_SPEDITION_INFO ?></td>
+                <td class="info"><?php echo ML_IDEALO_LABEL_FORWARDING_CARRIER_INFO; ?></td>
             </tr>
             <tr class="spacer">
                 <td colspan="3">&nbsp;</td>
@@ -614,10 +622,20 @@ class IdealoPrepareView extends MagnaCompatibleBase {
                     var d = $('#desc_5 span').html();
                     $('#infodiag').html(d).jDialog({'width': (d.length > 1000) ? '700px' : '500px'});
                 });
+
+                $('#desc_6').click(function () {
+                    var d = $('#desc_6 span').html();
+                    $('#infodiag').html(d).jDialog({'width': (d.length > 1000) ? '700px' : '500px'});
+                });
+
+                $('#desc_7').click(function () {
+                    var d = $('#desc_7 span').html();
+                    $('#infodiag').html(d).jDialog({'width': (d.length > 1000) ? '700px' : '500px'});
+                });
                 var activateFulFillmentSubElements = $('form').find('[data-fulfillment="Spedition"]');
                 var disableElement = function(element, disable) {
                     element.each(function(index, item){
-                        item.value = disable ? '0.00' : item.value;
+                        item.value = disable ? '' : item.value === '' ? '' :  item.value;
                     });
                     element.next('.ml-disable-panel').css('display', disable ? "inherit" : "none");
                 };

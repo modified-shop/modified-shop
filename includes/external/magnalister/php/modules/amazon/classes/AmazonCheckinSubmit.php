@@ -102,10 +102,19 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 		if ($productMatching === false) {
 			return false;
 		}
+
+        # shipping templates are now mandatory (as discussed with Tim on 2022-07-20)
+        if (isset($productMatching['ShippingTemplate'])) {
+            $defaultTemplateIndex = $productMatching['ShippingTemplate'];
+        } else {
+            $aDefaultTemplate = getDBConfigValue(array('amazon.shipping.template', 'defaults'), $this->mpID);
+            $defaultTemplateIndex = array_search('1', $aDefaultTemplate);
+        }
+
 		$data['submit']['ASIN'] = $productMatching['asin'];
 		$data['submit']['ConditionType'] = empty($productMatching['item_condition']) ? $data['submit']['ConditionType'] : $productMatching['item_condition'];
 		$data['submit']['ConditionNote'] = sanitizeProductDescription($productMatching['item_note']);
-		$data['submit']['WillShipInternationally'] = $productMatching['will_ship_internationally'];
+		$data['submit']['ShippingTemplate'] = isset($defaultTemplateIndex)?:"";
 		if ($productMatching['leadtimeToShip'] > 0) {
 			$data['submit']['LeadtimeToShip'] = $productMatching['leadtimeToShip'];
 		}
@@ -392,27 +401,23 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 		unset($data['submit']['ShopVariation']);
 
 
-		if (getDBConfigValue(array('amazon.shipping.template.active', 'val'), $this->mpID, false)) {
-			if (!isset($data['submit']['Attributes'])) {
-				$data['submit']['Attributes'] = array();
-			}
-			$aTemplates = getDBConfigValue(array('amazon.shipping.template', 'values'), $this->mpID);
-			if (isset($productApply['ShippingTemplate'])) {
-				$defaultTemplateIndex = $productApply['ShippingTemplate'];
-			} else {
-				$aDefaultTemplate = getDBConfigValue(array('amazon.shipping.template', 'defaults'), $this->mpID);
-				$defaultTemplateIndex = array_search('1', $aDefaultTemplate);
-			}
-			if (isset($aTemplates[$defaultTemplateIndex])) {
-				$data['submit']['Attributes']['MerchantShippingGroupName'] = $aTemplates[$defaultTemplateIndex];
-                // Set MerchantShippingGroup also for Variations!
-                foreach ($data['submit']['Variations'] as &$varItem) {
-                    $varItem['Attributes']['MerchantShippingGroupName'] = $aTemplates[$defaultTemplateIndex];
-                }
-			}
-		} else if (isset($data['submit']['Attributes']) && isset($data['submit']['Attributes']['MerchantShippingGroupName'])) {
-			unset($data['submit']['Attributes']['MerchantShippingGroupName']);
-		}
+        if (!isset($data['submit']['Attributes'])) {
+            $data['submit']['Attributes'] = array();
+        }
+        $aTemplates = getDBConfigValue(array('amazon.shipping.template', 'values'), $this->mpID);
+        if (isset($productApply['ShippingTemplate'])) {
+            $defaultTemplateIndex = $productApply['ShippingTemplate'];
+        } else {
+            $aDefaultTemplate = getDBConfigValue(array('amazon.shipping.template', 'defaults'), $this->mpID);
+            $defaultTemplateIndex = array_search('1', $aDefaultTemplate);
+        }
+        if (isset($aTemplates[$defaultTemplateIndex])) {
+            $data['submit']['Attributes']['MerchantShippingGroupName'] = $aTemplates[$defaultTemplateIndex];
+            // Set MerchantShippingGroup also for Variations!
+            foreach ($data['submit']['Variations'] as &$varItem) {
+                $varItem['Attributes']['MerchantShippingGroupName'] = $aTemplates[$defaultTemplateIndex];
+            }
+        }
 
 		return true;
 	}

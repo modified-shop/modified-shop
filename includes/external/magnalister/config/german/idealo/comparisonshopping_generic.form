@@ -242,6 +242,7 @@
             },
             "twomanhandlingfee": {
                 "label": "Direkkauf Spedition - Lieferkosten bis zum Aufstellort",
+                "desc": "F\u00fcr Artikel mit der Lieferart \u201eSpedition\u201c kann im idealo Direktkauf vom User die zus\u00e4tzliche Dienstleistung \u201eLieferung bis zum Aufstellort\u201c bestellt werden. Die Ware wird nicht, wie bei der \u00fcblichen Spedition, bis zur Bordsteinkante, sondern bis zum gew\u00fcnschten Aufstellort geliefert. Die angegebene Kosten werden mit dem Gesamtpreis verrechnet. Bitte geben Sie die Kosten inkl. MwSt. an.\r\n\r\nBei Aussparung dieses Feldes wird diese Option nicht bei idealo Direktkauf angeboten.",
                 "key": "_#_platform_#_.shipping.methods.twomanhandlingfee",
                 "type": "text",
                 "rightlabel": "const(DEFAULT_CURRENCY)",
@@ -256,6 +257,7 @@
             },
             "disposalfee": {
                 "label": "Direkkauf Spedition - Kosten Altgerätemitnahme",
+                "desc": "F\u00fcr Artikel mit der Lieferart \u201eSpedition\u201c und der Auswahl \u201eLieferung bis zum Aufstellort\u201c kann im idealo Direktkauf vom User die zus\u00e4tzliche Dienstleistung \u201eAltger\u00e4temitnahme\u201c bestellt werden. Das Altger\u00e4t wird vom Spediteur mitgenommen und entsorgt. Die angegebenen Kosten werden mit dem Gesamtpreis verrechnet. Bitte geben Sie die Kosten inkl. MwSt. an. \r\n\r\nBei Aussparung dieses Feldes wird diese Option nicht bei idealo Direktkauf angeboten.",
                 "key": "_#_platform_#_.shipping.methods.disposalfee",
                 "type": "text",
                 "rightlabel": "const(DEFAULT_CURRENCY)",
