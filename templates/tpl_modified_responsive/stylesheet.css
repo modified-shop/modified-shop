@@ -2244,9 +2244,30 @@ table.paymentinfotable.paypallink span.cssButton, table.paymentinfotable.paypalp
 .checkout_accordion .infomessage {
   margin: 10px 0 0 0;
 }
+.checkout_accordion.resp-easy-accordion h2.resp-accordion {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: row-reverse; 
+  flex-direction: row-reverse;
+}
+.checkout_accordion .cus_radio {
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+}
+.checkout_accordion img {
+  max-width:100%;
+  height:auto;
+  vertical-align:top;
+}
 .shipping_costs, .payment_costs {
   float:right; 
-  margin-right:10px;
+  padding:0px 10px;
 }  
 .dutyinfo {
   font-size:12px; 
