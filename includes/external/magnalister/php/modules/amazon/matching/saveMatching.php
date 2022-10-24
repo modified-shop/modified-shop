@@ -152,7 +152,7 @@ function amazonAutoMatching($mpID, $selectionName) {
 				'products_model' => $pRow['products_model'],
 				'asin' => $searchResult[0]['ASIN'],
 				'item_condition' => getDBConfigValue('amazon.itemCondition', $mpID),
-				'will_ship_internationally' => getDBConfigValue('amazon.internationalShipping', $mpID),
+				'will_ship_internationally' => 0,
 				'category_id' => $searchResult[0]['CategoryID'],
 				'category_name' => $searchResult[0]['CategoryName'],
 				'lowestprice' => $searchResult[0]['LowestPrice'],
@@ -246,7 +246,7 @@ if (array_key_exists('action', $_GET) && ($_GET['action'] == 'multimatching') &&
 			$data['products_model'] = $product['products_model'];
 			$data['asin'] = $asin;
 			$data['item_condition'] = getDBConfigValue('amazon.itemCondition', $_MagnaSession['mpID']);
-			$data['will_ship_internationally'] = getDBConfigValue('amazon.internationalShipping', $_MagnaSession['mpID']);
+			$data['will_ship_internationally'] = 0;
 
 			$data['category_id'] = isset($_POST['catID'][$asin]) ? $_POST['catID'][$asin] : '';
 			$data['category_name'] = isset($_POST['catName'][$asin]) ? $_POST['catName'][$asin] : '';

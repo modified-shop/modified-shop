@@ -339,6 +339,12 @@
                 "type": "text",
                 "desc": "Verzeichnis, aus dem das Hauptbild sowie die Bilder f&uuml;r die Produktbeschreibung (Template) f&uuml;r eBay genommen werden"
             },
+            "imagepathvariations": {
+                "label": "Variantenbilder-Verzeichnis",
+                "key": "ebay.imagepath.variations",
+                "type": "text",
+                "desc": "Verzeichnis, aus dem die Bilder der Produktvarianten f&uuml;r eBay genommen werden"
+            },
             "galleryimagepath": {
                 "label": "Galerie-Bilder",
                 "key": "ebay.gallery.type",

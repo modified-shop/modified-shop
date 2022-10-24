@@ -700,13 +700,11 @@ if (!$auth['state']) {
 	    && ML_ShopAddOns::mlAddOnIsBooked('EbayPicturePack')
         && version_compare(ML_GAMBIO_VERSION, '4.1', '<')
     ) {
-		if (false == getDBConfigValue('ebay.imagepath.variations', $_MagnaSession['mpID'], false)) {
+		if (empty(getDBConfigValue('ebay.imagepath.variations', $_MagnaSession['mpID'], false))) {
 			$form['images']['fields']['imagepathvariations']['default'] =
 				HTTP_CATALOG_SERVER.DIR_WS_CATALOG.DIR_WS_IMAGES.'product_images/properties_combis_images/';
 			setDBConfigValue('ebay.imagepath.variations', $_MagnaSession['mpID'], $form['images']['fields']['imagepathvariations']['default'], true);
 		}
-	} else {
-		unset($form['images']['fields']['imagepathvariations']);
 	}
 	# Bilder
 //	if (false === getDBConfigValue('ebay.gallery.imagepath', $_MagnaSession['mpID'], false)) {

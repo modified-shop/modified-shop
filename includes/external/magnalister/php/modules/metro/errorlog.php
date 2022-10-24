@@ -29,6 +29,7 @@ class MetroErrorLog extends MagnaCompatibleErrorLog {
 	}
 }
 class MetroErrorView extends MagnaCompatibleErrorView {
+	protected $blRecommendationColumn = true;
 	public function __construct($settings = array()) {
 		$settings = array_merge(array(
 			'hasImport' => true,

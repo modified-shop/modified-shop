@@ -344,7 +344,7 @@ class MetroInventoryView extends MagnaCompatibleInventoryView {
         $sMetroPrice = (isset($item['Price']) && 0 != $item['Price'])
             ? $this->simplePrice->setPriceAndCurrency($item['Price'], $item['Currency'])->format()
                 .'<span class="small">('.ML_LABEL_INCL.' '.$shippingCost.' '.ML_GENERIC_SHIPPING.')</span>'
-            : '&mdash';
+            : '&mdash;';
 
         $renderedShopNetPrice = (isset($item['ShopNetPrice']) && 0 != $item['ShopNetPrice'])
             ? $this->simplePrice->setPriceAndCurrency($item['ShopNetPrice'], $item['Currency'])->format()

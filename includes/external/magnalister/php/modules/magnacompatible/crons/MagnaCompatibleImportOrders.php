@@ -1115,8 +1115,8 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 			// set the products_model
 			$this->setProductsModel();
 
-			if ($reduceStock) {
-				// reduces main product stock
+			if ($reduceStock && empty($aOptions)) {
+				// reduces main product stock (only if it's a "simple" product)
 				$this->reduceStockBySKU($sSKU);
 			}
 			// set products.products_ordered for statistics

@@ -1,0 +1,78 @@
+{
+    "prepare": {
+        "headline": "Artikelvorbereitung",
+        "fields": {
+            "lang": {
+                "label": "Sprache",
+                "key": "_#_platform_#_.lang",
+                "type": "selection",
+                "values": null
+            },
+            "vat": {
+                "label": "VAT",
+                "desc": "Sie müssen mindestens eine VAT im Shopsystem definiert haben.",
+                "morefields": {
+                    "vat": {
+                        "type": "extern",
+                        "skipRadio": true,
+                        "procFunc": "OttoConfigure::productVATConfig",
+                        "params": {
+                            "subfields": {
+                                "name": {
+                                    "label": "<strong>Shop-Steuerklassen</strong>",
+                                    "key": "otto.product.vat.name",
+                                    "type": "text",
+                                    "cssClasses": [
+                                        "autoWidth"
+                                    ]
+                                },
+                                "percent": {
+                                    "label": "<strong>OTTO-Steuer-Codes</strong>",
+                                    "key": "otto.product.vat",
+                                    "type": "selection",
+                                    "cssClasses": [
+                                        "fullWidth"
+                                    ],
+                                    "values": {
+                                        "": "Bitte w\u00e4hlen",
+                                        "FULL": "Regelsteuersatz",
+                                        "REDUCED": "erm\u00e4\u00dfigte Mehrwertsteuersatz"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delivery": {
+                "label": "Versand",
+                "morefields": {
+                    "delivery.type": {
+                        "label": "Art der Zustellung",
+                        "key": "_#_platform_#_.delivery.type",
+                        "type": "selection",
+                        "values": {
+                            "PARCEL": "Paketware",
+                            "FORWARDER_PREFERREDLOCATION": "Spediteur - bevorzugter Standort",
+                            "FORWARDER_CURBSIDE": "Spediteur - Bordsteinkante"
+                        }
+                    },
+                    "delivery.time": {
+                        "label": "Lieferzeit in Tagen",
+                        "key": "_#_platform_#_.delivery.time",
+                        "type": "selection"
+                    }
+                }
+            },
+            "manufacturerfilter": {
+                "label": "Herstellerfilter",
+                "key": "_#_platform_#_.filter.manufacturer",
+                "type": "multicheckbox",
+                "desc": "Alle hier markierten Hersteller werden bei der Produkt-Vorbereitung nicht mit angezeigt.",
+                "default": [
+                ],
+                "expertsetting": true
+            }
+        }
+    }
+}
