@@ -83,6 +83,18 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 	public function __construct($mpID, $marketplace) {
 		parent::__construct($mpID, $marketplace);  
 	}
+
+	/*
+	 * Display messages, if called in standalone mode
+	 */
+	protected function out($str) {
+		if (    !defined('MAGNA_CALLBACK_MODE')
+		     || MAGNA_CALLBACK_MODE != 'STANDALONE') {
+			return;
+		}
+		echo $str;
+		flush();
+	}
 	
 	/**
 	 * Specifies the settings and their default values for order status
@@ -302,6 +314,7 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 		
 		// flag order as dirty, meaning that it has to be saved.
 		$this->oOrder['__dirty'] = true;
+		$this->out($this->marketplace.' ('.$this->mpID.') sent shipping confirmation request for order '.$this->oOrder['special'] .' ('.$this->oOrder['orders_id'].')'."\n");
 		return $cfirm;
 	}
 
@@ -317,6 +330,7 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 		$this->oOrder['data']['ML_LABEL_ORDER_CANCELLED'] = $date;
 		// flag order as dirty, meaning that it has to be saved.
 		$this->oOrder['__dirty'] = true;
+		$this->out($this->marketplace.' ('.$this->mpID.') sent cancel order request for order '.$this->oOrder['special'] .' ('.$this->oOrder['orders_id'].')'."\n");
 		return $cncl;
 	}
 	
@@ -437,6 +451,7 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 			}
 			$oOrder = &$this->getFromLookupTable($cData['MOrderID']);
 			if ($oOrder !== null) {
+				$this->out($this->marketplace.' ('.$this->mpID.') success response received for order '.$this->oOrder['special'] .' ('.$this->oOrder['orders_id'].')'."\n");
 				$this->storeConfirmation($oOrder, $cData);
 			}
 		}
@@ -486,6 +501,7 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 			
 			$oOrder = &$this->getFromLookupTable($eData['DETAILS']['MOrderID']);
 			if ($oOrder !== null) {
+				$this->out($this->marketplace.' ('.$this->mpID.') error response received for order '.$this->oOrder['special'] .' ('.$this->oOrder['orders_id'].')'."\n");
 				$oOrder['__dirty'] = true;
 			}
 		}
@@ -539,6 +555,7 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 		if ($this->_debugLevel >= self::DBGLV_MED) {
 			$this->log(print_m($this->unprocessed, '$this->unprocessed'));
 		}
+		$this->out($this->marketplace.' ('.$this->mpID.') SyncOrderStatus: Unprocessed = '. implode('", "', $this->unprocessed)."\n");
 		if ($this->_debugDryRun) {
 			return;
 		}
@@ -660,7 +677,10 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 
 		$this->log(print_m($this->aOrders, "\n".'$this->aOrders'));
 		
-		if (empty($this->aOrders)) return true;
+		if (empty($this->aOrders)) {
+			$this->out($this->marketplace.' ('.$this->mpID.") SyncOrderStatus: No orders to sync.\n");
+			return true;
+		}
 		
 		#return true;
 		$this->confirmations = array();

@@ -96,7 +96,7 @@ class MagnaDBDriverMysqli extends MagnaDBDriver {
 			if (is_file(DIR_FS_INC.'get_database_version.inc.php')) {
 				require_once(DIR_FS_INC.'get_database_version.inc.php');
 				$modified_shop_version = get_database_version();
-				if ($shop_version['plain'] >= '2.0.5.0') {
+				if ($modified_shop_version['plain'] >= '2.0.5.0') {
 					$blMsock3 = true;
 				}
 			}

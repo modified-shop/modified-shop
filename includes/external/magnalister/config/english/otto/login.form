@@ -1,0 +1,22 @@
+{
+    "login": {
+        "headline": "_#_platformName_#_ Zugangsdaten",
+        "fields": [
+            {
+                "label": "OTTO API-Nutzer",
+                "desc":"<p>Ihren “OTTO API-Nutzer” erhalten Sie automatisch per E-Mail, nachdem Sie einen Händler-Account bei OTTO registriert und die Legitimationsprüfung durchlaufen haben.</p><strong>Weitere Infos:</strong><ul><li>Unter <a href=\"https://www.otto.market/\" target=_\"blank\">https://www.otto.market/</a> können Sie sich als Händler registrieren.</li><li>Damit Ihre per magnalister hochgeladenen Produkte auf OTTO angezeigt werden, müssen Sie als neuer Händler die Sichtbarkeits-Restriktion im OTTO Händler-Backend entfernen und eine “Bestätigung über Ihr Verständnis des Bestellprozesses” an OTTO senden. </br>Weitere Infos dazu finden Sie hier: <a href=\"https://account.otto.market/s/article/Vorbereitungen-Livegang/\" target=_\"blank\">https://account.otto.market/s/article/Vorbereitungen-Livegang/</a></li></ul>",
+                "key": "_#_platform_#_.username",
+                "type": "text"
+            },
+            {
+                "label": "OTTO API-Passwort",
+                "desc":"<p>Nach der Registrierung des OTTO Händler-Accounts und der Legitimationsprüfung durch OTTO erhalten Sie eine E-Mail mit Ihrem OTTO “API-Nutzer” und einem Link zur Passwort-Vergabe. </br>Tragen Sie das generierte “API-Passwort” hier ein.</p><p>Bitte beachten Sie auch die Hinweise im Info-Icon unter “OTTO Market API-Username”.</p>",
+                "key": "_#_platform_#_.password",
+                "type": "password",
+                "settings": {
+                    "save": false
+                }
+            }
+        ]
+    }
+}

@@ -104,17 +104,19 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 		}
 
         # shipping templates are now mandatory (as discussed with Tim on 2022-07-20)
+        $aTemplates = getDBConfigValue(array('amazon.shipping.template', 'values'), $this->mpID);
         if (isset($productMatching['ShippingTemplate'])) {
             $defaultTemplateIndex = $productMatching['ShippingTemplate'];
         } else {
             $aDefaultTemplate = getDBConfigValue(array('amazon.shipping.template', 'defaults'), $this->mpID);
             $defaultTemplateIndex = array_search('1', $aDefaultTemplate);
         }
+        $defaultTemplate = $aTemplates[$defaultTemplateIndex];
 
 		$data['submit']['ASIN'] = $productMatching['asin'];
 		$data['submit']['ConditionType'] = empty($productMatching['item_condition']) ? $data['submit']['ConditionType'] : $productMatching['item_condition'];
 		$data['submit']['ConditionNote'] = sanitizeProductDescription($productMatching['item_note']);
-		$data['submit']['ShippingTemplate'] = isset($defaultTemplateIndex)?:"";
+		$data['submit']['ShippingTemplate'] = isset($defaultTemplate) ? $defaultTemplate : "";
 		if ($productMatching['leadtimeToShip'] > 0) {
 			$data['submit']['LeadtimeToShip'] = $productMatching['leadtimeToShip'];
 		}

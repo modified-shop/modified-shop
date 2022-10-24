@@ -86,10 +86,6 @@ class EbayImportOrders extends MagnaCompatibleImportOrders {
                 'key' => array('shippingdiscount.international', 'val'),
                 'default' => true,
             ),
-            'MwStFallback' => array (
-                'key' => 'mwstfallback',
-                'default' => 0,
-            ),
         ));
     }
 
@@ -99,6 +95,17 @@ class EbayImportOrders extends MagnaCompatibleImportOrders {
             ? $this->config['OrderStatusClosed']
             : array()
         ;
+        // case: Old MwStFallback mkey 'ebay.mwstfallback' (changed in form file a time ago, but was still used here)
+        if (    $this->config['MwStFallback'] == 0
+             && ($iOldMwStFallback = getDBConfigValue('ebay.mwstfallback', $this->mpID, 0)) != 0) {
+            $this->config['MwStFallback'] = $iOldMwStFallback;
+            if (false == MagnaDB::gi()->fetchOne('SELECT `value` FROM '.TABLE_MAGNA_CONFIG.' WHERE `mkey` = \'ebay.mwst.fallback\' AND `mpID` = '.$this->mpID)) {
+                MagnaDB::gi()->query('UPDATE '.TABLE_MAGNA_CONFIG.' SET `mkey` = \'ebay.mwst.fallback\' WHERE `mkey` = \'ebay.mwstfallback\' AND `mpID` = '.$this->mpID);
+            } else {
+                MagnaDB::gi()->query('UPDATE '.TABLE_MAGNA_CONFIG.' SET `value` = \''.$iOldMwStFallback.'\' WHERE `mkey` = \'ebay.mwst.fallback\' AND `mpID` = '.$this->mpID);
+                MagnaDB::gi()->query('DELETE FROM '.TABLE_MAGNA_CONFIG.' WHERE `mkey` = \'ebay.mwstfallback\' AND `mpID` = '.$this->mpID);
+            }
+        }
     }
 
     protected function doBeforeInsertProduct() {

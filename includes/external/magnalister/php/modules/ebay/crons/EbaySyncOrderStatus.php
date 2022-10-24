@@ -100,6 +100,7 @@ class EbaySyncOrderStatus extends MagnaCompatibleSyncOrderStatus {
 			}
 			$oOrder = &$this->getFromLookupTable($cData['MOrderID']);
 			if ($oOrder !== null) {
+				$this->out($this->marketplace.' ('.$this->mpID.') success response received for order '.$this->oOrder['special'] .' ('.$this->oOrder['orders_id'].')'."\n");
 				// save the confirmation and update the status.
 				$oOrder['__dirty'] = true;
 			}

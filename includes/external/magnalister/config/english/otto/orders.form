@@ -300,7 +300,7 @@
                     "subfields": {
                         "status": {
                             "label": "Webshop-Bestellstatus:",
-                            "key": "_#_platform_#_.orders.shipping.status",
+                            "key": "_#_platform_#_.shipping.status",
                             "type": "selection",
                             "values": {},
                             "cssClasses": [
