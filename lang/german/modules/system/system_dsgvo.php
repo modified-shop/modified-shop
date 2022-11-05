@@ -14,7 +14,7 @@ define('MODULE_SYSTEM_DSGVO_STATUS_TITLE','Status');
 define('MODULE_SYSTEM_DSGVO_STATUS_DESC','Modulstatus');
 define('MODULE_SYSTEM_DSGVO_STATUS_INFO','Aktiv');
 define('MODULE_SYSTEM_DSGVO_TEXT_TITLE', 'DSGVO');
-define('MODULE_SYSTEM_DSGVO_TEXT_DESCRIPTION', 'Es wird geloggt, welche Datenschutzbestimmungen der Kunde aktzeptiert hat.');
+define('MODULE_SYSTEM_DSGVO_TEXT_DESCRIPTION', 'Es wird geloggt, welche Datenschutzbestimmungen der Kunde akzeptiert hat.');
 define('MODULE_SYSTEM_DSGVO_CONTENT_TITLE', 'Privatsph&auml;re &amp; Datenschutz');
 define('MODULE_SYSTEM_DSGVO_CONTENT_DESC', 'W&auml;hlen Sie den Content f&uuml;r Ihre Datenschutzbestimmungen');
 
