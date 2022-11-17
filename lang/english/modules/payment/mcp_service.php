@@ -2,8 +2,8 @@
 /**
  *
  * @package    micropayment
- * @copyright  Copyright (c) 2015 Micropayment GmbH (http://www.micropayment.de)
- * @author     micropayment GmbH <shop-plugins@micropayment.de>
+ * @copyright  Copyright (c) 2022 Micropayment GmbH (http://www.micropayment.de)
+ * @author     micropayment GmbH (TE) <support@micropayment.de>
  */
 
 define('MODULE_PAYMENT_MCP_SERVICE_STATUS_TITLE','Status');
@@ -18,6 +18,8 @@ define('MODULE_PAYMENT_MCP_SERVICE_PROJECT_CODE_TITLE','Project code');
 define('MODULE_PAYMENT_MCP_SERVICE_PROJECT_CODE_DESC','Project code from micropayment&trade;');
 define('MODULE_PAYMENT_MCP_SERVICE_PAYTEXT_TITLE','Payment text');
 define('MODULE_PAYMENT_MCP_SERVICE_PAYTEXT_DESC','This option is shown on the invoice and page title of the payment window. With the place holder #ORDER# it is possible to automatically integrate the OrderID in to the invoice or payment window. e.g. "Order: #ORDER#" would show "Order: 0000023"');
+define('MODULE_PAYMENT_MCP_SERVICE_TESTMODE_TITLE',' Test Mode');
+define('MODULE_PAYMENT_MCP_SERVICE_TESTMODE_DESC','Enable Test Mode');
 
 define('MODULE_PAYMENT_MCP_SERVICE_THEME_TITLE','Theme');
 define('MODULE_PAYMENT_MCP_SERVICE_THEME_DESC','Theme for the payment windows, default is x1');

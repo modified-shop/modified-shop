@@ -2,8 +2,8 @@
 /**
  *
  * @package    micropayment
- * @copyright  Copyright (c) 2015 Micropayment GmbH (http://www.micropayment.de)
- * @author     micropayment GmbH <shop-plugins@micropayment.de>
+ * @copyright  Copyright (c) 2022 Micropayment GmbH (http://www.micropayment.de)
+ * @author     micropayment GmbH (TE) <support@micropayment.de>
  */
 if(!class_exists('micropayment_method',false)) {
     $method_class_file = dirname(__FILE__).'/../../external/micropayment/class.micropayment_method.php';

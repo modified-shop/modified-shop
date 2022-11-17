@@ -2,8 +2,8 @@
 /**
  *
  * @package    micropayment
- * @copyright  Copyright (c) 2015 Micropayment GmbH (http://www.micropayment.de)
- * @author     micropayment GmbH <shop-plugins@micropayment.de>
+ * @copyright  Copyright (c) 2022 Micropayment GmbH (http://www.micropayment.de)
+ * @author     micropayment GmbH (TE) <support@micropayment.de>
  */
 require_once(dirname(__FILE__).'/class.micropayment_helper.php');
 require_once(dirname(__FILE__).'/../../../lang/german/modules/payment/mcp_service.php');
@@ -33,10 +33,11 @@ class micropayment_method extends micropayment_helper
         if (isset($this->code) && $this->code != '') {
           $this->check_enabled();
           $this->check();
-        
-          if (defined('RUN_MODE_ADMIN')) {
-            $this->refreshShopModule();
-          }
+
+          //echo '<pre>'.print_r($this,true).RUN_MODE_ADMIN.'</pre>';
+//          if (defined('RUN_MODE_ADMIN')) {
+//            $this->refreshShopModule();
+//          }
         }
     }
 
@@ -132,6 +133,7 @@ class micropayment_method extends micropayment_helper
         global $insert_id;
         $order = new order($insert_id);
         $url = $this->generateBillingUrl($order);
+        //echo '<pre>'.print_r($url,true).'</pre>'; exit();
         $this->addToMicropaymentOrders($insert_id,$this->code);
         $this->addToMicropaymentLog($insert_id,'new');
 
@@ -218,6 +220,7 @@ class micropayment_method extends micropayment_helper
             $this->createConfigParameter('MODULE_PAYMENT_MCP_SERVICE_PROJECT_CODE', '', '6', '0','');
             $this->createConfigParameter('MODULE_PAYMENT_MCP_SERVICE_PAYTEXT', '#ORDER#', '6', '0','');
             $this->createConfigParameter('MODULE_PAYMENT_MCP_SERVICE_THEME', 'x1', '6', '0','');
+            $this->createConfigParameter('MODULE_PAYMENT_MCP_SERVICE_TESTMODE', 'True', '6', '0', 'xtc_cfg_select_option(array(\'True\',\'False\'),');
             $this->createConfigParameter('MODULE_PAYMENT_MCP_SERVICE_GFX', '', '6', '0','');
             $this->createConfigParameter('MODULE_PAYMENT_MCP_SERVICE_BGCOLOR', '', '6', '0','');
             $this->createConfigParameter('MODULE_PAYMENT_MCP_SERVICE_BGGFX', '', '6', '0','');
@@ -272,6 +275,7 @@ class micropayment_method extends micropayment_helper
             'MODULE_PAYMENT_MCP_SERVICE_ACCOUNT_ID',
             'MODULE_PAYMENT_MCP_SERVICE_ACCESS_KEY',
             'MODULE_PAYMENT_MCP_SERVICE_PROJECT_CODE',
+            'MODULE_PAYMENT_MCP_SERVICE_TESTMODE',
             'MODULE_PAYMENT_MCP_SERVICE_PAYTEXT',
             'MODULE_PAYMENT_MCP_SERVICE_THEME',
             'MODULE_PAYMENT_MCP_SERVICE_GFX',

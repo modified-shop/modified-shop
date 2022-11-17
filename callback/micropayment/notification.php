@@ -2,8 +2,8 @@
 /**
  *
  * @package    micropayment
- * @copyright  Copyright (c) 2015 Micropayment GmbH (http://www.micropayment.de)
- * @author     micropayment GmbH <shop-plugins@micropayment.de>
+ * @copyright  Copyright (c) 2022 Micropayment GmbH (http://www.micropayment.de)
+ * @author     micropayment GmbH (TE) <support@micropayment.de>
  */
 chdir('../../');
 require_once('includes/application_top.php');
@@ -46,7 +46,7 @@ if(isset($_REQUEST['function']) && $_REQUEST['function'] == 'test') {
 
     echo '<pre>';
     echo 'MICROPAYMENT GATEWAY TEST FUNCTION' . PHP_EOL;
-    echo 'VERSION-SHOP: ' . $version . ' ; MOD: 2.1.0' . PHP_EOL;
+    echo 'VERSION-SHOP: ' . $version . ' ; MOD: 2.2.0' . PHP_EOL;
     echo 'ACCOUNT-ID: ' . substr($accId,0,1).str_repeat('x',strlen($accId)-2).substr($accId,strlen($accId)-1) . PHP_EOL;
     echo 'BILLING-URL: ' . $billingUrl . PHP_EOL;
     echo 'ACCESSKEY: ' . substr($accKey,0,1).str_repeat('x',strlen($accKey)-2).substr($accKey,strlen($accKey)-1) . PHP_EOL;

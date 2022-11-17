@@ -2,8 +2,8 @@
 /**
  *
  * @package    micropayment
- * @copyright  Copyright (c) 2015 Micropayment GmbH (http://www.micropayment.de)
- * @author     micropayment GmbH <shop-plugins@micropayment.de>
+ * @copyright  Copyright (c) 2022 Micropayment GmbH (http://www.micropayment.de)
+ * @author     micropayment GmbH (TE) <support@micropayment.de>
  */
 require_once('mcp_service.php');
 define('MODULE_PAYMENT_MCP_PREPAY_TEXT_DESCRIPTION', 'micropayment&trade; Prepay Module
@@ -15,7 +15,7 @@ links<br />
 </a><br />
 <br />
 <b>Extern</b><br />
-<a href="http://ecommerce.micropayment.de/download/modified/micropayment_modified-shop_2.x.pdf?version=2.1.0">
+<a href="https://www.micropayment.de/products/plugins/modified/?_r=gst&_src=ctor">
   <input type="button" value="Manual">
 </a>&nbsp;
 <a target="_new" href="https://r120.micropayment.de">
