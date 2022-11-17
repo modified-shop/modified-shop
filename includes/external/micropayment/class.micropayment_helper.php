@@ -2,8 +2,8 @@
 /**
  *
  * @package    micropayment
- * @copyright  Copyright (c) 2015 Micropayment GmbH (http://www.micropayment.de)
- * @author     micropayment GmbH <shop-plugins@micropayment.de>
+ * @copyright  Copyright (c) 2022 Micropayment GmbH (http://www.micropayment.de)
+ * @author     micropayment GmbH (TE) <support@micropayment.de>
  */
 class micropayment_helper
 {
@@ -12,12 +12,15 @@ class micropayment_helper
 
     const INFO_SERVICE_URL                   = 'http://webservices.micropayment.de/public/info/index.php';
 
-    const CONFIG_NAME_CURRENT_VERSION        = 'MODULE_PAYMENT_MCP_SERVICE_CURRENT_VERSION';
-    const CONFIG_NAME_REFRESH_INTERVAL       = 'MODULE_PAYMENT_MCP_SERVICE_REFRESH_INTERVAL';
-    const CONFIG_NAME_BILLING_URL_CREDITCARD = 'MODULE_PAYMENT_MCP_SERVICE_BILLING_URL_CREDITCARD';
-    const CONFIG_NAME_BILLING_URL_DEBIT      = 'MODULE_PAYMENT_MCP_SERVICE_BILLING_URL_DEBIT';
-    const CONFIG_NAME_BILLING_URL_SOFORT     = 'MODULE_PAYMENT_MCP_SERVICE_BILLING_URL_SOFORT';
-    const CONFIG_NAME_BILLING_URL_PREPAY     = 'MODULE_PAYMENT_MCP_SERVICE_BILLING_URL_PREPAY';
+    const CONFIG_NAME_CURRENT_VERSION         = 'MODULE_PAYMENT_MCP_SERVICE_CURRENT_VERSION';
+    const CONFIG_NAME_REFRESH_INTERVAL        = 'MODULE_PAYMENT_MCP_SERVICE_REFRESH_INTERVAL';
+    const CONFIG_NAME_BILLING_URL_CREDITCARD  = 'https://creditcard.micropayment.de/creditcard/event/';
+    const CONFIG_NAME_BILLING_URL_DEBIT       = 'https://sepadirectdebit.micropayment.de/lastschrift/event/';
+    const CONFIG_NAME_BILLING_URL_SOFORT      = 'https://directbanking.micropayment.de/sofort/event/';
+    const CONFIG_NAME_BILLING_URL_PREPAY      = 'https://prepayment.micropayment.de/prepay/event/';
+    const CONFIG_NAME_BILLING_URL_GIROPAY     = 'https://paydirekt.micropayment.de/paydirekt/event/';
+    const CONFIG_NAME_BILLING_URL_PAYPAL      = 'https://paypal.micropayment.de/paypal/event/';
+    const CONFIG_NAME_BILLING_URL_PAYSAFECARD = 'https://paysafecard.micropayment.de/paysafecard/event/';
 
     private function getShopSignatur()
     {
@@ -30,14 +33,16 @@ class micropayment_helper
     {
         global $insert_id;
         $params = array(
-            'shop_version' => $this->getShopSignatur(),
+            //'shop_version' => $this->getShopSignatur(),
+            'currency'     => $order->info['currency'],
             'project'      => MODULE_PAYMENT_MCP_SERVICE_PROJECT_CODE,
             'amount'       => ($order->info['pp_total'] * 100),
             'orderid'      => $insert_id,
             'paytext'      => str_replace('#ORDER#',$insert_id,MODULE_PAYMENT_MCP_SERVICE_PAYTEXT),
             'theme'        => MODULE_PAYMENT_MCP_SERVICE_THEME,
-            'currency'     => $order->info['currency'],
             'MODsid'       => xtc_session_id(),
+            'producttype'  => 'cart',
+            'testmode'     => (bool)json_decode(strtolower(MODULE_PAYMENT_MCP_SERVICE_TESTMODE)),
 
             'mp_user_email'     => $order->customer['email_address'],
             'mp_user_firstname' => $order->customer['firstname'],
@@ -65,20 +70,31 @@ class micropayment_helper
 
         switch($this->code) {
             case 'mcp_creditcard':
-                $url = constant(self::CONFIG_NAME_BILLING_URL_CREDITCARD);
+                $url = self::CONFIG_NAME_BILLING_URL_CREDITCARD;
                 break;
             case 'mcp_debit':
-                $url = constant(self::CONFIG_NAME_BILLING_URL_DEBIT);
+                $url = self::CONFIG_NAME_BILLING_URL_DEBIT;
                 break;
             case 'mcp_prepay':
-                $url = constant(self::CONFIG_NAME_BILLING_URL_PREPAY);
+                $url = self::CONFIG_NAME_BILLING_URL_PREPAY;
                 break;
             case 'mcp_ebank2pay':
-                $url = constant(self::CONFIG_NAME_BILLING_URL_SOFORT);
+            case 'mcp_sofort':
+                $url = self::CONFIG_NAME_BILLING_URL_SOFORT;
+                break;
+            case 'mcp_paypal':
+                $url = self::CONFIG_NAME_BILLING_URL_PAYPAL;
+                break;
+            case 'mcp_paysafecard':
+                $url = self::CONFIG_NAME_BILLING_URL_PAYSAFECARD;
+                break;
+            case 'mcp_giropay':
+                $url = self::CONFIG_NAME_BILLING_URL_GIROPAY;
                 break;
             default: throw new Exception('UNKNOWN PAYMODULE'); break;
         }
         $url .= '?' . $urlParams;
+        //echo '<pre>'.print_r($url,true).'</pre>';
         return $url;
     }
     function addToMicropaymentOrders($order_id,$payment_method)
@@ -162,124 +178,126 @@ class micropayment_helper
         );
     }
 
-    function refreshShopModule()
-    {
-        if(self::$infoServiceDone) {
-            return true;
-        }
-        $check = xtc_db_query('
-          SELECT
-              CASE WHEN ISNULL(`last_modified`) THEN
-                  1
-              ELSE
-                  CASE
-                      WHEN unix_timestamp(`last_modified`)+`configuration_value` <= unix_timestamp() THEN
-                        1
-                      ELSE
-                        0
-                  END
-              END `result`
-              FROM '.TABLE_CONFIGURATION.'
-              WHERE `configuration_key` = "'.self::CONFIG_NAME_REFRESH_INTERVAL.'"');
-        $check = xtc_db_fetch_array($check);
+//    function refreshShopModule()
+//    {
+//        if(self::$infoServiceDone) {
+//            return true;
+//        }
+//        $check = xtc_db_query('
+//          SELECT
+//              CASE WHEN ISNULL(`last_modified`) THEN
+//                  1
+//              ELSE
+//                  CASE
+//                      WHEN unix_timestamp(`last_modified`)+`configuration_value` <= unix_timestamp() THEN
+//                        1
+//                      ELSE
+//                        0
+//                  END
+//              END `result`
+//              FROM '.TABLE_CONFIGURATION.'
+//              WHERE `configuration_key` = "'.self::CONFIG_NAME_REFRESH_INTERVAL.'"');
+//        $check = xtc_db_fetch_array($check);
+//
+//        if(!is_array($check) || (isset($check['result']) && $check['result'] != 1)) {
+//            return false;
+//        } else {
+//            if (!$this->getConfig('MODULE_PAYMENT_MCP_SERVICE_ACCOUNT_ID')) {
+//                return false;
+//            }
+//        }
+//        $data = (array) $this->callInfoService('ShopModulService');
+//        echo '<pre>'.print_r($data,true).'</pre>';
+//        if(isset($data['current.version'])) {
+//            $this->setConfig(self::CONFIG_NAME_CURRENT_VERSION,$data['current.version']);
+//        }
+//        if(isset($data['refresh.interval'])) {
+//            $this->setConfig(self::CONFIG_NAME_REFRESH_INTERVAL,$data['refresh.interval']);
+//        }
+//        if(isset($data['billing.creditcard.url'])) {
+//            $this->setConfig(self::CONFIG_NAME_BILLING_URL_CREDITCARD,$data['billing.creditcard.url']);
+//        }
+//        if(isset($data['billing.debit.url'])) {
+//            $this->setConfig(self::CONFIG_NAME_BILLING_URL_DEBIT,$data['billing.debit.url']);
+//        }
+//        if(isset($data['billing.sofort.url'])) {
+//            $this->setConfig(self::CONFIG_NAME_BILLING_URL_SOFORT,$data['billing.sofort.url']);
+//        }
+//        if(isset($data['billing.prepay.url'])) {
+//            $this->setConfig(self::CONFIG_NAME_BILLING_URL_PREPAY,$data['billing.prepay.url']);
+//        }
+//        self::$infoServiceDone = true;
+//    }
+//
+//    function callInfoService($modul,$params=null)
+//    {
+//        if (!$this->getConfig('MODULE_PAYMENT_MCP_SERVICE_ACCOUNT_ID')) {
+//            if ($this->check_is_service_installed()) {
+//                if ($this->rslcode) {
+//                    $url = 'https://' . $this->rslcode . '.micropayment.de';
+//                } else {
+//                    $url = 'https://www.micropayment.de';
+//                }
+//                echo sprintf(MODULE_PAYMENT_MCP_SERVICE_NO_ACCOUNT, MODULE_PAYMENT_MCP_SERVICE_CSS, $url);
+//            }
+//            return false;
+//        }
+//        $service_url = self::INFO_SERVICE_URL;
+//
+//        $url_params = array(
+//            'action'     => $modul,
+//            'format'     => 'json',
+//            'account_id' => $this->getConfig('MODULE_PAYMENT_MCP_SERVICE_ACCOUNT_ID'),
+//            'shop_version' => $this->getShopSignatur()
+//        );
+//
+//        if($params) {
+//            $url_params = array_merge($params,$url_params);
+//        }
+//
+//        try {
+//            if (extension_loaded('curl')) {
+//                $r = curl_init($service_url);
+//                curl_setopt($r, CURLOPT_POST, 1);
+//                curl_setopt($r, CURLOPT_POSTFIELDS, $url_params);
+//                curl_setopt($r, CURLOPT_RETURNTRANSFER, true);
+//                curl_setopt($r, CURLOPT_TIMEOUT, self::HTTP_TIMEOUT);
+//                $response = curl_exec($r);
+//
+//                curl_close($r);
+//            } else {
+//                $url3 = parse_url($service_url);
+//                $host = $url3["host"];
+//                $path = $url3["path"];
+//                $fp = fsockopen($host, 80, $errno, $errstr, self::HTTP_TIMEOUT);
+//                if ($fp) {
+//                    fputs($fp, "GET " . $path . "?" . http_build_query($url_params) . " HTTP/1.0\nHost: " . $host . "\n\n");
+//                    $buf = null;
+//                    while (!feof($fp)) {
+//                        $buf .= fgets($fp, 128);
+//                    }
+//                    $lines = explode("\n", $buf);
+//                    $response = $lines[count($lines) - 1];
+//                    fclose($fp);
+//                }
+//            }
+//        } catch(Exception $e) {
+//            return false;
+//        }
+//
+//        try {
+//            $json = json_decode($response);
+//        } catch (Exception $e) {
+//            return false;
+//        }
+//
+//        if (is_object($json)) {
+//            return $json;
+//        } else {
+//            return false;
+//        }
+//    }
 
-        if(!is_array($check) || (isset($check['result']) && $check['result'] != 1)) {
-            return false;
-        } else {
-            if (!$this->getConfig('MODULE_PAYMENT_MCP_SERVICE_ACCOUNT_ID')) {
-                return false;
-            }
-        }
-        $data = (array) $this->callInfoService('ShopModulService');
-        if(isset($data['current.version'])) {
-            $this->setConfig(self::CONFIG_NAME_CURRENT_VERSION,$data['current.version']);
-        }
-        if(isset($data['refresh.interval'])) {
-            $this->setConfig(self::CONFIG_NAME_REFRESH_INTERVAL,$data['refresh.interval']);
-        }
-        if(isset($data['billing.creditcard.url'])) {
-            $this->setConfig(self::CONFIG_NAME_BILLING_URL_CREDITCARD,$data['billing.creditcard.url']);
-        }
-        if(isset($data['billing.debit.url'])) {
-            $this->setConfig(self::CONFIG_NAME_BILLING_URL_DEBIT,$data['billing.debit.url']);
-        }
-        if(isset($data['billing.sofort.url'])) {
-            $this->setConfig(self::CONFIG_NAME_BILLING_URL_SOFORT,$data['billing.sofort.url']);
-        }
-        if(isset($data['billing.prepay.url'])) {
-            $this->setConfig(self::CONFIG_NAME_BILLING_URL_PREPAY,$data['billing.prepay.url']);
-        }
-        self::$infoServiceDone = true;
-    }
-
-    function callInfoService($modul,$params=null)
-    {
-        if (!$this->getConfig('MODULE_PAYMENT_MCP_SERVICE_ACCOUNT_ID')) {
-            if ($this->check_is_service_installed()) {
-                if ($this->rslcode) {
-                    $url = 'https://' . $this->rslcode . '.micropayment.de';
-                } else {
-                    $url = 'https://www.micropayment.de';
-                }
-                echo sprintf(MODULE_PAYMENT_MCP_SERVICE_NO_ACCOUNT, MODULE_PAYMENT_MCP_SERVICE_CSS, $url);
-            }
-            return false;
-        }
-        $service_url = self::INFO_SERVICE_URL;
-
-        $url_params = array(
-            'action'     => $modul,
-            'format'     => 'json',
-            'account_id' => $this->getConfig('MODULE_PAYMENT_MCP_SERVICE_ACCOUNT_ID'),
-            'shop_version' => $this->getShopSignatur()
-        );
-
-        if($params) {
-            $url_params = array_merge($params,$url_params);
-        }
-
-        try {
-            if (extension_loaded('curl')) {
-                $r = curl_init($service_url);
-                curl_setopt($r, CURLOPT_POST, 1);
-                curl_setopt($r, CURLOPT_POSTFIELDS, $url_params);
-                curl_setopt($r, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($r, CURLOPT_TIMEOUT, self::HTTP_TIMEOUT);
-                $response = curl_exec($r);
-
-                curl_close($r);
-            } else {
-                $url3 = parse_url($service_url);
-                $host = $url3["host"];
-                $path = $url3["path"];
-                $fp = fsockopen($host, 80, $errno, $errstr, self::HTTP_TIMEOUT);
-                if ($fp) {
-                    fputs($fp, "GET " . $path . "?" . http_build_query($url_params) . " HTTP/1.0\nHost: " . $host . "\n\n");
-                    $buf = null;
-                    while (!feof($fp)) {
-                        $buf .= fgets($fp, 128);
-                    }
-                    $lines = explode("\n", $buf);
-                    $response = $lines[count($lines) - 1];
-                    fclose($fp);
-                }
-            }
-        } catch(Exception $e) {
-            return false;
-        }
-
-        try {
-            $json = json_decode($response);
-        } catch (Exception $e) {
-            return false;
-        }
-
-        if (is_object($json)) {
-            return $json;
-        } else {
-            return false;
-        }
-    }
     function createConfigParameter(
         $configuration_key, $configuration_value, $configuration_group_id,$sort_order,
         $set_function = false,$use_function = false

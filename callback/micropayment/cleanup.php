@@ -2,8 +2,8 @@
 /**
  *
  * @package    micropayment
- * @copyright  Copyright (c) 2015 Micropayment GmbH (http://www.micropayment.de)
- * @author     micropayment GmbH <shop-plugins@micropayment.de>
+ * @copyright  Copyright (c) 2022 Micropayment GmbH (http://www.micropayment.de)
+ * @author     micropayment GmbH (TE) <support@micropayment.de>
  */
 chdir('../../');
 
