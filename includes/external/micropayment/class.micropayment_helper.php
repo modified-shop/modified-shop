@@ -36,7 +36,7 @@ class micropayment_helper
             //'shop_version' => $this->getShopSignatur(),
             'currency'     => $order->info['currency'],
             'project'      => MODULE_PAYMENT_MCP_SERVICE_PROJECT_CODE,
-            'amount'       => ($order->info['pp_total'] * 100),
+            'amount'       => (int)($order->info['pp_total'] * 100),
             'orderid'      => $insert_id,
             'paytext'      => str_replace('#ORDER#',$insert_id,MODULE_PAYMENT_MCP_SERVICE_PAYTEXT),
             'theme'        => MODULE_PAYMENT_MCP_SERVICE_THEME,
@@ -64,6 +64,7 @@ class micropayment_helper
 
         $urlParams = http_build_query($params, null, '&');
 
+        //mail('webmaster@web-dezign.de', __CLASS__.'->'.__FUNCTION__.'->$params', $urlParams.print_r($params,true).print_r($order,true));
 
         $seal = md5($urlParams . MODULE_PAYMENT_MCP_SERVICE_ACCESS_KEY);
         $urlParams .= '&seal=' . $seal;
