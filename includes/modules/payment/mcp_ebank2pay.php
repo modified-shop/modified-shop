@@ -27,9 +27,9 @@ class mcp_ebank2pay extends micropayment_method
     }
 
     function install() {
-        if(!$this->check_is_service_installed()) {
+        //if(!$this->check_is_service_installed()) {
             parent::install();
-        }
+        //}
 
         $this->createConfigParameter('MODULE_PAYMENT_MCP_EBANK2PAY_STATUS', 'False', '6', '1', 'xtc_cfg_select_option(array(\'True\',\'False\'),');
         $this->createConfigParameter('MODULE_PAYMENT_MCP_EBANK2PAY_MINIMUM_AMOUNT', '0', '6', '0');

@@ -178,130 +178,16 @@ class micropayment_helper
         );
     }
 
-//    function refreshShopModule()
-//    {
-//        if(self::$infoServiceDone) {
-//            return true;
-//        }
-//        $check = xtc_db_query('
-//          SELECT
-//              CASE WHEN ISNULL(`last_modified`) THEN
-//                  1
-//              ELSE
-//                  CASE
-//                      WHEN unix_timestamp(`last_modified`)+`configuration_value` <= unix_timestamp() THEN
-//                        1
-//                      ELSE
-//                        0
-//                  END
-//              END `result`
-//              FROM '.TABLE_CONFIGURATION.'
-//              WHERE `configuration_key` = "'.self::CONFIG_NAME_REFRESH_INTERVAL.'"');
-//        $check = xtc_db_fetch_array($check);
-//
-//        if(!is_array($check) || (isset($check['result']) && $check['result'] != 1)) {
-//            return false;
-//        } else {
-//            if (!$this->getConfig('MODULE_PAYMENT_MCP_SERVICE_ACCOUNT_ID')) {
-//                return false;
-//            }
-//        }
-//        $data = (array) $this->callInfoService('ShopModulService');
-//        echo '<pre>'.print_r($data,true).'</pre>';
-//        if(isset($data['current.version'])) {
-//            $this->setConfig(self::CONFIG_NAME_CURRENT_VERSION,$data['current.version']);
-//        }
-//        if(isset($data['refresh.interval'])) {
-//            $this->setConfig(self::CONFIG_NAME_REFRESH_INTERVAL,$data['refresh.interval']);
-//        }
-//        if(isset($data['billing.creditcard.url'])) {
-//            $this->setConfig(self::CONFIG_NAME_BILLING_URL_CREDITCARD,$data['billing.creditcard.url']);
-//        }
-//        if(isset($data['billing.debit.url'])) {
-//            $this->setConfig(self::CONFIG_NAME_BILLING_URL_DEBIT,$data['billing.debit.url']);
-//        }
-//        if(isset($data['billing.sofort.url'])) {
-//            $this->setConfig(self::CONFIG_NAME_BILLING_URL_SOFORT,$data['billing.sofort.url']);
-//        }
-//        if(isset($data['billing.prepay.url'])) {
-//            $this->setConfig(self::CONFIG_NAME_BILLING_URL_PREPAY,$data['billing.prepay.url']);
-//        }
-//        self::$infoServiceDone = true;
-//    }
-//
-//    function callInfoService($modul,$params=null)
-//    {
-//        if (!$this->getConfig('MODULE_PAYMENT_MCP_SERVICE_ACCOUNT_ID')) {
-//            if ($this->check_is_service_installed()) {
-//                if ($this->rslcode) {
-//                    $url = 'https://' . $this->rslcode . '.micropayment.de';
-//                } else {
-//                    $url = 'https://www.micropayment.de';
-//                }
-//                echo sprintf(MODULE_PAYMENT_MCP_SERVICE_NO_ACCOUNT, MODULE_PAYMENT_MCP_SERVICE_CSS, $url);
-//            }
-//            return false;
-//        }
-//        $service_url = self::INFO_SERVICE_URL;
-//
-//        $url_params = array(
-//            'action'     => $modul,
-//            'format'     => 'json',
-//            'account_id' => $this->getConfig('MODULE_PAYMENT_MCP_SERVICE_ACCOUNT_ID'),
-//            'shop_version' => $this->getShopSignatur()
-//        );
-//
-//        if($params) {
-//            $url_params = array_merge($params,$url_params);
-//        }
-//
-//        try {
-//            if (extension_loaded('curl')) {
-//                $r = curl_init($service_url);
-//                curl_setopt($r, CURLOPT_POST, 1);
-//                curl_setopt($r, CURLOPT_POSTFIELDS, $url_params);
-//                curl_setopt($r, CURLOPT_RETURNTRANSFER, true);
-//                curl_setopt($r, CURLOPT_TIMEOUT, self::HTTP_TIMEOUT);
-//                $response = curl_exec($r);
-//
-//                curl_close($r);
-//            } else {
-//                $url3 = parse_url($service_url);
-//                $host = $url3["host"];
-//                $path = $url3["path"];
-//                $fp = fsockopen($host, 80, $errno, $errstr, self::HTTP_TIMEOUT);
-//                if ($fp) {
-//                    fputs($fp, "GET " . $path . "?" . http_build_query($url_params) . " HTTP/1.0\nHost: " . $host . "\n\n");
-//                    $buf = null;
-//                    while (!feof($fp)) {
-//                        $buf .= fgets($fp, 128);
-//                    }
-//                    $lines = explode("\n", $buf);
-//                    $response = $lines[count($lines) - 1];
-//                    fclose($fp);
-//                }
-//            }
-//        } catch(Exception $e) {
-//            return false;
-//        }
-//
-//        try {
-//            $json = json_decode($response);
-//        } catch (Exception $e) {
-//            return false;
-//        }
-//
-//        if (is_object($json)) {
-//            return $json;
-//        } else {
-//            return false;
-//        }
-//    }
-
     function createConfigParameter(
         $configuration_key, $configuration_value, $configuration_group_id,$sort_order,
         $set_function = false,$use_function = false
     ) {
+
+      // check if setting already exists
+      $sql = 'SELECT * FROM `'.TABLE_CONFIGURATION.'` WHERE `configuration_key`= "'.addslashes($configuration_key).'" ';
+      $res = xtc_db_query($sql);
+      if (!empty($res->num_rows)) return true;
+
         if($set_function) {
             $queryTpl = '
               INSERT INTO `%s` (
