@@ -23,35 +23,29 @@
   // Return all customers statuses for a specified language_id and return an array(array())
   // Use it to make pull_down_menu, checkbox....
   function xtc_get_customers_statuses($use_customers_status_id = false) {
-
-    $customers_statuses_array = array();
-    if (!isset($_SESSION['languages_id'])
-        || $_SESSION['languages_id'] == ''
-        ) 
-    {
-      $customers_statuses_query = xtc_db_query("SELECT * 
-                                                  FROM " . TABLE_CUSTOMERS_STATUS . " 
-                                                 WHERE language_id = '1' 
-                                              ORDER BY customers_status_id");
-    } else {
-      $customers_statuses_query = xtc_db_query("SELECT * 
-                                                  FROM " . TABLE_CUSTOMERS_STATUS . " 
-                                                 WHERE language_id = '" . (int)$_SESSION['languages_id'] . "' 
-                                              ORDER BY customers_status_id");
-    }
-    $index = 0;
-    while ($customers_statuses = xtc_db_fetch_array($customers_statuses_query)) {
-      $index = $use_customers_status_id ? $customers_statuses['customers_status_id'] : $index;
-      $customers_statuses_array[$index] = array(
-        'id' => $customers_statuses['customers_status_id'],
-        'text' => $customers_statuses['customers_status_name'],
-      );      
-      foreach ($customers_statuses as $key => $value) {
-        $customers_statuses_array[$index][str_replace('customers_status', 'csa', $key)] = $value;
-      }
-      $index++;
+    static $customers_statuses_array;
+        
+    $languages_id = 1;
+    if (isset($_SESSION['languages_id'])) {
+      $languages_id = $_SESSION['languages_id'];
     }
     
-    return $customers_statuses_array;
+    if (!isset($customers_statuses_array)) {
+      $customers_statuses_query = xtc_db_query("SELECT * 
+                                                  FROM " . TABLE_CUSTOMERS_STATUS . " 
+                                                 WHERE language_id = '" . (int)$languages_id . "' 
+                                              ORDER BY customers_status_id");
+
+      while ($customers_statuses = xtc_db_fetch_array($customers_statuses_query)) {
+        $customers_statuses_array[$customers_statuses['customers_status_id']] = array(
+          'id' => $customers_statuses['customers_status_id'],
+          'text' => $customers_statuses['customers_status_name'],
+        );      
+        foreach ($customers_statuses as $key => $value) {
+          $customers_statuses_array[$customers_statuses['customers_status_id']][str_replace('customers_status', 'csa', $key)] = $value;
+        }
+      }
+    }
+    
+    return (($use_customers_status_id == false) ? array_values($customers_statuses_array) : $customers_statuses_array);
   }
- ?>
