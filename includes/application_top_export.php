@@ -22,7 +22,7 @@
    ---------------------------------------------------------------------------------------*/
 
 // start the timer for the page parse time log
-define('PAGE_PARSE_START_TIME', microtime());
+define('PAGE_PARSE_START_TIME', microtime(true));
 
 // set the level of error reporting
 @ini_set('display_errors', false);
