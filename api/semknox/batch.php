@@ -47,22 +47,28 @@
     }    
     
     if (count($semknox_array) > 0) {
-      $products_array = array();
+      $products_id_array = array();
       $products_query = xtc_db_query("SELECT p.products_id 
                                         FROM ".TABLE_PRODUCTS." p
                                        WHERE p.products_status = 1");
       if (xtc_db_num_rows($products_query) > 0) {
         while ($products = xtc_db_fetch_array($products_query)) {
-          $products_array[] = $products['products_id'];
+          $products_id_array[] = $products['products_id'];
         }
       }
     
-      if (count($products_array) > 0) {
-        foreach ($semknox_array as $semknox) {
+      if (count($products_id_array) > 0) {
+        $products_array = array_chunk($products_id_array, 1000);
+        
+        foreach ($semknox_array as $semknox) {                  
           $response = $semknox->initBatch();
-          if ($response->status == 'success') {          
-            $response = $semknox->uploadBatch($products_array);
-            
+          if ($response->status == 'success') {
+            foreach ($products_array as $key => $products) {       
+              $response = $semknox->uploadBatch($products);
+              if ($response->status != 'success') {  
+                break 2;
+              }
+            }
             if ($response->status == 'success') {  
               $semknox->startBatch();
             }
