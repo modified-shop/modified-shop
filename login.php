@@ -73,7 +73,8 @@ if (isset($_GET['action'])
   $check_login_query = xtc_db_query("SELECT customers_login_tries
                                        FROM ".TABLE_CUSTOMERS_LOGIN."
                                       WHERE (customers_email_address = '".xtc_db_input($email_address)."'
-                                             OR customers_ip = '".xtc_db_input($_SESSION['tracking']['ip'])."')");
+                                             OR customers_ip = '".xtc_db_input($_SESSION['tracking']['ip'])."')
+                                        AND customers_email_address != ''");
   if (xtc_db_num_rows($check_login_query) > 0) {
     while ($check_login = xtc_db_fetch_array($check_login_query)) {
       if ($check_login['customers_login_tries'] > $_SESSION['customers_login_tries']) {
