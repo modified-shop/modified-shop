@@ -226,7 +226,7 @@ class xtcPrice {
                           WHERE products_id='".(int)$pID."'");
     $pData = xtc_db_fetch_array($pQuery, true);
     $pData = $this->priceModules->getPprice($pData, $pID);
-    return $pData['products_price'];
+    return (double)$pData['products_price'];
   }
     
   /**
@@ -447,7 +447,7 @@ class xtcPrice {
       
       $special_price = $this->priceModules->CheckSpecialPrice($special_price, $pID);
       
-      return $special_price;
+      return (double)$special_price;
     }
   }
 
@@ -483,7 +483,7 @@ class xtcPrice {
       }
       $products_price = $this->priceModules->CheckSpecialProductPrice($products_price, $pID, $add_tax);
       
-      return $products_price;
+      return (double)$products_price;
     }
   }
 
@@ -495,7 +495,7 @@ class xtcPrice {
    */
   function xtcCheckExtension($pID) {     
     $price = $this->priceModules->CheckExtension(0, $pID);
-    return $price;
+    return (double)$price;
   }
   
   /**
@@ -505,7 +505,7 @@ class xtcPrice {
    * @return Double converted price
    */
   function xtcCalculateCurr($price) {
-    return $this->currencies[$this->actualCurr]['value'] * (double)$price;
+    return (double)$this->currencies[$this->actualCurr]['value'] * (double)$price;
   }
     
   /**
@@ -517,10 +517,10 @@ class xtcPrice {
   function xtcRemoveCurr($price) {
     if (DEFAULT_CURRENCY != $this->actualCurr) {
       if ($this->currencies[$this->actualCurr]['value'] > 0) {
-        return $price * (1 / $this->currencies[$this->actualCurr]['value']);
+        return (double)$price * (1 / (double)$this->currencies[$this->actualCurr]['value']);
       }
     } else {
-      return $price;
+      return (double)$price;
     }
   }
   
@@ -534,7 +534,7 @@ class xtcPrice {
    * @return Double gross price
    */
   function xtcAddTax($price, $tax) {
-    $price += $price / 100 * $tax;
+    $price += (double)$price / 100 * (double)$tax;
     $price = $this->xtcCalculateCurr($price);
     return $this->show_price_tax ? round($price, PRICE_PRECISION) : $price;
   }
@@ -547,7 +547,7 @@ class xtcPrice {
    * @return Double net price
    */
   function xtcRemoveTax($price, $tax) {
-    $price = ($price / (($tax + 100) / 100));
+    $price = ((double)$price / (((double)$tax + 100) / 100));
     return $price;
   }
   
@@ -559,7 +559,7 @@ class xtcPrice {
    * @return Double tax part
    */
   function xtcGetTax($price, $tax) {
-    $tax = $price - $this->xtcRemoveTax($price, $tax);
+    $tax = (double)$price - $this->xtcRemoveTax($price, $tax);
     return $tax;
   }
 
@@ -571,7 +571,7 @@ class xtcPrice {
    * @return Double tax part
    */
   function calcTax($price, $tax) {
-    return $price * $tax / 100;
+    return (double)$price * (double)$tax / 100;
   }
   
   /**
@@ -582,7 +582,7 @@ class xtcPrice {
    * @return Double discount part
    */
   function xtcRemoveDC($price, $dc) {
-    $price = $price - ($price / 100 * $dc);
+    $price = (double)$price - ((double)$price / 100 * (double)$dc);
     return $price;
   }
   
@@ -594,7 +594,7 @@ class xtcPrice {
    * @return Double discount part
    */
   function xtcGetDC($price, $dc) {
-    $dc = $price / 100 * $dc;
+    $dc = (double)$price / 100 * (double)$dc;
     return $dc;
   }
   
@@ -639,7 +639,7 @@ class xtcPrice {
    * @return double
    */
   function xtcCalculateCurrEx($price, $curr) {
-    return $price * ($this->currencies[$curr]['value'] / $this->currencies[$this->actualCurr]['value']);
+    return (double)$price * ((double)$this->currencies[$curr]['value'] / (double)$this->currencies[$this->actualCurr]['value']);
   }
   
   /**
@@ -737,7 +737,7 @@ class xtcPrice {
         );
       }
     } else {
-      return $this->show_price_tax ? round($price, PRICE_PRECISION) : $price;
+      return $this->show_price_tax ? round((double)$price, PRICE_PRECISION) : (double)$price;
     }
   }
   
@@ -794,7 +794,7 @@ class xtcPrice {
         );
       }
     } else {
-      return $this->show_price_tax ? round($sPrice, PRICE_PRECISION) : $sPrice;
+      return $this->show_price_tax ? round((double)$sPrice, PRICE_PRECISION) : (double)$sPrice;
     }
   }
   
@@ -851,7 +851,7 @@ class xtcPrice {
         );
       }
     } else {
-      $return = $this->show_price_tax ? round($sPrice, PRICE_PRECISION) : $sPrice;
+      $return = $this->show_price_tax ? round((double)$sPrice, PRICE_PRECISION) : (double)$sPrice;
     }
     
     $return = $this->priceModules->FormatSpecial($return, $pID, $sPrice, $pPrice, $format, $vpeStatus);
@@ -941,7 +941,7 @@ class xtcPrice {
         );
       }
     } else {
-      return $this->show_price_tax ? round($sPrice, PRICE_PRECISION) : $sPrice;
+      return $this->show_price_tax ? round((double)$sPrice, PRICE_PRECISION) : (double)$sPrice;
     }
   }
   
@@ -983,7 +983,7 @@ class xtcPrice {
         );
       }
     } else {
-      $return = $this->show_price_tax ? round($ePrice, PRICE_PRECISION) : $ePrice;
+      $return = $this->show_price_tax ? round((double)$ePrice, PRICE_PRECISION) : (double)$ePrice;
     }
     
     $return = $this->priceModules->FormatExtension($return, $pID, $ePrice, $pPrice, $format, $vpeStatus);
