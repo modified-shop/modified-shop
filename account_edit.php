@@ -201,7 +201,7 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
   $account = xtc_db_fetch_array($account_query);
   
   foreach ($account as $key => $value) {
-    ${str_replace('customers_', '', $key)} = $value;
+    ${str_replace('customers_', '', $key)} = (($key == 'customers_dob') ? xtc_date_short($value) : $value);
   }
 }
 
@@ -227,7 +227,7 @@ if (ACCOUNT_GENDER == 'true') {
   $smarty->assign('INPUT_FEMALE', xtc_draw_radio_field(array('name'=>'gender','suffix' => FEMALE), 'f', $female));
   $smarty->assign('INPUT_DIVERSE', xtc_draw_radio_field(array('name'=>'gender','suffix' => DIVERSE, 'text' => (xtc_not_null(ENTRY_GENDER_TEXT) ? '<span class="inputRequirement">&nbsp;' . ENTRY_GENDER_TEXT . '</span>': '')), 'd', $diverse));
   // Gender Dropdown
-  $smarty->assign('INPUT_GENDER', xtc_draw_pull_down_menuNote(array ('name' => 'gender', 'text' => '&nbsp;'. (xtc_not_null(ENTRY_GENDER_TEXT) ? '<span class="inputRequirement">'.ENTRY_GENDER_TEXT.'</span>' : '')), get_customers_gender(), $gender));
+  $smarty->assign('INPUT_GENDER', xtc_draw_pull_down_menuNote(array ('name' => 'gender', 'text' => '&nbsp;'. (xtc_not_null(ENTRY_GENDER_TEXT) ? '<span class="inputRequirement">'.ENTRY_GENDER_TEXT.'</span>' : '')), get_customers_gender()));
 }
 
 if (ACCOUNT_COMPANY_VAT_CHECK == 'true') {
@@ -243,7 +243,7 @@ $smarty->assign('csID', $_SESSION['customer_cid']);
 
 if (ACCOUNT_DOB == 'true') {
   $smarty->assign('birthdate', '1');
-  $smarty->assign('INPUT_DOB', xtc_draw_input_fieldNote(array ('name' => 'dob', 'text' => '&nbsp;'. (xtc_not_null(ENTRY_DATE_OF_BIRTH_TEXT) ? '<span class="inputRequirement">'.ENTRY_DATE_OF_BIRTH_TEXT.'</span>' : '')), xtc_date_short($account['customers_dob'])));
+  $smarty->assign('INPUT_DOB', xtc_draw_input_fieldNote(array ('name' => 'dob', 'text' => '&nbsp;'. (xtc_not_null(ENTRY_DATE_OF_BIRTH_TEXT) ? '<span class="inputRequirement">'.ENTRY_DATE_OF_BIRTH_TEXT.'</span>' : ''))));
 }
 
 $smarty->assign('INPUT_EMAIL', xtc_draw_input_fieldNote(array ('name' => 'email_address', 'text' => '&nbsp;'. (xtc_not_null(ENTRY_EMAIL_ADDRESS_TEXT) ? '<span class="inputRequirement">'.ENTRY_EMAIL_ADDRESS_TEXT.'</span>' : ''))));
