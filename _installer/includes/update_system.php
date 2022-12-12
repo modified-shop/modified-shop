@@ -103,7 +103,25 @@
       }
     }
   }
-
+  
+  // delete duplicate content
+  if (defined('REVIEWS_PURCHASED_INFOS')
+      && REVIEWS_PURCHASED_INFOS != ''
+      )
+  {
+    $content_query = xtc_db_query("SELECT *
+                                     FROM ".TABLE_CONTENT_MANAGER."
+                                    WHERE content_title = '".xtc_db_input('Information on the authenticity of customer reviews')."'");
+    if (xtc_db_num_rows($content_query) > 1) {
+      while ($content = xtc_db_fetch_array($content_query)) {
+        if ($content['content_group'] != REVIEWS_PURCHASED_INFOS) {
+          xtc_db_query("DELETE FROM ".TABLE_CONTENT_MANAGER."
+                              WHERE content_group = '".(int)$content['content_group']."'");
+        }
+      }
+    }
+  }
+  
   //install new configurations
   if (file_exists(DIR_FS_CATALOG.DIR_ADMIN.'includes/configuration_installer.php')) {
     define('_VALID_XTC', true);
