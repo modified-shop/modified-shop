@@ -18,7 +18,7 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
     @media screen and (max-height: 520px) { .iframeBox_wrap{max-height:400px; height:400px; margin-top:-200px;} }    
     .iframeBox_iframe {
         width:100%; height:100%; background:#FFF; border:#000 1px solid; padding:1px;  
-        box-shadow: 0 0 10px #000; -moz-box-shadow: 0 0 10px #000; -webkit-box-shadow: 0 0 10px #000); 
+        box-shadow: 0 0 10px #000; -moz-box-shadow: 0 0 10px #000; -webkit-box-shadow: 0 0 10px #000; 
       }
     .iframeBox_title { 
         font-family: Verdana,Arial, Helvetica, sans-serif; font-size: 13px; background:#555; color:#FFF; font-weight:bold; padding:3px; margin-bottom:1px;
