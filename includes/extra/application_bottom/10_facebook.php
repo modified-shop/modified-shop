@@ -62,11 +62,11 @@
       $trackingCode = '
       fbq(\'track\', \'Purchase\', {
         currency: "'.$orders['currency'].'", 
-        value: '.round($total, 2, '.', '').'
+        value: '.number_format($total, 2, '.', '').'
       });
       ';
 
-      $endCode .= '<img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id='.TRACKING_FACEBOOK_ID.'&amp;ev=Purchase&amp;cd[value]='.round($total, 2).'&amp;cd[currency]='.$orders['currency'].'&amp;noscript=1"/>
+      $endCode .= '<img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id='.TRACKING_FACEBOOK_ID.'&amp;ev=Purchase&amp;cd[value]='.number_format($total, 2, '.', '').'&amp;cd[currency]='.$orders['currency'].'&amp;noscript=1"/>
       ';
     }
     
