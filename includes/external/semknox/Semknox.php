@@ -111,20 +111,31 @@
     
     public function uploadBatch($products_id_array) {
       $products_array = array();
-      foreach ($products_id_array as $products_id) {
-        $products_array['products'][] = $this->getProduct($products_id);
+      foreach ($products_id_array as $nr => $products_id) {
+        $product = $this->getProduct($products_id);
+        if (xtc_not_null($product)) {
+          $product = array_filter($product);
+          if (is_array($product) && count($product) > 0) {
+            $products_array['products'][] = $this->getProduct($products_id);
+          }
+        }
       }
-
-      try {
-        $response = $this->client->post(
-          sprintf('products/batch/upload?apiKey=%s&projectId=%s', $this->api_key, $this->project_id),
-          array(GuzzleHttp\RequestOptions::JSON => $this->convertToString($products_array))
-        );
-        $json = $response->getBody();
-        $response = json_decode($json);
-        $this->logger->log('semknox', __FUNCTION__.': '.date('Y-m-d H:i:s'));
-      } catch (Exception $e) {
-        $this->logger->log('semknox', __FUNCTION__.': '.$e->getMessage());
+      
+      $response = new stdClass();
+      $response->status = 'success';
+      
+      if (isset($products_array['products'])) {
+        try {
+          $response = $this->client->post(
+            sprintf('products/batch/upload?apiKey=%s&projectId=%s', $this->api_key, $this->project_id),
+            array(GuzzleHttp\RequestOptions::JSON => $this->convertToString($products_array))
+          );
+          $json = $response->getBody();
+          $response = json_decode($json);
+          $this->logger->log('semknox', __FUNCTION__.': '.date('Y-m-d H:i:s'));
+        } catch (Exception $e) {
+          $this->logger->log('semknox', __FUNCTION__.': '.$e->getMessage());
+        }
       }
     
       return $response;
@@ -228,226 +239,230 @@
                                              ON p.manufacturers_id = m.manufacturers_id
                                        WHERE p.products_id = ".$products_id."
                                          AND p.products_status = 1");
-      $products = xtc_db_fetch_array($products_query);
+      if (xtc_db_num_rows($products_query) > 0) {
+        $products = xtc_db_fetch_array($products_query);
 
-      $products_array = array(
-        'identifier' => $products['products_id'],
-        'groupIdentifier' => $products['products_id'],
-        'name' => $products['products_name'],
-        'productUrl' => $xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($products['products_id'], $products['products_name']), 'NONSSL', false),
-        'categories' => $this->getCategories($products['products_id']),
-        'images' => array(),
-        'attributes' => $this->getTags($products['products_id']),
-      );
+        $products_array = array(
+          'identifier' => $products['products_id'],
+          'groupIdentifier' => $products['products_id'],
+          'name' => $products['products_name'],
+          'productUrl' => $xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($products['products_id'], $products['products_name']), 'NONSSL', false),
+          'categories' => $this->getCategories($products['products_id']),
+          'images' => array(),
+          'attributes' => $this->getTags($products['products_id']),
+        );
     
-      if ($products['products_image'] != '') {
-        $products_array['images'][] = array(
-          'url' => $xtc_href_link($this->dir_images_popup.$products['products_image'], '', 'NONSSL', false),
-          'type' => 'LARGE',
-        );
-        $products_array['images'][] = array(
-          'url' => $xtc_href_link($this->dir_images_info.$products['products_image'], '', 'NONSSL', false),
-          'type' => 'SMALL',
-        );
-        $products_array['images'][] = array(
-          'url' => $xtc_href_link($this->dir_images_thumbnail.$products['products_image'], '', 'NONSSL', false),
-          'type' => 'THUMB',
-        );
-      }
+        if ($products['products_image'] != '') {
+          $products_array['images'][] = array(
+            'url' => $xtc_href_link($this->dir_images_popup.$products['products_image'], '', 'NONSSL', false),
+            'type' => 'LARGE',
+          );
+          $products_array['images'][] = array(
+            'url' => $xtc_href_link($this->dir_images_info.$products['products_image'], '', 'NONSSL', false),
+            'type' => 'SMALL',
+          );
+          $products_array['images'][] = array(
+            'url' => $xtc_href_link($this->dir_images_thumbnail.$products['products_image'], '', 'NONSSL', false),
+            'type' => 'THUMB',
+          );
+        }
     
-      $products_array['attributes'][] = array(
-        'key' => 'viewed',
-        'value' => $products['products_viewed'],
-        'userGroups' => $this->customers_status_all_array,
-      );
-
-      $products_array['attributes'][] = array(
-        'key' => 'ordered',
-        'value' => $products['products_ordered'],
-        'userGroups' => $this->customers_status_all_array,
-      );
-
-      $products_array['attributes'][] = array(
-        'key' => 'quantity',
-        'value' => $products['products_quantity'],
-        'userGroups' => $this->customers_status_all_array,
-      );
-
-      $products_array['attributes'][] = array(
-        'key' => 'date_added',
-        'value' => $this->getText($products['products_date_added']),
-        'userGroups' => $this->customers_status_all_array,
-      );
-
-      if ($products['products_description'] != '') {
         $products_array['attributes'][] = array(
-          'key' => 'description',
-          'value' => $this->getText($products['products_description']),
+          'key' => 'viewed',
+          'value' => $products['products_viewed'],
           'userGroups' => $this->customers_status_all_array,
         );
-      }
 
-      if ($products['products_short_description'] != '') {
         $products_array['attributes'][] = array(
-          'key' => 'description_short',
-          'value' => $this->getText($products['products_short_description']),
+          'key' => 'ordered',
+          'value' => $products['products_ordered'],
           'userGroups' => $this->customers_status_all_array,
         );
-      }
 
-      if ($products['products_ean'] != '') {
         $products_array['attributes'][] = array(
-          'key' => 'ean',
-          'value' => $this->getText($products['products_ean']),
+          'key' => 'quantity',
+          'value' => $products['products_quantity'],
           'userGroups' => $this->customers_status_all_array,
         );
-      }
 
-      if ($products['products_model'] != '') {
         $products_array['attributes'][] = array(
-          'key' => 'model',
-          'value' => $this->getText($products['products_model']),
+          'key' => 'date_added',
+          'value' => $this->getText($products['products_date_added']),
           'userGroups' => $this->customers_status_all_array,
         );
-      }
 
-      if ($products['products_manufacturers_model'] != '') {
-        $products_array['attributes'][] = array(
-          'key' => 'mpn',
-          'value' => $this->getText($products['products_manufacturers_model']),
-          'userGroups' => $this->customers_status_all_array,
-        );
-      }
-
-      if ($products['manufacturers_name'] != '') {
-        $products_array['attributes'][] = array(
-          'key' => 'brand',
-          'value' => $this->getText($products['manufacturers_name']),
-          'userGroups' => $this->customers_status_all_array,
-        );
-      }
-
-      if ($products['products_keywords'] != '') {
-        $products_array['attributes'][] = array(
-          'key' => 'keywords',
-          'value' => $this->getText($products['products_keywords']),
-          'userGroups' => $this->customers_status_all_array,
-        );
-      }      
-      
-      $reviews_avg = $product->getReviewsAverage($products['products_id']);
-      $products_array['attributes'][] = array(
-        'key' => 'reviews_avg',
-        'value' => $reviews_avg,
-        'userGroups' => $this->customers_status_all_array,
-      );
-
-      $reviews_count = $product->getReviewsCount($products['products_id']);
-      if ($reviews_count > 0) {
-        $products_array['attributes'][] = array(
-          'key' => 'reviews_count',
-          'value' => $reviews_count,
-          'userGroups' => $this->customers_status_all_array,
-        );
-        
-        for($i=1; $i<=$reviews_avg; $i++) {
+        if ($products['products_description'] != '') {
           $products_array['attributes'][] = array(
-            'key' => 'reviews_avg_'.$i,
-            'value' => 1,
+            'key' => 'description',
+            'value' => $this->getText($products['products_description']),
             'userGroups' => $this->customers_status_all_array,
           );
         }
-      }
+
+        if ($products['products_short_description'] != '') {
+          $products_array['attributes'][] = array(
+            'key' => 'description_short',
+            'value' => $this->getText($products['products_short_description']),
+            'userGroups' => $this->customers_status_all_array,
+          );
+        }
+
+        if ($products['products_ean'] != '') {
+          $products_array['attributes'][] = array(
+            'key' => 'ean',
+            'value' => $this->getText($products['products_ean']),
+            'userGroups' => $this->customers_status_all_array,
+          );
+        }
+
+        if ($products['products_model'] != '') {
+          $products_array['attributes'][] = array(
+            'key' => 'model',
+            'value' => $this->getText($products['products_model']),
+            'userGroups' => $this->customers_status_all_array,
+          );
+        }
+
+        if ($products['products_manufacturers_model'] != '') {
+          $products_array['attributes'][] = array(
+            'key' => 'mpn',
+            'value' => $this->getText($products['products_manufacturers_model']),
+            'userGroups' => $this->customers_status_all_array,
+          );
+        }
+
+        if ($products['manufacturers_name'] != '') {
+          $products_array['attributes'][] = array(
+            'key' => 'brand',
+            'value' => $this->getText($products['manufacturers_name']),
+            'userGroups' => $this->customers_status_all_array,
+          );
+        }
+
+        if ($products['products_keywords'] != '') {
+          $products_array['attributes'][] = array(
+            'key' => 'keywords',
+            'value' => $this->getText($products['products_keywords']),
+            'userGroups' => $this->customers_status_all_array,
+          );
+        }      
       
-      if ((int)$products['products_shippingtime'] > 0 && ACTIVATE_SHIPPING_STATUS == 'true') {
-        $shipping_status_array = array(
-          'shipping_name' => $this->main->getShippingStatusName($products['products_shippingtime']),
-          'shipping_image' => $this->main->getShippingStatusImage($products['products_shippingtime']),
-          'shipping_link' => $this->main->getShippingStatusName($products['products_shippingtime'], true),
+        $reviews_avg = $product->getReviewsAverage($products['products_id']);
+        $products_array['attributes'][] = array(
+          'key' => 'reviews_avg',
+          'value' => $reviews_avg,
+          'userGroups' => $this->customers_status_all_array,
         );
-        foreach ($shipping_status_array as $key => $value) {
-          if ($value != '') {
+
+        $reviews_count = $product->getReviewsCount($products['products_id']);
+        if ($reviews_count > 0) {
+          $products_array['attributes'][] = array(
+            'key' => 'reviews_count',
+            'value' => $reviews_count,
+            'userGroups' => $this->customers_status_all_array,
+          );
+        
+          for($i=1; $i<=$reviews_avg; $i++) {
             $products_array['attributes'][] = array(
-              'key' => $key,
-              'value' => $value,
+              'key' => 'reviews_avg_'.$i,
+              'value' => 1,
               'userGroups' => $this->customers_status_all_array,
             );
           }
         }
-      }
       
-      $vpe_array = $this->getVpeData($products, 1);
-      if (is_array($vpe_array)) {
-        $products_array['attributes'][] = array(
-          'key' => 'vpe_name',
-          'value' => $vpe_array['vpe_name'],
-          'userGroups' => $this->customers_status_all_array,
-        );          
-      }
+        if ((int)$products['products_shippingtime'] > 0 && ACTIVATE_SHIPPING_STATUS == 'true') {
+          $shipping_status_array = array(
+            'shipping_name' => $this->main->getShippingStatusName($products['products_shippingtime']),
+            'shipping_image' => $this->main->getShippingStatusImage($products['products_shippingtime']),
+            'shipping_link' => $this->main->getShippingStatusName($products['products_shippingtime'], true),
+          );
+          foreach ($shipping_status_array as $key => $value) {
+            if ($value != '') {
+              $products_array['attributes'][] = array(
+                'key' => $key,
+                'value' => $value,
+                'userGroups' => $this->customers_status_all_array,
+              );
+            }
+          }
+        }
       
-      $price_array = array();
-      $price_formatted_array = array();
-      $vpe_price_array = array();
-      $tax_info_array = array();
+        $vpe_array = $this->getVpeData($products, 1);
+        if (is_array($vpe_array)) {
+          $products_array['attributes'][] = array(
+            'key' => 'vpe_name',
+            'value' => $vpe_array['vpe_name'],
+            'userGroups' => $this->customers_status_all_array,
+          );          
+        }
+      
+        $price_array = array();
+        $price_formatted_array = array();
+        $vpe_price_array = array();
+        $tax_info_array = array();
 
-      foreach ($this->customers_status_array as $customers_status) {
-        $products_price = $customers_status['xtPrice']->xtcGetPrice($products['products_id'], true, 1, $products['products_tax_class_id'], $products['products_price'], 1);
-        $tax_rate = isset($customers_status['xtPrice']->TAX[$products['products_tax_class_id']]) ? $customers_status['xtPrice']->TAX[$products['products_tax_class_id']] : 0;
-        $_SESSION['customers_status'] = $customers_status['xtPrice']->cStatus;
+        foreach ($this->customers_status_array as $customers_status) {
+          $products_price = $customers_status['xtPrice']->xtcGetPrice($products['products_id'], true, 1, $products['products_tax_class_id'], $products['products_price'], 1);
+          $tax_rate = isset($customers_status['xtPrice']->TAX[$products['products_tax_class_id']]) ? $customers_status['xtPrice']->TAX[$products['products_tax_class_id']] : 0;
+          $_SESSION['customers_status'] = $customers_status['xtPrice']->cStatus;
         
-        if (!isset($price_array[$products_price['plain']])) {
-          $price_array[$products_price['plain']] = array(
-            'key' => 'price',
-            'value' => $products_price['plain'],
-            'userGroups' => array(),
-          );
+          if (!isset($price_array[$products_price['plain']])) {
+            $price_array[$products_price['plain']] = array(
+              'key' => 'price',
+              'value' => $products_price['plain'],
+              'userGroups' => array(),
+            );
 
-          $price_formatted_array[$products_price['plain']] = array(
-            'key' => 'price_formatted',
-            'value' => $customers_status['xtPrice']->xtcFormatCurrency($products_price['plain']),
-            'userGroups' => array(),
-          );
+            $price_formatted_array[$products_price['plain']] = array(
+              'key' => 'price_formatted',
+              'value' => $customers_status['xtPrice']->xtcFormatCurrency($products_price['plain']),
+              'userGroups' => array(),
+            );
           
-          $vpe_array = $this->getVpeData($products, $products_price['plain']);
-          if (is_array($vpe_array)) {
-            $vpe_price_array[$products_price['plain']] = array(
-              'key' => 'vpe_price',
-              'value' => $customers_status['xtPrice']->xtcFormatCurrency($vpe_array['vpe_price']),
+            $vpe_array = $this->getVpeData($products, $products_price['plain']);
+            if (is_array($vpe_array)) {
+              $vpe_price_array[$products_price['plain']] = array(
+                'key' => 'vpe_price',
+                'value' => $customers_status['xtPrice']->xtcFormatCurrency($vpe_array['vpe_price']),
+                'userGroups' => array(),
+              );
+            }
+          }
+
+          $price_array[$products_price['plain']]['userGroups'][] = $customers_status['id'];
+          $price_formatted_array[$products_price['plain']]['userGroups'][] = $customers_status['id'];
+          if (count($vpe_price_array) > 0) {
+            $vpe_price_array[$products_price['plain']]['userGroups'][] = $customers_status['id'];
+          }
+        
+          if (!isset($tax_info_array[$tax_rate])) {
+            $tax_info_array[$tax_rate] = array(
+              'key' => 'tax_rate_'.$tax_rate,
+              'value' => $tax_rate,
               'userGroups' => array(),
             );
           }
-        }
+          $tax_info_array[$tax_rate]['userGroups'][] = $customers_status['id'];
 
-        $price_array[$products_price['plain']]['userGroups'][] = $customers_status['id'];
-        $price_formatted_array[$products_price['plain']]['userGroups'][] = $customers_status['id'];
-        if (count($vpe_price_array) > 0) {
-          $vpe_price_array[$products_price['plain']]['userGroups'][] = $customers_status['id'];
-        }
-        
-        if (!isset($tax_info_array[$tax_rate])) {
-          $tax_info_array[$tax_rate] = array(
-            'key' => 'tax_rate_'.$tax_rate,
-            'value' => $tax_rate,
-            'userGroups' => array(),
-          );
-        }
-        $tax_info_array[$tax_rate]['userGroups'][] = $customers_status['id'];
-
-        if (GROUP_CHECK == 'true') {
-          if ($products['group_permission_'.$customers_status['id']] == 1) {
-            $products_array['settings']['includeUserGroups'][] = $customers_status['id'];
-          } else {
-            $products_array['settings']['excludeUserGroups'][] = $customers_status['id'];
+          if (GROUP_CHECK == 'true') {
+            if ($products['group_permission_'.$customers_status['id']] == 1) {
+              $products_array['settings']['includeUserGroups'][] = $customers_status['id'];
+            } else {
+              $products_array['settings']['excludeUserGroups'][] = $customers_status['id'];
+            }
           }
         }
-      }
 
-      $products_array['attributes'] = array_merge($products_array['attributes'], array_values($price_array));
-      $products_array['attributes'] = array_merge($products_array['attributes'], array_values($price_formatted_array));
-      $products_array['attributes'] = array_merge($products_array['attributes'], array_values($vpe_price_array));
-      $products_array['attributes'] = array_merge($products_array['attributes'], array_values($tax_info_array));
-      
-      return $this->encode_utf8($products_array);
+        $products_array['attributes'] = array_merge($products_array['attributes'], array_values($price_array));
+        $products_array['attributes'] = array_merge($products_array['attributes'], array_values($price_formatted_array));
+        $products_array['attributes'] = array_merge($products_array['attributes'], array_values($vpe_price_array));
+        $products_array['attributes'] = array_merge($products_array['attributes'], array_values($tax_info_array));
+            
+        if (count($products_array['categories']) > 0) {
+          return $this->encode_utf8($products_array);
+        }
+      }
     }
   
   
@@ -459,10 +474,16 @@
                                          WHERE products_id = ".$products_id);
       while ($categories = xtc_db_fetch_array($categories_query)) {
         $cPath = xtc_get_category_path($categories['categories_id']);
-        $categories_array[]['path'] = array_map(array($this, 'getCategoriesNames'), explode('_', $cPath));
+
+        $path = array_map(array($this, 'getCategoriesNames'), explode('_', $cPath));
+        $path = array_filter($path);
+        
+        if (count($path) > 0) {
+          $categories_array[]['path'] = $path;
+        }
       }
     
-      return  $categories_array;
+      return $categories_array;
     }
   
   
