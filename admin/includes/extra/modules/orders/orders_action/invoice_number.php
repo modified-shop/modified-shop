@@ -20,7 +20,11 @@
   {
     $order = new order($oID);
     if ($order->info['ibn_billnr'] == '') {
-      $n = (int)MODULE_INVOICE_NUMBER_IBN_BILLNR;
+      $billnr_query = xtc_db_query("SELECT configuration_value
+                                      FROM ".TABLE_CONFIGURATION."
+                                     WHERE configuration_key = 'MODULE_INVOICE_NUMBER_IBN_BILLNR'");
+      $billnr = xtc_db_fetch_array($billnr_query);
+      $n = (int)$billnr['configuration_value'];
       
       if ($n > 0) {
         xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
