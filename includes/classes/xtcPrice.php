@@ -295,7 +295,7 @@ class xtcPrice {
             $graduated_price_array[$this->actualGroup][$pID][$graduated_price['quantity']] = $graduated_price['personal_offer'];
           }
         }
-        if (count($graduated_price_array) > 0
+        if (count($graduated_price_array[$this->actualGroup][$pID]) > 0
             && !isset($graduated_price_array[$this->actualGroup][$pID][1])
             )
         {
