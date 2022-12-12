@@ -189,7 +189,7 @@
 
     $total = get_order_total($last_order);
 
-    return "        "."_paq.push(['trackGoal', '" . $goal . "', '" . $total . "' ]);\n";
+    return "        "."_paq.push(['trackGoal', '" . $goal . "', '" . formatMatomoPrice($total) . "' ]);\n";
   }
 
   /* format price */

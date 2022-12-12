@@ -43,7 +43,7 @@ if (basename($PHP_SELF) == FILENAME_CHECKOUT_SUCCESS
   var google_conversion_id = <?php echo GOOGLE_CONVERSION_ID; ?>;
   var google_conversion_language = "<?php echo GOOGLE_LANG; ?>";
   var google_conversion_label = "<?php echo GOOGLE_CONVERSION_LABEL; ?>";
-  var google_conversion_value = <?php echo number_format($total, 2); ?>;
+  var google_conversion_value = <?php echo number_format($total, 2, '.', ''); ?>;
   var google_conversion_currency = "<?php echo $currency['currency']; ?>";
   var google_remarketing_only = false;
   /* ]]> */

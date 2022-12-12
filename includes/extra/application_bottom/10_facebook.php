@@ -62,7 +62,7 @@
       $trackingCode = '
       fbq(\'track\', \'Purchase\', {
         currency: "'.$orders['currency'].'", 
-        value: '.round($total, 2).'
+        value: '.round($total, 2, '.', '').'
       });
       ';
 

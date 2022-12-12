@@ -235,7 +235,7 @@
         $item['products_id'],
         addslashes($item['products_name']),
         addslashes($item['categories_name']),
-        $item['products_price'],
+        number_format($item['products_price'], 2, '.', ''),
         $item['products_quantity']
       );
     }
@@ -295,9 +295,9 @@
     $addTrans = sprintf("          ga('ecommerce:addTransaction', {'id': '%s', 'affiliation': '%s', 'revenue': '%s', 'shipping': '%s', 'tax': '%s', 'currency': '%s'});\n",
       $last_order,
       addslashes(STORE_NAME),
-      $total,
-      $shipping,
-      $tax,
+      number_format($total, 2, '.', ''),
+      number_format($shipping, 2, '.', ''),
+      number_format($tax, 2, '.', ''),
       $currency['currency']
     );
 
@@ -335,7 +335,7 @@
         addslashes($item['products_name']),
         $item['products_id'],
         addslashes($item['categories_name']),
-        $item['products_price'],
+        number_format($item['products_price'], 2, '.', ''),
         $item['products_quantity'],
         $currency['currency']
       );

@@ -45,10 +45,10 @@
     $orderCode = null;
     if (strpos($PHP_SELF, FILENAME_CHECKOUT_SUCCESS) !== false
         && TRACKING_GOOGLE_ECOMMERCE == 'true'
-        && !in_array('GA-'.$last_order, $_SESSION['tracking']['order'])
+        && !in_array('GTAG-'.$last_order, $_SESSION['tracking']['order'])
         )
     {
-      $_SESSION['tracking']['order'][] = 'GA-'.$last_order;
+      $_SESSION['tracking']['order'][] = 'GTAG-'.$last_order;
   
       $orderCode = getOrderDetailsGtag();
     }
@@ -117,7 +117,7 @@
         'category': '".addslashes($item['categories_name'])."',
         'list_position': ".$i.",
         'quantity': ".$item['products_quantity'].",
-        'price': '".number_format($item['products_price'], 2)."'
+        'price': '".number_format($item['products_price'], 2, '.', '')."'
       }";
       $i ++;
     }
@@ -128,9 +128,9 @@
     'transaction_id': '".$last_order."',
     'affiliation': '".addslashes(STORE_NAME)."',
     'currency': '".$currency['currency']."',
-    'value': ".number_format($total, 2).",
-    'tax': ".number_format($tax, 2).",
-    'shipping': ".number_format($shipping, 2).",
+    'value': ".number_format($total, 2, 2, '.', '').",
+    'tax': ".number_format($tax, 2, 2, '.', '').",
+    'shipping': ".number_format($shipping, 2, 2, '.', '').",
     'items': [".implode(',', $addItem)."
     ]
   });";
