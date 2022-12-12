@@ -128,9 +128,9 @@
     'transaction_id': '".$last_order."',
     'affiliation': '".addslashes(STORE_NAME)."',
     'currency': '".$currency['currency']."',
-    'value': ".number_format($total, 2, 2, '.', '').",
-    'tax': ".number_format($tax, 2, 2, '.', '').",
-    'shipping': ".number_format($shipping, 2, 2, '.', '').",
+    'value': ".number_format($total, 2, '.', '').",
+    'tax': ".number_format($tax, 2, '.', '').",
+    'shipping': ".number_format($shipping, 2, '.', '').",
     'items': [".implode(',', $addItem)."
     ]
   });";
