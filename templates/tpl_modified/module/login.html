@@ -12,13 +12,7 @@
     <h4>{#title_returning#}</h4>
     {$FORM_ACTION}
     <p>{#text_returning#}</p>
-    {if $smarty.get.order_id}
-      {#text_after_login1#}
-    {elseif $smarty.get.review_prod_id}
-      {#text_after_login2#}
-    {else}
-      {#text_after_login#}
-    {/if}
+    {#text_after_login#}
     <br />  
     <table>
       <tr>
