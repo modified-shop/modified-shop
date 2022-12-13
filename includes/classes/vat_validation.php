@@ -54,10 +54,6 @@ class vat_validation {
     $customers_status_id = DEFAULT_CUSTOMERS_STATUS_ID;
     $customers_vat_status_id = DEFAULT_CUSTOMERS_VAT_STATUS_ID;
     $customers_vat_status_id_local = DEFAULT_CUSTOMERS_VAT_STATUS_ID_LOCAL;
-
-    if ($guest === true) {
-      $customers_status_id = DEFAULT_CUSTOMERS_STATUS_ID_GUEST;
-    }
     
     $error = false;
     if ($vat_id != '') {
@@ -118,6 +114,10 @@ class vat_validation {
       }
     }
     
+    if ($guest === true) {
+      $status = DEFAULT_CUSTOMERS_STATUS_ID_GUEST;
+    }
+
     // check if is admin
     if ($customers_id != '') {
       $customers_status_query = xtc_db_query("SELECT customers_status 
