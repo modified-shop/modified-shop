@@ -16,7 +16,7 @@
 
 require ('includes/application_top.php');
 
-$content_data = $main->getContentData((int)$_GET['coID'], '', '', (isset($_GET['preview']) ? true : false));
+$content_data = $main->getContentData(((isset($_GET['coID'])) ? (int)$_GET['coID'] : 0), '', '', (isset($_GET['preview']) ? true : false));
 
 if (!isset($_GET['coID']) || $_GET['coID'] == '' || count($content_data) < 1) {
   die('Direct Access to this location is not allowed.');
