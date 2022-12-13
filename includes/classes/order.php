@@ -34,14 +34,13 @@
     define('CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION', 'true'); // 'true' 'false'  --- default: true
   }
 
-  if (!defined('RUN_MODE_ADMIN')) {
-    // include needed functions
-    require_once(DIR_FS_INC . 'xtc_date_long.inc.php');
-    require_once(DIR_FS_INC . 'xtc_address_format.inc.php');
-    require_once(DIR_FS_INC . 'xtc_get_country_name.inc.php');
-    require_once(DIR_FS_INC . 'xtc_get_zone_code.inc.php');
-    require_once(DIR_FS_INC . 'xtc_get_tax_description.inc.php');
-  }
+  // include needed functions
+  require_once(DIR_FS_INC . 'xtc_date_long.inc.php');
+  require_once(DIR_FS_INC . 'xtc_address_format.inc.php');
+  require_once(DIR_FS_INC . 'xtc_get_country_name.inc.php');
+  require_once(DIR_FS_INC . 'xtc_get_zone_code.inc.php');
+  require_once(DIR_FS_INC . 'xtc_get_tax_description.inc.php');
+  require_once(DIR_FS_INC . 'get_country_id.inc.php');
 
   class order {
     var $info, $totals, $products, $customer, $delivery, $content_type;
@@ -170,6 +169,12 @@
       $this->customer['format_id'] = $order['customers_address_format_id'];
       $this->customer['ID'] = $order['customers_id'];
       $this->customer['cIP'] = $order['customers_ip'];
+      $this->customer['country_id'] = get_country_id($order['customers_country_iso_code_2']);
+      $this->customer['country'] = array(
+        'id' => get_country_id($order['customers_country_iso_code_2']),
+        'title' => $order['customers_country'],
+        'iso_code_2' => $order['customers_country_iso_code_2'],
+      );
 
       // build delivery array dynamically
       foreach ($order as $key => $val) {
@@ -180,6 +185,12 @@
       // additional delivery
       $this->delivery['country_iso_2'] = $order['delivery_country_iso_code_2'];
       $this->delivery['format_id'] = $order['delivery_address_format_id'];
+      $this->delivery['country_id'] = get_country_id($order['delivery_country_iso_code_2']);
+      $this->delivery['country'] = array(
+        'id' => get_country_id($order['delivery_country_iso_code_2']),
+        'title' => $order['delivery_country'],
+        'iso_code_2' => $order['delivery_country_iso_code_2'],
+      );
 
       if (!defined('RUN_MODE_ADMIN')) {
         if (empty(trim($this->delivery['name'])) && empty(trim($this->delivery['street_address']))) {
@@ -196,6 +207,12 @@
       // additional billing
       $this->billing['country_iso_2'] = $order['billing_country_iso_code_2'];
       $this->billing['format_id'] = $order['billing_address_format_id'];
+      $this->billing['country_id'] = get_country_id($order['billing_country_iso_code_2']);
+      $this->billing['country'] = array(
+        'id' => get_country_id($order['billing_country_iso_code_2']),
+        'title' => $order['billing_country'],
+        'iso_code_2' => $order['billing_country_iso_code_2'],
+      );
 
 
       $index = 0;
