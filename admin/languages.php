@@ -46,7 +46,7 @@
             'image' => xtc_db_prepare_input($_POST['image']),  
             'directory' => xtc_db_prepare_input($_POST['directory']),  
             'sort_order' => xtc_db_prepare_input($_POST['sort_order']), 
-            'language_charset' => xtc_db_prepare_input($_POST['charset']),
+            'language_charset' => xtc_db_prepare_input($_POST['language_charset']),
           );
         xtc_db_perform(TABLE_LANGUAGES, $sql_data_array);      
         $lID = xtc_db_insert_id();
@@ -84,7 +84,7 @@
           'directory' => xtc_db_prepare_input($_POST['directory']),  
           //'status' => xtc_db_prepare_input($_POST['status']),  
           'sort_order' => xtc_db_prepare_input($_POST['sort_order']), 
-          'language_charset' => xtc_db_prepare_input($_POST['charset']),
+          'language_charset' => xtc_db_prepare_input($_POST['language_charset']),
           //'status_admin' => xtc_db_prepare_input($_POST['status_admin'])
         ); 
         xtc_db_perform(TABLE_LANGUAGES, $sql_data_array, 'update', 'languages_id = \''.$lID.'\'');        
@@ -525,7 +525,7 @@
                 $contents[] = array('text' => TEXT_INFO_INSERT_INTRO);
                 $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_NAME . '<br />' . xtc_draw_input_field('name'));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_CODE . '<br />' . xtc_draw_input_field('code'));
-                $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_CHARSET . '<br />' . xtc_draw_input_field('charset'));
+                $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_CHARSET . '<br />' . xtc_draw_input_field('language_charset'));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_IMAGE . '<br />' . xtc_draw_input_field('image', 'icon.gif'));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_DIRECTORY . '<br />' . xtc_draw_input_field('directory'));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_SORT_ORDER . '<br />' . xtc_draw_input_field('sort_order'));
@@ -538,7 +538,7 @@
                 $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
                 $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_NAME . '<br />' . xtc_draw_input_field('name', $lInfo->name));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_CODE . '<br />' . xtc_draw_input_field('code', $lInfo->code));
-                $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_CHARSET . '<br />' . xtc_draw_input_field('charset', $lInfo->language_charset));
+                $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_CHARSET . '<br />' . xtc_draw_input_field('language_charset', $lInfo->language_charset));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_IMAGE . '<br />' . xtc_draw_input_field('image', $lInfo->image));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_DIRECTORY . '<br />' . xtc_draw_input_field('directory', $lInfo->directory));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_SORT_ORDER . '<br />' . xtc_draw_input_field('sort_order', $lInfo->sort_order));
