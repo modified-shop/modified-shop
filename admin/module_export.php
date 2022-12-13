@@ -85,30 +85,31 @@
         break;
       //EOF NEW MODULE PROCESSING
       case 'save':
-        if (is_array($_POST['configuration'])) {
-          if (count($_POST['configuration'])) {
-            foreach ($_POST['configuration'] as $key => $value) {
-              if (is_array($_POST['configuration'][$key])) {
-                // multi language config
-                $keys = array_keys($_POST['configuration'][$key]);
-                if (gettype(array_shift($keys)) == 'string') {
-                  $config_value = array();
-                  foreach ($_POST['configuration'][$key] as $k => $v) {
-                    if (xtc_not_null($v)) {
-                      $config_value[] =  $k . '::' . $v;
-                    }
+        if (isset($_POST['configuration']) 
+            && is_array($_POST['configuration'])
+            )
+        {
+          foreach ($_POST['configuration'] as $key => $value) {
+            if (is_array($_POST['configuration'][$key])) {
+              // multi language config
+              $keys = array_keys($_POST['configuration'][$key]);
+              if (gettype(array_shift($keys)) == 'string') {
+                $config_value = array();
+                foreach ($_POST['configuration'][$key] as $k => $v) {
+                  if (xtc_not_null($v)) {
+                    $config_value[] =  $k . '::' . $v;
                   }
-                  $value = implode('||', $config_value);
-                } else {
-                  $value = implode(',', $_POST['configuration'][$key]);
                 }
+                $value = implode('||', $config_value);
+              } else {
+                $value = implode(',', $_POST['configuration'][$key]);
               }
-              xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " 
-                               SET configuration_value = '" . xtc_db_input($value) . "',
-                                   last_modified = NOW()
-                             WHERE configuration_key = '" . $key . "'");
-              if (@strpos($key,'FILE') !== false) $file = $value;
             }
+            xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " 
+                             SET configuration_value = '" . xtc_db_input($value) . "',
+                                 last_modified = NOW()
+                           WHERE configuration_key = '" . $key . "'");
+            if (@strpos($key,'FILE') !== false) $file = $value;
           }
         }
         $class = basename($module_class);
