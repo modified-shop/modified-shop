@@ -689,7 +689,7 @@ function GetTableData($table) {
       }
 
       //BOF Complete Inserts ja/nein
-      if ($dump['complete_inserts'] == 'yes') {
+      if (isset($dump['complete_inserts']) && $dump['complete_inserts'] == 'yes') {
 
         while ($rows = xtc_db_fetch_array($rows_query)) {
           $insert = 'INSERT INTO `'.$table.'` (`' . implode('`, `', $table_list) . '`) VALUES (';
