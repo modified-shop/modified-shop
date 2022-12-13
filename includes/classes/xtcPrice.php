@@ -207,7 +207,7 @@ class xtcPrice {
     }
 
     // check Product Discount
-    if ($discount = $this->xtcCheckDiscount($pID)) {
+    if ($pPrice > 0 && $discount = $this->xtcCheckDiscount($pID)) {
       return $this->xtcFormatSpecialDiscount($pID, $discount, $pPrice, $format, $vpeStatus);
     }
     return $this->xtcFormat($pPrice, $format, 0, false, $vpeStatus, $pID);
@@ -874,7 +874,7 @@ class xtcPrice {
     if ($pPrice == 0) {
       return $this->xtcFormat($sPrice, $format, 0, false, $vpeStatus);
     }
-    if ($discount = $this->xtcCheckDiscount($pID)) {
+    if ($pPrice > 0 && $discount = $this->xtcCheckDiscount($pID)) {
       $sPrice -= $sPrice / 100 * $discount;
     }
     if ($format) {
