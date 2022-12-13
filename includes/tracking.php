@@ -82,7 +82,21 @@ if (!isset($_SESSION['tracking']['pageview_history'])) {
 }
 
 if (!isset($forbidden_history_sites) || !is_array($forbidden_history_sites)) $forbidden_history_sites = array();
-$forbidden_history_sites = array_merge(array('ajax.php', 'login_admin.php', FILENAME_COOKIE_USAGE, FILENAME_REDIRECT), $forbidden_history_sites);
+$fobidden_array = array(
+  'ajax.php', 
+  'autocomplete.php', 
+  'login_admin.php', 
+  FILENAME_COOKIE_USAGE, 
+  FILENAME_GV_REDEEM,
+  FILENAME_GV_SEND,
+  FILENAME_REDIRECT, 
+  FILENAME_POPUP_CONTENT,
+  FILENAME_POPUP_COUPON_HELP,
+  FILENAME_POPUP_SEARCH_HELP,
+  FILENAME_PRINT_ORDER,
+  FILENAME_PRINT_PRODUCT_INFO,
+);
+$forbidden_history_sites = array_merge($fobidden_array, $forbidden_history_sites);
 
 if (!in_array(basename($PHP_SELF), $forbidden_history_sites) 
     && end($_SESSION['tracking']['pageview_history']) != $req_url
