@@ -16,7 +16,7 @@
     $keywords = $_GET['keywords'] = !empty($_GET['keywords']) ? stripslashes(trim(urldecode($_GET['keywords']))) : false;
     $pfrom = $_GET['pfrom'] = !empty($_GET['pfrom']) ? str_replace(',', '.', stripslashes(trim(urldecode($_GET['pfrom'])))) : false;
     $pto = $_GET['pto'] = !empty($_GET['pto']) ? str_replace(',', '.', stripslashes(trim(urldecode($_GET['pto'])))) : false;
-    $manufacturers_id  = $_GET['manufacturers_id'] = !empty($_GET['manufacturers_id']) ? (int)$_GET['manufacturers_id'] : false;
+    $manufacturers_id  = $_GET['filter_id'] = !empty($_GET['filter_id']) ? (int)$_GET['filter_id'] : false;
     $categories_id = $_GET['categories_id'] = !empty($_GET['categories_id']) ? (int)$_GET['categories_id'] : false;
     $_GET['inc_subcat'] = !empty($_GET['inc_subcat']) ? (int)$_GET['inc_subcat'] : null;
 

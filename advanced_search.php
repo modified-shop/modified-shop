@@ -36,7 +36,7 @@ $smarty->assign('BUTTON_SUBMIT', xtc_image_submit('button_search.gif', IMAGE_BUT
 
 $smarty->assign('SELECT_CATEGORIES',xtc_draw_pull_down_menu('categories_id', xtc_get_categories(array (array ('id' => '', 'text' => TEXT_ALL_CATEGORIES))), ((isset($_GET['categories_id'])) ? (int)$_GET['categories_id'] : '')));
 $smarty->assign('ENTRY_SUBCAT',xtc_draw_checkbox_field('inc_subcat', '1', ((isset($_GET['inc_subcat'])) ? true : false)));
-$smarty->assign('SELECT_MANUFACTURERS',xtc_draw_pull_down_menu('manufacturers_id', xtc_get_manufacturers(array (array ('id' => '', 'text' => TEXT_ALL_MANUFACTURERS))), ((isset($_GET['manufacturers_id'])) ? (int)$_GET['manufacturers_id'] : '')));
+$smarty->assign('SELECT_MANUFACTURERS',xtc_draw_pull_down_menu('filter_id', xtc_get_manufacturers(array (array ('id' => '', 'text' => TEXT_ALL_MANUFACTURERS))), ((isset($_GET['filter_id'])) ? (int)$_GET['filter_id'] : '')));
 $smarty->assign('SELECT_PFROM',xtc_draw_input_field('pfrom', ((isset($_GET['pfrom'])) ? (float)$_GET['pfrom'] : '')));
 $smarty->assign('SELECT_PTO',xtc_draw_input_field('pto', ((isset($_GET['pto'])) ? (float)$_GET['pto'] : '')));
 
