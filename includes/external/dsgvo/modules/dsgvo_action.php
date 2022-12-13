@@ -35,7 +35,7 @@
           }
         }
         
-        if (count($_SESSION['dsgvo']) < 1) {
+        if (empty($_SESSION['dsgvo']) || !is_array($_SESSION['dsgvo'])) {
           unset($_SESSION['dsgvo']);
           
           if (strpos(basename($PHP_SELF), 'checkout') !== false) {
@@ -66,7 +66,7 @@
         }
       }
       
-      if (count($_SESSION['dsgvo']) > 0) {
+      if (!empty($_SESSION['dsgvo'])) {
         $messageStack->add('dsgvo', TEXT_DSGVO_ERROR);
       }
     }
