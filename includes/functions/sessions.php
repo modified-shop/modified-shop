@@ -82,7 +82,7 @@
     }
 
     function _sess_gc($maxlifetime) {
-      if (DELETE_GUEST_ACCOUNT == 'true') {
+      if (defined('DELETE_GUEST_ACCOUNT') && DELETE_GUEST_ACCOUNT == 'true') {
         $session_query = xtc_db_query("SELECT sesskey,
                                               value
                                          FROM " . TABLE_SESSIONS . "
