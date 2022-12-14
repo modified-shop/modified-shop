@@ -135,11 +135,15 @@
 
     function getParent($catID) {
       if (!isset($this->PARENT[$catID])) {
+        $this->PARENT[$catID] = 0;
+        
         $parent_query = xtc_db_query("SELECT parent_id 
                                         FROM " . TABLE_CATEGORIES . " 
                                        WHERE categories_id='" . $catID . "'");
-        $parent_data = xtc_db_fetch_array($parent_query);
-        $this->PARENT[$catID] = $parent_data['parent_id'];        
+        if (xtc_db_num_rows($parent_query) > 0) {
+          $parent_data = xtc_db_fetch_array($parent_query);
+          $this->PARENT[$catID] = $parent_data['parent_id'];  
+        }      
       }
       
       return $this->PARENT[$catID];
