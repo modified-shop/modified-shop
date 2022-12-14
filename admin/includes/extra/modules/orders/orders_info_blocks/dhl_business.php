@@ -10,7 +10,7 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-  if (defined('MODULE_DHL_STATUS') && MODULE_DHL_STATUS == 'True') { 
+  if (defined('MODULE_DHL_BUSINESS_STATUS') && MODULE_DHL_BUSINESS_STATUS == 'True') { 
     ?>
     <div class="heading"><?php echo 'DHL:'; ?></div>
     <?php
@@ -19,7 +19,7 @@
       ?>
       <table cellspacing="0" cellpadding="5" class="table borderall">
         <tr>
-          <td class="smallText" align="center"><strong><?php echo TABLE_HEADING_DHL_SHIPPING_NUMBER; ?></strong></td>
+          <td class="smallText" align="center"><strong><?php echo TABLE_HEADING_DHL_BUSINESS_SHIPPING_NUMBER; ?></strong></td>
           <td class="smallText" align="center" style="width:100px;"><strong><?php echo TABLE_HEADING_DATE; ?></strong></td>
           <td class="smallText" align="center" style="width:150px;"><strong><?php echo TABLE_HEADING_ACTION; ?></strong></td>
         </tr>
@@ -51,9 +51,9 @@
               );
 
               $avs_array = array(
-                array('id' => '0', 'text' => TEXT_DHL_NO),
-                array('id' => '16', 'text' => sprintf(TEXT_DHL_AVS_YEAR, 16)),
-                array('id' => '18', 'text' => sprintf(TEXT_DHL_AVS_YEAR, 18)),
+                array('id' => '0', 'text' => TEXT_DHL_BUSINESS_NO),
+                array('id' => '16', 'text' => sprintf(TEXT_DHL_BUSINESS_AVS_YEAR, 16)),
+                array('id' => '18', 'text' => sprintf(TEXT_DHL_BUSINESS_AVS_YEAR, 18)),
               );
 
               $endorsement_array = array(
@@ -66,8 +66,8 @@
                 array('id' => '1', 'text' => 'Warenpost'),
               );
               
-              $orders_statuses_selected = MODULE_DHL_STATUS_UPDATE;
-              if (MODULE_DHL_STATUS_UPDATE == '0') {
+              $orders_statuses_selected = MODULE_DHL_BUSINESS_STATUS_UPDATE;
+              if (MODULE_DHL_BUSINESS_STATUS_UPDATE == '0') {
                 $orders_statuses_selected = $order->info['orders_status'];
               }
               
@@ -85,48 +85,48 @@
             ?>
             <table cellspacing="0" cellpadding="5" class="tableInput border0" style="padding:0;">
               <tr>
-                <td style="width:16%;padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_WEIGHT; ?></td>
+                <td style="width:16%;padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_BUSINESS_WEIGHT; ?></td>
                 <td style="width:16%;padding:5px;border-width: 0 1px 1px 0;"><?php echo xtc_draw_input_field('weight', $weight, 'style="width: 120px; padding:5px;" placeholder="optional..."'); ?></td>
-                <td style="width:16%;padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_TYPE; ?></td>
-                <td style="width:16%;padding:5px;border-width: 0 1px 1px 0;"><?php echo xtc_draw_pull_down_menu('type', $type_array, ((MODULE_DHL_PRODUCT == 'Paket') ? 0 : 1), 'style="width:120px;"'); ?></td>
-                <td style="width:16%;padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_CODEABLE; ?></td>
-                <td style="width:16%;padding:5px;border-width: 0 0 1px 0;"><?php echo xtc_draw_pull_down_menu('codeable', 'checkbox', ((MODULE_DHL_CODING == 'True') ? true : false), 'style="width:120px;"'); ?></td>
+                <td style="width:16%;padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_BUSINESS_TYPE; ?></td>
+                <td style="width:16%;padding:5px;border-width: 0 1px 1px 0;"><?php echo xtc_draw_pull_down_menu('type', $type_array, ((MODULE_DHL_BUSINESS_PRODUCT == 'Paket') ? 0 : 1), 'style="width:120px;"'); ?></td>
+                <td style="width:16%;padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_BUSINESS_CODEABLE; ?></td>
+                <td style="width:16%;padding:5px;border-width: 0 0 1px 0;"><?php echo xtc_draw_pull_down_menu('codeable', 'checkbox', ((MODULE_DHL_BUSINESS_CODING == 'True') ? true : false), 'style="width:120px;"'); ?></td>
               </tr>
               <tr class="dhl_expand dhl_toggle">
-                <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_INSURANCE; ?></td>
+                <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_BUSINESS_INSURANCE; ?></td>
                 <td style="padding:5px;border-width: 0 1px 1px 0;"><?php echo xtc_draw_pull_down_menu('insurance', $insurance_array, '', 'style="width:120px;"'); ?></td>
-                <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_RETOURE; ?></td>
-                <td style="padding:5px;border-width: 0 1px 1px 0;"><?php echo xtc_draw_pull_down_menu('retoure', 'checkbox', ((MODULE_DHL_RETOURE == 'True') ? true : false), 'style="width:120px;"'); ?></td>
-                <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_STATUS_UPDATE; ?></td>
-                <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo xtc_draw_pull_down_menu('status_update', array_merge(array(array('id' => '0', 'text' => TEXT_DHL_NO)), $orders_statuses), ((MODULE_DHL_STATUS_UPDATE == '0') ? $order->info['orders_status'] : MODULE_DHL_STATUS_UPDATE), 'style="width:120px;"'); ?></td>
+                <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_BUSINESS_RETOURE; ?></td>
+                <td style="padding:5px;border-width: 0 1px 1px 0;"><?php echo xtc_draw_pull_down_menu('retoure', 'checkbox', ((MODULE_DHL_BUSINESS_RETOURE == 'True') ? true : false), 'style="width:120px;"'); ?></td>
+                <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_BUSINESS_STATUS_UPDATE; ?></td>
+                <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo xtc_draw_pull_down_menu('status_update', array_merge(array(array('id' => '0', 'text' => TEXT_DHL_BUSINESS_NO)), $orders_statuses), ((MODULE_DHL_BUSINESS_STATUS_UPDATE == '0') ? $order->info['orders_status'] : MODULE_DHL_BUSINESS_STATUS_UPDATE), 'style="width:120px;"'); ?></td>
               </tr>
               <tr class="dhl_expand dhl_toggle">
-                <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_AVS; ?></td>
-                <td style="padding:5px;border-width: 0 1px 1px 0;"><?php echo xtc_draw_pull_down_menu('avs', $avs_array, MODULE_DHL_AVS, 'style="width:120px;"'); ?></td>
-                <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_PERSONAL; ?></td>
-                <td style="padding:5px;border-width: 0 1px 1px 0;"><?php echo xtc_draw_pull_down_menu('personal', 'checkbox', ((MODULE_DHL_PERSONAL == 'True') ? true : false), 'style="width:120px;"'); ?></td>
-                <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_NO_NEIGHBOUR; ?></td>
-                <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo xtc_draw_pull_down_menu('no_neighbour', 'checkbox', ((MODULE_DHL_NO_NEIGHBOUR == 'True') ? true : false), 'style="width:120px;"'); ?></td>
+                <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_BUSINESS_AVS; ?></td>
+                <td style="padding:5px;border-width: 0 1px 1px 0;"><?php echo xtc_draw_pull_down_menu('avs', $avs_array, MODULE_DHL_BUSINESS_AVS, 'style="width:120px;"'); ?></td>
+                <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_BUSINESS_PERSONAL; ?></td>
+                <td style="padding:5px;border-width: 0 1px 1px 0;"><?php echo xtc_draw_pull_down_menu('personal', 'checkbox', ((MODULE_DHL_BUSINESS_PERSONAL == 'True') ? true : false), 'style="width:120px;"'); ?></td>
+                <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_BUSINESS_NO_NEIGHBOUR; ?></td>
+                <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo xtc_draw_pull_down_menu('no_neighbour', 'checkbox', ((MODULE_DHL_BUSINESS_NO_NEIGHBOUR == 'True') ? true : false), 'style="width:120px;"'); ?></td>
               </tr>
               <tr class="dhl_expand dhl_toggle">
-                <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_IDENT; ?></td>
-                <td style="padding:5px;border-width: 0 1px 1px 0;"><?php echo xtc_draw_pull_down_menu('ident', $avs_array, MODULE_DHL_IDENT, 'style="width:120px;"'); ?></td>
-                <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_DOB; ?></td>
+                <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_BUSINESS_IDENT; ?></td>
+                <td style="padding:5px;border-width: 0 1px 1px 0;"><?php echo xtc_draw_pull_down_menu('ident', $avs_array, MODULE_DHL_BUSINESS_IDENT, 'style="width:120px;"'); ?></td>
+                <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_BUSINESS_DOB; ?></td>
                 <td style="padding:5px;border-width: 0 1px 1px 0;"><?php echo xtc_draw_input_field('dob', ((strtotime($order->customer['dob']) > 0 && strtotime($order->customer['dob']) != false) ? date('d.m.Y', strtotime($order->customer['dob'])) : ''), 'style="width: 120px; padding:5px;" placeholder="dd.mm.YYYY"'); ?></td>
-                <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_BULKY; ?></td>
-                <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo xtc_draw_pull_down_menu('bulky', 'checkbox', ((MODULE_DHL_BULKY == 'True') ? true : false), 'style="width:120px;"'); ?></td>
+                <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_BUSINESS_BULKY; ?></td>
+                <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo xtc_draw_pull_down_menu('bulky', 'checkbox', ((MODULE_DHL_BUSINESS_BULKY == 'True') ? true : false), 'style="width:120px;"'); ?></td>
               </tr>
               <tr class="dhl_expand dhl_toggle">
-                <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_PARCEL_OUTLET; ?></td>
-                <td style="padding:5px;border-width: 0 1px 1px 0;"><?php echo xtc_draw_pull_down_menu('parcel_outlet', 'checkbox', ((MODULE_DHL_PARCEL_OUTLET == 'True') ? true : false), 'style="width:120px;"'); ?></td>
-                <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_PREMIUM; ?></td>
-                <td style="padding:5px;border-width: 0 1px 1px 0;"><?php echo xtc_draw_pull_down_menu('premium', 'checkbox', ((MODULE_DHL_PREMIUM == 'True') ? true : false), 'style="width:120px;"'); ?></td>
-                <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_NOTIFICATION; ?></td>
-                <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo xtc_draw_pull_down_menu('notification', 'checkbox', ((MODULE_DHL_NOTIFICATION == 'True') ? true : false), 'style="width:120px;"'); ?></td>
+                <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_BUSINESS_PARCEL_OUTLET; ?></td>
+                <td style="padding:5px;border-width: 0 1px 1px 0;"><?php echo xtc_draw_pull_down_menu('parcel_outlet', 'checkbox', ((MODULE_DHL_BUSINESS_PARCEL_OUTLET == 'True') ? true : false), 'style="width:120px;"'); ?></td>
+                <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_BUSINESS_PREMIUM; ?></td>
+                <td style="padding:5px;border-width: 0 1px 1px 0;"><?php echo xtc_draw_pull_down_menu('premium', 'checkbox', ((MODULE_DHL_BUSINESS_PREMIUM == 'True') ? true : false), 'style="width:120px;"'); ?></td>
+                <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_BUSINESS_NOTIFICATION; ?></td>
+                <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo xtc_draw_pull_down_menu('notification', 'checkbox', ((MODULE_DHL_BUSINESS_NOTIFICATION == 'True') ? true : false), 'style="width:120px;"'); ?></td>
               </tr>
               <tr class="dhl_expand dhl_toggle">
-                <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_ENDORSEMENT; ?></td>
-                <td style="padding:5px;border-width: 0 1px 1px 0;"><?php echo xtc_draw_pull_down_menu('endorsement', $endorsement_array, MODULE_DHL_ENDORSEMENT, 'style="width:120px;"'); ?></td>
+                <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_BUSINESS_ENDORSEMENT; ?></td>
+                <td style="padding:5px;border-width: 0 1px 1px 0;"><?php echo xtc_draw_pull_down_menu('endorsement', $endorsement_array, MODULE_DHL_BUSINESS_ENDORSEMENT, 'style="width:120px;"'); ?></td>
                 <td style="padding:5px;border-width: 0 0 1px 0;"></td>
                 <td style="padding:5px;border-width: 0 1px 1px 0;"></td>
                 <td style="padding:5px;border-width: 0 0 1px 0;"></td>
@@ -135,14 +135,14 @@
               <tr id="dhl_expand">
                 <td colspan="6" style="padding:5px;border-width: 0 0 0 0;">
                   <div style="text-align:center;font-weight:bold;">
-                    <div class="dhl_expand" style="cursor:pointer;"><?php echo TEXT_DHL_SHOW_MORE; ?></div>
-                    <div class="dhl_expand dhl_toggle" style="cursor:pointer;"><?php echo TEXT_DHL_SHOW_LESS; ?></div>
+                    <div class="dhl_expand" style="cursor:pointer;"><?php echo TEXT_DHL_BUSINESS_SHOW_MORE; ?></div>
+                    <div class="dhl_expand dhl_toggle" style="cursor:pointer;"><?php echo TEXT_DHL_BUSINESS_SHOW_LESS; ?></div>
                   </div>
                 </td>
               </tr>
             </table>
           </td>
-          <td class="smallText" align="center"><input class="button" type="submit" value="<?php echo TEXT_DHL_BUTTON_CREATE; ?>"></td>
+          <td class="smallText" align="center"><input class="button" type="submit" value="<?php echo TEXT_DHL_BUSINESS_BUTTON_CREATE; ?>"></td>
         </tr>
       </table>
     </form>
@@ -160,7 +160,7 @@
     </script>
     <style>.dhl_toggle{display:none;visibillity:hidden;}</style>
     <?php
-    if (MODULE_DHL_DISPLAY_LABEL == 'True'
+    if (MODULE_DHL_BUSINESS_DISPLAY_LABEL == 'True'
         && isset($_SESSION['DHLparcel_id']) 
         && $_SESSION['DHLparcel_id'] != ''
         )

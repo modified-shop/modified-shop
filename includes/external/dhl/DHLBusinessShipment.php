@@ -39,14 +39,14 @@
       $this->LoggingManager = new LoggingManager(DIR_FS_LOG.'mod_dhl_%s_%s.log', 'dhl', 'debug');
       
       $this->data = array(
-        'user'          => MODULE_DHL_USER,
-        'signature'     => MODULE_DHL_SIGNATURE,
-        'ekp'           => MODULE_DHL_EKP,
+        'user'          => MODULE_DHL_BUSINESS_USER,
+        'signature'     => MODULE_DHL_BUSINESS_SIGNATURE,
+        'ekp'           => MODULE_DHL_BUSINESS_EKP,
         'api_user'      => 'ModifiedShopV1_1',
         'api_password'  => 'tHv3UHNBc9FE6VXZz2mgWXK9oEFO5i',
       );
       
-      $account_data = preg_split("/[:,]/", MODULE_DHL_ACCOUNT); 
+      $account_data = preg_split("/[:,]/", MODULE_DHL_BUSINESS_ACCOUNT); 
       for ($i=0, $n=count($account_data); $i<$n; $i+=2) {
         if (!isset($this->data['account'][$account_data[$i]])) {
           $this->data['account'][$account_data[$i]] = array();
@@ -62,21 +62,21 @@
       }
       
       $country = xtc_get_countries_with_iso_codes(STORE_COUNTRY);
-      $street_address = $this->parse_street_address(MODULE_DHL_ADDRESS);
+      $street_address = $this->parse_street_address(MODULE_DHL_BUSINESS_ADDRESS);
       $this->info = array(
-        'name'            => MODULE_DHL_FIRSTNAME . ' ' . MODULE_DHL_LASTNAME,
-        'firstname'       => MODULE_DHL_FIRSTNAME,
-        'lastname'        => MODULE_DHL_LASTNAME,
-        'company'         => MODULE_DHL_COMPANY,
+        'name'            => MODULE_DHL_BUSINESS_FIRSTNAME . ' ' . MODULE_DHL_BUSINESS_LASTNAME,
+        'firstname'       => MODULE_DHL_BUSINESS_FIRSTNAME,
+        'lastname'        => MODULE_DHL_BUSINESS_LASTNAME,
+        'company'         => MODULE_DHL_BUSINESS_COMPANY,
         'street_name'     => $street_address['street_name'],
         'street_number'   => $street_address['street_number'],
-        'street_address'  => MODULE_DHL_ADDRESS,
-        'postcode'        => MODULE_DHL_POSTCODE,
-        'city'            => MODULE_DHL_CITY,
+        'street_address'  => MODULE_DHL_BUSINESS_ADDRESS,
+        'postcode'        => MODULE_DHL_BUSINESS_POSTCODE,
+        'city'            => MODULE_DHL_BUSINESS_CITY,
         'country'         => $country['countries_name'],
         'country_iso_2'   => $country['countries_iso_code_2'],
         'email_address'   => STORE_OWNER_EMAIL_ADDRESS,
-        'telephone'       => MODULE_DHL_TELEPHONE,
+        'telephone'       => MODULE_DHL_BUSINESS_TELEPHONE,
       );
       $this->info = $this->encode_request($this->info);
       
@@ -255,10 +255,10 @@
         
         // bankdata
         $BankData = new stdClass();
-        $BankData->accountOwner = MODULE_DHL_ACCOUNT_OWNER;
-        $BankData->bankName = MODULE_DHL_BANK_NAME;
-        $BankData->iban = MODULE_DHL_IBAN;
-        $BankData->bic = MODULE_DHL_BIC;
+        $BankData->accountOwner = MODULE_DHL_BUSINESS_ACCOUNT_OWNER;
+        $BankData->bankName = MODULE_DHL_BUSINESS_BANK_NAME;
+        $BankData->iban = MODULE_DHL_BUSINESS_IBAN;
+        $BankData->bic = MODULE_DHL_BUSINESS_BIC;
         $BankData->note1 = $this->data['reference'];
       }
       
@@ -386,7 +386,7 @@
       $ShipmentOrder = new stdClass();
       $ShipmentOrder->labelResponseType = 'URL';
       $ShipmentOrder->PrintOnlyIfCodeable['active'] = $this->codeable;
-      $ShipmentOrder->sequenceNumber = MODULE_DHL_PREFIX.$this->data['orders_id'];
+      $ShipmentOrder->sequenceNumber = MODULE_DHL_BUSINESS_PREFIX.$this->data['orders_id'];
       $ShipmentOrder->Shipment = $Shipment;
     
       // request
@@ -566,7 +566,7 @@
         $ExportDocument->ExportDocPosition[$i]->countryCodeOrigin = ((isset($this->order->products[$i]['origin']) && $this->order->products[$i]['origin'] != '') ? $this->order->products[$i]['origin'] : $this->info['country_iso_2']);
         $ExportDocument->ExportDocPosition[$i]->customsTariffNumber = ((isset($this->order->products[$i]['tariff']) && $this->order->products[$i]['tariff'] != '') ? $this->order->products[$i]['tariff'] : '');
         $ExportDocument->ExportDocPosition[$i]->amount = $this->order->products[$i]['quantity'];
-        $ExportDocument->ExportDocPosition[$i]->netWeightInKG = $this->order->products[$i]['weight'] + (($this->order->products[$i]['weight'] == 0) ? (double)MODULE_DHL_WEIGHT_CN23 : 0);
+        $ExportDocument->ExportDocPosition[$i]->netWeightInKG = $this->order->products[$i]['weight'] + (($this->order->products[$i]['weight'] == 0) ? (double)MODULE_DHL_BUSINESS_WEIGHT_CN23 : 0);
         $ExportDocument->ExportDocPosition[$i]->customsValue = $this->order->products[$i]['price'];
       }
       
