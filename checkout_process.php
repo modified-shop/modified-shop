@@ -83,7 +83,6 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
     $orders_status_id = ${$_SESSION['payment']}->tmpStatus;
   } else {
     $tmp = false;
-    $orders_status_id = $order->info['order_status'];
   }
 
   if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == 1) {
@@ -149,7 +148,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
     'shipping_method' => $order->info['shipping_method'],
     'shipping_class' => $order->info['shipping_class'],
     'date_purchased' => 'now()',
-    'orders_status' => $orders_status_id,
+    'orders_status' => (($tmp == true) ? $orders_status_id : $order->info['order_status']),
     'currency' => $order->info['currency'],
     'currency_value' => $order->info['currency_value'],
     'account_type' => $_SESSION['account_type'],
@@ -215,7 +214,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
 
   $sql_data_array = array(
     'orders_id' => $insert_id,
-    'orders_status_id' => $orders_status_id,
+    'orders_status_id' => $order->info['order_status'],
     'date_added' => 'now()',
     'customer_notified' => $customer_notification,
     'comments' => $order->info['comments']
@@ -412,6 +411,13 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
 
   // redirect to payment service
   if ($tmp) {
+    $sql_data_array = array(
+      'orders_id' => $insert_id,
+      'orders_status_id' => $orders_status_id,
+      'date_added' => 'now()',
+    );
+    xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+
     $payment_modules->payment_action();
   }
 }

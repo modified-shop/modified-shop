@@ -264,8 +264,23 @@ class easycredit {
     
     if ($this->ecProcess->agree(\EasyCredit\Transfer\ProcessInitialize::INTEGRATION_TYPE_PAYMENT_PAGE, $insert_id) === true) {
       if (isset($this->order_status) && $this->order_status) {
-        xtc_db_query("UPDATE ".TABLE_ORDERS_STATUS_HISTORY." SET orders_status_id='".$this->order_status."' WHERE orders_id='".$insert_id."'");
-        xtc_db_query("UPDATE ".TABLE_ORDERS." SET orders_status='".$this->order_status_success."' WHERE orders_id='".$insert_id."'");
+        $orders_query = xtc_db_query("SELECT *
+                                        FROM ".TABLE_ORDERS."
+                                       WHERE orders_id = '".$insert_id."'");
+        $orders = xtc_db_fetch_array($orders_query);
+      
+        if ($this->order_status != $orders['orders_status']) {
+          $sql_data_array = array(
+            'orders_id' => (int)$insert_id,
+            'orders_status_id' => $this->order_status,
+            'date_added' => 'now()',
+          );
+          xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+        }
+
+        xtc_db_query("UPDATE ".TABLE_ORDERS." 
+                         SET orders_status = '".$this->order_status_success."' 
+                       WHERE orders_id = '".(int)$insert_id."'");
         
         $FinancingDetails = $this->ecProcess->getFinancingDetails();
         $sql_data_array = array (
