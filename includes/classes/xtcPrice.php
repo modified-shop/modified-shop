@@ -50,7 +50,6 @@ class xtcPrice {
     $this->TAX = array();
     $this->showFrom_Attributes = true;
     $this->showCheapestGraduated = false;
-    $this->flagSpecial = false;
     $this->show_price_tax = 0;
     $this->country_id = STORE_COUNTRY;
     $this->zone_id = STORE_ZONE;
@@ -429,25 +428,31 @@ class xtcPrice {
    * @return Double special offer
    */
   function xtcCheckSpecial($pID) {
-    $this->flagSpecial = false;
+    static $special_price_array;
+    
+    if (!isset($special_price_array)) {
+      $special_price_array = array();
+    }
+    
     if ($this->cStatus['customers_status_specials'] == '1') {
-      $special_price = 0;
-      $product_query = xtc_db_query("SELECT *
-                                       FROM ".TABLE_SPECIALS."
-                                      WHERE products_id = '".(int)$pID."'
-                                            ".SPECIALS_CONDITIONS);
-      if (xtc_db_num_rows($product_query) > 0) {
-        $product = xtc_db_fetch_array($product_query);
-        $this->flagSpecial = true;
+      if (!isset($special_price_array[$pID])) {
+        $special_price = 0;
+        $product_query = xtc_db_query("SELECT *
+                                         FROM ".TABLE_SPECIALS."
+                                        WHERE products_id = '".(int)$pID."'
+                                              ".SPECIALS_CONDITIONS);
+        if (xtc_db_num_rows($product_query) > 0) {
+          $product = xtc_db_fetch_array($product_query);
         
-        $product = $this->priceModules->CheckSpecial($product, $pID);
+          $product = $this->priceModules->CheckSpecial($product, $pID);
       
-        $special_price = $product['specials_new_products_price'];
+          $special_price = $product['specials_new_products_price'];
+        }
+      
+        $special_price_array[$pID] = $this->priceModules->CheckSpecialPrice($special_price, $pID);
       }
       
-      $special_price = $this->priceModules->CheckSpecialPrice($special_price, $pID);
-      
-      return (double)$special_price;
+      return (double)$special_price_array[$pID];
     }
   }
 
@@ -460,30 +465,39 @@ class xtcPrice {
    * @return Double products price
    */
   function xtcSpecialProductPrice($pID, $pPrice, $add_tax = false) {
+    static $special_products_price_array;
+    
+    if (!isset($special_products_price_array)) {
+      $special_products_price_array = array();
+    }
+    
     if ($this->cStatus['customers_status_specials'] == '1') {
-      $products_price = $pPrice;
-      $product_query = xtc_db_query("SELECT *
-                                       FROM ".TABLE_SPECIALS."
-                                      WHERE products_id = '".(int)$pID."'
-                                            ".SPECIALS_CONDITIONS);
-      if (xtc_db_num_rows($product_query) > 0) {
-        $product = xtc_db_fetch_array($product_query);
+      if (!isset($special_products_price_array[$pID][(int)$add_tax])) {
+        $products_price = $pPrice;
+        $product_query = xtc_db_query("SELECT *
+                                         FROM ".TABLE_SPECIALS."
+                                        WHERE products_id = '".(int)$pID."'
+                                              ".SPECIALS_CONDITIONS);
+        if (xtc_db_num_rows($product_query) > 0) {
+          $product = xtc_db_fetch_array($product_query);
         
-        $product = $this->priceModules->CheckSpecial($product, $pID);
-        if ($product['specials_old_products_price'] > 0) {
-          $products_price = $product['specials_old_products_price'];
+          $product = $this->priceModules->CheckSpecial($product, $pID);
+          if ($product['specials_old_products_price'] > 0) {
+            $products_price = $product['specials_old_products_price'];
         
-          if ($add_tax === true) {          
-            $products_tax = (isset($this->tax_class) && isset($this->TAX[$this->tax_class])) ? $this->TAX[$this->tax_class] : 0;
-            if ($this->cStatus['customers_status_show_price_tax'] == '1') {
-              $products_price = $this->xtcAddTax($products_price, $products_tax);
+            if ($add_tax === true) {          
+              $products_tax = (isset($this->tax_class) && isset($this->TAX[$this->tax_class])) ? $this->TAX[$this->tax_class] : 0;
+              if ($this->cStatus['customers_status_show_price_tax'] == '1') {
+                $products_price = $this->xtcAddTax($products_price, $products_tax);
+              }
             }
           }
         }
+        
+        $special_products_price_array[$pID][(int)$add_tax] = $this->priceModules->CheckSpecialProductPrice($products_price, $pID, $add_tax);
       }
-      $products_price = $this->priceModules->CheckSpecialProductPrice($products_price, $pID, $add_tax);
       
-      return (double)$products_price;
+      return (double)$special_products_price_array[$pID][(int)$add_tax];
     }
   }
 
