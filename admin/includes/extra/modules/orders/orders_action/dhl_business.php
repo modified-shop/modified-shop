@@ -12,7 +12,7 @@
 
   defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
-  if (defined('MODULE_DHL_STATUS') && MODULE_DHL_STATUS == 'True') {
+  if (defined('MODULE_DHL_BUSINESS_STATUS') && MODULE_DHL_BUSINESS_STATUS == 'True') {
     if (isset($_GET['subaction']) && $_GET['subaction'] == 'createlabel') {
       require_once(DIR_FS_EXTERNAL.'dhl/DHLBusinessShipment.php');
       $oID = (int)$_POST['oID'];
@@ -29,7 +29,7 @@
         }
       } else {
         $_SESSION['DHLparcel_id'] = $response;
-        $messageStack->add_session(TEXT_DHL_CREATE_SUCCESS, 'success');
+        $messageStack->add_session(TEXT_DHL_BUSINESS_CREATE_SUCCESS, 'success');
         
         if ($_POST['status_update'] > 0) {
           $check_query = xtc_db_query("SELECT *
@@ -44,7 +44,7 @@
             $xtPrice = new xtcPrice($order->info['currency'], $order->info['status']);
         
             $status = $_POST['status_update'];
-            $comments = sprintf(TEXT_DHL_ORDER_COMMENT, $_SESSION['DHLparcel_id']);
+            $comments = sprintf(TEXT_DHL_BUSINESS_ORDER_COMMENT, $_SESSION['DHLparcel_id']);
             $order_updated = false;
             $_POST['notify'] = 'on';
             $_POST['notify_comments'] = 'off';
@@ -81,12 +81,12 @@
           $messageStack->add_session(utf8_decode($response['message']), 'warning');
         }
       } else {
-        $messageStack->add_session(TEXT_DHL_DELETE_SUCCESS, 'success');
+        $messageStack->add_session(TEXT_DHL_BUSINESS_DELETE_SUCCESS, 'success');
       
         $check_query = xtc_db_query("SELECT *
                                        FROM ".TABLE_ORDERS_STATUS_HISTORY."
                                       WHERE orders_id = '".(int)$oID."'
-                                        AND comments LIKE ('".xtc_db_input(sprintf(TEXT_DHL_ORDER_COMMENT, $tracking_links['parcel_id']))."')
+                                        AND comments LIKE ('".xtc_db_input(sprintf(TEXT_DHL_BUSINESS_ORDER_COMMENT, $tracking_links['parcel_id']))."')
                                         AND customer_notified = 1
                                    ORDER BY orders_status_history_id DESC
                                       LIMIT 1");
@@ -106,7 +106,7 @@
           $orders_status = xtc_db_fetch_array($orders_status_query);
 
           $status = $orders_status['orders_status_id'];
-          $comments = sprintf(TEXT_DHL_ORDER_COMMENT_DELETED, $tracking_links['parcel_id']);
+          $comments = sprintf(TEXT_DHL_BUSINESS_ORDER_COMMENT_DELETED, $tracking_links['parcel_id']);
           $order_updated = false;
           $_POST['notify'] = 'on';
           $_POST['notify_comments'] = 'on';
