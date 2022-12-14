@@ -141,7 +141,7 @@ if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == '1' &&
     $price = $total;
   }
   $discount = $xtPrice->xtcGetDC($price, $_SESSION['customers_status']['customers_status_ot_discount']);
-  $total_content = $_SESSION['customers_status']['customers_status_ot_discount'].' % '.SUB_TITLE_OT_DISCOUNT.' -'.xtc_format_price($discount, $price_special = 1, $calculate_currencies = false).'<br />';
+  $total_content = $_SESSION['customers_status']['customers_status_ot_discount'].' % '.SUB_TITLE_OT_DISCOUNT.' -'.xtc_format_price($discount, 1, $_SESSION['currency'], 1).'<br />';
 }
 
 if ($_SESSION['customers_status']['customers_status_show_price'] == '1') {
