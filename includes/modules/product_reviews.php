@@ -57,7 +57,9 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/products_reviews.html',
     
     if (defined('REVIEWS_PURCHASED_INFOS') && REVIEWS_PURCHASED_INFOS != '') {
       $shop_content_data = $main->getContentData(REVIEWS_PURCHASED_INFOS);
-      $module_smarty->assign('reviews_note', $main->getContentLink(REVIEWS_PURCHASED_INFOS, $shop_content_data['content_title'], $request_type, false));
+      if (count($shop_content_data) > 0) {
+        $module_smarty->assign('reviews_note', $main->getContentLink(REVIEWS_PURCHASED_INFOS, $shop_content_data['content_title'], $request_type, false));
+      }
     }
   }
 }
