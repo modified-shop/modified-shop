@@ -130,6 +130,7 @@ define('ERROR_NO_COUPON_AMOUNT', 'ERROR: No Coupon Amount');
 define('COUPON_DATE_START_TT', 'Starting at 00:00:00');
 define('COUPON_DATE_END_TT', 'Ending at midnight (23:59:59)');
 define('ERROR_COUPON_DATE', 'ERROR: Expiry date is older than start date');
+define('ERROR_COUPON_EXISTS', 'ERROR: Coupon Code already exists.');
 
 define('TEXT_OT_COUPON_STATUS_INFO', 'The coupon module (ot_coupon) still needs to be installed (Module -> <a href="'.xtc_href_link('modules.php','set=ordertotal').'">Order Total</a>)');
 ?>
