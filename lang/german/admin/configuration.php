@@ -373,7 +373,7 @@ define('SMTP_PASSWORD_DESC' , 'Bitte geben Sie hier das Passwort Ihres SMTP Kont
 define('SMTP_AUTH_TITLE' , 'SMTP Auth');
 define('SMTP_AUTH_DESC' , 'Erfordert der SMTP Server eine sichere Authentifizierung?');
 define('SMTP_AUTH_TYPE_TITLE' , 'SMTP AuthType');
-define('SMTP_AUTH_TYPE_DESC' , 'Geben sie den Typ der SMTP Authentifizierung an.');
+define('SMTP_AUTH_TYPE_DESC' , 'Geben Sie den Typ der SMTP Authentifizierung an.');
 define('SMTP_PORT_TITLE' , 'SMTP Port');
 define('SMTP_PORT_DESC' , 'Geben Sie den SMTP Port Ihres SMTP Servers ein (Standard: 25)?');
 define('SMTP_AUTO_TLS_TITLE' , 'SMTP Automatische TLS Verbindung');
