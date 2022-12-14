@@ -57,11 +57,8 @@ class PayPalPaymentBase extends PayPalCommon {
       $this->order_status_pending = (($this->get_config('PAYPAL_ORDER_STATUS_PENDING_ID') > 0) ? $this->get_config('PAYPAL_ORDER_STATUS_PENDING_ID') : DEFAULT_ORDERS_STATUS_ID);
       $this->order_status_capture = (($this->get_config('PAYPAL_ORDER_STATUS_CAPTURED_ID') > 0) ? $this->get_config('PAYPAL_ORDER_STATUS_CAPTURED_ID') : DEFAULT_ORDERS_STATUS_ID);
       $this->order_status_tmp = (($this->get_config('PAYPAL_ORDER_STATUS_TMP_ID') > 0) ? $this->get_config('PAYPAL_ORDER_STATUS_TMP_ID') : DEFAULT_ORDERS_STATUS_ID);
-      
-      $this->tmpOrders = true;
       $this->tmpStatus = $this->order_status_tmp;
-      $this->order_status = $this->order_status_pending;
-
+      $this->tmpOrders = true;
       $this->loglevel = $this->get_config('PAYPAL_LOG_LEVEL');
   
       $payment_sale = array(
