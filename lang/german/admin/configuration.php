@@ -348,7 +348,7 @@ define('ACCOUNT_OPTIONS_TITLE','Art der Kontoerstellung');
 define('ACCOUNT_OPTIONS_DESC','Wie m&ouml;chten Sie die Anmeldeprozedur in Ihrem Shop gestalten?<br />Sie haben die Wahl zwischen regul&auml;ren Kundenkonten und "Einmalbestellungen" ohne Erstellung eines Kundenkontos (es wird ein Konto erstellt, aber dies ist f&uuml;r den Kunden nicht ersichtlich)');
 
 define('EMAIL_TRANSPORT_TITLE' , 'E-Mail-Transport-Methode');
-define('EMAIL_TRANSPORT_DESC' , '<b>Empfehlung: smtp</b> - Definiert ob der Server eine lokale Verbindung zum "Sendmail-Programm" benutzt oder ob er eine SMTP-Verbindung &uuml;ber TCP/IP ben&ouml;tigt. Server, die auf Windows oder Mac OS laufen, sollten SMTP verwenden.');
+define('EMAIL_TRANSPORT_DESC' , '<b>Empfehlung: smtp</b> - Definiert ob der Server eine lokale Verbindung zum "Sendmail-Programm" benutzt oder ob er eine SMTP Verbindung &uuml;ber TCP/IP ben&ouml;tigt. Server, die auf Windows oder Mac OS laufen, sollten SMTP verwenden.');
 
 define('EMAIL_LINEFEED_TITLE' , 'E-Mail-Linefeeds');
 define('EMAIL_LINEFEED_DESC' , 'Definiert die Zeichen, die benutzt werden sollen, um die E-Mail-Header zu trennen.');
@@ -362,22 +362,25 @@ define('SENDMAIL_PATH_TITLE' , 'Der Pfad zu Sendmail');
 define('SENDMAIL_PATH_DESC' , 'Wenn Sie Sendmail benutzen, geben Sie hier den Pfad zum Sendmail Programm an (normalerweise: /usr/bin/sendmail):');
 define('USE_SENDMAIL_OPTIONS_TITLE', 'Sendmail Options');
 define('USE_SENDMAIL_OPTIONS_DESC', 'Gibt an, ob mail() einen vollst&auml;ndig sendmail-kompatiblen MTA verwendet');
-define('SMTP_MAIN_SERVER_TITLE' , 'Adresse des SMTP-Servers');
-define('SMTP_MAIN_SERVER_DESC' , 'Geben Sie die Adresse Ihres Haupt SMTP-Servers ein.');
-define('SMTP_BACKUP_SERVER_TITLE' , 'Adresse des SMTP-Backup-Servers');
-define('SMTP_BACKUP_SERVER_DESC' , 'Geben Sie die Adresse Ihres Backup SMTP-Servers ein.');
-define('SMTP_USERNAME_TITLE' , 'SMTP-Benutzername');
-define('SMTP_USERNAME_DESC' , 'Bitte geben Sie hier den Benutzernamen Ihres SMTP-Kontos ein.');
-define('SMTP_PASSWORD_TITLE' , 'SMTP-Passwort');
-define('SMTP_PASSWORD_DESC' , 'Bitte geben Sie hier das Passwort Ihres SMTP-Kontos ein.');
-define('SMTP_AUTH_TITLE' , 'SMTP-Auth');
-define('SMTP_AUTH_DESC' , 'Erfordert der SMTP-Server eine sichere Authentifizierung?');
-define('SMTP_PORT_TITLE' , 'SMTP-Port');
-define('SMTP_PORT_DESC' , 'Geben Sie den SMTP-Port Ihres SMTP-Servers ein (Standard: 25)?');
-define('SMTP_AUTO_TLS_TITLE' , 'SMTP-Automatische TLS Verbindung');
-define('SMTP_AUTO_TLS_DESC' , 'Verbindung automatisch mit STARTTLS wenn SMTP-SECURE deaktiviert ist?<br>Bei Sendeproblemen die automatische TLS-Verbindung deaktivieren!');
-define('SMTP_DEBUG_TITLE' , 'SMTP-Debug Log-Level');
+define('SMTP_MAIN_SERVER_TITLE' , 'Adresse des SMTP Servers');
+define('SMTP_MAIN_SERVER_DESC' , 'Geben Sie die Adresse Ihres Haupt SMTP Servers ein.');
+define('SMTP_BACKUP_SERVER_TITLE' , 'Adresse des SMTP Backup-Servers');
+define('SMTP_BACKUP_SERVER_DESC' , 'Geben Sie die Adresse Ihres Backup SMTP Servers ein.');
+define('SMTP_USERNAME_TITLE' , 'SMTP Benutzername');
+define('SMTP_USERNAME_DESC' , 'Bitte geben Sie hier den Benutzernamen Ihres SMTP Kontos ein.');
+define('SMTP_PASSWORD_TITLE' , 'SMTP Passwort');
+define('SMTP_PASSWORD_DESC' , 'Bitte geben Sie hier das Passwort Ihres SMTP Kontos ein.');
+define('SMTP_AUTH_TITLE' , 'SMTP Auth');
+define('SMTP_AUTH_DESC' , 'Erfordert der SMTP Server eine sichere Authentifizierung?');
+define('SMTP_AUTH_TYPE_TITLE' , 'SMTP AuthType');
+define('SMTP_AUTH_TYPE_DESC' , 'Geben sie den Typ der SMTP Authentifizierung an.');
+define('SMTP_PORT_TITLE' , 'SMTP Port');
+define('SMTP_PORT_DESC' , 'Geben Sie den SMTP Port Ihres SMTP Servers ein (Standard: 25)?');
+define('SMTP_AUTO_TLS_TITLE' , 'SMTP Automatische TLS Verbindung');
+define('SMTP_AUTO_TLS_DESC' , 'Verbindung automatisch mit STARTTLS wenn SMTP SECURE deaktiviert ist?<br>Bei Sendeproblemen die automatische TLS-Verbindung deaktivieren!');
+define('SMTP_DEBUG_TITLE' , 'SMTP Debug Log-Level');
 define('SMTP_DEBUG_DESC' , '<b>0</b>: keine Ausgabe; <b>1</b>: nur Befehle; <b>2</b>: Daten und Befehle; <b>3</b>: wie 2 plus Verbindungstatus; <b>4</b>: wie 3 plus weitere Angaben<br>Bei Sendeproblemen auf 2 stellen, es wird dann ein Protokoll im log-Verzeichnis erstellt.');
+define('CFG_TXT_DEFAULT', 'Default');
 
 //DokuMan - 2011-09-20 - E-Mail SQL errors
 define('EMAIL_SQL_ERRORS_TITLE','SQL-Fehlermeldungen als E-Mail versenden');
@@ -760,7 +763,7 @@ define('USE_ADMIN_FIXED_SEARCH_TITLE', 'Admin Suchleiste anzeigen?');
 define('USE_ADMIN_FIXED_SEARCH_DESC', 'Soll die Suchleiste immer sichtbar sein?');
 
 define('SMTP_SECURE_TITLE' , 'SMTP SECURE');
-define('SMTP_SECURE_DESC' , 'Erfordert der SMTP-Server eine sichere Verbindung? Die notwendigen Einstellungen erfahren Sie bei Ihrem Provider.');
+define('SMTP_SECURE_DESC' , 'Erfordert der SMTP Server eine sichere Verbindung? Die notwendigen Einstellungen erfahren Sie bei Ihrem Provider.');
 
 define('DISPLAY_ERROR_REPORTING_TITLE', 'Error Reporting');
 define('DISPLAY_ERROR_REPORTING_DESC', 'Soll das Error Reporting als formatierte Liste im Footer angezeigt werden?');
