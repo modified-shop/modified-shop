@@ -168,7 +168,7 @@ class paypalplus extends PayPalPayment {
 
 
 	function after_process() {
-		unset($_SESSION['paypal']);
+    unset($_SESSION['paypal']);
 	}
 
 

@@ -102,7 +102,7 @@ class paypaltrustly extends PayPalPaymentV2 {
 
 
   function after_process() {
-    return false;
+    unset($_SESSION['paypal']);
   }
 
 
