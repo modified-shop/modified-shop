@@ -30,7 +30,7 @@ class protectedshops_update {
   
   function check_update() {
     if ($this->enabled === true) {
-      if (((MODULE_PROTECTEDSHOPS_LAST_UPDATED + MODULE_PROTECTEDSHOPS_UPDATE_INTERVAL) <= time() && MODULE_PROTECTEDSHOPS_AUTOUPDATE == 'true') || defined('RUN_MODE_ADMIN')) {
+      if ((((int)MODULE_PROTECTEDSHOPS_LAST_UPDATED + (int)MODULE_PROTECTEDSHOPS_UPDATE_INTERVAL) <= time() && MODULE_PROTECTEDSHOPS_AUTOUPDATE == 'true') || defined('RUN_MODE_ADMIN')) {
         
         xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value='" . (int) time() . "', last_modified = NOW() WHERE configuration_key='MODULE_PROTECTEDSHOPS_LAST_UPDATED'");
         
@@ -43,7 +43,7 @@ class protectedshops_update {
         if (isset($content['DocumentDate']) && is_array($content['DocumentDate'])) {
           foreach ($content['DocumentDate'] as $type => $date) {
             ((defined('MODULE_PROTECTEDSHOPS_TYPE_'.strtoupper($type)) && constant('MODULE_PROTECTEDSHOPS_TYPE_'.strtoupper($type)) > 0) ? $this->get_page_content($type, constant('MODULE_PROTECTEDSHOPS_TYPE_'.strtoupper($type))) : '');
-            ((defined('MODULE_PROTECTEDSHOPS_PDF_'.strtoupper($type)) && constant('MODULE_PROTECTEDSHOPS_PDF_'.strtoupper($type)) == 'true') ? $this->get_page_content($type) : '');
+            ((defined('MODULE_PROTECTEDSHOPS_PDF_'.strtoupper($type)) && constant('MODULE_PROTECTEDSHOPS_PDF_'.strtoupper($type)) == 'true') ? $this->get_page_pdf($type) : '');
           }
         }        
       }
