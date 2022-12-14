@@ -546,14 +546,6 @@
         'tax_groups' => array(),
       );
 
-      if (isset($_SESSION['payment']) && is_object($_SESSION['payment'])) {
-        $this->info['payment_method'] = $_SESSION['payment']->title;
-        $this->info['payment_class'] = $_SESSION['payment']->title;
-        if (isset($_SESSION['payment']->order_status) && is_numeric($_SESSION['payment']->order_status) && $_SESSION['payment']->order_status > 0) {
-          $this->info['order_status'] = $_SESSION['payment']->order_status;
-        }
-      }
-
       // build customer, billing, delivery array
       if (isset($_SESSION['customer_id'])) {
         $customer_address['state'] = ((xtc_not_null($customer_address['state'])) ? $customer_address['state'] : $customer_address['zone_name']);
@@ -604,15 +596,15 @@
       $index = 0;
       $this->tax_discount = array ();
 
-      $products = $_SESSION['cart']->get_products(); //set in includes/classes/shopping_cart.php function get_products
+      $products = $_SESSION['cart']->get_products();
 
       for ($i=0, $n=sizeof($products); $i<$n; $i++) {
 
         //attribute mapping
         $products_attributes = array();
         if (isset($products[$i]['attributes']) && is_array($products[$i]['attributes'])) {
-          $products_attributes = $products[$i]['attributes']; //contains only option_id and value_id
-          unset($products[$i]['attributes']); //remove from array for direct array mapping
+          $products_attributes = $products[$i]['attributes'];
+          unset($products[$i]['attributes']);
         }
         //direct products array mapping
         $this->products[$index] = $products[$i];
@@ -626,8 +618,8 @@
         $this->products[$index]['image'] = !empty($products[$i]['image']) ? $main->getProductPopupLink($products[$i]['id'],$products[$i]['image'], 'image') : '&nbsp;';
         $this->products[$index]['link'] = $main->getProductPopupLink($products[$i]['id'],$products[$i]['name'], 'details');
         $this->products[$index]['link_more'] = $main->getProductPopupLink($products[$i]['id'], MORE_INFO, 'details');
-        $this->products[$index]['price_formated'] = $xtPrice->xtcFormat($products[$i]['price'], true); //$products[$i]['price'] is single plain price including attributes_price
-        $this->products[$index]['final_price_formated'] = $xtPrice->xtcFormat($products[$i]['final_price'], true); //$products[$i]['final_price'] is quantity * plain price including attributes_price
+        $this->products[$index]['price_formated'] = $xtPrice->xtcFormat($products[$i]['price'], true);
+        $this->products[$index]['final_price_formated'] = $xtPrice->xtcFormat($products[$i]['final_price'], true);
 
         $this->products[$index]['tax'] = xtc_get_tax_rate($products[$i]['tax_class_id'], $tax_address['country_id'], $tax_address['zone_id']);
         if ($_SESSION['customers_status']['customers_status_show_price_tax'] == '0'
@@ -676,7 +668,7 @@
   
             $subindex++;
           }
-          $this->products[$index]['attributes'] = array_merge(array_filter($this->products[$index]['attributes'])); //index correction needed in "for loops"
+          $this->products[$index]['attributes'] = array_merge(array_filter($this->products[$index]['attributes']));
           
           if($check_attributes_model === true && count($attributes_model) > 0) {
           	$attr_model_delimiter = defined('ATTRIBUTE_MODEL_DELIMITER') ? ATTRIBUTE_MODEL_DELIMITER : '<br />';
