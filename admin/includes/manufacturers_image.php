@@ -13,7 +13,7 @@
 
 defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
-if (!isset($banners_image_name_process)) {
+if (!isset($manufacturers_image_name_process)) {
   $manufacturers_image_name_process = $manufacturers_image_name;
 }
 
