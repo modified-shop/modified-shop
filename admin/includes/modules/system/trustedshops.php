@@ -42,12 +42,10 @@ class trustedshops {
       );
     
       foreach ($table_array as $table) {
-        if (in_array($table['column'], $db_table_rows)) {
-          if ($table['column'] == 'add') {
-            xtc_db_query("ALTER TABLE ".TABLE_TRUSTEDSHOPS." ADD ".$table['column']." ".$table['default']."");
-          } else {
-            xtc_db_query("ALTER TABLE ".TABLE_TRUSTEDSHOPS." DROP COLUMN ".$table['column']);
-          }
+        if (!in_array($table['column'], $db_table_rows) && $table['column'] == 'add') {
+          xtc_db_query("ALTER TABLE ".TABLE_TRUSTEDSHOPS." ADD ".$table['column']." ".$table['default']."");
+        } elseif (in_array($table['column'], $db_table_rows) && $table['column'] == 'delete') { {
+          xtc_db_query("ALTER TABLE ".TABLE_TRUSTEDSHOPS." DROP COLUMN ".$table['column']);
         }
       }
     }
