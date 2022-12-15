@@ -78,8 +78,9 @@ $smarty->assign('FORM_ACTION', xtc_draw_form('order', xtc_href_link(FILENAME_CHE
 $smarty->assign('BUTTON_CONTINUE', xtc_image_submit('button_continue.gif', IMAGE_BUTTON_CONTINUE));
 $smarty->assign('FORM_END', '</form>');
 
+$popup_params = $main->getPopupParams();
 $smarty->assign('BUTTON_PRINT', xtc_image_button('print.gif', TEXT_PRINT, 'style="cursor:pointer" onclick="javascript:window.open(\''.xtc_href_link(FILENAME_PRINT_ORDER, 'oID='.(int)$last_order, 'SSL').'\', \'popup\', \'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,  '.(defined('TPL_POPUP_PRODUCT_PRINT_SIZE') ? TPL_POPUP_PRODUCT_PRINT_SIZE : POPUP_PRINT_ORDER_SIZE).'\')"'));
-$smarty->assign('BUTTON_PRINT_LAYER', '<a class="iframe" target="_blank" rel="nofollow" href="'.xtc_href_link(FILENAME_PRINT_ORDER, 'oID='.(int)$last_order, 'SSL'). '" title="'.TEXT_PRINT.'" />'. xtc_image_button('print.gif', TEXT_PRINT) .'</a>');
+$smarty->assign('BUTTON_PRINT_LAYER', '<a title="'.TEXT_PRINT.'" target="_blank" class="'.$popup_params['link_class'].'" rel="nofollow" href="'.xtc_href_link(FILENAME_PRINT_ORDER, 'oID='.(int)$last_order.$popup_params['link_parameters'], 'SSL'). '"/>'. xtc_image_button('print.gif', TEXT_PRINT) .'</a>');
 
 // GV Code
 if (ACTIVATE_GIFT_SYSTEM == 'true') {
