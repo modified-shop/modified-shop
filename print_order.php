@@ -23,7 +23,8 @@ if (DIR_WS_BASE == '') {
 }
 $smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 
-$oID = (int) $_GET['oID'];
+$oID = (isset($_GET['oID']) ? (int)$_GET['oID'] : 0);
+$customer_id = (isset($_SESSION['customer_id']) ? (int)$_SESSION['customer_id'] : (isset($_SESSION['customer_gid']) ? (int)$_SESSION['customer_gid'] : 0));
 
 // check if custmer is allowed to see this order!
 $order_query_check = xtc_db_query("SELECT customers_id
@@ -31,11 +32,11 @@ $order_query_check = xtc_db_query("SELECT customers_id
                                     WHERE orders_id = '".$oID."'");
 $order_check = xtc_db_fetch_array($order_query_check);
 
-if ((isset($_SESSION['customer_id']) && $_SESSION['customer_id'] == $order_check['customers_id']) 
-    || (isset($_SESSION['customer_gid']) && $_SESSION['customer_gid'] == $order_check['customers_id'])
-    ) 
+if ($customer_id > 0
+    && isset($order_check['customers_id'])
+    && $customer_id == $order_check['customers_id']
+    )
 {
-
   // get order data
   include (DIR_WS_CLASSES.'order.php');
   $order = new order($oID);
@@ -74,4 +75,3 @@ if ((isset($_SESSION['customer_id']) && $_SESSION['customer_id'] == $order_check
 } else {
   die('You are not allowed to view this order!');
 }
-?>
