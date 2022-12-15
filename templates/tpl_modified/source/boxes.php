@@ -153,12 +153,13 @@ if (in_array(basename($PHP_SELF), $bestsellers) && !isset($_GET['cPath']) && !is
 // -----------------------------------------------------------------------------------------
 
 $smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+  function getContentData($coID, $language_id = '', $customers_status = '', $get_inactive = true, $add_select= '') {
 
-$shop_content_data = $main->getContentData(7);
+$shop_content_data = $main->getContentData(7, '', '', false);
 if (count($shop_content_data) > 0) {
   $smarty->assign('contact', xtc_href_link(FILENAME_CONTENT, 'coID=7', 'SSL'));
 }
-$shop_content_data = $main->getContentData(4);
+$shop_content_data = $main->getContentData(4, '', '', false);
 if (count($shop_content_data) > 0) {
   $smarty->assign('imprint', xtc_href_link(FILENAME_CONTENT, 'coID=4', 'SSL'));
 }
