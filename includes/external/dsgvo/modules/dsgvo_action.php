@@ -46,6 +46,9 @@
           $cnt_pageview_history = count($_SESSION['tracking']['pageview_history']);
           if ($cnt_pageview_history > 1) {
             $redirect = $_SESSION['tracking']['pageview_history'][$cnt_pageview_history - 2];
+            if (substr($redirect, 0, strlen(DIR_WS_CATALOG)) == DIR_WS_CATALOG) {
+              $redirect = substr($redirect, strlen(DIR_WS_CATALOG));
+            }
             if ($_SESSION['old_customers_basket_cart'] === true) {
               unset($_SESSION['old_customers_basket_cart']);
               $messageStack->add_session('global', TEXT_SAVED_BASKET);
@@ -62,7 +65,7 @@
             xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART),'NONSSL'); 
           } else {          
             xtc_redirect(xtc_href_link(FILENAME_DEFAULT),'NONSSL');           
-          }          
+          }
         }
       }
       
