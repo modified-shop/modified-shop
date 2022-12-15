@@ -77,7 +77,9 @@
           DIR_ADMIN.'includes/extra/modules/orders/orders_action/dhl.php',
           DIR_ADMIN.'includes/extra/modules/orders/orders_info_blocks/dhl.php',
           DIR_ADMIN.'includes/modules/system/dhl.php',
+          'lang/english/extra/admin/dhl.php',
           'lang/english/modules/system/dhl.php',
+          'lang/german/extra/admin/dhl.php',
           'lang/german/modules/system/dhl.php',
         );
   
