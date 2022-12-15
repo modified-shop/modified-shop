@@ -153,7 +153,6 @@ if (in_array(basename($PHP_SELF), $bestsellers) && !isset($_GET['cPath']) && !is
 // -----------------------------------------------------------------------------------------
 
 $smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
-  function getContentData($coID, $language_id = '', $customers_status = '', $get_inactive = true, $add_select= '') {
 
 $shop_content_data = $main->getContentData(7, '', '', false);
 if (count($shop_content_data) > 0) {
