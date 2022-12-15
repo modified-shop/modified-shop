@@ -71,7 +71,7 @@ if (is_array($request)
           
           xtc_db_query("UPDATE ".TABLE_PAYPAL_PAYMENT."
                            SET send_order = 0
-                         WHERE paypal_payment_id = '".(int)$check['paypal_payment_id']."'");
+                         WHERE paypal_id = '".(int)$check['paypal_id']."'");
         }
       }
     }
