@@ -30,6 +30,7 @@ class vat_validation {
     $vat_id = str_replace(' ', '', $vat_id);
     $this->vat_info = array ();
     $this->vat_errors = array(
+      'MS_MAX_CONCURRENT_REQ' => '93',
       'INVALID_INPUT' => '94',
       'SERVICE_UNAVAILABLE' => '95',
       'MS_UNAVAILABLE' => '96',
@@ -102,6 +103,7 @@ class vat_validation {
         case '96' :
         case '95' :
         case '94' :
+        case '93' :
           if (ACCOUNT_VAT_BLOCK_ERROR == 'true') {
             $error = true;
           }
