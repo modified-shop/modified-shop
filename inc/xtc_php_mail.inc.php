@@ -210,7 +210,7 @@ function xtc_php_mail($from_email_address, $from_email_name,
   
   $included_files = get_included_files();
   if (is_array($included_files)) {
-    $conditions = CONTENT_CONDITIONS;
+    $conditions = ((defined('CONTENT_CONDITIONS')) ? CONTENT_CONDITIONS : '');
     if (defined('RUN_MODE_ADMIN') && GROUP_CHECK == 'true') {
       $conditions = " AND group_ids LIKE '%c_".((isset($customers_status)) ? $customers_status : DEFAULT_CUSTOMERS_STATUS_ID_GUEST)."_group%' ";
     }
