@@ -16,7 +16,7 @@
   function xtc_category_link($cID, $name = '') {
     $params = 'cPath='.xtc_get_category_path($cID);
     if (SEARCH_ENGINE_FRIENDLY_URLS == 'true' && $name != '') {
-      $params .= '&name='.base64_encode($name);
+      $params .= '&name='.base64_encode(strip_tags($name));
     }
 
     return $params;
