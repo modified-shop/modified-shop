@@ -91,11 +91,13 @@
             }
           }
       
-          $sql_data_array = array(
-            'customers_id' => (int)$_SESSION['customer_id'],
-            'orders_id' => (int)$_POST['oID'],
-            'type' => $type,
-          );
+          if (isset($_POST['oID'])) {
+            $sql_data_array = array(
+              'customers_id' => (int)$_SESSION['customer_id'],
+              'orders_id' => (int)$_POST['oID'],
+              'type' => $type,
+            );
+          }
           break;
 
         case 'configuration.php':
