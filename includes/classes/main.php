@@ -265,7 +265,10 @@ class main {
         $content_data = xtc_db_fetch_array($content_data_query, true);
     
         // check if content data is a file
-        if ($content_data['content_file'] != '') {
+        if ($content_data['content_file'] != '' 
+            && is_file(DIR_FS_CATALOG.'media/content/'.$content_data['content_file'])
+            )
+        {
           unset($content_data['content_text']);
           ob_start();      
           include (DIR_FS_DOCUMENT_ROOT.'media/content/'.$content_data['content_file']);      

@@ -303,9 +303,12 @@
       if (xtc_db_num_rows($contents_meta_query, true) > 0) {
         $contents_meta = xtc_db_fetch_array($contents_meta_query,true);
 
-        if ($contents_meta['content_file']) {
+        if ($contents_meta['content_file'] != '' 
+            && is_file(DIR_FS_CATALOG.'media/content/'.$contents_meta['content_file'])
+            )
+        {
           if (preg_match("/\.(txt|htm|html)$/i", $contents_meta['content_file'])) {
-            $contents_meta['content_text'] .= ' '.implode(' ', @file(DIR_FS_CATALOG.'media/content/'.$contents_meta['content_file']));
+            $contents_meta['content_text'] .= ' '.file_get_contents(DIR_FS_CATALOG.'media/content/'.$contents_meta['content_file']);
           }
         }
 
