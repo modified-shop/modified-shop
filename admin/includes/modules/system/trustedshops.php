@@ -23,29 +23,31 @@ class trustedshops {
     $this->description = MODULE_TRUSTEDSHOPS_TEXT_DESCRIPTION;
     $this->sort_order = defined('MODULE_TRUSTEDSHOPS_SORT_ORDER') ? MODULE_TRUSTEDSHOPS_SORT_ORDER : '';
     $this->enabled = ((defined('MODULE_TRUSTEDSHOPS_STATUS') && MODULE_TRUSTEDSHOPS_STATUS == 'true') ? true : false);
-
-    $query_result = xtc_db_query("SHOW COLUMNS FROM `" . TABLE_TRUSTEDSHOPS . "`");
-    $db_table_rows = array();
-    while ($row = xtc_db_fetch_array($query_result)) {
-      $db_table_rows[] = $row['Field'];
-    }
     
-    if (count($db_table_rows) > 0) {
-      $table_array = array(
-        array('action' => 'add', 'column' => 'trustbadge_offset_mobile', 'default' => "int(11) NOT NULL DEFAULT '0' AFTER trustbadge_position"),
-        array('action' => 'add', 'column' => 'trustbadge_position_mobile', 'default' => "varchar(32) NOT NULL AFTER trustbadge_offset_mobile"),
-        array('action' => 'add', 'column' => 'product_sticker_api_client', 'default' => "varchar(128) NOT NULL AFTER product_sticker_api"),
-        array('action' => 'add', 'column' => 'product_sticker_api_secret', 'default' => "varchar(128) NOT NULL AFTER product_sticker_api_secret"),
-
-        array('action' => 'delete', 'column' => 'snippets'),
-        array('action' => 'delete', 'column' => 'widget'),
-      );
+    if (defined('MODULE_TRUSTEDSHOPS_STATUS')) {
+      $query_result = xtc_db_query("SHOW COLUMNS FROM `" . TABLE_TRUSTEDSHOPS . "`");
+      $db_table_rows = array();
+      while ($row = xtc_db_fetch_array($query_result)) {
+        $db_table_rows[] = $row['Field'];
+      }
     
-      foreach ($table_array as $table) {
-        if (!in_array($table['column'], $db_table_rows) && $table['column'] == 'add') {
-          xtc_db_query("ALTER TABLE ".TABLE_TRUSTEDSHOPS." ADD ".$table['column']." ".$table['default']."");
-        } elseif (in_array($table['column'], $db_table_rows) && $table['column'] == 'delete') { {
-          xtc_db_query("ALTER TABLE ".TABLE_TRUSTEDSHOPS." DROP COLUMN ".$table['column']);
+      if (count($db_table_rows) > 0) {
+        $table_array = array(
+          array('action' => 'add', 'column' => 'trustbadge_offset_mobile', 'default' => "int(11) NOT NULL DEFAULT '0' AFTER trustbadge_position"),
+          array('action' => 'add', 'column' => 'trustbadge_position_mobile', 'default' => "varchar(32) NOT NULL AFTER trustbadge_offset_mobile"),
+          array('action' => 'add', 'column' => 'product_sticker_api_client', 'default' => "varchar(128) NOT NULL AFTER product_sticker_api"),
+          array('action' => 'add', 'column' => 'product_sticker_api_secret', 'default' => "varchar(128) NOT NULL AFTER product_sticker_api_secret"),
+
+          array('action' => 'delete', 'column' => 'snippets'),
+          array('action' => 'delete', 'column' => 'widget'),
+        );
+    
+        foreach ($table_array as $table) {
+          if (!in_array($table['column'], $db_table_rows) && $table['column'] == 'add') {
+            xtc_db_query("ALTER TABLE ".TABLE_TRUSTEDSHOPS." ADD ".$table['column']." ".$table['default']."");
+          } elseif (in_array($table['column'], $db_table_rows) && $table['column'] == 'delete') {
+            xtc_db_query("ALTER TABLE ".TABLE_TRUSTEDSHOPS." DROP COLUMN ".$table['column']);
+          }
         }
       }
     }
