@@ -42,7 +42,8 @@
             $order = new order($oID);
             require_once(DIR_FS_CATALOG.DIR_WS_CLASSES.'xtcPrice.php');
             $xtPrice = new xtcPrice($order->info['currency'], $order->info['status']);
-        
+
+            $lang = $order->info['languages_id'];
             $status = $_POST['status_update'];
             $comments = sprintf(TEXT_DHL_BUSINESS_ORDER_COMMENT, $_SESSION['DHLparcel_id']);
             $order_updated = false;
@@ -105,6 +106,7 @@
                                                 LIMIT 1");
           $orders_status = xtc_db_fetch_array($orders_status_query);
 
+          $lang = $order->info['languages_id'];
           $status = $orders_status['orders_status_id'];
           $comments = sprintf(TEXT_DHL_BUSINESS_ORDER_COMMENT_DELETED, $tracking_links['parcel_id']);
           $order_updated = false;
