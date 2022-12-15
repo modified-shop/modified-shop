@@ -1260,7 +1260,28 @@ class PayPalPaymentBase extends PayPalCommon {
     if (xtc_db_num_rows($check_query) == 0) {
       xtc_db_query("ALTER TABLE ".TABLE_PAYPAL_INSTRUCTIONS." ADD `paypal_instructions_id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST");
     }
-
+    
+    // reset zones
+    $fixed_zones_modules_array = array(
+      'paypalacdc',
+      'paypalpui',
+      'paypalexpress',
+      'paypalsofort',
+      'paypaltrustly',
+      'paypalprzelewy',
+      'paypalmybank',
+      'paypalideal',
+      'paypalgiropay',
+      'paypaleps',
+      'paypalblik',
+      'paypalbancontact',
+    );
+    foreach ($fixed_zones_modules_array as $zones_modules) {
+      xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                       SET configuration_value = ''
+                     WHERE configuration_key = 'MODULE_PAYMENT_".strtoupper($zones_modules)."_ZONE'");
+    }
+    
     // set all files to be deleted                     
     $unlink_file = array(
       'callback/paypal/paypalinstallment.php',
