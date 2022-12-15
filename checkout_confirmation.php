@@ -91,6 +91,7 @@ if (ACTIVATE_GIFT_SYSTEM == 'true'
     && $_GET['action'] == 'check_gift_checkout'
     )
 {
+  unset($_SESSION['paypal']);
   xtc_collect_posts();
 }
 
