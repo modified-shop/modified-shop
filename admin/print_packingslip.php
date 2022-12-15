@@ -51,6 +51,7 @@
 
   $smarty->assign('logo_path', DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
   $smarty->assign('tpl_path', DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
+  $smarty->assign('base_href', xtc_catalog_href_link('', '', $request_type, false, false));
 
   $smarty->assign('oID',$order->info['order_id']);
   if ($order->info['payment_method']!='' && $order->info['payment_method']!='no_payment') {
