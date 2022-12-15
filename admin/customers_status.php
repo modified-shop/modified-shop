@@ -164,18 +164,9 @@
           // adopt customer prices
           if (isset($_POST['customers_base_status']) && !empty($_POST['customers_base_status'])) {
             if ($action == 'save') {
-              xtc_db_query('TRUNCATE TABLE personal_offers_by_customers_status_' . $customers_status_id);
+              xtc_db_query("TRUNCATE TABLE ".TABLE_PERSONAL_OFFERS_BY.$customers_status_id);
             }
-            $products_query = xtc_db_query("SELECT price_id, products_id, quantity, personal_offer FROM personal_offers_by_customers_status_".(int)$_POST['customers_base_status']."");
-            while($products = xtc_db_fetch_array($products_query)){
-              $product_data_array = array(
-                  'price_id' => xtc_db_prepare_input($products['price_id']),
-                  'products_id' => xtc_db_prepare_input($products['products_id']),
-                  'quantity' => xtc_db_prepare_input($products['quantity']),
-                  'personal_offer' => xtc_db_prepare_input($products['personal_offer'])
-                );
-              xtc_db_perform('personal_offers_by_customers_status_' . $customers_status_id, $product_data_array);
-            }
+            xtc_db_query("INSERT INTO ".TABLE_PERSONAL_OFFERS_BY.$customers_status_id." SELECT * FROM ".TABLE_PERSONAL_OFFERS_BY.(int)$_POST['customers_base_status'])
           }
 
           $accepted_customers_status_image_files_extensions = array("jpg","jpeg","jpe","gif","png","bmp","tiff","tif","bmp");
