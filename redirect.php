@@ -81,7 +81,7 @@ if (isset($_GET['action'])) {
           }
         } else {
           // url exists in selected language
-          $manufacturer = xtc_db_fetch_array($manufacturer_query);
+          $manufacturer = xtc_db_fetch_array($manufacturer_query, true);
           xtc_db_query("UPDATE ".TABLE_MANUFACTURERS_INFO." 
                            SET url_clicked = url_clicked+1, 
                                date_last_click = now() 
