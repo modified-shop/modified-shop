@@ -36,10 +36,10 @@ class productTagsOnCheckout {  //Important same name as filename
     }
     
     function keys() {
-        define($this->name.'_STATUS_TITLE', TEXT_DEFAULT_STATUS_TITLE);
-        define($this->name.'_STATUS_DESC', TEXT_DEFAULT_STATUS_DESC);
-        define($this->name.'_SORT_ORDER_TITLE', TEXT_DEFAULT_SORT_ORDER_TITLE);
-        define($this->name.'_SORT_ORDER_DESC', TEXT_DEFAULT_SORT_ORDER_DESC);
+        defined($this->name.'_STATUS_TITLE') OR define($this->name.'_STATUS_TITLE', TEXT_DEFAULT_STATUS_TITLE);
+        defined($this->name.'_STATUS_DESC') OR define($this->name.'_STATUS_DESC', TEXT_DEFAULT_STATUS_DESC);
+        defined($this->name.'_SORT_ORDER_TITLE') OR define($this->name.'_SORT_ORDER_TITLE', TEXT_DEFAULT_SORT_ORDER_TITLE);
+        defined($this->name.'_SORT_ORDER_DESC') OR define($this->name.'_SORT_ORDER_DESC', TEXT_DEFAULT_SORT_ORDER_DESC);
         
         return array(
             $this->name.'_STATUS', 
