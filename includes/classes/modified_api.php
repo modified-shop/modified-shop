@@ -157,6 +157,7 @@
 
       if ($httpStatus < 200 || $httpStatus >= 300) {
         trigger_error('Could not reach external host: '.$path.'. Exit with Status: '.$httpStatus, E_USER_WARNING);
+        $result = array();
       }
       
       $response = $result;
