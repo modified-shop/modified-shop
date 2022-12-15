@@ -47,9 +47,9 @@
     <div id="col_right">
       <div id="content_navbar">
         <ul class="contentnavigation"> 
-          <li class="first"><a href="{$smarty.const.FILENAME_CONTENT|xtc_href_link:'coID=7'}">{#link_contact#}</a></li>
-          <li><a href="{$smarty.const.FILENAME_CONTENT|xtc_href_link:'coID=4'}">{#link_imprint#}</a></li>
-          <li class="last"><a href="{$checkout}"><strong>{#link_checkout#}</strong></a></li>
+          {if isset($contact)}<li class="first"><a href="{$contact}">{#link_contact#}</a></li>{/if}
+          {if isset($imprint)}<li{if !isset($contact)} class="first"{/if}><a href="{$imprint}">{#link_imprint#}</a></li>{/if}
+          <li class="last{if (!isset($contact) && !isset($imprint))} first{/if}"><a href="{$checkout}"><strong>{#link_checkout#}</strong></a></li>
           {if isset($box_CART)}<li class="cart">{$box_CART}</li>{/if}
           {if isset($box_WISHLIST)}<li class="wishlist">{$box_WISHLIST}</li>{/if}
         </ul>
@@ -73,9 +73,9 @@
       <div id="content_navbar">
         <ul class="contentnavigation">
           <li class="first"><a href="{$index}">{#link_index#}</a></li>
-          <li><a href="{$smarty.const.FILENAME_CONTENT|xtc_href_link:'coID=7'}">{#link_contact#}</a></li>
-          <li><a href="{$smarty.const.FILENAME_CONTENT|xtc_href_link:'coID=4'}">{#link_imprint#}</a></li>
-          <li class="last"><a href="{$checkout}"><strong>{#link_checkout#}</strong></a></li>
+          {if isset($contact)}<li class="first"><a href="{$contact}">{#link_contact#}</a></li>{/if}
+          {if isset($imprint)}<li{if !isset($contact)} class="first"{/if}><a href="{$imprint}">{#link_imprint#}</a></li>{/if}
+          <li class="last{if (!isset($contact) && !isset($imprint))} first{/if}"><a href="{$checkout}"><strong>{#link_checkout#}</strong></a></li>
           {if isset($box_CART)}<li class="cart">{$box_CART}</li>{/if}
           {if isset($box_WISHLIST)}<li class="wishlist">{$box_WISHLIST}</li>{/if}
         </ul>
@@ -107,9 +107,9 @@
     <div id="col_right">
       <div id="content_navbar">
         <ul class="contentnavigation"> 
-          <li class="first"><a href="{$smarty.const.FILENAME_CONTENT|xtc_href_link:'coID=7'}">{#link_contact#}</a></li>
-          <li><a href="{$smarty.const.FILENAME_CONTENT|xtc_href_link:'coID=4'}">{#link_imprint#}</a></li>
-          <li class="last"><a href="{$checkout}"><strong>{#link_checkout#}</strong></a></li>
+          {if isset($contact)}<li class="first"><a href="{$contact}">{#link_contact#}</a></li>{/if}
+          {if isset($imprint)}<li{if !isset($contact)} class="first"{/if}><a href="{$imprint}">{#link_imprint#}</a></li>{/if}
+          <li class="last{if (!isset($contact) && !isset($imprint))} first{/if}"><a href="{$checkout}"><strong>{#link_checkout#}</strong></a></li>
           {if isset($box_CART)}<li class="cart">{$box_CART}</li>{/if}
           {if isset($box_WISHLIST)}<li class="wishlist">{$box_WISHLIST}</li>{/if}
         </ul>
