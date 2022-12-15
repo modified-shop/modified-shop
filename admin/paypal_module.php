@@ -261,8 +261,7 @@ require (DIR_WS_INCLUDES.'head.php');
                   
                   foreach ($mInfo->keys as $key => $value) {
                     if (!in_array($module->code, $fixed_zones_modules_array)
-                        && strpos($key, '_ZONE') === false
-                        && strpos($key, '_ALLOWED') === false
+                        || (strpos($key, '_ZONE') === false && strpos($key, '_ALLOWED') === false)
                         )
                     {
                       ?>
