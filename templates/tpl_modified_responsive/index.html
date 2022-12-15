@@ -47,8 +47,8 @@
           <div id="content_navbar">
             <ul class="contentnavigation">
               <li class="sidebar_btn"><span id="sidebar_marker"></span><a href="#" title="{#header_menu#}"><i class="fas fa-bars"></i><span class="cn_nomobile_text">{#header_menu#}</span></a></li>
-              <li class="cn_nomobile"><a title="{#link_contact#}" href="{$smarty.const.FILENAME_CONTENT|xtc_href_link:'coID=7'}"><i class="far fa-envelope"></i>{#link_contact#}</a></li>
-              <li class="cn_nomobile"><a title="{#link_imprint#}" href="{$smarty.const.FILENAME_CONTENT|xtc_href_link:'coID=4'}"><i class="fas fa-info-circle"></i>{#link_imprint#}</a></li>
+              {if isset($contact)}<li class="cn_nomobile"><a title="{#link_contact#}" href="{$contact}"><i class="far fa-envelope"></i>{#link_contact#}</a></li>{/if}
+              {if isset($imprint)}<li class="cn_nomobile"><a title="{#link_imprint#}" href="{$imprint}"><i class="fas fa-info-circle"></i>{#link_imprint#}</a></li>{/if}
               <li class="cn_nomobile"><a title="{#link_checkout#}" href="{$checkout}"><strong><i class="far fa-credit-card"></i>{#link_checkout#}</strong></a></li>
               {if isset($box_CART)}<li class="cart">{$box_CART}</li>{/if}
               {if isset($box_WISHLIST)}<li class="wishlist">{$box_WISHLIST}</li>{/if}
@@ -119,8 +119,8 @@
       <div id="col_full" class="cf">
         <div id="content_navbar">
           <ul class="contentnavigation">
-            <li class="cn_nomobile"><a title="{#link_contact#}" href="{$smarty.const.FILENAME_CONTENT|xtc_href_link:'coID=7'}"><i class="far fa-envelope"></i>{#link_contact#}</a></li>
-            <li class="cn_nomobile"><a title="{#link_imprint#}" href="{$smarty.const.FILENAME_CONTENT|xtc_href_link:'coID=4'}"><i class="fas fa-info-circle"></i>{#link_imprint#}</a></li>
+            {if isset($contact)}<li class="cn_nomobile"><a title="{#link_contact#}" href="{$contact}"><i class="far fa-envelope"></i>{#link_contact#}</a></li>{/if}
+            {if isset($imprint)}<li class="cn_nomobile"><a title="{#link_imprint#}" href="{$imprint}"><i class="fas fa-info-circle"></i>{#link_imprint#}</a></li>{/if}
             <li class="cn_nomobile"><a title="{#link_checkout#}" href="{$checkout}"><strong><i class="far fa-credit-card"></i>{#link_checkout#}</strong></a></li>
             {if isset($box_CART)}<li class="cart">{$box_CART}</li>{/if}
             {if isset($box_WISHLIST)}<li class="wishlist">{$box_WISHLIST}</li>{/if}
@@ -139,8 +139,8 @@
           <div id="content_navbar">
             <ul class="contentnavigation">
               <li class="sidebar_btn"><span id="sidebar_marker"></span><a href="#" title="{#header_menu#}"><i class="fas fa-bars"></i><span class="cn_nomobile_text">{#header_menu#}</span></a></li>
-              <li class="cn_nomobile"><a title="{#link_contact#}" href="{$smarty.const.FILENAME_CONTENT|xtc_href_link:'coID=7'}"><i class="far fa-envelope"></i>{#link_contact#}</a></li>
-              <li class="cn_nomobile"><a title="{#link_imprint#}" href="{$smarty.const.FILENAME_CONTENT|xtc_href_link:'coID=4'}"><i class="fas fa-info-circle"></i>{#link_imprint#}</a></li>
+              {if isset($contact)}<li class="cn_nomobile"><a title="{#link_contact#}" href="{$contact}"><i class="far fa-envelope"></i>{#link_contact#}</a></li>{/if}
+              {if isset($imprint)}<li class="cn_nomobile"><a title="{#link_imprint#}" href="{$imprint}"><i class="fas fa-info-circle"></i>{#link_imprint#}</a></li>{/if}
               <li class="cn_nomobile"><a title="{#link_checkout#}" href="{$checkout}"><strong><i class="far fa-credit-card"></i>{#link_checkout#}</strong></a></li>
               {if isset($box_CART)}<li class="cart">{$box_CART}</li>{/if}
               {if isset($box_WISHLIST)}<li class="wishlist">{$box_WISHLIST}</li>{/if}
