@@ -65,7 +65,10 @@ function check_secure_form($params) {
     $valid = false;
   }
   
-  if (!isset($params[$_SESSION['SFName']])) {
+  if (isset($_SESSION['SFName'])
+      && !isset($params[$_SESSION['SFName']])
+      )
+  {
     $valid = false;
   }
 
