@@ -75,6 +75,20 @@ $orders_v2_array = array(
   'paypalbancontact',
 );
 
+$fixed_zones_modules_array = array(
+  'paypalacdc',
+  'paypalpui',
+  'paypalexpress',
+  'paypalsofort',
+  'paypaltrustly',
+  'paypalprzelewy',
+  'paypalmybank',
+  'paypalideal',
+  'paypalgiropay',
+  'paypaleps',
+  'paypalblik',
+  'paypalbancontact',
+);
 
 $payment_array = array_merge($orders_v2_array, $orders_v1_array);
 
@@ -246,21 +260,27 @@ require (DIR_WS_INCLUDES.'head.php');
                   <?php
                   
                   foreach ($mInfo->keys as $key => $value) {
-                    ?>
-                    <tr>
-                      <td class="dataTableConfig col-left"><?php echo $value['title']; ?></td>
-                      <td class="dataTableConfig col-middle">
-                      <?php 
-                        if ($value['set_function']) {
-                          eval('echo ' . $value['set_function'] . "'" . $value['value'] . "', '" . $key . "');");
-                        } else {
-                          echo xtc_draw_input_field('configuration[' . $key . ']', $value['value'], 'style="width: 300px;"');
-                        }
+                    if (!in_array($module->code, $fixed_zones_modules_array)
+                        && strpos($key, '_ZONE') === false
+                        && strpos($key, '_ALLOWED') === false
+                        )
+                    {
                       ?>
-                      </td>
-                      <td class="dataTableConfig col-right"><?php echo $value['description']; ?></td>
-                    </tr>
-                    <?php
+                      <tr>
+                        <td class="dataTableConfig col-left"><?php echo $value['title']; ?></td>
+                        <td class="dataTableConfig col-middle">
+                        <?php 
+                          if ($value['set_function']) {
+                            eval('echo ' . $value['set_function'] . "'" . $value['value'] . "', '" . $key . "');");
+                          } else {
+                            echo xtc_draw_input_field('configuration[' . $key . ']', $value['value'], 'style="width: 300px;"');
+                          }
+                        ?>
+                        </td>
+                        <td class="dataTableConfig col-right"><?php echo $value['description']; ?></td>
+                      </tr>
+                      <?php
+                    }
                   }
 
                   if ($module->code == 'paypallink' || $module->code == 'paypalpluslink') {
