@@ -154,7 +154,8 @@ if (isset($_GET['action'])
     )
 {
   $address_query = xtc_db_query("SELECT *,
-                                        entry_country_id as country
+                                        entry_country_id as country,
+                                        entry_zone_id as state
                                    FROM ".TABLE_ADDRESS_BOOK."
                                   WHERE address_book_id = '".(int)$_GET['id']."'");
   if (xtc_db_num_rows($address_query) > 0) {
