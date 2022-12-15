@@ -62,12 +62,16 @@ if ($customer_id > 0
   $smarty->assign('DATE', xtc_date_long($order->info['date_purchased']));
   $smarty->assign('SHIPPING_CLASS', $order->info['shipping_class']);
 
-  $last_order = $oID;
-  // load the selected payment module
-  require_once (DIR_WS_CLASSES . 'payment.php');
-  $payment_modules = new payment($order->info['payment_class']);
-  $smarty->assign('PAYMENT_INFO', $payment_modules->success());
-  $smarty->assign('PAYMENT_METHOD', $payment_modules::payment_title($order->info['payment_method'],$oID));
+  // Payment Method
+  if ($order->info['payment_method'] != '' && $order->info['payment_method'] != 'no_payment') {  
+    $_SESSION['billing_zone'] = $order->billing['country_iso_2'];
+    $last_order = $order->info['order_id'];
+    require_once (DIR_WS_CLASSES . 'payment.php');
+    $payment_modules = new payment($order->info['payment_class']);
+    $smarty->assign('PAYMENT_INFO', $payment_modules->success());
+    $smarty->assign('PAYMENT_METHOD', $payment_modules::payment_title($order->info['payment_method'], $order->info['order_id']));
+    unset($_SESSION['billing_zone']);
+  }
 
   // dont allow cache
   $smarty->caching =0;
