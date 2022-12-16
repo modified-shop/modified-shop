@@ -43,7 +43,13 @@
             require_once(DIR_FS_CATALOG.DIR_WS_CLASSES.'xtcPrice.php');
             $xtPrice = new xtcPrice($order->info['currency'], $order->info['status']);
 
-            $lang = $order->info['languages_id'];
+            $lang_query = xtc_db_query("SELECT *
+                                          FROM " . TABLE_LANGUAGES . "
+                                         WHERE directory = '" . xtc_db_input($order->info['language']) . "'");
+            $lang_array = xtc_db_fetch_array($lang_query);
+            $lang = $lang_array['languages_id'];
+            $lang_code = $lang_array['code'];
+
             $status = $_POST['status_update'];
             $comments = sprintf(TEXT_DHL_BUSINESS_ORDER_COMMENT, $_SESSION['DHLparcel_id']);
             $order_updated = false;
@@ -106,7 +112,13 @@
                                                 LIMIT 1");
           $orders_status = xtc_db_fetch_array($orders_status_query);
 
-          $lang = $order->info['languages_id'];
+          $lang_query = xtc_db_query("SELECT *
+                                        FROM " . TABLE_LANGUAGES . "
+                                       WHERE directory = '" . xtc_db_input($order->info['language']) . "'");
+          $lang_array = xtc_db_fetch_array($lang_query);
+          $lang = $lang_array['languages_id'];
+          $lang_code = $lang_array['code'];
+
           $status = $orders_status['orders_status_id'];
           $comments = sprintf(TEXT_DHL_BUSINESS_ORDER_COMMENT_DELETED, $tracking_links['parcel_id']);
           $order_updated = false;
