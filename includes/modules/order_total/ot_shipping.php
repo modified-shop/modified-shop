@@ -90,7 +90,7 @@ class ot_shipping {
         $shipping_tax_description = xtc_get_tax_description($GLOBALS[$module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
       }
       
-      $tax = $xtPrice->xtcAddTax($order->info['shipping_cost'], $shipping_tax) - $order->info['shipping_cost'];
+      $tax = $xtPrice->xtcAddTax($order->info['shipping_cost'], $shipping_tax, false) - $order->info['shipping_cost'];
       //$tax = $xtPrice->xtcFormat($tax, false, 0, true); // do not round
       
       if ($tax != 0
@@ -102,7 +102,7 @@ class ot_shipping {
           if (!isset($order->info['tax_groups'][TAX_ADD_TAX . "$shipping_tax_description"])) {
             $order->info['tax_groups'][TAX_ADD_TAX . "$shipping_tax_description"] = 0;
           }
-          $order->info['shipping_cost'] = $xtPrice->xtcAddTax($order->info['shipping_cost'], $shipping_tax);
+          $order->info['shipping_cost'] = $xtPrice->xtcAddTax($order->info['shipping_cost'], $shipping_tax, false);
           $order->info['tax'] += $tax;
           $order->info['tax_groups'][TAX_ADD_TAX . "$shipping_tax_description"] += $tax;
           $order->info['total'] += $tax;

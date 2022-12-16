@@ -166,7 +166,7 @@
                   if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 || !isset($quotes['tax'])) {
                     $quotes['tax'] = 0;
                   }
-                  $quotes['methods'][$i]['total'] = $xtPrice->xtcFormat($xtPrice->xtcAddTax($quotes['methods'][$i]['cost'], $quotes['tax']), false);						
+                  $quotes['methods'][$i]['total'] = $xtPrice->xtcFormat($xtPrice->xtcAddTax($quotes['methods'][$i]['cost'], $quotes['tax'], false), false);						
                 }
                 $title = $quotes['module'];
                 if (!defined('SHOW_SHIPPING_MODULE_TITLE') || SHOW_SHIPPING_MODULE_TITLE == 'shipping_default') {

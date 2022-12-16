@@ -547,9 +547,11 @@ class xtcPrice {
    * @param Double $tax tax value(%)
    * @return Double gross price
    */
-  function xtcAddTax($price, $tax) {
+  function xtcAddTax($price, $tax, $curr = true) {
     $price += (double)$price / 100 * (double)$tax;
-    $price = $this->xtcCalculateCurr($price);
+    if ($curr) {
+      $price = $this->xtcCalculateCurr($price);
+    }
     return $this->show_price_tax ? round($price, PRICE_PRECISION) : $price;
   }
 
