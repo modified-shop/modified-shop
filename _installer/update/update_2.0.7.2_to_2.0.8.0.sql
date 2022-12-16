@@ -54,4 +54,8 @@ ALTER TABLE `manufacturers_info` ADD KEY `idx_manufacturers_title` (`manufacture
 #GTB - 2022-07-22 - add content_type for orders
 ALTER TABLE `orders` ADD `content_type` VARCHAR(32) NOT NULL; 
 
+#GTB - 2022-07-12 - extend manufacturers
+ALTER TABLE `customers_login` ADD `date_added` DATETIME DEFAULT '0000-00-00 00:00:00';
+ALTER TABLE `customers_login` ADD `last_modified` DATETIME DEFAULT '0000-00-00 00:00:00';
+
 # Keep an empty line at the end of this file for the db_updater to work properly

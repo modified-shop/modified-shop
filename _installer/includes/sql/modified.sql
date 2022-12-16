@@ -563,6 +563,8 @@ CREATE TABLE customers_login (
   customers_ip varchar(50) DEFAULT NULL,
   customers_email_address varchar(255) DEFAULT NULL,
   customers_login_tries INT(11) NOT NULL,
+  date_added DATETIME DEFAULT '0000-00-00 00:00:00',
+  last_modified DATETIME DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (customers_login_id),
   KEY idx_customers_ip (customers_ip),
   KEY idx_customers_email_address (customers_email_address)
