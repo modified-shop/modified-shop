@@ -68,6 +68,7 @@
       );  
       
       defined('_VALID_XTC') OR define('_VALID_XTC', true);
+      defined('FILENAME_MODULE_EXPORT') OR define('FILENAME_MODULE_EXPORT', 'module_export.php');
       
       modified_api::reset();
       $modules_data = modified_api::request('modified/version/modules/');
