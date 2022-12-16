@@ -82,7 +82,7 @@
                       if ($data[2] != '' && is_numeric($data[2])) {
                         $sql_data_array = array(
                           'PROID' => (int)$data[2],
-                          'PRODNAME' => encode_utf8($data[4]),
+                          'PRODNAME' => encode_utf8($data[4], 'ISO-8859-15'),
                           'PROPR' => str_replace(',', '.', $data[5]),
                         );
                         xtc_db_perform('internetmarke', $sql_data_array);             
