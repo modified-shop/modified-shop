@@ -117,7 +117,7 @@
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_DHL_BUSINESS_WEIGHT_CN23', '0.1',  '6', '1', '', now())");
 
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_DHL_BUSINESS_NOTIFICATION', 'False',  '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
-      xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_DHL_BUSINESS_STATUS_UPDATE', '-1',  '6', '1', 'xtc_cfg_get_DHL_BUSINESS_orders_status(', 'xtc_get_order_status_name', now())");
+      xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_DHL_BUSINESS_STATUS_UPDATE', '-1',  '6', '1', 'xtc_cfg_get_dhl_business_orders_status(', 'xtc_get_order_status_name', now())");
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_DHL_BUSINESS_CODING', 'False',  '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_DHL_BUSINESS_PRODUCT', 'Paket',  '6', '1', 'xtc_cfg_select_option(array(\'Paket\', \'Warenpost\'), ', now())");
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_DHL_BUSINESS_DISPLAY_LABEL', 'False',  '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
@@ -209,8 +209,8 @@
   }
 
 
-  if (!function_exists('xtc_cfg_get_DHL_BUSINESS_orders_status')) {
-    function xtc_cfg_get_DHL_BUSINESS_orders_status($cfg_value, $cfg_key) {    
+  if (!function_exists('xtc_cfg_get_dhl_business_orders_status')) {
+    function xtc_cfg_get_dhl_business_orders_status($cfg_value, $cfg_key) {    
       return xtc_draw_pull_down_menu('configuration['.$cfg_key.']', array_merge(array(array('id' => '-1', 'text' => TEXT_DHL_BUSINESS_NO),array('id' => '0', 'text' => TEXT_DHL_BUSINESS_NO_STATUS_CHANGE)), xtc_get_orders_status()), $cfg_value);
     }
   }
