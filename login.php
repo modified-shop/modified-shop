@@ -83,7 +83,8 @@ if (isset($_GET['action'])
     }
     // update login tries
     xtc_db_query("UPDATE ".TABLE_CUSTOMERS_LOGIN." 
-                     SET customers_login_tries = '".($_SESSION['customers_login_tries'] + 1)."'
+                     SET customers_login_tries = '".($_SESSION['customers_login_tries'] + 1)."',
+                         last_modified = NOW()
                    WHERE (customers_email_address = '".xtc_db_input($email_address)."'
                           OR customers_ip = '".xtc_db_input($_SESSION['tracking']['ip'])."')");
   } else {
@@ -91,6 +92,7 @@ if (isset($_GET['action'])
       'customers_ip' => $_SESSION['tracking']['ip'],
       'customers_email_address' => $email_address,
       'customers_login_tries' => ($_SESSION['customers_login_tries'] + 1),
+      'date_added' => 'now()',
     );
     xtc_db_perform(TABLE_CUSTOMERS_LOGIN, $sql_data_array);
   }
