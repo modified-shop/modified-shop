@@ -106,10 +106,10 @@
 
           if ($action == 'insert') {
             // Check if table exists and delete it first
-            xtc_db_query("DROP TABLE IF EXISTS personal_offers_by_customers_status_" . $customers_status_id);
+            xtc_db_query("DROP TABLE IF EXISTS " . TABLE_PERSONAL_OFFERS_BY . $customers_status_id);
 
             // We want to create a personal offer table corresponding to each customers_status
-            xtc_db_query("CREATE TABLE personal_offers_by_customers_status_" . $customers_status_id . " (
+            xtc_db_query("CREATE TABLE " . TABLE_PERSONAL_OFFERS_BY . $customers_status_id . " (
                             price_id INT NOT NULL AUTO_INCREMENT, 
                             products_id int NOT NULL, 
                             quantity int, 
@@ -194,7 +194,7 @@
         xtc_db_query("DELETE FROM " . TABLE_CUSTOMERS_STATUS . " WHERE customers_status_id = '" . (int)$cID . "'");
 
         // We want to drop the existing corresponding personal_offers table
-        xtc_db_query("DROP TABLE IF EXISTS personal_offers_by_customers_status_" . (int)$cID);
+        xtc_db_query("DROP TABLE IF EXISTS " . TABLE_PERSONAL_OFFERS_BY.(int)$cID);
         xtc_db_query("ALTER TABLE `products` DROP `group_permission_" . (int)$cID . "`");
         xtc_db_query("ALTER TABLE `categories` DROP `group_permission_" . (int)$cID . "`");
         xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS_STATUS, 'page=' . $page));

@@ -52,9 +52,9 @@ $function = (isset($_GET['function']) ? $_GET['function'] : '');
 if (xtc_not_null($function)) {
   switch ($function) {
     case 'delete' :
-      xtc_db_query("DELETE FROM personal_offers_by_customers_status_".(int) $_GET['statusID']."
-                                 WHERE products_id = '".(int) $_GET['pID']."'
-                                 AND quantity    = '".(int) $_GET['quantity']."'");
+      xtc_db_query("DELETE FROM ".TABLE_PERSONAL_OFFERS_BY.(int)$_GET['statusID']."
+                                 WHERE products_id = '".(int)$_GET['pID']."'
+                                 AND quantity = '".(int)$_GET['quantity']."'");
       break;
   }
   xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('action', 'page')).'action=new_product'.$catfunc->page_parameter));

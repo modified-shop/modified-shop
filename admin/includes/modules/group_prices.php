@@ -110,7 +110,7 @@ $products_tax_rate = xtc_get_tax_rate($pInfo->products_tax_class_id);
                                                   products_id,
                                                   quantity,
                                                   personal_offer
-                                             FROM personal_offers_by_customers_status_".$group_data['STATUS_ID']."
+                                             FROM ".TABLE_PERSONAL_OFFERS_BY.$group_data['STATUS_ID']."
                                             WHERE products_id = '".$pInfo->products_id."'
                                               AND quantity != '1'
                                          ORDER BY quantity ASC");
