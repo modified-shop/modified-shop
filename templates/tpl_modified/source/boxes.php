@@ -154,11 +154,16 @@ if (in_array(basename($PHP_SELF), $bestsellers) && !isset($_GET['cPath']) && !is
 
 $smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 
-$shop_content_data = $main->getContentData(7, '', '', false);
-if (count($shop_content_data) > 0) {
-  $smarty->assign('contact', xtc_href_link(FILENAME_CONTENT, 'coID=7', 'SSL'));
-}
-$shop_content_data = $main->getContentData(4, '', '', false);
-if (count($shop_content_data) > 0) {
-  $smarty->assign('imprint', xtc_href_link(FILENAME_CONTENT, 'coID=4', 'SSL'));
+$content_data_query = xtDBquery("SELECT *
+                                   FROM ".TABLE_CONTENT_MANAGER."
+                                  WHERE content_group IN (4,7)
+                                    AND content_active = '1'
+                                    AND trim(content_title) != ''
+                                    AND languages_id = '".(int)$_SESSION['languages_id']."'
+                                        ".CONTENT_CONDITIONS);
+if (xtc_db_num_rows($content_data_query, true) > 0) {
+  while ($content_data = xtc_db_fetch_array($content_data_query, true)) {
+    if ($content_data['content_group'] == '7') $smarty->assign('contact', xtc_href_link(FILENAME_CONTENT, 'coID=7', 'SSL'));
+    if ($content_data['content_group'] == '4') $smarty->assign('imprint', xtc_href_link(FILENAME_CONTENT, 'coID=4', 'SSL'));
+  }
 }
