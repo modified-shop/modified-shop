@@ -325,8 +325,10 @@ switch ($category_depth) {
   case 'top':
     $content_main_template = 'main_content.html';
     $shop_content_data = $main->getContentData(5, '', '', false, ADD_SELECT_CONTENT);
-    $default_smarty->assign('title', $shop_content_data['content_heading']);
-
+    if (!empty($shop_content_data['content_heading'])) {
+      $default_smarty->assign('title', $shop_content_data['content_heading']);
+    }
+    
     foreach(auto_include(DIR_FS_CATALOG.'includes/extra/default/center_modules/','php') as $file) require_once ($file);
 
     if ($messageStack->size('default') > 0) {
