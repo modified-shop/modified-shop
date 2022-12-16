@@ -57,7 +57,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'send') {
                               FROM ".TABLE_COUPON_GV_CUSTOMER." 
                              WHERE customer_id = '".(int)$_SESSION['customer_id']."'");
   $gv_result = xtc_db_fetch_array($gv_query);
-  $customer_amount = $gv_result['amount'];
+  $customer_amount = $xtPrice->xtcCalculateCurr($gv_result['amount']);
   $gv_amount = xtc_input_validation($_POST['amount'], 'amount');
   if (trim($gv_amount) == '') {
     $error = true;
@@ -76,7 +76,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'process') {
                              WHERE customer_id='".(int)$_SESSION['customer_id']."'");
   $gv_result = xtc_db_fetch_array($gv_query);
   $gv_amount = xtc_input_validation($_POST['amount'], 'amount');
-  $new_amount = $gv_result['amount'] - $gv_amount;
+  $new_amount = $xtPrice->xtcCalculateCurr($gv_result['amount']) - $gv_amount;
   if ($new_amount < 0) {
     $error = true;
     $messageStack->add('gv_send', ERROR_ENTRY_AMOUNT_CHECK);
@@ -95,7 +95,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'process') {
       'coupon_type' => 'G',
       'coupon_code' => $id1,
       'date_created' => 'now()',
-      'coupon_amount' => $gv_amount
+      'coupon_amount' => $xtPrice->xtcRemoveCurr($gv_amount)
     );
     xtc_db_perform(TABLE_COUPONS, $sql_data_array);
     $insert_id = xtc_db_insert_id();

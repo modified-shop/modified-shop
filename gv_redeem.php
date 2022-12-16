@@ -89,7 +89,7 @@ require (DIR_WS_INCLUDES.'header.php');
 
 // if we get here then either the url gv_no was not set or it was invalid
 // so output a message.
-$smarty->assign('coupon_amount', $xtPrice->xtcFormat($coupon['coupon_amount'], true));
+$smarty->assign('coupon_amount', $xtPrice->xtcFormat($coupon['coupon_amount'], true, 0, true));
 $smarty->assign('error', $error);
 $smarty->assign('LINK_DEFAULT', '<a href="'.xtc_href_link(FILENAME_DEFAULT).'">'.xtc_image_button('button_continue.gif', IMAGE_BUTTON_CONTINUE).'</a>');
 $smarty->assign('language', $_SESSION['language']);
