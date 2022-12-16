@@ -266,8 +266,9 @@
       $carriers_query = xtc_db_query("SELECT carrier_name 
                                         FROM ".TABLE_CARRIERS." 
                                        WHERE carrier_id = '".(int)$cfg_value."'");
-      $carrier = xtc_db_fetch_array($carriers_query);
-      return $carrier['carrier_name'];
-    }    
+      if (xtc_db_num_rows($carriers_query) > 0) {
+        $carrier = xtc_db_fetch_array($carriers_query);
+        return $carrier['carrier_name'];
+      }
+    }
   }
-?>
