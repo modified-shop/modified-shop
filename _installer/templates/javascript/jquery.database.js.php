@@ -48,7 +48,7 @@ function JStoPHPResponse(data) {
     data_ok += '<div>' + '<?php echo TEXT_INFO_LAST; ?>' + response.actual_table + '</div>';
   }
   data_ok += '<div>' + '<?php echo TEXT_INFO_CALLS; ?>' + response.aufruf + '</div>';
-  data_ok += '<div>' + '<?php echo TEXT_INFO_ROWS; ?>' + response.anzahl_zeilen + '</div>';
+  if (response.anzahl_zeilen !== undefined) data_ok += '<div>' + '<?php echo TEXT_INFO_ROWS; ?>' + response.anzahl_zeilen + '</div>';
   data_ok += '<div>' + '<?php echo TEXT_INFO_TIME; ?>' +  response.time  + '</div>';
   
   $('#data_ok').html(data_ok);
