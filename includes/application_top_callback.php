@@ -193,8 +193,19 @@ include_once (DIR_WS_MODULES.'verify_session.php');
 // set the language
 include_once (DIR_WS_MODULES.'set_language_sessions.php');
 
+// currency
+include_once (DIR_WS_MODULES.'set_currency_session.php');
+
+// write customers status in session
+require_once (DIR_WS_INCLUDES.'write_customers_status.php');
+
+// content, product, category - sql group_check/fsk_lock
+require_once (DIR_WS_INCLUDES.'define_conditions.php');
+
+// add_select
+require_once (DIR_WS_INCLUDES.'define_add_select.php');
+
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/application_top_callback/application_top_callback_end/','php') as $file) require ($file);
 
 //compatibility for modified eCommerce Shopsoftware 1.06 files
 defined('DIR_WS_BASE') OR define('DIR_WS_BASE', '');
-?>
