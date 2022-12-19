@@ -138,6 +138,7 @@
   define('TEXT_DB_DATABASE', 'Database:');
   define('TEXT_DB_MYSQL_TYPE', 'Type:');
   define('TEXT_DB_CHARSET', 'Charset:');
+  define('TEXT_DB_ENGINE', 'Engine:');
   define('TEXT_DB_PCONNECT', 'Persistent:');
   define('TEXT_DB_EXISTS', 'Database already exists');
   define('TEXT_DB_EXISTS_DESC', 'If you click "Confirm", all tables in this database will be overwritten! If you do not want it, click "Back" and specify a different database. Otherwise, click "Confirm".');

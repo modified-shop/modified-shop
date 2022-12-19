@@ -138,6 +138,7 @@
   define('TEXT_DB_DATABASE', 'Datenbank:');
   define('TEXT_DB_MYSQL_TYPE', 'Typ:');
   define('TEXT_DB_CHARSET', 'Zeichensatz:');
+  define('TEXT_DB_ENGINE', 'Engine:');
   define('TEXT_DB_PCONNECT', 'Persistent:');
   define('TEXT_DB_EXISTS', 'Datenbank existiert bereits');
   define('TEXT_DB_EXISTS_DESC', 'Wenn Sie "Best&auml;tigen" klicken werden alle Tabellen dieser Datenbank &uuml;berschrieben! Wenn Sie dies nicht m&ouml;chten, dann klicken Sie auf "Zur&uuml;ck" und geben eine andere Datenbank an. Andersfalls klicken Sie auf "Best&auml;tigen".');

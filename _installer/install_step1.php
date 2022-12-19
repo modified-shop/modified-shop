@@ -48,6 +48,7 @@
 
   $db_type = ((defined('DB_MYSQL_TYPE')) ? DB_MYSQL_TYPE : '');
   $db_charset = (($upgrade === true && defined('DB_SERVER_CHARSET')) ? DB_SERVER_CHARSET : 'utf8');
+  $db_engine = ((defined('DB_ENGINE')) ? DB_ENGINE : 'MyISAM');
   $db_pconnect = ((defined('USE_PCONNECT')) ? USE_PCONNECT : 'false');
 
   $http_server = HTTP_SERVER;
@@ -68,8 +69,8 @@
       'db_username',
       'db_password',
       'db_database',
-      'db_type',
       'db_charset',
+      'db_engine',
       'db_pconnect',
       'db_install',
     
@@ -130,7 +131,9 @@
           xtc_db_query('SET NAMES '.$db_charset.' COLLATE '.$collation);
       
           $engine = '';
+          $engine = $db_engine;
           xtc_db_query("CREATE TABLE IF NOT EXISTS `engine` (`type` VARCHAR( 16 ) NOT NULL)");
+          /*
           $check_query = xtc_db_query("SHOW CREATE TABLE `engine`");
           $check = xtc_db_fetch_array($check_query);
               
@@ -144,6 +147,7 @@
               $engine = trim(substr($check['Create Table'], ($pos + 5), (strpos($check['Create Table'], ' ', $pos) - $pos - 5)));
             }
           }
+          */
           xtc_db_query("TRUNCATE `engine`");
           xtc_db_query("INSERT INTO `engine` VALUES ('".xtc_db_input($engine)."')");
         }
@@ -299,6 +303,10 @@
     array('id' => 'latin1', 'text' => 'ISO-8859-15'),
     array('id' => 'utf8', 'text' => 'UTF-8'),
   );
+  $db_engine_array = array(
+    array('id' => 'MyISAM', 'text' => 'MyISAM'),
+    array('id' => 'InnoDB', 'text' => 'InnoDB'),
+  );
   $session_array = array(
     array('id' => 'mysql', 'text' => 'Datenbank'),
     array('id' => 'files', 'text' => 'Datei'),
@@ -313,6 +321,7 @@
   $smarty->assign('INPUT_DB_DATABSE', xtc_draw_input_fieldNote(array('name' => 'db_database')));    
   $smarty->assign('INPUT_DB_CHARSET', xtc_draw_pull_down_menuNote(array ('name' => 'db_charset'), $db_charset_array, $db_charset));
   $smarty->assign('INPUT_DB_PCONNECT', xtc_draw_pull_down_menuNote(array ('name' => 'db_pconnect'), $boolean_array, $db_pconnect));
+  $smarty->assign('INPUT_DB_ENGINE', xtc_draw_pull_down_menuNote(array ('name' => 'db_engine'), $db_engine_array, $db_engine));
   
   // server
   $smarty->assign('INPUT_HTTP_SERVER', xtc_draw_input_fieldNote(array('name' => 'http_server')));    
