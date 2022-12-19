@@ -166,7 +166,7 @@
             if ($action == 'save') {
               xtc_db_query("TRUNCATE TABLE ".TABLE_PERSONAL_OFFERS_BY.$customers_status_id);
             }
-            xtc_db_query("INSERT INTO ".TABLE_PERSONAL_OFFERS_BY.$customers_status_id." SELECT * FROM ".TABLE_PERSONAL_OFFERS_BY.(int)$_POST['customers_base_status'])
+            xtc_db_query("INSERT INTO ".TABLE_PERSONAL_OFFERS_BY.$customers_status_id." SELECT * FROM ".TABLE_PERSONAL_OFFERS_BY.(int)$_POST['customers_base_status']);
           }
 
           $accepted_customers_status_image_files_extensions = array("jpg","jpeg","jpe","gif","png","bmp","tiff","tif","bmp");
