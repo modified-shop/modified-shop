@@ -285,7 +285,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
       'final_price' => $order->products[$i]['final_price'],
       'products_tax' => $order->products[$i]['tax'],
       'products_quantity' => $order->products[$i]['qty'],
-      'allow_tax' => $_SESSION['customers_status']['customers_status_show_price_tax'],
+      'allow_tax' => $order->info['allow_tax'],
       'products_order_description' => $order->products[$i]['order_description'],
       'products_weight' => $order->products[$i]['weight'],
     );

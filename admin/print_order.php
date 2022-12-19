@@ -46,13 +46,27 @@
   $smarty->assign('order_total', $order_total['data']);
   
   $smarty->assign('vat_info', 0);
-  if ($order->customer['vat_id'] != '' 
-      && count($order_data) > 0
+  if (count($order_data) > 0
       && $order_data[0]['ALLOW_TAX'] == 0
       )
   {
     $store_country = xtc_get_countriesList(STORE_COUNTRY);
-    $countries_array = xtc_get_isocodes_from_geozone(5);
+    
+    $countries_array = array();
+    $countries_query = xtc_db_query("SELECT c.countries_iso_code_2
+                                       FROM ".TABLE_TAX_RATES." tr
+                                       JOIN ".TABLE_ZONES_TO_GEO_ZONES." ztgz
+                                            ON tr.tax_zone_id = ztgz.geo_zone_id
+                                       JOIN ".TABLE_COUNTRIES." c
+                                            ON ztgz.zone_country_id = c.countries_id
+                                      WHERE tr.tax_rate > 0
+                                   GROUP BY c.countries_id");
+    if (xtc_db_num_rows($countries_query) > 0) {
+      while ($countries = xtc_db_fetch_array($countries_query)) {
+        $countries_array[] = $countries['countries_iso_code_2'];
+      }
+    }
+    
     if (in_array($order->delivery['country_iso_2'], $countries_array)
         && in_array($store_country['countries_iso_code_2'], $countries_array)
         && $order->delivery['country_iso_2'] != $store_country['countries_iso_code_2']
