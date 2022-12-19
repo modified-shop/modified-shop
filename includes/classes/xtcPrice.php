@@ -175,6 +175,8 @@ class xtcPrice {
     if ($this->cStatus['customers_status_show_price_tax'] == '0') {
       $products_tax = 0;
     }
+
+    $this->show_price_tax = (((int)$this->tax_class > 0 && $products_tax == 0) ? 0 : $this->show_price_tax);
     
     // add taxes
     if ((float)$pPrice == 0) {

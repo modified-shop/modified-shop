@@ -36,6 +36,7 @@
       foreach ($order->info['tax_groups'] as $key => $value) {
         if ($value > 0) {
           if ($_SESSION['customers_status']['customers_status_show_price_tax'] != 0) {
+            $order->info['allow_tax'] = 1; //customer
             $this->output[] = array('title' => $key . ':',
                                     'text' => $xtPrice->xtcFormat($value,true),
                                     'value' => $xtPrice->xtcFormat($value, false));
@@ -45,6 +46,7 @@
               && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1
               ) 
           {
+            $order->info['allow_tax'] = 2; //merchant
             $this->output[] = array('title' => $key .':',
                                     'text' => $xtPrice->xtcFormat($value,true),
                                     'value' => $xtPrice->xtcFormat($value, false));
@@ -55,6 +57,7 @@
               && $order->delivery['country_id'] == STORE_COUNTRY
               ) 
           {
+            $order->info['allow_tax'] = 3; //merchant EU
             $this->output[] = array('title' => $key .':',
                                     'text' => $xtPrice->xtcFormat($value,true),
                                     'value' => $xtPrice->xtcFormat($value, false));

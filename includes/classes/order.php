@@ -541,6 +541,7 @@
         'payment_method' => ((isset($_SESSION['payment']) && $_SESSION['payment'] != '') ? $_SESSION['payment'] : 'no_payment'),
         'payment_class' => ((isset($_SESSION['payment']) && $_SESSION['payment'] != '') ? $_SESSION['payment'] : 'no_payment'),
         'comments' => isset($_SESSION['comments']) ? $_SESSION['comments'] : '',
+        'allow_tax' => 0,
         'subtotal' => 0,
         'tax' => 0,
         'tax_groups' => array(),
