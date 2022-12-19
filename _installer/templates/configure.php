@@ -43,6 +43,7 @@ $file_contents =
 '  defined(\'DB_SERVER_PASSWORD\') or define(\'DB_SERVER_PASSWORD\', \'' . $db_password. '\');' . PHP_EOL .
 '  defined(\'DB_DATABASE\') or define(\'DB_DATABASE\', \'' . $db_database. '\');' . PHP_EOL .
 '  defined(\'DB_SERVER_CHARSET\') or define(\'DB_SERVER_CHARSET\', \'' . $db_charset . '\'); // set db charset \'utf8\' or \'latin1\'' . PHP_EOL .
+'  defined(\'DB_ENGINE\') or define(\'DB_ENGINE\', \'' . $db_engine . '\');' . PHP_EOL .
 '  defined(\'USE_PCONNECT\') or define(\'USE_PCONNECT\', \'' . $db_pconnect . '\'); // use persistent connections?' . PHP_EOL .
 '' . PHP_EOL .
 '  // server' . PHP_EOL .
