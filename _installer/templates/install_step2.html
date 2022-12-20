@@ -1,10 +1,9 @@
 {$FORM_ACTION}
   {if isset($error_message)}<div class="errormessage">{$error_message}</div>{/if}
   
-  <p>{$smarty.const.TEXT_ACCOUNT}</p>
-  <br />
   <br />
   <h2>{$smarty.const.TEXT_ACCOUNT_HEADING}</h2>
+  <p>{$smarty.const.TEXT_ACCOUNT}</p>
   <div class="field_row">
     <div class="field_item"><div class="field_heading">{$smarty.const.TEXT_ACCOUNT_FIRSTNAME}</div>{$INPUT_FIRSTNAME}</div>
     <div class="field_item"><div class="field_heading">{$smarty.const.TEXT_ACCOUNT_LASTNAME}</div>{$INPUT_LASTNAME}</div>
@@ -14,6 +13,12 @@
     <div class="field_item"><div class="field_heading">{$smarty.const.TEXT_ACCOUNT_CITY}</div>{$INPUT_CITY}</div>
     <div class="field_item"><div class="field_heading">{$smarty.const.TEXT_ACCOUNT_COUNTRY}</div>{$INPUT_COUNTRY}</div>
   </div>
+
+  <br />
+  <br />
+  <h2>{$smarty.const.TEXT_ACCOUNT_LOGIN_HEADING}</h2>
+  <p>{$smarty.const.TEXT_ACCOUNT_PASSWORD_POLICY|sprintf:$smarty.const.ENTRY_PASSWORD_MIN_LENGTH}</p>
+    
   <div class="field_row">
     <div class="field_item"><div class="field_heading">{$smarty.const.TEXT_ACCOUNT_EMAIL}</div>{$INPUT_EMAIL}</div>
     <div class="field_item"><div class="field_heading">{$smarty.const.TEXT_ACCOUNT_CONFIRM_EMAIL}</div>{$INPUT_CONFIRM_EMAIL}</div>

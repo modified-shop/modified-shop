@@ -156,6 +156,7 @@
 
   define('TEXT_ACCOUNT','The installer will create the admin account and will perform some db actions.<br /> The given information for <b>Country</b> and <b>Post Code</b> are used for shipping and tax callculations.');
   define('TEXT_ACCOUNT_HEADING', 'Account details:');
+  define('TEXT_ACCOUNT_LOGIN_HEADING', 'Account login:');
   define('TEXT_ACCOUNT_FIRSTNAME', 'First name:');
   define('TEXT_ACCOUNT_LASTNAME', 'Last name:');
   define('TEXT_ACCOUNT_COMPANY', 'Company:');
@@ -167,6 +168,7 @@
   define('TEXT_ACCOUNT_CONFIRM_EMAIL', ' Confirm E-Mail:');
   define('TEXT_ACCOUNT_PASSWORD', 'Password:');
   define('TEXT_ACCOUNT_CONFIRMATION', 'Confirm Password:');
+  define('TEXT_ACCOUNT_PASSWORD_POLICY', 'A secure password should be at least %s characters in length and should include uppercase and lowercase letters and numbers and special characters (except Backslash "\").');
   
   define('TEXT_FINISHED', 'Here you can already install the popular PayPal payment methods.');
   define('TEXT_MODULES_INSTALLED', 'Intalled:');

@@ -156,6 +156,7 @@
 
   define('TEXT_ACCOUNT','Der Installer richtet den Admin-Account ein und schreibt noch diverse Daten in die Datenbank.<br />Die angegebenen Daten f&uuml;r <b>Land</b> und <b>PLZ</b> werden f&uuml;r die Versand- und Steuerberechnungen genutzt.');
   define('TEXT_ACCOUNT_HEADING', 'Angaben zum Account:');
+  define('TEXT_ACCOUNT_LOGIN_HEADING', 'Angaben zum Login:');
   define('TEXT_ACCOUNT_FIRSTNAME', 'Vorname:');
   define('TEXT_ACCOUNT_LASTNAME', 'Nachname:');
   define('TEXT_ACCOUNT_COMPANY', 'Firma:');
@@ -167,7 +168,8 @@
   define('TEXT_ACCOUNT_CONFIRM_EMAIL', 'E-Mail best&auml;tigen:');
   define('TEXT_ACCOUNT_PASSWORD', 'Passwort:');
   define('TEXT_ACCOUNT_CONFIRMATION', 'Passwort best&auml;tigen:');
-  
+  define('TEXT_ACCOUNT_PASSWORD_POLICY', 'Ein sicheres Passwort muss mindestens %s Zeichen lang sein und sollte neben Gro&szlig;- und Kleinbuchstaben auch Zahlen sowie Sonderzeichen (au&szlig;er Backslash "\") enthalten.');
+
   define('TEXT_FINISHED', 'Hier k&ouml;nnen Sie bereits die beliebten Zahlungsweisen von PayPal installieren.');
   define('TEXT_MODULES_INSTALLED', 'Installiert:');
   define('TEXT_MODULES_UNINSTALLED', 'Nicht installiert:');
