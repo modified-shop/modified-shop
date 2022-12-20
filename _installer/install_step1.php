@@ -69,6 +69,7 @@
       'db_username',
       'db_password',
       'db_database',
+      'db_type',
       'db_charset',
       'db_engine',
       'db_pconnect',
