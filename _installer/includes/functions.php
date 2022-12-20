@@ -354,8 +354,10 @@
     if (is_array($version_array)) {
       foreach ($version_array as $file => $data) {
         $filename = ltrim($file, '/');
-        $filename = str_replace('admin/', DIR_ADMIN, $filename);
-      
+        if (substr($filename, 0, 6) == 'admin/') {
+          $filename = substr_replace($filename, DIR_ADMIN, 0, 6);
+        }
+
         if (is_file(DIR_FS_CATALOG.$filename)) {
           $files_array[$file] = array(
             'relativePath' => DIR_WS_CATALOG.$filename,
@@ -475,7 +477,7 @@
             $install_path = str_replace($shoproot, DIR_FS_CATALOG, $file->getPath());
             $install_path = rtrim($install_path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
             $install_path = str_replace(DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $install_path);
-            $install_path = str_replace('/admin/', DIRECTORY_SEPARATOR.DIR_ADMIN, $install_path);
+            $install_path = str_replace(DIR_FS_CATALOG.'admin/', DIR_FS_CATALOG.DIR_ADMIN, $install_path);
             
             if (strpos($install_path.$file->getFilename(), DIR_FS_CATALOG.'includes/configure.php') !== false
                 || strpos($install_path.$file->getFilename(), DIR_FS_CATALOG.'includes/local/configure.php') !== false
