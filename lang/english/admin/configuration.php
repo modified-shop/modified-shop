@@ -832,6 +832,13 @@ define('MAX_DISPLAY_ADVANCED_SEARCH_RESULTS_TITLE', 'Number of Search Results');
 define('MAX_DISPLAY_ADVANCED_SEARCH_RESULTS_DESC', 'Maximum number of products to be displayed per page in the search results (advanced_search_result.php).');
 define('MAX_DISPLAY_PRODUCTS_HISTORY_TITLE' , 'Maximum History');
 define('MAX_DISPLAY_PRODUCTS_HISTORY_DESC' , 'Maximum visited products in account history');
+define('MAX_DISPLAY_SEARCH_AC_RESULTS_TITLE' , 'Number of Autocomplete Search Results');
+define('MAX_DISPLAY_SEARCH_AC_RESULTS_DESC' , 'Maximum number of products to be displayed in the autocomplete search results');
+
+define('SEARCH_AC_SORT_TITLE', 'Autocomplete Sort Order');
+define('SEARCH_AC_SORT_DESC', 'This is the sort order used for autocomplete.');
+define('SEARCH_AC_FIELD_TITLE', 'Autocomplete Sort Field');
+define('SEARCH_AC_FIELD_DESC', 'The column to sort by for autocomplete.');
 
 define('PRODUCT_IMAGE_SHOW_NO_IMAGE_TITLE', 'Product noimage.gif');
 define('PRODUCT_IMAGE_SHOW_NO_IMAGE_DESC', 'Show noimage.gif if there is no product image assigned');

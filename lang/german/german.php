@@ -217,6 +217,7 @@ define('IMAGE_BUTTON_SEND', 'Absenden');
 define('IMAGE_BUTTON_CONTINUE_SHOPPING', 'Einkauf fortsetzen');
 define('IMAGE_BUTTON_CHECKOUT_STEP2', 'Weiter zu Schritt 2');
 define('IMAGE_BUTTON_CHECKOUT_STEP3', 'Weiter zu Schritt 3');
+define('IMAGE_BUTTON_RESULTS', 'Ergebnisse anzeigen');
 
 define('SMALL_IMAGE_BUTTON_DELETE', 'L&ouml;schen');
 define('SMALL_IMAGE_BUTTON_EDIT', '&Auml;ndern');
@@ -229,6 +230,7 @@ define('ICON_WARNING', 'Warnung');
 define('ICON_ERROR', 'Fehler');
 
 define('TEXT_PRINT', 'Drucken');
+define('TEXT_BUTTON_RESULTS', '%s Ergebnisse anzeigen');
 
 define('BUTTON_RESET', 'Reset');
 define('BUTTON_UPDATE', 'Update');

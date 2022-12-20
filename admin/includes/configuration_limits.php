@@ -22,6 +22,7 @@ $value_limits['MODULE_CAPTCHA_LOGIN_NUM'] = array('min' => 0, 'max' => 10);
 $value_limits['MAX_DISPLAY_SPECIAL_PRODUCTS'] = array('min' => 1);
 $value_limits['MAX_DISPLAY_SEARCH_RESULTS'] = array('min' => 1);
 $value_limits['MAX_DISPLAY_ADVANCED_SEARCH_RESULTS'] = array('min' => 1);
+$value_limits['MAX_DISPLAY_SEARCH_AC_RESULTS'] = array('min' => 1, 'max' => 20);
 $value_limits['MAX_DISPLAY_PRODUCTS_NEW'] = array('min' => 1);
 $value_limits['MAX_DISPLAY_PAGE_LINKS'] = array('min' => 1);
 

@@ -217,6 +217,7 @@ define('IMAGE_BUTTON_SEND', 'Send'); //DokuMan - 2010-03-15 - Added button descr
 define('IMAGE_BUTTON_CONTINUE_SHOPPING', 'Continue shopping'); //Hendrik - 2010-11-12 - used in default template ...shopping_cart.html
 define('IMAGE_BUTTON_CHECKOUT_STEP2', 'Continue to step 2');
 define('IMAGE_BUTTON_CHECKOUT_STEP3', 'Continue to step 3');
+define('IMAGE_BUTTON_RESULTS', 'Show results');
 
 define('SMALL_IMAGE_BUTTON_DELETE', 'Delete');
 define('SMALL_IMAGE_BUTTON_EDIT', 'Edit');
@@ -229,6 +230,7 @@ define('ICON_WARNING', 'Warning');
 define('ICON_ERROR', 'Error');
 
 define('TEXT_PRINT', 'Print'); //DokuMan - 2009-05-26 - Added description for 'account_history_info.php'
+define('TEXT_BUTTON_RESULTS', 'Show %s results');
 
 define('BUTTON_RESET', 'Reset');
 define('BUTTON_UPDATE', 'Update');

@@ -86,6 +86,7 @@ $values_group_update = array();
   $values[] = "(NULL, 'MAX_DISPLAY_PRODUCTS_HISTORY', '6', '3', '25', NULL, NOW(), NULL, NULL);";
   $values[] = "(NULL, 'MAX_DISPLAY_BESTSELLERS_DAYS', '100', '3', '15', NULL, NOW(), NULL, NULL);";
   $values[] = "(NULL, 'MAX_DISPLAY_ALSO_PURCHASED_ORDERS', '100', '3', '16', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'MAX_DISPLAY_SEARCH_AC_RESULTS', '10', '3', '24', NULL, NOW(), NULL, NULL);";
 
 //configuration_group_id 4 --- "Bild Optionen"
   $values[] = "(NULL, 'PRODUCT_IMAGE_NO_ENLARGE_UNDER_DEFAULT', 'false', '4', '2', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
@@ -606,6 +607,10 @@ $values_group_update = array();
   $values[] = "(NULL, 'SEARCH_AC_STATUS', 'true', 22, 10, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');"; 
   $values[] = "(NULL, 'SEARCH_AC_CATEGORIES', 'true', 22, 10, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');"; 
   $values[] = "(NULL, 'SEARCH_AC_MIN_LENGTH', '3', '22', '11', NULL, NOW(), NULL, NULL);";
+
+  $values[] = "(NULL, 'SEARCH_AC_SORT', 'ASC', 22, 12, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'ASC\', \'DESC\'),');"; 
+  $values[] = "(NULL, 'SEARCH_AC_FIELD', 'pd.products_name', 22, 13, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'p.products_price\', \'pd.products_name\', \'p.products_date_added\', \'p.products_model\', \'p.products_ordered\', \'p.products_sort\', \'p.products_weight\', \'p.products_quantity\'),');"; 
+
   //$values[] = "(NULL, 'SEARCH_HIGHLIGHT', 'true', 22, 4, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";   //modified 2.10
   //$values[] = "(NULL, 'SEARCH_HIGHLIGHT_STYLE', 'color:#000;background-color:#eee;border:dotted #000 1px;', 22, 5, NULL, NOW(), NULL, NULL);"; //modified 2.10
 

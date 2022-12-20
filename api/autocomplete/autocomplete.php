@@ -55,7 +55,9 @@
       }
       
       include(DIR_WS_INCLUDES.'build_search_query.php');
-                                                         
+      
+      $sorting = ' ORDER BY '.SEARCH_AC_FIELD.' '.SEARCH_AC_SORT.' ';
+                                  
       $autocomplete_search_query = "SELECT ".$product->default_select."
                                       FROM ".TABLE_PRODUCTS." p 
                                       JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd 
@@ -74,8 +76,8 @@
                                            ".$where_str."
                                            ".PRODUCTS_CONDITIONS_P."
                                   GROUP BY p.products_id 
-                                  ORDER BY p.products_id ASC
-                                     LIMIT ".MAX_DISPLAY_ADVANCED_SEARCH_RESULTS;
+                                           ".((isset($_SESSION['filter_sorting'])) ? $_SESSION['filter_sorting'] : $sorting)."
+                                     LIMIT ".MAX_DISPLAY_SEARCH_AC_RESULTS;
       
       $autocomplete_search_query = xtc_db_query($autocomplete_search_query);                      
       if (xtc_db_num_rows($autocomplete_search_query) > 0) {

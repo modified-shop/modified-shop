@@ -829,8 +829,15 @@ define('MAX_DISPLAY_PRODUCTS_CATEGORY_TITLE', 'Maximale Artikel');
 define('MAX_DISPLAY_PRODUCTS_CATEGORY_DESC', 'Maximale Anzahl an Artikeln aus der gleichen Kategorie.');
 define('MAX_DISPLAY_ADVANCED_SEARCH_RESULTS_TITLE', 'Anzahl Suchergebnisse');
 define('MAX_DISPLAY_ADVANCED_SEARCH_RESULTS_DESC', 'Maximum Anzahl der Artikel die pro Seite in den Suchergebnissen (advanced_search_result.php) angezeigt werden sollen.');
-define('MAX_DISPLAY_PRODUCTS_HISTORY_TITLE' , 'Anzahl der History');
-define('MAX_DISPLAY_PRODUCTS_HISTORY_DESC' , 'Maximum Anzahl an Artikeln, die zuletzt besucht wurden, im Account anzeigen.');
+define('MAX_DISPLAY_ADVANCED_SEARCH_RESULTS_TITLE', 'Anzahl Suchergebnisse');
+define('MAX_DISPLAY_ADVANCED_SEARCH_RESULTS_DESC', 'Maximum Anzahl der Artikel die pro Seite in den Suchergebnissen (advanced_search_result.php) angezeigt werden sollen.');
+define('MAX_DISPLAY_SEARCH_AC_RESULTS_TITLE' , 'Anzahl Autocomplete Suchergebnisse');
+define('MAX_DISPLAY_SEARCH_AC_RESULTS_DESC' , 'Maximum Anzahl an Erbnissen der Autocomplete Suche.');
+
+define('SEARCH_AC_SORT_TITLE', 'Reihenfolge f&uuml;r Autocomplete');
+define('SEARCH_AC_SORT_DESC', 'Das ist die Reihenfolge, wie Autocomplete Ergebnisse angezeigt werden.');
+define('SEARCH_AC_FIELD_TITLE', 'Sortierfeld f&uuml;r Autocomplete');
+define('SEARCH_AC_FIELD_DESC', 'Das ist die Spalte, die zum Sortieren der Autocomplete Ergebnisse benutzt wird.');
 
 define('PRODUCT_IMAGE_SHOW_NO_IMAGE_TITLE', 'Artikel noimage.gif');
 define('PRODUCT_IMAGE_SHOW_NO_IMAGE_DESC', 'Anzeige des noimage.gif, wenn kein Artikelbild angegeben wurde.');
