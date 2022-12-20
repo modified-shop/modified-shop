@@ -62,5 +62,33 @@
     define('_MODIFIED_SHOP_LOGIN', true);
     include(DIR_FS_CATALOG.'includes/login_admin.php');
     exit();
-  }  
+  }
+  
+  function check_db() {
+    // include functions
+    require_once(DIR_FS_INC.'auto_include.inc.php');
+    require_once(DIR_WS_INCLUDES . 'database_tables.php');
+
+    require_once (DIR_FS_INC.'xtc_not_null.inc.php');
+    require_once (DIR_FS_INC.'xtc_validate_password.inc.php');
+
+    // Database
+    $db_type = get_mysql_type();
+    require_once (DIR_FS_INC.'db_functions_'.$db_type.'.inc.php');
+    require_once (DIR_FS_INC.'db_functions.inc.php');
+
+    // make a connection to the database... now
+    $check_db = xtc_db_connect();
+    
+    if ($check_db !== false) {
+      $check_db = false;
+      $check_query = xtc_db_query("SELECT *
+                                     FROM ".TABLE_CUSTOMERS);
+      if (xtc_db_num_rows($check_query) > 0) {
+        $check_db = true;
+      }
+    }
+    
+    return $check_db;
+  } 
 ?>

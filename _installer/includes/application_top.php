@@ -120,11 +120,9 @@
   } else {
     include(DIR_FS_CATALOG.'/includes/configure.php');
   }
-  $upgrade = true;
-  if (DB_SERVER_USERNAME == '' && DB_SERVER_PASSWORD == '' && DB_DATABASE == '') {
-    $upgrade = false;
-  }
+
   require ('includes/auth.php');
+  $upgrade = check_db();
   if ($upgrade === true && check_auth() === false) {
     show_auth();
   }
