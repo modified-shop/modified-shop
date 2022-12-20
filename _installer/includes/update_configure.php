@@ -17,7 +17,7 @@
 
   $db_type = get_mysql_type();
   $db_charset = DB_SERVER_CHARSET;
-  $db_engine = ((defined('DB_ENGINE')) ? DB_ENGINE : 'MyISAM');
+  $db_engine = ((defined('DB_SERVER_ENGINE')) ? DB_SERVER_ENGINE : 'MyISAM');
   $db_pconnect = USE_PCONNECT;
 
   $http_server = HTTP_SERVER;
