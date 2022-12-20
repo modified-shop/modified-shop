@@ -59,6 +59,8 @@
   }
 
   function show_auth() {
+    global $PHP_SELF;
+    
     define('_MODIFIED_SHOP_LOGIN', true);
     include(DIR_FS_CATALOG.'includes/login_admin.php');
     exit();

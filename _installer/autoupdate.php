@@ -185,6 +185,7 @@
         if ($error === true || $integrity_error === true) {
           $smarty->assign('REQUIREMENT_ARRAY', $requirement_array);
           $smarty->assign('PERMISSION_ARRAY', $permission_array);
+          $smarty->assign('UNLINKED_ARRAY', $unlinked_files);
           $smarty->clear_assign('FORM_ACTION');
 
           if (count($permission_array['file_permission']) > 0

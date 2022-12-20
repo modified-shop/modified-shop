@@ -129,7 +129,7 @@
   $_SESSION['auth'] = true;
   
   if (!isset($_SESSION['language']) || isset($_GET['language'])) {
-    switch ($_GET['language']) {
+    switch (isset($_GET['language']) ? $_GET['language'] : '') {
       case 'en':
         $_SESSION['language'] = 'english';
         $_SESSION['language_code'] = 'en';
