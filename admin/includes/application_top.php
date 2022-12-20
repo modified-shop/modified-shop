@@ -55,8 +55,8 @@ if (file_exists('../includes/local/configure.php')) {
 }
 
 // minimum requirement
-if (version_compare(PHP_VERSION, '7.4', '<')) {
-  die('<h1>Minimum requirement PHP Version 7.4</h1>');
+if (version_compare(PHP_VERSION, '8.0', '<')) {
+  die('<h1>Minimum requirement PHP Version 8.0</h1>');
 }
 
 // default time zone
