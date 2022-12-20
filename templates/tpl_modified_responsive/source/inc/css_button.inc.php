@@ -53,6 +53,7 @@ function css_button($image, $alt, $parameters = '', $submit = false) {
     'button_quick_find_head' => array(),
     'button_add_quick' => array(),
     'wishlist_del' => array(),
+    'button_results' => array(),
 
 
     // color 2

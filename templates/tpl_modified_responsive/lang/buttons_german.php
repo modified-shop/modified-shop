@@ -388,4 +388,11 @@ define('CSS_IMAGE_SMALL_CONTINUE_TEXT', '');
 define('CSS_IMAGE_SMALL_CONTINUE_ICON_RIGHT', '');
 define('CSS_IMAGE_SMALL_CONTINUE_ICON_LEFT', '<i class="far fa-check-square"></i>');
 
+
+// define('CSS_IMAGE_BUTTON_RESULTS_TEXT', '');
+// define('CSS_IMAGE_BUTTON_RESULTS_TITLE', '');
+define('CSS_IMAGE_BUTTON_RESULTS_ICON_RIGHT', '<i class="fas fa-chevron-circle-right"></i>');
+define('CSS_IMAGE_BUTTON_RESULTS_ICON_LEFT', '');
+
+
 ?>

@@ -5407,7 +5407,7 @@ ul.address_block li .address {
   color:#333;
   z-index:1100;
   box-sizing: border-box;
-  padding: 10px 10px 3px 10px;
+  padding: 10px 10px 10px 10px;
 }
 .suggestionList {
   margin:0px;
@@ -5451,39 +5451,6 @@ ul.address_block li .address {
 }
 .autocompletecloser {
   cursor:pointer;
-}
-#autocomplete_pagination {
-  margin: 5px 0 0 0;
-  position:relative;
-}
-#autocomplete_pagination li {
-  float:left;
-  border: 0;
-}
-#autocomplete_prev {
-  cursor:pointer;
-  padding:5px;
-  box-sizing: border-box;
-  width:15%;
-  text-align:left;
-  font-size:15px;
-}
-#autocomplete_next {
-  cursor: pointer;
-  padding: 5px;
-  box-sizing: border-box;
-  width: 15%;
-  float: right !important;
-  text-align: right;
-  font-size:15px;
-}
-#autocomplete_count {
-  padding: 5px;
-  width: 70%;
-  box-sizing: border-box;
-  text-align: center;
-  font-size:11px;
-  font-weight:bold;
 }
 .autocomplete_error {
   padding:6px 0px 11px;
@@ -5545,6 +5512,12 @@ ul.address_block li .address {
 @media only screen and (min-width: 600px) {
   .suggestionsBox { width:400px; }
 }
+
+.autocomplete_button {
+  text-align:center;
+  margin: 10px 0 0 0;
+}
+
 /* END autocomplete */
 
 .external_links a:after {

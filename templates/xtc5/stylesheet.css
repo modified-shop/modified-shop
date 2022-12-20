@@ -1997,13 +1997,15 @@ a.tags_bar_reset {
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
-  padding: 10px 10px 3px 10px;
+  padding: 10px 10px 10px 10px;
+}
+#autocomplete_main {
+  max-height:600px;
+  overflow:auto;
 }
 .suggestionList {
   margin:0px;
   padding:0px;
-  max-height:600px;
-  overflow:auto;
   padding-right:5px;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -2042,40 +2044,6 @@ a.tags_bar_reset {
 }
 .autocompletecloser {
   cursor:pointer;
-}
-#autocomplete_pagination {
-  position:relative;
-}
-#autocomplete_pagination li {
-  float:left;
-  border: 0;
-}
-#autocomplete_pagination li:hover {
-  background-color:#f1f1f1;
-}
-#autocomplete_prev {
-  cursor:pointer;
-  padding:5px;
-  width:5%;
-  text-align:left;
-  font-size:15px;
-}
-#autocomplete_next {
-  cursor: pointer;
-  padding: 5px;
-  width: 5%;
-  float: right !important;
-  text-align: right;
-  font-size:15px;
-}
-#autocomplete_count {
-  padding: 5px;
-  width: 75%;
-  text-align: center;
-  position: absolute;
-  margin-left: 7%;
-  font-size:11px;
-  font-weight:bold;
 }
 .autocomplete_error {
   padding:6px 0px 11px;
@@ -2168,6 +2136,10 @@ a.autocomplete:hover {
   color:#555 !important;
   text-decoration:underline !important;
   outline:none !important;
+}
+.autocomplete_button {
+  text-align:center;
+  margin: 10px 0 0 0;
 }
 /* END autocomplete */
 

@@ -27,9 +27,8 @@
     {/foreach}
   </ul>
   
-  <ul id="autocomplete_pagination" class="cf">
-    <li id="autocomplete_prev">&laquo;</li>
-    <li id="autocomplete_count"></li>
-    <li id="autocomplete_next">&raquo;</li>
-  </ul>
+  {if isset($BUTTON_VIEW_RESULTS)}
+    <div class="autocomplete_button">{$BUTTON_VIEW_RESULTS}</div>
+  {/if}
+  
 {/if}

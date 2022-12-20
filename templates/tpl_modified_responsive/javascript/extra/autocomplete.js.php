@@ -10,89 +10,60 @@
    Released under the GNU General Public License
    --------------------------------------------------------------*/
 ?>
-<script>  
+<script>
   <?php if (SEARCH_AC_STATUS == 'true') { ?>
-  $(document).ready(function(){
-    var option = $('#suggestions');
-    $(document).click(function(e){
-      var target = $(e.target);
-      if(!(target.is(option) || option.find(target).length)){
-        ac_closing();
-      }
-    });
-  });
-  <?php } ?>  
-
-  <?php if (SEARCH_AC_STATUS == 'true') { ?>
-  var ac_pageSize = 8;
-  var ac_page = 1;
-  var ac_result = 0;
-  var ac_show_page = '<?php echo AC_SHOW_PAGE; ?>';
-  var ac_show_page_of = '<?php echo AC_SHOW_PAGE_OF; ?>';
-  
-  function ac_showPage(ac_page) {
-    ac_result = Math.ceil($("#autocomplete_main").children().length/ac_pageSize);
-    $('.autocomplete_content').hide();   
-    $('.autocomplete_content').each(function(n) {    
-      if (n >= (ac_pageSize * (ac_page - 1)) && n < (ac_pageSize * ac_page)) {
-        $(this).show();
-      }
-    });
-    $('#autocomplete_next').css('visibility', 'hidden');
-    $('#autocomplete_prev').css('visibility', 'hidden');
-    if (ac_page > 1) {
-      $('#autocomplete_prev').css('visibility', 'visible');
-    }
-    if (ac_page < ac_result && ac_result > 1) {
-      $('#autocomplete_next').css('visibility', 'visible');
-    }
-    $('#autocomplete_count').html(ac_show_page+ac_page+ac_show_page_of+ac_result);
-  }
-  function ac_prevPage() {
-    if (ac_page == 1) {
-      ac_page = ac_result;
+  var session_id = '<?php echo xtc_session_id(); ?>';
+  $('body').on('keydown paste cut input focus', '#inputString', delay(function() {
+    if ($(this).length == 0) {
+      $('#suggestions').hide();
     } else {
-      ac_page--;
-    }
-    if (ac_page < 1) {
-      ac_page = 1;
-    }
-    ac_showPage(ac_page);
-  }
-  function ac_nextPage() {
-    if (ac_page == ac_result) {
-      ac_page = 1;
-    } else {
-      ac_page++;
-    }
-    ac_showPage(ac_page);
-  }
-	function ac_lookup(inputString) {
-		if(inputString.length == 0) {
-			$('#suggestions').hide();
-		} else {
       var post_params = $('#quick_find').serialize();
-      post_params = post_params.replace("keywords=", "queryString=");
-		  
-			$.post("<?php echo xtc_href_link('api/autocomplete/autocomplete.php', '', $request_type); ?>", post_params, function(data) {
-				if(data.length > 0) {
-					$('#suggestions').slideDown();
-					$('#autoSuggestionsList').html(data);
-					ac_showPage(1);
-					$('#autocomplete_prev').click(ac_prevPage);
-          $('#autocomplete_next').click(ac_nextPage);
-				}
-			});
-		}
-	}
-	$('#cat_search').on('change', function () {
-	  $('#inputString').val('');
-	});	
+      
+      $.ajax({
+        dataType: "json",
+        type: 'post',
+        url: '<?php echo DIR_WS_BASE; ?>ajax.php?ext=get_autocomplete&MODsid='+session_id,
+        data: post_params,
+        cache: false,
+        async: true,
+        success: function(data) {
+          if (data !== null && typeof data === 'object') {
+            if (data.result !== null && data.result != undefined && data.result != '') {
+              $('#autoSuggestionsList').html(decode_ajax(data.result));
+              $('#suggestions').slideDown();
+            } else {
+              $('#suggestions').slideUp();
+            }
+          }
+        }
+      });    
+    }
+  }, 500));
+  
+  function delay(fn, ms) {
+    let timer = 0;
+    return function(args) {
+      clearTimeout(timer);
+      timer = setTimeout(fn.bind(this, args), ms || 0);
+    }
+  }
+
+  function decode_ajax(encodedString) {
+    var textArea = document.createElement('textarea');
+    textArea.innerHTML = encodedString;
+  
+    return textArea.value;
+  }
+
+  $('body').on('click', function (e) {
+    if ($(e.target).closest("#suggestions").length === 0) {
+      ac_closing();
+    }
+  });
   <?php } ?>
 	<?php if (SEARCH_AC_STATUS == 'true' || (basename($PHP_SELF) != FILENAME_SHOPPING_CART && !strpos($PHP_SELF, 'checkout'))) { ?>	
 	function ac_closing() {
 		setTimeout("$('#suggestions').slideUp();", 100);
-		ac_page = 1;
 	}
   <?php } ?>
 </script>  
