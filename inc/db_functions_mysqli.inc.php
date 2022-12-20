@@ -120,10 +120,10 @@
     xtc_db_set_charset(DB_SERVER_CHARSET);
 
     // set charset defined in configure.php
-    if(!defined('DB_ENGINE')) {
-      define('DB_ENGINE','MyISAM');
+    if(!defined('DB_SERVER_ENGINE')) {
+      define('DB_SERVER_ENGINE','MyISAM');
     }
-    xtc_db_query("SET default_storage_engine = ".DB_ENGINE);
+    xtc_db_query("SET default_storage_engine = ".DB_SERVER_ENGINE);
 
     return ${$link};
   }

@@ -48,7 +48,7 @@
 
   $db_type = ((defined('DB_MYSQL_TYPE')) ? DB_MYSQL_TYPE : '');
   $db_charset = (($upgrade === true && defined('DB_SERVER_CHARSET')) ? DB_SERVER_CHARSET : 'utf8');
-  $db_engine = ((defined('DB_ENGINE')) ? DB_ENGINE : 'MyISAM');
+  $db_engine = ((defined('DB_SERVER_ENGINE')) ? DB_SERVER_ENGINE : 'MyISAM');
   $db_pconnect = ((defined('USE_PCONNECT')) ? USE_PCONNECT : 'false');
 
   $http_server = HTTP_SERVER;
@@ -126,7 +126,7 @@
         if ($error === false || isset($db_install)) {     
           $collation = 'latin1_german1_ci';
           if ($_SESSION['language_charset'] == 'utf-8') {
-            $collation = 'utf8_general_ci';
+            $collation = 'utf8_german2_ci';
           }
           xtc_db_query('ALTER DATABASE `'.$db_database.'` DEFAULT CHARACTER SET '.$db_charset.' COLLATE '.$collation);
           xtc_db_query('SET NAMES '.$db_charset.' COLLATE '.$collation);
