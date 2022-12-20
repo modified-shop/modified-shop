@@ -21,7 +21,7 @@
 
   // min / max  
   define('SSL_VERSION_MIN', '1.2');
-  define('PHP_VERSION_MIN', '7.4.0');
+  define('PHP_VERSION_MIN', '8.0.0');
   define('PHP_VERSION_MAX', '8.1.99');
   
   // permission
