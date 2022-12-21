@@ -834,10 +834,10 @@ define('MAX_DISPLAY_ADVANCED_SEARCH_RESULTS_DESC', 'Maximum Anzahl der Artikel d
 define('MAX_DISPLAY_SEARCH_AC_RESULTS_TITLE' , 'Anzahl Autocomplete Suchergebnisse');
 define('MAX_DISPLAY_SEARCH_AC_RESULTS_DESC' , 'Maximum Anzahl an Erbnissen der Autocomplete Suche.');
 
-define('SEARCH_RESULTS_SORT_TITLE', 'Reihenfolge f&uuml;r Autocomplete');
-define('SEARCH_RESULTS_SORT_DESC', 'Das ist die Reihenfolge, wie Autocomplete Ergebnisse angezeigt werden.');
-define('SEARCH_RESULTS_FIELD_TITLE', 'Sortierfeld f&uuml;r Autocomplete');
-define('SEARCH_RESULTS_FIELD_DESC', 'Das ist die Spalte, die zum Sortieren der Autocomplete Ergebnisse benutzt wird.');
+define('SEARCH_RESULTS_SORT_TITLE', 'Reihenfolge f&uuml;r Suchergebnisse');
+define('SEARCH_RESULTS_SORT_DESC', 'Das ist die Reihenfolge, wie Suchergebnisse angezeigt werden.');
+define('SEARCH_RESULTS_FIELD_TITLE', 'Sortierfeld f&uuml;r Suchergebnisse');
+define('SEARCH_RESULTS_FIELD_DESC', 'Das ist die Spalte, die zum Sortieren der Suchergebnisse benutzt wird.');
 
 define('PRODUCT_IMAGE_SHOW_NO_IMAGE_TITLE', 'Artikel noimage.gif');
 define('PRODUCT_IMAGE_SHOW_NO_IMAGE_DESC', 'Anzeige des noimage.gif, wenn kein Artikelbild angegeben wurde.');
