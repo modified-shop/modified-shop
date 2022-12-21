@@ -186,7 +186,7 @@
         }
         
         // DB version
-        $dbversion = get_database_version();
+        $dbversion = get_database_version_installer();
         
         modified_api::reset();
         $sql_files = modified_api::request('modified/version/update/'.$dbversion['plain']);

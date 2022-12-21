@@ -144,7 +144,7 @@
         // check versions
         $integrity_error = false;
         $shopversion = get_shop_version();
-        $dbversion = get_database_version();
+        $dbversion = get_database_version_installer();
         $_SESSION['dbversion'] = $dbversion['plain'];
         if (isset($_SESSION['sql_files'])) unset($_SESSION['sql_files']);
         

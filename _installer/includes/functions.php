@@ -347,6 +347,15 @@
   }
 
 
+  function get_database_version_installer() {
+    $check_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_DATABASE_VERSION." LIKE 'id'");
+    if (xtc_db_num_rows($check_query) < 1) {
+      xtc_db_query("ALTER TABLE `".TABLE_DATABASE_VERSION."` ADD `id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST");
+    }
+    return get_database_version();
+  }
+
+
   function get_checksum_install() {        
     $files_array = array();
 
