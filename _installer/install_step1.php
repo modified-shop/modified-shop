@@ -126,7 +126,7 @@
         if ($error === false || isset($db_install)) {     
           $collation = 'latin1_german1_ci';
           if ($_SESSION['language_charset'] == 'utf-8') {
-            $collation = 'utf8_general_ci';
+            $collation = 'utf8_german2_ci';
           }
           xtc_db_query('ALTER DATABASE `'.$db_database.'` DEFAULT CHARACTER SET '.$db_charset.' COLLATE '.$collation);
           xtc_db_query('SET NAMES '.$db_charset.' COLLATE '.$collation);
