@@ -608,8 +608,8 @@ $values_group_update = array();
   $values[] = "(NULL, 'SEARCH_AC_CATEGORIES', 'true', 22, 10, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');"; 
   $values[] = "(NULL, 'SEARCH_AC_MIN_LENGTH', '3', '22', '11', NULL, NOW(), NULL, NULL);";
 
-  $values[] = "(NULL, 'SEARCH_AC_SORT', 'ASC', 22, 12, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'ASC\', \'DESC\'),');"; 
-  $values[] = "(NULL, 'SEARCH_AC_FIELD', 'pd.products_name', 22, 13, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'p.products_price\', \'pd.products_name\', \'p.products_date_added\', \'p.products_model\', \'p.products_ordered\', \'p.products_sort\', \'p.products_weight\', \'p.products_quantity\'),');"; 
+  $values[] = "(NULL, 'SEARCH_RESULTS_SORT', 'ASC', 22, 12, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'ASC\', \'DESC\'),');"; 
+  $values[] = "(NULL, 'SEARCH_RESULTS_FIELD', 'pd.products_name', 22, 13, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'p.products_price\', \'pd.products_name\', \'p.products_date_added\', \'p.products_model\', \'p.products_ordered\', \'p.products_sort\', \'p.products_weight\', \'p.products_quantity\'),');"; 
 
   //$values[] = "(NULL, 'SEARCH_HIGHLIGHT', 'true', 22, 4, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";   //modified 2.10
   //$values[] = "(NULL, 'SEARCH_HIGHLIGHT_STYLE', 'color:#000;background-color:#eee;border:dotted #000 1px;', 22, 5, NULL, NOW(), NULL, NULL);"; //modified 2.10

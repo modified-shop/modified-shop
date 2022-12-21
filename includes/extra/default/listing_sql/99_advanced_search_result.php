@@ -150,6 +150,8 @@
     // create $search_keywords array
     $keywordcheck = xtc_parse_search_string($keywords, $search_keywords);
 
+    $sorting = ' ORDER BY '.SEARCH_RESULTS_FIELD.' '.SEARCH_RESULTS_SORT.' ';
+
     //go for keywords... this is the main search process
     if ($keywords && $keywordcheck) {
     
@@ -157,7 +159,7 @@
     
       if (PRODUCT_LIST_FILTER != 'true') { 
         $where_str .= " GROUP BY p.products_id ";
-        $where_str .= ((isset($_SESSION['filter_sorting'])) ? $_SESSION['filter_sorting'] : 'ORDER BY p.products_id ASC');
+        $where_str .= ((isset($_SESSION['filter_sorting'])) ? $_SESSION['filter_sorting'] : $sorting);
       }
     }
 
@@ -197,7 +199,7 @@
                              ON p.products_id = s.products_id
                                 ".SPECIALS_CONDITIONS_S."
                        WHERE p.products_id IN ('".implode("', '", $products_search_array)."')
-                             ".((isset($_SESSION['filter_sorting'])) ? $_SESSION['filter_sorting'] : 'ORDER BY p.products_id ASC');
+                             ".((isset($_SESSION['filter_sorting'])) ? $_SESSION['filter_sorting'] : $sorting);
     }
   
     $_GET['keywords'] = urlencode($keywords);

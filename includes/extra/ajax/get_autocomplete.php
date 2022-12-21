@@ -69,7 +69,7 @@
       
         include(DIR_WS_INCLUDES.'build_search_query.php');
         
-        $sorting = ' ORDER BY '.SEARCH_AC_FIELD.' '.SEARCH_AC_SORT.' ';
+        $sorting = ' ORDER BY '.SEARCH_RESULTS_FIELD.' '.SEARCH_RESULTS_SORT.' ';
                                                  
         $autocomplete_search_query = "SELECT ".$product->default_select.",
                                              IFNULL(s.specials_new_products_price, p.products_price) AS price
