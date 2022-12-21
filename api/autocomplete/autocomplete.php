@@ -56,7 +56,7 @@
       
       include(DIR_WS_INCLUDES.'build_search_query.php');
       
-      $sorting = ' ORDER BY '.SEARCH_RESULTS_FIELD.' '.SEARCH_RESULTS_SORT.' ';
+      $sorting = ' ORDER BY '.SEARCH_RESULTS_FIELD.' '.SEARCH_RESULTS_SORT.', p.products_id ASC ';
                                   
       $autocomplete_search_query = "SELECT ".$product->default_select."
                                       FROM ".TABLE_PRODUCTS." p 

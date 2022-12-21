@@ -150,7 +150,7 @@
     // create $search_keywords array
     $keywordcheck = xtc_parse_search_string($keywords, $search_keywords);
 
-    $sorting = ' ORDER BY '.SEARCH_RESULTS_FIELD.' '.SEARCH_RESULTS_SORT.' ';
+    $sorting = ' ORDER BY '.SEARCH_RESULTS_FIELD.' '.SEARCH_RESULTS_SORT.', p.products_id ASC ';
 
     //go for keywords... this is the main search process
     if ($keywords && $keywordcheck) {
