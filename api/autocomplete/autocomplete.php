@@ -10,6 +10,8 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+  die('Deprecated File: '.basename(__FILE__).'. Use ajax.php instead.'); 
+  /*
   chdir('../../');
   include('includes/application_top.php');
 
@@ -93,4 +95,5 @@
       $module_smarty->display(CURRENT_TEMPLATE.'/module/autocomplete.html');
     }
   }
+  */
 ?>
