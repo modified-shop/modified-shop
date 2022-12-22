@@ -58,8 +58,8 @@
   define('MODULE_DHL_BUSINESS_ENDORSEMENT_DESC', 'Wie sollen internationale Pakete behandelt werden, wenn sie nicht zugestellt werden k&ouml;nnen?');
   define('MODULE_DHL_BUSINESS_DUTYPAID_TITLE', 'Postversand verzollt');
   define('MODULE_DHL_BUSINESS_DUTYPAID_DESC', 'Die Deutsche Post und der Absender &uuml;bernehmen die Einfuhrabgaben anstelle des Empf&auml;ngers');
-  define('MODULE_DHL_BUSINESS_DROPPOINT_TITLE', 'N&auml;chster Abgabestelle');
-  define('MODULE_DHL_BUSINESS_DROPPOINT_DESC', 'Lieferung an eine Packstation, der der Adresse des Empf&auml;ngers der Sendung am n&auml;chsten liegt');
+  define('MODULE_DHL_BUSINESS_DROPPOINT_TITLE', 'N&auml;chste Abgabestelle');
+  define('MODULE_DHL_BUSINESS_DROPPOINT_DESC', 'Lieferung an eine Packstation, die der Adresse des Empf&auml;ngers der Sendung am n&auml;chsten liegt');
 
   define('MODULE_DHL_BUSINESS_COMPANY_TITLE', '<hr noshade>Kundendetails<br/>');
   define('MODULE_DHL_BUSINESS_COMPANY_DESC', 'Firma:');
