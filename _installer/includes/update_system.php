@@ -132,10 +132,7 @@
   if (is_dir(DIR_FS_EXTERNAL.'phpfastcache') && !is_dir(DIR_FS_EXTERNAL.'Phpfastcache')) {
     rename(DIR_FS_EXTERNAL.'phpfastcache', DIR_FS_EXTERNAL.'Phpfastcache');
   }
-  if (is_dir(DIR_FS_EXTERNAL.'phpfastcache') && is_dir(DIR_FS_EXTERNAL.'Phpfastcache')) {
-    rrmdir(DIR_FS_EXTERNAL.'phpfastcache');
-  }
-    
+  
   // rename config key
   $config_array = array(
     'MAX_DISPLAY_CONTENT_MANAGER' => 'MAX_DISPLAY_CONTENT_MANAGER_RESULTS',
