@@ -34,6 +34,8 @@
   define('TEXT_DHL_BUSINESS_PREMIUM', 'Premium:');
   define('TEXT_DHL_BUSINESS_NOTIFICATION', 'Benachrichtigung via DHL:');
   define('TEXT_DHL_BUSINESS_ENDORSEMENT', 'Vorausverf&uuml;gung:');
+  define('TEXT_DHL_BUSINESS_DUTYPAID', 'Postal DDP:');
+  define('TEXT_DHL_BUSINESS_DROPPOINT', 'Droppoint:');
 
   define('TEXT_DHL_BUSINESS_SHOW_MORE', '[mehr anzeigen]');
   define('TEXT_DHL_BUSINESS_SHOW_LESS', '[weniger anzeigen]');

@@ -56,6 +56,10 @@
   define('MODULE_DHL_BUSINESS_PREMIUM_DESC', 'Set Premium preselected as default');
   define('MODULE_DHL_BUSINESS_ENDORSEMENT_TITLE', 'Endorsement');
   define('MODULE_DHL_BUSINESS_ENDORSEMENT_DESC', 'How should international parcels be handled if they cannot be delivered?');
+  define('MODULE_DHL_BUSINESS_DUTYPAID_TITLE', 'Postal Delivered Duty Paid');
+  define('MODULE_DHL_BUSINESS_DUTYPAID_DESC', 'Postal Delivery Duty Paid Deutsche Post and sender handle import duties instead of consignee');
+  define('MODULE_DHL_BUSINESS_DROPPOINT_TITLE', 'Closest Droppoint');
+  define('MODULE_DHL_BUSINESS_DROPPOINT_DESC', 'Closest Droppoint Delivery to the droppoint closest to the address of the recipient of the shipment');
 
   define('MODULE_DHL_BUSINESS_COMPANY_TITLE', '<hr noshade>Customer details<br/>');
   define('MODULE_DHL_BUSINESS_COMPANY_DESC', 'Company:');

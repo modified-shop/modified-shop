@@ -265,7 +265,7 @@
       // insurance
       if ($this->insurance > 0) {
         $Service->AdditionalInsurance = array(
-          'active' => 1,
+          'active' => '1',
           'insuranceAmount' => $this->insurance_array[$this->insurance]
         );
       }
@@ -278,10 +278,16 @@
       }
       
       // international
-      if ($this->premium > 0 && in_array($this->data['product_code'], array('53', '66'))) {
-        $Service->Premium = array(
-          'active' => 1,
-        );
+      if (in_array($this->data['product_code'], array('53', '66'))) {
+        if ($this->premium > 0) {
+          $Service->Premium['active'] = '1';
+        }
+        if ($this->dutypaid > 0) {
+          $Service->PDDP['active'] = '1';
+        }
+        if ($this->droppoint > 0) {
+          $Service->CDP['active'] = '1';
+        }
       }
       
       // avs
