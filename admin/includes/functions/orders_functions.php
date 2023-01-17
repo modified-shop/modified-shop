@@ -1128,19 +1128,18 @@
     $discount_modules = array_map('trim', explode(",", DISCOUNT_MODULES));
     while ($module_value = xtc_db_fetch_array($module_query)) {
       $module_name = str_replace('ot_', '', $module_value['class']);
+      
+      $module_tax_class = '0';
       if (!in_array($module_value['class'], $discount_modules)) {
-        $module_tax_class = '0';
         if ($module_name != 'shipping' && defined('MODULE_ORDER_TOTAL_'.strtoupper($module_name).'_TAX_CLASS')) {
           $module_tax_class = constant('MODULE_ORDER_TOTAL_'.strtoupper($module_name).'_TAX_CLASS');
-        } else {
+        } elseif ($module_name == 'shipping') {
           $module_tmp_name = explode('_', $order->info['shipping_class']);
           $module_tmp_name = $module_tmp_name[0];
           if ($module_tmp_name != 'selfpickup' && $module_tmp_name != 'free' && defined('MODULE_SHIPPING_'.strtoupper($module_tmp_name).'_TAX_CLASS')) {
             $module_tax_class = constant('MODULE_SHIPPING_'.strtoupper($module_tmp_name).'_TAX_CLASS');
           }
         }
-      } else {
-        $module_tax_class = '0';
       }
 
       $c_info = get_c_infos($order->customer['ID'], trim($order->delivery['country_iso_2']));
@@ -1167,7 +1166,11 @@
         $module_tax = $xtPrice->calcTax($module_n_price, $module_tax_rate);
       }
 
-      if ($module_name != 'shipping' && $module_name != 'cod_fee' && $module_tax_rate == 0) {
+      if ($module_tax_rate == 0
+          && defined('MODULE_ORDER_TOTAL_'.strtoupper($module_name).'_CALC_TAX')
+          && strtolower(constant('MODULE_ORDER_TOTAL_'.strtoupper($module_name).'_CALC_TAX')) == 'true'
+          )
+      {
         $module_tax = calculate_tax($module_value['value'], $oID);
         if ($status['customers_status_show_price_tax'] == 0) {
           $module_tax = 0;
