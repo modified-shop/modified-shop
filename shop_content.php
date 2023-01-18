@@ -37,7 +37,6 @@ require_once (DIR_FS_INC.'xtc_validate_email.inc.php');
 if ($language_not_found === true) {
   $site_error = TEXT_CONTENT_NOT_FOUND;
   include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
-  require (DIR_WS_INCLUDES.'header.php');
 
 } else {
   if (!isset($_GET['coID']) || $_GET['coID'] == '') {
@@ -59,37 +58,37 @@ if ($language_not_found === true) {
                                       AND languages_id = '".(int)$_SESSION['languages_id']."'
                                           ".CONTENT_CONDITIONS);
   
-  $content_exists = xtc_db_num_rows($shop_content_query, true);
-  if ($shop_content_data = xtc_db_fetch_array($shop_content_query, true)) {
+  if (xtc_db_num_rows($shop_content_query, true) < 1) {
+    $site_error = TEXT_CONTENT_NOT_FOUND;
+    include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
+
+  } else {
+    $shop_content_data = xtc_db_fetch_array($shop_content_query, true);
+    
     // sub content
     include (DIR_WS_MODULES.'sub_content_listing.php');
 
     $breadcrumb->add($shop_content_data['content_title'], xtc_href_link(FILENAME_CONTENT, xtc_content_link($shop_content_data['content_group'], $shop_content_data['content_title'])));
-  } else {
-    $site_error = TEXT_CONTENT_NOT_FOUND;
-    $shop_content_data = array(
-      'content_heading' => TEXT_CONTENT_NOT_FOUND
-    );
-  }
 
-  $link = 'javascript:history.back(1)';
-  if (!isset($_SERVER['HTTP_REFERER']) 
-      || strpos($_SERVER['HTTP_REFERER'], HTTP_SERVER) === false
-      )
-  {
-    $link = xtc_href_link(FILENAME_DEFAULT, '', 'NONSSL');
-  } 
-  $smarty->assign('BUTTON_CONTINUE', '<a href="'.$link.'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
-  $smarty->assign('CONTENT_HEADING', (($shop_content_data['content_heading'] != '') ? $shop_content_data['content_heading'] : $shop_content_data['content_title']));
+    $link = 'javascript:history.back(1)';
+    if (!isset($_SERVER['HTTP_REFERER']) 
+        || strpos($_SERVER['HTTP_REFERER'], HTTP_SERVER) === false
+        )
+    {
+      $link = xtc_href_link(FILENAME_DEFAULT, '', 'NONSSL');
+    } 
+    $smarty->assign('BUTTON_CONTINUE', '<a href="'.$link.'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
+    $smarty->assign('CONTENT_HEADING', (($shop_content_data['content_heading'] != '') ? $shop_content_data['content_heading'] : $shop_content_data['content_title']));
 
-  if ($messageStack->size('content') > 0) {
-    $smarty->assign('error_message', $messageStack->output('content'));
-  }
+    if ($messageStack->size('content') > 0) {
+      $smarty->assign('error_message', $messageStack->output('content'));
+    }
 
-  $content_body = '';
-  if ($content_exists == 1) {
     $content_body = $shop_content_data['content_text'];
-    if ($shop_content_data['content_file'] != '' && is_file(DIR_FS_CATALOG.'media/content/'.$shop_content_data['content_file'])) {
+    if ($shop_content_data['content_file'] != '' 
+        && is_file(DIR_FS_CATALOG.'media/content/'.$shop_content_data['content_file'])
+        )
+    {
       ob_start();
       if (strpos($shop_content_data['content_file'], '.txt') !== false)
         echo '<pre>';
@@ -99,20 +98,20 @@ if ($language_not_found === true) {
       $smarty->assign('file', ob_get_contents());
       ob_end_clean();
     }
+    $smarty->assign('CONTENT_BODY', $content_body);
+  
+    include (DIR_WS_MODULES.'content_manager_media.php');
+  
+    $content_template = 'content.html';
+    foreach(auto_include(DIR_FS_CATALOG.'includes/extra/shop_content_end/','php') as $file) require_once ($file);
+
+    $smarty->caching = 0;
+    $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/'.$content_template);
+    $smarty->assign('main_content', $main_content);
   }
-  $smarty->assign('CONTENT_BODY', $content_body);
-  
-  include (DIR_WS_MODULES.'content_manager_media.php');
-  
-  $content_template = 'content.html';
-  foreach(auto_include(DIR_FS_CATALOG.'includes/extra/shop_content_end/','php') as $file) require_once ($file);
-
-  $smarty->caching = 0;
-  $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/'.$content_template);
-  $smarty->assign('main_content', $main_content);
-
-  require (DIR_WS_INCLUDES.'header.php');
 }
+
+require (DIR_WS_INCLUDES.'header.php');
 
 $smarty->caching = 0;
 if (!defined('RM'))
