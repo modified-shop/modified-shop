@@ -109,11 +109,11 @@ if ($language_not_found === true) {
 
   $smarty->caching = 0;
   $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/'.$content_template);
+  $smarty->assign('main_content', $main_content);
 
   require (DIR_WS_INCLUDES.'header.php');
 }
 
-$smarty->assign('main_content', $main_content);
 $smarty->caching = 0;
 if (!defined('RM'))
   $smarty->load_filter('output', 'note');
