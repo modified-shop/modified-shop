@@ -30,9 +30,7 @@
 // include needed functions
 require_once(DIR_FS_INC . 'xtc_output_warning.inc.php');
 require_once(DIR_FS_INC . 'xtc_parse_input_field_data.inc.php');
-require_once(DIR_FS_INC . 'xtc_get_shop_conf.inc.php'); 
 
-$shop_is_offline = get_shop_offline_status();
 if ($shop_is_offline) {
   $current_link = preg_replace("/([^\?]*)(\?.*)/", "$1", $_SERVER['REQUEST_URI']);  
   $redirect_link = xtc_href_link(FILENAME_DEFAULT);
