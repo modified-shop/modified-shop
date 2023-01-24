@@ -2046,7 +2046,7 @@ function ProductsUpdate ()
             2 => array('ID' => '2','GRP' => '1','PREIS' => $products_vk2),
             3 => array('ID' => '3','GRP' => '2','PREIS' => $products_vk2),
             4 => array('ID' => '4','GRP' => '3','PREIS' => $products_vk2),
-            //5 => array('ID' => '5','GRP' => '4','PREIS' => $products_vk3),
+            5 => array('ID' => '5','GRP' => '4','PREIS' => $products_vk2),
             //6 => array('ID' => '6','GRP' => '5','PREIS' => $products_vk4),
          );
 
