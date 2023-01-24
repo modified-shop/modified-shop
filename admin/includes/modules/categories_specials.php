@@ -83,14 +83,14 @@ if ($existing === false) {
 
 // build the expires date in the format YYYY-MM-DD
 if (strtotime($sInfo->expires_date) !== false && strtotime($sInfo->expires_date) > 0) {
-  $expires_date = date('Y-m-d', strtotime($sInfo->expires_date));
+  $expires_date = date('Y-m-d H:i', strtotime($sInfo->expires_date));
 } else {
   $expires_date = '';
 }
 
 // build the start date in the format YYYY-MM-DD
 if (strtotime($sInfo->start_date) !== false && strtotime($sInfo->start_date) > 0) {
-  $start_date = date('Y-m-d', strtotime($sInfo->start_date));
+  $start_date = date('Y-m-d H:i', strtotime($sInfo->start_date));
 } else {
   $start_date = '';
 }
@@ -141,11 +141,11 @@ echo SPECIALS_TITLE;
     <?php } ?>
     <tr>
       <td class="main"><?php echo TEXT_SPECIALS_START_DATE; ?></td>
-      <td class="main"><?php echo xtc_draw_input_field('specials_start', $start_date ,'id="DatepickerSpecialsStart" style="width: 135px"') . draw_tooltip(TEXT_CATSPECIALS_START_DATE_TT.SPECIALS_DATE_START_TT); ?></td>
+      <td class="main"><?php echo xtc_draw_input_field('specials_start', $start_date ,'id="Datetimepicker1" style="width: 135px"') . draw_tooltip(TEXT_CATSPECIALS_START_DATE_TT.SPECIALS_DATE_START_TT); ?></td>
     </tr>
     <tr>
       <td class="main"><?php echo TEXT_SPECIALS_EXPIRES_DATE; ?></td>
-      <td class="main"><?php echo xtc_draw_input_field('specials_expires', $expires_date ,'id="DatepickerSpecials" style="width: 135px"') . draw_tooltip(TEXT_CATSPECIALS_EXPIRES_DATE_TT.SPECIALS_DATE_END_TT); ?></td>
+      <td class="main"><?php echo xtc_draw_input_field('specials_expires', $expires_date ,'id="Datetimepicker2" style="width: 135px"') . draw_tooltip(TEXT_CATSPECIALS_EXPIRES_DATE_TT.SPECIALS_DATE_END_TT); ?></td>
     </tr>
     <?php if ($existing === true) { ?>
     <tr>
