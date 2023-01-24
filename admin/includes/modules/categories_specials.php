@@ -141,11 +141,11 @@ echo SPECIALS_TITLE;
     <?php } ?>
     <tr>
       <td class="main"><?php echo TEXT_SPECIALS_START_DATE; ?></td>
-      <td class="main"><?php echo xtc_draw_input_field('specials_start', $start_date ,'id="Datetimepicker1" style="width: 135px"') . draw_tooltip(TEXT_CATSPECIALS_START_DATE_TT.SPECIALS_DATE_START_TT); ?></td>
+      <td class="main"><?php echo xtc_draw_input_field('specials_start', $start_date ,'id="Datetimepicker2" style="width: 135px"') . draw_tooltip(TEXT_CATSPECIALS_START_DATE_TT.SPECIALS_DATE_START_TT); ?></td>
     </tr>
     <tr>
       <td class="main"><?php echo TEXT_SPECIALS_EXPIRES_DATE; ?></td>
-      <td class="main"><?php echo xtc_draw_input_field('specials_expires', $expires_date ,'id="Datetimepicker2" style="width: 135px"') . draw_tooltip(TEXT_CATSPECIALS_EXPIRES_DATE_TT.SPECIALS_DATE_END_TT); ?></td>
+      <td class="main"><?php echo xtc_draw_input_field('specials_expires', $expires_date ,'id="Datetimepicker3" style="width: 135px"') . draw_tooltip(TEXT_CATSPECIALS_EXPIRES_DATE_TT.SPECIALS_DATE_END_TT); ?></td>
     </tr>
     <?php if ($existing === true) { ?>
     <tr>

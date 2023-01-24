@@ -22,7 +22,13 @@
       format:'Y-m-d H:i',
       scrollInput:false
     });
-    $('#Datetimepicker1').datetimepicker({
+    $('#Datetimepicker2').datetimepicker({
+      dayOfWeekStart:1,
+      timepicker:true, 
+      format:'Y-m-d H:i',
+      scrollInput:false
+    });    
+    $('#Datetimepicker3').datetimepicker({
       dayOfWeekStart:1,
       timepicker:true, 
       format:'Y-m-d H:i',
