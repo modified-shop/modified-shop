@@ -18,13 +18,13 @@
     // datetime
     $('#Datetimepicker1').datetimepicker({
       dayOfWeekStart:1,
-      timepicker:false, 
+      timepicker:true, 
       format:'Y-m-d H:i',
       scrollInput:false
     });
     $('#Datetimepicker1').datetimepicker({
       dayOfWeekStart:1,
-      timepicker:false, 
+      timepicker:true, 
       format:'Y-m-d H:i',
       scrollInput:false
     });    
