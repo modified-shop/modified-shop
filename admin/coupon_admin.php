@@ -146,7 +146,7 @@
           'restrict_to_categories' => xtc_db_prepare_input($_POST['coupon_categories']),
           'restrict_to_customers' => xtc_db_prepare_input($_POST['coupon_groups']),
           'coupon_start_date' => xtc_db_prepare_input(date('Y-m-d H:i:00', strtotime($_POST['coupon_startdate']))),
-          'coupon_expire_date' => xtc_db_prepare_input(date('Y-m-d H:i:59', strtotime($_POST['coupon_finishdate']))),
+          'coupon_expire_date' => xtc_db_prepare_input(date('Y-m-d H:i:00', strtotime($_POST['coupon_finishdate']))),
         );
         $languages = xtc_get_languages();
         for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
@@ -662,10 +662,10 @@ if (USE_WYSIWYG == 'true' && $_GET['action'] == 'email') {
       $coupon_uses_coupon = '';
     }
     if (!isset($coupon_startdate)) {
-      $coupon_startdate = date('Y-m-d 00:00');
+      $coupon_startdate = date('Y-m-d');
     }
     if (!isset($coupon_finishdate)) {
-      $coupon_finishdate = date('Y-m-d 23:59', strtotime('+1 year'));
+      $coupon_finishdate = date('Y-m-d', strtotime('+1 year'));
     }
 
     $input_name = '';

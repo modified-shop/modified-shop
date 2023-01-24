@@ -1508,7 +1508,7 @@ class categories {
 
       $products_data['specials_old_products_price'] = $this->priceCheck($products_data['specials_old_products_price'], $tax_rate);
       $start_date = isset($products_data['specials_start']) && !empty($products_data['specials_start']) ? date('Y-m-d H:i:00', strtotime($products_data['specials_start'])) : '';
-      $expires_date = isset($products_data['specials_expires']) && !empty($products_data['specials_expires']) ? date('Y-m-d H:i:59', strtotime($products_data['specials_expires'])) : '';
+      $expires_date = isset($products_data['specials_expires']) && !empty($products_data['specials_expires']) ? date('Y-m-d H:i:00', strtotime($products_data['specials_expires'])) : '';
     
       $sql_data_array = array(
         'products_id' => $products_data['products_id'],
