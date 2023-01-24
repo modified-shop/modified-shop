@@ -32,7 +32,7 @@
   
   if (isset($_GET['pID']) && (!$_POST)) {
     $product_query = xtc_db_query("SELECT *,
-                                          date_format(p.products_date_available, '%Y-%m-%d') as products_date_available
+                                          date_format(p.products_date_available, '%Y-%m-%d %H:%i') as products_date_available
                                      FROM ".TABLE_PRODUCTS." p
                                 LEFT JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
                                           ON p.products_id = pd.products_id
@@ -128,7 +128,7 @@
         </tr>
         <tr>
           <td><span class="main"><?php echo TEXT_PRODUCTS_DATE_AVAILABLE; ?> <small><?php echo TEXT_PRODUCTS_DATE_FORMAT; ?></small></span></td>
-          <td><span class="main"><?php echo xtc_draw_input_field('products_date_available', isset($pInfo->products_date_available) ? $pInfo->products_date_available : '' ,'id="DatepickerProduct" style="width: 155px"'); ?></span></td>
+          <td><span class="main"><?php echo xtc_draw_input_field('products_date_available', isset($pInfo->products_date_available) ? $pInfo->products_date_available : '' ,'id="Datetimepicker1" style="width: 155px"'); ?></span></td>
         </tr>
         <tr>
           <td><span class="main"><?php echo TEXT_PRODUCTS_STARTPAGE; ?></span></td>

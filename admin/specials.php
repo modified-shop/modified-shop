@@ -55,7 +55,7 @@
         break;
 
       case 'deleteconfirm':
-        xtc_db_query("delete from " . TABLE_SPECIALS . " where specials_id = '" . xtc_db_prepare_input($sID) . "'");
+        xtc_db_query("DELETE FROM " . TABLE_SPECIALS . " WHERE specials_id = '" . xtc_db_prepare_input($sID) . "'");
         xtc_redirect(xtc_href_link(FILENAME_SPECIALS, xtc_get_all_get_params(array('action', 'sID'))));
         break;
     
@@ -246,14 +246,14 @@
 
           // build the expires date in the format YYYY-MM-DD
           if (strtotime($sInfo->expires_date) !== false && strtotime($sInfo->expires_date) > 0) {
-            $expires_date = date('Y-m-d', strtotime($sInfo->expires_date));
+            $expires_date = date('Y-m-d H:i', strtotime($sInfo->expires_date));
           } else {
             $expires_date = '';
           }
 
           // build the start date in the format YYYY-MM-DD
           if (strtotime($sInfo->start_date) !== false && strtotime($sInfo->start_date) > 0) {
-            $start_date = date('Y-m-d', strtotime($sInfo->start_date));
+            $start_date = date('Y-m-d H:i', strtotime($sInfo->start_date));
           } else {
             $start_date = '';
           }
@@ -301,12 +301,12 @@
             </tr>
             <tr>
               <td class="dataTableConfig col-left"><?php echo TEXT_SPECIALS_START_DATE; ?></td>
-              <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('specials_start', $start_date ,'id="DatepickerSpecialsStart"'); ?></td>
+              <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('specials_start', $start_date ,'id="Datetimepicker1"'); ?></td>
               <td class="dataTableConfig col-right"><?php echo TEXT_SPECIALS_START_DATE_TIP.SPECIALS_DATE_START_TT; ?>&nbsp;</td>
             </tr>
             <tr>
               <td class="dataTableConfig col-left"><?php echo TEXT_SPECIALS_EXPIRES_DATE; ?></td>
-              <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('specials_expires', $expires_date ,'id="DatepickerSpecials"'); ?></td>
+              <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('specials_expires', $expires_date ,'id="Datetimepicker2"'); ?></td>
               <td class="dataTableConfig col-right"><?php echo TEXT_SPECIALS_EXPIRES_DATE_TIP.SPECIALS_DATE_END_TT; ?>&nbsp;</td>
             </tr>
           </table>
@@ -407,8 +407,8 @@
                       <td  class="dataTableContent"><?php echo $specials['products_model']; ?></td>
                       <td  class="dataTableContent txta-c"><?php echo $specials['products_quantity']; ?></td>
                       <td  class="dataTableContent txta-c"><?php echo $specials['specials_quantity']; ?></td>
-                      <td  class="dataTableContent txta-r"><?php echo (isset($specials['start_date']) ? xtc_date_short($specials['start_date']): '&nbsp;'); ?></td>
-                      <td  class="dataTableContent txta-r"><?php echo (isset($specials['expires_date']) ? xtc_date_short($specials['expires_date']): '&nbsp;'); ?></td>
+                      <td  class="dataTableContent txta-r"><?php echo (isset($specials['start_date']) ? xtc_datetime_short($specials['start_date']): '&nbsp;'); ?></td>
+                      <td  class="dataTableContent txta-r"><?php echo (isset($specials['expires_date']) ? xtc_datetime_short($specials['expires_date']): '&nbsp;'); ?></td>
                       <td  class="dataTableContent txta-r">
                         <span class="oldPrice">
                           <?php echo $xtPrice->xtcFormat($specials['products_price'],true); ?>
@@ -481,8 +481,8 @@
                     $contents[] = array('text' => '<br />' . TEXT_INFO_ORIGINAL_PRICE . ' ' . $xtPrice->xtcFormat($sInfo->products_price,true));
                     $contents[] = array('text' => '' . TEXT_INFO_NEW_PRICE . ' ' . $xtPrice->xtcFormat($sInfo->specials_new_products_price,true));
                     $contents[] = array('text' => '' . TEXT_INFO_PERCENTAGE . ' ' . (($sInfo->products_price > 0) ? number_format(100 - (($sInfo->specials_new_products_price / $sInfo->products_price) * 100)) : '0') . '%');
-                    $contents[] = array('text' => '<br />' . TEXT_INFO_START_DATE . ' <b>' . xtc_date_short($sInfo->start_date) . '</b>');
-                    $contents[] = array('text' => TEXT_INFO_EXPIRES_DATE . ' <b>' . xtc_date_short($sInfo->expires_date) . '</b>');
+                    $contents[] = array('text' => '<br />' . TEXT_INFO_START_DATE . ' <b>' . xtc_datetime_short($sInfo->start_date) . '</b>');
+                    $contents[] = array('text' => TEXT_INFO_EXPIRES_DATE . ' <b>' . xtc_datetime_short($sInfo->expires_date) . '</b>');
                     $contents[] = array('text' => TEXT_INFO_STATUS_CHANGE . ' ' . xtc_date_short($sInfo->date_status_change));
                   }
                   break;

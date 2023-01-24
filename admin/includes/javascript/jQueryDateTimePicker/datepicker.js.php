@@ -15,6 +15,20 @@
 <script type="text/javascript">
   $(document).ready(function(){
     $.datetimepicker.setLocale('<?php echo $_SESSION["language_code"]; ?>');    
+    // datetime
+    $('#Datetimepicker1').datetimepicker({
+      dayOfWeekStart:1,
+      timepicker:false, 
+      format:'Y-m-d H:i',
+      scrollInput:false
+    });
+    $('#Datetimepicker1').datetimepicker({
+      dayOfWeekStart:1,
+      timepicker:false, 
+      format:'Y-m-d H:i',
+      scrollInput:false
+    });    
+
     // banner manager, coupon admin
     $('#Datepicker1').datetimepicker({
       dayOfWeekStart:1,

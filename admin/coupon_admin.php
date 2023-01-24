@@ -145,8 +145,8 @@
           'restrict_to_products' => xtc_db_prepare_input($_POST['coupon_products']),
           'restrict_to_categories' => xtc_db_prepare_input($_POST['coupon_categories']),
           'restrict_to_customers' => xtc_db_prepare_input($_POST['coupon_groups']),
-          'coupon_start_date' => xtc_db_prepare_input(date('Y-m-d', strtotime($_POST['coupon_startdate'])).' 00:00:00'),
-          'coupon_expire_date' => xtc_db_prepare_input(date('Y-m-d', strtotime($_POST['coupon_finishdate'])).' 23:59:59'),
+          'coupon_start_date' => xtc_db_prepare_input(date('Y-m-d H:i:00', strtotime($_POST['coupon_startdate']))),
+          'coupon_expire_date' => xtc_db_prepare_input(date('Y-m-d H:i:59', strtotime($_POST['coupon_finishdate']))),
         );
         $languages = xtc_get_languages();
         for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
@@ -538,14 +538,14 @@ if (USE_WYSIWYG == 'true' && $_GET['action'] == 'email') {
         <tr>
           <td class="dataTableConfig col-left"><?php echo COUPON_STARTDATE; ?></td>
           <?php
-              $start_date = xtc_date_short($_POST['coupon_startdate']);
+              $start_date = xtc_datetime_short($_POST['coupon_startdate']);
           ?>
          <td class="dataTableConfig col-single-right"><?php echo $start_date; ?>&nbsp;</td>
         </tr>
         <tr>
           <td class="dataTableConfig col-left"><?php echo COUPON_FINISHDATE; ?></td>
           <?php
-              $finish_date = xtc_date_short($_POST['coupon_finishdate']);
+              $finish_date = xtc_datetime_short($_POST['coupon_finishdate']);
           ?>
           <td class="dataTableConfig col-single-right"><?php echo $finish_date; ?>&nbsp;</td>
         </tr>
@@ -618,8 +618,8 @@ if (USE_WYSIWYG == 'true' && $_GET['action'] == 'email') {
     $coupon_products = $coupon['restrict_to_products'];
     $coupon_categories = $coupon['restrict_to_categories'];
     $coupon_groups = explode(',', $coupon['restrict_to_customers']);
-    $coupon_startdate = date('Y-m-d', strtotime($coupon['coupon_start_date']));
-    $coupon_finishdate = date('Y-m-d', strtotime($coupon['coupon_expire_date']));
+    $coupon_startdate = date('Y-m-d H:i', strtotime($coupon['coupon_start_date']));
+    $coupon_finishdate = date('Y-m-d H:i', strtotime($coupon['coupon_expire_date']));
 
   case 'new':
     if (isset($_POST['coupon_amount'])) $coupon_amount = xtc_db_prepare_input($_POST['coupon_amount']);
@@ -662,10 +662,10 @@ if (USE_WYSIWYG == 'true' && $_GET['action'] == 'email') {
       $coupon_uses_coupon = '';
     }
     if (!isset($coupon_startdate)) {
-      $coupon_startdate = date('Y-m-d');
+      $coupon_startdate = date('Y-m-d 00:00');
     }
     if (!isset($coupon_finishdate)) {
-      $coupon_finishdate = date('Y-m-d', strtotime('+1 year'));
+      $coupon_finishdate = date('Y-m-d 23:59', strtotime('+1 year'));
     }
 
     $input_name = '';
@@ -758,12 +758,12 @@ if (USE_WYSIWYG == 'true' && $_GET['action'] == 'email') {
           </tr>
           <tr>
             <td class="dataTableConfig col-left"><?php echo COUPON_STARTDATE; ?></td>
-            <td class="dataTableConfig col-middle nobr"><?php echo xtc_draw_input_field('coupon_startdate', $coupon_startdate ,'id="Datepicker1"'); ?></td>
+            <td class="dataTableConfig col-middle nobr"><?php echo xtc_draw_input_field('coupon_startdate', $coupon_startdate ,'id="Datetimepicker1"'); ?></td>
             <td class="dataTableConfig col-right"><?php echo COUPON_STARTDATE_HELP.COUPON_DATE_START_TT; ?></td>
           </tr>
           <tr>
             <td class="dataTableConfig col-left"><?php echo COUPON_FINISHDATE; ?></td>
-            <td class="dataTableConfig col-middle nobr"><?php echo xtc_draw_input_field('coupon_finishdate', $coupon_finishdate ,'id="Datepicker2"'); ?></td>
+            <td class="dataTableConfig col-middle nobr"><?php echo xtc_draw_input_field('coupon_finishdate', $coupon_finishdate ,'id="Datetimepicker2"'); ?></td>
             <td class="dataTableConfig col-right"><?php echo COUPON_FINISHDATE_HELP.COUPON_DATE_END_TT; ?></td>
           </tr>
         </table>
@@ -973,8 +973,8 @@ if (USE_WYSIWYG == 'true' && $_GET['action'] == 'email') {
                     
                     $contents[] = array('text'=>COUPON_NAME . ':&nbsp;' . $coupon_name['coupon_name'] . '<br />' .
                       COUPON_AMOUNT . ':&nbsp;<strong><span class="col-red">' . $amount . '</span></strong><br /><br />' .
-                      COUPON_STARTDATE . ':&nbsp;' . xtc_date_short($cInfo->coupon_start_date) . '<br />' .
-                      COUPON_FINISHDATE . ':&nbsp;' . xtc_date_short($cInfo->coupon_expire_date) . '<br /><br />' .
+                      COUPON_STARTDATE . ':&nbsp;' . xtc_datetime_short($cInfo->coupon_start_date) . '<br />' .
+                      COUPON_FINISHDATE . ':&nbsp;' . xtc_datetime_short($cInfo->coupon_expire_date) . '<br /><br />' .
                       COUPON_USES_COUPON . ':&nbsp;<strong>' . $cInfo->uses_per_coupon . '</strong><br />' .
                       COUPON_USES_USER . ':&nbsp;<strong>' . $cInfo->uses_per_user . '</strong><br /><br />' .
                       COUPON_PRODUCTS . ':&nbsp;' . $prod_details . '<br />' .

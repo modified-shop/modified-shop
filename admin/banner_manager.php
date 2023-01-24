@@ -163,7 +163,7 @@
             }
 
             if ($_POST['expires_date'] != '' && $_POST['expires_date'] != '0000-00-00 00:00:00') {          
-              $expires_date = date('Y-m-d H:i:s', strtotime($_POST['expires_date']));
+              $expires_date = date('Y-m-d H:i:59', strtotime($_POST['expires_date']));
               xtc_db_query("update " . TABLE_BANNERS . " set expires_date = '" . xtc_db_input($expires_date) . "', expires_impressions = null where banners_id = '" . (int)$banners_id . "'");
             } elseif ($_POST['expires_impressions'] != '' && $_POST['expires_impressions'] != '0') {
               $expires_impressions = xtc_db_prepare_input($_POST['expires_impressions']);
@@ -171,7 +171,7 @@
             }
 
             if ($_POST['date_scheduled'] != '' && $_POST['date_scheduled'] != '0000-00-00 00:00:00') {
-              $date_scheduled = date('Y-m-d H:i:s', strtotime($_POST['date_scheduled']));
+              $date_scheduled = date('Y-m-d H:i:00', strtotime($_POST['date_scheduled']));
               xtc_db_query("update " . TABLE_BANNERS . " set status = '0', date_scheduled = '" . xtc_db_input($date_scheduled) . "' where banners_id = '" . (int)$banners_id . "'");
             }
           }
@@ -312,8 +312,8 @@
               $form_action = 'update';
               $bID = xtc_db_prepare_input($_GET['bID']);
               $banner_query = xtc_db_query("SELECT *,
-                                                   date_format(date_scheduled, '%Y-%m-%d') as date_scheduled, 
-                                                   date_format(expires_date, '%Y-%m-%d') as expires_date
+                                                   date_format(date_scheduled, '%Y-%m-%d %H:%i') as date_scheduled, 
+                                                   date_format(expires_date, '%Y-%m-%d %H:%i') as expires_date
                                               FROM " . TABLE_BANNERS . " 
                                              WHERE banners_group_id = '" . (int)$bID . "'");
               $banner = xtc_db_fetch_array($banner_query);
@@ -375,14 +375,14 @@
                   <tr>
                     <td class="dataTableConfig col-left" style="border-left: 1px solid #ccc;"><?php echo TEXT_BANNERS_SCHEDULED_AT; ?><br /><small><?php echo TEXT_BANNERS_DATE_FORMAT; ?></small></td>
                     <td class="dataTableConfig col-middle">
-                      <?php echo xtc_draw_input_field('date_scheduled', $bInfo->date_scheduled ,'id="Datepicker1" style="width:155px"'); ?>
+                      <?php echo xtc_draw_input_field('date_scheduled', $bInfo->date_scheduled ,'id="Datetimepicker1" style="width:155px"'); ?>
                     </td>
                     <td class="dataTableConfig col-right" style="border-right: 1px solid #ccc;">&nbsp;</td>
                   </tr>                     
                   <tr>
                     <td class="dataTableConfig col-left" style="border-left: 1px solid #ccc;"><?php echo TEXT_BANNERS_EXPIRES_ON; ?><br /><small><?php echo TEXT_BANNERS_DATE_FORMAT; ?></small></td>
                     <td class="dataTableConfig col-middle">
-                      <?php echo xtc_draw_input_field('expires_date', $bInfo->expires_date ,'id="Datepicker2" style="width:155px"'); ?>
+                      <?php echo xtc_draw_input_field('expires_date', $bInfo->expires_date ,'id="Datetimepicker2" style="width:155px"'); ?>
                       <?php echo TEXT_BANNERS_OR_AT . '<br />' . xtc_draw_input_field('expires_impressions', $bInfo->expires_impressions, 'style="width:155px"') . ' ' . TEXT_BANNERS_IMPRESSIONS; ?>
                     </td>
                     <td class="dataTableConfig col-right" style="border-right: 1px solid #ccc;">&nbsp;</td>
@@ -412,8 +412,8 @@
                     $banner_query = xtc_db_query("SELECT *,
                                                          banners_image as banners_image_exist,
                                                          banners_image_mobile as banners_image_mobile_exist,
-                                                         date_format(date_scheduled, '%Y-%m-%d') as date_scheduled, 
-                                                         date_format(expires_date, '%Y-%m-%d') as expires_date
+                                                         date_format(date_scheduled, '%Y-%m-%d %H:%i') as date_scheduled, 
+                                                         date_format(expires_date, '%Y-%m-%d %H:%i') as expires_date
                                                     FROM " . TABLE_BANNERS . " 
                                                    WHERE banners_group_id = '" . xtc_db_input($bInfo->banners_group_id) . "'
                                                      AND languages_id = '".$languages[$i]['id']."'");
@@ -629,17 +629,17 @@
                           }
                         }
 
-                        $contents[] = array('text' => '<br />' . TEXT_BANNERS_DATE_ADDED . ' ' . xtc_date_short($bInfo->date_added));
                         if ($bInfo->date_scheduled) {
-                          $contents[] = array('text' => sprintf(TEXT_BANNERS_SCHEDULED_AT_DATE, xtc_date_short($bInfo->date_scheduled)));
+                          $contents[] = array('text' => sprintf(TEXT_BANNERS_SCHEDULED_AT_DATE, xtc_datetime_short($bInfo->date_scheduled)));
                         }
                         
                         if ($bInfo->expires_date) {
-                          $contents[] = array('text' => sprintf(TEXT_BANNERS_EXPIRES_AT_DATE, xtc_date_short($bInfo->expires_date)));
+                          $contents[] = array('text' => sprintf(TEXT_BANNERS_EXPIRES_AT_DATE, xtc_datetime_short($bInfo->expires_date)));
                         } elseif ($bInfo->expires_impressions) {
                           $contents[] = array('text' => sprintf(TEXT_BANNERS_EXPIRES_AT_IMPRESSIONS, $bInfo->expires_impressions));
                         }
                         
+                        $contents[] = array('text' => '<br />' . TEXT_BANNERS_DATE_ADDED . ' ' . xtc_date_short($bInfo->date_added));
                         if ($bInfo->date_status_change) {
                           $contents[] = array('text' => sprintf(TEXT_BANNERS_STATUS_CHANGE, xtc_date_short($bInfo->date_status_change)));
                         }
