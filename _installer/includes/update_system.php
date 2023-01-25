@@ -133,6 +133,12 @@
     rename(DIR_FS_EXTERNAL.'phpfastcache', DIR_FS_EXTERNAL.'Phpfastcache');
   }
   
+  // set shipping title
+  xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                   SET configuration_value = 'shipping_default'
+                 WHERE configuration_key = 'SHOW_SHIPPING_MODULE_TITLE'
+                   AND configuration_value = 'standard'");
+                   
   // rename config key
   $config_array = array(
     'MAX_DISPLAY_CONTENT_MANAGER' => 'MAX_DISPLAY_CONTENT_MANAGER_RESULTS',
