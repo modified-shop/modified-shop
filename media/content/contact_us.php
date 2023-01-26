@@ -74,7 +74,7 @@
     }
     
     if (in_array('contact', $use_captcha) && (!isset($_SESSION['customer_id']) || MODULE_CAPTCHA_LOGGED_IN == 'True')) {    
-      if ($mod_captcha->validate($_POST['vvcode']) !== true) {
+      if ($mod_captcha->validate((isset($_POST['vvcode'])) ? $_POST['vvcode'] : '') !== true) {
         $messageStack->add('contact_us', ERROR_VVCODE);
         $error = true;
       }

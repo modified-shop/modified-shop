@@ -59,7 +59,7 @@ if (isset($_GET['action'])
     } else {
       $messageStack->add('password_double_opt_in', TEXT_EMAIL_ERROR);
     }
-  } elseif (xtc_not_null($_POST['email']) && (!in_array('password', $use_captcha) || $mod_captcha->validate($_POST['vvcode']) === true)) {
+  } elseif (xtc_not_null($_POST['email']) && (!in_array('password', $use_captcha) || $mod_captcha->validate((isset($_POST['vvcode'])) ? $_POST['vvcode'] : '') === true)) {
     $check_customer_query = xtc_db_query("SELECT customers_email_address, 
                                                  customers_id 
                                             FROM ".TABLE_CUSTOMERS." 

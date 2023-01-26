@@ -91,7 +91,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'process' && $review_error ===
     $error = true;
   }
   if (in_array('reviews', $use_captcha) && (!isset($_SESSION['customer_id']) || MODULE_CAPTCHA_LOGGED_IN == 'True')) {
-    if ($mod_captcha->validate($_POST['vvcode']) !== true) 
+    if ($mod_captcha->validate((isset($_POST['vvcode'])) ? $_POST['vvcode'] : '') !== true) 
     {
       $messageStack->add('product_reviews_write', strip_tags(ERROR_VVCODE, '<b><strong>'));
       $error = true;
