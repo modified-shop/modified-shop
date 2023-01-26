@@ -180,7 +180,7 @@ if (!$action || $action == 'delete') {
           $content_query = xtc_db_query($content_query_raw);
           while ($content_data = xtc_db_fetch_array($content_query)) {
 
-            if ((!isset($_GET['coID']) || $_GET['coID'] == $content_data['content_group']) && !isset($oInfo)) {
+            if ((!isset($_GET['coID']) || $_GET['coID'] == $content_data['content_group']) && (!isset($_GET['coIndex']) || $_GET['coIndex'] == $content_data['content_group_index']) && !isset($oInfo)) {
               $oInfo = new objectInfo($content_data);
             }
           
@@ -193,7 +193,7 @@ if (!$action || $action == 'delete') {
               $content_data['content_count'] = xtc_db_num_rows($check_query);
             }
           
-            if (isset($oInfo) && is_object($oInfo) && $content_data['content_group'] == $oInfo->content_group) {
+            if (isset($oInfo) && is_object($oInfo) && $content_data['content_group'] == $oInfo->content_group && $content_data['content_group_index'] == $oInfo->content_group_index) {
               echo '<tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action', 'coID', 'coIndex')) . 'coID=' . $oInfo->content_group . '&coIndex=' . $oInfo->content_group_index . '&action=edit') . '\'">' . "\n";
             } else {
               echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action', 'coID', 'coIndex')) . 'coID=' . $content_data['content_group'] . '&coIndex=' . $content_data['content_group_index']) . '\'">' . "\n";
