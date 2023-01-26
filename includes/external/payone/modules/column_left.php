@@ -19,9 +19,10 @@
 
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
+  $menu_output = false;
   if (!isset($menu_access)) {
     $menu_access = array();
-    $menu_aoutput = true;
+    $menu_output = true;
   }
 
   if ((isset($admin_access['payone_config']) && $admin_access['payone_config'] == '1') || (isset($admin_access['payone_log']) && $admin_access['payone_log'] == '1')) {
@@ -31,7 +32,7 @@
     $menu_access[] = '</ul></li>';
   }
 
-  if ($menu_aoutput === true) {
+  if ($menu_output === true) {
     echo implode(PHP_EOL, $menu_access);
     unset($menu_access);
   }
