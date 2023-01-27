@@ -2,7 +2,7 @@
 
 /**
  *
- * This file is part of phpFastCache.
+ * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
@@ -11,27 +11,25 @@
  * @author Lucas Brucksch <support@hammermaps.de>
  *
  */
+
 declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Zenddisk;
 
 use Phpfastcache\Cluster\AggregatablePoolInterface;
-use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
+use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
+use Phpfastcache\Core\Pool\TaggableCacheItemPoolTrait;
+use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverStatistic;
-use Phpfastcache\Exceptions\{PhpfastcacheInvalidArgumentException};
-use Psr\Cache\CacheItemInterface;
-
+use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 
 /**
- * Class Driver (zend disk cache)
  * Requires Zend Data Cache Functions from ZendServer
- * @package phpFastCache\Drivers
- * @property Config $config Config object
- * @method Config getConfig() Return the config object
+ * @method Config getConfig()
  */
-class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
+class Driver implements AggregatablePoolInterface
 {
-    use DriverBaseTrait;
+    use TaggableCacheItemPoolTrait;
 
     /**
      * @return bool
@@ -76,13 +74,14 @@ HELP;
     }
 
     /**
-     * @param CacheItemInterface $item
-     * @return null|array
+     * @param ExtendedCacheItemInterface $item
+     * @return ?array<string, mixed>
      */
-    protected function driverRead(CacheItemInterface $item)
+    protected function driverRead(ExtendedCacheItemInterface $item): ?array
     {
         $data = zend_disk_cache_fetch($item->getKey());
-        if ($data === false) {
+
+        if (empty($data) || !\is_array($data)) {
             return null;
         }
 
@@ -90,50 +89,32 @@ HELP;
     }
 
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return mixed
      * @throws PhpfastcacheInvalidArgumentException
      */
-    protected function driverWrite(CacheItemInterface $item): bool
+    protected function driverWrite(ExtendedCacheItemInterface $item): bool
     {
-        /**
-         * Check for Cross-Driver type confusion
-         */
-        if ($item instanceof Item) {
-            $ttl = $item->getExpirationDate()->getTimestamp() - time();
+        $this->assertCacheItemType($item, Item::class);
 
-            return zend_disk_cache_store($item->getKey(), $this->driverPreWrap($item), ($ttl > 0 ? $ttl : 0));
-        }
+        $ttl = $item->getExpirationDate()->getTimestamp() - time();
 
-        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
+        return zend_disk_cache_store($item->getKey(), $this->driverPreWrap($item), ($ttl > 0 ? $ttl : 0));
     }
 
-    /********************
-     *
-     * PSR-6 Extended Methods
-     *
-     *******************/
-
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return bool
      * @throws PhpfastcacheInvalidArgumentException
      */
-    protected function driverDelete(CacheItemInterface $item): bool
+    protected function driverDelete(ExtendedCacheItemInterface $item): bool
     {
-        /**
-         * Check for Cross-Driver type confusion
-         */
-        if ($item instanceof Item) {
-            return (bool)zend_disk_cache_delete($item->getKey());
-        }
+        $this->assertCacheItemType($item, Item::class);
 
-        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
+        return (bool)zend_disk_cache_delete($item->getKey());
     }
 
-    /**
-     * @return bool
-     */
+
     protected function driverClear(): bool
     {
         return @zend_disk_cache_clear();

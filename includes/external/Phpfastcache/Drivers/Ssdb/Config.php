@@ -1,15 +1,15 @@
 <?php
+
 /**
  *
- * This file is part of phpFastCache.
+ * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
- * For full copyright and license information, please see the docs/CREDITS.txt file.
+ * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
  *
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> https://www.phpfastcache.com
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
- *
+ * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
 
 declare(strict_types=1);
@@ -17,30 +17,15 @@ declare(strict_types=1);
 namespace Phpfastcache\Drivers\Ssdb;
 
 use Phpfastcache\Config\ConfigurationOption;
+use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 
 class Config extends ConfigurationOption
 {
-    /**
-     * @var string
-     */
-    protected $host = '127.0.0.1';
-
-    /**
-     * @var int
-     */
-    protected $port = 8888;
-
-    /**
-     * @var string
-     */
-    protected $password = '';
-
-    /**
-     * @var int
-     */
-    protected $timeout = 2000;
-
-    /**
+    protected string $host = '127.0.0.1';
+    protected int $port = 8888;
+    protected string $password = '';
+    protected int $timeout = 2000;
+/**
      * @return string
      */
     public function getHost(): string
@@ -51,9 +36,11 @@ class Config extends ConfigurationOption
     /**
      * @param string $host
      * @return Config
+     * @throws PhpfastcacheLogicException
      */
     public function setHost(string $host): Config
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->host = $host;
         return $this;
     }
@@ -69,9 +56,11 @@ class Config extends ConfigurationOption
     /**
      * @param int $port
      * @return Config
+     * @throws PhpfastcacheLogicException
      */
     public function setPort(int $port): Config
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->port = $port;
         return $this;
     }
@@ -87,9 +76,11 @@ class Config extends ConfigurationOption
     /**
      * @param string $password
      * @return Config
+     * @throws PhpfastcacheLogicException
      */
     public function setPassword(string $password): Config
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->password = $password;
         return $this;
     }
@@ -105,9 +96,11 @@ class Config extends ConfigurationOption
     /**
      * @param int $timeout
      * @return Config
+     * @throws PhpfastcacheLogicException
      */
     public function setTimeout(int $timeout): Config
     {
+        $this->enforceLockedProperty(__FUNCTION__);
         $this->timeout = $timeout;
         return $this;
     }
