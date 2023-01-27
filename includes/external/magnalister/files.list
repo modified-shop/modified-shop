@@ -2,7 +2,7 @@ ChangeLog	80e127e906214811527e52d8e882f0a3
 MagnaUpdater.php	6a1e58821abd67080297316d1c30c184
 config/	0
 config/english/	0
-config/english/amazon.form	9d415ae3daec9b33c4190f873ce612ac
+config/english/amazon.form	a0cdd5e8ec4e369f98c4a252e9147a47
 config/english/ayn24.form	91f692d1b8b6b1c68de113a855b9f8be
 config/english/check24/	0
 config/english/check24/checkin.form	38be909a11776938f20946e5da5fa25c
@@ -160,7 +160,7 @@ config/french/tradoria/orderImportExtras.form	878cf1a85c7cb94d3f1e2524466376b9
 config/french/tradoria/useShopCatsAsOwn.form	bad332180344f9f2cbaafe46c422eba9
 config/french/yatego.form	5d737efb7cbb2e9a01205b1eb268d2cb
 config/german/	0
-config/german/amazon.form	767d284e7d131952cd278b044f1f005a
+config/german/amazon.form	31af9aa2c3b749a96041aec3f13ea92e
 config/german/ayn24.form	96754790008d9df172dca8e4d9d02f45
 config/german/bepado/	0
 config/german/bepado/checkin.form	142db206f2050b1847be65364643028c
@@ -271,7 +271,7 @@ config/german/otto/	0
 config/german/otto/checkin.form	1d21c31c932ce341e1bea304302620c7
 config/german/otto/inventorysync.form	8a0c0def4e792ffcc709d45612842ac2
 config/german/otto/login.form	bc01b68767b5d5461a227dcfab1a5c6e
-config/german/otto/orders.form	331b1d21f5fe70ff4208802c4d34c888
+config/german/otto/orders.form	c3b4d8587e8ad2718659ce10c2fb3aa0
 config/german/otto/prepare.form	2ec3b733205354c44ebaedc1c34fb88d
 config/german/otto/price.form	735414e15837d2f4a16f06cdf0156f41
 config/german/priceminister/	0
@@ -643,7 +643,7 @@ images/togglebuttons.png	d2ba9a07f0b0f516179443ca4ac0984d
 images/under_construction.png	03e55b9713106de44e3dc1913dbad8de
 images/view-refresh.png	9c9dd4cd3020f8231574bf9181d0b57b
 images/warning-exclamation-triangle.png	673e1208dfba9f3baf3542167600666d
-init.php	bcb07076b592350026193441346bc86c
+init.php	065bc2be57c69c5f3f7df9a87e431bdb
 js/	0
 js/classes/	0
 js/classes/CheckinSubmit.js	bced11a397ea484fcd06b3e9b34efbb9
@@ -800,7 +800,7 @@ js/tinymce/skins/lightgray/img/wline.gif	c136c9f8e00718a98947a21d8adbcc56
 js/tinymce/skins/lightgray/skin.ie7.min.css	a15846089ae835e507324fb3297e9747
 js/tinymce/skins/lightgray/skin.min.css	02ca83e284d3b0b819c7c00b38f4fe52
 js/tinymce/tinymce.min.js	228499e61ddbd9cf1933fb6f2578b59a
-js/variation_matching.js	e8ba410c248ca426e840b2e72ffcc150
+js/variation_matching.js	a8d8e8142b570ee15d0fb60da8e7b933
 lang/	0
 lang/english.php	8b7dd1668dbbf717f634b30956ac2f81
 lang/french.php	82b2e97790dd1762430f7947e94e8207
@@ -846,7 +846,7 @@ php/lib/classes/ComparisonShopping/ComparisonShoppingCategoryView.php	3de5e4aa96
 php/lib/classes/ComparisonShopping/ComparisonShoppingCheckinProductList.php	5f98b73855981802cfda2b3490d39e02
 php/lib/classes/ComparisonShopping/ComparisonShoppingCheckinSubmit.php	9cf0e342828f160f2000fd6a944146be
 php/lib/classes/ComparisonShopping/ComparisonShoppingListings.php	7f50eae7185706d036b15d1db35c1741
-php/lib/classes/ComparisonShopping/ComparisonShoppingSummaryView.php	019de5886202a54c82407a09e372751a
+php/lib/classes/ComparisonShopping/ComparisonShoppingSummaryView.php	504e6d2d06228bc26dd9f1cd7588f189
 php/lib/classes/ComparisonShopping/DeletedView.php	d01ccffac583cc9fc20f649b2aaf8b06
 php/lib/classes/ComparisonShopping/ErrorView.php	16f0db6b541bbc0a692fced6004766b8
 php/lib/classes/ComparisonShopping/InventoryView.php	9ecbf11b0024d5ce851b544d80fc1724
@@ -917,7 +917,7 @@ php/lib/classes/productIdFilter/EANMasterFilter.php	4a0d3152c021ec7068a3ba7f7b47
 php/lib/classes/productIdFilter/ManufacturerFilter.php	77f7e9ce9a0de07f202112fc395d6102
 php/lib/classes/productIdFilter/ProductStatusFilter.php	ec44ae08045a2c2889069bdb62e9957e
 php/lib/configFunctions.php	8380e737a4206e2c1e1af74fe961b30e
-php/lib/functionLib.php	b0294f3b3b707f344e6b9d1bde1f44e9
+php/lib/functionLib.php	70be155887c6738b752df54b8b61126b
 php/lib/json/	0
 php/lib/json/LICENSE	7fc2d268d5da1e548f7d6d769e4ab346
 php/lib/json/Test-JSON.php	3e5a22a9711fa242fc7c17275f664452
@@ -988,7 +988,7 @@ php/modules/	0
 php/modules/amazon/	0
 php/modules/amazon/AmazonHelper.php	bf04c67fa212279b83ba0d4fcb3e2d17
 php/modules/amazon/amazonConfig.php	ef19d1527b0aad00780dc187dc8679a9
-php/modules/amazon/amazonFunctions.php	20b5b4ae1b47921e24f796d0d77f3215
+php/modules/amazon/amazonFunctions.php	0987916a148bf9b9c9b2e2a646994c48
 php/modules/amazon/amazonajax.php	4544d832277316c8b0a38d7a65b91329
 php/modules/amazon/application/	0
 php/modules/amazon/application/applicationviews.php	9f7b4f46de359f7ba954d08da23c0c3c
@@ -998,7 +998,7 @@ php/modules/amazon/checkin/AmazonCheckinProductList.php	4cbb3d9c7d9fbc1602352655
 php/modules/amazon/checkin.php	59318e1703e20212a4ced9d23f449388
 php/modules/amazon/classes/	0
 php/modules/amazon/classes/AmazonCategoryView.php	e8b60a1dfb83da39041cbdb41709d94a
-php/modules/amazon/classes/AmazonCheckinSubmit.php	a2029f545e1754dbf630ac9dfd2ccd34
+php/modules/amazon/classes/AmazonCheckinSubmit.php	de7b34513de0bc3a6e1d1f5368c5da44
 php/modules/amazon/classes/AmazonSummaryView.php	df45253ca6c342fc16a4dc31d865c745
 php/modules/amazon/classes/ApplyCategoryView.php	ff306db91982155d3eaa64cdeeaf8602
 php/modules/amazon/classes/CheckinCategoryView.php	6b93ab2c5f5fd16ebc1d5497a5ba74f5
@@ -1091,7 +1091,7 @@ php/modules/amazon/classes/ProductList/templates/field/amazonpreparetype.php	8bc
 php/modules/amazon/classes/amazonTopTen.php	254ea1dd37c85be96006353be59b5a23
 php/modules/amazon/crons/	0
 php/modules/amazon/crons/AmazonImportOrders.php	535d6f407c06b7b72e270f8c9dcd0b7f
-php/modules/amazon/crons/AmazonSyncInventory.php	14b77a40731ad5591d237bbe65c9c15e
+php/modules/amazon/crons/AmazonSyncInventory.php	f10480c4d67e2600352fb57a3b09638d
 php/modules/amazon/crons/AmazonSyncOrderStatus.php	3241a104dcc5117eda770a5e4cb98ab3
 php/modules/amazon/crons/AmazonUploadInvoices.php	4477a0baf139c92ff5528cabd1cee8e5
 php/modules/amazon/errorlog.php	903a9851ff64b004234ff48332bb77b1
@@ -1224,7 +1224,7 @@ php/modules/cdiscount/checkin/CdiscountCheckinSubmit.php	30c613277a10dcb4c62d47b
 php/modules/cdiscount/checkin/CdiscountSummaryView.php	d856474ee45f6f5c50d3bc5bfcc7bbc2
 php/modules/cdiscount/classes/	0
 php/modules/cdiscount/classes/CdiscountApiConfigValues.php	45011341427bd2706f86bb8e2177514c
-php/modules/cdiscount/classes/CdiscountProductSaver.php	f5a675999bfba5500339b7cf08a24b53
+php/modules/cdiscount/classes/CdiscountProductSaver.php	06378e2d74cd387d43b46279f2271a84
 php/modules/cdiscount/classes/CdiscountTopTenCategories.php	49911a16320e640bd40b284156ebd350
 php/modules/cdiscount/classes/MLProductListCdiscountAbstract.php	732f2ed6055eb5fea27d09525d3bccdd
 php/modules/cdiscount/classes/ProductList/	0
@@ -1346,7 +1346,7 @@ php/modules/crowdfox/configure.php	18aacf41e39c58cff7a115b0768d9a30
 php/modules/crowdfox/crons/	0
 php/modules/crowdfox/crons/CrowdfoxImportOrders.php	0db2a2112190aa1ac69fd9de7fe4e395
 php/modules/crowdfox/crons/CrowdfoxSyncInventory.php	d878893161124e72819496a848572dbd
-php/modules/crowdfox/crons/CrowdfoxSyncOrderStatus.php	7c29cf97a6df52cb025b15fe3766b4e4
+php/modules/crowdfox/crons/CrowdfoxSyncOrderStatus.php	7c6c31c0fe89309bbdc23d06cd8064f9
 php/modules/crowdfox/errorlog/	0
 php/modules/crowdfox/errorlog/CrowdfoxErrorView.php	25e32865c8d8adb7aa509e9f274b8eef
 php/modules/crowdfox/listings/	0
@@ -1456,9 +1456,9 @@ php/modules/ebay/crons/	0
 php/modules/ebay/crons/EbayImportOrders.php	0a2e55feafc6dabd9cc14fbe97c05c40
 php/modules/ebay/crons/EbaySyncInventory.php	190da1cbdae035276918659b24f5d31e
 php/modules/ebay/crons/EbaySyncListingDetails.php	b6dc1a659fee94a3f5da132c35220da2
-php/modules/ebay/crons/EbaySyncOrderStatus.php	3bac11153a2fc8df7ded411d3268f28f
+php/modules/ebay/crons/EbaySyncOrderStatus.php	61944f3f9bfee805ba5a5e5664c53afa
 php/modules/ebay/crons/get_ebay_orders.php	8386af4762af5348843aabc4044cd853
-php/modules/ebay/ebayConfig.php	af7d9b15d4a011a8a92c2b6516f1b8c3
+php/modules/ebay/ebayConfig.php	1080705492068eee6bb9108d66d3eb09
 php/modules/ebay/ebayFunctions.php	bd4573cf051b6b833bb35786160180ee
 php/modules/ebay/ebayajax.php	87fd1ca9e28b810c46e28c89429fc77a
 php/modules/ebay/errorlog.php	cd2decca0165d9e5f795080e3bed24a9
@@ -1754,7 +1754,7 @@ php/modules/hood.php	ab3adbc34cc88ed3ffae8f033890923b
 php/modules/idealo/	0
 php/modules/idealo/checkin/	0
 php/modules/idealo/checkin/IdealoCheckinProductList.php	1d98dbf522c90e9881e4c5f633baab22
-php/modules/idealo/checkin/IdealoCheckinSubmit.php	c9e4df3acbff58bbc7f4b12482610e43
+php/modules/idealo/checkin/IdealoCheckinSubmit.php	2988b996b31a9d384bdb94191f4467a2
 php/modules/idealo/checkin.php	0f51e49fc8a1b8205eb567dca41b9a95
 php/modules/idealo/classes/	0
 php/modules/idealo/classes/IdealoApiConfigValues.php	751cc5d7b0eb069a95afef5b1d4042e5
@@ -1845,10 +1845,10 @@ php/modules/magnacompatible/config.php	8317bf3805be32c9f5f7d9834c1362a7
 php/modules/magnacompatible/configure.php	94351a9235e374c277c528423b5b4e7a
 php/modules/magnacompatible/crons/	0
 php/modules/magnacompatible/crons/MagnaCompatibleCronBase.php	82ce9bf3e7bd8e33a9ca52ea88b57597
-php/modules/magnacompatible/crons/MagnaCompatibleImportOrders.php	2868e467fd8d8ea27c81459239fd3445
+php/modules/magnacompatible/crons/MagnaCompatibleImportOrders.php	491d5cdf60a2146bff77d92470bc013d
 php/modules/magnacompatible/crons/MagnaCompatibleSyncInventory.php	0f3ded0cf6fdc91b5735e7a2d6bb32ee
-php/modules/magnacompatible/crons/MagnaCompatibleSyncOrderStatus.php	cedcd10a0a706adf5664b57f1678afb9
-php/modules/magnacompatible/crons/MagnaCompatibleUploadInvoices.php	d018f11c6e6e3b2eb18fa4045883e584
+php/modules/magnacompatible/crons/MagnaCompatibleSyncOrderStatus.php	9dfee99c9b3f0895fc8013af30b15658
+php/modules/magnacompatible/crons/MagnaCompatibleUploadInvoices.php	f4673d662ca3dbab2993805d87f64638
 php/modules/magnacompatible/errorlog/	0
 php/modules/magnacompatible/errorlog/MagnaCompatibleErrorView.php	62d431d9baa60262ed0280680d3bc22c
 php/modules/magnacompatible/errorlog.php	12b0937203441f81129d1f710ffbd135
@@ -1936,7 +1936,7 @@ php/modules/metro/configure.php	42b424229c2aff36a4851fdef5e47f42
 php/modules/metro/crons/	0
 php/modules/metro/crons/MetroImportOrders.php	b97d7442d5a9b5d543c0e54161e73ac2
 php/modules/metro/crons/MetroSyncInventory.php	bb9b2fa545416472bec52e22ccde04da
-php/modules/metro/crons/MetroSyncOrderStatus.php	112079061cf620af2f86a43c2d823df8
+php/modules/metro/crons/MetroSyncOrderStatus.php	77455646c3858bbb9d6955b77b444576
 php/modules/metro/crons/MetroUploadInvoices.php	fbae9732654cc0c2ba63cccf996144ad
 php/modules/metro/errorlog.php	b7b6e73038f280afa0c43e28563dc802
 php/modules/metro/listings/	0
@@ -1979,7 +1979,7 @@ php/modules/otto/crons/	0
 php/modules/otto/crons/OttoImportCategories.php	22fe55bc52482abd5798f4f6b73d408a
 php/modules/otto/crons/OttoImportOrders.php	6133e08bc70dcdcba3bfa2054ffa0148
 php/modules/otto/crons/OttoSyncInventory.php	598aa4f2e145fab42b73fbe9d41307cf
-php/modules/otto/crons/OttoSyncOrderStatus.php	958d25d9e51de12139e6ebe6f697ffac
+php/modules/otto/crons/OttoSyncOrderStatus.php	7391dfbc4381ae8f3575c466675f6738
 php/modules/otto/errorlog.php	6c3a8dbeb24c3823b9757cdefdc7f3b8
 php/modules/otto/listings/	0
 php/modules/otto/listings/OttoDeletedView.php	8bd6524498280135650e3b4ed117ebf4
@@ -2041,7 +2041,7 @@ php/modules/priceminister/configure.php	b131c5108a9a3a07a9efe4f842194346
 php/modules/priceminister/crons/	0
 php/modules/priceminister/crons/PriceministerImportOrders.php	cc56b546a0f4e30ed19dbdcdfb792dcf
 php/modules/priceminister/crons/PriceministerSyncInventory.php	8c9e64e68b9e9c92c8da2d5cea54ec54
-php/modules/priceminister/crons/PriceministerSyncOrderStatus.php	11f4896e3c12e004b4bdf38c52587579
+php/modules/priceminister/crons/PriceministerSyncOrderStatus.php	30ca1420a6b268084b1abf3026c9accd
 php/modules/priceminister/errorlog/	0
 php/modules/priceminister/errorlog/PriceministerErrorView.php	5fd203564789f8515c0ef5a664e44bbc
 php/modules/priceminister/listings/	0

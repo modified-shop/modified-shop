@@ -78,7 +78,7 @@ class ComparisonShoppingSummaryView extends SimpleSummaryView {
 		
 	}
 	
-	protected function getAdditionalHeadlines() {
+	protected function removed__getAdditionalHeadlines() {
 		return '<td>'.$this->provideResetFunction(
 			sprintf(
 				ML_GENERIC_SHIPPING_COST_IN_CURRENCY,
@@ -115,7 +115,7 @@ class ComparisonShoppingSummaryView extends SimpleSummaryView {
 		}
 	}
 
-	protected function getAdditionalItemCells($key, $dbRow) {
+	protected function removed__getAdditionalItemCells($key, $dbRow) {
 		$this->extendProductAttributes($dbRow['products_id'], $this->selection[$dbRow['products_id']]);
 		$this->simplePrice->setPrice($this->selection[$dbRow['products_id']]['shippingcost']);
 		return '<td><input type="text" id="shippingcost_'.$dbRow['products_id'].'"

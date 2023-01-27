@@ -249,6 +249,12 @@ function mlPrintLastUpdateError() {
 	}
 }
 
+/**
+ * @param $mUpdater MagnaUpdater
+ * @param $currentVersion
+ * @param $localVersion
+ * @return false[]
+ */
 function mlUpdatePlugin($mUpdater, $currentVersion, $localVersion) {
 	$magnaUpdateErrorText = mlGetUpdateErrorTexts();
 	$magnaFilePermissionErrors['german'] = array(

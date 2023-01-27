@@ -318,7 +318,7 @@ function resizeImage($resource_file, $max_width, $max_height, $destination_file,
 	$src = array();
 	$dst = array();
 	$dimensions = getimagesize($resource_file);
-	
+
 	if (is_array($dimensions)) {
 		$src['w'] = $dimensions[0];
 		$src['h'] = $dimensions[1];
@@ -333,9 +333,17 @@ function resizeImage($resource_file, $max_width, $max_height, $destination_file,
 		$dst['w'] = ($thiso > $thisp) ? $max_width : round($src['w'] / $thisp); // width
 		$dst['h'] = ($thiso > $thisp) ? round($src['h'] / $thiso) : $max_height; // height
 	}
+
 	$src['image'] = @imagecreatefromstring(@file_get_contents($resource_file));
 
-	if (!is_resource($src['image'])) {
+    // on PHP 8+ it is no longer a resource its instance of GdImage when successful
+    if (version_compare(PHP_VERSION, '8.0', '>=')) {
+        if (!($src['image'] instanceof GdImage)) {
+            unset($src);
+            unset($dst);
+            return false;
+        }
+    } elseif (!is_resource($src['image'])) {
 		unset($src);
 		unset($dst);
 		return false;

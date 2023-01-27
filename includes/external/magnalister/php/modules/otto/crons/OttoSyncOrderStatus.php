@@ -22,62 +22,12 @@ require_once(DIR_MAGNALISTER_MODULES.'magnacompatible/crons/MagnaCompatibleSyncO
 
 class OttoSyncOrderStatus extends MagnaCompatibleSyncOrderStatus {
 
-    public function process() {
-        #echo print_m($this->config, '$this->config');
-        $this->storeLogging('Config', $this->config);
-
-        if ($this->config['OrderStatusSync'] != 'auto') {
-            return false;
+    protected function submitStatusUpdate($action, $data) {
+        if ($action == 'CancelShipment') {
+            $action = 'CancelOrder';
         }
-        $this->aOrders = $this->getOrdersToSync();
-        $this->log(print_m($this->aOrders, "\n".'$this->aOrders'));
 
-        if (empty($this->aOrders)) return true;
-
-        #return true;
-        $this->confirmations = array();
-        $this->cancellations = array();
-        $this->unprocessed = array();
-
-        foreach ($this->aOrders as $key => &$oOrder) {
-            $this->oOrder = &$oOrder;
-            $this->iOrderIndex = $key;
-
-            if (!$this->isProcessable()) {
-                $this->unprocessed[] = $oOrder['orders_id'];
-                unset($this->aOrders[$key]);
-                continue;
-            }
-            $this->decodeData();
-            // add order to lookup table
-            $this->addToLookupTable();
-            $this->prepareSingleOrder($this->getStatusChangeTimestamp());
-
-            $requestSend = false;
-            if (count($this->confirmations) >= $this->sizeOfBatch) {
-                $this->submitStatusUpdate('ConfirmShipment', $this->confirmations);
-                $this->confirmations = array();
-                $requestSend = true;
-            }
-            if (count($this->cancellations) >= $this->sizeOfBatch) {
-                $this->submitStatusUpdate('CancelOrder', $this->cancellations);
-                $this->cancellations = array();
-                $requestSend = true;
-            }
-            if ($requestSend) {
-                $this->saveDirtyOrders();
-            }
-        }
-        //*
-        $this->submitStatusUpdate('ConfirmShipment', $this->confirmations);
-        $this->submitStatusUpdate('CancelOrder',  $this->cancellations);
-
-        $this->saveDirtyOrders();
-
-        $this->storeLogging('Unprocessed', $this->unprocessed);
-        $this->updateUnprocessed();
-        //*/
-        return true;
+        parent::submitStatusUpdate($action, $data);
     }
 
     private function getCarrierValue($type, $configValue, $orderId) {
@@ -171,6 +121,7 @@ class OttoSyncOrderStatus extends MagnaCompatibleSyncOrderStatus {
 
         // flag order as dirty, meaning that it has to be saved.
         $this->oOrder['__dirty'] = true;
+        $this->out($this->marketplace.' ('.$this->mpID.') sent shipping confirmation request for order '.$this->oOrder['special'] .' ('.$this->oOrder['orders_id'].')'."\n");
         return $cfirm;
     }
 
@@ -183,6 +134,7 @@ class OttoSyncOrderStatus extends MagnaCompatibleSyncOrderStatus {
         $this->oOrder['data']['ML_LABEL_ORDER_CANCELLED'] = $date;
         // flag order as dirty, meaning that it has to be saved.
         $this->oOrder['__dirty'] = true;
+        $this->out($this->marketplace.' ('.$this->mpID.') sent cancel order request for order '.$this->oOrder['special'] .' ('.$this->oOrder['orders_id'].')'."\n");
         return $aRequest;
     }
 

@@ -53,6 +53,7 @@ class CrowdfoxSyncOrderStatus extends MagnaCompatibleSyncOrderStatus {
 
         #return true;
         $this->confirmations = array();
+        /** array ('order id' => 'current order status id') */
         $this->unprocessed = array();
 
         foreach ($this->aOrders as $key => &$oOrder) {
@@ -60,7 +61,7 @@ class CrowdfoxSyncOrderStatus extends MagnaCompatibleSyncOrderStatus {
             $this->iOrderIndex = $key;
 
             if (!$this->isProcessable()) {
-                $this->unprocessed[] = $oOrder['orders_id'];
+                $this->unprocessed[$oOrder['orders_id']] = $oOrder['orders_status_shop'];
                 unset($this->aOrders[$key]);
                 continue;
             }

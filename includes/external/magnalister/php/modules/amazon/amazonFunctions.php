@@ -983,24 +983,32 @@ function getAmazonOfferLink($sAsin, $sTitle) {
 	} else {
 		global $_MagnaSession;
 		$sAmazonSite = strtolower(getDBConfigValue('amazon.site', $_MagnaSession['mpID'], 'de'));
-		switch ($sAmazonSite) {
-			case 'jp': {
-					$sAmazonSite = 'co.jp';
-					break;
-				}
-			case 'us': {
-					$sAmazonSite = 'com';
-					break;
-				}
-			case 'uk': {
-					$sAmazonSite = 'co.uk';
-					break;
-				}
-			default: {//fr, in, it, ca, es, cn
-				}
-		}
-		return '<a href="http://www.amazon.' . $sAmazonSite . '/gp/offer-listing/' . $sAsin . '" title="' . $sTitle . '" target="_blank">' . $sAsin . '</a>';
-	}
+        switch ($sAmazonSite) {
+            case 'jp': {
+                $sAmazonSite = 'co.jp';
+                break;
+            }
+            case 'us': {
+                $sAmazonSite = 'com';
+                break;
+            }
+            case 'uk': {
+                $sAmazonSite = 'co.uk';
+                break;
+            }
+            case 'tr': {
+                $sAmazonSite = 'com.tr';
+                break;
+            }
+            case 'au': {
+                $sAmazonSite = 'com.au';
+                break;
+            }
+            default: {//fr, in, it, ca, es, cn
+            }
+        }
+        return '<a href="https://www.amazon.' . $sAmazonSite . '/dp/' . $sAsin . '" title="' . $sTitle . '" target="_blank">' . $sAsin . '</a>';
+    }
 }
 
 function amazonMfsGetConfigurationValues($sType = null) {
