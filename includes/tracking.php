@@ -82,7 +82,7 @@ if (!isset($_SESSION['tracking']['pageview_history'])) {
 }
 
 if (!isset($forbidden_history_sites) || !is_array($forbidden_history_sites)) $forbidden_history_sites = array();
-$fobidden_array = array(
+$forbidden_array = array(
   'ajax.php', 
   'autocomplete.php', 
   'login_admin.php', 
@@ -96,7 +96,7 @@ $fobidden_array = array(
   FILENAME_PRINT_ORDER,
   FILENAME_PRINT_PRODUCT_INFO,
 );
-$forbidden_history_sites = array_merge($fobidden_array, $forbidden_history_sites);
+$forbidden_history_sites = array_merge($forbidden_array, $forbidden_history_sites);
 
 if (!in_array(basename($PHP_SELF), $forbidden_history_sites) 
     && end($_SESSION['tracking']['pageview_history']) != $req_url
