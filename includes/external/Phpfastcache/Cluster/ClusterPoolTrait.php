@@ -2,7 +2,7 @@
 
 /**
  *
- * This file is part of phpFastCache.
+ * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
@@ -11,53 +11,49 @@
  * @author  Georges.L (Geolim4)  <contact@geolim4.com>
  *
  */
+
 declare(strict_types=1);
 
 namespace Phpfastcache\Cluster;
 
+use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Psr\Cache\CacheItemInterface;
 
 trait ClusterPoolTrait
 {
-    /**
-     * @return bool
-     */
     protected function driverCheck(): bool
     {
         return true;
     }
 
-    /**
-     * @return bool
-     */
     protected function driverConnect(): bool
     {
         return true;
     }
 
     /**
-     * @param CacheItemInterface $item
-     * @return null
+     * @param ExtendedCacheItemInterface $item
+     * @return ?array<string, mixed>
      */
-    protected function driverRead(CacheItemInterface $item)
+    protected function driverRead(ExtendedCacheItemInterface $item): ?array
     {
         return null;
     }
 
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return bool
      */
-    protected function driverWrite(CacheItemInterface $item): bool
+    protected function driverWrite(ExtendedCacheItemInterface $item): bool
     {
         return true;
     }
 
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return bool
      */
-    protected function driverDelete(CacheItemInterface $item): bool
+    protected function driverDelete(ExtendedCacheItemInterface $item): bool
     {
         return true;
     }

@@ -1,45 +1,24 @@
 <?php
+
 /**
  *
- * This file is part of phpFastCache.
+ * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
- * For full copyright and license information, please see the docs/CREDITS.txt file.
+ * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
  *
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> https://www.phpfastcache.com
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
- *
+ * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
 
 declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Leveldb;
 
-use Phpfastcache\Config\ConfigurationOption;
+use Phpfastcache\Config\IOConfigurationOptionInterface;
+use Phpfastcache\Config\IOConfigurationOption;
 
-class Config extends ConfigurationOption
+class Config extends IOConfigurationOption implements IOConfigurationOptionInterface
 {
-    /**
-     * @var bool
-     */
-    protected $htaccess = true;
-
-    /**
-     * @return bool
-     */
-    public function getHtaccess(): bool
-    {
-        return $this->htaccess;
-    }
-
-    /**
-     * @param bool $htaccess
-     * @return self
-     */
-    public function setHtaccess(bool $htaccess): self
-    {
-        $this->htaccess = $htaccess;
-        return $this;
-    }
 }

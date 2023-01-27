@@ -2,40 +2,42 @@
 
 /**
  *
- * This file is part of phpFastCache.
+ * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
- * For full copyright and license information, please see the docs/CREDITS.txt file.
+ * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
  *
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> https://www.phpfastcache.com
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
- *
+ * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
+
 declare(strict_types=1);
 
 namespace Phpfastcache\Drivers\Couchdb;
 
-use Doctrine\CouchDB\{CouchDBClient, CouchDBException, HTTP\HTTPException};
+use Doctrine\CouchDB\CouchDBClient;
+use Doctrine\CouchDB\CouchDBException;
+use Doctrine\CouchDB\HTTP\HTTPException;
 use Phpfastcache\Cluster\AggregatablePoolInterface;
-use Phpfastcache\Core\Pool\{DriverBaseTrait, ExtendedCacheItemPoolInterface};
+use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
+use Phpfastcache\Core\Pool\TaggableCacheItemPoolTrait;
+use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverStatistic;
-use Phpfastcache\Exceptions\{PhpfastcacheDriverException, PhpfastcacheInvalidArgumentException, PhpfastcacheLogicException};
-use Psr\Cache\CacheItemInterface;
-
+use Phpfastcache\Exceptions\PhpfastcacheDriverException;
+use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
+use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 
 /**
  * Class Driver
- * @package phpFastCache\Drivers
  * @property CouchdbClient $instance Instance of driver service
- * @property Config $config Config object
- * @method Config getConfig() Return the config object
+ * @method Config getConfig()
  */
-class Driver implements ExtendedCacheItemPoolInterface, AggregatablePoolInterface
+class Driver implements AggregatablePoolInterface
 {
-    public const COUCHDB_DEFAULT_DB_NAME = 'phpfastcache'; // Public because used in config
+    use TaggableCacheItemPoolTrait;
 
-    use DriverBaseTrait;
+    public const COUCHDB_DEFAULT_DB_NAME = 'phpfastcache'; // Public because used in config
 
     /**
      * @return bool
@@ -60,6 +62,7 @@ HELP;
 
     /**
      * @return DriverStatistic
+     * @throws HTTPException
      */
     public function getStats(): DriverStatistic
     {
@@ -74,14 +77,10 @@ HELP;
 
     /**
      * @return bool
-     * @throws PhpfastcacheLogicException
+     * @throws HTTPException
      */
     protected function driverConnect(): bool
     {
-        if ($this->instance instanceof CouchDBClient) {
-            throw new PhpfastcacheLogicException('Already connected to Couchdb server');
-        }
-
         $clientConfig = $this->getConfig();
 
         $url = ($clientConfig->isSsl() ? 'https://' : 'http://');
@@ -114,32 +113,34 @@ HELP;
      */
     protected function getDatabaseName(): string
     {
-        return $this->getConfig()->getDatabase() ?: self::COUCHDB_DEFAULT_DB_NAME;
+        return $this->getConfig()->getDatabase() ?: static::COUCHDB_DEFAULT_DB_NAME;
     }
 
     /**
      * @return void
+     * @throws HTTPException
      */
-    protected function createDatabase()
+    protected function createDatabase(): void
     {
-        try{
+        try {
             $this->instance->getDatabaseInfo($this->getDatabaseName());
-        } catch(HTTPException $e){
+        } catch (HTTPException) {
             $this->instance->createDatabase($this->getDatabaseName());
         }
     }
 
-    protected function getCouchDbItemKey(CacheItemInterface $item)
+    protected function getCouchDbItemKey(ExtendedCacheItemInterface $item): string
     {
         return 'pfc_' . $item->getEncodedKey();
     }
 
     /**
-     * @param CacheItemInterface $item
-     * @return null|array
+     * @param ExtendedCacheItemInterface $item
+     * @return ?array<string, mixed>
      * @throws PhpfastcacheDriverException
+     * @throws \Exception
      */
-    protected function driverRead(CacheItemInterface $item)
+    protected function driverRead(ExtendedCacheItemInterface $item): ?array
     {
         try {
             $response = $this->instance->findDocument($this->getCouchDbItemKey($item));
@@ -152,43 +153,40 @@ HELP;
         }
 
         if ($response->status === 200) {
-            return $this->decode($response->body);
+            return $this->decodeDocument($response->body);
         }
 
         throw new PhpfastcacheDriverException('Got unexpected HTTP status: ' . $response->status);
     }
 
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return bool
      * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheInvalidArgumentException
+     * @throws PhpfastcacheLogicException
      */
-    protected function driverWrite(CacheItemInterface $item): bool
+    protected function driverWrite(ExtendedCacheItemInterface $item): bool
     {
-        /**
-         * Check for Cross-Driver type confusion
-         */
-        if ($item instanceof Item) {
-            try {
-                $this->instance->putDocument(
-                    $this->encodeDocument($this->driverPreWrap($item)),
-                    $this->getCouchDbItemKey($item),
-                    $this->getLatestDocumentRevision($this->getCouchDbItemKey($item))
-                );
-            } catch (CouchDBException $e) {
-                throw new PhpfastcacheDriverException('Got error while trying to upsert a document: ' . $e->getMessage(), 0, $e);
-            }
-            return true;
-        }
+        $this->assertCacheItemType($item, Item::class);
 
-        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
+        try {
+            $this->instance->putDocument(
+                $this->encodeDocument($this->driverPreWrap($item)),
+                $this->getCouchDbItemKey($item),
+                $this->getLatestDocumentRevision($this->getCouchDbItemKey($item))
+            );
+        } catch (CouchDBException $e) {
+            throw new PhpfastcacheDriverException('Got error while trying to upsert a document: ' . $e->getMessage(), 0, $e);
+        }
+        return true;
     }
 
     /**
+     * @param string $docId
      * @return string|null
      */
-    protected function getLatestDocumentRevision($docId)
+    protected function getLatestDocumentRevision(string $docId): ?string
     {
         $path = '/' . \urlencode($this->getDatabaseName()) . '/' . urlencode($docId);
 
@@ -205,33 +203,22 @@ HELP;
         return null;
     }
 
-    /********************
-     *
-     * PSR-6 Extended Methods
-     *
-     *******************/
-
     /**
-     * @param CacheItemInterface $item
+     * @param ExtendedCacheItemInterface $item
      * @return bool
      * @throws PhpfastcacheDriverException
      * @throws PhpfastcacheInvalidArgumentException
      */
-    protected function driverDelete(CacheItemInterface $item): bool
+    protected function driverDelete(ExtendedCacheItemInterface $item): bool
     {
-        /**
-         * Check for Cross-Driver type confusion
-         */
-        if ($item instanceof Item) {
-            try {
-                $this->instance->deleteDocument($this->getCouchDbItemKey($item), $this->getLatestDocumentRevision($this->getCouchDbItemKey($item)));
-            } catch (CouchDBException $e) {
-                throw new PhpfastcacheDriverException('Got error while trying to delete a document: ' . $e->getMessage(), 0, $e);
-            }
-            return true;
-        }
+        $this->assertCacheItemType($item, Item::class);
 
-        throw new PhpfastcacheInvalidArgumentException('Cross-Driver type confusion detected');
+        try {
+            $this->instance->deleteDocument($this->getCouchDbItemKey($item), $this->getLatestDocumentRevision($this->getCouchDbItemKey($item)));
+        } catch (CouchDBException $e) {
+            throw new PhpfastcacheDriverException('Got error while trying to delete a document: ' . $e->getMessage(), 0, $e);
+        }
+        return true;
     }
 
     /**
@@ -251,8 +238,8 @@ HELP;
     }
 
     /**
-     * @param array $data
-     * @return array
+     * @param array<string, mixed> $data
+     * @return array<string, mixed>
      */
     protected function encodeDocument(array $data): array
     {
@@ -263,30 +250,33 @@ HELP;
 
     /**
      * Specific document decoder for Couchdb
-     * since we dont store encoded version
+     * since we don't store encoded version
      * for performance purposes
      *
-     * @param $value
-     * @return mixed
+     * @param array<string, mixed> $value
+     * @return array<string, mixed>
      * @throws \Exception
      */
-    protected function decode($value)
+    protected function decodeDocument(array $value): array
     {
-        $value[ExtendedCacheItemPoolInterface::DRIVER_DATA_WRAPPER_INDEX] = \unserialize($value[ExtendedCacheItemPoolInterface::DRIVER_DATA_WRAPPER_INDEX], ['allowed_classes' => true]);
+        $value[ExtendedCacheItemPoolInterface::DRIVER_DATA_WRAPPER_INDEX] = \unserialize(
+            $value[ExtendedCacheItemPoolInterface::DRIVER_DATA_WRAPPER_INDEX],
+            ['allowed_classes' => true]
+        );
 
         $value[ExtendedCacheItemPoolInterface::DRIVER_EDATE_WRAPPER_INDEX] = new \DateTime(
             $value[ExtendedCacheItemPoolInterface::DRIVER_EDATE_WRAPPER_INDEX]['date'],
             new \DateTimeZone($value[ExtendedCacheItemPoolInterface::DRIVER_EDATE_WRAPPER_INDEX]['timezone'])
         );
 
-        if(isset($value[ExtendedCacheItemPoolInterface::DRIVER_CDATE_WRAPPER_INDEX])){
+        if (isset($value[ExtendedCacheItemPoolInterface::DRIVER_CDATE_WRAPPER_INDEX])) {
             $value[ExtendedCacheItemPoolInterface::DRIVER_CDATE_WRAPPER_INDEX] = new \DateTime(
                 $value[ExtendedCacheItemPoolInterface::DRIVER_CDATE_WRAPPER_INDEX]['date'],
                 new \DateTimeZone($value[ExtendedCacheItemPoolInterface::DRIVER_CDATE_WRAPPER_INDEX]['timezone'])
             );
         }
 
-        if(isset($value[ExtendedCacheItemPoolInterface::DRIVER_MDATE_WRAPPER_INDEX])){
+        if (isset($value[ExtendedCacheItemPoolInterface::DRIVER_MDATE_WRAPPER_INDEX])) {
             $value[ExtendedCacheItemPoolInterface::DRIVER_MDATE_WRAPPER_INDEX] = new \DateTime(
                 $value[ExtendedCacheItemPoolInterface::DRIVER_MDATE_WRAPPER_INDEX]['date'],
                 new \DateTimeZone($value[ExtendedCacheItemPoolInterface::DRIVER_MDATE_WRAPPER_INDEX]['timezone'])

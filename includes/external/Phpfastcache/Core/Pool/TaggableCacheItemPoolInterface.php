@@ -2,16 +2,16 @@
 
 /**
  *
- * This file is part of phpFastCache.
+ * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
- * For full copyright and license information, please see the docs/CREDITS.txt file.
+ * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
  *
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> https://www.phpfastcache.com
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
- *
+ * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
+
 declare(strict_types=1);
 
 namespace Phpfastcache\Core\Pool;
@@ -19,21 +19,28 @@ namespace Phpfastcache\Core\Pool;
 use InvalidArgumentException;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 
-
-/**
- * Interface TaggableCacheItemPoolInterface
- * @package Phpfastcache\Core\Pool
- */
 interface TaggableCacheItemPoolInterface
 {
     public const DRIVER_TAGS_KEY_PREFIX = '_TAG_';
 
     public const DRIVER_TAGS_WRAPPER_INDEX = 'g';
 
+    /**
+     * Allows you to get cache item(s) by at least **ONE** of the specified matching tag(s).
+     * Default behavior
+     */
     public const TAG_STRATEGY_ONE = 1;
 
+    /**
+     * Allows you to get cache item(s) by **ALL** of the specified matching tag(s)
+     * The cache item *CAN* have additional tag(s)
+     */
     public const TAG_STRATEGY_ALL = 2;
 
+    /**
+     * Allows you to get cache item(s) by **ONLY** the specified matching tag(s)
+     * The cache item *CANNOT* have additional tag(s)
+     */
     public const TAG_STRATEGY_ONLY = 4;
 
     /**
@@ -91,7 +98,7 @@ interface TaggableCacheItemPoolInterface
      *   MUST be thrown.
      *
      */
-    public function getItemsByTagsAsJsonString(array $tagNames, int $option = 0, int $depth = 512, int $strategy = self::TAG_STRATEGY_ONE): string;
+    public function getItemsByTagsAsJsonString(array $tagNames, int $option = \JSON_THROW_ON_ERROR, int $depth = 512, int $strategy = self::TAG_STRATEGY_ONE): string;
 
     /**
      * Removes the item from the pool by tag.
@@ -209,7 +216,7 @@ interface TaggableCacheItemPoolInterface
      * @param string $tagName
      *   The tag for which to append
      *
-     * @param array|string $data
+     * @param array<mixed>|string $data
      *
      * @param int $strategy
      *
@@ -220,7 +227,7 @@ interface TaggableCacheItemPoolInterface
      *   MUST be thrown.
      *
      */
-    public function appendItemsByTag(string $tagName, $data, int $strategy = self::TAG_STRATEGY_ONE): bool;
+    public function appendItemsByTag(string $tagName, array|string $data, int $strategy = self::TAG_STRATEGY_ONE): bool;
 
     /**
      * Append the items from the pool by one of multiple tag names.
@@ -228,7 +235,7 @@ interface TaggableCacheItemPoolInterface
      * @param string[] $tagNames
      *   The tag for which to append
      *
-     * @param array|string $data
+     * @param array<mixed>|string $data
      *
      * @param int $strategy
      *
@@ -239,7 +246,7 @@ interface TaggableCacheItemPoolInterface
      *   MUST be thrown.
      *
      */
-    public function appendItemsByTags(array $tagNames, $data, int $strategy = self::TAG_STRATEGY_ONE): bool;
+    public function appendItemsByTags(array $tagNames, array|string $data, int $strategy = self::TAG_STRATEGY_ONE): bool;
 
     /**
      * Prepend the items from the pool by tag.
@@ -247,7 +254,7 @@ interface TaggableCacheItemPoolInterface
      * @param string $tagName
      *   The tag for which to prepend
      *
-     * @param array|string $data
+     * @param array<mixed>|string $data
      *
      * @param int $strategy
      *
@@ -258,7 +265,7 @@ interface TaggableCacheItemPoolInterface
      *   MUST be thrown.
      *
      */
-    public function prependItemsByTag(string $tagName, $data, int $strategy = self::TAG_STRATEGY_ONE): bool;
+    public function prependItemsByTag(string $tagName, array|string $data, int $strategy = self::TAG_STRATEGY_ONE): bool;
 
     /**
      * Prepend the items from the pool by one of multiple tag names.
@@ -266,7 +273,7 @@ interface TaggableCacheItemPoolInterface
      * @param string[] $tagNames
      *   The tag for which to prepend
      *
-     * @param array|string $data
+     * @param array<mixed>|string $data
      *
      * @param int $strategy
      *
@@ -277,5 +284,5 @@ interface TaggableCacheItemPoolInterface
      *   MUST be thrown.
      *
      */
-    public function prependItemsByTags(array $tagNames, $data, int $strategy = self::TAG_STRATEGY_ONE): bool;
+    public function prependItemsByTags(array $tagNames, array|string $data, int $strategy = self::TAG_STRATEGY_ONE): bool;
 }

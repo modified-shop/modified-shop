@@ -2,92 +2,96 @@
 
 /**
  *
- * This file is part of phpFastCache.
+ * This file is part of Phpfastcache.
  *
  * @license MIT License (MIT)
  *
- * For full copyright and license information, please see the docs/CREDITS.txt file.
+ * For full copyright and license information, please see the docs/CREDITS.txt and LICENCE files.
  *
- * @author Khoa Bui (khoaofgod)  <khoaofgod@gmail.com> https://www.phpfastcache.com
  * @author Georges.L (Geolim4)  <contact@geolim4.com>
- *
+ * @author Contributors  https://github.com/PHPSocialNetwork/phpfastcache/graphs/contributors
  */
+
 declare(strict_types=1);
 
 namespace Phpfastcache\Core\Pool;
 
 use DateTime;
 use DateTimeInterface;
-use Exception;
+use Phpfastcache\Config\ConfigurationOptionInterface;
+use Phpfastcache\Event\EventManagerDispatcherTrait;
+use Phpfastcache\Event\EventManagerInterface;
+use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
+use Phpfastcache\Util\ClassNamespaceResolverTrait;
+use Throwable;
 use Phpfastcache\Config\ConfigurationOption;
 use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use Phpfastcache\Entities\DriverIO;
-use Phpfastcache\Exceptions\{PhpfastcacheDriverCheckException, PhpfastcacheDriverConnectException};
+use Phpfastcache\Exceptions\PhpfastcacheCoreException;
+use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
+use Phpfastcache\Exceptions\PhpfastcacheDriverConnectException;
+use Phpfastcache\Exceptions\PhpfastcacheIOException;
+use Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use ReflectionObject;
 
-
-/**
- * Class DriverBaseTrait
- * @package phpFastCache\Cache
- */
 trait DriverBaseTrait
 {
-    use ExtendedCacheItemPoolTrait;
+    use DriverPoolAbstractTrait;
+    use ClassNamespaceResolverTrait;
+    use EventManagerDispatcherTrait;
 
     /**
-     * @var ConfigurationOption the options
+     * @var string[]
      */
-    protected $config;
+    protected static array $cacheItemClasses = [];
+
+    protected ConfigurationOptionInterface $config;
 
     /**
-     * @var bool
+     * @var object|array<mixed>|null
      */
-    protected $fallback = false;
+    protected object|array|null $instance;
 
-    /**
-     * @var object Instance of driver service
-     */
-    protected $instance;
+    protected string $driverName;
 
-    /**
-     * @var string
-     */
-    protected $driverName;
-
-    /**
-     * @internal This variable is read-access only
-     * @var string
-     */
-    protected $instanceId;
+    protected string $instanceId;
 
     /**
      * Driver constructor.
-     * @param ConfigurationOption $config
+     * @param ConfigurationOptionInterface $config
      * @param string $instanceId
+     * @param EventManagerInterface $em
+     * @throws PhpfastcacheCoreException
      * @throws PhpfastcacheDriverCheckException
      * @throws PhpfastcacheDriverConnectException
+     * @throws PhpfastcacheIOException
+     * @throws PhpfastcacheInvalidArgumentException
      */
-    public function __construct(ConfigurationOption $config, $instanceId)
+    public function __construct(ConfigurationOptionInterface $config, string $instanceId, EventManagerInterface $em)
     {
+        $this->setEventManager($em);
         $this->setConfig($config);
         $this->instanceId = $instanceId;
-        $this->IO = new DriverIO();
 
         if (!$this->driverCheck()) {
-            throw new PhpfastcacheDriverCheckException(\sprintf(self::DRIVER_CHECK_FAILURE, $this->getDriverName()));
+            throw new PhpfastcacheDriverCheckException(\sprintf(ExtendedCacheItemPoolInterface::DRIVER_CHECK_FAILURE, $this->getDriverName()));
         }
 
         try {
             $this->driverConnect();
-        } catch (Exception $e) {
+            $config->lock($this);
+        } catch (Throwable $e) {
             throw new PhpfastcacheDriverConnectException(
                 sprintf(
-                    self::DRIVER_CONNECT_FAILURE,
+                    ExtendedCacheItemPoolInterface::DRIVER_CONNECT_FAILURE,
+                    $e::class,
                     $this->getDriverName(),
                     $e->getMessage(),
                     $e->getLine() ?: 'unknown line',
                     $e->getFile() ?: 'unknown file'
-                )
+                ),
+                0,
+                $e
             );
         }
     }
@@ -97,19 +101,20 @@ trait DriverBaseTrait
      */
     public function getDriverName(): string
     {
-        if (!$this->driverName) {
+        if (!isset($this->driverName)) {
             $this->driverName = \ucfirst(\substr(\strrchr((new ReflectionObject($this))->getNamespaceName(), '\\'), 1));
         }
         return $this->driverName;
     }
 
     /**
-     * @return ConfigurationOption
+     * @return ConfigurationOptionInterface
      */
-    public function getDefaultConfig(): ConfigurationOption
+    public function getDefaultConfig(): ConfigurationOptionInterface
     {
-        $className = self::getConfigClass();
-        return new $className;
+        $className = $this::getConfigClass();
+
+        return new $className();
     }
 
     /**
@@ -124,85 +129,120 @@ trait DriverBaseTrait
         return ConfigurationOption::class;
     }
 
+    public static function getItemClass(): string
+    {
+        if (!isset(self::$cacheItemClasses[static::class])) {
+            self::$cacheItemClasses[static::class] = self::getClassNamespace() . '\\' . 'Item';
+        }
+
+        return self::$cacheItemClasses[static::class];
+    }
+
+
     /**
      * @param ExtendedCacheItemInterface $item
-     * @return array
+     * @param bool $stringifyDate
+     * @return array<string, mixed>
+     * @throws PhpfastcacheLogicException
      */
-    public function driverPreWrap(ExtendedCacheItemInterface $item): array
+    public function driverPreWrap(ExtendedCacheItemInterface $item, bool $stringifyDate = false): array
     {
         $wrap = [
-            self::DRIVER_KEY_WRAPPER_INDEX => $item->getKey(), // Stored but not really used, allow you to quickly identify the cache key
-            self::DRIVER_DATA_WRAPPER_INDEX => $item->get(),
-            self::DRIVER_TAGS_WRAPPER_INDEX => $item->getTags(),
-            self::DRIVER_EDATE_WRAPPER_INDEX => $item->getExpirationDate(),
+            ExtendedCacheItemPoolInterface::DRIVER_KEY_WRAPPER_INDEX => $item->getKey(), // Stored but not really used, allow you to quickly identify the cache key
+            ExtendedCacheItemPoolInterface::DRIVER_DATA_WRAPPER_INDEX => $item->getRawValue(),
+            ExtendedCacheItemPoolInterface::DRIVER_EDATE_WRAPPER_INDEX => $item->getExpirationDate(),
+            TaggableCacheItemPoolInterface::DRIVER_TAGS_WRAPPER_INDEX => $item->getTags(),
         ];
 
         if ($this->getConfig()->isItemDetailedDate()) {
-            $wrap[self::DRIVER_MDATE_WRAPPER_INDEX] = new DateTime();
+            $wrap[ExtendedCacheItemPoolInterface::DRIVER_MDATE_WRAPPER_INDEX] = new DateTime();// Always on the latest date
             /**
              * If the creation date exists
              * reuse it else set a new Date
              */
-            $wrap[self::DRIVER_CDATE_WRAPPER_INDEX] = $item->getCreationDate() ?: new DateTime();
+            $wrap[ExtendedCacheItemPoolInterface::DRIVER_CDATE_WRAPPER_INDEX] = $item->getCreationDate();
         } else {
-            $wrap[self::DRIVER_MDATE_WRAPPER_INDEX] = null;
-            $wrap[self::DRIVER_CDATE_WRAPPER_INDEX] = null;
+            $wrap[ExtendedCacheItemPoolInterface::DRIVER_MDATE_WRAPPER_INDEX] = null;
+            $wrap[ExtendedCacheItemPoolInterface::DRIVER_CDATE_WRAPPER_INDEX] = null;
+        }
+
+        if ($stringifyDate) {
+            \array_walk($wrap, static function (mixed &$value, string $key): void {
+                if ($value instanceof DateTimeInterface && $key !== ExtendedCacheItemPoolInterface::DRIVER_DATA_WRAPPER_INDEX) {
+                    $value = $value->format(DateTimeInterface::W3C);
+                }
+            });
         }
 
         return $wrap;
     }
 
     /**
-     * @return ConfigurationOption
+     * @return ConfigurationOptionInterface
      */
-    public function getConfig(): ConfigurationOption
+    public function getConfig(): ConfigurationOptionInterface
     {
         return $this->config;
     }
 
     /**
-     * @param ConfigurationOption $config
+     * @param ConfigurationOptionInterface $config
+     * @return static
      */
-    public function setConfig(ConfigurationOption $config)
+    public function setConfig(ConfigurationOptionInterface $config): static
     {
         $this->config = $config;
+
+        return $this;
     }
 
     /**
-     * @param array $wrapper
+     * @param array<string, mixed> $wrapper
      * @return mixed
+     * @throws \Exception
      */
-    public function driverUnwrapData(array $wrapper)
+    public function driverUnwrapData(array $wrapper): mixed
     {
-        return $wrapper[self::DRIVER_DATA_WRAPPER_INDEX];
-    }
-
-
-    /**
-     * @param array $wrapper
-     * @return ?DateTimeInterface
-     */
-    public function driverUnwrapEdate(array $wrapper): ?DateTimeInterface
-    {
-        return $wrapper[self::DRIVER_EDATE_WRAPPER_INDEX];
+        return $wrapper[ExtendedCacheItemPoolInterface::DRIVER_DATA_WRAPPER_INDEX];
     }
 
     /**
-     * @param array $wrapper
-     * @return ?DateTimeInterface
+     * @param array<string, mixed> $wrapper
+     * @return DateTimeInterface
      */
-    public function driverUnwrapCdate(array $wrapper): ?DateTimeInterface
+    public function driverUnwrapEdate(array $wrapper): \DateTimeInterface
     {
-        return $wrapper[self::DRIVER_CDATE_WRAPPER_INDEX];
+        if ($wrapper[ExtendedCacheItemPoolInterface::DRIVER_EDATE_WRAPPER_INDEX] instanceof \DateTimeInterface) {
+            return $wrapper[ExtendedCacheItemPoolInterface::DRIVER_EDATE_WRAPPER_INDEX];
+        }
+
+        return DateTime::createFromFormat(\DateTimeInterface::W3C, $wrapper[ExtendedCacheItemPoolInterface::DRIVER_EDATE_WRAPPER_INDEX]);
     }
 
     /**
-     * @param array $wrapper
-     * @return ?DateTimeInterface
+     * @param array<string, mixed> $wrapper
+     * @return DateTimeInterface|null
      */
-    public function driverUnwrapMdate(array $wrapper) :?DateTimeInterface
+    public function driverUnwrapCdate(array $wrapper): ?\DateTimeInterface
     {
-        return $wrapper[self::DRIVER_MDATE_WRAPPER_INDEX];
+        if ($wrapper[ExtendedCacheItemPoolInterface::DRIVER_CDATE_WRAPPER_INDEX] instanceof \DateTimeInterface) {
+            return $wrapper[ExtendedCacheItemPoolInterface::DRIVER_CDATE_WRAPPER_INDEX];
+        }
+
+        return DateTime::createFromFormat(\DateTimeInterface::W3C, $wrapper[ExtendedCacheItemPoolInterface::DRIVER_CDATE_WRAPPER_INDEX]);
+    }
+
+    /**
+     * @param array<string, mixed> $wrapper
+     * @return DateTimeInterface|null
+     */
+    public function driverUnwrapMdate(array $wrapper): ?\DateTimeInterface
+    {
+        if ($wrapper[ExtendedCacheItemPoolInterface::DRIVER_MDATE_WRAPPER_INDEX] instanceof \DateTimeInterface) {
+            return $wrapper[ExtendedCacheItemPoolInterface::DRIVER_MDATE_WRAPPER_INDEX];
+        }
+
+        return DateTime::createFromFormat(\DateTimeInterface::W3C, $wrapper[ExtendedCacheItemPoolInterface::DRIVER_MDATE_WRAPPER_INDEX]);
     }
 
     /**
@@ -213,15 +253,14 @@ trait DriverBaseTrait
         return $this->instanceId;
     }
 
-
     /**
      * Encode data types such as object/array
      * for driver that does not support
      * non-scalar value
-     * @param $data
+     * @param mixed $data
      * @return string
      */
-    protected function encode($data): string
+    protected function encode(mixed $data): string
     {
         return \serialize($data);
     }
@@ -233,17 +272,8 @@ trait DriverBaseTrait
      * @param string|null $value
      * @return mixed
      */
-    protected function decode($value)
+    protected function decode(?string $value): mixed
     {
-        return \unserialize((string)$value, ['allowed_classes' => true]);
-    }
-
-    /**
-     * Check if phpModule or CGI
-     * @return bool
-     */
-    protected function isPHPModule(): bool
-    {
-        return (\PHP_SAPI === 'apache2handler' || \strpos(\PHP_SAPI, 'handler') !== false);
+        return $value ? \unserialize($value, ['allowed_classes' => true]) : null;
     }
 }
