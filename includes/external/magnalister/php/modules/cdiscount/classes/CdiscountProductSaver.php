@@ -29,6 +29,8 @@ class CdiscountProductSaver {
 	protected $aMagnaSession = array();
 	protected $sMarketplace = '';
 	protected $sMpId = 0;
+	protected $gambioPropertiesEnabled = false;
+	protected $sEanColumn = '';
 
 	protected $aConfig = array();
 
@@ -38,6 +40,12 @@ class CdiscountProductSaver {
 		$this->mpId = $this->aMagnaSession['mpID'];
 
 		$this->aConfig['keytype'] = getDBConfigValue('general.keytype', '0');
+		$this->gambioPropertiesEnabled = (getDBConfigValue('general.options', '0', 'old') === 'gambioProperties');
+		if (MagnaDB::gi()->columnExistsInTable('gm_ean', TABLE_PRODUCTS_ATTRIBUTES)) {
+			$this->sEanColumn = 'gm_ean';
+		} else if (MagnaDB::gi()->columnExistsInTable('attributes_ean', TABLE_PRODUCTS_ATTRIBUTES)) {
+			$this->sEanColumn = 'attributes_ean';
+		}
 	}
 
 	protected function insertPrepareData($aData) {
@@ -130,6 +138,9 @@ class CdiscountProductSaver {
 			$aRow['MarketplaceCategoriesName'] = $aItemDetails['MarketplaceCategoriesName'];
 		}
 
+		if (empty($aRow['EAN'])) {
+			$aRow['EAN'] = $this->getFirstVariationEAN($iProductId);
+		}
 		if (empty($aRow['EAN'])) {
 			$aRow['Verified'] = 'ERROR';
 			$this->aErrors['ML_CDISCOUNT_ERROR_EAN'] = ML_CDISCOUNT_ERROR_EAN;
@@ -235,6 +246,26 @@ class CdiscountProductSaver {
 
 			MagnaDB::gi()->insert(TABLE_MAGNA_CDISCOUNT_PREPARE, $matchedProduct, true);
 
+		}
+	}
+
+	/**
+	 * Get the first EAN for a variation (EAN is mandatory, so we need at least 1 so that at least 1 variation can be uploaded)
+	 *  @param $iProductId
+	 *  @return string
+	 */
+	private function getFirstVariationEAN($iProductId) {
+		if ($this->gambioPropertiesEnabled) {
+			return (string)MagnaDB::gi()->fetchOne('SELECT combi_ean FROM products_properties_combis
+			    WHERE products_id = '.$iProductId.'
+			      AND LENGTH(combi_ean) > 0
+			    ORDER BY products_properties_combis_id LIMIT 1');
+		} else {
+			if (empty($this->sEanColumn)) return '';
+			return (string)MagnaDB::gi()->fetchOne('SELECT '.$this->sEanColumn.' FROM '.TABLE_PRODUCTS_ATTRIBUTES.'
+			    WHERE products_id = '.$iProductId.'
+			      AND LENGTH('.$this->sEanColumn.') > 0
+			    ORDER BY products_attributes_id LIMIT 1');
 		}
 	}
 

@@ -136,12 +136,13 @@ class IdealoCheckinSubmit extends ComparisonShoppingCheckinSubmit {
 			$data['submit']['Checkout'] = false;
 		}
 
-		if ($data['submit']['Checkout']) {
-			if (!empty($aPropertiesRow['PaymentMethod']) && $aPropertiesRow['PaymentMethod'] !== 'noselection') {
-				$aPaymentMethods = json_decode($aPropertiesRow['PaymentMethod'], true);
-				$data['submit']['PaymentMethod'] = is_array($aPaymentMethods) ? $aPaymentMethods : (array)$aPropertiesRow['PaymentMethod'];
-			}
+        // payment methods are independent of idealo checkout
+        if (!empty($aPropertiesRow['PaymentMethod']) && $aPropertiesRow['PaymentMethod'] !== 'noselection') {
+            $aPaymentMethods = json_decode($aPropertiesRow['PaymentMethod'], true);
+            $data['submit']['PaymentMethod'] = is_array($aPaymentMethods) ? $aPaymentMethods : (array)$aPropertiesRow['PaymentMethod'];
+        }
 
+		if ($data['submit']['Checkout']) {
 			if (!empty($aPropertiesRow['ShippingMethod']) && $aPropertiesRow['ShippingMethod'] !== 'noselection') {
 				$data['submit']['ShippingMethod'] = $aPropertiesRow['ShippingMethod'];
 			}
@@ -157,7 +158,7 @@ class IdealoCheckinSubmit extends ComparisonShoppingCheckinSubmit {
 		}
 
 		if (!empty($aPropertiesRow['ShippingCostMethod'])) {
-			if (!empty($aPropertiesRow['ShippingCost']) && (float)$aPropertiesRow['ShippingCost'] > 0
+			if (is_numeric($aPropertiesRow['ShippingCost'])
 				&& $aPropertiesRow['ShippingCostMethod'] === '__ml_lump') {
 				$data['submit']['ShippingCost'] = $aPropertiesRow['ShippingCost'];
 			} else if ($aPropertiesRow['ShippingCostMethod'] === '__ml_weight') {

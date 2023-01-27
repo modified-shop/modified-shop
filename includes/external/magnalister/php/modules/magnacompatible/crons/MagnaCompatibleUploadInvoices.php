@@ -34,22 +34,31 @@ class MagnaCompatibleUploadInvoices extends MagnaCompatibleCronBase {
     protected $sInvoiceOptionConfigKey = 'Invoice.Option';
 
     protected function getConfigKeys() {
-        try {
-            MLReceiptUpload::gi()->setConfig(array(
-                'Invoice'              => getDBConfigValue($this->marketplace.'.invoice.erpinvoicesource', $this->mpID),
-                'Invoice_DESTINATION'  => getDBConfigValue($this->marketplace.'.invoice.erpinvoicedestination', $this->mpID),
-                'Reversal'             => getDBConfigValue($this->marketplace.'.invoice.erpreversalinvoicesource', $this->mpID),
-                'Reversal_DESTINATION' => getDBConfigValue($this->marketplace.'.invoice.erpreversalinvoicedestination', $this->mpID),
-            ));
-        } catch (MagnaException $e) {
-            if (MLReceiptUpload::$ReceiptUploadError == $e->getCode()) {
+        global $magnaConfig;
+        if ($magnaConfig['db'][$this->mpID][$this->marketplace.'.invoice.option'] == 'erp') {
+            try {
+                MLReceiptUpload::gi()->setConfig(array(
+                    'Invoice' => getDBConfigValue($this->marketplace.'.invoice.erpinvoicesource', $this->mpID),
+                    'Invoice_DESTINATION' => getDBConfigValue($this->marketplace.'.invoice.erpinvoicedestination', $this->mpID),
+                    'Reversal' => getDBConfigValue($this->marketplace.'.invoice.erpreversalinvoicesource', $this->mpID),
+                    'Reversal_DESTINATION' => getDBConfigValue($this->marketplace.'.invoice.erpreversalinvoicedestination', $this->mpID),
+                ));
+            } catch (MagnaException $e) {
+                if (MLReceiptUpload::$ReceiptUploadError == $e->getCode()) {
+                    $this->out($e->getMessage());
+                } else {
+                    throw $e;
+                }
+            } catch (Exception $e) {
                 $this->out($e->getMessage());
-            } else {
-                throw $e;
             }
-        } catch (Exception $e) {
-            $this->out($e->getMessage());
+
+        } elseif (    $magnaConfig['db'][$this->mpID][$this->marketplace.'.invoice.option'] == 'off'
+                    || empty($magnaConfig['db'][$this->mpID][$this->marketplace.'.invoice.option'])
+        ) {
+            $this->out(str_replace(array('{#marketplace#}','{#mpID#}'), array($this->marketplace, $this->mpID), ML_NO_INVOICE_UPLOAD_FROM_SHOP));
         }
+
         $keys[$this->sInvoiceOptionConfigKey] = array(
             'key'     => 'invoice.option',
             'default' => 'off',

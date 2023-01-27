@@ -58,6 +58,7 @@ class PriceministerSyncOrderStatus extends MagnaCompatibleSyncOrderStatus
         $this->cancellations = array();
         $this->acceptations = array();
         $this->refused = array();
+        /** array ('order id' => 'current order status id') */
         $this->unprocessed = array();
 
         foreach ($this->aOrders as $key => &$oOrder){
@@ -65,7 +66,7 @@ class PriceministerSyncOrderStatus extends MagnaCompatibleSyncOrderStatus
             $this->iOrderIndex = $key;
 
             if (!$this->isProcessable()){
-                $this->unprocessed[] = $oOrder['orders_id'];
+                $this->unprocessed[$oOrder['orders_id']] = $oOrder['orders_status_shop'];
                 unset($this->aOrders[$key]);
                 continue;
             }
@@ -116,7 +117,6 @@ class PriceministerSyncOrderStatus extends MagnaCompatibleSyncOrderStatus
 
         $this->saveDirtyOrders();
 
-        $this->storeLogging('Unprocessed', $this->unprocessed);
         $this->updateUnprocessed();
         if (defined('MAGNA_CALLBACK_MODE')){
             // giving continous output if callback

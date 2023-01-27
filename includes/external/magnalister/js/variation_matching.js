@@ -860,7 +860,7 @@
                 // for this, we use shop's values but do not use keys for attributes because we send to marketplace
                 // keys, which in case of shop should be values because marketplace cannot recognize those keys
                 // Add shop's values also if we have marketplace values, but free text is allowed as well.
-                var AllowedValuesLower = Object.values(selector.AllowedValues).map(v => v.toLowerCase());
+                var AllowedValuesLower = Object.values(selector.AllowedValues).map(v => v.toString().toLowerCase());
                 for (var k in values.Values) {
                     if (values.Values.hasOwnProperty(k)) {
                         if (AllowedValuesLower.includes(values.Values[k].toLowerCase())) {

@@ -431,9 +431,21 @@ if ($auth['state']) {
 		setDBConfigValue('ebay.default.paymentmethod', $_MagnaSession['mpID'], $sellerProfileContents['Payment'][$defaultPaymentSellerProfile]['paymentmethod'], true);
 		setDBConfigValue('ebay.paypal.address', $_MagnaSession['mpID'], $sellerProfileContents['Payment'][$defaultPaymentSellerProfile]['paypal.address'], true);
 		setDBConfigValue('ebay.paymentinstructions', $_MagnaSession['mpID'], fixHTMLUTF8Entities($sellerProfileContents['Payment'][$defaultPaymentSellerProfile]['paymentinstructions']), true);
-		if (array_key_exists('DispatchTimeMax', $sellerProfileContents['Shipping'][$defaultShippingSellerProfile])) setDBConfigValue('ebay.DispatchTimeMax', $_MagnaSession['mpID'], $sellerProfileContents['Shipping'][$defaultShippingSellerProfile]['DispatchTimeMax'], true);
-		setDBConfigValue('ebay.default.shipping.local', $_MagnaSession['mpID'], $sellerProfileContents['Shipping'][$defaultShippingSellerProfile]['shipping.local'], true);
-		setDBConfigValue('ebay.default.shipping.international', $_MagnaSession['mpID'], $sellerProfileContents['Shipping'][$defaultShippingSellerProfile]['shipping.international'], true);
+        // check if shipping seller profile exists in sellerProfileContents->Shipping
+        if (!array_key_exists($defaultShippingSellerProfile, $sellerProfileContents['Shipping'])) {
+            // set as empty array to prevent any php errors and warnings
+            $sellerProfileContents['Shipping'][$defaultShippingSellerProfile] = array();
+        }
+
+        if (array_key_exists('DispatchTimeMax', $sellerProfileContents['Shipping'][$defaultShippingSellerProfile])) {
+            setDBConfigValue('ebay.DispatchTimeMax', $_MagnaSession['mpID'], $sellerProfileContents['Shipping'][$defaultShippingSellerProfile]['DispatchTimeMax'], true);
+        }
+        if (array_key_exists('shipping.local', $sellerProfileContents['Shipping'][$defaultShippingSellerProfile])) {
+            setDBConfigValue('ebay.default.shipping.local', $_MagnaSession['mpID'], $sellerProfileContents['Shipping'][$defaultShippingSellerProfile]['shipping.local'], true);
+        }
+        if (array_key_exists('shipping.international', $sellerProfileContents['Shipping'][$defaultShippingSellerProfile])) {
+            setDBConfigValue('ebay.default.shipping.international', $_MagnaSession['mpID'], $sellerProfileContents['Shipping'][$defaultShippingSellerProfile]['shipping.international'], true);
+        }
 		if (array_key_exists('shippingprofile.local', $sellerProfileContents['Shipping'][$defaultShippingSellerProfile])) {
 			setDBConfigValue('ebay.default.shippingprofile.local', $_MagnaSession['mpID'], $sellerProfileContents['Shipping'][$defaultShippingSellerProfile]['shippingprofile.local'], true);
 			$blShippingProfileLocalSet = true;
@@ -700,7 +712,9 @@ if (!$auth['state']) {
 	    && ML_ShopAddOns::mlAddOnIsBooked('EbayPicturePack')
         && version_compare(ML_GAMBIO_VERSION, '4.1', '<')
     ) {
-		if (empty(getDBConfigValue('ebay.imagepath.variations', $_MagnaSession['mpID'], false))) {
+        // don't use empty(getDBConfigValue(()) its not supported by PHP 5.4 -  PHP Fatal error:  Can't use function return value in write context
+        $varImageField = getDBConfigValue('ebay.imagepath.variations', $_MagnaSession['mpID'], false);
+		if (empty($varImageField)) {
 			$form['images']['fields']['imagepathvariations']['default'] =
 				HTTP_CATALOG_SERVER.DIR_WS_CATALOG.DIR_WS_IMAGES.'product_images/properties_combis_images/';
 			setDBConfigValue('ebay.imagepath.variations', $_MagnaSession['mpID'], $form['images']['fields']['imagepathvariations']['default'], true);

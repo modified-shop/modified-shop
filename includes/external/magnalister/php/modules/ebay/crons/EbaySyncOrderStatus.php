@@ -100,7 +100,7 @@ class EbaySyncOrderStatus extends MagnaCompatibleSyncOrderStatus {
 			}
 			$oOrder = &$this->getFromLookupTable($cData['MOrderID']);
 			if ($oOrder !== null) {
-				$this->out($this->marketplace.' ('.$this->mpID.') success response received for order '.$this->oOrder['special'] .' ('.$this->oOrder['orders_id'].')'."\n");
+				$this->out($this->marketplace.' ('.$this->mpID.') success response received for order '.$oOrder['special'] .' ('.$oOrder['orders_id'].')'."\n");
 				// save the confirmation and update the status.
 				$oOrder['__dirty'] = true;
 			}
@@ -173,7 +173,9 @@ class EbaySyncOrderStatus extends MagnaCompatibleSyncOrderStatus {
 	    return $aReturn;
     }
 
-
+    /**
+     * @return bool
+     */
     protected function isProcessable() {
         if ($this->blIsPaymentProgramAvailable && $this->config['OrderRefundStatus'] !== '--' && $this->oOrder['orders_status_shop'] === $this->config['OrderRefundStatus']) {
             /* {Hook} "EbaySyncOrderStatus_beforeDoRefund": called before a refund to eBay is triggered.
@@ -201,17 +203,19 @@ class EbaySyncOrderStatus extends MagnaCompatibleSyncOrderStatus {
                  require($hp);
                  $this->oOrder = $order;
             }
-            $aRequest = array(
+            $request = $this->getBaseRequest();
+            $request = array_merge($request, array(
                 'ACTION' => 'DoRefund',
                 'MagnalisterOrderId' => $this->oOrder['special'],
                 'ReasonOfRefund' => $sOrderRefundReason,
                 'Comment' => $sOrderRefundComment
-            );
+            ));
 
             try {
+                // in osc this $this->oOrder['data'] is at this point serialized but not in veyton
                 $aData = unserialize($this->oOrder['data']);
-                if(!isset($aData['refund'])) {
-                    MagnaConnector::gi()->submitRequest($aRequest);
+                if (!isset($aData['refund'])) {
+                    MagnaConnector::gi()->submitRequest($request);
                     $aData['refund'] = 'requested';
                     $this->oOrder['data'] = serialize($aData);
                     MagnaDB::gi()->update(TABLE_MAGNA_ORDERS,
@@ -224,7 +228,7 @@ class EbaySyncOrderStatus extends MagnaCompatibleSyncOrderStatus {
                     );
                 }
             } catch (MagnaException $oEx) {
-                echo print_m($oEx->getMessage());
+                echo print_m($oEx->getMessage(), 'DoRefund ('.$this->oOrder['special'].')');
                 $aErrorData = array(
                     'MOrderID' => $this->oOrder['special'],
                 );

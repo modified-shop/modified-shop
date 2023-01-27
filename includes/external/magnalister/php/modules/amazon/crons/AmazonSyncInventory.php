@@ -29,6 +29,9 @@ class AmazonSyncInventory extends MagnaCompatibleSyncInventory {
         parent::initSync();
 
         $this->aBusinessPriceConfig = $this->simplePrice->loadPriceSettings($this->mpID, 'b2b.');
+        if (getDBConfigValue(array('amazon.b2b.price.use.netto', 'val'), $this->mpID, false) == true) {
+            $this->aBusinessPriceConfig['IncludeTax'] = false;
+        }
     }
 
 	protected function initMLProduct() {

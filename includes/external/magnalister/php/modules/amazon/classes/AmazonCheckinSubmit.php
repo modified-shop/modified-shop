@@ -441,6 +441,10 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 	private function setB2BVariationData(&$vItem, $data, $productId, $b2bOnly) {
         $aPriceConfig = $this->simpleprice->loadPriceSettings($this->mpID, 'b2b.');
 
+        if (getDBConfigValue(array('amazon.b2b.price.use.netto', 'val'), $this->mpID, false) == true) {
+            $aPriceConfig['IncludeTax'] = false;
+        }
+
         $vItem['BusinessPrice'] = $this->simpleprice
             ->setPriceFromDB($productId, $this->mpID, $aPriceConfig)
             ->addAttributeSurcharge((int)magnaSKU2aID($vItem['SKU']))
@@ -480,7 +484,13 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 	protected function setB2BPrice($pID, &$data, $product, $b2bOnly) {
 		$this->simpleprice->setCurrency(getCurrencyFromMarketplace($this->mpID));
 		// calculate business price
-		$businessPrice = $this->simpleprice->setFinalPriceFromDB($pID, $this->mpID, 'b2b.')->getPrice();
+		if (getDBConfigValue(array('amazon.b2b.price.use.netto', 'val'), $this->mpID, false) == true) {
+			$aPriceConfig = $this->simpleprice->loadPriceSettings($this->mpID, 'b2b.');
+			$aPriceConfig['IncludeTax'] = false;
+			$businessPrice = $this->simpleprice->setFinalPriceFromDB($pID, $this->mpID, $aPriceConfig)->getPrice();
+		} else {
+			$businessPrice = $this->simpleprice->setFinalPriceFromDB($pID, $this->mpID, 'b2b.')->getPrice();
+		}
 		$data['submit']['BusinessPrice'] = $businessPrice;
 		if ($b2bOnly) {
 			unset($data['submit']['Price']);

@@ -352,7 +352,7 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 			return $this->beginImportDate;
 		}
 		$begin = strtotime($this->config['FirstImportDate']);
-		if ($begin <= '1970-01-01 00:00:00') {
+		if ($begin <= strtotime('1970-01-01 00:00:00')) {
 			# not configured. Check if this is a required key for the platform.
 			# If so, return false, which stops the import.
 			if (in_array($this->marketplace.'.preimport.start', $_modules[$this->marketplace]['requiredConfigKeys'])) {
@@ -1112,12 +1112,15 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 		if (!MagnaDB::gi()->recordExists(TABLE_PRODUCTS, array('products_id' => (int)$this->p['products_id']))) {
 			$this->p['products_id'] = 0;
 		} else {
+            // Gambio specific check - will return (int)0 when product has no gambio properties
+            $gambioPropertiesQuantityOption = $this->getGambioPropertiesQuantityOption($aOptions);
+
 			// set the products_model
 			$this->setProductsModel();
 
-			if ($reduceStock && empty($aOptions)) {
-				// reduces main product stock (only if it's a "simple" product)
-				$this->reduceStockBySKU($sSKU);
+			if ($reduceStock) {
+				// reduces main product stock (or magnalister_variations, if enabled)
+				$this->reduceStockBySKU($sSKU, in_array($gambioPropertiesQuantityOption, array(0, 1)));
 			}
 			// set products.products_ordered for statistics
 			$this->increaseOrdered();
@@ -1147,8 +1150,8 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 				}
 				$this->insertProductAttribute($iOrdersProductsId, $aOption, $sSKU);
 			} else {
-				// Gambio properties
-				if ($reduceStock) {
+				// Gambio properties - check for properties quantity option
+				if ($reduceStock && in_array($gambioPropertiesQuantityOption, array(0, 2))) {
 					$this->reducePropertyStockByOptionsID($aOption['id']);
 				}
 				$this->setProductsModelForGambioProperties($iOrdersProductsId, $aOption['id']);
@@ -1266,18 +1269,10 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 	}
 
 	/*
-	 * reduces the main product stock and magnalister variants stock
+	 * reduces the main product stock or magnalister variants stock
 	 */
-	protected function reduceStockBySKU($sSKU) {
-		$this->db->query("
-			UPDATE ".TABLE_PRODUCTS."
-			   SET products_quantity = products_quantity - ".(int)$this->p['products_quantity']."
-			 WHERE products_id = '".(int)$this->p['products_id']."'
-		");
-		$this->stock_left = MagnaDB::gi()->fetchOne("
-			SELECT products_quantity FROM ".TABLE_PRODUCTS."
-			 WHERE products_id = '".(int)$this->p['products_id']."'
-		");
+	protected function reduceStockBySKU($sSKU, $reduceMainStock = true) {
+		$this->stock_left = 1;
 		if ($this->multivariationsEnabled) {
 			$this->db->query("
 				UPDATE ".TABLE_MAGNA_VARIATIONS."
@@ -1295,8 +1290,22 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 					SELECT SUM(variation_quantity) FROM ".TABLE_MAGNA_VARIATIONS."
 					 WHERE     products_id = '".(int)$this->p['products_id']."'
 				");
+				return; // Variation stock reduced, no need to reduce main stock
 			}
 		}
+
+        if ($reduceMainStock) {
+            // not a variation => reduce main
+            $this->db->query("
+                UPDATE ".TABLE_PRODUCTS."
+                   SET products_quantity = products_quantity - ".(int)$this->p['products_quantity']."
+                 WHERE products_id = '".(int)$this->p['products_id']."'
+            ");
+            $this->stock_left = MagnaDB::gi()->fetchOne("
+                SELECT products_quantity FROM ".TABLE_PRODUCTS."
+                 WHERE products_id = '".(int)$this->p['products_id']."'
+            ");
+            }
 	}
 
 	/*
@@ -1318,6 +1327,7 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 			&& ($this->config['DBColumnExists'][TABLE_PRODUCTS_ATTRIBUTES.'.attributes_stock'])
 			&& (((int)$aOption['options_id'] > 0) && ((int)$aOption['options_values_id'] > 0))
 		) {
+			$this->stock_left = 1;
 			$this->db->query("
 				UPDATE ".TABLE_PRODUCTS_ATTRIBUTES."
 				   SET attributes_stock = attributes_stock - ".(int)$this->p['products_quantity']."
@@ -1346,6 +1356,7 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 	 */
 	protected function reducePropertyStockByOptionsID($iOptionsId) {
 		if ($this->gambioPropertiesEnabled) {
+			$this->stock_left = 1;
 			$this->db->query(eecho("
 				UPDATE products_properties_combis
 				   SET combi_quantity = combi_quantity - ".(int)$this->p['products_quantity']."
@@ -2196,5 +2207,35 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 		}
 		
 	}
+
+
+    /**
+     * Gambio specific check when it's a variation product if only main product stock or variation stock should be deducted
+     *
+     *  0 = Default deduct both
+     *  1 = only main product
+     *  2 = only variation
+     *  3 = no deduction (not supported by magnalister - customer need to change magnalister config if he does not want to reduce stock during order import)
+     *
+     * @param $aOptions - Variations regardless of attributes or gambio properties
+     * @return int
+     */
+    private function getGambioPropertiesQuantityOption($aOptions) {
+        $gambioPropertiesQuantityOption = 0;
+
+        if (   $this->gambioPropertiesEnabled
+            && !empty($aOptions)
+            && MagnaDB::gi()->columnExistsInTable('use_properties_combis_quantity', TABLE_PRODUCTS)
+        ) {
+            $gambioPropertiesQuantityOption = (int)MagnaDB::gi()->fetchOne("
+                SELECT `use_properties_combis_quantity`
+                  FROM `".TABLE_PRODUCTS."`
+                 WHERE `products_id` = '".MagnaDB::gi()->escape($this->p['products_id'])."'
+                 LIMIT 1
+            ");
+        }
+
+        return $gambioPropertiesQuantityOption;
+    }
 
 }

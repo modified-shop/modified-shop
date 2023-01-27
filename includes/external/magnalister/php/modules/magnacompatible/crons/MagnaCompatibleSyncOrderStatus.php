@@ -1,22 +1,21 @@
 <?php
-/**
- * 888888ba                 dP  .88888.                    dP                
- * 88    `8b                88 d8'   `88                   88                
- * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b. 
- * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88 
- * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88 
- * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P' 
+/*
+ * 888888ba                 dP  .88888.                    dP
+ * 88    `8b                88 d8'   `88                   88
+ * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b.
+ * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88
+ * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88
+ * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P'
  *
  *                          m a g n a l i s t e r
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id$
- *
- * (c) 2010 - 2013 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2022 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
+
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
 require_once(DIR_MAGNALISTER_MODULES.'magnacompatible/crons/MagnaCompatibleCronBase.php');
@@ -27,19 +26,19 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 	 * @var string
 	 */
 	protected $confirmationResponseField = 'DATA';
-	
+
 	/**
 	 * List of all orders that have to be synced
 	 * @var array
 	 */
 	protected $aOrders = array();
-	
+
 	/**
 	 * The order that is currently processed
 	 * @var array
 	 */
 	protected $oOrder = null;
-	
+
 	/**
 	 * The index of the current order in the list of all orders.
 	 * @var int
@@ -185,7 +184,8 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 	protected function getTrackingCode($orderId) {
         // if shop has column is_return_delivery (Gambio 4.5+) and matched to default tracking codes database table
         // skip usage of runDbMatching() - see below
-        if ($this->config['TrackingCodeMatchingTable']['table'] == 'orders_parcel_tracking_codes'
+        if (   array_key_exists('table', $this->config['TrackingCodeMatchingTable'])
+            && $this->config['TrackingCodeMatchingTable']['table'] == 'orders_parcel_tracking_codes'
             && $this->config['TrackingCodeMatchingTable']['column'] == 'tracking_code'
             && MagnaDB::gi()->columnExistsInTable('is_return_delivery','orders_parcel_tracking_codes')
         ) {
@@ -451,7 +451,7 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 			}
 			$oOrder = &$this->getFromLookupTable($cData['MOrderID']);
 			if ($oOrder !== null) {
-				$this->out($this->marketplace.' ('.$this->mpID.') success response received for order '.$this->oOrder['special'] .' ('.$this->oOrder['orders_id'].')'."\n");
+				$this->out($this->marketplace.' ('.$this->mpID.') success response received for order '.$oOrder['special'] .' ('.$oOrder['orders_id'].')'."\n");
 				$this->storeConfirmation($oOrder, $cData);
 			}
 		}
@@ -510,7 +510,7 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 	/**
 	 * Submits the status update for ConfirmShipment and CancelShipment.
 	 * @param string $action
-	 *   The API action. Either ConfirmShipment or CancelShipment.
+	 *   The API action: Either ConfirmShipment or CancelShipment.
 	 * @param array $data
 	 *   The data for the DATA element of the API request
 	 * @return void
@@ -546,6 +546,10 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 	/**
 	 * Sets magnalister_orders.orders_status to the one of the shop for all
 	 * unprocessed orders.
+     *
+     * Hint: Set the order to the status in magnalister_orders when the order was loaded,
+     *       because it could be that while processing the status has been changed
+     *
 	 * @return void
 	 */
 	protected function updateUnprocessed() {
@@ -559,21 +563,26 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 		if ($this->_debugDryRun) {
 			return;
 		}
-		// log the status of unprocessed orders
-		$aUnprocessedWithStatus = MagnaDB::gi()->fetchArray('
-		    SELECT orders_id, orders_status
-		      FROM '.TABLE_ORDERS.'
-		     WHERE orders_id IN ("'.implode('", "', $this->unprocessed).'")
-		');
-		$this->storeLogging('UnprocessedWithStatus', $aUnprocessedWithStatus);
-		MagnaDB::gi()->query('
-		    UPDATE '.TABLE_MAGNA_ORDERS.' mo,
-		           '.TABLE_ORDERS.' o 
-		       SET mo.orders_status = o.orders_status
-		     WHERE mo.orders_id = o.orders_id
-		           AND mo.mpID = "'.$this->mpID.'"
-		           AND mo.orders_id IN ("'.implode('", "', $this->unprocessed).'")
-		');
+
+        $unprocessedOrdersWithStatus = array();
+
+        /** @var int $orderId */
+        /** @var string $orderStatus */
+        foreach ($this->unprocessed as $orderId => $orderStatus) {
+            // log the status of unprocessed orders
+            $unprocessedOrdersWithStatus[] = array(
+                'orders_id' => $orderId,
+                'orders_status' => $orderStatus,
+            );
+            MagnaDB::gi()->update(TABLE_MAGNA_ORDERS, array(
+                'orders_status' => $orderStatus
+            ), array(
+                'orders_id' => $orderId,
+                'mpID' => $this->mpID,
+            ));
+        }
+
+        $this->storeLogging('UnprocessedWithStatus', $unprocessedOrdersWithStatus);
 	}
 	
 	/**
@@ -685,6 +694,7 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 		#return true;
 		$this->confirmations = array();
 		$this->cancellations = array();
+        /** array ('order id' => 'current order status id') */
 		$this->unprocessed = array();
 		
 		foreach ($this->aOrders as $key => &$oOrder) {
@@ -692,7 +702,7 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 			$this->iOrderIndex = $key;
 			
 			if (!$this->isProcessable()) {
-				$this->unprocessed[] = $oOrder['orders_id'];
+				$this->unprocessed[$oOrder['orders_id']] = $oOrder['orders_status_shop'];
 				unset($this->aOrders[$key]);
 				continue;
 			}
