@@ -487,8 +487,14 @@ if ( !class_exists( "image_processing_step" ) ) {
 
     function check() {
       if (!isset($this->_check)) {
-        $check_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_STEP_IMAGE_PROCESS_STATUS'");
-        $this->_check = xtc_db_num_rows($check_query);
+        if (defined('MODULE_STEP_IMAGE_PROCESS_STATUS')) {
+          $this->_check = true;
+        } else {
+          $check_query = xtc_db_query("SELECT configuration_value 
+                                         FROM " . TABLE_CONFIGURATION . " 
+                                        WHERE configuration_key = 'MODULE_STEP_IMAGE_PROCESS_STATUS'");
+          $this->_check = xtc_db_num_rows($check_query);
+        }
       }
       return $this->_check;
     }
