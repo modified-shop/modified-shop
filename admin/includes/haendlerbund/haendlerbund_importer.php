@@ -37,6 +37,7 @@ class haendlerbund_importer
             }
 
             $check_array = array();
+            $return = "";
             $error = "";
             $_SESSION["import_message"] = "";
 
@@ -65,7 +66,7 @@ class haendlerbund_importer
                             $result
                         )) {
                         $check_array[] = $agb;
-                        echo $this->getContentIDSelect($agb_name, $agb, $agb);
+                        $return .= $this->getContentIDSelect($agb_name, $agb, $agb);
                         xtc_db_query(
                             "UPDATE configuration SET configuration_value='1' WHERE configuration_key='" . xtc_db_input(strtoupper($agb . '_hbon')) . "'"
                         );
@@ -96,16 +97,16 @@ class haendlerbund_importer
             }
 
             if (count($check_array) == 0 && $api_config == 1) {
-                echo "<br /><p align='center' style='color:red'>Es konnten keine Rechtstexte gefunden werden. <br />Bitte &uuml;berpr&uuml;fen Sie Ihren API-Key oder wenden Sie sich an den Support.<input type='hidden' name='api_check_ok' id='api_check_ok' value='0' /></p>";
+                $return .= "<br /><p align='center' style='color:red'>Es konnten keine Rechtstexte gefunden werden. <br />Bitte &uuml;berpr&uuml;fen Sie Ihren API-Key oder wenden Sie sich an den Support.<input type='hidden' name='api_check_ok' id='api_check_ok' value='0' /></p>";
             } else {
-                echo "<input type='hidden' name='api_check_ok' id='api_check_ok' value='1' />";
+                $return .= "<input type='hidden' name='api_check_ok' id='api_check_ok' value='1' />";
             }
 
             if (strtolower($_SESSION['language_charset']) != "utf-8") {
-                $result = utf8_encode($result);
+                $return = utf8_encode($return);
             }
 
-            return $result;
+            return $return;
         }
     }
 
