@@ -23,7 +23,7 @@
 
       function __construct() 
       {          
-          $this->version = '1.18';
+          $this->version = '1.19';
           $this->code = 'internetmarke';
           $this->title = MODULE_INTERNETMARKE_TEXT_TITLE;
           $this->description = MODULE_INTERNETMARKE_TEXT_DESCRIPTION;
