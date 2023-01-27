@@ -29,7 +29,7 @@ class haendlerbund_importer
             $this->saveConfiguration($data);
         }
 
-        if (isset($_POST["agb_import"]) && ($_POST['agb_import'] == 1 || $api_config == 1)) {
+        if ((isset($_POST["agb_import"]) && $_POST['agb_import'] == 1) || $api_config == 1) {
             if ($api_config == 1) {
                 $apikey = $_GET["api_key"];
             } else {
@@ -67,11 +67,11 @@ class haendlerbund_importer
                         $check_array[] = $agb;
                         echo $this->getContentIDSelect($agb_name, $agb, $agb);
                         xtc_db_query(
-                            "UPDATE configuration SET configuration_value='1' WHERE configuration_key='" . $agb . "_hbon'"
+                            "UPDATE configuration SET configuration_value='1' WHERE configuration_key='" . xtc_db_input(strtoupper($agb . '_hbon')) . "'"
                         );
                     } else {
                         xtc_db_query(
-                            "UPDATE configuration SET configuration_value='0' WHERE configuration_key='" . $agb . "_hbon'"
+                            "UPDATE configuration SET configuration_value='0' WHERE configuration_key='" . xtc_db_input(strtoupper($agb . '_hbon')) . "'"
                         );
                     }
                 }
@@ -102,10 +102,10 @@ class haendlerbund_importer
             }
 
             if (strtolower($_SESSION['language_charset']) != "utf-8") {
-                $return = utf8_encode($return);
+                $result = utf8_encode($result);
             }
 
-            return $return;
+            return $result;
         }
     }
 
@@ -139,11 +139,11 @@ class haendlerbund_importer
         foreach ($_POST as $configuration_key => $configuration_value) {
             if (stripos($configuration_key, "haendlerbund") !== false) {
                 $sql = xtc_db_query(
-                    "SELECT * FROM configuration WHERE configuration_key='" . $configuration_key . "' LIMIT 1"
+                    "SELECT * FROM configuration WHERE configuration_key='" . xtc_db_input($configuration_key) . "' LIMIT 1"
                 );
                 if (xtc_db_num_rows($sql)) {
                     xtc_db_query(
-                        "UPDATE configuration SET configuration_value='" . $configuration_value . "' WHERE configuration_key='" . $configuration_key . "' LIMIT 1"
+                        "UPDATE configuration SET configuration_value='" . xtc_db_input($configuration_value) . "' WHERE configuration_key='" . xtc_db_input($configuration_key) . "' LIMIT 1"
                     );
                 }
             }
@@ -155,7 +155,7 @@ class haendlerbund_importer
     {
         $value = '';
         $sqlConfiguration = xtc_db_query(
-            "SELECT * FROM configuration WHERE configuration_key='" . strtoupper($key) . "' LIMIT 1"
+            "SELECT * FROM configuration WHERE configuration_key='" . xtc_db_input(strtoupper($key)) . "' LIMIT 1"
         );
         if (xtc_db_num_rows($sqlConfiguration) > 0) {
             $dataConfiguration = xtc_db_fetch_array($sqlConfiguration);
@@ -169,7 +169,7 @@ class haendlerbund_importer
     function updateContent($content_id, $content_text)
     {
         $return = xtc_db_query(
-            "UPDATE content_manager SET content_text='" . $content_text . "' WHERE content_id=" . $content_id . " LIMIT 1"
+            "UPDATE content_manager SET content_text='" . xtc_db_input($content_text) . "' WHERE content_id=" . (int)$content_id . " LIMIT 1"
         );
         return $return;
     }
@@ -382,7 +382,7 @@ class haendlerbund_importer
             $value = $data[$name];
         }
         $sql = xtc_db_query(
-            "SELECT content_id,content_title FROM content_manager WHERE languages_id=" . $_SESSION["languages_id"] . " ORDER BY content_title"
+            "SELECT content_id,content_title FROM content_manager WHERE languages_id=" . (int)$_SESSION["languages_id"] . " ORDER BY content_title"
         );
         while ($row = xtc_db_fetch_array($sql)) {
             $selected = "";

@@ -27,7 +27,7 @@ if(isset($_GET['api_konfiguration']) && $_GET["api_konfiguration"] == 1) {
 ?>
 
 <link href="includes/haendlerbund/css/main.css" rel="stylesheet" type="text/css" />
-<link href="http://fonts.googleapis.com/css?family=Cuprum" rel="stylesheet" type="text/css" />
+<link href="https://fonts.googleapis.com/css?family=Cuprum" rel="stylesheet" type="text/css" />
 
 <?php
 // BOF - Tomcraft - 2014-08-13 - jquery-1.8.3.min.js already global available via "/admin/includes/head.php"
