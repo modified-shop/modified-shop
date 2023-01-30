@@ -46,9 +46,7 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/products_media.html', $
 
     while ($content_data = xtc_db_fetch_array($content_query, true)) {
     
-      $icon = xtc_image(DIR_WS_ICONS.'filetype/icon_link.gif');
-      $filename = ($content_data['content_link'] != '') ? '<a href="'.$content_data['content_link'].'" target="_blank">'.$content_data['content_name'].'</a>' : $content_data['content_name'];
-    
+      $icon = xtc_image(DIR_WS_ICONS.'filetype/icon_link.gif');    
       $button = '';
       $filesize = '';
       if ($content_data['content_link'] == '') {
@@ -75,11 +73,16 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/products_media.html', $
                     '</a>';
           $filesize = xtc_filesize($content_data['content_file']);
         }
+      } else {
+        $button = '<a target="_blank"'.
+                  ' href="'.$content_data['content_link'].'">'.
+                  xtc_image_button('button_view.gif', TEXT_VIEW).
+                  '</a>';
       }
     
       $module_content[] = array (
         'ICON' => $icon,
-        'FILENAME' => $filename,
+        'FILENAME' => $content_data['content_name'],
         'DESCRIPTION' => $content_data['file_comment'],
         'FILESIZE' => $filesize,
         'BUTTON' => $button,
