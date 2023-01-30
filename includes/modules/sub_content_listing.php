@@ -36,10 +36,10 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/sub_content_listing.htm
     $shop_content_sub_query_1 = xtDBquery("SELECT c2.content_title,
                                                   c2.content_group,
                                                   c2.content_text,
-                                                  c2.content_status,
+                                                  c2.content_status as parent_status,
                                                   c1.content_title as title, 
                                                   c1.content_group as group_id,
-                                                  c1.content_status as parent_status,
+                                                  c1.content_status,
                                                   c1.parent_id
                                              FROM ".TABLE_CONTENT_MANAGER." c1
                                              JOIN ".TABLE_CONTENT_MANAGER." c2

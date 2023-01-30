@@ -1,7 +1,7 @@
-{if count($parent_content) > 0}
+{if isset($parent_content) && count($parent_content) > 0}
   <p><a href="{$parent_content.CONTENT_LINK}"><strong>{$parent_content.CONTENT_TITLE}</strong></a></p>
 {/if}
-{if count($sub_content) > 0}
+{if isset($sub_content) && count($sub_content) > 0}
   <ul>
     {foreach name=aussen item=content_data from=$sub_content}
     <li>
