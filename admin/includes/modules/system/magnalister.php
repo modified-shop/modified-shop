@@ -90,10 +90,12 @@ class magnalister {
 			if (defined('MODULE_MAGNALISTER_STATUS')) {
 				$this->_check = true;
 			} else {
-				$check_query = xtc_db_query("SELECT configuration_value 
-																			 FROM " . TABLE_CONFIGURATION . " 
-																			WHERE configuration_key = 'MODULE_MAGNALISTER_STATUS'");
-				$this->_check = xtc_db_num_rows($check_query);
+				$check_query = $this->fnWrp['db_query']("
+					SELECT configuration_value 
+					  FROM " . TABLE_CONFIGURATION . " 
+					 WHERE configuration_key = 'MODULE_MAGNALISTER_STATUS'
+				");
+				$this->_check = $this->fnWrp['db_num_rows']($check_query) > 0;
 			}
 		}
 		return $this->_check;
