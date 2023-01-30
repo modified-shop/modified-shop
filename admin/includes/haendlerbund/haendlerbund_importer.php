@@ -143,6 +143,23 @@ class haendlerbund_importer
                     "SELECT * FROM configuration WHERE configuration_key='" . xtc_db_input($configuration_key) . "' LIMIT 1"
                 );
                 if (xtc_db_num_rows($sql)) {
+                    if ($configuration_key == 'haendlerbund_key') {
+                      xtc_db_query(
+                          "UPDATE configuration SET configuration_value='false' WHERE configuration_key='HAENDLERBUND_STATUS' LIMIT 1"
+                      );
+                      if ($configuration_value != '') {                    
+                        $sql = xtc_db_query(
+                            "SELECT * FROM configuration WHERE configuration_key='HAENDLERBUND_STATUS' LIMIT 1"
+                        );
+                        if (xtc_db_num_rows($sql) < 1) {
+                          xtc_db_query("INSERT INTO configuration ( configuration_key ) VALUES  ( 'HAENDLERBUND_STATUS' )");
+                        }
+                      }
+                      xtc_db_query(
+                          "UPDATE configuration SET configuration_value='true' WHERE configuration_key='HAENDLERBUND_STATUS' LIMIT 1"
+                      );
+                    }
+                    
                     xtc_db_query(
                         "UPDATE configuration SET configuration_value='" . xtc_db_input($configuration_value) . "' WHERE configuration_key='" . xtc_db_input($configuration_key) . "' LIMIT 1"
                     );
@@ -177,19 +194,20 @@ class haendlerbund_importer
 
     function install()
     {
-        xtc_db_query("INSERT INTO configuration ( configuration_key ) VALUES  ( 'HAENDLERBUND_KEY'  ) ");
-        xtc_db_query("INSERT INTO configuration ( configuration_key ) VALUES  ( 'HAENDLERBUND_IMPRESSUM_HBON') ");
-        xtc_db_query("INSERT INTO configuration ( configuration_key ) VALUES  ( 'HAENDLERBUND_AGB_HBON') ");
-        xtc_db_query("INSERT INTO configuration ( configuration_key ) VALUES  ( 'HAENDLERBUND_WIDERRUF_HBON') ");
-        xtc_db_query("INSERT INTO configuration ( configuration_key ) VALUES  ( 'HAENDLERBUND_VERSANDINFO_HBON') ");
-        xtc_db_query("INSERT INTO configuration ( configuration_key ) VALUES  ( 'HAENDLERBUND_DATENSCHUTZ_HBON') ");
-        xtc_db_query("INSERT INTO configuration ( configuration_key ) VALUES  ( 'HAENDLERBUND_BATTERIEGESETZ_HBON') ");
-        xtc_db_query("INSERT INTO configuration ( configuration_key ) VALUES  ( 'HAENDLERBUND_IMPRESSUM') ");
-        xtc_db_query("INSERT INTO configuration ( configuration_key ) VALUES  ( 'HAENDLERBUND_AGB') ");
-        xtc_db_query("INSERT INTO configuration ( configuration_key ) VALUES  ( 'HAENDLERBUND_WIDERRUF') ");
-        xtc_db_query("INSERT INTO configuration ( configuration_key ) VALUES  ( 'HAENDLERBUND_VERSANDINFO') ");
-        xtc_db_query("INSERT INTO configuration ( configuration_key ) VALUES  ( 'HAENDLERBUND_DATENSCHUTZ') ");
-        xtc_db_query("INSERT INTO configuration ( configuration_key ) VALUES  ( 'HAENDLERBUND_BATTERIEGESETZ') ");
+        xtc_db_query("INSERT INTO configuration ( configuration_key ) VALUES  ( 'HAENDLERBUND_KEY' )");
+        xtc_db_query("INSERT INTO configuration ( configuration_key ) VALUES  ( 'HAENDLERBUND_STATUS' )");
+        xtc_db_query("INSERT INTO configuration ( configuration_key ) VALUES  ( 'HAENDLERBUND_IMPRESSUM_HBON' )");
+        xtc_db_query("INSERT INTO configuration ( configuration_key ) VALUES  ( 'HAENDLERBUND_AGB_HBON' )");
+        xtc_db_query("INSERT INTO configuration ( configuration_key ) VALUES  ( 'HAENDLERBUND_WIDERRUF_HBON' )");
+        xtc_db_query("INSERT INTO configuration ( configuration_key ) VALUES  ( 'HAENDLERBUND_VERSANDINFO_HBON' )");
+        xtc_db_query("INSERT INTO configuration ( configuration_key ) VALUES  ( 'HAENDLERBUND_DATENSCHUTZ_HBON' )");
+        xtc_db_query("INSERT INTO configuration ( configuration_key ) VALUES  ( 'HAENDLERBUND_BATTERIEGESETZ_HBON' )");
+        xtc_db_query("INSERT INTO configuration ( configuration_key ) VALUES  ( 'HAENDLERBUND_IMPRESSUM' )");
+        xtc_db_query("INSERT INTO configuration ( configuration_key ) VALUES  ( 'HAENDLERBUND_AGB' )");
+        xtc_db_query("INSERT INTO configuration ( configuration_key ) VALUES  ( 'HAENDLERBUND_WIDERRUF' )");
+        xtc_db_query("INSERT INTO configuration ( configuration_key ) VALUES  ( 'HAENDLERBUND_VERSANDINFO' )");
+        xtc_db_query("INSERT INTO configuration ( configuration_key ) VALUES  ( 'HAENDLERBUND_DATENSCHUTZ' )");
+        xtc_db_query("INSERT INTO configuration ( configuration_key ) VALUES  ( 'HAENDLERBUND_BATTERIEGESETZ' )");
     }
 
     #getImportForm Methode: Generiert das Modul-Formular
