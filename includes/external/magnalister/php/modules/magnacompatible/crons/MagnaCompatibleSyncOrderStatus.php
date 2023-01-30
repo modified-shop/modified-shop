@@ -184,13 +184,15 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 	protected function getTrackingCode($orderId) {
         // if shop has column is_return_delivery (Gambio 4.5+) and matched to default tracking codes database table
         // skip usage of runDbMatching() - see below
-        if (   array_key_exists('table', $this->config['TrackingCodeMatchingTable'])
+        $mTrackingCode = false;
+        if (   is_array($this->config['TrackingCodeMatchingTable'])
+            && array_key_exists('table', $this->config['TrackingCodeMatchingTable'])
             && $this->config['TrackingCodeMatchingTable']['table'] == 'orders_parcel_tracking_codes'
             && $this->config['TrackingCodeMatchingTable']['column'] == 'tracking_code'
             && MagnaDB::gi()->columnExistsInTable('is_return_delivery','orders_parcel_tracking_codes')
         ) {
             $mTrackingCode = false;
-        } else {
+        } else if (is_array($this->config['TrackingCodeMatchingTable'])){
             $mTrackingCode = $this->runDbMatching(array(
                 'Table' => $this->config['TrackingCodeMatchingTable'],
                 'Alias' => $this->config['TrackingCodeMatchingAlias']

@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * 888888ba                 dP  .88888.                    dP
  * 88    `8b                88 d8'   `88                   88
  * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b.
@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * (c) 2010 - 2019 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2023 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -36,6 +36,27 @@ MagnaConnector::gi()->setAddRequestsProps(array(
 $checkoutEnabled = getDBConfigValue('idealo.directbuy.active', $_MagnaSession['mpID'], 'false');
 $aOldCheckoutEnabled = getDBConfigValue('idealo.checkout.status', $_MagnaSession['mpID'], array('val' => false));
 $blOldCheckoutEnabled = isset($aOldCheckoutEnabled['val']) && $aOldCheckoutEnabled['val'] === true;
+
+if ($checkoutEnabled === 'true') {
+    echo '
+    <div class="noticeBox" style="font-size: 14px;">
+        <p><span style="color: #000">Achtung: idealo beabsichtigt, den idealo Direktkauf zum 31.12.2022 einzustellen</span></p>
+        <p>F&uuml;r magnalister User, die den Direktkauf nutzen, bedeutet das:</p>
+        <ul>
+            <li>
+                <p>Produkte k&ouml;nnen ab dem 01.01.2023 nicht mehr im Direktkauf gelistet werden</p>
+            </li>
+            <li>
+                <p>Alle bis zum 31.12.2022 eingehenden Direktkauf-Bestellungen, werden in magnalister importiert und k&ouml;nnen bis zum 31.03.2023 weiterverarbeitet werden.</p>
+            </li>
+            <li>
+                <p>Wir werden die Direktkauf-Funktionalit&auml;ten in der magnalister idealo Schnittstelle am 31.03.2023 entfernen<br><br></p>
+            </li>
+        </ul>
+        <p>Ihr magnalister Team</p>
+    </div>
+    ';
+}
 
 if (($checkoutEnabled === 'true' || $blOldCheckoutEnabled ) && !isset($_POST['conf']['idealo.directbuy.clientid'])) {
     $_modules[$_MagnaSession['currentPlatform']]['requiredConfigKeys'][] = 'idealo.directbuy.clientid';

@@ -124,12 +124,26 @@ class MetroHelper extends AttributesMatchingHelper {
         $val = preg_replace('/\.(?=.*\.)/', '', $val);
         return floatval($val);
     }
+ 
+    // metro.shippingprofile.cost must have numeric values
+    public static function fixShippingprofileCost(&$aProfileCost) {
+        if (!is_array($aProfileCost)) {
+            $aProfileCost = array(0.00);
+            return;
+        }
+        foreach ($aProfileCost as $kCost => $vCost) {
+            if (!is_numeric($vCost)) {
+                $aProfileCost[$kCost] = (float)0.00;
+            }
+        }
+    }
 
     public function getShippingProfiles($iSelectedProfile=999) {
 
         $aDefaultProfile = getDBConfigValue('metro.shippingprofile', $this->mpId);
         $aProfileName = getDBConfigValue('metro.shippingprofile.name', $this->mpId);
         $aProfileCost = getDBConfigValue('metro.shippingprofile.cost', $this->mpId);
+        self::fixShippingprofileCost($aProfileCost);
         $html = '';
 
         if ($iSelectedProfile < 999) {
