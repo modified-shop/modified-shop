@@ -4,7 +4,7 @@ class haendlerbund_importer
 {
 
     #Klassenvariablen
-    var $version = '1.05';
+    var $version = '1.06';
     var $api = false;
     var $api_config = false;
     var $data = array();
