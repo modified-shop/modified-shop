@@ -75,10 +75,11 @@
       
       foreach ($modules_data as $heading => $modules) {
         foreach ($modules as $module => $data) {
-          $details[$heading][$module] = $data;
           $data['path'] = str_replace('DIR_ADMIN/', DIR_ADMIN, $data['path']);
           $data['lang'] = str_replace('DIR_LANG', $_SESSION['language'], $data['lang']);
           
+          $details[$heading][$module] = $data;
+
           if (is_file(DIR_FS_CATALOG.$data['path'])) {
             if ($data['lang'] != '' && is_file(DIR_FS_CATALOG.$data['lang'])) {
               require_once(DIR_FS_CATALOG.$data['lang']);
