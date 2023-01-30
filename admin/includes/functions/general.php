@@ -716,6 +716,7 @@
    */
   function xtc_get_cross_sell_groups() {
     $cross_sell_array = array ();
+    $cross_sell_array[] = array ('id' => '', 'text' => TEXT_NONE);
     $cross_sell_query = xtc_db_query("SELECT products_xsell_grp_name_id,
                                              groupname
                                         FROM ".TABLE_PRODUCTS_XSELL_GROUPS."
