@@ -140,12 +140,12 @@ define('ML_LABEL_CARRIER_NONE', 'kein Spediteur angeben');
 define('ML_SELECT_AMAZON_SUGGESTED_CARRIER', 'Von Amazon vorgeschlagene Transportunternehmen');
 define('ML_MATCH_CARRIER_TO_DB', 'Transportunternehmen aus einem Datenbankfeld matchen');
 define('ML_MATCH_AMAZON_CARRIER_TO_SHIPPING_MODULE', 'Von Amazon vorgeschlagene Transportunternehmen mit Versanddienstleistern aus Webshop  Versandkosten-Modul matchen');
-define('ML_MATCH_TEXT_TO_SHIPPING_MODULE', 'Lieferservice mit Einträgen aus Webshop  Versandkosten-Modul matchen');
+define('ML_MATCH_TEXT_TO_SHIPPING_MODULE', 'Lieferservice mit Eintr&auml;gen aus Webshop  Versandkosten-Modul matchen');
 define('ML_ADDITIONAL_OPTIONS', 'Zus&auml;tzliche Optionen');
-define('ML_SELECT_MARKETPLACE_SUGGESTED_CARRIER', 'Vom Marktplatz unterstützte Versanddienstleister:');
+define('ML_SELECT_MARKETPLACE_SUGGESTED_CARRIER', 'Vom Marktplatz unterst&uuml;tzte Versanddienstleister:');
 define('ML_CARRIER_TEXTFIELD', 'Manuelle Eingabe eines Transportunternehmens in rechtes Textfeld');
 define('ML_SHIPMETHOD_TEXTFIELD', 'Manuelle Eingabe eines Lieferservice in rechtes Textfeld');
-define('ML_PLACEHOLDER_MERCHANT_ID', 'wird automatisch gefüllt');
+define('ML_PLACEHOLDER_MERCHANT_ID', 'wird automatisch gef&uuml;llt');
 define('ML_LABEL_ORDER_ID', 'Bestellnummer');
 define('ML_LABEL_SHIPPING_DATE', 'Versanddatum');
 define('ML_LABEL_ESTIMATED_ARRIVAL_DATE', 'Gesch&auml;tztes Ankunftsdatum');
@@ -165,7 +165,7 @@ define('ML_LABEL_BLANKET_FROM_RIGHT_FIELD', 'Pauschal aus rechtem Feld');
 define('ML_LABEL_SHOP_PAYMENT_METHODS', 'Shop-Zahlungsarten');
 define('ML_MESSAGE_BEFORE_UPDATE_TITLE', 'magnalister Update');
 define('ML_MESSAGE_BEFORE_UPDATE_TEXT', 'Das magnalister Update aktualisiert nun auf die neueste Version. Der Vorgang dauert 1-3 Minuten.');
-define('ML_MESSAGE_UPDATE_DISABLED_GAMBIOCLOUD', 'Die magnalister Update-Funktion ist für Gambio Cloud deaktiviert: magnalister wird in dem Fall regelmäßig von Gambio aktualisiert. Bei Fragen wenden Sie sich bitte an support@magnalister.de');
+define('ML_MESSAGE_UPDATE_DISABLED_GAMBIOCLOUD', 'Die magnalister Update-Funktion ist f&uuml;r Gambio Cloud deaktiviert: magnalister wird in dem Fall regelm&auml;&szlig;ig von Gambio aktualisiert. Bei Fragen wenden Sie sich bitte an support@magnalister.de');
 define('ML_MESSAGE_BEFORE_XTMC_UPDATE_TITLE', 'xt:MultiConnect Update');
 define('ML_MESSAGE_BEFORE_XTMC_UPDATE_TEXT', 'Das xt:MultiConnect Update aktualisiert nun auf die neueste Version. Der Vorgang dauert 1-3 Minuten.');
 define('ML_LABEL_IMPORT_ORDERS', 'Bestellungen importieren');
@@ -385,7 +385,7 @@ define('ML_TEXT_LISTING_GOING_TO_EXCEED', '
 	   <a target="_blank" href="'.MAGNA_PUBLIC_SERVER.'frontend/rate.php" title="Preis&uuml;bersicht">hier</a> entnehmen.</p>
 	<p>Sie k&ouml;nnen einfach ein <a target="_blank" href="'.MAGNA_PUBLIC_SERVER.'frontend/login.php/rateupgrade:%d" title="Tarif-Upgrade">Tarif-Upgrade</a>
 	   r&uuml;ckwirkend zum Monatsanfang vornehmen und haben damit volle Kostenkontrolle.</p>');
-define('ML_TEXT_LISTING_GOING_TO_EXCEED_GAMBIO_CLOUD', 'Achtung, Sie überschreiten das Upload-Limit Ihres Tarifs (20 Produkt-Uploads & Bestellungen kombiniert pro Monat). Wenn Sie den Produkt-Upload fortsetzen, wird dieser Tarif kostenpflichtig. Es gelten dann unsere regulären Preise für den von Ihnen gewählten Tarif (Business, Ultimate, Flat).');
+define('ML_TEXT_LISTING_GOING_TO_EXCEED_GAMBIO_CLOUD', 'Achtung, Sie &uuml;berschreiten das Upload-Limit Ihres Tarifs (20 Produkt-Uploads & Bestellungen kombiniert pro Monat). Wenn Sie den Produkt-Upload fortsetzen, wird dieser Tarif kostenpflichtig. Es gelten dann unsere regul&auml;ren Preise f&uuml;r den von Ihnen gew&auml;hlten Tarif (Business, Ultimate, Flat).');
 define('ML_TEXT_CURRENT_MODULE_NOT_BOOKED', 'Zur Aktivierung von <b>%s</b> loggen Sie sich unter
 	<a href="'.MAGNA_PUBLIC_SERVER.'frontend/login.php" title="Kunden Login" target=_blank">'.str_replace('http://', 'www.', MAGNA_PUBLIC_SERVER).'login</a> ein,
 	w&auml;hlen "Meine Shops" und beantragen &uuml;ber den "Bearbeiten-Button" weitere Marketplaces.');
@@ -403,7 +403,7 @@ define('ML_TEXT_BUTTON_CHECKIN_ADD', 'Wenn Sie auf <span class="ml-button">'.ML_
 define('ML_TEXT_BUTTON_CHECKIN_PURGE', 'Wenn Sie auf <span class="ml-button">'.ML_BUTTON_LABEL_CHECKIN_PURGE.'</span> klicken,
 	wird die alte CSV gel&ouml;scht und nur die &uuml;bermittelten Artikel sind enthalten');
 define('ML_TEXT_CONFIG_SAVED_SUCCESSFULLY', 'Die Konfiguration wurde erfolgreich gespeichert.');
-define('ML_TEXT_GLOBALCONFIG_SAVED_SUCCESSFULLY', 'Die Konfiguration wurde erfolgreich gespeichert. Bitte wählen Sie nun für die weitere Einrichtung links einen Marktplatz aus.');
+define('ML_TEXT_GLOBALCONFIG_SAVED_SUCCESSFULLY', 'Die Konfiguration wurde erfolgreich gespeichert. Bitte w&auml;hlen Sie nun f&uuml;r die weitere Einrichtung links einen Marktplatz aus.');
 define('ML_TEXT_CONFIG_SAVED_SEMI_SUCCESSFULLY', 'Einige &Auml;nderungen konnten nicht gespeichert werden, da diese fehlerhaft sind.
 	Bitte korrigieren Sie alle Werte, die auf der linken Seite rot hervorgehobene Fehlerbeschreibungen haben.<br />
 	Die alten Werte wurden an diesen Stellen wiederhergestellt.');
@@ -719,32 +719,32 @@ define('ML_AMAZON_LABEL_APPLY_ATTRIBUTES', 'Attribute');
 define('ML_AMAZON_LABEL_APPLY_BROWSENODES', 'Browsenodes');
 define('ML_AMAZON_LABEL_APPLY_BULLETPOINTS', 'Bulletpoints');
 define('ML_AMAZON_LABEL_APPLY_KEYWORDS', 'Allgemeine Schl&uuml;sselw&ouml;rter');
-define('ML_AMAZON_INFO_APPLY_KEYWORDS', '<h3>Produkt-Ranking mit Amazon Schlüsselwörtern optimieren</h3>
+define('ML_AMAZON_INFO_APPLY_KEYWORDS', '<h3>Produkt-Ranking mit Amazon Schl&uuml;sselw&ouml;rtern optimieren</h3>
 <br>
-Allgemeine Schlüsselwörter dienen zur Optimierung des Rankings und zur besseren Filterbarkeit auf Amazon. Sie werden während des magnalister Produkt-Uploads unsichtbar am Produkt hinterlegt.
+Allgemeine Schl&uuml;sselw&ouml;rter dienen zur Optimierung des Rankings und zur besseren Filterbarkeit auf Amazon. Sie werden w&auml;hrend des magnalister Produkt-Uploads unsichtbar am Produkt hinterlegt.
 <br><br>
-<h2>Optionen für die Übergabe von Allgemeinen Schlüsselwörtern</h2>
+<h2>Optionen f&uuml;r die &Uuml;bergabe von Allgemeinen Schl&uuml;sselw&ouml;rtern</h2>
 1. Keywords immer aktuell aus Web-Shop verwenden (Metakeywords): 
 <br><br>
-Dabei werden die Schlüsselwörter aus dem Metakeywords-Feld des jeweiligen Produktes im Web-Shop gezogen und an Amazon übermittelt.
+Dabei werden die Schl&uuml;sselw&ouml;rter aus dem Metakeywords-Feld des jeweiligen Produktes im Web-Shop gezogen und an Amazon &uuml;bermittelt.
 <br><br>
-2. Allgemeine Schlüsselwörter in magnalister manuell eintragen: 
+2. Allgemeine Schl&uuml;sselw&ouml;rter in magnalister manuell eintragen: 
 <br><br>
-Wenn Sie nicht die am Web-Shop-Produkt hinterlegten Metakeywords übernehmen möchten, können Sie eigene Schlüsselwörter in diesem Freitextfeld eintragen.
+Wenn Sie nicht die am Web-Shop-Produkt hinterlegten Metakeywords &uuml;bernehmen m&ouml;chten, k&ouml;nnen Sie eigene Schl&uuml;sselw&ouml;rter in diesem Freitextfeld eintragen.
 <br><br>
 <b>Wichtige Hinweise:</b>
 <br><ul>
-<li>Wenn Sie Schlüsselwörter manuell eintragen, trennen Sie sie mit einem Leerzeichen (nicht mit Komma!) und achten Sie darauf, dass Sie insgesamt 250 Bytes (Faustregel: 1 Zeichen = 1 Byte. Ausnahme: Sonderzeichen wie Ä, Ö, Ü = 2 Byte) nicht überschreiten.
+<li>Wenn Sie Schl&uuml;sselw&ouml;rter manuell eintragen, trennen Sie sie mit einem Leerzeichen (nicht mit Komma!) und achten Sie darauf, dass Sie insgesamt 250 Bytes (Faustregel: 1 Zeichen = 1 Byte. Ausnahme: Sonderzeichen wie &Auml;, &Ouml;, &Uuml; = 2 Byte) nicht &uuml;berschreiten.
 </li><li>
 Wenn im Metakeywords-Feld des Web-Shop-Produkts die Keywords kommagetrennt vorliegen, wandelt magnalister beim Produkt-Upload die Kommas automatisch in Leerzeichen um. Auch hier gilt die Begrenzung auf 250 Bytes.
 </li><li>
-Wird die zulässige Byte-Zahl überschritten, gibt Amazon nach dem Produkt-Upload möglicherweise eine Fehlermeldung zurück, die Sie im magnalister Fehler-Log einsehen können (Wartezeit bis zu 60 Minuten).
+Wird die zul&auml;ssige Byte-Zahl &uuml;berschritten, gibt Amazon nach dem Produkt-Upload m&ouml;glicherweise eine Fehlermeldung zur&uuml;ck, die Sie im magnalister Fehler-Log einsehen k&ouml;nnen (Wartezeit bis zu 60 Minuten).
 </li><li>
-Übergabe von Platinum-Keywords: Sofern Sie Amazon Platin-Händler sind, informieren Sie den magnalister Support darüber. Wir schalten dann die Übergabe der Platinum-Keywords frei. Dabei greift magnalister auf die Allgemeinen Schlüsselbegriffe zurück und übermittelt diese 1:1 an Amazon. Allgemeine Schlüsselbegriffe und Platinum-Keywords sind also identisch.
+&Uuml;bergabe von Platinum-Keywords: Sofern Sie Amazon Platin-H&auml;ndler sind, informieren Sie den magnalister Support dar&uuml;ber. Wir schalten dann die &Uuml;bergabe der Platinum-Keywords frei. Dabei greift magnalister auf die Allgemeinen Schl&uuml;sselbegriffe zur&uuml;ck und &uuml;bermittelt diese 1:1 an Amazon. Allgemeine Schl&uuml;sselbegriffe und Platinum-Keywords sind also identisch.
 </li><li>
-Abweichende Platinum-Keywords übermitteln: Nutzen Sie das magnalister Attributs-Matching in der Produktvorbereitung. Wählen Sie dafür aus der Liste der verfügbaren Amazon Attribute “Platinum-Schlüsselwörter 1-5” und matchen Sie das entsprechende Webshop-Attribut.
+Abweichende Platinum-Keywords &uuml;bermitteln: Nutzen Sie das magnalister Attributs-Matching in der Produktvorbereitung. W&auml;hlen Sie daf&uuml;r aus der Liste der verf&uuml;gbaren Amazon Attribute “Platinum-Schl&uuml;sselw&ouml;rter 1-5” und matchen Sie das entsprechende Webshop-Attribut.
 </li><li>
-Neben Allgemeinen Schlüsselwörtern gibt es weitere Amazon-relevante Keywords (z.B. Thesaurus Attributschlüsselwörter, Zielgruppen-Keywords oder Themenschlüsselwörter), die Sie ebenfalls über das Attributs-Matching an Amazon übergeben können.
+Neben Allgemeinen Schl&uuml;sselw&ouml;rtern gibt es weitere Amazon-relevante Keywords (z.B. Thesaurus Attributschl&uuml;sselw&ouml;rter, Zielgruppen-Keywords oder Themenschl&uuml;sselw&ouml;rter), die Sie ebenfalls &uuml;ber das Attributs-Matching an Amazon &uuml;bergeben k&ouml;nnen.
 </li></ul>');
 define('ML_AMAZON_LABEL_APPLY_ADDITIONAL_DETAILS', 'Weitere Details (Empfohlen)');
 define('ML_AMAZON_LABEL_APPLY_NOT_PREPARED', 'Nicht vorbereitet');
@@ -823,9 +823,9 @@ define('ML_AMAZON_TEXT_APPLY_BULLETPOINTS', 'Key-Features des Artikels (z. B. &q
 define('ML_AMAZON_TEXT_APPLY_PRODUCTDESCRIPTION', 'Maximal 2000 Zeichen. Einige HTML-Tags und deren Attribute sind erlaubt. Diese Z&auml;hlen zu den 2000 Zeichen dazu.');
 define('ML_AMAZON_TEXT_APPLY_KEYWORDS', 'Bei manueller Eingabe zu beachten:
 <br><br>
-Einzelne Schlüsselwörter mit Leerzeichen (nicht mit Komma!) trennen
+Einzelne Schl&uuml;sselw&ouml;rter mit Leerzeichen (nicht mit Komma!) trennen
 <br><br>
-Alle Schlüsselwörter zusammen dürfen nicht größer als 250 Bytes sein (1 Zeichen = 1 Byte. Ausnahme: Sonderzeichen wie Ä, Ö, Ü = 2 Byte)');
+Alle Schl&uuml;sselw&ouml;rter zusammen d&uuml;rfen nicht gr&ouml;&szlig;er als 250 Bytes sein (1 Zeichen = 1 Byte. Ausnahme: Sonderzeichen wie &Auml;, &Ouml;, &Uuml; = 2 Byte)');
 define('ML_AMAZON_FROMWEBSHOP_APPLY_KEYWORDS', 'Keywords immer aktuell aus Web-Shop verwenden (Metakeywords)');
 define('ML_AMAZON_TEXT_APPLY_DATA_INCOMPLETE', 'Einige Pflichtfelder wurden nicht ausgef&uuml;llt. Bitte korrigieren Sie dies durch Klick auf die Schaltfl&auml;che "'.
 	ML_AMAZON_BUTTON_PREPARE.'"');
@@ -965,13 +965,13 @@ define('ML_AMAZON_INVENTORY_TYPE_MFN', 'MFN');
 define('ML_AMAZON_INVENTORY_TYPE_FBA', 'FBA');
 define('ML_AMAZON_SHIPPINGLABEL_FILTER_ORDERTYPE_DEFAULT', 'Filter (FulfillmentChannel)');
 define('ML_AMAZON_SHIPPINGLABEL_FILTER_ORDERTYPE_MFN', 'Standard (MFN)');
-define('ML_AMAZON_SHIPPINGLABEL_FILTER_ORDERTYPE_MFNPRIME', 'Prime durch Verkäufer (MFN-Prime)');
+define('ML_AMAZON_SHIPPINGLABEL_FILTER_ORDERTYPE_MFNPRIME', 'Prime durch Verk&auml;ufer (MFN-Prime)');
 define('ML_AMAZON_SHIPPINGLABEL_FILTER_ORDERTYPE_BUSINESS', 'Amazon Business (B2B)');
 define('ML_AMAZON_SHIPPINGLABEL_FILTER_ORDERTYPE_FBA', 'Versand durch Amazon (FBA)');
 define('ML_AMAZON_SHIPPINGLABEL_FILTER_ORDERTYPE_PRIME_SAMEDAY', 'Prime Same Day');
 define('ML_AMAZON_SHIPPINGLABEL_FILTER_ORDERTYPE_PRIME_NEXTDAY', 'Prime Next Day');
 define('ML_AMAZON_SHIPPINGLABEL_FILTER_ORDERTYPE_PRIME_SECONDDAY', 'Prime Second Day');
-define('ML_AMAZON_PRODUCT_MATCHING_POPUP_INFO_MAX_ALLOWED_PRODUCTS', 'Aus technischen Gründen ist es nicht möglich mehr als 10 Produkte gleichzeitig manuell zu matchen!');
+define('ML_AMAZON_PRODUCT_MATCHING_POPUP_INFO_MAX_ALLOWED_PRODUCTS', 'Aus technischen Gr&uuml;nden ist es nicht m&ouml;glich mehr als 10 Produkte gleichzeitig manuell zu matchen!');
 /*
  * comparison shopping
  */
@@ -1067,7 +1067,7 @@ define('ML_IDEALO_LABEL_FORWARDING_CARRIER_INFO', 'Gilt nur f&uuml;r die Versand
 define('ML_IDEALO_LABEL_DIRECT_CHECKOUT', 'Direktkauf');
 define('ML_IDEALO_LABEL_DIRECT_FULFILLMENT_TYPE', 'Versandart');
 define('ML_IDEALO_LABEL_DIRECT_TWO_MAN_HANDLING_FEE', 'Direktkauf Spedition - Lieferkosten bis zum Aufstellort');
-define('ML_IDEALO_LABEL_DIRECT_DISPOSAL_FEE', 'Direktkauf Spedition - Kosten Altgerätemitnahme');
+define('ML_IDEALO_LABEL_DIRECT_DISPOSAL_FEE', 'Direktkauf Spedition - Kosten Altger&auml;temitnahme');
 define('ML_IDEALO_OPTION_DIRECT_FULFILLMENTTYPE_SPEDITION', 'Spedition');
 define('ML_IDEALO_OPTION_DIRECT_FULFILLMENTTYPE_PACKETDIENST', 'Paketdienst');
 define('ML_IDEALO_OPTION_DIRECT_FULFILLMENTTYPE_DOWNLOAD', 'Download');
@@ -1096,7 +1096,7 @@ define('ML_IDEALO_PAYMENTMETHOD_OPTION_GROUPS', '
 define('ML_IDEALO_ACTIVATE_CHECKOUT_POPUP_TITLE', 'idealo Direktkauf');
 define('ML_IDEALO_ACTIVATE_CHECKOUT_POPUP_CONTENT', 'Zur Nutzung dieser Funktion aktivieren Sie bitte unter &quot;idealo Account&quot; den idealo Direktkauf.');
 define('ML_IDEALO_ACTIVATE_CHECKOUT_Old_TOKEN_POPUP_TITLE', 'Umstellung auf idealo Checkout (“Direktkauf”)  Merchant Order API v2');
-define('ML_IDEALO_ACTIVATE_CHECKOUT_Old_TOKEN_POPUP_CONTENT', 'Seit 01.01.2021 unterstützt magnalister die idealo Checkout Merchant Order API v2. Die Merchant Order API v1 wird bald abgeschaltet.<br><br>Bitte generieren Sie in Ihrem idealo Business Account eine “Client ID” und ein “Client Passwort” und tragen Sie die Daten in der magnalister idealo Konfiguration unter “Zugangsdaten” -> “idealo Direktkauf” ein.<br><br>Eine Anleitung zur Umstellung finden Sie im Info-Icon neben “idealo Direktkauf verwenden”.');
+define('ML_IDEALO_ACTIVATE_CHECKOUT_Old_TOKEN_POPUP_CONTENT', 'Seit 01.01.2021 unterst&uuml;tzt magnalister die idealo Checkout Merchant Order API v2. Die Merchant Order API v1 wird bald abgeschaltet.<br><br>Bitte generieren Sie in Ihrem idealo Business Account eine “Client ID” und ein “Client Passwort” und tragen Sie die Daten in der magnalister idealo Konfiguration unter “Zugangsdaten” -> “idealo Direktkauf” ein.<br><br>Eine Anleitung zur Umstellung finden Sie im Info-Icon neben “idealo Direktkauf verwenden”.');
 
 /* preissuchmaschnine.de */
 define('ML_PREISSUCHMASCHINE_SAME_PRODUCT_THERE', 'Dieser Artikel bei preissuchmaschnine.de');
@@ -1169,14 +1169,17 @@ define('ML_EBAY_CONDITION_NEW', 'Neu / Neu mit Karton');
 define('ML_EBAY_CONDITION_NEW_OTHER', 'Neu / Sonstige (s. Artikelbeschreibung) / Neu ohne Karton');
 define('ML_EBAY_CONDITION_NEW_WITH_DEFECTS', 'Neu mit Fehlern');
 define('ML_EBAY_CONDITION_MANUF_REFURBISHED', 'Vom Hersteller general&uuml;berholt');
-define('ML_EBAY_CONDITION_CERTIFIED_REFURBISHED', 'Zerrtifiziert general&uuml;berholt');
+define('ML_EBAY_CONDITION_CERTIFIED_REFURBISHED', 'Zertifiziert – Refurbished');
+define('ML_EBAY_CONDITION_EXCELLENT_REFURBISHED', 'Hervorragend – Refurbished');
+define('ML_EBAY_CONDITION_VERY_GOOD_REFURBISHED', 'Sehr gut – Refurbished');
+define('ML_EBAY_CONDITION_GOOD_REFURBISHED', 'Gut – Refurbished');
 define('ML_EBAY_CONDITION_SELLER_REFURBISHED', 'Vom Verk&auml;fer general&uuml;berholt');
 define('ML_EBAY_CONDITION_AS_NEW', 'Neuwertig');
 define('ML_EBAY_CONDITION_USED', 'Gebraucht');
-define('ML_EBAY_CONDITION_VERY_GOOD', 'Sehr gut');
-define('ML_EBAY_CONDITION_GOOD', 'Gut');
-define('ML_EBAY_CONDITION_ACCEPTABLE', 'Akzeptabel');
-define('ML_EBAY_CONDITION_FOR_PARTS_OR_NOT_WORKING', 'Als Ersatzteil / defekt');
+define('ML_EBAY_CONDITION_VERY_GOOD', 'Gebraucht, sehr gut');
+define('ML_EBAY_CONDITION_GOOD', 'Gebraucht, gut');
+define('ML_EBAY_CONDITION_ACCEPTABLE', 'Gebraucht, akzeptabel');
+define('ML_EBAY_CONDITION_FOR_PARTS_OR_NOT_WORKING', 'Als Ersatzteil / Defekt');
 define('ML_EBAY_NO_CONDITIONS_APPLICABLE_FOR_CAT', 'Diese Kategorie erlaubt keine Angabe des Artikelzustands.');
 
 define('ML_EBAY_LABEL_PREPARE_KIND', 'Vorbereitungsart');
@@ -1445,7 +1448,7 @@ define('ML_EBAY_PUI_MSG_TO_BUYER', "eBay Rechnungskauf, eBay Nachricht an den Ku
 
 define('ML_LABEL_EBAY_SALES_RECORD_NUMBER', 'Verkaufsprotokollnummer');
 define('ML_EBAY_PP_TRANSACTION_ID', 'PayPal Transaction ID');
-define('ML_EBAY_ORDER_DETAIL_INFORMATION_TO_EBAY_SELLER_HUB', 'Klicken Sie auf diesen <a href="%s">Link</a>, um die (Teil-)Rückerstattung einer Bestellung über den eBay Seller Hub manuell abzuwickeln.');
+define('ML_EBAY_ORDER_DETAIL_INFORMATION_TO_EBAY_SELLER_HUB', 'Klicken Sie auf diesen <a href="%s">Link</a>, um die (Teil-)R&uuml;ckerstattung einer Bestellung &uuml;ber den eBay Seller Hub manuell abzuwickeln.');
 /* Laendernamen (fuer eBay, vllt spaeter auch fuer andere */
 define('ML_COUNTRY_AUSTRALIA', 'Australien');
 define('ML_COUNTRY_AUSTRIA', '&Ouml;sterreich');
@@ -1711,7 +1714,7 @@ define('ML_GENERAL_VARMATCH_ALREADY_MATCHED', '(bereits gematcht)');
 define('ML_GENERAL_VARMATCH_MULTI_SELECT', 'Multiselect');
 define('ML_GENERAL_VARMATCH_PRODUCTS_PREPARED_DIFFERENTLY', 'Bitte beachten Sie, dass Sie einige Artikel der gew&auml;hlten Kategorie "%category_name%" abweichend unter „Produkte vorbereiten“ gematcht haben. Es werden die dort gespeicherten Werte zum Marktplatz &uuml;bermittelt.');
 define('ML_GENERAL_INVENTORY_IS_SPLIT', 'Is split');
-define('ML_GENERAL_VARMATCH_MULTISELECTHINT', 'Dr&uuml;cke CMD und w&auml;hlen alle zur Übermittlung gew&uuml;nschten Attribute');
+define('ML_GENERAL_VARMATCH_MULTISELECTHINT', 'Dr&uuml;cke CMD und w&auml;hlen alle zur &Uuml;bermittlung gew&uuml;nschten Attribute');
 
 /* Cdiscount */
 
@@ -1791,9 +1794,9 @@ define('ML_CDISCOUNT_TEXT_AUTOMATIC_MATCHING_CONFIRM', 'Bitte beachten Sie, dass
 define('ML_CDISCOUNT_LABEL_LAST_REPORT', 'Letzter Bericht von Cdiscount');
 define('ML_CDISCOUNT_TEXT_CHECKIN_DELAY', 'Bitte beachten Sie, dass es bis zu zwei Stunden dauern kann bis Einstell- und L&ouml;schvorg&auml;nge
 	vollst&auml;ndig von Cdiscount verarbeitet werden.');
-define('ML_CDISCOUNT_LABEL_PREPARATION_TIME', 'Vorbereitungszeit für den Versand (in Tagen 1-10)');
+define('ML_CDISCOUNT_LABEL_PREPARATION_TIME', 'Vorbereitungszeit f&uuml;r den Versand (in Tagen 1-10)');
 define('ML_CDISCOUNT_LABEL_PRICE', 'Cdiscount Preis');
-define('ML_CDISCOUNT_HELP_PREPARATION_TIME', 'Vorbereitungszeit für die Auslieferung des Produkts. Sie muss in Tagen zwischen 1 und 10 angegeben werden.');
+define('ML_CDISCOUNT_HELP_PREPARATION_TIME', 'Vorbereitungszeit f&uuml;r die Auslieferung des Produkts. Sie muss in Tagen zwischen 1 und 10 angegeben werden.');
 define('ML_CDISCOUNT_VARMATCH_MANDATORY_INFO', 'Size and color attributes are mandatory for Cdiscount variations.<br> 
 If you want your item to be uploaded as item with variations, please provide both size and color. <br>
 Otherwise if one of these two attributes is missing, your variations will be uploaded as separate items with attribute list in item title (e.g. Item title "Nike T-Shirt Size: M"). ');
@@ -2217,7 +2220,7 @@ define('ML_RICARDO_ERROR_TITLE', 'Bitte geben Sie einen Titel an.');
 define('ML_RICARDO_ERROR_DESCRIPTION', 'Bitte geben Sie eine Artikelbeschreibung an.');
 define('ML_RICARDO_ERROR_WARRANTY', 'Bitte geben Sie eine Garantiebeschreibung an.');
 define('ML_RICARDO_ERROR_GTIN', 'Bitte geben Sie eine GTIN Kode.');
-define('ML_RICARDO_ERROR_IMAGES', 'Bitte übertragen / hinterlegen Sie mindestens ein Bild.');
+define('ML_RICARDO_ERROR_IMAGES', 'Bitte &uuml;bertragen / hinterlegen Sie mindestens ein Bild.');
 define('ML_RICARDO_ERROR_SHIPPING', 'Bitte geben Sie eine Versandbeschreibung an.');
 define('ML_RICARDO_ERROR_START_PRICE', 'Der Start-Preis muss gr&ouml;&szlig;er als null sein.');
 define('ML_RICARDO_ERROR_INCREMENT', 'Der Erh&ouml;hungsschritt muss gr&ouml;&szlig;er als null sein');
@@ -2305,7 +2308,7 @@ define('ML_FYNDIQ_ERROR_CATEGORY_ATTRIBUTE', ' (Kategorie Attribute) ist erforde
 
 /* Tradoria */
 define('ML_TRADORIA_UPLOAD_EXPLANATION', '<b>Hinweis</b>:<br /><br />
-Hochgeladene Artikel werden in der Regel innerhalb einer Stunde auf Rakuten platziert. Danach können Sie die Produkte in Ihrer Rakuten-Shop-Administration sehen.');
+Hochgeladene Artikel werden in der Regel innerhalb einer Stunde auf Rakuten platziert. Danach k&ouml;nnen Sie die Produkte in Ihrer Rakuten-Shop-Administration sehen.');
 
 /* Etsy */
 define('ML_ETSY_MAX_PICTURES', 'Maximal 10 Bilder');
@@ -2327,9 +2330,11 @@ define('ML_ETSY_WHEN_MADE_1960S', '1960ern');
 define('ML_ETSY_WHEN_MADE_1970S', '1970ern');
 define('ML_ETSY_WHEN_MADE_1980S', '1980ern');
 define('ML_ETSY_WHEN_MADE_1990S', '1990ern');
-define('ML_ETSY_WHEN_MADE_BEFORE_2002', 'Vor 2002');
-define('ML_ETSY_WHEN_MADE_2002_2009', '2002-2009');
+define('ML_ETSY_WHEN_MADE_BEFORE_2004', 'Vor 2004');
+define('ML_ETSY_WHEN_MADE_2000_2003', '2000-2003');
+define('ML_ETSY_WHEN_MADE_2004_2009', '2004-2009');
 define('ML_ETSY_WHEN_MADE_2010_2019', '2010-2019');
+define('ML_ETSY_WHEN_MADE_2020_2023', '2020-2023');
 define('ML_ETSY_WHEN_MADE_MADE_TO_ORDER', 'Produktion auf Bestellung');
 define('ML_ETSY_ISSUPLY', 'Was ist es?');
 define('ML_ETSY_ISSUPLY_NO', 'Ein fertiges Produkt');
@@ -2381,9 +2386,9 @@ define('ML_METRO_PREPARE_PRODUCT_TITLE_INFO', 'Maximal 150 Zeichen');
 define('ML_METRO_PREPARE_PRODUCT_SHORTDESCRIPTION_INFO', 'Kurze Beschreibung des Produkts mit einer Zusammenfassung der wichtigsten Produkteigenschaften.<br/>Maximal 150 Zeichen');
 define('ML_METRO_PREPARE_PRODUCT_DESCRIPTION_INFO', 'Detaillierte und informative Beschreibung des Produkts mit seinen Spezifikationen und Eigenschaften. Angebotsdetails, Versand- oder Shopinformationen wie Preise, Lieferbedingungen, etc. sind nicht erlaubt. Bitte beachten Sie, dass es nur eine Produktdetailseite pro Produkt gibt, die von allen Verk&auml;ufern, die dieses Produkt anbieten, geteilt wird. F&uuml;gen Sie keine Hyperlinks, Bilder oder Videos hinzu.<br><br>Folgende HTML-Tags sind erlaubt: P, B, BR, A, UL, OL, LI, SPAN<br><br>Maximal 4000 Zeichen');
 define('ML_METRO_PREPARE_PRODUCT_IMAGES_INFO', 'Maximal 10 Produktbilder');
-define('ML_METRO_PREPARE_PRODUCT_GTIN_INFO', 'Zum Beispiel: EAN, ISBN, ...<br/>Maximal 14 Zeichen<br/>Sie müssen hier eine GTIN hinterlegen, wenn Sie bei “Hersteller” und “Herstellerartikelnummer” keinen Wert eintragen.');
-define('ML_METRO_PREPARE_PRODUCT_MANUFACTURER_INFO', 'Maximal 100 Zeichen<br/>Wenn Sie unter “GTIN” nichts eintragen, müssen Sie hier einen Hersteller hinterlegen.');
-define('ML_METRO_PREPARE_PRODUCT_MPN_INFO', 'Maximal 100 Zeichen<br/>Wenn Sie unter “GTIN” nichts eintragen, müssen Sie hier eine Herstellerartikelnummer (MPN) hinterlegen.');
+define('ML_METRO_PREPARE_PRODUCT_GTIN_INFO', 'Zum Beispiel: EAN, ISBN, ...<br/>Maximal 14 Zeichen<br/>Sie m&uuml;ssen hier eine GTIN hinterlegen, wenn Sie bei “Hersteller” und “Herstellerartikelnummer” keinen Wert eintragen.');
+define('ML_METRO_PREPARE_PRODUCT_MANUFACTURER_INFO', 'Maximal 100 Zeichen<br/>Wenn Sie unter “GTIN” nichts eintragen, m&uuml;ssen Sie hier einen Hersteller hinterlegen.');
+define('ML_METRO_PREPARE_PRODUCT_MPN_INFO', 'Maximal 100 Zeichen<br/>Wenn Sie unter “GTIN” nichts eintragen, m&uuml;ssen Sie hier eine Herstellerartikelnummer (MPN) hinterlegen.');
 define('ML_METRO_PREPARE_PRODUCT_BRAND_INFO', 'Maximal 100 Zeichen');
 define('ML_METRO_PREPARE_PRODUCT_MSRP_INFO', 'Maximal 100 Zeichen');
 define('ML_METRO_PREPARE_PRODUCT_KEY_FEATURE_INFO', 'Maximal 200 Zeichen je Merkmal');
@@ -2415,7 +2420,7 @@ define('ML_UPLOADINVOICE_ERROR_MULTIPLERECEIPTSFORONEORDER', 'Achtung f&uuml;r d
 define('ML_UPLOADINVOICE_ERROR_NORECEIPTSFORONEORDER', 'Achtung in dem/den &quot;{#ConfigFieldLabel#}&quot; existiert keine Rechnung bzw. Gutschrift zu Shop-Bestell-Id: {#ShopOrderId#}. magnalister kann der Shop-Bestellung daher keine Rechnung / Gutschrift zuordnen und an {#marketplace#} &uuml;bermitteln.');
 define('ML_UPLOADINVOICE_ERROR_MOVETODESTINATIONDIRECTORY_FAILED', 'Die Rechnung / Gutschrift &quot;{#ReceiptFileName#}&quot; konnte nicht in den Ziel-Ordner auf dem Server ({#ConfigDestinationPath#}) verschoben werden. Bitte pr&uuml;fen Sie die Schreib- und Leserechte f&uuml;r entsprechende Ordner und Dateien auf Ihrem Server!');
 define('ML_UPLOADINVOICE_FILEBROWSER_HEADLINE', 'Datei-Manager');
-define('ML_UPLOADINVOICE_FILEBROWSER_INFORMATION', 'Bitte beachten Sie, dass hier nur Ordner angezeigt werden, für die die Lese- und Schreibrechte korrekt gesetzt sind.');
+define('ML_UPLOADINVOICE_FILEBROWSER_INFORMATION', 'Bitte beachten Sie, dass hier nur Ordner angezeigt werden, f&uuml;r die die Lese- und Schreibrechte korrekt gesetzt sind.');
 
 /**
  * OTTO
@@ -2429,9 +2434,9 @@ define('ML_OTTO_PREPARE_PRODUCT_DELIVERY_TIME', 'Lieferzeit in Tagen');
 define('ML_OTTO_PREPARE_PRODUCT_PARCEL', 'Paketware');
 define('ML_OTTO_PREPARE_PRODUCT_FORWARDER_PREFERREDLOCATION', 'Spediteur - bevorzugter Standort');
 define('ML_OTTO_PREPARE_PRODUCT_FORWARDER_CURBSIDE', 'Spediteur - Bordsteinkante');
-define('ML_OTTO_PREPARE_PRODUCT_TITLE_INFO', 'Eine Übertragung des Produkttitels ist bei OTTO nicht möglich.<br>OTTO erstellt den Titel basierend auf den von Ihnen übertragenen Attributen wie Hersteller, Marke, Produktlinie und viele mehr.');
+define('ML_OTTO_PREPARE_PRODUCT_TITLE_INFO', 'Eine &Uuml;bertragung des Produkttitels ist bei OTTO nicht m&ouml;glich.<br>OTTO erstellt den Titel basierend auf den von Ihnen &uuml;bertragenen Attributen wie Hersteller, Marke, Produktlinie und viele mehr.');
 define('ML_OTTO_PRODUCT_IMAGES', 'Produktbilder');
-define('ML_OTTO_PREPARE_PRODUCT_DESCRIPTION_INFO', 'Detaillierte und informative Beschreibung des Produkts mit seinen Spezifikationen und Eigenschaften. Angebotsdetails, Versand- oder Shopinformationen wie Preise, Lieferbedingungen, etc. sind nicht erlaubt. Bitte beachten Sie, dass es nur eine Produktdetailseite pro Produkt gibt, die von allen Verkäufern, die dieses Produkt anbieten, geteilt wird. Fügen Sie keine Hyperlinks, Bilder oder Videos hinzu.<br><br>May contain HTML elements<br><br>Maximal 2000 Zeichen');
+define('ML_OTTO_PREPARE_PRODUCT_DESCRIPTION_INFO', 'Detaillierte und informative Beschreibung des Produkts mit seinen Spezifikationen und Eigenschaften. Angebotsdetails, Versand- oder Shopinformationen wie Preise, Lieferbedingungen, etc. sind nicht erlaubt. Bitte beachten Sie, dass es nur eine Produktdetailseite pro Produkt gibt, die von allen Verk&auml;ufern, die dieses Produkt anbieten, geteilt wird. F&uuml;gen Sie keine Hyperlinks, Bilder oder Videos hinzu.<br><br>May contain HTML elements<br><br>Maximal 2000 Zeichen');
 define('ML_OTTO_PREPARE_PRODUCT_IMAGES_INFO', 'Immer aktuell aus Web-Shop verwenden');
 define('ML_OTTO_PRODUCT_GENERALSETTINGS', 'Allgemeine Einstellungen');
 define('ML_OTTO_LABEL_SELECT_CATEGORY', 'Kategorien');
@@ -2445,13 +2450,13 @@ define('ML_OTTO_PRICE_FOR_OTTO', 'OTTO Preis');
 define('ML_OTTO_LABEL_TITLE', 'OTTO Titel');
 define('ML_OTTO_LISTING_ID', 'OTTO ListingId');
 define('ML_OTTO_PRICE_SHOP_OTTO', 'Shop-Preis / OTTO Preis');
-define('ML_OTTO_STOCK_SHOP_OTTO', 'Bestand Shop / An OTTO übermittelter Bestand');
+define('ML_OTTO_STOCK_SHOP_OTTO', 'Bestand Shop / An OTTO &uuml;bermittelter Bestand');
 define('ML_OTTO_ERROR_GTIN', 'Bitte geben Sie eine GTIN Kode oder pr&uuml;fen Sie, ob der GTIN-Code g&uuml;ltig ist.');
 define('ML_OTTO_DELETED_OFFER_PURGE_INFO', 'Gel&ouml;schte Artikel werden nach 30 Tagen final aus der Datenbank und &Uuml;bersicht gel&ouml;scht.');
 define('ML_OTTO_CATEGORY_ATTRIBUTES', 'Kategorie Attribute');
-define('ML_OTTO_CATEGORY_ATTRIBUTES_INFO', 'Diese Attribute beziehen sich auf die ausgewählte Kategorie.');
-define('ML_OTTO_CATEGORY_INDEPENDENT_ATTRIBUTES', 'Kategorieunabhängige Attribute');
-define('ML_OTTO_CATEGORY_INDEPENDENT_ATTRIBUTES_INFO', 'Diese Attribute beziehen sich nicht auf die ausgewählte Kategorie.');
+define('ML_OTTO_CATEGORY_ATTRIBUTES_INFO', 'Diese Attribute beziehen sich auf die ausgew&auml;hlte Kategorie.');
+define('ML_OTTO_CATEGORY_INDEPENDENT_ATTRIBUTES', 'Kategorieunabh&auml;ngige Attribute');
+define('ML_OTTO_CATEGORY_INDEPENDENT_ATTRIBUTES_INFO', 'Diese Attribute beziehen sich nicht auf die ausgew&auml;hlte Kategorie.');
 define('ML_OTTO_CATEGORY_INDEPENDENT_ATTRIBUTES_REQUIRED', 'OTTO\'s Pflicht-Attribute');
 define('ML_OTTO_CATEGORY_INDEPENDENT_ATTRIBUTES_REQUIRED_INFO', 'Attribut- und Attributswert-Matching');
 define('ML_OTTO_CATEGORY_INDEPENDENT_ATTRIBUTES_OTIONAL', 'OTTO optionale Attribute');
@@ -2468,11 +2473,11 @@ define('ML_OTTO_LABEL_PAGINATION_LAST', 'Letzte Seite');
 define('ML_OTTO_STATUS_PRODUCT_IS_CREATED', 'Produkt ist erstellt und wartet auf Validierung');
 define('ML_OTTO_STATUS_PRODUCT_IS_CREATING', 'Produkt wartet darauf, erstellt zu werden');
 define('ML_OTTO_STATUS_PRODUCT_IS_PENDING_DELETE', 'Angebot wird gel&ouml;scht');
-define('ML_OTTO_STATUS_PRODUCT_IS_PENDING_CREATION', 'Warten auf Übertragung an OTTO');
+define('ML_OTTO_STATUS_PRODUCT_IS_PENDING_CREATION', 'Warten auf &Uuml;bertragung an OTTO');
 define('ML_OTTO_STATUS_PRODUCT_IS_PENDING_UPDATE', 'Produkt wird auf OTTO aktualisiert');
 define('ML_MATCH_OTTO_CARRIER_TO_SHIPPING_MODULE', 'Von Otto vorgeschlagene Transportunternehmen mit Versanddienstleistern aus Webshop  Versandkosten-Modul matchen');
 
-define('ML_DUPLCIATE_HOVERTEXTS', 'Bitte speichern Sie die Konfiguration / Vorbereitung bevor Sie Zeilen hinzufügen oder entfernen');
+define('ML_DUPLCIATE_HOVERTEXTS', 'Bitte speichern Sie die Konfiguration / Vorbereitung bevor Sie Zeilen hinzuf&uuml;gen oder entfernen');
 define('ML_ATTRIBUTES_MATCHING_FIELD_WEIGHT_AND_UNIT', 'Artikelgewicht (Wert und Einheit als Text)');
 define('ML_ATTRIBUTES_MATCHING_FIELD_WEIGHT_VALUE', 'Artikelgewicht (Nur den Wert)');
 define('ML_ATTRIBUTES_MATCHING_FIELD_WEIGHT_UNIT', 'Artikelgewicht (Nur die Einheit)');

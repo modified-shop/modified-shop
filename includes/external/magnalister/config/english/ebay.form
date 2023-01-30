@@ -88,16 +88,20 @@
                 "type": "selection",
                 "desc": "Presetting for the condition of the article (necessary for categories where the condition can be used or the condition is needed). Not all values are allowed, if necessary the condition must be corrected after the category has been chosen.",
                 "values": {
-                    "1000": "new \/ new with box",
-                    "1500": "new other (see details) \/ new without box",
-                    "1750": "new with defects",
-                    "2000": "certified refurbished",
-                    "2500": "seller refurbished",
-                    "3000": "used",
-                    "4000": "used, very good",
-                    "5000": "used, good",
-                    "6000": "used, acceptable",
-                    "7000": "for parts or not working"
+                    "1000": "New",
+                    "1500": "New other (see details)",
+                    "1750": "New with defects",
+                    "2000": "Certified - Refurbished",
+                    "2010": "Excellent - Refurbished",
+                    "2020": "Very Good - Refurbished",
+                    "2030": "Good - Refurbished",
+                    "2500": "Seller refurbished",
+                    "2750": "Like New",
+                    "3000": "Used",
+                    "4000": "Used, very good",
+                    "5000": "Used, good",
+                    "6000": "Used, acceptable",
+                    "7000": "For parts or not working"
                 }
             },
             "Statusfilter": {

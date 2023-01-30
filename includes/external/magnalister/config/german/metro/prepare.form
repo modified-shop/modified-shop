@@ -93,7 +93,8 @@
                             "type": "text",
                             "cssClasses": [
                                 "autoWidth"
-                            ]
+                            ],
+                            "default": "0.00"
                         }
                     }
                 }

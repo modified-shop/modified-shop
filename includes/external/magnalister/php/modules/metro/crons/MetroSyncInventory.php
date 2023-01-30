@@ -92,6 +92,7 @@ class MetroSyncInventory extends MagnaCompatibleSyncInventory {
             )
         );
         $priceConfigValue = getDBConfigValue('metro.shippingprofile.cost', $this->mpID);
+        MetroHelper::fixShippingprofileCost($priceConfigValue);
 
         // If NetPrice dont use GrossPrice
         $marketplacePrice = (float)$this->cItem['Price'];

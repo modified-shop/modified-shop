@@ -99,15 +99,19 @@
                 "desc": "Voreinstellung f&uuml den Artikelzustand (f&uuml;r eBay-Kategorien wo dieser angegeben werden kann oder mu&szlig;). Nicht alle Werte sind f&uuml;r jede Kategorie zul&auml;ssig, ggf. mu&szlig; nach der Wahl der Kategorie der Zustand noch mal korrigiert werden.",
                 "values": {
                     "1000": "Neu",
-                    "1500": "Neu \/ Sonstige (s. Artikelbeschreibung)",
+                    "1500": "Neu: Sonstige (siehe Artikelbeschreibung)",
                     "1750": "Neu mit Fehlern",
-                    "2000": "Zertifiziert general&uuml;berholt",
-                    "2500": "Vom Verk&auml;ufer general&uuml;berholt",
+                    "2000": "Zertifiziert \u2013 Refurbished",
+                    "2010": "Hervorragend \u2013 Refurbished",
+                    "2020": "Sehr gut \u2013 Refurbished",
+                    "2030": "Gut \u2013 Refurbished",
+                    "2500": "Vom Verk\u00e4ufer general\u00fcberholt",
                     "2750": "Neuwertig",
-                    "4000": "Sehr gut",
-                    "5000": "Gut",
-                    "6000": "Akzeptabel",
-                    "7000": "Als Ersatzteil / defekt"
+                    "3000": "Gebraucht",
+                    "4000": "Gebraucht, sehr gut",
+                    "5000": "Gebraucht, gut",
+                    "6000": "Gebraucht, akzeptabel",
+                    "7000": "Als Ersatzteil \/ Defekt"
                 }
             },
             "Statusfilter": {

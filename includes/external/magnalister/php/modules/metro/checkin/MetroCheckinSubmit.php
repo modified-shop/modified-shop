@@ -109,6 +109,7 @@ class MetroCheckinSubmit extends MagnaCompatibleCheckinSubmit {
         }
 
         $shippingPriceConfigValue = getDBConfigValue('metro.shippingprofile.cost', $this->mpID);
+        MetroHelper::fixShippingprofileCost($shippingPriceConfigValue);
         $shippingProfilePrice = $shippingPriceConfigValue[$properties['ShippingProfile']];
         // Shipping Cost is stored as gross price
         $data['submit']['ShippingCost'] = (float)$shippingProfilePrice;
