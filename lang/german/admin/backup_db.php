@@ -42,4 +42,5 @@ define('TEXT_BACKUP_UNCOMPRESSED', 'Die Backupdatei wurde entpackt: ');
 
 define('TEXT_SIMULATION', '<br>(Simulation mit log-Datei)');
 
-?>
+define('YES','ja');
+define('NO','nein');

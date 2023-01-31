@@ -42,4 +42,5 @@ define('TEXT_BACKUP_UNCOMPRESSED', 'The backup file has been unpacked: ');
 
 define('TEXT_SIMULATION', '<br>(Simulation with log file)');
 
-?>
+define('YES','yes');
+define('NO','no');
