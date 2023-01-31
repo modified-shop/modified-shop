@@ -68,11 +68,14 @@
     }
   
     if (!isset($parent[$catID])) {
+      $parent[$catID] = 0;
       $parent_query = xtc_db_query("SELECT parent_id 
                                       FROM ".TABLE_CATEGORIES." 
                                      WHERE categories_id = '".(int)$catID."'");
-      $parent_data = xtc_db_fetch_array($parent_query);
-      $parent[$catID] = $parent_data['parent_id'];
+      if (xtc_db_num_rows($parent_query) > 0) {
+        $parent_data = xtc_db_fetch_array($parent_query);
+        $parent[$catID] = $parent_data['parent_id'];
+      }
     }
   
     return $parent[$catID];
@@ -172,9 +175,9 @@
             echo xtc_draw_hidden_field('action', 'edit_crossselling').PHP_EOL;
             echo xtc_draw_hidden_field('current_product_id', $_GET['current_product_id']).PHP_EOL;
             echo xtc_draw_hidden_field('last_action', $_GET['last_action']).PHP_EOL;
-            echo xtc_draw_hidden_field('sorting', $_GET['sorting']).PHP_EOL;
             echo xtc_draw_hidden_field('cpath', $_GET['cpath']).PHP_EOL;
             echo xtc_draw_hidden_field('page', $_GET['page']).PHP_EOL;
+            echo ((isset($_GET['sorting'])) ? xtc_draw_hidden_field('sorting', $_GET['sorting']).PHP_EOL : '');
             echo CROSS_SELLING_SEARCH.'&nbsp;'.xtc_draw_input_field('keywords', ((isset($_GET['keywords'])) ? $_GET['keywords'] : ''), 'size="30"');
             echo '&nbsp;<input type="submit" class="button no_top_margin"  style="vertical-align:top;" onclick="this.blur();" value="' . BUTTON_SEARCH . '"/>';
             if (isset($_GET['keywords']) && $_GET['keywords'] != '') {
@@ -196,7 +199,7 @@
     
       <?php
       // search results
-      if ($_GET['keywords']) {
+      if (isset($_GET['keywords'])) {
         echo xtc_draw_form('product_keywords', FILENAME_CATEGORIES, xtc_get_all_get_params(array('keywords', 'special')), 'POST', $confirm_submit).PHP_EOL;
         echo xtc_draw_hidden_field('special', 'add_entries').PHP_EOL;
         ?>

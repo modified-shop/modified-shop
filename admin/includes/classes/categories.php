@@ -1163,7 +1163,7 @@ class categories {
 
 
   function edit_cross_sell($cross_data) {
-    if ($cross_data['special'] == 'add_entries') {
+    if (isset($cross_data['special']) && $cross_data['special'] == 'add_entries') {
       if (isset ($cross_data['ids'])) {
         foreach ($cross_data['ids'] AS $pID) {
           $sql_data_array = array(
@@ -1183,7 +1183,7 @@ class categories {
       }
     }
     
-    if ($cross_data['special'] == 'edit') {
+    if (isset($cross_data['special']) && $cross_data['special'] == 'edit') {
       if (isset ($cross_data['ids'])) {
         // delete
         foreach ($cross_data['ids'] AS $pID) {
