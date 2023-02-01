@@ -128,6 +128,9 @@ class payone_cc extends PayonePayment {
         iframes.creditCardCheck(\'checkCallback\');
       } else {
         document.getElementById(\'errorOutput\').innerHTML = \''.TEXT_CHECK_DATA.'\';
+        if(typeof jQuery != \'undefined\') {
+          $(window.event.target).unbind("click");
+        }
       }
       return false;
     }
@@ -137,6 +140,10 @@ class payone_cc extends PayonePayment {
         document.getElementById("pseudocardpan").value = response.pseudocardpan; 
         document.getElementById("truncatedcardpan").value = response.truncatedcardpan;
         document.checkout_confirmation.submit();
+      } else {
+        if(typeof jQuery != \'undefined\') {
+          $(\'#button_checkout_confirmation\').closest(\'[class^=cssButtonPos]\').css(\'display\',\'inline-block\');
+        }
       }
       return false;
     }
