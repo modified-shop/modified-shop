@@ -216,7 +216,7 @@
                                          AND zone_name = '".xtc_db_input($entry_state)."'");
           if (xtc_db_num_rows($zone_query) == 1) {
             $zone_values = xtc_db_fetch_array($zone_query);
-            $entry_zone_id = $zone_values['zone_id'];
+            $zone_id = $zone_values['zone_id'];
           } else {
             $zone_query = xtc_db_query("SELECT zone_id
                                           FROM ".TABLE_ZONES."
@@ -297,7 +297,7 @@
       if (ACCOUNT_SUBURB == 'true')
         $sql_data_array['entry_suburb'] = $entry_suburb;
       if (ACCOUNT_STATE == 'true') {
-        $sql_data_array['entry_zone_id'] = (int)$entry_zone_id;
+        $sql_data_array['entry_zone_id'] = (int)$zone_id;
         $sql_data_array['entry_state'] = $entry_state;
       }
       xtc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array);

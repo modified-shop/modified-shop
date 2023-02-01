@@ -319,7 +319,6 @@
         $entry_country_id = xtc_db_prepare_input($_POST['entry_country_id']);
         if (ACCOUNT_COMPANY == 'true') $entry_company = xtc_db_prepare_input($_POST['entry_company']);
         if (ACCOUNT_STATE == 'true') $entry_state = xtc_db_prepare_input($_POST['entry_state']);
-        if (ACCOUNT_STATE == 'true') $entry_zone_id = xtc_db_prepare_input($_POST['entry_zone_id']);
         $memo_title = xtc_db_prepare_input($_POST['memo_title']);
         $memo_text = xtc_db_prepare_input($_POST['memo_text']);
         $payment_unallowed = implode(',', (isset($_POST['payment_unallowed']) && is_array($_POST['payment_unallowed']) ? $_POST['payment_unallowed'] : array()));
@@ -492,7 +491,7 @@
           if ($entry_country_error == true) {
             $entry_state_error = true;
           } else {
-            $entry_zone_id = 0;
+            $zone_id = 0;
             $entry_state_error = false;
             $check_query = xtc_db_query("SELECT count(*) as total 
                                            FROM ".TABLE_ZONES." 
@@ -506,7 +505,7 @@
                                              AND zone_name = '".xtc_db_input($entry_state)."'");
               if (xtc_db_num_rows($zone_query) == 1) {
                 $zone_values = xtc_db_fetch_array($zone_query);
-                $entry_zone_id = $zone_values['zone_id'];
+                $zone_id = $zone_values['zone_id'];
               } else {
                 $zone_query = xtc_db_query("SELECT zone_id 
                                               FROM ".TABLE_ZONES." 
@@ -514,7 +513,7 @@
                                                AND zone_code = '".xtc_db_input($entry_state)."'");
                 if (xtc_db_num_rows($zone_query) >= 1) {
                   $zone_values = xtc_db_fetch_array($zone_query);
-                  $entry_zone_id = $zone_values['zone_id'];
+                  $zone_id = $zone_values['zone_id'];
                 } else {
                   $error = true;
                   $entry_state_error = true;
@@ -612,10 +611,7 @@
             $sql_data_array['entry_suburb'] = $entry_suburb;
           }
           if (ACCOUNT_STATE == 'true') {
-            if ($entry_zone_id > 0) {
-              $entry_state = '';
-            }
-            $sql_data_array['entry_zone_id'] = (int)$entry_zone_id;
+            $sql_data_array['entry_zone_id'] = (int)$zone_id;
             $sql_data_array['entry_state'] = $entry_state;
           }
           if ($address_book_id == 0) {
