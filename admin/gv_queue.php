@@ -82,6 +82,12 @@
         $html_mail = $smarty->fetch(CURRENT_TEMPLATE . '/admin/mail/'.$_SESSION['language'].'/gift_accepted.html');
         $txt_mail = $smarty->fetch(CURRENT_TEMPLATE . '/admin/mail/'.$_SESSION['language'].'/gift_accepted.txt');
 
+        // create subject
+        $order_subject = str_replace('{$nr}', $gv['order_id'], EMAIL_BILLING_SUBJECT_ORDER);
+        $order_subject = str_replace('{$date}', xtc_date_long($gv['date_created']), $order_subject);
+        $order_subject = str_replace('{$lastname}', $mail['customers_lastname'], $order_subject);
+        $order_subject = str_replace('{$firstname}', $mail['customers_firstname'], $order_subject);
+
         xtc_php_mail(EMAIL_BILLING_ADDRESS,
                      EMAIL_BILLING_NAME,
                      $mail['customers_email_address'], 
@@ -91,7 +97,7 @@
                      EMAIL_BILLING_REPLY_ADDRESS_NAME, 
                      '', 
                      '', 
-                     EMAIL_BILLING_SUBJECT, 
+                     $order_subject, 
                      $html_mail, 
                      $txt_mail);
 
