@@ -200,7 +200,7 @@
         <?php if (ACTIVATE_SHIPPING_STATUS=='true') { ?>
         <tr>
           <td><span class="main"><?php echo BOX_SHIPPING_STATUS.':'; ?></span></td>
-          <td><span class="main"><?php echo xtc_draw_pull_down_menu('shipping_status', $shipping_statuses, $pInfo->products_shippingtime=='' ? (int)(DEFAULT_SHIPPING_STATUS_ID) : $pInfo->products_shippingtime, 'style="width: 155px"'); ?></span></td>
+          <td><span class="main"><?php echo xtc_draw_pull_down_menu('shipping_status', $shipping_statuses, empty($pInfo->products_shippingtime) ? (int)(DEFAULT_SHIPPING_STATUS_ID) : $pInfo->products_shippingtime, 'style="width: 155px"'); ?></span></td>
         </tr>
         <?php } ?>
       </table>
