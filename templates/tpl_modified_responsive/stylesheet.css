@@ -5805,7 +5805,8 @@ ul.tc_list li .tc_delete .cssButton .fas {
   display:inline-block;
   margin: 0 2px 0 2px;
 }
-.cssButtonPos11 .fas {
+.cssButtonPos11 .fas,
+.cssButtonPos11 .far {
   font-size:16px;
   vertical-align:-2px;
 }
