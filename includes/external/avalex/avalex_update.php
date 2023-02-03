@@ -10,7 +10,8 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-require_once (DIR_FS_INC.'get_external_content.inc.php');
+// include needed classes
+require_once(DIR_FS_CATALOG.'includes/classes/modified_api.php');
 
 class avalex_update {
 
@@ -53,7 +54,9 @@ class avalex_update {
     foreach ($this->map as $map => $endpoint) {
       $content_groups_array[] = constant('MODULE_AVALEX_TYPE_'.strtoupper($map));
     }
-
+    
+    modified_api::setEndpoint($this->url);
+    
     $lang_query = xtc_db_query("SELECT *
                                   FROM ".TABLE_LANGUAGES."
                                  WHERE status = 1");
@@ -67,10 +70,10 @@ class avalex_update {
         $content_array[$content['content_group']] = $content;
       }
 
-      foreach ($this->map as $map => $endpoint) {
-        $result = get_external_content($this->url.'avx-'.$endpoint.'?apikey='.$this->apikey.'&lang='.$lang['code'].'&domain='.$this->domain, '3', false);
+      foreach ($this->map as $map => $endpoint) {      
+        $result = modified_api::request('avx-'.$endpoint.'?apikey='.$this->apikey.'&lang='.$lang['code'].'&domain='.$this->domain);
         
-        if (trim($result) != '') {
+        if (!is_array($result) && trim($result) != '') {
           $content = $content_array[constant('MODULE_AVALEX_TYPE_'.strtoupper($map))];
         
           $sql_data_array = array(
