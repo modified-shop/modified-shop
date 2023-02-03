@@ -73,7 +73,7 @@ class avalex_update {
       foreach ($this->map as $map => $endpoint) {      
         $result = modified_api::request('avx-'.$endpoint.'?apikey='.$this->apikey.'&lang='.$lang['code'].'&domain='.$this->domain);
         
-        if (!is_array($result) && trim($result) != '') {
+        if (is_string($result) && trim($result) != '') {
           $content = $content_array[constant('MODULE_AVALEX_TYPE_'.strtoupper($map))];
         
           $sql_data_array = array(
