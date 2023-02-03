@@ -2850,7 +2850,14 @@ function SendLog ()
       if (is_array($value)) {
         $array[$key] = encode_request($value);
       } else {
-        $array[$key] = ((!is_bool($value)) ? encode_utf8($value, '', true) : $value);
+        $array[$key] = $value;
+        if (defined('DB_SERVER_CHARSET') 
+            && DB_SERVER_CHARSET == 'utf8'
+            && !is_bool($value)
+            )
+        {
+          $array[$key] = encode_utf8($value, '', true);
+        }
       }
     }
   
