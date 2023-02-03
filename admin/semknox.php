@@ -197,7 +197,7 @@ require (DIR_WS_INCLUDES.'head.php');
               &Uuml;ber ein kleines JavaScript Widget wird die Suche in das Template des Shops integriert. Sobald der Benutzer die ersten Buchstaben eintippt, erscheint die Autosuggestion mit Produktvorschl&auml;gen. Ein [enter] im Suchfeld zeigt die volle Ergebnisliste innerhalb von Bruchteilen einer Sekunde an, inklusive facettierter Suche &uuml;ber dargestellten Filter.<br /><br />
               Zur Site Search 360 geh&ouml;rt zus&auml;tzlich ein Control Panel, mit dem die volle Kontrolle &uuml;ber die Suche zur Verf&uuml;gung steht. Es lassen sich Ranking Strategien hinterlegen oder einzelne Suchergebnisse explizit gestalten. Dazu kann der Result Manager verwendet werden, mit dem f&uuml;r einzelne Suchbegriffe das Ergebnis per Drag&rsquo;n&rsquo;Drop umgestaltet werden kann. Auch HTML Teaser k&ouml;nnen eingebunden werden oder f&uuml;r bestimmte Suchbegriffe Weiterleitungen eingerichtet werden.<br /><br />
               Die Site Search 360 ist nicht nur auf Produktdaten beschr&auml;nkt, es lassen sich auch beliebige Content Seiten indizieren, wie z.B. ein Blog, ein Magazin oder Ratgeber, eine FAQ-Seite, PDF oder Word-Dokumente und sogar YouTube Videos. Dadurch l&auml;sst sich die Suche ganzheitlich auf die Bed&uuml;rfnisse des Besuchers einstellen, so dass zu jeder Zeit das optimale Ergebnis pr&auml;sentiert werden kann.<br /><br />
-              Testen Sie die Site Search 360 und starten Sie Ihren kostenlosen, 14-t&auml;gigen Testzeitraum noch heute: <a href="https://app.sitesearch360.com/signup.html?kind=ecom&amp;ref=modified-info-page" target="_blank" style="font-size:12px;"><u>https://app.sitesearch360.com/signup.html</u></a><br /><br />
+              Testen Sie die Site Search 360 und starten Sie Ihren kostenlosen, 14-t&auml;gigen Testzeitraum noch heute: <a href="https://app.sitesearch360.com/signup?kind=ecom&amp;ref=modified-info-page" target="_blank" style="font-size:12px;"><u>https://app.sitesearch360.com/signup</u></a><br /><br />
 
               <div class="sx-container">
                 <div class="sx-grid">
@@ -306,7 +306,7 @@ require (DIR_WS_INCLUDES.'head.php');
               </div>
 
               <strong>Voraussetzung/Anforderungen:</strong><br /><br />
-              Zum Betrieb der Site Search 360 Produktsuche ist ein kostenpflichtiger Account erforderlich, welcher unter <a href="https://app.sitesearch360.com/signup.html?kind=ecom&amp;ref=modified-info-page" target="_blank" style="font-size:12px;"><u>https://app.sitesearch360.com/signup.html</u></a> angelegt werden kann. Jede Neuanmeldung verbleibt f&uuml;r 14 Tage im kostenfreien Testzeitraum und wird automatisch gel&ouml;scht, sollte keine Anmeldung zu einem der kostenpflichtigen Tarife erfolgen.
+              Zum Betrieb der Site Search 360 Produktsuche ist ein kostenpflichtiger Account erforderlich, welcher unter <a href="https://app.sitesearch360.com/signup?kind=ecom&amp;ref=modified-info-page" target="_blank" style="font-size:12px;"><u>https://app.sitesearch360.com/signup</u></a> angelegt werden kann. Jede Neuanmeldung verbleibt f&uuml;r 14 Tage im kostenfreien Testzeitraum und wird automatisch gel&ouml;scht, sollte keine Anmeldung zu einem der kostenpflichtigen Tarife erfolgen.
             </td>
           </tr>
         </table>
