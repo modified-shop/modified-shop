@@ -132,8 +132,8 @@
         @ImageCopyMerge($this->t,$this->dark,$this->q-($this->pixel+1),$this->pixel,0,0,1,$this->r-(2*$this->pixel),max(0,$this->opac-10));
         @ImageCopyMerge($this->t,$this->dark,$this->pixel,$this->r-($this->pixel+1),0,0,$this->q-(2*$this->pixel),1,max(0,$this->opac-10));
       }
-      @ImageDestroy($this->dark);
-      @ImageDestroy($this->light);
+      if ($this->dark) @ImageDestroy($this->dark);
+      if ($this->light) @ImageDestroy($this->light);
     }
     function greyscale($rv=38, $gv=36, $bv=26) {
       // Not working properly for PNG & GIF images, so skipping
@@ -198,7 +198,7 @@
         @ImageCopyMerge($this->t,$this->dot,$this->xpos-1,$this->ypos-1,0,0,2,2,30);
         @ImageLine($this->t,$this->xpos,($this->ypos),$this->xto,($this->ypos),$this->zenitha);
       }
-      @ImageDestroy($this->dot);
+      if ($this->dot) @ImageDestroy($this->dot);
     }
     function round_edges($edge_rad=3, $bg_colour="FFFFFF", $anti_alias=1) {
       // Not working properly for PNG images, so skipping
@@ -225,10 +225,10 @@
           }
         }
       }
-      @imagedestroy($this->dot);
+      if ($this->dot) @imagedestroy($this->dot);
     }
     function merge($merge_img="", $x_left=0, $y_top=0, $merge_opacity=70, $trans_colour="FF0000") {
-      if ($this->effects_disabled)
+      if ($this->effects_disabled || !is_file($merge_img))
         return; 
       $this->mi = $merge_img;
       $this->xx = ($x_left < 0) ? $this->q+$x_left : $x_left;
@@ -253,7 +253,7 @@
           }
         }
       }
-      @imagedestroy($this->mm);
+      if ($this->mm) @imagedestroy($this->mm);
     }
     function frame($light_colour="FFFFFF", $dark_colour="000000", $mid_width=4, $frame_colour = "" ) {
       if ($this->effects_disabled)
@@ -317,8 +317,8 @@
       }
       @imagecopyresampled($this->v, $this->t, 0, 0, 0, 0, $this->rsw, $this->rsh, $this->q, $this->r);
       @imagecopyresampled($this->t, $this->v, 0, 0, 0, 0, $this->q, $this->r, $this->q, $this->r);
-      @imagedestroy($this->v);
-      @imagedestroy($this->dot);
+      if ($this->v) @imagedestroy($this->v);
+      if ($this->dot) @imagedestroy($this->dot);
     }
     function motion_blur($num_blur_lines, $background_colour="FFFFFF") {
       // Not working properly for PNG images, so skipping
@@ -347,7 +347,7 @@
       }
       @imagecopyresampled($this->w, $this->t, 0, 0, 0, 0, $this->rsw, $this->rsh, $this->q, $this->r);
       @imagecopyresampled($this->t, $this->w, 0, 0, 0, 0, $this->q, $this->r, $this->q, $this->r);
-      @imagedestroy($this->w);
+      if ($this->w) @imagedestroy($this->w);
     }
     function manipulate() {
       if($this->c !== "" && $this->s !== Null) {
