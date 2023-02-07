@@ -13,7 +13,7 @@
   include (dirname(__FILE__).'/../../includes/application_top_callback.php');
 
   // include needed functions
-  require_once(DIR_FS_INC.'next_schduled_time.inc.php');
+  require_once(DIR_FS_INC.'next_scheduled_time.inc.php');
   
   $tasks_query = xtc_db_query("SELECT *
                                  FROM ".TABLE_SCHEDULED_TASKS."
