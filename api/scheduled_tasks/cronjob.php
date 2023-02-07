@@ -23,7 +23,7 @@
     while ($tasks = xtc_db_fetch_array($tasks_query)) {
 
       // When should this next be run?
-      $time_next = next_schduled_time($tasks['time_regularity'], $tasks['time_unit'], $tasks['time_offset']);
+      $time_next = next_scheduled_time($tasks['time_regularity'], $tasks['time_unit'], $tasks['time_offset']);
 
       $duration = $tasks['time_regularity'];
       if ($tasks['time_unit'] == 'm') {
