@@ -97,6 +97,7 @@ $filename_array = array(
   'FILENAME_SEMKNOX' => 'semknox.php',
   'FILENAME_CHECKOUT_SUCCESS' => 'checkout_success.php',
   'FILENAME_DHL' => 'dhl.php',
+  'FILENAME_SCHEDULED_TASKS' => 'scheduled_tasks.php',
 );
 
 // define 

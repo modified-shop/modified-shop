@@ -172,6 +172,7 @@ $values_group_update = array();
   $values[] = "(NULL, 'MODULE_PRODUCT_INSTALLED', '', '6', '0', NULL, NOW(), NULL, NULL);";
   $values[] = "(NULL, 'MODULE_SHOPPING_CART_INSTALLED', '', '6', '0', NULL, NOW(), NULL, NULL);";
   $values[] = "(NULL, 'MODULE_XTCPRICE_INSTALLED', '', '6', '0', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'CRONJOB_NEXT_EVENT_TIME', '0', '6', '0', NULL, NOW(), NULL, NULL);";
 
 //configuration_group_id 7 --- "Versandoptionen"
   //$values[] = "(NULL, 'SHIPPING_DEFAULT_TAX_CLASS_METHOD', '1', 7, 7, NULL, NOW(), 'xtc_get_default_tax_class_method_name', 'xtc_cfg_pull_down_default_tax_class_methods(');"; //modified 1.07

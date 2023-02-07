@@ -88,6 +88,8 @@
   define('TABLE_PRODUCTS_XSELL_GROUPS','products_xsell_grp_name');
   define('TABLE_REVIEWS', 'reviews');
   define('TABLE_REVIEWS_DESCRIPTION', 'reviews_description');
+  define('TABLE_SCHEDULED_TASKS', 'scheduled_tasks');
+  define('TABLE_SCHEDULED_TASKS_LOG', 'scheduled_tasks_log');
   define('TABLE_SERVER_TRACKING', 'server_tracking');
   define('TABLE_SESSIONS', 'sessions');
   define('TABLE_SHIPPING_STATUS', 'shipping_status');

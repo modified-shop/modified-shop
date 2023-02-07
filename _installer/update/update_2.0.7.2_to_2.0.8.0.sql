@@ -58,4 +58,29 @@ ALTER TABLE `orders` ADD `content_type` VARCHAR(32) NOT NULL;
 ALTER TABLE `customers_login` ADD `date_added` DATETIME DEFAULT '0000-00-00 00:00:00';
 ALTER TABLE `customers_login` ADD `last_modified` DATETIME DEFAULT '0000-00-00 00:00:00';
 
+#GTB - 2023-02-07 - scheduled tasks
+CREATE TABLE IF NOT EXISTS `scheduled_tasks` (
+  `tasks_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `time_next` INT(11) NOT NULL,
+  `time_offset` INT(11) NOT NULL,
+  `time_regularity` INT(5) NOT NULL ,
+  `time_unit` VARCHAR(1) NOT NULL DEFAULT 'h',
+  `status` INT(1) NOT NULL,
+  `tasks` VARCHAR(128) NOT NULL ,
+  PRIMARY KEY (`tasks_id`),
+  UNIQUE KEY `idx_task` (`tasks`),
+  KEY `idx_status` (`status`),
+  KEY `idx_time_next` (`time_next`)
+);
+
+#GTB - 2023-02-07 - scheduled tasks log
+CREATE TABLE IF NOT EXISTS `scheduled_tasks_log` (
+  `logs_id` BIGINT(11) NOT NULL AUTO_INCREMENT,
+  `tasks_id` INT(11) NOT NULL,
+  `time_run` INT(11) NOT NULL,
+  `time_taken` FLOAT NOT NULL,
+  PRIMARY KEY (`logs_id`),
+  KEY `idx_tasks_id` (`tasks_id`)
+);
+
 # Keep an empty line at the end of this file for the db_updater to work properly

@@ -175,6 +175,7 @@ if ($admin_access['csv_backend'] == '1') $menu_access[] = '<li><a href="' . xtc_
 if ($admin_access['parcel_carriers'] == '1') $menu_access[] = '<li><a href="' . xtc_href_link(FILENAME_PARCEL_CARRIERS) . '" class="menuBoxContentLink"> -' . BOX_PARCEL_CARRIERS . '</a></li>';
 if ($admin_access['logs'] == '1') $menu_access[] = '<li><a href="' . xtc_href_link(FILENAME_LOGS) . '" class="menuBoxContentLink"> -' . BOX_LOGS . '</a></li>';
 if ($admin_access['blacklist_logs'] == '1') $menu_access[] = '<li><a href="' . xtc_href_link(FILENAME_BLACKLIST_LOGS) . '" class="menuBoxContentLink"> -' . BOX_BLACKLIST_LOGS . '</a></li>';
+if ($admin_access['scheduled_tasks'] == '1') $menu_access[] = '<li><a href="' . xtc_href_link(FILENAME_SCHEDULED_TASKS, '', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_SCHEDULED_TASKS . '</a></li>';
 endMenue(BOX_HEADING_TOOLS);
 
 //gift

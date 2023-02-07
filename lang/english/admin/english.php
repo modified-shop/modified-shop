@@ -198,6 +198,7 @@ define('BOX_PRODUCTS_CONTENT', 'Product attachments');
 define('BOX_CONTENT_CONTENT', 'Content attachments');
 define('BOX_EMAIL_CONTENT', 'E-Mail attachments');
 define('BOX_DHL', 'DHL Shipping &amp; Label Creation');
+define('BOX_SCHEDULED_TASKS', 'Scheduled Tasks');
 
 define('TXT_GROUPS','<b>Groups</b>:');
 define('TXT_SYSTEM','System');

@@ -1330,6 +1330,31 @@ CREATE TABLE reviews_description (
   PRIMARY KEY (reviews_id, languages_id)
 );
 
+DROP TABLE IF EXISTS scheduled_tasks;
+CREATE TABLE scheduled_tasks (
+  tasks_id INT(11) NOT NULL AUTO_INCREMENT,
+  time_next INT(11) NOT NULL,
+  time_offset INT(11) NOT NULL,
+  time_regularity INT(5) NOT NULL,
+  time_unit VARCHAR(1) NOT NULL DEFAULT 'h',
+  status INT(1) NOT NULL,
+  tasks VARCHAR(128) NOT NULL,
+  PRIMARY KEY (tasks_id),
+  UNIQUE KEY idx_tasks (tasks),
+  KEY idx_status (status),
+  KEY idx_time_next (time_next)
+);
+
+DROP TABLE IF EXISTS scheduled_tasks_log;
+CREATE TABLE scheduled_tasks_log (
+  logs_id BIGINT(11) NOT NULL AUTO_INCREMENT,
+  tasks_id INT(11) NOT NULL,
+  time_run INT(11) NOT NULL,
+  time_taken FLOAT NOT NULL,
+  PRIMARY KEY (logs_id),
+  KEY idx_tasks_id (tasks_id)
+);
+
 DROP TABLE IF EXISTS sessions;
 CREATE TABLE sessions (
   sesskey VARCHAR(32) NOT NULL,
@@ -1657,6 +1682,7 @@ INSERT INTO configuration (configuration_id, configuration_key, configuration_va
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'SESSION_CHECK_USER_AGENT', 'False', 6, 100, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'True\', \'False\'),');
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'SESSION_CHECK_IP_ADDRESS', 'False', 6, 100, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'True\', \'False\'),');
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'SESSION_FORCE_COOKIE_USE', 'True', 6, 2, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'True\', \'False\'),');
+INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'CRONJOB_NEXT_EVENT_TIME', '0', 6, 0, NULL, NOW(), NULL, NULL);
 
 # configuration_group_id 7, Shipping/Packaging
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'SHIPPING_MAX_WEIGHT', '50', 7, 3, NULL, NOW(), NULL, NULL);
