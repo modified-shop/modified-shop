@@ -17,7 +17,9 @@
 
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
+  
   defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
+  
   class image_manipulation {
     var $effects_disabled = false; 
     function __construct($resource_file, $max_width, $max_height, $destination_file="", $compression=IMAGE_QUALITY, $transform="") {
@@ -200,6 +202,7 @@
       }
       if ($this->dot) @ImageDestroy($this->dot);
     }
+    
     function round_edges($edge_rad=3, $bg_colour="FFFFFF", $anti_alias=1) {
       // Not working properly for PNG images, so skipping
       if ($this->effects_disabled || $this->k == 3)
@@ -227,6 +230,7 @@
       }
       if ($this->dot) @imagedestroy($this->dot);
     }
+    
     function merge($merge_img="", $x_left=0, $y_top=0, $merge_opacity=70, $trans_colour="FF0000") {
       if ($this->effects_disabled || !is_file($merge_img))
         return; 
@@ -255,6 +259,7 @@
       }
       if ($this->mm) @imagedestroy($this->mm);
     }
+    
     function frame($light_colour="FFFFFF", $dark_colour="000000", $mid_width=4, $frame_colour = "" ) {
       if ($this->effects_disabled)
         return;
@@ -286,6 +291,7 @@
         @imageline($this->t, $this->q-($this->crw+2), $this->crw, $this->q-($this->crw+2), $this->r-($this->crw+1), $this->mid); // right
       }
     }
+    
     function drop_shadow($shadow_width, $shadow_colour="000000", $background_colour="FFFFFF") {
       // Not working properly for PNG & GIF images, so skipping
       if ($this->effects_disabled || $this->k == 3 || $this->k == 1)
@@ -320,6 +326,7 @@
       if ($this->v) @imagedestroy($this->v);
       if ($this->dot) @imagedestroy($this->dot);
     }
+    
     function motion_blur($num_blur_lines, $background_colour="FFFFFF") {
       // Not working properly for PNG images, so skipping
       if ($this->effects_disabled || $this->k == 3)
@@ -349,6 +356,7 @@
       @imagecopyresampled($this->t, $this->w, 0, 0, 0, 0, $this->q, $this->r, $this->q, $this->r);
       if ($this->w) @imagedestroy($this->w);
     }
+    
     function manipulate() {
       if($this->c !== "" && $this->s !== Null) {
         eval("\$this->maniparray = array(".$this->c.");");
@@ -357,6 +365,7 @@
         }
       }
     }
+    
     function create() {
       if($this->s !== Null) {
         if($this->d !== "") {
