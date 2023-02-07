@@ -10,7 +10,7 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  function next_schduled_time($regularity, $unit, $offset) {
+  function next_scheduled_time($regularity, $unit, $offset) {
     if ($regularity == 0) {
       $regularity = 2;
     }
