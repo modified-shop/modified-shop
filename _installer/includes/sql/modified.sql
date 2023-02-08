@@ -1333,8 +1333,8 @@ CREATE TABLE reviews_description (
 DROP TABLE IF EXISTS scheduled_tasks;
 CREATE TABLE scheduled_tasks (
   tasks_id INT(11) NOT NULL AUTO_INCREMENT,
-  time_next INT(11) NOT NULL,
-  time_offset INT(11) NOT NULL,
+  time_next INT(11) NOT NULL DEFAULT 0,
+  time_offset INT(11) NOT NULL DEFAULT 0,
   time_regularity INT(5) NOT NULL,
   time_unit VARCHAR(1) NOT NULL DEFAULT 'h',
   status INT(1) NOT NULL,

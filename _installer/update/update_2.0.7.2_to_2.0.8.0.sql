@@ -61,9 +61,9 @@ ALTER TABLE `customers_login` ADD `last_modified` DATETIME DEFAULT '0000-00-00 0
 #GTB - 2023-02-07 - scheduled tasks
 CREATE TABLE IF NOT EXISTS `scheduled_tasks` (
   `tasks_id` INT(11) NOT NULL AUTO_INCREMENT,
-  `time_next` INT(11) NOT NULL,
-  `time_offset` INT(11) NOT NULL,
-  `time_regularity` INT(5) NOT NULL ,
+  `time_next` INT(11) NOT NULL DEFAULT 0,
+  `time_offset` INT(11) NOT NULL DEFAULT 0,
+  `time_regularity` INT(5) NOT NULL,
   `time_unit` VARCHAR(1) NOT NULL DEFAULT 'h',
   `status` INT(1) NOT NULL,
   `tasks` VARCHAR(128) NOT NULL ,
