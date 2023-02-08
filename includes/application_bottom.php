@@ -48,6 +48,9 @@ if (is_file('templates/'.CURRENT_TEMPLATE.'/javascript/general_bottom.js.php')) 
 
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/application_bottom/','php') as $file) require ($file);
 
+// who's online functions
+xtc_update_whos_online();
+
 // new error handling
 if (isset($error_exceptions) && is_array($error_exceptions) && count($error_exceptions) > 0) {
   if ((DISPLAY_ERROR_REPORTING == 'all') || (DISPLAY_ERROR_REPORTING == 'admin' && $_SESSION['customers_status']['customers_status'] == '0')) {
