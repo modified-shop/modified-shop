@@ -110,19 +110,11 @@ endMenue(BOX_HEADING_MODULES);
 //partner
 $menu_access = array();
 $menu_access[] = mainMenue(BOX_HEADING_PARTNER_MODULES);
-if (isset($admin_access['janolaw']) && $admin_access['janolaw'] == '1') $menu_access[] = '<li><a href="' . xtc_href_link(FILENAME_JANOLAW, '', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_JANOLAW . '</a></li>';
-if (isset($admin_access['it_recht_kanzlei']) && $admin_access['it_recht_kanzlei'] == '1') $menu_access[] = '<li><a href="' . xtc_href_link(FILENAME_IT_RECHT_KANZLEI, '') . '" class="menuBoxContentLink"> -' . BOX_IT_RECHT_KANZLEI . '</a></li>';
-if (isset($admin_access['haendlerbund']) && $admin_access['haendlerbund'] == '1') $menu_access[] = '<li><a href="' . xtc_href_link(FILENAME_HAENDLERBUND, '') . '" class="menuBoxContentLink"> -' . BOX_HAENDLERBUND . '</a></li>';
-if (isset($admin_access['protectedshops']) && $admin_access['protectedshops'] == '1') $menu_access[] = '<li><a href="' . xtc_href_link(FILENAME_PROTECTEDSHOPS, '') . '" class="menuBoxContentLink"> -' . BOX_PROTECTEDSHOPS . '</a></li>';
 if (isset($admin_access['cleverreach']) && $admin_access['cleverreach'] == '1') $menu_access[] = '<li><a href="' . xtc_href_link(FILENAME_CLEVERREACH, '') . '" class="menuBoxContentLink"> -' . BOX_CLEVERREACH . '</a></li>';
-if (isset($admin_access['supermailer']) && $admin_access['supermailer'] == '1') $menu_access[] = '<li><a href="' . xtc_href_link(FILENAME_SUPERMAILER, '') . '" class="menuBoxContentLink"> -' . BOX_SUPERMAILER . '</a></li>';
-if (isset($admin_access['trustedshops']) && $admin_access['trustedshops'] == '1') $menu_access[] = '<li><a href="' . xtc_href_link(FILENAME_TRUSTEDSHOPS, '') . '" class="menuBoxContentLink"> -' . BOX_TRUSTEDSHOPS . '</a></li>';
-
-## PayPal
-include(DIR_FS_EXTERNAL.'paypal/modules/column_left.php');
-
-## shipcloud
-include(DIR_FS_EXTERNAL.'shipcloud/column_left.php');
+if (isset($admin_access['dhl']) && $admin_access['dhl'] == '1') $menu_access[] = '<li><a href="' . xtc_href_link(FILENAME_DHL, '') . '" class="menuBoxContentLink"> -' . BOX_DHL . '</a></li>';
+if (isset($admin_access['haendlerbund']) && $admin_access['haendlerbund'] == '1') $menu_access[] = '<li><a href="' . xtc_href_link(FILENAME_HAENDLERBUND, '') . '" class="menuBoxContentLink"> -' . BOX_HAENDLERBUND . '</a></li>';
+if (isset($admin_access['it_recht_kanzlei']) && $admin_access['it_recht_kanzlei'] == '1') $menu_access[] = '<li><a href="' . xtc_href_link(FILENAME_IT_RECHT_KANZLEI, '') . '" class="menuBoxContentLink"> -' . BOX_IT_RECHT_KANZLEI . '</a></li>';
+if (isset($admin_access['janolaw']) && $admin_access['janolaw'] == '1') $menu_access[] = '<li><a href="' . xtc_href_link(FILENAME_JANOLAW, '', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_JANOLAW . '</a></li>';
 
 ## Magnalister
 if(defined('MODULE_MAGNALISTER_STATUS') && MODULE_MAGNALISTER_STATUS=='True') {
@@ -134,11 +126,17 @@ if(defined('MODULE_MAGNALISTER_STATUS') && MODULE_MAGNALISTER_STATUS=='True') {
 ## Payone
 include(DIR_FS_EXTERNAL.'payone/modules/column_left.php');
 
-## SEMKNOX
+## PayPal
+include(DIR_FS_EXTERNAL.'paypal/modules/column_left.php');
+
+if (isset($admin_access['protectedshops']) && $admin_access['protectedshops'] == '1') $menu_access[] = '<li><a href="' . xtc_href_link(FILENAME_PROTECTEDSHOPS, '') . '" class="menuBoxContentLink"> -' . BOX_PROTECTEDSHOPS . '</a></li>';
 if (isset($admin_access['semknox']) && $admin_access['semknox'] == '1') $menu_access[] = '<li><a href="' . xtc_href_link(FILENAME_SEMKNOX, '') . '" class="menuBoxContentLink"> -' . BOX_SEMKNOX . '</a></li>';
 
-## DHL
-if (isset($admin_access['dhl']) && $admin_access['dhl'] == '1') $menu_access[] = '<li><a href="' . xtc_href_link(FILENAME_DHL, '') . '" class="menuBoxContentLink"> -' . BOX_DHL . '</a></li>';
+## shipcloud
+include(DIR_FS_EXTERNAL.'shipcloud/column_left.php');
+
+if (isset($admin_access['supermailer']) && $admin_access['supermailer'] == '1') $menu_access[] = '<li><a href="' . xtc_href_link(FILENAME_SUPERMAILER, '') . '" class="menuBoxContentLink"> -' . BOX_SUPERMAILER . '</a></li>';
+if (isset($admin_access['trustedshops']) && $admin_access['trustedshops'] == '1') $menu_access[] = '<li><a href="' . xtc_href_link(FILENAME_TRUSTEDSHOPS, '') . '" class="menuBoxContentLink"> -' . BOX_TRUSTEDSHOPS . '</a></li>';
 endMenue(BOX_HEADING_PARTNER_MODULES);
 
 //stats
