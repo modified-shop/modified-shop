@@ -48,7 +48,7 @@ require (DIR_WS_INCLUDES.'head.php');
               DHL Anbindung
             </td>
             <td valign="middle" class="dataTableHeadingContent">
-              <a href="<?php echo xtc_href_link('module_export.php', 'set=system&module=dhl'); ?>"><u>Einstellungen</u></a>  
+              <a href="<?php echo xtc_href_link('module_export.php', 'set=system&module=dhl_business'); ?>"><u>Einstellungen</u></a>  
             </td>
           </tr>
           <tr style="background-color: #FFFFFF;">
