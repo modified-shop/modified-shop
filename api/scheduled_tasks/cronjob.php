@@ -15,6 +15,8 @@
   // include needed functions
   require_once(DIR_FS_INC.'next_scheduled_time.inc.php');
   
+  defined('RUN_MODE_TASKS') or define('RUN_MODE_TASKS', true);
+  
   $tasks_query = xtc_db_query("SELECT *
                                  FROM ".TABLE_SCHEDULED_TASKS."
                                 WHERE status = 1

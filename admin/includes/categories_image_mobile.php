@@ -11,7 +11,7 @@
    Released under the GNU General Public License
    --------------------------------------------------------------*/
 
-defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
+(defined( '_VALID_XTC' ) || defined('RUN_MODE_TASKS')) or die( 'Direct Access to this location is not allowed.' );
 
 if (!isset($categories_image_name_process)) {
   $categories_image_name_process = $categories_image_name;
