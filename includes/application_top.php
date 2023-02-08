@@ -305,9 +305,6 @@ $messageStack = new messageStack;
 
 require_once (DIR_WS_INCLUDES.FILENAME_CART_ACTIONS);
 
-// who's online functions
-xtc_update_whos_online();
-
 // split-page-results
 require_once (DIR_WS_CLASSES.'split_page_results.php');
 
