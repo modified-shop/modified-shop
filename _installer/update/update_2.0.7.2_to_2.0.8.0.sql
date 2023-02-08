@@ -91,5 +91,7 @@ UPDATE `admin_access` SET `scheduled_tasks` = 5 WHERE `customers_id` = 'groups' 
 #GTB - 2023-02-08 - insert scheduled tasks
 INSERT INTO `scheduled_tasks` (`time_regularity`, `time_unit`, `status`, `tasks`) VALUES (1, 'm', 1, 'status_specials');
 INSERT INTO `scheduled_tasks` (`time_regularity`, `time_unit`, `status`, `tasks`) VALUES (1, 'm', 1, 'status_banners');
+INSERT INTO `scheduled_tasks` (`time_regularity`, `time_unit`, `status`, `tasks`) VALUES (1, 'w', 0, 'db_maintenance');
+INSERT INTO `scheduled_tasks` (`time_regularity`, `time_unit`, `status`, `tasks`) VALUES (1, 'd', 0, 'db_backup');
 
 # Keep an empty line at the end of this file for the db_updater to work properly
