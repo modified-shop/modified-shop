@@ -138,7 +138,15 @@
                    SET configuration_value = 'shipping_default'
                  WHERE configuration_key = 'SHOW_SHIPPING_MODULE_TITLE'
                    AND configuration_value = 'standard'");
-                   
+
+  // scheduled task
+  if (defined('MODULE_SITEMAPORG_STATUS') 
+      && MODULE_SITEMAPORG_STATUS == 'True'
+      )
+  {
+    xtc_db_query("INSERT INTO " . TABLE_SCHEDULED_TASKS . " (time_regularity, time_unit, status, tasks) VALUES ('1', 'd',  '0', 'export_sitemap')");
+  }
+                 
   // rename config key
   $config_array = array(
     'MAX_DISPLAY_CONTENT_MANAGER' => 'MAX_DISPLAY_CONTENT_MANAGER_RESULTS',
