@@ -70,14 +70,7 @@ if (!function_exists('xtDBquery')) {
 
   function xtDBquery($query)
   {
-  //  if (defined('DB_CACHE') && DB_CACHE == 'true') //Dokuman - 2011-02-11 - check for defined DB_CACHE
-  //  {
-  //    $result = xtc_db_queryCached($query);
-  //  }
-  //    else
-  //  {
-      $result = xtc_db_query($query);
-  //  }
+    $result = xtc_db_query($query);
     return $result;
   }
 
@@ -1309,10 +1302,7 @@ function xtc_create_password($pass)
 
 function xtc_remove_product($product_id)
 {
-//BOF - Dokuman - 2009-11-04 - fix typo customers_status_array -> customers_statuses_array
-         //global $LangID, $customers_status_array;  //R Brym
          global $LangID, $customers_statuses_array;
-//EOF - Dokuman - 2009-11-04 - fix typo customers_status_array -> customers_statuses_array
 
         // rewrite values to use resample classes
         define('DIR_FS_CATALOG_ORIGINAL_IMAGES',DIR_FS_CATALOG.DIR_WS_ORIGINAL_IMAGES);
@@ -1399,7 +1389,7 @@ function xtc_remove_product($product_id)
         }
 
         // get statuses
-        $customers_statuses_array = array(array());
+        $customers_statuses_array = array();
 
         $customers_statuses_query = xtc_db_query("select * from " . TABLE_CUSTOMERS_STATUS . " where language_id = '".$LangID."' order by customers_status_id");
 
@@ -1408,10 +1398,8 @@ function xtc_remove_product($product_id)
                                                  'text' => $customers_statuses['customers_status_name']);
 
           }
-//BOF - Dokuman - 2009-11-04 - fix typo customers_status_array -> customers_statuses_array
-          //for ($i=0,$n=sizeof($customers_status_array);$i<$n;$i++) {
+
           for ($i=0,$n=sizeof($customers_statuses_array);$i<$n;$i++) {
-//EOF - Dokuman - 2009-11-04 - fix typo customers_status_array -> customers_statuses_array
               xtc_db_query("delete from personal_offers_by_customers_status_" . $i . " where products_id = '" . xtc_db_input($product_id) . "'");
           }
 
@@ -1882,7 +1870,7 @@ function ProductsUpdate ()
       else
     {
       // XTC bis 3.0.3
-      $customers_statuses_array = array(array());
+      $customers_statuses_array = array();
       $customers_statuses_query = xtc_db_query("select customers_status_id,
                                                customers_status_name
                                                from " . TABLE_CUSTOMERS_STATUS . "
@@ -2234,7 +2222,7 @@ function CategoriesUpdate ()
         else
       {
         // XTC bis 3.0.3
-        $customers_statuses_array = array(array());
+        $customers_statuses_array = array();
         $customers_statuses_query = xtc_db_query("select customers_status_id,
                                                  customers_status_name
                                                  from " . TABLE_CUSTOMERS_STATUS . "

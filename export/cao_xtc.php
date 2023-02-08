@@ -102,9 +102,6 @@
 ***********************************************************************************************/
 
 
-define('SET_TIME_LIMIT',1);   // use set_time_limit(0);
-define('CHARSET','utf-8'); // iso-8859-1 or utf-8
-
 $version_nr    = '1.56';
 $version_datum = '2009.08.26';
 
@@ -131,6 +128,10 @@ $post = $_POST;
 define ('_VALID_XTC',false);
 
 require('../includes/application_top_export.php');
+
+define('SET_TIME_LIMIT',1);   // use set_time_limit(0);
+define('CHARSET', (defined('DB_SERVER_CHARSET') && DB_SERVER_CHARSET == 'utf8') ? 'utf-8' : 'iso-8859-15'); // iso-8859-1 or utf-8
+
 require_once (DIR_FS_INC.'xtc_get_tax_rate.inc.php');
 
 $_POST = $post;
