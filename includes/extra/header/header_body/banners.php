@@ -15,7 +15,8 @@
   require_once(DIR_FS_INC . 'xtc_display_banner.inc.php');
   require_once(DIR_FS_INC . 'xtc_update_banner_display_count.inc.php');
   
-  if (MODULE_BANNER_MANAGER_STATUS == 'true'
+  if (defined('MODULE_BANNER_MANAGER_STATUS')
+      && MODULE_BANNER_MANAGER_STATUS == 'true'
       && basename($PHP_SELF) == FILENAME_DEFAULT 
       && !isset($_GET['cPath']) 
       && !isset($_GET['manufacturers_id'])
@@ -25,10 +26,6 @@
     $banner_smarty->caching = 0;
     $banner_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
     $banner_smarty->assign('language', $_SESSION['language']);
-
-    // auto activate and expire banners
-    xtc_activate_banners();
-    xtc_expire_banners();
 
     $banners_group_condition = ((isset($banners_group_condition)) ? $banners_group_condition : '');
     
