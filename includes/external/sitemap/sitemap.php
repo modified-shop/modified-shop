@@ -39,7 +39,7 @@
                                          languages_id as id,
                                          language_charset as charset
                                     FROM ".TABLE_LANGUAGES."
-                                   WHERE code = '".xtc_db_input(DEFAULT_LANGUAGE)."'");
+                                   WHERE code = '".xtc_db_input((defined('MODULE_MULTILANG_STATUS') && MODULE_MULTILANG_STATUS == 'true') ? MODULE_SITEMAPORG_LANGUAGE : DEFAULT_LANGUAGE)."'");
       if (xtc_db_num_rows($lang_query) > 0) {
         while ($lang =  xtc_db_fetch_array($lang_query)) {
           $this->language = $lang;
