@@ -308,9 +308,6 @@ require_once (DIR_WS_INCLUDES.FILENAME_CART_ACTIONS);
 // split-page-results
 require_once (DIR_WS_CLASSES.'split_page_results.php');
 
-// auto expire special products
-xtc_expire_specials();
-
 // class product
 require_once (DIR_WS_CLASSES.'product.php');
 

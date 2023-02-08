@@ -88,4 +88,7 @@ ALTER TABLE `admin_access` ADD `scheduled_tasks` INT(1) NOT NULL DEFAULT '0' AFT
 UPDATE `admin_access` SET `scheduled_tasks` = 1 WHERE `customers_id` = 1 LIMIT 1;
 UPDATE `admin_access` SET `scheduled_tasks` = 5 WHERE `customers_id` = 'groups' LIMIT 1;
 
+#GTB - 2023-02-08 - insert scheduled tasks
+INSERT INTO `scheduled_tasks` (`time_regularity`, `time_unit`, `status`, `tasks`) VALUES (1, 'm', 1, 'status_specials');
+
 # Keep an empty line at the end of this file for the db_updater to work properly

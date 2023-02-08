@@ -2342,6 +2342,9 @@ INSERT INTO orders_status VALUES (3,2,'Versendet', 3);
 INSERT INTO orders_status VALUES (4,1,'Canceled', 4);
 INSERT INTO orders_status VALUES (4,2,'Storniert', 4);
 
+# scheduled tasks
+INSERT INTO scheduled_tasks VALUES (1, 0, 0, 1, 'm', 1, 'status_specials');
+
 # shipping status
 INSERT INTO shipping_status VALUES (1, 1, '3-4 Days', '', 1);
 INSERT INTO shipping_status VALUES (1, 2, '3-4 Tage', '', 1);
