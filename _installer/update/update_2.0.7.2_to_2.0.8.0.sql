@@ -93,5 +93,6 @@ INSERT INTO `scheduled_tasks` (`time_regularity`, `time_unit`, `status`, `tasks`
 INSERT INTO `scheduled_tasks` (`time_regularity`, `time_unit`, `status`, `tasks`) VALUES (1, 'm', 1, 'status_banners');
 INSERT INTO `scheduled_tasks` (`time_regularity`, `time_unit`, `status`, `tasks`) VALUES (1, 'w', 0, 'db_maintenance');
 INSERT INTO `scheduled_tasks` (`time_regularity`, `time_unit`, `status`, `tasks`) VALUES (1, 'd', 0, 'db_backup');
+INSERT INTO `scheduled_tasks` (`time_regularity`, `time_unit`, `status`, `tasks`) VALUES (1, 'd', 0, 'logs_maintenance');
 
 # Keep an empty line at the end of this file for the db_updater to work properly
