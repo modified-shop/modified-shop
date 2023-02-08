@@ -42,8 +42,8 @@
   define('TEXT_INFO_TASKS_STATUS_SPECIALS', 'Sonderangebote Status');
   define('TEXT_INFO_TASKS_DB_MAINTENANCE', 'Datenbank optimieren');
   define('TEXT_INFO_TASKS_DB_BACKUP', 'Datenbank Backup erstellen');
-  define('TEXT_INFO_TASKS_LOGS', 'Logfiles bereinigen');
-  define('TEXT_INFO_TASKS_SITEMAP', 'Sitemap erstellen');
+  define('TEXT_INFO_TASKS_LOGS_MAINTENANCE', 'Logfiles bereinigen');
+  define('TEXT_INFO_TASKS_EXPORT_SITEMAP', 'Sitemap erstellen');
 
   define('TEXT_INFO_TASKS_IMAGE_PROCESS_PRODUCTS', 'Bilder Prozessing - Artikel');
   define('TEXT_INFO_TASKS_IMAGE_PROCESS_CATEGORIES', 'Bilder Prozessing - Kategorien');

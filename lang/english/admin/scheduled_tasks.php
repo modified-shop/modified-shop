@@ -41,8 +41,8 @@
   define('TEXT_INFO_TASKS_STATUS_SPECIALS', 'Specials Status');
   define('TEXT_INFO_TASKS_DB_MAINTENANCE', 'Database optimize');
   define('TEXT_INFO_TASKS_DB_BACKUP', 'Database backup');
-  define('TEXT_INFO_TASKS_LOGS', 'Logfiles cleanup');
-  define('TEXT_INFO_TASKS_SITEMAP', 'Sitemap');
+  define('TEXT_INFO_TASKS_LOGS_MAINTENANCE', 'Logfiles cleanup');
+  define('TEXT_INFO_TASKS_EXPORT_SITEMAP', 'Sitemap');
 
   define('TEXT_INFO_TASKS_IMAGE_PROCESS_PRODUCTS', 'Images processing - Products');
   define('TEXT_INFO_TASKS_IMAGE_PROCESS_CATEGORIES', 'Images processing - Categories');

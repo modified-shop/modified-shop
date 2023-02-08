@@ -98,25 +98,26 @@
             <td class="boxCenterLeft">
               <table class="tableBoxCenter collapse">
                 <tr class="dataTableHeadingRow">
-                  <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_TASKS.xtc_sorting(FILENAME_SCHEDULED_TASKS, 'tasks'); ?></td>
+                  <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_TASKS; ?></td>
                   <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_TIME_NEXT.xtc_sorting(FILENAME_SCHEDULED_TASKS, 'next'); ?></td>
-                  <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_INTERVAL; ?></td>
+                  <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_INTERVAL.xtc_sorting(FILENAME_SCHEDULED_TASKS, 'unit'); ?></td>
                   <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_STATUS.xtc_sorting(FILENAME_SCHEDULED_TASKS, 'status'); ?></td>
                   <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
                 </tr>
                   <?php
+                    $tsort = '';
                     switch ($sorting) {
-                      case 'tasks':
-                        $tsort = 'tasks ASC';
-                        break;
-                      case 'tasks-desc':
-                        $tsort = 'tasks DESC';
-                        break;
                       case 'next':
                         $tsort = 'time_next ASC';
                         break;
                       case 'next-desc':
                         $tsort = 'time_next DESC';
+                        break;
+                      case 'unit':
+                        $tsort = 'time_unit ASC';
+                        break;
+                      case 'unit-desc':
+                        $tsort = 'time_unit DESC';
                         break;
                       case 'status':
                         $tsort = 'status ASC';
@@ -124,11 +125,9 @@
                       case 'status-desc':
                         $tsort = 'status DESC';
                         break;
-                      default:
-                        $tsort = 'tasks_id ASC';
-                        break;
                     }
-
+                    $tsort .= (($tsort != '') ? ', ' : '').'tasks_id ASC';
+                    
                     $tasks_query_raw = "SELECT *
                                           FROM ".TABLE_SCHEDULED_TASKS."
                                       ORDER BY ".$tsort;
