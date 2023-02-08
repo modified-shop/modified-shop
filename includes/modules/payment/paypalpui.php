@@ -245,10 +245,9 @@ class paypalpui extends PayPalPaymentV2 {
 
     if ($order->customer['company'] != '') {
       $payment_source['payment_source']['pay_upon_invoice']['billing_address']['address_line_2'] = $this->encode_utf8($order->customer['company']);
-    }
-
-    if ($order->customer['suburb'] != '') {
-      $payment_source['payment_source']['pay_upon_invoice']['billing_address']['address_line_2'] = $this->encode_utf8($order->customer['street_address'].', '.$order->customer['suburb']);
+      if ($order->customer['suburb'] != '') {
+        $payment_source['payment_source']['pay_upon_invoice']['billing_address']['address_line_1'] = $this->encode_utf8($order->customer['street_address'].', '.$order->customer['suburb']);
+      }
     }
 
     $result = $this->CreateOrder($payment_source, true);

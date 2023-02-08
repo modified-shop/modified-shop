@@ -243,10 +243,9 @@
 
         if ($order->delivery['company'] != '') {
           $purchase_unit['shipping']['address']['address_line_2'] = $this->encode_utf8($order->delivery['company']);
-        }
-
-        if ($order->delivery['suburb'] != '') {
-          $purchase_unit['shipping']['address']['address_line_2'] = $this->encode_utf8($order->delivery['street_address'].', '.$order->delivery['suburb']);
+          if ($order->delivery['suburb'] != '') {
+            $purchase_unit['shipping']['address']['address_line_1'] = $this->encode_utf8($order->delivery['street_address'].', '.$order->delivery['suburb']);
+          }
         }
       }
       
@@ -269,10 +268,9 @@
 
         if ($order->customer['company'] != '') {
           $payer['address']['address_line_2'] = $this->encode_utf8($order->customer['company']);
-        }
-
-        if ($order->customer['suburb'] != '') {
-          $payer['address']['address_line_2'] = $this->encode_utf8($order->customer['street_address'].', '.$order->customer['suburb']);
+          if ($order->customer['suburb'] != '') {
+            $payer['address']['address_line_1'] = $this->encode_utf8($order->customer['street_address'].', '.$order->customer['suburb']);
+          }
         }
       }
       
@@ -467,10 +465,9 @@
       
       if ($order->delivery['company'] != '') {
         $shipping_address['address_line_2'] = $this->encode_utf8($order->delivery['company']);
-      }
-
-      if ($order->delivery['suburb'] != '') {
-        $shipping_address['address_line_2'] = $this->encode_utf8($order->delivery['street_address'].', '.$order->delivery['suburb']);
+        if ($order->delivery['suburb'] != '') {
+          $shipping_address['address_line_1'] = $this->encode_utf8($order->delivery['street_address'].', '.$order->delivery['suburb']);
+        }
       }
 
       $request = new OrdersPatchRequest($orderID);
