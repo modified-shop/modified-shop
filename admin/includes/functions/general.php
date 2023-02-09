@@ -2250,9 +2250,9 @@
    * @param string $dir
    * @param boolean $basefiles
    */
-  function clear_dir($dir, $basefiles = false) {
+  function clear_dir($dir, $basefiles = false, $ignore_files = array()) {
     $dir = rtrim($dir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
-    $ignore_files = array('.htaccess', 'index.html');
+    $ignore_files = array_merge($ignore_files, array('.htaccess', 'index.html'));
     if ($handle = opendir($dir)) {
       while (false !== ($file = readdir($handle))) {
         if ($file != "." && $file != "..") {
