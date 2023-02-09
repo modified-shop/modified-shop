@@ -16,7 +16,7 @@
     $dir = dir(DIR_FS_LOG);
     $contents_array = array();
     while ($file = $dir->read()) {
-      if (!is_dir(DIR_FS_LOG . $file)) {
+      if (!is_dir(DIR_FS_LOG . $file) && $file != 'xss_blacklist.log') {
         foreach ($exts as $ext) {
           if (preg_match('/\.'.$ext.'$/i', $file)
               && filectime(DIR_FS_LOG . $file) < (time() - (86400 * 7))
