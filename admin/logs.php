@@ -48,7 +48,7 @@
         break;
         
       case 'dellog':
-        clear_dir(DIR_FS_CATALOG.'log/');
+        clear_dir(DIR_FS_CATALOG.'log/', false, array('xss_blacklist.log'));
         $messageStack->add_session(DELETE_LOGS_SUCCESSFUL, 'success');
         xtc_redirect(xtc_href_link(FILENAME_LOGS));
         break;
