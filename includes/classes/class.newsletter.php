@@ -63,9 +63,9 @@ class newsletter {
         $sql_data_array = array (
           'mail_status' => '2',
           'mail_key' => '',
-          'date_added' => 'null',
+          'date_added' => '0000-00-00 00:00:00',
           'ip_date_added' => '',
-          'date_confirmed' => 'null',
+          'date_confirmed' => '0000-00-00 00:00:00',
           'ip_date_confirmed' => '',
         );
         xtc_db_perform(TABLE_NEWSLETTER_RECIPIENTS, $sql_data_array, 'update', "customers_email_address = '".xtc_db_input($check_mail['customers_email_address'])."'".$where);
