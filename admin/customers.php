@@ -54,6 +54,7 @@
   $error = false;
   $entry_vat_error_text = '';
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
+  $saction = (isset($_GET['saction']) ? $_GET['saction'] : '');
   $customers_id = (isset($_GET['cID']) ? (int)$_GET['cID'] : 0);
   $page = (isset($_GET['page']) ? (int)$_GET['page'] : 1);
 
@@ -299,19 +300,9 @@
         break;
 
       case 'update' :
-        $customers_cid = xtc_db_prepare_input($_POST['customers_cid']);
-        $customers_status = xtc_db_prepare_input($_POST['customers_status']);
-        $customers_vat_id = xtc_db_prepare_input($_POST['customers_vat_id']);
-        $customers_vat_id_status = (isset($_POST['customers_vat_id_status']) ? xtc_db_prepare_input($_POST['customers_vat_id_status']) : '');
+        if (ACCOUNT_GENDER == 'true') $customers_gender = xtc_db_prepare_input($_POST['customers_gender']);
         $customers_firstname = xtc_db_prepare_input($_POST['customers_firstname']);
         $customers_lastname = xtc_db_prepare_input($_POST['customers_lastname']);
-        $customers_email_address = xtc_db_prepare_input($_POST['customers_email_address']);
-        $customers_telephone = xtc_db_prepare_input($_POST['customers_telephone']);
-        $customers_fax = xtc_db_prepare_input($_POST['customers_fax']);
-        if (ACCOUNT_GENDER == 'true') $customers_gender = xtc_db_prepare_input($_POST['customers_gender']);
-        if (ACCOUNT_DOB == 'true') $customers_dob = xtc_db_prepare_input($_POST['customers_dob']);
-        $customers_default_address_id = xtc_db_prepare_input($_POST['customers_default_address_id']);
-        $address_book_id = xtc_db_prepare_input($_POST['address_book_id']);
         $entry_street_address = xtc_db_prepare_input($_POST['entry_street_address']);
         if (ACCOUNT_SUBURB == 'true') $entry_suburb = xtc_db_prepare_input($_POST['entry_suburb']);
         $entry_postcode = xtc_db_prepare_input($_POST['entry_postcode']);
@@ -319,31 +310,44 @@
         $entry_country_id = xtc_db_prepare_input($_POST['entry_country_id']);
         if (ACCOUNT_COMPANY == 'true') $entry_company = xtc_db_prepare_input($_POST['entry_company']);
         if (ACCOUNT_STATE == 'true') $entry_state = xtc_db_prepare_input($_POST['entry_state']);
-        $memo_title = xtc_db_prepare_input($_POST['memo_title']);
-        $memo_text = xtc_db_prepare_input($_POST['memo_text']);
-        $payment_unallowed = implode(',', (isset($_POST['payment_unallowed']) && is_array($_POST['payment_unallowed']) ? $_POST['payment_unallowed'] : array()));
-        $shipping_unallowed = implode(',', (isset($_POST['shipping_unallowed']) && is_array($_POST['shipping_unallowed']) ? $_POST['shipping_unallowed'] : array()));
-        $password = xtc_db_prepare_input($_POST['customers_password']);
-        /*
-        $amount = xtc_db_prepare_input($_POST['amount']);
-        if ($amount != '') {
-          $sql_data_array = array('customer_id' => $customers_id,
-                                  'amount' => $amount
-                                  );
-          $check_gv_query = xtc_db_query("SELECT * FROM " . TABLE_COUPON_GV_CUSTOMER . " WHERE customer_id = '".$customers_id."'");
-          if (xtc_db_num_rows($check_gv_query) > 0) {
-            xtc_db_perform(TABLE_COUPON_GV_CUSTOMER, $sql_data_array, 'update', "customer_id = '".$customers_id."'");
-          } else {
-            xtc_db_perform(TABLE_COUPON_GV_CUSTOMER, $sql_data_array);
-          }
-        }*/
-
+        $customers_default_address_id = xtc_db_prepare_input($_POST['customers_default_address_id']);
+        $address_book_id = xtc_db_prepare_input($_POST['address_book_id']);
+                
+        if (!$saction) {
+          $customers_cid = xtc_db_prepare_input($_POST['customers_cid']);
+          $customers_email_address = xtc_db_prepare_input($_POST['customers_email_address']);
+          $customers_status = xtc_db_prepare_input($_POST['customers_status']);
+          $customers_vat_id = xtc_db_prepare_input($_POST['customers_vat_id']);
+          $customers_vat_id_status = (isset($_POST['customers_vat_id_status']) ? xtc_db_prepare_input($_POST['customers_vat_id_status']) : '');
+          $customers_telephone = xtc_db_prepare_input($_POST['customers_telephone']);
+          $customers_fax = xtc_db_prepare_input($_POST['customers_fax']);
+          if (ACCOUNT_DOB == 'true') $customers_dob = xtc_db_prepare_input($_POST['customers_dob']);
+          $memo_title = xtc_db_prepare_input($_POST['memo_title']);
+          $memo_text = xtc_db_prepare_input($_POST['memo_text']);
+          $payment_unallowed = implode(',', (isset($_POST['payment_unallowed']) && is_array($_POST['payment_unallowed']) ? $_POST['payment_unallowed'] : array()));
+          $shipping_unallowed = implode(',', (isset($_POST['shipping_unallowed']) && is_array($_POST['shipping_unallowed']) ? $_POST['shipping_unallowed'] : array()));
+          $password = xtc_db_prepare_input($_POST['customers_password']);
+          /*
+          $amount = xtc_db_prepare_input($_POST['amount']);
+          if ($amount != '') {
+            $sql_data_array = array('customer_id' => $customers_id,
+                                    'amount' => $amount
+                                    );
+            $check_gv_query = xtc_db_query("SELECT * FROM " . TABLE_COUPON_GV_CUSTOMER . " WHERE customer_id = '".$customers_id."'");
+            if (xtc_db_num_rows($check_gv_query) > 0) {
+              xtc_db_perform(TABLE_COUPON_GV_CUSTOMER, $sql_data_array, 'update', "customer_id = '".$customers_id."'");
+            } else {
+              xtc_db_perform(TABLE_COUPON_GV_CUSTOMER, $sql_data_array);
+            }
+          }*/
+        }
+        
         // reset error flag
         $error = false;
         
         $entry_memo_title_error = false;
         $entry_memo_text_error = false;
-        if ($memo_text != '' || $memo_title != '') {
+        if (isset($memo_text) && ($memo_text != '' || $memo_title != '')) {
           if ($memo_text != '' && $memo_title == '') {
             $error = true;
             $entry_memo_title_error = true;
@@ -384,79 +388,6 @@
           } else {
             $entry_gender_error = false;
           }
-        }
-
-        if (ACCOUNT_DOB == 'true') {
-          $entry_date_of_birth_error = false;
-          $date = xtc_date_raw($customers_dob);
-          if (is_numeric($date) == false
-              || strlen($date) != 8
-              || checkdate(substr($date, 4, 2), substr($date, 6, 2), substr($date, 0, 4)) == false
-              )
-          {
-            $error = $entry_date_of_birth_error = true;
-          }
-        }
-
-        // New VAT Check
-        if (xtc_get_geo_zone_code($entry_country_id) != '6') {
-          require_once(DIR_FS_CATALOG.DIR_WS_CLASSES.'vat_validation.php');
-          $vatID = new vat_validation($customers_vat_id, $customers_id, '', $entry_country_id);
-          $customers_vat_id_status = isset($vatID->vat_info['vat_id_status']) ? $vatID->vat_info['vat_id_status'] : '';
-          // display correct error code of VAT ID check
-          switch ($customers_vat_id_status) {
-            case '0' :// 'VAT invalid'
-              $entry_vat_error_text = TEXT_VAT_FALSE;
-              break;
-            case '1' :// 'VAT valid'
-              $entry_vat_error_text = TEXT_VAT_TRUE;
-              break;
-            case '2' :// 'SOAP ERROR: Connection to host not possible, europe.eu down?'
-              $entry_vat_error_text = TEXT_VAT_CONNECTION_NOT_POSSIBLE;
-              break;
-            case '8' :// 'unknown country'
-              $entry_vat_error_text = TEXT_VAT_UNKNOWN_COUNTRY;
-              break;
-            case '94' :// 'INVALID_INPUT' => 'The provided CountryCode is invalid or the VAT number is empty'
-              $entry_vat_error_text = TEXT_VAT_INVALID_INPUT;
-              break;
-            case '95' :// 'SERVICE_UNAVAILABLE' => 'The SOAP service is unavailable, try again later'
-              $entry_vat_error_text = TEXT_VAT_SERVICE_UNAVAILABLE;
-              break;
-            case '96' :// 'MS_UNAVAILABLE' => 'The Member State service is unavailable, try again later or with another Member State'
-              $entry_vat_error_text = TEXT_VAT_MS_UNAVAILABLE;
-              break;
-            case '97' :// 'TIMEOUT' => 'The Member State service could not be reached in time, try again later or with another Member State',
-              $entry_vat_error_text = TEXT_VAT_TIMEOUT;
-              break;
-            case '98' :// 'SERVER_BUSY' => 'The service cannot process your request. Try again later.'
-              $entry_vat_error_text = TEXT_VAT_SERVER_BUSY;
-              break;
-            case '99' :// 'no PHP5 SOAP support'
-              $entry_vat_error_text = TEXT_VAT_NO_PHP5_SOAP_SUPPORT;
-              break;
-            default:
-              $entry_vat_error_text = '';
-              break;
-          }
-          if (isset($vatID->vat_info['error']) && $vatID->vat_info['error']==1){
-            $entry_vat_error = true;
-            $error = true;
-          }
-        }
-
-        if (strlen($customers_email_address) < ENTRY_EMAIL_ADDRESS_MIN_LENGTH) {
-          $error = true;
-          $entry_email_address_error = true;
-        } else {
-          $entry_email_address_error = false;
-        }
-
-        if (!xtc_validate_email($customers_email_address)) {
-          $error = true;
-          $entry_email_address_check_error = true;
-        } else {
-          $entry_email_address_check_error = false;
         }
 
         if (strlen($entry_street_address) < ENTRY_STREET_ADDRESS_MIN_LENGTH) {
@@ -527,70 +458,146 @@
             }
           }
         }
-
-        if (ACCOUNT_TELEPHONE_OPTIONAL == 'false' && strlen($customers_telephone) < ENTRY_TELEPHONE_MIN_LENGTH) {
-          $error = true;
-          $entry_telephone_error = true;
-        } else {
-          $entry_telephone_error = false;
-        }
-
-        if (strlen($password) > 0 && strlen($password) < ENTRY_PASSWORD_MIN_LENGTH) {
-          $error = true;
-          $entry_password_error = true;
-        } else {
-          $entry_password_error = false;
-        }
         
-        if ($customers_status != DEFAULT_CUSTOMERS_STATUS_ID_GUEST) {
-          $check_email = xtc_db_query("SELECT customers_email_address
-                                        FROM ".TABLE_CUSTOMERS."
-                                       WHERE customers_email_address = '".xtc_db_input($customers_email_address)."'
-                                         AND account_type = '0'
-                                         AND customers_id != '".$customers_id."'");
-          if (xtc_db_num_rows($check_email)) {
-            $error = true;
-            $entry_email_address_exists = true;
-          } else {
-            $entry_email_address_exists = false;
-          }
-        }
-
-        if ($error == false) {
-          $sql_data_array = array (
-              'customers_firstname' => $customers_firstname,
-              'customers_cid' => $customers_cid,
-              'customers_vat_id' => $customers_vat_id,
-              'customers_vat_id_status' => $customers_vat_id_status,
-              'customers_lastname' => $customers_lastname,
-              'customers_email_address' => $customers_email_address,
-              'customers_telephone' => $customers_telephone,
-              'customers_fax' => $customers_fax,
-              'payment_unallowed' => $payment_unallowed,
-              'shipping_unallowed' => $shipping_unallowed,
-              'customers_last_modified' => 'now()'
-            );
-
-          if ($password != '') {
-            $sql_data_array['customers_password'] = xtc_encrypt_password($password);
-            $sql_data_array['customers_password_time'] = time();
-            if ($_SESSION['customer_id'] == $customers_id) {
-              $_SESSION['customer_time'] = $sql_data_array['customers_password_time'];
+        if (!$saction) {
+          if (ACCOUNT_DOB == 'true') {
+            $entry_date_of_birth_error = false;
+            $date = xtc_date_raw($customers_dob);
+            if (is_numeric($date) == false
+                || strlen($date) != 8
+                || checkdate(substr($date, 4, 2), substr($date, 6, 2), substr($date, 0, 4)) == false
+                )
+            {
+              $error = $entry_date_of_birth_error = true;
             }
           }
-          if (ACCOUNT_GENDER == 'true') {
-            $sql_data_array['customers_gender'] = $customers_gender;
+
+          // New VAT Check
+          if (xtc_get_geo_zone_code($entry_country_id) != '6') {
+            require_once(DIR_FS_CATALOG.DIR_WS_CLASSES.'vat_validation.php');
+            $vatID = new vat_validation($customers_vat_id, $customers_id, '', $entry_country_id);
+            $customers_vat_id_status = isset($vatID->vat_info['vat_id_status']) ? $vatID->vat_info['vat_id_status'] : '';
+            // display correct error code of VAT ID check
+            switch ($customers_vat_id_status) {
+              case '0' :// 'VAT invalid'
+                $entry_vat_error_text = TEXT_VAT_FALSE;
+                break;
+              case '1' :// 'VAT valid'
+                $entry_vat_error_text = TEXT_VAT_TRUE;
+                break;
+              case '2' :// 'SOAP ERROR: Connection to host not possible, europe.eu down?'
+                $entry_vat_error_text = TEXT_VAT_CONNECTION_NOT_POSSIBLE;
+                break;
+              case '8' :// 'unknown country'
+                $entry_vat_error_text = TEXT_VAT_UNKNOWN_COUNTRY;
+                break;
+              case '94' :// 'INVALID_INPUT' => 'The provided CountryCode is invalid or the VAT number is empty'
+                $entry_vat_error_text = TEXT_VAT_INVALID_INPUT;
+                break;
+              case '95' :// 'SERVICE_UNAVAILABLE' => 'The SOAP service is unavailable, try again later'
+                $entry_vat_error_text = TEXT_VAT_SERVICE_UNAVAILABLE;
+                break;
+              case '96' :// 'MS_UNAVAILABLE' => 'The Member State service is unavailable, try again later or with another Member State'
+                $entry_vat_error_text = TEXT_VAT_MS_UNAVAILABLE;
+                break;
+              case '97' :// 'TIMEOUT' => 'The Member State service could not be reached in time, try again later or with another Member State',
+                $entry_vat_error_text = TEXT_VAT_TIMEOUT;
+                break;
+              case '98' :// 'SERVER_BUSY' => 'The service cannot process your request. Try again later.'
+                $entry_vat_error_text = TEXT_VAT_SERVER_BUSY;
+                break;
+              case '99' :// 'no PHP5 SOAP support'
+                $entry_vat_error_text = TEXT_VAT_NO_PHP5_SOAP_SUPPORT;
+                break;
+              default:
+                $entry_vat_error_text = '';
+                break;
+            }
+            if (isset($vatID->vat_info['error']) && $vatID->vat_info['error']==1){
+              $entry_vat_error = true;
+              $error = true;
+            }
           }
-          if (ACCOUNT_DOB == 'true') {
-            $sql_data_array['customers_dob'] = xtc_date_raw($customers_dob);
+
+          if (strlen($customers_email_address) < ENTRY_EMAIL_ADDRESS_MIN_LENGTH) {
+            $error = true;
+            $entry_email_address_error = true;
+          } else {
+            $entry_email_address_error = false;
           }
 
-          xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '".$customers_id."' AND customers_default_address_id = '".$address_book_id."'");
+          if (!xtc_validate_email($customers_email_address)) {
+            $error = true;
+            $entry_email_address_check_error = true;
+          } else {
+            $entry_email_address_check_error = false;
+          }
 
-          xtc_db_query("UPDATE ".TABLE_CUSTOMERS_INFO."
-                           SET customers_info_date_account_last_modified = now()
-                         WHERE customers_info_id = '".$customers_id."'");
+          if (ACCOUNT_TELEPHONE_OPTIONAL == 'false' && strlen($customers_telephone) < ENTRY_TELEPHONE_MIN_LENGTH) {
+            $error = true;
+            $entry_telephone_error = true;
+          } else {
+            $entry_telephone_error = false;
+          }
 
+          if (strlen($password) > 0 && strlen($password) < ENTRY_PASSWORD_MIN_LENGTH) {
+            $error = true;
+            $entry_password_error = true;
+          } else {
+            $entry_password_error = false;
+          }
+        
+          if ($customers_status != DEFAULT_CUSTOMERS_STATUS_ID_GUEST) {
+            $check_email = xtc_db_query("SELECT customers_email_address
+                                          FROM ".TABLE_CUSTOMERS."
+                                         WHERE customers_email_address = '".xtc_db_input($customers_email_address)."'
+                                           AND account_type = '0'
+                                           AND customers_id != '".$customers_id."'");
+            if (xtc_db_num_rows($check_email)) {
+              $error = true;
+              $entry_email_address_exists = true;
+            } else {
+              $entry_email_address_exists = false;
+            }
+          }
+        }
+        
+        if ($error == false) {
+          if (!$saction) {
+            $sql_data_array = array (
+                'customers_firstname' => $customers_firstname,
+                'customers_cid' => $customers_cid,
+                'customers_vat_id' => $customers_vat_id,
+                'customers_vat_id_status' => $customers_vat_id_status,
+                'customers_lastname' => $customers_lastname,
+                'customers_email_address' => $customers_email_address,
+                'customers_telephone' => $customers_telephone,
+                'customers_fax' => $customers_fax,
+                'payment_unallowed' => $payment_unallowed,
+                'shipping_unallowed' => $shipping_unallowed,
+                'customers_last_modified' => 'now()'
+              );
+
+            if ($password != '') {
+              $sql_data_array['customers_password'] = xtc_encrypt_password($password);
+              $sql_data_array['customers_password_time'] = time();
+              if ($_SESSION['customer_id'] == $customers_id) {
+                $_SESSION['customer_time'] = $sql_data_array['customers_password_time'];
+              }
+            }
+            if (ACCOUNT_GENDER == 'true') {
+              $sql_data_array['customers_gender'] = $customers_gender;
+            }
+            if (ACCOUNT_DOB == 'true') {
+              $sql_data_array['customers_dob'] = xtc_date_raw($customers_dob);
+            }
+
+            xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '".$customers_id."' AND customers_default_address_id = '".$address_book_id."'");
+
+            xtc_db_query("UPDATE ".TABLE_CUSTOMERS_INFO."
+                             SET customers_info_date_account_last_modified = now()
+                           WHERE customers_info_id = '".$customers_id."'");
+          }
           $sql_data_array = array (
               'entry_firstname' => $customers_firstname,
               'entry_lastname' => $customers_lastname,
@@ -614,14 +621,14 @@
             $sql_data_array['entry_zone_id'] = (int)$zone_id;
             $sql_data_array['entry_state'] = $entry_state;
           }
-          if ($address_book_id == 0) {
+          if ($saction == 'new') {
             $sql_data_array['address_date_added'] = 'now()';
             $sql_data_array['customers_id'] = $customers_id;
             xtc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array, 'insert');
           } else {
             xtc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array, 'update', "customers_id = '".$customers_id."' AND address_book_id = '".xtc_db_input($address_book_id)."'");
           }
-          xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action')).'cID='.$customers_id));
+          xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action', 'saction', 'edit')).'cID='.$customers_id.(($saction) ? '&action=address_book' : '')));
 
         }  elseif ($error == true) {
 
@@ -632,8 +639,8 @@
           }
           
           // unallowd payment/shipping must be comma separated
-          $_POST['payment_unallowed'] = $payment_unallowed;
-          $_POST['shipping_unallowed'] = $shipping_unallowed;
+          if (isset($payment_unallowed)) $_POST['payment_unallowed'] = $payment_unallowed;
+          if (isset($shipping_unallowed)) $_POST['shipping_unallowed'] = $shipping_unallowed;
 
           $cInfo = new objectInfo($_POST);
           $processed = true;

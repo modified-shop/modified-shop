@@ -79,8 +79,10 @@
         <div class="clear"></div>
         <?php echo xtc_draw_form('customers', FILENAME_CUSTOMERS, xtc_get_all_get_params(array('action')) . 'action=update', 'post') .
                    xtc_draw_hidden_field('customers_default_address_id', $cInfo->customers_default_address_id) .
-                   xtc_draw_hidden_field('address_book_id', $cInfo->address_book_id) .
-                   xtc_draw_hidden_field('customers_status', $cInfo->customers_status); ?>
+                   xtc_draw_hidden_field('address_book_id', ((isset($_GET['edit']) && $_GET['edit'] != '') ? (int)$_GET['edit'] : $cInfo->address_book_id)) .
+                   xtc_draw_hidden_field('customers_status', $cInfo->customers_status) .
+                   (($saction) ? xtc_draw_hidden_field('action', $saction)  : '');
+                   ?>
         <div class="formAreaTitle"><span class="title"><?php echo CATEGORY_PERSONAL; ?></span></div>
         <div class="formAreaC">
           <table class="tableConfig borderall">
@@ -89,7 +91,7 @@
             ?>
             <tr>
               <td class="dataTableConfig col-left"><?php echo ENTRY_GENDER; ?></td>
-              <td class="dataTableConfig col-single-right<?php echo (($error == true && $entry_gender_error == true) ? ' col-error' : ''); ?>">
+              <td class="dataTableConfig col-single-right<?php echo (($error == true && isset($entry_gender_error) && $entry_gender_error == true) ? ' col-error' : ''); ?>">
               <?php
               if ($error == true) {
                 if ($entry_gender_error == true) {
@@ -107,7 +109,7 @@
             </tr>
             <?php
               }
-            echo ($cInfo->customers_default_address_id != $cInfo->address_book_id) ? '<tr style="display:none;">' : '<tr>';
+            echo ($saction) ? '<tr style="display:none;">' : '<tr>';
             ?>
               <td class="dataTableConfig col-left"><?php echo ENTRY_CID; ?></td>
               <td class="dataTableConfig col-single-right bg_notice">
@@ -153,10 +155,10 @@
             </tr>
             <?php
             if (ACCOUNT_DOB == 'true') {
-              echo ($cInfo->customers_default_address_id != $cInfo->address_book_id) ? '<tr style="display:none;">' : '<tr>';
+              echo ($saction) ? '<tr style="display:none;">' : '<tr>';
             ?>
               <td class="dataTableConfig col-left"><?php echo ENTRY_DATE_OF_BIRTH; ?></td>
-              <td class="dataTableConfig col-single-right<?php echo (($error == true && $entry_date_of_birth_error == true) ? ' col-error' : ''); ?>">
+              <td class="dataTableConfig col-single-right<?php echo (($error == true && isset($entry_date_of_birth_error) && $entry_date_of_birth_error == true) ? ' col-error' : ''); ?>">
                  <?php
                 if ($error == true) {
                   if ($entry_date_of_birth_error == true) {
@@ -173,17 +175,17 @@
             </tr>
             <?php
             }
-             echo ($cInfo->customers_default_address_id != $cInfo->address_book_id) ? '<tr style="display:none;">' : '<tr>';
+             echo ($saction) ? '<tr style="display:none;">' : '<tr>';
             ?>
               <td class="dataTableConfig col-left"><?php echo ENTRY_EMAIL_ADDRESS; ?></td>
-              <td class="dataTableConfig col-single-right<?php echo (($error == true && $entry_email_address_error == true) ? ' col-error' : ''); ?>">
+              <td class="dataTableConfig col-single-right<?php echo (($error == true && isset($entry_email_address_error) && $entry_email_address_error == true) ? ' col-error' : ''); ?>">
                 <?php
                 if ($error == true) {
-                  if ($entry_email_address_error == true) {
+                  if (isset($entry_email_address_error) && $entry_email_address_error == true) {
                     echo xtc_draw_input_field('customers_email_address', $cInfo->customers_email_address, 'autocomplete="off" readonly="readonly" onfocus="this.removeAttribute(\'readonly\');" onblur="this.setAttribute(\'readonly\', \'readonly\');" maxlength="96"').'&nbsp;'.ENTRY_EMAIL_ADDRESS_ERROR;
-                  } elseif ($entry_email_address_check_error == true) {
+                  } elseif (isset($entry_email_address_check_error) && $entry_email_address_check_error == true) {
                     echo xtc_draw_input_field('customers_email_address', $cInfo->customers_email_address, 'autocomplete="off" readonly="readonly" onfocus="this.removeAttribute(\'readonly\');" onblur="this.setAttribute(\'readonly\', \'readonly\');" maxlength="96"').'&nbsp;'.ENTRY_EMAIL_ADDRESS_CHECK_ERROR;
-                  } elseif ($entry_email_address_exists == true) {
+                  } elseif (isset($entry_email_address_exists) && $entry_email_address_exists == true) {
                     echo xtc_draw_input_field('customers_email_address', $cInfo->customers_email_address, 'autocomplete="off" readonly="readonly" onfocus="this.removeAttribute(\'readonly\');" onblur="this.setAttribute(\'readonly\', \'readonly\');" maxlength="96"').'&nbsp;'.ENTRY_EMAIL_ADDRESS_ERROR_EXISTS;
                   } else {
                     echo $cInfo->customers_email_address.xtc_draw_hidden_field('customers_email_address', $cInfo->customers_email_address);
@@ -245,7 +247,7 @@
                     break;
                 }
               }
-              echo ($cInfo->customers_default_address_id != $cInfo->address_book_id) ? '<tr style="display:none;">' : '<tr>';
+              echo ($saction) ? '<tr style="display:none;">' : '<tr>';
               ?>
                 <td class="dataTableConfig col-left"><?php echo ENTRY_VAT_ID; ?></td>
                 <td class="dataTableConfig col-single-right">
@@ -396,23 +398,18 @@
           </table>
         </div>
         <?php
-        if ($cInfo->customers_default_address_id == $cInfo->address_book_id) {
+        if (!$saction) {
         ?>
 
         <div class="formAreaTitle"><span class="title"><?php echo CATEGORY_CONTACT; ?></span></div>
-
-        <?php
-        }
-        $style = ($cInfo->customers_default_address_id != $cInfo->address_book_id) ? ' style="display:none;"' : '';
-        ?>
-        <div class="formAreaC"<?php $style;?>>
+        <div class="formAreaC">
           <table class="tableConfig borderall">
             <tr>
               <td class="dataTableConfig col-left"><?php echo ENTRY_TELEPHONE_NUMBER; ?></td>
               <td class="dataTableConfig col-single-right<?php echo (($error == true && $entry_telephone_error == true) ? ' col-error' : ''); ?>">
               <?php
                 if ($error == true) {
-                  if ($entry_telephone_error == true) {
+                  if (isset($entry_telephone_error) && $entry_telephone_error == true) {
                     echo xtc_draw_input_field('customers_telephone', $cInfo->customers_telephone, 'maxlength="32"').'&nbsp;'.ENTRY_TELEPHONE_NUMBER_ERROR;
                   } else {
                     echo $cInfo->customers_telephone.xtc_draw_hidden_field('customers_telephone', $cInfo->customers_telephone);
@@ -439,9 +436,6 @@
             </tr>
           </table>
         </div>
-        <?php
-        if ($cInfo->customers_default_address_id == $cInfo->address_book_id) {
-        ?>
 
         <div class="formAreaTitle"><span class="title"><?php echo CATEGORY_OPTIONS; ?></span></div>
         <div class="formAreaC">
@@ -467,7 +461,7 @@
               <td class="dataTableConfig col-single-right bg_notice<?php echo (($error == true && $entry_password_error == true) ? ' col-error' : ''); ?>">
               <?php
                 if ($error == true) {
-                  if ($entry_password_error == true) {
+                  if (isset($entry_password_error) && $entry_password_error == true) {
                     echo xtc_draw_password_field('customers_password', $cInfo->customers_password, false, 'autocomplete="off" readonly="readonly" onfocus="this.removeAttribute(\'readonly\');" onblur="this.setAttribute(\'readonly\', \'readonly\');"').'&nbsp;'.ENTRY_PASSWORD_ERROR;
                   } else {
                     echo xtc_draw_password_field('customers_password', $cInfo->customers_password, false, 'autocomplete="off" readonly="readonly" onfocus="this.removeAttribute(\'readonly\');" onblur="this.setAttribute(\'readonly\', \'readonly\');"');
@@ -509,7 +503,7 @@
         }
         ?>
 
-        <div class="main mrg5"><input type="submit" class="button" onclick="this.blur();" value="<?php echo BUTTON_UPDATE; ?>"><?php echo ' <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array('action', 'edit'))) .'">' . BUTTON_CANCEL . '</a>'; ?></div>
+        <div class="main mrg5"><input type="submit" class="button" onclick="this.blur();" value="<?php echo (($saction) ? BUTTON_INSERT : BUTTON_UPDATE); ?>"><?php echo ' <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array('action', 'edit')).((isset($_GET['edit'])) ? 'action=address_book' : '')) .'">' . BUTTON_CANCEL . '</a>'; ?></div>
 
       </form>
     </div>
