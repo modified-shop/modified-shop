@@ -503,7 +503,7 @@
         }
         ?>
 
-        <div class="main mrg5"><input type="submit" class="button" onclick="this.blur();" value="<?php echo (($saction) ? BUTTON_INSERT : BUTTON_UPDATE); ?>"><?php echo ' <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array('action', 'edit')).((isset($_GET['edit'])) ? 'action=address_book' : '')) .'">' . BUTTON_CANCEL . '</a>'; ?></div>
+        <div class="main mrg5"><input type="submit" class="button" onclick="this.blur();" value="<?php echo (($saction) ? BUTTON_INSERT : BUTTON_UPDATE); ?>"><?php echo ' <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array('action', 'edit', 'saction')).(($saction) ? 'action=address_book' : '')) .'">' . BUTTON_CANCEL . '</a>'; ?></div>
 
       </form>
     </div>
