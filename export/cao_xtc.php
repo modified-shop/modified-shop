@@ -131,8 +131,16 @@ require('../includes/application_top_export.php');
 
 define('SET_TIME_LIMIT',1);   // use set_time_limit(0);
 define('CHARSET', (defined('DB_SERVER_CHARSET') && DB_SERVER_CHARSET == 'utf8') ? 'utf-8' : 'iso-8859-15'); // iso-8859-1 or utf-8
+define('DIR_FS_LANGUAGES', DIR_WS_LANGUAGES);
+define('CONTENT_CONDITIONS', '');
 
 require_once (DIR_FS_INC.'xtc_get_tax_rate.inc.php');
+require_once (DIR_FS_INC.'xtc_try_upload.inc.php');
+
+require_once(DIR_FS_LANGUAGES . $Lang_folder . '/admin/' . $Lang_folder . '.php');
+
+// file uploading class
+require(DIR_WS_CLASSES . 'upload.php');
 
 $_POST = $post;
 

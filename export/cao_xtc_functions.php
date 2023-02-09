@@ -490,24 +490,6 @@ function SendOrders ()
     }
     $schema .= '</ORDER_TOTAL>' . "\n";
 
-    /*
-    $sql = "select
-             comments
-            from " .
-             TABLE_ORDERS_STATUS_HISTORY . "
-            where
-             orders_id = '" . $orders['orders_id'] . "' and
-             orders_status_id = '" . $orders['orders_status'] . "' ";
-
-    $comments_query = xtc_db_query($sql);
-    if ($comments =  xtc_db_fetch_array($comments_query))
-    {
-      $schema .=  '<ORDER_COMMENTS>' . encode_htmlspecialchars($comments['comments']) . '</ORDER_COMMENTS>' . "\n";
-    }
-    */
-
-    //Es werden jetzt alle Kommentare mit übertragen, nicht nur der letzte
-    //JP 2008-12-15
     $comments_query = "SELECT comments FROM " . TABLE_ORDERS_STATUS_HISTORY .
                       " WHERE orders_id = '" . $orders['orders_id'] ."'";
     $comments_result = xtc_db_query ($comments_query);
@@ -879,13 +861,9 @@ function SendCustomers ()
                     c.customers_email_address,
                     c.customers_telephone,
                     c.customers_fax,
-                    c.customers_status,";
-
-  //JAN Pruefen, ob mind. Version 3.x vom XTC und dann wenn das Feld existiert, dieses mit Abfragen
-  $res=xtc_db_query('show fields from ' . TABLE_CUSTOMERS . ' like "customers_vat_id"');
-  if (xtc_db_fetch_array($res)) {  $address_query .= "c.customers_vat_id as vat_id,"; }
-
-  $address_query .= "ci.customers_info_date_account_created,
+                    c.customers_status,
+                    c.customers_vat_id as vat_id,
+                    ci.customers_info_date_account_created,
                     a.entry_firstname,
                     a.entry_lastname,
                     a.entry_company,
@@ -1070,14 +1048,7 @@ function SendShopConfig ()
   {
       while (($file = readdir($dir)) != false)
       {
-// BOF - Tomcraft - 2010-02-04 - Prevent modified eCommerce Shopsoftware from fetching other files than *.html
-/*
-          if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_listing/'.$file) and
-             ($file != "index.html"))
-         {
-*/
           if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_listing/'.$file) and (substr($file, -5) == ".html") and ($file != "index.html") and (substr($file, 0, 1) !=".")) {
-// EOF - Tomcraft - 2010-02-04 - Prevent modified eCommerce Shopsoftware from fetching other files than *.html
              $schema .= "<TEMPLATE>" . $file . "</TEMPLATE>\n";
          } //if
      } // while
@@ -1092,14 +1063,7 @@ function SendShopConfig ()
   {
       while (($file = readdir($dir)) != false)
       {
-// BOF - Tomcraft - 2010-02-04 - Prevent modified eCommerce Shopsoftware from fetching other files than *.html
-/*
-          if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_info/'.$file) and
-             ($file != "index.html"))
-         {
-*/
           if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_info/'.$file) and (substr($file, -5) == ".html") and ($file != "index.html") and (substr($file, 0, 1) !=".")) {
-// EOF - Tomcraft - 2010-02-04 - Prevent modified eCommerce Shopsoftware from fetching other files than *.html
              $schema .= "<TEMPLATE>" . $file . "</TEMPLATE>\n";
          } //if
      } // while
@@ -1114,14 +1078,7 @@ function SendShopConfig ()
   {
       while (($file = readdir($dir)) != false)
       {
-// BOF - Tomcraft - 2010-02-04 - Prevent modified eCommerce Shopsoftware from fetching other files than *.html
-/*
-          if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_options/'.$file) and
-             ($file != "index.html"))
-         {
-*/
            if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_options/'.$file) and (substr($file, -5) == ".html") and ($file != "index.html") and (substr($file, 0, 1) !=".")) {
-// EOF - Tomcraft - 2010-02-04 - Prevent modified eCommerce Shopsoftware from fetching other files than *.html
              $schema .= "<TEMPLATE>" . $file . "</TEMPLATE>\n";
          } //if
      } // while
@@ -1258,15 +1215,6 @@ function UpdateTables ()
     echo '<br><br>';
   }
   echo '</body></html>';
-}
-
-//--------------------------------------------------------------
-
-function xtc_try_upload ($file = '', $destination = '',
-                         $permissions = '777', $extensions = '')
-{
-  $file_object = new upload($file, $destination, $permissions, $extensions);
-  if ($file_object->filename != '') return $file_object; else return false;
 }
 
 //--------------------------------------------------------------
@@ -1448,11 +1396,13 @@ function CategoriesImageUpload ()
 function ProductsImageUpload ()
 {
   global $_GET, $_POST;
+  
   if ($products_image = &xtc_try_upload('products_image',DIR_FS_CATALOG.DIR_WS_ORIGINAL_IMAGES,'777', '', true))
   {
     $products_image_name = $products_image_name_process = $products_image->filename;
     
     // rewrite values to use resample classes
+    define('DIR_FS_ADMIN', DIR_FS_CATALOG.(defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/'));
     define('DIR_FS_CATALOG_ORIGINAL_IMAGES',DIR_FS_CATALOG.DIR_WS_ORIGINAL_IMAGES);
     define('DIR_FS_CATALOG_MIDI_IMAGES',DIR_FS_CATALOG.DIR_WS_MIDI_IMAGES);
     define('DIR_FS_CATALOG_INFO_IMAGES',DIR_FS_CATALOG.DIR_WS_INFO_IMAGES);
@@ -1462,11 +1412,11 @@ function ProductsImageUpload ()
     define('DIR_FS_CATALOG_IMAGES',DIR_FS_CATALOG.DIR_WS_IMAGES);
 
     // generate resampled images
-    require(DIR_FS_DOCUMENT_ROOT.(defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'includes/product_thumbnail_images.php');
-    require(DIR_FS_DOCUMENT_ROOT.(defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'includes/product_mini_images.php');
-    require(DIR_FS_DOCUMENT_ROOT.(defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'includes/product_info_images.php');
-    require(DIR_FS_DOCUMENT_ROOT.(defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'includes/product_midi_images.php');
-    require(DIR_FS_DOCUMENT_ROOT.(defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'includes/product_popup_images.php');
+    require(DIR_FS_ADMIN.'includes/product_thumbnail_images.php');
+    require(DIR_FS_ADMIN.'includes/product_mini_images.php');
+    require(DIR_FS_ADMIN.'includes/product_info_images.php');
+    require(DIR_FS_ADMIN.'includes/product_midi_images.php');
+    require(DIR_FS_ADMIN.'includes/product_popup_images.php');
 
     $code = 0;
     $message = 'OK';
@@ -1495,9 +1445,10 @@ function ProductsImageUploadLarge ()
 
 function CheckImages ($FileName)
 {
-  $products_image_name = $FileName;
+  $products_image_name = $products_image_name_process = $FileName;
 
   // rewrite values to use resample classes
+  define('DIR_FS_ADMIN', DIR_FS_CATALOG.(defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/'));
   define('DIR_FS_CATALOG_ORIGINAL_IMAGES',DIR_FS_CATALOG.DIR_WS_ORIGINAL_IMAGES);
   define('DIR_FS_CATALOG_MIDI_IMAGES',DIR_FS_CATALOG.DIR_WS_MIDI_IMAGES);
   define('DIR_FS_CATALOG_INFO_IMAGES',DIR_FS_CATALOG.DIR_WS_INFO_IMAGES);
@@ -1512,27 +1463,27 @@ function CheckImages ($FileName)
 
     if (!file_exists (DIR_FS_CATALOG_MIDI_IMAGES . $FileName))
     {
-      require(DIR_FS_DOCUMENT_ROOT.(defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'includes/product_midi_images.php');
+      require(DIR_FS_ADMIN.'includes/product_midi_images.php');
     }
 
     if (!file_exists (DIR_FS_CATALOG_INFO_IMAGES . $FileName))
     {
-      require(DIR_FS_DOCUMENT_ROOT.(defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'includes/product_info_images.php');
+      require(DIR_FS_ADMIN.'includes/product_info_images.php');
     }
 
     if (!file_exists (DIR_FS_CATALOG_THUMBNAIL_IMAGES . $FileName))
     {
-      require(DIR_FS_DOCUMENT_ROOT.(defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'includes/product_thumbnail_images.php');
+      require(DIR_FS_ADMIN.'includes/product_thumbnail_images.php');
     }
 
     if (!file_exists (DIR_FS_CATALOG_POPUP_IMAGES . $FileName))
     {
-      require(DIR_FS_DOCUMENT_ROOT.(defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'includes/product_popup_images.php');
+      require(DIR_FS_ADMIN.'includes/product_popup_images.php');
     }
 
     if (!file_exists (DIR_FS_CATALOG_MINI_IMAGES . $FileName))
     {
-      require(DIR_FS_DOCUMENT_ROOT.(defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'includes/product_mini_images.php');
+      require(DIR_FS_ADMIN.'includes/product_mini_images.php');
     }
   }
 }
@@ -2399,13 +2350,13 @@ function OrderUpdate ()
 {
   global $_POST, $LangID;
 
-  $schema = '<?xml version="1.0" encoding="' . CHARSET . '"?>' . "\n" . "\n";
+  $schema = '<?xml version="1.0" encoding="' . CHARSET . '"?>' . "\n";
 
   if ((isset($_POST['order_id'])) && (isset($_POST['status'])))
   {
     // Per Post übergebene Variablen
-    $oID = $_POST['order_id'];
-    $status = $_POST['status'];
+    $oID = (int)$_POST['order_id'];
+    $status = (int)$_POST['status'];
     $comments = xtc_db_prepare_input($_POST['comments']);
 
     //Status überprüfen
@@ -2480,6 +2431,10 @@ function OrderUpdate ()
           $html_mail=$smarty->fetch(CURRENT_TEMPLATE . '/admin/mail/'.$check_status['language'].'/change_order_mail.html');
           $txt_mail=$smarty->fetch(CURRENT_TEMPLATE . '/admin/mail/'.$check_status['language'].'/change_order_mail.txt');
 
+          $order_subject_search = array('{$nr}', '{$date}', '{$lastname}', '{$firstname}');
+          $order_subject_replace = array($oID, xtc_date_long($check_status['date_purchased']), $check_status['customers_lastname'], $check_status['customers_lfirstname']);
+          $order_subject = str_replace($order_subject_search, $order_subject_replace, EMAIL_BILLING_SUBJECT);
+
           // send mail with html/txt template
           xtc_php_mail(EMAIL_BILLING_ADDRESS,
                        EMAIL_BILLING_NAME ,
@@ -2490,13 +2445,23 @@ function OrderUpdate ()
                        EMAIL_BILLING_REPLY_ADDRESS_NAME,
                        '',
                        '',
-                       EMAIL_BILLING_SUBJECT,
+                       $order_subject,
                        $html_mail ,
                        $txt_mail);
 
           $customer_notified = '1';
         }
-        xtc_db_query("insert into " . TABLE_ORDERS_STATUS_HISTORY . " (orders_id, orders_status_id, date_added, customer_notified, comments) values ('" . xtc_db_input($oID) . "', '" . xtc_db_input($status) . "', now(), '" . $customer_notified . "', '" . xtc_db_input($comments)  . "')");
+
+        $sql_data_array = array(
+          'orders_id' => $oID,
+          'orders_status_id' => $status,
+          'date_added' => 'now()',
+          'customer_notified' => $customer_notified,
+          'comments' => $comments,
+          'comments_sent' => ((isset($_POST['notify_comments']) && $_POST['notify_comments'] == 'on') ? 1 : 0)
+        );
+        xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY,$sql_data_array);
+
         $schema .= '<STATUS>' . "\n" .
                    '<STATUS_DATA>' . "\n" .
                    '<ORDER_ID>' . $oID . '</ORDER_ID>' . "\n" .
@@ -2536,15 +2501,15 @@ function OrderUpdate ()
   }
     else
   {
-    $schema = '<?xml version="1.0" encoding="' . CHARSET . '"?>' . "\n" .
-              '<STATUS>' . "\n" .
-              '<STATUS_DATA>' . "\n" .
-              '<ACTION>' . $_POST['action'] . '</ACTION>' . "\n" .
-              '<CODE>' . '99' . '</CODE>' . "\n" .
-              '<MESSAGE>' . 'PARAMETER ERROR' . '</MESSAGE>' . "\n" .
-              '</STATUS_DATA>' . "\n" .
-              '</STATUS>' . "\n\n";
+    $schema .= '<STATUS>' . "\n" .
+               '<STATUS_DATA>' . "\n" .
+               '<ACTION>' . $_POST['action'] . '</ACTION>' . "\n" .
+               '<CODE>' . '99' . '</CODE>' . "\n" .
+               '<MESSAGE>' . 'PARAMETER ERROR' . '</MESSAGE>' . "\n" .
+               '</STATUS_DATA>' . "\n" .
+               '</STATUS>' . "\n\n";
   }
+    
   echo $schema;
 }
 
@@ -2655,9 +2620,6 @@ function CustomersUpdate ()
     require_once(DIR_FS_INC . 'xtc_date_long.inc.php');
     require_once(DIR_FS_INC . 'xtc_check_agent.inc.php');
     require_once(DIR_FS_INC . 'xtc_php_mail.inc.php');
-
-    require_once(DIR_FS_LANGUAGES . $Lang_folder . '/admin/' . $Lang_folder . '.php');  //JP 20080102
-
 
     $smarty = new Smarty;
 
@@ -2913,166 +2875,4 @@ function SendLog ()
      }
   }
 
-
-
-
-//-------------------------------------------------------------------------------------------------------
-//
-//-------------------------------------------------------------------------------------------------------
-
-  require_once(DIR_FS_INC . 'xtc_not_null.inc.php');
-  require_once(DIR_FS_INC . 'xtc_redirect.inc.php');
-  require_once(DIR_FS_INC . 'xtc_rand.inc.php');
-
-  //----------------------------------------------------------------------------
-  class upload {
-    var $file, $filename, $destination, $permissions, $extensions, $tmp_filename;
-
-    function upload($file = '', $destination = '', $permissions = '777', $extensions = '') {
-
-      $this->set_file($file);
-      $this->set_destination($destination);
-      $this->set_permissions($permissions);
-      $this->set_extensions($extensions);
-
-      if (xtc_not_null($this->file) && xtc_not_null($this->destination)) {
-        if ( ($this->parse() == true) && ($this->save() == true) ) {
-          return true;
-        } else {
-          return false;
-        }
-      }
-    }
-  //----------------------------------------------------------------------------
-    function parse() {
-      global $messageStack;
-      if (isset($_FILES[$this->file])) {
-        $file = array('name' => $_FILES[$this->file]['name'],
-                      'type' => $_FILES[$this->file]['type'],
-                      'size' => $_FILES[$this->file]['size'],
-                      'tmp_name' => $_FILES[$this->file]['tmp_name']);
-      } elseif (isset($_FILES[$this->file])) {
-
-        $file = array('name' => $_FILES[$this->file]['name'],
-                      'type' => $_FILES[$this->file]['type'],
-                      'size' => $_FILES[$this->file]['size'],
-                      'tmp_name' => $_FILES[$this->file]['tmp_name']);
-      } else {
-        $file = array('name' => $GLOBALS[$this->file . '_name'],
-                      'type' => $GLOBALS[$this->file . '_type'],
-                      'size' => $GLOBALS[$this->file . '_size'],
-                      'tmp_name' => $GLOBALS[$this->file]);
-      }
-
-      if ( xtc_not_null($file['tmp_name']) && ($file['tmp_name'] != 'none') && is_uploaded_file($file['tmp_name']) ) {
-        if (sizeof($this->extensions) > 0) {
-          if (!in_array(strtolower(substr($file['name'], strrpos($file['name'], '.')+1)), $this->extensions)) {
-            //$messageStack->add_session(ERROR_FILETYPE_NOT_ALLOWED, 'error');
-
-            return false;
-          }
-        }
-
-        $this->set_file($file);
-        $this->set_filename($file['name']);
-        $this->set_tmp_filename($file['tmp_name']);
-
-        return $this->check_destination();
-      } else {
-
-             //if ($file['tmp_name']=='none') $messageStack->add_session(WARNING_NO_FILE_UPLOADED, 'warning');
-        return false;
-      }
-    }
-  //----------------------------------------------------------------------------
-    function save() {
-      global $messageStack;
-
-      if (substr($this->destination, -1) != '/') $this->destination .= '/';
-
-      // GDlib check
-      if (!function_exists(imagecreatefromgif)) {
-
-        // check if uploaded file = gif
-        if ($this->destination==DIR_FS_CATALOG_ORIGINAL_IMAGES) {
-            // check if merge image is defined .gif
-            if (strpos(PRODUCT_IMAGE_THUMBNAIL_MERGE,'.gif') !== false ||
-                strpos(PRODUCT_IMAGE_INFO_MERGE,'.gif') !== false ||
-                strpos(PRODUCT_IMAGE_POPUP_MERGE,'.gif') !== false
-                )
-            {
-                //$messageStack->add_session(ERROR_GIF_MERGE, 'error');
-                return false;
-            }
-            // check if uploaded image = .gif
-            if (strpos($this->filename,'.gif') !== false) {
-             //$messageStack->add_session(ERROR_GIF_UPLOAD, 'error');
-             return false;
-            }
-
-        }
-
-      }
-
-      if (move_uploaded_file($this->file['tmp_name'], $this->destination . $this->filename)) {
-        chmod($this->destination . $this->filename, $this->permissions);
-
-        //$messageStack->add_session(SUCCESS_FILE_SAVED_SUCCESSFULLY, 'success');
-
-        return true;
-      } else {
-        //$messageStack->add_session(ERROR_FILE_NOT_SAVED, 'error');
-
-        return false;
-      }
-    }
-  //----------------------------------------------------------------------------
-    function set_file($file) {
-      $this->file = $file;
-    }
-  //----------------------------------------------------------------------------
-    function set_destination($destination) {
-      $this->destination = $destination;
-    }
-  //----------------------------------------------------------------------------
-    function set_permissions($permissions) {
-      $this->permissions = octdec($permissions);
-    }
-  //----------------------------------------------------------------------------
-    function set_filename($filename) {
-      $this->filename = $filename;
-    }
-  //----------------------------------------------------------------------------
-    function set_tmp_filename($filename) {
-      $this->tmp_filename = $filename;
-    }
-  //----------------------------------------------------------------------------
-    function set_extensions($extensions) {
-      if (xtc_not_null($extensions)) {
-        if (is_array($extensions)) {
-          $this->extensions = $extensions;
-        } else {
-          $this->extensions = array($extensions);
-        }
-      } else {
-        $this->extensions = array();
-      }
-    }
-  //----------------------------------------------------------------------------
-    function check_destination() {
-      global $messageStack;
-
-      if (!is_writeable($this->destination)) {
-        if (is_dir($this->destination)) {
-          //$messageStack->add_session(sprintf(ERROR_DESTINATION_NOT_WRITEABLE, $this->destination), 'error');
-        } else {
-          //$messageStack->add_session(sprintf(ERROR_DESTINATION_DOES_NOT_EXIST, $this->destination), 'error');
-        }
-
-        return false;
-      } else {
-        return true;
-      }
-    }
-  }
 ?>
