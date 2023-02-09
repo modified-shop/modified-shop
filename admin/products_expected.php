@@ -24,7 +24,9 @@ $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_re
 
 $page = (isset($_GET['page']) ? (int)$_GET['page'] : 1);
 
-xtc_db_query("update " . TABLE_PRODUCTS . " set products_date_available = '' where to_days(now()) > to_days(products_date_available)");
+xtc_db_query("UPDATE " . TABLE_PRODUCTS . " 
+                 SET products_date_available = NULL
+               WHERE to_days(now()) > to_days(products_date_available)");
 
 require (DIR_WS_INCLUDES.'head.php');
 ?>
@@ -69,7 +71,8 @@ require (DIR_WS_INCLUDES.'head.php');
                                          FROM " . TABLE_PRODUCTS_DESCRIPTION . " pd,
                                               " . TABLE_PRODUCTS . " p
                                         WHERE p.products_id = pd.products_id
-                                          AND p.products_date_available != ''
+                                          AND p.products_date_available IS NOT NULL
+                                          AND p.products_date_available > '" . date('Y-m-d H:i:s') . "'
                                           AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
                                      ORDER BY p.products_date_available DESC";
                 $products_split = new splitPageResults($page, $page_max_display_results, $products_query_raw, $products_query_numrows);
