@@ -3,7 +3,7 @@
     {if $FREE_SHIPPING}
       <li>
         <div class="cus_radio">
-          <div class="cus_label">{$FREE_SHIPPING_TITLE|onlytext}</div>
+          <div class="cus_label"><span class="shipping_name">{$FREE_SHIPPING_TITLE|onlytext}</span></div>
         </div>
       </li>
     {else}    
@@ -11,7 +11,7 @@
         {if $module_data.error != ''}
           <li>
             <div class="cus_radio">
-              <div class="cus_label">{$module_data.module|onlytext}</div>
+              <div class="cus_label"><span class="shipping_name">{$module_data.module|onlytext}</span></div>
             </div>
           </li>
         {else}
@@ -19,7 +19,7 @@
             <li>
               <div class="cus_radio">
                 {$method_data.radio_field}
-                <label>{$module_data.module|onlytext}<span class="shipping_costs">{$method_data.price}</span></label>
+                <label><span class="shipping_name">{$module_data.module|onlytext}</span><span class="shipping_costs">{$method_data.price}</span></label>
               </div>
             </li>
           {/foreach}
