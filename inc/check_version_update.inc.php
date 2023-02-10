@@ -86,25 +86,27 @@
             }
   
             require_once(DIR_FS_CATALOG.$data['path']);
-            ${$module} = new $data['class']($data['module']);
+            if (class_exists($data['class'])) {
+              ${$module} = new $data['class']($data['module']);
   
-            if (array_key_exists($data['variable'], get_object_vars(${$module}))) {
-              $details[$heading][$module]['shop'] = ${$module}->{$data['variable']};
-            }
+              if (array_key_exists($data['variable'], get_object_vars(${$module}))) {
+                $details[$heading][$module]['shop'] = ${$module}->{$data['variable']};
+              }
   
-            if ($data['regex'] != '') {
-              $details[$heading][$module]['shop'] = preg_replace($data['regex'], '', $details[$heading][$module]['shop']);
-            }
+              if ($data['regex'] != '') {
+                $details[$heading][$module]['shop'] = preg_replace($data['regex'], '', $details[$heading][$module]['shop']);
+              }
             
-            $check_query = xtc_db_query("SELECT *
-                                           FROM ".TABLE_CONFIGURATION."
-                                          WHERE configuration_key LIKE '".xtc_db_input($data['key'])."'");
-            if (xtc_db_num_rows($check_query) > 0) {
-              $details[$heading][$module]['installed'] = 2;
-              while ($check = xtc_db_fetch_array($check_query)) {
-                if (strtolower($check['configuration_value']) == 'true') {
-                  $details[$heading][$module]['installed'] = 1;
-                  break;
+              $check_query = xtc_db_query("SELECT *
+                                             FROM ".TABLE_CONFIGURATION."
+                                            WHERE configuration_key LIKE '".xtc_db_input($data['key'])."'");
+              if (xtc_db_num_rows($check_query) > 0) {
+                $details[$heading][$module]['installed'] = 2;
+                while ($check = xtc_db_fetch_array($check_query)) {
+                  if (strtolower($check['configuration_value']) == 'true') {
+                    $details[$heading][$module]['installed'] = 1;
+                    break;
+                  }
                 }
               }
             }
@@ -131,4 +133,3 @@
     
     return $contents;
   }
-?>
