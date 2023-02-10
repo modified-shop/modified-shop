@@ -263,7 +263,7 @@ class ot_payment {
       if ($this->discount['sum']!=0) {
         for ($i=1; $i<=$this->num_payment; $i++) {
           if ($this->discount['amount' . $i] != 0) {
-            if ($type == 'price' || $this->show_type == 'price' || $payment == 'paypal') {
+            if ($type == 'price' || $this->show_type == 'price') {
               $string .= $xtPrice->xtcFormat(abs($this->discount['amount' . $i]), true) . ' ' . (($this->discount['amount' . $i] < 0) ? MODULE_ORDER_TOTAL_PAYMENT_DISCOUNT : MODULE_ORDER_TOTAL_PAYMENT_FEE);
             } else {
               $string .= (($this->discount['pro' . $i] != 0.0) ? number_format(abs($this->discount['pro' . $i]), 2, $xtPrice->currencies[$_SESSION['currency']]['decimal_point'], '') . '% ' : '') .
