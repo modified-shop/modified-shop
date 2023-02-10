@@ -111,7 +111,7 @@
           $module_smarty->assign('error', 'true');
         }
         $module_smarty->caching = 0;
-        $data['result'] = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/autocomplete.html');
+        $data['result'] = encode_htmlentities($module_smarty->fetch(CURRENT_TEMPLATE.'/module/autocomplete.html'));
       }
     }
     
