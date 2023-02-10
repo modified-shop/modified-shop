@@ -189,9 +189,19 @@
         if ($_SESSION['shipping'] === false) {
           $_SESSION['sendto'] = $_SESSION['billto'];
         }
+        
         if (isset ($_SESSION['payment']) && !isset($_SESSION['paypal']['PayerID'])) {
           unset($_SESSION['payment']);
-        } 
+        }
+        
+        if (isset($address_book_id)) {
+          if (isset($_SESSION['paypal']['PayerID'])) {
+            $_SESSION['shipping'] = '';
+          } else {
+            $link_checkout_payment = FILENAME_CHECKOUT_SHIPPING;
+          }
+        }
+        
         xtc_redirect(xtc_href_link($link_checkout_payment, $params, 'SSL'));          
         break;      
     }       

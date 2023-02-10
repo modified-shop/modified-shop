@@ -98,11 +98,12 @@ $module_smarty->assign('SELECT_COUNTRY', xtc_get_country_list('country', $select
 if (isset($_GET['action']) 
     && $_GET['action'] == 'new'
     && $addresses_count < MAX_ADDRESS_BOOK_ENTRIES
+    && !isset($edit_address_book)
     )
 {
   $module_smarty->assign('PARAMS', xtc_draw_hidden_field('store_address', 1));
 } elseif (isset($edit_address_book) && $edit_address_book === true) {
-  $module_smarty->assign('PARAMS', xtc_draw_hidden_field('address_book_id', (int)$_GET['id']));
+  $module_smarty->assign('PARAMS', xtc_draw_hidden_field('address_book_id', ((isset($_GET['id'])) ? (int)$_GET['id'] : (int)$address_book_id)));
 }
 
 if ((isset($_GET['id']) && $_SESSION['customer_default_address_id'] != $_GET['id']) || (isset($_GET['action']) && $_GET['action'] == 'new')) {

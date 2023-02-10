@@ -68,6 +68,7 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'submit')) {
       ) 
   {
     $checkout_page = 'shipping';
+    if (isset($_POST['address_book_id'])) $edit_address_book = true;
     include(DIR_WS_MODULES.'checkout_address_store.php');    
   // process the selected shipping destination
   } elseif (isset ($_POST['address'])) {
