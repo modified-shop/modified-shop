@@ -2244,31 +2244,33 @@ table.paymentinfotable.paypallink span.cssButton, table.paymentinfotable.paypalp
 .checkout_accordion .infomessage {
   margin: 10px 0 0 0;
 }
-.checkout_accordion.resp-easy-accordion h2.resp-accordion {
+.checkout_accordion .cus_radio input[type="radio"] ~ label {
   display: -webkit-box;
   display: -moz-box;
   display: -ms-flexbox;
   display: -webkit-flex;
   display: flex;
-  -webkit-flex-direction: row-reverse; 
-  flex-direction: row-reverse;
+  padding: 0px 15px 0px 25px;
 }
-.checkout_accordion .cus_radio {
+.checkout_accordion .shipping_name,
+.checkout_accordion .payment_name {
   -webkit-box-flex: 1;
   -moz-box-flex: 1;
   -webkit-flex: 1;
   -ms-flex: 1;
   flex: 1;
+  padding: 0px 10px 0 0;
+}
+.checkout_accordion .shipping_costs,
+.checkout_accordion .payment_costs {
+  white-space:nowrap;
+  padding: 0 0 0 0;
 }
 .checkout_accordion img {
   max-width:100%;
   height:auto;
   vertical-align:top;
 }
-.shipping_costs, .payment_costs {
-  float:right; 
-  padding:0px 10px;
-}  
 .dutyinfo {
   font-size:12px; 
   padding:5px;
