@@ -347,7 +347,7 @@ define('TEXT_DEFAULT', 'Standard');
 define('TEXT_SET_DEFAULT', 'als Standard definieren');
 define('TEXT_FIELD_REQUIRED', '&nbsp;<span class="fieldRequired">* Erforderlich</span>');
 
-define('ERROR_NO_DEFAULT_CURRENCY_DEFINED', 'Fehler: Es wurde keine Standardw&auml;hrung definiert. Bitte definieren Sie unter Adminstration -> Sprachen/W&auml;hrungen -> W&auml;hrungen eine Standardw&auml;hrung.');
+define('ERROR_NO_DEFAULT_CURRENCY_DEFINED', 'Fehler: Es wurde keine Standardw&auml;hrung definiert. Bitte definieren Sie unter Administration -> Sprachen/W&auml;hrungen -> W&auml;hrungen eine Standardw&auml;hrung.');
 
 define('TEXT_CACHE_CATEGORIES', 'Kategorien Box');
 define('TEXT_CACHE_MANUFACTURERS', 'Hersteller Box');
@@ -502,11 +502,11 @@ define('BUTTON_CLOSE_WINDOW' , 'Fenster schliessen');
 
 //BOF - hendrik - 2011-05-14 - independent invoice number and date
 define('ENTRY_INVOICE_NUMBER',  'Rechnungsnummer:'); 
-define('ENTRY_INVOICE_DATE',    'Rechnungdatum:'); 
+define('ENTRY_INVOICE_DATE',    'Rechnungsdatum:'); 
 //EOF - hendrik - 2011-05-14 - independent invoice number and date  
 
 //BOF - web28 - 2010-07-06 - added missing error text
-define('ENTRY_VAT_ERROR', '&nbsp;<span class="errorText">Ung&uuml;ltge USt-IdNr.</span>');
+define('ENTRY_VAT_ERROR', '&nbsp;<span class="errorText">Ung&uuml;ltige USt-IdNr.</span>');
 //EOF - web28 - 2010-07-06 - added missing error text
 
 define('CONFIG_INT_VALUE_ERROR', '"%s" FEHLER: Bitte nur Zahlen eingeben! Eingabe %s wurde ignoriert!');

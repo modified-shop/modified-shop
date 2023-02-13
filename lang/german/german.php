@@ -264,7 +264,7 @@ define('TEXT_UNKNOWN_TAX_RATE', 'Unbekannter Steuersatz');
  * 
  */
 
-define('WARNING_INSTALL_DIRECTORY_EXISTS', 'Warnung: Das Installationverzeichnis ist noch vorhanden auf: %s. Bitte l&ouml;schen Sie das Verzeichnis aus Gr&uuml;nden der Sicherheit!');
+define('WARNING_INSTALL_DIRECTORY_EXISTS', 'Warnung: Das Installationsverzeichnis ist noch vorhanden auf: %s. Bitte l&ouml;schen Sie das Verzeichnis aus Gr&uuml;nden der Sicherheit!');
 define('WARNING_CONFIG_FILE_WRITEABLE', 'Warnung: Die modified eCommerce Shopsoftware kann in die Konfigurationsdatei schreiben: %s. Das stellt ein m&ouml;gliches Sicherheitsrisiko dar - bitte korrigieren Sie die Benutzerberechtigungen zu dieser Datei!');
 define('WARNING_SESSION_DIRECTORY_NON_EXISTENT', 'Warnung: Das Verzeichnis f&uuml;r die Sessions existiert nicht: ' . xtc_session_save_path() . '. Die Sessions werden nicht funktionieren, bis das Verzeichnis erstellt wurde!');
 define('WARNING_SESSION_DIRECTORY_NOT_WRITEABLE', 'Warnung: Die modified eCommerce Shopsoftware kann nicht in das Sessions Verzeichnis schreiben: ' . xtc_session_save_path() . '. Die Sessions werden nicht funktionieren, bis die richtigen Benutzerberechtigungen gesetzt wurden!');
@@ -595,7 +595,7 @@ define('TEXT_ERROR_CHECKOUT_EXPRESS_PAYMENT_ADDRESS', 'Bitte w&auml;hlen Sie ein
 define('TEXT_ERROR_CHECKOUT_EXPRESS_PAYMENT_MODULE', 'Bitte w&auml;hlen Sie eine Zahlart');
 define('TEXT_CHECKOUT_EXPRESS_INFO_LINK', 'Mein Schnellkauf');
 define('TEXT_CHECKOUT_EXPRESS_INFO_LINK_MORE', 'Mehr Informationen zu Mein Schnellkauf &raquo;');
-define('TEXT_CHECKOUT_EXPRESS_CHECK_CHEAPEST', 'Immer g&uuml;nstigste Versandard w&auml;hlen');
+define('TEXT_CHECKOUT_EXPRESS_CHECK_CHEAPEST', 'Immer g&uuml;nstigste Versandart w&auml;hlen');
 
 define('AC_SHOW_PAGE', 'Seite ');
 define('AC_SHOW_PAGE_OF', ' von ');
@@ -630,7 +630,7 @@ define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1040', 'Pr&uuml;fziffern der IBAN (Ste
 define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1050', 'BIC hat ung&uuml;ltiges Format.');
 define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1060', 'BIC-L&auml;nge falsch: Zu viele Zeichen eingegeben. 8 oder 11 Zeichen sind erforderlich.');
 define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1070', 'BIC-L&auml;nge falsch: Zu wenige Zeichen angeben. 8 oder 11 Zeichen sind erforderlich.');
-define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1080', 'BIC-L&auml;nge ung&uuml;tig: 8 oder 11 Zeichen erforderlich.');
+define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1080', 'BIC-L&auml;nge ung&uuml;ltig: 8 oder 11 Zeichen erforderlich.');
 define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1200', 'IBANs aus dem angegebenen Land (1. und 2. Stelle der IBAN) k&ouml;nnen wir leider nicht akzeptieren.');
 
 // Fehlermeldungen für deutsche Kontonummern 
