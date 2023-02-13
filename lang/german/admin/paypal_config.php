@@ -71,7 +71,7 @@ $lang_array = array(
   'TEXT_PAYPAL_CONFIG_STATE_CAPTURED_INFO' => 'Status ausgel&ouml;st durch ein Capture',
   
   'TEXT_PAYPAL_CONFIG_STATE_REFUNDED' => 'Status R&uuml;ckzahlung:',
-  'TEXT_PAYPAL_CONFIG_STATE_REFUNDED_INFO' => 'Status ausgel&ouml;st duch ein Refund',
+  'TEXT_PAYPAL_CONFIG_STATE_REFUNDED_INFO' => 'Status ausgel&ouml;st durch ein Refund',
   
   'TEXT_PAYPAL_CONFIG_STATE_TEMP' => 'Status Temp:',
   'TEXT_PAYPAL_CONFIG_STATE_TEMP_INFO' => 'Status bei einer nicht best&auml;tigten Bestellung',
