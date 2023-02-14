@@ -504,10 +504,13 @@
       if (isset($data['suburb'])
           && $data['suburb'] != '' 
           && $data['country_iso_2'] == 'DE'
-          && $Name->name2 == ''
           ) 
       {
-        $Name->name2 = $data['suburb'];
+        if ($Name->name2 == '') {
+          $Name->name2 = $data['suburb'];
+        } else {
+          $Name->name3 = $data['suburb'];
+        }
       }
       
       if (isset($data['packstation']) && $data['packstation'] === true) {
@@ -548,6 +551,9 @@
             $shipping_details->name1 = $Name->name1;
             $shipping_details->Address = $Address;
             $shipping_details->Address->name2 = $Name->name2;
+            if (isset($Name->name3)) {
+              $shipping_details->Address->name3 = $Name->name3;
+            }
           }
           //$shipping_details->Communication = $Communication;
           break;
