@@ -22,13 +22,7 @@
   ?>
 
   <?php
-    $content_query=xtc_db_query("SELECT content_id,
-                                        content_name,
-                                        content_file,
-                                        content_link,
-                                        languages_id,
-                                        file_comment,
-                                        content_read 
+    $content_query=xtc_db_query("SELECT *
                                    FROM ".TABLE_PRODUCTS_CONTENT."
                                   WHERE products_id='".(int)$_GET['pID']."'
                                     AND languages_id='".$languages[$i]['id']."'
