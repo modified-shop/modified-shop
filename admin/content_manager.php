@@ -298,6 +298,7 @@
     $file_comment = ((isset($_POST['file_comment'])) ? xtc_db_prepare_input($_POST['file_comment']) : '');
     $select_file = xtc_db_prepare_input($_POST['select_file']);
     $filename = ((isset($_POST['file_name'])) ? xtc_db_prepare_input($_POST['file_name']) : '');
+    $sort_order = xtc_db_prepare_input($_POST['sort_order']);
 
     $error = false;
     for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
@@ -341,6 +342,7 @@
         'content_link' => $content_link,
         'file_comment' => $file_comment,
         'languages_id' => $content_language_id,
+        'sort_order' => $sort_order,
       );
 
       if ($subaction == 'update') {

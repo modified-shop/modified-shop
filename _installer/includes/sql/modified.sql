@@ -361,8 +361,10 @@ CREATE TABLE content_manager_content (
   languages_id INT(11) NOT NULL,
   content_read INT(11) NOT NULL DEFAULT 0,
   file_comment TEXT NOT NULL,
+  sort_order INT(3) DEFAULT 0 NOT NULL,
   PRIMARY KEY (content_id),
-  KEY idx_content_manager_id (content_manager_id)
+  KEY idx_content_manager_id (content_manager_id),
+  KEY idx_sort_order (sort_order)
 );
 
 DROP TABLE IF EXISTS countries;
@@ -641,8 +643,10 @@ CREATE TABLE email_content (
   languages_id INT(11) NOT NULL,
   content_read INT(11) NOT NULL DEFAULT 0,
   file_comment TEXT NOT NULL,
+  sort_order INT(3) DEFAULT 0 NOT NULL,
   PRIMARY KEY (content_id),
-  KEY idx_email_id (email_id)
+  KEY idx_email_id (email_id),
+  KEY idx_sort_order (sort_order)
 );
 
 DROP TABLE IF EXISTS geo_zones;
@@ -1099,8 +1103,10 @@ CREATE TABLE products_content (
   languages_id INT(11) NOT NULL,
   content_read INT(11) NOT NULL DEFAULT 0,
   file_comment TEXT NOT NULL,
+  sort_order INT(3) DEFAULT 0 NOT NULL,
   PRIMARY KEY (content_id),
-  KEY idx_products_id (products_id)
+  KEY idx_products_id (products_id),
+  KEY idx_sort_order (sort_order)
 );
 
 DROP TABLE IF EXISTS products_description;

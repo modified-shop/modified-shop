@@ -217,7 +217,8 @@ function xtc_php_mail($from_email_address, $from_email_name,
     $email_query = xtDBquery("SELECT *
                                 FROM ".TABLE_EMAIL_CONTENT."
                                WHERE languages_id = '".$lang_data['languages_id']."'
-                                     ".$conditions);
+                                     ".$conditions."
+                               ORDER BY sort_order, content_id");
     while ($email = xtc_db_fetch_array($email_query, true)) {
       foreach ($included_files as $files) {
         if (strpos($files, $email['email_id'].'.html') !== false) {

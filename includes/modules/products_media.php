@@ -39,7 +39,8 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/products_media.html', $
                                 FROM ".TABLE_PRODUCTS_CONTENT."
                                WHERE products_id = '".$product->data['products_id']."'
                                  AND languages_id = '".(int) $_SESSION['languages_id']."'
-                                     ".CONTENT_CONDITIONS);
+                                     ".CONTENT_CONDITIONS."
+                            ORDER BY sort_order, content_id");
 
   if (xtc_db_num_rows($content_query, true) > 0) {
     $module_content = array ();

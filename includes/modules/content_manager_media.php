@@ -36,25 +36,19 @@ if (!CacheCheck()) {
 
 if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/products_media.html', $cache_id) || !$cache) {
   //get downloads
-  $content_query = xtDBquery("SELECT content_id, 
-                                     content_name, 
-                                     content_link, 
-                                     content_file, 
-                                     content_read, 
-                                     file_comment
+  $content_query = xtDBquery("SELECT *
                                 FROM ".TABLE_CONTENT_MANAGER_CONTENT."
                                WHERE content_manager_id = '".(int)$_GET['coID']."'
                                      ".CONTENT_CONDITIONS."
-                                 AND languages_id = '".(int) $_SESSION['languages_id']."'");
+                                 AND languages_id = '".(int) $_SESSION['languages_id']."'
+                            ORDER BY sort_order, content_id");
 
   if (xtc_db_num_rows($content_query, true) > 0) {
 
     $module_content = array ();
     while ($content_data = xtc_db_fetch_array($content_query, true)) {
     
-      $icon = xtc_image(DIR_WS_ICONS.'filetype/icon_link.gif');
-      $filename = ($content_data['content_link'] != '') ? '<a href="'.$content_data['content_link'].'" target="_blank">'.$content_data['content_name'].'</a>' : $content_data['content_name'];
-    
+      $icon = xtc_image(DIR_WS_ICONS.'filetype/icon_link.gif');    
       $button = '';
       $filesize = '';
       if ($content_data['content_link'] == '') {
@@ -81,10 +75,16 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/products_media.html', $
                     '</a>';
           $filesize = xtc_filesize($content_data['content_file'], 'content');
         }
+      } else {
+        $button = '<a target="_blank"'.
+                  ' href="'.$content_data['content_link'].'">'.
+                  xtc_image_button('button_view.gif', TEXT_VIEW).
+                  '</a>';
       }
+    
       $module_content[] = array (
         'ICON' => $icon,
-        'FILENAME' => $filename,
+        'FILENAME' => $content_data['content_name'],
         'DESCRIPTION' => $content_data['file_comment'],
         'FILESIZE' => $filesize,
         'BUTTON' => $button,

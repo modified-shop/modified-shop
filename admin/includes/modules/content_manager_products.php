@@ -56,11 +56,13 @@ if (!$action || in_array($action, array('delete', 'list'))) {
               <td class="dataTableHeadingContent txta-c" style="width:1%"><?php echo TABLE_HEADING_CONTENT_FILESIZE; ?></td>
               <td class="dataTableHeadingContent txta-c" style="width:20%"><?php echo TABLE_HEADING_CONTENT_LINK; ?></td>
               <td class="dataTableHeadingContent txta-c" style="width:5%"><?php echo TABLE_HEADING_CONTENT_HITS; ?></td>
+              <td class="dataTableHeadingContent txta-r" style="width:10%"><?php echo TABLE_HEADING_CONTENT_SORT; ?></td>
               <td class="dataTableHeadingContent txta-c" style="width:10%"><?php echo TABLE_HEADING_CONTENT_ACTION; ?></td>
             </tr>
             <tr class="dataTableRow" onmouseover="this.className='dataTableRowOver'" onmouseout="this.className='dataTableRow\">
               <td class="dataTableContent txta-c">--</td>
               <td class="dataTableContent"><?php echo '<a href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action', 'coID'))). '">'.xtc_image(DIR_WS_ICONS . 'folder_parent.gif', ICON_FOLDER) . ' ..</a>'; ?></td>
+              <td class="dataTableContent txta-c">--</td>
               <td class="dataTableContent txta-c">--</td>
               <td class="dataTableContent txta-c">--</td>
               <td class="dataTableContent txta-c">--</td>
@@ -74,7 +76,7 @@ if (!$action || in_array($action, array('delete', 'list'))) {
                                       JOIN ".TABLE_LANGUAGES." l
                                            ON pc.languages_id = l.languages_id
                                      WHERE products_id = '".(int)$_GET['pID']."'
-                                  ORDER BY content_id";
+                                  ORDER BY sort_order, content_id";
               $content_query_split = new splitPageResults($page, $page_max_display_results, $content_query_raw, $content_query_numrows);
               $content_query = xtc_db_query($content_query_raw);
               while ($content = xtc_db_fetch_array($content_query)) {
@@ -103,6 +105,7 @@ if (!$action || in_array($action, array('delete', 'list'))) {
                     ?>
                   </td>
                   <td class="dataTableContent txta-c"><?php echo $content['content_read']; ?></td>
+                  <td class="dataTableContent txta-r"><?php echo $content['sort_order']; ?></td>
                   <td class="dataTableContent txta-r"><?php if (isset($oInfo) && is_object($oInfo) && $content['content_id'] == $oInfo->content_id) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('coID')) . 'coID=' . $content['content_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
                 </tr>
                 <?php
@@ -400,6 +403,10 @@ if (!$action || in_array($action, array('delete', 'list'))) {
               <?php
             }
           ?>
+          <tr>
+            <td class="dataTableConfig col-left"><?php echo TEXT_SORT_ORDER; ?></td>
+            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('sort_order',$content['sort_order']); ?></td>
+          </tr>
           <tr>
             <td class="dataTableConfig col-left"><?php echo TEXT_TITLE_FILE; ?></td>
             <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('cont_title',$content['content_name'],'size="60"'); ?></td>
