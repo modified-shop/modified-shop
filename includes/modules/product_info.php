@@ -128,15 +128,19 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
    
   // show expiry date of active special products
   if ($_SESSION['customers_status']['customers_status_specials'] != '0') {
-    $special_expires_date_query = "SELECT expires_date
-                                     FROM ".TABLE_SPECIALS."
-                                    WHERE products_id = '".$product->data['products_id']."'
-                                          ".SPECIALS_CONDITIONS;
-    $special_expires_date_query = xtc_db_query($special_expires_date_query);
-    if (xtc_db_num_rows($special_expires_date_query) > 0) {
-      $sDate = xtc_db_fetch_array($special_expires_date_query);
-      $info_smarty->assign('PRODUCTS_EXPIRES', $sDate['expires_date'] != '0000-00-00 00:00:00' ? xtc_date_short($sDate['expires_date']) : '');
-      $info_smarty->assign('PRODUCTS_EXPIRES_C', $sDate['expires_date'] != '0000-00-00 00:00:00' ? date('c', strtotime($sDate['expires_date'])) : '');
+    $specials_query = xtc_db_query("SELECT expires_date,
+                                           specials_quantity,
+                                           start_date
+                                      FROM ".TABLE_SPECIALS."
+                                     WHERE products_id = '".$product->data['products_id']."'
+                                           ".SPECIALS_CONDITIONS);
+    if (xtc_db_num_rows($specials_query) > 0) {
+      $specials = xtc_db_fetch_array($specials_query);
+      $info_smarty->assign('PRODUCTS_SPECIALS_QUANTITY', $specials['specials_quantity']);
+      $info_smarty->assign('PRODUCTS_START', $specials['start_date'] != '0000-00-00 00:00:00' ? xtc_date_short($specials['start_date']) : '');
+      $info_smarty->assign('PRODUCTS_START_C', $specials['start_date'] != '0000-00-00 00:00:00' ? date('c', strtotime($specials['start_date'])) : '');
+      $info_smarty->assign('PRODUCTS_EXPIRES', $specials['expires_date'] != '0000-00-00 00:00:00' ? xtc_date_short($specials['expires_date']) : '');
+      $info_smarty->assign('PRODUCTS_EXPIRES_C', $specials['expires_date'] != '0000-00-00 00:00:00' ? date('c', strtotime($specials['expires_date'])) : '');
     }
   }
 
