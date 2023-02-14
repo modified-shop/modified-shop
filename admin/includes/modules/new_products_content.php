@@ -32,7 +32,7 @@
                                    FROM ".TABLE_PRODUCTS_CONTENT."
                                   WHERE products_id='".(int)$_GET['pID']."'
                                     AND languages_id='".$languages[$i]['id']."'
-                               ORDER BY content_name");
+                               ORDER BY sort_order, content_id");
 
     if (xtc_db_num_rows($content_query)>0) {
       ?>
@@ -44,8 +44,9 @@
             <td class="dataTableHeadingContent" nowrap width="20%" ><?php echo TABLE_HEADING_CONTENT_NAME; ?></td>
             <td class="dataTableHeadingContent" nowrap width="28%" ><?php echo TABLE_HEADING_CONTENT_FILE; ?></td>
             <td class="dataTableHeadingContent" nowrap width="1%" ><?php echo TABLE_HEADING_CONTENT_FILESIZE; ?></td>
-            <td class="dataTableHeadingContent" nowrap align="middle" width="20%" ><?php echo TABLE_HEADING_CONTENT_LINK; ?></td>
+            <td class="dataTableHeadingContent" nowrap align="middle" width="15%" ><?php echo TABLE_HEADING_CONTENT_LINK; ?></td>
             <td class="dataTableHeadingContent" nowrap width="5%" ><?php echo TABLE_HEADING_CONTENT_HITS; ?></td>
+            <td class="dataTableHeadingContent" nowrap width="5%" ><?php echo TABLE_HEADING_CONTENT_SORT; ?></td>
             <td class="dataTableHeadingContent" nowrap width="22%" ><?php echo TABLE_HEADING_CONTENT_ACTION; ?></td>
           </tr>
           <?php
@@ -76,6 +77,7 @@
                 &nbsp;
               </td>
               <td class="dataTableContent" align="left"><?php echo $content_array['content_read']; ?></td>
+              <td class="dataTableContent" align="left"><?php echo $content_array['sort_order']; ?></td>
               <td class="dataTableContent" align="left">
                 <a href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action')) . 'last_action='.$_GET['action'].'&special=delete_product&coID='.$content_array['content_id'].'&set=product'); ?>" onclick="return confirmLink('<?php echo CONFIRM_DELETE.'<br/>'.CONTINUE_WITHOUT_SAVE; ?>', '', this)">
                 <?php
