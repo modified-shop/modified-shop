@@ -96,11 +96,11 @@ INSERT INTO `scheduled_tasks` (`time_regularity`, `time_unit`, `status`, `tasks`
 INSERT INTO `scheduled_tasks` (`time_regularity`, `time_unit`, `status`, `tasks`) VALUES (1, 'd', 0, 'logs_maintenance');
 
 #GTB - 2023-02-14 - add sort order for contents
-ALTER TABLE `content_manager_content` ADD `sort_order` INT(3) NOT NULL DEFAULT '0';
+ALTER TABLE `content_manager_content` ADD `sort_order` INT(3) NOT NULL DEFAULT '0' AFTER `file_comment`;
 ALTER TABLE `content_manager_content` ADD INDEX `idx_sort_order` (`sort_order`); 
-ALTER TABLE `email_content` ADD `sort_order` INT(3) NOT NULL DEFAULT '0';
+ALTER TABLE `email_content` ADD `sort_order` INT(3) NOT NULL DEFAULT '0' AFTER `file_comment`;
 ALTER TABLE `email_content` ADD INDEX `idx_sort_order` (`sort_order`); 
-ALTER TABLE `products_content` ADD `sort_order` INT(3) NOT NULL DEFAULT '0';
+ALTER TABLE `products_content` ADD `sort_order` INT(3) NOT NULL DEFAULT '0' AFTER `file_comment`;
 ALTER TABLE `products_content` ADD INDEX `idx_sort_order` (`sort_order`); 
 
 # Keep an empty line at the end of this file for the db_updater to work properly
