@@ -386,6 +386,10 @@ class product {
                                     ORDER BY pxg.xsell_sort_order, px.products_xsell_grp_name_id");
       $cross_sells_array[$pID] = array ();
       if (xtc_db_num_rows($cross_sells_query, true) > 0) {
+        $limit = '';
+        if ((int)MAX_DISPLAY_CROSS_SELLS > 0) {
+          $limit = " LIMIT ".(int)MAX_DISPLAY_CROSS_SELLS;
+        }        
         while ($cross_sells = xtc_db_fetch_array($cross_sells_query, true)) {
           $xsell_query = xtDBquery("SELECT ".$this->default_select.",
                                            xp.sort_order
@@ -407,7 +411,8 @@ class product {
                                        AND xp.products_xsell_grp_name_id='".$cross_sells['products_xsell_grp_name_id']."'
                                            ".PRODUCTS_CONDITIONS_P."
                                   GROUP BY p.products_id
-                                  ORDER BY xp.sort_order ASC");
+                                  ORDER BY xp.sort_order ASC
+                                           ".$limit);
           if (xtc_db_num_rows($xsell_query, true) > 0) {
             $cross_sells_array[$pID][$cross_sells['products_xsell_grp_name_id']] = array(
               'GROUP' => $cross_sells['groupname'],
@@ -441,6 +446,10 @@ class product {
     }
 
     if (!isset($reverse_cross_sells_array[$pID])) {	
+      $limit = '';
+      if ((int)MAX_DISPLAY_REVERSE_CROSS_SELLS > 0) {
+        $limit = " LIMIT ".(int)MAX_DISPLAY_REVERSE_CROSS_SELLS;
+      }        
       $cross_query = xtDBquery("SELECT ".$this->default_select.",
                                        xp.sort_order
                                   FROM ".TABLE_PRODUCTS_XSELL." xp
@@ -460,7 +469,8 @@ class product {
                                  WHERE xp.xsell_id = '".(int)$pID."'
                                        ".PRODUCTS_CONDITIONS_P."
                               GROUP BY p.products_id
-                              ORDER BY xp.sort_order ASC");
+                              ORDER BY xp.sort_order ASC
+                                       ".$limit);
       $reverse_cross_sells_array[$pID] = array();
       if (xtc_db_num_rows($cross_query, true) > 0) {
         while ($xsell = xtc_db_fetch_array($cross_query, true)) {
