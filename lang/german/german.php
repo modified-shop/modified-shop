@@ -145,7 +145,7 @@ define('ENTRY_FAX_NUMBER_TEXT', '');
 define('ENTRY_NEWSLETTER_TEXT', '');
 define('ENTRY_PASSWORD_ERROR', 'Ihr Passwort muss aus mindestens ' . ENTRY_PASSWORD_MIN_LENGTH . ' Zeichen bestehen.');
 define('ENTRY_PASSWORD_ERROR_MIN_LOWER', 'Ihr Passwort muss mindestens %s Kleinbuchstaben enthalten.');
-define('ENTRY_PASSWORD_ERROR_MIN_UPPER', 'Ihr Passwort muss mindestens %s Grossbuchstaben enthalten.');
+define('ENTRY_PASSWORD_ERROR_MIN_UPPER', 'Ihr Passwort muss mindestens %s Gro&szlig;buchstaben enthalten.');
 define('ENTRY_PASSWORD_ERROR_MIN_NUM', 'Ihr Passwort muss mindestens %s Zahl enthalten.');
 define('ENTRY_PASSWORD_ERROR_MIN_CHAR', 'Ihr Passwort muss mindestens %s Sonderzeichen enthalten.');
 define('ENTRY_PASSWORD_ERROR_INVALID_CHAR', 'Ihr Passwort enth&auml;lt ung&uuml;ltige Zeichen. Bitte verwenden Sie ein anderes Passwort.');
@@ -426,7 +426,7 @@ define('TEXT_EMAIL_ERROR','Bitte geben Sie Ihre E-Mail-Adresse erneut ein. <br /
 define('TEXT_NO_ACCOUNT','Leider m&uuml;ssen wir Ihnen mitteilen, dass Ihre Anfrage f&uuml;r ein neues Anmelde-Passwort entweder ung&uuml;ltig war oder abgelaufen ist.<br />Bitte versuchen Sie es erneut.');
 define('HEADING_PASSWORD_FORGOTTEN','Passwort vergessen?');
 define('TEXT_PASSWORD_FORGOTTEN','&Auml;ndern Sie Ihr Passwort in drei leichten Schritten.');
-define('TEXT_EMAIL_PASSWORD_FORGOTTEN','Bestätigungs-E-Mail für Passwortänderung'); // ä und ü für korrekte E-Mail Betreffszeile lassen!
+define('TEXT_EMAIL_PASSWORD_FORGOTTEN','Bestâ€°tigungs-E-Mail fÂ¸r Passwortâ€°nderung'); // â€° und Â¸ fÂ¸r korrekte E-Mail Betreffszeile lassen!
 define('TEXT_EMAIL_PASSWORD_NEW_PASSWORD','Ihr neues Passwort');
 define('ERROR_MAIL','Bitte &uuml;berpr&uuml;fen Sie Ihre eingegebenen Daten im Formular.');
 
@@ -459,7 +459,7 @@ define('TEXT_LINK_TITLE_INFORMATION', 'Information');
  * 
  */
  
-define('TEXT_CLOSE_WINDOW', 'Fenster schliessen [x]');
+define('TEXT_CLOSE_WINDOW', 'Fenster schlie&szlig;en [x]');
 define('TEXT_COUPON_HELP_HEADER', 'Ihr Gutschein/Coupon wurde erfolgreich verbucht.');
 define('TEXT_COUPON_HELP_NAME', '<br /><br />Gutschein-/Couponbezeichnung: %s');
 define('TEXT_COUPON_HELP_SPECIALS', '<br /><br />Ihr Coupon kann nicht auf Sonderangebote angewendet werden.');
@@ -532,7 +532,7 @@ define('ERROR_SQL_DB_QUERY_REDIRECT','Sie werden in %s Sekunden auf unsere Homep
 
 define('TEXT_AGB_CHECKOUT','Bitte nehmen Sie unsere AGB und Kundeninformation %s sowie unsere Datenschutzerkl&auml;rung %s zur Kenntnis.');
 define('TEXT_REVOCATION_CHECKOUT', ', unsere Widerrufsbelehrung %s');
-define('DOWNLOAD_NOT_ALLOWED', '<h1>Forbidden</h1>This server could not verify that you are authorized to access the document requested. Either you supplied the wrong credentials (e.g., bad password), or your browser does not understand how to supply the credentials required.');
+define('DOWNLOAD_NOT_ALLOWED', '<h1>Unzul&auml;ssig</h1>Dieser Server konnte nicht Ã¼berpr&uuml;fen, ob Sie zum Zugriff auf das angeforderte Dokument berechtigt sind. Entweder haben Sie die falschen Anmeldedaten angegeben (z. B. ein falsches Passwort) oder Ihr Browser erkennt nicht, wie die erforderlichen Anmeldedaten einzugeben sind.');
 
 define('TEXT_INFO_DETAILS', ' Details');
 define('TEXT_SAVED_BASKET', 'Bitte &uuml;berpr&uuml;fen Sie Ihren Warenkorb. Dieser enth&auml;lt noch Artikel von einem fr&uuml;heren Besuch.');
@@ -608,7 +608,7 @@ define('ENTRY_TOKEN_ERROR', 'Bitte &uuml;berpr&uuml;fen Sie Ihre Eingaben.');
 define('IMAGE_BUTTON_CONFIRM', 'Best&auml;tigen'); // Needed for PayPal
 
 // ***************************************************
-//  Kontodaten-PrŸfung
+//  Kontodaten-PrÃ¼fung
 // ***************************************************
 define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_0', 'Bankverbindung okay.');
 define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1', 'Kontonummer und/oder BLZ sind ung&uuml;ltig bzw. passen nicht zueinander!');
@@ -633,7 +633,7 @@ define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1070', 'BIC-L&auml;nge falsch: Zu weni
 define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1080', 'BIC-L&auml;nge ung&uuml;ltig: 8 oder 11 Zeichen erforderlich.');
 define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_1200', 'IBANs aus dem angegebenen Land (1. und 2. Stelle der IBAN) k&ouml;nnen wir leider nicht akzeptieren.');
 
-// Fehlermeldungen fŸr deutsche Kontonummern 
+// Fehlermeldungen fÃ¼r deutsche Kontonummern 
 define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_2001', 'In IBAN enthaltene Kontonummer (Stellen 13 bis 22) und/oder Bankleitzahl (Stellen 5 bis 12) ung&uuml;ltig bzw. nicht zueinander passend.');
 define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_2002', 'In IBAN enthaltene Kontonummer (Stellen 13 bis 22) nicht automatisch pr&uuml;fbar.');
 define('BANKACCOUNT_CHECK_TEXT_BANK_ERROR_2003', 'F&uuml;r in IBAN enthaltene Kontonummer (Stellen 13 bis 22) ist kein Pr&uuml;fziffernverfahren definiert.');
