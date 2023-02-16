@@ -14,9 +14,6 @@
   
   if ($order->info['orders_status'] != $status || $comments != '' || $email_preview) {
     if (!$email_preview) {  
-      if (defined('MODULE_PAYMENT_BILLPAY_STATUS') && MODULE_PAYMENT_BILLPAY_STATUS == 'True') {
-          require_once(DIR_FS_EXTERNAL . 'billpay/utils/billpay_status_requests.php');
-      }
       xtc_db_query("UPDATE ".TABLE_ORDERS."
                        SET orders_status = ".$status.",
                            last_modified = now()

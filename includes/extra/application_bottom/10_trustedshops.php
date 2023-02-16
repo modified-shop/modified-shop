@@ -77,7 +77,6 @@
         case 'payone_wlt':
           $paymenttype = 'PAYPAL';
           break;
-        case 'billpaydebit':
         case 'mcp_creditcard':
         case 'mcp_debit':
         case 'payone_cc':
@@ -102,7 +101,6 @@
           $paymenttype = 'CASH_ON_DELIVERY';
           break;
         case 'invoice':
-        case 'billpay':
         case 'klarna_paylater':
         case 'payone_invoice':
           $paymenttype = 'INVOICE';
@@ -129,8 +127,6 @@
         case 'moneybookers_wlt':
           $paymenttype = 'MONEYBOOKERS';
           break;
-        case 'billpaypaylater':
-        case 'billpaytransactioncredit':
         case 'klarna_payovertime':
         case 'payone_installment':
           $paymenttype = 'FINANCING';

@@ -30,12 +30,6 @@
   require_once (DIR_WS_CLASSES.'order.php');
   require_once (DIR_FS_CATALOG.DIR_WS_CLASSES.'xtcPrice.php');
   
-  if (defined('MODULE_PAYMENT_BILLPAY_STATUS') && MODULE_PAYMENT_BILLPAY_STATUS == 'True' && file_exists(DIR_FS_EXTERNAL . 'billpay/base/BillpayOrderEdit.php')) {
-    require_once (DIR_FS_EXTERNAL . 'billpay/base/BillpayOrderEdit.php');
-    $billpayOrderEdit = new BillpayOrderEdit();
-    $billpayOrderEdit->onBeforeUpdate();
-  }
-
 
   function get_customers_taxprice_status() {
     global $order, $lang;
@@ -1008,7 +1002,7 @@
 
 
   function orders_save_order($oID, $data_array) {
-    global $order, $xtPrice, $status, $billpayOrderEdit;
+    global $order, $xtPrice, $status;
     
     require_once(DIR_FS_LANGUAGES.$order->info['language'].'/extra/tax.php');
     
@@ -1038,29 +1032,7 @@
       'text' => xtc_db_prepare_input($subtotal_text),
       'value' => xtc_db_prepare_input($subtotal_final)
     );
-    
-    if (defined('MODULE_PAYMENT_BILLPAY_STATUS') && MODULE_PAYMENT_BILLPAY_STATUS == 'True' && file_exists(DIR_FS_EXTERNAL . 'billpay/base/BillpayOrderEdit.php')) {
-      require_once DIR_FS_EXTERNAL . 'billpay/base/BillpayOrderEdit.php';
-      $billpayOrderEdit = new BillpayOrderEdit();
-      if($billpayOrderEdit->isBillpay) {
-        $oldSubtotal = BillpayOrder::getOTById($oID, 'ot_subtotal');
-        $newSubTotal = xtc_db_prepare_input($subtotal_final);
-        if($newSubTotal > $oldSubtotal) {
-          $language = $_SESSION['language'];
-          $path = DIR_FS_CATALOG . 'lang/' . $language . '/admin/orders.php';
-          if (file_exists($path)) {
-            require_once($path);
-          } else {
-            require_once(DIR_FS_CATALOG . 'lang/english/admin/orders.php');
-          }
-          global $messageStack;
-
-          $messageStack->add_session(BILLPAY_ORDER_UPDATE_HIGH, 'warning');
-          return;
-        }
-      }
-    }
-    
+        
     xtc_db_perform(TABLE_ORDERS_TOTAL, $total_data_array, 'update', "orders_id ='". (int)($oID). "' AND class = 'ot_subtotal'");
 
     $products_query = xtc_db_query("SELECT final_price, 
@@ -1360,12 +1332,6 @@
 
     xtc_db_query("DELETE FROM ".TABLE_ORDERS_RECALCULATE." WHERE orders_id = '".xtc_db_input($oID)."'");
 
-    xtc_db_perform(TABLE_ORDERS, array('last_modified' => 'now()'), 'update', "orders_id = '".(int)$oID."'");
-    
-    if (defined('MODULE_PAYMENT_BILLPAY_STATUS') && MODULE_PAYMENT_BILLPAY_STATUS == 'True' && file_exists(DIR_FS_EXTERNAL . 'billpay/base/BillpayOrderEdit.php')) {
-      require_once DIR_FS_EXTERNAL . 'billpay/base/BillpayOrderEdit.php';
-      $billpayOrderEdit = new BillpayOrderEdit();
-      $billpayOrderEdit->onAfterUpdate();
-    }
+    xtc_db_perform(TABLE_ORDERS, array('last_modified' => 'now()'), 'update', "orders_id = '".(int)$oID."'");    
   }
 ?>

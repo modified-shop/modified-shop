@@ -177,8 +177,6 @@ define('BUTTON_ORDER_MAIL_STEP', 'Bestellbest&auml;tigung senden');
 define('COMMENT_SEND_ORDER_MAIL_STEP' , 'Bestellbest&auml;tigung gesendet');
 define('SUCCESS_ORDER_MAIL_STEP_SEND', 'Bestellbest&auml;tigung erfolgreich gesendet');
 
-define('BILLPAY_ORDER_UPDATE_HIGH', 'Fehler: Bei einer BillPay Bestellung darf der neue Bestellwert nicht h&ouml;her sein als der alte Bestellwert');
-
 define('TABLE_HEADING_INVOICE_NUMBER', 'Rg.Nr.');
 define('BUTTON_BILL', 'Rechnungsnummer erstellen');
 define('NOT_ASSIGNED', 'noch nicht vergeben!');
