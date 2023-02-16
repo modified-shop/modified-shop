@@ -32,7 +32,7 @@ define('MODULE_PAYMENT_AMONEYBOOKERS_TEXT_ERROR', 'Fehler bei Zahlung!');
 define('MODULE_PAYMENT_AMONEYBOOKERS_CONFIRMATION_TEXT', 'Danke f&uuml;r Ihre Bestellung!');
 define('MODULE_PAYMENT_AMONEYBOOKERS_TRANSACTION_FAILED_TEXT', 'Ihre Zahlungstransaktion bei skrill.com ist fehlgeschlagen. Bitte versuchen Sie es nochmal, oder w&auml;hlen Sie eine andere Zahlungsm&ouml;glichkeit!');
 define('MODULE_PAYMENT_AMONEYBOOKERS_TEXT_INFO_2', '<b>100%-ige Sicherheit</b> - Ihre Daten werden nach h&ouml;chstem Sicherheitsstandard verschl&uuml;sselt.');
-define('MODULE_PAYMENT_AMONEYBOOKERS_TEXT_INFO_3', '<b>100%-iger Datenschutz</b> - Ihre pers&ouml;nlichen Daten verbleiben bei Skrill als lizensiertem Finanzinstitut und werden nicht an den Shop weitergegeben.');
+define('MODULE_PAYMENT_AMONEYBOOKERS_TEXT_INFO_3', '<b>100%-iger Datenschutz</b> - Ihre pers&ouml;nlichen Daten verbleiben bei Skrill als lizenziertem Finanzinstitut und werden nicht an den Shop weitergegeben.');
 define('MODULE_PAYMENT_AMONEYBOOKERS_TEXT_INFO_4', '<b>maximaler Komfort</b> - Nachdem Sie einmalig bei Skrill registriert sind, reichen Ihre E-Mail-Adresse und Passwort f&uuml;r alle k&uuml;nftigen Zahlungen.');
 define('MODULE_PAYMENT_AMONEYBOOKERS_TEXT_INFO_5', '<b>hohe Akzeptanz</b> - Mit Skrill k&ouml;nnen Sie in mehreren tausend Shops einkaufen.');
 define('MODULE_PAYMENT_AMONEYBOOKERS_TEXT_INFO_1', '<br /><br />Direkt und bequem zahlen mit...');
