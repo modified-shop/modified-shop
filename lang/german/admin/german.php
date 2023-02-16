@@ -497,7 +497,7 @@ define('TABLE_HEADING_RESET','Statistik zur&uuml;cksetzen');
 //EOF - DokuMan - 2010-08-12 - added possibility to reset admin statistics
 
 //BOF - web28 - 2010-11-13 - added BUTTON_CLOSE_WINDOW
-define('BUTTON_CLOSE_WINDOW' , 'Fenster schliessen');
+define('BUTTON_CLOSE_WINDOW' , 'Fenster schlie&szlig;en');
 //EOF - web28 - 2010-11-13 - added BUTTON_CLOSE_WINDOW
 
 //BOF - hendrik - 2011-05-14 - independent invoice number and date

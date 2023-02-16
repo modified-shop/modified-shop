@@ -166,8 +166,8 @@ define('MAX_DISPLAY_CROSS_SELLS_TITLE' , 'Cross Selling');
 define('MAX_DISPLAY_CROSS_SELLS_DESC' , 'Maximum Anzahl der Cross Selling Artikel, die bei der Artikelansicht angezeigt werden sollen.<br><b>Hinweis:</b> Mit 0 werden alle zugewiesenen Artikel angezeigt.');
 define('MAX_DISPLAY_REVERSE_CROSS_SELLS_TITLE' , 'Reverse Cross Selling');
 define('MAX_DISPLAY_REVERSE_CROSS_SELLS_DESC' , 'Maximum Anzahl der reverse Cross Selling Artikel, die bei der Artikelansicht angezeigt werden sollen.<br><b>Hinweis:</b> Mit 0 werden alle zugewiesenen Artikel angezeigt.');
-define('MAX_DISPLAY_PRODUCTS_IN_ORDER_HISTORY_BOX_TITLE' , 'Bestell&uuml;bersichts Box');
-define('MAX_DISPLAY_PRODUCTS_IN_ORDER_HISTORY_BOX_DESC' , 'Maximum Anzahl an Artikeln die in der pers&ouml;nlichen Bestell&uuml;bersichts Box des Kunden angezeigt werden sollen.');
+define('MAX_DISPLAY_PRODUCTS_IN_ORDER_HISTORY_BOX_TITLE' , 'Bestell&uuml;bersichts-Box');
+define('MAX_DISPLAY_PRODUCTS_IN_ORDER_HISTORY_BOX_DESC' , 'Maximum Anzahl an Artikeln die in der pers&ouml;nlichen Bestell&uuml;bersichts-Box des Kunden angezeigt werden sollen.');
 define('MAX_DISPLAY_ORDER_HISTORY_TITLE' , 'Bestell&uuml;bersicht');
 define('MAX_DISPLAY_ORDER_HISTORY_DESC' , 'Maximum Anzahl an Bestellungen die in der &Uuml;bersicht im Kundenbereich des Shop angezeigt werden sollen.');
 define('MAX_PRODUCTS_QTY_TITLE', 'Maximale Produktanzahl');
@@ -284,7 +284,7 @@ define('SHIPPING_MAX_WEIGHT_TITLE' , 'Maximalgewicht, das als ein Paket versende
 define('SHIPPING_MAX_WEIGHT_DESC' , 'Versandpartner (Post/UPS etc.) haben ein maximales Paketgewicht. Geben Sie einen Wert daf&uuml;r ein.');
 define('SHIPPING_BOX_WEIGHT_TITLE' , 'Paketleergewicht');
 define('SHIPPING_BOX_WEIGHT_DESC' , 'Wie hoch ist das Gewicht eines durchschnittlichen kleinen bis mittleren Leerpaketes?');
-define('SHIPPING_BOX_PADDING_TITLE' , 'Bei gr&ouml;sseren Leerpaketen - Gewichtszuwachs in %');
+define('SHIPPING_BOX_PADDING_TITLE' , 'Bei gr&ouml;&szlig;eren Leerpaketen - Gewichtszuwachs in %');
 define('SHIPPING_BOX_PADDING_DESC' , 'F&uuml;r etwa 10% geben Sie 10 ein');
 define('SHOW_SHIPPING_TITLE' , 'Anzeige Versandkosten');
 define('SHOW_SHIPPING_DESC' , 'Verlinkte Anzeige von "zzgl. Versandkosten"');
@@ -383,7 +383,7 @@ define('SMTP_PORT_DESC' , 'Geben Sie den SMTP Port Ihres SMTP Servers ein (Stand
 define('SMTP_AUTO_TLS_TITLE' , 'SMTP Automatische TLS Verbindung');
 define('SMTP_AUTO_TLS_DESC' , 'Verbindung automatisch mit STARTTLS wenn SMTP SECURE deaktiviert ist?<br>Bei Sendeproblemen die automatische TLS-Verbindung deaktivieren!');
 define('SMTP_DEBUG_TITLE' , 'SMTP Debug Log-Level');
-define('SMTP_DEBUG_DESC' , '<b>0</b>: keine Ausgabe; <b>1</b>: nur Befehle; <b>2</b>: Daten und Befehle; <b>3</b>: wie 2 plus Verbindungstatus; <b>4</b>: wie 3 plus weitere Angaben<br>Bei Sendeproblemen auf 2 stellen, es wird dann ein Protokoll im log-Verzeichnis erstellt.');
+define('SMTP_DEBUG_DESC' , '<b>0</b>: keine Ausgabe; <b>1</b>: nur Befehle; <b>2</b>: Daten und Befehle; <b>3</b>: wie 2 plus Verbindungsstatus; <b>4</b>: wie 3 plus weitere Angaben<br>Bei Sendeproblemen auf 2 stellen, es wird dann ein Protokoll im log-Verzeichnis erstellt.');
 define('CFG_TXT_DEFAULT', 'Default');
 
 //DokuMan - 2011-09-20 - E-Mail SQL errors
@@ -396,7 +396,7 @@ define('CONTACT_US_EMAIL_ADDRESS_DESC' , 'Bitte geben Sie eine korrekte Absender
 define('CONTACT_US_NAME_TITLE' , 'Kontakt - E-Mail-Adresse, Name');
 define('CONTACT_US_NAME_DESC' , 'Bitte geben Sie einen Absender Namen f&uuml;r das Versenden der E-Mails &uuml;ber das "Kontakt" Formular ein.');
 define('CONTACT_US_FORWARDING_STRING_TITLE' , 'Kontakt - Weiterleitungs-E-Mail-Adressen');
-define('CONTACT_US_FORWARDING_STRING_DESC' , 'Geben Sie weitere E-Mail-Adressen ein, an welche die E-Mails des "Kontakt" Formulares noch versendet werden sollen (mit , getrennt)');
+define('CONTACT_US_FORWARDING_STRING_DESC' , 'Geben Sie weitere E-Mail-Adressen ein, an welche die E-Mails des "Kontakt" Formulars noch versendet werden sollen (mit , getrennt)');
 define('CONTACT_US_REPLY_ADDRESS_TITLE' , 'Kontakt - Antwort-E-Mail-Adresse');
 define('CONTACT_US_REPLY_ADDRESS_DESC' , 'Bitte geben Sie eine E-Mail-Adresse ein, an die Ihre Kunden Antworten k&ouml;nnen.');
 define('CONTACT_US_REPLY_ADDRESS_NAME_TITLE' , 'Kontakt - Antwort-E-Mail-Adresse, Name');
@@ -575,7 +575,7 @@ define('ACCOUNT_COMPANY_VAT_CHECK_DESC' , 'Die USt-IdNr. soll durch Kunden einge
 define('ACCOUNT_COMPANY_VAT_LIVE_CHECK_TITLE' , 'USt-IdNr. online auf Plausibilit&auml;t &uuml;berpr&uuml;fen');
 define('ACCOUNT_COMPANY_VAT_LIVE_CHECK_DESC' , 'Die USt-IdNr. wird online auf Plausibilit&auml;t &uuml;berpr&uuml;ft. Dazu wird der Webservice des Steuerportals der EU (<a href="http://ec.europa.eu/taxation_customs" style="font-style:italic">http://ec.europa.eu/taxation_customs</a>).<br/>Ben&ouml;tigt PHP5 mit aktivierter "SOAP" Unterst&uuml;tzung!<br/><br/><span class="messageStackSuccess">Die "PHP5 SOAP"-Unterst&uuml;tzung ist derzeit '.(in_array ('soap', get_loaded_extensions()) ? '' : '<span class="messageStackError">NICHT</span>').' aktiviert!</span><br/><br/>');
 define('ACCOUNT_COMPANY_VAT_GROUP_TITLE' , 'Kundengruppe nach USt-IdNr. Check anpassen?');
-define('ACCOUNT_COMPANY_VAT_GROUP_DESC' , 'Durch Einschalten dieser Option wird die Kundengruppe nach einem postiven USt-IdNr. Check ge&auml;ndert');
+define('ACCOUNT_COMPANY_VAT_GROUP_DESC' , 'Durch Einschalten dieser Option wird die Kundengruppe nach einem positiven USt-IdNr. Check ge&auml;ndert');
 define('ACCOUNT_VAT_BLOCK_ERROR_TITLE' , 'Eintragung falscher oder ungepr&uuml;fter USt-IdNr. Nummern sperren?');
 define('ACCOUNT_VAT_BLOCK_ERROR_DESC' , 'Durch Einschalten dieser Option werden nur gepr&uuml;fte und richtige USt-IdNr. eingetragen');
 define('DEFAULT_CUSTOMERS_VAT_STATUS_ID_LOCAL_TITLE','Kundenstatus f&uuml;r USt-IdNr. gepr&uuml;fte Kunden (Inland)');
@@ -889,8 +889,8 @@ define('EMAIL_SIGNATURE_ID_DESC', 'W&auml;hlen Sie den Content aus, der als Sign
 
 define('POLICY_MIN_LOWER_CHARS_TITLE', 'Passwort Kleinbuchstaben');
 define('POLICY_MIN_LOWER_CHARS_DESC', 'Wie viele Kleinbuchstaben soll das Passwort mindestens haben?');
-define('POLICY_MIN_UPPER_CHARS_TITLE', 'Passwort Grossbuchstaben');
-define('POLICY_MIN_UPPER_CHARS_DESC', 'Wie viele Grossbuchstaben soll das Passwort mindestens haben?');
+define('POLICY_MIN_UPPER_CHARS_TITLE', 'Passwort Gro&szlig;buchstaben');
+define('POLICY_MIN_UPPER_CHARS_DESC', 'Wie viele Gro&szlig;buchstaben soll das Passwort mindestens haben?');
 define('POLICY_MIN_NUMERIC_CHARS_TITLE', 'Passwort Zahlen');
 define('POLICY_MIN_NUMERIC_CHARS_DESC', 'Wie viele Zahlen soll das Passwort mindestens haben?');
 define('POLICY_MIN_SPECIAL_CHARS_TITLE', 'Passwort Sonderzeichen');

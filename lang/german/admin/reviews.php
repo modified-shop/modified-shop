@@ -39,7 +39,7 @@ define('TEXT_IMAGE_NONEXISTENT', 'BILD EXISTIERT NICHT');
 define('TEXT_INFO_REVIEW_AUTHOR', 'geschrieben von:');
 define('TEXT_INFO_REVIEW_RATING', 'Bewertung:');
 define('TEXT_INFO_REVIEW_READ', 'gelesen :');
-define('TEXT_INFO_REVIEW_SIZE', 'Gr&ouml;sse:');
+define('TEXT_INFO_REVIEW_SIZE', 'Gr&ouml;&szlig;e:');
 define('TEXT_INFO_PRODUCTS_AVERAGE_RATING', 'durchschnittl. Wertung:');
 
 define('TEXT_OF_5_STARS', '%s von 5 Sternen!');

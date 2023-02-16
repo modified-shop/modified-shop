@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: backup.php 1780 2011-02-08 02:09:45Z cybercosmonaut $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -14,7 +14,7 @@ define('HEADING_TITLE', 'Logfiles');
 
 define('TABLE_HEADING_TITLE', 'Titel');
 define('TABLE_HEADING_FILE_DATE', 'Datum');
-define('TABLE_HEADING_FILE_SIZE', 'Gr&ouml;sse');
+define('TABLE_HEADING_FILE_SIZE', 'Gr&ouml;&szlig;e');
 
 define('TEXT_LOG_DIRECTORY', 'Logverzeichnis:');
 define('TEXT_DELETE_INTRO', 'Sind Sie sicher, dass Sie diese Logdatei l&ouml;schen m&ouml;chten?');
