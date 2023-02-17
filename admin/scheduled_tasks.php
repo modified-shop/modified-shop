@@ -154,7 +154,7 @@
                       }
 
                       if (isset($trInfo) && is_object($trInfo) && $tasks['tasks_id'] == $trInfo->tasks_id) {
-                        echo '<tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" '.(($tasks['edit'] == '1') ? 'onclick="document.location.href=\'' . xtc_href_link(FILENAME_SCHEDULED_TASKS, xtc_get_all_get_params(array('tID', 'action')) . 'tID=' . $trInfo->tasks_id . '&action=edit') . '\'"' : '').'>' . "\n";
+                        echo '<tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" '.(($trInfo->edit == '1') ? 'onclick="document.location.href=\'' . xtc_href_link(FILENAME_SCHEDULED_TASKS, xtc_get_all_get_params(array('tID', 'action')) . 'tID=' . $trInfo->tasks_id . '&action=edit') . '\'"' : '').'>' . "\n";
                       } else {
                         echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_SCHEDULED_TASKS, xtc_get_all_get_params(array('tID')) . 'tID=' . $tasks['tasks_id']) . '\'">' . "\n";
                       }
@@ -175,7 +175,7 @@
                             if ($tasks['edit'] == '1') {
                               echo '<a href="' . xtc_href_link(FILENAME_SCHEDULED_TASKS, xtc_get_all_get_params(array('tID', 'action', 'flag')) . 'tID=' . $tasks['tasks_id'] . '&action=setflag&flag=1') . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 12, 12) . '</a>&nbsp;&nbsp;';
                             } else {
-                              xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 12, 12);
+                              echo xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 12, 12);
                             }
                             echo xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 12, 12);
                           }
