@@ -66,7 +66,8 @@ CREATE TABLE IF NOT EXISTS `scheduled_tasks` (
   `time_regularity` INT(5) NOT NULL,
   `time_unit` VARCHAR(1) NOT NULL DEFAULT 'h',
   `status` INT(1) NOT NULL,
-  `tasks` VARCHAR(128) NOT NULL ,
+  `edit` INT(1) NOT NULL DEFAULT 1,
+  `tasks` VARCHAR(128) NOT NULL,
   PRIMARY KEY (`tasks_id`),
   UNIQUE KEY `idx_task` (`tasks`),
   KEY `idx_status` (`status`),
@@ -89,11 +90,11 @@ UPDATE `admin_access` SET `scheduled_tasks` = 1 WHERE `customers_id` = 1 LIMIT 1
 UPDATE `admin_access` SET `scheduled_tasks` = 5 WHERE `customers_id` = 'groups' LIMIT 1;
 
 #GTB - 2023-02-08 - insert scheduled tasks
-INSERT INTO `scheduled_tasks` (`time_regularity`, `time_unit`, `status`, `tasks`) VALUES (1, 'm', 1, 'status_specials');
-INSERT INTO `scheduled_tasks` (`time_regularity`, `time_unit`, `status`, `tasks`) VALUES (1, 'm', 1, 'status_banners');
-INSERT INTO `scheduled_tasks` (`time_regularity`, `time_unit`, `status`, `tasks`) VALUES (1, 'w', 0, 'db_maintenance');
-INSERT INTO `scheduled_tasks` (`time_regularity`, `time_unit`, `status`, `tasks`) VALUES (1, 'd', 0, 'db_backup');
-INSERT INTO `scheduled_tasks` (`time_regularity`, `time_unit`, `status`, `tasks`) VALUES (1, 'd', 0, 'logs_maintenance');
+INSERT INTO `scheduled_tasks` (`time_regularity`, `time_unit`, `status`, `edit`, `tasks`) VALUES (1, 'm', 1, 1, 'status_specials');
+INSERT INTO `scheduled_tasks` (`time_regularity`, `time_unit`, `status`, `edit`, `tasks`) VALUES (1, 'm', 1, 1, 'status_banners');
+INSERT INTO `scheduled_tasks` (`time_regularity`, `time_unit`, `status`, `edit`, `tasks`) VALUES (1, 'w', 0, 1, 'db_maintenance');
+INSERT INTO `scheduled_tasks` (`time_regularity`, `time_unit`, `status`, `edit`, `tasks`) VALUES (1, 'd', 0, 1, 'db_backup');
+INSERT INTO `scheduled_tasks` (`time_regularity`, `time_unit`, `status`, `edit`, `tasks`) VALUES (1, 'd', 0, 1, 'logs_maintenance');
 
 #GTB - 2023-02-14 - add sort order for contents
 ALTER TABLE `content_manager_content` ADD `sort_order` INT(3) NOT NULL DEFAULT '0' AFTER `file_comment`;

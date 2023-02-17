@@ -32,9 +32,10 @@
         if ( ($_GET['flag'] == '0') || ($_GET['flag'] == '1') ) {
           xtc_db_query("UPDATE ".TABLE_SCHEDULED_TASKS."
                            SET status = '".(int)$_GET['flag']."'
-                         WHERE tasks_id = '".(int)$tasks_id."'");
+                         WHERE tasks_id = '".(int)$tasks_id."'
+                           AND edit = 1");
         }
-        xtc_redirect(xtc_href_link(FILENAME_SCHEDULED_TASKS, 'page=' . $page . '&tID=' . $tasks_id));
+        xtc_redirect(xtc_href_link(FILENAME_SCHEDULED_TASKS, xtc_get_all_get_params(array('tID', 'action', 'flag')) . 'tID=' . $tasks_id));
         break;
       case 'save':
         $tasks_id = xtc_db_prepare_input($_GET['tID']);
@@ -48,9 +49,9 @@
           'time_offset' => strtotime('1970-01-01 '.$time_offset.' UTC'),
         ); 
                
-        xtc_db_perform(TABLE_SCHEDULED_TASKS, $sql_data_array, 'update', "tasks_id = '" . (int)$tasks_id . "'");
+        xtc_db_perform(TABLE_SCHEDULED_TASKS, $sql_data_array, 'update', "tasks_id = '" . (int)$tasks_id . "' AND edit = 1");
 
-        xtc_redirect(xtc_href_link(FILENAME_SCHEDULED_TASKS, 'page=' . $page . '&tID=' . $tasks_id));
+        xtc_redirect(xtc_href_link(FILENAME_SCHEDULED_TASKS, xtc_get_all_get_params(array('tID', 'action')) . 'tID=' . $tasks_id));
         break;
     }
   }
@@ -153,9 +154,9 @@
                       }
 
                       if (isset($trInfo) && is_object($trInfo) && $tasks['tasks_id'] == $trInfo->tasks_id) {
-                        echo '<tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_SCHEDULED_TASKS, 'page=' . $page . '&tID=' . $trInfo->tasks_id . '&action=edit') . '\'">' . "\n";
+                        echo '<tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_SCHEDULED_TASKS, xtc_get_all_get_params(array('tID', 'action')) . 'tID=' . $trInfo->tasks_id . '&action=edit') . '\'">' . "\n";
                       } else {
-                        echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_SCHEDULED_TASKS, 'page=' . $page . '&tID=' . $tasks['tasks_id']) . '\'">' . "\n";
+                        echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_SCHEDULED_TASKS, xtc_get_all_get_params(array('tID')) . 'tID=' . $tasks['tasks_id']) . '\'">' . "\n";
                       }
                       ?>
                       <td class="dataTableContent"><?php echo (defined('TEXT_INFO_TASKS_'.strtoupper($tasks['tasks'])) ? constant('TEXT_INFO_TASKS_'.strtoupper($tasks['tasks'])) : $tasks['tasks']); ?></td>
@@ -164,13 +165,23 @@
                       <td class="dataTableContent txta-c">
                         <?php                                      
                           if ($tasks['status'] == '1') {
-                            echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 12, 12) . '&nbsp;&nbsp;<a href="' . xtc_href_link(FILENAME_SCHEDULED_TASKS, 'page=' . $page . '&tID=' . $tasks['tasks_id'] . '&action=setflag&flag=0') . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 12, 12) . '</a>';
+                            echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 12, 12) . '&nbsp;&nbsp;';
+                            if ($tasks['edit'] == '1') {
+                              echo '<a href="' . xtc_href_link(FILENAME_SCHEDULED_TASKS, xtc_get_all_get_params(array('tID', 'action', 'flag')) . 'tID=' . $tasks['tasks_id'] . '&action=setflag&flag=0') . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 12, 12) . '</a>';
+                            } else {
+                              echo xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 12, 12);
+                            }
                           } else {
-                            echo '<a href="' . xtc_href_link(FILENAME_SCHEDULED_TASKS, 'page=' . $page . '&tID=' . $tasks['tasks_id'] . '&action=setflag&flag=1') . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 12, 12) . '</a>&nbsp;&nbsp;' . xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 12, 12);
+                            if ($tasks['edit'] == '1') {
+                              echo '<a href="' . xtc_href_link(FILENAME_SCHEDULED_TASKS, xtc_get_all_get_params(array('tID', 'action', 'flag')) . 'tID=' . $tasks['tasks_id'] . '&action=setflag&flag=1') . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 12, 12) . '</a>&nbsp;&nbsp;';
+                            } else {
+                              xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 12, 12);
+                            }
+                            echo xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 12, 12);
                           }
                         ?>
                       </td>
-                      <td class="dataTableContent txta-r"><?php if (isset($trInfo) && is_object($trInfo) && $tasks['tasks_id'] == $trInfo->tasks_id) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_SCHEDULED_TASKS, 'page=' . $page . '&tID=' . $tasks['tasks_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                      <td class="dataTableContent txta-r"><?php if (isset($trInfo) && is_object($trInfo) && $tasks['tasks_id'] == $trInfo->tasks_id) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_SCHEDULED_TASKS, xtc_get_all_get_params(array('tID')) . 'tID=' . $tasks['tasks_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
                     </tr>
                     <?php
                   }
@@ -188,20 +199,22 @@
                 case 'edit':
                   $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_EDIT_TASKS . '</b>');
 
-                  $contents = array('form' => xtc_draw_form('rates', FILENAME_SCHEDULED_TASKS, 'page=' . $page . '&tID=' . $trInfo->tasks_id  . '&action=save'));
+                  $contents = array('form' => xtc_draw_form('rates', FILENAME_SCHEDULED_TASKS, xtc_get_all_get_params(array('tID', 'action')) . 'tID=' . $trInfo->tasks_id  . '&action=save'));
                   $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
                   
                   $contents[] = array('text' => '<br />' . TEXT_INFO_TIME_REGULARITY . '<br />' . xtc_draw_input_field('time_regularity', $trInfo->time_regularity));
                   $contents[] = array('text' => '<br />' . TEXT_INFO_TIME_UNIT . '<br />' . xtc_draw_pull_down_menu('time_unit', $time_unit_array, $trInfo->time_unit));
                   $contents[] = array('text' => '<br />' . TEXT_INFO_TIME_OFFSET . '<br />' . xtc_draw_input_field('time_offset', gmdate('H:i', $trInfo->time_offset)));
                                     
-                  $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/>&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_SCHEDULED_TASKS, 'page=' . $page . '&tID=' . $trInfo->tasks_id) . '">' . BUTTON_CANCEL . '</a>');
+                  $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/>&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_SCHEDULED_TASKS, xtc_get_all_get_params(array('tID')) . 'tID=' . $trInfo->tasks_id) . '">' . BUTTON_CANCEL . '</a>');
                   break;
 
                 default:
                   if (isset($trInfo) && is_object($trInfo)) {
                     $heading[] = array('text' => '<b>' . (defined('TEXT_INFO_TASKS_'.strtoupper($trInfo->tasks)) ? constant('TEXT_INFO_TASKS_'.strtoupper($trInfo->tasks)) : $trInfo->tasks) . '</b>');
-                    $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_SCHEDULED_TASKS, 'page=' . $page . '&tID=' . $trInfo->tasks_id . '&action=edit') . '">' . BUTTON_EDIT . '</a>');
+                    if ($trInfo->edit == 1) {
+                      $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_SCHEDULED_TASKS, xtc_get_all_get_params(array('tID', 'action')) . 'tID=' . $trInfo->tasks_id . '&action=edit') . '">' . BUTTON_EDIT . '</a>');
+                    }
                     if ($trInfo->time_run > 0) {
                       $contents[] = array('text' => '<br />' . TEXT_INFO_LAST_EXECUTED . ' ' . xtc_datetime_short(date('Y-m-d H:i:s', $trInfo->time_run)));
                       $contents[] = array('text' => '<br />' . TEXT_INFO_LAST_DURATION . ' ' . $trInfo->time_taken.'s');
