@@ -10,17 +10,17 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-  define('MODULE_AVALEX_TEXT_TITLE', 'Avalex Rechtstexte');
-  define('MODULE_AVALEX_TEXT_DESCRIPTION', 'Rechtstexte von Avalex');
-  define('MODULE_AVALEX_ACTION_TITLE', 'Avalex Rechtstexte importieren');
-  define('MODULE_AVALEX_ACTION_DESC', 'Sollen die Rechtstexte von Avalex jetzt importiert werden?');
+  define('MODULE_AVALEX_TEXT_TITLE', 'avalex Rechtstexte');
+  define('MODULE_AVALEX_TEXT_DESCRIPTION', 'Rechtstexte von avalex');
+  define('MODULE_AVALEX_ACTION_TITLE', 'avalex Rechtstexte importieren');
+  define('MODULE_AVALEX_ACTION_DESC', 'Sollen die Rechtstexte von avalex jetzt importiert werden?');
   
   define('MODULE_AVALEX_STATUS_TITLE', 'Status');
   define('MODULE_AVALEX_STATUS_DESC', 'Modul aktivieren');
   define('MODULE_AVALEX_API_TITLE', 'API Key');
-  define('MODULE_AVALEX_API_DESC', 'Avalex API Key');
+  define('MODULE_AVALEX_API_DESC', 'avalex API Key');
   define('MODULE_AVALEX_DOMAIN_TITLE', 'Domain');
-  define('MODULE_AVALEX_DOMAIN_DESC', 'Avalex Domain');
+  define('MODULE_AVALEX_DOMAIN_DESC', 'avalex Domain');
   define('MODULE_AVALEX_TYPE_TITLE', 'Typ');
   define('MODULE_AVALEX_TYPE_DESC', 'W&auml;hlen Sie wie die Rechtstexte gespeichert werden sollen.');
   define('MODULE_AVALEX_TYPE_AGB_TITLE', 'Rechtstext AGB');
