@@ -857,17 +857,19 @@ class categories {
       $pname_arr = explode('.', $product['products_image']);
       $nsuffix = array_pop($pname_arr);
       $dup_products_image_name = $this->image_name($this->dup_products_id, 0, $nsuffix, $pname_arr, $src_products_id, $product);
+      
       //write to DB
       xtc_db_query("UPDATE ".TABLE_PRODUCTS." 
                        SET products_image = '".xtc_db_input($dup_products_image_name)."' 
                      WHERE products_id = '".$this->dup_products_id."'");
       
-      copy(DIR_FS_CATALOG_ORIGINAL_IMAGES.'/'.$product['products_image'], DIR_FS_CATALOG_ORIGINAL_IMAGES.'/'.$dup_products_image_name);
-      copy(DIR_FS_CATALOG_POPUP_IMAGES.'/'.$product['products_image'], DIR_FS_CATALOG_POPUP_IMAGES.'/'.$dup_products_image_name);
-      copy(DIR_FS_CATALOG_INFO_IMAGES.'/'.$product['products_image'], DIR_FS_CATALOG_INFO_IMAGES.'/'.$dup_products_image_name);
-      copy(DIR_FS_CATALOG_MIDI_IMAGES.'/'.$product['products_image'], DIR_FS_CATALOG_MIDI_IMAGES.'/'.$dup_products_image_name);
-      copy(DIR_FS_CATALOG_THUMBNAIL_IMAGES.'/'.$product['products_image'], DIR_FS_CATALOG_THUMBNAIL_IMAGES.'/'.$dup_products_image_name);
-      copy(DIR_FS_CATALOG_MINI_IMAGES.'/'.$product['products_image'], DIR_FS_CATALOG_MINI_IMAGES.'/'.$dup_products_image_name);
+      //copy org images to duplicate
+      copy(DIR_FS_CATALOG_ORIGINAL_IMAGES.$product['products_image'], DIR_FS_CATALOG_ORIGINAL_IMAGES.$dup_products_image_name);
+      copy(DIR_FS_CATALOG_POPUP_IMAGES.$product['products_image'], DIR_FS_CATALOG_POPUP_IMAGES.$dup_products_image_name);
+      copy(DIR_FS_CATALOG_INFO_IMAGES.$product['products_image'], DIR_FS_CATALOG_INFO_IMAGES.$dup_products_image_name);
+      copy(DIR_FS_CATALOG_MIDI_IMAGES.$product['products_image'], DIR_FS_CATALOG_MIDI_IMAGES.$dup_products_image_name);
+      copy(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$product['products_image'], DIR_FS_CATALOG_THUMBNAIL_IMAGES.$dup_products_image_name);
+      copy(DIR_FS_CATALOG_MINI_IMAGES.$product['products_image'], DIR_FS_CATALOG_MINI_IMAGES.$dup_products_image_name);
       $this->set_products_images_file_rights($dup_products_image_name);
     }
 
@@ -910,13 +912,14 @@ class categories {
       $pname_arr = explode('.', $mo_images['image_name']);
       $nsuffix = array_pop($pname_arr);
       $dup_products_image_name = $this->image_name($this->dup_products_id, $mo_images['image_nr'], $nsuffix, $pname_arr, $src_products_id, $product);
+      
       //copy org images to duplicate
-      copy(DIR_FS_CATALOG_ORIGINAL_IMAGES.'/'.$mo_images['image_name'], DIR_FS_CATALOG_ORIGINAL_IMAGES.'/'.$dup_products_image_name);
-      copy(DIR_FS_CATALOG_POPUP_IMAGES.'/'.$mo_images['image_name'], DIR_FS_CATALOG_POPUP_IMAGES.'/'.$dup_products_image_name);
-      copy(DIR_FS_CATALOG_INFO_IMAGES.'/'.$mo_images['image_name'], DIR_FS_CATALOG_INFO_IMAGES.'/'.$dup_products_image_name);
-      copy(DIR_FS_CATALOG_MIDI_IMAGES.'/'.$mo_images['image_name'], DIR_FS_CATALOG_MIDI_IMAGES.'/'.$dup_products_image_name);
-      copy(DIR_FS_CATALOG_THUMBNAIL_IMAGES.'/'.$mo_images['image_name'], DIR_FS_CATALOG_THUMBNAIL_IMAGES.'/'.$dup_products_image_name);
-      copy(DIR_FS_CATALOG_MINI_IMAGES.'/'.$mo_images['image_name'], DIR_FS_CATALOG_MINI_IMAGES.'/'.$dup_products_image_name);
+      copy(DIR_FS_CATALOG_ORIGINAL_IMAGES.$mo_images['image_name'], DIR_FS_CATALOG_ORIGINAL_IMAGES.$dup_products_image_name);
+      copy(DIR_FS_CATALOG_POPUP_IMAGES.$mo_images['image_name'], DIR_FS_CATALOG_POPUP_IMAGES.$dup_products_image_name);
+      copy(DIR_FS_CATALOG_INFO_IMAGES.$mo_images['image_name'], DIR_FS_CATALOG_INFO_IMAGES.$dup_products_image_name);
+      copy(DIR_FS_CATALOG_MIDI_IMAGES.$mo_images['image_name'], DIR_FS_CATALOG_MIDI_IMAGES.$dup_products_image_name);
+      copy(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$mo_images['image_name'], DIR_FS_CATALOG_THUMBNAIL_IMAGES.$dup_products_image_name);
+      copy(DIR_FS_CATALOG_MINI_IMAGES.$mo_images['image_name'], DIR_FS_CATALOG_MINI_IMAGES.$dup_products_image_name);
       $this->set_products_images_file_rights($dup_products_image_name);
     
       //write to DB
