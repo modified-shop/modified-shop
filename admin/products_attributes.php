@@ -241,17 +241,14 @@
       if (count($products_array) > 0) {
         $messageStack->add_session(TEXT_WARNING_OF_DELETE, 'error');
       } else {
-        xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_OPTIONS . " WHERE products_options_id = '" . $oID . "'");
+        xtc_db_query("DELETE pav
+                        FROM ".TABLE_PRODUCTS_OPTIONS_VALUES." pav
+                        JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS." pov2po
+                             ON pav.products_options_values_id = ppov2poad.products_options_values_id
+                                AND pov2po.products_options_id = '" . $oID . "'");
 
-        $options_query = xtc_db_query("SELECT products_options_values_id
-                                         FROM " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " 
-                                        WHERE products_options_id = '" . $oID . "'");
-        if (xtc_db_num_rows($options_query) > 0) {
-          while ($options = xtc_db_fetch_array($options_query)) {
-            xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . " WHERE products_options_values_id = '" . $options['products_options_values_id'] . "'");
-            xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " WHERE products_options_values_id = '" . $options['products_options_values_id'] . "' AND products_options_id = '" . $oID . "'");
-          }
-        }
+        xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_OPTIONS . " WHERE products_options_id = '" . $oID . "'");
+        xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " WHERE products_options_id = '" . $oID . "'");
       }
 
       xtc_redirect(xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action', 'oID'))));
