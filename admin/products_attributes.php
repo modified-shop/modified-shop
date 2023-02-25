@@ -244,7 +244,7 @@
         xtc_db_query("DELETE pav
                         FROM ".TABLE_PRODUCTS_OPTIONS_VALUES." pav
                         JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS." pov2po
-                             ON pav.products_options_values_id = ppov2poad.products_options_values_id
+                             ON pav.products_options_values_id = ppov2po.products_options_values_id
                                 AND pov2po.products_options_id = '" . $oID . "'");
 
         xtc_db_query("DELETE FROM " . TABLE_PRODUCTS_OPTIONS . " WHERE products_options_id = '" . $oID . "'");
