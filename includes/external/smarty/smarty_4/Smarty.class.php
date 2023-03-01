@@ -28,30 +28,6 @@
  * @author    Rodney Rehm
  * @package   Smarty
  */
-
-/**
- * define smarty plugindir in template
- */
-define('MY_CURRENT_TEMPLATE', defined('CURRENT_TEMPLATE') ? CURRENT_TEMPLATE : 'tpl_modified');
-define('MY_TEMPLATE_PLUGINS', DIR_FS_CATALOG.'templates/'.MY_CURRENT_TEMPLATE.'/smarty/');
-define('MY_SHOP_PLUGINS', DIR_FS_EXTERNAL.'smarty/plugins/');
-
-/**
- * define smarty charset
- */
-if (isset($_SESSION['language_charset'])) {
-  $charset = $_SESSION['language_charset'];
-} else {
-  $charset = 'ISO-8859-1';
-  if (defined('DB_SERVER_CHARSET')
-      && DB_SERVER_CHARSET == 'utf8'
-      )
-  {
-    $charset = 'UTF-8';
-  }
-}
-define('SMARTY_RESOURCE_CHAR_SET', $charset);
-
 /**
  * set SMARTY_DIR to absolute path to Smarty library files.
  * Sets SMARTY_DIR only if user application has not already defined it.
@@ -60,7 +36,7 @@ if (!defined('SMARTY_DIR')) {
     /**
      *
      */
-    define('SMARTY_DIR', dirname(__FILE__) . DIRECTORY_SEPARATOR);
+    define('SMARTY_DIR', __DIR__ . DIRECTORY_SEPARATOR);
 }
 /**
  * set SMARTY_SYSPLUGINS_DIR to absolute path to Smarty internal plugins.
@@ -84,12 +60,21 @@ if (!defined('SMARTY_MBSTRING')) {
      */
     define('SMARTY_MBSTRING', function_exists('mb_get_info'));
 }
+
+/**
+ * Load helper functions
+ */
+if (!defined('SMARTY_HELPER_FUNCTIONS_LOADED')) {
+    include __DIR__ . '/functions.php';
+}
+
 /**
  * Load Smarty_Autoloader
  */
 if (!class_exists('Smarty_Autoloader')) {
-    include dirname(__FILE__) . '/bootstrap.php';
+    include __DIR__ . '/bootstrap.php';
 }
+
 /**
  * Load always needed external class files
  */
@@ -102,10 +87,6 @@ require_once SMARTY_SYSPLUGINS_DIR . 'smarty_variable.php';
 require_once SMARTY_SYSPLUGINS_DIR . 'smarty_template_source.php';
 require_once SMARTY_SYSPLUGINS_DIR . 'smarty_template_resource_base.php';
 require_once SMARTY_SYSPLUGINS_DIR . 'smarty_internal_resource_file.php';
-include_once SMARTY_SYSPLUGINS_DIR . 'smarty_compatibility.php';
-if (!defined('RUN_MODE_INSTALLER')) {
-  include_once SMARTY_SYSPLUGINS_DIR . 'smarty_cacheresource_phpfastcache.php';
-}
 
 /**
  * This is the main Smarty class
@@ -121,12 +102,12 @@ if (!defined('RUN_MODE_INSTALLER')) {
  * @method int compileAllConfig(string $extension = '.conf', bool $force_compile = false, int $time_limit = 0, $max_errors = null)
  * @method int clearCompiledTemplate($resource_name = null, $compile_id = null, $exp_time = null)
  */
-class Smarty extends Smarty_Compatibility
+class Smarty extends Smarty_Internal_TemplateBase
 {
     /**
      * smarty version
      */
-    const SMARTY_VERSION = '4.2.0';
+    const SMARTY_VERSION = '4.3.0';
     /**
      * define variable scopes
      */
@@ -188,7 +169,7 @@ class Smarty extends Smarty_Compatibility
     /**
      * The character set to adhere to (e.g. "UTF-8")
      */
-    public static $_CHARSET = SMARTY_RESOURCE_CHAR_SET;
+    public static $_CHARSET = SMARTY_MBSTRING ? 'UTF-8' : 'ISO-8859-1';
 
     /**
      * The date format to be used internally
@@ -483,7 +464,7 @@ class Smarty extends Smarty_Compatibility
      *
      * @var string
      */
-    public $caching_type = 'phpfastcache';
+    public $caching_type = 'file';
 
     /**
      * config type
@@ -684,26 +665,7 @@ class Smarty extends Smarty_Compatibility
         if (is_callable('mb_internal_encoding')) {
             mb_internal_encoding(Smarty::$_CHARSET);
         }
-        if (is_callable('mb_regex_encoding')) {
-            mb_regex_encoding(Smarty::$_CHARSET);
-        }
         $this->start_time = microtime(true);
-
-        // set default dirs
-        $this->setTemplateDir(DIR_FS_CATALOG . 'templates' . DIRECTORY_SEPARATOR)
-             ->addTemplateDir(DIR_FS_CATALOG . 'templates' . DIRECTORY_SEPARATOR . MY_CURRENT_TEMPLATE . DIRECTORY_SEPARATOR)
-             ->setCompileDir(DIR_FS_CATALOG . 'templates_c' . DIRECTORY_SEPARATOR)
-             ->setPluginsDir(SMARTY_PLUGINS_DIR)
-             ->setCacheDir(DIR_FS_CATALOG . 'cache' . DIRECTORY_SEPARATOR)
-             ->setConfigDir(DIR_FS_CATALOG . 'lang' . DIRECTORY_SEPARATOR)
-             ->addConfigDir(DIR_FS_CATALOG . 'templates' . DIRECTORY_SEPARATOR . MY_CURRENT_TEMPLATE . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR)
-             ->addPluginsDir(MY_TEMPLATE_PLUGINS)
-             ->addPluginsDir(MY_SHOP_PLUGINS);
-        
-        if (!defined('RUN_MODE_INSTALLER')) {
-          $this->registerCacheResource('phpfastcache', new Smarty_CacheResource_Phpfastcache());
-        }
-
         if (isset($_SERVER[ 'SCRIPT_NAME' ])) {
             Smarty::$global_tpl_vars[ 'SCRIPT_NAME' ] = new Smarty_Variable($_SERVER[ 'SCRIPT_NAME' ]);
         }
