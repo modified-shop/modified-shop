@@ -75,6 +75,20 @@
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_AVALEX_TYPE_DSE', '2',  '6', '1', 'xtc_cfg_select_content_module(', 'xtc_cfg_display_content', now())");
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_AVALEX_TYPE_WRB', '9',  '6', '1', 'xtc_cfg_select_content_module(', 'xtc_cfg_display_content', now())");
       xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_AVALEX_TYPE_IMP', '4',  '6', '1', 'xtc_cfg_select_content_module(', 'xtc_cfg_display_content', now())");
+
+      $query_result = xtc_db_query("SHOW COLUMNS FROM `" . TABLE_ADMIN_ACCESS . "`");
+      $db_table_rows = array();
+      while ($row = xtc_db_fetch_array($query_result)) {
+        $db_table_rows[] = $row['Field'];
+      }
+      
+      if (!in_array('avalex', $db_table_rows)) {
+        xtc_db_query("ALTER TABLE `" . TABLE_ADMIN_ACCESS . "` ADD `avalex` INT(1) NOT NULL DEFAULT 0");
+        xtc_db_query("UPDATE `" . TABLE_ADMIN_ACCESS . "` SET `avalex` = 1 WHERE `customers_id` = 1");
+        xtc_db_query("UPDATE `" . TABLE_ADMIN_ACCESS . "` SET `avalex` = 1 WHERE `customers_id` = ".$_SESSION['customer_id']);
+        xtc_db_query("UPDATE `" . TABLE_ADMIN_ACCESS . "` SET `avalex` = 9 WHERE `customers_id`='groups'");
+      }
+
     }
 
     function remove() {
