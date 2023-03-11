@@ -104,4 +104,9 @@ ALTER TABLE `email_content` ADD INDEX `idx_sort_order` (`sort_order`);
 ALTER TABLE `products_content` ADD `sort_order` INT(3) NOT NULL DEFAULT '0' AFTER `file_comment`;
 ALTER TABLE `products_content` ADD INDEX `idx_sort_order` (`sort_order`); 
 
+#Tomcraft - 2023-03-11 - avalex
+ALTER TABLE `admin_access` ADD `avalex` INT(1) NOT NULL DEFAULT '0' AFTER `scheduled_tasks`;
+UPDATE `admin_access` SET `avalex` = 1 WHERE `customers_id` = 1 LIMIT 1;
+UPDATE `admin_access` SET `avalex` = 9 WHERE `customers_id` = 'groups' LIMIT 1;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
