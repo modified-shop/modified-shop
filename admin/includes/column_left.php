@@ -110,6 +110,7 @@ endMenue(BOX_HEADING_MODULES);
 //partner
 $menu_access = array();
 $menu_access[] = mainMenue(BOX_HEADING_PARTNER_MODULES);
+if (isset($admin_access['avalex']) && $admin_access['avalex'] == '1') $menu_access[] = '<li><a href="' . xtc_href_link(FILENAME_AVALEX, '') . '" class="menuBoxContentLink"> -' . BOX_AVALEX . '</a></li>';
 if (isset($admin_access['cleverreach']) && $admin_access['cleverreach'] == '1') $menu_access[] = '<li><a href="' . xtc_href_link(FILENAME_CLEVERREACH, '') . '" class="menuBoxContentLink"> -' . BOX_CLEVERREACH . '</a></li>';
 if (isset($admin_access['dhl']) && $admin_access['dhl'] == '1') $menu_access[] = '<li><a href="' . xtc_href_link(FILENAME_DHL, '') . '" class="menuBoxContentLink"> -' . BOX_DHL . '</a></li>';
 if (isset($admin_access['haendlerbund']) && $admin_access['haendlerbund'] == '1') $menu_access[] = '<li><a href="' . xtc_href_link(FILENAME_HAENDLERBUND, '') . '" class="menuBoxContentLink"> -' . BOX_HAENDLERBUND . '</a></li>';

@@ -98,6 +98,7 @@ $filename_array = array(
   'FILENAME_CHECKOUT_SUCCESS' => 'checkout_success.php',
   'FILENAME_DHL' => 'dhl.php',
   'FILENAME_SCHEDULED_TASKS' => 'scheduled_tasks.php',
+  'FILENAME_AVALEX' => 'avalex.php',
 );
 
 // define 

@@ -199,6 +199,7 @@ define('BOX_CONTENT_CONTENT', 'Content Anh&auml;nge');
 define('BOX_EMAIL_CONTENT', 'E-Mail Anh&auml;nge');
 define('BOX_DHL', 'DHL Versand &amp; Label-Erstellung');
 define('BOX_SCHEDULED_TASKS', 'Geplante Aufgaben');
+define('BOX_AVALEX', 'avalex Rechtstexte');
 
 define('TXT_GROUPS','<b>Gruppen</b>:');
 define('TXT_SYSTEM','System');
