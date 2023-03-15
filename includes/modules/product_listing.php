@@ -231,7 +231,7 @@ if ($result != false) {
       )
   {
     $manufacturer = $manufacturers_array[(int)$_GET['manufacturers_id']];
-    $manufacturer_image = $main->getImage($manufacturer['manufacturers_image'], '', MANUFACTURER_IMAGE_SHOW_NO_IMAGE, 'manufacturers/noimage.gif');
+    $manufacturer_image = $main->getImage($manufacturer['manufacturers_image'], 'manufacturers/', MANUFACTURER_IMAGE_SHOW_NO_IMAGE, 'manufacturers/noimage.gif');
 
     $module_smarty->assign('language', $_SESSION['language']);
     $module_smarty->assign('CATEGORIES_NAME', $manufacturer['manufacturers_name']);
