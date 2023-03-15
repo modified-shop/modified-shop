@@ -404,6 +404,9 @@
 
   function orders_product_edit($oID, $data_array) {
     global $order, $xtPrice, $lang;
+    if (empty($data_array['products_price'])) {
+      $data_array['products_price'] = 0;
+    }
   
     $lang_query = xtc_db_query("SELECT languages_id 
                                   FROM ".TABLE_LANGUAGES." 
