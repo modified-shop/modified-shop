@@ -863,7 +863,7 @@ select {
   border-style: solid;
   border-width: 1px;
   vertical-align: middle;
-	padding: 7px 5px 7px 2px;
+	padding: 7px 5px 7px 7px;
 	border-radius: 2px;
   box-sizing: border-box;
   width:100%;
