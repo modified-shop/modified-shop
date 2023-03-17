@@ -63,6 +63,9 @@
   define('PICTURESET_BOX', '360:thumbnail,480:midi,600:thumbnail,690:thumbnail,920:thumbnail,985:midi');
   define('PICTURESET_ROW', '985:midi');
   
+  // Sumo select  
+  defined('ADVANCED_SUMOSELECT_SEARCHFIELD') or define('ADVANCED_SUMOSELECT_SEARCHFIELD', true); // 'true' zeigt in allen Select-Felder das Suchfeld an  / 'false' zeigt das Suchfeld nur bei der Länderauswahl an
+  
   // set base
   defined('DIR_WS_BASE') OR define('DIR_WS_BASE', xtc_href_link('', '', $request_type, false, false));
 
