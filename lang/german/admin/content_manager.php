@@ -59,7 +59,7 @@
   // edit
   define('TEXT_LANGUAGE','Sprache:');
   define('TEXT_STATUS','Sichtbar:');
-  define('TEXT_STATUS_DESCRIPTION','Link in der Info Box angezeigen?');
+  define('TEXT_STATUS_DESCRIPTION','Link in der Info Box anzeigen?');
   define('TEXT_TITLE','Titel:');
   define('TEXT_TITLE_FILE','Titel/Dateiname:');
   define('TEXT_HEADING','&Uuml;berschrift:');
