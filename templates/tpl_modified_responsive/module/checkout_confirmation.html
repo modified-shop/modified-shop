@@ -143,7 +143,7 @@
         {if $smarty.const.CHECKOUT_SHOW_PRODUCTS_IMAGES == 'true'}<span class="ol_image ol_width2">{$data.image}</span>{/if}
         <span class="ol_productsname ol_width3">
           <span class="ol_distance">{if isset($data.link_more)}<strong>{$data.name}</strong> {$data.link_more}{else}{$data.link}{/if}</span>
-          <p class="ol_short_desc">{$data.order_description}</p>
+          <div class="ol_short_desc">{$data.order_description}</div>
           {if isset($data.products_tags)}
             <div class="ol_tags_row">
               {foreach item=module_data from=$data.products_tags}
@@ -156,8 +156,8 @@
               {/foreach} 
             </div>
           {/if}
-          <p class="ol_model">{$smarty.const.HEADER_MODEL}: {$data.model}</p>
-          {if $data.shipping_time}<p class="ol_model">{$smarty.const.SHIPPING_TIME} {$data.shipping_time}</p>{/if}
+          <div class="ol_model">{$smarty.const.HEADER_MODEL}: {$data.model}</div>
+          {if $data.shipping_time}<div class="ol_shipping">{$smarty.const.SHIPPING_TIME} {$data.shipping_time}</div>{/if}
           {if is_array($data.attributes) && count($data.attributes) > 0}
           <ul class="attributes_list">
             {foreach key=a_data item=attrib_data from=$data.attributes}

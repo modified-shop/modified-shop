@@ -3267,8 +3267,10 @@ span.ol_totalprice {
   font-size:12px;
   line-height:18px;
   font-weight:normal;
+  margin: 2px 0 0 0;
 }
 .ol_short_desc {
+  margin: 8px 0px;
   font-size:12px;
   line-height:18px;
 }
