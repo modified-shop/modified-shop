@@ -22,12 +22,10 @@
   if ($error === true) {
     $smarty->assign('PERMISSION_ARRAY', $permission_array);
     $smarty->assign('REQUIREMENT_ARRAY', $requirement_array);
-    $smarty->assign('UNLINKED_ARRAY', $unlinked_files);
     
     if (count($permission_array['file_permission']) > 0
         || count($permission_array['folder_permission']) > 0
         || count($permission_array['rfolder_permission']) > 0
-        || 1==1
         )
     {
       // ftp
