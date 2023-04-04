@@ -121,14 +121,16 @@
     include(DIR_FS_CATALOG.'/includes/configure.php');
   }
 
-  require ('includes/auth.php');
-  $upgrade = check_db();
-  if ($upgrade === true && check_auth() === false) {
-    show_auth();
-  }
+//   require ('includes/auth.php');
+//   $upgrade = check_db();
+//   if ($upgrade === true && check_auth() === false) {
+//     show_auth();
+//   }
   $_SESSION['auth'] = true;
   
   if (!isset($_SESSION['language']) || isset($_GET['language'])) {
+    $_SESSION['language_charset'] = 'utf-8';
+
     switch (isset($_GET['language']) ? $_GET['language'] : '') {
       case 'en':
         $_SESSION['language'] = 'english';

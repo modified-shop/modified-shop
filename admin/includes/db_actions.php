@@ -259,11 +259,18 @@
 
       $_GET['file'] = isset($_GET['file']) ? basename($_GET['file']) : '';
       $_GET['file'] = preg_replace('/[^0-9a-zA-Z._-]/','',$_GET['file']);
-      $restore['file'] = DIR_FS_BACKUP . $_GET['file'];
 
-      if (!is_file($restore['file'])) {
-        die('Direct Access to this location is not allowed.');
+      if (is_file($_GET['file'])) {
+        $restore['file'] =  $_GET['file'];
+      } else {
+        $restore['file'] = DIR_FS_BACKUP . $_GET['file'];
       }
+
+//       $restore['file'] = DIR_FS_BACKUP . $_GET['file'];
+// 
+//       if (!is_file($restore['file'])) {
+//         die('Direct Access to this location is not allowed.');
+//       }
 
       $extension = substr($restore['file'], -3);
       if($extension == '.gz') {
@@ -290,22 +297,18 @@
       }
       $restore['anzahl_zeilen'] = RESTORE_ROWS;
       $restore['time_gap'] = time();
-    
-      if (!is_file($restore['file'])) {
-        die('Direct Access to this location is not allowed.');
-      }
 
       $restore['aufruf'] = 0;
       $restore['offset'] = 0;
       $restore['minspeed'] = 1;
       $restore['table_ready'] = 0;
       
-      $_SESSION['restore'] = isset($restore) ? $restore : '';
+      $_SESSION['restore'] = isset($restore) ? $restore : '';      
       break;
     
     case 'restoredb':
       if (!is_file($restore['file'])) {
-        die('Direct Access to this location is not allowed.');
+        die('Direccct Access to this location is not allowed.');
       }
       $info_text = TEXT_INFO_DO_RESTORE . $sim;
       $restore['filehandle']=($restore['compressed'] == true) ? gzopen($restore['file'],'r') : fopen($restore['file'],'r');

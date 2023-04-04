@@ -79,6 +79,8 @@
     require_once (DIR_FS_INC.'db_functions_'.$db_type.'.inc.php');
     require_once (DIR_FS_INC.'db_functions.inc.php');
 
+  $check_db = false;
+  if (DB_SERVER_USERNAME != '') {
     // make a connection to the database... now
     $check_db = xtc_db_connect();
     
@@ -90,7 +92,8 @@
         $check_db = true;
       }
     }
-    
+  }
+  
     return $check_db;
   } 
 ?>

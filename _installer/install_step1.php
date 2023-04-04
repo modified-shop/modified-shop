@@ -58,10 +58,10 @@
   $session = 'mysql';
 
   $sql_file_array = array(
-    'modified.sql',
-    'banktransfer_blz.sql',
-    'customers_status.sql',            
-    );
+    DIR_FS_INSTALLER.'includes/sql/modified.sql',
+    DIR_FS_INSTALLER.'includes/sql/banktransfer_blz.sql',
+    DIR_FS_INSTALLER.'includes/sql/customers_status.sql',            
+  );
 
   if (isset($_POST['action']) && $_POST['action'] == 'process') {
     $valid_params = array(
@@ -195,9 +195,9 @@
       if (isset($_POST['action']) && $_POST['action'] == 'restorenow') {
         $action = 'restorenow';
       }
-      $_GET['file'] = $sql_file_array[$_GET['sql']];
+      $_GET['file'] = $sql_file_array[(int)$_GET['sql']];
       $_GET['convert'] = $_SESSION['language_charset'];
-    
+      
       include (DIR_FS_CATALOG.DIR_ADMIN.'includes/functions/db_functions.php');
       include (DIR_FS_CATALOG.DIR_ADMIN.'includes/db_actions.php');
 

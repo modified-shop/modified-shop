@@ -145,6 +145,7 @@ CREATE TABLE admin_access (
   newsletter_recipients INT(1) NOT NULL DEFAULT 0,
   semknox INT(1) NOT NULL DEFAULT 0,
   dhl INT(1) NOT NULL DEFAULT 0,
+  scheduled_tasks INT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (customers_id)
 );
 
