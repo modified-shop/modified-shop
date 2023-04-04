@@ -2395,16 +2395,6 @@ function OrderUpdate ()
           $o_status=xtc_db_fetch_array($orders_status_query);
           $o_status=$o_status['orders_status_name'];
 
-          //ok lets generate the html/txt mail from Template
-          if ($_POST['notify_comments'] == 'on')
-          {
-            $notify_comments = sprintf(EMAIL_TEXT_COMMENTS_UPDATE, $comments) . "\n\n";
-          }
-            else
-          {
-            $comments='';
-          }
-
           // require functionblock for mails
           require_once(DIR_FS_INC . 'xtc_not_null.inc.php');
           require_once(DIR_FS_INC . 'xtc_href_link.inc.php');
