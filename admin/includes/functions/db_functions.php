@@ -14,7 +14,7 @@
    Released under the GNU General Public License
    --------------------------------------------------------------*/
 
-(defined( '_VALID_XTC' ) || defined('RUN_MODE_TASKS')) or die( 'Direct Access to this location is not allowed.' );
+(defined( '_VALID_XTC' ) || defined('RUN_MODE_TASKS')) or die( 'Direct Accessss to this location is not allowed.' );
 
 $lang['L_UNKNOWN_SQLCOMMAND']= 'Unbekannter SQL-Befehl';
 

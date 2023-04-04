@@ -18,8 +18,10 @@
 
   function xtc_db_close($link='db_link') {
     global ${$link};
-
-    return mysqli_close(${$link});
+    
+    if (is_object(${$link})) {
+      return mysqli_close(${$link});
+    }
   }
 
 
@@ -36,14 +38,18 @@
   function xtc_db_get_client_info($link='db_link') {
     global ${$link};
 
-    return mysqli_get_client_info(${$link});
+    if (is_object(${$link})) {
+      return mysqli_get_client_info(${$link});
+    }
   }
 
 
   function xtc_db_get_server_info($link='db_link') {
     global ${$link};
 
-    return mysqli_get_server_info(${$link});
+    if (is_object(${$link})) {
+      return mysqli_get_server_info(${$link});
+    }
   }
 
 
@@ -55,14 +61,18 @@
   function xtc_db_affected_rows($link='db_link') {
     global ${$link};
 
-    return mysqli_affected_rows(${$link});
+    if (is_object(${$link})) {
+      return mysqli_affected_rows(${$link});
+    }
   }
-
+  
 
   function xtc_db_insert_id($link='db_link') {
     global ${$link};
 
-    return mysqli_insert_id(${$link});
+    if (is_object(${$link})) {
+      return mysqli_insert_id(${$link});
+    }
   }
 
 
@@ -99,17 +109,19 @@
       return false;
     }
 
-    if (${$link}) {
-      if (!mysqli_select_db(${$link}, $database)) {
+    if (is_object(${$link})) {
+      try {
+        mysqli_select_db(${$link}, $database);
+      } catch (Exception $ex) {
         xtc_db_error('', mysqli_errno(${$link}), mysqli_error(${$link}));
-        return false;
+        return false;   
       }
     } else {
       xtc_db_error('', mysqli_connect_errno(), mysqli_connect_error());
       return false;
     }
 
-    if(version_compare(xtc_db_get_server_info(), '5.0.0', '>=')) {
+    if (version_compare(xtc_db_get_server_info(), '5.0.0', '>=')) {
       xtc_db_query("SET SESSION sql_mode=''");
     }
 
@@ -270,4 +282,3 @@
     
     return false;
   }
-?>

@@ -62,7 +62,10 @@
         && strpos($domain, '.') !== false
         && !in_array($domain, $tld_domain_array)
         )
-    {  
+    {
+      if (strpos($domain, ':') !== false) {
+        $domain = substr($domain, 0, strpos($domain, ':'));
+      }
       $domain_array[] = $domain;
       return get_cookie_domains(substr($domain, strpos($domain, '.') + 1), $domain_array);
     }
