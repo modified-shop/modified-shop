@@ -65,6 +65,7 @@
             $unlinked_files['success']['files'][] = $filename;
           } else {
             $unlinked_files['error']['files'][] = $filename;
+            $error = true;
           }
         }
       }

@@ -72,7 +72,7 @@
   {$FORM_END}
 {/if}
 
-{if count($UNLINKED_ARRAY.error.files) > 0}
+{if isset($UNLINKED_ARRAY.error.files) && count($UNLINKED_ARRAY.error.files) > 0}
   <div class="info_red_box">
     <h2>{$smarty.const.TEXT_ERROR_UNLINK_FILES}</h2>
     {foreach name=aussen item=files from=$UNLINKED_ARRAY.error.files}
@@ -81,7 +81,7 @@
   </div>
 {/if}
 
-{if count($UNLINKED_ARRAY.error.dir) > 0}
+{if isset($UNLINKED_ARRAY.error.dir) && count($UNLINKED_ARRAY.error.dir) > 0}
   <div class="info_red_box">
     <h2>{$smarty.const.TEXT_ERROR_UNLINK_FOLDER}</h2>
     {foreach name=aussen item=files from=$UNLINKED_ARRAY.error.dir}
