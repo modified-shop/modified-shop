@@ -121,11 +121,11 @@
     include(DIR_FS_CATALOG.'/includes/configure.php');
   }
 
-//   require ('includes/auth.php');
-//   $upgrade = check_db();
-//   if ($upgrade === true && check_auth() === false) {
-//     show_auth();
-//   }
+  require ('includes/auth.php');
+  $upgrade = check_db();
+  if ($upgrade === true && check_auth() === false) {
+    show_auth();
+  }
   $_SESSION['auth'] = true;
   
   if (!isset($_SESSION['language']) || isset($_GET['language'])) {
