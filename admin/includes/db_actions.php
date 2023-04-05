@@ -266,12 +266,6 @@
         $restore['file'] = DIR_FS_BACKUP . $_GET['file'];
       }
 
-//       $restore['file'] = DIR_FS_BACKUP . $_GET['file'];
-// 
-//       if (!is_file($restore['file'])) {
-//         die('Direct Access to this location is not allowed.');
-//       }
-
       $extension = substr($restore['file'], -3);
       if($extension == '.gz') {
         $protdatei = substr($restore['file'],0, -3). '.log.gz';
@@ -303,12 +297,12 @@
       $restore['minspeed'] = 1;
       $restore['table_ready'] = 0;
       
-      $_SESSION['restore'] = isset($restore) ? $restore : '';      
+      $_SESSION['restore'] = isset($restore) ? $restore : '';
       break;
     
     case 'restoredb':
       if (!is_file($restore['file'])) {
-        die('Direccct Access to this location is not allowed.');
+        die('Direct Access to this location is not allowed.');
       }
       $info_text = TEXT_INFO_DO_RESTORE . $sim;
       $restore['filehandle']=($restore['compressed'] == true) ? gzopen($restore['file'],'r') : fopen($restore['file'],'r');

@@ -197,7 +197,7 @@
       }
       $_GET['file'] = $sql_file_array[(int)$_GET['sql']];
       $_GET['convert'] = $_SESSION['language_charset'];
-      
+
       include (DIR_FS_CATALOG.DIR_ADMIN.'includes/functions/db_functions.php');
       include (DIR_FS_CATALOG.DIR_ADMIN.'includes/db_actions.php');
 

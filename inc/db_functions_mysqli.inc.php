@@ -114,7 +114,7 @@
         mysqli_select_db(${$link}, $database);
       } catch (Exception $ex) {
         xtc_db_error('', mysqli_errno(${$link}), mysqli_error(${$link}));
-        return false;   
+        return false;
       }
     } else {
       xtc_db_error('', mysqli_connect_errno(), mysqli_connect_error());
