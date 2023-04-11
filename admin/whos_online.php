@@ -132,7 +132,7 @@
               $whos_online_query = xtc_db_query($whos_online_query_raw);                        
               while ($whos_online = xtc_db_fetch_array($whos_online_query)) {
                 $time_online = (time() - $whos_online['time_entry']);
-                if ((!isset($_GET['info']) || (isset($_GET['info']) && ($_GET['info'] == $whos_online['session_id']))) && !isset($info) ) {
+                if ((!isset($_GET['info']) || (isset($_GET['info']) && ($_GET['info'] == $whos_online['session_id'] || str_replace('BOT', 'BOT|', $_GET['info']) == $whos_online['session_id']))) && !isset($info) ) {
                   $info = array(
                     'session_id' => $whos_online['session_id'],
                     'ip' => $whos_online['ip_address'],
@@ -205,7 +205,7 @@
             }
             $user_session = unserialize_session_data($session_data);
             
-            if (isset($user_session) && $user_session != 'ENCRYPTED' && ($user_session != '' || is_array($user_session))) {
+            if (is_array($user_session)) {
               
               $xtPrice = new xtcPrice($user_session['currency'], $user_session['customers_status']['customers_status_id']);
               
