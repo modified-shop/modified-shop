@@ -230,11 +230,6 @@
               $entry_state_error = true;
             }
           }
-        } else {
-          if ($entry_state == false) {
-            $error = true;
-            $entry_state_error = true;
-          }
         }
       }
     }
