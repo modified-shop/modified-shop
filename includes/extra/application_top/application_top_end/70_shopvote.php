@@ -28,9 +28,12 @@
     
       modified_api::reset();
       modified_api::setEndpoint('https://api.shopvote.de/');
-          
-      $response = unserialize(file_get_contents(SQL_CACHEDIR.'shopvote.cache'));
-    
+      
+      $response = false;
+      if (is_file(SQL_CACHEDIR.'shopvote.cache')) {
+        $response = unserialize(file_get_contents(SQL_CACHEDIR.'shopvote.cache'));
+      }
+      
       if ($response === false
           || $response['exp'] < time()
           )
@@ -133,4 +136,3 @@
       }
     }   
   }
-?>
