@@ -390,7 +390,6 @@
       
       // ShipmentOrder
       $ShipmentOrder = new stdClass();
-      $ShipmentOrder->labelResponseType = 'URL';
       $ShipmentOrder->PrintOnlyIfCodeable['active'] = $this->codeable;
       $ShipmentOrder->sequenceNumber = MODULE_DHL_BUSINESS_PREFIX.$this->data['orders_id'];
       $ShipmentOrder->Shipment = $Shipment;
@@ -399,7 +398,8 @@
       $request = new stdClass();
       $request->Version = $this->buildVersion();
       $request->ShipmentOrder = $ShipmentOrder;
-      
+      $request->labelResponseType = 'URL';
+
       return $request;
     }
 
