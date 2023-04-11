@@ -503,7 +503,6 @@
   
       if (isset($data['suburb'])
           && $data['suburb'] != '' 
-          && $data['country_iso_2'] == 'DE'
           ) 
       {
         if ($Name->name2 == '') {
