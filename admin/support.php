@@ -32,16 +32,21 @@ if (isset($_GET['module']) && $_GET['module'] != '') {
 if (isset($_GET['action'])) {
   switch ($_GET['action']) {
     case 'send':
-      foreach ($response['form'] as $data) {
-        if ($data['required'] == true
-            && (!isset($_POST[$data['name']])
-                || $_POST[$data['name']] == ''
-                )
-            )
-        {
-          $error = true;
-          $error_field[$data['name']] = true;
-        }        
+      if (isset($response['form']) 
+          && is_array($response['form'])
+          )
+      {
+        foreach ($response['form'] as $data) {
+          if ($data['required'] == true
+              && (!isset($_POST[$data['name']])
+                  || $_POST[$data['name']] == ''
+                  )
+              )
+          {
+            $error = true;
+            $error_field[$data['name']] = true;
+          }        
+        }
       }
       
       if (isset($response['privacy'])
@@ -189,7 +194,7 @@ require (DIR_WS_INCLUDES.'head.php');
             
             <div class="div_box brd-none pdg2">
               <?php
-              if (!is_array($response)) {
+              if (!is_array($response) || count($response) < 1) {
                 echo '<div class="description">'.TEXT_SUPPORT_ALTERNATIVE.'</div>';
               } else {
                 ?>

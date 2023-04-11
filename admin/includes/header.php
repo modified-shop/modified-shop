@@ -179,7 +179,7 @@
               'icon'  => 'icon_update.png',
               'name'  => BOX_UPDATE,
               'class' => 'right',
-              'count' => ($update_array['total'] > 0 ? $update_array['total'] : '')
+              'count' => ((isset($update_array['total']) && $update_array['total'] > 0) ? $update_array['total'] : '')
             );
           $favorites[] = array(
               'file'  => xtc_href_link('support.php'),
