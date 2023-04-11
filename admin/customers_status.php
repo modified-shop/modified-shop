@@ -197,6 +197,9 @@
         xtc_db_query("DROP TABLE IF EXISTS " . TABLE_PERSONAL_OFFERS_BY.(int)$cID);
         xtc_db_query("ALTER TABLE `products` DROP `group_permission_" . (int)$cID . "`");
         xtc_db_query("ALTER TABLE `categories` DROP `group_permission_" . (int)$cID . "`");
+        xtc_db_query("UPDATE content_manager SET group_ids = REPLACE(group_ids, 'c_".(int)$cID."_group', '')");
+        xtc_db_query("UPDATE content_manager SET group_ids = REPLACE(group_ids, ',,', ',')");
+        
         xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS_STATUS, 'page=' . $page));
         break;
 
