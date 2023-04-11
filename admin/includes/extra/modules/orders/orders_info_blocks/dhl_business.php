@@ -76,11 +76,14 @@
               $weight = $dhl->calculate_weight($oID);
               
               if (!isset($order->customer['dob'])) {
+                $order->customer['dob'] = '0000-00-00';
                 $check_query = xtc_db_query("SELECT customers_dob
                                                FROM ".TABLE_CUSTOMERS."
                                               WHERE customers_id = '".(int)$order->customer['ID']."'");
-                $check = xtc_db_fetch_array($check_query);
-                $order->customer['dob'] = $check['customers_dob'];
+                if (xtc_db_num_rows($check_query) > 0) {
+                  $check = xtc_db_fetch_array($check_query);
+                  $order->customer['dob'] = $check['customers_dob'];
+                }
               }
             ?>
             <table cellspacing="0" cellpadding="5" class="tableInput border0" style="padding:0;">
