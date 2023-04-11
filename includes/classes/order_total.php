@@ -31,8 +31,11 @@ class order_total {
   var $modules;
   
   function __construct() {
-    global $order;
+    global $PHP_SELF, $order;
     
+    require_once (DIR_FS_CATALOG.'includes/classes/checkoutModules.class.php');
+    $this->checkoutModules = new checkoutModules();
+
     $this->order_total = $order->info['total'];
     
     $this->modules = array();
@@ -49,6 +52,9 @@ class order_total {
         }
       }
       unset($modules);
+
+      //new module support
+      $this->modules = $this->checkoutModules->total_modules($this->modules);
       
       foreach ($this->modules as $value) {
         include_once(DIR_WS_LANGUAGES.$_SESSION['language'].'/modules/order_total/'.$value);

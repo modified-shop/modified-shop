@@ -94,6 +94,11 @@ class checkoutModules {
         return $this->call_module_method($unallowed_modules);
     }
     
+    function total_modules($modules)
+    {
+        $this->function_call = 'total_modules';
+        return $this->call_module_method($modules);
+    }
 
     
 }
