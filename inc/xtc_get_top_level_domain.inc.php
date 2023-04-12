@@ -23,6 +23,10 @@
     }
   
     $cookie_domain = $url;
+    if (strpos($cookie_domain, ':') !== false) {
+      $cookie_domain = substr($cookie_domain, 0, strpos($cookie_domain, ':'));
+    }
+
     $domains = get_cookie_domains($url);
     if (count($domains) > 0) {
       $cookie_domain = array_shift($domains);
