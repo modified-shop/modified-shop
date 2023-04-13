@@ -57,7 +57,7 @@ if (isset($oID) && $oID != '') {
             $_SESSION['pp_error'] = TEXT_PAYPAL_ERROR_AMOUNT;
           }
           break;
-        case 'refund':
+        case 'capture':
           if ($_POST['capture_price'] > 0) {
             $paypal->capture_payment_admin($order->info['order_id'], $_POST['capture_price'], (isset($_POST['final_capture'])));
           } else {
@@ -108,7 +108,7 @@ if (isset($oID) && $oID != '') {
             $_SESSION['pp_error'] = TEXT_PAYPAL_ERROR_AMOUNT;
           }
           break;
-        case 'refund':
+        case 'capture':
           if ($_POST['capture_price'] > 0) {
             $response = $paypal->CaptureAuthorizedOrder($_POST['authorize_id'], $_POST['capture_price'], $order->info['currency'], (isset($_POST['final_capture'])));
 
