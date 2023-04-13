@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: reviews.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -36,11 +36,14 @@ define('TEXT_INFO_DELETE_REVIEW_INTRO', 'Sind Sie sicher, dass Sie diese Rezensi
 define('TEXT_INFO_DATE_ADDED', 'hinzugef&uuml;gt am:');
 define('TEXT_INFO_LAST_MODIFIED', 'letzte &Auml;nderung:');
 define('TEXT_IMAGE_NONEXISTENT', 'BILD EXISTIERT NICHT');
+
 define('TEXT_INFO_REVIEW_AUTHOR', 'geschrieben von:');
 define('TEXT_INFO_REVIEW_RATING', 'Bewertung:');
 define('TEXT_INFO_REVIEW_READ', 'gelesen :');
 define('TEXT_INFO_REVIEW_SIZE', 'Gr&ouml;&szlig;e:');
 define('TEXT_INFO_PRODUCTS_AVERAGE_RATING', 'durchschnittl. Wertung:');
+define('TEXT_INFO_HEADING_EDIT_REVIEW', 'Produktrezensionen bearbeiten');
+define('TEXT_INFO_EDIT_REVIEW_INTRO', 'Bitte f&uuml;hren Sie notwendige &Auml;nderungen durch');
 
 define('TEXT_OF_5_STARS', '%s von 5 Sternen!');
 define('TEXT_GOOD', '<span class="smallText colorRed"><b>GUT</b></span>');
