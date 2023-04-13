@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: reviews.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -42,6 +42,8 @@ define('TEXT_INFO_REVIEW_RATING', 'Rating:');
 define('TEXT_INFO_REVIEW_READ', 'Read:');
 define('TEXT_INFO_REVIEW_SIZE', 'Size:');
 define('TEXT_INFO_PRODUCTS_AVERAGE_RATING', 'Average Rating:');
+define('TEXT_INFO_HEADING_EDIT_REVIEW', 'Edit Review');
+define('TEXT_INFO_EDIT_REVIEW_INTRO', 'Please make any necessary changes');
 
 define('TEXT_OF_5_STARS', '%s of 5 Stars!');
 define('TEXT_GOOD', '<span class="smallText colorRed"><b>GOOD</b></font></span>');
