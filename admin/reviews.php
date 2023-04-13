@@ -127,7 +127,7 @@ require (DIR_WS_INCLUDES.'head.php');
                   }
 
                   if (isset($rInfo) && is_object($rInfo) && $reviews['reviews_id'] == $rInfo->reviews_id) {
-                    echo '<tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_REVIEWS, 'page=' . $page . '&rID=' . $rInfo->reviews_id . '&action=preview') . '\'">' . "\n";
+                    echo '<tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_REVIEWS, 'page=' . $page . '&rID=' . $rInfo->reviews_id . '&action=edit') . '\'">' . "\n";
                   } else {
                     echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_REVIEWS, 'page=' . $page . '&rID=' . $reviews['reviews_id']) . '\'">' . "\n";
                   }
