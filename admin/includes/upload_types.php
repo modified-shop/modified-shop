@@ -23,5 +23,5 @@
   $accepted_movie_extensions = array("mpeg","mpg","mpe","qt","mov","avi","movie");
   $accepted_movie_mime_types = array("video/mpeg","video/quicktime","video/x-msvideo","video/x-sgi-movie");
 
-  $accepted_compressed_extensions = array("cab","tar","rar","7z");
-  $accepted_compressed_mime_types = array("application/x-tar","application/zip","application/x-rar-compressed","application/x-7z-compressed");
+  $accepted_compressed_extensions = array("tar","zip","rar","7z","cab");
+  $accepted_compressed_mime_types = array("application/x-tar","application/zip","application/x-rar-compressed","application/x-7z-compressed","application/vnd.ms-cab-compressed");
