@@ -52,9 +52,6 @@
   $page_max_display_values_results = xtc_cfg_save_max_display_results($cfg_max_display_values_key);
 
   $dir_values = DIR_FS_CATALOG_IMAGES . 'tags/';
-  $accepted_values_image_files_extensions = array("jpg","jpeg","jpe","gif","png","bmp","tiff","tif","bmp");
-  $accepted_values_image_files_mime_types = array("image/jpeg","image/gif","image/png","image/bmp");
-  
   $icon_padding = 'style="padding-right:8px;"';
   
   $languages = xtc_get_languages();
@@ -125,7 +122,9 @@
       }
   
       //store image
-      if ($values_image = xtc_try_upload('values_image', $dir_values, '644', $accepted_values_image_files_extensions, $accepted_values_image_files_mime_types)) {
+      require(DIR_WS_INCLUDES.'upload_types.php');
+      
+      if ($values_image = xtc_try_upload('values_image', $dir_values, '644', $accepted_image_extensions, $accepted_image_mime_types)) {
         $sql_data_array = array('values_image' => 'tags/'.$values_image->filename);
         xtc_db_perform(TABLE_PRODUCTS_TAGS_VALUES, $sql_data_array, 'update', "values_id = '" . (int)$values_id . "'");
       }
@@ -176,7 +175,9 @@
       }
      
       //store image
-      if ($values_image = xtc_try_upload('values_image', $dir_values, '644', $accepted_values_image_files_extensions, $accepted_values_image_files_mime_types)) {
+      require(DIR_WS_INCLUDES.'upload_types.php');
+      
+      if ($values_image = xtc_try_upload('values_image', $dir_values, '644', $accepted_image_extensions, $accepted_image_mime_types)) {
         $sql_data_array = array('values_image' => 'tags/'.$values_image->filename);
         xtc_db_perform(TABLE_PRODUCTS_TAGS_VALUES, $sql_data_array, 'update', "values_id = '" . $vID . "'");
       }

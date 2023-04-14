@@ -219,9 +219,8 @@ class categories {
         xtc_db_perform(TABLE_CATEGORIES_DESCRIPTION, $sql_data_array, 'update', "categories_id = '".$categories_id."' AND language_id = '".$lang['id']."'");
       }
     }
-
-    $accepted_categories_image_files_extensions = array("jpg","jpeg","jpe","gif","png","bmp","tiff","tif","bmp");
-    $accepted_categories_image_files_mime_types = array("image/jpeg","image/gif","image/png","image/bmp");
+    
+    require(DIR_WS_INCLUDES.'upload_types.php');
     
     foreach ($this->images_type_array as $image_type) {
       //are we asked to delete some pics?
@@ -240,7 +239,7 @@ class categories {
                        WHERE categories_id = '".(int) $categories_id."'");
       }
     
-      if ($categories_image = xtc_try_upload('categories_image'.$image_type, DIR_FS_CATALOG_IMAGES.'categories/original_images/', '777', $accepted_categories_image_files_extensions, $accepted_categories_image_files_mime_types)) {
+      if ($categories_image = xtc_try_upload('categories_image'.$image_type, DIR_FS_CATALOG_IMAGES.'categories/original_images/', '777', $accepted_image_extensions, $accepted_image_mime_types)) {
         $cname_arr = explode('.', $categories_image->filename);
         $cnsuffix = array_pop($cname_arr);
         $categories_image_name = $categories_image_name_process = $this->image_name($categories_id, substr($image_type, 1), $cnsuffix, $cname_arr, false, $categories_data);
@@ -1307,8 +1306,7 @@ class categories {
 
   
   function uploadImage($products_id, $products_data) {
-    $accepted_products_image_files_extensions = array("jpg","jpeg","jpe","gif","png","bmp","tiff","tif","bmp");
-    $accepted_products_image_files_mime_types = array("image/jpeg","image/gif","image/png","image/bmp");
+    require(DIR_WS_INCLUDES.'upload_types.php');
     
     //are we asked to delete some pics?
     if (isset($products_data['del_pic']) && $products_data['del_pic'] != '') {
@@ -1324,7 +1322,7 @@ class categories {
                      WHERE products_id    = '".(int)$products_id."'");
     }
 
-    if ($products_image = xtc_try_upload('products_image', DIR_FS_CATALOG_ORIGINAL_IMAGES, '777', $accepted_products_image_files_extensions, $accepted_products_image_files_mime_types)) {
+    if ($products_image = xtc_try_upload('products_image', DIR_FS_CATALOG_ORIGINAL_IMAGES, '777', $accepted_image_extensions, $accepted_image_mime_types)) {
       $pname_arr = explode('.', $products_image->filename);
       $nsuffix = array_pop($pname_arr);
       $products_image_name = $products_image_name_process = $this->image_name($products_id, 0, $nsuffix, $pname_arr, false, $products_data);
@@ -1359,8 +1357,7 @@ class categories {
 
   
   function uploadMoImages($products_id, $products_data, $action) {
-    $accepted_mo_pics_image_files_extensions = array("jpg","jpeg","jpe","gif","png","bmp","tiff","tif","bmp");
-    $accepted_mo_pics_image_files_mime_types = array("image/jpeg","image/gif","image/png","image/bmp");
+    require(DIR_WS_INCLUDES.'upload_types.php');
     
     //are we asked to delete some pics?
     if (isset($products_data['del_mo_pic']) && count($products_data['del_mo_pic']) > 0) {
@@ -1377,7 +1374,7 @@ class categories {
     }
     
     for ($img = 0; $img < MO_PICS; $img ++) {      
-      if ($pIMG = xtc_try_upload('mo_pics_'.$img, DIR_FS_CATALOG_ORIGINAL_IMAGES, '777', $accepted_mo_pics_image_files_extensions, $accepted_mo_pics_image_files_mime_types)) {
+      if ($pIMG = xtc_try_upload('mo_pics_'.$img, DIR_FS_CATALOG_ORIGINAL_IMAGES, '777', $accepted_image_extensions, $accepted_image_mime_types)) {
         $pname_arr = explode('.', $pIMG->filename);
         $nsuffix = array_pop($pname_arr);
         $products_image_name = $products_image_name_process = $this->image_name($products_id, ($img +1), $nsuffix, $pname_arr, false, $products_data);

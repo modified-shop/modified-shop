@@ -123,10 +123,9 @@
       }
       
       //store manufacturers_image
-      $accepted_manufacturers_image_files_extensions = array("jpg","jpeg","jpe","gif","png","bmp","tiff","tif","bmp");
-      $accepted_manufacturers_image_files_mime_types = array("image/jpeg","image/gif","image/png","image/bmp");
-
-      if ($manufacturers_image = xtc_try_upload('manufacturers_image', DIR_FS_CATALOG_IMAGES.'manufacturers/original_images/', '644', $accepted_manufacturers_image_files_extensions, $accepted_manufacturers_image_files_mime_types)) {        
+      require(DIR_WS_INCLUDES.'upload_types.php');
+      
+      if ($manufacturers_image = xtc_try_upload('manufacturers_image', DIR_FS_CATALOG_IMAGES.'manufacturers/original_images/', '644', $accepted_image_extensions, $accepted_image_mime_types)) {        
         $manufacturers_image_name_process = $manufacturers_image_name = $manufacturers_image->filename;
         require(DIR_WS_INCLUDES.'manufacturers_image.php');
         

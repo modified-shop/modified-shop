@@ -74,9 +74,9 @@
         }
       }
 
-      $accepted_shipping_status_files_extensions = array("jpg","jpeg","jpe","gif","png","bmp","tiff","tif","bmp");
-      $accepted_shipping_status_files_mime_types = array("image/jpeg","image/gif","image/png","image/bmp");
-      if ($shipping_status_image = xtc_try_upload('shipping_status_image', DIR_FS_DOCUMENT_ROOT.DIR_WS_IMAGES, '644', $accepted_shipping_status_files_extensions, $accepted_shipping_status_files_mime_types)) {
+      require(DIR_WS_INCLUDES.'upload_types.php');
+      
+      if ($shipping_status_image = xtc_try_upload('shipping_status_image', DIR_FS_DOCUMENT_ROOT.DIR_WS_IMAGES, '644', $accepted_image_extensions, $accepted_image_mime_types)) {
         xtc_db_query("UPDATE " . TABLE_SHIPPING_STATUS . " 
                          SET shipping_status_image = '" . $shipping_status_image->filename . "' 
                        WHERE shipping_status_id = '" . xtc_db_input($oID) . "'");

@@ -169,9 +169,9 @@
             xtc_db_query("INSERT INTO ".TABLE_PERSONAL_OFFERS_BY.$customers_status_id." SELECT * FROM ".TABLE_PERSONAL_OFFERS_BY.(int)$_POST['customers_base_status']);
           }
 
-          $accepted_customers_status_image_files_extensions = array("jpg","jpeg","jpe","gif","png","bmp","tiff","tif","bmp");
-          $accepted_customers_status_image_files_mime_types = array("image/jpeg","image/gif","image/png","image/bmp");
-          if ($customers_status_image = xtc_try_upload('customers_status_image', DIR_FS_CATALOG.DIR_WS_ICONS, '644', $accepted_customers_status_image_files_extensions, $accepted_customers_status_image_files_mime_types)) {
+          require(DIR_WS_INCLUDES.'upload_types.php');
+          
+          if ($customers_status_image = xtc_try_upload('customers_status_image', DIR_FS_CATALOG.DIR_WS_ICONS, '644', $accepted_image_extensions, $accepted_image_mime_types)) {
             xtc_db_query("UPDATE " . TABLE_CUSTOMERS_STATUS . " SET customers_status_image = '" . $customers_status_image->filename . "' WHERE customers_status_id = '" . xtc_db_input($customers_status_id) . "'");
           }
 

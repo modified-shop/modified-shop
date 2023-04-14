@@ -67,10 +67,8 @@
           $messageStack->add(ERROR_BANNER_GROUP_REQUIRED, 'error');
           $banner_error = true;
         }
-      
-        //store banners_image
-        $accepted_banners_image_files_extensions = array("jpg","jpeg","jpe","gif","png","bmp","tiff","tif","bmp","swf","cab");
-        $accepted_banners_image_files_mime_types = array("image/jpeg","image/gif","image/png","image/bmp","application/x-shockwave-flash");
+        
+        require(DIR_WS_INCLUDES.'upload_types.php');
         
         for ($i = 0, $n = count($languages); $i < $n; $i++) {
           $banners_title = xtc_db_prepare_input($_POST['banners_title'][$languages[$i]['id']]);
@@ -78,7 +76,7 @@
           
           foreach ($images_type_array as $images_type) {
             ${'banners_image'.$images_type.'_exist'} = xtc_db_prepare_input($_POST['banners_image'.$images_type.'_exist'][$languages[$i]['id']]);
-            ${'banners_image'.$images_type.'_'.$languages[$i]['id']} = xtc_try_upload('banners_image'.$images_type.'_'.$languages[$i]['id'], DIR_FS_CATALOG_IMAGES.'banner/original_images/', '644', $accepted_banners_image_files_extensions, $accepted_banners_image_files_mime_types);
+            ${'banners_image'.$images_type.'_'.$languages[$i]['id']} = xtc_try_upload('banners_image'.$images_type.'_'.$languages[$i]['id'], DIR_FS_CATALOG_IMAGES.'banner/original_images/', '644', $accepted_image_extensions, $accepted_image_mime_types);
           }
           /*          
           if (empty($banners_title)) {
@@ -86,7 +84,7 @@
             $banner_error = true;
           }
 
-          ${'banners_image_'.$languages[$i]['id']} = xtc_try_upload('banners_image_'.$languages[$i]['id'], DIR_FS_CATALOG_IMAGES.'banner/', '644', $accepted_banners_image_files_extensions, $accepted_banners_image_files_mime_types);
+          ${'banners_image_'.$languages[$i]['id']} = xtc_try_upload('banners_image_'.$languages[$i]['id'], DIR_FS_CATALOG_IMAGES.'banner/', '644', $accepted_image_extensions, $accepted_image_mime_types);
           if ($banners_image_exist == '' && $html_text == '' && !${'banners_image_'.$languages[$i]['id']}) {
             $messageStack->add(strtoupper($languages[$i]['code']) . ': ' . ERROR_BANNER_IMAGE_HTML_REQUIRED, 'error');
             $banner_error = true;
