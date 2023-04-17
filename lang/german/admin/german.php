@@ -109,7 +109,7 @@ define('BOX_CONFIGURATION_17', 'Zusatzmodule');
 define('BOX_CONFIGURATION_18', 'USt-IdNr.');
 define('BOX_CONFIGURATION_19', 'Partner');
 define('BOX_CONFIGURATION_22', 'Such-Optionen');
-define('BOX_CONFIGURATION_24', 'Google, Matomo &amp; Facebook');
+define('BOX_CONFIGURATION_24', 'Matomo &amp; Facebook');
 define('BOX_CONFIGURATION_25', 'Captcha');
 define('BOX_CONFIGURATION_31', 'Skrill');
 define('BOX_CONFIGURATION_40', 'Popup Fenster Optionen');
