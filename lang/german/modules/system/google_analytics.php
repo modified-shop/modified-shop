@@ -10,8 +10,8 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  define('MODULE_CONTACT_US_TEXT_TITLE', 'Google Analytics');
-  define('MODULE_CONTACT_US_TEXT_DESCRIPTION', 'Es werden alle Seitenaufrufe an Google Analytics &uuml;bermittelt und k&ouml;nnen sp&auml;ter ausgewertet werden. Dazu ist vorher die Anlage eines Kontos bei <a href="http://www.google.com/analytics/" target="_blank"><b>Google Analytics</b></a> erforderlich.');    
+  define('MODULE_GOOGLE_ANALYTICS_TEXT_TITLE', 'Google Analytics');
+  define('MODULE_GOOGLE_ANALYTICS_TEXT_DESCRIPTION', 'Es werden alle Seitenaufrufe an Google Analytics &uuml;bermittelt und k&ouml;nnen sp&auml;ter ausgewertet werden. Dazu ist vorher die Anlage eines Kontos bei <a href="http://www.google.com/analytics/" target="_blank"><b>Google Analytics</b></a> erforderlich.');    
 
   define('MODULE_GOOGLE_ANALYTICS_STATUS_TITLE', 'Status');
   define('MODULE_GOOGLE_ANALYTICS_STATUS_DESC', 'Modulstatus');

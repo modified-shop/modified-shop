@@ -10,8 +10,8 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  define('MODULE_CONTACT_US_TEXT_TITLE', 'Google Analytics');
-  define('MODULE_CONTACT_US_TEXT_DESCRIPTION', 'All page views will be submitted to Google Analytics for later evaluation. Before using this option, you need to register at <a href="http://www.google.com/analytics/" target="_blank"><b>Google Analytics</b></a> and create a new account.');    
+  define('MODULE_GOOGLE_ANALYTICS_TEXT_TITLE', 'Google Analytics');
+  define('MODULE_GOOGLE_ANALYTICS_TEXT_DESCRIPTION', 'All page views will be submitted to Google Analytics for later evaluation. Before using this option, you need to register at <a href="http://www.google.com/analytics/" target="_blank"><b>Google Analytics</b></a> and create a new account.');    
 
   define('MODULE_GOOGLE_ANALYTICS_STATUS_TITLE', 'Status');
   define('MODULE_GOOGLE_ANALYTICS_STATUS_DESC', 'Module status');
