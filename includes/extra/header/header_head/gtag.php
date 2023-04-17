@@ -10,31 +10,31 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  if (TRACKING_GOOGLEANALYTICS_ACTIVE == 'true'
-      && TRACKING_GOOGLEANALYTICS_GTAG == 'true'
-      && ((TRACKING_COUNT_ADMIN_ACTIVE == 'true' && $_SESSION['customers_status']['customers_status_id'] == '0')
+  if (defined('MODULE_GOOGLE_ANALYTICS_STATUS')
+      && MODULE_GOOGLE_ANALYTICS_STATUS == 'true'
+      && ((MODULE_GOOGLE_ANALYTICS_COUNT_ADMIN == 'true' && $_SESSION['customers_status']['customers_status_id'] == '0')
           || $_SESSION['customers_status']['customers_status_id'] != '0'
           )
       )
   {
-    $beginCode = '<script async src="https://www.googletagmanager.com/gtag/js?id='.TRACKING_GOOGLEANALYTICS_ID.'"></script>
+    $beginCode = '<script async src="https://www.googletagmanager.com/gtag/js?id='.MODULE_GOOGLE_ANALYTICS_TAG_ID.'"></script>
 <script>';
 
     if (defined('MODULE_COOKIE_CONSENT_STATUS') && MODULE_COOKIE_CONSENT_STATUS == 'true' && (in_array(3, $_SESSION['tracking']['allowed']) || defined('COOKIE_CONSENT_NO_TRACKING'))) {
-      $beginCode = '<script async data-type="text/javascript" data-src="https://www.googletagmanager.com/gtag/js?id='.TRACKING_GOOGLEANALYTICS_ID.'" type="as-oil" data-purposes="3" data-managed="as-oil"></script>
+      $beginCode = '<script async data-type="text/javascript" data-src="https://www.googletagmanager.com/gtag/js?id='.MODULE_GOOGLE_ANALYTICS_TAG_ID.'" type="as-oil" data-purposes="3" data-managed="as-oil"></script>
 <script async data-type="text/javascript" type="as-oil" data-purposes="3" data-managed="as-oil">';
     }
 
     $beginCode .= "
-  window['ga-disable-".TRACKING_GOOGLEANALYTICS_ID."'] = ".(((TRACKING_COUNT_ADMIN_ACTIVE == 'true' && $_SESSION['customers_status']['customers_status_id'] == '0') || $_SESSION['customers_status']['customers_status_id'] != '0') ? 'false' : 'true').";
+  window['ga-disable-".MODULE_GOOGLE_ANALYTICS_TAG_ID."'] = ".(((TRACKING_COUNT_ADMIN_ACTIVE == 'true' && $_SESSION['customers_status']['customers_status_id'] == '0') || $_SESSION['customers_status']['customers_status_id'] != '0') ? 'false' : 'true').";
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
-  gtag('config', '".TRACKING_GOOGLEANALYTICS_ID."', {
+  gtag('config', '".MODULE_GOOGLE_ANALYTICS_TAG_ID."', {
     anonymize_ip: true,
-    link_attribution: ".((TRACKING_GOOGLE_LINKID == 'true') ? 'true' : 'false').",
-    allow_google_signals: ".((TRACKING_GOOGLE_DISPLAY == 'true') ? 'true' : 'false')."
+    link_attribution: ".((MODULE_GOOGLE_ANALYTICS_LINKID == 'true') ? 'true' : 'false').",
+    allow_google_signals: ".((MODULE_GOOGLE_ANALYTICS_DISPLAY == 'true') ? 'true' : 'false')."
   });
 ";
 
@@ -57,7 +57,7 @@
           $addCode = getPaymentGtag();
           break;
         case FILENAME_CHECKOUT_SUCCESS:
-          if (TRACKING_GOOGLE_ECOMMERCE == 'true'
+          if (MODULE_GOOGLE_ANALYTICS_ECOMMERCE == 'true'
               && !in_array('GTAG-'.$last_order, $_SESSION['tracking']['order'])
               )
           {

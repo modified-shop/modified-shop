@@ -736,11 +736,6 @@ define ('POPUP_PRINT_ORDER_SIZE_DESC', 'Sets the size of the popup window to be 
 define('TRACKING_COUNT_ADMIN_ACTIVE_TITLE' , 'Count page views of the shop owner');
 define('TRACKING_COUNT_ADMIN_ACTIVE_DESC' , 'By activating this option, all page views of the administration usersof the shop owner will be counted as well. This will falsify the visitor stats.');
 
-define('TRACKING_GOOGLEANALYTICS_ACTIVE_TITLE' , 'Activate Google Analytics tracking');
-define('TRACKING_GOOGLEANALYTICS_ACTIVE_DESC' , 'By activating this option, all page views will be submitted to Google Analytics for later evaluation. Before using this option, you need to register at <a href="http://www.google.com/analytics/" target="_blank"><b>Google Analytics</b></a> and create a new account.');
-define('TRACKING_GOOGLEANALYTICS_ID_TITLE' , 'Google Analytics account number');
-define('TRACKING_GOOGLEANALYTICS_ID_DESC' , 'Enter your Google Analytics account number in the format "UA-XXXXXXXX-X" which you received after successfully creating an account.');
-
 define('TRACKING_PIWIK_ACTIVE_TITLE' , 'Activate Matomo Web-Analytics tracking');
 define('TRACKING_PIWIK_ACTIVE_DESC' , 'In order to use Matomo at all, you have to download and install it to your webspace at first. See also <a href="https://matomo.org/" target="_blank"><b>Matomo Web-Analytics</b></a>. In comparison to Google Analytics all data will be stored locally, i.e. you as show owner have complete control over all data.');
 define('TRACKING_PIWIK_LOCAL_PATH_TITLE' , 'Matomo install path (without "http://")');
@@ -902,19 +897,6 @@ define('SHOW_SHIPPING_EXCL_DESC', 'Show excl. or incl. shippingcost');
 
 define('ACCOUNT_TELEPHONE_OPTIONAL_TITLE', 'Telephone number optional');
 define('ACCOUNT_TELEPHONE_OPTIONAL_DESC', 'Telephone number only optional on registration?');
-
-define('TRACKING_GOOGLEANALYTICS_UNIVERSAL_TITLE' , 'Google Universal Analytics');
-define('TRACKING_GOOGLEANALYTICS_UNIVERSAL_DESC' , 'Use Google Universal Analytics Code?<br/><b>Attention:</b> This only works with a shop version 2.0.0.0 compatible template!');
-define('TRACKING_GOOGLEANALYTICS_DOMAIN_TITLE' , 'Google Universal Analytics Cookie Domain');
-define('TRACKING_GOOGLEANALYTICS_DOMAIN_DESC' , 'Please enter the Cookie Domain (<i>auto</i> or <i>example.com</i> or <i>www.example.com</i>). Only works with Google Universal Analytics.');
-define('TRACKING_GOOGLE_LINKID_TITLE' , 'Google Universal Analytics/Google Analytics GTAG LinkID');
-define('TRACKING_GOOGLE_LINKID_DESC' , 'You can see separate information on multiple links on a page that all have the same goal. If there is for example two links are on the same side, both lead to the contact page, you will see separate click information for each link. Only works with Google Universal Analytics &amp; Google Analytics GTAG.');
-define('TRACKING_GOOGLE_DISPLAY_TITLE' , 'Google Universal Analytics/Google Analytics GTAG Displayfeature');
-define('TRACKING_GOOGLE_DISPLAY_DESC' , 'The areas to demographics and interests included an overview and new reports about the performance by age, gender and interest categories. Only works with Google Universal Analytics &amp; Google Analytics GTAG.');
-define('TRACKING_GOOGLE_ECOMMERCE_TITLE' , 'Google E-Commerce Tracking');
-define('TRACKING_GOOGLE_ECOMMERCE_DESC' , 'Set up an E-Commerce tracking to find out what visitors buy from your website or app. In addition, you receive the following information:<br><br><strong>Products:</strong> Purchased products and the quantities and the revenues from these products<br><strong>Transactions:</strong> Information about sales, tax, shipping costs and quantities for each transaction<br><strong>time to Purchase:</strong> Number of days and visits, starting from the current campaign until the completion of the transaction');
-define('TRACKING_GOOGLEANALYTICS_GTAG_TITLE' , 'Google Analytics GTAG');
-define('TRACKING_GOOGLEANALYTICS_GTAG_DESC' , 'Use Google global Site Tag?');
 
 define('NEW_ATTRIBUTES_STYLING_TITLE', 'Attribute Manager Styling');
 define('NEW_ATTRIBUTES_STYLING_DESC', 'Enable styling of the checkboxes/dropdowns in the attribute manager? Set it to "No" if you experience problems with a huge number of attributes and performance problems.');

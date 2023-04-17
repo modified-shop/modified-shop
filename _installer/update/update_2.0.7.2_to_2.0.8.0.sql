@@ -109,4 +109,14 @@ ALTER TABLE `admin_access` ADD `avalex` INT(1) NOT NULL DEFAULT '0' AFTER `sched
 UPDATE `admin_access` SET `avalex` = 1 WHERE `customers_id` = 1 LIMIT 1;
 UPDATE `admin_access` SET `avalex` = 9 WHERE `customers_id` = 'groups' LIMIT 1;
 
+#GTB - 2023-04-17 - delete obsolete configuration
+DELETE FROM `configuration` WHERE `configuration_key` = 'TRACKING_GOOGLEANALYTICS_ACTIVE';
+DELETE FROM `configuration` WHERE `configuration_key` = 'TRACKING_GOOGLEANALYTICS_ID';
+DELETE FROM `configuration` WHERE `configuration_key` = 'TRACKING_GOOGLEANALYTICS_UNIVERSAL';
+DELETE FROM `configuration` WHERE `configuration_key` = 'TRACKING_GOOGLEANALYTICS_DOMAIN';
+DELETE FROM `configuration` WHERE `configuration_key` = 'TRACKING_GOOGLE_LINKID';
+DELETE FROM `configuration` WHERE `configuration_key` = 'TRACKING_GOOGLE_DISPLAY';
+DELETE FROM `configuration` WHERE `configuration_key` = 'TRACKING_GOOGLE_ECOMMERCE';
+DELETE FROM `configuration` WHERE `configuration_key` = 'TRACKING_GOOGLEANALYTICS_GTAG';
+
 # Keep an empty line at the end of this file for the db_updater to work properly

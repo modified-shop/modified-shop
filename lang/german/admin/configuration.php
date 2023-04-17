@@ -735,11 +735,6 @@ define('POPUP_PRINT_ORDER_SIZE_DESC', 'Hier kann die Gr&ouml;&szlig;e des Popup-
 define('TRACKING_COUNT_ADMIN_ACTIVE_TITLE' , 'Seitenaufrufe des Shopbetreibers mitz&auml;hlen');
 define('TRACKING_COUNT_ADMIN_ACTIVE_DESC' , 'Wird diese Option aktiviert, so werden auch alle Zugriffe des Administrators mitgez&auml;hlt, die (durch die h&auml;ufigeren Zugriffe auf den Shop) die Besucherstatistik verf&auml;lschen k&ouml;nnen.');
 
-define('TRACKING_GOOGLEANALYTICS_ACTIVE_TITLE' , 'Google Analytics Tracking aktivieren');
-define('TRACKING_GOOGLEANALYTICS_ACTIVE_DESC' , 'Wird diese Option aktiviert, so werden alle Seitenaufrufe an Google Analytics &uuml;bermittelt und k&ouml;nnen sp&auml;ter ausgewertet werden. Dazu ist vorher die Anlage eines Kontos bei <a href="http://www.google.com/analytics/" target="_blank"><b>Google Analytics</b></a> erforderlich.');
-define('TRACKING_GOOGLEANALYTICS_ID_TITLE' , 'Google Analytics Kontonummer');
-define('TRACKING_GOOGLEANALYTICS_ID_DESC' , 'Tragen Sie hier die Google Analytics Kontonummer im Format "UA-XXXXXXXX-X" ein, die Sie nach einer erfolgreichen Kontoerstellen bekommen haben.');
-
 define('TRACKING_PIWIK_ACTIVE_TITLE' , 'Matomo Web-Analytics Tracking aktivieren');
 define('TRACKING_PIWIK_ACTIVE_DESC' , 'Um Matomo nutzen zu k&ouml;nnen, m&uuml;ssen Sie es zun&auml;chst herunterladen und auf Ihrem Webspace installieren, siehe auch <a href="https://matomo.org/" target="_blank"><b>Matomo Web-Analytics</b></a>. Im Gegensatz zu Google Analytics werden die Daten lokal gespeichert, d.h. Sie als Shopbetreiber haben die Datenhoheit.');
 define('TRACKING_PIWIK_LOCAL_PATH_TITLE' , 'Matomo Installationsverzeichnis (ohne "http://")');
@@ -901,19 +896,6 @@ define('SHOW_SHIPPING_EXCL_DESC', 'Anzeige von zzgl. oder inkl. Versandkosten');
 
 define('ACCOUNT_TELEPHONE_OPTIONAL_TITLE', 'Telefonnummer optional');
 define('ACCOUNT_TELEPHONE_OPTIONAL_DESC', 'Soll die Telefonnummer nur optional abgefragt werden?');
-
-define('TRACKING_GOOGLEANALYTICS_UNIVERSAL_TITLE' , 'Google Universal Analytics');
-define('TRACKING_GOOGLEANALYTICS_UNIVERSAL_DESC' , 'Soll der Google Universal Analytics Code verwendet werden?<br/><b>Achtung:</b> Das funktioniert nur mit einem ab Shopversion 2.0.0.0 kompatiblem Template!');
-define('TRACKING_GOOGLEANALYTICS_DOMAIN_TITLE' , 'Google Universal Analytics Cookie Domain');
-define('TRACKING_GOOGLEANALYTICS_DOMAIN_DESC' , 'Tragen Sie hier Ihre Cookie Domain ein (<i>auto</i> oder <i>example.com</i> oder <i>www.example.com</i>). Funktioniert nur f&uuml;r Google Universal Analytics.');
-define('TRACKING_GOOGLE_LINKID_TITLE' , 'Google Universal Analytics/Google Analytics GTAG LinkID');
-define('TRACKING_GOOGLE_LINKID_DESC' , 'Sie k&ouml;nnen separate Informationen zu mehreren Links auf einer Seite sehen, die alle dasselbe Ziel haben. Wenn es zum Beispiel zwei Links auf derselben Seite gibt, die beide auf die Seite Kontakt f&uuml;hren, sehen Sie separate Klickinformationen f&uuml;r jeden Link. Funktioniert nur f&uuml;r Google Universal Analytics &amp; Google Analytics GTAG.');
-define('TRACKING_GOOGLE_DISPLAY_TITLE' , 'Google Universal Analytics/Google Analytics GTAG Displayfeature');
-define('TRACKING_GOOGLE_DISPLAY_DESC' , 'Die Bereiche zu demografischen Merkmalen und zum Interesse enthalten eine &Uuml;bersicht sowie neue Berichte zur Leistung nach Alter, Geschlecht und Interessenkategorien. Funktioniert nur f&uuml;r Google Universal Analytics &amp; Google Analytics GTAG.');
-define('TRACKING_GOOGLE_ECOMMERCE_TITLE' , 'Google E-Commerce-Tracking');
-define('TRACKING_GOOGLE_ECOMMERCE_DESC' , 'Setzen Sie E-Commerce-Tracking ein, um herauszufinden, was Besucher &uuml;ber Ihre Website oder App kaufen. Zudem erhalten Sie folgende Informationen:<br><br><strong>Produkte:</strong> Gekaufte Produkte, sowie die Mengen und die mit diesen Produkten erzielten Ums&auml;tze<br><strong>Transaktionen:</strong> Informationen zu Umsatz, Steuern, Versandkosten und Mengen f&uuml;r jede Transaktion<br><strong>Zeit bis zum Kauf:</strong> Anzahl von Tagen und Besuchen, beginnend von der aktuellen Kampagne bis zum Abschluss der Transaktion.');
-define('TRACKING_GOOGLEANALYTICS_GTAG_TITLE' , 'Google Analytics GTAG');
-define('TRACKING_GOOGLEANALYTICS_GTAG_DESC' , 'Soll der Google global Site Tag verwendet werden?');
 
 define('NEW_ATTRIBUTES_STYLING_TITLE', 'Attribut Verwaltung Styling');
 define('NEW_ATTRIBUTES_STYLING_DESC', 'In der Attribut Verwaltung das Styling bei den Checkboxen/Dropdowns aktivieren? Bei sehr vielen Attributen und Performanceproblemen auf Nein/false setzen.');
