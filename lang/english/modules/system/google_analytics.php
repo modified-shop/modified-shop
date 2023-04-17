@@ -17,7 +17,7 @@
   define('MODULE_GOOGLE_ANALYTICS_STATUS_DESC', 'Module status');
   
   define('MODULE_GOOGLE_ANALYTICS_TAG_ID_TITLE', 'Google Analytics TAG ID');
-  define('MODULE_GOOGLE_ANALYTICS_TAG_ID_DESC', 'Enter your Google Analytics TAG ID in the format "G-XXXXXXXXXX" which you received after successfully creating an account.');
+  define('MODULE_GOOGLE_ANALYTICS_TAG_ID_DESC', 'Enter your Google Analytics TAG ID in the format "G-XXXXXXXXXX" or "UA-XXXXXXXXXX" (for migrated Google Analytics Properties).');
 
   define('MODULE_GOOGLE_ANALYTICS_ECOMMERCE_TITLE' , 'E-Commerce Tracking');
   define('MODULE_GOOGLE_ANALYTICS_ECOMMERCE_DESC' , 'Set up an E-Commerce tracking to find out what visitors buy from your website or app. In addition, you receive the following information:<br><br><strong>Products:</strong> Purchased products and the quantities and the revenues from these products<br><strong>Transactions:</strong> Information about sales, tax, shipping costs and quantities for each transaction<br><strong>time to Purchase:</strong> Number of days and visits, starting from the current campaign until the completion of the transaction');
