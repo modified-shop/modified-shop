@@ -24,7 +24,7 @@
       $beginCode = '<script async data-type="text/javascript" data-src="https://www.googletagmanager.com/gtag/js?id='.TRACKING_GOOGLEANALYTICS_ID.'" type="as-oil" data-purposes="3" data-managed="as-oil"></script>
 <script async data-type="text/javascript" type="as-oil" data-purposes="3" data-managed="as-oil">';
     }
-    
+
     $beginCode .= "
   window['ga-disable-".TRACKING_GOOGLEANALYTICS_ID."'] = ".(((TRACKING_COUNT_ADMIN_ACTIVE == 'true' && $_SESSION['customers_status']['customers_status_id'] == '0') || $_SESSION['customers_status']['customers_status_id'] != '0') ? 'false' : 'true').";
   window.dataLayer = window.dataLayer || [];
@@ -32,109 +32,282 @@
   gtag('js', new Date());
 
   gtag('config', '".TRACKING_GOOGLEANALYTICS_ID."', {
-    'anonymize_ip': true,
-    'link_attribution': ".((TRACKING_GOOGLE_LINKID == 'true') ? 'true' : 'false').",
-    'allow_google_signals': ".((TRACKING_GOOGLE_DISPLAY == 'true') ? 'true' : 'false')."
+    anonymize_ip: true,
+    link_attribution: ".((TRACKING_GOOGLE_LINKID == 'true') ? 'true' : 'false').",
+    allow_google_signals: ".((TRACKING_GOOGLE_DISPLAY == 'true') ? 'true' : 'false')."
   });
 ";
-  
+
     $endCode = "
 </script>
 ";
 
-    $orderCode = null;
-    if (strpos($PHP_SELF, FILENAME_CHECKOUT_SUCCESS) !== false
-        && TRACKING_GOOGLE_ECOMMERCE == 'true'
-        && !in_array('GTAG-'.$last_order, $_SESSION['tracking']['order'])
-        )
-    {
-      $_SESSION['tracking']['order'][] = 'GTAG-'.$last_order;
-  
-      $orderCode = getOrderDetailsGtag();
+    $addCode = null;
+    if (isset($site_error)) {
+      $addCode = getErrorGtag($site_error);
+    } else {
+      switch (basename($PHP_SELF)) {
+        case FILENAME_CHECKOUT_SHIPPING:
+          $addCode = getCheckoutGtag();
+          break;
+        case FILENAME_CHECKOUT_PAYMENT:
+          $addCode = getShippingGtag();
+          break;
+        case FILENAME_CHECKOUT_CONFIRMATION:
+          $addCode = getPaymentGtag();
+          break;
+        case FILENAME_CHECKOUT_SUCCESS:
+          if (TRACKING_GOOGLE_ECOMMERCE == 'true'
+              && !in_array('GTAG-'.$last_order, $_SESSION['tracking']['order'])
+              )
+          {
+            $_SESSION['tracking']['order'][] = 'GTAG-'.$last_order;
+            $addCode = getOrderDetailsGtag();
+          }
+          break;
+        case FILENAME_SHOPPING_CART:
+          $addCode = getCartDetailsGtag();
+          break;
+        case FILENAME_PRODUCT_INFO:
+          $addCode = getProductDetailsGtag();
+          break;
+        case FILENAME_DEFAULT:
+          if ((isset($_GET['cPath']) && $_GET['cPath'] != '')
+              || (isset($_GET['manufacturers_id']) && $_GET['manufacturers_id'] != '')
+              )
+          {
+            $addCode = getListingDetailsGtag();
+          } else {
+            $addCode = getStartpageGtag();
+          }
+          break;
+        case FILENAME_SPECIALS:
+        case FILENAME_PRODUCTS_NEW:
+        case FILENAME_ADVANCED_SEARCH_RESULT:
+          $addCode = getListingDetailsGtag();
+          break;
+      }
     }
 
-    echo $beginCode . $orderCode . $endCode;  
-  } 
-  
+    echo $beginCode . $addCode . $endCode;
+  }
+
   /*
    * FUNCTIONS
    */
-  function getOrderDetailsGtag() {
-    global $last_order;
-  
-    require_once (DIR_FS_INC.'get_order_total.inc.php');
-    $total = get_order_total($last_order);
-    
-    $shipping = 0;
-    $ot_shipping_query = xtc_db_query("SELECT value
-                                         FROM " . TABLE_ORDERS_TOTAL . "
-                                        WHERE orders_id = '" . (int)$last_order . "' 
-                                          AND class='ot_shipping'");
-    if (xtc_db_num_rows($ot_shipping_query) > 0) {
-      $ot_shipping = xtc_db_fetch_array($ot_shipping_query);
-      $shipping = $ot_shipping['value'];
-    }
-    
-    $tax = 0;
-    $ot_tax_query = xtc_db_query("SELECT value
-                                    FROM " . TABLE_ORDERS_TOTAL . "
-                                   WHERE orders_id = '" . (int)$last_order . "' 
-                                     AND class='ot_tax'");
-    if (xtc_db_num_rows($ot_shipping_query) > 0) {
-      while ($ot_tax = xtc_db_fetch_array($ot_tax_query)) {
-        $tax += $ot_tax['value'];
-      }
-    }
-    
-    $currency_query = xtc_db_query("SELECT currency
-                                      FROM " . TABLE_ORDERS . "
-                                     WHERE orders_id = '" . (int)$last_order . "'");
-    $currency = xtc_db_fetch_array($currency_query);
+  function getStartpageGtag() {
+    $addCode = "
+  gtag('event', 'view_home');";
 
-    $item_query = xtc_db_query("SELECT cd.categories_name,
-                                       op.products_id,
-                                       op.orders_products_id,
-                                       op.products_model,
-                                       op.products_name,
-                                       op.products_price,
-                                       op.products_quantity
-                                  FROM " . TABLE_ORDERS_PRODUCTS . " op
-                                  JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c
-                                       ON op.products_id = p2c.products_id
-                                  JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd
-                                       ON p2c.categories_id = cd.categories_id
-                                          AND cd.language_id = '" . (int)$_SESSION['languages_id'] . "'
-                                 WHERE op.orders_id='" . (int)$last_order . "'
-                              GROUP BY op.products_id");
-    
-    $i = 1;
-    $addItem = array();
-    while ($item = xtc_db_fetch_array($item_query)) {
-      $addItem[] = "
-      {
-        'id': '".$item['products_id']."',
-        'name': '".addslashes($item['products_name'])."',
-        'category': '".addslashes($item['categories_name'])."',
-        'list_position': ".$i.",
-        'quantity': ".$item['products_quantity'].",
-        'price': '".number_format($item['products_price'], 2, '.', '')."'
-      }";
-      $i ++;
-    }
+    return $addCode;
+  }
 
 
-    $orderCode = "
-  gtag('event', 'purchase', {
-    'transaction_id': '".$last_order."',
-    'affiliation': '".addslashes(STORE_NAME)."',
-    'currency': '".$currency['currency']."',
-    'value': ".number_format($total, 2, '.', '').",
-    'tax': ".number_format($tax, 2, '.', '').",
-    'shipping': ".number_format($shipping, 2, '.', '').",
-    'items': [".implode(',', $addItem)."
+  function getErrorGtag($site_error) {
+    $addCode = "
+  gtag('event', 'view_error', {
+    error: '".$site_error."'
+  });";
+
+    return $addCode;
+  }
+
+
+  function getProductDetailsGtag() {
+    global $product, $xtPrice;
+
+    $addCode = "
+  gtag('event', 'view_item', {
+    currency: '".$_SESSION['currency']."',
+    value: ".numberFormatGtag($xtPrice->xtcGetPrice($product->data['products_id'], false, 1, $product->data['products_tax_class_id'])).",
+    items: [".getItemDetailsGtag($product->data)."
     ]
   });";
 
-    return $orderCode;
+    return $addCode;
   }
-?>
+
+
+  function getListingDetailsGtag() {
+    $split_obj = array('listing_split', 'specials_split', 'products_new_split');
+    foreach ($split_obj as $object) {
+      global ${$object};
+      if (isset(${$object}) && is_object(${$object})) {
+        break;
+      }
+    }
+
+    if (isset(${$object}) && is_object(${$object})) {
+      $products_array = array();
+      $listing_query = xtDBquery(${$object}->sql_query);
+      while ($listing = xtc_db_fetch_array($listing_query, true)) {
+        $products_array[] = getItemDetailsGtag($listing);
+      }
+
+      $addCode = "
+  gtag('event', 'view_item_list', {
+    items: [".implode(',', $products_array)."
+    ]
+  });";
+
+    } else {
+
+      $addCode = "
+  gtag('event', 'view_category');";
+
+    }
+
+    return $addCode;
+  }
+
+
+  function getCartDetailsGtag() {
+    if ($_SESSION['cart']->count_contents() > 0) {
+      $products_array = array();
+      $products = $_SESSION['cart']->get_products();
+      for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
+        $products_array[] = getItemDetailsGtag($products[$i]);
+      }
+
+      $addCode = "
+  gtag('event', 'view_cart', {
+    currency: '".$_SESSION['currency']."',
+    value: ".numberFormatGtag($_SESSION['cart']->show_total()).",
+    items: [".implode(',', $products_array)."
+    ]
+  });";
+
+      return $addCode;
+    }
+  }
+
+
+  function getCheckoutGtag() {
+    global $order;
+
+    if (count($order->products) > 0) {
+      $products_array = array();
+      $products = $order->products;
+      for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
+        $products_array[] = getItemDetailsGtag($products[$i]);
+      }
+
+      $addCode = "
+  gtag('event', 'begin_checkout', {
+    currency: '".$_SESSION['currency']."',
+    value: ".numberFormatGtag($_SESSION['cart']->show_total()).",
+    items: [".implode(',', $products_array)."
+    ]
+  });";
+
+      return $addCode;
+    }
+  }
+
+
+  function getShippingGtag() {
+    global $order;
+
+    if (count($order->products) > 0) {
+      $products_array = array();
+      $products = $order->products;
+      for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
+        $products_array[] = getItemDetailsGtag($products[$i]);
+      }
+
+      $addCode = "
+  gtag('event', 'add_shipping_info', {
+    currency: '".$order->info['currency']."',
+    value: ".numberFormatGtag($order->info['total']).",
+    shipping_tier: '".$order->info['shipping_class']."',
+    items: [".implode(',', $products_array)."
+    ]
+  });";
+
+      return $addCode;
+    }
+  }
+
+
+  function getPaymentGtag() {
+    global $order;
+
+    if (count($order->products) > 0) {
+      $products_array = array();
+      $products = $order->products;
+      for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
+        $products_array[] = getItemDetailsGtag($products[$i]);
+      }
+
+      $addCode = "
+  gtag('event', 'add_payment_info', {
+    currency: '".$order->info['currency']."',
+    value: ".numberFormatGtag($order->info['total']).",
+    payment_type: '".$order->info['payment_class']."',
+    items: [".implode(',', $products_array)."
+    ]
+  });";
+
+      return $addCode;
+    }
+  }
+
+
+  function getOrderDetailsGtag() {
+    global $last_order;
+
+    require_once (DIR_WS_CLASSES . 'order.php');
+    $order = new order($last_order);
+
+    $addItem = array();
+    $products = $order->products;
+    for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
+      $addItem[] = getItemDetailsGtag($products[$i]);
+    }
+
+    $addCode = "
+  gtag('event', 'purchase', {
+    transaction_id: '".$order->info['orders_id']."',
+    currency: '".$order->info['currency']."',
+    value: ".numberFormatGtag($order->info['pp_total']).",
+    tax: ".numberFormatGtag($order->info['pp_tax']).",
+    shipping: ".numberFormatGtag($order->info['pp_shipping']).",
+    items: [".implode(',', $addItem)."
+    ]
+  });";
+
+    return $addCode;
+  }
+
+
+  function getItemDetailsGtag($data) {
+    global $xtPrice, $PHP_SELF;
+
+    $item = array();
+    foreach ($data as $k => $v) {
+      $k = str_replace('products_', '', $k);
+      $item[$k] = $v;
+    }
+
+    if (strpos($PHP_SELF, 'checkout') === false
+        && strpos($PHP_SELF, 'shopping_cart') === false
+        )
+    {
+      $item['price'] = $xtPrice->xtcGetPrice($item['id'], false, 1, $item['tax_class_id']);
+    }
+
+    $item_data = "
+      {
+        item_id: '".addslashes($item['model'])."',
+        item_name: '".addslashes($item['name'])."',
+        price: ".numberFormatGtag($item['price']).",
+        quantity: ".((isset($item['quantity']) && $item['quantity'] > 0) ? $item['quantity'] : 1)."
+      }";
+
+    return $item_data;
+  }
+
+
+  function numberFormatGtag($price) {
+    return number_format($price, 2, '.', '');
+  }
