@@ -13,8 +13,8 @@
   define('MODULE_MATOMO_TEXT_TITLE', 'Matomo Web-Analytics');
   define('MODULE_MATOMO_TEXT_DESCRIPTION', 'In order to use Matomo at all, you have to download and install it to your webspace at first. See also <a href="https://matomo.org/" target="_blank"><b>Matomo Web-Analytics</b></a>. In comparison to Google Analytics all data will be stored locally, i.e. you as show owner have complete control over all data.');    
 
-  define('MODULE_MATOMO_ACTIVE_TITLE' , 'Activate Matomo Web-Analytics tracking');
-  define('MODULE_MATOMO_ACTIVE_DESC' , 'In order to use Matomo at all, you have to download and install it to your webspace at first. See also <a href="https://matomo.org/" target="_blank"><b>Matomo Web-Analytics</b></a>. In comparison to Google Analytics all data will be stored locally, i.e. you as show owner have complete control over all data.');
+  define('MODULE_MATOMO_STATUS_TITLE', 'Status');
+  define('MODULE_MATOMO_STATUS_DESC', 'Module status');
 
   define('MODULE_MATOMO_ID_TITLE' , 'Matomo page ID');
   define('MODULE_MATOMO_ID_DESC' , 'In the Matomo administration a page ID will be created per domain (usually "1")');
