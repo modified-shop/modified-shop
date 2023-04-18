@@ -1952,11 +1952,6 @@ INSERT INTO configuration (configuration_id, configuration_key, configuration_va
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'TRACKING_ECONDA_ACTIVE', 'false', 23, 1, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'TRACKING_ECONDA_ID','', 23, 2, NULL, NOW(), NULL, NULL);
 
-#configuration_group_id 24, google analytics, motamo & facebook tracking
-INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'TRACKING_COUNT_ADMIN_ACTIVE', 'false', 24, 1, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
-INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'TRACKING_FACEBOOK_ACTIVE', 'false', 24, 8, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
-INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'TRACKING_FACEBOOK_ID','', 24, 9, NULL, NOW(), NULL, NULL);
-
 #configuration_group_id 25, captcha
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'MODULE_CAPTCHA_ACTIVE', 'newsletter,contact,password', 25, 1, NULL, NOW(), NULL, 'xtc_cfg_multi_checkbox(array(\'newsletter\' => \'Newsletter\', \'contact\' => \'Contact\', \'password\' => \'Password\', \'reviews\' => \'Reviews\', \'create_account\' => \'Registration\'), \'chr(44)\',');
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'MODULE_CAPTCHA_LOGGED_IN', 'False', 25, 2, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'True\', \'False\'),');
@@ -2036,7 +2031,6 @@ INSERT INTO configuration_group VALUES (20,'Import/Export','Import/Export',20,1)
 INSERT INTO configuration_group VALUES (21,'Afterbuy','Afterbuy.de',21,1);
 INSERT INTO configuration_group VALUES (22,'Search Options','Additional Options for search function',22,1);
 INSERT INTO configuration_group VALUES (23,'Econda Tracking','Econda Tracking System',23,1);
-INSERT INTO configuration_group VALUES (24,'Motamo & Google Analytics Tracking','Settings for Motamo & Google Analytics Tracking',24,1); 
 INSERT INTO configuration_group VALUES (25,'Captcha','Captcha Configuration',25,1);
 INSERT INTO configuration_group VALUES (31,'Skrill','Skrill System',31,1);
 INSERT INTO configuration_group VALUES (40,'Popup Window Configuration','Popup Window Parameters',40,1);

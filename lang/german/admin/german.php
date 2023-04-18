@@ -109,7 +109,7 @@ define('BOX_CONFIGURATION_17', 'Zusatzmodule');
 define('BOX_CONFIGURATION_18', 'USt-IdNr.');
 define('BOX_CONFIGURATION_19', 'Partner');
 define('BOX_CONFIGURATION_22', 'Such-Optionen');
-define('BOX_CONFIGURATION_24', 'Matomo &amp; Facebook');
+define('BOX_CONFIGURATION_24', 'Statistik');
 define('BOX_CONFIGURATION_25', 'Captcha');
 define('BOX_CONFIGURATION_31', 'Skrill');
 define('BOX_CONFIGURATION_40', 'Popup Fenster Optionen');
@@ -200,6 +200,9 @@ define('BOX_EMAIL_CONTENT', 'E-Mail Anh&auml;nge');
 define('BOX_DHL', 'DHL Versand &amp; Label-Erstellung');
 define('BOX_SCHEDULED_TASKS', 'Geplante Aufgaben');
 define('BOX_AVALEX', 'avalex Rechtstexte');
+define('BOX_GOOGLE_ANALYTICS', 'Google Analytics');
+define('BOX_MATOMO_ANALYTICS', 'Matomo Analytics');
+define('BOX_FACEBOOK_EVENTS', 'Facebook Pixel Events');
 
 define('TXT_GROUPS','<b>Gruppen</b>:');
 define('TXT_SYSTEM','System');

@@ -732,9 +732,6 @@ define('POPUP_PRODUCT_PRINT_SIZE_DESC', 'Hier kann die Gr&ouml;&szlig;e des Popu
 define('POPUP_PRINT_ORDER_SIZE_TITLE', 'Bestellung Druckansicht Fenstergr&ouml;&szlig;e');
 define('POPUP_PRINT_ORDER_SIZE_DESC', 'Hier kann die Gr&ouml;&szlig;e des Popup-Fensters definiert werden - Standard: width=640, height=600');
 
-define('TRACKING_COUNT_ADMIN_ACTIVE_TITLE' , 'Seitenaufrufe des Shopbetreibers mitz&auml;hlen');
-define('TRACKING_COUNT_ADMIN_ACTIVE_DESC' , 'Wird diese Option aktiviert, so werden auch alle Zugriffe des Administrators mitgez&auml;hlt, die (durch die h&auml;ufigeren Zugriffe auf den Shop) die Besucherstatistik verf&auml;lschen k&ouml;nnen.');
-
 define('CONFIRM_SAVE_ENTRY_TITLE', 'Best&auml;tigungsabfrage beim Speichern von Artikeln/Kategorien');
 define('CONFIRM_SAVE_ENTRY_DESC', 'Soll eine Best&auml;tigungsabfrage beim Speichern von Artikeln/Kategorien erfolgen? Standard: true (ja)');
 
@@ -918,11 +915,6 @@ define('META_GOOGLE_VERIFICATION_KEY_TITLE', 'Google Verification Key');
 define('META_GOOGLE_VERIFICATION_KEY_DESC', '<meta name="google-site-verification">');
 define('META_BING_VERIFICATION_KEY_TITLE', 'Bing Verification Key');
 define('META_BING_VERIFICATION_KEY_DESC', '<meta name="msvalidate.01">');
-
-define('TRACKING_FACEBOOK_ACTIVE_TITLE', 'Facebook Conversion-Tracking aktivieren');
-define('TRACKING_FACEBOOK_ACTIVE_DESC', 'Wird diese Option aktiviert, so werden alle K&auml;ufe an Facebook &uuml;bermittelt und k&ouml;nnen sp&auml;ter ausgewertet werden. Dazu ist vorher die Anlage eines Kontos bei <a href="https://www.facebook.com" target="_blank"><b>Facebook</b></a> erforderlich.<br/><b>Achtung:</b> Das funktioniert nur mit einem ab Shopversion 2.0.0.0 kompatiblem Template!');
-define('TRACKING_FACEBOOK_ID_TITLE', 'Facebook Conversion ID');
-define('TRACKING_FACEBOOK_ID_DESC', 'Ihre Facebook Conversion ID');
 
 define('NEW_SELECT_CHECKBOX_TITLE', 'Adminbereich Styling');
 define('NEW_SELECT_CHECKBOX_DESC', 'Im Adminbereich das Styling bei den Checkboxen/Dropdowns aktivieren?');

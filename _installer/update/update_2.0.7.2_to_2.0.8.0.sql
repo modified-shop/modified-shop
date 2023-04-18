@@ -111,5 +111,6 @@ UPDATE `admin_access` SET `avalex` = 9 WHERE `customers_id` = 'groups' LIMIT 1;
 
 #GTB - 2023-04-17 - delete obsolete configuration
 DELETE FROM `configuration` WHERE `configuration_key` = 'TRACKING_GOOGLEANALYTICS_GTAG';
+DELETE FROM `configuration_group` WHERE `configuration_group_id` = 24;
 
 # Keep an empty line at the end of this file for the db_updater to work properly

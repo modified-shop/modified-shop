@@ -221,6 +221,21 @@
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_MATOMO_COUNT_ADMIN', '".TRACKING_COUNT_ADMIN_ACTIVE."',  '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
   }
 
+  // facebook
+  if (defined('TRACKING_FACEBOOK_ID')
+      && TRACKING_FACEBOOK_ID != ''
+      )
+  {
+    $config_array['TRACKING_FACEBOOK_ACTIVE'] = 'MODULE_MATOMO_STATUS';
+    $config_array['TRACKING_FACEBOOK_ID'] = 'MODULE_MATOMO_ID';
+    
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_FACEBOOK_COUNT_ADMIN', '".TRACKING_COUNT_ADMIN_ACTIVE."',  '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
+  }
+  
+  // delete old configuration
+  xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'TRACKING_COUNT_ADMIN_ACTIVE'");
+  
+  // rename config key
   foreach ($config_array as $old_config => $new_config) {
     if (!defined($new_config)) {
       xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
