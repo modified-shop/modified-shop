@@ -243,7 +243,13 @@ if ($admin_access['configuration'] == '1') {
   $menu_access[] = '<li><a href="' . xtc_href_link(FILENAME_CONFIGURATION, 'gID=19', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_CONFIGURATION_19 . '</a></li>';
   $menu_access[] = '<li><a href="' . xtc_href_link(FILENAME_CONFIGURATION, 'gID=22', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_CONFIGURATION_22 . '</a></li>';
   $menu_access[] = '<li><a href="' . xtc_href_link(FILENAME_CONFIGURATION, 'gID=40', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_CONFIGURATION_40 . '</a></li>'; 
-  $menu_access[] = '<li><a href="' . xtc_href_link(FILENAME_CONFIGURATION, 'gID=24', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_CONFIGURATION_24 . '</a></li>';
+  if ($admin_access['module_export'] == '1') {
+    $menu_access[] = '<li><a href="javascript:void(0)" class="menuBoxContentLinkSub"> -' . BOX_CONFIGURATION_24 . '</a><ul>';
+    $menu_access[] = '  <li><a href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system&module=google_analytics', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_GOOGLE_ANALYTICS . '</a></li>';
+    $menu_access[] = '  <li><a href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system&module=matomo', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_MATOMO_ANALYTICS . '</a></li>';
+    $menu_access[] = '  <li><a href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system&module=facebook', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_FACEBOOK_EVENTS . '</a></li>';
+    $menu_access[] = '</ul></li>';
+  }
   $menu_access[] = '<li><a href="' . xtc_href_link(FILENAME_CONFIGURATION, 'gID=25', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_CONFIGURATION_25 . '</a></li>';
 }
 endMenue(BOX_HEADING_CONFIGURATION2);

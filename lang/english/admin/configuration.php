@@ -733,9 +733,6 @@ define ('POPUP_PRODUCT_PRINT_SIZE_DESC', 'Sets the size of the popup window to b
 define ('POPUP_PRINT_ORDER_SIZE_TITLE', 'order window size Print view');
 define ('POPUP_PRINT_ORDER_SIZE_DESC', 'Sets the size of the popup window to be defined - default: width = 640, height = 600');
 
-define('TRACKING_COUNT_ADMIN_ACTIVE_TITLE' , 'Count page views of the shop owner');
-define('TRACKING_COUNT_ADMIN_ACTIVE_DESC' , 'By activating this option, all page views of the administration usersof the shop owner will be counted as well. This will falsify the visitor stats.');
-
 define ('CONFIRM_SAVE_ENTRY_TITLE', 'Confirmation when saving articles/category');
 define ('CONFIRM_SAVE_ENTRY_DESC', 'Should be made a confirmation message when saving products/categories? Default: true (yes)');
 
@@ -919,11 +916,6 @@ define('META_GOOGLE_VERIFICATION_KEY_TITLE', 'Google Verification Key');
 define('META_GOOGLE_VERIFICATION_KEY_DESC', '<meta name="google-site-verification">');
 define('META_BING_VERIFICATION_KEY_TITLE', 'Bing Verification Key');
 define('META_BING_VERIFICATION_KEY_DESC', '<meta name="msvalidate.01">');
-
-define('TRACKING_FACEBOOK_ACTIVE_TITLE', 'Activate Facebook Conversion-Tracking');
-define('TRACKING_FACEBOOK_ACTIVE_DESC', 'By activating this option, all purchases will be submitted to Facebook for later evaluation. Before using this option, you need to register at <a href="https://www.facebook.com" target="_blank"><b>Facebook</b></a> and create a new account.<br/><b>Attention:</b> This only works with a shop version 2.0.0.0 compatible template!');
-define('TRACKING_FACEBOOK_ID_TITLE', 'Facebook Conversion ID');
-define('TRACKING_FACEBOOK_ID_DESC', 'Your Facebook conversion ID');
 
 define('NEW_SELECT_CHECKBOX_TITLE', 'Admin Styling');
 define('NEW_SELECT_CHECKBOX_DESC', 'Use Styling for Checkboxes/Dropdowns?');
