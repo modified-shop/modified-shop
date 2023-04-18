@@ -735,15 +735,6 @@ define('POPUP_PRINT_ORDER_SIZE_DESC', 'Hier kann die Gr&ouml;&szlig;e des Popup-
 define('TRACKING_COUNT_ADMIN_ACTIVE_TITLE' , 'Seitenaufrufe des Shopbetreibers mitz&auml;hlen');
 define('TRACKING_COUNT_ADMIN_ACTIVE_DESC' , 'Wird diese Option aktiviert, so werden auch alle Zugriffe des Administrators mitgez&auml;hlt, die (durch die h&auml;ufigeren Zugriffe auf den Shop) die Besucherstatistik verf&auml;lschen k&ouml;nnen.');
 
-define('TRACKING_PIWIK_ACTIVE_TITLE' , 'Matomo Web-Analytics Tracking aktivieren');
-define('TRACKING_PIWIK_ACTIVE_DESC' , 'Um Matomo nutzen zu k&ouml;nnen, m&uuml;ssen Sie es zun&auml;chst herunterladen und auf Ihrem Webspace installieren, siehe auch <a href="https://matomo.org/" target="_blank"><b>Matomo Web-Analytics</b></a>. Im Gegensatz zu Google Analytics werden die Daten lokal gespeichert, d.h. Sie als Shopbetreiber haben die Datenhoheit.');
-define('TRACKING_PIWIK_LOCAL_PATH_TITLE' , 'Matomo Installationsverzeichnis (ohne "http://")');
-define('TRACKING_PIWIK_LOCAL_PATH_DESC' , 'Tragen Sie hier das Verzeichnis ein, nachdem Matomo erfolgreich installiert worden ist. Als Pfad ist hier der komplette Domainname ohne "http://" einzutragen, z.B. "www.example.com/matomo".');
-define('TRACKING_PIWIK_ID_TITLE' , 'Matomo Seiten-ID');
-define('TRACKING_PIWIK_ID_DESC' , 'In der Matomo Administrationsoberfl&auml;che wird pro angelegter Domain wird eine ID vergeben (meist "1")');
-define('TRACKING_PIWIK_GOAL_TITLE' , 'Matomo Kampagnen-Nummer (optional)');
-define('TRACKING_PIWIK_GOAL_DESC' , 'Tragen Sie hier eine Kampagnen-Nummer ein, wenn Sie vordefinierte Ziele nachverfolgen m&ouml;chten. Details siehe <a href="https://matomo.org/docs/tracking-goals-web-analytics/" target="_blank"><b>Matomo: Tracking Goal Conversions</b></a>');
-
 define('CONFIRM_SAVE_ENTRY_TITLE', 'Best&auml;tigungsabfrage beim Speichern von Artikeln/Kategorien');
 define('CONFIRM_SAVE_ENTRY_DESC', 'Soll eine Best&auml;tigungsabfrage beim Speichern von Artikeln/Kategorien erfolgen? Standard: true (ja)');
 

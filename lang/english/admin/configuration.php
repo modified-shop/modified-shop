@@ -736,15 +736,6 @@ define ('POPUP_PRINT_ORDER_SIZE_DESC', 'Sets the size of the popup window to be 
 define('TRACKING_COUNT_ADMIN_ACTIVE_TITLE' , 'Count page views of the shop owner');
 define('TRACKING_COUNT_ADMIN_ACTIVE_DESC' , 'By activating this option, all page views of the administration usersof the shop owner will be counted as well. This will falsify the visitor stats.');
 
-define('TRACKING_PIWIK_ACTIVE_TITLE' , 'Activate Matomo Web-Analytics tracking');
-define('TRACKING_PIWIK_ACTIVE_DESC' , 'In order to use Matomo at all, you have to download and install it to your webspace at first. See also <a href="https://matomo.org/" target="_blank"><b>Matomo Web-Analytics</b></a>. In comparison to Google Analytics all data will be stored locally, i.e. you as show owner have complete control over all data.');
-define('TRACKING_PIWIK_LOCAL_PATH_TITLE' , 'Matomo install path (without "http://")');
-define('TRACKING_PIWIK_LOCAL_PATH_DESC' , 'Enter the path when Matomo was installed successfully. The complete path of the domain has to be given, but without "http://", e.g. "www.example.com/matomo".');
-define('TRACKING_PIWIK_ID_TITLE' , 'Matomo page ID');
-define('TRACKING_PIWIK_ID_DESC' , 'In the Matomo administration a page ID will be created per domain (usually "1")');
-define('TRACKING_PIWIK_GOAL_TITLE' , 'Matomo campaign number (optional)');
-define('TRACKING_PIWIK_GOAL_DESC' , 'Enter your campaign number, if you want to track predefined goals. Details see <a href="https://matomo.org/docs/tracking-goals-web-analytics/" target="_blank"><b>Matomo: Tracking Goal Conversions</b></a>');
-
 define ('CONFIRM_SAVE_ENTRY_TITLE', 'Confirmation when saving articles/category');
 define ('CONFIRM_SAVE_ENTRY_DESC', 'Should be made a confirmation message when saving products/categories? Default: true (yes)');
 

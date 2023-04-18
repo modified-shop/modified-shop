@@ -11,8 +11,11 @@
    --------------------------------------------------------------*/
 
     
-  if (TRACKING_PIWIK_ACTIVE == 'true'
-      && ((TRACKING_COUNT_ADMIN_ACTIVE == 'true' && $_SESSION['customers_status']['customers_status_id'] == '0')
+  if (defined('MODULE_MATOMO_STATUS')
+      && MODULE_MATOMO_STATUS == 'true'
+      && defined('MODULE_MATOMO_ID')
+      && MODULE_MATOMO_ID != ''
+      && ((defined('MODULE_MATOMO_COUNT_ADMIN') && MODULE_MATOMO_COUNT_ADMIN == 'true' && $_SESSION['customers_status']['customers_status_id'] == '0')
           || $_SESSION['customers_status']['customers_status_id'] != '0'
           )
       )
@@ -25,19 +28,12 @@
     // include needed classes
     require_once (DIR_WS_CLASSES.'language.php');
 
-    $url = TRACKING_PIWIK_LOCAL_PATH;
-    $id = TRACKING_PIWIK_ID;
-    $goal = TRACKING_PIWIK_GOAL;
-
-    if (!$url || !$id) {
-      return false;
-    }
-
     $piwik_lang = new language(xtc_input_validation(DEFAULT_LANGUAGE, 'lang'));
     $piwik_language_id = $piwik_lang->language['id'];
 
-    $url = str_replace(array('http://', 'https://'), '', $url);
+    $url = str_replace(array('http://', 'https://'), '', MODULE_MATOMO_LOCAL_PATH);
     $url = trim($url, '/');
+    
     $beginCode = '<script>';
     if (defined('MODULE_COOKIE_CONSENT_STATUS') && strtolower(MODULE_COOKIE_CONSENT_STATUS) == 'true' && (in_array(7, $_SESSION['tracking']['allowed']) || defined('COOKIE_CONSENT_NO_TRACKING'))) {
       $beginCode = '<script async data-type="text/javascript" type="as-oil" data-purposes="7" data-managed="as-oil">';
@@ -45,7 +41,7 @@
     $beginCode .= '
         var _paq = _paq || [];
           var u="//'.$url.'/";
-          _paq.push([\'setSiteId\', '.$id.']);
+          _paq.push([\'setSiteId\', '.MODULE_MATOMO.']);
           _paq.push([\'setTrackerUrl\', u+\'matomo.php\']);
           _paq.push([\'trackPageView\']);
           _paq.push([\'enableLinkTracking\']);'."\n";
@@ -77,8 +73,8 @@
     if (strpos($PHP_SELF, FILENAME_CHECKOUT_SUCCESS) != false && !in_array('PW-'.$last_order, $_SESSION['tracking']['order'])) {
       $_SESSION['tracking']['order'][] = 'PW-'.$last_order;
       $orderCode .= getMatomoOrder();
-      if ($goal > 0) {
-        $orderCode .= getMatomoOrderDetails($goal);
+      if (MODULE_MATOMO_GOAL != '') {
+        $orderCode .= getMatomoOrderDetails(MODULE_MATOMO_GOAL);
       }
     }
   
