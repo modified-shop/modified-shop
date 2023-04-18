@@ -447,6 +447,7 @@
     'includes/extra/database_tables/cookie_consent.php',
     'includes/extra/header/header_begin/shopgate.php',
     'includes/extra/header/header_body/billsafe.php',
+    'includes/extra/header/header_head/gtag.php',
     'includes/extra/modules/metatags_end/shopgate.php',
     'includes/extra/modules/order_details_cart_total/klarna.php',
     'includes/extra/send_order/banktransfer.php',
