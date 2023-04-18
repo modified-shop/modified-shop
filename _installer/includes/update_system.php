@@ -146,7 +146,7 @@
   {
     xtc_db_query("INSERT INTO " . TABLE_SCHEDULED_TASKS . " (time_regularity, time_unit, status, tasks) VALUES ('1', 'd',  '0', 'export_sitemap')");
   }
-                 
+           
   // rename config key
   $config_array = array(
     'MAX_DISPLAY_CONTENT_MANAGER' => 'MAX_DISPLAY_CONTENT_MANAGER_RESULTS',
@@ -191,6 +191,23 @@
     'MODULE_DHL_IBAN' => 'MODULE_DHL_BUSINESS_IBAN',
     'MODULE_DHL_BIC' => 'MODULE_DHL_BUSINESS_BIC',
   );
+
+  // google analytics
+  if (defined('TRACKING_GOOGLEANALYTICS_ID')
+      && TRACKING_GOOGLEANALYTICS_ID != ''
+      )
+  {
+    $config_array['TRACKING_GOOGLEANALYTICS_ACTIVE'] = 'MODULE_GOOGLE_ANALYTICS_STATUS';
+    $config_array['TRACKING_GOOGLEANALYTICS_ID'] = 'MODULE_GOOGLE_ANALYTICS_TAG_ID';
+    $config_array['TRACKING_GOOGLE_LINKID'] = 'MODULE_GOOGLE_ANALYTICS_LINKID';
+    $config_array['TRACKING_GOOGLE_DISPLAY'] = 'MODULE_GOOGLE_ANALYTICS_DISPLAY';
+    $config_array['TRACKING_GOOGLE_ECOMMERCE'] = 'MODULE_GOOGLE_ANALYTICS_ECOMMERCE';
+    
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_GOOGLE_ANALYTICS_ADS_ID', '',  '6', '1', '', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_GOOGLE_ANALYTICS_ADS_CONVERSION_ID', '',  '6', '1', '', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_GOOGLE_ANALYTICS_COUNT_ADMIN', '".TRACKING_COUNT_ADMIN_ACTIVE."',  '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
+  }
+
   foreach ($config_array as $old_config => $new_config) {
     if (!defined($new_config)) {
       xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
