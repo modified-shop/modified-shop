@@ -12,6 +12,8 @@
 
   if (defined('MODULE_GOOGLE_ANALYTICS_STATUS')
       && MODULE_GOOGLE_ANALYTICS_STATUS == 'true'
+      && defined('MODULE_GOOGLE_ANALYTICS_TAG_ID')
+      && MODULE_GOOGLE_ANALYTICS_TAG_ID != ''
       && ((MODULE_GOOGLE_ANALYTICS_COUNT_ADMIN == 'true' && $_SESSION['customers_status']['customers_status_id'] == '0')
           || $_SESSION['customers_status']['customers_status_id'] != '0'
           )
@@ -37,7 +39,14 @@
     allow_google_signals: ".((MODULE_GOOGLE_ANALYTICS_DISPLAY == 'true') ? 'true' : 'false')."
   });
 ";
-
+    if (MODULE_GOOGLE_ANALYTICS_ADWORDS_ID != '') {
+      $beginCode .= "
+  gtag('config', '".MODULE_GOOGLE_ANALYTICS_ADWORDS_ID."', {
+    anonymize_ip: true
+  });
+";
+    }
+    
     $endCode = "
 </script>
 ";
@@ -63,6 +72,10 @@
           {
             $_SESSION['tracking']['order'][] = 'GTAG-'.$last_order;
             $addCode = getOrderDetailsGtag();
+            
+            if (MODULE_GOOGLE_ANALYTICS_CONVERSION_ID != '') {
+              $addCode .= getConversionGtag();
+            }
           }
           break;
         case FILENAME_SHOPPING_CART:
@@ -276,6 +289,24 @@
     ]
   });";
 
+    return $addCode;
+  }
+
+
+  function getConversionGtag() {
+    global $last_order;
+
+    require_once (DIR_WS_CLASSES . 'order.php');
+    $order = new order($last_order);
+
+    $addCode = "
+  gtag('event', 'conversion', {
+    send_to: '".MODULE_GOOGLE_ANALYTICS_CONVERSION_ID."',
+    transaction_id: '".$order->info['orders_id']."',
+    currency: '".$order->info['currency']."',
+    value: ".numberFormatGtag($order->info['pp_total'])."
+  });";
+  
     return $addCode;
   }
 

@@ -19,6 +19,12 @@
   define('MODULE_GOOGLE_ANALYTICS_TAG_ID_TITLE', 'Google Analytics TAG ID');
   define('MODULE_GOOGLE_ANALYTICS_TAG_ID_DESC', 'Tragen Sie hier Ihre Google Analytics TAG ID im Format "G-XXXXXXXXXX" oder "UA-XXXXXXXXXX" (f&uuml;r migrierte Google Analytics Properties) ein.');
 
+  define('MODULE_GOOGLE_ANALYTICS_ADWORDS_ID_TITLE', 'Google Adwords ID');
+  define('MODULE_GOOGLE_ANALYTICS_ADWORDS_ID_DESC', 'Sofern Sie Google Adwords Remarketing verwenden wollen, tragen Sie hier die Google Adwords ID im Format "AW-XXXXXXXXXX" ein.');
+
+  define('MODULE_GOOGLE_ANALYTICS_CONVERSION_ID_TITLE', 'Google Conversion ID');
+  define('MODULE_GOOGLE_ANALYTICS_CONVERSION_ID_DESC', 'Sofern Sie Google Conversion Tracking verwenden wollen, tragen Sie hier die Google Conversion ID im Format "AW-XXXXXXXXXX/xxx" ein.');
+
   define('MODULE_GOOGLE_ANALYTICS_ECOMMERCE_TITLE' , 'E-Commerce Tracking');
   define('MODULE_GOOGLE_ANALYTICS_ECOMMERCE_DESC' , 'Setzen Sie E-Commerce Tracking ein, um herauszufinden, was Besucher &uuml;ber Ihre Website oder App kaufen. Zudem erhalten Sie folgende Informationen:<br><br><strong>Produkte:</strong> Gekaufte Produkte, sowie die Mengen und die mit diesen Produkten erzielten Ums&auml;tze<br><strong>Transaktionen:</strong> Informationen zu Umsatz, Steuern, Versandkosten und Mengen f&uuml;r jede Transaktion<br><strong>Zeit bis zum Kauf:</strong> Anzahl von Tagen und Besuchen, beginnend von der aktuellen Kampagne bis zum Abschluss der Transaktion.');
 
