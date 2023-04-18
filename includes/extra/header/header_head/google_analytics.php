@@ -14,7 +14,7 @@
       && MODULE_GOOGLE_ANALYTICS_STATUS == 'true'
       && defined('MODULE_GOOGLE_ANALYTICS_TAG_ID')
       && MODULE_GOOGLE_ANALYTICS_TAG_ID != ''
-      && ((MODULE_GOOGLE_ANALYTICS_COUNT_ADMIN == 'true' && $_SESSION['customers_status']['customers_status_id'] == '0')
+      && ((defined('MODULE_GOOGLE_ANALYTICS_COUNT_ADMIN') && MODULE_GOOGLE_ANALYTICS_COUNT_ADMIN == 'true' && $_SESSION['customers_status']['customers_status_id'] == '0')
           || $_SESSION['customers_status']['customers_status_id'] != '0'
           )
       )
@@ -42,7 +42,8 @@
     if (MODULE_GOOGLE_ANALYTICS_ADS_ID != '') {
       $beginCode .= "
   gtag('config', '".MODULE_GOOGLE_ANALYTICS_ADS_ID."', {
-    anonymize_ip: true
+    anonymize_ip: true,
+    allow_enhanced_conversions: true
   });
 ";
     }
