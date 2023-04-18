@@ -39,9 +39,9 @@
     allow_google_signals: ".((MODULE_GOOGLE_ANALYTICS_DISPLAY == 'true') ? 'true' : 'false')."
   });
 ";
-    if (MODULE_GOOGLE_ANALYTICS_ADWORDS_ID != '') {
+    if (MODULE_GOOGLE_ANALYTICS_ADS_ID != '') {
       $beginCode .= "
-  gtag('config', '".MODULE_GOOGLE_ANALYTICS_ADWORDS_ID."', {
+  gtag('config', '".MODULE_GOOGLE_ANALYTICS_ADS_ID."', {
     anonymize_ip: true
   });
 ";
@@ -73,7 +73,7 @@
             $_SESSION['tracking']['order'][] = 'GTAG-'.$last_order;
             $addCode = getOrderDetailsGtag();
             
-            if (MODULE_GOOGLE_ANALYTICS_CONVERSION_ID != '') {
+            if (MODULE_GOOGLE_ANALYTICS_ADS_CONVERSION_ID != '') {
               $addCode .= getConversionGtag();
             }
           }
@@ -301,7 +301,7 @@
 
     $addCode = "
   gtag('event', 'conversion', {
-    send_to: '".MODULE_GOOGLE_ANALYTICS_CONVERSION_ID."',
+    send_to: '".MODULE_GOOGLE_ANALYTICS_ADS_CONVERSION_ID."',
     transaction_id: '".$order->info['orders_id']."',
     currency: '".$order->info['currency']."',
     value: ".numberFormatGtag($order->info['pp_total'])."
