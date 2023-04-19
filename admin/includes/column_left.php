@@ -101,7 +101,6 @@ $menu_access[] = mainMenue(BOX_HEADING_MODULES);
 if ($admin_access['modules'] == '1') $menu_access[] = '<li><a href="' . xtc_href_link(FILENAME_MODULES, 'set=payment', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_PAYMENT . '</a></li>';
 if ($admin_access['modules'] == '1') $menu_access[] = '<li><a href="' . xtc_href_link(FILENAME_MODULES, 'set=shipping', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_SHIPPING . '</a></li>';
 if ($admin_access['modules'] == '1') $menu_access[] = '<li><a href="' . xtc_href_link(FILENAME_MODULES, 'set=ordertotal', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_ORDER_TOTAL . '</a></li>';
-if ($admin_access['modules'] == '1') $menu_access[] = '<li><a href="' . xtc_href_link(FILENAME_MODULES, 'set=categories', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_MODULE_TYPE . '</a></li>';
 if ($admin_access['modules'] == '1') {
   $menu_access[] = '<li><a href="javascript:void(0)" class="menuBoxContentLinkSub"> -' . BOX_MODULE_TYPE . '</a><ul>';
   $menu_access[] = '  <li><a href="' . xtc_href_link(FILENAME_MODULES, 'set=categories') . '" class="menuBoxContentLink"> -' . BOX_MODULE_CATEGORIES . '</a></li>';
