@@ -11,11 +11,11 @@
    --------------------------------------------------------------*/
 
     
-  if (defined('MODULE_FACEBOOK_STATUS')
-      && MODULE_FACEBOOK_STATUS == 'true'
-      && defined('MODULE_FACEBOOK_ID')
-      && MODULE_FACEBOOK_ID != ''
-      && ((defined('MODULE_FACEBOOK_COUNT_ADMIN') && MODULE_FACEBOOK_COUNT_ADMIN == 'true' && $_SESSION['customers_status']['customers_status_id'] == '0')
+  if (defined('MODULE_FACEBOOK_PIXEL_STATUS')
+      && MODULE_FACEBOOK_PIXEL_STATUS == 'true'
+      && defined('MODULE_FACEBOOK_PIXEL_ID')
+      && MODULE_FACEBOOK_PIXEL_ID != ''
+      && ((defined('MODULE_FACEBOOK_PIXEL_COUNT_ADMIN') && MODULE_FACEBOOK_PIXEL_COUNT_ADMIN == 'true' && $_SESSION['customers_status']['customers_status_id'] == '0')
           || $_SESSION['customers_status']['customers_status_id'] != '0'
           )
       )
@@ -35,7 +35,7 @@
       t.src = v; s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s)
     }(window,document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
 
-    fbq('init', '".MODULE_FACEBOOK_ID."');
+    fbq('init', '".MODULE_FACEBOOK_PIXEL_ID."');
     fbq('track', 'PageView');
     ";
 
@@ -44,7 +44,7 @@
     $endCode = '
   </script>
   <noscript>
-    <img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id='.MODULE_FACEBOOK_ID.'&amp;ev=PageView&amp;noscript=1"/>
+    <img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id='.MODULE_FACEBOOK_PIXEL_ID.'&amp;ev=PageView&amp;noscript=1"/>
     ';
 
     if (isset($_SESSION['new_products_id_in_cart'])) {
@@ -122,7 +122,7 @@
       });
     ';
 
-      $endCode .= '<img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id='.MODULE_FACEBOOK_ID.'&amp;ev=Purchase&amp;cd[value]='.number_format($total, 2, '.', '').'&amp;cd[currency]='.$orders['currency'].'&amp;noscript=1"/>
+      $endCode .= '<img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id='.MODULE_FACEBOOK_PIXEL_ID.'&amp;ev=Purchase&amp;cd[value]='.number_format($total, 2, '.', '').'&amp;cd[currency]='.$orders['currency'].'&amp;noscript=1"/>
     ';
     }
     
