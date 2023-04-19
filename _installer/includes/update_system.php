@@ -213,12 +213,12 @@
       && TRACKING_PIWIK_ID != ''
       )
   {
-    $config_array['TRACKING_PIWIK_ACTIVE'] = 'MODULE_MATOMO_STATUS';
-    $config_array['TRACKING_PIWIK_ID'] = 'MODULE_MATOMO_ID';
-    $config_array['TRACKING_PIWIK_LOCAL_PATH'] = 'MODULE_MATOMO_LOCAL_PATH';
-    $config_array['TRACKING_PIWIK_GOAL'] = 'MODULE_MATOMO_GOAL';
+    $config_array['TRACKING_PIWIK_ACTIVE'] = 'MODULE_MATOMO_ANALYTICS_STATUS';
+    $config_array['TRACKING_PIWIK_ID'] = 'MODULE_MATOMO_ANALYTICS_ID';
+    $config_array['TRACKING_PIWIK_LOCAL_PATH'] = 'MODULE_MATOMO_ANALYTICS_LOCAL_PATH';
+    $config_array['TRACKING_PIWIK_GOAL'] = 'MODULE_MATOMO_ANALYTICS_GOAL';
     
-    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_MATOMO_COUNT_ADMIN', '".TRACKING_COUNT_ADMIN_ACTIVE."',  '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_MATOMO_ANALYTICS_COUNT_ADMIN', '".TRACKING_COUNT_ADMIN_ACTIVE."',  '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
   }
 
   // facebook
@@ -226,10 +226,10 @@
       && TRACKING_FACEBOOK_ID != ''
       )
   {
-    $config_array['TRACKING_FACEBOOK_ACTIVE'] = 'MODULE_MATOMO_STATUS';
-    $config_array['TRACKING_FACEBOOK_ID'] = 'MODULE_MATOMO_ID';
+    $config_array['TRACKING_FACEBOOK_ACTIVE'] = 'MODULE_FACEBOOK_PIXEL_STATUS';
+    $config_array['TRACKING_FACEBOOK_ID'] = 'MODULE_FACEBOOK_PIXEL_ID';
     
-    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_FACEBOOK_COUNT_ADMIN', '".TRACKING_COUNT_ADMIN_ACTIVE."',  '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_FACEBOOK_PIXEL_COUNT_ADMIN', '".TRACKING_COUNT_ADMIN_ACTIVE."',  '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
   }
   
   // delete old configuration
