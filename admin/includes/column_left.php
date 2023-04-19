@@ -102,6 +102,17 @@ if ($admin_access['modules'] == '1') $menu_access[] = '<li><a href="' . xtc_href
 if ($admin_access['modules'] == '1') $menu_access[] = '<li><a href="' . xtc_href_link(FILENAME_MODULES, 'set=shipping', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_SHIPPING . '</a></li>';
 if ($admin_access['modules'] == '1') $menu_access[] = '<li><a href="' . xtc_href_link(FILENAME_MODULES, 'set=ordertotal', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_ORDER_TOTAL . '</a></li>';
 if ($admin_access['modules'] == '1') $menu_access[] = '<li><a href="' . xtc_href_link(FILENAME_MODULES, 'set=categories', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_MODULE_TYPE . '</a></li>';
+if ($admin_access['modules'] == '1') {
+  $menu_access[] = '<li><a href="javascript:void(0)" class="menuBoxContentLinkSub"> -' . BOX_MODULE_TYPE . '</a><ul>';
+  $menu_access[] = '  <li><a href="' . xtc_href_link(FILENAME_MODULES, 'set=categories') . '" class="menuBoxContentLink"> -' . BOX_MODULE_CATEGORIES . '</a></li>';
+  $menu_access[] = '  <li><a href="' . xtc_href_link(FILENAME_MODULES, 'set=checkout') . '" class="menuBoxContentLink"> -' . BOX_MODULE_CHECKOUT . '</a></li>';
+  $menu_access[] = '  <li><a href="' . xtc_href_link(FILENAME_MODULES, 'set=main') . '" class="menuBoxContentLink"> -' . BOX_MODULE_MAIN . '</a></li>';
+  $menu_access[] = '  <li><a href="' . xtc_href_link(FILENAME_MODULES, 'set=order') . '" class="menuBoxContentLink"> -' . BOX_MODULE_ORDER . '</a></li>';
+  $menu_access[] = '  <li><a href="' . xtc_href_link(FILENAME_MODULES, 'set=product') . '" class="menuBoxContentLink"> -' . BOX_MODULE_PRODUCT . '</a></li>';
+  $menu_access[] = '  <li><a href="' . xtc_href_link(FILENAME_MODULES, 'set=shopping_cart') . '" class="menuBoxContentLink"> -' . BOX_MODULE_SHOPPING_CART . '</a></li>';
+  $menu_access[] = '  <li><a href="' . xtc_href_link(FILENAME_MODULES, 'set=xtcPrice') . '" class="menuBoxContentLink"> -' . BOX_MODULE_XTCPRICE . '</a></li>';
+  $menu_access[] = '</ul></li>';
+}
 if ($admin_access['module_export'] == '1') $menu_access[] = '<li><a href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=export&module=sitemaporg', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_GOOGLE_SITEMAP . '</a></li>';
 if ($admin_access['module_export'] == '1') $menu_access[] = '<li><a href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_MODULE_SYSTEM . '</a></li>';
 if ($admin_access['module_export'] == '1') $menu_access[] = '<li><a href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=export', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_MODULE_EXPORT . '</a></li>';

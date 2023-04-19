@@ -203,6 +203,13 @@ define('BOX_AVALEX', 'avalex Rechtstexte');
 define('BOX_GOOGLE_ANALYTICS', 'Google Analytics');
 define('BOX_MATOMO_ANALYTICS', 'Matomo Analytics');
 define('BOX_FACEBOOK_PIXEL', 'Facebook Pixel');
+define('BOX_MODULE_CATEGORIES', 'Kategorien');
+define('BOX_MODULE_CHECKOUT', 'Checkout');
+define('BOX_MODULE_MAIN', 'Main');
+define('BOX_MODULE_ORDER', 'Bestellungen');
+define('BOX_MODULE_PRODUCT', 'Artikel');
+define('BOX_MODULE_SHOPPING_CART', 'Warenkorb');
+define('BOX_MODULE_XTCPRICE', 'Preise');
 
 define('TXT_GROUPS','<b>Gruppen</b>:');
 define('TXT_SYSTEM','System');

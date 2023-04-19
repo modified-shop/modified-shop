@@ -1,4 +1,14 @@
-<?php 
+<?php
+  /* --------------------------------------------------------------
+   $Id$
+
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
+
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   --------------------------------------------------------------
+   Released under the GNU General Public License
+   --------------------------------------------------------------*/
 
 defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
@@ -13,4 +23,4 @@ if ($set == 'categories') {
   $check_language_file = false;
 }  
         
-$mTypeArr[] = '<a class="submenutab'.$submenutabactiv.'" href="' . xtc_href_link(FILENAME_MODULES, 'set=categories') . '">' . 'categories' . '</a>';
+$mTypeArr[] = '<a class="submenutab'.$submenutabactiv.'" href="' . xtc_href_link(FILENAME_MODULES, 'set=categories') . '">' . BOX_MODULE_CATEGORIES . '</a>';

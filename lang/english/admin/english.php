@@ -203,6 +203,13 @@ define('BOX_AVALEX', 'avalex Legal Documents');
 define('BOX_GOOGLE_ANALYTICS', 'Google Analytics');
 define('BOX_MATOMO_ANALYTICS', 'Matomo Analytics');
 define('BOX_FACEBOOK_PIXEL', 'Facebook Pixel');
+define('BOX_MODULE_CATEGORIES', 'Categories');
+define('BOX_MODULE_CHECKOUT', 'Checkout');
+define('BOX_MODULE_MAIN', 'Main');
+define('BOX_MODULE_ORDER', 'Orders');
+define('BOX_MODULE_PRODUCT', 'Products');
+define('BOX_MODULE_SHOPPING_CART', 'Shopping Cart');
+define('BOX_MODULE_XTCPRICE', 'Prices');
 
 define('TXT_GROUPS','<b>Groups</b>:');
 define('TXT_SYSTEM','System');
