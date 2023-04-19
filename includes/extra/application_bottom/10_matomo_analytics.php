@@ -11,11 +11,11 @@
    --------------------------------------------------------------*/
 
     
-  if (defined('MODULE_MATOMO_STATUS')
-      && MODULE_MATOMO_STATUS == 'true'
-      && defined('MODULE_MATOMO_ID')
-      && MODULE_MATOMO_ID != ''
-      && ((defined('MODULE_MATOMO_COUNT_ADMIN') && MODULE_MATOMO_COUNT_ADMIN == 'true' && $_SESSION['customers_status']['customers_status_id'] == '0')
+  if (defined('MODULE_MATOMO_ANALYTICS_STATUS')
+      && MODULE_MATOMO_ANALYTICS_STATUS == 'true'
+      && defined('MODULE_MATOMO_ANALYTICS_ID')
+      && MODULE_MATOMO_ANALYTICS_ID != ''
+      && ((defined('MODULE_MATOMO_ANALYTICS_COUNT_ADMIN') && MODULE_MATOMO_ANALYTICS_COUNT_ADMIN == 'true' && $_SESSION['customers_status']['customers_status_id'] == '0')
           || $_SESSION['customers_status']['customers_status_id'] != '0'
           )
       )
@@ -31,7 +31,7 @@
     $piwik_lang = new language(xtc_input_validation(DEFAULT_LANGUAGE, 'lang'));
     $piwik_language_id = $piwik_lang->language['id'];
 
-    $url = str_replace(array('http://', 'https://'), '', MODULE_MATOMO_LOCAL_PATH);
+    $url = str_replace(array('http://', 'https://'), '', MODULE_MATOMO_ANALYTICS_LOCAL_PATH);
     $url = trim($url, '/');
     
     $beginCode = '<script>';
@@ -73,8 +73,8 @@
     if (strpos($PHP_SELF, FILENAME_CHECKOUT_SUCCESS) != false && !in_array('PW-'.$last_order, $_SESSION['tracking']['order'])) {
       $_SESSION['tracking']['order'][] = 'PW-'.$last_order;
       $orderCode .= getMatomoOrder();
-      if (MODULE_MATOMO_GOAL != '') {
-        $orderCode .= getMatomoOrderDetails(MODULE_MATOMO_GOAL);
+      if (MODULE_MATOMO_ANALYTICS_GOAL != '') {
+        $orderCode .= getMatomoOrderDetails(MODULE_MATOMO_ANALYTICS_GOAL);
       }
     }
   
