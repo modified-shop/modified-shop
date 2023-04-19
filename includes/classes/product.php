@@ -764,6 +764,13 @@ class product {
         break;
     }
 
+    if (defined('IMAGE_TYPE_EXTENSION') && IMAGE_TYPE_EXTENSION != 'default') {
+      $name_extension = substr($name, 0, strrpos($name, '.')).'.'.IMAGE_TYPE_EXTENSION;
+      if (is_file($path.$name_extension)) {
+        $name = $name_extension;
+      }
+    }
+
     $returnName = $name;
     if ($returnName == '' || !is_file($path.$returnName)) {
       $returnName = '';
@@ -830,4 +837,3 @@ class product {
     }
   }
 }
-?>

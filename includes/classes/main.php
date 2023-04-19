@@ -445,6 +445,14 @@ class main {
     if ($image != '') {
       $image = DIR_WS_IMAGES . $dir . $image;
     }   
+
+    if (defined('IMAGE_TYPE_EXTENSION') && IMAGE_TYPE_EXTENSION != 'default') {
+      $image_extension = substr($image, 0, strrpos($image, '.')).'.'.IMAGE_TYPE_EXTENSION;
+      if (is_file($image_extension)) {
+        $image = $image_extension;
+      }
+    }
+
     if (!is_file(DIR_FS_CATALOG.$image)) {
       $image = (($check == 'true') ? DIR_WS_IMAGES . $dir . $noImg : '');
     }
@@ -455,4 +463,3 @@ class main {
     return $image;
   }
 }
-?>

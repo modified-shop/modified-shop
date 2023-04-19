@@ -91,6 +91,7 @@ $values_group_update = array();
   $values[] = "(NULL, 'MAX_DISPLAY_REVERSE_CROSS_SELLS', '0', '3', '16', NULL, NOW(), NULL, NULL);";
 
 //configuration_group_id 4 --- "Bild Optionen"
+  $values[] = "(NULL, 'IMAGE_TYPE_EXTENSION', 'default', '4', '1', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'default\', \'webp\'), ');";
   $values[] = "(NULL, 'PRODUCT_IMAGE_NO_ENLARGE_UNDER_DEFAULT', 'false', '4', '2', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
   $values[] = "(NULL, 'PRODUCT_IMAGE_SHOW_NO_IMAGE', 'true', '4', '2', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
   $values[] = "(NULL, 'PRODUCT_IMAGE_MINI_WIDTH', '80', '4', '3', NULL, NOW(), NULL, NULL);";
@@ -122,7 +123,7 @@ $values_group_update = array();
                            'configuration_key' => 'IMAGE_QUALITY'
                            );
   $values_update[] = array (
-                           'values' => "sort_order = '1'",
+                           'values' => "configuration_group_id = '6'",
                            'configuration_key' => 'IMAGE_MANIPULATOR'
                            );
   $values_update[] = array (

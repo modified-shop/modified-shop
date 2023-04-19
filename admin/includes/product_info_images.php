@@ -33,5 +33,8 @@ if (PRODUCT_IMAGE_INFO_MERGE != '') {
 
 $a->create();
 
+if (defined('IMAGE_TYPE_EXTENSION') && IMAGE_TYPE_EXTENSION != 'default') {
+  $a->createWebp();
+}
+
 unset($products_image_name_process);
-?>

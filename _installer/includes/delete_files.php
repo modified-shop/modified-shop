@@ -161,6 +161,9 @@
     DIR_ADMIN.'images/top_shop.gif',
     DIR_ADMIN.'images/top_support.gif',
     DIR_ADMIN.'includes/classes/class.paypal.php',
+    DIR_ADMIN.'includes/classes/image_manipulator_GD1.php',
+    DIR_ADMIN.'includes/classes/image_manipulator_GD2_advanced.php',
+    DIR_ADMIN.'includes/classes/image_manipulator_GD2.php',
     DIR_ADMIN.'includes/classes/sessions.php',
     DIR_ADMIN.'includes/classes/phpmailer.lang-de.php',
     DIR_ADMIN.'includes/classes/phpmailer.lang-en.php',
@@ -1098,4 +1101,3 @@
       }
     }
   }
-?>

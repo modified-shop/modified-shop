@@ -262,6 +262,8 @@ define('PRODUCT_IMAGE_POPUP_MERGE_DESC' , 'Product Popup Images:Merge<br /><br /
 define('IMAGE_MANIPULATOR_TITLE','GDlib processing');
 define('IMAGE_MANIPULATOR_DESC','Image Manipulator for GD2 or GD1<br /><br /><b>NOTE:</b> image_manipulator_GD2_advanced.php support transparent PNG\s');
 
+define('IMAGE_TYPE_EXTENSION_TITLE','Imagetype');
+define('IMAGE_TYPE_EXTENSION_DESC','Which image type should be delivered?<br /><br /><b>NOTE:</b> after changing, image processing must be started to generate the images.');
 
 define('ACCOUNT_GENDER_TITLE' , 'Salutation');
 define('ACCOUNT_GENDER_DESC' , 'Display salutation upon customer account creation/editing');
@@ -1011,4 +1013,3 @@ define('REVIEWS_PURCHASED_ONLY_TITLE', 'Check ratings');
 define('REVIEWS_PURCHASED_ONLY_DESC', 'Should reviews only be possible if a customer has also bought the item?');
 define('REVIEWS_PURCHASED_INFOS_TITLE', 'Reviews Info');
 define('REVIEWS_PURCHASED_INFOS_DESC', 'Select the content to display as rating info on its authenticity.');
-?>

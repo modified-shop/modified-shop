@@ -39,7 +39,6 @@
     // Support for transparency, enhanced PNG & GIF processing
     function imagecopyresampled_adv($image_type, &$dest, $source, $d_x, $d_y, $s_x, $s_y, $d_w, $d_h, $s_w, $s_h) {
       switch ($image_type) {
-        // Process GIF images
         case 1:
           $transcol = imagecolortransparent($source);
           $dest = imagecreate($d_w, $d_h);
@@ -50,7 +49,6 @@
           imagecolortransparent($dest, $transcol);
           break;
 
-        // Process PNG images
         case 3:
           $dest = imageCreateTrueColor($d_w, $d_h);
           imagealphablending($dest, false);
@@ -65,7 +63,6 @@
           //imagecolortransparent($dest,$transparent); //imagecolortransparent much faster on big images
           break;
 
-        // Any other images
         default:
           $dest = imageCreateTrueColor($d_w, $d_h);
           break;
@@ -369,18 +366,17 @@
     function create() {
       if($this->s !== Null) {
         if($this->d !== "") {
-          ob_start();
           $image_type = $this->k;
+
+          ob_start();
           switch ($image_type) {
             case 1:
-              // Keep transparent color
               $transcol = imagecolortransparent($this->s);
               imagecolortransparent($this->t, $transcol);
               $this->sharpen();
               imagegif($this->t, $this->d);
               break;
 
-            // PNG image
             case 3:
               imagealphablending($this->t, true);
               imagesavealpha($this->t, true);
@@ -388,11 +384,11 @@
               imagepng($this->t, $this->d);
               break;
 
-            // Other images
             default:
               imageinterlace($this->t, true);
               $this->sharpen();
               imagejpeg($this->t, $this->d, $this->e);
+              break;
           }
           ob_end_clean();
         }
@@ -401,6 +397,38 @@
       }
     }
 
+    function createWebp() {
+      if ($this->d !== "" && is_file($this->d)) {
+        $image_type = $this->k;
+        $destination = substr($this->d, 0, strrpos($this->d, '.')).'.webp';
+
+        ob_start();
+        switch ($image_type) {
+          case 1:
+            $image = imagecreatefromgif($this->d);
+            imagepalettetotruecolor($image);
+            imagealphablending($image, true);
+            imagesavealpha($image, true);
+            break;
+
+          case 3:
+            $image = imagecreatefrompng($this->d);            
+            imagepalettetotruecolor($image);
+            imagealphablending($image, true);
+            imagesavealpha($image, true);
+            break;
+
+          default:
+            $image = imagecreatefromjpeg($this->d);
+            break;
+        }
+        imagewebp($image, $destination);
+        ob_end_clean();
+        
+        imagedestroy($image);
+      }
+    }
+    
     function correctImageOrientation($resource_file) {
       getimagesize($resource_file, $imageinfo);           
       if (isset($imageinfo['APP1']) && stripos(substr($imageinfo['APP1'], 0, 4), 'exif') !== false && function_exists('exif_read_data') && function_exists('exif_imagetype') && exif_imagetype($resource_file) == IMAGETYPE_JPEG) {
@@ -459,8 +487,7 @@
       
       require_once(DIR_FS_INC.'auto_include.inc.php');
       foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/image_sharpen/','php') as $file) require ($file);
-
-      
+     
       if ($sharpen === true && is_array($sharpen_arr) && count($sharpen_arr) == 3) {
       
         // sharpen the image

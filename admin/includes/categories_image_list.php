@@ -24,5 +24,8 @@ if (is_file(DIR_FS_CATALOG_IMAGES.'categories/'.$categories_image_name_process))
 $a = new image_manipulation(DIR_FS_CATALOG_IMAGES.'categories/original_images/'.$categories_image_name, CATEGORIES_IMAGE_LIST_WIDTH, CATEGORIES_IMAGE_LIST_HEIGHT, DIR_FS_CATALOG_IMAGES.'categories/'.$categories_image_name_process, IMAGE_QUALITY, '');
 $a->create();
 
+if (defined('IMAGE_TYPE_EXTENSION') && IMAGE_TYPE_EXTENSION != 'default') {
+  $a->createWebp();
+}
+
 unset($categories_image_name_process);
-?>

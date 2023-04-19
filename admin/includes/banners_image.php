@@ -24,5 +24,8 @@ if (is_file(DIR_FS_CATALOG_IMAGES.'banner/'.$banners_image_name_process)) {
 $a = new image_manipulation(DIR_FS_CATALOG_IMAGES.'banner/original_images/'.$banners_image_name, BANNERS_IMAGE_WIDTH, BANNERS_IMAGE_HEIGHT, DIR_FS_CATALOG_IMAGES.'banner/'.$banners_image_name_process, IMAGE_QUALITY, '');
 $a->create();
 
+if (defined('IMAGE_TYPE_EXTENSION') && IMAGE_TYPE_EXTENSION != 'default') {
+  $a->createWebp();
+}
+
 unset($banners_image_name_process);
-?>

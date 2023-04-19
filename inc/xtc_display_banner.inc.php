@@ -45,6 +45,21 @@
   
         $banner_array = array();
         foreach ($banner_content as $banner) {
+          if (defined('IMAGE_TYPE_EXTENSION') && IMAGE_TYPE_EXTENSION != 'default') {
+            if ($banner['banners_image'] != '') {
+              $banners_image = substr($banner['banners_image'], 0, strrpos($banner['banners_image'], '.')).'.'.IMAGE_TYPE_EXTENSION;
+              if (is_file(DIR_WS_IMAGES.'banner/'.$banners_image)) {
+                $banner['banners_image'] = $banners_image;
+              }
+            }
+            if ($banner['banner_image_mobile'] != '') {
+              $banner_image_mobile = substr($banner['banner_image_mobile'], 0, strrpos($banner['banner_image_mobile'], '.')).'.'.IMAGE_TYPE_EXTENSION;
+              if (is_file(DIR_WS_IMAGES.'banner/'.$banners_image)) {
+                $banner['banner_image_mobile'] = $banner_image_mobile;
+              }
+            }
+          }
+
           $banner_url = xtc_get_top_level_domain($banner['banners_url']);
           $banner_title = xtc_parse_input_field_data($banner['banners_title'], array('"' => '&quot;'));
           $banner_link = (($banner['banners_redirect'] == 0) ? xtc_get_banners_url($banner['banners_url']) : xtc_href_link(FILENAME_REDIRECT, 'action=banner&goto=' . $banner['banners_id']));
@@ -76,6 +91,22 @@
       return false;
     }
     
+    
+    if (defined('IMAGE_TYPE_EXTENSION') && IMAGE_TYPE_EXTENSION != 'default') {
+      if ($banner['banners_image'] != '') {
+        $banners_image = substr($banner['banners_image'], 0, strrpos($banner['banners_image'], '.')).'.'.IMAGE_TYPE_EXTENSION;
+        if (is_file(DIR_WS_IMAGES.'banner/'.$banners_image)) {
+          $banner['banners_image'] = $banners_image;
+        }
+      }
+      if ($banner['banner_image_mobile'] != '') {
+        $banner_image_mobile = substr($banner['banner_image_mobile'], 0, strrpos($banner['banner_image_mobile'], '.')).'.'.IMAGE_TYPE_EXTENSION;
+        if (is_file(DIR_WS_IMAGES.'banner/'.$banners_image)) {
+          $banner['banner_image_mobile'] = $banner_image_mobile;
+        }
+      }
+    }
+
     $banner_url = xtc_get_top_level_domain($banner['banners_url']);
     $banner_title = xtc_parse_input_field_data($banner['banners_title'], array('"' => '&quot;'));
     $banner_link = (($banner['banners_redirect'] == 0) ? xtc_get_banners_url($banner['banners_url']) : xtc_href_link(FILENAME_REDIRECT, 'action=banner&goto=' . $banner['banners_id']));
