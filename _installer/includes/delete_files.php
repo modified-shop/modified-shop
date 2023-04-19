@@ -440,6 +440,7 @@
     'includes/external/sofort/classes/sofortLibSofortueberweisungGateway.inc.php',
     'includes/extra/ajax/cookie_consent.php',
     'includes/extra/application_bottom/10_easymarketing.php',
+    'includes/extra/application_bottom/10_facebook.php',
     'includes/extra/application_bottom/10_findologic.php',
     'includes/extra/application_bottom/10_matomo.php',
     'includes/extra/application_bottom/10_google_analytics.php',
