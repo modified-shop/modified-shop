@@ -202,7 +202,7 @@ define('BOX_SCHEDULED_TASKS', 'Geplante Aufgaben');
 define('BOX_AVALEX', 'avalex Rechtstexte');
 define('BOX_GOOGLE_ANALYTICS', 'Google Analytics');
 define('BOX_MATOMO_ANALYTICS', 'Matomo Analytics');
-define('BOX_FACEBOOK_EVENTS', 'Facebook Pixel Events');
+define('BOX_FACEBOOK_EVENTS', 'Facebook Pixel');
 
 define('TXT_GROUPS','<b>Gruppen</b>:');
 define('TXT_SYSTEM','System');
