@@ -441,6 +441,7 @@
     'includes/extra/ajax/cookie_consent.php',
     'includes/extra/application_bottom/10_easymarketing.php',
     'includes/extra/application_bottom/10_findologic.php',
+    'includes/extra/application_bottom/10_matomo.php',
     'includes/extra/application_bottom/10_google_analytics.php',
     'includes/extra/checkout/checkout_process_end/20_easybill.php',
     'includes/extra/checkout/checkout_process_end/10_xsbooster.php',
