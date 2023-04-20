@@ -30,6 +30,7 @@ float:left;
 padding:0px 0px 0px 0px;
 cursor:pointer;
 border: 0;
+position:relative;
 }
 #cssmenu li a {
 background: #AF417E /*url(images/current-bg.gif) top left repeat-x*/;
@@ -58,6 +59,11 @@ z-index:2000;
 }
 #cssmenu li > ul {
   border-top:2px solid #AF417E;
+}
+@media only screen and (max-width: 1060px) {
+  #cssmenu li:last-child > ul {
+    right:0px;
+  }
 }
 #cssmenu li ul  ul {
   border-top:0px solid #AF417E !important;
@@ -160,6 +166,11 @@ border-top: 0px solid #AF417E;
   left:200px;
   top:0px;
 }  
+@media only screen and (max-width: 1160px) {
+  #cssmenu ul:last-child ul ul {
+    left:-202px;
+  } 
+}
 #cssmenu ul ul li:hover ul {
   display:block !important;
 }
