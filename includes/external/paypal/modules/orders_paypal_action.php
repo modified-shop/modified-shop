@@ -52,7 +52,13 @@ if (isset($oID) && $oID != '') {
       switch ($_POST['cmd']) {
         case 'refund':
           if ($_POST['refund_price'] > 0) {
-            $paypal->refund_payment($order->info['order_id'], $_POST['refund_price'], $_POST['refund_comment']);
+            $response = $paypal->refund_payment($order->info['order_id'], $_POST['refund_price'], $_POST['refund_comment']);
+
+            if (is_object($response) && $response->state == 'completed') {
+              xtc_db_query("UPDATE ".TABLE_PAYPAL_INSTRUCTIONS."
+                               SET amount = amount - ".(double)$_POST['refund_price']."
+                             WHERE orders_id = '".(int)$oID."'");
+            }
           } else {
             $_SESSION['pp_error'] = TEXT_PAYPAL_ERROR_AMOUNT;
           }
@@ -96,12 +102,20 @@ if (isset($oID) && $oID != '') {
         case 'refund':
           if ($_POST['refund_price'] > 0) {
             $response = $paypal->refundOrder($_POST['refund_id'], $_POST['refund_price'], $order->info['currency'], $_POST['refund_comment']);
-                    
-            if (method_exists($response, 'getMessage')) {
-              $messages = $response->getMessage();
-              $messages = json_decode($messages, true);
-              if (isset($messages['details'])) {
-                $_SESSION['pp_error'] = $messages['details'][0]['description'];
+            
+            if (is_object($response)) {
+              if ($response->status == 'COMPLETED') {
+                xtc_db_query("UPDATE ".TABLE_PAYPAL_INSTRUCTIONS."
+                                 SET amount = amount - ".(double)$_POST['refund_price']."
+                               WHERE orders_id = '".(int)$oID."'");
+              }
+              
+              if (method_exists($response, 'getMessage')) {
+                $messages = $response->getMessage();
+                $messages = json_decode($messages, true);
+                if (isset($messages['details'])) {
+                  $_SESSION['pp_error'] = $messages['details'][0]['description'];
+                }
               }
             }
           } else {
