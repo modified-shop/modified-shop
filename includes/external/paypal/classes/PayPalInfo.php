@@ -118,8 +118,8 @@ class PayPalInfo extends PayPalPayment {
           }
                     
           try {
-            $resource->refund($refund, $apiContext);
-            $success = true;
+            $response = $resource->refund($refund, $apiContext);
+            return $response;
           } catch (Exception $ex) {
             $this->LoggingManager->log('DEBUG', 'Transactions', array('exception' => $ex));
             
