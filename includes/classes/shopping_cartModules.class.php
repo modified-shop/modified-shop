@@ -227,4 +227,10 @@ class shoppingCartModules {
         return self::call_module_method($type);
     }
 
+    public static function count_contents_virtual($no_count, $products_id)
+    {
+        self::$function_call = 'count_contents_virtual';
+        return self::call_module_method($no_count, $products_id);
+    }
+
 }

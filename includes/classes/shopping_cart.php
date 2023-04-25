@@ -985,9 +985,6 @@ class shoppingCart {
    *
    * amend count_contents to show nil contents for shipping
    * as we don't want to quote for 'virtual' item
-   * GLOBAL CONSTANTS if NO_COUNT_ZERO_WEIGHT is true then we don't count any product with a weight
-   * which is less than or equal to MINIMUM_WEIGHT
-   * otherwise we just don't count gift certificates
    *
    * @return integer
    */
@@ -1000,11 +997,10 @@ class shoppingCart {
         if (preg_match('/^GIFT/', $gv_result['products_model'])) {
           $no_count = true;
         }
-        if (defined('NO_COUNT_ZERO_WEIGHT') && NO_COUNT_ZERO_WEIGHT == 1) {
-          if ($gv_result['products_weight'] <= MINIMUM_WEIGHT) {
-            $no_count = true;
-          }
-        }
+
+        //new module support 
+        $no_count = $this->shoppingCartModules->count_contents_virtual($no_count, $products_id);
+
         if (!$no_count){
           $total_items += $this->get_quantity($products_id);
         }
