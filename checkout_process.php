@@ -405,6 +405,8 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
 
       }
     }
+
+    foreach(auto_include(DIR_FS_CATALOG.'includes/extra/checkout/checkout_process_products_end/','php') as $file) require ($file);
   }
 
   foreach(auto_include(DIR_FS_CATALOG.'includes/extra/checkout/checkout_process_order/','php') as $file) require ($file);
