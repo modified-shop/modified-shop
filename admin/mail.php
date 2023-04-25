@@ -26,9 +26,11 @@
   require_once(DIR_FS_INC . 'xtc_wysiwyg.inc.php');
   require_once(DIR_FS_INC . 'xtc_php_mail.inc.php');
 
+  $action = (isset($_GET['action']) ? $_GET['action'] : '');
+
   $error = false;
-  if (isset($_GET['action']) && $_GET['action'] != '') {
-    switch ($_GET['action']) {
+  if (isset($action) && $action != '') {
+    switch ($action) {
       case 'send_email_to_user':
         if (isset($_POST['customers_email_address']) 
             && $_POST['customers_email_address'] != ''
@@ -107,7 +109,7 @@
 
   require (DIR_WS_INCLUDES.'head.php');
 
-  if (USE_WYSIWYG == 'true' && ($_GET['action'] != 'preview' || $error == true)) {
+  if (USE_WYSIWYG == 'true' && ($action != 'preview' || $error == true)) {
     $query=xtc_db_query("SELECT code FROM ". TABLE_LANGUAGES ." WHERE languages_id='".(int)$_SESSION['languages_id']."'");
     $data=xtc_db_fetch_array($query);
     echo xtc_wysiwyg('gv_mail', $data['code']);
@@ -139,7 +141,7 @@
         <div class="clear"></div>
         <div class="div_box brd-none pdg2">
           <?php
-          if ($_GET['action'] == 'preview' && $error === false) {
+          if ($action == 'preview' && $error === false) {
             switch ($_POST['customers_email_address']) {
               case '***':
                 $mail_sent_to = TEXT_ALL_CUSTOMERS;

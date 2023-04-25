@@ -145,7 +145,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     $pInfo = new objectInfo($products);
                   }
 
-                  if ((is_object($pInfo)) && ($products['products_id'] == $pInfo->products_id) ) {
+                  if (isset($pInfo) && (is_object($pInfo)) && ($products['products_id'] == $pInfo->products_id)) {
                     echo '<tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_STATS_PRODUCTS_PURCHASED, xtc_get_all_get_params(array('action', 'pID')) . 'pID=' . $pInfo->products_id . '&action=orders') . '\'">' . "\n";
                   } else {
                     echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_STATS_PRODUCTS_PURCHASED, xtc_get_all_get_params(array('action', 'pID')) . 'pID=' . $products['products_id']) . '\'">' . "\n";
