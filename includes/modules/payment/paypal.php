@@ -83,7 +83,7 @@ class paypal extends PayPalPaymentV2 {
         },
         onApprove: function(data, actions) {
           $("#checkout_confirmation").submit();
-          $("#checkout_confirmation").html("");
+          $(".apms_form_button").hide();
         },
         onError: function (err) {
           console.error("failed to load PayPal buttons", err);
@@ -109,7 +109,7 @@ class paypal extends PayPalPaymentV2 {
           },
           onApprove: function(data, actions) {
             $("#checkout_confirmation").submit();
-            $("#checkout_confirmation").html("");
+            $(".apms_form_button").hide();
           },
           onError: function (err) {
             console.error("failed to load PayPal buttons", err);
