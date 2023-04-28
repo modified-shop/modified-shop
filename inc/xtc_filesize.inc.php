@@ -18,13 +18,14 @@
 function xtc_filesize($file, $dir = 'products') {
 	$a = array("B","KB","MB","GB","TB","PB");
 	
-	$pos = 0;
-	$size = filesize(DIR_FS_CATALOG.'media/'.$dir.'/'.$file);
-	while ($size >= 1024) {
-		$size /= 1024;
-		$pos++;
+  $size = $pos = 0;
+	if (is_file(DIR_FS_CATALOG.'media/'.$dir.'/'.$file)) {
+    $size = filesize(DIR_FS_CATALOG.'media/'.$dir.'/'.$file);
+    while ($size >= 1024) {
+      $size /= 1024;
+      $pos++;
+    }
 	}
-	return round($size,2)." ".$a[$pos];
+	
+  return round($size,2)." ".$a[$pos];
 }
-
-?>
