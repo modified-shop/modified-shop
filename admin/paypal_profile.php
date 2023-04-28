@@ -104,6 +104,8 @@ require (DIR_WS_INCLUDES.'head.php');
           <div class="clear div_box mrg5" style="margin-top:-1px;">
             <table class="clear tableConfig">
             <?php
+              echo '<div class="error_message">'.TEXT_PAYPAL_PROFILE_INFO_DEPRECATED.'</div>';
+              
               if (isset($_GET['action']) && $_GET['action'] == 'edit') {
                 $list = $paypal->get_profile($_GET['id']);
             
