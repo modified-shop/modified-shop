@@ -69,6 +69,9 @@
           for ($i=0, $n=count($payment_installed); $i<$n; $i++) {
             $class = substr($payment_installed[$i], 0, strrpos($payment_installed[$i], '.'));
             if (file_exists(DIR_FS_CATALOG_MODULES . 'payment/' . $payment_installed[$i])) {
+              if (file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $payment_installed[$i])) {
+                require_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $payment_installed[$i]);
+              }
               include(DIR_FS_CATALOG_MODULES . 'payment/' . $payment_installed[$i]);
               $module = new $class();
               if (isset($module->order_status) && $module->order_status == DEFAULT_ORDERS_STATUS_ID) {
