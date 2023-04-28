@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: customers_status.php 1062 2005-07-21 19:57:29Z gwinger $
+   $Id$
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -96,7 +96,7 @@ define('TEXT_INFO_CUSTOMERS_GROUP_ADOPT_PERMISSION', '<strong>Adopt customer gro
 define('ENTRY_CUSTOMERS_GROUP_ADOPT_PERMISSION', 'Adopt visibility rights for categories, products and content pages of the following customer group:');
 define('CUSTOMERS_GROUP_ADOPT_PERMISSIONS', 'Don\'t adopt any rights');
 
-define('TEXT_INFO_CUSTOMERS_STATUS_SHOW_PRICE_TAX_TOTAL', '<b>Show VAT at Total</b>');
+define('TEXT_INFO_CUSTOMERS_STATUS_SHOW_PRICE_TAX_TOTAL', '<b>Show total without tax at Total</b>');
 define('ENTRY_CUSTOMERS_STATUS_SHOW_PRICE_TAX_TOTAL', 'Minimum Total');
 
 define('TABLE_HEADING_CUSTOMERS_SPECIALS', 'Special prices');

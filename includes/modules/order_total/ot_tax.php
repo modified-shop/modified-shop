@@ -31,10 +31,19 @@
     }
 
     function process() {
-      global $order, $xtPrice;
+      global $order, $xtPrice, $PHP_SELF;
 
       foreach ($order->info['tax_groups'] as $key => $value) {
         if ($value > 0) {
+          if (defined('MODULE_ORDER_TOTAL_SUBTOTAL_NO_TAX_STATUS')
+              && MODULE_ORDER_TOTAL_SUBTOTAL_NO_TAX_STATUS == 'true'
+              && strpos(basename($PHP_SELF), 'checkout') !== false
+              && $xtPrice->xtcRemoveCurr($order->info['total']) >= $_SESSION['customers_status']['customers_status_show_tax_total']
+              )
+          {
+            $key = str_replace(TAX_ADD_TAX, TAX_NO_TAX, $key);
+          }
+
           if ($_SESSION['customers_status']['customers_status_show_price_tax'] != 0) {
             $order->info['allow_tax'] = 1; //customer
             $this->output[] = array('title' => $key . ':',

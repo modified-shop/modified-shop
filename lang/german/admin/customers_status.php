@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: customers_status.php 1062 2005-07-21 19:57:29Z gwinger $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -96,7 +96,7 @@ define('TEXT_INFO_CUSTOMERS_GROUP_ADOPT_PERMISSION', '<strong>Sichtbarkeitsrecht
 define('ENTRY_CUSTOMERS_GROUP_ADOPT_PERMISSION', 'Die Kategorie-, Artikel- und Content-Sichtbarkeitsrechte von folgender Kundengruppe &uuml;bernehmen:');
 define('CUSTOMERS_GROUP_ADOPT_PERMISSIONS', 'Keine Rechte &uuml;bernehmen');
 
-define('TEXT_INFO_CUSTOMERS_STATUS_SHOW_PRICE_TAX_TOTAL', '<b>MwSt. anzeigen ab Kaufbetrag</b>');
+define('TEXT_INFO_CUSTOMERS_STATUS_SHOW_PRICE_TAX_TOTAL', '<b>Summe Netto anzeigen ab Kaufbetrag</b>');
 define('ENTRY_CUSTOMERS_STATUS_SHOW_PRICE_TAX_TOTAL', 'Mindest-Kaufbetrag');
 
 define('TABLE_HEADING_CUSTOMERS_SPECIALS', 'Sonderangebote');
