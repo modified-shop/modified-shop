@@ -206,7 +206,7 @@
                   $contents[] = array('text' => '<br />' . TEXT_INFO_TIME_UNIT . '<br />' . xtc_draw_pull_down_menu('time_unit', $time_unit_array, $trInfo->time_unit));
                   $contents[] = array('text' => '<br />' . TEXT_INFO_TIME_OFFSET . '<br />' . xtc_draw_input_field('time_offset', gmdate('H:i', $trInfo->time_offset)));
                                     
-                  $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/>&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_SCHEDULED_TASKS, xtc_get_all_get_params(array('tID')) . 'tID=' . $trInfo->tasks_id) . '">' . BUTTON_CANCEL . '</a>');
+                  $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/>&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_SCHEDULED_TASKS, xtc_get_all_get_params(array('tID', 'action')) . 'tID=' . $trInfo->tasks_id) . '">' . BUTTON_CANCEL . '</a>');
                   break;
 
                 default:
