@@ -48,12 +48,12 @@
       }
     }
 
-    $wo_status = 0; 
+    $wo_cart_status = 0; 
     if ($crawler !== 0) {
       $wo_session_id = 'BOT|'.substr(md5($crawler), 4);
     } else {
       $wo_session_id = xtc_session_id();
-      $wo_status = (($_SESSION['cart']->count_contents() > 0) ? 1 : 0);
+      $wo_cart_status = (($_SESSION['cart']->count_contents() > 0) ? 1 : 0);
     }
 
     $wo_ip_address = xtc_db_prepare_input(ip_clearing($_SESSION['tracking']['ip']));
@@ -70,8 +70,8 @@
     // remove entries that have expired
     xtc_db_query("DELETE FROM " . TABLE_WHOS_ONLINE . " WHERE time_last_click < '" . $xx_mins_ago . "'");
 
-    xtc_db_query("INSERT INTO " . TABLE_WHOS_ONLINE . " (customer_id, full_name, session_id, time_entry, ip_address, time_last_click, last_page_url, http_referer, status)
-                       VALUES ('". (int)$wo_customer_id ."', '".xtc_db_input($wo_full_name)."', '".xtc_db_input($wo_session_id)."', '".xtc_db_input($current_time)."', '".xtc_db_input($wo_ip_address)."', '".xtc_db_input($current_time)."', '".xtc_db_input($wo_last_page_url)."', '".xtc_db_input($wo_referer)."', '".(int)$wo_status."')
-                       ON DUPLICATE KEY UPDATE customer_id = '".(int)$wo_customer_id."', full_name = '".xtc_db_input($wo_full_name)."', ip_address = '".xtc_db_input($wo_ip_address)."', time_last_click = '".xtc_db_input($current_time)."', last_page_url = '".xtc_db_input($wo_last_page_url)."', status = '".(int)$wo_status."'");
+    xtc_db_query("INSERT INTO " . TABLE_WHOS_ONLINE . " (customer_id, full_name, session_id, time_entry, ip_address, time_last_click, last_page_url, http_referer, cart_status)
+                       VALUES ('". (int)$wo_customer_id ."', '".xtc_db_input($wo_full_name)."', '".xtc_db_input($wo_session_id)."', '".xtc_db_input($current_time)."', '".xtc_db_input($wo_ip_address)."', '".xtc_db_input($current_time)."', '".xtc_db_input($wo_last_page_url)."', '".xtc_db_input($wo_referer)."', '".(int)$wo_cart_status."')
+                       ON DUPLICATE KEY UPDATE customer_id = '".(int)$wo_customer_id."', full_name = '".xtc_db_input($wo_full_name)."', ip_address = '".xtc_db_input($wo_ip_address)."', time_last_click = '".xtc_db_input($current_time)."', last_page_url = '".xtc_db_input($wo_last_page_url)."', cart_status = '".(int)$wo_cart_status."'");
 
   }
