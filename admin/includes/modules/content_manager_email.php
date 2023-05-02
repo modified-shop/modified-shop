@@ -44,7 +44,7 @@ if (!$action || in_array($action, array('delete', 'list'))) {
             </tr>
             <tr class="dataTableRow" onmouseover="this.className='dataTableRowOver'" onmouseout="this.className='dataTableRow\">
               <td class="dataTableContent txta-c">--</td>
-              <td class="dataTableContent"><?php echo '<a href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('coID', 'eID'))). '">'.xtc_image(DIR_WS_ICONS . 'folder_parent.gif', ICON_FOLDER) . ' ..</a>'; ?></td>
+              <td class="dataTableContent"><?php echo '<a href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('coID', 'action'))). '">'.xtc_image(DIR_WS_ICONS . 'folder_parent.gif', ICON_FOLDER) . ' ..</a>'; ?></td>
               <td class="dataTableContent txta-c">--</td>
               <td class="dataTableContent txta-c">--</td>
               <td class="dataTableContent txta-c">--</td>
@@ -68,9 +68,9 @@ if (!$action || in_array($action, array('delete', 'list'))) {
                 }
 
                 if (isset($oInfo) && is_object($oInfo) && $content['content_id'] == $oInfo->content_id) {
-                  echo '<tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action', 'coID')) . 'coID=' . $oInfo->content_id . '&action=edit_email_content') . '\'">' . "\n";
+                  echo '<tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action', 'coID')) . 'coID=' . $oInfo->content_id . '&action=edit_email_content&last_action=list') . '\'">' . "\n";
                 } else {
-                  echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action','coID')) . 'coID=' . $content['content_id']) . '\'">' . "\n";
+                  echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action','coID')) . 'action=list&coID=' . $content['content_id']) . '\'">' . "\n";
                 }
                 ?>
                   <td class="dataTableContent txta-c"><?php echo $content['content_id']; ?> </td>
@@ -416,7 +416,7 @@ if (!$action || in_array($action, array('delete', 'list'))) {
           <?php echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SAVE . '"/>'; ?>
         </div>
         <div class="flt-r mrg5 pdg2">
-          <a class="button" onclick="this.blur();" href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action'))); ?>"><?php echo BUTTON_BACK; ?></a>
+          <a class="button" onclick="this.blur();" href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('last_action')).'action=list'); ?>"><?php echo BUTTON_BACK; ?></a>
         </div>
         </form>
       </td>
