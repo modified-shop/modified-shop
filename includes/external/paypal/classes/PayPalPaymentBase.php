@@ -925,7 +925,9 @@ class PayPalPaymentBase extends PayPalCommon {
     xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('MODULE_PAYMENT_".strtoupper($this->code)."_ZONE', '0', '6', '4', NULL, now(), 'xtc_get_zone_class_title', 'xtc_cfg_pull_down_zone_classes(')");
     
     // scheduled task
-    xtc_db_query("INSERT INTO " . TABLE_SCHEDULED_TASKS . " (time_regularity, time_unit, status, tasks) VALUES ('1', 'h',  '0', 'paypal_tracking')");
+    if (defined('TABLE_SCHEDULED_TASKS')) {
+      xtc_db_query("INSERT INTO " . TABLE_SCHEDULED_TASKS . " (time_regularity, time_unit, status, tasks) VALUES ('1', 'h',  '0', 'paypal_tracking')");
+    }
     
     if (!defined('MODULE_PAYMENT_PAYPAL_SECRET')) {
       $check_query = xtc_db_query("SELECT * 
@@ -1068,7 +1070,9 @@ class PayPalPaymentBase extends PayPalCommon {
       xtc_db_query("DELETE FROM ".TABLE_CONFIGURATION." WHERE configuration_key LIKE 'MODULE_PAYMENT_PAYPAL_SECRET'");
 
       // scheduled task
-      xtc_db_query("DELETE FROM " . TABLE_SCHEDULED_TASKS . " WHERE tasks = 'paypal_tracking'");
+      if (defined('TABLE_SCHEDULED_TASKS')) {
+        xtc_db_query("DELETE FROM " . TABLE_SCHEDULED_TASKS . " WHERE tasks = 'paypal_tracking'");
+      }
     }
 
     xtc_db_query("DELETE FROM ".TABLE_CONFIGURATION." WHERE configuration_key LIKE 'MODULE_PAYMENT_".strtoupper($this->code)."\_%' AND configuration_key != 'MODULE_PAYMENT_PAYPAL_SECRET'");
