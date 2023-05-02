@@ -135,7 +135,7 @@
                 switch ($_GET['status']) {
                   case '0':
                   case '1':
-                    $where = " WHERE status = '".(int)$_GET['status']."'";
+                    $where = " WHERE cart_status = '".(int)$_GET['status']."'";
                     break;
                   case '2':
                     $where = " WHERE session_id NOT LIKE 'BOT%'";

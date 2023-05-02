@@ -1453,10 +1453,10 @@ CREATE TABLE whos_online (
   time_last_click VARCHAR(14) NOT NULL,
   last_page_url VARCHAR(255) NOT NULL,
   http_referer VARCHAR(255) NOT NULL,
-  status INT(11) NOT NULL,
+  cart_status INT(11) NOT NULL,
   PRIMARY KEY (session_id),
   KEY idx_time_last_click (time_last_click),
-  KEY idx_status (status)
+  KEY idx_cart_status (cart_status)
 );
 
 DROP TABLE IF EXISTS zones;
