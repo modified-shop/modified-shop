@@ -97,7 +97,7 @@ require (DIR_WS_INCLUDES.'head.php');
                   $carriers_query_raw = "SELECT *
                                            FROM " . TABLE_CARRIERS . "
                                        ORDER BY carrier_sort_order";
-                  $carriers_split = new splitPageResults($page_parcel, $page_max_display_results, $carriers_query_raw, $carriers_query_numrows);
+                  $carriers_split = new splitPageResults($page_parcel, $page_max_display_results, $carriers_query_raw, $carriers_query_numrows, 'carrier_id', 'cID');
                   $carriers_query = xtc_db_query($carriers_query_raw);
                   while ($carriers = xtc_db_fetch_array($carriers_query)) {
                     if ((!isset($_GET['cID']) || (isset($_GET['cID']) && ($_GET['cID'] == $carriers['carrier_id']))) && !isset($cInfo) && (substr($action, 0, 3) != 'new')) {

@@ -19,7 +19,7 @@
 defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 class splitPageResults {
 
-    function __construct(&$current_page_number, $max_rows_per_page, &$sql_query, &$query_num_rows, $count_key = '*') {
+    function __construct(&$current_page_number, $max_rows_per_page, &$sql_query, &$query_num_rows, $count_key = '*', $get_key = '', $page_key = 'page', $sql_key = '') {
       if (empty($current_page_number)) $current_page_number = 1;
 
       $pos_to = strlen($sql_query);
@@ -48,14 +48,46 @@ class splitPageResults {
       $num_pages = $max_rows_per_page > 0 ? ceil($query_num_rows / $max_rows_per_page) : 0;        
       
       if ($current_page_number > $num_pages) {
-          $current_page_number = $num_pages;
+        $current_page_number = $num_pages;
       }
+      
+      if ($sql_key == '') $sql_key = $count_key;
+      
+      if ($sql_key != '*' 
+          && $get_key != ''
+          && isset($_GET[$get_key]) 
+          && $_GET[$get_key] != ''
+          )
+      {
+        if (strpos($sql_key, '.') !== false) {
+          $sql_key = substr($sql_key, strpos($sql_key, '.') + 1);
+        }
+        
+        $found = false;
+        $page = $i = 1;        
+        $check_query = xtc_db_query($sql_query);
+        while ($check = xtc_db_fetch_array($check_query)) {          
+          if ($_GET[$get_key] == $check[$sql_key]) {
+            $found = true;
+            break;
+          }
+          if ($i % $max_rows_per_page == 0) {
+            $page ++;
+          }
+          $i ++;
+        }
+        
+        if ($found === true) {
+          $current_page_number = $_GET[$page_key] = $page;
+        }
+      }
+      
       $offset = ($max_rows_per_page * ($current_page_number - 1));
       $offset = $offset < 0 ? 0 : $offset;
       
       //no page results limit (-1)
       if ($max_rows_per_page > (-1)) {
-        $sql_query .= " limit " . $offset . ", " . $max_rows_per_page;
+        $sql_query .= " LIMIT " . $offset . ", " . $max_rows_per_page;
       }
     }
 
@@ -126,4 +158,3 @@ class splitPageResults {
         return '<span style="line-height: 28px;">'.sprintf($text_output, $from_num, $to_num, $query_numrows).'</span>';
     }
 }
-?>

@@ -571,7 +571,7 @@
 
                //glue together
                $listing_sql = $select_str.$from_str.$where_str;
-               $products_split = new splitPageResults($_GET['page'], $page_max_display_results, $listing_sql, $products_query_numrows, 'p.products_id');
+               $products_split = new splitPageResults($_GET['page'], $page_max_display_results, $listing_sql, $products_query_numrows, 'p.products_id', 'pID');
                $products_query = xtc_db_query($listing_sql);
              } else {
                 $add_where = '';
@@ -630,7 +630,7 @@
                                       " . $add_join . $add_where ."
                              ORDER BY " . $prodsort;
                 
-                $products_split = new splitPageResults($_GET['page'], $page_max_display_results, $select_str, $products_query_numrows);
+                $products_split = new splitPageResults($_GET['page'], $page_max_display_results, $select_str, $products_query_numrows, 'p.products_id', 'pID');
                 $products_query = xtc_db_query($select_str);
              }
 

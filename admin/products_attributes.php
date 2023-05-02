@@ -358,7 +358,7 @@ require (DIR_WS_INCLUDES.'head.php');
                                       AND pov.language_id = '".(int)$_SESSION['languages_id']."'
                                  ORDER BY ".$value_sort;
 
-              $values_split = new splitPageResults($spage, $page_max_display_values_results, $values_query_raw, $values_query_numrows);
+              $values_split = new splitPageResults($spage, $page_max_display_values_results, $values_query_raw, $values_query_numrows, 'pov.products_options_values_id', 'vID', 'spage');
               $values_query = xtc_db_query($values_query_raw);
               while ($values = xtc_db_fetch_array($values_query)) {
                 if ((!isset($_GET['vID']) || $_GET['vID'] == $values['products_options_values_id']) && !isset($vInfo) && substr($action, 0, 3) != 'new_value') {
@@ -414,7 +414,7 @@ require (DIR_WS_INCLUDES.'head.php');
                                              ".$where."
                                     GROUP BY po.products_options_id
                                     ORDER BY ".$option_sort;
-                $options_split = new splitPageResults($page, $page_max_display_options_results, $options_query_raw, $options_query_numrows, 'po.products_options_id');
+                $options_split = new splitPageResults($page, $page_max_display_options_results, $options_query_raw, $options_query_numrows, 'po.products_options_id', 'oID');
                 $options_query = xtc_db_query($options_query_raw);
                 while ($options = xtc_db_fetch_array($options_query)) {
                   if ((!isset($_GET['oID']) || $_GET['oID'] == $options['products_options_id']) && !isset($oInfo) && substr($action, 0, 3) != 'new_value') {

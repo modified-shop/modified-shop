@@ -128,7 +128,7 @@
                                            FROM " . TABLE_PRODUCTS_XSELL_GROUPS . " 
                                           WHERE language_id = '" . (int)$_SESSION['languages_id'] . "' 
                                        ORDER BY xsell_sort_order, products_xsell_grp_name_id";
-                $cross_sell_split = new splitPageResults($page, $page_max_display_results, $cross_sell_query_raw, $cross_sell_query_numrows);
+                $cross_sell_split = new splitPageResults($page, $page_max_display_results, $cross_sell_query_raw, $cross_sell_query_numrows, 'products_xsell_grp_name_id', 'oID');
                 $cross_sell_query = xtc_db_query($cross_sell_query_raw);
                 while ($cross_sell = xtc_db_fetch_array($cross_sell_query)) {
                   if ((!isset($_GET['oID']) || ($_GET['oID'] == $cross_sell['products_xsell_grp_name_id'])) && !isset($oInfo) && (substr($action, 0, 3) != 'new')) {

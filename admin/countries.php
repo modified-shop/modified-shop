@@ -192,7 +192,7 @@
                                             FROM ".TABLE_COUNTRIES."
                                                  ".$where." 
                                                  ".$sort;
-                  $countries_split = new splitPageResults($page, $page_max_display_results, $countries_query_raw, $countries_query_numrows);
+                  $countries_split = new splitPageResults($page, $page_max_display_results, $countries_query_raw, $countries_query_numrows, 'countries_id', 'cID');
                   $countries_query = xtc_db_query($countries_query_raw);
                   while ($countries = xtc_db_fetch_array($countries_query)) {
                     if ((!isset($_GET['cID']) || ($_GET['cID'] == $countries['countries_id'])) && (!isset($cInfo)) && (substr($action, 0, 3) != 'new')) {

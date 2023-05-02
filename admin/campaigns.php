@@ -127,7 +127,7 @@ require (DIR_WS_INCLUDES.'head.php');
               $campaigns_query_raw = "SELECT * 
                                         FROM ".TABLE_CAMPAIGNS." 
                                     ORDER BY campaigns_name";
-              $campaigns_split = new splitPageResults($page, $page_max_display_results, $campaigns_query_raw, $campaigns_query_numrows);
+              $campaigns_split = new splitPageResults($page, $page_max_display_results, $campaigns_query_raw, $campaigns_query_numrows, 'campaigns_id', 'cID');
               $campaigns_query = xtc_db_query($campaigns_query_raw);
               while ($campaigns = xtc_db_fetch_array($campaigns_query)) {
                 if ((!isset($_GET['cID']) || (isset($_GET['cID']) && $_GET['cID'] == $campaigns['campaigns_id'])) && !isset($cInfo) && (substr($action, 0, 3) != 'new')) {

@@ -143,7 +143,7 @@
                 $tax_classes_query_raw = "SELECT *
                                             FROM ".TABLE_TAX_CLASS." 
                                         ORDER BY sort_order, tax_class_id";
-                $tax_classes_split = new splitPageResults($page, $page_max_display_results, $tax_classes_query_raw, $tax_classes_query_numrows);
+                $tax_classes_split = new splitPageResults($page, $page_max_display_results, $tax_classes_query_raw, $tax_classes_query_numrows, 'tax_class_id', 'tID');
                 $tax_classes_query = xtc_db_query($tax_classes_query_raw);
                 while ($tax_classes = xtc_db_fetch_array($tax_classes_query)) {
                   if ((!isset($_GET['tID']) || $_GET['tID'] == $tax_classes['tax_class_id']) && !isset($tcInfo) && (substr($action, 0, 3) != 'new')) {

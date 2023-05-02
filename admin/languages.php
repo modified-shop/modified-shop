@@ -418,7 +418,7 @@
                 $languages_query_raw = "SELECT *
                                           FROM " . TABLE_LANGUAGES . " 
                                       ORDER BY sort_order";
-                $languages_split = new splitPageResults($page, $page_max_display_results, $languages_query_raw, $languages_query_numrows);
+                $languages_split = new splitPageResults($page, $page_max_display_results, $languages_query_raw, $languages_query_numrows, 'languages_id', 'lID');
                 $languages_query = xtc_db_query($languages_query_raw);
 
                 while ($languages = xtc_db_fetch_array($languages_query)) {

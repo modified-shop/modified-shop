@@ -176,7 +176,7 @@
                                       GROUP BY c.customers_id
                                                ".$sort;
 
-                $customers_split = new splitPageResults($page, $page_max_display_results, $customers_query_raw, $customers_query_numrows, 'c.customers_id');
+                $customers_split = new splitPageResults($page, $page_max_display_results, $customers_query_raw, $customers_query_numrows, 'c.customers_id', 'cID');
                 $customers_query = xtc_db_query($customers_query_raw);
                 while ($customers = xtc_db_fetch_array($customers_query)) {
                   $umsatz_query = xtc_db_query("SELECT SUM(op.final_price) as ordersum

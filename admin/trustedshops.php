@@ -472,7 +472,7 @@ require (DIR_WS_INCLUDES.'head.php');
                                                  JOIN " . TABLE_LANGUAGES . " l
                                                       ON t.languages_id = l.languages_id
                                              ORDER BY id";
-                    $trustedshops_split = new splitPageResults($_GET['page'], $page_max_display_results, $trustedshops_query_raw, $trustedshops_query_numrows);
+                    $trustedshops_split = new splitPageResults($_GET['page'], $page_max_display_results, $trustedshops_query_raw, $trustedshops_query_numrows, 't.id', 'tID');
                     $trustedshops_query = xtc_db_query($trustedshops_query_raw);
                     while ($trustedshops = xtc_db_fetch_array($trustedshops_query)) {
                       if ((!isset($_GET['tID']) || $_GET['tID'] == $trustedshops['id']) && !isset($tInfo) && (substr($action, 0, 3) != 'new')) {

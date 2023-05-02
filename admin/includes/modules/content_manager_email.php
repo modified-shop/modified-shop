@@ -60,7 +60,7 @@ if (!$action || in_array($action, array('delete', 'list'))) {
                                            ON ec.languages_id = l.languages_id
                                      WHERE ec.email_id = '".xtc_db_input($_GET['eID'])."'
                                   ORDER BY ec.sort_order, ec.email_id";
-              $content_query_split = new splitPageResults($page, $page_max_display_results, $content_query_raw, $content_query_numrows, 'ec.email_id');          
+              $content_query_split = new splitPageResults($page, $page_max_display_results, $content_query_raw, $content_query_numrows, 'ec.email_id', 'coID', 'content_id');          
               $content_query = xtc_db_query($content_query_raw);     
               while ($content = xtc_db_fetch_array($content_query)) {
                 if ((!isset($_GET['coID']) || $_GET['coID'] == $content['content_id']) && !isset($oInfo)) {
@@ -146,7 +146,7 @@ if (!$action || in_array($action, array('delete', 'list'))) {
           $content_query_raw = "SELECT ec.email_id
                                   FROM ".TABLE_EMAIL_CONTENT." ec
                               GROUP BY ec.email_id";
-          $content_query_split = new splitPageResults($page, $page_max_display_results, $content_query_raw, $content_query_numrows, 'ec.email_id');          
+          $content_query_split = new splitPageResults($page, $page_max_display_results, $content_query_raw, $content_query_numrows, 'ec.email_id', 'eID', 'page', 'email_id');          
           $content_query = xtc_db_query($content_query_raw);     
           while ($content = xtc_db_fetch_array($content_query)) {
             $content['content_title'] = ucwords(implode(' ', explode('_', $content['email_id'])));

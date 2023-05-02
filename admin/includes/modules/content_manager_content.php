@@ -72,7 +72,7 @@ if (!$action || in_array($action, array('delete', 'list'))) {
                                            ON cmc.languages_id = l.languages_id
                                      WHERE cmc.content_manager_id = '".(int)$_GET['cID']."'
                                   ORDER BY cmc.sort_order, cmc.content_id";
-              $content_query_split = new splitPageResults($page, $page_max_display_results, $content_query_raw, $content_query_numrows, 'cmc.content_manager_id');          
+              $content_query_split = new splitPageResults($page, $page_max_display_results, $content_query_raw, $content_query_numrows, 'cmc.content_id', 'coID');          
               $content_query = xtc_db_query($content_query_raw);     
               while ($content = xtc_db_fetch_array($content_query)) {
                 if ((!isset($_GET['coID']) || $_GET['coID'] == $content['content_id']) && !isset($oInfo)) {

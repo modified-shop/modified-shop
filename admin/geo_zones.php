@@ -251,7 +251,7 @@ if (isset($_GET['zID']) && ($saction == 'edit' || $saction == 'new')) {
                                          ON a.zone_id = z.zone_id 
                                    WHERE a.geo_zone_id = " . (int)$_GET['zID'] . " 
                                 ORDER BY c.countries_name";
-              $zones_split = new splitPageResults($spage, $page_max_display_countries_results, $zones_query_raw, $zones_query_numrows);
+              $zones_split = new splitPageResults($spage, $page_max_display_countries_results, $zones_query_raw, $zones_query_numrows, 'a.association_id', 'sID', 'spage');
               $zones_query = xtc_db_query($zones_query_raw);
               while ($zones = xtc_db_fetch_array($zones_query)) {
                 $rows++;
@@ -290,7 +290,7 @@ if (isset($_GET['zID']) && ($saction == 'edit' || $saction == 'new')) {
                 $zones_query_raw = "SELECT *
                                       FROM " . TABLE_GEO_ZONES . " 
                                   ORDER BY geo_zone_name";
-                $zones_split = new splitPageResults($zpage, $page_max_display_tax_results, $zones_query_raw, $zones_query_numrows);
+                $zones_split = new splitPageResults($zpage, $page_max_display_tax_results, $zones_query_raw, $zones_query_numrows, 'geo_zone_id', 'zID', 'zpage');
                 $zones_query = xtc_db_query($zones_query_raw);
                 while ($zones = xtc_db_fetch_array($zones_query)) {
                   if (((!isset($_GET['zID'])) || ($_GET['zID'] == $zones['geo_zone_id'])) && (!isset($zInfo)) && (substr($action, 0, 3) != 'new')) {

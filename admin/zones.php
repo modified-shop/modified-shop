@@ -90,8 +90,14 @@ require (DIR_WS_INCLUDES.'head.php');
                   <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
                 </tr>
                 <?php
-                  $zones_query_raw = "select z.zone_id, c.countries_id, c.countries_name, z.zone_name, z.zone_code, z.zone_country_id from " . TABLE_ZONES . " z, " . TABLE_COUNTRIES . " c where z.zone_country_id = c.countries_id order by c.countries_name, z.zone_name";
-                  $zones_split = new splitPageResults($page, $page_max_display_results, $zones_query_raw, $zones_query_numrows);
+                  $zones_query_raw = "SELECT z.*, 
+                                             c.countries_id, 
+                                             c.countries_name
+                                        FROM " . TABLE_ZONES . " z
+                                        JOIN " . TABLE_COUNTRIES . " c 
+                                             ON z.zone_country_id = c.countries_id
+                                    ORDER BY c.countries_name, z.zone_name";
+                  $zones_split = new splitPageResults($page, $page_max_display_results, $zones_query_raw, $zones_query_numrows, 'z.zone_id', 'cID');
                   $zones_query = xtc_db_query($zones_query_raw);
                   while ($zones = xtc_db_fetch_array($zones_query)) {
                     if ((!isset($_GET['cID']) || (isset($_GET['cID']) && ($_GET['cID'] == $zones['zone_id']))) && !isset($cInfo) && (substr($action, 0, 3) != 'new')) {

@@ -137,10 +137,10 @@
                   <?php
                     switch ($sorting) {
                       case 'prio':
-                        $tsort = 'r.tax_priority ASC';
+                        $tsort = 'tr.tax_priority ASC';
                         break;
                       case 'prio-desc':
-                        $tsort = 'r.tax_priority DESC';
+                        $tsort = 'tr.tax_priority DESC';
                         break;
                       case 'title':
                         $tsort = 'tc.tax_class_title ASC';
@@ -149,35 +149,35 @@
                         $tsort = 'tc.tax_class_title DESC';
                         break;
                       case 'name':
-                        $tsort = 'z.geo_zone_name ASC';
+                        $tsort = 'gz.geo_zone_name ASC';
                         break;
                       case 'name-desc':
-                        $tsort = 'z.geo_zone_name DESC';
+                        $tsort = 'gz.geo_zone_name DESC';
                         break;
                       case 'tax':
-                        $tsort = 'r.tax_rate ASC';
+                        $tsort = 'tr.tax_rate ASC';
                         break;
                       case 'tax-desc':
-                        $tsort = 'r.tax_rate DESC';
+                        $tsort = 'tr.tax_rate DESC';
                         break;
                       default:
-                        $tsort = 'r.tax_rates_id ASC';
+                        $tsort = 'tr.tax_rates_id ASC';
                         break;
                     }
-                    $tsort .= ', r.tax_rates_id ASC';
+                    $tsort .= ', tr.tax_rates_id ASC';
                     
-                    $rates_query_raw = "SELECT r.*, 
-                                               z.geo_zone_id, 
-                                               z.geo_zone_name, 
+                    $rates_query_raw = "SELECT tr.*, 
+                                               gz.geo_zone_id, 
+                                               gz.geo_zone_name, 
                                                tc.tax_class_title, 
                                                tc.tax_class_id
                                           FROM " . TABLE_TAX_CLASS . " tc
-                                          JOIN " . TABLE_TAX_RATES . " r 
-                                               ON r.tax_class_id = tc.tax_class_id
-                                     LEFT JOIN " . TABLE_GEO_ZONES . " z 
-                                               ON r.tax_zone_id = z.geo_zone_id
+                                          JOIN " . TABLE_TAX_RATES . " tr 
+                                               ON tr.tax_class_id = tc.tax_class_id
+                                     LEFT JOIN " . TABLE_GEO_ZONES . " gz 
+                                               ON tr.tax_zone_id = gz.geo_zone_id
                                          ORDER BY ".$tsort;
-                    $rates_split = new splitPageResults($page, $page_max_display_results, $rates_query_raw, $rates_query_numrows);
+                    $rates_split = new splitPageResults($page, $page_max_display_results, $rates_query_raw, $rates_query_numrows, 'tr.tax_rates_id', 'tID');
                     $rates_query = xtc_db_query($rates_query_raw);
                     while ($rates = xtc_db_fetch_array($rates_query)) {
                       if ((!isset($_GET['tID']) || $_GET['tID'] == $rates['tax_rates_id']) && !isset($trInfo) && (substr($action, 0, 3) != 'new')) {

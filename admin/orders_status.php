@@ -175,7 +175,7 @@
                                               FROM " . TABLE_ORDERS_STATUS . " 
                                              WHERE language_id = '" . (int)$_SESSION['languages_id'] . "' 
                                           ORDER BY sort_order, orders_status_id";
-                $orders_status_split = new splitPageResults($page, $page_max_display_results, $orders_status_query_raw, $orders_status_query_numrows);
+                $orders_status_split = new splitPageResults($page, $page_max_display_results, $orders_status_query_raw, $orders_status_query_numrows, 'orders_status_id', 'oID');
                 $orders_status_query = xtc_db_query($orders_status_query_raw);
                 while ($orders_status = xtc_db_fetch_array($orders_status_query)) {
                   if ((!isset($_GET['oID']) || (isset($_GET['oID']) && ($_GET['oID'] == $orders_status['orders_status_id']))) && !isset($oInfo) && (substr($action, 0, 3) != 'new')) {

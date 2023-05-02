@@ -482,7 +482,7 @@ if (USE_WYSIWYG == 'true') {
                   $manufacturers_query_raw = "SELECT *
                                                 FROM " . TABLE_MANUFACTURERS . " 
                                                      ".$sort;
-                  $manufacturers_split = new splitPageResults($page, $page_max_display_results, $manufacturers_query_raw, $manufacturers_query_numrows);
+                  $manufacturers_split = new splitPageResults($page, $page_max_display_results, $manufacturers_query_raw, $manufacturers_query_numrows, 'manufacturers_id', 'mID');
                   $manufacturers_query = xtc_db_query($manufacturers_query_raw);
                   while ($manufacturers = xtc_db_fetch_array($manufacturers_query)) {
                     $manufacturers['manufacturers_image'] = str_replace('manufacturers/', '', $manufacturers['manufacturers_image']);

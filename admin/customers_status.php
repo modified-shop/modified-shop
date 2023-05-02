@@ -301,7 +301,7 @@ if (xtc_not_null($action) && $action != 'delete') {
                   </tr>
                   <?php
 
-                  $customers_status_split = new splitPageResults($page, $page_max_display_results, $customers_status_query_raw, $customers_status_query_numrows);
+                  $customers_status_split = new splitPageResults($page, $page_max_display_results, $customers_status_query_raw, $customers_status_query_numrows, 'customers_status_id', 'cID');
                   $customers_status_query = xtc_db_query($customers_status_query_raw);
                   while ($customers_status = xtc_db_fetch_array($customers_status_query)) {
                     if ((!isset($_GET['cID']) || (isset($_GET['cID']) && ($_GET['cID'] == $customers_status['customers_status_id']))) && !isset($cInfo) && (substr($action, 0, 3) != 'new')) {

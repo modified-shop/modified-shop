@@ -176,7 +176,7 @@ if (!$action || $action == 'delete') {
                                  WHERE languages_id = '".(int)$_SESSION['languages_id']."'
                                        ".$where."
                               ORDER BY ".$sort;
-          $content_query_split = new splitPageResults($page, $page_max_display_results, $content_query_raw, $content_query_numrows);
+          $content_query_split = new splitPageResults($page, $page_max_display_results, $content_query_raw, $content_query_numrows, 'content_group', 'coID');
           $content_query = xtc_db_query($content_query_raw);
           while ($content_data = xtc_db_fetch_array($content_query)) {
 
@@ -694,7 +694,5 @@ if (!$action || $action == 'delete') {
       });
     }
   </script>
-
-<?php
+  <?php
 }
-?>

@@ -171,7 +171,7 @@
                   $currency_query_raw = "SELECT *
                                            FROM " . TABLE_CURRENCIES . "
                                        ORDER BY title";
-                  $currency_split = new splitPageResults($page, $page_max_display_results, $currency_query_raw, $currency_query_numrows);
+                  $currency_split = new splitPageResults($page, $page_max_display_results, $currency_query_raw, $currency_query_numrows, 'currencies_id', 'cID');
                   $currency_query = xtc_db_query($currency_query_raw);
                   while ($currency = xtc_db_fetch_array($currency_query)) {
                     if ((!isset($_GET['cID']) || (isset($_GET['cID'])  && ($_GET['cID'] == $currency['currencies_id']))) && !isset($cInfo) && (substr($action, 0, 3) != 'new')) {

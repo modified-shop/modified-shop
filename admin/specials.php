@@ -368,7 +368,7 @@
                                                    AND pd.language_id = '" .(int) $_SESSION['languages_id'] . "'
                                        ORDER BY ".$spsort;
                                    
-                  $specials_split = new splitPageResults($page, $page_max_display_results, $specials_query_raw, $specials_query_numrows);
+                  $specials_split = new splitPageResults($page, $page_max_display_results, $specials_query_raw, $specials_query_numrows, 's.specials_id', 'sID');
                   $specials_query = xtc_db_query($specials_query_raw);
                   while ($specials = xtc_db_fetch_array($specials_query)) {
                     

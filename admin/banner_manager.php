@@ -538,7 +538,7 @@
                                               FROM " . TABLE_BANNERS . " 
                                              WHERE languages_id = '".(int)$_SESSION['languages_id']."'
                                           ORDER BY ".$bsort;
-                      $banners_split = new splitPageResults($page, $page_max_display_results, $banners_query_raw, $banners_query_numrows);
+                      $banners_split = new splitPageResults($page, $page_max_display_results, $banners_query_raw, $banners_query_numrows, 'banners_group_id', 'bID');
                       $banners_query = xtc_db_query($banners_query_raw);
                       while ($banners = xtc_db_fetch_array($banners_query)) {
                         $info_query = xtc_db_query("SELECT sum(banners_shown) as banners_shown, 

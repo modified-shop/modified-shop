@@ -76,8 +76,8 @@ if (!$action || in_array($action, array('delete', 'list'))) {
                                       JOIN ".TABLE_LANGUAGES." l
                                            ON pc.languages_id = l.languages_id
                                      WHERE products_id = '".(int)$_GET['pID']."'
-                                  ORDER BY sort_order, content_id";
-              $content_query_split = new splitPageResults($page, $page_max_display_results, $content_query_raw, $content_query_numrows);
+                                  ORDER BY pc.sort_order, pc.content_id";
+              $content_query_split = new splitPageResults($page, $page_max_display_results, $content_query_raw, $content_query_numrows, 'pc.content_id', 'coID');
               $content_query = xtc_db_query($content_query_raw);
               while ($content = xtc_db_fetch_array($content_query)) {
                 if ((!isset($_GET['coID']) || $_GET['coID'] == $content['content_id']) && !isset($oInfo)) {
@@ -213,7 +213,7 @@ if (!$action || in_array($action, array('delete', 'list'))) {
                               GROUP BY p.products_id
                               ORDER BY pd.products_name, p.products_id ASC";
                   
-          $content_query_split = new splitPageResults($page, $page_max_display_results, $content_query_raw, $content_query_numrows, 'p.products_id');          
+          $content_query_split = new splitPageResults($page, $page_max_display_results, $content_query_raw, $content_query_numrows, 'p.products_id', 'pID');          
           $content_query = xtc_db_query($content_query_raw);
           while ($content = xtc_db_fetch_array($content_query)) {
             if ((!isset($_GET['pID']) || $_GET['pID'] == $content['products_id']) && !isset($oInfo)) {
