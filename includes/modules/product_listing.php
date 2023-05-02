@@ -51,14 +51,7 @@ $listing_split = new splitPageResults($listing_sql, (isset($_GET['page']) ? (int
 $module_content = $category = array();
 $image = '';
 
-if ($listing_split->number_of_rows == 0
-    && (basename($PHP_SELF) == FILENAME_PRODUCTS_NEW
-        || basename($PHP_SELF) == FILENAME_SPECIALS
-        )
-    )
-{
-  xtc_redirect(xtc_href_link(FILENAME_DEFAULT));
-} elseif ($listing_split->number_of_rows > 0) {
+if ($listing_split->number_of_rows > 0) {
   if (!is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/pagination.html')) {
     $pagination = '<div class="smallText" style="clear:both;">
                      <div style="float:left;">'.$listing_split->display_count(TEXT_DISPLAY_NUMBER_OF_PRODUCTS).'</div> 
@@ -264,6 +257,12 @@ if ($result != false) {
     }
     include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
   }
+} elseif (basename($PHP_SELF) == FILENAME_SPECIALS) {
+  $site_error = TEXT_SPECIALS_NOT_FOUND;
+  include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
+} elseif (basename($PHP_SELF) == FILENAME_PRODUCTS_NEW) {
+  $site_error = sprintf(TEXT_PRODUCTS_NEW_NOT_FOUND, MAX_DISPLAY_NEW_PRODUCTS_DAYS);
+  include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
 } elseif ($current_category_id == '0' && isset($_GET['keywords'])) {
   $site_error = TEXT_PRODUCT_NOT_FOUND;
   include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
