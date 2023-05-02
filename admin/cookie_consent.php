@@ -316,7 +316,7 @@ require (DIR_WS_INCLUDES.'head.php');
               $values_split = new splitPageResults($spage, $page_max_display_values_results, $values_query_raw, $values_query_numrows);
               $values_query = xtc_db_query($values_query_raw);
               while ($values = xtc_db_fetch_array($values_query)) {
-                if ((!isset($_GET['vID']) || ($_GET['vID'] == $values['cookies_id'])) && !isset($vInfo) && (substr($saction, 0, 3) != 'new_value')) {
+                if ((!isset($_GET['vID']) || ($_GET['vID'] == $values['cookies_id'])) && !isset($vInfo) && (substr($saction, 0, 3) != 'new')) {
                   $vInfo = new objectInfo($values);
                 }
                 if (isset($vInfo) && is_object($vInfo) && $values['cookies_id'] == $vInfo->cookies_id) {
@@ -372,7 +372,7 @@ require (DIR_WS_INCLUDES.'head.php');
                 $options_split = new splitPageResults($page, $page_max_display_options_results, $options_query_raw, $options_query_numrows);
                 $options_query = xtc_db_query($options_query_raw);
                 while ($options = xtc_db_fetch_array($options_query)) {
-                  if ((!isset($_GET['oID']) || ($_GET['oID'] == $options['categories_id'])) && (!isset($oInfo)) && (substr($page, 0, 3) != 'new_value')) {
+                  if ((!isset($_GET['oID']) || ($_GET['oID'] == $options['categories_id'])) && (!isset($oInfo)) && (substr($action, 0, 3) != 'new')) {
                     $num_options_query = xtc_db_query("SELECT count(*) as num_options 
                                                          FROM " . TABLE_COOKIE_CONSENT_COOKIES . " 
                                                         WHERE categories_id = '" . $options['categories_id'] . "' 
