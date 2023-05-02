@@ -116,4 +116,8 @@ DELETE FROM `configuration_group` WHERE `configuration_group_id` = 24;
 #GTB - 2023-04-19 - set image manpulator
 UPDATE `configuration` SET `configuration_value` = 'image_manipulator.php' WHERE `configuration_key` = 'IMAGE_MANIPULATOR';
 
+#GTB - 2023-05-02 - add whos online filter
+ALTER TABLE `whos_online` ADD `status` INT(11) NOT NULL;
+ALTER TABLE `whos_online` ADD INDEX `idx_status` (`status`); 
+
 # Keep an empty line at the end of this file for the db_updater to work properly

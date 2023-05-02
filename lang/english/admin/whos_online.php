@@ -34,4 +34,9 @@ define('TEXT_NUMBER_OF_CUSTOMERS', 'Currently there are %s customers online');
 define('TEXT_EMPTY_CART', 'Users Shopping Cart is empty');
 define('TEXT_SESSION_IS_ENCRYPTED', '<hr><b>Note</b>:<br />The basket contents may not be displayed.<br />The session is encrypted with Suhosin<br />(suhosin.session.encrypt = On)<br />To turn off encryption, contact your provider.');
 define('TEXT_ACTIVATE_WHOS_ONLINE', 'Who\'s online activate:');
-?>
+define('TEXT_HEADING_STATUS', 'Status');
+define('TEXT_WHOS_ONLINE_STATUS_ALL', 'show all');
+define('TEXT_WHOS_ONLINE_STATUS_NULL', 'without products in cart');
+define('TEXT_WHOS_ONLINE_STATUS_CART', 'with products in cart');
+define('TEXT_WHOS_ONLINE_STATUS_VISITOR', 'Visitors');
+define('TEXT_WHOS_ONLINE_STATUS_BOT', 'Bots');

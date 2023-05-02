@@ -34,4 +34,9 @@ define('TEXT_NUMBER_OF_CUSTOMERS', 'Es sind zur Zeit %s Kunden online');
 define('TEXT_EMPTY_CART', 'Warenkorb des Kunden ist leer');
 define('TEXT_SESSION_IS_ENCRYPTED', '<hr><b>HINWEIS</b>:<br />Der Warenkorbinhalt kann nicht angezeigt werden.<br />Die Session ist mit Suhosin verschl&uuml;sselt<br />(suhosin.session.encrypt = On)<br />Zum Deaktivieren der Verschl&uuml;sselung wenden Sie sich an Ihren Provider.');
 define('TEXT_ACTIVATE_WHOS_ONLINE', 'Wer ist Online aktivieren:');
-?>
+define('TEXT_HEADING_STATUS', 'Status:');
+define('TEXT_WHOS_ONLINE_STATUS_ALL', 'Alle anzeigen');
+define('TEXT_WHOS_ONLINE_STATUS_NULL', 'Ohne Artikel im Warenkorb');
+define('TEXT_WHOS_ONLINE_STATUS_CART', 'Mit Artikel im Warenkorb');
+define('TEXT_WHOS_ONLINE_STATUS_VISITOR', 'Besucher');
+define('TEXT_WHOS_ONLINE_STATUS_BOT', 'Suchmaschinen');

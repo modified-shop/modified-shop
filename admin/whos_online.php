@@ -94,12 +94,24 @@
           echo '<div class="flt-l" style="margin: 10px 0 0">'.PHP_EOL;
           echo TEXT_ACTIVATE_WHOS_ONLINE.PHP_EOL;
           echo '<div class="flt-r" style="margin: -6px 50px 0px 5px">'.PHP_EOL;
-          echo draw_on_off_selection('whos_online', $whosonline_status_array, ((MODULE_WHOS_ONLINE_STATUS == 'true') ? true : false)).PHP_EOL;
-          echo '<input style="margin-top: -23px;" type="submit" name="go" class="button" onclick="this.blur();" value="' . BUTTON_SAVE . '"/>';
+          echo draw_on_off_selection('whos_online', $whosonline_status_array, ((MODULE_WHOS_ONLINE_STATUS == 'true') ? true : false), 'onchange="this.form.submit();"').PHP_EOL;
           echo '</div>'.PHP_EOL;
           echo '</div>'.PHP_EOL;
           echo '</form>';
           ?>
+        </div>
+        <div class="main pdg2 flt-l" style="margin:10px 0 0 0;">
+          <?php echo xtc_draw_form('status', basename($PHP_SELF), '', 'get'); ?>
+          <?php
+            $wo_statuses_array = array();
+            $wo_statuses_array[] = array('id' => '-1', 'text' => TEXT_WHOS_ONLINE_STATUS_ALL);
+            $wo_statuses_array[] = array('id' => '0', 'text' => TEXT_WHOS_ONLINE_STATUS_NULL);
+            $wo_statuses_array[] = array('id' => '1', 'text' => TEXT_WHOS_ONLINE_STATUS_CART);
+            $wo_statuses_array[] = array('id' => '2', 'text' => TEXT_WHOS_ONLINE_STATUS_VISITOR);
+            $wo_statuses_array[] = array('id' => '3', 'text' => TEXT_WHOS_ONLINE_STATUS_BOT);
+            echo TEXT_HEADING_STATUS . ' ' . xtc_draw_pull_down_menu('status', $wo_statuses_array, ((isset($_GET['status']) && xtc_not_null($_GET['status'])) ? (int)$_GET['status'] : ''), 'onchange="this.form.submit();"'); 
+          ?>
+          </form>        
         </div>
           
         <table class="tableCenter">
@@ -118,6 +130,21 @@
                 <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_HTTP_REFERER; ?></td>
               </tr>
               <?php
+              $where = '';
+              if (isset($_GET['status']) && (int)$_GET['status'] >= 0) {
+                switch ($_GET['status']) {
+                  case '0':
+                  case '1':
+                    $where = " WHERE status = '".(int)$_GET['status']."'";
+                    break;
+                  case '2':
+                    $where = " WHERE session_id NOT LIKE 'BOT%'";
+                    break;
+                  case '3':
+                    $where = " WHERE session_id LIKE 'BOT%'";
+                    break;
+                }
+              }
               $whos_online_query_raw = "SELECT customer_id,
                                                full_name,
                                                ip_address,
@@ -127,6 +154,7 @@
                                                session_id,
                                                http_referer
                                           FROM " . TABLE_WHOS_ONLINE ."
+                                               " . $where . "
                                       ORDER BY time_last_click desc";
               $whos_online_split = new splitPageResults($page, $page_max_display_results, $whos_online_query_raw, $whos_online_query_numrows);
               $whos_online_query = xtc_db_query($whos_online_query_raw);                        
