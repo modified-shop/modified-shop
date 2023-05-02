@@ -325,7 +325,7 @@ define('TEXT_LOGIN_ERROR', '<strong>ERROR:</strong> The entered \'e-mail address
 define('TEXT_RELOGIN_NEEDED', 'Please sign in again.');
 //define('TEXT_NO_EMAIL_ADDRESS_FOUND', '<span class="color_error_message"><strong>WARNING:</strong></span> The e-mail address entered is not registered. Please try again.'); // Not used anymore as we do not give a hint that an e-mail address is or is not in the database!
 define('TEXT_PASSWORD_SENT', 'A new password was sent by e-mail.');
-define('TEXT_PRODUCT_NOT_FOUND', 'Product not found!');
+define('TEXT_PRODUCT_NOT_FOUND', 'Product not found');
 define('TEXT_MORE_INFORMATION', 'For further information, please visit the <a href="%s" onclick="window.open(this.href); return false;">homepage</a> of this product.');
 define('TEXT_DATE_ADDED', 'This Product was added to our catalogue on %s.');
 define('TEXT_DATE_AVAILABLE', '<span class="color_error_message">This Product is expected to be on stock again on %s </span>');
@@ -549,8 +549,8 @@ define('GV_ADD_PAYMENT_INFO', '<div class="errormessage">Your credit is not suff
 define('_SHIPPING_FREE','Free Shipping');
 define('TEXT_INFO_FREE_SHIPPING_COUPON', 'The shipping costs are covered by your coupon.');
 
-define('TEXT_CONTENT_NOT_FOUND', 'Page not found!');
-define('TEXT_SITE_NOT_FOUND', 'Page not found!');
+define('TEXT_CONTENT_NOT_FOUND', 'Page not found');
+define('TEXT_SITE_NOT_FOUND', 'Page not found');
 
 // error message for exceeded product quantity, noRiddle
 define('MAX_PROD_QTY_EXCEEDED', 'The maximum allowed number of ' .MAX_PRODUCTS_QTY. ' for <span style="font-style:italic;">"%s"</span> has been exceeded. The number was automatically reduced to the permitted quantity.');
@@ -603,6 +603,8 @@ define('AC_SHOW_PAGE_OF', ' from ');
 define('FREE_SHIPPING_INFO', 'Free Shipping minimum order: %s');
 
 define('MANUFACTURER_NOT_FOUND', 'Manufacturer not found');
+define('TEXT_PRODUCTS_NEW_NOT_FOUND', 'No new products in the last %s days found');
+define('TEXT_SPECIALS_NOT_FOUND', 'No specials found');
 define('ENTRY_TOKEN_ERROR', 'Please check your data.');
 
 define('IMAGE_BUTTON_CONFIRM', 'Confirm'); // Needed for PayPal

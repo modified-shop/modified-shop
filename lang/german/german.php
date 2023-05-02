@@ -325,7 +325,7 @@ define('TEXT_LOGIN_ERROR', '<b>FEHLER:</b> Keine &Uuml;bereinstimmung der eingeg
 define('TEXT_RELOGIN_NEEDED', 'Bitte melden Sie sich erneut an.');
 //define('TEXT_NO_EMAIL_ADDRESS_FOUND', '<span class="color_error_message"><b>ACHTUNG:</b></span> Die eingegebene E-Mail-Adresse ist nicht registriert. Bitte versuchen Sie es noch einmal.'); // Not used anymore as we do not give a hint that an e-mail address is or is not in the database!
 define('TEXT_PASSWORD_SENT', 'Ein neues Passwort wurde per E-Mail verschickt.');
-define('TEXT_PRODUCT_NOT_FOUND', 'Artikel wurde nicht gefunden!');
+define('TEXT_PRODUCT_NOT_FOUND', 'Artikel wurde nicht gefunden');
 define('TEXT_MORE_INFORMATION', 'F&uuml;r weitere Informationen besuchen Sie bitte die <a href="%s" onclick="window.open(this.href); return false;">Homepage</a> zu diesem Artikel.');
 define('TEXT_DATE_ADDED', 'Diesen Artikel haben wir am %s in unseren Katalog aufgenommen.');
 define('TEXT_DATE_AVAILABLE', '<span class="color_error_message">Dieser Artikel wird voraussichtlich ab dem %s wieder vorr&auml;tig sein.</span>');
@@ -549,8 +549,8 @@ define('GV_ADD_PAYMENT_INFO', '<div class="errormessage">Ihr Guthaben reicht nic
 define('_SHIPPING_FREE','Versandkostenfrei');
 define('TEXT_INFO_FREE_SHIPPING_COUPON', 'Die Versandkosten werden durch Ihren Coupon abgedeckt.');
 
-define('TEXT_CONTENT_NOT_FOUND', 'Diese Seite wurde nicht gefunden!');
-define('TEXT_SITE_NOT_FOUND', 'Diese Seite wurde nicht gefunden!');
+define('TEXT_CONTENT_NOT_FOUND', 'Diese Seite wurde nicht gefunden');
+define('TEXT_SITE_NOT_FOUND', 'Diese Seite wurde nicht gefunden');
 
 // error message for exceeded product quantity, noRiddle
 define('MAX_PROD_QTY_EXCEEDED', 'Die maximal erlaubte St&uuml;ckzahl i.H.v. ' .MAX_PRODUCTS_QTY. ' f&uuml;r <span style="font-style:italic;">"%s"</span> wurde &uuml;berschritten.<br />Die St&uuml;ckzahl wurde automatisch auf die erlaubte St&uuml;ckzahl reduziert.');
@@ -603,6 +603,8 @@ define('AC_SHOW_PAGE_OF', ' von ');
 define('FREE_SHIPPING_INFO', 'ab %s  Bestellwert versenden wir Ihre Bestellung versandkostenfrei');
 
 define('MANUFACTURER_NOT_FOUND', 'Hersteller nicht gefunden');
+define('TEXT_PRODUCTS_NEW_NOT_FOUND', 'Keine neuen Artikel in den letzten %s Tagen gefunden');
+define('TEXT_SPECIALS_NOT_FOUND', 'Keine Sonderangebote gefunden');
 define('ENTRY_TOKEN_ERROR', 'Bitte &uuml;berpr&uuml;fen Sie Ihre Eingaben.');
 
 define('IMAGE_BUTTON_CONFIRM', 'Best&auml;tigen'); // Needed for PayPal
