@@ -11,14 +11,14 @@
   {#text_after_login#}
   <table width="100%" border="0" cellspacing="4" cellpadding="0">
     {if $VVIMG}
-      <tr>
+      <tr class="vvcode_img">
         <td style="white-space:nowrap;"><strong>{#text_sec_code#}:</strong></td>
         <td>{$VVIMG}</td>
         <td>&nbsp;</td>
       </tr>
     {/if}
     {if $INPUT_CODE}
-      <tr>
+      <tr class="vvcode_sec">
         <td style="white-space:nowrap;"><strong>{#text_sec_code#}:</strong></td>
         <td>{$INPUT_CODE}</td>
         <td>&nbsp;</td>

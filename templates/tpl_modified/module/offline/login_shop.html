@@ -183,11 +183,13 @@ table td {
               <tr>
                 <td><span class="fieldtext">{#text_password#}</span>{$INPUT_PASSWORD}</td>
               </tr>
-              {if $INPUT_CODE}
-                <tr>
+              {if $VVIMG}
+                <tr class="vvcode_img">
                   <td><span class="fieldtext">{#text_sec_code#}</span>{$VVIMG}</td>
                 </tr>
-                <tr>
+              {/if}
+              {if $INPUT_CODE}
+                <tr class="vvcode_sec">
                   <td><span class="fieldtext">{#text_sec_code#}</span>{$INPUT_CODE}</td>
                 </tr>
               {/if}
