@@ -46,4 +46,3 @@ if (defined('MODULE_SHIPPING_ITEM_NUMBER_ZONES')) {
     define('MODULE_SHIPPING_ITEM_HANDLING_'.$module_shipping_item_i.'_DESC' , 'Handling Fee for this shipping zone');
   }
 }
-?>

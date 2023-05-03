@@ -31,18 +31,14 @@ define('MODULE_SHIPPING_AP_UNDEFINED_RATE', 'Forwarding expenses cannot be calcu
 
 define('MODULE_SHIPPING_AP_STATUS_TITLE' , 'Austrian Post AG');
 define('MODULE_SHIPPING_AP_STATUS_DESC' , 'Do you want to offer Austrian Post shipping?');
-define('MODULE_SHIPPING_AP_ALLOWED_TITLE' , 'Allowed Zones');
-define('MODULE_SHIPPING_AP_ALLOWED_DESC' , 'Please enter the zones <b>separately</b> which should be allowed to use this modul (e. g. AT,DE (leave empty if you want to allow all zones))');
 define('MODULE_SHIPPING_AP_TAX_CLASS_TITLE' , 'Tax Class');
 define('MODULE_SHIPPING_AP_TAX_CLASS_DESC' , 'Use the following tax class on the shipping fee.');
 define('MODULE_SHIPPING_AP_ZONE_TITLE' , 'Shipping Zone');
 define('MODULE_SHIPPING_AP_ZONE_DESC' , 'If a zone is selected, only enable this shipping method for that zone.');
 define('MODULE_SHIPPING_AP_SORT_ORDER_TITLE' , 'Sort Order');
 define('MODULE_SHIPPING_AP_SORT_ORDER_DESC' , 'Sort order of display.');
-define('MODULE_SHIPPING_AP_NUMBER_ZONES_TITLE' , 'Number of zones');
-define('MODULE_SHIPPING_AP_NUMBER_ZONES_DESC' , 'Number of zones to use');
-define('MODULE_SHIPPING_AP_DISPLAY_TITLE' , 'Enable Display');
-define('MODULE_SHIPPING_AP_DISPLAY_DESC' , 'Do you want to display, if shipping to destination is not possible or if shipping costs cannot be calculated?');
+define('MODULE_SHIPPING_AP_ALLOWED_TITLE' , 'Allowed Zones');
+define('MODULE_SHIPPING_AP_ALLOWED_DESC' , 'Please enter the zones <b>separately</b> which should be allowed to use this modul (e. g. AT,DE (leave empty if you want to allow all zones))');
 define('MODULE_SHIPPING_AP_NUMBER_ZONES_TITLE' , 'Number of zones');
 define('MODULE_SHIPPING_AP_NUMBER_ZONES_DESC' , 'Number of zones to use');
 define('MODULE_SHIPPING_AP_DISPLAY_TITLE' , 'Enable Display');
@@ -58,4 +54,3 @@ if (defined('MODULE_SHIPPING_AP_NUMBER_ZONES')) {
     define('MODULE_SHIPPING_AP_HANDLING_'.$module_shipping_ap_i.'_DESC' , 'Handling Fee for this shipping zone');
   }
 }
-?>

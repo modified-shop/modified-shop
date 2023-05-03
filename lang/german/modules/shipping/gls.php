@@ -57,4 +57,3 @@ for ($module_shipping_gls_i = 1; $module_shipping_gls_i <= 6; $module_shipping_g
   define('MODULE_SHIPPING_GLS_COST_'.$module_shipping_gls_i.'_TITLE' , 'Zone '.$module_shipping_gls_i.' Versandkosten');
   define('MODULE_SHIPPING_GLS_COST_'.$module_shipping_gls_i.'_DESC' , 'Versandkosten nach Zone '.$module_shipping_gls_i.' Bestimmungsorte, basierend auf einer Gruppe von max. Bestellgewichten. Beispiel: 3:8.50,7:10.50,... Gewicht von kleiner oder gleich 3 w&uuml;rde 8.50 f&uuml;r die Zone '.$module_shipping_gls_i.' Bestimmungsl&auml;nder kosten.');
 }
-?>

@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: upse.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $   
+   $Id$   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -23,8 +23,8 @@
 
 
 
-define('MODULE_SHIPPING_UPSE_TEXT_TITLE', 'United Parcel Service Express');
-define('MODULE_SHIPPING_UPSE_TEXT_DESCRIPTION', 'United Parcel Service Express - Shipping Module');
+define('MODULE_SHIPPING_UPSE_TEXT_TITLE', 'UPS Express');
+define('MODULE_SHIPPING_UPSE_TEXT_DESCRIPTION', 'UPS Express - Shipping Module');
 define('MODULE_SHIPPING_UPSE_TEXT_WAY', 'Dispatch to');
 define('MODULE_SHIPPING_UPSE_TEXT_UNITS', 'kg');
 define('MODULE_SHIPPING_UPSE_INVALID_ZONE', 'Unfortunately it is not possible to dispatch into this country');
@@ -119,4 +119,3 @@ define('MODULE_SHIPPING_UPSE_COUNTRIES_14_TITLE' , 'UPS Express Zone 12 Countrie
 define('MODULE_SHIPPING_UPSE_COUNTRIES_14_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone 12 (Enter WORLD for the rest of the world.).');
 define('MODULE_SHIPPING_UPSE_COST_14_TITLE' , 'UPS Express Zone 12 Shipping Table');
 define('MODULE_SHIPPING_UPSE_COST_14_DESC' , 'Shipping rates to Zone 12 destinations based on a range of order weights. Example: 0.5:105.20,... Weights/Total less than or equal to 0.5 would cost 105.20 for Zone 12 destinations.');
-?>

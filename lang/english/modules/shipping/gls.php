@@ -57,4 +57,3 @@ for ($module_shipping_gls_i = 1; $module_shipping_gls_i <= 6; $module_shipping_g
   define('MODULE_SHIPPING_GLS_COST_'.$module_shipping_gls_i.'_TITLE' , 'Zone '.$module_shipping_gls_i.' Shipping Table');
   define('MODULE_SHIPPING_GLS_COST_'.$module_shipping_gls_i.'_DESC' , 'Shipping rates to Zone '.$module_shipping_gls_i.' destinations based on a group of maximum order weights. Example: 3:8.50,7:10.50,... Weights less than or equal to 3 would cost 8.50 for Zone '.$module_shipping_gls_i.' destinations.');
 }
-?>

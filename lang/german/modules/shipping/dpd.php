@@ -6,7 +6,7 @@
 
    Copyrigt (c) 2004 cigamth
   ------------------------------------------------------------------------------
-   $Id: dpd.php 2751 2012-04-12 13:28:06Z Tomcraft1980 $
+   $Id$
 
    XTC-GLS Shipping Module - Contribution for XT-Commerce http://www.xt-commerce.com
    modified by http://www.hhgag.com
@@ -28,8 +28,8 @@
    Released under the GNU General Public License
 
    ---------------------------------------------------------------------------*/
-define('MODULE_SHIPPING_DPD_TEXT_TITLE', 'DPD Dynamic Parcel Distribution');
-define('MODULE_SHIPPING_DPD_TEXT_DESCRIPTION', 'DPD Dynamic Parcel Distribution - Weltweites Versandmodul');
+define('MODULE_SHIPPING_DPD_TEXT_TITLE', 'DPD');
+define('MODULE_SHIPPING_DPD_TEXT_DESCRIPTION', 'DPD - Weltweites Versandmodul');
 define('MODULE_SHIPPING_DPD_TEXT_WAY', 'Versand nach');
 define('MODULE_SHIPPING_DPD_TEXT_UNITS', 'kg');
 define('MODULE_SHIPPING_DPD_INVALID_ZONE', 'Es ist leider kein Versand in dieses Land m&ouml;glich');
@@ -37,8 +37,8 @@ define('MODULE_SHIPPING_DPD_UNDEFINED_RATE', 'Die Versandkosten k&ouml;nnen im M
 define('MODULE_SHIPPING_DPD_FREE_SHIPPING', 'Wir &uuml;bernehmen die Versandkosten');
 define('MODULE_SHIPPING_DPD_SUBSIDIZED_SHIPPING', 'Einen Teil der Versandkosten &uuml;bernehmen wir.');
 
-define('MODULE_SHIPPING_DPD_STATUS_TITLE', 'DPD Dynamic Parcel Distribution');
-define('MODULE_SHIPPING_DPD_STATUS_DESC', 'Wollen Sie den Versand &uuml;ber DPD Dynamic Parcel Distribution anbieten?');
+define('MODULE_SHIPPING_DPD_STATUS_TITLE', 'DPD');
+define('MODULE_SHIPPING_DPD_STATUS_DESC', 'Wollen Sie den Versand &uuml;ber DPD anbieten?');
 define('MODULE_SHIPPING_DPD_HANDLING_TITLE', 'Bearbeitungsgeb&uuml;hr');
 define('MODULE_SHIPPING_DPD_HANDLING_DESC', 'Bearbeitungsgeb&uuml;hr f&uuml;r diese Versandart in Euro');
 define('MODULE_SHIPPING_DPD_ALLOWED_TITLE' , 'Erlaubte Versandzonen');
@@ -49,5 +49,3 @@ define('MODULE_SHIPPING_DPD_TAX_CLASS_TITLE', 'Steuersatz');
 define('MODULE_SHIPPING_DPD_TAX_CLASS_DESC', 'W&auml;hlen Sie den MwSt.-Satz f&uuml;r diese Versandart aus.');
 define('MODULE_SHIPPING_DPD_ZONE_TITLE', 'Versand Zone');
 define('MODULE_SHIPPING_DPD_ZONE_DESC', 'Wenn Sie eine Zone ausw&auml;hlen, wird diese Versandart nur in dieser Zone angeboten.');
-
-?>

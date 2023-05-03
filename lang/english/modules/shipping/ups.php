@@ -24,8 +24,8 @@
    ---------------------------------------------------------------------------------------*/
 
 
-define('MODULE_SHIPPING_UPS_TEXT_TITLE', 'United Parcel Service Standard');
-define('MODULE_SHIPPING_UPS_TEXT_DESCRIPTION', 'United Parcel Service Standard - Shipping Module');
+define('MODULE_SHIPPING_UPS_TEXT_TITLE', 'UPS Standard');
+define('MODULE_SHIPPING_UPS_TEXT_DESCRIPTION', 'UPS Standard - Shipping Module');
 define('MODULE_SHIPPING_UPS_TEXT_WAY', 'Dispatch to');
 define('MODULE_SHIPPING_UPS_TEXT_UNITS', 'kg');
 define('MODULE_SHIPPING_UPS_TEXT_FREE', 'Free Shipping minimum order: EUR ' . ((defined('MODULE_SHIPPING_UPS_FREEAMOUNT')) ? MODULE_SHIPPING_UPS_FREEAMOUNT : ''));
@@ -82,4 +82,3 @@ define('MODULE_SHIPPING_UPS_COUNTRIES_7_TITLE' , 'UPS Standard Zone 6 Countries'
 define('MODULE_SHIPPING_UPS_COUNTRIES_7_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone 6 (Enter WORLD for the rest of the world.).');
 define('MODULE_SHIPPING_UPS_COST_7_TITLE' , 'UPS Standard Zone 6 Shipping Table');
 define('MODULE_SHIPPING_UPS_COST_7_DESC' , 'Shipping rates to Zone 6 destinations based on a range of order weights. Example: 4:37.10,... Weights/Total less than or equal to 4 would cost 37.10 for Zone 6 destinations.');
-?>

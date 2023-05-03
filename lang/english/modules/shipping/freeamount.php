@@ -47,4 +47,3 @@ if (defined('MODULE_SHIPPING_FREEAMOUNT_NUMBER_ZONES')) {
     define('MODULE_SHIPPING_FREEAMOUNT_AMOUNT_'.$module_shipping_freeamount_i.'_DESC' , 'Minimum order amount purchased for Zone '.$module_shipping_freeamount_i.' before shipping is free.');
   }
 }
-?>
