@@ -11,6 +11,20 @@
    ---------------------------------------------------------------------------------------*/
 
   function set_session_cookie($lifetime, $path, $domain, $secure = false, $httponly = false, $samesite = 'None') {
+    
+    $user_agent = '';
+    if (isset($_SERVER['HTTP_USER_AGENT'])) {
+      $user_agent = $_SERVER['HTTP_USER_AGENT'];
+    }
+    
+    if ($samesite == 'Lax'
+        && stripos($user_agent, 'safari') !== false
+        && stripos($user_agent, 'chrome') === false
+        )
+    {
+      $samesite = 'None';
+    }
+    
     if (function_exists('session_set_cookie_params')) {
       if (version_compare(PHP_VERSION, '7.3', '>=')) {
         $cookie_options = array (
@@ -36,4 +50,3 @@
       }
     }
   }
-?>
