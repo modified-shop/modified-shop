@@ -86,7 +86,7 @@
       break;
 
     case 'ot_edit':
-      if ($_POST['class'] == 'ot_shipping') {
+      if ($_POST['ot_class'] == 'ot_shipping') {
         $module_query = xtc_db_query("SELECT value, 
                                              class 
                                         FROM ".TABLE_ORDERS_TOTAL." 
