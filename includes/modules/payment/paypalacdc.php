@@ -135,7 +135,6 @@ class paypalacdc extends PayPalPaymentV2 {
             event.preventDefault();
 
             cardFields.submit({
-              //contingencies: ['3D_SECURE'],
               contingencies: ['SCA_WHEN_REQUIRED'],
               cardholderName: document.getElementById('card-holder').value,
               billingAddress: {
@@ -147,33 +146,39 @@ class paypalacdc extends PayPalPaymentV2 {
                 countryCodeAlpha2: '".$this->encode_utf8($order->billing['country']['iso_code_2'])."'
               }
             }).then(function (data) {
-              if (data.liabilityShift === 'POSSIBLE' && data.authenticationReason === 'SUCCESSFUL') {
-                // redirect to complete order
-                window.location.href = '".xtc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL')."';
+              if (data.liabilityShift === 'POSSIBLE') {
+                $.get('ajax.php', {ext: 'check_paypal_order', payment_method: 'paypalacdc'}, function(result) {
+                  if (result === true) {
+                    // redirect to complete order
+                    window.location.href = '".xtc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL')."';
+                  } else {
+                    var msg = '".decode_htmlentities(MODULE_PAYMENT_PAYPALACDC_TEXT_ERROR_MSG)."';
+                    display_error_acdc(msg);
+                  }
+                }).fail(function() {
+                  var msg = '".decode_htmlentities(MODULE_PAYMENT_PAYPALACDC_TEXT_ERROR_MSG)."';
+                  display_error_acdc(msg);
+                });
               } else {
                 var msg = '".decode_htmlentities(MODULE_PAYMENT_PAYPALACDC_TEXT_ERROR_MSG)."';
-
-                el_acdc_overlay.style = 'display: none';
-                el_acdc_error.style = 'display: block';
-                el_payment_confirmation.style = 'display: ' + el_payment_confirmation_style;
-                return el_acdc_error.innerHTML = msg;
+                display_error_acdc(msg);
               }
-
             }).catch(function (err) {
-              var errorDetail = Array.isArray(err.details) && err.details[0];
-
               var msg = '".decode_htmlentities(MODULE_PAYMENT_PAYPALACDC_TEXT_ERROR_MSG)."';
-
-              el_acdc_overlay.style = 'display: none';
-              el_acdc_error.style = 'display: block';
-              el_payment_confirmation.style = 'display: ' + el_payment_confirmation_style;
-              return el_acdc_error.innerHTML = msg;
+              display_error_acdc(msg);
             });
           });
         });
       } else {
         // redirects if the merchant isn't eligible
         window.location.href = '".xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL')."';
+      }
+      
+      function display_error_acdc(msg) {
+        el_acdc_overlay.style = 'display: none';
+        el_acdc_error.style = 'display: block';
+        el_payment_confirmation.style = 'display: ' + el_payment_confirmation_style;
+        el_acdc_error.innerHTML = msg;
       }
     ");
 
