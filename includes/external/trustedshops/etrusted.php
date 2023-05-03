@@ -127,7 +127,7 @@
             $sql_data_array = array(
               'reviews_id' => $insert_id,
               'languages_id' => (int)$this->language_id,
-              'reviews_text' => $review['comment']
+              'reviews_text' => decode_utf8($review['comment'])
             );
             xtc_db_perform(TABLE_REVIEWS_DESCRIPTION, $sql_data_array);
           }
