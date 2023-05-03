@@ -26,7 +26,10 @@
  * @return string
  */
 function smarty_modifier_onlytext($string) {
-   return str_replace(array('"', "'"), '', strip_tags($string));
-}
+  $string = strip_tags($string);
+  $string = preg_replace("/\s++/u", ' ', $string);
+  $string = str_replace(array('"', "'"), '', $string);
+  $string = trim($string);
 
-?>
+  return $string;
+}
