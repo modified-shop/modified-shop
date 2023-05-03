@@ -55,4 +55,3 @@ if (defined('MODULE_SHIPPING_FREEAMOUNT_NUMBER_ZONES')) {
     define('MODULE_SHIPPING_DP_COST_'.$module_shipping_dp_i.'_DESC' , 'Shipping rates to Zone '.$module_shipping_dp_i.' destinations based on a range of order weights. Example: 3:8.50,7:10.50,99999:12.00... Weights greater than 0 and less than 3 would cost 8.50, less than 7 would cost 10.50 for Zone '.$module_shipping_dp_i.' destinations.');
   }
 }
-?>

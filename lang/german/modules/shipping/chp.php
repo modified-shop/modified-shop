@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: chp.php 5123 2013-07-18 11:49:11Z Tomcraft $   
+   $Id$   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -102,4 +102,3 @@ define('MODULE_SHIPPING_CHP_COST_PRI_7_TITLE' , 'Tariftabelle f&uuml;r Zone 5 bi
 define('MODULE_SHIPPING_CHP_COST_PRI_7_DESC' , 'Tarif Tabelle f&uuml;r die Zone 5, basierend auf <b>\'PRI\'</b> bis 30 kg Versandgewicht.');
 define('MODULE_SHIPPING_CHP_COST_URG_7_TITLE' , 'Tariftabelle f&uuml;r Zone 5 bis 30 kg URG');
 define('MODULE_SHIPPING_CHP_COST_URG_7_DESC' , 'Tarif Tabelle f&uuml;r die Zone 5, basierend auf <b>\'URG\'</b> bis 30 kg Versandgewicht.');
-?>

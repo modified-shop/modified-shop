@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: dhl.php 5121 2013-07-18 11:38:19Z Tomcraft $   
+   $Id$   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -22,15 +22,15 @@
    ---------------------------------------------------------------------------------------*/
    
 
-define('MODULE_SHIPPING_DHL_TEXT_TITLE', 'DHL Austria');
-define('MODULE_SHIPPING_DHL_TEXT_DESCRIPTION', 'DHL WORLDWIDE EXPRESS Austria');
+define('MODULE_SHIPPING_DHL_TEXT_TITLE', 'DHL');
+define('MODULE_SHIPPING_DHL_TEXT_DESCRIPTION', 'DHL WORLDWIDE EXPRESS');
 define('MODULE_SHIPPING_DHL_TEXT_WAY', 'Dispatch to');
 define('MODULE_SHIPPING_DHL_TEXT_UNITS', 'kg');
 define('MODULE_SHIPPING_DHL_INVALID_ZONE', 'Unfortunately it is not possible to dispatch into this country');
 define('MODULE_SHIPPING_DHL_UNDEFINED_RATE', 'Forwarding expenses cannot be calculated for the moment');
 
-define('MODULE_SHIPPING_DHL_STATUS_TITLE' , 'DHL WORLDWIDE EXPRESS Austria');
-define('MODULE_SHIPPING_DHL_STATUS_DESC' , 'Do you want to offer DHL WORLDWIDE EXPRESS Austria shipping?');
+define('MODULE_SHIPPING_DHL_STATUS_TITLE' , 'DHL WORLDWIDE EXPRESS');
+define('MODULE_SHIPPING_DHL_STATUS_DESC' , 'Do you want to offer DHL WORLDWIDE EXPRESS shipping?');
 define('MODULE_SHIPPING_DHL_HANDLING_TITLE' , 'Handling Fee');
 define('MODULE_SHIPPING_DHL_HANDLING_DESC' , 'Handlingfee for this shipping method in Euro');
 define('MODULE_SHIPPING_DHL_TAX_CLASS_TITLE' , 'Tax Rate');
@@ -401,4 +401,3 @@ define('MODULE_SHIPPING_DHL_STEP_SDX_50_10_TITLE' , 'Extra charge up to 50 kg SD
 define('MODULE_SHIPPING_DHL_STEP_SDX_50_10_DESC' , 'Extra charge each additional 0,50 kg in EUR');
 define('MODULE_SHIPPING_DHL_STEP_SDX_51_10_TITLE' , 'Extra charge up from 50 kg SDX');
 define('MODULE_SHIPPING_DHL_STEP_SDX_51_10_DESC' , 'Extra charge each additional 0,50 kg in EUR');
-?>

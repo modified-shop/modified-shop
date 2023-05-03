@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: flat.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $   
+   $Id$   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -32,4 +32,3 @@ define('MODULE_SHIPPING_FLAT_ZONE_TITLE' , 'Shipping Zone');
 define('MODULE_SHIPPING_FLAT_ZONE_DESC' , 'If a zone is selected, only enable this shipping method for that zone.');
 define('MODULE_SHIPPING_FLAT_SORT_ORDER_TITLE' , 'Sort Order');
 define('MODULE_SHIPPING_FLAT_SORT_ORDER_DESC' , 'Sort order of display.');
-?>

@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: hermes.php 5121 2013-07-18 11:38:19Z Tomcraft $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -16,7 +16,7 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-define('MODULE_SHIPPING_HERMES_TEXT_TITLE', 'Shipping with Hermes');
+define('MODULE_SHIPPING_HERMES_TEXT_TITLE', 'Hermes');
 define('MODULE_SHIPPING_HERMES_TEXT_DESCRIPTION', 'Hermes Paket Service');
 define('MODULE_SHIPPING_HERMES_TEXT_WAY_DE', 'Throughout Germany: ');
 define('MODULE_SHIPPING_HERMES_TEXT_WAY_EU', 'International: ');
@@ -44,4 +44,3 @@ define('MODULE_SHIPPING_HERMES_SORT_ORDER_DESC' , 'Lowermost shown first.');
 
 define('MODULE_SHIPPING_HERMES_ALLOWED_TITLE' , 'Individual shipping zones');
 define('MODULE_SHIPPING_HERMES_ALLOWED_DESC' , 'Please enter the zones <b>separately</b> which should be allowed to use this modul (e. g. AT,DE (leave empty if you want to allow all zones))');
-?>

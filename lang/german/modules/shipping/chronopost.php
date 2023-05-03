@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: chronopost.php 5121 2013-07-18 11:38:19Z Tomcraft $   
+   $Id$   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -23,7 +23,7 @@
    
 
 
-define('MODULE_SHIPPING_CHRONOPOST_TEXT_TITLE', 'Chronopost Zone Rates');
+define('MODULE_SHIPPING_CHRONOPOST_TEXT_TITLE', 'Chronopost');
 define('MODULE_SHIPPING_CHRONOPOST_TEXT_DESCRIPTION', 'Chronopost Zone Based Rates');
 define('MODULE_SHIPPING_CHRONOPOST_TEXT_WAY', 'Shipping to');
 define('MODULE_SHIPPING_CHRONOPOST_TEXT_UNITS', 'kg');
@@ -92,4 +92,3 @@ define('MODULE_SHIPPING_CHRONOPOST_COUNTRIES_10_TITLE' , 'Chronopost Zone 10 (pa
 define('MODULE_SHIPPING_CHRONOPOST_COUNTRIES_10_DESC' , 'Ins&eacute;rer une virgule entre 2 codes ISO de pays qui font partie de la m&ecirc;me zone (WORLD eintragen f&uuml;r den Rest der Welt.).');
 define('MODULE_SHIPPING_CHRONOPOST_COST_10_TITLE' , 'Chronopost Zone 10 (poids:tarifs)');
 define('MODULE_SHIPPING_CHRONOPOST_COST_10_DESC' , 'Tarifs Chronopost pour les destinations de la Zone 10. Principe : une fourchette de poids (grammes) suivie du tarif (euros TTC). Exemple: 0-2000:28.71,2000-5000:34.38,... Les colis pesant moins de 2kg seront factur&eacute;s 28,71 EUR TTC pour les destinations de');
-?>

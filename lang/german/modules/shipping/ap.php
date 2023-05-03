@@ -54,4 +54,3 @@ if (defined('MODULE_SHIPPING_AP_NUMBER_ZONES')) {
     define('MODULE_SHIPPING_AP_HANDLING_'.$module_shipping_ap_i.'_DESC' , 'Handling Geb&uuml;hr f&uuml;r diese Versandzone');
   }
 }
-?>

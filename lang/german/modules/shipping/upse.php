@@ -23,8 +23,8 @@
 
 
 
-define('MODULE_SHIPPING_UPSE_TEXT_TITLE', 'United Parcel Service Express');
-define('MODULE_SHIPPING_UPSE_TEXT_DESCRIPTION', 'United Parcel Service Express - Versandmodul');
+define('MODULE_SHIPPING_UPSE_TEXT_TITLE', 'UPS Express');
+define('MODULE_SHIPPING_UPSE_TEXT_DESCRIPTION', 'UPS Express - Versandmodul');
 define('MODULE_SHIPPING_UPSE_TEXT_WAY', 'Versand nach');
 define('MODULE_SHIPPING_UPSE_TEXT_UNITS', 'kg');
 define('MODULE_SHIPPING_UPSE_INVALID_ZONE', 'Es ist leider kein Versand in dieses Land m&ouml;glich.');
@@ -119,4 +119,3 @@ define('MODULE_SHIPPING_UPSE_COUNTRIES_14_TITLE' , 'Staaten f&uuml;r UPS Express
 define('MODULE_SHIPPING_UPSE_COUNTRIES_14_DESC' , 'Durch Komma getrennte ISO-K&uuml;rzel der Staaten f&uuml;r Zone 12 (WORLD eintragen f&uuml;r den Rest der Welt.):');
 define('MODULE_SHIPPING_UPSE_COST_14_TITLE' , 'Tarife f&uuml;r UPS Express Zone 12');
 define('MODULE_SHIPPING_UPSE_COST_14_DESC' , 'Gewichtsbasierte Versandkosten innerhalb Zone 12. Beispiel: Sendung zwischen 0 und 0,5kg kostet EUR 105,20 = 0.5:105.20,...');
-?>

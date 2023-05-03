@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: dhl.php 5123 2013-07-18 11:49:11Z Tomcraft $   
+   $Id$   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -22,15 +22,15 @@
    ---------------------------------------------------------------------------------------*/
    
 
-define('MODULE_SHIPPING_DHL_TEXT_TITLE', 'DHL &Ouml;sterreich');
-define('MODULE_SHIPPING_DHL_TEXT_DESCRIPTION', 'DHL WORLDWIDE EXPRESS &Ouml;sterreich');
+define('MODULE_SHIPPING_DHL_TEXT_TITLE', 'DHL');
+define('MODULE_SHIPPING_DHL_TEXT_DESCRIPTION', 'DHL WORLDWIDE EXPRESS');
 define('MODULE_SHIPPING_DHL_TEXT_WAY', 'Versand nach');
 define('MODULE_SHIPPING_DHL_TEXT_UNITS', 'kg');
 define('MODULE_SHIPPING_DHL_INVALID_ZONE', 'Es ist leider kein Versand in dieses Land m&ouml;glich');
 define('MODULE_SHIPPING_DHL_UNDEFINED_RATE', 'Die Versandkosten k&ouml;nnen im Moment nicht errechnet werden');
 
-define('MODULE_SHIPPING_DHL_STATUS_TITLE' , 'DHL WORLDWIDE EXPRESS &Ouml;sterreich');
-define('MODULE_SHIPPING_DHL_STATUS_DESC' , 'Wollen Sie den Versand &uuml;ber DHL WORLDWIDE EXPRESS &Ouml;sterreich anbieten?');
+define('MODULE_SHIPPING_DHL_STATUS_TITLE' , 'DHL WORLDWIDE EXPRESS');
+define('MODULE_SHIPPING_DHL_STATUS_DESC' , 'Wollen Sie den Versand &uuml;ber DHL WORLDWIDE EXPRESS anbieten?');
 define('MODULE_SHIPPING_DHL_HANDLING_TITLE' , 'Handling Fee');
 define('MODULE_SHIPPING_DHL_HANDLING_DESC' , 'Bearbeitungsgeb&uuml;hr f&uuml;r diese Versandart in Euro');
 define('MODULE_SHIPPING_DHL_TAX_CLASS_TITLE' , 'Steuersatz');
@@ -401,4 +401,3 @@ define('MODULE_SHIPPING_DHL_STEP_SDX_50_10_TITLE' , 'Erh&ouml;hungszuschlag bis 
 define('MODULE_SHIPPING_DHL_STEP_SDX_50_10_DESC' , 'Erh&ouml;hungszuschlag pro &uuml;bersteigende 0,50 kg in EUR');
 define('MODULE_SHIPPING_DHL_STEP_SDX_51_10_TITLE' , 'Erh&ouml;hungszuschlag ab 50 kg SDX');
 define('MODULE_SHIPPING_DHL_STEP_SDX_51_10_DESC' , 'Erh&ouml;hungszuschlag pro &uuml;bersteigende 0,50 kg in EUR');
-?>

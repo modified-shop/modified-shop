@@ -6,7 +6,7 @@
 
    Copyrigt (c) 2004 cigamth
    ------------------------------------------------------------------------------
-   $Id: dpd.php 2666 2012-02-23 11:38:17Z dokuman $
+   $Id$
 
    XTC-GLS Shipping Module - Contribution for XT-Commerce http://www.xt-commerce.com
    modified by http://www.hhgag.com
@@ -28,8 +28,8 @@
    Released under the GNU General Public License
 
    ---------------------------------------------------------------------------*/
-define('MODULE_SHIPPING_DPD_TEXT_TITLE', 'DPD Dynamic Parcel Distribution');
-define('MODULE_SHIPPING_DPD_TEXT_DESCRIPTION', 'DPD Dynamic Parcel Distribution - Worldwide Shipping Module');
+define('MODULE_SHIPPING_DPD_TEXT_TITLE', 'DPD');
+define('MODULE_SHIPPING_DPD_TEXT_DESCRIPTION', 'DPD - Worldwide Shipping Module');
 define('MODULE_SHIPPING_DPD_TEXT_WAY', 'Delivery to');
 define('MODULE_SHIPPING_DPD_TEXT_UNITS', 'kg');
 define('MODULE_SHIPPING_DPD_INVALID_ZONE', 'Sorry, this carrier can not ship into this country');
@@ -37,8 +37,8 @@ define('MODULE_SHIPPING_DPD_UNDEFINED_RATE', 'The shipping costs can not be calc
 define('MODULE_SHIPPING_DPD_FREE_SHIPPING', 'Free shipping');
 define('MODULE_SHIPPING_DPD_SUBSIDIZED_SHIPPING', 'We subsidized the shipping.');
 
-define('MODULE_SHIPPING_DPD_STATUS_TITLE', 'DPD Dynamic Parcel Distribution');
-define('MODULE_SHIPPING_DPD_STATUS_DESC', 'Would you like to offer shipping with DPD Dynamic Parcel Distribution?');
+define('MODULE_SHIPPING_DPD_STATUS_TITLE', 'DPD');
+define('MODULE_SHIPPING_DPD_STATUS_DESC', 'Would you like to offer shipping with DPD?');
 define('MODULE_SHIPPING_DPD_HANDLING_TITLE', 'Handling Fee');
 define('MODULE_SHIPPING_DPD_HANDLING_DESC', 'Handling fee for this shipping method');
 define('MODULE_SHIPPING_DPD_ALLOWED_TITLE' , 'Allowed Zones');
@@ -49,5 +49,3 @@ define('MODULE_SHIPPING_DPD_TAX_CLASS_TITLE', 'Tax Class');
 define('MODULE_SHIPPING_DPD_TAX_CLASS_DESC', 'Use the following tax class on the shipping fee.');
 define('MODULE_SHIPPING_DPD_ZONE_TITLE', 'Shipping Zone');
 define('MODULE_SHIPPING_DPD_ZONE_DESC', 'If a zone is selected, only enable this shipping method for that zone.');
-
-?>

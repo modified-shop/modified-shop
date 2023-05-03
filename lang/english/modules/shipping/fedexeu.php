@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: fedexeu.php 5121 2013-07-18 11:38:19Z Tomcraft $   
+   $Id$   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -23,15 +23,15 @@
 
 
 
-define('MODULE_SHIPPING_FEDEXEU_TEXT_TITLE', 'FedEx Express Europe');
-define('MODULE_SHIPPING_FEDEXEU_TEXT_DESCRIPTION', 'FedEx Express Europe');
+define('MODULE_SHIPPING_FEDEXEU_TEXT_TITLE', 'FedEx');
+define('MODULE_SHIPPING_FEDEXEU_TEXT_DESCRIPTION', 'FedEx');
 define('MODULE_SHIPPING_FEDEXEU_TEXT_WAY', 'Dispatch to');
 define('MODULE_SHIPPING_FEDEXEU_TEXT_UNITS', 'kg');
 define('MODULE_SHIPPING_FEDEXEU_INVALID_ZONE', 'Unfortunately it is not possible to dispatch into this country');
 define('MODULE_SHIPPING_FEDEXEU_UNDEFINED_RATE', 'Forwarding expenses cannot be calculated for the moment');
 
-define('MODULE_SHIPPING_FEDEXEU_STATUS_TITLE' , 'FedEx Express Europe');
-define('MODULE_SHIPPING_FEDEXEU_STATUS_DESC' , 'Do you want to offer FedEx Express Europe shipping?');
+define('MODULE_SHIPPING_FEDEXEU_STATUS_TITLE' , 'FedEx');
+define('MODULE_SHIPPING_FEDEXEU_STATUS_DESC' , 'Do you want to offer FedEx shipping?');
 define('MODULE_SHIPPING_FEDEXEU_HANDLING_TITLE' , 'Handling Fee');
 define('MODULE_SHIPPING_FEDEXEU_HANDLING_DESC' , 'Handlingfee for this shipping method in Euro');
 define('MODULE_SHIPPING_FEDEXEU_TAX_CLASS_TITLE' , 'Tax Rate');
@@ -162,4 +162,3 @@ define('MODULE_SHIPPING_FEDEXEU_STEP_BOX_40_8_TITLE' , 'Extra charge up to 30 kg
 define('MODULE_SHIPPING_FEDEXEU_STEP_BOX_40_8_DESC' , 'Extra charge for each additional 0,50 kg in EUR');
 define('MODULE_SHIPPING_FEDEXEU_STEP_BOX_70_8_TITLE' , 'Extra charge up to 50 kg BOX');
 define('MODULE_SHIPPING_FEDEXEU_STEP_BOX_70_8_DESC' , 'Extra charge for each additional 0,50 kg in EUR');
-?>
