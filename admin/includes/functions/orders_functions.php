@@ -509,7 +509,7 @@
       'products_quantity' => xtc_db_prepare_input($data_array['products_quantity']),
       'allow_tax' => (int)$status['customers_status_show_price_tax'],
       'products_model' => xtc_db_prepare_input($data_array['products_model']),
-      'products_weight' => xtc_db_prepare_input($data_array['products_weight']),
+      'products_weight' => xtc_db_prepare_input($product['products_weight']),
     );
 
     xtc_db_perform(TABLE_ORDERS_PRODUCTS, $sql_data_array, 'update', "orders_products_id = '".(int)($data_array['opID'])."'");
@@ -1370,4 +1370,3 @@
 
     xtc_db_perform(TABLE_ORDERS, array('last_modified' => 'now()'), 'update', "orders_id = '".(int)$oID."'");    
   }
-?>
