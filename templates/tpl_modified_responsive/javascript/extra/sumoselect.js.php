@@ -14,13 +14,14 @@
   $(document).ready(function() {
 
     <?php if (defined('ADVANCED_SUMOSELECT_SEARCHFIELD') && ADVANCED_SUMOSELECT_SEARCHFIELD == true) { ?>
-      $('select:not([name=filter_sort]):not([name=filter_set]):not([name=currency]):not([name=categories_id]):not([name=gender]):not([id^=sel_])').SumoSelect({search: true, searchText: "<?php echo TEXT_SUMOSELECT_SEARCH; ?>", noMatch: "<?php echo TEXT_SUMOSELECT_NO_RESULT; ?>"});
+      $('select:not([name=filter_sort]):not([name=filter_set]):not([name=currency]):not([name=categories_id]):not([name=gender]):not([id^=sel_]):not([id=ec_term])').SumoSelect({search: true, searchText: "<?php echo TEXT_SUMOSELECT_SEARCH; ?>", noMatch: "<?php echo TEXT_SUMOSELECT_NO_RESULT; ?>"});
       $('select[name=filter_sort]').SumoSelect();
       $('select[name=filter_set]').SumoSelect();
       $('select[name=currency]').SumoSelect();
       $('select[name=categories_id]').SumoSelect();
       $('select[name=gender]').SumoSelect();
       $('select[id^=sel_]').SumoSelect();
+      $('select[id=ec_term]').SumoSelect();
     <?php } else { ?>
       $('select:not([name=country])').SumoSelect();
       $('select[name=country]').SumoSelect({search: true, searchText: "<?php echo TEXT_SUMOSELECT_SEARCH; ?>", noMatch: "<?php echo TEXT_SUMOSELECT_NO_RESULT; ?>"});
