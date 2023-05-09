@@ -48,13 +48,13 @@
     {/if}
     {if $INPUT_CODE}
       <tr class="vvcode_sec">
-        <td>{#text_inp_code#}*</td>
-        <td width="59%">{$INPUT_CODE}</td>
+        <td>{#text_inp_code#}</td>
+        <td width="59%">{$INPUT_CODE}<span class="inputRequirement">*</span></td>
       </tr>
     {/if}
     <tr>
-      <td valign="top">{#text_message#}*</td>
-      <td width="59%">{$INPUT_TEXT}</td>
+      <td valign="top">{#text_message#}</td>
+      <td width="59%">{$INPUT_TEXT}<span class="inputRequirement_textarea">*</span></td>
     </tr>
     <tr>
       <td valign="top">&nbsp;</td>
