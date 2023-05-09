@@ -111,6 +111,11 @@ textarea {
   padding:10px;
   background:url(img/input_bg.gif) no-repeat;
 }
+
+textarea#message_body {
+  width:250px;
+} 
+
 select {
   font-family:Arial, Sans-serif;
   font-size:12px;
@@ -124,6 +129,21 @@ input[type=text], input[type=password] {
 }
 input[type=radio], input[type=checkbox] {
   margin: 0 3px;
+}
+.inputRequirement {
+  margin: 0 0 0 5px;
+}
+.inputRequirement_textarea {
+  font-size:12px;
+  vertical-align:top; 
+  line-height:20px;
+  margin: 0 0 0 5px;
+}
+.inputNote {
+  display: block;
+  font-size: 10px;
+  line-height: 12px;
+  padding: 4px 0 0 0;
 }
 /* PARAGRAPH GLOBAL */
 p {

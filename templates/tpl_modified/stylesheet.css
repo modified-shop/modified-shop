@@ -1434,11 +1434,19 @@ td.messageStackError {
 .inputRequirement {
   font-size:10px;
   line-height:20px;
+  margin: 0 0 0 5px;
 }
 .inputRequirement_textarea {
   font-size:10px;
   vertical-align:top; 
   line-height:30px;
+  margin: 0 0 0 5px;
+}
+.inputNote {
+  display: block;
+  font-size: 10px;
+  line-height: 12px;
+  padding: 4px 0 0 0;
 }
 /* INFO MESSAGES */
 .infomessage {
