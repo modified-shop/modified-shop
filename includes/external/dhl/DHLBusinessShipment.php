@@ -484,6 +484,17 @@
       $Name->name1 = (($data['company'] != '') ? substr($data['company'], 0, 35) : substr(($data['firstname'] . ' ' . $data['lastname']), 0, 35));
       $Name->name2 = (($data['company'] != '') ? substr(($data['firstname'] . ' ' . $data['lastname']), 0, 35) : '');
       
+      if (isset($data['suburb'])
+          && $data['suburb'] != '' 
+          ) 
+      {
+        if ($Name->name2 == '') {
+          $Name->name2 = $data['suburb'];
+        } else {
+          $Name->name3 = $data['suburb'];
+        }
+      }
+
       $Origin = new stdClass();
       $Origin->countryISOCode = $data['country_iso_2'];
       
@@ -495,23 +506,12 @@
       $Address->streetName = $data['street_name'];
       $Address->streetNumber = $data['street_number'];
       if (isset($data['suburb']) && $data['suburb'] != '') {
-        $Address->addressAddition = $data['suburb'];
+        //$Address->addressAddition = $data['suburb'];
       }
       $Address->zip = $data['postcode'];
       $Address->city = $data['city'];
       $Address->Origin = $Origin;
   
-      if (isset($data['suburb'])
-          && $data['suburb'] != '' 
-          ) 
-      {
-        if ($Name->name2 == '') {
-          $Name->name2 = $data['suburb'];
-        } else {
-          $Name->name3 = $data['suburb'];
-        }
-      }
-      
       if (isset($data['packstation']) && $data['packstation'] === true) {
         $Packstation = new stdClass();
         $Packstation->packstationNumber = preg_replace('/[^0-9]/', '', (($data['street_number'] != '') ? $data['street_number'] : $data['street_name']));
