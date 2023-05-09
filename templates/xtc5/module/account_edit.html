@@ -36,7 +36,7 @@
   {if $birthdate == '1'}
   <tr>
     <td>{#text_birthdate#}</td>
-    <td>{$INPUT_DOB}</td>
+    <td>{$INPUT_DOB}<span class="inputNote">{$TEXT_DOB_NOTE}</span></td>
   </tr>
   {/if}
   <tr>
@@ -58,7 +58,7 @@
   {if $vat == '1'}
   <tr>
     <td>{#text_ustid#}</td>
-    <td>{$INPUT_VAT}</td>
+    <td>{$INPUT_VAT}<span class="inputNote">{$TEXT_VAT_NOTE}</span></td>
   </tr>
   {/if}
 </table>

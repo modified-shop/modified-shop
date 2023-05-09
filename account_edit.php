@@ -233,6 +233,7 @@ if (ACCOUNT_GENDER == 'true') {
 if (ACCOUNT_COMPANY_VAT_CHECK == 'true') {
   $smarty->assign('vat', '1');
   $smarty->assign('INPUT_VAT', xtc_draw_input_fieldNote(array('name' => 'vat', 'text' => (xtc_not_null(ENTRY_VAT_TEXT) ? '<span class="inputRequirement">'.ENTRY_VAT_TEXT.'</span>' : ''))));
+  $smarty->assign('TEXT_VAT_NOTE', ENTRY_VAT_NOTE);
 } else {
   $smarty->assign('vat', '0');
 }
@@ -244,6 +245,9 @@ $smarty->assign('csID', $_SESSION['customer_cid']);
 if (ACCOUNT_DOB == 'true') {
   $smarty->assign('birthdate', '1');
   $smarty->assign('INPUT_DOB', xtc_draw_input_fieldNote(array('name' => 'dob', 'text' => (xtc_not_null(ENTRY_DATE_OF_BIRTH_TEXT) ? '<span class="inputRequirement">'.ENTRY_DATE_OF_BIRTH_TEXT.'</span>' : ''))));
+  $smarty->assign('TEXT_DOB_NOTE', ENTRY_DATE_OF_BIRTH_NOTE);
+} else {
+  $smarty->assign('birthdate', '0');
 }
 
 $smarty->assign('INPUT_EMAIL', xtc_draw_input_fieldNote(array('name' => 'email_address', 'text' => (xtc_not_null(ENTRY_EMAIL_ADDRESS_TEXT) ? '<span class="inputRequirement">'.ENTRY_EMAIL_ADDRESS_TEXT.'</span>' : ''))));

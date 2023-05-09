@@ -121,7 +121,8 @@ define('ENTRY_FIRST_NAME_TEXT', '*');
 define('ENTRY_LAST_NAME_ERROR', 'Your last name must consist of at least ' . ENTRY_LAST_NAME_MIN_LENGTH . ' characters.');
 define('ENTRY_LAST_NAME_TEXT', '*');
 define('ENTRY_DATE_OF_BIRTH_ERROR', 'Your date of birth needs to be entered in the following form DD/MM/YYYY (e.g. 21/05/1970) '); //Dokuman - 2009-06-03 - correct english date format
-define('ENTRY_DATE_OF_BIRTH_TEXT', '* (e.g. 21/05/1970)'); //Dokuman - 2009-06-03 - correct english date format
+define('ENTRY_DATE_OF_BIRTH_TEXT', '*');
+define('ENTRY_DATE_OF_BIRTH_NOTE', 'e.g. 21/05/1970');
 define('ENTRY_EMAIL_ADDRESS_ERROR', 'Your e-mail address must consist of at least  ' . ENTRY_EMAIL_ADDRESS_MIN_LENGTH . ' characters.');
 define('ENTRY_EMAIL_ADDRESS_CHECK_ERROR', 'Your e-mail address entered is incorrect or already registered.');
 define('ENTRY_EMAIL_ERROR_NOT_MATCHING', 'Your entered e-mail addresses do not match.'); // Hetfield - 2009-08-15 - confirm e-mail at registration
@@ -477,7 +478,8 @@ define('TEXT_COUPON_PRODUCTS_RESTRICT', 'Your voucher/coupon is limited to some 
 define('TEXT_COUPON_CATEGORIES_RESTRICT', 'Your voucher/coupon is limited to some categories.');
 
 // VAT Reg No
-define('ENTRY_VAT_TEXT','* for EU-Countries only');
+define('ENTRY_VAT_TEXT', '');
+define('ENTRY_VAT_NOTE','for EU-Countries only');
 define('ENTRY_VAT_ERROR', 'The chosen VAT Reg No is not valid or cannot be verified at the moment! Please enter a valid VAT Reg No or leave this field empty.');
 define('MSRP','MSRP');
 define('YOUR_PRICE','your price ');

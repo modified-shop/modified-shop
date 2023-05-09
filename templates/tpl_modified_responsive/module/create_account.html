@@ -21,7 +21,7 @@
       </tr>
       {if $birthdate == '1'}
       <tr>
-        <td><span class="fieldtext">{#text_birthdate#}</span><span class="stern">{$INPUT_DOB}</span></td>
+        <td><span class="fieldtext">{#text_birthdate#}</span><span class="stern">{$INPUT_DOB}</span><span class="inputNote">{$TEXT_DOB_NOTE}</span></td>
       </tr>
       {/if}
       <tr>
@@ -40,7 +40,7 @@
       </tr>
       {if $vat == '1'}
       <tr>
-        <td><span class="fieldtext">{#text_ustid#}</span><span class="stern">{$INPUT_VAT|replace:"Nur":"<br />Nur"}</span></td>
+        <td><span class="fieldtext">{#text_ustid#}</span><span class="stern">{$INPUT_VAT}</span><span class="inputNote">{$TEXT_VAT_NOTE}</span></td>
       </tr>
       {/if}
     </table>
@@ -49,7 +49,7 @@
     <br />
     <h4>{#title_newsletter#}</h4>
     <div class="cus_check cus_check_small">
-      {$CHECKBOX_NEWSLETTER|replace:"&nbsp;":""}
+      {$CHECKBOX_NEWSLETTER}
       <label for="newsletter">{#text_newsletter#}</label>
     </div>
     {/if}

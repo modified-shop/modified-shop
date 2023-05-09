@@ -121,7 +121,8 @@ define('ENTRY_FIRST_NAME_TEXT', '*');
 define('ENTRY_LAST_NAME_ERROR', 'Ihr Nachname muss aus mindestens ' . ENTRY_LAST_NAME_MIN_LENGTH . ' Zeichen bestehen.');
 define('ENTRY_LAST_NAME_TEXT', '*');
 define('ENTRY_DATE_OF_BIRTH_ERROR', 'Ihr Geburtsdatum muss im Format TT.MM.JJJJ (z.B. 21.05.1970) eingegeben werden.');
-define('ENTRY_DATE_OF_BIRTH_TEXT', '* (z.B. 21.05.1970)');
+define('ENTRY_DATE_OF_BIRTH_TEXT', '*');
+define('ENTRY_DATE_OF_BIRTH_NOTE', 'z.B. 21.05.1970');
 define('ENTRY_EMAIL_ADDRESS_ERROR', 'Ihre E-Mail-Adresse muss aus mindestens ' . ENTRY_EMAIL_ADDRESS_MIN_LENGTH . ' Zeichen bestehen.');
 define('ENTRY_EMAIL_ADDRESS_CHECK_ERROR', 'Ihre eingegebene E-Mail-Adresse ist fehlerhaft oder bereits registriert.');
 define('ENTRY_EMAIL_ERROR_NOT_MATCHING', 'Ihre E-Mail-Adressen stimmen nicht &uuml;berein.');
@@ -477,7 +478,8 @@ define('TEXT_COUPON_PRODUCTS_RESTRICT', 'Der Coupon ist auf eine Auswahl an Arti
 define('TEXT_COUPON_CATEGORIES_RESTRICT', 'Der Coupon ist auf eine Auswahl an Kategorien beschr&auml;nkt.');
 
 // VAT Reg No
-define('ENTRY_VAT_TEXT', 'Nur f&uuml;r Deutschland und EU!');
+define('ENTRY_VAT_TEXT', '');
+define('ENTRY_VAT_NOTE', 'Nur f&uuml;r Deutschland und EU!');
 define('ENTRY_VAT_ERROR', 'Die eingegebene USt-IdNr. ist ung&uuml;ltig oder kann derzeit nicht &uuml;berpr&uuml;ft werden! Bitte geben Sie eine g&uuml;ltige ID ein oder lassen Sie das Feld zun&auml;chst leer.');
 define('MSRP','UVP');
 define('YOUR_PRICE','Ihr Preis ');
