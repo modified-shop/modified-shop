@@ -61,7 +61,7 @@ if(isset($_GET['api_konfiguration']) && $_GET["api_konfiguration"] == 1) {
 							<td>
 								<table border="0" width="100%" cellspacing="0" cellpadding="0">
 									<tr>
-										<td width="290"><a href="https://partner.haendlerbund.de/partnerdoor.php?partnerid=partner_modified&bannerid=64" target="_blank"><img src="includes/haendlerbund/images/haendlerbund_logo.png" hspace="0" vspace="0" style="padding:10px" /></a></td>
+										<td width="290"><a href="https://affiliate.haendlerbund.de/go.cgi?pid=133&amp;wmid=370&amp;cpid=1&amp;prid=5&amp;subid=&amp;target=Modified_LP_PID_133" target="_blank"><img src="includes/haendlerbund/images/haendlerbund_logo.png" hspace="0" vspace="0" style="padding:10px" /></a></td>
 									</tr>
 								</table>
 							</td>

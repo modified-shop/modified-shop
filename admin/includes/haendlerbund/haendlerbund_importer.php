@@ -227,7 +227,7 @@ class haendlerbund_importer
             <h5 class="title_hb">H&auml;ndlerbund Mitgliedschaft</h5>
             </div>
                 <br />
-                Sie ben&ouml;tigen f&uuml;r die Verwendung dieser Schnittstellen eine H&auml;ndlerbund Mitgliedschaft, welche Sie hier beantragen k&ouml;nnen:<br /><br />&gt;&gt;&gt; <a target="_blank" href="https://partner.haendlerbund.de/partnerdoor.php?partnerid=partner_modified&bannerid=64" style="color: #3581C1; font-family: Arial,Helvetica,sans-serif; font-size: 12px; text-decoration: underline;">Jetzt Mitglied werden</a> &lt;&lt;&lt;
+                Sie ben&ouml;tigen f&uuml;r die Verwendung dieser Schnittstellen eine H&auml;ndlerbund Mitgliedschaft, welche Sie hier beantragen k&ouml;nnen:<br /><br />&gt;&gt;&gt; <a target="_blank" href="https://affiliate.haendlerbund.de/go.cgi?pid=133&amp;wmid=370&amp;cpid=1&amp;prid=5&amp;subid=&amp;target=Modified_LP_PID_133" style="color: #3581C1; font-family: Arial,Helvetica,sans-serif; font-size: 12px; text-decoration: underline;">Jetzt Mitglied werden</a> &lt;&lt;&lt;
                 <br />
                 <br />
                 <div class="title_hb">
