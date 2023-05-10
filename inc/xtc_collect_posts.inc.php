@@ -27,7 +27,7 @@
    ---------------------------------------------------------------------------------------*/
 
   function xtc_collect_posts() {
-    global $coupon_no, $xtPrice, $cc_id, $messageStack, $PHP_SELF;
+    global $xtPrice, $cc_id, $messageStack, $PHP_SELF;
 
     if (isset($_POST['gv_redeem_code']) && xtc_not_null($_POST['gv_redeem_code'])) {
       unset($_SESSION['cc_id']);
@@ -132,7 +132,15 @@
           $messageStack->add_session('coupon_message', ERROR_INVALID_FINISDATE_COUPON);
           xtc_redirect(xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action')), 'NONSSL'));
         }
-
+        
+        // min order
+        $coupon_minimum_order = $xtPrice->xtcCalculateCurr($gv_result['coupon_minimum_order']);
+        if ($coupon_minimum_order > $_SESSION['cart']->show_total()) {
+          $messageStack->add_session('coupon_message', sprintf(ERROR_INVALID_MINIMUM_ORDER_COUPON, $xtPrice->xtcFormat($coupon_minimum_order, true, 0, true)));
+          xtc_redirect(xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action')), 'NONSSL'));
+        }
+        
+        // limit to uses
         $coupon_count = xtc_db_query("SELECT coupon_id 
                                         FROM " . TABLE_COUPON_REDEEM_TRACK . " 
                                        WHERE coupon_id = '" . $gv_result['coupon_id']."'");
@@ -150,16 +158,17 @@
           $messageStack->add_session('coupon_message', ERROR_INVALID_USES_USER_COUPON . $gv_result['uses_per_user'] . TIMES);
           xtc_redirect(xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action')), 'NONSSL'));
         }
+        
         if ($gv_result['coupon_type'] == 'S') {
-          $coupon_amount = TEXT_COUPON_HELP_FIXED; //$order->info['shipping_cost'];
+          $coupon_amount = TEXT_COUPON_HELP_FREESHIP;
         } else {
-            $coupon_amount = sprintf(TEXT_COUPON_HELP_FIXED,$xtPrice->xtcFormat($gv_result['coupon_amount'],true,0,true)) . ' ';
+          $coupon_amount = sprintf(TEXT_COUPON_HELP_FIXED, $xtPrice->xtcFormat($gv_result['coupon_amount'], true, 0, true));
         }
         if ($gv_result['coupon_type'] == 'P') {
-          $coupon_amount = sprintf(TEXT_COUPON_HELP_FIXED,round($gv_result['coupon_amount'],0)) . '% ';
+          $coupon_amount = sprintf(TEXT_COUPON_HELP_FIXED, round($gv_result['coupon_amount'],0)) . '%';
         }
         if ($gv_result['coupon_minimum_order'] > 0) {          
-          $coupon_amount .= sprintf(TEXT_COUPON_HELP_MINORDER, $xtPrice->xtcFormat($gv_result['coupon_minimum_order'],true,0,true));
+          $coupon_amount .= sprintf(TEXT_COUPON_HELP_MINORDER, $xtPrice->xtcFormat($gv_result['coupon_minimum_order'], true, 0, true));
         }
         if ($gv_result['restrict_to_products'] != '') {
           $coupon_amount .= '<br /><br />'.TEXT_COUPON_PRODUCTS_RESTRICT;
@@ -167,11 +176,10 @@
         if ($gv_result['restrict_to_categories'] != '') {
           $coupon_amount .= '<br /><br />'.TEXT_COUPON_CATEGORIES_RESTRICT;
         }
-        $_SESSION['cc_amount_min_order'] = $xtPrice->xtcCalculateCurr($gv_result['coupon_minimum_order']);
+        
+        $_SESSION['cc_amount_min_order'] = $coupon_minimum_order;
         $_SESSION['cc_amount_info'] = $coupon_amount;
-        if ($_SESSION['cc_amount_min_order'] <= $_SESSION['cart']->show_total()) {
-          $_SESSION['cc_id'] = $gv_result['coupon_id'];
-        }
+        $_SESSION['cc_id'] = $gv_result['coupon_id'];
         $_SESSION['cc_post'] = true;
         
         $messageStack->add_session('coupon_message', REDEEMED_COUPON, 'success');
@@ -184,4 +192,3 @@
       xtc_redirect(xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action')), 'NONSSL'));
     }
   }
-?>
