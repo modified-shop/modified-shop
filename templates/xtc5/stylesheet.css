@@ -131,18 +131,18 @@ input[type=radio], input[type=checkbox] {
   margin: 0 3px;
 }
 .inputRequirement {
-  margin: 0 0 0 5px;
+  margin: 0 0 0 3px;
 }
 .inputRequirement_textarea {
   font-size:12px;
   vertical-align:top; 
   line-height:20px;
-  margin: 0 0 0 5px;
+  margin: 0 0 0 3px;
 }
 .inputNote {
   font-size: 12px;
   line-height: 18px;
-  padding: 0 0 0 3px;
+  padding: 0 0 0 4px;
 }
 /* PARAGRAPH GLOBAL */
 p {
