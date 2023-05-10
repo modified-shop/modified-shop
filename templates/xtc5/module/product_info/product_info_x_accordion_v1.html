@@ -2,6 +2,7 @@
 {$FORM_ACTION}
   <h1>{if $PRODUCTS_HEADING_TITLE != ''}{$PRODUCTS_HEADING_TITLE}{else}{$PRODUCTS_NAME}{/if}</h1>
   {if $error_message}<div class="errormessage">{$error_message}</div>{/if}
+  {if $success_message}<div class="infomessage">{$success_message}</div>{/if}
   <div id="productinfowrap">
     <table>
       <tr>

@@ -240,6 +240,10 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
   if ($messageStack->size('product_info') > 0) {
     $info_smarty->assign('error_message', $messageStack->output('product_info'));
   }
+
+  if ($messageStack->size('product_info', 'success') > 0) {
+    $info_smarty->assign('success_message', $messageStack->output('product_info', 'success'));
+  }
   
   $info_smarty->caching = 0;
   $product_info = $info_smarty->fetch(CURRENT_TEMPLATE.'/module/product_info/'.$product->data['product_template']);
