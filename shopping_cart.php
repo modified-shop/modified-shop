@@ -89,6 +89,10 @@ if ($messageStack->size('coupon_message') > 0) {
 if ($messageStack->size('coupon_message', 'success') > 0) {
 	$smarty->assign('coupon_message_success', $messageStack->output('coupon_message', 'success'));
 }
+// coupon min order info
+if (isset($cc_amount_min_order_info)) {
+  $messageStack->add('shopping_cart', $cc_amount_min_order_info);
+}
 
 if ($messageStack->size('shopping_cart') > 0) {
   $smarty->assign('error_message', $messageStack->output('shopping_cart'));
