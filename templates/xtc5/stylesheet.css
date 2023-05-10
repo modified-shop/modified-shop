@@ -140,10 +140,9 @@ input[type=radio], input[type=checkbox] {
   margin: 0 0 0 5px;
 }
 .inputNote {
-  display: block;
   font-size: 10px;
   line-height: 12px;
-  padding: 4px 0 0 0;
+  padding: 0 0 0 5px;
 }
 /* PARAGRAPH GLOBAL */
 p {
