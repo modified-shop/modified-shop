@@ -161,7 +161,7 @@ class ot_gv {
   }
 
   function apply_credit() {
-    global $order, $coupon_no, $xtPrice;
+    global $order, $xtPrice;
     
     $gv_amount = 0;
     if (isset ($_SESSION['cot_gv']) && $_SESSION['cot_gv'] == true) {
@@ -179,7 +179,7 @@ class ot_gv {
   }
 
   function collect_posts() {
-    global $xtPrice, $coupon_no, $REMOTE_ADDR;
+    global $xtPrice, $REMOTE_ADDR;
     if (isset($_POST['gv_redeem_code'])) {
       $gv_query = xtc_db_query("select coupon_id, coupon_type, coupon_amount from ".TABLE_COUPONS." where coupon_code = '".xtc_db_input($_POST['gv_redeem_code'])."'");
       $gv_result = xtc_db_fetch_array($gv_query);
