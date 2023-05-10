@@ -86,8 +86,13 @@ require (DIR_WS_INCLUDES.'head.php');
         <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'page_white_star.png'); ?></div>
         <div class="flt-l">
           <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?></div>
-          <div class="main pdg2">Products</div>
+          <div class="main pdg2"><?php echo ((isset($_GET['pID']) && $_GET['pID'] != '') ? xtc_get_products_name($_GET['pID']) : 'Products'); ?></div>
         </div>
+        <?php if (isset($_GET['pID']) && $_GET['pID'] != '') { ?>
+        <div class="main pdg2 flt-l" style="margin-left:100px;">
+          <a class="button" href="<?php echo xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('action', 'rID'))); ?>"><?php echo BUTTON_BACK; ?></a>
+        </div>
+        <?php } ?>
         <table class="tableCenter">
           <tr>
             <td class="boxCenterLeft">
@@ -101,6 +106,10 @@ require (DIR_WS_INCLUDES.'head.php');
                   <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
                 </tr>
                 <?php
+                $where = '';
+                if (isset($_GET['pID']) && $_GET['pID'] != '') {
+                  $where = " WHERE p.products_id = '".(int)$_GET['pID']."' ";
+                }
                 $reviews_query_raw = "SELECT r.*,
                                              rd.reviews_text,
                                              length(rd.reviews_text) as reviews_text_size,
@@ -114,6 +123,7 @@ require (DIR_WS_INCLUDES.'head.php');
                                    LEFT JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
                                              ON r.products_id = pd.products_id
                                                 AND language_id = '".(int)$_SESSION['languages_id']."'
+                                             ".$where."
                                     ORDER BY r.date_added DESC";
                 $reviews_split = new splitPageResults($page, $page_max_display_results, $reviews_query_raw, $reviews_query_numrows);
                 $reviews_query = xtc_db_query($reviews_query_raw);
@@ -127,9 +137,9 @@ require (DIR_WS_INCLUDES.'head.php');
                   }
 
                   if (isset($rInfo) && is_object($rInfo) && $reviews['reviews_id'] == $rInfo->reviews_id) {
-                    echo '<tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_REVIEWS, 'page=' . $page . '&rID=' . $rInfo->reviews_id . '&action=edit') . '\'">' . "\n";
+                    echo '<tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_REVIEWS, xtc_get_all_get_params(array('action', 'rID')) . 'rID=' . $rInfo->reviews_id . '&action=edit') . '\'">' . "\n";
                   } else {
-                    echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_REVIEWS, 'page=' . $page . '&rID=' . $reviews['reviews_id']) . '\'">' . "\n";
+                    echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_REVIEWS, xtc_get_all_get_params(array('action', 'rID')) . '&rID=' . $reviews['reviews_id']) . '\'">' . "\n";
                   }
                   ?>
                     <td class="dataTableContent"><?php echo $reviews['products_name']; ?></td>
@@ -139,13 +149,13 @@ require (DIR_WS_INCLUDES.'head.php');
                     <td  class="dataTableContent txta-r">
                       <?php
                       if ($reviews['reviews_status'] == '1') {
-                        echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 12, 12, 'style="margin-right:5px;"') . '<a href="' . xtc_href_link(FILENAME_REVIEWS, 'action=setflag&flag=0&rID=' . $reviews['reviews_id'] . '&page=' . $page, 'NONSSL') . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 12, 12) . '</a>';
+                        echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 12, 12, 'style="margin-right:5px;"') . '<a href="' . xtc_href_link(FILENAME_REVIEWS, xtc_get_all_get_params(array('action', 'rID', 'flag')) . 'action=setflag&flag=0&rID=' . $reviews['reviews_id'], 'NONSSL') . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 12, 12) . '</a>';
                       } else {
-                        echo '<a href="' . xtc_href_link(FILENAME_REVIEWS, 'action=setflag&flag=1&rID=' . $reviews['reviews_id'] . '&page=' . $page, 'NONSSL') . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 12, 12, 'style="margin-right:5px;"') . '</a>' . xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 12, 12);
+                        echo '<a href="' . xtc_href_link(FILENAME_REVIEWS, xtc_get_all_get_params(array('action', 'rID', 'flag')) . 'action=setflag&flag=1&rID=' . $reviews['reviews_id'], 'NONSSL') . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 12, 12, 'style="margin-right:5px;"') . '</a>' . xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 12, 12);
                       }
                       ?>
                     </td>
-                    <td class="dataTableContent txta-r" align="right"><?php if (isset($rInfo) && is_object($rInfo) && $reviews['reviews_id'] == $rInfo->reviews_id) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_REVIEWS, 'page=' . $page . '&rID=' . $reviews['reviews_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                    <td class="dataTableContent txta-r" align="right"><?php if (isset($rInfo) && is_object($rInfo) && $reviews['reviews_id'] == $rInfo->reviews_id) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_REVIEWS, xtc_get_all_get_params(array('action', 'rID')) . '&rID=' . $reviews['reviews_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
                   </tr>
                   <?php
                 }
@@ -162,16 +172,16 @@ require (DIR_WS_INCLUDES.'head.php');
               case 'delete':
                 $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_DELETE_REVIEW . '</b>');
 
-                $contents = array('form' => xtc_draw_form('reviews', FILENAME_REVIEWS, 'page=' . $page . '&rID=' . $rInfo->reviews_id . '&action=deleteconfirm'));
+                $contents = array('form' => xtc_draw_form('reviews', FILENAME_REVIEWS, xtc_get_all_get_params(array('action', 'rID')) . 'action=deleteconfirm&rID=' . $rInfo->reviews_id));
                 $contents[] = array('text' => TEXT_INFO_DELETE_REVIEW_INTRO);
                 $contents[] = array('text' => '<br /><b>' . $rInfo->products_name . '</b>');
-                $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_REVIEWS, 'page=' . $page . '&rID=' . $rInfo->reviews_id) . '">' . BUTTON_CANCEL . '</a>');
+                $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_REVIEWS, xtc_get_all_get_params(array('action', 'rID')) . 'rID=' . $rInfo->reviews_id) . '">' . BUTTON_CANCEL . '</a>');
                 break;
 
               case 'edit':
                 $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_EDIT_REVIEW . '</b>');
 
-                $contents = array('form' => xtc_draw_form('reviews', FILENAME_REVIEWS, 'page=' . $page . '&rID=' . $rInfo->reviews_id . '&action=update'));
+                $contents = array('form' => xtc_draw_form('reviews', FILENAME_REVIEWS, xtc_get_all_get_params(array('action', 'rID')) . 'action=update&rID=' . $rInfo->reviews_id));
                 $contents[] = array('text' => TEXT_INFO_EDIT_REVIEW_INTRO);
                 $contents[] = array('text' => '<br />' . ENTRY_PRODUCT . '<br /><b>' . $rInfo->products_name . '</b>');
                 $contents[] = array('text' => '<br />' . ENTRY_FROM . '<br /><b>' . $rInfo->customers_name . '</b>');
@@ -184,14 +194,14 @@ require (DIR_WS_INCLUDES.'head.php');
                 $contents[] = array('text' => '<br />' . ENTRY_RATING . '<br />' . $reviews_rating . '&nbsp;' . TEXT_GOOD);
                 $contents[] = array('text' => '<br />' . ENTRY_REVIEW . '<br />' . xtc_draw_textarea_field('reviews_text', 'soft', '60', '15', $rInfo->reviews_text, 'style="width:99%"'));
    
-                $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_REVIEWS, 'page=' . $page . '&rID=' . $rInfo->reviews_id) . '">' . BUTTON_CANCEL . '</a>');
+                $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_REVIEWS, xtc_get_all_get_params(array('action', 'rID')) . 'rID=' . $rInfo->reviews_id) . '">' . BUTTON_CANCEL . '</a>');
                 break;
 
               default:
                 if (isset($rInfo) && is_object($rInfo)) {
                   $heading[] = array('text' => '<b>' . $rInfo->products_name . '</b>');
 
-                  $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_REVIEWS, 'page=' . $page . '&rID=' . $rInfo->reviews_id . '&action=edit') . '">' . BUTTON_EDIT . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_REVIEWS, 'page=' . $page . '&rID=' . $rInfo->reviews_id . '&action=delete') . '">' . BUTTON_DELETE . '</a>');
+                  $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_REVIEWS, xtc_get_all_get_params(array('action', 'rID')) . 'rID=' . $rInfo->reviews_id . '&action=edit') . '">' . BUTTON_EDIT . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_REVIEWS, xtc_get_all_get_params(array('action', 'rID')) . 'rID=' . $rInfo->reviews_id . '&action=delete') . '">' . BUTTON_DELETE . '</a>');
                   $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_ADDED . ' ' . xtc_date_short($rInfo->date_added));
                   if (xtc_not_null($rInfo->last_modified)) $contents[] = array('text' => TEXT_INFO_LAST_MODIFIED . ' ' . xtc_date_short($rInfo->last_modified));
                   $contents[] = array('text' => '<br />' . xtc_product_thumb_image($rInfo->products_image, $rInfo->products_name));

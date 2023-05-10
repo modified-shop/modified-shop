@@ -85,4 +85,4 @@ define('BUTTON_VIEW_MANUFACTURER', 'View Manufacturer');
 define('BUTTON_VALUES', 'Values');
 define('BUTTON_DELETE_BANKTRANSFER', 'Delete Banktransfer data');
 define('BUTTON_BLACKLIST', 'Blacklist');
-?>
+define('BUTTON_REVIEWS', 'Reviews');
