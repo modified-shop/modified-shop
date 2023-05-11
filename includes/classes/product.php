@@ -113,12 +113,9 @@ class product {
     
     if (!isset($attributes_count_array[$pID])) {
       $products_attributes_query = xtDBquery("SELECT count(*) AS total_a,
-                                                     count(IF(patrib.options_values_price > 0, 1, null)) as total_p 
-                                                FROM ".TABLE_PRODUCTS_OPTIONS." popt
-                                                JOIN ".TABLE_PRODUCTS_ATTRIBUTES." patrib
-                                                     ON patrib.options_id = popt.products_options_id
-                                                        AND popt.language_id = '".(int) $_SESSION['languages_id']."'
-                                               WHERE patrib.products_id = '".(int)$pID."'");
+                                                     count(IF(options_values_price > 0, 1, null)) as total_p 
+                                                FROM ".TABLE_PRODUCTS_ATTRIBUTES."
+                                               WHERE products_id = '".(int)$pID."'");
       $products_attributes = xtc_db_fetch_array($products_attributes_query, true);
       $attributes_count_array[$pID] = $products_attributes;
     }
