@@ -37,14 +37,25 @@
   define('TEXT_INFO_INTERVALL', 'Starts at %s, repeats every %s');
   define('TEXT_DISPLAY_NUMBER_OF_SCHEDULED_TASKS', 'Displayed are %d to %d (of a total of %d tasks)');
 
-  define('TEXT_INFO_TASKS_STATUS_BANNERS', 'Banners Status');
-  define('TEXT_INFO_TASKS_STATUS_SPECIALS', 'Specials Status');
-  define('TEXT_INFO_TASKS_DB_MAINTENANCE', 'Database optimize');
-  define('TEXT_INFO_TASKS_DB_BACKUP', 'Database backup');
-  define('TEXT_INFO_TASKS_LOGS_MAINTENANCE', 'Logfiles cleanup');
-  define('TEXT_INFO_TASKS_EXPORT_SITEMAP', 'Sitemap');
+  define('TEXT_HEADING_TASKS_STATUS_BANNERS', 'Banners Status');
+  define('TEXT_INFO_TASKS_STATUS_BANNERS', 'Banners getting checked to their status');
 
-  define('TEXT_INFO_TASKS_IMAGE_PROCESS_PRODUCTS', 'Images processing - Products');
-  define('TEXT_INFO_TASKS_IMAGE_PROCESS_CATEGORIES', 'Images processing - Categories');
-  define('TEXT_INFO_TASKS_IMAGE_PROCESS_MANUFACTURERS', 'Images processing - Manufacturers');
-  define('TEXT_INFO_TASKS_IMAGE_PROCESS_BANNERS', 'Images processing - Banners');
+  define('TEXT_HEADING_TASKS_STATUS_SPECIALS', 'Specials Status');
+  define('TEXT_INFO_TASKS_STATUS_SPECIALS', 'Specials getting checked to their status');
+
+  define('TEXT_HEADING_TASKS_DB_MAINTENANCE', 'Database optimize');
+  define('TEXT_INFO_TASKS_DB_MAINTENANCE', 'Database is getting analyzed an optimized');
+
+  define('TEXT_HEADING_TASKS_DB_BACKUP', 'Database backup');
+  define('TEXT_INFO_TASKS_DB_BACKUP', 'Database backup is created');
+
+  define('TEXT_HEADING_TASKS_LOGS_MAINTENANCE', 'Logfiles cleanup');
+  define('TEXT_INFO_TASKS_LOGS_MAINTENANCE', 'Logfiles cleanup older than 7 days');
+
+  define('TEXT_HEADING_TASKS_EXPORT_SITEMAP', 'Sitemap');
+  define('TEXT_INFO_TASKS_EXPORT_SITEMAP', 'Sitemap is getting created');
+
+  define('TEXT_HEADING_TASKS_IMAGE_PROCESS_PRODUCTS', 'Images processing - Products');
+  define('TEXT_HEADING_TASKS_IMAGE_PROCESS_CATEGORIES', 'Images processing - Categories');
+  define('TEXT_HEADING_TASKS_IMAGE_PROCESS_MANUFACTURERS', 'Images processing - Manufacturers');
+  define('TEXT_HEADING_TASKS_IMAGE_PROCESS_BANNERS', 'Images processing - Banners');

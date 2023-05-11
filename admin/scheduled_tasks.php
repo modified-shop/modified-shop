@@ -156,7 +156,7 @@
                       if (isset($trInfo) && is_object($trInfo) && $tasks['tasks_id'] == $trInfo->tasks_id) {
                         echo '<tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" '.(($trInfo->edit == '1') ? 'onclick="document.location.href=\'' . xtc_href_link(FILENAME_SCHEDULED_TASKS, xtc_get_all_get_params(array('tID', 'action')) . 'tID=' . $trInfo->tasks_id . '&action=edit') . '\'"' : '').'>' . "\n";
                       } else {
-                        echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_SCHEDULED_TASKS, xtc_get_all_get_params(array('tID')) . 'tID=' . $tasks['tasks_id']) . '\'">' . "\n";
+                        echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_SCHEDULED_TASKS, xtc_get_all_get_params(array('tID', 'action')) . 'tID=' . $tasks['tasks_id']) . '\'">' . "\n";
                       }
                       ?>
                       <td class="dataTableContent"><?php echo (defined('TEXT_INFO_TASKS_'.strtoupper($tasks['tasks'])) ? constant('TEXT_INFO_TASKS_'.strtoupper($tasks['tasks'])) : $tasks['tasks']); ?></td>
@@ -181,7 +181,7 @@
                           }
                         ?>
                       </td>
-                      <td class="dataTableContent txta-r"><?php if (isset($trInfo) && is_object($trInfo) && $tasks['tasks_id'] == $trInfo->tasks_id) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_SCHEDULED_TASKS, xtc_get_all_get_params(array('tID')) . 'tID=' . $tasks['tasks_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                      <td class="dataTableContent txta-r"><?php if (isset($trInfo) && is_object($trInfo) && $tasks['tasks_id'] == $trInfo->tasks_id) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_SCHEDULED_TASKS, xtc_get_all_get_params(array('tID', 'action')) . 'tID=' . $tasks['tasks_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
                     </tr>
                     <?php
                   }
@@ -211,7 +211,10 @@
 
                 default:
                   if (isset($trInfo) && is_object($trInfo)) {
-                    $heading[] = array('text' => '<b>' . (defined('TEXT_INFO_TASKS_'.strtoupper($trInfo->tasks)) ? constant('TEXT_INFO_TASKS_'.strtoupper($trInfo->tasks)) : $trInfo->tasks) . '</b>');
+                    $heading[] = array('text' => '<b>' . (defined('TEXT_HEADING_TASKS_'.strtoupper($trInfo->tasks)) ? constant('TEXT_INFO_TASKS_'.strtoupper($trInfo->tasks)) : $trInfo->tasks) . '</b>');
+                    if (defined('TEXT_INFO_TASKS_'.strtoupper($trInfo->tasks))) {
+                      $contents[] = array('text' => constant('TEXT_INFO_TASKS_'.strtoupper($trInfo->tasks)));
+                    }
                     if ($trInfo->edit == 1) {
                       $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_SCHEDULED_TASKS, xtc_get_all_get_params(array('tID', 'action')) . 'tID=' . $trInfo->tasks_id . '&action=edit') . '">' . BUTTON_EDIT . '</a>');
                     }
