@@ -10,4 +10,5 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  define('TEXT_INFO_TASKS_PAYPAL_TRACKING', 'PayPal Tracking');
+  define('TEXT_HEADING_TASKS_PAYPAL_TRACKING', 'PayPal Tracking');
+  define('TEXT_INFO_TASKS_PAYPAL_TRACKING', 'Trackinginformations are getting send to PayPal');

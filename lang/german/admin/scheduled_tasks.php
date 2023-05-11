@@ -37,15 +37,25 @@
   define('TEXT_INFO_INTERVALL', 'Beginnt um %s, wiederholt sich alle %s');
   define('TEXT_DISPLAY_NUMBER_OF_SCHEDULED_TASKS', 'Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> Aufgaben)');
 
-  define('TEXT_INFO_TASKS_DAILY', 'Tägliche Wartung');
-  define('TEXT_INFO_TASKS_STATUS_BANNERS', 'Banners Status');
-  define('TEXT_INFO_TASKS_STATUS_SPECIALS', 'Sonderangebote Status');
-  define('TEXT_INFO_TASKS_DB_MAINTENANCE', 'Datenbank optimieren');
-  define('TEXT_INFO_TASKS_DB_BACKUP', 'Datenbank Backup erstellen');
-  define('TEXT_INFO_TASKS_LOGS_MAINTENANCE', 'Logfiles bereinigen');
-  define('TEXT_INFO_TASKS_EXPORT_SITEMAP', 'Sitemap erstellen');
+  define('TEXT_HEADING_TASKS_STATUS_BANNERS', 'Banners Status');
+  define('TEXT_INFO_TASKS_STATUS_BANNERS', 'Banner werden auf ihre G&uuml;ltigkeit gepr&uuml;ft');
 
-  define('TEXT_INFO_TASKS_IMAGE_PROCESS_PRODUCTS', 'Bilder Prozessing - Artikel');
-  define('TEXT_INFO_TASKS_IMAGE_PROCESS_CATEGORIES', 'Bilder Prozessing - Kategorien');
-  define('TEXT_INFO_TASKS_IMAGE_PROCESS_MANUFACTURERS', 'Bilder Prozessing - Hersteller');
-  define('TEXT_INFO_TASKS_IMAGE_PROCESS_BANNERS', 'Bilder Prozessing - Banner');
+  define('TEXT_HEADING_TASKS_STATUS_SPECIALS', 'Sonderangebote Status');
+  define('TEXT_INFO_TASKS_STATUS_SPECIALS', 'Sonderangebote werden auf ihre G&uuml;ltigkeit gepr&uuml;ft');
+
+  define('TEXT_HEADING_TASKS_DB_MAINTENANCE', 'Datenbank optimieren');
+  define('TEXT_INFO_TASKS_DB_MAINTENANCE', 'Die Datenbank wird analysiert und optimiert');
+
+  define('TEXT_HEADING_TASKS_DB_BACKUP', 'Datenbank Backup erstellen');
+  define('TEXT_INFO_TASKS_DB_BACKUP', 'Datenbank Backup wird erstellt');
+
+  define('TEXT_HEADING_TASKS_LOGS_MAINTENANCE', 'Logfiles bereinigen');
+  define('TEXT_INFO_TASKS_LOGS_MAINTENANCE', 'Logfiles &auml;lter als 7 Tage werden gel&ouml;scht');
+
+  define('TEXT_HEADING_TASKS_EXPORT_SITEMAP', 'Sitemap erstellen');
+  define('TEXT_INFO_TASKS_EXPORT_SITEMAP', 'Die Sitemap wird neu erstellt');
+
+  define('TEXT_HEADING_TASKS_IMAGE_PROCESS_PRODUCTS', 'Bilder Prozessing - Artikel');
+  define('TEXT_HEADING_TASKS_IMAGE_PROCESS_CATEGORIES', 'Bilder Prozessing - Kategorien');
+  define('TEXT_HEADING_TASKS_IMAGE_PROCESS_MANUFACTURERS', 'Bilder Prozessing - Hersteller');
+  define('TEXT_HEADING_TASKS_IMAGE_PROCESS_BANNERS', 'Bilder Prozessing - Banner');
