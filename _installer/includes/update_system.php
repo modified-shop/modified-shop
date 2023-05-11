@@ -146,7 +146,14 @@
   {
     xtc_db_query("INSERT INTO " . TABLE_SCHEDULED_TASKS . " (time_regularity, time_unit, status, tasks) VALUES ('1', 'd',  '0', 'export_sitemap')");
   }
-           
+
+  // delete invalid geo_zones
+  xtc_db_query("DELETE z2gz 
+                  FROM `zones_to_geo_zones` z2gz 
+             LEFT JOIN `geo_zones` gz 
+                       ON gz.geo_zone_id = z2gz.geo_zone_id 
+                 WHERE gz.geo_zone_id IS NULL");
+  
   // rename config key
   $config_array = array(
     'MAX_DISPLAY_CONTENT_MANAGER' => 'MAX_DISPLAY_CONTENT_MANAGER_RESULTS',
