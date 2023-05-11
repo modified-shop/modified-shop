@@ -211,12 +211,12 @@
 
                 default:
                   if (isset($trInfo) && is_object($trInfo)) {
-                    $heading[] = array('text' => '<b>' . (defined('TEXT_HEADING_TASKS_'.strtoupper($trInfo->tasks)) ? constant('TEXT_INFO_TASKS_'.strtoupper($trInfo->tasks)) : $trInfo->tasks) . '</b>');
-                    if (defined('TEXT_INFO_TASKS_'.strtoupper($trInfo->tasks))) {
-                      $contents[] = array('text' => constant('TEXT_INFO_TASKS_'.strtoupper($trInfo->tasks)));
-                    }
+                    $heading[] = array('text' => '<b>' . (defined('TEXT_HEADING_TASKS_'.strtoupper($trInfo->tasks)) ? constant('TEXT_HEADING_TASKS_'.strtoupper($trInfo->tasks)) : $trInfo->tasks) . '</b>');
                     if ($trInfo->edit == 1) {
                       $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_SCHEDULED_TASKS, xtc_get_all_get_params(array('tID', 'action')) . 'tID=' . $trInfo->tasks_id . '&action=edit') . '">' . BUTTON_EDIT . '</a>');
+                    }
+                    if (defined('TEXT_INFO_TASKS_'.strtoupper($trInfo->tasks))) {
+                      $contents[] = array('text' => constant('TEXT_INFO_TASKS_'.strtoupper($trInfo->tasks)));
                     }
                     if ($trInfo->time_run > 0) {
                       $contents[] = array('text' => '<br />' . TEXT_INFO_LAST_EXECUTED . ' ' . xtc_datetime_short(date('Y-m-d H:i:s', $trInfo->time_run)));
