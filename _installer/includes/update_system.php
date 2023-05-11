@@ -149,8 +149,8 @@
 
   // delete invalid geo_zones
   xtc_db_query("DELETE z2gz 
-                  FROM `zones_to_geo_zones` z2gz 
-             LEFT JOIN `geo_zones` gz 
+                  FROM ".TABLE_ZONES_TO_GEO_ZONES." z2gz 
+             LEFT JOIN ".TABLE_GEO_ZONES." gz 
                        ON gz.geo_zone_id = z2gz.geo_zone_id 
                  WHERE gz.geo_zone_id IS NULL");
   
