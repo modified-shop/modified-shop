@@ -154,6 +154,29 @@
                        ON gz.geo_zone_id = z2gz.geo_zone_id 
                  WHERE gz.geo_zone_id IS NULL");
   
+  // reset paypal allowed zones
+  $paypal_module_array = array(
+    'MODULE_PAYMENT_PAYPALACDC_ALLOWED',
+    'MODULE_PAYMENT_PAYPALBANCONTACT_ALLOWED',
+    'MODULE_PAYMENT_PAYPALBLIK_ALLOWED',
+    'MODULE_PAYMENT_PAYPALEPS_ALLOWED',
+    'MODULE_PAYMENT_PAYPALGIROPAY_ALLOWED',
+    'MODULE_PAYMENT_PAYPALIDEAL_ALLOWED',
+    'MODULE_PAYMENT_PAYPALMYBANK_ALLOWED',
+    'MODULE_PAYMENT_PAYPALPRZELEWY_ALLOWED',
+    'MODULE_PAYMENT_PAYPALPUI_ALLOWED',
+    'MODULE_PAYMENT_PAYPALSOFORT_ALLOWED',
+    'MODULE_PAYMENT_PAYPALTRUSTLY_ALLOWED',
+  );
+  
+  foreach ($paypal_module_array as $paypal_module) {
+    if (defined($paypal_module)) {
+      xtc_db_query("UPDATE ".TABLE_CONFIGURATION."
+                       SET configuration_value = ''
+                     WHERE configuration_key = '".xtc_db_input($paypal_module)."'");
+    }
+  }
+  
   // rename config key
   $config_array = array(
     'MAX_DISPLAY_CONTENT_MANAGER' => 'MAX_DISPLAY_CONTENT_MANAGER_RESULTS',
