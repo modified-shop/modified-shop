@@ -14,7 +14,7 @@
 
   define('TABLE_HEADING_TASKS', 'Tasks');
   define('TABLE_HEADING_TIME_NEXT', 'Next execution');
-  define('TABLE_HEADING_INTERVAL', 'Intervall');
+  define('TABLE_HEADING_INTERVAL', 'Interval');
   define('TABLE_HEADING_STATUS', 'Status');
   define('TABLE_HEADING_ACTION', 'Action');
 
@@ -38,22 +38,22 @@
   define('TEXT_DISPLAY_NUMBER_OF_SCHEDULED_TASKS', 'Displayed are %d to %d (of a total of %d tasks)');
 
   define('TEXT_HEADING_TASKS_STATUS_BANNERS', 'Banners Status');
-  define('TEXT_INFO_TASKS_STATUS_BANNERS', 'Banners getting checked to their status');
+  define('TEXT_INFO_TASKS_STATUS_BANNERS', 'Banners are checked for validity');
 
   define('TEXT_HEADING_TASKS_STATUS_SPECIALS', 'Specials Status');
-  define('TEXT_INFO_TASKS_STATUS_SPECIALS', 'Specials getting checked to their status');
+  define('TEXT_INFO_TASKS_STATUS_SPECIALS', 'Specials are checked for validity');
 
   define('TEXT_HEADING_TASKS_DB_MAINTENANCE', 'Database optimize');
-  define('TEXT_INFO_TASKS_DB_MAINTENANCE', 'Database is getting analyzed an optimized');
+  define('TEXT_INFO_TASKS_DB_MAINTENANCE', 'The database is analyzed and optimized');
 
   define('TEXT_HEADING_TASKS_DB_BACKUP', 'Database backup');
-  define('TEXT_INFO_TASKS_DB_BACKUP', 'Database backup is created');
+  define('TEXT_INFO_TASKS_DB_BACKUP', 'Database backup will be created');
 
   define('TEXT_HEADING_TASKS_LOGS_MAINTENANCE', 'Logfiles cleanup');
-  define('TEXT_INFO_TASKS_LOGS_MAINTENANCE', 'Logfiles cleanup older than 7 days');
+  define('TEXT_INFO_TASKS_LOGS_MAINTENANCE', 'Logfiles older than 7 days are deleted');
 
   define('TEXT_HEADING_TASKS_EXPORT_SITEMAP', 'Sitemap');
-  define('TEXT_INFO_TASKS_EXPORT_SITEMAP', 'Sitemap is getting created');
+  define('TEXT_INFO_TASKS_EXPORT_SITEMAP', 'Sitemap will be recreated');
 
   define('TEXT_HEADING_TASKS_IMAGE_PROCESS_PRODUCTS', 'Images processing - Products');
   define('TEXT_HEADING_TASKS_IMAGE_PROCESS_CATEGORIES', 'Images processing - Categories');
