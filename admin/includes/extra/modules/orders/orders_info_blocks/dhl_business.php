@@ -171,7 +171,10 @@
       $check_query = xtc_db_query("SELECT *
                                      FROM ".TABLE_ORDERS_TRACKING."
                                     WHERE parcel_id = '".xtc_db_input($_SESSION['DHLparcel_id'])."'
-                                      AND dhl_label_url != ''");
+                                      AND orders_id = '".(int)$oID."'
+                                      AND dhl_label_url != ''
+                                 ORDER BY tracking_id DESC 
+                                    LIMIT 1");
       if (xtc_db_num_rows($check_query) > 0) {
         $check = xtc_db_fetch_array($check_query);
       
