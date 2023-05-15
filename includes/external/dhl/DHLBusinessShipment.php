@@ -269,14 +269,7 @@
           'insuranceAmount' => $this->insurance_array[$this->insurance]
         );
       }
-      
-      // notification
-      if ($this->notification === true) {
-        $Notification = new stdClass();
-        $Notification->recipientEmailAddress = $this->data['email_address'];
-        $Service->Notification = $Notification;
-      }
-      
+            
       // international
       if (in_array($this->data['product_code'], array('53', '66'))) {
         if ($this->premium > 0) {
@@ -287,9 +280,17 @@
         }
         if ($this->droppoint > 0) {
           $Service->CDP['active'] = '1';
+          $this->notification = true;
         }
       }
       
+      // notification
+      if ($this->notification === true) {
+        $Notification = new stdClass();
+        $Notification->recipientEmailAddress = $this->data['email_address'];
+        $Service->Notification = $Notification;
+      }
+
       // avs
       if ($this->avs > 0) {
         $Service->VisualCheckOfAge['active'] = '1';
