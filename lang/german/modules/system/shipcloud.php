@@ -17,8 +17,8 @@ if (defined('_VALID_XTC')) {
   define('MODULE_SHIPCLOUD_STATUS_DESC', 'Modul aktivieren');
   define('MODULE_SHIPCLOUD_API_TITLE', '<hr noshade>API');
   define('MODULE_SHIPCLOUD_API_DESC', 'API Key von shipcloud');
-  define('MODULE_SHIPCLOUD_PARCEL_TITLE', '<hr noshade>Paketgr&ouml;ßen');
-  define('MODULE_SHIPCLOUD_PARCEL_DESC', 'Bitte geben Sie die Paketgr&ouml;ßen in cm folgendermaßen ein: L&auml;nge,Breite,H&ouml;he;<br/>Mehrere Paketmaße k&ouml;nnen mit Semikolon (;) getrennt angegeben werden. zB: 20,40,30;15,20,20;');
+  define('MODULE_SHIPCLOUD_PARCEL_TITLE', '<hr noshade>Paketgr&ouml;&szlig;en');
+  define('MODULE_SHIPCLOUD_PARCEL_DESC', 'Bitte geben Sie die Paketgr&ouml;&szlig;en in cm folgenderma&szlig;en ein: L&auml;nge,Breite,H&ouml;he;<br/>Mehrere Paketma&szlig;e k&ouml;nnen mit Semikolon (;) getrennt angegeben werden. zB: 20,40,30;15,20,20;');
   define('MODULE_SHIPCLOUD_COMPANY_TITLE', '<hr noshade>Kundendetails<br/>');
   define('MODULE_SHIPCLOUD_COMPANY_DESC', 'Firma:');
   define('MODULE_SHIPCLOUD_FIRSTNAME_TITLE', '');
