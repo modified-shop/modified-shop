@@ -18,7 +18,7 @@ class shipcloud {
   function __construct() {
     global $order;
 
-    $this->version = '1.24';
+    $this->version = '1.25';
     $this->code = 'shipcloud';
     $this->title = MODULE_SHIPCLOUD_TEXT_TITLE;
     $this->description = MODULE_SHIPCLOUD_TEXT_DESCRIPTION;
