@@ -16,7 +16,7 @@ if (defined('_VALID_XTC')) {
   define('MODULE_SHIPCLOUD_STATUS_TITLE', 'Status');
   define('MODULE_SHIPCLOUD_STATUS_DESC', 'Module activate?');
   define('MODULE_SHIPCLOUD_API_TITLE', '<hr noshade>API');
-  define('MODULE_SHIPCLOUD_API_DESC', 'API Key von shipcloud');
+  define('MODULE_SHIPCLOUD_API_DESC', 'API Key from shipcloud');
   define('MODULE_SHIPCLOUD_PARCEL_TITLE', '<hr noshade>Packagesize');
   define('MODULE_SHIPCLOUD_PARCEL_DESC', 'Please define the Packagesize like this: length,width,height;<br/>You can define more sizes separated by semicolon (;). Exapmple: 20,40,30;15,20,20;');
   define('MODULE_SHIPCLOUD_COMPANY_TITLE', '<hr noshade>Customer details<br/>');
