@@ -23,6 +23,7 @@ define('TABLE_HEADING_RATING', 'Bewertung');
 define('TABLE_HEADING_DATE_ADDED', 'hinzugef&uuml;gt am');
 define('TABLE_HEADING_ACTION', 'Aktion');
 define('TABLE_HEADING_STATUS', 'Status');
+define('TABLE_HEADING_LANGUAGE', 'Sprache');
 
 define('ENTRY_PRODUCT', 'Artikel:');
 define('ENTRY_FROM', 'von:');

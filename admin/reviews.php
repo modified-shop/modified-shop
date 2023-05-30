@@ -24,6 +24,14 @@
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
   $page = (isset($_GET['page']) ? (int)$_GET['page'] : 1);
   
+  // languages
+  $lang = array();
+  $languages_query = xtc_db_query("SELECT *
+                                     FROM ".TABLE_LANGUAGES);
+  while ($languages = xtc_db_fetch_array($languages_query)) {
+    $lang[$languages['languages_id']] = $languages['name'];
+  }
+
   if (xtc_not_null($action)) {
     switch ($action) {
       case 'setflag':
@@ -100,9 +108,10 @@ require (DIR_WS_INCLUDES.'head.php');
                 <tr class="dataTableHeadingRow">
                   <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS; ?></td>
                   <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_CUSTOMER; ?></td>
-                  <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_RATING; ?></td>
+                  <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_LANGUAGE; ?></td>
+                  <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_RATING; ?></td>
+                  <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_STATUS; ?></td>
                   <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_DATE_ADDED; ?></td>
-                  <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_STATUS; ?></td>
                   <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
                 </tr>
                 <?php
@@ -112,6 +121,7 @@ require (DIR_WS_INCLUDES.'head.php');
                 }
                 $reviews_query_raw = "SELECT r.*,
                                              rd.reviews_text,
+                                             rd.languages_id,
                                              length(rd.reviews_text) as reviews_text_size,
                                              p.products_image,
                                              pd.products_name
@@ -144,9 +154,9 @@ require (DIR_WS_INCLUDES.'head.php');
                   ?>
                     <td class="dataTableContent"><?php echo $reviews['products_name']; ?></td>
                     <td class="dataTableContent"><?php echo $reviews['customers_name']; ?></td>
-                    <td class="dataTableContent txta-r" align="right"><?php echo xtc_image(DIR_WS_IMAGES.'stars_' . $reviews['reviews_rating'] . '.png'); ?></td>
-                    <td class="dataTableContent txta-r" align="right"><?php echo xtc_date_short($reviews['date_added']); ?></td>
-                    <td  class="dataTableContent txta-r">
+                    <td class="dataTableContent"><?php echo $lang[$reviews['languages_id']]; ?></td>
+                    <td class="dataTableContent txta-c" align="right"><?php echo xtc_image(DIR_WS_IMAGES.'stars_' . $reviews['reviews_rating'] . '.png'); ?></td>
+                    <td class="dataTableContent txta-c">
                       <?php
                       if ($reviews['reviews_status'] == '1') {
                         echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 12, 12, 'style="margin-right:5px;"') . '<a href="' . xtc_href_link(FILENAME_REVIEWS, xtc_get_all_get_params(array('action', 'rID', 'flag')) . 'action=setflag&flag=0&rID=' . $reviews['reviews_id'], 'NONSSL') . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 12, 12) . '</a>';
@@ -155,6 +165,7 @@ require (DIR_WS_INCLUDES.'head.php');
                       }
                       ?>
                     </td>
+                    <td class="dataTableContent txta-r" align="right"><?php echo xtc_date_short($reviews['date_added']); ?></td>
                     <td class="dataTableContent txta-r" align="right"><?php if (isset($rInfo) && is_object($rInfo) && $reviews['reviews_id'] == $rInfo->reviews_id) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_REVIEWS, xtc_get_all_get_params(array('action', 'rID')) . '&rID=' . $reviews['reviews_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
                   </tr>
                   <?php
