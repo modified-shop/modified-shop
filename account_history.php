@@ -48,7 +48,7 @@ require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 $module_content = array ();
 if (xtc_count_customer_orders() > 0) {
-  $history_query_raw = "SELECT o.*
+  $history_query_raw = "SELECT o.*,
                                s.orders_status_name
                           FROM ".TABLE_ORDERS." o
                           JOIN ".TABLE_ORDERS_STATUS." s

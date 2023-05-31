@@ -90,7 +90,7 @@ for ($i=0; $i<$max; $i++) {
 $smarty->assign('products_history', $products_history);
 
 if (xtc_count_customer_orders() > 0) {
-  $orders_query = xtc_db_query("SELECT o.*
+  $orders_query = xtc_db_query("SELECT o.*,
                                        os.orders_status_name
                                   FROM ".TABLE_ORDERS." o
                                   JOIN ".TABLE_ORDERS_STATUS." os
