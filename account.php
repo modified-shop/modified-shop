@@ -90,13 +90,7 @@ for ($i=0; $i<$max; $i++) {
 $smarty->assign('products_history', $products_history);
 
 if (xtc_count_customer_orders() > 0) {
-  $orders_query = xtc_db_query("SELECT o.orders_id,
-                                       o.date_purchased,
-                                       o.delivery_name,
-                                       o.delivery_country,
-                                       o.billing_name,
-                                       o.billing_country,
-                                       o.currency,
+  $orders_query = xtc_db_query("SELECT o.*
                                        os.orders_status_name
                                   FROM ".TABLE_ORDERS." o
                                   JOIN ".TABLE_ORDERS_STATUS." os
@@ -107,24 +101,27 @@ if (xtc_count_customer_orders() > 0) {
                                  LIMIT 3");
   $row = 0;
   while ($orders = xtc_db_fetch_array($orders_query)) {
-    if (xtc_not_null($orders['delivery_name'])) {
-      $order_name = $orders['delivery_name'];
-      $order_country = $orders['delivery_country'];
-    } else {
-      $order_name = $orders['billing_name'];
-      $order_country = $orders['billing_country'];
-    }
+    // count products in order
+    $products_query = xtc_db_query("SELECT count(*) as count 
+                                      FROM ".TABLE_ORDERS_PRODUCTS." 
+                                     WHERE orders_id = '".$orders['orders_id']."'");
+    $products = xtc_db_fetch_array($products_query);
+
     $order_content[$row] = array (
       'ORDER_ID' => $orders['orders_id'], 
-      'ORDER_DATE' => xtc_date_short($orders['date_purchased']), 
       'ORDER_STATUS' => $orders['orders_status_name'], 
+      'ORDER_DATE' => xtc_date_short($orders['date_purchased']), 
+      'ORDER_PRODUCTS' => $products['count'],
       'ORDER_TOTAL' => xtc_format_price_order(get_order_total($orders['orders_id']), 1, $orders['currency'], 1), 
       'ORDER_LINK' => xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id='.$orders['orders_id'], 'SSL'), 
       'ORDER_BUTTON' => '<a href="'.xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id='.$orders['orders_id'], 'SSL').'">'.xtc_image_button('small_view.gif', SMALL_IMAGE_BUTTON_VIEW).'</a>',
-      'TRACKING' => get_tracking_link($orders['orders_id'], $_SESSION['language_code']),
+      'ORDER_TRACKING' => get_tracking_link($orders['orders_id'], $_SESSION['language_code']),
       'BUTTON_CART' => '<a href="'.xtc_href_link(FILENAME_ACCOUNT, 'action=add_order&order_id='.$orders['orders_id'], 'SSL').'">'.xtc_image_button('small_cart.gif', IMAGE_BUTTON_IN_CART).'</a>',
     );
-
+    
+    // fallback
+    $order_content[$row]['TRACKING'] = $order_content[$row]['ORDER_TRACKING'];
+    
     if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS == 'true') {
       $order_content[$row]['BUTTON_CART_EXPRESS'] = '<a href="'.xtc_href_link(FILENAME_ACCOUNT, 'action=add_order&express=on&order_id='.$orders['orders_id'], 'SSL').'">'.xtc_image_button('small_express.gif', IMAGE_BUTTON_IN_CART).'</a>';
     }
