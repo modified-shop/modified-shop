@@ -1926,3 +1926,18 @@ img.thumbnail-productsimage {
   height:auto;
   max-height:200px;
 }
+.fixed_sumo {
+  display:inline-block;
+}
+.fixed_sumo .SumoSelect > .CaptionCont > span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.fixed_sumo .SumoSelect {
+  width:100%;
+}
+.fixed_sumo .SumoSelect > .optWrapper {
+  width: auto;
+  min-width:100%;
+}
