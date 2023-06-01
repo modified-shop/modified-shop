@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: shipping_status.php 899 2005-04-29 02:40:57Z hhgag $
+   $Id$
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -34,6 +34,4 @@ define('TEXT_DELETE_IMAGE', 'Delete Image');
 define('TEXT_INFO_SHIPPING_STATUS_SORT_ORDER', 'Sortorder:');
 
 define('ERROR_REMOVE_DEFAULT_SHIPPING_STATUS', 'Error: The default Shipping status can not be removed. Please set another Shipping status as default, and try again.');
-define('ERROR_STATUS_USED_IN_ORDERS', 'Error: This Shipping status is currently used in Products.');
-define('ERROR_STATUS_USED_IN_HISTORY', 'Error: This Shipping status is currently used in Products.');
-?>
+define('ERROR_STATUS_USED_IN_PRODUCTS', 'Error: This Shipping status is currently used in Products.');

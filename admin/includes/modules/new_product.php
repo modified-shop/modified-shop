@@ -99,8 +99,9 @@
     $tax_class_array[] = array ('id' => $tax_class['tax_class_id'], 'text' => parse_multi_language_value($tax_class['tax_class_title'], $_SESSION['language_code']));
   }
 
-  $shipping_statuses = array ();
   $shipping_statuses = xtc_get_shipping_status();
+  $shipping_statuses = array_merge(array(array('id' => '0', 'text' => TEXT_NONE)), $shipping_statuses);
+  
   $languages = xtc_get_languages();
 
   $product_status_array = array(
@@ -123,7 +124,7 @@
     <div style="float:left; width:57%; vertical-align:top">
       <table class="tableInput border0">
         <tr>
-          <td style="width:260px"><span class="main"><?php echo TEXT_PRODUCTS_STATUS; ?></span></td>
+          <td style="width:260px;"><span class="main"><?php echo TEXT_PRODUCTS_STATUS; ?></span></td>
           <td><span class="main"><?php echo draw_on_off_selection('products_status', $product_status_array, ($pInfo->products_status == '0' ? false : true), 'style="width: 155px"'); ?></span></td>
         </tr>
         <tr>
@@ -144,7 +145,7 @@
         </tr>
         <tr>
           <td>
-            <span class="main"><div class="flt-l" style="margin-top:8px"><?php echo TEXT_PRODUCTS_VPE_VISIBLE. '</div>&nbsp;' . xtc_draw_pull_down_menu('products_vpe_status', 'checkbox', (isset($pInfo->products_vpe_status) && $pInfo->products_vpe_status==1 ? true : false));?></span>
+            <span class="main"><div class="flt-l" style="margin-top:8px"><?php echo TEXT_PRODUCTS_VPE_VISIBLE. '</div>&nbsp;' . draw_on_off_selection('products_vpe_status', 'checkbox', (isset($pInfo->products_vpe_status) && $pInfo->products_vpe_status==1 ? true : false));?></span>
             <div class="flt-r" style="margin-top:8px">
             <span class="main"><?php echo TEXT_PRODUCTS_VPE_VALUE; ?></span>
             </div>                
@@ -153,20 +154,38 @@
         </tr>
         <tr>
           <td><span class="main"><?php echo TEXT_PRODUCTS_VPE ?></span></td>
-          <td><span class="main"><?php echo xtc_draw_pull_down_menu('products_vpe', $vpe_array, $pInfo->products_vpe=='' ?  DEFAULT_PRODUCTS_VPE_ID : $pInfo->products_vpe, 'style="width: 155px"'); ?></span></td>
+          <td><span class="main fixed_sumo" style="width:155px;"><?php echo xtc_draw_pull_down_menu('products_vpe', $vpe_array, $pInfo->products_vpe=='' ?  DEFAULT_PRODUCTS_VPE_ID : $pInfo->products_vpe, 'style="width: 155px"'); ?></span></td>
         </tr>
         <tr>
           <td><span class="main"><?php echo TEXT_FSK18; ?></span></td>
-          <td><span class="main"><?php echo xtc_draw_pull_down_menu('fsk18', 'checkbox', (isset($pInfo->products_fsk18) && $pInfo->products_fsk18==1 ? true : false)); ?></span></td>
+          <td><span class="main"><?php echo draw_on_off_selection('fsk18', 'checkbox', (isset($pInfo->products_fsk18) && $pInfo->products_fsk18==1 ? true : false)) ?></span></td>
         </tr>
+
+        <tr>
+          <td><span class="main"><?php echo TEXT_CHOOSE_INFO_TEMPLATE; ?>:</span></td>
+          <td><span class="main fixed_sumo" style="width:155px;"><?php echo $catfunc->create_templates_dropdown_menu('info_template', '/module/product_info/', $pInfo->product_template ,'style="width: 155px"'); ?></span></td>
+        </tr>
+        <tr>
+          <td><span class="main"><?php echo TEXT_CHOOSE_OPTIONS_TEMPLATE; ?>:</span></td>
+          <td><span class="main fixed_sumo" style="width:155px;"><?php echo $catfunc->create_templates_dropdown_menu('options_template', '/module/product_options/', $pInfo->options_template, 'style="width: 155px"'); ?></span></td>
+        </tr>
+
       </table>
     </div>
     
     <div style="float:left;width:43%; vertical-align:top">
       <table class="tableInput border0">
         <tr>
-          <td style="width:180px; line-height: 35px;"><span class="main"><?php echo TEXT_PRODUCTS_LAST_MODIFIED; ?></span></td>
+          <td style="width:180px; line-height: 30px;"><span class="main"><?php echo TEXT_DATE_ADDED; ?></span></td>
+          <td><span class="main"><?php echo (($pInfo->products_date_added != NULL && strtotime($pInfo->products_date_added) > 0 && strtotime($pInfo->products_date_added) !== false) ? xtc_datetime_short($pInfo->products_date_added) : '---'); ?></span></td>
+        </tr>
+        <tr>
+          <td style="line-height: 30px;"><span class="main"><?php echo TEXT_PRODUCTS_LAST_MODIFIED; ?></span></td>
           <td><span class="main"><?php echo (($pInfo->products_last_modified != NULL && strtotime($pInfo->products_last_modified) > 0 && strtotime($pInfo->products_last_modified) !== false) ? xtc_datetime_short($pInfo->products_last_modified) : '---'); ?></span></td>
+        </tr>
+        <tr>
+          <td style="line-height: 30px;"><span class="main"><?php echo TEXT_PRODUCTS_ORDERED; ?></span></td>
+          <td><span class="main"><?php echo $pInfo->products_ordered; ?></span></td>
         </tr>
         <tr>
           <td><span class="main"><?php echo TEXT_PRODUCTS_QUANTITY; ?></span></td>
@@ -187,7 +206,7 @@
         </tr>
         <tr>
           <td><span class="main"><?php echo TEXT_PRODUCTS_MANUFACTURER; ?></span></td>
-          <td><span class="main"><?php echo xtc_draw_pull_down_menu('manufacturers_id', $manufacturers_array, $pInfo->manufacturers_id, 'style="width: 155px"'); ?></span></td>
+          <td><span class="main fixed_sumo" style="width:155px;"><?php echo xtc_draw_pull_down_menu('manufacturers_id', $manufacturers_array, $pInfo->manufacturers_id, 'style="width: 155px;"'); ?></span></td>
         </tr>
         <tr>
           <td><span class="main"><?php echo TEXT_PRODUCTS_MANUFACTURER_MODEL; ?></span></td>
@@ -200,24 +219,13 @@
         <?php if (ACTIVATE_SHIPPING_STATUS=='true') { ?>
         <tr>
           <td><span class="main"><?php echo BOX_SHIPPING_STATUS.':'; ?></span></td>
-          <td><span class="main"><?php echo xtc_draw_pull_down_menu('shipping_status', $shipping_statuses, empty($pInfo->products_shippingtime) ? (int)(DEFAULT_SHIPPING_STATUS_ID) : $pInfo->products_shippingtime, 'style="width: 155px"'); ?></span></td>
+          <td><span class="main fixed_sumo" style="width:155px;"><?php echo xtc_draw_pull_down_menu('shipping_status', $shipping_statuses, $pInfo->products_shippingtime, 'style="width: 155px"'); ?></span></td>
         </tr>
         <?php } ?>
       </table>
     </div>
-
     <div style="clear:both;"></div>
-    <table class="tableInput border0">
-      <tr>
-        <td style="width:260px"><span class="main"><?php echo TEXT_CHOOSE_INFO_TEMPLATE; ?>:</span></td>
-        <td><span class="main"><?php echo $catfunc->create_templates_dropdown_menu('info_template', '/module/product_info/', $pInfo->product_template ,'style="width: 250px"'); ?></span></td>
-      </tr>
-      <tr>
-        <td><span class="main"><?php echo TEXT_CHOOSE_OPTIONS_TEMPLATE; ?>:</span></td>
-        <td><span class="main"><?php echo $catfunc->create_templates_dropdown_menu('options_template', '/module/product_options/', $pInfo->options_template, 'style="width: 250px"'); ?></span></td>
-      </tr>
-    </table>
-    
+
     <?php 
     //autoload new product addons 
     require_once(DIR_FS_INC.'auto_include.inc.php');

@@ -300,7 +300,7 @@ define('NO','nein');
 define('SAVE_ENTRY','&Auml;nderungen Speichern?');
 define('TEXT_CHOOSE_INFO_TEMPLATE','Vorlage f&uuml;r Artikeldetails');
 define('TEXT_CHOOSE_OPTIONS_TEMPLATE','Vorlage f&uuml;r Artikeloptionen');
-define('TEXT_SELECT','-- Bitte w&auml;hlen Sie --');
+define('TEXT_SELECT','-- Bitte w&auml;hlen --');
 define('PULL_DOWN_DEFAULT', 'Bitte w&auml;hlen');
 
 // BOF - Tomcraft - 2009-06-10 - added some missing alternative text on admin icons
@@ -364,9 +364,9 @@ define('TEXT_CACHE_CATEGORIES', 'Kategorien Box');
 define('TEXT_CACHE_MANUFACTURERS', 'Hersteller Box');
 define('TEXT_CACHE_ALSO_PURCHASED', 'Ebenfalls gekauft Modul');
 
-define('TEXT_NONE', '--keine--');
-define('TEXT_AUTO_PROPORTIONAL', '--auto proportional--');
-define('TEXT_AUTO_MAX', '--auto max--');
+define('TEXT_NONE', '-- keine --');
+define('TEXT_AUTO_PROPORTIONAL', '-- auto proportional --');
+define('TEXT_AUTO_MAX', '-- auto max --');
 define('TEXT_TOP', 'Top');
 
 define('ERROR_DESTINATION_DOES_NOT_EXIST', 'Fehler: Speicherort existiert nicht.');

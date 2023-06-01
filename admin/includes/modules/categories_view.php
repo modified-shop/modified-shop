@@ -473,7 +473,7 @@
                $select_str = "SELECT DISTINCT $add_select
                                               p.products_tax_class_id,
                                               p.products_id,
-                                              pd.products_name,
+                                              p.products_ordered,
                                               p.products_sort,
                                               p.products_quantity,
                                               p.products_image,
@@ -487,7 +487,8 @@
                                               p.products_startpage,
                                               p.products_startpage_sort,
                                               p2c.categories_id,
-                                              IFNULL(s.specials_new_products_price, p.products_price) AS price ";
+                                              IFNULL(s.specials_new_products_price, p.products_price) AS price,
+                                              pd.products_name ";
 
                $from_str  = " FROM ".TABLE_PRODUCTS." AS p ";
                $from_str .= "LEFT JOIN ".TABLE_PRODUCTS_DESCRIPTION." AS pd ON (p.products_id = pd.products_id) ";
@@ -612,7 +613,7 @@
                                       p.products_tax_class_id,
                                       p.products_sort,
                                       p.products_id,
-                                      pd.products_name,
+                                      p.products_ordered,
                                       p.products_quantity,
                                       p.products_image,
                                       p.products_model,
@@ -624,7 +625,8 @@
                                       p.products_status,
                                       p.products_startpage,
                                       p.products_startpage_sort,
-                                      IFNULL(s.specials_new_products_price, p.products_price) AS price 
+                                      IFNULL(s.specials_new_products_price, p.products_price) AS price,
+                                      pd.products_name
                                  FROM " . TABLE_PRODUCTS . " p
                             LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON p.products_id = pd.products_id AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
                                       " . $add_join . $add_where ."
@@ -1031,14 +1033,14 @@
                   
                   //Informations
                   $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%; border-top: 1px solid #aaa; margin-top: 5px;">' . TEXT_INFORMATIONS . '</div>');
-                  $contents[] = array('text'  => '<div style="padding-left: 10px;">' . TEXT_DATE_ADDED . ' ' . xtc_date_short($pInfo->products_date_added) . '</div>');
-                  if (xtc_not_null($pInfo->products_last_modified)) {
-                    $contents[] = array('text' => '<div style="padding-left: 10px;">' . TEXT_LAST_MODIFIED . '&nbsp;' . xtc_date_short($pInfo->products_last_modified) . '</div>');
-                  }
-                  if (date('Y-m-d') < $pInfo->products_date_available) {
-                    $contents[] = array('text' => '<div style="padding-left: 10px;">' . TEXT_DATE_AVAILABLE . ' ' . xtc_date_short($pInfo->products_date_available) . '</div>');
-                  }
+                  $contents[] = array('text'  => '<div style="padding-left: 10px;">' . TEXT_DATE_ADDED . ' ' . xtc_date_short($pInfo->products_date_added) . '</div>' .
+                                                 ((xtc_not_null($pInfo->products_last_modified)) ? '<div style="padding-left: 10px;">' . TEXT_LAST_MODIFIED . '&nbsp;' . xtc_date_short($pInfo->products_last_modified) . '</div>' : '') .
+                                                 ((date('Y-m-d') < $pInfo->products_date_available) ? '<div style="padding-left: 10px;">' . TEXT_DATE_AVAILABLE . '&nbsp;' . xtc_date_short($pInfo->products_date_available) . '</div>' : '')
+                                      );
                   
+                  //Quantity
+                  $contents[] = array('text' => '<div style="padding-left: 10px;">' .  TEXT_PRODUCTS_ORDERED . '&nbsp;' . $pInfo->products_ordered . '</div><div style="padding-left: 10px;">' .  TEXT_PRODUCTS_QUANTITY_INFO . '&nbsp;' . $pInfo->products_quantity . '</div>');
+
                   //Price
                   $price = $pInfo->products_price;
                   $price = xtc_round($price,PRICE_PRECISION);
@@ -1048,8 +1050,8 @@
                     $price = ($price*(xtc_get_tax_rate($pInfo->products_tax_class_id)+100)/100);
                     $price_string = '' . TEXT_PRODUCTS_PRICE_INFO . '&nbsp;' . $currencies->format($price) . '<br/>' . TXT_NETTO . $currencies->format($price_netto);
                   }
-                  $contents[] = array('text' => '<div style="padding-left: 10px;">' . $price_string.  '</div><div style="padding-left: 10px;">' . TEXT_PRODUCTS_DISCOUNT_ALLOWED_INFO . '&nbsp;' . $pInfo->products_discount_allowed . ' %</div><div style="padding-left: 10px;">' .  TEXT_PRODUCTS_QUANTITY_INFO . '&nbsp;' . $pInfo->products_quantity . '</div>');
-
+                  $contents[] = array('text' => '<div style="padding-left: 10px;">' . $price_string.  '</div><div style="padding-left: 10px;">' . TEXT_PRODUCTS_DISCOUNT_ALLOWED_INFO . '&nbsp;' . $pInfo->products_discount_allowed . ' %</div>');
+                  
                   //Specials
                   if ($pInfo->specials_status == 1) {
                     $special_price = $pInfo->specials_new_products_price;
@@ -1066,8 +1068,13 @@
                                         );
                   }
                   
+                  //Reviews
                   $contents[] = array('text' => '<div style="padding-left: 10px; padding-bottom: 10px;">' . TEXT_PRODUCTS_AVERAGE_RATING . ' ' . (($pInfo->average_rating != '') ? number_format($pInfo->average_rating, 2) : 0) . '</div>');
+                  
+                  //Categories
                   $contents[] = array('text' => '<div style="padding-left: 10px; padding-bottom: 10px;">' . TEXT_PRODUCT_LINKED_TO . '<br />' . xtc_output_generated_category_path($pInfo->products_id, 'product') . '</div>');
+                  
+                  //Image
                   $contents[] = array('align' => 'center', 'text' => '<div style="padding: 10px;">' . xtc_product_thumb_image($pInfo->products_image, $pInfo->products_name)  . '</div><div style="padding-bottom: 10px;">' . $pInfo->products_image.'</div>');
                 }
               } else {

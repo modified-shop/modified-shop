@@ -81,13 +81,6 @@
                          SET shipping_status_image = '" . $shipping_status_image->filename . "' 
                        WHERE shipping_status_id = '" . xtc_db_input($oID) . "'");
       }
-
-      if (isset($_POST['default']) && $_POST['default'] == 'on') {
-        xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " 
-                         SET configuration_value = '" . xtc_db_input($oID) . "' 
-                       WHERE configuration_key = 'DEFAULT_SHIPPING_STATUS_ID'");
-      }
-
       xtc_redirect(xtc_href_link(FILENAME_SHIPPING_STATUS, 'page=' . $page . '&oID=' . $oID));
       break;
 
@@ -119,11 +112,16 @@
     case 'delete':
       $oID = (int)$_GET['oID'];
 
+      $status_query = xtc_db_query("SELECT count(*) as count 
+                                      FROM " . TABLE_PRODUCTS . " 
+                                     WHERE products_shippingtime = '" . (int)$oID . "'");
+      $status = xtc_db_fetch_array($status_query);
+      
       $remove_status = true;
-      if ($oID == DEFAULT_SHIPPING_STATUS_ID) {
+      if ($status['count'] > 0) {
         $remove_status = false;
-        $messageStack->add(ERROR_REMOVE_DEFAULT_SHIPPING_STATUS, 'error');
-      }
+        $messageStack->add(ERROR_STATUS_USED_IN_PRODUCTS, 'error');
+      } 
       break;
   }
   require (DIR_WS_INCLUDES.'head.php');
@@ -156,6 +154,7 @@
             <td class="boxCenterLeft">
               <table class="tableBoxCenter collapse">
               <tr class="dataTableHeadingRow">
+                <td class="dataTableHeadingContent"><?php echo 'ID'; ?></td>
                 <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_SHIPPING_STATUS_IMAGE; ?></td>
                 <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_SHIPPING_STATUS; ?></td>
                 <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_SORT; ?>&nbsp;</td>
@@ -178,23 +177,10 @@
                   } else {
                     echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_SHIPPING_STATUS, 'page=' . $page . '&oID=' . $shipping_status['shipping_status_id']) . '\'">' . "\n";
                   }
-
-                  if (DEFAULT_SHIPPING_STATUS_ID == $shipping_status['shipping_status_id']) {
-                    echo '<td class="dataTableContent" align="left">';
-                    if ($shipping_status['shipping_status_image'] != '') {
-                      echo xtc_image(DIR_WS_CATALOG.DIR_WS_IMAGES . $shipping_status['shipping_status_image'], IMAGE_ICON_INFO, '', '', 'style="border:0;max-width:200px;max-height:60px;"');
-                    }
-                    echo '</td>';
-                    echo '<td class="dataTableContent"><b>' . $shipping_status['shipping_status_name'] . ' (' . TEXT_DEFAULT . ')</b></td>' . "\n";
-                  } else {
-                    echo '<td class="dataTableContent">';
-                    if ($shipping_status['shipping_status_image'] != '') {
-                      echo xtc_image(DIR_WS_CATALOG.DIR_WS_IMAGES . $shipping_status['shipping_status_image'] , IMAGE_ICON_INFO, '', '', 'style="border:0;max-width:200px;max-height:60px;"');
-                    }
-                    echo '</td>';
-                    echo '<td class="dataTableContent">' . $shipping_status['shipping_status_name'] . '</td>' . "\n";
-                  }
                 ?>
+                <td class="dataTableContent"><?php echo $shipping_status['shipping_status_id']; ?></td>
+                <td class="dataTableContent"><?php echo (($shipping_status['shipping_status_image'] != '') ? xtc_image(DIR_WS_CATALOG.DIR_WS_IMAGES . $shipping_status['shipping_status_image'] , IMAGE_ICON_INFO, '', '', 'style="border:0;max-width:200px;max-height:60px;"') : ''); ?></td>
+                <td class="dataTableContent"><?php echo $shipping_status['shipping_status_name']; ?></td>
                 <td class="dataTableContent txta-r"><?php echo $shipping_status['sort_order']; ?></td>
                 <td class="dataTableContent txta-r"><?php if (isset($oInfo) && is_object($oInfo) && $shipping_status['shipping_status_id'] == $oInfo->shipping_status_id) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_SHIPPING_STATUS, 'page=' . $page . '&oID=' . $shipping_status['shipping_status_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
@@ -234,7 +220,6 @@
                 $contents[] = array('text' => '<br />' . TEXT_INFO_SHIPPING_STATUS_IMAGE . '<br />' . xtc_draw_file_field('shipping_status_image'));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_SHIPPING_STATUS_NAME . $shipping_status_inputs_string);
                 $contents[] = array('text' => '<br />' . TEXT_INFO_SHIPPING_STATUS_SORT_ORDER . '<br />' . xtc_draw_input_field('sort_order', ''));
-                $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('default') . ' ' . TEXT_SET_DEFAULT);
                 $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_INSERT . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_SHIPPING_STATUS, 'page=' . $page) . '">' . BUTTON_CANCEL . '</a>');
                 break;
 
@@ -255,7 +240,6 @@
 
                 $contents[] = array('text' => '<br />' . TEXT_INFO_SHIPPING_STATUS_NAME . $shipping_status_inputs_string);
                 $contents[] = array('text' => '<br />' . TEXT_INFO_SHIPPING_STATUS_SORT_ORDER . '<br />' . xtc_draw_input_field('sort_order', $oInfo->sort_order));
-                if (DEFAULT_SHIPPING_STATUS_ID != $oInfo->shipping_status_id) $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('default') . ' ' . TEXT_SET_DEFAULT);
                 $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_SHIPPING_STATUS, 'page=' . $page . '&oID=' . $oInfo->shipping_status_id) . '">' . BUTTON_CANCEL . '</a>');
                 break;
 
