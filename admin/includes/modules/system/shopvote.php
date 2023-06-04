@@ -72,8 +72,21 @@ class shopvote
         xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SHOPVOTE_BADGE', '1',  '6', '1', 'xtc_cfg_select_option(array(\'1\', \'2\', \'3\', \'4\'), ', now())");
         xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SHOPVOTE_DEFAULT_LANG', '".$_SESSION['language_code']."',  '6', '1', 'xtc_cfg_pull_down_language_code(', now())");
 
+        // check scheduled tasks
+        if (defined('TABLE_SCHEDULED_TASKS')) {
+          xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SHOPVOTE_SCHEDULED_TASKS', 'true',  '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
+          $check_query = xtc_db_query("SELECT *
+                                         FROM ".TABLE_SCHEDULED_TASKS."
+                                        WHERE tasks = 'shopvote_import'");
+          if (xtc_db_num_rows($check_query) < 1) {                      
+            xtc_db_query("INSERT INTO " . TABLE_SCHEDULED_TASKS . " (time_regularity, time_unit, status, tasks) VALUES ('1', 'h',  '0', 'shopvote_import')");
+          }
+        }
+
         $table_array = array(
           array('table' => TABLE_PRODUCTS, 'column' => 'shopvote_last_imported', 'default' => 'DATETIME'),
+          array('table' => TABLE_REVIEWS, 'column' => 'external_id', 'default' => 'VARCHAR(256)'),
+          array('table' => TABLE_REVIEWS, 'column' => 'external_source', 'default' => 'VARCHAR(32)'),
         );
         foreach ($table_array as $table) {
           $check_query = xtc_db_query("SHOW COLUMNS FROM ".$table['table']." LIKE '".xtc_db_input($table['column'])."'");
@@ -81,16 +94,32 @@ class shopvote
             xtc_db_query("ALTER TABLE ".$table['table']." ADD ".$table['column']." ".$table['default']."");
           }
         }
+
+        $table_array = array(
+          array('table' => TABLE_REVIEWS, 'column' => 'external_id', 'name' => 'idx_external_id'),
+          array('table' => TABLE_REVIEWS, 'column' => 'external_source', 'name' => 'idx_external_source'),
+        );
+        foreach ($table_array as $table) {
+          $check_query = xtc_db_query("SHOW INDEX FROM ".$table['table']." WHERE Column_name = '".xtc_db_input($table['column'])."'");
+          if (xtc_db_num_rows($check_query) < 1) {
+            xtc_db_query("ALTER TABLE ".$table['table']." ADD INDEX ".$table['name']." (".$table['column'].")");            
+          }
+        }
     }
 
     function remove()
     {
         xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key LIKE 'MODULE_SHOPVOTE_%'");
+
+        // scheduled task
+        if (defined('TABLE_SCHEDULED_TASKS')) {
+          xtc_db_query("DELETE FROM " . TABLE_SCHEDULED_TASKS . " WHERE tasks = 'shopvote_import'");
+        }
     }
 
     function keys() 
     {
-        return array(
+        $keys = array(
           'MODULE_SHOPVOTE_STATUS',
           'MODULE_SHOPVOTE_SHOPID',
           'MODULE_SHOPVOTE_API_KEY',
@@ -98,6 +127,11 @@ class shopvote
           'MODULE_SHOPVOTE_BADGE',
           'MODULE_SHOPVOTE_DEFAULT_LANG',
         );
+        
+        if (defined('TABLE_SCHEDULED_TASKS')) {
+          $keys[] = 'MODULE_SHOPVOTE_SCHEDULED_TASKS';
+        }
+        
+        return $keys;
     }    
 }
-?>

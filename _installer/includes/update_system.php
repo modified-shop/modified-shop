@@ -147,6 +147,13 @@
     xtc_db_query("INSERT INTO " . TABLE_SCHEDULED_TASKS . " (time_regularity, time_unit, status, tasks) VALUES ('1', 'd',  '0', 'export_sitemap')");
   }
 
+  if (defined('MODULE_SHOPVOTE_STATUS') 
+      && MODULE_SHOPVOTE_STATUS == 'true'
+      )
+  {
+    xtc_db_query("INSERT INTO " . TABLE_SCHEDULED_TASKS . " (time_regularity, time_unit, status, tasks) VALUES ('1', 'h',  '0', 'shopvote_import')");
+  }
+
   // delete invalid geo_zones
   xtc_db_query("DELETE z2gz 
                   FROM ".TABLE_ZONES_TO_GEO_ZONES." z2gz 
