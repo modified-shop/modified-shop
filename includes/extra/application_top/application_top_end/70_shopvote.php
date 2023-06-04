@@ -18,14 +18,14 @@
       && (!defined('MODULE_SHOPVOTE_SCHEDULED_TASKS') || MODULE_SHOPVOTE_SCHEDULED_TASKS == 'false')
       && is_object($product) 
       && $product->isProduct() === true
-      && (time() - strtotime($product->data['shopvote_last_imported']) >= 86400)
+      && (empty($product->data['shopvote_last_imported']) || time() - strtotime($product->data['shopvote_last_imported']) >= 86400)
       )
   {
     // include needed classes
     require_once (DIR_FS_EXTERNAL.'shopvote/shopvote_import.php');
 
     $days = 365;
-    $timestamp = strtotime($product->data['shopvote_last_imported']);
+    $timestamp = !empty($product->data['shopvote_last_imported']) ? strtotime($product->data['shopvote_last_imported']) : false;
     if ($timestamp !== false) {
       $days = ceil((time() - $timestamp) / 86400);
       if ($days > 365) {
@@ -34,7 +34,7 @@
     }
 
     $shopvote = new shopvote_import();
-    $response = $shopvote->import($days, $product->data['products_id'], (int)strtotime($product->data['shopvote_last_imported']) < 1);
+    $response = $shopvote->import($days, $product->data['products_id'], (int)$timestamp < 1);
   
     if ($response === true) {
       xtc_db_query("UPDATE ".TABLE_PRODUCTS."
