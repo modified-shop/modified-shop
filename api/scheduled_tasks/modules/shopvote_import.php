@@ -39,7 +39,7 @@
         $days = 365;
       }
 
-      $shopvote = new shopvote_import()
+      $shopvote = new shopvote_import();
       $response = $shopvote->import($days, '', (int)MODULE_SHOPVOTE_CRONJOB === 0);
     
       if ($response === true) {

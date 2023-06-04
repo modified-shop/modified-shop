@@ -33,7 +33,7 @@
       }
     }
 
-    $shopvote = new shopvote_import()
+    $shopvote = new shopvote_import();
     $response = $shopvote->import($days, $product->data['products_id'], (int)strtotime($product->data['shopvote_last_imported']) < 1);
   
     if ($response === true) {
