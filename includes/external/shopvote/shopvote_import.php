@@ -109,10 +109,13 @@
                 }
               }
             
-              $check_query = xtc_db_query("SELECT *  
-                                             FROM ".TABLE_REVIEWS."
-                                            WHERE external_id = '".xtc_db_input($reviews['reviewUID'])."'
-                                              AND external_source = 'shopvote'");
+              $check_query = xtc_db_query("SELECT r.*
+                                             FROM ".TABLE_REVIEWS." r
+                                             JOIN ".TABLE_PRODUCTS." p
+                                                  ON r.products_id = p.products_id
+                                            WHERE r.products_id = '".(int)$reviews['sku']."'
+                                              AND r.external_id = '".xtc_db_input($reviews['reviewUID'])."'
+                                              AND r.external_source = 'shopvote'");
               if (xtc_db_num_rows($check_query) < 1) {
                 if (isset($lng->catalog_languages[$reviews['lang']])) {
                   $language = $lng->catalog_languages[$reviews['lang']];
