@@ -25,4 +25,5 @@
   define('MODULE_SHOPVOTE_BADGE_DESC', 'Choose the badge type.');
   define('MODULE_SHOPVOTE_DEFAULT_LANG_TITLE', 'Fallback language');
   define('MODULE_SHOPVOTE_DEFAULT_LANG_DESC', 'Select the language for ratings in a language that is not in the shop.');
-?>
+  define('MODULE_SHOPVOTE_SCHEDULED_TASKS_TITLE', 'Scheduled Tasks');
+  define('MODULE_SHOPVOTE_SCHEDULED_TASKS_DESC', 'Import of the ratings via the scheduled tasks?');
