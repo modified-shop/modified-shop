@@ -18,7 +18,7 @@ class shopvote
 
     function __construct() 
     {
-        $this->version = '1.16';
+        $this->version = '1.17';
         $this->code = 'shopvote';
         $this->title = MODULE_SHOPVOTE_TEXT_TITLE;
         $this->description = MODULE_SHOPVOTE_TEXT_DESCRIPTION;
