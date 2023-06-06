@@ -479,7 +479,7 @@ require (DIR_WS_INCLUDES.'head.php');
                         $tInfo = new objectInfo($trustedshops);
                       }
 
-                      if ( (is_object($tInfo)) && ($trustedshops['id'] == $tInfo->id) ) {
+                      if (isset($tInfo) && is_object($tInfo) && $trustedshops['id'] == $tInfo->id) {
                         echo '              <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_TRUSTEDSHOPS, 'page=' . (int)$_GET['page'] . '&tID=' . $trustedshops['id'] . '&action=edit') . '\'">' . "\n";
                       } else {
                         echo '              <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_TRUSTEDSHOPS, 'page=' . (int)$_GET['page'] . '&tID=' . $trustedshops['id']) . '\'">' . "\n";
@@ -496,7 +496,7 @@ require (DIR_WS_INCLUDES.'head.php');
                       }
                       ?>
                     </td>
-                    <td class="dataTableContent txta-r"><?php if ( (is_object($tInfo)) && ($trustedshops['id'] == $tInfo->id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_TRUSTEDSHOPS, 'page=' . (int)$_GET['page'] . '&tID=' . $trustedshops['id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                    <td class="dataTableContent txta-r"><?php if (isset($tInfo) && is_object($tInfo) && $trustedshops['id'] == $tInfo->id) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_TRUSTEDSHOPS, 'page=' . (int)$_GET['page'] . '&tID=' . $trustedshops['id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
                   </tr>
                   <?php
                     }
