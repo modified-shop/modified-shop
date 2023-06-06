@@ -42,7 +42,7 @@ define('TEXT_BADGE_INSTRUCTION', 'You will find a step-by-step instruction for y
 define('TEXT_BADGE_CUSTOM_CODE', 'Fill in your trustbadge code here:');
 
 define('TEXT_PRODUCT_STICKER_API', 'Product Review API:');
-define('TEXT_PRODUCT_STICKER_API_INFO', 'With the product review API the reviews are imported into the store.'.((!defined('TABLE_SCHEDULED_TASKS')) ? '  For this it is necessary that a cronjob is created on URL '.HTTPS_SERVER.DIR_WS_CATALOG.'api/trustedshops/cronjob.php' : ''));
+define('TEXT_PRODUCT_STICKER_API_INFO', 'With the product review API the reviews are imported into the store.'.((!defined('TABLE_SCHEDULED_TASKS')) ? ' For this it is necessary that a cronjob is created on URL '.HTTPS_SERVER.DIR_WS_CATALOG.'api/trustedshops/cronjob.php' : ''));
 define('TEXT_PRODUCT_STICKER_API_CLIENT', 'Product Review API Client:');
 define('TEXT_PRODUCT_STICKER_API_SECRET', 'Product Review API Secret:');
 define('TEXT_PRODUCT_STICKER_STATUS', 'Product Review Widget Status:');
