@@ -90,7 +90,6 @@
     
     case 'insert':
     case 'save':
-      $tID = (int)$_GET['tID'];
       $trustedshops_id = xtc_db_prepare_input($_POST['trustedshops_id']);
       $languages_id = (int)$_POST['languages_id'];
       $trustbadge_variant = xtc_db_prepare_input($_POST['trustbadge_variant']);
@@ -150,6 +149,7 @@
         xtc_db_perform(TABLE_TRUSTEDSHOPS, $sql_data_array);
         $tID = xtc_db_insert_id();
       } elseif ($action == 'save') {
+        $tID = (int)$_GET['tID'];
         $update_sql_data = array('last_modified' => 'now()');
         $sql_data_array = array_merge($sql_data_array, $update_sql_data);
         xtc_db_perform(TABLE_TRUSTEDSHOPS, $sql_data_array, 'update', "id = '" . (int)$tID . "'");
@@ -442,7 +442,7 @@ require (DIR_WS_INCLUDES.'head.php');
               <!-- BOF Save block //-->
               <div style="clear:both;"></div>
               <div class="txta-r">
-                <?php echo xtc_button_link(BUTTON_CANCEL, xtc_href_link(FILENAME_TRUSTEDSHOPS, 'page=' . (int)$_GET['page'] . '&tID=' . (int)$_GET['tID'])) . '&nbsp;' . xtc_button(BUTTON_SAVE); ?>
+                <?php echo xtc_button_link(BUTTON_CANCEL, xtc_href_link(FILENAME_TRUSTEDSHOPS, 'page=' . (int)$_GET['page'] . ((isset($_GET['tID'] )) ? '&tID=' . (int)$_GET['tID'] : ''))) . '&nbsp;' . xtc_button(BUTTON_SAVE); ?>
               </div>
               <!-- EOF Save block //-->
             </div>
@@ -527,7 +527,7 @@ require (DIR_WS_INCLUDES.'head.php');
                       break;
 
                     default:
-                      if (is_object($tInfo)) {
+                      if (isset($tInfo) && is_object($tInfo)) {
                         $heading[] = array('text' => '<b>' . $tInfo->trustedshops_id . '</b>');
                         $contents[] = array('align' => 'center', 'text' => xtc_button_link(BUTTON_EDIT, xtc_href_link(FILENAME_TRUSTEDSHOPS, 'page=' . (int)$_GET['page'] . '&tID=' . $tInfo->id . '&action=edit')) . '&nbsp;' . xtc_button_link(BUTTON_DELETE, xtc_href_link(FILENAME_TRUSTEDSHOPS, 'page=' . (int)$_GET['page'] . '&tID=' . $tInfo->id . '&action=delete')));
                         $contents[] = array('text' => '<br />' . TEXT_DATE_ADDED . ' ' . xtc_date_short($tInfo->date_added));
