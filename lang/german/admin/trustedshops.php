@@ -42,7 +42,7 @@ define('TEXT_BADGE_INSTRUCTION', 'In unserem Integration Center finden Sie eine 
 define('TEXT_BADGE_CUSTOM_CODE', 'Trustbadge Code hier einf&uuml;gen:');
 
 define('TEXT_PRODUCT_STICKER_API', 'Produktbewertung API:');
-define('TEXT_PRODUCT_STICKER_API_INFO', 'Mit der Produktbewertung API werden die Bewertungen in den Shop importiert. Dazu ist es notwendig, dass ein Cronjob auf URL '.HTTPS_SERVER.DIR_WS_CATALOG.'api/trustedshops/cronjob.php erstellt wird.');
+define('TEXT_PRODUCT_STICKER_API_INFO', 'Mit der Produktbewertung API werden die Bewertungen in den Shop importiert.'.((!defined('TABLE_SCHEDULED_TASKS')) ? ' Dazu ist es notwendig, dass ein Cronjob auf URL '.HTTPS_SERVER.DIR_WS_CATALOG.'api/trustedshops/cronjob.php erstellt wird.' : ''));
 define('TEXT_PRODUCT_STICKER_API_CLIENT', 'Produktbewertung API Client:');
 define('TEXT_PRODUCT_STICKER_API_SECRET', 'Produktbewertung API Secret:');
 define('TEXT_PRODUCT_STICKER_STATUS', 'Produktbewertungs Widget Status:');

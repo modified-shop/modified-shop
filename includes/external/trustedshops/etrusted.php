@@ -11,12 +11,14 @@
    ---------------------------------------------------------------------------------------*/
 
 
+  // include needed classes
+  require_once (DIR_WS_CLASSES.'language.php');
+
   //include needed functions
   require_once(DIR_FS_EXTERNAL.'GuzzleHttp/functions_include.php');
   require_once(DIR_FS_EXTERNAL.'GuzzleHttp/Promise/functions_include.php');
   require_once(DIR_FS_EXTERNAL.'GuzzleHttp/Psr7/functions_include.php');
   require_once(DIR_FS_INC.'get_database_version.inc.php');
-
 
   // include needed defaults
   require_once(DIR_FS_EXTERNAL.'trustedshops/trustedshops.php');
@@ -71,7 +73,7 @@
       return $this->access_token;
     }
 
-    function getReviews($url = '') {
+    function getReviews($url = '', $migrate = false) {
       if ($url == '') {
         $url_array = array(
           'type' => 'PRODUCT_REVIEW',
@@ -97,39 +99,108 @@
           && count($response['items']) > 0
           )
       {
-        foreach ($response['items'] as $review) {                                      
+        if (!isset($lng) || (isset($lng) && !is_object($lng))) {
+          $lng = new language();
+        }
+
+        foreach ($response['items'] as $review) {
           $products_query = xtc_db_query("SELECT *
                                            FROM ".TABLE_PRODUCTS."
                                           WHERE products_model = '".xtc_db_input($review['product']['sku'])."'");
           if (xtc_db_num_rows($products_query) > 0) {
             $products = xtc_db_fetch_array($products_query);
-        
-            $author = constant('TEXT_GUEST_'.$this->language_id);
-            $customers_query = xtc_db_query("SELECT customers_firstname,
-                                                    customers_lastname
+            
+            $language_id = $this->language_id;
+            if (isset($review['questionnaire']) 
+                && isset($review['questionnaire']['locale'])
+                )
+            {
+              $language_code = substr($review['questionnaire']['locale'], 0, strpos($review['questionnaire']['locale'], '_'));
+              if (isset($lng->catalog_languages[$language_code])) {
+                $language = $lng->catalog_languages[$language_code];
+                $language_id = $language['id'];
+              }
+            }
+            
+            $customers_id = 0;
+            $author = constant('TEXT_GUEST_'.$language_id);
+
+            // customer
+            $customers_query = xtc_db_query("SELECT *
                                                FROM ".TABLE_CUSTOMERS."
                                               WHERE customers_email_address = '".xtc_db_input($review['customer']['email'])."'");
+          
+            // order
+            if (xtc_db_num_rows($customers_query) < 1) {
+              $customers_query = xtc_db_query("SELECT *
+                                                 FROM ".TABLE_ORDERS."
+                                                WHERE customers_email_address = '".xtc_db_input($review['customer']['email'])."'");
+            }
+          
+            // order
+            if (xtc_db_num_rows($customers_query) < 1
+                && isset($review['transaction'])
+                && isset($review['transaction']['reference'])
+                )
+            {
+              $customers_query = xtc_db_query("SELECT *
+                                                 FROM ".TABLE_ORDERS."
+                                                WHERE orders_id = '".xtc_db_input($review['transaction']['reference'])."'");
+            }
+
             if (xtc_db_num_rows($customers_query) > 0) {
               $customers = xtc_db_fetch_array($customers_query);
+              
+              $customers_id = $customers['customers_id'];
               $author = $customers['customers_firstname'].' '.$customers['customers_lastname'][0].'.';
             }
-        
-            $sql_data_array = array(
-              'products_id' => $products['products_id'],
-              'customers_name' => $author,
-              'reviews_rating' => $review['rating'],
-              'reviews_status' => 1,
-              'date_added' =>  'now()'
-            );        
-            xtc_db_perform(TABLE_REVIEWS, $sql_data_array);
-            $insert_id = xtc_db_insert_id();
 
-            $sql_data_array = array(
-              'reviews_id' => $insert_id,
-              'languages_id' => (int)$this->language_id,
-              'reviews_text' => decode_utf8($review['comment'])
-            );
-            xtc_db_perform(TABLE_REVIEWS_DESCRIPTION, $sql_data_array);
+            if ($migrate === true) {
+              $check_query = xtc_db_query("SELECT *  
+                                             FROM ".TABLE_REVIEWS."
+                                            WHERE customers_name = '".xtc_db_input($author)."'
+                                              AND products_id = '".(int)$products['products_id']."'
+                                              AND date_added = '".xtc_db_input(date('Y-m-d H:i:s', strtotime($review['createdAt'])))."'
+                                              AND customers_id = '".(int)$customers_id."'
+                                              AND external_id = ''");
+              if (xtc_db_num_rows($check_query) > 0) {
+                $check = xtc_db_fetch_array($check_query);
+            
+                $sql_data_array = array(
+                  'external_id' => xtc_db_prepare_input($review['id']),
+                  'external_source' => 'trustedshops',
+                );
+                xtc_db_perform(TABLE_REVIEWS, $sql_data_array, 'update', "reviews_id = '".(int)$check['reviews_id']."'");               
+              }
+            }
+
+            $check_query = xtc_db_query("SELECT r.*
+                                           FROM ".TABLE_REVIEWS." r
+                                           JOIN ".TABLE_PRODUCTS." p
+                                                ON r.products_id = p.products_id
+                                          WHERE r.products_id = '".(int)$products['products_id']."'
+                                            AND r.external_id = '".xtc_db_input($review['id'])."'
+                                            AND r.external_source = 'trustedshops'");
+            if (xtc_db_num_rows($check_query) < 1) {
+              $sql_data_array = array(
+                'products_id' => $products['products_id'],
+                'customers_id' => $customers_id,
+                'customers_name' => $author,
+                'reviews_rating' => $review['rating'],
+                'date_added' =>  date('Y-m-d H:i:s', strtotime($review['createdAt'])),
+                'external_id' => xtc_db_prepare_input($review['id']),
+                'external_source' => 'trustedshops',
+              );        
+              xtc_db_perform(TABLE_REVIEWS, $sql_data_array);
+              $insert_id = xtc_db_insert_id();
+
+              $sql_data_array = array(
+                'reviews_id' => $insert_id,
+                'languages_id' => (int)$language_id,
+                'reviews_text' => decode_utf8($review['comment'])
+              );
+              xtc_db_perform(TABLE_REVIEWS_DESCRIPTION, $sql_data_array);
+            }
           }
         }
         
@@ -138,7 +209,7 @@
             && isset($response['paging']['links']['next'])
             )
         {
-          $this->getReviews($response['paging']['links']['next']);
+          $this->getReviews($response['paging']['links']['next'], $migrate);
         }
       }
     }
