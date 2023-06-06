@@ -151,7 +151,7 @@ class trustedshops {
     $key = array('MODULE_TRUSTEDSHOPS_STATUS');
     
     if (defined('TABLE_SCHEDULED_TASKS')) {
-      $keys[] = 'MODULE_TRUSTEDSHOPS_SCHEDULED_TASKS';
+      $key[] = 'MODULE_TRUSTEDSHOPS_SCHEDULED_TASKS';
     }
 
     return $key;
