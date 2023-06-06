@@ -17,7 +17,7 @@ class trustedshops {
   var $code, $title, $description, $enabled;
 
   function __construct() {
-    $this->version = '1.14';
+    $this->version = '1.15';
     $this->code = 'trustedshops';
     $this->title = MODULE_TRUSTEDSHOPS_TEXT_TITLE;
     $this->description = MODULE_TRUSTEDSHOPS_TEXT_DESCRIPTION;
