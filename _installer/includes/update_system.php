@@ -154,6 +154,13 @@
     xtc_db_query("INSERT INTO " . TABLE_SCHEDULED_TASKS . " (time_regularity, time_unit, status, tasks) VALUES ('1', 'h',  '0', 'shopvote_import')");
   }
 
+  if (defined('MODULE_TRUSTEDSHOPS_STATUS') 
+      && MODULE_TRUSTEDSHOPS_STATUS == 'true'
+      )
+  {
+    xtc_db_query("INSERT INTO " . TABLE_SCHEDULED_TASKS . " (time_regularity, time_unit, status, tasks) VALUES ('1', 'h',  '0', 'trustedshops_import')");
+  }
+
   // delete invalid geo_zones
   xtc_db_query("DELETE z2gz 
                   FROM ".TABLE_ZONES_TO_GEO_ZONES." z2gz 
