@@ -38,6 +38,7 @@
     'api/easybill', 
     'api/easymarketing',
     'api/findologic',
+    'api/trustedshops',
     'callback/billpay',
     'callback/masterpayment',
     'callback/pn_sofortueberweisung',
