@@ -54,17 +54,17 @@
 
     $addCode = null;
     if (isset($site_error)) {
-      $addCode = getErrorGtag($site_error);
+      $addCode = getErrorGoogleAnalytics($site_error);
     } else {
       switch (basename($PHP_SELF)) {
         case FILENAME_CHECKOUT_SHIPPING:
-          $addCode = getCheckoutGtag();
+          $addCode = getCheckoutGoogleAnalytics();
           break;
         case FILENAME_CHECKOUT_PAYMENT:
-          $addCode = getShippingGtag();
+          $addCode = getShippingGoogleAnalytics();
           break;
         case FILENAME_CHECKOUT_CONFIRMATION:
-          $addCode = getPaymentGtag();
+          $addCode = getPaymentGoogleAnalytics();
           break;
         case FILENAME_CHECKOUT_SUCCESS:
           if (MODULE_GOOGLE_ANALYTICS_ECOMMERCE == 'true'
@@ -72,33 +72,33 @@
               )
           {
             $_SESSION['tracking']['order'][] = 'GTAG-'.$last_order;
-            $addCode = getOrderDetailsGtag();
+            $addCode = getOrderDetailsGoogleAnalytics();
             
             if (MODULE_GOOGLE_ANALYTICS_ADS_CONVERSION_ID != '') {
-              $addCode .= getConversionGtag();
+              $addCode .= getConversionGoogleAnalytics();
             }
           }
           break;
         case FILENAME_SHOPPING_CART:
-          $addCode = getCartDetailsGtag();
+          $addCode = getCartDetailsGoogleAnalytics();
           break;
         case FILENAME_PRODUCT_INFO:
-          $addCode = getProductDetailsGtag();
+          $addCode = getProductDetailsGoogleAnalytics();
           break;
         case FILENAME_DEFAULT:
           if ((isset($_GET['cPath']) && $_GET['cPath'] != '')
               || (isset($_GET['manufacturers_id']) && $_GET['manufacturers_id'] != '')
               )
           {
-            $addCode = getListingDetailsGtag();
+            $addCode = getListingDetailsGoogleAnalytics();
           } else {
-            $addCode = getStartpageGtag();
+            $addCode = getStartpageGoogleAnalytics();
           }
           break;
         case FILENAME_SPECIALS:
         case FILENAME_PRODUCTS_NEW:
         case FILENAME_ADVANCED_SEARCH_RESULT:
-          $addCode = getListingDetailsGtag();
+          $addCode = getListingDetailsGoogleAnalytics();
           break;
       }
     }
@@ -109,7 +109,7 @@
   /*
    * FUNCTIONS
    */
-  function getStartpageGtag() {
+  function getStartpageGoogleAnalytics() {
     $addCode = "
   gtag('event', 'view_home');";
 
@@ -117,7 +117,7 @@
   }
 
 
-  function getErrorGtag($site_error) {
+  function getErrorGoogleAnalytics($site_error) {
     $addCode = "
   gtag('event', 'view_error', {
     error: '".$site_error."'
@@ -127,14 +127,14 @@
   }
 
 
-  function getProductDetailsGtag() {
+  function getProductDetailsGoogleAnalytics() {
     global $product, $xtPrice;
 
     $addCode = "
   gtag('event', 'view_item', {
     currency: '".$_SESSION['currency']."',
-    value: ".numberFormatGtag($xtPrice->xtcGetPrice($product->data['products_id'], false, 1, $product->data['products_tax_class_id'])).",
-    items: [".getItemDetailsGtag($product->data, false)."
+    value: ".numberFormatGoogleAnalytics($xtPrice->xtcGetPrice($product->data['products_id'], false, 1, $product->data['products_tax_class_id'])).",
+    items: [".getItemDetailsGoogleAnalytics($product->data)."
     ]
   });";
 
@@ -142,7 +142,7 @@
   }
 
 
-  function getListingDetailsGtag() {
+  function getListingDetailsGoogleAnalytics() {
     $split_obj = array('listing_split', 'specials_split', 'products_new_split');
     foreach ($split_obj as $object) {
       global ${$object};
@@ -155,7 +155,7 @@
       $products_array = array();
       $listing_query = xtDBquery(${$object}->sql_query);
       while ($listing = xtc_db_fetch_array($listing_query, true)) {
-        $products_array[] = getItemDetailsGtag($listing, false);
+        $products_array[] = getItemDetailsGoogleAnalytics($listing);
       }
 
       $addCode = "
@@ -175,18 +175,18 @@
   }
 
 
-  function getCartDetailsGtag() {
+  function getCartDetailsGoogleAnalytics() {
     if ($_SESSION['cart']->count_contents() > 0) {
       $products_array = array();
       $products = $_SESSION['cart']->get_products();
       for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
-        $products_array[] = getItemDetailsGtag($products[$i]);
+        $products_array[] = getItemDetailsGoogleAnalytics($products[$i]);
       }
 
       $addCode = "
   gtag('event', 'view_cart', {
     currency: '".$_SESSION['currency']."',
-    value: ".numberFormatGtag($_SESSION['cart']->show_total()).",
+    value: ".numberFormatGoogleAnalytics($_SESSION['cart']->show_total()).",
     items: [".implode(',', $products_array)."
     ]
   });";
@@ -196,20 +196,20 @@
   }
 
 
-  function getCheckoutGtag() {
+  function getCheckoutGoogleAnalytics() {
     global $order;
 
     if (count($order->products) > 0) {
       $products_array = array();
       $products = $order->products;
       for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
-        $products_array[] = getItemDetailsGtag($products[$i]);
+        $products_array[] = getItemDetailsGoogleAnalytics($products[$i]);
       }
 
       $addCode = "
   gtag('event', 'begin_checkout', {
     currency: '".$_SESSION['currency']."',
-    value: ".numberFormatGtag($_SESSION['cart']->show_total()).",
+    value: ".numberFormatGoogleAnalytics($_SESSION['cart']->show_total()).",
     items: [".implode(',', $products_array)."
     ]
   });";
@@ -219,20 +219,20 @@
   }
 
 
-  function getShippingGtag() {
+  function getShippingGoogleAnalytics() {
     global $order;
 
     if (count($order->products) > 0) {
       $products_array = array();
       $products = $order->products;
       for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
-        $products_array[] = getItemDetailsGtag($products[$i]);
+        $products_array[] = getItemDetailsGoogleAnalytics($products[$i]);
       }
 
       $addCode = "
   gtag('event', 'add_shipping_info', {
     currency: '".$order->info['currency']."',
-    value: ".numberFormatGtag($order->info['total']).",
+    value: ".numberFormatGoogleAnalytics($order->info['total']).",
     shipping_tier: '".$order->info['shipping_class']."',
     items: [".implode(',', $products_array)."
     ]
@@ -243,20 +243,20 @@
   }
 
 
-  function getPaymentGtag() {
+  function getPaymentGoogleAnalytics() {
     global $order;
 
     if (count($order->products) > 0) {
       $products_array = array();
       $products = $order->products;
       for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
-        $products_array[] = getItemDetailsGtag($products[$i]);
+        $products_array[] = getItemDetailsGoogleAnalytics($products[$i]);
       }
 
       $addCode = "
   gtag('event', 'add_payment_info', {
     currency: '".$order->info['currency']."',
-    value: ".numberFormatGtag($order->info['total']).",
+    value: ".numberFormatGoogleAnalytics($order->info['total']).",
     payment_type: '".$order->info['payment_class']."',
     items: [".implode(',', $products_array)."
     ]
@@ -267,7 +267,7 @@
   }
 
 
-  function getOrderDetailsGtag() {
+  function getOrderDetailsGoogleAnalytics() {
     global $last_order;
 
     require_once (DIR_WS_CLASSES . 'order.php');
@@ -276,16 +276,16 @@
     $addItem = array();
     $products = $order->products;
     for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
-      $addItem[] = getItemDetailsGtag($products[$i]);
+      $addItem[] = getItemDetailsGoogleAnalytics($products[$i]);
     }
 
     $addCode = "
   gtag('event', 'purchase', {
     transaction_id: '".$order->info['orders_id']."',
     currency: '".$order->info['currency']."',
-    value: ".numberFormatGtag($order->info['pp_total']).",
-    tax: ".numberFormatGtag($order->info['pp_tax']).",
-    shipping: ".numberFormatGtag($order->info['pp_shipping']).",
+    value: ".numberFormatGoogleAnalytics($order->info['pp_total']).",
+    tax: ".numberFormatGoogleAnalytics($order->info['pp_tax']).",
+    shipping: ".numberFormatGoogleAnalytics($order->info['pp_shipping']).",
     items: [".implode(',', $addItem)."
     ]
   });";
@@ -294,7 +294,7 @@
   }
 
 
-  function getConversionGtag() {
+  function getConversionGoogleAnalytics() {
     global $last_order;
 
     require_once (DIR_WS_CLASSES . 'order.php');
@@ -305,14 +305,14 @@
     send_to: '".MODULE_GOOGLE_ANALYTICS_ADS_CONVERSION_ID."',
     transaction_id: '".$order->info['orders_id']."',
     currency: '".$order->info['currency']."',
-    value: ".numberFormatGtag($order->info['pp_total'])."
+    value: ".numberFormatGoogleAnalytics($order->info['pp_total'])."
   });";
   
     return $addCode;
   }
 
 
-  function getItemDetailsGtag($data, $quantity = true) {
+  function getItemDetailsGoogleAnalytics($data) {
     global $xtPrice, $PHP_SELF;
 
     $item = array();
@@ -332,14 +332,14 @@
       {
         item_id: '".addslashes($item['model'])."',
         item_name: '".addslashes($item['name'])."',
-        price: ".numberFormatGtag($item['price']).",
-        quantity: ".(($quantity === true && isset($item['quantity']) && $item['quantity'] > 0) ? $item['quantity'] : 1)."
+        price: ".numberFormatGoogleAnalytics($item['price']).",
+        quantity: ".((isset($item['quantity']) && $item['quantity'] > 0) ? $item['quantity'] : 1)."
       }";
 
     return $item_data;
   }
 
 
-  function numberFormatGtag($price) {
+  function numberFormatGoogleAnalytics($price) {
     return number_format($price, 2, '.', '');
   }
