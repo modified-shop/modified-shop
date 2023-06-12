@@ -105,7 +105,6 @@ class trustedshops {
 
     // check scheduled tasks
     if (defined('TABLE_SCHEDULED_TASKS')) {
-      xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_TRUSTEDSHOPS_SCHEDULED_TASKS', 'true',  '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
       $check_query = xtc_db_query("SELECT *
                                      FROM ".TABLE_SCHEDULED_TASKS."
                                     WHERE tasks = 'trustedshops_import'");
@@ -149,12 +148,7 @@ class trustedshops {
 
   function keys() {
     $key = array('MODULE_TRUSTEDSHOPS_STATUS');
-    
-    if (defined('TABLE_SCHEDULED_TASKS')) {
-      $key[] = 'MODULE_TRUSTEDSHOPS_SCHEDULED_TASKS';
-    }
 
     return $key;
   }
 }
-?>
