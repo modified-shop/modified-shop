@@ -165,12 +165,36 @@
                        WHERE languages_id = '" . $languages['languages_id'] . "'
                          AND id != '" . $tID . "'"); 
       }
+
+      // scheduled tasks
+      if (defined('TABLE_SCHEDULED_TASKS')) {
+        $check_query = xtc_db_query("SELECT *
+                                       FROM ".TABLE_TRUSTEDSHOPS."
+                                      WHERE product_sticker_api = 1");
+        
+        xtc_db_query("UPDATE ".TABLE_SCHEDULED_TASKS."
+                         SET status = '".((xtc_db_num_rows($check_query) > 0) ? 1 : 0)."'
+                       WHERE tasks = 'trustedshops_import'");
+      }
+      
       xtc_redirect(xtc_href_link(FILENAME_TRUSTEDSHOPS, 'page=' . (int)$_GET['page'] . '&tID=' . $tID));
       break;
 
     case 'deleteconfirm':
       $tID = xtc_db_prepare_input($_GET['tID']);
       xtc_db_query("DELETE FROM " . TABLE_TRUSTEDSHOPS . " WHERE id = '" . (int)$tID . "'");
+
+      // scheduled tasks
+      if (defined('TABLE_SCHEDULED_TASKS')) {
+        $check_query = xtc_db_query("SELECT *
+                                       FROM ".TABLE_TRUSTEDSHOPS."
+                                      WHERE product_sticker_api = 1");
+        if (xtc_db_num_rows($check_query) < 1) {
+          xtc_db_query("UPDATE ".TABLE_SCHEDULED_TASKS."
+                           SET status = '0'
+                         WHERE tasks = 'trustedshops_import'");
+        }
+      }
 
       xtc_redirect(xtc_href_link(FILENAME_TRUSTEDSHOPS, 'page=' . (int)$_GET['page']));
       break;
