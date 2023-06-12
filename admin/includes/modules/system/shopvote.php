@@ -28,6 +28,15 @@ class shopvote
 
     function process($file) 
     {
+        if (isset($_POST['configuration'])
+            && isset($_POST['configuration']['MODULE_SHOPVOTE_SCHEDULED_TASKS'])
+            )
+        {
+          xtc_db_query("UPDATE ".TABLE_SCHEDULED_TASKS."
+                           SET status = '".(($_POST['configuration']['MODULE_SHOPVOTE_SCHEDULED_TASKS'] == 'true') ? 1 : 0)."'
+                         WHERE tasks = 'shopvote_import'");
+        }
+
         if (is_array($_POST['configuration'])
             && count($_POST['configuration']) > 0
             )
