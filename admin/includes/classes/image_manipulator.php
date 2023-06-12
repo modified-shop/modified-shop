@@ -23,10 +23,10 @@
   class image_manipulation {
     var $effects_disabled = false; 
     function __construct($resource_file, $max_width, $max_height, $destination_file="", $compression=IMAGE_QUALITY, $transform="") {
-      $this->a = $this->correctImageOrientation($resource_file);  // image to be thumbnailed
+      $this->a = $this->correctImageOrientation($resource_file);
       $this->c = $transform;
-      $this->d = $destination_file;  // thumbnail saved to
-		  $this->e = (((int)$compression != 0) ? (int)$compression : 80);	// compression ration for jpeg thumbnails
+      $this->d = $destination_file;
+		  $this->e = (((int)$compression != 0) ? (int)$compression : 80);
       $this->m = (int)$max_width;
       $this->n = (int)$max_height;
       $this->compile();
