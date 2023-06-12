@@ -170,7 +170,8 @@
       if (defined('TABLE_SCHEDULED_TASKS')) {
         $check_query = xtc_db_query("SELECT *
                                        FROM ".TABLE_TRUSTEDSHOPS."
-                                      WHERE product_sticker_api = 1");
+                                      WHERE product_sticker_api = 1
+                                        AND status = 1");
         
         xtc_db_query("UPDATE ".TABLE_SCHEDULED_TASKS."
                          SET status = '".((xtc_db_num_rows($check_query) > 0) ? 1 : 0)."'
@@ -188,7 +189,8 @@
       if (defined('TABLE_SCHEDULED_TASKS')) {
         $check_query = xtc_db_query("SELECT *
                                        FROM ".TABLE_TRUSTEDSHOPS."
-                                      WHERE product_sticker_api = 1");
+                                      WHERE product_sticker_api = 1
+                                        AND status = 1");
         if (xtc_db_num_rows($check_query) < 1) {
           xtc_db_query("UPDATE ".TABLE_SCHEDULED_TASKS."
                            SET status = '0'
