@@ -172,6 +172,13 @@
     xtc_db_query("INSERT INTO " . TABLE_SCHEDULED_TASKS . " (time_regularity, time_unit, status, tasks) VALUES ('1', 'h',  '".((xtc_db_num_rows($check_query) > 0) ? 1 : 0)."', 'trustedshops_import')");
   }
 
+  if (defined('MODULE_AVALEX_STATUS')
+      && !in_array('avalex_update', $scheduled_tasks_array)
+      )
+  {
+    xtc_db_query("INSERT INTO " . TABLE_SCHEDULED_TASKS . " (time_regularity, time_unit, status, tasks) VALUES ('1', 'h',  '".((MODULE_AVALEX_STATUS == 'True') ? 1 : 0)."', 'avalex_update')");
+  }
+
   // delete invalid geo_zones
   xtc_db_query("DELETE z2gz 
                   FROM ".TABLE_ZONES_TO_GEO_ZONES." z2gz 
