@@ -55,7 +55,5 @@
   define('TEXT_HEADING_TASKS_EXPORT_SITEMAP', 'Sitemap erstellen');
   define('TEXT_INFO_TASKS_EXPORT_SITEMAP', 'Die Sitemap wird neu erstellt');
 
-  define('TEXT_HEADING_TASKS_IMAGE_PROCESS_PRODUCTS', 'Bilder Prozessing - Artikel');
-  define('TEXT_HEADING_TASKS_IMAGE_PROCESS_CATEGORIES', 'Bilder Prozessing - Kategorien');
-  define('TEXT_HEADING_TASKS_IMAGE_PROCESS_MANUFACTURERS', 'Bilder Prozessing - Hersteller');
-  define('TEXT_HEADING_TASKS_IMAGE_PROCESS_BANNERS', 'Bilder Prozessing - Banner');
+  define('TEXT_HEADING_TASKS_ADMINLOG_MAINTENANCE', 'Admin Log');
+  define('TEXT_INFO_TASKS_ADMINLOG_MAINTENANCE', 'Admin Log bereinigen');
