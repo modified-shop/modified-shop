@@ -140,25 +140,36 @@
                    AND configuration_value = 'standard'");
 
   // scheduled task
-  if (defined('MODULE_SITEMAPORG_STATUS') 
-      && MODULE_SITEMAPORG_STATUS == 'True'
+  $scheduled_tasks_array = array();
+  $scheduled_query = xtc_db_query("SELECT *
+                                     FROM ".TABLE_SCHEDULED_TASKS);
+  while ($scheduled = xtc_db_fetch_array($scheduled_query)) {
+    $scheduled_tasks_array[] = $scheduled['tasks'];
+  }
+  
+  if (defined('MODULE_SITEMAPORG_STATUS')
+      && !in_array('export_sitemap', $scheduled_tasks_array)
       )
   {
-    xtc_db_query("INSERT INTO " . TABLE_SCHEDULED_TASKS . " (time_regularity, time_unit, status, tasks) VALUES ('1', 'd',  '0', 'export_sitemap')");
+    xtc_db_query("INSERT INTO " . TABLE_SCHEDULED_TASKS . " (time_regularity, time_unit, status, tasks) VALUES ('1', 'd',  '".((MODULE_SITEMAPORG_STATUS == 'True') ? 1 : 0)."', 'export_sitemap')");
   }
 
-  if (defined('MODULE_SHOPVOTE_STATUS') 
-      && MODULE_SHOPVOTE_STATUS == 'true'
+  if (defined('MODULE_SHOPVOTE_STATUS')
+      && !in_array('shopvote_import', $scheduled_tasks_array)
       )
   {
-    xtc_db_query("INSERT INTO " . TABLE_SCHEDULED_TASKS . " (time_regularity, time_unit, status, tasks) VALUES ('1', 'h',  '0', 'shopvote_import')");
+    xtc_db_query("INSERT INTO " . TABLE_SCHEDULED_TASKS . " (time_regularity, time_unit, status, tasks) VALUES ('1', 'h',  '".((MODULE_SHOPVOTE_STATUS == 'true') ? 1 : 0)."', 'shopvote_import')");
   }
 
-  if (defined('MODULE_TRUSTEDSHOPS_STATUS') 
-      && MODULE_TRUSTEDSHOPS_STATUS == 'true'
+  if (defined('MODULE_TRUSTEDSHOPS_STATUS')
+      && !in_array('trustedshops_import', $scheduled_tasks_array)
       )
   {
-    xtc_db_query("INSERT INTO " . TABLE_SCHEDULED_TASKS . " (time_regularity, time_unit, status, tasks) VALUES ('1', 'h',  '0', 'trustedshops_import')");
+    $check_query = xtc_db_query("SELECT *
+                                   FROM ".TABLE_TRUSTEDSHOPS."
+                                  WHERE product_sticker_api = 1
+                                    AND status = 1");
+    xtc_db_query("INSERT INTO " . TABLE_SCHEDULED_TASKS . " (time_regularity, time_unit, status, tasks) VALUES ('1', 'h',  '".((xtc_db_num_rows($check_query) > 0) ? 1 : 0)."', 'trustedshops_import')");
   }
 
   // delete invalid geo_zones
