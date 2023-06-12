@@ -30,6 +30,15 @@
     }
 
     function process($file) {
+      if (isset($_POST['configuration'])
+          && isset($_POST['configuration']['MODULE_AVALEX_STATUS'])
+          )
+      {
+        xtc_db_query("UPDATE ".TABLE_SCHEDULED_TASKS."
+                         SET status = '".(($_POST['configuration']['MODULE_AVALEX_STATUS'] == 'True') ? 1 : 0)."'
+                       WHERE tasks = 'avalex_update'");
+      }
+
       if ($this->enabled === true 
           && isset($_POST['import']) 
           && $_POST['import'] == 'yes'
@@ -47,7 +56,7 @@
                               xtc_draw_radio_field('import', 'yes', false).YES.'<br>'.
 
                              '<br /><div align="center">' . xtc_button('OK') .
-                              xtc_button_link(BUTTON_CANCEL, xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $_GET['set'] . '&module=protectedshops')) . "</div>");
+                              xtc_button_link(BUTTON_CANCEL, xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $_GET['set'] . '&module=avalex')) . "</div>");
     }
 
     function check() {
@@ -89,10 +98,24 @@
         xtc_db_query("UPDATE `" . TABLE_ADMIN_ACCESS . "` SET `avalex` = 9 WHERE `customers_id`='groups'");
       }
 
+      // check scheduled tasks
+      if (defined('TABLE_SCHEDULED_TASKS')) {
+        $check_query = xtc_db_query("SELECT *
+                                       FROM ".TABLE_SCHEDULED_TASKS."
+                                      WHERE tasks = 'avalex_update'");
+        if (xtc_db_num_rows($check_query) < 1) {                      
+          xtc_db_query("INSERT INTO " . TABLE_SCHEDULED_TASKS . " (time_regularity, time_unit, status, tasks) VALUES ('1', 'h',  '0', 'avalex_update')");
+        }
+      }
     }
 
     function remove() {
       xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key IN ('" . implode("', '", $this->keys()) . "')");
+
+      // scheduled task
+      if (defined('TABLE_SCHEDULED_TASKS')) {
+        xtc_db_query("DELETE FROM " . TABLE_SCHEDULED_TASKS . " WHERE tasks = 'avalex_update'");
+      }
     }
 
     function keys() {
