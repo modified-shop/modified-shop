@@ -29,7 +29,7 @@ class admin_log {
         )
     {
       xtc_db_query("UPDATE ".TABLE_SCHEDULED_TASKS."
-                       SET status = '".(($_POST['configuration']['MODULE_ADMIN_LOG_SCHEDULED_TASKS'] == 'true' && (int)$_POST['configuration']['MODULE_ADMIN_LOG_SCHEDULED_TASKS'] > 0) ? 1 : 0)."'
+                       SET status = '".(($_POST['configuration']['MODULE_ADMIN_LOG_SCHEDULED_TASKS'] == 'true' && (int)$_POST['configuration']['MODULE_ADMIN_LOG_TRESHOLD_DAYS'] > 0) ? 1 : 0)."'
                      WHERE tasks = 'adminlog_maintenance'");
     }
   }
