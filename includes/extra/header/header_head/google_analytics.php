@@ -134,7 +134,7 @@
   gtag('event', 'view_item', {
     currency: '".$_SESSION['currency']."',
     value: ".numberFormatGtag($xtPrice->xtcGetPrice($product->data['products_id'], false, 1, $product->data['products_tax_class_id'])).",
-    items: [".getItemDetailsGtag($product->data)."
+    items: [".getItemDetailsGtag($product->data, false)."
     ]
   });";
 
@@ -155,7 +155,7 @@
       $products_array = array();
       $listing_query = xtDBquery(${$object}->sql_query);
       while ($listing = xtc_db_fetch_array($listing_query, true)) {
-        $products_array[] = getItemDetailsGtag($listing);
+        $products_array[] = getItemDetailsGtag($listing, false);
       }
 
       $addCode = "
@@ -312,7 +312,7 @@
   }
 
 
-  function getItemDetailsGtag($data) {
+  function getItemDetailsGtag($data, $quantity = true) {
     global $xtPrice, $PHP_SELF;
 
     $item = array();
@@ -333,7 +333,7 @@
         item_id: '".addslashes($item['model'])."',
         item_name: '".addslashes($item['name'])."',
         price: ".numberFormatGtag($item['price']).",
-        quantity: ".((isset($item['quantity']) && $item['quantity'] > 0) ? $item['quantity'] : 1)."
+        quantity: ".(($quantity === true && isset($item['quantity']) && $item['quantity'] > 0) ? $item['quantity'] : 1)."
       }";
 
     return $item_data;
