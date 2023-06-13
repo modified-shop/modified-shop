@@ -106,6 +106,13 @@ abstract class MarketplaceCategoryMatching {
 		if (!is_array($categories['DATA']) || empty($categories['DATA'])) {
 			return false;
 		}
+		// Field 'CategoryPath' doesn't have a default value
+		foreach ($categories['DATA'] as $curRowNumber => $curRow) {
+			if (array_key_exists('CategoryPath', $curRow)) break;
+			$categories['DATA'][$curRowNumber]['CategoryPath'] = '';
+		}
+		unset($curRowNumber);
+		unset($curRow);
 		// echo print_m($categories);
 		# Cast both to string because PHP thinks 'X' == 0 is true.
 		if ($parentID.'' == (0).'') {

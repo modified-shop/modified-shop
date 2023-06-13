@@ -22,4 +22,4 @@ require(DIR_MAGNALISTER_MODULES.'magnacompatible/config.php');
 $mpconfig['pages']['conf']['class'] = 'EtsyConfigure';
 $mpconfig['pages']['prepare']['class'] = 'EtsyPrepare';
 $mpconfig['pages']['errorlog']['class'] = 'EtsyErrorLog';
-$mpconfig['auth']['authkeys'] = array('username', 'password', 'shop.language');
+//$mpconfig['auth']['authkeys'] = array('username', 'password', 'shop.language');

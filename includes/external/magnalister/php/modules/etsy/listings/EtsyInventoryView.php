@@ -311,27 +311,30 @@ class EtsyInventoryView extends MagnaCompatibleInventoryView {
 
 	protected function getItemStatus($item) {
 		switch($item['Status']) {
-			case 'add': {
-				$sStatus = ML_GENERIC_INVENTORY_STATUS_PENDING_NEW;
-				break;
-			}
-			case 'update': {
-				$sStatus = ML_GENERIC_INVENTORY_STATUS_PENDING_UPDATE;
-				break;
-			}
-			case 'inactive': {
-				$sStatus = ML_GENERIC_INVENTORY_STATUS_INACTIVE;
-				break;
-			}
-			case 'expired': {
-				$sStatus = ML_GENERIC_INVENTORY_STATUS_EXPIRED;
-				break;
-			}
-			case 'active':
-			default: {
-				$sStatus = ML_GENERIC_INVENTORY_STATUS_ACTIVE;
-				break;
-			}
+            case 'add': {
+                $sStatus = ML_GENERIC_INVENTORY_STATUS_PENDING_NEW;
+                break;
+            }
+            case 'active': {
+                $sStatus = ML_GENERIC_INVENTORY_STATUS_ACTIVE;
+                break;
+            }
+            case 'inactive': {
+                $sStatus = ML_GENERIC_INVENTORY_STATUS_INACTIVE;
+                break;
+            }
+            case 'expired': {
+                $sStatus = ML_GENERIC_INVENTORY_STATUS_EXPIRED;
+                break;
+            }
+            case 'draft': {
+                $sStatus = ML_GENERIC_INVENTORY_STATUS_DRAFT;
+                break;
+            }
+            case 'sold_out': {
+                $sStatus = ML_GENERIC_INVENTORY_STATUS_SOLD_OUT;
+                break;
+            }
 		}
 		return '<td>'.$sStatus.'</td>';
 	}

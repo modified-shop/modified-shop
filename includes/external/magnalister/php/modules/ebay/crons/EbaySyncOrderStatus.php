@@ -40,6 +40,9 @@ class EbaySyncOrderStatus extends MagnaCompatibleSyncOrderStatus {
         }
 		$this->confirmationResponseField = 'DATA';
 		$this->sizeOfBatch = 256;
+            if (($hp = magnaContribVerify('EbaySyncOrderStatus_beforeSyncOrderStatus', 1)) !== false) {
+                 require($hp);
+            } 
 	}
 	
 	/**

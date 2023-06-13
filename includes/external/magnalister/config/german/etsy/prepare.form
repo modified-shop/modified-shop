@@ -66,9 +66,9 @@
                 "type": "selection",
                 "values": null
             },
-            "shippingtemplate" : {
+            "shippingprofile" : {
                 "label": "Etsy Versandgruppe",
-                "key": "_#_platform_#_.ShippingTemplate",
+                "key": "_#_platform_#_.ShippingProfile",
                 "type": "selection",
                 "desc": "Die Etsy Versandgruppen enthalten Angaben zum Versand:<br \/><ul><li>Land, aus dem Sie versenden,<\/li><li>Land oder Region, in die Sie versenden,<\/li><li>Versandkosten bei Einzellieferung,<\/li><li>Versandkosten wenn der Artikel zusammen mit anderen versendet wird.<\/li><\/ul><br \/>Die Angabe des Versanddienstleisters ist nicht vorgesehen.",
                 "values": null

@@ -88,6 +88,12 @@ class Check24ProductSaver {
 		if ($aItemDetails['ShippingCost'] === '') {
 			$aRow['Verified'] = 'ERROR';
 			$this->addToErrorLog(ML_CHECK24_ERROR_SHIPPING_COST, $aRow['products_model']);
+		} else if (!is_numeric($aItemDetails['ShippingCost'])) {
+			$aItemDetails['ShippingCost'] = trim(str_replace(',', '.', $aItemDetails['ShippingCost']));
+			if (!is_numeric($aItemDetails['ShippingCost'])) {
+				$aRow['Verified'] = 'ERROR';
+				$this->addToErrorLog(ML_CHECK24_ERROR_SHIPPING_COST, $aRow['products_model']);
+			}
 		}
 		
 		$aRow['ShippingCost'] = $aItemDetails['ShippingCost'];

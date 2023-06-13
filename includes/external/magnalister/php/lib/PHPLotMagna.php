@@ -169,7 +169,10 @@ $deg :: 0
 		$this->image_height *= $factor;
 		
 		$this->img = ImageCreate($this->image_width, $this->image_height);
-		if (!is_resource($this->img)) {
+		if (    !is_resource($this->img)
+		     && (!class_exists('GdImage') || !($this->img instanceof GdImage))//PHP 8
+
+		) {
 			return $this->PrintError('PHPlot(): Could not create image resource.');
 		}
 		

@@ -29,6 +29,7 @@ class HitmeisterSummaryView extends MagnaCompatibleSummaryView {
 	protected $useShippingtimeMatching = false;
 	protected $defaultShippingtime = '';
 	protected $shippingtimeMatching = array();
+	protected $handlingtimeMatching = array();
 	
 	public function __construct($settings = array()) {
 		parent::__construct($settings);
@@ -39,6 +40,7 @@ class HitmeisterSummaryView extends MagnaCompatibleSummaryView {
 		
 		$this->defaultShippingtime  = getDBConfigValue($this->marketplace.'.shippingtime', $this->mpID, 0); 
 		$this->shippingtimeMatching = getDBConfigValue($this->marketplace.'.shippingtimematching.values', $this->mpID, array()); 
+		$this->handlingtimeMatching = getDBConfigValue($this->marketplace.'.handlingtimematching.values', $this->mpID, array()); 
 		$this->useShippingtimeMatching = getDBConfigValue(array($this->marketplace.'.shippingtimematching.prefer', 'val'), $this->mpID, false); 
 		
 		if (!is_array($this->shippingtimeMatching) || empty($this->shippingtimeMatching)) {
@@ -61,7 +63,7 @@ class HitmeisterSummaryView extends MagnaCompatibleSummaryView {
 		(MagnaDB::gi()->columnExistsInTable('products_shippingtime', TABLE_PRODUCTS)
 		? ' p.products_shippingtime, '
 		: '\' '.getDBConfigValue($this->marketplace.'.shippingtime', $this->mpID, 0).'\' AS `p.products_shippingtime`, ').
-							'hp.MarketplaceCategories, hp.MarketplaceCategoriesName, hp.ConditionType, hp.ShippingTime, '.
+							'hp.MarketplaceCategories, hp.MarketplaceCategoriesName, hp.ConditionType, hp.ShippingTime, hp.HandlingTime, '.
 							'hp.Comment
 		              ';
 		$addFrom   = 'LEFT JOIN '.TABLE_MAGNA_HITMEISTER_PREPARE.' hp ON (
@@ -93,7 +95,7 @@ class HitmeisterSummaryView extends MagnaCompatibleSummaryView {
 	}
 
 	protected function getAdditionalHeadlines() {
-		return parent::getAdditionalHeadlines().'<td>Versanddauer</td>';
+		return parent::getAdditionalHeadlines().'<td>Lieferzeit</td><td>Bearbeitungszeit</td>';
 	}
 	
 	protected function getAdditionalItemCells($key, $dbRow) {
@@ -106,7 +108,13 @@ class HitmeisterSummaryView extends MagnaCompatibleSummaryView {
 		if (!array_key_exists($shippingTime, $this->shippingTimes)) {
 			$shippingTime = $this->defaultShippingtime;
 		}
+		$handlingTime = 
+			($this->useShippingtimeMatching || $dbRow['ShippingTime'] === 'm') && array_key_exists($dbRow['products_shippingtime'], $this->handlingtimeMatching)
+			? $this->handlingtimeMatching[$dbRow['products_shippingtime']]
+			: $dbRow['HandlingTime']
+		;
 		$html = '<td>'.$this->shippingTimes[$shippingTime].'</td>';
+		$html .= '<td>'.$handlingTime.'</td>';
 
 		return parent::getAdditionalItemCells($key, $dbRow).$html;
 	}

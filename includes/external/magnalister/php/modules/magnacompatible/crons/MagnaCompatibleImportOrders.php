@@ -588,6 +588,8 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 		} else if (function_exists('tep_encrypt_password')) {
 			$this->o['customer']['customers_password'] = tep_encrypt_password($customer['Password']);
 		}
+        MagnaDB::gi()->validateDataLength($this->o['customer'], TABLE_CUSTOMERS);
+		MagnaDB::gi()->addNonNullableEntries($this->o['customer'], TABLE_CUSTOMERS);
 		$this->insert(TABLE_CUSTOMERS, $this->o['customer']);
 		$cupdate = array();
 
@@ -651,6 +653,8 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 		$this->o['adress']['customers_id'] = $customer['ID'];
 		$this->o['adress']['entry_country_id'] = $this->cur['BuyerCountry']['ID'];
 
+        MagnaDB::gi()->validateDataLength($this->o['adress'], TABLE_ADDRESS_BOOK);
+		MagnaDB::gi()->addNonNullableEntries($this->o['adress'], TABLE_ADDRESS_BOOK);
 		$this->insert(TABLE_ADDRESS_BOOK, $this->o['adress']);
 
 		# Adressbuchdatensatz-Id herausfinden.
@@ -695,6 +699,8 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 			unset($this->o['adress']['address_date_added']);
 		}
 		$this->o['adress']['entry_country_id'] = $this->cur['BuyerCountry']['ID'];
+
+        MagnaDB::gi()->validateDataLength($this->o['adress'], TABLE_ADDRESS_BOOK);
 		$this->db->update(TABLE_ADDRESS_BOOK, $this->o['adress'], array (
 			'customers_id' => $this->cur['customer']['ID'],
 		));
@@ -943,7 +949,7 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 		// set currency_value
 		$this->o['order']['currency_value'] = $this->allCurrencies[$this->o['order']['currency']];
 
-		
+
 		$this->doInsertOrder();
 		# Statuseintrag fuer Historie vornehmen.
 		$this->o['orderStatus']['orders_id'] = $this->cur['OrderID'];
@@ -989,6 +995,8 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
                 ");
 		$this->o['order']['campaign'] = '';
 		$this->o['order']['ibn_billdate'] = '0000-00-00';
+        MagnaDB::gi()->validateDataLength($this->o['order'], TABLE_ORDERS);
+        MagnaDB::gi()->addNonNullableEntries($this->o['order'], TABLE_ORDERS);
 		$this->insert(TABLE_ORDERS, array_filter_keys($this->o['order'], MagnaDB::gi()->getTableColumns(TABLE_ORDERS)));
 
 		# OrderId merken

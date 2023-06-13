@@ -75,7 +75,7 @@ class EtsyCategoryMatching {
 		$delete_query = 'DELETE FROM '.TABLE_MAGNA_ETSY_CATEGORIES
 			.' WHERE Language = \''.getDBConfigValue('etsy.shop.language', $_MagnaSession['mpID'], 'en').'\'
 			AND ParentID = ';
-		if (0 == $ParentID)	{
+		if (0 == (int)$ParentID)	{
 			$delete_query .= '0';
 		} else {
 			$delete_query .= $ParentID.' AND ParentID <> 0';
@@ -126,7 +126,7 @@ class EtsyCategoryMatching {
 				'mpID' => $this->mpID
 			));
 		}
-		if (0 == $ParentID) {
+		if (0 == (int)$ParentID) { // (int), cause for PHP >= 8.1, '' != 0
 			$whereCondition = '0 = ParentID';
 		} else {
 			$whereCondition = "0 != ParentID AND ParentID = $ParentID";

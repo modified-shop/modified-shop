@@ -453,6 +453,7 @@ class HitmeisterPrepare extends MagnaCompatibleBase
 				'EAN'				=> reset($searchResults[$iMatchedArrayKey]['eans']),
 				'ConditionType'		=> $product['Condition'],
 				'ShippingTime'		=> $product['ShippingTime'],
+				'HandlingTime'		=> $product['HandlingTime'],
 				'Location'			=> $product['Country'],
 				'Comment'			=> $product['Comment'],
 				'PrepareType'		=> 'Match',

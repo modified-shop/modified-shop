@@ -177,6 +177,7 @@ class HitmeisterProductSaver {
 		$aRow['CategoryAttributes'] = $aItemDetails['CategoryAttributes'];
 		$aRow['ConditionType'] = $aItemDetails['condition_id'];
 		$aRow['ShippingTime'] = $aItemDetails['shippingtime'];
+		$aRow['HandlingTime'] = $aItemDetails['handlingtime'];
 		$aRow['Location'] = $aItemDetails['deliverycountry'];
 		$aRow['Comment'] = $aItemDetails['comment'];
 
@@ -219,6 +220,7 @@ class HitmeisterProductSaver {
 				'EAN'				=> $itemDetails['matching'][$pId]['ean'],
 				'ConditionType'		=> $itemDetails['unit']['condition_id'],
 				'ShippingTime'		=> $itemDetails['unit']['shippingtime'],
+				'HandlingTime'		=> $itemDetails['unit']['handlingtime'],
 				'Location'			=> $itemDetails['unit']['deliverycountry'],
 				'Comment'			=> $itemDetails['unit']['comment'],
 				'PrepareType'		=> 'Match',

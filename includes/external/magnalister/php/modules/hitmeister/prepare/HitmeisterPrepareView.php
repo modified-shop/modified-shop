@@ -72,6 +72,7 @@ class HitmeisterPrepareView extends MagnaCompatibleBase {
 
 		$shippingTimes         = HitmeisterHelper::GetShippingTimes();
 		$defaultShippingTime   = getDBConfigValue('hitmeister.shippingtime', $this->mpID);
+		$defaultHandlingTime   = getDBConfigValue('hitmeister.handlingtime', $this->mpID);
 		if (getDBConfigValue(array('hitmeister.shippingtimematching.prefer', 'val'), $this->mpID, false)) {
 			$shippingTimes['m']  = ML_HITMEISTER_USE_SHIPPINGTIME_MATCHING;
 			$defaultShippingTime = 'm';
@@ -94,7 +95,7 @@ class HitmeisterPrepareView extends MagnaCompatibleBase {
 			  AND ms.selectionname = \'prepare\'
 			  AND ms.pID = hp.products_id
 			  AND ms.mpID = hp.mpID
-		', false));
+		', true));
 		$numberOfPreparedValues = MagnaDB::gi()->numRows();
 		$preselectShopValues = MagnaDB::gi()->fetchArray(eecho('
 			SELECT p.products_fsk18, p.products_shippingtime
@@ -102,7 +103,7 @@ class HitmeisterPrepareView extends MagnaCompatibleBase {
 			 WHERE ms.mpID=\''.$this->mpID.'\'
 			  AND ms.selectionname = \'prepare\'
 			  AND ms.pID = p.products_id
-		', false));
+		', true));
 		$numberOfItems = MagnaDB::gi()->numRows();
 		if (1 == $numberOfPreparedValues) {
 			$defaultMpCategory     = $preselectPreparedValues[0]['mp_category_id'];
@@ -112,6 +113,7 @@ class HitmeisterPrepareView extends MagnaCompatibleBase {
 			}
 			$defaultCondition      = $preselectPreparedValues[0]['condition_id'];
 			$defaultShippingTime   = $preselectPreparedValues[0]['shippingtime'];
+			$defaultHandlingTime   = $preselectPreparedValues[0]['handlingtime'];
 			$defaultAgeRating      = $preselectPreparedValues[0]['age_rating'];
 			$defaultIsPorn         = $preselectPreparedValues[0]['is_porn'];
 			$defaultComment        = $preselectPreparedValues[0]['comment'];

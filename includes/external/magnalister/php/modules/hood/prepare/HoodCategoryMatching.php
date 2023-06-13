@@ -141,7 +141,7 @@ class HoodCategoryMatching {
 				'StoreCategory' => '0'
 			));
 		}
-		if (0 == $ParentID) {
+		if (0 == (int)$ParentID) {
 			$whereCondition = '0 = ParentID';
 		} else {
 			$whereCondition = "0 != ParentID AND ParentID = $ParentID";
@@ -186,7 +186,7 @@ class HoodCategoryMatching {
 				'StoreCategory' => '1',
 			));
 		}
-		if (0 == $ParentID) {
+		if (0 == (int)$ParentID) {
 			$whereCondition = ' 0 = ParentID ';
 		} else {
 			$whereCondition = ' 0 != ParentID AND ParentID = '.$ParentID;

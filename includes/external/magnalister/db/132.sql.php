@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * 888888ba                 dP  .88888.                    dP
  * 88    `8b                88 d8'   `88                   88
  * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b.
@@ -11,32 +11,20 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id$
- *
- * (c) 2010 - 2014 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2023 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
 
-defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
+$queries = array();
+$functions = array();
 
-
-require_once(DIR_MAGNALISTER_MODULES.'magnacompatible/crons/MagnaCompatibleSyncOrderStatus.php');
-
-class EtsySyncOrderStatus extends MagnaCompatibleSyncOrderStatus {
-
-    /**
-     * We want to ignore the configuration of cancellation because
-     * there is no functionality on Etsy API to cancel the order
-     *
-     * @return array
-     */
-    protected function getConfigKeys() {
-        $parent = parent::getConfigKeys();
-        $parent['StatusCancelled'] = array(
-            'key' => '',
-            'default' => false,
-        );
-        return $parent;
+function md_db_update_132() {
+    if (!MagnaDB::gi()->columnExistsInTable('B2BActive', TABLE_MAGNA_AMAZON_PROPERTIES)) {
+        MagnaDB::gi()->query("ALTER TABLE `".TABLE_MAGNA_AMAZON_PROPERTIES."` ADD COLUMN `B2BActive` ENUM('false', 'true') NOT NULL DEFAULT 'false' AFTER `leadtimeToShip`");
+        MagnaDB::gi()->query("UPDATE `".TABLE_MAGNA_AMAZON_PROPERTIES."`  AS mp LEFT JOIN `".TABLE_MAGNA_CONFIG."` mc on mc.`mkey`='amazon.b2b.active' and mp.`mpID`=mc.`mpID` SET mp.`B2BActive`=IFNULL(mc.`value`, 'false')");
     }
 }
+
+$functions[] = 'md_db_update_132';
+

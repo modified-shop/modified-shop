@@ -77,17 +77,6 @@ class ComparisonShoppingSummaryView extends SimpleSummaryView {
 		}
 		
 	}
-	
-	protected function removed__getAdditionalHeadlines() {
-		return '<td>'.$this->provideResetFunction(
-			sprintf(
-				ML_GENERIC_SHIPPING_COST_IN_CURRENCY,
-				$this->simplePrice->getCurrency()
-			),
-			'shippingcost',
-			'formatPriceWoCur(#VAL#, '.json_encode(array('2', '.', '')).')'
-		).'</td>';
-	}
 
 	protected function extendProductAttributes($pID, &$data) {
 		if (!isset($data['shippingcost']) || ($data['shippingcost'] == null)) {
@@ -115,14 +104,10 @@ class ComparisonShoppingSummaryView extends SimpleSummaryView {
 		}
 	}
 
-	protected function removed__getAdditionalItemCells($key, $dbRow) {
+	protected function getAdditionalItemCells($key, $dbRow) {
 		$this->extendProductAttributes($dbRow['products_id'], $this->selection[$dbRow['products_id']]);
 		$this->simplePrice->setPrice($this->selection[$dbRow['products_id']]['shippingcost']);
-		return '<td><input type="text" id="shippingcost_'.$dbRow['products_id'].'"
-				           name="shippingcost['.$dbRow['products_id'].']"
-				           value="'.$this->simplePrice->getPrice().'"/>
-				    <input type="hidden" id="backup_shippingcost_'.$dbRow['products_id'].'"
-				           value="'.$this->simplePrice->getPrice().'"/></td>';
+		return '';
 	}
 
 	public function renderSelection() {

@@ -37,7 +37,7 @@ $checkoutEnabled = getDBConfigValue('idealo.directbuy.active', $_MagnaSession['m
 $aOldCheckoutEnabled = getDBConfigValue('idealo.checkout.status', $_MagnaSession['mpID'], array('val' => false));
 $blOldCheckoutEnabled = isset($aOldCheckoutEnabled['val']) && $aOldCheckoutEnabled['val'] === true;
 
-if ($checkoutEnabled === 'true') {
+if ($checkoutEnabled === 'true' && (!isset($_GET['kind']) || ($_GET['kind'] != 'ajax'))) {
     echo '
     <div class="noticeBox" style="font-size: 14px;">
         <p><span style="color: #000">Achtung: idealo beabsichtigt, den idealo Direktkauf zum 31.12.2022 einzustellen</span></p>

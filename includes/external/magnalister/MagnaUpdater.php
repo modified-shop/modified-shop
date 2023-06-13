@@ -267,7 +267,7 @@ class MagnaUpdater {
 		/* a call to set_time_limit restarts the timeout counter from zero. */
 		#$this->log(__METHOD__.' :: '.print_r(func_get_args(), true)."\n");
 		
-		@set_time_limit(ini_get('max_execution_time'));
+		@set_time_limit((int)ini_get('max_execution_time')); // (int) - type must be strict in PHP >8.1
 		
 		if ($destination === false) {
 			$destination = $this->paths['DIR_MAGNALISTER'].$name;

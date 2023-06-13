@@ -488,12 +488,14 @@ function magnaInstalled($woDBCheck = false) {
 		MagnaDB::gi()->setCharset(DB_SERVER_CHARSET);
 	}
 	if (SHOPSYSTEM == 'gambio' && (($sVersion = mlGetGambioShopSystemVersion()) !== false)) {
-		define('ML_GAMBIO_VERSION', $sVersion);
+        if (!defined('ML_GAMBIO_VERSION')) {
+            define('ML_GAMBIO_VERSION', $sVersion);
+        }
 		if (version_compare($sVersion, '2.1', '>=')) {
 			MagnaDB::gi()->setCharset('utf8');
 		}
 		// in gambio v2.5.2.1 ml will displayed in iframe so no stuff to display from gambio backend
-		if (version_compare($sVersion, '2.5.2.1', '>=')) {
+		if (version_compare($sVersion, '2.5.2.1', '>=') && !defined('ML_GAMBIO_USE_IFRAME')) {
 			define('ML_GAMBIO_USE_IFRAME', true);
 		}
 	}
@@ -780,12 +782,14 @@ function magnaCallbackRun() {
     }
 
 	if (SHOPSYSTEM == 'gambio' && (($sVersion = mlGetGambioShopSystemVersion()) !== false)) {
-		define('ML_GAMBIO_VERSION', $sVersion);
+        if (!defined('ML_GAMBIO_VERSION')) {
+            define('ML_GAMBIO_VERSION', $sVersion);
+        }
 		if (version_compare($sVersion, '2.1', '>=')) {
 			MagnaDB::gi()->setCharset('utf8');
 		}
 		// in gambio v2.5.2.1 ml will displayed in iframe so no stuff to display from gambio backend
-		if (version_compare($sVersion, '2.5.2.1', '>=')) {
+        if (version_compare($sVersion, '2.5.2.1', '>=') && !defined('ML_GAMBIO_USE_IFRAME')) {
 			define('ML_GAMBIO_USE_IFRAME', true);
 		}
 	}

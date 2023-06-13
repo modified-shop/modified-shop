@@ -155,29 +155,11 @@
                     "5": "5 Tage",
                     "6": "6 Tage",
                     "7": "7 Tage",
-                    "8": "8 Tage",
-                    "9": "9 Tage",
                     "10": "10 Tage",
-                    "11": "11 Tage",
-                    "12": "12 Tage",
-                    "13": "13 Tage",
-                    "14": "14 Tage",
                     "15": "15 Tage",
-                    "16": "16 Tage",
-                    "17": "17 Tage",
-                    "18": "18 Tage",
-                    "19": "19 Tage",
                     "20": "20 Tage",
-                    "21": "21 Tage",
-                    "22": "22 Tage",
-                    "23": "23 Tage",
-                    "24": "24 Tage",
-                    "25": "25 Tage",
-                    "26": "26 Tage",
-                    "27": "27 Tage",
-                    "28": "28 Tage",
-                    "29": "29 Tage",
-                    "30": "30 Tage"
+                    "30": "30 Tage",
+                    "40": "40 Tage"
                 },
                 "default": "3",
 				"desc" : "Maximale Dauer die Sie brauchen, bis Sie den Artikel versenden. Der Wert wird bei eBay angezeigt. <br /><br>\n\n<b>Hinweis:</b><br />\n\nWenn Sie Versand \"am gleichen Tag\" w&auml;hlen, legen Sie bitte in Ihrem eBay Account entsprechend Ihren Gesch&auml;ftsabl&auml;ufen einen Zeitpunkt fest, bis zu dem die Zahlung des K&auml;ufers bei Ihnen eingegangen sein muss. Die voreingestellte Zeit ist 14:00 Uhr. Pr&uuml;fen Sie, ob Sie die angegebene Bearbeitungszeit einhalten k&ouml;nnen."
@@ -980,11 +962,11 @@
     },
     "orderRefund": {
         "headline": "",
-        "desc": "<b>Zahlungsabwicklung durch eBay: R&uuml;ckerstattung f&uuml;r Bestellungen ausl\u00f6sen<\/b>",
+        "desc": "<b>Zahlungsabwicklung durch eBay: R&uuml;ckerstattung f&uuml;r Bestellungen ausl&ouml;sen<\/b>",
         "fields": {
             "ebayrefundconfig": {
-                "label": "R&uuml;ckerstattung ausl\u00f6sen mit",
-                "desc": "\n                      <p>          Mit dieser Funktion k\u00f6nnen Sie eine R&uuml;ckerstattung f&uuml;r importierte eBay Bestellungen ausl\u00f6sen. Voraussetzung daf&uuml;r ist die Teilnahme an der \u201cZahlungsabwicklung durch eBay\u201d.\n                    <\/p><p>\n                    F&uuml;r jeden von eBay vorgegebenen R&uuml;ckerstattungsgrund k\u00f6nnen Sie je einen Webshop-Bestellstatus definieren (\u201c+\u201d Button) und einen Kommentar zuweisen. Dieser wird dem K&auml;ufer und eBay &uuml;bermittelt.\n                    <\/p><p>\n                                        <strong>\u201cBestellstatus im Webshop\u201d<\/strong><br>\n                                        W&auml;hlen Sie hier einen Bestellstatus aus dem\n                                        Webshop aus, mit dem eine R&uuml;ckerstattung an\n                                        den K&auml;ufer ausgel\u00f6st wird.\n                    <\/p><p>\n                                        <strong>\u201cR&uuml;ckerstattungs-Grund\u201d<\/strong><br>\n                                        W&auml;hlen Sie hier einen von eBay vorgegebenen\n                                        R&uuml;ckerstattungsgrund aus.\n                    <\/p><p>\n                                        <strong>\u201cKommentar zur R&uuml;ckerstattung\u201d<\/strong><br>\n                                        Hinterlegen Sie einen Kommentar, der mit dem\n                                        ausgew&auml;hlten R&uuml;ckerstattungsgrund an den\n                                        K&auml;ufer und eBay &uuml;bermittelt wird.\n                    <\/p><p>\n                    <strong>Wichtige Hinweise:<\/strong><br>\n                    <ul>\n                    <li>Die meisten Shopsysteme sind nicht in der Lage, mehrere, in einer Bestellung zusammengefasste Artikel, aufzusplitten und die korrekten R&uuml;ckerstattungsbetr&auml;ge bereitzustellen. Daher k&ouml;nnen Bestellungen mit mehr als einem Artikel  via magnalister nicht r&uuml;ckerstattet werden.<\/li>\n\n\n                    <li>L&ouml;sung: Eine teilweise R&uuml;ckerstattung sollten Sie direkt im eBay Seller Hub vornehmen. Einen Direktlink zu Ihrer Bestellung im eBay Seller Hub finden Sie in den magnalister Bestelldetails.<\/li>\n                    <\/ul>\n                    <\/p>",
+                "label": "R&uuml;ckerstattung ausl&ouml;sen mit",
+                "desc": "\n                      <p>          Mit dieser Funktion k&ouml;nnen Sie eine R&uuml;ckerstattung f&uuml;r importierte eBay Bestellungen ausl&ouml;sen. Voraussetzung daf&uuml;r ist die Teilnahme an der &quot;Zahlungsabwicklung durch eBay&quot;.\n                    <\/p><p>\n                    F&uuml;r jeden von eBay vorgegebenen R&uuml;ckerstattungsgrund k&ouml;nnen Sie je einen Webshop-Bestellstatus definieren (&quot;+&quot; Button) und einen Kommentar zuweisen. Dieser wird dem K&auml;ufer und eBay &uuml;bermittelt.\n                    <\/p><p>\n                                        <strong>&quot;Bestellstatus im Webshop&quot;<\/strong><br>\n                                        W&auml;hlen Sie hier einen Bestellstatus aus dem\n                                        Webshop aus, mit dem eine R&uuml;ckerstattung an\n                                        den K&auml;ufer ausgel&ouml;st wird.\n                    <\/p><p>\n                                        <strong>&quot;R&uuml;ckerstattungs-Grund&quot;<\/strong><br>\n                                        W&auml;hlen Sie hier einen von eBay vorgegebenen\n                                        R&uuml;ckerstattungsgrund aus.\n                    <\/p><p>\n                                        <strong>&quot;Kommentar zur R&uuml;ckerstattung&quot;<\/strong><br>\n                                        Hinterlegen Sie einen Kommentar, der mit dem\n                                        ausgew&auml;hlten R&uuml;ckerstattungsgrund an den\n                                        K&auml;ufer und eBay &uuml;bermittelt wird.\n                    <\/p><p>\n                    <strong>Wichtige Hinweise:<\/strong><br>\n                    <ul>\n                    <li>Die meisten Shopsysteme sind nicht in der Lage, mehrere, in einer Bestellung zusammengefasste Artikel, aufzusplitten und die korrekten R&uuml;ckerstattungsbetr&auml;ge bereitzustellen. Daher k&ouml;nnen Bestellungen mit mehr als einem Artikel  via magnalister nicht r&uuml;ckerstattet werden.<\/li>\n\n\n                    <li>L&ouml;sung: Eine teilweise R&uuml;ckerstattung sollten Sie direkt im eBay Seller Hub vornehmen. Einen Direktlink zu Ihrer Bestellung im eBay Seller Hub finden Sie in den magnalister Bestelldetails.<\/li>\n                    <\/ul>\n                    <\/p>",
                 "key": "ebay.refundconfig",
                 "type": "extern",
                 "procFunc": "mlEbayRefundConfig",
@@ -1009,7 +991,7 @@
                                 "SELLER_CANCEL": "Der Verk&auml;ufer hat die Bestellung storniert.",
                                 "ITEM_NOT_RECEIVED": "Der K&auml;ufer hat die Ware nicht erhalten.",
                                 "BUYER_RETURN": "Der K&auml;ufer hat die Ware z.B. aufgrund von Kulanz des H&auml;ndlers oder weil sie nicht wie beschrieben geliefert wurde zur&uuml;ckgeschickt.",
-                                "ITEM_NOT_AS_DESCRIBED": "Der K&auml;ufer hat die Ware als \u201cnicht wie beschrieben\u201d reklamiert.",
+                                "ITEM_NOT_AS_DESCRIBED": "Der K&auml;ufer hat die Ware als &quot;nicht wie beschrieben&quot; reklamiert.",
                                 "OTHER_ADJUSTMENT": "Die R&uuml;ckerstattung wurde vom K&auml;ufer ohne Angabe eines Grundes angefordert."
                             }
                         },

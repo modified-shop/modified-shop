@@ -112,7 +112,7 @@ class Ayn24ProductPrepareSaver {
 		return MagnaDB::gi()->fetchArray('
 			SELECT p.products_id, p.products_model
 			  FROM ' . TABLE_PRODUCTS . ' p
-			 WHERE p.products_id IN (' . implode($pIds, ', ') . ')
+			 WHERE p.products_id IN (' . implode(', ', $pIds) . ')
 		');
 	}
 	

@@ -52,7 +52,7 @@ class HoodInventoryView {
 		}
 
 		$this->settings = array_merge(array(
-			'maxTitleChars' => 80,
+			'maxTitleChars' => 85,
 			'itemLimit' => $this->magnasession[$this->mpID]['InventoryView']['ItemLimit'],
 			'language' => getDBConfigValue('hood.lang', $this->mpID),
 		), $settings);

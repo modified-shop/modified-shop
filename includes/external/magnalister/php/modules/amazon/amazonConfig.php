@@ -469,25 +469,24 @@ function amazonGetToken($args, &$value = '') {
         $firstToken = ' mlbtn-action';
         return '<input class="ml-button'.$firstToken.' mlbtn-action" type="button" value="'.ML_EBAY_BUTTON_TOKEN_NEW.'" id="'.$buttonId.'"/>
         '.$expires.'
-        <div id="desc_get_token" title="<?php echo ML_LABEL_INFO ?>">
-            <span style="display: none">' . ML_AMAZON_TEXT_GET_TOKEN . '</span>
+        <div id="desc_get_token" class="dialog2" title="'.ML_AMAZON_TEXT_GET_TOKEN_HEADER.'">
+            '.ML_AMAZON_TEXT_GET_TOKEN.'
         </div>
 <script type="text/javascript">/*<![CDATA[*/
 $(document).ready(function() {
         $(\'#'.$buttonId.'\').click(function() {
-                  var d = $("#desc_get_token span").html();
-                  console.log(d)
-                  $("#infodiag").html(d).jDialog({
+                  var d = $("#desc_get_token").html();
+                  $("#desc_get_token").jDialog({
                         width: (d.length > 1000) ? "700px" : "500px",
                         buttons: {
                             Cancel: {
-                                "text": "cancel",
+                                "text": "'.ML_BUTTON_LABEL_ABORT.'",
                                 click: function() {
                                     $(this).dialog("close");
                                 }
                             },
                             Ok: {
-                                "text": "ok",
+                                "text": "'.ML_BUTTON_LABEL_OK.'",
                                 click: function() {
                                     $(this).dialog("close");
                                     openIframe();

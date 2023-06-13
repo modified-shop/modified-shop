@@ -10,7 +10,7 @@
             },
             "vat": {
                 "label": "VAT",
-                "desc": "Sie müssen mindestens eine VAT im Shopsystem definiert haben.",
+                "desc": "Sie m&uuml;ssen mindestens eine VAT im Shopsystem definiert haben.",
                 "morefields": {
                     "vat": {
                         "type": "extern",
@@ -34,9 +34,9 @@
                                         "fullWidth"
                                     ],
                                     "values": {
-                                        "": "Bitte w\u00e4hlen",
+                                        "": "Bitte w&auml;hlen",
                                         "FULL": "Regelsteuersatz",
-                                        "REDUCED": "erm\u00e4\u00dfigte Mehrwertsteuersatz"
+                                        "REDUCED": "erm&auml;&szlig;igter Mehrwertsteuersatz"
                                     }
                                 }
                             }

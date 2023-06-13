@@ -83,7 +83,7 @@ class EtsyProductSaver {
 		//$aRow['ShopVariation'] = $aItemDetails['CategoryAttributes'];
 		// TODO Attributes Matching
 		$aRow['ShopVariation'] = $aItemDetails['ShopVariation'];
-		$aRow['ShippingTemplate'] = $aItemDetails['shippingtemplate'];
+		$aRow['ShippingProfile'] = $aItemDetails['shippingprofile'];
 		$aRow['Whomade']  = $aItemDetails['whomade'];
 		$aRow['Whenmade'] = $aItemDetails['whenmade'];
 		$aRow['IsSupply'] = $aItemDetails['issuply'];

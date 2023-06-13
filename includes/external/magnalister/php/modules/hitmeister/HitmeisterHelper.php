@@ -180,6 +180,21 @@ class HitmeisterHelper extends AttributesMatchingHelper
 		$times['values'] = self::GetShippingTimes();
 	}
 	
+	public static function GetHandlingTimes() {
+		$times = array (
+                    0 => ML_SAME_WORKING_DAY,
+                    1 => '1 '.ML_WORKING_DAY
+                );
+                for ($days = 2 ; $days <= 100 ; $days++) {
+                    $times[$days] = (string)$days . ' '.ML_WORKING_DAYS;
+                }
+                return $times;
+	}
+	
+	public static function GetHandlingTimesConfig(&$times) {
+		$times['values'] = self::GetHandlingTimes();
+	}
+	
 	public static function GetDeliveryCountries() {
 		global $_MagnaSession;
 	

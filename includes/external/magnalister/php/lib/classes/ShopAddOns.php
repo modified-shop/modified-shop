@@ -70,7 +70,7 @@ class ML_ShopAddOns {
 										'success': function (data) {
 											jQuery.unblockUI();
 											myConsole.log('ajax.success', data);
-											if (data != '1') {
+											if (data.indexOf('<?php echo ML_ADDON_BOOK_SUCCESS; ?>') == -1) {
 												$checkbox.prop('checked', false);
 												jQuery('<div></div>').html(data).jDialog({
 													title: '<?php echo ML_LABEL_NOTE; ?>'
@@ -132,7 +132,7 @@ class ML_ShopAddOns {
 										'success': function (data) {
 											jQuery.unblockUI();
 											myConsole.log('ajax.success', data);
-											if (data != '1') {
+											if (data.indexOf('<?php echo ML_ADDON_BOOK_SUCCESS; ?>') == -1) {
 												$false.attr('checked', 'checked');
 												jQuery('<div></div>').html(data).jDialog({
 													title: '<?php echo ML_LABEL_NOTE; ?>'
@@ -210,7 +210,7 @@ class ML_ShopAddOns {
 												), true)?>',
 												'success': function (data) {
 													jQuery.unblockUI();
-													if (data != '1') {
+													if (data.indexOf('<?php echo ML_ADDON_BOOK_SUCCESS; ?>') == -1) {
 														previousValue = $(currentComponent).val();
 														jQuery('<div></div>').html(data).jDialog({
 															title: '<?php echo ML_LABEL_NOTE; ?>'
@@ -279,7 +279,7 @@ class ML_ShopAddOns {
 		}
 
 		if ($aResult['STATUS'] == 'SUCCESS') {
-			return true;
+			return ML_ADDON_BOOK_SUCCESS;
 		} else {
 			$aErrorMessages = array();
 			foreach ($aResult['ERRORS'] as $aError) {

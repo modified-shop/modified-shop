@@ -323,7 +323,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
 		$propertiesRow['PictureURL'] = $data['submit']['PictureURL'];
 		// DispatchTimeMax: use default if property not set properly
 		if ($data['submit']['DispatchTimeMax'] > 40) {
-			$data['submit']['DispatchTimeMax'] = getDBConfigValue('ebay.DispatchTimeMax', $this->_magnasession['mpID'], 30);
+			$data['submit']['DispatchTimeMax'] = getDBConfigValue('ebay.DispatchTimeMax', $this->_magnasession['mpID'], 40);
 		}
 
 		if (!$this->verify) { // && ML_ShopAddOns::mlAddOnIsBooked('EbayPicturePack'))
@@ -776,7 +776,11 @@ class eBayCheckinSubmit extends CheckinSubmit {
 		if (
 			('Chinese' <> $propertiesRow['ListingType'])
 		    && getDBConfigValue(array($this->_magnasession['currentPlatform'].'.usevariations', 'val'), $this->_magnasession['mpID'], true)
-		    && VariationsEnabled($data['submit']['PrimaryCategory'])
+		    && (    VariationsEnabled($data['submit']['PrimaryCategory'])
+		         && (    empty($data['submit']['SecondaryCategory'])
+		              || VariationsEnabled($data['submit']['SecondaryCategory'])
+		            )
+		       )
 			&& !empty($product['Variations'])
 		) {
 			$skuField = (getDBConfigValue('general.keytype', '0') == 'artNr') ? 'MarketplaceSku' : 'MarketplaceId';
@@ -1164,7 +1168,11 @@ class eBayCheckinSubmit extends CheckinSubmit {
 		# default is true
 		if (  ('Chinese' <> $propertiesRow['ListingType'])
 		    && getDBConfigValue(array($this->_magnasession['currentPlatform'].'.usevariations', 'val'), $this->_magnasession['mpID'], true)
-		    && VariationsEnabled($data['submit']['PrimaryCategory'])
+		    && (    VariationsEnabled($data['submit']['PrimaryCategory'])
+		         && (    empty($data['submit']['SecondaryCategory'])
+		              || VariationsEnabled($data['submit']['SecondaryCategory'])
+		            )
+		       )
 		) {
 			$data['submit']['Variations'] = getVariations($pID, $data['submit']['Price']);
 			if (!$data['submit']['Variations']) unset($data['submit']['Variations']);

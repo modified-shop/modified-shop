@@ -511,7 +511,7 @@ if (isset($_GET['module']) && ($_GET['module'] == 'ajax') && isset($_GET['reques
 				MagnaDB::gi()->setCharset('utf8');
 			}
 			// in gambio v2.5.2.1 ml will displayed in iframe so no stuff to display from gambio backend
-			if (version_compare($sVersion, '2.5.2.1', '>=')) {
+			if (version_compare($sVersion, '2.5.2.1', '>=') && !defined('ML_GAMBIO_USE_IFRAME')) {
 				define('ML_GAMBIO_USE_IFRAME', true);
 			}
 			// Store information for Gambio updater - that ml will be updated when merchants update Gambio shopsystem
@@ -612,15 +612,19 @@ if (defined('DB_SERVER_CHARSET')) {
 	MagnaDB::gi()->setCharset(DB_SERVER_CHARSET);
 }
 if (SHOPSYSTEM == 'gambio' && (($sVersion = mlGetGambioShopSystemVersion()) !== false)) {
-    define('ML_GAMBIO_VERSION', $sVersion);
-
+    if (!defined('ML_GAMBIO_VERSION')) {
+        define('ML_GAMBIO_VERSION', $sVersion);
+    }
 	if (version_compare($sVersion, '2.1', '>=')) {
 		MagnaDB::gi()->setCharset('utf8');
 	}
 	// in gambio v2.5.2.1 ml will displayed in iframe so no stuff to display from gambio backend
-	if (version_compare($sVersion, '2.5.2.1', '>=')) {
+	if (version_compare($sVersion, '2.5.2.1', '>=') && !defined('ML_GAMBIO_USE_IFRAME')) {
 		define('ML_GAMBIO_USE_IFRAME', true);
 	}
+} else {
+    // commerce:Seo uses gambio functionalities, but has no gambio version
+    define('ML_GAMBIO_VERSION', '3.0');
 }
 
 mlDetectShopFeatures();

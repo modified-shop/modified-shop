@@ -938,8 +938,9 @@ function labelToKey(&$aAttrOptions, &$preselectedValues) {
 
 function VariationsEnabled($cID) {
     global $_MagnaSession;
-    if (empty($cID))
+    if (empty($cID)) {
         return false;
+    }
     try {
         $VariationsEnabledResult = MagnaConnector::gi()->submitRequest(array(
             'ACTION' => 'VariationsEnabled',
@@ -1769,6 +1770,7 @@ function eBayInsertPrepareData($data) {
         && !empty($data['MobileDescription'])
         && (getDBConfigValue('ebay.template.usemobile', $_MagnaSession['mpID'], false) === 'true')) {
         $data['MobileDescription'] = strip_tags($data['MobileDescription'], '<ol></ol><ul></ul><li></li><br><br/><br />');
+        $data['MobileDescription'] = trim(substr(strip_tags($data['MobileDescription'], '<ol></ol><ul></ul><li></li><br><br/><br />'), 0, 1021)); // eBay accepts 800, 1021 are for our table
     }
 
     /* {Hook} "eBayInsertPrepareData": Enables you to modify the prepared product data before it will be saved.<br>
@@ -1787,9 +1789,9 @@ function eBayInsertPrepareData($data) {
 function SaveEBaySingleProductProperties($pID, $itemDetails) {
     global $_MagnaSession;
     $row = prepareEBayPropertiesRow($pID, $itemDetails);
-    $row['Title'] = trim(strip_tags(html_entity_decode($itemDetails['Title'])));
+    $row['Title'] = substr(trim(strip_tags(html_entity_decode($itemDetails['Title']))), 0, 80);
     if (array_key_exists('enableSubtitle', $itemDetails) && ('on' == $itemDetails['enableSubtitle']) && !empty($itemDetails['Subtitle'])) {
-        $row['Subtitle'] = trim(strip_tags($itemDetails['Subtitle']));
+        $row['Subtitle'] = substr(trim(strip_tags($itemDetails['Subtitle'])), 0, 55);
     }
     if (!empty($itemDetails['PictureURL'])) {
         if (is_array($itemDetails['PictureURL'])) {
@@ -1900,7 +1902,7 @@ function SaveEBayMultipleProductProperties($pIDs, $itemDetails) {
 				AND p.products_id IN ('.implode(', ', $pIDs).')';
 
     $more_data = MagnaDB::gi()->fetchArray($more_data_select);
-    #$prefilled_data_select = 'SELECT products_id, Title, Subtitle FROM '.TABLE_MAGNA_EBAY_PROPERTIES.' WHERE products_id IN ('.implode($pIDs, ', ').') AND mpID = '.$_MagnaSession['mpID'];
+    #$prefilled_data_select = 'SELECT products_id, Title, Subtitle FROM '.TABLE_MAGNA_EBAY_PROPERTIES.' WHERE products_id IN ('.implode(', ', $pIDs).') AND mpID = '.$_MagnaSession['mpID'];
     #$prefilled_data = MagnaDB::gi()->fetchArray($prefilled_data_select);
     #if (is_array($prefilled_data)) {
     #	$prefilled_data_by_pID = array();
@@ -1919,10 +1921,10 @@ function SaveEBayMultipleProductProperties($pIDs, $itemDetails) {
         $pID = $dataRow['products_id'];
         #$row['Title'] = (isset($prefilled_data_by_pID[$pID]) && isset($prefilled_data_by_pID[$pID]['Title']))
         #	? $prefilled_data_by_pID[$pID]['Title']
-        $row['Title'] = eBaySubstituteTemplate($_MagnaSession['mpID'], $dataRow['products_id'], $eBayTitleTemplate, array(
+        $row['Title'] = substr(eBaySubstituteTemplate($_MagnaSession['mpID'], $dataRow['products_id'], $eBayTitleTemplate, array(
             '#TITLE#' => strip_tags($dataRow['products_name']),
             '#ARTNR#' => $dataRow['products_model']
-        ));
+        )), 0, 80);
         if ('on' == $itemDetails['enableSubtitle'] && !empty($dataRow['products_short_description'])) {
             #$row['Subtitle'] = (isset($prefilled_data_by_pID[$pID]) && isset($prefilled_data_by_pID[$pID]['Subtitle']))
             #? $prefilled_data_by_pID[$pID]['Subtitle']

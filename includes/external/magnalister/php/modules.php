@@ -832,8 +832,6 @@ $_modules = array(
         'logo' => 'etsy',
         'displayAlways' => false,
         'requiredConfigKeys' => array (
-            'etsy.username',
-            'etsy.password',
             'etsy.shop.language',
             'etsy.currency',
             'etsy.lang',
@@ -846,7 +844,6 @@ $_modules = array(
             'etsy.preimport.start',
             'etsy.orderstatus.open',
             'etsy.orderstatus.shipped',
-            'etsy.orderstatus.cancelled',
             'etsy.stocksync.tomarketplace',
             'etsy.stocksync.frommarketplace',
             'etsy.inventorysync.price',

@@ -274,7 +274,7 @@ class HoodCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 	
 	/**
 	 * Hilfsfunktion: Fuer den Fall dass am Ende des Titels ein #BASEPRICE# steht,
-	 * das durch die 80-Zeichen-Beschraenkung abgeschnitten wurde
+	 * das durch die 85-Zeichen-Beschraenkung abgeschnitten wurde
 	 */	
 	protected function buildTitle($pId, $title, $data, $maxlen) {
 		$title = html_entity_decode(fixHTMLUTF8Entities($title), ENT_COMPAT, 'UTF-8');

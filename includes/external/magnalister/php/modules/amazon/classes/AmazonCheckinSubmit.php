@@ -120,6 +120,15 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 		if ($productMatching['leadtimeToShip'] > 0) {
 			$data['submit']['LeadtimeToShip'] = $productMatching['leadtimeToShip'];
 		}
+
+		// B2B
+		// if B2B is globally disabled, ignore prepared values
+		if (getDBConfigValue('amazon.b2b.active', $this->mpID, 'false') === 'true') {
+			if (isset($productMatching['B2BActive']) && $productMatching['B2BActive'] == 'true') {
+				$b2bOnly = (getDBConfigValue('amazon.b2b.sell_to', $this->mpID, 'b2b_b2c') === 'b2b_only');
+				$this->setB2BData($data, $pID, $product, $b2bOnly);
+			}
+		}
 		
 		$productVariations = isset($product['Variations']) && is_array($product['Variations'])? $product['Variations'] : array();
 		$preparedVariations = array();
@@ -141,6 +150,9 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 			if ($this->appendMatchingData($variation['VariationId'], $variationProduct, $variationData)) {
 				unset($variationData['submit']['Variations']);
 				$preparedVariations[] = $variationData['submit'];
+			}
+			if (isset($productMatching['B2BActive']) && $productMatching['B2BActive'] == 'true') {
+				$this->setB2BVariationData($variation, $data, $pID, $b2bOnly);
 			}
 		}
 		$data['submit']['Variations'] = empty($preparedVariations) ? array() : $preparedVariations;

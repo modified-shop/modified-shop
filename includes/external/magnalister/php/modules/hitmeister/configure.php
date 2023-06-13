@@ -76,28 +76,32 @@ class HitmeisterConfigure extends MagnaCompatibleConfigure {
 		     WHERE language_id = '.$_SESSION['languages_id'].' 
 		  ORDER BY shipping_status_id ASC
 		');
-		$shippingtimeMatch = getDBConfigValue($args['key'], $this->mpID, array());
-		$opts = HitmeisterHelper::GetShippingTimes();
+		#$shippingtimeMatch = getDBConfigValue($args['key'], $this->mpID, array());
+		#$opts = HitmeisterHelper::GetShippingTimes();
+                $handlingtimeMatch = getDBConfigValue('hitmeister.handlingtimematching.values', $this->mpID, array());
+                $defaultHandlingTime = getDBConfigValue('hitmeister.handlingtime', $this->mpID, 1);
 		$html = '<table class="nostyle" style="float: left; margin-right: 2em;">
 			<thead><tr>
 				<th>'.ML_LABEL_SHIPPING_TIME_SHOP.'</th>
-				<th>'.ML_HITMEISTER_SHIPPINGTIME_HM.'</th>
+				<th>'.ML_HITMEISTER_HANDLINGTIME_HM.'</th>
 			</tr></thead>
 			<tbody>';
 		foreach ($shippingtimes as $st) {
 			$html .= '
 				<tr>
-					<td class="nowrap">'.$st['name'].'</td>
-					<td><select name="conf['.$args['key'].']['.$st['id'].']">';
-			foreach ($opts as $key => $val) {
-				$html .= '<option value="'.$key.'" '.(
-					(array_key_exists($st['id'], $shippingtimeMatch) && ($shippingtimeMatch[$st['id']] == $key))
-						? 'selected="selected"'
-						: ''
-				).'>'.$val.'</option>';
-			}
-			$html .= '
-					</select></td>
+					<td class="nowrap">'.$st['name'].'</td>'
+					#<td><select name="conf['.$args['key'].']['.$st['id'].']">';
+			#foreach ($opts as $key => $val) {
+				#$html .= '<option value="'.$key.'" '.(
+					#(array_key_exists($st['id'], $shippingtimeMatch) && ($shippingtimeMatch[$st['id']] == $key))
+						#? 'selected="selected"'
+						#: ''
+				#).'>'.$val.'</option>';
+			#}
+			#$html .= '
+					#</select></td>
+					.'<td><input type="text" name="conf[hitmeister.handlingtimematching.values]['.$st['id'].']" value="'.(array_key_exists($st['id'], $handlingtimeMatch) ? $handlingtimeMatch[$st['id']] : $defaultHandlingTime).'">
+					</td>
 				</tr>';
 		}
 		$html .= '</tbody></table>';
@@ -115,6 +119,7 @@ class HitmeisterConfigure extends MagnaCompatibleConfigure {
 			HitmeisterHelper::GetDeliveryCountriesConfig($this->form['prepare']['fields']['location']);
 			HitmeisterHelper::GetConditionTypesConfig($this->form['prepare']['fields']['condition']);
 			HitmeisterHelper::GetShippingTimesConfig($this->form['prepare']['fields']['shippingtime']);
+			HitmeisterHelper::GetHandlingTimesConfig($this->form['prepare']['fields']['handlingtime']);
 
 			$this->form['prepare']['fields']['shippingtimeMatching']['procFunc'] = array($this, 'confShippingtimeMatching');
 			mlGetOrderStatus($this->form['orderSyncState']['fields']['shippedstatus']);

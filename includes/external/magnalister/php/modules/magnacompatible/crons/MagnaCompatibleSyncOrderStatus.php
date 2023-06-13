@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * (c) 2010 - 2022 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2023 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -26,6 +26,12 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 	 * @var string
 	 */
 	protected $confirmationResponseField = 'DATA';
+
+    /**
+     * Name of the confirmation order id field. May be MOrderId or MOrderID.
+     * @var string
+     */
+    protected $confirmationsOrderIdFieldName = 'MOrderId';
 
 	/**
 	 * List of all orders that have to be synced
@@ -448,10 +454,10 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 			return;
 		}
 		foreach ($result[$this->confirmationResponseField] as $cData) {
-			if (!isset($cData['MOrderID'])) {
+			if (!isset($cData[$this->confirmationsOrderIdFieldName])) {
 				continue;
 			}
-			$oOrder = &$this->getFromLookupTable($cData['MOrderID']);
+			$oOrder = &$this->getFromLookupTable($cData[$this->confirmationsOrderIdFieldName]);
 			if ($oOrder !== null) {
 				$this->out($this->marketplace.' ('.$this->mpID.') success response received for order '.$oOrder['special'] .' ('.$oOrder['orders_id'].')'."\n");
 				$this->storeConfirmation($oOrder, $cData);

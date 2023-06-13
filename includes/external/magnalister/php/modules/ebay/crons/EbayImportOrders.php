@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * (c) 2010 - 2021 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2023 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -455,6 +455,8 @@ class EbayImportOrders extends MagnaCompatibleImportOrders {
         # If magna order is found we add this order to it.
         if (false == $existingOpenOrder) {
             # We didn't find an order to which we can add this order.
+            MagnaDB::gi()->validateDataLength($this->o['order'], TABLE_ORDERS);
+            MagnaDB::gi()->addNonNullableEntries($this->o['order'], TABLE_ORDERS);
             # filter keys (if hooks have changed sth.)
             $this->db->insert(TABLE_ORDERS, array_filter_keys($this->o['order'], MagnaDB::gi()->getTableColumns(TABLE_ORDERS)));
             $this->cur['OrderID'] = $this->db->getLastInsertID();
@@ -538,6 +540,20 @@ class EbayImportOrders extends MagnaCompatibleImportOrders {
             ? round($this->p['final_price'] / $this->p['products_quantity'], 2)
             : $this->p['products_price']
         ;
+        /* {Hook} "GeteBayOrders_additionalProductsIdentification": Allows own product identification (e.g. by a dedicated column in the shop database. Called after the default identification by SKU.
+            Variables that can be used:
+            <ul>
+               <li>$this->marketplace (here always 'ebay')</li>
+               <li>$this->mpID the ID of the marketplace</li>
+               <li>$this->p Array with product data.</li>
+            </ul>
+            <p>$this->p['products_id'] and $this->p['products_model'] contain the data determined by the default identification.<br />
+            If the default identification didn't find anything, $this->p['products_id'] = 0 and $this->p['products_model'] contains the SKU obtained from the marketplace.<br />
+            After a successful identification, $this->p['products_id'] and $this->p['products_model'] should contain the product identifiers.
+        */
+        if (($hp = magnaContribVerify('GeteBayOrders_additionalProductsIdentification', 1)) !== false) {
+            require($hp);
+        }
     }
 
     /*
@@ -1135,6 +1151,8 @@ class EbayImportOrders extends MagnaCompatibleImportOrders {
         // add the additional costs to internal array
         if (   (null !== $shippingProfiles)
             && (!empty($profileID))
+            && (!empty($shippingProfiles['Profiles']))
+            && array_key_exists($profileID, $shippingProfiles['Profiles'])
             && array_key_exists('EachAdditionalAmount', $shippingProfiles['Profiles']["$profileID"])
         ) {
             if ($shippingProfiles['Profiles']["$profileID"]['EachAdditionalAmount'] >= 0) {

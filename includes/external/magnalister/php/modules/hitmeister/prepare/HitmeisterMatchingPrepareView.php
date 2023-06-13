@@ -55,8 +55,10 @@ class HitmeisterMatchingPrepareView extends MagnaCompatibleBase {
 					p.products_id,
 					p.products_model,
 					p.products_price,
+					p.products_shippingtime,
 					pd.products_name,
 					pr.ShippingTime,
+					pr.HandlingTime,
 					pr.ConditionType,
 					pr.Comment,
 					pr.Location
@@ -93,10 +95,13 @@ class HitmeisterMatchingPrepareView extends MagnaCompatibleBase {
 			}
 
 			foreach ($p as $sKey => &$sValue) {
-				if (in_array($sKey, array('ShippingTime', 'ConditionType', 'Location')) && $sValue === null) {
+				if (in_array($sKey, array('ShippingTime', 'HandlingTime', 'ConditionType', 'Location')) && $sValue === null) {
 					switch ($sKey) {
 						case 'ShippingTime':
 							$sValue = getDBConfigValue($this->marketplace.'.shippingtime', $this->mpID, 0);
+							break;
+						case 'HandlingTime':
+							$sValue = getDBConfigValue($this->marketplace.'.handlingtime', $this->mpID, 0);
 							break;
 						case 'ConditionType':
 							$sValue = getDBConfigValue($this->marketplace.'.itemcondition', $this->mpID, 0);
@@ -120,6 +125,8 @@ class HitmeisterMatchingPrepareView extends MagnaCompatibleBase {
 				'Manufacturer'	=> $manufacturerName,
 				'EAN'			=> $mlProduct['products_ean'],
 				'ShippingTime'	=> $p['ShippingTime'],
+				'products_shippingtime'	=> $p['products_shippingtime'],
+				'HandlingTime'	=> $p['HandlingTime'],
 				'Condition'		=> $p['ConditionType'],
 				'Comment'		=> $p['Comment'],
 				'Country'		=> $p['Location'],
@@ -173,10 +180,12 @@ class HitmeisterMatchingPrepareView extends MagnaCompatibleBase {
 		$currentChunk = $productChunks[$currentPage - 1];
 
 		$shippingTimes		= HitmeisterHelper::GetShippingTimes();
+		$handlingTimes		= HitmeisterHelper::GetHandlingTimes();
 		$conditions			= HitmeisterHelper::GetConditionTypes();
 		$deliveryCountries	= HitmeisterHelper::GetDeliveryCountries();
 
 		$defaultShippingTime	= getDBConfigValue($this->marketplace . '.shippingtime', $this->mpID);
+		$defaultHandlingTime	= getDBConfigValue($this->marketplace . '.handlingtime', $this->mpID);
 		$defaultCondition		= getDBConfigValue($this->marketplace . '.itemcondition', $this->mpID);
 		$defaultComment			= '';
 		$defaultDeliveryCountry = getDBConfigValue($this->marketplace . '.itemcountry', $this->mpID);
@@ -185,6 +194,14 @@ class HitmeisterMatchingPrepareView extends MagnaCompatibleBase {
 			$singleProduct = reset($products);
 
 			$defaultShippingTime	= isset($singleProduct['ShippingTime']) ? $singleProduct['ShippingTime'] : $defaultShippingTime;
+			$defaultHandlingTime	= isset($singleProduct['HandlingTime']) ? $singleProduct['HandlingTime'] : $defaultHandlingTime;
+			if (getDBConfigValue(array('hitmeister.shippingtimematching.prefer', 'val'), $this->mpID, false)) {
+				$handlingtimeMatching = getDBConfigValue($this->marketplace . '.handlingtimematching.values', $this->mpID, array());
+				if (!empty($handlingtimeMatching)
+				     && array_key_exists($singleProduct['products_shippingtime'], $handlingtimeMatching)) {
+					$defaultHandlingTime = $handlingtimeMatching[$singleProduct['products_shippingtime']];
+				}
+			}
 			$defaultCondition		= isset($singleProduct['Condition']) ? $singleProduct['Condition'] : $defaultCondition;
 			$defaultComment			= isset($singleProduct['Comment']) ? $singleProduct['Comment'] : $defaultComment;
 			$defaultDeliveryCountry = isset($singleProduct['Country']) ? $singleProduct['Country'] : $defaultDeliveryCountry;
@@ -226,11 +243,11 @@ class HitmeisterMatchingPrepareView extends MagnaCompatibleBase {
 						<td class="info">&nbsp;</td>
 					</tr>
 					<tr class="even">
-						<th><?php echo ML_HITMEISTER_SHIPPINGTIME ?></th>
+						<th><?php echo ML_HITMEISTER_HANDLINGTIME ?></th>
 						<td class="input">
-						<select name="unit[shippingtime]" id="shippingtime">
-						<?php foreach ($shippingTimes as $shipTimeID => $shipTimeName) : ?>
-							<option <?php echo $shipTimeID == $defaultShippingTime ? 'selected' : '' ?> value="<?php echo $shipTimeID ?>"><?php echo fixHTMLUTF8Entities($shipTimeName, ENT_COMPAT, 'UTF-8') ?></option>
+						<select name="unit[handlingtime]" id="handlingtime">
+						<?php foreach ($handlingTimes as $handTimeID => $handTimeName) : ?>
+							<option <?php echo $handTimeID == $defaultHandlingTime ? 'selected' : '' ?> value="<?php echo $handTimeID ?>"><?php echo fixHTMLUTF8Entities($handTimeName, ENT_COMPAT, 'UTF-8') ?></option>
 						<?php endforeach ?>
 						</select>
 						</td>

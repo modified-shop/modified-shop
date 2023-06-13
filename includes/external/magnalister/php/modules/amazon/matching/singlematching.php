@@ -57,6 +57,7 @@ if (!empty($amazonProperties) && !empty($amazonProperties['asin'])) {
 	$productDetails['asin_type'] = '';
 	$productDetails['item_condition'] = getDBConfigValue('amazon.itemCondition', $_MagnaSession['mpID']);
 	$productDetails['item_note'] = '';
+	$productDetails['B2BActive'] = getDBConfigValue('amazon.b2b.active', $_MagnaSession['mpID'], 'false');
 	if (defined('DEVELOPMENT_TEST')) {
 		$productDetails['item_note'] = DEVELOPMENT_TEST;
 	}
@@ -123,6 +124,8 @@ $matchingConfig = array (
 	'itemConditions' => amazonGetPossibleOptions('ConditionTypes'),
 );
 
+$B2Benabled = isset($productDetails['B2BActive']) ? $productDetails['B2BActive'] : 'false';
+
 echo '
 <h2>Single Matching</h2>
 <form name="singleMatching" id="singleMatching" action="'.toURL($_url).'" method="POST" enctype="multipart/form-data">';
@@ -157,6 +160,15 @@ echo '
 					}
 					echo '
 				</select>
+			</td>
+		</tr>
+		<tr class="even">
+			<td class="label">'.ML_AMAZON_B2B_ACTIVATE.'</td>
+			<td class="input">
+				<input type="radio" value="true" id="B2BActiveTrue" name="B2BActive" '.($B2Benabled === 'true' ? 'checked' : '').'>
+				<label for="B2BActiveTrue">'.ML_BUTTON_LABEL_YES.'
+				<input type="radio" value="false" id="B2BActiveFalse" name="B2BActive" '.($B2Benabled === 'false' ? 'checked' : '').'>
+				<label for="B2BActiveTrue">'.ML_BUTTON_LABEL_NO.'
 			</td>
 		</tr>
 		<tr class="last">

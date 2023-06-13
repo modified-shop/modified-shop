@@ -46,7 +46,7 @@ class HoodDeletedView {
 		$this->marketplace = $marketplace;
 		
 		$this->settings = array_merge(array(
-			'maxTitleChars'	=> 80,
+			'maxTitleChars'	=> 85,
 			'itemLimit'		=> 50,
 		), $settings);
 

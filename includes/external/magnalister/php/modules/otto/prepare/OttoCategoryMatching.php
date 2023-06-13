@@ -279,16 +279,26 @@ class OttoCategoryMatching {
     }
 
     private function getOttoCategories($categoryfilterSearch = '', $categoryfilterPage = 0) {
-        $sql = "SELECT * FROM ". TABLE_MAGNA_OTTO_CATEGORIES_MARKETPLACE;
 
-        $results = MagnaDB::gi()->fetchArray($sql);
-
-        if (empty($results)) {
+        $iCategoriesCount = (int)MagnaDB::gi()->fetchOne('SELECT COUNT(*) FROM '. TABLE_MAGNA_OTTO_CATEGORIES_MARKETPLACE);
+        if ($iCategoriesCount == 0) {
             require_once(DIR_MAGNALISTER_MODULES.'otto/crons/OttoImportCategories.php');
             $oOIC = new OttoImportCategories($this->mpID, 'otto');
             $oOIC->process();
-            $results = MagnaDB::gi()->fetchArray($sql);
         }
+
+        // Constraint result count, too big result sets can cause errors
+        $iMaxRowsPerQuery = 16384;
+        $iRowOffset = 0;
+        $results = array();
+        $partResultsCount = 0;
+        do {
+            $sql = "SELECT SQL_CALC_FOUND_ROWS DISTINCT * FROM ". TABLE_MAGNA_OTTO_CATEGORIES_MARKETPLACE." LIMIT $iRowOffset, $iMaxRowsPerQuery";
+            $partResults = MagnaDB::gi()->fetchArray($sql);
+            $partResultsCount = (int)MagnaDB::gi()->foundRows();
+            $results = array_merge($results, $partResults);
+            $iRowOffset  += $iMaxRowsPerQuery;
+        } while ($partResultsCount == $iMaxRowsPerQuery);
 
         foreach ($results as $aCategory) {
             // display only leaf categories (otto has only one leaf)
@@ -437,8 +447,7 @@ class OttoCategoryMatching {
         return json_encode($result);
     }
 
-    private function getOttoBrands($brandfilterSearch = '', $brandfilterPage = 0)
-    {
+    private function getOttoBrands($brandfilterSearch = '', $brandfilterPage = 0) {
         $brands = array();
         $brandCacheFile = DIR_MAGNALISTER_FS_CACHE.'ottoBrandCache.json';
 
@@ -462,10 +471,10 @@ class OttoCategoryMatching {
             $brands = json_decode(file_get_contents($brandCacheFile), true);
         }
 
-        foreach ($brands as $aBrand) {
+        foreach ($brands as $brandId => $brandName) {
             $ottoBrands[] = array(
-                'id'   => $aBrand,
-                'text' => html_entity_decode($aBrand, null, 'UTF-8'),
+                'id'   => $brandId,
+                'text' => html_entity_decode($brandName, null, 'UTF-8'),
             );
         }
 

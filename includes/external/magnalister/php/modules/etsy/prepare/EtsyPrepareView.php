@@ -33,7 +33,7 @@ class EtsyPrepareView extends MagnaCompatibleBase {
 	protected $shopType = 'noShop'; // hood
 	protected $businessSeller = false;
 	protected $defaultListingType = 'shopProduct'; // hood
-	protected $defaultShippingTemplate = '';
+	protected $defaultShippingProfile = '';
 	
 	protected function initCatMatching() {
 		$params = array();
@@ -46,7 +46,7 @@ class EtsyPrepareView extends MagnaCompatibleBase {
 
 	public function __construct(&$params) {
 		parent::__construct($params);
-		$this->defaultShippingTemplate = getDBConfigValue('etsy.ShippingTemplate', $this->mpID);
+		$this->defaultShippingProfile = getDBConfigValue('etsy.ShippingProfile', $this->mpID);
 	}
 	
 	protected function getSelection() {
@@ -59,7 +59,7 @@ class EtsyPrepareView extends MagnaCompatibleBase {
 		    SELECT ep.products_id, ep.products_model,
 		           ep.Title, ep.Description, 
 		           ep.PrimaryCategory, ep.ShopVariation,
-		           ep.ShippingTemplate, ep.Whomade, ep.Whenmade, ep.IsSupply, ep.Image,
+		           ep.ShippingProfile, ep.Whomade, ep.Whenmade, ep.IsSupply, ep.Image,
 		           pd.products_name, pd.products_description
 		      FROM ' . TABLE_MAGNA_ETSY_PREPARE . ' ep
 		';
@@ -286,7 +286,7 @@ class EtsyPrepareView extends MagnaCompatibleBase {
 		// Check which values all prepared products have in common to preselect the values.
 		$preSelected = array (
 			'PrimaryCategory' => array(),
-			'ShippingTemplate' => array(),
+			'ShippingProfile' => array(),
 			'Whomade' => array(),
 			'Whenmade' => array(),
 			'IsSupply' => array(),
@@ -311,8 +311,8 @@ class EtsyPrepareView extends MagnaCompatibleBase {
 		}
 		
 		// add some usefull defaults in case of multiple selections
-		if ($preSelected['ShippingTemplate'] === null) {
-			$preSelected['ShippingTemplate'] = $this->defaultShippingTemplate;
+		if ($preSelected['ShippingProfile'] === null) {
+			$preSelected['ShippingProfile'] = $this->defaultShippingProfile;
 		}
 		if ($preSelected['Whomade'] === null) {
 			$preSelected['Whomade'] = getDBConfigValue('etsy.whomade', $this->mpID);
@@ -411,7 +411,7 @@ class EtsyPrepareView extends MagnaCompatibleBase {
 			'false' => ML_ETSY_ISSUPLY_NO,
 			'true'  => ML_ETSY_ISSUPLY_YES
 		);
-		$aShippingTemplateValues = EtsyHelper::showShippingTemplates();
+		$aShippingProfileValues = EtsyHelper::showShippingProfiles();
 		$html .= '
 			<tbody>
 				<tr class="headline">
@@ -465,9 +465,9 @@ class EtsyPrepareView extends MagnaCompatibleBase {
 				<tr class="' . (($oddEven = !$oddEven) ? 'odd' : 'even') . '">
 					<th>' . ML_ETSY_SHIPPING_TEMPLATE . '</th>
 					<td class="input">
-						<select name="shippingtemplate">';
-				foreach ($aShippingTemplateValues as $k =>$v) {
-					if ($preSelected['ShippingTemplate'] == $k) $s = 'selected="selected"';
+						<select name="shippingprofile">';
+				foreach ($aShippingProfileValues as $k =>$v) {
+					if ($preSelected['ShippingProfile'] == $k) $s = 'selected="selected"';
 					else $s = '';
 					$html .= '
 							<option '.$s.' value='.$k.'>'.$v.'</option>';

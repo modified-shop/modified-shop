@@ -42,7 +42,7 @@ function magnaCollectStats() {
 			}
 		}
 	}
-	if (!empty($referers) && preg_match('/'.implode('|', $referers).'/i', $_SERVER['HTTP_REFERER'], $match)) {
+    if (!empty($referers) && isset($_SERVER['HTTP_REFERER']) && preg_match('/'.implode('|', $referers).'/i', $_SERVER['HTTP_REFERER'], $match)) {
 		$info = array (
 			'Marketplace' => $refererToModule[$match[0]],
 			'IP' => $_SERVER['REMOTE_ADDR'],

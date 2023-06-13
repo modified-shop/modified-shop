@@ -5,7 +5,7 @@
             "ordersimportactive": {
                 "label": "Import aktivieren",
                 "key": "_#_platform_#_.import",
-                "desc": "Sollen Bestellungen aus OTTO importiert werden?<br /><br />Wenn die Funktion aktiviert ist, werden Bestellungen voreingestellt stündlich importiert.<br /><br />Einen manuellen Import können Sie anstoßen, indem Sie den entsprechenden Funktionsbutton Bestellungen importieren oben rechts im magnalister Plugin anklicken.<br /><br />Zusätzlich können Sie den Bestellimport (ab Tarif Flat - maximal viertelstündlich) auch durch einen eigenen CronJob anstoßen, indem Sie folgenden Link zu Ihrem Shop aufrufen:<br /><br />Eigene CronJob-Aufrufe durch Kunden, die nicht im Tarif Flat sind, oder die häufiger als viertelstündlich laufen, werden geblockt.",
+                "desc": "Sollen Bestellungen aus OTTO importiert werden?<br /><br />Wenn die Funktion aktiviert ist, werden Bestellungen voreingestellt st&uuml;ndlich importiert.<br /><br />Einen manuellen Import k&ouml;nnen Sie ansto&szlig;en, indem Sie den entsprechenden Funktionsbutton Bestellungen importieren oben rechts im magnalister Plugin anklicken.<br /><br />Zus&auml;tzlich k&ouml;nnen Sie den Bestellimport (ab Tarif Flat - maximal viertelst&uuml;ndlich) auch durch einen eigenen CronJob ansto&szlig;en, indem Sie folgenden Link zu Ihrem Shop aufrufen:<br /><br />Eigene CronJob-Aufrufe durch Kunden, die nicht im Tarif Flat sind, oder die h&auml;ufiger als viertelst&uuml;ndlich laufen, werden geblockt.",
                 "type": "radio",
                 "default": "true",
                 "values": {
@@ -19,7 +19,7 @@
                 "morefields": {
                     "orders.import.start": {
                         "label": "erstmalig ab Zeitpunkt",
-                        "desc": "Startzeitpunkt, ab dem die Bestellungen erstmalig importiert werden sollen. Bitte beachten Sie, dass dies nicht beliebig weit in die Vergangenheit möglich ist, da die Daten bei OTTO höchstens einige Wochen lang vorliegen.",
+                        "desc": "Startzeitpunkt, ab dem die Bestellungen erstmalig importiert werden sollen. Bitte beachten Sie, dass dies nicht beliebig weit in die Vergangenheit m&ouml;glich ist, da die Daten bei OTTO h&ouml;chstens einige Wochen lang vorliegen.",
                         "key": "_#_platform_#_.preimport.start",
                         "type": "date",
                         "submit": "Orders.Import.Start",
@@ -31,7 +31,7 @@
             },
             "orders.vat": {
                 "label": "MwSt. Shop-fremder Artikel",
-                "desc": "Wenn beim Bestellimport die Artikelnummer eines Kaufs im Web-Shop nicht erkannt wird, kann die Mehrwertsteuer nicht berechnet werden.<br />Als Lösung wird der hier angegebene Wert in Prozent bei allen Produkten hinterlegt, deren Mehrwertsteuersatz beim Bestellimport aus OTTO nicht bekannt ist.",
+                "desc": "Wenn beim Bestellimport die Artikelnummer eines Kaufs im Web-Shop nicht erkannt wird, kann die Mehrwertsteuer nicht berechnet werden.<br />Als L&ouml;sung wird der hier angegebene Wert in Prozent bei allen Produkten hinterlegt, deren Mehrwertsteuersatz beim Bestellimport aus OTTO nicht bekannt ist.",
                 "morefields": {
                     "orders.vat": {
                         "key": "_#_platform_#_.mwst.fallback",
@@ -56,8 +56,8 @@
                 ]
             },
             "orders.status.processable": {
-                "label": "Webshop-Status für “offene” Bestellungen",
-                "desc": "<p>Der OTTO Bestellstatus “offen” bedeutet, dass der Käufer die Ware bereits bezahlt hat. Sie kann also risikofrei versendet werden.</p><p>Wählen Sie hier den entsprechenden Webshop-Bestellstatus, den eine importierte OTTO Bestellung mit dem Status “offen” erhalten soll.</p>",
+                "label": "Webshop-Status f&uuml;r “offene” Bestellungen",
+                "desc": "<p>Der OTTO Bestellstatus “offen” bedeutet, dass der K&auml;ufer die Ware bereits bezahlt hat. Sie kann also risikofrei versendet werden.</p><p>W&auml;hlen Sie hier den entsprechenden Webshop-Bestellstatus, den eine importierte OTTO Bestellung mit dem Status “offen” erhalten soll.</p>",
                 "key": "_#_platform_#_.orders.status.processable",
                 "type": "selection",
                 "values": null,
@@ -92,7 +92,7 @@
             },
             "orders.payment.methods": {
                 "label": "Zahlart der Bestellungen",
-                "desc": "Zahlart, die allen OTTO-Bestellungen zugeordnet wird. Standard: 'OTTO'.<br /><br />Diese Einstellung ist wichtig für den Rechnungs- und Lieferscheindruck und für die nachträgliche Bearbeitung der Bestellung im Shop sowie einige Warenwirtschaften.",
+                "desc": "Zahlart, die allen OTTO-Bestellungen zugeordnet wird. Standard: 'OTTO'.<br /><br />Diese Einstellung ist wichtig f&uuml;r den Rechnungs- und Lieferscheindruck und f&uuml;r die nachtr&auml;gliche Bearbeitung der Bestellung im Shop sowie einige Warenwirtschaften.",
                 "key": "_#_platform_#_.orderimport.payment.methods",
                 "type": "selection",
                 "values":{
@@ -118,7 +118,7 @@
 
             "orders.status.synchronization": {
                 "label": "Status Synchronisierung",
-                "desc": "<dl><dt>Automatische Synchronisierung per CronJob (empfohlen)</dt><dd>Die Funktion 'Automatische Synchronisierung per CronJob' übermittelt alle 2 Stunden den aktuellen Versendet-Status zu OTTO.<br/>Dabei werden die Status-Werte aus der Datenbank geprüft und übernommen, auch wenn die Änderungen durch z.B. eine Warenwirtschaft nur in der Datenbank erfolgten.<br/><br/>Sie können auch den entsprechenden Funktionsbutton 'Bestellstatus synchronisieren' oben rechts im magnalister Plugin anklicken, um den Status sofort zu &uuml;bergeben.<br/><br/>Zusätzlich können Sie den Bestellstatus-Abgleich (ab Tarif Flat - maximal viertelstündlich) auch durch einen eigenen CronJob anstoßen, indem Sie folgenden Link zu Ihrem Shop aufrufen: <br/><br/><i>http://www.IhrShop.de/magnaCallback.php?do=SyncOrderStatus</i><br/><br/>Eigene CronJob-Aufrufe durch Kunden, die nicht im Tarif Flat sind, oder die häufiger als viertelstündlich laufen, werden geblockt.<br /></dd></dl>",
+                "desc": "<dl><dt>Automatische Synchronisierung per CronJob (empfohlen)</dt><dd>Die Funktion 'Automatische Synchronisierung per CronJob' &uuml;bermittelt alle 2 Stunden den aktuellen Versendet-Status zu OTTO.<br/>Dabei werden die Status-Werte aus der Datenbank gepr&uuml;ft und &uuml;bernommen, auch wenn die &Auml;nderungen durch z.B. eine Warenwirtschaft nur in der Datenbank erfolgten.<br/><br/>Sie k&ouml;nnen auch den entsprechenden Funktionsbutton 'Bestellstatus synchronisieren' oben rechts im magnalister Plugin anklicken, um den Status sofort zu &uuml;bergeben.<br/><br/>Zus&auml;tzlich k&ouml;nnen Sie den Bestellstatus-Abgleich (ab Tarif Flat - maximal viertelst&uuml;ndlich) auch durch einen eigenen CronJob ansto&szlig;en, indem Sie folgenden Link zu Ihrem Shop aufrufen: <br/><br/><i>http://www.IhrShop.de/magnaCallback.php?do=SyncOrderStatus</i><br/><br/>Eigene CronJob-Aufrufe durch Kunden, die nicht im Tarif Flat sind, oder die h&auml;ufiger als viertelst&uuml;ndlich laufen, werden geblockt.<br /></dd></dl>",
                 "key": "_#_platform_#_.orders.status.synchronization",
                 "type": "selection",
                 "values": {
@@ -136,8 +136,8 @@
           },
 
          "send.carrier":{
-            "label":"Versanddienstleister für versendete Bestellungen",
-            "desc": "OTTO lässt nur bestimmte Versanddienstleister zu.<br>Bitte achten Sie darauf, dass Sie nur gültige Daten angeben.",
+            "label":"Versanddienstleister f&uuml;r versendete Bestellungen",
+            "desc": "OTTO l&auml;sst nur bestimmte Versanddienstleister zu.<br>Bitte achten Sie darauf, dass Sie nur g&uuml;ltige Daten angeben.",
             "key":"_#_platform_#_.send.carrier",
             "type":"selection",
             "values":null,
@@ -203,7 +203,7 @@
          },
             "orders.tracking.key": {
                 "label": "Sendungsnummer",
-                "desc": "W&auml;hlen Sie hier aus der Datenbank die Tabelle und Spalte aus, in welcher Sie Ihre Sendungsnummer für jede Bestellung hinterlegen.<br><span style='color: red'>Hinweis: Die Angabe der Sendungsnummer ist für die Versandbest&auml;tigung bei OTTO verpflichtend!</span>",
+                "desc": "W&auml;hlen Sie hier aus der Datenbank die Tabelle und Spalte aus, in welcher Sie Ihre Sendungsnummer f&uuml;r jede Bestellung hinterlegen.<br><span style='color: red'>Hinweis: Die Angabe der Sendungsnummer ist f&uuml;r die Versandbest&auml;tigung bei OTTO verpflichtend!</span>",
                 "key": "_#_platform_#_.orders.tracking.key.DBMatching.table",
                 "type": "dbfieldselector",
                 "expertsetting": true,
@@ -222,8 +222,8 @@
                 ]
             },
           "forwarding.carrier":{
-             "label":"Versanddienstleister (Spedition) für versendete Bestellungen",
-             "desc": "OTTO lässt nur bestimmte Versanddienstleister zu.<br>Bitte achten Sie darauf, dass Sie nur gültige Daten angeben.",
+             "label":"Versanddienstleister (Spedition) f&uuml;r versendete Bestellungen",
+             "desc": "OTTO l&auml;sst nur bestimmte Versanddienstleister zu.<br>Bitte achten Sie darauf, dass Sie nur g&uuml;ltige Daten angeben.",
              "key":"_#_platform_#_.forwarding.carrier",
              "type":"selection",
              "values":null,
@@ -289,8 +289,8 @@
           },
 
             "orders.shipping.address": {
-                "label": "Bestätigen Sie die Versand- und Absenderadresse mit",
-                "desc": "Bestätigen Sie den Versand mit den Webshop-Status und das Lager oder den Ort, von dem die Sendung zur endgültigen Zustellung Versand wird.",
+                "label": "Best&auml;tigen Sie die Versand- und Absenderadresse mit",
+                "desc": "Best&auml;tigen Sie den Versand mit den Webshop-Status und das Lager oder den Ort, von dem die Sendung zur endg&uuml;ltigen Zustellung Versand wird.",
                 "key": "_#_platform_#_.orders.shipping.address",
                 "type": "duplicate",
                 "skipRadio": "true",
@@ -341,7 +341,7 @@
 
               "return.carrier":{
                  "label":"Versanddienstleister des Retourenschein",
-                 "desc": "OTTO lässt nur bestimmte Versanddienstleister zu.<br>Bitte achten Sie darauf, dass Sie nur gültige Daten angeben.",
+                 "desc": "OTTO l&auml;sst nur bestimmte Versanddienstleister zu.<br>Bitte achten Sie darauf, dass Sie nur g&uuml;ltige Daten angeben.",
                  "key":"_#_platform_#_.return.carrier",
                  "type":"selection",
                  "values":null,
@@ -408,7 +408,7 @@
 
 "orders.return.tracking.key": {
     "label": "Retouren-Sendungsnummer des Retourenschein",
-    "desc": "W&auml;hlen Sie hier aus der Datenbank die Tabelle und Spalte aus, in welcher Sie Ihre Retourensendungsnummer für jede Bestellung hinterlegen.<br><span style='color: red'>Hinweis: Die Angabe der Retouren-Sendungsnummer ist für die Versandbest&auml;tigung bei OTTO verpflichtend!</span>",
+    "desc": "W&auml;hlen Sie hier aus der Datenbank die Tabelle und Spalte aus, in welcher Sie Ihre Retourensendungsnummer f&uuml;r jede Bestellung hinterlegen.<br><span style='color: red'>Hinweis: Die Angabe der Retouren-Sendungsnummer ist f&uuml;r die Versandbest&auml;tigung bei OTTO verpflichtend!</span>",
     "key": "_#_platform_#_.orders.return.tracking.key.DBMatching.table",
     "type": "dbfieldselector",
     "morefields":{
@@ -428,7 +428,7 @@
 
             "orders.cancel.with": {
                 "label": "Bestellung stornieren mit",
-                "desc": "Wählen Sie hier den Shop-Status, der zu OTTO automatisch den Status 'Bestellung storniert' übermitteln soll.<br /><br /><strong>Hinweis:</strong> Teilstorno ist hierüber nicht möglich. Die gesamte Bestellung wird über diese Funktion storniert.",
+                "desc": "W&auml;hlen Sie hier den Shop-Status, der zu OTTO automatisch den Status 'Bestellung storniert' &uuml;bermitteln soll.<br /><br /><strong>Hinweis:</strong> Teilstorno ist hier&uuml;ber nicht m&ouml;glich. Die gesamte Bestellung wird &uuml;ber diese Funktion storniert.",
                 "key": "_#_platform_#_.orders.cancel.with",
                 "type": "selection",
                 "values": {

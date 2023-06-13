@@ -146,9 +146,12 @@ class AmazonSyncOrderStatus extends MagnaCompatibleSyncOrderStatus {
 			$this->config['CarrierMatchingTable'] = $this->config['CarrierDBMatchingTable'];
 			$this->config['CarrierMatchingAlias'] = $this->config['CarrierDBMatchingAlias'];
 			$sCarrier = parent::getCarrier($orderId);
-			if (    ('dbmatch' == $sCarrier)                    // if no carrier set
-			     && !empty($this->config['CarrierTextfield'])) {// and textfield filled
+			if ('dbmatch' == $sCarrier) {                       // if no carrier set
+			   if (!empty($this->config['CarrierTextfield'])) { // if textfield filled
 				return $this->config['CarrierTextfield'];   // use textfield as fallback
+                           } else {
+				return '';                                  // nothing set
+                           }
 			}
 			return $sCarrier;
 		} else if($this->config['CarrierMatch'] == 'shipmodulematch') {

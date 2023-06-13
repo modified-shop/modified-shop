@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * (c) 2010 - 2021 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2023 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -251,7 +251,7 @@ class OttoHelper extends AttributesMatchingHelper {
         return $data;
     }
 
-    protected function getPreparedIndependentData($prepare = false, $customIdentifier = '', $dbField) {
+    protected function getPreparedIndependentData($prepare = false, $customIdentifier = '', $dbField = 'NULL') {
         $availableCustomConfigs = array();
 
         if ($_GET['where'] == 'varmatchView') {
@@ -341,7 +341,7 @@ class OttoHelper extends AttributesMatchingHelper {
      * @param string $customIdentifier
      * @return array|null
      */
-    protected function getPreparedProductsData($category, $customIdentifier='') {
+    protected function getPreparedProductsData($category, $customIdentifier = '') {
         $dataFromDB = MagnaDB::gi()->fetchArray(eecho('
             SELECT `ShopVariation`
               FROM '.TABLE_MAGNA_OTTO_PREPARE.'
@@ -376,7 +376,7 @@ class OttoHelper extends AttributesMatchingHelper {
      * Loading Category Independent Attributes
      *
      * @param 
-     * @return 
+     * @return array
      */
     public function getCategoryIndependentAttributes($independentAttributes, $category, $prepare = false, $getDate = false, $customIdentifier = '') {
         $mpData = $independentAttributes;
@@ -710,8 +710,10 @@ class OttoHelper extends AttributesMatchingHelper {
         $independentAttributesClass = new OttoIndependentAttributes;
         $independentAttributes = $independentAttributesClass->getCategoryIndependentAttributes();
         $mpVariations = $this->getCategoryIndependentAttributes($independentAttributes, $categoryId, false, true);
-
-        $aMPAttributeValues = $mpVariations[$sMPAttributeCode]['AllowedValues'];
+        $aMPAttributeValues = $mpVariations['Attributes'][$sMPAttributeCode]['AllowedValues'];
+        $blAllowFreetext = ($mpVariations[$sMPAttributeCode]['DataType'] == 'multiSelectAndText'
+            || $mpVariations[$sMPAttributeCode]['DataType'] == 'selectAndText'
+            || $mpVariations[$sMPAttributeCode]['DataType'] == 'text');
 
         $sVariations = $this->flatShopVariations();
         $sAttributeValues = $sVariations[$aAttributes['Code']]['Values'];
@@ -731,14 +733,14 @@ class OttoHelper extends AttributesMatchingHelper {
         $sInfo = ML_GENERAL_VARMATCH_AUTO_MATCHED;
         $blFound = false;
         $allValuesAreMatched = true;
-        if ($aAttributes['Values']['0']['Shop']['Key'] === 'auto') {
+        if ($aAttributes['Values']['0']['Shop']['Key'] === 'all') {
             $newValue = array();
             $i = 0;
 
             foreach ($sAttributeValues as $keyAttribute => $valueAttribute) {
                 foreach ($aMPAttributeValues as $key => $value) {
                     if (in_array($valueAttribute, $aAlreadyMatchedValues)) continue;
-                    if (strcasecmp($valueAttribute, $value) == 0) {
+                    if (strcasecmp(html_entity_decode($valueAttribute), html_entity_decode($value)) == 0) {
                         $newValue[$i]['Shop']['Key'] = $keyAttribute;
                         $newValue[$i]['Shop']['Value'] = $valueAttribute;
                         $newValue[$i]['Marketplace']['Key'] = $key;
@@ -759,7 +761,9 @@ class OttoHelper extends AttributesMatchingHelper {
                 foreach ($sAttributeValues as $keyAttribute => $valueAttribute) {
                     foreach ($aMPAttributeValues as $key => $value) {
                         if (in_array($valueAttribute, $aAlreadyMatchedValues)) continue;
-                        if (filter_var($valueAttribute, FILTER_SANITIZE_NUMBER_INT) == filter_var($value, FILTER_SANITIZE_NUMBER_INT)) {
+                        $shopValueInteger = filter_var($valueAttribute, FILTER_SANITIZE_NUMBER_INT);
+                        $mpValueInteger = filter_var($value, FILTER_SANITIZE_NUMBER_INT);
+                        if (!empty($shopValueInteger) && !empty($mpValueInteger) && $mpValueInteger == $shopValueInteger) {
                             $newValue[$i]['Shop']['Key'] = $keyAttribute;
                             $newValue[$i]['Shop']['Value'] = $valueAttribute;
                             $newValue[$i]['Marketplace']['Key'] = $key;
@@ -780,7 +784,7 @@ class OttoHelper extends AttributesMatchingHelper {
             }
         } else {
             foreach ($aMPAttributeValues as $key => $value) {
-                if (strcasecmp($aAttributes['Values']['0']['Shop']['Value'], $value) == 0) {
+                if (strcasecmp(html_entity_decode($aAttributes['Values']['0']['Shop']['Value']), html_entity_decode($value)) == 0) {
                     $aAttributes['Values']['0']['Marketplace']['Key'] = $key;
                     $aAttributes['Values']['0']['Marketplace']['Value'] = $value;
                     // $value can be array if it is multi value, so that`s why this is checked
@@ -792,12 +796,21 @@ class OttoHelper extends AttributesMatchingHelper {
                 }
             }
 
-            if (!$blFound) {
+            if (!$blFound && $blAllowFreetext) {
                 // single automatching, not found: Set as free text entry
                 $aAttributes['Values']['0']['Marketplace']['Key'] = $aAttributes['Values']['0']['Shop']['Value'];
                 $aAttributes['Values']['0']['Marketplace']['Value'] = $aAttributes['Values']['0']['Shop']['Value'];
                 $aAttributes['Values']['0']['Marketplace']['Info'] = $aAttributes['Values']['0']['Shop']['Value'] . ML_GENERAL_VARMATCH_FREE_TEXT;
                 $allValuesAreMatched = false;
+                $blFound = true;
+            }
+
+            if (!$blFound && !empty($aAttributes['Values'])) {
+                foreach ($aAttributes['Values'] as $keyAttribute => $valueAttribute) {
+                    if (isset($valueAttribute['Marketplace']['Key']) && $valueAttribute['Marketplace']['Key'] == 'auto') {
+                        unset($aAttributes['Values'][$keyAttribute]);
+                    }
+                }
             }
         }
 

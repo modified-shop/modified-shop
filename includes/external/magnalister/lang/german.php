@@ -148,6 +148,7 @@ define('ML_SHIPMETHOD_TEXTFIELD', 'Manuelle Eingabe eines Lieferservice in recht
 define('ML_PLACEHOLDER_MERCHANT_ID', 'wird automatisch gef&uuml;llt');
 define('ML_LABEL_ORDER_ID', 'Bestellnummer');
 define('ML_LABEL_SHIPPING_DATE', 'Versanddatum');
+define('ML_LABEL_SHIPMETHOD', 'Versandmethode');
 define('ML_LABEL_ESTIMATED_ARRIVAL_DATE', 'Gesch&auml;tztes Ankunftsdatum');
 define('ML_LABEL_DONT_USE', 'Nicht verwenden');
 define('ML_LABEL_SELECT_TABLE_FIRST', 'Bitte erst Tabelle w&auml;hlen');
@@ -613,12 +614,12 @@ define('ML_GENERIC_ITEM', 'Artikel');
 define('ML_GENERIC_EACH', 'Einzelpreis');
 define('ML_GENERIC_TOTAL', 'Gesamtpreis');
 
-define('ML_GENERIC_INVENTORY_STATUS_PENDING_NEW', 'Artikel wird erstellt');
-define('ML_GENERIC_INVENTORY_STATUS_PENDING_UPDATE', 'Artikel wird aktualisiert');
+define('ML_GENERIC_INVENTORY_STATUS_PENDING_NEW', 'Produkt wird erstellt');
 define('ML_GENERIC_INVENTORY_STATUS_ACTIVE', 'Aktiv');
 define('ML_GENERIC_INVENTORY_STATUS_INACTIVE', 'Inaktiv');
+define('ML_GENERIC_INVENTORY_STATUS_SOLD_OUT', 'Ausverkauft');
 define('ML_GENERIC_INVENTORY_STATUS_EXPIRED', 'Abgelaufen');
-define('ML_GENERIC_INVENTORY_STATUS_TRANSFERRED', 'Transferred');
+define('ML_GENERIC_INVENTORY_STATUS_DRAFT', 'Draft');
 define('ML_GENERIC_INVENTORY_STATUS', 'Status');
 define('ML_GENERIC_STATUS_PRODUCT_IS_CREATED', 'Produkt wird erstellt');
 define('ML_GENERIC_STATUS_PRODUCT_IS_UPDATED', 'Produkt wird aktualisiert');
@@ -773,22 +774,25 @@ define('ML_AMAZON_PRODUCT_MATCHED_OK', 'Erfolgreich vorbereitet');
 define('ML_AMAZON_TEXT_REMATCH', 'Die ausgew&auml;hlten Produkte wurden bereits gematcht. Um diese per Multimatching neu
 	zu matchen m&uuml;ssen Sie zuvor die Option &quot;'.ML_LABEL_ALL.'&quot; neben der Schaltfl&auml;che
 	&quot;'.ML_AMAZON_LABEL_MANUAL_MATCHING.'&quot; anw&auml;hlen.');
+define('ML_AMAZON_TEXT_GET_TOKEN_HEADER', 'magnalister für Amazon autorisieren');
 define('ML_AMAZON_TEXT_GET_TOKEN', 'Um magnalister in Verbindung mit Amazon zu nutzen ist Ihre Zustimmung von N&ouml;ten.<br />
-                <br />
-                Mit der Autorisierung von magnalister in Ihrem Seller Central Portal, erlauben Sie uns mit Ihrem Amazon Shop zu interagieren. 
-                Das hei&szlig;t konkret: Bestellungen abzufragen, Produkte hochzuladen, Best&auml;nde zu synchronisieren und vieles mehr.
-                <br />
-                <br />
-                Um magnalister zu autorisieren f&uuml;hren Sie bitte folgende Schritte durch:<br />
-                <ol>
-                    <li>Nachdem Sie die Amazon Site ausgew&auml;hlt und auf Token beantragen geklickt haben, &ouml;ffnet sich nach diesem Hinweisfenster gleich ein Fenster zu Amazon. Loggen Sie sich dort bitte ein.</li>
-                    <li>Folgen Sie den Anweisungen auf Amazon selbst und schlie&szlig;en Sie Autorisierung ab.</li>
-                    <li>Klicken Sie im Anschluss auf "Weiter zur Artikelvorbereitung"</li>
-                </ol>
-                <br />
-                <strong>Wichtig:</strong> Nachdem Sie Ihren Token beantragt haben, d&uuml;rfen Sie ihre Amazon Site nicht mehr &auml;ndern. Sollten Sie f&auml;lschlicher Weise eine 
-                falsche Amazon Site gew&auml;hlt und Ihren Token bereits beantragt haben, w&auml;hlen Sie die korrekte Site aus und beantragen Sie bitte einen neuen Token.
-                ');
+    <br />
+    Mit der Autorisierung von magnalister in Ihrem Seller Central Portal, erlauben Sie uns mit Ihrem Amazon Shop zu interagieren. 
+    Das hei&szlig;t konkret: Bestellungen abzufragen, Produkte hochzuladen, Best&auml;nde zu synchronisieren und vieles mehr.
+    <br />
+    <br />
+    Um magnalister zu autorisieren f&uuml;hren Sie bitte folgende Schritte durch:<br />
+    <ol>
+        <li>Nachdem Sie die Amazon Site ausgew&auml;hlt und auf Token beantragen geklickt haben, &ouml;ffnet sich nach diesem Hinweisfenster gleich ein Fenster zu Amazon. Loggen Sie sich dort bitte ein.</li>
+        <li>Folgen Sie den Anweisungen auf Amazon selbst und schlie&szlig;en Sie Autorisierung ab.</li>
+        <li>Klicken Sie im Anschluss auf "Weiter zur Artikelvorbereitung"</li>
+    </ol>
+    <br />
+    <strong>Wichtig:</strong> Nachdem Sie Ihren Token beantragt haben, d&uuml;rfen Sie ihre Amazon Site nicht mehr &auml;ndern. Sollten Sie f&auml;lschlicherweise eine 
+    falsche Amazon Site gew&auml;hlt und Ihren Token bereits beantragt haben, w&auml;hlen Sie die korrekte Site aus und beantragen Sie bitte einen neuen Token.<br />
+    <br />
+    <strong>Hinweis:</strong> magnalister kann die an und von Amazon übermittelten nicht-personenbezogenen Daten für interne statistische Zwecke verarbeiten.
+');
 define('ML_AMAZON_TEXT_CHECKIN_DELAY', 'Bitte beachten Sie, dass es bis zu zwei Stunden dauern kann bis Einstell- und L&ouml;schvorg&auml;nge
 	vollst&auml;ndig von Amazon verarbeitet werden.');
 define('ML_AMAZON_TEXT_REFRESH_REQUEST_SEND', 'Ihre Aktualisierungsanfrage wurde gesendet. Bitte beachten Sie, dass es bis zu einer Stunden dauern kann
@@ -971,7 +975,7 @@ define('ML_AMAZON_SHIPPINGLABEL_FILTER_ORDERTYPE_FBA', 'Versand durch Amazon (FB
 define('ML_AMAZON_SHIPPINGLABEL_FILTER_ORDERTYPE_PRIME_SAMEDAY', 'Prime Same Day');
 define('ML_AMAZON_SHIPPINGLABEL_FILTER_ORDERTYPE_PRIME_NEXTDAY', 'Prime Next Day');
 define('ML_AMAZON_SHIPPINGLABEL_FILTER_ORDERTYPE_PRIME_SECONDDAY', 'Prime Second Day');
-define('ML_AMAZON_PRODUCT_MATCHING_POPUP_INFO_MAX_ALLOWED_PRODUCTS', 'Aus technischen Gr&uuml;nden ist es nicht m&ouml;glich mehr als 10 Produkte gleichzeitig manuell zu matchen!');
+define('ML_AMAZON_PRODUCT_MATCHING_POPUP_INFO_MAX_ALLOWED_PRODUCTS', 'Aus technischen Gr&uuml;nden ist es nicht m&ouml;glich mehr als %d Produkte gleichzeitig manuell zu matchen!');
 /*
  * comparison shopping
  */
@@ -1569,6 +1573,9 @@ define('ML_CROWDFOX_NO_GTIN', 'Some of prepared products do not have EAN specifi
 
 
 /* Kaufland.de */
+define('ML_SAME_WORKING_DAY', 'Am selben Werktag');
+define('ML_WORKING_DAY', 'Werktag');
+define('ML_WORKING_DAYS', 'Werktage');
 define('ML_HITMEISTER_SAME_PRODUCT_THERE', 'Dieser Artikel bei Kaufland.de');
 define('ML_HITMEISTER_LABEL_HITMEISTER_PRICE', 'Berechneter Preis <small>(gem. Konfig)</small>');
 define('ML_HITMEISTER_LABEL_ORDER_ID', 'Kaufland.de-Bestellnummer');
@@ -1576,7 +1583,9 @@ define('ML_HITMEISTER_IS_PORN', 'Porno');
 define('ML_HITMEISTER_AGE_RATING', 'Altersbeschr&auml;nkung');
 define('ML_HITMEISTER_CONDITION', 'Zustand');
 define('ML_HITMEISTER_SHIPPINGTIME', 'Lieferzeit');
+define('ML_HITMEISTER_HANDLINGTIME', 'Bearbeitungszeit');
 define('ML_HITMEISTER_SHIPPINGTIME_HM', 'Lieferzeit Kaufland.de');
+define('ML_HITMEISTER_HANDLINGTIME_HM', 'Bearbeitungszeit Kaufland.de');
 define('ML_HITMEISTER_USE_SHIPPINGTIME_MATCHING', 'Lieferzeit Matching verwenden');
 define('ML_HITMEISTER_DELIVERY_COUNTRY', 'Artikel wird versandt aus');
 define('ML_HITMEISTER_COMMENT', 'Hinweise zu Ihrem Artikel');
@@ -1749,7 +1758,7 @@ define('ML_CDISCOUNT_PRODUCT_DETAILS', 'Produktdetails');
 define('ML_CDISCOUNT_ITEM_NAME_TITLE', 'Titel');
 define('ML_CDISCOUNT_SUBTITLE', 'Warenkorb/Rechnungs-Titel');
 define('ML_CDISCOUNT_DESCRIPTION', 'Beschreibung');
-define('ML_CDISCOUNT_MARKETING_DESCRIPTION', 'Marketing beschreibung');
+define('ML_CDISCOUNT_MARKETING_DESCRIPTION', 'Marketing Beschreibung');
 define('ML_CDISCOUNT_PRICE', 'Preis');
 define('ML_CDISCOUNT_CATEGORY', 'Cdiscount Kategorie');
 define('ML_CDISCOUNT_LABEL_TITLE', 'Cdiscount Titel');

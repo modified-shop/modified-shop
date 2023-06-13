@@ -189,7 +189,7 @@ echo '
 
 if (!empty($products)) {
 	echo '
-<form name="matching" id="matching" action="'.toURL($_url, array('action' => 'multimatching')).'" method="POST" enctype="multipart/form-data" accept-charset="utf-8" >';
+<form name="matching" id="matching" action="'.toURL($_url, array('action' => 'multimatching')).'" method="POST" enctype="multipart/form-data" >';
 	renderMatchingTable($products, getCurrencyFromMarketplace($_MagnaSession['mpID']), true);
 	echo '
 	<input type="hidden" name="matching_nextpage" value="'.(($currentPage == $totalPages) ? 'null' : $currentPage).'" />

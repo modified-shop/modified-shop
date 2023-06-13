@@ -156,6 +156,7 @@ function amazonAutoMatching($mpID, $selectionName) {
 				'category_id' => $searchResult[0]['CategoryID'],
 				'category_name' => $searchResult[0]['CategoryName'],
 				'lowestprice' => $searchResult[0]['LowestPrice'],
+				'B2BActive' => getDBConfigValue('amazon.b2b.active', $mpID, 'false'),
 			);
 			
 			$where = (getDBConfigValue('general.keytype', '0') == 'artNr')
@@ -208,9 +209,11 @@ if (array_key_exists('amazonProperties', $_POST)) {
 		$data['category_id'] = isset($_POST['catID'][$asin]) ? $_POST['catID'][$asin] : '';
 		$data['category_name'] = isset($_POST['catName'][$asin]) ? $_POST['catName'][$asin] : '';
 		$data['lowestprice'] = isset($_POST['lowprice'][$asin]) ? $_POST['lowprice'][$asin] : '0.0';
+		$data['B2BActive'] = isset($_POST['B2BActive']) ? $_POST['B2BActive'] : 'false';
 	} else {
 		$data['asin'] = $data['item_note'] = $data['category_id'] = $data['category_name'] = $data['item_condition'] = '';
 		$data['asin_type'] = $data['will_ship_internationally'] = $data['lowestprice'] = 0;
+		/* TEST */ $data['B2BActive'] = isset($_POST['B2BActive']) ? $_POST['B2BActive'] : 'false';
 	}
 	$_MagnaSession['amazonLastPreparedTS'] = array_key_exists('amazonLastPreparedTS', $_MagnaSession) ? $_MagnaSession['amazonLastPreparedTS'] : date('Y-m-d H:i:s');
 	$data['PreparedTS'] = $_MagnaSession['amazonLastPreparedTS'];

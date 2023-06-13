@@ -39,7 +39,7 @@ class EtsyConfigure extends MagnaCompatibleConfigure {
         return array (
             'login', 'prepare', 'checkin',
             'price', 'inventorysync',
-            'orders', 'orderStatus',
+            'orders', 'etsyOrderStatus',
             'setImagePath'
         );
     }
@@ -119,9 +119,9 @@ $(document).ready(function() {
         mlGetOrderStatus($this->form['orderSyncState']['fields']['shippedstatus']);
         mlGetOrderStatus($this->form['orderSyncState']['fields']['cancelstatus']);
         if ($this->isAuthed) {
-            $this->form['prepare']['fields']['shippingtemplate']['values'] = EtsyHelper::showShippingTemplates();
+            $this->form['prepare']['fields']['shippingprofile']['values'] = EtsyHelper::showShippingProfiles();
         } else {
-            $this->form['prepare']['fields']['shippingtemplate']['values'] = array('');
+            $this->form['prepare']['fields']['shippingprofile']['values'] = array('');
         }
     }
 
@@ -166,11 +166,11 @@ $(document).ready(function() {
     protected function finalizeForm() {
         parent::finalizeForm();
 
-        if (    (isset($_POST['conf'][$this->marketplace.'.ShippingTemplate']) && empty($_POST['conf'][$this->marketplace.'.ShippingTemplate']))
-            || empty($this->form['prepare']['fields']['shippingtemplate']['values'])
+        if (    (isset($_POST['conf'][$this->marketplace.'.ShippingProfile']) && empty($_POST['conf'][$this->marketplace.'.ShippingProfile']))
+            || empty($this->form['prepare']['fields']['shippingprofile']['values'])
         ) {
             $aResponse = MagnaConnector::gi()->submitRequest(array(
-                'ACTION' => 'GetShippingTemplates'
+                'ACTION' => 'GetShippingProfiles'
             ));
 
             if (!empty($aResponse['ERRORS'])) {

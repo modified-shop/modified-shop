@@ -74,14 +74,14 @@ function renderSinglePrepareView($data) {
 			<tr class="odd">
 				<th>'.ML_LABEL_PRODUCT_NAME.'</th>
 				<td class="input">
-					<input class="fullwidth" type="text" maxlength="80" value="'.fixHTMLUTF8Entities($data[0]['Title'], ENT_COMPAT).'" name="Title" id="Title"/>
+					<input class="fullwidth" type="text" maxlength="80" value="'.substr(fixHTMLUTF8Entities($data[0]['Title'], ENT_COMPAT), 0, 80).'" name="Title" id="Title"/>
 				</td>
 				<td class="info">'.ML_EBAY_MAX_80_CHARS.'</td>
 			</tr>
 			<tr class="even">
 				<th>'.ML_EBAY_SUBTITLE.'</th>
 				<td class="input">
-					<input class="fullwidth" type="text" maxlength="55" value="'.((array_key_exists('Subtitle', $data[0])) ? $data[0]['Subtitle'] : '').'" name="Subtitle" id="Subtitle" />
+					<input class="fullwidth" type="text" maxlength="55" value="'.((array_key_exists('Subtitle', $data[0])) ? substr($data[0]['Subtitle'], 0, 55) : '').'" name="Subtitle" id="Subtitle" />
 					<input type="checkbox" name="enableSubtitle" id="enableSubtitle" />'.ML_EBAY_LABEL_USE_SUBTITLE_YES_NO.'
 				</td>
 				<td class="info">'.ML_EBAY_SUBTITLE_MAX_55_CHARS.'<span style="color:red;"> '.ML_EBAY_CAUSES_COSTS.'</span></td>
@@ -399,7 +399,7 @@ function renderMultiPrepareView($data) {
 			$PaymentMethodsArray[] = $row['PaymentMethods'];
 			$ShippingDetailsArray[] = $row['ShippingDetails'];
 		}
-		if ($row['DispatchTimeMax'] <= 30) { // gueltige Werte bis 30, table default == 99
+		if ($row['DispatchTimeMax'] <= 40) { // gueltige Werte bis 40, table default == 99
 			$DispatchTimeMaxArray[] = $row['DispatchTimeMax'];
 		}
 		if (!empty($row['SellerProfiles'])) {
@@ -551,7 +551,7 @@ function renderMultiPrepareView($data) {
 		if (1 == count($DispatchTimeMaxArray)) {
 			$prefilledDispatchTimeMax = $DispatchTimeMaxArray[0];
 		} else {
-			$prefilledDispatchTimeMax = getDBConfigValue('ebay.DispatchTimeMax', $_MagnaSession['mpID'], 30);
+			$prefilledDispatchTimeMax = getDBConfigValue('ebay.DispatchTimeMax', $_MagnaSession['mpID'], 40);
 		}
 	}
 
@@ -1033,7 +1033,13 @@ function renderMultiPrepareView($data) {
 								<tr><td colspan=3>
 									<div id="noteVariationsEnabled" name="noteVariationsEnabled">';
 			if (is_numeric($PrimaryCategory) && getDBConfigValue(array($_MagnaSession['currentPlatform'].'.usevariations', 'val'), $_MagnaSession['mpID'], true)) {
-				if (VariationsEnabled($PrimaryCategory))
+				#if (VariationsEnabled($PrimaryCategory))
+				if (    (    isset($SecondaryCategory) 
+				          && is_numeric($SecondaryCategory)
+				          && VariationsEnabled($PrimaryCategory)
+				          && VariationsEnabled($SecondaryCategory))
+				     || (    (!isset($SecondaryCategory) || empty($SecondaryCategory))
+				          && VariationsEnabled($PrimaryCategory)))
 					$html .= '<br />'.ML_EBAY_NOTE_VARIATIONS_ENABLED;
 				else
 					$html .= '<br />'.ML_EBAY_NOTE_VARIATIONS_DISABLED;
@@ -1549,7 +1555,11 @@ $(document).ready(function() {
 		var cID = this.value;
 		if (cID != '') {
 			generateEbayCategoryPath(cID, $('#PrimaryCategoryVisual'));
-			VariationsEnabled(cID, $('#noteVariationsEnabled'));
+			if ($('#SecondaryCategory').val() != '') {
+				VariationsEnabled2(cID, $('#SecondaryCategory').val(), $('#noteVariationsEnabled'));
+			} else {
+				VariationsEnabled(cID, $('#noteVariationsEnabled'));
+			}
 			ProductRequired(cID, $('#noteProductRequired'));
 			GetConditionValues(cID, $('#ebay_Condition'), <?php if(isset($defaultConditionID))
 			echo $defaultConditionID; else echo '1000'; ?>);
@@ -1562,6 +1572,11 @@ $(document).ready(function() {
 		if (cID != '') {
 			$('#SecondaryCategory').val(cID);
 			generateEbayCategoryPath(cID, $('#SecondaryCategoryVisual'));
+			if ($('#PrimaryCategory').val() != '') {
+				VariationsEnabled2($('#PrimaryCategory').val(), cID, $('#noteVariationsEnabled'));
+			} else {
+				VariationsEnabled(cID, $('#noteVariationsEnabled'));
+			}
 			return true;
 		}
 	});
@@ -1572,7 +1587,11 @@ $(document).ready(function() {
 		startCategorySelector(function(cID) {
 			$('#PrimaryCategory').val(cID);
 			generateEbayCategoryPath(cID, $('#PrimaryCategoryVisual'));
-			VariationsEnabled(cID, $('#noteVariationsEnabled'));
+			if ($('#SecondaryCategory').val() != '') {
+				VariationsEnabled2(cID, $('#SecondaryCategory').val(), $('#noteVariationsEnabled'));
+			} else {
+				VariationsEnabled(cID, $('#noteVariationsEnabled'));
+			}
 			ProductRequired(cID, $('#noteProductRequired'));
 			GetConditionValues(cID, $('#ebay_Condition'), <?php if(isset($defaultConditionID)) echo $defaultConditionID; else echo '1000'; ?>);
 			return true;
@@ -1582,6 +1601,11 @@ $(document).ready(function() {
 		startCategorySelector(function(cID) {
 			$('#SecondaryCategory').val(cID);
 			generateEbayCategoryPath(cID, $('#SecondaryCategoryVisual'));
+			if ($('#PrimaryCategory').val() != '') {
+				VariationsEnabled2($('#PrimaryCategory').val(), cID, $('#noteVariationsEnabled'));
+			} else {
+				VariationsEnabled(cID, $('#noteVariationsEnabled'));
+			}
 		}, 'eBay');
 	});
 	$('#selectStoreCategory').click(function() {

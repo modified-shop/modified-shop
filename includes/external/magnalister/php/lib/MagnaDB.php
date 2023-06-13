@@ -468,6 +468,7 @@ class MagnaDB {
 	/* Caches */
 	protected $tableColumnsCache = array();
 	protected $columnExistsInTableCache = array();
+	protected $DescCache = array();
 
 	/**
 	 * Class constructor
@@ -1161,7 +1162,7 @@ class MagnaDB {
 		if (isset($this->tableColumnsCache[$table])) {
 			return $this->tableColumnsCache[$table];
 		}
-		$columns = $this->fetchArray('DESC  '.$table);
+		$columns = $this->getDesc($table);
 		if (!is_array($columns) || empty($columns)) {
 			return false;
 		}
@@ -1176,7 +1177,7 @@ class MagnaDB {
 		if (isset($this->columnExistsInTableCache[$table][$column])) {
 			return $this->columnExistsInTableCache[$table][$column];
 		}
-		$columns = $this->fetchArray('DESC  '.$table);
+		$columns = $this->getDesc($table);
 		if (!is_array($columns) || empty($columns)) {
 			return false;
 		}
@@ -1201,11 +1202,95 @@ class MagnaDB {
 	}
 
 	public function	columnType($column, $table) {
-		$columns = $this->fetchArray('DESC  '.$table);
+		$columns = $this->getDesc($table);
 		foreach($columns as $column_description) {
 			if($column_description['Field'] == $column) return $column_description['Type'];
 		}
 		return false;
+	}
+
+	public function columnNeedsValue($column, $table) {
+		$columns = $this->getDesc($table);
+		foreach($columns as $column_description) {
+			if(    ($column_description['Field']   == $column)
+			    && ($column_description['Null']    == 'NO')
+			    && ($column_description['Default'] === null)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private function getDesc($table) {
+		if (!isset($this->DescCache[$table])) {
+			$this->DescCache[$table] = $this->fetchArray('DESC  '.$table);
+		}
+		return $this->DescCache[$table];
+	}
+
+    /**
+     * Will cut off if data is too long for a specific data field
+     *  Currently only checks for varchar
+     *  @TODO: int,...
+     *
+     * @param $data
+     * @param $table
+     * @return void
+     */
+    public function validateDataLength(&$data, $table) {
+        $tableDescription = $this->getDesc($table);
+        foreach ($tableDescription as $columnDescription) {
+            if (array_key_exists($columnDescription['Field'], $data)) {
+                // check if its varchar and cut off at max length
+                $pattern = '/varchar\((\d+)\)/';
+                if (preg_match($pattern, $columnDescription['Type'], $matches)) {
+                    $maxLength = (int)$matches[1];
+                    if (mb_strlen($data[$columnDescription['Field']]) > $maxLength) {
+                        $data[$columnDescription['Field']] = mb_substr($data[$columnDescription['Field']], 0, $maxLength);
+                    }
+                }
+            }
+        }
+    }
+
+	/**
+	 * @param array $array
+	 * @param string $table
+	 *
+	 *  If entries for non-nullable columns without default value are lacking, add
+	 */
+	public function addNonNullableEntries(&$data, $table) {
+		if (!is_array($data)) return;
+		$tabledesc = $this->getDesc($table);
+		if (!is_array($tabledesc)) return false;
+		$returnarray = array();
+		// go through all table's columns
+		foreach ($tabledesc as $column_description) {
+			if (!array_key_exists($column_description['Field'], $data)) {
+				if(    ($column_description['Null']    == 'NO')
+				    && ($column_description['Default'] === null)) {
+					if ($column_description['Type'] == 'date') {
+						$data[$column_description['Field']] = date('Y-m-d');
+					} else if ($column_description['Type'] == 'time') {
+						$data[$column_description['Field']] = date('H:i:s');
+					} else if ($column_description['Type'] == 'datetime') {
+						$data[$column_description['Field']] = date('Y-m-d H:i:s');
+					} else if (    (strpos($column_description['Type'], 'int') !== false)
+					            || (strpos($column_description['Type'], 'dec') !== false)
+					            || (strpos($column_description['Type'], 'float') !== false)
+					            || (strpos($column_description['Type'], 'double') !== false)
+					            || (strpos($column_description['Type'], 'numeric') !== false)
+					            || (strpos($column_description['Type'], 'fixed') !== false)
+					            || (strpos($column_description['Type'], 'number') !== false)
+					            || ($column_description['Type'] == 'bit')
+					            || ($column_description['Type'] == 'boolean')) {
+						$data[$column_description['Field']] = 0;
+					} else {
+						$data[$column_description['Field']] = '';
+					}
+				}
+			}
+		}
 	}
 
 	public function recordExists($table, $conditions, $getQuery = false) {

@@ -93,7 +93,7 @@ class EtsyCheckinSubmit extends MagnaCompatibleCheckinSubmit {
                 'IsSupply' => $masterData['IsSupply'],
                 'Language' => $masterData['Language'],
                 'Currency' => $masterData['Currency'],
-                'ShippingTemplate' => $masterData['ShippingTemplate'],
+                'ShippingProfile' => $masterData['ShippingProfile'],
                 'Primarycategory' => $masterData['Primarycategory'],
                 'Verified' => $masterData['Verified'],
                 'Description' => $masterData['MasterDescription'],
@@ -143,7 +143,7 @@ class EtsyCheckinSubmit extends MagnaCompatibleCheckinSubmit {
             'IsSupply' => $properties['IsSupply'],
             'Language' => getDBConfigValue('etsy.shop.language', $this->mpID),
             'Currency' => getDBConfigValue('etsy.currency', $this->mpID),
-            'ShippingTemplate' => $properties['ShippingTemplate'],
+            'ShippingProfile' => $properties['ShippingProfile'],
             'Primarycategory' => $properties['Primarycategory'],
             'Verified' => 'OK',
             'ProductId' => $pID,
@@ -179,6 +179,7 @@ class EtsyCheckinSubmit extends MagnaCompatibleCheckinSubmit {
     private function translateCategoryAttributesForVariations($jCategoryAttributes, $aVariations, $sSkuKey) {
 
         $aCategoryAttributes = json_decode($jCategoryAttributes, true);
+
 
         // determine used variation names and values
         $aVariationNames = array();
@@ -226,9 +227,10 @@ class EtsyCheckinSubmit extends MagnaCompatibleCheckinSubmit {
         // determine the variation name and value matching shop -> etsy
         $aVarValuesShop2Etsy = array();
         $aVarValuesShop2KeysEtsy = array();
+        $aPredefinedAttrNames = array(); // case: FreeText (optional) with predefined name
         foreach ($aVariationNamesByCode as $iShopVarCode => $sShopVarName) {
             foreach ($aCategoryAttributes as $key => $aAttr) {
-                if (($aAttr['Kind'] == 'Matching')
+                if (   ($aAttr['Kind'] == 'Matching')
                     && ($aAttr['Code'] == $iShopVarCode)
                 ) {
                     // Etsy optional attribute
@@ -246,6 +248,13 @@ class EtsyCheckinSubmit extends MagnaCompatibleCheckinSubmit {
                     foreach ($aAttr['Values'] as $aAVal) {
                         $aVarValuesShop2Etsy[$sShopVarName][$aAVal['Shop']['Value']] = $aAVal['Marketplace']['Value'];
                     }
+                    unset($aAVal);
+                } else if ($aAttr['Kind'] == 'FreeText') {
+                    // Matched free text attributes 
+                    foreach ($aAttr['Values'] as $aAVal) {
+                        $aVarValuesShop2Etsy[$sShopVarName][$aAVal['Shop']['Value']] = $aAVal['Marketplace']['Value'];
+                    }
+                    $aPredefinedAttrNames[$sShopVarName] = $aAttr['AttributeName'];
                     unset($aAVal);
                 }
             }
@@ -288,7 +297,9 @@ class EtsyCheckinSubmit extends MagnaCompatibleCheckinSubmit {
                     $aRes[$sCurrKey]['property_values'][$i] = array(
                         'property_id' => ($countCustomAttribute[$sCurrKey] === 1) ? 513 : 514,
                         'value_ids' => array(),
-                        'property_name' => $aNameValue['Name'],
+                        'property_name' => isset($aPredefinedAttrNames[$aNameValue['Name']])
+                                           ? $aPredefinedAttrNames[$aNameValue['Name']]
+                                           : $aNameValue['Name'],
                         'values' => array($aVarValuesShop2Etsy[$aNameValue['Name']][$aNameValue['Value']])
                     );
                 }

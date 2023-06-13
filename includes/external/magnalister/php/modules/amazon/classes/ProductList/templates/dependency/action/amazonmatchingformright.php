@@ -27,10 +27,10 @@ $mmatch = $oObject->getConfig('matchall');
             s.match('/\d+/');
 
             // if over border then show popup
-            if (s.match(/\d+/) > 10) {
+            if (s.match(/\d+/) > <?php echo getDBConfigValue('amazon.matching.max.allowed.products', 0, 10); ?> ) {
                 e.preventDefault();
                 $('<div class="ml-modal dialog2" title="<?php echo ML_LABEL_INFORMATION ?>"></div>')
-                    .html('<?php echo addslashes(ML_AMAZON_PRODUCT_MATCHING_POPUP_INFO_MAX_ALLOWED_PRODUCTS); ?>').jDialog({
+                    .html('<?php echo addslashes(sprintf(ML_AMAZON_PRODUCT_MATCHING_POPUP_INFO_MAX_ALLOWED_PRODUCTS, getDBConfigValue('amazon.matching.max.allowed.products', 0, 10))); ?>').jDialog({
                     width: '500px'
                 });
                 setTimeout(function() { jQuery.unblockUI(); }, 1100);

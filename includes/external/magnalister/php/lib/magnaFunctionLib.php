@@ -1791,26 +1791,26 @@ table.sqlerror td.q:hover div.debug:hover {
 		<table class="datagrid autoOddEven sqlerror">
 			<thead>
 				<tr>
-					<th>Query</th>
 					<th>ErrNo</th>
 					<th>Error</th>
+					<th>Query</th>
 				</tr>
 			</thead>
 			<tbody>';
 	foreach ($errors as $e) {
 		echo '
 				<tr>
-					<td class="q">
-						<pre>'.htmlspecialchars($e['Query']).'</pre>
-						<div class="debug">
-							<pre>'.htmlspecialchars(print_r($e['Backtrace'], true)).'</pre>
-						</div>
-					</td>
 					<td>
 						'.$e['ErrNo'].'
 					</td>
 					<td>
 						'.$e['Error'].'
+					</td>
+					<td class="q">
+						<pre>'.htmlspecialchars($e['Query']).'</pre>
+						<div class="debug">
+							<pre>'.htmlspecialchars(print_r($e['Backtrace'], true)).'</pre>
+						</div>
 					</td>
 				</tr>';
 	}

@@ -159,7 +159,8 @@ class IdealoCheckinSubmit extends ComparisonShoppingCheckinSubmit {
 
 		if (!empty($aPropertiesRow['ShippingCostMethod'])) {
 			if (is_numeric($aPropertiesRow['ShippingCost'])
-				&& $aPropertiesRow['ShippingCostMethod'] === '__ml_lump') {
+				&& $aPropertiesRow['ShippingCostMethod'] === '__ml_lump'
+            ) {
 				$data['submit']['ShippingCost'] = $aPropertiesRow['ShippingCost'];
 			} else if ($aPropertiesRow['ShippingCostMethod'] === '__ml_weight') {
 				$data['submit']['ShippingCost'] = $data['submit']['ItemWeight'];

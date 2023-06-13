@@ -66,11 +66,11 @@
                 "type": "selection",
                 "values": null
             },
-            "shippingtemplate" : {
-                "label": "Etsy Shipping Template",
-                "key": "_#_platform_#_.ShippingTemplate",
+            "shippingprofile" : {
+                "label": "Etsy Delivery Profile",
+                "key": "_#_platform_#_.ShippingProfile",
                 "type": "selection",
-                "desc": "Etsy Shipping Templates contain shipping information:<br \/><ul><li>Origin country (where you send from),<\/li><li>Destination country or region,<\/li><li>Primary shipping costs (if the Item is shipped alone),<\/li><li>Secondary shipping costs (if the Item is shipped together with others).<\/li><\/ul><br \/>An indication of the shipping service is not included.",
+                "desc": "Etsy delivery profile  contain delivery information:<br \/><ul><li>Origin country (where you send from),<\/li><li>Destination country or region,<\/li><li>Primary shipping costs (if the Item is shipped alone),<\/li><li>Secondary shipping costs (if the Item is shipped together with others).<\/li><\/ul><br \/>An indication of the shipping service is not included.",
                 "values": null
             }
         }

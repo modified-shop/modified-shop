@@ -1110,7 +1110,7 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
                         $blCurrValueFound = true;
                         continue;
                     }
-                    if (strcasecmp($valueAttribute, $value) == 0) {
+                    if (strcasecmp(html_entity_decode($valueAttribute), html_entity_decode($value)) == 0) {
                         $newValue[$i]['Shop']['Key'] = $keyAttribute;
                         $newValue[$i]['Shop']['Value'] = $valueAttribute;
                         $newValue[$i]['Marketplace']['Key'] = $key;
@@ -1143,7 +1143,9 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
                 foreach ($sAttributeValues as $keyAttribute => $valueAttribute) {
                     foreach ($aMPAttributeValues as $key => $value) {
                         if (in_array($valueAttribute, $aAlreadyMatchedValues)) continue;
-                        if (filter_var($valueAttribute, FILTER_SANITIZE_NUMBER_INT) == filter_var($value, FILTER_SANITIZE_NUMBER_INT)) {
+                        $shopValueInteger = filter_var($valueAttribute, FILTER_SANITIZE_NUMBER_INT);
+                        $mpValueInteger = filter_var($value, FILTER_SANITIZE_NUMBER_INT);
+                        if (!empty($shopValueInteger) && !empty($mpValueInteger) && $mpValueInteger == $shopValueInteger) {
                             $newValue[$i]['Shop']['Key'] = $keyAttribute;
                             $newValue[$i]['Shop']['Value'] = $valueAttribute;
                             $newValue[$i]['Marketplace']['Key'] = $key;
@@ -1164,7 +1166,7 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
             }
         } else {
             foreach ($aMPAttributeValues as $key => $value) {
-                if (strcasecmp($aAttributes['Values']['0']['Shop']['Value'], $value) == 0) {
+                if (strcasecmp(html_entity_decode($aAttributes['Values']['0']['Shop']['Value']), html_entity_decode($value)) == 0) {
                     $aAttributes['Values']['0']['Marketplace']['Key'] = $key;
                     $aAttributes['Values']['0']['Marketplace']['Value'] = $value;
                     // $value can be array if it is multi value, so that`s why this is checked
@@ -1176,12 +1178,21 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
                 }
             }
 
-            if (!$blFound) {
+            if (!$blFound && $blAllowFreetext) {
                 // single automatching, not found: Set as free text entry
                 $aAttributes['Values']['0']['Marketplace']['Key'] = $aAttributes['Values']['0']['Shop']['Value'];
                 $aAttributes['Values']['0']['Marketplace']['Value'] = $aAttributes['Values']['0']['Shop']['Value'];
                 $aAttributes['Values']['0']['Marketplace']['Info'] = $aAttributes['Values']['0']['Shop']['Value'] . ML_GENERAL_VARMATCH_FREE_TEXT;
                 $allValuesAreMatched = false;
+                $blFound = true;
+            }
+
+            if (!$blFound && !empty($aAttributes['Values'])) {
+                foreach ($aAttributes['Values'] as $keyAttribute => $valueAttribute) {
+                    if (isset($valueAttribute['Marketplace']['Key']) && $valueAttribute['Marketplace']['Key'] == 'auto') {
+                        unset($aAttributes['Values'][$keyAttribute]);
+                    }
+                }
             }
         }
 
@@ -1389,7 +1400,7 @@ class AttributesMatchingHelper extends MagnaCompatibleHelper {
                 'MpIdentifier' => $category,
                 'CustomIdentifier' => $sCustomIdentifier,
                 'ShopVariation' => json_encode($matching['ShopVariation']),
-                'IsValid' => isset($matching['IsValid']) && $matching['IsValid'] === 'false' ? false : true,
+                'IsValid' => isset($matching['IsValid']) && $matching['IsValid'] === 'false' ? 0 : 1,
                 'ModificationDate' => date('Y-m-d H:i:s'),
                     ), true);
         }

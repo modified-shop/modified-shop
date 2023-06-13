@@ -29,12 +29,6 @@ class HitmeisterInventoryView extends MagnaCompatibleInventoryView {
 		$this->marketplace = $_MagnaSession['currentPlatform'];
 		$this->mpID = $_MagnaSession['mpID'];
 
-		$this->settings = array_merge(array(
-			'maxTitleChars'	=> 40,
-			'itemLimit'		=> 50,
-			'language'      => getDBConfigValue($this->marketplace.'.lang', $this->mpID, $_SESSION['languages_id']),
-		), $settings);
-
 		$this->simplePrice = new SimplePrice();
 		$this->mpCurrency = getCurrencyFromMarketplace($this->mpID);
 		$this->simplePrice->setCurrency($this->mpCurrency);
@@ -43,11 +37,25 @@ class HitmeisterInventoryView extends MagnaCompatibleInventoryView {
 		$this->magnasession = &$_MagnaSession;
 		$this->magnaShopSession = &$_MagnaShopSession;
 
+		if (isset($_GET['itemsPerPage'])) {
+			$this->magnasession[$this->mpID]['InventoryView']['ItemLimit'] = (int) $_GET['itemsPerPage'];
+		}
+		if (!isset($this->magnasession[$this->mpID]['InventoryView']['ItemLimit']) || ($this->magnasession[$this->mpID]['InventoryView']['ItemLimit'] <= 0)
+		) {
+			$this->magnasession[$this->mpID]['InventoryView']['ItemLimit'] = 50;
+		}
+
 		if (array_key_exists('tfSearch', $_POST) && !empty($_POST['tfSearch'])) {
 			$this->search = $_POST['tfSearch'];
 		} else if (array_key_exists('search', $_GET) && !empty($_GET['search'])) {
 			$this->search = $_GET['search'];
 		}
+
+		$this->settings = array_merge(array(
+			'maxTitleChars'	=> 40,
+			'itemLimit'	=> $this->magnasession[$this->mpID]['InventoryView']['ItemLimit'],
+			'language'      => getDBConfigValue($this->marketplace.'.lang', $this->mpID, $_SESSION['languages_id']),
+		), $settings);
 
 		if (isset($_POST['refreshStock'])) {
 			try {
@@ -62,6 +70,83 @@ class HitmeisterInventoryView extends MagnaCompatibleInventoryView {
 		}
 	}
 
+	public function renderInventoryTable() {
+		$html = '';
+
+		if (empty($this->renderableData)) {
+			$this->prepareInventoryData();
+		}
+
+		$pages = ceil($this->numberofitems / $this->settings['itemLimit']);
+		$tmpURL = $this->url;
+		if (isset($_GET['sorting'])) {
+			$tmpURL['sorting'] = $_GET['sorting'];
+		}
+		if (!empty($this->search)) {
+			$tmpURL['search'] = urlencode($this->search);
+		}
+		$currentPage = 1;
+		if (isset($_GET['page']) && ctype_digit($_GET['page']) && (1 <= (int)$_GET['page']) && ((int)$_GET['page'] <= $pages)) {
+			$currentPage = (int)$_GET['page'];
+		}
+
+		$itemsPerPageSelect = array(50, 100, 250, 500, 1000, 2500);
+		$chooser = '
+				<select id="itemsPerPage" name="itemsPerPage" class="">' . "\n";
+		foreach ($itemsPerPageSelect as $chc) {
+			$chcselected = ($this->settings['itemLimit'] == $chc) ? 'selected' : '';
+			$chooser .= '<option value="' . $chc . '" ' . $chcselected . '>' . $chc . '</option>';
+		}
+		$chooser .= '
+				</select>';
+
+		$offset = $currentPage * $this->settings['itemLimit'] - $this->settings['itemLimit'] + 1;
+		$limit = $offset + count($this->renderableData) - 1;
+		$html .= '<table class="listingInfo"><tbody><tr>
+					<td class="ml-pagination">
+						'.(($this->numberofitems > 0)
+							?	('<span class="bold">'.ML_LABEL_PRODUCTS.':&nbsp; '.
+								 $offset.' bis '.$limit.' von '.($this->numberofitems).'&nbsp;&nbsp;&nbsp;&nbsp;</span>'
+								)
+							:	''
+						).'
+						<span class="bold">'.ML_LABEL_CURRENT_PAGE.':&nbsp; '.$currentPage.'</span>
+					</td>
+					<td class="textright">
+						'.renderPagination($currentPage, $pages, $tmpURL).'&nbsp;'.$chooser.'
+					</td>
+				</tr></tbody></table>';
+
+		if (!empty($this->renderableData)) {
+			$html .= $this->renderDataGrid('csinventory');
+		} else {
+			$html .= '<table class="magnaframe"><tbody><tr><td>'.
+						(empty($this->search) ? ML_GENERIC_NO_INVENTORY : ML_LABEL_NO_SEARCH_RESULTS).
+					 '</td></tr></tbody></table>';
+		}
+
+		ob_start();
+?>
+<script type="text/javascript">/*<![CDATA[*/
+$(document).ready(function() {
+	$('#selectAll').click(function() {
+		state = $(this).attr('checked') !== undefined;
+		$('#csinventory input[type="checkbox"]:not([disabled])').each(function() {
+			$(this).attr('checked', state);
+		});
+	});
+	$('#itemsPerPage').change(function() {
+		window.location.href = '<?php echo toURL($tmpURL, true); ?>&itemsPerPage=' + $(this).val();
+	});
+});
+/*]]>*/</script>
+<?php
+		$html .= ob_get_contents();	
+		ob_end_clean();
+		
+		return $html;
+	}
+	
 	public function renderActionBox() {
 		global $_modules;
 

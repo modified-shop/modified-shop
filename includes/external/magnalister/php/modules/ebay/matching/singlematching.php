@@ -155,7 +155,7 @@ if (isset($productsData['Variations']) && !empty($productsData['Variations'])) {
 
 echo '
 <h2>Single Matching</h2>
-<form name="singleMatching" id="singleMatching" action="'.toURL($_url).'" method="POST" enctype="multipart/form-data" accept-charset="utf-8" >';
+<form name="singleMatching" id="singleMatching" action="'.toURL($_url).'" method="POST" enctype="multipart/form-data" >';
 	renderMatchingTable($products, getCurrencyFromMarketplace($_MagnaSession['mpID']));
 /*	echo '
 <table class="ebay_properties">

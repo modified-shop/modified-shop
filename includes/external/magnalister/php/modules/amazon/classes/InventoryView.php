@@ -365,6 +365,8 @@ class InventoryView {
 						 WHERE products_id=\''.$item['pID'].'\'
 						       AND language_id = \''.$_SESSION['languages_id'].'\'
 					');
+					// Shop Price (attribute price is added in the render function)
+					$item['ShopPrice'] = (float)MagnaDB::gi()->fetchOne('SELECT products_price FROM '.TABLE_PRODUCTS.' WHERE products_id='.$item['pID']);
 					if (is_array($variationTheme)) {
 						if (array_key_exists('VariationTitle', $variationTheme)) {
 						$variationTheme = array($variationTheme);
@@ -408,6 +410,7 @@ class InventoryView {
 					<td>'.ML_LABEL_SHOP_TITLE.'</td>
 					<td>'.ML_AMAZON_LABEL_TITLE.' '.$this->sortByType('itemtitle').'</td>
 					<td>ASIN '.$this->sortByType('asin').'</td>
+					<td>'.ML_LABEL_SHOP_PRICE_BRUTTO.'</td>
 					<td>'.ML_AMAZON_LABEL_AMAZON_PRICE.' '.$this->sortByType('price').'</td>
 					<td>'.ML_AMAZON_BUSINESS_LABEL_PRICE.' '.$this->sortByType('businessprice').'</td>
 					<td>'.ML_LABEL_QUANTITY.' '.$this->sortByType('quantity').'</td>
@@ -462,6 +465,12 @@ class InventoryView {
 				$class .= ' incomplete';
 			}
 
+			if (isset($item['ShopPrice'])) {
+				$shopPrice = $this->simpleprice->setPrice($item['ShopPrice'])->addAttributeSurcharge((int)magnaSKU2aID($item['SKU']))->addTaxByPID($item['pID'])->format();
+			} else {
+				$shopPrice = '&mdash;';
+			}
+
 			if (isset($item['BusinessFeature'])) {
 				$businessFeature = constant('ML_' . $item['BusinessFeature']);
 			} else {
@@ -499,6 +508,7 @@ class InventoryView {
 						: ('<td title="'.$item['ItemTitle'].'">'.str_replace(' ', '&nbsp;', $item['ItemTitleShort']).'</td>')
 					).'
 					<td>'.getAmazonOfferLink($item['ASIN'], ML_AMAZON_LABEL_PRODUCT_IN_AMAZON).'</td>
+					<td>'.$shopPrice.'</td>
 					<td>'.$this->simpleprice->setPrice($item['Price'])->format().'</td>
 					<td>'.$businessPrice.'</td>
 					<td>'.(($item['Quantity'] > 0) ? $item['Quantity'] : ML_LABEL_SOLD_OUT).'</td>

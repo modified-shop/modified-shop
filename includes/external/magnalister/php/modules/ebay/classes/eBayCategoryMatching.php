@@ -457,6 +457,27 @@ function VariationsEnabled(cID, viewElem) {
 	});
 }
 
+function VariationsEnabled2(cID1, cID2, viewElem) {
+	jQuery.ajax({
+		type: 'POST',
+		url: '<?php echo toURL($this->url, array('where' => 'prepareView', 'kind' => 'ajax'), true);?>',
+		data: {
+			'action': 'VariationsEnabled2',
+			'id1': cID1,
+			'id2': cID2
+		},
+		success: function(data) {
+			var msg;
+			if(data == 'true') msg='<?php echo ML_EBAY_NOTE_VARIATIONS_ENABLED ?>';
+			else msg='<?php echo ML_EBAY_NOTE_VARIATIONS_DISABLED ?>';
+			viewElem.html(msg);
+		},
+		error: function() {
+		},
+		dataType: 'html'
+	});
+}
+
 function ProductRequired(cID, viewElem) {
 	jQuery.ajax({
 		type: 'POST',
@@ -596,6 +617,13 @@ $(document).ready(function() {
 				$id = $_POST['id'];
 			}
 		}
+		$id1 = $id2 = ''; // for VariationsEnabled2
+		if (isset($_POST['id1'])) {
+			$id1 = $_POST['id1'];
+		}
+		if (isset($_POST['id2'])) {
+			$id2 = $_POST['id2'];
+		}
 		$this->isStoreCategory = (array_key_exists('isStoreCategory', $_POST))
 			? (($_POST['isStoreCategory'] == 'false')
 				? false
@@ -651,6 +679,14 @@ $(document).ready(function() {
 			}
 			case 'VariationsEnabled': {
 				return VariationsEnabled($id)?'true':'false';
+			}
+			case 'VariationsEnabled2': {
+				if (empty($id2)) {
+					return VariationsEnabled($id1)?'true':'false';
+				} else {
+					return (    VariationsEnabled($id1)
+					         && VariationsEnabled($id2)) ?'true':'false';
+				}
 			}
 			case 'ProductRequired': {
 				return ProductRequired($id)?'true':'false';

@@ -407,7 +407,7 @@ abstract class MLProductList {
 	 * @return int
 	 */
 	protected function getPageCount(){
-		$iPages = $this->oQuery->getCount() / $this->iRowsPerPage;
+		$iPages = $this->oQuery->getCount(true, 'DISTINCT p.products_id') / $this->iRowsPerPage;
 		if((int) $iPages != $iPages){
 			++$iPages;
 		}

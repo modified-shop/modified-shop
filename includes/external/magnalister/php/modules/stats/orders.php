@@ -32,7 +32,11 @@ $result = MagnaDB::gi()->fetchArray('
 $platforms = array('label' => '', 'total' => 0, 'shop' => 0);
 if (!empty($result)) {
 	foreach ($result as $item) {
-		$platforms[$item] = 0;
+		if (array_key_exists($item, $_modules)){
+			$platforms[$_modules[$item]['title']] = 0;
+		} else {
+			$platforms[$item] = 0;
+		}
 	}
 }
 
@@ -59,6 +63,8 @@ while ($item = MagnaDB::gi()->fetchNext($query)) {
 	if (empty($item['platform'])) {
 		$item['platform'] = 'shop';
 		$shopOrderExists = true;
+	} else if (array_key_exists($item['platform'], $_modules)) {
+		$item['platform'] = $_modules[$item['platform']]['title'];
 	}
 	++$semiFinal[$key][$item['platform']];
 	++$semiFinal[$key]['total'];

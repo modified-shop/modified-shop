@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * 888888ba                 dP  .88888.                    dP
  * 88    `8b                88 d8'   `88                   88
  * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b.
@@ -11,9 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id$
- *
- * (c) 2010 - 2014 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2023 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -24,6 +22,28 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 require_once(DIR_MAGNALISTER_MODULES.'magnacompatible/crons/MagnaCompatibleSyncOrderStatus.php');
 
 class HitmeisterSyncOrderStatus extends MagnaCompatibleSyncOrderStatus {
+
+    /**
+     * Overwrite confirmationsResponseField
+     */
+    public function __construct($mpID, $marketplace) {
+        parent::__construct($mpID, $marketplace);
+        $this->confirmationResponseField = 'CONFIRMATIONS';
+    }
+
+    /**
+     * Overwrite to set __dirty to false,
+     * so only when marketplace responded the confirmations the sync was successful
+     *
+     * @param $date
+     * @return void
+     */
+    protected function prepareSingleOrder($date) {
+        parent::prepareSingleOrder($date);
+
+        // this marketplace returns orders if successful
+        $this->oOrder['__dirty'] = false;
+    }
 
 	/**
 	 * Builds an element for the CancelShipment request
@@ -40,6 +60,7 @@ class HitmeisterSyncOrderStatus extends MagnaCompatibleSyncOrderStatus {
 		$this->oOrder['__dirty'] = true;
 		return $cncl;
 	}
+
 	
 	/**
 	 * Adds an error to the hitmeister error log.

@@ -46,8 +46,12 @@ class HitmeisterApplyPrepareView extends MagnaCompatibleBase {
 		$preSelected = $this->getPreSelectedData($data);
 
 		$shippingTimes = HitmeisterHelper::GetShippingTimes();
+		$handlingTimes = HitmeisterHelper::GetHandlingTimes();
 		$defaultShippingTime = $preSelected['ShippingTime'];
-		if (getDBConfigValue(array('hitmeister.shippingtimematching.prefer', 'val'), $this->mpID, false)) {
+		$defaultHandlingTime = $preSelected['HandlingTime'];
+		// if not prepared + configuration prefers matching
+		if (    empty($preSelected['MarketplaceCategories'])
+		     && (getDBConfigValue(array('hitmeister.shippingtimematching.prefer', 'val'), $this->mpID, false))) {
 			$shippingTimes['m']  = ML_HITMEISTER_USE_SHIPPINGTIME_MATCHING;
 			$defaultShippingTime = 'm';
 		}
@@ -64,11 +68,15 @@ class HitmeisterApplyPrepareView extends MagnaCompatibleBase {
 			$defaultMpCategory = $preSelected['MarketplaceCategories'];
 
 			if ('m' == $defaultShippingTime) {
-				$products_shippingtime = $preSelected['ShippingTime'];
+				$products_shippingtime = $data[0]['products_shippingtime'];
 				$shippingtimeMatching = getDBConfigValue($this->marketplace . '.shippingtimematching.values', $this->mpID, array());
 				if (array_key_exists($products_shippingtime, $shippingtimeMatching)) {
 					$defaultShippingTime = $shippingtimeMatching["$products_shippingtime"];
 					unset($shippingTimes['m']);
+				}
+				$handlingtimeMatching = getDBConfigValue($this->marketplace . '.handlingtimematching.values', $this->mpID, array());
+				if (array_key_exists($products_shippingtime, $handlingtimeMatching)) {
+					$defaultHandlingTime = $handlingtimeMatching["$products_shippingtime"];
 				}
 			}
 		}
@@ -199,29 +207,25 @@ class HitmeisterApplyPrepareView extends MagnaCompatibleBase {
 					</td>
 					<td class="info">&nbsp;</td>
 				</tr>';
-
 		$html .= '
-				<tr class="odd">
-					<th>'.ML_HITMEISTER_SHIPPINGTIME.'</th>
+				<tr class="even">
+					<th>'.ML_HITMEISTER_HANDLINGTIME.'</th>
 					<td class="input">
-					'.($defaultShippingTime === 'm' ? '<input name="shippingtime" type="hidden" value="m" />' : '').'
-					<select name="shippingtime" id="shippingtime"'.($defaultShippingTime === 'm' ? 'disabled="disabled" style="background-color: #eee; cursor: not-allowed;"' : '').'>';
-		foreach ($shippingTimes as $shipTimeID => $shipTimeName) {
-			if ($shipTimeID == $defaultShippingTime) {
+					<select name="handlingtime" id="handlingtime">';
+		foreach ($handlingTimes as $handTimeID => $handTimeName) {
+			if ($handTimeID == $defaultHandlingTime) {
 				$html .= '
-					<option selected value="'.$shipTimeID.'">'.fixHTMLUTF8Entities($shipTimeName, ENT_COMPAT).'</option>';
+					<option selected value="'.$handTimeID.'">'.fixHTMLUTF8Entities($handTimeName, ENT_COMPAT).'</option>';
 			} else {
 				$html .= '
-					<option value="'.$shipTimeID.'">'.fixHTMLUTF8Entities($shipTimeName, ENT_COMPAT).'</option>';
+					<option value="'.$handTimeID.'">'.fixHTMLUTF8Entities($handTimeName, ENT_COMPAT).'</option>';
 			}
 		}
-
 		$html .= '
 					</select>
 					</td>
-					<td class="info">&nbsp;</td>
 				</tr>
-				<tr class="even">
+				<tr class="odd">
 					<th>'.ML_HITMEISTER_DELIVERY_COUNTRY.'</th>
 					<td class="input">
 					<select name="deliverycountry" id="deliverycountry">';
@@ -240,7 +244,7 @@ class HitmeisterApplyPrepareView extends MagnaCompatibleBase {
 					</td>
 					<td class="info">&nbsp;</td>
 				</tr>
-				<tr class="odd">
+				<tr class="even">
 					<th>'.ML_HITMEISTER_COMMENT.'</th>
 					<td class="input">
 						<textarea name="comment">'.$defaultComment.'</textarea>
@@ -323,6 +327,7 @@ class HitmeisterApplyPrepareView extends MagnaCompatibleBase {
 					p.products_id,
 					p.products_model,
 					p.products_image as PictureUrl,
+					p.products_shippingtime,
 					pd.products_name as Title,
 					'.(MagnaDB::gi()->columnExistsInTable('products_short_description', TABLE_PRODUCTS_DESCRIPTION) ? 'pd.products_short_description' : '"" AS Subtitle').',
 					pd.products_description as Description
@@ -375,17 +380,19 @@ class HitmeisterApplyPrepareView extends MagnaCompatibleBase {
 	protected function getPreSelectedData($data) {
 		// Check which values all prepared products have in common to preselect the values.
 		$preSelected = array(
-			'ConditionType' => null,
-			'ShippingTime' => null,
-			'Location' => null,
-			'Comment' => null,
-			'PictureUrl' => null,
-			'MarketplaceCategories' => null,
+			'ConditionType' => array(),
+			'ShippingTime' => array(),
+			'HandlingTime' => array(),
+			'Location' => array(),
+			'Comment' => array(),
+			'PictureUrl' => array(),
+			'MarketplaceCategories' => array(),
 		);
 
 		$defaults = array(
 			'ConditionType' => getDBConfigValue($this->marketplace.'.itemcondition', $this->mpID),
 			'ShippingTime' => getDBConfigValue($this->marketplace.'.shippingtime', $this->mpID),
+			'HandlingTime' => getDBConfigValue($this->marketplace.'.handlingtime', $this->mpID),
 			'Location' => getDBConfigValue($this->marketplace.'.itemcountry', $this->mpID),
 			'Comment' => null,
 			'PictureUrl' => null,
@@ -394,7 +401,9 @@ class HitmeisterApplyPrepareView extends MagnaCompatibleBase {
 
 		foreach ($data as $row) {
 			foreach ($preSelected as $field => $collection) {
-				$preSelected[$field][] = isset($row[$field]) ? $row[$field] : null;
+				if (isset($row[$field])) {
+					$preSelected[$field][] = $row[$field];
+				}
 			}
 		}
 

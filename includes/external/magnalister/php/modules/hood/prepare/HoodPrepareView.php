@@ -310,7 +310,7 @@ class HoodPrepareView extends MagnaCompatibleBase {
 				<tr class="' . (($oddEven = !$oddEven) ? 'odd' : 'even') . '">
 					<th>' . ML_LABEL_PRODUCT_NAME . '</th>
 					<td class="input">
-						<input class="fullwidth" type="text" maxlength="80" value="' . fixHTMLUTF8Entities($data['Title'], ENT_COMPAT) . '" name="Title" id="Title"/>
+						<input class="fullwidth" type="text" maxlength="85" value="' . fixHTMLUTF8Entities($data['Title'], ENT_COMPAT) . '" name="Title" id="Title"/>
 					</td>
 					<td class="info">' . ML_HOOD_TITLE_MAX_CHARS . '</td>
 				</tr>

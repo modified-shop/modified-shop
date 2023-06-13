@@ -25,6 +25,7 @@ require_once('magnacompatible.php');
 class HitmeisterMarketplace extends MagnaCompatMarketplace {
     # Hitmeister uses EANs to identify products. Don't allow multiple products with the same EAN,
     # as this would make the identification unpredictable and break the synchronisation.
+
     protected function extraChecks() {
         global $_MagnaSession;
         if (($hp = magnaContribVerify('HitmeisterExtraChecksReplacement', 1)) !== false) {

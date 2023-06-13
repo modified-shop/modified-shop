@@ -196,8 +196,7 @@ class CdiscountHelper extends AttributesMatchingHelper {
 	 * @param string $sDescription
 	 * @return string $sDescription
 	 */
-	public static function cdiscountSanitizeDesc($sDescription)
-	{
+	public static function cdiscountSanitizeDesc($sDescription) {
 		# preg_replace could return NULL at 5.2.0 to 5.3.6 - "/(\s*<br[^>]*>\s*)*$/"
 		# tested at: http://3v4l.org/WGcod
 		if (version_compare(PHP_VERSION, '5.2.0', '>=') && version_compare(PHP_VERSION, '5.3.6', '<=')) {
@@ -212,6 +211,9 @@ class CdiscountHelper extends AttributesMatchingHelper {
 		// Normalize space
 		$sDescription = str_replace("\r", "\n", $sDescription);
 		$sDescription = preg_replace("/\n{3,}/", "\n\n", $sDescription);
+
+		// replace all umlauts with real chars
+		$sDescription = html_entity_decode($sDescription, ENT_COMPAT, 'UTF-8');
 
 		if (strlen($sDescription) > self::DESC_MAX_LENGTH) {
 			$sDescription = mb_substr($sDescription, 0, self::DESC_MAX_LENGTH - 3, 'UTF-8') . '...';

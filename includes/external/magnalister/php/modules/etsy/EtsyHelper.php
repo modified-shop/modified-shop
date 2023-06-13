@@ -222,15 +222,15 @@ class EtsyHelper extends AttributesMatchingHelper {
         return substituteTemplate($template, $substitution);
     }
 
-    public static function showShippingTemplates() {
-        $aShippingTemplates = MagnaConnector::gi()->submitRequest(array(
-            'ACTION' => 'GetShippingTemplates'
+    public static function showShippingProfiles() {
+        $aShippingProfiles = MagnaConnector::gi()->submitRequest(array(
+            'ACTION' => 'GetShippingProfiles'
         ));
 
         $aRet = array();
-        if (array_key_exists('ShippingTemplates', $aShippingTemplates['DATA'])) {
-            foreach ($aShippingTemplates['DATA']['ShippingTemplates'] as $aTemplate) {
-                $aRet[(string)$aTemplate['shippingTemplateId']] = $aTemplate['title']; // cast Id to string to catch problems with too long numbers
+        if (array_key_exists('ShippingProfiles', $aShippingProfiles['DATA'])) {
+            foreach ($aShippingProfiles['DATA']['ShippingProfiles'] as $aTemplate) {
+                $aRet[(string)$aTemplate['shippingProfileId']] = $aTemplate['title']; // cast Id to string to catch problems with too long numbers
             }
         }
 

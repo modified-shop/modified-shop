@@ -4,19 +4,6 @@
         "desc": "The term 'Etsy' is a trademark of Etsy, Inc. This application uses the Etsy API but is not endorsed or certified by Etsy, Inc.",
         "fields": [
             {
-                "label": "Etsy Username",
-                "key": "_#_platform_#_.username",
-                "type": "text"
-            },
-            {
-                "label": "Etsy Password",
-                "key": "_#_platform_#_.password",
-                "type": "password",
-                "settings": {
-                    "save": false
-                }
-            },
-            {
                 "label": "Etsy Token",
                 "key": "_#_platform_#_.token",
                 "desc": "",

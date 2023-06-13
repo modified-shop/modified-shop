@@ -25,6 +25,8 @@ class HitmeisterCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 	protected $useShippingtimeMatching = false;
 	protected $defaultShippingtime = '';
 	protected $shippingtimeMatching = array();
+	protected $defaultHandlingtime = '';
+	protected $handlingtimeMatching = array();
 	protected $ignoreErrors = true;
 	protected $shippingTimes = array();
 
@@ -49,6 +51,8 @@ class HitmeisterCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 		
 		$this->defaultShippingtime  = getDBConfigValue($this->marketplace.'.shippingtime', $this->mpID, 0); 
 		$this->shippingtimeMatching = getDBConfigValue($this->marketplace.'.shippingtimematching.values', $this->mpID, array()); 
+		$this->defaultHandlingtime  = getDBConfigValue($this->marketplace.'.handlingtime', $this->mpID, 0); 
+		$this->handlingtimeMatching = getDBConfigValue($this->marketplace.'.handlingtimematching.values', $this->mpID, array()); 
 		$this->useShippingtimeMatching = getDBConfigValue(array($this->marketplace.'.shippingtimematching.prefer', 'val'), $this->mpID, false); 
 		$this->shippingTimes = HitmeisterHelper::GetShippingTimes();
 		if (!is_array($this->shippingtimeMatching) || empty($this->shippingtimeMatching)) {
@@ -149,7 +153,14 @@ class HitmeisterCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 			if (!array_key_exists($shippingTime, $this->shippingTimes)) {
 				$shippingTime = $this->defaultShippingtime;
 			}
+			$handlingTime = 
+				($this->useShippingtimeMatching || $prepare['ShippingTime'] === 'm') && array_key_exists($product['ShippingTimeId'], $this->handlingtimeMatching)
+				? $this->handlingtimeMatching[$product['ShippingTimeId']]
+				: $prepare['HandlingTime']
+			;
+
 			$data['submit']['ShippingTime'] = $shippingTime;
+			$data['submit']['HandlingTime'] = $handlingTime;
 			$data['submit']['ConditionType'] = $prepare['ConditionType'];
 			$data['submit']['Location'] = isset($prepare['Location']) ? $prepare['Location'] : $defaultLocation;
 			$data['submit']['Comment'] = isset($prepare['Comment']) ? $prepare['Comment'] : '';
@@ -160,6 +171,12 @@ class HitmeisterCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 				: (($this->useShippingtimeMatching)
 					? $this->shippingtimeMatching[$product['ShippingTime']]
 					: $this->defaultShippingtime
+				);
+			$data['submit']['HandlingTime']  = isset($data['handlingtime']) && !empty($data['handlingtime'])
+				? $data['handlingtime']
+				: (($this->useShippingtimeMatching)
+					? $this->handlingtimeMatching[$product['ShippingTime']]
+					: $this->defaultHandlingtime
 				);
 			$data['submit']['ConditionType'] = getDBConfigValue($this->settings['marketplace'].'.itemcondition', $this->_magnasession['mpID']);
 		}
