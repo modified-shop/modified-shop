@@ -41,7 +41,17 @@ class protectedshops {
     $this->content = $this->update->request_document($params); 
   }
   
-  function process() {
+  function process($file) {
+    if (defined('TABLE_SCHEDULED_TASKS')
+        && isset($_POST['configuration'])
+        && isset($_POST['configuration']['MODULE_PROTECTEDSHOPS_STATUS'])
+        )
+    {
+      xtc_db_query("UPDATE ".TABLE_SCHEDULED_TASKS."
+                       SET status = '".(($_POST['configuration']['MODULE_PROTECTEDSHOPS_STATUS'] == 'true') ? 1 : 0)."'
+                     WHERE tasks = 'protectedshops_update'");
+    }
+
     if ($this->enabled === true && $_POST['export'] == 'yes') {
       $this->init_ps();
       $this->update->check_update();
@@ -84,6 +94,16 @@ class protectedshops {
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_PROTECTEDSHOPS_LAST_UPDATED', '',  '6', '6', '', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_PROTECTEDSHOPS_UPDATE_INTERVAL', '86400',  '6', '1', 'xtc_cfg_select_interval_module(', 'xtc_cfg_display_interval', now())");
 
+    // check scheduled tasks
+    if (defined('TABLE_SCHEDULED_TASKS')) {
+      $check_query = xtc_db_query("SELECT *
+                                     FROM ".TABLE_SCHEDULED_TASKS."
+                                    WHERE tasks = 'protectedshops_update'");
+      if (xtc_db_num_rows($check_query) < 1) {                      
+        xtc_db_query("INSERT INTO " . TABLE_SCHEDULED_TASKS . " (time_regularity, time_unit, status, tasks) VALUES ('1', 'h',  '0', 'protectedshops_update')");
+      }
+    }
+
     // dynamic
     $this->auto_install();
   }
@@ -119,6 +139,10 @@ class protectedshops {
     
     xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key IN ('" . implode("', '", $keys) . "')");
 
+    // scheduled task
+    if (defined('TABLE_SCHEDULED_TASKS')) {
+      xtc_db_query("DELETE FROM " . TABLE_SCHEDULED_TASKS . " WHERE tasks = 'protectedshops_update'");
+    }
   }
 
   // keys
@@ -128,11 +152,12 @@ class protectedshops {
       $this->auto_install();
     }
     
-    $keys = array('MODULE_PROTECTEDSHOPS_STATUS', 
-                  'MODULE_PROTECTEDSHOPS_TOKEN', 
-                  'MODULE_PROTECTEDSHOPS_TYPE',
-                  'MODULE_PROTECTEDSHOPS_FORMAT',                 
-                 );
+    $keys = array(
+      'MODULE_PROTECTEDSHOPS_STATUS', 
+      'MODULE_PROTECTEDSHOPS_TOKEN', 
+      'MODULE_PROTECTEDSHOPS_TYPE',
+      'MODULE_PROTECTEDSHOPS_FORMAT',                 
+    );
     
     if (isset($this->content['DocumentDate']) && is_array($this->content['DocumentDate'])) {
       $i=0;
