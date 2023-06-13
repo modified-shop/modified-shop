@@ -54,7 +54,7 @@ require (DIR_WS_INCLUDES.'head.php');
           <tr style="background-color: #FFFFFF;">
             <td colspan="2" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px; padding: 0px 10px 11px 10px; text-align: justify">
               <br />
-              <a href="https://avalex.de" target="_blank"><img src="images/avalex/avalex-banner-modified.png" style="max-width:100%" /></a><br /><br />
+              <a href="https://avalex.de/317.html" target="_blank"><img src="images/avalex/avalex-banner-modified.png" style="max-width:100%" /></a><br /><br />
               <p><strong>Sch&uuml;tzen Sie Ihren modified Shop mit automatisch aktuellen Rechtstexten vor Abmahnungen. Einmal installiert, dauerhaft gesch&uuml;tzt.</strong></p>
               Im avalex Paket f&uuml;r Onlineshops sind die folgenden Rechtstexte enthalten:
               <ul>
@@ -63,7 +63,7 @@ require (DIR_WS_INCLUDES.'head.php');
                 <li><strong>Widerrufsbelehrung</strong></li>
                 <li><strong>AGB</strong></li>
               </ul>
-              <p>Starten Sie mit einem kostenlosen Scan Ihres modified Shops auf <a href="https://avalex.de" target="_blank">www.avalex.de</a>. Wir &uuml;berpr&uuml;fen den Shop automatisiert auf Abmahnrisiken und zeigen an, welche aktiven Webdienste von uns gefunden wurden. Nach der Bestellung konfigurieren Sie mithilfe unseres Scanners, Fragen zu Ihrem Unternehmen und umfangreichen Hilfetexten selbst individuelle Rechtstexte in Ihrem avalex-Kundenkonto (Keine Sorge, es dauert nur wenige Minuten). Nach der Konfiguration installieren Sie das avalex Modul f&uuml;r modified Shops und entscheiden, auf welchen Seiten Ihres Shops die avalex Rechtstexte ausgespielt werden sollen. Ab sofort halten wir Ihre avalex Rechtstexte w&auml;hrend der Vertragslaufzeit automatisch &uuml;ber das Internet auf dem aktuellen Stand. Falls wir einen Fehler machen und Sie deshalb abgemahnt w&uuml;rden, tragen wir die entstehenden Kosten gem&auml;&szlig; Rechtsanwaltsverg&uuml;tungsgesetz und Gerichtskostengesetz.</p>
+              <p>Starten Sie mit einem kostenlosen Scan Ihres modified Shops auf <a href="https://avalex.de/317.html" target="_blank">www.avalex.de</a>. Wir &uuml;berpr&uuml;fen den Shop automatisiert auf Abmahnrisiken und zeigen an, welche aktiven Webdienste von uns gefunden wurden. Nach der Bestellung konfigurieren Sie mithilfe unseres Scanners, Fragen zu Ihrem Unternehmen und umfangreichen Hilfetexten selbst individuelle Rechtstexte in Ihrem avalex-Kundenkonto (Keine Sorge, es dauert nur wenige Minuten). Nach der Konfiguration installieren Sie das avalex Modul f&uuml;r modified Shops und entscheiden, auf welchen Seiten Ihres Shops die avalex Rechtstexte ausgespielt werden sollen. Ab sofort halten wir Ihre avalex Rechtstexte w&auml;hrend der Vertragslaufzeit automatisch &uuml;ber das Internet auf dem aktuellen Stand. Falls wir einen Fehler machen und Sie deshalb abgemahnt w&uuml;rden, tragen wir die entstehenden Kosten gem&auml;&szlig; Rechtsanwaltsverg&uuml;tungsgesetz und Gerichtskostengesetz.</p>
               <p>Die wichtigsten avalex Features im &Uuml;berblick:</p>
               <ul>
                 <li><strong>Anwaltlich erstellte Rechtstexte f&uuml;r Ihren modified Shop</strong></li>
@@ -76,7 +76,7 @@ require (DIR_WS_INCLUDES.'head.php');
               </ul>
               <p align="left">
                 <br />
-                <a href="https://avalex.de" target="_blank"><font size="3" color="#893769"><u><strong>&rarr; Jetzt Shop absichern mit avalex Rechtstexten</strong></u></font></a> 
+                <a href="https://avalex.de/317.html" target="_blank"><font size="3" color="#893769"><u><strong>&rarr; Jetzt Shop absichern mit avalex Rechtstexten</strong></u></font></a> 
               </p>
             </td>
           </tr>
