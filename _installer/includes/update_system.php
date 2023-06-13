@@ -179,6 +179,13 @@
     xtc_db_query("INSERT INTO " . TABLE_SCHEDULED_TASKS . " (time_regularity, time_unit, status, tasks) VALUES ('1', 'h',  '".((MODULE_AVALEX_STATUS == 'True') ? 1 : 0)."', 'avalex_update')");
   }
 
+  if (defined('MODULE_JANOLAW_STATUS')
+      && !in_array('janolaw_update', $scheduled_tasks_array)
+      )
+  {
+    xtc_db_query("INSERT INTO " . TABLE_SCHEDULED_TASKS . " (time_regularity, time_unit, status, tasks) VALUES ('1', 'h',  '".((MODULE_JANOLAW_STATUS == 'True') ? 1 : 0)."', 'janolaw_update')");
+  }
+
   // delete invalid geo_zones
   xtc_db_query("DELETE z2gz 
                   FROM ".TABLE_ZONES_TO_GEO_ZONES." z2gz 

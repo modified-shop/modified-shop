@@ -34,6 +34,16 @@ class janolaw {
   function process($file) {
     global $messageStack;
 
+    if (defined('TABLE_SCHEDULED_TASKS')
+        && isset($_POST['configuration'])
+        && isset($_POST['configuration']['MODULE_JANOLAW_STATUS'])
+        )
+    {
+      xtc_db_query("UPDATE ".TABLE_SCHEDULED_TASKS."
+                       SET status = '".(($_POST['configuration']['MODULE_JANOLAW_STATUS'] == 'True') ? 1 : 0)."'
+                     WHERE tasks = 'janolaw_update'");
+    }
+
     // include needed class
     require_once(DIR_FS_EXTERNAL.'janolaw/janolaw.php');
     
@@ -106,6 +116,16 @@ class janolaw {
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_JANOLAW_TYPE_WITHDRAWAL', '',  '6', '1', 'xtc_cfg_select_content_module(', 'xtc_cfg_display_content', now())");
 
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_JANOLAW_UPDATE_INTERVAL', '86400',  '6', '1', 'xtc_cfg_select_interval_module(', 'xtc_cfg_display_interval', now())");
+
+    // check scheduled tasks
+    if (defined('TABLE_SCHEDULED_TASKS')) {
+      $check_query = xtc_db_query("SELECT *
+                                     FROM ".TABLE_SCHEDULED_TASKS."
+                                    WHERE tasks = 'janolaw_update'");
+      if (xtc_db_num_rows($check_query) < 1) {                      
+        xtc_db_query("INSERT INTO " . TABLE_SCHEDULED_TASKS . " (time_regularity, time_unit, status, tasks) VALUES ('1', 'h',  '0', 'janolaw_update')");
+      }
+    }
   }
 
   function remove() {
@@ -131,6 +151,11 @@ class janolaw {
 
     xtc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
     xtc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_JANOLAW_LAST_UPDATED'");
+
+    // scheduled task
+    if (defined('TABLE_SCHEDULED_TASKS')) {
+      xtc_db_query("DELETE FROM " . TABLE_SCHEDULED_TASKS . " WHERE tasks = 'janolaw_update'");
+    }
   }
 
   function keys() {
