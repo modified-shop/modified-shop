@@ -51,7 +51,7 @@ class janolaw_content {
     );
     
     if ($this->enabled === true) {
-      if (((MODULE_JANOLAW_LAST_UPDATED + MODULE_JANOLAW_UPDATE_INTERVAL) <= time()) || defined('RUN_MODE_ADMIN')) {
+      if ((((int)MODULE_JANOLAW_LAST_UPDATED + (int)MODULE_JANOLAW_UPDATE_INTERVAL) <= time()) || defined('RUN_MODE_ADMIN')) {
         
         $this->get_page_content('datasecurity', self::get_configuration('MODULE_JANOLAW_TYPE_DATASECURITY'));
         $this->get_page_content('terms', self::get_configuration('MODULE_JANOLAW_TYPE_TERMS'));
