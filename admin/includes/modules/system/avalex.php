@@ -30,7 +30,8 @@
     }
 
     function process($file) {
-      if (isset($_POST['configuration'])
+      if (defined('TABLE_SCHEDULED_TASKS')
+          && isset($_POST['configuration'])
           && isset($_POST['configuration']['MODULE_AVALEX_STATUS'])
           )
       {
