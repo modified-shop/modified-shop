@@ -10,11 +10,10 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
-
   if (defined('MODULE_MAGNALISTER_STATUS')
       && MODULE_MAGNALISTER_STATUS == 'True'
       )
   {
-    if (function_exists('magnaExecute')) echo magnaExecute('magnaRenderOrderDetails', array('oID' => $oID), array('order_details.php'));
+    if (function_exists('magnaExecute')) magnaExecute('magnaInsertOrderDetails', array('oID' => $insert_id), array('order_details.php'));
+    if (function_exists('magnaExecute')) magnaExecute('magnaInventoryUpdate', array('action' => 'inventoryUpdateOrder'), array('inventoryUpdate.php'));
   }

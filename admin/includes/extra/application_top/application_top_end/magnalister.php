@@ -12,9 +12,17 @@
 
   defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
-  if (defined('MODULE_MAGNALISTER_STATUS')
+  if (defined('MODULE_MAGNALISTER_STATUS') 
       && MODULE_MAGNALISTER_STATUS == 'True'
       )
   {
-    if (function_exists('magnaExecute')) echo magnaExecute('magnaRenderOrderDetails', array('oID' => $oID), array('order_details.php'));
+    switch (basename($PHP_SELF)) {
+      case FILENAME_CATEGORIES:
+        if (function_exists('magnaExecute')) magnaExecute('magnaInventoryUpdate', array('action' => 'inventoryUpdate'), array('inventoryUpdate.php'));
+        break;
+
+      case FILENAME_ORDERS:
+        if (function_exists('magnaExecute')) magnaExecute('magnaSubmitOrderStatus', array(), array('order_details.php'));
+        break;
+    }
   }

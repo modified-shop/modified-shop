@@ -168,6 +168,7 @@
     DIR_ADMIN.'includes/classes/phpmailer.lang-de.php',
     DIR_ADMIN.'includes/classes/phpmailer.lang-en.php',
     DIR_ADMIN.'includes/configure.org.php',
+    DIR_ADMIN.'includes/extra/application_top/application_top_end/40_magnalister.php',
     DIR_ADMIN.'includes/extra/filenames/cookie_consent.php',
     DIR_ADMIN.'includes/extra/menu/cookie_consent.php',
     DIR_ADMIN.'includes/extra/modules/orders/orders_action/dhl.php',

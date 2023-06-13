@@ -24,10 +24,6 @@
 
 require_once ('includes/application_top.php');
 
-/* magnalister v1.0.1 */
-if (function_exists('magnaExecute')) magnaExecute('magnaInventoryUpdate', array('action' => 'inventoryUpdate'), array('inventoryUpdate.php'));
-/* END magnalister */
-
 // include needed function
 require_once (DIR_FS_INC.'xtc_get_tax_rate.inc.php');
 require_once (DIR_FS_INC.'xtc_get_products_mo_images.inc.php');

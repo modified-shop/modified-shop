@@ -41,10 +41,6 @@ require_once (DIR_FS_CATALOG.DIR_WS_CLASSES.'xtcPrice.php');
 require_once (DIR_FS_CATALOG.DIR_WS_CLASSES.'payment.php');
 require_once (DIR_FS_CATALOG.DIR_WS_CLASSES.'shipping.php');
 
-/* magnalister v1.0.1 */
-if (function_exists('magnaExecute')) magnaExecute('magnaSubmitOrderStatus', array(), array('order_details.php'));
-/* END magnalister */
-
 //split page results
 if (!defined('MAX_DISPLAY_ORDER_RESULTS')) {
   define('MAX_DISPLAY_ORDER_RESULTS', 30);

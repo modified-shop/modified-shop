@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: extra_menu.php 5568 2013-09-08 13:47:05Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -25,7 +25,6 @@ if (!function_exists('subMenue')){ // zweite ebene
     function subMenue($admin_access_name = '', $filename = '', $linktext= '', $parameters = '', $ssl = 'NONSSL'){
         global $admin_access;
 
-        ## magnalister
         if (!is_array($admin_access) || count($admin_access) < 1) {
           $admin_access = array();
           if (($_SESSION['customers_status']['customers_status_id'] == '0')) {
@@ -33,7 +32,6 @@ if (!function_exists('subMenue')){ // zweite ebene
             $admin_access = xtc_db_fetch_array($admin_access_query);
           }
         }
-        ## magnalister
 
         $html = '';
         if (isset($admin_access[$admin_access_name]) && $admin_access[$admin_access_name] == '1') {
@@ -61,11 +59,9 @@ if (!function_exists('dynamicsAdds')){ // Menüpunkte dynamisch ergänzen
     function dynamicsAdds($box){
         global $add_contents, $admin_access;
 
-        ## magnalister
         if (!is_array($add_contents) || count($add_contents) < 1) {
           $add_contents = extraMenue();
         }
-        ## magnalister
 
         $html = '';
         if(isset($add_contents[$box]) && count($add_contents[$box]) > 0) {
