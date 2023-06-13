@@ -70,7 +70,8 @@ class magnalister {
 	}
 
 	function process($file) {
-    if (isset($_POST['configuration'])
+    if (defined('TABLE_SCHEDULED_TASKS')
+        && isset($_POST['configuration'])
         && isset($_POST['configuration']['MODULE_MAGNALISTER_STATUS'])
         )
     {
@@ -127,11 +128,13 @@ class magnalister {
 		$this->fnWrp['db_query']("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_MAGNALISTER_STATUS', 'True',  '6', '1', '".$this->foundFnWrapper."_cfg_select_option(array(\'True\', \'False\'), ', NOW())");
 
     // check scheduled tasks
-    $check_query = $this->fnWrp['db_query']("SELECT *
-                                               FROM ".TABLE_SCHEDULED_TASKS."
-                                              WHERE tasks = 'magnalister'");
-    if ($this->fnWrp['db_num_rows']($check_query) < 1) {                      
-      $this->fnWrp['db_query']("INSERT INTO " . TABLE_SCHEDULED_TASKS . " (time_regularity, time_unit, status, tasks) VALUES ('15', 'm',  '1', 'magnalister')");
+    if (defined('TABLE_SCHEDULED_TASKS')) {
+      $check_query = $this->fnWrp['db_query']("SELECT *
+                                                 FROM ".TABLE_SCHEDULED_TASKS."
+                                                WHERE tasks = 'magnalister'");
+      if ($this->fnWrp['db_num_rows']($check_query) < 1) {                      
+        $this->fnWrp['db_query']("INSERT INTO " . TABLE_SCHEDULED_TASKS . " (time_regularity, time_unit, status, tasks) VALUES ('15', 'm',  '1', 'magnalister')");
+      }
     }
 	}
 
@@ -142,7 +145,9 @@ class magnalister {
 		$this->fnWrp['db_query']("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key IN ('" . implode("', '", $this->keys()) . "')");
 
     // scheduled task
-    $this->fnWrp['db_query']("DELETE FROM " . TABLE_SCHEDULED_TASKS . " WHERE tasks = 'magnalister'");
+    if (defined('TABLE_SCHEDULED_TASKS')) {
+      $this->fnWrp['db_query']("DELETE FROM " . TABLE_SCHEDULED_TASKS . " WHERE tasks = 'magnalister'");
+    }
 	}
 
 	function keys() {
