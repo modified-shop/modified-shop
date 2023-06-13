@@ -193,6 +193,13 @@
     xtc_db_query("INSERT INTO " . TABLE_SCHEDULED_TASKS . " (time_regularity, time_unit, status, tasks) VALUES ('1', 'h',  '".((MODULE_PROTECTEDSHOPS_STATUS == 'true') ? 1 : 0)."', 'protectedshops_update')");
   }
 
+  if (defined('MODULE_MAGNALISTER_STATUS')
+      && !in_array('magnalister', $scheduled_tasks_array)
+      )
+  {
+    xtc_db_query("INSERT INTO " . TABLE_SCHEDULED_TASKS . " (time_regularity, time_unit, status, tasks) VALUES ('15', 'm',  '".((MODULE_MAGNALISTER_STATUS == 'True') ? 1 : 0)."', 'magnalister')");
+  }
+
   // delete invalid geo_zones
   xtc_db_query("DELETE z2gz 
                   FROM ".TABLE_ZONES_TO_GEO_ZONES." z2gz 
