@@ -24,10 +24,10 @@ class janolaw_content {
   
   
   function __construct() {
-    $this->user_id = $this->get_configuration('MODULE_JANOLAW_USER_ID');
-    $this->shop_id = $this->get_configuration('MODULE_JANOLAW_SHOP_ID');
+    $this->user_id = self::get_configuration('MODULE_JANOLAW_USER_ID');
+    $this->shop_id = self::get_configuration('MODULE_JANOLAW_SHOP_ID');
     $this->enabled = $this->get_status();
-    $this->format = strtolower($this->get_configuration('MODULE_JANOLAW_FORMAT'));
+    $this->format = strtolower(self::get_configuration('MODULE_JANOLAW_FORMAT'));
 
     $this->document_name = array(
       'DE' => array('legaldetails' => 'Impressum',
@@ -53,11 +53,11 @@ class janolaw_content {
     if ($this->enabled === true) {
       if (((MODULE_JANOLAW_LAST_UPDATED + MODULE_JANOLAW_UPDATE_INTERVAL) <= time()) || defined('RUN_MODE_ADMIN')) {
         
-        $this->get_page_content('datasecurity', $this->get_configuration('MODULE_JANOLAW_TYPE_DATASECURITY'));
-        $this->get_page_content('terms', $this->get_configuration('MODULE_JANOLAW_TYPE_TERMS'));
-        $this->get_page_content('legaldetails', $this->get_configuration('MODULE_JANOLAW_TYPE_LEGALDETAILS'));
-        $this->get_page_content('model-withdrawal-form', $this->get_configuration('MODULE_JANOLAW_TYPE_WITHDRAWAL'));
-        $this->get_page_content('revocation', $this->get_configuration('MODULE_JANOLAW_TYPE_REVOCATION'));
+        $this->get_page_content('datasecurity', self::get_configuration('MODULE_JANOLAW_TYPE_DATASECURITY'));
+        $this->get_page_content('terms', self::get_configuration('MODULE_JANOLAW_TYPE_TERMS'));
+        $this->get_page_content('legaldetails', self::get_configuration('MODULE_JANOLAW_TYPE_LEGALDETAILS'));
+        $this->get_page_content('model-withdrawal-form', self::get_configuration('MODULE_JANOLAW_TYPE_WITHDRAWAL'));
+        $this->get_page_content('revocation', self::get_configuration('MODULE_JANOLAW_TYPE_REVOCATION'));
                 
         xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value='".xtc_db_input(time())."', last_modified = NOW() where configuration_key='MODULE_JANOLAW_LAST_UPDATED'");
       }
@@ -66,14 +66,14 @@ class janolaw_content {
 
 
   function get_status() {
-    if (!defined('MODULE_JANOLAW_STATUS') || $this->get_configuration('MODULE_JANOLAW_STATUS') == 'False') {
+    if (!defined('MODULE_JANOLAW_STATUS') || self::get_configuration('MODULE_JANOLAW_STATUS') == 'False') {
       return false;
     }
     return true;
   }
   
   
-  function get_configuration($key) {
+  static function get_configuration($key) {
     $configuration_query = xtc_db_query("SELECT configuration_value
                                            FROM ".TABLE_CONFIGURATION."
                                           WHERE configuration_key = '".$key."'");
@@ -126,14 +126,14 @@ class janolaw_content {
           $content_pdf = '';
           $module_name = str_replace('model-withdrawal-form', 'withdrawal', $name);
 
-          if ($module_name == 'withdrawal' && $this->get_configuration('MODULE_JANOLAW_WITHDRAWAL_COMBINE') == 'True') {
+          if ($module_name == 'withdrawal' && self::get_configuration('MODULE_JANOLAW_WITHDRAWAL_COMBINE') == 'True') {
             $this->withdrawal_content[$key] = $content;
           }
-          if ($module_name == 'revocation' && $this->get_configuration('MODULE_JANOLAW_WITHDRAWAL_COMBINE') == 'True') {
+          if ($module_name == 'revocation' && self::get_configuration('MODULE_JANOLAW_WITHDRAWAL_COMBINE') == 'True') {
             $content .= '<br /><br />'.$this->withdrawal_content[$key];
           }  
-          if ($this->get_configuration('MODULE_JANOLAW_PDF_'.strtoupper($module_name)) == 'True'
-              || $this->get_configuration('MODULE_JANOLAW_MAIL_'.strtoupper($module_name)) == 'True'
+          if (self::get_configuration('MODULE_JANOLAW_PDF_'.strtoupper($module_name)) == 'True'
+              || self::get_configuration('MODULE_JANOLAW_MAIL_'.strtoupper($module_name)) == 'True'
               ) 
           {
             $content_pdf = get_external_content($url.$name.'.pdf', '3', false);
@@ -145,19 +145,19 @@ class janolaw_content {
               if (is_resource($fp)) {
                 fwrite($fp, $content_pdf);
                 fclose($fp);
-                if ($module_name == 'withdrawal' && $this->get_configuration('MODULE_JANOLAW_WITHDRAWAL_COMBINE') == 'True') {
+                if ($module_name == 'withdrawal' && self::get_configuration('MODULE_JANOLAW_WITHDRAWAL_COMBINE') == 'True') {
                   $this->withdrawal_link[$key] = ((ENABLE_SSL === true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.$filename;
                 }
                 if (($this->format == 'html' 
-                    && $this->get_configuration('MODULE_JANOLAW_PDF_'.strtoupper($module_name)) == 'True'
+                    && self::get_configuration('MODULE_JANOLAW_PDF_'.strtoupper($module_name)) == 'True'
                     ) || isset($this->withdrawal_link[$key]))
                 {
                   if ($module_name == 'revocation' 
-                      && $this->get_configuration('MODULE_JANOLAW_WITHDRAWAL_COMBINE') == 'True' 
+                      && self::get_configuration('MODULE_JANOLAW_WITHDRAWAL_COMBINE') == 'True' 
                       && isset($this->withdrawal_link[$key])
                       ) 
                   {
-                    if ($this->get_configuration('MODULE_JANOLAW_PDF_'.strtoupper($module_name)) == 'True') {
+                    if (self::get_configuration('MODULE_JANOLAW_PDF_'.strtoupper($module_name)) == 'True') {
                       $content .= '<br /><br /><a href="'.((ENABLE_SSL === true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.$filename.'" target="_blank">PDF - '.$this->document_name[strtoupper($language)][$module_name].'</a>';
                     }
                     $content .= '<br /><a href="'.$this->withdrawal_link[$key].'" target="_blank">PDF - '.$this->document_name[strtoupper($language)]['withdrawal'].'</a>';
@@ -171,7 +171,7 @@ class janolaw_content {
                     
           // save data
           if ($coID != '') {
-            if (strtolower($this->get_configuration('MODULE_JANOLAW_TYPE')) == 'database') {
+            if (strtolower(self::get_configuration('MODULE_JANOLAW_TYPE')) == 'database') {
               // convert content
               $content = decode_utf8($content);
 
