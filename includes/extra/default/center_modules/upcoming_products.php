@@ -40,7 +40,8 @@ if (MAX_DISPLAY_UPCOMING_PRODUCTS != '0') {
 
   if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/upcoming_products.html', $cache_id) || !$cache) {
     $expected_query = xtDBquery("SELECT ".$product->default_select.",
-                                        products_date_available as date_expected
+                                        p.products_date_available,
+                                        p.products_date_available as date_expected
                                    FROM ".TABLE_PRODUCTS." p
                                    JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
                                         ON p.products_id = pd.products_id
@@ -74,4 +75,5 @@ if (MAX_DISPLAY_UPCOMING_PRODUCTS != '0') {
   
   $module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/upcoming_products.html', $cache_id);
   $default_smarty->assign('MODULE_upcoming_products', $module);
+  $smarty->assign('MODULE_upcoming_products', $module);
 }
