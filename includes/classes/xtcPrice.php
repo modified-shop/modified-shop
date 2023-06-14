@@ -424,6 +424,34 @@ class xtcPrice {
   }
   
   /**
+   * Returns the special data of a product
+   *
+   * @param Integer $pID product id
+   * @return Array
+   */
+  function xtcGetSpecialData($pID) {
+    static $special_data_array;
+    
+    if (!isset($special_data_array)) {
+      $special_data_array = array();
+    }
+  
+    if (!isset($special_data_array[$pID])) {
+      $special_data_array[$pID] = array();
+      
+      $special_query = xtc_db_query("SELECT *
+                                       FROM ".TABLE_SPECIALS."
+                                      WHERE products_id = '".(int)$pID."'
+                                            ".SPECIALS_CONDITIONS);
+      if (xtc_db_num_rows($special_query) > 0) {
+        $special_data_array[$pID] = xtc_db_fetch_array($special_query);    
+      }
+    }
+    
+    return $special_data_array[$pID];
+  }
+  
+  /**
    * Returns the special offer price of a product
    *
    * @param Integer $pID product id
@@ -439,16 +467,11 @@ class xtcPrice {
     if ($this->cStatus['customers_status_specials'] == '1') {
       if (!isset($special_price_array[$pID])) {
         $special_price = 0;
-        $product_query = xtc_db_query("SELECT *
-                                         FROM ".TABLE_SPECIALS."
-                                        WHERE products_id = '".(int)$pID."'
-                                              ".SPECIALS_CONDITIONS);
-        if (xtc_db_num_rows($product_query) > 0) {
-          $product = xtc_db_fetch_array($product_query);
         
-          $product = $this->priceModules->CheckSpecial($product, $pID);
-      
-          $special_price = $product['specials_new_products_price'];
+        $special = $this->xtcGetSpecialData($pID);
+        if (count($special) > 0) {
+          $special = $this->priceModules->CheckSpecial($special, $pID);
+          $special_price = $special['specials_new_products_price'];
         }
       
         $special_price_array[$pID] = $this->priceModules->CheckSpecialPrice($special_price, $pID);
@@ -476,16 +499,13 @@ class xtcPrice {
     if ($this->cStatus['customers_status_specials'] == '1') {
       if (!isset($special_products_price_array[$pID][(int)$add_tax])) {
         $products_price = $pPrice;
-        $product_query = xtc_db_query("SELECT *
-                                         FROM ".TABLE_SPECIALS."
-                                        WHERE products_id = '".(int)$pID."'
-                                              ".SPECIALS_CONDITIONS);
-        if (xtc_db_num_rows($product_query) > 0) {
-          $product = xtc_db_fetch_array($product_query);
+
+        $special = $this->xtcGetSpecialData($pID);
+        if (count($special) > 0) {
+          $special = $this->priceModules->CheckSpecial($special, $pID);
         
-          $product = $this->priceModules->CheckSpecial($product, $pID);
-          if ($product['specials_old_products_price'] > 0) {
-            $products_price = $product['specials_old_products_price'];
+          if ($special['specials_old_products_price'] > 0) {
+            $products_price = $special['specials_old_products_price'];
         
             if ($add_tax === true) {          
               $products_tax = (isset($this->tax_class) && isset($this->TAX[$this->tax_class])) ? $this->TAX[$this->tax_class] : 0;
@@ -854,6 +874,8 @@ class xtcPrice {
       if ($vpeStatus == 0) {
         $return = $price;
       } else {
+        $special = $this->xtcGetSpecialData($pID);
+        
         $return = array(
           'formated' => $price,
           'plain' => $sPrice,
@@ -865,7 +887,10 @@ class xtcPrice {
           'from' =>  $from,
           'flag' => 'Special',
           'netto' => $Nprice,
-          'brutto' => $Bprice
+          'brutto' => $Bprice,
+          'start_date' =>  $special['start_date'],
+          'expires_date' =>  $special['expires_date'],
+          'specials_quantity' =>  $special['specials_quantity'],
         );
       }
     } else {
@@ -1127,4 +1152,3 @@ class xtcPrice {
   }
 
 }
-?>
