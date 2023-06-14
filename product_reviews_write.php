@@ -35,7 +35,7 @@ require_once (DIR_WS_CLASSES.'modified_captcha.php');
 $mod_captcha = $_mod_captcha_class::getInstance();
 
 // create smarty elements
-$smarty = new Smarty;
+$smarty = new Smarty();
 
 $review_error = false;
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/product_reviews_write/','php') as $file) require ($file);
@@ -129,12 +129,14 @@ if (isset ($_GET['action']) && $_GET['action'] == 'process' && $review_error ===
   }
 }
 
-// include boxes
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
-
+// build breadcrumb
 $breadcrumb->add(NAVBAR_TITLE_REVIEWS_WRITE, xtc_href_link(FILENAME_PRODUCT_REVIEWS, xtc_get_all_get_params()));
 
-require (DIR_WS_INCLUDES.'header.php');
+// include header
+require (DIR_WS_INCLUDES . 'header.php');
+
+// include boxes
+require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 if ($product->isProduct() === false) {
   $smarty->assign('error_message', ERROR_INVALID_PRODUCT);
@@ -200,4 +202,3 @@ if (!defined('RM'))
   $smarty->load_filter('output', 'note');
 $smarty->display(CURRENT_TEMPLATE.'/index.html');
 include ('includes/application_bottom.php');
-?>

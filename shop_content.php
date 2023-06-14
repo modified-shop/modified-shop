@@ -24,12 +24,9 @@ if (ENABLE_SSL == true && $request_type == 'NONSSL' && !isset($_GET['action']) &
 }
 
 // create smarty elements
-$smarty = new Smarty;
+$smarty = new Smarty();
 $smarty->assign('language', $_SESSION['language']);
 $smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
-
-// include boxes
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 // include needed functions
 require_once (DIR_FS_INC.'xtc_validate_email.inc.php');
@@ -68,6 +65,7 @@ if ($language_not_found === true) {
     // sub content
     include (DIR_WS_MODULES.'sub_content_listing.php');
 
+    // build breadcrumb
     $breadcrumb->add($shop_content_data['content_title'], xtc_href_link(FILENAME_CONTENT, xtc_content_link($shop_content_data['content_group'], $shop_content_data['content_title'])));
 
     $link = 'javascript:history.back(1)';
@@ -111,7 +109,11 @@ if ($language_not_found === true) {
   }
 }
 
-require (DIR_WS_INCLUDES.'header.php');
+// include header
+require (DIR_WS_INCLUDES . 'header.php');
+
+// include boxes
+require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 $smarty->caching = 0;
 if (!defined('RM'))

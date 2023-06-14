@@ -24,16 +24,18 @@ if (isset($_GET['return_to'])
   xtc_redirect(xtc_href_link(basename($_GET['return_to']), xtc_get_all_get_params(array('return_to')), 'SSL'));
 }
 
-$smarty = new Smarty;
+$smarty = new Smarty();
 $smarty->assign('language', $_SESSION['language']);
 $smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 
-// include boxes
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
-
+// build breadcrumb
 $breadcrumb->add(NAVBAR_TITLE_COOKIE_USAGE, xtc_href_link(FILENAME_COOKIE_USAGE));
 
-require (DIR_WS_INCLUDES.'header.php');
+// include header
+require (DIR_WS_INCLUDES . 'header.php');
+
+// include boxes
+require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 // set cache ID
 if (!CacheCheck()) {

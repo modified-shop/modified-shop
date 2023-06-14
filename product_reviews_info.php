@@ -30,7 +30,7 @@ if ($_SESSION['customers_status']['customers_status_read_reviews'] == '0') {
   xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
 }
 
-$smarty = new Smarty;
+$smarty = new Smarty();
 $smarty->assign('language', $_SESSION['language']);
 $smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 
@@ -107,6 +107,7 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
     $smarty->assign('error_message', $messageStack->output('product_reviews'));
   }
 
+  // build breadcrumb
   $breadcrumb->add(NAVBAR_TITLE_PRODUCT_REVIEWS, xtc_href_link(FILENAME_PRODUCT_REVIEWS, xtc_get_all_get_params(array('reviews_id'))));
 
   xtc_db_query("UPDATE ".TABLE_REVIEWS." 
@@ -117,10 +118,11 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
   $smarty->assign('main_content', $main_content);
 }
 
+// include header
+require (DIR_WS_INCLUDES . 'header.php');
+
 // include boxes
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
-
-require (DIR_WS_INCLUDES.'header.php');
 
 $smarty->caching = 0;
 if (!defined('RM'))

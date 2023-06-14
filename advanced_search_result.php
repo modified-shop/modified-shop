@@ -19,7 +19,7 @@
 include ('includes/application_top.php');
 
 // create smarty elements
-$smarty = new Smarty;
+$smarty = new Smarty();
 
 // include needed functions
 require_once (DIR_FS_INC.'xtc_parse_search_string.inc.php');
@@ -60,21 +60,21 @@ if ($errorno) {
 
 } else {
 
-  // include boxes
-  require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
-
   // build breadcrumb
   $breadcrumb->add(NAVBAR_TITLE1_ADVANCED_SEARCH, xtc_href_link(FILENAME_ADVANCED_SEARCH));
   $breadcrumb->add(NAVBAR_TITLE2_ADVANCED_SEARCH, xtc_href_link(FILENAME_ADVANCED_SEARCH_RESULT, xtc_get_all_get_params(array('filter', 'show', 'filter_id', 'cat'))));
 
   include (DIR_WS_MODULES.'default.php');
+
+  // include header
   require (DIR_WS_INCLUDES.'header.php');
+
+  // include boxes
+  require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 }
 
 $smarty->assign('language', $_SESSION['language']);
-if (!defined('RM')) {
-  $smarty->load_filter('output', 'note');
-}
+if (!defined('RM'))
+	$smarty->load_filter('output', 'note');
 $smarty->display(CURRENT_TEMPLATE.'/index.html');
 include ('includes/application_bottom.php');
-?>

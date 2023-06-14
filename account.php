@@ -19,7 +19,7 @@
 include ('includes/application_top.php');
 
 // create smarty
-$smarty = new Smarty;
+$smarty = new Smarty();
 
 // include needed functions
 require_once (DIR_FS_INC.'xtc_count_customer_orders.inc.php');
@@ -45,9 +45,6 @@ if (!isset($_SESSION['customer_id'])) {
 
 // clear session
 clear_checkout_session();
-
-// include boxes
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 if ($messageStack->size('account') > 0) {
   $smarty->assign('error_message', $messageStack->output('account'));
@@ -154,8 +151,14 @@ if (defined('MODULE_NEWSLETTER_STATUS') && MODULE_NEWSLETTER_STATUS == 'true') {
   $smarty->assign('LINK_NEWSLETTER', xtc_href_link(FILENAME_NEWSLETTER, '', 'SSL'));
 }
 
+// build breadcrumb
 $breadcrumb->add(NAVBAR_TITLE_ACCOUNT, xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
+
+// include header
 require (DIR_WS_INCLUDES.'header.php');
+
+// include boxes
+require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 $smarty->assign('language', $_SESSION['language']);
 
@@ -169,4 +172,3 @@ if (!defined('RM'))
   $smarty->load_filter('output', 'note');
 $smarty->display(CURRENT_TEMPLATE.'/index.html');
 include ('includes/application_bottom.php');
-?>

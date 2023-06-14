@@ -21,5 +21,7 @@
   {
     // create smarty elements
     $smarty = new Smarty;
+    
+    // include header
     require (DIR_WS_INCLUDES.'header.php');
   }

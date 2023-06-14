@@ -18,15 +18,16 @@
     // create smarty elements
     $smarty = new Smarty;
 
-    // include boxes
-    require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
-
     // build breadcrumb
     $breadcrumb->add(NAVBAR_TITLE1_ADVANCED_SEARCH, xtc_href_link(FILENAME_ADVANCED_SEARCH));
     $breadcrumb->add(NAVBAR_TITLE2_ADVANCED_SEARCH, xtc_href_link(FILENAME_ADVANCED_SEARCH_RESULT, xtc_get_all_get_params(array('filter', 'show', 'filter_id', 'cat'))));
 
+    // include header
     require (DIR_WS_INCLUDES.'header.php');
   
+    // include boxes
+    require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
+
     $smarty->assign('language', $_SESSION['language']);
     
     if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/semknox_listing.html')) {

@@ -19,7 +19,7 @@
 include ('includes/application_top.php');
 
 // create smarty elements
-$smarty = new Smarty;
+$smarty = new Smarty();
 
 // include needed functions
 require_once (DIR_FS_INC.'xtc_count_customer_address_book_entries.inc.php');
@@ -108,14 +108,17 @@ if (!isset ($_SESSION['billto'])) {
   $_SESSION['billto'] = $_SESSION['customer_default_address_id'];
 }
 
-// include boxes
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
-
+// build breadcrumb
 $breadcrumb->add(NAVBAR_TITLE_1_PAYMENT_ADDRESS, xtc_href_link($link_checkout_payment, $params, 'SSL'));
 $breadcrumb->add(NAVBAR_TITLE_2_PAYMENT_ADDRESS, xtc_href_link(FILENAME_CHECKOUT_PAYMENT_ADDRESS, $params, 'SSL'));
 
-$addresses_count = xtc_count_customer_address_book_entries();
+// include header
 require (DIR_WS_INCLUDES.'header.php');
+
+// include boxes
+require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
+
+$addresses_count = xtc_count_customer_address_book_entries();
 
 $smarty->assign('FORM_ACTION', xtc_draw_form('checkout_address', xtc_href_link(FILENAME_CHECKOUT_PAYMENT_ADDRESS, $params.'action=new', 'SSL')).secure_form('checkout_address'));
 $smarty->assign('BUTTON_CONTINUE', xtc_draw_hidden_field('action', 'submit').xtc_image_submit('button_continue.gif', IMAGE_BUTTON_CONTINUE));
@@ -180,9 +183,7 @@ $smarty->assign('language', $_SESSION['language']);
 $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/checkout_payment_address.html');
 $smarty->assign('main_content', $main_content);
 $smarty->caching = 0;
-if (!defined('RM')) {
+if (!defined('RM'))
   $smarty->load_filter('output', 'note');
-}
 $smarty->display(CURRENT_TEMPLATE.'/index.html');
 include ('includes/application_bottom.php');
-?>

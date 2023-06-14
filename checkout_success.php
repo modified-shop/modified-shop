@@ -30,7 +30,7 @@
 include ('includes/application_top.php');
 
 // create smarty elements
-$smarty = new Smarty;
+$smarty = new Smarty();
 
 if (isset ($_GET['action']) && ($_GET['action'] == 'update')) {
 	if ($_POST['account_type'] != 1) {
@@ -63,9 +63,6 @@ if (xtc_db_num_rows($orders_query) < 1) {
   $order_status = $orders['orders_status'];
   $payment_class = $orders['payment_class'];
 }
-
-// include boxes
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 $_SESSION['customer_gid'] = $_SESSION['customer_id'];
 
@@ -120,19 +117,22 @@ if ($_SESSION['account_type'] == '1') {
   require (DIR_WS_INCLUDES.'write_customers_status.php');
 }
 
+// build breadcrumb
 $breadcrumb->add(NAVBAR_TITLE_1_CHECKOUT_SUCCESS);
 $breadcrumb->add(NAVBAR_TITLE_2_CHECKOUT_SUCCESS);
 
-require (DIR_WS_INCLUDES.'header.php');
+// include header
+require (DIR_WS_INCLUDES . 'header.php');
+
+// include boxes
+require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 $smarty->assign('language', $_SESSION['language']);
 $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/checkout_success.html');
 $smarty->assign('main_content', $main_content);
 
 $smarty->caching = 0;
-if (!defined('RM')) {
-	$smarty->load_filter('output', 'note');
-}
+if (!defined('RM'))
+  $smarty->load_filter('output', 'note');
 $smarty->display(CURRENT_TEMPLATE.'/index.html');
 include ('includes/application_bottom.php');
-?>

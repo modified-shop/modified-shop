@@ -35,7 +35,7 @@ if ($session_started == false) {
 }
 
 // create smarty elements
-$smarty = new Smarty;
+$smarty = new Smarty();
 
 // include needed functions
 require_once (DIR_FS_INC.'xtc_validate_password.inc.php');
@@ -215,11 +215,14 @@ if (isset($_GET['action']) && $_GET['action'] === 'relogin') {
   $messageStack->add('login', TEXT_RELOGIN_NEEDED);
 }
 
+// build breadcrumb
+$breadcrumb->add(NAVBAR_TITLE_LOGIN, xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
+
+// include header
+require (DIR_WS_INCLUDES . 'header.php');
+
 // include boxes
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
-
-$breadcrumb->add(NAVBAR_TITLE_LOGIN, xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
-require (DIR_WS_INCLUDES.'header.php');
 
 if ($messageStack->size('login') > 0) {
 	$smarty->assign('error_message', $messageStack->output('login'));
@@ -255,4 +258,3 @@ if (!defined('RM'))
 	$smarty->load_filter('output', 'note');
 $smarty->display(CURRENT_TEMPLATE.'/index.html');
 include ('includes/application_bottom.php');
-?>

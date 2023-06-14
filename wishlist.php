@@ -20,14 +20,16 @@ if (!defined('MODULE_WISHLIST_SYSTEM_STATUS') || MODULE_WISHLIST_SYSTEM_STATUS =
 require_once(DIR_FS_INC.'get_wishlist_content.inc.php');
 
 // create smarty
-$smarty = new Smarty;
+$smarty = new Smarty();
+
+// build breadcrumb
+$breadcrumb->add(NAVBAR_TITLE_WISHLIST, xtc_href_link(FILENAME_WISHLIST));
+
+// include header
+require (DIR_WS_INCLUDES . 'header.php');
 
 // include boxes
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
-
-$breadcrumb->add(NAVBAR_TITLE_WISHLIST, xtc_href_link(FILENAME_WISHLIST));
-
-require (DIR_WS_INCLUDES.'header.php');
 
 $module_data = array ();
 if ($_SESSION['wishlist']->count_contents() > 0) {
@@ -50,4 +52,3 @@ if (!defined('RM'))
   $smarty->load_filter('output', 'note');
 $smarty->display(CURRENT_TEMPLATE.'/index.html');
 include ('includes/application_bottom.php');
-?>

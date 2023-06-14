@@ -56,7 +56,7 @@ if ($account_options == 'guest') {
 }
 
 // create smarty elements
-$smarty = new Smarty;
+$smarty = new Smarty();
 
 // include needed functions
 require_once (DIR_FS_INC.'xtc_get_country_list.inc.php');
@@ -536,12 +536,14 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
   }
 }
 
-// include boxes
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
-
+// build breadcrumb
 $breadcrumb->add(NAVBAR_TITLE_CREATE_ACCOUNT, xtc_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL'));
 
-require (DIR_WS_INCLUDES.'header.php');
+// include header
+require (DIR_WS_INCLUDES . 'header.php');
+
+// include boxes
+require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 if ($messageStack->size('create_account') > 0) {
   $smarty->assign('error_message', $messageStack->output('create_account'));
@@ -666,6 +668,4 @@ $smarty->assign('main_content', $main_content);
 if (!defined('RM'))
   $smarty->load_filter('output', 'note');
 $smarty->display(CURRENT_TEMPLATE.'/index.html');
-
 include ('includes/application_bottom.php');
-?>

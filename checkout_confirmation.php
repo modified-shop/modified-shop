@@ -36,7 +36,7 @@ define('SESSION_FORCE_COOKIE_USE', 'False');
 include ('includes/application_top.php');
 
 // create smarty elements
-$smarty = new Smarty;
+$smarty = new Smarty();
 
 // include needed functions
 require_once (DIR_FS_INC . 'xtc_collect_posts.inc.php');
@@ -149,9 +149,6 @@ if ((is_array($payment_modules->modules)
   $messageStack->add_session('global', ERROR_NO_PAYMENT_MODULE_SELECTED);
   xtc_redirect(xtc_href_link(((isset($payment_modules->selected_module) && $payment_modules->selected_module == 'paypalcart') ? FILENAME_CHECKOUT_SHIPPING : FILENAME_CHECKOUT_PAYMENT), '', 'SSL'));
 }
-
-// include boxes
-require (DIR_FS_CATALOG . 'templates/' . CURRENT_TEMPLATE . '/source/boxes.php');
 
 if (ACTIVATE_GIFT_SYSTEM == 'true') {
   include (DIR_WS_MODULES.'gift_cart.php');
@@ -328,10 +325,15 @@ if (defined('DISPLAY_HEADQUARTER_ON_CHECKOUT') && DISPLAY_HEADQUARTER_ON_CHECKOU
 }
 $smarty->assign('HEADQUARTER', $store_owner);
 
+// build breadcrumb
 $breadcrumb->add(NAVBAR_TITLE_1_CHECKOUT_CONFIRMATION, xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
 $breadcrumb->add(NAVBAR_TITLE_2_CHECKOUT_CONFIRMATION);
 
+// include header
 require (DIR_WS_INCLUDES . 'header.php');
+
+// include boxes
+require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weight') || ($_SESSION['cart']->count_contents_virtual() == 0)) {
   $_SESSION['NO_SHIPPING'] = true;
@@ -349,8 +351,7 @@ $smarty->assign('language', $_SESSION['language']);
 $main_content = $smarty->fetch(CURRENT_TEMPLATE . '/module/checkout_confirmation.html');
 $smarty->assign('main_content', $main_content);
 $smarty->caching = 0;
-if (!defined('RM')) $smarty->load_filter('output', 'note');
+if (!defined('RM'))
+	$smarty->load_filter('output', 'note');
 $smarty->display(CURRENT_TEMPLATE . '/index.html');
-
 include ('includes/application_bottom.php');
-?>
