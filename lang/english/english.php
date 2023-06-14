@@ -431,7 +431,7 @@ define('TEXT_EMAIL_PASSWORD_FORGOTTEN','Confirmation mail for password renewal')
 define('TEXT_EMAIL_PASSWORD_NEW_PASSWORD','Your new password');
 define('ERROR_MAIL','Please check the data entered in the form.');
 
-define('CATEGORIE_NOT_FOUND','Category not found');
+define('TEXT_CATEGORIE_NOT_FOUND','Category not found');
 
 define('GV_FAQ', 'Gift voucher FAQ');
 define('ERROR_NO_REDEEM_CODE', 'You did not enter a redeem code.');
@@ -604,9 +604,10 @@ define('AC_SHOW_PAGE_OF', ' from ');
 
 define('FREE_SHIPPING_INFO', 'Free Shipping minimum order: %s');
 
-define('MANUFACTURER_NOT_FOUND', 'Manufacturer not found');
+define('TEXT_MANUFACTURER_NOT_FOUND', 'Manufacturer not found');
 define('TEXT_PRODUCTS_NEW_NOT_FOUND', 'No new products in the last %s days found');
 define('TEXT_SPECIALS_NOT_FOUND', 'No specials found');
+define('TEXT_SEARCH_NOT_FOUND', 'No search results found');
 define('ENTRY_TOKEN_ERROR', 'Please check your data.');
 
 define('IMAGE_BUTTON_CONFIRM', 'Confirm'); // Needed for PayPal

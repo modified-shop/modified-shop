@@ -431,7 +431,7 @@ define('TEXT_EMAIL_PASSWORD_FORGOTTEN','Best‰tigungs-E-Mail f¸r Passwort‰nd
 define('TEXT_EMAIL_PASSWORD_NEW_PASSWORD','Ihr neues Passwort');
 define('ERROR_MAIL','Bitte &uuml;berpr&uuml;fen Sie Ihre eingegebenen Daten im Formular.');
 
-define('CATEGORIE_NOT_FOUND','Kategorie wurde nicht gefunden');
+define('TEXT_CATEGORIE_NOT_FOUND','Kategorie wurde nicht gefunden');
 
 define('GV_FAQ', 'Gutschein FAQ');
 define('ERROR_NO_REDEEM_CODE', 'Sie haben leider keinen Code eingegeben.');
@@ -604,9 +604,10 @@ define('AC_SHOW_PAGE_OF', ' von ');
 
 define('FREE_SHIPPING_INFO', 'ab %s  Bestellwert versenden wir Ihre Bestellung versandkostenfrei');
 
-define('MANUFACTURER_NOT_FOUND', 'Hersteller nicht gefunden');
+define('TEXT_MANUFACTURER_NOT_FOUND', 'Hersteller nicht gefunden');
 define('TEXT_PRODUCTS_NEW_NOT_FOUND', 'Keine neuen Artikel in den letzten %s Tagen gefunden');
 define('TEXT_SPECIALS_NOT_FOUND', 'Keine Sonderangebote gefunden');
+define('TEXT_SEARCH_NOT_FOUND', 'Keine Suchergebnisse gefunden');
 define('ENTRY_TOKEN_ERROR', 'Bitte &uuml;berpr&uuml;fen Sie Ihre Eingaben.');
 
 define('IMAGE_BUTTON_CONFIRM', 'Best&auml;tigen'); // Needed for PayPal

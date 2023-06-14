@@ -49,7 +49,7 @@ if (isset ($cPath) && xtc_not_null($cPath)) {
 
   // check categorie exist
   if (xtc_check_categories_status($current_category_id) === false) {
-    $site_error = CATEGORIE_NOT_FOUND;
+    $site_error = TEXT_CATEGORIE_NOT_FOUND;
     include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
     return;
   }
@@ -90,7 +90,7 @@ if (isset ($cPath) && xtc_not_null($cPath)) {
 
 if (isset($language_not_found) && $language_not_found === true) {
   if ($category_depth != 'top') {
-    $site_error = CATEGORIE_NOT_FOUND;
+    $site_error = TEXT_CATEGORIE_NOT_FOUND;
     include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
     return;
   } else {

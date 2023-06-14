@@ -44,11 +44,12 @@ if ($shop_is_offline) {
 }
 //SET 410 STATUS CODE
 elseif (isset($site_error) 
-        && ($site_error === CATEGORIE_NOT_FOUND 
+        && ($site_error === TEXT_CATEGORIE_NOT_FOUND 
             || $site_error === TEXT_PRODUCT_NOT_FOUND 
             || $site_error === TEXT_CONTENT_NOT_FOUND 
-            || $site_error === MANUFACTURER_NOT_FOUND
+            || $site_error === TEXT_MANUFACTURER_NOT_FOUND
             || $site_error === TEXT_SITE_NOT_FOUND
+            || $site_error === TEXT_SEARCH_NOT_FOUND
             )
         ) 
 {

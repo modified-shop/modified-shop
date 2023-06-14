@@ -210,10 +210,10 @@ if ($result != false) {
     
     $smarty->assign('main_content', $main_content);
   } elseif (isset($_GET['filter_id']) && !is_array($_GET['filter_id']) && (int)$_GET['filter_id'] > 0) {
-    $site_error = MANUFACTURER_NOT_FOUND;
+    $site_error = TEXT_MANUFACTURER_NOT_FOUND;
     include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
   } else {
-    $site_error = CATEGORIE_NOT_FOUND;
+    $site_error = TEXT_CATEGORIE_NOT_FOUND;
     include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
   }
 } elseif (isset($_GET['manufacturers_id']) && $_GET['manufacturers_id'] > 0) {
@@ -251,9 +251,9 @@ if ($result != false) {
     
     $smarty->assign('main_content', $main_content);
   } else {
-    $site_error = MANUFACTURER_NOT_FOUND;
+    $site_error = TEXT_MANUFACTURER_NOT_FOUND;
     if (isset($_GET['filter_id']) && !is_array($_GET['filter_id']) && (int)$_GET['filter_id'] > 0) {
-      $site_error = CATEGORIE_NOT_FOUND;  
+      $site_error = TEXT_CATEGORIE_NOT_FOUND;  
     }
     include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
   }
@@ -264,9 +264,9 @@ if ($result != false) {
   $site_error = sprintf(TEXT_PRODUCTS_NEW_NOT_FOUND, MAX_DISPLAY_NEW_PRODUCTS_DAYS);
   include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
 } elseif ($current_category_id == '0' && isset($_GET['keywords'])) {
-  $site_error = TEXT_PRODUCT_NOT_FOUND;
+  $site_error = TEXT_SEARCH_NOT_FOUND;
   include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
 } else {
-  $site_error = CATEGORIE_NOT_FOUND;
+  $site_error = TEXT_CATEGORIE_NOT_FOUND;
   include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
 }
