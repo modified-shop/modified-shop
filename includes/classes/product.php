@@ -208,11 +208,15 @@ class product {
                                             r.date_added,
                                             r.last_modified,
                                             r.reviews_read,
-                                            rd.reviews_text
+                                            rd.reviews_text,
+                                            pd.products_name
                                        FROM ".TABLE_REVIEWS." r
                                        JOIN ".TABLE_REVIEWS_DESCRIPTION." rd
                                             ON r.reviews_id = rd.reviews_id
                                                AND rd.languages_id = '".(int)$_SESSION['languages_id']."'
+                                       JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
+                                            ON r.products_id = pd.products_id
+                                               AND pd.language_id = '".(int)$_SESSION['languages_id']."'
                                       WHERE r.products_id = '".(int)$pID."'
                                         AND r.reviews_status = '1'
                                    ORDER BY r.reviews_id DESC");
@@ -229,7 +233,8 @@ class product {
             'RATING' => xtc_image($img, sprintf(TEXT_OF_5_STARS, $reviews['reviews_rating'])),
             'RATING_MICROTAG' => xtc_image($img, sprintf(TEXT_OF_5_STARS, $reviews['reviews_rating']),'','','itemprop="rating"'),
             'RATING_VOTE' => $reviews['reviews_rating'],
-            'TEXT' => nl2br($reviews['reviews_text'])
+            'TEXT' => nl2br($reviews['reviews_text']),
+            'PRODUCTS_NAME' => $reviews['products_name'],
           );
           foreach ($reviews as $k => $v) {
             $reviews_array[$pID][$i][strtoupper($k)] = $v;
