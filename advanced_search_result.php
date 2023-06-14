@@ -18,11 +18,11 @@
 
 include ('includes/application_top.php');
 
-// create smarty elements
-$smarty = new Smarty();
-
 // include needed functions
 require_once (DIR_FS_INC.'xtc_parse_search_string.inc.php');
+
+// create smarty elements
+$smarty = new Smarty();
 
 // security fix
 $keywords = $_GET['keywords'] = !empty($_GET['keywords']) ? stripslashes(trim(urldecode($_GET['keywords']))) : false;

@@ -23,11 +23,12 @@
 
 include ('includes/application_top.php');
 
-$smarty = new Smarty();
-
 // include needed function
 require_once (DIR_FS_INC.'xtc_date_long.inc.php');
 require_once (DIR_FS_INC.'xtc_get_vpe_name.inc.php');
+
+// create smarty
+$smarty = new Smarty();
 
 if ($language_not_found === true) {
   $site_error = TEXT_SITE_NOT_FOUND;

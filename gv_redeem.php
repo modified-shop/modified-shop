@@ -28,9 +28,6 @@
 
 require ('includes/application_top.php');
 
-// smarty
-$smarty = new Smarty();
-
 if (ACTIVATE_GIFT_SYSTEM != 'true') {
   xtc_redirect(FILENAME_DEFAULT);
 }
@@ -39,6 +36,9 @@ if (ACTIVATE_GIFT_SYSTEM != 'true') {
 if (!isset ($_SESSION['customer_id'])) {
   xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
 }
+
+// smarty
+$smarty = new Smarty();
 
 // check for a voucher number in the url
 if (isset ($_GET['gv_no'])) {

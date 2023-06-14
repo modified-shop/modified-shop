@@ -23,13 +23,13 @@ if (ENABLE_SSL == true && $request_type == 'NONSSL' && !isset($_GET['action']) &
   xtc_redirect(xtc_href_link(FILENAME_CONTENT, xtc_content_link((int)$_GET['coID']), 'SSL'));
 }
 
+// include needed functions
+require_once (DIR_FS_INC.'xtc_validate_email.inc.php');
+
 // create smarty elements
 $smarty = new Smarty();
 $smarty->assign('language', $_SESSION['language']);
 $smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
-
-// include needed functions
-require_once (DIR_FS_INC.'xtc_validate_email.inc.php');
 
 if ($language_not_found === true) {
   $site_error = TEXT_CONTENT_NOT_FOUND;

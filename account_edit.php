@@ -18,9 +18,6 @@
 
 include ('includes/application_top.php');
 
-// create smarty elements
-$smarty = new Smarty();
-
 // include needed functions
 require_once (DIR_FS_INC.'xtc_date_short.inc.php');
 require_once (DIR_FS_INC.'xtc_image_button.inc.php');
@@ -41,6 +38,9 @@ if (!isset($_SESSION['customer_id'])) {
 { 
   xtc_redirect(xtc_href_link(FILENAME_DEFAULT, '', 'SSL'));
 }
+
+// create smarty elements
+$smarty = new Smarty();
 
 // clear session
 clear_checkout_session();

@@ -34,13 +34,13 @@ defined('CHECK_CHEAPEST_SHIPPING_MODUL') or define('CHECK_CHEAPEST_SHIPPING_MODU
 // show selfpickup on free shipping
 defined('SHOW_SELFPICKUP_FREE') or define('SHOW_SELFPICKUP_FREE', 'false'); // default: 'false'
 
-// create smarty elements
-$smarty = new Smarty();
-
 // include needed functions
 require_once (DIR_FS_INC.'xtc_address_label.inc.php');
 require_once (DIR_FS_INC.'xtc_get_address_format_id.inc.php');
 require_once (DIR_FS_INC.'xtc_count_shipping_modules.inc.php');
+
+// create smarty elements
+$smarty = new Smarty();
 
 require (DIR_WS_INCLUDES.'checkout_requirements.php');
 
@@ -240,6 +240,7 @@ $smarty->assign('SHIPPING_BLOCK', $shipping_block);
 $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/checkout_shipping.html');
 $smarty->assign('main_content', $main_content);
 $smarty->caching = 0;
-if (!defined('RM'))	$smarty->load_filter('output', 'note');
+if (!defined('RM'))
+  $smarty->load_filter('output', 'note');
 $smarty->display(CURRENT_TEMPLATE.'/index.html');
 include ('includes/application_bottom.php');

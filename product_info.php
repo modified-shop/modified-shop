@@ -24,6 +24,10 @@
 
 require_once ('includes/application_top.php');
 
+// include needed functions
+require_once (DIR_FS_INC.'xtc_get_download.inc.php');
+require_once (DIR_FS_INC.'xtc_date_long.inc.php');
+
 // create smarty elements
 $smarty = new Smarty();
 
@@ -31,10 +35,6 @@ $smarty = new Smarty();
 if (!isset($_GET['products_id']) && !isset($_GET['info']) && !isset($_GET['action'])) {
   xtc_redirect(xtc_href_link(FILENAME_DEFAULT, '', 'NONSSL'));
 }
-
-// include needed functions
-require_once (DIR_FS_INC.'xtc_get_download.inc.php');
-require_once (DIR_FS_INC.'xtc_date_long.inc.php');
 
 if (isset($_GET['action']) && $_GET['action'] == 'get_download') {
 	xtc_get_download((int)$_GET['cID']); 
@@ -53,5 +53,4 @@ $smarty->caching = 0;
 if (!defined('RM'))
 	$smarty->load_filter('output', 'note');
 $smarty->display(CURRENT_TEMPLATE.'/index.html');
-
 include ('includes/application_bottom.php');

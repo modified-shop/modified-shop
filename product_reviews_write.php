@@ -194,6 +194,8 @@ if ($product->isProduct() === false) {
 }
 
 $smarty->assign('language', $_SESSION['language']);
+
+$smarty->caching = 0;
 $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/product_reviews_write.html');
 
 $smarty->assign('main_content', $main_content);

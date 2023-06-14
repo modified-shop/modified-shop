@@ -31,9 +31,6 @@ if (defined('MODULE_CAPTCHA_ACTIVE')) {
 }
 defined('MODULE_CAPTCHA_CODE_LENGTH') or define('MODULE_CAPTCHA_CODE_LENGTH', 6);
 
-// create smarty elements
-$smarty = new Smarty();
-
 // include needed functions
 require_once (DIR_FS_INC.'xtc_encrypt_password.inc.php');
 require_once (DIR_FS_INC.'xtc_random_charcode.inc.php');
@@ -42,6 +39,9 @@ require_once (DIR_FS_INC.'secure_form.inc.php');
 // include needed classes
 require_once (DIR_FS_EXTERNAL.'password_policy/password_policy.php');
 require_once (DIR_WS_CLASSES.'modified_captcha.php');
+
+// create smarty elements
+$smarty = new Smarty();
 
 $mod_captcha = $_mod_captcha_class::getInstance();
 

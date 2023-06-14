@@ -28,9 +28,6 @@ if (!function_exists('xtc_date_long')) {
 	require_once (DIR_FS_INC.'xtc_date_long.inc.php');
 }
 
-// init Smarty
-$smarty = new Smarty();
-
 if (isset($_SESSION['customer_id'])) {
   $_SESSION['customer_id_download'] = $_SESSION['customer_id'];
 }
@@ -49,6 +46,9 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
 		xtc_redirect(xtc_href_link(FILENAME_DOWNLOAD, xtc_get_all_get_params(array('action')), 'SSL'));
   }
 }
+
+// init Smarty
+$smarty = new Smarty();
 
 if (isset ($_GET['order']) && is_numeric($_GET['order']) && isset ($_GET['id']) && is_numeric($_GET['id']) && isset($_GET['key']) && strlen($_GET['key']) == '32') {
   // check for Geust Accounts

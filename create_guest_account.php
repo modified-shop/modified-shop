@@ -44,9 +44,6 @@ for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
   }
 }
 
-// create smarty elements
-$smarty = new Smarty();
-
 // include needed functions
 require_once (DIR_FS_INC.'xtc_get_country_list.inc.php');
 require_once (DIR_FS_INC.'xtc_validate_email.inc.php');
@@ -60,6 +57,9 @@ require_once (DIR_FS_INC.'write_customers_session.inc.php');
 
 // include needed classes
 require_once (DIR_WS_CLASSES.'modified_captcha.php');
+
+// create smarty elements
+$smarty = new Smarty();
 
 $mod_captcha = $_mod_captcha_class::getInstance();
 

@@ -18,9 +18,6 @@
 
 include ('includes/application_top.php');
 
-// create smarty elements
-$smarty = new Smarty();
-
 // include needed functions
 require_once (DIR_FS_INC.'xtc_count_customer_address_book_entries.inc.php');
 require_once (DIR_FS_INC.'xtc_address_label.inc.php');
@@ -50,6 +47,9 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'deleteconfirm') && isset ($_
 
   xtc_redirect(xtc_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
 }
+
+// create smarty elements
+$smarty = new Smarty();
 
 // error checking when updating or adding an entry
 $process = false;

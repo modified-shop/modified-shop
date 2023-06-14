@@ -35,12 +35,12 @@ define('SESSION_FORCE_COOKIE_USE', 'False');
 
 include ('includes/application_top.php');
 
-// create smarty elements
-$smarty = new Smarty();
-
 // include needed functions
 require_once (DIR_FS_INC . 'xtc_collect_posts.inc.php');
 require_once (DIR_FS_INC . 'xtc_display_tax_value.inc.php');
+
+// create smarty elements
+$smarty = new Smarty();
 
 require (DIR_WS_INCLUDES.'checkout_requirements.php');
 

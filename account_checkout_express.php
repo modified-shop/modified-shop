@@ -12,9 +12,6 @@
 
 include ('includes/application_top.php');
 
-// create smarty elements
-$smarty = new Smarty();
-
 // include needed functions
 require_once (DIR_FS_INC.'xtc_address_format.inc.php');
 require_once (DIR_FS_INC.'xtc_get_address_format_id.inc.php');
@@ -46,6 +43,9 @@ if (!isset($_SESSION['customer_id'])) {
 if (!defined('MODULE_CHECKOUT_EXPRESS_STATUS') || MODULE_CHECKOUT_EXPRESS_STATUS == 'false') {
 	xtc_redirect(xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
 }
+
+// create smarty elements
+$smarty = new Smarty();
 
 if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
   $valid_params = array(

@@ -18,9 +18,6 @@
 
 include ('includes/application_top.php');
 
-// create smarty elements
-$smarty = new Smarty();
-
 // include needed functions
 require_once (DIR_FS_INC.'xtc_count_customer_address_book_entries.inc.php');
 require_once (DIR_FS_INC.'xtc_address_label.inc.php');
@@ -105,6 +102,9 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'submit')) {
     xtc_redirect(xtc_href_link($link_checkout_shipping, $params, 'SSL'));
   }
 }
+
+// create smarty elements
+$smarty = new Smarty();
 
 // if no shipping destination address was selected, use their own address as default
 if (!isset ($_SESSION['sendto'])) {

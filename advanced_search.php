@@ -17,12 +17,12 @@
 
 include ('includes/application_top.php');
 
-// create smarty elements
-$smarty = new Smarty();
-
 // include needed functions
 require_once (DIR_FS_INC.'xtc_get_categories.inc.php');
 require_once (DIR_FS_INC.'xtc_get_manufacturers.inc.php');
+
+// create smarty elements
+$smarty = new Smarty();
 
 $popup_params = $main->getPopupParams();
 

@@ -22,9 +22,6 @@ require_once (DIR_FS_INC.'xtc_validate_password.inc.php');
 require_once (DIR_FS_INC.'secure_form.inc.php');
 require_once (DIR_FS_INC.'clear_checkout_session.inc.php');
 
-// create smarty elements
-$smarty = new Smarty();
-
 if (!isset($_SESSION['customer_id'])) { 
   xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
 } elseif (isset($_SESSION['customer_id']) 
@@ -41,6 +38,9 @@ clear_checkout_session();
 if ($_SESSION['customer_id'] == 1) {
   xtc_redirect(xtc_href_link(FILENAME_DEFAULT),'NONSSL');
 }
+
+// create smarty elements
+$smarty = new Smarty();
 
 $success = false;
 if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
