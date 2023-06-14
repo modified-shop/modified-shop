@@ -22,7 +22,7 @@ if (!isset($_GET['coID']) || $_GET['coID'] == '' || count($content_data) < 1) {
   die('Direct Access to this location is not allowed.');
 }
 
-$popup_smarty = new Smarty;
+$popup_smarty = new Smarty();
 
 $popup_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 $popup_smarty->assign('html_params', ((TEMPLATE_HTML_ENGINE == 'xhtml') ? ' '.HTML_PARAMS : ' lang="'.$_SESSION['language_code'].'"'));
@@ -36,4 +36,3 @@ $popup_smarty->assign('content_heading', $content_data['content_heading']);
 $popup_smarty->assign('content_text', $content_data['content_text']);
 
 $popup_smarty->display(CURRENT_TEMPLATE.'/module/popup_content.html');
-?>

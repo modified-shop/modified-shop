@@ -42,7 +42,7 @@ $backup_delivery_zone = $_SESSION['delivery_zone'];
 $_SESSION['country'] = $_SESSION['customer_country'];
 
 // create smarty elements
-$smarty = $module_smarty = new Smarty;
+$smarty = $module_smarty = new Smarty();
 
 include(DIR_WS_INCLUDES.'shipping_estimate.php');
 $_SESSION['shipping'] = $backup_shipping;

@@ -10,7 +10,7 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-$categorie_smarty = new Smarty;
+$categorie_smarty = new Smarty();
 $categorie_smarty->assign('language', $_SESSION['language']);
 $categorie_smarty->assign('tpl_path', DIR_WS_BASE . 'templates/'.CURRENT_TEMPLATE.'/');
 

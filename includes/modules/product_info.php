@@ -38,7 +38,7 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
 
 } else {
 
-  $info_smarty = new Smarty;
+  $info_smarty = new Smarty();
   $info_smarty->assign('language', $_SESSION['language']);
   $info_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 

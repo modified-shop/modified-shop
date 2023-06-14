@@ -16,7 +16,7 @@
 
 include ('includes/application_top.php');
 
-$smarty = new Smarty;
+$smarty = new Smarty();
 
 if (DIR_WS_BASE == '') {
   $smarty->assign('base_href', (($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER) . DIR_WS_CATALOG);

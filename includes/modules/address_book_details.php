@@ -16,7 +16,7 @@
    ---------------------------------------------------------------------------------/-----*/
 
   // include needed functions
-  $module_smarty=new Smarty;
+  $module_smarty=new Smarty();
   $module_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
   
   // include needed functions
@@ -108,4 +108,3 @@
   $module_smarty->caching = 0;
   $main_content=$module_smarty->fetch(CURRENT_TEMPLATE . '/module/address_book_details.html');
   $smarty->assign('MODULE_address_book_details',$main_content);
-?>

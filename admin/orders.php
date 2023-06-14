@@ -47,7 +47,7 @@ if (!defined('MAX_DISPLAY_ORDER_RESULTS')) {
 }
 
 // initiate template engine for mail
-$smarty = new Smarty;
+$smarty = new Smarty();
 $currencies = new currencies();
 
 $order_exists = false;

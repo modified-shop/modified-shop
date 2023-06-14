@@ -29,7 +29,7 @@
     // include needed functions
     require_once (DIR_FS_INC.'xtc_parse_search_string.inc.php');
   
-    $module_smarty = new Smarty;
+    $module_smarty = new Smarty();
     $module_smarty->assign('language', $_SESSION['language']);
   
     if (isset($_POST['keywords'])) {    

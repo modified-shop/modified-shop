@@ -248,7 +248,7 @@ class newsletter {
     global $xtPrice;
     
     $sendmail = false;
-    $smarty = new Smarty;
+    $smarty = new Smarty();
     
     $function = 'xtc_href_link';
     if (function_exists('xtc_href_link_from_admin')) {

@@ -32,7 +32,7 @@ if (isset($_REQUEST['error']) && $_REQUEST['error'] == '404') {
   header('HTTP/1.1 404 Not Found');
 }
 
-$module_smarty = new Smarty;
+$module_smarty = new Smarty();
 $module_smarty->assign('language', $_SESSION['language']);
 $module_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 

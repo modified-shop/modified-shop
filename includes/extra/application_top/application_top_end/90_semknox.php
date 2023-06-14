@@ -16,7 +16,7 @@
       )
   {
     // create smarty elements
-    $smarty = new Smarty;
+    $smarty = new Smarty();
 
     // build breadcrumb
     $breadcrumb->add(NAVBAR_TITLE1_ADVANCED_SEARCH, xtc_href_link(FILENAME_ADVANCED_SEARCH));

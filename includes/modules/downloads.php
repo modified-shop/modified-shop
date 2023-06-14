@@ -21,7 +21,7 @@ if (!function_exists('xtc_date_long')) {
   require_once (DIR_FS_INC.'xtc_date_long.inc.php');
 }
 
-$module_smarty = new Smarty;
+$module_smarty = new Smarty();
 
 $customer_id = (int)$_SESSION['customer_id'];
 $language = $_SESSION['language'];

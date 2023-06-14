@@ -17,7 +17,7 @@
 
 include ('includes/application_top.php');
 
-$popup_smarty = new Smarty;
+$popup_smarty = new Smarty();
 
 $popup_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 $popup_smarty->assign('html_params', ((TEMPLATE_HTML_ENGINE == 'xhtml') ? ' '.HTML_PARAMS : ' lang="'.$_SESSION['language_code'].'"'));
@@ -30,4 +30,3 @@ $popup_smarty->assign('link_close', 'javascript:window.close()');
 $popup_smarty->assign('language', $_SESSION['language']);
 
 $popup_smarty->display(CURRENT_TEMPLATE.'/module/popup_search_help.html');
-?>

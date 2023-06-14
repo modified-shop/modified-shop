@@ -10,7 +10,7 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  $module_smarty = new Smarty;
+  $module_smarty = new Smarty();
   $shipping_block = '';
   if (xtc_count_shipping_modules() > 0) {
     $showtax = $_SESSION['customers_status']['customers_status_show_price_tax'];
@@ -57,4 +57,3 @@
     $module_smarty->assign('language', $_SESSION['language']);
     $shipping_block = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/checkout_shipping_block.html');
   }
-?>

@@ -42,7 +42,7 @@ require_once (DIR_FS_INC.'xtc_address_label.inc.php');
 require_once (DIR_FS_INC.'ip_clearing.inc.php');
 
 // initialize smarty
-$smarty = new Smarty;
+$smarty = new Smarty();
 
 require (DIR_WS_INCLUDES.'checkout_requirements.php');
 
@@ -467,4 +467,3 @@ if (!$tmp) {
 
   xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
 }
-?>

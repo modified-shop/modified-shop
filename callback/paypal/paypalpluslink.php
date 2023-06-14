@@ -64,7 +64,7 @@ if (isset($_GET['oID'])
       }
     } else {      
       // create smarty elements
-      $smarty = new Smarty;
+      $smarty = new Smarty();
 
       // include boxes
       require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
@@ -132,4 +132,3 @@ if (isset($_GET['oID'])
 }
 
 include ('includes/application_bottom.php'); 
-?>

@@ -22,7 +22,7 @@
       && !isset($_GET['manufacturers_id'])
       )
   {
-    $banner_smarty = new Smarty;
+    $banner_smarty = new Smarty();
     $banner_smarty->caching = 0;
     $banner_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
     $banner_smarty->assign('language', $_SESSION['language']);

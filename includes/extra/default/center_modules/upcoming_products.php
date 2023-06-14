@@ -21,7 +21,7 @@ if (MAX_DISPLAY_UPCOMING_PRODUCTS != '0') {
   // include needed functions
   require_once (DIR_FS_INC.'xtc_date_short.inc.php');
 
-  $module_smarty = new Smarty;
+  $module_smarty = new Smarty();
   $module_smarty->assign('language', $_SESSION['language']);
   $module_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 
