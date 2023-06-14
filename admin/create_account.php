@@ -33,7 +33,7 @@
   require(DIR_WS_INCLUDES . 'get_states.php');
 
   // initiate template engine for mail
-  $smarty = new Smarty;
+  $smarty = new Smarty();
 
   $customers_statuses_array = xtc_get_customers_statuses();
   if (!isset($customers_password)) {

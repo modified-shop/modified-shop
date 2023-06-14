@@ -28,7 +28,7 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-$gift_smarty = new Smarty;
+$gift_smarty = new Smarty();
 $gift_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 
 if (ACTIVATE_GIFT_SYSTEM == 'true') {
@@ -97,4 +97,3 @@ $gift_smarty->caching = 0;
 
 $module = $gift_smarty->fetch(CURRENT_TEMPLATE.'/module/gift_cart.html');
 $smarty->assign('MODULE_gift_cart', !empty($module) ? trim($module) : $module);
-?>

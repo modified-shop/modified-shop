@@ -22,7 +22,7 @@ if (!isset($_GET['cID']) || $_GET['cID'] == '') {
   die('Direct Access to this location is not allowed.');
 }
 
-$popup_smarty = new Smarty;
+$popup_smarty = new Smarty();
 
 $text_coupon_help = TEXT_COUPON_HELP_HEADER;
 $coupon_query = xtc_db_query("SELECT * 
@@ -124,4 +124,3 @@ if (DIR_WS_BASE == '') {
 }
 $popup_smarty->caching = 0;
 $popup_smarty->display(CURRENT_TEMPLATE.'/module/popup_coupon_help.html');
-?>

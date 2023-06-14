@@ -43,7 +43,7 @@ function xtc_php_mail($from_email_address, $from_email_name,
   if (!class_exists('Smarty')) {
     require (DIR_FS_EXTERNAL.'smarty/smarty_2/Smarty.class.php');
   }
-  $mailsmarty= new Smarty;
+  $mailsmarty= new Smarty();
   $mailsmarty->compile_dir = DIR_FS_CATALOG.'templates_c';
   
   //set language parameters
@@ -280,4 +280,3 @@ function check_attachments($attachments, $path_to_attachments)
   }
   return $attachments;
 }
-?>

@@ -32,7 +32,7 @@ if (!isset($_SESSION['customers_login_tries'])) {
 if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/offline/login_shop.html')) {
 
   // create smarty elements
-  $smarty = new Smarty;
+  $smarty = new Smarty();
 
   if ($messageStack->size('login') > 0) {
     $smarty->assign('error_message', $messageStack->output('login'));

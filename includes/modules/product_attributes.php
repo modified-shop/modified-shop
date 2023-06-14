@@ -36,7 +36,7 @@ if ($product->data['options_template'] == ''
   $product->data['options_template'] = basename($files[0]);
 }
 
-$module_smarty = new Smarty;
+$module_smarty = new Smarty();
 $module_smarty->assign('language', $_SESSION['language']);
 $module_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 

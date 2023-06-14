@@ -16,7 +16,7 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  $box_smarty = new Smarty;
+  $box_smarty = new Smarty();
 
   $box_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 
@@ -113,4 +113,3 @@
   $box_smarty->assign('language', $_SESSION['language']);
   $box_shopping_cart = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_cart.html');
   $smarty->assign('box_CART', $box_shopping_cart);
-?>

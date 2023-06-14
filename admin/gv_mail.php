@@ -40,7 +40,7 @@
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
   // initiate template engine for mail
-  $smarty = new Smarty;
+  $smarty = new Smarty();
 
   // set dirs manual
   $smarty->template_dir = DIR_FS_CATALOG.'templates';

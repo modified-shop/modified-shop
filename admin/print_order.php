@@ -19,7 +19,7 @@
   // include needed functions
   require_once(DIR_FS_INC.'xtc_get_countries.inc.php');
 
-  $smarty = new Smarty;
+  $smarty = new Smarty();
 
   //get store name and store name_address
   $smarty->assign('store_name', STORE_NAME);
@@ -124,4 +124,3 @@
   $smarty->compile_dir = DIR_FS_CATALOG.'templates_c';
   $smarty->config_dir = DIR_FS_CATALOG.'lang';
   $smarty->display(CURRENT_TEMPLATE . '/admin/print_order.html');
-?>

@@ -405,7 +405,7 @@ class PayPalPaymentBase extends PayPalCommon {
       return false;
     }
 
-    $module_smarty = new Smarty;
+    $module_smarty = new Smarty();
     
     //check if display conditions on checkout page is true
     if (DISPLAY_REVOCATION_ON_CHECKOUT == 'true') {
@@ -1324,4 +1324,3 @@ class PayPalPaymentBase extends PayPalCommon {
   }
 
 }
-?>

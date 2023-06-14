@@ -14,7 +14,7 @@
 require_once(DIR_FS_INC.'get_wishlist_content.inc.php');
 
 // create smarty
-$module_smarty = new Smarty;
+$module_smarty = new Smarty();
 
 $module_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 
@@ -32,4 +32,3 @@ $module_smarty->caching = 0;
 $module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/wishlist.html');
 
 $smarty->assign('MODULE_wishlist', !empty($module) ? trim($module) : $module);
-?>

@@ -21,7 +21,7 @@ require_once (DIR_FS_INC.'xtc_row_number_format.inc.php');
 require_once (DIR_FS_INC.'xtc_date_short.inc.php');
 
 // create smarty elements
-$module_smarty = new Smarty;
+$module_smarty = new Smarty();
 $module_smarty->assign('language', $_SESSION['language']);
 $module_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 

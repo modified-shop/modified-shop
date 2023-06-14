@@ -13,7 +13,7 @@
 // include needed functions
 require_once (DIR_FS_INC.'get_filter_tags.inc.php');
 
-$filter_smarty = new Smarty;
+$filter_smarty = new Smarty();
 $filter_smarty->assign('language', $_SESSION['language']);
 $filter_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 

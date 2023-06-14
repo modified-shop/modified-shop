@@ -36,7 +36,7 @@ require_once (DIR_FS_INC.'xtc_get_currencies_values.inc.php');
 require_once (DIR_FS_INC.'check_whatsnew.inc.php');
 require_once (DIR_FS_INC.'get_filter_tags.inc.php');
 
-$default_smarty = new Smarty;
+$default_smarty = new Smarty();
 $default_smarty->assign('language', $_SESSION['language']);
 $default_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 $default_smarty->assign('session', xtc_session_id());
