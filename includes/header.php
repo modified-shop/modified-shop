@@ -53,8 +53,10 @@ elseif (isset($site_error)
             )
         ) 
 {
-  header("HTTP/1.0 410 Gone"); 
-  header("Status: 410 Gone"); // FAST CGI
+  if (!isset($_REQUEST['error'])) {
+    header("HTTP/1.0 410 Gone"); 
+    header("Status: 410 Gone"); // FAST CGI
+  }
 }
 
 // gzip compression

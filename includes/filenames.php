@@ -89,10 +89,10 @@ $filename_array = array(
   'FILENAME_ACCOUNT_CHECKOUT_EXPRESS' => 'account_checkout_express.php',
   'FILENAME_CHECKOUT_PAYMENT_IFRAME' => 'checkout_payment_iframe.php',
   'FILENAME_MEDIA_CONTENT' => 'media_content.php',
+  'FILENAME_ERROR' => 'error.php',
 );
 
 // define 
 foreach ($filename_array as $key => $val) {
   defined($key) or define($key, $val);
 }
-?>
