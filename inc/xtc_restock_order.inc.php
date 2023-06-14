@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: header.php 3808 2012-10-28 20:39:04Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -49,4 +49,3 @@
       }
     }
   }
-?>
