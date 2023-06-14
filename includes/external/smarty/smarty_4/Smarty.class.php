@@ -712,6 +712,17 @@ class Smarty extends Smarty_Compatibility
         if (!defined('RUN_MODE_INSTALLER')) {
           $this->registerCacheResource('phpfastcache', new Smarty_CacheResource_Phpfastcache());
         }
+        
+        if (is_file(MY_TEMPLATE_PLUGINS.'register_php_plugins.php')) {
+            include(MY_TEMPLATE_PLUGINS.'register_php_plugins.php');
+          
+            if (isset($register_php_plugins) && is_array($register_php_plugins)) {
+                $register_php_plugins = array_unique($register_php_plugins);
+                foreach ($register_php_plugins as $php_plugins) {
+                    $this->registerPlugin('modifier', $php_plugins, $php_plugins);
+                }
+            }
+        }
 
         if (isset($_SERVER[ 'SCRIPT_NAME' ])) {
             Smarty::$global_tpl_vars[ 'SCRIPT_NAME' ] = new Smarty_Variable($_SERVER[ 'SCRIPT_NAME' ]);
