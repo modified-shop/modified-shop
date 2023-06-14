@@ -28,7 +28,7 @@ if ($_SESSION['customers_status']['customers_status_read_reviews'] == '0') {
 }
 
 // create smarty
-$smarty = new Smarty;
+$smarty = new Smarty();
 $smarty->assign('language', $_SESSION['language']);
 $smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 
@@ -94,11 +94,14 @@ if ($reviews_split->number_of_rows > 0) {
   $smarty->assign('module_content', $module_data);
 }
 
+// build breadcrumb
+$breadcrumb->add(NAVBAR_TITLE_REVIEWS, xtc_href_link(FILENAME_REVIEWS));
+
+// include header
+require (DIR_WS_INCLUDES . 'header.php');
+
 // include boxes
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
-
-$breadcrumb->add(NAVBAR_TITLE_REVIEWS, xtc_href_link(FILENAME_REVIEWS));
-require (DIR_WS_INCLUDES.'header.php');
 
 if ($messageStack->size('product_reviews') > 0) {
   $smarty->assign('error_message', $messageStack->output('product_reviews'));

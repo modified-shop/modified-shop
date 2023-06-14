@@ -35,7 +35,7 @@ defined('CHECK_CHEAPEST_SHIPPING_MODUL') or define('CHECK_CHEAPEST_SHIPPING_MODU
 defined('SHOW_SELFPICKUP_FREE') or define('SHOW_SELFPICKUP_FREE', 'false'); // default: 'false'
 
 // create smarty elements
-$smarty = new Smarty;
+$smarty = new Smarty();
 
 // include needed functions
 require_once (DIR_FS_INC.'xtc_address_label.inc.php');
@@ -164,13 +164,15 @@ if ((!isset($_SESSION['shipping']) && CHECK_CHEAPEST_SHIPPING_MODUL == 'true') |
 	$_SESSION['shipping'] = $shipping_modules->cheapest();
 }
 
-// include boxes
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
-
+// build breadcrumb
 $breadcrumb->add(NAVBAR_TITLE_1_CHECKOUT_SHIPPING, xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
 $breadcrumb->add(NAVBAR_TITLE_2_CHECKOUT_SHIPPING, xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
 
-require (DIR_WS_INCLUDES.'header.php');
+// include header
+require (DIR_WS_INCLUDES . 'header.php');
+
+// include boxes
+require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 $smarty->assign('FORM_ACTION', xtc_draw_form('checkout_address', xtc_href_link(FILENAME_CHECKOUT_SHIPPING, xtc_get_all_get_params(), 'SSL'), 'post', 'onSubmit="return check_form();"').xtc_draw_hidden_field('action', 'process'));
 $smarty->assign('ADDRESS_LABEL', xtc_address_label($_SESSION['customer_id'], $_SESSION['sendto'], true, ' ', '<br />'));
@@ -240,6 +242,4 @@ $smarty->assign('main_content', $main_content);
 $smarty->caching = 0;
 if (!defined('RM'))	$smarty->load_filter('output', 'note');
 $smarty->display(CURRENT_TEMPLATE.'/index.html');
-
 include ('includes/application_bottom.php');
-?>

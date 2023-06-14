@@ -24,7 +24,7 @@ require_once (DIR_FS_INC.'xtc_date_short.inc.php');
 require_once (DIR_FS_INC.'xtc_get_products_mo_images.inc.php');
 
 // create smarty elements
-$info_smarty = new Smarty;
+$info_smarty = new Smarty();
 $info_smarty->assign('language', $_SESSION['language']);
 $info_smarty->assign('charset', $_SESSION['language_charset'] ); 
 $info_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
@@ -44,16 +44,17 @@ if (isset($_GET['products_id']) && $_GET['products_id'] != '') {
 
 if (!is_object($product) || $product->isProduct() === false || $language_not_found === true) {
   // create smarty elements
-  $smarty = new Smarty;
-
-  // include boxes
-  require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
+  $smarty = new Smarty();
 
   // product not found in database
   $site_error = TEXT_PRODUCT_NOT_FOUND;
   include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
 
-  require (DIR_WS_INCLUDES.'header.php');
+  // include header
+  require (DIR_WS_INCLUDES . 'header.php');
+
+  // include boxes
+  require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
   $smarty->assign('language', $_SESSION['language']);
   $smarty->caching = 0;

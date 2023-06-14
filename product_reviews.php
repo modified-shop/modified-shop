@@ -24,7 +24,7 @@ require_once (DIR_FS_INC.'xtc_get_products_name.inc.php');
 require_once (DIR_FS_INC.'xtc_word_count.inc.php');
 
 // create smarty
-$smarty = new Smarty;
+$smarty = new Smarty();
 $smarty->assign('language', $_SESSION['language']);
 $smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 
@@ -109,12 +109,14 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
   }
 }
 
-// include boxes
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
-
+// build breadcrumb
 $breadcrumb->add(NAVBAR_TITLE_PRODUCT_REVIEWS, xtc_href_link(FILENAME_PRODUCT_REVIEWS, xtc_get_all_get_params()));
 
-require (DIR_WS_INCLUDES.'header.php');
+// include header
+require (DIR_WS_INCLUDES . 'header.php');
+
+// include boxes
+require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 $smarty->assign('PRODUCTS_NAME', xtc_get_products_name($_GET['products_id'], $_SESSION['languages_id']));
 
@@ -142,4 +144,3 @@ if (!defined('RM'))
 	$smarty->load_filter('output', 'note');
 $smarty->display(CURRENT_TEMPLATE.'/index.html');
 include ('includes/application_bottom.php');
-?>

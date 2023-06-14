@@ -19,7 +19,7 @@
 include ('includes/application_top.php');
 
 // create smarty elements
-$smarty = new Smarty;
+$smarty = new Smarty();
 
 // include needed functions
 require_once (DIR_FS_INC.'xtc_count_customer_address_book_entries.inc.php');
@@ -297,9 +297,7 @@ if (!isset ($_GET['delete']) && !isset ($_GET['edit'])) {
   }
 }
 
-// include boxes
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
-
+// build breadcrumb
 $breadcrumb->add(NAVBAR_TITLE_1_ADDRESS_BOOK_PROCESS, xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
 $breadcrumb->add(NAVBAR_TITLE_2_ADDRESS_BOOK_PROCESS, xtc_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
 
@@ -312,7 +310,11 @@ elseif (isset ($_GET['delete']) && is_numeric($_GET['delete'])) {
   $breadcrumb->add(NAVBAR_TITLE_ADD_ENTRY_ADDRESS_BOOK_PROCESS, xtc_href_link(FILENAME_ADDRESS_BOOK_PROCESS, '', 'SSL'));
 }
 
+// include header
 require (DIR_WS_INCLUDES.'header.php');
+
+// include boxes
+require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 if (!isset($_GET['delete'])) {
   $action = xtc_draw_form('addressbook', xtc_href_link(FILENAME_ADDRESS_BOOK_PROCESS, (isset ($_GET['edit']) ? 'edit='.$_GET['edit'] : ''), 'SSL')).secure_form('address_book_process');
@@ -354,4 +356,3 @@ if (!defined('RM'))
   $smarty->load_filter('output', 'note');
 $smarty->display(CURRENT_TEMPLATE.'/index.html');
 include ('includes/application_bottom.php');
-?>

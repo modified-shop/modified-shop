@@ -39,16 +39,13 @@ include ('includes/application_top.php');
 defined('CHECK_FIRST_PAYMENT_MODUL') or define('CHECK_FIRST_PAYMENT_MODUL', 'false'); // default: 'false'
 
 // create smarty elements
-$smarty = new Smarty;
+$smarty = new Smarty();
 
 // include needed functions
 require_once (DIR_FS_INC . 'xtc_address_label.inc.php');
 require_once (DIR_FS_INC . 'xtc_get_address_format_id.inc.php');
 
 require (DIR_WS_INCLUDES.'checkout_requirements.php');
-
-// include boxes
-require (DIR_FS_CATALOG . 'templates/' . CURRENT_TEMPLATE . '/source/boxes.php');
 
 unset ($_SESSION['tmp_oID']);
 unset ($_SESSION['transaction_id']); ### moneybookers payment module version 2.4
@@ -134,9 +131,6 @@ $payment_modules = new payment();
 $order_total = $order_total_modules->process();
 // redirect if Coupon matches ammount
 
-$breadcrumb->add(NAVBAR_TITLE_1_CHECKOUT_PAYMENT, xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
-$breadcrumb->add(NAVBAR_TITLE_2_CHECKOUT_PAYMENT, xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
-
 $smarty->assign('FORM_ACTION', xtc_draw_form('checkout_payment', xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'), 'post', 'onSubmit="return check_form_payment();"'));
 $smarty->assign('ADDRESS_LABEL', xtc_address_label($_SESSION['customer_id'], $_SESSION['billto'], true, ' ', '<br />'));
 $smarty->assign('BUTTON_ADDRESS', '<a href="' . xtc_href_link(FILENAME_CHECKOUT_PAYMENT_ADDRESS, '', 'SSL') . '">' . xtc_image_button('button_change_address.gif', IMAGE_BUTTON_CHANGE_ADDRESS) . '</a>');
@@ -148,7 +142,7 @@ if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weigh
 $smarty->assign('FORM_END', '</form>');
 
 $total = $xtPrice->xtcFormat($order->info['total'], false);
-$module_smarty = new Smarty;
+$module_smarty = new Smarty();
 
 $credit_amount = 0;
 if (ACTIVATE_GIFT_SYSTEM == 'true') {
@@ -258,8 +252,15 @@ elseif (!isset($_SESSION['cot_gv']) || $total <= 0) {
   $smarty->assign('NO_PAYMENT', 'true');
 }
 
-// move header for Javascript form check
+// build breadcrumb
+$breadcrumb->add(NAVBAR_TITLE_1_CHECKOUT_PAYMENT, xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
+$breadcrumb->add(NAVBAR_TITLE_2_CHECKOUT_PAYMENT, xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
+
+// include header
 require (DIR_WS_INCLUDES . 'header.php');
+
+// include boxes
+require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 $module_smarty->caching = 0;
 $payment_block = $module_smarty->fetch(CURRENT_TEMPLATE . '/module/checkout_payment_block.html');
@@ -317,6 +318,4 @@ $smarty->assign('main_content', $main_content);
 $smarty->caching = 0;
 if (!defined('RM')) $smarty->load_filter('output', 'note');
 $smarty->display(CURRENT_TEMPLATE . '/index.html');
-
 include ('includes/application_bottom.php');
-?>

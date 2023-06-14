@@ -30,7 +30,7 @@
 include ('includes/application_top.php');
 
 // create smarty elements
-$smarty = new Smarty;
+$smarty = new Smarty();
 
 if ($messageStack->size('logoff') > 0) {
   $smarty->assign('error_message', $messageStack->output('logoff'));
@@ -61,12 +61,14 @@ xtc_session_reset();
 // write customers status guest in session again
 require (DIR_WS_INCLUDES.'write_customers_status.php');
 
-// include boxes
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
-
+// build breadcrumb
 $breadcrumb->add(NAVBAR_TITLE_LOGOFF);
 
-require (DIR_WS_INCLUDES.'header.php');
+// include header
+require (DIR_WS_INCLUDES . 'header.php');
+
+// include boxes
+require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 $smarty->assign('BUTTON_CONTINUE', '<a href="'.xtc_href_link(FILENAME_DEFAULT).'">'.xtc_image_button('button_continue.gif', IMAGE_BUTTON_CONTINUE).'</a>');
 $smarty->assign('language', $_SESSION['language']);
@@ -77,4 +79,3 @@ if (!defined('RM'))
   $smarty->load_filter('output', 'note');
 $smarty->display(CURRENT_TEMPLATE.'/index.html');
 include ('includes/application_bottom.php');
-?>

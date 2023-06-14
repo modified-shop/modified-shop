@@ -31,9 +31,6 @@ if (!function_exists('xtc_date_long')) {
 // init Smarty
 $smarty = new Smarty();
 
-// include boxes
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
-
 if (isset($_SESSION['customer_id'])) {
   $_SESSION['customer_id_download'] = $_SESSION['customer_id'];
 }
@@ -200,8 +197,14 @@ $smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 $smarty->caching = 0;
 $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/downloads.html');
 
+// build breadcrumb
 $breadcrumb->add(NAVBAR_TITLE_DOWNLOAD, xtc_href_link(FILENAME_DOWNLOAD, '', 'SSL'));
-require (DIR_WS_INCLUDES.'header.php');
+
+// include header
+require (DIR_WS_INCLUDES . 'header.php');
+
+// include boxes
+require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 $smarty->assign('language', $_SESSION['language']);
 $smarty->assign('main_content', $main_content);
@@ -209,6 +212,4 @@ $smarty->caching = 0;
 if (!defined('RM'))
 	$smarty->load_filter('output', 'note');
 $smarty->display(CURRENT_TEMPLATE.'/index.html');
-
 include ('includes/application_bottom.php');
-?>

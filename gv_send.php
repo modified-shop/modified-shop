@@ -41,7 +41,7 @@ if (!isset ($_SESSION['customer_id'])) {
 require_once (DIR_FS_INC.'xtc_validate_email.inc.php');
 
 // smarty
-$smarty = new Smarty;
+$smarty = new Smarty();
 
 if (isset($_POST['back_x']) || isset($_POST['back_y'])) {
   $_GET['action'] = '';
@@ -145,12 +145,14 @@ if (isset($_GET['action']) && $_GET['action'] == 'process') {
   }
 }
 
-// include boxes
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
-
+// build breadcrumb
 $breadcrumb->add(NAVBAR_GV_SEND);
 
-require (DIR_WS_INCLUDES.'header.php');
+// include header
+require (DIR_WS_INCLUDES . 'header.php');
+
+// include boxes
+require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 if (isset($_GET['action']) && $_GET['action'] == 'process') {
   $smarty->assign('action', 'process');

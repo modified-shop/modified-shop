@@ -19,7 +19,7 @@
 include ('includes/application_top.php');
 
 // create smarty elements
-$smarty = new Smarty;
+$smarty = new Smarty();
 
 // include needed functions
 require_once (DIR_FS_INC.'xtc_date_short.inc.php');
@@ -205,13 +205,15 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
   }
 }
 
-// include boxes
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
-
+// build breadcrumb
 $breadcrumb->add(NAVBAR_TITLE_1_ACCOUNT_EDIT, xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
 $breadcrumb->add(NAVBAR_TITLE_2_ACCOUNT_EDIT, xtc_href_link(FILENAME_ACCOUNT_EDIT, '', 'SSL'));
 
+// include header
 require (DIR_WS_INCLUDES.'header.php');
+
+// include boxes
+require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 $smarty->assign('FORM_ACTION', xtc_draw_form('account_edit', xtc_href_link(FILENAME_ACCOUNT_EDIT, '', 'SSL')).xtc_draw_hidden_field('action', 'process').secure_form('account_edit'));
 
@@ -269,4 +271,3 @@ if (!defined('RM'))
   $smarty->load_filter('output', 'note');
 $smarty->display(CURRENT_TEMPLATE.'/index.html');
 include ('includes/application_bottom.php');
-?>

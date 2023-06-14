@@ -18,10 +18,7 @@
 include ('includes/application_top.php');
 
 // create smarty elements
-$smarty = new Smarty;
-
-// include boxes
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
+$smarty = new Smarty();
 
 // include needed functions
 require_once (DIR_FS_INC.'xtc_get_categories.inc.php');
@@ -39,6 +36,7 @@ $smarty->assign('ENTRY_SUBCAT',xtc_draw_checkbox_field('inc_subcat', '1', ((isse
 $smarty->assign('SELECT_MANUFACTURERS',xtc_draw_pull_down_menu('filter_id', xtc_get_manufacturers(array (array ('id' => '', 'text' => TEXT_ALL_MANUFACTURERS))), ((isset($_GET['filter_id'])) ? (int)$_GET['filter_id'] : '')));
 $smarty->assign('SELECT_PFROM',xtc_draw_input_field('pfrom', ((isset($_GET['pfrom'])) ? (float)$_GET['pfrom'] : '')));
 $smarty->assign('SELECT_PTO',xtc_draw_input_field('pto', ((isset($_GET['pto'])) ? (float)$_GET['pto'] : '')));
+$smarty->assign('FORM_END', '</form>');
 
 if (isset ($_GET['errorno'])) {
 	if (($_GET['errorno'] & 1) == 1) {
@@ -74,12 +72,16 @@ if ($messageStack->size('advanced_search') > 0) {
   $smarty->assign('error_message', $messageStack->output('advanced_search'));
 }
 
+// build breadcrumb
 $breadcrumb->add(NAVBAR_TITLE_ADVANCED_SEARCH, xtc_href_link(FILENAME_ADVANCED_SEARCH));
 
+// include header
 require(DIR_WS_INCLUDES.'header.php');
 
+// include boxes
+require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
+
 $smarty->assign('language', $_SESSION['language']);
-$smarty->assign('FORM_END', '</form>');
 
 $smarty->caching = 0;
 $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/advanced_search.html');
@@ -91,4 +93,3 @@ if (!defined('RM'))
 	$smarty->load_filter('output', 'note');
 $smarty->display(CURRENT_TEMPLATE.'/index.html');
 include ('includes/application_bottom.php');
-?>

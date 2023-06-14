@@ -29,7 +29,7 @@
 require ('includes/application_top.php');
 
 // smarty
-$smarty = new Smarty;
+$smarty = new Smarty();
 
 if (ACTIVATE_GIFT_SYSTEM != 'true') {
   xtc_redirect(FILENAME_DEFAULT);
@@ -80,12 +80,14 @@ if ($error === false && isset($_SESSION['customer_id'])) {
 	unset($_SESSION['gv_id']);
 }
 
-// include boxes
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
-
+// build breadcrumb
 $breadcrumb->add(NAVBAR_GV_REDEEM);
 
-require (DIR_WS_INCLUDES.'header.php');
+// include header
+require (DIR_WS_INCLUDES . 'header.php');
+
+// include boxes
+require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 // if we get here then either the url gv_no was not set or it was invalid
 // so output a message.
@@ -104,4 +106,3 @@ if (!defined('RM'))
 	$smarty->load_filter('output', 'note');
 $smarty->display(CURRENT_TEMPLATE.'/index.html');
 include ('includes/application_bottom.php');
-?>

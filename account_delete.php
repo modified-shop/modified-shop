@@ -23,7 +23,7 @@ require_once (DIR_FS_INC.'secure_form.inc.php');
 require_once (DIR_FS_INC.'clear_checkout_session.inc.php');
 
 // create smarty elements
-$smarty = new Smarty;
+$smarty = new Smarty();
 
 if (!isset($_SESSION['customer_id'])) { 
   xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
@@ -76,13 +76,15 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
   }
 }
 
-// include boxes
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
-
+// build breadcrumb
 $breadcrumb->add(NAVBAR_TITLE_1_ACCOUNT_DELETE, xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
 $breadcrumb->add(NAVBAR_TITLE_2_ACCOUNT_DELETE, xtc_href_link(FILENAME_ACCOUNT_DELETE, '', 'SSL'));
 
+// include header
 require (DIR_WS_INCLUDES.'header.php');
+
+// include boxes
+require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 if ($messageStack->size('account_delete') > 0) {
   $smarty->assign('error_message', $messageStack->output('account_delete'));
@@ -105,4 +107,3 @@ if (!defined('RM'))
   $smarty->load_filter('output', 'note');
 $smarty->display(CURRENT_TEMPLATE.'/index.html');
 include ('includes/application_bottom.php');
-?>

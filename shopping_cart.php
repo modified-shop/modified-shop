@@ -28,12 +28,7 @@
 require ('includes/application_top.php');
 
 // create smarty elements
-$smarty = new Smarty;
-
-// include boxes
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
-
-$breadcrumb->add(NAVBAR_TITLE_SHOPPING_CART, xtc_href_link(FILENAME_SHOPPING_CART, '', $request_type));
+$smarty = new Smarty();
 
 if (ACTIVATE_GIFT_SYSTEM == 'true') {
   include (DIR_WS_MODULES.'gift_cart.php');
@@ -122,15 +117,20 @@ if (defined('MODULE_CHECKOUT_EXPRESS_STATUS') && MODULE_CHECKOUT_EXPRESS_STATUS 
   }
 }
 
-require (DIR_WS_INCLUDES.'header.php');
+// build breadcrumb
+$breadcrumb->add(NAVBAR_TITLE_SHOPPING_CART, xtc_href_link(FILENAME_SHOPPING_CART, '', $request_type));
+
+// include header
+require (DIR_WS_INCLUDES . 'header.php');
+
+// include boxes
+require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 $smarty->assign('language', $_SESSION['language']);
 $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/shopping_cart.html');
 $smarty->assign('main_content', $main_content);
 $smarty->caching = 0;
-if (!defined('RM')) {
+if (!defined('RM'))
   $smarty->load_filter('output', 'note');
-}
 $smarty->display(CURRENT_TEMPLATE.'/index.html');
 include ('includes/application_bottom.php');
-?>

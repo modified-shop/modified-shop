@@ -13,7 +13,7 @@
 include ('includes/application_top.php');
 
 // create smarty elements
-$smarty = new Smarty;
+$smarty = new Smarty();
 
 // include needed functions
 require_once (DIR_FS_INC.'xtc_address_format.inc.php');
@@ -269,13 +269,15 @@ if (isset($_POST['action']) && $_POST['action'] == 'process' && $error === false
   xtc_redirect(xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
 }
 
-// include boxes
-require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
-
+// build breadcrumb
 $breadcrumb->add(NAVBAR_TITLE_1_ACCOUNT_EDIT, xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
 $breadcrumb->add(NAVBAR_TITLE_ACCOUNT_CHECKOUT_EXPRESS_EDIT, xtc_href_link(FILENAME_ACCOUNT_CHECKOUT_EXPRESS, '', 'SSL'));
 
+// include header
 require (DIR_WS_INCLUDES.'header.php');
+
+// include boxes
+require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 $smarty->assign('FORM_ACTION', xtc_draw_form('account_edit', xtc_href_link(FILENAME_ACCOUNT_CHECKOUT_EXPRESS, xtc_get_all_get_params(), 'SSL')).xtc_draw_hidden_field('action', 'process'));
 $smarty->assign('BUTTON_SUBMIT', xtc_image_submit('button_continue.gif', IMAGE_BUTTON_CONTINUE));
@@ -301,4 +303,3 @@ if (!defined('RM'))
 	$smarty->load_filter('output', 'note');
 $smarty->display(CURRENT_TEMPLATE.'/index.html');
 include ('includes/application_bottom.php');
-?>
