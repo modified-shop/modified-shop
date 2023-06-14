@@ -10,6 +10,14 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
    
+$error = array(
+  '400' => TEXT_ERROR_HANDLER_400,
+  '401' => TEXT_ERROR_HANDLER_401,
+  '403' => TEXT_ERROR_HANDLER_403,
+  '404' => TEXT_ERROR_HANDLER_404,
+  '500' => TEXT_ERROR_HANDLER_500,
+);    
+
 $module_smarty = new Smarty();
 $module_smarty->assign('language', $_SESSION['language']);
 $module_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
@@ -24,11 +32,11 @@ if (!CacheCheck()) {
   $module_smarty->caching = 1;
   $module_smarty->cache_lifetime = CACHE_LIFETIME;
   $module_smarty->cache_modified_check = CACHE_CHECK == 'true';
-  $cache_id = md5('lID:'.$_SESSION['language'].'|error:'.$site_error.'|keyword:'.((isset($_GET['keywords'])) ? $_GET['keywords'] : ''));
+  $cache_id = md5('lID:'.$_SESSION['language'].'|error:'.((isset($_REQUEST['error'])) ? $_REQUEST['error'] : $site_error).'|keyword:'.((isset($_GET['keywords'])) ? $_GET['keywords'] : ''));
 }
 
 if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/error_message.html', $cache_id) || !$cache) {
-  $module_smarty->assign('ERROR', $site_error);
+  $module_smarty->assign('ERROR', ((isset($_REQUEST['error']) && isset($error[$_REQUEST['error']])) ? $error[$_REQUEST['error']] : $site_error));
 
   $link = 'javascript:history.back(1)';
   if (!isset($_SERVER['HTTP_REFERER']) 

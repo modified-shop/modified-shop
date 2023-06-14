@@ -20,18 +20,6 @@
 require_once(DIR_FS_INC . 'xtc_get_category_tree.inc.php');
 require_once(DIR_FS_INC . 'xtc_count_products_in_category.inc.php');
 
-$error = array(
-  '400' => SITEMAP_ERROR_400,
-  '401' => SITEMAP_ERROR_401,
-  '403' => SITEMAP_ERROR_403,
-  '404' => SITEMAP_ERROR_404,
-  '500' => SITEMAP_ERROR_500,
-);    
-
-if (isset($_REQUEST['error']) && $_REQUEST['error'] == '404') {
-  header('HTTP/1.1 404 Not Found');
-}
-
 $module_smarty = new Smarty();
 $module_smarty->assign('language', $_SESSION['language']);
 $module_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
@@ -88,10 +76,6 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/sitemap.html', $cache_i
     }
 
     $module_smarty->assign('module_content', $module_content);    
-  }
-  
-  if (isset($_REQUEST['error']) && isset($error[$_REQUEST['error']])) {
-    $module_smarty->assign('herror', $error[$_REQUEST['error']]);
   }
 }
 

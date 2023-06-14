@@ -113,12 +113,12 @@ FileETag None
 
 ##-- Redirect error pages to Sitemap
 ##-- set the correct Path to ErrorDocument
-ErrorDocument 400 /sitemap.html?error=400
-ErrorDocument 401 /sitemap.html?error=401
-ErrorDocument 402 /sitemap.html?error=402
-ErrorDocument 403 /sitemap.html?error=403
-ErrorDocument 404 /sitemap.html?error=404
-ErrorDocument 500 /sitemap.html?error=500
+ErrorDocument 400 /error.php?error=400
+ErrorDocument 401 /error.php?error=401
+ErrorDocument 402 /error.php?error=402
+ErrorDocument 403 /error.php?error=403
+ErrorDocument 404 /error.php?error=404
+ErrorDocument 500 /error.php?error=500
 
 ##-----------------------------------------
 ##- SEO Shopstat Modul (Hartmut Koenig)
