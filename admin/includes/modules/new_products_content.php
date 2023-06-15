@@ -16,7 +16,7 @@
   require_once(DIR_FS_INC . 'xtc_format_filesize.inc.php');
   require_once(DIR_FS_INC . 'xtc_filesize.inc.php');
 
-  if (file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/'.FILENAME_CONTENT_MANAGER)) {
+  if (is_file(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/'.FILENAME_CONTENT_MANAGER)) {
     include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/'. FILENAME_CONTENT_MANAGER);
   }
   ?>

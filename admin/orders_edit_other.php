@@ -108,7 +108,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
   if (xtc_not_null(MODULE_PAYMENT_INSTALLED)) {
     $payments = explode(';', MODULE_PAYMENT_INSTALLED);
     for ($i=0; $i<count($payments); $i++) {
-      if (file_exists(DIR_FS_LANGUAGES . $order->info['language'] . '/modules/payment/' . $payments[$i])) {
+      if (is_file(DIR_FS_LANGUAGES . $order->info['language'] . '/modules/payment/' . $payments[$i])) {
         require_once(DIR_FS_LANGUAGES . $order->info['language'] . '/modules/payment/' . $payments[$i]);
       }
       $payment_modul = substr($payments[$i], 0, strrpos($payments[$i], '.'));
@@ -136,7 +136,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
   $payment_array = array_reduce($payment_array, 'array_merge', array());
 
   $order_payment_text = $order->info['payment_class'];
-  if (file_exists(DIR_FS_LANGUAGES . $order->info['language'] . '/modules/payment/' . $order->info['payment_class'] .'.php')) {
+  if (is_file(DIR_FS_LANGUAGES . $order->info['language'] . '/modules/payment/' . $order->info['payment_class'] .'.php')) {
     require_once(DIR_FS_LANGUAGES . $order->info['language'] . '/modules/payment/' . $order->info['payment_class'] .'.php');
     $order_payment_text = constant('MODULE_PAYMENT_'.strtoupper($order->info['payment_class']).'_TEXT_TITLE').' ('.$order->info['payment_class'].')';
   }
@@ -168,7 +168,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
   if (xtc_not_null(MODULE_SHIPPING_INSTALLED)) {
     $shippings = explode(';', MODULE_SHIPPING_INSTALLED);
     for ($i=0; $i<count($shippings); $i++) {
-      if (file_exists(DIR_FS_LANGUAGES . $order->info['language'] . '/modules/shipping/' . $shippings[$i])) {
+      if (is_file(DIR_FS_LANGUAGES . $order->info['language'] . '/modules/shipping/' . $shippings[$i])) {
         require_once(DIR_FS_LANGUAGES . $order->info['language'] . '/modules/shipping/' . $shippings[$i]);
       }
       $shipping_modul = substr($shippings[$i], 0, strrpos($shippings[$i], '.'));
@@ -197,7 +197,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
 
   $order_shipping = explode('_', $order->info['shipping_class']);
   $order_shipping_text = $order_shipping = $order_shipping[0];
-  if (file_exists(DIR_FS_LANGUAGES . $order->info['language'] . '/modules/shipping/' . $order_shipping .'.php')) {
+  if (is_file(DIR_FS_LANGUAGES . $order->info['language'] . '/modules/shipping/' . $order_shipping .'.php')) {
     require_once(DIR_FS_LANGUAGES . $order->info['language'] . '/modules/shipping/' . $order_shipping .'.php');
     $order_shipping_text = constant('MODULE_SHIPPING_'.strtoupper($order_shipping).'_TEXT_TITLE').' ('.$order_shipping.')';
   }
@@ -240,7 +240,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
   if (xtc_not_null(MODULE_ORDER_TOTAL_INSTALLED)) {
     $totals = explode(';', MODULE_ORDER_TOTAL_INSTALLED);
     for ($i=0; $i<count($totals); $i++) {
-      if (file_exists(DIR_FS_LANGUAGES . $order->info['language'] . '/modules/order_total/' . $totals[$i])) {
+      if (is_file(DIR_FS_LANGUAGES . $order->info['language'] . '/modules/order_total/' . $totals[$i])) {
         require_once(DIR_FS_LANGUAGES . $order->info['language'] . '/modules/order_total/' . $totals[$i]);
       }
       $total = substr($totals[$i], 0, strrpos($totals[$i], '.'));

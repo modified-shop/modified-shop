@@ -439,7 +439,7 @@
                     if (xtc_not_null(MODULE_PAYMENT_INSTALLED)) { 
                       $payments = explode(';', MODULE_PAYMENT_INSTALLED);
                       for ($i=0; $i<count($payments); $i++) {
-                        if (file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $payments[$i])) {
+                        if (is_file(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $payments[$i])) {
                           require_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $payments[$i]);
                         }
                         $payment_modul = substr($payments[$i], 0, strrpos($payments[$i], '.'));
@@ -471,7 +471,7 @@
                     if (xtc_not_null(MODULE_SHIPPING_INSTALLED)) {
                       $shippings = explode(';', MODULE_SHIPPING_INSTALLED);
                       for ($i=0; $i<count($shippings); $i++) {
-                        if (file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/' . $shippings[$i])) {
+                        if (is_file(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/' . $shippings[$i])) {
                           require_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/' . $shippings[$i]);
                         }
                         $shipping_modul = substr($shippings[$i], 0, strrpos($shippings[$i], '.'));

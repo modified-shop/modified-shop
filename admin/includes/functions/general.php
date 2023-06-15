@@ -1984,7 +1984,7 @@
     if (xtc_not_null($module_const)) {
       $module_array = explode(';', $module_const);
       for ($p=0, $x=sizeof($module_array); $p<$x; $p++) {
-        if (file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/'.$module_type.'/' . $module_array[$p])) {
+        if (is_file(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/'.$module_type.'/' . $module_array[$p])) {
           include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/'.$module_type.'/' . $module_array[$p]);
         }
         $module_name = substr($module_array[$p], 0,-4);

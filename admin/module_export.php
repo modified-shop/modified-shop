@@ -66,7 +66,7 @@
 
   if (xtc_not_null($action)) {
     //load language file for action
-    if (file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . basename($module_class) . '.php')) {
+    if (is_file(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . basename($module_class) . '.php')) {
       include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . basename($module_class) . '.php');
     }
     switch ($action) {
@@ -144,7 +144,7 @@
       case 'restoreconfirm':
       case 'custom':
         $class = basename($module_class);
-        if (file_exists($module_directory . $class . $file_extension)) {
+        if (is_file($module_directory . $class . $file_extension)) {
           include($module_directory . $class . $file_extension);
           $module = new $class();
           if ($action == 'install') {
@@ -316,7 +316,7 @@
 require (DIR_WS_INCLUDES.'head.php');
 if (xtc_not_null($action) && !$box) {
   echo '<link href="includes/css/module_box_full.css" rel="stylesheet" type="text/css" />';
-  if (file_exists('includes/css/'.basename($module_class).'.css')) {
+  if (is_file('includes/css/'.basename($module_class).'.css')) {
     echo '<link href="includes/css/'.basename($module_class).'.css" rel="stylesheet" type="text/css" />';
   }
 }
@@ -367,7 +367,7 @@ if (xtc_not_null($action) && !$box) {
                         foreach ($directory_array as $directory_array) {
                           for ($i = 0, $n = sizeof($directory_array); $i < $n; $i++) {
                             $file = $directory_array[$i];
-                            if (file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $file)) {
+                            if (is_file(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $file)) {
                               include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $file);
                             }
                             include_once($module_directory . $file);
@@ -468,7 +468,7 @@ if (xtc_not_null($action) && !$box) {
                       $heading = array();
                       $contents = array();
                       $class = basename($module_class);
-                      if (file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $class . '.php')) {
+                      if (is_file(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $class . '.php')) {
                         include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $class . '.php');
                       }
                       include($module_directory . $class . '.php');

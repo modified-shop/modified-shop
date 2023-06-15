@@ -91,7 +91,7 @@
         $stat_query = xtc_db_query("SELECT * FROM ".TABLE_CUSTOMERS_STATUS." WHERE customers_status_id = '".(int)$customers1['customers_status']."' AND language_id = '".(int)$_SESSION['languages_id']."'");
         $stat = xtc_db_fetch_array($stat_query);
 
-        if (file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/' . $_POST['shipping'] . '.php')) {
+        if (is_file(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/' . $_POST['shipping'] . '.php')) {
           require_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/' . $_POST['shipping'] . '.php');
         }
 

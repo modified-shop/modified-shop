@@ -106,7 +106,7 @@
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
   if (xtc_not_null($action)) {
     //load language file for action
-    if (file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . basename($module_class) . '.php')) {
+    if (is_file(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . basename($module_class) . '.php')) {
       include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . basename($module_class) . '.php');
     }
     switch ($action) {
@@ -145,7 +145,7 @@
       case 'custom':
         $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
         $class = basename($module_class);
-        if (file_exists($module_directory . $class . $file_extension)) {
+        if (is_file($module_directory . $class . $file_extension)) {
           include_once($module_directory . $class . $file_extension);
           if (class_exists($class)) {
             $module = new $class();
@@ -315,7 +315,7 @@
 require (DIR_WS_INCLUDES.'head.php');
 if (xtc_not_null($action) && !$box) {
   echo '<link href="includes/css/module_box_full.css" rel="stylesheet" type="text/css" />';
-  if (file_exists('includes/css/'.basename($module_class).'.css')) {
+  if (is_file('includes/css/'.basename($module_class).'.css')) {
     echo '<link href="includes/css/'.basename($module_class).'.css" rel="stylesheet" type="text/css" />';
   }
 }
@@ -526,7 +526,7 @@ if (xtc_not_null($action) && !$box) {
                   $heading = array();
                   $contents = array();
                   $class = basename($module_class);
-                  if (file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $class. '.php')) {
+                  if (is_file(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $class. '.php')) {
                     include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $class. '.php');
                   }  
                   include_once($module_directory . $class . '.php');

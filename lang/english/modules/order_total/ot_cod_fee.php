@@ -40,7 +40,7 @@
         $shipping_code = strtoupper($shipping_code);
         $title = '';
 
-        if (defined('DIR_FS_LANGUAGES') && file_exists(DIR_FS_LANGUAGES . 'english/modules/' . $module_type . '/' . $file)) {
+        if (defined('DIR_FS_LANGUAGES') && is_file(DIR_FS_LANGUAGES . 'english/modules/' . $module_type . '/' . $file)) {
             include_once(DIR_FS_LANGUAGES . 'english/modules/' . $module_type . '/' . $file);
             $title = constant('MODULE_SHIPPING_'.$shipping_code.'_TEXT_TITLE');
         }

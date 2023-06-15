@@ -116,7 +116,7 @@
 
   // include the language translations
   require(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/buttons.php');
-  if (file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/'.'backup_db.php')) {
+  if (is_file(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/'.'backup_db.php')) {
     include(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/'. 'backup_db.php');
   }
 

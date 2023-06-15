@@ -617,7 +617,7 @@ require (DIR_WS_INCLUDES.'head.php');
                         if (xtc_not_null(MODULE_PAYMENT_INSTALLED)) {
                           $payment_status = explode(';', MODULE_PAYMENT_INSTALLED);
                           for ($p=0, $x=sizeof($payment_status); $p<$x; $p++) {
-                            if (file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $payment_status[$p])) {
+                            if (is_file(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $payment_status[$p])) {
                               include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $payment_status[$p]);
                             }
                             echo xtc_draw_checkbox_field('payment_unallowed[]', substr($payment_status[$p], 0,-4), (in_array(substr($payment_status[$p], 0,-4), $customers_payment_unallowed) ? true : false)).constant('MODULE_PAYMENT_'.strtoupper(substr($payment_status[$p], 0,-4)).'_TEXT_TITLE').' ('.$payment_status[$p].')<br/>';
@@ -641,7 +641,7 @@ require (DIR_WS_INCLUDES.'head.php');
                         if (xtc_not_null(MODULE_SHIPPING_INSTALLED)) {
                           $shipping_status = explode(';', MODULE_SHIPPING_INSTALLED);
                           for ($s=0, $x=sizeof($shipping_status); $s<$x; $s++) {
-                            if (file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/' . $shipping_status[$s])) {
+                            if (is_file(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/' . $shipping_status[$s])) {
                               include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/' . $shipping_status[$s]);
                             }
                             echo xtc_draw_checkbox_field('shipping_unallowed[]', substr($shipping_status[$s], 0,-4), (in_array(substr($shipping_status[$s], 0,-4), $customers_shipping_unallowed) ? true : false)).constant('MODULE_SHIPPING_'.strtoupper(substr($shipping_status[$s], 0,-4)).'_TEXT_TITLE').' ('.$shipping_status[$s].')<br/>';
