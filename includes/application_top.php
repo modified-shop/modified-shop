@@ -172,7 +172,6 @@ require_once (DIR_FS_INC.'xtc_js_lang.php');
 require_once (DIR_FS_INC.'xtc_backup_restore_configuration.php');
 require_once (DIR_FS_INC.'xtc_hide_session_id.inc.php');
 require_once (DIR_FS_INC.'xtc_get_manufacturers.inc.php');
-require_once (DIR_FS_INC.'get_messages.inc.php');
 require_once (DIR_FS_INC.'xtc_get_products_stock.inc.php');
 require_once (DIR_FS_INC.'xtc_get_category_data.inc.php');
 require_once (DIR_FS_INC.'xtc_get_products_name.inc.php');
