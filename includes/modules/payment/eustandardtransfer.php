@@ -118,13 +118,13 @@ class eustandardtransfer {
   }
 
   function success() {
-    global $last_order, $order;
+    global $last_order, $order, $xtPrice;
     
     $success = array(
       array ('title' => $this->title.': ', 
              'class' => $this->code,
              'fields' => array(array('title' => '',
-                                     'field' => sprintf($this->info_success, $last_order, $order->info['pp_total'])
+                                     'field' => sprintf($this->info_success, $last_order, $xtPrice->xtcFormatCurrency($order->info['pp_total']))
                                      )
                                )
              )
