@@ -46,12 +46,16 @@
           )
       {
         $check_flag = false;
-        $check_query = xtc_db_query("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_SHIPPING_GLS_ZONE . "' and zone_country_id = '" . $order->delivery['country']['id'] . "' order by zone_id");
+        $check_query = xtc_db_query("SELECT zone_id 
+                                       FROM " . TABLE_ZONES_TO_GEO_ZONES . "
+                                      WHERE geo_zone_id = '" . (int)MODULE_SHIPPING_GLS_ZONE . "' 
+                                        AND zone_country_id = '" . (int)$order->delivery['shipping']['id'] . "' 
+                                   ORDER BY zone_id");
         while ($check = xtc_db_fetch_array($check_query)) {
           if ($check['zone_id'] < 1) {
             $check_flag = true;
             break;
-          } elseif ($check['zone_id'] == $order->delivery['zone_id']) {
+          } elseif ($check['zone_id'] == $order->delivery['shipping']['zone_id']) {
             $check_flag = true;
             break;
           }
@@ -75,7 +79,7 @@
       global $order, $shipping_weight, $shipping_num_boxes, $xtPrice;
       require_once(DIR_FS_INC .'xtc_format_price.inc.php');
 
-      $dest_country = $order->delivery['country']['iso_code_2'];
+      $dest_country = $order->delivery['shipping']['iso_code_2'];
       $dest_plz = $order->delivery['postcode'];
       $dest_zone = 0;
 
@@ -141,7 +145,7 @@
 
           $tax_text = '';          
           if ($this->tax_class > 0 && $_SESSION['customers_status']['customers_status_show_price_tax'] == 1) {
-             $tax_rate = xtc_get_tax_rate($this->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
+             $tax_rate = xtc_get_tax_rate($this->tax_class, $order->delivery['shipping']['id'], $order->delivery['shipping']['zone_id']);
              $shipping_cost_normal = $xtPrice->xtcAddTax($shipping_cost_normal, $tax_rate);
              $shipping_cost_extra = $xtPrice->xtcAddTax($shipping_cost_extra, $tax_rate);
              $tax_text = ' '.sprintf(TAX_INFO_INCL, $tax_rate.'%');
@@ -167,7 +171,7 @@
       }
 
       if ($this->tax_class > 0) {
-        $this->quotes['tax'] = xtc_get_tax_rate($this->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
+        $this->quotes['tax'] = xtc_get_tax_rate($this->tax_class, $order->delivery['shipping']['id'], $order->delivery['shipping']['zone_id']);
       }
 
       if (xtc_not_null($this->icon)) $this->quotes['icon'] = xtc_image($this->icon, $this->title);

@@ -564,6 +564,11 @@
         $this->billing = $customers_standard_arr;
       }
       
+      // set shipping
+      $this->delivery['shipping'] = $this->delivery['country'];
+      $this->delivery['shipping']['zone_id'] = $this->delivery['zone_id'];
+      
+      // set shipping address
       if (isset($_SESSION['shipping']) 
           && $_SESSION['shipping'] != false
           )
@@ -578,7 +583,10 @@
             && method_exists($GLOBALS[$shipping_class], 'address')
             )
         {
+          $_shipping = $this->delivery['shipping'];
           $this->delivery = $GLOBALS[$shipping_class]->address();
+          
+          $this->delivery['shipping'] = $_shipping;
           $this->delivery['delivery_zone'] = $shipping_address['iso_code_2'];
 
           $tax_address['country_id'] = $this->delivery['country_id'];

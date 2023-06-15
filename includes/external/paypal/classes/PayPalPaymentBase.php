@@ -869,12 +869,19 @@ class PayPalPaymentBase extends PayPalCommon {
     
       $country = xtc_get_countriesList($countries_id, true);
     
-      $_SESSION['delivery_zone'] = $country['countries_iso_code_2'];        
       $order->delivery['country']['iso_code_2'] = $country['countries_iso_code_2'];
       $order->delivery['country']['title'] = $country['countries_name'];
       $order->delivery['country']['id'] = $country['countries_id'];
       $order->delivery['country_id'] = $country['countries_id'];
       $order->delivery['zone_id'] = 0;
+ 
+      $order->delivery['shipping'] = $order->delivery['country'];
+      $order->delivery['shipping']['zone_id'] = $order->delivery['zone_id'];
+   
+      $_SESSION['delivery_zone'] = $order->delivery['country']['iso_code_2'];
+      if (isset($order->delivery['delivery_zone']) && $order->delivery['delivery_zone'] != '') {
+        $_SESSION['delivery_zone'] = $order->delivery['delivery_zone'];
+      }
     
       $total_weight = $_SESSION['cart']->show_weight();
       $total_count = $_SESSION['cart']->count_contents();

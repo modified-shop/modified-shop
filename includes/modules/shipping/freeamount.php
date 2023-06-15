@@ -38,12 +38,16 @@
           )
       {
         $check_flag = false;
-        $check_query = xtc_db_query("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_SHIPPING_FREEAMOUNT_ZONE . "' and zone_country_id = '" . $order->delivery['country']['id'] . "' order by zone_id");
+        $check_query = xtc_db_query("SELECT zone_id 
+                                       FROM " . TABLE_ZONES_TO_GEO_ZONES . "
+                                      WHERE geo_zone_id = '" . (int)MODULE_SHIPPING_FREEAMOUNT_ZONE . "' 
+                                        AND zone_country_id = '" . (int)$order->delivery['shipping']['id'] . "' 
+                                   ORDER BY zone_id");
         while ($check = xtc_db_fetch_array($check_query)) {
           if ($check['zone_id'] < 1) {
             $check_flag = true;
             break;
-          } elseif ($check['zone_id'] == $order->delivery['zone_id']) {
+          } elseif ($check['zone_id'] == $order->delivery['shipping']['zone_id']) {
             $check_flag = true;
             break;
           }
@@ -86,7 +90,7 @@
     function quote($method = '') {
       global $xtPrice, $order;
   
-      $dest_country = $order->delivery['country']['iso_code_2'];
+      $dest_country = $order->delivery['shipping']['iso_code_2'];
       $dest_zone = 0;
       
       for ($i=1; $i<=$this->num_zones; $i++) {

@@ -33,11 +33,11 @@
       $this->tax_class = ((defined('MODULE_SHIPPING_HERMES_TAX_CLASS')) ? MODULE_SHIPPING_HERMES_TAX_CLASS : '');
       $this->enabled = ((defined('MODULE_SHIPPING_HERMES_STATUS') && MODULE_SHIPPING_HERMES_STATUS == 'True') ? true : false);
 
-      if ( $this->enabled == true && is_object($order) && count($order->products) > 0) {
+      if ($this->enabled == true && is_object($order) && count($order->products) > 0) {
         $check_flag = false;
         $gew = 0;
         foreach($order->products as $prod) {
-          $gew += (float)$prod['weight']*$prod['qty'];
+          $gew += (float)$prod['weight'] * $prod['qty'];
         }
         if($gew <= MODULE_SHIPPING_HERMES_MAXGEWICHT) {
           $check_flag = true;
@@ -50,13 +50,13 @@
 
     function quote($method = '') {
       global $order, $shipping_weight;
-	  	$gew = 0;
 
+	  	$gew = 0;
       foreach($order->products as $prod) {
-        $gew += (float)$prod['weight']*$prod['qty'];
+        $gew += (float)$prod['weight'] * $prod['qty'];
       }
 
-      if($order->delivery['country']['iso_code_2'] == 'DE') {
+      if($order->delivery['shipping']['iso_code_2'] == 'DE') {
         $preise = preg_split("/;/", MODULE_SHIPPING_HERMES_NATIONAL); 
       } else {
         $preise = preg_split("/;/", MODULE_SHIPPING_HERMES_INTERNATIONAL); 
@@ -71,7 +71,7 @@
         $price_id++;
       }
     
-      if($order->delivery['country']['iso_code_2'] == 'DE') {
+      if($order->delivery['shipping']['iso_code_2'] == 'DE') {
         $stitle = MODULE_SHIPPING_HERMES_TEXT_WAY_DE . $shipping_weight . ' ' . MODULE_SHIPPING_HERMES_TEXT_UNITS;
       } else {
         $stitle = MODULE_SHIPPING_HERMES_TEXT_WAY_EU . $shipping_weight . ' ' . MODULE_SHIPPING_HERMES_TEXT_UNITS;
@@ -83,7 +83,7 @@
                                                      'title' => $stitle,
                                                      'cost' => $preise[$price_id])));
       if ($this->tax_class > 0) {
-        $this->quotes['tax'] = xtc_get_tax_rate($this->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
+        $this->quotes['tax'] = xtc_get_tax_rate($this->tax_class, $order->delivery['shipping']['id'], $order->delivery['shipping']['zone_id']);
       }
     
       if (xtc_not_null($this->icon)) $this->quotes['icon'] = xtc_image($this->icon, $this->title);
@@ -104,14 +104,14 @@
     }
 
     function install() {
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SHIPPING_HERMES_STATUS', 'True', '6', '0', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
+      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SHIPPING_HERMES_STATUS', 'True', '6', '0', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) values ('MODULE_SHIPPING_HERMES_TAX_CLASS', '0', '6', '0', 'xtc_get_tax_class_title', 'xtc_cfg_pull_down_tax_classes(', now())");
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_HERMES_NATIONAL', '3.90;5.90;8.90', '6', '0', now())");
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_HERMES_INTERNATIONAL', '13.90;18.90;28.90', '6', '0', now())");
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_HERMES_GEWICHT', '5;10;25', '6', '0', now())");
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_HERMES_MAXGEWICHT', '25', '6', '0', now())");
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_HERMES_SORT_ORDER', '0', '6', '0', now())");
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_HERMES_ALLOWED', 'DE,BE,DK,EE,FI,FR,IT,LU,NL,AT,SE,SK,SL,ES,CZ,HU', '6', '0', now())");
+      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_HERMES_NATIONAL', '3.90;5.90;8.90', '6', '0', now())");
+      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_HERMES_INTERNATIONAL', '13.90;18.90;28.90', '6', '0', now())");
+      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_HERMES_GEWICHT', '5;10;25', '6', '0', now())");
+      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_HERMES_MAXGEWICHT', '25', '6', '0', now())");
+      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_HERMES_SORT_ORDER', '0', '6', '0', now())");
+      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_HERMES_ALLOWED', 'DE,BE,DK,EE,FI,FR,IT,LU,NL,AT,SE,SK,SL,ES,CZ,HU', '6', '0', now())");
     }
 
     function remove() {

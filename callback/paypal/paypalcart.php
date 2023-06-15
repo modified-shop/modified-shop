@@ -37,6 +37,9 @@ if ($order->content_type == 'virtual'
   $_SESSION['sendto'] = false;
 } elseif ($order->delivery['country']['iso_code_2'] != '') {
   $_SESSION['delivery_zone'] = $order->delivery['country']['iso_code_2'];
+  if (isset($order->delivery['delivery_zone']) && $order->delivery['delivery_zone'] != '') {
+    $_SESSION['delivery_zone'] = $order->delivery['delivery_zone'];
+  }
 }
 
 // payment

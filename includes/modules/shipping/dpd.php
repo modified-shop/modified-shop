@@ -53,13 +53,16 @@
           )
       {
         $check_flag = false;
-        $check_query_string = "select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_SHIPPING_DPD_ZONE . "' and zone_country_id = '" . $order->delivery['country']['id'] . "' order by zone_id";
-        $check_query = xtc_db_query($check_query_string);
+        $check_query = xtc_db_query("SELECT zone_id 
+                                       FROM " . TABLE_ZONES_TO_GEO_ZONES . "
+                                      WHERE geo_zone_id = '" . (int)MODULE_SHIPPING_DPD_ZONE . "' 
+                                        AND zone_country_id = '" . (int)$order->delivery['shipping']['id'] . "' 
+                                   ORDER BY zone_id");
         while ($check = xtc_db_fetch_array($check_query)) {
           if ($check['zone_id'] < 1) {
             $check_flag = true;
             break;
-          } elseif ($check['zone_id'] == $order->delivery['zone_id']) {
+          } elseif ($check['zone_id'] == $order->delivery['shipping']['zone_id']) {
             $check_flag = true;
             break;
           }
@@ -76,7 +79,7 @@
       global $shipping_quote_dpd, $shipping_quote_all, $shipping_weight, $shipping_num_boxes, $shipping_quoted, $shipping_dpd_cost, $shipping_dpd_method, $order;
       
       $error = false;
-      $dest_country = $order->delivery['country']['iso_code_2'];
+      $dest_country = $order->delivery['shipping']['iso_code_2'];
       $dest_postal_code = $order->delivery['postcode'];
       // get rid of spaces in the postal code (e.g Great Britain or Canada)
       $dest_postal_code = strtoupper(str_replace(' ', '', $dest_postal_code));
@@ -108,7 +111,7 @@
                                                        'cost' => 0)));
 
         if ($this->tax_class > 0) {
-          $this->quotes['tax'] = xtc_get_tax_rate($this->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
+          $this->quotes['tax'] = xtc_get_tax_rate($this->tax_class, $order->delivery['shipping']['id'], $order->delivery['shipping']['zone_id']);
         }
 
         if (xtc_not_null($this->icon)) $this->quotes['icon'] = xtc_image($this->icon, $this->title);
@@ -168,7 +171,7 @@
                                                      'cost' => $shipping_dpd_cost)));
 
       if ($this->tax_class > 0) {
-       $this->quotes['tax'] = xtc_get_tax_rate($this->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
+       $this->quotes['tax'] = xtc_get_tax_rate($this->tax_class, $order->delivery['shipping']['id'], $order->delivery['shipping']['zone_id']);
       }
 
       if (xtc_not_null($this->icon)) $this->quotes['icon'] = xtc_image($this->icon, $this->title);

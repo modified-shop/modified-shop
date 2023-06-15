@@ -39,7 +39,11 @@ if (!isset($_SESSION['customer_id']) || SHOW_ALWAYS_LANG_DROPDOWN) {
   $smarty->assign('SELECT_COUNTRY_PLAIN', xtc_get_country_list(array ('name' => 'country'), (int)$selected, 'onchange="this.form.submit()"'));
 }
 
-if (!isset($order->delivery['country']['iso_code_2']) || $order->delivery['country']['iso_code_2'] == ''  || SHOW_ALWAYS_LANG_DROPDOWN) {
+if (!isset($order->delivery['country']['iso_code_2']) 
+    || $order->delivery['country']['iso_code_2'] == ''
+    || SHOW_ALWAYS_LANG_DROPDOWN
+    )
+{
   $delivery_zone_query = xtDBquery("SELECT countries_id,
                                            countries_iso_code_2,
                                            countries_name
@@ -52,6 +56,9 @@ if (!isset($order->delivery['country']['iso_code_2']) || $order->delivery['count
   $order->delivery['country']['id'] = $delivery_zone['countries_id'];
   $order->delivery['country_id'] = $delivery_zone['countries_id'];
   $order->delivery['zone_id'] = 0;
+
+  $order->delivery['shipping'] = $order->delivery['country'];
+  $order->delivery['shipping']['zone_id'] = $order->delivery['zone_id'];
 }
 
 $order_total_modules = new order_total();
@@ -62,6 +69,9 @@ if (isset($_SESSION['credit_covers'])) {
 }
 
 $_SESSION['delivery_zone'] = $order->delivery['country']['iso_code_2'];
+if (isset($order->delivery['delivery_zone']) && $order->delivery['delivery_zone'] != '') {
+	$_SESSION['delivery_zone'] = $order->delivery['delivery_zone'];
+}
 
 $free_shipping = false;
 if (xtc_not_null(MODULE_ORDER_TOTAL_INSTALLED)) {
