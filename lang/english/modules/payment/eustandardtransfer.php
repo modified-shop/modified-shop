@@ -17,15 +17,14 @@
 
   define('MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_TITLE', 'EU-Standard Bank Transfer');
   define('MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_DESCRIPTION', 
-          '<br />The cheapest and most simple payment method within the EU is the EU-Standard Bank Transfer using IBAN and BIC.' .
-          '<br />Please use the following details to transfer your total order value:<br />' .
+          'Please use the following details to transfer your total order value:<br />' .
           (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKNAM') ? '<br />Bank Name: ' . MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKNAM : '') .
           (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_BRANCH')  ? '<br />Beneficiary: ' . MODULE_PAYMENT_EUSTANDARDTRANSFER_BRANCH : '') .
           (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCIBAN') ? '<br />IBAN: ' . MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCIBAN : '') .
           (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKBIC') ? '<br />BIC/SWIFT: ' . MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKBIC : '') .
           '<br />Purpose of payment: %s'.
           '<br />Total amount: %s'.
-          '<br /><br />Your order will not be shipped until we receive your payment in the above account.<br />');
+          '<br /><br />Your order will not be shipped until we receive your payment in the above account.');
 
   if (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_SUCCESS') && MODULE_PAYMENT_EUSTANDARDTRANSFER_SUCCESS == 'True') {
     define('MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_INFO', 'Please transfer the invoice total to our bank account. You will receive the account data in the last step of the checkout.');
