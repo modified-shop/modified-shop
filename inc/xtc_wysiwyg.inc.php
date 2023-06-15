@@ -63,6 +63,9 @@ function xtc_wysiwyg($type, $lang, $langID = '',$addonType='')
     //$customConfig['removeDialogTabs'] = "removeDialogTabs: 'image:Link;link:Link',";
     $customConfig['removeDialogTabs'] = "removeDialogTabs: 'image:Upload',";
     
+    //Bilder per Zwischenablage deaktivieren
+    $customConfig['config'] = "clipboard_handleImages: false,";
+
     //toolbarGroups
     $customConfig['toolbarGroups'] ="
     toolbarGroups : [
