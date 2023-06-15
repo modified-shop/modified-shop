@@ -75,14 +75,6 @@ if (($action == 'edit' || $action == 'update_order') && $oID) {
 // search
 if ($action == 'search' && $search && $customer == '') {
   $where = $join = '';
-  if (defined('MODULE_MAGNALISTER_STATUS')
-      && MODULE_MAGNALISTER_STATUS == 'True'
-      )
-  {
-    $join .= " LEFT JOIN magnalister_orders mo
-                        ON o.orders_id = mo.orders_id ";
-    $where .= " OR mo.special LIKE '%".xtc_db_input($search)."%' ";
-  }
   if (defined('MODULE_INVOICE_NUMBER_STATUS') 
       && MODULE_INVOICE_NUMBER_STATUS == 'True'
       )
@@ -92,16 +84,38 @@ if ($action == 'search' && $search && $customer == '') {
   $orders_query_raw = "SELECT o.*,
                               s.orders_status_name
                          FROM ".TABLE_ORDERS." o
-                              ".$join."
                     LEFT JOIN ".TABLE_ORDERS_STATUS." s
                               ON o.orders_status = s.orders_status_id 
                                  AND s.language_id = '".(int)$_SESSION['languages_id']."'
                         WHERE (o.orders_id LIKE '%".xtc_db_input($search)."%'
-                               OR o.orders_ident_key LIKE '%".xtc_db_input($search)."%'
-                               OR o.comments LIKE '%".xtc_db_input($search)."%'
                                ".$where.")
                      ORDER BY o.orders_id DESC";
   $orders_search_query = xtc_db_query($orders_query_raw);
+
+  if (xtc_db_num_rows($orders_search_query) != 1) {
+    if (defined('MODULE_MAGNALISTER_STATUS')
+        && MODULE_MAGNALISTER_STATUS == 'True'
+        )
+    {
+      $join .= " LEFT JOIN magnalister_orders mo
+                           ON o.orders_id = mo.orders_id ";
+      $where .= " OR mo.special LIKE '%".xtc_db_input($search)."%' ";
+    }
+    $orders_query_raw = "SELECT o.*,
+                                s.orders_status_name
+                           FROM ".TABLE_ORDERS." o
+                                ".$join."
+                      LEFT JOIN ".TABLE_ORDERS_STATUS." s
+                                ON o.orders_status = s.orders_status_id 
+                                   AND s.language_id = '".(int)$_SESSION['languages_id']."'
+                          WHERE (o.orders_id LIKE '%".xtc_db_input($search)."%'
+                                 OR o.orders_ident_key LIKE '%".xtc_db_input($search)."%'
+                                 OR o.comments LIKE '%".xtc_db_input($search)."%'
+                                 ".$where.")
+                       ORDER BY o.orders_id DESC";    
+    $orders_search_query = xtc_db_query($orders_query_raw);
+  }
+
   if (xtc_db_num_rows($orders_search_query) == 1) {
     $orders_search = xtc_db_fetch_array($orders_search_query);
     $_GET['oID'] = $oID = $orders_search['orders_id'];
