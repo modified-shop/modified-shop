@@ -306,6 +306,7 @@
     'images/icons/pp_credit-german_h_rgb.png',
     'images/icons/pp_credit-german_v_rgb.png',
     'images/icons/pp_logo_100x31.gif',
+    'inc/get_messages.inc.php',
     'inc/search_replace_iso-8859-1.php',
     'inc/search_replace_iso-8859-15.php',
     'inc/set_customers_status_by_id.inc.php',
