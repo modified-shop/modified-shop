@@ -17,15 +17,14 @@
 
   define('MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_TITLE', 'EU-Standard Bank Transfer');
   define('MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_DESCRIPTION', 
-          '<br />Die g&uuml;nstigste und einfachste Zahlungsmethode innerhalb der EU ist die &Uuml;berweisung mittels IBAN und BIC.' .
-					'<br />Bitte verwenden Sie folgende Daten f&uuml;r die &Uuml;berweisung des Gesamtbetrages:<br />' .
+          'Bitte verwenden Sie folgende Daten f&uuml;r die &Uuml;berweisung des Gesamtbetrages:<br />' .
           (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKNAM') ? '<br />Name der Bank: ' . MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKNAM : '') .
           (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_BRANCH')  ? '<br />Empf&auml;nger: ' . MODULE_PAYMENT_EUSTANDARDTRANSFER_BRANCH : '') .
           (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCIBAN') ? '<br />IBAN: ' . MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCIBAN : '') .
           (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKBIC') ? '<br />BIC/SWIFT: ' . MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKBIC : '') .
           '<br />Verwendungszweck: %s'.
           '<br />Gesamtbetrag: %s'.
-          '<br /><br />Die Ware wird erst ausgeliefert, wenn der Betrag auf unserem Konto eingegangen ist.<br />');
+          '<br /><br />Die Ware wird erst ausgeliefert, wenn der Betrag auf unserem Konto eingegangen ist.');
 
   if (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_SUCCESS') && MODULE_PAYMENT_EUSTANDARDTRANSFER_SUCCESS == 'True') {
     define('MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_INFO', 'Bitte &uuml;berweisen Sie den f&auml;lligen Rechnungsbetrag auf unser Konto. Die Kontodaten erhalten Sie im letzten Schritt der Bestellung.');
