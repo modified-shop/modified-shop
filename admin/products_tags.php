@@ -327,7 +327,7 @@
           $_POST['attributes_option'] = '0';
         }
       } elseif (isset($_POST['attributes_value']) && $_POST['attributes_value'] == '1') {
-        $attributes_values_query = xtc_db_query("SELECT pov.products_options_values_id,
+        $attributes_values_query = xtc_db_query("SELECT DISTINCT pov.products_options_values_id,
                                                         pov.products_options_values_name,	
                                                         pov.language_id,
                                                         pov2po.products_options_id,
@@ -421,7 +421,7 @@
         $javascript = '';
       }
 
-      $hidden_fields .= xtc_draw_hidden_field('attributes_option', $_POST['attributes_option']);
+      $hidden_fields  = xtc_draw_hidden_field('attributes_option', $_POST['attributes_option']);
       $hidden_fields .= xtc_draw_hidden_field('attributes_value', $_POST['attributes_value']);
       $hidden_fields .= xtc_draw_hidden_field('attributes', $_POST['attributes']);
       break;
@@ -744,7 +744,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_IMPORT . '</b>');
                     
                     $on_off_array = array(array('id'=>0,'text'=>NO),array('id'=>1,'text'=>YES));
-                    $contents = array('form' => xtc_draw_form('options', FILENAME_PRODUCTS_TAGS, 'page=' . $page . '&oID=' . $oInfo->options_id . '&action=import_confirm'));
+                    $contents = array('form' => xtc_draw_form('options', FILENAME_PRODUCTS_TAGS, 'page=' . $page . '&action=import_confirm'));
                     $contents[] = array('text' => '<br />' . TEXT_INFO_ATTRIBUTES_OPTION);
                     $contents[] = array('text' => draw_on_off_selection('attributes_option', $on_off_array, false));
                     $contents[] = array('text' => '<br />' . TEXT_INFO_ATTRIBUTES_VALUE);
@@ -753,16 +753,16 @@ require (DIR_WS_INCLUDES.'head.php');
                     $contents[] = array('text' => draw_on_off_selection('attributes', $on_off_array, false));
                     $contents[] = array('text' => '<br />' . TEXT_INFO_ATTRIBUTES_DELETE);
                     $contents[] = array('text' => draw_on_off_selection('attributes_delete', $on_off_array, false));
-                    $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_CONFIRM . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PRODUCTS_TAGS, 'page=' . $page . '&oID=' . $oInfo->options_id) . '">' . BUTTON_CANCEL . '</a>');
+                    $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_CONFIRM . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PRODUCTS_TAGS, 'page=' . $page) . '">' . BUTTON_CANCEL . '</a>');
                     break;
 
                   case 'import_confirm':
                     $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_IMPORT . '</b>');
 
-                    $contents = array('form' => xtc_draw_form('import', FILENAME_PRODUCTS_TAGS, 'page=' . $page . '&oID=' . $oInfo->options_id . '&action=import_confirm').$hidden_fields);
+                    $contents = array('form' => xtc_draw_form('import', FILENAME_PRODUCTS_TAGS, 'page=' . $page . '&action=import_confirm').$hidden_fields);
                     if ($javascript == '') {
                       $contents[] = array('text' => TEXT_INFO_IMPORT_FINISHED);
-                      $contents[] = array('align' => 'center', 'text' => '<br /><a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PRODUCTS_TAGS, 'page=' . $page . '&oID=' . $oInfo->options_id) . '">' . BUTTON_BACK . '</a>');
+                      $contents[] = array('align' => 'center', 'text' => '<br /><a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PRODUCTS_TAGS, 'page=' . $page) . '">' . BUTTON_BACK . '</a>');
                     } else {
                       $contents[] = array('text' => TEXT_INFO_IMPORT_WAIT);
                       $contents[] = array('align' => 'center','text' => '<img src="images/loading.gif" />');
