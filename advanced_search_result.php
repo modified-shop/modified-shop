@@ -25,9 +25,9 @@ require_once (DIR_FS_INC.'xtc_parse_search_string.inc.php');
 $smarty = new Smarty();
 
 // security fix
-$keywords = $_GET['keywords'] = !empty($_GET['keywords']) ? stripslashes(trim(urldecode($_GET['keywords']))) : false;
-$pfrom = $_GET['pfrom'] = !empty($_GET['pfrom']) ? str_replace(',', '.', stripslashes(trim(urldecode($_GET['pfrom'])))) : false;
-$pto = $_GET['pto'] = !empty($_GET['pto']) ? str_replace(',', '.', stripslashes(trim(urldecode($_GET['pto'])))) : false;
+$keywords = $_GET['keywords'] = !empty($_GET['keywords']) ? stripslashes(trim($_GET['keywords'])) : false;
+$pfrom = $_GET['pfrom'] = !empty($_GET['pfrom']) ? str_replace(',', '.', stripslashes(trim($_GET['pfrom']))) : false;
+$pto = $_GET['pto'] = !empty($_GET['pto']) ? str_replace(',', '.', stripslashes(trim($_GET['pto']))) : false;
 
 // reset error
 $errorno = 0;

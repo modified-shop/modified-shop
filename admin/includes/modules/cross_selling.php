@@ -219,7 +219,7 @@
             <td class="dataTableHeadingContent" style="width:<?php echo (( USE_ADMIN_THUMBS_IN_LIST=='true' ) ? '37%' : '42%'); ?>"><?php echo HEADING_CATEGORY; ?></td>
           </tr>
           <?php
-            $keywords = $_GET['keywords'] = !empty($_GET['keywords']) ? stripslashes(trim(urldecode($_GET['keywords']))) : false;
+            $keywords = $_GET['keywords'] = !empty($_GET['keywords']) ? stripslashes(trim($_GET['keywords'])) : false;
 
             $from_str = ''; 
             if (SEARCH_IN_MANU == 'true') {

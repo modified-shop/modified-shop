@@ -135,7 +135,7 @@ if (!$action || $action == 'delete') {
             <?php
             $where .= " AND parent_id = '".$_GET['pID']."'";
           } elseif (isset($_GET['keywords']) && $_GET['keywords'] != '') {
-            $keywords = $_GET['keywords'] = !empty($_GET['keywords']) ? stripslashes(trim(urldecode($_GET['keywords']))) : false;
+            $keywords = $_GET['keywords'] = !empty($_GET['keywords']) ? stripslashes(trim($_GET['keywords'])) : false;
             if ($keywords) {
               require_once (DIR_FS_INC.'xtc_parse_search_string.inc.php');
               $keywordcheck = xtc_parse_search_string($_GET['keywords'], $search_keywords);

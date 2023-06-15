@@ -104,7 +104,7 @@ if ($listing_split->number_of_rows > 0) {
   }
 
   if ($current_category_id == '0' && isset($_GET['keywords'])) {
-    $category['categories_name'] = TEXT_SEARCH_TERM . stripslashes(trim(urldecode($_GET['keywords'])));
+    $category['categories_name'] = TEXT_SEARCH_TERM . stripslashes(trim($_GET['keywords']));
   }
 
   if (isset($category['categories_heading_title']) && $category['categories_heading_title'] != '') {

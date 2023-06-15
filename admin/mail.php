@@ -193,7 +193,7 @@
             $customers[] = array('id' => '**D', 'text' => TEXT_NEWSLETTER_CUSTOMERS);
             $customers = array_merge($customers, xtc_get_customers_statuses());
 
-            $selected_customer = urldecode((isset($_GET['customer'])) ? $_GET['customer'] : ((isset($_POST['customers_email_address'])) ? $_POST['customers_email_address'] : ''));
+            $selected_customer = ((isset($_GET['customer'])) ? $_GET['customer'] : ((isset($_POST['customers_email_address'])) ? $_POST['customers_email_address'] : ''));
             
             if ($selected_customer != '') {
               $mail_query = xtc_db_query("SELECT *

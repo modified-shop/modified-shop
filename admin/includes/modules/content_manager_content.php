@@ -159,7 +159,7 @@ if (!$action || in_array($action, array('delete', 'list'))) {
                              ON cm.content_group = cmc.content_manager_id";
           $where_str = '';
           if (isset($_GET['keywords']) && $_GET['keywords'] != '') {
-            $keywords = $_GET['keywords'] = !empty($_GET['keywords']) ? stripslashes(trim(urldecode($_GET['keywords']))) : false;
+            $keywords = $_GET['keywords'] = !empty($_GET['keywords']) ? stripslashes(trim($_GET['keywords'])) : false;
                     
             if ($keywords) {
               $from_str = '';

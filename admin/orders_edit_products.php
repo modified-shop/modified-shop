@@ -171,7 +171,7 @@ if (isset($_GET['action']) && $_GET['action'] =='product_search') {
       <td class="dataTableHeadingContent">&nbsp;</td>
     </tr>
     <?php
-    $keywords = $_GET['search'] = !empty($_GET['search']) ? stripslashes(trim(urldecode($_GET['search']))) : false;
+    $keywords = $_GET['search'] = !empty($_GET['search']) ? stripslashes(trim($_GET['search'])) : false;
 
     $from_str = ''; 
     if (SEARCH_IN_MANU == 'true') {

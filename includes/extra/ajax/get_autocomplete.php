@@ -35,7 +35,7 @@
     if (isset($_POST['keywords'])) {    
       $from_str = $where_str = $p2c_condition = $params = '';
     
-      $keywords = stripslashes(trim(decode_utf8(urldecode($_POST['keywords']))));    
+      $keywords = stripslashes(trim(decode_utf8($_POST['keywords'])));    
       $categories_id = !empty($_POST['categories_id']) ? (int)$_POST['categories_id'] : false;
       $inc_subcat = !empty($_POST['inc_subcat']) ? (int)$_POST['inc_subcat'] : null;
 
