@@ -42,12 +42,13 @@ if (!isset ($_SESSION['customer_id'])) {
   xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART), 'NONSSL');
 }
 
+// include needed classes
+require_once(DIR_WS_CLASSES.'order.php');
+
 // create smarty elements
 $smarty = new Smarty();
 
-$orders_query = xtc_db_query("SELECT orders_id,
-                                     orders_status,
-                                     payment_class
+$orders_query = xtc_db_query("SELECT orders_id
                                 FROM ".TABLE_ORDERS."
                                WHERE customers_id = '".(int)$_SESSION['customer_id']."'
                                  AND unix_timestamp(date_purchased) > (unix_timestamp(now()) - '".(int)SESSION_LIFE_CUSTOMERS."')
@@ -57,18 +58,18 @@ $orders_query = xtc_db_query("SELECT orders_id,
 // if no order exists for customer redirect them to the shopping cart page
 if (xtc_db_num_rows($orders_query) < 1) {
   xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART), 'NONSSL');
-} else {
-  $orders = xtc_db_fetch_array($orders_query);
-  $last_order = $orders['orders_id'];
-  $order_status = $orders['orders_status'];
-  $payment_class = $orders['payment_class'];
 }
+
+$orders = xtc_db_fetch_array($orders_query);
+
+$order = new order($orders['orders_id']);
+$last_order = $orders['orders_id'];
 
 $_SESSION['customer_gid'] = $_SESSION['customer_id'];
 
 // load the selected payment module
 require_once (DIR_WS_CLASSES . 'payment.php');
-$payment_modules = new payment($payment_class);
+$payment_modules = new payment($order->info['payment_class']);
 $smarty->assign('PAYMENT_INFO', $payment_modules->success());
 
 $smarty->assign('FORM_ACTION', xtc_draw_form('order', xtc_href_link(FILENAME_CHECKOUT_SUCCESS, 'action=update', 'SSL')).xtc_draw_hidden_field('account_type', $_SESSION['account_type']));

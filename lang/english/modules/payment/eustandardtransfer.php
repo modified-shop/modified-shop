@@ -21,11 +21,10 @@
           '<br />Please use the following details to transfer your total order value:<br />' .
           (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKNAM') ? '<br />Bank Name: ' . MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKNAM : '') .
           (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_BRANCH')  ? '<br />Beneficiary: ' . MODULE_PAYMENT_EUSTANDARDTRANSFER_BRANCH : '') .
-          (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNAM')  ? '<br />Bank code: ' . MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNAM : '') .
-          (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNUM')  ? '<br />Account No.: ' . MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNUM : '') .
           (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCIBAN') ? '<br />IBAN: ' . MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCIBAN : '') .
           (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKBIC') ? '<br />BIC/SWIFT: ' . MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKBIC : '') .
           '<br />Purpose of payment: %s'.
+          '<br />Total amount: %s'.
           '<br /><br />Your order will not be shipped until we receive your payment in the above account.<br />');
 
   if (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_SUCCESS') && MODULE_PAYMENT_EUSTANDARDTRANSFER_SUCCESS == 'True') {
@@ -41,12 +40,6 @@
 
   define('MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKNAM_TITLE', 'Bank Name');
   define('MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKNAM_DESC', 'Your full bank name');
-
-  define('MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNAM_TITLE', 'Bank code');
-  define('MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNAM_DESC', 'The Bank code of your account.');
-
-  define('MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNUM_TITLE', 'Bank Account No.');
-  define('MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNUM_DESC', 'Your account number.');
 
   define('MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCIBAN_TITLE', 'Bank Account IBAN');
   define('MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCIBAN_DESC', 'International account id.<br />(ask your bank if you don\'t know it)');
@@ -68,4 +61,3 @@
 
   define('MODULE_PAYMENT_EUSTANDARDTRANSFER_SUCCESS_TITLE', 'Display bank data');
   define('MODULE_PAYMENT_EUSTANDARDTRANSFER_SUCCESS_DESC', 'Display bank data on checkout success?');
-?>

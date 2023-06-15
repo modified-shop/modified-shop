@@ -89,13 +89,13 @@ class moneyorder {
   }
 
   function success() {
-    global $last_order;
+    global $last_order, $order;
     
     $success = array(
       array ('title' => $this->title.': ', 
              'class' => $this->code,
              'fields' => array(array('title' => '',
-                                     'field' => sprintf($this->info_success, $last_order)
+                                     'field' => sprintf($this->info_success, $last_order, $order->info['pp_total'])
                                      )
                                )
              )
