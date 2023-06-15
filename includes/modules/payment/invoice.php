@@ -64,14 +64,18 @@ class invoice {
 
       if (($this->enabled == true) && ((int) MODULE_PAYMENT_INVOICE_ZONE > 0)) {
         $check_flag = false;
-        $check_query = xtc_db_query("select zone_id from ".TABLE_ZONES_TO_GEO_ZONES." where geo_zone_id = '".MODULE_PAYMENT_INVOICE_ZONE."' and zone_country_id = '".$order->delivery['country']['id']."' order by zone_id");
+        $check_query = xtc_db_query("SELECT zone_id 
+                                       FROM ".TABLE_ZONES_TO_GEO_ZONES." 
+                                      WHERE geo_zone_id = '".(int)MODULE_PAYMENT_INVOICE_ZONE."' 
+                                        AND zone_country_id = '".(int)$order->billing['country']['id']."' 
+                                   ORDER BY zone_id");
 
         while ($check = xtc_db_fetch_array($check_query)) {
           if ($check['zone_id'] < 1) {
             $check_flag = true;
             break;
           }
-          elseif ($check['zone_id'] == $order->delivery['zone_id']) {
+          elseif ($check['zone_id'] == $order->billing['zone_id']) {
             $check_flag = true;
             break;
           }
