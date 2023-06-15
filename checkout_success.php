@@ -42,12 +42,6 @@ if (!isset ($_SESSION['customer_id'])) {
   xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART), 'NONSSL');
 }
 
-// include needed classes
-require_once(DIR_WS_CLASSES.'order.php');
-
-// create smarty elements
-$smarty = new Smarty();
-
 $orders_query = xtc_db_query("SELECT orders_id
                                 FROM ".TABLE_ORDERS."
                                WHERE customers_id = '".(int)$_SESSION['customer_id']."'
@@ -59,6 +53,12 @@ $orders_query = xtc_db_query("SELECT orders_id
 if (xtc_db_num_rows($orders_query) < 1) {
   xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART), 'NONSSL');
 }
+
+// include needed classes
+require_once(DIR_WS_CLASSES.'order.php');
+
+// create smarty elements
+$smarty = new Smarty();
 
 $orders = xtc_db_fetch_array($orders_query);
 
