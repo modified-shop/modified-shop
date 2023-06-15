@@ -328,6 +328,9 @@
   xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'TRACKING_PIWIK_GOAL'");
   xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'TRACKING_FACEBOOK_ACTIVE'");
   xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'TRACKING_FACEBOOK_ID'");
+
+  xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNAM'");
+  xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNUM'");
   
   // rename config key
   foreach ($config_array as $old_config => $new_config) {

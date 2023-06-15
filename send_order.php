@@ -44,8 +44,8 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
   $smarty->assign('address_label_payment', xtc_address_format($order->billing['format_id'], $order->billing, 1, '', '<br />'));
   $smarty->assign('csID', $order->customer['csID']);
 
-  $order_total = $order->getTotalData($insert_id); //ACHTUNG für Bestellbestätigung aus Admin Funktion in admin/includes/classes/order.php
-  $smarty->assign('order_data', $order->getOrderData($insert_id)); //ACHTUNG für Bestellbestätigung aus Admin Funktion in admin/includes/classes/order.php
+  $order_total = $order->getTotalData($insert_id);
+  $smarty->assign('order_data', $order->getOrderData($insert_id));
   $smarty->assign('order_total', $order_total['data']);
 
   // assign language to template for caching
@@ -99,7 +99,7 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
   // PAYMENT MODUL TEXTS
   $payment_method_array = array('eustandardtransfer','moneyorder');
   if (in_array($order->info['payment_method'],$payment_method_array)) {
-    $payment_text = defined('MODULE_PAYMENT_'.strtoupper($order->info['payment_method']).'_TEXT_DESCRIPTION') ? sprintf(constant('MODULE_PAYMENT_'.strtoupper($order->info['payment_method']).'_TEXT_DESCRIPTION'), $insert_id) : '';
+    $payment_text = defined('MODULE_PAYMENT_'.strtoupper($order->info['payment_method']).'_TEXT_DESCRIPTION') ? sprintf(constant('MODULE_PAYMENT_'.strtoupper($order->info['payment_method']).'_TEXT_DESCRIPTION'), $insert_id, $order->info['pp_total']) : '';
     $smarty->assign('PAYMENT_INFO_HTML', $payment_text);
     $smarty->assign('PAYMENT_INFO_TXT', str_replace("<br />", "\n", $payment_text));
   }
@@ -225,9 +225,7 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
 
   if (isset($send_by_admin)) {
     $customer_notified = '1';
-    $orders_status_id = '1';
-    //Comment out the next line for setting the $orders_status_id = '1' //Auskommentieren der nächsten Zeile, um die $orders_status_id = '1' zu setzen
-    $orders_status_id = ($order->info['orders_status'] < 1) ? '1' : $order->info['orders_status'];
+    $orders_status_id = ($order->info['orders_status'] < 1) ? DEFAULT_ORDERS_STATUS_ID : $order->info['orders_status'];
     $comments = encode_utf8(decode_htmlentities(COMMENT_SEND_ORDER_BY_ADMIN));
     
     if (defined('MODULE_ORDER_MAIL_STEP_STATUS')

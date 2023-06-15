@@ -21,11 +21,10 @@
 					'<br />Bitte verwenden Sie folgende Daten f&uuml;r die &Uuml;berweisung des Gesamtbetrages:<br />' .
           (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKNAM') ? '<br />Name der Bank: ' . MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKNAM : '') .
           (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_BRANCH')  ? '<br />Empf&auml;nger: ' . MODULE_PAYMENT_EUSTANDARDTRANSFER_BRANCH : '') .
-          (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNAM')  ? '<br />Bankleitzahl: ' . MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNAM : '') .
-          (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNUM')  ? '<br />Kontonummer: ' . MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNUM : '') .
           (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCIBAN') ? '<br />IBAN: ' . MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCIBAN : '') .
           (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKBIC') ? '<br />BIC/SWIFT: ' . MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKBIC : '') .
           '<br />Verwendungszweck: %s'.
+          '<br />Gesamtbetrag: %s'.
           '<br /><br />Die Ware wird erst ausgeliefert, wenn der Betrag auf unserem Konto eingegangen ist.<br />');
 
   if (defined('MODULE_PAYMENT_EUSTANDARDTRANSFER_SUCCESS') && MODULE_PAYMENT_EUSTANDARDTRANSFER_SUCCESS == 'True') {
@@ -41,12 +40,6 @@
 
   define('MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKNAM_TITLE', 'Name der Bank');
   define('MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKNAM_DESC', 'Der volle Name der Bank.');
-
-  define('MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNAM_TITLE', 'Bankleitzahl');
-  define('MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNAM_DESC', 'Die Bankleitzahl des angegebenen Kontos.');
-
-  define('MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNUM_TITLE', 'Kontonummer');
-  define('MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNUM_DESC', 'Ihre Kontonummer.');
 
   define('MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCIBAN_TITLE', 'Bank Account IBAN');
   define('MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCIBAN_DESC', 'International account id.<br />(Fragen Sie Ihre Bank, wenn Sie nicht sicher sind.)');
@@ -68,4 +61,3 @@
 
   define('MODULE_PAYMENT_EUSTANDARDTRANSFER_SUCCESS_TITLE', 'Bankdaten anzeigen');
   define('MODULE_PAYMENT_EUSTANDARDTRANSFER_SUCCESS_DESC', 'Sollen auf der Erfolgsseite die Bankdaten angezeigt werden?');
-?>

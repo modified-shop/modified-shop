@@ -118,13 +118,13 @@ class eustandardtransfer {
   }
 
   function success() {
-    global $last_order;
+    global $last_order, $order;
     
     $success = array(
       array ('title' => $this->title.': ', 
              'class' => $this->code,
              'fields' => array(array('title' => '',
-                                     'field' => sprintf($this->info_success, $last_order)
+                                     'field' => sprintf($this->info_success, $last_order, $order->info['pp_total'])
                                      )
                                )
              )
@@ -154,8 +154,6 @@ class eustandardtransfer {
     xtc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_EUSTANDARDTRANSFER_STATUS', 'True', '6', '3', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now());");
     xtc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKNAM', '---',  '6', '1', now());");
     xtc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_EUSTANDARDTRANSFER_BRANCH', '---', '6', '1', now());");
-    xtc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNAM', '---',  '6', '1', now());");
-    xtc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNUM', '---',  '6', '1', now());");
     xtc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCIBAN', '---',  '6', '1', now());");
     xtc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKBIC', '---',  '6', '1', now());");
     xtc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_EUSTANDARDTRANSFER_SORT_ORDER', '0',  '6', '0', now())");
@@ -177,8 +175,6 @@ class eustandardtransfer {
       'MODULE_PAYMENT_EUSTANDARDTRANSFER_ORDER_STATUS_ID', 
       'MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKNAM', 
       'MODULE_PAYMENT_EUSTANDARDTRANSFER_BRANCH', 
-      'MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNAM', 
-      'MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNUM', 
       'MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCIBAN', 
       'MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKBIC',
       'MODULE_PAYMENT_EUSTANDARDTRANSFER_SORT_ORDER',
