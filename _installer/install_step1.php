@@ -59,8 +59,8 @@
 
   $sql_file_array = array(
     DIR_FS_INSTALLER.'includes/sql/modified.sql',
-    DIR_FS_INSTALLER.'includes/sql/banktransfer_blz.sql',
     DIR_FS_INSTALLER.'includes/sql/customers_status.sql',            
+    DIR_FS_INSTALLER.'includes/sql/banktransfer_blz.sql',
   );
 
   if (isset($_POST['action']) && $_POST['action'] == 'process') {
@@ -197,6 +197,7 @@
       }
       $_GET['file'] = $sql_file_array[(int)$_GET['sql']];
       $_GET['convert'] = $_SESSION['language_charset'];
+      $_GET['encoding'] = 'ISO-8859-1';
 
       include (DIR_FS_CATALOG.DIR_ADMIN.'includes/functions/db_functions.php');
       include (DIR_FS_CATALOG.DIR_ADMIN.'includes/db_actions.php');
@@ -241,7 +242,7 @@
           $json_output['aufruf'] = $convert['aufruf'];
           $json_output['table_ready'] = $convert['aufruf'];
           $json_output['time'] = $time;
-          $json_output['actual_table'] = (($convert['aufruf'] > $convert['num_tables']) ? '' : $convert['tables'][$convert['aufruf']]);
+          $json_output['actual_table'] = ((array_key_exists($convert['aufruf'], $convert['tables']) && $convert['aufruf'] < $convert['num_tables']) ? $convert['tables'][$convert['aufruf']] : '');
           $json_output['fileEOF'] = (($convert['aufruf'] > $convert['num_tables']) ? 1 : 0);
           $json_output['nr'] = $convert['aufruf'];
           $json_output['num_tables'] = $convert['num_tables'];
@@ -376,4 +377,3 @@
   }
   $smarty->display('index.html');
   require_once ('includes/application_bottom.php');
-?>

@@ -523,4 +523,3 @@
   }
   $smarty->display('index.html');
   require_once ('includes/application_bottom.php');
-?>

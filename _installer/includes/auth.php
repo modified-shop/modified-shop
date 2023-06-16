@@ -86,10 +86,14 @@
     
     if ($check_db !== false) {
       $check_db = false;
-      $check_query = xtc_db_query("SELECT *
-                                     FROM ".TABLE_CUSTOMERS);
-      if (xtc_db_num_rows($check_query) > 0) {
-        $check_db = true;
+      
+      $check_table = xtc_db_query("SHOW TABLES WHERE `Tables_in_".DB_DATABASE."` = '".TABLE_CUSTOMERS."'");
+      if (xtc_db_num_rows($check_table) > 0) {     
+        $check_query = xtc_db_query("SELECT *
+                                       FROM ".TABLE_CUSTOMERS);
+        if (xtc_db_num_rows($check_query) > 0) {
+          $check_db = true;
+        }
       }
     }
   }

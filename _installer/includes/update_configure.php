@@ -23,6 +23,7 @@
   $http_server = HTTP_SERVER;
   $https_server = HTTPS_SERVER;
   $use_ssl = ((ENABLE_SSL == true) ? 'true' : 'false');
+  $session = STORE_SESSIONS;
   $password_hmac = ((defined('PASSWORD_HMAC')) ? PASSWORD_HMAC : '');
   
   //create  includes/configure.php

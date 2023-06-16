@@ -61,7 +61,7 @@
       xtc_set_time_limit(0);
 
       $vers = xtc_db_get_client_info();
-      if(substr($vers,0,1) > 4) {
+      if (substr($vers,0,1) > 4) {
         xtc_db_query("SET SESSION sql_mode=''");
       }
 
@@ -70,7 +70,7 @@
       } else {
         $mysql_verion = '';
       }
-      $schema = '-- Modified-Shop & compatible' . "\n" .
+      $schema = '-- modified eCommerce Shopsoftware' . "\n" .
                 '--' . "\n" .
                 '-- ' . STORE_NAME . "\n" .
                 '-- ' . STORE_OWNER . "\n" .
@@ -149,11 +149,8 @@
                 $table_collations[$fields['Collation']] = 1;
             }
             $dump['tables'][$i] = $erg['Name'];
-            // Get nr of records -> need to do it this way because of incorrect returns when using InnoDBs
-            $data_query = xtc_db_query(
-                "SELECT count(*) as `count_records` 
-                   FROM `". $erg['Name'] ."`
-                ");
+
+            $data_query = xtc_db_query("SELECT count(*) as `count_records` FROM `". $erg['Name'] ."`");
             $data_array = xtc_db_fetch_array($data_query);
           
             $erg['Rows'] = $data_array['count_records'];
@@ -253,7 +250,7 @@
       xtc_set_time_limit(0);
 
       $vers = xtc_db_get_client_info();
-      if(substr($vers,0,1) > 4) {
+      if (substr($vers,0,1) > 4) {
         xtc_db_query("SET SESSION sql_mode=''");
       }
 
@@ -267,7 +264,7 @@
       }
 
       $extension = substr($restore['file'], -3);
-      if($extension == '.gz') {
+      if ($extension == '.gz') {
         $protdatei = substr($restore['file'],0, -3). '.log.gz';
       } else {
         $protdatei = $restore['file'] . '.log';
@@ -276,18 +273,21 @@
         unlink ($protdatei);
       }
       $extension = substr($_GET['file'], -3);
-      if($extension == 'sql') {
+      if ($extension == 'sql') {
         $restore['compressed'] = false;
       }
-      if($extension == '.gz') {
+      if ($extension == '.gz') {
         $restore['compressed'] = true;
       }      
       $restore['utf8'] = false;
       if (isset($_POST['utf8-convert']) && $_POST['utf8-convert'] == 'yes') {
         $restore['utf8'] = true;
       }
-      if(isset($_GET['convert']) && $_GET['convert'] == 'utf-8') {
+      if (isset($_GET['convert']) && $_GET['convert'] == 'utf-8') {
         $restore['utf8'] = true;
+      }
+      if (isset($_GET['encoding'])) {
+        $restore['encoding'] = $_GET['encoding'];
       }
       $restore['anzahl_zeilen'] = RESTORE_ROWS;
       $restore['time_gap'] = time();
@@ -304,6 +304,7 @@
       if (!is_file($restore['file'])) {
         die('Direct Access to this location is not allowed.');
       }
+
       $info_text = TEXT_INFO_DO_RESTORE . $sim;
       $restore['filehandle']=($restore['compressed'] == true) ? gzopen($restore['file'],'r') : fopen($restore['file'],'r');
       if (!$restore['compressed']) {
@@ -325,17 +326,20 @@
       while (($a < $restore['anzahl_zeilen']) && (!$restore['fileEOF']) && !$restore['EOB']) {
         xtc_set_time_limit(0);
         $sql_command = get_sqlbefehl();
-
+                
         if ($sql_command > '') {
           $actual_table = $restore['actual_table'];
           if (!RESTORE_TEST) {
             if ($restore['utf8'] == true) {
+              if (!isset($restore['encoding'])) {
+                $restore['encoding'] = detect_encoding($sql_command);
+              }
               xtc_db_set_charset('utf8');
-              $sql_command = encode_utf8($sql_command, '', true); 
+              $sql_command = encode_utf8($sql_command, $restore['encoding'], true); 
             }
             $res = xtc_db_query($sql_command);
-            if ($res === false) {
 
+            if ($res === false) {
               $meldung = ((defined('DB_MYSQL_TYPE') && DB_MYSQL_TYPE=='mysqli') ? xtc_db_error($query, mysqli_errno(${$link}), mysqli_error(${$link})) : xtc_db_error($query, mysql_errno(${$link}), mysql_error(${$link})));
               if ($meldung != '') {
                 die($sql_command.' -> '.$meldung);
@@ -398,4 +402,3 @@
       exit();
       break;
   }
-?>

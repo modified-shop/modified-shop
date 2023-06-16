@@ -43,7 +43,7 @@ function encode_utf8($string, $encoding = '', $force_utf8 = false)
 {
   if (strtolower($_SESSION['language_charset']) == 'utf-8' || $force_utf8 === true) {
     $supported_charsets = explode(',', strtoupper(ENCODE_DEFINED_CHARSETS));  
-    $cur_encoding = !empty($encoding) && in_array(strtoupper($encoding), $supported_charsets) ? strtoupper($encoding) : mb_detect_encoding($string, ENCODE_DEFINED_CHARSETS, true);
+    $cur_encoding = !empty($encoding) && in_array(strtoupper($encoding), $supported_charsets) ? strtoupper($encoding) : detect_encoding($string);
     if ($cur_encoding == 'UTF-8' && mb_check_encoding($string, 'UTF-8')) {
       return $string;
     } else {
@@ -85,7 +85,7 @@ function decode_utf8($string, $encoding = '', $force_utf8 = false)
   $default_charset = isset($_SESSION['language_charset']) && in_array(strtoupper($_SESSION['language_charset']), $supported_charsets) ? strtoupper($_SESSION['language_charset']) : ENCODE_DEFAULT_CHARSET;
   $encoding = !empty($encoding) && in_array(strtoupper($encoding), $supported_charsets) ? strtoupper($encoding) : $default_charset;  
   if (strtolower($_SESSION['language_charset']) != 'utf-8' || $force_utf8 === true) {
-    $cur_encoding = mb_detect_encoding($string, 'UTF-8', true);
+    $cur_encoding = detect_encoding($string, 'UTF-8');
     if ($cur_encoding == 'UTF-8' && mb_check_encoding($string, 'UTF-8')) {
       return mb_convert_encoding($string, $encoding, 'UTF-8');
     } else {
@@ -105,4 +105,16 @@ function get_supported_charset($charset = '')
   $supported_charsets = explode(',', strtoupper(ENCODE_DEFINED_CHARSETS));
   $default_charset = isset($charset) && in_array(strtoupper($charset), $supported_charsets) ? strtoupper($charset) : ENCODE_DEFAULT_CHARSET;
   return $default_charset;
+}
+
+/**
+ * detect_encoding
+ */
+function detect_encoding($string, $encodings = ENCODE_DEFINED_CHARSETS, $strict = true)
+{
+  $encoding = mb_detect_encoding($string, $encodings, $strict);
+  if ($encoding === false) {
+    $encoding = mb_detect_encoding($string, $encodings, false);
+  }
+  return $encoding;
 }

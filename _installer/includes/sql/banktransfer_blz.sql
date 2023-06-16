@@ -1,27 +1,15 @@
-# -----------------------------------------------------------------------------------------
+# ---------------------------------------------------------------
 #  $Id$
 #
 #  modified eCommerce Shopsoftware
 #  http://www.modified-shop.org
 #
 #  Copyright (c) 2009 - 2013 [www.modified-shop.org]
-#  -----------------------------------------------------------------------------------------
+#  --------------------------------------------------------------
+#  Released under the GNU General Public License
+#  --------------------------------------------------------------
 
--- Einträge für Bankleitzahlen für die Tabelle banktransfer_blz
--- Gültig vom 09.03.2015 bis 07.06.2015
--- --------------------------------------------------------
-DROP TABLE IF EXISTS banktransfer_blz;
-CREATE TABLE IF NOT EXISTS banktransfer_blz (
-  blz int(10) NOT NULL DEFAULT 0,
-  bankname varchar(255) NOT NULL DEFAULT '',
-  prz char(2) NOT NULL DEFAULT '',
-  PRIMARY KEY (blz)
-);
-
--- 
--- Daten für Tabelle `banktransfer_blz`
--- 
-
+TRUNCATE `banktransfer_blz`;
 INSERT INTO `banktransfer_blz` (`blz`, `bankname`, `prz`) VALUES(10000000, 'Bundesbank', '09');
 INSERT INTO `banktransfer_blz` (`blz`, `bankname`, `prz`) VALUES(10010010, 'Postbank Ndl der DB Privat- und Firmenkundenbank', '24');
 INSERT INTO `banktransfer_blz` (`blz`, `bankname`, `prz`) VALUES(10010111, 'DSK Hyp', '13');

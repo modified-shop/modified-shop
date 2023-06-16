@@ -173,7 +173,7 @@
   }
   
   
-  function sql_update($file, $plain=false) {  
+  function sql_update($file, $plain = false) {  
     if ($plain === false) {
       $sql_file = file_get_contents($file);
     } else {
@@ -193,7 +193,7 @@
         } else {
           $check_query = xtc_db_query("SHOW COLUMNS FROM " . $matches[1]);
           while ($check = xtc_db_fetch_array($check_query)) {
-            if ($check['Field']==$matches[2]) { 
+            if ($check['Field'] == $matches[2]) { 
               $exists = true;
             }
           }
@@ -201,7 +201,7 @@
       }
       if (!$exists) {
         if (DB_SERVER_CHARSET == 'utf8') {
-          $sql = encode_utf8($sql, '', true);
+          $sql = encode_utf8($sql, 'ISO-8859-1', true);
         }
         $sql_data_array[] = trim($sql);
       }

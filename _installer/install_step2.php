@@ -119,6 +119,7 @@
       $error = true;
       $messageStack->add('install_step2', ENTRY_COUNTRY_ERROR);
     } else {
+      $zone_id = -1;
       $check_country_query = xtc_db_query("SELECT countries_id
                                              FROM ".TABLE_COUNTRIES."
                                             WHERE countries_id = '".(int)$country."'
@@ -187,29 +188,29 @@
       //xtc_db_query("UPDATE " .TABLE_COUNTRIES . " SET status='0'");
       //xtc_db_query("UPDATE " .TABLE_COUNTRIES . " SET status='1' WHERE countries_id = '". (int)$country ."'");
 
-      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($email_address). "' WHERE configuration_key = 'STORE_OWNER_EMAIL_ADDRESS'");
-      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($store_name). "' WHERE configuration_key = 'STORE_NAME'");
-      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($email_from). "' WHERE configuration_key = 'EMAIL_FROM'");
-      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($country). "' WHERE configuration_key = 'SHIPPING_ORIGIN_COUNTRY'");
-      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($postcode). "' WHERE configuration_key = 'SHIPPING_ORIGIN_ZIP'");
-      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($company). "' WHERE configuration_key = 'STORE_OWNER'");
-      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". (int)$country. "' WHERE configuration_key = 'STORE_COUNTRY'");
-      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". (int)$zone_id. "' WHERE configuration_key = 'STORE_ZONE'");
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value = '" . xtc_db_input($email_address) . "' WHERE configuration_key = 'STORE_OWNER_EMAIL_ADDRESS'");
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value = '" . xtc_db_input($store_name) . "' WHERE configuration_key = 'STORE_NAME'");
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value = '" . xtc_db_input($email_from) . "' WHERE configuration_key = 'EMAIL_FROM'");
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value = '" . xtc_db_input($country) . "' WHERE configuration_key = 'SHIPPING_ORIGIN_COUNTRY'");
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value = '" . xtc_db_input($postcode) . "' WHERE configuration_key = 'SHIPPING_ORIGIN_ZIP'");
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value = '" . xtc_db_input($company) . "' WHERE configuration_key = 'STORE_OWNER'");
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value = '" . (int)$country . "' WHERE configuration_key = 'STORE_COUNTRY'");
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value = '" . (int)$zone_id . "' WHERE configuration_key = 'STORE_ZONE'");
 
-      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". /*xtc_db_input($store_name) . '\n' .*/ xtc_db_input($company) . '\n' . xtc_db_input($firstname) . ' ' . xtc_db_input($lastname) . '\n' . xtc_db_input($street_address) . '\n' . xtc_db_input($postcode) . ' ' . xtc_db_input($city) . '\n\n' . /*xtc_db_input($telephone) . '\n' .*/ xtc_db_input($email_address)."' WHERE configuration_key = 'STORE_NAME_ADDRESS'");
-      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($email_address). "' WHERE configuration_key = 'META_REPLY_TO'");
-      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($company). "' WHERE configuration_key = 'META_COMPANY'");
-      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($store_name). "' WHERE configuration_key = 'META_PUBLISHER'");
-      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($firstname) . ' ' . xtc_db_input($lastname). "' WHERE configuration_key = 'META_AUTHOR'");
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value = '" . /*xtc_db_input($store_name) . '\n' .*/ xtc_db_input($company) . '\n' . xtc_db_input($firstname) . ' ' . xtc_db_input($lastname) . '\n' . xtc_db_input($street_address) . '\n' . xtc_db_input($postcode) . ' ' . xtc_db_input($city) . '\n\n' . /*xtc_db_input($telephone) . '\n' .*/ xtc_db_input($email_address) . "' WHERE configuration_key = 'STORE_NAME_ADDRESS'");
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value = '" . xtc_db_input($email_address) . "' WHERE configuration_key = 'META_REPLY_TO'");
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value = '" . xtc_db_input($company) . "' WHERE configuration_key = 'META_COMPANY'");
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value = '" . xtc_db_input($store_name) . "' WHERE configuration_key = 'META_PUBLISHER'");
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value = '" . xtc_db_input($firstname) . ' ' . xtc_db_input($lastname) . "' WHERE configuration_key = 'META_AUTHOR'");
 
       $multilanguage_email = 'DE::'.$email_from.'||EN::'.$email_from;
-      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($multilanguage_email). "' WHERE configuration_key = 'CONTACT_US_EMAIL_ADDRESS'");
-      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($multilanguage_email). "' WHERE configuration_key = 'CONTACT_US_REPLY_ADDRESS'");
-      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($multilanguage_email). "' WHERE configuration_key = 'EMAIL_SUPPORT_ADDRESS'");
-      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($multilanguage_email). "' WHERE configuration_key = 'EMAIL_SUPPORT_REPLY_ADDRESS'");
-      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($multilanguage_email). "' WHERE configuration_key = 'EMAIL_BILLING_ADDRESS'");
-      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($multilanguage_email). "' WHERE configuration_key = 'EMAIL_BILLING_REPLY_ADDRESS'");
-      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($multilanguage_email). "' WHERE configuration_key = 'EMAIL_BILLING_FORWARDING_STRING'");
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value = '" . xtc_db_input($multilanguage_email) . "' WHERE configuration_key = 'CONTACT_US_EMAIL_ADDRESS'");
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value = '" . xtc_db_input($multilanguage_email) . "' WHERE configuration_key = 'CONTACT_US_REPLY_ADDRESS'");
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value = '" . xtc_db_input($multilanguage_email) . "' WHERE configuration_key = 'EMAIL_SUPPORT_ADDRESS'");
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value = '" . xtc_db_input($multilanguage_email) . "' WHERE configuration_key = 'EMAIL_SUPPORT_REPLY_ADDRESS'");
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value = '" . xtc_db_input($multilanguage_email) . "' WHERE configuration_key = 'EMAIL_BILLING_ADDRESS'");
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value = '" . xtc_db_input($multilanguage_email) . "' WHERE configuration_key = 'EMAIL_BILLING_REPLY_ADDRESS'");
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value = '" . xtc_db_input($multilanguage_email) . "' WHERE configuration_key = 'EMAIL_BILLING_FORWARDING_STRING'");
 
       if (DB_SERVER_CHARSET == 'utf8') {
         xtc_db_query("UPDATE " .TABLE_LANGUAGES . " SET language_charset='utf-8'");
@@ -382,4 +383,3 @@
   }
   $smarty->display('index.html');
   require_once ('includes/application_bottom.php');
-?>
