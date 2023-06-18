@@ -19,7 +19,6 @@
 include ('includes/application_top.php');
 
 // include needed functions
-require_once (DIR_FS_INC.'xtc_date_short.inc.php');
 require_once (DIR_FS_INC.'xtc_get_products_name.inc.php');
 require_once (DIR_FS_INC.'xtc_word_count.inc.php');
 

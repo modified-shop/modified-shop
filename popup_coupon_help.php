@@ -16,7 +16,6 @@
    ---------------------------------------------------------------------------------------*/
 
 require ('includes/application_top.php');
-require_once (DIR_FS_INC.'xtc_date_short.inc.php');
 
 if (!isset($_GET['cID']) || $_GET['cID'] == '') {
   die('Direct Access to this location is not allowed.');

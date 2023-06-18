@@ -19,7 +19,6 @@
 include ('includes/application_top.php');
 
 // include needed functions
-require_once (DIR_FS_INC.'xtc_date_short.inc.php');
 require_once (DIR_FS_INC.'xtc_image_button.inc.php');
 require_once (DIR_FS_INC.'xtc_display_tax_value.inc.php');
 require_once (DIR_FS_INC.'xtc_format_price_order.inc.php');

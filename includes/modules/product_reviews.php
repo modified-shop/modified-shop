@@ -18,7 +18,6 @@
 
 // include needed functions
 require_once (DIR_FS_INC.'xtc_row_number_format.inc.php');
-require_once (DIR_FS_INC.'xtc_date_short.inc.php');
 
 // create smarty elements
 $module_smarty = new Smarty();

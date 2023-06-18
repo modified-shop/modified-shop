@@ -21,7 +21,6 @@ include ('includes/application_top.php');
 // include needed functions
 require_once (DIR_FS_INC.'xtc_word_count.inc.php');
 require_once (DIR_FS_INC.'xtc_date_long.inc.php');
-require_once (DIR_FS_INC.'xtc_date_short.inc.php');
 
 if ($_SESSION['customers_status']['customers_status_read_reviews'] == '0') {
   xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));

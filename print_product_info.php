@@ -20,7 +20,6 @@ include ('includes/application_top.php');
 
 // include needed functions
 require_once (DIR_FS_INC.'xtc_date_long.inc.php');
-require_once (DIR_FS_INC.'xtc_date_short.inc.php'); 
 require_once (DIR_FS_INC.'xtc_get_products_mo_images.inc.php');
 
 // create smarty elements

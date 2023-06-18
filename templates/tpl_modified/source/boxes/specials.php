@@ -18,9 +18,6 @@
 
 defined('SPECIALS_CONDITIONS_S') or define('SPECIALS_CONDITIONS_S', 'AND s.status = \'1\' AND (now() >= s.start_date OR s.start_date IS NULL)');
 
-//include needed functions
-require_once (DIR_FS_INC.'xtc_date_short.inc.php');
-
 // include smarty
 include(DIR_FS_BOXES_INC . 'smarty_default.php');
 
