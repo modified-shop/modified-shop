@@ -662,6 +662,7 @@ $smarty->assign('PRIVACY_LINK', $main->getContentLink(2, MORE_INFO, $request_typ
 $smarty->assign('FORM_END', '</form>');
 $smarty->assign('language', $_SESSION['language']);
 $smarty->assign('BUTTON_SUBMIT', xtc_image_submit('button_continue.gif', IMAGE_BUTTON_CONTINUE));
+$smarty->assign('BUTTON_SUBMIT_SAVE', xtc_image_submit('button_save.gif', IMAGE_BUTTON_SAVE));
 
 $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/create_account.html');
 $smarty->assign('main_content', $main_content);

@@ -93,6 +93,7 @@ $smarty->assign('FORM_ACTION', xtc_draw_form('account_delete', xtc_href_link(FIL
 $smarty->assign('INPUT_PASSWORD', xtc_draw_password_field('password'));
 $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(FILENAME_ACCOUNT, '', 'SSL').'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
 $smarty->assign('BUTTON_SUBMIT', xtc_image_submit('button_continue.gif', IMAGE_BUTTON_CONTINUE));
+$smarty->assign('BUTTON_SUBMIT_DELETE', xtc_image_submit('button_save.gif', IMAGE_BUTTON_DELETE));
 $smarty->assign('FORM_END', '</form>');
 if ($success === true) {
   $smarty->assign('BUTTON_CONTINUE', '<a href="'.xtc_href_link(FILENAME_DEFAULT, '', 'NONSSL').'">'.xtc_image_button('button_continue.gif', IMAGE_BUTTON_CONTINUE).'</a>');

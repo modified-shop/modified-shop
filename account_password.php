@@ -128,6 +128,8 @@ $smarty->assign('INPUT_NEW', xtc_draw_password_fieldNote(array('name' => 'passwo
 $smarty->assign('INPUT_CONFIRM', xtc_draw_password_fieldNote(array('name' => 'password_confirmation', 'text' => (xtc_not_null(ENTRY_PASSWORD_CONFIRMATION_TEXT) ? '<span class="inputRequirement">'.ENTRY_PASSWORD_CONFIRMATION_TEXT.'</span>' : ''))));
 $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(FILENAME_ACCOUNT, '', 'SSL').'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
 $smarty->assign('BUTTON_SUBMIT', xtc_image_submit('button_continue.gif', IMAGE_BUTTON_CONTINUE));
+$smarty->assign('BUTTON_SUBMIT_SAVE', xtc_image_submit('button_save.gif', IMAGE_BUTTON_SAVE));
+$smarty->assign('BUTTON_SUBMIT_UPDATE', xtc_image_submit('button_update.gif', IMAGE_BUTTON_UPDATE));
 $smarty->assign('FORM_END', '</form>');
 
 $smarty->assign('language', $_SESSION['language']);

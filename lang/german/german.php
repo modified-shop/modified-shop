@@ -219,6 +219,7 @@ define('IMAGE_BUTTON_CONTINUE_SHOPPING', 'Einkauf fortsetzen');
 define('IMAGE_BUTTON_CHECKOUT_STEP2', 'Weiter zu Schritt 2');
 define('IMAGE_BUTTON_CHECKOUT_STEP3', 'Weiter zu Schritt 3');
 define('IMAGE_BUTTON_RESULTS', 'Ergebnisse anzeigen');
+define('IMAGE_BUTTON_SAVE', 'Speichern');
 
 define('SMALL_IMAGE_BUTTON_DELETE', 'L&ouml;schen');
 define('SMALL_IMAGE_BUTTON_EDIT', '&Auml;ndern');
