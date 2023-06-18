@@ -219,6 +219,7 @@ define('IMAGE_BUTTON_CONTINUE_SHOPPING', 'Continue shopping'); //Hendrik - 2010-
 define('IMAGE_BUTTON_CHECKOUT_STEP2', 'Continue to step 2');
 define('IMAGE_BUTTON_CHECKOUT_STEP3', 'Continue to step 3');
 define('IMAGE_BUTTON_RESULTS', 'Show results');
+define('IMAGE_BUTTON_SAVE', 'Save');
 
 define('SMALL_IMAGE_BUTTON_DELETE', 'Delete');
 define('SMALL_IMAGE_BUTTON_EDIT', 'Edit');
