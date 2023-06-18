@@ -34,9 +34,6 @@ if ($language_not_found === true) {
   $site_error = TEXT_SITE_NOT_FOUND;
   include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
 
-  // build breadcrumb
-  $breadcrumb->add(NAVBAR_TITLE_ERROR, xtc_href_link(FILENAME_ERROR));
-
 } else {
   include (DIR_WS_MODULES.'default.php');
 }
