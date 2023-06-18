@@ -107,9 +107,6 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
     $smarty->assign('error_message', $messageStack->output('product_reviews'));
   }
 
-  // build breadcrumb
-  $breadcrumb->add(NAVBAR_TITLE_PRODUCT_REVIEWS, xtc_href_link(FILENAME_PRODUCT_REVIEWS, xtc_get_all_get_params(array('reviews_id'))));
-
   xtc_db_query("UPDATE ".TABLE_REVIEWS." 
                    SET reviews_read = reviews_read+1 
                  WHERE reviews_id = '".(int)$_GET['reviews_id']."'");
@@ -117,6 +114,9 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
   $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/product_reviews_info.html', $cache_id);
   $smarty->assign('main_content', $main_content);
 }
+
+// build breadcrumb
+$breadcrumb->add(NAVBAR_TITLE_PRODUCT_REVIEWS, xtc_href_link(FILENAME_PRODUCT_REVIEWS, xtc_get_all_get_params(array('reviews_id'))));
 
 // include header
 require (DIR_WS_INCLUDES . 'header.php');

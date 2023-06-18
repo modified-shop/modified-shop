@@ -51,6 +51,10 @@ if (isset ($cPath) && xtc_not_null($cPath)) {
   if (xtc_check_categories_status($current_category_id) === false) {
     $site_error = TEXT_CATEGORIE_NOT_FOUND;
     include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
+
+    // build breadcrumb
+    $breadcrumb->add(NAVBAR_TITLE_ERROR, xtc_href_link(FILENAME_ERROR));
+
     return;
   }
   
@@ -92,6 +96,10 @@ if (isset($language_not_found) && $language_not_found === true) {
   if ($category_depth != 'top') {
     $site_error = TEXT_CATEGORIE_NOT_FOUND;
     include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
+
+    // build breadcrumb
+    $breadcrumb->add(NAVBAR_TITLE_ERROR, xtc_href_link(FILENAME_ERROR));
+
     return;
   } else {
     header("HTTP/1.0 410 Gone"); 
@@ -329,7 +337,9 @@ switch ($category_depth) {
     foreach(auto_include(DIR_FS_CATALOG.'includes/extra/default/center_modules/','php') as $file) require_once ($file);
 
     if ($messageStack->size('default') > 0) {
-      $default_smarty->assign('error_message', $messageStack->output('default'));
+      $error_message = $messageStack->output('default');
+      $default_smarty->assign('error_message', $error_message);
+      $smarty->assign('error_message', $error_message);
     }
     
     $default_smarty->caching = 0;

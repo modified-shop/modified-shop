@@ -50,6 +50,9 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
   $site_error = TEXT_PRODUCT_NOT_FOUND;
   include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
 
+  // build breadcrumb
+  $breadcrumb->add(NAVBAR_TITLE_ERROR, xtc_href_link(FILENAME_ERROR));
+
   // include header
   require (DIR_WS_INCLUDES . 'header.php');
 
