@@ -107,6 +107,27 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
   } else {
     xtc_redirect(xtc_href_link(FILENAME_REVIEWS, '', 'NONSSL'));
   }
+
+  $smarty->assign('PRODUCTS_NAME', xtc_get_products_name($_GET['products_id'], $_SESSION['languages_id']));
+
+  if (defined('REVIEWS_PURCHASED_INFOS') && REVIEWS_PURCHASED_INFOS != '') {
+    $shop_content_data = $main->getContentData(REVIEWS_PURCHASED_INFOS);
+    if (count($shop_content_data) > 0) {
+      $smarty->assign('REVIEWS_NOTE', $main->getContentLink(REVIEWS_PURCHASED_INFOS, $shop_content_data['content_title'], $request_type, false));
+    }
+  }
+
+  if ($messageStack->size('product_reviews') > 0) {
+    $smarty->assign('error_message', $messageStack->output('product_reviews'));
+  }
+  if ($messageStack->size('product_reviews', 'success') > 0) {
+    $smarty->assign('success_message', $messageStack->output('product_reviews', 'success'));
+  }
+
+  $smarty->caching = 0;
+  $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/product_reviews.html');
+
+  $smarty->assign('main_content', $main_content);
 }
 
 // build breadcrumb
@@ -117,27 +138,6 @@ require (DIR_WS_INCLUDES . 'header.php');
 
 // include boxes
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
-
-$smarty->assign('PRODUCTS_NAME', xtc_get_products_name($_GET['products_id'], $_SESSION['languages_id']));
-
-if (defined('REVIEWS_PURCHASED_INFOS') && REVIEWS_PURCHASED_INFOS != '') {
-  $shop_content_data = $main->getContentData(REVIEWS_PURCHASED_INFOS);
-  if (count($shop_content_data) > 0) {
-    $smarty->assign('REVIEWS_NOTE', $main->getContentLink(REVIEWS_PURCHASED_INFOS, $shop_content_data['content_title'], $request_type, false));
-  }
-}
-
-if ($messageStack->size('product_reviews') > 0) {
-  $smarty->assign('error_message', $messageStack->output('product_reviews'));
-}
-if ($messageStack->size('product_reviews', 'success') > 0) {
-  $smarty->assign('success_message', $messageStack->output('product_reviews', 'success'));
-}
-
-$smarty->caching = 0;
-$main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/product_reviews.html');
-
-$smarty->assign('main_content', $main_content);
 
 $smarty->caching = 0;
 if (!defined('RM'))

@@ -34,7 +34,6 @@ $smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 if ($language_not_found === true) {
   $site_error = TEXT_CONTENT_NOT_FOUND;
   include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
-
 } else {
   if (!isset($_GET['coID']) || $_GET['coID'] == '') {
     xtc_redirect(xtc_href_link(FILENAME_DEFAULT));
@@ -59,7 +58,9 @@ if ($language_not_found === true) {
     $site_error = TEXT_CONTENT_NOT_FOUND;
     include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
 
-  } else {
+    // build breadcrumb
+    $breadcrumb->add(NAVBAR_TITLE_ERROR, xtc_href_link(FILENAME_ERROR));
+} else {
     $shop_content_data = xtc_db_fetch_array($shop_content_query, true);
     
     // sub content

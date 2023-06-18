@@ -254,6 +254,9 @@ if ($result != false) {
     $site_error = TEXT_MANUFACTURER_NOT_FOUND;
     if (isset($_GET['filter_id']) && !is_array($_GET['filter_id']) && (int)$_GET['filter_id'] > 0) {
       $site_error = TEXT_CATEGORIE_NOT_FOUND;  
+    } else {
+      // build breadcrumb
+      $breadcrumb->add(NAVBAR_TITLE_ERROR, xtc_href_link(FILENAME_ERROR));
     }
     include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
   }
