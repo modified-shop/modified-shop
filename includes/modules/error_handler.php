@@ -10,6 +10,8 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
    
+define('DISPLAY_ERROR_HANDLER', true);
+
 $error = array(
   '400' => TEXT_ERROR_HANDLER_400,
   '401' => TEXT_ERROR_HANDLER_401,
@@ -57,8 +59,4 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/error_message.html', $c
 
 $module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/error_message.html', $cache_id);
 
-if (isset($smarty) && is_object($smarty)) {
-  require_once(DIR_FS_BOXES . 'best_sellers.php');
-  $smarty->assign('bestseller', true);
-  $smarty->assign('main_content', !empty($module) ? trim($module) : $module);
-}
+$smarty->assign('main_content', $module);
