@@ -19,6 +19,7 @@
 // include needed function
 require_once(DIR_FS_INC . 'xtc_get_category_tree.inc.php');
 require_once(DIR_FS_INC . 'xtc_count_products_in_category.inc.php');
+require_once(DIR_FS_BOXES_INC . 'xtc_show_category.inc.php');
 
 $module_smarty = new Smarty();
 $module_smarty->assign('language', $_SESSION['language']);
