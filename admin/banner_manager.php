@@ -168,6 +168,7 @@
                 $query_status_result = xtc_db_fetch_array($query_status);
                 $sql_data_array['status'] = $query_status_result['status'];
                 xtc_db_perform(TABLE_BANNERS, $sql_data_array);
+                $banners_id = xtc_db_insert_id();
               }
             }
 
