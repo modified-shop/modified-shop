@@ -155,18 +155,24 @@
               $sql_data_array['status'] = '0';
               xtc_db_perform(TABLE_BANNERS, $sql_data_array);
               $banners_id = xtc_db_insert_id();
-            } elseif ($action == 'update') {
-              $sql_data_array['date_status_change'] = 'now()';
-              $query_check = xtc_db_query("SELECT `banners_id` FROM " . TABLE_BANNERS . " WHERE banners_group_id=" . $banners_group_id . " AND languages_id = " . $languages[$i]['id']);
-              if (xtc_db_num_rows($query_check)) {
+            } elseif ($action == 'update') {              
+              $check_query = xtc_db_query("SELECT banners_id 
+                                             FROM ".TABLE_BANNERS." 
+                                            WHERE banners_group_id = '".$banners_group_id."' 
+                                              AND languages_id = '".$languages[$i]['id']."'");
+              if (xtc_db_num_rows($check_query) > 0) {
                 $sql_data_array['date_status_change'] = 'now()';
                 xtc_db_perform(TABLE_BANNERS, $sql_data_array, 'update', "banners_id = '" . (int)$banners_id . "'");
-              } else {
-                $exists_status = xtc_db_fetch_array($query_check);
+              } else {                
+                $status_query = xtc_db_query("SELECT status 
+                                                FROM ".TABLE_BANNERS." 
+                                               WHERE banners_group_id = '".$banners_group_id."'
+                                               LIMIT 1");
+                $status = xtc_db_fetch_array($status_query);
+
+                $sql_data_array['status'] = $status['status'];
                 $sql_data_array['date_added'] = 'now()';
-                $query_status = xtc_db_query("SELECT `status` FROM " . TABLE_BANNERS . " WHERE banners_group_id=" . $banners_group_id . " LIMIT 1");
-                $query_status_result = xtc_db_fetch_array($query_status);
-                $sql_data_array['status'] = $query_status_result['status'];
+                
                 xtc_db_perform(TABLE_BANNERS, $sql_data_array);
                 $banners_id = xtc_db_insert_id();
               }
