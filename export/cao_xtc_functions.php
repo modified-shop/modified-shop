@@ -1971,45 +1971,21 @@ function ProductsUpdate ()
     }
   }
 
-  //Burn VK1-4 an die jeweiligen Gruppen übergeben
-
-    if (isset($_POST['products_vk1']))               $products_vk1               = xtc_db_prepare_input($_POST['products_vk1']);
-    if (isset($_POST['products_vk2']))               $products_vk2               = xtc_db_prepare_input($_POST['products_vk2']);
-    if (isset($_POST['products_vk3']))               $products_vk3               = xtc_db_prepare_input($_POST['products_vk3']);
-    if (isset($_POST['products_vk4']))               $products_vk4               = xtc_db_prepare_input($_POST['products_vk4']);
-    if (isset($_POST['products_vk5']))               $products_vk5               = xtc_db_prepare_input($_POST['products_vk5']);
-
-// Hier die Preise den Gruppen zuordnen ID => Aufsteigend, GRP => Gruppen ID aus dem Shop, PREIS => vk1-4
-    $vk_array = array(
-            1 => array('ID' => '1','GRP' => '0','PREIS' => $products_vk2),
-            2 => array('ID' => '2','GRP' => '1','PREIS' => $products_vk2),
-            3 => array('ID' => '3','GRP' => '2','PREIS' => $products_vk2),
-            4 => array('ID' => '4','GRP' => '3','PREIS' => $products_vk2),
-            5 => array('ID' => '5','GRP' => '4','PREIS' => $products_vk2),
-            //6 => array('ID' => '6','GRP' => '5','PREIS' => $products_vk4),
-         );
-
-   for ($i = 1; $i < count($vk_array)+1; $i++)
-   {
-
-         $sql_data_array = array('products_id' => $products_id,
-                          'quantity' => '1',
-                          'personal_offer' => $vk_array[$i]['PREIS']);
-
-
-         $delete = xtc_db_query("delete from personal_offers_by_customers_status_" . $vk_array[$i]['GRP'] . " where products_id='" . $products_id . "'");
-         $insert_sql_data = array('products_id' => $products_id);
-         $sql_data_array = array_merge($sql_data_array, $insert_sql_data);
-         xtc_db_perform('personal_offers_by_customers_status_' . $vk_array[$i]['GRP'], $sql_data_array);
-   }
-
-//Burn Ende
+  $customers_statuses_query = xtc_db_query("select * from " . TABLE_CUSTOMERS_STATUS . " where language_id = '".$LangID."' order by customers_status_id");
+  while ($customers_statuses = xtc_db_fetch_array($customers_statuses_query)) {
+    xtc_db_query("delete from personal_offers_by_customers_status_" . $customers_statuses['customers_status_id'] . " where products_id='" . $products_id . "'");
+    
+    if (isset($_POST['products_vk'.$customers_statuses['customers_status_id']])) {
+      $sql_data_array = array(
+        'products_id' => $products_id,
+        'quantity' => '1',
+        'personal_offer' => xtc_db_prepare_input($_POST['products_vk'.$customers_statuses['customers_status_id']]),
+      );
+      xtc_db_perform('personal_offers_by_customers_status_' . $customers_statuses['customers_status_id'] , $sql_data_array);
+    }
+  }
 
   if (file_exists('cao_produpd_2.php')) { include('cao_produpd_2.php'); }
-
-
-
-
 
   print_xml_status (0, $_POST['action'], 'OK', $mode, 'PRODUCTS_ID', $products_id);
 }
@@ -2535,12 +2511,8 @@ function CustomersUpdate ()
   if (isset($_POST['customers_tele'])) $sql_customers_data_array['customers_telephone'] = $_POST['customers_tele'];
   if (isset($_POST['customers_fax'])) $sql_customers_data_array['customers_fax'] = $_POST['customers_fax'];
   if (isset($_POST['customers_gender'])) $sql_customers_data_array['customers_gender'] = $_POST['customers_gender'];
-  if ($_POST['customers_price_level'] == 5) $sql_customers_data_array['customers_status'] = 6;
-  if ($_POST['customers_price_level'] == 4) $sql_customers_data_array['customers_status'] = 5;
-  if ($_POST['customers_price_level'] == 3) $sql_customers_data_array['customers_status'] = 4;
-  if ($_POST['customers_price_level'] == 2) $sql_customers_data_array['customers_status'] = 2;
-  //if ($_POST['customers_price_level'] == 1) $sql_customers_data_array['customers_status'] = 0; // Tomcraft - 2018-08-18 - Beware that customers_status 0 is the admin customers group!
-
+  if (isset($_POST['customers_price_level']) && $_POST['customers_price_level'] > 0) $sql_customers_data_array['customers_status'] = (int)$_POST['customers_price_level'];
+  
   if (file_exists('cao_custupd_1.php')) { include('cao_custupd_1.php'); }
 
   if (isset($_POST['customers_password']))
