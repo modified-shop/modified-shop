@@ -100,6 +100,7 @@ if (ACCOUNT_STATE == 'true' && in_array(basename($PHP_SELF), $state_pages)) {
         } else {
           $("[name='state']").prop('selectedIndex',0);
         }
+        $('select[name=state]').SumoSelect({search: true, searchText: "<?php echo TEXT_SUMOSELECT_SEARCH; ?>", noMatch: "<?php echo TEXT_SUMOSELECT_NO_RESULT; ?>"});
         stateSelect.closest("tr").show();      
       } else {
         if (min_length) {
