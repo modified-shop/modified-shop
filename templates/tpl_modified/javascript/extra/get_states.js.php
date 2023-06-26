@@ -103,11 +103,6 @@ if (ACCOUNT_STATE == 'true' && in_array(basename($PHP_SELF), $state_pages)) {
         $('select[name=state]').SumoSelect({search: true, searchText: "<?php echo TEXT_SUMOSELECT_SEARCH; ?>", noMatch: "<?php echo TEXT_SUMOSELECT_NO_RESULT; ?>"});
         stateSelect.closest("tr").show();      
       } else {
-        if (tmpParent.attr("class") !== undefined && tmpParent.attr("class").indexOf("SumoSelect") > -1) {
-          tmpParent.replaceWith('<input type="text" name="state"></input>');
-        } else {
-          $("[name='state']").replaceWith('<input type="text" name="state"></input>');
-        }
         if (min_length) {
           show_state();
         } else {
