@@ -26,6 +26,7 @@
     require (DIR_WS_INCLUDES.'header.php');
   
     // include boxes
+    $display_mode = 'search';
     require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
     $smarty->assign('language', $_SESSION['language']);

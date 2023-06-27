@@ -333,6 +333,7 @@ $breadcrumb->add(NAVBAR_TITLE_2_CHECKOUT_CONFIRMATION);
 require (DIR_WS_INCLUDES . 'header.php');
 
 // include boxes
+$display_mode = 'checkout';
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weight') || ($_SESSION['cart']->count_contents_virtual() == 0)) {

@@ -67,6 +67,7 @@ if (isset($_GET['oID'])
       $smarty = new Smarty();
 
       // include boxes
+      $display_mode = 'paypal';
       require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
     
       $breadcrumb->add(NAVBAR_TITLE_2_CHECKOUT_CONFIRMATION);

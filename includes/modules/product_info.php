@@ -251,4 +251,5 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
   $product_info = $info_smarty->fetch(CURRENT_TEMPLATE.'/module/product_info/'.$product->data['product_template']);
   
   $smarty->assign('main_content', $product_info);
+  $display_mode = 'productinfo';
 }

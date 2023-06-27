@@ -98,6 +98,7 @@ $breadcrumb->add(NAVBAR_TITLE_2_ADDRESS_BOOK, xtc_href_link(FILENAME_ADDRESS_BOO
 require (DIR_WS_INCLUDES.'header.php');
 
 // include boxes
+$display_mode = 'account';
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 $smarty->assign('language', $_SESSION['language']);

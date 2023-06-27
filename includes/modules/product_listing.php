@@ -209,6 +209,7 @@ if ($result != false) {
     $main_content = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/categorie_listing/'.$category['categories_template']);
     
     $smarty->assign('main_content', $main_content);
+    $display_mode = 'category';
   } elseif (isset($_GET['filter_id']) && !is_array($_GET['filter_id']) && (int)$_GET['filter_id'] > 0) {
     $site_error = TEXT_MANUFACTURER_NOT_FOUND;
     include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
@@ -250,6 +251,7 @@ if ($result != false) {
     $main_content = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/categorie_listing/'.$manufacturer['categories_template']);
     
     $smarty->assign('main_content', $main_content);
+    $display_mode = 'manufacturer';
   } else {
     $site_error = TEXT_MANUFACTURER_NOT_FOUND;
     if (isset($_GET['filter_id']) && !is_array($_GET['filter_id']) && (int)$_GET['filter_id'] > 0) {

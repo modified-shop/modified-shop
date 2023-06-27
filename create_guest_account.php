@@ -376,6 +376,7 @@ $breadcrumb->add(NAVBAR_TITLE_CREATE_GUEST_ACCOUNT, xtc_href_link(FILENAME_CREAT
 require (DIR_WS_INCLUDES . 'header.php');
 
 // include boxes
+$display_mode = 'createaccount';
 require (DIR_FS_CATALOG . 'templates/' . CURRENT_TEMPLATE . '/source/boxes.php');
 
 if ($messageStack->size('create_account') > 0) {

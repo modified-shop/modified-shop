@@ -314,6 +314,7 @@ elseif (isset ($_GET['delete']) && is_numeric($_GET['delete'])) {
 require (DIR_WS_INCLUDES.'header.php');
 
 // include boxes
+$display_mode = 'account';
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 if (!isset($_GET['delete'])) {

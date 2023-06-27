@@ -35,6 +35,7 @@ $breadcrumb->add(NAVBAR_TITLE_COOKIE_USAGE, xtc_href_link(FILENAME_COOKIE_USAGE)
 require (DIR_WS_INCLUDES . 'header.php');
 
 // include boxes
+$display_mode = 'cookieusage';
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 // set cache ID
