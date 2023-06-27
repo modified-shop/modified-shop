@@ -277,6 +277,7 @@ $breadcrumb->add(NAVBAR_TITLE_ACCOUNT_CHECKOUT_EXPRESS_EDIT, xtc_href_link(FILEN
 require (DIR_WS_INCLUDES.'header.php');
 
 // include boxes
+$display_mode = 'account';
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 $smarty->assign('FORM_ACTION', xtc_draw_form('account_edit', xtc_href_link(FILENAME_ACCOUNT_CHECKOUT_EXPRESS, xtc_get_all_get_params(), 'SSL')).xtc_draw_hidden_field('action', 'process'));
