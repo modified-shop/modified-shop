@@ -87,6 +87,7 @@ $breadcrumb->add(NAVBAR_GV_REDEEM);
 require (DIR_WS_INCLUDES . 'header.php');
 
 // include boxes
+$display_mode = 'gv';
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 // if we get here then either the url gv_no was not set or it was invalid

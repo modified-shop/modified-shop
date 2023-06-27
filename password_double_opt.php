@@ -204,6 +204,7 @@ $breadcrumb->add(NAVBAR_TITLE_PASSWORD_DOUBLE_OPT, xtc_href_link(FILENAME_PASSWO
 require (DIR_WS_INCLUDES . 'header.php');
 
 // include boxes
+$display_mode = 'password';
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 switch ($case) {

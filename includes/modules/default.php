@@ -162,6 +162,7 @@ switch ($category_depth) {
     $default_smarty->caching = 0;
     $main_content = $default_smarty->fetch(CURRENT_TEMPLATE.'/module/categorie_listing/'.$category['categories_template']);
     $smarty->assign('main_content', $main_content);
+    $display_mode = 'category';
     break;
 
   case 'products':
@@ -171,6 +172,7 @@ switch ($category_depth) {
     $where = '';
     $p2c_condition = '';
     $use_group_by = (isset($subcategories_array) && count($subcategories_array) > 1);
+    $display_mode = 'listing';
     
     // sorting query
     if (isset($_GET['manufacturers_id']) && isset($_GET['filter_id'])) {
@@ -243,6 +245,8 @@ switch ($category_depth) {
 
     if (isset($_GET['manufacturers_id'])) {
       if (basename($PHP_SELF) == FILENAME_DEFAULT) {
+        $display_mode = 'manufacturer';
+        
         // show the products of a specified manufacturer
         $select .= "m.manufacturers_name, ";
         $from   .= "JOIN ".TABLE_MANUFACTURERS." m 
@@ -328,6 +332,7 @@ switch ($category_depth) {
     break;
     
   case 'top':
+    $display_mode = 'home';
     $content_main_template = 'main_content.html';
     $shop_content_data = $main->getContentData(5, '', '', false, ADD_SELECT_CONTENT);
     if (!empty($shop_content_data['content_heading'])) {

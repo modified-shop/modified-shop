@@ -126,6 +126,7 @@ $breadcrumb->add(NAVBAR_TITLE_2_CHECKOUT_SUCCESS);
 require (DIR_WS_INCLUDES . 'header.php');
 
 // include boxes
+$display_mode = 'checkout';
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 $smarty->assign('language', $_SESSION['language']);

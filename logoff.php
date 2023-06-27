@@ -68,6 +68,7 @@ $breadcrumb->add(NAVBAR_TITLE_LOGOFF);
 require (DIR_WS_INCLUDES . 'header.php');
 
 // include boxes
+$display_mode = 'logoff';
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 $smarty->assign('BUTTON_CONTINUE', '<a href="'.xtc_href_link(FILENAME_DEFAULT).'">'.xtc_image_button('button_continue.gif', IMAGE_BUTTON_CONTINUE).'</a>');

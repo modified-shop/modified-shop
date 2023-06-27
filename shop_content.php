@@ -60,7 +60,7 @@ if ($language_not_found === true) {
 
     // build breadcrumb
     $breadcrumb->add(NAVBAR_TITLE_ERROR, xtc_href_link(FILENAME_ERROR));
-} else {
+  } else {
     $shop_content_data = xtc_db_fetch_array($shop_content_query, true);
     
     // sub content
@@ -107,6 +107,7 @@ if ($language_not_found === true) {
     $smarty->caching = 0;
     $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/'.$content_template);
     $smarty->assign('main_content', $main_content);
+    $display_mode = 'content';
   }
 }
 

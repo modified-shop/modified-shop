@@ -204,6 +204,7 @@ $breadcrumb->add(NAVBAR_TITLE_DOWNLOAD, xtc_href_link(FILENAME_DOWNLOAD, '', 'SS
 require (DIR_WS_INCLUDES . 'header.php');
 
 // include boxes
+$display_mode = 'download';
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 $smarty->assign('language', $_SESSION['language']);

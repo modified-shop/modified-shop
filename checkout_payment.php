@@ -260,6 +260,7 @@ $breadcrumb->add(NAVBAR_TITLE_2_CHECKOUT_PAYMENT, xtc_href_link(FILENAME_CHECKOU
 require (DIR_WS_INCLUDES . 'header.php');
 
 // include boxes
+$display_mode = 'checkout';
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 $module_smarty->caching = 0;

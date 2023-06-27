@@ -100,6 +100,7 @@ $breadcrumb->add(NAVBAR_TITLE_REVIEWS, xtc_href_link(FILENAME_REVIEWS));
 require (DIR_WS_INCLUDES . 'header.php');
 
 // include boxes
+$display_mode = 'reviews';
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 if ($messageStack->size('product_reviews') > 0) {

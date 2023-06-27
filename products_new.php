@@ -36,6 +36,7 @@ if ($language_not_found === true) {
 
 } else {
   include (DIR_WS_MODULES.'default.php');
+  $display_mode = 'productsnew';
 }
 
 // build breadcrumb

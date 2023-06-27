@@ -60,3 +60,4 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/error_message.html', $c
 $module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/error_message.html', $cache_id);
 
 $smarty->assign('main_content', $module);
+$display_mode = 'error';

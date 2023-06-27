@@ -29,6 +29,7 @@ $breadcrumb->add(NAVBAR_TITLE_WISHLIST, xtc_href_link(FILENAME_WISHLIST));
 require (DIR_WS_INCLUDES . 'header.php');
 
 // include boxes
+$display_mode = 'wishlist';
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 $module_data = array ();

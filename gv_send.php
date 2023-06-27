@@ -152,6 +152,7 @@ $breadcrumb->add(NAVBAR_GV_SEND);
 require (DIR_WS_INCLUDES . 'header.php');
 
 // include boxes
+$display_mode = 'gv';
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 if (isset($_GET['action']) && $_GET['action'] == 'process') {

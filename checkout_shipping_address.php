@@ -119,6 +119,7 @@ $breadcrumb->add(NAVBAR_TITLE_2_CHECKOUT_SHIPPING_ADDRESS, xtc_href_link(FILENAM
 require (DIR_WS_INCLUDES . 'header.php');
 
 // include boxes
+$display_mode = 'checkout';
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 $addresses_count = xtc_count_customer_address_book_entries();

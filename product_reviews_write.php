@@ -136,6 +136,7 @@ $breadcrumb->add(NAVBAR_TITLE_REVIEWS_WRITE, xtc_href_link(FILENAME_PRODUCT_REVI
 require (DIR_WS_INCLUDES . 'header.php');
 
 // include boxes
+$display_mode = 'reviews';
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 if ($product->isProduct() === false) {

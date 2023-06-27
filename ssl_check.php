@@ -28,6 +28,7 @@ $breadcrumb->add(NAVBAR_TITLE_SSL_CHECK, xtc_href_link(FILENAME_SSL_CHECK));
 require (DIR_WS_INCLUDES . 'header.php');
 
 // include boxes
+$display_mode = 'sslcheck';
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 // set cache ID

@@ -113,6 +113,7 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
 
   $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/product_reviews_info.html', $cache_id);
   $smarty->assign('main_content', $main_content);
+  $display_mode = 'reviews';
 }
 
 // build breadcrumb
