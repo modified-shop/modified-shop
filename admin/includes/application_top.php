@@ -200,6 +200,10 @@ if (is_file(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/' . $current_page
   require_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/' . $current_page);
 }
 
+if (isset($_SESSION['country'])) {
+  unset($_SESSION['country']);
+}
+
 // write customers status in session
 require(DIR_FS_CATALOG.DIR_WS_INCLUDES.'write_customers_status.php');
 
