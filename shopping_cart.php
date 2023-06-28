@@ -124,7 +124,7 @@ $breadcrumb->add(NAVBAR_TITLE_SHOPPING_CART, xtc_href_link(FILENAME_SHOPPING_CAR
 require (DIR_WS_INCLUDES . 'header.php');
 
 // include boxes
-$display_mode = 'cart';
+$display_mode = 'shoppingcart';
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 $smarty->assign('language', $_SESSION['language']);

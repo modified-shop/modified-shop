@@ -140,6 +140,7 @@ $breadcrumb->add(sprintf(NAVBAR_TITLE_3_ACCOUNT_HISTORY_INFO, (int)$_GET['order_
 require (DIR_WS_INCLUDES.'header.php');
 
 // include boxes
+$display_mode = 'account';
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 $from_history = preg_match("/page=/i", xtc_get_all_get_params());

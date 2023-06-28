@@ -84,6 +84,7 @@ $breadcrumb->add(NAVBAR_TITLE_2_ACCOUNT_DELETE, xtc_href_link(FILENAME_ACCOUNT_D
 require (DIR_WS_INCLUDES.'header.php');
 
 // include boxes
+$display_mode = 'account';
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 if ($messageStack->size('account_delete') > 0) {
