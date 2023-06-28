@@ -108,6 +108,7 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/listing_filter.html', $
                      ON p2c.products_id = p.products_id
                 JOIN ".TABLE_CATEGORIES." c 
                      ON c.categories_id = p2c.categories_id 
+                        AND c.categories_status = 1
                         ".CATEGORIES_CONDITIONS_C."
                 JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd 
                      ON cd.categories_id = p2c.categories_id
