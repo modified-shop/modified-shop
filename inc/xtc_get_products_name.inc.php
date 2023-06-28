@@ -26,13 +26,16 @@
       $language_id = $_SESSION['languages_id'];
     }
     
-    if (!isset($products_name_cache[$product_id][$language_id])) {  
+    if (!isset($products_name_cache[$product_id][$language_id])) {
+      $products_name_cache[$product_id][$language_id] = '';
       $product_query = xtDBquery("SELECT products_name 
                                     FROM " . TABLE_PRODUCTS_DESCRIPTION . " 
                                    WHERE products_id = '" . (int)$product_id . "' 
                                      AND language_id = '" . (int)$language_id . "'");
-      $product = xtc_db_fetch_array($product_query, true);
-      $products_name_cache[$product_id][$language_id] = $product['products_name'];
+      if (xtc_db_num_rows($product_query, true) > 0) {
+        $product = xtc_db_fetch_array($product_query, true);
+        $products_name_cache[$product_id][$language_id] = $product['products_name'];
+      }
     }
     
     return $products_name_cache[$product_id][$language_id];
