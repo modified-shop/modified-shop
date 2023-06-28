@@ -316,6 +316,11 @@
         }
       }
 
+      // signed
+      if ($this->signed > 0) {
+        $Service->signedForByRecipient['active'] = '1';
+      }
+
       // bulky
       if ($this->bulky > 0) {
         $Service->BulkyGoods['active'] = '1';

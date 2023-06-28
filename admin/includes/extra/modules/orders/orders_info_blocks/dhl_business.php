@@ -135,6 +135,14 @@
                 <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_BUSINESS_DROPPOINT; ?></td>
                 <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo xtc_draw_pull_down_menu('droppoint', 'checkbox', ((MODULE_DHL_BUSINESS_DROPPOINT == 'True') ? true : false), 'style="width:120px;"'); ?></td>
               </tr>
+              <tr class="dhl_expand dhl_toggle">
+                <td style="padding:5px;border-width: 0 0 1px 0;"><?php echo TEXT_DHL_BUSINESS_SIGNED; ?></td>
+                <td style="padding:5px;border-width: 0 1px 1px 0;"><?php echo xtc_draw_pull_down_menu('signed', 'checkbox', ((MODULE_DHL_BUSINESS_SIGNED == 'True') ? true : false), 'style="width:120px;"'); ?></td>
+                <td style="padding:5px;border-width: 0 0 1px 0;"></td>
+                <td style="padding:5px;border-width: 0 1px 1px 0;"></td>
+                <td style="padding:5px;border-width: 0 0 1px 0;"></td>
+                <td style="padding:5px;border-width: 0 0 1px 0;"></td>
+              </tr>
               <tr id="dhl_expand">
                 <td colspan="6" style="padding:5px;border-width: 0 0 0 0;">
                   <div style="text-align:center;font-weight:bold;">

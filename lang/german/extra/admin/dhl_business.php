@@ -36,6 +36,7 @@
   define('TEXT_DHL_BUSINESS_ENDORSEMENT', 'Vorausverf&uuml;gung:');
   define('TEXT_DHL_BUSINESS_DUTYPAID', 'Postal DDP:');
   define('TEXT_DHL_BUSINESS_DROPPOINT', 'Droppoint:');
+  define('TEXT_DHL_BUSINESS_SIGNED', 'Empf&auml;ngerunterschrift:');
 
   define('TEXT_DHL_BUSINESS_SHOW_MORE', '[mehr anzeigen]');
   define('TEXT_DHL_BUSINESS_SHOW_LESS', '[weniger anzeigen]');

@@ -60,6 +60,8 @@
   define('MODULE_DHL_BUSINESS_DUTYPAID_DESC', 'Die Deutsche Post und der Absender &uuml;bernehmen die Einfuhrabgaben anstelle des Empf&auml;ngers');
   define('MODULE_DHL_BUSINESS_DROPPOINT_TITLE', 'N&auml;chste Abgabestelle');
   define('MODULE_DHL_BUSINESS_DROPPOINT_DESC', 'Lieferung an eine Packstation, die der Adresse des Empf&auml;ngers der Sendung am n&auml;chsten liegt');
+  define('MODULE_DHL_BUSINESS_SIGNED_TITLE', 'Empf&auml;nger Unterschrift');
+  define('MODULE_DHL_BUSINESS_SIGNED_DESC', 'Soll die Lieferung vom Empf&auml;nger und nicht vom DHL Fahrer unterzeichnet werden?');
 
   define('MODULE_DHL_BUSINESS_COMPANY_TITLE', '<hr noshade>Kundendetails<br/>');
   define('MODULE_DHL_BUSINESS_COMPANY_DESC', 'Firma:');

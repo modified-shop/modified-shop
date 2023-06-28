@@ -60,6 +60,8 @@
   define('MODULE_DHL_BUSINESS_DUTYPAID_DESC', 'Postal Delivery Duty Paid Deutsche Post and sender handle import duties instead of consignee');
   define('MODULE_DHL_BUSINESS_DROPPOINT_TITLE', 'Closest Droppoint');
   define('MODULE_DHL_BUSINESS_DROPPOINT_DESC', 'Closest Droppoint Delivery to the droppoint closest to the address of the recipient of the shipment');
+  define('MODULE_DHL_BUSINESS_SIGNED_TITLE', 'Recipient Signature');
+  define('MODULE_DHL_BUSINESS_SIGNED_DESC', 'Set delivery should be signed by the recipient instead of the DHL driver as default');
 
   define('MODULE_DHL_BUSINESS_COMPANY_TITLE', '<hr noshade>Customer details<br/>');
   define('MODULE_DHL_BUSINESS_COMPANY_DESC', 'Company:');
