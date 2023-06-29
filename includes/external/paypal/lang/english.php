@@ -143,7 +143,7 @@ $lang_array = array(
   
   // template
   'TEXT_PAYPALINSTALLMENT_HEADING' => 'Pay easily in monthly installments',
-  'TEXT_PAYPALINSTALLMENT_DESCRIPTION' => 'You can choose your installment payment and the appropriate financing plan as part of the ordering process. Your application is completely online and will be completed in a few steps here in the shop.',
+  'TEXT_PAYPALINSTALLMENT_DESCRIPTION' => 'You can select payment by installments and the suitable financing plan during the ordering process. Your request will be completely handled online and concluded in a few steps here in the shop.',
 
   'TEXT_PAYPALINSTALLMENT_RATING_PLAN' => 'Financing from %s with %s Installments Powered by PayPal',
   'TEXT_PAYPALINSTALLMENT_RATING_PLAN_SHORT' => 'Financing from %s in the month with',
