@@ -47,7 +47,7 @@ define('MODULE_SHIPPING_DP_NUMBER_ZONES_DESC' , 'Number of zones to use');
 define('MODULE_SHIPPING_DP_DISPLAY_TITLE' , 'Enable Display');
 define('MODULE_SHIPPING_DP_DISPLAY_DESC' , 'Do you want to display, if shipping to destination is not possible or if shipping costs cannot be calculated?');
 
-if (defined('MODULE_SHIPPING_FREEAMOUNT_NUMBER_ZONES')) {
+if (defined('MODULE_SHIPPING_DP_NUMBER_ZONES')) {
   for ($module_shipping_dp_i = 1; $module_shipping_dp_i <= MODULE_SHIPPING_DP_NUMBER_ZONES; $module_shipping_dp_i ++) {
     define('MODULE_SHIPPING_DP_COUNTRIES_'.$module_shipping_dp_i.'_TITLE' , '<hr/>DP Zone '.$module_shipping_dp_i.' Countries');
     define('MODULE_SHIPPING_DP_COUNTRIES_'.$module_shipping_dp_i.'_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone '.$module_shipping_dp_i.' (Enter WORLD for the rest of the world.).');
