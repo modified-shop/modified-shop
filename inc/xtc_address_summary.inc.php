@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_address_summary.inc.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id$   
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -46,10 +46,15 @@
                                             FROM " . TABLE_ADDRESS_FORMAT . " 
                                            WHERE address_format_id = '" . $address['address_format_id'] . "'");
     $address_format = xtc_db_fetch_array($address_format_query);
-
-    $address_summary = $address_format['address_summary'];
-    eval("\$address = \"$address_summary\";");
+    
+    $address = $address_format['address_summary'];
+    preg_match_all('#\$([a-zA-Z0-9]+)#', $address, $matches, PREG_SET_ORDER);
+    foreach ($matches as $var) {
+      $var = compact($var);
+      foreach ($var as $k => $v) {
+        $address = str_replace('$'.$k, $v, $address);
+      }
+    }
 
     return $address;
   }
-?>
