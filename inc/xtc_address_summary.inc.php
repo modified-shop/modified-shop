@@ -48,10 +48,10 @@
     $address_format = xtc_db_fetch_array($address_format_query);
     
     $address = $address_format['address_summary'];
-    preg_match_all('#\$([a-zA-Z0-9]+)#', $address, $matches, PREG_SET_ORDER);
-    foreach ($matches as $var) {
-      $var = compact($var);
-      foreach ($var as $k => $v) {
+    preg_match_all('#\$([a-zA-Z0-9]+)#', $address, $matches);
+    if (isset($matches[1])) {
+      $matches = compact($matches[1]);
+      foreach ($matches as $k => $v) {
         $address = str_replace('$'.$k, $v, $address);
       }
     }
