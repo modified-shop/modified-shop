@@ -73,9 +73,15 @@
       $city = strtoupper($city);
       $country = strtoupper($country);
     }
-    
-    $fmt = $address_format['format'];
-    eval("\$address = \"$fmt\";");
+  
+    $address = $address_format['format'];
+    preg_match_all('#\$([a-zA-Z0-9]+)#', $address, $matches, PREG_SET_ORDER);
+    foreach ($matches as $var) {
+      $var = compact($var);
+      foreach ($var as $k => $v) {
+        $address = str_replace('$' . $k, $v, $address);
+      }
+    }
 
     if ( (ACCOUNT_COMPANY == 'true') && (xtc_not_null($company)) ) {
       $address = $company . $cr . $address;
@@ -85,4 +91,3 @@
 
     return $address;
   }
-?>
