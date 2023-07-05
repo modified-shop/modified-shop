@@ -199,7 +199,11 @@
   function getCheckoutGoogleAnalytics() {
     global $order;
 
-    if (count($order->products) > 0) {
+    if (isset($order->products)
+        && is_array($order->products)
+        && count($order->products) > 0
+        )
+    {
       $products_array = array();
       $products = $order->products;
       for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
@@ -222,7 +226,11 @@
   function getShippingGoogleAnalytics() {
     global $order;
 
-    if (count($order->products) > 0) {
+    if (isset($order->products)
+        && is_array($order->products)
+        && count($order->products) > 0
+        )
+    {
       $products_array = array();
       $products = $order->products;
       for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
@@ -246,7 +254,11 @@
   function getPaymentGoogleAnalytics() {
     global $order;
 
-    if (count($order->products) > 0) {
+    if (isset($order->products)
+        && is_array($order->products)
+        && count($order->products) > 0
+        )
+    {
       $products_array = array();
       $products = $order->products;
       for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
@@ -273,13 +285,18 @@
     require_once (DIR_WS_CLASSES . 'order.php');
     $order = new order($last_order);
 
-    $addItem = array();
-    $products = $order->products;
-    for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
-      $addItem[] = getItemDetailsGoogleAnalytics($products[$i]);
-    }
+    if (isset($order->products)
+        && is_array($order->products)
+        && count($order->products) > 0
+        )
+    {
+      $addItem = array();
+      $products = $order->products;
+      for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
+        $addItem[] = getItemDetailsGoogleAnalytics($products[$i]);
+      }
 
-    $addCode = "
+      $addCode = "
   gtag('event', 'purchase', {
     transaction_id: '".$order->info['orders_id']."',
     currency: '".$order->info['currency']."',
@@ -290,7 +307,8 @@
     ]
   });";
 
-    return $addCode;
+      return $addCode;
+    }
   }
 
 
