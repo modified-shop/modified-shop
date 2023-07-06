@@ -3090,14 +3090,13 @@ a.view_box.active {
 }
 .pagination_list ul li {
   padding: 0 0 0 0px; 
-  border-right: 1px solid #d9d9d9;
+  border-left: 1px solid #d9d9d9;
 }
-.pagination_list ul li:last-child {
-  border-right: none;
+.pagination_list ul li:first-child {
+  border-left: none;
 }
 .pagination_list ul li .current,
-.pagination_list ul li .listing_topscroll,
-.pagination_list ul li .listing_bottomscroll,
+.pagination_list ul li .icon,
 .pagination_list ul li a {
   display: inline-block;
   min-width:33px;
@@ -3118,15 +3117,15 @@ a.view_box.active {
 .pagination_list ul li:hover {
   background:#f5f5f5;
 }
-.pagination_list ul li .listing_topscroll,
-.pagination_list ul li .listing_bottomscroll {
+.pagination_list ul li.listing_topscroll,
+.pagination_list ul li.listing_bottomscroll {
   display:none;
   cursor:pointer;
 }
-.pagination_top .pagination_list ul li .listing_bottomscroll {
+.pagination_top .pagination_list ul li.listing_bottomscroll {
   display:block;
 }
-.pagination_bottom .pagination_list ul li .listing_topscroll {
+.pagination_bottom .pagination_list ul li.listing_topscroll {
   display:block;
 }
 /* 19. END pagination */
@@ -3145,7 +3144,7 @@ a.view_box.active {
   .filter_pagination_bar { flex-direction:row; }
 }
 
-.filter_pagination_bar .pagination_list ul li .listing_bottomscroll {
+.filter_pagination_bar .pagination_list ul li.listing_bottomscroll {
   display:block;
 }
 .filter_pagination_bar .pagination_text {
