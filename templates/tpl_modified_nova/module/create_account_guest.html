@@ -1,0 +1,107 @@
+{config_load file="$language/lang_$language.conf" section="create_account"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="create_account_guest"}
+<div class="create_account_guest">
+  <h1>{#heading_create_guest_account#}</h1>
+  {if $error_message}<div class="errormessage">{$error_message}</div>{/if}
+
+  {$FORM_ACTION}
+
+    <div class="flex_column_row">
+    
+      <div class="flex_2column_item">
+        <div class="contentbox">
+          <div class="subline">{#title_personal#} <span class="fields_required">({#text_must#})</span></div>
+    
+          {if $gender == '1'}
+            <div class="field_item_1"><label><span class="field_text">{#text_gender#}</span>{$INPUT_GENDER|asterisk}</label></div>
+          {/if}
+    
+          <div class="field_item_row">
+            <div class="field_item_2"><label><span class="field_text">{#text_firstname#}</span>{$INPUT_FIRSTNAME|asterisk}</label></div>
+            <div class="field_item_2"><label><span class="field_text">{#text_lastname#}</span>{$INPUT_LASTNAME|asterisk}</label></div>
+          </div>
+    
+          {if $birthdate == '1'}
+            <div class="field_item_1"><label><span class="field_text">{#text_birthdate#}</span>{$INPUT_DOB|asterisk}<span class="inputNote">{$TEXT_DOB_NOTE}</span></label></div>
+          {/if}
+    
+          <div class="field_item_1"><label><span class="field_text">{#text_email#}</span>{$INPUT_EMAIL|asterisk|replace:"type=\"text\"":"type=\"email\""}</label></div>
+          <div class="field_item_1"><label><span class="field_text">{#text_confirm_email#}</span>{$INPUT_CONFIRM_EMAIL|asterisk|replace:"type=\"text\"":"type=\"email\""}</label></div>
+          <div class="field_item_1"><label><span class="field_text">{#text_tel#}</span>{$INPUT_TEL|asterisk|replace:"type=\"text\"":"type=\"tel\""}</label></div>
+          <div class="field_item_1"><label><span class="field_text">{#text_fax#}</span>{$INPUT_FAX|replace:"type=\"text\"":"type=\"tel\""}</label></div>
+    
+          {if $company == '1'}
+            <br />
+            <div class="subline">{#title_company#}</div>
+            <div class="field_item_1"><label><span class="field_text">{#text_company#}</span>{$INPUT_COMPANY}</label></div>
+            {if $vat == '1'}
+              <div class="field_item_1"><label><span class="field_text">{#text_ustid#}</span>{$INPUT_VAT}<span class="inputNote">{$TEXT_VAT_NOTE}</span></label></div>
+            {/if}      
+          {/if}
+    
+        </div>
+      </div>
+  
+      <div class="flex_2column_item">
+        <div class="contentbox cf">
+          <div class="subline">{#title_address#}</div>
+          <div class="field_item_1"><label><span class="field_text">{#text_street#}</span>{$INPUT_STREET|asterisk}</label></div>
+    
+          {if $suburb == '1'}
+            <div class="field_item_1"><label><span class="field_text">{#text_suburb#}</span>{$INPUT_SUBURB}</label></div>
+          {/if}
+    
+          <div class="field_item_row">
+            <div class="field_item_3"><label><span class="field_text">{#text_code#}</span>{$INPUT_CODE|asterisk}</label></div>
+            <div class="field_item_4"><label><span class="field_text">{#text_city#}</span>{$INPUT_CITY|asterisk}</label></div>
+          </div>
+    
+          <div class="field_item_1"><label for="country"><span class="field_text">{#text_country#}</span>{$SELECT_COUNTRY|asterisk}</label></div>
+    
+          {if $state == '1'}
+            <div class="field_item_1"{if $display_state}{$display_state}{/if}><label for="state"><span class="field_text">{#text_state#}</span>{$INPUT_STATE|asterisk}</label></div>
+          {/if}
+    
+          {if $VVIMG}
+            <div class="field_item_1 mt_20 vvcode_img"><label><span class="field_text">{#text_sec_code#}</span>{$VVIMG|replace:"<img":"<img alt=\"{#text_sec_code#}\""}</label></div>
+          {/if}
+    
+          {if $INPUT_VVCODE}
+            <div class="field_item_1 vvcode_sec"><label><span class="field_text">{#text_sec_code#}</span>{$INPUT_VVCODE}<span class="inputRequirement">{$smarty.const.TEXT_ICON_ASTERISK}</span></label></div>
+          {/if}
+    
+          {if $CHECKBOX_NEWSLETTER}
+            <div class="cus_check mt_20">
+              {$CHECKBOX_NEWSLETTER}
+              <label for="newsletter">{#text_newsletter#}</label>
+            </div>
+          {/if}
+    
+          {if "SIGN_CONDITIONS_ON_CHECKOUT"|defined}
+            <div class="cus_check mt_20">
+              {if $PRIVACY_CHECKBOX}{$PRIVACY_CHECKBOX}{/if}
+              <label for="privacy"><strong>{if $PRIVACY_CHECKBOX}{#text_privacy_accept#}{else}{#text_privacy_notice#}{/if}</strong> {$PRIVACY_LINK}</label>
+            </div>
+          {else}
+            {if $PRIVACY_CHECKBOX}
+              <div class="cus_check mt_20">
+                {$PRIVACY_CHECKBOX}
+                <label for="privacy"><strong>{#text_privacy_accept#}</strong> {$PRIVACY_LINK}</label>
+              </div>
+            {/if}
+          {/if}
+    
+        </div>
+      </div>
+  
+    </div>
+  
+    <div class="button_row">
+      <div class="br_right">
+        <div class="br_btn_1">{$BUTTON_SUBMIT_SAVE}</div>
+      </div>
+    </div>
+
+  {$FORM_END}
+</div>

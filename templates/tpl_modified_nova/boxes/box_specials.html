@@ -1,0 +1,24 @@
+{if isset($BOX_CONTENT) && count($BOX_CONTENT) > 0}
+  {config_load file="$language/lang_$language.conf" section="boxes"}
+  {config_load file="$language/lang_$language.conf" section="specials"}
+  {config_load file="lang_`$language`.custom"}
+  {config_load file="lang_`$language`.section" section="boxes"}
+  <div class="box_specials my_50">
+
+    <div class="box_products_head">
+      <div class="title">{#heading_specials#}</div>
+      <div class="more"><a href="{$SPECIALS_LINK}" title="{#heading_specials#}">{#show_all#}<i class="fa-solid fa-arrow-right-long ml_5"></i></a></div>
+    </div>
+
+    <div class="splide splide_size1" aria-label="{#heading_specials#}">
+      <div class="splide__track">
+		    <div class="splide__list">
+          {foreach name=aussen item=module_data from=$BOX_CONTENT}
+            <div class="splide__slide">{include file="module/includes/products_include_box.html"}</div>
+          {/foreach}
+		    </div>
+      </div>
+    </div>    
+
+  </div>
+{/if}

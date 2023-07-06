@@ -1,0 +1,193 @@
+{config_load file="$language/lang_$language.conf" section="account_history_info"}
+{config_load file="$language/lang_$language.conf" section="print_order"}
+{config_load file="$language/lang_$language.conf" section="product_info"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="account_history_info"}
+<div class="account_history_info">
+  <h1>{#text_oid#}{$ORDER_NUMBER} - {$ORDER_STATUS}</h1>
+
+  <div class="flex_account_row">
+
+    <div class="flex_account_col_1">
+      {if isset($smarty.session.customer_id)}
+        {include file="module/account_navigation.html"}
+      {/if}
+    </div>
+    <div class="flex_account_col_2">
+
+      {if $error_message}<div class="errormessage">{$error_message}</div>{/if}
+      {if $success_message}<div class="infomessage">{$success_message}</div>{/if}      
+
+      <div class="contentbox">
+        <div class="subline">{#text_date#} {$ORDER_DATE}</div>      
+
+        <div class="account_history_box_row">
+          {if $DELIVERY_LABEL}
+            <div class="account_history_box">
+              <p class="my_5"><strong>{if isset($SHIPPING_CLASS) && strpos($SHIPPING_CLASS, 'selfpickup')}{#text_pickup_address#}{else}{#text_shipping_address#}{/if}</strong></p>
+              {$DELIVERY_LABEL}
+            </div>
+          {/if}
+
+          {if $BILLING_LABEL}
+            <div class="account_history_box">
+              <p class="my_5"><strong>{#text_payment_address#}</strong></p>
+              {$BILLING_LABEL}
+            </div>
+          {/if}      
+
+          {if $SHIPPING_METHOD != ''}
+            <div class="account_history_box">
+              <p class="my_5"><strong>{#text_shipping_method#}</strong></p>
+              {$SHIPPING_METHOD}
+            </div>
+          {/if}
+
+          {if $PAYMENT_METHOD}
+            <div class="account_history_box">
+              <p class="my_5"><strong>{#text_payment_method#}</strong></p>
+              {$PAYMENT_METHOD}
+            </div>
+          {/if}          
+
+          {if is_array($PAYMENT_INFO) && count($PAYMENT_INFO) > 0}
+            <div class="account_history_box">
+              <p class="my_5"><strong>{#text_payment_info#}</strong></p>
+              {foreach name=aussen item=data from=$PAYMENT_INFO}
+                <div>{$data.title|stripslashes}</div>
+                <table class="paymentinfotable {$data.class}">
+                  {foreach name=aussen item=info from=$data.fields}
+                    <tr>
+                      {if $info.title != ''}<td>{$info.title|stripslashes}</td>{/if}
+                      {if $info.field != ''}<td>{$info.field|stripslashes}</td>{/if}
+                    </tr>      
+                  {/foreach}
+                </table>
+              {/foreach}
+            </div>
+          {/if} 
+        </div>      
+      
+        <div class="account_history_box_row">
+          <div class="account_history_box">
+            <p class="my_5"><strong>{#title_history#}:</strong></p>
+            {$HISTORY_BLOCK}
+          </div>      
+       
+          {if count($ORDER_TRACKING) > 0}
+            <div class="account_history_box">
+              <p class="my_5"><strong>{#label_tracking#}</strong></p>
+              {foreach name=aussen item=tracking_data from=$ORDER_TRACKING}
+                <div><a target="_blank" href="{$tracking_data.tracking_link}">{$tracking_data.parcel_id}</a></div>
+              {/foreach}
+            </div>
+          {/if} 
+        
+          {if $ORDER_COMMENTS != ''}
+            <div class="account_history_box">
+              <p class="my_5"><strong>{#text_comments#}</strong></p>
+              <p class="my_5">{$ORDER_COMMENTS}</p>
+            </div>
+          {/if}      
+        </div>
+      
+        <br />   
+        <div class="orderflex">  
+      
+          <div class="orderflex_row orderflex_row_header">
+            <div class="of_header_col_flex">{$smarty.const.HEADER_ARTICLE}</div>
+            <div class="of_header_col_summary">
+              <div class="of_header_col_qty">{$smarty.const.HEADER_QTY}</div>
+              <div class="of_header_col_total">{$smarty.const.HEADER_TOTAL}</div>
+            </div>
+          </div> 
+
+          {foreach name=aussen item=order_values from=$order_data}    
+            <div class="orderflex_row">
+      
+              <div class="of_col_flex">
+                <div class="of_productname">
+                  <strong>{$order_values.PRODUCTS_NAME}</strong>
+                </div>        
+                         
+                {if $order_values.PRODUCTS_MODEL || ($order_values.PRODUCTS_SHIPPING_TIME != '')}
+                  <div class="of_inforows">
+                    {if $order_values.PRODUCTS_MODEL}<div class="of_infoline">{$smarty.const.HEADER_MODEL}: {$order_values.PRODUCTS_MODEL}{$order_values.PRODUCTS_ATTRIBUTES_MODEL|replace:"<br />":" - "}</div>{/if}
+                    {if $order_values.PRODUCTS_SHIPPING_TIME != ''}<div class="of_infoline">{$smarty.const.SHIPPING_TIME} {$order_values.PRODUCTS_SHIPPING_TIME}</div>{/if}
+                  </div>
+                {/if}
+                
+                {if sizeof($order_values.PRODUCTS_ATTRIBUTES_ARRAY) > 0}
+                  <ul class="of_attributes">
+                    {foreach key=a_data item=attrib_data from=$order_values.PRODUCTS_ATTRIBUTES_ARRAY}
+                      <li>{$attrib_data.option}: {$attrib_data.value}</li>
+                    {/foreach}
+                  </ul>
+                {/if}
+
+              </div>
+    
+              <div class="of_col_summary">
+                <div class="of_col_qty">
+                  <div class="of_col_qty_label">{$smarty.const.HEADER_QTY}</div>
+                  <div class="of_col_qty_inner">
+                    <div class="of_quantity_field">{$order_values.PRODUCTS_QTY}</div>
+                    <div class="of_quantity_update">
+                      {if isset($order_values.BUTTON_CART_EXPRESS)}{$order_values.BUTTON_CART_EXPRESS}{/if}
+                      {$order_values.BUTTON_CART}
+                    </div>            
+                  </div>
+                </div>
+                <div class="of_col_total">
+                  <div class="of_col_total_inner">
+                    {$order_values.PRODUCTS_PRICE}
+                    {if $order_values.PRODUCTS_QTY > 1}
+                      <div class="of_col_total_singleprice">{#order_text_each#} {$order_values.PRODUCTS_SINGLE_PRICE}</div>
+                    {/if}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          {/foreach}
+
+          <div class="ordersum_nocart">
+            {if sizeof($order_total) > 0}
+              <div class="ordertotal_block">
+                {foreach name=aussen item=order_total_values from=$order_total}
+                  <div class="ordertotal_row{if $order_total_values.TEXT|strpos:"-"} ot_red{/if}"">
+                    <div class="ot_width_1">{$order_total_values.TITLE}</div>
+                    <div class="ot_width_2"><strong>{$order_total_values.TEXT}</strong></div>
+                  </div>
+                {/foreach}
+              </div>
+            {/if}
+          </div>    
+
+        </div>      
+      </div>    
+      
+      {if $downloads_content != ''}
+        <br />
+        {$downloads_content}
+      {/if}
+
+      <br />
+      <div class="button_row">
+        <div class="br_left">
+          <div class="br_btn_1">{$BUTTON_PRINT_LAYER}</div>
+        </div>
+        <div class="br_right">
+          <div class="br_btn_1">{$BUTTON_CART}</div>
+        </div>
+        {if isset($BUTTON_CART_EXPRESS)}
+          <div class="br_right">
+            <div class="br_btn_1">{$BUTTON_CART_EXPRESS}</div>
+          </div>
+        {/if}
+      </div>
+
+    </div>
+    
+  </div>    
+</div>

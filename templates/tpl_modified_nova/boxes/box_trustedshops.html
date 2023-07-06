@@ -1,0 +1,6 @@
+{if $STICKER_CODE != ''}
+  {config_load file="$language/lang_$language.conf" section="boxes"}
+  {config_load file="lang_`$language`.custom"}
+
+  {$STICKER_CODE}
+{/if}

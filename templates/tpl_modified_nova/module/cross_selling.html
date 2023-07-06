@@ -1,0 +1,27 @@
+{if isset($module_content)}
+  {config_load file="$language/lang_$language.conf" section="cross_selling"}
+  {config_load file="$language/lang_$language.conf" section="index"}
+  {config_load file="lang_`$language`.custom"}
+  {config_load file="lang_`$language`.section" section="cross_selling"}
+  <div class="cross_selling">
+    {foreach name=aussen item=products_data from=$module_content}
+
+      {if $products_data.GROUP != ''}
+        <div class="subline border_0 mt_50 mb_0">{$products_data.GROUP}</div>
+      {else}
+        <div class="subline border_0 mt_50 mb_0">{#heading_text#}</div>
+      {/if}
+  
+      <div class="splide splide_size1" aria-label="{if $products_data.GROUP != ''}{$products_data.GROUP}{else}{#heading_text#}{/if}">
+        <div class="splide__track">
+  		    <div class="splide__list">
+            {foreach item=module_data from=$products_data.PRODUCTS}
+              <div class="splide__slide">{include file="module/includes/products_include_info.html"}</div>
+            {/foreach}
+  		    </div>
+        </div>
+      </div> 
+
+    {/foreach}
+  </div>
+{/if}

@@ -1,0 +1,112 @@
+{config_load file="$language/lang_$language.conf" section="account_checkout_express"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="account_checkout_express"}
+<div class="account_checkout_express">
+
+  <h1>{#heading_checkout_express#}</h1>
+
+  <div class="flex_account_row">
+
+    <div class="flex_account_col_1">
+      {if isset($smarty.session.customer_id)}
+        {include file="module/account_navigation.html"}
+      {/if}
+    </div>
+
+    <div class="flex_account_col_2">
+
+      <p>{#text_checkout_express_info#}</p>
+      {$FORM_ACTION}
+
+        <div class="contentbox">
+          <div class="subline">{#heading_shipping#}</div>
+          {if isset($module_shipping_error)}<div class="errormessage small mb_10">{$module_shipping_error}</div>{/if}
+          <div class="action_row mt_10">        
+            {foreach name=aussen item=shipping from=$module_shipping}
+              <div class="action_item_full">
+                <div class="action_item_inner_plain">
+                  <div class="cus_radio">
+                    {$shipping.FIELD}
+                    <label for="shipping_{$shipping.ID}">{$shipping.NAME}</label>
+                  </div>
+                </div>
+              </div>
+            {/foreach}
+          </div>
+        </div>
+        
+        <div class="contentbox">
+          <div class="subline">{#heading_payment#}</div>
+          {if isset($module_payment_error)}<div class="errormessage small mb_10">{$module_payment_error}</div>{/if}
+          <div class="action_row mt_10">        
+            {foreach name=aussen item=payment from=$module_payment}
+              <div class="action_item_full">
+                <div class="action_item_inner_plain">
+                  <div class="cus_radio">
+                    {$payment.FIELD}
+                    <label for="payment_{$payment.ID}">{$payment.NAME}</label>
+                  </div>
+                </div>
+              </div>
+            {/foreach}
+          </div>
+        </div>
+        
+        <div class="contentbox">
+          <div class="subline">{#heading_shipping_address#}</div>
+          {if isset($module_shipping_address_error)}<div class="errormessage small mb_10">{$module_shipping_address_error}</div>{/if}
+          <p>{#text_choose_shipping_address#}</p>
+          <div class="action_row mt_10">
+            {foreach name=aussen item=shipping_address from=$module_shipping_address}
+              <div class="action_item_full">
+                <div class="action_item_inner_plain bordered">
+                  <div class="cus_radio">
+                    {$shipping_address.FIELD}
+                    <label for="shipping_address_{$shipping_address.ID}">
+                      <span class="title">{$shipping_address.NAME}</span>
+                      <span class="content">{$shipping_address.ADDRESS}</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            {/foreach}
+          </div>
+        </div>
+        
+        <div class="contentbox">
+          <div class="subline">{#heading_payment_address#}</div>
+          {if isset($module_payment_address_error)}<div class="errormessage small mb_10">{$module_payment_address_error}</div>{/if}
+          <p>{#text_choose_payment_address#}</p>
+          <div class="action_row mt_10">
+            {foreach name=aussen item=payment_address from=$module_payment_address}
+              <div class="action_item_full">
+                <div class="action_item_inner_plain bordered">
+                  <div class="cus_radio">
+                    {$payment_address.FIELD}
+                    <label for="payment_address_{$payment_address.ID}">
+                      <span class="title">{$payment_address.NAME}</span>
+                      <span class="content">{$payment_address.ADDRESS}</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            {/foreach}
+          </div>
+        </div>
+        
+        <div class="button_row">
+{*
+          <div class="br_left">
+            <div class="br_btn_1">{$BUTTON_BACK}</div>
+          </div>
+*}
+          <div class="br_right">
+            <div class="br_btn_1">{$BUTTON_SUBMIT_UPDATE}</div>
+          </div>
+        </div>
+
+      {$FORM_END}
+      
+    </div>
+  </div>
+</div>       

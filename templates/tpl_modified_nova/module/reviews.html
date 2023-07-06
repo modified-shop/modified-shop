@@ -1,0 +1,60 @@
+{config_load file="$language/lang_$language.conf" section="reviews"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="reviews"}
+<div class="reviews">
+
+  <h1>{#heading_reviews#}</h1>
+   
+  {if isset($REVIEWS_NOTE)}
+    <div class="font_small my_20">{$REVIEWS_NOTE|replace:"iframe":"arrow iframe"}</div>
+  {/if}
+
+  {if $error_message}<div class="errormessage">{$error_message}</div>{/if}
+  {if $success_message}<div class="infomessage">{$success_message}</div>{/if}
+
+  {foreach name=aussen item=module_data from=$module_content}
+    <div class="pr_reviews">
+    
+      <div class="pr_reviews_image_small">
+        <div class="pr_reviews_image_inner">
+          <div class="prod_image">      
+            {if $module_data.PRODUCTS_IMAGE != ''}
+              <a href="{$module_data.PRODUCTS_LINK}">
+                {if $smarty.const.PICTURESET_ACTIVE === true}
+                  <img class="lazyload" data-src="{$module_data.PRODUCTS_IMAGE|replace:"thumbnail_images":"midi_images"}" alt="{$module_data.PRODUCTS_NAME|onlytext}" title="{$module_data.PRODUCTS_NAME|onlytext}" />
+                {else}
+                  <img class="lazyload" data-src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" title="{$module_data.PRODUCTS_NAME|onlytext}" />
+                {/if}            
+              </a>
+            {/if}
+          </div>
+        </div>
+      </div>              
+
+      <div class="pr_reviews_content"> 
+        <div class="reviewrow_full">
+          <div class="reviewrow_full_head">
+            <strong>{#text_rating#}</strong>
+            {if isset($module_data.RATING_VOTE)}
+              <span class="rating_icons"><i class="fa-solid fa-star{if $module_data.RATING_VOTE >= 1} full{/if}"></i><i class="fa-solid fa-star{if $module_data.RATING_VOTE >= 2} full{/if}"></i><i class="fa-solid fa-star{if $module_data.RATING_VOTE >= 3} full{/if}"></i><i class="fa-solid fa-star{if $module_data.RATING_VOTE >= 4} full{/if}"></i><i class="fa-solid fa-star{if $module_data.RATING_VOTE >= 5} full{/if}"></i></span>
+            {else}
+              {$module_data.RATING|replace:".gif":".png"}
+            {/if}
+            <span class="seperator">|</span> <strong>{#text_author#}</strong> {$module_data.AUTHOR}
+            <span class="seperator">|</span> <strong>{#title_date#}:</strong> {$module_data.DATE}
+          </div>
+          <div class="reviewrow_full_content">
+            <h3><a href="{$module_data.PRODUCTS_LINK}">{$module_data.PRODUCTS_NAME}</a></h3>
+            <div class="reviewrow_full_content_title"><strong>{#text_text#}</strong></div>
+           {$module_data.TEXT_PLAIN|onlytext}
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  {/foreach}  
+  
+  {$PAGINATION}
+
+</div>

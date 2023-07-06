@@ -1,0 +1,33 @@
+{config_load file="$language/lang_$language.conf" section="sitemap"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="sitemap"}
+{if isset($herror)}<div class="errormessage">{$herror}</div>{/if}
+{if isset($module_content)}
+  <div class="sitemap">
+
+    {if is_array($module_content)}
+      <div class="sitemap_standard cf">
+        {foreach name=aussen item=module_data from=$module_content}
+          <ul class="nocolumnbreak cf">
+            <li class="sitemap_header"><a href="{$module_data.CAT_LINK}">{$module_data.CAT_NAME}</a>
+              {if $module_data.SCATS|@sizeof != 0}
+                <ul>
+                  {foreach key=key_data item=item_data from=$module_data.SCATS}
+                    <li><a href="{$item_data.link}">{$item_data.text}</a></li>
+                  {/foreach}
+                </ul>
+              {/if}
+            </li>
+          </ul>
+        {/foreach}
+      </div>
+    {else}
+      <div class="sitemaplist cf">
+        <ul class="sitemapcat cf">
+          {$module_content|replace:"<div class=\"mega_menu\">":""|replace:"</div>":""}
+        </ul>
+      </div>
+    {/if}
+
+  </div>
+{/if}

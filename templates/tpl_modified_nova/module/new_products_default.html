@@ -1,0 +1,22 @@
+{if isset($module_content)}
+  {config_load file="$language/lang_$language.conf" section="new_products"}
+  {config_load file="$language/lang_$language.conf" section="index"}
+  {config_load file="lang_`$language`.custom"}
+  {config_load file="lang_`$language`.section" section="new_products"}
+  <div class="new_products_default my_50">
+
+    <div class="box_products_head">
+      <div class="title">{if #heading_text_top# != ''}{#heading_text_top#}{else}{#heading_text#}{/if}</div>
+    </div>
+
+    <div class="splide splide_size1" aria-label="{if #heading_text_top# != ''}{#heading_text_top#}{else}{#heading_text#}{/if}">
+      <div class="splide__track">
+		    <div class="splide__list">
+          {include file="module/includes/products_include_listing.html"}
+		    </div>
+      </div>
+    </div> 
+
+  </div>
+
+{/if}

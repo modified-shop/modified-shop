@@ -1,0 +1,52 @@
+{config_load file="$language/lang_$language.conf" section="advanced_search"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="advanced_search"}
+<div class="advanced_search">
+
+  <h1>{#heading_search#}</h1>
+
+  {if $error_message}<div class="errormessage">{$error_message}</div>{/if}
+
+  {$FORM_ACTION}
+    <div class="flex_column_row">
+      <div class="flex_2column_item">
+        <div class="contentbox">
+          <div class="field_item_1"><label><span class="field_text">{#title_keywords#}</span>{$INPUT_KEYWORDS}</label></div>
+          <div class="font_midi mt_10"><a href="{$HELP_LINK}" class="arrow {if $smarty.const.TPL_POPUP_CONTENT_LINK_CLASS}{$smarty.const.TPL_POPUP_CONTENT_LINK_CLASS}{else}{$smarty.const.POPUP_CONTENT_LINK_CLASS}{/if}" title="{if $smarty.const.TEXT_LINK_TITLE_INFORMATION}{$smarty.const.TEXT_LINK_TITLE_INFORMATION}{else}Information{/if}">{#text_help#}</a></div>
+        </div>
+      </div>
+      <div class="flex_2column_item">
+        <div class="contentbox">
+          <div class="field_item_1"><label><span class="field_text">{#text_categories#}</span>{$SELECT_CATEGORIES}</label></div>
+          <div class="cus_check font_midi mt_10">
+            {$ENTRY_SUBCAT|replace:"name=":"id=\"inc_subcat\" name="}
+            <label for="inc_subcat">{#text_subkategories#}</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex_column_row">
+      <div class="flex_2column_item">
+        <div class="contentbox">
+          <div class="field_item_1"><label><span class="field_text">{#text_manufacturer#}</span>{$SELECT_MANUFACTURERS}</label></div>
+        </div>
+      </div>
+      <div class="flex_2column_item">
+        <div class="contentbox">
+          <div class="field_item_row">
+            <div class="field_item_2"><label><span class="field_text">{#text_min#}</span>{$SELECT_PFROM}</label></div>
+            <div class="field_item_2"><label><span class="field_text">{#text_max#}</span>{$SELECT_PTO}</label></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="button_row">
+      <div class="br_right">
+        <div class="br_btn_1">{$BUTTON_SUBMIT}</div>
+      </div>
+    </div>
+  {$FORM_END}
+
+</div>

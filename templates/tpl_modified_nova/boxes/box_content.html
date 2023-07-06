@@ -1,0 +1,13 @@
+{if isset($BOX_CONTENT) && $BOX_CONTENT != ''}
+  {config_load file="$language/lang_$language.conf" section="boxes"}
+  {config_load file="lang_`$language`.custom"}
+  <div class="content_box">
+    <div class="content_box_header">{#heading_content#}</div>
+    <ul class="content_box_list">
+      {$BOX_CONTENT}
+      {if "MODULE_COOKIE_CONSENT_STATUS"|defined && $smarty.const.MODULE_COOKIE_CONSENT_STATUS == 'true'}
+        <li class="level1"><a href="javascript:;" trigger-cookie-consent-panel="">{$smarty.const.TEXT_COOKIE_CONSENT_LABEL_CPC_HEADING}</a></li>
+      {/if}
+    </ul>
+  </div>
+{/if}

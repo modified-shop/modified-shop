@@ -1,0 +1,34 @@
+            {if $price_data.PRODUCTS_PRICE_FLAG == 'Special' || $price_data.PRODUCTS_PRICE_FLAG == 'SpecialDiscount'}
+              {* START Produkt Sonderpreis Kurzform mit Ausgabe #Sonderpreis# *}
+              <span class="new_price">
+                <span class="small_price">{#special_price#}{$price_data.PRODUCTS_PRICE_FROM}</span> <span class="value_price">{$price_data.PRODUCTS_PRICE_SPECIAL_PRICE}</span>
+              </span>              
+              <span class="save_price">
+                {$price_data.PRODUCTS_PRICE_SAVE_PERCENT}%
+              </span>
+              {* ENDE Produkt Sonderpreis Kurzform mit Ausgabe #Sonderpreis# *}
+            {elseif $price_data.PRODUCTS_PRICE_FLAG == 'SpecialGraduated'}
+              {if $price_data.PRODUCTS_PRICE_UVP != ''} 
+                {* START Produkt UVP Preis mit Ausgabe Ihr Preis, UVP *}
+                <span class="uvp_price">
+                  <span class="small_price">{$smarty.const.YOUR_PRICE}</span> <span class="value_price">{$price_data.PRODUCTS_PRICE_SPECIAL_PRICE}</span>
+                </span>
+                {* ENDE Produkt UVP Preis mit Ausgabe Ihr Preis, UVP *}
+              {else}
+                {* START Produkt Staffelpreis mit Ausgabe ab Preis, Stückpreis *}
+                <span class="graduated_price">
+                  <span class="small_price">{$smarty.const.FROM}</span> <span class="value_price">{$price_data.PRODUCTS_PRICE_OLD_PRICE}</span>
+                </span>
+                <span class="item_price{if $module_data.PRODUCTS_VPE} with_vpe{/if}"><span class="small_price">{$smarty.const.UNIT_PRICE}</span> <span class="value_price">{$price_data.PRODUCTS_PRICE_SPECIAL_PRICE}</span></span>
+                {* ENDE Produkt Staffelpreis mit Ausgabe ab Preis, Stückpreis *}
+              {/if}
+            {elseif $price_data.PRODUCTS_PRICE_FLAG == 'NotAllowed'}
+              <span class="no_price">{$price_data.PRODUCTS_PRICE_NOT_ALLOWED}</span>
+            {else}
+              {* START Produkt Standardpreis mit Ausgabe ab Preis *}
+              <span class="standard_price">
+                {if $price_data.PRODUCTS_PRICE_FROM != ''}<span class="small_price">{$price_data.PRODUCTS_PRICE_FROM}</span>{/if}
+                <span class="value_price">{$price_data.PRODUCTS_PRICE_STANDARD_PRICE}</span>
+              </span>
+              {* ENDE Produkt Standardpreis mit Ausgabe ab Preis *}
+            {/if}

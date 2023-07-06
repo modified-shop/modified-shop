@@ -1,0 +1,33 @@
+
+{if $GENDER == 'm'}Sehr geehrter Herr{elseif $GENDER == 'f'}Sehr geehrte Frau{else}Hallo{/if} {$NAME},
+
+Sie haben soeben Ihr Kundenkonto erfolgreich erstellt.
+
+Als registrierter Kunde haben Sie folgende Vorteile in unserem Shop:
+
+-Kundenwarenkorb - Jeder Artikel bleibt registriert bis Sie zur Kasse gehen, oder die Produkte aus dem Warenkorb entfernen.
+-Adressbuch - Wir können jetzt die Produkte zu der von Ihnen ausgesuchten Adresse senden. Der perfekte Weg ein Geburtstagsgeschenk zu versenden.
+-Vorherige Bestellungen - Sie können jederzeit Ihre vorherigen Bestellungen überprüfen.
+-Meinungen über Produkte - Teilen Sie Ihre Meinung zu unseren Produkten mit anderen Kunden.
+
+Achtung: Diese E-Mail-Adresse wurde uns von einem Kunden bekannt gegeben. Falls Sie sich nicht angemeldet haben, senden Sie bitte eine E-Mail an: {$content.MAIL_REPLY_ADDRESS}
+
+{if $SEND_GIFT == true}
+Als kleines Willkommensgeschenk senden wir Ihnen einen Gutschein über: {$GIFT_AMMOUNT}
+
+Ihr persönlicher Gutscheincode lautet {$GIFT_CODE}. Sie können diese Gutschrift an der Kasse während des Bestellvorganges verbuchen.
+
+Um den Gutschein einzulösen verwenden Sie bitte den folgenden link {$GIFT_LINK}.
+{/if}
+
+{if $SEND_COUPON == true}
+Als kleines Willkommensgeschenk senden wir Ihnen einen Kupon.
+
+Kuponbeschreibung: {$COUPON_DESC}
+ 
+Geben Sie einfach Ihren persönlichen Code {$COUPON_CODE} während des Bezahlvorganges ein.
+{/if}
+
+Falls Sie Fragen zu unserem Kunden-Service haben, wenden Sie sich bitte an: {$content.MAIL_REPLY_ADDRESS}
+
+[SIGNATUR]

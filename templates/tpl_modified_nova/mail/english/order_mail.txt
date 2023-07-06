@@ -1,0 +1,82 @@
+{config_load file="$language/lang_$language.conf" section="duty_info"} 
+{$address_label_customer}
+
+{if $SHIPPING_METHOD}Shippingmethod: {$SHIPPING_METHOD}
+{/if}
+{if $PAYMENT_METHOD}Paymentmethod: {$PAYMENT_METHOD}
+{/if}
+Order No.: {$oID}
+Date: {$DATE}
+{if $csID}Customer ID: {$csID}
+{/if}
+Your e-mail-address: {$EMAIL}
+{if $vatID}Your VAT ID No.: {$vatID}
+{/if}
+----------------------------------------------------------------------
+
+
+{if $GENDER == 'm'}Dear Mr.{elseif $GENDER == 'f'}Dear Ms./Mrs.{else}Hello{/if} {$NAME},
+
+thank you for your order.
+
+{$PAYMENT_INFO_TXT}
+
+{if isset($NEW_PASSWORD) && $NEW_PASSWORD != ''}
+Your Account was protected with a password.
+You can change your password with this link: {$NEW_PASSWORD}
+{/if}
+
+{if $COMMENTS}
+Your Comments:
+{$COMMENTS}
+{/if}
+
+Your ordered following products
+----------------------------------------------------------------------
+{foreach name=aussen item=order_values from=$order_data} 
+{$order_values.PRODUCTS_QTY} x {$order_values.PRODUCTS_NAME} {$order_values.PRODUCTS_PRICE}
+Prod. No. {$order_values.PRODUCTS_MODEL}{$order_values.PRODUCTS_ATTRIBUTES_MODEL}
+{if $order_values.PRODUCTS_ORDER_DESCRIPTION != ''}{$order_values.PRODUCTS_ORDER_DESCRIPTION}
+{/if}
+{if $order_values.PRODUCTS_SHIPPING_TIME != ''}Shipping time: {$order_values.PRODUCTS_SHIPPING_TIME}
+{/if}
+{if $order_values.PRODUCTS_ATTRIBUTES != ''}{$order_values.PRODUCTS_ATTRIBUTES}
+{/if}
+
+{/foreach}
+
+{foreach name=aussen item=order_total_values from=$order_total}
+{$order_total_values.TITLE}{$order_total_values.TEXT}
+{/foreach}
+
+{$downloads_content_txt}
+
+{if $address_label_payment != $address_label_shipping}
+{if isset($SHIPPING_CLASS) && strpos($SHIPPING_CLASS, 'selfpickup')}Pickup address
+{else}Shipping address
+{/if} 
+----------------------------------------------------------------------
+{$address_label_shipping}{/if}
+
+{if $address_label_payment}
+{if $address_label_payment != $address_label_shipping}Payment address
+{else}Payment-/Shipping address
+{/if}
+----------------------------------------------------------------------
+{$address_label_payment}
+{/if}
+
+{if $DELIVERY_DUTY_INFO != ''}
+
+----------------------------------------------------------------------
+{#text_duty_info#}
+----------------------------------------------------------------------
+{/if}
+
+[SIGNATUR]
+
+{$REVOCATION_TXT}
+
+{$AGB_TXT}
+
+{$PRIVACY_POLICY_TXT}

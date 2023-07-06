@@ -1,0 +1,20 @@
+{config_load file="$language/lang_$language.conf" section="ssl_check"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="ssl_check"}
+<div class="ssl_check">
+  <h1>{#heading_ssl_check#}</h1>
+
+  <div class="mb_20">
+    <p class="external_links">{#text_information#}</p>
+
+    <div class="subline mt_30">{#title_infobox#}</div>
+    <p>{#text_infobox#}</p>
+  </div>
+  
+  <div class="button_row">
+    <div class="br_right">
+      <div class="br_btn_1">{$BUTTON_CONTINUE}</div>
+    </div>
+  </div>
+  
+</div>  

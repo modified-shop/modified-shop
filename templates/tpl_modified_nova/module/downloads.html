@@ -1,0 +1,83 @@
+{if $dl != ''}
+  {config_load file="$language/lang_$language.conf" section="downloads_module"}
+  {config_load file="$language/lang_$language.conf" section="login"}
+  {config_load file="lang_`$language`.custom"}
+  {config_load file="lang_`$language`.section" section="downloads_module"}
+  <div class="downloads">
+
+    {if $FORM_ACTION}
+
+      <h1>{#heading_download#}</h1>
+
+      {if $error_message}<div class="errormessage">{$error_message}</div>{/if}
+
+      <div class="flex_column_row">
+        <div class="flex_2column_item">
+          {$FORM_ACTION}
+          <div class="contentbox cf">
+            <div class="subline">{#heading_personal#}</div>
+            <p>{#text_confirm_download#}</p>
+
+            <div class="field_item_1">
+              <label><span class="field_text">{#text_email#}</span>{$INPUT_MAIL|replace:"type=\"text\"":"type=\"email\""}<span class="inputRequirement">{$smarty.const.TEXT_ICON_ASTERISK}</span></label>
+            </div>
+    
+            <div class="button_row">
+              <div class="br_left">
+                <div class="br_btn_1">{$BUTTON_LOGIN}</div>
+              </div>
+            </div>
+    
+          </div>
+          {$FORM_END}
+        </div>
+      </div>
+
+    {else}
+    
+      {if strpos($smarty.server.PHP_SELF, $smarty.const.FILENAME_DOWNLOAD)}
+        <h1>{#heading_download#}</h1>
+      {else}
+        <div class="subline border_0 mb_0">{#heading_download#}</div>
+      {/if}
+        
+      {if $dl_prevented eq 'true'}
+        {if $dl_not_found}
+          <div class="errormessage">{#download_not_found#}</div>
+        {elseif $dl_exceeded eq 'true'}
+          <div class="errormessage">{#download_exceeded#}</div>
+        {else}
+          <div class="errormessage">{#download_not_allowed#}</div>
+        {/if}
+      {/if}
+      {if $dl|@sizeof > 0}
+        <div class="download_box">
+          {foreach name=aussen item=dl_data from=$dl}
+            <div class="download_row">
+              <div class="dl_icon">
+                {if $dl_data.allowed}
+                  <a class="dl_allow" href="{$dl_data.pic_link}"><i class="fa-solid fa-download"></i></a>
+                {else}
+                  <a class="dl_lock" href="{$dl_data.pic_link}"><i class="fa-solid fa-lock"></i></a>
+                {/if}
+              </div>
+              <div class="dl_content">
+                <strong>{$dl_data.download_link}</strong><br />
+                {#table_heading_download_date#}&nbsp;{$dl_data.date} &bull; <strong>{$dl_data.count}</strong>&nbsp;{#table_heading_download_count#}
+              </div>
+            </div>
+          {/foreach}
+        </div>
+      {/if}
+
+    {/if}
+  </div>
+{/if}
+
+{if $BUTTON_BACK && !$FORM_ACTION}
+  <div class="button_row">
+    <div class="br_right">
+      <div class="br_btn_1">{$BUTTON_BACK}</div>
+    </div>
+  </div>
+{/if}

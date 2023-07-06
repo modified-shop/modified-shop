@@ -1,0 +1,103 @@
+{config_load file="$language/lang_$language.conf" section="index"}
+{config_load file="$language/lang_$language.conf" section="account"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="account"}
+<div class="account">
+
+  <h1>{#heading_account#}</h1>
+  
+  {if $error_message}<div class="errormessage">{$error_message}</div>{/if}
+  {if $success_message}<div class="infomessage">{$success_message}</div>{/if}
+         
+  <div class="flex_account_row">
+
+    <div class="flex_account_col_1">
+      {if isset($smarty.session.customer_id)}
+        {include file="module/account_navigation.html"}
+      {/if}
+    </div>
+
+    <div class="flex_account_col_2">
+
+      {if !$products_history || !isset($smarty.session.customer_id)}
+        <div class="contentbox">
+          <div class="subline">{#title_welcome#}</div>
+          {if #text_welcome#}
+            <p>{#text_welcome#}</p>
+          {/if}
+          {if $LINK_LOGIN}
+            <p class="font_midi"><a class="arrow" href="{$LINK_LOGIN}">{#text_login#}</a></p>
+          {/if}
+        </div>
+      {/if}
+                      
+
+
+      {if $order_content}
+        <div class="contentbox">
+          <div class="subline mb_0">{#title_orders#}</div>
+          <div class="action_row mt_0">
+            {foreach name=aussen item=order_data from=$order_content}
+              <div class="action_item_full">
+                <div class="action_item_inner_plain bordered no_top_border">      
+                  <label>
+                    <span class="title"><a href="{$order_data.ORDER_LINK}"><strong>{#text_oid#}{$order_data.ORDER_ID}</strong></a> vom {$order_data.ORDER_DATE}</span>
+                    <span class="content">
+                      {#text_total#} {$order_data.ORDER_TOTAL}<br />
+                      {#text_status#} {$order_data.ORDER_STATUS}
+                      {if count($order_data.TRACKING) > 0}
+                        {foreach name=aussen item=tracking_data from=$order_data.TRACKING}
+                          <br />{#label_tracking#} <a target="_blank" href="{$tracking_data.tracking_link}">{$tracking_data.parcel_id}</a>
+                        {/foreach}
+                      {/if}
+                    </span>
+                  </label>
+                  <span class="actions">
+                    <span class="icon">{$order_data.ORDER_BUTTON}</span>
+                    {if isset($order_data.BUTTON_CART_EXPRESS)}<span class="icon">{$order_data.BUTTON_CART_EXPRESS}</span>{/if}
+                    <span class="icon">{$order_data.BUTTON_CART}</span>              
+                  </span>
+                </div>
+              </div>
+            {/foreach}
+          </div>
+          <p class="font_midi"><a class="arrow" href="{$LINK_ALL}">{#text_all#}</a></p>
+        </div>
+      {/if}
+                      
+                        
+      {if $products_history}
+        <div class="contentbox">
+          <div class="subline mb_0">{#title_viewed_products#}</div>
+          <div class="action_row mt_0">
+            {foreach name=history_products item=prod_history_data from=$products_history}
+              <div class="action_item_full">
+                <div class="action_item_inner_plain bordered no_top_border">
+                  <span class="image">
+                    <span class="prod_image">
+                      {if $prod_history_data.PRODUCTS_IMAGE != ''}
+                        {if $smarty.const.PICTURESET_ACTIVE === true}
+                          <a title="{$prod_history_data.PRODUCTS_NAME|onlytext}" href="{$prod_history_data.PRODUCTS_LINK}"><img class="lazyload" data-src="{$prod_history_data.PRODUCTS_IMAGE|replace:"thumbnail_":"mini_"}" alt="{$prod_history_data.PRODUCTS_NAME|onlytext}" title="{$prod_history_data.PRODUCTS_NAME|onlytext}" /></a>
+                        {else}
+                          <a title="{$prod_history_data.PRODUCTS_NAME|onlytext}" href="{$prod_history_data.PRODUCTS_LINK}"><img class="lazyload" data-src="{$prod_history_data.PRODUCTS_IMAGE}" alt="{$prod_history_data.PRODUCTS_NAME|onlytext}" title="{$prod_history_data.PRODUCTS_NAME|onlytext}" /></a>
+                        {/if}
+                        <noscript><a title="{$prod_history_data.PRODUCTS_NAME|onlytext}" href="{$prod_history_data.PRODUCTS_LINK}"><img class="lazyload" data-src="{$prod_history_data.PRODUCTS_IMAGE}" alt="{$prod_history_data.PRODUCTS_NAME|onlytext}" title="{$prod_history_data.PRODUCTS_NAME|onlytext}" /></a></noscript>
+                      {/if}
+                    </span>
+                  </span>
+                  <span class="entry">
+                    <span class="entry_item"><a title="{$prod_history_data.PRODUCTS_NAME}" href="{$prod_history_data.PRODUCTS_LINK}">{$prod_history_data.PRODUCTS_NAME}</a></span>
+                    <span class="entry_item"><strong>{#text_goto_cat#}</strong> <a title="{$prod_history_data.CATEGORIES_NAME}" href="{$prod_history_data.CAT_URL}">{$prod_history_data.CATEGORIES_NAME}</a></span>
+                  </span>
+                </div>
+              </div>
+            {/foreach}
+          </div>
+        </div>
+      {/if}
+
+  
+    </div>
+
+  </div>  
+</div>    

@@ -1,0 +1,49 @@
+<div style="width:700px;margin: 0px auto;">
+<table width="700" border="0" align="center" cellpadding="5" cellspacing="0">
+	<tr> 
+    	<td align="center" style="padding: 10px 0px;"><img src="{$logo_path}logo.gif" /></td>
+	</tr>
+	<tr> 
+    <td style="font-size:14px;text-transform:uppercase;padding:10px 5px;border-top: 1px dotted #999;border-bottom: 1px dotted #999;">
+      <font face="Tahoma, Verdana, sans-serif">Thank you for subscribing</font>
+    </td>
+	</tr>
+	<tr> 
+		<td>
+      <br />
+      <font size="2" face="Tahoma, Verdana, sans-serif"><b>Thank you for subscribing!</b><br />
+			<br />
+			{if isset($LINK)}
+			You receive this e-mail because you want to receive our newsletter.<br />
+			<br />
+      Please click the following activation link to receive newsletters. If you haven't subscribed to this service, please ignore this e-mail!<br />
+      <br />
+      <b>Your activation link:</b><br />
+      <a href="{$LINK}">{$LINK}</a><br />
+      <br />
+      If you have not registered for our newsletter or do not wish to receive the newsletter, please ignore the activation link.<br />
+      <br />
+      Your consent to the dispatch of our newsletter is revocable at any time. The newsletter is sent according to our privacy policy.<br />
+      {/if}
+
+      {if $SEND_GIFT == true}
+      <br />
+      As a thank you for creating your account, you've received a <b>{$GIFT_AMMOUNT}</b> gift voucher!<br />
+      <br />
+      Redeem your voucher with the following code <b>{$GIFT_CODE}</b> when placing an order or simply by clicking the following link
+      <a href="{$GIFT_LINK}">[redeem Voucher]</a>.<br />
+      {/if}
+
+      {if $SEND_COUPON == true}
+      <br />
+      As a thank you for creating your account, you've recieved a discount voucher.<br />
+      The voucher details are: <b>{$COUPON_DESC}</b><br />
+      Redeem your voucher by entering the code {$COUPON_CODE} during checkout process, when asked for it.<br />
+      {/if}
+      </font>
+		</td>
+	</tr>
+</table>
+
+[SIGNATUR]
+</div>

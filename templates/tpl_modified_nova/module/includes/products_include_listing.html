@@ -1,0 +1,13 @@
+{if ($STARTPAGE == 'true' && $smarty.const.PRODUCT_LIST_BOX_STARTPAGE == 'true')}
+  {foreach name=aussen item=module_data from=$module_content}
+    <div class="splide__slide">{include file="module/includes/product_box.html"}</div>
+  {/foreach}
+{elseif (!isset($STARTPAGE) && $smarty.const.PRODUCT_LIST_BOX == 'true')}
+  {foreach name=aussen item=module_data from=$module_content}
+    {include file="module/includes/product_box.html"}
+  {/foreach}
+{else}
+  {foreach name=aussen item=module_data from=$module_content}
+    {include file="module/includes/product_row.html"}    
+  {/foreach}
+{/if}

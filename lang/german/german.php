@@ -659,6 +659,9 @@ define('PRODUCT_REVIEWS_SUCCESS_WAITING', 'Vielen Dank f&uuml;r Ihre Rezension. 
 define('TITLE_PRODUCTS_NEW', 'Neue Artikel');
 define('TITLE_SPECIALS', 'Angebote');
 
+define('TEXT_SHOW_CATEGORY', 'Alles anzeigen aus ');
+define('TEXT_MENU_TITLE', 'Kategorien');
+
 define('NAVBAR_TITLE_ERROR', 'Fehler');
 
 define('TEXT_ERROR_HANDLER_400', 'Fehler 400: Die Anforderung war syntaktisch falsch.');

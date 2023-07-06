@@ -1,0 +1,118 @@
+{config_load file="$language/lang_$language.conf" section="boxes"}
+{config_load file="lang_`$language`.custom"}
+<div id="cart_short"{if $empty == 'false'} style="cursor:pointer"{/if}>
+  {if $empty == 'false'}
+    <a title="{#heading_cart#}" {if $deny_cart != 'true'}id="toggle_cart"{/if} href="{$LINK_CART}">
+      <i class="fa-solid fa-cart-shopping"></i>
+      <span class="count">{$PRODUCTS}</span>
+    </a>
+  {else}
+    <a title="{#heading_cart#}" {if $deny_cart != 'true'}id="toggle_cart"{/if} href="{$LINK_CART}">
+      <i class="fa-solid fa-cart-shopping"></i>
+      {* <span class="count">0</span> *}
+    </a>
+  {/if}
+</div>
+
+<div class="toggle_cart">
+
+  <div class="toggle_closer"><i class="fa-solid fa-xmark"></i></div>
+  {if $deny_cart != 'true'}
+  
+    {if $empty == 'false'}
+  
+      <div class="toggle_headline">
+        {$PRODUCTS} {#heading_flyout_product_cart#}    
+      </div>
+  
+      <div class="toggle_products">
+        {foreach name=aussen item=products_data from=$products}
+          <div class="toggle_products_item">
+            <div class="toggle_products_image">
+              <div class="toggle_products_image_inner">
+                <div class="prod_image">
+                  {if $products_data.IMAGE != ''}
+                    {if $smarty.const.PICTURESET_ACTIVE === true}
+                      <img class="lazyload" data-src="{$products_data.IMAGE|replace:"thumbnail_":"mini_"}" alt="{$products_data.NAME|onlytext}" title="{$products_data.NAME|onlytext}" />
+                    {else}
+                      <img class="lazyload" data-src="{$products_data.IMAGE}" alt="{$products_data.NAME|onlytext}" title="{$products_data.NAME|onlytext}" />
+                    {/if}
+                  {/if}
+                </div>
+              </div>
+            </div>
+            <div class="toggle_products_content">
+              <div class="tpc_title"><a href="{$products_data.LINK}">{$products_data.NAME|truncate:60:"...":true}</a></div>    
+              <div class="tpc_quantity">{#heading_flyout_qty#} {$products_data.QTY}</div>
+            </div>
+            <div class="toggle_products_icon">
+              {$products_data.BUTTON_DELETE}
+            </div>
+          </div>
+        {/foreach}
+      </div>
+  
+      {if $ACTIVATE_GIFT == 'true'}
+        {if isset($GV_AMOUNT)}
+          <div class="giftmessage"><strong>{#voucher_balance#}</strong>&nbsp;{$GV_AMOUNT}</div>
+        {/if}
+      {/if}
+  
+      <div class="toggle_action_1">
+        <a href="{$LINK_CHECKOUT}" title="{#heading_flyout_checkout#}">
+          <span class="cssButton cssButtonColor2" title="{#heading_flyout_checkout#}">
+            <span class="cssButtonText">{#heading_flyout_checkout#}</span>
+            <span class="cssButtonIcon"><i class="fa-solid fa-right-long"></i></span>
+          </span>
+        </a>
+      </div>
+  
+      <div class="toggle_action_2">
+        <a href="{$LINK_CART}" title="{#heading_flyout_cart#}">
+          <span class="cssButton cssButtonColor1" title="{#heading_flyout_cart#}">
+            <span class="cssButtonText">{#heading_flyout_cart#}</span>
+            <span class="cssButtonIcon"><i class="fa-solid fa-right-long"></i></span>
+          </span>
+        </a>
+      </div>
+  
+    {else}
+  
+      <div class="infomessage">{#text_empty_cart#}</div>
+  
+      {if $ACTIVATE_GIFT == 'true'}
+        {if isset($GV_AMOUNT)}
+          <div class="giftmessage"><strong>{#voucher_balance#}</strong>&nbsp;{$GV_AMOUNT}</div>
+        {/if}
+      {/if}
+  
+      <div class="toggle_action_1">
+        <a href="{$LINK_CART}" title="{#heading_flyout_cart#}">
+          <span class="cssButton cssButtonColor1" title="{#heading_flyout_cart#}">
+            <span class="cssButtonText">{#heading_flyout_cart#}</span>
+            <span class="cssButtonIcon"><i class="fa-solid fa-right-long"></i></span>
+          </span>
+        </a>
+      </div>
+  
+    {/if}
+  {/if}
+
+  {if $smarty.const.SHOW_ADD_QUICKIE === true}
+    <div class="addaquickie mt_50">
+      <div class="toggle_headline bordered">
+        {#heading_add_a_quickie#}    
+      </div>
+      <p class="font_midi my_5">{#heading_flyout_text_quickie#}</p>
+      {$FORM_ACTION}
+        <div class="field_item_row">
+          <div class="field_item_4">
+            <label for="input_quick_add">{$INPUT_FIELD|replace:"<input":"<input aria-label=\"{#addquickie_placeholder#}\" placeholder=\"{#addquickie_placeholder#}\""}</label>
+          </div>
+          <div class="field_item_7">{$SUBMIT_BUTTON}</div>
+        </div>
+      {$FORM_END}
+    </div>
+  {/if}
+  
+</div>

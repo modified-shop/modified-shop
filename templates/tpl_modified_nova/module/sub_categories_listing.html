@@ -1,0 +1,33 @@
+{if isset($categories_content) && $categories_content != '' && $TR_COLS > 0}
+  {config_load file="$language/lang_$language.conf" section="categorie_listing"}
+  {config_load file="lang_`$language`.custom"}
+  {config_load file="lang_`$language`.section" section="categorie_listing"}
+
+  <div class="sub_categories_listing">
+    <div class="subline border_0 mb_0">{#heading_more_categories#}</div>
+    <div class="subcats_row">
+      {foreach name=aussen item=categories_data from=$categories_content key=spalten}
+        <div class="subcats_item">
+          <div class="subcats_item_inner">
+            <a href="{$categories_data.CATEGORIES_LINK}" title="{$categories_data.CATEGORIES_NAME|onlytext}">                
+              {if $categories_data.CATEGORIES_IMAGE != '' || (isset($categories_data.CATEGORIES_IMAGE_LIST) && $categories_data.CATEGORIES_IMAGE_LIST != '')}
+                <span class="subcats_image">
+                  <span class="subcats_image_inner">
+                    {if isset($categories_data.CATEGORIES_IMAGE_LIST) && $categories_data.CATEGORIES_IMAGE_LIST != ''}
+                      <img class="lazyload" data-src="{$categories_data.CATEGORIES_IMAGE_LIST}" alt="{$categories_data.CATEGORIES_NAME|onlytext}" />
+                    {else}
+                      <img class="lazyload" data-src="{$categories_data.CATEGORIES_IMAGE}" alt="{$categories_data.CATEGORIES_NAME|onlytext}" />
+                    {/if}
+                    <noscript><img src="{$categories_data.CATEGORIES_IMAGE}" alt="{$categories_data.CATEGORIES_NAME|onlytext}" /></noscript>
+                  </span>
+                </span>
+              {/if}
+              <span class="subcats_title"><span>{$categories_data.CATEGORIES_NAME}</span></span>
+            </a>
+          </div>
+        </div>
+      {/foreach}
+    </div>
+  </div>
+
+{/if}

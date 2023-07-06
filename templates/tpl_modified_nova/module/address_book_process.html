@@ -1,0 +1,50 @@
+{config_load file="$language/lang_$language.conf" section="address_book_process"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="address_book_process"}
+<div class="address_book_process">
+
+  <h1>{#heading_address#}</h1>
+
+  <div class="flex_account_row">
+
+    <div class="flex_account_col_1">
+      {if isset($smarty.session.customer_id)}
+        {include file="module/account_navigation.html"}
+      {/if}
+    </div>
+
+    <div class="flex_account_col_2">
+      {if $error_message}<div class="errormessage my_0">{$error_message}</div>{/if}
+
+      {$FORM_ACTION}
+      
+        {if $delete != '1'}
+          {$MODULE_address_book_details}
+        {/if}
+  
+        {if $delete == '1'}
+          <div class="contentbox">
+            <div class="subline">{#title_delete#}</div>
+            <p>{#text_delete#}</p>
+            <div class="contentbox grey">{$ADDRESS}</div>
+          </div>
+        {/if}
+  
+        <div class="button_row">
+{*
+          <div class="br_left">
+            <div class="br_btn_1">{$BUTTON_BACK}</div>
+          </div>
+*}
+          <div class="br_right">
+            {if isset($BUTTON_UPDATE)}<div class="br_btn_1">{$BUTTON_UPDATE}</div>{/if}
+            {if isset($BUTTON_DELETE)}<div class="br_btn_1">{$BUTTON_DELETE}</div>{/if}
+          </div>
+        </div>
+
+      {$FORM_END}
+      
+    </div>
+  </div>      
+</div>      
+      

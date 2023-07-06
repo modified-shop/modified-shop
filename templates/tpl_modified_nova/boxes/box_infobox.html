@@ -1,0 +1,5 @@
+{if isset($BOX_CONTENT)}
+  {config_load file="$language/lang_$language.conf" section="boxes"}
+  {config_load file="lang_`$language`.custom"}
+  <div class="infomessage small mt_20">{$BOX_CONTENT}</div>
+{/if}

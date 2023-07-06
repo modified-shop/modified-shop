@@ -1,0 +1,100 @@
+/**
+ * jquery.alertable.js - Minimal alert, confirmation, and prompt alternatives.
+ * Developed by Cory LaViska for A Beautiful Site, LLC
+ * https://github.com/claviska/jquery-alertable
+ * Licensed under the MIT license: http://opensource.org/licenses/MIT
+ */
+
+/* Modal */
+.alertable {
+  position: fixed;
+  z-index: 9999;
+  top: 25vh;
+  left:10px;
+  right:10px;      
+  max-width:580px;
+  background: white;
+  border-radius: 0px;
+  padding: 20px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  box-shadow: 0px 0px 15px #3d3d3d;
+}
+
+/* Overlay */
+.alertable-overlay {
+  position: fixed;
+  z-index: 9998;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* Message */
+.alertable-message {
+  margin-bottom: 20px;
+}
+
+#alertable-title {
+  display:block;
+  font-size:14px;
+  font-weight:bold;
+  text-transform:uppercase;
+  color:#333;
+  padding: 0 0 5px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+#alertable-content {
+  display:block;
+  font-size:14px;
+  line-height:20px;
+  color:#555;
+  font-weight:400;
+  padding: 20px 0 20px 0;
+  border-bottom: 1px solid #ddd;
+  white-space: pre-line;
+}
+#alertable-content p {
+  margin-top:0px;
+}
+#alertable-content > div {
+  
+}
+
+/* Button group */
+.alertable-buttons {
+  text-align: right;
+}
+
+/* OK button */
+.alertable-ok, 
+.alertable-ok:focus,
+.alertable-ok:active {
+  cursor: pointer;
+  text-align:center;
+  padding: 8px 20px;
+  font-size:14px;
+  line-height:18px;
+  font-weight:bold;
+  text-transform:uppercase;
+  box-sizing: border-box;
+  white-space:nowrap;
+  text-decoration:none;
+  border-radius: 2px;
+  border:1px solid #ccc;
+  text-decoration:none;
+  background-color:#eee;
+  color:#666;
+  display:inline-block;
+  outline:none;
+}
+
+.alertable-ok:hover {
+  background-color:#eee;
+  border:1px solid #aaa;
+  color:#222;
+  text-decoration:none !important;
+}

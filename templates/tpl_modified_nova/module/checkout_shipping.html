@@ -1,0 +1,57 @@
+{config_load file="$language/lang_$language.conf" section="checkout_shipping"}
+{config_load file="$language/lang_$language.conf" section="checkout_navigation"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="checkout_shipping"}
+{config_load file="lang_`$language`.section" section="checkout_navigation"}
+{literal}
+<noscript>
+<style type="text/css">
+  #horizontalAccordion { display:block;}
+  .nonjs-fallback {display:none !important;}
+  .nonjs-heading {margin:10px 0px 5px 0px; font-weight:bold;}
+</style>
+</noscript>
+{/literal}
+
+  <ul id="checkoutnavigation">
+    <li><span class="active"><span class="number"><i class="fa-solid fa-1"></i></span><span class="content"><span class="title">{#title_shipping#}</span><span class="description">{#desc_shipping#}</span></span></span></li>
+    <li><span class="inactive"><span class="number"><i class="fa-solid fa-2"></i></span><span class="content"><span class="title">{#title_payment#}</span><span class="description">{#desc_payment#}</span></span></span></li>
+    <li><span class="inactive"><span class="number"><i class="fa-solid fa-3"></i></span><span class="content"><span class="title">{#title_confirmation#}</span><span class="description">{#desc_confirmation#}</span></span></span></li>
+    <li><span class="inactive"><span class="number"><i class="fa-solid fa-4"></i></span><span class="content"><span class="title">{#title_success#}</span><span class="description">{#desc_success#}</span></span></span></li>
+  </ul>
+
+  {* <h1>{#heading_shipping#}</h1> *}
+  {if $error_message}<div class="errormessage">{$error_message}</div>{/if}
+  {if $success_message}<div class="infomessage">{$success_message}</div>{/if}
+
+  {$FORM_ACTION}
+    <div class="checkout_row cf">
+  
+      <div class="checkout_action">
+        <div class="subline">{#title_shipping#}</div>
+        <p>{#text_shipping#}</p>
+        <div>{$SHIPPING_BLOCK}</div>
+      </div>
+  
+      <div class="checkout_info">
+        <div class="subline">{#title_address#}</div>
+        <div>{$ADDRESS_LABEL}</div>
+        <div class="font_small mt_5"><a class="arrow" title="{#checkout_edit_address#}" href="{$smarty.const.FILENAME_CHECKOUT_SHIPPING_ADDRESS}"><strong>{#checkout_edit_address#}</strong></a></div>
+      </div>
+  
+    </div>
+  
+    <div class="button_row">
+      {*
+      <div class="br_left">
+        <div class="br_btn_1">{$BUTTON_BACK}</div>
+      </div>
+      *}
+      <div class="br_right">
+        <div class="br_btn_1">{$BUTTON_CHECKOUT_STEP2}</div>
+      </div>
+    </div>  
+ 
+  {$FORM_END}
+
+</div>

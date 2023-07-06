@@ -1,0 +1,25 @@
+{config_load file="$language/lang_$language.conf" section="error_handler"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="error_handler"}
+<div class="error_message">
+
+  <h1>{$ERROR}</h1>
+
+  <div class="infomessage">{#text_search_advanced1#} <a href="{$LINK_ADVANCED}">{#text_search_advanced2#}</a> {#text_search_advanced3#}</div>
+
+  {$FORM_ACTION}
+    <div class="contentbox">
+      <div class="field_item_row">
+        <div class="field_item_4"><label><span class="field_text">{#text_search#}</span>{$INPUT_SEARCH}</label></div>
+        <div class="field_item_5"><span class="field_text">&nbsp;</span>{$BUTTON_SUBMIT}</div>
+      </div>
+    </div>
+  {$FORM_END}
+
+  <div class="button_row">
+    <div class="br_left">
+      <div class="br_btn_1">{$BUTTON}</div>
+    </div>
+  </div>
+
+</div>

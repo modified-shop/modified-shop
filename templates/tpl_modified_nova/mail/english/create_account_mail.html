@@ -1,0 +1,53 @@
+<div style="width:700px;margin: 0px auto;">
+<table width="700" border="0" align="center" cellpadding="5" cellspacing="0">
+	<tr> 
+    	<td align="center" style="padding: 10px 0px;"><img src="{$logo_path}logo.gif" /></td>
+	</tr>
+	<tr> 
+    <td style="font-size:14px;text-transform:uppercase;padding:10px 5px;border-top: 1px dotted #999;border-bottom: 1px dotted #999;">
+      <font face="Tahoma, Verdana, sans-serif">Account successfully created</font>
+    </td>
+	</tr>
+	<tr> 
+		<td>
+      <br />
+      <font size="2" face="Tahoma, Verdana, sans-serif"><b>{if $GENDER == 'm'}Dear Mr.{elseif $GENDER == 'f'}Dear Ms./Mrs.{else}Hello{/if} {$NAME},</b><br />
+      <br />
+      your account has been successfully created.<br />
+      You now have access to the following features:<br />
+      <br />
+      <b>Shopping cart</b> - Products placed in the shopping cart will remain there until they've been deleted or purchased.<br />
+      <br />
+      <b>Address book</b> - The address book allows you to save several different shipping destinations.<br />
+      <br />
+      <b>Order history</b> - Your order history is always available for you.<br />
+      <br />
+      <b>Product evaluation</b> - Rate and comment our products.<br />
+      <br />
+      <u>Attention:</u> If this account wasn't created by you, 
+      please contact us at: <a href="mailto:{$content.MAIL_REPLY_ADDRESS}">{$content.MAIL_REPLY_ADDRESS}</a><br />
+
+      {if $SEND_GIFT == true}
+      <br />
+      As a thank you for creating your account, you've received a <b>{$GIFT_AMMOUNT}</b> gift voucher!<br />
+      <br />
+      Redeem your voucher with the following code <b>{$GIFT_CODE}</b> when placing an order or simply by clicking the following link
+      <a href="{$GIFT_LINK}">[redeem Voucher]</a>.<br />
+      {/if}
+
+      {if $SEND_COUPON == true}
+      <br />
+      As a thank you for creating your account, you've recieved a discount voucher.<br />
+      The voucher details are: <b>{$COUPON_DESC}</b><br />
+      Redeem your voucher by entering the code {$COUPON_CODE} during checkout process, when asked for it.<br />
+      {/if}
+      <br />
+      If you have any questions, please contact us at: <a href="mailto:{$content.MAIL_REPLY_ADDRESS}">{$content.MAIL_REPLY_ADDRESS}</a>
+      </font>
+
+		</td>
+	</tr>
+</table>
+
+[SIGNATUR]
+</div>

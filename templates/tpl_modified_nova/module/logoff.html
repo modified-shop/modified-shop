@@ -1,0 +1,18 @@
+{config_load file="$language/lang_$language.conf" section="logoff"} 
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="logoff"}
+<div class="logoff">
+
+  <h1>{#heading_logoff#}</h1>
+  {if $error_message}<div class="errormessage">{$error_message}</div>{/if}
+  {if $success_message}<div class="infomessage">{$success_message}</div>{/if}
+
+  <div class="infomessage">{#text_logoff#}</div>
+
+  <div class="button_row">
+    <div class="br_right">
+      <div class="br_btn_1">{$BUTTON_CONTINUE}</div>
+    </div>
+  </div> 
+
+</div>  

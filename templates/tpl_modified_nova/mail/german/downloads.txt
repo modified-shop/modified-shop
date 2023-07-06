@@ -1,0 +1,12 @@
+{if $dl != ''}
+  {config_load file="$language/lang_$language.conf" section="downloads_module"}
+  {#heading_download#}
+  {if $dl|@sizeof > 0}
+    {foreach name=aussen item=dl_data from=$dl}
+      {if $dl_data.download_link_plain}{$dl_data.download_link_plain}
+      {else}{$dl_data.download_link}
+      {/if}
+      {#table_heading_download_date#} {$dl_data.date}, {$dl_data.count} {#table_heading_download_count#}
+    {/foreach}
+  {/if}
+{/if}

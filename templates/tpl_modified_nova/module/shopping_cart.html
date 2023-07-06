@@ -1,0 +1,126 @@
+{config_load file="$language/lang_$language.conf" section="shopping_cart"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="shopping_cart"}
+<div class="shopping_cart">
+
+  <h1 class="subline">{#heading_cart#}</h1>
+
+  {if $error_message}<div class="errormessage">{$error_message}</div>{/if}
+
+  {if $cart_empty == true}
+
+    <div class="infomessage">{#text_empty#}</div>
+    <div class="button_row">
+      <div class="br_right">
+        <div class="br_btn_1">{$BUTTON_CONTINUE}</div>
+      </div>
+    </div>
+
+  {else}
+
+    {if $info_message_3}<div class="errormessage">{$info_message_3}</div>{/if}
+    {$FORM_ACTION}
+    {$HIDDEN_OPTIONS}
+
+    <div class="ordercontainer_row">
+
+      <div class="ordercontainer_details">
+        {$MODULE_order_details}
+      </div>
+
+      <div class="ordercontainer_total">
+        <div class="ordercontainer_total_inner">
+          <div class="ordersum">
+            <div class="ordersum_heading">{#order_total_heading#}</div>              
+  
+            {if isset($TOTAL_BLOCK_ARRAY) && count($TOTAL_BLOCK_ARRAY) > 0}
+              <div class="ordertotal_block">
+                {foreach name=aussen item=order_total_values from=$TOTAL_BLOCK_ARRAY}
+                  <div class="ordertotal_row{if $order_total_values.text|strpos:"-"} ot_red{/if}"">
+                    <div class="ot_width_1">{$order_total_values.title}</div>
+                    <div class="ot_width_2"><strong>{$order_total_values.text}</strong></div>
+                  </div>
+                {/foreach}
+                {if isset($shipping_content) && count($shipping_content) > 0}
+                  {if $SELECT_COUNTRY}
+                    <div class="ordertotal_row ot_shipping ot_select">
+                      <div class="ot_width_3">{$smarty.const._SHIPPING_TO}</div>
+                      <div class="ot_width_1">{$SELECT_COUNTRY_PLAIN|replace:"<select":"<select autocomplete=\"off\" aria-label=\"cart_quantity\""}</div>
+                    </div>                                                           
+                  {/if}
+                  {foreach name=aussen item=shipping_data from=$shipping_content}
+                    <div class="ordertotal_row ot_shipping">
+                      {if $shipping_data.VALUE != ''}
+                        <div class="ot_width_1">{$shipping_data.NAME} ({$COUNTRY}):</div>
+                        <div class="ot_width_2">{$shipping_data.VALUE}</div>
+                      {else}
+                        {$shipping_data.NAME} ({$COUNTRY})
+                      {/if}
+                    </div>
+                  {/foreach}
+                {/if}
+          
+                {if $total}
+                  <div class="ordertotal_row ot_total">
+                    <div class="ot_width_1"><strong>{#text_total#}:</strong></div>
+                    <div class="ot_width_2"><strong>{$total}</strong></div>
+                  </div>
+                {/if}
+              </div>
+    
+            {else}
+    
+              {if $smarty.const.MODULE_SMALL_BUSINESS != 'true'}
+                {if $UST_CONTENT}{$UST_CONTENT}{else}{$smarty.const.TAX_INFO_EXCL|sprintf:''}<br />{/if}
+              {/if}
+              <strong>{$TOTAL_CONTENT}</strong>
+              {if isset($shipping_content) && count($shipping_content) > 0}
+                {if $SELECT_COUNTRY}<div class="shipping_container">{$SELECT_COUNTRY|replace:"<select":"<select autocomplete=\"off\" aria-label=\"cart_quantity\""}</div>{else}<br />{/if}
+                {foreach name=aussen item=shipping_data from=$shipping_content}
+                  <div class="shipping_hinweis">{$shipping_data.NAME} ({$COUNTRY}): {$shipping_data.VALUE}</div>
+                {/foreach}
+              {/if}
+              {if $total}<strong>{#text_total#}: {$total}</strong>{/if}
+    
+            {/if}
+            {* if $TOTAL_WEIGHT}<div class="ordertotal_row ot_weight">{#text_total_weight#} {$TOTAL_WEIGHT|number_format:2:",":"."} kg</div>{/if *}
+    
+          </div>
+          
+          {if isset($FREE_SHIPPING_INFO)}<div class="successmessage freeshipping my_20"><strong>{$FREE_SHIPPING_INFO}</strong></div>{/if}
+  
+          {if $info_message_1}<div class="errormessage small">{$info_message_1} <span class="nowrap">{$min_order}</span> {$info_message_2} <span class="nowrap">{$order_amount}</span></div>{/if}
+  
+          {$MODULE_gift_cart}
+    
+          <div class="button_row">
+            <div class="br_btn_0">{$BUTTON_CHECKOUT}</div>
+            {if isset($BUTTON_CHECKOUT_EXPRESS) && !$PAYPALPLAN}
+              <div class="br_btn_alternate"><span>oder</span></div>
+              <div class="br_btn_0">
+                {$BUTTON_CHECKOUT_EXPRESS}
+                  <div class="font_small mt_5" style="text-align:center;"><a class="arrow" href="{$ACTIVATE_EXPRESS_LINK}">{#checkout_express_activate#}</a></div>            
+                {if isset($ACTIVATE_EXPRESS_LINK)}
+                {/if}
+              </div>
+            {/if}
+            {if $BUTTON_PAYPAL != '' && !$PAYPALPLAN}
+              <div class="br_btn_alternate"><span>{#text_cart_or#}</span></div>
+              <div class="br_btn_0">{$BUTTON_PAYPAL}</div>
+            {/if}
+          </div>
+
+        </div>
+      </div>
+    </div>
+    {$FORM_END}
+  {/if}
+
+
+  {if $MODULE_wishlist}
+    <div class="mt_50">
+      {$MODULE_wishlist}
+    </div>
+  {/if}
+  
+</div>  

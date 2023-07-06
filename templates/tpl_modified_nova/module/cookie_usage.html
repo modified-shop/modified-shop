@@ -1,0 +1,24 @@
+{config_load file="$language/lang_$language.conf" section="cookie_usage"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="cookie_usage"}
+<h1>{#heading_cookie_usage#}</h1>
+<div class="content_site cf">
+
+  <div class="subline">{#title_information#}</div>
+  <p>{#text_information#}</p>
+  <br />
+
+  <div class="subline">{#title_settings#}</div>
+  <p class="external_links">{#text_settings#}</p>
+  <br />
+
+  <div class="subline">{#title_infobox#}</div>
+  <p>{#text_infobox#}</p>
+
+</div>
+
+<div class="button_row">
+  <div class="br_right">
+    <div class="br_btn_1">{$BUTTON_CONTINUE}</div>
+  </div>
+</div>

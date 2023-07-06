@@ -1,0 +1,187 @@
+# Die lang_german.section wird nur eingebunden, wenn in der "../config/config.php" die "TEMPLATE_ENGINE" auf "smarty_3" oder "smarty_4" gesetzt ist!
+
+[account_checkout_express]
+
+[account_delete]
+title_delete_account = 'Wollen Sie Ihr Konto wirklich l&ouml;schen?'
+text_password = 'Passwort:'
+
+[account_edit]
+text_must = '<i class="fa-solid fa-asterisk"></i> notwendige Informationen'
+
+[account_history_info]
+order_text_each = 'je'
+
+[account_history]
+text_account_history = 'Hier sehen Sie alle Ihre get&auml;tigten Bestellungen.<br />Sie k&ouml;nnen diese im Detail nochmal ansehen oder aber die Bestellung &uuml;ber die Warenkorb-Buttons nochmal ausl&ouml;sen.'
+
+[account_password]
+text_must = '<i class="fa-solid fa-asterisk"></i> notwendige Informationen'
+
+[account]
+title_nav_account = 'Mein Konto'
+title_nav_account_edit = 'Kontodaten bearbeiten'
+title_nav_address_book = 'Adressbuch'
+title_nav_password = 'Passwort &auml;ndern'
+title_nav_orders = 'Bestellungen'
+title_nav_account_delete = 'Konto l&ouml;schen'
+title_nav_checkout_express = 'Mein Schnellkauf'
+title_nav_newsletter = 'Newsletter'
+title_nav_logoff = 'Abmelden'
+
+title_accountbox_create = 'Kundenkonto erstellen'
+title_accountbox_create_guest = 'Gastkonto erstellen'
+title_accountbox_password_forgotten = 'Passwort vergessen?'
+title_accountbox_login_success = 'Herzlich willkommen'
+
+
+[address_book_process]
+text_must = '<i class="fa-solid fa-asterisk"></i> notwendige Informationen'
+
+[address_book]
+
+[advanced_search]
+
+[also_purchased]
+
+[boxes]
+text_shippingtime = 'Lieferzeit:'
+show_all = 'Alle anzeigen'
+
+[error_handler]
+
+[checkout_navigation]
+title_shipping = 'Versandart'
+desc_shipping = 'W&auml;hlen Sie die gew&uuml;nschte Versandart'
+title_payment = 'Bezahlart'
+desc_payment = 'W&auml;hlen Sie die gew&uuml;nschte Bezahlart'
+title_confirmation = 'Best&auml;tigen'
+desc_confirmation = 'Best&auml;tigen Sie Ihre Bestellung'
+title_success = 'Fertig'
+desc_success = 'Vielen Dank'
+
+
+[checkout_confirmation]
+order_text_each = 'je'
+text_payment_info_layertext = 'Info'
+
+[checkout_payment]
+checkout_edit_address = 'Adresse &auml;ndern'
+
+[checkout_new_address]
+
+[checkout_payment_address]
+
+[checkout_shipping_address]
+
+[checkout_shipping]
+checkout_edit_address = 'Adresse &auml;ndern'
+
+[checkout_success]
+
+[contact_us]
+text_hint = '<i class="fa-solid fa-asterisk"></i> notwendige Informationen'
+
+[cookie_usage]
+
+[create_account]
+text_must = '<i class="fa-solid fa-asterisk"></i> notwendige Informationen'
+
+[create_account_guest]
+text_must = '<i class="fa-solid fa-asterisk"></i> notwendige Informationen'
+
+[cross_selling]
+
+[downloads_module]
+heading_personal = 'Ihre Daten'
+
+[main]
+
+[gift_cart]
+text_heading_gift = 'Sie haben einen Coupon/Gutschein?'
+voucher_info_text = 'Ihr aktuelles Guthaben betr&auml;gt'
+voucher_heading_text_popup = 'Informationen zu Ihrem Guthaben'
+text_create_account = 'Kundenkonto erstellen'
+
+[graduated_price]
+
+[gv_redeem]
+
+[gv_send]
+
+[filter]
+listing_text_filter_sort = 'Filtern und Sortieren'
+listing_text_sort = 'Sortieren'
+
+[login]
+text_returning = 'Sie haben schon einmal bei uns bestellt?<br />Herzlichen Dank, dass Sie uns ein weiteres Mal Ihr Vertrauen schenken.'
+
+[logoff]
+
+[index]
+
+[new_products]
+
+[newsletter]
+
+[shopping_cart]
+order_text_update = 'Aktualisieren'
+order_total_heading = 'Zusammenfassung'
+checkout_express_activate = 'Mein Schnellkauf aktivieren'
+order_text_each = 'je'
+products_basket_quantity = 'Anzahl'
+text_cart_or = 'oder'
+
+
+[new_password]
+heading_personal = 'Ihre Daten'
+text_must = '<i class="fa-solid fa-asterisk"></i> notwendige Informationen'
+text_note = 'Hinweis'
+
+[password_forgotten]
+
+[popup_coupon_help]
+
+[popup_search_help]
+
+[print_order]
+
+[print_product_info]
+
+[product_info]
+products_basket_quantity = 'Anzahl'
+
+[product_navigator]
+
+[reviews]
+heading_reviews = 'Kundenrezensionen'
+text_reviews_avg = 'Durchschnittliche Bewertung'
+text_reviews_based = 'Basierend auf'
+text_single_review = 'Bewertung'
+text_multiple_review = 'Bewertungen'
+text_review_show_1 = 'Alle'
+text_review_show_2 = 'Bewertungen anzeigen'
+text_review_show = 'Bewertung anzeigen'
+reviews_signs = 'Zeichen'
+reviews_min = 'Mindestens'
+
+[product_tags]
+
+[products_category]
+
+[products_media]
+
+[reverse_cross_selling]
+
+[sitemap]
+
+[specials]
+
+[ssl_check]
+
+[categorie_listing]
+
+[upcoming_products]
+
+[wishlist]
+

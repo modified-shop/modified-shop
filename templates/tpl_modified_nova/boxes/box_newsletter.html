@@ -1,0 +1,22 @@
+{config_load file="$language/lang_$language.conf" section="boxes"}
+{config_load file="lang_`$language`.custom"}
+
+<div class="sf_newsletter_heading">{#subfooter_newsletter_headline#}</div>
+<div class="sf_newsletter_text">
+  {#subfooter_newsletter_text#}
+</div>
+<div class="sf_newsletter_form">
+  {$FORM_ACTION}
+    <div class="sf_newsletter_form_inner">
+      <span class="sf_newsletter_input">
+        <label for="input_sign_in">
+          {$FIELD_EMAIL|replace:"type=\"text\"":"type=\"email\""|replace:"<input":"<input aria-label=\"{#subfooter_text_email#}\" placeholder=\"{#subfooter_text_email#}\""}
+        </label>
+      </span>
+      <span class="sf_newsletter_button">{$BUTTON}</span>
+    </div>
+  {$FORM_END}
+</div>
+<div class="sf_newsletter_disclaim">
+  {#subfooter_newsletter_disclaim#}
+</div>

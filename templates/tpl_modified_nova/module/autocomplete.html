@@ -1,0 +1,44 @@
+{config_load file="$language/lang_$language.conf" section="error_handler"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="error_handler"}
+{if $error}
+  <span class="autocomplete_error">{#text_search_again#}</span>
+{else}
+  <ul id="autocomplete_main">
+    {foreach item=products_data from=$module_content}
+      <li>
+        <a href="{$products_data.PRODUCTS_LINK}" title="{$products_data.PRODUCTS_NAME}">
+          <span class="autocomlete_item">
+            <span class="ac_image">
+              <span class="prod_image">
+                {if $products_data.PRODUCTS_IMAGE}
+                  {if $smarty.const.PICTURESET_ACTIVE === true}
+                    <img class="lazyload" data-src="{$products_data.PRODUCTS_IMAGE|replace:"thumbnail_":"mini_"}" alt="{$products_data.PRODUCTS_NAME|onlytext}" title="{$products_data.PRODUCTS_NAME|onlytext}" />
+                  {else}
+                    <img class="lazyload" data-src="{$products_data.PRODUCTS_IMAGE}" alt="{$products_data.PRODUCTS_NAME|onlytext}" title="{$products_data.PRODUCTS_NAME|onlytext}" />
+                  {/if}
+                {/if}
+              </span>
+            </span>
+            <span class="ac_content">
+              <span class="ac_text">{$products_data.PRODUCTS_NAME}</span>
+              <span class="ac_price">
+                {foreach name=inner item=price_data from=$products_data.PRODUCTS_PRICE_ARRAY}
+                  {include file="module/includes/price_box.html"}
+                {/foreach}
+                {if $products_data.PRODUCTS_PRICE_ARRAY.0.PRODUCTS_PRICE_FLAG != 'NotAllowed'}
+                  {if $products_data.PRODUCTS_VPE}<span class="ac_vpe">{$products_data.PRODUCTS_VPE}</span>{/if}
+                {/if}
+              </span>
+            </span>
+          </span>
+        </a>
+      </li>
+    {/foreach}
+  </ul>
+
+  {if isset($BUTTON_VIEW_RESULTS)}
+    <div class="autocomplete_button">{$BUTTON_VIEW_RESULTS}</div>
+  {/if}
+
+{/if}

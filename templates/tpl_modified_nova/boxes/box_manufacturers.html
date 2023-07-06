@@ -1,0 +1,26 @@
+{if isset($box_content) && count($box_content) > 0}
+  {config_load file="$language/lang_$language.conf" section="boxes"}
+  {config_load file="lang_`$language`.custom"}
+  <li class="level1 has_sub_cats{if isset($smarty.get.manufacturers_id)} active1 Selected{/if}">
+    <span class="nolink" title="{#heading_manufacturers#}">{#heading_manufacturers#}<span class="sub_cats_arrow"></span></span>
+    {if $smarty.const.CATEGORIES_CASE == 2}
+      <ul class="dropdown_menu">
+        {foreach name=aussen item=module_data from=$box_content}
+          <li class="level_manu{if $module_data.SELECTED == 1} Selected{/if}">
+            <a href="{$module_data.LINK}" title="{$module_data.NAME}">{$module_data.NAME}</a>
+          </li>
+        {/foreach}
+      </ul>
+    {else}
+      <div class="mega_menu">
+        <ul class="cf">
+          {foreach name=aussen item=module_data from=$box_content}
+            <li class="level_manu{if $module_data.SELECTED == 1} Selected{/if}">
+              <a href="{$module_data.LINK}" title="{$module_data.NAME}">{$module_data.NAME}</a>
+            </li>
+          {/foreach}
+        </ul>
+      </div>
+    {/if}
+  </li>
+{/if}

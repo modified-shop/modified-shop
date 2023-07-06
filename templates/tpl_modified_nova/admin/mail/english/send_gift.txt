@@ -1,0 +1,12 @@
+
+{$MESSAGE}
+  
+Voucher value: {$AMMOUNT}
+    
+Your voucher code is: {$GIFT_ID}
+
+Redeem your voucher by simply clicking the following link - {$GIFT_LINK}.
+
+Should you have any difficulties with the link, please visit our website {$WEBSITE} and enter the code manually.
+
+[SIGNATUR]

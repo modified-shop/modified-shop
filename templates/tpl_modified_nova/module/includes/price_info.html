@@ -1,0 +1,58 @@
+            {if $price_data.PRODUCTS_PRICE_FLAG == 'Special' || $price_data.PRODUCTS_PRICE_FLAG == 'SpecialDiscount'}
+              {* START Produkt Sonderpreis Langform mit Ausgabe Alter Preis, Neuer Preis, Sie sparen *}
+              <span class="special_price">
+                <span class="new_price">
+                  <span class="small_price">{$smarty.const.ONLY}{$price_data.PRODUCTS_PRICE_FROM}</span> 
+                  {$price_data.PRODUCTS_PRICE_SPECIAL_PRICE}
+                </span>
+                <span class="old_price">
+                  <span class="small_price">{$smarty.const.INSTEAD}{$price_data.PRODUCTS_PRICE_FROM}</span>
+                  <del>{$price_data.PRODUCTS_PRICE_OLD_PRICE}</del>
+                </span>
+              </span>
+        
+              <span class="save_price">
+                {$price_data.PRODUCTS_PRICE_SAVE_PERCENT}%
+              </span>
+              {if $price_data.PRODUCTS_PRICE_GROUP_DISCOUNT != ''}
+                <span class="save_price_long">
+                  {$smarty.const.BOX_LOGINBOX_DISCOUNT}: {$price_data.PRODUCTS_PRICE_GROUP_DISCOUNT}%
+                </span>
+              {/if}
+              <meta itemprop="price" content="{$price_data.PRODUCTS_PRICE_PLAIN}" />
+              {* ENDE Produkt Sonderpreis Langform mit Ausgabe Alter Preis, Neuer Preis, Sie sparen *}
+            {elseif $price_data.PRODUCTS_PRICE_FLAG == 'SpecialGraduated'}
+              {if $price_data.PRODUCTS_PRICE_UVP != ''} 
+                {* START Produkt UVP Preis mit Ausgabe Ihr Preis, UVP *}
+                <span class="specialgraduated_price">  
+                  <span class="uvp_price">  
+                    <span class="small_price">{$smarty.const.YOUR_PRICE}</span> 
+                    {$price_data.PRODUCTS_PRICE_SPECIAL_PRICE}
+                  </span>
+                  <span class="item_price">
+                    <span class="small_price">{$smarty.const.MSRP}</span> 
+                    <del>{$price_data.PRODUCTS_PRICE_OLD_PRICE}</del>
+                  </span>
+                </span>
+                <meta itemprop="price" content="{$price_data.PRODUCTS_PRICE_PLAIN}" />
+                {* ENDE Produkt UVP Preis mit Ausgabe Ihr Preis, UVP *}
+              {else}
+                {* START Produkt Staffelpreis mit Ausgabe ab Preis, Stückpreis *}
+                <span class="graduated_price">
+                  {if isset($price_data.PRODUCTS_PRICE_FROM)}<span class="small_price">{$smarty.const.FROM}</span> {/if}{$price_data.PRODUCTS_PRICE_OLD_PRICE}
+                </span>
+                <span class="item_price"><span class="small_price">{$smarty.const.UNIT_PRICE}</span> {$price_data.PRODUCTS_PRICE_SPECIAL_PRICE}</span>
+                <meta itemprop="price" content="{$price_data.PRODUCTS_PRICE_PLAIN}" />
+                {* ENDE Produkt Staffelpreis mit Ausgabe ab Preis, Stückpreis *}
+              {/if}
+            {elseif $price_data.PRODUCTS_PRICE_FLAG == 'NotAllowed'}
+              <span class="no_price">{$price_data.PRODUCTS_PRICE_NOT_ALLOWED}</span>
+            {else}
+              {* START Produkt Standardpreis mit Ausgabe ab Preis *}
+              <span class="standard_price">
+                {if $price_data.PRODUCTS_PRICE_FROM != ''}<span class="small_price">{$price_data.PRODUCTS_PRICE_FROM}</span>{/if}
+                {$price_data.PRODUCTS_PRICE_STANDARD_PRICE}
+              </span>
+              <meta itemprop="price" content="{$price_data.PRODUCTS_PRICE_PLAIN}" />
+              {* ENDE Produkt Standardpreis mit Ausgabe ab Preis *}
+            {/if}

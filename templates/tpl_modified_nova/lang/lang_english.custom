@@ -1,0 +1,91 @@
+zoomtext = 'For a larger view click on the thumbnail'
+products_desc = 'Products description'
+products_fsk18_check = 'This article can be purchased only after age verification.'
+products_manufacturer_model = 'MPN:'
+products_tags = 'Features'
+heading_products_tags = 'Product Features'
+
+first = '&laquo; first'
+back = '&laquo; back'
+overview = 'Overview'
+next = 'next &raquo;'
+last = 'last &raquo;'
+
+heading_miscellaneous = 'Payment methods'
+text_miscellaneous = 'Die Box kann unter tpl_modified_responsive/boxes/box_miscellaneous.html ver&auml;ndert werden. Die Sprachvariablen befinden sich in der Datei tpl_modified_responsive/lang/german/lang_german.custom.'
+
+ab_admin = 'Adminarea'
+ab_orders = 'Orders'
+ab_contentmanager = 'Content Manager'
+ab_customers = 'Customers'
+ab_category = 'Category/Products'
+ab_logoff = 'Logoff'
+ab_news = 'News'
+ab_offline = 'Shop Offline'
+ab_update = 'Update'
+ab_support = 'Support'
+ab_shop = 'Shop'
+ab_caching = 'Caching'
+
+ab_edit_content = 'Edit content'
+ab_edit_product = 'Edit product'
+ab_edit_attributes = 'Edit product attributes'
+ab_edit_category = 'Edit category'
+ab_edit_xsell = 'Edit cross selling'
+ab_edit_tags = 'Product features'
+
+info_reviews = 'Reviews:'
+info_review = 'Review:'
+
+heading_trustedshops = 'Trusted Shops'
+
+text_search_again = 'Sorry, we could not find a product matching your search request'
+
+listing_listview = 'List view'
+listing_boxview = 'Box view'
+
+subcats_menu_heading = 'Categories'
+
+# Header # 
+link_settings = 'Settings'
+link_specials = 'Special offers'
+link_whatsnew = 'New products'
+link_cart = 'Shopping cart'
+link_menu = 'Menu'
+link_search = 'Search'
+
+addquickie_placeholder = 'Article no ...'
+heading_flyout_text_quickie = 'Please enter the article no.'
+heading_flyout_product_cart = 'Your shopping cart contains'
+heading_flyout_product_wishlist = 'Your wishlist contains'
+heading_flyout_qty = 'Quantity:'
+heading_flyout_cart = 'Show shopping cart'
+heading_flyout_checkout = 'Got to checkout'
+heading_flyout_wishlist = 'Show wishlist'
+
+heading_box_languages = 'Languages'
+
+header_back_to_shop = 'Back to main page'
+header_back_to_cart = 'Back to shopping cart'
+
+# Box Newsletter #
+subfooter_newsletter_headline = 'Subscribe to our newsletter
+subfooter_newsletter_text = 'Free exclusive offers and new products by email'
+subfooter_newsletter_disclaim = 'Our newsletter is free of charge and can be canceled at any time here or in your customer account.'
+subfooter_text_email = 'Your e-mail address ...'
+
+
+# Footer #
+footer_price_hinweis_1 = 'All prices'
+footer_price_hinweis_incl = 'incl.'
+footer_price_hinweis_excl = 'excl.'
+footer_price_hinweis_2 = 'VAT. plus'
+footer_price_hinweis_3 = 'shipping and handling'
+footer_price_hinweis_4 = 'The crossed out prices correspond to the price at'
+
+footer_heading_payment = 'Payment methods'
+footer_heading_social = 'Social Media'
+footer_heading_contact = 'Contact'
+footer_text_contact = 'Demoshop modified eCommerce Shopsoftware<br />Musterstr. 123<br />12345 Musterstadt<br /><br />Telefon: 01234 56789<br />Mail: demo@modified-shop.org'
+
+text_expires_date = 'Special offer valid until:'

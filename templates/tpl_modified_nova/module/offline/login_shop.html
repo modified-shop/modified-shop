@@ -1,0 +1,208 @@
+{config_load file="$language/lang_$language.conf" section="login"}
+{config_load file="$language/lang_$language.conf" section="newsletter"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="login"}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="{$charset}" />
+<title>Shop-Login</title>
+<meta name="robots" content="noindex, nofollow, noodp" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<style type="text/css">
+{literal}
+<!--
+
+* {
+  box-sizing: border-box;
+  margin:0;
+  padding:0;
+}
+img {
+  vertical-align:top;
+  max-width:100%;
+}
+
+body {
+  font-family: sans-serif, Tahoma;
+  font-weight: 400;
+  font-size:14px;
+  line-height:22px;
+  background-color:#fff;
+  color:#333;
+}
+
+h1 {
+  font-family: sans-serif, Tahoma;
+  color:#444;
+  font-weight:800;
+  font-size:16px;
+  line-height:20px;
+  margin:0px 0 15px 0;
+  padding:0 0 5px;
+  border:#e1e1e1 solid;
+  border-width:0 0 1px 0;
+  text-transform:uppercase;
+}
+
+.field_item_1 {
+  position:relative;
+  width:100%;
+  padding: 5px 0;
+}
+.field_text {
+  display:block;
+  font-size:11px;
+  line-height:15px;
+  padding: 0 1px 2px 1px;
+  font-weight:600;
+  white-space:nowrap;
+  transition: all 0.3s ease-in-out;
+  color:#555;
+}
+.field_item_1:focus-within .field_text {
+  color:#333 !important
+}
+
+input {
+  font-family: sans-serif, Tahoma;
+  font-size:14px;
+  line-height:20px;
+  font-weight:400;
+}
+input[type=text], input[type=password], input[type=email], input[type=tel] {
+  color: #555;
+  background-color:#f2f2f2;
+  border-color: #d9d9d9;
+  border-style: solid;
+  border-width: 1px;
+  vertical-align: middle;
+	padding: 11px 11px 11px 11px;
+	border-radius: 4px;
+  width:100%;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;  
+  transition: all 0.3s ease-in-out;
+  height:44px;
+}
+input[type=text]:hover, input[type=password]:hover, input[type=email]:hover, input[type=tel]:hover, select:hover, textarea:hover {
+  background-color:#f2f2f2;
+  border-color: #999;
+  color: #555;
+}
+input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, input[type=tel]:focus, select:focus, textarea:focus {
+  background-color:#fff;
+  border-color: #999;
+  color: #333;
+  outline: 0 none;
+}
+
+
+#layout_offline {
+  width:80%;
+  max-width:700px;
+  margin:40px auto;
+  padding:20px;
+  border: 1px solid #e1e1e1;
+}
+
+#layout_login {
+  position:relative;
+  margin: 50px auto;
+  padding:15px;
+  background:#fff;
+  border:solid #e1e1e1 1px;
+  box-shadow: 0px 0px 15px #ccc;
+  max-width:400px;
+}
+#layout_login a.help_login {
+  position:absolute;
+  width:32px;
+  height:32px;
+  outline:none;
+  top:10px;
+  right:10px;  
+  display:block;
+}
+
+#layout_login .login {
+  margin: 10px 0 0 0;
+  font-family: sans-serif, Tahoma;
+  outline: none;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  font-size: 12px;
+  line-height:18px;
+  padding: 10px 25px;
+  border-radius: 4px;
+  color: #fff;
+  border: solid 1px #333;
+  background: #333;
+  font-weight:800;
+  text-transform:uppercase;
+}
+#layout_login .login:hover {
+  text-decoration: none;
+  opacity:0.8;
+}
+
+a.lost_password {
+  display:block;
+  width:100%;
+  font-size:12px;
+  line-height:16px;
+  color:#333;
+  margin: 5px 0px;
+  text-decoration:underline;
+} 
+
+
+.errormessage {
+  font-size:12px !important;
+  line-height:18px;
+  font-weight:400;
+  color:#e32828;
+  background: #fff3f3;
+  padding:10px;
+  margin-bottom:10px;
+}
+.errormessage p { 
+  margin: 0px 0px;
+}
+-->
+{/literal}
+</style>
+</head>
+<body>
+
+<div id="layout_login">
+
+  <h1>Shop Login</h1>
+
+  {if $error_message}<div class="errormessage">{$error_message}</div>{/if}
+  {if $success_message}<div class="infomessage">{$success_message}</div>{/if}
+
+  <div>
+  
+    {$FORM_ACTION}
+      <div class="field_item_1"><label><span class="field_text">{#text_email#}:</span>{$INPUT_MAIL|replace:"type=\"text\"":"type=\"email\""}</label></div>
+      <div class="field_item_1"><label><span class="field_text">{#text_password#}</span>{$INPUT_PASSWORD}</label></div>
+
+      {if $VVIMG}
+        <div class="field_item_1 vvcode_img"><span class="field_text">{#text_sec_code#}:</span>{$VVIMG}</div>
+      {/if}
+      {if $INPUT_CODE}
+        <div class="field_item_1 vvcode_sec"><label><span class="field_text">{#text_sec_code#}:</span>{$INPUT_CODE}<label></div>
+      {/if}
+
+      {* <a class="lost_password" href="{$LINK_LOST_PASSWORD}">{#text_lost_password#}</a> *}
+      <input type="submit" class="login" name="Submit" value="{$smarty.const.IMAGE_BUTTON_LOGIN}" />
+    {$FORM_END}
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -659,6 +659,9 @@ define('PRODUCT_REVIEWS_SUCCESS_WAITING', 'Thank you for your review. This will 
 define('TITLE_PRODUCTS_NEW', 'New products');
 define('TITLE_SPECIALS', 'Special offers');
 
+define('TEXT_SHOW_CATEGORY', 'Show all from ');
+define('TEXT_MENU_TITLE', 'Categories');
+
 define('NAVBAR_TITLE_ERROR', 'Error');
 
 define('TEXT_ERROR_HANDLER_400', 'Error 400: Bad Request.');

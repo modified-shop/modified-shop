@@ -1,0 +1,65 @@
+{config_load file="$language/lang_$language.conf" section="account_delete"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="account_delete"}
+<div class="account_delete">
+  {if $BUTTON_CONTINUE}
+
+    <h1>{#heading_account_deleted#}</h1>
+
+    <div class="infomessage">{#account_deleted#}</div>
+        
+    <div class="button_row">
+      <div class="br_right">
+        <div class="br_btn_1">{$BUTTON_CONTINUE}</div>
+      </div>
+    </div>
+
+  {else}
+  
+    <h1>{#heading_delete_account#}</h1>
+
+    <div class="flex_account_row">
+
+      <div class="flex_account_col_1">
+        {if isset($smarty.session.customer_id)}
+          {include file="module/account_navigation.html"}
+        {/if}
+      </div>
+  
+      <div class="flex_account_col_2">
+        {$FORM_ACTION}
+
+          {if $error_message}<div class="errormessage my_0">{$error_message}</div>{/if}
+
+          <div class="contentbox">
+
+            <div class="subline">{#title_delete_account#}</div>
+            <p class="mb_20">{#delete_account#}</p>
+
+            <div class="field_item_1">
+              <label>
+                <span class="field_text">{#text_password#}</span>{$INPUT_PASSWORD}<span class="inputRequirement">{$smarty.const.TEXT_ICON_ASTERISK}</span>
+                <span class="field_eye"><i class="fa-solid fa-eye" data-name="password"></i></span>
+              </label>
+            </div>
+
+          </div>
+
+          <div class="button_row">
+{*
+            <div class="br_left">
+              <div class="br_btn_1">{$BUTTON_BACK}</div>
+            </div>
+*}
+            <div class="br_right">
+              <div class="br_btn_1">{$BUTTON_SUBMIT_DELETE}</div>
+            </div>
+          </div>
+
+        {$FORM_END}
+      </div>
+
+    </div>
+
+  {/if}
+</div>  

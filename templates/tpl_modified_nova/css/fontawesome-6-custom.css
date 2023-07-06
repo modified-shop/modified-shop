@@ -1,0 +1,378 @@
+/*!
+ * Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com
+ * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
+ * Copyright 2023 Fonticons, Inc.
+ */
+.fa {
+  font-family: var(--fa-style-family, "Font Awesome 6 Free");
+  font-weight: var(--fa-style, 900); }
+
+.fa,
+.fa-classic,
+.fa-sharp,
+.fas,
+.fa-solid,
+.far,
+.fa-regular,
+.fab,
+.fa-brands {
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  display: var(--fa-display, inline-block);
+  font-style: normal;
+  font-variant: normal;
+  line-height: 1;
+  text-rendering: auto; }
+
+.fas,
+.fa-classic,
+.fa-solid,
+.far,
+.fa-regular {
+  font-family: 'Font Awesome 6 Free'; }
+
+.fab,
+.fa-brands {
+  font-family: 'Font Awesome 6 Brands'; }
+
+
+.fa-ul {
+  list-style-type: none;
+  margin-left: var(--fa-li-margin, 2.5em);
+  padding-left: 0; }
+  .fa-ul > li {
+    position: relative; }
+
+.fa-li {
+  left: calc(var(--fa-li-width, 2em) * -1);
+  position: absolute;
+  text-align: center;
+  width: var(--fa-li-width, 2em);
+  line-height: inherit; }
+
+
+/* Font Awesome uses the Unicode Private Use Area (PUA) to ensure screen
+readers do not read off random characters that represent icons */
+
+.fa-xmark::before {
+  content: "\f00d"; }
+
+.fa-right-long::before {
+  content: "\f30b"; }
+
+.fa-asterisk::before {
+  content: "\2a"; }
+
+.fa-eye::before {
+  content: "\f06e"; }
+
+.fa-eye-slash::before {
+  content: "\f070"; }
+
+.fa-arrow-right-long::before {
+  content: "\f178"; }
+
+.fa-star::before {
+  content: "\f005"; }
+
+.fa-magnifying-glass::before {
+  content: "\f002"; }
+
+.fa-globe::before {
+  content: "\f0ac"; }
+
+.fa-bars::before {
+  content: "\f0c9"; }
+
+.fa-angle-right::before {
+  content: "\f105"; }
+
+.fa-angle-left::before {
+  content: "\f104"; }
+
+.fa-user::before {
+  content: "\f007"; }
+
+.fa-user-pen::before {
+  content: "\f4ff"; }
+
+.fa-address-card::before {
+  content: "\f2bb"; }
+
+.fa-key::before {
+  content: "\f084"; }
+
+.fa-cart-shopping::before {
+  content: "\f07a"; }
+
+
+.fa-truck-fast::before {
+  content: "\f48b"; }
+
+.fa-envelopes-bulk::before {
+  content: "\f674"; }
+
+.fa-right-from-bracket::before {
+  content: "\f2f5"; }
+
+.fa-1::before {
+  content: "\31"; }
+
+.fa-2::before {
+  content: "\32"; }
+
+.fa-3::before {
+  content: "\33"; }
+
+.fa-4::before {
+  content: "\34"; }
+
+.fa-check::before {
+  content: "\f00c"; }
+
+.fa-download::before {
+  content: "\f019"; }
+
+.fa-lock::before {
+  content: "\f023"; }
+
+.fa-circle-info::before {
+  content: "\f05a"; }
+
+.fa-filter::before {
+  content: "\f0b0"; }
+
+.fa-filter-circle-xmark::before {
+  content: "\e17b"; }
+
+.fa-table-cells::before {
+  content: "\f00a"; }
+
+.fa-table-list::before {
+  content: "\f00b"; }
+
+.fa-rotate::before {
+  content: "\f2f1"; }
+
+.fa-chevron-left::before {
+  content: "\f053"; }
+
+.fa-ellipsis::before {
+  content: "\f141"; }
+
+.fa-chevron-right::before {
+  content: "\f054"; }
+
+.fa-arrow-up-long::before {
+  content: "\f176"; }
+
+.fa-arrow-down-long::before {
+  content: "\f175"; }
+
+.fa-arrow-left-long::before {
+  content: "\f177"; }
+
+.fa-arrow-up-right-from-square::before {
+  content: "\f08e"; }
+
+.fa-calendar-days::before {
+  content: "\f073"; }
+
+.fa-up-right-from-square::before {
+  content: "\f35d"; }
+
+.fa-chevron-down::before {
+  content: "\f078"; }
+
+.fa-square::before {
+  content: "\f0c8"; }
+
+.fa-square-check::before {
+  content: "\f14a"; }
+
+.fa-circle::before {
+  content: "\f111"; }
+
+.fa-circle-dot::before {
+  content: "\f192"; }
+
+.fa-triangle-exclamation::before {
+  content: "\f071"; }
+
+.fa-circle-check::before {
+  content: "\f058"; }
+
+.fa-gift::before {
+  content: "\f06b"; }
+
+.fa-pen-to-square::before {
+  content: "\f044"; }
+
+.fa-ban::before {
+  content: "\f05e"; }
+
+.fa-right-to-bracket::before {
+  content: "\f2f6"; }
+
+.fa-square-plus::before {
+  content: "\f0fe"; }
+
+.fa-trash-can::before {
+  content: "\f2ed"; }
+
+.fa-magnifying-glass-plus::before {
+  content: "\f00e"; }
+
+.fa-magnifying-glass-minus::before {
+  content: "\f010"; }
+
+.fa-thumbs-up::before {
+  content: "\f164"; }
+
+.fa-print::before {
+  content: "\f02f"; }
+
+.fa-credit-card::before {
+  content: "\f09d"; }
+
+.fa-circle-right::before {
+  content: "\f35a"; }
+
+.fa-floppy-disk::before {
+  content: "\f0c7"; }
+
+.fa-cart-plus::before {
+  content: "\f217"; }
+
+.fa-arrow-up-right-dots::before {
+  content: "\e4b7"; }
+
+.fa-heart::before {
+  content: "\f004"; }
+
+.fa-facebook-f:before {
+  content: "\f39e"; }
+
+.fa-twitter:before {
+  content: "\f099"; }
+
+.fa-instagram:before {
+  content: "\f16d"; }
+
+.fa-youtube:before {
+  content: "\f167"; }
+
+.fa-pinterest:before {
+  content: "\f0d2"; }
+
+.fa-linkedin:before {
+  content: "\f08c"; }
+
+.fa-ticket::before {
+  content: "\f145"; }
+
+.fa-cogs::before {
+  content: "\f085"; }
+
+.fa-circle-chevron-right::before {
+  content: "\f138"; }
+
+
+/* start add new icons here */
+
+
+
+
+
+/* end add new icons here */
+
+
+
+/* do not change */
+
+:root, :host {
+  --fa-style-family-classic: 'Font Awesome 6 Free';
+  --fa-font-regular: normal 400 1em/1 'Font Awesome 6 Free'; }
+
+@font-face {
+  font-family: 'Font Awesome 6 Free';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url("../css/fonts/fa-regular-400.woff2") format("woff2"), url("../css/fonts/fa-regular-400.ttf") format("truetype"); }
+
+.far,
+.fa-regular {
+  font-weight: 400; }
+
+
+#:root, :host {
+  --fa-style-family-classic: 'Font Awesome 6 Free';
+  --fa-font-solid: normal 900 1em/1 'Font Awesome 6 Free'; }
+
+@font-face {
+  font-family: 'Font Awesome 6 Free';
+  font-style: normal;
+  font-weight: 900;
+  font-display: block;
+  src: url("../css/fonts/fa-solid-900.woff2") format("woff2"), url("../css/fonts/fa-solid-900.ttf") format("truetype"); }
+
+.fas,
+.fa-solid {
+  font-weight: 900; }
+
+
+#:root, :host {
+  --fa-style-family-classic: 'Font Awesome 6 Brands';
+  --fa-font-solid: normal 900 1em/1 'Font Awesome 6 Brands'; }
+
+@font-face {
+  font-family: 'Font Awesome 6 Brands';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url("../css/fonts/fa-brands-400.woff2") format("woff2"), url("../css/fonts/fa-brands-400.ttf") format("truetype"); }
+
+.fab,
+.fa-brands {
+  font-weight: 400; }
+
+
+@font-face {
+  font-family: 'Font Awesome 5 Brands';
+  font-display: block;
+  font-weight: 400;
+  src: url("../css/fonts/fa-brands-400.woff2") format("woff2"), url("../css/fonts/fa-brands-400.ttf") format("truetype"); }
+
+@font-face {
+  font-family: 'Font Awesome 5 Free';
+  font-display: block;
+  font-weight: 900;
+  src: url("../css/fonts/fa-solid-900.woff2") format("woff2"), url("../css/fonts/fa-solid-900.ttf") format("truetype"); }
+
+@font-face {
+  font-family: 'Font Awesome 5 Free';
+  font-display: block;
+  font-weight: 400;
+  src: url("../css/fonts/fa-regular-400.woff2") format("woff2"), url("../css/fonts/fa-regular-400.ttf") format("truetype"); }
+@font-face {
+  font-family: 'FontAwesome';
+  font-display: block;
+  src: url("../css/fonts/fa-solid-900.woff2") format("woff2"), url("../css/fonts/fa-solid-900.ttf") format("truetype"); }
+
+@font-face {
+  font-family: 'FontAwesome';
+  font-display: block;
+  src: url("../css/fonts/fa-brands-400.woff2") format("woff2"), url("../css/fonts/fa-brands-400.ttf") format("truetype"); }
+
+@font-face {
+  font-family: 'FontAwesome';
+  font-display: block;
+  src: url("../css/fonts/fa-regular-400.woff2") format("woff2"), url("../css/fonts/fa-regular-400.ttf") format("truetype");
+  unicode-range: U+F003,U+F006,U+F014,U+F016-F017,U+F01A-F01B,U+F01D,U+F022,U+F03E,U+F044,U+F046,U+F05C-F05D,U+F06E,U+F070,U+F087-F088,U+F08A,U+F094,U+F096-F097,U+F09D,U+F0A0,U+F0A2,U+F0A4-F0A7,U+F0C5,U+F0C7,U+F0E5-F0E6,U+F0EB,U+F0F6-F0F8,U+F10C,U+F114-F115,U+F118-F11A,U+F11C-F11D,U+F133,U+F147,U+F14E,U+F150-F152,U+F185-F186,U+F18E,U+F190-F192,U+F196,U+F1C1-F1C9,U+F1D9,U+F1DB,U+F1E3,U+F1EA,U+F1F7,U+F1F9,U+F20A,U+F247-F248,U+F24A,U+F24D,U+F255-F25B,U+F25D,U+F271-F274,U+F278,U+F27B,U+F28C,U+F28E,U+F29C,U+F2B5,U+F2B7,U+F2BA,U+F2BC,U+F2BE,U+F2C0-F2C1,U+F2C3,U+F2D0,U+F2D2,U+F2D4,U+F2DC; }
+
+@font-face {
+  font-family: 'FontAwesome';
+  font-display: block;
+  src: url("../css/fonts/fa-v4compatibility.woff2") format("woff2"), url("../css/fonts/fa-v4compatibility.ttf") format("truetype");
+  unicode-range: U+F041,U+F047,U+F065-F066,U+F07D-F07E,U+F080,U+F08B,U+F08E,U+F090,U+F09A,U+F0AC,U+F0AE,U+F0B2,U+F0D0,U+F0D6,U+F0E4,U+F0EC,U+F10A-F10B,U+F123,U+F13E,U+F148-F149,U+F14C,U+F156,U+F15E,U+F160-F161,U+F163,U+F175-F178,U+F195,U+F1F8,U+F219,U+F27A; }

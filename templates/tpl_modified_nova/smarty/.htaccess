@@ -1,0 +1,27 @@
+#  -----------------------------------------------------------------------------------------
+#  $Id: .htaccess 9957 2016-06-09 12:01:38Z GTB $
+#
+#  modified eCommerce Shopsoftware
+#  http://www.modified-shop.org
+#
+#  Copyright (c) 2009 - 2016 [www.modified-shop.org]
+#  -----------------------------------------------------------------------------------------
+#  Released under the GNU General Public License 
+#  -----------------------------------------------------------------------------------------
+#
+# This is used with Apache WebServers
+# The following blocks direct HTTP requests in this directory recursively
+
+<Files *.php>
+  <IfModule mod_authz_core.c>
+    # Apache 2.4
+    <RequireAll>
+      Require all denied
+    </RequireAll>
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    # Apache 2.2
+    Order Deny,Allow
+    Deny from all
+  </IfModule>
+</Files>

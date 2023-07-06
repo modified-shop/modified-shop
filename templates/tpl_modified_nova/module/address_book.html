@@ -1,0 +1,56 @@
+{config_load file="$language/lang_$language.conf" section="address_book"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="address_book"}
+<div class="address_book">
+
+  <h1>{#heading_address#}</h1>
+
+  <div class="flex_account_row">
+
+    <div class="flex_account_col_1">
+      {if isset($smarty.session.customer_id)}
+        {include file="module/account_navigation.html"}
+      {/if}
+    </div>
+
+    <div class="flex_account_col_2">
+
+      {if $error_message}<div class="errormessage my_0">{$error_message}</div>{/if}
+      {if $success_message}<div class="infomessage my_0">{$success_message}</div>{/if}
+
+      <div class="contentbox">
+        <div class="subline">{#title_addresses#}</div>
+        <p>{#text_standard#}</p>
+        <p>{$ADDRESS_COUNT}</p>
+
+        <div class="action_row">
+          {foreach name=aussen item=addresses from=$addresses_data}
+            <div class="action_item_full{if $addresses.PRIMARY == '1'} selected{/if}">
+              <div class="action_item_inner">
+                <label>
+                  <span class="title">{$addresses.NAME} {if $addresses.PRIMARY == '1'} ({#title_standard#}){/if}</span>
+                  <span class="content">{$addresses.ADDRESS|replace:"<br />":", "}</span>
+                </label> 
+                <span class="actions">
+                  <span class="icon">{$addresses.BUTTON_DELETE}</span><span class="icon">{$addresses.BUTTON_EDIT}</span>
+                </span>
+              </div>
+            </div>
+          {/foreach}
+        </div>
+      </div>
+
+      <div class="button_row">
+{*
+        <div class="br_left">
+          <div class="br_btn_1">{$BUTTON_BACK}</div>
+        </div>
+*}
+        <div class="br_right">
+          <div class="br_btn_1">{$BUTTON_NEW}</div>
+        </div>
+      </div>
+
+    </div>    
+  </div>    
+</div>

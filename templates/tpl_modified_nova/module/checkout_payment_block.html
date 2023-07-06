@@ -1,0 +1,53 @@
+
+{foreach name=outer item=gift_data from=$module_gift}
+  <div class="checkout_payment_gift">
+    <div class="gift_title">
+      {$gift_data.module|onlytext}<span class="gift_costs">{$gift_data.credit_amount}</span>
+    </div>
+    <div class="cus_check cus_check_gift">
+      {$gift_data.selection}
+      <label>
+        {if $gift_data.description != ''}
+          <div class="gift_desc">{$gift_data.description}</div>
+        {/if}      
+      </label>
+    </div> 
+    {$credit_amount_payment_info|replace:"message":"message small"}
+  </div>
+{/foreach}
+
+<div id="horizontalAccordion" class="checkout_accordion">
+  <ul class="resp-tabs-list nonjs-fallback">
+    {foreach name=outer item=module_data from=$module_content}
+      <li>
+        <div class="cus_radio">
+          {$module_data.selection}
+          <label><span class="payment_name">{$module_data.module|onlytext}</span><span class="payment_costs">{$module_data.module_cost}</span></label>
+        </div>
+      </li>
+    {/foreach}
+  </ul>
+  <div class="resp-tabs-container">
+    {foreach name=outer item=module_data from=$module_content}
+      <div>
+        <noscript>
+          <div class="nonjs-heading"><span class="payment_radio">{$module_data.selection}</span>{$module_data.module|onlytext}<span class="payment_costs">{$module_data.module_cost}</span></div>
+        </noscript>
+        {if $module_data.description}{$module_data.description}<br />{/if}
+        {if $module_data.error != ''}
+          {$module_data.error}<br />
+        {elseif $module_data.fields}
+          <table class="paymentmoduledata">
+            {foreach name=inner item=method_data from=$module_data.fields}
+              <tr>
+                <td class="title">{$method_data.title}</td>
+                <td class="field">{$method_data.field}</td>
+               </tr>
+            {/foreach}
+          </table>
+        {/if}    
+      </div>
+    {/foreach}    
+  </div>
+</div>
+<div class="pp-message"></div>

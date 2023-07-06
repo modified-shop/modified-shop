@@ -1,0 +1,91 @@
+zoomtext = 'F&uuml;r eine gr&ouml;&szlig;ere Ansicht klicken Sie auf das Vorschaubild'
+products_desc = 'Produktbeschreibung'
+products_fsk18_check = 'Dieser Artikel kann erst nach erfolgter Altersverifikation gekauft werden.'
+products_manufacturer_model = 'HAN:'
+products_tags = 'Eigenschaften'
+heading_products_tags = 'Produkteigenschaften'
+
+first = '&laquo; Erster'
+back = '&laquo; vorheriger'
+overview = '&Uuml;bersicht'
+next = 'n&auml;chster &raquo;'
+last = 'Letzter &raquo;'
+
+heading_miscellaneous = 'Zahlungsmethoden'
+text_miscellaneous = 'Die Box kann unter tpl_modified_responsive/boxes/box_miscellaneous.html ver&auml;ndert werden. Die Sprachvariablen befinden sich in der Datei tpl_modified_responsive/lang/german/lang_german.custom.'
+
+ab_admin = 'Adminbereich'
+ab_orders = 'Bestellungen'
+ab_contentmanager = 'Content Manager'
+ab_customers = 'Kunden'
+ab_category = 'Kategorien/Artikel'
+ab_logoff = 'Abmelden'
+ab_news = 'News'
+ab_offline = 'Shop Offline'
+ab_update = 'Update'
+ab_support = 'Support'
+ab_shop = 'Shop'
+ab_caching = 'Caching'
+
+ab_edit_content = 'Content bearbeiten'
+ab_edit_product = 'Artikel bearbeiten'
+ab_edit_attributes = 'Attribute editieren'
+ab_edit_category = 'Kategorie bearbeiten'
+ab_edit_xsell = 'Cross Selling bearbeiten'
+ab_edit_tags = 'Artikeleigenschaften'
+
+info_reviews = 'Bewertungen:'
+info_review = 'Bewertung:'
+
+heading_trustedshops = 'Trusted Shops'
+
+text_search_again = 'Die Suche ergab keine genauen Treffer'
+
+listing_listview = 'Listenansicht'
+listing_boxview = 'Boxansicht'
+
+subcats_menu_heading = 'Kategorien'
+
+# Header # 
+link_settings = 'Einstellungen'
+link_specials = 'Angebote'
+link_whatsnew = 'Neue Artikel'
+link_cart = 'Warenkorb'
+link_menu = 'Men&uuml;'
+link_search = 'Suchen'
+
+addquickie_placeholder = 'Artikelnummer ...'
+heading_flyout_text_quickie = 'Bitte geben Sie eine Artikelnummer ein.'
+heading_flyout_product_cart = 'Artikel im Warenkorb'
+heading_flyout_product_wishlist = 'Artikel auf dem Merkzettel'
+heading_flyout_qty = 'Anzahl:'
+heading_flyout_cart = 'Warenkorb anzeigen'
+heading_flyout_checkout = 'Weiter zur Kasse'
+heading_flyout_wishlist = 'Merkzettel anzeigen'
+
+heading_box_languages = 'Sprachen'
+
+header_back_to_shop = 'Zur&uuml;ck zum Shop'
+header_back_to_cart = 'Zur&uuml;ck zum Warenkorb'
+
+# Box Newsletter #
+subfooter_newsletter_headline = 'Abonnieren Sie unseren Newsletter'
+subfooter_newsletter_text = 'Kostenlose exklusive Angebote und Produktneuheiten per E-Mail'
+subfooter_newsletter_disclaim = 'Der Newsletter ist kostenlos und kann jederzeit hier oder in Ihrem Kundenkonto wieder abbestellt werden.'
+subfooter_text_email = 'Ihre E-Mail-Adresse ...'
+
+
+# Footer #
+footer_price_hinweis_1 = 'Alle Preise'
+footer_price_hinweis_incl = 'inkl.'
+footer_price_hinweis_excl = 'exkl.'
+footer_price_hinweis_2 = 'gesetzl. MwSt. zzgl.'
+footer_price_hinweis_3 = 'Versandkosten'
+footer_price_hinweis_4 = 'Die durchgestrichenen Preise entsprechen dem bisherigen Preis bei'
+
+footer_heading_payment = 'Zahlungsmethoden'
+footer_heading_social = 'Social Media'
+footer_heading_contact = 'Kontakt'
+footer_text_contact = 'Demoshop modified eCommerce Shopsoftware<br />Musterstr. 123<br />12345 Musterstadt<br /><br />Telefon: 01234 56789<br />Mail: demo@modified-shop.org'
+
+text_expires_date = 'Sonderangebot g&uuml;ltig bis:'

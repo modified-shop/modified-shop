@@ -1,0 +1,187 @@
+# Die lang_german.section wird nur eingebunden, wenn in der "../config/config.php" die "TEMPLATE_ENGINE" auf "smarty_3" oder "smarty_4" gesetzt ist!
+
+[account_checkout_express]
+
+[account_delete]
+title_delete_account = 'Do you really want to delete your account?'
+text_password = 'Password:'
+
+[account_edit]
+text_must = '<i class="fa-solid fa-asterisk"></i> necessary information'
+
+[account_history_info]
+order_text_each = 'each'
+
+[account_history]
+text_account_history = 'Here you can see all the orders you have placed.<br />You can view these in detail again or trigger the order again using the shopping cart buttons.'
+
+[account_password]
+text_must = '<i class="fa-solid fa-asterisk"></i> necessary information'
+
+[account]
+title_nav_account = 'Your account'
+title_nav_account_edit = 'Edit your account'
+title_nav_address_book = 'Address book'
+title_nav_password = 'Change passwort'
+title_nav_orders = 'Your orders'
+title_nav_account_delete = 'Delete account'
+title_nav_checkout_express = 'Your quick purchase settings'
+title_nav_newsletter = 'Newsletter'
+title_nav_logoff = 'Logoff'
+
+title_accountbox_create = 'Create customer account'
+title_accountbox_create_guest = 'Create guest account'
+title_accountbox_password_forgotten = 'Forgot Password?'
+title_accountbox_login_success = 'Welcome'
+
+
+[address_book_process]
+text_must = '<i class="fa-solid fa-asterisk"></i> necessary information'
+
+[address_book]
+
+[advanced_search]
+
+[also_purchased]
+
+[boxes]
+text_shippingtime = 'Shipping time:'
+show_all = 'Show all'
+
+[error_handler]
+
+[checkout_navigation]
+title_shipping = 'Shipping'
+desc_shipping = 'Please select a shipping method'
+title_payment = 'Payment'
+desc_payment = 'Please select a payment method'
+title_confirmation = 'Confirmation'
+desc_confirmation = 'Please confirm your order'
+title_success = 'Success'
+desc_success = 'Thank you for your order'
+
+
+[checkout_confirmation]
+order_text_each = 'each'
+text_payment_info_layertext = 'Info'
+
+[checkout_payment]
+checkout_edit_address = 'Change address'
+
+[checkout_new_address]
+
+[checkout_payment_address]
+
+[checkout_shipping_address]
+
+[checkout_shipping]
+checkout_edit_address = 'Change address'
+
+[checkout_success]
+
+[contact_us]
+text_hint = '<i class="fa-solid fa-asterisk"></i> necessary information'
+
+[cookie_usage]
+
+[create_account]
+text_must = '<i class="fa-solid fa-asterisk"></i> necessary information'
+
+[create_account_guest]
+text_must = '<i class="fa-solid fa-asterisk"></i> necessary information'
+
+[cross_selling]
+
+[downloads_module]
+heading_personal = 'Your data'
+
+[main]
+
+[gift_cart]
+text_heading_gift = 'You have a coupon/voucher?'
+voucher_info_text = 'Your current balance is'
+voucher_heading_text_popup = 'Information about your credit'
+text_create_account = 'Create customer account'
+
+[graduated_price]
+
+[gv_redeem]
+
+[gv_send]
+
+[filter]
+listing_text_filter_sort = 'Filter and sort'
+listing_text_sort = 'Sort'
+
+[login]
+text_returning = 'Have you ordered from us before?<br />Thank you for placing your trust in us once again.'
+
+[logoff]
+
+[index]
+
+[new_products]
+
+[newsletter]
+
+[shopping_cart]
+order_text_update = 'Update'
+order_total_heading = 'Summary'
+checkout_express_activate = 'Activate my quick purchase'
+order_text_each = 'each'
+products_basket_quantity = 'Quantity'
+text_cart_or = 'or'
+
+
+[new_password]
+heading_personal = 'Your data'
+text_must = '<i class="fa-solid fa-asterisk"></i> necessary information'
+text_note = 'Hinweis'
+
+[password_forgotten]
+
+[popup_coupon_help]
+
+[popup_search_help]
+
+[print_order]
+
+[print_product_info]
+
+[product_info]
+products_basket_quantity = 'Quantity'
+
+[product_navigator]
+
+[reviews]
+heading_reviews = 'Customer reviews'
+text_reviews_avg = 'Durchschnittliche Bewertung'
+text_reviews_based = 'Based on'
+text_single_review = 'Review'
+text_multiple_review = 'Customer reviews'
+text_review_show_1 = 'Show all'
+text_review_show_2 = 'Show reviews'
+text_review_show = 'Show review'
+reviews_signs = 'signs'
+reviews_min = 'min.'
+
+[product_tags]
+
+[products_category]
+
+[products_media]
+
+[reverse_cross_selling]
+
+[sitemap]
+
+[specials]
+
+[ssl_check]
+
+[categorie_listing]
+
+[upcoming_products]
+
+[wishlist]
+

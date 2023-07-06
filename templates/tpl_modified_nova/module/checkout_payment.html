@@ -1,0 +1,119 @@
+{config_load file="$language/lang_$language.conf" section="checkout_payment"}
+{config_load file="$language/lang_$language.conf" section="checkout_navigation"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="checkout_payment"}
+{config_load file="lang_`$language`.section" section="checkout_navigation"}
+
+{literal}
+<noscript>
+<style type="text/css">
+  #horizontalAccordion { display:block;}
+  .nonjs-fallback {display:none !important;}
+  .nonjs-heading {margin:10px 0px 5px 0px; font-weight:bold;}
+  .nonjs-h4 {margin:10px 0px 10px 0px;}
+</style>
+</noscript>
+{/literal}
+
+<div class="checkout_payment">
+
+  {if isset($NO_SHIPPING)}
+    <ul id="checkoutnavigation" class="cn_no_shipping">
+      <li><span class="active"><span class="number"><i class="fa-solid fa-1"></i></span><span class="content"><span class="title">{#title_payment#}</span><span class="description">{#desc_payment#}</span></span></span></li>
+      <li><span class="inactive"><span class="number"><i class="fa-solid fa-2"></i></span><span class="content"><span class="title">{#title_confirmation#}</span><span class="description">{#desc_confirmation#}</span></span></span></li>
+      <li><span class="inactive"><span class="number"><i class="fa-solid fa-3"></i></span><span class="content"><span class="title">{#title_success#}</span><span class="description">{#desc_success#}</span></span></span></li>
+    </ul>
+  {else}
+    <ul id="checkoutnavigation">
+      <li><span class="selected"><span class="number"><i class="fa-solid fa-check"></i></span><span class="content"><span class="title">{#title_shipping#}</span><span class="description">{#desc_shipping#}</span></span></span></li>
+      <li><span class="active"><span class="number"><i class="fa-solid fa-2"></i></span><span class="content"><span class="title">{#title_payment#}</span><span class="description">{#desc_payment#}</span></span></span></li>
+      <li><span class="inactive"><span class="number"><i class="fa-solid fa-3"></i></span><span class="content"><span class="title">{#title_confirmation#}</span><span class="description">{#desc_confirmation#}</span></span></span></li>
+      <li><span class="inactive"><span class="number"><i class="fa-solid fa-4"></i></span><span class="content"><span class="title">{#title_success#}</span><span class="description">{#desc_success#}</span></span></span></li>
+    </ul>
+  {/if}
+
+
+  {* <h1>{#heading_payment#}</h1> *}
+  {if $error_message}<div class="errormessage">{$error_message}</div>{/if}
+
+  {$FORM_ACTION}
+
+  <div class="checkout_row cf">
+
+    <div class="checkout_action">
+      <div class="subline">{#title_payment#}</div>
+      {if (!isset($GV_COVER) || $GV_COVER != 'true') && (!isset($NO_PAYMENT) || $NO_PAYMENT != 'true')}
+        <p>{#text_payment#}</p>
+        {$PAYMENT_BLOCK}{$module_gift}
+      {elseif isset($GV_COVER) && $GV_COVER == 'true'}
+        <div class="infomessage" id="gccover">{#text_gccover#}</div>
+      {elseif isset($NO_PAYMENT) && $NO_PAYMENT == 'true'}
+        <div class="infomessage" id="nopayment">{#text_nopayment#}</div>
+      {/if}
+    </div>
+
+    <div class="checkout_info">
+      {if $step2 != 'true'}
+        <div class="subline">{#title_address#}</div>
+        <div>{$ADDRESS_LABEL}</div>
+        <div class="font_small mt_5"><a class="arrow" title="{#checkout_edit_address#}" href="{$smarty.const.FILENAME_CHECKOUT_PAYMENT_ADDRESS}"><strong>{#checkout_edit_address#}</strong></a></div>
+        <br />
+        <label>
+          <div class="subline">{#title_comments_short#}</div>
+          <div class="checkout_comment">{$COMMENTS}</div>
+        </label>
+      {/if}
+    </div>
+
+
+    {if $step2 != 'true'}
+      {if $smarty.const.DISPLAY_CONDITIONS_ON_CHECKOUT == 'true' || isset($PRIVACY_LINK) || isset($REVOCATION_checkbox)}
+        <div class="checkout_accept">
+  
+          {if $smarty.const.DISPLAY_CONDITIONS_ON_CHECKOUT == 'true'}
+            <div class="checkoutconditions">
+              <div class="cus_check">
+                {if "SIGN_CONDITIONS_ON_CHECKOUT"|defined}
+                  {if $smarty.const.SIGN_CONDITIONS_ON_CHECKOUT == 'true'}{$AGB_checkbox}{/if}<label for="conditions"><strong>{#text_accept_agb#}</strong>&nbsp;{$AGB_LINK}</label>
+                {else}
+                  {$AGB_checkbox}<label for="conditions"><strong>{#text_accept_agb#}</strong>&nbsp;{$AGB_LINK}</label>
+                {/if}
+              </div>
+            </div>
+          {/if}
+        
+          {if isset($PRIVACY_LINK)}
+            <div class="checkoutconditions">
+              <div class="cus_check">
+                {if $PRIVACY_checkbox}{$PRIVACY_checkbox}{/if}<label for="privacy"><strong>{if $PRIVACY_checkbox}{#text_privacy_accept#}{else}{#text_privacy_notice#}{/if}</strong>&nbsp;{$PRIVACY_LINK}</label>
+              </div>
+            </div>
+          {/if}
+  
+          {if isset($REVOCATION_checkbox)}
+            <div class="checkoutconditions">
+              <div class="cus_check">
+                {$REVOCATION_checkbox}<label for="revocation"><strong>{#text_accept_revocation#}</strong>&nbsp;{$REVOCATION_LINK}</label>
+              </div>
+            </div>
+          {/if}
+        </div>
+      {/if}
+    {/if}
+  </div>
+
+  <div class="button_row">
+    {*
+    {if isset($BUTTON_BACK)}
+      <div class="br_left">
+        <div class="br_btn_1">{$BUTTON_BACK}</div>
+      </div>
+    {/if}
+    *}
+    <div class="br_right">
+      <div class="br_btn_1">{$BUTTON_CHECKOUT_STEP3}</div>
+    </div>
+  </div>
+
+  {$FORM_END}
+</div>

@@ -1,0 +1,22 @@
+{config_load file="$language/lang_$language.conf" section="gv_redeem"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="gv_redeem"}
+<div class="gv_redeem">
+
+  <h1>{#heading_gvredeem#}</h1>
+
+  <div>{#text_information#}</div>
+
+  {if $error eq 'true'}
+    <div class="errormessage my_20">{#text_invalid_gv#}</div>
+  {else}
+    <div class="infomessage my_20">{#text_valid_gva#} {$coupon_amount} {#text_valid_gvb#}</div>
+  {/if}
+
+  <div class="button_row">
+    <div class="br_right">
+      <div class="br_btn_1">{$LINK_DEFAULT}</div>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,91 @@
+{config_load file="$language/lang_$language.conf" section="checkout_success"}
+{config_load file="$language/lang_$language.conf" section="checkout_navigation"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="checkout_success"}
+{config_load file="lang_`$language`.section" section="checkout_navigation"}
+
+<div class="checkout_success">
+
+  {if isset($NO_SHIPPING)}
+    <ul id="checkoutnavigation" class="cn_no_shipping">
+      <li><span class="selected"><span class="number"><i class="fa-solid fa-1"></i></span><span class="content"><span class="title">{#title_payment#}</span><span class="description">{#desc_payment#}</span></span></span></li>
+      <li><span class="selected"><span class="number"><i class="fa-solid fa-2"></i></span><span class="content"><span class="title">{#title_confirmation#}</span><span class="description">{#desc_confirmation#}</span></span></span></li>
+      <li><span class="active"><span class="number"><i class="fa-solid fa-3"></i></span><span class="content"><span class="title">{#title_success#}</span><span class="description">{#desc_success#}</span></span></span></li>
+    </ul>
+  {else}
+    <ul id="checkoutnavigation">
+      <li><span class="selected"><span class="number"><i class="fa-solid fa-check"></i></span><span class="content"><span class="title">{#title_shipping#}</span><span class="description">{#desc_shipping#}</span></span></span></li>
+      <li><span class="selected"><span class="number"><i class="fa-solid fa-2"></i></span><span class="content"><span class="title">{#title_payment#}</span><span class="description">{#desc_payment#}</span></span></span></li>
+      <li><span class="selected"><span class="number"><i class="fa-solid fa-3"></i></span><span class="content"><span class="title">{#title_confirmation#}</span><span class="description">{#desc_confirmation#}</span></span></span></li>
+      <li><span class="active"><span class="number"><i class="fa-solid fa-4"></i></span><span class="content"><span class="title">{#title_success#}</span><span class="description">{#desc_success#}</span></span></span></li>
+    </ul>
+  {/if}
+
+  {* <h1>{#heading_success#}</h1> *}
+
+  <div class="flex_column_row">
+  
+    <div class="flex_2column_item">
+      <div class="contentbox">
+        <div class="subline">{#heading_success#}</div>
+        <p>{#text_success#}</p> 
+        <p>{#text_printorder#}<br />
+        <strong>{#text_thankyou#}</strong></p> 
+      </div>
+  
+    </div>
+  
+    <div class="flex_2column_item">
+      {if $downloads_content != ''}
+        <div class="contentbox">
+          {if $title_downloadfiles != ''}
+            <div class="subline">{#title_downloadfiles#}</div>
+          {/if}
+          {$downloads_content}
+        </div>
+      {/if}
+  
+      {if is_array($PAYMENT_INFO) && count($PAYMENT_INFO) > 0}
+        <div class="contentbox">
+          {foreach name=aussen item=data from=$PAYMENT_INFO}
+            <div class="subline">{$data.title|stripslashes}</div>
+            <table class="paymentinfotable {$data.class}">
+              {foreach name=aussen item=info from=$data.fields}
+                <tr>
+                  {if $info.title != ''}<td>{$info.title|stripslashes}</td>{/if}
+                  {if $info.field != ''}<td>{$info.field|stripslashes}</td>{/if}
+                </tr>      
+              {/foreach}
+            </table>
+          {/foreach}
+        </div>
+      {/if}
+    </div>
+  </div>
+  
+  <div class="button_row">
+    <div class="br_left">
+      <div class="br_btn_1">
+        {if isset($BUTTON_PRINT_LAYER)}
+          {$BUTTON_PRINT_LAYER}
+        {else}
+          {if isset($FORM_ACTION_PRINT_LAYER)}{$FORM_ACTION_PRINT_LAYER}{else}{$FORM_ACTION_PRINT}{/if}{$BUTTON_PRINT}{$FORM_END}
+        {/if}    
+      </div>
+    </div>
+    <div class="br_right">
+      <div class="br_btn_1">
+        {$FORM_ACTION}{$BUTTON_CONTINUE}{$FORM_END}    
+      </div>
+    </div>
+  </div>
+  
+  {if $google_tracking eq 'true'}
+    {$tracking_code}
+  {/if}
+
+  {if $GV_SEND_LINK}
+    <div class="infomessage my_20">{#gv_has_vouchera#} {$GV_SEND_LINK} {#gv_has_voucherb#}</div>
+  {/if}
+
+</div>

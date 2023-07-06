@@ -1,0 +1,51 @@
+#colorbox, #cboxOverlay, #cboxWrapper{position:absolute; top:0; left:0; z-index:9999; overflow:hidden;}
+#cboxWrapper {max-width:none;}
+#cboxOverlay{position:fixed; width:100%; height:100%;}
+#cboxMiddleLeft, #cboxBottomLeft{clear:left;}
+#cboxContent{position:relative;}
+#cboxLoadedContent{overflow:auto; -webkit-overflow-scrolling: touch;}
+
+#cboxLoadingOverlay, #cboxLoadingGraphic{position:absolute; top:0; left:0; width:100%; height:100%;}
+#cboxPrevious, #cboxNext, #cboxClose, #cboxSlideshow{cursor:pointer;}
+.cboxPhoto{margin: 0px 20px; float:left; margin:auto; border:0; display:block; max-width:none; -ms-interpolation-mode:bicubic;}
+.cboxIframe{width:100%; height:100%; display:block; border:0; padding:0; margin:0;}
+
+#colorbox, #cboxContent, #cboxLoadedContent{background:#fff; box-sizing:content-box; -moz-box-sizing:content-box; -webkit-box-sizing:content-box;}
+#colorbox { -webkit-border-radius: 0px; -moz-border-radius: 0px; border-radius: 0px; }
+#cboxOverlay{background:rgba(0,0,0,0.4);}
+#colorbox{outline:0;}
+
+#cboxTopLeft{width:20px; height:12px; background:#fff;}
+#cboxTopRight{width:20px; height:12px; background:#fff;}
+#cboxTopCenter{height:12px; background:#fff;}
+
+#cboxBottomLeft{width:20px; height:10px; background:#fff;}
+#cboxBottomRight{width:20px; height:10px; background:#fff;}
+#cboxBottomCenter{height:20px; background:#fff;}
+
+#cboxMiddleLeft{width:0px; background:#fff;}
+#cboxMiddleRight{width:0px; background:#fff;}
+
+#cboxContent{background:#fff; overflow:hidden; padding: 0px 20px;}
+.cboxIframe{background:#fff;}
+#cboxError{padding:50px; border:1px solid #ccc;}
+#cboxLoadedContent{margin-top:40px; margin-bottom: 20px; padding: 20px 0 0 0;}
+
+#cboxTitle {margin:0; top: 0px; left: 20px; right:20px; padding: 0px 60px 8px 0px; position: absolute; height:40px; background:#fff; display:flex; -ms-flex-align: center; -webkit-align-items: center; -webkit-box-align: center; align-items: center; border-bottom: 1px solid #eee;}
+#cboxTitle > span { max-height:34px; font-size:12px; line-height:16px; font-weight:600; color: #555; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+#cboxCurrent{position:absolute; bottom:0px; left:0px; width:100%; text-align:center; color:#555; font-size:12px; line-height:12px; font-weight:600; } 
+
+#cboxLoadingOverlay{background:#fff}
+#cboxLoadingGraphic{background:url(images/loading.svg) no-repeat center center;}
+#cboxPrevious, #cboxNext, #cboxSlideshow, #cboxClose {border:0; padding:0; margin:0; overflow:visible; width:auto; background:none; }
+#cboxPrevious:active, #cboxNext:active, #cboxSlideshow:active, #cboxClose:active {outline:0;}
+#cboxSlideshow{position:absolute; bottom:4px; right:30px; color:#555;}
+
+#cboxPrevious{position:absolute; margin: auto; top:0px; bottom:0px; left:10px; width:40px; height:40px;font-size:20px; line-height:40px; text-align:center; outline:none; background:#fff;}
+#cboxPrevious:hover{ color:#555;}
+#cboxNext{position:absolute; margin: auto; top:0px; bottom:0px; right:10px; width:40px; height:40px;font-size:20px; line-height:40px; text-align:center; outline:none; background:#fff;}
+#cboxNext:hover{color:#555;}
+
+
+#cboxClose{position: absolute; top: 0px; right: 8px; width: 40px; height: 40px; font-size: 20px; outline: none; line-height: 40px; }
+#cboxClose:hover{color:#555;}

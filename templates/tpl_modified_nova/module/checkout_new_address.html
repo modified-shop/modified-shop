@@ -1,0 +1,57 @@
+{config_load file="$language/lang_$language.conf" section="address_book_process"}
+{config_load file="$language/lang_$language.conf" section="checkout_new_address"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="address_book_process"}
+{config_load file="lang_`$language`.section" section="checkout_new_address"}
+
+<div class="checkout_new_address">
+  <div class="contentbox">
+    <div class="subline">{if isset($smarty.get.action) && $smarty.get.action == 'edit'}{#title_edit_address#}{else}{#title_new_address#}{/if} <span class="fields_required">({#text_must#})</span></div>
+    {if !isset($smarty.get.action) || $smarty.get.action == 'new'}<p>{#text_new_address#}</p>{/if}
+
+    <div class="flex_column_row">
+      <div class="flex_2column_item"> 
+
+        {if $gender == '1'}
+          <div class="field_item_1"><label><span class="field_text">{#text_gender#}</span>{$INPUT_GENDER|asterisk}</label></div>
+        {/if}
+        <div class="field_item_row">
+          <div class="field_item_2"><label><span class="field_text">{#text_firstname#}</span>{$INPUT_FIRSTNAME|asterisk}</label></div>
+          <div class="field_item_2"><label><span class="field_text">{#text_lastname#}</span>{$INPUT_LASTNAME|asterisk}</label></div>
+        </div>
+        {if $company == '1'}
+          <div class="field_item_1"><label><span class="field_text">{#text_company#}</span>{$INPUT_COMPANY}</label></div>
+        {/if}
+
+      </div>
+      <div class="flex_2column_item"> 
+
+        <div class="field_item_1"><label><span class="field_text">{#text_street#}</span>{$INPUT_STREET|asterisk}</label></div>
+        {if $suburb == '1'}
+          <div class="field_item_1"><label><span class="field_text">{#text_suburb#}</span>{$INPUT_SUBURB}</label></div>
+        {/if}
+        <div class="field_item_row">
+          <div class="field_item_3"><label><span class="field_text">{#text_code#}</span>{$INPUT_CODE|asterisk}</label></div>
+          <div class="field_item_4"><label><span class="field_text">{#text_city#}</span>{$INPUT_CITY|asterisk}</label></div>
+        </div>
+        <div class="field_item_1"><label for="country"><span class="field_text">{#text_country#}</span>{$SELECT_COUNTRY|asterisk}</label></div>
+        {if $state == '1'}
+          <div class="field_item_1"{if $display_state}{$display_state}{/if}><label for="state"><span class="field_text">{#text_state#}</span>{$INPUT_STATE|asterisk}</label></div>
+        {/if}
+
+        {if $new == '1'}
+          <div class="contentbox lightyellow mt_20">      
+            <div class="cus_check">
+              {$CHECKBOX_PRIMARY}
+              <label for="primary">{#text_standard#}</label>
+            </div>
+          </div>
+        {/if}
+
+
+      </div>
+    </div>
+    {if isset($PARAMS)}{$PARAMS}{/if}
+
+  </div>
+</div>    

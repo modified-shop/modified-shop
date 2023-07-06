@@ -1,0 +1,26 @@
+{if (isset($parent_content) && count($parent_content) > 0) || (isset($sub_content) && count($sub_content) > 0)}
+  <div class="sub_content_listing">
+    <div class="subcontent_row">
+      {if isset($parent_content) && count($parent_content) > 0}
+        <div class="subcontent_item">
+          <div class="subcontent_item_inner">
+            <a{if $parent_content.CONTENT_GROUP == $smarty.get.coID} class="selected"{/if} href="{$parent_content.CONTENT_LINK}" title="{$parent_content.CONTENT_TITLE|onlytext}">                
+              <span class="subcontent_title"><span>{$parent_content.CONTENT_TITLE}</span></span>
+            </a>
+          </div>
+        </div>
+      {/if}
+      {if isset($sub_content) && count($sub_content) > 0}
+        {foreach name=aussen item=content_data from=$sub_content}
+          <div class="subcontent_item">
+            <div class="subcontent_item_inner">
+              <a{if $content_data.CONTENT_GROUP == $smarty.get.coID} class="selected"{/if} href="{$content_data.CONTENT_LINK}" title="{$content_data.CONTENT_TITLE|onlytext}">                
+                <span class="subcontent_title"><span>{$content_data.CONTENT_TITLE}</span></span>
+              </a>
+            </div>
+          </div>
+        {/foreach}
+      {/if}  
+    </div>
+  </div>
+{/if}

@@ -1,0 +1,71 @@
+{config_load file="$language/lang_$language.conf" section="checkout_shipping_address"}
+{config_load file="$language/lang_$language.conf" section="checkout_navigation"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="checkout_shipping_address"}
+{config_load file="lang_`$language`.section" section="checkout_navigation"}
+
+<div class="checkout_shipping_address">
+
+  <ul id="checkoutnavigation">
+    <li><span class="active"><span class="number"><i class="fa-solid fa-1"></i></span><span class="content"><span class="title">{#title_shipping#}</span><span class="description">{#desc_shipping#}</span></span></span></li>
+    <li><span class="inactive"><span class="number"><i class="fa-solid fa-2"></i></span><span class="content"><span class="title">{#title_payment#}</span><span class="description">{#desc_payment#}</span></span></span></li>
+    <li><span class="inactive"><span class="number"><i class="fa-solid fa-3"></i></span><span class="content"><span class="title">{#title_confirmation#}</span><span class="description">{#desc_confirmation#}</span></span></span></li>
+    <li><span class="inactive"><span class="number"><i class="fa-solid fa-4"></i></span><span class="content"><span class="title">{#title_success#}</span><span class="description">{#desc_success#}</span></span></span></li>
+  </ul>
+
+
+  {* <h1>{#heading_address#}</h1> *}
+  {if $error_message}<div class="errormessage">{$error_message}</div>{/if}
+
+  {if !isset($NEW_ADDRESS)}
+    <div class="contentbox cf">
+      <div class="subline">{#title_old_addresses#}</div>
+      <p>{#text_old_addresses#}</p>
+
+      <div class="action_row">
+        {foreach item=module_data from=$BLOCK_ADDRESS_ARRAY}
+          <div class="action_item{if $module_data.SELECTED == 1} selected{/if}">
+            <div class="action_item_inner">
+              {$module_data.FORM_ACTION}
+                <label for="field_addresses_{$module_data.ADDRESS_BOOK_ID}">
+                  <span class="title">{$module_data.FIRSTNAME} {$module_data.LASTNAME}, {$module_data.CITY}</span>
+                  <span class="content">{$module_data.ADDRESS_LABEL|replace:"<br />":", "}</span>
+                </label> 
+                <span class="actions">
+                  {if isset($module_data.BUTTON_EDIT)}<span class="icon">{$module_data.BUTTON_EDIT}</span>{/if}
+                  {if isset($module_data.BUTTON_CONTINUE)}<span class="icon">{$module_data.BUTTON_CONTINUE}</span>{/if}                
+                </span>
+              {$module_data.FORM_END}
+            </div>
+          </div>
+        {/foreach}
+      </div>
+    </div>
+
+    <div class="button_row">
+      <div class="br_left">
+        <div class="br_btn_1">{$BUTTON_BACK}</div>
+      </div>
+      <div class="br_right">
+        <div class="br_btn_1">{$BUTTON_NEW}</div>
+      </div>
+    </div>
+
+  {else}
+
+    {$FORM_ACTION}
+      {if $MODULE_new_address}
+        {$MODULE_new_address}
+      {/if}
+      <div class="button_row">
+        <div class="br_left">
+          <div class="br_btn_1">{$BUTTON_BACK}</div>
+        </div>
+        <div class="br_right">
+          <div class="br_btn_1">{$BUTTON_CONTINUE}</div>
+        </div>
+      </div>
+    {$FORM_END}
+
+  {/if}
+</div>

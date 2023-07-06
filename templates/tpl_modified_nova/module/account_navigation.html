@@ -1,0 +1,70 @@
+{config_load file="$language/lang_$language.conf" section="index"}
+{config_load file="$language/lang_$language.conf" section="account"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="account"}
+
+<div class="account_navigaton">
+  
+  <div class="navigation_item{if strpos($smarty.server.PHP_SELF, $smarty.const.FILENAME_ACCOUNT) == true} selected{/if}">
+    <a href="{$smarty.const.FILENAME_ACCOUNT|xtc_href_link}" title="{#title_nav_account#}">
+      <span class="icon"><i class="fa-solid fa-user"></i></span><span class="title">{#title_nav_account#}</span>
+    </a>
+  </div>
+  
+  <div class="navigation_item{if strpos($smarty.server.PHP_SELF, $smarty.const.FILENAME_ACCOUNT_EDIT) == true} selected{/if}">
+    <a href="{$smarty.const.FILENAME_ACCOUNT_EDIT|xtc_href_link}" title="{#title_nav_account_edit#}">
+      <span class="icon"><i class="fa-solid fa-user-pen"></i></span><span class="title">{#title_nav_account_edit#}</span>
+    </a>
+  </div>
+
+  <div class="navigation_item{if strpos($smarty.server.PHP_SELF, $smarty.const.FILENAME_ADDRESS_BOOK) == true} selected{elseif strpos($smarty.server.PHP_SELF, $smarty.const.FILENAME_ADDRESS_BOOK_PROCESS) == true} selected{/if}">
+    <a href="{$smarty.const.FILENAME_ADDRESS_BOOK|xtc_href_link}" title="{#title_nav_address_book#}">
+      <span class="icon"><i class="fa-solid fa-address-card"></i></span><span class="title">{#title_nav_address_book#}</span>
+    </a>
+  </div>
+                                                     
+  <div class="navigation_item{if strpos($smarty.server.PHP_SELF, $smarty.const.FILENAME_ACCOUNT_PASSWORD) == true} selected{/if}">
+    <a href="{$smarty.const.FILENAME_ACCOUNT_PASSWORD|xtc_href_link}" title="{#title_nav_password#}">
+      <span class="icon"><i class="fa-solid fa-key"></i></span><span class="title">{#title_nav_password#}</span>
+    </a>
+  </div>
+
+  <div class="navigation_item{if (strpos($smarty.server.PHP_SELF, $smarty.const.FILENAME_ACCOUNT_HISTORY) == true) || (strpos($smarty.server.PHP_SELF, $smarty.const.FILENAME_ACCOUNT_HISTORY_INFO) == true)} selected{/if}">
+    <a href="{$smarty.const.FILENAME_ACCOUNT_HISTORY|xtc_href_link}" title="{#title_nav_orders#}">
+      <span class="icon"><i class="fa-solid fa-cart-shopping"></i></span><span class="title">{#title_nav_orders#}</span>
+    </a>
+  </div>
+
+  {if $smarty.session.customer_id != 1}
+    <div class="navigation_item{if strpos($smarty.server.PHP_SELF, $smarty.const.FILENAME_ACCOUNT_DELETE) == true} selected{/if}">
+      <a href="{$smarty.const.FILENAME_ACCOUNT_DELETE|xtc_href_link}" title="{#title_nav_account_delete#}">
+        <span class="icon"><i class="fa-solid fa-trash-can"></i></span><span class="title">{#title_nav_account_delete#}</span>
+      </a>
+    </div>
+  {/if}
+
+  {if 'MODULE_CHECKOUT_EXPRESS_STATUS'|defined && $smarty.const.MODULE_CHECKOUT_EXPRESS_STATUS == 'true'}
+    <div class="navigation_item{if strpos($smarty.server.PHP_SELF, $smarty.const.FILENAME_ACCOUNT_CHECKOUT_EXPRESS) == true} selected{/if}">
+      <a href="{$smarty.const.FILENAME_ACCOUNT_CHECKOUT_EXPRESS|xtc_href_link}" title="{#title_nav_checkout_express#}">
+        <span class="icon"><i class="fa-solid fa-truck-fast"></i></span><span class="title">{#title_nav_checkout_express#}</span>
+      </a>
+    </div>
+  {/if}
+
+{*
+  {if $smarty.const.MODULE_NEWSLETTER_STATUS == 'true'}
+    <div class="navigation_item">
+      <a href="{$smarty.const.FILENAME_NEWSLETTER|xtc_href_link}" title="{#title_nav_newsletter#}">
+        <span class="icon"><i class="fa-solid fa-envelopes-bulk"></i></span><span class="title">{#title_nav_newsletter#}</span>
+      </a>
+    </div>
+  {/if}  
+
+  <div class="navigation_item">
+    <a href="{$smarty.const.FILENAME_LOGOFF|xtc_href_link}" title="{#title_nav_logoff#}">
+      <span class="icon"><i class="fa-solid fa-right-from-bracket"></i></span><span class="title">{#title_nav_logoff#}</span>
+    </a>
+  </div>
+*}
+
+</div>

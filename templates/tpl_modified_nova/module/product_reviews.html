@@ -1,0 +1,55 @@
+{config_load file="$language/lang_$language.conf" section="reviews"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="reviews"}
+<div class="product_reviews">
+
+  <h1>{#heading_reviews#} {$PRODUCTS_NAME}</h1>
+   
+  {if isset($REVIEWS_NOTE)}
+    <div class="font_small my_20">{$REVIEWS_NOTE|replace:"iframe":"arrow iframe"}</div>
+  {/if}
+
+  {if $error_message}<div class="errormessage">{$error_message}</div>{/if}
+  {if $success_message}<div class="infomessage">{$success_message}</div>{/if}
+
+  <div class="pr_reviews">
+
+    <div class="pr_reviews_image">
+      {if $module_content.0.PRODUCTS_IMAGE != ''}
+        <div class="pr_reviews_image_box pd_sticky">      
+          <div class="pr_reviews_image_inner">
+            <div class="prod_image">      
+              <img class="lazyload" data-src="{$module_content.0.PRODUCTS_IMAGE}" alt="{$module_content.0.PRODUCTS_NAME|onlytext}" title="{$module_content.0.PRODUCTS_NAME|onlytext}" />
+            </div>
+          </div>
+        </div>
+      {/if}
+    </div>              
+    <div class="pr_reviews_content">              
+
+      {foreach name=aussen item=module_data from=$module_content}
+        <div class="reviewrow_full">
+          <div class="reviewrow_full_head">
+            <strong>{#text_rating#}</strong>
+            {if isset($module_data.RATING_VOTE)}
+              <span class="rating_icons"><i class="fa-solid fa-star{if $module_data.RATING_VOTE >= 1} full{/if}"></i><i class="fa-solid fa-star{if $module_data.RATING_VOTE >= 2} full{/if}"></i><i class="fa-solid fa-star{if $module_data.RATING_VOTE >= 3} full{/if}"></i><i class="fa-solid fa-star{if $module_data.RATING_VOTE >= 4} full{/if}"></i><i class="fa-solid fa-star{if $module_data.RATING_VOTE >= 5} full{/if}"></i></span>
+            {else}
+              {$module_data.RATING|replace:".gif":".png"}
+            {/if}
+            <span class="seperator">|</span> <strong>{#text_author#}</strong> {$module_data.AUTHOR}
+            <span class="seperator">|</span> <strong>{#title_date#}:</strong> {$module_data.DATE}
+          </div>
+          <div class="reviewrow_full_content">
+            <div class="reviewrow_full_content_title"><strong>{#text_text#}</strong></div>
+            {$module_data.TEXT_PLAIN|onlytext}
+            <div class="reviewrow_full_content_more"><a class="arrow" href="{$module_data.PRODUCTS_LINK}">{#text_review_show#}</a></div>
+          </div>
+        </div>
+      {/foreach}
+
+    </div>
+  </div>
+  
+  {$PAGINATION}
+
+</div>

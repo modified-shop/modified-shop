@@ -1,0 +1,81 @@
+{config_load file="$language/lang_$language.conf" section="print_order"}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="{$charset}" />
+  <title>{#title#} {$oID}</title>
+  <meta name="robots" content="noindex, nofollow, noodp" />
+  <base href="{$base_href}" />
+  <link rel="stylesheet" type="text/css" href="{$tpl_path}stylesheet.css" />
+  <script src="{$tpl_path}javascript/jquery.min.js" type="text/javascript"></script>
+  <script type="text/javascript">
+    {literal}
+    $(document).ready(function(){
+      window.focus();
+      window.print();
+    });
+    {/literal}
+  </script>
+</head>
+<body class="popupprint">
+  <div class="printwrap_admin cf">
+    <div class="printColumsLeft">
+      <p class="underline">{$ADDRESS_SMALL}</p>
+      <div style="padding-left:15px;">{$address_label_customer}</div>
+      <div class="print_small" style="margin-top:50px;">
+        {if $csID}<strong>{#csID#}</strong> {$csID}<br />{/if}
+        <strong>{#payment#}</strong> {$PAYMENT_METHOD}<br />
+        <strong>{#order#}</strong> {$oID}<br />
+        <strong>{#date#}</strong> {$DATE}
+        {if $vatID}<br /><strong>{#vatID#}</strong> {$vatID}{/if}
+      </div>
+    </div>
+    <div class="printColumsRight">
+      <div class="printlogo_admin"><img src="{$tpl_path}img/logo.gif" alt="{$smarty.const.STORE_NAME}" /></div>
+      <div class="print_small" style="font-size:11px; line-height:15px;">{$ADDRESS_LARGE}</div>
+    </div>
+    <br class="clearfix">
+    <div class="print_big">{#packingslip#}</div>
+    <div class="hr_15"></div>
+    <div class="printColumsLeft">
+      <strong>{if isset($SHIPPING_CLASS) && strpos($SHIPPING_CLASS, 'selfpickup')}{#pickup_address#}{else}{#shipping_address#}{/if}</strong><br />{$address_label_shipping}
+    </div>
+    <div class="printColumsRight">
+      {if $address_label_payment}<strong>{#payment_address#}</strong>{/if}<br />{$address_label_payment}
+    </div>
+    <br class="clearfix">
+    <br />
+    <table class="order_table">
+      <tr class="headerrow">
+        <td class="ord_table_left">{#head_units#}</td>
+        <td class="ord_table_left">{#head_products#}</td>
+        <td class="ord_table_right">{#head_artnr#}</td>
+      </tr>
+      {foreach name=aussen item=order_values from=$order_data}
+      <tr class="mainrow">
+        <td class="ord_table_left ord_width40">{$order_values.PRODUCTS_QTY}&nbsp;x</td>
+        <td class="ord_table_left">
+          <strong>{$order_values.PRODUCTS_NAME}</strong>
+          {if sizeof($order_values.PRODUCTS_ATTRIBUTES_ARRAY) > 0}
+            <ul class="attributes_list">
+              {foreach key=a_data item=attrib_data from=$order_values.PRODUCTS_ATTRIBUTES_ARRAY}
+              <li><strong>{$attrib_data.option}:</strong> {$attrib_data.value}</li>
+              {/foreach}
+            </ul>
+          {/if}
+        </td>
+        <td class="ord_table_right ord_width120">{$order_values.PRODUCTS_MODEL}{$order_values.PRODUCTS_ATTRIBUTES_MODEL}</td>
+      </tr>
+      {/foreach}
+    </table>
+    <div class="hr_5"></div>
+    {if $COMMENTS}
+    <br />
+    <div class="print_small">
+      <strong>{#comments#}</strong><br />
+      {$COMMENTS}
+    </div>
+    {/if}
+  </div>
+</body>
+</html>

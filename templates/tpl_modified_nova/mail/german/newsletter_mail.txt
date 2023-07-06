@@ -1,0 +1,34 @@
+
+Vielen Dank für die Anmeldung zu unserem Newsletter.
+
+{if isset($LINK)}
+Sie erhalten diese E-Mail, weil Sie unseren Newsletter empfangen möchten.
+
+Bitte klicken Sie auf den Aktivierungslink, damit Ihre E-Mail-Adresse für den Newsletterempfang freigeschaltet wird.
+
+Ihr Aktivierungslink:
+{$LINK}
+
+Sollten Sie sich nicht für unseren Newsletter eingetragen haben bzw. den Empfang des Newsletters nicht wünschen,
+bitten wir Sie, den Aktivierungslink einfach zu ignorieren. 
+
+Ihre Einwilligung in den Versand unseres Newsletters ist jederzeit widerruflich. Der Newsletter-Versand erfolgt entsprechend unserer Datenschutzerklärung.
+{/if}
+
+{if $SEND_GIFT == true}
+Als kleines Geschenk senden wir Ihnen einen Gutschein über: {$GIFT_AMMOUNT}
+
+Ihr persönlicher Gutscheincode lautet {$GIFT_CODE}. Sie können diese Gutschrift an der Kasse während des Bestellvorganges verbuchen.
+
+Um den Gutschein einzulösen verwenden Sie bitte den folgenden link {$GIFT_LINK}.
+{/if}
+
+{if $SEND_COUPON == true}
+Als kleines Geschenk senden wir Ihnen einen Kupon.
+
+Kuponbeschreibung: {$COUPON_DESC}
+ 
+Geben Sie einfach Ihren persönlichen Code {$COUPON_CODE} während des Bezahlvorganges ein.
+{/if}
+
+[SIGNATUR]

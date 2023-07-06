@@ -1,0 +1,37 @@
+{if isset($BOX_CONTENT) && count($BOX_CONTENT) > 0}
+  {config_load file="$language/lang_$language.conf" section="boxes"}
+  {config_load file="lang_`$language`.custom"}
+  {config_load file="lang_`$language`.section" section="boxes"}
+
+  {config_load file="$language/lang_$language.conf" section="cross_selling"}
+  {config_load file="$language/lang_$language.conf" section="index"}
+  {config_load file="lang_`$language`.custom"}
+  {config_load file="lang_`$language`.section" section="cross_selling"}
+
+  {foreach name=aussen item=xsell from=$BOX_CONTENT}
+    <div class="box_xsell my_50">
+
+      {if $xsell.GROUP != ''}
+        <div class="box_products_head">
+          <div class="subline border_0 mb_0">{$xsell.GROUP}</div>
+        </div>
+      {else}
+        <div class="box_products_head">
+          <div class="subline border_0 mb_0">{#heading_text#}</div>
+        </div>
+      {/if}
+
+      <div class="splide splide_size1" aria-label="{if $xsell.GROUP != ''}{$xsell.GROUP}{else}{#heading_text#}{/if}">
+        <div class="splide__track">
+  		    <div class="splide__list">
+            {foreach name=aussen item=module_data from=$xsell.PRODUCTS}
+              <div class="splide__slide">{include file="module/includes/products_include_box.html"}</div>
+            {/foreach}
+  		    </div>
+        </div>
+      </div> 
+
+    </div>
+  {/foreach}
+
+{/if}

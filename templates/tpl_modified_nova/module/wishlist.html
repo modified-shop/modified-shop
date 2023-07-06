@@ -1,0 +1,90 @@
+{config_load file="$language/lang_$language.conf" section="new_products"}
+{config_load file="$language/lang_$language.conf" section="index"}
+{config_load file="$language/lang_$language.conf" section="wishlist"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="wishlist"}
+
+{if isset($BUTTON_CONTINUE)}
+
+  <h1>{#heading_wishlist#}</h1>
+  <div class="infomessage">{#text_empty_wishlist#}</div>
+  <div class="button_row">
+    <div class="br_right">
+      <div class="br_btn_1">{$BUTTON_CONTINUE}</div>
+    </div>
+  </div>
+  
+{elseif isset($module_content)}
+
+  {if isset($wishlist_cart)}
+    <div class="subline border_0 mb_0">{#heading_wishlist#}</div>
+    <div class="splide splide_size1" aria-label="{#heading_wishlist#}">
+      <div class="splide__track">
+	      <div class="splide__list">
+  {else}
+    <h1>{#heading_wishlist#}</h1>
+    <div class="listingcontainer">
+  {/if}
+
+
+  {foreach name=aussen item=module_data from=$module_content}
+    {if isset($wishlist_cart)}<div class="splide__slide">{/if}
+      <div class="listingbox">
+        <div class="lb_inner">
+
+          <div class="lb_image">
+            <div class="prod_image">
+              {if $module_data.PRODUCTS_IMAGE != ''}
+                <a href="{$module_data.PRODUCTS_LINK}" title="{$module_data.PRODUCTS_NAME|onlytext}">
+                  <img class="lazyload" data-src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" title="{$module_data.PRODUCTS_NAME|onlytext}" />
+                </a>
+              {/if}
+            </div>
+          </div>
+
+          <div class="lb_title"><h2><a href="{$module_data.PRODUCTS_LINK}" title="{$module_data.PRODUCTS_NAME|onlytext}">{$module_data.PRODUCTS_NAME}</a></h2></div>
+
+          {if is_array($module_data.ATTRIBUTES) && count($module_data.ATTRIBUTES) > 0}
+            <div class="lb_attributes">
+              {foreach key=key_data item=item_data from=$module_data.ATTRIBUTES}
+                <span class="lb_attributes_item"><strong>{$item_data.NAME}:</strong> {$item_data.VALUE_NAME}</span>
+              {/foreach}
+            </div>
+          {/if}        
+          
+          <div class="lb_shipping">
+            {if $module_data.PRODUCTS_SHIPPING_NAME}
+              <i class="fa-solid fa-truck-fast mr_5"></i>{#text_shippingtime#} 
+              {if $module_data.PRODUCTS_SHIPPING_IMAGE}<span class="lb_shipping_image"><img src="{$module_data.PRODUCTS_SHIPPING_IMAGE}" alt="{$module_data.PRODUCTS_SHIPPING_NAME|onlytext}" /></span>{/if}
+              {$module_data.PRODUCTS_SHIPPING_NAME_LINK}
+            {else}
+              &nbsp;
+            {/if}
+          </div>
+                                                                                        
+          <div class="lb_price cf">
+            <span class="standard_price">{$module_data.PRODUCTS_PRICE}</span>
+            {if $module_data.PRODUCTS_VPE}<div class="vpe">{$module_data.PRODUCTS_VPE}</div>{/if}
+          </div>
+
+          <div class="lb_tax">{$module_data.PRODUCTS_TAX_INFO}{$module_data.PRODUCTS_SHIPPING_LINK}</div>
+          
+          <div class="lb_buttons">
+            {$module_data.PRODUCTS_BUTTON_DELETE}
+            {$module_data.PRODUCTS_BUTTON_BUY_NOW}
+          </div>
+         
+        </div>
+      </div>
+    {if isset($wishlist_cart)}</div>{/if}
+  {/foreach}
+
+  {if isset($wishlist_cart)}
+	      </div>
+      </div>
+    </div> 
+  {else}
+    </div>
+  {/if}
+
+{/if}

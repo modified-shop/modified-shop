@@ -1,0 +1,75 @@
+  {* ROWANSICHT *}
+
+  <div class="listingrow">
+
+    <div class="lr_image">
+      <div class="lr_image_inner">
+        <div class="prod_image">
+          {if $module_data.PRODUCTS_IMAGE != ''}
+            <a href="{$module_data.PRODUCTS_LINK}" title="{$module_data.PRODUCTS_NAME|onlytext}">
+              {if isset($pictureset_row) && count($pictureset_row) > 0}
+                <picture>
+                  {foreach name=inner item=picture_data from=$pictureset_row}
+                    <source media="(max-width:{$picture_data.SIZE}px)" data-srcset="{$module_data.PRODUCTS_IMAGE|replace:"thumbnail_images":"`$picture_data.IMAGE`"}">
+                  {/foreach}
+                  <source data-srcset="{$module_data.PRODUCTS_IMAGE|replace:"thumbnail_images":"midi_images"}">
+                  <img class="lazyload" data-src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" title="{$module_data.PRODUCTS_NAME|onlytext}">
+                </picture>
+              {else}
+                <img class="lazyload" data-src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" title="{$module_data.PRODUCTS_NAME|onlytext}">
+              {/if}
+            </a>
+          {/if}
+        </div>
+      </div>
+    </div>
+    <div class="lr_content">
+      <div class="lr_title">
+        <h2><a href="{$module_data.PRODUCTS_LINK}" title="{$module_data.PRODUCTS_NAME|onlytext}">{$module_data.PRODUCTS_NAME}</a></h2>
+      </div>
+      {if $module_data.PRODUCTS_SHORT_DESCRIPTION}
+        <div class="lr_desc">{$module_data.PRODUCTS_SHORT_DESCRIPTION}</div>
+      {/if}
+    </div>
+    <div class="lr_action">
+
+      <div class="lr_price cf">
+        {foreach name=inner item=price_data from=$module_data.PRODUCTS_PRICE_ARRAY}
+          {include file="module/includes/price_listing.html"}
+        {/foreach}
+        {if $module_data.PRODUCTS_PRICE_ARRAY.0.PRODUCTS_PRICE_FLAG != 'NotAllowed'}
+          {if ($module_data.PRODUCTS_PRICE_FLAG == 'SpecialGraduated') && ($module_data.PRODUCTS_PRICE_UVP == '') && ($module_data.PRODUCTS_VPE != '')}
+            {if $module_data.PRODUCTS_VPE}<span class="vpe_with_item_price">{$module_data.PRODUCTS_VPE}</span>{/if}
+          {else}
+            {if $module_data.PRODUCTS_VPE}<span class="vpe">{$module_data.PRODUCTS_VPE}</span>{/if}
+          {/if}
+        {/if}
+      </div>
+
+      {if $module_data.PRODUCTS_PRICE_ARRAY.0.PRODUCTS_PRICE_FLAG != 'NotAllowed'}
+        <div class="lr_tax">{$module_data.PRODUCTS_TAX_INFO}{$module_data.PRODUCTS_SHIPPING_LINK}</div>
+        {if $module_data.PRODUCTS_PRICE_EXPIRES_DATE|strtotime > 0}        
+          <div class="lr_expires_date">{#text_expires_date#} {$module_data.PRODUCTS_PRICE_EXPIRES_DATE|xtc_date_short}</div>
+        {/if}
+      {/if}
+
+      <div class="lr_shipping">
+        {if $module_data.PRODUCTS_SHIPPING_NAME}
+          <i class="fa-solid fa-truck-fast mr_5"></i>{#text_shippingtime#} 
+          {if $module_data.PRODUCTS_SHIPPING_IMAGE}<span class="lr_shipping_image"><img src="{$module_data.PRODUCTS_SHIPPING_IMAGE}" alt="{$module_data.PRODUCTS_SHIPPING_NAME|onlytext}" /></span>{/if}
+          {$module_data.PRODUCTS_SHIPPING_NAME_LINK}
+        {else}
+          &nbsp;
+        {/if}
+      </div>
+
+      {if $smarty.const.SHOW_BUTTON_BUY_NOW != 'false'}
+        <div class="lr_buttons">
+          {$module_data.PRODUCTS_BUTTON_DETAILS}
+          {if $module_data.PRODUCTS_BUTTON_BUY_NOW || ($module_data.PRODUCTS_FSK18 != '1')}{$module_data.PRODUCTS_BUTTON_BUY_NOW}{/if}
+        </div>
+      {/if}
+
+    </div>
+
+  </div>

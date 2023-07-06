@@ -1,0 +1,88 @@
+{if isset($MODULE_TS_PRODUCT_STICKER)}
+  {$MODULE_TS_PRODUCT_STICKER}
+{elseif isset($module_content)}
+  {config_load file="$language/lang_$language.conf" section="reviews"}
+  {config_load file="lang_`$language`.custom"}
+  {config_load file="lang_`$language`.section" section="reviews"}
+  <div class="products_reviews">
+
+    <div class="subline">{#heading_reviews#}{if $reviews_count > 0}<span class="count">{$reviews_count}</span>{/if}</div>
+    {if isset($reviews_note)}
+      <div class="font_small my_10">{$reviews_note|replace:"iframe":"arrow iframe"}</div>
+    {/if}
+
+    <div class="pd_reviews">
+      <div class="pd_reviews_summary">
+
+        <div class="pd_reviews_heading">
+          {#text_reviews_avg#}: {$reviews_avg} 
+        </div>
+                     
+        <div class="pd_reviews_stars">
+          <i class="fa-solid fa-star{if $reviews_avg >= 1} full{/if}"></i>
+          <i class="fa-solid fa-star{if $reviews_avg >= 2} full{/if}"></i>
+          <i class="fa-solid fa-star{if $reviews_avg >= 3} full{/if}"></i>
+          <i class="fa-solid fa-star{if $reviews_avg >= 4} full{/if}"></i>
+          <i class="fa-solid fa-star{if $reviews_avg >= 5} full{/if}"></i>
+        </div>
+        <div class="pd_reviews_note">
+          {#text_reviews_based#} {$reviews_count} {if $reviews_count == 1}{#text_single_review#}{else}{#text_multiple_review#}{/if}
+        </div>
+      
+        {if $reviews_count > $smarty.const.PRODUCT_REVIEWS_VIEW}
+          <div class="pd_reviews_all">
+            <a class="arrow" href="{FILENAME_PRODUCT_REVIEWS|xtc_href_link:"products_id=`$smarty.get.products_id`"}">
+              {#text_review_show_1#} {$reviews_count} {#text_review_show_2#}
+            </a>
+          </div>    
+        {/if}    
+      
+      </div>
+      <div class="pd_reviews_content">
+
+        {if $reviews_count > 0}
+          {foreach name=aussen item=module_data from=$module_content}
+            <div class="reviewrow_full" itemprop="review" itemscope itemtype="http://schema.org/Review">
+              <div class="reviewrow_full_head">
+                <strong>{#text_rating#}</strong>
+                {if isset($module_data.RATING_VOTE)}
+                  <span itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating">
+                    <span class="rating_icons"><i class="fa-solid fa-star{if $module_data.RATING_VOTE >= 1} full{/if}"></i><i class="fa-solid fa-star{if $module_data.RATING_VOTE >= 2} full{/if}"></i><i class="fa-solid fa-star{if $module_data.RATING_VOTE >= 3} full{/if}"></i><i class="fa-solid fa-star{if $module_data.RATING_VOTE >= 4} full{/if}"></i><i class="fa-solid fa-star{if $module_data.RATING_VOTE >= 5} full{/if}"></i></span>
+                    <meta itemprop="worstRating" content="1">
+                    <meta itemprop="ratingValue" content="{$module_data.RATING_VOTE}">
+                    <meta itemprop="bestRating" content="5">
+                  </span>
+                {else}
+                  {$module_data.RATING|replace:".gif":".png"}
+                {/if}
+                <span class="seperator">|</span> 
+                <span itemprop="author" itemtype="http://schema.org/Person" itemscope>
+                  <strong>{#text_author#}</strong> <span itemprop="name">{$module_data.AUTHOR}</span>
+                </span>
+                <span class="seperator">|</span> <strong>{#title_date#}:</strong> {$module_data.DATE}
+                <meta itemprop="datePublished" content="{$module_data.DATE}" />
+              </div>
+              <div class="reviewrow_full_content">
+                <span itemprop="description">{$module_data.TEXT}</span>
+              </div>
+            </div>
+          {/foreach}
+        {else}
+
+          <div class="pd_reviews_heading" style="text-align:left;">
+            {#text_write_first_review#} 
+          </div>
+        {/if}
+
+        <div class="button_row">
+          <div class="br_left">
+            <div class="br_btn_1">{$BUTTON_WRITE}</div>
+          </div>
+        </div>
+        
+      </div>      
+    </div>
+
+
+  </div>
+{/if}

@@ -1,0 +1,31 @@
+
+{if $GENDER == 'm'}Dear Mr.{elseif $GENDER == 'f'}Dear Ms./Mrs.{else}Hello{/if} {$NAME},
+
+your account has been successfully created!
+
+You now have access to the following features:
+
+-Shopping cart - Products placed in the shopping cart will remain there until they've been deleted or purchased.
+-Address book - The address book allows you to save several different shipping destinations.
+-Order history - Your order history is always available for you.
+-Product evaluation - Rate and comment our products!
+
+If this account wasn't created by you, please contact us at {$content.MAIL_REPLY_ADDRESS}.
+
+{if $SEND_GIFT == true}
+As a thank you for creating your account, you've received a {$GIFT_AMMOUNT} gift voucher!
+
+Redeem your voucher with the following code - {$GIFT_CODE} - when placing an order or simply by clicking the following link {$GIFT_LINK}.
+{/if}
+
+{if $SEND_COUPON == true}
+As a thank you for creating your account, you've recieved a discount voucher!
+
+The voucher details are: {$COUPON_DESC}
+
+Redeem your voucher by entering the code {$COUPON_CODE} during checkout process, when asked for it.
+{/if} 
+
+If you have any questions, please contact us at {$content.MAIL_REPLY_ADDRESS}!
+
+[SIGNATUR]

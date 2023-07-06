@@ -1,0 +1,381 @@
+{config_load file="$language/lang_$language.conf" section="index"}
+{config_load file="lang_`$language`.custom"}
+
+{if isset($box_ADMIN)}{$box_ADMIN}{/if}
+
+<div id="layout_wrap">
+
+  {if $display_mode != 'checkout'} 
+    <div class="layout_header">
+      <div class="layout_header_inner">
+        <div class="flex_header_row">
+
+          <div class="col_logo"><a href="{$index}" title="{#link_index#} &bull; {$store_name}"><img src="{$tpl_path}img/logo_head.png" alt="{$store_name}" /></a></div>
+          <div class="col_filler"></div>
+    
+          {if isset($box_SEARCH)}
+            <div class="col_search">
+              <div id="search_short">
+                <div id="toggle_search" title="{#link_search#}"><i class="fa-solid fa-magnifying-glass"></i></div>
+              </div>
+              <div class="toggle_search"><div id="search">{$box_SEARCH}</div></div>
+            </div>
+          {/if}
+    
+          {if (isset($box_CURRENCIES) && $box_CURRENCIES != '') || (isset($box_SHIPPING_COUNTRY) && $box_SHIPPING_COUNTRY != '') || (isset($box_LANGUAGES) && $box_LANGUAGES != '')}
+            <div class="col_settings">
+              <div id="settings_short">
+                <div id="toggle_settings" title="{#link_settings#}"><i class="fa-solid fa-globe"></i></div>
+              </div>
+              <div class="toggle_settings">
+                <div class="toggle_closer"><i class="fa-solid fa-xmark"></i></div>
+                <div class="toggle_headline">
+                  {#link_settings#}    
+                </div>
+                {if isset($box_SHIPPING_COUNTRY)}{$box_SHIPPING_COUNTRY}{/if}
+                {if isset($box_LANGUAGES) && $box_LANGUAGES != ''}{$box_LANGUAGES}{/if}
+                {if isset($box_CURRENCIES)}{$box_CURRENCIES}{/if}
+              </div>
+            </div>
+          {/if}
+
+          {if isset($box_LOGIN) || isset($box_INFOBOX)}
+            <div class="col_account">
+              <div id="account_short" style="cursor:pointer">
+                {if isset($smarty.session.customer_id)}
+                  <a title="{#link_account#}" id="toggle_account" href="{$account}"><i class="fa-solid fa-user"></i></a>
+                {else}
+                  <a title="{#link_login#}" id="toggle_account" href="{$login}"><i class="fa-regular fa-user"></i></a>
+                {/if}
+              </div>
+              <div class="toggle_account">
+                {if isset($box_LOGIN)}{$box_LOGIN}{/if}
+                {if isset($box_INFOBOX)}{$box_INFOBOX}{/if}
+              </div>
+            </div>
+          {/if}
+    
+          {if isset($box_WISHLIST)}<div class="col_wishlist">{$box_WISHLIST}</div>{/if}
+          {if isset($box_CART)}<div class="col_cart">{$box_CART}</div>{/if}
+
+          <div class="col_menu">
+            <div id="menu_short">
+              <div id="#mobile_menu" title="{#link_menu#}"><span><i class="fa-solid fa-bars"></i></span></div>
+            </div>
+          </div>        
+          
+        </div>
+      </div>
+      <div class="toggle_overlay"></div>
+    </div>
+
+    <div class="layout_categories">
+      <div class="layout_categories_inner">
+        <ul class="menu_items case_{$smarty.const.CATEGORIES_CASE}">
+          {if isset($box_CATEGORIES)}{$box_CATEGORIES}{/if}
+          {if $smarty.const.HEADER_SHOW_MANUFACTURERS === true}
+            {if isset($box_MANUFACTURERS)}{$box_MANUFACTURERS}{/if}
+          {/if}
+          {if $smarty.const.SPECIALS_EXISTS === true}
+            <li class="level1{if strpos($smarty.server.PHP_SELF, $smarty.const.FILENAME_SPECIALS)} active1{/if}"><a title="{#link_specials#}" href="{$smarty.const.FILENAME_SPECIALS|xtc_href_link}">{#link_specials#}</a></li>
+          {/if}
+          {if $smarty.const.WHATSNEW_EXISTS === true}
+            <li class="level1{if strpos($smarty.server.PHP_SELF, $smarty.const.FILENAME_PRODUCTS_NEW)} active1{/if}"><a title="{#link_whatsnew#}" href="{$smarty.const.FILENAME_PRODUCTS_NEW|xtc_href_link}">{#link_whatsnew#}</a></li>
+          {/if}
+        </ul>
+      </div>
+    </div>
+
+  {else}
+  
+    <div class="layout_header_checkout">
+      <div class="layout_header_checkout_inner">
+        <div class="flex_header_checkout_row">
+          <div class="col_logo_checkout"><img src="{$tpl_path}img/logo_head.png" alt="{$store_name}" /></div>
+          <div class="col_logo_back">
+            {if strpos($smarty.server.PHP_SELF, $smarty.const.FILENAME_CHECKOUT_SUCCESS)}
+              <a href="{$index}" title="{#link_index#} &bull; {$store_name}">{#header_back_to_shop#}</a>
+            {else}
+              <a href="{$smarty.const.FILENAME_SHOPPING_CART|xtc_href_link}" title="{#link_index#} &bull; {$store_name}">{#header_back_to_cart#}</a>
+            {/if} 
+          </div>
+        </div>
+      </div>
+    </div>  
+  
+  {/if}
+
+  {if $display_mode == 'home'}
+
+    <div class="layout_content">
+      <div class="content_big">
+  
+        {if $error_message}<div class="errormessage my_20">{$error_message}</div>{/if}
+
+        {if isset($SLIDER)}
+          <div class="slider_row">
+            <div class="splide {if $SLIDER|@count > 1}splide_slider{else}splide_slider_single{/if}" aria-label="Slider">
+              <div class="splide__track">
+        		    <div class="splide__list">
+                  
+                    {foreach name=outer item=slider from=$SLIDER}
+                      <div class="splide__slide">          
+                        {if $slider.LINK != ''}
+                          {if isset($slider.IMAGE_SRC_MOBILE) && $slider.IMAGE_SRC_MOBILE != ''}
+                            <a title="{$slider.TITLE}" href="{$slider.LINK}" {$slider.TARGET}>
+                              <picture>
+                                <source media="(max-width:600px)" data-srcset="{$slider.IMAGE_SRC_MOBILE}">
+                                <source data-srcset="{$slider.IMAGE_SRC}">
+                                <img class="lazyload" data-src="{$slider.IMAGE_SRC}" alt="{$slider.TITLE|onlytext}" title="{$slider.TITLE|onlytext}">
+                              </picture>
+                              <span class="slider_item_content">
+                                {$slider.TITLE}
+                              </span>
+                            </a>
+                          {else}
+                            <a title="{$slider.TITLE}" href="{$slider.LINK}" {$slider.TARGET}>
+                              {$slider.IMAGE_IMG|replace:"<img src":"<img class=\"lazyload\" data-src"}
+                              <span class="slider_item_content">
+                                {$slider.TITLE}
+                              </span>
+                            </a>
+                          {/if}
+                        {elseif $slider.IMAGE_IMG != ''}
+                          {if isset($slider.IMAGE_SRC_MOBILE) && $slider.IMAGE_SRC_MOBILE != ''}
+                            <picture>
+                              <source media="(max-width:600px)" data-srcset="{$slider.IMAGE_SRC_MOBILE}">
+                              <source data-srcset="{$slider.IMAGE_SRC}">
+                              <img class="lazyload" data-src="{$slider.IMAGE_SRC}" alt="{$slider.TITLE|onlytext}" title="{$slider.TITLE|onlytext}">
+                            </picture>
+                            <span class="slider_item_content">
+                              {$slider.TITLE}
+                            </span>
+                          {else}
+                            {$slider.IMAGE_IMG|replace:"<img src":"<img class=\"lazyload\" data-src"}
+                            <span class="slider_item_content">
+                              {$slider.TITLE}
+                            </span>
+                          {/if}
+                        {/if}
+                      </div>
+                    {/foreach}
+
+                </div>
+              </div>
+            </div>
+          </div>            
+        {/if}
+ 
+        {if isset($BANNER1) || isset($BANNER2) || isset($BANNER3) || isset($BANNER4)}
+          <div class="banner_row">
+            {if isset($BANNER1)}<div class="banner_item width_25"{if $BANNER1_SORT > 0} style="order:{$BANNER1_SORT};"{/if}><div class="banner_item_image"><div class="banner_item_image_inner">{$BANNER1}</div></div></div>{/if}
+            {if isset($BANNER2)}<div class="banner_item width_25"{if $BANNER2_SORT > 0} style="order:{$BANNER2_SORT};"{/if}><div class="banner_item_image"><div class="banner_item_image_inner">{$BANNER2}</div></div></div>{/if}
+            {if isset($BANNER3)}<div class="banner_item width_25"{if $BANNER3_SORT > 0} style="order:{$BANNER3_SORT};"{/if}><div class="banner_item_image"><div class="banner_item_image_inner">{$BANNER3}</div></div></div>{/if}
+            {if isset($BANNER4)}<div class="banner_item width_25"{if $BANNER4_SORT > 0} style="order:{$BANNER4_SORT};"{/if}><div class="banner_item_image"><div class="banner_item_image_inner">{$BANNER4}</div></div></div>{/if}
+          </div>
+        {/if}
+
+        {if isset($box_WHATSNEW)}{$box_WHATSNEW}{/if}
+        {if isset($box_SPECIALS)}{$box_SPECIALS}{/if}
+
+        {if isset($BANNER5) || isset($BANNER6) || isset($BANNER7) || isset($BANNER8)}
+          <div class="banner_row">
+            {if isset($BANNER5)}<div class="banner_item width_50"{if $BANNER5_SORT > 0} style="order:{$BANNER5_SORT};"{/if}><div class="banner_item_image"><div class="banner_item_image_inner">{$BANNER5}</div></div></div>{/if}
+            {if isset($BANNER6)}<div class="banner_item width_50"{if $BANNER6_SORT > 0} style="order:{$BANNER6_SORT};"{/if}><div class="banner_item_image"><div class="banner_item_image_inner">{$BANNER6}</div></div></div>{/if}
+            {if isset($BANNER7)}<div class="banner_item width_33"{if $BANNER7_SORT > 0} style="order:{$BANNER7_SORT};"{/if}><div class="banner_item_image"><div class="banner_item_image_inner">{$BANNER7}</div></div></div>{/if}
+            {if isset($BANNER8)}<div class="banner_item width_66"{if $BANNER8_SORT > 0} style="order:{$BANNER8_SORT};"{/if}><div class="banner_item_image"><div class="banner_item_image_inner">{$BANNER8}</div></div></div>{/if}
+          </div>
+        {/if}
+
+        {if isset($MODULE_upcoming_products)}{$MODULE_upcoming_products}{/if}
+        {if isset($MODULE_new_products)}{$MODULE_new_products}{/if}
+        {if isset($box_GREETING)}{$box_GREETING}{/if}
+        {if isset($main_content)}{$main_content}{/if}
+        {if isset($box_REVIEWS)}{$box_REVIEWS}{/if}
+        {if isset($box_BESTSELLERS)}{$box_BESTSELLERS}{/if}
+
+        {if isset($BANNER9)}
+          <div class="banner_row">
+            {if isset($BANNER9)}<div class="banner_item width_100"{if $BANNER9_SORT > 0} style="order:{$BANNER9_SORT};"{/if}><div class="banner_item_image"><div class="banner_item_image_inner">{$BANNER9}</div></div></div>{/if}
+          </div>  
+        {/if}
+
+      </div>
+    </div>
+
+  {elseif $display_mode == 'error'}
+
+    <div class="layout_content">
+      <div class="content_big">
+
+        {if isset($navtrail)}
+          <div class="breadcrumb">{$navtrail|replace:" &raquo; ":"<i class=\"fa-solid fa-angle-right\"></i>"}</div>
+        {/if}
+
+        {if isset($main_content)}{$main_content}{/if}
+        {if isset($box_LAST_VIEWED)}{$box_LAST_VIEWED}{/if}
+        {if isset($box_BESTSELLERS)}{$box_BESTSELLERS}{/if}
+        {if isset($box_WHATSNEW)}{$box_WHATSNEW}{/if}
+        {if isset($box_SPECIALS)}{$box_SPECIALS}{/if}
+        {if isset($box_XSELL)}{$box_XSELL}{/if}
+
+      </div>
+    </div>    
+  
+  {elseif $display_mode == 'listing'}  
+
+    <div class="layout_content">
+      <div class="content_big">
+
+        {if isset($navtrail)}
+          <div class="breadcrumb">{$navtrail|replace:" &raquo; ":"<i class=\"fa-solid fa-angle-right\"></i>"}</div>
+        {/if}
+
+        <div class="flex_listing_cols">        
+
+          <div class="flex_listing_categories">
+            <div class="subcats_menu_box">  
+              <div class="subline mt_40 mb_0">{#subcats_menu_heading#}</div>
+              <ul class="subcats_menu">
+                {if isset($box_SUB_CATEGORIES)}{$box_SUB_CATEGORIES}{/if}
+              </ul>
+            </div>
+          </div>
+
+          <div class="flex_listing_products">
+            {if isset($main_content)}{$main_content}{/if}
+          </div>
+        </div>
+
+      </div>
+    </div>    
+  
+  {elseif $display_mode == 'productinfo'}  
+
+    <div class="layout_content">
+
+      <div class="content_big">
+        {if isset($navtrail)}
+          <div class="breadcrumb">{$navtrail|replace:" &raquo; ":"<i class=\"fa-solid fa-angle-right\"></i>"}</div>
+        {/if}
+      </div>
+
+      <div class="content_full">
+        {if isset($main_content)}{$main_content}{/if}
+      </div>
+
+    </div>      
+
+  {elseif $display_mode == 'content'}
+
+    <div class="layout_content">
+      <div class="content_small">
+
+        {if isset($navtrail)}
+          <div class="breadcrumb">{$navtrail|replace:" &raquo; ":"<i class=\"fa-solid fa-angle-right\"></i>"}</div>
+        {/if}
+
+        <div class="flex_content_row">
+          <div class="flex_content_col_1">
+            <div class="content_site cf">
+              {if isset($main_content)}{$main_content}{/if}
+            </div>
+          </div>
+
+          <div class="flex_content_col_2">
+            {if isset($box_CONTENT)}{$box_CONTENT}{/if}
+            {if isset($box_INFORMATION)}{$box_INFORMATION}{/if}
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  {else}
+
+    <div class="layout_content">
+      <div class="content_{$content_size}">
+
+        {if $display_mode != 'checkout'}
+          {if isset($navtrail)}
+            <div class="breadcrumb">{$navtrail|replace:" &raquo; ":"<i class=\"fa-solid fa-angle-right\"></i>"}</div>
+          {/if}
+        {/if}
+
+        {if isset($main_content)}{$main_content}{/if}
+                
+        {if isset($box_XSELL)}{$box_XSELL}{/if}
+        {if isset($box_LAST_VIEWED)}{$box_LAST_VIEWED}{/if}
+        {if isset($box_BESTSELLERS)}{$box_BESTSELLERS}{/if}
+        {if isset($box_WHATSNEW)}{$box_WHATSNEW}{/if}
+        {if isset($box_SPECIALS)}{$box_SPECIALS}{/if}
+
+      </div>
+    </div>
+
+  {/if}
+
+  {if $display_mode == 'home'}
+    {if isset($box_TRUSTEDSHOPS)}
+      <div class="layout_content">
+        <div class="content_big">
+          {$box_TRUSTEDSHOPS}
+        </div>
+      </div>
+    {/if}
+  {/if}
+
+  {if isset($box_NEWSLETTER) && $display_mode != 'checkout' && $display_mode != 'newsletter'}
+    <div class="layout_subfooter">
+      <div class="content_small">
+        {$box_NEWSLETTER}
+      </div>
+    </div>
+  {/if}
+
+  <div class="layout_footer">
+    <div class="content_big">
+
+      <div class="footer_row">
+        <div class="footer_item">
+          <div class="content_box">
+            <div class="content_box_header">{#footer_heading_contact#}</div>
+            <div class="content_box_text">{#footer_text_contact#}</div>            
+          </div>
+        </div>
+        {if isset($box_CONTENT)}<div class="footer_item">{$box_CONTENT}</div>{/if}
+        {if isset($box_INFORMATION)}<div class="footer_item">{$box_INFORMATION}</div>{/if}
+        {if isset($box_MISCELLANEOUS)}<div class="footer_item">{$box_MISCELLANEOUS}</div>{/if}
+      </div>
+
+      <div class="mod_copyright">
+        {#footer_price_hinweis_1#} {if $smarty.session.customers_status.customers_status_show_price_tax == 1}{#footer_price_hinweis_incl#}{else}{#footer_price_hinweis_excl#}{/if} {#footer_price_hinweis_2#} <a class="iframe" title="Information" href="{'popup_content.php'|xtc_href_link:'coID=1'}" target="_blank" rel="nofollow">{#footer_price_hinweis_3#}</a>. {#footer_price_hinweis_4#} {$smarty.const.TITLE}.<br />
+        {$smarty.const.TITLE} &copy; {$smarty.now|date_format:"Y"} | Template &copy; 2009-{$smarty.now|date_format:"Y"} by modified eCommerce Shopsoftware
+      </div>
+
+    </div>
+  </div>
+
+  {if $display_mode != 'checkout'}
+    {if isset($box_CATEGORIES)}
+      <div id="mobile_menu">
+        <div id="menu_closer"><i class="fa-solid fa-xmark"></i></div>
+        <ul>
+          {$box_CATEGORIES|replace:"<div class=\"mega_menu\">":""|replace:"</div>":""}
+          {if isset($box_MANUFACTURERS)}{$box_MANUFACTURERS|replace:"<div class=\"mega_menu\">":""|replace:"</div>":""}{/if}
+          {if $smarty.const.SPECIALS_CATEGORIES === true}
+            {if $smarty.const.SPECIALS_EXISTS === true}
+              <li class="level1{if strpos($smarty.server.PHP_SELF, $smarty.const.FILENAME_SPECIALS)} active1{/if}"><a title="{#header_specials#}" href="{$smarty.const.FILENAME_SPECIALS|xtc_href_link}">{#header_specials#}</a></li>
+            {/if}
+          {/if}
+          {if $smarty.const.WHATSNEW_CATEGORIES === true}
+            {if $smarty.const.WHATSNEW_EXISTS === true}
+              <li class="level1{if strpos($smarty.server.PHP_SELF, $smarty.const.FILENAME_PRODUCTS_NEW)} active1{/if}"><a title="{#header_whatsnew#}" href="{$smarty.const.FILENAME_PRODUCTS_NEW|xtc_href_link}">{#header_whatsnew#}</a></li>
+            {/if}
+          {/if}
+        </ul>    
+      </div>
+    {/if}
+  {/if}
+
+</div>

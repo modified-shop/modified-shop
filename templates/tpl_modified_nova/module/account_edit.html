@@ -1,0 +1,64 @@
+{config_load file="$language/lang_$language.conf" section="account_edit"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="account_edit"}
+<div class="account_edit">
+  <h1>{#heading_account#}</h1>
+
+  <div class="flex_account_row">
+
+    <div class="flex_account_col_1">
+      {if isset($smarty.session.customer_id)}
+        {include file="module/account_navigation.html"}
+      {/if}
+    </div>
+
+    <div class="flex_account_col_2">
+      {$FORM_ACTION}
+
+        {if $error_message}<div class="errormessage my_0">{$error_message}</div>{/if}
+
+        <div class="contentbox">
+          <div class="subline">{#title_personal#} <span class="fields_required">({#text_must#})</span></div>
+          {if $csID}
+            <div class="field_item_1"><label><span class="field_text">{#csID#}</span>{$csID}</label></div>
+          {/if}
+          {if $gender == '1'}
+            <div class="field_item_1"><label><span class="field_text">{#text_gender#}</span>{$INPUT_GENDER|asterisk}</label></div>
+          {/if}
+          <div class="field_item_row">
+            <div class="field_item_2"><label><span class="field_text">{#text_firstname#}</span>{$INPUT_FIRSTNAME|asterisk}</label></div>
+            <div class="field_item_2"><label><span class="field_text">{#text_lastname#}</span>{$INPUT_LASTNAME|asterisk}</label></div>
+          </div>
+          {if $birthdate == '1'}
+            <div class="field_item_1"><label><span class="field_text">{#text_birthdate#}</span>{$INPUT_DOB|asterisk}<span class="inputNote">{$TEXT_DOB_NOTE}</span></label></div>
+          {/if}          
+        </div>
+          
+        <div class="contentbox">
+          <div class="subline">{#title_contact#} <span class="fields_required">({#text_must#})</span></div>
+          <div class="field_item_1"><label><span class="field_text">{#text_email#}</span>{$INPUT_EMAIL|asterisk|replace:"type=\"text\"":"type=\"email\""}</label></div>
+          <div class="field_item_1"><label><span class="field_text">{#text_confirm_email#}</span>{$INPUT_CONFIRM_EMAIL|asterisk|replace:"type=\"text\"":"type=\"email\""}</label></div>
+          <div class="field_item_1"><label><span class="field_text">{#text_tel#}</span>{$INPUT_TEL|asterisk|replace:"type=\"text\"":"type=\"tel\""}</label></div>
+          <div class="field_item_1"><label><span class="field_text">{#text_fax#}</span>{$INPUT_FAX|replace:"type=\"text\"":"type=\"tel\""}</label></div>
+          {if $vat == '1'}
+            <div class="field_item_1"><label><span class="field_text">{#text_ustid#}</span>{$INPUT_VAT}<span class="inputNote">{$TEXT_VAT_NOTE}</span></label></div>
+          {/if}  
+        </div>
+
+        <div class="button_row">
+{*
+          <div class="br_left">
+            <div class="br_btn_1">{$BUTTON_BACK}</div>
+          </div>
+*}
+          <div class="br_right">
+            <div class="br_btn_1">{$BUTTON_SUBMIT_UPDATE}</div>
+          </div>
+        </div>
+
+      {$FORM_END}
+      
+    </div>
+  </div>    
+</div>
+          

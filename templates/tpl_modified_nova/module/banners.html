@@ -1,0 +1,46 @@
+{if $banner_data.TEXT != ''}
+
+  {$banner_data.TEXT}
+
+{elseif $banner_data.LINK != ''}
+  {if isset($banner_data.IMAGE_SRC_MOBILE) && $banner_data.IMAGE_SRC_MOBILE != ''}
+    <a title="{$banner_data.TITLE}" href="{$banner_data.LINK}" {$banner_data.TARGET}>
+      <picture>
+        <source media="(max-width:600px)" data-srcset="{$banner_data.IMAGE_SRC_MOBILE}">
+        <source data-srcset="{$banner_data.IMAGE_SRC}">
+        <img class="lazyload" data-src="{$banner_data.IMAGE_SRC}" alt="{$banner_data.TITLE|onlytext}" title="{$banner_data.TITLE|onlytext}">
+      </picture>
+      <noscript><img src="{$banner_data.IMAGE_SRC}" alt="{$banner_data.TITLE|onlytext}" title="{$banner_data.TITLE|onlytext}"></noscript>
+      <span class="banner_item_content">
+        <span>{$banner_data.TITLE}</span>
+      </span>
+    </a>
+  {else}
+    <a title="{$banner_data.TITLE}" href="{$banner_data.LINK}" {$banner_data.TARGET}>
+      {$banner_data.IMAGE_IMG|replace:"<img src":"<img class=\"lazyload\" data-src"}
+      <span class="banner_item_content">
+        <span>{$banner_data.TITLE}</span>
+      </span>
+    </a>
+  {/if}
+
+{elseif $banner_data.IMAGE_IMG != ''}
+
+  {if isset($banner_data.IMAGE_SRC_MOBILE) && $banner_data.IMAGE_SRC_MOBILE != ''}
+    <picture>
+      <source media="(max-width:600px)" data-srcset="{$banner_data.IMAGE_SRC_MOBILE}">
+      <source data-srcset="{$banner_data.IMAGE_SRC}">
+      <img class="lazyload" data-src="{$banner_data.IMAGE_SRC}" alt="{$banner_data.TITLE|onlytext}" title="{$banner_data.TITLE|onlytext}">
+    </picture>
+    <noscript><img src="{$banner_data.IMAGE_SRC}" alt="{$banner_data.TITLE|onlytext}" title="{$banner_data.TITLE|onlytext}"></noscript>
+    <span class="banner_item_content">
+      <span>{$banner_data.TITLE}</span>
+    </span>
+  {else}
+    {$banner_data.IMAGE_IMG|replace:"<img src":"<img class=\"lazyload\" data-src"}
+    <span class="banner_item_content">
+      <span>{$banner_data.TITLE}</span>
+    </span>
+  {/if}
+
+{/if}

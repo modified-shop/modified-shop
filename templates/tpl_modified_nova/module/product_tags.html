@@ -1,0 +1,48 @@
+{if isset($module_content)}
+  {config_load file="$language/lang_$language.conf" section="reviews"}
+  {config_load file="lang_`$language`.custom"}
+  {config_load file="lang_`$language`.section" section="product_tags"}
+  <div class="products_tags">
+    <div class="subline border_0 mb_0">{#heading_products_tags#}</div>
+    <div class="tags_block cf">
+      {foreach name=aussen item=module_data from=$module_content}
+        <div class="tags_row {cycle values="tags_bg1,tags_bg2"}">
+
+          <span class="tags_options">
+            <span class="tags_options_row">
+              <span class="tags_options_name{if $module_data.OPTIONS_DESCRIPTION != ''} tooltip{/if}">
+                {$module_data.OPTIONS_NAME}
+                {if $module_data.OPTIONS_DESCRIPTION != ''}<span class="tooltip_content">{$module_data.OPTIONS_DESCRIPTION}</span>{/if}:
+              </span>
+              {if $module_data.OPTIONS_CONTENT_LINK != ''}<span class="tags_options_info"><a class="iframe" target="_blank" title="{$module_data.OPTIONS_NAME|onlytext}" href="{$module_data.OPTIONS_CONTENT_LINK}"><i class="fa-solid fa-circle-info ml_5"></i></a></span>{/if}
+            </span>
+          </span>
+
+          <span class="tags_values">
+            {foreach name=inner item=item_data from=$module_data.DATA}
+              {if $item_data.VALUES_IMAGE != ''}
+                <span class="tags_values_icon_row">
+                  <span class="tags_values_icon_name">
+                    {if $item_data.VALUES_CONTENT_LINK != ''}<a class="iframe" target="_blank" href="{$item_data.VALUES_CONTENT_LINK}" title="{$item_data.VALUES_NAME|onlytext}">{/if}
+                      <img src="{$item_data.VALUES_IMAGE}" alt="{$item_data.VALUES_NAME|onlytext}" />
+                    {if $item_data.VALUES_CONTENT_LINK != ''}</a>{/if}
+                    {if $item_data.VALUES_DESCRIPTION != ''}<span class="tooltip_content">{$item_data.VALUES_DESCRIPTION}</span>{/if}
+                  </span>
+                </span>
+              {else}
+                <span class="tags_values_text_row">
+                  <span class="tags_values_name{if $item_data.VALUES_DESCRIPTION != ''} tooltip{/if}">
+                    {$item_data.VALUES_NAME}
+                    {if $item_data.VALUES_DESCRIPTION != ''}<span class="tooltip_content">{$item_data.VALUES_DESCRIPTION}</span>{/if}
+                  </span>
+                  {if $item_data.VALUES_CONTENT_LINK != ''}<span class="tags_values_info"><a class="iframe" target="_blank" href="{$item_data.VALUES_CONTENT_LINK}" title="{$item_data.VALUES_NAME|onlytext}"><i class="fa-solid fa-circle-info ml_5"></i></a></span>{/if}
+                </span>
+              {/if}
+            {/foreach}
+          </span>
+
+        </div>
+      {/foreach}
+    </div>
+  </div>
+{/if}

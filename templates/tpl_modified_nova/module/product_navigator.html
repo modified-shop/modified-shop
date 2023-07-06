@@ -1,0 +1,27 @@
+{if isset($module_content)}
+  {config_load file="$language/lang_$language.conf" section="product_navigator"}
+  {config_load file="lang_`$language`.custom"}
+  {config_load file="lang_`$language`.section" section="product_navigator"}
+  <div class="product_navigator">
+    {if $module_content.prev.LINK != ''}
+      <div class="prev">
+        <a href="{$module_content.prev.LINK}" title="{$module_content.prev.NAME|onlytext}">
+          <span class="content">
+            <span><img class="lazyload" data-src="{$module_content.prev.IMAGE}" alt="{$module_content.prev.NAME|onlytext}"></span>
+          </span>
+          <span class="action"><i class="fa-solid fa-arrow-left-long"></i></span>
+        </a>
+      </div>
+    {/if}
+    {if $module_content.next.LINK != ''}
+      <div class="next">
+        <a href="{$module_content.next.LINK}" title="{$module_content.next.NAME|onlytext}">        
+          <span class="action"><i class="fa-solid fa-arrow-right-long"></i></span>
+          <span class="content">
+            <span><img class="lazyload" data-src="{$module_content.next.IMAGE}" alt="{$module_content.next.NAME|onlytext}"></span>
+          </span>
+        </a>
+      </div>
+    {/if}
+  </div>
+{/if}

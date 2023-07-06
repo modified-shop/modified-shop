@@ -1,0 +1,9 @@
+{$MESSAGE}
+
+Redeem your coupon by entering the coupon code into the designated input field for Voucher/Coupon codes during checkout.
+
+Your coupon code is: {$COUPON_ID}
+
+You can use the coupon code next time you visit us at {$WEBSITE}.
+
+[SIGNATUR]

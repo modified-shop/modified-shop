@@ -1,0 +1,32 @@
+{if isset($module_content)}
+  {config_load file="$language/lang_$language.conf" section="products_media"}
+  {config_load file="lang_`$language`.custom"}
+  {config_load file="lang_`$language`.section" section="products_media"}
+  <div class="products_media">
+    <div class="subline border_0 mb_0">{#file#}</div>
+    
+    <div class="media_block">
+      {foreach name=aussen item=module_data from=$module_content}
+        <div class="media_row">
+          <span class="media_icon">
+            {if isset($module_data.ICON)}
+              {if strpos($module_data.ICON, 'pdf')}
+                <i class="fa-regular fa-file-pdf"></i>
+              {elseif strpos($module_data.ICON, 'link')}
+                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+              {elseif strpos($module_data.ICON, 'jpg') || strpos($module_data.ICON, 'png') }
+                <i class="fa-regular fa-file-video"></i>
+              {else}  
+                <i class="fa-regular fa-file-zipper"></i>
+              {/if}
+            {/if}
+          </span>
+          <span class="media_content">{$module_data.FILENAME|replace:"<a href":"<a rel=\"noopener noreferrer\" href"}</span>
+          <span class="media_size">{$module_data.FILESIZE}</span>
+          <span class="media_button">{if $module_data.BUTTON != ''}{$module_data.BUTTON}{else}&nbsp;{/if}</span>
+          {if $module_data.DESCRIPTION != ''}<span class="media_desc">{$module_data.DESCRIPTION}</span>{/if}                
+        </div>
+      {/foreach}
+    </div>
+  </div>
+{/if}

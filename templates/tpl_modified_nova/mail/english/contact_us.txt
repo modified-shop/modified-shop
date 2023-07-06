@@ -1,0 +1,12 @@
+{config_load file="$language/lang_$language.conf" section="newsletter"}
+{config_load file="$language/lang_$language.conf" section="contact_us"}
+{config_load file="lang_`$language`.custom"}
+You have received a contact request. Below, the details of the request:
+
+{$smarty.const.EMAIL_NAME} {$NAME}
+{$smarty.const.EMAIL_EMAIL} {$EMAIL}
+{$ADDITIONAL_FIELDS} 
+
+{$smarty.const.EMAIL_MESSAGE}
+ 
+{$MESSAGE}

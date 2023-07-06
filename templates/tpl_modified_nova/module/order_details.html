@@ -1,0 +1,93 @@
+{config_load file="$language/lang_$language.conf" section="shopping_cart"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="shopping_cart"}
+<div class="order_details">
+
+  <div class="orderflex">  
+
+    <div class="orderflex_row orderflex_row_header">
+      <div class="of_header_col_img">&nbsp;</div>
+      <div class="of_header_col_flex">{#text_article#}</div>
+      <div class="of_header_col_summary">
+        <div class="of_header_col_qty">{#text_qty#}</div>
+        <div class="of_header_col_total">{#text_total#}</div>
+      </div>
+    </div> 
+
+    {foreach name=aussen item=module_data from=$module_content}    
+      <div class="orderflex_row">
+
+        <div class="of_col_img">
+          <div class="prod_image">
+            {if $module_data.PRODUCTS_IMAGE != ''}        
+              {if $smarty.const.PICTURESET_ACTIVE === true}
+                <img class="lazyload" data-src="{$module_data.PRODUCTS_IMAGE|replace:"thumbnail_":"mini_"}" alt="{$module_data.PRODUCTS_NAME|onlytext}" title="{$module_data.PRODUCTS_NAME|onlytext}" />
+              {else}
+                <img class="lazyload" data-src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" title="{$module_data.PRODUCTS_NAME|onlytext}" />
+              {/if}
+              <noscript><img src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" title="{$module_data.PRODUCTS_NAME|onlytext}" /></noscript>
+            {/if}  
+          </div>
+        </div>
+
+        <div class="of_col_flex">
+
+          <div class="of_productname">
+            <a href="{$module_data.PRODUCTS_LINK}" title="{$module_data.PRODUCTS_NAME|onlytext}">{$module_data.PRODUCTS_NAME}</a>
+          </div>        
+
+          {if $module_data.PRODUCTS_SHORT_DESCRIPTION}<div class="of_description">{$module_data.PRODUCTS_SHORT_DESCRIPTION}</div>{/if}
+
+          {if $module_data.PRODUCTS_MODEL || $module_data.PRODUCTS_SHIPPING_TIME}
+            <div class="of_inforows">
+              {if $module_data.PRODUCTS_MODEL}<div class="of_infoline"><strong>{$smarty.const.HEADER_MODEL}:</strong> {$module_data.PRODUCTS_MODEL}</div>{/if}
+              {if $module_data.PRODUCTS_SHIPPING_TIME}<div class="of_infoline"><strong>{$smarty.const.SHIPPING_TIME}</strong> {$module_data.PRODUCTS_SHIPPING_TIME}</div>{/if}
+            </div>
+          {/if}
+    
+          {if is_array($module_data.ATTRIBUTES) && count($module_data.ATTRIBUTES) > 0}
+            <ul class="of_attributes">
+              {foreach key=key_data item=item_data from=$module_data.ATTRIBUTES}
+                <li><strong>{$item_data.NAME}:</strong> {$item_data.VALUE_NAME}</li>
+              {/foreach}
+            </ul>
+          {/if}
+        
+          <div class="of_action">                                                
+            {if $module_data.BUTTON_WISHLIST != ''}<span class="of_wishlist">{$module_data.BUTTON_WISHLIST|replace:"\">":" \"><i class=\"fa-regular fa-heart\"></i>"}</span>{/if}
+            <span class="of_delete">{$module_data.BUTTON_DELETE}</span>
+          </div>                                                                                              
+        
+        </div>
+
+        <div class="of_col_summary">
+          <div class="of_col_qty">
+            <div class="of_col_qty_label">{#text_qty#}</div>
+            <div class="of_col_qty_inner">
+              <div class="of_quantity_field">{$module_data.PRODUCTS_QTY|replace:"type=\"text\"":"type=\"tel\" aria-label=\"{#products_basket_quantity#}\""}</div>
+              <div class="of_quantity_update">
+                <span class="cssButton cssButtonColor1">
+                  <span class="cssButtonIcon"><i class="fa-solid fa-rotate"></i></span>
+                  <button type="submit" class="cssButtonText" title="{#order_text_update#}">{#order_text_update#}</button>
+                </span>
+              </div>            
+            </div>
+          </div>
+
+          <div class="of_col_total">
+            <div class="of_col_total_inner">
+              {$module_data.PRODUCTS_PRICE}
+              {if $module_data.PRODUCTS_QUANTITY > 1}
+                <div class="of_col_total_singleprice">{#order_text_each#} {$module_data.PRODUCTS_SINGLE_PRICE}</div>
+              {/if}
+            </div>
+          </div>
+        </div>
+
+      </div>
+    {/foreach}
+
+  </div>
+
+  {if $PAYPAL_INSTALLMENT && !$PAYPALPLAN}{$PAYPAL_INSTALLMENT}{/if}
+</div>

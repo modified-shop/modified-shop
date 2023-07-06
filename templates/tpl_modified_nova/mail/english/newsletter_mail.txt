@@ -1,0 +1,31 @@
+
+Thank you for subscribing!
+
+{if isset($LINK)}
+You receive this e-mail because you want to receive our newsletter.
+
+Please click the following activation link to receive newsletters. If you haven't subscribed to this service, please ignore this e-mail!
+
+Your activation link:
+{$LINK}
+
+If you have not registered for our newsletter or do not wish to receive the newsletter, please ignore the activation link.
+
+Your consent to the dispatch of our newsletter is revocable at any time. The newsletter is sent according to our privacy policy.
+{/if}
+
+{if $SEND_GIFT == true}
+As a thank you for creating your account, you've received a {$GIFT_AMMOUNT} gift voucher!
+
+Redeem your voucher with the following code - {$GIFT_CODE} - when placing an order or simply by clicking the following link {$GIFT_LINK}.
+{/if}
+
+{if $SEND_COUPON == true}
+As a thank you for creating your account, you've recieved a discount voucher!
+
+The voucher details are: {$COUPON_DESC}
+
+Redeem your voucher by entering the code {$COUPON_CODE} during checkout process, when asked for it.
+{/if} 
+
+[SIGNATUR]
