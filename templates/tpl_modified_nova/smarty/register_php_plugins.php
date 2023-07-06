@@ -19,9 +19,11 @@
     'count',
     'nl2br',
     'sprintf',
+    'strtotime',
     'number_format',
     'stripslashes',
     'array_reverse',
     'xtc_href_link',
     'htmlentities',
+    'xtc_date_short',
   );
