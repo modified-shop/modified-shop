@@ -277,7 +277,15 @@ readers do not read off random characters that represent icons */
 .fa-circle-chevron-right::before {
   content: "\f138"; }
 
+.fa-file-pdf::before {
+  content: "\f1c1"; }
+  
+.fa-file-video::before {
+  content: "\f1c8"; }
 
+.fa-file-zipper::before {
+  content: "\f1c6"; }
+  
 /* start add new icons here */
 
 
