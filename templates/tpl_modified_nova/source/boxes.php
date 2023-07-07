@@ -125,6 +125,11 @@
       require_once(DIR_FS_BOXES . 'sub_categories.php');
       break;
 
+    case 'productinfo':
+      // sub categories
+      require_once(DIR_FS_BOXES . 'last_viewed.php');
+      break;
+
     case 'category':
     case 'manufacturer':
     case 'search':

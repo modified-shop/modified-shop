@@ -262,6 +262,11 @@
 
       <div class="content_full">
         {if isset($main_content)}{$main_content}{/if}
+        {if isset($box_LAST_VIEWED)}
+          <div class="content_big">
+            {$box_LAST_VIEWED}
+          </div>
+        {/if}
       </div>
 
     </div>      
