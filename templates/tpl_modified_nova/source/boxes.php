@@ -58,7 +58,7 @@
   // -----------------------------------------------------------------------------------------
   // additional boxes
   // -----------------------------------------------------------------------------------------
-  if (in_array($display_mode, array('home', 'logoff', 'error', 'shopping_cart', 'newsletter')) 
+  if (in_array($display_mode, array('home', 'logoff', 'error', 'shoppingcart', 'newsletter')) 
       || basename($PHP_SELF) == FILENAME_CHECKOUT_SUCCESS
       )
   {
