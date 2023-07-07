@@ -39,9 +39,9 @@
                                      LIMIT ".MAX_PRODUCTS_RANDOM_POOL);
 
     $box_content = array();
-    if (xtc_db_num_rows($specials_query, true) > 0) {
+    if (xtc_db_num_rows($specials_query) > 0) {
       $content_array = array();
-      while ($specials = xtc_db_fetch_array($specials_query, true)) {
+      while ($specials = xtc_db_fetch_array($specials_query)) {
         $content_array[] = $specials;
       }
       shuffle($content_array);
@@ -54,8 +54,8 @@
 
     $box_smarty->assign('BOX_CONTENT', $box_content);
     $box_smarty->assign('SPECIALS_LINK', xtc_href_link(FILENAME_SPECIALS));
-
-    $box_specials = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_specials.html', $cache_id);
-
-    $smarty->assign('box_SPECIALS', $box_specials);
   }
+
+  $box_specials = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_specials.html', $cache_id);
+
+  $smarty->assign('box_SPECIALS', $box_specials);

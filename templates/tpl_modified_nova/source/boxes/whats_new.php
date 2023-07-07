@@ -25,24 +25,24 @@
 
   if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_whatsnew.html', $cache_id) || !$cache) {
     // get random product data
-    $whats_new_query = xtc_db_query("SELECT DISTINCT ".$product->default_select."
-                                                FROM ".TABLE_PRODUCTS." p
-                                                JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd 
-                                                     ON p.products_id = pd.products_id 
-                                                        AND pd.language_id = ".(int)$_SESSION['languages_id']."
-                                                        AND trim(pd.products_name) != ''
-                                                JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
-                                                     ON p.products_id = p2c.products_id
-                                                JOIN ".TABLE_CATEGORIES." c
-                                                     ON c.categories_id = p2c.categories_id 
-                                                        AND c.categories_status = 1 
-                                                            ".CATEGORIES_CONDITIONS_C."
-                                               WHERE p.products_status = 1
-                                                     " . PRODUCTS_CONDITIONS_P . "
-                                                     " . $products_id . "
-                                                     " . $days . "                                           
-                                            ORDER BY p.products_date_added DESC, p.products_id
-                                               LIMIT ".MAX_PRODUCTS_RANDOM_POOL);
+    $whats_new_query = xtDBquery("SELECT DISTINCT ".$product->default_select."
+                                             FROM ".TABLE_PRODUCTS." p
+                                             JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd 
+                                                  ON p.products_id = pd.products_id 
+                                                     AND pd.language_id = ".(int)$_SESSION['languages_id']."
+                                                     AND trim(pd.products_name) != ''
+                                             JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
+                                                  ON p.products_id = p2c.products_id
+                                             JOIN ".TABLE_CATEGORIES." c
+                                                  ON c.categories_id = p2c.categories_id 
+                                                     AND c.categories_status = 1 
+                                                         ".CATEGORIES_CONDITIONS_C."
+                                            WHERE p.products_status = 1
+                                                  " . PRODUCTS_CONDITIONS_P . "
+                                                  " . $products_id . "
+                                                  " . $days . "                                           
+                                         ORDER BY p.products_date_added DESC, p.products_id
+                                            LIMIT ".MAX_PRODUCTS_RANDOM_POOL);
 
     $box_content = array();
     if (xtc_db_num_rows($whats_new_query, true) > 0) {
@@ -60,8 +60,8 @@
 
     $box_smarty->assign('BOX_CONTENT', $box_content);
     $box_smarty->assign('LINK_NEW_PRODUCTS', xtc_href_link(FILENAME_PRODUCTS_NEW));
-
-    $box_whats_new = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_whatsnew.html', $cache_id);
-
-    $smarty->assign('box_WHATSNEW', $box_whats_new);
   }
+
+  $box_whats_new = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_whatsnew.html', $cache_id);
+
+  $smarty->assign('box_WHATSNEW', $box_whats_new);
