@@ -85,7 +85,6 @@ if ($listing_split->number_of_rows > 0) {
   if (isset($manufacturers_id) && basename($PHP_SELF) != FILENAME_ADVANCED_SEARCH_RESULT) {
     $manufacturers_array = xtc_get_manufacturers();
     if (isset($manufacturers_array[$manufacturers_id])) {
-      $module_smarty->assign('listing_mode', 'manufacturer');
       $manufacturer = $manufacturers_array[$manufacturers_id];
       $manufacturer_image = $main->getImage($manufacturer['manufacturers_image'], 'manufacturers/', MANUFACTURER_IMAGE_SHOW_NO_IMAGE);
 
@@ -101,6 +100,7 @@ if ($listing_split->number_of_rows > 0) {
         $category['categories_description'] = $manufacturer['manufacturers_description'];
         $category['listing_template'] = $manufacturer['listing_template'];
         $image = ((isset($manufacturer_image) && $manufacturer_image != '') ? $manufacturer_image : '');
+        $module_smarty->assign('listing_mode', 'manufacturer');
       }
     }
   }
