@@ -2561,20 +2561,24 @@ ul.subcats_menu li.Selected a {
 }
 
 .lb_buttons {
+  position:relative;
   margin: 15px 0 0 0;
-  display: none; 
+  display: flex; 
   justify-content: center;
+  opacity:1;
+  padding: 0 0;
 }
-@media only screen and (min-width: 985px) {
-  .lb_buttons { display: flex; }
-}
-
 .lb_buttons .cssButton {
   width: 44px;
-  margin: 0px 4px;
+  margin: 0 4px;
 }
 .lb_buttons .cssButton .cssButtonIcon {
   font-size:16px;
+}
+/* animation for box buttons - only desktop */
+@media only screen and (min-width: 985px) {
+  .lb_buttons { position:absolute; opacity:0; left:0; right:0; bottom:0; transform: translate(0, 100%); transition: all 0.6s ease-in-out; background:rgba(249,249,249,0.7); width:100%; padding: 20px 0px; }
+  .listingbox:hover .lb_buttons { opacity:1; transform: translate(0, 0); }
 }
 
 /* upcoming products */
@@ -2593,24 +2597,6 @@ ul.subcats_menu li.Selected a {
   font-weight: 700;
   border-radius: 4px;
   text-align:center; 
-}
-
-/* animation for box buttons */
-.lb_buttons {
-  position:absolute;
-  opacity:0;
-  left:0;
-  right:0;
-  bottom:0;
-  transform: translate(0, 100%); 
-  transition: all 0.6s ease-in-out;
-  background:rgba(249,249,249,0.7);
-  width:100%;
-  padding: 20px 0px;
-}
-.listingbox:hover .lb_buttons {
-  opacity:1;
-  transform: translate(0, 0);
 }
 
 /* rows */
