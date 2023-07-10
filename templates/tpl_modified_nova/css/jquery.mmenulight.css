@@ -332,27 +332,32 @@ body.mm-ocd-opened {
 
 .mm-spn--open .active1 > a,
 .mm-spn--open .activeparent1 > a {
-  color:#f67766 !important;
+  color:#222 !important;
+  font-weight:700 !important;
 }
 .mm-spn--open .active2 > a,
 .mm-spn--open .activeparent2 > a {
-  color:#f67766 !important;
+  color:#222 !important;
+  font-weight:700 !important;
 }
 .mm-spn--open .active3 > a,
 .mm-spn--open .activeparent3 > a {
-  color:#f67766 !important;
+  color:#222 !important;
+  font-weight:700 !important;
 }
 .mm-spn--open .active4 > a,
 .mm-spn--open .activeparent4 > a {
-  color:#f67766 !important;
+  color:#222 !important;
+  font-weight:700 !important;
 }
 .mm-spn--open .active5 > a,
 .mm-spn--open .activeparent5 > a {
-  color:#f67766 !important;
+  color:#222 !important;
+  font-weight:700 !important;
 }
 .mm-spn--open li.level_manu > a > strong {
-  font-weight:400 !important;
-  color:#f67766 !important;
+  font-weight:700 !important;
+  color:#222 !important;
 } 
 .admin_mode .mm-ocd {
   top:36px !important;
