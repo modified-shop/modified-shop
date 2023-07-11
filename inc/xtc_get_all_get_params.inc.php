@@ -33,7 +33,20 @@
             && (!in_array($key, $exclude_array)) 
             ) 
         {
-          $get_url .= build_get_query(array($key => $value));          
+          if (is_array($value)) {
+            foreach ($exclude_array as $exclude) {
+              if (is_array($exclude) 
+                  && isset($exclude[$key])
+                  && isset($value[$exclude[$key]])
+                  )
+              {
+                unset($value[$exclude[$key]]);
+                $value = array_filter($value);
+              }
+            }
+          }
+          
+          $get_url .= build_get_query(array($key => $value));
         }
       }
     }
