@@ -22,16 +22,24 @@
   ((isset($_GET['search']) && strip_tags($_GET['search']) != $_GET['search']) ? $_GET['search'] = NULL : false);
   ((isset($_GET['search_email']) && strip_tags($_GET['search_email']) != $_GET['search_email']) ? $_GET['search_email'] = NULL : false);
   
+  $confirm_change = '';
+  if (isset($_GET['edit_action']) 
+      || (isset($_GET['action']) 
+          && (strpos($_GET['action'], 'edit') !== false 
+              || in_array($_GET['action'], array('edit_category', 'new_category', 'new_product'))
+              )
+          )
+      )
+  {
+    $confirm_change = 'onclick="return confirmLink(\''. CONTINUE_WITHOUT_SAVE .'\', \'\' ,this)"';
+  }
+  
   // Admin Language Switch
   $ls_languages = xtc_get_languages();  
   $languages_array = array();
   if (count($ls_languages) > 1) {
     foreach ($ls_languages as $key => $value) {
-      if (!isset($_GET['action']) || $_GET['action'] == 'edit') {
-        $languages_array[] = '<a href="' . xtc_href_link($current_page, xtc_get_all_get_params(array('language', 'currency')).'language=' . $value['code'], 'NONSSL') . '">' . xtc_image('../lang/' .  $value['directory'] .'/admin/images/' . $value['image'], $value['name']) . '</a>';
-      } else {
-        $languages_array[] = '<span class="nolink">' . xtc_image('../lang/' .  $value['directory'] .'/admin/images/' . $value['image'], $value['name']).'</span>';
-      }
+      $languages_array[] = '<a '.$confirm_change.' href="' . xtc_href_link($current_page, xtc_get_all_get_params(array('language', 'currency')).'language=' . $value['code'], 'NONSSL') . '">' . xtc_image('../lang/' .  $value['directory'] .'/admin/images/' . $value['image'], $value['name']) . '</a>';
     }
   }
   $languages_string = implode('&nbsp;', $languages_array);
