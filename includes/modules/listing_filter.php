@@ -42,6 +42,7 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/listing_filter.html', $
   $filter_sort_dropdown = '';
   $manufacturer_dropdown = '';
   $filter_dropdown = array();
+  $filter_selected = array();
 
   $filter_set_const = strtoupper(substr(basename($PHP_SELF), 0, -4));
   
@@ -203,6 +204,13 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/listing_filter.html', $
       }
       while ($filterlist = xtc_db_fetch_array($filterlist_query, true)) {
         $options[] = array ('id' => $filterlist['id'], 'text' => $filterlist['name']);
+        
+        if (isset($_GET['filter_id']) && $_GET['filter_id'] == $filterlist['id']) {
+          $filter_selected[] = array(
+            'NAME' => $filterlist['name'],
+            'LINK' => xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('filter_id'))),
+          );
+        }
       }
       $manufacturer_dropdown .= xtc_draw_pull_down_menu('filter_id', $options, isset($_GET['filter_id']) ? (int)$_GET['filter_id'] : '', 'onchange="this.form.submit()"').PHP_EOL;
       $manufacturer_dropdown .= '<noscript><input type="submit" value="'.SMALL_IMAGE_BUTTON_VIEW.'" id="filter_submit" /></noscript>'.PHP_EOL;
@@ -301,6 +309,16 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/listing_filter.html', $
       while ($filterlist = xtc_db_fetch_array($filterlist_query, true)) {
         $options[$filterlist['options_id']]['NAME'] = $filterlist['options_name'];
         $options[$filterlist['options_id']][] = array ('id' => $filterlist['values_id'], 'text' => $filterlist['values_name']);
+
+        if (isset($_GET['filter'][$filterlist['options_id']]) 
+            && $_GET['filter'][$filterlist['options_id']] == $filterlist['values_id']
+            )
+        {
+          $filter_selected[] = array(
+            'NAME' =>  $filterlist['values_name'],
+            'LINK' => xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array(array('filter' => $filterlist['options_id'])))),
+          );
+        }
       }
         
       foreach ($options as $options_id => $values) {
@@ -358,6 +376,7 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/listing_filter.html', $
   }
 
   $filter_smarty->assign('FILTER_TAG', $filter_dropdown);
+  $filter_smarty->assign('FILTER_SELECTED', $filter_selected);
   $filter_smarty->assign('LINK_DISPLAY_LIST', xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('show')).'show=list', 'NONSSL'));
   $filter_smarty->assign('LINK_DISPLAY_BOX', xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('show')).'show=box', 'NONSSL'));
 }
