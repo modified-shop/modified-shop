@@ -3167,6 +3167,8 @@ class IbanAccountCheck extends AccountCheck {
 		}
 
 		function iban_trim($iban) {
+		
+			if (empty($iban)) return $iban;
 			
 			// IBAN auf einheitliches Format mit Großbuchstaben und ohne Leerstellen bringen
 			// Swift (BIC) können damit ebenfalls formatiert werden
