@@ -170,6 +170,7 @@
             {if $PRODUCTS_PRICE_ARRAY.0.PRODUCTS_PRICE_FLAG != 'NotAllowed'}
               <div class="pd_tax">{$PRODUCTS_TAX_INFO}{if $PRODUCTS_SHIPPING_LINK}{$PRODUCTS_SHIPPING_LINK}{/if}</div>
             {/if}
+            {if $PAYPAL_INSTALLMENT && !$PAYPALPLAN}{$PAYPAL_INSTALLMENT}{/if}
           </div>
 
           {if isset($MODULE_graduated_price) && $MODULE_graduated_price != ''}{$MODULE_graduated_price}{/if}
@@ -211,7 +212,6 @@
         {if $ADD_CART_BUTTON == '' && $PRODUCTS_FSK18 == 'true'}<div class="fskmessage">{#products_fsk18_check#}</div>{/if}
         {if $ADD_CART_BUTTON == '' && $PRODUCTS_GIFT_FORBIDDEN == 'true'}<div class="errormessage mt_20 mb_0">{#products_gift_forbidden#}</div>{/if}  
 
-        {if $PAYPAL_INSTALLMENT && !$PAYPALPLAN}{$PAYPAL_INSTALLMENT}{/if}
         {if $EASYCREDIT && !$PAYPALPLAN}{$EASYCREDIT}{/if}
 
       </div>      

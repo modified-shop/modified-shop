@@ -4954,6 +4954,9 @@ a.view_box.active {
 #product_info {
   margin: 40px 0 0 0;
 }
+#product_info .pp-message {
+  margin: 10px 0 -10px 0;
+}
 #product_info .subline {
 	font-size:14px;
   line-height: 20px;
