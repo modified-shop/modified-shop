@@ -61,4 +61,12 @@
     </div>
 
   </div>
-</div>  
+</div>
+
+{if isset($FILTER_SELECTED) && count($FILTER_SELECTED) > 0}
+  <div class="listing_filter_selected">
+  {foreach name=aussen item=filter_data from=$FILTER_SELECTED}
+    <div class="listing_filter_selected_item"><a title="{#listing_filter_text_delete#}" href="{$filter_data.LINK}"><span>{$filter_data.NAME}</span></a></div>
+  {/foreach}
+  </div>
+{/if}  

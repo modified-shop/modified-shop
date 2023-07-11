@@ -112,6 +112,7 @@ text_create_account = 'Kundenkonto erstellen'
 [filter]
 listing_text_filter_sort = 'Filtern und Sortieren'
 listing_text_sort = 'Sortieren'
+listing_filter_text_delete = 'Filter l&ouml;schen'
 
 [login]
 text_returning = 'Sie haben schon einmal bei uns bestellt?<br />Herzlichen Dank, dass Sie uns ein weiteres Mal Ihr Vertrauen schenken.'
