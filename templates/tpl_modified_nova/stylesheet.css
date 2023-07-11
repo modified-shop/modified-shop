@@ -3449,6 +3449,13 @@ a.view_box.active {
   max-width:480px;
   width:100% !important;
 }
+.br_btn_checkout .apms_form_button {
+  min-width: 100% !important;
+  max-width:480px !important;
+}
+.br_btn_checkout .apms_form_button_inner {
+  min-height: 44px !important;
+}
 
 .br_btn_alternate {
   display:block;
