@@ -3138,9 +3138,55 @@ a.view_box.active {
 }
 .filter_pagination_bar .pagination_bar {
   margin:5px 0;
+  order:3;
 }
 .filter_pagination_bar .listing_filter {
+  margin:0 0 5px 0;
+  order:1;
+}
+
+.filter_pagination_bar .listing_filter_selected {
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:center;
+  width:100%;
   margin:5px 0;
+  order:2;
+}
+@media only screen and (min-width: 600px) {
+  .filter_pagination_bar .listing_filter_selected { order:4; justify-content:flex-start; }
+}
+.filter_pagination_bar .listing_filter_selected_item {
+  margin: 5px 5px 0 0;
+}
+.filter_pagination_bar .listing_filter_selected_item a {
+  display:inline-block;
+  background:#555;
+  color:#fff;
+  font-size:11px;
+  line-height:15px;
+  padding: 3px 6px 3px 6px;
+  border-radius:4px;
+  vertical-align:top;
+  text-decoration:none;
+  white-space:nowrap;
+}
+.filter_pagination_bar .listing_filter_selected_item a:before {
+  font-family: 'Font Awesome 6 Free';
+  content: '\f00d';
+  font-weight: 900;
+  margin:0 4px 0 0;
+  font-size:11px;
+  line-height:15px;
+}
+.filter_pagination_bar .listing_filter_selected_item a > span {
+  display:inline-block; 
+  vertical-align:top;
+  max-width:100px;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  overflow:hidden;
 }
 /* 20. END Combined filter & pagination */
 
