@@ -22,7 +22,6 @@ require('includes/application_top.php');
 $cfg_max_display_results_key = 'MAX_DISPLAY_ZONES_RESULTS';
 $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
 
-$_GET['action'] = (isset($_GET['action']) ? $_GET['action'] : '');
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
 $page = (isset($_GET['page']) ? (int)$_GET['page'] : 1);
 
