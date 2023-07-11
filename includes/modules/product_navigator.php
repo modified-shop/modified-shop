@@ -9,10 +9,7 @@
    -----------------------------------------------------------------------------------------
    based on:
    (c) 2003 xtCommerce - www.xt-commerce.de
-   
-   Third Party contributions:
-   Produktsortierung nach Voreinstellung der Kategorie - (c) by Hetfield | j_hetfield@hotmail.de
-   
+
    Released under the GNU General Public License
    --------------------------------------------------------------------------------------------*/
 
@@ -34,17 +31,31 @@ if (!CacheCheck()) {
 }
 
 if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/product_navigator.html', $cache_id) || !$cache) {
-  // select products
-  $sorting_query = xtDBquery("SELECT products_sorting,
-                                     products_sorting2 
-                                FROM ".TABLE_CATEGORIES."
-                               WHERE categories_id='".(int)$current_category_id."'");
-  $sorting_data = xtc_db_fetch_array($sorting_query,true);
+  $sorting_data = array(
+    'products_sorting' => '',
+    'products_sorting2' => '',
+  );
+  
+  if (isset($current_category_id)) {
+    $sorting_query = xtDBquery("SELECT products_sorting,
+                                       products_sorting2
+                                  FROM ".TABLE_CATEGORIES."
+                                 WHERE categories_id = '".$current_category_id."'");
+    if (xtc_db_num_rows($sorting_query, true) > 0) {
+      $sorting_data = xtc_db_fetch_array($sorting_query, true);
+    }
+  }
 
-  if (!$sorting_data['products_sorting']) {
+  //Fallback for products_sorting to products_name
+  if (empty($sorting_data['products_sorting'])) { 
     $sorting_data['products_sorting'] = 'pd.products_name';
   }
-  $sorting = ' ORDER BY '.$sorting_data['products_sorting'].' '.$sorting_data['products_sorting2'];
+
+  //Fallback for products_sorting2 to ascending
+  if (empty($sorting_data['products_sorting2'])) { 
+    $sorting_data['products_sorting2'] = 'ASC';
+  }
+  $sorting = ' ORDER BY '.$sorting_data['products_sorting'].' '.$sorting_data['products_sorting2'].' ';
 
   $products_query = xtDBquery("SELECT p2c.products_id,
                                       pd.products_name,
