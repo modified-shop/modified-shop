@@ -199,7 +199,32 @@
   {
     xtc_db_query("INSERT INTO " . TABLE_SCHEDULED_TASKS . " (time_regularity, time_unit, status, tasks) VALUES ('15', 'm',  '".((MODULE_MAGNALISTER_STATUS == 'True') ? 1 : 0)."', 'magnalister')");
   }
+  
+  // reviews
+  if (defined('MODULE_TRUSTEDSHOPS_STATUS') || defined('MODULE_SHOPVOTE_STATUS')) {
+    $table_array = array(
+      array('table' => TABLE_REVIEWS, 'column' => 'external_id', 'default' => 'VARCHAR(256)'),
+      array('table' => TABLE_REVIEWS, 'column' => 'external_source', 'default' => 'VARCHAR(32)'),
+    );
+    foreach ($table_array as $table) {
+      $check_query = xtc_db_query("SHOW COLUMNS FROM ".$table['table']." LIKE '".xtc_db_input($table['column'])."'");
+      if (xtc_db_num_rows($check_query) < 1) {
+        xtc_db_query("ALTER TABLE ".$table['table']." ADD ".$table['column']." ".$table['default']."");
+      }
+    }
 
+    $table_array = array(
+      array('table' => TABLE_REVIEWS, 'column' => 'external_id', 'name' => 'idx_external_id'),
+      array('table' => TABLE_REVIEWS, 'column' => 'external_source', 'name' => 'idx_external_source'),
+    );
+    foreach ($table_array as $table) {
+      $check_query = xtc_db_query("SHOW INDEX FROM ".$table['table']." WHERE Column_name = '".xtc_db_input($table['column'])."'");
+      if (xtc_db_num_rows($check_query) < 1) {
+        xtc_db_query("ALTER TABLE ".$table['table']." ADD INDEX ".$table['name']." (".$table['column'].")");            
+      }
+    }
+  }
+  
   // delete invalid geo_zones
   xtc_db_query("DELETE z2gz 
                   FROM ".TABLE_ZONES_TO_GEO_ZONES." z2gz 
