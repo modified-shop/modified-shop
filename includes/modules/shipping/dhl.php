@@ -112,7 +112,6 @@
         $dhl_cost_sdx = defined('MODULE_SHIPPING_DHL_COST_SDX_' . $dest_zone) ? constant('MODULE_SHIPPING_DHL_COST_SDX_' . $dest_zone) : '';
 
         $methods = array();
-        $n == 0;
 
         if ($dhl_cost_ecx != '') {
           $dhl_table_ecx = preg_split("/[:,]/" , $dhl_cost_ecx); 
@@ -145,7 +144,6 @@
           $methods[] = array('id' => 'ECX',
                              'title' => 'EU Express Service',
                              'cost' => $shipping_cost_1);
-          $n++;
         }
 
         if ($dhl_cost_dox != '') {
@@ -179,7 +177,6 @@
           $methods[] = array('id' => 'DOX',
                              'title' => 'Document Express Service',
                              'cost' => $shipping_cost_2);
-          $n++;
         }
 
         if ($dhl_cost_wpx != '') {
@@ -212,7 +209,6 @@
           $methods[] = array('id' => 'WPX',
                              'title' => 'Waren Express Service',
                              'cost' => $shipping_cost_3);
-          $n++;
         }
 
         if ($dhl_cost_mdx != '') {
@@ -245,7 +241,6 @@
           $methods[] = array('id' => 'MDX',
                              'title' => 'Mid Day Express Service',
                              'cost' => $shipping_cost_4);
-          $n++;
         }
 
         if ($dhl_cost_sdx != '') {
@@ -278,7 +273,6 @@
           $methods[] = array('id' => 'SDX',
                              'title' => 'Start Day Express Service',
                              'cost' => $shipping_cost_5);
-          $n++;
         }
       }
 
