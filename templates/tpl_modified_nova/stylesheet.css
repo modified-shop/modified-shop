@@ -5515,19 +5515,16 @@ a.view_box.active {
 }
 .pd_addtobasket_row_additional {
   display:flex;
-  flex-direction:row;
-	align-items: flex-start;
-  justify-content:flex-end;
+  flex-direction:column;
   margin: 0px -5px;
+  padding: 0 54px 0 70px;
 }
 .pd_addtobasket_paypal {
   width:100%;
-  max-width:300px;
   padding: 5px 5px;
 }
 .pd_addtobasket_express {
   width:100%;
-  max-width:300px;
   padding: 5px 5px;
   text-align:right;
   line-height: 17px;
