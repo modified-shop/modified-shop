@@ -166,6 +166,8 @@
           </div>            
         {/if}
  
+        {if isset($box_GREETING)}{$box_GREETING}{/if}
+
         {if isset($BANNER1) || isset($BANNER2) || isset($BANNER3) || isset($BANNER4)}
           <div class="banner_row">
             {if isset($BANNER1)}<div class="banner_item width_25"{if $BANNER1_SORT > 0} style="order:{$BANNER1_SORT};"{/if}><div class="banner_item_image"><div class="banner_item_image_inner">{$BANNER1}</div></div></div>{/if}
@@ -189,7 +191,6 @@
 
         {if isset($MODULE_upcoming_products)}{$MODULE_upcoming_products}{/if}
         {if isset($MODULE_new_products)}{$MODULE_new_products}{/if}
-        {if isset($box_GREETING)}{$box_GREETING}{/if}
         {if isset($main_content)}{$main_content}{/if}
         {if isset($box_REVIEWS)}{$box_REVIEWS}{/if}
         {if isset($box_BESTSELLERS)}{$box_BESTSELLERS}{/if}
