@@ -2906,7 +2906,7 @@ ul.subcats_menu li.Selected a {
   text-align:center;
   border: 1px solid #ccc;
   color:#fff;
-  background: #555;
+  background: #296aab;
   font-size:13px ;
   line-height:21px;
   border-radius:8px;
@@ -3162,7 +3162,7 @@ a.view_box.active {
 }
 .filter_pagination_bar .listing_filter_selected_item a {
   display:inline-block;
-  background:#555;
+  background:#296aab;
   color:#fff;
   font-size:11px;
   line-height:15px;
