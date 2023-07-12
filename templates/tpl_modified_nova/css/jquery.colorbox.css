@@ -37,7 +37,7 @@
 
 #cboxLoadingOverlay{background:#fff}
 #cboxLoadingGraphic{background:url(images/loading.svg) no-repeat center center;}
-#cboxPrevious, #cboxNext, #cboxSlideshow, #cboxClose {border:0; padding:0; margin:0; overflow:visible; width:auto; background:none; }
+#cboxPrevious, #cboxNext, #cboxSlideshow, #cboxClose {color:#555; border:0; padding:0; margin:0; overflow:visible; width:auto; background:none; }
 #cboxPrevious:active, #cboxNext:active, #cboxSlideshow:active, #cboxClose:active {outline:0;}
 #cboxSlideshow{position:absolute; bottom:4px; right:30px; color:#555;}
 
