@@ -254,7 +254,7 @@ define('CSS_IMAGE_SMALL_DELETE_ICON_LEFT', '<i class="fa-regular fa-trash-can"><
 define('CSS_IMAGE_SMALL_VIEW_TEXT', '');
 //define('CSS_IMAGE_SMALL_VIEW_TITLE', '');
 define('CSS_IMAGE_SMALL_VIEW_ICON_RIGHT', '');
-define('CSS_IMAGE_SMALL_VIEW_ICON_LEFT', '<i class="fa-solid fa-arrow-up-right-dots"></i>');
+define('CSS_IMAGE_SMALL_VIEW_ICON_LEFT', '<i class="fa-solid fa-eye"></i>');
 
 
 //define('CSS_IMAGE_BUTTON_SHIPPING_OPTIONS_TEXT', '');
@@ -295,7 +295,7 @@ define('CSS_IMAGE_BUTTON_HISTORY_ICON_LEFT', '');
 
 define('CSS_IMAGE_BUTTON_PRODUCT_MORE_TEXT', '');
 //define('CSS_IMAGE_BUTTON_PRODUCT_MORE_TITLE', '');
-define('CSS_IMAGE_BUTTON_PRODUCT_MORE_ICON_RIGHT', '<i class="fa-solid fa-arrow-up-right-dots"></i>');
+define('CSS_IMAGE_BUTTON_PRODUCT_MORE_ICON_RIGHT', '<i class="fa-solid fa-eye"></i>');
 define('CSS_IMAGE_BUTTON_PRODUCT_MORE_ICON_LEFT', '');
 
 

@@ -11,7 +11,7 @@
    --------------------------------------------------------------*/
 ?>
 <script>
-  $('body').on('click', '.fa-eye, .fa-eye-slash', function() {
+  $('.field_eye').on('click', '.fa-eye, .fa-eye-slash', function() {
     var pass_name = $(this).data('name');
     var pass_state = $("input[name='"+pass_name+"']").attr('type');
     $("input[name='"+pass_name+"']").attr('type', (pass_state == 'text') ? 'password' : 'text');

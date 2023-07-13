@@ -1408,10 +1408,10 @@ label  {
   display:block;
   font-size:20px;
 }
-.fa-eye {
+.field_eye .fa-eye {
   color:#ccc;
 }
-.fa-eye-slash {
+.field_eye .fa-eye-slash {
   color:#555;
 }
 
