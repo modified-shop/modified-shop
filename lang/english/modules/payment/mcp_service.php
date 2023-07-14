@@ -5,7 +5,9 @@
  * @copyright  Copyright (c) 2022 Micropayment GmbH (http://www.micropayment.de)
  * @author     micropayment GmbH (TE) <support@micropayment.de>
  */
-
+define('MODULE_PAYMENT_MCP_SERVICE_TEXT_TITLE','micropayment - Gateway');
+define('MODULE_PAYMENT_MCP_SERVICE_TEXT_DESCRIPTION','Bla Blub ding dong');
+define('MODULE_PAYMENT_MCP_SERVICE_TEXT_INFO','INFOTEXT von MCP_SERVICE');
 define('MODULE_PAYMENT_MCP_SERVICE_STATUS_TITLE','Status');
 define('MODULE_PAYMENT_MCP_SERVICE_STATUS_DESC','Enable the micropayment&trade; module');
 define('MODULE_PAYMENT_MCP_SERVICE_SORT_ORDER_TITLE','Positioning');
@@ -18,11 +20,10 @@ define('MODULE_PAYMENT_MCP_SERVICE_PROJECT_CODE_TITLE','Project code');
 define('MODULE_PAYMENT_MCP_SERVICE_PROJECT_CODE_DESC','Project code from micropayment&trade;');
 define('MODULE_PAYMENT_MCP_SERVICE_PAYTEXT_TITLE','Payment text');
 define('MODULE_PAYMENT_MCP_SERVICE_PAYTEXT_DESC','This option is shown on the invoice and page title of the payment window. With the place holder #ORDER# it is possible to automatically integrate the OrderID in to the invoice or payment window. e.g. "Order: #ORDER#" would show "Order: 0000023"');
-define('MODULE_PAYMENT_MCP_SERVICE_TESTMODE_TITLE',' Test Mode');
-define('MODULE_PAYMENT_MCP_SERVICE_TESTMODE_DESC','Enable Test Mode');
-
 define('MODULE_PAYMENT_MCP_SERVICE_THEME_TITLE','Theme');
 define('MODULE_PAYMENT_MCP_SERVICE_THEME_DESC','Theme for the payment windows, default is x1');
+define('MODULE_PAYMENT_MCP_SERVICE_TESTMODE_TITLE',' Test Mode');
+define('MODULE_PAYMENT_MCP_SERVICE_TESTMODE_DESC','Enable Test Mode');
 
 define('MODULE_PAYMENT_MCP_SERVICE_GFX_TITLE','Logo-Code');
 define('MODULE_PAYMENT_MCP_SERVICE_GFX_DESC','Please insert your Logo-Code here');
@@ -50,11 +51,6 @@ define('MODULE_PAYMENT_MCP_SERVICE_UNKNOWN_FUNCTION','unknown function');
 define('MODULE_PAYMENT_MCP_SERVICE_ERROR_INVALID_AUTH_CODE','invalid auth code');
 define('MODULE_PAYMENT_MCP_SERVICE_ERROR_INVALID_AMOUNT_VALUE','invalid amount');
 
-define('MODULE_PAYMENT_MCP_SERVICE_PENDING_PAYMENT','Payment pending. Automatic cancellation %s');
-define('MODULE_PAYMENT_MCP_PREPAY_EXPIRED','No receipt of payment, automatic cancellation');
-
-define('MODULE_PAYMENT_MCP_SERVICE_REFUND_COMMENT','Refund is raised.');
-
 define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PENDING_PAYMENT_ID_TITLE','Order status: in process');
 define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PENDING_PAYMENT_ID_DESC','Customer is paying the order');
 
@@ -76,31 +72,47 @@ define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_CONFLICT_ID_DESC','logical payme
 define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PARTPAY_ID_TITLE',' Order status: Prepay - partial payment');
 define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PARTPAY_ID_DESC','this order has a partial payin yet has not been fully paid');
 
+define('MODULE_PAYMENT_MCP_SERVICE_REFUND_COMMENT','Refund is raised.');
+define('MODULE_PAYMENT_MCP_SERVICE_PENDING_PAYMENT','Payment pending. Automatic cancellation %s');
+define('MODULE_PAYMENT_MCP_PREPAY_EXPIRED','No receipt of payment, automatic cancellation');
+
+define('MODULE_PAYMENT_MCP_SERVICE_EXPIRE_DAYS_TITLE','Deletion of unpaid orders');
+define('MODULE_PAYMENT_MCP_SERVICE_EXPIRE_DAYS_DESC','How many days old can an order be with the status "pending payment" before being deleted by the "clear old orders" button. Important: Prepayment orders will not be deleted.');
+
 define('MODULE_PAYMENT_MCP_SERVICE_NEW_VERSION','%s<div class="mcp_notice_register">New version of micropayment&trade; Payment modules are avaiable. <a href="http://ecommerce.micropayment.de/modifiedshop/?lang=EN" target="_new">Click here for Download.</a></div>');
 
 define('MODULE_PAYMENT_MCP_SERVICE_NO_ACCOUNT','%s<div class="mcp_notice_register">In order to ensure functionality of the micropayment&trade; Payment modules, please first register an account and create a project. <a href="https://%s.micropayment.de" target="blank">Click here to register.</a></div>');
 define('MODULE_PAYMENT_MCP_SERVICE_CSS','
 <style type="text/css">
 .mcp_notice_register {
-    margin-bottom: 5px;
-    background-image: url("../images/micropayment/logo_small.png");
-	background-position: 10px 10px;
-	background-color: #ffdede;
-    background-repeat: no-repeat;
-    background-size: 100px;
-    height: 40px;
+  margin-bottom: 5px;
+  background-image: url("../images/micropayment/logo_small.png");
+  background-position: 10px 10px;
+  background-color: #ffdede;
+  background-repeat: no-repeat;
+  background-size: 100px;
+  height: 40px;
 	padding-left:130px;
-	padding-top: 18px;
+	padding-top: 24px;
 	border: 1px #cdcdcd solid;
+	font-family: verdana, tahoma, sans-serif;
+	font-size: 12px;
+}
+.mcp_notice_register a {
+  font-family: verdana, tahoma, sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+  color: #8d005d;
 }
 </style>
 ');
-define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PENDING_PAYMENT_GERMAN_TITLE','Bezahlung steht aus');
-define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PARTPAY_GERMAN_TITLE','Vorkasse, Teilzahlung');
-define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PROCESSING_GERMAN_TITLE','in bearbeitung');
-define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_CANCELLED_GERMAN_TITLE','Storniert');
-define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PAYMENT_REVIEW_GERMAN_TITLE','Bestellung pr&uuml;fen');
-define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_CONFLICT_GERMAN_TITLE','Event-Problem!');
+
+define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PENDING_PAYMENT_GERMAN_TITLE','pending payment');
+define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PARTPAY_GERMAN_TITLE','prepay, partpay');
+define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PROCESSING_GERMAN_TITLE','processing');
+define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_CANCELLED_GERMAN_TITLE','cancelled');
+define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PAYMENT_REVIEW_GERMAN_TITLE','payment review');
+define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_CONFLICT_GERMAN_TITLE','event-conflict!');
 
 define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PENDING_PAYMENT_ENGLISH_TITLE','pending payment');
 define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PARTPAY_ENGLISH_TITLE','prepay, partpay');
@@ -108,6 +120,3 @@ define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PROCESSING_ENGLISH_TITLE','proce
 define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_CANCELLED_ENGLISH_TITLE','cancelled');
 define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PAYMENT_REVIEW_ENGLISH_TITLE','payment review');
 define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_CONFLICT_ENGLISH_TITLE','event-conflict!');
-
-define('MODULE_PAYMENT_MCP_SERVICE_EXPIRE_DAYS_TITLE','Deletion of unpaid orders');
-define('MODULE_PAYMENT_MCP_SERVICE_EXPIRE_DAYS_DESC','How many days old can an order be with the status "pending payment" before being deleted by the "clear old orders" button. Important: Prepayment orders will not be deleted.');
