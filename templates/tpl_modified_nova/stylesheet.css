@@ -5508,17 +5508,25 @@ a.view_box.active {
 .pd_addtobasket_input {
   position:relative;
   padding: 0 5px 0 5px;
-  width: 70px;
+  width: 50px;
+}
+@media only screen and (min-width: 340px) {
+  .pd_addtobasket_input { width: 70px; }
 }
 .pd_addtobasket_input input {
   text-align:center;
+  padding: 11px 6px 11px 6px
 }
 .pd_addtobasket_row_additional {
   display:flex;
   flex-direction:column;
   margin: 0px -5px;
-  padding: 0 54px 0 70px;
+  padding: 0 54px 0 50px;
 }
+@media only screen and (min-width: 340px) {
+  .pd_addtobasket_row_additional { padding: 0 54px 0 70px; }
+}
+
 .pd_addtobasket_paypal {
   width:100%;
   padding: 5px 5px;
