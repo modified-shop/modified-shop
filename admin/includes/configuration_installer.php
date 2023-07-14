@@ -601,8 +601,8 @@ $values_group_update = array();
   $values[] = "(NULL, 'CSV_CATEGORY_DEFAULT', '0', '20', '4', NULL, NOW(), NULL, 'xtc_cfg_get_category_tree(');";
   $values[] = "(NULL, 'CSV_CAT_DEPTH', '4', '20', '5', NULL, NOW(), NULL, NULL);";
 //configuration_group_id 21 --- "Afterbuy"
-  //$values[] = "(NULL, 'AFTERBUY_DEALERS', '3', '21', '7', NULL , NOW(), NULL , NULL);";
-  //$values[] = "(NULL, 'AFTERBUY_IGNORE_GROUPE', '', '21', '8', NULL , NOW(), NULL , NULL);";
+  $values[] = "(NULL, 'AFTERBUY_DEALERS', '3', '21', '7', NULL , NOW(), NULL , NULL);";
+  $values[] = "(NULL, 'AFTERBUY_IGNORE_GROUPE', '', '21', '8', NULL , NOW(), NULL , NULL);";
 
 //configuration_group_id 22 --- "Such-Optionen"
   $values[] = "(NULL, 'SEARCH_MIN_LENGTH', '3', '22', '1', NULL, NOW(), NULL, NULL);";
@@ -762,10 +762,10 @@ function insert_into_config_table($values)
       $insert_into = "INSERT INTO ".TABLE_CONFIGURATION." (configuration_id ,configuration_key ,configuration_value ,configuration_group_id ,sort_order ,last_modified ,date_added ,use_function ,set_function) VALUES ";
       $value = encode_utf8($value);
       if( xtc_db_query($insert_into.$value)){
-        $messageStack->add_session('OK: INSERT INTO '.TABLE_CONFIGURATION.' '.encode_htmlentities($value), 'success');
+        $messageStack->add_session('OK: INSERT INTO '.TABLE_CONFIGURATION.' VALUES '.encode_htmlentities($value), 'success');
         $install = true;
       } else {
-        $messageStack->add_session('ERROR: INSERT INTO '.TABLE_CONFIGURATION.' '.encode_htmlentities($value), 'error');
+        $messageStack->add_session('ERROR: INSERT INTO '.TABLE_CONFIGURATION.' VALUES '.encode_htmlentities($value), 'error');
       }
     }
   }
