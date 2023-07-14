@@ -6450,7 +6450,7 @@ ul#checkoutnavigation li .selected .number {
 .checkout_box {
   margin: 0px 0px 15px 0px;
 }
-.checkout_box #customers_express .cssButtonText {
+.checkout_box #customers_express span.cssButtonText {
   display:none;
 }
 .checkout_box_products {
