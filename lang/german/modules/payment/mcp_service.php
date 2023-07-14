@@ -40,6 +40,16 @@ define('MODULE_PAYMENT_MCP_SERVICE_SECRET_FIELD_DESC','F&uuml;r mehr Sicherheit 
 define('MODULE_PAYMENT_MCP_SERVICE_SECRET_FIELD_VALUE_TITLE',' Sicherheitsfeld Wert');
 define('MODULE_PAYMENT_MCP_SERVICE_SECRET_FIELD_VALUE_DESC','Geben Sie hier einen Wert ein den der micropayment&trade; Server Ihrem Shop mitgeben soll um die Sicherheit zu verbessern.');
 
+define('MODULE_PAYMENT_MCP_SERVICE_SUCCESS_TRANSACTION','Die Bestellung wurde bezahlt. Der Auth-Code ist: %s');
+define('MODULE_PAYMENT_MCP_SERVICE_IP_NOT_ALLOWED','The IP-Adress is invalid.');
+define('MODULE_PAYMENT_MCP_SERVICE_ERROR_TERMINATED','Die Anfrage ist ung&uuml;ltig.');
+define('MODULE_PAYMENT_MCP_SERVICE_ERROR_UNKNOWN_ORDER_ID','Die Bestellung existiert nicht');
+define('MODULE_PAYMENT_MCP_SERVICE_ERROR_SECRET_FIELD_MISSMATCH','Sicherheitsfeld stimmt nicht &uuml;berein!');
+define('MODULE_PAYMENT_MCP_SERVICE_ERROR_AMOUNT_MISSMATCH','Die Summe stimmt nicht mit dem Bezahltem Wert &uuml;berein! Ist: %s  Soll: %s');
+define('MODULE_PAYMENT_MCP_SERVICE_PAYIN_MESSAGE','%s %s has been paid.');
+define('MODULE_PAYMENT_MCP_SERVICE_UNKNOWN_FUNCTION','Funktion ist nicht bekannt.');
+define('MODULE_PAYMENT_MCP_SERVICE_ERROR_INVALID_AUTH_CODE','Auth code ist fehlerhaft');
+define('MODULE_PAYMENT_MCP_SERVICE_ERROR_INVALID_AMOUNT_VALUE','Der Amount ist fehlerhaft');
 
 define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PENDING_PAYMENT_ID_TITLE',' Bestellstatus: in Bezahlung');
 define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PENDING_PAYMENT_ID_DESC','Kunde ist am bezahlen der Bestellung');
@@ -63,14 +73,8 @@ define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PARTPAY_ID_TITLE',' Bestellstatu
 define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PARTPAY_ID_DESC','Wenn ein Zahlungseingang bei Vorkasse gemeldet wird, die Bestellung aber nicht voll bezahlt ist, wird dieser Status gesetzt.');
 
 define('MODULE_PAYMENT_MCP_SERVICE_REFUND_COMMENT','Ein Refund wurde ausgel&ouml;st.');
-define('MODULE_PAYMENT_MCP_SERVICE_SUCCESS_TRANSACTION','Die Bestellung wurde bezahlt. Der Auth-Code ist: %s');
-define('MODULE_PAYMENT_MCP_SERVICE_ERROR_TERMINATED','Die Anfrage ist ung&uuml;ltig.');
-define('MODULE_PAYMENT_MCP_SERVICE_ERROR_UNKNOWN_ORDER_ID','Die Bestellung existiert nicht');
-define('MODULE_PAYMENT_MCP_SERVICE_ERROR_SECRET_FIELD_MISSMATCH','Sicherheitsfeld stimmt nicht &uuml;berein!');
-define('MODULE_PAYMENT_MCP_SERVICE_ERROR_AMOUNT_MISSMATCH','Die Summe stimmt nicht mit dem Bezahltem Wert &uuml;berein! Ist: %s  Soll: %s');
-define('MODULE_PAYMENT_MCP_SERVICE_UNKNOWN_FUNCTION','Funktion ist nicht bekannt.');
-define('MODULE_PAYMENT_MCP_SERVICE_ERROR_INVALID_AUTH_CODE','Auth code ist fehlerhaft');
-define('MODULE_PAYMENT_MCP_SERVICE_ERROR_INVALID_AMOUNT_VALUE','Der Amount ist fehlerhaft');
+define('MODULE_PAYMENT_MCP_SERVICE_PENDING_PAYMENT','Payment pending. Automatic cancellation %s');
+define('MODULE_PAYMENT_MCP_PREPAY_EXPIRED','No receipt of payment, automatic cancellation');
 
 define('MODULE_PAYMENT_MCP_SERVICE_EXPIRE_DAYS_TITLE','L&ouml;schen von nicht bezahlten Bestellungen');
 define('MODULE_PAYMENT_MCP_SERVICE_EXPIRE_DAYS_DESC','Wie lang kann eine Bestellung sich noch im Status "Bezahlung steht aus" befinden, bevor Sie vom "Bestellung aufr&auml;umen" Button entfernt wird. Bitte legen Sie die Anzahl von Tagen fest. WICHTIG: Hierbei werden keine Vorkassen Bestellung entfernt.');
@@ -81,13 +85,13 @@ define('MODULE_PAYMENT_MCP_SERVICE_NO_ACCOUNT','%s<div class="mcp_notice_registe
 define('MODULE_PAYMENT_MCP_SERVICE_CSS','
 <style type="text/css">
 .mcp_notice_register {
-    margin-bottom: 5px;
-    background-image: url("../images/micropayment/logo_small.png");
-	background-position: 10px 10px;
-	background-color: #ffdede;
-    background-repeat: no-repeat;
-    background-size: 100px;
-    height: 40px;
+  margin-bottom: 5px;
+  background-image: url("../images/micropayment/logo_small.png");
+  background-position: 10px 10px;
+  background-color: #ffdede;
+  background-repeat: no-repeat;
+  background-size: 100px;
+  height: 40px;
 	padding-left:130px;
 	padding-top: 24px;
 	border: 1px #cdcdcd solid;
@@ -95,19 +99,20 @@ define('MODULE_PAYMENT_MCP_SERVICE_CSS','
 	font-size: 12px;
 }
 .mcp_notice_register a {
- font-family: verdana, tahoma, sans-serif;
- font-size: 12px;
- font-weight: bold;
- color: #8d005d;
+  font-family: verdana, tahoma, sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+  color: #8d005d;
 }
 </style>
 ');
-define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PENDING_PAYMENT_GERMAN_TITLE','Bezahlung steht aus');
-define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PARTPAY_GERMAN_TITLE','Vorkasse, Teilzahlung');
-define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PROCESSING_GERMAN_TITLE','in bearbeitung');
-define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_CANCELLED_GERMAN_TITLE','Storniert');
-define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PAYMENT_REVIEW_GERMAN_TITLE','Bestellung pr&uuml;fen');
-define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_CONFLICT_GERMAN_TITLE','Event-Problem!');
+
+define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PENDING_PAYMENT_GERMAN_TITLE','pending payment');
+define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PARTPAY_GERMAN_TITLE','prepay, partpay');
+define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PROCESSING_GERMAN_TITLE','processing');
+define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_CANCELLED_GERMAN_TITLE','cancelled');
+define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PAYMENT_REVIEW_GERMAN_TITLE','payment review');
+define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_CONFLICT_GERMAN_TITLE','event-conflict!');
 
 define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PENDING_PAYMENT_ENGLISH_TITLE','pending payment');
 define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PARTPAY_ENGLISH_TITLE','prepay, partpay');

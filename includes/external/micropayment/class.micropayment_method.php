@@ -6,7 +6,8 @@
  * @author     micropayment GmbH (TE) <support@micropayment.de>
  */
 require_once(dirname(__FILE__).'/class.micropayment_helper.php');
-require_once(dirname(__FILE__).'/../../../lang/german/modules/payment/mcp_service.php');
+require_once(dirname(__FILE__).'/../../../lang/'.$_SESSION['language'].'/modules/payment/mcp_service.php');
+
 class micropayment_method extends micropayment_helper
 {
 
@@ -177,7 +178,8 @@ class micropayment_method extends micropayment_helper
     function install()
     {
         if (!$this->check_is_service_installed()) {
-          require_once(dirname(__FILE__).'/../../../lang/english/modules/payment/mcp_service.php');
+          require_once(dirname(__FILE__).'/../../../lang/'.$_SESSION['language'].'/modules/payment/mcp_service.php');
+          
           $lastStatusArray = xtc_db_query('SELECT MAX(`orders_status_id`) last_id FROM '.TABLE_ORDERS_STATUS);
           $t               = xtc_db_fetch_array($lastStatusArray);
           $nextId          = $t['last_id'] + 1;
