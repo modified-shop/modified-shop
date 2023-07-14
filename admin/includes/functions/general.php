@@ -1727,7 +1727,7 @@
    * @return
    */
   function xtc_round($value, $precision) {
-    return round($value, (int)$precision);
+    return round((double)$value, (int)$precision);
   }
 
   /**
