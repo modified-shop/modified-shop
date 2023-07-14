@@ -69,10 +69,10 @@
       }
 
       $cv_id = $_POST['optionValues'][$i];
-      $value_price =  $_POST[$cv_id . '_price'];
+      $value_price =  (double)$_POST[$cv_id . '_price'];
 
       if (PRICE_IS_BRUTTO == 'true'){
-        $value_price = ($value_price/((xtc_get_tax_rate(xtc_get_tax_class_id($_POST['current_product_id'])))+100)*100);
+        $value_price = ($value_price / ((xtc_get_tax_rate(xtc_get_tax_class_id($_POST['current_product_id']))) + 100) * 100);
       }
 
       $value_price = xtc_round($value_price, PRICE_PRECISION);
@@ -86,7 +86,7 @@
         'price_prefix' => xtc_db_prepare_input($_POST[$cv_id . '_prefix']),
         'attributes_model' => xtc_db_prepare_input($_POST[$cv_id . '_model']),
         'attributes_stock' => (int)$_POST[$cv_id . '_stock'],
-        'options_values_weight' => $_POST[$cv_id . '_weight'],
+        'options_values_weight' => (double)$_POST[$cv_id . '_weight'],
         'weight_prefix' => xtc_db_prepare_input($_POST[$cv_id . '_weight_prefix']),
         'sortorder' => (int)$_POST[$cv_id . '_sortorder']
       );
@@ -111,7 +111,7 @@
 
       if (isset($_POST[$cv_id . '_download_file']) && $_POST[$cv_id . '_download_file'] != '') {
         $value_download_file = $_POST[$cv_id . '_download_file'];
-        $value_download_expire = $_POST[$cv_id . '_download_expire'];
+        $value_download_expire = (int)$_POST[$cv_id . '_download_expire'];
         $value_download_count = (int)$_POST[$cv_id . '_download_count'];
 
         $sql_data_array = array(
@@ -131,4 +131,3 @@
   xtc_db_query("UPDATE " . TABLE_PRODUCTS . " 
                    SET products_last_modified = now() 
                  WHERE products_id = " . (int)$_POST['current_product_id']);
-?>
