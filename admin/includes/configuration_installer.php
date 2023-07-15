@@ -762,10 +762,10 @@ function insert_into_config_table($values)
       $insert_into = "INSERT INTO ".TABLE_CONFIGURATION." (configuration_id ,configuration_key ,configuration_value ,configuration_group_id ,sort_order ,last_modified ,date_added ,use_function ,set_function) VALUES ";
       $value = encode_utf8($value);
       if( xtc_db_query($insert_into.$value)){
-        $messageStack->add_session('OK: INSERT INTO '.TABLE_CONFIGURATION.' '.encode_htmlentities($value), 'success');
+        $messageStack->add_session('OK: INSERT INTO '.TABLE_CONFIGURATION.' VALUES '.encode_htmlentities($value), 'success');
         $install = true;
       } else {
-        $messageStack->add_session('ERROR: INSERT INTO '.TABLE_CONFIGURATION.' '.encode_htmlentities($value), 'error');
+        $messageStack->add_session('ERROR: INSERT INTO '.TABLE_CONFIGURATION.' VALUES '.encode_htmlentities($value), 'error');
       }
     }
   }
