@@ -3,7 +3,7 @@
 
 {if isset($box_ADMIN)}{$box_ADMIN}{/if}
 
-<div id="layout_wrap">
+<div class="layout_wrap">
 
   {if $display_mode != 'checkout'} 
     <div class="layout_header">
@@ -107,7 +107,7 @@
 
   {if $display_mode == 'home'}
 
-    <div class="layout_content">
+    <div class="layout_content dm_{$display_mode}">
       <div class="content_big">
   
         {if $error_message}<div class="errormessage my_20">{$error_message}</div>{/if}
@@ -206,7 +206,7 @@
 
   {elseif $display_mode == 'error'}
 
-    <div class="layout_content">
+    <div class="layout_content dm_{$display_mode}">
       <div class="content_big">
 
         {if isset($navtrail)}
@@ -225,7 +225,7 @@
   
   {elseif $display_mode == 'listing'}  
 
-    <div class="layout_content">
+    <div class="layout_content dm_{$display_mode}">
       <div class="content_big">
 
         {if isset($navtrail)}
@@ -253,7 +253,7 @@
   
   {elseif $display_mode == 'productinfo'}  
 
-    <div class="layout_content">
+    <div class="layout_content dm_{$display_mode}">
 
       <div class="content_big">
         {if isset($navtrail)}
@@ -274,7 +274,7 @@
 
   {elseif $display_mode == 'content'}
 
-    <div class="layout_content">
+    <div class="layout_content dm_{$display_mode}">
       <div class="content_small">
 
         {if isset($navtrail)}
@@ -299,7 +299,7 @@
 
   {else}
 
-    <div class="layout_content">
+    <div class="layout_content dm_{$display_mode}">
       <div class="content_{$content_size}">
 
         {if $display_mode != 'checkout'}

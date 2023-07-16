@@ -74,7 +74,7 @@
     #43c875;
     rgba(67,200,117,0.2);
   
-   ----------------------------------------------------------------------------------------- /*
+   ---------------------------------------------------------------------------------------*/
 
 
 /* 01. START Fonts */
@@ -429,13 +429,13 @@ h1 {
 }   
 h2 {
   color:#333;
-	font-weight:700;
-	font-size:16px;
+  font-weight:700;
+  font-size:16px;
   line-height:22px;
-	margin:25px 0 10px 0;
-	padding:0px;
-	border-bottom: 1px solid #e1e1e1;
-	padding-bottom:5px;
+  margin:25px 0 10px 0;
+  padding:0px;
+  border-bottom: 1px solid #e1e1e1;
+  padding-bottom:5px;
 }
 h3 {
   color:#333;
@@ -443,34 +443,34 @@ h3 {
   font-size:14px;
 }
 h4 {
-	color:#333;
-	font-weight:900;
+  color:#333;
+  font-weight:900;
   text-transform:none;
-	font-size:16px;
+  font-size:16px;
   line-height: 20px;
-	margin:0 0 10px 0;
-	padding:0 0 10px 0;
+  margin:0 0 10px 0;
+  padding:0 0 10px 0;
   border-bottom: 1px solid #e1e1e1;
 }
 /* same format as h4 */
 .subline {
-	color:#333;
-	font-weight:900;
+  color:#333;
+  font-weight:900;
   text-transform:none;
-	font-size:16px;
+  font-size:16px;
   line-height: 20px;
-	margin:0 0 10px 0;
-	padding:0 0 10px 0;
+  margin:0 0 10px 0;
+  padding:0 0 10px 0;
   border-bottom: 1px solid #e1e1e1;
 }
 h1.subline {
-	color:#333;
-	font-weight:900;
+  color:#333;
+  font-weight:900;
   text-transform:none;
-	font-size:16px;
+  font-size:16px;
   line-height: 20px;
   margin: 30px 0 10px 0;
-	padding:0 0 0 0;
+  padding:0 0 0 0;
   border-bottom: none;
 }
 /* 04. END headlines */
@@ -584,7 +584,7 @@ h1.subline {
 .flex_header_checkout_row {
   margin: 0 0;
   display: flex; 
-	align-items: center;   
+  align-items: center;   
   flex-wrap: wrap;
 }
 .col_logo_checkout {
@@ -646,7 +646,7 @@ h1.subline {
 .flex_header_row {
   margin: 0 0;
   display: flex; 
-	align-items: center;   
+  align-items: center;   
   flex-wrap: wrap;
 }
 .col_logo {
@@ -969,7 +969,7 @@ h1.subline {
 .menu_items {
   list-style-type:none;
   display: flex; 
-	align-items: center;
+  align-items: center;
   flex-wrap: wrap;
   margin: 0px auto;
   width:100%;
@@ -994,6 +994,7 @@ h1.subline {
   display:inline;
   font-weight:600;
   font-size:10px;
+  line-height:10px;
   padding: 0 0 0 3px;
 }
 .menu_items > li.has_sub_cats > a,
@@ -1199,7 +1200,7 @@ h1.subline {
 }
 .mega_menu > ul > li.level_manu > a > strong {
   font-weight:400 !important;
-  color:#ff3535 !important;
+  color:#ff3535;
 }  
 /* End Megamenü case 1*/
 
@@ -1496,7 +1497,7 @@ textarea {
   border-width: 1px;
   vertical-align: middle;
   padding: 11px 11px 11px 11px;
-	border-radius: 4px;
+  border-radius: 4px;
   width:100%;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -1519,8 +1520,8 @@ select {
   border-style: solid;
   border-width: 1px;
   vertical-align: middle;
-	padding: 11px 11px 11px 11px;
-	border-radius: 4px;
+  padding: 11px 11px 11px 11px;
+  border-radius: 4px;
   width:100%;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -1536,8 +1537,8 @@ input[type=text], input[type=password], input[type=email], input[type=tel] {
   border-style: solid;
   border-width: 1px;
   vertical-align: middle;
-	padding: 11px 11px 11px 11px;
-	border-radius: 4px;
+  padding: 11px 11px 11px 11px;
+  border-radius: 4px;
   width:100%;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -1739,7 +1740,7 @@ input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, inp
   padding: 0px 0px;
   color:#e32828;
   background:rgba(227,40,40,0.1);
-	align-items: center;
+  align-items: center;
   justify-content: center;
   display: flex; 
 }
@@ -1855,7 +1856,7 @@ input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, inp
   padding: 0px 0px;
   color:#43c875;
   background:rgba(67,200,117,0.1);
-	align-items: center;
+  align-items: center;
   justify-content: center;
   display: flex; 
 }
@@ -1978,7 +1979,7 @@ input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, inp
   padding: 0px 0px;
   color:#eaf2fa;
   background:#296aab;
-	align-items: center;
+  align-items: center;
   justify-content: center;
   display: flex; 
 }
@@ -2405,7 +2406,6 @@ ul.subcats_menu li.Selected a {
 }
 
 .lb_image {
-  padding: 1px;
   text-align: center;
   width: 100%;
   position:relative;
@@ -2819,16 +2819,21 @@ ul.subcats_menu li.Selected a {
 .box_products_head {
   display:flex;
   align-items:center;
-	margin:0px 0px 10px 0px;
+  margin:0px 0px 10px 0px;
 }
 .box_products_head .title {
   flex:1;
-	color:#333;
-	font-weight:900;
+  color:#333;
+  font-weight:900;
   text-transform:none;
-	font-size:18px;
+  font-size:18px;
   line-height: 20px;
   padding: 4px 0px;
+}
+.dm_productinfo .box_products_head .title {
+  font-size: 16px;
+  margin:0px;
+  padding: 0px;
 }
 .box_products_head .more {
 
@@ -3548,11 +3553,11 @@ a.view_box.active {
 /* Colors for CSS Buttons */
 /* Color Grey */
 .cssButtonColor1 {
-	border-radius:4px;
-	border:1px solid #ccc;
-	text-decoration:none;
-	background:#ddd;
-	color:#333;
+  border-radius:4px;
+  border:1px solid #ccc;
+  text-decoration:none;
+  background:#ddd;
+  color:#333;
 }
 .cssButtonColor1:hover {
   opacity:0.8;
@@ -3561,11 +3566,11 @@ a.view_box.active {
 
 /* Color Black */
 .cssButtonColor2 {
-	border-radius:4px;
-	border:1px solid #333;
-	text-decoration:none;
-	background:#4d4d4d;
-	color:#fff;
+  border-radius:4px;
+  border:1px solid #333;
+  text-decoration:none;
+  background:#4d4d4d;
+  color:#fff;
 }
 .cssButtonColor2:hover {
   opacity:0.8;
@@ -3574,9 +3579,9 @@ a.view_box.active {
 
 /* Color: light grey */
 .cssButtonColor3 {
-	border-radius:4px;
+  border-radius:4px;
   border: 1px solid #ddd;
-	text-decoration:none;
+  text-decoration:none;
   background:#eee;
   color:#333;
 }
@@ -3587,11 +3592,11 @@ a.view_box.active {
 
 /* Green Buttons */
 .cssButtonColor4 {
-	border-radius:4px;
-	border:1px solid #43c875;
-	text-decoration:none;
-	background-color:#43c875;
-	color:#ffffff;
+  border-radius:4px;
+  border:1px solid #43c875;
+  text-decoration:none;
+  background-color:#43c875;
+  color:#ffffff;
 }
 .cssButtonColor4:hover {
   opacity:0.8;
@@ -3610,19 +3615,19 @@ a.view_box.active {
 
 /* Yellow Paypal Express Buttons */
 .cssButtonColor6 {
-	border-radius:2px;
-	border:1px solid #d19c20;
-	text-decoration:none;
-	background-color:#ffc848;
-	color:#222;
-	display:inline-block;
-	text-shadow:1px 1px 0px #ffd97e;
- 	box-shadow:inset 1px 1px 0px 0px #ffe3a1;
+  border-radius:2px;
+  border:1px solid #d19c20;
+  text-decoration:none;
+  background-color:#ffc848;
+  color:#222;
+  display:inline-block;
+  text-shadow:1px 1px 0px #ffd97e;
+  box-shadow:inset 1px 1px 0px 0px #ffe3a1;
   height:32px;
 }
 .cssButtonColor6:hover {
-	background-color:#fbba22;
-	color:#222;
+  background-color:#fbba22;
+  color:#222;
   text-decoration:none !important;
 }
 .cssButtonColor6 .color-paypal0 {
@@ -3734,7 +3739,7 @@ a.view_box.active {
   width:110px;
 }
 .ot_select {
-	align-items: center;
+  align-items: center;
 }
 .ot_select select {
   height:36px;
@@ -4566,7 +4571,7 @@ a.view_box.active {
 /* reviews write */
 .field_rating {
   display: flex; 
-	align-items: center;
+  align-items: center;
 }
 .show_rating {
   unicode-bidi: bidi-override;
@@ -5477,7 +5482,7 @@ a.view_box.active {
   padding: 0px 0px;
   color:#fff3f3;
   background:#e32828;
-	align-items: center;
+  align-items: center;
   justify-content: center;
   display: flex; 
   opacity:0.5;
@@ -5492,7 +5497,7 @@ a.view_box.active {
   display: flex;
   padding: 5px 0px;
   margin: 0px -5px;
-	align-items: center;
+  align-items: center;
 }
 .pd_addtobasket_wish {
   padding: 0 5px 0 5px;
@@ -6150,7 +6155,7 @@ a.view_box.active {
 .media_row {
   display: flex; 
   flex-wrap: wrap;
-	align-items: center;
+  align-items: center;
   font-size:14px;
   line-height:18px;
   border-bottom: 1px solid #e1e1e1;
@@ -6554,7 +6559,7 @@ table.paymentinfotable.paypalpluslink span.cssButton {
   padding: 9px 0px;
   color:#333;
   background:#eee;
-	align-items: flex-start;
+  align-items: flex-start;
   justify-content: center;
   display: flex; 
 }
@@ -6604,7 +6609,7 @@ table.paymentinfotable.paypalpluslink span.cssButton {
 .checkout_confirmation_gift .ordertotal_row {
   background: #f5f5f5;
   border: 0px !important;
-	align-items: center;
+  align-items: center;
   font-size: 14px;
   line-height: 20px;
   flex-direction: column;
@@ -6825,10 +6830,10 @@ ul.printinfolist li.active {
 .moimages img {
   position:absolute;
   margin: auto;
-	top:0px;
-	bottom:0px;
-	left:0px;
-	right:0px;
+  top:0px;
+  bottom:0px;
+  left:0px;
+  right:0px;
   background-color: #fff;
   max-height:124px;
   max-width:124px;
