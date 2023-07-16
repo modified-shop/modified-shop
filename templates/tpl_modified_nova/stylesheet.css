@@ -153,6 +153,9 @@ body {
 #horizontalTab ul.resp-tabs-list li { display: inline-block; }
 #horizontalTab .resp-tabs-container { display: none; }
 
+/* prevent flicker of mobile menu */
+#mobile_menu { display:none; }
+
 /* scrollbars */
 * {
   scrollbar-width: thin;
@@ -2361,6 +2364,9 @@ ul.subcats_menu li.Selected a {
 .lb_inner {
   padding: 20px 10px;
   margin: 0px 0px;
+  display:flex;
+  flex-direction:column;
+  height:100%;
 }
 @media only screen and (min-width: 500px) {
   .lb_inner { padding: 40px 20px; }
@@ -2567,6 +2573,8 @@ ul.subcats_menu li.Selected a {
   justify-content: center;
   opacity:1;
   padding: 0 0;
+  flex: 1;
+  align-items: flex-end;
 }
 .lb_buttons .cssButton {
   width: 44px;
@@ -3401,7 +3409,7 @@ a.view_box.active {
   text-align:center;
   color:#333;
   font-weight:700;
-  font-size:12px;
+  font-size:10px;
   margin: -12px 0 0 0;
 }
 /* 22. END footer, copyright, parse time */
