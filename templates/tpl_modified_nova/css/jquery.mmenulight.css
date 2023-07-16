@@ -9,6 +9,10 @@
  * http://creativecommons.org/licenses/by/4.0/
  */
 
+#mobile_menu {
+  display:block;
+} 
+ 
 #menu_closer {
   cursor:pointer;
   width:30px;
