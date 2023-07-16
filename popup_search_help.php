@@ -33,7 +33,7 @@ if (SEARCH_IN_DESC == 'true') $popup_help_array[] = TEXT_SEARCH_DESCRIPTION;
 if (SEARCH_IN_MANU == 'true') $popup_help_array[] = TEXT_SEARCH_MANUFACTURERS;
 if (SEARCH_IN_ATTR == 'true') $popup_help_array[] = TEXT_SEARCH_ATTRIBUTES;
 if (SEARCH_IN_FILTER == 'true') $popup_help_array[] = TEXT_SEARCH_TAGS;
-$popup_help = implode(',', $popup_help_array);
+$popup_help = implode(', ', $popup_help_array);
 $popup_smarty->assign('TEXT_HELP', sprintf(TEXT_SEARCH_HELP, ' '.(($popup_help != '') ? $popup_help.' ' : '')));
 
 $popup_smarty->caching = 0;
