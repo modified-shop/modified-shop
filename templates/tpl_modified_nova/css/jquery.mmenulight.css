@@ -200,8 +200,7 @@ body.mm-ocd-opened {
   content:'';
   display: block;
   margin-left:0px;
-  border-top: 1px solid;
-  opacity: 0.15;
+  border-top: 1px solid #d9d9d9;
 }
 .mm-spn a,
 .mm-spn span {
@@ -268,7 +267,7 @@ body.mm-ocd-opened {
   height:40px;
   padding:0 40px;
   line-height:40px;
-  opacity:0.8;
+  opacity:1.0;
   text-align: center;
   overflow: hidden;
   white-space: nowrap;
@@ -284,7 +283,7 @@ body.mm-ocd-opened {
   padding-left:20px;
 }
 .mm-spn.mm-spn--navbar ul {
-  top:92px;
+  top:90px;
 }
 .mm-spn.mm-spn--navbar ul:before {
   content:'';
@@ -293,8 +292,7 @@ body.mm-ocd-opened {
   top: inherit;
   z-index: 2;
   width: 100%;
-  border-top: 1px solid currentColor;
-  opacity: 0.15;
+  border-top: 1px solid #d9d9d9;
 }
 .mm-spn.mm-spn--light {
   color: #444;
