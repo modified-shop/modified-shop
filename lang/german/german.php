@@ -344,7 +344,7 @@ define('MAXIMUM_ORDER_VALUE_REACHED_2', '&uuml;berschritten.<br /> Bitte reduzie
 define('ERROR_INVALID_PRODUCT', 'Der von Ihnen gew&auml;hlte Artikel wurde nicht gefunden!');
 define('JS_KEYWORDS_MIN_LENGTH', 'Der Suchbegriff muss mindestens ' . (int)SEARCH_MIN_LENGTH . ' Zeichen lang sein.\n');
 
-define('TEXT_SEARCH_HELP', 'Die Suchfunktion erm&ouml;glicht Ihnen, innerhalb von Artikelnamen%sund Artikelnummern zu suchen.<br /><br />Sie haben die M&ouml;glichkeit, logische Operatoren wie "AND" (Und) und "OR" (oder) zu verwenden.<br /><br />Zum Beispiel k&ouml;nnten Sie also angeben: <span class="underline">Microsoft AND Maus</span>.<br /><br />Des Weiteren k&ouml;nnen Sie Klammern verwenden, um die Suche zu verschachteln, also z.B.:<br /><br /><span class="underline">Microsoft AND (Maus OR Tastatur OR "Visual Basic")</span>.<br /><br />Mit Anf&uuml;hrungszeichen k&ouml;nnen Sie mehrere Worte zu einem Suchbegriff zusammenfassen.');
+define('TEXT_SEARCH_HELP', 'Die Suchfunktion erm&ouml;glicht Ihnen, innerhalb von Artikelnamen%s und Artikelnummern zu suchen.<br /><br />Sie haben die M&ouml;glichkeit, logische Operatoren wie "AND" (Und) und "OR" (oder) zu verwenden.<br /><br />Zum Beispiel k&ouml;nnten Sie also angeben: <span class="underline">Microsoft AND Maus</span>.<br /><br />Des Weiteren k&ouml;nnen Sie Klammern verwenden, um die Suche zu verschachteln, also z.B.:<br /><br /><span class="underline">Microsoft AND (Maus OR Tastatur OR "Visual Basic")</span>.<br /><br />Mit Anf&uuml;hrungszeichen k&ouml;nnen Sie mehrere Worte zu einem Suchbegriff zusammenfassen.');
 define('TEXT_SEARCH_MANUFACTURERS', 'Herstellern');
 define('TEXT_SEARCH_DESCRIPTION', 'Artikelbeschreibungen');
 define('TEXT_SEARCH_ATTRIBUTES', 'Artikelmerkmalen');
