@@ -10,22 +10,58 @@
 
   <ul class="arrownav">
     {if isset($IS_CUSTOMER) && $IS_CUSTOMER == true}
-      <li><a href="{$LINK_ACCOUNT}" title="{#title_nav_account#}">{#title_nav_account#}</a></li>
-      <li><a href="{$LINK_EDIT}" title="{#title_nav_account_edit#}">{#title_nav_account_edit#}</a></li>
-      <li><a href="{$LINK_ADDRESS}" title="{#title_nav_address_book#}">{#title_nav_address_book#}</a></li>
-      <li><a href="{$LINK_PASSWORD}" title="{#title_nav_password#}">{#title_nav_password#}</a></li>
-      <li><a href="{$LINK_ORDERS}" title="{#title_nav_orders#}">{#title_nav_orders#}</a></li>
+      <li>
+        <a href="{$LINK_ACCOUNT}" title="{#title_nav_account#}">
+          <span class="icon"><i class="fa-solid fa-user"></i></span><span class="title">{#title_nav_account#}</span>
+        </a>
+      </li>
+      <li>
+        <a href="{$LINK_EDIT}" title="{#title_nav_account_edit#}">
+          <span class="icon"><i class="fa-solid fa-user-pen"></i></span><span class="title">{#title_nav_account_edit#}</span>
+        </a>
+      </li>
+      <li>
+        <a href="{$LINK_ADDRESS}" title="{#title_nav_address_book#}">
+          <span class="icon"><i class="fa-solid fa-address-card"></i></span><span class="title">{#title_nav_address_book#}</span>
+        </a>
+      </li>
+      <li>
+        <a href="{$LINK_PASSWORD}" title="{#title_nav_password#}">
+          <span class="icon"><i class="fa-solid fa-key"></i></span><span class="title">{#title_nav_password#}</span>
+        </a>
+      </li>
+      <li>
+        <a href="{$LINK_ORDERS}" title="{#title_nav_orders#}">
+          <span class="icon"><i class="fa-solid fa-cart-shopping"></i></span><span class="title">{#title_nav_orders#}</span>
+        </a>
+      </li>
       {if isset($LINK_DELETE)}
-        <li><a href="{$LINK_DELETE}" title="{#title_nav_account_delete#}">{#title_nav_account_delete#}</a></li>
+        <li>
+          <a href="{$LINK_DELETE}" title="{#title_nav_account_delete#}">
+            <span class="icon"><i class="fa-solid fa-trash-can"></i></span><span class="title">{#title_nav_account_delete#}</span>
+          </a>
+        </li>
       {/if}    
       {if isset($LINK_EXPRESS)}
-        <li><a href="{$LINK_EXPRESS}" title="{#title_nav_checkout_express#}">{#title_nav_checkout_express#}</a></li>
+        <li>
+          <a href="{$LINK_EXPRESS}" title="{#title_nav_checkout_express#}">
+            <span class="icon"><i class="fa-solid fa-truck-fast"></i></span><span class="title">{#title_nav_checkout_express#}</span>
+          </a>
+        </li>
       {/if}
     {/if}
     {if isset($LINK_NEWSLETTER)}
-      <li><a href="{$LINK_NEWSLETTER}" title="{#title_nav_newsletter#}">{#title_nav_newsletter#}</a></li>
+      <li>
+        <a href="{$LINK_NEWSLETTER}" title="{#title_nav_newsletter#}">
+          <span class="icon"><i class="fa-solid fa-envelopes-bulk"></i></span><span class="title">{#title_nav_newsletter#}</span>
+        </a>
+      </li>
     {/if}
-    <li><a href="{$LINK_LOGOFF}" title="{#title_nav_logoff#}">{#title_nav_logoff#}</a></li>
+    <li>
+      <a href="{$LINK_LOGOFF}" title="{#title_nav_logoff#}">
+        <span class="icon"><i class="fa-solid fa-right-from-bracket"></i></span><span class="title">{#title_nav_logoff#}</span>
+      </a>
+    </li>
   </ul>
 
 {else}
@@ -51,11 +87,23 @@
     {$FORM_END}
 
     <ul class="arrownav">
-      <li><a href="{$LINK_CREATE_ACCOUNT}" title="{#title_accountbox_create#}">{#title_accountbox_create#}</a></li>
+      <li>
+        <a href="{$LINK_CREATE_ACCOUNT}" title="{#title_accountbox_create#}">
+          <span class="icon"><i class="fa-solid fa-user-shield"></i></span><span class="title">{#title_accountbox_create#}</span>
+        </a>
+      </li>
       {if $smarty.const.ACCOUNT_OPTIONS == 'both' or $smarty.const.ACCOUNT_OPTIONS == 'guest'}
-        <li><a href="{$LINK_CREATE_GUEST_ACCOUNT}" title="{#title_accountbox_create_guest#}">{#title_accountbox_create_guest#}</a></li>
+        <li>
+          <a href="{$LINK_CREATE_GUEST_ACCOUNT}" title="{#title_accountbox_create_guest#}">
+            <span class="icon"><i class="fa-solid fa-user"></i></span><span class="title">{#title_accountbox_create_guest#}</span>
+          </a>
+        </li>
       {/if}
-      <li><a href="{$LINK_LOST_PASSWORD}" title="{#title_accountbox_password_forgotten#}">{#title_accountbox_password_forgotten#}</a></li>
+      <li>
+        <a href="{$LINK_LOST_PASSWORD}" title="{#title_accountbox_password_forgotten#}">
+          <span class="icon"><i class="fa-solid fa-key"></i></span><span class="title">{#title_accountbox_password_forgotten#}</span>
+        </a>
+      </li>
     </ul>
   {/if}
 {/if}

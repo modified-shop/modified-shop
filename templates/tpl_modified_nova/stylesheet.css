@@ -1998,12 +1998,6 @@ input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, inp
   text-align:center;
   text-transform:uppercase;
 }
-.toggle_headline.bordered {
-  border-bottom: 1px solid #d9d9d9;
-  margin: 10px 0px;
-  padding: 10px 10px;
-}
-
 .toggle_products {
   margin: 10px 0px;
   border-top: 1px solid #d9d9d9;
@@ -2070,12 +2064,31 @@ input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, inp
   border-top: 1px solid #d9d9d9;
 }
 .toggle_account ul.arrownav li {
-  padding: 10px 0px;
+  padding: 0px 0px;
   border-bottom: 1px solid #d9d9d9;
 }
 .toggle_account ul.arrownav li a {
+  display: flex;
+  align-items: center;
+  padding: 0px 0px;
   font-size: 14px;
   line-height: 18px;
+  color:#555;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-overflow-scrolling: touch;
+}
+.toggle_account ul.arrownav li a::before {
+  display:none;
+}
+.toggle_account ul.arrownav li a .icon {
+  padding: 10px 0px 10px 0px;
+  width:24px;
+  text-align:center;
+}
+.toggle_account ul.arrownav li a .title {
+  padding: 10px 10px;
+  flex:1;
+  font-weight:400;
 }
 
 .toggle_settings .settingsbox {

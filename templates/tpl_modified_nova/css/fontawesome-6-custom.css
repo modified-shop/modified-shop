@@ -96,6 +96,9 @@ readers do not read off random characters that represent icons */
 .fa-user-pen::before {
   content: "\f4ff"; }
 
+.fa-user-shield::before {
+  content: "\f505"; }
+
 .fa-address-card::before {
   content: "\f2bb"; }
 
