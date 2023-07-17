@@ -344,7 +344,7 @@ define('MAXIMUM_ORDER_VALUE_REACHED_2', '<br /> Please decrease your order by at
 define('ERROR_INVALID_PRODUCT', 'The product chosen was not found!');
 define('JS_KEYWORDS_MIN_LENGTH', 'The search term must be at least ' . (int)SEARCH_MIN_LENGTH . ' characters long.\n');
 
-define('TEXT_SEARCH_HELP', 'You can search by products name%s and article numbers.<br /><br />Use logical connectives such as "AND" and "OR".<br />Example: "Screen AND Speaker" will only return results containing BOTH words "Screen" and "Speaker".<br /><br />You can search for exact phrases by using quotation marks " ".<br />Example: "USB cable".<br /><br />Use brackets for interleaving.<br />Example: screen AND (speaker OR Keyboard or "USB cable").');
+define('TEXT_SEARCH_HELP', 'You can search by products name%sand article numbers.<br /><br />Use logical connectives such as "AND" and "OR".<br />Example: "Screen AND Speaker" will only return results containing BOTH words "Screen" and "Speaker".<br /><br />You can search for exact phrases by using quotation marks " ".<br />Example: "USB cable".<br /><br />Use brackets for interleaving.<br />Example: screen AND (speaker OR Keyboard or "USB cable").');
 define('TEXT_SEARCH_MANUFACTURERS', 'manufacturers');
 define('TEXT_SEARCH_DESCRIPTION', 'description');
 define('TEXT_SEARCH_ATTRIBUTES', 'attributes');
