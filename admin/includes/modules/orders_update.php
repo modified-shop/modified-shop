@@ -28,8 +28,10 @@
         $gender_query = xtc_db_query("SELECT customers_gender
                                         FROM " . TABLE_CUSTOMERS . "
                                        WHERE customers_id = '" .$order->customer['id']. "'");
-        $gender_array = xtc_db_fetch_array($gender_query);
-        $order->customer['gender'] = $gender_array['customers_gender'];
+        if (xtc_db_num_rows($gender_query) > 0) {
+          $gender_array = xtc_db_fetch_array($gender_query);
+          $order->customer['gender'] = $gender_array['customers_gender'];
+        }
       } 
       $smarty->assign('GENDER', $order->customer['gender']);
       $smarty->assign('FIRSTNAME',$order->customer['firstname'] != '' ? $order->customer['firstname'] : $order->customer['name']);
