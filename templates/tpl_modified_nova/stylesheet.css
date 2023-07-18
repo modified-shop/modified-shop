@@ -76,7 +76,6 @@
   
    ---------------------------------------------------------------------------------------*/   
 
-
 /* 01. START Fonts */
 /* red-hat-display-regular - latin */
 @font-face {
@@ -829,12 +828,13 @@ h1.subline {
   margin: auto;
   width: 100%;
   height: 100%;
-  background: rgba(255,255,255,0.9);
+  background: var(--search_toggle_bg, rgba(255,255,255,0.9));
 }
 @media only screen and (min-width: 920px) {
   .toggle_search { display: block; position:static; background:transparent;}
 }
 .search_inner {
+  position:relative;
   display: flex;
 }
 .search_inner .search_cat {
@@ -844,12 +844,11 @@ h1.subline {
   width:120px;
   height:40px;
   text-align:left;
-  background-color: #eee;
-  border:1px solid #eee;
-  border-top-right-radius: 0px;
-  border-bottom-right-radius: 0px;
-  border-top-left-radius: 15px;
-  border-bottom-left-radius: 15px;
+  border-radius: 15px 0 0 15px;  
+  border-color: var(--search_toggle_input_border, #eee);
+  border-style:solid;
+  border-width: 1px 0px 1px 1px;
+  background: var(--search_toggle_input_bg, #eee);
 }
 @media only screen and (min-width: 500px) {
   .search_inner .search_cat { display:block; }
@@ -866,73 +865,112 @@ h1.subline {
   right: -4px;
   margin: auto;  
 }
+.search_inner .search_cat .SumoSelect {
+  position: static; 
+}
 .search_inner .search_closer {
   display:block;
   width:40px;
   height:40px;
   text-align:center;
-  font-size:18px;
+  font-size:20px;
   line-height:40px;
   cursor:pointer;
+  background: var(--toggle_menu_closer_bg, #eee);
+  color: var(--toggle_menu_closer_color, #555);
+  border-radius:4px;
+  margin: 0 0 0 10px;
 }
 @media only screen and (min-width: 920px) {
   .search_inner .search_closer { display:none; }
 }
+.search_inner .search_help {
+  width: 20px;
+  height: 40px;
+  font-size: 14px;
+  font-weight: 400;
+  position: absolute;
+  z-index: 1200;
+  right: 90px;
+  top: 0px;
+  bottom: 0px;
+  margin: auto;
+  line-height: 40px;
+}
+.search_inner .search_help > a {
+  color: var(--search_toggle_color_help, #666);
+}
+@media only screen and (min-width: 920px) {
+  .search_inner .search_help { right: 40px; }
+}
+
 .search_inner .search_input {
   flex: 1;
 }
-#search .search_inner input[type=text] {
+.search_inner input[type=text], 
+.search_inner input[type=text]:hover,
+.search_inner input[type=text]:focus {
   padding: 10px 15px;
   height:40px;
-  border: none !important;
-  background: #eee !important;
-  border-top-right-radius: 0px;
-  border-bottom-right-radius: 0px;
-  border-top-left-radius: 15px;
-  border-bottom-left-radius: 15px;
-}
-.search_inner.search_cat_mode input[type=text] {
-  border-top-left-radius: 15px !important;
-  border-bottom-left-radius: 15px !important;
+  border-width: 1px 0px 1px 1px;
+  border-style: solid;
+  border-color: var(--search_toggle_input_border, #eee);
+  background: var(--search_toggle_input_bg, #eee);
+  border-radius: 15px 0 0 15px;
+  color: var(--search_toggle_color_input, #555);
 }
 @media only screen and (min-width: 500px) {
-  .search_inner.search_cat_mode input[type=text] { border-top-left-radius: 0px !important; border-bottom-left-radius: 0px !important; }
+  .search_inner input[type=text], 
+  .search_inner input[type=text]:hover,
+  .search_inner input[type=text]:focus { border-radius: 15px 0 0 15px; }
 }
 
-#search .search_inner .search_button {
+.search_inner.search_cat_mode input[type=text],
+.search_inner.search_cat_mode input[type=text]:hover,
+.search_inner.search_cat_mode input[type=text]:focus {
+  border-width: 1px 0px 1px 1px;
+  border-radius: 15px 0 0 15px;
+}
+@media only screen and (min-width: 500px) {
+  .search_inner.search_cat_mode input[type=text],
+  .search_inner.search_cat_mode input[type=text]:hover,
+  .search_inner.search_cat_mode input[type=text]:focus { border-width: 1px 0px 1px 0px; border-radius: 0 0px 0px 0; }
+}
+
+.search_inner .search_button {
   width:40px;
 }
-#search .search_inner .search_button .cssButton {
-  min-height: 40px !important;
-  height:40px !important;
-  padding: 7px 5px !important;
-  border-top-left-radius: 0px;
-  border-bottom-left-radius: 0px;
-  border-top-right-radius: 15px;
-  border-bottom-right-radius: 15px;
-  border:none;
+.search_inner .search_button .cssButton {
+  min-height: 40px;
+  height:40px;
+  padding: 7px 5px;
+  border-radius: 0 15px 15px 0;  
+  background: var(--search_toggle_input_bg, #eee);
+  border-color: var(--search_toggle_input_border, #eee);
+  border-style: solid;
+  border-width:1px 1px 1px 0px;
+  color: var(--search_toggle_color_button, #555);
 }
-#search .search_inner .search_button .cssButton .cssButtonIcon {
-  font-size:18px !important;
+.search_inner .search_button .cssButton .cssButtonIcon {
+  font-size:18px;
 }
 
 .search_inner .search_cat .SumoSelect > .CaptionCont,
+.search_inner .search_cat .SumoSelect:hover > .CaptionCont,
+.search_inner .search_cat .SumoSelect:focus > .CaptionCont,
+.search_inner .search_cat .SumoSelect.open  > .CaptionCont,
 .search_inner .search_cat select {
-  background-color: #eee !important;
-  border:1px solid #eee !important;
-  border-top-right-radius: 0px;
-  border-bottom-right-radius: 0px;
-  border-top-left-radius: 15px;
-  border-bottom-left-radius: 15px;
+  background: var(--search_toggle_input_bg, #eee);
+  border-width: 0px 0px 0px 0px;
+  border-radius: 15px 0 0 15px;  
   text-transform:none;
   font-size: 12px;
   line-height:22px;
   font-weight: 700;
-  padding: 9px 9px 9px 9px;
-  height:40px;
+  padding: 10px 9px 8px 9px;
+  height:38px;
+  color: var(--search_toggle_color_select, #555);
 }
-.search_inner .search_cat .SumoSelect:focus > .CaptionCont { border: 1px solid #eee !important; }
-.search_inner .search_cat .SumoSelect:focus > .CaptionCont { border: 1px solid #eee !important; }
 
 .search_inner .SumoSelect > .CaptionCont > span {
   padding-right: 20px;
@@ -1580,7 +1618,9 @@ input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, inp
 .addquickie_input ::-moz-placeholder, 
 .addquickie_input :-ms-input-placeholder,
 .addquickie_input :-moz-placeholder { 
-  color: #666; font-style:italic; line-height:28px;
+  color: #666; 
+  font-style:italic; 
+  line-height:28px;
 }
 
 /* 09. END inputs & input layout */
@@ -7059,11 +7099,10 @@ p.underline {
 /* 43. START autocomplete search */
 .suggestionsBox {
   position:absolute;
-  right:0px;
-  left:0px;
-  top:100%;
+  right:-10px;
+  left:-10px;
+  top:calc(100% + 28px);
   margin:auto;
-  width: 100%;
   background:#fff;
   z-index:1100;
   padding: 20px 0px 20px 0px;
@@ -7071,7 +7110,7 @@ p.underline {
   box-shadow: 0 10px 15px -15px #333;
 }
 @media only screen and (min-width: 920px) {
-  .suggestionsBox { padding: 0px 0px 20px 0px; }
+  .suggestionsBox { top:100%; right:0px; left:0px; padding: 0px 0px 20px 0px; }
 }
 
 .suggestionList {

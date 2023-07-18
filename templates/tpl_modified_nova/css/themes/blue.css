@@ -2,18 +2,28 @@
 .layout_wrap.theme_blue,
 .layout_wrap.theme_blue ~ .copyright,
 .layout_wrap.theme_blue ~ .parseTime,
-.layout_wrap.theme_blue ~ .mm-ocd {
+.layout_wrap.theme_blue ~ .mm-ocd,
+.layout_wrap.theme_blue ~ #colorbox {
 
   /* Header & navigation elements cart, wishlist, settings, account, menu */
-  --header_bg: #d0e0ef;
-  --header_menuitems_bg: #eee;
+  --header_bg: #e9f1f8;
+  --header_menuitems_bg: #d0e0ef;
   --header_menuitems_color: #555;
-  --header_menuitems_bg_hover: #b7cfe6;
+  --header_menuitems_bg_hover: #9ebedd;
   --header_menuitems_color_hover: #333;
 
   /* Count for cart and wishlist */ 
   --count_cart_wishlist_color: #fff;
   --count_cart_wishlist_bg: #3a74a8;
+
+  /* Header search */
+  --search_toggle_bg: #e9f1f8; 
+  --search_toggle_input_border: #d0e0ef; 
+  --search_toggle_input_bg: #d0e0ef; 
+  --search_toggle_color_select: #555; 
+  --search_toggle_color_input: #555; 
+  --search_toggle_color_help: #666; 
+  --search_toggle_color_button: #555; 
 
   /* Categories menu */   
   --categoriesmenu_bg: #3a74a8; 

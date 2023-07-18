@@ -25,10 +25,10 @@
   );
   
   if (defined('THEME_COLOR')
-      && is_file(DIR_FS_CATALOG.DIR_TMPL_CSS.'themes/'.str_replace('theme_', '', THEME_COLOR).'.css')
+      && is_file(DIR_FS_CATALOG.DIR_TMPL_CSS.'themes/'.THEME_COLOR.'.css')
       )
   {
-    array_unshift($css_array, DIR_TMPL_CSS.'themes/'.str_replace('theme_', '', THEME_COLOR).'.css');
+    array_unshift($css_array, DIR_TMPL_CSS.'themes/'.THEME_COLOR.'.css');
   }
   
   if (is_file(DIR_FS_CATALOG.DIR_TMPL_CSS.'tpl_custom.css')) {

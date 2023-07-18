@@ -77,7 +77,8 @@
   define('TEXT_ICON_ASTERISK', '<i class="fa-solid fa-asterisk"></i>');  
     
   // theme color
-  define('THEME_COLOR', 'theme_default');  
+  // default, blue, green
+  define('THEME_COLOR', 'default');  
 
   // set base
   defined('DIR_WS_BASE') OR define('DIR_WS_BASE', xtc_href_link('', '', $request_type, false, false));

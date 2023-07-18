@@ -24,7 +24,7 @@
   //	default smarty
   // -----------------------------------------------------------------------------------------
   $smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
-  $smarty->assign('theme_color', ((defined('THEME_COLOR')) ? THEME_COLOR : 'theme_default'));
+  $smarty->assign('theme_color', ((defined('THEME_COLOR')) ? 'theme_'.THEME_COLOR : 'theme_default'));
   $smarty->assign('display_mode', $display_mode);
   $smarty->assign('content_size', 'small');
 

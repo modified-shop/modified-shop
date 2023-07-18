@@ -2,7 +2,8 @@
 .layout_wrap.theme_default,
 .layout_wrap.theme_default ~ .copyright,
 .layout_wrap.theme_default ~ .parseTime,
-.layout_wrap.theme_default ~ .mm-ocd {
+.layout_wrap.theme_default ~ .mm-ocd,
+.layout_wrap.theme_default ~ #colorbox {
 
   /* Header & navigation elements cart, wishlist, settings, account, menu */
   --header_bg: #fff;
@@ -14,7 +15,16 @@
   /* Count for cart and wishlist */ 
   --count_cart_wishlist_color: #fff;
   --count_cart_wishlist_bg: #333;
-  
+
+  /* Header search */
+  --search_toggle_bg: #fff; 
+  --search_toggle_input_border: #eee; 
+  --search_toggle_input_bg: #eee; 
+  --search_toggle_color_select: #555; 
+  --search_toggle_color_input: #555; 
+  --search_toggle_color_help: #666; 
+  --search_toggle_color_button: #555; 
+              
   /* Categories */
   --categoriesmenu_bg: #f0f0f0; 
   --categoriesitems_level1_color: #666; 

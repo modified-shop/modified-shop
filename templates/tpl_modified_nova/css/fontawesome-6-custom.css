@@ -142,6 +142,9 @@ readers do not read off random characters that represent icons */
 .fa-circle-info::before {
   content: "\f05a"; }
 
+.fa-circle-question::before {
+  content: "\f059"; }
+
 .fa-filter::before {
   content: "\f0b0"; }
 

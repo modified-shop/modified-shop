@@ -11,16 +11,46 @@
    --------------------------------------------------------------*/
 ?>
 <script>
+  let colorBoxBreakpoint = 800;
+  let lastBreakpoint = window.innerWidth;
+  
   $(document).ready(function(){
-    $(".cbimages").colorbox({rel:'cbimages', scalePhotos:true, maxWidth: "96%", maxHeight: "96%", fixed: true, close: '<i class="fa-solid fa-xmark"></i>', next: '<i class="fa-solid fa-angle-right"></i>', previous: '<i class="fa-solid fa-angle-left"></i>'});
-    $(".iframe").colorbox({iframe:true, width:"780", height:"560", maxWidth: "96%", maxHeight: "96%", fixed: true, close: '<i class="fa-solid fa-xmark"></i>'});
-    $(".inline").colorbox({inline:true, width:"780", maxWidth: "96%", maxHeight: "96%", fixed: true, close: '<i class="fa-solid fa-xmark"></i>'});
-    $("#print_order_layer").on('submit', function(event) {
-      $.colorbox({iframe:true, width:"780", height:"560", maxWidth: "90%", maxHeight: "90%", close: '<i class="fa-solid fa-xmark"></i>', href:$(this).attr("action") + '&' + $(this).serialize()});
-      return false;
-    });
+    $(".cbimages").colorbox({rel:'cbimages', scalePhotos:true, maxWidth: "100%", maxHeight: "100%", fixed: true, close: '<i class="fa-solid fa-xmark"></i>', next: '<i class="fa-solid fa-angle-right"></i>', previous: '<i class="fa-solid fa-angle-left"></i>'});
+    setColorBox(lastBreakpoint, true);    
   });
 
+  $(window).resize(function() {
+    setColorBox(window.innerWidth);
+  });
+  
+  function setColorBox(globalWidth, initialise = false) {
+    if (globalWidth <= colorBoxBreakpoint) {
+      $(".iframe").colorbox.resize({width:"100%", height:"100%"});
+      
+      if (initialise === true || lastBreakpoint >= colorBoxBreakpoint) {
+        lastBreakpoint = globalWidth;
+        $(".iframe").colorbox({iframe:true, width:"100%", height:"100%", maxWidth: "100%", maxHeight: "100%", fixed: true, close: '<i class="fa-solid fa-xmark"></i>'});
+        $(".inline").colorbox({inline:true, width:"100%", height:"100%", maxWidth: "100%", maxHeight: "100%", fixed: true, close: '<i class="fa-solid fa-xmark"></i>'});
+        $("#print_order_layer").on('submit', function(event) {
+          $.colorbox({iframe:true, width:"100%", height:"100%", maxWidth: "100%", maxHeight: "100%", close: '<i class="fa-solid fa-xmark"></i>', href:$(this).attr("action") + '&' + $(this).serialize()});
+          return false;
+        });
+      }
+    } else {
+      $(".iframe").colorbox.resize({width: "780", height: "560"});
+      
+      if (initialise === true || lastBreakpoint <= colorBoxBreakpoint) {
+        lastBreakpoint = globalWidth;
+        $(".iframe").colorbox({iframe:true, width:"780", height:"560", maxWidth: "100%", maxHeight: "100%", fixed: true, close: '<i class="fa-solid fa-xmark"></i>'});
+        $(".inline").colorbox({inline:true, width:"780", maxWidth: "100%", maxHeight: "100%", fixed: true, close: '<i class="fa-solid fa-xmark"></i>'});
+        $("#print_order_layer").on('submit', function(event) {
+          $.colorbox({iframe:true, width:"780", height:"560", maxWidth: "100%", maxHeight: "100%", close: '<i class="fa-solid fa-xmark"></i>', href:$(this).attr("action") + '&' + $(this).serialize()});
+          return false;
+        });
+      }
+    }
+  }
+  
   jQuery.extend(jQuery.colorbox.settings, {
     current: "<?php echo TEXT_COLORBOX_CURRENT; ?>",
     previous: "<?php echo TEXT_COLORBOX_PREVIOUS; ?>",
