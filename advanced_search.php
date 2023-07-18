@@ -26,6 +26,7 @@ $smarty = new Smarty();
 
 $popup_params = $main->getPopupParams();
 
+$smarty->assign('popup_params', $popup_params);
 $smarty->assign('FORM_ACTION', xtc_draw_form('advanced_search', xtc_href_link(FILENAME_ADVANCED_SEARCH_RESULT, '', $request_type, false), 'get').xtc_hide_session_id());
 $smarty->assign('INPUT_KEYWORDS', xtc_draw_input_field('keywords', '', 'placeholder="'.IMAGE_BUTTON_SEARCH.'"'));
 $smarty->assign('HELP_LINK', xtc_href_link(FILENAME_POPUP_SEARCH_HELP, $popup_params['link_parameters'], $request_type));

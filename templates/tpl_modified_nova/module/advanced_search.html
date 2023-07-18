@@ -12,7 +12,7 @@
       <div class="flex_2column_item">
         <div class="contentbox">
           <div class="field_item_1"><label><span class="field_text">{#title_keywords#}</span>{$INPUT_KEYWORDS}</label></div>
-          <div class="font_midi mt_10"><a href="{$HELP_LINK}" class="arrow {if $smarty.const.TPL_POPUP_CONTENT_LINK_CLASS}{$smarty.const.TPL_POPUP_CONTENT_LINK_CLASS}{else}{$smarty.const.POPUP_CONTENT_LINK_CLASS}{/if}" title="{if $smarty.const.TEXT_LINK_TITLE_INFORMATION}{$smarty.const.TEXT_LINK_TITLE_INFORMATION}{else}Information{/if}">{#text_help#}</a></div>
+          <div class="font_midi mt_10"><a href="{$HELP_LINK}" class="arrow {$popup_params.link_class}" title="{$popup_params.link_title}">{#text_help#}</a></div>
         </div>
       </div>
       <div class="flex_2column_item">
