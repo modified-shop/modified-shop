@@ -1,0 +1,77 @@
+
+.layout_wrap.theme_green,
+.layout_wrap.theme_green ~ .copyright,
+.layout_wrap.theme_green ~ .parseTime,
+.layout_wrap.theme_green ~ .mm-ocd {
+
+  /* Header & navigation elements cart, wishlist, settings, account, menu */
+  --header_bg: #e4e4dc;
+  --header_menuitems_bg: #eee;
+  --header_menuitems_color: #555;
+  --header_menuitems_bg_hover: #c6c6b6;
+  --header_menuitems_color_hover: #333;
+
+  /* Count for cart and wishlist */ 
+  --count_cart_wishlist_color: #fff;
+  --count_cart_wishlist_bg: #95aa63;
+
+  /* Categories menu */
+  --categoriesmenu_bg: #6f9580; 
+  --categoriesitems_level1_color: #fff; 
+  --categoriesitems_level1_bg_hover: rgba(255,255,255,0.2);
+  --categoriesitems_level1_color_hover: #fff; 
+  --categoriesitems_level1_color_selected: #e4e4dc;
+  --categoriesitems_level2_selected: #6f9580;
+  --categoriesitems_overview_color_selected: #6f9580;
+
+  /* Left submenu selected */
+  --subcatsmenu_color_selected: #6f9580; 
+  
+  /* Mobile mmenu selected */
+  --mobilemenu_color_selected: #6f9580; 
+
+  /* Right content menu selected */
+  --contentboxlist_color_selected: #6f9580; 
+
+  /* Left account menu selected */
+  --account_navigation_selected: #6f9580; 
+
+  /* Main Buttons */
+  --button1_background: #bfcab4;  
+  --button1_border: rgba(0,0,0,0.1);
+  --button1_color: #333; 
+
+  --button2_background: #95aa63;  
+  --button2_border: rgba(0,0,0,0.1); 
+  --button2_color: #333; 
+  
+  /* Prices */
+  --price_default_color: #333; 
+  --price_new_color: #ff1717; 
+  --price_old_color: #666; 
+  --price_save_bg: #ff1717; 
+  --price_save_color: #fff; 
+
+  /* Toogle menu closer */  
+  --toggle_menu_closer_bg: #e4e4dc;
+  --toggle_menu_closer_color: #6f9580;
+  
+  /* Subfooter */
+  --subfooter_bg: #e4e4dc; 
+  --subfooter_color_title: #333; 
+  --subfooter_color_text: #555;
+
+  /* Footer */
+  --footer_bg: #6f9580; 
+  --footer_box_header: #fff;   
+  --footer_box_text: #eee;   
+  --footer_link_color: #fff;  
+  --footer_link_color_underline: #ccc;  
+  --footer_payment_icons_bg: rgba(255,255,255,0.8);  
+  --footer_social_icons: #fff;  
+  --footer_social_icons_hover: #bfcab4;  
+  --footer_copyright: #ddd;  
+  --footer_copyright_border: #ddd;  
+
+}  
+

@@ -17,8 +17,8 @@
   cursor:pointer;
   width:30px;
   height:30px;
-  background:#eee;
-  color:#555;
+  background: var(--toggle_menu_closer_bg, #eee);
+  color: var(--toggle_menu_closer_color, #555);
   position:absolute;
   top:0px;
   right:0px;
@@ -334,32 +334,32 @@ body.mm-ocd-opened {
 
 .mm-spn--open .active1 > a,
 .mm-spn--open .activeparent1 > a {
-  color:#222 !important;
+  color: var(--mobilemenu_color_selected, #222);
   font-weight:700 !important;
 }
 .mm-spn--open .active2 > a,
 .mm-spn--open .activeparent2 > a {
-  color:#222 !important;
+  color: var(--mobilemenu_color_selected, #222);
   font-weight:700 !important;
 }
 .mm-spn--open .active3 > a,
 .mm-spn--open .activeparent3 > a {
-  color:#222 !important;
+  color: var(--mobilemenu_color_selected, #222);
   font-weight:700 !important;
 }
 .mm-spn--open .active4 > a,
 .mm-spn--open .activeparent4 > a {
-  color:#222 !important;
+  color: var(--mobilemenu_color_selected, #222);
   font-weight:700 !important;
 }
 .mm-spn--open .active5 > a,
 .mm-spn--open .activeparent5 > a {
-  color:#222 !important;
+  color: var(--mobilemenu_color_selected, #222);
   font-weight:700 !important;
 }
 .mm-spn--open li.level_manu > a > strong {
+  color: var(--mobilemenu_color_selected, #222);
   font-weight:700 !important;
-  color:#222 !important;
 } 
 .admin_mode .mm-ocd {
   top:36px !important;

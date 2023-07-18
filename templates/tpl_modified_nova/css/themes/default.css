@@ -1,0 +1,77 @@
+
+.layout_wrap.theme_default,
+.layout_wrap.theme_default ~ .copyright,
+.layout_wrap.theme_default ~ .parseTime,
+.layout_wrap.theme_default ~ .mm-ocd {
+
+  /* Header & navigation elements cart, wishlist, settings, account, menu */
+  --header_bg: #fff;
+  --header_menuitems_bg: #eee;
+  --header_menuitems_color: #555;
+  --header_menuitems_bg_hover: #ddd;
+  --header_menuitems_color_hover: #333;
+
+  /* Count for cart and wishlist */ 
+  --count_cart_wishlist_color: #fff;
+  --count_cart_wishlist_bg: #333;
+  
+  /* Categories */
+  --categoriesmenu_bg: #f0f0f0; 
+  --categoriesitems_level1_color: #666; 
+  --categoriesitems_level1_bg_hover: rgba(0,0,0,0.1); 
+  --categoriesitems_level1_color_hover: #222;  
+  --categoriesitems_level1_color_selected: #222;
+  --categoriesitems_level2_selected: #222;
+  --categoriesitems_overview_color_selected: #222;
+
+  /* Left submenu selected */
+  --subcatsmenu_color_selected: #222; 
+  
+  /* Mobile mmenu selected */
+  --mobilemenu_color_selected: #222; 
+
+  /* Right content menu selected */
+  --contentboxlist_color_selected: #333; 
+  
+  /* Left account menu selected */
+  --account_navigation_selected: #555; 
+
+  /* Main Buttons */
+  --button1_background: #ddd;  
+  --button1_border: rgba(0,0,0,0.1);
+  --button1_color: #333; 
+  
+  --button2_background: #4d4d4d;  
+  --button1_border: rgba(0,0,0,0.1);
+  --button2_color: #fff; 
+
+  /* Prices */
+  --price_default_color: #434343; 
+  --price_new_color: #e32828; 
+  --price_old_color: #666; 
+  --price_save_bg: #e32828; 
+  --price_save_color: #fff; 
+
+  /* Toogle menu closer */  
+  --toggle_menu_closer_bg: #eee;
+  --toggle_menu_closer_color: #555;
+  
+  /* Subfooter */
+  --subfooter_bg: #f5f5f5; 
+  --subfooter_color_title: #333; 
+  --subfooter_color_text: #555; 
+  
+  /* Footer */
+  --footer_bg: #eee; 
+  --footer_box_header: #555;   
+  --footer_box_text: #333;   
+  --footer_link_color: #333;  
+  --footer_link_color_underline: #999;  
+  --footer_payment_icons_bg: rgba(255,255,255,0.0);  
+  --footer_social_icons: #666;  
+  --footer_social_icons_hover: #333;  
+  --footer_copyright: #666;  
+  --footer_copyright_border: #666;  
+  
+} 
+

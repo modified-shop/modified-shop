@@ -1,0 +1,77 @@
+
+.layout_wrap.theme_blue,
+.layout_wrap.theme_blue ~ .copyright,
+.layout_wrap.theme_blue ~ .parseTime,
+.layout_wrap.theme_blue ~ .mm-ocd {
+
+  /* Header & navigation elements cart, wishlist, settings, account, menu */
+  --header_bg: #d0e0ef;
+  --header_menuitems_bg: #eee;
+  --header_menuitems_color: #555;
+  --header_menuitems_bg_hover: #b7cfe6;
+  --header_menuitems_color_hover: #333;
+
+  /* Count for cart and wishlist */ 
+  --count_cart_wishlist_color: #fff;
+  --count_cart_wishlist_bg: #3a74a8;
+
+  /* Categories menu */   
+  --categoriesmenu_bg: #3a74a8; 
+  --categoriesitems_level1_color: #fff; 
+  --categoriesitems_level1_bg_hover: rgba(255,255,255,0.2);
+  --categoriesitems_level1_color_hover: #fff; 
+  --categoriesitems_level1_color_selected: #d0e0ef;
+  --categoriesitems_level2_selected: #3a74a8;
+  --categoriesitems_overview_color_selected: #3a74a8;
+
+  /* Left submenu selected */
+  --subcatsmenu_color_selected: #3a74a8; 
+  
+  /* Mobile mmenu selected */
+  --mobilemenu_color_selected: #3a74a8; 
+
+  /* Right content menu selected */
+  --contentboxlist_color_selected: #3a74a8; 
+
+  /* Left account menu selected */
+  --account_navigation_selected: #3a74a8; 
+
+  /* Main Buttons */
+  --button1_background: #444;  
+  --button1_border: rgba(0,0,0,0.1);
+  --button1_color: #fff; 
+
+  --button2_background: #3a74a8;  
+  --button2_border: rgba(0,0,0,0.1); 
+  --button2_color: #fff; 
+
+  /* Prices */
+  --price_default_color: #333; 
+  --price_new_color: #ff1717; 
+  --price_old_color: #666; 
+  --price_save_bg: #ff1717; 
+  --price_save_color: #fff; 
+
+  /* Toogle menu closer */  
+  --toggle_menu_closer_bg: #d0e0ef;
+  --toggle_menu_closer_color: #3a74a8;
+  
+  /* Subfooter */  
+  --subfooter_bg: #d0e0ef; 
+  --subfooter_color_title: #333; 
+  --subfooter_color_text: #555;
+
+  /* Footer */
+  --footer_bg: #3a74a8; 
+  --footer_box_header: #fff;   
+  --footer_box_text: #eee;   
+  --footer_link_color: #fff;  
+  --footer_link_color_underline: #ccc;  
+  --footer_payment_icons_bg: rgba(255,255,255,0.8);  
+  --footer_social_icons: #fff;  
+  --footer_social_icons_hover: #d0e0ef;  
+  --footer_copyright: #ddd;  
+  --footer_copyright_border: #ddd;  
+
+}
+
