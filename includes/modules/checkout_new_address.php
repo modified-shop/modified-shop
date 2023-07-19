@@ -106,11 +106,35 @@ if (isset($_GET['action'])
   $module_smarty->assign('PARAMS', xtc_draw_hidden_field('address_book_id', ((isset($_GET['id'])) ? (int)$_GET['id'] : (int)$address_book_id)));
 }
 
-if ((isset($_GET['id']) && $_SESSION['customer_default_address_id'] != $_GET['id']) || (isset($_GET['action']) && $_GET['action'] == 'new')) {
+if (basename($PHP_SELF) != FILENAME_CHECKOUT_PAYMENT_ADDRESS 
+    && ((isset($_GET['id']) && $_SESSION['customer_default_address_id'] != $_GET['id']) 
+         || (isset($_GET['action']) && $_GET['action'] == 'new')
+        )
+    )
+{
   $module_smarty->assign('new','1');
   $module_smarty->assign('CHECKBOX_PRIMARY', xtc_draw_checkbox_field('primary', 'on', false, 'id="primary"'));
 }
 
+if (basename($PHP_SELF) == FILENAME_CHECKOUT_PAYMENT_ADDRESS 
+    && $_SESSION['cart']->content_type != 'virtual' 
+    && $_SESSION['cart']->content_type != 'virtual_weight'
+    && $_SESSION['cart']->count_contents_virtual() != 0
+    && isset($_SESSION['sendto'])
+    && ((isset($_GET['id'])  && (int)$_GET['id'] == (int)$_SESSION['sendto'])
+        || (isset($edit_address_book_id) && (int)$edit_address_book_id == (int)$_SESSION['sendto'])
+        )
+    )
+{
+  if ($addresses_count < MAX_ADDRESS_BOOK_ENTRIES) {
+    $module_smarty->clear_assign('new');
+    $module_smarty->assign('PARAMS', xtc_draw_hidden_field('store_address', 1));
+    $module_smarty->assign('CHECKBOX_EDIT_ADDRESS', xtc_draw_checkbox_field('edit_address_book_id', ((isset($_GET['id'])) ? (int)$_GET['id'] : (int)$edit_address_book_id), false, 'id="edit_address_book_id"'));
+    $smarty->assign('BUTTON_CONTINUE', xtc_draw_hidden_field('action', 'submit').xtc_image_submit('button_save.gif', IMAGE_BUTTON_SAVE));
+  } else {
+    $module_smarty->assign('MAX_ADDRESS_NOTE', sprintf('TEXT_PAYMENT_ADDRESS_NOTE', MAX_ADDRESS_BOOK_ENTRIES));
+  }
+}
 $module_smarty->assign('language', $_SESSION['language']);
 
 $module_smarty->caching = 0;

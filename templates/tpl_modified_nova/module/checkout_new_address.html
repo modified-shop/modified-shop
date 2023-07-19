@@ -48,7 +48,23 @@
           </div>
         {/if}
 
+        {if isset($CHECKBOX_EDIT_ADDRESS)}
+          <div class="contentbox lightyellow mt_20">      
+            <div class="cus_check">
+              {$CHECKBOX_EDIT_ADDRESS}
+              <label for="edit_address_book_id">{#text_edit_address_note#}</label>
+            </div>
+          </div>
+        {/if}
 
+        {if isset($MAX_ADDRESS_NOTE)}
+          <div class="contentbox infomessage small mt_20">      
+            <div class="cus_check">
+              {$MAX_ADDRESS_NOTE}
+            </div>
+          </div>
+        {/if}
+        
       </div>
     </div>
     {if isset($PARAMS)}{$PARAMS}{/if}

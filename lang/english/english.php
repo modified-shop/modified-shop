@@ -677,3 +677,5 @@ define('TEXT_ERROR_HANDLER_404', 'Error 404: Not Found!');
 define('TEXT_ERROR_HANDLER_500', 'Error 500: Internal Server Error.');
 
 define('ERROR_PRODUCTS_MISSING_CONFIGURATION_NOT_ADDED', 'Some items from your order are no longer available in the desired configuration and have not been placed in the shopping cart.');
+
+define('MAX_ADDRESS_NOTE', 'Attention, there is no new address available. You have reached the maximum number of %s addresses. This address will also be used as the shipping address. If you need a different billing address, select an address from your address book.');

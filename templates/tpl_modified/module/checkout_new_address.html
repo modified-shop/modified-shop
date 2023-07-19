@@ -69,6 +69,23 @@
         </tr>
       </table>
       {/if}
+      {if isset($CHECKBOX_EDIT_ADDRESS)}
+      <br />
+      <table>
+        <tr>
+          <td class="checkbox">{$CHECKBOX_EDIT_ADDRESS}</td>
+          <td class="midi td_full"><label for="edit_address_book_id">{#text_edit_address_note#}</label></td>
+        </tr>
+      </table>
+      {/if}
+      {if isset($MAX_ADDRESS_NOTE)}
+      <br />
+      <table>
+        <tr>
+          <td colspan="2" class="midi td_full">{$MAX_ADDRESS_NOTE}</td>
+        </tr>
+      </table>
+      {/if}
     </div>
   </div>
   <div class="clearer"></div>
