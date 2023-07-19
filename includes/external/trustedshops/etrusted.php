@@ -162,7 +162,7 @@
                                               AND products_id = '".(int)$products['products_id']."'
                                               AND date_added = '".xtc_db_input(date('Y-m-d H:i:s', strtotime($review['createdAt'])))."'
                                               AND customers_id = '".(int)$customers_id."'
-                                              AND external_id = ''");
+                                              AND (external_id = '' OR external_id IS NULL)");
               if (xtc_db_num_rows($check_query) > 0) {
                 $check = xtc_db_fetch_array($check_query);
             
