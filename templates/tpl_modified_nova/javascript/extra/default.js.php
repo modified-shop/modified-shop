@@ -214,6 +214,7 @@
   });
  
   function close_search_field(event) {
+    event.stopPropagation();
     $(".toggle_search").fadeOut("slow");
     return false;
   }
