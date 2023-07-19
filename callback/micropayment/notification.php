@@ -103,8 +103,10 @@ class micropayment_callback
 
     static function processRequest()
     {
-        $obj = new self();
-        $obj->process();
+        if(defined('MODULE_PAYMENT_MCP_SERVICE_STATUS')) {
+            $obj = new self();
+            $obj->process();
+        }
     }
 
     function process()
