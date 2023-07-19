@@ -120,4 +120,8 @@ UPDATE `configuration` SET `configuration_value` = 'image_manipulator.php' WHERE
 ALTER TABLE `whos_online` ADD `cart_status` INT(11) NOT NULL;
 ALTER TABLE `whos_online` ADD INDEX `idx_cart_status` (`cart_status`); 
 
+#GTB - 2023-07-19 - add banner image title and alt tags
+ALTER TABLE `banners` ADD `banners_image_title` VARCHAR(255) NOT NULL AFTER `banners_image_mobile`;
+ALTER TABLE `banners` ADD `banners_image_alt` VARCHAR(255) NOT NULL AFTER `banners_image_title`;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
