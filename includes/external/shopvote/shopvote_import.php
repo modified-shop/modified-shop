@@ -97,7 +97,7 @@
                                                 AND products_id = '".(int)$reviews['sku']."'
                                                 AND date_added = '".xtc_db_input(date('Y-m-d H:i:s', strtotime($reviews['created'])))."'
                                                 AND customers_id = '0'
-                                                AND external_id = ''");
+                                                AND (external_id = '' OR external_id IS NULL)");
                 if (xtc_db_num_rows($check_query) > 0) {
                   $check = xtc_db_fetch_array($check_query);
                 
