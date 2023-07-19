@@ -26,8 +26,11 @@ $order_query_check = xtc_db_query("SELECT customers_id
                                     WHERE orders_id='".(int)$insert_id."'");
 $order_check = xtc_db_fetch_array($order_query_check);
 
-if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) { // Send Order by Admin
-
+if ((isset($_SESSION['customer_id']) 
+     && $_SESSION['customer_id'] == $order_check['customers_id']
+     ) || $send_by_admin
+    )
+{
   $order = new order($insert_id);
 
   if (isset($send_by_admin)) {
@@ -258,10 +261,12 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
     );  
     xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY,$sql_data_array);
     
-    if (isset($_GET['site']) && $_GET['site'] == 1) {
-      xtc_redirect(xtc_href_link(FILENAME_ORDERS, 'oID='.$_GET['oID'].'&action=edit'));
-    } else {
-      xtc_redirect(xtc_href_link(FILENAME_ORDERS, 'oID='.$_GET['oID']));
+    if (!isset($redirect_to_admin)) {
+      if (isset($_GET['site']) && $_GET['site'] == 1) {
+        xtc_redirect(xtc_href_link(FILENAME_ORDERS, 'oID='.$_GET['oID'].'&action=edit'));
+      } else {
+        xtc_redirect(xtc_href_link(FILENAME_ORDERS, 'oID='.$_GET['oID']));
+      }
     }
   }
 } else {

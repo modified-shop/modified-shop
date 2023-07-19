@@ -5,7 +5,7 @@
  * @copyright  Copyright (c) 2022 Micropayment GmbH (http://www.micropayment.de)
  * @author     micropayment GmbH (TE) <support@micropayment.de>
  */
-require_once('mcp_service.php');
+include_once('mcp_service.php');
 define('MODULE_PAYMENT_MCP_PREPAY_TEXT_DESCRIPTION', 'micropayment&trade; Prepay Module
 <br /><br />
 links<br />

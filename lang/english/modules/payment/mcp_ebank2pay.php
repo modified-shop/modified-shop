@@ -5,7 +5,7 @@
  * @copyright  Copyright (c) 2022 Micropayment GmbH (http://www.micropayment.de)
  * @author     micropayment GmbH (TE) <support@micropayment.de>
  */
-require_once('mcp_service.php');
+include_once('mcp_service.php');
 define('MODULE_PAYMENT_MCP_EBANK2PAY_TEXT_DESCRIPTION', 'micropayment&trade; online bank transfer module
 <br /><br />
 links<br />
@@ -42,5 +42,3 @@ define('MODULE_PAYMENT_MCP_EBANK2PAY_SORT_ORDER_TITLE','Positioning');
 define('MODULE_PAYMENT_MCP_EBANK2PAY_SORT_ORDER_DESC','Positioning in the payment method selection');
 define('MODULE_PAYMENT_MCP_EBANK2PAY_ALLOWED_TITLE','Country selection');
 define('MODULE_PAYMENT_MCP_EBANK2PAY_ALLOWED_DESC','Allow orders only from these countries (Comma seperated list DE,EN)');
-
-?>

@@ -6,7 +6,7 @@
  * @author     micropayment GmbH (TE) <support@micropayment.de>
  */
 require_once(dirname(__FILE__).'/class.micropayment_helper.php');
-require_once(dirname(__FILE__).'/../../../lang/'.$_SESSION['language'].'/modules/payment/mcp_service.php');
+include_once(dirname(__FILE__).'/../../../lang/'.$_SESSION['language'].'/modules/payment/mcp_service.php');
 
 class micropayment_method extends micropayment_helper
 {
@@ -34,11 +34,6 @@ class micropayment_method extends micropayment_helper
         if (isset($this->code) && $this->code != '') {
           $this->check_enabled();
           $this->check();
-
-          //echo '<pre>'.print_r($this,true).RUN_MODE_ADMIN.'</pre>';
-//          if (defined('RUN_MODE_ADMIN')) {
-//            $this->refreshShopModule();
-//          }
         }
     }
 

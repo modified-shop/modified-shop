@@ -5,7 +5,7 @@
  * @copyright  Copyright (c) 2022 Micropayment GmbH (http://www.micropayment.de)
  * @author     micropayment GmbH (TE) <support@micropayment.de>
  */
-require_once('mcp_service.php');
+include_once('mcp_service.php');
 define('MODULE_PAYMENT_MCP_DEBIT_TEXT_DESCRIPTION', 'micropayment&trade; Lastschrift Modul
 <br /><br />
 Links<br />
@@ -42,5 +42,3 @@ define('MODULE_PAYMENT_MCP_DEBIT_SORT_ORDER_TITLE','Positionierung');
 define('MODULE_PAYMENT_MCP_DEBIT_SORT_ORDER_DESC','Positionierung in der Bezahlmethodenauswahl');
 define('MODULE_PAYMENT_MCP_DEBIT_ALLOWED_TITLE','L&auml;nderauswahl');
 define('MODULE_PAYMENT_MCP_DEBIT_ALLOWED_DESC','Bestellungen nur aus den L&auml;ndern erlauben (Komma separierte Liste z.b. DE,EN)');
-
-?>

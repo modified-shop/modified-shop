@@ -29,26 +29,35 @@ define('MODULE_PAYMENT_MCP_NOTIFICATION_MESSAGE_EVENT_CONFLICT','EVENT-WORKFLOW-
 define('MODULE_PAYMENT_MCP_NOTIFICATION_MESSAGE_INFO','ERR: %s - %s');
 
 
-if(isset($_REQUEST['function']) && $_REQUEST['function'] == 'test') {
+if (defined('MODULE_PAYMENT_MCP_SERVICE_STATUS') 
+    && isset($_REQUEST['function']) 
+    && $_REQUEST['function'] == 'test'
+    )
+{
     require_once(DIR_FS_INC.'get_database_version.inc.php');
     $db_version  = get_database_version();
     $version     = $db_version['full'];
     $accKey      = MODULE_PAYMENT_MCP_SERVICE_ACCESS_KEY;
-    $billingUrl  = MODULE_PAYMENT_MCP_SERVICE_URL;
     $accId       = MODULE_PAYMENT_MCP_SERVICE_ACCOUNT_ID;
     $secretField = MODULE_PAYMENT_MCP_SERVICE_SECRET_FIELD;
     $secretValue = MODULE_PAYMENT_MCP_SERVICE_SECRET_FIELD_VALUE;
-    $refreshQuery = xtc_db_fetch_array(xtc_db_query('SELECT * FROM '.TABLE_CONFIGURATION.' WHERE configuration_key = "MODULE_PAYMENT_MCP_SERVICE_REFRESH_INTERVAL"'));
-
-    $lastRefresh = ($refreshQuery)?$refreshQuery['last_modified']:'-';
-    $interval = ($refreshQuery)?$refreshQuery['configuration_value']:'0';
-
-
+    
+    $lastRefresh = '-';
+    $interval = '0';
+    $refreshQuery = xtc_db_query('SELECT * 
+                                    FROM '.TABLE_CONFIGURATION.' 
+                                   WHERE configuration_key = "MODULE_PAYMENT_MCP_SERVICE_REFRESH_INTERVAL"');
+    if (xtc_db_num_rows($refreshQuery) > 0) {
+      $refresh = xtc_db_fetch_array($refreshQuery);
+      
+      $lastRefresh = $refresh['last_modified'];
+      $interval = $refresh['configuration_value'];
+    }
+    
     echo '<pre>';
     echo 'MICROPAYMENT GATEWAY TEST FUNCTION' . PHP_EOL;
     echo 'VERSION-SHOP: ' . $version . ' ; MOD: 2.2.3' . PHP_EOL;
     echo 'ACCOUNT-ID: ' . substr($accId,0,1).str_repeat('x',strlen($accId)-2).substr($accId,strlen($accId)-1) . PHP_EOL;
-    echo 'BILLING-URL: ' . $billingUrl . PHP_EOL;
     echo 'ACCESSKEY: ' . substr($accKey,0,1).str_repeat('x',strlen($accKey)-2).substr($accKey,strlen($accKey)-1) . PHP_EOL;
     echo 'SECRET_FIELD: ' . substr($secretField,0,1).str_repeat('x',strlen($secretField)-2).substr($secretField,strlen($secretField)-1) . PHP_EOL;
     echo 'SECRET_VALUE: ' . substr($secretValue,0,1).str_repeat('x',strlen($secretValue)-2).substr($secretValue,strlen($secretValue)-1) . PHP_EOL;
@@ -623,9 +632,11 @@ class micropayment_callback
     {
 
         //must be set for send_order.php (also $insert_id)
-        global $smarty, $order, $insert_id, $send_by_admin, $messageStack;
+        global $smarty, $order, $insert_id, $send_by_admin, $redirect_to_admin, $messageStack;
+        
         $send_by_admin = true;
-
+        $redirect_to_admin = false;
+        
         defined('COMMENT_SEND_ORDER_BY_ADMIN') OR define('COMMENT_SEND_ORDER_BY_ADMIN', 'new order email send by notification from micropayment');
         defined('SUCCESS_ORDER_SEND') OR define('SUCCESS_ORDER_SEND', 'Order confirmation sent successfully');
 
@@ -640,7 +651,7 @@ class micropayment_callback
             $smarty = new Smarty();
         }
 
-        include (DIR_FS_EXTERNAL.'micropayment/send_order.php');
+        include (DIR_FS_CATALOG.'send_order.php');
     }
 }
 

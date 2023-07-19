@@ -63,9 +63,6 @@ class micropayment_helper
         }
 
         $urlParams = http_build_query($params, null, '&');
-
-        //mail('webmaster@web-dezign.de', __CLASS__.'->'.__FUNCTION__.'->$params', $urlParams.print_r($params,true).print_r($order,true));
-
         $seal = md5($urlParams . MODULE_PAYMENT_MCP_SERVICE_ACCESS_KEY);
         $urlParams .= '&seal=' . $seal;
 
@@ -95,7 +92,7 @@ class micropayment_helper
             default: throw new Exception('UNKNOWN PAYMODULE'); break;
         }
         $url .= '?' . $urlParams;
-        //echo '<pre>'.print_r($url,true).'</pre>';
+
         return $url;
     }
     function addToMicropaymentOrders($order_id,$payment_method)
