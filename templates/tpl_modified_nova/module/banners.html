@@ -4,19 +4,19 @@
 
 {elseif $banner_data.LINK != ''}
   {if isset($banner_data.IMAGE_SRC_MOBILE) && $banner_data.IMAGE_SRC_MOBILE != ''}
-    <a title="{$banner_data.TITLE}" href="{$banner_data.LINK}" {$banner_data.TARGET}>
+    <a title="{$banner_data.TITLE|onlytext}" href="{$banner_data.LINK}" {$banner_data.TARGET}>
       <picture>
         <source media="(max-width:600px)" data-srcset="{$banner_data.IMAGE_SRC_MOBILE}">
         <source data-srcset="{$banner_data.IMAGE_SRC}">
-        <img class="lazyload" data-src="{$banner_data.IMAGE_SRC}" alt="{$banner_data.TITLE|onlytext}" title="{$banner_data.TITLE|onlytext}">
+        <img class="lazyload" data-src="{$banner_data.IMAGE_SRC}" alt="{$banner_data.IMAGE_ALT|onlytext}" title="{$banner_data.IMAGE_TITLE|onlytext}">
       </picture>
-      <noscript><img src="{$banner_data.IMAGE_SRC}" alt="{$banner_data.TITLE|onlytext}" title="{$banner_data.TITLE|onlytext}"></noscript>
+      <noscript><img src="{$banner_data.IMAGE_SRC}" alt="{$banner_data.IMAGE_ALT|onlytext}" title="{$banner_data.IMAGE_TITLE|onlytext}"></noscript>
       <span class="banner_item_content">
         <span>{$banner_data.TITLE}</span>
       </span>
     </a>
   {else}
-    <a title="{$banner_data.TITLE}" href="{$banner_data.LINK}" {$banner_data.TARGET}>
+    <a title="{$banner_data.TITLE|onlytext}" href="{$banner_data.LINK}" {$banner_data.TARGET}>
       {$banner_data.IMAGE_IMG|replace:"<img src":"<img class=\"lazyload\" data-src"}
       <span class="banner_item_content">
         <span>{$banner_data.TITLE}</span>
@@ -30,9 +30,9 @@
     <picture>
       <source media="(max-width:600px)" data-srcset="{$banner_data.IMAGE_SRC_MOBILE}">
       <source data-srcset="{$banner_data.IMAGE_SRC}">
-      <img class="lazyload" data-src="{$banner_data.IMAGE_SRC}" alt="{$banner_data.TITLE|onlytext}" title="{$banner_data.TITLE|onlytext}">
+      <img class="lazyload" data-src="{$banner_data.IMAGE_SRC}" alt="{$banner_data.IMAGE_ALT|onlytext}" title="{$banner_data.IMAGE_TITLE|onlytext}">
     </picture>
-    <noscript><img src="{$banner_data.IMAGE_SRC}" alt="{$banner_data.TITLE|onlytext}" title="{$banner_data.TITLE|onlytext}"></noscript>
+    <noscript><img src="{$banner_data.IMAGE_SRC}" alt="{$banner_data.IMAGE_ALT|onlytext}" title="{$banner_data.IMAGE_TITLE|onlytext}"></noscript>
     <span class="banner_item_content">
       <span>{$banner_data.TITLE}</span>
     </span>

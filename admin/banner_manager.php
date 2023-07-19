@@ -99,6 +99,8 @@
             if (isset($_POST['banners_id'][$languages[$i]['id']])) $banners_id = xtc_db_prepare_input($_POST['banners_id'][$languages[$i]['id']]);
             $banners_title = xtc_db_prepare_input($_POST['banners_title'][$languages[$i]['id']]);
             $banners_url = xtc_db_prepare_input($_POST['banners_url'][$languages[$i]['id']]);
+            $banners_image_title = xtc_db_prepare_input($_POST['banners_image_title'][$languages[$i]['id']]);
+            $banners_image_alt = xtc_db_prepare_input($_POST['banners_image_alt'][$languages[$i]['id']]);
             $html_text = xtc_db_prepare_input($_POST['html_text'][$languages[$i]['id']]);
             
             foreach ($images_type_array as $images_type) {
@@ -142,6 +144,8 @@
               'banners_group' => $banners_group,
               'banners_image' => $banners_image_exist,
               'banners_image_mobile' => $banners_image_mobile_exist,
+              'banners_image_title' => $banners_image_title,
+              'banners_image_alt' => $banners_image_alt,
               'banners_html_text' => $html_text,
               'banners_sort' => $banners_sort,
               'banners_group_id' => $banners_group_id,
@@ -457,6 +461,16 @@
                       <td class="dataTableConfig col-left"><?php echo TEXT_BANNERS_REDIRECT; ?></td>
                       <td class="dataTableConfig col-middle"><?php echo xtc_draw_checkbox_field('banners_redirect_' . $languages[$i]['id'], '', (($bInfo->banners_redirect == 0) ? true : false)); ?></td>
                       <td class="dataTableConfig col-right"><?php echo TEXT_BANNERS_REDIRECT_NOTE; ?></td>
+                    </tr>
+                    <tr>
+                      <td class="dataTableConfig col-left"><?php echo TEXT_BANNERS_IMAGE_TITLE; ?></td>
+                      <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('banners_image_title[' . $languages[$i]['id'] . ']', $bInfo->banners_image_title); ?></td>
+                      <td class="dataTableConfig col-right"><?php echo TEXT_BANNERS_IMAGE_TITLE_NOTE; ?></td>
+                    </tr>
+                    <tr>
+                      <td class="dataTableConfig col-left"><?php echo TEXT_BANNERS_IMAGE_ALT; ?></td>
+                      <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('banners_image_alt[' . $languages[$i]['id'] . ']', $bInfo->banners_image_alt); ?></td>
+                      <td class="dataTableConfig col-right"><?php echo TEXT_BANNERS_IMAGE_ALT_NOTE; ?></td>
                     </tr>
                     <?php 
                     foreach ($images_type_array as $images_type) {
