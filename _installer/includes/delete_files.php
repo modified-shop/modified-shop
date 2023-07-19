@@ -396,6 +396,7 @@
     'includes/external/magnalister/lang/ababab',
     'includes/external/magnalister/php/modules/idealo/classes/IdealoCheckinSubmit.php',
     'includes/external/magnalister/php/modules/metro/classes/MetroShippingDetailsProcessor.php',
+    'includes/external/micropayment/send_order.php',
     'includes/external/payone/modules/send_order.php',
     'includes/external/paypal/lib/PayPal/Core/PayPalLoggingLevel.php',
     'includes/external/paypal/modules/cart_action.php',
