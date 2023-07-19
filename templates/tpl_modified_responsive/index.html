@@ -62,22 +62,22 @@
                   <div class="slider_item">          
                     {if $slider.LINK != ''}
                       {if isset($slider.IMAGE_SRC_MOBILE) && $slider.IMAGE_SRC_MOBILE != ''}
-                        <a title="{$slider.TITLE}" href="{$slider.LINK}" {$slider.TARGET}>
+                        <a title="{$slider.TITLE|onlytext}" href="{$slider.LINK}" {$slider.TARGET}>
                           <picture>
                             <source media="(max-width:600px)" data-srcset="{$slider.IMAGE_SRC_MOBILE}">
                             <source data-srcset="{$slider.IMAGE_SRC}">
-                            <img class="lazyload" data-src="{$slider.IMAGE_SRC}" alt="{$slider.TITLE|onlytext}" title="{$slider.TITLE|onlytext}">
+                            <img class="lazyload" data-src="{$slider.IMAGE_SRC}" alt="{$slider.IMAGE_ALT|onlytext}" title="{$slider.IMAGE_TITLE|onlytext}">
                           </picture>
                         </a>
                       {else}
-                        <a title="{$slider.TITLE}" href="{$slider.LINK}" {$slider.TARGET}>{$slider.IMAGE_IMG}</a>
+                        <a title="{$slider.TITLE|onlytext}" href="{$slider.LINK}" {$slider.TARGET}>{$slider.IMAGE_IMG}</a>
                       {/if}
                     {elseif $slider.IMAGE_IMG != ''}
                       {if isset($slider.IMAGE_SRC_MOBILE) && $slider.IMAGE_SRC_MOBILE != ''}
                         <picture>
                           <source media="(max-width:600px)" data-srcset="{$slider.IMAGE_SRC_MOBILE}">
                           <source data-srcset="{$slider.IMAGE_SRC}">
-                          <img class="lazyload" data-src="{$slider.IMAGE_SRC}" alt="{$slider.TITLE|onlytext}" title="{$slider.TITLE|onlytext}">
+                          <img class="lazyload" data-src="{$slider.IMAGE_SRC}" alt="{$slider.IMAGE_ALT|onlytext}" title="{$slider.IMAGE_TITLE|onlytext}">
                         </picture>
                       {else}
                         {$slider.IMAGE_IMG}
