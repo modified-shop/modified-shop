@@ -59,6 +59,8 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'submit')) {
   {
     $checkout_page = 'payment';
     if (isset($_POST['address_book_id'])) $edit_address_book = true;
+    if (isset($_POST['edit_address_book_id'])) $edit_address_book = true;
+    
     include(DIR_WS_MODULES.'checkout_address_store.php');
   // process the selected billing destination
   } elseif (isset ($_POST['address'])) {
@@ -156,6 +158,10 @@ if (isset($_GET['action'])
     && isset($_GET['id'])
     )
 {
+  $smarty->assign('NEW_ADDRESS', true);
+  $smarty->assign('BUTTON_CONTINUE', xtc_draw_hidden_field('action', 'submit').xtc_image_submit('button_update.gif', IMAGE_BUTTON_UPDATE));
+  $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(FILENAME_CHECKOUT_PAYMENT_ADDRESS, $params, 'SSL').'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
+
   $address_query = xtc_db_query("SELECT *,
                                         entry_country_id as country,
                                         entry_zone_id as state
@@ -171,9 +177,6 @@ if (isset($_GET['action'])
     $edit_address_book = true;
     require (DIR_WS_MODULES.'checkout_new_address.php');
   }
-  $smarty->assign('NEW_ADDRESS', true);
-  $smarty->assign('BUTTON_CONTINUE', xtc_draw_hidden_field('action', 'submit').xtc_image_submit('button_update.gif', IMAGE_BUTTON_UPDATE));
-  $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(FILENAME_CHECKOUT_PAYMENT_ADDRESS, $params, 'SSL').'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
 }
 
 $smarty->assign('FORM_END', '</form>');

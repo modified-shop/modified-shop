@@ -27,6 +27,7 @@
     'suburb',
     'state',
     'address_book_id',
+    'edit_address_book_id',
   );
 
   // prepare variables
@@ -151,8 +152,8 @@
       $sql_data_array['entry_state'] = ((isset($state) && !empty($state)) ? $state : '');
     }
     
-    if (isset($address_book_id)) {
-      xtc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array, 'update', "address_book_id = '".(int)$address_book_id."'");
+    if (isset($address_book_id) || isset($edit_address_book_id)) {
+      xtc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array, 'update', "address_book_id = '".((isset($edit_address_book_id)) ? (int)$edit_address_book_id : (int)$address_book_id)."'");
       $new_address_book_id = $address_book_id;    
     } else {
       xtc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array);      
