@@ -132,7 +132,7 @@ if (basename($PHP_SELF) == FILENAME_CHECKOUT_PAYMENT_ADDRESS
     $module_smarty->assign('CHECKBOX_EDIT_ADDRESS', xtc_draw_checkbox_field('edit_address_book_id', ((isset($_GET['id'])) ? (int)$_GET['id'] : (int)$edit_address_book_id), false, 'id="edit_address_book_id"'));
     $smarty->assign('BUTTON_CONTINUE', xtc_draw_hidden_field('action', 'submit').xtc_image_submit('button_save.gif', IMAGE_BUTTON_SAVE));
   } else {
-    $module_smarty->assign('MAX_ADDRESS_NOTE', sprintf(TEXT_PAYMENT_ADDRESS_NOTE, MAX_ADDRESS_BOOK_ENTRIES));
+    $module_smarty->assign('MAX_ADDRESS_NOTE', sprintf(TEXT_MAX_ADDRESS_NOTE, MAX_ADDRESS_BOOK_ENTRIES));
   }
 }
 $module_smarty->assign('language', $_SESSION['language']);
