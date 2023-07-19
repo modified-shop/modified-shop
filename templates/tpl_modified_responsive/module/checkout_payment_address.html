@@ -29,13 +29,14 @@
         <li{if $module_data.SELECTED == 1} class="selected"{/if}>
           <div class="address_inner">
             {$module_data.FORM_ACTION}
-            <label for="field_addresses_{$module_data.ADDRESS_BOOK_ID}">
-              {$module_data.FIRSTNAME} {$module_data.LASTNAME}, {$module_data.CITY}
-              <span class="address">{$module_data.ADDRESS_LABEL|replace:"<br />":", "}</span>
-            </label> 
-            <span class="address_actions">
-              {if isset($module_data.BUTTON_EDIT)}<span class="cssButtonPos5">{$module_data.BUTTON_EDIT}</span>{/if}{if isset($module_data.BUTTON_CONTINUE)}<span class="cssButtonPos5">{$module_data.BUTTON_CONTINUE}</span>{/if}
-            </span>
+              <span class="header">
+                <span class="title">{$module_data.FIRSTNAME} {$module_data.LASTNAME}, {$module_data.CITY}</span>
+                <span class="actions">
+                  {if isset($module_data.BUTTON_EDIT)}<span class="icon">{$module_data.BUTTON_EDIT}</span>{/if}
+                  {if isset($module_data.BUTTON_CONTINUE)}<span class="icon">{$module_data.BUTTON_CONTINUE}</span>{/if}                
+                </span>                  
+              </span>
+              <span class="content">{$module_data.ADDRESS_LABEL|replace:"<br />":", "}</span>
             {$module_data.FORM_END}         
           </div>
         </li>

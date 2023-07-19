@@ -75,6 +75,19 @@
     <td align="left">{$CHECKBOX_PRIMARY} {#text_standard#}</td>
   </tr>
   {/if}
+
+  {if isset($CHECKBOX_EDIT_ADDRESS)}
+  <tr>
+    <td>&nbsp;</td>
+    <td align="left">{$CHECKBOX_EDIT_ADDRESS} {#text_edit_address_note#}</td>
+  </tr>
+  {/if}
 </table>
+
+{if isset($MAX_ADDRESS_NOTE)}
+  <br />
+  <div class="errormessage">{$MAX_ADDRESS_NOTE}</div>
+{/if}
+
 {if isset($PARAMS)}{$PARAMS}{/if}
 </div>

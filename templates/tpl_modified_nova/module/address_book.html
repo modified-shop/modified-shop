@@ -23,17 +23,20 @@
         <p>{#text_standard#}</p>
         <p>{$ADDRESS_COUNT}</p>
 
-        <div class="action_row">
+        <div class="action_row address">
           {foreach name=aussen item=addresses from=$addresses_data}
             <div class="action_item_full{if $addresses.PRIMARY == '1'} selected{/if}">
               <div class="action_item_inner">
                 <label>
-                  <span class="title">{$addresses.NAME} {if $addresses.PRIMARY == '1'} ({#title_standard#}){/if}</span>
+                  <span class="header">
+                    <span class="title">{$addresses.NAME} {if $addresses.PRIMARY == '1'} ({#title_standard#}){/if}</span>
+                    <span class="actions">
+                      <span class="icon">{$addresses.BUTTON_DELETE}</span>
+                      <span class="icon">{$addresses.BUTTON_EDIT}</span>
+                    </span>
+                  </span>
                   <span class="content">{$addresses.ADDRESS|replace:"<br />":", "}</span>
                 </label> 
-                <span class="actions">
-                  <span class="icon">{$addresses.BUTTON_DELETE}</span><span class="icon">{$addresses.BUTTON_EDIT}</span>
-                </span>
               </div>
             </div>
           {/foreach}

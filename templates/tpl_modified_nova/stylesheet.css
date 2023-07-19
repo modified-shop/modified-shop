@@ -3728,6 +3728,39 @@ a.view_box.active {
   font-weight:700;
   color:#019CDE;
 }
+
+/* Small account action text-buttons  */
+.cssButtonColor7 {
+  text-transform:none;
+  font-weight:600;
+  padding: 0px;
+  margin: 0px;
+  height:auto;  
+  text-decoration:none;
+  border: none;;
+  color: #333;
+}
+.cssButtonColor7 .cssButtonText {
+  font-size: 12px;
+  line-height: 16px;
+  text-transform: none;
+  vertical-align: top;
+  padding: 0px 3px;
+  text-decoration:none;
+  border-bottom: 1px solid #555;
+}
+.cssButtonColor7 .cssButtonIcon {
+  font-size: 12px;
+  line-height: 16px;
+  vertical-align: top;
+  padding: 0px 3px;
+}
+.cssButtonColor7:hover {
+  opacity:0.8;
+  text-decoration:none !important;
+  border:none;
+  background:none;
+}
 /* 24. END CSS Buttons */
 
 
@@ -4273,7 +4306,7 @@ a.view_box.active {
   font-weight:700;
 }
 
-/* action row for adress book, account history, account checkout express  */
+/* action row for account history, account checkout express  */
 .action_row {
   display: flex;
   flex-wrap: wrap;
@@ -4311,6 +4344,7 @@ a.view_box.active {
 }
 .action_item_inner > form {
   height:100%;
+  width:100%;
   display:flex;
 }
 .action_item.selected .action_item_inner,
@@ -4358,6 +4392,56 @@ a.view_box.active {
 .action_row .actions .icon .cssButtonIcon {
   font-size:16px;
 } 
+
+/* action row for adress book */
+.action_row.address .header {
+  display:flex;
+  flex-wrap:wrap;
+}
+.action_row.address .title {
+  padding: 3px 0 0 0;
+  font-weight: 700;
+  line-height:18px;
+  flex:1;
+}
+.action_row.address .actions {
+  display:flex;
+  padding: 2px 0 0 0;
+  width: 100%;
+}
+@media only screen and (min-width: 500px) {
+  .action_row.address .actions { padding: 0 0 0 10px; width:auto; }
+}
+.action_row.address .actions .icon {
+  width:auto;
+  display:inline-block;
+  vertical-align:top;
+  margin: 0 10px 0 0;
+}
+@media only screen and (min-width: 500px) {
+  .action_row.address .actions .icon { margin: 0 0 0 10px; }
+}
+.action_row.address .actions .icon a,
+.action_row.address .actions .icon a:hover {
+  text-decoration:none;
+}  
+.action_row.address .actions .icon .cssButton {
+	height:24px;
+  min-height:24px;
+}
+.action_row.address .actions .icon .cssButtonIcon {
+  font-size:12px;
+  line-height:16px;
+  padding: 0 6px 0 0;
+}
+.action_row.address .actions .icon .cssButtonText {
+  padding: 0 0 0 0;
+}
+.action_row.address .content {
+  display: block !important;
+  padding: 10px 0px 0px 0px !important;
+  font-weight: 400 !important;
+}
 
 /* account history list */
 .action_row .image {

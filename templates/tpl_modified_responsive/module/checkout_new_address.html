@@ -60,6 +60,7 @@
       <label for="primary">{#text_standard#}</label>
     </div>
     {/if}
+
     {if isset($CHECKBOX_EDIT_ADDRESS)}
     <br />
     <div class="cus_check cus_check_small">
@@ -67,12 +68,14 @@
       <label for="edit_address_book_id">{#text_edit_address_note#}</label>
     </div>
     {/if}
+
     {if isset($MAX_ADDRESS_NOTE)}
     <br />
-    <div class="cus_check cus_check_small">
+    <div class="errormessage">
       {$MAX_ADDRESS_NOTE}
     </div>
     {/if}
+
   </div>
   {if isset($PARAMS)}{$PARAMS}{/if}
 </div>    

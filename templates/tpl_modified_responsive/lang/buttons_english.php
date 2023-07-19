@@ -239,14 +239,14 @@ define('CSS_IMAGE_BUTTON_CONTINUE_SHOPPING_ICON_RIGHT', '<i class="fas fa-caret-
 define('CSS_IMAGE_BUTTON_CONTINUE_SHOPPING_ICON_LEFT', '');
 
 
-define('CSS_IMAGE_SMALL_EDIT_TEXT', '');
-//define('CSS_IMAGE_SMALL_EDIT_TITLE', '');
+define('CSS_IMAGE_SMALL_EDIT_TEXT', 'Edit');
+define('CSS_IMAGE_SMALL_EDIT_TITLE', 'Edit');
 define('CSS_IMAGE_SMALL_EDIT_ICON_RIGHT', '');
 define('CSS_IMAGE_SMALL_EDIT_ICON_LEFT', '<i class="far fa-edit"></i>');
 
 
-define('CSS_IMAGE_SMALL_DELETE_TEXT', '');
-//define('CSS_IMAGE_SMALL_DELETE_TITLE', '');
+define('CSS_IMAGE_SMALL_DELETE_TEXT', 'Delete');
+define('CSS_IMAGE_SMALL_DELETE_TITLE', 'Delete');
 define('CSS_IMAGE_SMALL_DELETE_ICON_RIGHT', '');
 define('CSS_IMAGE_SMALL_DELETE_ICON_LEFT', '<i class="far fa-trash-alt"></i>');
 
@@ -383,8 +383,8 @@ define('CSS_IMAGE_EPAYPAL_EN_ICON_RIGHT', '');
 define('CSS_IMAGE_EPAYPAL_EN_ICON_LEFT', '');
 
 
-define('CSS_IMAGE_SMALL_CONTINUE_TEXT', '');
-//define('CSS_IMAGE_SMALL_CONTINUE_TITLE', '');
+define('CSS_IMAGE_SMALL_CONTINUE_TEXT', 'Select');
+define('CSS_IMAGE_SMALL_CONTINUE_TITLE', 'Select');
 define('CSS_IMAGE_SMALL_CONTINUE_ICON_RIGHT', '');
 define('CSS_IMAGE_SMALL_CONTINUE_ICON_LEFT', '<i class="far fa-check-square"></i>');
 
