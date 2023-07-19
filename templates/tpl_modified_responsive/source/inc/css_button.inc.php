@@ -105,17 +105,6 @@ function css_button($image, $alt, $parameters = '', $submit = false) {
     'button_login_newsletter' => array(
       'class' => 'cssButtonColor3',
     ),
-    'small_continue' => array(
-      'class' => 'cssButtonColor3',
-    ),
-    'small_edit' => array(
-      'class' => 'cssButtonColor3',
-    ),
-    'small_delete' => array(
-      'class' => 'cssButtonColor3',
-    ),
-    
-    
     
     
     // color 4
@@ -143,6 +132,19 @@ function css_button($image, $alt, $parameters = '', $submit = false) {
     'epaypal_en' => array(
       'class' => 'cssButtonColor6',
     ),
+
+    
+    // color 7
+    'small_continue' => array(
+      'class' => 'cssButtonColor7',
+    ),
+    'small_edit' => array(
+      'class' => 'cssButtonColor7',
+    ),
+    'small_delete' => array(
+      'class' => 'cssButtonColor7',
+    ),    
+    
 
   );
 

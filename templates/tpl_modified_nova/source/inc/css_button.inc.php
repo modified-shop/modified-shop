@@ -108,15 +108,6 @@ function css_button($image, $alt, $parameters = '', $submit = false) {
     
     
     // color 3
-    'small_continue' => array(
-      'class' => 'cssButtonColor3',
-    ),
-    'small_edit' => array(
-      'class' => 'cssButtonColor3',
-    ),
-    'small_delete' => array(
-      'class' => 'cssButtonColor3',
-    ),
     'button_quick_find' => array(
       'class' => 'cssButtonColor3',
     ),
@@ -147,6 +138,19 @@ function css_button($image, $alt, $parameters = '', $submit = false) {
     'epaypal_en' => array(
       'class' => 'cssButtonColor6',
     ),
+
+    
+    // color 7
+    'small_continue' => array(
+      'class' => 'cssButtonColor7',
+    ),
+    'small_edit' => array(
+      'class' => 'cssButtonColor7',
+    ),
+    'small_delete' => array(
+      'class' => 'cssButtonColor7',
+    ),    
+    
 
   );
 

@@ -4161,14 +4161,14 @@ ol#address_block_new li label .address {
 }
 #address_block_new form {
   position:relative;
-  padding: 0px 150px 0px 0px; 
+  padding: 0px 120px 0px 0px; 
 }
 #address_block_new .address_actions {
   overflow:hidden;
   position:absolute;
   top:0px;
   right:0px;
-  width:140px;
+  width:120px;
   text-align:right;
 }
 #address_block_new .address_actions img {

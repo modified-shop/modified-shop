@@ -29,19 +29,21 @@
       <div class="subline">{#title_old_addresses#}</div>
       <p>{#text_old_addresses#}</p>
 
-      <div class="action_row">
+      <div class="action_row address">
         {foreach item=module_data from=$BLOCK_ADDRESS_ARRAY}
           <div class="action_item{if $module_data.SELECTED == 1} selected{/if}">
             <div class="action_item_inner">
               {$module_data.FORM_ACTION}
                 <label for="field_addresses_{$module_data.ADDRESS_BOOK_ID}">
-                  <span class="title">{$module_data.FIRSTNAME} {$module_data.LASTNAME}, {$module_data.CITY}</span>
+                  <span class="header">
+                    <span class="title">{$module_data.FIRSTNAME} {$module_data.LASTNAME}, {$module_data.CITY}</span>
+                    <span class="actions">
+                      {if isset($module_data.BUTTON_EDIT)}<span class="icon">{$module_data.BUTTON_EDIT}</span>{/if}
+                      {if isset($module_data.BUTTON_CONTINUE)}<span class="icon">{$module_data.BUTTON_CONTINUE}</span>{/if}                
+                    </span>                  
+                  </span>
                   <span class="content">{$module_data.ADDRESS_LABEL|replace:"<br />":", "}</span>
-                </label> 
-                <span class="actions">
-                  {if isset($module_data.BUTTON_EDIT)}<span class="icon">{$module_data.BUTTON_EDIT}</span>{/if}
-                  {if isset($module_data.BUTTON_CONTINUE)}<span class="icon">{$module_data.BUTTON_CONTINUE}</span>{/if}                
-                </span>
+                </label>
               {$module_data.FORM_END}
             </div>
           </div>
