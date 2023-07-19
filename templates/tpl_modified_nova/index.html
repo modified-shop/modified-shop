@@ -122,18 +122,18 @@
                       <div class="splide__slide">          
                         {if $slider.LINK != ''}
                           {if isset($slider.IMAGE_SRC_MOBILE) && $slider.IMAGE_SRC_MOBILE != ''}
-                            <a title="{$slider.TITLE}" href="{$slider.LINK}" {$slider.TARGET}>
+                            <a title="{$slider.TITLE|onlytext}" href="{$slider.LINK}" {$slider.TARGET}>
                               <picture>
                                 <source media="(max-width:600px)" data-srcset="{$slider.IMAGE_SRC_MOBILE}">
                                 <source data-srcset="{$slider.IMAGE_SRC}">
-                                <img class="lazyload" data-src="{$slider.IMAGE_SRC}" alt="{$slider.TITLE|onlytext}" title="{$slider.TITLE|onlytext}">
+                                <img class="lazyload" data-src="{$slider.IMAGE_SRC}" alt="{$slider.IMAGE_ALT|onlytext}" title="{$slider.IMAGE_TITLE|onlytext}">
                               </picture>
                               <span class="slider_item_content">
                                 {$slider.TITLE}
                               </span>
                             </a>
                           {else}
-                            <a title="{$slider.TITLE}" href="{$slider.LINK}" {$slider.TARGET}>
+                            <a title="{$slider.TITLE|onlytext}" href="{$slider.LINK}" {$slider.TARGET}>
                               {$slider.IMAGE_IMG|replace:"<img src":"<img class=\"lazyload\" data-src"}
                               <span class="slider_item_content">
                                 {$slider.TITLE}
@@ -145,7 +145,7 @@
                             <picture>
                               <source media="(max-width:600px)" data-srcset="{$slider.IMAGE_SRC_MOBILE}">
                               <source data-srcset="{$slider.IMAGE_SRC}">
-                              <img class="lazyload" data-src="{$slider.IMAGE_SRC}" alt="{$slider.TITLE|onlytext}" title="{$slider.TITLE|onlytext}">
+                              <img class="lazyload" data-src="{$slider.IMAGE_SRC}" alt="{$slider.IMAGE_ALT|onlytext}" title="{$slider.IMAGE_TITLE|onlytext}">
                             </picture>
                             <span class="slider_item_content">
                               {$slider.TITLE}
