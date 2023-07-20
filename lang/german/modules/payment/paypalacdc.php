@@ -17,7 +17,7 @@ $lang_array = array(
   'MODULE_PAYMENT_PAYPALACDC_TEXT_INFO' => ((!defined('RUN_MODE_ADMIN') && function_exists('xtc_href_link')) ? '<img src="'.xtc_href_link(DIR_WS_ICONS.'paypal_creditcard.png', '', 'SSL', false).'" />' : ''),
   'MODULE_PAYMENT_PAYPALACDC_TEXT_DESCRIPTION' => 'Im letzten Step im Checkout werden Sie gebeten die Kreditkartendaten einzugeben, um hier Ihre Bestellung zu bezahlen.',
   'MODULE_PAYMENT_PAYPALACDC_ALLOWED_TITLE' => 'Erlaubte Zonen',
-  'MODULE_PAYMENT_PAYPALACDC_ALLOWED_DESC' => 'Geben Sie <b>einzeln</b> die Zonen an, welche f&uuml;r dieses Modul erlaubt sein sollen. (z.B. AT,DE (wenn leer, werden alle Zonen erlaubt))',
+  'MODULE_PAYMENT_PAYPALACDC_ALLOWED_DESC' => 'Das Modul kann f&uuml;r die folgenden Zonen verwendet werden.',
   'MODULE_PAYMENT_PAYPALACDC_STATUS_TITLE' => 'Kreditkarte aktivieren',
   'MODULE_PAYMENT_PAYPALACDC_STATUS_DESC' => 'M&ouml;chten Sie Zahlungen per PayPal Card akzeptieren?',
   'MODULE_PAYMENT_PAYPALACDC_SORT_ORDER_TITLE' => 'Anzeigereihenfolge',

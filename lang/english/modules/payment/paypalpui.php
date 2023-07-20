@@ -17,7 +17,7 @@ $lang_array = array(
   'MODULE_PAYMENT_PAYPALPUI_TEXT_INFO' => 'By clicking on the button, you agree to the <a target="_blank" href="https://www.ratepay.com/legal-payment-terms">terms of payment</a> and <a target="_blank" href="https://www.ratepay.com/legal-payment-dataprivacy">performance of a risk check</a> from the payment partner, Ratepay. You also agree to PayPal’s <a target="_blank" href="https://www.paypal.com/de/webapps/mpp/ua/privacy-full?locale.x=eng_DE&_ga=1.187051880.1362749179.1647260107">privacy statement</a>. If your request to purchase upon invoice is accepted, the purchase price claim will be assigned to Ratepay, and you may only pay Ratepay, not the merchant.',
   'MODULE_PAYMENT_PAYPALPUI_TEXT_DESCRIPTION' => '<strong><font color="red">ATTENTION:</font></strong> In order for Pay upon invoice to work correctly the following webhooks must be set in the PayPal configuration so that the status is switched correctly:<ul><li>PAYMENT.CAPTURE.COMPLETED</li><li>PAYMENT.CAPTURE.DENIED</li></ul>',
   'MODULE_PAYMENT_PAYPALPUI_ALLOWED_TITLE' => 'Allowed zones',
-  'MODULE_PAYMENT_PAYPALPUI_ALLOWED_DESC' => 'Please enter the zones <b>separately</b> which should be allowed to use this module (e.g. AT,DE (leave empty if you want to allow all zones))',
+  'MODULE_PAYMENT_PAYPALPUI_ALLOWED_DESC' => 'The module can be used for the following zones.',
   'MODULE_PAYMENT_PAYPALPUI_STATUS_TITLE' => 'Enable Pay upon invoice via PayPal',
   'MODULE_PAYMENT_PAYPALPUI_STATUS_DESC' => 'Do you want to accept PayPal Pay upon invoice payments?',
   'MODULE_PAYMENT_PAYPALPUI_SORT_ORDER_TITLE' => 'Sort order',

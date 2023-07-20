@@ -17,7 +17,7 @@ $lang_array = array(
   'MODULE_PAYMENT_PAYPALTRUSTLY_TEXT_INFO' => '<img src="https://www.paypalobjects.com/images/checkout/alternative_payments/paypal_trustly_color.svg" />',
   'MODULE_PAYMENT_PAYPALTRUSTLY_TEXT_DESCRIPTION' => 'After "confirm" your will be routet to Trustly to pay your order.<br />Back in shop you will get your order-mail.<br />PayPal is the safer way to pay online. We keep your details safe from others and can help you get your money back if something ever goes wrong.',
   'MODULE_PAYMENT_PAYPALTRUSTLY_ALLOWED_TITLE' => 'Allowed zones',
-  'MODULE_PAYMENT_PAYPALTRUSTLY_ALLOWED_DESC' => 'Please enter the zones <b>separately</b> which should be allowed to use this module (e.g. AT,DE (leave empty if you want to allow all zones))',
+  'MODULE_PAYMENT_PAYPALTRUSTLY_ALLOWED_DESC' => 'The module can be used for the following zones.',
   'MODULE_PAYMENT_PAYPALTRUSTLY_STATUS_TITLE' => 'Enable Trustly via PayPal',
   'MODULE_PAYMENT_PAYPALTRUSTLY_STATUS_DESC' => 'Do you want to accept PayPal Trustly payments?',
   'MODULE_PAYMENT_PAYPALTRUSTLY_SORT_ORDER_TITLE' => 'Sort order',

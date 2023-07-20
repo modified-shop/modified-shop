@@ -17,7 +17,7 @@ $lang_array = array(
   'MODULE_PAYMENT_PAYPALIDEAL_TEXT_INFO' => '<img src="https://www.paypalobjects.com/images/checkout/alternative_payments/paypal_ideal_color.svg" />',
   'MODULE_PAYMENT_PAYPALIDEAL_TEXT_DESCRIPTION' => 'Sie werden nach dem "Best&auml;tigen" zu iDEAL geleitet, um hier Ihre Bestellung zu bezahlen.<br />Danach gelangen Sie zur&uuml;ck in den Shop und erhalten Ihre Bestell-Best&auml;tigung.<br />Jetzt schneller bezahlen mit unbegrenztem PayPal-K&auml;uferschutz - nat&uuml;rlich kostenlos.',
   'MODULE_PAYMENT_PAYPALIDEAL_ALLOWED_TITLE' => 'Erlaubte Zonen',
-  'MODULE_PAYMENT_PAYPALIDEAL_ALLOWED_DESC' => 'Geben Sie <b>einzeln</b> die Zonen an, welche f&uuml;r dieses Modul erlaubt sein sollen. (z.B. AT,DE (wenn leer, werden alle Zonen erlaubt))',
+  'MODULE_PAYMENT_PAYPALIDEAL_ALLOWED_DESC' => 'Das Modul kann f&uuml;r die folgenden Zonen verwendet werden.',
   'MODULE_PAYMENT_PAYPALIDEAL_STATUS_TITLE' => 'iDEAL via PayPal aktivieren',
   'MODULE_PAYMENT_PAYPALIDEAL_STATUS_DESC' => 'M&ouml;chten Sie Zahlungen per PayPal iDEAL akzeptieren?',
   'MODULE_PAYMENT_PAYPALIDEAL_SORT_ORDER_TITLE' => 'Anzeigereihenfolge',
