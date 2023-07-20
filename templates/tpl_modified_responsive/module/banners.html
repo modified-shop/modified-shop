@@ -2,7 +2,7 @@
   {$banner_data.TEXT}
 {elseif $banner_data.LINK != ''}
   {if isset($banner_data.IMAGE_SRC_MOBILE) && $banner_data.IMAGE_SRC_MOBILE != ''}
-    <a title="{$banner_data.TITLE}" href="{$banner_data.LINK}" {$banner_data.TARGET}>
+    <a title="{$banner_data.IMAGE_TITLE|onlytext}" href="{$banner_data.LINK}" {$banner_data.TARGET}>
       <picture>
         <source media="(max-width:600px)" data-srcset="{$banner_data.IMAGE_SRC_MOBILE}">
         <source data-srcset="{$banner_data.IMAGE_SRC}">
@@ -11,7 +11,7 @@
       </picture>
     </a>
   {else}
-    <a title="{$banner_data.TITLE}" href="{$banner_data.LINK}" {$banner_data.TARGET}>{$banner_data.IMAGE_IMG}</a>
+    <a title="{$banner_data.IMAGE_TITLE|onlytext}" href="{$banner_data.LINK}" {$banner_data.TARGET}>{$banner_data.IMAGE_IMG}</a>
   {/if}
 {elseif $banner_data.IMAGE_IMG != ''}
   {if isset($banner_data.IMAGE_SRC_MOBILE) && $banner_data.IMAGE_SRC_MOBILE != ''}
