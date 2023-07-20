@@ -62,7 +62,7 @@
                   <div class="slider_item">          
                     {if $slider.LINK != ''}
                       {if isset($slider.IMAGE_SRC_MOBILE) && $slider.IMAGE_SRC_MOBILE != ''}
-                        <a title="{$slider.TITLE|onlytext}" href="{$slider.LINK}" {$slider.TARGET}>
+                        <a title="{$slider.IMAGE_TITLE|onlytext}" href="{$slider.LINK}" {$slider.TARGET}>
                           <picture>
                             <source media="(max-width:600px)" data-srcset="{$slider.IMAGE_SRC_MOBILE}">
                             <source data-srcset="{$slider.IMAGE_SRC}">
@@ -70,7 +70,7 @@
                           </picture>
                         </a>
                       {else}
-                        <a title="{$slider.TITLE|onlytext}" href="{$slider.LINK}" {$slider.TARGET}>{$slider.IMAGE_IMG}</a>
+                        <a title="{$slider.IMAGE_TITLE|onlytext}" href="{$slider.LINK}" {$slider.TARGET}>{$slider.IMAGE_IMG}</a>
                       {/if}
                     {elseif $slider.IMAGE_IMG != ''}
                       {if isset($slider.IMAGE_SRC_MOBILE) && $slider.IMAGE_SRC_MOBILE != ''}
