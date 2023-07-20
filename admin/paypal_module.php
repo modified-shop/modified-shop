@@ -260,19 +260,25 @@ require (DIR_WS_INCLUDES.'head.php');
                   <?php
                   
                   foreach ($mInfo->keys as $key => $value) {
-                    if (!in_array($module->code, $fixed_zones_modules_array)
-                        || (strpos($key, '_ZONE') === false && strpos($key, '_ALLOWED') === false)
-                        )
-                    {
+                    if (strpos($key, '_ZONE') === false) {
                       ?>
                       <tr>
                         <td class="dataTableConfig col-left"><?php echo $value['title']; ?></td>
                         <td class="dataTableConfig col-middle">
-                        <?php 
-                          if ($value['set_function']) {
-                            eval('echo ' . $value['set_function'] . "'" . $value['value'] . "', '" . $key . "');");
+                        <?php
+                          if (in_array($module->code, $fixed_zones_modules_array)
+                              && isset($module->allowed_zones) 
+                              && is_array($module->allowed_zones)
+                              && strpos($key, '_ALLOWED') !== false
+                              )
+                          {
+                            echo implode(', ', $module->allowed_zones);
                           } else {
-                            echo xtc_draw_input_field('configuration[' . $key . ']', $value['value'], 'style="width: 300px;"');
+                            if ($value['set_function']) {
+                              eval('echo ' . $value['set_function'] . "'" . $value['value'] . "', '" . $key . "');");
+                            } else {
+                              echo xtc_draw_input_field('configuration[' . $key . ']', $value['value'], 'style="width: 300px;"');
+                            }
                           }
                         ?>
                         </td>

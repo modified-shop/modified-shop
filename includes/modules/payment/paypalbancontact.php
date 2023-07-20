@@ -22,6 +22,8 @@ class paypalbancontact extends PayPalPaymentV2 {
   function __construct() {
     global $order;
 
+    $this->allowed_zones = array('BE');
+
     PayPalPaymentV2::__construct('paypalbancontact');
     $this->tmpOrders = false;
   }
@@ -32,7 +34,7 @@ class paypalbancontact extends PayPalPaymentV2 {
 
     $this->enabled = false;
     if (isset($order->billing['country']['iso_code_2'])
-        && in_array($order->delivery['country']['iso_code_2'], array('BE'))
+        && in_array($order->delivery['country']['iso_code_2'], $this->allowed_zones)
         && in_array($order->info['currency'], array('EUR'))
         )
     {

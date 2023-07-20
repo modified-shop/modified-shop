@@ -27,6 +27,8 @@ class paypalpui extends PayPalPaymentV2 {
   function __construct() {
     global $order;
 
+    $this->allowed_zones = array('DE');
+
     PayPalPaymentV2::__construct('paypalpui');
 
     if (PayPalPaymentBase::check_install() === true) {
@@ -43,7 +45,7 @@ class paypalpui extends PayPalPaymentV2 {
     if (strpos(basename($PHP_SELF), 'checkout') !== false) {
       $this->enabled = false;
       if (isset($order->billing['country']['iso_code_2'])
-          && in_array($order->billing['country']['iso_code_2'], array('DE'))
+          && in_array($order->billing['country']['iso_code_2'], $this->allowed_zones)
           && in_array($order->info['currency'], array('EUR'))
           && $_SESSION['customers_status']['customers_status_show_price_tax'] == 1
           && $order->content_type == 'physical'
