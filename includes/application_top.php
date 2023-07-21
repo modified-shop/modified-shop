@@ -34,7 +34,7 @@ if (is_file('includes/xss_secure.php')) {
 }
 
 // start the timer for the page parse time log
-define('PAGE_PARSE_START_TIME', microtime(true));
+defined('PAGE_PARSE_START_TIME') OR define('PAGE_PARSE_START_TIME', microtime(true));
 
 // set the level of error reporting
 @ini_set('display_errors', false);
@@ -84,10 +84,6 @@ require_once (DIR_FS_INC . 'auto_include.inc.php');
 
 // include the list of project filenames
 require_once (DIR_WS_INCLUDES.'filenames.php');
-
-// Debug-Log-Class - thx to franky
-include_once (DIR_WS_CLASSES.'class.debug.php');
-$log = new debug;
 
 // project version
 define('PROJECT_VERSION', 'modified eCommerce Shopsoftware');
@@ -183,7 +179,7 @@ foreach(auto_include(DIR_FS_CATALOG.'includes/extra/functions/','php') as $file)
 xtc_db_connect() or die('Unable to connect to database server!');
 
 // load configuration
-$configuration_query = xtc_db_query('SELECT configuration_key, configuration_value FROM '.TABLE_CONFIGURATION);
+$configuration_query = xtc_db_query("SELECT configuration_key, configuration_value FROM ".TABLE_CONFIGURATION);
 while ($configuration = xtc_db_fetch_array($configuration_query)) {
   if (function_exists('extra_configuration')) extra_configuration();
   defined($configuration['configuration_key']) OR define($configuration['configuration_key'], stripslashes($configuration['configuration_value']));
