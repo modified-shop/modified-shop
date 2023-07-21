@@ -10,7 +10,7 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-  include (dirname(__FILE__).'/../../includes/application_top_callback.php');
+  include_once (dirname(__FILE__).'/../../includes/application_top_callback.php');
 
   // include needed functions
   require_once(DIR_FS_INC.'next_scheduled_time.inc.php');
