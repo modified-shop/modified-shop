@@ -365,6 +365,8 @@
     'includes/classes/class.easybill.php',
     'includes/classes/class.phpmailer.php',
     'includes/classes/class.smtp.php',
+    'includes/classes/class.debug.firephp.php',
+    'includes/classes/class.debug.php',
     'includes/classes/navigation_history.php',
     'includes/classes/outputfilter.note.php',
     'includes/classes/paypal_checkout.php',
