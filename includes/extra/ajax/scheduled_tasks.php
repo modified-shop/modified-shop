@@ -10,6 +10,8 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
+  include_once (DIR_FS_CATALOG.'includes/application_top_callback.php');
+
   function scheduled_tasks() {
     require_once(DIR_FS_CATALOG.'api/scheduled_tasks/cronjob.php');    
   }
