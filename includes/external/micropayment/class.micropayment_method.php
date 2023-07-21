@@ -28,12 +28,18 @@ class micropayment_method extends micropayment_helper
 
     function __construct()
     {
+        global $order;
+        
         $this->form_action_url = 'not_used';
         $this->tmpOrders = true;
         $this->tmpStatus = ((defined('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PENDING_PAYMENT_ID')) ? MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PENDING_PAYMENT_ID : '');
         if (isset($this->code) && $this->code != '') {
           $this->check_enabled();
           $this->check();
+        }
+
+        if (!defined('RUN_MODE_ADMIN') && is_object($order)) {
+          $this->update_status();
         }
     }
 
@@ -153,8 +159,8 @@ class micropayment_method extends micropayment_helper
         if (!$this->check()) {
             $this->enabled = false;
         }
-        $minimumAmount = $this->getConfig('MODULE_PAYMENT_'.$this->code.'_MINIMUM_AMOUNT');
-        $maximumAmount = $this->getConfig('MODULE_PAYMENT_'.$this->code.'_MAXIMUM_AMOUNT');
+        $minimumAmount = (double)$this->getConfig('MODULE_PAYMENT_'.$this->code.'_MINIMUM_AMOUNT');
+        $maximumAmount = (double)$this->getConfig('MODULE_PAYMENT_'.$this->code.'_MAXIMUM_AMOUNT');
         $order_total = $order->info['total'];
 
         if (($minimumAmount > 0 && $order_total < $minimumAmount) || ($maximumAmount > 0 && $order_total > $maximumAmount)) {
