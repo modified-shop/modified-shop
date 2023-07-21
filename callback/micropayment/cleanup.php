@@ -15,13 +15,10 @@ require_once('includes/application_top.php');
 $method_class_file = DIR_FS_EXTERNAL.'micropayment/class.micropayment_method.php';
 require_once($method_class_file);
 
-if(
-    !isset($_SESSION['customers_status']) ||
-    !isset($_SESSION['customers_status']['customers_status']) ||
-    $_SESSION['customers_status']['customers_status'] != 0)
+if (defined('MODULE_PAYMENT_MCP_SERVICE_STATUS')
+    && $_SESSION['customers_status']['customers_status'] == 0
+    )
 {
-    exit();
-} else {
     $age = MODULE_PAYMENT_MCP_SERVICE_EXPIRE_DAYS;
     if($age < 3 ) {
         $age = 3;
