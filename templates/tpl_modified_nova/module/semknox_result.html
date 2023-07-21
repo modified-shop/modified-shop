@@ -1,0 +1,52 @@
+{config_load file="$language/lang_$language.conf" section="index"}
+{config_load file="lang_`$language`.custom"}
+{config_load file="lang_`$language`.section" section="index"}
+  <div class="listingbox">
+    <div class="lb_inner">
+
+      <div class="lb_image">
+        <div class="prod_image">
+         {$TAG_TEXT|sprintf:"# image"}
+            <a href="{$TAG_TEXT|sprintf:"link"}" title="{$TAG_TEXT|sprintf:"name"}">
+              <img class="lazyload" data-src="{$TAG_TEXT|sprintf:"image"}" alt="{$TAG_TEXT|sprintf:"name"}" title="{$TAG_TEXT|sprintf:"name"}">
+            </a>
+          {$TAG_TEXT|sprintf:"/ image"}
+        </div>
+      </div>
+
+      <div class="lb_title"><h2><a href="{$TAG_TEXT|sprintf:"link"}" title="{$TAG_TEXT|sprintf:"name"}">{$TAG_TEXT|sprintf:"name"}</a></h2></div>
+
+      <div class="lb_shipping">
+        {$TAG_TEXT|sprintf:"# dataPointHash.shipping_name[0]"}
+          <i class="fa-solid fa-truck-fast mr_5"></i>{#text_shippingtime#} 
+          {$TAG_HTML|sprintf:"dataPointHash.shipping_name[0]"}
+        {$TAG_TEXT|sprintf:"/ dataPointHash.shipping_name[0]"}
+      </div>
+        
+      {$TAG_TEXT|sprintf:"# dataPointHash.price_formatted[0]"}                                                                            
+      <div class="lb_price cf">
+        <span class="standard_price">
+          <span class="value_price">{$TAG_TEXT|sprintf:"dataPointHash.price_formatted[0]"} </span>
+        </span>
+        {$TAG_TEXT|sprintf:"# dataPointHash.vpe_price[0]"}<span class="vpe">{$TAG_TEXT|sprintf:"dataPointHash.vpe_price[0]"}</span>{$TAG_TEXT|sprintf:"/ dataPointHash.vpe_price[0]"}
+      </div>
+
+      <div class="lb_tax">
+      {foreach item=data from=$TAX_DATA}
+        {$TAG_TEXT|sprintf:"# dataPointHash.tax_rate_`$data.tax_rate`[0]"}{$data.tax_info} {$TAG_TEXT|sprintf:"/ dataPointHash.tax_rate_`$data.tax_rate`[0]"}
+      {/foreach}
+      {$SHIPPING_INFO}
+      </div>
+      {$TAG_TEXT|sprintf:"/ dataPointHash.price_formatted[0]"}
+      
+      {if $smarty.const.SHOW_BUTTON_BUY_NOW != 'false'}      
+      <div class="lb_buttons">
+        <a href="{$TAG_TEXT|sprintf:"link"}">
+          <span class="cssButton cssButtonColor1" title=" Details">
+            <span class="cssButtonIcon"><i class="fa-solid fa-eye"></i></span>
+          </span>
+        </a>
+      </div>
+      {/if}
+    </div>
+  </div>

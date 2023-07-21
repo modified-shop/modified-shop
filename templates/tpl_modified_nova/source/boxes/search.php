@@ -32,6 +32,15 @@
   $box_smarty->assign('LINK_ADVANCED', xtc_href_link(FILENAME_ADVANCED_SEARCH));
   $box_smarty->assign('HELP_LINK', xtc_href_link(FILENAME_POPUP_SEARCH_HELP, $popup_params['link_parameters'], $request_type));
 
+  if (defined('MODULE_SEMKNOX_SYSTEM_STATUS')
+      && MODULE_SEMKNOX_SYSTEM_STATUS == 'true'
+      && defined('MODULE_SEMKNOX_SYSTEM_PROJECT_'.$_SESSION['languages_id'])
+      && constant('MODULE_SEMKNOX_SYSTEM_PROJECT_'.$_SESSION['languages_id']) != ''
+      )
+  {  
+    $box_smarty->clear_assign('HELP_LINK');
+  }
+  
   $box_smarty->caching = 0;
   $box_search = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_search.html');
 

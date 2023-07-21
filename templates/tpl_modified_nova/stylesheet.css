@@ -7197,14 +7197,14 @@ p.underline {
   .suggestionsBox { top:100%; right:0px; left:0px; padding: 0px 0px 20px 0px; }
 }
 
-.suggestionList {
+.suggestionsBox .suggestionList {
   width:100%;
   max-width:980px;
   background:#fff;
   margin:0px auto;
   padding:0 0 0 0;
 }
-.suggestionList ul {
+.suggestionsBox .suggestionList ul {
   max-height:640px;
   overflow:auto;
   text-align:left;
@@ -7214,25 +7214,25 @@ p.underline {
   display:flex;
   flex-wrap:wrap;
 }
-.suggestionList ul li {
+.suggestionsBox .suggestionList ul li {
   width:100%;
   padding: 0 10px;
 }
 @media only screen and (min-width: 460px) {
-  .suggestionList ul li { width:50%; }
+  .suggestionsBox .suggestionList ul li { width:50%; }
 }
 @media only screen and (min-width: 690px) {
-  .suggestionList ul li { width:33.3333%; }
+  .suggestionsBox .suggestionList ul li { width:33.3333%; }
 }
 @media only screen and (min-width: 920px) {
-  .suggestionList ul li { width:25%; }
+  .suggestionsBox .suggestionList ul li { width:25%; }
 }
 
-.suggestionList li a {
+.suggestionsBox .suggestionList li a {
   display:block;
   text-decoration:none;
 }
-.autocomlete_item {
+.suggestionsBox .autocomlete_item {
   display:flex;
   font-size:14px;
   line-height:18px;
@@ -7240,10 +7240,10 @@ p.underline {
   border-top: 1px solid #e1e1e1;
 }
 @media only screen and (min-width: 690px) {
-  .autocomlete_item { padding: 20px 0; }
+  .suggestionsBox .autocomlete_item { padding: 20px 0; }
 }
 
-.ac_image {
+.suggestionsBox .ac_image {
   width:50px;
   height:50px;
   padding: 5px;
@@ -7252,17 +7252,17 @@ p.underline {
   border: 1px solid #e1e1e1;
 }
 @media only screen and (min-width: 460px) {
-  .ac_image { width:60px; height:60px; }
+  .suggestionsBox .ac_image { width:60px; height:60px; }
 }
 @media only screen and (min-width: 690px) {
-  .ac_image { width:70px; height:70px; }
+  .suggestionsBox .ac_image { width:70px; height:70px; }
 }
 
-.ac_content {
+.suggestionsBox .ac_content {
   flex:1;
   padding: 0 0 0 10px;
 }
-.ac_text {
+.suggestionsBox .ac_text {
   display:block;
   padding: 2px 0px 0px 0px;
   color:#434343;
@@ -7274,7 +7274,7 @@ p.underline {
   -moz-hyphens: auto;
   hyphens: auto;
 }
-.ac_price {
+.suggestionsBox .ac_price {
   display:block;
   padding: 5px 0 0 0;
   white-space:nowrap;
@@ -7283,51 +7283,51 @@ p.underline {
   font-size:12px;
   line-height:16px;
 }
-.ac_price .small_price {
+.suggestionsBox .ac_price .small_price {
   font-size:10px;
   font-weight:400;
 }
-.ac_price .new_price {
+.suggestionsBox .ac_price .new_price {
   color: var(--price_new_color, #e32828);
 }
-.ac_price .graduated_price,
-.ac_price .item_price {
+.suggestionsBox .ac_price .graduated_price,
+.suggestionsBox .ac_price .item_price {
   display:block;
 }
-.ac_price .save_price,
-.ac_price .no_price {
+.suggestionsBox .ac_price .save_price,
+.suggestionsBox .ac_price .no_price {
   display:none;
 }
-.ac_vpe {
+.suggestionsBox .ac_vpe {
   font-size:10px;
   line-height:12px;
   color:#666;
   font-weight:400;
   display:block;
 }
-.autocompletecloser {
+.suggestionsBox .autocompletecloser {
   cursor:pointer;
 }
-.autocomplete_error {
+.suggestionsBox .autocomplete_error {
   padding:6px 0 11px 0;
   display:inline-block;
   text-align:center;
   width:100%;
 }
-.autocomplete_button {
+.suggestionsBox .autocomplete_button {
   text-align:center;
   padding: 20px 0 0 0;
   margin: 10px 10px 0 10px;
   border-top: 1px solid #e1e1e1;
 }
-.autocomplete_button a {
+.suggestionsBox .autocomplete_button a {
   display:inline-block;
 }
-.autocomplete_button .cssButton {
+.suggestionsBox .autocomplete_button .cssButton {
   width:280px;
   margin: 0px auto;
 }
-.autocomplete_button a:hover {
+.suggestionsBox .autocomplete_button a:hover {
   text-decoration:none;
 }
 /* 43. END autocomplete search */
