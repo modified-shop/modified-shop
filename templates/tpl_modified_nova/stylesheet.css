@@ -980,8 +980,8 @@ h1.subline {
   padding-right: 20px;
 }    
 .search_inner .search_cat .SumoSelect > .optWrapper {
-  width:auto !important;
-  max-width:300px !important;
+  width:auto;
+  max-width:300px;
   min-width:180px;
 }
 .search_inner .search_cat .SumoSelect > .optWrapper > .options li.opt {
@@ -1089,7 +1089,7 @@ h1.subline {
   margin: 0px;
 }
 .menu_items a:hover {
-  text-decoration:none !important;
+  text-decoration:none;
 }
 
 .mega_menu {
@@ -1177,7 +1177,7 @@ h1.subline {
 }
 /* only 3 level */
 .mega_menu > ul ul ul {
-  display:none !important;
+  display:none;
 }
 .mega_menu > ul ul > li > a {
   position:relative;
@@ -1247,7 +1247,7 @@ h1.subline {
   left:1px;
 }
 .mega_menu > ul > li.level_manu > a > strong {
-  font-weight:400 !important;
+  font-weight:400;
   color:#ff3535;
 }  
 /* End Megamenü case 1*/
@@ -1263,7 +1263,7 @@ h1.subline {
   position:relative;
 }
 .menu_items.case_2 a:hover {
-  text-decoration:none !important;
+  text-decoration:none;
 }
 .menu_items.case_2 .dropdown_menu {
   border-top: 8px solid var(--categoriesmenu_bg, #f0f0f0);
@@ -1311,8 +1311,8 @@ h1.subline {
   padding: 0 0 0 3px;
 }
 .menu_items.case_2 li.level_manu > a > strong {
-  font-weight:400 !important;
-  color:#222 !important;
+  font-weight:400;
+  color:#222;
 }
 .menu_items.case_2 li .dropdown_menu .fa-solid {
   margin: 0 5px 0 0;
@@ -1346,7 +1346,7 @@ h1.subline {
 }
 /* only 3 levels for dropdown */
 .menu_items.case_2 li.level3 > .dropdown_menu {
-  display:none !important;
+  display:none;
 }
 /* 07. END Categories Top Menu */
 
@@ -1478,7 +1478,7 @@ label  {
 .field_item_2:focus-within .field_text,
 .field_item_3:focus-within .field_text,
 .field_item_4:focus-within .field_text {
-  color:#333 !important
+  color:#333;
 }
 
 .inputRequirement,
@@ -3109,8 +3109,8 @@ a.view_box.active {
   padding:5px 5px;
 }
 .filter_bar .CaptionCont.SelectBox.Selected {
-  color:#296aab !important;
-  background: #eaf2fa !important;
+  color:#296aab;
+  background: #eaf2fa;
 }
 /* 18. END listing filter */
 
@@ -4379,9 +4379,9 @@ a.view_box.active {
   font-weight: 700;
 }
 .action_row label .content {
-  display: block !important;
-  padding: 5px 0px 0px 0px !important;
-  font-weight: 400 !important;
+  display: block;
+  padding: 5px 0px 0px 0px;
+  font-weight: 400;
 }
 .action_row .actions {
   display:flex;
@@ -4442,9 +4442,9 @@ a.view_box.active {
   padding: 0 0 0 0;
 }
 .action_row.address .content {
-  display: block !important;
-  padding: 10px 0px 0px 0px !important;
-  font-weight: 400 !important;
+  display: block;
+  padding: 10px 0px 0px 0px;
+  font-weight: 400;
 }
 
 /* account history list */
@@ -5174,7 +5174,7 @@ a.view_box.active {
   top: 0;
 }
 @media only screen and (min-width: 850px) {
-  .pd_sticky { position: -webkit-sticky !important; position: sticky !important; top: 15px; }
+  .pd_sticky { position: -webkit-sticky; position: sticky; top: 15px; }
 }
 .admin_mode .pd_sticky {
   top: 0;
@@ -5207,7 +5207,7 @@ a.view_box.active {
 .pd_image_small_container {
   float:left;
   width:16.6666%;
-  display: flex !important;
+  display: flex;
   flex-direction: column; 
   position:relative;
   right:-10px;
@@ -5222,7 +5222,7 @@ a.view_box.active {
   display:block;
   height:100%;
   padding: 0px 0px 0px 0;
-  display: flex !important;
+  display: flex;
 }
 .pd_image_small_inner {
   width:100%;
@@ -6026,14 +6026,14 @@ a.view_box.active {
   padding: 0 0 0 0;
 }
 .po_row_select_item select {
-  height:41px !important;
+  height:41px;
 }
 .po_row_select_item .SumoSelect > .CaptionCont {
   height: 41px;
   font-size: 13px;
   line-height: 19px;
   min-height:41px;
-  padding: 10px 10px 10px 10px !important;
+  padding: 10px 10px 10px 10px;
 }
 .po_row_select_item .SumoSelect > .optWrapper {
   font-size: 13px;
@@ -6771,7 +6771,7 @@ table.paymentinfotable.paypalpluslink span.cssButton {
 }
 .checkout_confirmation_gift .ordertotal_row {
   background: #f5f5f5;
-  border: 0px !important;
+  border: 0px;
   align-items: center;
   font-size: 14px;
   line-height: 20px;
@@ -6805,11 +6805,11 @@ table.paymentinfotable.paypalpluslink span.cssButton {
   color: #296aab;
 }
 .checkout_confirmation_gift .gift_item_row {
-  padding: 0px !important;
+  padding: 0px;
 }
 .checkout_confirmation_gift .gift_item_row > div {
-  padding-top: 0px !important;
-  padding-bottom: 0px !important;
+  padding-top: 0px;
+  padding-bottom: 0px;
 }
 /* 39. END checkout */
 
@@ -7079,7 +7079,7 @@ p.underline {
 .printwrap table.order_table ul.attributes_list,
 .printwrap_admin table.order_table ul.attributes_list {
   list-style-type:none;
-  margin: 7px 0px 0px 0px !important;
+  margin: 7px 0px 0px 0px;
 }
 .printwrap table.order_table ul.attributes_list li,
 .printwrap_admin table.order_table ul.attributes_list li {
