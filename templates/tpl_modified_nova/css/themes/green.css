@@ -9,8 +9,10 @@
   --header_bg: #e4e4dc;
   --header_menuitems_bg: #d5d5c9;
   --header_menuitems_color: #555;
+  --header_menuitems_border: #d5d5c9;
   --header_menuitems_bg_hover: #bfbfac;
   --header_menuitems_color_hover: #333;
+  --header_menuitems_border_hover: #bfbfac;
 
   /* Count for cart and wishlist */ 
   --count_cart_wishlist_color: #fff;

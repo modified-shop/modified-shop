@@ -25,6 +25,7 @@
   font-size:20px;
   line-height:30px;
   text-align:center;
+  border-radius:4px;
 }
 
 body.mm-ocd-opened {

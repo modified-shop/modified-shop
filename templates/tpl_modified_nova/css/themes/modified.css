@@ -1,0 +1,89 @@
+
+.layout_wrap.theme_modified,
+.layout_wrap.theme_modified ~ .copyright,
+.layout_wrap.theme_modified ~ .parseTime,
+.layout_wrap.theme_modified ~ .mm-ocd,
+.layout_wrap.theme_modified ~ #colorbox {
+
+  /* Header & navigation elements cart, wishlist, settings, account, menu */
+  --header_bg: #eee;
+  --header_menuitems_bg: #ddd;
+  --header_menuitems_color: #444;
+  --header_menuitems_border: #ccc;
+  --header_menuitems_bg_hover: #ccc;
+  --header_menuitems_color_hover: #222;
+  --header_menuitems_border_hover: #bbb;
+
+  /* Count for cart and wishlist */ 
+  --count_cart_wishlist_color: #fff;
+  --count_cart_wishlist_bg: #b0377e;
+
+  /* Header search */
+  --search_toggle_bg: #eee; 
+  --search_toggle_input_border: #ccc; 
+  --search_toggle_input_bg: #ddd; 
+  --search_toggle_color_select: #444; 
+  --search_toggle_color_input: #444; 
+  --search_toggle_color_help: #666; 
+  --search_toggle_color_button: #444; 
+              
+  /* Categories */
+  --categoriesmenu_bg: #363839; 
+  --categoriesitems_level1_color: #eee; 
+  --categoriesitems_level1_bg_hover: rgba(255,255,255,0.2); 
+  --categoriesitems_level1_color_hover: #fff;  
+  --categoriesitems_level1_color_selected: #fff;
+  --categoriesitems_level2_selected: #7c2759;
+  --categoriesitems_overview_color_selected: #7c2759;
+
+  /* Left submenu selected */
+  --subcatsmenu_color_selected: #7c2759; 
+  
+  /* Mobile mmenu selected */
+  --mobilemenu_color_selected: #7c2759; 
+
+  /* Right content menu selected */
+  --contentboxlist_color_selected: #7c2759; 
+  
+  /* Left account menu selected */
+  --account_navigation_selected: #7c2759; 
+
+  /* Main Buttons */
+  --button1_background: #4d4d4d;  
+  --button1_border: rgba(0,0,0,0.1);
+  --button1_color: #fff; 
+  
+  --button2_background: #7c2759;  
+  --button2_border: rgba(0,0,0,0.1);
+  --button2_color: #fff; 
+
+  /* Prices */
+  --price_default_color: #434343; 
+  --price_new_color: #e32828; 
+  --price_old_color: #666; 
+  --price_save_bg: #e32828; 
+  --price_save_color: #fff; 
+
+  /* Toogle menu closer */  
+  --toggle_menu_closer_bg: #b0377e;
+  --toggle_menu_closer_color: #fff;
+  
+  /* Subfooter */
+  --subfooter_bg: #eee; 
+  --subfooter_color_title: #333; 
+  --subfooter_color_text: #555; 
+  
+  /* Footer */
+  --footer_bg: #363839; 
+  --footer_box_header: #eee;   
+  --footer_box_text: #eee;   
+  --footer_link_color: #eee;  
+  --footer_link_color_underline: #999;  
+  --footer_payment_icons_bg: rgba(255,255,255,0.6);  
+  --footer_social_icons: #ddd;  
+  --footer_social_icons_hover: #eee;  
+  --footer_copyright: #aaa;  
+  --footer_copyright_border: #aaa;  
+  
+} 
+
