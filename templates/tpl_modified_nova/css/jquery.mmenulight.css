@@ -279,6 +279,7 @@ body.mm-ocd-opened {
   background:#eee;
   z-index:1;
   font-size:12px;
+  border-radius:4px;
 }
 .mm-spn.mm-spn--navbar.mm-spn--main:after {
   padding-left:20px;
