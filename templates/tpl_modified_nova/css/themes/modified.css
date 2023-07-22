@@ -29,7 +29,7 @@
               
   /* Categories */
   --categoriesmenu_bg: #363839; 
-  --categoriesitems_level1_color: #eee; 
+  --categoriesitems_level1_color: #ddd; 
   --categoriesitems_level1_bg_hover: rgba(255,255,255,0.2); 
   --categoriesitems_level1_color_hover: #fff;  
   --categoriesitems_level1_color_selected: #fff;
@@ -65,8 +65,8 @@
   --price_save_color: #fff; 
 
   /* Toogle menu closer */  
-  --toggle_menu_closer_bg: #b0377e;
-  --toggle_menu_closer_color: #fff;
+  --toggle_menu_closer_bg: #ddd;
+  --toggle_menu_closer_color: #b0377e;
   
   /* Subfooter */
   --subfooter_bg: #eee; 
