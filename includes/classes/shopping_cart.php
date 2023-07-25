@@ -713,6 +713,7 @@ class shoppingCart {
                                                  p.products_vpe_value,
                                                  p.products_discount_allowed,
                                                  p.products_weight,
+                                                 p.products_weight as products_weight_origin,
                                                  p.products_tax_class_id,
                                                  p.products_status,
                                                  p.products_fsk18,
