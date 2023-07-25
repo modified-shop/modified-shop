@@ -196,7 +196,6 @@
                 <td class="dataTableContent txta-c"><?php echo $gv_list['order_id']; ?></td>
                 <td class="dataTableContent txta-r"><?php echo $currencies->format($gv_list['amount']); ?></td>
                 <td class="dataTableContent txta-r"><?php echo xtc_datetime_short($gv_list['date_created']); ?></td>
-                <td class="dataTableContent txta-r"><?php if ((!isset($_GET['gid']) || ($_GET['gid'] == $gv_list['unique_id'])) && !isset($gInfo)) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_GV_QUEUE, 'page=' . $page . '&gid=' . $gv_list['unique_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
                 <td class="dataTableContent txta-r"><?php if (isset($gInfo) && is_object($gInfo) && $gv_list['unique_id'] == $gInfo->unique_id) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_GV_QUEUE, 'page=' . $page . '&gid=' . $gv_list['unique_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_arrow_grey.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
               <?php
