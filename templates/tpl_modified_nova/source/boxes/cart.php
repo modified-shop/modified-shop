@@ -13,8 +13,13 @@
   // include smarty
   include (DIR_FS_BOXES_INC . 'smarty_default.php');
 
+  // include needed functions
+  require_once (DIR_FS_INC.'xtc_get_products_stock.inc.php');
+  require_once (DIR_FS_INC.'check_stock_specials.inc.php');
+
   // define defaults
-  $products_in_cart = array ();
+  $any_out_of_stock = false;
+  $products_cart = array ();
   $qty = 0;
 
   if ($_SESSION['cart']->count_contents() > 0) {
@@ -32,22 +37,46 @@
           $image = $product->productImage($products[$i]['image'],'thumbnail');
         }
         
+        $mark_stock = '';
+        if (STOCK_CHECK == 'true') {
+          $any_out_of_stock = true;
+          $mark_stock = xtc_check_stock($products[$i]['id'], $products[$i]['quantity']);
+        }
+  
+        if (STOCK_CHECK_SPECIALS == 'true' && $xtPrice->xtcCheckSpecial($products[$i]['id'])) {
+          $any_out_of_stock = true;
+          $mark_stock = check_stock_specials($products[$i]['id'], $products[$i]['quantity']);
+        }
+
         $qty += $products[$i]['quantity'];
         
-        $products_in_cart[] = array (
+        $products_cart[] = array (
           'QTY' => $products[$i]['quantity'],
           'LINK' => xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$products[$i]['id']),
           'IMAGE' => $image,
           'NAME' => $products[$i]['name'],
           'BUTTON_DELETE' => $del_button,
           'LINK_DELETE' => $del_link,
+          'MARK_STOCK' => $mark_stock,
         );
       }
     }
   }
 
+  if (STOCK_CHECK == 'true' && $any_out_of_stock === true) {
+    if (STOCK_ALLOW_CHECKOUT == 'true') {
+      $messageStack->add('box_cart', OUT_OF_STOCK_CAN_CHECKOUT);
+    } else {
+      $messageStack->add('box_cart', OUT_OF_STOCK_CANT_CHECKOUT);
+    }
+  }
+  
+  if ($messageStack->size('box_cart') > 0) {
+    $box_smarty->assign('error_message', $messageStack->output('box_cart'));
+  }
+
   $box_smarty->assign('deny_cart', strpos($PHP_SELF, 'checkout') !== false ? 'true' : 'false'); // no cart at the checkout
-  $box_smarty->assign('products', $products_in_cart);
+  $box_smarty->assign('products', $products_cart);
   $box_smarty->assign('PRODUCTS', $qty);
   $box_smarty->assign('empty', $qty > 0 ? 'false' : 'true');
   $box_smarty->assign('ACTIVATE_GIFT', ACTIVATE_GIFT_SYSTEM == 'true' ? 'true' : false);

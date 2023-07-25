@@ -25,6 +25,8 @@
         {$PRODUCTS} {#heading_flyout_product_cart#}    
       </div>
   
+      {if $error_message}<div class="errormessage small mb_0">{$error_message}</div>{/if}
+
       <div class="toggle_products">
         {foreach name=aussen item=products_data from=$products}
           <div class="toggle_products_item">
@@ -42,8 +44,8 @@
               </div>
             </div>
             <div class="toggle_products_content">
-              <div class="tpc_title"><a href="{$products_data.LINK}">{$products_data.NAME|truncate:60:"...":true}</a></div>    
-              <div class="tpc_quantity">{#heading_flyout_qty#} {$products_data.QTY}</div>
+              <div class="tpc_title"><a href="{$products_data.LINK}">{$products_data.NAME}</a></div>    
+              <div class="tpc_quantity">{#heading_flyout_qty#} {$products_data.QTY} {$products_data.MARK_STOCK}</div>
             </div>
             <div class="toggle_products_icon">
               {$products_data.BUTTON_DELETE}
