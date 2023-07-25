@@ -124,4 +124,7 @@ ALTER TABLE `whos_online` ADD INDEX `idx_cart_status` (`cart_status`);
 ALTER TABLE `banners` ADD `banners_image_title` VARCHAR(255) NOT NULL AFTER `banners_image_mobile`;
 ALTER TABLE `banners` ADD `banners_image_alt` VARCHAR(255) NOT NULL AFTER `banners_image_title`;
 
+#GTB - 2023-07-25 - add products_weight_origin
+ALTER TABLE `orders_products` ADD `products_weight_origin` DECIMAL(15,4) NOT NULL AFTER `products_weight`;
+
 # Keep an empty line at the end of this file for the db_updater to work properly

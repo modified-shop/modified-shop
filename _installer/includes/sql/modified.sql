@@ -907,6 +907,7 @@ CREATE TABLE orders_products (
   allow_tax INT(1) NOT NULL,
   products_order_description text,
   products_weight DECIMAL(15,4) NOT NULL,
+  products_weight_origin DECIMAL(15,4) NOT NULL,
   PRIMARY KEY (orders_products_id),
   KEY idx_orders_id (orders_id),
   KEY idx_products_id (products_id)

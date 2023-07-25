@@ -416,7 +416,6 @@
 
     $product_query = xtc_db_query("SELECT op.allow_tax,
                                           op.products_tax,
-                                          op.products_weight,
                                           p.products_tax_class_id,
                                           pd.products_name,
                                           pd.products_short_description,
@@ -509,7 +508,6 @@
       'products_quantity' => xtc_db_prepare_input($data_array['products_quantity']),
       'allow_tax' => (int)$status['customers_status_show_price_tax'],
       'products_model' => xtc_db_prepare_input($data_array['products_model']),
-      'products_weight' => xtc_db_prepare_input($product['products_weight']),
     );
 
     xtc_db_perform(TABLE_ORDERS_PRODUCTS, $sql_data_array, 'update', "orders_products_id = '".(int)($data_array['opID'])."'");
@@ -618,7 +616,8 @@
       'products_quantity' => xtc_db_prepare_input($data_array['products_quantity']),
       'allow_tax' => (int)$status['customers_status_show_price_tax'],
       'products_model' => xtc_db_prepare_input($product['products_model']),
-      'products_weight' => $product['products_weight']
+      'products_weight' => $product['products_weight'],
+      'products_weight_origin' => $product['products_weight'],
     );
     xtc_db_perform(TABLE_ORDERS_PRODUCTS, $sql_data_array);
 
@@ -682,7 +681,7 @@
                                            op.products_discount_made, 
                                            op.products_tax, 
                                            op.allow_tax,
-                                           op.products_weight
+                                           op.products_weight_origin
                                       FROM ".TABLE_ORDERS_PRODUCTS." op
                                  LEFT JOIN ".TABLE_PRODUCTS." p
                                            ON p.products_id = op.products_id
@@ -754,7 +753,7 @@
 
     $products_weight = $ov_weight;
     if ($weight_prefix === false) {
-      $products_weight = $products['products_weight'] + $ov_weight;
+      $products_weight = $products['products_weight_origin'] + $ov_weight;
     }
 
     $tax_rate = $products['products_tax'];

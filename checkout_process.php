@@ -283,6 +283,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
       'allow_tax' => $order->info['allow_tax'],
       'products_order_description' => $order->products[$i]['order_description'],
       'products_weight' => $order->products[$i]['weight'],
+      'products_weight_origin' => $order->products[$i]['weight_origin'],
     );
     
     foreach(auto_include(DIR_FS_CATALOG.'includes/extra/checkout/checkout_process_products/','php') as $file) require ($file);
