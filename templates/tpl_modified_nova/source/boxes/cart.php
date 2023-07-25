@@ -39,13 +39,13 @@
         
         $mark_stock = '';
         if (STOCK_CHECK == 'true') {
-          $any_out_of_stock = true;
           $mark_stock = xtc_check_stock($products[$i]['id'], $products[$i]['quantity']);
+          if ($mark_stock) $any_out_of_stock = true;
         }
   
         if (STOCK_CHECK_SPECIALS == 'true' && $xtPrice->xtcCheckSpecial($products[$i]['id'])) {
-          $any_out_of_stock = true;
           $mark_stock = check_stock_specials($products[$i]['id'], $products[$i]['quantity']);
+          if ($mark_stock) $any_out_of_stock = true;
         }
 
         $qty += $products[$i]['quantity'];
