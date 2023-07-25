@@ -36,7 +36,7 @@
           )
       {
         $redirect_link = xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(), $request_type);
-        $redirect_link = str_replace(array(HTTP_SERVER,HTTPS_SERVER), '', preg_replace("/([^\?]*)(\?.*)/", "$1", $redirect_link));
+        $redirect_link = str_replace(array(HTTP_SERVER,HTTPS_SERVER,FILENAME_DEFAULT), '', preg_replace("/([^\?]*)(\?.*)/", "$1", $redirect_link));
         $current_link = preg_replace("/([^\?]*)(\?.*)/", "$1", $_SERVER['REQUEST_URI']);
       
         if ($current_link != $redirect_link) {
