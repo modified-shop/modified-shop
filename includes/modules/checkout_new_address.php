@@ -106,10 +106,9 @@ if (isset($_GET['action'])
   $module_smarty->assign('PARAMS', xtc_draw_hidden_field('address_book_id', ((isset($_GET['id'])) ? (int)$_GET['id'] : (int)$address_book_id)));
 }
 
+$id = ((isset($_GET['id'])) ? (int)$_GET['id'] : ((isset($address_book_id)) ? (int)$address_book_id : 0));
 if (basename($PHP_SELF) != FILENAME_CHECKOUT_PAYMENT_ADDRESS 
-    && ((isset($_GET['id']) && $_SESSION['customer_default_address_id'] != $_GET['id']) 
-         || (isset($_GET['action']) && $_GET['action'] == 'new')
-        )
+    && $_SESSION['customer_default_address_id'] != $id
     )
 {
   $module_smarty->assign('new','1');

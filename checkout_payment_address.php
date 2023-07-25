@@ -141,7 +141,7 @@ if ($process == false) {
   include(DIR_WS_MODULES.'checkout_address_layout.php');
 }
 
-if ($addresses_count < MAX_ADDRESS_BOOK_ENTRIES) {
+if ($addresses_count < MAX_ADDRESS_BOOK_ENTRIES || ($process === true && $error === true)) {
   if (isset($_GET['action']) 
       && $_GET['action'] == 'new'
       )
