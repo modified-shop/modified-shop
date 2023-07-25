@@ -908,6 +908,8 @@ CREATE TABLE orders_products (
   products_order_description text,
   products_weight DECIMAL(15,4) NOT NULL,
   products_weight_origin DECIMAL(15,4) NOT NULL,
+  products_vpe VARCHAR(32) NOT NULL,
+  products_vpe_value DECIMAL(15,4) NOT NULL,
   PRIMARY KEY (orders_products_id),
   KEY idx_orders_id (orders_id),
   KEY idx_products_id (products_id)

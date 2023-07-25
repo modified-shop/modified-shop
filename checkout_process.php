@@ -40,6 +40,7 @@ defined('STOCK_LIMITED_DOWNLOADS') or define('STOCK_LIMITED_DOWNLOADS', 'false')
 // include needed functions
 require_once (DIR_FS_INC.'xtc_address_label.inc.php');
 require_once (DIR_FS_INC.'ip_clearing.inc.php');
+require_once (DIR_FS_INC.'xtc_get_vpe_name.inc.php');
 
 // initialize smarty
 $smarty = new Smarty();
@@ -285,6 +286,11 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
       'products_weight' => $order->products[$i]['weight'],
       'products_weight_origin' => $order->products[$i]['weight_origin'],
     );
+    
+    if ($order->products[$i]['vpe_status'] == 1) {
+      $sql_data_array['products_vpe'] = xtc_get_vpe_name($order->products[$i]['vpe_id']);
+      $sql_data_array['products_vpe_value'] = $order->products[$i]['vpe_value'];
+    }
     
     foreach(auto_include(DIR_FS_CATALOG.'includes/extra/checkout/checkout_process_products/','php') as $file) require ($file);
     xtc_db_perform(TABLE_ORDERS_PRODUCTS, $sql_data_array);

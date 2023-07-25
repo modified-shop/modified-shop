@@ -127,4 +127,8 @@ ALTER TABLE `banners` ADD `banners_image_alt` VARCHAR(255) NOT NULL AFTER `banne
 #GTB - 2023-07-25 - add products_weight_origin
 ALTER TABLE `orders_products` ADD `products_weight_origin` DECIMAL(15,4) NOT NULL AFTER `products_weight`;
 
+#GTB - 2023-07-25 - add products_vpe to orders_products
+ALTER TABLE `orders_products` ADD `products_vpe` VARCHAR(32) NOT NULL AFTER `products_weight_origin`;
+ALTER TABLE `orders_products` ADD `products_vpe_value` DECIMAL(15,4) NOT NULL AFTER `products_vpe`;
+
 # Keep an empty line at the end of this file for the db_updater to work properly

@@ -25,6 +25,7 @@
   require_once (DIR_FS_INC.'xtc_get_countries.inc.php');
   require_once (DIR_FS_INC.'xtc_get_address_format_id.inc.php');
   require_once (DIR_FS_INC.'get_customers_gender.inc.php');
+  require_once (DIR_FS_INC.'xtc_get_vpe_name.inc.php');
   
   // include needed classes
   require_once (DIR_WS_CLASSES.'order.php');
@@ -564,6 +565,9 @@
     $product_query = xtc_db_query("SELECT p.products_model,
                                           p.products_tax_class_id,
                                           p.products_weight,
+                                          p.products_vpe,
+                                          p.products_vpe_status,
+                                          p.products_vpe_value,
                                           pd.products_name,
                                           pd.products_short_description,
                                           pd.products_order_description
@@ -619,6 +623,12 @@
       'products_weight' => $product['products_weight'],
       'products_weight_origin' => $product['products_weight'],
     );
+    
+    if ($product['products_vpe_value'] == 1) {
+      $sql_data_array['products_vpe'] = xtc_get_vpe_name($product['products_vpe'], $lang['languages_id']);
+      $sql_data_array['products_vpe_value'] = $product['products_vpe_value'];
+    }
+    
     xtc_db_perform(TABLE_ORDERS_PRODUCTS, $sql_data_array);
 
     if ($data_array['products_quantity'] != 0) {
