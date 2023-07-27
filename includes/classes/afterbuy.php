@@ -17,6 +17,8 @@
 
 class xtc_afterbuy_functions {
   var $order_id;
+  var $payment_id;
+  var $payment_name;
 
   // constructor
   function __construct($order_id) {
@@ -272,7 +274,8 @@ class xtc_afterbuy_functions {
         $anzahl += $pDATA['products_quantity'];
       }
 
-      $coupon = $gv = $discount = $cod_fee = $shipping = '0.0000';
+      $coupon = $gv = $discount = $cod_fee = $shipping = $ot_payment_fee = '0.0000';
+      $ot_payment_flag = false;
       $cod_flag = false;
       $discount_flag = false;
       $gv_flag = false;
@@ -284,6 +287,11 @@ class xtc_afterbuy_functions {
 						                         ORDER BY sort_order ASC");
 
       while ($order_total_values = xtc_db_fetch_array($order_total_query)) {
+        // payment fee
+        if ($order_total_values['class'] == 'ot_payment') {
+          $ot_payment_flag = true;
+          $ot_payment_fee = $order_total_values['value'];
+        }
         // shippingcosts
         if ($order_total_values['class'] == 'ot_shipping') {
           $shipping = $order_total_values['value'];
@@ -359,6 +367,10 @@ class xtc_afterbuy_functions {
       }
 
       $DATAstring .= "PosAnz=" . $p_count . "&";
+
+      if ($ot_payment_flag !== false) {
+        $DATAstring .= "ZahlartenAufschlag=" . $this->change_dec_separator($ot_payment_fee) . "&";
+      }
 
       $vK = $this->change_dec_separator($shipping);
 
