@@ -275,6 +275,7 @@
       }
       
       $request = new OrdersCreateRequest();
+      $request->payPalRequestId(md5($this->code.$_SESSION['cart']->cartID));
       $request->prefer('return=representation');
       $request->body = array(
         'intent' => $this->intent,
@@ -299,7 +300,6 @@
       
       if (count($payment_source) > 0) {
         $request->body = array_merge($request->body, $payment_source);
-        $request->payPalRequestId(xtc_random_charcode(32)); 
       }
       
       if ($this->code == 'paypalpui') {
