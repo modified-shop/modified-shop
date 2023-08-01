@@ -2350,6 +2350,7 @@ a.color_more:hover {
 @media only screen and (min-width: 370px) {
   .listingcontainer .listingbox { width:50%;}
   .listingcontainer_full .listingbox { width:50%;}
+  .listingcontainer_details .listingbox { width:50%;}
   .pd_tabs .listingbox { width:50%; }
   .pd_accordion .listingbox { width:50%; }
 }
@@ -2362,18 +2363,21 @@ a.color_more:hover {
 @media only screen and (min-width: 690px) {
   .listingcontainer .listingbox { width:33.3333%;}
   .listingcontainer_full .listingbox { width:33.3333%;}
+  .listingcontainer_details .listingbox { width:33.3333%;}
   .pd_tabs .listingbox { width:33.3333%; }
   .pd_accordion .listingbox { width:33.3333%; }
 }
 @media only screen and (min-width: 920px) {
   .listingcontainer .listingbox { width:25%;}
   .listingcontainer_full .listingbox { width:25%;}
+  .listingcontainer_details .listingbox { width:25%;}
   .pd_tabs .listingbox { width:25%; }
   .pd_accordion .listingbox { width:25%; }
 }
 
 @media only screen and (min-width: 985px) {
   .listingcontainer .listingbox { width:33.3333%;}
+  .listingcontainer_details .listingbox { width:33.3333%;}
   .pd_tabs .listingbox { width:33.3333%; }
   .pd_accordion .listingbox { width:33.3333%; }
   .listingcontainer_full .listingbox { width:25%;}
