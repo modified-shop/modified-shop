@@ -55,7 +55,7 @@ define('TEXT_DELETE_WARNING_PRODUCTS', '<b>WARNING:</b> There are %s products st
 define('ERROR_DIRECTORY_NOT_WRITEABLE', 'Error: I can not write to this directory. Please set the right user permissions on: %s');
 define('ERROR_DIRECTORY_DOES_NOT_EXIST', 'Error: Directory does not exist: %s');
 
-define('TEXT_CHARACTERS','Signs');
+define('TEXT_CHARACTERS', 'Signs');
 define('TEXT_META_TITLE', 'Meta Title:');
 define('TEXT_META_DESCRIPTION', 'Meta Description:');
 define('TEXT_META_KEYWORDS', 'Meta Keywords:');
@@ -73,4 +73,3 @@ define('TXT_MODEL','Products Model');
 
 define('TEXT_CHOOSE_INFO_TEMPLATE_CATEGORIE','Template for Manufacturer Listing');
 define('TEXT_CHOOSE_INFO_TEMPLATE_LISTING','Template for Product Listing');
-?>

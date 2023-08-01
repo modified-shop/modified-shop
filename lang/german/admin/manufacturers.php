@@ -55,9 +55,9 @@ define('TEXT_DELETE_WARNING_PRODUCTS', '<b>WARNUNG:</b> Es existieren noch %s Ar
 define('ERROR_DIRECTORY_NOT_WRITEABLE', 'Fehler: Das Verzeichnis %s ist schreibgesch&uuml;tzt. Bitte korrigieren Sie die Zugriffsrechte zu diesem Verzeichnis!');
 define('ERROR_DIRECTORY_DOES_NOT_EXIST', 'Fehler: Das Verzeichnis %s existiert nicht!');
 
-define('TEXT_CHARACTERS','Zeichen');
+define('TEXT_CHARACTERS', 'Zeichen');
 define('TEXT_META_TITLE', 'Meta Title:');
-define('TEXT_META_DESCRIPTION', 'Meta Description:');
+define('TEXT_META_DESCRIPTION', 'Meta Beschreibung:');
 define('TEXT_META_KEYWORDS', 'Meta Keywords:');
 define('TEXT_MANUFACTURERS_DESCRIPTION', 'Hersteller Beschreibung:');
 define('TEXT_DELETE', 'L&ouml;schen');
@@ -73,4 +73,3 @@ define('TXT_MODEL','Artikelnummer');
 
 define('TEXT_CHOOSE_INFO_TEMPLATE_CATEGORIE','Vorlage f&uuml;r Hersteller&uuml;bersicht');
 define('TEXT_CHOOSE_INFO_TEMPLATE_LISTING','Vorlage f&uuml;r Artikel&uuml;bersicht');
-?>
