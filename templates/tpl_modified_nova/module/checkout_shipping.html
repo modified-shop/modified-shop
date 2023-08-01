@@ -3,6 +3,7 @@
 {config_load file="lang_`$language`.custom"}
 {config_load file="lang_`$language`.section" section="checkout_shipping"}
 {config_load file="lang_`$language`.section" section="checkout_navigation"}
+
 {literal}
 <noscript>
 <style type="text/css">
@@ -12,6 +13,8 @@
 </style>
 </noscript>
 {/literal}
+
+<div class="checkout_shipping">
 
   <ul id="checkoutnavigation">
     <li><span class="active"><span class="number"><i class="fa-solid fa-1"></i></span><span class="content"><span class="title">{#title_shipping#}</span><span class="description">{#desc_shipping#}</span></span></span></li>
