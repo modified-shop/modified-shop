@@ -506,9 +506,9 @@ if (USE_WYSIWYG == 'true') {
                     <td class="dataTableContent txta-c">
                       <?php
                       if ($manufacturers['manufacturers_status'] == 1) {
-                        echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 12, 12, 'style="margin-left: 5px;"') . '<a href="' . xtc_href_link(FILENAME_MANUFACTURERS, xtc_get_all_get_params(array('action', 'mID')) . 'action=setflag&flag=0&mID='.$manufacturers['manufacturers_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 12, 12, 'style="margin-left: 5px;"') . '</a>';
+                        echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 12, 12, 'style="margin-left: 5px;"') . '<a href="' . xtc_href_link(FILENAME_MANUFACTURERS, xtc_get_all_get_params(array('action', 'mID', 'flag')) . 'action=setflag&flag=0&mID='.$manufacturers['manufacturers_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 12, 12, 'style="margin-left: 5px;"') . '</a>';
                       } else {
-                        echo '<a href="' . xtc_href_link(FILENAME_MANUFACTURERS, xtc_get_all_get_params(array('saction', 'vID')) . 'action=setflag&flag=1&mID='.$manufacturers['manufacturers_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 12, 12, 'style="margin-left: 5px;"') . '</a>' . xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 12, 12, 'style="margin-left: 5px;"');
+                        echo '<a href="' . xtc_href_link(FILENAME_MANUFACTURERS, xtc_get_all_get_params(array('action', 'mID', 'flag')) . 'action=setflag&flag=1&mID='.$manufacturers['manufacturers_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 12, 12, 'style="margin-left: 5px;"') . '</a>' . xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 12, 12, 'style="margin-left: 5px;"');
                       }
                       ?>
                     </td>
