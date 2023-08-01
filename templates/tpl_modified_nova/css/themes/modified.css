@@ -6,7 +6,7 @@
 .layout_wrap.theme_modified ~ #colorbox {
 
   /* Header & navigation elements cart, wishlist, settings, account, menu */
-  --header_bg: #eee;
+  --header_bg: #fff;
   --header_menuitems_bg: #ddd;
   --header_menuitems_color: #444;
   --header_menuitems_border: #ccc;
@@ -28,8 +28,9 @@
   --search_toggle_color_button: #444; 
               
   /* Categories */
-  --categoriesmenu_bg: #363839; 
-  --categoriesitems_level1_color: #ddd; 
+  --categoriesmenu_bg: #b0377e; 
+  --categoriesmenu_border: #b0377e; 
+  --categoriesitems_level1_color: #eee; 
   --categoriesitems_level1_bg_hover: rgba(255,255,255,0.2); 
   --categoriesitems_level1_color_hover: #fff;  
   --categoriesitems_level1_color_selected: #fff;
@@ -69,17 +70,17 @@
   --toggle_menu_closer_color: #b0377e;
   
   /* Subfooter */
-  --subfooter_bg: #eee; 
-  --subfooter_color_title: #333; 
+  --subfooter_bg: #ddd; 
+  --subfooter_color_title: #555; 
   --subfooter_color_text: #555; 
   
   /* Footer */
-  --footer_bg: #363839; 
+  --footer_bg: #b0377e; 
   --footer_box_header: #eee;   
   --footer_box_text: #eee;   
   --footer_link_color: #eee;  
   --footer_link_color_underline: #999;  
-  --footer_payment_icons_bg: rgba(255,255,255,0.6);  
+  --footer_payment_icons_bg: rgba(255,255,255,0.8);  
   --footer_social_icons: #ddd;  
   --footer_social_icons_hover: #eee;  
   --footer_copyright: #aaa;  

@@ -77,7 +77,7 @@
   define('TEXT_ICON_ASTERISK', '<i class="fa-solid fa-asterisk"></i>');  
     
   // theme color
-  // default, blue, green
+  // default, blue, green, modified
   define('THEME_COLOR', 'default');  
 
   // set base
