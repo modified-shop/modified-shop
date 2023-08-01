@@ -276,7 +276,7 @@ if (isset($_GET['zID']) && ($saction == 'edit' || $saction == 'new')) {
             <div class="smallText pdg2 flt-l"><?php echo $zones_split->display_count($zones_query_numrows, $page_max_display_countries_results, $spage, TEXT_DISPLAY_NUMBER_OF_COUNTRIES); ?></div>
             <div class="smallText pdg2 flt-r"><?php echo $zones_split->display_links($zones_query_numrows, $page_max_display_countries_results, MAX_DISPLAY_PAGE_LINKS, $spage, 'zpage=' . $zpage . ((isset($_GET['zID'])) ? '&zID=' . (int)$_GET['zID'] : '') . '&action=list', 'spage'); ?></div>
             <div class="clear"></div>
-            <?php echo draw_input_per_page($PHP_SELF.'?'.xtc_get_all_get_params(array('zpage')),$cfg_max_display_countries_key,$page_max_display_countries_results); ?>
+            <?php echo draw_input_per_page($PHP_SELF.'?'.xtc_get_all_get_params(array('spage', 'saction')),$cfg_max_display_countries_key,$page_max_display_countries_results); ?>
             <div class="smallText pdg2 flt-r"><?php if (!xtc_not_null($saction)) echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $zpage . ((isset($_GET['zID'])) ? '&zID=' . (int)$_GET['zID'] : '')) . '">' . BUTTON_BACK . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_GEO_ZONES, 'zpage=' . $zpage . ((isset($_GET['zID'])) ? '&zID=' . (int)$_GET['zID'] : '') . '&action=list&spage=' . $spage . ((isset($sInfo)) ? '&sID=' . $sInfo->association_id : '') . '&saction=new') . '">' . BUTTON_INSERT . '</a>'; ?></div>
             <?php
             } else {
