@@ -29,6 +29,7 @@
 
   /* Categories menu */   
   --categoriesmenu_bg: #3a74a8; 
+  --categoriesmenu_border: #3a74a8; 
   --categoriesitems_level1_color: #fff; 
   --categoriesitems_level1_bg_hover: rgba(255,255,255,0.2);
   --categoriesitems_level1_color_hover: #fff; 
