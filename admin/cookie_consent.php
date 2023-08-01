@@ -352,7 +352,7 @@ require (DIR_WS_INCLUDES.'head.php');
             <div class="smallText pdg2 flt-l"><?php echo $values_split->display_count($values_query_numrows, $page_max_display_values_results, $spage, TEXT_DISPLAY_NUMBER_OF_VALUES); ?></div>
             <div class="smallText pdg2 flt-r"><?php echo $values_split->display_links($values_query_numrows, $page_max_display_values_results, MAX_DISPLAY_PAGE_LINKS, $spage, 'page=' . $page . '&oID=' . (int)$_GET['oID'] . '&action=list', 'spage'); ?></div>
             <div class="clear"></div>
-            <?php echo draw_input_per_page($PHP_SELF.'?'.xtc_get_all_get_params(array('page')),$cfg_max_display_values_key,$page_max_display_values_results); ?>
+            <?php echo draw_input_per_page($PHP_SELF.'?'.xtc_get_all_get_params(array('spage', 'saction')),$cfg_max_display_values_key,$page_max_display_values_results); ?>
             <div class="smallText pdg2 flt-r"><?php if (!xtc_not_null($saction)) echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(basename($PHP_SELF), 'page=' . $page . '&oID=' . (int)$_GET['oID']) . '">' . BUTTON_BACK . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(basename($PHP_SELF), 'page=' . $page . '&oID=' . (int)$_GET['oID'] . '&action=list&spage=' . $spage . '&vID=' . $vInfo->cookies_id . '&saction=new_value') . '">' . BUTTON_INSERT . '</a>'; ?></div>
             <?php
             } else {

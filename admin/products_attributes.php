@@ -449,7 +449,7 @@ require (DIR_WS_INCLUDES.'head.php');
             <div class="smallText pdg2 flt-l"><?php echo $options_split->display_count($options_query_numrows, $page_max_display_options_results, $page, TEXT_DISPLAY_NUMBER_OF_OPTIONS); ?></div>
             <div class="smallText pdg2 flt-r"><?php echo $options_split->display_links($options_query_numrows, $page_max_display_options_results, MAX_DISPLAY_PAGE_LINKS, $page, xtc_get_all_get_params(array('page', 'oID', 'action')), 'page'); ?></div>
             <div class="clear"></div>
-            <?php echo draw_input_per_page($PHP_SELF.'?'.xtc_get_all_get_params(array('page', 'action')),$cfg_max_display_options_key,$page_max_display_options_results); ?> 
+            <?php echo draw_input_per_page($PHP_SELF,$cfg_max_display_options_key,$page_max_display_options_results); ?> 
             <div class="smallText pdg2 flt-r">
               <?php if (!xtc_not_null($action)) echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, xtc_get_all_get_params(array('action', 'oID')) . '&action=new_option') . '">' . BUTTON_INSERT . '</a>'; ?>
             </div>
