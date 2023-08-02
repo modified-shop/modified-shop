@@ -175,13 +175,13 @@
                 <?php
               } else {
                 if ($_GET['edit_action'] == 'address') {                  
-                  include ('orders_edit_address.php');                  
+                  include (DIR_WS_MODULES.'orders_edit_address.php');                  
                 } elseif ($_GET['edit_action'] == 'products') {
-                  include ('orders_edit_products.php');
+                  include (DIR_WS_MODULES.'orders_edit_products.php');
                 } elseif ($_GET['edit_action'] == 'other') {
-                  include ('orders_edit_other.php');
+                  include (DIR_WS_MODULES.'orders_edit_other.php');
                 } elseif ($_GET['edit_action'] == 'options') {
-                  include ('orders_edit_options.php');
+                  include (DIR_WS_MODULES.'orders_edit_options.php');
                 }
               }
               ?>
