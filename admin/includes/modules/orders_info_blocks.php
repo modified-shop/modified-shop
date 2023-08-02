@@ -18,6 +18,7 @@
   <div class="main pdg2"><?php echo HEADING_TITLE; ?></div>
 
   <div class="div_box mrg5">
+    <div id="buttons_top_block">
     <div class="clear" style="padding-bottom: 5px; display: inline-block; width: 100%;">
       <div class="flt-l" style="margin-left: 5px;">     
         <a class="button" href="<?php echo xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action')));?>"><?php echo BUTTON_BACK; ?></a>
@@ -38,8 +39,10 @@
         ?>
       </div>
     </div>
+    </div>
 
     <!-- BOC CUSTOMERS INFO BLOCK -->
+    <div id="customers_info_block">
     <table cellspacing="0" cellpadding="2" class="table">
       <tr>
         <td valign="top" style="border-right: 1px solid #a3a3a3;">
@@ -122,9 +125,11 @@
         </td>
       </tr>
     </table>
+    </div>
     <!-- EOC CUSTOMERS INFO BLOCK -->
 
     <!-- BOC PAYMENT BLOCK -->
+    <div id="payment_block">
     <table border="0" cellspacing="0" cellpadding="2" class="table">
       <tr>
         <td>
@@ -158,9 +163,11 @@
         </td>
       </tr>
     </table>
+    </div>
     <!-- EOC PAYMENT BLOCK -->
 
     <!-- BOC ORDER BLOCK -->
+    <div id="order_block">
     <div class="heading"><?php echo TEXT_ORDER; ?></div>
     <table cellspacing="0" cellpadding="2" class="table">
       <tr class="dataTableHeadingRow">
@@ -225,6 +232,7 @@
         </td>
       </tr>
     </table>
+    </div>
     <!-- EOC ORDER BLOCK -->
 
     <!-- BOC DOWNLOAD BLOCK -->
@@ -246,6 +254,7 @@
 
     if (xtc_db_num_rows($downloads_query) > 0) {
       ?>
+      <div id="download_block">
       <div class="heading"><?php echo TEXT_DOWNLOADS; ?></div>
       <table cellspacing="0" cellpadding="2" class="table">
         <tr class="dataTableHeadingRow">
@@ -269,6 +278,7 @@
         }
         ?>
       </table>
+      </div>
       <?php
     }
     ?>
@@ -279,6 +289,7 @@
     ?>
 
     <!-- BOC ORDER TRACK & TRACE BLOCK -->
+    <div id="track_trace_block">
     <div class="heading"><?php echo TABLE_HEADING_TRACK_TRACE; ?></div>
     <?php echo xtc_draw_form('carriers', FILENAME_ORDERS, xtc_get_all_get_params(array('action')) . 'action=inserttracking'); ?>
     <table cellspacing="0" cellpadding="5" class="table borderall">
@@ -316,9 +327,11 @@
       </tr>
     </table>
     </form>
+    </div>
     <!-- EOC ORDER TRACK & TRACE BLOCK -->
 
     <!-- BOC ORDER HISTORY BLOCK -->
+    <div id="order_history_block">
     <div class="heading"><?php echo TEXT_ORDER_HISTORY; ?></div>
     <table cellspacing="0" cellpadding="5" class="table borderall">
       <tr>
@@ -372,9 +385,11 @@
       ?>
       </tr>
     </table>
+    </div>
     <!-- EOC ORDER HISTORY BLOCK -->
 
     <!-- BOC ORDER STATUS BLOCK -->
+    <div id="order_status_block">
     <div class="heading"><?php echo TEXT_ORDER_STATUS; ?></div>
     <?php echo xtc_draw_form('status', FILENAME_ORDERS, xtc_get_all_get_params(array('action')) . 'action=update_order'); ?>
     <table cellspacing="0" cellpadding="2" class="table">
@@ -430,9 +445,11 @@
       </tr>
     </table>
     </form>
+    </div>
     <!-- EOC ORDER STATUS BLOCK -->
 
     <!-- BOC BUTTONS BLOCK -->
+    <div id="buttons_block">
     <table class="table" style="margin-bottom:10px;border: none !important;">
       <tr>
         <td>
@@ -464,6 +481,7 @@
         </td>
       </tr>
     </table>
+    </div>
     <!-- EOC BUTTONS BLOCK -->
   </div>
   
