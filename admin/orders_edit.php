@@ -71,7 +71,16 @@
       orders_product_delete($_POST['oID'], $_POST);
       xtc_redirect(xtc_href_link(FILENAME_ORDERS_EDIT, 'edit_action=products&oID='.(int)$_POST['oID']));
       break;
-
+    case 'product':
+      if (isset($_POST['product_edit'])) {
+        orders_product_edit($_POST['oID'], $_POST);
+      }
+      if (isset($_POST['product_delete'])) {
+        orders_product_delete($_POST['oID'], $_POST);
+      }
+      xtc_redirect(xtc_href_link(FILENAME_ORDERS_EDIT, 'edit_action=products&oID='.(int)$_POST['oID']));
+      break;
+    
     case 'product_option_edit':
       $products_id = orders_product_option_edit($_POST['oID'], $_POST);
       xtc_redirect(xtc_href_link(FILENAME_ORDERS_EDIT, 'edit_action=options&oID='.(int)$_POST['oID'].'&pID='.(int)$products_id.'&opID='.(int)$_POST['opID']));
@@ -82,6 +91,15 @@
       break;
     case 'product_option_delete':
       $products_id = orders_product_option_delete($_POST['oID'], $_POST);
+      xtc_redirect(xtc_href_link(FILENAME_ORDERS_EDIT, 'edit_action=options&oID='.(int)$_POST['oID'].'&pID='.(int)$products_id.'&opID='.(int)$_POST['opID']));
+      break;
+    case 'product_option':
+      if (isset($_POST['product_option_edit'])) {
+        $products_id = orders_product_option_edit($_POST['oID'], $_POST);
+      }
+      if (isset($_POST['product_option_delete'])) {
+        $products_id = orders_product_option_delete($_POST['oID'], $_POST);
+      }
       xtc_redirect(xtc_href_link(FILENAME_ORDERS_EDIT, 'edit_action=options&oID='.(int)$_POST['oID'].'&pID='.(int)$products_id.'&opID='.(int)$_POST['opID']));
       break;
 
