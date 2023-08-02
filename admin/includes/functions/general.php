@@ -1346,12 +1346,15 @@
     $check = xtc_db_fetch_array($check_query);
     if ($check['orders_status'] != $order_status_id) {
       xtc_db_query("UPDATE ".TABLE_ORDERS." SET orders_status = '".(int)$order_status_id."' WHERE orders_id = '".(int)$order_id."'");
-      xtc_db_query("INSERT INTO ".TABLE_ORDERS_STATUS_HISTORY."
-                            SET orders_id = '".(int)$order_id."',
-                                orders_status_id = '".(int)$order_status_id."',
-                                date_added = now(),
-                                customer_notified = '0',
-                                comments = 'Storniert'");
+      $sql_data_array = array(
+        'orders_id' => (int)$order_id,
+        'orders_status_id' => (int)$order_status_id,
+        'date_added' => 'now()',
+        'customer_notified' => '0',
+        'comments' => 'Storniert',
+        'comments_sent' => '0',
+      );
+      xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
     }
     xtc_db_query("UPDATE ".TABLE_ORDERS_TOTAL." SET value = '0.0000' WHERE orders_id = '".(int)$order_id."'");
     xtc_db_query("UPDATE ".TABLE_ORDERS_TOTAL." SET text = '0.00' WHERE orders_id = '".(int)$order_id."'");
