@@ -1,5 +1,5 @@
 /*!
- * Font Awesome Free 5.15.3 by @fontawesome - https://fontawesome.com
+ * Font Awesome Free 5.15.4 by @fontawesome - https://fontawesome.com
  * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
  */
 .fa,
@@ -4089,9 +4089,6 @@ readers do not read off random characters that represent icons */
 .fa-trello:before {
   content: "\f181"; }
 
-.fa-tripadvisor:before {
-  content: "\f262"; }
-
 .fa-trophy:before {
   content: "\f091"; }
 
@@ -4586,13 +4583,14 @@ readers do not read off random characters that represent icons */
 @font-face {
   font-family: 'Font Awesome 5 Brands';
   font-style: normal;
-  font-weight: normal;
+  font-weight: 400;
   font-display: swap;
   src: url("../css/fonts/fa-brands-400.eot");
   src: url("../css/fonts/fa-brands-400.eot?#iefix") format("embedded-opentype"), url("../css/fonts/fa-brands-400.woff2") format("woff2"), url("../css/fonts/fa-brands-400.woff") format("woff"), url("../css/fonts/fa-brands-400.ttf") format("truetype"), url("../css/fonts/fa-brands-400.svg#fontawesome") format("svg"); }
 
 .fab {
-  font-family: 'Font Awesome 5 Brands'; }
+  font-family: 'Font Awesome 5 Brands';
+  font-weight: 400; }
 @font-face {
   font-family: 'Font Awesome 5 Free';
   font-style: normal;
