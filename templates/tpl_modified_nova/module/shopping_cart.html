@@ -51,10 +51,10 @@
                   {foreach name=aussen item=shipping_data from=$shipping_content}
                     <div class="ordertotal_row ot_shipping">
                       {if $shipping_data.VALUE != ''}
-                        <div class="ot_width_1">{$shipping_data.NAME} ({$COUNTRY}):</div>
+                        <div class="ot_width_1">{$shipping_data.NAME}:</div>
                         <div class="ot_width_2">{$shipping_data.VALUE}</div>
                       {else}
-                        {$shipping_data.NAME} ({$COUNTRY})
+                        {$shipping_data.NAME}
                       {/if}
                     </div>
                   {/foreach}
@@ -77,7 +77,7 @@
               {if isset($shipping_content) && count($shipping_content) > 0}
                 {if $SELECT_COUNTRY}<div class="shipping_container">{$SELECT_COUNTRY|replace:"<select":"<select autocomplete=\"off\" aria-label=\"cart_quantity\""}</div>{else}<br />{/if}
                 {foreach name=aussen item=shipping_data from=$shipping_content}
-                  <div class="shipping_hinweis">{$shipping_data.NAME} ({$COUNTRY}): {$shipping_data.VALUE}</div>
+                  <div class="shipping_hinweis">{$shipping_data.NAME}: {$shipping_data.VALUE}</div>
                 {/foreach}
               {/if}
               {if $total}<strong>{#text_total#}: {$total}</strong>{/if}
