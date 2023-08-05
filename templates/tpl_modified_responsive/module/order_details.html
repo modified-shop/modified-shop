@@ -69,7 +69,7 @@
       {/if}
       {foreach name=aussen item=shipping_data from=$shipping_content}
       <li class="otl_row3 cf">
-        <span class="otl_col3">{$shipping_data.NAME} ({$COUNTRY}):</span>
+        <span class="otl_col3">{$shipping_data.NAME}:</span>
         <span class="otl_col4">{$shipping_data.VALUE}</span>
       </li>
       {/foreach}
@@ -90,7 +90,7 @@
     {if isset($shipping_content) && count($shipping_content) > 0}
       {if $SELECT_COUNTRY}<div class="shipping_container">{$SELECT_COUNTRY}</div>{else}<br />{/if}
       {foreach name=aussen item=shipping_data from=$shipping_content}
-        <div class="shipping_hinweis">{$shipping_data.NAME} ({$COUNTRY}): {$shipping_data.VALUE}</div>
+        <div class="shipping_hinweis">{$shipping_data.NAME}: {$shipping_data.VALUE}</div>
       {/foreach}
     {/if}
     {if $total}<strong>{#text_total#}: {$total}</strong>{/if}
