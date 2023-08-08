@@ -494,8 +494,14 @@ if (xtc_not_null($action) && !$box) {
                             ${$class_method[0]} = new $class_method[0]();
                           }
                           $keys .= call_user_func_array(array(${$class_method[0]}, $class_method[1]), array($value['value'], $key));
-                        } else {
+                        } elseif (strpos($value['set_function'], '(') !== false) {
                           eval('$keys .= ' . $value['set_function'] . "'" . encode_htmlspecialchars($value['value'], ENT_QUOTES) . "', '" . $key . "');");
+                        } else {
+                          $parameters = explode(';', $value['set_function']);
+                          $function = trim($parameters[0]);
+                          $parameters[0] = $value['value'];
+                          $parameters[] = 'configuration[%s]';
+                          $keys .= xtc_call_function($function, $parameters);
                         }
                       } else {
                         $keys .= xtc_draw_input_field('configuration[' . $key . ']', $value['value'], 'class="inputModule"');
