@@ -5831,6 +5831,13 @@ a.view_box.active {
   top: 0px;
   left: 0px;
 }
+.pd_url > a {
+  border-bottom: 1px solid #999;  
+}
+.pd_url > a:hover {
+  text-decoration:none;
+  border-bottom: 1px solid #999;  
+}
 
 /* plain */
 .pd_plain .count {
