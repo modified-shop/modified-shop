@@ -47,10 +47,10 @@
 }
 .splide {
   position: relative;
-  visibility: hidden;
+  opacity: 0.0;
 }
 .splide.is-initialized, .splide.is-rendered {
-  visibility: visible;
+  opacity: 1.0;
 }
 .splide__slide {
   backface-visibility: hidden;
@@ -148,6 +148,7 @@ to {
   transform: translateY(-50%);
   width: 2em;
   z-index: 1;
+  color:transparent;
 }
 .splide__arrow svg {
   fill: #333;
