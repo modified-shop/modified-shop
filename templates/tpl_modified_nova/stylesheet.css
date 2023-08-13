@@ -889,7 +889,7 @@ h1.subline {
   .search_inner .search_closer { display:none; }
 }
 .search_inner .search_help {
-  width: 20px;
+  width: 24px;
   height: 40px;
   font-size: 14px;
   font-weight: 400;
@@ -902,6 +902,7 @@ h1.subline {
   line-height: 40px;
 }
 .search_inner .search_help > a {
+  display:block;
   color: var(--search_toggle_color_help, #666);
 }
 @media only screen and (min-width: 920px) {
@@ -914,7 +915,7 @@ h1.subline {
 .search_inner input[type=text], 
 .search_inner input[type=text]:hover,
 .search_inner input[type=text]:focus {
-  padding: 10px 15px;
+  padding: 10px 30px 10px 15px;
   height:40px;
   border-width: 1px 0px 1px 1px;
   border-style: solid;
