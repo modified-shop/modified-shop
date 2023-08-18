@@ -1792,7 +1792,7 @@ input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, inp
   font-size:14px;
   line-height:20px;
   font-weight:400;
-  color:#e32828;
+  color:#dd1d1d;
   background: #fff3f3;
   margin:5px 0 20px 0;
 }
@@ -1812,7 +1812,7 @@ input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, inp
   font-size:20px;
   line-height:20px; 
   padding: 0px 0px;
-  color:#e32828;
+  color:#dd1d1d;
   background:rgba(227,40,40,0.1);
   align-items: center;
   justify-content: center;
@@ -1822,23 +1822,23 @@ input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, inp
   line-height:18px; 
 }
 .errormessage a {
-  color:#e32828;
+  color:#dd1d1d;
   text-decoration:none;
-  border-bottom: 1px solid #e32828; 
+  border-bottom: 1px solid #dd1d1d; 
 }  
 .errormessage p {
   margin: 0px 0px;
   padding: 0px 0px;
 }
 .errormessage.shopsystem {
-  margin-top:36px;
-  margin-bottom:-36px;
+  margin-top:0px;
+  margin-bottom:0px;
 }
 .errormessage ul li {
   margin:40px;
 }
 .errormessage span {
-  color:#e32828 !important;
+  color:#dd1d1d !important;
 }
 
 /* info message */
@@ -7412,6 +7412,7 @@ p.underline {
 }
 .slider_row .splide__track {
   height: 100%;
+  color:unset;
 }
 .slider_row .splide__slide {
   width:100%;
