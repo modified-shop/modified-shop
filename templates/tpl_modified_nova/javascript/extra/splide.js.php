@@ -94,4 +94,10 @@
     }
 
   }); 
+
+  /* prevent accessibility warning for vertical orientation */
+  $(document).ready(function(){
+    $("#splide02-list").removeAttr('aria-orientation');
+  });
+
 </script>
