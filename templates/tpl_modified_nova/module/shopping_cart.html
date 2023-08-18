@@ -45,7 +45,7 @@
                   {if $SELECT_COUNTRY}
                     <div class="ordertotal_row ot_shipping ot_select">
                       <div class="ot_width_3">{$smarty.const._SHIPPING_TO}</div>
-                      <div class="ot_width_1">{$SELECT_COUNTRY_PLAIN|replace:"<select":"<select autocomplete=\"off\" aria-label=\"cart_quantity\""}</div>
+                      <div class="ot_width_1">{$SELECT_COUNTRY_PLAIN|replace:"<select":"<select autocomplete=\"off\" aria-label=\"`$smarty.const._SHIPPING_TO`\""}</div>
                     </div>                                                           
                   {/if}
                   {foreach name=aussen item=shipping_data from=$shipping_content}

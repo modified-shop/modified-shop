@@ -3599,7 +3599,7 @@ a.view_box.active {
   font-size:10px;
   line-height:20px;  
   font-weight:400;
-  color:#999;
+  color:#666;
   padding: 0px 10px;
   text-transform:uppercase;
 }
@@ -3925,14 +3925,14 @@ a.view_box.active {
   font-weight:700;
 }
 .ot_red {
-  color:#e32828 !important;
+  color:#dd1d1d !important;
 }
 
 .color_ot_total {
-  color:#e32828;
+  color:#dd1d1d;
 }
 .color_error_message {
-  color:#e32828;
+  color:#dd1d1d;
 }
 /* 25. END shopping_cart and checkout */
 
