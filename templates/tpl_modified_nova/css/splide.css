@@ -149,6 +149,7 @@ to {
   width: 2em;
   z-index: 1;
   color:transparent;
+  font-size:24px;
 }
 .splide__arrow svg {
   fill: #333;
@@ -284,14 +285,14 @@ to {
   transform: translate(-50%);
 }
 .splide__arrows--ttb .splide__arrow--prev {
-  top: 1em;
+  top: 10px;
   bottom:auto;
 }
 .splide__arrows--ttb .splide__arrow--prev svg {
   transform: rotate(-90deg);
 }
 .splide__arrows--ttb .splide__arrow--next {
-  bottom: 1em;
+  bottom: 10px;
   top: auto;
 }
 .splide__arrows--ttb .splide__arrow--next svg {
@@ -334,6 +335,7 @@ to {
   z-index: 1;
   transform:none;
   transition: all 0.3s ease-in-out;
+  font-size:24px;
 }
 .splide__arrow:disabled,
 .splide:hover .splide__arrow:disabled {
@@ -345,6 +347,17 @@ to {
 }
 .splide:hover .splide__arrow { 
   opacity: 0.8;  
+}
+
+.splide__arrows--ttb .splide__arrow {
+  left: 0;
+  right:0;
+  transform:none;
+  transition: all 0.3s ease-in-out;
+  display:none;
+}
+@media only screen and (min-width: 985px) {
+  .splide__arrows--ttb .splide__arrow { display:initial; }
 }
 
 /* custom pagination */
