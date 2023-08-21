@@ -687,7 +687,7 @@ CREATE TABLE languages (
 DROP TABLE IF EXISTS manufacturers;
 CREATE TABLE manufacturers (
   manufacturers_id INT(11) NOT NULL AUTO_INCREMENT,
-  manufacturers_name VARCHAR(64) NOT NULL,
+  manufacturers_name VARCHAR(255) NOT NULL,
   manufacturers_image VARCHAR(255) NOT NULL,
   manufacturers_status INT(1) NOT NULL,
   sort_order INT(3) DEFAULT 0 NOT NULL,
