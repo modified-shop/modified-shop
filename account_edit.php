@@ -95,7 +95,8 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
   }
 
   // New VAT Check
-  if (ACCOUNT_COMPANY_VAT_CHECK == 'true'){
+  if (ACCOUNT_COMPANY_VAT_CHECK == 'true') {
+    if (!isset($vat)) $vat = '';
     $country = xtc_get_customers_country($_SESSION['customer_id']);
     require_once(DIR_WS_CLASSES.'vat_validation.php');
     $vatID = new vat_validation($vat, $_SESSION['customer_id'], '', $country, ($_SESSION['account_type'] != '0'));

@@ -130,6 +130,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
 
   // New VAT Check
   if (ACCOUNT_COMPANY_VAT_CHECK == 'true') {
+    if (!isset($vat)) $vat = '';
     require_once (DIR_WS_CLASSES . 'vat_validation.php');
     $vatID = new vat_validation($vat, '', '', (int)$country, true);
     $customers_status = $vatID->vat_info['status'];
