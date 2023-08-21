@@ -173,7 +173,10 @@
     switch ($checkout_page) {
       case 'shipping':
         unset($_SESSION['shipping']);
-        if (isset($_SESSION['paypal']['PayerID'])) {
+        if (isset($_SESSION['paypal']['PayerID'])
+            && $_SESSION['paypal']['PayerID'] != ''
+            )
+        {
           $_SESSION['shipping'] = '';
         }
         $_SESSION['sendto'] = $new_address_book_id;
@@ -196,7 +199,10 @@
         }
         
         if (isset($address_book_id)) {
-          if (isset($_SESSION['paypal']['PayerID'])) {
+          if (isset($_SESSION['paypal']['PayerID'])
+              && $_SESSION['paypal']['PayerID'] != ''
+              )
+          {
             $_SESSION['shipping'] = '';
           } else {
             $link_checkout_payment = FILENAME_CHECKOUT_SHIPPING;
