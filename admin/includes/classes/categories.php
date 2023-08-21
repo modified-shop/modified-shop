@@ -609,7 +609,6 @@ class categories {
       'products_ean' => xtc_db_prepare_input($products_data['products_ean']),
       'products_price' => xtc_db_prepare_input($products_data['products_price']),
       'products_sort' => xtc_db_prepare_input($products_data['products_sort']),
-      'products_shippingtime' => xtc_db_prepare_input($products_data['shipping_status']),
       'products_discount_allowed' => xtc_db_prepare_input($products_data['products_discount_allowed']),
       'products_date_available' => $products_date_available,
       'products_weight' => xtc_db_prepare_input($products_data['products_weight']),
@@ -626,6 +625,10 @@ class categories {
       'products_vpe' => xtc_db_prepare_input($products_data['products_vpe']),
     );
 
+    if (ACTIVATE_SHIPPING_STATUS == 'true') {
+      $sql_data_array['products_shippingtime'] = xtc_db_prepare_input($products_data['shipping_status']);
+    }
+    
     if (trim(ADD_PRODUCTS_FIELDS) != '') {
       $sql_data_array = array_merge($sql_data_array, $this->add_data_fields(ADD_PRODUCTS_FIELDS,$products_data));
     }
