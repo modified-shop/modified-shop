@@ -131,4 +131,7 @@ ALTER TABLE `orders_products` ADD `products_weight_origin` DECIMAL(15,4) NOT NUL
 ALTER TABLE `orders_products` ADD `products_vpe` VARCHAR(32) NOT NULL AFTER `products_weight_origin`;
 ALTER TABLE `orders_products` ADD `products_vpe_value` DECIMAL(15,4) NOT NULL AFTER `products_vpe`;
 
+#GTB - 2023-08-21 - fix #2559 - extend manufacturers_name to 255 signs
+ALTER TABLE `manufacturers` MODIFY `manufacturers_name` VARCHAR(255) NOT NULL;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
