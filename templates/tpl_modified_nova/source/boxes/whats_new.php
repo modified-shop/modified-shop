@@ -21,7 +21,7 @@
   $products_id =  (isset($_GET['products_id']) && (int)$_GET['products_id'] > 0) ? 'AND p.products_id != ' . (int)$_GET['products_id'] : '';
 
   // reset cache id
-  $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|curr:'.$_SESSION['currency'].'|pID:'.$products_id.'|days:'.(int)MAX_DISPLAY_NEW_PRODUCTS_DAYS);
+  $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|curr:'.$_SESSION['currency'].'|pID:'.$products_id.'|days:'.(int)MAX_DISPLAY_NEW_PRODUCTS_DAYS.'|country:'.((isset($_SESSION['country'])) ? $_SESSION['country'] : ((isset($_SESSION['customer_country_id'])) ? $_SESSION['customer_country_id'] : STORE_COUNTRY)));
 
   if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_whatsnew.html', $cache_id) || !$cache) {
     // get random product data

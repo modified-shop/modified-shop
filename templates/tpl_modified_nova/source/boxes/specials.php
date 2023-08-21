@@ -14,7 +14,7 @@
   include(DIR_FS_BOXES_INC . 'smarty_default.php');
 
   // reset cache id
-  $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|curr:'.$_SESSION['currency'].'|date:'.date('Y-m-d-H:i'));
+  $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|curr:'.$_SESSION['currency'].'|date:'.date('Y-m-d-H:i').'|country:'.((isset($_SESSION['country'])) ? $_SESSION['country'] : ((isset($_SESSION['customer_country_id'])) ? $_SESSION['customer_country_id'] : STORE_COUNTRY)));
 
   if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_specials.html', $cache_id) || !$cache) {
     $specials_query = xtc_db_query("SELECT ".$product->default_select."
