@@ -44,8 +44,12 @@
             {if "SIGN_CONDITIONS_ON_CHECKOUT"|defined}
               <br />
               <div class="cus_check">
-                {if $PRIVACY_CHECKBOX}{$PRIVACY_CHECKBOX}{/if}
-                <label for="privacy">{#text_privacy_accept#|sprintf:$smarty.const.STORE_OWNER_EMAIL_ADDRESS} {$PRIVACY_LINK}</label>
+                {if $PRIVACY_CHECKBOX}
+                  {$PRIVACY_CHECKBOX}
+                  <label for="privacy">{#text_privacy_accept#|sprintf:$smarty.const.STORE_OWNER_EMAIL_ADDRESS} {$PRIVACY_LINK}</label>              
+                {else}
+                  {#text_privacy_accept#|sprintf:$smarty.const.STORE_OWNER_EMAIL_ADDRESS} {$PRIVACY_LINK}              
+                {/if}
               </div>
             {else}
               {if $PRIVACY_CHECKBOX}

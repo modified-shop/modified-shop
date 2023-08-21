@@ -74,7 +74,12 @@
             <div class="checkoutconditions">
               <div class="cus_check">
                 {if "SIGN_CONDITIONS_ON_CHECKOUT"|defined}
-                  {if $smarty.const.SIGN_CONDITIONS_ON_CHECKOUT == 'true'}{$AGB_checkbox}{/if}<label for="conditions"><strong>{#text_accept_agb#}</strong>&nbsp;{$AGB_LINK}</label>
+                  {if $smarty.const.SIGN_CONDITIONS_ON_CHECKOUT == 'true'}
+                    {$AGB_checkbox}
+                    <label for="conditions"><strong>{#text_accept_agb#}</strong>&nbsp;{$AGB_LINK}</label>
+                  {else}
+                    <strong>{#text_accept_agb#}</strong>&nbsp;{$AGB_LINK}
+                  {/if}
                 {else}
                   {$AGB_checkbox}<label for="conditions"><strong>{#text_accept_agb#}</strong>&nbsp;{$AGB_LINK}</label>
                 {/if}
@@ -85,7 +90,12 @@
           {if isset($PRIVACY_LINK)}
             <div class="checkoutconditions">
               <div class="cus_check">
-                {if $PRIVACY_checkbox}{$PRIVACY_checkbox}{/if}<label for="privacy"><strong>{if $PRIVACY_checkbox}{#text_privacy_accept#}{else}{#text_privacy_notice#}{/if}</strong>&nbsp;{$PRIVACY_LINK}</label>
+                {if $PRIVACY_checkbox}
+                  {$PRIVACY_checkbox}
+                  <label for="privacy"><strong>{#text_privacy_accept#}</strong>&nbsp;{$PRIVACY_LINK}</label>
+                {else}
+                  <strong>{#text_privacy_notice#}</strong>&nbsp;{$PRIVACY_LINK}</label>
+                {/if}
               </div>
             </div>
           {/if}

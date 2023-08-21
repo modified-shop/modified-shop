@@ -38,8 +38,12 @@
             {if "SIGN_CONDITIONS_ON_CHECKOUT"|defined}
               <br />
               <div class="cus_check">
-                {if $PRIVACY_CHECKBOX}{$PRIVACY_CHECKBOX}{/if}
-                <label for="privacy"><span class="bold">{if $PRIVACY_CHECKBOX}{#text_privacy_accept#}{else}{#text_privacy_notice#}{/if}</span> {$PRIVACY_LINK}</label>
+                {if $PRIVACY_CHECKBOX}
+                  {$PRIVACY_CHECKBOX}
+                  <label for="privacy"><span class="bold">{#text_privacy_accept#}</span> {$PRIVACY_LINK}</label>              
+                {else}
+                  <span class="bold">{#text_privacy_accept#}</span> {$PRIVACY_LINK}              
+                {/if}
               </div>
             {else}
               {if $PRIVACY_CHECKBOX}
