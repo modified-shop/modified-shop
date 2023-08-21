@@ -67,7 +67,7 @@ if (STOCK_CHECK == 'true'
 {
   $products = $_SESSION['cart']->get_products();
   for ($i = 0, $n = sizeof($products); $i < $n; $i++) {
-    if (xtc_check_stock($products[$i]['id'], $products[$i]['quantity'])) {
+    if (xtc_check_stock($products[$i]['id'], $products[$i]['quantity'], $products[$i]['stock'])) {
       $_SESSION['any_out_of_stock'] = 1;
       xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART));
     }

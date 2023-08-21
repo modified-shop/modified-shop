@@ -18,14 +18,15 @@
   // include needed functions
   require_once(DIR_FS_INC . 'xtc_get_products_stock.inc.php');
   
-  function xtc_check_stock($products_id, $products_quantity) {
-    $stock_left = xtc_get_products_stock($products_id) - $products_quantity;
-
+  function xtc_check_stock($products_id, $products_quantity, $stock_left = '') {
+    if ($stock_left == '') {
+      $stock_left = xtc_get_products_stock($products_id) - $products_quantity;
+    }
+    
     $out_of_stock = '';
-    if ($stock_left < 0) {
+    if ((int)$stock_left < 0) {
       $out_of_stock = '<span class="markProductOutOfStock">' . STOCK_MARK_PRODUCT_OUT_OF_STOCK . '</span>';
     }
 
     return $out_of_stock;
   }
-?>

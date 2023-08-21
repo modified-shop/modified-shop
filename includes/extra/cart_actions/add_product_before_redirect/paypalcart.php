@@ -24,7 +24,7 @@
     $products = $_SESSION['cart']->get_products();
     for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
       if (STOCK_CHECK == 'true') {
-        $mark_stock = xtc_check_stock($products[$i]['id'], $products[$i]['quantity']);
+        $mark_stock = xtc_check_stock($products[$i]['id'], $products[$i]['quantity'], $products[$i]['stock']);
         if ($mark_stock) {
           $_SESSION['any_out_of_stock'] = 1;
         }
