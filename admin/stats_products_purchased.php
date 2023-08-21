@@ -145,7 +145,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     $pInfo = new objectInfo($products);
                   }
 
-                  if (isset($pInfo) && (is_object($pInfo)) && ($products['products_id'] == $pInfo->products_id)) {
+                  if (isset($pInfo) && is_object($pInfo) && $products['products_id'] == $pInfo->products_id) {
                     echo '<tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_STATS_PRODUCTS_PURCHASED, xtc_get_all_get_params(array('action', 'pID')) . 'pID=' . $pInfo->products_id . '&action=orders') . '\'">' . "\n";
                   } else {
                     echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_STATS_PRODUCTS_PURCHASED, xtc_get_all_get_params(array('action', 'pID')) . 'pID=' . $products['products_id']) . '\'">' . "\n";
@@ -168,9 +168,11 @@ require (DIR_WS_INCLUDES.'head.php');
             <?php
             $heading = array();
             $contents = array();
-            $heading[] = array('text' => '<b>' . $pInfo->products_name . '</b>');
-            $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_STATS_PRODUCTS_PURCHASED, xtc_get_all_get_params(array('action', 'pID')).'action=orders&pID=' . $pInfo->products_id) . '">' . BUTTON_ORDERS . '</a> 
-                                                                <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CATEGORIES, 'action=new_product&pID=' . $pInfo->products_id . '&origin=' . FILENAME_STATS_PRODUCTS_PURCHASED . '&page=' . $_GET['page'] . '&cPath='.xtc_get_category_path($pInfo->categories_id)) . '">' . BUTTON_EDIT . '</a>');
+            if (isset($pInfo) && is_object($pInfo)) {
+              $heading[] = array('text' => '<b>' . $pInfo->products_name . '</b>');
+              $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_STATS_PRODUCTS_PURCHASED, xtc_get_all_get_params(array('action', 'pID')).'action=orders&pID=' . $pInfo->products_id) . '">' . BUTTON_ORDERS . '</a> 
+                                                                  <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CATEGORIES, 'action=new_product&pID=' . $pInfo->products_id . '&origin=' . FILENAME_STATS_PRODUCTS_PURCHASED . '&page=' . $_GET['page'] . '&cPath='.xtc_get_category_path($pInfo->categories_id)) . '">' . BUTTON_EDIT . '</a>');
+            }
             
             if ( (xtc_not_null($heading)) && (xtc_not_null($contents)) ) {
               echo '<td class="boxRight">' . "\n";
