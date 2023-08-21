@@ -52,7 +52,7 @@
         
         $products_cart[] = array (
           'QTY' => $products[$i]['quantity'],
-          'LINK' => xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$products[$i]['id']),
+          'LINK' => xtc_href_link(FILENAME_PRODUCT_INFO, xtc_get_all_get_params_include(array('language')).'products_id='.$products[$i]['id']),
           'IMAGE' => $image,
           'NAME' => $products[$i]['name'],
           'BUTTON_DELETE' => $del_button,
