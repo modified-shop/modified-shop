@@ -34,9 +34,9 @@
           <div class="field_item_3"><label><span class="field_text">{#text_code#}</span>{$INPUT_CODE|asterisk}</label></div>
           <div class="field_item_4"><label><span class="field_text">{#text_city#}</span>{$INPUT_CITY|asterisk}</label></div>
         </div>
-        <div class="field_item_1"><label for="country"><span class="field_text">{#text_country#}</span>{$SELECT_COUNTRY|asterisk}</label></div>
+        <div class="field_item_1"><label><span class="field_text">{#text_country#}</span>{$SELECT_COUNTRY|asterisk|replace:"<select":"<select aria-label=\"{#text_country#}\""}</label></div>
         {if $state == '1'}
-          <div class="field_item_1"{if $display_state}{$display_state}{/if}><label for="state"><span class="field_text">{#text_state#}</span>{$INPUT_STATE|asterisk}</label></div>
+          <div class="field_item_1"{if $display_state}{$display_state}{/if}><label><span class="field_text">{#text_state#}</span>{$INPUT_STATE|asterisk|replace:"<select":"<select aria-label=\"{#text_state#}\""}</label></div>
         {/if}
 
         {if $new == '1'}
