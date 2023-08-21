@@ -29,7 +29,10 @@ require_once (DIR_FS_INC.'secure_form.inc.php');
 
 $params = '';
 $link_checkout_shipping = FILENAME_CHECKOUT_SHIPPING;
-if (isset($_SESSION['paypal']['PayerID'])) {
+if (isset($_SESSION['paypal']['PayerID']) 
+    && $_SESSION['paypal']['PayerID'] != ''
+    )
+{
   $params = xtc_get_all_get_params(array('action', 'id'));
   $link_checkout_shipping = FILENAME_CHECKOUT_CONFIRMATION;
 }
@@ -89,7 +92,10 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'submit')) {
     if ($check_address['total'] == '1') {
       if ($reset_shipping == true) {
         unset($_SESSION['shipping']);
-        if (isset($_SESSION['paypal']['PayerID'])) {
+        if (isset($_SESSION['paypal']['PayerID'])
+            && $_SESSION['paypal']['PayerID'] != ''
+            )
+        {
           $_SESSION['shipping'] = '';
         }
       }

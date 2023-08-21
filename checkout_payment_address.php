@@ -29,7 +29,10 @@ require_once (DIR_FS_INC.'secure_form.inc.php');
 
 $params = '';
 $link_checkout_payment = FILENAME_CHECKOUT_PAYMENT;
-if (isset($_SESSION['paypal']['PayerID'])) {
+if (isset($_SESSION['paypal']['PayerID'])
+    && $_SESSION['paypal']['PayerID'] != ''
+    )
+{
   $params = xtc_get_all_get_params(array('action', 'id'));
   $link_checkout_payment = FILENAME_CHECKOUT_CONFIRMATION;
 }
