@@ -58,7 +58,7 @@ if (xtc_db_num_rows($whats_new_query) > 0) {
   $whats_new = xtc_db_fetch_array($whats_new_query);
   
   // set cache id
-  $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|curr:'.$_SESSION['currency'].'|pID:'.$whats_new['products_id']);
+  $cache_id = md5('lID:'.$_SESSION['language'].'|csID:'.$_SESSION['customers_status']['customers_status_id'].'|curr:'.$_SESSION['currency'].'|pID:'.$whats_new['products_id'].'|country:'.((isset($_SESSION['country'])) ? $_SESSION['country'] : ((isset($_SESSION['customer_country_id'])) ? $_SESSION['customer_country_id'] : STORE_COUNTRY)));
   
   if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_whatsnew.html', $cache_id) || !$cache) {
     $box_smarty->assign('box_content', $product->buildDataArray($whats_new));
@@ -73,4 +73,3 @@ if (!$cache) {
 }
 
 $smarty->assign('box_WHATSNEW', $box_whats_new);
-?>

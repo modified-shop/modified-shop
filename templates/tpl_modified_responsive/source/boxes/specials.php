@@ -50,7 +50,7 @@ if (xtc_db_num_rows($specials_query) > 0) {
   $specials = xtc_db_fetch_array($specials_query);
 
   // set cache id
-  $cache_id = md5($_SESSION['currency'].$_SESSION['language'].$specials['products_id']);
+  $cache_id = md5($_SESSION['currency'].$_SESSION['language'].$specials['products_id'].((isset($_SESSION['country'])) ? $_SESSION['country'] : ((isset($_SESSION['customer_country_id'])) ? $_SESSION['customer_country_id'] : STORE_COUNTRY)));
 
   if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_specials.html', $cache_id) || !$cache) {
     $box_content = $product->buildDataArray($specials);
@@ -67,4 +67,3 @@ if (!$cache) {
 }
 
 $smarty->assign('box_SPECIALS', $box_specials);
-?>
