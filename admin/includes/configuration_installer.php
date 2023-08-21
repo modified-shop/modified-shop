@@ -657,6 +657,7 @@ $values_group_update = array();
   $values[] = "(NULL, 'ADMIN_SEARCH_IN_ATTR', 'false', '1000', '25', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');"; 
   $values[] = "(NULL, 'ADMIN_START_TAB_SELECTED', 'whos_online', '1000', '24', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'whos_online\', \'orders\', \'customers\', \'sales_report\', \'blog\'),');";
   $values[] = "(NULL, 'ADMIN_SEARCH_IN_DESC', 'false', '1000', '25', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
+  $values[] = "(NULL, 'CAT_VIEW_DROPDOWN', 'true', '1000', '27', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
   $values[] = "(NULL, 'USE_ADMIN_THUMBS_IN_LIST', 'true', '1000', '32', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
   $values[] = "(NULL, 'USE_ADMIN_THUMBS_IN_LIST_STYLE', 'max-width:40px;max-height:40px;', '1000', '33', NULL, NOW(), NULL, NULL);";
   $values[] = "(NULL, 'MAX_DISPLAY_ORDER_RESULTS', '30', '1000', '-1', NULL , NOW(), NULL , NULL);";
@@ -674,7 +675,8 @@ $values_group_update = array();
   $values[] = "(NULL, 'CSRF_TOKEN_SYSTEM', 'true', '1000', '114', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
   $values[] = "(NULL, 'ADMIN_HEADER_X_FRAME_OPTIONS', 'true', '1000', '115', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
   $values[] = "(NULL, 'ATTRIBUTE_MODEL_DELIMITER', '<br />', '1000', '116', NULL, NOW(), NULL, NULL);";
-  $values[] = "(NULL, 'ORDER_STATUSES_DISPLAY_DEFAULT', '', 1000, 90, NULL, NOW(), NULL, 'xtc_cfg_multi_checkbox(\'order_statuses\', \'chr(44)\',');";
+  $values[] = "(NULL, 'ORDER_STATUSES_DISPLAY_DEFAULT', '', '1000', '90', NULL, NOW(), NULL, 'xtc_cfg_multi_checkbox(\'order_statuses\', \'chr(44)\',');";
+
   $values_update[] = array (
                            'values' => "configuration_group_id = '1000', sort_order = '-1'",
                            'configuration_key' => 'MAX_DISPLAY_ORDER_RESULTS'

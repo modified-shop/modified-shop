@@ -1013,3 +1013,6 @@ define('REVIEWS_PURCHASED_ONLY_TITLE', 'Check ratings');
 define('REVIEWS_PURCHASED_ONLY_DESC', 'Should reviews only be possible if a customer has also bought the item?');
 define('REVIEWS_PURCHASED_INFOS_TITLE', 'Reviews Info');
 define('REVIEWS_PURCHASED_INFOS_DESC', 'Select the content to display as rating info on its authenticity.');
+
+define('CAT_VIEW_DROPDOWN_TITLE' , 'Categories Select with Categories / Articles');
+define('CAT_VIEW_DROPDOWN_DESC' , 'Use Categories Select as navigation with categories / articles?');

@@ -1013,3 +1013,6 @@ define('REVIEWS_PURCHASED_ONLY_TITLE', 'Bewertungen &uuml;berpr&uuml;fen');
 define('REVIEWS_PURCHASED_ONLY_DESC', 'Sollen nur Bewertungen m&ouml;glich sein, wenn ein Kunde den Artikel auch gekauft hat?');
 define('REVIEWS_PURCHASED_INFOS_TITLE', 'Bewertungen Info');
 define('REVIEWS_PURCHASED_INFOS_DESC', 'W&auml;hle den Content zur Anzeige als Bewertung Info zu deren Echtheit.');
+
+define('CAT_VIEW_DROPDOWN_TITLE' , 'Kategorie Dropdown bei Kategorien/Artikel');
+define('CAT_VIEW_DROPDOWN_DESC' , 'Kategorie Dropdown zur Navigation f&uuml;r Kategorien/Artikel aktivieren?');

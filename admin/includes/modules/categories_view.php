@@ -33,8 +33,6 @@
   if (is_file('includes/modules/products_tags_iframe.php')) {
     include_once('includes/modules/products_tags_iframe.php');
   } 
-
-  define('CAT_VIEW_DROPDOWN', true); //remove dropdown field due to performance issues on many categories
   
   //display per page
   $cfg_max_display_results_key = 'MAX_DISPLAY_LIST_PRODUCTS';
@@ -156,7 +154,7 @@
         <div class="main pdg2"><?php echo HEADING_TITLE .sprintf(HEADING_TITLE_CAT_BREADCRUMB,$breadcrumb_html); ?></div>
       </div>
       <?php
-      if (CAT_VIEW_DROPDOWN) {
+      if (defined('CAT_VIEW_DROPDOWN') && CAT_VIEW_DROPDOWN == 'true') {
       ?>
         <div class="smallText pdg2 flt-r">
          <?php
