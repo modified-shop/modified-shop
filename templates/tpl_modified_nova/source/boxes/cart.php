@@ -39,7 +39,7 @@
         
         $mark_stock = '';
         if (STOCK_CHECK == 'true') {
-          $mark_stock = xtc_check_stock($products[$i]['id'], $products[$i]['quantity']);
+          $mark_stock = xtc_check_stock($products[$i]['id'], $products[$i]['quantity'], $products[$i]['stock']);
           if ($mark_stock) $any_out_of_stock = true;
         }
   
