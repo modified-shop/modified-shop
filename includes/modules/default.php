@@ -176,9 +176,9 @@ switch ($category_depth) {
     
     // sorting query
     if (isset($_GET['manufacturers_id']) && isset($_GET['filter_id'])) {
-      $categories_id = (int)$_GET['filter_id'];
+      $category_id = (int)$_GET['filter_id'];
     } else {
-      $categories_id = (int)$current_category_id;
+      $category_id = (int)$current_category_id;
     }
 
     $sorting_data = array(
@@ -190,7 +190,7 @@ switch ($category_depth) {
       $sorting_query = xtDBquery("SELECT products_sorting,
                                          products_sorting2
                                     FROM ".TABLE_CATEGORIES."
-                                   WHERE categories_id = '".$categories_id."'");
+                                   WHERE categories_id = '".$category_id."'");
       if (xtc_db_num_rows($sorting_query, true) > 0) {
         $sorting_data = xtc_db_fetch_array($sorting_query, true);
       }
