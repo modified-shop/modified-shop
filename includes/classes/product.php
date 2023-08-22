@@ -772,15 +772,15 @@ class product {
         )
     {
       $name_extension = substr($name, 0, strrpos($name, '.')).'.'.IMAGE_TYPE_EXTENSION;
-      if (is_file($path.$name_extension)) {
+      if (is_file(DIR_FS_CATALOG.$path.$name_extension)) {
         $name = $name_extension;
       }
     }
 
     $returnName = $name;
-    if ($returnName == '' || !is_file($path.$returnName)) {
+    if ($returnName == '' || !is_file(DIR_FS_CATALOG.$path.$returnName)) {
       $returnName = '';
-      if ($this->useStandardImage == 'true' && $this->standardImage != '' && is_file($path.$this->standardImage)) {
+      if ($this->useStandardImage == 'true' && $this->standardImage != '' && is_file(DIR_FS_CATALOG.$path.$this->standardImage)) {
         $returnName = $this->standardImage;
       }
     }
