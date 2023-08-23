@@ -448,6 +448,7 @@ define('EMAIL_GV_TEXT_SUBJECT', 'A gift from %s');
 define('MAIN_MESSAGE', 'You have decided to send a gift voucher worth %s to %s who\'s e-mail address is %s<br /><br />Following text will be included in the e-mail:<br /><br />Dear %s<br /><br />You have received a Gift voucher worth %s by %s');
 define('REDEEMED_AMOUNT','Your gift voucher was successfully added to your account. Gift voucher amount: %s');
 define('REDEEMED_COUPON','Your voucher has been successfully credited to your account and will be cashed automatically on your purchase.');
+define('REDEEMED_COUPON_NO_SPECIALS','Your voucher has been successfully credited to your account and will be cashed automatically on your purchase, but can not be used for specials.');
 
 define('ERROR_INVALID_USES_USER_COUPON','This voucher can only be redeemed ');
 define('ERROR_INVALID_USES_COUPON','This coucher can only be redeemed ');
