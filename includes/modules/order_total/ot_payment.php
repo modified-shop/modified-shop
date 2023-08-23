@@ -35,29 +35,29 @@ class ot_payment {
     global $order;
     
     $this->code = 'ot_payment';
-    $this->num_payment = defined('MODULE_ORDER_TOTAL_PAYMENT_NUMBER')?MODULE_ORDER_TOTAL_PAYMENT_NUMBER:'';
-    $this->title = defined('MODULE_ORDER_TOTAL_PAYMENT_TITLE')?MODULE_ORDER_TOTAL_PAYMENT_TITLE:'';
-    $this->description = defined('MODULE_ORDER_TOTAL_PAYMENT_DESCRIPTION')?MODULE_ORDER_TOTAL_PAYMENT_DESCRIPTION:'';
+    $this->num_payment = defined('MODULE_ORDER_TOTAL_PAYMENT_NUMBER') ? (int)MODULE_ORDER_TOTAL_PAYMENT_NUMBER : 0;
+    $this->title = defined('MODULE_ORDER_TOTAL_PAYMENT_TITLE') ? MODULE_ORDER_TOTAL_PAYMENT_TITLE : '';
+    $this->description = defined('MODULE_ORDER_TOTAL_PAYMENT_DESCRIPTION') ? MODULE_ORDER_TOTAL_PAYMENT_DESCRIPTION : '';
     $this->enabled = (defined('MODULE_ORDER_TOTAL_PAYMENT_STATUS') && MODULE_ORDER_TOTAL_PAYMENT_STATUS == 'true') ? true : false;
-    $this->sort_order = defined('MODULE_ORDER_TOTAL_PAYMENT_SORT_ORDER')?MODULE_ORDER_TOTAL_PAYMENT_SORT_ORDER:'';
-    $this->include_shipping = defined('MODULE_ORDER_TOTAL_PAYMENT_INC_SHIPPING')?MODULE_ORDER_TOTAL_PAYMENT_INC_SHIPPING:'';
-    $this->include_tax = defined('MODULE_ORDER_TOTAL_PAYMENT_INC_TAX')?MODULE_ORDER_TOTAL_PAYMENT_INC_TAX:'';
-    $this->calculate_tax = defined('MODULE_ORDER_TOTAL_PAYMENT_CALC_TAX')?MODULE_ORDER_TOTAL_PAYMENT_CALC_TAX:'';
-    $this->tax_class = defined('MODULE_ORDER_TOTAL_PAYMENT_TAX_CLASS')?MODULE_ORDER_TOTAL_PAYMENT_TAX_CLASS:'';
+    $this->sort_order = defined('MODULE_ORDER_TOTAL_PAYMENT_SORT_ORDER') ? MODULE_ORDER_TOTAL_PAYMENT_SORT_ORDER : '';
+    $this->include_shipping = defined('MODULE_ORDER_TOTAL_PAYMENT_INC_SHIPPING') ? MODULE_ORDER_TOTAL_PAYMENT_INC_SHIPPING : '';
+    $this->include_tax = defined('MODULE_ORDER_TOTAL_PAYMENT_INC_TAX') ? MODULE_ORDER_TOTAL_PAYMENT_INC_TAX : '';
+    $this->calculate_tax = defined('MODULE_ORDER_TOTAL_PAYMENT_CALC_TAX') ? MODULE_ORDER_TOTAL_PAYMENT_CALC_TAX : '';
+    $this->tax_class = defined('MODULE_ORDER_TOTAL_PAYMENT_TAX_CLASS') ? MODULE_ORDER_TOTAL_PAYMENT_TAX_CLASS : '';
     $this->output = array();
     $this->amount = 0;
     $this->original_total = 0;
     $this->discount = array();
     $this->amounts = array();
-    $this->show_in_checkout_payment = defined('MODULE_ORDER_TOTAL_PAYMENT_SHOW_IN_CHECKOUT_PAYMENT') && MODULE_ORDER_TOTAL_PAYMENT_SHOW_IN_CHECKOUT_PAYMENT=='true' ? true : false;
-    $this->show_type = defined('MODULE_ORDER_TOTAL_PAYMENT_SHOW_TYPE')?MODULE_ORDER_TOTAL_PAYMENT_SHOW_TYPE:'';
+    $this->show_in_checkout_payment = defined('MODULE_ORDER_TOTAL_PAYMENT_SHOW_IN_CHECKOUT_PAYMENT') && MODULE_ORDER_TOTAL_PAYMENT_SHOW_IN_CHECKOUT_PAYMENT == 'true' ? true : false;
+    $this->show_type = defined('MODULE_ORDER_TOTAL_PAYMENT_SHOW_TYPE') ? MODULE_ORDER_TOTAL_PAYMENT_SHOW_TYPE : '';
 
     if ($this->check() > 0) {      
       $check_zones_query = xtc_db_query("SELECT * FROM " . TABLE_CONFIGURATION . " WHERE configuration_key LIKE 'MODULE_ORDER_TOTAL_PAYMENT_PERCENTAGE%'");
-      $check_zones_rows_query = xtc_db_num_rows($check_zones_query);
+      $check_zones_rows = xtc_db_num_rows($check_zones_query);
 
-      if ($check_zones_rows_query != $this->num_payment) {
-        $this->install_numbers($check_zones_rows_query);
+      if ($check_zones_rows != $this->num_payment) {
+        $this->install_numbers($check_zones_rows);
       }
     }
 
@@ -391,4 +391,3 @@ class ot_payment {
   }
 
 }
-?>

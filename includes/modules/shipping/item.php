@@ -30,7 +30,7 @@
       $this->icon = '';
       $this->tax_class = ((defined('MODULE_SHIPPING_ITEM_TAX_CLASS')) ? MODULE_SHIPPING_ITEM_TAX_CLASS : '');
       $this->enabled = ((defined('MODULE_SHIPPING_ITEM_STATUS') && MODULE_SHIPPING_ITEM_STATUS == 'True') ? true : false);
-      $this->num_item = defined('MODULE_SHIPPING_ITEM_NUMBER_ZONES') ? MODULE_SHIPPING_ITEM_NUMBER_ZONES : '1';
+      $this->num_item = defined('MODULE_SHIPPING_ITEM_NUMBER_ZONES') ? (int)MODULE_SHIPPING_ITEM_NUMBER_ZONES : 0;
 
       if ($this->enabled == true 
           && !defined('RUN_MODE_ADMIN')
@@ -180,7 +180,7 @@
 
       // add new zone
       if ($number_of_zones <= $this->num_item) {
-        for ($i = (($number_of_zones==0) ? 1 : $number_of_zones); $i <= $this->num_item; $i ++) {
+        for ($i = (($number_of_zones == 0) ? 1 : $number_of_zones); $i <= $this->num_item; $i ++) {
           $check_zones_query = xtc_db_query("SELECT * FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_SHIPPING_ITEM_COUNTRIES_".$i."'");
           if (xtc_db_num_rows($check_zones_query) < 1) {
             xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SHIPPING_ITEM_COUNTRIES_".$i."', '', '6', '0', 'xtc_cfg_textarea(', now())");
