@@ -538,6 +538,8 @@
                          $where_str .= ($ent_keyword) ? "OR p.products_model LIKE ('%".$ent_keyword."%') " : '';
                          $where_str .= "OR p.products_manufacturers_model LIKE ('%".$keyword."%') ";
                          $where_str .= ($ent_keyword) ? "OR p.products_manufacturers_model LIKE ('%".$ent_keyword."%') " : '';
+                         $where_str .= "OR p.products_ean LIKE ('%".$keyword."%') ";
+                         $where_str .= ($ent_keyword) ? "OR p.products_ean LIKE ('%".$ent_keyword."%') " : '';
                          if (defined('ADD_WHERE_SEARCH') && ADD_WHERE_SEARCH != '') {
                             $add_where = explode(',',ADD_WHERE_SEARCH);
                             if (count($add_where)) {
