@@ -45,6 +45,9 @@ $lang_array = array(
   'TEXT_PAYPAL_MODULE_CHECKOUT_BNPL' => 'BNPL Button in checkout',
   'TEXT_PAYPAL_MODULE_CHECKOUT_BNPL_INFO' => 'Shall the PayPal button be displayed in the checkout?',
 
+  'TEXT_PAYPAL_MODULE_ACDC_EXTEND_CARDS' => 'Allow Creditcards without 3D Secure',
+  'TEXT_PAYPAL_MODULE_ACDC_EXTEND_CARDS_INFO' => 'There is no liability shift without 3D Secure.',
+
   'TEXT_PAYPAL_MODULE_USE_TABS' => 'Accordion / Tabs',
   'TEXT_PAYPAL_MODULE_USE_TABS_INFO' => 'Does the template use accordion or tabs in the checkout?',
 

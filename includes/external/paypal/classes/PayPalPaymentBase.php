@@ -1051,6 +1051,17 @@ class PayPalPaymentBase extends PayPalCommon {
         xtc_db_perform(TABLE_PAYPAL_CONFIG, $sql_data_array);
       }
     }
+
+    // check express button
+    if ($this->code == 'paypalacdc') {
+      if ($this->get_config('MODULE_PAYMENT_PAYPALACDC_EXTEND_CARDS') == '') {
+        $sql_data_array = array(
+          'config_key' => 'MODULE_PAYMENT_PAYPALACDC_EXTEND_CARDS',
+          'config_value' => '0'
+        );
+        xtc_db_perform(TABLE_PAYPAL_CONFIG, $sql_data_array);
+      }
+    }
   }
 
 
@@ -1332,6 +1343,16 @@ class PayPalPaymentBase extends PayPalCommon {
       if (trim($unlink) != '' && is_file(DIR_FS_CATALOG.$unlink)) {  
         unlink(DIR_FS_CATALOG.$unlink);
       }
+    }
+
+    if ($this->get_config('MODULE_PAYMENT_PAYPALACDC_EXTEND_CARDS') == '') {
+      $sql_data_array = array(
+        array(
+          'config_key' => 'MODULE_PAYMENT_PAYPALACDC_EXTEND_CARDS',
+          'config_value' => '0',
+        )
+      );
+      $this->save_config($sql_data_array);
     }
   }
 

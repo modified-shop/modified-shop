@@ -323,6 +323,16 @@ require (DIR_WS_INCLUDES.'head.php');
                     <?php
                   }
 
+                  if ($module->code == 'paypalacdc') {
+                    ?>
+                    <tr>
+                      <td class="dataTableConfig col-left"><?php echo TEXT_PAYPAL_MODULE_ACDC_EXTEND_CARDS; ?></td>
+                      <td class="dataTableConfig col-middle"><?php echo draw_on_off_selection('config[profile][MODULE_PAYMENT_'.strtoupper($module->code).'_EXTEND_CARDS]', $status_array, (($paypal->get_config('MODULE_PAYMENT_'.strtoupper($module->code).'_EXTEND_CARDS') == '1') ? true : false)); ?></td>
+                      <td class="dataTableConfig col-right"><?php echo TEXT_PAYPAL_MODULE_ACDC_EXTEND_CARDS_INFO; ?></td>
+                    </tr>
+                    <?php
+                  }
+
                   if ($module->code == 'paypalexpress') {
                     ?>
                     <tr>
