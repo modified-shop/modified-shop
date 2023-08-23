@@ -31,14 +31,6 @@
   define('MODULE_ORDER_TOTAL_COUPON_DESCRIPTION', 'Discount Coupon');
   define('MODULE_ORDER_TOTAL_COUPON_USER_PROMPT', '');
   define('ERROR_NO_INVALID_REDEEM_COUPON', 'Invalid Coupon Code');
-  //BOF - DokuMan - 2010-08-31 - constants already defined in english.php
-  //define('ERROR_INVALID_STARTDATE_COUPON', 'This coupon is not available yet');
-  //define('ERROR_INVALID_FINISDATE_COUPON', 'This coupon has expired');
-  //define('ERROR_INVALID_USES_COUPON', 'This coupon could only be used ');  
-  //define('TIMES', ' times.');
-  //define('ERROR_INVALID_USES_USER_COUPON', 'You have used the coupon the maximum number of times allowed per customer.'); 
-  //define('REDEEMED_COUPON', 'a coupon worth ');  
-  //EOF - DokuMan - 2010-08-31 - constants already defined in english.php
   define('REDEEMED_MIN_ORDER', 'on orders over ');  
   define('REDEEMED_RESTRICTIONS', ' [Product-Category restrictions apply]');  
   define('TEXT_ENTER_COUPON_CODE', 'Enter Redeem Code&nbsp;&nbsp;');
@@ -55,8 +47,5 @@
   define('MODULE_ORDER_TOTAL_COUPON_CALC_TAX_DESC', 'Re-Calculate Tax');
   define('MODULE_ORDER_TOTAL_COUPON_TAX_CLASS_TITLE', 'Tax Class');
   define('MODULE_ORDER_TOTAL_COUPON_TAX_CLASS_DESC', 'Use the following tax class when treating Discount Coupon as Credit Note.');
-  //BOF - web28 - 2010-06-20 - no discount for special offers
   define('MODULE_ORDER_TOTAL_COUPON_SPECIAL_PRICES_TITLE', 'Discount for special offers');
-  define('MODULE_ORDER_TOTAL_COUPON_SPECIAL_PRICES_DESC', 'Allowed discount for special offers');
-  //EOF - web28 - 2010-06-20 - no discount for special offers
-?>
+  define('MODULE_ORDER_TOTAL_COUPON_SPECIAL_PRICES_DESC', 'Allow discount on special offers on percentage coupons');
