@@ -1,0 +1,62 @@
+{config_load file="$language/lang_$language.conf" section="checkout_paypal"}
+{config_load file="$language/lang_$language.conf" section="checkout_payment"}
+<div class="contentbox pt_0">
+  <label>
+    <div class="subline border_0 mb_0">{#title_comments_short#}</div>
+    <div class="checkout_comment">{$COMMENTS}</div>
+  </label>
+        
+  {if isset($ADR_checkbox)}
+    <div class="checkoutconditions">
+      <div class="cus_check">
+        {$ADR_checkbox}
+        <label for="address"><strong>{#text_accept_adr#}</strong></label>
+      </div>
+    </div>
+  {/if}
+
+  {if $smarty.const.DISPLAY_CONDITIONS_ON_CHECKOUT == 'true'}
+    {if defined($smarty.const.SIGN_CONDITIONS_ON_CHECKOUT)}
+      <div class="checkoutconditions">
+        <div class="cus_check">
+          {if $smarty.const.SIGN_CONDITIONS_ON_CHECKOUT == 'true'}
+            {$AGB_checkbox} 
+            <label for="conditions"><strong>{#text_accept_agb#}</strong>&nbsp;{$AGB_LINK}</label>
+          {else}
+            <strong>{#text_accept_agb#}</strong>&nbsp;{$AGB_LINK}
+          {/if}
+        </div>
+      </div>
+    {else}
+      <div class="checkoutconditions">
+        <div class="cus_check">
+          {$AGB_checkbox} 
+          <strong><label for="conditions">{#text_accept_agb#}</label></strong>&nbsp;{$AGB_LINK}
+        </div>
+      </div>
+    {/if}
+  {/if}
+
+  {if isset($PRIVACY_LINK)}
+    <div class="checkoutconditions">
+      <div class="cus_check">
+        {if $PRIVACY_checkbox}
+          {$PRIVACY_checkbox}
+          <label for="privacy"><strong>{#text_privacy_accept#}</strong>&nbsp;{$PRIVACY_LINK}</label>
+        {else}
+          <strong>{#text_privacy_notice#}</strong>&nbsp;{$PRIVACY_LINK}</label>
+        {/if}
+      </div>
+    </div>
+  {/if}
+
+  {if isset($REVOCATION_checkbox)}
+    <div class="checkoutconditions">
+      <div class="cus_check">
+        {$REVOCATION_checkbox}<label for="revocation"><strong>{#text_accept_revocation#}</strong>&nbsp;{$REVOCATION_LINK}</label>
+      </div>
+    </div>
+  {/if}
+
+</div>
+
