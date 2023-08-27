@@ -40,7 +40,7 @@
             {foreach name=aussen item=order_data from=$order_content}
               <div class="action_item_full">
                 <div class="action_item_inner_plain bordered no_top_border">      
-                  <label>
+                  <span class="item">
                     <span class="title"><a href="{$order_data.ORDER_LINK}"><strong>{#text_oid#}{$order_data.ORDER_ID}</strong></a> vom {$order_data.ORDER_DATE}</span>
                     <span class="content">
                       {#text_total#} {$order_data.ORDER_TOTAL}<br />
@@ -51,7 +51,7 @@
                         {/foreach}
                       {/if}
                     </span>
-                  </label>
+                  </span>
                   <span class="actions">
                     <span class="icon">{$order_data.ORDER_BUTTON}</span>
                     {if isset($order_data.BUTTON_CART_EXPRESS)}<span class="icon">{$order_data.BUTTON_CART_EXPRESS}</span>{/if}

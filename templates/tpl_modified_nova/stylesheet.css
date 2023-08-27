@@ -4414,11 +4414,13 @@ a.view_box.active {
 .action_row .item {
   flex:1;
 }
-.action_row label .title {
+.action_row label .title,
+.action_row .item .title {
   display:block;
   font-weight: 700;
 }
-.action_row label .content {
+.action_row label .content,
+.action_row .item .content {
   display: block;
   padding: 5px 0px 0px 0px;
   font-weight: 400;
@@ -4470,7 +4472,7 @@ a.view_box.active {
   text-decoration:none;
 }  
 .action_row.address .actions .icon .cssButton {
-	height:24px;
+  height:24px;
   min-height:24px;
 }
 .action_row.address .actions .icon .cssButtonIcon {
