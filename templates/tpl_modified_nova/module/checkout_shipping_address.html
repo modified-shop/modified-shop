@@ -27,7 +27,7 @@
           <div class="action_item{if $module_data.SELECTED == 1} selected{/if}">
             <div class="action_item_inner">
               {$module_data.FORM_ACTION}
-                <label>
+                <div class="item">
                   <span class="header">
                     <span class="title">{$module_data.FIRSTNAME} {$module_data.LASTNAME}, {$module_data.CITY}</span>
                     <span class="actions">
@@ -36,7 +36,7 @@
                     </span>                  
                   </span>
                   <span class="content">{$module_data.ADDRESS_LABEL|replace:"<br />":", "}</span>
-                </label> 
+                </div> 
               {$module_data.FORM_END}
             </div>
           </div>
