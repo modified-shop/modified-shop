@@ -4410,7 +4410,8 @@ a.view_box.active {
   border-top: none !important;
 }
 
-.action_row label {
+.action_row label,
+.action_row .item {
   flex:1;
 }
 .action_row label .title {
