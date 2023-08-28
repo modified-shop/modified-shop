@@ -69,7 +69,7 @@ header_back_to_shop = 'Back to main page'
 header_back_to_cart = 'Back to shopping cart'
 
 # Box Newsletter #
-subfooter_newsletter_headline = 'Subscribe to our newsletter
+subfooter_newsletter_headline = 'Subscribe to our newsletter'
 subfooter_newsletter_text = 'Free exclusive offers and new products by email'
 subfooter_newsletter_disclaim = 'Our newsletter is free of charge and can be canceled at any time here or in your customer account.'
 subfooter_text_email = 'Your e-mail address ...'
