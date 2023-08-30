@@ -16,5 +16,5 @@
   header('X-Content-Type-Options: nosniff');
 
   if (HTTP_SERVER == HTTPS_SERVER && $request_type == 'SSL') {
-    header("strict-transport-security: max-age=3600");
+    header("strict-transport-security: max-age=2592000");
   }
