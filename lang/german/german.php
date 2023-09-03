@@ -688,4 +688,5 @@ define('TEXT_FILTER_MANUFACTURERS_LABEL', 'Hersteller');
 define('TEXT_COUNTRY_LABEL', 'Land');
 define('TEXT_STATE_LABEL', 'Bundesland');
 
+define('TEXT_IMG_VVCODE', 'Sicherheitscode');
 

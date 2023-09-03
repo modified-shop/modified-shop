@@ -111,7 +111,7 @@ class modified_captcha {
    * @return   image code
    */
   public function get_image_code() {
-    return '<img src="data:image/jpeg;base64,' . base64_encode($this->output()).'">';
+    return '<img alt="'.TEXT_IMG_VVCODE.'" src="data:image/jpeg;base64,' . base64_encode($this->output()).'">';
   }
     
     

@@ -686,3 +686,5 @@ define('TEXT_FILTER_SORT_LABEL', 'Sorting');
 define('TEXT_FILTER_MANUFACTURERS_LABEL', 'Manufacturers');
 define('TEXT_COUNTRY_LABEL', 'Country');
 define('TEXT_STATE_LABEL', 'State');
+
+define('TEXT_IMG_VVCODE', 'Security Code');
