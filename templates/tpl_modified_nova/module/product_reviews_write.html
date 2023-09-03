@@ -44,7 +44,7 @@
         <div class="font_small my_5"><strong>{#text_note#}</strong><br /><i>{#reviews_min#} {$smarty.const.REVIEW_TEXT_MIN_LENGTH} {#reviews_signs#} | <span id="review_count">0</span> {#reviews_signs#}</i></div>
 
         {if $VVIMG}
-          <div class="field_item_1 vvcode_img"><span class="field_text">{#text_sec_code#}</span>{$VVIMG|replace:"<img":"<img alt=\"{#text_sec_code#}\""}</div>
+          <div class="field_item_1 vvcode_img"><span class="field_text">{#text_sec_code#}</span>{$VVIMG}</div>
         {/if}
         {if $INPUT_CODE}
           <div class="field_item_1 vvcode_sec"><label><span class="field_text">{#text_sec_code#}</span>{$INPUT_CODE}<span class="inputRequirement">{$smarty.const.TEXT_ICON_ASTERISK}</span></label></div>

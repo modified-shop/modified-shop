@@ -33,7 +33,7 @@
             *}
     
             {if $VVIMG}
-              <div class="field_item_1 vvcode_img"><span class="field_text">{#text_sec_code#}</span>{$VVIMG|replace:"<img":"<img alt=\"{#text_sec_code#}\""}</div>
+              <div class="field_item_1 vvcode_img"><span class="field_text">{#text_sec_code#}</span>{$VVIMG}</div>
             {/if}
             {if $INPUT_CODE}
               <div class="field_item_1 vvcode_sec"><label><span class="field_text">{#text_inp_code#}</span>{$INPUT_CODE}<span class="inputRequirement">{$smarty.const.TEXT_ICON_ASTERISK}</span><label></div>
