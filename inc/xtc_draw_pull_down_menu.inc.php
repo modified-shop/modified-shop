@@ -22,7 +22,14 @@
     $field = '<select name="' . xtc_parse_input_field_data($name, array('"' => '&quot;')) . '"';
 
     if (xtc_not_null($parameters)) $field .= ' ' . $parameters;
-
+    
+    if (strpos($field, 'aria-label') === false
+        && defined('TEXT_'.strtoupper($name).'_LABEL')
+        )
+    {
+      $field .= ' aria-label="'.constant('TEXT_'.strtoupper($name).'_LABEL').'"';
+    }
+    
     $field .= '>';
 
     if (empty($default) && isset($GLOBALS[$name])) $default = $GLOBALS[$name];
@@ -48,6 +55,13 @@
     $field = '<select name="' . xtc_parse_input_field_data($data['name'], array('"' => '&quot;')) . '"';
 
     if (xtc_not_null($parameters)) $field .= ' ' . $parameters;
+
+    if (strpos($field, 'aria-label') === false
+        && defined('TEXT_'.strtoupper($data['name']).'_LABEL')
+        )
+    {
+      $field .= ' aria-label="'.constant('TEXT_'.strtoupper($data['name']).'_LABEL').'"';
+    }
 
     $field .= '>';
 

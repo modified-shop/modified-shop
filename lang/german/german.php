@@ -681,3 +681,11 @@ define('TEXT_ERROR_HANDLER_500', 'Fehler 500: Beim Server gab es einen internen 
 define('ERROR_PRODUCTS_MISSING_CONFIGURATION_NOT_ADDED', 'Einige Artikel aus Ihrer Bestellung sind nicht mehr in der gew&uuml;nschten Konfiguration erh&auml;ltlich und wurden nicht in den Warenkorb gelegt.');
 
 define('TEXT_MAX_ADDRESS_NOTE', 'Achtung, es steht keine neue Adresse zur Verf&uuml;gung. Sie haben die maxiamle Anzahl von %s Adressen erreicht. Diese Adresse wird auch als Versandadresse &uuml;bernommen. Sofern sie eine abweichende Rechnungsadresse ben&ouml;tigen, w&auml;hlen sie eine Adresse aus ihrem Adressbuch aus.');
+
+define('TEXT_FILTER_SET_LABEL', 'Artikel pro Seite');
+define('TEXT_FILTER_SORT_LABEL', 'Sortierung');
+define('TEXT_FILTER_MANUFACTURERS_LABEL', 'Hersteller');
+define('TEXT_COUNTRY_LABEL', 'Land');
+define('TEXT_STATE_LABEL', 'Bundesland');
+
+

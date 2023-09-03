@@ -212,7 +212,7 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/listing_filter.html', $
           );
         }
       }
-      $manufacturer_dropdown .= xtc_draw_pull_down_menu('filter_id', $options, isset($_GET['filter_id']) ? (int)$_GET['filter_id'] : '', 'onchange="this.form.submit()"').PHP_EOL;
+      $manufacturer_dropdown .= xtc_draw_pull_down_menu('filter_id', $options, isset($_GET['filter_id']) ? (int)$_GET['filter_id'] : '', 'aria-label="'.TEXT_FILTER_MANUFACTURERS_LABEL.'" onchange="this.form.submit()"').PHP_EOL;
       $manufacturer_dropdown .= '<noscript><input type="submit" value="'.SMALL_IMAGE_BUTTON_VIEW.'" id="filter_submit" /></noscript>'.PHP_EOL;
       $manufacturer_dropdown .= xtc_hide_session_id() .PHP_EOL;
       $manufacturer_dropdown .= '</form>'.PHP_EOL;
@@ -322,13 +322,14 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/listing_filter.html', $
       }
         
       foreach ($options as $options_id => $values) {
-      
-        if (isset($_GET['filter'][$options_id]) && $_GET['filter'][$options_id] != '') {
-          $options_array = array (array ('id' => '', 'text' => $values['NAME'] . TEXT_SHOW_ALL));
-        } else {
-          $options_array = array (array ('id' => '', 'text' => $values['NAME']));
-        }
+        $options_name = $values['NAME'];
         unset($values['NAME']);
+
+        if (isset($_GET['filter'][$options_id]) && $_GET['filter'][$options_id] != '') {
+          $options_array = array (array ('id' => '', 'text' => $options_name . TEXT_SHOW_ALL));
+        } else {
+          $options_array = array (array ('id' => '', 'text' => $options_name));
+        }
         $options_array = array_merge($options_array, $values);
             
         $filter_dropdown[$options_id] = xtc_draw_form('filter_'.$options_id, xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('page', 'show', 'cat'))), 'get');
@@ -365,7 +366,7 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/listing_filter.html', $
             }
           }
         }
-        $filter_dropdown[$options_id] .= xtc_draw_pull_down_menu('filter['.$options_id.']', $options_array, isset($_GET['filter'][$options_id]) ? (int)$_GET['filter'][$options_id] : '', 'onchange="this.form.submit()"').PHP_EOL;
+        $filter_dropdown[$options_id] .= xtc_draw_pull_down_menu('filter['.$options_id.']', $options_array, isset($_GET['filter'][$options_id]) ? (int)$_GET['filter'][$options_id] : '', 'aria-label="'.$options_name.'" onchange="this.form.submit()"').PHP_EOL;
         $filter_dropdown[$options_id] .= '<noscript><input type="submit" value="'.SMALL_IMAGE_BUTTON_VIEW.'" id="filter_'.$options_id.'_submit" /></noscript>'.PHP_EOL;
         $filter_dropdown[$options_id] .= xtc_hide_session_id() .PHP_EOL;
         $filter_dropdown[$options_id] .= '</form>'.PHP_EOL;
