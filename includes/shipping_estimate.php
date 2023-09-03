@@ -32,11 +32,11 @@ if (!isset($_SESSION['customer_id']) || SHOW_ALWAYS_LANG_DROPDOWN) {
   if (isset($_SESSION['country'])) {
     $selected = $_SESSION['country'];
   }
-  $module_smarty->assign('SELECT_COUNTRY', _SHIPPING_TO. xtc_get_country_list(array ('name' => 'country'), (int)$selected, 'onchange="this.form.submit()"'));
-  $module_smarty->assign('SELECT_COUNTRY_PLAIN', xtc_get_country_list(array ('name' => 'country'), (int)$selected, 'onchange="this.form.submit()"'));
+  $module_smarty->assign('SELECT_COUNTRY', _SHIPPING_TO. xtc_get_country_list(array ('name' => 'country'), (int)$selected, 'autocomplete="off" onchange="this.form.submit()"'));
+  $module_smarty->assign('SELECT_COUNTRY_PLAIN', xtc_get_country_list(array ('name' => 'country'), (int)$selected, 'autocomplete="off" onchange="this.form.submit()"'));
 
-  $smarty->assign('SELECT_COUNTRY', _SHIPPING_TO. xtc_get_country_list(array ('name' => 'country'), (int)$selected, 'onchange="this.form.submit()"'));
-  $smarty->assign('SELECT_COUNTRY_PLAIN', xtc_get_country_list(array ('name' => 'country'), (int)$selected, 'onchange="this.form.submit()"'));
+  $smarty->assign('SELECT_COUNTRY', _SHIPPING_TO. xtc_get_country_list(array ('name' => 'country'), (int)$selected, 'autocomplete="off" onchange="this.form.submit()"'));
+  $smarty->assign('SELECT_COUNTRY_PLAIN', xtc_get_country_list(array ('name' => 'country'), (int)$selected, 'autocomplete="off" onchange="this.form.submit()"'));
 }
 
 if (!isset($order->delivery['country']['iso_code_2']) 
