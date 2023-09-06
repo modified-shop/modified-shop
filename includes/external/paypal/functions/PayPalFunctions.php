@@ -77,6 +77,7 @@ function get_paypal_js_sdk($client_id, $currency, $intent, $commit, $client_toke
         "commit": "'.$commit.'",
         "locale": "'.$_SESSION['language_code'].'_'.strtoupper(($_SESSION['language_code'] == 'en') ? 'GB' : $_SESSION['language_code']).'",
         "enable-funding": "paylater",
+        "data-partner-attribution-id": "Modified_Cart_PPCP",
         '.(($client_token !== false) ? '"data-client-token": "'.$client_token.'",' : '').'
         "components": "buttons,funding-eligibility,messages,hosted-fields"
       }).then((paypal) => {
