@@ -21,6 +21,8 @@
   function xtc_check_stock($products_id, $products_quantity, $stock_left = '') {
     if ($stock_left == '') {
       $stock_left = xtc_get_products_stock($products_id) - $products_quantity;
+    } else {
+      $stock_left = $stock_left - $products_quantity;
     }
     
     $out_of_stock = '';
