@@ -28,7 +28,7 @@
     }
 
     $beginCode .= "
-  window['ga-disable-".MODULE_GOOGLE_ANALYTICS_TAG_ID."'] = ".(((TRACKING_COUNT_ADMIN_ACTIVE == 'true' && $_SESSION['customers_status']['customers_status_id'] == '0') || $_SESSION['customers_status']['customers_status_id'] != '0') ? 'false' : 'true').";
+  window['ga-disable-".MODULE_GOOGLE_ANALYTICS_TAG_ID."'] = ".(((MODULE_GOOGLE_ANALYTICS_COUNT_ADMIN == 'true' && $_SESSION['customers_status']['customers_status_id'] == '0') || $_SESSION['customers_status']['customers_status_id'] != '0') ? 'false' : 'true').";
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
