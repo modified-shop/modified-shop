@@ -17,18 +17,18 @@
    ---------------------------------------------------------------------------------------*/
    
   // Sets the status of a banner
-  function xtc_set_banner_status($banners_id, $status) {
+  function xtc_set_banner_status($banners_group_id, $status) {
     if ($status == '1') {
       xtc_db_query("UPDATE " . TABLE_BANNERS . " 
                        SET status = '".(int)$status."', 
                            date_status_change = now(), 
                            date_scheduled = NULL 
-                     WHERE banners_group_id = '" . (int)$banners_id . "'");
+                     WHERE banners_group_id = '" . (int)$banners_group_id . "'");
     } elseif ($status == '0') {
       xtc_db_query("UPDATE " . TABLE_BANNERS . " 
                        SET status = '".(int)$status."', 
                            date_status_change = now()
-                     WHERE banners_group_id = '" . (int)$banners_id . "'");
+                     WHERE banners_group_id = '" . (int)$banners_group_id . "'");
     }
   }
 ?>
