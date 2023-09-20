@@ -143,14 +143,14 @@ class paypal_plan_price {  //Important same name as filename
       return $price;
     }
     
-    function FormatExtension($return, $pID, $ePrice, $pPrice, $format, $vpeStatus) {
-        
+    function FormatExtension($return, $pID, $ePrice, $pPrice, $format, $vpeStatus) {        
       if (isset($_SESSION['cart']->plans[$pID]) 
           && is_array($return)
           )
       {
         $return['from'] = '';
       }
+      
       return $return;
     }
 }
