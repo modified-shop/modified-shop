@@ -187,6 +187,8 @@ class paypal_plan_cart {  //Important same name as filename
           $_SESSION[$type]->plans[$products['products_id']] = $check['plans_id'];
         }
       }
+      
+      return $products;
     }
     
     function add_cart_products_session($products_id, $type, $qty, $attributes) {
@@ -210,6 +212,8 @@ class paypal_plan_cart {  //Important same name as filename
           xtc_db_perform('customers_'.(($type == 'cart') ? 'basket' : 'wishlist').'_plans', $sql_data_array);
         }
       }
+      
+      return $products_id;
     }
     
     function remove_custom_inputs_session($products_id, $type) {
@@ -226,6 +230,8 @@ class paypal_plan_cart {  //Important same name as filename
                             WHERE customers_id = '".(int)$_SESSION['customer_id']."' 
                               AND products_id = '".xtc_db_input($products_id)."'");
       }
+
+      return $products_id;
     }
     
     function update_cart_products_session($products_id, $type, $quantity, $attributes) {
@@ -248,6 +254,8 @@ class paypal_plan_cart {  //Important same name as filename
           xtc_db_perform('customers_'.(($type == 'cart') ? 'basket' : 'wishlist').'_plans', $sql_data_array, 'update', "customers_id = '".(int)$_SESSION['customer_id']."' AND products_id = '".xtc_db_input($products_id)."'");
         }
       }
+
+      return $products_id;
     }
     
 }
