@@ -4223,6 +4223,12 @@ a.view_box.active {
   color:#333;
   opacity:1;
 }  
+.order_details .pp-message {
+  margin: 20px 0;
+}
+.order_details .pp-message > span {
+  max-width:100% !important;
+}  
 /* 26. END order_details */
 
 
@@ -6593,6 +6599,13 @@ ul#checkoutnavigation li .selected .number {
 @media only screen and (min-width: 985px) {
   .checkout_action { padding: 2px 0 0 40px; width:calc(100% - 292px); margin: 0; }
 }
+
+.checkout_action .pp-message {
+  margin: 20px 0 0 0;
+}
+.checkout_action .pp-message > span {
+  max-width:100% !important;
+} 
 
 .checkout_accept {
   padding: 0px 0 0 0px;
