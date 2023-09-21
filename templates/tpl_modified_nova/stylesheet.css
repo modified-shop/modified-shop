@@ -1455,6 +1455,7 @@ label  {
   position:relative;
   width:25%;
   padding: 5px 10px;
+  min-width:120px;
 }
 .field_item_6 {
   position:relative;
