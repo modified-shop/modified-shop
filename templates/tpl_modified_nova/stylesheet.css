@@ -1455,7 +1455,9 @@ label  {
   position:relative;
   width:25%;
   padding: 5px 10px;
-  min-width:120px;
+}
+@media only screen and (max-width: 500px) {
+  #new_find .field_item_5 span.cssButtonText { display:none; }
 }
 .field_item_6 {
   position:relative;
