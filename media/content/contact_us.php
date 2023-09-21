@@ -245,6 +245,7 @@
   $smarty->clear_assign('BUTTON_CONTINUE');
   $smarty->clear_assign('CONTENT_HEADING');
   $content_body = '';
+  unset($email);
   
   // disable cache
   $disable_smarty_cache = true;
