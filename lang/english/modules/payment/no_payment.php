@@ -10,11 +10,11 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  define('MODULE_PAYMENT_NO_PAYMENT_TEXT_DESCRIPTION', 'Set orders status from orders without payment');
-  define('MODULE_PAYMENT_NO_PAYMENT_TEXT_TITLE', 'No Payment');
+  define('MODULE_PAYMENT_NO_PAYMENT_TEXT_DESCRIPTION', 'Set orders status from orders with Gift Voucher/Coupon (without Surcharge)');
+  define('MODULE_PAYMENT_NO_PAYMENT_TEXT_TITLE', 'Gift Voucher/Coupon (without Surcharge)');
   define('MODULE_PAYMENT_NO_PAYMENT_TEXT_INFO','');
-  define('MODULE_PAYMENT_NO_PAYMENT_STATUS_TITLE' , 'Enable No Payment Module');
-  define('MODULE_PAYMENT_NO_PAYMENT_STATUS_DESC' , 'Do you want to enable No Payment?');
+  define('MODULE_PAYMENT_NO_PAYMENT_STATUS_TITLE' , 'Enable Gift Voucher/Coupon (without Surcharge) Module');
+  define('MODULE_PAYMENT_NO_PAYMENT_STATUS_DESC' , 'Do you want to enable Gift Voucher/Coupon (without Surcharge)?');
   define('MODULE_PAYMENT_NO_PAYMENT_ORDER_STATUS_ID_TITLE' , 'Set Order Status');
   define('MODULE_PAYMENT_NO_PAYMENT_ORDER_STATUS_ID_DESC' , 'Set the status of orders made with this payment module to this value.');
   define('MODULE_PAYMENT_NO_PAYMENT_SORT_ORDER_TITLE' , 'Sort order of display.');

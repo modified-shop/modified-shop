@@ -10,11 +10,11 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  define('MODULE_PAYMENT_NO_PAYMENT_TEXT_DESCRIPTION', 'Steuern Sie den Bestellstatus von Bestellungen ohne Zahlung');
-  define('MODULE_PAYMENT_NO_PAYMENT_TEXT_TITLE', 'Keine Zahlung');
+  define('MODULE_PAYMENT_NO_PAYMENT_TEXT_DESCRIPTION', 'Steuern Sie den Bestellstatus von Bestellungen mit Gutschein/Coupon (ohne Zuzahlung)');
+  define('MODULE_PAYMENT_NO_PAYMENT_TEXT_TITLE', 'Gutschein/Coupon (ohne Zuzahlung)');
   define('MODULE_PAYMENT_NO_PAYMENT_TEXT_INFO','');
-  define('MODULE_PAYMENT_NO_PAYMENT_STATUS_TITLE' , 'Keine Zahlung aktivieren');
-  define('MODULE_PAYMENT_NO_PAYMENT_STATUS_DESC' , 'M&ouml;chten Sie Keine Zahlung aktivieren?');
+  define('MODULE_PAYMENT_NO_PAYMENT_STATUS_TITLE' , 'Gutschein/Coupon (ohne Zuzahlung) aktivieren');
+  define('MODULE_PAYMENT_NO_PAYMENT_STATUS_DESC' , 'M&ouml;chten Sie Gutschein/Coupon (ohne Zuzahlung) aktivieren?');
   define('MODULE_PAYMENT_NO_PAYMENT_ORDER_STATUS_ID_TITLE' , 'Bestellstatus festlegen');
   define('MODULE_PAYMENT_NO_PAYMENT_ORDER_STATUS_ID_DESC' , 'Bestellungen, welche mit diesem Modul gemacht werden, auf diesen Status setzen.');
   define('MODULE_PAYMENT_NO_PAYMENT_SORT_ORDER_TITLE' , 'Anzeigereihenfolge');
