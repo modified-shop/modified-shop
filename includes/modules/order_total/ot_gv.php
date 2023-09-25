@@ -173,6 +173,7 @@ class ot_gv {
       xtc_db_query("UPDATE ".TABLE_COUPON_GV_CUSTOMER." 
                        SET amount = '".$gv_amount."' 
                      WHERE customer_id = '".(int)$_SESSION['customer_id']."'");
+      unset($_SESSION['cot_gv']);
     }
     
     return $gv_amount;

@@ -285,7 +285,7 @@
           'locale' => $_SESSION['language_code'].'-'.strtoupper(($_SESSION['language_code'] == 'en') ? 'GB' : $_SESSION['language_code']),
           'landing_page' => 'BILLING',
           'user_action' => 'CONTINUE',
-          'cancel_url' => $this->link_encoding(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code.'&'.xtc_session_name().'='.xtc_session_id(), 'SSL', false)),
+          'cancel_url' => $this->link_encoding(xtc_href_link('callback/paypal/error.php', 'payment_error='.$this->code.'&'.xtc_session_name().'='.xtc_session_id(), 'SSL', false)),
           'return_url' => $this->link_encoding(xtc_href_link(FILENAME_CHECKOUT_PROCESS, xtc_session_name().'='.xtc_session_id(), 'SSL', false)),
         ) 
       );
@@ -349,6 +349,17 @@
         }
       }
       
+      $PayPalOrder = $this->GetOrder($OrderID);
+
+      if ($PayPalOrder->status == 'PAYER_ACTION_REQUIRED') {
+        foreach ($PayPalOrder->links as $links) {
+          if ($links->rel == 'payer-action') {
+            xtc_redirect($links->href);
+            break;
+          }
+        }
+      }
+      
       if (isset($insert_id) && (int)$insert_id > 0) {
         $this->remove_order($insert_id);
       }
@@ -396,6 +407,17 @@
         if ($error === true) {
           return json_decode($ex->getMessage(), true);
         }      
+      }
+
+      $PayPalOrder = $this->GetOrder($OrderID);
+
+      if ($PayPalOrder->status == 'PAYER_ACTION_REQUIRED') {
+        foreach ($PayPalOrder->links as $links) {
+          if ($links->rel == 'payer-action') {
+            xtc_redirect($links->href);
+            break;
+          }
+        }
       }
 
       if (isset($insert_id) && (int)$insert_id > 0) {
