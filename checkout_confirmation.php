@@ -224,8 +224,8 @@ if ($_SESSION['cart']->show_total() <= 0 && count($order->totals) == 0) {
 };
 
 if ($no_payment === false && isset($_SESSION['credit_covers']) && $order->info['payment_method'] == 'no_payment') {
-  include_once (DIR_WS_LANGUAGES . '/' . $_SESSION['language'] . '/modules/order_total/ot_gv.php');
-  $smarty->assign('PAYMENT_METHOD', constant('MODULE_ORDER_TOTAL_GV_TITLE'));
+  include_once (DIR_WS_LANGUAGES . '/' . $_SESSION['language'] . '/modules/payment/no_payment.php');
+  $smarty->assign('PAYMENT_METHOD', constant('MODULE_PAYMENT_NO_PAYMENT_TEXT_TITLE'));
 }
 
 if (is_array($payment_modules->modules) && ($confirmation = $payment_modules->confirmation())) { // $confirmation['title'];
