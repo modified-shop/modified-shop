@@ -484,7 +484,7 @@ class PayPalPaymentBase extends PayPalCommon {
   function before_process() {
     global $messageStack;
 
-    if (!in_array($this->code, array('paypalcart', 'paypalexpress'))) {
+    if (!in_array($this->code, array('paypalcart', 'paypalexpress')) || isset($_SESSION['tmp_oID'])) {
       return false;
     }
         
