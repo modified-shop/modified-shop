@@ -113,12 +113,12 @@ if ($order->content_type != 'virtual'
   }
 }
 
-require_once (DIR_WS_CLASSES . 'order_total.php'); // GV Code ICW ADDED FOR CREDIT CLASS SYSTEM
-$order_total_modules = new order_total(); // GV Code ICW ADDED FOR CREDIT CLASS SYSTEM
+require_once (DIR_WS_CLASSES . 'order_total.php');
+$order_total_modules = new order_total();
 
 $content_type = $_SESSION['cart']->get_content_type();
 $total_weight = $_SESSION['cart']->show_weight();
-$total_count = $_SESSION['cart']->count_contents_virtual(); // GV Code ICW ADDED FOR CREDIT CLASS SYSTEM
+$total_count = $_SESSION['cart']->count_contents_virtual();
 
 if ($order->billing['country']['iso_code_2'] != '') {
 	$_SESSION['billing_zone'] = $order->billing['country']['iso_code_2'];

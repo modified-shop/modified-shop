@@ -335,9 +335,6 @@
       return $selection_array;
     }
 
-    //GV Code Start
-    //ICW CREDIT CLASS Gift Voucher System
-    //check credit covers was setup to test whether credit covers is set in other parts of the code
     function check_credit_covers() {
       global $credit_covers;
       return $credit_covers;
