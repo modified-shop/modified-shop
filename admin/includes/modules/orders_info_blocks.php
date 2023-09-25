@@ -191,9 +191,9 @@
                                        JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
                                             ON p.products_id = pd.products_id
                                                AND pd.language_id = '".(int)$_SESSION['languages_id']."'
-                                      WHERE p.products_status = 0
+                                      WHERE p.products_status = 1
                                         AND p.products_id = '".(int)$order->products[$i]['id']."'");
-        if (xtc_db_num_rows($check_query) > 0) {
+        if (xtc_db_num_rows($check_query) < 1) {
           $link = xtc_href_link(FILENAME_CATEGORIES, 'action=new_product&pID='.(int)$order->products[$i]['id']);
         } else {
           $params = array();        
