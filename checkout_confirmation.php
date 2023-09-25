@@ -107,7 +107,7 @@ if (isset($_SESSION['credit_covers'])
         )
     )
 {
-  $_SESSION['payment'] = 'no_payment'; // GV Code Start/End ICW added for CREDIT CLASS
+  $_SESSION['payment'] = 'no_payment';
 }
 
 if (!isset($_SESSION['payment'])) {
@@ -117,7 +117,6 @@ if (!isset($_SESSION['payment'])) {
 
 $payment_modules = new payment($_SESSION['payment']);
 
-// GV Code ICW ADDED FOR CREDIT CLASS SYSTEM
 require_once (DIR_WS_CLASSES . 'order_total.php');
 require_once (DIR_WS_CLASSES . 'order.php');
 $order = new order();

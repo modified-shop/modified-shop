@@ -65,9 +65,6 @@ class order_total {
     }
   }
 
-  // GV Code Start
-  // ICW ORDER TOTAL CREDIT CLASS/GV SYSTEM - START ADDITION
-  //
   // This function is called in checkout payment after display of payment methods. It actually calls
   // two credit class functions.
   //
