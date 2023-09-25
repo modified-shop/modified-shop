@@ -49,9 +49,6 @@ require (DIR_WS_INCLUDES.'checkout_requirements.php');
 
 // load selected payment module
 require_once(DIR_WS_CLASSES.'payment.php');
-if (isset($_SESSION['credit_covers'])) {
-  $_SESSION['payment'] = ''; //ICW added for CREDIT CLASS 
-}
 $payment_modules = new payment($_SESSION['payment']);
 
 // if no shipping method has been selected, redirect the customer to the shipping page
@@ -319,7 +316,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
       }
     }
 
-    $order_total_modules->update_credit_account($i); // GV Code ICW ADDED FOR CREDIT CLASS SYSTEM
+    $order_total_modules->update_credit_account($i);
 
     $attributes_exist = '0';
     $products_ordered_attributes = '';
