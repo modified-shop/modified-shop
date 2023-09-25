@@ -363,6 +363,7 @@
       }
 
       if ($addSearchShopTitle === true) $metadata_array['title'] .= ' - ' . ML_META_TITLE;
+      $meta_robots = 'noindex, follow, noodp';
       break;
 
     case FILENAME_SPECIALS :
@@ -407,6 +408,13 @@
     if ($v == '' && defined('ML_META_'.strtoupper($k))) {
       $metadata_array[$k] = constant('ML_META_'.strtoupper($k));
     }
+  }
+
+  if ((isset($_GET['filter']) && $_GET['filter'] != '') 
+      || (isset($_GET['filter_id']) && $_GET['filter_id'] != '')
+      )
+  {
+    $meta_robots = 'noindex, follow, noodp';
   }
 
   foreach(auto_include(DIR_FS_CATALOG.'includes/extra/modules/metatags_data/','php') as $file) require ($file); 
