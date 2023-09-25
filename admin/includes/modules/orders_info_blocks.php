@@ -184,11 +184,31 @@
       </tr>
       <?php
       for ($i = 0, $n = sizeof($order->products); $i < $n; $i ++) {
+        $attr_count = isset($order->products[$i]['attributes']) ? count($order->products[$i]['attributes']) : 0;
+        
+        $check_query = xtc_db_query("SELECT *
+                                       FROM ".TABLE_PRODUCTS." p
+                                       JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
+                                            ON p.products_id = pd.products_id
+                                               AND pd.language_id = '".(int)$_SESSION['languages_id']."'
+                                      WHERE p.products_status = 0
+                                        AND p.products_id = '".(int)$order->products[$i]['id']."'");
+        if (xtc_db_num_rows($check_query) > 0) {
+          $link = xtc_href_link(FILENAME_CATEGORIES, 'action=new_product&pID='.(int)$order->products[$i]['id']);
+        } else {
+          $params = array();        
+          if ($attr_count > 0) {
+            foreach ($order->products[$i]['attributes'] as $attributes) {
+              $params[$attributes['orders_products_options_id']] = $attributes['orders_products_options_values_id'];
+            }
+          }
+          $link = xtc_catalog_href_link('product_info.php', 'products_id='.xtc_get_uprid($order->products[$i]['id'], $params));
+        }
+        
         echo '          <tr class="dataTableRow">'.PHP_EOL;
         echo '            <td class="dataTableContent" valign="top" align="right">'.$order->products[$i]['qty'].'&nbsp;x&nbsp;</td>'.PHP_EOL;
         echo '            <td class="dataTableContent" valign="top">'.PHP_EOL;
-        echo '              <a href="'.HTTP_CATALOG_SERVER.DIR_WS_CATALOG.'product_info.php?products_id='.$order->products[$i]['id'].'" target="_blank">'.$order->products[$i]['name'].'</a>';
-        $attr_count = isset($order->products[$i]['attributes']) ? count($order->products[$i]['attributes']) : 0;
+        echo '              <a href="'.$link.'" target="_blank">'.$order->products[$i]['name'].'</a>';
         if ($attr_count > 0) {
           for ($j = 0; $j < $attr_count; $j ++) {
             echo '<br /><nobr><i>&nbsp; - '.$order->products[$i]['attributes'][$j]['option'].': '.$order->products[$i]['attributes'][$j]['value'].'</i></nobr> ';
