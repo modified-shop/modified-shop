@@ -39,7 +39,7 @@
       <div class="printlogo_admin"><img src="{$tpl_path}img/logo.gif" alt="{$smarty.const.STORE_NAME}" /></div>
       <div class="print_small" style="font-size:11px; line-height:15px;">{$ADDRESS_LARGE}</div>
     </div>
-    <br class="clearfix">
+    <div class="clearer"></div>
     <div class="print_big">{#invoice#}</div>
     <div class="hr_15"></div>
     <div class="printColumsLeft">
@@ -48,7 +48,7 @@
     <div class="printColumsRight">
       {if $address_label_payment}<strong>{#payment_address#}</strong>{/if}<br />{$address_label_payment}
     </div>
-    <br class="clearfix">
+    <div class="clearer"></div>
     <br />
     <table class="order_table">
       <tr class="headerrow">
@@ -89,12 +89,12 @@
         {/foreach}
       </table>
     </div>
-    <br class="clearfix" />
+    <div class="clearer"></div>
     {/if}
     {if isset($vat_info) && $vat_info != 0}
       <br />
       {if $vat_info == 2}{#vat_info_2#}{else}{#vat_info#}{/if}
-      <br class="clearfix" />
+      <div class="clearer"></div>
     {/if}
     {if $COMMENTS}
     <div class="hr_5"></div>
@@ -119,7 +119,7 @@
         </table>
       {/foreach}
     </div>
-    <br class="clearfix" />
+    <div class="clearer"></div>
     {/if}
   </div>
 </body>
