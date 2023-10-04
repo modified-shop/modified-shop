@@ -44,12 +44,11 @@ if (ACCOUNT_STATE == 'true' && in_array(basename($PHP_SELF), $state_pages)) {
 
   function show_state() {
     $("[name='state']").closest("tr").show();
-    $("[name='state']").prop('type', 'text'); //fix for check_form in form_check.js.php
   }
 
   function hide_state() {
     $("[name='state']").closest("tr").hide();
-    $("[name='state']").prop('type', 'hidden'); //fix for check_form in form_check.js.php
+    $("select[name='state']").replaceWith('<input type="text" name="state"></input>');
   }
 
   function load_state() {
