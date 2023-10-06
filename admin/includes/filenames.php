@@ -10,9 +10,6 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-require_once(DIR_FS_INC.'auto_include.inc.php');
-foreach(auto_include(DIR_FS_ADMIN.'includes/extra/filenames/', 'php') as $file) require ($file);
-
 $filename_array = array(
   'FILENAME_ACCOUNTING' => 'accounting.php',
   'FILENAME_BACKUP' => 'backup.php',
@@ -100,6 +97,9 @@ $filename_array = array(
   'FILENAME_SCHEDULED_TASKS' => 'scheduled_tasks.php',
   'FILENAME_AVALEX' => 'avalex.php',
 );
+
+require_once(DIR_FS_INC.'auto_include.inc.php');
+foreach(auto_include(DIR_FS_ADMIN.'includes/extra/filenames/', 'php') as $file) require ($file);
 
 // define 
 foreach ($filename_array as $key => $val) {
