@@ -339,7 +339,7 @@ class main {
     $popup_params = $this->getPopupParams();    
     
     if ($class == 'image') {
-      if ($text = '') {
+      if ($text == '') {
         require_once (DIR_FS_INC . 'xtc_get_products_image.inc.php');
         $text = xtc_get_products_image($pID);
       }
