@@ -142,9 +142,7 @@ if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weigh
   // load all enabled shipping modules
   $quotes = $shipping->quote();
 
-  if (defined('MODULE_ORDER_TOTAL_SHIPPING_STATUS')
-      && MODULE_ORDER_TOTAL_SHIPPING_STATUS == 'true'
-      && MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING == 'true'
+  if (MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING == 'true'
       && $pass === true
       && $free_shipping === false
       )
