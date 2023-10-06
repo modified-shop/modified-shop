@@ -34,7 +34,7 @@ if (isset($_GET['cat'])) {
 }
 
 // manufacturer URLS
-if (isset($_GET['manufacturers_id']) && $_GET['manufacturers_id'] != '') {
+if (isset($_GET['manufacturers_id']) && (int)$_GET['manufacturers_id'] > 0) {
   require_once (DIR_FS_INC.'manufacturer_redirect.inc.php');
   $_GET['manufacturers_id'] = (int)$_GET['manufacturers_id'];
   $_GET['manufacturers_id'] = manufacturer_redirect($_GET['manufacturers_id']);
