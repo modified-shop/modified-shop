@@ -219,7 +219,7 @@
     global ${$link};
 
     if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS == 'true') {    
-      $queryStartTime = array_sum(explode(" ",microtime()));
+      $queryStartTime = microtime(true);
     }
 
     if (stripos(trim($query), 'INSERT INTO '.TABLE_CONFIGURATION.' ') !== false
@@ -239,7 +239,7 @@
     }
     
     if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS == 'true') {
-      $queryEndTime = array_sum(explode(" ",microtime())); 
+      $queryEndTime = microtime(true); 
       $processTime = number_format(round($queryEndTime - $queryStartTime, 5), 5, '.', '');
 
       if (defined('STORE_DB_SLOW_QUERY') && ((STORE_DB_SLOW_QUERY == 'true' && $processTime >= STORE_DB_SLOW_QUERY_TIME) || STORE_DB_SLOW_QUERY == 'false')) {
