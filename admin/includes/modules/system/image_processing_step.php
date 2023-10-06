@@ -40,7 +40,7 @@ if ( !class_exists( "image_processing_step" ) ) {
       $this->files = array();
       
 
-      $this->logfile = DIR_FS_CATALOG.'log/image_processing_*.log';
+      $this->logfile = DIR_FS_CATALOG.'log/mod_image_processing_*.log';
 
       $this->images_type_array = array(
         '',
@@ -293,7 +293,7 @@ if ( !class_exists( "image_processing_step" ) ) {
           if ($flag) {
             $count += 1;
             if (isset($_POST['logging']) && $_POST['logging'] == 1) {
-              $handle = fopen($this->logfile, "a"); fwrite($handle, $rData['imgname'].'|process'."\n"); fclose($handle);
+              $handle = fopen($this->logfile, "a"); fwrite($handle, $image_name.'|processed'."\n"); fclose($handle);
             }  
           }
         } else {
@@ -344,7 +344,7 @@ if ( !class_exists( "image_processing_step" ) ) {
           }
           $count += 1;
           if (isset($_POST['logging']) && $_POST['logging'] == 1) {
-            $handle = fopen($this->logfile, "a"); fwrite($handle, $rData['imgname'].'|process'."\n"); fclose($handle);
+            $handle = fopen($this->logfile, "a"); fwrite($handle, $image_name.'|processed'."\n"); fclose($handle);
           }
         }
       }
