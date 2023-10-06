@@ -72,9 +72,9 @@
       }
     
       if($order->delivery['shipping']['iso_code_2'] == 'DE') {
-        $stitle = MODULE_SHIPPING_HERMES_TEXT_WAY_DE . $shipping_weight . ' ' . MODULE_SHIPPING_HERMES_TEXT_UNITS;
+        $stitle = MODULE_SHIPPING_HERMES_TEXT_WAY_DE . ' (' . ($shipping_num_boxes > 1 ? $shipping_num_boxes . ' x ' : '') . round($shipping_weight, 2) . ' ' .  MODULE_SHIPPING_HERMES_TEXT_UNITS .')';
       } else {
-        $stitle = MODULE_SHIPPING_HERMES_TEXT_WAY_EU . $shipping_weight . ' ' . MODULE_SHIPPING_HERMES_TEXT_UNITS;
+        $stitle = MODULE_SHIPPING_HERMES_TEXT_WAY_EU . ' (' . ($shipping_num_boxes > 1 ? $shipping_num_boxes . ' x ' : '') . round($shipping_weight, 2) . ' ' .  MODULE_SHIPPING_HERMES_TEXT_UNITS .')';
       }
     
       $this->quotes = array('id' => $this->code,
