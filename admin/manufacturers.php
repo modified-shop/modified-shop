@@ -225,6 +225,11 @@
 require (DIR_WS_INCLUDES.'head.php');
 ?>
 <script type="text/javascript" src="includes/general.js"></script>
+<script type="text/javascript"> 
+  var lang_chars_left = '<?php echo CHARS_LEFT; ?>'; 
+  var lang_chars_max = '<?php echo CHARS_MAX; ?>'; 
+</script>  
+<script type="text/javascript" src="includes/javascript/countdown.js"></script> 
 <?php
 // Include WYSIWYG if is activated
 if (USE_WYSIWYG == 'true') {
