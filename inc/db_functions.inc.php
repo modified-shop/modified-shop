@@ -103,7 +103,7 @@
     }
     
     if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS == 'true') {    
-      $queryStartTime = array_sum(explode(" ",microtime()));
+      $queryStartTime = microtime(true);
     }
     
     $id = $cache_data['prefix'].'_'.md5(strtolower(preg_replace("'[\r\n\s]+'", '', $query)));
@@ -130,7 +130,7 @@
     }
     
     if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS == 'true' && $hit === true) {
-      $queryEndTime = array_sum(explode(" ",microtime())); 
+      $queryEndTime = microtime(true); 
       $processTime = number_format(round($queryEndTime - $queryStartTime, 3), 3, '.', '');
       if (defined('STORE_DB_SLOW_QUERY') && ((STORE_DB_SLOW_QUERY == 'true' && $processTime >= STORE_DB_SLOW_QUERY_TIME) || STORE_DB_SLOW_QUERY == 'false')) {
         xtc_db_slow_query_log($processTime, $query, 'QUERY CACHED');
