@@ -186,7 +186,7 @@ switch ($category_depth) {
       'products_sorting2' => '',
     );
     
-    if (isset($categories_id)) {
+    if (isset($category_id)) {
       $sorting_query = xtDBquery("SELECT products_sorting,
                                          products_sorting2
                                     FROM ".TABLE_CATEGORIES."
