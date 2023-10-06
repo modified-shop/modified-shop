@@ -102,7 +102,7 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/listing_filter.html', $
     $where = '';
     $select = "m.manufacturers_id as id,
                m.manufacturers_name as name ";
-    if (isset($_GET['manufacturers_id']) && $_GET['manufacturers_id'] > 0 && basename($PHP_SELF) != FILENAME_ADVANCED_SEARCH_RESULT) {
+    if (isset($_GET['manufacturers_id']) && (int)$_GET['manufacturers_id'] > 0 && basename($PHP_SELF) != FILENAME_ADVANCED_SEARCH_RESULT) {
       $select = "c.categories_id as id,
                  cd.categories_name as name ";
       $join = " JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
@@ -167,7 +167,7 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/listing_filter.html', $
     $filterlist_query = xtDBquery($filterlist_sql);
     if (xtc_db_num_rows($filterlist_query, true) > 0) {
       $manufacturer_dropdown = xtc_draw_form('filter', xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('page', 'show', 'cat'))), 'get');
-      if (isset($_GET['manufacturers_id']) && $_GET['manufacturers_id'] > 0) {
+      if (isset($_GET['manufacturers_id']) && (int)$_GET['manufacturers_id'] > 0) {
         if (basename($PHP_SELF) != FILENAME_ADVANCED_SEARCH_RESULT) {
           $options = array (array ('id' => '', 'text' => TEXT_ALL_CATEGORIES));
           if (SEARCH_ENGINE_FRIENDLY_URLS != 'true') {
@@ -225,12 +225,12 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/listing_filter.html', $
     $join = '';  
     $where = '';
     $filterlist_sql = '';
-    if ((isset($_GET['filter_id']) && $_GET['filter_id'] > 0)
-        || (isset($_GET['manufacturers_id']) && $_GET['manufacturers_id'] > 0)
+    if ((isset($_GET['filter_id']) && (int)$_GET['filter_id'] > 0)
+        || (isset($_GET['manufacturers_id']) && (int)$_GET['manufacturers_id'] > 0)
         )
     {
-      if ((isset($_GET['filter_id']) && $_GET['filter_id'] > 0)
-          && (isset($_GET['manufacturers_id']) && $_GET['manufacturers_id'] > 0)
+      if ((isset($_GET['filter_id']) && (int)$_GET['filter_id'] > 0)
+          && (isset($_GET['manufacturers_id']) && (int)$_GET['manufacturers_id'] > 0)
           )
       {
         $join .= " JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
@@ -238,7 +238,7 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/listing_filter.html', $
                            AND p2c.categories_id = '".(int)$_GET['filter_id']."' ";
         $where .= " AND p.manufacturers_id = '".(int)$_GET['manufacturers_id']."' ";
       } else {
-        $where .= " AND p.manufacturers_id = '".(int)((isset($_GET['filter_id']) && $_GET['filter_id'] > 0) ? $_GET['filter_id'] : $_GET['manufacturers_id'])."' ";
+        $where .= " AND p.manufacturers_id = '".((isset($_GET['filter_id']) && (int)$_GET['filter_id'] > 0) ? (int)$_GET['filter_id'] : (int)$_GET['manufacturers_id'])."' ";
       }
     }
     if (isset($current_category_id) && $current_category_id > 0) {
@@ -357,7 +357,7 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/listing_filter.html', $
           $filter_dropdown[$options_id] .= xtc_draw_hidden_field('keywords', $_GET['keywords']).PHP_EOL;
         }
         if (isset($_GET['filter_id']) && !empty($_GET['filter_id'])) {
-          $filter_dropdown[$options_id] .= xtc_draw_hidden_field('filter_id', $_GET['filter_id']).PHP_EOL;
+          $filter_dropdown[$options_id] .= xtc_draw_hidden_field('filter_id', (int)$_GET['filter_id']).PHP_EOL;
         }
         if (isset($_GET['filter']) && is_array($_GET['filter'])) {
           foreach ($_GET['filter'] as $key => $val) {
