@@ -334,15 +334,19 @@ class main {
    * @return string
    */
   function getProductPopupLink($pID, $text, $class = '', $add_params = '') {
-    global $request_type;
+    global $product, $request_type;
     
     $popup_params = $this->getPopupParams();    
     
     if ($class == 'image') {
-      require_once (DIR_FS_INC . 'xtc_get_products_image.inc.php');
-      $products_image = xtc_get_products_image($pID);
-      $product = new product($pID);
-      $products_image = $product->productImage($products_image, 'thumbnail');      
+      if ($text = '') {
+        require_once (DIR_FS_INC . 'xtc_get_products_image.inc.php');
+        $text = xtc_get_products_image($pID);
+      }
+      if (!isset($product) || !is_object($product)) {
+        $product = new product($pID);
+      }
+      $products_image = $product->productImage($text, 'thumbnail');      
       $productPopupLink = '<a target="_blank" title="'.$popup_params['link_title'].'" href="'.xtc_href_link('print_product_info.php', 'pID='.$pID.$popup_params['link_parameters'], $request_type).'" class="'.$popup_params['link_class'].'"><img class="'.$class.'" alt="" src="'.$products_image.'" /></a>';
     } else {
       $productPopupLink = '<a target="_blank" title="'.$popup_params['link_title'].'" href="'.xtc_href_link('print_product_info.php', 'pID='.$pID.$popup_params['link_parameters'].$add_params, $request_type).'" class="'.$popup_params['link_class'].' '.$class.'">'.$text.'</a>';
