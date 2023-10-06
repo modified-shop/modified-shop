@@ -74,8 +74,6 @@ define('MODULE_PAYMENT_'.$sofort_code.'_REASON_2_TITLE', 'Usage Line 2');
 define('MODULE_PAYMENT_'.$sofort_code.'_REASON_2_DESC', 'In use (maximum 27 characters) to be replaced following placeholders:<br /> {{order_id}}<br />{{order_date}}<br />{{customer_id}}<br />{{customer_name}}<br />{{customer_company}}<br />{{customer_email}}');
 define('MODULE_PAYMENT_'.$sofort_code.'_IMAGE_TITLE', 'Payment Grafic / Text');
 define('MODULE_PAYMENT_'.$sofort_code.'_IMAGE_DESC', 'Grafic / Text on Payment Checkout');
-define('MODULE_PAYMENT_'.$sofort_code.'_KS_STATUS_TITLE', 'Customer protection activated');
-define('MODULE_PAYMENT_'.$sofort_code.'_KS_STATUS_DESC', 'Activate customer protection for Online Bank Transfer.');
 define('MODULE_PAYMENT_'.$sofort_code.'_USER_ID_TITLE', 'Customer Number');
 define('MODULE_PAYMENT_'.$sofort_code.'_USER_ID_DESC', 'Customer Number at Online Bank Transfer.');
 define('MODULE_PAYMENT_'.$sofort_code.'_PROJECT_ID_TITLE', 'Project Nummer');

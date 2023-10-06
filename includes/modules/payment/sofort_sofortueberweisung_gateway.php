@@ -68,7 +68,7 @@ class sofort_sofortueberweisung_gateway extends SofortLibPayment {
     $this->Sofortueberweisung->setAbortUrl($this->data['abort_url']);
     $this->Sofortueberweisung->setTimeoutUrl($this->data['timeout_url']);
     $this->Sofortueberweisung->setNotificationUrl($this->data['callback_url']);
-    $this->Sofortueberweisung->setCustomerprotection($this->ks_status);
+    $this->Sofortueberweisung->setCustomerprotection(false);
     $this->Sofortueberweisung->setVersion($this->version);
     $this->Sofortueberweisung->setSuccessLinkRedirect(true);
     $this->Sofortueberweisung->setTimeout(SESSION_LIFE_CUSTOMERS-(60*5));
