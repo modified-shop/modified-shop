@@ -66,6 +66,7 @@
             )
         {
           $paypalscript .= '
+          if ($("#apms_button1").length) {
             paypal.Buttons({
               fundingSource: paypal.FUNDING.PAYPAL,
               style: {
@@ -95,6 +96,7 @@
                 $(".apms_form_button_overlay").hide();
               }
             }).render("#apms_button1");
+          }
           ';
         }
         
@@ -106,6 +108,7 @@
             )
         {
           $paypalscript .= '
+          if ($("#apms_button2").length) {
             paypal.Buttons({
               fundingSource: paypal.FUNDING.PAYLATER,
               style: {
@@ -132,6 +135,7 @@
                 $(".apms_form_button_overlay").hide();
               }
             }).render("#apms_button2");
+          }
           ';
         }
       }
@@ -167,6 +171,7 @@
         
         if ($total > 0) {
           $paypalscript .= '
+          if ($(".pp-message").length) {
             paypal.Messages({
               amount: '.$total.',
               countryCode: "'.$countries_iso_code_2.'",
@@ -183,6 +188,7 @@
                 '.((basename($PHP_SELF) == FILENAME_PRODUCT_INFO) ? '' : '$(".pp-message").css("margin-top", "20px");').'
               }
             }).render(".pp-message");
+          }
           ';
         }
       }
