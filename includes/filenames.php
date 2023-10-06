@@ -15,9 +15,6 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-require_once(DIR_FS_INC.'auto_include.inc.php');
-foreach(auto_include(DIR_FS_CATALOG.'includes/extra/filenames/','php') as $file) require ($file);
-
 //compatibility for modified eCommerce Shopsoftware 1.06 files
 if (!defined('DIR_ADMIN')) {
   define('DIR_ADMIN', 'admin/');
@@ -91,6 +88,9 @@ $filename_array = array(
   'FILENAME_MEDIA_CONTENT' => 'media_content.php',
   'FILENAME_ERROR' => 'error.php',
 );
+
+require_once(DIR_FS_INC.'auto_include.inc.php');
+foreach(auto_include(DIR_FS_CATALOG.'includes/extra/filenames/','php') as $file) require ($file);
 
 // define 
 foreach ($filename_array as $key => $val) {
