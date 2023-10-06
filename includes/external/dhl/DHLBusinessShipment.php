@@ -284,13 +284,6 @@
         }
       }
       
-      // notification
-      if ($this->notification === true) {
-        $Notification = new stdClass();
-        $Notification->recipientEmailAddress = $this->data['email_address'];
-        $Service->Notification = $Notification;
-      }
-
       // avs
       if ($this->avs > 0) {
         $Service->VisualCheckOfAge['active'] = '1';
@@ -311,9 +304,6 @@
       if ($this->parcel_outlet > 0) {
         $Service->ParcelOutletRouting['active'] = '1';
         $Service->ParcelOutletRouting['details'] = $customers_data['email_address'];
-        if ($this->notification !== true) {
-          $Service->ParcelOutletRouting['details'] = $this->info['email_address'];
-        }
       }
 
       // signed
@@ -506,7 +496,9 @@
       
       $Communication = new stdClass();
       $Communication->phone = $data['telephone'];
-      //$Communication->email = $data['email_address'];
+      if ($this->notification === true) {
+        $Communication->email = $data['email_address'];
+      }
       
       $Address = new stdClass();
       $Address->streetName = $data['street_name'];
@@ -560,7 +552,6 @@
               $shipping_details->Address->name3 = $Name->name3;
             }
           }
-          //$shipping_details->Communication = $Communication;
           break;
       }
   
