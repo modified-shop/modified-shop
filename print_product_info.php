@@ -128,11 +128,9 @@ if (!is_object($product) || $product->isProduct() === false || $language_not_fou
   }
 
   // product discount
-  if ($_SESSION['customers_status']['customers_status_public'] == '1') {
-    $discount = $xtPrice->xtcCheckDiscount($product->data['products_id']);
-    if ($discount != '0.00') {
-      $info_smarty->assign('PRODUCTS_DISCOUNT', $discount.'%');
-    }
+  $discount = $xtPrice->xtcCheckDiscount($product->data['products_id']);
+  if ($discount != '0.00') {
+    $info_smarty->assign('PRODUCTS_DISCOUNT', $discount.'%');
   }
 
   // date available/added

@@ -142,10 +142,7 @@ if (!$module_smarty->is_cached(CURRENT_TEMPLATE.'/module/product_options/'.$prod
           }
                 
           // product discount
-          if ($_SESSION['customers_status']['customers_status_public'] == '1'
-              && $_SESSION['customers_status']['customers_status_discount_attributes'] == 1
-              )
-          {
+          if ($_SESSION['customers_status']['customers_status_discount_attributes'] == 1) {
             $discount = $xtPrice->xtcCheckDiscount($product->data['products_id']);
             if ($discount != '0.00') {
               $price -= $price / 100 * $discount;
