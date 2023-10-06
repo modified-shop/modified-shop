@@ -344,7 +344,7 @@ class main {
         $text = xtc_get_products_image($pID);
       }
       if (!isset($product) || !is_object($product)) {
-        $product = new product($pID);
+        $product = new product();
       }
       $products_image = $product->productImage($text, 'thumbnail');      
       $productPopupLink = '<a target="_blank" title="'.$popup_params['link_title'].'" href="'.xtc_href_link('print_product_info.php', 'pID='.$pID.$popup_params['link_parameters'], $request_type).'" class="'.$popup_params['link_class'].'"><img class="'.$class.'" alt="" src="'.$products_image.'" /></a>';
