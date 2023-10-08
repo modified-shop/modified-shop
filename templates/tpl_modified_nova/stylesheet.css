@@ -7448,6 +7448,7 @@ p.underline {
 }
 .slider_row .splide.splide_slider_single {
   visibility: visible;
+  opacity:1;
 }
 .slider_row .splide:hover { 
   background:#000;
