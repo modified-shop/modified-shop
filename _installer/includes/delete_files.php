@@ -280,6 +280,7 @@
     'export/_error_reporting.dev',
     'export/_error_reporting.none',
     'export/_error_reporting.shop',
+    'export/_error_reporting.all',
     'export/xml_export.php',
     'favicon.ico',
     'findologic.php',
