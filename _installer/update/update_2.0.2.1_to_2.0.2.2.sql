@@ -11,14 +11,9 @@
 INSERT INTO `database_version` (`version`) VALUES ('MOD_2.0.2.2');
 
 #Web28 - 2017-03-08 - add keys
-ALTER TABLE `products`
- ADD KEY `idx_manufacturers_id` (`manufacturers_id`);
- 
-ALTER TABLE `products_tags_values`
- ADD KEY `idx_filter` (`filter`);
-
-ALTER TABLE `products_tags_options`
- ADD KEY `idx_filter` (`filter`);
+ALTER TABLE `products` ADD INDEX `idx_manufacturers_id` (`manufacturers_id`);
+ALTER TABLE `products_tags_values` ADD INDEX `idx_filter` (`filter`);
+ALTER TABLE `products_tags_options` ADD INDEX `idx_filter` (`filter`);
 
 #Tomcraft - 2017-03-13 - Fix Online Dispute Resolution links on r9479 (Fix #795)
 UPDATE content_manager SET content_text = REPLACE(content_text, '<p>The EU Commission provides on its website the following link to the ODR platform: http://ec.europa.eu/consumers/odr.</p>', '<p>The EU Commission provides on its website the following link to the ODR platform: <a href="http://ec.europa.eu/consumers/odr/" target="_blank">http://ec.europa.eu/consumers/odr/</a></p>');

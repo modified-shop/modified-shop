@@ -130,7 +130,7 @@
         // If the number of unescaped quotes is even, then the delimiter did NOT occur inside a string literal.
         if (($unescaped_quotes % 2) == 0) {
           // It's a complete sql statement.
-          $output[] = $tokens[$i];
+          $output[] = trim($tokens[$i]);
           $tokens[$i] = '';
         } else {
           // incomplete sql statement. keep adding tokens until we have a complete one.
@@ -152,7 +152,7 @@
             if (($unescaped_quotes % 2) == 1) {
               // odd number of unescaped quotes. In combination with the previous incomplete
               // statement(s), we now have a complete statement. (2 odds always make an even)
-              $output[] = $temp . $tokens[$j];
+              $output[] = trim($temp . $tokens[$j]);
       
               $tokens[$j] = '';
               $temp = '';
@@ -169,6 +169,7 @@
         }
       }
     }
+    
     return $output;
   }
   
@@ -179,26 +180,65 @@
     } else {
       $sql_file = $file;
     }
-    $sql_array = (split_sql_file($sql_file, ';'));
+    $sql_array = split_sql_file($sql_file, ';');
     
     $sql_data_array = array();
     foreach ($sql_array as $sql) {
       $exists = false;
-      if (preg_match('#[\\\z\s]?(?:ALTER TABLE){1}[\\\Z\s]+([^ ]*)[\\\z\s]+(?:ADD){1}[\\\z\s]+([^ ]*)[\\\z\s]+([^ ]*)#', $sql, $matches)) {
-        if ($matches[2] == strtoupper('INDEX')) {
-          $check_query = xtc_db_query("SHOW KEYS FROM ".$matches[1]." WHERE Key_name='".$matches[3]."'");
-          if (xtc_db_num_rows($check_query)>0) {
-            $sql_data_array[] = trim("ALTER TABLE ".$matches[1]." DROP INDEX ".$matches[3]);
-          }
-        } else {
-          $check_query = xtc_db_query("SHOW COLUMNS FROM " . $matches[1]);
-          while ($check = xtc_db_fetch_array($check_query)) {
-            if ($check['Field'] == $matches[2]) { 
-              $exists = true;
-            }
+      if (preg_match('#[\\\z\s]?(?:ALTER TABLE){1}[\\\Z\s]+([^ ]*)[\\\z\s]+(?:ADD PRIMARY KEY){1}[\\\z\s]+(.*)#', $sql, $matches)) {
+        $table = preg_replace("'[\r\n\s]+'", '', str_replace('`', '', $matches[1]));
+        
+        $check_query = xtc_db_query("SHOW KEYS FROM `".$table."` WHERE Key_name = 'PRIMARY'");
+        if (xtc_db_num_rows($check_query) > 0) {
+          $sql_data_array[] = trim("ALTER TABLE `".$table."` DROP PRIMARY KEY");
+        }
+      } elseif (preg_match('#[\\\z\s]?(?:ALTER TABLE){1}[\\\Z\s]+([^ ]*)[\\\z\s]+(?:ADD UNIQUE KEY|ADD UNIQUE){1}[\\\z\s]+([^ ]*)[\\\z\s]+(.*)#', $sql, $matches)) {
+        $table = preg_replace("'[\r\n\s]+'", '', str_replace('`', '', $matches[1]));
+        $key = preg_replace("'[\r\n\s]+'", '', str_replace('`', '', $matches[2]));
+        
+        $check_query = xtc_db_query("SHOW KEYS FROM `".$table."` WHERE Key_name = '".$key."'");
+        if (xtc_db_num_rows($check_query) > 0) {
+          $check = xtc_db_fetch_array($check_query);
+          if ($check['Key_name'] == $key) {
+            $sql_data_array[] = trim("ALTER TABLE `".$table."` DROP INDEX `".$key."`");
           }
         }
+      } elseif (preg_match('#[\\\z\s]?(?:ALTER TABLE){1}[\\\Z\s]+([^ ]*)[\\\z\s]+(?:ADD|DROP){1}[\\\z\s]+([^ ]*)[\\\z\s]+([^ ]*)#', $sql, $matches)) {
+        $table = preg_replace("'[\r\n\s]+'", '', str_replace('`', '', $matches[1]));
+
+        if (stripos(strtoupper($matches[2]), 'INDEX') !== false) {
+          $key = preg_replace("'[\r\n\s]+'", '', str_replace('`', '', $matches[3]));
+          
+          $check_query = xtc_db_query("SHOW KEYS FROM `".$table."` WHERE Key_name = '".$key."'");
+          if (xtc_db_num_rows($check_query) > 0) {
+            $check = xtc_db_fetch_array($check_query);
+            if ($check['Key_name'] == $key) {
+              $sql_data_array[] = trim("ALTER TABLE `".$table."` DROP INDEX `".$key."`");
+            }
+          }
+          if (stripos(strtoupper($matches[0]), 'DROP INDEX') !== false) $exists = true;
+        } elseif (stripos(strtoupper($matches[0]), 'ADD') !== false) {
+          $column = preg_replace("'[\r\n\s]+'", '', str_replace('`', '', $matches[2]));
+          
+          $check_query = xtc_db_query("SHOW COLUMNS FROM `".$table."` LIKE '".$column."'");
+          if (xtc_db_num_rows($check_query) > 0) {
+            $exists = true;
+          }
+        }
+      } elseif (preg_match('#[\\\z\s]?(?:ALTER TABLE){1}[\\\Z\s]+([^ ]*)[\\\z\s]+(?:DROP){1}[\\\z\s]+([^ ]*)#', $sql, $matches)) {
+        $table = preg_replace("'[\r\n\s]+'", '', str_replace('`', '', $matches[1]));
+        
+        if (stripos(strtoupper($matches[0]), 'DROP') !== false) {
+          $column = preg_replace("'[\r\n\s]+'", '', str_replace('`', '', $matches[2]));
+          
+          $check_query = xtc_db_query("SHOW COLUMNS FROM `".$table."` LIKE '".$column."'");
+          if (xtc_db_num_rows($check_query) > 0) {
+            $sql_data_array[] = trim("ALTER TABLE `".$table."` DROP `".$column."`");
+          }
+          $exists = true;
+        }      
       }
+      
       if (!$exists) {
         if (DB_SERVER_CHARSET == 'utf8') {
           $sql = encode_utf8($sql, 'ISO-8859-1', true);

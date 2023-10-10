@@ -17,12 +17,19 @@
   if ($action == 'processnow') {
     $db_update = array();
     unset($_SESSION['db_update']);
-
+    
     $db_update['starttime'] = time();
     $db_update['num_tables'] = ((isset($sql_data_array) && is_array($sql_data_array)) ? count($sql_data_array) : 0);
     $db_update['ready'] = 0;
     $db_update['step'] = 1;
     $db_update['start'] = -1;
+    
+    if (isset($sql_data_array) && is_array($sql_data_array)) {
+      file_put_contents(DIR_FS_INSTALLER.'update/complete.sql', json_encode($sql_data_array));
+      $_POST['sql_files'] = array(
+        'complete.sql'
+      );
+    }
     $db_update['sql_files'] = $_POST['sql_files'];
 
     $_SESSION['db_update'] = $db_update;

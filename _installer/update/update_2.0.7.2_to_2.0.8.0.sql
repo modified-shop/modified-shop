@@ -26,8 +26,8 @@ ALTER TABLE `manufacturers` ADD `products_sorting` VARCHAR(64) NULL AFTER `sort_
 ALTER TABLE `manufacturers` ADD `products_sorting2` VARCHAR(64) NOT NULL AFTER `products_sorting`; 
 ALTER TABLE `manufacturers` ADD `listing_template` VARCHAR(64) NOT NULL DEFAULT '' AFTER `products_sorting2`; 
 ALTER TABLE `manufacturers` ADD `categories_template` VARCHAR(64) AFTER `listing_template`; 
-ALTER TABLE `manufacturers` ADD KEY `idx_manufacturers_status` (`manufacturers_status`);
-ALTER TABLE `manufacturers` ADD KEY `idx_sort_order` (`sort_order`);
+ALTER TABLE `manufacturers` ADD INDEX `idx_manufacturers_status` (`manufacturers_status`);
+ALTER TABLE `manufacturers` ADD INDEX `idx_sort_order` (`sort_order`);
 
 #GTB - 2022-07-13 - add image description
 CREATE TABLE IF NOT EXISTS `products_images_description` (
@@ -41,15 +41,15 @@ CREATE TABLE IF NOT EXISTS `products_images_description` (
 );
 
 #GTB - 2022-07-18 - add index for products_description
-ALTER TABLE `products_description` ADD KEY `idx_products_heading_title` (`products_heading_title`);
-ALTER TABLE `products_description` ADD KEY `idx_products_keywords` (`products_keywords`);
+ALTER TABLE `products_description` ADD INDEX `idx_products_heading_title` (`products_heading_title`);
+ALTER TABLE `products_description` ADD INDEX `idx_products_keywords` (`products_keywords`);
 
 #GTB - 2022-07-18 - add index for categories_description
-ALTER TABLE `categories_description` ADD KEY `idx_categories_heading_title` (`categories_heading_title`);
+ALTER TABLE `categories_description` ADD INDEX `idx_categories_heading_title` (`categories_heading_title`);
 
 #GTB - 2022-07-18 - add index for manufacturers
-ALTER TABLE `manufacturers` ADD KEY `idx_manufacturers_image` (`manufacturers_image`);
-ALTER TABLE `manufacturers_info` ADD KEY `idx_manufacturers_title` (`manufacturers_title`);
+ALTER TABLE `manufacturers` ADD INDEX `idx_manufacturers_image` (`manufacturers_image`);
+ALTER TABLE `manufacturers_info` ADD INDEX `idx_manufacturers_title` (`manufacturers_title`);
 
 #GTB - 2022-07-22 - add content_type for orders
 ALTER TABLE `orders` ADD `content_type` VARCHAR(32) NOT NULL; 

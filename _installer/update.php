@@ -156,8 +156,14 @@
           if (isset($_POST['sql_files']) && count($_POST['sql_files']) > 0) {
             $sql_data_array = array();
             foreach ($_POST['sql_files'] as $sql_file) {
-              $sql_data = sql_update(DIR_FS_INSTALLER.'update/'.$sql_file);
-              $sql_data_array = array_merge($sql_data_array, $sql_data);
+              if ($sql_file == 'complete.sql' && is_file(DIR_FS_INSTALLER.'update/'.$sql_file)) {
+                $sql_data_content = file_get_contents(DIR_FS_INSTALLER.'update/'.$sql_file);
+                $sql_data = json_decode($sql_data_content, true);
+                $sql_data_array = array_merge($sql_data_array, $sql_data);
+              } elseif ($sql_file != 'complete.sql' && is_file(DIR_FS_INSTALLER.'update/'.$sql_file)) {
+                $sql_data = sql_update(DIR_FS_INSTALLER.'update/'.$sql_file);
+                $sql_data_array = array_merge($sql_data_array, $sql_data);
+              }
             }
           }
 

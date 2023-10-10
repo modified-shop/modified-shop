@@ -25,11 +25,8 @@ UPDATE content_manager SET content_text = REPLACE(content_text, '<a href="https:
 UPDATE content_manager SET content_text = REPLACE(content_text, '<a href="https://www.modified-shop.org" target="_blank">', '<a href="https://www.modified-shop.org" rel="nofollow noopener" target="_blank">');
 
 #GTB - 2018-05-25 - performance tweaks for admin
-ALTER TABLE `orders`
-ADD KEY `idx_payment_class` (`payment_class`);
-
-ALTER TABLE `orders_status_history`
-ADD KEY `idx_orders_id` (`orders_id`);
+ALTER TABLE `orders` ADD INDEX `idx_payment_class` (`payment_class`);
+ALTER TABLE `orders_status_history` ADD INDEX `idx_orders_id` (`orders_id`);
 
 #GTB - 2018-05-30 - fix #1412
 ALTER TABLE categories_description MODIFY categories_meta_title text NOT NULL;

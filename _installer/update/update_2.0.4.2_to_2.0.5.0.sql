@@ -78,7 +78,7 @@ ALTER TABLE `address_book` MODIFY `address_book_id` INT(11) NOT NULL AUTO_INCREM
 ALTER TABLE `address_book` MODIFY `customers_id` INT(11) NOT NULL;
 ALTER TABLE `address_format` MODIFY `address_format_id` INT(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `banktransfer` DROP INDEX `idx_orders_id`;
-ALTER TABLE `banktransfer` ADD PRIMARY KEY(orders_id);
+ALTER TABLE `banktransfer` ADD PRIMARY KEY (orders_id);
 ALTER TABLE `banners` MODIFY `banners_id` INT(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `banners_history` MODIFY `banners_history_id` INT(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `banners_history` MODIFY `banners_id` INT(11) NOT NULL;
@@ -185,12 +185,12 @@ DELETE FROM `configuration` WHERE `configuration_key` LIKE '%EASYMARKETING%';
 DELETE FROM `configuration` WHERE `configuration_key` LIKE '%FINDOLOGIC%';
 
 #GTB - 2019-07-22 - add index - fix #826
-ALTER TABLE `specials` ADD KEY `idx_start_date` (`start_date`);
-ALTER TABLE `specials` ADD KEY `idx_expires_date` (`expires_date`);
+ALTER TABLE `specials` ADD INDEX `idx_start_date` (`start_date`);
+ALTER TABLE `specials` ADD INDEX `idx_expires_date` (`expires_date`);
 
 #GTB - 2019-09-25 - add index - fix #1679
-ALTER TABLE `products_tags_options` ADD KEY `idx_filter_multi` (`languages_id`,`filter`,`options_id`,`sort_order`);
-ALTER TABLE `products_tags_values` ADD KEY `idx_filter_multi` (`languages_id`,`filter`,`options_id`,`sort_order`);
+ALTER TABLE `products_tags_options` ADD INDEX `idx_filter_multi` (`languages_id`,`filter`,`options_id`,`sort_order`);
+ALTER TABLE `products_tags_values` ADD INDEX `idx_filter_multi` (`languages_id`,`filter`,`options_id`,`sort_order`);
 
 #GTB - 2019-10-06 - update content manager
 CREATE TABLE IF NOT EXISTS `content_manager_content` (
