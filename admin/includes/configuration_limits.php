@@ -42,3 +42,8 @@ $value_limits['SEARCH_MIN_LENGTH'] = array('min' => 1);
 $value_limits['SEARCH_AC_MIN_LENGTH'] = array('min' => 1);
 
 $value_limits['SHIPPING_BOX_WEIGHT'] = array('min' => 0);
+
+$value_limits['META_MIN_KEYWORD_LENGTH'] = array('min' => 0);
+$value_limits['META_MAX_KEYWORD_LENGTH'] = array('min' => 0);
+$value_limits['META_DESCRIPTION_LENGTH'] = array('min' => 0);
+$value_limits['META_KEYWORDS_NUMBER'] = array('min' => 0);
