@@ -55,10 +55,10 @@
   // config
   $metaStopWords        = META_STOP_WORDS;
   $metaGoWords          = META_GO_WORDS;
-  $metaMinLength        = META_MIN_KEYWORD_LENGTH; // min length keywords
-  $metaMaxLength        = META_MAX_KEYWORD_LENGTH; // max length keywords
-  $metaMaxKeywords      = META_KEYWORDS_NUMBER;    // may keywords
-  $metaDesLength        = META_DESCRIPTION_LENGTH; // max length "description" 
+  $metaMinLength        = (int)META_MIN_KEYWORD_LENGTH; // min length keywords
+  $metaMaxLength        = (int)META_MAX_KEYWORD_LENGTH; // max length keywords
+  $metaMaxKeywords      = (int)META_KEYWORDS_NUMBER;    // may keywords
+  $metaDesLength        = (int)META_DESCRIPTION_LENGTH; // max length "description" 
   $addPagination        = true;
   $addCatShopTitle      = ((META_CAT_SHOP_TITLE == 'true') ? true : false);      // add title to categories
   $addProdShopTitle     = ((META_PROD_SHOP_TITLE == 'true') ? true : false);     // add title to products
