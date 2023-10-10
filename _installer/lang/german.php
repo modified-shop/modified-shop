@@ -109,7 +109,7 @@
   define('TEXT_INFO_DO_BACKUP', 'Die Datenbank wird gesichert!');
   define('TEXT_INFO_WAIT', 'Bitte warten!');
   define('TEXT_INFO_FINISH', 'FERTIG!');
-  define('TEXT_INFO_UPDATE', 'Datensätze aktualisiert: ');
+  define('TEXT_INFO_UPDATE', 'Datens&auml;tze aktualisiert: ');
   define('TEXT_INFO_RESTORE', 'Tabellen wiederhergestellt: ');
   define('TEXT_INFO_BACKUP', 'Tabellen gesichert: ');
   define('TEXT_INFO_LAST', 'Zuletzt bearbeitet: ');
