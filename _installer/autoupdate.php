@@ -336,6 +336,10 @@
         $smarty->assign('FORM_ACTION', xtc_draw_form('autoupdateprocess', xtc_href_link(DIR_WS_INSTALLER.basename($PHP_SELF), 'uaction=update&step=8', $request_type), 'post', 'name="db_backup"').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()));
         $modulelist[$step - 1]['BUTTON'] = '<i class="fas fa-clock fa-spin"></i>';
         
+        if (is_file(DIR_FS_INSTALLER.'update/complete.sql')) {
+          unlink(DIR_FS_INSTALLER.'update/complete.sql');
+        }
+        
         if ((isset($_GET['action']) && $_GET['action'] == 'updatenow') 
             || (isset($_GET['action']) && $_GET['action'] == 'doupdate')
             )

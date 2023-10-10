@@ -25,7 +25,8 @@
     $db_update['start'] = -1;
     
     if (isset($sql_data_array) && is_array($sql_data_array)) {
-      file_put_contents(DIR_FS_INSTALLER.'update/complete.sql', json_encode($sql_data_array));
+      $sql_data_array = array_map('base64_encode', $sql_data_array);
+      file_put_contents(DIR_FS_INSTALLER.'update/complete.sql', json_encode($sql_data_array, JSON_PRETTY_PRINT));
       $_POST['sql_files'] = array(
         'complete.sql'
       );
