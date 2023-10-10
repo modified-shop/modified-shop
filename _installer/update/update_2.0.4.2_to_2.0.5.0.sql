@@ -14,6 +14,16 @@ INSERT INTO `database_version` (`version`) VALUES ('MOD_2.0.5.0');
 ALTER TABLE `orders_products` MODIFY `products_weight` DECIMAL(15,4) NOT NULL;
 ALTER TABLE `products` MODIFY `products_weight` DECIMAL(15,4) NOT NULL;
 
+#GTB - 2023-10-10 - add paypal_info
+ALTER TABLE admin_access ADD paypal_info INT(1) NOT NULL DEFAULT 0 AFTER blacklist_logs;
+UPDATE admin_access SET paypal_info = 1 WHERE customers_id = 1 LIMIT 1;
+UPDATE admin_access SET paypal_info = 9 WHERE customers_id = 'groups' LIMIT 1;
+
+#GTB - 2023-10-10 - add paypal_module
+ALTER TABLE admin_access ADD paypal_module INT(1) NOT NULL DEFAULT 0 AFTER paypal_info;
+UPDATE admin_access SET paypal_module = 1 WHERE customers_id = 1 LIMIT 1;
+UPDATE admin_access SET paypal_module = 9 WHERE customers_id = 'groups' LIMIT 1;
+
 #GTB - 2018-06-19 - add newsletter update
 ALTER TABLE admin_access ADD newsletter_recipients INT(1) NOT NULL DEFAULT '0' AFTER paypal_module;
 UPDATE `admin_access` SET `newsletter_recipients` = 1 WHERE `customers_id` = 1 LIMIT 1;
