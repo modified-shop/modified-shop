@@ -49,8 +49,7 @@
         $sql_array = array_slice($sql_data_array, $j, $db_update['step']);
                   
         foreach ($sql_array as $sql) {
-          xtc_db_query($sql);
-          trigger_error('UPDATE SQL: '.$sql, E_USER_NOTICE);
+          execute_sql($sql);
         }
       }
     }

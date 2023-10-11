@@ -73,7 +73,7 @@
                 foreach ($data['drop']['col'] as $column) {
                   if (isset($table_exists[$column])) {
                     xtc_db_query("ALTER TABLE ".$table." DROP ".$column);
-                    trigger_error('Table '.$table.' Column '.$column.' DELETED', E_USER_NOTICE);
+                    installer_log('Table '.$table.' Column '.$column.' DELETED');
                   }
                 }
               }
@@ -100,7 +100,7 @@
             $result_table = array_diff_assoc_recursive($table_check, $table_exists);
 
             if (count($result_table) < 1) {
-              trigger_error('Table '.$table.' OK', E_USER_NOTICE);
+              installer_log('Table '.$table.' OK');
             } else {
               $cnt = 0;
               foreach ($result_table as $key => $value) {
@@ -120,9 +120,9 @@
                 }
               }
               if ($cnt > 0) {
-                trigger_error('Table '.$table.' UPDATED', E_USER_NOTICE);
+                installer_log('Table '.$table.' UPDATED');
               } else {
-                trigger_error('Table '.$table.' OK', E_USER_NOTICE);
+                installer_log('Table '.$table.' OK');
               }
             }
         
@@ -140,7 +140,7 @@
                 foreach ($data['drop']['idx'] as $index) {
                   if (isset($table_idx_exists[$index])) {
                     xtc_db_query("ALTER TABLE `".$table."`".((strtoupper($index) == 'PRIMARY') ? " DROP PRIMARY KEY" : " DROP INDEX `".$index."`"));
-                    trigger_error('Table '.$table.' Index '.$index.' DELETED', E_USER_NOTICE);
+                    installer_log('Table '.$table.' Index '.$index.' DELETED');
                   }
                 }
               }
@@ -166,7 +166,7 @@
             $result_index = array_diff_assoc_recursive($table_idx_check, $table_idx_exists);
 
             if (count($result_index) < 1) {
-              trigger_error('Table '.$table.' Index OK', E_USER_NOTICE);
+              installer_log('Table '.$table.' Index OK');
             } else {
               foreach ($result_index as $key => $value) {
                 if (isset($value[0])
@@ -186,12 +186,12 @@
                                                  HAVING COUNT(*) > 1");
                     if (xtc_db_num_rows($check_query) > 0) {
                       $index_error = true;
-                      trigger_error('Table '.$table.' Index '.$value[0]['Key_name'].' NOT POSSIBLE', E_USER_WARNING);
+                      installer_log('Table '.$table.' Index '.$value[0]['Key_name'].' NOT POSSIBLE', E_USER_WARNING);
                     }
                   }
                   if ($index_error === false) {
                     xtc_db_query("ALTER TABLE `".$table."` ADD ".((strtoupper($value[0]['Key_name']) == 'PRIMARY') ? 'PRIMARY KEY' : (($value[0]['Non_unique'] == '0') ? "UNIQUE" : "KEY")." ".$value[0]['Key_name'])." (".implode(", ", $index_array).")");
-                    trigger_error('Table '.$table.' Index '.$value[0]['Key_name'].' UPDATED', E_USER_NOTICE);
+                    installer_log('Table '.$table.' Index '.$value[0]['Key_name'].' UPDATED');
                   }
                 }
               }
@@ -201,7 +201,7 @@
             xtc_db_query("DROP TABLE IF EXISTS `_mod_".$table."`");
           }
         } else {
-          trigger_error('Table '.$table.' structure NOT FOUND', E_USER_WARNING);
+          installer_log('Table '.$table.' structure NOT FOUND', E_USER_WARNING);
         }
       }
     }
@@ -223,4 +223,3 @@
     echo $json_output;
     exit();
   }
-?>

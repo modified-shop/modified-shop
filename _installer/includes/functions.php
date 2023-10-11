@@ -174,7 +174,27 @@
   }
   
   
-  function sql_update($file, $plain = false) {
+  function sql_update($file, $plain = false) {    
+    if ($plain === false) {
+      $sql_file = file_get_contents($file);
+    } else {
+      $sql_file = $file;
+    }
+    $sql_array = split_sql_file($sql_file, ';');
+    
+    $sql_data_array = array();
+    foreach ($sql_array as $sql) {
+      if (DB_SERVER_CHARSET == 'utf8') {
+        $sql = encode_utf8($sql, 'ISO-8859-1', true);
+      }
+      $sql_data_array[] = trim($sql);
+    }
+    
+    return $sql_data_array;
+  }
+  
+  
+  function execute_sql($sql) {
     static $database_tables;
     
     if (!isset($database_tables)) {
@@ -185,87 +205,94 @@
       }
     }
     
-    if ($plain === false) {
-      $sql_file = file_get_contents($file);
-    } else {
-      $sql_file = $file;
-    }
-    $sql_array = split_sql_file($sql_file, ';');
-    
-    $sql_data_array = array();
-    foreach ($sql_array as $sql) {
-      $exists = false;
-      if (preg_match('#[\\\z\s]?(?:ALTER TABLE){1}[\\\Z\s]+([^ ]*)[\\\z\s]+(?:ADD PRIMARY KEY){1}[\\\z\s]+(.*)#', $sql, $matches)) {
-        $table = preg_replace("'[\r\n\s]+'", '', str_replace('`', '', $matches[1]));
-        
-        if (in_array($table, $database_tables)) {
-          $check_query = xtc_db_query("SHOW KEYS FROM `".$table."` WHERE Key_name = 'PRIMARY'");
-          if (xtc_db_num_rows($check_query) > 0) {
-            $sql_data_array[] = trim("ALTER TABLE `".$table."` DROP PRIMARY KEY");
+    $execute = true;
+    if (preg_match('#[\\\z\s]?(?:ALTER TABLE){1}[\\\Z\s]+([^ ]*)[\\\z\s]+(?:ADD PRIMARY KEY){1}[\\\z\s]+(.*)#', $sql, $matches)) {
+      $table = preg_replace("'[\r\n\s]+'", '', str_replace('`', '', $matches[1]));
+      
+      if (in_array($table, $database_tables)) {
+        $check_query = xtc_db_query("SHOW KEYS FROM `".$table."` WHERE Key_name = 'PRIMARY'");
+        if (xtc_db_num_rows($check_query) > 0) {
+          $add_sql = "ALTER TABLE `".$table."` DROP PRIMARY KEY";
+          xtc_db_query($add_sql);
+          installer_log('EXECUTED SQL: '.$add_sql);
+        }
+      }
+    } elseif (preg_match('#[\\\z\s]?(?:ALTER TABLE){1}[\\\Z\s]+([^ ]*)[\\\z\s]+(?:ADD UNIQUE KEY|ADD UNIQUE){1}[\\\z\s]+([^ ]*)[\\\z\s]+(.*)#', $sql, $matches)) {
+      $table = preg_replace("'[\r\n\s]+'", '', str_replace('`', '', $matches[1]));
+      $key = preg_replace("'[\r\n\s]+'", '', str_replace('`', '', $matches[2]));
+      
+      if (in_array($table, $database_tables)) {
+        $check_query = xtc_db_query("SHOW KEYS FROM `".$table."` WHERE Key_name = '".$key."'");
+        if (xtc_db_num_rows($check_query) > 0) {
+          $check = xtc_db_fetch_array($check_query);
+          if ($check['Key_name'] == $key) {
+            $add_sql = "ALTER TABLE `".$table."` DROP INDEX `".$key."`";
+            xtc_db_query($add_sql);
+            installer_log('EXECUTED SQL: '.$add_sql);
           }
         }
-      } elseif (preg_match('#[\\\z\s]?(?:ALTER TABLE){1}[\\\Z\s]+([^ ]*)[\\\z\s]+(?:ADD UNIQUE KEY|ADD UNIQUE){1}[\\\z\s]+([^ ]*)[\\\z\s]+(.*)#', $sql, $matches)) {
-        $table = preg_replace("'[\r\n\s]+'", '', str_replace('`', '', $matches[1]));
-        $key = preg_replace("'[\r\n\s]+'", '', str_replace('`', '', $matches[2]));
+      }
+    } elseif (preg_match('#[\\\z\s]?(?:ALTER TABLE){1}[\\\Z\s]+([^ ]*)[\\\z\s]+(?:ADD|DROP INDEX){1}[\\\z\s]+([^ ]*)[\\\z\s]+([^ ]*)#', $sql, $matches)) {    
+      $table = preg_replace("'[\r\n\s]+'", '', str_replace('`', '', $matches[1]));
+      
+      if (in_array($table, $database_tables)) {
+        if (strtoupper($matches[2]) == 'INDEX') {
+          $key = preg_replace("'[\r\n\s]+'", '', str_replace('`', '', $matches[3]));
         
-        if (in_array($table, $database_tables)) {
           $check_query = xtc_db_query("SHOW KEYS FROM `".$table."` WHERE Key_name = '".$key."'");
           if (xtc_db_num_rows($check_query) > 0) {
             $check = xtc_db_fetch_array($check_query);
             if ($check['Key_name'] == $key) {
-              $sql_data_array[] = trim("ALTER TABLE `".$table."` DROP INDEX `".$key."`");
+              $add_sql = "ALTER TABLE `".$table."` DROP INDEX `".$key."`";
+              xtc_db_query($add_sql);
+              installer_log('EXECUTED SQL: '.$add_sql);
             }
           }
-        }
-      } elseif (preg_match('#[\\\z\s]?(?:ALTER TABLE){1}[\\\Z\s]+([^ ]*)[\\\z\s]+(?:ADD|DROP){1}[\\\z\s]+([^ ]*)[\\\z\s]+([^ ]*)#', $sql, $matches)) {
-        $table = preg_replace("'[\r\n\s]+'", '', str_replace('`', '', $matches[1]));
+          if (stripos(strtoupper($matches[0]), 'DROP INDEX') !== false) $execute = false;
+        } elseif (stripos(strtoupper($matches[0]), 'ADD') !== false) {
+          $column = preg_replace("'[\r\n\s]+'", '', str_replace('`', '', $matches[2]));
         
-        if (in_array($table, $database_tables)) {
-          if (stripos(strtoupper($matches[2]), 'INDEX') !== false) {
-            $key = preg_replace("'[\r\n\s]+'", '', str_replace('`', '', $matches[3]));
-          
-            $check_query = xtc_db_query("SHOW KEYS FROM `".$table."` WHERE Key_name = '".$key."'");
-            if (xtc_db_num_rows($check_query) > 0) {
-              $check = xtc_db_fetch_array($check_query);
-              if ($check['Key_name'] == $key) {
-                $sql_data_array[] = trim("ALTER TABLE `".$table."` DROP INDEX `".$key."`");
-              }
-            }
-            if (stripos(strtoupper($matches[0]), 'DROP INDEX') !== false) $exists = true;
-          } elseif (stripos(strtoupper($matches[0]), 'ADD') !== false) {
-            $column = preg_replace("'[\r\n\s]+'", '', str_replace('`', '', $matches[2]));
-          
-            $check_query = xtc_db_query("SHOW COLUMNS FROM `".$table."` LIKE '".$column."'");
-            if (xtc_db_num_rows($check_query) > 0) {
-              $exists = true;
-            }
-          }
-        }
-      } elseif (preg_match('#[\\\z\s]?(?:ALTER TABLE){1}[\\\Z\s]+([^ ]*)[\\\z\s]+(?:DROP){1}[\\\z\s]+([^ ]*)#', $sql, $matches)) {
-        $table = preg_replace("'[\r\n\s]+'", '', str_replace('`', '', $matches[1]));
-        
-        if (in_array($table, $database_tables)) {
-          if (stripos(strtoupper($matches[0]), 'DROP') !== false) {
-            $column = preg_replace("'[\r\n\s]+'", '', str_replace('`', '', $matches[2]));
-          
-            $check_query = xtc_db_query("SHOW COLUMNS FROM `".$table."` LIKE '".$column."'");
-            if (xtc_db_num_rows($check_query) > 0) {
-              $sql_data_array[] = trim("ALTER TABLE `".$table."` DROP `".$column."`");
-            }
-            $exists = true;
+          $check_query = xtc_db_query("SHOW COLUMNS FROM `".$table."` LIKE '".$column."'");
+          if (xtc_db_num_rows($check_query) > 0) {
+            $execute = false;
           }
         }
       }
+    } elseif (preg_match('#[\\\z\s]?(?:ALTER TABLE){1}[\\\Z\s]+([^ ]*)[\\\z\s]+(?:CHANGE){1}[\\\z\s]+([^ ]*)#', $sql, $matches)) {
+      $table = preg_replace("'[\r\n\s]+'", '', str_replace('`', '', $matches[1]));
+
+      if (in_array($table, $database_tables)) {
+        $column = preg_replace("'[\r\n\s]+'", '', str_replace('`', '', $matches[2]));
+
+        $check_query = xtc_db_query("SHOW COLUMNS FROM `".$table."` LIKE '".$column."'");
+        if (xtc_db_num_rows($check_query) < 1) {
+          $execute = false;
+        }      
+      }
+    } elseif (preg_match('#[\\\z\s]?(?:ALTER TABLE){1}[\\\Z\s]+([^ ]*)[\\\z\s]+(?:DROP){1}[\\\z\s]+([^ ]*)#', $sql, $matches)) {
+      $table = preg_replace("'[\r\n\s]+'", '', str_replace('`', '', $matches[1]));
       
-      if (!$exists) {
-        if (DB_SERVER_CHARSET == 'utf8') {
-          $sql = encode_utf8($sql, 'ISO-8859-1', true);
+      if (in_array($table, $database_tables)) {
+        if (stripos(strtoupper($matches[0]), 'DROP') !== false) {
+          $column = preg_replace("'[\r\n\s]+'", '', str_replace('`', '', $matches[2]));
+        
+          $check_query = xtc_db_query("SHOW COLUMNS FROM `".$table."` LIKE '".$column."'");
+          if (xtc_db_num_rows($check_query) > 0) {
+            $add_sql = "ALTER TABLE `".$table."` DROP `".$column."`";
+            xtc_db_query($add_sql);
+            installer_log('EXECUTED SQL: '.$add_sql);
+          }
+          $execute = false;
         }
-        $sql_data_array[] = trim($sql);
       }
     }
-    
-    return $sql_data_array;
+
+    if ($execute === true) {
+      xtc_db_query($sql);
+      installer_log('EXECUTED SQL: '.$sql);
+    } else {
+      installer_log('NOT EXECUTED SQL: '.$sql);
+    }   
   }
   
   
@@ -571,4 +598,9 @@
     }
     
     return true;
+  }
+
+
+  function installer_log($messages) {
+    error_log($messages."\n", 3, DIR_FS_LOG.'mod_installer_info_'.date('Y-m-d').'.log');
   }
