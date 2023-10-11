@@ -225,8 +225,8 @@
         $check_query = xtc_db_query("SHOW KEYS FROM `".$table."` WHERE Key_name = '".$key."'");
         if (xtc_db_num_rows($check_query) > 0) {
           $check = xtc_db_fetch_array($check_query);
-          if ($check['Key_name'] == $key) {
-            $add_sql = "ALTER TABLE `".$table."` DROP INDEX `".$key."`";
+          if (strtolower($check['Key_name']) == strtolower($key)) {
+            $add_sql = "ALTER TABLE `".$table."` DROP INDEX `".$check['Key_name']."`";
             xtc_db_query($add_sql);
             installer_log('EXECUTED SQL: '.$add_sql);
           }
@@ -242,8 +242,8 @@
           $check_query = xtc_db_query("SHOW KEYS FROM `".$table."` WHERE Key_name = '".$key."'");
           if (xtc_db_num_rows($check_query) > 0) {
             $check = xtc_db_fetch_array($check_query);
-            if ($check['Key_name'] == $key) {
-              $add_sql = "ALTER TABLE `".$table."` DROP INDEX `".$key."`";
+            if (strtolower($check['Key_name']) == strtolower($key)) {
+              $add_sql = "ALTER TABLE `".$table."` DROP INDEX `".$check['Key_name']."`";
               xtc_db_query($add_sql);
               installer_log('EXECUTED SQL: '.$add_sql);
             }
