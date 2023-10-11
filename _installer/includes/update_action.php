@@ -169,7 +169,11 @@
               trigger_error('Table '.$table.' Index OK', E_USER_NOTICE);
             } else {
               foreach ($result_index as $key => $value) {
-                if (array_key_exists('Key_name', $value[0]) && !isset($table_idx_exists[$value[0]['Key_name']])) {
+                if (isset($value[0])
+                    && array_key_exists('Key_name', $value[0]) 
+                    && !isset($table_idx_exists[$value[0]['Key_name']])
+                    )
+                {
                   $index_array = array();
                   for ($i=0, $n=count($value); $i<$n; $i++) {
                     $index_array[] = $value[$i]['Column_name'];

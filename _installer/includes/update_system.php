@@ -369,19 +369,27 @@
 
   // add columns
   $table_array = array(
-    array('table' => TABLE_ADMIN_ACCESS, 'group' => 9, 'column' => 'paypal_info', 'default' => 'INT(1) NOT NULL DEFAULT 0 AFTER blacklist_logs'),
-    array('table' => TABLE_ADMIN_ACCESS, 'group' => 9, 'column' => 'paypal_module', 'default' => 'INT(1) NOT NULL DEFAULT 0 AFTER paypal_info'),
-    array('table' => TABLE_ADMIN_ACCESS, 'group' => 5, 'column' => 'newsletter_recipients', 'default' => 'INT(1) NOT NULL DEFAULT 0 AFTER paypal_module'),
-    array('table' => TABLE_ADMIN_ACCESS, 'group' => 9, 'column' => 'semknox', 'default' => 'INT(1) NOT NULL DEFAULT 0 AFTER newsletter_recipients'),
-    array('table' => TABLE_ADMIN_ACCESS, 'group' => 9, 'column' => 'dhl', 'default' => 'INT(1) NOT NULL DEFAULT 0 AFTER semknox'),
+    array('table' => TABLE_ADMIN_ACCESS, 'group' => 9, 'column' => 'paypal_info', 'default' => 'INT(1) NOT NULL DEFAULT 0', 'after' => 'blacklist_logs'),
+    array('table' => TABLE_ADMIN_ACCESS, 'group' => 9, 'column' => 'paypal_module', 'default' => 'INT(1) NOT NULL DEFAULT 0', 'after' => 'paypal_info'),
+    array('table' => TABLE_ADMIN_ACCESS, 'group' => 5, 'column' => 'newsletter_recipients', 'default' => 'INT(1) NOT NULL DEFAULT 0', 'after' => 'paypal_module'),
+    array('table' => TABLE_ADMIN_ACCESS, 'group' => 9, 'column' => 'semknox', 'default' => 'INT(1) NOT NULL DEFAULT 0', 'after' => 'newsletter_recipients'),
+    array('table' => TABLE_ADMIN_ACCESS, 'group' => 9, 'column' => 'dhl', 'default' => 'INT(1) NOT NULL DEFAULT 0', 'after' => 'semknox'),
   );
   foreach ($table_array as $table) {
-    $check_query = xtc_db_query("SHOW COLUMNS FROM ".$table['table']." LIKE '".xtc_db_input($table['column'])."'");
-    if (xtc_db_num_rows($check_query) < 1) {
-      xtc_db_query("ALTER TABLE ".$table['table']." ADD ".$table['column']." ".$table['default']."");
+    $columns_array = array();
+    $check_query = xtc_db_query("SHOW COLUMNS FROM ".$table['table']);
+    while ($check = xtc_db_fetch_array($check_query)) {
+      $columns_array[] = $check['Field'];
     }
-    if (isset($table['group'])) {
-      xtc_db_query("UPDATE ".$table['table']." SET ".$table['column']." = 1 WHERE customers_id = 1");
-      xtc_db_query("UPDATE ".$table['table']." SET ".$table['column']." = ".$table['group']." WHERE customers_id = 'groups'");
+    
+    if (!in_array($table['column'], $columns_array)) {
+      if (!isset($table['after']) || in_array($table['after'], $columns_array)) {
+        xtc_db_query("ALTER TABLE ".$table['table']." ADD ".$table['column']." ".$table['default'].((isset($table['after'])) ? " AFTER ".$table['after'] : ''));
+      
+        if (isset($table['group'])) {
+          xtc_db_query("UPDATE ".$table['table']." SET ".$table['column']." = 1 WHERE customers_id = 1");
+          xtc_db_query("UPDATE ".$table['table']." SET ".$table['column']." = ".$table['group']." WHERE customers_id = 'groups'");
+        }
+      }
     }
   }
