@@ -230,7 +230,7 @@ class xtc_afterbuy_functions {
           $stammid = $pDATA['products_id'];
         } elseif (isset($Artikelerkennung) && $Artikelerkennung == 1 && $pDATA['products_model'] != '') {
           $stammid = $pDATA['products_model'];
-        } elseif (isset($Artikelerkennung) && $Artikelerkennung == 2 && $pDATA['products_ean'] != '') {
+        } elseif (isset($Artikelerkennung) && $Artikelerkennung == 13 && $pDATA['products_ean'] != '') {
           $stammid = $pDATA['products_ean'];
         } else {
           $stammid = '';
@@ -371,7 +371,7 @@ class xtc_afterbuy_functions {
       if ($ot_payment_flag !== false) {
         $DATAstring .= "ZahlartenAufschlag=" . $this->change_dec_separator($ot_payment_fee) . "&";
       }
-
+ 
       $vK = $this->change_dec_separator($shipping);
 
       $s_method = explode('(', $oData['shipping_method']);
@@ -383,6 +383,60 @@ class xtc_afterbuy_functions {
       $this->getPayment($oData['payment_method']);
       $DATAstring .= "Zahlart=" . $this->payment_name . "&";
       $DATAstring .= "ZFunktionsID=" . $this->payment_id . "&";
+
+      if ($this->payment_id == '5') {
+        $orders_v1_array = array(
+          'paypalclassic',
+          'paypalcart',
+          'paypalplus',
+          'paypallink',
+          'paypalpluslink',
+          'paypalsubscription',
+        );
+
+        $orders_v2_array = array(
+          'paypal',
+          'paypalacdc',
+          'paypalpui',
+          'paypalexpress',
+          'paypalcard',
+          'paypalsepa',
+          'paypalsofort',
+          'paypaltrustly',
+          'paypalprzelewy',
+          'paypalmybank',
+          'paypalideal',
+          'paypalgiropay',
+          'paypaleps',
+          'paypalblik',
+          'paypalbancontact',
+        );
+   
+        if (in_array($oData['payment_method'], $orders_v2_array)) {
+          require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalPaymentV2.php');
+          $paypal = new PayPalPaymentV2($oData['payment_method']);
+          $payment_order_info_array = $paypal->GetOrderDetails($oID);
+        } else {
+          require_once(DIR_FS_EXTERNAL.'paypal/classes/PayPalInfo.php');
+          $paypal = new PayPalInfo($oData['payment_method']);
+          $payment_order_info_array = $paypal->order_info($oID);
+         }
+
+        if (isset($payment_order_info_array->status)) {
+          $DATAstring .= "PaymentStatus=".$payment_order_info_array->status."&";
+          $DATAstring .= "PaymentTransactionId=".$payment_order_info_array->id."&";
+          if ($payment_order_info_array->status == 'COMPLETED') $DATAstring .= "SetPay=1&";
+        } else {
+          if ($payment_order_info_array['transactions']['0']['relatedResource']['0']['state'] == 'completed') {
+            $DATAstring .= "PaymentStatus=".$payment_order_info_array['transactions']['0']['relatedResource']['0']['state']."&";
+            $DATAstring .= "PaymentTransactionId=".$payment_order_info_array['transactions']['0']['relatedResource']['0']['id']."&";
+            $DATAstring .= "SetPay=1&";
+          } else {
+            $DATAstring .= "PaymentTransactionId=".$payment_order_info_array['id']."&";
+            $DATAstring .= "PaymentStatus=0&";
+          }
+        }
+      }
 
       if ($oData['payment_method'] == 'banktransfer') {
         $b_query = xtc_db_query("SELECT * FROM " . TABLE_BANKTRANSFER . " WHERE orders_id = " . $oID);
