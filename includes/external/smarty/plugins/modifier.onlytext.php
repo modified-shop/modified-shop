@@ -26,6 +26,7 @@
  * @return string
  */
 function smarty_modifier_onlytext($string) {
+  $string = encode_htmlentities($string);
   $string = strip_tags($string);
   $string = preg_replace("/\s++/u", ' ', $string);
   $string = str_replace(array('"', "'"), '', $string);
