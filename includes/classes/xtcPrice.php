@@ -570,7 +570,7 @@ class xtcPrice {
    * @return Double gross price
    */
   function xtcAddTax($price, $tax, $curr = true) {
-    $price += (double)$price / 100 * (double)$tax;
+    $price = (double)$price + (double)$price / 100 * (double)$tax;
     if ($curr) {
       $price = $this->xtcCalculateCurr($price);
     }
