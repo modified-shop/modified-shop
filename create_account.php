@@ -532,7 +532,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
       }
       xtc_redirect(xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
     } else {
-      $messageStack->add('create_account', ENTRY_EMAIL_ADDRESS_ERROR);
+      $messageStack->add('create_account', ENTRY_EMAIL_ADDRESS_CHECK_ERROR);
     }
   }
 }
